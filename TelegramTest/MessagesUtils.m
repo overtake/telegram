@@ -231,7 +231,6 @@
             } 
 
             
-            
             if(chatUserNameString)
                 msgText = [NSString stringWithFormat:@" %@", msgText];
             
@@ -378,7 +377,8 @@
     
     NSRange start;
     //  if(user != [UsersManager currentUser]) {
-    start = [attributedString appendString:[user fullName] withColor:LINK_COLOR];
+    if(user)
+        start = [attributedString appendString:[user fullName] withColor:LINK_COLOR];
     
     if(message.from_id > 0) {
         [attributedString setLink:[TMInAppLinks userProfile:user.n_id] forRange:start];

@@ -546,7 +546,8 @@
         
         
         if(message.unread && !message.n_out) {
-             dialog.unread_count++;
+            if(dialog.type != DialogTypeChannel || message.isImportantMessage)
+                dialog.unread_count++;
         }
         
         dialog.top_message = message.n_id;
@@ -554,8 +555,8 @@
         if(message.isImportantMessage) {
             dialog.top_important_message = message.n_id;
         }
-        
-        dialog.lastMessage = message;
+        if(dialog.type != DialogTypeChannel || message.isImportantMessage)
+            dialog.lastMessage = message;
         
         if(message.n_out) {
             dialog.last_marked_message = message.n_id;
@@ -574,7 +575,8 @@
         
         int last_real_date = dialog.last_real_message_date;
         
-        dialog.last_message_date = message.date;
+        if(dialog.type != DialogTypeChannel || message.isImportantMessage)
+            dialog.last_message_date = message.date;
         
         if(update_real_date) {
             dialog.last_real_message_date = last_real_date;
@@ -660,7 +662,8 @@
                 
                 int last_real_date = dialog.last_real_message_date;
                 
-                dialog.last_message_date = message.date;
+                if(dialog.type != DialogTypeChannel || message.isImportantMessage)
+                    dialog.last_message_date = message.date;
                 
                 if(update_real_date) {
                     dialog.last_real_message_date = last_real_date;
@@ -677,10 +680,11 @@
                 }
                 
                 if(!message.n_out && message.unread) {
-                    dialog.unread_count++;
+                    if(dialog.type != DialogTypeChannel || message.isImportantMessage)
+                        dialog.unread_count++;
                 }
-                
-                dialog.lastMessage = message;
+                if(dialog.type != DialogTypeChannel || message.isImportantMessage)
+                    dialog.lastMessage = message;
                 
                 
                 [dialog save];

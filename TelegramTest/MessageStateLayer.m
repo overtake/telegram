@@ -43,7 +43,7 @@
     
     if(state == MessageTableCellSending) {
         if(!self.progressView) {
-            self.progressView = [[TMClockProgressView alloc] initWithFrame:NSMakeRect(1, 4, 15, 15)];
+            self.progressView = [[TMClockProgressView alloc] initWithFrame:NSMakeRect(13, 4, 15, 15)];
             [self.layer addSublayer:self.progressView.layer];
         }
         [self.progressView startAnimating];
@@ -57,7 +57,7 @@
     if(state == MessageTableCellSendingError) {
         
         if(!self.errorView) {
-            self.errorView = [[BTRButton alloc] initWithFrame:NSMakeRect(0, 2, image_ChatMessageError().size.width , image_ChatMessageError().size.height)];
+            self.errorView = [[BTRButton alloc] initWithFrame:NSMakeRect(13, 2, image_ChatMessageError().size.width , image_ChatMessageError().size.height)];
             [self.errorView setBackgroundImage:image_ChatMessageError() forControlState:BTRControlStateNormal];
             [self addSubview:self.errorView];
         }
@@ -92,24 +92,24 @@
             [_viewsCountText setTextColor:GRAY_TEXT_COLOR];
             [_viewsCountText setStringValue:[[NSNumber numberWithInt:self.container.item.message.views] prettyNumber]];
             [_viewsCountText sizeToFit];
-            [_viewsCountText setFrameOrigin:CGPointMake(14,3)];
+            [_viewsCountText setFrameOrigin:CGPointMake(16,3)];
             [self addSubview:_viewsCountText];
             
             
             _channelImageView = imageViewWithImage(image_ChannelViews());
             
-            [_channelImageView setFrameOrigin:NSMakePoint(0, 6)];
+            [_channelImageView setFrameOrigin:NSMakePoint(3, 6)];
             
             [self addSubview:_channelImageView];
         } else {
             if(!self.readOrSentView) {
-                self.readOrSentView = [[NSImageView alloc] initWithFrame:NSMakeRect(1, 5, 0, 0)];
+                self.readOrSentView = [[NSImageView alloc] initWithFrame:NSMakeRect(11, 5, 0, 0)];
                 self.readOrSentView.wantsLayer = YES;
             }
             
             self.readOrSentView.image = state == MessageTableCellUnread ? image_MessageStateSent() : image_MessageStateRead();
             [self.readOrSentView setFrameSize:self.readOrSentView.image.size];
-            [self.readOrSentView setFrameOrigin:NSMakePoint(state == MessageTableCellUnread ? 12 : 11, NSMinY(self.readOrSentView.frame))];
+            [self.readOrSentView setFrameOrigin:NSMakePoint(state == MessageTableCellUnread ? 13 : 11, NSMinY(self.readOrSentView.frame))];
             [self.layer addSublayer:self.readOrSentView.layer];
         }
 

@@ -212,10 +212,10 @@ NSImage *fireImage() {
     
     [super setItem:item];
     
-    [self.imageView setFrameSize:item.imageSize];
-    
     
     self.imageView.object = item.imageObject;
+    
+    [self.imageView setFrameSize:item.imageSize];
 
     [self updateCellState];
 

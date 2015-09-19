@@ -451,6 +451,11 @@ static NSArray *channelUpdates;
         TL_localMessage *message = [TL_localMessage createWithN_id:shortMessage.n_id flags:shortMessage.flags from_id:[shortMessage from_id] to_id:[TL_peerChat createWithChat_id:shortMessage.chat_id] fwd_from_id:shortMessage.fwd_from_id fwd_date:shortMessage.fwd_date reply_to_msg_id:shortMessage.reply_to_msg_id date:shortMessage.date message:shortMessage.message media:[TL_messageMediaEmpty create] fakeId:[MessageSender getFakeMessageId] randomId:rand_long() reply_markup:nil entities:shortMessage.entities views:0 isViewed:YES state:DeliveryStateNormal];
         
         if(![[UsersManager sharedManager] find:shortMessage.from_id] || ![[ChatsManager sharedManager] find:shortMessage.chat_id] || (message.fwd_from_id != nil && !message.fwdObject)) {
+            
+            if(![[ChatsManager sharedManager] find:shortMessage.chat_id]) {
+                [[FullChatManager sharedManager] loadIfNeed:shortMessage.chat_id force:YES];
+            }
+            
             [self failSequence];
             return NO;
         }

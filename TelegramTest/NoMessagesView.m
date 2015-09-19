@@ -233,9 +233,9 @@ static NSTextAttachment *secretImage() {
     assert([NSThread isMainThread]);
     
     [self.progress setHidden:!isLoading || self.conversation.type == DialogTypeSecretChat];
-    [self.field setHidden:isLoading];
+   
     
-    
+    [self.field setHidden:!self.progress.isHidden];
     
     if(isLoading) {
         [self.progress startAnimation:self];

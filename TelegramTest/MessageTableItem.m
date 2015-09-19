@@ -74,7 +74,7 @@
 }
 
 -(int)makeSize {
-    return MAX(NSWidth([Telegram rightViewController].view.frame) - (self.message.from_id == 0 ? (40 + self.dateSize.width) : 150),100);
+    return MAX(NSWidth([Telegram rightViewController].view.frame) - (self.message.from_id == 0 ? 100 : 150),100);
 }
 
 - (void) headerStringBuilder {

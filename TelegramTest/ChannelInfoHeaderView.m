@@ -322,13 +322,18 @@
     
     [self.linkEditButton setHidden:self.type != ChatInfoViewControllerEdit];
     [self.setGroupPhotoButton setHidden:self.type != ChatInfoViewControllerEdit];
-    [self.openOrJoinChannelButton setHidden:self.type == ChatInfoViewControllerEdit];
+    
+    
+    [self.openOrJoinChannelButton setHidden:self.controller.chat.isManager];
    
     
-    [self.managmentButton setHidden:self.type != ChatInfoViewControllerEdit];
-    [self.membersButton setHidden:self.type != ChatInfoViewControllerEdit];
-    [self.blackListButton setHidden:self.type != ChatInfoViewControllerEdit];
-    [self.enableCommentsButton setHidden:self.type != ChatInfoViewControllerEdit];
+    [self.managmentButton setHidden:!self.controller.chat.isAdmin];
+    
+    [self.membersButton setHidden:!self.controller.chat.isManager];
+    [self.blackListButton setHidden:!self.controller.chat.isManager];
+    
+    
+    [self.enableCommentsButton setHidden:self.type != ChatInfoViewControllerEdit || !self.controller.chat.isAdmin];
     
     [self.addMembersButton setHidden:self.type != ChatInfoViewControllerEdit];
     
@@ -337,39 +342,46 @@
     
     [self.notificationView setFrame:NSMakeRect(100,  yOffset, NSWidth(self.frame) - 200, 42)];
     
-    if(self.type != ChatInfoViewControllerEdit) {
-       
-        
-        yOffset+=42;
-        
+    yOffset+=42;
+    
+    if(!self.sharedLinksButton.isHidden) {
         [self.sharedLinksButton setFrame:NSMakeRect(100,  yOffset, NSWidth(self.frame) - 200, 42)];
-        
         yOffset+=42;
-        
+    }
+    
+    if(!self.filesMediaButton.isHidden) {
         [self.filesMediaButton setFrame:NSMakeRect(100,  yOffset, NSWidth(self.frame) - 200, 42)];
-        
         yOffset+=42;
+    }
         
+    if(!self.sharedMediaButton.isHidden) {
         [self.sharedMediaButton setFrame:NSMakeRect(100,  yOffset, NSWidth(self.frame) - 200, 42)];
-        
         yOffset+=42;
-    } else {
+    }
+    
+    yOffset+=42;
         
-        yOffset+=42;
-        
+    if(!self.managmentButton.isHidden) {
         [self.managmentButton setFrame:NSMakeRect(100,  yOffset, NSWidth(self.frame) - 200, 42)];
-        
         yOffset+=42;
+    }
         
+    if(!self.membersButton.isHidden) {
         [self.membersButton setFrame:NSMakeRect(100,  yOffset, NSWidth(self.frame) - 200, 42)];
         
         yOffset+=42;
-       
+    }
+    
+        
+    if(!self.blackListButton.isHidden) {
         [self.blackListButton setFrame:NSMakeRect(100,  yOffset, NSWidth(self.frame) - 200, 42)];
         
         yOffset+=42;
     }
     
+       
+    
+ 
     
     if(!self.addMembersButton.isHidden) {
         yOffset+=42;
@@ -379,62 +391,69 @@
     
     
     
-    if(self.type == ChatInfoViewControllerNormal) {
+    
+    
+    if(!self.openOrJoinChannelButton.isHidden) {
+        [self.openOrJoinChannelButton setFrame:NSMakeRect(100, yOffset, NSWidth(self.frame)-200, 42)];
         
-        if(!self.openOrJoinChannelButton.isHidden) {
-            yOffset+=42;
-        }
+        yOffset+=NSHeight(self.openOrJoinChannelButton.frame);
+    }
+    
+    if(!self.linkView.isHidden || !self.aboutView.isHidden || !self.openOrJoinChannelButton.isHidden) {
+        yOffset+=42;
+    }
+    
+    
+    if(!self.aboutView.isHidden) {
+        [self.aboutView setFrame:NSMakeRect(100, yOffset, NSWidth(self.frame) - 200, NSHeight(self.aboutView.frame))];
         
-        if(!self.openOrJoinChannelButton.isHidden) {
-            [self.openOrJoinChannelButton setFrame:NSMakeRect(100, yOffset, NSWidth(self.frame)-200, 42)];
-            
-            yOffset+=NSHeight(self.openOrJoinChannelButton.frame);
-        }
+        yOffset+=NSHeight(self.aboutView.frame);
+    }
+    
+    if(!self.linkView.isHidden) {
+        [self.linkView setFrame:NSMakeRect(100, yOffset, NSWidth(self.frame) - 200, NSHeight(self.linkView.frame))];
         
-        if(!self.linkView.isHidden || !self.aboutView.isHidden || !self.openOrJoinChannelButton.isHidden) {
-            yOffset+=42;
-        }
-        
-        
-        if(!self.aboutView.isHidden) {
-            [self.aboutView setFrame:NSMakeRect(100, yOffset, NSWidth(self.frame) - 200, NSHeight(self.aboutView.frame))];
-            
-            yOffset+=NSHeight(self.aboutView.frame);
-        }
-        
-        if(!self.linkView.isHidden) {
-            [self.linkView setFrame:NSMakeRect(100, yOffset, NSWidth(self.frame) - 200, NSHeight(self.linkView.frame))];
-            
-            yOffset+=NSHeight(self.linkView.frame);
-        }
-        
-    } else {
+        yOffset+=NSHeight(self.linkView.frame);
+    }
+    
+    
+    
+    
+    
+    
+    if(!self.enableCommentsButton.isHidden) {
         
         yOffset+=42;
-        
-        
         
         [self.enableCommentsButton setFrame:NSMakeRect(100,  yOffset, NSWidth(self.frame) - 200, 42)];
         
         yOffset+=42;
-        
+    }
+    
+    
+    if(!self.linkEditButton.isHidden) {
         [self.linkEditButton setFrame:NSMakeRect(100, yOffset, NSWidth(self.frame) - 200, 42)];
         
         yOffset+=NSHeight(self.linkEditButton.frame);
-        
-        
+    }
+    
+    if(!self.linkEditButton.isHidden) {
         [self.setGroupPhotoButton setFrame:NSMakeRect(100, yOffset, NSWidth(self.frame) - 200, 42)];
         
         yOffset+=NSHeight(self.setGroupPhotoButton.frame) + 42;
-        
-        
-        [_editAboutContainer setFrameSize:NSMakeSize(NSWidth(self.frame) - 200, NSHeight(_editAboutContainer.frame))];
-        
-        [self.editAboutContainer setFrameOrigin:NSMakePoint(100, yOffset)];
-        
-        yOffset+=NSHeight(self.editAboutContainer.frame);
-        
     }
+        
+    
+        
+        if(!self.editAboutContainer.isHidden) {
+            [_editAboutContainer setFrame:NSMakeRect(100, yOffset,NSWidth(self.frame) - 200, NSHeight(_editAboutContainer.frame))];
+            
+            yOffset+=NSHeight(self.editAboutContainer.frame);
+        }
+    
+        
+        
+  
     
     [self.nameTextField setFrameOrigin:NSMakePoint(180, yOffset + (NSHeight(self.avatarImageView.frame)/2) + roundf(NSHeight(self.statusTextField.frame)/2 + NSHeight(self.nameTextField.frame)/2)) ];
     

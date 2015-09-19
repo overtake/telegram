@@ -431,17 +431,17 @@
                 
                 if(conversation.pts < [response pts]) {
                     __block TL_localMessage *topMsg;
-                    __block TL_localMessage *minMsg;
+                    __block TL_localMessage *importantMsg;
                     
                     [[response messages] enumerateObjectsUsingBlock:^(TLMessage *obj, NSUInteger idx, BOOL *stop) {
                         
                         TL_localMessage *c = [TL_localMessage convertReceivedMessage:obj];
                         
                         if([response top_message] == c.n_id)
-                        topMsg = c;
+                            topMsg = c;
                         
-                        if(!minMsg || c.n_id < minMsg.n_id)
-                        minMsg = c;
+                        if(!importantMsg || c.n_id < importantMsg.n_id)
+                            importantMsg = c;
                         
                     }];
                     
@@ -450,9 +450,9 @@
                     conversation.pts = [response pts];
                     
                     conversation.top_message = [response top_message];
-                    conversation.lastMessage = topMsg;
+                    conversation.lastMessage = importantMsg.n_id != topMsg.n_id ? importantMsg : topMsg;
                     conversation.top_important_message = [response top_important_message];
-                    conversation.last_message_date = topMsg.date;
+                    conversation.last_message_date = conversation.lastMessage.date;
                     
                     if(conversation.last_marked_message == 0) {
                         conversation.last_marked_message = conversation.top_message;
@@ -460,7 +460,7 @@
                     }
                     
                     conversation.read_inbox_max_id = [response read_inbox_max_id];
-                    conversation.unread_count = [response unread_count];
+                    conversation.unread_count = [response unread_important_count];
                     
                     [conversation save];
                     
@@ -477,10 +477,20 @@
                     {
                         int maxSyncedId = [[Storage manager] syncedMessageIdWithChannelId:conversation.peer_id important:NO latest:YES];
                         
-                        if(minMsg.n_id != topMsg.n_id) {
-                            longHole = [[TGMessageHole alloc] initWithUniqueId:-rand_int() peer_id:minMsg.peer_id min_id:maxSyncedId max_id:topMsg.n_id+1 date:minMsg.date count:0];
+                        if(importantMsg.n_id > maxSyncedId) {
+                            longHole = [[TGMessageHole alloc] initWithUniqueId:-rand_int() peer_id:importantMsg.peer_id min_id:maxSyncedId max_id:importantMsg.n_id date:0 count:0];
                             
                             [longHole save];
+                        }
+                        
+                        
+                        if(importantMsg.n_id != topMsg.n_id) {
+                            TGMessageHole *nextHole = [[TGMessageHole alloc] initWithUniqueId:-rand_int() peer_id:importantMsg.peer_id min_id:importantMsg.n_id max_id:topMsg.n_id+1 date:0 count:0];
+                            
+                            [nextHole save];
+                            
+                            if(longHole == nil)
+                                longHole = nextHole;
                         }
                         
                     }

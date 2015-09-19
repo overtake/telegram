@@ -270,8 +270,7 @@ static const int navigationOffset = 48;
     __block TMView *oldView = oldViewController.view;
     __block TMView *newView = newViewController.view;
     
-    if(oldViewController && oldViewController != newViewController && [self.viewControllerStack indexOfObject:oldViewController] == NSNotFound)
-        [oldViewController _didStackRemoved];
+    
     
     if(oldView == newView) {
         [oldViewController viewWillDisappear:NO];
@@ -325,6 +324,8 @@ static const int navigationOffset = 48;
     if (!isAnimate) {
         // Add the new view
         
+        if(oldViewController && oldViewController != newViewController && [self.viewControllerStack indexOfObject:oldViewController] == NSNotFound)
+            [oldViewController _didStackRemoved];
                 
         [oldView removeFromSuperview];
         [newView removeFromSuperview];
@@ -422,7 +423,8 @@ static const int navigationOffset = 48;
             if(two > 0)
                 return;
             
-            
+            if(oldViewController && oldViewController != newViewController && [self.viewControllerStack indexOfObject:oldViewController] == NSNotFound)
+                [oldViewController _didStackRemoved];
             
             _isLocked = NO;
             

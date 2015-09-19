@@ -407,7 +407,7 @@ static void *kType;
 
 
 -(BOOL)canSendChannelMessageAsAdmin {
-    return self.type == DialogTypeChannel && self.chat.isAdmin;
+    return self.type == DialogTypeChannel && (self.chat.isAdmin || self.chat.isPublisher);
 }
 
 -(BOOL)canSendChannelMessageAsUser {

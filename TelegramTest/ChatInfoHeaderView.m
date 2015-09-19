@@ -258,21 +258,6 @@
             [menuPopover showRelativeToRect:strongSelf.muteUntilTitle.bounds ofView:strongSelf.muteUntilTitle preferredEdge:CGRectMinYEdge];
             
         }];
-//        
-//        _notificationSwitcher = [[ITSwitch alloc] initWithFrame:NSMakeRect(0, 0, 36, 20)];
-//        
-//        _notificationView.rightContainer = self.notificationSwitcher;
-//        
-//        [self.notificationSwitcher setDidChangeHandler:^(BOOL isOn) {
-//            
-//            TL_conversation *dialog = [[DialogsManager sharedManager] findByChatId:strongSelf.controller.chat.n_id];
-//            
-//            BOOL isMute =  dialog.isMute;
-//            if(isMute == isOn) {
-//             //   [dialog muteOrUnmute:nil];
-//            }
-//
-//        }];
         
         [_notificationView setFrame:NSMakeRect(100,  NSMinY(self.sharedLinksButton.frame) - 42, NSWidth(self.frame) - 200, 42)];
         
@@ -421,8 +406,11 @@
         
 
         
-    }];
+        [self.controller buildFirstItem];
 
+    }];
+    
+   
     
 }
 

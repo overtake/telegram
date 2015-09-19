@@ -231,7 +231,7 @@
     
     int flags = TGOUTMESSAGE;
     
-    if(!conversation.user.isBot)
+    if(!conversation.user.isBot && conversation.type != DialogTypeChannel)
         flags|=TGUNREADMESSAGE;
     
     if(reply_to_msg_id > 0)

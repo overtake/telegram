@@ -693,8 +693,8 @@ static BOOL dragAction = NO;
     }
    
     
-    [self.containerView setFrame:NSMakeRect(item.isForwadedMessage ? item.containerOffsetForward : item.containerOffset, item.isHeaderMessage ? item.isForwadedMessage ? 10 : 4 : item.isForwadedMessage ? 7 : roundf((item.viewSize.height - item.blockSize.height)/2), item.blockSize.width, item.blockSize.height)];
-    
+    [self.containerView setFrame:NSMakeRect(item.isForwadedMessage ? item.containerOffsetForward : item.containerOffset, item.isHeaderMessage ? item.isForwadedMessage ? 10 : 4 : item.isForwadedMessage ? 7 : roundf((item.viewSize.height - item.blockSize.height)/2), NSWidth(self.frame) - (item.message.from_id == 0 ? 110 : 160), item.blockSize.height)];
+        
     
     if([item isReplyMessage])
     {
@@ -705,7 +705,7 @@ static BOOL dragAction = NO;
         
         [_replyContainer setReplyObject:item.replyObject];
         
-        [_replyContainer setFrame:NSMakeRect(item.containerOffset + 1, NSHeight(_containerView.frame) + 10, item.blockWidth - 60 , item.replyObject.containerHeight)];
+        [_replyContainer setFrame:NSMakeRect(item.containerOffset + 1, NSHeight(_containerView.frame) + 10, item.blockWidth  , item.replyObject.containerHeight)];
         
         
     } else {
@@ -750,7 +750,7 @@ static int offsetEditable = 30;
 - (void)setRightLayerToEditablePosition:(BOOL)editable {
     //    static int offserUnreadMark = 12;
     
-    CGPoint position = CGPointMake(self.bounds.size.width - self.rightView.bounds.size.width , self.item.viewSize.height - self.rightView.bounds.size.height - (self.item.isHeaderMessage ? 12 : 4));
+    CGPoint position = CGPointMake(self.bounds.size.width - self.rightView.bounds.size.width , self.item.viewSize.height - self.rightView.bounds.size.height - (self.item.isHeaderMessage ? 9 : 4));
     
     if(editable)
         position.x -= offsetEditable;

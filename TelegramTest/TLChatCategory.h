@@ -38,6 +38,7 @@ typedef enum {
 -(BOOL)isKicked;
 -(BOOL)isPublisher;
 -(BOOL)isModerator;
+-(BOOL)isManager;
 -(id)inputPeer;
 -(NSString *)usernameLink;
 

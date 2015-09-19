@@ -58,7 +58,7 @@
     
     [_observer setNeedApiObjectWithUserName:^id(NSString *userName) {
         
-        return [TLAPI_channels_checkUsername createWithChannel:[TL_inputChannelEmpty create] username:userName];
+        return [TLAPI_channels_checkUsername createWithChannel:[weakSelf.action.result.singleObject inputPeer] username:userName];
     }];
     
     self.view = _changeUserNameContainerView  = [[TGChangeUserNameContainerView alloc] initWithFrame:self.view.bounds observer:_observer];

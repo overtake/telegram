@@ -243,6 +243,10 @@ static NSTextAttachment *chatIconSelectedAttachment() {
     return self.flags & (1 << 4);
 }
 
+-(BOOL)isManager {
+    return [self isAdmin] || [self isPublisher] || [self isModerator];
+}
+
 -(NSString *)usernameLink {
     return self.username.length > 0 ? [NSString stringWithFormat:@"https://telegram.me/%@",self.username] : @"";
 }

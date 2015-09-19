@@ -46,12 +46,14 @@
     
     _checkMessage = self.conversation.lastMessage;
     
+
     
    _messageText = notification.userInfo[KEY_LAST_CONVRESATION_DATA][@"messageText"];
     _dateText = notification.userInfo[KEY_LAST_CONVRESATION_DATA][@"dateText"];
     _dateSize = [notification.userInfo[KEY_LAST_CONVRESATION_DATA][@"dateSize"] sizeValue];
     _unreadText = notification.userInfo[KEY_LAST_CONVRESATION_DATA][@"unreadText"];
     _unreadTextSize = [notification.userInfo[KEY_LAST_CONVRESATION_DATA][@"unreadTextSize"] sizeValue];
+    
     
     BOOL isNotForReload = [notification.userInfo[@"isNotForReload"] boolValue];
     if(!isNotForReload)

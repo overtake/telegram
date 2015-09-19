@@ -42,12 +42,12 @@
 -(void)setChat:(TLChat *)chat {
     [super setChat:chat];
     
-    [self.rightNavigationBarView setHidden:!self.chat.isAdmin];
+    [self.rightNavigationBarView setHidden:!self.chat.isAdmin && !self.chat.isPublisher];
 }
 
 -(void)buildRightView {
     [super buildRightView];
-     [self.rightNavigationBarView setHidden:!self.chat.dialog.chat.isAdmin];
+     [self.rightNavigationBarView setHidden:!self.chat.isAdmin && !self.chat.isPublisher];
 }
 
 - (void)reloadParticipants {

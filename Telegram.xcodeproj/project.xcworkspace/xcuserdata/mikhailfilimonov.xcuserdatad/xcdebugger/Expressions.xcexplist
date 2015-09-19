@@ -135,6 +135,9 @@
             <PersistentString
                value = "channel">
             </PersistentString>
+            <PersistentString
+               value = "f">
+            </PersistentString>
          </PersistentStrings>
       </ContextState>
       <ContextState
@@ -1630,6 +1633,11 @@
       </ContextState>
       <ContextState
          contextName = "__57-[MessagesViewController loadhistory:toEnd:prev:isFirst:]_block_invoke:MessagesViewController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "_historyController.selectLimit">
+            </PersistentString>
+         </PersistentStrings>
       </ContextState>
       <ContextState
          contextName = "__47-[SelectUsersTableView remoteSearchByUserName:]_block_invoke:SelectUsersTableView.m">
@@ -1884,6 +1892,17 @@
       </ContextState>
       <ContextState
          contextName = "__40-[TGChannelsPolling launchTimer:repeat:]_block_invoke_2:TGChannelsPolling.m">
+      </ContextState>
+      <ContextState
+         contextName = "__28-[ChatInfoHeaderView reload]_block_invoke:ChatInfoHeaderView.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "_notificationView">
+            </PersistentString>
+            <PersistentString
+               value = "_notificationView.isHidden">
+            </PersistentString>
+         </PersistentStrings>
       </ContextState>
       <ContextState
          contextName = "-[MessageTableCellVideoView open]:MessageTableCellVideoView.m">
@@ -2472,6 +2491,14 @@
          contextName = "+[NSString(NSString_FindURLs) textCheckingResultsForText:highlightMentionsAndTags:highlightCommands:]:NSString+FindURLs.m">
       </ContextState>
       <ContextState
+         contextName = "-[MessageTableItemPhoto makeSizeByWidth:]:MessageTableItemPhoto.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "width">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "-[MTTcpTransport initWithDelegate:context:datacenterId:address:]:MTTcpTransport.m">
       </ContextState>
       <ContextState
@@ -2545,6 +2572,9 @@
       </ContextState>
       <ContextState
          contextName = "__27-[TGPhotoViewer show:user:]_block_invoke:TGPhotoViewer.m">
+      </ContextState>
+      <ContextState
+         contextName = "__31-[ChannelInfoHeaderView reload]_block_invoke_2:ChannelInfoHeaderView.m">
       </ContextState>
       <ContextState
          contextName = "-[Storage loadChannelMessages:min_id:max_id:minDate:maxDate:limit:filterMask:important:]:Storage.m">

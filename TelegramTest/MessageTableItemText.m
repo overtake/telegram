@@ -230,6 +230,7 @@
     
     width -= self.dateSize.width+10;
     
+    
     if(self.isForwadedMessage) {
         width -= 50;
     }
