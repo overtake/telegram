@@ -173,26 +173,74 @@
 }
 
 
+-(TGMessageGroupHole *)proccessUnimportantGroup:(NSArray *)messages {
+    
+    TL_localMessage *minMsg = [[Storage manager] lastMessageAroundMinId:[(TL_localMessage *)messages[0] channelMsgId] important:YES isTop:NO];
+    
+    TL_localMessage *minUnimportantMsg = [messages firstObject];
+    TL_localMessage *maxUnimportantMsg = [messages lastObject];
+    
+    
+    int minId = minMsg ? minMsg.n_id : minUnimportantMsg.n_id - 1;
+    
+    TGMessageGroupHole *hole = [[[Storage manager] groupHoles:minUnimportantMsg.peer_id min:minId max:maxUnimportantMsg.n_id +1] lastObject];
+    
+    if(hole == nil)
+        hole = [[TGMessageGroupHole alloc] initWithUniqueId:-rand_int() peer_id:minUnimportantMsg.peer_id min_id:minId max_id:maxUnimportantMsg.n_id+1 date:minUnimportantMsg.date  count:0];
+    
+    hole.max_id = maxUnimportantMsg.n_id+1;
+    hole.messagesCount+= (int)messages.count;
+    
+    [hole save];
+    
+    return hole;
+
+}
+
+
+-(void)proccessHoleWithNewMessage:(NSArray *)messages {
+    
+    messages = [messages sortedArrayUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"self.n_id" ascending:YES]]];
+    
+    NSMutableArray *unimporantMessages = [[NSMutableArray alloc] init];
+    
+    [[Storage manager] insertMessages:messages];
+    
+    NSMutableArray *groups = [[NSMutableArray alloc] init];
+    
+    [messages enumerateObjectsUsingBlock:^(TL_localMessage *obj, NSUInteger idx, BOOL *stop) {
+        
+        if(![obj isImportantMessage])
+            [unimporantMessages addObject:obj];
+        
+        if([obj isImportantMessage] || idx == messages.count-1) {
+            
+            if(unimporantMessages.count > 0) {
+                TGMessageGroupHole *hole = [self proccessUnimportantGroup:[unimporantMessages copy]];
+                [groups addObject:hole];
+                [unimporantMessages removeAllObjects];
+            }
+           
+        }
+    }];
+    
+    [Notification perform:MESSAGE_LIST_UPDATE_TOP data:@{KEY_MESSAGE_LIST:messages}];
+    
+    [groups enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+         [Notification perform:UPDATE_MESSAGE_GROUP_HOLE data:@{KEY_GROUP_HOLE:obj}];
+    }];
+    
+}
+
 -(void)proccessUpdate:(id)update {
     if([update isKindOfClass:[TL_updateNewChannelMessage class]])
     {
         TL_localMessage *msg = [TL_localMessage convertReceivedMessage:[(TL_updateNewChannelMessage *)update message]];
         
-        TL_localMessage *minMsg = [[Storage manager] lastMessageAroundMinId:channelMsgId(msg.n_id, msg.peer_id) important:YES isTop:NO];
-        
-        int minId = minMsg ? minMsg.n_id : msg.n_id - 1;
-        
-        TGMessageGroupHole *hole = [[[Storage manager] groupHoles:msg.peer_id min:minId max:msg.n_id +1] lastObject];
-        
+
         if(![msg isImportantMessage]) {
             
-            if(!hole)
-                hole = [[TGMessageGroupHole alloc] initWithUniqueId:-rand_int() peer_id:msg.peer_id min_id:minId max_id:msg.n_id+1 date:msg.date  count:0];
-            
-            hole.max_id = msg.n_id+1;
-            hole.messagesCount++;
-            
-            [hole save];
+            TGMessageGroupHole *hole = [self proccessUnimportantGroup:@[msg]];
             
             [Notification perform:UPDATE_MESSAGE_GROUP_HOLE data:@{KEY_GROUP_HOLE:hole}];
             
@@ -363,9 +411,9 @@
             
             [TL_localMessage convertReceivedMessages:[response n_messages]];
             
-            [[Storage manager] insertMessages:[response n_messages]];
+            [self proccessHoleWithNewMessage:[response n_messages]];
             
-            [Notification perform:MESSAGE_LIST_UPDATE_TOP data:@{KEY_MESSAGE_LIST:[response n_messages]}];
+            
             
             
         } else if([response isKindOfClass:[TL_updates_channelDifferenceTooLong class]]) {
