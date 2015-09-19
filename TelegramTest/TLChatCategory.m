@@ -182,7 +182,14 @@ static NSTextAttachment *chatIconSelectedAttachment() {
     
     if([self isKindOfClass:[TL_channel class]])
     {
-        [attributedString appendString:NSLocalizedString(@"Conversation.ChannelTitle", nil) withColor:NSColorFromRGB(0xa9a9a9)];
+        
+        TLChatFull *fullChat = [[FullChatManager sharedManager] find:self.n_id];
+        
+        if(fullChat.participants_count >= 200) {
+            [attributedString appendString:[NSString stringWithFormat:NSLocalizedString(@"Channel.MembersCount", nil),fullChat.participants_count] withColor:NSColorFromRGB(0xa9a9a9)];
+        } else {
+            [attributedString appendString:NSLocalizedString(@"Conversation.ChannelTitle", nil) withColor:NSColorFromRGB(0xa9a9a9)];
+        }
         
         return attributedString;
     }

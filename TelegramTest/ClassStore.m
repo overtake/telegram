@@ -3,7 +3,7 @@
 //  ClassStore.m
 //  Telegram
 //
-    //  Created by keepcoder on 18.09.15.
+    //  Created by keepcoder on 19.09.15.
 //  Copyright (c) 2015 keepcoder. All rights reserved.
 //
 
@@ -115,7 +115,6 @@ static NSMutableDictionary *cs_constuctors;
         //Очень фикс, потому что может быть Long, или прочая хуета
         int constructor = [stream readInt];
         Class class = [cs_classes objectForKey:[NSNumber numberWithInt:constructor]];
-        
         if(class == nil) {
             [vector addObject:[NSNumber numberWithInt:constructor]];
         } else {
@@ -474,7 +473,7 @@ static NSMutableDictionary *cs_constuctors;
    [cs_classes setObject:[TL_channel class] forKey:[NSNumber numberWithInt:1737397639]];
    [cs_classes setObject:[TL_channelForbidden class] forKey:[NSNumber numberWithInt:763724588]];
    [cs_classes setObject:[TL_contacts_resolvedPeer class] forKey:[NSNumber numberWithInt:2131196633]];
-   [cs_classes setObject:[TL_channelFull class] forKey:[NSNumber numberWithInt:-158049435]];
+   [cs_classes setObject:[TL_channelFull class] forKey:[NSNumber numberWithInt:-88925533]];
    [cs_classes setObject:[TL_dialogChannel class] forKey:[NSNumber numberWithInt:1535415986]];
    [cs_classes setObject:[TL_messageRange class] forKey:[NSNumber numberWithInt:182649427]];
    [cs_classes setObject:[TL_messageGroup class] forKey:[NSNumber numberWithInt:-399216813]];

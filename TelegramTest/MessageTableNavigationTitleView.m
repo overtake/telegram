@@ -150,7 +150,7 @@
     self->_dialog = dialog;
     
 
-    [_searchButton setHidden:self.dialog.type == DialogTypeChannel];
+   // [_searchButton setHidden:self.dialog.type == DialogTypeChannel];
     
     [self enableDiscussion:_discussionSwitch.isOn force:NO];
 

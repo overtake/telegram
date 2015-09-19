@@ -2,7 +2,7 @@
 //  MTProto.m
 //  Telegram
 //
-//  Auto created by Mikhail Filimonov on 18.09.15.
+//  Auto created by Mikhail Filimonov on 19.09.15.
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -4088,9 +4088,9 @@
 	[stream writeInt:self.flags];
 	[stream writeInt:self.n_id];
 	[stream writeString:self.about];
-	[stream writeInt:self.participants_count];
-	if(self.flags & (1 << 0)) {[stream writeInt:self.admins_count];}
-	if(self.flags & (1 << 1)) {[stream writeInt:self.kicked_count];}
+	if(self.flags & (1 << 0)) {[stream writeInt:self.participants_count];}
+	if(self.flags & (1 << 1)) {[stream writeInt:self.admins_count];}
+	if(self.flags & (1 << 2)) {[stream writeInt:self.kicked_count];}
 	[stream writeInt:self.read_inbox_max_id];
 	[stream writeInt:self.unread_count];
 	[stream writeInt:self.unread_important_count];
@@ -4102,9 +4102,9 @@
 	self.flags = [stream readInt];
 	self.n_id = [stream readInt];
 	self.about = [stream readString];
-	self.participants_count = [stream readInt];
-	if(self.flags & (1 << 0)) {self.admins_count = [stream readInt];}
-	if(self.flags & (1 << 1)) {self.kicked_count = [stream readInt];}
+	if(self.flags & (1 << 0)) {self.participants_count = [stream readInt];}
+	if(self.flags & (1 << 1)) {self.admins_count = [stream readInt];}
+	if(self.flags & (1 << 2)) {self.kicked_count = [stream readInt];}
 	self.read_inbox_max_id = [stream readInt];
 	self.unread_count = [stream readInt];
 	self.unread_important_count = [stream readInt];
@@ -4148,17 +4148,23 @@
 
         
         
+-(void)setParticipants_count:(int)participants_count
+{
+    [super setParticipants_count:participants_count];
+            
+    if(self.participants_count == 0)  { self.flags&= ~ (1 << 0) ;} else { self.flags|= (1 << 0); }
+}        
 -(void)setAdmins_count:(int)admins_count
 {
     [super setAdmins_count:admins_count];
             
-    if(self.admins_count == 0)  { self.flags&= ~ (1 << 0) ;} else { self.flags|= (1 << 0); }
+    if(self.admins_count == 0)  { self.flags&= ~ (1 << 1) ;} else { self.flags|= (1 << 1); }
 }        
 -(void)setKicked_count:(int)kicked_count
 {
     [super setKicked_count:kicked_count];
             
-    if(self.kicked_count == 0)  { self.flags&= ~ (1 << 1) ;} else { self.flags|= (1 << 1); }
+    if(self.kicked_count == 0)  { self.flags&= ~ (1 << 2) ;} else { self.flags|= (1 << 2); }
 }
         
 @end

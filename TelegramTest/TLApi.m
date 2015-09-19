@@ -2,7 +2,7 @@
 //  TLApi.m
 //  Telegram
 //
-//  Auto created by Mikhail Filimonov on 18.09.15..
+//  Auto created by Mikhail Filimonov on 19.09.15..
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -2001,6 +2001,50 @@
 - (NSData*)getData {
 	SerializedData* stream = [ClassStore streamWithConstuctor:-2067661490];
 	[ClassStore TLSerialize:self.channel stream:stream];
+	//Serialize ShortVector
+	[stream writeInt:0x1cb5c415];
+	{
+		NSInteger tl_count = [self.n_id count];
+		[stream writeInt:(int)tl_count];
+		for(int i = 0; i < (int)tl_count; i++) {
+            if([self.n_id count] > i) {
+                NSNumber* obj = [self.n_id objectAtIndex:i];
+			[stream writeInt:[obj intValue]];
+            }  else
+                break;
+		}
+	}
+	return [stream getOutput];
+}
+@end
+
+@implementation TLAPI_channels_deleteUserHistory
++(TLAPI_channels_deleteUserHistory*)createWithChannel:(TLInputChannel*)channel user_id:(TLInputUser*)user_id {
+    TLAPI_channels_deleteUserHistory* obj = [[TLAPI_channels_deleteUserHistory alloc] init];
+    obj.channel = channel;
+	obj.user_id = user_id;
+    return obj;
+}
+- (NSData*)getData {
+	SerializedData* stream = [ClassStore streamWithConstuctor:-787622117];
+	[ClassStore TLSerialize:self.channel stream:stream];
+	[ClassStore TLSerialize:self.user_id stream:stream];
+	return [stream getOutput];
+}
+@end
+
+@implementation TLAPI_channels_reportSpam
++(TLAPI_channels_reportSpam*)createWithChannel:(TLInputChannel*)channel user_id:(TLInputUser*)user_id n_id:(NSMutableArray*)n_id {
+    TLAPI_channels_reportSpam* obj = [[TLAPI_channels_reportSpam alloc] init];
+    obj.channel = channel;
+	obj.user_id = user_id;
+	obj.n_id = n_id;
+    return obj;
+}
+- (NSData*)getData {
+	SerializedData* stream = [ClassStore streamWithConstuctor:-32999408];
+	[ClassStore TLSerialize:self.channel stream:stream];
+	[ClassStore TLSerialize:self.user_id stream:stream];
 	//Serialize ShortVector
 	[stream writeInt:0x1cb5c415];
 	{

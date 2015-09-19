@@ -2,7 +2,7 @@
 //  TLApi.h
 //  Telegram
 //
-//  Auto created by Mikhail Filimonov on 18.09.15.
+//  Auto created by Mikhail Filimonov on 19.09.15.
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -847,6 +847,21 @@
 @property (nonatomic, strong) NSMutableArray* n_id;
 
 +(TLAPI_channels_deleteMessages*)createWithChannel:(TLInputChannel*)channel n_id:(NSMutableArray*)n_id;
+@end
+
+@interface TLAPI_channels_deleteUserHistory : TLApiObject
+@property (nonatomic, strong) TLInputChannel* channel;
+@property (nonatomic, strong) TLInputUser* user_id;
+
++(TLAPI_channels_deleteUserHistory*)createWithChannel:(TLInputChannel*)channel user_id:(TLInputUser*)user_id;
+@end
+
+@interface TLAPI_channels_reportSpam : TLApiObject
+@property (nonatomic, strong) TLInputChannel* channel;
+@property (nonatomic, strong) TLInputUser* user_id;
+@property (nonatomic, strong) NSMutableArray* n_id;
+
++(TLAPI_channels_reportSpam*)createWithChannel:(TLInputChannel*)channel user_id:(TLInputUser*)user_id n_id:(NSMutableArray*)n_id;
 @end
 
 @interface TLAPI_channels_getMessages : TLApiObject

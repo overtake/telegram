@@ -649,7 +649,7 @@
     
     [self.searchMessagesView showSearchBox:^(int msg_id, NSString *searchString) {
         
-        [self showMessage:msg_id fromMsgId:0 animated:NO selectText:searchString switchDiscussion:NO];
+        [self showMessage:msg_id fromMsgId:-1 animated:NO selectText:searchString switchDiscussion:NO];
         
     } closeCallback:^{
          [self hideSearchBox:YES];
@@ -2297,7 +2297,7 @@ static NSTextAttachment *headerMediaIcon() {
                     [self.table setNeedsDisplay:YES];
                     [self.table display];
                     
-                    if(rect.origin.y == 0 || fromMsgId != 0) {
+                    if(rect.origin.y == 0 || fromMsgId != 0 || fromMsgId == -1) {
                         [self scrollToItem:importantItem animated:NO centered:YES highlight:fromMsgId != 0];
                     } else {
                         
@@ -2305,16 +2305,29 @@ static NSTextAttachment *headerMediaIcon() {
                         
                         
                         dispatch_block_t block = ^{
-                           // if(self.table.scrollView.documentOffset.y > drect.origin.y)
-                                drect.origin.y -= (NSHeight(self.table.containerView.frame)  -yTopOffset);
+                            
+                            NSRect rect = [self.table visibleRect];
+                            
+                        
+                            
+                            drect.origin.y -= (NSHeight(self.table.containerView.frame)  -yTopOffset);
+                            
+                            if(drect.origin.y > rect.origin.y && (drect.origin.y + drect.size.height) < self.table.scrollView.documentOffset.y + self.table.scrollView.documentSize.height) {
+                                
+                                drect.origin.y = MAX(0,drect.origin.y);
+                                
+                                NSLog(@"%@",NSStringFromRect(drect));
+                                
+                                [self.table.scrollView scrollToPoint:drect.origin animation:NO];
+                                
+                            } else {
+                                [self scrollToItem:importantItem animated:NO centered:YES highlight:YES];
+                            }
+                            
                            // else
                              //   drect.origin.y -= (NSHeight(self.table.containerView.frame)  -yTopOffset);
                             
-                            drect.origin.y = MAX(0,drect.origin.y);
-                            
-                            NSLog(@"%@",NSStringFromRect(drect));
-                            
-                            [self.table.scrollView scrollToPoint:drect.origin animation:NO];
+                           
                             
                         };
                         

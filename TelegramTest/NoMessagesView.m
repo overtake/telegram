@@ -215,6 +215,8 @@
     
     if(self.conversation)
         [self setConversation:self.conversation];
+    
+    [self setLoading:!self.progress.isHidden];
    
     [super setHidden:flag];
 }

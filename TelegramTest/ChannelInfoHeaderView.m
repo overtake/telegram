@@ -253,6 +253,10 @@
         self.controller.fullChat = fullChat;
         
         
+        [self.managmentButton setRightContainer:[self buildTitleWithString:[NSString stringWithFormat:@"%d",fullChat.admins_count]]];
+        [self.blackListButton setRightContainer:[self buildTitleWithString:[NSString stringWithFormat:@"%d",fullChat.kicked_count]]];
+        [self.membersButton setRightContainer:[self buildTitleWithString:[NSString stringWithFormat:@"%d",fullChat.participants_count]]];
+        
         [self.aboutTextView setStringValue:self.controller.fullChat.about];
         
         [self.statusTextField setChat:chat];
@@ -303,6 +307,22 @@
 
     }];
 
+}
+
+-(TMTextField *)buildTitleWithString:(NSString *)str  {
+    
+    TMTextField *textField = [TMTextField defaultTextField];
+    
+    NSMutableAttributedString *string = [[NSMutableAttributedString alloc] init];
+    [string appendString:str withColor:NSColorFromRGB(0xa1a1a1)];
+    
+    [string setFont:TGSystemFont(13) forRange:NSMakeRange(0, string.length)];
+    
+    [textField setAttributedStringValue:string];
+    
+    [textField sizeToFit];
+    
+    return textField;
 }
 
 -(void)rebuildOrigins {
@@ -457,7 +477,7 @@
     
     [self.nameTextField setFrameOrigin:NSMakePoint(180, yOffset + (NSHeight(self.avatarImageView.frame)/2) + roundf(NSHeight(self.statusTextField.frame)/2 + NSHeight(self.nameTextField.frame)/2)) ];
     
-    [self.statusTextField setFrameOrigin:NSMakePoint(178, yOffset + (NSHeight(self.avatarImageView.frame)/2)  )];
+    [self.statusTextField setFrameOrigin:NSMakePoint(180, yOffset + (NSHeight(self.avatarImageView.frame)/2)  )];
 
     
     [self.nameLiveView setFrameOrigin:NSMakePoint(182, NSMinY(self.nameTextField.frame) - 5)];
