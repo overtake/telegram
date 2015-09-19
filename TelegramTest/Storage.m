@@ -807,9 +807,9 @@ TL_localMessage *parseMessage(FMResultSet *result) {
         
          if(important) {
              
-             [self explainQuery:[NSString stringWithFormat:@"select * from message_holes where peer_id = %@ and ((min_id <= %@) and (max_id >= %@) ) and (type & 4 = 4) order by date asc",@(conversationId),@(min),@(max)]];
+             [self explainQuery:[NSString stringWithFormat:@"select * from message_holes where peer_id = %@ and ((min_id < %@) and (max_id > %@) ) and (type & 4 = 4) order by date asc",@(conversationId),@(min),@(max)]];
              
-            result = [db executeQuery:@"select * from message_holes where peer_id = ? and ((min_id <= ?) and (max_id >= ?)) and (type & 4 = 4) order by date asc",@(conversationId),@(max),@(min)];
+            result = [db executeQuery:@"select * from message_holes where peer_id = ? and ((min_id <= ?) and (max_id > ?)) and (type & 4 = 4) order by date asc",@(conversationId),@(max),@(min)];
             
             while ([result next]) {
                 TGMessageHole *gh = [[TGMessageGroupHole alloc] initWithUniqueId:[result intForColumn:@"unique_id"] peer_id:[result intForColumn:@"peer_id"] min_id:[result intForColumn:@"min_id"] max_id:[result intForColumn:@"max_id"] date:[result intForColumn:@"date"] count:[result intForColumn:@"count"]];

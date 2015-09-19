@@ -130,7 +130,7 @@
             
             [messages addObject:msg];
             
-            [[Storage manager] insertMessagesHole:hole];
+            [hole save];
         } else {
             [Notification perform:UPDATE_MESSAGE_GROUP_HOLE data:@{KEY_GROUP_HOLE:groupHole}];
         }

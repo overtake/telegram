@@ -455,11 +455,6 @@ static NSArray *channelUpdates;
             return NO;
         }
         
-         if(message.reply_to_msg_id != 0 && message.replyMessage == nil) {
-             [self failSequence];
-             return NO;
-         }
-        
         [MessagesManager addAndUpdateMessage:message];
     }
     
@@ -479,12 +474,6 @@ static NSArray *channelUpdates;
         } else {
             message.to_id.user_id = [UsersManager currentUserId];
         }
-        
-        if(message.reply_to_msg_id != 0 && message.replyMessage == nil) {
-            [self failSequence];
-            return NO;
-        }
-        
         
         [MessagesManager addAndUpdateMessage:message];
     }

@@ -115,64 +115,28 @@ static TGChannelsPolling *channelPolling;
 -(void)pollingDidSaidTooLongWithHole:(TGMessageHole *)hole {
     
     if(hole != nil) {
-        if([self selectAllItems].count > 0) {
-            TL_localMessageService *service = [TL_localMessageService createWithHole:hole];
+        
+        [self.filter setHole:hole withNext:NO];
+        
+        [self setState:ChatHistoryStateRemote next:NO];
+        
+        [self.filter request:NO callback:^(id response, ChatHistoryState state) {
             
-            NSArray *converted = [self filterAndAdd:[self.controller messageTableItemsFromMessages:@[service]] isLates:NO];
-            
-            converted = [self sortItems:converted];
+            NSArray *converted = [self proccessResponse:response state:state next:NO];
             
             [ASQueue dispatchOnMainQueue:^{
                 
                 [self.controller receivedMessageList:converted inRange:NSMakeRange(0, converted.count) itsSelf:NO];
                 
             }];
-        } else {
             
-            [ASQueue dispatchOnMainQueue:^{
-                [self.controller flushMessages];
-                [self removeAllItems];
-                
-                [self.controller jumpToLastMessages:YES];
-            }];
             
-        }
+            
+        }];
+        
     }
     
     
-    
-    // add new holes after received too long update.
-    
-//     [self setState:ChatHistoryStateLocal next:NO];
-//    
-//    
-//    [self removeAllItems];
-//    
-//    self.proccessing = YES;
-//    
-//    [self.filter request:YES callback:^(id response, ChatHistoryState state) {
-//        
-//        NSArray *converted = [self filterAndAdd:[self.controller messageTableItemsFromMessages:response] isLates:NO];
-//        
-//        converted = [self sortItems:converted];
-//        
-//        [self setState:self.filter.hole.max_id != INT32_MAX ? ChatHistoryStateFull : ChatHistoryStateLocal next:NO];
-//        
-//        [ASQueue dispatchOnMainQueue:^{
-//            
-//            self.proccessing = NO;
-//            
-//            [self.controller flushMessages];
-//            
-//            
-//            [self.controller receivedMessageList:converted inRange:NSMakeRange(0, converted.count) itsSelf:NO];
-//            
-//        }];
-//        
-//        
-//        
-//    }];
-//    
     
 }
 
