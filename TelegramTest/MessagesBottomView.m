@@ -367,7 +367,7 @@
     [self checkFwdMessages:updateHeight animated:animated];
 }
 
-- (void)setSectedMessagesCount:(NSUInteger)count {
+- (void)setSectedMessagesCount:(NSUInteger)count enable:(BOOL)enable {
     if(count == 0) {
         [self.messagesSelectedCount setHidden:YES];
         [self.forwardButton setDisable:YES];
@@ -379,7 +379,7 @@
         
         
         
-        [self.deleteButton setDisable:self.dialog.type == DialogTypeChannel ? !self.dialog.canSendMessage : NO];
+        [self.deleteButton setDisable:!enable];
     }
     
     [self.messagesSelectedCount setHidden:NO];

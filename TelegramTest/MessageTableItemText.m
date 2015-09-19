@@ -34,20 +34,20 @@
     
     NSString *message = [[object.message trim] fixEmoji];
     
-    NSArray *emoji = [message getEmojiFromString:NO];
-    
-    if(emoji.count <= 5) {
-        NSMutableString *c = [message mutableCopy];
-        
-        [emoji enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
-            
-            [c replaceOccurrencesOfString:obj withString:@"" options:0 range:NSMakeRange(0, c.length)];
-            
-        }];
-        
-        _isEmojiMessage = [c trim].length == 0;
-    }
-    
+//    NSArray *emoji = [message getEmojiFromString:NO];
+//    
+//    if(emoji.count <= 5) {
+//        NSMutableString *c = [message mutableCopy];
+//        
+//        [emoji enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+//            
+//            [c replaceOccurrencesOfString:obj withString:@"" options:0 range:NSMakeRange(0, c.length)];
+//            
+//        }];
+//        
+//        _isEmojiMessage = [c trim].length == 0;
+//    }
+//    
     
     [self.textAttributed appendString:message withColor:TEXT_COLOR];
     

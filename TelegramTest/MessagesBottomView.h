@@ -38,7 +38,7 @@ typedef enum {
 
 - (void)setInputMessageString:(NSString *)message disableAnimations:(BOOL)disableAnimations;
 - (NSString *)inputMessageString;
-- (void)setSectedMessagesCount:(NSUInteger)count;
+- (void)setSectedMessagesCount:(NSUInteger)count enable:(BOOL)enable;
 
 -(void)closeEmoji;
 

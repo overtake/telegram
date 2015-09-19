@@ -41,8 +41,12 @@
     
     if(!conversation) {
         conversation = [[Storage manager] selectConversation:[TL_peerChannel createWithChannel_id:channel_id]];
+        
+        if(conversation) {
+            [[ChannelsManager sharedManager] add:@[conversation]];
+        }
                 
-        [[ChannelsManager sharedManager] add:@[conversation]];
+        
     }
     
     

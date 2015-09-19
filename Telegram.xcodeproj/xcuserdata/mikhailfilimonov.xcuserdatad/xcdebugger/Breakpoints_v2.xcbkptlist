@@ -154,11 +154,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "TelegramTest/FullChatManager.m"
-            timestampString = "464270953.801232"
+            timestampString = "464270950.530554"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "257"
-            endingLineNumber = "257"
+            startingLineNumber = "198"
+            endingLineNumber = "198"
             landmarkName = "-loadFullChatByChatId:force:callback:"
             landmarkType = "5">
          </BreakpointContent>
@@ -169,13 +169,13 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "TelegramTest/FullChatManager.m"
-            timestampString = "464270950.530554"
+            filePath = "TelegramTest/MessagesUtils.m"
+            timestampString = "464295209.325195"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "198"
-            endingLineNumber = "198"
-            landmarkName = "-loadFullChatByChatId:force:callback:"
+            startingLineNumber = "229"
+            endingLineNumber = "229"
+            landmarkName = "+conversationLastText:conversation:"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>

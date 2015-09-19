@@ -871,7 +871,7 @@ static NSTextAttachment *headerMediaIcon() {
             
             if(nState != self.bottomView.stateBottom) {
                 [self.bottomView setStateBottom:nState];
-                [self.bottomView setSectedMessagesCount:self.selectedMessages.count];
+                [self.bottomView setSectedMessagesCount:self.selectedMessages.count enable:[self canDeleteMessages]];
             }
             
             
@@ -1256,7 +1256,7 @@ static NSTextAttachment *headerMediaIcon() {
     
     [self setState:self.state];
     if(self.state == MessagesViewControllerStateEditable)
-        [self.bottomView setSectedMessagesCount:self.selectedMessages.count];
+        [self.bottomView setSectedMessagesCount:self.selectedMessages.count enable:[self canDeleteMessages]];
     
     #ifdef __MAC_10_10
     
@@ -2088,13 +2088,35 @@ static NSTextAttachment *headerMediaIcon() {
         
         if(count != self.selectedMessages.count) {
             if(self.selectedMessages.count)
-                [self.bottomView setSectedMessagesCount:self.selectedMessages.count];
+                [self.bottomView setSectedMessagesCount:self.selectedMessages.count enable:[self canDeleteMessages]];
             else
                 [self.bottomView setStateBottom:MessagesBottomViewNormalState];
         }
     }
     
    // [self.table endUpdates];
+    
+}
+
+
+-(BOOL)canDeleteMessages {
+    
+    __block BOOL accept = YES;
+    
+    if(self.conversation.type == DialogTypeChannel) {
+        [self.selectedMessages enumerateObjectsUsingBlock:^(MessageTableItem *obj, NSUInteger idx, BOOL *stop) {
+            
+            accept = obj.message.chat.isAdmin || obj.message.chat.isPublisher || obj.message.chat.isModerator || obj.message.n_out;
+            
+            if(!accept) {
+                *stop = YES;
+            }
+            
+        }];
+    }
+    
+    
+    return accept;
     
 }
 
@@ -2125,7 +2147,7 @@ static NSTextAttachment *headerMediaIcon() {
         [self.selectedMessages removeObject:item];
     }
     
-    [self.bottomView setSectedMessagesCount:self.selectedMessages.count];
+    [self.bottomView setSectedMessagesCount:self.selectedMessages.count enable:[self canDeleteMessages]];
 }
 
 -(void)unSelectAll {

@@ -250,7 +250,7 @@ static NSArray *channelUpdates;
             
         }
         
-        if([update isKindOfClass:[TL_updateShortMessage class]]) {
+        if([update isKindOfClass:[TL_updateShortMessage class]] || [update isKindOfClass:[TL_updateShortSentMessage class]]) {
             TL_updateShortMessage *shortMessage = update;
             
             [self addStatefullUpdate:update seq:[shortMessage seq] pts:[shortMessage pts] date:[shortMessage date] qts:0 pts_count:[shortMessage pts_count]];
@@ -450,7 +450,7 @@ static NSArray *channelUpdates;
         
         TL_localMessage *message = [TL_localMessage createWithN_id:shortMessage.n_id flags:shortMessage.flags from_id:[shortMessage from_id] to_id:[TL_peerChat createWithChat_id:shortMessage.chat_id] fwd_from_id:shortMessage.fwd_from_id fwd_date:shortMessage.fwd_date reply_to_msg_id:shortMessage.reply_to_msg_id date:shortMessage.date message:shortMessage.message media:[TL_messageMediaEmpty create] fakeId:[MessageSender getFakeMessageId] randomId:rand_long() reply_markup:nil entities:shortMessage.entities views:0 isViewed:YES state:DeliveryStateNormal];
         
-        if(![[UsersManager sharedManager] find:shortMessage.from_id] || ![[ChatsManager sharedManager] find:shortMessage.chat_id] || !message.fwdObject) {
+        if(![[UsersManager sharedManager] find:shortMessage.from_id] || ![[ChatsManager sharedManager] find:shortMessage.chat_id] || (message.fwd_from_id != nil && !message.fwdObject)) {
             [self failSequence];
             return NO;
         }
@@ -469,7 +469,7 @@ static NSArray *channelUpdates;
         TL_localMessage *message = [TL_localMessage createWithN_id:shortMessage.n_id flags:shortMessage.flags from_id:[shortMessage user_id] to_id:[TL_peerUser createWithUser_id:[shortMessage user_id]] fwd_from_id:shortMessage.fwd_from_id fwd_date:shortMessage.fwd_date reply_to_msg_id:shortMessage.reply_to_msg_id date:shortMessage.date message:shortMessage.message media:[TL_messageMediaEmpty create] fakeId:[MessageSender getFakeMessageId] randomId:rand_long() reply_markup:nil entities:shortMessage.entities views:0 isViewed:YES state:DeliveryStateNormal];
         
         
-        if(![[UsersManager sharedManager] find:shortMessage.user_id] || (!message.fwdObject)) {
+        if(![[UsersManager sharedManager] find:shortMessage.user_id] || (message.fwd_from_id != nil && !message.fwdObject)) {
             [self failSequence];
             return NO;
         }

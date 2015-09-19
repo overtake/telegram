@@ -19,11 +19,11 @@
     TLUser *user = [[UsersManager sharedManager] find:message.from_id];
     NSString *text;
     if([action isKindOfClass:[TL_messageActionChatEditTitle class]]) {
-        text = [NSString stringWithFormat:NSLocalizedString(@"MessageAction.ServiceMessage.ChangedGroupName", nil), [user fullName], action.title];
+        text = [NSString stringWithFormat:NSLocalizedString(message.isChannelMessage ? @"MessageAction.ServiceMessage.ChangedChannelName" : @"MessageAction.ServiceMessage.ChangedChannelName", nil), message.isChannelMessage ? message.chat.title : [user fullName], action.title];
     } else if([action isKindOfClass:[TL_messageActionChatDeletePhoto class]]) {
-        text = [NSString stringWithFormat:NSLocalizedString(@"MessageAction.ServiceMessage.RemovedGroupPhoto", nil), [user fullName]];
+        text = [NSString stringWithFormat:NSLocalizedString(message.isChannelMessage ? @"MessageAction.ServiceMessage.RemovedChannelPhoto" : @"MessageAction.ServiceMessage.RemovedGroupPhoto", nil), message.isChannelMessage ? message.chat.title : [user fullName]];
     } else if([action isKindOfClass:[TL_messageActionChatEditPhoto class]]) {
-        text = [NSString stringWithFormat:NSLocalizedString(@"MessageAction.ServiceMessage.ChangedGroupPhoto", nil), [user fullName]];
+        text = [NSString stringWithFormat:NSLocalizedString(message.isChannelMessage ? @"MessageAction.ServiceMessage.ChangedChannelPhoto" : @"MessageAction.ServiceMessage.ChangedGroupPhoto", nil), message.isChannelMessage ? message.chat.title : [user fullName]];
     } else if([action isKindOfClass:[TL_messageActionChatAddUser class]]) {
         TLUser *userAdd = [[UsersManager sharedManager] find:action.user_id];
         if(action.user_id != message.from_id) {
@@ -225,7 +225,6 @@
                 msgText = NSLocalizedString(@"MessageAction.Service.JoinedGroupByLink", nil);
                 
             } else if([action isKindOfClass:[TL_messageActionChannelCreate class]]) {
-                
                 
                 msgText = NSLocalizedString(@"MessageAction.Service.ChannelCreated", nil);
                 

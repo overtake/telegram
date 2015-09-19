@@ -449,6 +449,7 @@ static NSTextAttachment *channelIconAttachment() {
 }
 
 -(void)dealloc {
+
 }
 
 
