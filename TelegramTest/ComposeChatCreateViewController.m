@@ -303,8 +303,8 @@
     
     NSMutableArray *array = [[NSMutableArray alloc] init];
     
-    for (SelectUserItem *item in self.action.result.multiObjects) {
-        [array addObject:[item copy]];
+    for (TLUser *item in self.action.result.multiObjects) {
+        [array addObject:[[SelectUserItem alloc] initWithObject:item]];
     }
     
     [self.tableView removeAllItems:NO];

@@ -1575,14 +1575,19 @@ TL_localMessage *parseMessage(FMResultSet *result) {
          NSMutableArray *chats = [[NSMutableArray alloc] init];
         FMResultSet *secretResult = [db executeQuery:@"select * from encrypted_chats"];
         while ([secretResult next]) {
-            [chats addObject:[TLClassStore deserialize:[secretResult dataForColumn:@"serialized"]]];
+            
+            id chat = [TLClassStore deserialize:[secretResult dataForColumn:@"serialized"]];
+            if(chat)
+                [chats addObject:chat];
         }
         [secretResult close];
         
         
         FMResultSet *chatResult = [db executeQuery:@"select * from chats"];
         while ([chatResult next]) {
-            [chats addObject:[TLClassStore deserialize:[chatResult dataForColumn:@"serialized"]]];
+            id obj = [TLClassStore deserialize:[chatResult dataForColumn:@"serialized"]];
+            if(obj)
+            [chats addObject:obj];
         }
         
         [chatResult close];
@@ -1942,31 +1947,6 @@ TL_localMessage *parseMessage(FMResultSet *result) {
     }];
 }
 
--(void)sessions:(void (^)(NSArray *))completeHandler {
-    [queue inDatabase:^(FMDatabase *db) {
-        NSMutableArray *sessions = [[NSMutableArray alloc] init];
-        //[db beginTransaction];
-        FMResultSet *result = [db executeQuery:@"select * from sessions"];
-        while ([result next]) {
-            [sessions addObject:[[result resultDictionary] objectForKey:@"session"]];
-        }
-        [result close];
-        //[db commit];
-        dispatch_async(dispatch_get_main_queue(), ^{
-            if(completeHandler) completeHandler(sessions);
-        });
-    }];
-}
-
--(void)destroySessions {
-    [queue inDatabase:^(FMDatabase *db) {
-        [db executeUpdate:@"delete from sessions where 1 = 1"];
-    }];
-}
-
-
-
-
 
 -(void)fullChats:(void (^)(NSArray *chats))completeHandler {
     [queue inDatabase:^(FMDatabase *db) {
@@ -1975,9 +1955,12 @@ TL_localMessage *parseMessage(FMResultSet *result) {
         while ([result next]) {
             TLChatFull *fullChat = [TLClassStore deserialize:[result dataForColumn:@"serialized"]];
             
-            fullChat.lastUpdateTime = [result intForColumn:@"last_update_time"];
+            if(fullChat) {
+                fullChat.lastUpdateTime = [result intForColumn:@"last_update_time"];
+                
+                [chats addObject:fullChat];
+            }
             
-            [chats addObject:fullChat];
         }
         [result close];
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -2422,8 +2405,9 @@ TL_localMessage *parseMessage(FMResultSet *result) {
         FMResultSet *result = [db executeQuery:@"select * from broadcasts where 1=1 order by date"];
         while ([result next]) {
             TL_broadcast *broadcast = [TLClassStore deserialize:[result dataForColumn:@"serialized"]];
-            
-            [list addObject:broadcast];
+            if(broadcast) {
+                [list addObject:broadcast];
+            }
         }
         
          [result close];
@@ -2516,8 +2500,8 @@ TL_localMessage *parseMessage(FMResultSet *result) {
         
         
         while ([result next]) {
-            
-            [messages addObject:[TLClassStore deserialize:[result dataForColumn:@"serialized"]]];
+            id msg = [TLClassStore deserialize:[result dataForColumn:@"serialized"]];
+            [messages addObject:msg];
             
         }
         
@@ -2651,7 +2635,8 @@ TL_localMessage *parseMessage(FMResultSet *result) {
                 msg.flags = -1;
                 msg.message = [result stringForColumn:@"message_text"];
                 msg.flags = [result intForColumn:@"flags"];
-                [messages addObject:msg];
+                if(msg)
+                    [messages addObject:msg];
             }
             [result close];
             

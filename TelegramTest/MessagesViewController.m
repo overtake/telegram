@@ -2312,18 +2312,18 @@ static NSTextAttachment *headerMediaIcon() {
                             
                             drect.origin.y -= (NSHeight(self.table.containerView.frame)  -yTopOffset);
                             
-                            if(drect.origin.y > rect.origin.y && (drect.origin.y + drect.size.height) < self.table.scrollView.documentOffset.y + self.table.scrollView.documentSize.height) {
-                                
-                                drect.origin.y = MAX(0,drect.origin.y);
-                                
-                                NSLog(@"%@",NSStringFromRect(drect));
-                                
-                                [self.table.scrollView scrollToPoint:drect.origin animation:NO];
-                                
-                            } else {
-                                [self scrollToItem:importantItem animated:NO centered:YES highlight:YES];
-                            }
+                            drect.origin.y = MAX(0,drect.origin.y);
+                                                        
+                            [self.table.scrollView scrollToPoint:drect.origin animation:NO];
                             
+//                            if(drect.origin.y > rect.origin.y && (drect.origin.y + drect.size.height) < self.table.scrollView.documentOffset.y + self.table.scrollView.documentSize.height) {
+//                                
+//                                
+//                                
+//                            } else {
+//                                [self scrollToItem:importantItem animated:NO centered:YES highlight:YES];
+//                            }
+//                            
                            // else
                              //   drect.origin.y -= (NSHeight(self.table.containerView.frame)  -yTopOffset);
                             

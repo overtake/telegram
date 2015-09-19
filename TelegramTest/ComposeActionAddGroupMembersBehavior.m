@@ -68,6 +68,8 @@
             
         } errorHandler:^(id request, RpcError *error) {
             [self.delegate behaviorDidEndRequest:nil];
+            
+            alert(appName(), NSLocalizedString(error.error_msg, nil));
         }];
         
         
@@ -103,6 +105,7 @@
         
     } errorHandler:^(RPCRequest *request, RpcError *error) {
         [self.delegate behaviorDidEndRequest:request.response];
+        alert(appName(), NSLocalizedString(error.error_msg, nil));
     }];
 }
 
