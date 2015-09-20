@@ -407,8 +407,8 @@
         
         TL_localMessage *msg = [TGPhotoViewer currentItem].previewObject.media;
         
-        
-        [[Telegram rightViewController].messagesViewController showMessage:msg.n_id fromMsgId:-1];
+        [[Telegram rightViewController] showByDialog:_convertsation withJump:msg.n_id historyFilter:nil sender:[TGPhotoViewer viewer]];
+
         
         [[TGPhotoViewer viewer] hide];
         

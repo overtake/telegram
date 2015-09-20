@@ -387,7 +387,7 @@
     [self.addMembersButton setHidden:self.type != ChatInfoViewControllerEdit || self.controller.fullChat.participants_count >= 200];
     
     
-     int yOffset = 42;
+    int yOffset = 42;
     
     [self.notificationView setFrame:NSMakeRect(100,  yOffset, NSWidth(self.frame) - 200, 42)];
     
@@ -438,7 +438,7 @@
         [self.addMembersButton setFrame:NSMakeRect(100, yOffset, NSWidth(self.frame) - 200, 42)];
         
         yOffset+=42;
-    } else {
+    } else if(self.controller.chat.isManager) {
         yOffset+=42;
     }
     
@@ -472,8 +472,8 @@
     }
     
     
-    
-    yOffset+=42;
+    if(self.controller.chat.isManager)
+        yOffset+=42;
 
     
     if(!self.enableCommentsButton.isHidden) {

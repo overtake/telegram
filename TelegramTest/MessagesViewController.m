@@ -2476,7 +2476,7 @@ static NSTextAttachment *headerMediaIcon() {
         
         
         
-        if(messageId != 0) {
+        if(messageId != 0 && self.conversation.type != DialogTypeChannel) {
             self.historyController.min_id = messageId;
             self.historyController.start_min = messageId;
             self.historyController.max_id = messageId;
@@ -2512,7 +2512,12 @@ static NSTextAttachment *headerMediaIcon() {
         
         [self flushMessages];
         
-        [self loadhistory:messageId toEnd:YES prev:messageId != 0 isFirst:YES];
+        if(self.conversation.type == DialogTypeChannel && messageId != 0) {
+            [self showMessage:messageId fromMsgId:-1];
+        } else {
+            [self loadhistory:messageId toEnd:YES prev:messageId != 0 isFirst:YES];
+        }
+        
         [self addScrollEvent];
         
         if(self.conversation.type == DialogTypeChannel) {
