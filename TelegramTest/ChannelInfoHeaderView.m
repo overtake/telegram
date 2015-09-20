@@ -438,6 +438,8 @@
         [self.addMembersButton setFrame:NSMakeRect(100, yOffset, NSWidth(self.frame) - 200, 42)];
         
         yOffset+=42;
+    } else {
+        yOffset+=42;
     }
     
     if(!self.exportChatInvite.isHidden) {
