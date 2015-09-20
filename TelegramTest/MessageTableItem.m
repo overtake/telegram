@@ -134,9 +134,9 @@
     
     [header appendString:name withColor:nameColor];
     
-    if(self.message.from_id == 0) {
-        [header appendAttributedString:[NSAttributedString attributedStringWithAttachment:channelIconAttachment()]];
-    }
+//    if(self.message.from_id == 0) {
+//        [header appendAttributedString:[NSAttributedString attributedStringWithAttachment:channelIconAttachment()]];
+//    }
     
     [header setFont:[NSFont fontWithName:@"HelveticaNeue-Medium" size:13] forRange:header.range];
     

@@ -118,8 +118,6 @@
         
         
         
-        
-        
         [self.title appendString:self.conversation.type == DialogTypeChat || self.conversation.type == DialogTypeChannel ? self.chat.title : dialog.user.fullName withColor:DARK_BLACK];
         
         [NSMutableAttributedString selectText:searchString fromAttributedString:(NSMutableAttributedString*)self.title selectionColor:BLUE_UI_COLOR];

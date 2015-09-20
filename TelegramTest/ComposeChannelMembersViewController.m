@@ -51,7 +51,7 @@
     [self.tableView removeSelectedItems];
     [self selectTableDidChangedItem:nil];
     [self hideModalProgress];
-    
+    [[FullChatManager sharedManager] loadIfNeed:[(TLChat *)self.action.object n_id] force:YES];
 }
 
 -(void)behaviorDidStartRequest {

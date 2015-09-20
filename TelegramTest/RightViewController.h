@@ -47,7 +47,7 @@
 #import "ComposeCreateChannelUserNameStepViewController.h"
 #import "ComposeConfirmModeratorViewController.h"
 #import "ComposeManagmentViewController.h"
-#import "ComposeChannelBlackListViewController.h"
+#import "ComposeChannelParticipantsViewController.h"
 #import "ComposeChannelMembersViewController.h"
 @class MainViewController;
 @class LeftViewController;
@@ -101,8 +101,7 @@
 @property (nonatomic, strong) ComposeConfirmModeratorViewController *composeConfirmModeratorViewController;
 @property (nonatomic,strong) ComposeManagmentViewController *composeManagmentViewController;
 
-@property (nonatomic,strong) ComposeChannelBlackListViewController *composeChannelBlackListViewController;
-@property (nonatomic,strong) ComposeChannelMembersViewController *composeChannelMembersViewController;
+@property (nonatomic,strong) ComposeChannelParticipantsViewController *composeChannelParticipantsViewController;
 
 
 - (void)modalViewSendAction:(id)object;
@@ -179,6 +178,5 @@
 -(void)showComposeManagment:(ComposeAction *)action;
 
 
--(void)showComposeChannelBlackList:(ComposeAction *)action;
--(void)showComposeChannelMembers:(ComposeAction *)action;
+-(void)showComposeChannelParticipants:(ComposeAction *)action;
 @end

@@ -143,7 +143,7 @@
             }
             
             if(self.chat.isBroadcast) {
-                return NSLocalizedString(@"Conversation.Action.CommentsBlocked", nil);
+                return self.isMute ? NSLocalizedString(@"Unmute", nil) : NSLocalizedString(@"Mute", nil);
             }
             
             

@@ -392,8 +392,6 @@
         
         [_exportChatInvite setHidden:self.fullChat.participants.admin_id != [UsersManager currentUserId]];
         
-        if(ACCEPT_FEATURE)
-            [_exportChatInvite setHidden:NO];
         
         [self.sharedMediaButton setFrameOrigin:NSMakePoint(NSMinX(_exportChatInvite.isHidden ? self.addMembersButton.frame : self.exportChatInvite.frame), NSMinY(_exportChatInvite.isHidden ? self.addMembersButton.frame : self.exportChatInvite.frame) - 72)];
         

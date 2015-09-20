@@ -67,7 +67,6 @@
                 SerializedData *stream = [[SerializedData alloc] init];
                 NSInputStream *inputStream = [[NSInputStream alloc] initWithData:data];
                 [inputStream open];
-                // [stream setCacheData:data];
                 [stream setInput:inputStream];
                 
                 int constructor = [stream readInt];
@@ -80,8 +79,6 @@
                         
                     }
                 }
-                
-            
                 
                 return vector;
                 

@@ -35,7 +35,28 @@
     [_tableView removeAllItems:NO];
     
     
-    TLChat *chat = action.object;
+    [self setLoading:YES];
+    
+    [RPCRequest sendRequest:[TLAPI_channels_getParticipants createWithChannel:[self.action.object inputPeer] filter:[TL_channelParticipantsAdmins create] offset:0 limit:100] successHandler:^(id request, TL_channels_channelParticipants *response) {
+        
+        [SharedManager proccessGlobalResponse:response];
+        
+        action.result = [[ComposeResult alloc] initWithMultiObjects:response.participants];
+        
+        [self reload];
+        
+        [self setLoading:NO];
+        
+    } errorHandler:^(id request, RpcError *error) {
+        
+    }];
+    
+   
+}
+
+
+-(void)reload {
+    TLChat *chat = self.action.object;
     
     if(chat.isAdmin) {
         GeneralSettingsRowItem *addModerator = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeNext callback:^(GeneralSettingsRowItem *item) {
@@ -56,7 +77,7 @@
         description.xOffset = 30;
     }
     
-   
+    
     NSArray *sort = @[NSStringFromClass([TL_channelParticipantCreator class]),NSStringFromClass([TL_channelParticipantEditor class]),NSStringFromClass([TL_channelParticipantModerator class])];
     
     NSArray *admins = [self.action.result.multiObjects sortedArrayUsingComparator:^NSComparisonResult(id obj1, id obj2) {
@@ -66,7 +87,7 @@
     }];
     
     
-     [admins enumerateObjectsWithOptions:0 usingBlock:^(TL_channelParticipant *obj, NSUInteger idx, BOOL *stop) {
+    [admins enumerateObjectsWithOptions:0 usingBlock:^(TL_channelParticipant *obj, NSUInteger idx, BOOL *stop) {
         
         TGUserContainerRowItem *item = [[TGUserContainerRowItem alloc] initWithUser:[[UsersManager sharedManager] find:obj.user_id]];
         
@@ -79,7 +100,7 @@
         TLUser *user = item.user;
         
         item.stateCallback = ^{
-          
+            
             if(![obj isKindOfClass:[TL_channelParticipantCreator class]]) {
                 ComposeAction *action = [[ComposeAction alloc] initWithBehaviorClass:[ComposeActionAddChannelModeratorBehavior class] filter:@[] object:chat reservedObjects:@[@(YES),obj]];
                 

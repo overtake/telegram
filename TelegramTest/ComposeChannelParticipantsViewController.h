@@ -1,5 +1,5 @@
 //
-//  ComposeChannelBlackListViewController.h
+//  ComposeChannelParticipantsViewController.h
 //  Telegram
 //
 //  Created by keepcoder on 17.09.15.
@@ -8,6 +8,6 @@
 
 #import "ComposeViewController.h"
 
-@interface ComposeChannelBlackListViewController : ComposeViewController
+@interface ComposeChannelParticipantsViewController : ComposeViewController
 
 @end

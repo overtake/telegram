@@ -79,7 +79,7 @@
     } errorHandler:^(RPCRequest *request, RpcError *error) {
         
         if(callback && self.controller) {
-            callback(nil,NO);
+            callback(nil,ChatHistoryStateFull);
         }
         
     } timeout:10 queue:[ASQueue globalQueue].nativeQueue];

@@ -40,7 +40,7 @@
 @property (nonatomic, strong,readonly) LineView *nameLiveView;
 
 -(void)save;
-
+-(void)buildNotificationsTitle;
 - (NSString *)title;
 - (void)reload;
 

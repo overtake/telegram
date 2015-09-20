@@ -252,8 +252,8 @@
         }];
         
         
-    } else if(self.dialog.type == DialogTypeChat) {
-        [[FullChatManager sharedManager] performLoad:self.dialog.peer.chat_id force:(self.dialog.fullChat.class == [TL_chatFull_old29 class] && !self.dialog.fullChat.isLastLayerUpdated) || dialog.type == DialogTypeChannel callback:^(TLChatFull * chatFull) {
+    } else if(self.dialog.type == DialogTypeChat || self.dialog.type == DialogTypeChannel) {
+        [[FullChatManager sharedManager] performLoad:self.dialog.chat.n_id force:(self.dialog.fullChat.class == [TL_chatFull_old29 class] && !self.dialog.fullChat.isLastLayerUpdated) || dialog.type == DialogTypeChannel callback:^(TLChatFull * chatFull) {
             
             _chatFull = chatFull;
             
@@ -900,18 +900,16 @@
             
         } else if(weakSelf.dialog.chat.isBroadcast) {
             
-//            [TMViewController showModalProgressWithDescription:NSLocalizedString(@"Channel.ShareCopyDescription",nil)];
-//            
-//            NSPasteboard* cb = [NSPasteboard generalPasteboard];
-//            
-//            [cb declareTypes:[NSArray arrayWithObjects:NSStringPboardType, nil] owner:weakSelf];
-//            [cb setString:[NSString stringWithFormat:@"https://telegram.me/%@",weakSelf.dialog.chat.username] forType:NSStringPboardType];
-//            
-//            dispatch_after_seconds(0.2, ^{
-//                
-//                [TMViewController hideModalProgressWithSuccess];
-//                
-//            });
+            
+            [TMViewController showModalProgress];
+            [weakSelf.dialog muteOrUnmute:^{
+                
+                [TMViewController hideModalProgressWithSuccess];
+                
+                [weakSelf setState:weakSelf.stateBottom animated:YES];
+                
+            } until:weakSelf.dialog.isMute ? 0 : 365*24*60*60];
+            
             
         } else if(!weakSelf.dialog.canSendMessage && weakSelf.dialog.user.isBot && _onClickToLockedView == nil)
         {

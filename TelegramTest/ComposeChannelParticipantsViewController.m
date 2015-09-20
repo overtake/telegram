@@ -1,22 +1,22 @@
 //
-//  ComposeChannelBlackListViewController.m
+//  ComposeChannelParticipantsViewController.m
 //  Telegram
 //
 //  Created by keepcoder on 17.09.15.
 //  Copyright (c) 2015 keepcoder. All rights reserved.
 //
 
-#import "ComposeChannelBlackListViewController.h"
+#import "ComposeChannelParticipantsViewController.h"
 #import "SelectUsersTableView.h"
 
-@interface ComposeChannelBlackListViewController ()<SelectTableDelegate,ComposeBehaviorDelegate>
+@interface ComposeChannelParticipantsViewController ()<SelectTableDelegate,ComposeBehaviorDelegate>
 @property (nonatomic,strong) SelectUsersTableView *tableView;
 @property (nonatomic,strong) RPCRequest *request;
 
 @property (nonatomic,assign) int offset;
 @end
 
-@implementation ComposeChannelBlackListViewController
+@implementation ComposeChannelParticipantsViewController
 
 -(void)loadView {
     [super loadView];
@@ -34,6 +34,8 @@
     [self.tableView removeSelectedItems];
     [self selectTableDidChangedItem:nil];
     [self hideModalProgress];
+    
+    [[FullChatManager sharedManager] loadIfNeed:[(TLChat *)self.action.object n_id] force:YES];
     
 }
 
@@ -85,7 +87,7 @@
 -(void)loadNext {
     TLChat *channel = self.action.object;
     
-    [RPCRequest sendRequest:[TLAPI_channels_getParticipants createWithChannel:channel.inputPeer filter:[TL_channelParticipantsKicked create] offset:_offset limit:100] successHandler:^(id request, TL_channels_channelParticipants *response) {
+    [RPCRequest sendRequest:[TLAPI_channels_getParticipants createWithChannel:channel.inputPeer filter:self.action.reservedObject1 offset:_offset limit:100] successHandler:^(id request, TL_channels_channelParticipants *response) {
         
         NSMutableArray *items = [[NSMutableArray alloc] init];
         

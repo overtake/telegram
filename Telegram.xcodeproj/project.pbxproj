@@ -569,7 +569,7 @@
 		C2B0DF891BA9C6EC0023982C /* TGUserContainerView.m in Sources */ = {isa = PBXBuildFile; fileRef = C2B0DF881BA9C6EC0023982C /* TGUserContainerView.m */; };
 		C2B0DF8C1BA9CE290023982C /* TGUserContainerRowItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C2B0DF8B1BA9CE290023982C /* TGUserContainerRowItem.m */; };
 		C2B0DF8F1BAAD9330023982C /* ComposeManagmentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C2B0DF8E1BAAD9330023982C /* ComposeManagmentViewController.m */; };
-		C2B0DF921BAAFD2E0023982C /* ComposeChannelBlackListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C2B0DF911BAAFD2E0023982C /* ComposeChannelBlackListViewController.m */; };
+		C2B0DF921BAAFD2E0023982C /* ComposeChannelParticipantsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C2B0DF911BAAFD2E0023982C /* ComposeChannelParticipantsViewController.m */; };
 		C2B0DF951BAAFDA20023982C /* ComposeChannelMembersViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C2B0DF941BAAFDA20023982C /* ComposeChannelMembersViewController.m */; };
 		C2B0DF991BAAFEFA0023982C /* TGModalDeleteChannelMessagesView.m in Sources */ = {isa = PBXBuildFile; fileRef = C2B0DF981BAAFEFA0023982C /* TGModalDeleteChannelMessagesView.m */; };
 		C2B0DF9C1BAB07DD0023982C /* ComposeActionBlackListBehavior.m in Sources */ = {isa = PBXBuildFile; fileRef = C2B0DF9B1BAB07DD0023982C /* ComposeActionBlackListBehavior.m */; };
@@ -2150,8 +2150,8 @@
 		C2B0DF8B1BA9CE290023982C /* TGUserContainerRowItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGUserContainerRowItem.m; sourceTree = "<group>"; };
 		C2B0DF8D1BAAD9330023982C /* ComposeManagmentViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ComposeManagmentViewController.h; sourceTree = "<group>"; };
 		C2B0DF8E1BAAD9330023982C /* ComposeManagmentViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ComposeManagmentViewController.m; sourceTree = "<group>"; };
-		C2B0DF901BAAFD2E0023982C /* ComposeChannelBlackListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ComposeChannelBlackListViewController.h; sourceTree = "<group>"; };
-		C2B0DF911BAAFD2E0023982C /* ComposeChannelBlackListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ComposeChannelBlackListViewController.m; sourceTree = "<group>"; };
+		C2B0DF901BAAFD2E0023982C /* ComposeChannelParticipantsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ComposeChannelParticipantsViewController.h; sourceTree = "<group>"; };
+		C2B0DF911BAAFD2E0023982C /* ComposeChannelParticipantsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ComposeChannelParticipantsViewController.m; sourceTree = "<group>"; };
 		C2B0DF931BAAFDA20023982C /* ComposeChannelMembersViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ComposeChannelMembersViewController.h; sourceTree = "<group>"; };
 		C2B0DF941BAAFDA20023982C /* ComposeChannelMembersViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ComposeChannelMembersViewController.m; sourceTree = "<group>"; };
 		C2B0DF971BAAFEFA0023982C /* TGModalDeleteChannelMessagesView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGModalDeleteChannelMessagesView.h; sourceTree = "<group>"; };
@@ -5244,8 +5244,8 @@
 				C2B0DF851BA9C59B0023982C /* ComposeConfirmModeratorViewController.m */,
 				C2B0DF8D1BAAD9330023982C /* ComposeManagmentViewController.h */,
 				C2B0DF8E1BAAD9330023982C /* ComposeManagmentViewController.m */,
-				C2B0DF901BAAFD2E0023982C /* ComposeChannelBlackListViewController.h */,
-				C2B0DF911BAAFD2E0023982C /* ComposeChannelBlackListViewController.m */,
+				C2B0DF901BAAFD2E0023982C /* ComposeChannelParticipantsViewController.h */,
+				C2B0DF911BAAFD2E0023982C /* ComposeChannelParticipantsViewController.m */,
 				C2B0DF931BAAFDA20023982C /* ComposeChannelMembersViewController.h */,
 				C2B0DF941BAAFDA20023982C /* ComposeChannelMembersViewController.m */,
 			);
@@ -6710,7 +6710,7 @@
 				C2CB5DC51B4EAA4F00CD61DF /* NSObject+BObject.m in Sources */,
 				C2F429D21B04D37C00C2CE4E /* TGUIMainThreadGuard.m in Sources */,
 				0A08D1D4181B1F8C005F7C13 /* TLClassStore.m in Sources */,
-				C2B0DF921BAAFD2E0023982C /* ComposeChannelBlackListViewController.m in Sources */,
+				C2B0DF921BAAFD2E0023982C /* ComposeChannelParticipantsViewController.m in Sources */,
 				C20A5EEC1B8CD8B8007F4B49 /* AddContactView.m in Sources */,
 				C2002D0619994D7A002A1915 /* BroadcastInfoHeaderView.m in Sources */,
 				C2DE4FB51AD43ED0001EC26C /* TGArticleImageObject.m in Sources */,

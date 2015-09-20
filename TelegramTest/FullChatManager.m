@@ -194,9 +194,6 @@
         
     }
     
-    if(chat_id == 0) {
-        int bp = 0;
-    }
     
     TLChat *chat = [[ChatsManager sharedManager] find:chat_id];
     
@@ -234,6 +231,7 @@
        
         
         [self.queue dispatchOnQueue:^{
+            
             
             [self add:@[[result full_chat]]];
             
@@ -303,9 +301,18 @@
                 currentChat.lastUpdateTime = [[MTNetwork instance] getTime];
                 currentChat.exported_invite = newChatFull.exported_invite;
                 currentChat.bot_info = newChatFull.bot_info;
+                currentChat.kicked_count = newChatFull.kicked_count;
+                currentChat.admins_count = newChatFull.admins_count;
 
+                if(currentChat.participants_count != newChatFull.participants_count) {
+                    [Notification perform:CHAT_STATUS data:@{KEY_CHAT_ID: @(currentChat.n_id)}];
+                    currentChat.participants_count = newChatFull.participants_count;
+                }
+                
+                
             } else {
                 [self->keys setObject:newChatFull forKey:@(newChatFull.n_id)];
+                [self->list addObject:newChatFull];
                 currentChat = newChatFull;
                 if(currentChat.lastUpdateTime == 0)
                     currentChat.lastUpdateTime = [[MTNetwork instance] getTime];

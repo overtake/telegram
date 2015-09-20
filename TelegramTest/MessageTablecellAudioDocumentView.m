@@ -248,7 +248,7 @@
     
     [self setDurationTextFieldString:item.duration];
     
-    [self.stateTextField setFrameOrigin:NSMakePoint(self.durationView.frame.origin.x + self.durationView.frame.size.width, self.durationView.frame.origin.y )];
+    [self.stateTextField setFrameOrigin:NSMakePoint(NSMaxX(self.durationView.frame), self.durationView.frame.origin.y )];
     
     if(item.state != AudioStatePlaying && item.state != AudioStatePaused)
         [self updateCellState];

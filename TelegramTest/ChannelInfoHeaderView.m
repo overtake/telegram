@@ -145,7 +145,7 @@
         self.blackListButton = [UserInfoShortButtonView buttonWithText:NSLocalizedString(@"Profile.ChannelBlackList", nil) tapBlock:^{
             
             
-            [[Telegram rightViewController] showComposeChannelBlackList:[[ComposeAction alloc] initWithBehaviorClass:[ComposeActionBlackListBehavior class] filter:@[] object:self.controller.chat]];
+            [[Telegram rightViewController] showComposeChannelParticipants:[[ComposeAction alloc] initWithBehaviorClass:[ComposeActionBlackListBehavior class] filter:@[] object:self.controller.chat reservedObjects:@[[TL_channelParticipantsKicked create]]]];
             
         }];
         
@@ -155,7 +155,7 @@
         self.membersButton = [UserInfoShortButtonView buttonWithText:NSLocalizedString(@"Profile.ChannelMembers", nil) tapBlock:^{
             
             
-            [[Telegram rightViewController] showComposeChannelMembers:[[ComposeAction alloc] initWithBehaviorClass:[ComposeActionChannelMembersBehavior class] filter:@[] object:self.controller.chat]];
+            [[Telegram rightViewController] showComposeChannelParticipants:[[ComposeAction alloc] initWithBehaviorClass:[ComposeActionChannelMembersBehavior class] filter:@[] object:self.controller.chat reservedObjects:@[[TL_channelParticipantsRecent create]]]];
             
         }];
         
@@ -230,28 +230,13 @@
     
     TLChat *chat = self.controller.chat;
     
+     [self rebuildOrigins];
+    
     _composeActionManagment = [[ComposeAction alloc] initWithBehaviorClass:[ComposeActionBehavior class] filter:@[] object:chat];
-    
-    
-    if(chat.isAdmin || chat.isModerator || chat.isPublisher) {
-        [RPCRequest sendRequest:[TLAPI_channels_getParticipants createWithChannel:self.controller.chat.inputPeer filter:[TL_channelParticipantsAdmins create] offset:0 limit:100] successHandler:^(id request, TL_channels_channelParticipants *response) {
-            
-            [SharedManager proccessGlobalResponse:response];
-            
-            _composeActionManagment.result = [[ComposeResult alloc] initWithMultiObjects:response.participants];
-            
-            
-        } errorHandler:^(id request, RpcError *error) {
-            
-        }];
-    }
-    
-    
     
     [[FullChatManager sharedManager]  performLoad:chat.n_id callback:^(TLChatFull *fullChat) {
         
         self.controller.fullChat = fullChat;
-        
         
         [self.managmentButton setRightContainer:[self buildTitleWithString:[NSString stringWithFormat:@"%d",fullChat.admins_count]]];
         [self.blackListButton setRightContainer:[self buildTitleWithString:[NSString stringWithFormat:@"%d",fullChat.kicked_count]]];
@@ -282,7 +267,7 @@
         [self.filesMediaButton setConversation:self.controller.chat.dialog];
         [self.sharedMediaButton setConversation:self.controller.chat.dialog];
         
-        
+        [self buildNotificationsTitle];
         
         [self.avatarImageView setChat:chat];
         [self.avatarImageView rebuild];

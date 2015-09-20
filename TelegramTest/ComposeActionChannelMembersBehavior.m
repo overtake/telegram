@@ -65,6 +65,7 @@
         
         [RPCRequest sendRequest:[TLAPI_channels_kickFromChannel createWithChannel:self.chat.inputPeer user_id:user.inputUser kicked:YES] successHandler:^(id request, id response) {
             
+            
             if(users.count == 0) {
                 [self.delegate behaviorDidEndRequest:nil];
             }

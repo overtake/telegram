@@ -157,6 +157,22 @@ static NSTextAttachment *chatIconSelectedAttachment() {
     if(!str) {
         str = [[NSMutableAttributedString alloc] init];
         
+        
+        if([self isKindOfClass:[TL_channel class]])
+        {
+            
+            TLChatFull *fullChat = [[FullChatManager sharedManager] find:self.n_id];
+            
+            //if(fullChat.participants_count >= 200) {
+            [str appendString:[NSString stringWithFormat:@"%d %@", fullChat.participants_count, fullChat.participants_count > 1 ?  NSLocalizedString(@"Conversation.Members", nil) : NSLocalizedString(@"Conversation.Member", nil)] withColor:NSColorFromRGB(0xa9a9a9)];
+            //} else {
+            //  [attributedString appendString:NSLocalizedString(@"Conversation.ChannelTitle", nil) withColor:NSColorFromRGB(0xa9a9a9)];
+            //}
+            
+            return str;
+        }
+
+        
         [str appendString:[NSString stringWithFormat:@"%d %@", self.participants_count, self.participants_count > 1 ?  NSLocalizedString(@"Conversation.Members", nil) : NSLocalizedString(@"Conversation.Member", nil)] withColor:NSColorFromRGB(0x9b9b9b)];
 
         
@@ -186,7 +202,7 @@ static NSTextAttachment *chatIconSelectedAttachment() {
         TLChatFull *fullChat = [[FullChatManager sharedManager] find:self.n_id];
         
         //if(fullChat.participants_count >= 200) {
-            [attributedString appendString:[NSString stringWithFormat:NSLocalizedString(@"Channel.MembersCount", nil),fullChat.participants_count] withColor:NSColorFromRGB(0xa9a9a9)];
+            [attributedString appendString:[NSString stringWithFormat:@"%d %@", fullChat.participants_count, fullChat.participants_count > 1 ?  NSLocalizedString(@"Conversation.Members", nil) : NSLocalizedString(@"Conversation.Member", nil)] withColor:NSColorFromRGB(0xa9a9a9)];
         //} else {
           //  [attributedString appendString:NSLocalizedString(@"Conversation.ChannelTitle", nil) withColor:NSColorFromRGB(0xa9a9a9)];
         //}
