@@ -41,11 +41,13 @@
         
         [request setCompleted:nil];
         
-        timer = [[TGTimer alloc] initWithTimeout:3 repeat:NO completion:^{
+        timer = [[TGTimer alloc] initWithTimeout:2 repeat:NO completion:^{
+            
+            NSArray *items = [waitingItems copy];
             
             NSMutableArray *ids = [[NSMutableArray alloc] init];
             
-            TL_conversation *conversation = [(MessageTableItem *)waitingItems[0] message].conversation;
+            TL_conversation *conversation = [(MessageTableItem *)items[0] message].conversation;
             
             [waitingItems enumerateObjectsUsingBlock:^(MessageTableItem *obj, NSUInteger idx, BOOL *stop) {
                 [ids addObject:@(obj.message.n_id)];
@@ -91,16 +93,21 @@
                 
                 [ASQueue dispatchOnStageQueue:^{
                     
-                    assert(result.count == waitingItems.count);
+                    assert(result.count == items.count);
                     
-                    [strongSelf->waitingItems enumerateObjectsUsingBlock:^(MessageTableItem *obj, NSUInteger idx, BOOL *stop) {
-                        obj.message.viewed = YES;
-                        obj.message.views = [result[idx] intValue];
-                        [obj.message save:NO];
+                    [items enumerateObjectsUsingBlock:^(MessageTableItem *obj, NSUInteger idx, BOOL *stop) {
+                        BOOL needUpdate = obj.message.views != [result[idx] intValue];
                         
+                        obj.message.views = [result[idx] intValue];
+                        
+                        if(needUpdate) {
+                            [obj.message save:NO];
+                            [Notification perform:UPDATE_MESSAGE_ITEM data:@{@"item":obj}];
+                        }
+
                     }];
                     
-                    [strongSelf->waitingItems removeAllObjects];
+                    [strongSelf->waitingItems removeObjectsInArray:items];
                     
                 }];
                 

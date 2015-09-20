@@ -28,10 +28,12 @@
     
     NSMutableArray *uids = [[NSMutableArray alloc] init];
     
-//    [fullChat.participants.participants enumerateObjectsUsingBlock:^(TLChatParticipant * obj, NSUInteger idx, BOOL *stop) {
-//        [uids addObject:@(obj.user_id)];
-//        
-//    }];
+    NSArray *all =[[UsersManager sharedManager] all];
+    
+    [[all subarrayWithRange:NSMakeRange(0, MIN(500,all.count))] enumerateObjectsUsingBlock:^(TLUser * obj, NSUInteger idx, BOOL *stop) {
+        [uids addObject:@(obj.n_id)];
+        
+    }];
     
     
     NSArray *users = [UsersManager findUsersByMention:string withUids:uids];

@@ -378,7 +378,7 @@
     [self.openOrJoinChannelButton setHidden:self.controller.chat.isManager];
    
     
-    [self.managmentButton setHidden:self.controller.chat.isManager];
+    [self.managmentButton setHidden:!self.controller.chat.isManager];
     
     [self.membersButton setHidden:!self.controller.chat.isManager];
     [self.blackListButton setHidden:!self.controller.chat.isManager || self.controller.chat.isBroadcast];
@@ -386,7 +386,7 @@
     
     [self.enableCommentsButton setHidden:YES];
     
-    [self.addMembersButton setHidden:self.type != ChatInfoViewControllerEdit];
+    [self.addMembersButton setHidden:self.type != ChatInfoViewControllerEdit || self.controller.fullChat.participants_count >= 200];
     
     
      int yOffset = 42;

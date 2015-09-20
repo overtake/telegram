@@ -92,7 +92,7 @@
             [_viewsCountText setTextColor:GRAY_TEXT_COLOR];
             [_viewsCountText setStringValue:[[NSNumber numberWithInt:self.container.item.message.views] prettyNumber]];
             [_viewsCountText sizeToFit];
-            [_viewsCountText setFrameOrigin:CGPointMake(NSWidth(self.frame) - NSWidth(_viewsCountText.frame),3)];
+            [_viewsCountText setFrameOrigin:CGPointMake(NSWidth(self.frame) - NSWidth(_viewsCountText.frame) - 2,3)];
             [self addSubview:_viewsCountText];
             
             

@@ -440,10 +440,12 @@ static NSMutableArray *listeners;
             BOOL needAdd = [filterItems indexOfObject:obj] == NSNotFound;
             
             //  здесь лучше бы подумать над условием, мб что нибудь в голову придет, пока так.
+           
+           BOOL standartFilter = (self.filter.class == HistoryFilter.class || self.filter.class == ChannelFilter.class || self.filter.class == ChannelImportantFilter.class);
           
-            if( ((filterClass == HistoryFilter.class && (self.filter.class == HistoryFilter.class || self.filter.class == ChannelFilter.class || self.filter.class == ChannelImportantFilter.class)) ||
-                 (filterClass == HistoryFilter.class && isLatest)) ||
-               (filterClass != HistoryFilter.class && obj.message.filterType & [filterClass type]) > 0) {
+            if((standartFilter ||
+                 (standartFilter && isLatest)) ||
+               (!standartFilter && obj.message.filterType & [filterClass type]) > 0) {
                 
                 
                 if(obj.message.n_id != 0) {

@@ -12,10 +12,10 @@
          contextName = "-[MessagesViewController insertMessageTableItemsToList:startPosition:needCheckLastMessage:]:MessagesViewController.m">
          <PersistentStrings>
             <PersistentString
-               value = "current.isHeaderMessage">
+               value = "self.messages">
             </PersistentString>
             <PersistentString
-               value = "self.messages">
+               value = "current.isHeaderMessage">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -428,10 +428,10 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
-         contextName = "__47-[NewLoginViewController getSMSCodeSendRequest]_block_invoke:NewLoginViewController.m">
+         contextName = "__39-[SearchViewController searchByString:]_block_invoke599:SearchViewController.m">
       </ContextState>
       <ContextState
-         contextName = "__39-[SearchViewController searchByString:]_block_invoke599:SearchViewController.m">
+         contextName = "__47-[NewLoginViewController getSMSCodeSendRequest]_block_invoke:NewLoginViewController.m">
       </ContextState>
       <ContextState
          contextName = "-[TGModernEncryptedUpdates proccess17Layer:params:conversation:]:TGModernEncryptedUpdates.m">
@@ -457,29 +457,6 @@
          contextName = "__48-[HistoryFilter remoteRequest:peer_id:callback:]_block_invoke:HistoryFilter.m">
       </ContextState>
       <ContextState
-         contextName = "__29-[Storage groupHole:min:max:]_block_invoke:Storage.m">
-      </ContextState>
-      <ContextState
-         contextName = "__45-[NewContactsManager importContact:callback:]_block_invoke:NewContactsManager.m">
-      </ContextState>
-      <ContextState
-         contextName = "-[ChannelFilter fillGroupHoles:bottom:]:ChannelFilter.m">
-      </ContextState>
-      <ContextState
-         contextName = "-[MessagesViewController deleteSelectedMessages]:MessagesViewController.m">
-         <PersistentStrings>
-            <PersistentString
-               value = "self.selectedMessages">
-            </PersistentString>
-         </PersistentStrings>
-      </ContextState>
-      <ContextState
-         contextName = "-[TL_invokeAfter serialize:]:MTProto.m">
-      </ContextState>
-      <ContextState
-         contextName = "__44-[TGUpdateChannels proccessStatefullUpdate:]_block_invoke:TGUpdateChannels.m">
-      </ContextState>
-      <ContextState
          contextName = "__93-[Storage loadChannelMessages:min_id:max_id:minDate:maxDate:limit:filterMask:important:next:]_block_invoke:Storage.m">
          <PersistentStrings>
             <PersistentString
@@ -495,6 +472,29 @@
                value = "groups">
             </PersistentString>
          </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "__45-[NewContactsManager importContact:callback:]_block_invoke:NewContactsManager.m">
+      </ContextState>
+      <ContextState
+         contextName = "-[ChannelFilter fillGroupHoles:bottom:]:ChannelFilter.m">
+      </ContextState>
+      <ContextState
+         contextName = "__29-[Storage groupHole:min:max:]_block_invoke:Storage.m">
+      </ContextState>
+      <ContextState
+         contextName = "-[MessagesViewController deleteSelectedMessages]:MessagesViewController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.selectedMessages">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[TL_invokeAfter serialize:]:MTProto.m">
+      </ContextState>
+      <ContextState
+         contextName = "__44-[TGUpdateChannels proccessStatefullUpdate:]_block_invoke:TGUpdateChannels.m">
       </ContextState>
       <ContextState
          contextName = "__41-[AccountSettingsViewController loadView]_block_invoke143:AccountSettingsViewController.m">
@@ -618,13 +618,13 @@
          contextName = "__39-[SearchViewController searchByString:]_block_invoke_2:SearchViewController.m">
          <PersistentStrings>
             <PersistentString
+               value = "self.type &amp; SearchTypeGlobalUsers">
+            </PersistentString>
+            <PersistentString
                value = "tags">
             </PersistentString>
             <PersistentString
                value = "self.type">
-            </PersistentString>
-            <PersistentString
-               value = "self.type &amp; SearchTypeGlobalUsers">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -695,6 +695,12 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "__55-[FullChatManager loadFullChatByChatId:force:callback:]_block_invoke243:FullChatManager.m">
+      </ContextState>
+      <ContextState
+         contextName = "-[MessageSenderItem initWithMessage:forConversation:]:MessageSenderItem.m">
+      </ContextState>
+      <ContextState
          contextName = "__39-[Storage allChannels:deliveryOnQueue:]_block_invoke:Storage.m">
          <PersistentStrings>
             <PersistentString
@@ -707,12 +713,6 @@
                value = "messages">
             </PersistentString>
          </PersistentStrings>
-      </ContextState>
-      <ContextState
-         contextName = "-[MessageSenderItem initWithMessage:forConversation:]:MessageSenderItem.m">
-      </ContextState>
-      <ContextState
-         contextName = "__55-[FullChatManager loadFullChatByChatId:force:callback:]_block_invoke243:FullChatManager.m">
       </ContextState>
       <ContextState
          contextName = "__30-[Storage insertMessagesHole:]_block_invoke:Storage.m">
@@ -876,10 +876,10 @@
                value = "self.item.isset">
             </PersistentString>
             <PersistentString
-               value = "self.item.message">
+               value = "((TL_destructMessage *)self.item.message).ttl_seconds">
             </PersistentString>
             <PersistentString
-               value = "((TL_destructMessage *)self.item.message).ttl_seconds">
+               value = "self.item.message">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -1474,6 +1474,9 @@
          contextName = "__69-[MTDiscoverDatacenterAddressAction askForAnAddressDatacenterWithId:]_block_invoke:MTDiscoverDatacenterAddressAction.m">
       </ContextState>
       <ContextState
+         contextName = "__78-[ChannelHistoryController loadAroundMessagesWithMessage:limit:selectHandler:]_block_invoke:ChannelHistoryController.m">
+      </ContextState>
+      <ContextState
          contextName = "-[MessageTableCellAudioView setStateTextFieldString:]:MessageTableCellAudioView.m">
          <PersistentStrings>
             <PersistentString
@@ -1596,6 +1599,9 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "__32-[MessagesBottomView setDialog:]_block_invoke140:MessagesBottomView.m">
+      </ContextState>
+      <ContextState
          contextName = "-[TGPasslockModalView checkPassword]:TGPasslockModalView.m">
          <PersistentStrings>
             <PersistentString
@@ -1610,10 +1616,10 @@
                value = "self.table">
             </PersistentString>
             <PersistentString
-               value = "self.frameInit">
+               value = "self.view.bounds">
             </PersistentString>
             <PersistentString
-               value = "self.view.bounds">
+               value = "self.frameInit">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -1636,6 +1642,9 @@
          <PersistentStrings>
             <PersistentString
                value = "_historyController.selectLimit">
+            </PersistentString>
+            <PersistentString
+               value = "isFirst">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -1860,6 +1869,17 @@
          contextName = "__41-[GeneralSettingsViewController loadView]_block_invoke153:GeneralSettingsViewController.m">
       </ContextState>
       <ContextState
+         contextName = "__28-[ChatInfoHeaderView reload]_block_invoke:ChatInfoHeaderView.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "_notificationView">
+            </PersistentString>
+            <PersistentString
+               value = "_notificationView.isHidden">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "__56-[DocumentHistoryFilter remoteRequest:peer_id:callback:]_block_invoke:DocumentHistoryFilter.m">
       </ContextState>
       <ContextState
@@ -1872,9 +1892,6 @@
                value = "searchString.lenght">
             </PersistentString>
          </PersistentStrings>
-      </ContextState>
-      <ContextState
-         contextName = "__open_card_block_invoke_2:FileUtils.m">
       </ContextState>
       <ContextState
          contextName = "__42-[TGSModalSenderView sendAsMedia:rowItem:]_block_invoke_2:TGSModalSenderView.m">
@@ -1894,15 +1911,7 @@
          contextName = "__40-[TGChannelsPolling launchTimer:repeat:]_block_invoke_2:TGChannelsPolling.m">
       </ContextState>
       <ContextState
-         contextName = "__28-[ChatInfoHeaderView reload]_block_invoke:ChatInfoHeaderView.m">
-         <PersistentStrings>
-            <PersistentString
-               value = "_notificationView">
-            </PersistentString>
-            <PersistentString
-               value = "_notificationView.isHidden">
-            </PersistentString>
-         </PersistentStrings>
+         contextName = "__open_card_block_invoke_2:FileUtils.m">
       </ContextState>
       <ContextState
          contextName = "-[MessageTableCellVideoView open]:MessageTableCellVideoView.m">
@@ -1950,10 +1959,10 @@
          contextName = "__81-[Storage loadImportantChannelMessages:localMaxId:limit:next:maxDate:filterMask:]_block_invoke:Storage.m">
          <PersistentStrings>
             <PersistentString
-               value = "messages">
+               value = "msg.flags">
             </PersistentString>
             <PersistentString
-               value = "msg.flags">
+               value = "messages">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -2116,6 +2125,9 @@
          contextName = "-[TGPVImageView setObject:]:TGPVImageView.m">
       </ContextState>
       <ContextState
+         contextName = "__66-[ChatHistoryController request:anotherSource:sync:selectHandler:]_block_invoke_2307:ChatHistoryController.m">
+      </ContextState>
+      <ContextState
          contextName = "__72-[Storage loadChannelMessages:localMaxId:limit:next:maxDate:filterMask:]_block_invoke:Storage.m">
       </ContextState>
       <ContextState
@@ -2198,15 +2210,15 @@
          contextName = "-[TGWebpageArticleContainer setWebpage:]:TGWebpageArticleContainer.m">
       </ContextState>
       <ContextState
+         contextName = "__35-[TGUpdateChannels proccessUpdate:]_block_invoke:TGUpdateChannels.m">
+      </ContextState>
+      <ContextState
          contextName = "-[SearchMessagesView initWithFrame:]:SearchMessagesView.m">
          <PersistentStrings>
             <PersistentString
                value = "frameRect">
             </PersistentString>
          </PersistentStrings>
-      </ContextState>
-      <ContextState
-         contextName = "__35-[TGUpdateChannels proccessUpdate:]_block_invoke:TGUpdateChannels.m">
       </ContextState>
       <ContextState
          contextName = "-[TGMultipleSelectTextView _checkClickCount:]:TGMultipleSelectTextView.m">
@@ -2403,10 +2415,10 @@
          contextName = "-[Storage createAndCheckDatabase:]:Storage.m">
          <PersistentStrings>
             <PersistentString
-               value = "encryptionKey">
+               value = "encryptedDatabasePath">
             </PersistentString>
             <PersistentString
-               value = "encryptedDatabasePath">
+               value = "encryptionKey">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -2454,6 +2466,9 @@
       </ContextState>
       <ContextState
          contextName = "__38-[TGEnterPasswordPanel initWithFrame:]_block_invoke_3:TGEnterPasswordPanel.m">
+      </ContextState>
+      <ContextState
+         contextName = "__55-[FullChatManager loadFullChatByChatId:force:callback:]_block_invoke224:FullChatManager.m">
       </ContextState>
       <ContextState
          contextName = "__38-[UserNameViewContainer updateChecker]_block_invoke_2:UserNameViewController.m">
@@ -2568,6 +2583,9 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "__39-[ChatAvatarImageView updateChatPhoto:]_block_invoke198:ChatAvatarImageView.m">
+      </ContextState>
+      <ContextState
          contextName = "-[TGModernEncryptedUpdates proccess1Layer:]:TGModernEncryptedUpdates.m">
       </ContextState>
       <ContextState
@@ -2649,7 +2667,7 @@
          contextName = "__51-[NewContactsManager importCloudContacts:callback:]_block_invoke:NewContactsManager.m">
          <PersistentStrings>
             <PersistentString
-               value = "importedSet.count">
+               value = "abset.count">
             </PersistentString>
             <PersistentString
                value = "count">
@@ -2658,10 +2676,10 @@
                value = "import">
             </PersistentString>
             <PersistentString
-               value = "changedSet.count">
+               value = "importedSet.count">
             </PersistentString>
             <PersistentString
-               value = "abset.count">
+               value = "changedSet.count">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -2697,16 +2715,16 @@
                value = "allItems">
             </PersistentString>
             <PersistentString
-               value = "self.conversation.sync_message_id">
-            </PersistentString>
-            <PersistentString
                value = "memory">
             </PersistentString>
             <PersistentString
-               value = "sync">
+               value = "self.conversation.sync_message_id">
             </PersistentString>
             <PersistentString
                value = "_controller.conversation.sync_message_id">
+            </PersistentString>
+            <PersistentString
+               value = "sync">
             </PersistentString>
             <PersistentString
                value = "_nextState">
@@ -3277,7 +3295,7 @@
          contextName = "__42-[NewContactsManager importCloudContacts:]_block_invoke:NewContactsManager.m">
          <PersistentStrings>
             <PersistentString
-               value = "changeSet.count">
+               value = "abset.count">
             </PersistentString>
             <PersistentString
                value = "deleteSet">
@@ -3286,7 +3304,7 @@
                value = "importedSet.count">
             </PersistentString>
             <PersistentString
-               value = "abset.count">
+               value = "changeSet.count">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -3343,6 +3361,9 @@
          <PersistentStrings>
             <PersistentString
                value = "filterClass">
+            </PersistentString>
+            <PersistentString
+               value = "self.filter.class">
             </PersistentString>
          </PersistentStrings>
       </ContextState>

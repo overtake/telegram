@@ -1221,7 +1221,7 @@
         
         
         if(type == 1) {
-            if(self.dialog.type == DialogTypeChat)
+            if(self.dialog.type == DialogTypeChat || self.dialog.type == DialogTypeChannel)
                 [TGMentionPopup show:search chat:self.dialog.chat view:self.window.contentView ofRect:rect callback:callback];
         } else if(type == 2) {
             [TGHashtagPopup show:search peer_id:self.dialog.peer_id view:self.window.contentView ofRect:rect callback:callback];
