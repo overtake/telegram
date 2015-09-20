@@ -1686,16 +1686,17 @@ static NSTextAttachment *headerMediaIcon() {
 - (void)messageReadNotification:(NSNotification *)notify {
     
     NSArray *readed = [notify.userInfo objectForKey:KEY_MESSAGE_ID_LIST];
+
     
-    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"self.message.n_id IN %@", readed];
-    
-    NSArray *filtred = [self.messages filteredArrayUsingPredicate:predicate];
+    NSArray *filtred = [self.historyController.filter.class items:readed];
     
     for (MessageTableItem *msg in filtred) {
         msg.message.flags&= ~TGUNREADMESSAGE;
-        MessageTableCellContainerView *view = (MessageTableCellContainerView *)[self cellForRow:[self.messages indexOfObject:msg]];
-        if([view isKindOfClass:[MessageTableCellContainerView class]]) {
-            [view checkActionState:YES];
+        
+        NSUInteger idx = [self indexOfObject:msg];
+        
+        if(idx != NSNotFound) {
+            [self.table reloadDataForRowIndexes:[NSIndexSet indexSetWithIndex:idx] columnIndexes:[NSIndexSet indexSetWithIndex:0]];
         }
     }
 }
@@ -2306,7 +2307,6 @@ static NSTextAttachment *headerMediaIcon() {
                         
                         dispatch_block_t block = ^{
                             
-                            NSRect rect = [self.table visibleRect];
                             
                         
                             
@@ -2815,7 +2815,7 @@ static NSTextAttachment *headerMediaIcon() {
                 self.didUpdatedTable();
             }
             
-            if(prevResult.count+1 < _historyController.selectLimit) {
+            if(prevResult.count+1 < 10) {
                 [self loadhistory:0 toEnd:YES prev:NO isFirst:NO];
             }
         }

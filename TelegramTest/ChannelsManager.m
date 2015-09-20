@@ -29,6 +29,7 @@
                 current.read_inbox_max_id = dialog.read_inbox_max_id;
                 current.top_important_message = dialog.top_important_message;
                 current.unread_important_count = dialog.unread_important_count;
+                current.invisibleChannel = dialog.invisibleChannel;
             } else {
                 [self->list addObject:dialog];
                 [self->keys setObject:dialog forKey:@(dialog.peer_id)];

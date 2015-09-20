@@ -570,7 +570,6 @@
 		C2B0DF8C1BA9CE290023982C /* TGUserContainerRowItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C2B0DF8B1BA9CE290023982C /* TGUserContainerRowItem.m */; };
 		C2B0DF8F1BAAD9330023982C /* ComposeManagmentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C2B0DF8E1BAAD9330023982C /* ComposeManagmentViewController.m */; };
 		C2B0DF921BAAFD2E0023982C /* ComposeChannelParticipantsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C2B0DF911BAAFD2E0023982C /* ComposeChannelParticipantsViewController.m */; };
-		C2B0DF951BAAFDA20023982C /* ComposeChannelMembersViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C2B0DF941BAAFDA20023982C /* ComposeChannelMembersViewController.m */; };
 		C2B0DF991BAAFEFA0023982C /* TGModalDeleteChannelMessagesView.m in Sources */ = {isa = PBXBuildFile; fileRef = C2B0DF981BAAFEFA0023982C /* TGModalDeleteChannelMessagesView.m */; };
 		C2B0DF9C1BAB07DD0023982C /* ComposeActionBlackListBehavior.m in Sources */ = {isa = PBXBuildFile; fileRef = C2B0DF9B1BAB07DD0023982C /* ComposeActionBlackListBehavior.m */; };
 		C2B0DF9F1BAB13820023982C /* ComposeActionDeleteChannelMessagesBehavior.m in Sources */ = {isa = PBXBuildFile; fileRef = C2B0DF9E1BAB13820023982C /* ComposeActionDeleteChannelMessagesBehavior.m */; };
@@ -788,6 +787,7 @@
 		C2D51C381B25F5A8009327C0 /* TGStickerPackEmojiController.m in Sources */ = {isa = PBXBuildFile; fileRef = C2D51C371B25F5A8009327C0 /* TGStickerPackEmojiController.m */; };
 		C2D51C3E1B2618DE009327C0 /* TGTransformScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = C2D51C3D1B2618DE009327C0 /* TGTransformScrollView.m */; };
 		C2D5CE841B0B938B009F6419 /* SpacemanBlocks.h in Sources */ = {isa = PBXBuildFile; fileRef = CEA589441815827500462DF0 /* SpacemanBlocks.h */; };
+		C2D777301BAEA30B00D451FD /* ComposeSettingupNewChannelViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C2D7772F1BAEA30B00D451FD /* ComposeSettingupNewChannelViewController.m */; };
 		C2D7C5B11B2B4FAF0042DC01 /* TGMenuItemPhoto.m in Sources */ = {isa = PBXBuildFile; fileRef = C2D7C5B01B2B4FAF0042DC01 /* TGMenuItemPhoto.m */; };
 		C2D7C5BE1B3091400042DC01 /* StartBotSenderItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C2D7C5BD1B3091400042DC01 /* StartBotSenderItem.m */; };
 		C2D825D61B67B22E00434D37 /* CacheSettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C2D825D51B67B22E00434D37 /* CacheSettingsViewController.m */; };
@@ -2152,8 +2152,6 @@
 		C2B0DF8E1BAAD9330023982C /* ComposeManagmentViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ComposeManagmentViewController.m; sourceTree = "<group>"; };
 		C2B0DF901BAAFD2E0023982C /* ComposeChannelParticipantsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ComposeChannelParticipantsViewController.h; sourceTree = "<group>"; };
 		C2B0DF911BAAFD2E0023982C /* ComposeChannelParticipantsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ComposeChannelParticipantsViewController.m; sourceTree = "<group>"; };
-		C2B0DF931BAAFDA20023982C /* ComposeChannelMembersViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ComposeChannelMembersViewController.h; sourceTree = "<group>"; };
-		C2B0DF941BAAFDA20023982C /* ComposeChannelMembersViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ComposeChannelMembersViewController.m; sourceTree = "<group>"; };
 		C2B0DF971BAAFEFA0023982C /* TGModalDeleteChannelMessagesView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGModalDeleteChannelMessagesView.h; sourceTree = "<group>"; };
 		C2B0DF981BAAFEFA0023982C /* TGModalDeleteChannelMessagesView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGModalDeleteChannelMessagesView.m; sourceTree = "<group>"; };
 		C2B0DF9A1BAB07DD0023982C /* ComposeActionBlackListBehavior.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ComposeActionBlackListBehavior.h; sourceTree = "<group>"; };
@@ -2425,6 +2423,8 @@
 		C2D51C371B25F5A8009327C0 /* TGStickerPackEmojiController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGStickerPackEmojiController.m; sourceTree = "<group>"; };
 		C2D51C3C1B2618DE009327C0 /* TGTransformScrollView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGTransformScrollView.h; sourceTree = "<group>"; };
 		C2D51C3D1B2618DE009327C0 /* TGTransformScrollView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGTransformScrollView.m; sourceTree = "<group>"; };
+		C2D7772E1BAEA30B00D451FD /* ComposeSettingupNewChannelViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ComposeSettingupNewChannelViewController.h; sourceTree = "<group>"; };
+		C2D7772F1BAEA30B00D451FD /* ComposeSettingupNewChannelViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ComposeSettingupNewChannelViewController.m; sourceTree = "<group>"; };
 		C2D7C5AF1B2B4FAF0042DC01 /* TGMenuItemPhoto.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGMenuItemPhoto.h; sourceTree = "<group>"; };
 		C2D7C5B01B2B4FAF0042DC01 /* TGMenuItemPhoto.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGMenuItemPhoto.m; sourceTree = "<group>"; };
 		C2D7C5BC1B3091400042DC01 /* StartBotSenderItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StartBotSenderItem.h; sourceTree = "<group>"; };
@@ -5246,8 +5246,8 @@
 				C2B0DF8E1BAAD9330023982C /* ComposeManagmentViewController.m */,
 				C2B0DF901BAAFD2E0023982C /* ComposeChannelParticipantsViewController.h */,
 				C2B0DF911BAAFD2E0023982C /* ComposeChannelParticipantsViewController.m */,
-				C2B0DF931BAAFDA20023982C /* ComposeChannelMembersViewController.h */,
-				C2B0DF941BAAFDA20023982C /* ComposeChannelMembersViewController.m */,
+				C2D7772E1BAEA30B00D451FD /* ComposeSettingupNewChannelViewController.h */,
+				C2D7772F1BAEA30B00D451FD /* ComposeSettingupNewChannelViewController.m */,
 			);
 			name = channels;
 			sourceTree = "<group>";
@@ -6282,6 +6282,7 @@
 				0A4B0A7B186EED080016D80F /* SearchViewController.m in Sources */,
 				C222AB321A08FF2B00BEF907 /* PhotoCollectionTableView.m in Sources */,
 				C248F3E319BE08A800BF658E /* flac.c in Sources */,
+				C2D777301BAEA30B00D451FD /* ComposeSettingupNewChannelViewController.m in Sources */,
 				0AB8501E1875AC38001A796C /* TMRowItem.m in Sources */,
 				C21D482E19ACB7CD000F06E1 /* AccountSettingsViewController.m in Sources */,
 				C2C1DC1D1A443CCB00BBCC63 /* StickersPanelView.m in Sources */,
@@ -6871,7 +6872,6 @@
 				C2531F751966C15800F7D7A2 /* ViewAcceptMoveWindow.m in Sources */,
 				C2A5BFC018DC80620021BE68 /* opusfile.c in Sources */,
 				C20A7E5C19D7064D008844F2 /* TGDatacenterWatchdogActor.m in Sources */,
-				C2B0DF951BAAFDA20023982C /* ComposeChannelMembersViewController.m in Sources */,
 				0A9EDC531897BA0E0037E1BC /* NSView+RBLAlignmentAdditions.m in Sources */,
 				C20B228818E971D0007BCCD6 /* bitwise.c in Sources */,
 				C2D4B8791AFCE8FA0035B4E4 /* YapDatabaseTransaction.m in Sources */,

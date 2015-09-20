@@ -1231,7 +1231,7 @@ TL_localMessage *parseMessage(FMResultSet *result) {
         int flags = n_out ? 3 : 1;
         
         
-        FMResultSet *result = [db executeQuery:@"select n_id from messages where n_id <= ? and peer_id = ? and flags & ? = ?",@(max_id),@(conversation.peer.peer_id),@(flags),@(flags)];
+        FMResultSet *result = [db executeQuery:@"select n_id from messages where (n_id <= ? OR dstate=?) and peer_id = ? and flags & ? = ?",@(max_id),@(DeliveryStatePending),@(conversation.peer_id),@(flags),@(flags)];
         
         while ([result next]) {
             
@@ -2738,6 +2738,7 @@ TL_localMessage *parseMessage(FMResultSet *result) {
             TL_conversation *channel = [TL_conversation createWithPeer:[TL_peerChannel createWithChannel_id:-[result intForColumn:@"peer_id"]] top_message:[result intForColumn:@"top_message"] unread_count:[result intForColumn:@"unread_count"] last_message_date:[result intForColumn:@"last_message_date"] notify_settings:[TLClassStore deserialize:[result dataForColumn:@"notify_settings"]] last_marked_message:[result intForColumn:@"last_marked_message"] top_message_fake:0 last_marked_date:[result intForColumn:@"last_marked_date"] sync_message_id:[result intForColumn:@"sync_message_id"] read_inbox_max_id:[result intForColumn:@"read_inbox_max_id"] unread_important_count:[result intForColumn:@"unread_important_count"] lastMessage:message pts:[result intForColumn:@"pts"] isInvisibleChannel:[result boolForColumn:@"is_invisible"] top_important_message:[result intForColumn:@"top_important_message"]];
             
             
+
             [channels addObject:channel];
 
         }

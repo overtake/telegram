@@ -361,6 +361,20 @@
         //TODO
         // update channel interface.
         
+        
+        TL_conversation *channel = [self conversationWithChannelId:[update channel_id]];
+        
+        if(!channel) {
+            TL_conversation *channel = [[DialogsManager sharedManager] createDialogForChannel:[[ChatsManager sharedManager] find:[update channel_id]]];
+            
+            channel.invisibleChannel = NO;
+            [channel save];
+            
+            [[ChannelsManager sharedManager] add:@[channel]];
+        }
+        
+        [self failUpdateWithChannelId:[update channel_id] limit:100 withCallback:nil];
+        
     }
 
 }

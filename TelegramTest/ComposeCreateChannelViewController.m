@@ -220,31 +220,31 @@
     
     
     
-    
-    GeneralSettingsRowItem *discussionItem = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeSwitch callback:^(GeneralSettingsRowItem *item) {
-        
-        _headerItem.discussion = !_headerItem.discussion;
-        
-        [self updateCompose];
-        
-    } description:NSLocalizedString(@"Channel.Discussion", nil) height:60 stateback:^id(GeneralSettingsRowItem *item) {
-        
-        return @(_headerItem.discussion);
-        
-    }];
-    
-    
-    discussionItem.xOffset = 30;
-    
-    [self.tableView addItem:discussionItem tableRedraw:NO];
-    
-    
-    GeneralSettingsBlockHeaderItem *discussionDescription = [[GeneralSettingsBlockHeaderItem alloc] initWithString:NSLocalizedString(@"Channel.DiscussionEnableDescription", nil) height:62 flipped:YES];
-    
-    discussionDescription.xOffset = 30;
-    
-    
-    [self.tableView addItem:discussionDescription tableRedraw:NO];
+//    
+//    GeneralSettingsRowItem *discussionItem = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeSwitch callback:^(GeneralSettingsRowItem *item) {
+//        
+//        _headerItem.discussion = !_headerItem.discussion;
+//        
+//        [self updateCompose];
+//        
+//    } description:NSLocalizedString(@"Channel.Discussion", nil) height:60 stateback:^id(GeneralSettingsRowItem *item) {
+//        
+//        return @(_headerItem.discussion);
+//        
+//    }];
+//    
+//    
+//    discussionItem.xOffset = 30;
+//    
+//    [self.tableView addItem:discussionItem tableRedraw:NO];
+//    
+//    
+//    GeneralSettingsBlockHeaderItem *discussionDescription = [[GeneralSettingsBlockHeaderItem alloc] initWithString:NSLocalizedString(@"Channel.DiscussionEnableDescription", nil) height:62 flipped:YES];
+//    
+//    discussionDescription.xOffset = 30;
+//    
+//    
+//    [self.tableView addItem:discussionDescription tableRedraw:NO];
     
     
     [self.tableView reloadData];

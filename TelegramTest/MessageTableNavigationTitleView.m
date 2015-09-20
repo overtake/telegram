@@ -176,6 +176,8 @@
 
     [self.nameTextField sizeToFit];
     
+    [self.nameTextField setFrameSize:NSMakeSize(MIN(NSWidth(self.frame) - 60,NSWidth(self.nameTextField.frame)), NSHeight(self.nameTextField.frame))];
+    
     [_nameTextField setCenteredXByView:_nameTextField.superview];
     [_nameTextField setFrameOrigin:NSMakePoint(NSMinX(_nameTextField.frame), self.bounds.size.height - self.nameTextField.bounds.size.height - 4)];
     

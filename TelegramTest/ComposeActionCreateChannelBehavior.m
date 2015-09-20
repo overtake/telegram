@@ -53,7 +53,7 @@
 -(void)composeDidDone {
     if([self.action.currentViewController isKindOfClass:[ComposeCreateChannelViewController class]]) {
         
-        [[Telegram rightViewController] showComposeWithAction:self.action];
+        [[Telegram rightViewController] showComposeSettingsupNewChannel:self.action];
         
     } else if([self.action.currentViewController isKindOfClass:[ComposePickerViewController class]]) {
         

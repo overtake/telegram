@@ -29,7 +29,7 @@ static TGChannelsPolling *channelPolling;
             
             static dispatch_once_t onceToken;
             dispatch_once(&onceToken, ^{
-                channelPolling = [[TGChannelsPolling alloc] initWithDelegate:self withUpdatesLimit:3];
+                channelPolling = [[TGChannelsPolling alloc] initWithDelegate:self withUpdatesLimit:50];
                 
             });
             

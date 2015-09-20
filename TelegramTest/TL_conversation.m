@@ -113,6 +113,15 @@
     return YES;
 }
 
+-(BOOL)isInvisibleChannel {
+    
+    if(_invisibleChannel) {
+        int bp = 0;
+    }
+    
+    return _invisibleChannel;
+}
+
 - (TL_broadcast *)broadcast {
     return [[BroadcastManager sharedManager] find:self.peer.peer_id];
 }

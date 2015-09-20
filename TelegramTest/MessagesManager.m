@@ -389,13 +389,6 @@ static const int seconds_to_notify = 120;
         
         [[Storage manager] markAllInConversation:conversation max_id:max_id out:n_out completeHandler:^(NSArray *ids) {
             
-            [ids enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
-                
-                TL_localMessage *message = self.messages[obj];
-                 message.flags&=~TGUNREADMESSAGE;
-                
-            }];
-            
             dispatch_async(queue, ^{
                 callback(ids);
             });
