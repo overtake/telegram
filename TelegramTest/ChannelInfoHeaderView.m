@@ -230,6 +230,8 @@
     
     TLChat *chat = self.controller.chat;
     
+    self.avatarImageView.sourceType = ChatAvatarSourceChannel;
+    
      [self rebuildOrigins];
     
     _composeActionManagment = [[ComposeAction alloc] initWithBehaviorClass:[ComposeActionBehavior class] filter:@[] object:chat];
@@ -269,6 +271,8 @@
         
         [self buildNotificationsTitle];
         
+        
+        self.avatarImageView.sourceType = ChatAvatarSourceChannel;
         [self.avatarImageView setChat:chat];
         [self.avatarImageView rebuild];
         

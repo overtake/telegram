@@ -294,6 +294,16 @@
     
     UploadOperation *operation = [[UploadOperation alloc] init];
     [operation setUploadComplete:^(UploadOperation *operation, id input) {
+        
+        
+        if(self.sourceType == ChatAvatarSourceGroup) {
+            request = [TLAPI_messages_editChatPhoto createWithChat_id:lockId photo:[TL_inputChatUploadedPhoto createWithFile:input crop:[TL_inputPhotoCropAuto create]]];
+        } else if(self.sourceType == ChatAvatarSourceChannel) {
+            request = [TLAPI_channels_editPhoto createWithChannel:self.chat.inputPeer photo:[TL_inputChatUploadedPhoto createWithFile:input crop:[TL_inputPhotoCropAuto create]]];
+        } else {
+            request = [TLAPI_photos_uploadProfilePhoto createWithFile:input caption:@"me" geo_point:[TL_inputGeoPointEmpty create] crop:[TL_inputPhotoCropAuto create]];
+        }
+        
         if(self.sourceType == ChatAvatarSourceGroup || self.sourceType == ChatAvatarSourceChannel) {
             groupBlock();
         } else {
