@@ -829,6 +829,9 @@
 }
 
 -(void)open_link:(NSString *)link  itsReal:(BOOL)itsReal {
+    
+    itsReal = itsReal || [link rangeOfString:@"USER_PROFILE:"].location != NSNotFound || [link rangeOfString:@"openWithPeer"].location != NSNotFound;
+    
     if(itsReal) {
         open_link(link);
     } else {

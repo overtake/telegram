@@ -302,8 +302,6 @@
         }
         
         
-        
-        
         [_commentsSwitch setOn:!chat.isBroadcast];
         
         [self.sharedLinksButton setConversation:self.controller.chat.dialog];
