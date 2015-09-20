@@ -89,8 +89,10 @@
     
     [self.doneButton.superview setFrameSize:self.doneButton.frame.size];
     self.rightNavigationBarView = (TMView *) self.doneButton.superview;
-
     
 }
+
+
+
 
 @end

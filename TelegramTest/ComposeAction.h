@@ -32,7 +32,7 @@
 
 @property (nonatomic,strong,readonly) ComposeActionBehavior *behavior;
 @property (nonatomic,strong,readonly) NSArray *filter;
-@property (nonatomic,strong,readonly) id object;
+@property (nonatomic,strong) id object;
 
 @property (nonatomic,strong) id reservedObject1;
 @property (nonatomic,strong) id reservedObject2;

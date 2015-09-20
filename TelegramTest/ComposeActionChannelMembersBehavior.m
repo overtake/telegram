@@ -49,10 +49,10 @@
 }
 
 -(void)composeDidDone {
-    [self.delegate behaviorDidStartRequest];
-    
-    [self banUsers:[self.action.result.multiObjects mutableCopy]];
-}
+    if(self.action.result.multiObjects > 0) {
+        [self banUsers:[self.action.result.multiObjects mutableCopy]];
+        [self.delegate behaviorDidStartRequest];
+    }}
 
 
 -(void)banUsers:(NSMutableArray *)users {
@@ -68,6 +68,8 @@
             
             if(users.count == 0) {
                 [self.delegate behaviorDidEndRequest:nil];
+            } else {
+                [self banUsers:users];
             }
             
         } errorHandler:^(id request, RpcError *error) {

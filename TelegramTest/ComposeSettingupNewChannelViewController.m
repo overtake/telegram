@@ -8,8 +8,61 @@
 
 #import "ComposeSettingupNewChannelViewController.h"
 #import "TGSettingsTableView.h"
+#import "TGChangeUserNameContainerView.h"
+
+@interface TGUserNameContainerRowItem : TGGeneralRowItem
+@property (nonatomic,strong) TGChangeUserObserver *observer;
+@end
+
+@interface TGUserNameContainerRowView : TMRowView
+@property (nonatomic,strong) TGChangeUserNameContainerView *container;
+@end
+
+@implementation TGUserNameContainerRowView
+
+-(instancetype)initWithFrame:(NSRect)frameRect {
+    if(self =[super initWithFrame:frameRect]) {
+        _container = [[TGChangeUserNameContainerView alloc] initWithFrame:self.bounds observer:nil];
+        
+        [self addSubview:_container];
+    }
+    
+    return self;
+}
+
+-(void)redrawRow {
+    [super redrawRow];
+        
+    TGUserNameContainerRowItem *item = (TGUserNameContainerRowItem *) [self rowItem];
+    
+    [_container setOberser:item.observer];
+}
+
+-(void)setFrameSize:(NSSize)newSize {
+    [super setFrameSize:newSize];
+    
+    [_container setFrameSize:newSize];
+}
+
+@end
+
+
+
+
+@implementation TGUserNameContainerRowItem
+
+-(Class)viewClass {
+    return [TGUserNameContainerRowView class];
+}
+
+
+@end
+
+
 @interface ComposeSettingupNewChannelViewController ()
 @property (nonatomic,strong) TGSettingsTableView *tableView;
+@property (nonatomic,strong) TGUserNameContainerRowItem *userNameContainerItem;
+@property (nonatomic,strong) GeneralSettingsBlockHeaderItem *joinLinkItem;
 @end
 
 @implementation ComposeSettingupNewChannelViewController
@@ -23,6 +76,7 @@
     [self.view addSubview:_tableView.containerView];
     
     
+    
 }
 
 
@@ -31,8 +85,53 @@
     
     self.action.result = [[ComposeResult alloc] init];
     
+    self.action.result.singleObject = @(YES);
+    
+    _userNameContainerItem = [[TGUserNameContainerRowItem alloc] initWithHeight:100];
+    _userNameContainerItem.observer = [[TGChangeUserObserver alloc] initWithDescription:NSLocalizedString(@"Channel.NewChannelSettingUpUserNameDescription", nil) placeholder:@"" defaultUserName:@""];
+    
+    
+    TL_chatInviteExported *export = self.action.reservedObject1;
+    
+    _joinLinkItem = [[GeneralSettingsBlockHeaderItem alloc] initWithString:export.link height:42 flipped:NO];
+    _joinLinkItem.xOffset = 30;
+    [_joinLinkItem setTextColor:TEXT_COLOR];
+    [_joinLinkItem setFont:TGSystemFont(15)];
+    _joinLinkItem.drawsSeparator = YES;
+    
+    weak();
+    
+    [_userNameContainerItem.observer setWillNeedSaveUserName:^(NSString *username) {
+        if(username.length >= 5) {
+            
+            weakSelf.action.reservedObject2 = username;
+           
+            [weakSelf.action.behavior composeDidDone];
+            
+        }
+    }];
+    
+    [_userNameContainerItem.observer setDidChangedUserName:^(NSString *username, BOOL accept) {
+        
+        weakSelf.action.reservedObject2 = username;
+        
+        if(!accept) {
+            weakSelf.action.reservedObject2 = nil;
+        }
+        
+    }];
+    
+    [_userNameContainerItem.observer setNeedApiObjectWithUserName:^id(NSString *username) {
+        
+        return [TLAPI_channels_checkUsername createWithChannel:[weakSelf.action.object inputPeer] username:username];
+    }];
+
+    
     [self reload];
 }
+
+
+
 
 
 -(void)reload {
@@ -49,14 +148,17 @@
 
         self.action.result.singleObject = @(YES);
         
+        [self reload];
+        
     } description:NSLocalizedString(@"Channel.Public", nil) height:42 stateback:^id(GeneralSettingsRowItem *item) {
         return self.action.result.singleObject;
     }];
     
     GeneralSettingsRowItem *privateSelector = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeSelected callback:^(GeneralSettingsRowItem *item) {
         
+         self.action.result.singleObject = @(NO);
         
-        self.action.result.singleObject = @(NO);
+         [self reload];
         
     } description:NSLocalizedString(@"Channel.Private", nil) height:42 stateback:^id(GeneralSettingsRowItem *item) {
         return @(![self.action.result.singleObject boolValue]);
@@ -78,7 +180,29 @@
     [self.tableView addItem:selectorDesc tableRedraw:NO];
     
     
+    if([self.action.result.singleObject boolValue]) {
+        [self.tableView addItem:_userNameContainerItem tableRedraw:NO];
+    } else {
+        [self.tableView addItem:_joinLinkItem tableRedraw:NO];
+        
+
+        
+        GeneralSettingsBlockHeaderItem *joinDescription = [[GeneralSettingsBlockHeaderItem alloc] initWithString:NSLocalizedString(@"Channel.NewChannelSettingUpJoinLinkDescription", nil) height:42 flipped:YES];
+        
+        [self.tableView addItem:joinDescription tableRedraw:NO];
+        
+        joinDescription.xOffset = 30;
+    }
+   
+    
+    
+    
+    
     [self.tableView reloadData];
+}
+
+-(void)performEnter {
+    
 }
 
 @end

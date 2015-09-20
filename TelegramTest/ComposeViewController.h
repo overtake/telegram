@@ -13,8 +13,6 @@
 @property (nonatomic,strong,readonly) TMTextButton *doneButton;
 @property (nonatomic,strong) ComposeAction *action;
 
--(void)setAction:(ComposeAction *)action animated:(BOOL)animated;
-
 @property (nonatomic,assign,setter=setLoading:) BOOL isLoading;
 
 @end

@@ -49,9 +49,11 @@
 }
 
 -(void)composeDidDone {
-    [self.delegate behaviorDidStartRequest];
     
-    [self unbanUsers:[self.action.result.multiObjects mutableCopy]];
+    if(self.action.result.multiObjects > 0) {
+        [self unbanUsers:[self.action.result.multiObjects mutableCopy]];
+        [self.delegate behaviorDidStartRequest];
+    }
 }
 
 
@@ -67,6 +69,8 @@
             
             if(users.count == 0) {
                 [self.delegate behaviorDidEndRequest:nil];
+            } else {
+                [self unbanUsers:users];
             }
             
         } errorHandler:^(id request, RpcError *error) {

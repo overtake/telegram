@@ -139,6 +139,8 @@
         
         [dialog save];
         
+        [[ChannelsManager sharedManager] add:@[dialog]];
+        
         
         dialog.fake = YES;
         [self add:@[dialog]];
@@ -444,8 +446,14 @@
         
         id request = [TLAPI_messages_deleteChatUser createWithChat_id:dialog.chat.n_id user_id:[[UsersManager currentUser] inputUser]];
         
-        if(dialog.type == DialogTypeChannel)
+        if(dialog.type == DialogTypeChannel) {
             request = [TLAPI_channels_leaveChannel createWithChannel:dialog.chat.inputPeer];
+            if(dialog.chat.isAdmin) {
+                request = [TLAPI_channels_deleteChannel createWithChannel:dialog.chat.inputPeer];
+            }
+            
+        }
+        
         
         [RPCRequest sendRequest:request successHandler:^(RPCRequest *request, id response) {
             newBlock();

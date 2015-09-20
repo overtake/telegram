@@ -39,8 +39,9 @@
 @property (nonatomic,strong) NSString *lastUserName;
 @property (nonatomic,strong) NSString *checkedUserName;
 @property (nonatomic,strong) RPCRequest *request;
-
+@property (nonatomic,strong) TMTextField *telegramHolder;
 @property (nonatomic,strong) TMTextField *statusTextField;
+
 @end
 
 #define GC NSColorFromRGB(0x61ad5e)
@@ -62,7 +63,7 @@
         [self.progressView setStyle:NSProgressIndicatorSpinningStyle];
         
         
-        self.textView = [[UserInfoShortTextEditView alloc] initWithFrame:NSMakeRect(30, 50, NSWidth(self.frame) - 60, 23)];
+        self.textView = [[UserInfoShortTextEditView alloc] initWithFrame:NSMakeRect(30, 20, NSWidth(self.frame) - 60, 23)];
         
         [self.successView setFrameOrigin:NSMakePoint(NSWidth(self.textView.frame) - NSWidth(self.successView.frame), 8)];
         
@@ -80,6 +81,8 @@
         [self.textView addSubview:self.progressView];
         
         
+        
+        
         self.statusTextField = [TMTextField defaultTextField];
         
         [self.statusTextField setTextColor:[NSColor redColor]];
@@ -88,10 +91,20 @@
         
         [self.statusTextField sizeToFit];
         
-        [self.statusTextField setFrameOrigin:NSMakePoint(30, NSMinY(self.textView.frame) + 30)];
+        [self.statusTextField setFrameOrigin:NSMakePoint(30, NSMaxY(_textView.frame) + 5)];
         
         [self addSubview:self.statusTextField];
         
+        
+        _telegramHolder = [TMTextField defaultTextField];
+        [_telegramHolder setStringValue:@"telegram.me/"];
+        [_telegramHolder setFont:TGSystemFont(15)];
+        [_telegramHolder setTextColor:GRAY_TEXT_COLOR];
+        [_telegramHolder sizeToFit];
+        
+        [_telegramHolder setFrameOrigin:NSMakePoint(0, 8)];
+        [self.textView addSubview:_telegramHolder];
+        [self.textView.textView setFrameOrigin:NSMakePoint(NSMaxX(_telegramHolder.frame) - 5, 5)];
         
         
         NSMutableAttributedString *str = [[NSMutableAttributedString alloc] init];
@@ -110,10 +123,10 @@
         [self.textView.textView setAction:@selector(performEnter)];
         [self.textView.textView setTarget:self];
         [self.textView.textView setNextKeyView:self];
-        [self.textView.textView setFrameOrigin:NSMakePoint(0, NSMinY(self.textView.textView.frame))];
+        [self.textView.textView setFrameOrigin:NSMakePoint(NSMaxX(_telegramHolder.frame) - 5, NSMinY(self.textView.textView.frame))];
         
         
-        self.descriptionView = [[NSTextView alloc] initWithFrame:NSMakeRect(26, 92, NSWidth(self.frame) - 60, 100)];
+        self.descriptionView = [[NSTextView alloc] initWithFrame:NSMakeRect(26, NSMaxY(_textView.frame), NSWidth(self.frame) - 60, 100)];
         
         [self.descriptionView setString:NSLocalizedString(@"UserName.description", nil)];
         
@@ -185,6 +198,8 @@
     
 }
 
+
+
 - (void)controlTextDidChange:(NSNotification *)obj {
     
     if((self.textView.textView.stringValue.length >= 5 && [self isNumberValid]) || self.textView.textView.stringValue.length == 0) {
@@ -227,7 +242,7 @@
     if([self.textView.textView.stringValue isEqualToString:[self defaultUsername]]) {
         [self.progressView setHidden:YES];
         [self.progressView stopAnimation:self];
-        [self.successView setHidden:NO];
+        [self.successView setHidden:self.textView.textView.stringValue.length == 0];
         
         [self setState:nil color:nil];
         
@@ -323,7 +338,7 @@
     [self.statusTextField sizeToFit];
     self.statusTextField.textColor = color;
     
-    [self.descriptionView setFrameOrigin:NSMakePoint(26, !self.statusTextField.isHidden ? 100 : 80)];
+    [self.descriptionView setFrameOrigin:NSMakePoint(26, !self.statusTextField.isHidden ? NSMaxY(_statusTextField.frame)+5 : NSMaxY(_textView.frame)+5)];
     
 }
 

@@ -28,6 +28,7 @@
         _header = attr;
         self.height = height;
         _isFlipped = flipped;
+        self.drawsSeparator = NO;
     }
     
     return self;
@@ -110,11 +111,18 @@
     NSSize s = [item.header sizeForTextFieldForWidth:NSWidth(self.frame) - item.xOffset*2];
     
     [self.textField setFrameSize:NSMakeSize(NSWidth(self.frame) - item.xOffset*2, s.height )];
-    [self.textField setFrameOrigin:NSMakePoint(item.xOffset, item.isFlipped ? NSHeight(self.frame) - s.height : 0 )];
+    [self.textField setFrameOrigin:NSMakePoint(item.xOffset, item.isFlipped ? NSHeight(self.frame) - s.height : 2 )];
 }
 
 - (void)drawRect:(NSRect)dirtyRect {
     [super drawRect:dirtyRect];
+    
+    GeneralSettingsBlockHeaderItem *item = (GeneralSettingsBlockHeaderItem *)[self rowItem];
+    
+    if(item.drawsSeparator) {
+        [DIALOG_BORDER_COLOR set];
+        NSRectFill(NSMakeRect(item.xOffset, 0, NSWidth(dirtyRect) - item.xOffset*2, DIALOG_BORDER_WIDTH));
+    }
     
     // Drawing code here.
 }

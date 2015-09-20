@@ -8,7 +8,7 @@
 
 #import "ComposeActionCreateChannelBehavior.h"
 #import "SelectUserItem.h"
-
+#import "ComposeActionAddGroupMembersBehavior.h"
 @interface ComposeActionCreateChannelBehavior ()
 @property (nonatomic,strong) RPCRequest *request;
 @end
@@ -53,45 +53,67 @@
 -(void)composeDidDone {
     if([self.action.currentViewController isKindOfClass:[ComposeCreateChannelViewController class]]) {
         
-        [[Telegram rightViewController] showComposeSettingsupNewChannel:self.action];
-        
-    } else if([self.action.currentViewController isKindOfClass:[ComposePickerViewController class]]) {
-        
-        
-        [self.delegate behaviorDidStartRequest];
-        
         [self createChannel];
         
-    } else {
-        [self updateUserName];
+    } else if([self.action.currentViewController isKindOfClass:[ComposeSettingupNewChannelViewController class]]) {
+        
+        
+        [self updateChannel];
+        
     }
 }
 
--(void)updateUserName {
+-(void)updateChannel {
     
+    
+    BOOL isPublic = [self.action.result.singleObject boolValue];
+    
+    if(isPublic) {
+        
+        if([self.action.reservedObject2 length] >= 5) {
+            [TMViewController showModalProgress];
+            
+            [[ChatsManager sharedManager] updateChannelUserName:self.action.reservedObject2 channel:self.action.object completeHandler:^(TL_channel *channel) {
+                
+                [TMViewController hideModalProgressWithSuccess];
+                
+                [self showAddingCompose];
+                
+            } errorHandler:^(NSString *result) {
+                
+                [TMViewController hideModalProgress];
+                
+            }];
+
+        } else {
+             alert(appName(), NSLocalizedString(@"Channel.SetPublicUsernameDescription", nil));
+        }
+        
+            } else {
+        [self showAddingCompose];
+    }
+    
+}
+
+-(void)showAddingCompose {
+    [[Telegram rightViewController] clearStack];
+    
+    [[Telegram rightViewController] showByDialog:[self.action.object dialog] sender:self];
+    
+    [[Telegram rightViewController] showComposeWithAction:[[ComposeAction alloc] initWithBehaviorClass:[ComposeActionAddGroupMembersBehavior class] filter:@[[UsersManager currentUser]] object:[[FullChatManager sharedManager] find:[(TLChat *)self.action.object n_id]]]];
 }
 
 
 -(void)createChannel {
     
-    
-    NSArray *selected = self.action.result.multiObjects;
-    
-    
-    NSMutableArray *array = [[NSMutableArray alloc] init];
-    for(TLUser *item in selected) {
-        if(item.type != TLUserTypeSelf) {
-            [array addObject:[item inputUser]];
-        }
-        
-    }
+   [self.delegate behaviorDidStartRequest];
     
     if(self.action.result.stepResult.count < 2)
         return;
     
     BOOL discussion = [self.action.result.stepResult[1] intValue];
    
-    self.request = [RPCRequest sendRequest:[TLAPI_channels_createChannel createWithFlags:discussion ? 0 : 1 << 0 title:self.action.result.stepResult.firstObject[0] about:[self.action.result.stepResult.firstObject count] > 1 ? self.action.result.stepResult.firstObject[1] : nil users:array] successHandler:^(RPCRequest *request, TLUpdates * response) {
+    self.request = [RPCRequest sendRequest:[TLAPI_channels_createChannel createWithFlags:discussion ? 0 : 1 << 0 title:self.action.result.stepResult.firstObject[0] about:[self.action.result.stepResult.firstObject count] > 1 ? self.action.result.stepResult.firstObject[1] : nil users:nil] successHandler:^(RPCRequest *request, TLUpdates * response) {
         
         
         if(response.chats.count > 0) {
@@ -109,6 +131,8 @@
                 [conversation save];
                 
                 
+                self.action.object = channel;
+                
                 dispatch_block_t block = ^{
                     [self.delegate behaviorDidEndRequest:response];
                     
@@ -116,13 +140,26 @@
                     
                     [[Telegram rightViewController] showByDialog:channel.dialog sender:self];
                     
-                    self.action.result.singleObject = channel;
+                    [[Telegram rightViewController] showComposeSettingsupNewChannel:self.action];
                     
-                    [[Telegram rightViewController] showComposeChangeUserName:self.action];
+                    [self.delegate behaviorDidEndRequest:self];
                 };
                 
-                block();
-     
+                [RPCRequest sendRequest:[TLAPI_channels_exportInvite createWithChannel:channel.inputPeer] successHandler:^(id request, id response) {
+                    
+                    self.action.reservedObject1 = response;
+                    
+                    fullChat.exported_invite = response;
+                    
+                    [[Storage manager] insertFullChat:fullChat completeHandler:nil];
+                    
+                    block();
+                    
+                } errorHandler:^(id request, RpcError *error) {
+                    block();
+                }];
+                
+
                 
             }];
         

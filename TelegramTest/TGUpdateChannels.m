@@ -95,7 +95,12 @@
         
         if([statefullUpdates indexOfObject:[update className]] != NSNotFound)
         {
-            [self addStatefullUpdate:[[TGUpdateChannelContainer alloc] initWithPts:[update pts] pts_count:[update pts_count] channel_id:[self channelIdWithUpdate:update] update:update]];
+            
+            if(_channelsInUpdating[@([self channelIdWithUpdate:update])] == nil) {
+                [self addStatefullUpdate:[[TGUpdateChannelContainer alloc] initWithPts:[update pts] pts_count:[update pts_count] channel_id:[self channelIdWithUpdate:update] update:update]];
+            }
+            
+            
         }  else if([statelessUpdates indexOfObject:[update className]] != NSNotFound) {
             [self proccessStatelessUpdate:update];
         } else if([update isKindOfClass:[TGForceChannelUpdate class]]) {
@@ -370,7 +375,6 @@
             channel.invisibleChannel = NO;
             [channel save];
             
-            [[ChannelsManager sharedManager] add:@[channel]];
         }
         
         [self failUpdateWithChannelId:[update channel_id] limit:100 withCallback:nil];

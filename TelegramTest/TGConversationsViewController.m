@@ -428,7 +428,7 @@
     
     [menu addItem:[NSMenuItem separatorItem]];
     
-    if(dialog.type != DialogTypeChat && dialog.type != DialogTypeBroadcast) {
+    if(dialog.type != DialogTypeChat && dialog.type != DialogTypeBroadcast && dialog.type != DialogTypeChannel) {
         NSMenuItem *showUserProfile = [NSMenuItem menuItemWithTitle:[NSString stringWithFormat:NSLocalizedString(@"Conversation.ShowProfile", nil), user.dialogFullName] withBlock:^(id sender) {
             [[Telegram rightViewController] showUserInfoPage:user conversation:user.dialog];
         }];
@@ -487,8 +487,8 @@
         
         NSMenuItem *showСhatProfile;
         
-        if(dialog.type == DialogTypeChat) {
-            showСhatProfile = [NSMenuItem menuItemWithTitle:NSLocalizedString(@"Conversation.ShowGroupInfo", nil) withBlock:^(id sender) {
+        if(dialog.type == DialogTypeChat || dialog.type == DialogTypeChannel) {
+            showСhatProfile = [NSMenuItem menuItemWithTitle:dialog.type != DialogTypeChannel ? NSLocalizedString(@"Conversation.ShowGroupInfo", nil) : NSLocalizedString(@"Conversation.ShowChannelInfo", nil) withBlock:^(id sender) {
                 [[Telegram rightViewController] showChatInfoPage:chat];
             }];
             
@@ -516,20 +516,24 @@
         
         [menu addItem:[NSMenuItem separatorItem]];
         
-        if(dialog.type == DialogTypeChat) {
+        if(dialog.type == DialogTypeChat || dialog.type == DialogTypeChannel) {
             
-            NSMenuItem *deleteAndExitItem = [NSMenuItem menuItemWithTitle:chat.type == TLChatTypeNormal ? NSLocalizedString(@"Profile.DeleteAndExit", nil) : NSLocalizedString(@"Profile.DeleteConversation", nil)  withBlock:^(id sender) {
+            NSMenuItem *deleteAndExitItem = [NSMenuItem menuItemWithTitle:chat.type == TLChatTypeNormal ? (dialog.type != DialogTypeChannel ? NSLocalizedString(@"Profile.DeleteAndExit", nil) : NSLocalizedString(@"Profile.LeaveChannel", nil)) : NSLocalizedString(@"Profile.DeleteConversation", nil)  withBlock:^(id sender) {
                 [[Telegram rightViewController].messagesViewController deleteDialog:dialog];
             }];
             [menu addItem:deleteAndExitItem];
             
-            NSMenuItem *leaveFromGroupItem = [NSMenuItem menuItemWithTitle:!dialog.chat.left ? NSLocalizedString(@"Conversation.Actions.LeaveGroup", nil) : NSLocalizedString(@"Conversation.Actions.ReturnToGroup", nil) withBlock:^(id sender) {
-                [[Telegram rightViewController].messagesViewController leaveOrReturn:dialog];
-            }];
-            if(chat.type != TLChatTypeNormal)
-                leaveFromGroupItem.target = nil;
+            if(dialog.type == DialogTypeChat) {
+                NSMenuItem *leaveFromGroupItem = [NSMenuItem menuItemWithTitle:!dialog.chat.left ? NSLocalizedString(@"Conversation.Actions.LeaveGroup", nil) : NSLocalizedString(@"Conversation.Actions.ReturnToGroup", nil) withBlock:^(id sender) {
+                    [[Telegram rightViewController].messagesViewController leaveOrReturn:dialog];
+                }];
+                if(chat.type != TLChatTypeNormal)
+                    leaveFromGroupItem.target = nil;
+                
+                [menu addItem:leaveFromGroupItem];
+            }
             
-            [menu addItem:leaveFromGroupItem];
+            
         } else {
             NSMenuItem *deleteBroadcast = [NSMenuItem menuItemWithTitle: NSLocalizedString(@"Profile.DeleteBroadcast", nil) withBlock:^(id sender) {
                 [[Telegram rightViewController].messagesViewController deleteDialog:dialog];
