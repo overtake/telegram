@@ -43,7 +43,8 @@ static NSString *kYapChannelKey = @"channels_is_loaded";
         
         if(isNeedRemoteLoading)
             [self loadChannelsOnQueue:queue];
-        else
+        else {
+            
             [[Storage manager] allChannels:^(NSArray *channels, NSArray *messages) {
                 
                 _channelsIsLoaded = YES;
@@ -53,6 +54,8 @@ static NSString *kYapChannelKey = @"channels_is_loaded";
                 [self notifyListenersWithObject:channels];
                 
             } deliveryOnQueue:queue];
+        }
+        
         
     }
     
@@ -293,7 +296,7 @@ static BOOL isStorageLoaded;
         
         
         
-        [self dispatchWithFullList:[all subarrayWithRange:NSMakeRange(0, MIN(20,all.count))]];
+        [self dispatchWithFullList:all];
         
         
     } else if(_state == TGModernCHStateRemote) {

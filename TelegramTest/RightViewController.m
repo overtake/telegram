@@ -484,7 +484,7 @@
     }
     
     NSString *name;
-    if(dialog.type == DialogTypeChat) {
+    if(dialog.type == DialogTypeChat || dialog.type == DialogTypeChannel) {
         name = dialog.chat.title;
     } else if(dialog.type == DialogTypeSecretChat) {
         name = dialog.encryptedChat.peerUser.fullName;

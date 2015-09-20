@@ -12,6 +12,40 @@
 #import "ImageUtils.h"
 #import "TGDateUtils.h"
 #import "NSAttributedString+Hyperlink.h"
+#import "TGImageObject.h"
+#import "TMImageUtils.h"
+
+
+@interface TGImageGroupPhotoObject : TGImageObject
+
+@end
+
+@implementation TGImageGroupPhotoObject
+
+
+-(void)_didDownloadImage:(DownloadItem *)item {
+    __block NSImage *imageOrigin = [[NSImage alloc] initWithData:item.result];
+    
+    NSImage *image = renderedImage(imageOrigin, imageOrigin.size.width == 0 || imageOrigin.size.height ? self.imageSize : imageOrigin.size);
+    
+    [TGCache cacheImage:image forKey:self.location.cacheKey groups:@[IMGCACHE]];
+    
+    image = [TMImageUtils roundedImageNew:image size:self.imageSize];
+    
+    [TGCache cacheImage:image forKey:[self cacheKey] groups:@[IMGCACHE]];
+    
+    [ASQueue dispatchOnMainQueue:^{
+        [self.delegate didDownloadImage:image object:self];
+    }];
+}
+
+-(NSString *)cacheKey {
+    return [NSString stringWithFormat:@"group:%lu:%@",self.location.hashCacheKey,NSStringFromSize(self.imageSize)];
+}
+
+@end
+
+
 @implementation MessageTableItemServiceMessage
 
 - (id) initWithDate:(int)date {
@@ -63,10 +97,24 @@
         
         if(object.action.photo) {
             self.photo = object.action.photo;
-            self.photoSize = NSMakeSize(140, 140);
+            self.photoSize = NSMakeSize(100, 100);
             
-          
-         
+            if(self.photo.sizes.count) {
+                //Find cacheImage;
+                for(TLPhotoSize *photoSize in self.photo.sizes) {
+                    if([photoSize isKindOfClass:[TL_photoCachedSize class]]) {
+                        self.cachePhoto = [[NSImage alloc] initWithData:photoSize.bytes];
+                        break;
+                    }
+                }
+                
+                TLPhotoSize *photoSize = ((TLPhotoSize *)[self.photo.sizes objectAtIndex:MIN(2, self.photo.sizes.count) - 1]);
+                self.photoLocation = photoSize.location;
+            }
+            
+            self.imageObject = [[TGImageGroupPhotoObject alloc] initWithLocation:self.photoLocation placeHolder:self.cachePhoto];
+            
+            self.imageObject.imageSize = self.photoSize;
         }
         
         [self.messageAttributedString detectAndAddLinks:URLFindTypeLinks | URLFindTypeMentions | URLFindTypeHashtags | (object.conversation.user.isBot || object.conversation.type == DialogTypeChat ? URLFindTypeBotCommands : 0)];

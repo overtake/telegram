@@ -238,7 +238,7 @@ NSImage *voicePlay() {
     [self.stateTextField setHidden:NO];
     [self.stateTextField setStringValue:string];
     [self.stateTextField sizeToFit];
-    [self.stateTextField setFrameOrigin:NSMakePoint(self.durationView.frame.origin.x + self.durationView.frame.size.width, self.durationView.frame.origin.y - 2)];
+    [self.stateTextField setFrameOrigin:NSMakePoint(NSMaxX(self.durationView.frame) - 15, self.durationView.frame.origin.y - 2)];
 }
 
 

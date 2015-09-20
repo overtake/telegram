@@ -126,7 +126,7 @@
 
 -(void)setDurationTextFieldString:(NSString *)string {
     [self.durationView setStringValue:self.item.duration];
-    [self.durationView setFrameSize:NSMakeSize([self progressWidth] - self.stateTextField.frame.size.width , NSHeight(self.durationView.frame))];
+    [self.durationView setFrameSize:NSMakeSize([self progressWidth] - self.stateTextField.frame.size.width -15, NSHeight(self.durationView.frame))];
 }
 
 -(void)drawRect:(NSRect)dirtyRect {
@@ -244,11 +244,11 @@
     [self updateDownloadState];
     
     
-    [self setStateTextFieldString:[NSString sizeToTransformedValuePretty:self.item.size]];
+    [self setStateTextFieldString:item.fileSize];
     
     [self setDurationTextFieldString:item.duration];
     
-    [self.stateTextField setFrameOrigin:NSMakePoint(NSMaxX(self.durationView.frame), self.durationView.frame.origin.y )];
+    [self.stateTextField setFrameOrigin:NSMakePoint(NSMaxX(self.durationView.frame) - 10, self.durationView.frame.origin.y )];
     
     if(item.state != AudioStatePlaying && item.state != AudioStatePaused)
         [self updateCellState];

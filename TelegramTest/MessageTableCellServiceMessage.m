@@ -15,7 +15,7 @@
 @interface MessageTableCellServiceMessage()
 
 @property (nonatomic, strong) TGCTextView *textField;
-@property (nonatomic, strong) TMAvatarImageView *photoImageView;
+@property (nonatomic, strong) TGImageView *photoImageView;
 @end
 
 @implementation MessageTableCellServiceMessage
@@ -30,7 +30,10 @@
         
         [self addSubview:self.textField];
         
-        self.photoImageView = [TMAvatarImageView standartUserInfoAvatar];
+        self.photoImageView = [[TGImageView alloc] initWithFrame:NSMakeRect(0, 0, 60, 60)];
+        
+        self.photoImageView.layer.cornerRadius = 30;
+        self.photoImageView.wantsLayer = YES;
         [self addSubview:self.photoImageView];
         
         self.wantsLayer = YES;
@@ -88,10 +91,12 @@
         [self.textField setFrameOrigin:NSMakePoint(roundf((NSWidth([Telegram rightViewController].view.frame) - item.textSize.width) / 2),   (item.photoSize.height ? (item.photoSize.height + 5) : roundf((item.viewSize.height - NSHeight(_textField.frame))/2)))];
                 
         if(item.photo) {
-            [self.photoImageView setHidden:NO];
-            [self.photoImageView setFrameOrigin:NSMakePoint(roundf((self.bounds.size.width - _photoImageView.frame.size.width) / 2), 5)];
             
-            [_photoImageView setChat:item.message.chat];
+            [self.photoImageView setFrameSize:item.photoSize];
+            self.photoImageView.object = item.imageObject;
+            
+            [self.photoImageView setHidden:NO];
+            [self.photoImageView setFrameOrigin:NSMakePoint(roundf((self.bounds.size.width - _photoImageView.frame.size.width) / 2), 3)];
             
         } else {
             [self.photoImageView setHidden:YES];

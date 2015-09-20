@@ -92,13 +92,13 @@
             [_viewsCountText setTextColor:GRAY_TEXT_COLOR];
             [_viewsCountText setStringValue:[[NSNumber numberWithInt:self.container.item.message.views] prettyNumber]];
             [_viewsCountText sizeToFit];
-            [_viewsCountText setFrameOrigin:CGPointMake(16,3)];
+            [_viewsCountText setFrameOrigin:CGPointMake(NSWidth(self.frame) - NSWidth(_viewsCountText.frame),3)];
             [self addSubview:_viewsCountText];
             
             
             _channelImageView = imageViewWithImage(image_ChannelViews());
             
-            [_channelImageView setFrameOrigin:NSMakePoint(3, 6)];
+            [_channelImageView setFrameOrigin:NSMakePoint(NSMinX(_viewsCountText.frame) - NSWidth(_channelImageView.frame), 6)];
             
             [self addSubview:_channelImageView];
         } else {
