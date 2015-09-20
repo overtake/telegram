@@ -22,7 +22,7 @@
 -(void)loadView {
     [super loadView];
     
-    _observer = [[TGChangeUserObserver alloc] initWithDescription:NSLocalizedString(@"Channel.SetChannelLinkDescription", nil) placeholder:NSLocalizedString(@"Channel.SetChannelLinkPlaceholder", nil) defaultUserName:@"wtfmen"];
+    _observer = [[TGChangeUserObserver alloc] initWithDescription:NSLocalizedString(@"Channel.SetChannelLinkDescription", nil) placeholder:nil defaultUserName:nil];
     
     
     weak();

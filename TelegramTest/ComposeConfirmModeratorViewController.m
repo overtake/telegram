@@ -85,7 +85,9 @@
     
     [_tableView addItem:accessHeader tableRedraw:NO];
     
-    [_tableView addItem:moderatorItem tableRedraw:NO];
+    
+    if(![self.action.object isBroadcast])
+        [_tableView addItem:moderatorItem tableRedraw:NO];
     [_tableView addItem:editorItem tableRedraw:NO];
     
     [_tableView addItem:accessDescription tableRedraw:NO];

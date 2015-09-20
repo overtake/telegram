@@ -63,7 +63,7 @@
             
             [[Telegram rightViewController] showComposeWithAction:[[ComposeAction alloc] initWithBehaviorClass:[ComposeActionAddChannelModeratorBehavior class] filter:@[] object:chat]];
             
-        } description:NSLocalizedString(@"Channel.AddModerator", nil) height:62 stateback:^id(GeneralSettingsRowItem *item) {
+        } description:chat.isBroadcast ? NSLocalizedString(@"Channel.AddEditor", nil) : NSLocalizedString(@"Channel.AddModerator", nil) height:62 stateback:^id(GeneralSettingsRowItem *item) {
             return nil;
         }];
         

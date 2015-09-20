@@ -80,7 +80,15 @@
             
             [TMViewController showModalProgress];
             
-            [RPCRequest sendRequest:[TLAPI_messages_exportChatInvite createWithChat_id:_chat.n_id] successHandler:^(RPCRequest *request, TL_chatInviteExported *response) {
+            id request = [TLAPI_messages_exportChatInvite createWithChat_id:_chat.n_id];
+            
+            TLChat *chat = [[ChatsManager sharedManager] find:self.chat.n_id];
+            
+            if([chat isKindOfClass:[TL_channel class]]) {
+                request = [TLAPI_channels_exportInvite createWithChannel:chat.inputPeer];
+            }
+            
+            [RPCRequest sendRequest:request successHandler:^(RPCRequest *request, TL_chatInviteExported *response) {
                 
                 [TMViewController hideModalProgressWithSuccess];
                 

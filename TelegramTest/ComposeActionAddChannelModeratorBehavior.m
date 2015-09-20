@@ -43,25 +43,32 @@
             [self.delegate behaviorDidEndRequest:nil];
             
             if(error.error_code == 400) {
-                confirm(appName(), NSLocalizedString(error.error_msg, nil), ^{
-                    
-                    [self.delegate behaviorDidStartRequest];
-                    
-                    [RPCRequest sendRequest:[TLAPI_channels_inviteToChannel createWithChannel:self.chat.inputPeer users:[@[self.user.inputUser] mutableCopy]] successHandler:^(id request, id response) {
+                
+                if([error.error_msg isEqualToString:@"USER_NOT_PARTICIPANT"]) {
+                    confirm(appName(), [NSString stringWithFormat:NSLocalizedString(error.error_msg, nil),self.user.first_name], ^{
                         
-                        [self.delegate behaviorDidEndRequest:response];
-                        [[Telegram rightViewController] showComposeAddModerator:self.action];
+                        [self.delegate behaviorDidStartRequest];
                         
-                    } errorHandler:^(id request, RpcError *error) {
+                        [RPCRequest sendRequest:[TLAPI_channels_inviteToChannel createWithChannel:self.chat.inputPeer users:[@[self.user.inputUser] mutableCopy]] successHandler:^(id request, id response) {
+                            
+                            [self.delegate behaviorDidEndRequest:response];
+                            [[Telegram rightViewController] showComposeAddModerator:self.action];
+                            
+                        } errorHandler:^(id request, RpcError *error) {
+                            
+                            if(error.error_code == 400) {
+                                alert(appName(), NSLocalizedString(error.error_msg, nil));
+                            }
+                            
+                            [self.delegate behaviorDidEndRequest:nil];
+                        }];
                         
-                        if(error.error_code == 400) {
-                            alert(appName(), NSLocalizedString(error.error_msg, nil));
-                        }
-                        
-                        [self.delegate behaviorDidEndRequest:nil];
-                    }];
-                    
-                }, nil);
+                    }, nil);
+                } else {
+                    alert(appName(), NSLocalizedString(error.error_msg, nil));
+                }
+                
+                
             }
             
             
