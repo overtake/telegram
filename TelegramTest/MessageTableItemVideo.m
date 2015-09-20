@@ -69,8 +69,6 @@
     [super makeSizeByWidth:width];
     
     
-    if(self.isForwadedMessage)
-        width-=50;
     
     _videoSize = NSMakeSize(MIN(width - 60,250), self.message.media.video.thumb.h + (MIN(width - 60,250) - self.message.media.video.thumb.w));
     

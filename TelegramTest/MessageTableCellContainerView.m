@@ -114,16 +114,17 @@
     }
     
     if(!self.fwdContainer) {
-        self.fwdContainer = [[TMView alloc] initWithFrame:NSMakeRect(self.item.containerOffset +1, 0, self.bounds.size.width - 130, self.bounds.size.height)];
+        self.fwdContainer = [[TMView alloc] initWithFrame:NSMakeRect(self.item.containerOffset +1, 0, self.bounds.size.width - 130, self.bounds.size.height )];
+        
         [self.fwdContainer setDrawBlock:^{
-            [GRAY_BORDER_COLOR set];
+            [BLUE_SEPARATOR_COLOR set];
             
-            float offset = weakSelf.item.isHeaderMessage ? 26 : 0;
+            float offset = weakSelf.item.isHeaderMessage ? weakSelf.item.isHeaderForwardedMessage ? 50 : 20 : weakSelf.item.isHeaderForwardedMessage ? 24 : 0;
             
             if(weakSelf.item.isHeaderForwardedMessage) {
-                NSRectFill(NSMakeRect(0, 0, 2, weakSelf.fwdContainer.bounds.size.height - offset - 32));
+                NSRectFill(NSMakeRect(0, 0, 2, weakSelf.fwdContainer.bounds.size.height - offset ));
             } else {
-                NSRectFill(NSMakeRect(0, 0, 2, weakSelf.fwdContainer.bounds.size.height - offset));
+                NSRectFill(NSMakeRect(0, 0, 2, weakSelf.fwdContainer.bounds.size.height));
             }
         }];
         
@@ -138,19 +139,6 @@
         [self.fwdName setAutoresizingMask:NSViewWidthSizable];
         [[self.fwdName cell] setLineBreakMode:NSLineBreakByTruncatingTail];
         [self.fwdContainer addSubview:self.fwdName];
-    }
-    
-    if(!self.fwdAvatar) {
-        self.fwdAvatar = [TMAvatarImageView standartMessageTableAvatar];
-        [self.fwdAvatar setTapBlock:^{
-            
-            if(weakSelf.item.fwd_user)
-                [[Telegram rightViewController] showUserInfoPage:weakSelf.item.fwd_user];
-            else
-                [[Telegram rightViewController] showByDialog:weakSelf.item.fwd_chat.dialog sender:weakSelf];
-            
-        }];
-        [self.fwdContainer addSubview:self.fwdAvatar];
     }
     
     
@@ -631,12 +619,14 @@ static BOOL dragAction = NO;
         
         [self initForwardContainer];
         
+        [_fwdContainer setFrame:NSMakeRect(self.item.containerOffset, 0, self.bounds.size.width - 130, self.bounds.size.height )];
+        
         float minus = 0;
         
         if(self.item.isHeaderForwardedMessage) {
             minus = FORWARMESSAGE_TITLE_HEIGHT;
             
-            float minus = item.isHeaderMessage ? 30 : 12;
+            float minus = item.isHeaderMessage ? 30 : 5;
             [self.forwardMessagesTextLayer setFrameOrigin:CGPointMake(item.containerOffset+1, item.viewSize.height - self.forwardMessagesTextLayer.frame.size.height - minus)];
             
             [CATransaction begin];
@@ -650,17 +640,10 @@ static BOOL dragAction = NO;
             [CATransaction commit];
         }
         
-        if(item.fwd_user)
-            [self.fwdAvatar setUser:item.fwd_user];
-        else
-            [self.fwdAvatar setChat:item.fwd_chat];
-        
         if(self.item.isHeaderMessage) {
-            [self.fwdAvatar setFrameOrigin:NSMakePoint(12, (item.viewSize.height - self.fwdAvatar.bounds.size.height - 8 - 22 - minus))];
-            [self.fwdName setFrameOrigin:NSMakePoint(59, item.viewSize.height - 48 - minus)];
+            [self.fwdName setFrameOrigin:NSMakePoint(6, item.viewSize.height - 50 - minus)];
         } else {
-            [self.fwdAvatar setFrameOrigin:NSMakePoint(12, (item.viewSize.height - self.fwdAvatar.bounds.size.height - 8 - minus))];
-            [self.fwdName setFrameOrigin:NSMakePoint(59, item.viewSize.height - 28 - minus)];
+            [self.fwdName setFrameOrigin:NSMakePoint(6, item.viewSize.height - 24 - minus)];
         }
         
         
@@ -686,14 +669,19 @@ static BOOL dragAction = NO;
             [self.avatarImageView setChat:item.message.chat];
         [self.avatarImageView setFrameOrigin:NSMakePoint(29, item.viewSize.height - 43)];
         
-        [self.avatarImageView setHidden:item.message.from_id == 0];
         
     } else {
         [self deallocHeader];
     }
-   
+
     
-    [self.containerView setFrame:NSMakeRect(item.isForwadedMessage ? item.containerOffsetForward : item.containerOffset, item.isHeaderMessage ? item.isForwadedMessage ? 10 : 4 : item.isForwadedMessage ? 7 : roundf((item.viewSize.height - item.blockSize.height)/2), NSWidth(self.frame) - (item.message.from_id == 0 ? 110 : 160), item.blockSize.height)];
+  //  [self.containerView setBackgroundColor:[NSColor redColor]];
+    
+    [self.containerView setFrame:NSMakeRect(item.isForwadedMessage ? item.containerOffsetForward : item.containerOffset, item.isHeaderMessage ? item.isForwadedMessage ? 4 : 4 : item.isForwadedMessage ? 4 : roundf((item.viewSize.height - item.blockSize.height)/2), NSWidth(self.frame) - 160, item.blockSize.height)];
+    
+  //  [self.containerView removeAllSubviews];
+    
+  //  [self.layer setBackgroundColor:NSColorFromRGB(arc4random() % 16000000).CGColor];
         
     
     if([item isReplyMessage])

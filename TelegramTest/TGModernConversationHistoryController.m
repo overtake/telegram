@@ -260,7 +260,9 @@ static BOOL isStorageLoaded;
     
     if(_state == TGModernCHStateLocal)
     {
+        
         [[Storage manager] dialogsWithOffset:0 limit:10000 completeHandler:^(NSArray *d, NSArray *m) {
+            
             
             [[DialogsManager sharedManager] add:d];
             
@@ -289,7 +291,9 @@ static BOOL isStorageLoaded;
             return;
         }
         
-        [self dispatchWithFullList:all];
+        
+        
+        [self dispatchWithFullList:[all subarrayWithRange:NSMakeRange(0, MIN(20,all.count))]];
         
         
     } else if(_state == TGModernCHStateRemote) {

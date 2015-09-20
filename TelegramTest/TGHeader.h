@@ -87,6 +87,7 @@
 #define GRAY_BORDER_COLOR NSColorFromRGB(0xe4e4e4)
 #define LIGHT_GRAY_BORDER_COLOR NSColorFromRGB(0xededed)
 #define LINK_COLOR BLUE_UI_COLOR
+#define BLUE_SEPARATOR_COLOR NSColorFromRGB(0x66A7DB)
 #define MIN_IMG_SIZE NSMakeSize(250,40)
 #define weakify() __block __typeof(&*self)strongSelf = self;
 

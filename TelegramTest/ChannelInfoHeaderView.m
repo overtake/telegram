@@ -378,7 +378,7 @@
     [self.openOrJoinChannelButton setHidden:self.controller.chat.isManager];
    
     
-    [self.managmentButton setHidden:!self.controller.chat.isAdmin];
+    [self.managmentButton setHidden:self.controller.chat.isManager];
     
     [self.membersButton setHidden:!self.controller.chat.isManager];
     [self.blackListButton setHidden:!self.controller.chat.isManager || self.controller.chat.isBroadcast];

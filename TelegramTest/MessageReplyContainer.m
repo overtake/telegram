@@ -92,7 +92,7 @@
     
     if(_replyObject.replyHeader.string.length == 0)
     {
-        return LINK_COLOR;
+        return BLUE_SEPARATOR_COLOR;
     }
     
     return [_replyObject.replyHeader attribute:NSForegroundColorAttributeName atIndex:0 effectiveRange:&range];
@@ -103,7 +103,7 @@
 -(void)update {
     
    
-    int xOffset = _replyObject.replyThumb || _replyObject.geoURL ? 40 : 5;
+    int xOffset = _replyObject.replyThumb || _replyObject.geoURL ? 40 : 6;
     
     
     if(_replyObject.replyThumb) {

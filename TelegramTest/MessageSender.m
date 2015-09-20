@@ -386,6 +386,7 @@
          
             dispatch_async(dispatch_get_main_queue(), ^{
                 if(callback) callback();
+                [[Telegram rightViewController] clearStack];
                 [[Telegram sharedInstance] showMessagesFromDialog:dialog sender:self];
             });
             

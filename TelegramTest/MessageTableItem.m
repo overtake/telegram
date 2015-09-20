@@ -43,15 +43,15 @@
         
         if(object.peer.peer_id == [UsersManager currentUserId])
             object.flags&= ~TGUNREADMESSAGE;
-        
-        self.isForwadedMessage = (self.message.fwd_from_id != nil ) && ![self.message.media isKindOfClass:[TL_messageMediaPhoto class]] && ![self.message.media isKindOfClass:[TL_messageMediaVideo class]] && (![self.message.media isKindOfClass:[TL_messageMediaDocument class]] || (![self.message.media.document isSticker] && ![self.message.media.document.mime_type isEqualToString:@"image/gif"])) && ([self.message.media.document attributeWithClass:[TL_documentAttributeAudio class]] == nil);
+        //&& ![self.message.media isKindOfClass:[TL_messageMediaPhoto class]] && ![self.message.media isKindOfClass:[TL_messageMediaVideo class]]
+        self.isForwadedMessage = (self.message.fwd_from_id != nil )  && (![self.message.media isKindOfClass:[TL_messageMediaDocument class]] || (![self.message.media.document isSticker] && ![self.message.media.document.mime_type isEqualToString:@"image/gif"])) && ([self.message.media.document attributeWithClass:[TL_documentAttributeAudio class]] == nil);
         
         
         self.isChat = [self.message.to_id isKindOfClass:[TL_peerChat class]] || [self.message.to_id isKindOfClass:[TL_peerChannel class]];
         
-        _containerOffset = self.message.from_id != 0 ? 79 : 29;
+        _containerOffset = 79;
         
-        _containerOffsetForward  = self.message.from_id != 0 ? 141 : 91;
+        _containerOffsetForward  = 87;
         
         if(self.message) {
            
@@ -74,7 +74,7 @@
 }
 
 -(int)makeSize {
-    return MAX(NSWidth([Telegram rightViewController].view.frame) - (self.message.from_id == 0 ? 100 : 150),100);
+    return MAX(NSWidth([Telegram rightViewController].view.frame) - 150,100);
 }
 
 - (void) headerStringBuilder {
@@ -196,7 +196,7 @@ static NSTextAttachment *channelIconAttachment() {
             viewSize.height += 32;
             
             if(self.isForwadedMessage)
-                viewSize.height += 24;
+                viewSize.height += 20;
             
             if(viewSize.height < 44)
                 viewSize.height = 44;
@@ -204,7 +204,8 @@ static NSTextAttachment *channelIconAttachment() {
             viewSize.height += 10;
             
             if(self.isForwadedMessage)
-                viewSize.height += 24;
+                viewSize.height += 18;
+
         }
         
         if([self isReplyMessage]) {

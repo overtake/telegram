@@ -184,7 +184,7 @@
 
   //  [self.statusTextField setFrame:NSMakeRect(10, 9, self.bounds.size.width - 40, self.statusTextField.frame.size.height)];
     
-    [self.statusTextField setFrameOrigin:NSMakePoint(NSMinX(self.statusTextField.frame), 5)];
+    [self.statusTextField setFrameOrigin:NSMakePoint(NSMinX(self.statusTextField.frame), 7)];
     
     [_searchButton setFrameOrigin:NSMakePoint(NSWidth(self.container.frame) - NSWidth(_searchButton.frame) +5, 10)];
     

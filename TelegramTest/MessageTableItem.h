@@ -10,7 +10,7 @@
 #import "SenderHeader.h"
 #import "DownloadItem.h"
 #import "TGReplyObject.h"
-#define FORWARMESSAGE_TITLE_HEIGHT 28
+#define FORWARMESSAGE_TITLE_HEIGHT 20
 
 @interface MessageTableItem : NSObject<SelectTextDelegate>
 
