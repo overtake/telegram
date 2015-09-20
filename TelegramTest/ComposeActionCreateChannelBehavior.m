@@ -89,7 +89,7 @@
              alert(appName(), NSLocalizedString(@"Channel.SetPublicUsernameDescription", nil));
         }
         
-            } else {
+    } else {
         [self showAddingCompose];
     }
     

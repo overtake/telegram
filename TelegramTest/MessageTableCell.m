@@ -96,11 +96,16 @@
     NSMutableArray *items = [[NSMutableArray alloc] init];
     
     if(self.item.message.to_id.class == [TL_peerChannel class] || self.item.message.to_id.class == [TL_peerChat class] || self.item.message.to_id.class == [TL_peerUser class] )  {
-        [items addObject:[NSMenuItem menuItemWithTitle:NSLocalizedString(@"Context.Reply", nil) withBlock:^(id sender) {
-            
-            [[Telegram rightViewController].messagesViewController addReplayMessage:self.item.message animated:YES];
-            
-        }]];
+        
+        if([self.item.message.conversation canSendMessage]) {
+            [items addObject:[NSMenuItem menuItemWithTitle:NSLocalizedString(@"Context.Reply", nil) withBlock:^(id sender) {
+                
+                [[Telegram rightViewController].messagesViewController addReplayMessage:self.item.message animated:YES];
+                
+            }]];
+        }
+        
+        
     }
     
     if([self.item canShare]) {
@@ -145,20 +150,19 @@
         }]];
     }
     
-    
-    [items addObject:[NSMenuItem menuItemWithTitle:NSLocalizedString(@"Context.Delete", nil) withBlock:^(id sender) {
-        
-        [[Telegram rightViewController].messagesViewController setState:MessagesViewControllerStateNone];
-        [[Telegram rightViewController].messagesViewController unSelectAll:NO];
-        
-        [[Telegram rightViewController].messagesViewController setSelectedMessage:self.item selected:YES];
-        
-        [[Telegram rightViewController].messagesViewController deleteSelectedMessages];
-        
-        
-    }]];
-    
-    
+    if([MessagesViewController canDeleteMessages:@[self.item.message] inConversation:self.item.message.conversation]) {
+        [items addObject:[NSMenuItem menuItemWithTitle:NSLocalizedString(@"Context.Delete", nil) withBlock:^(id sender) {
+            
+            [[Telegram rightViewController].messagesViewController setState:MessagesViewControllerStateNone];
+            [[Telegram rightViewController].messagesViewController unSelectAll:NO];
+            
+            [[Telegram rightViewController].messagesViewController setSelectedMessage:self.item selected:YES];
+            
+            [[Telegram rightViewController].messagesViewController deleteSelectedMessages];
+            
+            
+        }]];
+    }
     
     return items;
     

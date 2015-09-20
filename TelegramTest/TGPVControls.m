@@ -332,13 +332,17 @@
     
     NSMenuItem *photoDelete = [NSMenuItem menuItemWithTitle:NSLocalizedString(@"PhotoViewer.Delete", nil) withBlock:^(id sender) {
         
-        [[DialogsManager sharedManager] deleteMessagesWithMessageIds:@[@(msg.n_id)]];
+        [[DialogsManager sharedManager] deleteMessagesWithRandomMessageIds:@[@(msg.randomId)] isChannelMessages:msg.isChannelMessage];
         
         
     }];
    // [photoDelete setImage:image_AttachPhotoVideo()];
    // [photoDelete setHighlightedImage:image_AttachPhotoVideoHighlighted()];
-    [theMenu addItem:photoDelete];
+    
+    if([MessagesViewController canDeleteMessages:@[msg] inConversation:msg.conversation])
+        [theMenu addItem:photoDelete];
+    
+    
     
     
     if(msg.conversation.type != DialogTypeSecretChat) {
@@ -401,7 +405,10 @@
     
     NSMenuItem *photoGoto = [NSMenuItem menuItemWithTitle:NSLocalizedString(@"PhotoViewer.Goto", nil) withBlock:^(id sender) {
         
-        [[Telegram rightViewController] showByDialog:_convertsation withJump:(int)[TGPhotoViewer currentItem].previewObject.msg_id historyFilter:[HistoryFilter class] sender:[TGPhotoViewer viewer]];
+        TL_localMessage *msg = [TGPhotoViewer currentItem].previewObject.media;
+        
+        
+        [[Telegram rightViewController].messagesViewController showMessage:msg.n_id fromMsgId:-1];
         
         [[TGPhotoViewer viewer] hide];
         

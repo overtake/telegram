@@ -24,16 +24,26 @@
 +(void)show:(NSString *)string chat:(TLChat *)chat view:(NSView *)view ofRect:(NSRect)rect callback:(void (^)(NSString *userName))callback {
     
     
-   // TLChatFull *fullChat = [[FullChatManager sharedManager] find:chat.n_id];
+    TLChatFull *fullChat = [[FullChatManager sharedManager] find:chat.n_id];
     
     NSMutableArray *uids = [[NSMutableArray alloc] init];
     
-    NSArray *all =[[UsersManager sharedManager] all];
-    
-    [[all subarrayWithRange:NSMakeRange(0, MIN(500,all.count))] enumerateObjectsUsingBlock:^(TLUser * obj, NSUInteger idx, BOOL *stop) {
-        [uids addObject:@(obj.n_id)];
+    if([chat isKindOfClass:[TL_chat class]]) {
+        [fullChat.participants.participants enumerateObjectsUsingBlock:^(TLChatParticipant * obj, NSUInteger idx, BOOL *stop) {
+            [uids addObject:@(obj.user_id)];
+            
+        }];
+    } else {
         
-    }];
+        NSArray *contacts = [[NewContactsManager sharedManager] all];
+        
+        [contacts enumerateObjectsUsingBlock:^(TLContact *obj, NSUInteger idx, BOOL *stop) {
+            
+             [uids addObject:@(obj.user_id)];
+            
+        }];
+    }
+    
     
     
     NSArray *users = [UsersManager findUsersByMention:string withUids:uids];

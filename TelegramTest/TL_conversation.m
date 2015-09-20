@@ -108,17 +108,13 @@
         return  !self.user.isBot || !self.user.isBlocked;
     
     if(self.type == DialogTypeChannel)
-        return (!self.chat.isBroadcast && !self.isInvisibleChannel) || self.chat.isAdmin;
+        return ((!self.chat.isBroadcast && !self.isInvisibleChannel) || self.chat.isAdmin || self.chat.isPublisher) && !self.chat.isKicked && !self.chat.left;
     
     return YES;
 }
 
 -(BOOL)isInvisibleChannel {
-    
-    if(_invisibleChannel) {
-        int bp = 0;
-    }
-    
+
     return _invisibleChannel;
 }
 
@@ -149,6 +145,10 @@
             
             if(self.isInvisibleChannel) {
                 return NSLocalizedString(@"Conversation.Action.JoinToChannel", nil);
+            }
+            
+            if(self.chat.isKicked || self.chat.left) {
+                return NSLocalizedString(@"Conversation.DeleteAndExit", nil);
             }
             
             if(self.chat.isBroadcast) {

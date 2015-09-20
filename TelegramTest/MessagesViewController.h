@@ -83,6 +83,8 @@ typedef enum {
 +(NSMenu *)destructMenu:(dispatch_block_t)ttlCallback click:(dispatch_block_t)click;
 +(NSMenu *)notifications:(dispatch_block_t)callback conversation:(TL_conversation *)conversation click:(dispatch_block_t)click;
 
++(BOOL)canDeleteMessages:(NSArray *)messages inConversation:(TL_conversation *)conversation;
+
 - (NSUInteger)messagesCount;
 
 - (void)clearHistory:(TL_conversation *)dialog;

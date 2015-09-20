@@ -898,7 +898,7 @@
             } timeout:0 queue:[ASQueue globalQueue].nativeQueue];
             
             
-        } else if(weakSelf.dialog.chat.isBroadcast) {
+        } else if(weakSelf.dialog.chat.isBroadcast  && !(weakSelf.dialog.chat.left || weakSelf.dialog.chat.isKicked)) {
             
             
             [TMViewController showModalProgress];
@@ -911,8 +911,10 @@
             } until:weakSelf.dialog.isMute ? 0 : 365*24*60*60];
             
             
-        } else if(!weakSelf.dialog.canSendMessage && weakSelf.dialog.user.isBot && _onClickToLockedView == nil)
-        {
+        } else if(weakSelf.dialog.type == DialogTypeChannel && (weakSelf.dialog.chat.left || weakSelf.dialog.chat.isKicked)) {
+             [weakSelf.messagesViewController deleteDialog:weakSelf.dialog];
+            
+        } else if(!weakSelf.dialog.canSendMessage && weakSelf.dialog.user.isBot && _onClickToLockedView == nil) {
             
             [TMViewController showModalProgress];
             

@@ -913,7 +913,7 @@ TL_localMessage *parseMessage(FMResultSet *result) {
     return [self lastMessageAroundMinId:channelMsgId important:YES isTop:NO];
 }
 
--(TL_localMessage *)lastMessageAroundMinId:(long)channelMsgId important:(BOOL)important isTop:(BOOL)isTop {
+-(TL_localMessage *)lastMessageAroundMinId:(long)msgId important:(BOOL)important isTop:(BOOL)isTop {
    
     __block TL_localMessage *msg;
     
@@ -927,7 +927,7 @@ TL_localMessage *parseMessage(FMResultSet *result) {
         
         
         
-        FMResultSet *result = [db executeQuery:[NSString stringWithFormat:@"select flags,serialized,views,pts from %@ where n_id %@ ? and peer_id = ? and  (filter_mask & ?) = ? order by n_id %@ limit 1",tableChannelMessages,!isTop ? @"<=" : @">=",isTop ? @"asc" : @"desc"],@(channelMsgId),@(peer_id),@(important ? HistoryFilterImportantChannelMessage : HistoryFilterChannelMessage),@(important ? HistoryFilterImportantChannelMessage : HistoryFilterChannelMessage)];
+        FMResultSet *result = [db executeQuery:[NSString stringWithFormat:@"select flags,serialized,views,pts from %@ where n_id %@ ? and n_id < ? and peer_id = ? and  (filter_mask & ?) = ? order by n_id %@ limit 1",tableChannelMessages,!isTop ? @"<=" : @">=",isTop ? @"asc" : @"desc"],@(msgId),@(channelMsgId(TGMINFAKEID,peer_id)),@(peer_id),@(important ? HistoryFilterImportantChannelMessage : HistoryFilterChannelMessage),@(important ? HistoryFilterImportantChannelMessage : HistoryFilterChannelMessage)];
         
         if([result next]) {
             msg = [TLClassStore deserialize:[result dataForColumn:@"serialized"]];
@@ -1072,7 +1072,7 @@ TL_localMessage *parseMessage(FMResultSet *result) {
         
         
         if([peer isKindOfClass:[TL_peerChannel class]]) {
-            NSString *topMessage = [NSString stringWithFormat:@"select serialized,flags,pts,views,invalidate,is_viewed from %@ where peer_id = %d and (filter_mask & %d) > 0 ORDER BY n_id DESC LIMIT 1",tableChannelMessages,peer_id,HistoryFilterImportantChannelMessage];
+            NSString *topMessage = [NSString stringWithFormat:@"select serialized,flags,pts,views,invalidate,is_viewed from %@ where peer_id = %d and (filter_mask & %d) > 0 ORDER BY date DESC, n_id desc LIMIT 1",tableChannelMessages,peer_id,HistoryFilterImportantChannelMessage];
             
              FMResultSet *result;
             
@@ -1094,8 +1094,7 @@ TL_localMessage *parseMessage(FMResultSet *result) {
             
             [result close];
             
-            
-            importantMessage = [db intForQuery:[NSString stringWithFormat:@"select n_id from %@ where peer_id = ? and (filter_mask & ?) > 0 ORDER BY n_id DESC LIMIT 1",tableChannelMessages],@(peer_id),@(HistoryFilterImportantChannelMessage)];
+            importantMessage = message.n_id;
             
             
         } else {
@@ -2066,7 +2065,9 @@ TL_localMessage *parseMessage(FMResultSet *result) {
 
 -(void)insertMedia:(TL_localMessage *)message {
     [queue inDatabase:^(FMDatabase *db) {
-        [db executeUpdate:@"insert or replace into sharedmedia_v2 (message_id,peer_id,serialized,date,filter_mask,random_id) values (?,?,?,?,?,?)",@(message.n_id),@(message.peer_id),[TLClassStore serialize:message],@([[MTNetwork instance] getTime]),@(message.filterType),@(message.randomId)];
+        if(!message.isChannelMessage) {
+            [db executeUpdate:[NSString stringWithFormat:@"insert or replace into %@ (message_id,peer_id,serialized,date,filter_mask,random_id) values (?,?,?,?,?,?)",tableSharedMedia],@(message.n_id),@(message.peer_id),[TLClassStore serialize:message],@([[MTNetwork instance] getTime]),@(message.filterType),@(message.randomId)];
+        }
     }];
 }
 
@@ -2835,7 +2836,7 @@ TL_localMessage *parseMessage(FMResultSet *result) {
     
     [queue inDatabaseWithDealocing:^(FMDatabase *db) {
         
-        int maxMsgId = [db intForQuery:[NSString stringWithFormat:@"select n_id from %@ where  peer_id = ? and (filter_mask & ?) > 0 and dstate = ? order by date %@, n_id %@ limit 1",tableChannelMessages,latest ? @"desc" : @"asc",latest ? @"desc" : @"asc"],@(channel_id),@(important ?HistoryFilterImportantChannelMessage : HistoryFilterChannelMessage),@(DeliveryStateNormal)];
+        int maxMsgId = [db intForQuery:[NSString stringWithFormat:@"select n_id from %@ where  peer_id = ? and n_id < ? and (filter_mask & ?) > 0 and dstate = ? order by date %@, n_id %@ limit 1",tableChannelMessages,latest ? @"desc" : @"asc",latest ? @"desc" : @"asc"],@(channel_id),@(channelMsgId(TGMINFAKEID, channel_id)),@(important ?HistoryFilterImportantChannelMessage : HistoryFilterChannelMessage),@(DeliveryStateNormal)];
         
         
         int holeMaxId = [db intForQuery:@"select max_id from message_holes where peer_id = ? and (type & ?) = ? and max_id > ? and min_id <= ?",@(important ? 4 : 2),@(important ? 4 : 2),@(channel_id),@(maxMsgId),@(maxMsgId)];

@@ -64,7 +64,7 @@ DYNAMIC_PROPERTY(DDialog);
 - (TLChatType)rebuildType {
     int type;
     
-    if([self isKindOfClass:[TL_chatForbidden class]])
+    if([self isKindOfClass:[TL_chatForbidden class]] || [self isKindOfClass:[TL_channelForbidden class]])
         type = TLChatTypeForbidden;
     else if([self isKindOfClass:[TL_chatEmpty class]])
         type = TLChatTypeEmpty;
@@ -163,11 +163,15 @@ static NSTextAttachment *chatIconSelectedAttachment() {
             
             TLChatFull *fullChat = [[FullChatManager sharedManager] find:self.n_id];
             
-            //if(fullChat.participants_count >= 200) {
-            [str appendString:[NSString stringWithFormat:@"%d %@", fullChat.participants_count, fullChat.participants_count > 1 ?  NSLocalizedString(@"Conversation.Members", nil) : NSLocalizedString(@"Conversation.Member", nil)] withColor:NSColorFromRGB(0xa9a9a9)];
-            //} else {
-            //  [attributedString appendString:NSLocalizedString(@"Conversation.ChannelTitle", nil) withColor:NSColorFromRGB(0xa9a9a9)];
-            //}
+            if(fullChat.participants_count > 0) {
+                [str appendString:[NSString stringWithFormat:@"%d %@", fullChat.participants_count, fullChat.participants_count > 1 ?  NSLocalizedString(@"Conversation.Members", nil) : NSLocalizedString(@"Conversation.Member", nil)] withColor:NSColorFromRGB(0xa9a9a9)];
+            } else {
+              [str appendString:NSLocalizedString(@"Conversation.ChannelTitle", nil) withColor:NSColorFromRGB(0xa9a9a9)];
+            }
+            
+            [str setSelectionColor:NSColorFromRGB(0xffffff) forColor:BLUE_UI_COLOR];
+            [str setSelectionColor:NSColorFromRGB(0xfffffe) forColor:NSColorFromRGB(0x9b9b9b)];
+            [str setFont:[NSFont fontWithName:@"HelveticaNeue" size:13] forRange:str.range];
             
             return str;
         }
@@ -201,11 +205,11 @@ static NSTextAttachment *chatIconSelectedAttachment() {
         
         TLChatFull *fullChat = [[FullChatManager sharedManager] find:self.n_id];
         
-        //if(fullChat.participants_count >= 200) {
+        if(fullChat.participants_count > 0) {
             [attributedString appendString:[NSString stringWithFormat:@"%d %@", fullChat.participants_count, fullChat.participants_count > 1 ?  NSLocalizedString(@"Conversation.Members", nil) : NSLocalizedString(@"Conversation.Member", nil)] withColor:NSColorFromRGB(0xa9a9a9)];
-        //} else {
-          //  [attributedString appendString:NSLocalizedString(@"Conversation.ChannelTitle", nil) withColor:NSColorFromRGB(0xa9a9a9)];
-        //}
+        } else {
+            [attributedString appendString:NSLocalizedString(@"Conversation.ChannelTitle", nil) withColor:NSColorFromRGB(0xa9a9a9)];
+        }
         
         return attributedString;
     }
@@ -230,7 +234,7 @@ static NSTextAttachment *chatIconSelectedAttachment() {
 }
 
 -(id)inputPeer {
-    return [self isKindOfClass:[TL_channel class]] ? [TL_inputChannel createWithChannel_id:self.n_id access_hash:self.access_hash] : ([self isKindOfClass:[TL_peerSecret class]] ? [TL_inputEncryptedChat createWithChat_id:self.n_id access_hash:self.access_hash] : nil);
+    return [self isKindOfClass:[TL_channel class]] || [self isKindOfClass:[TL_channelForbidden class]] ? [TL_inputChannel createWithChannel_id:self.n_id access_hash:self.access_hash] : ([self isKindOfClass:[TL_peerSecret class]] ? [TL_inputEncryptedChat createWithChat_id:self.n_id access_hash:self.access_hash] : nil);
 }
 
 
@@ -240,11 +244,12 @@ static NSTextAttachment *chatIconSelectedAttachment() {
 }
 
 
+
 -(BOOL)isAdmin {
     return self.flags & (1 << 0);
 }
 -(BOOL)isBroadcast {
-    return self.flags & (1 << 5);
+    return self.flags & (1 << 5) || self.type != TLChatTypeNormal;
 }
 -(BOOL)isPublic {
     return self.flags & (1 << 6);
@@ -255,7 +260,7 @@ static NSTextAttachment *chatIconSelectedAttachment() {
 }
 
 -(BOOL)isKicked {
-    return self.flags & (1 << 1);
+    return self.flags & (1 << 1) || self.type != TLChatTypeNormal;
 }
 
 -(BOOL)isPublisher {

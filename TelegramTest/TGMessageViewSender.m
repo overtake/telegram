@@ -92,9 +92,7 @@
                 
                 
                 [ASQueue dispatchOnStageQueue:^{
-                    
-                    assert(result.count == items.count);
-                    
+                                        
                     [items enumerateObjectsUsingBlock:^(MessageTableItem *obj, NSUInteger idx, BOOL *stop) {
                         BOOL needUpdate = obj.message.views != [result[idx] intValue];
                         

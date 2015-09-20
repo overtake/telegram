@@ -197,6 +197,9 @@
     
     TLChat *chat = [[ChatsManager sharedManager] find:chat_id];
     
+    if([chat isKindOfClass:[TL_channelForbidden class]] || [chat isKindOfClass:[TL_chatForbidden class]])
+        return;
+    
     id request;
     
     if([chat isKindOfClass:[TL_channel class]]) {
@@ -304,7 +307,7 @@
                 currentChat.kicked_count = newChatFull.kicked_count;
                 currentChat.admins_count = newChatFull.admins_count;
 
-                if(currentChat.participants_count != newChatFull.participants_count) {
+                if([currentChat isKindOfClass:[TL_channelFull class]] && currentChat.participants_count != newChatFull.participants_count) {
                     [Notification perform:CHAT_STATUS data:@{KEY_CHAT_ID: @(currentChat.n_id)}];
                     currentChat.participants_count = newChatFull.participants_count;
                 }
@@ -313,7 +316,18 @@
             } else {
                 [self->keys setObject:newChatFull forKey:@(newChatFull.n_id)];
                 [self->list addObject:newChatFull];
+                
+                if(currentChat.participants_count != newChatFull.participants_count) {
+                    [Notification perform:CHAT_STATUS data:@{KEY_CHAT_ID: @(currentChat.n_id)}];
+                    currentChat.participants_count = newChatFull.participants_count;
+                }
+                
                 currentChat = newChatFull;
+                
+                if([currentChat isKindOfClass:[TL_channelFull class]]) {
+                    [Notification perform:CHAT_STATUS data:@{KEY_CHAT_ID: @(currentChat.n_id)}];
+                }
+                
                 if(currentChat.lastUpdateTime == 0)
                     currentChat.lastUpdateTime = [[MTNetwork instance] getTime];
             }

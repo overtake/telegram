@@ -553,7 +553,7 @@
     
     [self hideModalView:YES animation:NO];
     
-    if(self.messagesViewController.conversation == dialog && self.navigationViewController.currentController != self.messagesViewController && ![_mainViewController isSingleLayout]) {
+    if(self.messagesViewController.conversation == dialog && self.navigationViewController.currentController != self.messagesViewController && ![_mainViewController isSingleLayout] && ![sender isKindOfClass:[ComposeActionBehavior class]]) {
       
         [self.messagesViewController setCurrentConversation:dialog withJump:messageId historyFilter:filter];
         

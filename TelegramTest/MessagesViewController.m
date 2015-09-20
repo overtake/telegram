@@ -1938,6 +1938,9 @@ static NSTextAttachment *headerMediaIcon() {
 
 - (void) deleteSelectedMessages {
     
+    if(![self canDeleteMessages])
+        return;
+    
     TL_conversation *conversation = self.conversation;
     
     
@@ -2106,15 +2109,25 @@ static NSTextAttachment *headerMediaIcon() {
     
 }
 
-
 -(BOOL)canDeleteMessages {
+    
+    NSMutableArray *msgs = [[NSMutableArray alloc] init];
+    
+    [self.selectedMessages enumerateObjectsUsingBlock:^(MessageTableItem *obj, NSUInteger idx, BOOL *stop) {
+        [msgs addObject:obj.message];
+    }];
+    
+    return [MessagesViewController canDeleteMessages:msgs inConversation:self.conversation];
+}
+
++(BOOL)canDeleteMessages:(NSArray *)messages inConversation:(TL_conversation *)conversation {
     
     __block BOOL accept = YES;
     
-    if(self.conversation.type == DialogTypeChannel) {
-        [self.selectedMessages enumerateObjectsUsingBlock:^(MessageTableItem *obj, NSUInteger idx, BOOL *stop) {
+    if(conversation.type == DialogTypeChannel) {
+        [messages enumerateObjectsUsingBlock:^(TL_localMessage *obj, NSUInteger idx, BOOL *stop) {
             
-            accept = obj.message.chat.isAdmin || obj.message.chat.isPublisher || obj.message.chat.isModerator || obj.message.n_out;
+            accept = obj.chat.isAdmin || (obj.chat.isPublisher && (obj.from_id != 0 || obj.n_out)) || (obj.chat.isModerator && obj.from_id != 0) || obj.n_out;
             
             if(!accept) {
                 *stop = YES;
@@ -2556,7 +2569,7 @@ static NSTextAttachment *headerMediaIcon() {
 
 
 - (void)readHistory:(int)offset{
-    if(!self.conversation || self.conversation.unread_count == 0)
+    if(!self.conversation || self.conversation.unread_count == 0 || self.conversation.chat.isKicked || self.conversation.chat.left)
         return;
     
      [(MessagesManager *)[MessagesManager sharedManager] markAllInDialog:self.conversation callback:^(NSArray *ids) {
@@ -3478,7 +3491,7 @@ static NSTextAttachment *headerMediaIcon() {
 }
 
 - (void)addImageAttachment:(NSString *)file_path forConversation:(TL_conversation *)conversation file_data:(NSData *)data addCompletionHandler:(dispatch_block_t)completeHandler {
-    if(self.conversation.type == DialogTypeSecretChat)
+    if(self.conversation.type == DialogTypeSecretChat || (!file_path && !data))
         return;
     
     [[Storage yap] asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {

@@ -63,6 +63,8 @@
             
             [[Telegram rightViewController] navigationGoBack];
             
+            [[FullChatManager sharedManager] loadIfNeed:chat.n_id force:YES];
+            
             [self.delegate behaviorDidEndRequest:nil];
             
             

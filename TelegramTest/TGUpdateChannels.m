@@ -174,7 +174,7 @@
         
         timer = [[TGTimer alloc] initWithTimeout:2 repeat:NO completion:^{
             
-            [self failUpdateWithChannelId:statefullMessage.channel_id limit:100 withCallback:nil];
+            [self failUpdateWithChannelId:statefullMessage.channel_id limit:100 withCallback:nil errorCallback:nil];
             
         } queue:_queue.nativeQueue reservedObject:@(statefullMessage.channel_id)];
         
@@ -197,7 +197,7 @@
     TGMessageGroupHole *hole = [[[Storage manager] groupHoles:minUnimportantMsg.peer_id min:minId max:maxUnimportantMsg.n_id +1] lastObject];
     
     if(hole == nil)
-        hole = [[TGMessageGroupHole alloc] initWithUniqueId:-rand_int() peer_id:minUnimportantMsg.peer_id min_id:minId max_id:maxUnimportantMsg.n_id+1 date:minUnimportantMsg.date  count:0];
+        hole = [[TGMessageGroupHole alloc] initWithUniqueId:-rand_int() peer_id:minUnimportantMsg.peer_id min_id:minId max_id:maxUnimportantMsg.n_id+1 date:minUnimportantMsg.date+1  count:0];
     
     hole.max_id = maxUnimportantMsg.n_id+1;
     hole.messagesCount+= (int)messages.count;
@@ -349,7 +349,7 @@
         
     } else if([update isKindOfClass:[TL_updateChannelTooLong class]]) {
         
-        [self failUpdateWithChannelId:[update channel_id] limit:100 withCallback:nil];
+        [self failUpdateWithChannelId:[update channel_id] limit:100 withCallback:nil errorCallback:nil];
         
     } else if([update isKindOfClass:[TL_updateChannelMessageViews class]]) {
         
@@ -367,17 +367,82 @@
         // update channel interface.
         
         
+        TLChat *chat = [[ChatsManager sharedManager] find:[update channel_id]];
+        
+        
         TL_conversation *channel = [self conversationWithChannelId:[update channel_id]];
         
+        BOOL addInviteMessage = channel == nil;
+        
+        
         if(!channel) {
-            TL_conversation *channel = [[DialogsManager sharedManager] createDialogForChannel:[[ChatsManager sharedManager] find:[update channel_id]]];
+            channel = [[DialogsManager sharedManager] createDialogForChannel:chat];
             
             channel.invisibleChannel = NO;
             [channel save];
             
         }
         
-        [self failUpdateWithChannelId:[update channel_id] limit:100 withCallback:nil];
+        
+        
+        dispatch_block_t dispatch = ^{
+            
+            assert(channel != nil);
+            
+            [self failUpdateWithChannelId:[update channel_id] limit:5 withCallback:^(id response, TGMessageHole *longHole) {
+                
+                assert(channel != nil);
+                
+                if(!chat.isKicked && !chat.left && addInviteMessage) {
+                    [RPCRequest sendRequest:[TLAPI_channels_getParticipant createWithChannel:chat.inputPeer user_id:[[UsersManager currentUser] inputUser]] successHandler:^(id request, TL_channels_channelParticipant *participant) {
+                        
+                        
+                        [SharedManager proccessGlobalResponse:response];
+                        
+                        assert(channel != nil);
+                        
+                        if([participant.participant isKindOfClass:[TL_channelParticipantSelf class]]) {
+                            TL_localMessage *msg = [TL_localMessageService createWithFlags:TGMENTIONMESSAGE n_id:0 from_id:[participant.participant inviter_id] to_id:channel.peer date:[[MTNetwork instance] getTime] action:[TL_messageActionChatAddUser createWithUser_id:[UsersManager currentUserId]] fakeId:[MessageSender getFakeMessageId] randomId:rand_long() dstate:DeliveryStateNormal];
+                            
+                            [MessagesManager addAndUpdateMessage:msg];
+                            
+                        }
+                        
+                        
+                    } errorHandler:^(id request, RpcError *error) {
+                        
+                        [self failUpdateWithChannelId:[update channel_id] limit:100 withCallback:nil errorCallback:nil];
+                        
+                    }];
+                }
+                
+            } errorCallback:^(RpcError *error) {
+                
+                
+                
+            }];
+        };
+        
+        
+        if(chat.isKicked || chat.left) {
+            if(channel != nil) {
+                [[DialogsManager sharedManager] deleteDialog:channel completeHandler:^{
+                    if([Telegram conversation].peer_id == channel.peer_id) {
+                        [[Telegram rightViewController] showNotSelectedDialog];
+                    }
+                }];
+            }
+            
+            return;
+        } else
+            dispatch();
+        
+        
+        
+        
+        
+        
+        
         
     }
 
@@ -406,7 +471,7 @@
 }
 
 
--(void)failUpdateWithChannelId:(int)channel_id limit:(int)limit withCallback:(void (^)(id response, TGMessageHole *longHole))callback
+-(void)failUpdateWithChannelId:(int)channel_id limit:(int)limit withCallback:(void (^)(id response, TGMessageHole *longHole))callback errorCallback:(void (^)(RpcError *error))errorCallback
 {
     TL_channel *channel = [[ChatsManager sharedManager] find:channel_id];
     
@@ -495,7 +560,7 @@
                     {
                         int maxSyncedId = [[Storage manager] syncedMessageIdWithChannelId:conversation.peer_id important:NO latest:YES];
                         
-                        if(importantMsg.n_id > maxSyncedId) {
+                        if(importantMsg.n_id > maxSyncedId && maxSyncedId > 0) {
                             longHole = [[TGMessageHole alloc] initWithUniqueId:-rand_int() peer_id:importantMsg.peer_id min_id:maxSyncedId max_id:importantMsg.n_id date:0 count:0];
                             
                             [longHole save];
@@ -530,6 +595,12 @@
            
         } errorHandler:^(id request, RpcError *error) {
             
+            if(errorCallback != nil)
+            {
+                errorCallback(error);
+            }
+            
+            [_channelsInUpdating removeObjectForKey:@(channel_id)];
             
         } timeout:0 queue:_queue.nativeQueue];
     }

@@ -90,10 +90,10 @@ static ASQueue *queue;
     }];
 }
 
--(void)failUpdateWithChannelId:(int)channel_id limit:(int)limit withCallback:(void (^)(id response, TGMessageHole *longHole))callback {
+-(void)failUpdateWithChannelId:(int)channel_id limit:(int)limit withCallback:(void (^)(id response, TGMessageHole *longHole))callback errorCallback:(void (^)(RpcError *error))errorCallback {
     [queue dispatchOnQueue:^{
         
-        [_channelsUpdater failUpdateWithChannelId:channel_id limit:limit withCallback:callback];
+        [_channelsUpdater failUpdateWithChannelId:channel_id limit:limit withCallback:callback errorCallback:errorCallback];
         
     }];
 }

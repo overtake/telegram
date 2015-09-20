@@ -25,13 +25,24 @@
     } else if([action isKindOfClass:[TL_messageActionChatEditPhoto class]]) {
         text = [NSString stringWithFormat:NSLocalizedString(message.isChannelMessage ? @"MessageAction.ServiceMessage.ChangedChannelPhoto" : @"MessageAction.ServiceMessage.ChangedGroupPhoto", nil), message.isChannelMessage ? message.chat.title : [user fullName]];
     } else if([action isKindOfClass:[TL_messageActionChatAddUser class]]) {
-        TLUser *userAdd = [[UsersManager sharedManager] find:action.user_id];
-        if(action.user_id != message.from_id) {
-            text = [NSString stringWithFormat:NSLocalizedString(@"MessageAction.ServiceMessage.InvitedGroup", nil), [user fullName], [userAdd fullName]];
+        
+        if(message.isChannelMessage) {
+            text = NSLocalizedString(@"MessageAction.Service.InvitedYouToChannel",nil);
+
         } else {
-            text = [NSString stringWithFormat:NSLocalizedString(@"MessageAction.ServiceMessage.JoinedGroup", nil), [user fullName]];
+            TLUser *userAdd = [[UsersManager sharedManager] find:action.user_id];
+            if(action.user_id != message.from_id) {
+                text = [NSString stringWithFormat:NSLocalizedString(@"MessageAction.ServiceMessage.InvitedGroup", nil), [user fullName], [userAdd fullName]];
+            } else {
+                text = [NSString stringWithFormat:NSLocalizedString(@"MessageAction.ServiceMessage.JoinedGroup", nil), [user fullName]];
+            }
+            
+            text = [NSString stringWithFormat:NSLocalizedString(@"MessageAction.ServiceMessage.InvitedGroup", nil), [user fullName], [userAdd fullName]];
         }
-        text = [NSString stringWithFormat:NSLocalizedString(@"MessageAction.ServiceMessage.InvitedGroup", nil), [user fullName], [userAdd fullName]];
+        
+        
+        
+        
     }else if([action isKindOfClass:[TL_messageActionChatCreate class]]) {
         text = [NSString stringWithFormat:NSLocalizedString(@"MessageAction.ServiceMessage.CreatedChat", nil), [user fullName],action.title];
     } else if([action isKindOfClass:[TL_messageActionChatDeleteUser class]]) {
@@ -178,13 +189,13 @@
         
         if(message.action) {
             isAction = YES;
-            if(!userLast)
+            if(!userLast && message.from_id != 0)
                 userLast = [[UsersManager sharedManager] find:message.from_id];
             // if(userLast == [UsersManager currentUser])
             //  chatUserNameString = NSLocalizedString(@"Profile.You", nil);
             //  else
             
-             if(message.conversation.type != DialogTypeSecretChat && message.conversation.type != DialogTypeChannel)
+             if(message.conversation.type != DialogTypeSecretChat && userLast)
                 chatUserNameString = userLast ? userLast.fullName : NSLocalizedString(@"MessageAction.Service.LeaveChat", nil);
 
             
@@ -197,13 +208,22 @@
             } else if([action isKindOfClass:[TL_messageActionChatEditPhoto class]]) {
                 msgText = NSLocalizedString(@"MessageAction.Service.ChangedGroupPhoto", nil);
             } else if([action isKindOfClass:[TL_messageActionChatAddUser class]]) {
-                userSecond = [[UsersManager sharedManager] find:action.user_id];
-                if(action.user_id == message.from_id) {
-                    userSecond = nil;
-                    msgText = NSLocalizedString(@"MessageAction.Service.JoinedGroup", nil);
+                
+                if(message.isChannelMessage) {
+                     msgText = NSLocalizedString(@"MessageAction.Service.InvitedYouToChannel",nil);
                 } else {
-                    msgText = NSLocalizedString(@"MessageAction.Service.InvitedGroup", nil);
+                    userSecond = [[UsersManager sharedManager] find:action.user_id];
+                    if(action.user_id == message.from_id) {
+                        userSecond = nil;
+                        msgText = NSLocalizedString(@"MessageAction.Service.JoinedGroup", nil);
+                    } else {
+                        msgText = NSLocalizedString(@"MessageAction.Service.InvitedGroup", nil);
+                    }
                 }
+                
+                
+                
+                
             } else if([action isKindOfClass:[TL_messageActionChatCreate class]]) {
                 msgText = [NSString stringWithFormat:NSLocalizedString(@"MessageAction.Service.CreatedChat", nil),action.title];
             } else if([action isKindOfClass:[TL_messageActionChatDeleteUser class]]) {
@@ -319,12 +339,18 @@
         
     } else if([action isKindOfClass:[TL_messageActionChatAddUser class]]) {
         
-        if(action.user_id != message.from_id) {
-            user2 = [[UsersManager sharedManager] find:action.user_id];
-            actionText = NSLocalizedString(@"MessageAction.Service.InvitedGroup",nil);
+        if(message.isChannelMessage) {
+             actionText = NSLocalizedString(@"MessageAction.Service.InvitedYouToChannel",nil);
         } else {
-            actionText = NSLocalizedString(@"MessageAction.Service.JoinedGroup", nil);
+            if(action.user_id != message.from_id) {
+                user2 = [[UsersManager sharedManager] find:action.user_id];
+                actionText = NSLocalizedString(@"MessageAction.Service.InvitedGroup",nil);
+            } else {
+                actionText = NSLocalizedString(@"MessageAction.Service.JoinedGroup", nil);
+            }
         }
+        
+        
         
     } else if([action isKindOfClass:[TL_messageActionChatCreate class]]) {
         

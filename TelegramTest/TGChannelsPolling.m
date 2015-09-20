@@ -114,6 +114,9 @@ static int pollingDelay = 5;
             }];
         
             
+        } errorCallback:^(RpcError *error) {
+            if(!repeat && !_isStoped)
+                [self launchTimer:15 repeat:YES];
         }];
         
         
