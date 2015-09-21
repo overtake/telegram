@@ -246,14 +246,14 @@ static NSArray *channelUpdates;
         if([update isKindOfClass:[TL_updateShortChatMessage class]]) {
             TL_updateShortChatMessage *shortMessage = update;
             
-            [self addStatefullUpdate:update seq:[shortMessage seq] pts:[shortMessage pts] date:[shortMessage date] qts:0 pts_count:[shortMessage pts_count]];
+            [self addStatefullUpdate:update seq:[shortMessage seq] pts:[shortMessage pts] date:0 qts:0 pts_count:[shortMessage pts_count]];
             
         }
         
         if([update isKindOfClass:[TL_updateShortMessage class]] || [update isKindOfClass:[TL_updateShortSentMessage class]]) {
             TL_updateShortMessage *shortMessage = update;
             
-            [self addStatefullUpdate:update seq:[shortMessage seq] pts:[shortMessage pts] date:[shortMessage date] qts:0 pts_count:[shortMessage pts_count]];
+            [self addStatefullUpdate:update seq:[shortMessage seq] pts:[shortMessage pts] date:0 qts:0 pts_count:[shortMessage pts_count]];
             
         }
         

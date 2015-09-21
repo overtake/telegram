@@ -36,7 +36,7 @@
     
     if([self.chat isKindOfClass:[TL_channelFull class]]) {
         [attr appendString:NSLocalizedString(@"Compose.Members", nil) withColor:NSColorFromRGB(0x333333)];
-        [attr setFont:[NSFont fontWithName:@"HelveticaNeue" size:12] forRange:attr.range];
+        [attr setAlignment:NSCenterTextAlignment range:NSMakeRange(0, attr.length-1)];
         return attr;
     }
         
