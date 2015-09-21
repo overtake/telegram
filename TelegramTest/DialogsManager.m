@@ -290,13 +290,17 @@
 
 
 -(void)notifyAfterUpdateConversation:(TL_conversation *)conversation {
-    [Notification perform:[Notification notificationNameByDialog:conversation action:@"message"] data:@{KEY_DIALOG:conversation,KEY_LAST_CONVRESATION_DATA:[MessagesUtils conversationLastData:conversation]}];
     
-    NSUInteger position = [self positionForConversation:conversation];
+    [self.queue dispatchOnQueue:^{
+        [Notification perform:[Notification notificationNameByDialog:conversation action:@"message"] data:@{KEY_DIALOG:conversation,KEY_LAST_CONVRESATION_DATA:[MessagesUtils conversationLastData:conversation]}];
+        
+        NSUInteger position = [self positionForConversation:conversation];
+        
+        [Notification perform:DIALOG_MOVE_POSITION data:@{KEY_DIALOG:conversation, KEY_POSITION:@(position)}];
+        
+        [MessagesManager updateUnreadBadge];
+    }];
     
-    [Notification perform:DIALOG_MOVE_POSITION data:@{KEY_DIALOG:conversation, KEY_POSITION:@(position)}];
-    
-    [MessagesManager updateUnreadBadge];
 }
 
 
@@ -549,7 +553,7 @@
     
     [self.queue dispatchOnQueue:^{
         TL_conversation *dialog = message.conversation;
-        if(dialog.top_message != 0 && dialog.top_message != -1 && ((dialog.top_message > message.n_id && dialog.top_message < TGMINFAKEID)))
+        if(dialog.top_message != 0 && dialog.top_message != -1 && (((dialog.type == DialogTypeChannel ? dialog.top_important_message : dialog.top_message) > message.n_id && dialog.top_message < TGMINFAKEID)))
             return;
         
         
@@ -661,7 +665,7 @@
         for (TL_localMessage *message in messages) {
             TL_conversation *dialog = message.conversation;
             
-            if(dialog && (dialog.top_message > TGMINFAKEID || dialog.top_message < message.n_id)) {
+            if(dialog && (dialog.top_message > TGMINFAKEID || (dialog.type == DialogTypeChannel ? dialog.top_important_message : dialog.top_message) < message.n_id)) {
                 dialog.top_message = message.n_id;
                 
                 if(message.isImportantMessage)

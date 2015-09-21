@@ -45,15 +45,8 @@ static NSString *kYapChannelKey = @"channels_is_loaded";
             [self loadChannelsOnQueue:queue];
         else {
             
-            [[Storage manager] allChannels:^(NSArray *channels, NSArray *messages) {
-                
-                _channelsIsLoaded = YES;
-                
-                [[ChannelsManager sharedManager] add:channels];
-                
-                [self notifyListenersWithObject:channels];
-                
-            } deliveryOnQueue:queue];
+             _channelsIsLoaded = YES;
+            
         }
         
         
@@ -264,49 +257,35 @@ static BOOL isStorageLoaded;
     if(_state == TGModernCHStateLocal)
     {
         
-        [[Storage manager] dialogsWithOffset:0 limit:10000 completeHandler:^(NSArray *d, NSArray *m) {
+        [[Storage manager] dialogsWithOffset:_offset limit:[self.delegate conversationsLoadingLimit] completeHandler:^(NSArray *d, NSArray *m, NSArray *c) {
             
+            [[DialogsManager sharedManager] add:[d arrayByAddingObjectsFromArray:c]];
             
-            [[DialogsManager sharedManager] add:d];
+            [[ChannelsManager sharedManager] add:c];
             
             [_queue dispatchOnQueue:^{
                 
-                isStorageLoaded = YES;
+                if(d.count < [self.delegate conversationsLoadingLimit]) {
+                    isStorageLoaded = YES;
+                    
+                    _state = TGModernCHStateRemote;
+                    
+                    [self performLoadNext];
+                }
                 
-                _state = TGModernCHStateCache;
-                
-                [self performLoadNext];
+                [self dispatchWithFullList:[self mixChannelsWithConversations:[d arrayByAddingObjectsFromArray:c]] offset:(int)d.count];
                 
             }];
             
             
         }];
-    } else if(_state == TGModernCHStateCache) {
-        NSArray *all = [[DialogsManager sharedManager] all];
-        
-        BOOL needDispatch = all.count > 0;
-        
-        [[DialogsManager sharedManager] add:[[ChannelsManager sharedManager] all]];
-        
-        if(_offset >= all.count || !needDispatch) {
-            _state = TGModernCHStateRemote;
-            [self performLoadNext];
-            return;
-        }
+    }  else if(_state == TGModernCHStateRemote) {
         
         
-        
-        [self dispatchWithFullList:all];
-        
-        
-    } else if(_state == TGModernCHStateRemote) {
-        
-        int remoteOffset = (int) [[[[DialogsManager sharedManager] all] filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.type != 4 && self.type != 3 && self.type != 2"]] count];
-        
-        [RPCRequest sendRequest:[TLAPI_messages_getDialogs createWithOffset:remoteOffset limit:[_delegate conversationsLoadingLimit]] successHandler:^(id request, TL_messages_dialogs *response) {
+        [RPCRequest sendRequest:[TLAPI_messages_getDialogs createWithOffset:_offset limit:[_delegate conversationsLoadingLimit]] successHandler:^(id request, TL_messages_dialogs *response) {
             
             
-            if([response isKindOfClass:[TL_messages_dialogsSlice class]] && remoteOffset == response.n_count)
+            if([response isKindOfClass:[TL_messages_dialogsSlice class]] && _offset == response.n_count)
                 return;
             
             [SharedManager proccessGlobalResponse:response];
@@ -332,7 +311,7 @@ static BOOL isStorageLoaded;
                 _state = TGModernCHStateFull;
             
             
-            [self dispatchWithFullList:[[DialogsManager sharedManager] all]];
+            [self dispatchWithFullList:converted offset:(int)converted.count];
             
             
             
@@ -346,9 +325,9 @@ static BOOL isStorageLoaded;
 
 }
 
-- (NSArray *)mixChannelsWithConversations:(NSArray *)channels conversations:(NSArray *)conversations {
+- (NSArray *)mixChannelsWithConversations:(NSArray *)conversations {
     
-    NSArray *join = [channels arrayByAddingObjectsFromArray:conversations];
+    NSArray *join = conversations;
     
     return [join sortedArrayUsingComparator:^NSComparisonResult(TL_conversation * obj1, TL_conversation * obj2) {
         return (obj1.last_real_message_date < obj2.last_real_message_date ? NSOrderedDescending : (obj1.last_real_message_date > obj2.last_real_message_date ? NSOrderedAscending : (obj1.top_message < obj2.top_message ? NSOrderedDescending : NSOrderedAscending)));
@@ -356,37 +335,11 @@ static BOOL isStorageLoaded;
     
 }
 
--(void)dispatchWithFullList:(NSArray *)all {
+-(void)dispatchWithFullList:(NSArray *)all offset:(int)offset {
     
+    [_delegate didLoadedConversations:all withRange:NSMakeRange(_offset, all.count)];
     
-    NSArray *mixed = [self mixChannelsWithConversations:@[] conversations:all];
-    
-
-//    [mixed enumerateObjectsWithOptions:NSEnumerationReverse usingBlock:^(TL_conversation *obj, NSUInteger idx, BOOL *stop) {
-//        
-//        if(obj.type != DialogTypeChannel) {
-//            lastIndex = idx+1;
-//            *stop = YES;
-//        }
-//        
-//    }];
-//    
-//    
-//    
-    mixed = [mixed subarrayWithRange:NSMakeRange(_offset, MIN([self.delegate conversationsLoadingLimit],mixed.count - _offset))];
-//    
-//    NSArray *channels = [mixed filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.type == 4"]];
-//    
-//    NSUInteger channelsOffsetCount = [channels count];
-//    
-//    [[DialogsManager sharedManager] add:channels];
-//   
-    NSRange range = NSMakeRange(_offset, mixed.count);
-    
-    [_delegate didLoadedConversations:mixed withRange:range];
-    
-  //  _channelsOffset+=channelsOffsetCount;
-    _offset+= mixed.count;
+    _offset+= offset;
     
     _isLoading = NO;
 

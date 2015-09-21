@@ -229,11 +229,11 @@
     [self.tableView reloadData];
     
     
-    [[Storage manager] dialogsWithOffset:0 limit:1000 completeHandler:^(NSArray *d, NSArray *m) {
+    [[Storage manager] dialogsWithOffset:0 limit:1000 completeHandler:^(NSArray *d, NSArray *m, NSArray *c) {
         
         
         [ASQueue dispatchOnMainQueue:^{
-            [self insertAll:d];
+            [self insertAll:[d arrayByAddingObjectsFromArray:c]];
         }];
         
         

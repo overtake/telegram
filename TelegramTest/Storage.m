@@ -270,6 +270,7 @@ NSString *const tableMessageHoles = @"message_holes";
         //channel indexes
         {
             [db executeUpdate:[NSString stringWithFormat:@"CREATE INDEX if not exists top_im_idx ON %@(top_important_message)",tableChannelDialogs]];
+            [db executeUpdate:[NSString stringWithFormat:@"CREATE INDEX if not exists lrmd_cd_idx ON %@(last_real_message_date)",tableChannelDialogs]];
         }
         
         [db executeUpdate:[NSString stringWithFormat:@"create table if not exists %@ (n_id INTEGER PRIMARY KEY, serialized blob)",tableChats]];
@@ -1679,7 +1680,7 @@ TL_localMessage *parseMessage(FMResultSet *result) {
     
 }
 
--(void)dialogsWithOffset:(int)offset limit:(int)limit completeHandler:(void (^)(NSArray *d, NSArray *m))completeHandler {
+-(void)dialogsWithOffset:(int)offset limit:(int)limit completeHandler:(void (^)(NSArray *d, NSArray *m, NSArray *c))completeHandler {
     
     dispatch_queue_t dq = dispatch_get_current_queue();
     
@@ -1691,14 +1692,20 @@ TL_localMessage *parseMessage(FMResultSet *result) {
         FMResultSet *result = [db executeQuery:@"select messages.message_text,messages.from_id, dialogs.peer_id, dialogs.type,dialogs.last_message_date, messages.serialized serialized_message, dialogs.top_message,dialogs.sync_message_id,dialogs.last_marked_date,dialogs.unread_count unread_count, dialogs.notify_settings notify_settings, dialogs.top_message_fake top_message_fake, dialogs.read_inbox_max_id read_inbox_max_id, dialogs.last_marked_message last_marked_message,dialogs.last_real_message_date last_real_message_date, messages.flags from dialogs left join messages on dialogs.top_message = messages.n_id ORDER BY dialogs.last_real_message_date DESC LIMIT ? OFFSET ?",@(limit),@(offset)];
         
         
-        [self parseDialogs:result dialogs:dialogs messages:messages];
-
         
+        
+        [self parseDialogs:result dialogs:dialogs messages:messages];
+        
+        TL_conversation *conversation = [dialogs lastObject];
+        
+        NSArray *channels = [self selectChannelsWithMaxDate:conversation.last_message_date];
+        
+
         [result close];
         
         if(completeHandler){
             dispatch_async(dq, ^{
-                completeHandler(dialogs,messages);
+                completeHandler(dialogs,messages,channels);
             });
         }
     }];
@@ -2702,22 +2709,62 @@ TL_localMessage *parseMessage(FMResultSet *result) {
 
 -(void)insertChannels:(NSArray *)channels {
     
-    
     [self insertChannels:channels completionHandler:nil deliveryOnQueue:nil];
+}
+
+
+-(NSArray *)selectChannelsWithMaxDate:(int)date {
+    
+    NSMutableArray *channels = [NSMutableArray array];
+    
+    [queue inDatabaseWithDealocing:^(FMDatabase *db) {
+        
+        FMResultSet *result = [db executeQuery:@"select channel_messages.from_id, channel_dialogs.peer_id,channel_dialogs.last_message_date, channel_dialogs.top_important_message, channel_messages.serialized serialized_message,channel_dialogs.read_inbox_max_id,channel_dialogs.unread_important_count, channel_dialogs.top_message,channel_dialogs.sync_message_id,channel_dialogs.last_marked_date,channel_dialogs.unread_count unread_count, channel_dialogs.notify_settings notify_settings, channel_dialogs.pts pts, channel_dialogs.is_invisible is_invisible, channel_dialogs.last_marked_message last_marked_message,channel_dialogs.last_real_message_date last_real_message_date, channel_messages.flags from channel_dialogs left join channel_messages on channel_dialogs.top_important_message = channel_messages.n_id where last_message_date >= ? ORDER BY channel_dialogs.last_real_message_date ",@(date)];
+        
+        
+        NSMutableArray *messages = [[NSMutableArray alloc] init];
+        while ([result next]) {
+            
+            id serializedMessage = [result dataForColumn:@"serialized_message"];
+            TL_localMessage *message;
+            if(![serializedMessage isKindOfClass:[NSNull class]] && serializedMessage != nil) {
+                
+                @try {
+                    message = [TLClassStore deserialize:serializedMessage];
+                    message.flags = [result intForColumn:@"flags"];
+                }
+                @catch (NSException *exception) {
+                    
+                }
+                
+                if(message)
+                    [messages addObject:message];
+            }
+            
+            
+            TL_conversation *channel = [TL_conversation createWithPeer:[TL_peerChannel createWithChannel_id:-[result intForColumn:@"peer_id"]] top_message:[result intForColumn:@"top_message"] unread_count:[result intForColumn:@"unread_count"] last_message_date:[result intForColumn:@"last_message_date"] notify_settings:[TLClassStore deserialize:[result dataForColumn:@"notify_settings"]] last_marked_message:[result intForColumn:@"last_marked_message"] top_message_fake:0 last_marked_date:[result intForColumn:@"last_marked_date"] sync_message_id:[result intForColumn:@"sync_message_id"] read_inbox_max_id:[result intForColumn:@"read_inbox_max_id"] unread_important_count:[result intForColumn:@"unread_important_count"] lastMessage:message pts:[result intForColumn:@"pts"] isInvisibleChannel:[result boolForColumn:@"is_invisible"] top_important_message:[result intForColumn:@"top_important_message"]];
+            
+            
+            
+            [channels addObject:channel];
+            
+        }
+        
+    }];
+    
+    return channels;
     
 }
 
 -(void)allChannels:(void (^)(NSArray *channels, NSArray *messages))completeHandler deliveryOnQueue:(ASQueue *)deliveryQueue {
     [queue inDatabase:^(FMDatabase *db) {
-        
+
         FMResultSet *result = [db executeQuery:@"select channel_messages.from_id, channel_dialogs.peer_id,channel_dialogs.last_message_date, channel_dialogs.top_important_message, channel_messages.serialized serialized_message,channel_dialogs.read_inbox_max_id,channel_dialogs.unread_important_count, channel_dialogs.top_message,channel_dialogs.sync_message_id,channel_dialogs.last_marked_date,channel_dialogs.unread_count unread_count, channel_dialogs.notify_settings notify_settings, channel_dialogs.pts pts, channel_dialogs.is_invisible is_invisible, channel_dialogs.last_marked_message last_marked_message,channel_dialogs.last_real_message_date last_real_message_date, channel_messages.flags from channel_dialogs left join channel_messages on channel_dialogs.top_important_message = channel_messages.n_id ORDER BY channel_dialogs.last_real_message_date"];
         
         
         NSMutableArray *channels = [[NSMutableArray alloc] init];
         NSMutableArray *messages = [[NSMutableArray alloc] init];
         while ([result next]) {
-            
-
             
             id serializedMessage = [result dataForColumn:@"serialized_message"];
             TL_localMessage *message;
@@ -2744,8 +2791,7 @@ TL_localMessage *parseMessage(FMResultSet *result) {
 
         }
         
-        [result close];
-        
+
         [deliveryQueue dispatchOnQueue:^{
             
             completeHandler(channels,messages);

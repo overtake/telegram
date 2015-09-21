@@ -197,7 +197,7 @@
     TGMessageGroupHole *hole = [[[Storage manager] groupHoles:minUnimportantMsg.peer_id min:minId max:maxUnimportantMsg.n_id +1] lastObject];
     
     if(hole == nil)
-        hole = [[TGMessageGroupHole alloc] initWithUniqueId:-rand_int() peer_id:minUnimportantMsg.peer_id min_id:minId max_id:maxUnimportantMsg.n_id+1 date:minUnimportantMsg.date+1  count:0];
+        hole = [[TGMessageGroupHole alloc] initWithUniqueId:-rand_int() peer_id:minUnimportantMsg.peer_id min_id:minId max_id:maxUnimportantMsg.n_id+1 date:minUnimportantMsg.date-1  count:0];
     
     hole.max_id = maxUnimportantMsg.n_id+1;
     hole.messagesCount+= (int)messages.count;
@@ -533,7 +533,7 @@
                     conversation.pts = [response pts];
                     
                     conversation.top_message = [response top_message];
-                    conversation.lastMessage = importantMsg.n_id != topMsg.n_id ? importantMsg : topMsg;
+                    conversation.lastMessage = importantMsg;
                     conversation.top_important_message = [response top_important_message];
                     conversation.last_message_date = conversation.lastMessage.date;
                     
