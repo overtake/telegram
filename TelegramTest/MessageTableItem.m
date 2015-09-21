@@ -28,6 +28,20 @@
 #import "MessageTableItemSocial.h"
 #import "TL_localMessage_old32.h"
 #import "TL_localMessage_old34.h"
+
+
+@interface TGItemCache : NSObject
+@property (nonatomic,strong) NSAttributedString *header;
+@property (nonatomic,strong) TLUser *user;
+@end
+
+
+@implementation TGItemCache
+
+
+
+@end
+
 @interface MessageTableItem()
 @property (nonatomic) BOOL isChat;
 @property (nonatomic) NSSize _viewSize;
@@ -36,11 +50,20 @@
 
 @implementation MessageTableItem
 
+
+static NSCache *cItems;
+
 - (id)initWithObject:(TL_localMessage *)object {
     self = [super init];
     if(self) {
         self.message = object;
         
+        static dispatch_once_t onceToken;
+        dispatch_once(&onceToken, ^{
+            cItems = [[NSCache alloc] init];
+            [cItems setCountLimit:100];
+        });
+
         if(object.peer.peer_id == [UsersManager currentUserId])
             object.flags&= ~TGUNREADMESSAGE;
         //&& ![self.message.media isKindOfClass:[TL_messageMediaPhoto class]] && ![self.message.media isKindOfClass:[TL_messageMediaVideo class]]
@@ -54,8 +77,18 @@
         _containerOffsetForward  = 87;
         
         if(self.message) {
+            
+            TGItemCache *cache = [cItems objectForKey:@(channelMsgId(_isChat ? 1 : 0, object.from_id == 0 ? object.peer_id : object.from_id))];
            
-            self.user = [[UsersManager sharedManager] find:object.from_id];
+            if(cache) {
+                _user = cache.user;
+                _headerName = cache.header;
+            } else {
+                [self buildHeaderAndSaveToCache];
+            }
+            
+            
+            
             if(self.isForwadedMessage) {
                 if([object.fwd_from_id isKindOfClass:[TL_peerUser class]]) {
                     self.fwd_user = [[UsersManager sharedManager] find:object.fwd_from_id.user_id];
@@ -65,9 +98,11 @@
                 
             }
             
+            [self headerStringBuilder];
+            
             [self rebuildDate];
             
-            [self headerStringBuilder];
+            
         }
     }
     return self;
@@ -77,13 +112,8 @@
     return MAX(NSWidth([Telegram rightViewController].view.frame) - 150,100);
 }
 
-- (void) headerStringBuilder {
-//    if(!self.headerString) {
-//        self.headerString = [[NSMutableAttributedString alloc] init];
-//    }
-//    
-//    [[self.headerString mutableString] setString:@""];
-    
+-(void)buildHeaderAndSaveToCache {
+    _user = [[UsersManager sharedManager] find:self.message.from_id];
     
     NSString *name = self.isChat ? self.user.fullName : self.user.dialogFullName;
     
@@ -112,17 +142,14 @@
     });
     
     
-   
     
     NSColor *nameColor = LINK_COLOR;
     
-    
-    int uid = self.user.n_id;
-    
+        
     if(self.isChat && self.user.n_id != [UsersManager currentUserId]) {
         
         
-       int colorMask = [TMAvatarImageView colorMask:self.user];
+        int colorMask = [TMAvatarImageView colorMask:self.user];
         
         nameColor = colors[colorMask % (sizeof(colors) / sizeof(colors[0]))];
         
@@ -134,9 +161,9 @@
     
     [header appendString:name withColor:nameColor];
     
-//    if(self.message.from_id == 0) {
-//        [header appendAttributedString:[NSAttributedString attributedStringWithAttachment:channelIconAttachment()]];
-//    }
+    //    if(self.message.from_id == 0) {
+    //        [header appendAttributedString:[NSAttributedString attributedStringWithAttachment:channelIconAttachment()]];
+    //    }
     
     [header setFont:[NSFont fontWithName:@"HelveticaNeue-Medium" size:13] forRange:header.range];
     
@@ -144,6 +171,18 @@
     
     self.headerName = header;
     
+    TGItemCache *item = [[TGItemCache alloc] init];
+    item.user = _user;
+    item.header = header;
+    
+    [cItems setObject:item forKey:@(channelMsgId(_isChat ? 1 : 0, _message.from_id == 0 ? _message.peer_id : _message.from_id))];
+}
+
+- (void) headerStringBuilder {
+    
+    
+    
+    [self buildHeaderAndSaveToCache];
     
     
     if([self isReplyMessage])
@@ -171,6 +210,10 @@
         
         [self.forwardMessageAttributedString setFont:[NSFont fontWithName:@"HelveticaNeue" size:12] forRange:self.forwardMessageAttributedString.range];
         [self.forwardMessageAttributedString setFont:[NSFont fontWithName:@"HelveticaNeue-Medium" size:13] forRange:rangeUser];
+        
+        NSMutableParagraphStyle *style = [[NSMutableParagraphStyle alloc] init];
+        style.lineBreakMode = NSLineBreakByTruncatingTail;
+        
         [self.forwardMessageAttributedString addAttribute:NSParagraphStyleAttributeName value:style range:self.forwardMessageAttributedString.range];
     }
 }
