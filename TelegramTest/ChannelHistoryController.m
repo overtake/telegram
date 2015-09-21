@@ -83,17 +83,22 @@ static TGChannelsPolling *channelPolling;
     
 }
 
+
 -(NSArray *)proccessResponse:(NSArray *)result state:(ChatHistoryState)state next:(BOOL)next {
     NSArray *items = [self.controller messageTableItemsFromMessages:result];
     
     
-    NSArray *converted = [self filterAndAdd:items isLates:NO];
+    NSArray *converted = [self filterAndAdd:items acceptToFilters:nil];
     
     
     converted = [self sortItems:converted];
     
     
-    state = !next && state != ChatHistoryStateFull && ([self.filter isKindOfClass:[ChannelFilter class]] ? self.conversation.top_message <= self.server_min_id : self.conversation.top_important_message <= self.server_min_id) ? ChatHistoryStateFull : state;
+    state = !next && state != ChatHistoryStateFull && ([self.filter isKindOfClass:[ChannelFilter class]] ? self.conversation.top_message <= self.server_max_id : self.conversation.top_important_message <= self.server_max_id) ? ChatHistoryStateFull : state;
+    
+    if(state == ChatHistoryStateFull && !next) {
+        int b= 0 ;
+    }
     
         
     [self setState:state next:next];
@@ -104,7 +109,7 @@ static TGChannelsPolling *channelPolling;
 -(void)setFilter:(HistoryFilter *)filter {
     
     [self.queue dispatchOnQueue:^{
-        [self removeAllItems];
+        
         [super setFilter:filter];
     }];
     
@@ -331,7 +336,7 @@ static TGChannelsPolling *channelPolling;
     return firstObject.message.date;
 }
 
--(int)server_max_id {
+-(int)server_min_id {
     
     NSArray *allItems = [self selectAllItems];
     
@@ -340,11 +345,6 @@ static TGChannelsPolling *channelPolling;
     
     [allItems enumerateObjectsWithOptions:NSEnumerationReverse usingBlock:^(MessageTableItem *obj, NSUInteger idx, BOOL *stop) {
         
-        if(((MessageTableItem *)allItems[0]).message.n_id && ((MessageTableItem *)allItems[0]).message.n_id < 0 && ((MessageTableItem *)allItems[0]).message.hole.date == INT32_MAX) {
-            msgId = ((MessageTableItem *)allItems[0]).message.hole.max_id;
-            *stop = YES;
-            return;
-        }
         
         if(obj.message.n_id > 0 && obj.message.n_id < TGMINFAKEID)
         {
@@ -358,7 +358,7 @@ static TGChannelsPolling *channelPolling;
     
 }
 
--(int)server_min_id {
+-(int)server_max_id {
     
     NSArray *allItems = [self selectAllItems];
     

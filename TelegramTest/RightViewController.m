@@ -165,6 +165,9 @@
     self.passwordSetViewController = [[TGPasswordSetViewController alloc] initWithFrame:rect];
     
     
+    [self.messagesViewController loadViewIfNeeded];
+    
+    
 //    [self.navigationViewController pushViewController:self.messagesViewController animated:NO];
 //    
 //    

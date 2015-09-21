@@ -86,7 +86,7 @@ typedef void (^selectHandler)(NSArray *result, NSRange range);
 // protected methods
 -(NSArray *)selectAllItems;
 -(ASQueue *)queue;
--(NSArray *)filterAndAdd:(NSArray *)items isLates:(BOOL)isLatest;
+-(NSArray *)filterAndAdd:(NSArray *)items acceptToFilters:(NSDictionary **)accept;
 -(NSArray *)sortItems:(NSArray *)sort;
 -(void)setProccessing:(BOOL)isProccessing;
 -(void)setState:(ChatHistoryState)state next:(BOOL)next;

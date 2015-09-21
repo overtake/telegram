@@ -766,8 +766,18 @@ static const int maxWidth = 120;
     
     [self.photoCollection removeAllItems:NO];
     [self.photoCollection reloadData];
+    
+    
     [TGCache removeAllCachedImages:@[PCCACHE]];
 }
+
+-(void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
+    
+    [self.documentsTableView setConversation:nil];
+    [self.sharedLinksTableView setConversation:nil];
+}
+
 
 -(void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];

@@ -438,9 +438,7 @@
         [self.addMembersButton setFrame:NSMakeRect(100, yOffset, NSWidth(self.frame) - 200, 42)];
         
         yOffset+=42;
-    } else if(self.controller.chat.isManager) {
-        yOffset+=42;
-    }
+    } 
     
     if(!self.exportChatInvite.isHidden) {
         [self.exportChatInvite setFrame:NSMakeRect(100, yOffset, NSWidth(self.frame) - 200, NSHeight(self.exportChatInvite.frame))];

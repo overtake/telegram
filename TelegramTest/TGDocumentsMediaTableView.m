@@ -68,13 +68,16 @@
     
     [self.tableView reloadData];
     
-    [_loader drop:NO];
     
     _loader = nil;
     
-    _loader = [[ChatHistoryController alloc] initWithController:self historyFilter:[self.tableView historyFilter]];
-    
-    [_loader setPrevState:ChatHistoryStateFull];
+    if(_conversation) {
+        _loader = [[ChatHistoryController alloc] initWithController:self historyFilter:[self.tableView historyFilter]];
+        
+        [_loader setPrevState:ChatHistoryStateFull];
+    } else {
+        _loader = nil;
+    }
     
     [self loadNext:YES];
 

@@ -54,8 +54,7 @@ static ASQueue *queue;
 static NSMutableArray *listeners;
 
 
-
-
+static ChatHistoryController *observer;
 
 -(id)initWithController:(id<MessagesDelegate>)controller historyFilter:(Class)historyFilter {
     if(self = [super init]) {
@@ -78,6 +77,19 @@ static NSMutableArray *listeners;
             [filters addObject:[ChannelImportantFilter class]];
             listeners = [[NSMutableArray alloc] init];
             
+            observer = [[ChatHistoryController alloc] init];
+            
+            [Notification addObserver:observer selector:@selector(notificationReceiveMessages:) name:MESSAGE_LIST_RECEIVE];
+            
+            [Notification addObserver:observer selector:@selector(notificationReceiveMessage:) name:MESSAGE_RECEIVE_EVENT];
+            
+            [Notification addObserver:observer selector:@selector(notificationDeleteMessage:) name:MESSAGE_DELETE_EVENT];
+            
+            [Notification addObserver:observer selector:@selector(notificationFlushHistory:) name: MESSAGE_FLUSH_HISTORY];
+            
+            [Notification addObserver:observer selector:@selector(notificationDeleteObjectMessage:) name:DELETE_MESSAGE];
+            
+            [Notification addObserver:observer selector:@selector(notificationUpdateMessageId:) name:MESSAGE_UPDATE_MESSAGE_ID];
             
         });
         
@@ -103,17 +115,7 @@ static NSMutableArray *listeners;
 
          } synchronous:YES];
         
-        [Notification addObserver:self selector:@selector(notificationReceiveMessages:) name:MESSAGE_LIST_RECEIVE];
         
-        [Notification addObserver:self selector:@selector(notificationReceiveMessage:) name:MESSAGE_RECEIVE_EVENT];
-        
-        [Notification addObserver:self selector:@selector(notificationDeleteMessage:) name:MESSAGE_DELETE_EVENT];
-        
-        [Notification addObserver:self selector:@selector(notificationFlushHistory:) name: MESSAGE_FLUSH_HISTORY];
-        
-        [Notification addObserver:self selector:@selector(notificationDeleteObjectMessage:) name:DELETE_MESSAGE];
-        
-        [Notification addObserver:self selector:@selector(notificationUpdateMessageId:) name:MESSAGE_UPDATE_MESSAGE_ID];
         
     }
     
@@ -127,13 +129,11 @@ static NSMutableArray *listeners;
 
 
 
-
-
 -(void)addItemWithoutSavingState:(MessageTableItem *)item {
     
     [queue dispatchOnQueue:^{
         
-        NSArray *items = [self filterAndAdd:@[item] isLates:NO];
+        NSArray *items = [self filterAndAdd:@[item] acceptToFilters:nil];
 
         if(items.count == 0) {
             int bp = 0;
@@ -145,52 +145,52 @@ static NSMutableArray *listeners;
     
     [queue dispatchOnQueue:^{
         
-            NSArray *list = notify.object;
-        
-            list = [[self filterAndAdd:[self.controller messageTableItemsFromMessages:list] isLates:YES] mutableCopy];
+        NSArray *messages = [notify.object copy];
         
         
-            [listeners enumerateObjectsUsingBlock:^(WeakReference *weak, NSUInteger idx, BOOL *stop) {
-                
-                ChatHistoryController *controller = [weak nonretainedObjectValue];
-                
-                NSMutableArray *accepted = [[NSMutableArray alloc] init];
-                NSMutableArray *ignored = [[NSMutableArray alloc] init];
+        NSDictionary *acceptFilters;
+        
+        [self filterAndAdd:[[Telegram rightViewController].messagesViewController messageTableItemsFromMessages:messages] acceptToFilters:&acceptFilters];
+        
+        
+        [listeners enumerateObjectsUsingBlock:^(WeakReference *weak, NSUInteger idx, BOOL *stop) {
             
-                [list enumerateObjectsUsingBlock:^(MessageTableItem *obj, NSUInteger idx, BOOL *stop) {
-                    if(controller.controller.conversation.peer.peer_id == obj.message.peer_id) {
-                        [accepted addObject:obj];
-                    } else {
-                        [ignored addObject:obj];
-                    }
-                }];
-                
-                
-                if(accepted.count == 0) {
-                    
-                    [ASQueue dispatchOnMainQueue:^{
-                        [controller.controller didAddIgnoredMessages:ignored];
-                    }];
-                    return;
+            ChatHistoryController *controller = [weak nonretainedObjectValue];
+            
+            NSMutableArray *accepted = [[NSMutableArray alloc] init];
+            NSMutableArray *ignored = [[NSMutableArray alloc] init];
+            
+            
+            [acceptFilters[controller.filter.className] enumerateObjectsUsingBlock:^(MessageTableItem *obj, NSUInteger idx, BOOL *stop) {
+                if(controller.controller.conversation.peer.peer_id == obj.message.peer_id) {
+                    [accepted addObject:obj];
+                } else {
+                    [ignored addObject:obj];
                 }
-                
-                NSArray *items = [controller selectAllItems];
-                
-                int pos = (int) [items indexOfObject:accepted[0]];
-                
-                
-                NSRange range = NSMakeRange(pos+1, accepted.count);
-                
-                
-                accepted = [accepted mutableCopy];
-                [SelfDestructionController addMessages:accepted];
-                
-                [[ASQueue mainQueue] dispatchOnQueue:^{
-                    [controller.controller receivedMessageList:accepted inRange:range itsSelf:NO];
-                }];
-                
-                
             }];
+            
+            
+            if(accepted.count == 0) {
+                return;
+            }
+            
+            NSArray *items = [controller selectAllItems];
+            
+            int pos = (int) [items indexOfObject:accepted[0]];
+            
+            
+            NSRange range = NSMakeRange(pos+1, accepted.count);
+            
+            
+            accepted = [accepted mutableCopy];
+            [SelfDestructionController addMessages:accepted];
+            
+            [[ASQueue mainQueue] dispatchOnQueue:^{
+                [controller.controller receivedMessageList:accepted inRange:range itsSelf:NO];
+            }];
+            
+            
+        }];
     }];
     
 }
@@ -352,21 +352,25 @@ static NSMutableArray *listeners;
         
         TL_localMessage *message = [notification.userInfo objectForKey:KEY_MESSAGE];
         
-        // [self markAsReceived:[message n_id]];
         
-        if(!message || self.prevState != ChatHistoryStateFull)
+        if(!message)
             return;
         
-        MessageTableItem *tableItem = (MessageTableItem *) [[self.controller messageTableItemsFromMessages:@[message]] lastObject];
+        MessageTableItem *tableItem = (MessageTableItem *) [[[Telegram rightViewController].messagesViewController messageTableItemsFromMessages:@[message]] lastObject];
         
         if(!tableItem)
             return;
         
-        NSArray *res = [self filterAndAdd:@[tableItem] isLates:YES];
+        NSDictionary *accept;
+        
+        [self filterAndAdd:@[tableItem] acceptToFilters:&accept];
         
         [listeners enumerateObjectsUsingBlock:^(WeakReference *weak, NSUInteger idx, BOOL *stop) {
             
             ChatHistoryController *obj = [weak nonretainedObjectValue];
+            
+            if(obj.prevState != ChatHistoryStateFull || [accept[obj.filter.className] count] != 1)
+                return;
             
              if(message.peer_id == obj.controller.conversation.peer_id) {
                 
@@ -374,22 +378,16 @@ static NSMutableArray *listeners;
                 
                 int position = (int) [items indexOfObject:tableItem];
                 
-                if(res.count == 1) {
+                [SelfDestructionController addMessages:@[message]];
                     
-                    [SelfDestructionController addMessages:@[message]];
-                    
-                    [[ASQueue mainQueue] dispatchOnQueue:^{
+                [[ASQueue mainQueue] dispatchOnQueue:^{
                         
-                        if([obj isFiltredAccepted:message.filterType]) {
-                            [obj.controller receivedMessage:tableItem position:position+1 itsSelf:NO];
-                        }
+                    if([obj isFiltredAccepted:message.filterType]) {
+                        [obj.controller receivedMessage:tableItem position:position+1 itsSelf:NO];
+                    }
                     
-                    }];
-                }
-            } else {
-                [ASQueue dispatchOnMainQueue:^{
-                    [obj.controller didAddIgnoredMessages:@[tableItem]];
                 }];
+                 
             }
             
         }];
@@ -402,19 +400,12 @@ static NSMutableArray *listeners;
     
     [queue dispatchOnQueue:^{
         
-        [messageItems enumerateObjectsUsingBlock:^(MessageTableItem *obj, NSUInteger idx, BOOL *stop) {
+        int n_id = [notification.userInfo[KEY_MESSAGE_ID] intValue];
+        long random_id = [notification.userInfo[KEY_RANDOM_ID] longValue];
+        
+        [filters enumerateObjectsUsingBlock:^(Class obj, NSUInteger idx, BOOL *stop) {
             
-            int n_id = [notification.userInfo[KEY_MESSAGE_ID] intValue];
-            long random_id = [notification.userInfo[KEY_RANDOM_ID] longValue];
-            
-            if(obj.message.randomId == random_id) {
-                
-                [messageKeys removeObjectForKey:@(obj.message.n_id)];
-                [messageKeys setObject:obj forKey:@(n_id)];
-                
-                obj.message.n_id = n_id;
-                
-            }
+            [obj updateItemId:random_id withId:n_id];
             
         }];
         
@@ -423,30 +414,28 @@ static NSMutableArray *listeners;
 }
 
 
--(NSArray *)filterAndAdd:(NSArray *)items isLates:(BOOL)isLatest {
+-(NSArray *)filterAndAdd:(NSArray *)items acceptToFilters:(NSDictionary **)accepted {
     
     __block  NSMutableArray *filtred;
     
+    NSMutableDictionary *af = [[NSMutableDictionary alloc] init];
+    
     filtred = [[NSMutableArray alloc] init];
     
-    for (Class filterClass in filters) {
+    [listeners enumerateObjectsUsingBlock:^(WeakReference *obj, NSUInteger idx, BOOL *stop) {
         
-       [items enumerateObjectsUsingBlock:^(MessageTableItem *obj, NSUInteger idx, BOOL *stop) {
+        ChatHistoryController *controller = obj.nonretainedObjectValue;
+        
+        [items enumerateObjectsUsingBlock:^(MessageTableItem *obj, NSUInteger idx, BOOL *stop) {
             
+            Class filterClass = controller.filter.class;
             
             NSMutableArray *filterItems = [filterClass messageItems:obj.message.peer_id];
             NSMutableDictionary *filterKeys = [filterClass messageKeys:obj.message.peer_id];
             
             BOOL needAdd = [filterItems indexOfObject:obj] == NSNotFound;
             
-            //  здесь лучше бы подумать над условием, мб что нибудь в голову придет, пока так.
-           
-           BOOL standartFilter = (self.filter.class == HistoryFilter.class || self.filter.class == ChannelFilter.class || self.filter.class == ChannelImportantFilter.class);
-          
-            if((standartFilter ||
-                 (standartFilter && isLatest)) ||
-               (!standartFilter && obj.message.filterType & [filterClass type]) > 0) {
-                
+            if( (obj.message.filterType & [filterClass type]) > 0 && (controller.prevState == ChatHistoryStateFull || accepted == NULL)) {
                 
                 if(obj.message.n_id != 0) {
                     id saved = filterKeys[@(obj.message.n_id)];
@@ -460,7 +449,13 @@ static NSMutableArray *listeners;
                 if(needAdd) {
                     [filterItems addObject:obj];
                     
-                    if(self.filter.class == filterClass) {
+                    if(!af[NSStringFromClass(filterClass)]) {
+                        af[NSStringFromClass(filterClass)] = [NSMutableArray array];
+                    }
+                    
+                    [af[NSStringFromClass(filterClass)] addObject:obj];
+                    
+                    if(self == controller) {
                         [filtred addObject:obj];
                     }
                 }
@@ -468,9 +463,12 @@ static NSMutableArray *listeners;
         }];
         
         
+    }];
         
-    }
     
+
+    if(accepted != NULL)
+        *accepted = [af copy];
     
    return filtred;
     
@@ -502,6 +500,8 @@ static NSMutableArray *listeners;
     
     [queue dispatchOnQueue:^{
     
+        [self removeAllItems];
+        
         _h_filter = filter;
         messageKeys = [filter messageKeys:self.conversation.peer_id];
         messageItems = [filter messageItems:self.conversation.peer_id];
@@ -513,17 +513,7 @@ static NSMutableArray *listeners;
         _maxDate = [[MTNetwork instance] getTime];
         _minDate = self.conversation.last_marked_date+1;
 
-        
-        NSArray *items = [self selectAllItems];
-        
-        if(items.count > 0) {
-            MessageTableItem *item = items[0];
-            
-            if(self.filter.class == HistoryFilter.class && (item.message.n_id != self.conversation.top_message && item.message.n_id < TGMINFAKEID)) {
-                [[self.filter class] removeAllItems:self.conversation.peer.peer_id];
-            }
-        }
-        
+                
         _nextState = ChatHistoryStateCache;
         _prevState = ChatHistoryStateCache;
          
@@ -638,7 +628,7 @@ static NSMutableArray *listeners;
                 NSArray *items = [self.controller messageTableItemsFromMessages:result];
                 
                 
-                NSArray *converted = [self filterAndAdd:items isLates:NO];
+                NSArray *converted = [self filterAndAdd:items acceptToFilters:nil];
                 
                 
                 converted = [self sortItems:converted];
@@ -691,7 +681,7 @@ static NSMutableArray *listeners;
                             [SharedManager proccessGlobalResponse:response];
                             
                             
-                            NSArray *converted = [self filterAndAdd:[self.controller messageTableItemsFromMessages:messages] isLates:NO];
+                            NSArray *converted = [self filterAndAdd:[self.controller messageTableItemsFromMessages:messages] acceptToFilters:nil];
                             
                             converted = [self sortItems:converted];
                             
@@ -838,11 +828,7 @@ static NSMutableArray *listeners;
 }
 
 -(void)removeAllItems {
-    for (Class filterClass in filters) {
-        [filterClass removeAllItems:self.conversation.peer_id];
-    }
-    
-    int bp = 0;
+    [self.filter.class removeAllItems:self.conversation.peer_id];
 }
 
 -(void)removeAllItemsWithPeerId:(int)peer_id {
@@ -895,7 +881,7 @@ static NSMutableArray *listeners;
             
             [item.messageSender addEventListener:self];
             
-            NSArray *added = [self filterAndAdd:@[item] isLates:YES];
+            NSArray *added = [self filterAndAdd:@[item] acceptToFilters:nil];
             
             [listeners enumerateObjectsUsingBlock:^(WeakReference *weak, NSUInteger idx, BOOL *stop) {
                 
@@ -946,7 +932,7 @@ static NSMutableArray *listeners;
     dispatch_block_t block = ^ {
         [queue dispatchOnQueue:^{
             
-            NSArray *filtred =  [self filterAndAdd:items isLates:YES];
+            NSArray *filtred =  [self filterAndAdd:items acceptToFilters:nil];
             
             MessageTableItem *item = [items lastObject];
             
@@ -1012,7 +998,7 @@ static NSMutableArray *listeners;
                     [messageItems removeObject:checkItem];
                     [messageKeys removeObjectForKey:@(checkItem.message.fakeId)];
                     
-                    [self filterAndAdd:@[checkItem] isLates:YES];
+                    [self filterAndAdd:@[checkItem] acceptToFilters:nil];
                 }
                 
                 
@@ -1057,12 +1043,12 @@ static NSMutableArray *listeners;
 
 -(void)drop:(BOOL)dropMemory {
     
-    if(dropMemory) {
-        [queue dispatchOnQueue:^{
-            [self removeAllItems];
-        } synchronous:YES];
-    }
-    
+    [queue dispatchOnQueue:^{
+        
+        [self removeAllItems];
+        
+    } synchronous:YES];
+
     [queue dispatchOnQueue:^{
         _h_filter.controller = nil;
         [_h_filter.request cancelRequest];
@@ -1112,7 +1098,7 @@ static NSMutableArray *listeners;
     [listeners removeObjectAtIndex:index];
     
     [queue dispatchOnQueue:^{
-        [self drop:NO];
+        [self drop:YES];
     } synchronous:YES];
 }
 

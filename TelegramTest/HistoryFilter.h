@@ -56,6 +56,7 @@ typedef enum {
 
 +(void)removeAllItems:(int)peerId;
 
++(void)updateItemId:(long)randomId withId:(int)n_id;
 +(NSArray *)items:(NSArray *)messageIds;
 +(NSArray *)items:(NSArray *)messageIds withPeer_id:(int)peer_id;
 -(int)type;

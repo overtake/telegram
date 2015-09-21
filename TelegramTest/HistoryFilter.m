@@ -132,6 +132,28 @@ static NSString *kMessageItems = @"kMessageItems";
     return items;
 }
 
++(void)updateItemId:(long)randomId withId:(int)n_id {
+    
+    [ASQueue dispatchOnStageQueue:^{
+        
+        [self.fClassItems enumerateKeysAndObjectsUsingBlock:^(NSNumber *peer_id, NSMutableArray *obj, BOOL *stop) {
+            
+            NSArray *f = [obj filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.message.randomId = %ld",randomId]];
+            MessageTableItem *item = [f firstObject];
+            
+            if(item) {
+                NSMutableDictionary *keys =[self messageKeys:[peer_id intValue]];
+                [keys removeObjectForKey:@(item.message.n_id)];
+                item.message.n_id = n_id;
+                keys[@( item.message.n_id)] = item;
+            }
+            
+        }];
+        
+    }];
+    
+}
+
 +(NSArray *)items:(NSArray *)messageIds withPeer_id:(int)peer_id {
     
     __block NSMutableArray *items = [[NSMutableArray alloc] init];

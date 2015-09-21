@@ -90,7 +90,7 @@
 
 -(void)remoteRequest:(BOOL)next hole:(TGMessageHole *)hole callback:(void (^)(id response,ChatHistoryState state))callback {
     
-    int maxId = next ? self.controller.server_max_id : self.controller.server_min_id;
+    int maxId = next ? self.controller.server_min_id : self.controller.server_max_id;
     
     [self remoteRequest:next max_id:maxId hole:hole callback:callback];
     

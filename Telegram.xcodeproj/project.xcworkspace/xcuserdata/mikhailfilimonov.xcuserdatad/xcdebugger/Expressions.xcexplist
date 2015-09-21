@@ -687,6 +687,11 @@
       </ContextState>
       <ContextState
          contextName = "-[ChannelHistoryController max_id]:ChannelHistoryController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "[self selectAllItems]">
+            </PersistentString>
+         </PersistentStrings>
       </ContextState>
       <ContextState
          contextName = "-[MessageTableItemAudioDocument regenerate]:MessageTableItemAudioDocument.m">
@@ -936,6 +941,14 @@
          contextName = "-[ChannelImportantFilter fillGroupHoles:peer_id:bottom:]:ChannelImportantFilter.m">
       </ContextState>
       <ContextState
+         contextName = "__54-[ChatHistoryController filterAndAdd:acceptToFilters:]_block_invoke_2:ChatHistoryController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "controller.prevState">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "__37-[TGEnterPasswordPanel checkPassword]_block_invoke_2:TGEnterPasswordPanel.m">
       </ContextState>
       <ContextState
@@ -1063,6 +1076,14 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "-[ChatHistoryController filterAndAdd:acceptToFilters:]:ChatHistoryController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "items">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "-[DocumentSenderItem initWithPath:forConversation:]:DocumentSenderItem.m">
          <PersistentStrings>
             <PersistentString
@@ -1127,6 +1148,14 @@
       </ContextState>
       <ContextState
          contextName = "-[NSString(Extended) searchInStringByWordsSeparated:]:NSString+Extended.m">
+      </ContextState>
+      <ContextState
+         contextName = "-[ChatHistoryController removeAllItems]:ChatHistoryController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "">
+            </PersistentString>
+         </PersistentStrings>
       </ContextState>
       <ContextState
          contextName = "-[TGPVImageObject _didDownloadImage:]:TGPVImageObject.m">
@@ -1482,6 +1511,9 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "__35-[TGUpdateChannels proccessUpdate:]_block_invoke_6:TGUpdateChannels.m">
+      </ContextState>
+      <ContextState
          contextName = "__69-[MTDiscoverDatacenterAddressAction askForAnAddressDatacenterWithId:]_block_invoke:MTDiscoverDatacenterAddressAction.m">
       </ContextState>
       <ContextState
@@ -1683,6 +1715,9 @@
       </ContextState>
       <ContextState
          contextName = "-[TGUpdateMessageService mtProto:receivedParsedMessage:]:TGUpdateMessageService.m">
+      </ContextState>
+      <ContextState
+         contextName = "-[ChannelImportantFilter remoteRequest:max_id:hole:callback:]:ChannelImportantFilter.m">
       </ContextState>
       <ContextState
          contextName = "-[SettingsWindowController itemRefInLoginItems]:SettingsWindowController.m">
@@ -2350,6 +2385,11 @@
       </ContextState>
       <ContextState
          contextName = "__61-[ChannelImportantFilter remoteRequest:max_id:hole:callback:]_block_invoke:ChannelImportantFilter.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "request">
+            </PersistentString>
+         </PersistentStrings>
       </ContextState>
       <ContextState
          contextName = "-[TL_conversation save]:TL_conversation.m">
