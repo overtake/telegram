@@ -154,7 +154,7 @@ static const int seconds_to_notify = 120;
         if(![message.to_id isSecret] && ![TGPasslock isVisibility]) {
             NSString *cacheKey = [fromUser.photo.photo_small cacheKey];
             
-            if(message.to_id.chat_id != 0) {
+            if(chat != nil) {
                 cacheKey = [chat.photo.photo_small cacheKey];
             }
             

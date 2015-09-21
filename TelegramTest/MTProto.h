@@ -2,7 +2,7 @@
 //  MTProto.h
 //  Telegram
 //
-//  Auto created by Mikhail Filimonov on 19.09.15.
+//  Auto created by Mikhail Filimonov on 21.09.15.
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -2380,6 +2380,7 @@
 	
 @interface TLChatInvite()
 @property (nonatomic, strong) TLChat* chat;
+@property int flags;
 @property (nonatomic, strong) NSString* title;
 @end
 
@@ -2387,7 +2388,7 @@
 +(TL_chatInviteAlready*)createWithChat:(TLChat*)chat;
 @end
 @interface TL_chatInvite : TLChatInvite<NSCoding>
-+(TL_chatInvite*)createWithTitle:(NSString*)title;
++(TL_chatInvite*)createWithFlags:(int)flags title:(NSString*)title;
 @end
 	
 @interface TLInputStickerSet()

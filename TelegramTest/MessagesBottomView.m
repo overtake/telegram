@@ -901,10 +901,7 @@
         } else if(weakSelf.dialog.chat.isBroadcast  && !(weakSelf.dialog.chat.left || weakSelf.dialog.chat.isKicked)) {
             
             
-            [TMViewController showModalProgress];
             [weakSelf.dialog muteOrUnmute:^{
-                
-                [TMViewController hideModalProgressWithSuccess];
                 
                 [weakSelf setState:weakSelf.stateBottom animated:YES];
                 

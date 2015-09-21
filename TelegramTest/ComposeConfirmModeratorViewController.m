@@ -38,7 +38,7 @@
     [super setAction:action];
     
     
-    _participantRole = [TL_channelRoleModerator create];
+    _participantRole = [self.action.object isBroadcast] ? [TL_channelRoleEditor create] : [TL_channelRoleModerator create];
     
     _userContainer = [[TGUserContainerRowItem alloc] initWithUser:action.result.multiObjects[0]];
     

@@ -11,11 +11,22 @@
 @implementation ComposeActionAddChannelModeratorBehavior
 
 -(NSString *)doneTitle {
-    return NSLocalizedString(@"Compose.Next", nil);
+    return [self.action.currentViewController isKindOfClass:[ComposePickerViewController class]] ? @"" : NSLocalizedString(@"Compose.Next", nil);
 }
 
 -(NSUInteger)limit {
-    return 1;
+    return 0;
+}
+
+-(NSAttributedString *)centerTitle {
+    
+    NSMutableAttributedString *attr = [[NSMutableAttributedString alloc] init];
+    
+    [attr appendString:NSLocalizedString(@"Compose.Contacts", nil) withColor:NSColorFromRGB(0x333333)];
+    
+    [attr setAlignment:NSCenterTextAlignment range:attr.range];
+    
+    return attr;
 }
 
 -(TL_channel *)chat {
@@ -27,9 +38,15 @@
 }
 
 
+-(void)composeDidChangeSelected {
+    [self composeDidDone];
+}
+
 -(void)composeDidDone {
     
     if([self.action.currentViewController isKindOfClass:[ComposePickerViewController class]])  {
+        
+       
         
         [self.delegate behaviorDidStartRequest];
         
@@ -37,7 +54,12 @@
             
             [self.delegate behaviorDidEndRequest:response];
             
-            [[Telegram rightViewController] showComposeAddModerator:self.action];
+            if(!self.chat.isBroadcast) {
+              [[Telegram rightViewController] showComposeAddModerator:self.action];
+            } else {
+                self.action.result.singleObject = [TL_channelRoleEditor create];
+                [self addAccess];
+            }
             
         } errorHandler:^(id request, RpcError *error) {
             [self.delegate behaviorDidEndRequest:nil];
@@ -52,7 +74,13 @@
                         [RPCRequest sendRequest:[TLAPI_channels_inviteToChannel createWithChannel:self.chat.inputPeer users:[@[self.user.inputUser] mutableCopy]] successHandler:^(id request, id response) {
                             
                             [self.delegate behaviorDidEndRequest:response];
-                            [[Telegram rightViewController] showComposeAddModerator:self.action];
+                            
+                            if(!self.chat.isBroadcast) {
+                                [[Telegram rightViewController] showComposeAddModerator:self.action];
+                            } else {
+                                self.action.result.singleObject = [TL_channelRoleEditor create];
+                                [self addAccess];
+                            }
                             
                         } errorHandler:^(id request, RpcError *error) {
                             
@@ -76,37 +104,37 @@
         
         
     } else {
-        [self.delegate behaviorDidStartRequest];
         
-        [RPCRequest sendRequest:[TLAPI_channels_editAdmin createWithChannel:self.chat.inputPeer user_id:[self.user inputUser] role: self.action.result.singleObject] successHandler:^(id request, id response) {
-            
-            
-            [RPCRequest sendRequest:[TLAPI_channels_getParticipants createWithChannel:self.chat.inputPeer filter:[TL_channelParticipantsAdmins create] offset:0 limit:100] successHandler:^(id request, TL_channels_channelParticipants *response) {
-                
-                [SharedManager proccessGlobalResponse:response];
-                
-                ComposeAction *action = [[ComposeAction alloc] initWithBehaviorClass:[ComposeActionBehavior class] filter:@[] object:self.chat];
-                
-                action.result = [[ComposeResult alloc] initWithMultiObjects:response.participants];
-                
-                
-                NSArray *stack = self.action.currentViewController.navigationViewController.viewControllerStack;
-                
-                NSUInteger idx = [stack indexOfObject:[Telegram rightViewController].composeManagmentViewController];
-                
-                self.action.currentViewController.navigationViewController.viewControllerStack =[[stack subarrayWithRange:NSMakeRange(0, idx)] mutableCopy];
-                
-                
-                [[Telegram rightViewController] showComposeManagment:action];
-                
-                [self.delegate behaviorDidEndRequest:response];
-                
-            } errorHandler:^(id request, RpcError *error) {
-                [self.delegate behaviorDidEndRequest:nil];
-            }];
-            
-            
+        [self addAccess];
+        
+    }
+    
+}
 
+
+-(void)addAccess {
+    [self.delegate behaviorDidStartRequest];
+    
+    [RPCRequest sendRequest:[TLAPI_channels_editAdmin createWithChannel:self.chat.inputPeer user_id:[self.user inputUser] role: self.action.result.singleObject] successHandler:^(id request, id response) {
+        
+        
+        [RPCRequest sendRequest:[TLAPI_channels_getParticipants createWithChannel:self.chat.inputPeer filter:[TL_channelParticipantsAdmins create] offset:0 limit:100] successHandler:^(id request, TL_channels_channelParticipants *response) {
+            
+            [SharedManager proccessGlobalResponse:response];
+            
+            ComposeAction *action = [[ComposeAction alloc] initWithBehaviorClass:[ComposeActionBehavior class] filter:@[] object:self.chat];
+            
+            action.result = [[ComposeResult alloc] initWithMultiObjects:response.participants];
+            
+            
+            NSArray *stack = self.action.currentViewController.navigationViewController.viewControllerStack;
+            
+            NSUInteger idx = [stack indexOfObject:[Telegram rightViewController].composeManagmentViewController];
+            
+            self.action.currentViewController.navigationViewController.viewControllerStack =[[stack subarrayWithRange:NSMakeRange(0, idx)] mutableCopy];
+            
+            
+            [[Telegram rightViewController] showComposeManagment:action];
             
             [self.delegate behaviorDidEndRequest:response];
             
@@ -114,8 +142,14 @@
             [self.delegate behaviorDidEndRequest:nil];
         }];
         
-    }
-    
+        
+        
+        
+        [self.delegate behaviorDidEndRequest:response];
+        
+    } errorHandler:^(id request, RpcError *error) {
+        [self.delegate behaviorDidEndRequest:nil];
+    }];
 }
 
 

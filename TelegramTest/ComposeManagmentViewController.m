@@ -32,7 +32,7 @@
 -(void)setAction:(ComposeAction *)action {
     [super setAction:action];
     
-    [_tableView removeAllItems:NO];
+    
     
     
     [self setLoading:YES];
@@ -56,6 +56,9 @@
 
 
 -(void)reload {
+    
+    [self.tableView removeAllItems:NO];
+    
     TLChat *chat = self.action.object;
     
     if(chat.isAdmin) {
@@ -99,15 +102,44 @@
         
         TLUser *user = item.user;
         
+        __weak TGUserContainerRowItem *weakItem = item;
+        
         item.stateCallback = ^{
             
             if(![obj isKindOfClass:[TL_channelParticipantCreator class]]) {
-                ComposeAction *action = [[ComposeAction alloc] initWithBehaviorClass:[ComposeActionAddChannelModeratorBehavior class] filter:@[] object:chat reservedObjects:@[@(YES),obj]];
-                
-                action.result = [[ComposeResult alloc] initWithMultiObjects:@[user]];
-                
-                [[Telegram rightViewController] showComposeAddModerator:action];
+                if(chat.isBroadcast) {
+                    
+                    confirm(NSLocalizedString(@"Channel.DismissModerator", nil), NSLocalizedString(@"Channel.DismissModeratorConfirm", nil), ^{
+                        
+                        
+                        [RPCRequest sendRequest:[TLAPI_channels_editAdmin createWithChannel:chat.inputPeer user_id:user.inputUser role:[TL_channelRoleEmpty create]] successHandler:^(id request, id response) {
+                            
+                            
+                            self.tableView.defaultAnimation = NSTableViewAnimationEffectFade;
+                            [self.tableView removeItem:weakItem tableRedraw:YES];
+                            self.tableView.defaultAnimation = NSTableViewAnimationEffectNone;
+                            
+                        } errorHandler:^(id request, RpcError *error) {
+                            
+                        }];
+                        
+                        
+                    }, ^{
+                        
+                    });
+                    
+                } else {
+                    
+                    ComposeAction *action = [[ComposeAction alloc] initWithBehaviorClass:[ComposeActionAddChannelModeratorBehavior class] filter:@[] object:chat reservedObjects:@[@(YES),obj]];
+                    
+                    action.result = [[ComposeResult alloc] initWithMultiObjects:@[user]];
+                    
+                    [[Telegram rightViewController] showComposeAddModerator:action];
+                }
+
             }
+            
+           
             
         };
         

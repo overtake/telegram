@@ -3989,12 +3989,13 @@ static NSTextAttachment *headerMediaIcon() {
     
     dispatch_block_t block = ^{
         [[DialogsManager sharedManager] deleteDialog:dialog completeHandler:^{
+            
+            if(callback) callback();
+            
             if(dialog == strongSelf.conversation) {
                 [strongSelf.historyController removeAllItems];
                 [[Telegram sharedInstance] showNotSelectedDialog];
                 strongSelf.conversation = nil;
-                
-                if(callback) callback();
             }
         }];
     };

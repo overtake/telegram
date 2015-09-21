@@ -2,7 +2,7 @@
 //  MTProto.m
 //  Telegram
 //
-//  Auto created by Mikhail Filimonov on 19.09.15.
+//  Auto created by Mikhail Filimonov on 21.09.15.
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -17848,15 +17848,18 @@
 @end
 
 @implementation TL_chatInvite
-+(TL_chatInvite*)createWithTitle:(NSString*)title {
++(TL_chatInvite*)createWithFlags:(int)flags title:(NSString*)title {
 	TL_chatInvite* obj = [[TL_chatInvite alloc] init];
+	obj.flags = flags;
 	obj.title = title;
 	return obj;
 }
 -(void)serialize:(SerializedData*)stream {
+	[stream writeInt:self.flags];
 	[stream writeString:self.title];
 }
 -(void)unserialize:(SerializedData*)stream {
+	self.flags = [stream readInt];
 	self.title = [stream readString];
 }
         
@@ -17864,6 +17867,7 @@
     
     TL_chatInvite *objc = [[TL_chatInvite alloc] init];
     
+    objc.flags = self.flags;
     objc.title = self.title;
     
     return objc;

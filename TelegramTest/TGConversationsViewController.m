@@ -73,7 +73,6 @@
     [Notification addObserver:self selector:@selector(notificationDialogsReload:) name:DIALOGS_NEED_FULL_RESORT];
     [Notification addObserver:self selector:@selector(notificationDialogToTop:) name:DIALOG_TO_TOP];
     [Notification addObserver:self selector:@selector(notificationDialogRemove:) name:DIALOG_DELETE];
-    [Notification addObserver:self selector:@selector(notificationReadEvent:) name:DIALOG_DELETE];
     [Notification addObserver:self selector:@selector(notificationDialogChangePosition:) name:DIALOG_MOVE_POSITION];
     [Notification addObserver:self selector:@selector(notificationDialogSelectionChanged:) name:@"ChangeDialogSelection"];
     [self addScrollEvent];
@@ -154,7 +153,7 @@
     [self loadhistory:30];
     
     
-    [EmojiViewController reloadStickers];
+    
     
     [[BlockedUsersManager sharedManager] remoteLoad];
     
@@ -173,7 +172,9 @@
     [TGSecretAction dequeAllStorageActions];
     
     
-    
+    [ASQueue dispatchOnMainQueue:^{
+        [EmojiViewController reloadStickers];
+    }];
     
     [MessagesManager updateUnreadBadge];
 }

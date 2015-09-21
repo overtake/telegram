@@ -165,8 +165,9 @@
     }];
 
     
+    
 
-    GeneralSettingsBlockHeaderItem *selectorDesc = [[GeneralSettingsBlockHeaderItem alloc] initWithString:NSLocalizedString(@"Channel.ChoiceTypeDescription", nil) height:42 flipped:YES];
+    GeneralSettingsBlockHeaderItem *selectorDesc = [[GeneralSettingsBlockHeaderItem alloc] initWithString:[self.action.result.singleObject boolValue] ? NSLocalizedString(@"Channel.ChoiceTypeDescriptionPublic", nil) : NSLocalizedString(@"Channel.ChoiceTypeDescriptionPrivate", nil) height:42 flipped:YES];
     
     
     selectorDesc.xOffset = privateSelector.xOffset = publicSelector.xOffset = 30;

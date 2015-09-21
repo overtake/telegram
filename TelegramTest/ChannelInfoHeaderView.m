@@ -365,7 +365,7 @@
     [self.aboutView setHidden:self.type == ChatInfoViewControllerEdit || self.aboutView.string.length == 0];
     
     
-    [self.exportChatInvite setHidden:self.type != ChatInfoViewControllerEdit];
+    [self.exportChatInvite setHidden:self.type != ChatInfoViewControllerEdit || self.controller.chat.username.length > 0];
     
     [self.editAboutContainer setHidden:self.type != ChatInfoViewControllerEdit];
     
@@ -430,8 +430,6 @@
     
     
     
-    
-    
     if(!self.addMembersButton.isHidden) {
         yOffset+=42;
         
@@ -441,7 +439,13 @@
     } 
     
     if(!self.exportChatInvite.isHidden) {
+        
         [self.exportChatInvite setFrame:NSMakeRect(100, yOffset, NSWidth(self.frame) - 200, NSHeight(self.exportChatInvite.frame))];
+     
+        if(!self.linkEditButton.isHidden)
+        {
+            yOffset+=42;
+        }
         
     }
     
@@ -470,8 +474,6 @@
     }
     
     
-    if(self.controller.chat.isManager)
-        yOffset+=42;
 
     
     if(!self.enableCommentsButton.isHidden) {

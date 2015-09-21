@@ -10,7 +10,7 @@
 #import "ChannelInfoHeaderView.h"
 #import "ChatParticipantItem.h"
 #import "ComposeActionAddChannelModeratorBehavior.h"
-
+#import "TGSettingsTableView.h"
 
 
 @interface ChannelInfoViewController ()
@@ -42,12 +42,12 @@
 -(void)setChat:(TLChat *)chat {
     [super setChat:chat];
     
-    [self.rightNavigationBarView setHidden:!self.chat.isAdmin && !self.chat.isPublisher];
+    [self.rightNavigationBarView setHidden:!self.chat.isAdmin];
 }
 
 -(void)buildRightView {
     [super buildRightView];
-     [self.rightNavigationBarView setHidden:!self.chat.isAdmin && !self.chat.isPublisher];
+     [self.rightNavigationBarView setHidden:!self.chat.isAdmin];
 }
 
 - (void)reloadParticipants {
@@ -55,10 +55,11 @@
     [self.tableView addItem:self.headerItem tableRedraw:NO];
 
 
-    
-   [self.tableView addItem:self.bottomItem tableRedraw:NO];
-    [self.tableView reloadData];
+    [self.tableView addItem:self.bottomItem tableRedraw:NO];
+       
 
+    
+     [self.tableView reloadData];
 }
 
 

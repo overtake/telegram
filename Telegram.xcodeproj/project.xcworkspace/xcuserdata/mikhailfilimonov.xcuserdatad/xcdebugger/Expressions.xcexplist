@@ -751,6 +751,14 @@
          contextName = "+[TMAvatarImageView text:]:TMAvatarImageView.m">
       </ContextState>
       <ContextState
+         contextName = "+[EmojiViewController reloadStickers]:EmojiViewController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "[self instance].stickersTableView.stickers">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "-[SearchItem initWithDialogItem:searchString:]:SearchItem.m">
          <PersistentStrings>
             <PersistentString
@@ -1126,6 +1134,9 @@
                value = "self.tableItem">
             </PersistentString>
          </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[TGProccessUpdates updateShort:]:TGProccessUpdates.m">
       </ContextState>
       <ContextState
          contextName = "-[ChatHistoryController setFilter:]:ChatHistoryController.m">
@@ -1518,6 +1529,11 @@
       </ContextState>
       <ContextState
          contextName = "__35-[TGUpdateChannels proccessUpdate:]_block_invoke_6:TGUpdateChannels.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "">
+            </PersistentString>
+         </PersistentStrings>
       </ContextState>
       <ContextState
          contextName = "__69-[MTDiscoverDatacenterAddressAction askForAnAddressDatacenterWithId:]_block_invoke:MTDiscoverDatacenterAddressAction.m">
@@ -2204,6 +2220,14 @@
       </ContextState>
       <ContextState
          contextName = "__56-[DialogsManager updateTop:needUpdate:update_real_date:]_block_invoke:DialogsManager.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "dialog.top_important_message">
+            </PersistentString>
+            <PersistentString
+               value = "message.n_id">
+            </PersistentString>
+         </PersistentStrings>
       </ContextState>
       <ContextState
          contextName = "-[MessagesViewController resendItem:]:MessagesViewController.m">
@@ -2608,6 +2632,9 @@
       </ContextState>
       <ContextState
          contextName = "__32-[NewContactsManager fullReload]_block_invoke_2:NewContactsManager.m">
+      </ContextState>
+      <ContextState
+         contextName = "-[TGProccessUpdates applyUpdate:]:TGProccessUpdates.m">
       </ContextState>
       <ContextState
          contextName = "-[TMNavigationController pushViewController:animated:]:TMNavigationController.m">

@@ -53,7 +53,7 @@
                 }
                 
                 if(message.conversation.lastMessage.n_id == message.n_id) {
-                    message.flags&= ~TGUNREADMESSAGE;
+                    message.conversation.lastMessage.flags&= ~TGUNREADMESSAGE;
                 }
                 
                 if(message.n_id > message.conversation.last_marked_message) {

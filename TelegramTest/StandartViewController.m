@@ -176,20 +176,7 @@
     NSMenu *theMenu = [[NSMenu alloc] init];
     
     
-    NSMenuItem *createChannel = [NSMenuItem menuItemWithTitle:NSLocalizedString(@"ComposeMenu.CreateChannel", nil) withBlock:^(id sender) {
-        
-        
-        ComposeAction *action = [[ComposeAction alloc] initWithBehaviorClass:[ComposeActionCreateChannelBehavior class]];
-        
-        [[Telegram rightViewController] showComposeCreateChannel:action];
-        
-        [[NSApplication sharedApplication] activateIgnoringOtherApps:YES];
-        
-    }];
-    
-    [createChannel setImage:[NSImage imageNamed:@"ComposeMenuNewBroadcast"]];
-    [createChannel setHighlightedImage:[NSImage imageNamed:@"ComposeMenuNewBroadcastActive"]];
-    [theMenu addItem:createChannel];
+   
     
     
     NSMenuItem *createGropup = [NSMenuItem menuItemWithTitle:NSLocalizedString(@"ComposeMenu.CreateGroup", nil) withBlock:^(id sender) {
@@ -209,25 +196,6 @@
     
     
     
-//    
-//    NSMenuItem *broadcast = [NSMenuItem menuItemWithTitle:NSLocalizedString(@"ComposeMenu.Broadcast", nil) withBlock:^(id sender) {
-//        ComposeAction *action = [[ComposeAction alloc] initWithBehaviorClass:[ComposeActionBroadcastBehavior class]];
-//        
-//        if([[BroadcastManager sharedManager] all].count == 0) {
-//             [[Telegram rightViewController] showComposeWithAction:action];
-//        } else {
-//             [[Telegram rightViewController] showComposeBroadcastList:action];
-//        }
-//        
-//       [[NSApplication sharedApplication] activateIgnoringOtherApps:YES];
-//        
-//    }];
-//
-//    [broadcast setImage:[NSImage imageNamed:@"ComposeMenuNewBroadcast"]];
-//    [broadcast setHighlightedImage:[NSImage imageNamed:@"ComposeMenuNewBroadcastActive"]];
-//    [theMenu addItem:broadcast];
-    
-   
     
     NSMenuItem *secretChat = [NSMenuItem menuItemWithTitle:NSLocalizedString(@"ComposeMenu.SecretChat", nil) withBlock:^(id sender) {
         
@@ -244,6 +212,22 @@
     
     
     [theMenu addItem:secretChat];
+    
+    
+    NSMenuItem *createChannel = [NSMenuItem menuItemWithTitle:NSLocalizedString(@"ComposeMenu.CreateChannel", nil) withBlock:^(id sender) {
+        
+        
+        ComposeAction *action = [[ComposeAction alloc] initWithBehaviorClass:[ComposeActionCreateChannelBehavior class]];
+        
+        [[Telegram rightViewController] showComposeCreateChannel:action];
+        
+        [[NSApplication sharedApplication] activateIgnoringOtherApps:YES];
+        
+    }];
+    
+    [createChannel setImage:[NSImage imageNamed:@"ComposeMenuNewBroadcast"]];
+    [createChannel setHighlightedImage:[NSImage imageNamed:@"ComposeMenuNewBroadcastActive"]];
+    [theMenu addItem:createChannel];
     
     return theMenu;
 }

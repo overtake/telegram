@@ -47,7 +47,7 @@
         
         
         dispatch_block_t report_spam_block = ^{
-            [RPCRequest sendRequest:[TLAPI_messages_reportSpam createWithPeer:self.user.inputPeer] successHandler:^(id request, id response1) {
+            [RPCRequest sendRequest:[TLAPI_channels_reportSpam createWithChannel:self.channel.inputPeer user_id:self.user.inputUser n_id:self.msgIds] successHandler:^(id request, id response1) {
                 
                 success();
                 
