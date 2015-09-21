@@ -1960,6 +1960,14 @@
          contextName = "__open_card_block_invoke_2:FileUtils.m">
       </ContextState>
       <ContextState
+         contextName = "__66-[ChatHistoryController request:anotherSource:sync:selectHandler:]_block_invoke_2303:ChatHistoryController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "messages">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "-[MessageTableCellVideoView open]:MessageTableCellVideoView.m">
          <PersistentStrings>
             <PersistentString
@@ -3032,6 +3040,9 @@
          <PersistentStrings>
             <PersistentString
                value = "channel.chat">
+            </PersistentString>
+            <PersistentString
+               value = "update">
             </PersistentString>
          </PersistentStrings>
       </ContextState>

@@ -252,7 +252,15 @@
 -(void)proccessUpdate:(id)update {
     if([update isKindOfClass:[TL_updateNewChannelMessage class]])
     {
+        
+        
+        
         TL_localMessage *msg = [TL_localMessage convertReceivedMessage:[(TL_updateNewChannelMessage *)update message]];
+        
+        if(![self conversationWithChannelId:abs(msg.peer_id)]) {
+            [self proccessUpdate:[TL_updateChannel createWithChannel_id:abs(msg.peer_id)]];
+            return;
+        }
         
 
         if(![msg isImportantMessage]) {
@@ -598,6 +606,13 @@
             if(errorCallback != nil)
             {
                 errorCallback(error);
+            }
+            
+            if([error.error_msg isEqualToString:@"CHANNEL_PRIVATE"]) {
+                
+                [[ChatsManager sharedManager] add:@[[TL_channelForbidden createWithN_id:channel.n_id access_hash:channel.access_hash title:channel.title]]];
+                
+                [[DialogsManager sharedManager] deleteDialog:[self conversationWithChannelId:channel_id] completeHandler:nil];
             }
             
             [_channelsInUpdating removeObjectForKey:@(channel_id)];

@@ -631,6 +631,34 @@ void open_link(NSString *link) {
         return;
     }
     
+    if([link hasPrefix:@"openWithPeer:"]) {
+        
+        NSString *peer_str = [link substringFromIndex:@"openWithPeer:".length];
+        int peer_id = [[peer_str substringFromIndex:[peer_str rangeOfString:@":"].location+1] intValue];
+        Class peer = NSClassFromString([peer_str substringToIndex:[peer_str rangeOfString:@":"].location]);
+        if(peer == [TL_peerUser class]) {
+            [[Telegram rightViewController] showUserInfoPage:[[UsersManager sharedManager] find:peer_id]];
+        } else if(peer == [TL_peerChat class] || peer == [TL_peerChannel class]) {
+            
+            TLChat *chat = [[ChatsManager sharedManager] find:abs(peer_id)];
+            
+            
+            if(chat.type == TLChatTypeNormal) {
+                if(peer == [TL_peerChannel class]) {
+                    
+                    [[Telegram rightViewController] showByDialog:chat.dialog sender:nil];
+                } else {
+                    [[Telegram rightViewController] showChatInfoPage:chat];
+                }
+            }
+            
+            
+            
+        }
+        
+        return;
+    }
+    
     if([link hasPrefix:TGImportCardPrefix]) {
         
         open_card([link substringFromIndex:TGImportCardPrefix.length]);

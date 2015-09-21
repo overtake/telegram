@@ -2270,7 +2270,7 @@ static NSTextAttachment *headerMediaIcon() {
                 [self.normalNavigationCenterView enableDiscussion:!self.normalNavigationCenterView.discussIsEnabled force:YES];
             
             
-            self.historyController = [[[self hControllerClass] alloc] initWithController:self historyFilter:conversation.type == DialogTypeChannel && fromMsgId == 0 ? self.normalNavigationCenterView.discussIsEnabled ? [ChannelFilter class] : [ChannelImportantFilter class] : msg.isImportantMessage ? self.historyController.filter.class : [ChannelFilter class]];
+            self.historyController = [[[self hControllerClass] alloc] initWithController:self historyFilter:msg.isChannelMessage ? ( fromMsgId == 0 ? self.normalNavigationCenterView.discussIsEnabled ? [ChannelFilter class] : [ChannelImportantFilter class] : msg.isImportantMessage ? self.historyController.filter.class : [ChannelFilter class]) : [HistoryFilter class]];
             
             [self.normalNavigationCenterView enableDiscussion:[self.historyController.filter isKindOfClass:[ChannelFilter class]] force:YES];
                         

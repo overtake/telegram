@@ -430,6 +430,10 @@ static ChatHistoryController *observer;
             
             Class filterClass = controller.filter.class;
             
+            if(controller == self) {
+                int bp =0;
+            }
+            
             NSMutableArray *filterItems = [filterClass messageItems:obj.message.peer_id];
             NSMutableDictionary *filterKeys = [filterClass messageKeys:obj.message.peer_id];
             

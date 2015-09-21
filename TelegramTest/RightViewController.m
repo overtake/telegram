@@ -1037,7 +1037,7 @@
 
 
 -(void)showChannelInfoPage:(TLChat *)chat {
-    if((self.navigationViewController.currentController == self.channelInfoViewController && self.channelInfoViewController.chat.n_id == chat.n_id) || chat.dialog.isInvisibleChannel)
+    if((self.navigationViewController.currentController == self.channelInfoViewController && self.channelInfoViewController.chat.n_id == chat.n_id) || chat.isKicked || chat.left )
         return;
     
     

@@ -402,6 +402,8 @@
                     
                     [Notification perform:DIALOG_DELETE data:@{KEY_DIALOG:dialog}];
                     
+                    [Notification perform:MESSAGE_FLUSH_HISTORY data:@{KEY_DIALOG:dialog}];
+                    
                     [self->list removeObject:dialog];
                     [self->keys removeObjectForKey:@(dialog.peer_id)];
                     
