@@ -514,7 +514,13 @@
          contextName = "__51-[ComposeActionCreateChannelBehavior createChannel]_block_invoke65:ComposeActionCreateChannelBehavior.m">
       </ContextState>
       <ContextState
+         contextName = "__56-[TGModernConversationHistoryController performLoadNext]_block_invoke_2:TGModernConversationHistoryController.m">
+      </ContextState>
+      <ContextState
          contextName = "-[MessageTableItemText initWithObject:]:MessageTableItemText.m">
+      </ContextState>
+      <ContextState
+         contextName = "-[TGConversationsViewController didLoadedConversations:withRange:]:TGConversationsViewController.m">
       </ContextState>
       <ContextState
          contextName = "-[TMAvatarImageView rebuild:]:TMAvatarImageView.m">
@@ -2089,6 +2095,9 @@
          contextName = "-[UpgradeLayerSenderItem performRequest]:UpgradeLayerSenderItem.m">
       </ContextState>
       <ContextState
+         contextName = "-[Storage selectChannelsWithMaxDate:]:Storage.m">
+      </ContextState>
+      <ContextState
          contextName = "__58-[TGModernEncryptedUpdates dequeueInActions:conversation:]_block_invoke_2:TGModernEncryptedUpdates.m">
       </ContextState>
       <ContextState
@@ -3036,6 +3045,12 @@
          contextName = "__38-[TGEnterPasswordPanel initWithFrame:]_block_invoke_8:TGEnterPasswordPanel.m">
       </ContextState>
       <ContextState
+         contextName = "-[TGConversationTableItem initWithConversation:]:TGConversationTableItem.m">
+      </ContextState>
+      <ContextState
+         contextName = "-[RightViewController showChannelInfoPage:]:RightViewController.m">
+      </ContextState>
+      <ContextState
          contextName = "-[TGUpdateChannels proccessUpdate:]:TGUpdateChannels.m">
          <PersistentStrings>
             <PersistentString
@@ -3403,6 +3418,9 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "-[TGConversationsViewController insertAll:]:TGConversationsViewController.m">
+      </ContextState>
+      <ContextState
          contextName = "__40-[TGAllStickersTableView removeSticker:]_block_invoke_2:TGAllStickersTableView.m">
          <PersistentStrings>
             <PersistentString
@@ -3450,6 +3468,26 @@
             </PersistentString>
             <PersistentString
                value = "self.filter.class">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "__22-[DialogsManager add:]_block_invoke_2:DialogsManager.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "dialog.peer">
+            </PersistentString>
+            <PersistentString
+               value = "idx">
+            </PersistentString>
+            <PersistentString
+               value = "[self all]">
+            </PersistentString>
+            <PersistentString
+               value = "dialog.peer_id">
+            </PersistentString>
+            <PersistentString
+               value = "keys">
             </PersistentString>
          </PersistentStrings>
       </ContextState>

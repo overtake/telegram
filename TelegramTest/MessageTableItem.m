@@ -145,7 +145,7 @@ static NSCache *cItems;
     
     NSColor *nameColor = LINK_COLOR;
     
-        
+    
     if(self.isChat && self.user.n_id != [UsersManager currentUserId]) {
         
         

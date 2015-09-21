@@ -98,15 +98,15 @@
         }];
         
         [response.participants enumerateObjectsUsingBlock:^(TLChannelParticipant *obj, NSUInteger idx, BOOL *stop) {
-            
-            TLUser *user = users[@(obj.user_id)];
-            
-            [user rebuildNames];
-            
-            SelectUserItem *item = [[SelectUserItem alloc] initWithObject:user];
-            
-            [items addObject:item];
-            
+            if(obj.user_id != [UsersManager currentUserId]) {
+                TLUser *user = users[@(obj.user_id)];
+                
+                [user rebuildNames];
+                
+                SelectUserItem *item = [[SelectUserItem alloc] initWithObject:user];
+                
+                [items addObject:item];
+            }  
         }];
         
         [ASQueue dispatchOnMainQueue:^{

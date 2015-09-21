@@ -282,7 +282,8 @@ static BOOL isStorageLoaded;
     }  else if(_state == TGModernCHStateRemote) {
         
         
-        [RPCRequest sendRequest:[TLAPI_messages_getDialogs createWithOffset:_offset limit:[_delegate conversationsLoadingLimit]] successHandler:^(id request, TL_messages_dialogs *response) {
+        [RPCRequest sendRequest:[TLAPI_messages_getDialogs createWithOffset:_offset limit:100] successHandler:^(id request, TL_messages_dialogs *response) {
+            
             
             
             if([response isKindOfClass:[TL_messages_dialogsSlice class]] && _offset == response.n_count)
@@ -301,6 +302,10 @@ static BOOL isStorageLoaded;
                 
             }];
             
+            
+            [converted addObjectsFromArray:[[ChannelsManager sharedManager] all]];
+            
+            converted = [self mixChannelsWithConversations:converted];
             
             [[DialogsManager sharedManager] add:converted];
             [[Storage manager] insertDialogs:converted completeHandler:nil];

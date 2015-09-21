@@ -1536,6 +1536,12 @@ TL_localMessage *parseMessage(FMResultSet *result) {
 
 
 -(void)executeSaveConversation:(TL_conversation *)dialog  db:(FMDatabase *)db {
+   
+    
+    if(dialog.type == DialogTypeChannel) {
+        [self insertChannels:@[dialog]];
+        return;
+    }
     
     if(!dialog.isAddToList) {
         return;
@@ -1562,10 +1568,7 @@ TL_localMessage *parseMessage(FMResultSet *result) {
     
     
     [queue inDatabase:^(FMDatabase *db) {
-        if(dialog.type != DialogTypeChannel)
-            [self executeSaveConversation:dialog db:db];
-        else
-            [self insertChannels:@[dialog]];
+        [self executeSaveConversation:dialog db:db];
     }];
 }
 
@@ -2722,7 +2725,6 @@ TL_localMessage *parseMessage(FMResultSet *result) {
         FMResultSet *result = [db executeQuery:@"select channel_messages.from_id, channel_dialogs.peer_id,channel_dialogs.last_message_date, channel_dialogs.top_important_message, channel_messages.serialized serialized_message,channel_dialogs.read_inbox_max_id,channel_dialogs.unread_important_count, channel_dialogs.top_message,channel_dialogs.sync_message_id,channel_dialogs.last_marked_date,channel_dialogs.unread_count unread_count, channel_dialogs.notify_settings notify_settings, channel_dialogs.pts pts, channel_dialogs.is_invisible is_invisible, channel_dialogs.last_marked_message last_marked_message,channel_dialogs.last_real_message_date last_real_message_date, channel_messages.flags from channel_dialogs left join channel_messages on channel_dialogs.top_important_message = channel_messages.n_id where last_message_date >= ? ORDER BY channel_dialogs.last_real_message_date ",@(date)];
         
         
-        NSMutableArray *messages = [[NSMutableArray alloc] init];
         while ([result next]) {
             
             id serializedMessage = [result dataForColumn:@"serialized_message"];
@@ -2736,9 +2738,6 @@ TL_localMessage *parseMessage(FMResultSet *result) {
                 @catch (NSException *exception) {
                     
                 }
-                
-                if(message)
-                    [messages addObject:message];
             }
             
             
@@ -2749,6 +2748,8 @@ TL_localMessage *parseMessage(FMResultSet *result) {
             [channels addObject:channel];
             
         }
+        
+        [result close];
         
     }];
     

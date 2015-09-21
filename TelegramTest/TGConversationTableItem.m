@@ -47,6 +47,9 @@
     _checkMessage = self.conversation.lastMessage;
     
 
+    if(!_checkMessage) {
+        int b= 0 ;
+    }
     
    _messageText = notification.userInfo[KEY_LAST_CONVRESATION_DATA][@"messageText"];
     _dateText = notification.userInfo[KEY_LAST_CONVRESATION_DATA][@"dateText"];

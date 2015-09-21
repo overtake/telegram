@@ -29,8 +29,17 @@
 }
 
 -(NSAttributedString *)centerTitle {
+    
     NSMutableAttributedString *attr = [[NSMutableAttributedString alloc] init];
     
+    
+    
+    if([self.chat isKindOfClass:[TL_channelFull class]]) {
+        [attr appendString:NSLocalizedString(@"Compose.Members", nil) withColor:NSColorFromRGB(0x333333)];
+        [attr setFont:[NSFont fontWithName:@"HelveticaNeue" size:12] forRange:attr.range];
+        return attr;
+    }
+        
     [attr appendString:NSLocalizedString(@"Compose.Contacts", nil) withColor:NSColorFromRGB(0x333333)];
         
     NSRange range = [attr appendString:[NSString stringWithFormat:@" - %lu/%lu",self.action.result.multiObjects.count,[self limit]] withColor:DARK_GRAY];

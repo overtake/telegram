@@ -764,9 +764,11 @@
 
 - (void)add:(NSArray *)all {
     
+    int bp = 0;
+    
     [self.queue dispatchOnQueue:^{
         [all enumerateObjectsUsingBlock:^(TL_conversation * dialog, NSUInteger idx, BOOL *stop) {
-            TL_conversation *current = [keys objectForKey:@(dialog.peer.peer_id)];
+            TL_conversation *current = [keys objectForKey:@(dialog.peer_id)];
             if(current) {
                 current.unread_count = dialog.unread_count;
                 current.top_message = dialog.top_message;
@@ -783,9 +785,10 @@
                 current.unread_important_count = dialog.unread_important_count;
                 current.pts = dialog.pts;
                 current.invisibleChannel = dialog.invisibleChannel;
+                current.lastMessage = dialog.lastMessage;
             } else {
                 [self->list addObject:dialog];
-                [self->keys setObject:dialog forKey:@(dialog.peer.peer_id)];
+                [self->keys setObject:dialog forKey:@(dialog.peer_id)];
                 current = dialog;
             }
             
