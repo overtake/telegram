@@ -2071,12 +2071,10 @@ TL_localMessage *parseMessage(FMResultSet *result) {
     }];
 }
 
-
+//TODO for channels
 -(void)insertMedia:(TL_localMessage *)message {
     [queue inDatabase:^(FMDatabase *db) {
-        if(!message.isChannelMessage) {
-            [db executeUpdate:[NSString stringWithFormat:@"insert or replace into %@ (message_id,peer_id,serialized,date,filter_mask,random_id) values (?,?,?,?,?,?)",tableSharedMedia],@(message.n_id),@(message.peer_id),[TLClassStore serialize:message],@([[MTNetwork instance] getTime]),@(message.filterType),@(message.randomId)];
-        }
+        [db executeUpdate:[NSString stringWithFormat:@"insert or replace into %@ (message_id,peer_id,serialized,date,filter_mask,random_id) values (?,?,?,?,?,?)",tableSharedMedia],@(message.n_id),@(message.peer_id),[TLClassStore serialize:message],@([[MTNetwork instance] getTime]),@(message.filterType),@(message.randomId)];
     }];
 }
 
