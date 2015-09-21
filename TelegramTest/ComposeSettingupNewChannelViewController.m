@@ -96,7 +96,7 @@
     _joinLinkItem = [[GeneralSettingsBlockHeaderItem alloc] initWithString:export.link height:42 flipped:NO];
     _joinLinkItem.xOffset = 30;
     [_joinLinkItem setTextColor:TEXT_COLOR];
-    [_joinLinkItem setFont:TGSystemFont(15)];
+    [_joinLinkItem setFont:TGSystemFont(14)];
     _joinLinkItem.drawsSeparator = YES;
     
     weak();

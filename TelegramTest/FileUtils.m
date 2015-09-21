@@ -424,15 +424,11 @@ void join_group_by_hash(NSString * hash) {
                     [TMViewController showModalProgress];
                     
                     [RPCRequest sendRequest:[TLAPI_messages_importChatInvite createWithN_hash:hash] successHandler:^(RPCRequest *request, TLUpdates *response) {
-                    
                         
                         if([response chats].count > 0) {
                             TLChat *chat = [response chats][0];
                             
-                            
-                            TL_conversation *conversation = [[DialogsManager sharedManager] createDialogForChat:chat];
-                            
-                            conversation.invisibleChannel = NO;
+                            TL_conversation *conversation = chat.dialog;
                             
                             [[Telegram rightViewController] showByDialog:conversation sender:nil];
                             

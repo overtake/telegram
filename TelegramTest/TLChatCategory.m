@@ -25,7 +25,7 @@ DYNAMIC_PROPERTY(DDialog);
     TL_conversation *dialog = [self getDDialog];
     
     if(!dialog) {
-        if([self isKindOfClass:[TL_channel class]])
+        if(self.isChannel)
             dialog = [[ChannelsManager sharedManager] find:-self.n_id];
         else
             dialog = [[DialogsManager sharedManager] findByChatId:self.n_id];
@@ -36,13 +36,14 @@ DYNAMIC_PROPERTY(DDialog);
         dialog = [[Storage manager] selectConversation:self.peer];
         
         if(!dialog) {
-            if([self isKindOfClass:[TL_channel class]])
+            if(self.isChannel) {
                 dialog = [[DialogsManager sharedManager] createDialogForChannel:self];
+                [[ChannelsManager sharedManager] add:@[dialog]];
+            }
+            
             else
                 dialog = [[DialogsManager sharedManager] createDialogForChat:self];
-        }
-        
-        else
+        } else
             [[DialogsManager sharedManager] add:@[dialog]];
         
         [self setDDialog:dialog];
@@ -81,19 +82,22 @@ DYNAMIC_PROPERTY(DIALOGTITLE);
 - (NSAttributedString *) dialogTitle {
     NSMutableAttributedString *dialogTitleAttributedString = [[NSMutableAttributedString alloc] init];
     
-    if([self isKindOfClass:[TL_channel class]]) {
-        [dialogTitleAttributedString appendAttributedString:[NSAttributedString attributedStringWithAttachment:chatIconAttachment()]];
-        [dialogTitleAttributedString setSelectionAttachment:chatIconSelectedAttachment() forAttachment:chatIconAttachment()];
-    }
-    
+//    if([self isChannel]) {
+//        [dialogTitleAttributedString appendAttributedString:[NSAttributedString attributedStringWithAttachment:chatIconAttachment()]];
+//        [dialogTitleAttributedString setSelectionAttachment:chatIconSelectedAttachment() forAttachment:chatIconAttachment()];
+//    }
+//    
     
     [dialogTitleAttributedString appendString:self.cropTitle withColor:NSColorFromRGB(0x333333)];
     [dialogTitleAttributedString setSelectionColor:NSColorFromRGB(0xffffff) forColor:NSColorFromRGB(0x333333)];
     [dialogTitleAttributedString setFont:[NSFont fontWithName:@"HelveticaNeue" size:14] forRange:dialogTitleAttributedString.range];
     
     
-    
-    
+//    if([self isChannel] && [self isVerify]) {
+//        [dialogTitleAttributedString appendAttributedString:[NSAttributedString attributedStringWithAttachment:channelVerifyAttachment()]];
+//        [dialogTitleAttributedString setSelectionAttachment:channelVerifySelectedAttachment() forAttachment:chatIconAttachment()];
+//    }
+//
     [self setDIALOGTITLE:dialogTitleAttributedString];
     
     return [self getDIALOGTITLE];
@@ -147,6 +151,24 @@ static NSTextAttachment *chatIconSelectedAttachment() {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         instance = [NSMutableAttributedString textAttachmentByImage:[image_chatHighlighted() imageWithInsets:NSEdgeInsetsMake(0, 1, 0, 4)]];
+    });
+    return instance;
+}
+
+static NSTextAttachment *channelVerifyAttachment() {
+    static NSTextAttachment *instance;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        instance = [NSMutableAttributedString textAttachmentByImage:[image_Verify() imageWithInsets:NSEdgeInsetsMake(0, 0, 0, 2)]];
+    });
+    return instance;
+}
+
+static NSTextAttachment *channelVerifySelectedAttachment() {
+    static NSTextAttachment *instance;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        instance = [NSMutableAttributedString textAttachmentByImage:[image_Verify() imageWithInsets:NSEdgeInsetsMake(0, 0, 0, 2)]];
     });
     return instance;
 }
@@ -269,6 +291,14 @@ static NSTextAttachment *chatIconSelectedAttachment() {
 
 -(BOOL)isModerator {
     return self.flags & (1 << 4);
+}
+
+-(BOOL)isVerify {
+    return self.flags & (1 << 7);
+}
+        
+-(BOOL)isChannel {
+    return [self isKindOfClass:[TL_channel class]] || [self isKindOfClass:[TL_channelForbidden class]];
 }
 
 -(BOOL)isManager {

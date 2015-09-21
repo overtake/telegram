@@ -2564,7 +2564,7 @@ static NSTextAttachment *headerMediaIcon() {
        
         _delayedBlockHandle = perform_block_after_delay(0.2f, ^{
             _delayedBlockHandle = nil;
-            if(self.conversation.unread_count > 0 || self.conversation.peer.user_id == [UsersManager currentUserId]) {
+            if(self.conversation.unread_count > 0 || (self.conversation.unread_important_count > 0) || self.conversation.peer.user_id == [UsersManager currentUserId]) {
                 [self readHistory:0];
             }
         });
@@ -2574,7 +2574,7 @@ static NSTextAttachment *headerMediaIcon() {
 
 
 - (void)readHistory:(int)offset{
-    if(!self.conversation || self.conversation.unread_count == 0 || self.conversation.chat.isKicked || self.conversation.chat.left)
+    if(!self.conversation || (self.conversation.unread_count == 0 && self.conversation.unread_important_count == 0) || self.conversation.chat.isKicked || self.conversation.chat.left)
         return;
     
      [(MessagesManager *)[MessagesManager sharedManager] markAllInDialog:self.conversation callback:^(NSArray *ids) {
@@ -2584,6 +2584,7 @@ static NSTextAttachment *headerMediaIcon() {
     
     
     self.conversation.unread_count = 0;
+    self.conversation.unread_important_count = 0;
     _conversation.read_inbox_max_id = self.conversation.top_message;
     
     [self.conversation save];

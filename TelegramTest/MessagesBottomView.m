@@ -877,7 +877,7 @@
                 
                 [[DialogsManager sharedManager] updateLastMessageForDialog:weakSelf.dialog];
                 
-                [weakSelf.dialog save];
+                
                 
                 
                 [[DialogsManager sharedManager] notifyAfterUpdateConversation:weakSelf.dialog];

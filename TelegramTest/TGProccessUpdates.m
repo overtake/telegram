@@ -195,9 +195,9 @@ static NSArray *channelUpdates;
                 }
                 
             }];
-            
-            [_updateState setDate:[(TL_updates *)update date]];
-            [self saveUpdateState];
+//            
+//            [_updateState setDate:[(TL_updates *)update date]];
+//            [self saveUpdateState];
             
         }
         
@@ -901,7 +901,7 @@ static NSArray *channelUpdates;
    
     _holdUpdates = YES;
     
-    if( !_updateState || force) {
+    if( !_updateState || force || _updateState.pts == 0) {
         
         [RPCRequest sendRequest:[TLAPI_updates_getState create] successHandler:^(RPCRequest *request, TL_updates_state * state) {
     

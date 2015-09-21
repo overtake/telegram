@@ -40,7 +40,13 @@
                 TLChat *currentChat = [self->keys objectForKey:[obj valueForKey:key]];
                 if(currentChat != nil) {
                     
+                    BOOL isNeedUpdateTypeNotification = NO;
                     
+                    if(currentChat.flags != newChat.flags) {
+                        currentChat.flags = newChat.flags;
+                        isNeedUpdateTypeNotification = YES;
+                        [Notification perform:CHAT_FLAGS_UPDATED data:@{KEY_CHAT:currentChat}];
+                    }
                     
                     if([currentChat.photo.photo_small hashCacheKey] != [newChat.photo.photo_small hashCacheKey]) {
                         currentChat.photo = newChat.photo;
@@ -51,6 +57,8 @@
                         currentChat.title = newChat.title;
                         [Notification perform:CHAT_UPDATE_TITLE data:@{KEY_CHAT: currentChat}];
                     }
+                    
+                    currentChat.username = newChat.username;
                     
                     currentChat.participants_count = newChat.participants_count;
                     currentChat.date = newChat.date;
@@ -63,23 +71,18 @@
                         [[FullChatManager sharedManager] loadIfNeed:currentChat.n_id force:YES]; // force load chat if changed version.
                     }
                    
-                    
-                    
-                    BOOL isNeedUpdateTypeNotification = NO;
-                    
-                    if(currentChat.type != newChat.type) {
+                     if(currentChat.type != newChat.type) {
                         currentChat.type = newChat.type;
                         isNeedUpdateTypeNotification = YES;
                     }
                     
-                    if(currentChat.flags != newChat.flags) {
-                        currentChat.flags = newChat.flags;
-                        isNeedUpdateTypeNotification = YES;
+                    
+                    
+                    if(isNeedUpdateTypeNotification) {
                         [Notification perform:CHAT_FLAGS_UPDATED data:@{KEY_CHAT:currentChat}];
+                         [Notification perform:CHAT_UPDATE_TYPE data:@{KEY_CHAT:currentChat}];
                     }
                     
-                    if(isNeedUpdateTypeNotification)
-                        [Notification perform:CHAT_UPDATE_TYPE data:@{KEY_CHAT:currentChat}];
                     
                     
                 } else {

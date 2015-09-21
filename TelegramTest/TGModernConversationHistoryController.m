@@ -41,15 +41,8 @@ static NSString *kYapChannelKey = @"channels_is_loaded";
         
         [Notification addObserver:self selector:@selector(logout:) name:LOGOUT_EVENT];
         
-        if(isNeedRemoteLoading)
-            [self loadChannelsOnQueue:queue];
-        else {
-            
-             _channelsIsLoaded = YES;
-            
-        }
-        
-        
+        _channelsIsLoaded = !isNeedRemoteLoading;
+
     }
     
     return self;
@@ -57,6 +50,7 @@ static NSString *kYapChannelKey = @"channels_is_loaded";
 
 -(void)logout:(NSNotification *)notification {
     _channelsIsLoaded = NO;
+    
 }
 
 static const int limit = 1000;
@@ -152,7 +146,6 @@ static const int limit = 1000;
 -(void)saveResults:(NSArray *)channels onQueue:(ASQueue *)queue {
     [queue dispatchOnQueue:^{
         
-        
         _channelsIsLoaded = YES;
         
         [[ChannelsManager sharedManager] add:channels];
@@ -206,6 +199,10 @@ static BOOL isStorageLoaded;
             
             
             [channelsLoader addWeakEventListener:self];
+            
+            if(!channelsLoader.channelsIsLoaded) {
+                [channelsLoader loadChannelsOnQueue:queue];
+            }
             
             
             _state = isStorageLoaded ? TGModernCHStateCache : TGModernCHStateLocal;
@@ -348,6 +345,12 @@ static BOOL isStorageLoaded;
     
     _isLoading = NO;
 
+}
+
+-(void)clear {
+    _offset = 0;
+    _isLoading = NO;
+    [channelsLoader removeEventListener:self];
 }
 
 

@@ -495,7 +495,6 @@ static NSString *encryptionKey;
 -(void)saveUpdateState:(TGUpdateState *)state {
     [queue inDatabase:^(FMDatabase *db) {
         [db executeUpdate:@"delete from update_state where 1=1"];
-        
         [db executeUpdate:@"insert into update_state (pts, qts, date, seq,pts_count) values (?,?,?,?,?)",@(state.pts),@(state.qts),@(state.date),@(state.seq),@(state.pts_count)];
     }];
 }

@@ -311,6 +311,7 @@
                 if(![item itemIsUpdated])
                 {
                     [item needUpdateMessage:[[NSNotification alloc] initWithName:@"" object:nil userInfo:@{KEY_LAST_CONVRESATION_DATA:[MessagesUtils conversationLastData:obj],@"isNotForReload":@(YES)}]];
+                    
                 }
             } else {
                 item = [[TGConversationTableItem alloc] initWithConversation:obj];
@@ -327,6 +328,8 @@
             [self.tableView removeAllItems:NO];
             [self.tableView insert:items startIndex:0 tableRedraw:NO];
             [self.tableView reloadData];
+            
+            [self.tableView setSelectedByHash:self.tableView.selectedItem.hash];
             
         }];
     }];
@@ -361,9 +364,10 @@
     } else {
         object = [[TGConversationTableItem alloc] initWithConversation:conversation];
         [self.tableView insert:object atIndex:position tableRedraw:YES];
-        if(conversation == [Telegram rightViewController].messagesViewController.conversation)
-            [self.tableView setSelectedByHash:object.hash];
     }
+    
+    if(conversation == [Telegram rightViewController].messagesViewController.conversation)
+        [self.tableView setSelectedByHash:object.hash];
     
 }
 

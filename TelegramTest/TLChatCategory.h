@@ -39,6 +39,7 @@ typedef enum {
 -(BOOL)isPublisher;
 -(BOOL)isModerator;
 -(BOOL)isManager;
+-(BOOL)isChannel;
 -(id)inputPeer;
 -(NSString *)usernameLink;
 

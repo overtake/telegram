@@ -34,4 +34,6 @@ typedef enum {
 
 -(void)requestNextConversation;
 
+-(void)clear;
+
 @end

@@ -298,7 +298,6 @@
 
 -(void)setUnreadCount:(int)unread_count {
     self.unread_count = unread_count  < 0 ? 0 : unread_count;
-    
 }
 
 -(void)addUnread {
@@ -422,6 +421,7 @@ static void *kType;
 -(BOOL)canSendChannelMessageAsUser {
     return self.type == DialogTypeChannel && ((self.chat.isAdmin && !self.chat.isBroadcast) || !self.chat.isBroadcast);
 }
+
 
 
 @end

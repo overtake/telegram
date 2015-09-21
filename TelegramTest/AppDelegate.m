@@ -868,26 +868,27 @@ void exceptionHandler(NSException * exception)
             [TGAudioPlayerWindow hide];
             
             
-            [Storage drop];
-            
-            [[MTNetwork instance] drop];
-            
-
-            [Storage open:^{
+            [[Storage manager] drop:^{
                 
-                [TGCache clear];
-                [TGModernTypingManager drop];
-                [SharedManager drop];
-                [[MTNetwork instance] startNetwork];
-                [Telegram drop];
-                [TMViewController hidePasslock];
-                [MessageSender drop];
-                [Notification perform:LOGOUT_EVENT data:nil];
+                [[MTNetwork instance] drop];
                 
-                [MessagesManager updateUnreadBadge];
-                
-                [self initializeLoginWindow];
+                [Storage open:^{
+                    
+                    [TGCache clear];
+                    [TGModernTypingManager drop];
+                    [SharedManager drop];
+                    [[MTNetwork instance] startNetwork];
+                    [Telegram drop];
+                    [TMViewController hidePasslock];
+                    [MessageSender drop];
+                    [Notification perform:LOGOUT_EVENT data:nil];
+                    
+                    [MessagesManager updateUnreadBadge];
+                    
+                    [self initializeLoginWindow];
+                }];
             }];
+            
         }];  
         
     };
