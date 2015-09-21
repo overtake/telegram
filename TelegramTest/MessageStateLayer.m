@@ -90,7 +90,7 @@
             _viewsCountText = [TMTextField defaultTextField];
             [_viewsCountText setFont:TGSystemFont(12)];
             [_viewsCountText setTextColor:GRAY_TEXT_COLOR];
-            [_viewsCountText setStringValue:[[NSNumber numberWithInt:self.container.item.message.views] prettyNumber]];
+            [_viewsCountText setStringValue:[[NSNumber numberWithInt:MAX(1,self.container.item.message.views)] prettyNumber]];
             [_viewsCountText sizeToFit];
             [_viewsCountText setFrameOrigin:CGPointMake(NSWidth(self.frame) - NSWidth(_viewsCountText.frame) - 2,3)];
             [self addSubview:_viewsCountText];

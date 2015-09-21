@@ -171,6 +171,8 @@ typedef enum {
         } else {
             [super paste:sender];
             
+            [self checkWebpages];
+            
             return;
         }
         
@@ -285,7 +287,6 @@ typedef enum {
     
     [super textDidChange:notification];
     
-    [self checkWebpages];
 }
 
 

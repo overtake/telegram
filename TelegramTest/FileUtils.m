@@ -644,8 +644,7 @@ void open_link(NSString *link) {
             
             
             if(chat.type == TLChatTypeNormal) {
-                if(peer == [TL_peerChannel class]) {
-                    
+                if(peer == [TL_peerChannel class] && chat.dialog != [Telegram conversation]) {
                     [[Telegram rightViewController] showByDialog:chat.dialog sender:nil];
                 } else {
                     [[Telegram rightViewController] showChatInfoPage:chat];

@@ -79,6 +79,10 @@
 
 - (void)textDidChange:(NSNotification *)notification {
     
+    if(self.frame.size.height >= _maxHeight) {
+        return;
+    }
+    
     if(_limit > 0 && self.string.length > _limit) {
         
         [self setString:[self.string substringWithRange:NSMakeRange(0, _limit)]];
@@ -88,8 +92,6 @@
     }
     
     
-    
-    [self detectAndAddLinks:URLFindTypeHashtags | URLFindTypeLinks | URLFindTypeMentions];
     
     self.font = [NSFont fontWithName:@"HelveticaNeue" size:[SettingsArchiver checkMaskedSetting:BigFontSetting] ? 15 : 13];
     

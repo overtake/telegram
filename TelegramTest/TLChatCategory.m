@@ -170,7 +170,7 @@ static NSTextAttachment *chatIconSelectedAttachment() {
             }
             
             [str setSelectionColor:NSColorFromRGB(0xffffff) forColor:BLUE_UI_COLOR];
-            [str setSelectionColor:NSColorFromRGB(0xfffffe) forColor:NSColorFromRGB(0x9b9b9b)];
+            [str setSelectionColor:NSColorFromRGB(0xfffffe) forColor:NSColorFromRGB(0xa9a9a9)];
             [str setFont:[NSFont fontWithName:@"HelveticaNeue" size:13] forRange:str.range];
             
             return str;

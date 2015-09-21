@@ -140,7 +140,7 @@
     
     [header setFont:[NSFont fontWithName:@"HelveticaNeue-Medium" size:13] forRange:header.range];
     
-    [header addAttribute:NSLinkAttributeName value:[TMInAppLinks userProfile:uid] range:header.range];
+    [header addAttribute:NSLinkAttributeName value:[TMInAppLinks peerProfile:self.message.peer] range:header.range];
     
     self.headerName = header;
     
