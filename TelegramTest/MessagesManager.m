@@ -122,7 +122,7 @@ static const int seconds_to_notify = 120;
         [Notification perform:MESSAGE_UPDATE_TOP_MESSAGE data:@{KEY_MESSAGE:message,@"update_real_date":@(update_real_date)}];
         
         
-        if(message.from_id == [UsersManager currentUserId]) {
+        if(message.from_id == [UsersManager currentUserId] || (message.isChannelMessage && !message.isImportantMessage)) {
             return;
         }
         
@@ -131,12 +131,13 @@ static const int seconds_to_notify = 120;
                 return;
         
         
+        
         TLUser *fromUser = [[UsersManager sharedManager] find:message.from_id];
         
-        TLChat *chat = [[ChatsManager sharedManager] find:message.to_id.chat_id];
+        TLChat *chat = [[ChatsManager sharedManager] find:message.chat.n_id];
         
         
-        NSString *title = [message.to_id isSecret] || [TGPasslock isVisibility] ? appName() : [fromUser fullName];
+        NSString *title = message.isChannelMessage ? (chat.title) : ( [message.to_id isSecret] || [TGPasslock isVisibility] ? appName() : [fromUser fullName] );
         NSString *msg = message.message;
         if(message.action) {
             msg = [MessagesUtils serviceMessage:message forAction:message.action];
@@ -234,7 +235,7 @@ static const int seconds_to_notify = 120;
                 notification.soundName = [SettingsArchiver soundNotification];
             if (floor(NSAppKitVersionNumber) > 1187)
             {
-                if(![message.to_id isSecret])
+                if(![message.to_id isSecret] && (!message.isChannelMessage || message.chat.dialog.canSendMessage))
                     notification.hasReplyButton = YES;
                 notification.contentImage = image;
             }

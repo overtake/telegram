@@ -505,7 +505,7 @@
             return [self serviceMessage:message forAction:message.action];
         }
         
-        if([message.media isKindOfClass:[TL_messageMediaWebPage class]]) {
+        if([message.media isKindOfClass:[TL_messageMediaEmpty class]] || message.media == nil || [message.media isKindOfClass:[TL_messageMediaWebPage class]]) {
             return message.message;
         }
         

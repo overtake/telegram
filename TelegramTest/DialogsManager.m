@@ -52,6 +52,10 @@
                     
                 }
                 
+                if(message.conversation.lastMessage.n_id == message.n_id) {
+                    message.flags&= ~TGUNREADMESSAGE;
+                }
+                
                 if(message.n_id > message.conversation.last_marked_message) {
                     message.conversation.last_marked_message = message.n_id;
                     message.conversation.last_marked_date = message.date;
