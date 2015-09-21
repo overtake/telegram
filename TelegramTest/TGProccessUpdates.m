@@ -195,9 +195,9 @@ static NSArray *channelUpdates;
                 }
                 
             }];
-//            
-//            [_updateState setDate:[(TL_updates *)update date]];
-//            [self saveUpdateState];
+            
+            [_updateState setDate:[(TL_updates *)update date]];
+            [self saveUpdateState];
             
         }
         
@@ -246,14 +246,14 @@ static NSArray *channelUpdates;
         if([update isKindOfClass:[TL_updateShortChatMessage class]]) {
             TL_updateShortChatMessage *shortMessage = update;
             
-            [self addStatefullUpdate:update seq:[shortMessage seq] pts:[shortMessage pts] date:0 qts:0 pts_count:[shortMessage pts_count]];
+            [self addStatefullUpdate:update seq:[shortMessage seq] pts:[shortMessage pts] date:[shortMessage date] qts:0 pts_count:[shortMessage pts_count]];
             
         }
         
         if([update isKindOfClass:[TL_updateShortMessage class]] || [update isKindOfClass:[TL_updateShortSentMessage class]]) {
             TL_updateShortMessage *shortMessage = update;
             
-            [self addStatefullUpdate:update seq:[shortMessage seq] pts:[shortMessage pts] date:0 qts:0 pts_count:[shortMessage pts_count]];
+            [self addStatefullUpdate:update seq:[shortMessage seq] pts:[shortMessage pts] date:[shortMessage date] qts:0 pts_count:[shortMessage pts_count]];
             
         }
         
@@ -901,7 +901,7 @@ static NSArray *channelUpdates;
    
     _holdUpdates = YES;
     
-    if( !_updateState || force || _updateState.pts == 0) {
+    if( !_updateState || force) {
         
         [RPCRequest sendRequest:[TLAPI_updates_getState create] successHandler:^(RPCRequest *request, TL_updates_state * state) {
     

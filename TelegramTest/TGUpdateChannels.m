@@ -497,10 +497,9 @@
     if(conversation) {
         id request = _channelsInUpdating[@(channel_id)];
         
-        int pts = [self ptsWithChannelId:channel_id];
         
         if(request == nil) {
-            _channelsInUpdating[@(channel_id)] = [RPCRequest sendRequest:[TLAPI_updates_getChannelDifference createWithChannel:[TL_inputChannel createWithChannel_id:channel_id access_hash:channel.access_hash] filter:[TL_channelMessagesFilterEmpty create] pts:MAX(1,pts) limit:pts == 0 ? INT32_MAX : pts] successHandler:^(id request, id response) {
+            _channelsInUpdating[@(channel_id)] = [RPCRequest sendRequest:[TLAPI_updates_getChannelDifference createWithChannel:[TL_inputChannel createWithChannel_id:channel_id access_hash:channel.access_hash] filter:[TL_channelMessagesFilterEmpty create] pts:[self ptsWithChannelId:channel_id] limit:limit] successHandler:^(id request, id response) {
                 
                 
                 TGMessageHole *longHole;

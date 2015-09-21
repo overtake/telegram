@@ -180,7 +180,7 @@ static NSTextAttachment *channelVerifySelectedAttachment() {
         str = [[NSMutableAttributedString alloc] init];
         
         
-        if([self isKindOfClass:[TL_channel class]])
+        if([self isChannel])
         {
             
             TLChatFull *fullChat = [[FullChatManager sharedManager] find:self.n_id];
@@ -222,7 +222,7 @@ static NSTextAttachment *channelVerifySelectedAttachment() {
     
     NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] init];
     
-    if([self isKindOfClass:[TL_channel class]])
+    if([self isChannel])
     {
         
         TLChatFull *fullChat = [[FullChatManager sharedManager] find:self.n_id];

@@ -16,7 +16,7 @@ static NSString *kYapChannelKey = @"channels_is_loaded";
 @interface TGChannelsLoader : TGObservableObject
 
 @property (nonatomic,assign,readonly) BOOL channelsIsLoaded;
-
+@property (nonatomic,assign) BOOL isNeedRemoteLoading;
 @end
 
 
@@ -31,17 +31,16 @@ static NSString *kYapChannelKey = @"channels_is_loaded";
 -(instancetype)initWithQueue:(ASQueue *)queue {
     if(self = [super init]) {
         
-        __block BOOL isNeedRemoteLoading;
         
         [[Storage yap] readWithBlock:^(YapDatabaseReadTransaction * __nonnull transaction) {
             
-            isNeedRemoteLoading = ![[transaction objectForKey:kYapChannelKey inCollection:kYapChannelCollection] boolValue];
+            _isNeedRemoteLoading = ![[transaction objectForKey:kYapChannelKey inCollection:kYapChannelCollection] boolValue];
             
         }];
         
         [Notification addObserver:self selector:@selector(logout:) name:LOGOUT_EVENT];
         
-        _channelsIsLoaded = !isNeedRemoteLoading;
+        _channelsIsLoaded = !_isNeedRemoteLoading;
 
     }
     
@@ -172,6 +171,9 @@ static const int limit = 1000;
 @property (nonatomic,weak) id<TGModernConversationHistoryControllerDelegate> delegate;
 @property (nonatomic,assign) BOOL loadNextAfterLoadChannels;
 @property (nonatomic,assign) int channelsOffset;
+
+@property (nonatomic,assign) BOOL needMergeChannels;
+
 @end
 
 @implementation TGModernConversationHistoryController
@@ -204,6 +206,7 @@ static BOOL isStorageLoaded;
                 [channelsLoader loadChannelsOnQueue:queue];
             }
             
+            _needMergeChannels = channelsLoader.isNeedRemoteLoading;
             
             _state = isStorageLoaded ? TGModernCHStateCache : TGModernCHStateLocal;
             
@@ -283,8 +286,11 @@ static BOOL isStorageLoaded;
             
             
             
-            if([response isKindOfClass:[TL_messages_dialogsSlice class]] && _offset == response.n_count)
+            if([response isKindOfClass:[TL_messages_dialogsSlice class]] && _offset == response.n_count) {
+                _state = TGModernCHStateFull;
                 return;
+            }
+            
             
             [SharedManager proccessGlobalResponse:response];
             
@@ -300,9 +306,13 @@ static BOOL isStorageLoaded;
             }];
             
             
-            [converted addObjectsFromArray:[[ChannelsManager sharedManager] all]];
             
-            converted = [self mixChannelsWithConversations:converted];
+            if(_needMergeChannels) {
+                 converted = [[self mixChannelsWithConversations:[[[ChannelsManager sharedManager] all] arrayByAddingObjectsFromArray:converted]] mutableCopy];
+                _needMergeChannels = NO;
+            }
+            
+           
             
             [[DialogsManager sharedManager] add:converted];
             [[Storage manager] insertDialogs:converted completeHandler:nil];

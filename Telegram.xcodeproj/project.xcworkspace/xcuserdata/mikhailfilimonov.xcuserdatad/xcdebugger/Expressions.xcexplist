@@ -217,6 +217,9 @@
          contextName = "__33-[PhoneChangeController loadView]_block_invoke103:PhoneChangeController.m">
       </ContextState>
       <ContextState
+         contextName = "-[DialogsManager add:]:DialogsManager.m">
+      </ContextState>
+      <ContextState
          contextName = "__24-[TGCTextView drawRect:]_block_invoke_2:TGCTextView.m">
          <PersistentStrings>
             <PersistentString
@@ -900,6 +903,9 @@
          contextName = "-[TGProccessUpdates addUpdate:]:TGProccessUpdates.m">
       </ContextState>
       <ContextState
+         contextName = "-[TGUpdateChannels proccessStatelessUpdate:]:TGUpdateChannels.m">
+      </ContextState>
+      <ContextState
          contextName = "-[MessageTableCellPhotoView setCellState:]:MessageTableCellPhotoView.m">
          <PersistentStrings>
             <PersistentString
@@ -1184,6 +1190,9 @@
                value = "self.imageSize">
             </PersistentString>
          </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[TGProccessUpdates init]:TGProccessUpdates.m">
       </ContextState>
       <ContextState
          contextName = "__95-[TGPasswosdMainViewController setPassword:current_pswd_hash:email:hint:flags:successCallback:]_block_invoke314:TGPasswosdMainViewController.m">
@@ -1643,6 +1652,12 @@
                value = "messages">
             </PersistentString>
          </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "__77-[TGUpdateChannels failUpdateWithChannelId:limit:withCallback:errorCallback:]_block_invoke:TGUpdateChannels.m">
+      </ContextState>
+      <ContextState
+         contextName = "-[TGProccessUpdates initWithQueue:]:TGProccessUpdates.m">
       </ContextState>
       <ContextState
          contextName = "-[DownloadOperation initWithItem:]:DownloadOperation.m">
@@ -2258,6 +2273,9 @@
          contextName = "__56-[TGModernConversationHistoryController performLoadNext]_block_invoke180:TGModernConversationHistoryController.m">
       </ContextState>
       <ContextState
+         contextName = "__56-[TGModernConversationHistoryController performLoadNext]_block_invoke195:TGModernConversationHistoryController.m">
+      </ContextState>
+      <ContextState
          contextName = "__32-[NewLoginViewController signIn]_block_invoke227:NewLoginViewController.m">
       </ContextState>
       <ContextState
@@ -2724,6 +2742,14 @@
          contextName = "__54-[ComposeActionAddGroupMembersBehavior composeDidDone]_block_invoke:ComposeActionAddGroupMembersBehavior.m">
       </ContextState>
       <ContextState
+         contextName = "__64-[TGModernConversationHistoryController initWithQueue:delegate:]_block_invoke:TGModernConversationHistoryController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "isStorageLoaded">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "-[TGCTextView calcSelectedRange]:TGCTextView.m">
          <PersistentStrings>
             <PersistentString
@@ -3118,6 +3144,9 @@
          contextName = "__34-[TGDocumentsController loadNext:]_block_invoke:TGDocumentsMediaTableView.m">
       </ContextState>
       <ContextState
+         contextName = "-[TGProccessUpdates updateDifference:updateConnectionState:]:TGProccessUpdates.m">
+      </ContextState>
+      <ContextState
          contextName = "__38-[TGStickerPackEmojiController reload]_block_invoke:TGStickerPackEmojiController.m">
       </ContextState>
       <ContextState
@@ -3241,6 +3270,9 @@
                value = "chat">
             </PersistentString>
          </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "__30-[TGUpdateChannels addUpdate:]_block_invoke:TGUpdateChannels.m">
       </ContextState>
       <ContextState
          contextName = "-[MessageTableCellContainerView downloadProgressHandler:]:MessageTableCellContainerView.m">
@@ -3526,6 +3558,17 @@
          <PersistentStrings>
             <PersistentString
                value = "[item.social imageURL]">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "__27-[Storage saveUpdateState:]_block_invoke:Storage.m">
+      </ContextState>
+      <ContextState
+         contextName = "-[TGUpdateChannels failUpdateWithChannelId:limit:withCallback:errorCallback:]:TGUpdateChannels.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "limit">
             </PersistentString>
          </PersistentStrings>
       </ContextState>

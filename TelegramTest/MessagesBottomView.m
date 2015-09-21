@@ -909,7 +909,8 @@
             
             
         } else if(weakSelf.dialog.type == DialogTypeChannel && (weakSelf.dialog.chat.left || weakSelf.dialog.chat.isKicked)) {
-             [weakSelf.messagesViewController deleteDialog:weakSelf.dialog];
+            [[DialogsManager sharedManager] deleteDialog:weakSelf.dialog completeHandler:nil];
+            [[Telegram rightViewController] showNotSelectedDialog];
             
         } else if(!weakSelf.dialog.canSendMessage && weakSelf.dialog.user.isBot && _onClickToLockedView == nil) {
             
