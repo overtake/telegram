@@ -53,7 +53,7 @@
         self.participantRole = [TL_channelRoleModerator create];
         [_tableView reloadData];
         
-    } description:NSLocalizedString(@"Channel.Moderator", nil) height:42 stateback:^id(GeneralSettingsRowItem *item) {
+    } description:NSLocalizedString(@"Channel.Comments.Moderator", nil) height:42 stateback:^id(GeneralSettingsRowItem *item) {
         return @([self.participantRole isKindOfClass:[TL_channelRoleModerator class]]);
     }];
     
@@ -63,7 +63,7 @@
         self.participantRole = [TL_channelRoleEditor create];
         [_tableView reloadData];
         
-    } description:NSLocalizedString(@"Channel.Editor", nil) height:42 stateback:^id(GeneralSettingsRowItem *item) {
+    } description:NSLocalizedString(@"Channel.Comments.Editor", nil) height:42 stateback:^id(GeneralSettingsRowItem *item) {
         return @(![self.participantRole isKindOfClass:[TL_channelRoleModerator class]]);
     }];
     

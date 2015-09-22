@@ -7,7 +7,7 @@
 //
 
 #import "TLChatCategory.h"
-
+#import "NSNumber+NumberFormatter.h"
 @implementation TLChat (Category)
 
 DYNAMIC_PROPERTY(DType);
@@ -186,9 +186,12 @@ static NSTextAttachment *channelVerifySelectedAttachment() {
             TLChatFull *fullChat = [[FullChatManager sharedManager] find:self.n_id];
             
             if(fullChat.participants_count > 0) {
-                [str appendString:[NSString stringWithFormat:@"%d %@", fullChat.participants_count, fullChat.participants_count > 1 ?  NSLocalizedString(@"Conversation.Members", nil) : NSLocalizedString(@"Conversation.Member", nil)] withColor:NSColorFromRGB(0xa9a9a9)];
+                
+                NSString *count = fullChat.participants_count > 10000 ? [NSString stringWithFormat:@"%@ %@",[@(fullChat.participants_count) prettyNumber],NSLocalizedString(@"Conversation.Members", nil)] : [NSString stringWithFormat:@"%d %@", fullChat.participants_count, fullChat.participants_count > 1 ?  NSLocalizedString(@"Conversation.Members", nil) : NSLocalizedString(@"Conversation.Member", nil)];
+                
+                [str appendString:count withColor:NSColorFromRGB(0xa9a9a9)];
             } else {
-              [str appendString:NSLocalizedString(@"Conversation.ChannelTitle", nil) withColor:NSColorFromRGB(0xa9a9a9)];
+                [str appendString:NSLocalizedString(@"Conversation.ChannelTitle", nil) withColor:NSColorFromRGB(0xa9a9a9)];
             }
             
             [str setSelectionColor:NSColorFromRGB(0xffffff) forColor:BLUE_UI_COLOR];
@@ -198,6 +201,8 @@ static NSTextAttachment *channelVerifySelectedAttachment() {
             return str;
         }
 
+        
+        
         
         [str appendString:[NSString stringWithFormat:@"%d %@", self.participants_count, self.participants_count > 1 ?  NSLocalizedString(@"Conversation.Members", nil) : NSLocalizedString(@"Conversation.Member", nil)] withColor:NSColorFromRGB(0x9b9b9b)];
 
