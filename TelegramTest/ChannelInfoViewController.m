@@ -27,6 +27,7 @@
 
 -(void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
+    [super setType:ChatInfoViewControllerNormal];
 }
 
 -(void)setType:(ChatInfoViewControllerType)type {
