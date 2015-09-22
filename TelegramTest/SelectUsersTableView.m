@@ -240,12 +240,13 @@ static NSCache *cacheItems;
 
 - (void)selectionDidChange:(NSInteger)row item:(SelectUserItem *)item {
     
-    [self.selectDelegate selectTableDidChangedItem:item];
-    
-    if(self.multipleCallback != nil) {
-        self.multipleCallback(@[item.user]);
+    if(![item isKindOfClass:[TGSearchRowItem class]]) {
+        [self.selectDelegate selectTableDidChangedItem:item];
+        
+        if(self.multipleCallback != nil) {
+            self.multipleCallback(@[item.user]);
+        }
     }
-    
 }
 
 

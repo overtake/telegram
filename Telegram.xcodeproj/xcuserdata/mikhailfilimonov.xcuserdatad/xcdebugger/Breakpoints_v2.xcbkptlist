@@ -185,13 +185,13 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "TelegramTest/ChannelHistoryController.m"
-            timestampString = "464608810.306781"
+            filePath = "TelegramTest/ComposeActionAddChannelModeratorBehavior.m"
+            timestampString = "464609316.005315"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "97"
-            endingLineNumber = "97"
-            landmarkName = "-proccessResponse:state:next:"
+            startingLineNumber = "47"
+            endingLineNumber = "47"
+            landmarkName = "-composeDidDone"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
