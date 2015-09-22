@@ -384,7 +384,7 @@
     
     [self.enableCommentsButton setHidden:YES];
     
-    [self.addMembersButton setHidden:self.type != ChatInfoViewControllerEdit || self.controller.fullChat.participants_count >= 200];
+    [self.addMembersButton setHidden:self.type == ChatInfoViewControllerEdit || !self.controller.chat.isAdmin || self.controller.fullChat.participants_count >= 200];
     
     
     int yOffset = 42;
@@ -409,7 +409,14 @@
     }
     
     yOffset+=42;
+    
+    if(!self.addMembersButton.isHidden) {
         
+        [self.addMembersButton setFrame:NSMakeRect(100, yOffset, NSWidth(self.frame) - 200, 42)];
+        
+        yOffset+=42;
+    }
+    
     if(!self.managmentButton.isHidden) {
         [self.managmentButton setFrame:NSMakeRect(100,  yOffset, NSWidth(self.frame) - 200, 42)];
         yOffset+=42;
@@ -430,15 +437,11 @@
     
     
     
-    if(!self.addMembersButton.isHidden) {
-        yOffset+=42;
-        
-        [self.addMembersButton setFrame:NSMakeRect(100, yOffset, NSWidth(self.frame) - 200, 42)];
-        
-        yOffset+=42;
-    } 
+    
     
     if(!self.exportChatInvite.isHidden) {
+        
+        yOffset+=42;
         
         [self.exportChatInvite setFrame:NSMakeRect(100, yOffset, NSWidth(self.frame) - 200, NSHeight(self.exportChatInvite.frame))];
      

@@ -2046,6 +2046,14 @@
          contextName = "__46-[Storage lastMessageForPeer:completeHandler:]_block_invoke:Storage.m">
       </ContextState>
       <ContextState
+         contextName = "-[TGChangeUserNameContainerView setOberser:]:TGChangeUserNameContainerView.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "oberser.desc">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "__56-[ChannelImportantFilter fillGroupHoles:peer_id:bottom:]_block_invoke:ChannelImportantFilter.m">
          <PersistentStrings>
             <PersistentString

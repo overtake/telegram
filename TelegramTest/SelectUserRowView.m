@@ -147,9 +147,11 @@ static int offsetEditable = 30;
             return;
         }
         
-        [self setSelected:[self rowItem].isSelected animation:YES];
-        
-        [((SelectUsersTableView *)[self rowItem].table).selectDelegate selectTableDidChangedItem:[self rowItem]];
+        if([self rowItem].user.n_id != [UsersManager currentUserId]) {
+            [self setSelected:[self rowItem].isSelected animation:YES];
+            
+            [((SelectUsersTableView *)[self rowItem].table).selectDelegate selectTableDidChangedItem:[self rowItem]];
+        }
         
     }
     

@@ -230,9 +230,7 @@ static NSTextField *testTextField() {
     return location.y >= frameSize.height ? 0 : (count -1);
 }
 
--(void)detectBoldColorInString  {
-    
-}
+
 
 
 @end

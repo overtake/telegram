@@ -132,7 +132,7 @@
     
     size.width = width;
     size.height += 10;
-    size.height += self.photoSize.height ? self.photoSize.height + 10 : 0;
+    size.height += self.photoSize.height ? self.photoSize.height  : 0;
     self.blockSize = size;
     
     return YES;

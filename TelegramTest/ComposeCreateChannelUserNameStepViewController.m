@@ -9,6 +9,7 @@
 #import "ComposeCreateChannelUserNameStepViewController.h"
 
 #import "TGChangeUserNameContainerView.h"
+#import "NSAttributedString+Hyperlink.h"
 
 @interface ComposeCreateChannelUserNameStepViewController ()
 @property (nonatomic,strong) TGChangeUserNameContainerView *changeUserNameContainerView;
@@ -22,7 +23,16 @@
 -(void)loadView {
     [super loadView];
     
-    _observer = [[TGChangeUserObserver alloc] initWithDescription:NSLocalizedString(@"Channel.SetChannelLinkDescription", nil) placeholder:nil defaultUserName:nil];
+    
+    NSMutableAttributedString *attr = [[NSMutableAttributedString alloc] init];
+    
+    [attr appendString:NSLocalizedString(@"Channel.SetChannelLinkDescription", nil)  withColor:TEXT_COLOR];
+    
+    [attr setFont:TGSystemFont(12) forRange:attr.range];
+    
+    [attr detectBoldColorInStringWithFont:TGSystemMediumFont(12)];
+    
+    _observer = [[TGChangeUserObserver alloc] initWithDescription:attr placeholder:nil defaultUserName:nil];
     
     
     weak();

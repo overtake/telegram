@@ -15,15 +15,16 @@
 @property (nonatomic,copy) void (^didChangedUserName)(NSString *userName,BOOL isAcceptable);
 
 
-@property (nonatomic,strong) NSString *desc;
+@property (nonatomic,strong) NSAttributedString *desc;
 @property (nonatomic,strong) NSString *placeholder;
 @property (nonatomic,strong) NSString *defaultUserName;
+
 
 @property (nonatomic,strong) id (^needApiObjectWithUserName)(NSString *userName);
 
 
 
--(id)initWithDescription:(NSString *)desc placeholder:(NSString *)placeholder defaultUserName:(NSString *)defaultUserName;
+-(id)initWithDescription:(NSAttributedString *)desc placeholder:(NSString *)placeholder defaultUserName:(NSString *)defaultUserName;
 
 @end
 

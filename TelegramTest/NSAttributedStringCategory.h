@@ -19,6 +19,6 @@
 
 -(NSRange)selectRange:(NSSize)frameSize startPoint:(NSPoint)startPoint currentPoint:(NSPoint)currentPoint;
 
--(void)detectBoldColorInString;
+
 
 @end

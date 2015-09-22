@@ -9,7 +9,7 @@
 #import "ComposeSettingupNewChannelViewController.h"
 #import "TGSettingsTableView.h"
 #import "TGChangeUserNameContainerView.h"
-
+#import "NSAttributedString+Hyperlink.h"
 @interface TGUserNameContainerRowItem : TGGeneralRowItem
 @property (nonatomic,strong) TGChangeUserObserver *observer;
 @end
@@ -88,7 +88,17 @@
     self.action.result.singleObject = @(YES);
     
     _userNameContainerItem = [[TGUserNameContainerRowItem alloc] initWithHeight:100];
-    _userNameContainerItem.observer = [[TGChangeUserObserver alloc] initWithDescription:NSLocalizedString(@"Channel.NewChannelSettingUpUserNameDescription", nil) placeholder:@"" defaultUserName:@""];
+    
+    NSMutableAttributedString *attr = [[NSMutableAttributedString alloc] init];
+    
+    [attr appendString:NSLocalizedString(@"Channel.NewChannelSettingUpUserNameDescription", nil)  withColor:GRAY_TEXT_COLOR];
+    
+    [attr setFont:TGSystemFont(12) forRange:attr.range];
+    
+    [attr detectBoldColorInStringWithFont:TGSystemMediumFont(12)];
+    
+    
+    _userNameContainerItem.observer = [[TGChangeUserObserver alloc] initWithDescription:attr placeholder:@"" defaultUserName:@""];
     
     
     TL_chatInviteExported *export = self.action.reservedObject1;

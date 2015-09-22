@@ -13,9 +13,11 @@
 
 @implementation TGChangeUserObserver
 
--(id)initWithDescription:(NSString *)desc placeholder:(NSString *)placeholder defaultUserName:(NSString *)defaultUserName {
+-(id)initWithDescription:(NSAttributedString *)desc placeholder:(NSString *)placeholder defaultUserName:(NSString *)defaultUserName {
     if(self = [super init]) {
+        
         _desc = desc;
+        
         _placeholder = placeholder;
         _defaultUserName = defaultUserName;
     }
@@ -29,7 +31,7 @@
 @interface TGChangeUserNameContainerView ()<NSTextFieldDelegate>
 @property (nonatomic,strong) UserInfoShortTextEditView *textView;
 @property (nonatomic,strong) TMTextButton *button;
-@property (nonatomic,strong) NSTextView *descriptionView;
+@property (nonatomic,strong) TMTextField *descriptionView;
 
 @property (nonatomic,strong) NSProgressIndicator *progressView;
 @property (nonatomic,strong) NSImageView *successView;
@@ -126,18 +128,16 @@
         [self.textView.textView setFrameOrigin:NSMakePoint(NSMaxX(_telegramHolder.frame) - 5, NSMinY(self.textView.textView.frame))];
         
         
-        self.descriptionView = [[NSTextView alloc] initWithFrame:NSMakeRect(26, NSMaxY(_textView.frame), NSWidth(self.frame) - 60, 100)];
+        self.descriptionView = [[TMTextField alloc] initWithFrame:NSMakeRect(26, NSMaxY(_textView.frame), NSWidth(self.frame) - 60, 100)];
         
-        [self.descriptionView setString:NSLocalizedString(@"UserName.description", nil)];
+        [self.descriptionView setStringValue:NSLocalizedString(@"UserName.description", nil)];
         
         [self.descriptionView setFont:[NSFont fontWithName:@"HelveticaNeue" size:12]];
         
         [self.descriptionView sizeToFit];
         [self.descriptionView setSelectable:NO];
-        
-        [self.descriptionView setTextContainerInset:NSMakeSize(0, 0)];
-        
-        
+        [self.descriptionView setBordered:NO];
+        [self.descriptionView setDrawsBackground:NO];
         [self addSubview:self.descriptionView];
         
         
@@ -149,7 +149,9 @@
 -(void)setOberser:(TGChangeUserObserver *)oberser {
     _oberser = oberser;
     
-    [_descriptionView setString:oberser.desc];
+    
+
+    [_descriptionView setAttributedStringValue:oberser.desc];
     [_descriptionView sizeToFit];
     
     NSMutableAttributedString *str = [[NSMutableAttributedString alloc] init];
@@ -345,7 +347,7 @@
 -(void)setFrameSize:(NSSize)newSize {
     [super setFrameSize:newSize];
     
-    NSSize size = [self.descriptionView.attributedString sizeForTextFieldForWidth:newSize.width - 60];
+    NSSize size = [self.descriptionView.attributedStringValue sizeForTextFieldForWidth:newSize.width - 60];
     
     [self.descriptionView setFrameSize:NSMakeSize(newSize.width - 60, size.height)];
 }

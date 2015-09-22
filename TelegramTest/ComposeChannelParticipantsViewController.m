@@ -50,6 +50,7 @@
     
     [_tableView removeAllItems:YES];
     
+    [self.doneButton setDisable:YES];
     
     [_tableView setSelectLimit:action.behavior.limit];
     _tableView.selectDelegate = self;
@@ -81,8 +82,10 @@
     
     [self.action.behavior composeDidChangeSelected];
     
-    [self.doneButton setDisable:self.action.result.multiObjects.count == 0 || self.action.behavior.doneTitle.length == 0];
+    [self.doneButton setDisable:(self.action.result.multiObjects.count == 0 || [(TLUser *)self.action.result.multiObjects[0] n_id] == [UsersManager currentUserId]) || self.action.behavior.doneTitle.length == 0];
 }
+
+
 
 -(void)loadNext {
     TLChat *channel = self.action.object;
@@ -98,15 +101,13 @@
         }];
         
         [response.participants enumerateObjectsUsingBlock:^(TLChannelParticipant *obj, NSUInteger idx, BOOL *stop) {
-            if(obj.user_id != [UsersManager currentUserId]) {
-                TLUser *user = users[@(obj.user_id)];
-                
-                [user rebuildNames];
-                
-                SelectUserItem *item = [[SelectUserItem alloc] initWithObject:user];
-                
-                [items addObject:item];
-            }  
+            TLUser *user = users[@(obj.user_id)];
+            
+            [user rebuildNames];
+            
+            SelectUserItem *item = [[SelectUserItem alloc] initWithObject:user];
+            
+            [items addObject:item];
         }];
         
         [ASQueue dispatchOnMainQueue:^{
