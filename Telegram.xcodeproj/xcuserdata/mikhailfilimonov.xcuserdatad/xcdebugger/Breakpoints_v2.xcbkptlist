@@ -185,13 +185,13 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "TelegramTest/Storage.m"
-            timestampString = "464608397.543209"
+            filePath = "TelegramTest/ChannelHistoryController.m"
+            timestampString = "464608810.306781"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "826"
-            endingLineNumber = "826"
-            landmarkName = "-loadChannelMessages:min_id:max_id:minDate:maxDate:limit:filterMask:important:next:"
+            startingLineNumber = "97"
+            endingLineNumber = "97"
+            landmarkName = "-proccessResponse:state:next:"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
