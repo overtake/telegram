@@ -282,7 +282,7 @@ static NSTextAttachment *channelVerifySelectedAttachment() {
 }
 
 -(BOOL)isKicked {
-    return self.flags & (1 << 1) || self.type != TLChatTypeNormal;
+    return self.flags & (1 << 1);
 }
 
 -(BOOL)isPublisher {

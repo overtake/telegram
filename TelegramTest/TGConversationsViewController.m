@@ -100,12 +100,12 @@
             
             
             [[Storage manager] loadChats:^(NSArray *chats) {
-
                 
-               [[ChatsManager sharedManager] add:chats];
-                
-                [self initConversations];
+                [ASQueue dispatchOnStageQueue:^{
+                    [[ChatsManager sharedManager] add:chats];
 
+                     [self initConversations];
+                }];
             }];
         }];
         

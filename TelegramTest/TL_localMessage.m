@@ -290,7 +290,7 @@
 }
 
 -(BOOL)unread {
-    return self.isChannelMessage ? self.n_out ? NO : (self.conversation.read_inbox_max_id < self.n_id) :  self.flags & TGUNREADMESSAGE;
+    return self.isChannelMessage ? self.n_out ? NO : (self.conversation.read_inbox_max_id < self.n_id || self.conversation.read_inbox_max_id > TGMINFAKEID) :  self.flags & TGUNREADMESSAGE;
 }
 
 -(BOOL)readedContent {

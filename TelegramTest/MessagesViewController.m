@@ -2585,7 +2585,7 @@ static NSTextAttachment *headerMediaIcon() {
     
     self.conversation.unread_count = 0;
     self.conversation.unread_important_count = 0;
-    _conversation.read_inbox_max_id = self.conversation.top_message;
+    _conversation.read_inbox_max_id = self.conversation.top_important_message;
     
     [self.conversation save];
     

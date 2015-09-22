@@ -189,32 +189,26 @@ static BOOL isStorageLoaded;
     if(self = [super init]) {
         _queue = queue;
         
-        [queue dispatchOnQueue:^{
-            
-            _delegate = deleagte;
-            
-           
-            static dispatch_once_t onceToken;
-            dispatch_once(&onceToken, ^{
-                channelsLoader = [[TGChannelsLoader alloc] initWithQueue:queue];
-            });
-            
-            
-            [channelsLoader addWeakEventListener:self];
-            
-            if(!channelsLoader.channelsIsLoaded) {
-                [channelsLoader loadChannelsOnQueue:queue];
-            }
-            
-            _needMergeChannels = channelsLoader.isNeedRemoteLoading;
-            
-            _state = isStorageLoaded ? TGModernCHStateCache : TGModernCHStateLocal;
-            
-        } synchronous:YES];
         
-
+        _delegate = deleagte;
+        
+        
+        static dispatch_once_t onceToken;
+        dispatch_once(&onceToken, ^{
+            channelsLoader = [[TGChannelsLoader alloc] initWithQueue:queue];
+        });
+        
+        
+        [channelsLoader addWeakEventListener:self];
+        
+        if(!channelsLoader.channelsIsLoaded) {
+            [channelsLoader loadChannelsOnQueue:queue];
+        }
+        
+        _needMergeChannels = channelsLoader.isNeedRemoteLoading;
+        
+        _state = isStorageLoaded ? TGModernCHStateCache : TGModernCHStateLocal;
          
-        
     }
     
     return self;

@@ -108,7 +108,7 @@
         return  !self.user.isBot || !self.user.isBlocked;
     
     if(self.type == DialogTypeChannel)
-        return ((!self.chat.isBroadcast && !self.isInvisibleChannel) || self.chat.isAdmin || self.chat.isPublisher) && !self.chat.isKicked && !self.chat.left;
+        return ((!self.chat.isBroadcast && !self.isInvisibleChannel) || self.chat.isAdmin || self.chat.isPublisher) && !self.chat.isKicked && !self.chat.left && self.chat.type == TLChatTypeNormal;
     
     return YES;
 }

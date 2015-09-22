@@ -111,7 +111,7 @@ static const int seconds_to_notify = 120;
 -(void)notifyMessage:(TL_localMessage *)message update_real_date:(BOOL)update_real_date notify:(BOOL)notify {
     [self.queue dispatchOnQueue:^{
       
-        if(!message || [self find:message.n_id])
+        if(!message)
             return;
         
         
