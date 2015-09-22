@@ -8,6 +8,7 @@
 
 #import "TMViewController.h"
 #import "UserInfoShortButtonView.h"
+#import "ChatAvatarImageView.h"
 @interface ChatHeaderItem : TMRowItem
 @end
 

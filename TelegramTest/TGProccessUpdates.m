@@ -512,24 +512,17 @@ static NSArray *channelUpdates;
         
         TLWebPage *page = [update webpage];
         
-        NSArray *updateMessages = [[MessagesManager sharedManager] findWithWebPageId:page.n_id];
+        TLMessageMedia *media = [TL_messageMediaWebPage createWithWebpage:page];
         
-        NSMutableArray *ids = [[NSMutableArray alloc] initWithCapacity:updateMessages.count];
-        
-        [updateMessages enumerateObjectsUsingBlock:^(TL_localMessage *obj, NSUInteger idx, BOOL *stop) {
+        [[Storage manager] messagesWithWebpage:media callback:^(NSDictionary *peers) {
+           
+            [Notification perform:UPDATE_WEB_PAGES data:@{KEY_WEBPAGE:page}];
             
-            obj.media.webpage = page;
-            
-            [ids addObject:@(obj.n_id)];
-        
+            [Notification perform:UPDATE_WEB_PAGE_ITEMS data:@{KEY_DATA:peers,KEY_WEBPAGE:page}];
         }];
         
-        [[Storage manager] updateMessages:updateMessages];
         
-        [Notification perform:UPDATE_WEB_PAGES data:@{KEY_WEBPAGE:page}];
-        
-        [Notification perform:UPDATE_WEB_PAGE_ITEMS data:@{KEY_MESSAGE_ID_LIST:ids}];
-        
+        return;
     }
     
     if([update isKindOfClass:[TL_updateMessageID class]]) {

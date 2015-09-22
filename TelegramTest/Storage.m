@@ -220,7 +220,11 @@ NSString *const tableMessageHoles = @"message_holes";
         res = [db setKey:encryptionKey];
         
         
-        [db executeUpdate:[NSString stringWithFormat:@"create table if not exists %@ (n_id INTEGER PRIMARY KEY,message_text TEXT, flags integer, from_id integer, peer_id integer, date integer, serialized blob, random_id, destruct_time, filter_mask integer, fake_id integer, dstate integer)",tableMessages]];
+        [db executeUpdate:[NSString stringWithFormat:@"create table if not exists %@ (n_id INTEGER PRIMARY KEY,message_text TEXT, flags integer, from_id integer, peer_id integer, date integer, serialized blob, random_id, destruct_time, filter_mask integer, fake_id integer, dstate integer, webpage_id blob)",tableMessages]];
+        
+        if (![db columnExists:@"webpage_id" inTableWithName:tableMessages])
+            [db executeUpdate:[NSString stringWithFormat:@"ALTER TABLE %@ ADD COLUMN webpage_id blob",tableMessages]];
+
         
         //messages indexes
         {
@@ -230,10 +234,15 @@ NSString *const tableMessageHoles = @"message_holes";
             [db executeUpdate:[NSString stringWithFormat:@"CREATE INDEX if not exists random_idx ON %@(random_id)",tableMessages]];
             [db executeUpdate:[NSString stringWithFormat:@"CREATE INDEX if not exists peer_flags_idx ON %@(peer_id,flags)",tableMessages]];
             [db executeUpdate:[NSString stringWithFormat:@"CREATE INDEX if not exists fake_id_idx ON %@(fake_id)",tableMessages]];
+            [db executeUpdate:[NSString stringWithFormat:@"CREATE INDEX if not exists webpage_idx ON %@(webpage_id)",tableMessages]];
         }
         
         
-        [db executeUpdate:[NSString stringWithFormat:@"create table if not exists %@ (n_id blob, flags integer, from_id integer,  peer_id integer, date integer, serialized blob, random_id, filter_mask integer, fake_id integer, dstate integer, pts integer, invalidate integer, views integer, is_viewed integer)",tableChannelMessages]];
+        [db executeUpdate:[NSString stringWithFormat:@"create table if not exists %@ (n_id blob, flags integer, from_id integer,  peer_id integer, date integer, serialized blob, random_id, filter_mask integer, fake_id integer, dstate integer, pts integer, invalidate integer, views integer, is_viewed integer, webpage_id blob)",tableChannelMessages]];
+        
+        
+        if (![db columnExists:@"webpage_id" inTableWithName:tableChannelMessages])
+            [db executeUpdate:[NSString stringWithFormat:@"ALTER TABLE %@ ADD COLUMN webpage_id integer",tableChannelMessages]];
         
         
         // channel messages indexes
@@ -246,6 +255,7 @@ NSString *const tableMessageHoles = @"message_holes";
             [db executeUpdate:[NSString stringWithFormat:@"CREATE INDEX if not exists cm_peer_flags_idx ON %@(peer_id,flags)",tableChannelMessages]];
             [db executeUpdate:[NSString stringWithFormat:@"CREATE INDEX if not exists cm_fake_idx ON %@(fake_id)",tableChannelMessages]];
             [db executeUpdate:[NSString stringWithFormat:@"CREATE INDEX if not exists cm_pts_idx ON %@(pts)",tableChannelMessages]];
+            [db executeUpdate:[NSString stringWithFormat:@"CREATE INDEX if not exists web_page_idx ON %@(webpage_id)",tableChannelMessages]];
         }
         
         
@@ -1207,6 +1217,66 @@ TL_localMessage *parseMessage(FMResultSet *result) {
     }];
 }
 
+-(void)messagesWithWebpage:(TLMessageMedia *)mediaWebpage callback:(void (^)(NSDictionary *))callback {
+    
+    dispatch_queue_t dqueue = dispatch_get_current_queue();
+    
+    [queue inDatabase:^(FMDatabase *db) {
+        
+        NSMutableDictionary *peers = [NSMutableDictionary dictionary];
+        
+        
+        
+        
+        void (^proccessResult)(NSString *tableName, FMResultSet *result) = ^(NSString *tableName, FMResultSet *result){
+            
+            TL_localMessage *msg = [TLClassStore deserialize:[result dataForColumn:@"serialized"]];
+            
+            msg.media = mediaWebpage;
+            
+            long random_id = [result longForColumn:@"random_id"];
+            
+            [db executeUpdate:[NSString stringWithFormat:@"update %@ set serialized = ? where random_id = ?",tableName],[TLClassStore serialize:msg],@(random_id)];
+            
+            int peer_id = msg.peer_id;
+            int n_id = msg.n_id;
+            
+            NSMutableArray *msgs = peers[@(peer_id)];
+            
+            if(!msgs) {
+                msgs = peers[@(peer_id)] = [NSMutableArray array];
+            }
+            
+            [msgs addObject:@(n_id)];
+        };
+        
+        
+        FMResultSet *result = [db executeQuery:[NSString stringWithFormat:@"select serialized,random_id from %@ where webpage_id = ?",tableMessages],@(mediaWebpage.webpage.n_id)];
+        
+        while ([result next])
+            proccessResult(tableMessages,result);
+        
+        [result close];
+        
+        result = [db executeQuery:[NSString stringWithFormat:@"select serialized,random_id from %@ where webpage_id = ?",tableChannelMessages],@(mediaWebpage.webpage.n_id)];
+        
+        while ([result next])
+           proccessResult(tableChannelMessages,result);
+            
+        
+        
+        [result close];
+        
+        if(callback != nil)
+        {
+            dispatch_async(dqueue, ^{
+                callback([peers copy]);
+            });
+        }
+        
+    }];
+}
+
 
 -(void)insertMessage:(TLMessage *)message {
     [self insertMessages:@[message]];
@@ -1485,7 +1555,7 @@ TL_localMessage *parseMessage(FMResultSet *result) {
             void (^insertBlock)(NSString *tableName) = ^(NSString *tableName) {
             
                 
-                [db executeUpdate:[NSString stringWithFormat:@"insert or replace into %@ (n_id,date,from_id,flags,peer_id,serialized, destruct_time, message_text, filter_mask,fake_id,dstate,random_id) values (?,?,?,?,?,?,?,?,?,?,?,?)",tableName],
+                [db executeUpdate:[NSString stringWithFormat:@"insert or replace into %@ (n_id,date,from_id,flags,peer_id,serialized, destruct_time, message_text, filter_mask,fake_id,dstate,random_id,webpage_id) values (?,?,?,?,?,?,?,?,?,?,?,?,?)",tableName],
                  @(message.n_id),
                  @(message.date),
                  @(message.from_id),
@@ -1497,7 +1567,8 @@ TL_localMessage *parseMessage(FMResultSet *result) {
                  @(mask),
                  @(message.fakeId),
                  @(message.dstate),
-                 @(message.randomId)
+                 @(message.randomId),
+                 @(message.media.webpage.n_id)
                  ];
 
             };
@@ -1515,7 +1586,7 @@ TL_localMessage *parseMessage(FMResultSet *result) {
                 message.pts = pts;
                 
                 if(isset == 0) {
-                    [db executeUpdate:[NSString stringWithFormat:@"insert into %@ (n_id,date,from_id,flags,peer_id,serialized, filter_mask,fake_id,dstate,random_id,pts,views) values (?,?,?,?,?,?,?,?,?,?,?,?)",tableChannelMessages],
+                    [db executeUpdate:[NSString stringWithFormat:@"insert into %@ (n_id,date,from_id,flags,peer_id,serialized, filter_mask,fake_id,dstate,random_id,pts,views,webpage_id) values (?,?,?,?,?,?,?,?,?,?,?,?,?)",tableChannelMessages],
                      @(message.channelMsgId),
                      @(message.date),
                      @(message.from_id),
@@ -1527,13 +1598,14 @@ TL_localMessage *parseMessage(FMResultSet *result) {
                      @(message.dstate),
                      @(message.randomId),
                      @(pts),
-                     @(message.views)
+                     @(message.views),
+                     @(message.media.webpage.n_id)
                      ];
 
                     
                 } else {
-                    [db executeUpdate:[NSString stringWithFormat:@"update %@ set flags = ?, from_id = ?,  peer_id = ?, date = ?, serialized = ?, random_id = ?, filter_mask = ?, fake_id = ?, dstate = ?, pts = ?, views = ? WHERE n_id = ?",tableChannelMessages],@(message.flags),@(message.from_id),@(message.peer_id),@(message.date),[TLClassStore serialize:message],@(message.randomId), @(message.filterType),@(message.fakeId),@(message.dstate),@(pts),
-                     @(message.views),@(message.channelMsgId),nil];
+                    [db executeUpdate:[NSString stringWithFormat:@"update %@ set flags = ?, from_id = ?,  peer_id = ?, date = ?, serialized = ?, random_id = ?, filter_mask = ?, fake_id = ?, dstate = ?, pts = ?, views = ?, webpage_id = ? WHERE n_id = ?",tableChannelMessages],@(message.flags),@(message.from_id),@(message.peer_id),@(message.date),[TLClassStore serialize:message],@(message.randomId), @(message.filterType),@(message.fakeId),@(message.dstate),@(pts),
+                     @(message.views),@(message.media.webpage.n_id),@(message.channelMsgId),nil];
 
                 }
                 

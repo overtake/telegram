@@ -147,7 +147,7 @@
                 return NSLocalizedString(@"Conversation.Action.JoinToChannel", nil);
             }
             
-            if(self.chat.isKicked || self.chat.left) {
+            if(self.chat.isKicked || self.chat.left || self.type == TLChatTypeForbidden) {
                 return NSLocalizedString(@"Conversation.DeleteAndExit", nil);
             }
             
@@ -159,9 +159,7 @@
         }
         
         
-        
-        
-        if(self.chat.isKicked) {
+        if(self.chat.isKicked || self.type == TLChatTypeForbidden) {
             return NSLocalizedString(@"Conversation.Action.YouKickedGroup", nil);
         }
         
@@ -209,7 +207,7 @@
     if(self.type == DialogTypeSecretChat)
         return NO;
     
-    return self.notify_settings.mute_until > [[MTNetwork instance] getTime] || ![SettingsArchiver checkMaskedSetting:PushNotifications];
+    return self.notify_settings.mute_until > [[MTNetwork instance] getTime];
 }
 
 

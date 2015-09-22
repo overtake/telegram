@@ -206,6 +206,8 @@ extern NSString *const RECENT_SEARCH;
 - (void)deleteFileHash:(NSString *)pathHash;
 -(void)updateMessages:(NSArray *)messages;
 
+-(void)messagesWithWebpage:(TLMessageMedia *)mediaWebpage callback:(void (^)(NSDictionary *))callback;
+
 
 -(void)insertSecretAction:(TGSecretAction *)action;
 -(void)removeSecretAction:(TGSecretAction *)action;

@@ -12,6 +12,7 @@
 #import "UserInfoShortButtonView.h"
 #import "TMSharedMediaButton.h"
 #import "ChatInfoNotificationView.h"
+
 @class ChatInfoViewController;
 
 @interface LineView : NSView

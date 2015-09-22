@@ -94,7 +94,7 @@
         
         if([self.message.media isKindOfClass:[TL_messageMediaWebPage class]])
         {
-            [Notification perform:UPDATE_WEB_PAGE_ITEMS data:@{KEY_MESSAGE_ID_LIST:@[@(self.message.n_id)]}];
+            [Notification perform:UPDATE_WEB_PAGE_ITEMS data:@{KEY_DATA:@{@(self.message.peer_id):@[@(self.message.n_id)]},KEY_WEBPAGE:self.message.media.webpage}];
         }
         
         if(self.message.entities.count > 0) {

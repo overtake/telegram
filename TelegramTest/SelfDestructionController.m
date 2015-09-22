@@ -159,7 +159,7 @@
         if(message.ttl_seconds != 0) {
             message.destruction_time = [[NSDate date] timeIntervalSince1970]+message.ttl_seconds;
             [self.targets addObject:message];
-            [[Storage manager] updateMessages:@[message]];
+            [message save:NO];
         }
     }];
     

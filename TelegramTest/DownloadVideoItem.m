@@ -71,7 +71,7 @@
         
         msg.media.video.thumb = [TL_photoCachedSize createWithType:@"x" location:location w:size.width h:size.height bytes:jpegNormalizedData(thumbImg)];
         
-        [[Storage manager] updateMessages:@[msg]];
+       [msg save:NO];
         
         
     }

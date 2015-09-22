@@ -1715,6 +1715,14 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "__26-[Storage insertMessages:]_block_invoke852:Storage.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "message">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "+[MessageSender createOutMessage:media:conversation:]:MessageSender.m">
       </ContextState>
       <ContextState
@@ -2240,6 +2248,17 @@
       </ContextState>
       <ContextState
          contextName = "__37-[MessageTableItemText updateWebPage]_block_invoke_2:MessageTableItemText.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "">
+            </PersistentString>
+            <PersistentString
+               value = "self.message.media.webpage">
+            </PersistentString>
+            <PersistentString
+               value = "self.message.media.webpage.date">
+            </PersistentString>
+         </PersistentStrings>
       </ContextState>
       <ContextState
          contextName = "-[TGProccessUpdates isLastUpdate:inUpdates:]:TGProccessUpdates.m">
@@ -3488,6 +3507,14 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "-[TL_conversation blockedText]:TL_conversation.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.chat">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "-[TGConversationsViewController insertAll:]:TGConversationsViewController.m">
       </ContextState>
       <ContextState
@@ -3750,6 +3777,11 @@
       </ContextState>
       <ContextState
          contextName = "-[MessageTableItemText updateWebPage]:MessageTableItemText.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.message.media">
+            </PersistentString>
+         </PersistentStrings>
       </ContextState>
       <ContextState
          contextName = "-[ComposeActionCreateChannelBehavior composeDidDone]:ComposeActionCreateChannelBehavior.m">

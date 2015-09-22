@@ -102,7 +102,7 @@
     [self setCenterBarViewText:NSLocalizedString(@"Profile.Info", nil)];
     
     
-    _avatarImageView = [ChatAvatarImageView standartUserInfoAvatar];
+    _avatarImageView = [TMAvatarImageView standartUserInfoAvatar];
     
     [_avatarImageView setFrameSize:NSMakeSize(70, 70)];
     [_avatarImageView setFrameOrigin:NSMakePoint(100, self.containerView.bounds.size.height - self.avatarImageView.bounds.size.height - 36)];
@@ -119,8 +119,6 @@
             [[TGPhotoViewer viewer] show:previewObject user:strongSelf.user];
         }
     }];
-    
-    [_avatarImageView setSourceType:ChatAvatarSourceUser];
     
     
     self.scrollView = [[BTRScrollView alloc] initWithFrame:self.view.bounds];

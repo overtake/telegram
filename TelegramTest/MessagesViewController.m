@@ -501,17 +501,18 @@
 
 -(void)messageTableItemsWebPageUpdate:(NSNotification *)notification {
     
-    NSArray *messages = notification.userInfo[KEY_MESSAGE_ID_LIST];
+    NSArray *messages = notification.userInfo[KEY_DATA][@(self.conversation.peer_id)];
     
-    
-    NSArray *items = [self.historyController.filter.class items:messages];
+    TLWebPage *webpage = notification.userInfo[KEY_WEBPAGE];
+
+    NSArray *items = [self.historyController.filter.class items:messages withPeer_id:self.conversation.peer_id];
     
     [items enumerateObjectsUsingBlock:^(MessageTableItemText *obj, NSUInteger idx, BOOL *stop) {
        
         NSUInteger index = [self indexOfObject:obj];
         
+        obj.message.media.webpage = webpage;
         
-
         [obj updateWebPage];
         
         obj.isHeaderMessage = obj.isHeaderMessage || obj.webpage != nil;
@@ -2574,7 +2575,7 @@ static NSTextAttachment *headerMediaIcon() {
 
 
 - (void)readHistory:(int)offset{
-    if(!self.conversation || (self.conversation.unread_count == 0 && self.conversation.unread_important_count == 0) || self.conversation.chat.isKicked || self.conversation.chat.left)
+    if(!self.conversation || (self.conversation.unread_count == 0 && self.conversation.unread_important_count == 0) || (self.conversation.type != DialogTypeSecretChat && (self.conversation.chat.isKicked || self.conversation.chat.left)))
         return;
     
      [(MessagesManager *)[MessagesManager sharedManager] markAllInDialog:self.conversation callback:^(NSArray *ids) {
