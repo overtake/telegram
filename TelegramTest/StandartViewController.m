@@ -214,7 +214,7 @@
     [theMenu addItem:secretChat];
     
     
-    if(ACCEPT_FEATURE) {
+   // if(ACCEPT_FEATURE) {
         NSMenuItem *createChannel = [NSMenuItem menuItemWithTitle:NSLocalizedString(@"ComposeMenu.CreateChannel", nil) withBlock:^(id sender) {
             
             
@@ -229,7 +229,7 @@
         [createChannel setImage:[NSImage imageNamed:@"ComposeMenuNewBroadcast"]];
         [createChannel setHighlightedImage:[NSImage imageNamed:@"ComposeMenuNewBroadcastActive"]];
         [theMenu addItem:createChannel];
-    }
+ //   }
     
     
     

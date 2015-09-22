@@ -70,7 +70,7 @@
         [self.rightView.layer addSublayer:self.dateLayer];
         
         
-        self.stateLayer = [[MessageStateLayer alloc] initWithFrame:NSMakeRect(0, 0, 35, NSHeight(self.rightView.frame))];
+        self.stateLayer = [[MessageStateLayer alloc] initWithFrame:NSMakeRect(0, 0, 40, NSHeight(self.rightView.frame))];
                 
         
         [self.rightView addSubview:self.stateLayer];

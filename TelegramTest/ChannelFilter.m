@@ -134,11 +134,13 @@
         
         if(![obj isImportantMessage]) {
             
-            int lastImportantMessage = [[[Storage manager] lastMessageAroundMinId:obj.channelMsgId important:YES isTop:!bottom] n_id];
+            TL_localMessage *lastImportantMessage = [[Storage manager] lastMessageAroundMinId:obj.channelMsgId important:YES isTop:!bottom];
             
-            lastImportantMessage = lastImportantMessage == 0 ? (bottom ? 1 : self.controller.conversation.top_message) : lastImportantMessage;
+            
+            
+            int lastImportantMessageId = [lastImportantMessage n_id] == 0 ? (bottom ? 1 : self.controller.conversation.top_message) : [lastImportantMessage n_id];
                         
-            NSArray *holes = [[Storage manager] groupHoles:obj.peer_id min:!bottom?obj.n_id:lastImportantMessage max:bottom?obj.n_id:lastImportantMessage];
+            NSArray *holes = [[Storage manager] groupHoles:obj.peer_id min:!bottom?obj.n_id:lastImportantMessageId max:bottom?obj.n_id:lastImportantMessageId];
             
             __block TGMessageGroupHole *hole;
             
@@ -170,7 +172,7 @@
                 }
     
             } else {
-                TGMessageGroupHole *groupHole = [[TGMessageGroupHole alloc] initWithUniqueId:-rand_int() peer_id:obj.peer_id min_id:obj.n_id-1 max_id:obj.n_id+1 date:obj.date count:1];
+                TGMessageGroupHole *groupHole = [[TGMessageGroupHole alloc] initWithUniqueId:-rand_int() peer_id:obj.peer_id min_id:obj.n_id-1 max_id:obj.n_id+1 date:!bottom?lastImportantMessage.date:obj.date-1 count:1];
                 [groupHole save];
             }
             
