@@ -397,7 +397,7 @@
                     [SharedManager proccessGlobalResponse:participant];
                     
                     if([participant.participant isKindOfClass:[TL_channelParticipantSelf class]]) {
-                        TL_localMessage *msg = [TL_localMessageService createWithFlags:TGMENTIONMESSAGE n_id:0 from_id:[participant.participant inviter_id] to_id:channel.peer date:[[MTNetwork instance] getTime] action:participant.participant.kicked_by > 0 ? [TL_messageActionChatDeleteUser createWithUser_id:participant.participant.kicked_by] : ([participant.participant inviter_id] != [UsersManager currentUserId] ? [TL_messageActionChatAddUser createWithUser_id:[UsersManager currentUserId]] :[TL_messageActionChatJoinedByLink createWithInviter_id:[UsersManager currentUserId]]) fakeId:[MessageSender getFakeMessageId] randomId:rand_long() dstate:DeliveryStateNormal];
+                        TL_localMessage *msg = [TL_localMessageService createWithFlags:TGMENTIONMESSAGE n_id:0 from_id:[participant.participant inviter_id] to_id:channel.peer date:[[MTNetwork instance] getTime] action:([participant.participant inviter_id] != [UsersManager currentUserId] ? [TL_messageActionChatAddUser createWithUser_id:[UsersManager currentUserId]] :[TL_messageActionChatJoinedByLink createWithInviter_id:[UsersManager currentUserId]]) fakeId:[MessageSender getFakeMessageId] randomId:rand_long() dstate:DeliveryStateNormal];
                         
                         channel.invisibleChannel = NO;
                         

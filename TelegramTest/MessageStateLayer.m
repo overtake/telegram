@@ -88,7 +88,7 @@
             self.readOrSentView = nil;
             
             _viewsCountText = [TMTextField defaultTextField];
-            [_viewsCountText setFont:TGSystemFont(12)];
+            [_viewsCountText setFont:TGSystemLightFont(12)];
             [_viewsCountText setTextColor:GRAY_TEXT_COLOR];
             [_viewsCountText setStringValue:[[NSNumber numberWithInt:MAX(1,self.container.item.message.views)] prettyNumber]];
             [_viewsCountText sizeToFit];
