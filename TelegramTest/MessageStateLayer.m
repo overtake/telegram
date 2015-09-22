@@ -43,7 +43,7 @@
     
     if(state == MessageTableCellSending) {
         if(!self.progressView) {
-            self.progressView = [[TMClockProgressView alloc] initWithFrame:NSMakeRect(13, 4, 15, 15)];
+            self.progressView = [[TMClockProgressView alloc] initWithFrame:NSMakeRect(NSWidth(self.frame) - NSWidth(_progressView.frame) - 3, 4, 15, 15)];
             [self.layer addSublayer:self.progressView.layer];
         }
         [self.progressView startAnimating];
@@ -57,7 +57,7 @@
     if(state == MessageTableCellSendingError) {
         
         if(!self.errorView) {
-            self.errorView = [[BTRButton alloc] initWithFrame:NSMakeRect(13, 2, image_ChatMessageError().size.width , image_ChatMessageError().size.height)];
+            self.errorView = [[BTRButton alloc] initWithFrame:NSMakeRect(NSWidth(self.frame) - NSWidth(_errorView.frame) - 3, 2, image_ChatMessageError().size.width , image_ChatMessageError().size.height)];
             [self.errorView setBackgroundImage:image_ChatMessageError() forControlState:BTRControlStateNormal];
             [self addSubview:self.errorView];
         }
@@ -109,7 +109,7 @@
             
             self.readOrSentView.image = state == MessageTableCellUnread ? image_MessageStateSent() : image_MessageStateRead();
             [self.readOrSentView setFrameSize:self.readOrSentView.image.size];
-            [self.readOrSentView setFrameOrigin:NSMakePoint(state == MessageTableCellUnread ? 13 : 11, NSMinY(self.readOrSentView.frame))];
+            [self.readOrSentView setFrameOrigin:NSMakePoint(NSWidth(self.frame) - NSWidth(_readOrSentView.frame) - 3, NSMinY(self.readOrSentView.frame))];
             [self.layer addSublayer:self.readOrSentView.layer];
         }
 
