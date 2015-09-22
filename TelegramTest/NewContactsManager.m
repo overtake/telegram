@@ -24,7 +24,7 @@
     static NewContactsManager *instance;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        instance = [[NewContactsManager alloc] initWithQueue:[[ASQueue alloc] initWithName:[NSStringFromClass([self class]) UTF8String]]];
+        instance = [[NewContactsManager alloc] initWithQueue:[ASQueue globalQueue]];
     });
     return instance;
 }
