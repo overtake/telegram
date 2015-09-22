@@ -100,7 +100,7 @@
     
     [[Telegram rightViewController] showByDialog:[self.action.object dialog] sender:self];
     
-    [[Telegram rightViewController] showComposeWithAction:[[ComposeAction alloc] initWithBehaviorClass:[ComposeActionAddGroupMembersBehavior class] filter:@[[UsersManager currentUser]] object:[[FullChatManager sharedManager] find:[(TLChat *)self.action.object n_id]]]];
+    [[Telegram rightViewController] showComposeWithAction:[[ComposeAction alloc] initWithBehaviorClass:[ComposeActionAddGroupMembersBehavior class] filter:@[@([UsersManager currentUserId])] object:[[FullChatManager sharedManager] find:[(TLChat *)self.action.object n_id]]]];
 }
 
 

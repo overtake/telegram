@@ -1518,7 +1518,7 @@ TL_localMessage *parseMessage(FMResultSet *result) {
 -(void)insertMessages:(NSArray *)messages {
     
     [queue inDatabase:^(FMDatabase *db) {
-         //[db beginTransaction];
+         [db beginTransaction];
         NSArray *msgs = [messages copy];
         
         
@@ -1623,6 +1623,8 @@ TL_localMessage *parseMessage(FMResultSet *result) {
             
             
         }
+        
+        [db commit];
 
     }];
 }

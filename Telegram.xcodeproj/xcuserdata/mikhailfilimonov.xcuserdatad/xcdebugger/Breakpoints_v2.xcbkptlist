@@ -74,11 +74,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "TelegramTest/Storage.m"
-            timestampString = "464642334.385774"
+            timestampString = "464643147.093065"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "2943"
-            endingLineNumber = "2943"
+            startingLineNumber = "2945"
+            endingLineNumber = "2945"
             landmarkName = "-groupHoles:min:max:"
             landmarkType = "5">
          </BreakpointContent>
@@ -160,22 +160,6 @@
             startingLineNumber = "508"
             endingLineNumber = "508"
             landmarkName = "-saveUpdateState:"
-            landmarkType = "5">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "TelegramTest/Storage.m"
-            timestampString = "464640840.758857"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "226"
-            endingLineNumber = "226"
-            landmarkName = "-open:queue:"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>

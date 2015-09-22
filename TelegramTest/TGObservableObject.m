@@ -46,9 +46,7 @@
 }
 
 -(void)notifyListenersWithObject:(id)object {
-    [_observers enumerateObjectsUsingBlock:^(NSValue *observerValue, NSUInteger idx, BOOL *stop) {
-        
-        id<TGObservableDelegate> observer = [observerValue nonretainedObjectValue];
+    [_observers enumerateObjectsUsingBlock:^(id <TGObservableDelegate> observer, NSUInteger idx, BOOL *stop) {
         
         [observer didChangedEventStateWithObject:object];
         

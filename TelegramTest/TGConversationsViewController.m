@@ -199,6 +199,8 @@
 -(void)notificationLogout:(NSNotification *)notification {
     [self.tableView removeAllItems:NO];
     [self.tableView reloadData];
+    [_modernHistory clear];
+    _modernHistory = nil;
 }
 
 - (void) scrollViewDocumentOffsetChangingNotificationHandler:(NSNotification *)aNotification {
@@ -210,11 +212,13 @@
 
 -(void)loadhistory:(int)limit  {
     
-    [_modernHistory requestNextConversation];
-    
-    dispatch_after_seconds(5, ^{
-        [self loadhistory:limit];
-    });
+    if(_modernHistory != nil) {
+        [_modernHistory requestNextConversation];
+        
+        dispatch_after_seconds(5, ^{
+            [self loadhistory:limit];
+        });
+    }
     
 }
 

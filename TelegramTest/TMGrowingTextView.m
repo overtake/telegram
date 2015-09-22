@@ -79,9 +79,6 @@
 
 - (void)textDidChange:(NSNotification *)notification {
     
-    if(self.frame.size.height >= _maxHeight) {
-        return;
-    }
     
     if(_limit > 0 && self.string.length > _limit) {
         
