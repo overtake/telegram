@@ -353,6 +353,8 @@
         [Notification perform:MESSAGE_UPDATE_MESSAGE_ID data:@{KEY_MESSAGE_ID:@([(TL_updateMessageID *)update n_id]),KEY_RANDOM_ID:@([(TL_updateMessageID *)update random_id])}];
     } else if([update isKindOfClass:[TL_updateReadChannelInbox class]]) {
         
+        [[DialogsManager sharedManager] markChannelMessagesAsRead:[update channel_id] max_id:[(TL_updateReadChannelInbox *)update max_id]];
+        
     } else if([update isKindOfClass:[TL_updateChannelTooLong class]]) {
         
         [self failUpdateWithChannelId:[update channel_id] limit:100 withCallback:nil errorCallback:nil];

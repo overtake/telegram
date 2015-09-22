@@ -28,6 +28,7 @@
 
 - (void) markAllMessagesAsRead:(TLPeer *)peer max_id:(int)max_id out:(BOOL)n_out;
 
+-(void)markChannelMessagesAsRead:(int)channel_id max_id:(int)max_id;
 
 // delete messages
 -(void)deleteMessagesWithMessageIds:(NSArray *)ids;

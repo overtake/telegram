@@ -908,6 +908,31 @@ TL_localMessage *parseMessage(FMResultSet *result) {
     }];
 }
 
+
+-(void)markChannelMessagesAsRead:(int)channel_id max_id:(int)max_id callback:(void (^)(int unread_count))callback {
+   
+    dispatch_queue_t dqueue = dispatch_get_current_queue();
+    
+    [queue inDatabase:^(FMDatabase *db) {
+        
+        int unread_count = [db intForQuery:[NSString stringWithFormat:@"select unread_count from %@ where peer_id = %d",tableChannelDialogs,-channel_id]];
+        
+        int current_max_read = [db intForQuery:[NSString stringWithFormat:@"select read_inbox_max_id from %@ where peer_id = %d",tableChannelDialogs,-channel_id]];
+        
+        unread_count = MAX(0, unread_count - (max_id - current_max_read));
+        
+        
+        [db executeUpdate:[NSString stringWithFormat:@"update %@ set read_inbox_max_id = %d, unread_count = %d where peer_id = %d",tableChannelDialogs,max_id,unread_count,-channel_id]];
+        
+        if(callback != nil) {
+            dispatch_async(dqueue, ^{
+                callback(unread_count);
+            });
+        }
+        
+    }];
+}
+
 -(TL_localMessage *)lastImportantMessageAroundMinId:(long)channelMsgId;
 {
     return [self lastMessageAroundMinId:channelMsgId important:YES isTop:NO];

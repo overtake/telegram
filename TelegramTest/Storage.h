@@ -163,6 +163,8 @@ extern NSString *const RECENT_SEARCH;
 
 -(void)updateMessageViews:(int)views channelMsgId:(long)channelMsgId;
 
+-(void)markChannelMessagesAsRead:(int)channel_id max_id:(int)max_id callback:(void (^)(int unread_count))callback;
+
 
 -(TL_localMessage *)lastImportantMessageAroundMinId:(long)channelMsgId;
 -(TL_localMessage *)lastMessageAroundMinId:(long)channelMsgId important:(BOOL)important isTop:(BOOL)isTop;

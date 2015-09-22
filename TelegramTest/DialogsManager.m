@@ -656,6 +656,25 @@
     
 }
 
+-(void)markChannelMessagesAsRead:(int)channel_id max_id:(int)max_id {
+    
+    [self.queue dispatchOnQueue:^{
+        [[Storage manager] markChannelMessagesAsRead:channel_id max_id:max_id callback:^(int unread_count) {
+            
+            TL_conversation *conversation = [self find:-channel_id];
+            
+            if(conversation) {
+                
+                conversation.unread_count = unread_count;
+                [Notification perform:[Notification notificationNameByDialog:conversation action:@"unread_count"] data:@{KEY_DIALOG:conversation,KEY_LAST_CONVRESATION_DATA:[MessagesUtils conversationLastData:conversation]}];
+            }
+ 
+        }];
+
+    }];
+    
+}
+
 - (void)insertDialog:(TL_conversation *)dialog {
     [self add:[NSArray arrayWithObject:dialog]];
     [dialog save];

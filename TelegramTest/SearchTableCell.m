@@ -134,6 +134,7 @@
         
         if(item.type == SearchItemGlobalUser) {
             [self.statusTextField setUser:nil];
+            [self.statusTextField setChat:nil];
             [self.statusTextField setAttributedStringValue:item.status];
         }
         
