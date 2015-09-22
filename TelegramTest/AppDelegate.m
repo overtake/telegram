@@ -727,6 +727,10 @@ void exceptionHandler(NSException * exception)
     
 }
 
+
+
+
+
 - (void)windowDidChangeBackingProperties:(NSNotification *)notification {
     
 }
@@ -741,6 +745,8 @@ void exceptionHandler(NSException * exception)
     
     return NSTerminateCancel;
 }
+
+
 
 
 -(void)initializeSounds {

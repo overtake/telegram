@@ -921,23 +921,30 @@ static int insertCount = 3;
         params.isLoading = NO;
         params.isRemoteGlobalUsersLoaded = YES;
         
-        if(response.users.count > 0) {
+        if(response.users.count > 0 || response.chats > 0) {
             
+            NSMutableArray *chatIds = [[NSMutableArray alloc] init];
             
             NSMutableArray *ids = [[NSMutableArray alloc] init];
             
             [params.globalUsers enumerateObjectsUsingBlock:^(SearchItem *obj, NSUInteger idx, BOOL *stop) {
-                [ids addObject:@([obj.user n_id])];
+                if(obj.user)
+                    [ids addObject:@([obj.user n_id])];
+                else
+                    [chatIds addObject:@([obj.chat n_id])];
             }];
             
             
+
+            NSArray *acceptUsers = [response.users filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"NOT(self.n_id IN %@)",ids]];
             
+            NSArray *acceptChats = [response.chats filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"NOT(self.n_id IN %@)",ids]];
             
-            NSArray *filtred = [response.users filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"NOT(self.n_id IN %@)",ids]];
+            [[UsersManager sharedManager] add:acceptUsers withCustomKey:@"n_id" update:YES];
             
-            [[UsersManager sharedManager] add:filtred withCustomKey:@"n_id" update:YES];
+            [[ChatsManager sharedManager] add:acceptChats];
             
-            [filtred enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+            [[acceptChats arrayByAddingObjectsFromArray:acceptUsers] enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
                 [params.globalUsers addObject:[[SearchItem alloc] initWithGlobalItem:obj searchString:params.searchString]];
             }];
             

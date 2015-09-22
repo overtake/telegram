@@ -129,10 +129,12 @@
             [self.avatarImageView setUser:item.user];
             [self.statusTextField setUser:item.user];
 
-            if(item.type == SearchItemGlobalUser) {
-                [self.statusTextField setUser:nil];
-                [self.statusTextField setAttributedStringValue:item.status];
-            }
+            
+        }
+        
+        if(item.type == SearchItemGlobalUser) {
+            [self.statusTextField setUser:nil];
+            [self.statusTextField setAttributedStringValue:item.status];
         }
         
         [self.titleTextField setFrameSize:NSMakeSize(self.bounds.size.width - 75, self.titleTextField.bounds.size.height)];

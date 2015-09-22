@@ -262,6 +262,10 @@
     }
 }
 
+-(BOOL)becomeFirstResponder {
+    return [super becomeFirstResponder];
+}
+
 -(void)hideSearchViewControllerWithConversationUsed:(TL_conversation*)conversation {
     
     

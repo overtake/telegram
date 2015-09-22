@@ -72,6 +72,11 @@
     
 }
 
+- (void)windowWillClose:(NSNotification *)notification {
+    // whichever operations are needed when the
+    // window is about to be closed
+}
+
 - (void)sendEvent:(NSEvent *)theEvent {
     [super sendEvent:theEvent];
     
