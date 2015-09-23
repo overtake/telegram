@@ -107,7 +107,7 @@
         item.stateCallback = ^{
             
             if(![obj isKindOfClass:[TL_channelParticipantCreator class]]) {
-                if(chat.isBroadcast) {
+                if(chat.isBroadcast && chat.isAdmin) {
                     
                     confirm(NSLocalizedString(@"Channel.DismissModerator", nil), NSLocalizedString(@"Channel.DismissModeratorConfirm", nil), ^{
                         
