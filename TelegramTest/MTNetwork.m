@@ -456,6 +456,7 @@ static int MAX_WORKER_POLL = 5;
 
 -(void)initConnectionWithId:(NSInteger)dc_id {
     
+    dc_id = dc_id == -1 ? _masterDatacenter : dc_id;
     
     [_queue dispatchOnQueue:^{
         
@@ -508,7 +509,7 @@ static int MAX_WORKER_POLL = 5;
         
         [self updateEncryptionKey];
         
-        [self initConnectionWithId:_masterDatacenter];
+        
         
     } synchronous:YES];
     

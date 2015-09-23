@@ -44,7 +44,7 @@
 
 +(void)pause;
 +(void)resume;
-
+-(NSString *)updateEncryptionKey;
 
 -(MTQueue *)queue;
 

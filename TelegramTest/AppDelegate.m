@@ -873,12 +873,13 @@ void exceptionHandler(NSException * exception)
             
             [TGAudioPlayerWindow hide];
             
-            [Storage drop];
-
+            [[MTNetwork instance] drop];
             
-            [Storage open:^{
+            [Storage drop];
+            
+             [Storage open:^{
                 
-                [[MTNetwork instance] drop];
+                [[MTNetwork instance] initConnectionWithId:-1];
                 
                 [TGCache clear];
                 [TGModernTypingManager drop];

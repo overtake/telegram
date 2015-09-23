@@ -134,11 +134,15 @@
                 [self.delegate behaviorDidEndRequest:self];
             };
             
+            block();
+            
             [RPCRequest sendRequest:[TLAPI_channels_exportInvite createWithChannel:channel.inputPeer] successHandler:^(id request, id response) {
+                
                 
                 self.action.reservedObject1 = response;
                 
-                block();
+                [self.action.currentViewController setAction:self.action];
+                
                 
             } errorHandler:^(id request, RpcError *error) {
                 block();
@@ -150,7 +154,7 @@
         
     } errorHandler:^(RPCRequest *request, RpcError *error) {
         [self.delegate behaviorDidEndRequest:nil];
-    } timeout:10 queue:[ASQueue globalQueue].nativeQueue];
+    }];
     
     
 }

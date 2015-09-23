@@ -9,6 +9,9 @@
 #import <Foundation/Foundation.h>
 #import "ComposeActionBehavior.h"
 #import "TMViewController.h"
+
+@class ComposeViewController;
+
 @interface ComposeResult : NSObject
 
 @property (nonatomic,strong) id singleObject;
@@ -39,7 +42,7 @@
 @property (nonatomic,strong) id reservedObject3;
 
 
-@property (nonatomic,strong) TMViewController *currentViewController;
+@property (nonatomic,strong) ComposeViewController *currentViewController;
 
 -(id)initWithBehaviorClass:(Class)behavior;
 -(id)initWithBehaviorClass:(Class)behavior filter:(NSArray *)filter object:(id)object;
