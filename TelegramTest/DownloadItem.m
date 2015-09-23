@@ -44,8 +44,26 @@ static int futureUniqueKey = 0;
         _uniqueKey = ++futureUniqueKey;
         _downloadState = DownloadStateWaitingStart;
         self.events = [[NSMutableArray alloc] init];
+        
     }
     return self;
+}
+
+-(void)setN_id:(long)n_id {
+    _n_id = n_id;
+    
+    [self findAndFillAfterInit];
+}
+
+-(void)findAndFillAfterInit {
+    DownloadItem *item = [DownloadQueue find:self.n_id];
+    
+    
+    if(item) {
+        _downloadState = item.downloadState;
+        _progress = item.progress;
+        [self start];
+    }
 }
 
 -(id)initWithObject:(id)object size:(int)size {

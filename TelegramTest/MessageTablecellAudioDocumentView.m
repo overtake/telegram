@@ -46,10 +46,14 @@
         
         [self.playerButton addBlock:^(BTRControlEvents events) {
             
-            [TGAudioPlayerWindow show:weakSelf.item.message.conversation];
-            [TGAudioPlayerWindow setCurrentItem:(MessageTableItemAudioDocument *)weakSelf.item];
-            
-            
+            if(weakSelf.item.isset) {
+                [TGAudioPlayerWindow show:weakSelf.item.message.conversation];
+                [TGAudioPlayerWindow setCurrentItem:(MessageTableItemAudioDocument *)weakSelf.item];
+
+            } else {
+                [weakSelf checkOperation];
+            }
+              
         } forControlEvents:BTRControlEventClick];
         
         [self.containerView addSubview:self.playerButton];
@@ -92,6 +96,8 @@
     }
     return self;
 }
+
+
 
 -(void)dealloc {
     [TGAudioPlayerWindow removeEventListener:self];

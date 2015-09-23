@@ -33,7 +33,7 @@
 }
 
 -(void)checkStartDownload:(SettingsMask)setting size:(int)size {
-    [super checkStartDownload:[self.message.to_id isKindOfClass:[TL_peerChat class]] ? AutoGroupDocuments : AutoPrivateDocuments size:[self size]];
+    [super checkStartDownload:[self.message.to_id isKindOfClass:[TL_peerChat class]] || [self.message.to_id isKindOfClass:[TL_peerChannel class]] ? AutoGroupDocuments : AutoPrivateDocuments size:[self size]];
 }
 
 -(BOOL)canShare {
@@ -124,6 +124,10 @@
     [super setDownloadItem:downloadItem];
     
     _secondDownloadListener = [[DownloadEventListener alloc] init];
+}
+
+-(void)dealloc {
+    [self.downloadItem removeEvent:_secondDownloadListener];
 }
 
 - (int)size {

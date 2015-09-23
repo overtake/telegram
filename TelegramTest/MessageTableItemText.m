@@ -232,7 +232,7 @@
     
     
     if(self.isForwadedMessage) {
-        width -= 50;
+        width -= 6;
     }
 
 

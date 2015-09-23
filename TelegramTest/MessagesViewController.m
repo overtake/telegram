@@ -945,6 +945,7 @@ static NSTextAttachment *headerMediaIcon() {
 
 - (void)setState:(MessagesViewControllerState)state {
     [self setState:state animated:NO];
+    
 }
 
 -(BOOL)acceptState:(MessagesViewControllerState)state {

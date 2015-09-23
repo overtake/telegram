@@ -100,7 +100,7 @@
             callback(nil,ChatHistoryStateFull);
         }
         
-    } timeout:10 queue:[ASQueue globalQueue].nativeQueue];
+    } timeout:0 queue:[ASQueue globalQueue].nativeQueue];
     
 
 }

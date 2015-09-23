@@ -162,4 +162,6 @@ typedef enum {
 
 -(void)showOrHideChannelDiscussion;
 
+-(void)tryRead;
+
 @end

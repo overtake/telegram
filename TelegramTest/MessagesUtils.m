@@ -202,11 +202,11 @@
             
             TLMessageAction *action = message.action;
             if([action isKindOfClass:[TL_messageActionChatEditTitle class]]) {
-                msgText = NSLocalizedString(@"MessageAction.Service.ChangedGroupName", nil);
+                msgText =message.isChannelMessage ? NSLocalizedString(@"MessageAction.Service.ChannelGroupName", nil) : NSLocalizedString(@"MessageAction.Service.ChangedGroupName", nil);
             } else if([action isKindOfClass:[TL_messageActionChatDeletePhoto class]]) {
-                msgText = NSLocalizedString(@"MessageAction.Service.RemovedGroupPhoto", nil);
+                msgText =message.isChannelMessage ? NSLocalizedString(@"MessageAction.Service.RemovedChannelPhoto", nil) : NSLocalizedString(@"MessageAction.Service.RemovedGroupPhoto", nil);
             } else if([action isKindOfClass:[TL_messageActionChatEditPhoto class]]) {
-                msgText = NSLocalizedString(@"MessageAction.Service.ChangedGroupPhoto", nil);
+                 msgText =message.isChannelMessage ? NSLocalizedString(@"MessageAction.Service.ChangedChannelPhoto", nil) : NSLocalizedString(@"MessageAction.Service.ChangedGroupPhoto", nil);
             } else if([action isKindOfClass:[TL_messageActionChatAddUser class]]) {
                 
                 if(message.isChannelMessage) {

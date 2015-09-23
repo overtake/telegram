@@ -378,8 +378,6 @@ static NSTextAttachment *channelIconAttachment() {
 -(void)setDownloadItem:(DownloadItem *)downloadItem {
     self->_downloadItem = downloadItem;
     
-    self.downloadListener = [[DownloadEventListener alloc] init];
-    
     [self.downloadItem addEvent:self.downloadListener];
 }
 
@@ -442,16 +440,25 @@ static NSTextAttachment *channelIconAttachment() {
     if(size > [SettingsArchiver autoDownloadLimitSize])
         self.autoStart = NO;
     
-    if(!self.downloadItem || self.downloadItem.downloadState == DownloadStateCompleted || self.downloadItem.downloadState == DownloadStateCanceled)
+    if(!self.downloadItem || self.downloadItem.downloadState == DownloadStateCompleted || self.downloadItem.downloadState == DownloadStateCanceled) {
         if(![self isset])
             self.downloadItem = [[[self downloadClass] alloc] initWithObject:self.message];
+        
+    }
     
-    
+        
     if((self.autoStart && !self.downloadItem && !self.isset) || (self.downloadItem && self.downloadItem.downloadState != DownloadStateCanceled)) {
         [self startDownload:NO force:NO];
     }
     
+}
+
+-(DownloadEventListener *)downloadListener {
+    if( _downloadListener == nil) {
+        _downloadListener = [[DownloadEventListener alloc] init];
+    }
     
+    return _downloadListener;
 }
 
 -(id)identifier {
@@ -493,7 +500,8 @@ static NSTextAttachment *channelIconAttachment() {
 }
 
 -(void)dealloc {
-
+    [self.downloadItem removeEvent:_downloadListener];
+    
 }
 
 

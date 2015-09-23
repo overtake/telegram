@@ -166,16 +166,16 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            shouldBeEnabled = "Yes"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "TelegramTest/ComposeSettingupNewChannelViewController.m"
-            timestampString = "464646075.821009"
+            filePath = "TelegramTest/DownloadQueue.mm"
+            timestampString = "464703430.21899"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "101"
-            endingLineNumber = "101"
-            landmarkName = "-setAction:"
+            startingLineNumber = "192"
+            endingLineNumber = "192"
+            landmarkName = "+addAndStartItem:"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>

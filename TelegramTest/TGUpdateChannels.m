@@ -378,6 +378,9 @@
         TLChat *chat = [[ChatsManager sharedManager] find:[update channel_id]];
         
         
+        if(!chat)
+            return;
+        
         TL_conversation *channel = [self conversationWithChannelId:[update channel_id]];
         
         BOOL addInviteMessage = channel == nil;
@@ -633,7 +636,8 @@
         }
 
     } else {
-        [self addUpdate:[TL_updateChannel createWithChannel_id:channel_id]];
+        if(channel != nil)
+            [self addUpdate:[TL_updateChannel createWithChannel_id:channel_id]];
     }
     
     

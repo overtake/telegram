@@ -884,6 +884,7 @@
                 
                 [ASQueue dispatchOnMainQueue:^{
                     [weakSelf.messagesViewController setState:MessagesViewControllerStateNone];
+                    [weakSelf.messagesViewController tryRead];
                     [TMViewController hideModalProgressWithSuccess];
                 }];
                 

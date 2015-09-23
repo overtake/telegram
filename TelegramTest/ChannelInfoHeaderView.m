@@ -12,7 +12,7 @@
 #import "ComposeActionBehavior.h"
 #import "ComposeActionBlackListBehavior.h"
 #import "ComposeActionChannelMembersBehavior.h"
-@interface ChannelInfoHeaderView ()
+@interface ChannelInfoHeaderView ()<NSTextFieldDelegate>
 @property (nonatomic,strong) UserInfoParamsView *linkView;
 @property (nonatomic,strong) UserInfoParamsView *aboutView;
 
@@ -49,6 +49,16 @@
     // Drawing code here.
 }
 
+- (void)controlTextDidChange:(NSNotification *)obj {
+    
+    NSSize size = [self.aboutTextView.attributedStringValue sizeForTextFieldForWidth:NSWidth(self.aboutTextView.frame)];
+    
+    [self.aboutTextView setFrameSize:NSMakeSize(NSWidth(self.aboutTextView.frame), size.height)];
+    
+    
+}
+
+
 -(instancetype)initWithFrame:(NSRect)frameRect {
     if(self = [super initWithFrame:frameRect]) {
         
@@ -56,8 +66,8 @@
         _editAboutContainer = [[TMView alloc] initWithFrame:NSMakeRect(0, 0, NSWidth(frameRect) - 200, 62)];
         
         self.aboutTextView = [[TMTextField alloc] initWithFrame:NSMakeRect(0, 24, NSWidth(_editAboutContainer.frame) , 23)];
-        
-        
+     
+        self.aboutTextView.delegate = self;
         [self.aboutTextView setFont:[NSFont fontWithName:@"HelveticaNeue" size:15]];
         
         [self.aboutTextView setEditable:YES];

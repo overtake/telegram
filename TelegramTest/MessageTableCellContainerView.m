@@ -265,7 +265,7 @@
         return;
     }
     
-    if(self.progressView.state == TMLoaderViewStateNeedDownload) {
+    if(self.cellState == CellStateNeedDownload) {
         [self startDownload:YES];
         return;
     }
@@ -273,6 +273,9 @@
     if([self.item isset]) {
         [self open];
         return;
+    } else {
+        [self updateCellState];
+        [self checkOperation];
     }
 
 }

@@ -244,7 +244,9 @@ static long h_r_l;
             
             [self resort];
             
-            [_tableView removeItemsInRange:NSMakeRange(1, _tableView.count-1) tableRedraw:YES];
+            if(_tableView.count > 0) {
+                 [_tableView removeItemsInRange:NSMakeRange(1, _tableView.count-1) tableRedraw:YES];
+            }
             
             [_tableView insert:_fullItems startIndex:1 tableRedraw:YES];
             
