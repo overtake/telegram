@@ -56,14 +56,14 @@ static int futureUniqueKey = 0;
 }
 
 -(void)findAndFillAfterInit {
-    DownloadItem *item = [DownloadQueue find:self.n_id];
     
-    
-    if(item) {
-        _downloadState = item.downloadState;
-        _progress = item.progress;
-        [self start];
-    }
+//    DownloadItem *item = [DownloadQueue find:self.n_id];
+//    
+//    if(item) {
+//        _downloadState = item.downloadState;
+//        _progress = item.progress;
+//        [self start];
+//    }
 }
 
 -(id)initWithObject:(id)object size:(int)size {

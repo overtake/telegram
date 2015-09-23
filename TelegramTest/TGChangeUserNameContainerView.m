@@ -65,7 +65,7 @@
         [self.progressView setStyle:NSProgressIndicatorSpinningStyle];
         
         
-        self.textView = [[UserInfoShortTextEditView alloc] initWithFrame:NSMakeRect(30, 20, NSWidth(self.frame) - 60, 23)];
+        self.textView = [[UserInfoShortTextEditView alloc] initWithFrame:NSMakeRect(30, 14, NSWidth(self.frame) - 60, 20)];
         
         [self.successView setFrameOrigin:NSMakePoint(NSWidth(self.textView.frame) - NSWidth(self.successView.frame), 8)];
         
@@ -104,9 +104,9 @@
         [_telegramHolder setTextColor:GRAY_TEXT_COLOR];
         [_telegramHolder sizeToFit];
         
-        [_telegramHolder setFrameOrigin:NSMakePoint(0, 8)];
+        [_telegramHolder setFrameOrigin:NSMakePoint(0, 2)];
         [self.textView addSubview:_telegramHolder];
-        [self.textView.textView setFrameOrigin:NSMakePoint(NSMaxX(_telegramHolder.frame) - 5, 5)];
+        [self.textView.textView setFrameOrigin:NSMakePoint(NSMaxX(_telegramHolder.frame) - 5, 3)];
         
         
         NSMutableAttributedString *str = [[NSMutableAttributedString alloc] init];
@@ -126,7 +126,7 @@
         [self.textView.textView setTarget:self];
         [self.textView.textView setNextKeyView:self];
         [self.textView.textView setFrameOrigin:NSMakePoint(NSMaxX(_telegramHolder.frame) - 5, NSMinY(self.textView.textView.frame))];
-        
+        [self.textView.textView setFrameSize:NSMakeSize(NSWidth(self.textView.textView.frame), 20)];
         
         self.descriptionView = [[TMTextField alloc] initWithFrame:NSMakeRect(26, NSMaxY(_textView.frame), NSWidth(self.frame) - 60, 100)];
         
@@ -342,7 +342,7 @@
     [self.statusTextField sizeToFit];
     self.statusTextField.textColor = color;
     
-    [self.descriptionView setFrameOrigin:NSMakePoint(26, !self.statusTextField.isHidden ? NSMaxY(_statusTextField.frame)+5 : NSMaxY(_textView.frame)+5)];
+    [self.descriptionView setFrameOrigin:NSMakePoint(28, !self.statusTextField.isHidden ? NSMaxY(_statusTextField.frame)+2 : NSMaxY(_textView.frame)+2)];
     
 }
 

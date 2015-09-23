@@ -48,11 +48,11 @@
 
 -(void)blockUsers:(NSMutableArray *)members {
     
-    SelectUserItem *item = members[0];
+    TLUser *user = members[0];
     
     [members removeObjectAtIndex:0];
     
-    [[BlockedUsersManager sharedManager] block:item.user.n_id completeHandler:^(BOOL response) {
+    [[BlockedUsersManager sharedManager] block:user.n_id completeHandler:^(BOOL response) {
         
         if(members.count == 0) {
             [self.delegate behaviorDidEndRequest:nil];
