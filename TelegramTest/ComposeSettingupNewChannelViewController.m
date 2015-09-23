@@ -103,7 +103,7 @@
     
     TL_chatInviteExported *export = self.action.reservedObject1;
     
-    _joinLinkItem = [[GeneralSettingsBlockHeaderItem alloc] initWithString:export.link height:42 flipped:NO];
+    _joinLinkItem = [[GeneralSettingsBlockHeaderItem alloc] initWithString:export.link height:34 flipped:NO];
     _joinLinkItem.xOffset = 30;
     [_joinLinkItem setTextColor:TEXT_COLOR];
     [_joinLinkItem setFont:TGSystemFont(14)];

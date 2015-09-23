@@ -342,7 +342,7 @@
     [self.statusTextField sizeToFit];
     self.statusTextField.textColor = color;
     
-    [self.descriptionView setFrameOrigin:NSMakePoint(28, !self.statusTextField.isHidden ? NSMaxY(_statusTextField.frame)+2 : NSMaxY(_textView.frame)+2)];
+    [self.descriptionView setFrameOrigin:NSMakePoint(30, !self.statusTextField.isHidden ? NSMaxY(_statusTextField.frame) : NSMaxY(_textView.frame))];
     
 }
 

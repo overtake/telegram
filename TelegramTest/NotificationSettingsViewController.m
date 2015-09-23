@@ -121,13 +121,15 @@
                 
                 [self.items enumerateObjectsUsingBlock:^(NotificationConversationRowItem *obj, NSUInteger idx, BOOL *stop) {
                     
-                    [obj.conversation updateNotifySettings:[TL_peerNotifySettings createWithMute_until:0 sound:obj.conversation.notify_settings.sound show_previews:obj.conversation.notify_settings.show_previews events_mask:obj.conversation.notify_settings.events_mask]];
-                    
-                    TL_conversation *original = [[DialogsManager sharedManager] find:obj.conversation.peer_id];
-                    
-                    
-                    [original updateNotifySettings:[TL_peerNotifySettings createWithMute_until:0 sound:obj.conversation.notify_settings.sound show_previews:obj.conversation.notify_settings.show_previews events_mask:obj.conversation.notify_settings.events_mask]];
-                    
+                    if([obj isKindOfClass:[NotificationConversationRowItem class]]) {
+                        [obj.conversation updateNotifySettings:[TL_peerNotifySettings createWithMute_until:0 sound:obj.conversation.notify_settings.sound show_previews:obj.conversation.notify_settings.show_previews events_mask:obj.conversation.notify_settings.events_mask]];
+                        
+                        TL_conversation *original = [[DialogsManager sharedManager] find:obj.conversation.peer_id];
+                        
+                        
+                        [original updateNotifySettings:[TL_peerNotifySettings createWithMute_until:0 sound:obj.conversation.notify_settings.sound show_previews:obj.conversation.notify_settings.show_previews events_mask:obj.conversation.notify_settings.events_mask]];
+                    }
+
                 }];
                 
                 
