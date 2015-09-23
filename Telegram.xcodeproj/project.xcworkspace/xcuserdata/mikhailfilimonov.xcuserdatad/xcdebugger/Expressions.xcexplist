@@ -1268,6 +1268,14 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "-[ChannelInfoHeaderView setFrameSize:]:ChannelInfoHeaderView.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "_aboutTextView.containerView.frame">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "-[MessageTableCellDocumentView setItem:]:MessageTableCellDocumentView.m">
       </ContextState>
       <ContextState

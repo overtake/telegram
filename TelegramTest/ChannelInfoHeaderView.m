@@ -12,7 +12,7 @@
 #import "ComposeActionBehavior.h"
 #import "ComposeActionBlackListBehavior.h"
 #import "ComposeActionChannelMembersBehavior.h"
-@interface ChannelInfoHeaderView ()<NSTextFieldDelegate>
+@interface ChannelInfoHeaderView ()<TMGrowingTextViewDelegate>
 @property (nonatomic,strong) UserInfoParamsView *linkView;
 @property (nonatomic,strong) UserInfoParamsView *aboutView;
 
@@ -22,8 +22,7 @@
 @property (nonatomic,strong) UserInfoShortButtonView *openOrJoinChannelButton;
 
 
-
-@property (nonatomic,strong) TMTextField *aboutTextView;
+@property (nonatomic,strong) TMGrowingTextView *aboutTextView;
 @property (nonatomic,strong) TMTextField *aboutDescription;
 
 
@@ -51,10 +50,30 @@
 
 - (void)controlTextDidChange:(NSNotification *)obj {
     
-    NSSize size = [self.aboutTextView.attributedStringValue sizeForTextFieldForWidth:NSWidth(self.aboutTextView.frame)];
     
-    [self.aboutTextView setFrameSize:NSMakeSize(NSWidth(self.aboutTextView.frame), size.height)];
+//    [self.aboutTextView setStringValue:[self.aboutTextView.stringValue substringToIndex:MIN(160,self.aboutTextView.stringValue.length)]];
+//    
+//    NSSize size = [self.aboutTextView.attributedStringValue sizeForTextFieldForWidth:NSWidth(self.aboutTextView.frame)];
+//    
+//    [self.aboutTextView setFrameSize:NSMakeSize(NSWidth(self.aboutTextView.frame), size.height)];
+//    
+//    [self.editAboutContainer setFrameSize:NSMakeSize(NSWidth(_editAboutContainer.frame), size.height + 20)];
+//    
+
     
+}
+
+
+- (void) TMGrowingTextViewHeightChanged:(id)textView height:(int)height cleared:(BOOL)isCleared {
+    [self setFrameSize:self.frame.size];
+}
+- (BOOL) TMGrowingTextViewCommandOrControlPressed:(id)textView isCommandPressed:(BOOL)isCommandPressed {
+    return NO;
+}
+- (void) TMGrowingTextViewTextDidChange:(id)textView {
+     [self setFrameSize:self.frame.size];
+}
+- (void) TMGrowingTextViewFirstResponder:(id)textView isFirstResponder:(BOOL)isFirstResponder {
     
 }
 
@@ -63,29 +82,33 @@
     if(self = [super initWithFrame:frameRect]) {
         
         
-        _editAboutContainer = [[TMView alloc] initWithFrame:NSMakeRect(0, 0, NSWidth(frameRect) - 200, 62)];
+        _editAboutContainer = [[TMView alloc] initWithFrame:NSMakeRect(0, 0, NSWidth(frameRect) - 200, 80)];
         
-        self.aboutTextView = [[TMTextField alloc] initWithFrame:NSMakeRect(0, 24, NSWidth(_editAboutContainer.frame) , 23)];
+        self.aboutTextView = [[TMGrowingTextView alloc] initWithFrame:NSMakeRect(0, 24, NSWidth(_editAboutContainer.frame) , 40)];
      
-        self.aboutTextView.delegate = self;
-        [self.aboutTextView setFont:[NSFont fontWithName:@"HelveticaNeue" size:15]];
+        self.aboutTextView.growingDelegate = self;
+        
+        
+        [self.aboutTextView setMinHeight:20];
+        [self.aboutTextView setMaxHeight:47];
+        
+        [self.aboutTextView setLimit:200];
+        [self.aboutTextView setDisabledBorder:YES];
+     //   self.aboutTextView.delegate = self;
+        [self.aboutTextView setFont:TGSystemFont(13)];
         
         [self.aboutTextView setEditable:YES];
-        [self.aboutTextView setBordered:NO];
         [self.aboutTextView setFocusRingType:NSFocusRingTypeNone];
-        [self.aboutTextView setTextOffset:NSMakeSize(0, 5)];
         
         NSMutableAttributedString *str = [[NSMutableAttributedString alloc] init];
         
         [str appendString:NSLocalizedString(@"Compose.ChannelAboutPlaceholder", nil) withColor:DARK_GRAY];
         [str setAlignment:NSLeftTextAlignment range:str.range];
-        [str setFont:[NSFont fontWithName:@"HelveticaNeue" size:15] forRange:str.range];
-        
-        [self.aboutTextView.cell setPlaceholderAttributedString:str];
-        [self.aboutTextView setPlaceholderPoint:NSMakePoint(2, 0)];
+        [str setFont:[NSFont fontWithName:@"HelveticaNeue" size:13] forRange:str.range];
         
         
-        [_editAboutContainer addSubview:self.aboutTextView];
+        
+        [_editAboutContainer addSubview:self.aboutTextView.containerView];
         
         
         TMView *separator = [[TMView alloc] initWithFrame:NSMakeRect(0, 15, NSWidth(_editAboutContainer.frame), 1)];
@@ -122,7 +145,7 @@
         self.aboutView = [[UserInfoParamsView alloc] initWithFrame:NSMakeRect(100, 50, 200, 61)];
         [self.aboutView setHeader:NSLocalizedString(@"Profile.About", nil)];
         [self addSubview:self.aboutView];
-        
+
         
         self.linkEditButton = [UserInfoShortButtonView buttonWithText:NSLocalizedString(@"Profile.EditLink", nil) tapBlock:^{
                         
@@ -287,8 +310,9 @@
         [self.blackListButton setRightContainer:[self buildTitleWithString:[NSString stringWithFormat:@"%d",fullChat.kicked_count]]];
         [self.membersButton setRightContainer:[self buildTitleWithString:[NSString stringWithFormat:@"%d",fullChat.participants_count]]];
         
-        [self.aboutTextView setStringValue:self.controller.fullChat.about];
-        
+        [self.aboutTextView setString:self.controller.fullChat.about];
+        [self.aboutTextView controlTextDidChange:nil];
+                
         [self.statusTextField setChat:chat];
         [self.statusTextField sizeToFit];
         
@@ -513,9 +537,13 @@
     
         
     if(!self.editAboutContainer.isHidden) {
-        [_editAboutContainer setFrame:NSMakeRect(100, yOffset,NSWidth(self.frame) - 200, NSHeight(_editAboutContainer.frame))];
         
-        yOffset+=NSHeight(self.editAboutContainer.frame);
+        [_aboutTextView scrollToEndOfDocument:self];
+        
+        [_aboutTextView textDidChange:nil];
+        
+        [_editAboutContainer setFrame:NSMakeRect(100, yOffset-14,NSWidth(self.frame) - 200, NSHeight(_editAboutContainer.frame))];
+        yOffset+=70;
     }
     
     
@@ -553,9 +581,10 @@
     
     [_editAboutContainer setFrameSize:NSMakeSize(newSize.width - 200, NSHeight(_editAboutContainer.frame))];
     
+    [_aboutTextView.containerView setFrameSize:NSMakeSize(NSWidth(_editAboutContainer.frame), NSHeight(_aboutTextView.containerView.frame))];
+    [_aboutDescription setFrameSize:NSMakeSize(NSWidth(_editAboutContainer.frame)+10, 18)];
     
-    [_aboutTextView setFrameSize:NSMakeSize(NSWidth(_editAboutContainer.frame), NSHeight(_aboutTextView.frame))];
-    [_aboutDescription setFrameSize:NSMakeSize(NSWidth(_editAboutContainer.frame), 18)];
+    [_aboutTextView.containerView setFrameOrigin:NSMakePoint(-5, 16)];
     
     [self.nameLiveView setFrameSize:NSMakeSize(NSWidth(self.frame) - NSMinX(self.nameLiveView.frame) - 100, NSHeight(self.nameLiveView.frame))];
     [self.nameTextField setFrameSize:NSMakeSize(NSWidth(self.frame) - NSMinX(self.nameTextField.frame) - 100, NSHeight(self.nameTextField.frame))];

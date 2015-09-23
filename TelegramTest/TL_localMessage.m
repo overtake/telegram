@@ -145,6 +145,10 @@
     }
 }
 
+-(void)saveViews {
+    [[Storage manager] updateChannelMessageViews:self.channelMsgId views:self.views];
+}
+
 -(void)serialize:(SerializedData*)stream {
     [stream writeInt:self.flags];
     [stream writeInt:self.n_id];

@@ -283,20 +283,6 @@
             [channelMessages addObject:@(channelMsgId([obj intValue], peer_id))];
         }];
         
-        [[Storage manager] deleteChannelMessages:channelMessages completeHandler:^(NSArray *peer_update) {
-            
-            [peer_update enumerateObjectsUsingBlock:^(NSDictionary *obj, NSUInteger idx, BOOL *stop) {
-                
-                TL_conversation *conversation = [[DialogsManager sharedManager] find:[obj[KEY_PEER_ID] intValue]];
-                
-                [[DialogsManager sharedManager] updateLastMessageForDialog:conversation];
-                
-            }];
-            
-            [Notification perform:MESSAGE_DELETE_EVENT data:@{KEY_DATA:peer_update}];
-            
-        }];
-        
         [[update messages] enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
             
             

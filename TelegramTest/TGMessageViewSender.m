@@ -99,7 +99,7 @@
                         obj.message.views = [result[idx] intValue];
                         
                         if(needUpdate) {
-                            [obj.message save:NO];
+                            [obj.message saveViews];
                             [Notification perform:UPDATE_MESSAGE_ITEM data:@{@"item":obj}];
                         }
 

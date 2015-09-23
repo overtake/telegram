@@ -440,7 +440,7 @@
     [self.attachButton setBackgroundImage:image_AttachHighlighted() forControlState:BTRControlStateSelected | BTRControlStateHover];
     [self.attachButton setBackgroundImage:image_AttachHighlighted() forControlState:BTRControlStateHighlighted];
     [self.attachButton addTarget:self action:@selector(attachButtonPressed) forControlEvents:BTRControlEventMouseEntered];
-
+[self.attachButton addTarget:self action:@selector(attachButtonPressed) forControlEvents:BTRControlEventMouseDownInside];
     
     [self.normalView addSubview:self.attachButton];
     

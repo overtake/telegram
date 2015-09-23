@@ -240,11 +240,13 @@
 -(void)deleteChannelMessags:(NSArray *)messageIds {
     [self.queue dispatchOnQueue:^{
         
-        [[Storage manager] deleteChannelMessages:messageIds completeHandler:^(NSArray *peer_update) {
+        [[Storage manager] deleteChannelMessages:messageIds completeHandler:^(NSArray *peer_update,NSDictionary *readCount) {
             
             [peer_update enumerateObjectsUsingBlock:^(NSDictionary *obj, NSUInteger idx, BOOL *stop) {
                 
                 TL_conversation *conversation = [[DialogsManager sharedManager] find:[obj[KEY_PEER_ID] intValue]];
+                
+                conversation.unread_count-=[readCount[@(conversation.peer_id)] intValue];
                 
                 [self updateLastMessageForDialog:conversation];
                 

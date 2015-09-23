@@ -40,6 +40,7 @@ typedef enum {
 @property (nonatomic, strong) TL_localMessage *replyMessage;
 
 -(void)save:(BOOL)updateConversation;
+-(void)saveViews;
 
 +(TL_localMessage *)convertReceivedMessage:(TLMessage *)msg;
 +(void)convertReceivedMessages:(NSMutableArray *)messages;

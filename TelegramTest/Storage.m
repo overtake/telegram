@@ -1438,7 +1438,7 @@ TL_localMessage *parseMessage(FMResultSet *result) {
     }];
 }
 
--(void)deleteChannelMessages:(NSArray *)messages completeHandler:(void (^)(NSArray *peer_updates))completeHandler {
+-(void)deleteChannelMessages:(NSArray *)messages completeHandler:(void (^)(NSArray *peer_updates, NSDictionary *readCount))completeHandler {
     
     dispatch_queue_t dqueue = dispatch_get_current_queue();
     
@@ -1448,35 +1448,63 @@ TL_localMessage *parseMessage(FMResultSet *result) {
         
         NSMutableArray *peer_updates = [[NSMutableArray alloc] init];
         
-        
-        NSString *sql = [NSString stringWithFormat:@"SELECT n_id FROM channel_messages WHERE n_id IN (%@)",mark];
-        
-        FMResultSet *result = [db executeQueryWithFormat:sql,nil];
-        
-        while ([result next]) {
+        if(messages.count > 0) {
+            NSString *sql = [NSString stringWithFormat:@"SELECT n_id,random_id FROM channel_messages WHERE n_id IN (%@)",mark];
             
-            long n_id = [result longForColumn:@"n_id"];
             
-            NSData *nData = [[NSData alloc] initWithBytes:&n_id length:8];
+            FMResultSet *result = [db executeQueryWithFormat:sql,nil];
             
-            int msgId;
-            int peerId;
+            NSMutableDictionary *unreadCount = [NSMutableDictionary dictionary];
             
-            [nData getBytes:&msgId range:NSMakeRange(0, 4)];
-            [nData getBytes:&peerId range:NSMakeRange(4, 4)];
+            NSMutableArray *randomIds = [NSMutableArray array];
             
-            [peer_updates addObject:@{KEY_MESSAGE_ID:@(msgId),KEY_PEER_ID:@(peerId)}];
+            while ([result next]) {
+                
+                [randomIds addObject:@([result longForColumn:@"random_id"])];
+                
+                long n_id = [result longForColumn:@"n_id"];
+                
+                NSData *nData = [[NSData alloc] initWithBytes:&n_id length:8];
+                
+                int msgId;
+                int peerId;
+
+                
+                [nData getBytes:&msgId range:NSMakeRange(0, 4)];
+                [nData getBytes:&peerId range:NSMakeRange(4, 4)];
+                
+                int read_max_id = [db intForQuery:[NSString stringWithFormat:@"select read_inbox_max_id from %@ where peer_id = ?",tableChannelDialogs],@(peerId)];
+                
+                if(msgId > read_max_id) {
+                    unreadCount[@(peerId)] = @([unreadCount[@(peerId)] intValue] + 1);
+                }
+                
+                
+                [peer_updates addObject:@{KEY_MESSAGE_ID:@(msgId),KEY_PEER_ID:@(peerId)}];
+            }
+            
+            
+            [result close];
+            
+            
+            [unreadCount enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
+                
+                [db executeUpdate:[NSString stringWithFormat:@"update %@ set unread_count = unread_count - ? where peer_id = ?",tableChannelDialogs],key,obj];
+            }];
+            
+            
+            sql = [NSString stringWithFormat:@"delete from channel_messages WHERE n_id IN (%@)",mark];
+            
+            [db executeUpdateWithFormat:sql,nil];
+            
+            sql = [NSString stringWithFormat:@"delete from %@ where random_id IN (%@)",tableSharedMedia,[randomIds componentsJoinedByString:@","]];
+            
+            dispatch_async(dqueue, ^{
+                if(completeHandler) completeHandler(peer_updates,unreadCount);
+            });
+
         }
         
-        [result close];
-        
-        
-        sql = [NSString stringWithFormat:@"delete from channel_messages WHERE n_id IN (%@)",mark];
-        [db executeUpdateWithFormat:sql,nil];
-        
-        dispatch_async(dqueue, ^{
-            if(completeHandler) completeHandler(peer_updates);
-        });
     }];
 }
 
@@ -1513,7 +1541,13 @@ TL_localMessage *parseMessage(FMResultSet *result) {
     }];
 }
 
-
+-(void)updateChannelMessageViews:(long)channelMsgId views:(int)views {
+    [queue inDatabase:^(FMDatabase *db) {
+       
+        [db executeUpdate:[NSString stringWithFormat:@"update %@ set views = ? where n_id = ?",tableChannelMessages],@(views),@(channelMsgId)];
+        
+    }];
+}
 
 -(void)insertMessages:(NSArray *)messages {
     

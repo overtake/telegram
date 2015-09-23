@@ -120,48 +120,30 @@
             
             TL_channel *channel = [[ChatsManager sharedManager] find:[(TL_channel *)response.chats[0] n_id]];
             
-            [[FullChatManager sharedManager] performLoad:channel.n_id callback:^(TLChatFull *fullChat) {
+            self.action.object = channel;
                 
-                TL_conversation *conversation = channel.dialog;
+            dispatch_block_t block = ^{
+                [self.delegate behaviorDidEndRequest:response];
                 
-                conversation.read_inbox_max_id = fullChat.read_inbox_max_id;
-                conversation.unread_count = fullChat.unread_count;
-                conversation.unread_important_count = fullChat.unread_important_count;
+                [[Telegram rightViewController] clearStack];
                 
-                [conversation save];
+                [[Telegram rightViewController] showByDialog:channel.dialog sender:self];
                 
+                [[Telegram rightViewController] showComposeSettingsupNewChannel:self.action];
                 
-                self.action.object = channel;
+                [self.delegate behaviorDidEndRequest:self];
+            };
+            
+            [RPCRequest sendRequest:[TLAPI_channels_exportInvite createWithChannel:channel.inputPeer] successHandler:^(id request, id response) {
                 
-                dispatch_block_t block = ^{
-                    [self.delegate behaviorDidEndRequest:response];
-                    
-                    [[Telegram rightViewController] clearStack];
-                    
-                    [[Telegram rightViewController] showByDialog:channel.dialog sender:self];
-                    
-                    [[Telegram rightViewController] showComposeSettingsupNewChannel:self.action];
-                    
-                    [self.delegate behaviorDidEndRequest:self];
-                };
+                self.action.reservedObject1 = response;
                 
-                [RPCRequest sendRequest:[TLAPI_channels_exportInvite createWithChannel:channel.inputPeer] successHandler:^(id request, id response) {
-                    
-                    self.action.reservedObject1 = response;
-                    
-                    fullChat.exported_invite = response;
-                    
-                    [[Storage manager] insertFullChat:fullChat completeHandler:nil];
-                    
-                    block();
-                    
-                } errorHandler:^(id request, RpcError *error) {
-                    block();
-                }];
+                block();
                 
-
-                
+            } errorHandler:^(id request, RpcError *error) {
+                block();
             }];
+            
         
         }
         
