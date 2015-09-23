@@ -543,7 +543,7 @@
         [_aboutTextView textDidChange:nil];
         
         [_editAboutContainer setFrame:NSMakeRect(100, yOffset-14,NSWidth(self.frame) - 200, NSHeight(_editAboutContainer.frame))];
-        yOffset+=70;
+        yOffset+=50;
     }
     
     

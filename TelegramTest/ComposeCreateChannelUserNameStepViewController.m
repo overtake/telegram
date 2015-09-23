@@ -34,6 +34,23 @@
     
     _observer = [[TGChangeUserObserver alloc] initWithDescription:attr placeholder:nil defaultUserName:nil];
     
+    [_observer setNeedDescriptionWithError:^NSString *(NSString *error) {
+        
+        if([error isEqualToString:@"USERNAME_CANT_FIRST_NUMBER"])  {
+            return NSLocalizedString(@"Channel.Username.InvalidStartsWithNumber", nil);
+        } else if([error isEqualToString:@"USERNAME_IS_ALREADY_TAKEN"]) {
+            return NSLocalizedString(@"Channel.Username.InvalidTaken", nil);
+        } else if([error isEqualToString:@"USERNAME_MIN_SYMBOLS_ERROR"]) {
+            return NSLocalizedString(@"Channel.Username.InvalidTooShort", nil);
+        } else if([error isEqualToString:@"USERNAME_INVALID"]) {
+            return NSLocalizedString(@"Channel.Username.InvalidCharacters", nil);
+        } else if([error isEqualToString:@"UserName.avaiable"]) {
+            return NSLocalizedString(@"Channel.Username.UsernameIsAvailable", nil);
+        }
+        
+        return @"Unknown error";
+        
+    }];
     
     weak();
     

@@ -101,7 +101,7 @@
         _telegramHolder = [TMTextField defaultTextField];
         [_telegramHolder setStringValue:@"telegram.me/"];
         [_telegramHolder setFont:TGSystemFont(15)];
-        [_telegramHolder setTextColor:GRAY_TEXT_COLOR];
+        [_telegramHolder setTextColor:TEXT_COLOR];
         [_telegramHolder sizeToFit];
         
         [_telegramHolder setFrameOrigin:NSMakePoint(0, 2)];
@@ -218,9 +218,9 @@
 
         
         if(![self isNumberValid]) {
-            [self setState:NSLocalizedString(@"USERNAME_CANT_FIRST_NUMBER", nil) color:[NSColor redColor]];
+            [self setState:[self errorWithKey:@"USERNAME_CANT_FIRST_NUMBER"] color:[NSColor redColor]];
         } else {
-            [self setState:NSLocalizedString(@"USERNAME_MIN_SYMBOLS_ERROR", nil) color:[NSColor redColor]];
+            [self setState:[self errorWithKey:@"USERNAME_MIN_SYMBOLS_ERROR"] color:[NSColor redColor]];
         }
         
     }
@@ -290,9 +290,9 @@
                     
                     
                     if(self.isSuccessChecked) {
-                        [self setState:self.checkedUserName.length > 0 ? [NSString stringWithFormat:NSLocalizedString(@"UserName.avaiable", nil),self.checkedUserName] : nil color:GC];
+                        [self setState:self.checkedUserName.length > 0 ? [NSString stringWithFormat:[self errorWithKey:@"UserName.avaiable"],self.checkedUserName] : nil color:GC];
                     } else {
-                        [self setState:[NSString stringWithFormat:NSLocalizedString(@"USERNAME_IS_ALREADY_TAKEN", nil)] color:[NSColor redColor]];
+                        [self setState:[self errorWithKey:@"USERNAME_IS_ALREADY_TAKEN"] color:[NSColor redColor]];
                     }
                     
                     
@@ -311,7 +311,7 @@
                     
                     [self.successView setHidden:YES];
                     
-                    [self setState:NSLocalizedString(error.error_msg, nil) color:[NSColor redColor]];
+                    [self setState:[self errorWithKey:error.error_msg] color:[NSColor redColor]];
                     
                 }];
                 
@@ -334,6 +334,14 @@
     
     self.lastUserName = self.textView.textView.stringValue;
     
+}
+
+-(NSString *)errorWithKey:(NSString *)key {
+    if(self.oberser.needDescriptionWithError != nil) {
+        return self.oberser.needDescriptionWithError(key);
+    }
+    
+    return NSLocalizedString(key, nil);
 }
 
 -(void)setState:(NSString *)state color:(NSColor *)color {

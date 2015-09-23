@@ -20,8 +20,10 @@
 @property (nonatomic,strong) NSString *defaultUserName;
 
 
-@property (nonatomic,strong) id (^needApiObjectWithUserName)(NSString *userName);
 
+
+@property (nonatomic,strong) id (^needApiObjectWithUserName)(NSString *userName);
+@property (nonatomic,strong) NSString* (^needDescriptionWithError)(NSString *error);
 
 
 -(id)initWithDescription:(NSAttributedString *)desc placeholder:(NSString *)placeholder defaultUserName:(NSString *)defaultUserName;
