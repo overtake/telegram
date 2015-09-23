@@ -283,6 +283,10 @@
             [channelMessages addObject:@(channelMsgId([obj intValue], peer_id))];
         }];
         
+        
+        [[DialogsManager sharedManager] deleteChannelMessags:channelMessages];
+
+        
         [[update messages] enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
             
             
@@ -330,8 +334,6 @@
             }
             
         }];
-        
-        [[DialogsManager sharedManager] deleteChannelMessags:channelMessages];
         
         
     } else if([update isKindOfClass:[TL_updateMessageID class]]) {

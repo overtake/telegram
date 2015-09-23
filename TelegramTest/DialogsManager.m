@@ -238,23 +238,19 @@
 }
 
 -(void)deleteChannelMessags:(NSArray *)messageIds {
-    [self.queue dispatchOnQueue:^{
+    [[Storage manager] deleteChannelMessages:messageIds completeHandler:^(NSArray *peer_update,NSDictionary *readCount) {
         
-        [[Storage manager] deleteChannelMessages:messageIds completeHandler:^(NSArray *peer_update,NSDictionary *readCount) {
+        [peer_update enumerateObjectsUsingBlock:^(NSDictionary *obj, NSUInteger idx, BOOL *stop) {
             
-            [peer_update enumerateObjectsUsingBlock:^(NSDictionary *obj, NSUInteger idx, BOOL *stop) {
-                
-                TL_conversation *conversation = [[DialogsManager sharedManager] find:[obj[KEY_PEER_ID] intValue]];
-                
-                conversation.unread_count-=[readCount[@(conversation.peer_id)] intValue];
-                
-                [self updateLastMessageForDialog:conversation];
-                
-            }];
+            TL_conversation *conversation = [[DialogsManager sharedManager] find:[obj[KEY_PEER_ID] intValue]];
             
-            [Notification perform:MESSAGE_DELETE_EVENT data:@{KEY_DATA:peer_update}];
+            conversation.unread_count-=[readCount[@(conversation.peer_id)] intValue];
+            
+            [self updateLastMessageForDialog:conversation];
             
         }];
+        
+        [Notification perform:MESSAGE_DELETE_EVENT data:@{KEY_DATA:peer_update}];
         
     }];
 

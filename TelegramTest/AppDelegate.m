@@ -873,29 +873,28 @@ void exceptionHandler(NSException * exception)
             
             [TGAudioPlayerWindow hide];
             
+            [Storage drop];
+
             
-            [[Storage manager] drop:^{
+            [Storage open:^{
                 
                 [[MTNetwork instance] drop];
                 
-                [Storage open:^{
-                    
-                    [TGCache clear];
-                    [TGModernTypingManager drop];
-                    [SharedManager drop];
-                    [[MTNetwork instance] startNetwork];
-                    [Telegram drop];
-                    [TMViewController hidePasslock];
-                    [MessageSender drop];
-                    [Notification perform:LOGOUT_EVENT data:nil];
-                    
-                    [MessagesManager updateUnreadBadge];
-                    
-                    [self initializeLoginWindow];
-                }];
+                [TGCache clear];
+                [TGModernTypingManager drop];
+                [SharedManager drop];
+                [[MTNetwork instance] startNetwork];
+                [Telegram drop];
+                [TMViewController hidePasslock];
+                [MessageSender drop];
+                [Notification perform:LOGOUT_EVENT data:nil];
+                
+                [MessagesManager updateUnreadBadge];
+                
+                [self initializeLoginWindow];
             }];
             
-        }];  
+        }];
         
     };
     
@@ -903,18 +902,24 @@ void exceptionHandler(NSException * exception)
         
          [TMViewController showModalProgress];
         
-        
-        dispatch_block_t clearCache = ^ {
+         dispatch_block_t clearCache = ^ {
             [RPCRequest sendRequest:[TLAPI_auth_logOut create] successHandler:^(RPCRequest *request, id response) {
                 
-                block();
+                [[Storage manager] drop:^{
+                    block();
+                }];
+                
                 
             } errorHandler:^(RPCRequest *request, RpcError *error) {
                 
                 [TMViewController hideModalProgress];
                 
                 confirm(NSLocalizedString(@"Auth.CantLogout", nil), NSLocalizedString(@"Auth.ForceLogout", nil), ^ {
-                    [self logoutWithForce:YES];
+                    
+                    [[Storage manager] drop:^{
+                        [self logoutWithForce:YES];
+                    }];
+                    
                 },nil);
                 
             } timeout:5];

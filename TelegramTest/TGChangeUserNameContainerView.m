@@ -204,7 +204,7 @@
 
 - (void)controlTextDidChange:(NSNotification *)obj {
     
-    [self.textView.textView setStringValue:[self.textView.textView.stringValue substringToIndex:MIN(30,self.textView.textView.stringValue.length)]];
+    [self.textView.textView setStringValue:[self.textView.textView.stringValue substringToIndex:MIN(40,self.textView.textView.stringValue.length)]];
     
     if((self.textView.textView.stringValue.length >= 5 && [self isNumberValid]) || self.textView.textView.stringValue.length == 0) {
         [self updateChecker];

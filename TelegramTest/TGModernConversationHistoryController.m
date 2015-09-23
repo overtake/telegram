@@ -200,7 +200,7 @@ static BOOL isStorageLoaded;
         
         _needMergeChannels = channelsLoader.isNeedRemoteLoading;
         
-        _state = isStorageLoaded ? TGModernCHStateCache : TGModernCHStateLocal;
+        _state = TGModernCHStateLocal;
          
     }
     

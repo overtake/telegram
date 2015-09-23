@@ -132,7 +132,7 @@
 
 -(void)setDurationTextFieldString:(NSString *)string {
     [self.durationView setStringValue:self.item.duration];
-    [self.durationView setFrameSize:NSMakeSize([self progressWidth] - self.stateTextField.frame.size.width -15, NSHeight(self.durationView.frame))];
+    [self.durationView setFrameSize:NSMakeSize(NSMaxX(self.stateTextField.frame) + 5, NSHeight(self.durationView.frame))];
 }
 
 -(void)drawRect:(NSRect)dirtyRect {
