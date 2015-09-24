@@ -78,6 +78,12 @@
         
         addModerator.xOffset = 30;
         description.xOffset = 30;
+    } else {
+        GeneralSettingsBlockHeaderItem *description = [[GeneralSettingsBlockHeaderItem alloc] initWithString:@"" height:30 flipped:YES];
+        
+        
+        description.xOffset = 30;
+        [_tableView addItem:description tableRedraw:NO];
     }
     
     
