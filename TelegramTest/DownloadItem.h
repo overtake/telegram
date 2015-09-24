@@ -24,7 +24,7 @@ typedef void (^DownloadItemHandler)(DownloadItem *item);
 
 @interface DownloadEventListener : NSObject
 @property (atomic,copy) DownloadItemHandler progressHandler;
-@property (atomic,strong) DownloadItemHandler completeHandler;
+@property (atomic,copy) DownloadItemHandler completeHandler;
 @property (atomic,copy) DownloadItemHandler errorHandler;
 
 

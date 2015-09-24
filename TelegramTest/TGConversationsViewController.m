@@ -154,7 +154,7 @@
     
      [[MTNetwork instance] startNetwork];
     
-    _modernHistory = [[TGModernConversationHistoryController alloc] initWithQueue:[ASQueue globalQueue] delegate:self];
+    _modernHistory = [[TGModernConversationHistoryController alloc] initWithQueue:[[ASQueue alloc] initWithName:"c_h_queue"] delegate:self];
     
     
     [self loadhistory:30];
