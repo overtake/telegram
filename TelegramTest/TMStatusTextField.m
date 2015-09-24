@@ -169,7 +169,7 @@
     if(chat == nil || self.lock)
         return;
     
-    if(self.chat.type == TLChatTypeNormal && !self.chat.left) {
+    if((self.chat.type == TLChatTypeNormal && !self.chat.left) || self.chat.isChannel) {
         self.attributedStringValue = [chat performSelector:self.selector withObject:nil];
     } else {
         self.attributedStringValue = [[NSAttributedString alloc] init];
