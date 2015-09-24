@@ -71,11 +71,14 @@
     
     _loader = nil;
     
+    NSLog(@"test");
+    
     if(_conversation) {
         _loader = [[ChatHistoryController alloc] initWithController:self historyFilter:[self.tableView historyFilter]];
         
         [_loader setPrevState:ChatHistoryStateFull];
     } else {
+        [_loader drop:YES];
         _loader = nil;
     }
     
@@ -85,11 +88,12 @@
 
 -(void)loadNext:(BOOL)isFirst {
     
-    _loader.selectLimit = _loader.nextState != ChatHistoryStateRemote ? 500 : 50;
+    _loader.selectLimit = _loader.nextState != ChatHistoryStateRemote ? 50 : 50;
     
     [_loader request:YES anotherSource:YES sync:isFirst selectHandler:^(NSArray *result, NSRange range) {
         
         self.tableView.isProgress = NO;
+        
         
         NSArray *filtred = [result filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary *bindings) {
             
@@ -106,6 +110,7 @@
         [self.defaultItems addObjectsFromArray:filtred];
         
         [self.tableView insertRowsAtIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(self.items.count - filtred.count, filtred.count)] withAnimation:NSTableViewAnimationEffectNone];
+        
         
         [self.tableView checkCap];
         

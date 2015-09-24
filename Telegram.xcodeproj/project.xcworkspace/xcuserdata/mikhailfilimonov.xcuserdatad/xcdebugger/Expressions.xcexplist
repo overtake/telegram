@@ -2572,6 +2572,11 @@
       </ContextState>
       <ContextState
          contextName = "__34-[TGDocumentsController loadNext:]_block_invoke:TGDocumentsMediaTableView.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "result">
+            </PersistentString>
+         </PersistentStrings>
       </ContextState>
       <ContextState
          contextName = "__31-[TGPhotoViewer indexOfObject:]_block_invoke:TGPhotoViewer.m">
@@ -3432,7 +3437,7 @@
          contextName = "-[ChatHistoryController removeAllItems]:ChatHistoryController.m">
          <PersistentStrings>
             <PersistentString
-               value = "">
+               value = "self.filter.class">
             </PersistentString>
          </PersistentStrings>
       </ContextState>

@@ -376,7 +376,6 @@ static const int maxWidth = 120;
     [self.photoCollection.containerView setHidden:YES];
     [self.sharedLinksTableView.containerView setHidden:YES];
     
-    [self.documentsTableView setConversation:self.conversation];
     [self setTitle:NSLocalizedString(@"Conversation.Filter.Files", nil)];
     [self checkCap];
     [self setIsEditable:NO animated:NO];
@@ -387,9 +386,7 @@ static const int maxWidth = 120;
     [self.photoCollection.containerView setHidden:YES];
     [self.documentsTableView.containerView setHidden:YES];
     
-    
-    [self.sharedLinksTableView setConversation:self.conversation];
-    [self setTitle:NSLocalizedString(@"Conversation.Filter.SharedLinks", nil)];
+        [self setTitle:NSLocalizedString(@"Conversation.Filter.SharedLinks", nil)];
     [self checkCap];
     [self setIsEditable:NO animated:NO];
 }
@@ -418,7 +415,7 @@ static const int maxWidth = 120;
    
     [self view];
     
-    [self showAllMedia];
+   
     
     [self.documentsTableView setConversation:conversation];
     [self.sharedLinksTableView setConversation:conversation];
@@ -678,6 +675,8 @@ static const int maxWidth = 120;
         [self.mediaCap setHidden:![self.sharedLinksTableView isNeedCap]];
         [self.mediaCap updateCap:image_SadAttach() text:NSLocalizedString(@"SharedMedia.NoSharedLinks", nil)];
         [self.mediaCap setProgress:self.isProgress];
+        
+        NSLog(@"%d",[self.sharedLinksTableView isNeedCap]);
     } else {
         [self.mediaCap setHidden:self.photoCollection.count != 0];
         [self.mediaCap updateCap:image_SadAttach() text:NSLocalizedString(@"SharedMedia.NoSharedMedia", nil)];

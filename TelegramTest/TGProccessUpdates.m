@@ -299,18 +299,20 @@ static NSArray *channelUpdates;
         return;
     }
     
-    
-    [_statefulUpdates addObject:statefulMessage];
-    
-    [self cancelSequenceTimer];
-    
-    _sequenceTimer = [[TGTimer alloc] initWithTimeout:2.0 repeat:NO completion:^{
-        [self failSequence];
-    } queue:queue.nativeQueue];
-    
-    [_sequenceTimer start];
-    
-    [self checkSequence];
+    if(!_holdUpdates) {
+        [_statefulUpdates addObject:statefulMessage];
+        
+        [self cancelSequenceTimer];
+        
+        _sequenceTimer = [[TGTimer alloc] initWithTimeout:2.0 repeat:NO completion:^{
+            [self failSequence];
+        } queue:queue.nativeQueue];
+        
+        [_sequenceTimer start];
+        
+        [self checkSequence];
+    }
+
 }
 
 -(void)failSequence {

@@ -20,7 +20,7 @@
 
 -(void)remoteRequest:(BOOL)next peer_id:(int)peer_id callback:(void (^)(id response))callback {
     
-    self.request = [RPCRequest sendRequest:[TLAPI_messages_search createWithFlags:0 peer:[self.controller.conversation inputPeer] q:@"" filter:[TL_inputMessagesFilterDocument create] min_date:0 max_date:0 offset:0 max_id:self.controller.max_id limit:(int)self.controller.selectLimit] successHandler:^(RPCRequest *request, id response) {
+    self.request = [RPCRequest sendRequest:[TLAPI_messages_search createWithFlags:0 peer:[self.controller.conversation inputPeer] q:@"" filter:[TL_inputMessagesFilterDocument create] min_date:0 max_date:0 offset:0 max_id:self.controller.max_id  limit:(int)self.controller.selectLimit] successHandler:^(RPCRequest *request, id response) {
         
         
         if(callback && self != nil) {
