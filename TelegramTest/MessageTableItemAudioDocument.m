@@ -141,6 +141,8 @@
 -(BOOL)makeSizeByWidth:(int)width {
     [super makeSizeByWidth:width];
     
+    
+    
     self.blockSize = NSMakeSize(width - self.dateSize.width - 20, 50);
     
     return NO;

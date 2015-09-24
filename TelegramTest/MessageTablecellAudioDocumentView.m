@@ -132,7 +132,8 @@
 
 -(void)setDurationTextFieldString:(NSString *)string {
     [self.durationView setStringValue:self.item.duration];
-    [self.durationView setFrameSize:NSMakeSize(NSMaxX(self.stateTextField.frame) + 5, NSHeight(self.durationView.frame))];
+    [self.durationView sizeToFit];
+    [self.durationView setFrameSize:NSMakeSize(MIN(NSWidth(self.containerView.frame) - NSMinX(self.durationView.frame) - NSWidth(self.stateTextField.frame) - 15,NSWidth(self.durationView.frame)), NSHeight(self.durationView.frame))];
 }
 
 -(void)drawRect:(NSRect)dirtyRect {
@@ -254,7 +255,7 @@
     
     [self setDurationTextFieldString:item.duration];
     
-    [self.stateTextField setFrameOrigin:NSMakePoint(NSMaxX(self.durationView.frame) - 10, self.durationView.frame.origin.y )];
+    [self.stateTextField setFrameOrigin:NSMakePoint(NSMaxX(self.durationView.frame) + 2, self.durationView.frame.origin.y )];
     
     if(item.state != AudioStatePlaying && item.state != AudioStatePaused)
         [self updateCellState];

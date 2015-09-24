@@ -561,7 +561,7 @@ void open_user_by_name(NSDictionary *params) {
                 
                 if([response.peer isKindOfClass:[TL_peerChannel class]]) {
                     obj = [response.chats firstObject];
-                } else if([response isKindOfClass:[TL_peerUser class]]) {
+                } else if([response.peer isKindOfClass:[TL_peerUser class]]) {
                     obj = [response.users firstObject];
                 }
                 
