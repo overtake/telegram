@@ -384,7 +384,9 @@ static NSCache *cacheItems;
     
     if(userName.length > 4) {
         _request = [RPCRequest sendRequest:[TLAPI_contacts_search createWithQ:userName limit:100] successHandler:^(RPCRequest *request, TL_contacts_found *response) {
-                        
+            
+            if(![userName isEqualToString:self.searchView.searchField.stringValue])
+                return;
             NSMutableArray *converted = [[NSMutableArray alloc] init];
             
             

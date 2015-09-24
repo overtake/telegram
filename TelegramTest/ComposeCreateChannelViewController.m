@@ -147,8 +147,9 @@
     
      NSSize size = [self.aboutTextView.attributedStringValue sizeForTextFieldForWidth:NSWidth(self.frame) - 60];
     
-    int nh = 139 + size.height;
+    size.height = MAX(21, size.height);
     
+    int nh = 139 + size.height;
     
     [item.controller updateComposeWithHeight:nh];
     
