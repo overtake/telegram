@@ -420,7 +420,7 @@
     
     [self.managmentButton setHidden:!self.controller.chat.isManager];
     
-    [self.membersButton setHidden:!self.controller.chat.isManager || (self.controller.fullChat.participants_count >= 200)];
+    [self.membersButton setHidden:!self.controller.chat.isManager];
     [self.blackListButton setHidden:!self.controller.chat.isManager || self.controller.chat.isBroadcast];
     
     

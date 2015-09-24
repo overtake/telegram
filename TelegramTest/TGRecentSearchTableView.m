@@ -164,7 +164,13 @@
     [[Telegram rightViewController] showByDialog:conv sender:self];
     
 }
-- (BOOL)selectionWillChange:(NSInteger)row item:(TMRowItem *) item {
+- (BOOL)selectionWillChange:(NSInteger)row item:(TGRecentSearchRowItem *) item {
+    
+    if([[Telegram rightViewController] isModalViewActive]) {
+        [[Telegram rightViewController] modalViewSendAction:item.conversation];
+        return NO;
+    }
+    
     return YES;
 }
 - (BOOL)isSelectable:(NSInteger)row item:(TMRowItem *) item {

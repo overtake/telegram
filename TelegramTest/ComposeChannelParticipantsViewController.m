@@ -118,9 +118,9 @@
         
         
     } errorHandler:^(id request, RpcError *error) {
-        
-        
-        [self setLoading:NO];
+        [ASQueue dispatchOnMainQueue:^{
+             [self setLoading:NO];
+        }];
         
     } timeout:0 queue:[ASQueue globalQueue].nativeQueue];
     
