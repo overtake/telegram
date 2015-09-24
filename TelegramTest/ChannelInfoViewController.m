@@ -60,7 +60,8 @@
         if(self.type == ChatInfoViewControllerEdit)
             [self.tableView addItem:self.bottomItem tableRedraw:NO];
     } else {
-        [self.tableView addItem:self.bottomItem tableRedraw:NO];
+        if(!self.chat.dialog.invisibleChannel)
+            [self.tableView addItem:self.bottomItem tableRedraw:NO];
     }
     
        

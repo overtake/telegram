@@ -28,7 +28,7 @@
         
         if(message.isChannelMessage) {
             text = NSLocalizedString(@"MessageAction.Service.InvitedYouToChannel",nil);
-            if(action.user_id == [UsersManager currentUserId]) {
+            if(message.from_id == [UsersManager currentUserId]) {
                 text = NSLocalizedString(@"MessageAction.Service.YouChoinedToChannel", nil);
             }
         } else {
@@ -213,7 +213,7 @@
                 
                 if(message.isChannelMessage) {
                      msgText = NSLocalizedString(@"MessageAction.Service.InvitedYouToChannel",nil);
-                    if(action.user_id == [UsersManager currentUserId]) {
+                    if(message.from_id  == [UsersManager currentUserId]) {
                         msgText = NSLocalizedString(@"MessageAction.Service.YouChoinedToChannel", nil);
                     }
                 } else {
@@ -346,7 +346,7 @@
         
         if(message.isChannelMessage) {
              actionText = NSLocalizedString(@"MessageAction.Service.InvitedYouToChannel",nil);
-            if(action.user_id == [UsersManager currentUserId]) {
+            if(message.from_id  == [UsersManager currentUserId]) {
                 actionText = NSLocalizedString(@"MessageAction.Service.YouChoinedToChannel", nil);
             }
         } else {
