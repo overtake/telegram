@@ -507,10 +507,6 @@ static int MAX_WORKER_POLL = 5;
         [self setDatacenter:isTestServer() ? 1 : 2];
         
         
-        [self updateEncryptionKey];
-        
-        
-        
     } synchronous:YES];
     
     

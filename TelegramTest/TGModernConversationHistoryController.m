@@ -146,11 +146,7 @@ static const int limit = 1000;
 -(void)saveResults:(NSArray *)channels onQueue:(ASQueue *)queue {
     [queue dispatchOnQueue:^{
         
-        _channelsIsLoaded = YES;
-        
         [[ChannelsManager sharedManager] add:channels];
-        
-        [self notifyListenersWithObject:channels];
         
         [[Storage manager] insertChannels:channels completionHandler:^{
             
@@ -160,7 +156,8 @@ static const int limit = 1000;
             
         } deliveryOnQueue:queue];
         
-        
+        _channelsIsLoaded = YES;
+        [self notifyListenersWithObject:channels];
     }];
     
 }
@@ -206,7 +203,6 @@ static BOOL isStorageLoaded;
             [channelsLoader loadChannelsOnQueue:queue];
         }
         
-        _needMergeChannels = channelsLoader.isNeedRemoteLoading;
         
         _state = TGModernCHStateLocal;
          
@@ -224,6 +220,8 @@ static BOOL isStorageLoaded;
    
     if(_loadNextAfterLoadChannels) {
         _isLoading = NO;
+        _state = TGModernCHStateRemote;
+        _needMergeChannels = YES;
         [self performLoadNext];
     }
     
