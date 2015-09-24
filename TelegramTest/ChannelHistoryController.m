@@ -65,8 +65,17 @@ static TGChannelsPolling *channelPolling;
          //   ChannelHistoryController* strongSelf = weakSelf;
             
           //  if(strongSelf != nil) {
-            NSArray *converted = [self proccessResponse:result state:state next:next];
             
+            if([self checkState:ChatHistoryStateLocal next:next] && result.count == 0) {
+                
+                [self proccessResponse:result state:state next:next];
+                
+                [self request:next anotherSource:anotherSource sync:sync selectHandler:selectHandler];
+                
+                return ;
+            }
+            
+            NSArray *converted = [self proccessResponse:result state:state next:next];
             
             [self performCallback:selectHandler result:converted range:NSMakeRange(0, converted.count)];
             
