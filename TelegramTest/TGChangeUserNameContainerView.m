@@ -87,6 +87,8 @@
         
         self.statusTextField = [TMTextField defaultTextField];
         
+        [[self.statusTextField cell] setLineBreakMode:0];
+        
         [self.statusTextField setTextColor:[NSColor redColor]];
         
         [self.statusTextField setStringValue:@"error cant set user name"];
@@ -347,11 +349,10 @@
 -(void)setState:(NSString *)state color:(NSColor *)color {
     [self.statusTextField setHidden:state.length == 0 || color == nil];
     self.statusTextField.stringValue = state;
-    [self.statusTextField sizeToFit];
     self.statusTextField.textColor = color;
     
-    [self.descriptionView setFrameOrigin:NSMakePoint(30, !self.statusTextField.isHidden ? NSMaxY(_statusTextField.frame) : NSMaxY(_textView.frame))];
     
+    [self setFrameSize:self.frame.size];
 }
 
 -(void)setFrameSize:(NSSize)newSize {
@@ -360,6 +361,9 @@
     NSSize size = [self.descriptionView.attributedStringValue sizeForTextFieldForWidth:newSize.width - 60];
     
     [self.descriptionView setFrameSize:NSMakeSize(newSize.width - 60, size.height)];
+    
+    [self.statusTextField setFrameSize:[self.statusTextField.attributedStringValue sizeForTextFieldForWidth:NSWidth(self.descriptionView.frame)]];
+    [self.descriptionView setFrameOrigin:NSMakePoint(30, !self.statusTextField.isHidden ? NSMaxY(_statusTextField.frame) : NSMaxY(_textView.frame))];
 }
 
 @end

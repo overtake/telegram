@@ -56,10 +56,14 @@ static const int limit = 1000;
 
 -(void)loadNext:(int)offset result:(NSArray *)result onQueue:(ASQueue *)queue{
     
+    test_start_group(@"test");
+
+    
     [RPCRequest sendRequest:[TLAPI_channels_getDialogs createWithOffset:offset limit:limit] successHandler:^(id request, TL_messages_dialogs *response) {
         
-         [SharedManager proccessGlobalResponse:response];
+         test_step_group(@"test");
         
+         [SharedManager proccessGlobalResponse:response];
         
         NSMutableArray *converted = [[NSMutableArray alloc] initWithCapacity:response.dialogs.count];
         
@@ -114,8 +118,12 @@ static const int limit = 1000;
             [converted addObject:[TL_conversation createWithPeer:channel.peer top_message:channel.top_message unread_count:channel.unread_important_count last_message_date:minMsg.date notify_settings:channel.notify_settings last_marked_message:channel.top_important_message top_message_fake:channel.top_important_message last_marked_date:minMsg.date sync_message_id:topMsg.n_id read_inbox_max_id:channel.read_inbox_max_id unread_important_count:channel.unread_important_count lastMessage:minMsg pts:channel.pts isInvisibleChannel:NO top_important_message:minMsg.n_id]];
             
             
-            
+           
         }];
+        
+         test_step_group(@"test");
+        
+        test_release_group(@"test");
         
         
         NSArray *join = [result arrayByAddingObjectsFromArray:converted];

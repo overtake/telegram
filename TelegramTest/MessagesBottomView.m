@@ -873,7 +873,14 @@
             [RPCRequest sendRequest:[TLAPI_channels_joinChannel createWithChannel:weakSelf.dialog.chat.inputPeer] successHandler:^(RPCRequest *request, id response) {
                 
                 
+                TL_localMessage *msg = [TL_localMessageService createWithFlags:TGMENTIONMESSAGE n_id:0 from_id:[UsersManager currentUserId] to_id:weakSelf.dialog.peer date:[[MTNetwork instance] getTime] action:([TL_messageActionChatAddUser createWithUser_id:[UsersManager currentUserId]]) fakeId:[MessageSender getFakeMessageId] randomId:rand_long() dstate:DeliveryStateNormal];
+                
+                [MessagesManager addAndUpdateMessage:msg];
+                
                 weakSelf.dialog.invisibleChannel = NO;
+                
+                [weakSelf.dialog save];
+                
                 
                 [[DialogsManager sharedManager] updateLastMessageForDialog:weakSelf.dialog];
                 

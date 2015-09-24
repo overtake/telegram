@@ -28,7 +28,9 @@
         
         if(message.isChannelMessage) {
             text = NSLocalizedString(@"MessageAction.Service.InvitedYouToChannel",nil);
-
+            if(action.user_id == [UsersManager currentUserId]) {
+                text = NSLocalizedString(@"MessageAction.Service.YouChoinedToChannel", nil);
+            }
         } else {
             TLUser *userAdd = [[UsersManager sharedManager] find:action.user_id];
             if(action.user_id != message.from_id) {
@@ -211,6 +213,9 @@
                 
                 if(message.isChannelMessage) {
                      msgText = NSLocalizedString(@"MessageAction.Service.InvitedYouToChannel",nil);
+                    if(action.user_id == [UsersManager currentUserId]) {
+                        msgText = NSLocalizedString(@"MessageAction.Service.YouChoinedToChannel", nil);
+                    }
                 } else {
                     userSecond = [[UsersManager sharedManager] find:action.user_id];
                     if(action.user_id == message.from_id) {
@@ -341,6 +346,9 @@
         
         if(message.isChannelMessage) {
              actionText = NSLocalizedString(@"MessageAction.Service.InvitedYouToChannel",nil);
+            if(action.user_id == [UsersManager currentUserId]) {
+                actionText = NSLocalizedString(@"MessageAction.Service.YouChoinedToChannel", nil);
+            }
         } else {
             if(action.user_id != message.from_id) {
                 user2 = [[UsersManager sharedManager] find:action.user_id];

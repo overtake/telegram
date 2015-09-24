@@ -96,8 +96,8 @@ static TGChannelsPolling *channelPolling;
     
     state = !next && state != ChatHistoryStateFull && ([self.filter isKindOfClass:[ChannelFilter class]] ? self.conversation.top_message <= self.server_max_id : self.conversation.top_important_message <= self.server_max_id) ? ChatHistoryStateFull : state;
     
-    if(state == ChatHistoryStateFull && !next) {
-        int b= 0 ;
+    if(state == ChatHistoryStateFull) {
+        
     }
     
         

@@ -324,7 +324,13 @@
         
         if(self.controller.chat.username.length > 0) {
 
-            [self.linkEditButton setRightContainer:[self buildTitleWithString:[NSString stringWithFormat:@"/%@",[self.controller.chat.username substringToIndex:MIN(15,self.controller.chat.username.length)]]]];
+            NSString *str = [NSString stringWithFormat:@"/%@",[self.controller.chat.username substringToIndex:MIN(20,self.controller.chat.username.length)]];
+            
+            if(str.length == 21 && self.controller.chat.username.length > 20) {
+                str = [str stringByAppendingString:@"..."];
+            }
+            
+            [self.linkEditButton setRightContainer:[self buildTitleWithString:str]];
         } else {
             [self.linkEditButton setRightContainer:nil];
             
@@ -374,6 +380,8 @@
 -(TMTextField *)buildTitleWithString:(NSString *)str  {
     
     TMTextField *textField = [TMTextField defaultTextField];
+    
+    [textField setLineBreakMode:NSLineBreakByTruncatingTail];
     
     NSMutableAttributedString *string = [[NSMutableAttributedString alloc] init];
     [string appendString:str withColor:NSColorFromRGB(0xa1a1a1)];

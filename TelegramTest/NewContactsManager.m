@@ -60,18 +60,17 @@
         
         [[Storage manager] contacts:^(NSArray *contacts) {
             
-            [self add:contacts withCustomKey:@"user_id"];
-            
-           
-            
-            [Notification perform:CONTACTS_MODIFIED data:@{@"CONTACTS_RELOAD": self->list}];
-            
-            [self remoteCheckContacts:^{
+            [self.queue dispatchOnQueue:^{
+                [self add:contacts withCustomKey:@"user_id"];
                 
-                [self iCloudSync];
+                [Notification perform:CONTACTS_MODIFIED data:@{@"CONTACTS_RELOAD": self->list}];
                 
+                [self remoteCheckContacts:^{
+                    
+                    [self iCloudSync];
+                    
+                }];
             }];
-            
         }];
         
         

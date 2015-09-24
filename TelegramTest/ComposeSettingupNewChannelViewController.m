@@ -87,7 +87,7 @@
     
     self.action.result.singleObject = @(YES);
     
-    _userNameContainerItem = [[TGUserNameContainerRowItem alloc] initWithHeight:100];
+    _userNameContainerItem = [[TGUserNameContainerRowItem alloc] initWithHeight:120];
     
     NSMutableAttributedString *attr = [[NSMutableAttributedString alloc] init];
     
@@ -127,6 +127,7 @@
     [_joinLinkItem setTextColor:TEXT_COLOR];
     [_joinLinkItem setFont:TGSystemFont(14)];
     _joinLinkItem.drawsSeparator = YES;
+    
     
     weak();
     

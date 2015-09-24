@@ -357,7 +357,8 @@ static NSString *kMessageItems = @"kMessageItems";
         
         
         if(nHole.min_id == nHole.max_id || abs(nHole.min_id - nHole.max_id) == 1) {
-            [nHole remove];
+           
+           [nHole remove];
             nHole = nil;
         } else
             [nHole save];

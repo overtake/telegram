@@ -36,6 +36,8 @@
 @property (nonatomic, strong) TGConversationsTableView *tableView;
 @property (nonatomic, strong) NSMutableArray *list;
 
+@property (nonatomic,assign) BOOL initedNext;
+
 @end
 
 @implementation TGConversationsViewController
@@ -112,8 +114,6 @@
         
     }];
     
-    [MessagesManager updateUnreadBadge];
-    
     
 }
 
@@ -134,6 +134,11 @@
 
 -(void)didLoadedConversations:(NSArray *)conversations withRange:(NSRange)range {
     [self insertAll:conversations];
+    
+    if(!_initedNext) {
+        [self didLoadedStartedConversationNeedNext];
+    }
+    
 }
 
 -(int)conversationsLoadingLimit {
@@ -145,6 +150,8 @@
     [SecretChatAccepter instance];
     
    
+    _initedNext = NO;
+    
      [[MTNetwork instance] startNetwork];
     
     _modernHistory = [[TGModernConversationHistoryController alloc] initWithQueue:[ASQueue globalQueue] delegate:self];
@@ -152,9 +159,11 @@
     
     [self loadhistory:30];
     
+
     
-    
-    
+}
+
+-(void)didLoadedStartedConversationNeedNext {
     [[BlockedUsersManager sharedManager] remoteLoad];
     
     [TMTaskRequest executeAll];
@@ -177,6 +186,7 @@
     }];
     
     [MessagesManager updateUnreadBadge];
+    _initedNext = YES;
 }
 
 - (void)addScrollEvent {

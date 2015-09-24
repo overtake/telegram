@@ -330,14 +330,14 @@ NSArray * soundsList() {
 }
 void playSentMessage(BOOL play) {
     
-    static ASQueue *queue;
+//    static ASQueue *queue;
+//    
+//    static dispatch_once_t onceToken;
+//    dispatch_once(&onceToken, ^{
+//        queue = [[ASQueue alloc] initWithName:"soundQueue"];
+//    });
     
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        queue = [[ASQueue alloc] initWithName:"soundQueue"];
-    });
-    
-    [queue dispatchOnQueue:^{
+   // [queue dispatchOnQueue:^{
         static NSSound *sound ;
         
         static dispatch_once_t onceToken;
@@ -348,7 +348,7 @@ void playSentMessage(BOOL play) {
         });
         if(play && [SettingsArchiver checkMaskedSetting:SoundEffects])
             [sound play];
-    }];
+   // }];
     
 }
 

@@ -1345,6 +1345,9 @@
             <PersistentString
                value = "self.server_min_id">
             </PersistentString>
+            <PersistentString
+               value = "[self selectAllItems]">
+            </PersistentString>
          </PersistentStrings>
       </ContextState>
       <ContextState
@@ -2618,6 +2621,9 @@
                value = "isCleared">
             </PersistentString>
          </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "__open_user_by_name_block_invoke466:FileUtils.m">
       </ContextState>
       <ContextState
          contextName = "__51-[ComposeActionCreateChannelBehavior createChannel]_block_invoke:ComposeActionCreateChannelBehavior.m">

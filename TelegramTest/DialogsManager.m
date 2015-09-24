@@ -669,6 +669,39 @@
     [dialog save];
 }
 
+-(void)updateTopMessagesWithMessages:(NSArray *)messages {
+    
+    
+    [self.queue dispatchOnQueue:^{
+        
+        NSMutableDictionary *topMessages = [NSMutableDictionary dictionary];
+        NSMutableDictionary *topImportantMessages = [NSMutableDictionary dictionary];
+
+        [messages enumerateObjectsUsingBlock:^(TL_localMessage *obj, NSUInteger idx, BOOL *stop) {
+            
+            if(obj.isChannelMessage && obj.isImportantMessage) {
+                
+                TL_localMessage *top_message = topImportantMessages[@(obj.peer_id)];
+                
+                if(top_message.n_id < obj.peer_id) {
+                    topImportantMessages[@(obj.peer_id)] = obj;
+                }
+                
+            } else {
+                TL_localMessage *top_message = topMessages[@(obj.peer_id)];
+                
+                if(top_message.n_id < obj.peer_id) {
+                    topMessages[@(obj.peer_id)] = obj;
+                }
+            }
+            
+        }];
+        
+        [[Storage manager] updateTopMessagesWithMessages:topMessages topImportantMessages:topImportantMessages];
+        
+    }];
+}
+
 - (void)setTopMessagesToDialogs:(NSNotification *)notify {
     NSArray *messages = [notify.userInfo objectForKey:KEY_MESSAGE_LIST];
     BOOL update_real_date = [[notify.userInfo objectForKey:@"update_real_date"] boolValue];

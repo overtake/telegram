@@ -22,7 +22,7 @@
 @end
 
 @interface ComposeCreateChannelViewController ()
--(void)updateCompose;
+-(void)updateComposeWithHeight:(int)height;
 @end
 
 
@@ -74,7 +74,6 @@
         [_aboutDescription setFont:TGSystemFont(13)];
         [_aboutDescription setTextColor:GRAY_TEXT_COLOR];
         
-        
         [_aboutDescription setStringValue:NSLocalizedString(@"Compose.ChannelAboutDescription", nil)];
         
         
@@ -90,7 +89,7 @@
         
         
         [self.nameTextView setFont:[NSFont fontWithName:@"HelveticaNeue" size:15]];
-        
+    
         [self.nameTextView setEditable:YES];
         [self.nameTextView setBordered:NO];
         [self.nameTextView setFocusRingType:NSFocusRingTypeNone];
@@ -132,15 +131,46 @@
     [self.aboutTextView setStringValue:item.channelAbout];
     [self.nameTextView setStringValue:item.channelName];
     
+
 }
 
+
+
 -(void)controlTextDidChange:(NSNotification *)obj {
+    
+    [self.aboutTextView setStringValue:[self.aboutTextView.stringValue substringToIndex:MIN(200,self.aboutTextView.stringValue.length)]];
+    
     CreateChannelHeaderItem *item = (CreateChannelHeaderItem *) [self rowItem];
     
     item.channelAbout = self.aboutTextView.stringValue;
     item.channelName = self.nameTextView.stringValue;
     
-    [item.controller updateCompose];
+     NSSize size = [self.aboutTextView.attributedStringValue sizeForTextFieldForWidth:NSWidth(self.frame) - 60];
+    
+    int nh = 139 + size.height;
+    
+    
+    [item.controller updateComposeWithHeight:nh];
+    
+    
+}
+
+
+-(void)setFrameSize:(NSSize)newSize {
+    [super setFrameSize:newSize];
+    
+    NSSize size = [self.aboutTextView.attributedStringValue sizeForTextFieldForWidth:newSize.width - 60];
+    size.width = newSize.width - 60;
+    size.height = MAX(21, size.height);
+    
+    [self.aboutTextView setFrameSize:size];
+    
+    [self.aboutTextView setFrame:NSMakeRect(30, 22, size.width, size.height)];
+    
+    [self.aboutDescription setFrameOrigin:NSMakePoint(30, 0)];
+    [self.nameTextView setFrameOrigin:NSMakePoint(92, newSize.height - 70)];
+    
+    [self.nameTextView setFrameSize:NSMakeSize(newSize.width - 92 - 30, 20)];
 }
 
 -(BOOL)becomeFirstResponder {
@@ -154,18 +184,18 @@
     
     NSBezierPath *path = [NSBezierPath bezierPath];
     
-    [path appendBezierPathWithArcWithCenter: NSMakePoint(55, 100)
+    [path appendBezierPathWithArcWithCenter: NSMakePoint(55,NSHeight(dirtyRect) - 60)
                                      radius: 25
                                  startAngle: 0
                                    endAngle: 360 clockwise:NO];
     
     
-    [image_Camera() drawInRect:NSMakeRect(40,90, image_Camera().size.width, image_Camera().size.height) fromRect:NSZeroRect operation:NSCompositeHighlight fraction:1];
+    [image_Camera() drawInRect:NSMakeRect(40,NSHeight(dirtyRect) - 70, image_Camera().size.width, image_Camera().size.height) fromRect:NSZeroRect operation:NSCompositeHighlight fraction:1];
     
     [GRAY_BORDER_COLOR set];
     [path stroke];
     
-    NSRectFill(NSMakeRect(92, 86, NSWidth(self.frame) - 122, 1));
+    NSRectFill(NSMakeRect(92, NSHeight(self.frame) - 84, NSWidth(self.frame) - 122, 1));
     
     
     
@@ -309,7 +339,7 @@
 }
 
 
--(void)updateCompose {
+-(void)updateComposeWithHeight:(int)height {
     
     [self.doneButton setDisable:self.headerItem.channelName.length == 0];
     
@@ -332,6 +362,20 @@
         self.action.result.stepResult = result;
     }
     
+    self.headerItem.height = height;
+    
+  //  id responder = self.view.window.firstResponder;
+    
+    [[NSAnimationContext currentContext] setDuration:0];
+    [self.tableView noteHeightOfRowsWithIndexesChanged:[NSIndexSet indexSetWithIndex:0]];
+    
+    CreateChannelHeaderView *header = [self.tableView viewAtColumn:0 row:0 makeIfNecessary:NO];
+    
+    if(header) {
+        [header setFrameSize:NSMakeSize(NSWidth(header.frame), height)];
+    }
+    
+ //   [responder becomeFirstResponder];
     
 }
 
