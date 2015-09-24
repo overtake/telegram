@@ -2579,9 +2579,7 @@ static NSTextAttachment *headerMediaIcon() {
     if(!self.conversation || (self.conversation.unread_count == 0 && self.conversation.unread_important_count == 0) || (self.conversation.type != DialogTypeSecretChat && (self.conversation.chat.isKicked || self.conversation.chat.left)))
         return;
     
-     [(MessagesManager *)[MessagesManager sharedManager] markAllInDialog:self.conversation callback:^(NSArray *ids) {
-         
-     }];
+    [[DialogsManager sharedManager] markAllMessagesAsRead:self.conversation];
     
     
     

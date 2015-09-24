@@ -623,33 +623,24 @@
 }
 
 - (void)markAllMessagesAsRead:(TL_conversation *)dialog {
-     [(MessagesManager *)[MessagesManager sharedManager] markAllInDialog:dialog callback:^(NSArray *ids) {
-         
-         if(ids.count > 0) {
-             
-             
-             [self.queue dispatchOnQueue:^{
-                 [Notification perform:MESSAGE_READ_EVENT data:@{KEY_MESSAGE_ID_LIST:ids}];
-                 [Notification perform:[Notification notificationNameByDialog:dialog action:@"unread_count"] data:@{KEY_DIALOG:dialog,KEY_LAST_CONVRESATION_DATA:[MessagesUtils conversationLastData:dialog]}];
-             }];
-             
-             
-         }
-         
-         
-         
-     }];
     
+    [[Storage manager] markAllInConversation:dialog.peer_id max_id:dialog.top_message out:NO completeHandler:^(NSArray *ids) {
+        
+    }];
 }
 
 - (void) markAllMessagesAsRead:(TLPeer *)peer max_id:(int)max_id out:(BOOL)n_out {
     
-    TL_conversation *conversation = [[DialogsManager sharedManager] find:peer.peer_id];
-    
-    [(MessagesManager *)[MessagesManager sharedManager] markAllInConversation:conversation max_id:max_id out:n_out callback:^(NSArray *ids) {
-        if(ids.count > 0) {
-            [Notification perform:MESSAGE_READ_EVENT data:@{KEY_MESSAGE_ID_LIST:ids}];
-        }
+    [[Storage manager] markAllInConversation:peer.peer_id max_id:max_id out:n_out completeHandler:^(NSArray *ids) {
+        [self.queue dispatchOnQueue:^{
+            
+            TL_conversation *conversation = [self find:peer.peer_id];
+            if(conversation != nil) {
+                [Notification perform:MESSAGE_READ_EVENT data:@{KEY_MESSAGE_ID_LIST:ids}];
+                [Notification perform:[Notification notificationNameByDialog:conversation action:@"unread_count"] data:@{KEY_DIALOG:conversation,KEY_LAST_CONVRESATION_DATA:[MessagesUtils conversationLastData:conversation]}];
+
+            }
+        }];
     }];
     
 }

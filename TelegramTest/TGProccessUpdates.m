@@ -64,6 +64,8 @@ static ASQueue *queue;
     return self;
 }
 
+static NSArray *channelUpdates;
+
 -(id)initWithQueue:(ASQueue *)q {
     if(self = [self init]) {
         self.holdUpdates = NO;
@@ -73,6 +75,13 @@ static ASQueue *queue;
        // _updateState = [[TGUpdateState alloc] initWithPts:1 qts:1 date:_updateState.date seq:1 pts_count:1];
         _encryptedUpdates = [[TGModernEncryptedUpdates alloc] init];
         _channelsUpdater = [[TGUpdateChannels alloc] initWithQueue:q];
+        
+        static dispatch_once_t onceToken;
+        
+        dispatch_once(&onceToken, ^{
+            
+            channelUpdates = @[NSStringFromClass([TL_updateNewChannelMessage class]),NSStringFromClass([TL_updateReadChannelInbox class]),NSStringFromClass([TL_updateDeleteChannelMessages class]),NSStringFromClass([TGForceChannelUpdate class]),NSStringFromClass([TL_updateChannelTooLong class]),NSStringFromClass([TL_updateChannelGroup class]),NSStringFromClass([TL_updateChannelMessageViews class]),NSStringFromClass([TL_updateChannel class])];
+        });
         
         queue = q;
     }
@@ -154,7 +163,7 @@ static ASQueue *queue;
     
 }
 
-static NSArray *channelUpdates;
+
 
 
 
@@ -162,12 +171,7 @@ static NSArray *channelUpdates;
     
     [queue dispatchOnQueue:^{
         
-        static dispatch_once_t onceToken;
-        
-        dispatch_once(&onceToken, ^{
-            
-            channelUpdates = @[NSStringFromClass([TL_updateNewChannelMessage class]),NSStringFromClass([TL_updateReadChannelInbox class]),NSStringFromClass([TL_updateDeleteChannelMessages class]),NSStringFromClass([TGForceChannelUpdate class]),NSStringFromClass([TL_updateChannelTooLong class]),NSStringFromClass([TL_updateChannelGroup class]),NSStringFromClass([TL_updateChannelMessageViews class]),NSStringFromClass([TL_updateChannel class])];
-        });
+       
         
         
         if([channelUpdates indexOfObject:[update className]] != NSNotFound)
@@ -546,13 +550,6 @@ static NSArray *channelUpdates;
             [self failSequence];
             return;
         }
-        
-        return [MessagesManager addAndUpdateMessage:message];
-    }
-    
-    if([update isKindOfClass:[TL_updateNewChannelMessage class]]) {
-        TL_localMessage *message = [TL_localMessage convertReceivedMessage:(TL_localMessage *)[update message]];
-        
         
         return [MessagesManager addAndUpdateMessage:message];
     }

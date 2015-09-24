@@ -445,6 +445,11 @@
       </ContextState>
       <ContextState
          contextName = "__61-[TGProccessUpdates uptodate:qts:date:updateConnectionState:]_block_invoke:TGProccessUpdates.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "">
+            </PersistentString>
+         </PersistentStrings>
       </ContextState>
       <ContextState
          contextName = "-[NotificationSettingsViewController insertAll:]:NotificationSettingsViewController.m">
@@ -534,6 +539,9 @@
                value = "self.window">
             </PersistentString>
          </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "__49-[Storage deleteChannelMessages:completeHandler:]_block_invoke:Storage.m">
       </ContextState>
       <ContextState
          contextName = "-[TMMediaController previewPanel:sourceFrameOnScreenForPreviewItem:]:TMMediaController.mm">
@@ -3745,9 +3753,6 @@
                value = "self.message.randomId">
             </PersistentString>
          </PersistentStrings>
-      </ContextState>
-      <ContextState
-         contextName = "__39-[MTNetwork sendRequest:forDatacenter:]_block_invoke:MTNetwork.m">
       </ContextState>
       <ContextState
          contextName = "-[SearchViewController searchByString:]:SearchViewController.m">

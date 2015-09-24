@@ -48,7 +48,7 @@
             return NSLocalizedString(@"Channel.Username.UsernameIsAvailable", nil);
         }
         
-        return @"Unknown error";
+        return NSLocalizedString(error, nil);
         
     }];
     

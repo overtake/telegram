@@ -486,14 +486,14 @@ static NSString *encryptionKey;
     
     [queue inDatabaseWithDealocing:^(FMDatabase *db) {
     
-        [db beginTransaction];
+        
         FMResultSet *result = [db executeQuery:@"select * from update_state limit 1"];
         
         if([result next]) {
             state = [[TGUpdateState alloc] initWithPts:[result intForColumn:@"pts"] qts:[result intForColumn:@"qts"] date:[result intForColumn:@"date"] seq:[result intForColumn:@"seq"] pts_count:[result intForColumn:@"pts_count"]];
         }
         
-        [db commit];
+        
         
         [result close];
         
@@ -504,8 +504,10 @@ static NSString *encryptionKey;
 
 -(void)saveUpdateState:(TGUpdateState *)state {
     [queue inDatabase:^(FMDatabase *db) {
+        [db beginTransaction];
         [db executeUpdate:@"delete from update_state where 1=1"];
         [db executeUpdate:@"insert into update_state (pts, qts, date, seq,pts_count) values (?,?,?,?,?)",@(state.pts),@(state.qts),@(state.date),@(state.seq),@(state.pts_count)];
+        [db commit];
     }];
 }
 
@@ -1304,16 +1306,17 @@ TL_localMessage *parseMessage(FMResultSet *result) {
     }];
 }
 
--(void)markAllInDialog:(TL_conversation *)dialog {
+-(void)markAllInConversation:(int)peer_id {
     [queue inDatabase:^(FMDatabase *db) {
-        //[db beginTransaction];
-        [db executeUpdate:@"update messages set flags= flags & ~1 where peer_id = ?",[NSNumber numberWithInt:dialog.peer.peer_id]];
-        //[db commit];
+        [db beginTransaction];
+        [db executeUpdate:@"update messages set flags= flags & ~1 where peer_id = ?",@(peer_id)];
+        [db executeUpdate:[NSString stringWithFormat:@"update %@ set read_inbox_max_id = (select top_message from %@ where peer_id = ?) where peer_id = ?",tableDialogs,tableDialogs],@(peer_id),@(peer_id)];
+        [db commit];
 
     }];
 }
 
--(void)markAllInConversation:(TL_conversation *)conversation max_id:(int)max_id out:(BOOL)n_out completeHandler:(void (^)(NSArray * ids))completeHandler {
+-(void)markAllInConversation:(int)peer_id max_id:(int)max_id out:(BOOL)n_out completeHandler:(void (^)(NSArray * ids))completeHandler {
     
     NSMutableArray *ids = [[NSMutableArray alloc] init];
     
@@ -1321,10 +1324,15 @@ TL_localMessage *parseMessage(FMResultSet *result) {
     
     [queue inDatabase:^(FMDatabase *db) {
         
-        int flags = n_out ? 3 : 1;
+        [db beginTransaction];
         
+        int flags = n_out ? TGOUTMESSAGE : 0;
         
-        FMResultSet *result = [db executeQuery:@"select n_id from messages where (n_id <= ? OR dstate=?) and peer_id = ? and flags & ? = ?",@(max_id),@(DeliveryStatePending),@(conversation.peer_id),@(flags),@(flags)];
+        int read_inbox_max_id = [db intForQuery:[NSString stringWithFormat:@"select read_inbox_max_id from %@ where peer_id = ?",tableDialogs],@(peer_id)];
+        
+        FMResultSet *result = [db executeQuery:@"select n_id from messages where ((n_id <= ? and n_id > ?) OR dstate=?) and peer_id = ? and (flags & ?) = ?",@(max_id),@(read_inbox_max_id),@(DeliveryStatePending),@(peer_id),@(flags),@(flags)];
+        
+        [db executeUpdate:[NSString stringWithFormat:@"update %@ set read_inbox_max_id = ? where peer_id = ?",tableDialogs],@(max_id),@(peer_id)];
         
         while ([result next]) {
             
@@ -1341,7 +1349,8 @@ TL_localMessage *parseMessage(FMResultSet *result) {
             
             [db executeUpdateWithFormat:sql,nil];
         }
-                
+        
+        [db commit];
         
         dispatch_async(q,^{
             completeHandler(ids);
@@ -2182,9 +2191,9 @@ TL_localMessage *parseMessage(FMResultSet *result) {
     
     [queue inDatabase:^(FMDatabase *db) {
         
-        int unread_count = [db intForQuery:@"select sum(unread_count) from dialogs"];
+        int unread_count = [db intForQuery:@"select sum(unread_count) from dialogs where unread_count > 0 and unread_count < 100000"];
        
-        int channel_unread_count = [db intForQuery:@"select sum(unread_count) from channel_dialogs where is_invisible = 0"];
+        int channel_unread_count = [db intForQuery:@"select sum(unread_count) from channel_dialogs where is_invisible = 0 and unread_count > 0 and unread_count < 100000"];
         
         dispatch_async(dispatch_get_main_queue(), ^{
             if(completeHandler) completeHandler(unread_count+channel_unread_count);

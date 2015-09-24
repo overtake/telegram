@@ -149,9 +149,9 @@ extern NSString *const RECENT_SEARCH;
 
 -(void)unreadCount:(void (^)(int count))completeHandler;
 
--(void)markAllInDialog:(TL_conversation *)dialog;
+-(void)markAllInConversation:(int)peer_id;
 
--(void)markAllInConversation:(TL_conversation *)conversation max_id:(int)max_id out:(BOOL)n_out completeHandler:(void (^)(NSArray * ids))completeHandler;
+-(void)markAllInConversation:(int)peer_id max_id:(int)max_id out:(BOOL)n_out completeHandler:(void (^)(NSArray * ids))completeHandler;
 
 -(void)insertEncryptedChat:(TLEncryptedChat *)chat;
 

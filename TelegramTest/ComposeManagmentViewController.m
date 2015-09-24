@@ -94,7 +94,7 @@
         
         TGUserContainerRowItem *item = [[TGUserContainerRowItem alloc] initWithUser:[[UsersManager sharedManager] find:obj.user_id]];
         
-        item.height = idx == 0 && !chat.isAdmin ? 62 : 42;
+        item.height = idx == 42;
         item.avatarHeight = 30;
         item.status = [obj isKindOfClass:[TL_channelParticipantCreator class]] ? NSLocalizedString(@"Channel.Creator", nil) : [obj isKindOfClass:[TL_channelParticipantModerator class]] ? NSLocalizedString(@"Channel.Moderator", nil) : [TL_channelParticipantEditor class] ? NSLocalizedString(@"Channel.Editor", nil) : @"";
         
