@@ -505,45 +505,46 @@
     
     TLWebPage *webpage = notification.userInfo[KEY_WEBPAGE];
 
-    NSArray *items = [self.historyController.filter.class items:messages withPeer_id:self.conversation.peer_id];
-    
-    [items enumerateObjectsUsingBlock:^(MessageTableItemText *obj, NSUInteger idx, BOOL *stop) {
-       
-        NSUInteger index = [self indexOfObject:obj];
-        
-        obj.message.media.webpage = webpage;
-        
-        [obj updateWebPage];
-        
-        obj.isHeaderMessage = obj.isHeaderMessage || obj.webpage != nil;
-        
-        if(index != NSNotFound) {
-            [self.table noteHeightOfRowsWithIndexesChanged:[NSIndexSet indexSetWithIndex:index]];
+    [self.historyController.filter.class items:messages withPeer_id:self.conversation.peer_id complete:^(NSArray *items) {
+        [items enumerateObjectsUsingBlock:^(MessageTableItemText *obj, NSUInteger idx, BOOL *stop) {
             
-            [self.table reloadDataForRowIndexes:[NSIndexSet indexSetWithIndex:index] columnIndexes:[NSIndexSet indexSetWithIndex:0]];
-        }
-        
+            NSUInteger index = [self indexOfObject:obj];
+            
+            obj.message.media.webpage = webpage;
+            
+            [obj updateWebPage];
+            
+            obj.isHeaderMessage = obj.isHeaderMessage || obj.webpage != nil;
+            
+            if(index != NSNotFound) {
+                [self.table noteHeightOfRowsWithIndexesChanged:[NSIndexSet indexSetWithIndex:index]];
+                
+                [self.table reloadDataForRowIndexes:[NSIndexSet indexSetWithIndex:index] columnIndexes:[NSIndexSet indexSetWithIndex:0]];
+            }
+            
+        }];
     }];
-    
     
     
 }
 
 -(void)updateMessageViews:(NSNotification *)notification {
     
-    NSArray *items = [self.historyController.filter.class items:notification.userInfo[KEY_MESSAGE_ID_LIST] withPeer_id:[notification.userInfo[KEY_PEER_ID] intValue]];
-    
-    NSDictionary *data = notification.userInfo[KEY_DATA];
-    
-    [items enumerateObjectsUsingBlock:^(MessageTableItemText *item, NSUInteger idx, BOOL *stop) {
-        NSUInteger index = [self indexOfObject:item];
+    [self.historyController.filter.class items:notification.userInfo[KEY_MESSAGE_ID_LIST] withPeer_id:[notification.userInfo[KEY_PEER_ID] intValue] complete:^(NSArray *items) {
+        NSDictionary *data = notification.userInfo[KEY_DATA];
         
-        item.message.views = [data[@(item.message.n_id)] intValue];
-        
-        if(index != NSNotFound) {
-            [self.table reloadDataForRowIndexes:[NSIndexSet indexSetWithIndex:index] columnIndexes:[NSIndexSet indexSetWithIndex:0]];
-        }
+        [items enumerateObjectsUsingBlock:^(MessageTableItemText *item, NSUInteger idx, BOOL *stop) {
+            NSUInteger index = [self indexOfObject:item];
+            
+            item.message.views = [data[@(item.message.n_id)] intValue];
+            
+            if(index != NSNotFound) {
+                [self.table reloadDataForRowIndexes:[NSIndexSet indexSetWithIndex:index] columnIndexes:[NSIndexSet indexSetWithIndex:0]];
+            }
+        }];
+
     }];
+    
     
 }
 
@@ -554,31 +555,31 @@
         TGMessageGroupHole *hole = notification.userInfo[KEY_GROUP_HOLE];
         
         
-        NSArray *items = [self.historyController.filter.class items:@[@(hole.uniqueId)]];
-        
-        MessageTableItemHole *item;
-        
-        if(items.count == 1) {
-            item = [items firstObject];
+        [self.historyController.filter.class items:@[@(hole.uniqueId)] complete:^(NSArray *items) {
+            MessageTableItemHole *item;
             
-            if(hole.messagesCount != 0) {
-                NSUInteger index = [self indexOfObject:item];
+            if(items.count == 1) {
+                item = [items firstObject];
                 
-                [item updateWithHole:hole];
-                
-                if(index != NSNotFound) {
-                    [self.table reloadDataForRowIndexes:[NSIndexSet indexSetWithIndex:index] columnIndexes:[NSIndexSet indexSetWithIndex:0]];
+                if(hole.messagesCount != 0) {
+                    NSUInteger index = [self indexOfObject:item];
+                    
+                    [item updateWithHole:hole];
+                    
+                    if(index != NSNotFound) {
+                        [self.table reloadDataForRowIndexes:[NSIndexSet indexSetWithIndex:index] columnIndexes:[NSIndexSet indexSetWithIndex:0]];
+                    }
+                } else {
+                    [Notification perform:MESSAGE_DELETE_EVENT data:@{KEY_DATA:@[@{KEY_PEER_ID:@(hole.peer_id),KEY_MESSAGE_ID:@(hole.uniqueId)}]}];
                 }
+                
+                
+                
             } else {
-                [Notification perform:MESSAGE_DELETE_EVENT data:@{KEY_DATA:@[@{KEY_PEER_ID:@(hole.peer_id),KEY_MESSAGE_ID:@(hole.uniqueId)}]}];
+                
+                [Notification perform:MESSAGE_RECEIVE_EVENT data:@{KEY_MESSAGE:[TL_localMessageService createWithHole:hole]}];
             }
-            
-            
-            
-        } else {
-            
-            [Notification perform:MESSAGE_RECEIVE_EVENT data:@{KEY_MESSAGE:[TL_localMessageService createWithHole:hole]}];
-        }
+        }];
     }
 
 }
@@ -588,19 +589,20 @@
     TL_localMessage *message = notification.userInfo[KEY_MESSAGE];
     
     
-    NSArray *items = [self.historyController.filter.class items:@[@(message.n_id)] withPeer_id:message.peer_id];
-    
-    [items enumerateObjectsUsingBlock:^(MessageTableItemText *obj, NSUInteger idx, BOOL *stop) {
-        
-        NSUInteger index = [self indexOfObject:obj];
-        
-        [obj updateEntities];
-        
-        if(index != NSNotFound) {
-            [self.table reloadDataForRowIndexes:[NSIndexSet indexSetWithIndex:index] columnIndexes:[NSIndexSet indexSetWithIndex:0]];
-        }
-        
+    [self.historyController.filter.class items:@[@(message.n_id)] withPeer_id:message.peer_id complete:^(NSArray *items){
+        [items enumerateObjectsUsingBlock:^(MessageTableItemText *obj, NSUInteger idx, BOOL *stop) {
+            
+            NSUInteger index = [self indexOfObject:obj];
+            
+            [obj updateEntities];
+            
+            if(index != NSNotFound) {
+                [self.table reloadDataForRowIndexes:[NSIndexSet indexSetWithIndex:index] columnIndexes:[NSIndexSet indexSetWithIndex:0]];
+            }
+            
+        }];
     }];
+    
 }
 
 
@@ -1689,18 +1691,19 @@ static NSTextAttachment *headerMediaIcon() {
     
     NSArray *readed = [notify.userInfo objectForKey:KEY_MESSAGE_ID_LIST];
 
+    [self.historyController.filter.class items:readed complete:^(NSArray * filtred) {
+         for (MessageTableItem *msg in filtred) {
+             msg.message.flags&= ~TGUNREADMESSAGE;
+             
+             NSUInteger idx = [self indexOfObject:msg];
+             
+             if(idx != NSNotFound) {
+                 [self.table reloadDataForRowIndexes:[NSIndexSet indexSetWithIndex:idx] columnIndexes:[NSIndexSet indexSetWithIndex:0]];
+             }
+         }
+    }];
     
-    NSArray *filtred = [self.historyController.filter.class items:readed];
-    
-    for (MessageTableItem *msg in filtred) {
-        msg.message.flags&= ~TGUNREADMESSAGE;
-        
-        NSUInteger idx = [self indexOfObject:msg];
-        
-        if(idx != NSNotFound) {
-            [self.table reloadDataForRowIndexes:[NSIndexSet indexSetWithIndex:idx] columnIndexes:[NSIndexSet indexSetWithIndex:0]];
-        }
-    }
+   
 }
 
 - (MessageTableCell *)cellForRow:(NSInteger)row {

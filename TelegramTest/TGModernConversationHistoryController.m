@@ -148,6 +148,9 @@ static const int limit = 1000;
         
         [[ChannelsManager sharedManager] add:channels];
         
+        _channelsIsLoaded = YES;
+        [self notifyListenersWithObject:channels];
+        
         [[Storage manager] insertChannels:channels completionHandler:^{
             
             [[Storage yap] readWriteWithBlock:^(YapDatabaseReadWriteTransaction * __nonnull transaction) {
@@ -156,8 +159,6 @@ static const int limit = 1000;
             
         } deliveryOnQueue:queue];
         
-        _channelsIsLoaded = YES;
-        [self notifyListenersWithObject:channels];
     }];
     
 }
@@ -220,7 +221,6 @@ static BOOL isStorageLoaded;
    
     if(_loadNextAfterLoadChannels) {
         _isLoading = NO;
-        _state = TGModernCHStateRemote;
         _needMergeChannels = YES;
         [self performLoadNext];
     }
@@ -254,6 +254,10 @@ static BOOL isStorageLoaded;
     {
         
         [[Storage manager] dialogsWithOffset:_offset limit:[self.delegate conversationsLoadingLimit] completeHandler:^(NSArray *d, NSArray *m, NSArray *c) {
+            
+            if([[ChannelsManager sharedManager] all].count > 0  && c.count == 0 && d.count > 0) {
+                c = [[ChannelsManager sharedManager] all];
+            }
             
             [[DialogsManager sharedManager] add:[d arrayByAddingObjectsFromArray:c]];
             

@@ -232,33 +232,27 @@
         
         
        
+        [self add:@[[result full_chat]]];
         
-        [self.queue dispatchOnQueue:^{
-            
-            
-            [self add:@[[result full_chat]]];
-            
-            TLChatFull *current = [self find:chat_id];
-            
-            
-            
-            [current setLastLayerUpdated:YES];
-            
-            [[Storage manager] insertFullChat:[result full_chat] completeHandler:nil];
-            
-            
-            [ASQueue dispatchOnMainQueue:^{
-                if(callback)
-                    callback([result full_chat]);
-            }];
-
+        TLChatFull *current = [self find:chat_id];
+        
+        
+        
+        [current setLastLayerUpdated:YES];
+        
+        [[Storage manager] insertFullChat:[result full_chat] completeHandler:nil];
+        
+        
+        [ASQueue dispatchOnMainQueue:^{
+            if(callback)
+                callback([result full_chat]);
         }];
 
     } errorHandler:^(RPCRequest *request, RpcError *error) {
         ELog(@"fullchat loading error %@", error.error_msg);
         if(callback)
             callback(nil);
-    }];
+    } timeout:0 queue:self.queue.nativeQueue];
     
 }
 

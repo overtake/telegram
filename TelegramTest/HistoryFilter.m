@@ -96,11 +96,13 @@ static NSString *kMessageItems = @"kMessageItems";
     return keys;
 }
 
-+(NSArray *)items:(NSArray *)msgIds {
++(void)items:(NSArray *)msgIds complete:(void (^)(NSArray *list))complete  {
     
     NSMutableArray *messageIds = [msgIds mutableCopy];
     
     NSMutableArray *items = [[NSMutableArray alloc] init];
+    
+    dispatch_queue_t dqueue = dispatch_get_current_queue();
     
     [ASQueue dispatchOnStageQueue:^{
         [self.fClassKeys enumerateKeysAndObjectsUsingBlock:^(id key, NSMutableDictionary *obj, BOOL *stop) {
@@ -125,11 +127,12 @@ static NSString *kMessageItems = @"kMessageItems";
             
         }];
         
-    } synchronous:YES];
+        dispatch_async(dqueue, ^{
+            complete([items copy]);
+        });
+    }];
     
-    
-    
-    return items;
+
 }
 
 +(void)updateItemId:(long)randomId withId:(int)n_id {
@@ -154,9 +157,11 @@ static NSString *kMessageItems = @"kMessageItems";
     
 }
 
-+(NSArray *)items:(NSArray *)messageIds withPeer_id:(int)peer_id {
++(void)items:(NSArray *)messageIds withPeer_id:(int)peer_id complete:(void (^)(NSArray *list))complete {
     
     __block NSMutableArray *items = [[NSMutableArray alloc] init];
+    
+    dispatch_queue_t dqueue = dispatch_get_current_queue();
     
     [ASQueue dispatchOnStageQueue:^{
         
@@ -172,12 +177,13 @@ static NSString *kMessageItems = @"kMessageItems";
             
         }];
         
+        dispatch_async(dqueue, ^{
+            complete([items copy]);
+        });
         
-    } synchronous:YES];
+    }];
     
-    
-    
-    return items;
+
 
 }
 
