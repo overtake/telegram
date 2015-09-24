@@ -877,9 +877,7 @@ void exceptionHandler(NSException * exception)
             
             [Storage drop];
             
-            [Storage updateEncryptionKey:[[MTNetwork instance] updateEncryptionKey]];
-            
-             [Storage open:^{
+            [Storage open:^{
                 
                 [[MTNetwork instance] initConnectionWithId:-1];
                 
