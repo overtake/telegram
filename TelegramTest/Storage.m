@@ -1332,7 +1332,13 @@ TL_localMessage *parseMessage(FMResultSet *result) {
         
         FMResultSet *result = [db executeQuery:@"select n_id from messages where ((n_id <= ? and n_id > ?) OR dstate=?) and peer_id = ? and (flags & ?) = ?",@(max_id),@(read_inbox_max_id),@(DeliveryStatePending),@(peer_id),@(flags),@(flags)];
         
-        [db executeUpdate:[NSString stringWithFormat:@"update %@ set read_inbox_max_id = ? where peer_id = ?",tableDialogs],@(max_id),@(peer_id)];
+        
+        
+        if(!n_out) {
+            [db executeUpdate:[NSString stringWithFormat:@"update %@ set read_inbox_max_id = ? where peer_id = ?",tableDialogs],@(max_id),@(peer_id)];
+
+        }
+        
         
         while ([result next]) {
             

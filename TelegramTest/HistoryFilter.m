@@ -316,7 +316,7 @@ static NSString *kMessageItems = @"kMessageItems";
             callback(nil);
         }
         
-    } timeout:10 queue:[ASQueue globalQueue].nativeQueue];
+    } timeout:0 queue:[ASQueue globalQueue].nativeQueue];
     
 }
 
