@@ -265,6 +265,7 @@
 		C20F76E31BB57581003A1E86 /* HockeySDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2082B7219C1E1C4000005E2 /* HockeySDK.framework */; };
 		C20F76E41BB57588003A1E86 /* Sparkle.framework in Copy Files (6 items) */ = {isa = PBXBuildFile; fileRef = C235364C19C88D620044978E /* Sparkle.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		C20F76E51BB57588003A1E86 /* HockeySDK.framework in Copy Files (6 items) */ = {isa = PBXBuildFile; fileRef = C2082B7219C1E1C4000005E2 /* HockeySDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		C20F76E91BB994A6003A1E86 /* TGModernUserViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C20F76E81BB994A6003A1E86 /* TGModernUserViewController.m */; };
 		C2182BBE19589246002469CA /* TL_localMessageService.m in Sources */ = {isa = PBXBuildFile; fileRef = C2182BBD19589246002469CA /* TL_localMessageService.m */; };
 		C21C7B2C18D7044600253A7A /* MessageSenderItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C21C7B2B18D7044600253A7A /* MessageSenderItem.m */; };
 		C21C7B2F18D7334D00253A7A /* MessageSenderSecretItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C21C7B2E18D7334D00253A7A /* MessageSenderSecretItem.m */; };
@@ -1520,6 +1521,8 @@
 		C20D18F71948D1FE0095A906 /* SecretChatAccepter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SecretChatAccepter.m; sourceTree = "<group>"; };
 		C20D190019542AB80095A906 /* SearchHistoryFilter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SearchHistoryFilter.h; sourceTree = "<group>"; };
 		C20D190119542AB80095A906 /* SearchHistoryFilter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SearchHistoryFilter.m; sourceTree = "<group>"; };
+		C20F76E71BB994A6003A1E86 /* TGModernUserViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGModernUserViewController.h; sourceTree = "<group>"; };
+		C20F76E81BB994A6003A1E86 /* TGModernUserViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGModernUserViewController.m; sourceTree = "<group>"; };
 		C2182BBC19589246002469CA /* TL_localMessageService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TL_localMessageService.h; sourceTree = "<group>"; };
 		C2182BBD19589246002469CA /* TL_localMessageService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TL_localMessageService.m; sourceTree = "<group>"; };
 		C21C7B2A18D7044600253A7A /* MessageSenderItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MessageSenderItem.h; sourceTree = "<group>"; };
@@ -3119,6 +3122,7 @@
 		0AA01439182CF2BE00901B7A /* user/сhats info */ = {
 			isa = PBXGroup;
 			children = (
+				C20F76E61BB99438003A1E86 /* modern */,
 				C20A5EB71B874850007F4B49 /* channels */,
 				C2200B7018F43A4200F28803 /* help */,
 				C2002CFC19990EE2002A1915 /* broadcast */,
@@ -3553,6 +3557,15 @@
 				C2C85BA61AF10B6500FBEABD /* TGCaptionView.m */,
 			);
 			name = help;
+			sourceTree = "<group>";
+		};
+		C20F76E61BB99438003A1E86 /* modern */ = {
+			isa = PBXGroup;
+			children = (
+				C20F76E71BB994A6003A1E86 /* TGModernUserViewController.h */,
+				C20F76E81BB994A6003A1E86 /* TGModernUserViewController.m */,
+			);
+			name = modern;
 			sourceTree = "<group>";
 		};
 		C21C7B2518D7041700253A7A /* sender */ = {
@@ -6365,6 +6378,7 @@
 				C24435921A1E1C7E00F9BB38 /* PrivacyUserListItemView.m in Sources */,
 				C2544E8A1A8128A8006E44DF /* TGSharedMediaCap.m in Sources */,
 				C2C1DC0F1A4336CE00BBCC63 /* TGStickerImageObject.m in Sources */,
+				C20F76E91BB994A6003A1E86 /* TGModernUserViewController.m in Sources */,
 				0AB43BC618D8A4AC00FB805A /* NSColor+CNGridViewPalette.m in Sources */,
 				C274C4471ACD99E7000DFDE4 /* TGWebpageTWObject.m in Sources */,
 				C2B0DFA21BAB34330023982C /* ComposeActionChannelMembersBehavior.m in Sources */,
