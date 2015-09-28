@@ -3444,7 +3444,7 @@ static NSTextAttachment *headerMediaIcon() {
 
 - (void)sendSecretTTL:(int)ttl forConversation:(TL_conversation *)conversation callback:(dispatch_block_t)callback {
     
-    if(!conversation.canSendMessage) {
+    if(!conversation.canSendMessage || conversation.type != DialogTypeSecretChat) {
         if(callback) callback();
         return;
     }
