@@ -12,4 +12,6 @@
 
 - (EncryptedParams *)encryptedParams;
 - (TL_conversation *)dialog;
+
+-(NSString *)username;
 @end

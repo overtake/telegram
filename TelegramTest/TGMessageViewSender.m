@@ -91,7 +91,7 @@
             [request setCompleted:^(NSArray *result, NSTimeInterval t, id error) {
                 
                 
-                [ASQueue dispatchOnStageQueue:^{
+                [ASQueue dispatchOnMainQueue:^{
                                         
                     [items enumerateObjectsUsingBlock:^(MessageTableItem *obj, NSUInteger idx, BOOL *stop) {
                         BOOL needUpdate = obj.message.views != [result[idx] intValue];
@@ -114,7 +114,7 @@
             [[MTNetwork instance] addRequest:request];
             
             
-        } queue:[ASQueue globalQueue].nativeQueue];
+        } queue:dispatch_get_main_queue()];
         
         [timer start];
     }];
@@ -136,18 +136,14 @@ static NSMutableDictionary *viewChannels;
 
 +(void)addItem:(MessageTableItem *)item {
     
-    [ASQueue dispatchOnStageQueue:^{
-        
-        TGViewSender *sender = viewChannels[@(item.message.peer_id)];
-        
-        if(!sender) {
-            sender = [[TGViewSender alloc] init];
-            viewChannels[@(item.message.peer_id)] = sender;
-        }
-        
-        [sender addItem:item];
-        
-    }];
+    TGViewSender *sender = viewChannels[@(item.message.peer_id)];
+    
+    if(!sender) {
+        sender = [[TGViewSender alloc] init];
+        viewChannels[@(item.message.peer_id)] = sender;
+    }
+    
+    [sender addItem:item];
     
     
     
