@@ -31,6 +31,13 @@
 
 
 
+-(NSString *)leftEditTitle {
+    return NSLocalizedString(@"Compose.Cancel", nil);
+}
+-(NSString *)rightEditTitle {
+    return NSLocalizedString(@"Compose.Done", nil);
+}
+
 -(NSString *)doneTitle {
     return NSLocalizedString(@"Compose.Done", nil);
 }

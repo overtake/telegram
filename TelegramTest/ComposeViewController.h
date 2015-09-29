@@ -15,4 +15,9 @@
 
 @property (nonatomic,assign,setter=setLoading:) BOOL isLoading;
 
+
+@property (nonatomic,assign, setter=setEditable:) BOOL isEditable;
+
+
+
 @end

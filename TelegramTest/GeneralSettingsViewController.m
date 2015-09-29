@@ -191,17 +191,7 @@
    
     
     
-//    GeneralSettingsRowItem *securitySettings = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeNext callback:^(GeneralSettingsRowItem *item) {
-//        
-//        [[Telegram rightViewController] showSecuritySettings];
-//        
-//    } description:NSLocalizedString(@"Settings.SecuritySettings", nil) height:42 stateback:^id(GeneralSettingsRowItem *item) {
-//        return nil;
-//    }];
-//    
-//    [self.tableView insert:securitySettings atIndex:self.tableView.list.count tableRedraw:NO];
-    
-    
+
     
     
     GeneralSettingsRowItem *advancedSettings = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeNext callback:^(GeneralSettingsRowItem *item) {
@@ -225,6 +215,19 @@
     
     [self.tableView insert:cache atIndex:self.tableView.list.count tableRedraw:NO];
 
+    
+    
+    GeneralSettingsRowItem *mutedChatsInUnreadCount = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeSwitch callback:^(GeneralSettingsRowItem *item) {
+        
+        [SettingsArchiver addOrRemoveSetting:IncludeMutedUnreadCount];
+        
+        [MessagesManager updateUnreadBadge];
+        
+    } description:NSLocalizedString(@"Settings.IncludeMutedUnread", nil) height:42 stateback:^id(GeneralSettingsRowItem *item) {
+        return @([SettingsArchiver checkMaskedSetting:IncludeMutedUnreadCount]);
+    }];
+    
+    [self.tableView insert:mutedChatsInUnreadCount atIndex:self.tableView.list.count tableRedraw:NO];
     
     
 #ifdef TGDEBUG

@@ -147,7 +147,7 @@ extern NSString *const RECENT_SEARCH;
 -(void)deleteImportedContacts:(NSSet *)result;
 
 
--(void)unreadCount:(void (^)(int count))completeHandler;
+-(void)unreadCount:(void (^)(int count))completeHandler includeMuted:(BOOL)includeMuted;
 
 -(void)markAllInConversation:(int)peer_id;
 

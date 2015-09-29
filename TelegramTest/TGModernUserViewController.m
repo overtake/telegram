@@ -12,8 +12,6 @@
 
 -(void)loadView {
     [super loadView];
-    
-    
 }
 
 @end

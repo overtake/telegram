@@ -71,6 +71,12 @@
     }];
 }
 
+-(void)setEditable:(BOOL)isEditable {
+    _isEditable = isEditable;
+    
+    
+}
+
 -(void)setAction:(ComposeAction *)action {
     _action = action;
     

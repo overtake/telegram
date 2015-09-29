@@ -518,7 +518,10 @@ static int unreadOffsetRight = 13;
         [NSColorFromRGB(0xffffff) set];
         
     } else {
-        [NSColorFromRGB(0x4ba3e2) set];
+        if(!self.item.conversation.isMute)
+            [NSColorFromRGB(0x4ba3e2) set];
+        else
+            [GRAY_TEXT_COLOR set];
     }
     [path fill];
     [path closePath];

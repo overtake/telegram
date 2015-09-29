@@ -416,7 +416,7 @@ static const int seconds_to_notify = 120;
         NSString *str = [[self sharedManager] unread_count] > 0 ? [NSString stringWithFormat:@"%d",count] : nil;
         [[[NSApplication sharedApplication] dockTile] setBadgeLabel:str];
         [Notification perform:UNREAD_COUNT_CHANGED data:@{@"count":@(count)}];
-    }];
+    } includeMuted:[SettingsArchiver checkMaskedSetting:IncludeMutedUnreadCount]];
     
 }
 

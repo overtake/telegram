@@ -256,6 +256,8 @@
         if(completeHandler)
             completeHandler();
         
+        [MessagesManager updateUnreadBadge];
+        
     } errorHandler:^(RPCRequest *request, RpcError *error) {
         if(completeHandler)
             completeHandler();
