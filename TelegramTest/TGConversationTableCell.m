@@ -14,6 +14,7 @@
 @interface ShortUnread : NSView
 @property (nonatomic, strong) NSString *unreadCount;
 @property (nonatomic) NSSize undreadSize;
+@property (nonatomic,strong) NSColor *color;
 @end
 
 @implementation ShortUnread
@@ -65,7 +66,8 @@ static NSDictionary *attributes() {
     [[NSColor whiteColor] setStroke];
     [path stroke];
     
-    [NSColorFromRGB(0x4ba3e2) setFill];
+    
+    [_color setFill];
     [path fill];
     
     [[NSColor whiteColor] set];
@@ -296,6 +298,7 @@ static NSDictionary *attributes() {
             [self.layer addSublayer:_shortUnread.layer];
         }
         
+        _shortUnread.color = self.item.conversation.isMute && ![SettingsArchiver checkMaskedSetting:IncludeMutedUnreadCount] ? GRAY_TEXT_COLOR : NSColorFromRGB(0x4ba3e2);
         [_shortUnread setUnreadCount:self.item.unreadText];
         
     } else {
@@ -518,7 +521,7 @@ static int unreadOffsetRight = 13;
         [NSColorFromRGB(0xffffff) set];
         
     } else {
-        if(!self.item.conversation.isMute)
+        if(!self.item.conversation.isMute || [SettingsArchiver checkMaskedSetting:IncludeMutedUnreadCount])
             [NSColorFromRGB(0x4ba3e2) set];
         else
             [GRAY_TEXT_COLOR set];

@@ -75,6 +75,7 @@
 #import "ChannelImportantFilter.h"
 #import "TGModalDeleteChannelMessagesView.h"
 #import "ComposeActionDeleteChannelMessagesBehavior.h"
+
 #define HEADER_MESSAGES_GROUPING_TIME (10 * 60)
 
 #define SCROLLDOWNBUTTON_OFFSET 1500
@@ -170,6 +171,8 @@
 @property (nonatomic,strong) NSString *noWebpageString;
 
 @property (nonatomic, strong) TL_conversation *conversation;
+
+@property (nonatomic, strong) TGMessagesHintView *hintView;
 
 @property (nonatomic,assign) BOOL needNextRequest;
 
@@ -449,6 +452,13 @@
     [self.stickerPanel hide:NO];
 
     
+    
+    
+    self.hintView = [[TGMessagesHintView alloc] initWithFrame:NSMakeRect(0, NSHeight(self.bottomView.frame), NSWidth(self.view.frame), 100)];
+    
+    [self.hintView setHidden:YES];
+    
+    [self.view addSubview:self.hintView];
     
 }
 

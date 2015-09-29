@@ -2450,6 +2450,9 @@
          contextName = "-[TGUpdateChannels proccessUnimportantGroup:]:TGUpdateChannels.m">
       </ContextState>
       <ContextState
+         contextName = "__34-[TGProccessUpdates checkSequence]_block_invoke_2:TGProccessUpdates.m">
+      </ContextState>
+      <ContextState
          contextName = "-[TMTableView keyDown:]:TMTableView.mm">
          <PersistentStrings>
             <PersistentString
@@ -3254,6 +3257,14 @@
          contextName = "+[RPCRequest sendRequest:successHandler:errorHandler:]:RPCRequest.m">
       </ContextState>
       <ContextState
+         contextName = "-[TGMessagesHintRowView redrawRow]:TGMessagesHintView.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "_descField.isHidden">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "__36-[StartBotSenderItem performRequest]_block_invoke:StartBotSenderItem.m">
       </ContextState>
       <ContextState
@@ -3536,6 +3547,9 @@
                value = "localStickers">
             </PersistentString>
          </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "__67-[TGProccessUpdates addStatefullUpdate:seq:pts:date:qts:pts_count:]_block_invoke:TGProccessUpdates.m">
       </ContextState>
       <ContextState
          contextName = "__47-[SelectUsersTableView remoteSearchByUserName:]_block_invoke:SelectUsersTableView.m">

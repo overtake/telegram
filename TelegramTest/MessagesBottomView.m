@@ -1160,6 +1160,8 @@
     rect.origin.x += 100;
     
     
+    [self.messagesViewController.hintView hide];
+    
     [TGMentionPopup close];
     [TGHashtagPopup close];
     [TGBotCommandsPopup close];
@@ -1229,19 +1231,30 @@
         
         
         if(type == 1) {
-            if(self.dialog.type == DialogTypeChat || self.dialog.type == DialogTypeChannel)
-                [TGMentionPopup show:search chat:self.dialog.chat view:self.window.contentView ofRect:rect callback:callback];
+            if(self.dialog.type == DialogTypeChat || self.dialog.type == DialogTypeChannel) {
+                
+                [self.messagesViewController.hintView showMentionPopupWithQuery:search chat:self.dialog.chat choiceHandler:callback];
+                
+             //   [TGMentionPopup show:search chat:self.dialog.chat view:self.window.contentView ofRect:rect callback:callback];
+            }
+            
         } else if(type == 2) {
-            [TGHashtagPopup show:search peer_id:self.dialog.peer_id view:self.window.contentView ofRect:rect callback:callback];
+            
+            [self.messagesViewController.hintView showHashtagHintsWithQuery:search peer_id:self.dialog.peer_id choiceHandler:callback];
+            
+         //   [TGHashtagPopup show:search peer_id:self.dialog.peer_id view:self.window.contentView ofRect:rect callback:callback];
         } else if(type == 3 && [self.inputMessageTextField.string rangeOfString:@"/"].location == 0) {
             if([_dialog.user isBot] || _dialog.fullChat.bot_info != nil) {
-                [TGBotCommandsPopup show:search botInfo:_userFull ? @[_userFull.bot_info] : _dialog.fullChat.bot_info view:self.window.contentView ofRect:rect callback:^(NSString *command) {
-                    
-                    callback(command);
-                    
-                    [[Telegram rightViewController].messagesViewController sendMessage];
-                    
-                }];
+                
+                 [self.messagesViewController.hintView showCommandsHintsWithQuery:search botInfo:_userFull ? @[_userFull.bot_info] : _dialog.fullChat.bot_info choiceHandler:callback];
+                
+//                [TGBotCommandsPopup show:search botInfo:_userFull ? @[_userFull.bot_info] : _dialog.fullChat.bot_info view:self.window.contentView ofRect:rect callback:^(NSString *command) {
+//                    
+//                    callback(command);
+//                    
+//                    [[Telegram rightViewController].messagesViewController sendMessage];
+//                    
+//                }];
                 
             }
         }
@@ -1618,7 +1631,7 @@
     
     [self updateTextFieldContainer];
     
-    [self.inputMessageTextField textDidChange:nil];
+//    [self.inputMessageTextField textDidChange:nil];
     
     [_botKeyboard setFrameSize:NSMakeSize(NSWidth(self.inputMessageTextField.containerView.frame), NSHeight(_botKeyboard.frame))];
 }

@@ -15,7 +15,7 @@
 #import "ConnectionStatusViewControllerView.h"
 #import <CoreLocation/CoreLocation.h>
 #import "TGCTextMark.h"
-
+#import "TGMessagesHintView.h"
 @class MessagesBottomView;
 
 @interface SearchSelectItem : NSObject
@@ -163,5 +163,7 @@ typedef enum {
 -(void)showOrHideChannelDiscussion;
 
 -(void)tryRead;
+
+-(TGMessagesHintView *)hintView;
 
 @end
