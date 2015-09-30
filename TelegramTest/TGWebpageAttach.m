@@ -38,7 +38,7 @@
         _stateField = [TMTextField defaultTextField];
         
         
-        [_titleField setFont:[NSFont fontWithName:@"HelveticaNeue" size:13]];
+        [_titleField setFont:TGSystemFont(13)];
         
         [_titleField setTextColor:LINK_COLOR];
         
@@ -46,7 +46,7 @@
         [_titleField setFrameOrigin:NSMakePoint(5, NSHeight(frameRect) - 13)];
         
         
-        [_stateField setFont:[NSFont fontWithName:@"HelveticaNeue" size:13]];
+        [_stateField setFont:TGSystemFont(13)];
         
         
         

@@ -90,7 +90,7 @@ DYNAMIC_PROPERTY(DIALOGTITLE);
     
     [dialogTitleAttributedString appendString:self.cropTitle withColor:NSColorFromRGB(0x333333)];
     [dialogTitleAttributedString setSelectionColor:NSColorFromRGB(0xffffff) forColor:NSColorFromRGB(0x333333)];
-    [dialogTitleAttributedString setFont:[NSFont fontWithName:@"HelveticaNeue" size:14] forRange:dialogTitleAttributedString.range];
+    [dialogTitleAttributedString setFont:TGSystemFont(14) forRange:dialogTitleAttributedString.range];
     
     
 //    if([self isChannel] && [self isVerify]) {
@@ -114,7 +114,7 @@ DYNAMIC_PROPERTY(TITLEFORMESSAGE);
     NSMutableAttributedString *dialogTitleAttributedString = [[NSMutableAttributedString alloc] init];
     
     [dialogTitleAttributedString appendString:self.cropTitle withColor:NSColorFromRGB(0x222222)];
-    [dialogTitleAttributedString setFont:[NSFont fontWithName:@"HelveticaNeue" size:14] forRange:dialogTitleAttributedString.range];
+    [dialogTitleAttributedString setFont:TGSystemFont(14) forRange:dialogTitleAttributedString.range];
     
     NSMutableParagraphStyle *style = [[NSMutableParagraphStyle alloc] init];
     [style setAlignment:NSCenterTextAlignment];
@@ -196,7 +196,7 @@ static NSTextAttachment *channelVerifySelectedAttachment() {
             
             [str setSelectionColor:NSColorFromRGB(0xffffff) forColor:BLUE_UI_COLOR];
             [str setSelectionColor:NSColorFromRGB(0xfffffe) forColor:NSColorFromRGB(0xa9a9a9)];
-            [str setFont:[NSFont fontWithName:@"HelveticaNeue" size:13] forRange:str.range];
+            [str setFont:TGSystemFont(13) forRange:str.range];
             
             return str;
         }
@@ -215,7 +215,7 @@ static NSTextAttachment *channelVerifySelectedAttachment() {
         
         [str setSelectionColor:NSColorFromRGB(0xffffff) forColor:BLUE_UI_COLOR];
         [str setSelectionColor:NSColorFromRGB(0xfffffe) forColor:NSColorFromRGB(0x9b9b9b)];
-        [str setFont:[NSFont fontWithName:@"HelveticaNeue" size:13] forRange:str.range];
+        [str setFont:TGSystemFont(13) forRange:str.range];
     }
     return str;
 }
@@ -250,7 +250,7 @@ static NSTextAttachment *channelVerifySelectedAttachment() {
     }
     
     
-    [attributedString setFont:[NSFont fontWithName:@"HelveticaNeue" size:12] forRange:attributedString.range];
+    [attributedString setFont:TGSystemFont(12) forRange:attributedString.range];
     
     NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
     [paragraphStyle setAlignment:2];

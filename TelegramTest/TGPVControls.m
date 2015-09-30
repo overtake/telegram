@@ -71,7 +71,7 @@
         
         self.backgroundColor = NSColorFromRGBWithAlpha(0x000000, 0.6);
         
-        [self.countTextField setFont:[NSFont fontWithName:@"HelveticaNeue-Bold" size:18]];
+        [self.countTextField setFont:TGSystemBoldFont(18)];
         
         [self.countTextField sizeToFit];
         

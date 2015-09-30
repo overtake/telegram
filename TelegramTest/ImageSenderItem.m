@@ -163,9 +163,7 @@
             strongSelf.message.dstate = DeliveryStateNormal;
             
             [strongSelf.message save:YES];
-            
-            [[Storage manager] insertMedia:strongSelf.message];
-            
+                        
             [[NSFileManager defaultManager] moveItemAtPath:strongSelf.filePath toPath:mediaFilePath(strongSelf.message.media) error:nil];
             
            

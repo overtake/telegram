@@ -23,7 +23,7 @@
         NSMutableAttributedString *attr = [[NSMutableAttributedString alloc] init];
         
         [attr appendString:header withColor:GRAY_TEXT_COLOR];
-        [attr setFont:[NSFont fontWithName:@"HelveticaNeue" size:12] forRange:attr.range];
+        [attr setFont:TGSystemFont(12) forRange:attr.range];
         
         _header = attr;
         self.height = height;

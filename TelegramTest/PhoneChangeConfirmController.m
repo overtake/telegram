@@ -32,9 +32,9 @@
     self.smsCodeView = [[UserInfoShortTextEditView alloc] initWithFrame:NSMakeRect(100, 30, self.view.frame.size.width-200, 35)];
     
     
-    self.smsCodeView.textView.font = [NSFont fontWithName:@"HelveticaNeue" size:13];
+    self.smsCodeView.textView.font = TGSystemFont(13);
     
-    NSAttributedString *smsCodePlaceholder = [[NSAttributedString alloc] initWithString:NSLocalizedString(@"PhoneChangeController.SmsPlaceholder", nil) attributes:@{NSFontAttributeName:[NSFont fontWithName:@"HelveticaNeue" size:13], NSForegroundColorAttributeName:GRAY_TEXT_COLOR}];
+    NSAttributedString *smsCodePlaceholder = [[NSAttributedString alloc] initWithString:NSLocalizedString(@"PhoneChangeController.SmsPlaceholder", nil) attributes:@{NSFontAttributeName:TGSystemFont(13), NSForegroundColorAttributeName:GRAY_TEXT_COLOR}];
     
     
     [self.smsCodeView.textView.cell setPlaceholderAttributedString:smsCodePlaceholder];

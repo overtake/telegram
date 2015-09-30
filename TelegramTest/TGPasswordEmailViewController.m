@@ -131,7 +131,7 @@
     
     [str appendString:action.title withColor:DARK_GRAY];
     [str setAlignment:NSLeftTextAlignment range:str.range];
-    [str setFont:[NSFont fontWithName:@"HelveticaNeue" size:15] forRange:str.range];
+    [str setFont:TGSystemFont(15) forRange:str.range];
     
     [[self.textView textView].cell setPlaceholderAttributedString:str];
     

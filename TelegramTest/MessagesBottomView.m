@@ -325,7 +325,7 @@
     
     self.messagesSelectedCount = [TMTextButton standartUserProfileNavigationButtonWithTitle:@""];
     self.messagesSelectedCount.textColor = DARK_BLACK;
-    self.messagesSelectedCount.font = [NSFont fontWithName:@"HelveticaNeue" size:14];
+    self.messagesSelectedCount.font = TGSystemFont(14);
     [self.messagesSelectedCount setAutoresizingMask:NSViewMinXMargin | NSViewMaxXMargin];
     [self.actionsView addSubview:self.messagesSelectedCount];
     
@@ -449,7 +449,7 @@
     [self.sendButton setAutoresizingMask:NSViewMinXMargin];
     [self.sendButton setTarget:self selector:@selector(sendButtonAction)];
     [self.sendButton setText:NSLocalizedString(@"Message.Send", nil)];
-    [self.sendButton setTextFont:[NSFont fontWithName:@"HelveticaNeue-Medium" size:14]];
+    [self.sendButton setTextFont:TGSystemMediumFont(14)];
     NSSize size = [self.sendButton sizeOfText];
     [self.sendButton setFrameSize:size];
     [self.sendButton setFrameOrigin:NSMakePoint(self.bounds.size.width - size.width - 17, 19)];
@@ -487,7 +487,7 @@
     [self.recordDurationLayer disableActions];
     self.recordDurationLayer.contentsScale = self.normalView.layer.contentsScale;
     [self.recordDurationLayer setTextColor:[NSColor blackColor]];
-    [self.recordDurationLayer setTextFont:[NSFont fontWithName:@"HelveticaNeue" size:14]];
+    [self.recordDurationLayer setTextFont:TGSystemFont(14)];
     [self.recordDurationLayer setString:@"00:34"];
     [self.recordDurationLayer sizeToFit];
     [self.recordDurationLayer setFrameOrigin:CGPointMake(52, roundf( (self.bounds.size.height - self.recordDurationLayer.bounds.size.height) / 2.f) - 1)];
@@ -496,7 +496,7 @@
     self.recordHelpLayer = [TMTextLayer layer];
     [self.recordHelpLayer disableActions];
     self.recordHelpLayer.contentsScale = self.normalView.layer.contentsScale;
-    [self.recordHelpLayer setTextFont:[NSFont fontWithName:@"HelveticaNeue" size:14]];
+    [self.recordHelpLayer setTextFont:TGSystemFont(14)];
     [self.normalView.layer addSublayer:self.recordHelpLayer];
 
 

@@ -23,7 +23,7 @@
         [self.textField setEnabled:NO];
         [self.textField setEditable:NO];
         [self.textField setStringValue:@"2 unread messages"];
-        [self.textField setFont:[NSFont fontWithName:@"HelveticaNeue" size:13]];
+        [self.textField setFont:TGSystemFont(13)];
         [self.textField setTextColor:NSColorFromRGB(0x9b9b9b)];
         [self.textField setDrawsBackground:NO];
         [self.textField setAlignment:NSCenterTextAlignment];

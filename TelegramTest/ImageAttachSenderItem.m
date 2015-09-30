@@ -123,9 +123,7 @@
         self.message.dstate = DeliveryStateNormal;
         
         [self.message save:YES];
-        
-        [[Storage manager] insertMedia:self.message];
-        
+                
         [[NSFileManager defaultManager] moveItemAtPath:self.filePath toPath:mediaFilePath(self.message.media) error:nil];
         
         

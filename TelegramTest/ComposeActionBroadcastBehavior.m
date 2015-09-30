@@ -33,7 +33,7 @@
         
         NSRange range = [attr appendString:[NSString stringWithFormat:@" - %lu/%lu",self.action.result.multiObjects.count,[self limit]] withColor:DARK_GRAY];
         
-        [attr setFont:[NSFont fontWithName:@"HelveticaNeue" size:12] forRange:range];
+        [attr setFont:TGSystemFont(12) forRange:range];
         
         
         

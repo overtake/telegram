@@ -363,7 +363,6 @@
                 
                 [TGCache cacheImage:renderedImage(image, strongsizeWithMinMax(image.size, MIN_IMG_SIZE.height, MIN_IMG_SIZE.width)) forKey:newLocation.cacheKey groups:@[IMGCACHE]];
                 
-                [[Storage manager] insertMedia:strongSelf.message];
                 
                 PreviewObject *previewObject = [[PreviewObject alloc] initWithMsdId:strongSelf.message.n_id media:strongSelf.message peer_id:strongSelf.message.peer_id];
                 

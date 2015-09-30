@@ -313,7 +313,7 @@
     
     self.filtredNavigationCenterView = [TMTextButton standartUserProfileButtonWithTitle:@"nil"];
     
-    [self.filtredNavigationCenterView setFont:[NSFont fontWithName:@"HelveticaNeue" size:14]];
+    [self.filtredNavigationCenterView setFont:TGSystemFont(14)];
     [self.filtredNavigationCenterView setAlignment:NSCenterTextAlignment];
     
     [self.filtredNavigationCenterView setTextColor:BLUE_UI_COLOR];
@@ -842,7 +842,7 @@
     
     [string appendString:mediaString withColor:BLUE_UI_COLOR];
     
-    [string setFont:[NSFont fontWithName:@"HelveticaNeue" size:14] forRange:NSMakeRange(0, string.length)];
+    [string setFont:TGSystemFont(14) forRange:NSMakeRange(0, string.length)];
     
     [string appendAttributedString:[NSAttributedString attributedStringWithAttachment:headerMediaIcon()]];
     
@@ -1318,23 +1318,31 @@ static NSTextAttachment *headerMediaIcon() {
 
 
 
-- (void)scrollDidStart {
-    for(int i = 0; i < self.messages.count; i++) {
-        MessageTableCellGifView *view = [self.table viewAtColumn:0 row:i makeIfNecessary:NO];
-        if(view && [view isKindOfClass:[MessageTableCellGifView class]]) {
-            [view pauseAnimation];
-        }
-    }
+- (void)scrollDidChange {
+    
+//    int bp = 0;
+//    
+//    [self.messages enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+//        
+//        MessageTableCellGifView *view = [self.table viewAtColumn:0 row:idx makeIfNecessary:NO];
+//        
+//        if(view && [view isKindOfClass:[MessageTableCellGifView class]]) {
+//            NSRange visibleRange = [_table rowsInRect:_table.visibleRect];
+//            
+//            if(idx < visibleRange.location || idx > visibleRange.location + visibleRange.length) {
+//                [view pauseAnimation];
+//            } else {
+//                [view resumeAnimation];
+//            }
+//        }
+//        
+//       
+//        
+//    }];
+    
 }
 
-- (void)scrollDidEnd {
-    for(int i = 0; i < self.messages.count; i++) {
-        MessageTableCellGifView *view = [self.table viewAtColumn:0 row:i makeIfNecessary:NO];
-        if(view && [view isKindOfClass:[MessageTableCellGifView class]]) {
-            [view resumeAnimation];
-        }
-    }
-}
+
 
 - (void)setStringValueToTextField:(NSString *)stringValue {
     if(stringValue)
@@ -1601,6 +1609,8 @@ static NSTextAttachment *headerMediaIcon() {
 
 - (void)scrollViewDocumentOffsetChangingNotificationHandler:(NSNotification *)aNotification {
     [self updateScrollBtn];
+    
+    [self scrollDidChange];
     
     if([self.table.scrollView isNeedUpdateTop] && self.historyController.prevState != ChatHistoryStateFull) {
         

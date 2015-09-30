@@ -55,7 +55,7 @@
     
     [replyHeader appendString:name withColor:nameColor];
     
-    [replyHeader setFont:[NSFont fontWithName:@"HelveticaNeue-Medium" size:13] forRange:replyHeader.range];
+    [replyHeader setFont:TGSystemMediumFont(13) forRange:replyHeader.range];
     
     [replyHeader addAttribute:NSLinkAttributeName value:[TMInAppLinks peerProfile:_replyMessage.fwd_from_id != nil ? _replyMessage.fwd_from_id : [TL_peerUser createWithUser_id:_replyMessage.from_id]] range:replyHeader.range];
     
@@ -156,7 +156,7 @@
     
     [replyText addAttribute:NSParagraphStyleAttributeName value:style range:replyText.range];
     
-    [replyText setFont:[NSFont fontWithName:@"HelveticaNeue" size:13] forRange:replyText.range];
+    [replyText setFont:TGSystemFont(13) forRange:replyText.range];
     
     _replyText = replyText;
     

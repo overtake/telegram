@@ -23,7 +23,7 @@
     
     
     TMButton *center = [[TMButton alloc] initWithFrame:NSMakeRect(0, 0, 400, 200)];
-    [center setTextFont:[NSFont fontWithName:@"HelveticaNeue" size:14]];
+    [center setTextFont:TGSystemFont(14)];
     [center setText:NSLocalizedString(@"EncryptionKey.EncryptionKey", nil)];
     [center setTarget:self selector:@selector(navigationGoBack)];
     self.centerNavigationBarView = center;
@@ -56,7 +56,7 @@
     
     self.textField.url_delegate = self;
     
-    [self.textField setFont:[NSFont fontWithName:@"HelveticaNeue" size:14]];
+    [self.textField setFont:TGSystemFont(14)];
     
     [self.textField setEditable:NO];
     [self.textField setSelectable:NO];
@@ -97,9 +97,9 @@
     NSString *baseText = [[NSString alloc] initWithFormat:textFormat, _userName, _userName];
     
     
-     NSDictionary *attrs = [NSDictionary dictionaryWithObjectsAndKeys:[NSFont fontWithName:@"HelveticaNeue" size:14], NSFontAttributeName, nil];
+     NSDictionary *attrs = [NSDictionary dictionaryWithObjectsAndKeys:TGSystemFont(14), NSFontAttributeName, nil];
     
-    NSDictionary *subAttrs = [NSDictionary dictionaryWithObjectsAndKeys:[NSFont fontWithName:@"HelveticaNeue-Medium" size:14], NSFontAttributeName, nil];
+    NSDictionary *subAttrs = [NSDictionary dictionaryWithObjectsAndKeys:TGSystemMediumFont(14), NSFontAttributeName, nil];
     
     NSDictionary *linkAtts = @{NSForegroundColorAttributeName: BLUE_UI_COLOR, NSLinkAttributeName:@"telegram.org"};
     

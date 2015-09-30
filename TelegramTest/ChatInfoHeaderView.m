@@ -426,7 +426,7 @@
     
     [string appendString:str withColor:NSColorFromRGB(0xa1a1a1)];
     
-    [string setFont:[NSFont fontWithName:@"HelveticaNeue-Light" size:15] forRange:NSMakeRange(0, string.length)];
+    [string setFont:TGSystemLightFont(15) forRange:NSMakeRange(0, string.length)];
     
     [string appendAttributedString:[NSAttributedString attributedStringWithAttachment:attach]];
     [self.muteUntilTitle setAttributedStringValue:string];

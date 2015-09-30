@@ -51,7 +51,7 @@ NSImage *placeholder() {
             
             [author appendString:webpage.author withColor:DARK_BLACK];
             
-            [author setFont:[NSFont fontWithName:@"HelveticaNeue-Medium" size:12.5] forRange:author.range];
+            [author setFont:TGSystemMediumFont(12.5) forRange:author.range];
             
             [author addAttribute:NSParagraphStyleAttributeName value:style range:author.range];
             
@@ -68,7 +68,7 @@ NSImage *placeholder() {
             
             
             [title appendString:webpage.title withColor:[NSColor blackColor]];
-            [title setFont:[NSFont fontWithName:@"HelveticaNeue-Medium" size:12.5] forRange:title.range];
+            [title setFont:TGSystemMediumFont(12.5) forRange:title.range];
             
             _title = title;
         }
@@ -77,7 +77,7 @@ NSImage *placeholder() {
 //            
 //            NSMutableAttributedString *copy = [_title mutableCopy];
 //            
-//            [copy setFont:[NSFont fontWithName:@"HelveticaNeue-Medium" size:12.5] forRange:copy.range];
+//            [copy setFont:TGSystemMediumFont(12.5) forRange:copy.range];
 //            [copy addAttribute:NSParagraphStyleAttributeName value:style range:copy.range];
 //            _author = copy;
 //            
@@ -87,7 +87,7 @@ NSImage *placeholder() {
         
         [siteName appendString:webpage.site_name ? webpage.site_name : @"Link Preview" withColor:GRAY_TEXT_COLOR];
         
-        [siteName setFont:[NSFont fontWithName:@"HelveticaNeue-Medium" size:12.5] forRange:siteName.range];
+        [siteName setFont:TGSystemMediumFont(12.5) forRange:siteName.range];
         [siteName addAttribute:NSParagraphStyleAttributeName value:style range:siteName.range];
         
         _siteName = siteName;
@@ -99,7 +99,7 @@ NSImage *placeholder() {
             NSMutableAttributedString *desc = [[NSMutableAttributedString alloc] init];
             
             [desc appendString:webpage.n_description withColor:[NSColor blackColor]];
-            [desc setFont:[NSFont fontWithName:@"HelveticaNeue" size:12.5] forRange:desc.range];
+            [desc setFont:TGSystemFont(12.5) forRange:desc.range];
             
             NSMutableParagraphStyle *style = [NSMutableParagraphStyle new];
             style.lineBreakMode = NSLineBreakByWordWrapping;
@@ -114,7 +114,7 @@ NSImage *placeholder() {
                 NSMutableAttributedString *title = [[NSMutableAttributedString alloc] init];
                 
                 [title appendString:[NSString stringWithFormat:@"%@\n",t] withColor:[NSColor blackColor]];
-                [title setFont:[NSFont fontWithName:@"HelveticaNeue-Medium" size:12.5] forRange:title.range];
+                [title setFont:TGSystemMediumFont(12.5) forRange:title.range];
                 
                 [desc insertAttributedString:title atIndex:0];
             }

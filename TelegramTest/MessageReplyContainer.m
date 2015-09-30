@@ -31,7 +31,7 @@
         
         self.nameTextField = [[TMHyperlinkTextField alloc] initWithFrame:NSMakeRect(15, NSHeight(frameRect) - 13, 200, 20)];
         [self.nameTextField setBordered:NO];
-        [self.nameTextField setFont:[NSFont fontWithName:@"HelveticaNeue-Medium" size:13]];
+        [self.nameTextField setFont:TGSystemMediumFont(13)];
         [self.nameTextField setDrawsBackground:NO];
         
         [self addSubview:self.nameTextField];
@@ -39,7 +39,7 @@
         self.dateField = [TMTextField defaultTextField];
         
         [self.dateField setTextColor:GRAY_TEXT_COLOR];
-        [self.dateField setFont:[NSFont fontWithName:@"HelveticaNeue" size:12]];
+        [self.dateField setFont:TGSystemFont(12)];
         
        // [self addSubview:self.dateField];
         

@@ -79,7 +79,7 @@
         [self.durationView setDrawsBackground:NO];
         [self.durationView setStringValue:@"00:00 / 00:00"];
         [self.durationView sizeToFit];
-        [self.durationView setFont:[NSFont fontWithName:@"HelveticaNeue" size:12]];
+        [self.durationView setFont:TGSystemFont(12)];
         [self.durationView setTextColor:NSColorFromRGB(0xbebebe)];
         [self.containerView addSubview:self.durationView];
         
@@ -89,7 +89,7 @@
         [self.stateTextField setBordered:NO];
         [self.stateTextField setEditable:NO];
         [self.stateTextField setDrawsBackground:NO];
-        [self.stateTextField setFont:[NSFont fontWithName:@"HelveticaNeue" size:12]];
+        [self.stateTextField setFont:TGSystemFont(12)];
         [self.stateTextField setTextColor:NSColorFromRGB(0xbebebe)];
 
         

@@ -90,21 +90,21 @@ static const TGTwoColors colors[] = {
 + (instancetype)standartTableAvatar {
     TMAvatarImageView *avatarImageView = [[self alloc] initWithFrame:NSMakeRect(10, roundf((66 - 50) / 2.0), 50, 50)];
     avatarImageView.placeholder = [TMAvatarImageView placeholderImageBySize:avatarImageView.frame.size andColor:NSColorFromRGB(0xfafafa)];
-    [avatarImageView setFont:[NSFont fontWithName:@"HelveticaNeue-Light" size:18]];
+    [avatarImageView setFont:TGSystemLightFont(18)];
     return avatarImageView;
 }
 
 + (instancetype)standartNewConversationTableAvatar {
     TMAvatarImageView *avatarImageView = [[self alloc] initWithFrame:NSMakeRect(10, roundf((60 - 44) / 2.0), 44, 44)];
     avatarImageView.placeholder = [TMAvatarImageView placeholderImageBySize:avatarImageView.frame.size andColor:NSColorFromRGB(0xfafafa)];
-    [avatarImageView setFont:[NSFont fontWithName:@"HelveticaNeue-Light" size:18]];
+    [avatarImageView setFont:TGSystemLightFont(18)];
     return avatarImageView;
 }
 
 + (instancetype)standartMessageTableAvatar {
     TMAvatarImageView *avatarImageView = [[self alloc] initWithFrame:NSMakeRect(0, 0, 36, 36)];
     avatarImageView.placeholder = [TMAvatarImageView placeholderImageBySize:avatarImageView.frame.size andColor:NSColorFromRGB(0xfafafa)];
-    [avatarImageView setFont:[NSFont fontWithName:@"HelveticaNeue" size:14]];
+    [avatarImageView setFont:TGSystemFont(14)];
     [avatarImageView setOffsetTextY:2];
     return avatarImageView;
 }
@@ -112,7 +112,7 @@ static const TGTwoColors colors[] = {
 + (instancetype)standartHintAvatar {
     TMAvatarImageView *avatarImageView = [[self alloc] initWithFrame:NSMakeRect(0, 0, 30, 30)];
     avatarImageView.placeholder = [TMAvatarImageView placeholderImageBySize:avatarImageView.frame.size andColor:NSColorFromRGB(0xfafafa)];
-    [avatarImageView setFont:[NSFont fontWithName:@"HelveticaNeue" size:14]];
+    [avatarImageView setFont:TGSystemFont(14)];
     [avatarImageView setOffsetTextY:2];
     return avatarImageView;
 }
@@ -120,7 +120,7 @@ static const TGTwoColors colors[] = {
 + (instancetype) standartUserInfoAvatar {
     TMAvatarImageView *avatarImageView = [[self alloc] initWithFrame:NSMakeRect(0, 0, 130, 130)];
     avatarImageView.placeholder = [TMAvatarImageView placeholderImageBySize:avatarImageView.frame.size andColor:NSColorFromRGB(0xfafafa)];
-    [avatarImageView setFont:[NSFont fontWithName:@"HelveticaNeue-Light" size:30]];
+    [avatarImageView setFont:TGSystemLightFont(30)];
     return avatarImageView;
 }
 
@@ -171,7 +171,7 @@ static const TGTwoColors colors[] = {
     [Notification addObserver:self selector:@selector(notificationChatChange:) name:CHAT_UPDATE_PHOTO];
     [Notification addObserver:self selector:@selector(notificationChatChange:) name:CHAT_UPDATE_TITLE];
 
-    self.font = [NSFont fontWithName:@"HelveticaNeue" size:12];
+    self.font = TGSystemFont(12);
     self.isNeedPlaceholder = YES;
     
     static dispatch_once_t onceToken;

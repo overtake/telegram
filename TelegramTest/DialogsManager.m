@@ -540,7 +540,6 @@
     
     [self.queue dispatchOnQueue:^{
         if([message.media isKindOfClass:[TL_messageMediaPhoto class]] || [message.media isKindOfClass:[TL_messageMediaVideo class]]) {
-            [[Storage manager] insertMedia:message];
             
             PreviewObject *previewObject = [[PreviewObject alloc] initWithMsdId:message.n_id media:message peer_id:message.peer_id];
             
@@ -767,7 +766,6 @@
             }];
             
             if([message.media isKindOfClass:[TL_messageMediaPhoto class]]) {
-                [[Storage manager] insertMedia:message];
                 
                 PreviewObject *previewObject = [[PreviewObject alloc] initWithMsdId:message.n_id media:message peer_id:message.peer_id];
                 

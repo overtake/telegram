@@ -160,7 +160,7 @@ static const NSMutableDictionary *cache;
     
     [string appendString:str withColor:NSColorFromRGB(0xa1a1a1)];
     
-    [string setFont:[NSFont fontWithName:@"HelveticaNeue-Light" size:15] forRange:string.range];
+    [string setFont:TGSystemLightFont(15) forRange:string.range];
     
     
     [self.field setAttributedStringValue:string];

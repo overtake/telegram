@@ -66,7 +66,7 @@
         [self.durationView setStringValue:@"00:00 / 00:00"];
         
         [[self.durationView cell] setLineBreakMode:NSLineBreakByTruncatingTail];
-        [self.durationView setFont:[NSFont fontWithName:@"HelveticaNeue" size:12]];
+        [self.durationView setFont:TGSystemFont(12)];
         [self.durationView sizeToFit];
         [self.durationView setTextColor:DARK_BLACK];
         [self.containerView addSubview:self.durationView];
@@ -76,7 +76,7 @@
         [self.stateTextField setBordered:NO];
         [self.stateTextField setEditable:NO];
         [self.stateTextField setDrawsBackground:NO];
-        [self.stateTextField setFont:[NSFont fontWithName:@"HelveticaNeue" size:12]];
+        [self.stateTextField setFont:TGSystemFont(12)];
         [self.stateTextField setTextColor:NSColorFromRGB(0xbebebe)];
         
         

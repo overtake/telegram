@@ -47,7 +47,7 @@
         [self.textField setBordered:NO];
         [self.textField setDrawsBackground:NO];
         [self.textField setAutoresizingMask:NSViewMinXMargin | NSViewMaxXMargin];
-        [self.textField setFont:[NSFont fontWithName:@"HelveticaNeue" size:13]];
+        [self.textField setFont:TGSystemFont(13)];
         [self addSubview:self.textField];
     }
     return self;

@@ -37,7 +37,7 @@
         self.titleTextButton = [[TMTextButton alloc] init];
         [[self.titleTextButton cell] setTruncatesLastVisibleLine:YES];
         [[self.titleTextButton cell] setLineBreakMode:NSLineBreakByTruncatingTail];
-        [self.titleTextButton setFont:[NSFont fontWithName:@"HelveticaNeue" size:12]];
+        [self.titleTextButton setFont:TGSystemFont(12)];
         [self.titleTextButton setTextColor:LINK_COLOR];
         [self.titleTextButton setTapBlock:block];
         [self.titleTextButton setFrameOrigin:NSMakePoint(self.contactImageView.bounds.size.width + 10, 20)];
@@ -47,7 +47,7 @@
         [self.phoneNumberTextView setDrawsBackground:NO];
         [self.phoneNumberTextView setEditable:NO];
         [self.phoneNumberTextView setFrameOrigin:NSMakePoint(self.contactImageView.bounds.size.width + 8, -3)];
-        [self.phoneNumberTextView setFont:[NSFont fontWithName:@"HelveticaNeue" size:12]];
+        [self.phoneNumberTextView setFont:TGSystemFont(12)];
         [self.containerView addSubview:self.phoneNumberTextView];
         
         self.addButton = [[TMBlueAddButtonView alloc] initWithFrame:NSMakeRect(0, 0, 60, 25)];

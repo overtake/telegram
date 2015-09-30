@@ -22,13 +22,13 @@
         [self.errorTextField setEditable:NO];
         [self.errorTextField setWantsLayer:IS_RETINA];
         [self.errorTextField setFrameOrigin:NSMakePoint(0, 0)];
-        [self.errorTextField setFont:[NSFont fontWithName:@"HelveticaNeue" size:13]];
+        [self.errorTextField setFont:TGSystemFont(13)];
         [self.errorTextField setTextColor:[NSColor redColor]];
         self.errorTextField.layer.opacity = 0;
         [self addSubview:self.errorTextField];
         
         self.textButton = [[TMTextButton alloc] initWithFrame:NSMakeRect(0, 0, 0, 0)];
-        [self.textButton setFont:[NSFont fontWithName:@"HelveticaNeue" size:15]];
+        [self.textButton setFont:TGSystemFont(15)];
         [self.textButton setDisableColor:NSColorFromRGB(0xaeaeae)];
         [self.textButton setTextColor:BLUE_UI_COLOR];
         [self.textButton setWantsLayer:IS_RETINA];

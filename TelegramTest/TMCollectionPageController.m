@@ -490,7 +490,7 @@ static const int maxWidth = 120;
     
     [string appendString:mediaString withColor:BLUE_UI_COLOR];
     
-    [string setFont:[NSFont fontWithName:@"HelveticaNeue" size:14] forRange:NSMakeRange(0, string.length)];
+    [string setFont:TGSystemFont(14) forRange:NSMakeRange(0, string.length)];
     
     [string appendAttributedString:[NSAttributedString attributedStringWithAttachment:[NSMutableAttributedString textAttachmentByImage:[image_HeaderDropdownArrow() imageWithInsets:NSEdgeInsetsMake(0, 5, 1, 4)]]]];
     
@@ -847,7 +847,7 @@ static const int maxWidth = 120;
     
     self.messagesSelectedCount = [TMTextButton standartUserProfileNavigationButtonWithTitle:@""];
     self.messagesSelectedCount.textColor = DARK_BLACK;
-    self.messagesSelectedCount.font = [NSFont fontWithName:@"HelveticaNeue" size:14];
+    self.messagesSelectedCount.font = TGSystemFont(14);
     [self.messagesSelectedCount setAutoresizingMask:NSViewMinXMargin | NSViewMaxXMargin];
     [self.actionsView addSubview:self.messagesSelectedCount];
     

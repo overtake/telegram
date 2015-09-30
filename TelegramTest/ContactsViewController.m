@@ -42,7 +42,7 @@
         self.field = [TMTextField defaultTextField];
         
         [self.field setBackgroundColor:[NSColor clearColor]];
-        [self.field setFont:[NSFont fontWithName:@"HelveticaNeue-Medium" size:12]];
+        [self.field setFont:TGSystemMediumFont(12)];
         [[self.field cell] setLineBreakMode:NSLineBreakByCharWrapping];
         [[self.field cell] setTruncatesLastVisibleLine:YES];
         

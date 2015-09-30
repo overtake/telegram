@@ -295,7 +295,7 @@
         [messageText appendString:@"" withColor:LIGHT_GRAY];
     }
     
-    [messageText setFont:[NSFont fontWithName:@"HelveticaNeue" size:13] forRange:messageText.range];
+    [messageText setFont:TGSystemFont(13) forRange:messageText.range];
     
     
     static NSMutableParagraphStyle *paragraph;
@@ -416,22 +416,22 @@
     
     if(message.from_id > 0) {
         [attributedString setLink:[TMInAppLinks userProfile:user.n_id] forRange:start];
-        [attributedString setFont:[NSFont fontWithName:@"HelveticaNeue-Medium" size:size] forRange:start];
+        [attributedString setFont:TGSystemMediumFont(size) forRange:start];
     }
     
     
     start = [attributedString appendString:[NSString stringWithFormat:@" %@ ", actionText] withColor:NSColorFromRGB(0xaeaeae)];
-    [attributedString setFont:[NSFont fontWithName:@"HelveticaNeue" size:size] forRange:start];
+    [attributedString setFont:TGSystemFont(size) forRange:start];
     
     if(user2) {
         start = [attributedString appendString:[user2 fullName] withColor:LINK_COLOR];
         [attributedString setLink:[TMInAppLinks userProfile:user2.n_id] forRange:start];
-        [attributedString setFont:[NSFont fontWithName:@"HelveticaNeue-Medium" size:size] forRange:start];
+        [attributedString setFont:TGSystemMediumFont(size) forRange:start];
     }
     
     if(title) {
         start = [attributedString appendString:[NSString stringWithFormat:@"\"%@\"", title] withColor:NSColorFromRGB(0xaeaeae)];
-        [attributedString setFont:[NSFont fontWithName:@"HelveticaNeue-Medium" size:size] forRange:start];
+        [attributedString setFont:TGSystemMediumFont(size) forRange:start];
     }
     
     //    [attributedString appendString:@"wqeqoeqwe wqkeqwoewkq keqwoei qoioiweiqwioeoqweiwqoi qoiweoiqwoiewqoieoiqweoiwqeoiwqoeiwqoieoiw oiqweoiqwoieqwoieoqwi"];
@@ -608,7 +608,7 @@
         
         NSDictionary *attributes =@{
                                     NSForegroundColorAttributeName: [NSColor whiteColor],
-                                    NSFontAttributeName: [NSFont fontWithName:@"HelveticaNeue-Bold" size:10]
+                                    NSFontAttributeName: TGSystemBoldFont(10)
                                     };
         unreadText = unreadTextCount;
         NSSize size = [unreadTextCount sizeWithAttributes:attributes];

@@ -39,7 +39,7 @@
                 }];
             }
        
-        } max_id:max_id peer_id:_conversation.peer_id next:next limit:limit];
+        } max_id:max_id filterMask:HistoryFilterPhoto peer:_conversation.peer next:next limit:limit];
         
     } else if(_state == TGPVMediaBehaviorLoadingStateRemote) {
         
@@ -87,9 +87,7 @@
             
             if(![obj isKindOfClass:[TL_messageEmpty class]]) {
                 PreviewObject *preview = [[PreviewObject alloc] initWithMsdId:obj.n_id media:obj peer_id:obj.peer_id];
-                
-                [[Storage manager] insertMedia:obj];
-                
+                                
                 [previewObjects addObject:preview];
             }
         }];

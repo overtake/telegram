@@ -74,7 +74,7 @@
     [textField setTextColor:NSColorFromRGB(0xaeaeae)];
     [textField setWantsLayer:YES];
     [textField setEditable:NO];
-    [textField setFont:[NSFont fontWithName:@"HelveticaNeue" size:13]];
+    [textField setFont:TGSystemFont(13)];
     [textField setBordered:NO];
     
     return textField;

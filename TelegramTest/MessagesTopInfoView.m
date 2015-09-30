@@ -226,7 +226,7 @@ static NSMutableDictionary *cache;
     
     [string addAttributes:@{NSLinkAttributeName:@""} range:range];
     
-    [string setFont:[NSFont fontWithName:@"HelveticaNeue" size:13] forRange:NSMakeRange(0, string.length)];
+    [string setFont:TGSystemFont(13) forRange:NSMakeRange(0, string.length)];
     
     [self.field setAttributedStringValue:string];
     

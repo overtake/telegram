@@ -36,7 +36,7 @@
         [self.titleTextField setAutoresizingMask:NSViewWidthSizable];
         [[self.titleTextField cell] setTruncatesLastVisibleLine:YES];
         [[self.titleTextField cell] setLineBreakMode:NSLineBreakByTruncatingTail];
-        [self.titleTextField setFont:[NSFont fontWithName:@"HelveticaNeue" size:14]];
+        [self.titleTextField setFont:TGSystemFont(14)];
         [self.titleTextField setDrawsBackground:NO];
 //        [self.titleTextField setBackgroundColor:[NSColor redColor]];
 
@@ -46,7 +46,7 @@
         [self.statusTextField setEditable:NO];
         [self.statusTextField setBordered:NO];
         [self.statusTextField setDrawsBackground:NO];
-        [self.statusTextField setFont:[NSFont fontWithName:@"HelveticaNeue" size:13]];
+        [self.statusTextField setFont:TGSystemFont(13)];
         [self.statusTextField setSelector:@selector(statusForSearchTableView)];
         [self.statusTextField setAutoresizingMask:NSViewWidthSizable];
         [[self.statusTextField cell] setLineBreakMode:NSLineBreakByCharWrapping];
@@ -59,7 +59,7 @@
         [self.dateTextField setBordered:NO];
         [self.dateTextField setAutoresizingMask:NSViewMinXMargin];
         [self.dateTextField setBackgroundColor:[NSColor clearColor]];
-        [self.dateTextField setFont:[NSFont fontWithName:@"Helvetica-Light" size:12]];
+        [self.dateTextField setFont:TGSystemLightFont(12)];
         [self addSubview:self.dateTextField];
         
         self.avatarImageView = [TMAvatarImageView standartTableAvatar];

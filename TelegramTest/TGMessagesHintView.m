@@ -212,7 +212,7 @@ DYNAMIC_PROPERTY(DUser);
 -(instancetype)initWithFrame:(NSRect)frameRect {
     if(self = [super initWithFrame:frameRect]) {
         
-        _tableView = [[TMTableView alloc] initWithFrame:NSMakeRect(0, 0, NSWidth(frameRect), NSHeight(frameRect) - 1)];
+        _tableView = [[TMTableView alloc] initWithFrame:NSMakeRect(0, 0, NSWidth(frameRect), NSHeight(frameRect))];
         _tableView.defaultAnimation = NSTableViewAnimationEffectFade;
         _tableView.tm_delegate = self;
         
@@ -426,7 +426,7 @@ DYNAMIC_PROPERTY(DUser);
     }
     
     [self setFrameSize:NSMakeSize(NSWidth(self.frame), MIN(self.tableView.count * 40, 140 ))];
-    [self.tableView.containerView setFrameSize:NSMakeSize(NSWidth(self.frame), NSHeight(self.frame) - 1)];
+    [self.tableView.containerView setFrameSize:NSMakeSize(NSWidth(self.frame), NSHeight(self.frame) )];
     [self selectPrev];
 }
 

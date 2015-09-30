@@ -70,7 +70,7 @@ static NSImage *mentionCap() {
             
             NSString *text = [TMAvatarImageView text:_user];
             
-            image = [TMAvatarImageView generateTextAvatar:colorMask size:NSMakeSize(30, 30) text:text type: TMAvatarTypeUser font:[NSFont fontWithName:@"HelveticaNeue" size:12] offsetY:2];
+            image = [TMAvatarImageView generateTextAvatar:colorMask size:NSMakeSize(30, 30) text:text type: TMAvatarTypeUser font:TGSystemFont(12) offsetY:2];
             
             self.menuItem.image = image;
         }

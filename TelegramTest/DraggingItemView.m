@@ -141,7 +141,7 @@
     if(_title) {
         range = [str appendString:_title withColor:NSColorFromRGB(0xA1A1A1)];
         
-        [str addAttributes:@{NSFontAttributeName:[NSFont fontWithName:@"HelveticaNeue" size:13]} range:range];
+        [str addAttributes:@{NSFontAttributeName:TGSystemFont(13)} range:range];
         
         [str setAlignment:NSCenterTextAlignment range:range];
     }
@@ -149,7 +149,7 @@
     if(_subtitle) {
         range = [str appendString:[@"\n" stringByAppendingString:_subtitle] withColor:NSColorFromRGB(0x333333)];
         
-        [str addAttributes:@{NSFontAttributeName:[NSFont fontWithName:@"HelveticaNeue" size:22]} range:range];
+        [str addAttributes:@{NSFontAttributeName:TGSystemFont(22)} range:range];
         
         [str setAlignment:NSCenterTextAlignment range:range];
     }

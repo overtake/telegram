@@ -49,7 +49,7 @@
         self.aboutTextView = [[TMTextField alloc] initWithFrame:NSMakeRect(30, 24, NSWidth(frameRect) - 60, 23)];
         
         
-        [self.aboutTextView setFont:[NSFont fontWithName:@"HelveticaNeue" size:15]];
+        [self.aboutTextView setFont:TGSystemFont(15)];
         
         [self.aboutTextView setEditable:YES];
         [self.aboutTextView setBordered:NO];
@@ -60,7 +60,7 @@
         
         [str appendString:NSLocalizedString(@"Compose.ChannelAboutPlaceholder", nil) withColor:DARK_GRAY];
         [str setAlignment:NSLeftTextAlignment range:str.range];
-        [str setFont:[NSFont fontWithName:@"HelveticaNeue" size:15] forRange:str.range];
+        [str setFont:TGSystemFont(15) forRange:str.range];
         
         [self.aboutTextView.cell setPlaceholderAttributedString:str];
         [self.aboutTextView setPlaceholderPoint:NSMakePoint(2, 0)];
@@ -88,7 +88,7 @@
         self.nameTextView = [[TMTextField alloc] initWithFrame:NSMakeRect(92, 90, NSWidth(frameRect) - 122, 23)];
         
         
-        [self.nameTextView setFont:[NSFont fontWithName:@"HelveticaNeue" size:15]];
+        [self.nameTextView setFont:TGSystemFont(15)];
     
         [self.nameTextView setEditable:YES];
         [self.nameTextView setBordered:NO];
@@ -99,7 +99,7 @@
         
         [str appendString:NSLocalizedString(@"Compose.ChannelTitlePlaceholder", nil) withColor:DARK_GRAY];
         [str setAlignment:NSLeftTextAlignment range:str.range];
-        [str setFont:[NSFont fontWithName:@"HelveticaNeue" size:15] forRange:str.range];
+        [str setFont:TGSystemFont(15) forRange:str.range];
         
         [self.nameTextView.cell setPlaceholderAttributedString:str];
         [self.nameTextView setPlaceholderPoint:NSMakePoint(2, 0)];

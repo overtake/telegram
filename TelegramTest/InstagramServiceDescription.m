@@ -33,7 +33,7 @@
         NSString *urlString = url.length > 25 ? [[url substringToIndex:25] stringByAppendingString:@"..."] : url;
         
         [title appendString:urlString withColor:[NSColor whiteColor]];
-        [title setFont:[NSFont fontWithName:@"HelveticaNeue" size:13] forRange:title.range];
+        [title setFont:TGSystemFont(13) forRange:title.range];
         _title = title;
         _titleSize = [title size];
         _titleSize.width = ceil(_titleSize.width + 14);
@@ -43,7 +43,7 @@
         
         NSMutableAttributedString *serviceName = [[NSMutableAttributedString alloc] init];
         [serviceName appendString:@"Instagram" withColor:[NSColor whiteColor]];
-        [serviceName setFont:[NSFont fontWithName:@"HelveticaNeue" size:13] forRange:serviceName.range];
+        [serviceName setFont:TGSystemFont(13) forRange:serviceName.range];
         _serviceName = serviceName;
         _serviceNameSize = [serviceName size];
         _serviceNameSize.width = ceil(_serviceNameSize.width + 14);

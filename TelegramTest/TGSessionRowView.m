@@ -23,7 +23,7 @@
         
         self.textField = [TMTextField defaultTextField];
         
-        [self.textField setFont:[NSFont fontWithName:@"HelveticaNeue" size:13]];
+        [self.textField setFont:TGSystemFont(13)];
         
         [self addSubview:self.textField];
         
@@ -32,7 +32,7 @@
         
         self.resetSession = [TMTextButton standartUserProfileButtonWithTitle:NSLocalizedString(@"Authorization.Reset", nil)];
         
-        [self.resetSession setFont:[NSFont fontWithName:@"HelveticaNeue" size:14]];
+        [self.resetSession setFont:TGSystemFont(14)];
         [self.resetSession setTextColor:BLUE_UI_COLOR];
         
         [self.resetSession sizeToFit];
@@ -68,16 +68,16 @@
     
     NSRange range = [description appendString:[NSString stringWithFormat:@"%@ %@\n",item.authorization.app_name, item.authorization.app_version]];
     
-    [description setFont:[NSFont fontWithName:@"HelveticaNeue-Medium" size:13] forRange:range];
+    [description setFont:TGSystemMediumFont(13) forRange:range];
     
     
     range = [description appendString:[NSString stringWithFormat:@"%@, %@ %@\n",item.authorization.device_model,item.authorization.platform,item.authorization.system_version]];
     
-    [description setFont:[NSFont fontWithName:@"HelveticaNeue" size:12] forRange:range];
+    [description setFont:TGSystemFont(12) forRange:range];
     
     range = [description appendString:[NSString stringWithFormat:@"%@ (%@)",item.authorization.country, item.authorization.ip] withColor:GRAY_TEXT_COLOR];
     
-    [description setFont:[NSFont fontWithName:@"HelveticaNeue" size:12] forRange:range];
+    [description setFont:TGSystemFont(12) forRange:range];
 
     
     NSMutableParagraphStyle *style = [[NSParagraphStyle defaultParagraphStyle] mutableCopy];

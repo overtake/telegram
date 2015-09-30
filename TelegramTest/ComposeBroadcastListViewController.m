@@ -80,7 +80,7 @@
         [self.descField setEditable:NO];
         [self.descField setBordered:NO];
         [self.descField setBackgroundColor:[NSColor clearColor]];
-        [self.descField setFont:[NSFont fontWithName:@"HelveticaNeue" size:12.5]];
+        [self.descField setFont:TGSystemFont(12.5)];
         [[self.descField cell] setLineBreakMode:NSLineBreakByCharWrapping];
         [[self.descField cell] setTruncatesLastVisibleLine:YES];
         [self.descField setAutoresizingMask:NSViewWidthSizable];
@@ -92,9 +92,8 @@
         [self.dateTextField setEditable:NO];
         [self.dateTextField setBordered:NO];
         [self.dateTextField setBackgroundColor:[NSColor clearColor]];
-        [self.dateTextField setFont:[NSFont fontWithName:@"Helvetica-Light" size:11]];
+        [self.dateTextField setFont:TGSystemLightFont(11)];
         [self addSubview:self.dateTextField];
-        
         
         [self setSelectedBackgroundColor: NSColorFromRGB(0xfafafa)];
         [self setNormalBackgroundColor:NSColorFromRGB(0xffffff)];

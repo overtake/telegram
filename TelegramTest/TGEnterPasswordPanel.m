@@ -78,7 +78,7 @@
     
     [attrs appendString:NSLocalizedString(@"Code", nil) withColor:DARK_GRAY];
     
-    [attrs setAttributes:@{NSFontAttributeName:[NSFont fontWithName:@"HelveticaNeue" size:14]} range:attrs.range];
+    [attrs setAttributes:@{NSFontAttributeName:TGSystemFont(14)} range:attrs.range];
     
     [attrs setAlignment:NSCenterTextAlignment range:attrs.range];
     
@@ -89,7 +89,7 @@
     
     [_emailCodeField setCenterByView:_confirmEmailCodeContainer];
     
-    [_emailCodeField.textView setFont:[NSFont fontWithName:@"HelveticaNeue" size:14]];
+    [_emailCodeField.textView setFont:TGSystemFont(14)];
     [_emailCodeField.textView setTextColor:DARK_BLACK];
     
     
@@ -117,7 +117,7 @@
     [codeDescription setStringValue:NSLocalizedString(@"EnterPassword.EnterCodeDescription", nil)];
     
     
-    [codeDescription setFont:[NSFont fontWithName:@"HelveticaNeue" size:13]];
+    [codeDescription setFont:TGSystemFont(13)];
     
     [codeDescription setTextColor:GRAY_TEXT_COLOR];
     
@@ -131,7 +131,7 @@
     
     troubleAccess.stringValue = [NSString stringWithFormat:NSLocalizedString(@"EnterPassword.TroubleEmailAccess", nil)];
     troubleAccess.textColor = BLUE_UI_COLOR;
-    troubleAccess.font = [NSFont fontWithName:@"HelveticaNeue" size:12];
+    troubleAccess.font = TGSystemFont(12);
     
     [troubleAccess sizeToFit];
     
@@ -181,7 +181,7 @@
     
     
     
-    [titleField setFont:[NSFont fontWithName:@"HelveticaNeue" size:14]];
+    [titleField setFont:TGSystemFont(14)];
     
     [titleField setTextColor:DARK_BLACK];
     
@@ -202,7 +202,7 @@
     
     [attrs appendString:NSLocalizedString(@"Password.password", nil) withColor:DARK_GRAY];
     
-    [attrs setAttributes:@{NSFontAttributeName:[NSFont fontWithName:@"HelveticaNeue" size:14]} range:attrs.range];
+    [attrs setAttributes:@{NSFontAttributeName:TGSystemFont(14)} range:attrs.range];
     
     [attrs setAlignment:NSCenterTextAlignment range:attrs.range];
     
@@ -212,7 +212,7 @@
     
     [self.secureField setCenterByView:_enterPasswordContainer];
     
-    [self.secureField setFont:[NSFont fontWithName:@"HelveticaNeue" size:14]];
+    [self.secureField setFont:TGSystemFont(14)];
     [self.secureField setTextColor:DARK_BLACK];
     
     [self.secureField setBordered:NO];
@@ -245,7 +245,7 @@
     [passwordDescription setStringValue:NSLocalizedString(@"EnterPassword.EnterPasswordDescription", nil)];
     
     
-    [passwordDescription setFont:[NSFont fontWithName:@"HelveticaNeue" size:13]];
+    [passwordDescription setFont:TGSystemFont(13)];
     
     [passwordDescription setTextColor:GRAY_TEXT_COLOR];
     
@@ -261,7 +261,7 @@
     
     self.resetPass.stringValue = NSLocalizedString(@"EnterPassword.forgotPassword", nil);
     self.resetPass.textColor = BLUE_UI_COLOR;
-    self.resetPass.font = [NSFont fontWithName:@"HelveticaNeue" size:12];
+    self.resetPass.font = TGSystemFont(12);
     
     [self.resetPass sizeToFit];
     
@@ -321,7 +321,7 @@
     
     self.resetAccount.stringValue = NSLocalizedString(@"EnterPassword.ResetAccount", nil);
     self.resetAccount.textColor = [NSColor redColor];
-    self.resetAccount.font = [NSFont fontWithName:@"HelveticaNeue" size:14];
+    self.resetAccount.font = TGSystemFont(14);
     
     [self.resetAccount sizeToFit];
     
@@ -369,7 +369,7 @@
     [resetDescription setStringValue:NSLocalizedString(@"EnterPassword.ResetAccountDescription", nil)];
     
     
-    [resetDescription setFont:[NSFont fontWithName:@"HelveticaNeue" size:13]];
+    [resetDescription setFont:TGSystemFont(13)];
     
     [resetDescription setTextColor:GRAY_TEXT_COLOR];
     

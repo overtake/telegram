@@ -149,18 +149,38 @@ static NSImage *playImage() {
         if(!self.animatedPlayer) {
             self.animatedPlayer = [[TGModernAnimatedImagePlayer alloc] initWithSize:self.imageView.frame.size path:item.path];
             
+            _imageView.image = self.animatedPlayer.poster;
+            
             [self.animatedPlayer setFrameReady:^(NSImage *image) {
-                weakSelf.imageView.image = image;
+               
+                NSRange visibleRange = [weakSelf.messagesViewController.table rowsInRect:weakSelf.messagesViewController.table.visibleRect];
+                
+                NSUInteger idx = [weakSelf.messagesViewController.table indexOfItem:item];
+                
+                if(idx > visibleRange.location && idx <= visibleRange.location + visibleRange.length) {
+                    if(weakSelf.window.isKeyWindow)
+                        weakSelf.imageView.image = image;
+                }
+
             }];
             
             [self.animatedPlayer play];
             
             [self.playImage setHidden:YES];
         } else {
-            [self animationDidStop:nil finished:YES];
+          //   [self.animatedPlayer play];
         }
     }
     
+}
+
+
+-(void)viewDidMoveToSuperview {
+    if(self.superview != nil) {
+        [self playAnimation];
+    } else {
+        [self animationDidStop:nil finished:YES];
+    }
 }
 
 - (void)animationDidStart:(CAAnimation *)theAnimation {
@@ -202,7 +222,7 @@ static NSImage *playImage() {
 
 
 -(void)doAfterDownload {
-    if(self.visibleRect.size.width > 0 && self.visibleRect.size.height > 0 && self.needOpenAfterDownload) {
+    if(self.superview.window) {
         [self open];
     }
 }
@@ -210,19 +230,25 @@ static NSImage *playImage() {
 - (void)open {
     if(!self.animatedPlayer.isPlaying) {
         [self playAnimation];
-    } else {
-        [self animationDidStop:nil finished:YES];
     }
 }
 
 - (void)resumeAnimation {
    // [self.gifAnimationLayer resumeAnimating];
-    [self.animatedPlayer play];
+    
+    if(!_animatedPlayer) {
+        [self playAnimation];
+    } else if(!_animatedPlayer.isPlaying) {
+        [_animatedPlayer play];
+    }
+    
+    
 }
 
 - (void)pauseAnimation {
   //  [self.gifAnimationLayer pauseAnimating];
     [self.animatedPlayer pause];
+    //[self animationDidStop:nil finished:YES];
 }
 
 - (void)setCellState:(CellState)cellState {
@@ -238,26 +264,32 @@ static NSImage *playImage() {
     
     self.needOpenAfterDownload = NO;
     
-    [self updateDownloadState];
     
+     [self updateDownloadState];
     
-    [self.animatedPlayer stop];
-    self.animatedPlayer = nil;
+    [_animatedPlayer stop];
+    _animatedPlayer = nil;
     
+    if(item.isset) {
+        
+        [self playAnimation];
+    } else {
+        if(item.cachedThumb) {
+            [self.imageView setImage:item.cachedThumb];
+        } else {
+            self.imageView.object = item.imageObject;
+        }
+    }
     
-    
-    
-    [self.imageView setFrameSize:item.blockSize];
+
+     [self.imageView setFrameSize:item.blockSize];
     
     [self.progressView setCenterByView:self.imageView];
     
-    if(item.cachedThumb) {
-        [self.imageView setImage:item.cachedThumb];
-    } else {
-        self.imageView.object = item.imageObject;
-    }
+    
+    
+    
 }
-
 
 
 @end

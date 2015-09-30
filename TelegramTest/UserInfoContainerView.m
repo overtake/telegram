@@ -449,7 +449,7 @@
     
     [string appendString:str withColor:NSColorFromRGB(0xa1a1a1)];
     
-    [string setFont:[NSFont fontWithName:@"HelveticaNeue-Light" size:15] forRange:NSMakeRange(0, string.length)];
+    [string setFont:TGSystemLightFont(15) forRange:NSMakeRange(0, string.length)];
    
     [string appendAttributedString:[NSAttributedString attributedStringWithAttachment:attach]];
     [self.ttlTitle setAttributedStringValue:string];
@@ -475,7 +475,7 @@
     
     [string appendString:str withColor:NSColorFromRGB(0xa1a1a1)];
     
-    [string setFont:[NSFont fontWithName:@"HelveticaNeue-Light" size:15] forRange:NSMakeRange(0, string.length)];
+    [string setFont:TGSystemLightFont(15) forRange:NSMakeRange(0, string.length)];
     
     [string appendAttributedString:[NSAttributedString attributedStringWithAttachment:attach]];
     [self.muteUntilTitle setAttributedStringValue:string];
@@ -686,7 +686,7 @@
     
 }
 
-#define DEFAULT_FONT [NSFont fontWithName:@"HelveticaNeue" size:13]
+#define DEFAULT_FONT TGSystemFont(13)
 #define DEFAULT_COLOR NSColorFromRGB(0xa1a1a1)
 
 - (void)setUser:(TLUser *)user {
@@ -707,7 +707,7 @@
     NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
     [paragraphStyle setLineBreakMode: NSLineBreakByTruncatingTail];
     
-    NSAttributedString *userNameAttributedString = [[NSAttributedString alloc] initWithString:user.fullName ? user.fullName : NSLocalizedString(@"User.Deleted", nil) attributes:@{NSForegroundColorAttributeName: NSColorFromRGB(0x333333), NSFontAttributeName: [NSFont fontWithName:@"HelveticaNeue" size:18], NSParagraphStyleAttributeName: paragraphStyle}];
+    NSAttributedString *userNameAttributedString = [[NSAttributedString alloc] initWithString:user.fullName ? user.fullName : NSLocalizedString(@"User.Deleted", nil) attributes:@{NSForegroundColorAttributeName: NSColorFromRGB(0x333333), NSFontAttributeName: TGSystemFont(18), NSParagraphStyleAttributeName: paragraphStyle}];
     size = [userNameAttributedString sizeForWidth:FLT_MAX height:FLT_MAX];
     
     [[self.nameTextView textStorage] setAttributedString:userNameAttributedString];

@@ -120,7 +120,7 @@ const NSTimeInterval typingIntervalSecond = 0.14;
         self.needDots = 0;
     }
     
-    [self.textField setFont:[NSFont fontWithName:@"HelveticaNeue" size:12]];
+    [self.textField setFont:TGSystemFont(12)];
     self.textField.attributedStringValue = self.attributedString;
     self.endString = (int) self.attributedString.length;
     [self.textField sizeToFit];

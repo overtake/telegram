@@ -35,7 +35,7 @@
         [self setNormalBackgroundColor:NSColorFromRGB(0xffffff)];
         _avatarImageView = [TMAvatarImageView standartNewConversationTableAvatar];
         [self addSubview:_avatarImageView];
-        [_avatarImageView setFont:[NSFont fontWithName:@"HelveticaNeue-Light" size:15]];
+        [_avatarImageView setFont:TGSystemLightFont(15)];
         [_avatarImageView setFrameSize:NSMakeSize(36, 36)];
         
         
@@ -43,7 +43,7 @@
         [_titleTextField setEditable:NO];
         [_titleTextField setBordered:NO];
         [_titleTextField setBackgroundColor:[NSColor clearColor]];
-        [_titleTextField setFont:[NSFont fontWithName:@"HelveticaNeue-Medium" size:12]];
+        [_titleTextField setFont:TGSystemMediumFont(12)];
         [[_titleTextField cell] setLineBreakMode:NSLineBreakByTruncatingTail];
         [[_titleTextField cell] setTruncatesLastVisibleLine:YES];
         
@@ -56,7 +56,7 @@
         [_statusTextField setEditable:NO];
         [_statusTextField setBordered:NO];
         [_statusTextField setBackgroundColor:[NSColor clearColor]];
-        [_statusTextField setFont:[NSFont fontWithName:@"HelveticaNeue" size:12]];
+        [_statusTextField setFont:TGSystemFont(12)];
         [[_statusTextField cell] setLineBreakMode:NSLineBreakByTruncatingTail];
         [[_statusTextField cell] setTruncatesLastVisibleLine:YES];
         [_statusTextField setSelector:@selector(statusForSearchTableView)];

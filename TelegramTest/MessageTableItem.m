@@ -165,7 +165,7 @@ static NSCache *cItems;
     //        [header appendAttributedString:[NSAttributedString attributedStringWithAttachment:channelIconAttachment()]];
     //    }
     
-    [header setFont:[NSFont fontWithName:@"HelveticaNeue-Medium" size:13] forRange:header.range];
+    [header setFont:TGSystemMediumFont(13) forRange:header.range];
     
     [header addAttribute:NSLinkAttributeName value:[TMInAppLinks peerProfile:self.message.peer] range:header.range];
     
@@ -208,8 +208,8 @@ static NSCache *cItems;
     
         [self.forwardMessageAttributedString appendString:[TGDateUtils stringForLastSeen:self.message.fwd_date] withColor:NSColorFromRGB(0xbebebe)];
         
-        [self.forwardMessageAttributedString setFont:[NSFont fontWithName:@"HelveticaNeue" size:12] forRange:self.forwardMessageAttributedString.range];
-        [self.forwardMessageAttributedString setFont:[NSFont fontWithName:@"HelveticaNeue-Medium" size:13] forRange:rangeUser];
+        [self.forwardMessageAttributedString setFont:TGSystemFont(12) forRange:self.forwardMessageAttributedString.range];
+        [self.forwardMessageAttributedString setFont:TGSystemMediumFont(13) forRange:rangeUser];
         
         NSMutableParagraphStyle *style = [[NSMutableParagraphStyle alloc] init];
         style.lineBreakMode = NSLineBreakByTruncatingTail;
@@ -388,7 +388,7 @@ static NSTextAttachment *channelIconAttachment() {
     time -= [[MTNetwork instance] getTime] - [[NSDate date] timeIntervalSince1970];
     
     self.dateStr = [TGDateUtils stringForMessageListDate:time];
-    NSSize dateSize = [self.dateStr sizeWithAttributes:@{NSFontAttributeName: [NSFont fontWithName:@"HelveticaNeue" size:12]}];
+    NSSize dateSize = [self.dateStr sizeWithAttributes:@{NSFontAttributeName: TGSystemFont(12)}];
     dateSize.width = roundf(dateSize.width);
     dateSize.height = roundf(dateSize.height);
     self.dateSize = dateSize;

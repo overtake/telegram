@@ -104,7 +104,7 @@
         
         [str appendString:NSLocalizedString(@"Compose.ChannelAboutPlaceholder", nil) withColor:DARK_GRAY];
         [str setAlignment:NSLeftTextAlignment range:str.range];
-        [str setFont:[NSFont fontWithName:@"HelveticaNeue" size:13] forRange:str.range];
+        [str setFont:TGSystemFont(13) forRange:str.range];
         
         
         

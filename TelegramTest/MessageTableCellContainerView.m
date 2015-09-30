@@ -65,7 +65,7 @@
         [self.dateLayer setContentsScale:self.layer.contentsScale];
         [self.dateLayer setFrameOrigin:CGPointMake(offserUnreadMark, 0)];
         [self.dateLayer setTextColor:GRAY_TEXT_COLOR];
-        [self.dateLayer setTextFont:[NSFont fontWithName:@"HelveticaNeue" size:12]];
+        [self.dateLayer setTextFont:TGSystemFont(12)];
         [self.dateLayer setBackgroundColor:[NSColor clearColor].CGColor];
         [self.rightView.layer addSublayer:self.dateLayer];
         
@@ -108,7 +108,7 @@
         [self.forwardMessagesTextLayer setFrameSize:NSMakeSize(180, 20)];
         [self.forwardMessagesTextLayer setContentsScale:self.layer.contentsScale];
         [self.forwardMessagesTextLayer setTextColor:NSColorFromRGB(0x9b9b9b)];
-        [self.forwardMessagesTextLayer setTextFont:[NSFont fontWithName:@"HelveticaNeue" size:13]];
+        [self.forwardMessagesTextLayer setTextFont:TGSystemFont(13)];
         [self.forwardMessagesTextLayer setString:NSLocalizedString(@"Messages.ForwardedMessages",nil)];
         [self.layer addSublayer:self.forwardMessagesTextLayer];
     }
@@ -226,7 +226,7 @@
     if(!self.nameTextField) {
         self.nameTextField = [[TMHyperlinkTextField alloc] initWithFrame:NSMakeRect(0, 0, 200, 20)];
         [self.nameTextField setBordered:NO];
-        [self.nameTextField setFont:[NSFont fontWithName:@"HelveticaNeue-Medium" size:13]];
+        [self.nameTextField setFont:TGSystemMediumFont(13)];
         [self.nameTextField setDrawsBackground:NO];
         
         

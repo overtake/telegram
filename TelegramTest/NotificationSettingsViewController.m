@@ -63,7 +63,7 @@
     NSArray *sorted = self.items;
     
     
-    if(self.tableView.count < 5)
+    if(self.tableView.count < 6)
     {
         return;
     }
@@ -71,7 +71,7 @@
     if(searchString.length > 0) {
         sorted = [self.items filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(NotificationConversationRowItem *evaluatedObject, NSDictionary *bindings) {
             
-            return evaluatedObject.conversation.type == DialogTypeChat ? [evaluatedObject.conversation.chat.title searchInStringByWordsSeparated:searchString] : [evaluatedObject.conversation.user.fullName searchInStringByWordsSeparated:searchString];
+            return evaluatedObject.class == [NotificationConversationRowItem class] && (evaluatedObject.conversation.type == DialogTypeChat ? [evaluatedObject.conversation.chat.title searchInStringByWordsSeparated:searchString] : [evaluatedObject.conversation.user.fullName searchInStringByWordsSeparated:searchString]);
             
         }]];
     }
@@ -79,7 +79,7 @@
     
     
     
-    NSRange range = NSMakeRange(5, self.tableView.list.count-5);
+    NSRange range = NSMakeRange(6, self.tableView.list.count-6);
     
     NSArray *list = [self.tableView.list subarrayWithRange:range];
     
@@ -90,7 +90,7 @@
     [self.tableView removeRowsAtIndexes:[NSIndexSet indexSetWithIndexesInRange:range] withAnimation:self.tableView.defaultAnimation];
     
     
-    [self.tableView insert:sorted startIndex:5 tableRedraw:YES];
+    [self.tableView insert:sorted startIndex:6 tableRedraw:YES];
     
 }
 
@@ -258,8 +258,8 @@
         
     }];
     
-    if(all.count > 5)
-        _items = [self.tableView.list subarrayWithRange:NSMakeRange(5, self.tableView.list.count - 5)];
+    if(all.count > 6)
+        _items = [self.tableView.list subarrayWithRange:NSMakeRange(5, self.tableView.list.count - 6)];
     
     [self.tableView reloadData];
     

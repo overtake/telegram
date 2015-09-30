@@ -27,7 +27,7 @@
         [self.textView setFrameOrigin:NSMakePoint(8, 2)];
         [self.textView setDrawsBackground:NO];
         
-        [self.textView setFont:[NSFont fontWithName:@"HelveticaNeue" size:15]];
+        [self.textView setFont:TGSystemFont(15)];
         [self setAutoresizingMask:NSViewWidthSizable];
         [self addSubview:self.textView];
     }
@@ -136,7 +136,7 @@
     
     [str appendString:action.title withColor:DARK_GRAY];
     [str setAlignment:NSLeftTextAlignment range:str.range];
-    [str setFont:[NSFont fontWithName:@"HelveticaNeue" size:15] forRange:str.range];
+    [str setFont:TGSystemFont(15) forRange:str.range];
     
     [[self.textView textView].cell setPlaceholderAttributedString:str];
    // [[self.textView textView] setPlaceholderPoint:NSMakePoint(0, 0)];

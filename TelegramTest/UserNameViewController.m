@@ -84,7 +84,7 @@
         
         [str appendString:NSLocalizedString(@"UserName.placeHolder", nil) withColor:DARK_GRAY];
         [str setAlignment:NSLeftTextAlignment range:str.range];
-        [str setFont:[NSFont fontWithName:@"HelveticaNeue" size:15] forRange:str.range];
+        [str setFont:TGSystemFont(15) forRange:str.range];
         
         [[self.textView textView].cell setPlaceholderAttributedString:str];
         [[self.textView textView] setPlaceholderPoint:NSMakePoint(0, 0)];
@@ -103,7 +103,7 @@
         
         [self.descriptionView setString:NSLocalizedString(@"UserName.description", nil)];
         
-        [self.descriptionView setFont:[NSFont fontWithName:@"HelveticaNeue" size:12]];
+        [self.descriptionView setFont:TGSystemFont(12)];
         
         [self.descriptionView sizeToFit];
         [self.descriptionView setSelectable:NO];

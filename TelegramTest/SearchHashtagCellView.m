@@ -19,7 +19,7 @@
 -(instancetype)initWithFrame:(NSRect)frameRect {
     if(self = [super initWithFrame:frameRect]) {
         _textField = [TMTextField defaultTextField];
-        [_textField setFont:[NSFont fontWithName:@"HelveticaNeue" size:13]];
+        [_textField setFont:TGSystemFont(13)];
         [self addSubview:_textField];
     }
     

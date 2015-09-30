@@ -24,7 +24,7 @@ static CGFloat const kLOL = 0;
 
 - (id)initTextCell:(NSString *)aString {
     self = [super initTextCell:aString];
-    self.font = [NSFont fontWithName:@"HelveticaNeue-Light" size:12];
+    self.font = TGSystemLightFont(12);
     return self;
 }
 

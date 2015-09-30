@@ -25,7 +25,7 @@
         self.placeholderTextField = [[TMTextField alloc] init];
         [self.placeholderTextField setEditable:NO];
         [self.placeholderTextField setBordered:NO];
-        [self.placeholderTextField setFont:[NSFont fontWithName:@"HelveticaNeue" size:15]];
+        [self.placeholderTextField setFont:TGSystemFont(15)];
         [self.placeholderTextField setTextColor:NSColorFromRGB(0xc8c8c8)];
         [self.placeholderTextField setStringValue:NSLocalizedString(@"Registration.AddPhoto", nil)];
         [self.placeholderTextField setAlignment:NSCenterTextAlignment];

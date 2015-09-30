@@ -98,17 +98,17 @@
     
     [string appendString:[NSString stringWithFormat:descFormat,chat.peerUser.first_name] withColor:NSColorFromRGB(0x9b9b9b)];
     
-    [string setFont:[NSFont fontWithName:@"HelveticaNeue" size:13] forRange:NSMakeRange(0, string.length)];
+    [string setFont:TGSystemFont(13) forRange:NSMakeRange(0, string.length)];
     
     [string addAttribute:NSParagraphStyleAttributeName value:subParagraphStyle2 range:NSMakeRange(0, string.length)];
     
     
-    [string setFont:[NSFont fontWithName:@"HelveticaNeue-Medium" size:13] forRange:NSMakeRange([descFormat rangeOfString:@"%1$@"].location, self.conversation.encryptedChat.peerUser.first_name.length)];
+    [string setFont:TGSystemMediumFont(13) forRange:NSMakeRange([descFormat rangeOfString:@"%1$@"].location, self.conversation.encryptedChat.peerUser.first_name.length)];
     
 
     NSRange range = [string appendString:NSLocalizedString(@"Secret.join.secret_chats",nil) withColor:NSColorFromRGB(0x9b9b9b)];
     
-    [string setFont:[NSFont fontWithName:@"HelveticaNeue" size:13] forRange:range];
+    [string setFont:TGSystemFont(13) forRange:range];
     
     [string addAttribute:NSParagraphStyleAttributeName value:paragraphStyle range:range];
     
@@ -133,7 +133,7 @@
     
     [subString appendString:NSLocalizedString(@"Secret.join.desc4", nil) withColor:NSColorFromRGB(0x9b9b9b)];
 
-    [subString setFont:[NSFont fontWithName:@"HelveticaNeue" size:13] forRange:NSMakeRange(0, subString.length)];
+    [subString setFont:TGSystemFont(13) forRange:NSMakeRange(0, subString.length)];
     
     [subString addAttribute:NSParagraphStyleAttributeName value:subParagraphStyle range:NSMakeRange(0, subString.length)];
     

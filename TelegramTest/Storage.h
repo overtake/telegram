@@ -174,14 +174,13 @@ extern NSString *const RECENT_SEARCH;
 
 
 -(TL_localMessage *)messageById:(int)msgId;
--(void)insertMedia:(TL_localMessage *)message;
 
 
 -(void)addUserPhoto:(int)user_id media:(TLUserProfilePhoto *)photo;
 -(void)deleteUserPhoto:(int)user_id;
 -(void)countOfUserPhotos:(int)user_id;
 
--(void)media:(void (^)(NSArray *))completeHandler max_id:(long)max_id peer_id:(int)peer_id next:(BOOL)next limit:(int)limit;
+-(void)media:(void (^)(NSArray *))completeHandler max_id:(int)max_id filterMask:(int)filterMask peer:(TLPeer *)peer next:(BOOL)next limit:(int)limit;
 
 -(int)countOfMedia:(int)peer_id;
 

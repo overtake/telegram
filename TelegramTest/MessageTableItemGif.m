@@ -64,11 +64,13 @@
     size.height = MAX(60, size.height);
     
     
+    BOOL makeNew = self.blockSize.width != size.width || self.blockSize.height != size.height;
+    
     self.blockSize = size;
     
     self.imageObject.imageSize = self.blockSize;
     
-    return YES;
+    return makeNew;
 }
 
 -(Class)downloadClass {

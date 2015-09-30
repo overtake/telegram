@@ -24,7 +24,7 @@ static NSDictionary *attributes() {
     static NSDictionary *dictionary;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        dictionary = @{NSFontAttributeName: [NSFont fontWithName:@"HelveticaNeue-Bold" size:11], NSForegroundColorAttributeName:NSColorFromRGB(0xfafafa)};
+        dictionary = @{NSFontAttributeName: TGSystemBoldFont(11), NSForegroundColorAttributeName:NSColorFromRGB(0xfafafa)};
     });
     return dictionary;
 }
@@ -199,7 +199,7 @@ static NSDictionary *attributes() {
         [_dateField setFrameOrigin:NSMakePoint(0, 46)];
         
         _dateField.wantsLayer = YES;
-        [_dateField setFont:[NSFont fontWithName:@"HelveticaNeue" size:12]];
+        [_dateField setFont:TGSystemFont(12)];
         
       
         
@@ -337,7 +337,7 @@ static NSDictionary *attributes() {
         
         [attr appendString:[NSString stringWithFormat:@"%@%@",self.item.typing,_dots] withColor:GRAY_TEXT_COLOR];
         [attr setSelectionColor:[NSColor whiteColor] forColor:GRAY_TEXT_COLOR];
-        [attr setFont:[NSFont fontWithName:@"HelveticaNeue" size:13] forRange:attr.range];
+        [attr setFont:TGSystemFont(13) forRange:attr.range];
         [attr setSelected:self.isSelected];
         
         [_messageField setAttributedStringValue:attr];
@@ -530,7 +530,7 @@ static int unreadOffsetRight = 13;
     [path closePath];
     
     int offsetX = (sizeWidth - self.item.unreadTextSize.width)/2;
-    [self.item.unreadText drawAtPoint:CGPointMake(offset1 - unreadCountRadius + offsetX, offsetY + 3) withAttributes:@{NSForegroundColorAttributeName: self.isSelected ? NSColorFromRGB(0x6896ba)  : [NSColor whiteColor], NSFontAttributeName: [NSFont fontWithName:@"HelveticaNeue-Bold" size:11]}];
+    [self.item.unreadText drawAtPoint:CGPointMake(offset1 - unreadCountRadius + offsetX, offsetY + 3) withAttributes:@{NSForegroundColorAttributeName: self.isSelected ? NSColorFromRGB(0x6896ba)  : [NSColor whiteColor], NSFontAttributeName: TGSystemBoldFont(11)}];
 }
 
 -(BOOL)isSelected {

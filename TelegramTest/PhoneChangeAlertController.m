@@ -40,7 +40,7 @@
     
     [attr appendString:[NSString stringWithFormat:textFormat,@"",@"",@"",@""] withColor:GRAY_TEXT_COLOR];
     
-    [attr setFont:[NSFont fontWithName:@"HelveticaNeue" size:13] forRange:attr.range];
+    [attr setFont:TGSystemFont(13) forRange:attr.range];
     
     NSRange startRange = [textFormat rangeOfString:@"%1$@"];
     NSRange endRange = [textFormat rangeOfString:@"%2$@"];
@@ -49,7 +49,7 @@
     
     
     
-    [attr addAttribute:NSFontAttributeName value:[NSFont fontWithName:@"HelveticaNeue-Medium" size:13] range:NSMakeRange(startRange.location, length-4)];
+    [attr addAttribute:NSFontAttributeName value:TGSystemMediumFont(13) range:NSMakeRange(startRange.location, length-4)];
     
     
     startRange = [textFormat rangeOfString:@"%3$@"];
@@ -57,7 +57,7 @@
     
     length = endRange.location - startRange.location;
     
-    [attr addAttribute:NSFontAttributeName value:[NSFont fontWithName:@"HelveticaNeue-Medium" size:13] range:NSMakeRange(startRange.location - 8, length-4)];
+    [attr addAttribute:NSFontAttributeName value:TGSystemMediumFont(13) range:NSMakeRange(startRange.location - 8, length-4)];
     
 //   
 //    

@@ -221,7 +221,7 @@ DYNAMIC_PROPERTY(SEEN_UPDATE);
     
     
 
-    [dialogTitleAttributedString setFont:[NSFont fontWithName:@"HelveticaNeue" size:14] forRange:dialogTitleAttributedString.range];
+    [dialogTitleAttributedString setFont:TGSystemFont(14) forRange:dialogTitleAttributedString.range];
     [self setDIALOGTITLE:dialogTitleAttributedString];
     
     NSMutableAttributedString *dialogEncryptedTitleAttributedString = [[NSMutableAttributedString alloc] init];
@@ -230,7 +230,7 @@ DYNAMIC_PROPERTY(SEEN_UPDATE);
     
     [dialogEncryptedTitleAttributedString appendString:fullNameOrPhone withColor:DARK_GREEN];
     [dialogEncryptedTitleAttributedString setSelectionColor:NSColorFromRGB(0xffffff) forColor:DARK_GREEN];
-    [dialogEncryptedTitleAttributedString setFont:[NSFont fontWithName:@"HelveticaNeue" size:14] forRange:dialogEncryptedTitleAttributedString.range];
+    [dialogEncryptedTitleAttributedString setFont:TGSystemFont(14) forRange:dialogEncryptedTitleAttributedString.range];
     [self setDIALOGTITLEENCRYPTED:dialogEncryptedTitleAttributedString];
     
     
@@ -239,7 +239,7 @@ DYNAMIC_PROPERTY(SEEN_UPDATE);
     [chatInfoTitleAttributedString appendString:fullName withColor:DARK_BLACK];
     [chatInfoTitleAttributedString setSelectionColor:NSColorFromRGB(0xffffff) forColor:DARK_BLACK];
     
-    [chatInfoTitleAttributedString setFont:[NSFont fontWithName:@"HelveticaNeue" size:12.5] forRange:chatInfoTitleAttributedString.range];
+    [chatInfoTitleAttributedString setFont:TGSystemFont(12.5) forRange:chatInfoTitleAttributedString.range];
     [self setCHATINFOTITLE:chatInfoTitleAttributedString];
     
     
@@ -248,7 +248,7 @@ DYNAMIC_PROPERTY(SEEN_UPDATE);
     [userNameTitle appendString:[NSString stringWithFormat:@"%@%@",self.username.length > 0 ? @"@" : @"",self.username.length > 0 ? self.username : @""] withColor:GRAY_TEXT_COLOR];
     [userNameTitle setSelectionColor:NSColorFromRGB(0xffffff) forColor:GRAY_TEXT_COLOR];
     
-    [userNameTitle setFont:[NSFont fontWithName:@"HelveticaNeue" size:14] forRange:userNameTitle.range];
+    [userNameTitle setFont:TGSystemFont(14) forRange:userNameTitle.range];
     [self setUserNameTitle:userNameTitle];
     
     
@@ -258,7 +258,7 @@ DYNAMIC_PROPERTY(SEEN_UPDATE);
     [userNameProfileTitle setSelectionColor:NSColorFromRGB(0xffffff) forColor:NSColorFromRGB(0x333333)];
     
     
-    [userNameProfileTitle setFont:[NSFont fontWithName:@"HelveticaNeue-Light" size:14] forRange:userNameProfileTitle.range];
+    [userNameProfileTitle setFont:TGSystemLightFont(14) forRange:userNameProfileTitle.range];
     [self setUserNameProfileTitle:userNameProfileTitle];
     
     
@@ -269,14 +269,14 @@ DYNAMIC_PROPERTY(SEEN_UPDATE);
     [userNameSearchTitle setSelectionColor:NSColorFromRGB(0xffffff) forColor:BLUE_UI_COLOR];
     
     
-    [userNameSearchTitle setFont:[NSFont fontWithName:@"HelveticaNeue" size:13] forRange:userNameSearchTitle.range];
+    [userNameSearchTitle setFont:TGSystemFont(13) forRange:userNameSearchTitle.range];
     [self setUserNameSearchTitle:userNameSearchTitle];
     
     //Message Tite
     
     NSMutableAttributedString *titleForMessageAttributedString = [[NSMutableAttributedString alloc] init];
     [titleForMessageAttributedString appendString:fullNameOrPhone withColor:NSColorFromRGB(0x222222)];
-    [titleForMessageAttributedString setFont:[NSFont fontWithName:@"HelveticaNeue" size:14] forRange:titleForMessageAttributedString.range];
+    [titleForMessageAttributedString setFont:TGSystemFont(14) forRange:titleForMessageAttributedString.range];
     
     NSMutableParagraphStyle *style = [[NSMutableParagraphStyle alloc] init];
     [style setAlignment:NSCenterTextAlignment];
@@ -286,14 +286,14 @@ DYNAMIC_PROPERTY(SEEN_UPDATE);
     
     NSMutableAttributedString *profileAttributedString = [[NSMutableAttributedString alloc] init];
     [profileAttributedString appendString:fullNameOrPhone withColor:NSColorFromRGB(0x222222)];
-    [profileAttributedString setFont:[NSFont fontWithName:@"HelveticaNeue" size:15] forRange:profileAttributedString.range];
+    [profileAttributedString setFont:TGSystemFont(15) forRange:profileAttributedString.range];
     [profileAttributedString setAlignment:NSLeftTextAlignment range:profileAttributedString.range];
     [self setProfileTitle:profileAttributedString];
     
     NSMutableAttributedString *encryptedTitleForMessageAttributedString = [[NSMutableAttributedString alloc] init];
     [encryptedTitleForMessageAttributedString appendAttributedString:[NSAttributedString attributedStringWithAttachment:encryptedIconAttachmentBlack()]];
     [encryptedTitleForMessageAttributedString appendString:fullNameFull withColor:DARK_BLACK];
-    [encryptedTitleForMessageAttributedString setFont:[NSFont fontWithName:@"HelveticaNeue" size:14] forRange:encryptedTitleForMessageAttributedString.range];
+    [encryptedTitleForMessageAttributedString setFont:TGSystemFont(14) forRange:encryptedTitleForMessageAttributedString.range];
     [encryptedTitleForMessageAttributedString addAttribute:NSParagraphStyleAttributeName value:style range:encryptedTitleForMessageAttributedString.range];
     [self setENCRYPTED_TITLE_FOR_MESSAGE:encryptedTitleForMessageAttributedString];
 }
@@ -428,7 +428,7 @@ DYNAMIC_PROPERTY(STATUS_MESSAGES_HEADER_VIEW);
             range = [str appendString:string withColor:NSColorFromRGB(0xa9a9a9)];
         }
         
-        [str setFont:[NSFont fontWithName:@"HelveticaNeue" size:12] forRange:range];
+        [str setFont:TGSystemFont(12) forRange:range];
 //        [self setSTATUS_MESSAGES_HEADER_VIEW:str];
     }
     
@@ -450,7 +450,7 @@ DYNAMIC_PROPERTY(STATUS_MESSAGES_HEADER_VIEW);
             range = [str appendString:string withColor:NSColorFromRGB(0xa1a1a1)];
         }
         
-        [str setFont:[NSFont fontWithName:@"Helvetica-Light" size:12.5] forRange:range];
+        [str setFont:TGSystemLightFont(12.5) forRange:range];
     }
     return str;
 }
@@ -469,7 +469,7 @@ DYNAMIC_PROPERTY(STATUS_MESSAGES_HEADER_VIEW);
         
         [str setSelectionColor:NSColorFromRGB(0xffffff) forColor:BLUE_UI_COLOR];
         [str setSelectionColor:NSColorFromRGB(0xfffffe) forColor:NSColorFromRGB(0x9b9b9b)];
-        [str setFont:[NSFont fontWithName:@"HelveticaNeue" size:13] forRange:range];
+        [str setFont:TGSystemFont(13) forRange:range];
     }
     return str;
 }
@@ -499,7 +499,7 @@ DYNAMIC_PROPERTY(STATUS_MESSAGES_HEADER_VIEW);
             range = [str appendString:string withColor:GRAY_TEXT_COLOR];
         }
         
-        [str setFont:[NSFont fontWithName:@"HelveticaNeue" size:12.5f] forRange:range];
+        [str setFont:TGSystemFont(12.5f) forRange:range];
     }
     return str;
 }
@@ -518,7 +518,7 @@ DYNAMIC_PROPERTY(STATUS_MESSAGES_HEADER_VIEW);
             range = [str appendString:string withColor:GRAY_TEXT_COLOR];
         }
         
-        [str setFont:[NSFont fontWithName:@"HelveticaNeue-Light" size:14] forRange:range];
+        [str setFont:TGSystemLightFont(14) forRange:range];
         
         [str setAlignment:NSLeftTextAlignment range:range];
     }

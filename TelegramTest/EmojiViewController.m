@@ -52,7 +52,7 @@
         
         for(int i = 0; i < EMOJI_COUNT_PER_ROW; i++) {
             EmojiButton *button = [[EmojiButton alloc] initWithFrame:NSMakeRect(34 * i, 0, 34, 34)];
-            [button setTitleFont:[NSFont fontWithName:@"HelveticaNeue" size:17] forControlState:BTRControlStateNormal];
+            [button setTitleFont:TGSystemFont(17) forControlState:BTRControlStateNormal];
             [button addTarget:self action:@selector(emojiClick:) forControlEvents:BTRControlEventLeftClick];
                         
             if(floor(NSAppKitVersionNumber) >= 1347 ) {
@@ -314,7 +314,7 @@
     
     self.noRecentsTextField = [[TMTextField alloc] initWithFrame:NSZeroRect];
     [self.noRecentsTextField setStringValue:NSLocalizedString(@"Emoji.NoRecents", nil)];
-    [self.noRecentsTextField setFont:[NSFont fontWithName:@"Helvetica-Light" size:12]];
+    [self.noRecentsTextField setFont:TGSystemLightFont(12)];
     [self.noRecentsTextField setTextColor:NSColorFromRGB(0xaeaeae)];
     [self.noRecentsTextField sizeToFit];
     [self.noRecentsTextField setDrawsBackground:NO];

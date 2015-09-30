@@ -160,7 +160,7 @@
     [self.textAttributed removeAttribute:NSFontAttributeName range:self.textAttributed.range];
     
     
-    [self.textAttributed setFont:[NSFont fontWithName:@"HelveticaNeue" size:[self fontSize]] forRange:self.textAttributed.range];
+    [self.textAttributed setFont:TGSystemFont([self fontSize]) forRange:self.textAttributed.range];
     
     
     [self.message.entities enumerateObjectsUsingBlock:^(TLMessageEntity *obj, NSUInteger idx, BOOL *stop) {

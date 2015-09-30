@@ -167,7 +167,6 @@ NSString *const tableContacts = @"contacts";
 NSString *const tableChatsFull = @"chats_full_new";
 NSString *const tableImportedContacts = @"imported_contacts";
 NSString *const tableEncryptedChats = @"encrypted_chats";
-NSString *const tableSharedMedia = @"sharedmedia_v2";
 NSString *const tableSelfDestruction = @"self_destruction";
 NSString *const tableUserPhotos = @"user_photos";
 NSString *const tableBlockedUsers = @"blocked_users";
@@ -313,12 +312,7 @@ NSString *const tableMessageHoles = @"message_holes";
         
         [db executeUpdate:[NSString stringWithFormat:@"create table if not exists %@ (chat_id integer primary key,serialized blob)",tableEncryptedChats]];
         
-        [db executeUpdate:[NSString stringWithFormat:@"create table if not exists %@ (random_id integer primary key, peer_id integer, serialized blob,date integer, filter_mask integer, message_id integer)",tableSharedMedia]];
-        
-        
-        [db executeUpdate:[NSString stringWithFormat:@"CREATE INDEX if not exists sm_peer_message_idx ON %@(peer_id,message_id)",tableSharedMedia]];
-        [db executeUpdate:[NSString stringWithFormat:@"CREATE INDEX if not exists sm_filter_mask_idx ON %@(filter_mask)",tableSharedMedia]];
-        [db executeUpdate:[NSString stringWithFormat:@"CREATE INDEX if not exists sm_random_id_idx ON %@(message_id)",tableSharedMedia]];
+
         
         
         [db executeUpdate:[NSString stringWithFormat:@"create table if not exists %@ (id integer primary key autoincrement, chat_id integer, max_id integer, ttl integer)",tableSelfDestruction]];
@@ -1522,7 +1516,6 @@ TL_localMessage *parseMessage(FMResultSet *result) {
             
             [db executeUpdateWithFormat:sql,nil];
             
-            sql = [NSString stringWithFormat:@"delete from %@ where random_id IN (%@)",tableSharedMedia,[randomIds componentsJoinedByString:@","]];
             
             dispatch_async(dqueue, ^{
                 if(completeHandler) completeHandler(peer_updates,unreadCount);
@@ -1548,9 +1541,6 @@ TL_localMessage *parseMessage(FMResultSet *result) {
             [db executeUpdate:[NSString stringWithFormat:@"delete from %@ where peer_id = ?",tableMessageHoles],@(dialog.peer_id)];
         }
         
-        
-        sql = [NSString stringWithFormat:@"delete from %@ WHERE peer_id  =%d",tableSharedMedia,dialog.peer.peer_id];
-        [db executeUpdateWithFormat:sql,nil];
         
         
         
@@ -1943,7 +1933,6 @@ TL_localMessage *parseMessage(FMResultSet *result) {
         [db executeUpdate:[NSString stringWithFormat:@"delete from %@ where peer_id = ?",tableDialogs],@(dialog.peer_id)];
         [db executeUpdate:[NSString stringWithFormat:@"delete from %@ where peer_id = ?",tableMessages],@(dialog.peer_id)];
         [db executeUpdate:[NSString stringWithFormat:@"delete from %@ where peer_id = ?",tableChannelDialogs],@(dialog.peer_id)];
-        [db executeUpdate:[NSString stringWithFormat:@"delete from %@ where peer_id = ?",tableSharedMedia],@(dialog.peer_id)];
         [db executeUpdate:[NSString stringWithFormat:@"delete from %@ where peer_id = ?",tableChannelMessages],@(dialog.peer_id)];
         [db executeUpdate:[NSString stringWithFormat:@"delete from %@ where peer_id = ?",tableMessageHoles],@(dialog.peer_id)];
          [db executeUpdate:[NSString stringWithFormat:@"delete from %@ where n_id = ?",tableBroadcasts],@(dialog.peer_id)];
@@ -2270,12 +2259,7 @@ TL_localMessage *parseMessage(FMResultSet *result) {
     }];
 }
 
-//TODO for channels
--(void)insertMedia:(TL_localMessage *)message {
-    [queue inDatabase:^(FMDatabase *db) {
-        [db executeUpdate:[NSString stringWithFormat:@"insert or replace into %@ (message_id,peer_id,serialized,date,filter_mask,random_id) values (?,?,?,?,?,?)",tableSharedMedia],@(message.n_id),@(message.peer_id),[TLClassStore serialize:message],@([[MTNetwork instance] getTime]),@(message.filterType),@(message.randomId)];
-    }];
-}
+
 
 
 -(void)countOfUserPhotos:(int)user_id {
@@ -2301,18 +2285,23 @@ TL_localMessage *parseMessage(FMResultSet *result) {
 }
 
 
--(void)media:(void (^)(NSArray *))completeHandler max_id:(long)max_id peer_id:(int)peer_id next:(BOOL)next limit:(int)limit {
+-(void)media:(void (^)(NSArray *))completeHandler max_id:(int)max_id filterMask:(int)filterMask peer:(TLPeer *)peer next:(BOOL)next limit:(int)limit {
      [queue inDatabase:^(FMDatabase *db) {
          
-         NSString *sql = [NSString stringWithFormat:@"select serialized,message_id from sharedmedia_v2 where peer_id = %d and message_id %@ %ld order by message_id DESC LIMIT %d",peer_id,next ? @"<" : @">",max_id,limit];
+         FMResultSet *result;
          
-         FMResultSet *result = [db executeQueryWithFormat:sql,nil];
+         NSString *sql = [NSString stringWithFormat:@"select serialized from %@ where peer_id = %d and n_id %@ %@ and (filter_mask & %d) > 0 order by date DESC, n_id DESC LIMIT %d",[peer isKindOfClass:[TL_peerChannel class]] ? tableChannelMessages : tableMessages,peer.peer_id,next ? @"<" : @">",@([peer isKindOfClass:[TL_peerChannel class]] ? channelMsgId(max_id, peer.peer_id) : max_id),filterMask,limit];
+         
+         
+        result = [db executeQueryWithFormat:sql,nil];
+         
+         
          __block NSMutableArray *list = [[NSMutableArray alloc] init];
          while ([result next]) {
              TL_localMessage *message = [TLClassStore deserialize:[[result resultDictionary] objectForKey:@"serialized"]];
             
              
-            [list addObject:[[PreviewObject alloc] initWithMsdId:[result intForColumn:@"message_id"] media:message peer_id:peer_id]];
+            [list addObject:[[PreviewObject alloc] initWithMsdId:message.n_id media:message peer_id:peer.peer_id]];
          }
          
          [LoopingUtils  runOnMainQueueAsync:^{

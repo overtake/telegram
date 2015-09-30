@@ -48,7 +48,7 @@
         self.nameTextField = [[TMNameTextField alloc] initWithFrame:NSMakeRect(0, 3, 0, 0)];
         [self.nameTextField setAlignment:NSCenterTextAlignment];
         [self.nameTextField setAutoresizingMask:NSViewWidthSizable];
-        [self.nameTextField setFont:[NSFont fontWithName:@"HelveticaNeue" size:14]];
+        [self.nameTextField setFont:TGSystemFont(14)];
         [self.nameTextField setTextColor:NSColorFromRGB(0x222222)];
         [self.nameTextField setSelector:@selector(titleForMessage)];
         [self.nameTextField setEncryptedSelector:@selector(encryptedTitleForMessage)];

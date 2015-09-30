@@ -63,7 +63,7 @@ static NSDictionary *elements;
     for(int i = 0; i < _currentElements.count; i++) {
         EmojiButton *button = [[EmojiButton alloc] initWithFrame:NSMakeRect(2+ (34 * i), 2, 34, 34)];
         [button setTitle:_currentElements[i] forControlState:BTRControlStateNormal];
-        [button setTitleFont:[NSFont fontWithName:@"HelveticaNeue" size:17] forControlState:BTRControlStateNormal];
+        [button setTitleFont:TGSystemFont(17) forControlState:BTRControlStateNormal];
         [button addTarget:self action:@selector(emojiClick:) forControlEvents:BTRControlEventLeftClick];
         
         [self.view addSubview:button];

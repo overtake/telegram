@@ -42,7 +42,7 @@
         [self.field setBordered:NO];
         [self.field setStringValue:string];
         
-        [self.field setFont:[NSFont fontWithName:@"HelveticaNeue" size:14]];
+        [self.field setFont:TGSystemFont(14)];
         
         [self.field setFrameOrigin:NSMakePoint(0, 0)];
         

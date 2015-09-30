@@ -33,7 +33,7 @@ static int offsetEditable = 30;
         [self setNormalBackgroundColor:NSColorFromRGB(0xffffff)];
         self.avatarImageView = [TMAvatarImageView standartNewConversationTableAvatar];
         [self addSubview:self.avatarImageView];
-        [self.avatarImageView setFont:[NSFont fontWithName:@"HelveticaNeue-Light" size:15]];
+        [self.avatarImageView setFont:TGSystemLightFont(15)];
         [self.avatarImageView setFrameSize:NSMakeSize(36, 36)];
         
         
@@ -41,7 +41,7 @@ static int offsetEditable = 30;
         [self.titleTextField setEditable:NO];
         [self.titleTextField setBordered:NO];
         [self.titleTextField setBackgroundColor:[NSColor clearColor]];
-        [self.titleTextField setFont:[NSFont fontWithName:@"HelveticaNeue-Medium" size:12]];
+        [self.titleTextField setFont:TGSystemMediumFont(12)];
         [[self.titleTextField cell] setLineBreakMode:NSLineBreakByTruncatingTail];
         [[self.titleTextField cell] setTruncatesLastVisibleLine:YES];
         
@@ -54,7 +54,7 @@ static int offsetEditable = 30;
         [self.lastSeenTextField setEditable:NO];
         [self.lastSeenTextField setBordered:NO];
         [self.lastSeenTextField setBackgroundColor:[NSColor clearColor]];
-        [self.lastSeenTextField setFont:[NSFont fontWithName:@"HelveticaNeue" size:12]];
+        [self.lastSeenTextField setFont:TGSystemFont(12)];
         [[self.lastSeenTextField cell] setLineBreakMode:NSLineBreakByTruncatingTail];
         [[self.lastSeenTextField cell] setTruncatesLastVisibleLine:YES];
         [self.lastSeenTextField setSelector:@selector(statusForGroupInfo)];

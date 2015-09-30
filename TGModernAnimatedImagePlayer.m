@@ -81,4 +81,8 @@
     _isPlaying = NO;
 }
 
+-(NSImage *)poster {
+    return _image.posterImage;
+}
+
 @end
