@@ -401,24 +401,22 @@ typedef enum {
 
 -(void)keyDown:(NSEvent *)theEvent {
     
-    if([TGMentionPopup isVisibility] || [TGHashtagPopup isVisibility] || [TGBotCommandsPopup isVisibility]) {
-        
-        
+    TGMessagesHintView *hint = [Telegram rightViewController].messagesViewController.hintView;
+    
+    
+    if(!hint.isHidden) {
         if(theEvent.keyCode == 125 || theEvent.keyCode == 126) {
             
             if(theEvent.keyCode == 125) {
-                [TGMentionPopup selectNext];
-                [TGHashtagPopup selectNext];
-                [TGBotCommandsPopup selectNext];
+                [hint selectNext];
             } else {
-                [TGMentionPopup selectPrev];
-                [TGHashtagPopup selectPrev];
-                [TGBotCommandsPopup selectPrev];
+                [hint selectPrev];
             }
             
             return;
             
         }
+        
         
         if([self isEnterEvent:theEvent] || [self isCommandEnterEvent:theEvent]) {
             
@@ -426,19 +424,48 @@ typedef enum {
             
             if(result) {
                 
-                [TGMentionPopup performSelected];
-                [TGHashtagPopup performSelected];
-                [TGBotCommandsPopup performSelected];
+                [hint performSelected];
                 return;
             }
             
         }
         
-        
-        
-        
-        
     }
+    
+//    if([TGMentionPopup isVisibility] || [TGHashtagPopup isVisibility] || [TGBotCommandsPopup isVisibility]) {
+//
+//
+//        if(theEvent.keyCode == 125 || theEvent.keyCode == 126) {
+//            
+//            if(theEvent.keyCode == 125) {
+//                [TGMentionPopup selectNext];
+//                [TGHashtagPopup selectNext];
+//                [TGBotCommandsPopup selectNext];
+//            } else {
+//                [TGMentionPopup selectPrev];
+//                [TGHashtagPopup selectPrev];
+//                [TGBotCommandsPopup selectPrev];
+//            }
+//            
+//            return;
+//            
+//        }
+//        
+//        if([self isEnterEvent:theEvent] || [self isCommandEnterEvent:theEvent]) {
+//            
+//            BOOL result = [self.growingDelegate TMGrowingTextViewCommandOrControlPressed:self isCommandPressed:[self isCommandEnterEvent:theEvent]];
+//            
+//            if(result) {
+//                
+//                [TGMentionPopup performSelected];
+//                [TGHashtagPopup performSelected];
+//                [TGBotCommandsPopup performSelected];
+//                return;
+//            }
+//            
+//        }
+//    }
+   
     //lol. MessagesBottomView
     if(!self.superview.superview.superview.superview.superview.isHidden) {
         [super keyDown:theEvent];

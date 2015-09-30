@@ -1091,10 +1091,12 @@
 - (BOOL) TMGrowingTextViewCommandOrControlPressed:(id)textView isCommandPressed:(BOOL)isCommandPressed {
     BOOL isNeedSend = ([SettingsArchiver checkMaskedSetting:SendEnter] && !isCommandPressed) || ([SettingsArchiver checkMaskedSetting:SendCmdEnter] && isCommandPressed);
     
-    if(isNeedSend && ![TGMentionPopup isVisibility] && ![TGHashtagPopup isVisibility] && ![TGBotCommandsPopup isVisibility]) {
+    
+    
+    if(isNeedSend && self.messagesViewController.hintView.isHidden) {
          [self sendButtonAction];
     }
-    return isNeedSend || ([TGMentionPopup isVisibility] || [TGHashtagPopup isVisibility] || [TGBotCommandsPopup isVisibility]);
+    return isNeedSend || (!self.messagesViewController.hintView.isHidden);
 }
 
 - (void) TMGrowingTextViewFirstResponder:(id)textView isFirstResponder:(BOOL)isFirstResponder {
@@ -1227,7 +1229,7 @@
             
         };
         
-        
+
         
         
         if(type == 1) {
@@ -1246,7 +1248,12 @@
         } else if(type == 3 && [self.inputMessageTextField.string rangeOfString:@"/"].location == 0) {
             if([_dialog.user isBot] || _dialog.fullChat.bot_info != nil) {
                 
-                 [self.messagesViewController.hintView showCommandsHintsWithQuery:search botInfo:_userFull ? @[_userFull.bot_info] : _dialog.fullChat.bot_info choiceHandler:callback];
+                
+                
+                [self.messagesViewController.hintView showCommandsHintsWithQuery:search botInfo:_userFull ? @[_userFull.bot_info] : _dialog.fullChat.bot_info choiceHandler:^(NSString *command) {
+                    callback(command);
+                    [self sendButtonAction];
+                }];
                 
 //                [TGBotCommandsPopup show:search botInfo:_userFull ? @[_userFull.bot_info] : _dialog.fullChat.bot_info view:self.window.contentView ofRect:rect callback:^(NSString *command) {
 //                    

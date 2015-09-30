@@ -456,7 +456,7 @@
     
     self.hintView = [[TGMessagesHintView alloc] initWithFrame:NSMakeRect(0, NSHeight(self.bottomView.frame), NSWidth(self.view.frame), 100)];
     
-    [self.hintView setHidden:YES];
+     [self.hintView setHidden:YES];
     
     [self.view addSubview:self.hintView];
     
@@ -1374,12 +1374,13 @@ static NSTextAttachment *headerMediaIcon() {
         [[self.noMessagesView animator] setFrame:newFrame];
         
         [[self.stickerPanel animator] setFrameOrigin:NSMakePoint(NSMinX(self.stickerPanel.frame), height)];
-        
+        [[self.hintView animator] setFrameOrigin:NSMakePoint(NSMinX(self.hintView.frame), height)];
     } else {
         [self.table.scrollView setFrame:newFrame];
         [self.noMessagesView setFrame:newFrame];
         
         [self.stickerPanel setFrameOrigin:NSMakePoint(NSMinX(self.stickerPanel.frame), height)];
+        [self.hintView setFrameOrigin:NSMakePoint(NSMinX(self.hintView.frame), height)];
     }
     
     

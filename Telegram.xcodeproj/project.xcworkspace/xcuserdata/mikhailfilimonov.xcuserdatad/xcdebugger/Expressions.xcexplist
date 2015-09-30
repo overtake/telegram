@@ -2645,6 +2645,14 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "-[TGMessagesHintView performSelected]:TGMessagesHintView.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "_choiceHandler">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "-[ZipArchive addFileToZip:newname:]:ZipArchive.mm">
          <PersistentStrings>
             <PersistentString

@@ -36,6 +36,7 @@ typedef void (^TapTMAvatarImageView)(void);
 @property (nonatomic, strong) TapTMAvatarImageView tapBlock;
 
 + (instancetype)standartTableAvatar;
++ (instancetype)standartHintAvatar;
 + (instancetype)standartUserInfoAvatar;
 + (instancetype)standartMessageTableAvatar;
 + (instancetype)standartNewConversationTableAvatar;

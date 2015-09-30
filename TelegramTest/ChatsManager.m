@@ -192,6 +192,16 @@
     return nil;
 }
 
++(NSArray *)findChatsByName:(NSString *)userName {
+    if([userName hasPrefix:@"@"])
+        userName = [userName substringFromIndex:1];
+    
+    NSArray *chats = [[[ChatsManager sharedManager] all] filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.username BEGINSWITH[c] %@",userName]];
+    
+    
+    return chats;
+}
+
 
 -(void)updateChannelUserName:(NSString *)userName channel:(TL_channel *)channel completeHandler:(void (^)(TL_channel *))completeHandler errorHandler:(void (^)(NSString *))errorHandler  {
     

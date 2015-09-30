@@ -109,6 +109,14 @@ static const TGTwoColors colors[] = {
     return avatarImageView;
 }
 
++ (instancetype)standartHintAvatar {
+    TMAvatarImageView *avatarImageView = [[self alloc] initWithFrame:NSMakeRect(0, 0, 30, 30)];
+    avatarImageView.placeholder = [TMAvatarImageView placeholderImageBySize:avatarImageView.frame.size andColor:NSColorFromRGB(0xfafafa)];
+    [avatarImageView setFont:[NSFont fontWithName:@"HelveticaNeue" size:14]];
+    [avatarImageView setOffsetTextY:2];
+    return avatarImageView;
+}
+
 + (instancetype) standartUserInfoAvatar {
     TMAvatarImageView *avatarImageView = [[self alloc] initWithFrame:NSMakeRect(0, 0, 130, 130)];
     avatarImageView.placeholder = [TMAvatarImageView placeholderImageBySize:avatarImageView.frame.size andColor:NSColorFromRGB(0xfafafa)];

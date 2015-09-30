@@ -32,36 +32,40 @@ DYNAMIC_PROPERTY(DUser);
 @end
 
 @interface TGMessagesHintRowItem : TMRowItem
-@property (nonatomic,strong) TGImageObject *imageObject;
+@property (nonatomic,strong) id imageObject;
 @property (nonatomic,strong) NSString *text;
 @property (nonatomic,strong) NSString *desc;
+@property (nonatomic,assign) NSUInteger h;
 
+@property (nonatomic,strong) NSString *result;
 
 
 @end
 
 @interface TGMessagesHintRowView : TMRowView
 @property (nonatomic,strong) TMTextField *textField;
-@property (nonatomic,strong) TGImageView *imageView;
+@property (nonatomic,strong) TMAvatarImageView *imageView;
 @property (nonatomic,strong) TMTextField *descField;
+
 @end
 
 
 
 @implementation TGMessagesHintRowItem
 
--(id)initWithImageObject:(TGImageObject *)imageObject text:(NSString *)text desc:(NSString *)desc {
+-(id)initWithImageObject:(id)imageObject text:(NSString *)text desc:(NSString *)desc  {
     if(self = [super init]) {
         _imageObject = imageObject;
         _text = text;
         _desc = desc;
+        _h = rand_long();
     }
     
     return self;
 }
 
 -(NSUInteger)hash {
-    return _imageObject != nil ? [_imageObject.location.cacheKey hash] : [_text hash];
+    return _h;
 }
 
 @end
@@ -83,7 +87,15 @@ DYNAMIC_PROPERTY(DUser);
         [_descField setFont:TGSystemFont(12)];
         [_descField setTextColor:GRAY_TEXT_COLOR];
         
-        _imageView = [[TGImageView alloc] initWithFrame:NSMakeRect(10, 0, 0, 0)];
+        
+        [_textField setStringValue:@"test"];
+        [_descField setStringValue:@"test"];
+        
+        [_textField sizeToFit];
+        [_descField sizeToFit];
+        
+        _imageView = [TMAvatarImageView standartHintAvatar];
+        [_imageView setFrameOrigin:NSMakePoint(10,5)];
         
         //self.backgroundColor = [NSColor redColor];
         
@@ -102,29 +114,29 @@ DYNAMIC_PROPERTY(DUser);
     
     TGMessagesHintRowItem *item = (TGMessagesHintRowItem *)[self rowItem];
     
-    int xOffset = item.imageObject == nil ? 10 : item.imageObject.imageSize.width + 20;
+    int xOffset = item.imageObject == nil ? 10 : 36 + 20;
     
     [_imageView setHidden:item.imageObject == nil];
     
-    _imageView.object = item.imageObject;
-    [_imageView setFrameSize:item.imageObject.imageSize];
+    if([item.imageObject isKindOfClass:[TLUser class]]) {
+        [_imageView setUser:item.imageObject];
+    } else if([item.imageObject isKindOfClass:[TLChat class]]) {
+        [_imageView setChat:item.imageObject];
+    }
     
-    [_imageView setCenteredYByView:_imageView.superview];
     
     [_descField setHidden:item.desc.length == 0];
     
     
     [_textField setStringValue:item.text];
-    [_textField sizeToFit];
     
     
     [_descField setStringValue:item.desc];
-    [_descField sizeToFit];
     
     
-    [_textField setFrameOrigin:NSMakePoint(xOffset, roundf(NSHeight(self.frame)/2) - (_descField.isHidden ? roundf(NSHeight(_textField.frame)/2) - 3 : 0) )];
+    [_textField setFrameOrigin:NSMakePoint(xOffset, roundf(NSHeight(self.frame)/2) - (_descField.isHidden ? roundf(NSHeight(_textField.frame)/2) - 3 : -2) )];
     
-    [_descField setFrameOrigin:NSMakePoint(xOffset, NSMinY(_textField.frame) - NSHeight(_descField.frame))];
+    [_descField setFrameOrigin:NSMakePoint(xOffset, NSMinY(_textField.frame) - NSHeight(_descField.frame) + 2)];
 }
 
 -(void)drawRect:(NSRect)dirtyRect {
@@ -134,9 +146,22 @@ DYNAMIC_PROPERTY(DUser);
     
     TGMessagesHintRowItem *item = (TGMessagesHintRowItem *)[self rowItem];
     
-    int xOffset = item.imageObject == nil ? 10 : item.imageObject.imageSize.width + 20;
+    int xOffset = item.imageObject == nil ? 10 : 36 + 20;
     
-    NSRectFill(NSMakeRect(xOffset, 0, NSWidth(dirtyRect) - xOffset, 1));
+   
+    
+    if(self.isSelected) {
+         NSRectFill(NSMakeRect(0, 0, NSWidth(dirtyRect) , NSHeight(dirtyRect)));
+    } else {
+         NSRectFill(NSMakeRect(xOffset, 0, NSWidth(dirtyRect) - xOffset, 1));
+    }
+}
+
+-(void)setFrameSize:(NSSize)newSize {
+    [super setFrameSize:newSize];
+    
+    [_textField setFrameSize:NSMakeSize(newSize.width - NSMinX(_textField.frame) - 10, NSHeight(_textField.frame))];
+    [_descField setFrameSize:NSMakeSize(newSize.width - NSMinX(_descField.frame) - 10, NSHeight(_descField.frame))];
 }
 
 @end
@@ -145,6 +170,8 @@ DYNAMIC_PROPERTY(DUser);
 
 @interface TGMessagesHintView () <TMTableViewDelegate>
 @property (nonatomic,strong) TMTableView *tableView;
+@property (nonatomic,copy) void (^choiceHandler)(NSString *result);
+
 @end
 
 @implementation TGMessagesHintView
@@ -170,7 +197,7 @@ DYNAMIC_PROPERTY(DUser);
 }
 
 - (void)selectionDidChange:(NSInteger)row item:(TGMessagesHintRowItem *) item {
-    
+    [self performSelected];
 }
 
 - (BOOL)selectionWillChange:(NSInteger)row item:(TGMessagesHintRowItem *) item {
@@ -191,6 +218,11 @@ DYNAMIC_PROPERTY(DUser);
         
         [self addSubview:_tableView.containerView];
         
+        
+        self.autoresizingMask = NSViewWidthSizable;
+        
+      //  self.tableView.containerView.autoresizingMask = NSViewWidthSizable;
+        
     }
     
     return self;
@@ -201,7 +233,7 @@ DYNAMIC_PROPERTY(DUser);
 
 -(void)showCommandsHintsWithQuery:(NSString *)query botInfo:(NSArray *)botInfo choiceHandler:(void (^)(NSString *result))choiceHandler  {
     
-    
+    _choiceHandler = choiceHandler;
     
     NSMutableArray *commands = [[NSMutableArray alloc] init];
     
@@ -234,11 +266,9 @@ DYNAMIC_PROPERTY(DUser);
     [commands enumerateObjectsUsingBlock:^(TL_botCommand *obj, NSUInteger idx, BOOL *stop) {
         
         
-        TMAvaImageObject *imageObject = [[TMAvaImageObject alloc] initWithLocation:obj.user.photo.photo_small];
-        imageObject.imageSize = NSMakeSize(30, 30);
+        TGMessagesHintRowItem *item = [[TGMessagesHintRowItem alloc] initWithImageObject:obj.user text:obj.command desc:obj.n_description];
         
-        
-        TGMessagesHintRowItem *item = [[TGMessagesHintRowItem alloc] initWithImageObject:imageObject text:obj.command desc:obj.n_description];
+        item.result = obj.command;
         
         [items addObject:item];
     }];
@@ -247,12 +277,16 @@ DYNAMIC_PROPERTY(DUser);
     
     [_tableView insert:items startIndex:0 tableRedraw:YES];
     
-    [self show:YES];
+    if(items.count > 0)
+        [self show:NO];
+    else
+        [self hide];
     
 }
 
 -(void)showHashtagHintsWithQuery:(NSString *)query peer_id:(int)peer_id choiceHandler:(void (^)(NSString *result))choiceHandler {
     
+    _choiceHandler = choiceHandler;
     
     __block NSMutableDictionary *tags;
     
@@ -285,7 +319,11 @@ DYNAMIC_PROPERTY(DUser);
     
     [list enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
         
-        [items addObject:[[TGMessagesHintRowItem alloc] initWithImageObject:nil text:[NSString stringWithFormat:@"#%@",obj[@"tag"]] desc:nil]];
+        TGMessagesHintRowItem *item = [[TGMessagesHintRowItem alloc] initWithImageObject:nil text:[NSString stringWithFormat:@"#%@",obj[@"tag"]]desc:nil];
+                                       
+        item.result = obj[@"tag"];
+        
+        [items addObject:item];
         
     }];
     
@@ -293,18 +331,18 @@ DYNAMIC_PROPERTY(DUser);
     
     [_tableView insert:items startIndex:0 tableRedraw:YES];
     
-    [self show:YES];
+    if(items.count > 0)
+        [self show:NO];
+    else
+        [self hide];
    
 }
 
 -(void)showMentionPopupWithQuery:(NSString *)query chat:(TLChat *)chat choiceHandler:(void (^)(NSString *result))choiceHandler {
    
-    
+    _choiceHandler = choiceHandler;
     
     TLChatFull *fullChat = [[FullChatManager sharedManager] find:chat.n_id];
-    
-    
-    
     
     NSMutableArray *uids = [[NSMutableArray alloc] init];
     
@@ -331,23 +369,40 @@ DYNAMIC_PROPERTY(DUser);
     
     NSMutableArray *items = [[NSMutableArray alloc] init];
     
-    [users enumerateObjectsUsingBlock:^(TLUser *obj, NSUInteger idx, BOOL *stop) {
+    
+    NSArray *chats = [ChatsManager findChatsByName:query];
+    
+    [chats enumerateObjectsUsingBlock:^(TLChat *obj, NSUInteger idx, BOOL *stop) {
         
-        TMAvaImageObject *imageObject = [[TMAvaImageObject alloc] initWithLocation:obj.photo.photo_small];
-        imageObject.imageSize = NSMakeSize(30, 30);
+        TGMessagesHintRowItem *item = [[TGMessagesHintRowItem alloc] initWithImageObject:obj text:obj.title desc:[NSString stringWithFormat:@"@%@",obj.username]];
         
-        TGMessagesHintRowItem *item = [[TGMessagesHintRowItem alloc] initWithImageObject:imageObject text:obj.fullName desc:nil];
-        
+        item.result = obj.username;
         
         [items addObject:item];
     }];
     
     
+    [users enumerateObjectsUsingBlock:^(TLUser *obj, NSUInteger idx, BOOL *stop) {
+        
+        TGMessagesHintRowItem *item = [[TGMessagesHintRowItem alloc] initWithImageObject:obj text:obj.fullName desc:[NSString stringWithFormat:@"@%@",obj.username]];
+        
+        item.result = obj.username;
+        
+        [items addObject:item];
+    }];
+    
+    
+    
+
+    
     [_tableView removeAllItems:YES];
     
     [_tableView insert:items startIndex:0 tableRedraw:YES];
     
-    [self show:YES];
+    if(items.count > 0)
+        [self show:NO];
+    else
+        [self hide];
 }
 
 -(void)show:(BOOL)animated {
@@ -370,14 +425,19 @@ DYNAMIC_PROPERTY(DUser);
         self.alphaValue = 1.0f;
     }
     
-    [self setFrameSize:NSMakeSize(NSWidth(self.frame), MIN(self.tableView.count * 40 - 1, 140 - 1))];
+    [self setFrameSize:NSMakeSize(NSWidth(self.frame), MIN(self.tableView.count * 40, 140 ))];
+    [self.tableView.containerView setFrameSize:NSMakeSize(NSWidth(self.frame), NSHeight(self.frame) - 1)];
+    [self selectPrev];
 }
 
 -(void)hide {
+        
     [self hide:NO];
 }
 
 -(void)hide:(BOOL)animated {
+    
+    
     if(self.alphaValue == 0.f || self.isHidden)
         return;
     
@@ -396,11 +456,47 @@ DYNAMIC_PROPERTY(DUser);
     }
 }
 
-+(void)selectNext {
+-(void)performSelected {
+    if(_choiceHandler != nil)
+    {
+        TGMessagesHintRowItem *item = (TGMessagesHintRowItem *) _tableView.selectedItem;
+        
+        if(item != nil) {
+            _choiceHandler(item.result);
+        }
+        
+        
+    }
+}
+
+-(void)selectNext {
+    
+    NSUInteger selectedIndex = _tableView.selectedItem == nil ? -1 : [_tableView indexOfItem:_tableView.selectedItem];
+    
+    selectedIndex++;
+    
+    if(selectedIndex == _tableView.count) {
+        selectedIndex = 0;
+    }
+    
+    [_tableView setSelectedObject:[_tableView itemAtPosition:selectedIndex]];
+    
+    [_tableView.scrollView.clipView scrollRectToVisible:[_tableView rectOfRow:selectedIndex] animated:NO];
+
     
 }
-+(void)selectPrev {
+-(void)selectPrev {
+    NSUInteger selectedIndex = _tableView.selectedItem == nil ? _tableView.count : [_tableView indexOfItem:_tableView.selectedItem];
     
+    selectedIndex--;
+    
+    if(selectedIndex == -1) {
+        selectedIndex = _tableView.count-1;
+    }
+    
+    [_tableView setSelectedObject:[_tableView itemAtPosition:selectedIndex]];
+    
+    [_tableView.scrollView.clipView scrollRectToVisible:[_tableView rectOfRow:selectedIndex] animated:NO];
 }
 
 @end
