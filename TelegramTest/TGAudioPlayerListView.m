@@ -326,37 +326,44 @@ static long h_r_l;
 }
 
 -(void)selectNext {
-    long rowId = (long) [_tableView indexOfItem:[_tableView itemByHash:_selectedId]];
     
-    if(rowId == NSNotFound)
-    {
-        rowId = 0;
-    }
+    [ASQueue dispatchOnMainQueue:^{
+        long rowId = (long) [_tableView indexOfItem:[_tableView itemByHash:_selectedId]];
+        
+        if(rowId == NSNotFound)
+        {
+            rowId = 0;
+        }
+        
+        rowId++;
+        
+        if(rowId == _tableView.count ) {
+            rowId = 1;
+        }
+        
+        _changedAudio([(TGAudioRowItem *)[_tableView itemAtPosition:rowId] document]);
+    }];
     
-    rowId++;
-    
-    if(rowId == _tableView.count ) {
-        rowId = 1;
-    }
-    
-    _changedAudio([(TGAudioRowItem *)[_tableView itemAtPosition:rowId] document]);
+   
     
 }
 -(void)selectPrev {
-    long rowId = (long) [_tableView indexOfItem:[_tableView itemByHash:_selectedId]];
-    
-    if(rowId == NSNotFound)
-    {
-        rowId = 0;
-    }
-    
-    rowId--;
-    
-    if(rowId < 1) {
-        rowId = (int)_tableView.count - 1;
-    }
-    
-    _changedAudio([(TGAudioRowItem *)[_tableView itemAtPosition:rowId] document]);
+    [ASQueue dispatchOnMainQueue:^{
+        long rowId = (long) [_tableView indexOfItem:[_tableView itemByHash:_selectedId]];
+        
+        if(rowId == NSNotFound)
+        {
+            rowId = 0;
+        }
+        
+        rowId--;
+        
+        if(rowId < 1) {
+            rowId = (int)_tableView.count - 1;
+        }
+        
+        _changedAudio([(TGAudioRowItem *)[_tableView itemAtPosition:rowId] document]);
+    }];
 }
 
 -(void)receivedMessage:(MessageTableItem *)message position:(int)position itsSelf:(BOOL)force {

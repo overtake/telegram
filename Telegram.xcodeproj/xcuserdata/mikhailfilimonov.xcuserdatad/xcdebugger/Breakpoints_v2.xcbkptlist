@@ -74,11 +74,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "TelegramTest/Storage.m"
-            timestampString = "465217602.921602"
+            timestampString = "465304871.597054"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "3054"
-            endingLineNumber = "3054"
+            startingLineNumber = "3049"
+            endingLineNumber = "3049"
             landmarkName = "-groupHoles:min:max:"
             landmarkType = "5">
          </BreakpointContent>
@@ -480,6 +480,22 @@
             startingLineNumber = "27"
             endingLineNumber = "27"
             landmarkName = "-remoteRequest:peer_id:callback:"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "TelegramTest/Storage.m"
+            timestampString = "465304871.597054"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "1805"
+            endingLineNumber = "1805"
+            landmarkName = "-parseDialogs:dialogs:messages:"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>

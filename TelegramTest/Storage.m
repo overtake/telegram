@@ -1801,10 +1801,7 @@ TL_localMessage *parseMessage(FMResultSet *result) {
         TL_conversation *dialog = [TL_conversation createWithPeer:peer top_message:[result intForColumn:@"top_message"] unread_count:[result intForColumn:@"unread_count"] last_message_date:[result intForColumn:@"last_message_date"] notify_settings:[TLClassStore deserialize:[result dataForColumn:@"notify_settings"]] last_marked_message:[result intForColumn:@"last_marked_message"] top_message_fake:[result intForColumn:@"top_message_fake"] last_marked_date:[result intForColumn:@"last_marked_date"] sync_message_id:[result intForColumn:@"sync_message_id"] read_inbox_max_id:[result intForColumn:@"read_inbox_max_id"] unread_important_count:0 lastMessage:message];
         
         
-        int mute_until = [result intForColumn:@"mute_until"];
-        
-        if(mute_until == 0 && dialog.notify_settings.mute_until > 0) {
-            mute_until = dialog.notify_settings.mute_until;
+        if([result intForColumn:@"mute_until"] == 0 && dialog.notify_settings.mute_until > 0) {
             [self insertDialogs:@[dialog] completeHandler:nil];
         }
         
@@ -2943,10 +2940,8 @@ TL_localMessage *parseMessage(FMResultSet *result) {
             
             TL_conversation *channel = [TL_conversation createWithPeer:[TL_peerChannel createWithChannel_id:-[result intForColumn:@"peer_id"]] top_message:[result intForColumn:@"top_message"] unread_count:[result intForColumn:@"unread_count"] last_message_date:[result intForColumn:@"last_message_date"] notify_settings:[TLClassStore deserialize:[result dataForColumn:@"notify_settings"]] last_marked_message:[result intForColumn:@"last_marked_message"] top_message_fake:0 last_marked_date:[result intForColumn:@"last_marked_date"] sync_message_id:[result intForColumn:@"sync_message_id"] read_inbox_max_id:[result intForColumn:@"read_inbox_max_id"] unread_important_count:[result intForColumn:@"unread_important_count"] lastMessage:message pts:[result intForColumn:@"pts"] isInvisibleChannel:[result boolForColumn:@"is_invisible"] top_important_message:[result intForColumn:@"top_important_message"]];
             
-            int mute_until = [result intForColumn:@"mute_until"];
-            
-            if(mute_until == 0 && channel.notify_settings.mute_until > 0) {
-                mute_until = channel.notify_settings.mute_until;
+
+            if([result intForColumn:@"mute_until"] == 0 && channel.notify_settings.mute_until > 0) {
                 [self insertDialogs:@[channel] completeHandler:nil];
             }
             
