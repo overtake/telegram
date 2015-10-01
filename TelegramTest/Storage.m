@@ -1406,8 +1406,6 @@ TL_localMessage *parseMessage(FMResultSet *result) {
         sql = [NSString stringWithFormat:@"delete from messages WHERE random_id IN (%@)",mark];
         [db executeUpdateWithFormat:sql,nil];
         
-        sql = [NSString stringWithFormat:@"delete from sharedmedia_v2 WHERE random_id IN (%@)",mark];
-        [db executeUpdateWithFormat:sql,nil];
         
         sql = [NSString stringWithFormat:@"delete from channel_messages WHERE random_id IN (%@)",mark];
         [db executeUpdateWithFormat:sql,nil];
@@ -1446,8 +1444,6 @@ TL_localMessage *parseMessage(FMResultSet *result) {
         sql = [NSString stringWithFormat:@"delete from messages WHERE n_id IN (%@)",mark];
         [db executeUpdateWithFormat:sql,nil];
         
-        sql = [NSString stringWithFormat:@"delete from sharedmedia_v2 WHERE message_id IN (%@)",mark];
-        [db executeUpdateWithFormat:sql,nil];
         
         
         //[db commit];
@@ -2315,11 +2311,7 @@ TL_localMessage *parseMessage(FMResultSet *result) {
     
     __block int count = 0;
     
-    [queue inDatabaseWithDealocing:^(FMDatabase *db) {
-        
-         count = [db intForQuery:@"select count(*) from sharedmedia_v2 where (filter_mask & 8 = 8) and peer_id = ?",@(peer_id)];
-        
-    }];
+    
     
     return count;
 }
@@ -2731,8 +2723,6 @@ TL_localMessage *parseMessage(FMResultSet *result) {
 -(void)updateMessageId:(long)random_id msg_id:(int)n_id {
     
     [queue inDatabase:^(FMDatabase *db) {
-        
-        [db executeUpdate:@"update sharedmedia_v2 set message_id = ? where random_id = ?",@(n_id),@(random_id)];
         
         [db executeUpdate:@"update messages set n_id = (?), dstate = (?) where random_id = ?",@(n_id),@(DeliveryStateNormal),@(random_id)];
         

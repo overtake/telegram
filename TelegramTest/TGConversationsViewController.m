@@ -92,8 +92,6 @@
 
 -(void)initialize {
     
-    test_start_group(@"test");
-
     [[Storage manager] users:^(NSArray *result) {
 
         [[UsersManager sharedManager] addFromDB:result];
@@ -102,16 +100,14 @@
             
             [[BroadcastManager sharedManager] add:broadcasts];
             
-            
             [[Storage manager] loadChats:^(NSArray *chats) {
                 
-                test_step_group(@"test");
+                [ASQueue dispatchOnStageQueue:^{
+                    [[ChatsManager sharedManager] add:chats];
+                    [self initConversations];
+                }];
                 
-                test_release_group(@"test");
-                
-                [[ChatsManager sharedManager] add:chats];
-                
-                [self initConversations];
+               
                 
             }];
         }];

@@ -49,9 +49,12 @@
 @property (nonatomic,assign,readonly) int blockWidth;
 
 
+
 @property (nonatomic,strong) TGReplyObject *replyObject;
 
+@property (nonatomic,strong,readonly) NSString *viewsCount;
 
+-(BOOL)updateViews;
 
 - (id) initWithObject:(id)object;
 + (id) messageItemFromObject:(id)object;

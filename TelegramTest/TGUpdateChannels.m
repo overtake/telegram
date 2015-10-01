@@ -353,7 +353,7 @@
         
         [[Storage manager] updateMessageViews:views.views channelMsgId:channelMsgId(views.n_id, views.peer.peer_id)];
         
-        [Notification perform:UPDATE_MESSAGE_VIEWS data:@{KEY_DATA:@{@(views.n_id):@(views.views)},KEY_MESSAGE_ID_LIST:@[@(views.n_id)],KEY_PEER_ID:@(views.peer.peer_id)}];
+        [Notification perform:UPDATE_MESSAGE_VIEWS data:@{KEY_DATA:@{@(views.n_id):@(views.views)},KEY_MESSAGE_ID_LIST:@[@(views.n_id)],KEY_PEER_ID:@(-views.channel_id)}];
         
     } else if([update isKindOfClass:[TL_updateMessageID class]]) {
         [[MTNetwork instance].updateService.proccessor addUpdate:update];

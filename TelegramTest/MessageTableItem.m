@@ -28,7 +28,7 @@
 #import "MessageTableItemSocial.h"
 #import "TL_localMessage_old32.h"
 #import "TL_localMessage_old34.h"
-
+#import "NSNumber+NumberFormatter.h"
 
 @interface TGItemCache : NSObject
 @property (nonatomic,strong) NSAttributedString *header;
@@ -76,7 +76,12 @@ static NSCache *cItems;
         
         _containerOffsetForward  = 87;
         
+        
         if(self.message) {
+            
+            if(self.message.from_id == 0) {
+                [self updateViews];
+            }
             
             TGItemCache *cache = [cItems objectForKey:@(channelMsgId(_isChat ? 1 : 0, object.from_id == 0 ? object.peer_id : object.from_id))];
            
@@ -501,6 +506,16 @@ static NSTextAttachment *channelIconAttachment() {
 
 -(void)dealloc {
     [self.downloadItem removeEvent:_downloadListener];
+    
+}
+
+-(BOOL)updateViews {
+    
+    NSString *o = _viewsCount;
+    
+    _viewsCount = [@(MAX(1,self.message.views)) prettyNumber];
+    
+    return ![_viewsCount isEqualToString:o];
     
 }
 

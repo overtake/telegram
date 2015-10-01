@@ -245,7 +245,6 @@
 		C20A7E7519DAAF51008844F2 /* CoreText.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C20A7E7419DAAF51008844F2 /* CoreText.framework */; };
 		C20A7E7C19DC1379008844F2 /* TGCTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = C20A7E7B19DC1379008844F2 /* TGCTextView.m */; };
 		C20A7E7E19DC1816008844F2 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C20A7E7D19DC1816008844F2 /* CoreGraphics.framework */; };
-		C20A7E8019DC1887008844F2 /* ImageIO.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C20A7E7F19DC1887008844F2 /* ImageIO.framework */; };
 		C20B228818E971D0007BCCD6 /* bitwise.c in Sources */ = {isa = PBXBuildFile; fileRef = C20B228418E971D0007BCCD6 /* bitwise.c */; };
 		C20B228918E971D0007BCCD6 /* framing.c in Sources */ = {isa = PBXBuildFile; fileRef = C20B228518E971D0007BCCD6 /* framing.c */; };
 		C20B228D18E98A2C007BCCD6 /* SettingsArchiver.m in Sources */ = {isa = PBXBuildFile; fileRef = C20B228C18E98A2C007BCCD6 /* SettingsArchiver.m */; };
@@ -647,7 +646,6 @@
 		C2CBF6061AF90683006BF90A /* TGTimer.m in Sources */ = {isa = PBXBuildFile; fileRef = C2AA4EF618A8ED5500E20C68 /* TGTimer.m */; };
 		C2CBF6071AF906DC006BF90A /* TGKeychain.m in Sources */ = {isa = PBXBuildFile; fileRef = C2967B481AA9BF90003759B2 /* TGKeychain.m */; };
 		C2CBF60C1AF90878006BF90A /* libsqlcipher.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C2E561031AF3726300B4CAF0 /* libsqlcipher.a */; };
-		C2CBF60E1AF90882006BF90A /* libsqlite3.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = C2CBF60D1AF90881006BF90A /* libsqlite3.0.dylib */; };
 		C2CBF60F1AF908B7006BF90A /* FMDatabase.m in Sources */ = {isa = PBXBuildFile; fileRef = CEAE5D59181ECDF100C17645 /* FMDatabase.m */; };
 		C2CBF6101AF908B7006BF90A /* FMDatabaseAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = CEAE5D5B181ECDF100C17645 /* FMDatabaseAdditions.m */; };
 		C2CBF6111AF908B7006BF90A /* FMDatabasePool.m in Sources */ = {isa = PBXBuildFile; fileRef = CEAE5D5D181ECDF100C17645 /* FMDatabasePool.m */; };
@@ -655,8 +653,6 @@
 		C2CBF6131AF910E2006BF90A /* FMResultSet.m in Sources */ = {isa = PBXBuildFile; fileRef = CEAE5D62181ECDF100C17645 /* FMResultSet.m */; };
 		C2CBF6141AF910EF006BF90A /* TGTLSerialization.mm in Sources */ = {isa = PBXBuildFile; fileRef = C2CBF3D41AF38F6F006BF90A /* TGTLSerialization.mm */; };
 		C2CBF6151AF9113E006BF90A /* NSData+Extensions.m in Sources */ = {isa = PBXBuildFile; fileRef = CEF5C02717FFFEFE006CEE27 /* NSData+Extensions.m */; };
-		C2CBF6171AF911A2006BF90A /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2CBF6161AF911A2006BF90A /* SystemConfiguration.framework */; };
-		C2CBF6191AF912A8006BF90A /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = C2CBF6181AF912A8006BF90A /* libz.dylib */; };
 		C2CBF61A1AF93A6C006BF90A /* SSKeychain.m in Sources */ = {isa = PBXBuildFile; fileRef = C297FBA21832997B00714B3C /* SSKeychain.m */; };
 		C2CBF61B1AF93A6C006BF90A /* SSKeychainQuery.m in Sources */ = {isa = PBXBuildFile; fileRef = C291C7BF183759EE00ABBB50 /* SSKeychainQuery.m */; };
 		C2CBF65B1AFAB075006BF90A /* NSMutableData+Extension.m in Sources */ = {isa = PBXBuildFile; fileRef = CECBC1681800D5E000AD98E6 /* NSMutableData+Extension.m */; };
@@ -799,7 +795,6 @@
 		C2E40E2C19D58E3C0079046E /* PreferencePanes.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2E40E2B19D58E3C0079046E /* PreferencePanes.framework */; };
 		C2E40E2E19D58E430079046E /* Quartz.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2E40E2D19D58E430079046E /* Quartz.framework */; };
 		C2E40E3019D58E490079046E /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2E40E2F19D58E490079046E /* Accelerate.framework */; };
-		C2E40E3419D58E580079046E /* libstdc++.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = C2E40E3319D58E580079046E /* libstdc++.dylib */; };
 		C2E40E3519D58F160079046E /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A7C78FA1947E134001617DB /* OpenGL.framework */; };
 		C2E561041AF3729600B4CAF0 /* libsqlcipher.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C2E561031AF3726300B4CAF0 /* libsqlcipher.a */; };
 		C2E5A0611BABF33C00C1BCA1 /* TL_localMessageService_old34.m in Sources */ = {isa = PBXBuildFile; fileRef = C2E5A0601BABF33C00C1BCA1 /* TL_localMessageService_old34.m */; };
@@ -812,6 +807,8 @@
 		C2F07E171BBD7D5300B3DB39 /* JavaScriptCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2F07E161BBD7D5300B3DB39 /* JavaScriptCore.framework */; };
 		C2F07E191BBD7D9300B3DB39 /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = C2F07E181BBD7D9300B3DB39 /* libz.tbd */; };
 		C2F07E1B1BBD7E0E00B3DB39 /* libsqlite3.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = C2F07E1A1BBD7E0E00B3DB39 /* libsqlite3.tbd */; };
+		C2F07E1D1BBDBABF00B3DB39 /* ImageIO.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2F07E1C1BBDBABF00B3DB39 /* ImageIO.framework */; };
+		C2F07E1F1BBDBACD00B3DB39 /* libstdc++.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = C2F07E1E1BBDBACD00B3DB39 /* libstdc++.tbd */; };
 		C2F3995F190E7692006B36F7 /* ReadHistroryTask.m in Sources */ = {isa = PBXBuildFile; fileRef = C2F3995E190E7692006B36F7 /* ReadHistroryTask.m */; };
 		C2F39967190FD1D6006B36F7 /* ASHandle.m in Sources */ = {isa = PBXBuildFile; fileRef = C2F39965190FD1D6006B36F7 /* ASHandle.m */; };
 		C2F3996E190FD1FC006B36F7 /* SGraphListNode.m in Sources */ = {isa = PBXBuildFile; fileRef = C2F39969190FD1FC006B36F7 /* SGraphListNode.m */; };
@@ -832,7 +829,6 @@
 		C2FF82A31B99C7CE00DE2455 /* TGForceChannelUpdate.m in Sources */ = {isa = PBXBuildFile; fileRef = C2FF82A21B99C7CE00DE2455 /* TGForceChannelUpdate.m */; };
 		C2FF82E81B9F28DA00DE2455 /* ChannelHistoryController.m in Sources */ = {isa = PBXBuildFile; fileRef = C2FF82E71B9F28D900DE2455 /* ChannelHistoryController.m */; };
 		C2FF82EB1BA0796400DE2455 /* ChannelsManager.m in Sources */ = {isa = PBXBuildFile; fileRef = C2FF82EA1BA0796400DE2455 /* ChannelsManager.m */; };
-		CE05837E17FD80AD0029EFCB /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = CE05837D17FD80AD0029EFCB /* libz.dylib */; };
 		CE05838017FDB68C0029EFCB /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CE05837F17FDB68C0029EFCB /* CoreFoundation.framework */; };
 		CE0AC51D18BE0EE70031658A /* TL_destructMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = CE0AC51C18BE0EE70031658A /* TL_destructMessage.m */; };
 		CE23C38218C717D200AA6C78 /* MessageTableItemAudio.m in Sources */ = {isa = PBXBuildFile; fileRef = CE23C38118C717D200AA6C78 /* MessageTableItemAudio.m */; };
@@ -868,7 +864,6 @@
 		CEAE5D65181ECDF100C17645 /* FMDatabasePool.m in Sources */ = {isa = PBXBuildFile; fileRef = CEAE5D5D181ECDF100C17645 /* FMDatabasePool.m */; };
 		CEAE5D66181ECDF100C17645 /* FMDatabaseQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = CEAE5D5F181ECDF100C17645 /* FMDatabaseQueue.m */; };
 		CEAE5D68181ECDF100C17645 /* FMResultSet.m in Sources */ = {isa = PBXBuildFile; fileRef = CEAE5D62181ECDF100C17645 /* FMResultSet.m */; };
-		CEAE5D6A181ED1BF00C17645 /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = CEAE5D69181ED1BF00C17645 /* libsqlite3.dylib */; };
 		CEAE5D6D181EEFF000C17645 /* TLPeer+Extensions.m in Sources */ = {isa = PBXBuildFile; fileRef = CEAE5D6C181EEFF000C17645 /* TLPeer+Extensions.m */; };
 		CEB09E5C17DAFC250055F150 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CEB09E5B17DAFC250055F150 /* Cocoa.framework */; };
 		CEB09E6817DAFC250055F150 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = CEB09E6717DAFC250055F150 /* main.m */; };
@@ -1479,7 +1474,6 @@
 		C20A7E7A19DC1379008844F2 /* TGCTextView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGCTextView.h; sourceTree = "<group>"; };
 		C20A7E7B19DC1379008844F2 /* TGCTextView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGCTextView.m; sourceTree = "<group>"; };
 		C20A7E7D19DC1816008844F2 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
-		C20A7E7F19DC1887008844F2 /* ImageIO.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ImageIO.framework; path = System/Library/Frameworks/ImageIO.framework; sourceTree = SDKROOT; };
 		C20B228418E971D0007BCCD6 /* bitwise.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = bitwise.c; sourceTree = "<group>"; };
 		C20B228518E971D0007BCCD6 /* framing.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = framing.c; sourceTree = "<group>"; };
 		C20B228618E971D0007BCCD6 /* ogg.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ogg.h; sourceTree = "<group>"; };
@@ -2251,7 +2245,6 @@
 		C2CB5D401B4D697700CD61DF /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		C2CB5D5D1B4D871600CD61DF /* TGUpdater.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGUpdater.h; sourceTree = "<group>"; };
 		C2CB5D5E1B4D871600CD61DF /* TGUpdater.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGUpdater.m; sourceTree = "<group>"; };
-		C2CB5DA11B4DB14F00CD61DF /* libstdc++.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libstdc++.dylib"; path = "Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.10.sdk/usr/lib/libstdc++.dylib"; sourceTree = DEVELOPER_DIR; };
 		C2CB5DC31B4EAA4F00CD61DF /* NSObject+BObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSObject+BObject.h"; sourceTree = "<group>"; };
 		C2CB5DC41B4EAA4F00CD61DF /* NSObject+BObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSObject+BObject.m"; sourceTree = "<group>"; };
 		C2CB5DC61B4EAA6300CD61DF /* AJObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AJObject.h; sourceTree = "<group>"; };
@@ -2277,9 +2270,6 @@
 		C2CBF5E71AF7CBD9006BF90A /* TGS_RPCRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGS_RPCRequest.m; sourceTree = "<group>"; };
 		C2CBF5F01AF8DA5C006BF90A /* ClassStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ClassStore.h; sourceTree = "<group>"; };
 		C2CBF5F11AF8DA5C006BF90A /* ClassStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ClassStore.m; sourceTree = "<group>"; };
-		C2CBF60D1AF90881006BF90A /* libsqlite3.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.0.dylib; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.10.sdk/usr/lib/libsqlite3.0.dylib; sourceTree = DEVELOPER_DIR; };
-		C2CBF6161AF911A2006BF90A /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.10.sdk/System/Library/Frameworks/SystemConfiguration.framework; sourceTree = DEVELOPER_DIR; };
-		C2CBF6181AF912A8006BF90A /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.10.sdk/usr/lib/libz.dylib; sourceTree = DEVELOPER_DIR; };
 		C2CBF67C1AFB6B6D006BF90A /* TGShare.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGShare.pch; sourceTree = "<group>"; };
 		C2CBF67D1AFB6BE1006BF90A /* TGHeader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGHeader.h; sourceTree = "<group>"; };
 		C2CBF6871AFB73FE006BF90A /* TGS_ConversationRowItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGS_ConversationRowItem.h; sourceTree = "<group>"; };
@@ -2449,7 +2439,6 @@
 		C2E40E2D19D58E430079046E /* Quartz.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Quartz.framework; path = System/Library/Frameworks/Quartz.framework; sourceTree = SDKROOT; };
 		C2E40E2F19D58E490079046E /* Accelerate.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accelerate.framework; path = System/Library/Frameworks/Accelerate.framework; sourceTree = SDKROOT; };
 		C2E40E3119D58E500079046E /* OpenCL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenCL.framework; path = System/Library/Frameworks/OpenCL.framework; sourceTree = SDKROOT; };
-		C2E40E3319D58E580079046E /* libstdc++.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libstdc++.dylib"; path = "usr/lib/libstdc++.dylib"; sourceTree = SDKROOT; };
 		C2E560FD1AF3726300B4CAF0 /* sqlcipher.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = sqlcipher.xcodeproj; path = sqlcipher/sqlcipher.xcodeproj; sourceTree = "<group>"; };
 		C2E5A05F1BABF33C00C1BCA1 /* TL_localMessageService_old34.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TL_localMessageService_old34.h; sourceTree = "<group>"; };
 		C2E5A0601BABF33C00C1BCA1 /* TL_localMessageService_old34.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TL_localMessageService_old34.m; sourceTree = "<group>"; };
@@ -2464,6 +2453,8 @@
 		C2F07E161BBD7D5300B3DB39 /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 		C2F07E181BBD7D9300B3DB39 /* libz.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = usr/lib/libz.tbd; sourceTree = SDKROOT; };
 		C2F07E1A1BBD7E0E00B3DB39 /* libsqlite3.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.tbd; path = usr/lib/libsqlite3.tbd; sourceTree = SDKROOT; };
+		C2F07E1C1BBDBABF00B3DB39 /* ImageIO.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ImageIO.framework; path = System/Library/Frameworks/ImageIO.framework; sourceTree = SDKROOT; };
+		C2F07E1E1BBDBACD00B3DB39 /* libstdc++.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = "libstdc++.tbd"; path = "usr/lib/libstdc++.tbd"; sourceTree = SDKROOT; };
 		C2F3995D190E7692006B36F7 /* ReadHistroryTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ReadHistroryTask.h; sourceTree = "<group>"; };
 		C2F3995E190E7692006B36F7 /* ReadHistroryTask.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ReadHistroryTask.m; sourceTree = "<group>"; };
 		C2F39964190FD1D6006B36F7 /* ASHandle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ASHandle.h; sourceTree = "<group>"; };
@@ -2646,9 +2637,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				C26E80341B8369B1003CC483 /* MtProtoKit.framework in Frameworks */,
-				C2CBF6191AF912A8006BF90A /* libz.dylib in Frameworks */,
-				C2CBF6171AF911A2006BF90A /* SystemConfiguration.framework in Frameworks */,
-				C2CBF60E1AF90882006BF90A /* libsqlite3.0.dylib in Frameworks */,
 				C2CBF60C1AF90878006BF90A /* libsqlcipher.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2657,6 +2645,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C2F07E1F1BBDBACD00B3DB39 /* libstdc++.tbd in Frameworks */,
+				C2F07E1D1BBDBABF00B3DB39 /* ImageIO.framework in Frameworks */,
+				0A2576A5181D09E500FB386C /* SystemConfiguration.framework in Frameworks */,
 				C2F07E1B1BBD7E0E00B3DB39 /* libsqlite3.tbd in Frameworks */,
 				C2F07E191BBD7D9300B3DB39 /* libz.tbd in Frameworks */,
 				CEB7AE05181419E5005CB6A1 /* QuartzCore.framework in Frameworks */,
@@ -2670,11 +2661,9 @@
 				C2F07E0F1BBD7CD900B3DB39 /* IOKit.framework in Frameworks */,
 				C2D826241B6FA8E800434D37 /* MtProtoKit.framework in Frameworks */,
 				C2E561041AF3729600B4CAF0 /* libsqlcipher.a in Frameworks */,
-				C20A7E8019DC1887008844F2 /* ImageIO.framework in Frameworks */,
 				C2E40E3519D58F160079046E /* OpenGL.framework in Frameworks */,
 				C20A7E7E19DC1816008844F2 /* CoreGraphics.framework in Frameworks */,
 				C20A7E7519DAAF51008844F2 /* CoreText.framework in Frameworks */,
-				C2E40E3419D58E580079046E /* libstdc++.dylib in Frameworks */,
 				C2C8AB0C1A3F3BC900C857D6 /* libwebpdemux.a in Frameworks */,
 				C2E40E3019D58E490079046E /* Accelerate.framework in Frameworks */,
 				C2E40E2E19D58E430079046E /* Quartz.framework in Frameworks */,
@@ -2684,15 +2673,12 @@
 				C2A5C02518E300E70021BE68 /* CoreAudio.framework in Frameworks */,
 				C2A5C01818E1AB980021BE68 /* AudioToolbox.framework in Frameworks */,
 				C2A5BFFA18E02D8F0021BE68 /* AudioUnit.framework in Frameworks */,
-				CEAE5D6A181ED1BF00C17645 /* libsqlite3.dylib in Frameworks */,
 				C2C8AB0D1A3F3BC900C857D6 /* libwebpmux.a in Frameworks */,
-				0A2576A5181D09E500FB386C /* SystemConfiguration.framework in Frameworks */,
 				0A13B82A18199C1A00E06702 /* AddressBook.framework in Frameworks */,
 				CE29CA7C1801355200803E22 /* libssl.a in Frameworks */,
 				CE29CA7B1801355200803E22 /* libcrypto.a in Frameworks */,
 				C2C8AB0B1A3F3BC900C857D6 /* libwebp.a in Frameworks */,
 				CE05838017FDB68C0029EFCB /* CoreFoundation.framework in Frameworks */,
-				CE05837E17FD80AD0029EFCB /* libz.dylib in Frameworks */,
 				CEB0A23517DB03E00055F150 /* Security.framework in Frameworks */,
 				CEB0D71618E0CBB000457D08 /* libopus.a in Frameworks */,
 				C20F76E21BB57581003A1E86 /* Sparkle.framework in Frameworks */,
@@ -5416,6 +5402,8 @@
 		CEB09E5A17DAFC250055F150 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				C2F07E1E1BBDBACD00B3DB39 /* libstdc++.tbd */,
+				C2F07E1C1BBDBABF00B3DB39 /* ImageIO.framework */,
 				C2F07E1A1BBD7E0E00B3DB39 /* libsqlite3.tbd */,
 				C2F07E181BBD7D9300B3DB39 /* libz.tbd */,
 				C2F07E161BBD7D5300B3DB39 /* JavaScriptCore.framework */,
@@ -5423,14 +5411,8 @@
 				C2F07E121BBD7CFA00B3DB39 /* MapKit.framework */,
 				C2F07E101BBD7CEF00B3DB39 /* WebKit.framework */,
 				C2F07E0E1BBD7CD900B3DB39 /* IOKit.framework */,
-				C2CB5DA11B4DB14F00CD61DF /* libstdc++.dylib */,
-				C2CBF6181AF912A8006BF90A /* libz.dylib */,
-				C2CBF6161AF911A2006BF90A /* SystemConfiguration.framework */,
-				C2CBF60D1AF90881006BF90A /* libsqlite3.0.dylib */,
-				C20A7E7F19DC1887008844F2 /* ImageIO.framework */,
 				C20A7E7D19DC1816008844F2 /* CoreGraphics.framework */,
 				C20A7E7419DAAF51008844F2 /* CoreText.framework */,
-				C2E40E3319D58E580079046E /* libstdc++.dylib */,
 				C2E40E3119D58E500079046E /* OpenCL.framework */,
 				C2E40E2F19D58E490079046E /* Accelerate.framework */,
 				C2E40E2D19D58E430079046E /* Quartz.framework */,

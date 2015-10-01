@@ -548,7 +548,9 @@
             
             item.message.views = [data[@(item.message.n_id)] intValue];
             
-            if(index != NSNotFound) {
+            BOOL upd = [item updateViews];
+            
+            if(upd && index != NSNotFound) {
                 [self.table reloadDataForRowIndexes:[NSIndexSet indexSetWithIndex:index] columnIndexes:[NSIndexSet indexSetWithIndex:0]];
             }
         }];
