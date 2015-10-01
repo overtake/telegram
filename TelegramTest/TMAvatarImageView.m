@@ -15,7 +15,6 @@
 #define INIT_HASH_CHEKER() __block NSUInteger hash = self.currentHash;
 #define HASH_CHECK() if(self.currentHash != hash) return;
 #import <CommonCrypto/CommonDigest.h>
-#import <openssl/md5.h>
 #import "ImageUtils.h"
 #import "TGCache.h"
 #import "TMAvaImageObject.h"

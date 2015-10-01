@@ -21,8 +21,6 @@
 
 @class Telegram;
 
-@protocol NSUserNotificationCenterDelegate <NSObject>
-@end
 
 
 @interface AppDelegate : NSObject <NSApplicationDelegate, NSApplicationDelegate,NSWindowDelegate, NSUserNotificationCenterDelegate>

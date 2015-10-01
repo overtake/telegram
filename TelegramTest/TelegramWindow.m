@@ -159,7 +159,7 @@
 }
 
 - (void)close {
-    [[NSApplication sharedApplication] hide:nil];
+    [(NSApplication *)[NSApplication sharedApplication] hide:nil];
 }
 
 - (void)dealloc {

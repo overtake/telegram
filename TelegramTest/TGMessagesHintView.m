@@ -168,21 +168,16 @@ DYNAMIC_PROPERTY(DUser);
 
 
 
+
 @interface TGMessagesHintView () <TMTableViewDelegate>
 @property (nonatomic,strong) TMTableView *tableView;
 @property (nonatomic,copy) void (^choiceHandler)(NSString *result);
-
+@property (nonatomic,strong) TMView *separator;
 @end
 
 @implementation TGMessagesHintView
 
-- (void)drawRect:(NSRect)dirtyRect {
-    [super drawRect:dirtyRect];
-    
-    [GRAY_BORDER_COLOR set];
-    
-    NSRectFill(NSMakeRect(0, NSHeight(dirtyRect) - 1, NSWidth(dirtyRect), 1));
-}
+
 
 - (CGFloat)rowHeight:(NSUInteger)row item:(TGMessagesHintRowItem *) item {
     return 40;
@@ -222,6 +217,14 @@ DYNAMIC_PROPERTY(DUser);
         self.autoresizingMask = NSViewWidthSizable;
         
       //  self.tableView.containerView.autoresizingMask = NSViewWidthSizable;
+        
+        _separator = [[TMView alloc] initWithFrame:NSMakeRect(0, NSHeight(frameRect) - DIALOG_BORDER_WIDTH, NSWidth(frameRect), DIALOG_BORDER_WIDTH)];
+        
+        _separator.backgroundColor = DIALOG_BORDER_COLOR;
+        
+         _separator.autoresizingMask = NSViewWidthSizable;
+        
+        [self addSubview:_separator];
         
     }
     
@@ -427,6 +430,8 @@ DYNAMIC_PROPERTY(DUser);
     
     [self setFrameSize:NSMakeSize(NSWidth(self.frame), MIN(self.tableView.count * 40, 140 ))];
     [self.tableView.containerView setFrameSize:NSMakeSize(NSWidth(self.frame), NSHeight(self.frame) )];
+    
+    [_separator setFrame:NSMakeRect(0, NSHeight(self.frame) - DIALOG_BORDER_WIDTH, NSWidth(self.frame), DIALOG_BORDER_WIDTH)];
     [self selectPrev];
 }
 

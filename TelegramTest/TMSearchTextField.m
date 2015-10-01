@@ -173,15 +173,15 @@ const static int textFieldXOffset = 30;
         NSAttributedString *placeholderAttributed = [[NSAttributedString alloc] initWithString:NSLocalizedString(@"Search", nil) attributes:@{NSForegroundColorAttributeName: NSColorFromRGB(0xaeaeae), NSFontAttributeName: TGSystemLightFont(12)}];
         [[self.textField cell] setPlaceholderAttributedString:placeholderAttributed];
         
-     
-        
         [self.textField setBackgroundColor:[NSColor clearColor]];
         [self.textField setFont:TGSystemLightFont(12)];
         [self.textField setStringValue:NSLocalizedString(@"Search", nil)];
         [self.textField sizeToFit];
         [self.textField setStringValue:@""];
         
-        [self.textField setFrame:NSMakeRect(textFieldXOffset, roundf((self.bounds.size.height - self.textField.bounds.size.height) / 2) - 3, self.containerView.frame.size.width - 30 - textFieldXOffset, self.textField.bounds.size.height)];
+        NSLog(@"%@",NSStringFromRect(self.textField.frame));
+        
+        [self.textField setFrame:NSMakeRect(textFieldXOffset, roundf((self.frame.size.height - self.textField.frame.size.height) / 2) - 1, self.containerView.frame.size.width - 30 - textFieldXOffset, self.textField.bounds.size.height)];
         
         
         [self.textField setBordered:NO];

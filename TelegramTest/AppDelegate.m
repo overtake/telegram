@@ -58,7 +58,7 @@
 
 @end
 
-@interface AppDelegate ()<SettingsListener>
+@interface AppDelegate ()<SettingsListener,BITHockeyManagerDelegate>
 
 @property (nonatomic,strong) NSSharingService *sharing;
 #ifdef TGDEBUG
@@ -100,9 +100,8 @@ static void TGTelegramLoggingFunction(NSString *format, va_list args)
 
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification {
     
-    
-   
-    
+        
+
     MTLogSetLoggingFunction(&TGTelegramLoggingFunction);
     
     NSAppleEventManager *appleEventManager = [NSAppleEventManager sharedAppleEventManager];
@@ -899,6 +898,7 @@ void exceptionHandler(NSException * exception)
         
     };
     
+    
     if([[MTNetwork instance] isAuth] && !force) {
         
          [TMViewController showModalProgress];
@@ -1028,9 +1028,7 @@ continueUserActivity: (id)userActivity
         int peerId = [userInfo[@"peer"][@"id"] intValue];
         
         NSString *text = userInfo[@"text"];
-        
-        NSString *username = userInfo[@"peer"][@"username"];
-        
+                
         
         TLPeer *peer;
         if([peerType isEqualToString:@"group"]) {

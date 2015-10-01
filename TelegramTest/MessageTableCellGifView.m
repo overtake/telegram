@@ -7,7 +7,6 @@
 //
 
 #import "MessageTableCellGifView.h"
-#import "TMGifImageView.h"
 #import "ImageUtils.h"
 #import "TMCircularProgress.h"
 #import "MessageTableCellVideoView.h"

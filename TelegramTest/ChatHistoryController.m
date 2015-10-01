@@ -28,7 +28,7 @@
 #import "TGChannelsPolling.h"
 #import "ChannelImportantFilter.h"
 #import "WeakReference.h"
-@interface ChatHistoryController () <TGChannelPollingDelegate>
+@interface ChatHistoryController ()
 
 
 @property (nonatomic,strong) NSMutableArray * messageItems;
@@ -133,12 +133,14 @@ static ChatHistoryController *observer;
     
     [queue dispatchOnQueue:^{
         
-        NSArray *items = [self filterAndAdd:@[item] acceptToFilters:nil];
+       [self filterAndAdd:@[item] acceptToFilters:nil];
 
-        if(items.count == 0) {
-            int bp = 0;
-        }
     }];
+}
+
+
+-(void)loadAroundMessagesWithMessage:(MessageTableItem *)msg limit:(int)limit selectHandler:(selectHandler)selectHandler {
+    
 }
 
 -(void)notificationReceiveMessages:(NSNotification *)notify {
@@ -429,10 +431,6 @@ static ChatHistoryController *observer;
         [items enumerateObjectsUsingBlock:^(MessageTableItem *obj, NSUInteger idx, BOOL *stop) {
             
             Class filterClass = controller.filter.class;
-            
-            if(controller == self) {
-                int bp =0;
-            }
             
             NSMutableArray *filterItems = [filterClass messageItems:obj.message.peer_id];
             NSMutableDictionary *filterKeys = [filterClass messageKeys:obj.message.peer_id];

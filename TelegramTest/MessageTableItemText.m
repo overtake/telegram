@@ -143,7 +143,7 @@
         
     }];
     
-    [attr addAttribute:NSFontAttributeName value:TGSystemFont(13) range:attr.range];
+    [attr addAttribute:NSFontAttributeName value:TGSystemFont(12.5) range:attr.range];
     
     _allAttributedLinks = [attr copy];
     
@@ -163,6 +163,13 @@
     [self.textAttributed setFont:TGSystemFont([self fontSize]) forRange:self.textAttributed.range];
     
     
+    
+    NSMutableParagraphStyle *style = [NSMutableParagraphStyle new];
+    style.lineSpacing = 0;
+    style.alignment = NSLeftTextAlignment;
+    
+    [self.textAttributed addAttribute:NSParagraphStyleAttributeName value:style range:self.textAttributed.range];
+    
     [self.message.entities enumerateObjectsUsingBlock:^(TLMessageEntity *obj, NSUInteger idx, BOOL *stop) {
         
         NSRange range = [self checkAndReturnEntityRange:obj];
@@ -173,7 +180,7 @@
             
             range = [self.textAttributed.string rangeOfString:link];
             
-            [self.textAttributed addAttribute:NSFontAttributeName value:TGSystemMediumFont([SettingsArchiver checkMaskedSetting:BigFontSetting] ? 15 : 13) range:range];
+            [self.textAttributed addAttribute:NSFontAttributeName value:TGSystemMediumFont([self fontSize]) range:range];
         } else if([obj isKindOfClass:[TL_messageEntityItalic class]]) {
             
             NSString *link = [self.message.message substringWithRange:range];
@@ -181,7 +188,7 @@
             range = [self.textAttributed.string rangeOfString:link];
 
             
-            [self.textAttributed addAttribute:NSFontAttributeName value:TGSystemItalicFont([SettingsArchiver checkMaskedSetting:BigFontSetting] ? 15 : 13) range:range];
+            [self.textAttributed addAttribute:NSFontAttributeName value:TGSystemItalicFont([self fontSize]) range:range];
         }
         
     }];

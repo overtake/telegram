@@ -140,6 +140,9 @@
     return self;
 }
 
+-(void)enterClick {
+    
+}
 
 - (void)actionAddContact {
     

@@ -446,7 +446,7 @@ static NSDictionary *attributes() {
                     stateImage = self.isSelected ? image_MessageStateSentWhite() : image_MessageStateSent();
                 }
                 
-                point = NSMakePoint(NSMinX(self.dateField.frame) - stateImage.size.width , NSHeight(self.frame) - stateImage.size.height - 10);
+                point = NSMakePoint(NSMinX(self.dateField.frame) - stateImage.size.width , NSHeight(self.frame) - stateImage.size.height - 8);
                 
             } else if(self.item.message.dstate == DeliveryStateError) {
                 
@@ -458,7 +458,7 @@ static NSDictionary *attributes() {
                 
                 stateImage = self.isSelected ? image_SendingClockWhite() : image_SendingClockGray();
                 
-                point = NSMakePoint(NSMinX(self.dateField.frame) - stateImage.size.width -2, NSHeight(self.frame) - stateImage.size.height - 9);
+                point = NSMakePoint(NSMinX(self.dateField.frame) - stateImage.size.width -2, NSHeight(self.frame) - stateImage.size.height - 7);
                 
             }
             

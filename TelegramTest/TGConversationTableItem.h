@@ -35,6 +35,5 @@
 
 -(void)needUpdateMessage:(NSNotification *)notification;
 
--(void)update;
 -(void)performReload;
 @end

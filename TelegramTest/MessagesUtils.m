@@ -581,6 +581,7 @@
         [dateText appendString:@"" withColor:NSColorFromRGB(0xaeaeae)];
     }
     
+    [dateText setFont:TGSystemFont(12) forRange:dateText.range];
    
      data[@"dateText"] = dateText;
     

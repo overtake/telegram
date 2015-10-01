@@ -599,7 +599,6 @@ static NSArray *channelUpdates;
     
     if([update isKindOfClass:[TL_updateServiceNotification class]]) {
         
-        
         TL_updateServiceNotification *updateNotification = (TL_updateServiceNotification *)update;
         
         TL_conversation *conversation = [[Storage manager] selectConversation:[TL_peerUser createWithUser_id:777000]];

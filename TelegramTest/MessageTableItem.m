@@ -167,7 +167,7 @@ static NSCache *cItems;
     
     [header setFont:TGSystemMediumFont(13) forRange:header.range];
     
-    [header addAttribute:NSLinkAttributeName value:[TMInAppLinks peerProfile:self.message.peer] range:header.range];
+    [header addAttribute:NSLinkAttributeName value:[TMInAppLinks peerProfile:self.message.from_id == 0 ? self.message.peer : [TL_peerUser createWithUser_id:self.message.from_id]] range:header.range];
     
     self.headerName = header;
     

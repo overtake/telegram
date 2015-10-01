@@ -65,7 +65,6 @@ typedef enum {
 - (NSString *)dialogFullName;
 - (TLInputPeer *)inputPeer;
 - (TLInputUser *)inputUser;
-- (NSString *)shortLastSeen;
 - (NSString *)lastSeen;
 - (int)lastSeenTime;
 - (TL_conversation *)dialog;

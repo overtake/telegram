@@ -365,10 +365,10 @@
     
     [super drawRect:dirtyRect];
     
-    if ([[self string] isEqualToString:@""] ) {
+    if (self.string.length == 0) {
         if(self.placeholderTextAttributedString) {
             
-           [self.placeholderTextAttributedString drawAtPoint:NSMakePoint(6, 4)];
+           [self.placeholderTextAttributedString drawAtPoint:NSMakePoint(6, roundf((NSHeight(dirtyRect) - [self.placeholderTextAttributedString size].height)/2) - 3)];
         }
     }
 }

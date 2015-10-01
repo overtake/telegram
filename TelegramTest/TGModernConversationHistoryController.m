@@ -253,15 +253,18 @@ static BOOL isStorageLoaded;
     if(_state == TGModernCHStateLocal)
     {
         
+        
         [[Storage manager] dialogsWithOffset:_offset limit:[self.delegate conversationsLoadingLimit] completeHandler:^(NSArray *d, NSArray *m, NSArray *c) {
             
-            if([[ChannelsManager sharedManager] all].count > 0  && c.count == 0 && d.count > 0) {
+            
+            if(c.count == 0 && d.count > 0 && [[ChannelsManager sharedManager] all].count > 0) {
                 c = [[ChannelsManager sharedManager] all];
             }
             
             [[DialogsManager sharedManager] add:[d arrayByAddingObjectsFromArray:c]];
             
             [[ChannelsManager sharedManager] add:c];
+            
             
             [_queue dispatchOnQueue:^{
                 

@@ -7,7 +7,6 @@
 //
 
 #import "NotSelectedDialogsViewController.h"
-#import "TMGifImageView.h"
 #import <AVFoundation/AVFoundation.h>
 #import "TGCTextView.h"
 @interface NotSelectedDialogsViewController()

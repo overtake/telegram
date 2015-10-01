@@ -1694,7 +1694,7 @@ TL_localMessage *parseMessage(FMResultSet *result) {
     
    
     
-    [db executeUpdate:@"insert or replace into dialogs (peer_id,top_message,last_message_date,unread_count,type,notify_settings,last_marked_message,sync_message_id,last_marked_date,last_real_message_date,mute_until) values (?,?,?,?,?,?,?,?,?,?,?)",
+    [db executeUpdate:@"insert or replace into dialogs (peer_id,top_message,last_message_date,unread_count,type,notify_settings,last_marked_message,sync_message_id,last_marked_date,last_real_message_date,mute_until,read_inbox_max_id) values (?,?,?,?,?,?,?,?,?,?,?,?)",
      @([dialog peer_id]),
      @(dialog.top_message),
      @(dialog.last_message_date),
@@ -1705,7 +1705,8 @@ TL_localMessage *parseMessage(FMResultSet *result) {
      @(dialog.sync_message_id),
      @(dialog.last_marked_date),
      @(dialog.last_real_message_date),
-     @(dialog.notify_settings.mute_until)
+     @(dialog.notify_settings.mute_until),
+     @(dialog.read_inbox_max_id)
      ];
 }
 
@@ -2289,7 +2290,6 @@ TL_localMessage *parseMessage(FMResultSet *result) {
      [queue inDatabase:^(FMDatabase *db) {
          
          FMResultSet *result;
-         
          NSString *sql = [NSString stringWithFormat:@"select serialized from %@ where peer_id = %d and n_id %@ %@ and (filter_mask & %d) > 0 order by date DESC, n_id DESC LIMIT %d",[peer isKindOfClass:[TL_peerChannel class]] ? tableChannelMessages : tableMessages,peer.peer_id,next ? @"<" : @">",@([peer isKindOfClass:[TL_peerChannel class]] ? channelMsgId(max_id, peer.peer_id) : max_id),filterMask,limit];
          
          

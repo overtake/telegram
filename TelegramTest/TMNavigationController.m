@@ -87,9 +87,7 @@ static const int navigationOffset = 48;
     
     self.containerView.layer.backgroundColor = [NSColor clearColor].CGColor;
     [self.view addSubview:self.containerView];
-    
-    int connectingHeight = navigationOffset-navigationHeight;
-    
+        
     
     // [self.containerView addSubview:_connectionController];
     

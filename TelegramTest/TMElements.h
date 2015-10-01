@@ -38,7 +38,6 @@
 #import "TMNameTextField.h"
 #import "Butter.h"
 #import "TMTextField.h"
-#import "TMGLGif.h"
 #import "TMTextButton.h"
 #import "TMSimpleTabViewController.h"
 #import "TMNavigationController.h"

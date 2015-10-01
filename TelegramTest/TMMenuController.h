@@ -13,7 +13,6 @@
 
 @property (nonatomic,strong,readonly) id selectedItem;
 
-@property (nonatomic, weak) TMMenuPopover *popover;
 @property (nonatomic, strong) NSMenu *menuController;
 - (id)initWithMenu:(NSMenu *)menu;
 - (void)close;
@@ -21,4 +20,7 @@
 -(void)selectNext;
 -(void)selectPrev;
 -(void)performSelected;
+
+-(TMMenuPopover *)popover;
+
 @end

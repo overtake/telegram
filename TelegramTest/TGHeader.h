@@ -60,12 +60,21 @@
 
 #define NSColorFromRGBWithAlpha(rgbValue, alphaValue) [NSColor colorWithDeviceRed:((float)((rgbValue & 0xFF0000) >> 16))/255.0 green:((float)((rgbValue & 0xFF00) >> 8))/255.0 blue:((float)(rgbValue & 0xFF))/255.0 alpha:(alphaValue)]
 
-#define TGSystemFont(s) [NSFont fontWithName:@"HelveticaNeue" size:(s)]
-#define TGSystemMediumFont(s) [NSFont fontWithName:@"HelveticaNeue-Medium" size:(s)]
-#define TGSystemLightFont(s) [NSFont fontWithName:@"HelveticaNeue-Light" size:(s)]
-#define TGSystemItalicFont(s) [NSFont fontWithName:@"HelveticaNeue-Italic" size:(s)]
-#define TGSystemBoldItalicFont(s) [NSFont fontWithName:@"HelveticaNeue-BoldItalic" size:(s)]
-#define TGSystemBoldFont(s) [NSFont fontWithName:@"HelveticaNeue-Bold" size:(s)]
+//#define TGSystemFont(s) [NSFont fontWithName:@"HelveticaNeue" size:(s)]
+//#define TGSystemMediumFont(s) [NSFont fontWithName:@"HelveticaNeue-Medium" size:(s)]
+//#define TGSystemLightFont(s) [NSFont fontWithName:@"HelveticaNeue-Light" size:(s)]
+//#define TGSystemItalicFont(s) [NSFont fontWithName:@"HelveticaNeue-Italic" size:(s)]
+//#define TGSystemBoldItalicFont(s) [NSFont fontWithName:@"HelveticaNeue-BoldItalic" size:(s)]
+//#define TGSystemBoldFont(s) [NSFont fontWithName:@"HelveticaNeue-Bold" size:(s)]
+
+#define TGSystemFont(s) NSAppKitVersionNumber > 1349 ? [NSFont fontWithName:@".SFNSText-Regular" size:(s)] : [NSFont fontWithName:@"HelveticaNeue" size:(s)]
+#define TGSystemMediumFont(s) NSAppKitVersionNumber > 1349 ? [NSFont fontWithName:@".SFNSText-Medium" size:(s)] : [NSFont fontWithName:@"HelveticaNeue-Medium" size:(s)]
+#define TGSystemLightFont(s) NSAppKitVersionNumber > 1349 ? [NSFont fontWithName:@".SFNSText-Regular" size:(s)] : [NSFont fontWithName:@"HelveticaNeue-Light" size:(s)]
+#define TGSystemItalicFont(s) NSAppKitVersionNumber > 1349 ? [NSFont fontWithName:@".SFNSText-Italic" size:(s)] : [NSFont fontWithName:@"HelveticaNeue-Italic" size:(s)]
+#define TGSystemBoldItalicFont(s) NSAppKitVersionNumber > 1349 ? [NSFont fontWithName:@".SFNSText-BoldItalic" size:(s)] : [NSFont fontWithName:@"HelveticaNeue-BoldItalic" size:(s)]
+#define TGSystemBoldFont(s) NSAppKitVersionNumber > 1349 ? [NSFont fontWithName:@".SFNSText-Bold" size:(s)] : [NSFont fontWithName:@"HelveticaNeue-Bold" size:(s)]
+
+
 #define VIDEO_COMPRESSED_PROGRESS 10.0f
 #define MAX_FILE_SIZE 1500000000
 
