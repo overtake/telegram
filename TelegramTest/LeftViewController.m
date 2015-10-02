@@ -234,6 +234,10 @@ static const int bottomOffset = 58;
 static TMViewController *changedController;
 
 -(void)tabItemDidChanged:(TMTabItem *)item index:(NSUInteger)index {
+    
+    if([Telegram mainViewController].isMinimisze && index != 1)
+        return;
+    
     [self.tabViewController showControllerByIndex:index];
     
     if(![Telegram isSingleLayout]) {
