@@ -329,6 +329,8 @@
             NSPoint currentConverted = NSMakePoint(startTablePoint.x - rect.origin.x - (item.isForwadedMessage ? item.containerOffsetForward : item.containerOffset), startTablePoint.y - rect.origin.y - NSMinY(view.containerView.frame));
             
             
+
+            
             if(i > startRow && i < endRow) {
                 
                 startPoint = NSMakePoint(textItem.blockSize.width, 0);

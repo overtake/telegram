@@ -244,6 +244,7 @@
     
     _selectRange = NSMakeRange(NSNotFound, 0);
     
+        
    
     [self.marks enumerateObjectsUsingBlock:^(TGCTextMark *mark, NSUInteger idx, BOOL *stop) {
         
@@ -471,7 +472,7 @@
     
     CTLineGetTypographicBounds(line, &ascent, &descent, &leading);
     
-    int lineHeight = floor(ascent + ceil(descent) + leading);
+    int lineHeight = ceil(ascent + ceil(descent) + leading);
 
     
     return (position.y > linePosition.y) && position.y < (linePosition.y + lineHeight);

@@ -233,7 +233,7 @@
     
     [super makeSizeByWidth:width];
     
-    [_webpage makeSize:width];
+    [_webpage makeSize:width - 30];
     
     width -= self.dateSize.width+10;
     
