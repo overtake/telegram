@@ -375,7 +375,9 @@
         
         
         if(!channel) {
-            channel = chat.dialog;
+            channel = [[DialogsManager sharedManager] createDialogForChannel:chat];
+            
+            [[ChannelsManager sharedManager] add:@[channel]];
             
             channel.invisibleChannel = NO;
             [channel save];
