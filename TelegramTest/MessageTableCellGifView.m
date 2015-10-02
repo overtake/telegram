@@ -258,7 +258,7 @@ static NSImage *playImage() {
 - (void)setCellState:(CellState)cellState {
     [super setCellState:cellState];
     
-    [self.playImage setHidden:!(cellState == CellStateNormal)];
+    [self.playImage setHidden:YES];
     
     [self.progressView setState:cellState];
 }
