@@ -294,6 +294,8 @@
     
     BOOL result = currentUser.status.expires != status.expires && currentUser.status.was_online != status.was_online && currentUser.status.class != status.class;
     
+    BOOL saveOnlyTime = currentUser.status.class == status.class || (([currentUser.status isKindOfClass:[TL_userStatusOnline class]] || [currentUser.status isKindOfClass:[TL_userStatusOffline class]])  && ([status isKindOfClass:[TL_userStatusOnline class]] || [status isKindOfClass:[TL_userStatusOffline class]]));
+    
     currentUser.status = status;
     currentUser.lastSeenUpdate = [[MTNetwork instance] getTime];
     currentUser.status.was_online = status.was_online;
@@ -301,6 +303,15 @@
     
     if(result)
         [Notification perform:USER_STATUS data:@{KEY_USER_ID: @(currentUser.n_id)}];
+    
+    
+    if(result) {
+        if(saveOnlyTime) {
+            [[Storage manager] updateUsersStatus:@[currentUser]];
+        } else {
+             [[Storage manager] insertUser:currentUser completeHandler:nil];
+        }
+    }
     
     return result;
 }
@@ -310,9 +321,6 @@
         TLUser *currentUser = [keys objectForKey:@(uid)];
         if(currentUser) {
             BOOL result = [self setUserStatus:status forUser:currentUser];
-            if(result) {
-                [[Storage manager] insertUser:currentUser completeHandler:nil];
-            }
         }
     }];
 }

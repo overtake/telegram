@@ -92,8 +92,9 @@
 
 -(void)initialize {
     
+    
     [[Storage manager] users:^(NSArray *result) {
-
+        
         [[UsersManager sharedManager] addFromDB:result];
         
         [[Storage manager] broadcastList:^(NSArray *broadcasts) {
@@ -102,8 +103,11 @@
             
             [[Storage manager] loadChats:^(NSArray *chats) {
                 
+                [[ChatsManager sharedManager] add:chats];
+                
                 [ASQueue dispatchOnStageQueue:^{
-                    [[ChatsManager sharedManager] add:chats];
+                    
+                    
                     [self initConversations];
                 }];
                 

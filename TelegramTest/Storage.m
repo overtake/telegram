@@ -161,7 +161,7 @@ NSString *const tableChannelMessages = @"channel_messages";
 NSString *const tableDialogs = @"dialogs";
 NSString *const tableChannelDialogs = @"channel_dialogs";
 NSString *const tableChats = @"chats";
-NSString *const tableUpdateState = @"update_state";
+NSString *const tableUpdateState = @"update_state2";
 NSString *const tableUsers = @"users";
 NSString *const tableContacts = @"contacts";
 NSString *const tableChatsFull = @"chats_full_new";
@@ -296,11 +296,17 @@ NSString *const tableMessageHoles = @"message_holes";
         
         
         
-        [db executeUpdate:[NSString stringWithFormat:@"create table if not exists %@ (seq integer, pts integer, date integer, qts integer, pts_count integer)",tableUpdateState]];
+        [db executeUpdate:[NSString stringWithFormat:@"create table if not exists %@ (n_id INTEGER PRIMARY KEY, seq integer, pts integer, date integer, qts integer, pts_count integer)",tableUpdateState]];
         
         
         
-        [db executeUpdate:[NSString stringWithFormat:@"CREATE TABLE IF NOT EXISTS %@ (n_id INTEGER PRIMARY KEY, serialized blob, lastseen_update integer)",tableUsers]];
+        [db executeUpdate:[NSString stringWithFormat:@"CREATE TABLE IF NOT EXISTS %@ (n_id INTEGER PRIMARY KEY, serialized blob, lastseen_update integer,last_seen integer)",tableUsers]];
+        
+        if (![db columnExists:@"last_seen" inTableWithName:tableUsers])
+        {
+            [db executeUpdate:[NSString stringWithFormat:@"ALTER TABLE %@ ADD COLUMN last_seen integer",tableUsers]];
+        }
+        
         
         [db executeUpdate:[NSString stringWithFormat:@"create table if not exists %@ (user_id INTEGER PRIMARY KEY,mutual integer)",tableContacts]];
         
@@ -491,10 +497,22 @@ static NSString *encryptionKey;
     [queue inDatabaseWithDealocing:^(FMDatabase *db) {
     
         
-        FMResultSet *result = [db executeQuery:@"select * from update_state limit 1"];
+        FMResultSet *result = [db executeQuery:[NSString stringWithFormat:@"select * from %@ where n_id = 1",tableUpdateState]];
+        
+        dispatch_block_t proccessResult = ^{
+             state = [[TGUpdateState alloc] initWithPts:[result intForColumn:@"pts"] qts:[result intForColumn:@"qts"] date:[result intForColumn:@"date"] seq:[result intForColumn:@"seq"] pts_count:[result intForColumn:@"pts_count"]];
+        };
         
         if([result next]) {
-            state = [[TGUpdateState alloc] initWithPts:[result intForColumn:@"pts"] qts:[result intForColumn:@"qts"] date:[result intForColumn:@"date"] seq:[result intForColumn:@"seq"] pts_count:[result intForColumn:@"pts_count"]];
+            proccessResult();
+        } else {
+            [result close];
+            
+            result = [db executeQuery:[NSString stringWithFormat:@"select * from %@ limit 1",@"update_state"]];
+           
+            proccessResult();
+            
+            [db executeUpdate:@"delete from update_state where 1=1"];
         }
         
         
@@ -508,10 +526,7 @@ static NSString *encryptionKey;
 
 -(void)saveUpdateState:(TGUpdateState *)state {
     [queue inDatabase:^(FMDatabase *db) {
-        [db beginTransaction];
-        [db executeUpdate:@"delete from update_state where 1=1"];
-        [db executeUpdate:@"insert into update_state (pts, qts, date, seq,pts_count) values (?,?,?,?,?)",@(state.pts),@(state.qts),@(state.date),@(state.seq),@(state.pts_count)];
-        [db commit];
+        [db executeUpdate:[NSString stringWithFormat:@"insert or replace into %@ (n_id, pts, qts, date, seq,pts_count) values (?,?,?,?,?,?)",tableUpdateState],@(1),@(state.pts),@(state.qts),@(state.date),@(state.seq),@(state.pts_count)];
     }];
 }
 
@@ -1330,7 +1345,7 @@ TL_localMessage *parseMessage(FMResultSet *result) {
         
         [db beginTransaction];
         
-        int flags = n_out ? TGOUTMESSAGE : 0;
+        int flags = n_out ? TGOUTMESSAGE | TGUNREADMESSAGE : TGUNREADMESSAGE;
         
         int read_inbox_max_id = [db intForQuery:[NSString stringWithFormat:@"select read_inbox_max_id from %@ where peer_id = ?",tableDialogs],@(peer_id)];
         
@@ -2007,6 +2022,13 @@ TL_localMessage *parseMessage(FMResultSet *result) {
             TLUser *user = [TLClassStore deserialize:[result dataForColumn:@"serialized"]];
             if([user isKindOfClass:[TLUser class]]) {
                 user.lastSeenUpdate = [result intForColumn:@"lastseen_update"];
+                
+                int last_seen = [result intForColumn:@"last_seen"];
+                
+                if(last_seen != 0) {
+                    user.status = last_seen < [[MTNetwork instance] getTime] ? [TL_userStatusOffline createWithWas_online:last_seen] : [TL_userStatusOnline createWithExpires:last_seen];
+                }
+                
                 [users addObject:user];
 
             }
@@ -2021,6 +2043,17 @@ TL_localMessage *parseMessage(FMResultSet *result) {
     }];
 }
 
+-(void)updateUsersStatus:(NSArray *)users {
+    [queue inDatabase:^(FMDatabase *db) {
+        
+        [users enumerateObjectsUsingBlock:^(TLUser *user, NSUInteger idx, BOOL * _Nonnull stop) {
+            
+            [db executeUpdate:[NSString stringWithFormat:@"update %@ set last_seen = ? where n_id = ?",tableUsers],@(user.lastSeenTime),@(user.n_id)];
+            
+        }];
+        
+    }];
+}
 
 
 - (void)insertUser:(TLUser *)user completeHandler:(void (^)(BOOL result))completeHandler {
@@ -2038,7 +2071,7 @@ TL_localMessage *parseMessage(FMResultSet *result) {
                     [[MTNetwork instance] setUserId:user.n_id];
                 }
                 
-                [db executeUpdate:@"insert or replace into users (n_id, serialized,lastseen_update) values (?,?,?)", @(user.n_id), [TLClassStore serialize:user],@(user.lastSeenUpdate)];
+                [db executeUpdate:@"insert or replace into users (n_id, serialized,lastseen_update,last_seen) values (?,?,?,?)", @(user.n_id), [TLClassStore serialize:user],@(user.lastSeenUpdate),@(user.status.lastSeenTime)];
 
             }
             

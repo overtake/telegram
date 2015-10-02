@@ -393,7 +393,7 @@
                 CGContextFillPath(context);
                 CGPathRelease(highlightPath);
                 
-
+                
                 
                 // CFRelease(line);
                 

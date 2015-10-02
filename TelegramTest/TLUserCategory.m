@@ -89,6 +89,8 @@ DYNAMIC_PROPERTY(DType);
     
     [self setType:type];
     
+    [self rebuildNames];
+    
     return type;
 }
 

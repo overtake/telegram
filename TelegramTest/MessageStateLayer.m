@@ -88,17 +88,17 @@
             self.readOrSentView = nil;
             
             _viewsCountText = [TMTextField defaultTextField];
-            [_viewsCountText setFont:TGSystemLightFont(12)];
+            [_viewsCountText setFont:TGSystemFont(12)];
             [_viewsCountText setTextColor:GRAY_TEXT_COLOR];
             [_viewsCountText setStringValue:self.container.item.viewsCount];
             [_viewsCountText sizeToFit];
-            [_viewsCountText setFrameOrigin:CGPointMake(NSWidth(self.frame) - NSWidth(_viewsCountText.frame) - 2,3)];
+            [_viewsCountText setFrameOrigin:CGPointMake(NSWidth(self.frame) - NSWidth(_viewsCountText.frame) - 2,2)];
             [self addSubview:_viewsCountText];
             
             
             _channelImageView = imageViewWithImage(image_ChannelViews());
             
-            [_channelImageView setFrameOrigin:NSMakePoint(NSMinX(_viewsCountText.frame) - NSWidth(_channelImageView.frame), 6)];
+            [_channelImageView setFrameOrigin:NSMakePoint(NSMinX(_viewsCountText.frame) - NSWidth(_channelImageView.frame), 5)];
             
             [self addSubview:_channelImageView];
         } else {

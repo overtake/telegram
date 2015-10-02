@@ -28,7 +28,7 @@
 
 @property (nonatomic, strong) NSView *rightView;
 @property (nonatomic, strong) TMTextLayer *forwardMessagesTextLayer;
-@property (nonatomic, strong) TMTextLayer *dateLayer;
+@property (nonatomic, strong) TMTextField *dateLayer;
 @property (nonatomic, strong) BTRButton *selectButton;
 
 @property (nonatomic, strong) MessageStateLayer *stateLayer;
@@ -60,14 +60,12 @@
         
        
         
-        self.dateLayer = [TMTextLayer layer];
-        [self.dateLayer disableActions];
-        [self.dateLayer setContentsScale:self.layer.contentsScale];
-        [self.dateLayer setFrameOrigin:CGPointMake(offserUnreadMark, 0)];
+        self.dateLayer = [TMTextField defaultTextField];
+
+        [self.dateLayer setFrameOrigin:CGPointMake(offserUnreadMark, 2)];
         [self.dateLayer setTextColor:GRAY_TEXT_COLOR];
-        [self.dateLayer setTextFont:TGSystemFont(12)];
-        [self.dateLayer setBackgroundColor:[NSColor clearColor].CGColor];
-        [self.rightView.layer addSublayer:self.dateLayer];
+        [self.dateLayer setFont:TGSystemFont(12)];
+        [self.rightView addSubview:self.dateLayer];
         
         
         self.stateLayer = [[MessageStateLayer alloc] initWithFrame:NSMakeRect(0, 0, 40, NSHeight(self.rightView.frame))];
@@ -722,7 +720,7 @@ static BOOL dragAction = NO;
     
   //  Layers ;)
     
-    [self.dateLayer setString:item.dateStr];
+    [self.dateLayer setStringValue:item.dateStr];
     [self.dateLayer setFrameSize:CGSizeMake(item.dateSize.width, item.dateSize.height)];
     [self.dateLayer setFrameOrigin:CGPointMake(NSMaxX(_stateLayer.frame), NSMinY(self.dateLayer.frame))];
     [self.rightView setFrameSize:CGSizeMake(item.dateSize.width + offserUnreadMark + NSWidth(self.stateLayer.frame) + 10 , 18)];

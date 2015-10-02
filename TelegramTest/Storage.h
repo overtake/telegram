@@ -176,6 +176,8 @@ extern NSString *const RECENT_SEARCH;
 -(TL_localMessage *)messageById:(int)msgId;
 
 
+-(void)updateUsersStatus:(NSArray *)users;
+
 -(void)addUserPhoto:(int)user_id media:(TLUserProfilePhoto *)photo;
 -(void)deleteUserPhoto:(int)user_id;
 -(void)countOfUserPhotos:(int)user_id;

@@ -394,7 +394,7 @@ static NSTextAttachment *channelIconAttachment() {
     
     self.dateStr = [TGDateUtils stringForMessageListDate:time];
     NSSize dateSize = [self.dateStr sizeWithAttributes:@{NSFontAttributeName: TGSystemFont(12)}];
-    dateSize.width = roundf(dateSize.width);
+    dateSize.width = roundf(dateSize.width)+5;
     dateSize.height = roundf(dateSize.height);
     self.dateSize = dateSize;
     

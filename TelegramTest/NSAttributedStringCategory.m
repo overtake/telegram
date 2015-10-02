@@ -89,6 +89,9 @@ static NSTextField *testTextField() {
         height+= floor(ascent + ceil(descent) + leading);
     }
     
+    CFRelease(framesetter);
+    CFRelease(CTFrame);
+    CFRelease(path);
     
     
     return NSMakeSize(width, height );
