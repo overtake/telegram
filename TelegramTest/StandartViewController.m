@@ -313,6 +313,7 @@
         [self.recentTableView.containerView setFrame:tableRect];
         
         [self.view addSubview:self.recentTableView.containerView];
+        
     }
     
     return canShow;

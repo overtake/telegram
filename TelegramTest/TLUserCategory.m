@@ -427,8 +427,6 @@ DYNAMIC_PROPERTY(DFullName);
         if(fullName.length > 30)
             fullName = [fullName substringToIndex:30];
         
-        if(self.type == TLUserTypeRequest)
-            fullName = self.phoneWithFormat;
         
         [self setDFullName:fullName];
         

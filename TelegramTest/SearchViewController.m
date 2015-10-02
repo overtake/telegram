@@ -316,7 +316,7 @@ typedef enum {
         } else {
             TMViewController *controller = [[Telegram leftViewController] currentTabController];
             
-            if([controller isKindOfClass:[StandartViewController class]] && searchItem.type == SearchItemGlobalUser) {
+            if([Telegram isSingleLayout] || ([controller isKindOfClass:[StandartViewController class]] && searchItem.type == SearchItemGlobalUser)) {
                 [(StandartViewController *)controller searchByString:@""];
             }
             
