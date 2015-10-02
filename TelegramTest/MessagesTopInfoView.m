@@ -312,8 +312,12 @@ static NSMutableDictionary *cache;
             
             [RPCRequest sendRequest:[TLAPI_messages_reportSpam createWithPeer:self.conversation.user.inputPeer] successHandler:^(id request, id response) {
                 
+                [[NSUserDefaults standardUserDefaults] setBool:NO forKey:[NSString stringWithFormat:@"showreport_%d",self.conversation.user.n_id]];
+                
                 self.locked = NO;
                 self.conversation = self.conversation;
+                
+                
                 
             } errorHandler:^(id request, RpcError *error) {
                 self.locked = NO;
@@ -339,7 +343,7 @@ static NSMutableDictionary *cache;
 -(void)setFrameSize:(NSSize)newSize {
     [super setFrameSize:newSize];
     
-    [_cancel setFrameOrigin:NSMakePoint(newSize.width - NSWidth(_cancel.frame), 0)];
+    [_cancel setFrameOrigin:NSMakePoint(newSize.width - NSWidth(_cancel.frame), 2)];
 }
 
 - (void)drawRect:(NSRect)dirtyRect
