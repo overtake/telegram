@@ -46,7 +46,14 @@
     
     if([self.action.currentViewController isKindOfClass:[ComposePickerViewController class]])  {
         
-       
+        if(!self.chat.isBroadcast) {
+            [[Telegram rightViewController] showComposeAddModerator:self.action];
+        } else {
+            self.action.result.singleObject = [TL_channelRoleEditor create];
+            [self addAccess];
+        }
+        
+        /*
         
         [self.delegate behaviorDidStartRequest];
         
@@ -100,7 +107,7 @@
             }
             
             
-        }];
+        }];*/
         
         
     } else {

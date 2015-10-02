@@ -9,6 +9,26 @@
 #import "MessageTableItemGif.h"
 #import "ImageUtils.h"
 
+@interface TGGifImageObject : TGImageObject
+
+@end
+
+
+@implementation TGGifImageObject
+
+-(void)_didDownloadImage:(DownloadItem *)item {
+    NSImage *image = [[NSImage alloc] initWithData:item.result];
+    
+    image = [ImageUtils blurImage:image blurRadius:60 frameSize:self.imageSize];
+    
+    [[ASQueue mainQueue] dispatchOnQueue:^{
+        [self.delegate didDownloadImage:image object:self];
+    }];
+}
+
+
+@end
+
 @implementation MessageTableItemGif
 
 - (id)initWithObject:(TL_localMessage *)object {
@@ -28,7 +48,7 @@
             
             self.cachedThumb = [ImageUtils roundCorners:self.cachedThumb size:NSMakeSize(3, 3)];
         } else {
-            self.imageObject = [[TGImageObject alloc] initWithLocation:self.previewLocation placeHolder:self.cachedThumb sourceId:object.peer_id size:thumb.size];
+            self.imageObject = [[TGGifImageObject alloc] initWithLocation:self.previewLocation placeHolder:self.cachedThumb sourceId:object.peer_id size:thumb.size];
         }
         
          [self makeSizeByWidth:310];

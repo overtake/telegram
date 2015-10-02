@@ -154,6 +154,11 @@ static NSImage *playImage() {
                
                 NSRange visibleRange = [weakSelf.messagesViewController.table rowsInRect:weakSelf.messagesViewController.table.visibleRect];
                 
+                if(visibleRange.location > 0) {
+                    visibleRange.location--;
+                    visibleRange.length++;
+                }
+                
                 NSUInteger idx = [weakSelf.messagesViewController.table indexOfItem:item];
                 
                 if(idx > visibleRange.location && idx <= visibleRange.location + visibleRange.length) {
@@ -273,6 +278,7 @@ static NSImage *playImage() {
         
         [self playAnimation];
     } else {
+        
         if(item.cachedThumb) {
             [self.imageView setImage:item.cachedThumb];
         } else {
