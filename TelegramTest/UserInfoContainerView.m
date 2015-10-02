@@ -602,6 +602,8 @@
         [self.filesMediaButton setHidden:NO];
         
         
+        [self.sharedLinksButton setHidden:self.controller.isSecretProfile];
+        
         if(!self.controller.isSecretProfile) {
             offset-=NSHeight(self.sharedLinksButton.frame);
             

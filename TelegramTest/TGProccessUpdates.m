@@ -514,363 +514,368 @@ static NSArray *channelUpdates;
 
 -(void)proccessUpdate:(TLUpdate *)update {
     
-    if([update isKindOfClass:[TL_updateWebPage class]]) {
-        
-        TLWebPage *page = [update webpage];
-        
-        TLMessageMedia *media = [TL_messageMediaWebPage createWithWebpage:page];
-        
-        [[Storage manager] messagesWithWebpage:media callback:^(NSDictionary *peers) {
-           
-            [Notification perform:UPDATE_WEB_PAGES data:@{KEY_WEBPAGE:page}];
+    @try {
+        if([update isKindOfClass:[TL_updateWebPage class]]) {
             
-            [Notification perform:UPDATE_WEB_PAGE_ITEMS data:@{KEY_DATA:peers,KEY_WEBPAGE:page}];
-        }];
-        
-        
-        return;
-    }
-    
-    if([update isKindOfClass:[TL_updateMessageID class]]) {
-        
-        [[Storage manager] updateMessageId:update.random_id msg_id:[update n_id]];
-        
-        [Notification perform:MESSAGE_UPDATE_MESSAGE_ID data:@{KEY_MESSAGE_ID:@(update.n_id),KEY_RANDOM_ID:@(update.random_id)}];
-        
-        return;
-        
-    }
-    
-    if([update isKindOfClass:[TL_updateNewMessage class]]) {
-        
-        if([[update message] isKindOfClass:[TL_messageEmpty class]])
-            return;
-        
-        TL_localMessage *message = [TL_localMessage convertReceivedMessage:(TL_localMessage *)[update message]];
-        
-        if(message.reply_to_msg_id != 0 && message.replyMessage == nil) {
-            [self failSequence];
+            TLWebPage *page = [update webpage];
+            
+            TLMessageMedia *media = [TL_messageMediaWebPage createWithWebpage:page];
+            
+            [[Storage manager] messagesWithWebpage:media callback:^(NSDictionary *peers) {
+                
+                [Notification perform:UPDATE_WEB_PAGES data:@{KEY_WEBPAGE:page}];
+                
+                [Notification perform:UPDATE_WEB_PAGE_ITEMS data:@{KEY_DATA:peers,KEY_WEBPAGE:page}];
+            }];
+            
+            
             return;
         }
         
-        return [MessagesManager addAndUpdateMessage:message];
-    }
-    
-    
-    if([update isKindOfClass:[TL_updateReadHistoryInbox class]]) {
-        [[DialogsManager sharedManager] markAllMessagesAsRead:update.peer max_id:update.max_id out:NO];
-        return;
-    }
-    
-    if([update isKindOfClass:[TL_updateReadHistoryOutbox class]]) {
-        [[DialogsManager sharedManager] markAllMessagesAsRead:update.peer max_id:update.max_id out:YES];
-        return;
-    }
-    
-    if([update isKindOfClass:[TL_updateReadMessagesContents class]]) {
-        [[MessagesManager sharedManager] readMessagesContent:[[update messages] copy]];
-    }
-    
-    if([update isKindOfClass:[TL_updateDeleteMessages class]]) {
-        
-        [[DialogsManager sharedManager] deleteMessagesWithMessageIds:[update messages]];
-        return;
-    }
-    
-    if([update isKindOfClass:[TL_updateUserName class]]) {
-        
-        
-        TLUser *user = [[UsersManager sharedManager] find:update.user_id];
-        
-        if(user) {
+        if([update isKindOfClass:[TL_updateMessageID class]]) {
             
-            TLUser *copy = [user copy];
+            [[Storage manager] updateMessageId:update.random_id msg_id:[update n_id]];
             
-            copy.first_name = update.first_name;
-            copy.last_name = update.last_name;
-            copy.username = update.username;
-            [[UsersManager sharedManager] add:@[copy]];
+            [Notification perform:MESSAGE_UPDATE_MESSAGE_ID data:@{KEY_MESSAGE_ID:@(update.n_id),KEY_RANDOM_ID:@(update.random_id)}];
+            
+            return;
             
         }
-       
         
-        return;
-    }
-    
-    if([update isKindOfClass:[TL_updateServiceNotification class]]) {
-        
-        TL_updateServiceNotification *updateNotification = (TL_updateServiceNotification *)update;
-        
-        TL_conversation *conversation = [[Storage manager] selectConversation:[TL_peerUser createWithUser_id:777000]];
-        TLUser *user = [[UsersManager sharedManager] find:777000];
-        if(!conversation) {
-            conversation = [[DialogsManager sharedManager] createDialogForUser:user];
-            [conversation save];
+        if([update isKindOfClass:[TL_updateNewMessage class]]) {
+            
+            if([[update message] isKindOfClass:[TL_messageEmpty class]])
+                return;
+            
+            TL_localMessage *message = [TL_localMessage convertReceivedMessage:(TL_localMessage *)[update message]];
+            
+            if(message.reply_to_msg_id != 0 && message.replyMessage == nil) {
+                [self failSequence];
+                return;
+            }
+            
+            return [MessagesManager addAndUpdateMessage:message];
         }
         
-        TL_localMessage *msg = [TL_localMessage createWithN_id:0 flags:TGUNREADMESSAGE from_id:777000 to_id:[TL_peerUser createWithUser_id:[UsersManager currentUserId]] fwd_from_id:0 fwd_date:0 reply_to_msg_id:0  date:[[MTNetwork instance] getTime] message:(NSString *)updateNotification.message media:updateNotification.media fakeId:[MessageSender getFakeMessageId] randomId:rand_long() reply_markup:nil entities:nil views:0 isViewed:YES state:DeliveryStateNormal];
         
-        [MessagesManager addAndUpdateMessage:msg];
+        if([update isKindOfClass:[TL_updateReadHistoryInbox class]]) {
+            [[DialogsManager sharedManager] markAllMessagesAsRead:update.peer max_id:update.max_id out:NO];
+            return;
+        }
+        
+        if([update isKindOfClass:[TL_updateReadHistoryOutbox class]]) {
+            [[DialogsManager sharedManager] markAllMessagesAsRead:update.peer max_id:update.max_id out:YES];
+            return;
+        }
+        
+        if([update isKindOfClass:[TL_updateReadMessagesContents class]]) {
+            [[MessagesManager sharedManager] readMessagesContent:[[update messages] copy]];
+        }
+        
+        if([update isKindOfClass:[TL_updateDeleteMessages class]]) {
+            
+            [[DialogsManager sharedManager] deleteMessagesWithMessageIds:[update messages]];
+            return;
+        }
+        
+        if([update isKindOfClass:[TL_updateUserName class]]) {
+            
+            
+            TLUser *user = [[UsersManager sharedManager] find:update.user_id];
+            
+            if(user) {
+                
+                TLUser *copy = [user copy];
+                
+                copy.first_name = update.first_name;
+                copy.last_name = update.last_name;
+                copy.username = update.username;
+                [[UsersManager sharedManager] add:@[copy]];
+                
+            }
+            
+            
+            return;
+        }
+        
+        if([update isKindOfClass:[TL_updateServiceNotification class]]) {
+            
+            TL_updateServiceNotification *updateNotification = (TL_updateServiceNotification *)update;
+            
+            TL_conversation *conversation = [[Storage manager] selectConversation:[TL_peerUser createWithUser_id:777000]];
+            TLUser *user = [[UsersManager sharedManager] find:777000];
+            if(!conversation) {
+                conversation = [[DialogsManager sharedManager] createDialogForUser:user];
+                [conversation save];
+            }
+            
+            TL_localMessage *msg = [TL_localMessage createWithN_id:0 flags:TGUNREADMESSAGE from_id:777000 to_id:[TL_peerUser createWithUser_id:[UsersManager currentUserId]] fwd_from_id:0 fwd_date:0 reply_to_msg_id:0  date:[[MTNetwork instance] getTime] message:(NSString *)updateNotification.message media:updateNotification.media fakeId:[MessageSender getFakeMessageId] randomId:rand_long() reply_markup:nil entities:nil views:0 isViewed:YES state:DeliveryStateNormal];
+            
+            [MessagesManager addAndUpdateMessage:msg];
+            
+            
+            if(updateNotification.popup) {
+                [[ASQueue mainQueue] dispatchOnQueue:^{
+                    alert(NSLocalizedString(@"UpdateNotification.Alert", nil), (NSString *)updateNotification.message);
+                }];
+                
+            }
+            
+            
+            return;
+        }
+        
+        if([update isKindOfClass:[TL_updateNotifySettings class]]) {
+            
+            TL_updateNotifySettings *notifyUpdate = (TL_updateNotifySettings *)update;
+            
+            TL_notifyPeer *peer = (TL_notifyPeer *) notifyUpdate.peer;
+            
+            TL_conversation *dialog = [[DialogsManager sharedManager] find:peer.peer.peer_id];
+            
+            if(!dialog) {
+                dialog = [[Storage manager] selectConversation:peer.peer];
+            }
+            
+            if(dialog) {
+                [dialog updateNotifySettings:notifyUpdate.notify_settings];
+            }
+            return;
+        }
+        
+        if([update isKindOfClass:[TL_updateChatParticipants class]]) {
+            TLChatParticipants *chatParticipants = ((TL_updateChatParticipants *)update).participants;
+            
+            TLChatFull *fullChat = [[FullChatManager sharedManager] find:chatParticipants.chat_id];
+            
+            [[FullChatManager sharedManager] performLoad:chatParticipants.chat_id force:YES callback:nil];
+            
+            if(fullChat) {
+                fullChat.participants = chatParticipants;
+                [[Storage manager] insertFullChat:fullChat completeHandler:nil];
+                
+                [Notification perform:CHAT_UPDATE_PARTICIPANTS data:@{KEY_CHAT_ID: @(fullChat.n_id), @"participants": fullChat.participants}];
+            }
+            
+            return;
+        }
+        
+        if([update isKindOfClass:[TL_updateContactLink class]]) {
+            TL_updateContactLink *contactLink = (TL_updateContactLink *)update;
+            
+            BOOL isContact = [contactLink.my_link isKindOfClass:[TL_contactLinkContact class]];
+            
+            
+            MTLog(@"%@ contact %d", isContact ? @"add" : @"delete", contactLink.user_id);
+            
+            
+            TLUser *user = [[[UsersManager sharedManager] find:contactLink.user_id] copy];
+            
+            if([contactLink.my_link isKindOfClass:[TL_contactLinkContact class]]) {
+                user.type = TLUserTypeContact;
+            } else if([contactLink.my_link isKindOfClass:[TL_contactLinkHasPhone class]]) {
+                user.type = TLUserTypeRequest;
+            } else {
+                user.type = TLUserTypeForeign;
+            }
+            
+            
+            [[UsersManager sharedManager] add:@[user]];
+            
+            if(isContact) {
+                [[NewContactsManager sharedManager] insertContact:[TL_contact createWithUser_id:contactLink.user_id mutual:NO]];
+            } else {
+                [[NewContactsManager sharedManager] removeContact:[TL_contact createWithUser_id:contactLink.user_id mutual:NO]];
+            }
+            return;
+        }
+        
+        if([update isKindOfClass:[TL_updateEncryption class]]) {
+            TL_encryptedChat *chat = (TL_encryptedChat *) [update chat];
+            if(chat) {
+                
+                if([chat isKindOfClass:[TL_encryptedChatRequested class]]) {
+                    [[ChatsManager sharedManager] acceptEncryption:(TL_encryptedChatRequested *)chat];
+                }
+                
+                if([chat isKindOfClass:[TL_encryptedChat class]]) {
+                    
+                    EncryptedParams *params = [EncryptedParams findAndCreate:chat.n_id];
+                    
+                    NSData *key_hash = [Crypto exp:[chat g_a_or_b] b:[params a] dhPrime:params.p];
+                    NSData *key_fingerprints = [[Crypto sha1:key_hash] subdataWithRange:NSMakeRange(12, 8)];
+                    long keyId;
+                    [key_fingerprints getBytes:&keyId];
+                    
+                    params.key_fingerprint = keyId;
+                    
+                    [params setKey:key_hash forFingerprint:keyId];
+                    
+                    params.access_hash = chat.access_hash;
+                    [params setState:EncryptedAllowed];
+                    [params save];
+                    [[Storage manager] insertEncryptedChat:chat];
+                    [[ChatsManager sharedManager] add:@[chat]];
+                    
+                    if(!chat.dialog) {
+                        TL_conversation *conversation = [[Storage manager] selectConversation:[TL_peerSecret createWithChat_id:chat.n_id]];
+                        if(conversation) {
+                            [[DialogsManager sharedManager] add:@[conversation]];
+                        }
+                        
+                    }
+                    
+                    if(chat.dialog) {
+                        [Notification perform:[Notification notificationNameByDialog:chat.dialog action:@"message"] data:@{KEY_DIALOG:chat.dialog,KEY_LAST_CONVRESATION_DATA:[MessagesUtils conversationLastData:chat.dialog]}];
+                        
+                        [MessagesManager notifyConversation:chat.dialog.peer.peer_id title:chat.peerUser.fullName text:NSLocalizedString(@"MessageService.Action.JoinedSecretChat", nil)];
+                    }
+                    
+                    
+                    
+                }
+                
+                if([chat isKindOfClass:[TL_encryptedChatDiscarded class]]) {
+                    
+                    TL_encryptedChat *local = [[ChatsManager sharedManager] find:[chat n_id]];
+                    if(!local)
+                        return;
+                    
+                    
+                    
+                    EncryptedParams *params = [EncryptedParams findAndCreate:[chat n_id]];
+                    [params setState:EncryptedDiscarted];
+                    [params save];
+                    
+                    [Notification perform:[Notification notificationNameByDialog:local.dialog action:@"message"] data:@{KEY_DIALOG:chat.dialog,KEY_LAST_CONVRESATION_DATA:[MessagesUtils conversationLastData:chat.dialog]}];
+                    
+                    
+                    [SecretChatAccepter removeChatId:chat.n_id];
+                    
+                }
+                if([chat isKindOfClass:[TL_encryptedChatEmpty class]]) {
+                    
+                }
+            }
+            return;
+        }
+        
+        if([update isKindOfClass:[TL_updateNewEncryptedMessage class]]) {
+            
+            [_encryptedUpdates proccessUpdate:(TLEncryptedMessage *)[update message]];
+            
+            return;
+        }
+        
+        if([update isKindOfClass:[TL_updateEncryptedMessagesRead class]]) {
+            TL_conversation *dialog = [[DialogsManager sharedManager] findBySecretId:update.chat_id];
+            if(dialog) {
+                [[DialogsManager sharedManager] markAllMessagesAsRead:dialog];
+            }
+            return;
+        }
+        
+        if([update isKindOfClass:[TL_updateUserPhoto class]]) {
+            TLUser *user = [[UsersManager sharedManager] find:update.user_id];
+            
+            if(user.photo.photo_id != [update photo].photo_id) {
+                user.photo = [update photo];
+                
+                if(user) {
+                    [[Storage manager] insertUser:user completeHandler:nil];
+                    PreviewObject *previewObject = [[PreviewObject alloc] initWithMsdId:user.photo.photo_id media:[TL_photoSize createWithType:@"x" location:user.photo.photo_big w:640 h:640 size:0] peer_id:user.n_id];
+                    [Notification perform:USER_UPDATE_PHOTO data:@{KEY_USER:user,KEY_PREVIOUS:@([update previous]), KEY_PREVIEW_OBJECT:previewObject}];
+                }
+            }
+            
+            
+            return;
+        }
+        
+        if([update isKindOfClass:[TL_updateUserStatus class]]) {
+            
+            //        if(update.user_id == [UsersManager currentUserId]) {
+            //            [[Telegram sharedInstance] setIsOnline:NO];
+            //            [[Telegram sharedInstance] setAccountOnline];
+            //
+            //            return;
+            //        }
+            [[UsersManager sharedManager] setUserStatus:[update status] forUid:update.user_id];
+            
+            return;
+        }
         
         
-        if(updateNotification.popup) {
-            [[ASQueue mainQueue] dispatchOnQueue:^{
-                alert(NSLocalizedString(@"UpdateNotification.Alert", nil), (NSString *)updateNotification.message);
+        if([update isKindOfClass:[TL_updateChatUserTyping class]] || [update isKindOfClass:[TL_updateUserTyping class]] || [update isKindOfClass:[TL_updateEncryptedChatTyping class]]) {
+            [Notification perform:USER_TYPING data:@{KEY_SHORT_UPDATE:update}];
+            return;
+        }
+        
+        if([update isKindOfClass:[TL_updateUserBlocked class]]) {
+            BOOL blocked = ((TL_updateUserBlocked *)update).blocked;
+            int user_id = ((TL_updateUserBlocked *)update).user_id;
+            
+            [[BlockedUsersManager sharedManager] updateBlocked:user_id isBlocked:blocked];
+        }
+        
+        if([update isKindOfClass:[TL_updateNewAuthorization class]]) {
+            
+            
+            TL_conversation *conversation = [[Storage manager] selectConversation:[TL_peerUser createWithUser_id:777000]];
+            TLUser *user = [[UsersManager sharedManager] find:777000];
+            if(!conversation) {
+                conversation = [[DialogsManager sharedManager] createDialogForUser:user];
+                [conversation save];
+            }
+            
+            NSString *displayDate = [[NSString alloc] initWithFormat:@"%@, %@ at %@", [TGDateUtils stringForDayOfWeek:update.date], [TGDateUtils stringForDialogTime:update.date], [TGDateUtils stringForShortTime:update.date]];
+            
+            NSString *messageText = [[NSString alloc] initWithFormat:NSLocalizedString(@"Notification.NewAuthDetected",nil), [UsersManager currentUser].first_name, displayDate, update.device, update.location];;
+            
+            TL_localMessage *msg = [TL_localMessage createWithN_id:0 flags:TGUNREADMESSAGE from_id:777000 to_id:[TL_peerUser createWithUser_id:[UsersManager currentUserId]] fwd_from_id:0 fwd_date:0 reply_to_msg_id:0 date:[[MTNetwork instance] getTime] message:messageText media:[TL_messageMediaEmpty create] fakeId:[MessageSender getFakeMessageId] randomId:rand_long() reply_markup:nil entities:nil views:0 isViewed:YES state:DeliveryStateNormal];
+            
+            [MessagesManager addAndUpdateMessage:msg];
+            
+            return;
+        }
+        
+        if([update isKindOfClass:[TL_updateContactRegistered class]]) {
+            
+            TLUser *user = [[UsersManager sharedManager] find:[update user_id]];
+            
+            if(!user) {
+                [self failSequence];
+                return;
+            }
+            
+            NSString *text = [NSString stringWithFormat:NSLocalizedString(@"Notification.UserRegistred", nil),user.fullName];
+            
+            TL_localMessageService *message = [TL_localMessageService createWithFlags:TGUNREADMESSAGE n_id:0 from_id:[update user_id] to_id:[TL_peerUser createWithUser_id:[update user_id]] date:[update date] action:[TL_messageActionEncryptedChat createWithTitle:text] fakeId:[MessageSender getFakeMessageId] randomId:rand_long() dstate:DeliveryStateNormal];
+            
+            [MessagesManager addAndUpdateMessage:message];
+            
+            return;
+        }
+        
+        if([update isKindOfClass:[TL_updatePrivacy class]]) {
+            
+            
+            
+            PrivacyArchiver *privacy = [PrivacyArchiver privacyFromRules:[(TL_updatePrivacy *)update rules] forKey:NSStringFromClass([(TL_updatePrivacy *)update n_key].class)];
+            
+            [privacy _save];
+            
+            
+            [[NewContactsManager sharedManager] getStatuses:^{
+                [Notification perform:PRIVACY_UPDATE data:@{KEY_PRIVACY:privacy}];
             }];
             
         }
-        
-        
-        return;
     }
-    
-    if([update isKindOfClass:[TL_updateNotifySettings class]]) {
-        
-        TL_updateNotifySettings *notifyUpdate = (TL_updateNotifySettings *)update;
-        
-        TL_notifyPeer *peer = (TL_notifyPeer *) notifyUpdate.peer;
-        
-        TL_conversation *dialog = [[DialogsManager sharedManager] find:peer.peer.peer_id];
-        
-        if(!dialog) {
-            dialog = [[Storage manager] selectConversation:peer.peer];
-        }
-        
-        if(dialog) {
-            [dialog updateNotifySettings:notifyUpdate.notify_settings];
-        }
-        return;
-    }
-    
-    if([update isKindOfClass:[TL_updateChatParticipants class]]) {
-        TLChatParticipants *chatParticipants = ((TL_updateChatParticipants *)update).participants;
-        
-        TLChatFull *fullChat = [[FullChatManager sharedManager] find:chatParticipants.chat_id];
-        
-        [[FullChatManager sharedManager] performLoad:chatParticipants.chat_id force:YES callback:nil];
-        
-        if(fullChat) {
-            fullChat.participants = chatParticipants;
-            [[Storage manager] insertFullChat:fullChat completeHandler:nil];
-            
-            [Notification perform:CHAT_UPDATE_PARTICIPANTS data:@{KEY_CHAT_ID: @(fullChat.n_id), @"participants": fullChat.participants}];
-        }
-        
-        return;
-    }
-    
-    if([update isKindOfClass:[TL_updateContactLink class]]) {
-        TL_updateContactLink *contactLink = (TL_updateContactLink *)update;
-        
-        BOOL isContact = [contactLink.my_link isKindOfClass:[TL_contactLinkContact class]];
-        
-        
-        MTLog(@"%@ contact %d", isContact ? @"add" : @"delete", contactLink.user_id);
-        
-        
-        TLUser *user = [[[UsersManager sharedManager] find:contactLink.user_id] copy];
-        
-        if([contactLink.my_link isKindOfClass:[TL_contactLinkContact class]]) {
-            user.type = TLUserTypeContact;
-        } else if([contactLink.my_link isKindOfClass:[TL_contactLinkHasPhone class]]) {
-            user.type = TLUserTypeRequest;
-        } else {
-            user.type = TLUserTypeForeign;
-        }
-        
-        
-        [[UsersManager sharedManager] add:@[user]];
-        
-        if(isContact) {
-            [[NewContactsManager sharedManager] insertContact:[TL_contact createWithUser_id:contactLink.user_id mutual:NO]];
-        } else {
-            [[NewContactsManager sharedManager] removeContact:[TL_contact createWithUser_id:contactLink.user_id mutual:NO]];
-        }
-        return;
-    }
-    
-    if([update isKindOfClass:[TL_updateEncryption class]]) {
-        TL_encryptedChat *chat = (TL_encryptedChat *) [update chat];
-        if(chat) {
-            
-            if([chat isKindOfClass:[TL_encryptedChatRequested class]]) {
-                [[ChatsManager sharedManager] acceptEncryption:(TL_encryptedChatRequested *)chat]; 
-            }
-            
-            if([chat isKindOfClass:[TL_encryptedChat class]]) {
-               
-                EncryptedParams *params = [EncryptedParams findAndCreate:chat.n_id];
-                
-                NSData *key_hash = [Crypto exp:[chat g_a_or_b] b:[params a] dhPrime:params.p];
-                NSData *key_fingerprints = [[Crypto sha1:key_hash] subdataWithRange:NSMakeRange(12, 8)];
-                long keyId;
-                [key_fingerprints getBytes:&keyId];
-                
-                 params.key_fingerprint = keyId;
-                
-                [params setKey:key_hash forFingerprint:keyId];
-                
-                params.access_hash = chat.access_hash;
-                [params setState:EncryptedAllowed];
-                [params save];
-                [[Storage manager] insertEncryptedChat:chat];
-                [[ChatsManager sharedManager] add:@[chat]];
-                
-                if(!chat.dialog) {
-                    TL_conversation *conversation = [[Storage manager] selectConversation:[TL_peerSecret createWithChat_id:chat.n_id]];
-                    if(conversation) {
-                         [[DialogsManager sharedManager] add:@[conversation]];
-                    }
-                   
-                }
-                
-                if(chat.dialog) {
-                    [Notification perform:[Notification notificationNameByDialog:chat.dialog action:@"message"] data:@{KEY_DIALOG:chat.dialog,KEY_LAST_CONVRESATION_DATA:[MessagesUtils conversationLastData:chat.dialog]}];
-                    
-                    [MessagesManager notifyConversation:chat.dialog.peer.peer_id title:chat.peerUser.fullName text:NSLocalizedString(@"MessageService.Action.JoinedSecretChat", nil)];
-                }
-                
-                
-                                
-            }
-            
-            if([chat isKindOfClass:[TL_encryptedChatDiscarded class]]) {
-                
-                TL_encryptedChat *local = [[ChatsManager sharedManager] find:[chat n_id]];
-                if(!local)
-                    return;
-                
-                
-                
-                EncryptedParams *params = [EncryptedParams findAndCreate:[chat n_id]];
-                [params setState:EncryptedDiscarted];
-                [params save];
-                
-                 [Notification perform:[Notification notificationNameByDialog:local.dialog action:@"message"] data:@{KEY_DIALOG:chat.dialog,KEY_LAST_CONVRESATION_DATA:[MessagesUtils conversationLastData:chat.dialog]}];
-                
-                
-                [SecretChatAccepter removeChatId:chat.n_id];
-                
-            }
-            if([chat isKindOfClass:[TL_encryptedChatEmpty class]]) {
-                
-            }
-        }
-        return;
-    }
-    
-    if([update isKindOfClass:[TL_updateNewEncryptedMessage class]]) {
-        
-        [_encryptedUpdates proccessUpdate:(TLEncryptedMessage *)[update message]];
-        
-        return;
-    }
-    
-    if([update isKindOfClass:[TL_updateEncryptedMessagesRead class]]) {
-        TL_conversation *dialog = [[DialogsManager sharedManager] findBySecretId:update.chat_id];
-        if(dialog) {
-            [[DialogsManager sharedManager] markAllMessagesAsRead:dialog];
-        }
-        return;
-    }
-    
-    if([update isKindOfClass:[TL_updateUserPhoto class]]) {
-        TLUser *user = [[UsersManager sharedManager] find:update.user_id];
-        
-        if(user.photo.photo_id != [update photo].photo_id) {
-            user.photo = [update photo];
-            
-            if(user) {
-                [[Storage manager] insertUser:user completeHandler:nil];
-                PreviewObject *previewObject = [[PreviewObject alloc] initWithMsdId:user.photo.photo_id media:[TL_photoSize createWithType:@"x" location:user.photo.photo_big w:640 h:640 size:0] peer_id:user.n_id];
-                [Notification perform:USER_UPDATE_PHOTO data:@{KEY_USER:user,KEY_PREVIOUS:@([update previous]), KEY_PREVIEW_OBJECT:previewObject}];
-            }
-        }
-        
-        
-        return;
-    }
-    
-    if([update isKindOfClass:[TL_updateUserStatus class]]) {
-        
-//        if(update.user_id == [UsersManager currentUserId]) {
-//            [[Telegram sharedInstance] setIsOnline:NO];
-//            [[Telegram sharedInstance] setAccountOnline];
-//        
-//            return;
-//        }
-        [[UsersManager sharedManager] setUserStatus:[update status] forUid:update.user_id];
-
-        return;
-    }
-    
-    
-    if([update isKindOfClass:[TL_updateChatUserTyping class]] || [update isKindOfClass:[TL_updateUserTyping class]] || [update isKindOfClass:[TL_updateEncryptedChatTyping class]]) {
-        [Notification perform:USER_TYPING data:@{KEY_SHORT_UPDATE:update}];
-        return;
-    }
-    
-    if([update isKindOfClass:[TL_updateUserBlocked class]]) {
-        BOOL blocked = ((TL_updateUserBlocked *)update).blocked;
-        int user_id = ((TL_updateUserBlocked *)update).user_id;
-        
-        [[BlockedUsersManager sharedManager] updateBlocked:user_id isBlocked:blocked];
-    }
-    
-    if([update isKindOfClass:[TL_updateNewAuthorization class]]) {
-        
-        
-        TL_conversation *conversation = [[Storage manager] selectConversation:[TL_peerUser createWithUser_id:777000]];
-        TLUser *user = [[UsersManager sharedManager] find:777000];
-        if(!conversation) {
-            conversation = [[DialogsManager sharedManager] createDialogForUser:user];
-            [conversation save];
-        }
-        
-         NSString *displayDate = [[NSString alloc] initWithFormat:@"%@, %@ at %@", [TGDateUtils stringForDayOfWeek:update.date], [TGDateUtils stringForDialogTime:update.date], [TGDateUtils stringForShortTime:update.date]];
-        
-        NSString *messageText = [[NSString alloc] initWithFormat:NSLocalizedString(@"Notification.NewAuthDetected",nil), [UsersManager currentUser].first_name, displayDate, update.device, update.location];;
-        
-        TL_localMessage *msg = [TL_localMessage createWithN_id:0 flags:TGUNREADMESSAGE from_id:777000 to_id:[TL_peerUser createWithUser_id:[UsersManager currentUserId]] fwd_from_id:0 fwd_date:0 reply_to_msg_id:0 date:[[MTNetwork instance] getTime] message:messageText media:[TL_messageMediaEmpty create] fakeId:[MessageSender getFakeMessageId] randomId:rand_long() reply_markup:nil entities:nil views:0 isViewed:YES state:DeliveryStateNormal];
-        
-        [MessagesManager addAndUpdateMessage:msg];
-        
-        return;
-    }
-    
-    if([update isKindOfClass:[TL_updateContactRegistered class]]) {
-        
-        TLUser *user = [[UsersManager sharedManager] find:[update user_id]];
-        
-        if(!user) {
-            [self failSequence];
-            return;
-        }
-        
-        NSString *text = [NSString stringWithFormat:NSLocalizedString(@"Notification.UserRegistred", nil),user.fullName];
-        
-        TL_localMessageService *message = [TL_localMessageService createWithFlags:TGUNREADMESSAGE n_id:0 from_id:[update user_id] to_id:[TL_peerUser createWithUser_id:[update user_id]] date:[update date] action:[TL_messageActionEncryptedChat createWithTitle:text] fakeId:[MessageSender getFakeMessageId] randomId:rand_long() dstate:DeliveryStateNormal];
-        
-        [MessagesManager addAndUpdateMessage:message];
-
-        return;
-    }
-    
-    if([update isKindOfClass:[TL_updatePrivacy class]]) {
-        
-        
-        
-        PrivacyArchiver *privacy = [PrivacyArchiver privacyFromRules:[(TL_updatePrivacy *)update rules] forKey:NSStringFromClass([(TL_updatePrivacy *)update n_key].class)];
-        
-        [privacy _save];
-        
-        
-        [[NewContactsManager sharedManager] getStatuses:^{
-            [Notification perform:PRIVACY_UPDATE data:@{KEY_PRIVACY:privacy}];
-        }];
+    @catch (NSException *exception) {
         
     }
-    
+ 
 }
 
 -(void)cancelSequenceTimer {

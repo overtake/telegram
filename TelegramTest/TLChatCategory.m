@@ -93,10 +93,10 @@ DYNAMIC_PROPERTY(DIALOGTITLE);
     [dialogTitleAttributedString setFont:TGSystemFont(14) forRange:dialogTitleAttributedString.range];
     
     
-    if([self isChannel] && [self isVerify]) {
-        [dialogTitleAttributedString appendAttributedString:[NSAttributedString attributedStringWithAttachment:channelVerifyAttachment()]];
-        [dialogTitleAttributedString setSelectionAttachment:channelVerifySelectedAttachment() forAttachment:channelVerifyAttachment()];
-    }
+//    if([self isChannel] && [self isVerify]) {
+//        [dialogTitleAttributedString appendAttributedString:[NSAttributedString attributedStringWithAttachment:channelVerifyAttachment()]];
+//        [dialogTitleAttributedString setSelectionAttachment:channelVerifySelectedAttachment() forAttachment:channelVerifyAttachment()];
+//    }
 //
     [self setDIALOGTITLE:dialogTitleAttributedString];
     
@@ -159,7 +159,7 @@ static NSTextAttachment *channelVerifyAttachment() {
     static NSTextAttachment *instance;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        instance = [NSMutableAttributedString textAttachmentByImage:[image_Verify() imageWithInsets:NSEdgeInsetsMake(0, 2, -1, 0)]];
+        instance = [NSMutableAttributedString textAttachmentByImage:[image_Verify() imageWithInsets:NSEdgeInsetsMake(0, 0, 0, 0)]];
     });
     return instance;
 }
@@ -168,7 +168,7 @@ static NSTextAttachment *channelVerifySelectedAttachment() {
     static NSTextAttachment *instance;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        instance = [NSMutableAttributedString textAttachmentByImage:[image_VerifyWhite() imageWithInsets:NSEdgeInsetsMake(0, 2, -1, 0)]];
+        instance = [NSMutableAttributedString textAttachmentByImage:[image_VerifyWhite() imageWithInsets:NSEdgeInsetsMake(0, 0, 0, 0)]];
     });
     return instance;
 }
