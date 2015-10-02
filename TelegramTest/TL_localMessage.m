@@ -464,7 +464,9 @@ long channelMsgId(int msg_id, int peer_id) {
     return [TL_localMessage createWithN_id:self.n_id flags:self.flags from_id:self.from_id to_id:self.to_id fwd_from_id:self.fwd_from_id fwd_date:self.fwd_date reply_to_msg_id:self.reply_to_msg_id date:self.date message:self.message media:self.media fakeId:self.fakeId randomId:self.randomId reply_markup:self.reply_markup entities:self.entities views:self.views state:self.dstate pts:self.pts isViewed:self.isViewed];
 }
 
-
+-(void)dealloc {
+    
+}
 
 
 @end

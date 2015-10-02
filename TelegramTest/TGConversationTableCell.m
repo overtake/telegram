@@ -268,6 +268,10 @@ static NSDictionary *attributes() {
     
 }
 
+-(BOOL)isVerify {
+    return self.item.conversation.type == DialogTypeChannel && self.item.conversation.chat.isVerify;
+}
+
 -(void)updateFrames {
     
     NSValue *point = [self stateImage][@"point"];
@@ -278,7 +282,7 @@ static NSDictionary *attributes() {
     self.style = NSWidth(self.frame) == 70 ? ConversationTableCellShortStyle : ConversationTableCellFullStyle;
     
     
-    [_nameTextField setFrameSize:NSMakeSize(NSWidth(self.frame) - NSMinX(_nameTextField.frame) - NSWidth(_dateField.frame) - 10 - (self.item.message.n_out ? 18 : 0), 23)];
+    [_nameTextField setFrameSize:NSMakeSize(NSWidth(self.frame) - NSMinX(_nameTextField.frame) - NSWidth(_dateField.frame) - 10 - (self.item.message.n_out ? 18 : 0) - (self.isVerify ? image_Verify().size.width : 0), 23)];
     [_messageField setFrameSize:NSMakeSize(NSWidth(self.frame) - NSMinX(_messageField.frame) -40, 36)];
     [_dateField setFrameOrigin:NSMakePoint(self.bounds.size.width - self.item.dateSize.width - 10, _dateField.frame.origin.y)];
 
@@ -298,7 +302,7 @@ static NSDictionary *attributes() {
             [self.layer addSublayer:_shortUnread.layer];
         }
         
-        _shortUnread.color = self.item.conversation.isMute && ![SettingsArchiver checkMaskedSetting:IncludeMutedUnreadCount] ? GRAY_TEXT_COLOR : NSColorFromRGB(0x4ba3e2);
+        _shortUnread.color = self.item.conversation.isMute && ![SettingsArchiver checkMaskedSetting:IncludeMutedUnreadCount] ? NSColorFromRGB(0xd7d7d7) : NSColorFromRGB(0x4ba3e2);
         [_shortUnread setUnreadCount:self.item.unreadText];
         
     } else {
@@ -485,7 +489,9 @@ static NSDictionary *attributes() {
 
 - (void)drawRect:(NSRect)dirtyRect {
     
-       
+//    if(self.isVerify) {
+//        [image_Verify() drawInRect:NSMakeRect(NSMaxX(self.nameTextField.frame),NSMinY(self.nameTextField.frame), image_Verify().size.width, image_Verify().size.height) fromRect:NSZeroRect operation:NSCompositeHighlight fraction:1];
+//    }
 }
 
 
@@ -524,7 +530,7 @@ static int unreadOffsetRight = 13;
         if(!self.item.conversation.isMute || [SettingsArchiver checkMaskedSetting:IncludeMutedUnreadCount])
             [NSColorFromRGB(0x4ba3e2) set];
         else
-            [GRAY_TEXT_COLOR set];
+            [NSColorFromRGB(0xd7d7d7) set];
     }
     [path fill];
     [path closePath];

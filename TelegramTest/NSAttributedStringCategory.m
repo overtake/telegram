@@ -60,9 +60,6 @@ static NSTextField *testTextField() {
     [paths enumerateObjectsUsingBlock:^(NSValue *obj, NSUInteger idx, BOOL *stop) {
             
         CGPathAddRect(path, NULL, [obj rectValue]);
-        
-        
-            
     }];
 
     
@@ -86,7 +83,7 @@ static NSTextField *testTextField() {
         
         CTLineGetTypographicBounds(line, &ascent, &descent, &leading);
         
-        height+= floor(ascent + ceil(descent) + leading);
+        height+= floor(ascent + floor(descent) + leading);
     }
     
     CFRelease(framesetter);

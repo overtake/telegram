@@ -111,7 +111,7 @@ CACHE_IMAGE(PlayButtonBig)
 CACHE_IMAGE(ArrowWhite)
 CACHE_IMAGE(ArrowGrey)
 CACHE_IMAGE(Verify)
-
+CACHE_IMAGE(VerifyWhite)
 CACHE_IMAGE(DownloadIconGrey)
 CACHE_IMAGE(DownloadIconWhite)
 CACHE_IMAGE(DownloadPauseIconGrey)

@@ -549,10 +549,14 @@ static const int bottomHeight = 60;
             AVPlayer *player = [AVPlayer playerWithURL:url];
             _videoPlayerView.player = player;
             
-            if(player.status == AVPlayerStatusReadyToPlay &&
-               player.currentItem.status == AVPlayerItemStatusReadyToPlay) {
-                [player play];
-            }
+            dispatch_async(dispatch_get_current_queue(), ^{
+                if(player.status == AVPlayerStatusReadyToPlay &&
+                   player.currentItem.status == AVPlayerItemStatusReadyToPlay) {
+                    [player play];
+                }
+            });
+            
+            
             
         }
         

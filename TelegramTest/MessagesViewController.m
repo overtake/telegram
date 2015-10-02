@@ -128,8 +128,6 @@
 @property (nonatomic, strong) NoMessagesView *noMessagesView;
 @property (nonatomic, strong) TMBottomScrollView *jumpToBottomButton;
 
-@property (nonatomic, strong) TelegramPopover *popover;
-
 @property (nonatomic, assign) BOOL isMarkIsset;
 
 
@@ -2714,6 +2712,42 @@ static NSTextAttachment *headerMediaIcon() {
     [self.table setNeedsDisplay:YES];
     [self.table display];
     
+    
+    if(self.conversation.type == DialogTypeUser && (self.conversation.user.type == TLUserTypeRequest)) {
+        
+        __block BOOL showReport = [[NSUserDefaults standardUserDefaults] boolForKey:[NSString stringWithFormat:@"showreport_%d",self.conversation.user.n_id]];
+        
+        __block BOOL alwaysShowReport = [[NSUserDefaults standardUserDefaults] boolForKey:[NSString stringWithFormat:@"always_showreport_%d",self.conversation.user.n_id]];
+        
+        if(self.messages.count > 1 && (!showReport && !alwaysShowReport)) {
+            if(self.messages.count > 2 || self.historyController.nextState == ChatHistoryStateFull) {
+                
+                showReport = YES;
+                
+                [self.messages enumerateObjectsAtIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(1, self.messages.count - 1)] options:0 usingBlock:^(MessageTableItem*  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                    
+                    if(obj.message.n_out) {
+                        showReport = NO;
+                        *stop = YES;
+                    }
+                    
+                }];
+                
+                alwaysShowReport = showReport;
+                
+                [[NSUserDefaults standardUserDefaults] setBool:showReport forKey:[NSString stringWithFormat:@"showreport_%d",self.conversation.user.n_id]];
+                [[NSUserDefaults standardUserDefaults] setBool:YES forKey:[NSString stringWithFormat:@"always_showreport_%d",self.conversation.user.n_id]];
+            }
+        }
+        
+        if(showReport) {
+            [_topInfoView setConversation:self.conversation];
+        }
+        
+    }
+    
+    
+    
 }
 
 
@@ -2744,12 +2778,6 @@ static NSTextAttachment *headerMediaIcon() {
             MessageTableItem *item = prevResult[0];
            if(self.conversation.peer_id != item.message.peer_id) {
                return;
-               
-               /*
-                #ifdef TGDEBUG
-                assert(NO);
-                #endif
-                */
            }
            
         }

@@ -14,6 +14,7 @@ typedef enum {
     MessagesTopInfoActionAddContact,
     MessagesTopInfoActionUnblockUser,
     MessagesTopInfoActionShareContact,
+    MessagesTopInfoActionReportSpam,
     MessagesTopInfoActionNone
 } MessagesTopInfoAction;
 
