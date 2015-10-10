@@ -384,7 +384,18 @@
         
         
         
-    } else {
+    } else if(self.modalView == [self shareModalView]) {
+        
+        
+        NSDictionary *obj = self.modalObject;
+        
+        [[Telegram sharedInstance] showMessagesFromDialog:dialog sender:self];
+        
+        [[Telegram rightViewController].messagesViewController setStringValueToTextField:[NSString stringWithFormat:@"%@\n%@",obj[@"url"],obj[@"text"]]];
+        
+        [[Telegram rightViewController].messagesViewController selectInputTextByText:obj[@"text"]];
+        
+    } else  {
         
      //   confirm(NSLocalizedString(@"Alert.Forward", nil), [NSString stringWithFormat:NSLocalizedString(@"Alert.ForwardTo", nil),(dialog.type == DialogTypeChat) ? dialog.chat.title : (dialog.type == DialogTypeBroadcast) ? dialog.broadcast.title : dialog.user.fullName], ^{
             
@@ -459,6 +470,29 @@
     
 }
 
+- (void)showShareLinkModalView:(NSString *)url text:(NSString *)text {
+    [self hideModalView:YES animation:NO];
+    
+    
+    if([Telegram isSingleLayout]) {
+        [self.navigationViewController pushViewController:[self currentEmptyController] animated:YES];
+    }
+    
+    TMModalView *view = [self shareModalView];
+    
+    self.modalView = view;
+    
+    self.modalObject = @{@"url":url, @"text":text};
+    
+    [view removeFromSuperview];
+    [view setFrameSize:view.bounds.size];
+    [view setHeaderTitle:NSLocalizedString(@"Messages.SharingLink", nil) text:url];
+    
+    [self hideModalView:NO animation:YES];
+    
+    
+}
+
 - (void)showForwardMessagesModalView:(TL_conversation *)dialog messagesCount:(NSUInteger)messagesCount {
     [self hideModalView:YES animation:NO];
     
@@ -502,6 +536,15 @@
 }
 
 - (TMModalView *)forwardModalView {
+    static TMModalView *view;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        view = [[TMModalView alloc] initWithFrame:self.view.bounds];
+    });
+    return view;
+}
+
+- (TMModalView *)shareModalView {
     static TMModalView *view;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{

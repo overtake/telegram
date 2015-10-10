@@ -1643,6 +1643,12 @@
     [_botKeyboard setFrameSize:NSMakeSize(NSWidth(self.inputMessageTextField.containerView.frame), NSHeight(_botKeyboard.frame))];
 }
 
+-(void)selectInputTextByText:(NSString *)text {
+    [self.inputMessageTextField setSelectedRange:[self.inputMessageTextField.string rangeOfString:text]];
+    
+    [self updateWebpage:NO];
+}
+
 
 -(void)updateTextFieldContainer {
     

@@ -2448,6 +2448,9 @@ static NSTextAttachment *headerMediaIcon() {
 }
 
 
+-(void)selectInputTextByText:(NSString *)text {
+    [self.bottomView selectInputTextByText:text];
+}
 
 - (void)setCurrentConversation:(TL_conversation *)dialog withJump:(int)messageId historyFilter:(Class)historyFilter force:(BOOL)force {
   
@@ -3969,6 +3972,7 @@ static NSTextAttachment *headerMediaIcon() {
     
     return cell;
 }
+
 
 - (void)backOrClose:(NSMenuItem *)sender {
     if(self.state == MessagesViewControllerStateEditable) {

@@ -44,6 +44,7 @@
 
 NSString *const TGImagePType = @"TGImagePasteType";
 NSString *const TGImportCardPrefix = @"tg://resolve?domain=";
+NSString *const TGImportShareLinkPrefix = @"tg://msg_url?url=";
 NSString *const TGJoinGroupPrefix = @"tg://join?invite=";
 NSString *const TGStickerPackPrefix = @"tg://addstickers?set=";
 NSString *const TLUserNamePrefix = @"@";
@@ -591,11 +592,25 @@ void open_user_by_name(NSDictionary *params) {
     
 }
 
+void share_link(NSString *url, NSString *text) {
+    [[Telegram rightViewController] showShareLinkModalView:url text:text];
+}
+
 void determinateURLLink(NSString *link) {
     
     
     if([link hasPrefix:TGImportCardPrefix]) {
         open_user_by_name(getUrlVars(link));
+        [[NSApplication sharedApplication]  activateIgnoringOtherApps:YES];
+        [[[Telegram delegate] mainWindow] deminiaturize:[Telegram delegate]];
+        return;
+    }
+    
+    if([link hasPrefix:TGImportShareLinkPrefix]) {
+        NSDictionary *vars = getUrlVars(link);
+        
+        share_link(vars[@"url"], vars[@"text"]);
+        
         [[NSApplication sharedApplication]  activateIgnoringOtherApps:YES];
         [[[Telegram delegate] mainWindow] deminiaturize:[Telegram delegate]];
         return;

@@ -164,6 +164,8 @@ typedef enum {
 
 -(void)tryRead;
 
+-(void)selectInputTextByText:(NSString *)text;
+
 -(TGMessagesHintView *)hintView;
 
 @end

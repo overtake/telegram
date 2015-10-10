@@ -30,6 +30,7 @@ extern NSString *const TLHashTagPrefix;
 extern NSString *const TLBotCommandPrefix;
 extern NSString *const TGJoinGroupPrefix;
 extern NSString *const TGStickerPackPrefix;
+extern NSString *const TGImportShareLinkPrefix;
 unsigned long fileSize(NSString *path);
 + (void)showPanelWithTypes:(NSArray *)types completionHandler:(void (^)(NSArray * result))handler;
 
@@ -57,7 +58,7 @@ NSArray * soundsList();
 void playSentMessage(BOOL play);
 void open_link(NSString *link);
 void open_card(NSString *link);
-
+void share_link(NSString *url, NSString *text);
 NSString *exportPath(long randomId,NSString *extension);
 
 

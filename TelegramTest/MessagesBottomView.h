@@ -53,4 +53,6 @@ typedef enum {
 
 -(NSUInteger)attachmentsCount;
 
+-(void)selectInputTextByText:(NSString *)text;
+
 @end

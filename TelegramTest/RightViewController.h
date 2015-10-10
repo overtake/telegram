@@ -112,7 +112,7 @@
 
 - (void)showShareContactModalView:(TLUser *)user;
 - (void)showForwardMessagesModalView:(TL_conversation *)dialog messagesCount:(NSUInteger)messagesCount;
-
+- (void)showShareLinkModalView:(NSString *)url text:(NSString *)text;
 - (void)showByDialog:(TL_conversation *)dialog sender:(id)sender;
 
 - (BOOL)showByDialog:(TL_conversation *)dialog withJump:(int)messageId historyFilter:(Class)filter sender:(id)sender;

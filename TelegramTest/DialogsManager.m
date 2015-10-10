@@ -294,13 +294,17 @@
 -(void)notifyAfterUpdateConversation:(TL_conversation *)conversation {
     
     [self.queue dispatchOnQueue:^{
-        [Notification perform:[Notification notificationNameByDialog:conversation action:@"message"] data:@{KEY_DIALOG:conversation,KEY_LAST_CONVRESATION_DATA:[MessagesUtils conversationLastData:conversation]}];
         
-        NSUInteger position = [self positionForConversation:conversation];
+        if(conversation != nil) {
+            [Notification perform:[Notification notificationNameByDialog:conversation action:@"message"] data:@{KEY_DIALOG:conversation,KEY_LAST_CONVRESATION_DATA:[MessagesUtils conversationLastData:conversation]}];
+            
+            NSUInteger position = [self positionForConversation:conversation];
+            
+            [Notification perform:DIALOG_MOVE_POSITION data:@{KEY_DIALOG:conversation, KEY_POSITION:@(position)}];
+            
+            [MessagesManager updateUnreadBadge];
+        }
         
-        [Notification perform:DIALOG_MOVE_POSITION data:@{KEY_DIALOG:conversation, KEY_POSITION:@(position)}];
-        
-        [MessagesManager updateUnreadBadge];
     }];
     
 }
