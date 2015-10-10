@@ -609,11 +609,13 @@ void determinateURLLink(NSString *link) {
     if([link hasPrefix:TGImportShareLinkPrefix]) {
         NSDictionary *vars = getUrlVars(link);
         
-        share_link(vars[@"url"], vars[@"text"]);
-        
-        [[NSApplication sharedApplication]  activateIgnoringOtherApps:YES];
-        [[[Telegram delegate] mainWindow] deminiaturize:[Telegram delegate]];
-        return;
+        if([vars[@"url"] length] > 0 && [vars[@"text"] length] > 0) {
+            share_link(vars[@"url"], vars[@"text"]);
+            
+            [[NSApplication sharedApplication]  activateIgnoringOtherApps:YES];
+            [[[Telegram delegate] mainWindow] deminiaturize:[Telegram delegate]];
+            return;
+        }  
     }
     
     if([link hasPrefix:TGJoinGroupPrefix]) {
