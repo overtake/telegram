@@ -12,8 +12,11 @@
 #import "QueueManager.h"
 #import "NSMutableData+Extension.h"
 #import "TGTimer.h"
-#import "Crypto.h"
+#import <MTProtoKit/MTProtoKit.h>
+#import <openssl/md5.h>
+#import <CommonCrypto/CommonCrypto.h>
 #define CONCURENT 3
+#define MD5(data, len, md)      CC_MD5(data, len, md)
 
 @interface UploadOperation () {
     int fingerprint;
@@ -165,9 +168,26 @@
     self.aes_key = key;
     self.aes_iv = [iv mutableCopy];
     
-    NSData *digest = [Crypto md5:[self.aes_key dataWithData:self.aes_iv]];
     
-    NSData *fingerdata = [Crypto xorAB:[digest subdataWithRange:NSMakeRange(0, 4)] b:[digest subdataWithRange:NSMakeRange(4, 4)]];
+    NSData *k = [self.aes_key dataWithData:self.aes_iv];
+    
+    unsigned char d[MD5_DIGEST_LENGTH];
+    
+    MD5([k bytes], (int)[k length], d);
+    
+    NSData *digest = [NSData dataWithBytes:&d length:MD5_DIGEST_LENGTH];
+    
+  
+    
+    NSMutableData *fingerdata = [[digest subdataWithRange:NSMakeRange(0, 4)] mutableCopy];
+    
+    NSData *b = [digest subdataWithRange:NSMakeRange(4, 4)];
+    
+    for (int i = 0; i < (int)fingerdata.length && i < (int)b.length; i++)
+    {
+        ((uint8_t *)fingerdata.mutableBytes)[i] ^= ((uint8_t *)b.bytes)[i];
+    }
+    
     [fingerdata getBytes:&self->fingerprint];
     
     self.isEncrypted = YES;
@@ -314,8 +334,14 @@
                 
                 data = [self readDataFromPosition:i * self.part_size length:readFromBufferSize];
                 data = [[data mutableCopy] addPadding:16];
-                data = [Crypto aesEncryptModify:data key:self.aes_key iv:self.aes_iv encrypt:YES];
-                [self.encryptedParts setObject:data forKey:@(i)];
+                
+                NSMutableData *copy = [data mutableCopy];
+                
+                
+                MTAesEncryptInplaceAndModifyIv(copy, self.aes_key, self.aes_iv);
+                [self.encryptedParts setObject:copy forKey:@(i)];
+                
+                data = copy;
             }
             
             self.maxEncryptedPart = partNumber;

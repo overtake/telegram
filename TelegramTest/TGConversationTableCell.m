@@ -406,7 +406,7 @@ static NSDictionary *attributes() {
     
     [self.dateField setAttributedStringValue:item.dateText];
     
-    [self.dateField setFrameSize:item.dateSize];
+    [self.dateField setFrameSize:NSMakeSize(item.dateSize.width, 18)];
     
     
     NSDictionary *stateImage = [self stateImage];

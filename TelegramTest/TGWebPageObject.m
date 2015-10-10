@@ -15,6 +15,9 @@
 #import "TGWebpageArticle.h"
 #import "TGWebpageGifObject.h"
 #import "NSAttributedString+Hyperlink.h"
+
+#import "TGArticleImageObject.h"
+
 @implementation TGWebpageObject
 
 NSImage *placeholder() {
@@ -147,6 +150,11 @@ NSImage *placeholder() {
             
             
             _imageObject.imageSize = imageSize;
+            
+            
+            _roundObject = [[TGArticleImageObject alloc] initWithLocation:photoSize.location placeHolder:placeholder() sourceId:0 size:photoSize.size];
+            
+            _roundObject.imageSize = NSMakeSize(60, 60);
         }
         
         

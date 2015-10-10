@@ -2693,6 +2693,11 @@ static NSTextAttachment *headerMediaIcon() {
 - (void)didUpdateTable {
     [self showNoMessages:self.messages.count == 1 || (self.conversation.user.isBot && self.messages.count == 2 && [self.messages[1] isKindOfClass:[MessageTableItemServiceMessage class]])];
     
+    
+    if(self.conversation.user.isBot &&  (self.messages.count == 1 || (self.messages.count == 2 && [self.messages[1] isKindOfClass:[MessageTableItemServiceMessage class]]))) {
+        [self showBotStartButton:NSLocalizedString(@"Bot.Start", nil) bot:self.conversation.user];
+    }
+    
     BOOL isHaveMessages = NO;
     for(MessageTableItem *item in self.messages) {
         if(item.message && !item.message.action) {

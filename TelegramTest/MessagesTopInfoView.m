@@ -240,7 +240,7 @@ static NSMutableDictionary *cache;
         [MessagesTopInfoActionAddContact] = @"Messages.MessagesTopInfoActionAddContact",
         [MessagesTopInfoActionShareContact] = @"Messages.MessagesTopInfoActionShareContact",
         [MessagesTopInfoActionUnblockUser] = @"Messages.MessagesTopInfoActionUnblockUser",
-        [MessagesTopInfoActionReportSpam] = @"Messages.MessagesTopInfoActionReportSpam"
+        [MessagesTopInfoActionReportSpam] = @""
     };
     
     static NSString * const buttonLocalization[] = {

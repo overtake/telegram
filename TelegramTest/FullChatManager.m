@@ -250,8 +250,10 @@
 
     } errorHandler:^(RPCRequest *request, RpcError *error) {
         ELog(@"fullchat loading error %@", error.error_msg);
-        if(callback)
-            callback(nil);
+        [ASQueue dispatchOnMainQueue:^{
+            if(callback)
+                callback(nil);
+        }];
     } timeout:0 queue:self.queue.nativeQueue];
     
 }

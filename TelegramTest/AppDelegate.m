@@ -58,7 +58,7 @@
 
 @end
 
-@interface AppDelegate ()<SettingsListener,BITHockeyManagerDelegate>
+@interface AppDelegate ()<SettingsListener>
 
 @property (nonatomic,strong) NSSharingService *sharing;
 #ifdef TGDEBUG

@@ -203,11 +203,11 @@
         [self.date setSelectionColor:NSColorFromRGB(0xcbe1f1) forColor:NSColorFromRGB(0x333333)];
         [self.date setSelectionColor:NSColorFromRGB(0xcbe1f2) forColor:DARK_BLUE];
         
-
-            NSString *dateStr = [TGDateUtils stringForMessageListDate:message.date];
-            [self.date appendString:dateStr withColor:NSColorFromRGB(0xaeaeae)];
-      
         
+        NSString *dateStr = [TGDateUtils stringForMessageListDate:message.date];
+        [self.date appendString:dateStr withColor:NSColorFromRGB(0xaeaeae)];
+      
+        self.dateSize = [self.date size];
         
     }
     return self;

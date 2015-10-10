@@ -95,7 +95,7 @@ static NSArray *channelUpdates;
         
         [self saveUpdateState];
         
-        [self uptodate:_updateState.pts qts:_updateState.qts date:_updateState.date updateConnectionState:YES];
+        [self uptodateWithConnectionState:YES];
     }];
 }
 
@@ -138,28 +138,9 @@ static NSArray *channelUpdates;
 
 -(void)processUpdates:(NSArray *)updates stateSeq:(int)stateSeq {
     
-    int statePts = 0;
-    int stateDate = 0;
-    int stateQts = 0;
-    int statePts_count = 0;
-    
     for(TLUpdate *update in updates) {
-        if ([update date] > stateDate)
-            stateDate = [update date];
-        
-        if([update isKindOfClass:[TL_updateNewEncryptedMessage class]]) {
-            if ([update qts] > stateQts)
-                stateQts = [update qts];
-        } else {
-            if ([update pts] > statePts)
-                statePts = [update pts];
-            
-            statePts_count+= [update pts_count];
-        }
-        
+        [self addStatefullUpdate:update seq:0 pts:[update pts] date:[update date] qts:[update qts] pts_count:[update pts_count]];
     }
-    
-    [self addStatefullUpdate:updates seq:stateSeq pts:statePts date:stateDate qts:stateQts pts_count:statePts_count];
     
 }
 
@@ -299,19 +280,17 @@ static NSArray *channelUpdates;
         return;
     }
     
-    if(!_holdUpdates) {
-        [_statefulUpdates addObject:statefulMessage];
-        
-        [self cancelSequenceTimer];
-        
-        _sequenceTimer = [[TGTimer alloc] initWithTimeout:2.0 repeat:NO completion:^{
-            [self failSequence];
-        } queue:queue.nativeQueue];
-        
-        [_sequenceTimer start];
-        
-        [self checkSequence];
-    }
+    [_statefulUpdates addObject:statefulMessage];
+    
+    [self cancelSequenceTimer];
+    
+    _sequenceTimer = [[TGTimer alloc] initWithTimeout:2.0 repeat:NO completion:^{
+        [self failSequence];
+    } queue:queue.nativeQueue];
+    
+    [_sequenceTimer start];
+    
+    [self checkSequence];
 
 }
 
@@ -434,6 +413,7 @@ static NSArray *channelUpdates;
 
 -(void)applyUpdate:(TGUpdateContainer *)container {
     
+        
     _updateState.seq = container.beginSeq;
     
     _updateState.pts = container.pts;
@@ -487,13 +467,10 @@ static NSArray *channelUpdates;
         }
         
         [MessagesManager addAndUpdateMessage:message];
+        
     }
     
-    if([container.update isKindOfClass:[NSArray class]]) {
-        for (TLUpdate *update in container.update) {
-            [self proccessUpdate:update];
-        }
-    }
+   [self proccessUpdate:container.update];
     
     if(needSave)
         [self applyUpdate:container];
@@ -910,12 +887,12 @@ static NSArray *channelUpdates;
             
             _holdUpdates = NO;
             
-            [self uptodate:_updateState.pts qts:_updateState.qts date:_updateState.date updateConnectionState:updateConnectionState];
+            [self uptodateWithConnectionState:updateConnectionState];
             
-        } errorHandler:nil];
+        } errorHandler:nil timeout:0 queue:queue.nativeQueue];
     } else {
         _holdUpdates = NO;
-        [self uptodate:_updateState.pts qts:_updateState.qts date:_updateState.date updateConnectionState:updateConnectionState];
+        [self uptodateWithConnectionState:updateConnectionState];
     }
 }
 
@@ -923,7 +900,7 @@ static NSArray *channelUpdates;
 
 
 
--(void)uptodate:(int)pts qts:(int)qts date:(int)date updateConnectionState:(BOOL)updateConnectionState  {
+-(void)uptodateWithConnectionState:(BOOL)updateConnectionState {
     
     if(_holdUpdates || ![[MTNetwork instance] isAuth] ) return;
     
@@ -933,7 +910,7 @@ static NSArray *channelUpdates;
         [Telegram setConnectionState:ConnectingStatusTypeUpdating];
     
     
-    TLAPI_updates_getDifference *dif = [TLAPI_updates_getDifference createWithPts:pts date:date qts:qts];
+    TLAPI_updates_getDifference *dif = [TLAPI_updates_getDifference createWithPts:_updateState.pts date:_updateState.date qts:_updateState.qts];
     [RPCRequest sendRequest:dif successHandler:^(RPCRequest *request, id response)  {
         
         TL_updates_difference *updates = response;
@@ -1005,43 +982,34 @@ static NSArray *channelUpdates;
                 [self proccessUpdate:update];
         }
         
-        [queue dispatchOnQueue:^{
-            
-            if([response n_messages].count > 0) {
-                [Notification perform:MESSAGE_LIST_UPDATE_TOP data:@{KEY_MESSAGE_LIST:[response n_messages]}];
-            }
-            
-            
-            _updateState.checkMinimum = NO;
-            _updateState.qts = stateQts;
-            _updateState.pts = statePts;
-            _updateState.date = stateDate;
-            _updateState.seq = stateSeq;
-            _updateState.checkMinimum = YES;
-            
-            [self saveUpdateState];
-            
-            _holdUpdates = NO;
-            
-            if(intstate != nil) {
-                [self uptodate:statePts qts:stateQts date:stateDate updateConnectionState:updateConnectionState];
-            } else {
-                [Notification perform:PROTOCOL_UPDATED data:nil];
-                [Telegram setConnectionState:ConnectingStatusTypeNormal];
-            }
-            
-        }];
-
-       
-        
-    } errorHandler:^(RPCRequest *request, RpcError *error) {
-        _holdUpdates = NO;
-        if(error.error_code == 502) {
-            [self uptodate:pts qts:qts date:date updateConnectionState:updateConnectionState];
-        } else {
-            [self updateDifference:YES updateConnectionState:updateConnectionState];
+        if([response n_messages].count > 0) {
+            [Notification perform:MESSAGE_LIST_UPDATE_TOP data:@{KEY_MESSAGE_LIST:[response n_messages]}];
         }
-    } timeout:10 queue:queue.nativeQueue];
+        
+        
+        _updateState.checkMinimum = NO;
+        _updateState.qts = stateQts;
+        _updateState.pts = statePts;
+        _updateState.date = stateDate;
+        _updateState.seq = stateSeq;
+        _updateState.checkMinimum = YES;
+        
+        [self saveUpdateState];
+        
+        _holdUpdates = NO;
+        
+        if(intstate != nil) {
+            [self uptodateWithConnectionState:updateConnectionState];
+        } else {
+            [Notification perform:PROTOCOL_UPDATED data:nil];
+            [Telegram setConnectionState:ConnectingStatusTypeNormal];
+        }
+
+    } errorHandler:^(RPCRequest *request, RpcError *error) {
+        if(error.error_code == 502) {
+            [self uptodateWithConnectionState:updateConnectionState];
+        }
+    } timeout:0 queue:queue.nativeQueue];
 
 }
 

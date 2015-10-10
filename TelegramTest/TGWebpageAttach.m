@@ -136,8 +136,9 @@
         if(!desc)
             desc = _webpage.author;
         if(!desc && _webpage.document)
-            desc = NSLocalizedString(@"WebAttach.Document", nil);
-        
+            desc = NSLocalizedString(@"Document", nil);
+        if(!desc)
+            desc = _webpage.url;
         [_stateField setTextColor:GRAY_TEXT_COLOR];
     }
     
