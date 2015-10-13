@@ -59,7 +59,7 @@
         _size.height = _descSize.width > 200 ? _descSize.height : _descSize.height + _imageSize.height;
     
     
-        _size.height = MAX(_size.height, 60);
+        _size.height = MAX(_size.height, _imageSize.height);
  //   }
     
 }

@@ -205,6 +205,8 @@
     
     [self drawWithStickers:sets];
     
+    
+    [self.stickers scrollToBeginningOfDocument:nil];
 }
 
 -(void)drawWithStickers:(NSArray *)stickers {

@@ -424,7 +424,6 @@
     [self.tableView.containerView setHidden:self.currentButton.index == 7];
     [self.stickersTableView setHidden:self.currentButton.index != 7];
     
-    
 }
 
 - (void)insertEmoji:(NSString *)emoji {

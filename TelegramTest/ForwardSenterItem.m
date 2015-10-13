@@ -95,7 +95,7 @@
         [random_ids addObject:@(obj.randomId)];
         
         if(!from_peer) {
-            from_peer = [obj.fwd_from_id inputPeer];
+            from_peer = [obj.conversation inputPeer];
         }
         
     }];

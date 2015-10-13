@@ -510,9 +510,13 @@ static NSString *encryptionKey;
             
             result = [db executeQuery:[NSString stringWithFormat:@"select * from %@ limit 1",@"update_state"]];
            
-            proccessResult();
-            
-            [db executeUpdate:@"delete from update_state where 1=1"];
+            if([result next]) {
+                proccessResult();
+                
+                [db executeUpdate:@"delete from update_state where 1=1"];
+                
+                [self saveUpdateState:state];
+            }
         }
         
         
@@ -744,8 +748,6 @@ TL_localMessage *parseMessage(FMResultSet *result) {
         
         if(localMaxDate == 0)
             localMaxDate = INT32_MAX;
-        
-        NSLog(@"storage_request %d:%d",min_id,max_id);
         
         
         NSString *sql = [NSString stringWithFormat:@"SELECT serialized,flags,invalidate,pts,views,is_viewed FROM channel_messages WHERE  peer_id = %d AND date > %d AND date < %d  AND (filter_mask & %d > 0) %@ ORDER BY date %@, n_id %@ LIMIT %d",conversationId,localMinDate,localMaxDate,mask,important ? @"AND ((flags & 2 > 0) OR (flags & 16 > 0) OR (flags & 256) == 0)" : @"", next ? @"DESC" : @"ASC",next ? @"DESC" : @"ASC",limit];

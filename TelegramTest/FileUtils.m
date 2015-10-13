@@ -615,7 +615,7 @@ void determinateURLLink(NSString *link) {
             [[NSApplication sharedApplication]  activateIgnoringOtherApps:YES];
             [[[Telegram delegate] mainWindow] deminiaturize:[Telegram delegate]];
             return;
-        }  
+        }
     }
     
     if([link hasPrefix:TGJoinGroupPrefix]) {

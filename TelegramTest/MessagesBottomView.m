@@ -1544,17 +1544,13 @@
             height += 75;
         }
         
-        if(self.replyContainer != nil) {
-            height+= self.replyContainer.replyObject.containerHeight + 5;
+        if(self.replyContainer != nil || self.fwdContainer != nil || (self.webpageAttach != nil && self.inputMessageString.length > 0)) {
+            height+= 40;
         }
         
-        if(self.fwdContainer != nil) {
-            height+= 35;
-        }
+        [_webpageAttach setHidden:_fwdContainer != nil];
+        [_replyContainer setHidden:self.fwdContainer != nil || (self.webpageAttach != nil && self.inputMessageString.length > 0)];
         
-        if(self.webpageAttach != nil && self.inputMessageString.length > 0) {
-            height+= 35;
-        }
         
         if(_botKeyboard != nil) {
             height+= (!_botKeyboard.isHidden ? NSHeight(_botKeyboard.frame) : 0);
@@ -1592,9 +1588,9 @@
             
             [[_replyContainer animator] setFrameOrigin:NSMakePoint(NSMinX(_replyContainer.frame), NSHeight(self.inputMessageTextField.containerView.frame) + offset )];
             
-            [[_fwdContainer animator] setFrameOrigin:NSMakePoint(NSMinX(_fwdContainer.frame), NSHeight(self.inputMessageTextField.containerView.frame) + offset + (_replyContainer ? 40 : 0))];
+            [[_fwdContainer animator] setFrameOrigin:NSMakePoint(NSMinX(_fwdContainer.frame), NSHeight(self.inputMessageTextField.containerView.frame) + offset )];
             
-            [[_webpageAttach animator] setFrameOrigin:NSMakePoint(NSMinX(_webpageAttach.frame), NSHeight(self.inputMessageTextField.containerView.frame) + offset + (_fwdContainer ? (_replyContainer ? 80 : 40) : _replyContainer ? 40 : 0))];
+            [[_webpageAttach animator] setFrameOrigin:NSMakePoint(NSMinX(_webpageAttach.frame), NSHeight(self.inputMessageTextField.containerView.frame) + offset )];
             
         } else {
             
@@ -1612,12 +1608,12 @@
             
             [_imageAttachmentsController setFrameOrigin:NSMakePoint(NSMinX(_imageAttachmentsController.frame), NSHeight(self.inputMessageTextField.containerView.frame) + 20 )];
             
-            [_replyContainer setFrameOrigin:NSMakePoint(NSMinX(_replyContainer.frame), NSHeight(self.inputMessageTextField.containerView.frame) + offset )];
+            [_replyContainer setFrameOrigin:NSMakePoint(NSMinX(_replyContainer.frame), NSHeight(self.inputMessageTextField.containerView.frame) + offset)];
             
             
-            [_fwdContainer setFrameOrigin:NSMakePoint(NSMinX(_fwdContainer.frame), NSHeight(self.inputMessageTextField.containerView.frame) + offset + (_replyContainer ? 40 : 0))];
+            [_fwdContainer setFrameOrigin:NSMakePoint(NSMinX(_fwdContainer.frame), NSHeight(self.inputMessageTextField.containerView.frame) + offset)];
             
-            [_webpageAttach setFrameOrigin:NSMakePoint(NSMinX(_webpageAttach.frame), NSHeight(self.inputMessageTextField.containerView.frame) + offset + (_fwdContainer ? _replyContainer ? 80 : 40 : _replyContainer ? 40 : 0))];
+            [_webpageAttach setFrameOrigin:NSMakePoint(NSMinX(_webpageAttach.frame), NSHeight(self.inputMessageTextField.containerView.frame) + offset)];
         }
         
         

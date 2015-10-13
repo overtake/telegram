@@ -910,6 +910,8 @@ static NSArray *channelUpdates;
         [Telegram setConnectionState:ConnectingStatusTypeUpdating];
     
     
+    MTLog(@"updateDifference:%@, pts:%d,date:%d,qts:%d",_updateState,_updateState.pts,_updateState.date,_updateState.qts);
+    
     TLAPI_updates_getDifference *dif = [TLAPI_updates_getDifference createWithPts:_updateState.pts date:_updateState.date qts:_updateState.qts];
     [RPCRequest sendRequest:dif successHandler:^(RPCRequest *request, id response)  {
         
@@ -1006,8 +1008,13 @@ static NSArray *channelUpdates;
         }
 
     } errorHandler:^(RPCRequest *request, RpcError *error) {
+        
+        _holdUpdates = NO;
+        
         if(error.error_code == 502) {
             [self uptodateWithConnectionState:updateConnectionState];
+        } else if(error.error_code == 400) {
+            [self updateDifference:YES updateConnectionState:updateConnectionState];
         }
     } timeout:0 queue:queue.nativeQueue];
 

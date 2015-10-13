@@ -1306,6 +1306,10 @@ static NSTextAttachment *headerMediaIcon() {
     
    [self.table.scrollView setHasVerticalScroller:NO];
     
+    if(![globalAudioPlayer().delegate isKindOfClass:[TGAudioPlayerWindow class]]) {
+        [globalAudioPlayer() stop];
+    }
+    
 }
 
 -(void)viewDidDisappear:(BOOL)animated {
