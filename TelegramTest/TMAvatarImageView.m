@@ -591,7 +591,9 @@ static CAAnimation *ani2() {
         
         NSDictionary *attributes = @{NSFontAttributeName: font, NSForegroundColorAttributeName: color};
         NSSize textSize = [textResult sizeWithAttributes:attributes];
-        [textResult drawAtPoint: NSMakePoint(roundf( (size.width- textSize.width) * 0.5 ),roundf( (size.height - textSize.height) * 0.5 + offset) )withAttributes: attributes];
+        
+        textSize.height-=4;
+        [textResult drawAtPoint: NSMakePoint(roundf( (size.width- textSize.width) * 0.5 ),roundf( (size.height - textSize.height) * 0.5 + offset) ) withAttributes: attributes];
 
     } else {
         static NSImage *smallAvatar;

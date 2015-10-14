@@ -1224,7 +1224,16 @@ static NSTextField *testTextField() {
         
         if(range.location != NSNotFound) {
             
-            if(range.location == 0 || [[self substringWithRange:NSMakeRange(range.location - 1, 1)] isEqualToString:@" "]) {
+            NSRange acceptRange = NSMakeRange(0, 0);
+            
+            if(range.location != 0) {
+                NSString *s = [self substringWithRange:NSMakeRange(range.location - 1, 1)];
+                
+                acceptRange = [s rangeOfCharacterFromSet:[NSCharacterSet letterCharacterSet] options:NSCaseInsensitiveSearch];
+            }
+            
+            
+            if(range.location == 0 || acceptRange.location == NSNotFound) {
                 result = YES;
                 *stop = YES;
             }

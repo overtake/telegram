@@ -3946,6 +3946,17 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "+[TMAvatarImageView generateTextAvatar:size:text:type:font:offsetY:]:TMAvatarImageView.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "font">
+            </PersistentString>
+            <PersistentString
+               value = "offset">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "__40-[TGStickerPackModalView initWithFrame:]_block_invoke56:TGStickerPackModalView.m">
       </ContextState>
       <ContextState

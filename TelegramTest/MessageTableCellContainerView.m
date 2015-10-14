@@ -933,6 +933,7 @@ static int offsetEditable = 30;
                     [weakSelf.item doAfterDownload];
                     [weakSelf updateCellState];
                     [weakSelf doAfterDownload];
+                    [weakSelf.progressView setCurrentProgress:0];
                     weakSelf.item.downloadItem = nil;
                 });  
             }];
