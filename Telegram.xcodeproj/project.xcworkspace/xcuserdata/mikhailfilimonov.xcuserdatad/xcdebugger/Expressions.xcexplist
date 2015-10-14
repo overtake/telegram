@@ -2515,6 +2515,11 @@
       </ContextState>
       <ContextState
          contextName = "__29-[RPCRequest completeHandler]_block_invoke:RPCRequest.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "self">
+            </PersistentString>
+         </PersistentStrings>
       </ContextState>
       <ContextState
          contextName = "-[MessageSenderItem initWithMessage:forConversation:]:MessageSenderItem.m">
@@ -3054,6 +3059,14 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "__30-[MTNetwork constructRequest:]_block_invoke_4:MTNetwork.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "result">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "-[MessageTableItemAudioDocument regenerate]:MessageTableItemAudioDocument.m">
       </ContextState>
       <ContextState
@@ -3433,6 +3446,9 @@
       <ContextState
          contextName = "__49-[TGProccessUpdates uptodateWithConnectionState:]_block_invoke:TGProccessUpdates.m">
          <PersistentStrings>
+            <PersistentString
+               value = "request">
+            </PersistentString>
             <PersistentString
                value = "response">
             </PersistentString>
