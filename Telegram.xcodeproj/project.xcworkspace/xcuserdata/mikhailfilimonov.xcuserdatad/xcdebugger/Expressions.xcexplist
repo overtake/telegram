@@ -3074,6 +3074,9 @@
          contextName = "-[ComposeActionCreateChannelBehavior composeDidDone]:ComposeActionCreateChannelBehavior.m">
       </ContextState>
       <ContextState
+         contextName = "-[TGProccessUpdates uptodateWithConnectionState:]:TGProccessUpdates.m">
+      </ContextState>
+      <ContextState
          contextName = "__38-[UserNameViewContainer updateChecker]_block_invoke_2:UserNameViewController.m">
          <PersistentStrings>
             <PersistentString
@@ -3424,6 +3427,14 @@
          <PersistentStrings>
             <PersistentString
                value = "self.chat">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "__49-[TGProccessUpdates uptodateWithConnectionState:]_block_invoke:TGProccessUpdates.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "response">
             </PersistentString>
          </PersistentStrings>
       </ContextState>

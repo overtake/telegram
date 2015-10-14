@@ -286,13 +286,13 @@
         }
         
         
-        [self.countryCodeTextField setFrameOrigin:NSMakePoint(114, 16)];
+        [self.countryCodeTextField setFrameOrigin:NSMakePoint(114, NSAppKitVersionNumber > NSAppKitVersionNumber10_10_Max ? 12 : 16)];
         
         
         [self.countryCodeTextField setCursorToEnd];
         
         [self.numberTextField setFrameSize:NSMakeSize(200, self.countryCodeTextField.bounds.size.height)];
-        [self.numberTextField setFrameOrigin:NSMakePoint(114 + self.countryCodeTextField.bounds.size.width + 16, 15)];
+        [self.numberTextField setFrameOrigin:NSMakePoint(114 + self.countryCodeTextField.bounds.size.width + 16,NSAppKitVersionNumber > NSAppKitVersionNumber10_10_Max ? 8 : 15)];
         
         
         
