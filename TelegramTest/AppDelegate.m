@@ -462,7 +462,7 @@ void exceptionHandler(NSException * exception)
             return result;
         
         
-        id responder = self.mainWindow.firstResponder;
+        id responder = incomingEvent.window.firstResponder;
                 
         if(incomingEvent.keyCode == 48) {
             

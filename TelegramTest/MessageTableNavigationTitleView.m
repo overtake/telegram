@@ -73,10 +73,12 @@
         
         _searchButton = [[BTRButton alloc] initWithFrame:NSMakeRect(NSWidth(self.container.frame) - image_SearchMessages().size.width - 30, 0, image_SearchMessages().size.width +10, image_SearchMessages().size.height+10)];
         
+        weak();
+        
         [_searchButton addBlock:^(BTRControlEvents events) {
             
-            if(![[Telegram rightViewController].messagesViewController searchBoxIsVisible]) {
-                [[Telegram rightViewController].messagesViewController showSearchBox];
+            if(![weakSelf.controller searchBoxIsVisible]) {
+                [weakSelf.controller showSearchBox];
             }
             
         } forControlEvents:BTRControlEventClick];
@@ -92,14 +94,12 @@
         _discussionSwitch = [[ITSwitch alloc] initWithFrame:NSMakeRect(0, 0, 19, 12)];
         
         _discussionSwitch.tintColor = BLUE_UI_COLOR;
-        
-        weak();
-        
+                
         [_discussionSwitch setDidChangeHandler:^(BOOL res){
             
             [weakSelf setDialog:weakSelf.dialog];
             
-            [[Telegram rightViewController].messagesViewController showOrHideChannelDiscussion];
+            [weakSelf.controller showOrHideChannelDiscussion];
     
         }];
         

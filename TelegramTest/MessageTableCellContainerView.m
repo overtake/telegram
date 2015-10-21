@@ -1094,6 +1094,9 @@ static int offsetEditable = 30;
 }
 
 -(void)dealloc {
+    
+ //   assert([NSThread isMainThread]);
+    
     [self.item.downloadListener setCompleteHandler:nil];
     [self.item.downloadListener setProgressHandler:nil];
     [self.item.downloadListener setErrorHandler:nil];

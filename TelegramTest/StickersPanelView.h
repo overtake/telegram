@@ -11,6 +11,8 @@
 @interface StickersPanelView : TMView
 
 
+@property (nonatomic,weak) MessagesViewController *messagesViewController;
+
 -(void)showAndSearch:(NSString *)emotion animated:(BOOL)animated;
 -(void)hide:(BOOL)animated;
 

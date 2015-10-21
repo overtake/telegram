@@ -220,6 +220,8 @@ CACHE_IMAGE(ChannelMessageAsAdmin);
 CACHE_IMAGE(ChannelMessageAsAdminHighlighted);
 CACHE_IMAGE(ChannelViews);
 
+CACHE_IMAGE(PinConversation);
+CACHE_IMAGE(PinnedConversation);
 @implementation ImageUtils
 
 NSImage *previewImageForDocument(NSString *path) {

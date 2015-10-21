@@ -25,7 +25,7 @@ typedef enum {
 
 @property (nonatomic) BOOL forwardEnabled;
 @property (nonatomic) MessagesBottomViewState stateBottom;
-@property (nonatomic, strong) MessagesViewController *messagesViewController;
+@property (nonatomic, weak) MessagesViewController *messagesViewController;
 @property (nonatomic, strong) TL_conversation *dialog;
 
 @property (nonatomic,copy) dispatch_block_t onClickToLockedView;
@@ -54,5 +54,6 @@ typedef enum {
 -(NSUInteger)attachmentsCount;
 
 -(void)selectInputTextByText:(NSString *)text;
+
 
 @end

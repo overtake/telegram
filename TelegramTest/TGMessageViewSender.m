@@ -32,7 +32,7 @@
 
 -(void)addItem:(MessageTableItem *)item {
     
-    [ASQueue dispatchOnStageQueue:^{
+    [ASQueue dispatchOnMainQueue:^{
         [waitingItems addObject:item];
         
         [timer invalidate];

@@ -41,6 +41,8 @@
 
 @property (nonatomic,strong) TL_conversation *conversation;
 
+@property (nonatomic,strong) NSString *internalId;
+
 @end
 
 @implementation ChatHistoryController
@@ -93,6 +95,8 @@ static ChatHistoryController *observer;
             
         });
         
+        _internalId = [NSString stringWithFormat:@"%ld",rand_long()];
+        
         _conversation = [controller conversation];
         
         
@@ -121,6 +125,8 @@ static ChatHistoryController *observer;
     
     return self;
 }
+
+
 
 
 -(ASQueue *)queue {
@@ -163,8 +169,8 @@ static ChatHistoryController *observer;
             NSMutableArray *ignored = [[NSMutableArray alloc] init];
             
             
-            [acceptFilters[controller.filter.className] enumerateObjectsUsingBlock:^(MessageTableItem *obj, NSUInteger idx, BOOL *stop) {
-                if(controller.controller.conversation.peer.peer_id == obj.message.peer_id) {
+            [acceptFilters[controller.filter.className][controller.internalId] enumerateObjectsUsingBlock:^(MessageTableItem *obj, NSUInteger idx, BOOL *stop) {
+                if(controller.conversation.peer_id == obj.message.peer_id) {
                     [accepted addObject:obj];
                 } else {
                     [ignored addObject:obj];
@@ -215,58 +221,34 @@ static ChatHistoryController *observer;
         if(updateData.count == 0)
             return;
         
-        NSMutableDictionary *dItems = [[NSMutableDictionary alloc] init];
-        
         
         [updateData enumerateObjectsUsingBlock:^(NSDictionary *obj, NSUInteger idx, BOOL *stop) {
             
-            for (Class filterClass in filters) {
+            
+            [listeners enumerateObjectsUsingBlock:^(WeakReference *weak, NSUInteger idx, BOOL *stop) {
                 
-                id item = [filterClass removeItemWithMessageId:[obj[KEY_MESSAGE_ID] intValue] withPeer_id:[obj[KEY_PEER_ID] intValue]];
+                ChatHistoryController *controller = [weak nonretainedObjectValue];
                 
-                if(item) {
-                    NSMutableArray *items = dItems[NSStringFromClass(filterClass)];
+                if(controller.conversation.peer_id == [obj[KEY_PEER_ID] intValue]) {
                     
-                    if(!items)
-                    {
-                        items = [NSMutableArray array];
-                        dItems[NSStringFromClass(filterClass)] = items;
+                    MessageTableItem *item = controller.messageKeys[obj[KEY_MESSAGE_ID]];
+                    
+                    [controller.messageItems removeObject:item];
+                    
+                    if(item != nil) {
+                        [[ASQueue mainQueue] dispatchOnQueue:^{
+                            [controller.controller deleteItems:@[item] orMessageIds:@[@(item.message.n_id)]];
+                        }];
                     }
                     
-                    [items addObject:item];
                 }
+
                 
-            
-                
-            }
-            
-        }];
-        
-        
-        
-        [listeners enumerateObjectsUsingBlock:^(WeakReference *weak, NSUInteger idx, BOOL *stop) {
-            
-            ChatHistoryController *obj = [weak nonretainedObjectValue];
-            
-            NSArray * td = dItems[obj.filter.className];
-            
-            td = [td filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.message.peer_id == %d", obj.conversation.peer_id]];
-            
-            NSMutableArray *msgIds = [[NSMutableArray alloc] init];
-            
-            [td enumerateObjectsUsingBlock:^(MessageTableItem *obj, NSUInteger idx, BOOL *stop) {
-                [msgIds addObject:@(obj.message.n_id)];
             }];
             
-            if(td.count > 0) {
-                [[ASQueue mainQueue] dispatchOnQueue:^{
-                    [obj.controller deleteItems:td orMessageIds:msgIds];
-                }];
-            }
-
         }];
         
-        self.proccessing = NO;
+       self.proccessing = NO;
         
     }];
     
@@ -367,11 +349,12 @@ static ChatHistoryController *observer;
         
         [self filterAndAdd:@[tableItem] acceptToFilters:&accept];
         
+        
         [listeners enumerateObjectsUsingBlock:^(WeakReference *weak, NSUInteger idx, BOOL *stop) {
             
             ChatHistoryController *obj = [weak nonretainedObjectValue];
             
-            if(obj.prevState != ChatHistoryStateFull || [accept[obj.filter.className] count] != 1)
+            if(obj.prevState != ChatHistoryStateFull || [accept[obj.filter.className][obj.internalId] count] != 1)
                 return;
             
              if(message.peer_id == obj.controller.conversation.peer_id) {
@@ -405,12 +388,9 @@ static ChatHistoryController *observer;
         int n_id = [notification.userInfo[KEY_MESSAGE_ID] intValue];
         long random_id = [notification.userInfo[KEY_RANDOM_ID] longValue];
         
-        [filters enumerateObjectsUsingBlock:^(Class obj, NSUInteger idx, BOOL *stop) {
+        [self updateItemId:random_id withId:n_id];
             
-            [obj updateItemId:random_id withId:n_id];
-            
-        }];
-        
+
     }];
     
 }
@@ -428,21 +408,23 @@ static ChatHistoryController *observer;
         
         ChatHistoryController *controller = obj.nonretainedObjectValue;
         
+        
         [items enumerateObjectsUsingBlock:^(MessageTableItem *obj, NSUInteger idx, BOOL *stop) {
             
             Class filterClass = controller.filter.class;
             
-            NSMutableArray *filterItems = [filterClass messageItems:obj.message.peer_id];
-            NSMutableDictionary *filterKeys = [filterClass messageKeys:obj.message.peer_id];
+            NSMutableArray *filterItems = [controller messageItems];
+            NSMutableDictionary *filterKeys = [controller messageKeys];
             
             BOOL needAdd = [filterItems indexOfObject:obj] == NSNotFound;
             
-            if( (obj.message.filterType & [filterClass type]) > 0 && (controller.prevState == ChatHistoryStateFull || accepted == NULL)) {
+            if(obj.message.peer_id == controller.conversation.peer_id && ((obj.message.filterType & [filterClass type]) > 0 && (controller.prevState == ChatHistoryStateFull || accepted == NULL))) {
                 
                 if(obj.message.n_id != 0) {
                     id saved = filterKeys[@(obj.message.n_id)];
                     if(!saved) {
                         filterKeys[@(obj.message.n_id)] = obj;
+                        
                     } else {
                         needAdd = NO;
                     }
@@ -451,11 +433,14 @@ static ChatHistoryController *observer;
                 if(needAdd) {
                     [filterItems addObject:obj];
                     
-                    if(!af[NSStringFromClass(filterClass)]) {
-                        af[NSStringFromClass(filterClass)] = [NSMutableArray array];
-                    }
+                    if(!af[NSStringFromClass(filterClass)])
+                        af[NSStringFromClass(filterClass)] = [NSMutableDictionary dictionary];
                     
-                    [af[NSStringFromClass(filterClass)] addObject:obj];
+                    
+                    if(!af[NSStringFromClass(filterClass)][controller.internalId])
+                        af[NSStringFromClass(filterClass)][controller.internalId] = [NSMutableArray array];
+                    
+                    [af[NSStringFromClass(filterClass)][controller.internalId] addObject:obj];
                     
                     if(self == controller) {
                         [filtred addObject:obj];
@@ -505,8 +490,8 @@ static ChatHistoryController *observer;
         [self removeAllItems];
         
         _h_filter = filter;
-        messageKeys = [filter messageKeys:self.conversation.peer_id];
-        messageItems = [filter messageItems:self.conversation.peer_id];
+        messageKeys = [NSMutableDictionary dictionary];
+        messageItems = [NSMutableArray array];
         _requestCounter = 0;
         
         _start_min = _min_id = self.conversation.last_marked_message == 0 ? self.conversation.top_message : self.conversation.last_marked_message;
@@ -853,6 +838,61 @@ static ChatHistoryController *observer;
     return pos;
 }
 
+-(void)items:(NSArray *)msgIds complete:(void (^)(NSArray *list))complete {
+    
+    dispatch_queue_t dqueue = dispatch_get_current_queue();
+    
+    [queue dispatchOnQueue:^{
+    
+        NSMutableArray *items = [NSMutableArray array];
+        
+        [msgIds enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            
+            MessageTableItem *item = messageKeys[obj];
+            
+            if(item != nil) {
+                [items addObject:item];
+            }
+            
+        }];
+        
+        dispatch_async(dqueue, ^{
+            complete(items);
+        });
+        
+    }];
+}
+
+-(void)updateItemId:(long)randomId withId:(int)n_id {
+    [queue dispatchOnQueue:^{
+        
+        NSArray *f = [messageItems filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.message.randomId = %ld",randomId]];
+        MessageTableItem *item = [f firstObject];
+        
+        if(item) {
+            [messageKeys removeObjectForKey:@(item.message.n_id)];
+            item.message.n_id = n_id;
+            messageKeys[@(item.message.n_id)] = item;
+        }
+        
+    }];
+}
+
+-(void)updateMessageTableItems:(NSArray *)items {
+    [items enumerateObjectsUsingBlock:^(MessageTableItem *obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        
+        MessageTableItem *item = messageKeys[@(obj.message.n_id)];
+        
+        if(item != nil) {
+            [messageItems removeObject:item];
+            
+            [messageItems addObject:obj];
+            messageKeys[@(obj.message.n_id)] = obj;
+        }
+        
+    }];
+}
+
 
 -(void)addItem:(MessageTableItem *)item {
     
@@ -883,27 +923,36 @@ static ChatHistoryController *observer;
             
             [item.messageSender addEventListener:self];
             
-            NSArray *added = [self filterAndAdd:@[item] acceptToFilters:nil];
+            
+            NSDictionary *accepted;
+            
+            [self filterAndAdd:@[item] acceptToFilters:&accepted];
             
             [listeners enumerateObjectsUsingBlock:^(WeakReference *weak, NSUInteger idx, BOOL *stop) {
                 
-                
                 ChatHistoryController *controller = weak.nonretainedObjectValue;
                 
-                if(added.count == 1 && (item.message.filterType & controller.filter.type) > 0 && item.message.peer_id == controller.conversation.peer_id) {
+                NSArray *filtred =  accepted[NSStringFromClass(controller.filter.class)][controller.internalId];
+                
+                if(filtred.count > 0) {
+                    
+                    NSArray *copyItems = [[NSArray alloc] initWithArray:filtred copyItems:YES];
+                    
+                    [controller updateMessageTableItems:copyItems];
+                    
                     
                     [[ASQueue mainQueue] dispatchOnQueue:^{
                         
-                        
-                        [controller.controller receivedMessage:item position:0 itsSelf:YES];
+                        [controller.controller receivedMessageList:copyItems inRange:NSMakeRange(0, filtred.count) itsSelf:YES];
                         
                         if(controller == self) {
                             if(sentControllerCallback)
                                 sentControllerCallback();
                         }
-                       
+                        
                     }];
                 }
+                
             }];
             
             
@@ -934,21 +983,39 @@ static ChatHistoryController *observer;
     dispatch_block_t block = ^ {
         [queue dispatchOnQueue:^{
             
-            NSArray *filtred =  [self filterAndAdd:items acceptToFilters:nil];
-            
             MessageTableItem *item = [items lastObject];
             
-            NSRange range = NSMakeRange(0, filtred.count);
-            if(filtred.count == items.count && item.message.peer_id == self.conversation.peer_id) {
-                [[ASQueue mainQueue] dispatchOnQueue:^{
+            NSDictionary *accepted = nil;
+            
+            [self filterAndAdd:[[NSArray alloc] initWithArray:items copyItems:YES] acceptToFilters:&accepted];
+            
+            [listeners enumerateObjectsUsingBlock:^(WeakReference *weak, NSUInteger idx, BOOL *stop) {
+                
+                ChatHistoryController *controller = weak.nonretainedObjectValue;
+                
+                NSArray *filtred =  accepted[NSStringFromClass(controller.filter.class)][controller.internalId];
+                
+                if(filtred.count > 0) {
                     
-                    [self.controller receivedMessageList:filtred inRange:range itsSelf:YES];
+                    NSArray *copyItems = [[NSArray alloc] initWithArray:filtred copyItems:YES];
                     
-                    if(sentControllerCallback)
-                        sentControllerCallback();
+                    [controller updateMessageTableItems:copyItems];
+
                     
-                }];
-            }
+                    [[ASQueue mainQueue] dispatchOnQueue:^{
+                        
+                        [controller.controller receivedMessageList:copyItems inRange:NSMakeRange(0, filtred.count) itsSelf:YES];
+                        
+                        if(controller == self) {
+                            if(sentControllerCallback)
+                                sentControllerCallback();
+                        }
+                        
+                    }];
+                }
+            }];
+            
+            
             
             
             conversation.last_marked_message = item.message.n_id;
@@ -997,10 +1064,15 @@ static ChatHistoryController *observer;
                }
                 
                 if(![checkItem.message isKindOfClass:[TL_destructMessage class]]) {
-                    [messageItems removeObject:checkItem];
-                    [messageKeys removeObjectForKey:@(checkItem.message.fakeId)];
                     
-                    [self filterAndAdd:@[checkItem] acceptToFilters:nil];
+                    [listeners enumerateObjectsUsingBlock:^(WeakReference *obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                        
+                        ChatHistoryController *controller = obj.nonretainedObjectValue;
+                        
+                        [controller updateItemId:checkItem.message.randomId withId:checkItem.message.n_id];
+                        
+                    }];
+                    
                 }
                 
                 
@@ -1058,6 +1130,8 @@ static ChatHistoryController *observer;
         _controller = nil;
         
     } synchronous:YES];
+    
+    _controller = nil;
     
     
     [[NSNotificationCenter defaultCenter] removeObserver:self];

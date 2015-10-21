@@ -610,7 +610,7 @@ void determinateURLLink(NSString *link) {
         NSDictionary *vars = getUrlVars(link);
         
         if([vars[@"url"] length] > 0 && [vars[@"text"] length] > 0) {
-            share_link(vars[@"url"], vars[@"text"]);
+            share_link([vars[@"url"] stringByDecodingURLFormat], [vars[@"text"] stringByDecodingURLFormat]);
             
             [[NSApplication sharedApplication]  activateIgnoringOtherApps:YES];
             [[[Telegram delegate] mainWindow] deminiaturize:[Telegram delegate]];

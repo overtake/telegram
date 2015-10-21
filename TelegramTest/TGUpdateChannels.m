@@ -347,6 +347,18 @@
         
         [self failUpdateWithChannelId:[update channel_id] limit:100 withCallback:nil errorCallback:nil];
         
+        [[FullChatManager sharedManager] performLoad:[update channel_id] force:YES callback:^(TLChatFull *fullChat) {
+            
+            TL_conversation *channel = [self conversationWithChannelId:fullChat.n_id];
+            
+            channel.unread_count = fullChat.unread_count;
+            channel.unread_important_count = fullChat.unread_important_count;
+            
+            [channel save];
+            [[DialogsManager sharedManager] notifyAfterUpdateConversation:channel];
+            
+        }];
+        
     } else if([update isKindOfClass:[TL_updateChannelMessageViews class]]) {
         
         TL_updateChannelMessageViews *views = (TL_updateChannelMessageViews *)update;

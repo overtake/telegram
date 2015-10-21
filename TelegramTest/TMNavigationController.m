@@ -1,16 +1,3 @@
-// DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE
-// Version 2, December 2004
-//
-// Copyright (C) 2013 Ilija Tovilo <support@ilijatovilo.ch>
-//
-// Everyone is permitted to copy and distribute verbatim or modified
-// copies of this license document, and changing it is allowed as long
-// as the name is changed.
-//
-// DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE
-// TERMS AND CONDITIONS FOR COPYING, DISTRIBUTION AND MODIFICATION
-//
-// 0. You just DO WHAT THE FUCK YOU WANT TO.
 
 //
 //  ITNavigationView.m
@@ -140,7 +127,6 @@ static const int navigationOffset = 48;
 - (void)pushViewController:(TMViewController *)viewController animated:(BOOL)animated {
     if(_isLocked)
         return;
-    
     
     
     if([self.viewControllerStack indexOfObject:viewController] == NSNotFound) {
@@ -283,7 +269,7 @@ static const int navigationOffset = 48;
     
     self.currentController = newViewController;
     
-        
+    
     // Make view resize properly
     newView.autoresizingMask = NSViewWidthSizable | NSViewHeightSizable;
     
@@ -515,6 +501,7 @@ static const int navigationOffset = 48;
        
         
     }
+    
 }
 
 

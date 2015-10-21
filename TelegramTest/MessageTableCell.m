@@ -100,7 +100,7 @@
         if([self.item.message.conversation canSendMessage]) {
             [items addObject:[NSMenuItem menuItemWithTitle:NSLocalizedString(@"Context.Reply", nil) withBlock:^(id sender) {
                 
-                [[Telegram rightViewController].messagesViewController addReplayMessage:self.item.message animated:YES];
+                [_messagesViewController addReplayMessage:self.item.message animated:YES];
                 
             }]];
         }
@@ -136,15 +136,15 @@
     if(self.item.message.conversation.type != DialogTypeSecretChat) {
         [items addObject:[NSMenuItem menuItemWithTitle:NSLocalizedString(@"Context.Forward", nil) withBlock:^(id sender) {
             
-            [[Telegram rightViewController].messagesViewController setState:MessagesViewControllerStateNone];
-            [[Telegram rightViewController].messagesViewController unSelectAll:NO];
+            [_messagesViewController setState:MessagesViewControllerStateNone];
+            [_messagesViewController unSelectAll:NO];
             
             
             
-            [[Telegram rightViewController].messagesViewController setSelectedMessage:self.item selected:YES];
+            [_messagesViewController setSelectedMessage:self.item selected:YES];
             
             
-            [[Telegram rightViewController] showForwardMessagesModalView:[Telegram rightViewController].messagesViewController.conversation messagesCount:1];
+            [[Telegram rightViewController] showForwardMessagesModalView:_messagesViewController.conversation messagesCount:1];
             
             
         }]];
@@ -153,12 +153,12 @@
     if([MessagesViewController canDeleteMessages:@[self.item.message] inConversation:self.item.message.conversation]) {
         [items addObject:[NSMenuItem menuItemWithTitle:NSLocalizedString(@"Context.Delete", nil) withBlock:^(id sender) {
             
-            [[Telegram rightViewController].messagesViewController setState:MessagesViewControllerStateNone];
-            [[Telegram rightViewController].messagesViewController unSelectAll:NO];
+            [_messagesViewController setState:MessagesViewControllerStateNone];
+            [_messagesViewController unSelectAll:NO];
             
-            [[Telegram rightViewController].messagesViewController setSelectedMessage:self.item selected:YES];
+            [_messagesViewController setSelectedMessage:self.item selected:YES];
             
-            [[Telegram rightViewController].messagesViewController deleteSelectedMessages];
+            [_messagesViewController deleteSelectedMessages];
             
             
         }]];
@@ -176,7 +176,7 @@
         MTLog(@"message_id:%d",self.item.message.n_id);
         
         if(accept && self.item.message.n_id < TGMINFAKEID && self.item.message.n_id > 0)
-            [[Telegram rightViewController].messagesViewController addReplayMessage:self.item.message animated:YES];
+            [_messagesViewController addReplayMessage:self.item.message animated:YES];
     }
     
     

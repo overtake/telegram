@@ -114,7 +114,7 @@ DYNAMIC_PROPERTY(DUser);
     
     TGMessagesHintRowItem *item = (TGMessagesHintRowItem *)[self rowItem];
     
-    int xOffset = item.imageObject == nil ? 10 : 36 + 20;
+    int xOffset = item.imageObject == nil ? 10 : 30 + 15;
     
     [_imageView setHidden:item.imageObject == nil];
     
@@ -133,8 +133,10 @@ DYNAMIC_PROPERTY(DUser);
     
     [_descField setStringValue:item.desc];
     
+    [_textField setTextColor:self.isSelected ? [NSColor whiteColor] : TEXT_COLOR];
+    [_descField setTextColor:self.isSelected ? [NSColor whiteColor] : GRAY_TEXT_COLOR];
     
-    [_textField setFrameOrigin:NSMakePoint(xOffset, roundf(NSHeight(self.frame)/2) - (_descField.isHidden ? roundf(NSHeight(_textField.frame)/2) - 3 : -2) )];
+    [_textField setFrameOrigin:NSMakePoint(xOffset, roundf(NSHeight(self.frame)/2) - (_descField.isHidden ? roundf(NSHeight(_textField.frame)/2) - 3 : -1) )];
     
     [_descField setFrameOrigin:NSMakePoint(xOffset, NSMinY(_textField.frame) - NSHeight(_descField.frame) + 2)];
 }
@@ -146,14 +148,22 @@ DYNAMIC_PROPERTY(DUser);
     
     TGMessagesHintRowItem *item = (TGMessagesHintRowItem *)[self rowItem];
     
-    int xOffset = item.imageObject == nil ? 10 : 36 + 20;
+    int xOffset = item.imageObject == nil ? 10 : 30 + 15;
     
    
     
     if(self.isSelected) {
+        
+        [BLUE_COLOR_SELECT set];
+        
          NSRectFill(NSMakeRect(0, 0, NSWidth(dirtyRect) , NSHeight(dirtyRect)));
     } else {
-         NSRectFill(NSMakeRect(xOffset, 0, NSWidth(dirtyRect) - xOffset, 1));
+        
+        TMTableView *table = item.table;
+        
+        if([table indexOfItem:item] != table.count - 1) {
+            NSRectFill(NSMakeRect(xOffset, 0, NSWidth(dirtyRect) - xOffset, 1));
+        }
     }
 }
 
@@ -216,13 +226,12 @@ DYNAMIC_PROPERTY(DUser);
         
         self.autoresizingMask = NSViewWidthSizable;
         
-      //  self.tableView.containerView.autoresizingMask = NSViewWidthSizable;
         
         _separator = [[TMView alloc] initWithFrame:NSMakeRect(0, NSHeight(frameRect) - DIALOG_BORDER_WIDTH, NSWidth(frameRect), DIALOG_BORDER_WIDTH)];
         
         _separator.backgroundColor = DIALOG_BORDER_COLOR;
         
-         _separator.autoresizingMask = NSViewWidthSizable;
+         _separator.autoresizingMask = NSViewWidthSizable | NSViewMinYMargin;
         
         [self addSubview:_separator];
         
@@ -409,8 +418,11 @@ DYNAMIC_PROPERTY(DUser);
 }
 
 -(void)show:(BOOL)animated {
-    if(self.alphaValue == 1.0f && !self.isHidden)
+    if(self.alphaValue == 1.0f && !self.isHidden) {
+        [self updateFrames:YES];
+        [self selectNext];
         return;
+    }
     
     self.hidden = NO;
     
@@ -428,11 +440,35 @@ DYNAMIC_PROPERTY(DUser);
         self.alphaValue = 1.0f;
     }
     
-    [self setFrameSize:NSMakeSize(NSWidth(self.frame), MIN(self.tableView.count * 40, 140 ))];
-    [self.tableView.containerView setFrameSize:NSMakeSize(NSWidth(self.frame), NSHeight(self.frame) )];
+    [self updateFrames:NO];
     
-    [_separator setFrame:NSMakeRect(0, NSHeight(self.frame) - DIALOG_BORDER_WIDTH, NSWidth(self.frame), DIALOG_BORDER_WIDTH)];
-    [self selectPrev];
+    [self selectNext];
+}
+
+-(void)updateFrames:(BOOL)animated {
+    if(animated) {
+        
+        NSUInteger height = MIN(self.tableView.count * 40, 140 );
+        
+        
+        [NSAnimationContext runAnimationGroup:^(NSAnimationContext * _Nonnull context) {
+            
+            [[self animator] setFrameSize:NSMakeSize(NSWidth(self.frame), height)];
+            
+            
+        } completionHandler:^{
+        }];
+        
+        
+    } else {
+        [self setFrameSize:NSMakeSize(NSWidth(self.frame), MIN(self.tableView.count * 40, 140 ))];
+        [self.tableView.containerView setFrameSize:NSMakeSize(NSWidth(self.frame), NSHeight(self.frame) )];
+        
+        [_separator setFrame:NSMakeRect(0, NSHeight(self.frame) - DIALOG_BORDER_WIDTH, NSWidth(self.frame), DIALOG_BORDER_WIDTH)];
+        [self.tableView scrollToBeginningOfDocument:self];
+    }
+    
+    
 }
 
 -(void)hide {

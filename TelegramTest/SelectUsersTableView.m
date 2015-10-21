@@ -380,42 +380,52 @@ static NSCache *cacheItems;
 }
 
 
+-(void)filterAndAddGlobalUsers:(NSArray *)users {
+    NSMutableArray *converted = [NSMutableArray array];
+    
+    NSMutableArray *ids = [[NSMutableArray alloc] init];
+    
+    [self.list enumerateObjectsUsingBlock:^(SelectUserItem *obj, NSUInteger idx, BOOL *stop) {
+        if([obj isKindOfClass:[SelectUserItem class]])
+            [ids addObject:@(obj.user.n_id)];
+    }];
+    
+    
+    NSArray *filtred = [users filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"NOT(self.n_id IN %@)",ids]];
+    
+    [filtred enumerateObjectsUsingBlock:^(TLUser *obj, NSUInteger idx, BOOL *stop) {
+        
+        [obj rebuildNames];
+        
+        // if([obj isKindOfClass:[TL_userContact class]]) {
+        
+        SelectUserItem *item = [[SelectUserItem alloc] initWithObject:obj];
+        item.isSearchUser = YES;
+        [converted addObject:item];
+        //  }
+        
+    }];
+    
+    if(converted.count > 0) {
+        [self.items insertObjects:converted atIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, converted.count)]];
+        
+        [self insert:converted startIndex:self.count tableRedraw:YES];
+    }
+
+}
+
 -(void)remoteSearchByUserName:(NSString *)userName {
     
     if(userName.length > 4) {
+        
+        NSArray *users = [UsersManager findUsersByName:userName];
+        
+        [self filterAndAddGlobalUsers:users];
+        
         _request = [RPCRequest sendRequest:[TLAPI_contacts_search createWithQ:userName limit:100] successHandler:^(RPCRequest *request, TL_contacts_found *response) {
             
-            NSMutableArray *converted = [[NSMutableArray alloc] init];
-            
-            
-            NSMutableArray *ids = [[NSMutableArray alloc] init];
-            
-            [_items enumerateObjectsUsingBlock:^(SelectUserItem *obj, NSUInteger idx, BOOL *stop) {
-                [ids addObject:@(obj.user.n_id)];
-            }];
-            
-            NSArray *filtred = [response.users filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"NOT(self.n_id IN %@)",ids]];
-            
-            [filtred enumerateObjectsUsingBlock:^(TLUser *obj, NSUInteger idx, BOOL *stop) {
-                
-                [obj rebuildNames];
-                
-               // if([obj isKindOfClass:[TL_userContact class]]) {
-                
-                SelectUserItem *item = [[SelectUserItem alloc] initWithObject:obj];
-                item.isSearchUser = YES;
-                [converted addObject:item];
-              //  }
-                
-            }];
-            
-            if(converted.count > 0) {
-                [self.items insertObjects:converted atIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, converted.count)]];
-                
-                [self insert:converted startIndex:self.count tableRedraw:YES];
-            }
-            
-            
+            [self filterAndAddGlobalUsers:response.users];
+  
         } errorHandler:^(RPCRequest *request, RpcError *error) {
             
             

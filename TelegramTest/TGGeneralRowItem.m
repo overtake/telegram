@@ -33,7 +33,7 @@
 
 -(int)xOffset {
     if(_xOffset < 1)
-        return 100;
+        return 30;
     return _xOffset;
 }
 

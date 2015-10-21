@@ -10,6 +10,9 @@
 
 @interface MessageTableNavigationTitleView : TMView<TMStatusTextFieldProtocol, TMNameTextFieldProtocol>
 
+
+@property (nonatomic,weak) MessagesViewController *controller;
+
 @property (nonatomic, strong) TL_conversation *dialog;
 @property (nonatomic, strong) dispatch_block_t tapBlock;
 

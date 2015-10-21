@@ -42,7 +42,7 @@
 
 @end
 
-@interface MessageTableItem()
+@interface MessageTableItem() <NSCopying>
 @property (nonatomic) BOOL isChat;
 @property (nonatomic) NSSize _viewSize;
 @property (nonatomic,assign) BOOL autoStart;
@@ -114,7 +114,7 @@ static NSCache *cItems;
 }
 
 -(int)makeSize {
-    return MAX(NSWidth([Telegram rightViewController].view.frame) - 150,100);
+    return MAX(NSWidth(((MessagesTableView *)self.table).viewController.view.frame) - 150,100);
 }
 
 -(void)buildHeaderAndSaveToCache {
@@ -519,6 +519,17 @@ static NSTextAttachment *channelIconAttachment() {
     
 }
 
+-(id)copy {
+    MessageTableItem *item = [MessageTableItem messageItemFromObject:self.message];
+    
+    item.messageSender = self.messageSender;
+    
+    return item;
+}
+
+-(id)copyWithZone:(NSZone *)zone {
+    return [self copy];
+}
 
 + (NSDateFormatter *)dateFormatter {
     static NSDateFormatter *dateF = nil;

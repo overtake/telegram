@@ -14,7 +14,7 @@
 
 @interface MessageTableItem : NSObject<SelectTextDelegate>
 
-@property (nonatomic,weak) TMTableView *table;
+@property (nonatomic,weak) MessagesTableView *table;
 
 @property (nonatomic, strong) TL_localMessage *message;
 

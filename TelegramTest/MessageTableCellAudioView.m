@@ -263,6 +263,8 @@
     
     [self.durationView setStringValue:item.duration];
     
+    [self.durationView setFrameSize:NSMakeSize(80, NSHeight(self.durationView.frame))];
+    
     if(item.state != AudioStatePlaying && item.state != AudioStatePaused)
         [self updateCellState];
     else {

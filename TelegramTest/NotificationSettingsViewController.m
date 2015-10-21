@@ -48,7 +48,7 @@
     
     self.searchView = [[TGSearchRowView alloc] initWithFrame:NSMakeRect(0, 0, NSWidth(self.view.frame), 50)];
     
-    [self.searchView setXOffset:100];
+    [self.searchView setXOffset:30];
     
     [self.searchView setDelegate:self];
     

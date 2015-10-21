@@ -254,7 +254,7 @@ static BOOL isStorageLoaded;
     {
         
         
-        [[Storage manager] dialogsWithOffset:_offset limit:[self.delegate conversationsLoadingLimit] completeHandler:^(NSArray *d, NSArray *m, NSArray *c) {
+        [[Storage manager] dialogsWithOffset:_localOffset limit:[self.delegate conversationsLoadingLimit] completeHandler:^(NSArray *d, NSArray *m, NSArray *c) {
             
             
             if(c.count == 0 && d.count > 0 && [[ChannelsManager sharedManager] all].count > 0) {
@@ -285,7 +285,8 @@ static BOOL isStorageLoaded;
     }  else if(_state == TGModernCHStateRemote) {
         
         
-        [RPCRequest sendRequest:[TLAPI_messages_getDialogs createWithOffset:_offset limit:100] successHandler:^(id request, TL_messages_dialogs *response) {
+        
+        [RPCRequest sendRequest:[TLAPI_messages_getDialogs createWithOffset:_remoteOffset limit:100] successHandler:^(id request, TL_messages_dialogs *response) {
             
             
             
@@ -355,13 +356,16 @@ static BOOL isStorageLoaded;
     [_delegate didLoadedConversations:all withRange:NSMakeRange(_offset, all.count)];
     
     _offset+= offset;
-    
+    _remoteOffset+= [[all filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.type == 0 OR self.type == 1"]] count];
+    _localOffset+= [[all filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.type == 0 OR self.type == 1 OR self.type == 2 OR self.type == 3"]] count];
     _isLoading = NO;
 
 }
 
 -(void)clear {
     _offset = 0;
+    _localOffset = 0;
+    _remoteOffset = 0;
     _isLoading = NO;
     _delegate = nil;
     [channelsLoader removeEventListener:self];

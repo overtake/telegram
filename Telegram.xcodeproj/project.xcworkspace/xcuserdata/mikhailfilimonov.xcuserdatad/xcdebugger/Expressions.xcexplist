@@ -20,13 +20,16 @@
          contextName = "__39-[AppDelegate initializeKeyDownHandler]_block_invoke:AppDelegate.m">
          <PersistentStrings>
             <PersistentString
-               value = "result.responder">
+               value = "responder">
             </PersistentString>
             <PersistentString
                value = "result.window">
             </PersistentString>
             <PersistentString
-               value = "">
+               value = "result.responder">
+            </PersistentString>
+            <PersistentString
+               value = "incomingEvent.window">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -54,6 +57,14 @@
       </ContextState>
       <ContextState
          contextName = "__38-[UserNameViewContainer updateChecker]_block_invoke180:UserNameViewController.m">
+      </ContextState>
+      <ContextState
+         contextName = "-[MessagesViewController didUpdateTable]:MessagesViewController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.messages.count">
+            </PersistentString>
+         </PersistentStrings>
       </ContextState>
       <ContextState
          contextName = "+[StickersPanelView hasSticker:]:StickersPanelView.m">
@@ -267,6 +278,9 @@
          <PersistentStrings>
             <PersistentString
                value = "controller.prevState">
+            </PersistentString>
+            <PersistentString
+               value = "af">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -489,6 +503,9 @@
                value = "NSHeight(self.frame)">
             </PersistentString>
          </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "__49-[TGProccessUpdates uptodateWithConnectionState:]_block_invoke599:TGProccessUpdates.m">
       </ContextState>
       <ContextState
          contextName = "-[ChannelHistoryController max_id]:ChannelHistoryController.m">
@@ -930,6 +947,9 @@
       </ContextState>
       <ContextState
          contextName = "__44-[TGUpdateChannels proccessStatefullUpdate:]_block_invoke:TGUpdateChannels.m">
+      </ContextState>
+      <ContextState
+         contextName = "-[MessageInputGrowingTextView keyDown:]:MessageInputGrowingTextView.m">
       </ContextState>
       <ContextState
          contextName = "__47-[TMCollectionPageController viewDidDisappear:]_block_invoke:TMCollectionPageController.m">
@@ -2522,6 +2542,14 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "-[TGHeadChatPanel initializeHeadChatPanel]:TGHeadChatPanel.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.contentView">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "-[MessageSenderItem initWithMessage:forConversation:]:MessageSenderItem.m">
       </ContextState>
       <ContextState
@@ -2620,6 +2648,11 @@
       </ContextState>
       <ContextState
          contextName = "__52-[ChatHistoryController notificationReceiveMessage:]_block_invoke:ChatHistoryController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "listeners">
+            </PersistentString>
+         </PersistentStrings>
       </ContextState>
       <ContextState
          contextName = "__47-[TGPVMediaBehavior loadRemote:limit:callback:]_block_invoke:TGPVMediaBehavior.m">
@@ -3063,6 +3096,14 @@
          <PersistentStrings>
             <PersistentString
                value = "result">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "__29-[TGModalView show:animated:]_block_invoke91:TGModalView.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "completed">
             </PersistentString>
          </PersistentStrings>
       </ContextState>

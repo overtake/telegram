@@ -401,7 +401,7 @@ typedef enum {
 
 -(void)keyDown:(NSEvent *)theEvent {
     
-    TGMessagesHintView *hint = [Telegram rightViewController].messagesViewController.hintView;
+    TGMessagesHintView *hint = self.controller.hintView;
     
     
     if(!hint.isHidden) {

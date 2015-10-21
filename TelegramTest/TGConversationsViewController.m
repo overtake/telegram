@@ -19,6 +19,7 @@
 #import "TGConversationsTableView.h"
 #import "MessagesUtils.h"
 #import "TGModernConversationHistoryController.h"
+#import "TGHeadChatPanel.h"
 @interface TestView : TMView
 
 @end
@@ -48,14 +49,7 @@
     _list = [[NSMutableArray alloc] init];
     
     
-    
-    
     int topOffset = 48;
-    
- //   self.view.wantsLayer = NO;
-    
-    
-    
     
     self.searchViewController.type = SearchTypeDialogs | SearchTypeMessages | SearchTypeContacts | SearchTypeGlobalUsers;
     
@@ -79,14 +73,9 @@
     [Notification addObserver:self selector:@selector(notificationDialogSelectionChanged:) name:@"ChangeDialogSelection"];
     [self addScrollEvent];
     
-    
-
-    
     if(![TGPasslock isEnabled] && [[MTNetwork instance] isAuth]) {
         [self initialize];
-       // [[MTNetwork instance] startNetwork];
     }
-    
     
 }
 
@@ -450,6 +439,17 @@
     
     [menu addItem:openConversationMenuItem];
     
+    if(ACCEPT_FEATURE) {
+        NSMenuItem *anotherWindow = [NSMenuItem menuItemWithTitle:NSLocalizedString(@"ShowConversationWithAnotherWindow", nil) withBlock:^(id sender) {
+            [TGHeadChatPanel showWithConversation:dialog];
+        }];
+        
+        
+        [menu addItem:anotherWindow];
+    }
+    
+    
+    
     
     [menu addItem:[NSMenuItem separatorItem]];
     
@@ -571,8 +571,6 @@
     
     [NSMenu popUpContextMenu:menu withEvent:theEvent forView:view];
 }
-
-
 
 
 

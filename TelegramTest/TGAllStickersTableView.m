@@ -188,7 +188,7 @@ static NSImage *higlightedImage() {
         [imageView setTapBlock:^ {
             
             if(!_tableView.isCustomStickerPack)
-                [[Telegram rightViewController].messagesViewController sendSticker:item.stickers[idx] forConversation:[Telegram conversation] addCompletionHandler:nil];
+                [[EmojiViewController instance].messagesViewController sendSticker:item.stickers[idx] forConversation:[Telegram conversation] addCompletionHandler:nil];
             
         }];
         

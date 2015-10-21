@@ -20,7 +20,7 @@
 + (NSString *) sizeToTransformedValue:(NSUInteger)value;
 + (NSString *) durationTransformedValue:(int) elapsedSeconds;
 + (NSString *) sizeToTransformedValuePretty:(int)value;
-
+- (NSString *)stringByDecodingURLFormat;
 
 +(NSRange)selectRange:(NSPoint)point frameSize:(NSSize)size;
 

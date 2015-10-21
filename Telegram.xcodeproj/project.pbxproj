@@ -519,6 +519,12 @@
 		C297955F19EC587900BE893E /* SettingsSecurityViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C297955E19EC587900BE893E /* SettingsSecurityViewController.m */; };
 		C297FBA31832997B00714B3C /* SSKeychain.m in Sources */ = {isa = PBXBuildFile; fileRef = C297FBA21832997B00714B3C /* SSKeychain.m */; };
 		C297FBA618329F3500714B3C /* TGDcAuth.m in Sources */ = {isa = PBXBuildFile; fileRef = C297FBA518329F3500714B3C /* TGDcAuth.m */; };
+		C2A2B4201BCEDADC0083DA8A /* Sparkle.framework in Copy Files (6 items) */ = {isa = PBXBuildFile; fileRef = C235364C19C88D620044978E /* Sparkle.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		C2A2B4211BCEDADC0083DA8A /* HockeySDK.framework in Copy Files (6 items) */ = {isa = PBXBuildFile; fileRef = C2082B7219C1E1C4000005E2 /* HockeySDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		C2A2B4221BCEDAE00083DA8A /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C235364C19C88D620044978E /* Sparkle.framework */; };
+		C2A2B4231BCEDAE00083DA8A /* HockeySDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2082B7219C1E1C4000005E2 /* HockeySDK.framework */; };
+		C2A2B4261BD01FC20083DA8A /* TGHeadChatPanel.m in Sources */ = {isa = PBXBuildFile; fileRef = C2A2B4251BD01FC20083DA8A /* TGHeadChatPanel.m */; settings = {ASSET_TAGS = (); }; };
+		C2A2B42E1BD519870083DA8A /* TGHCMessagesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C2A2B42D1BD519870083DA8A /* TGHCMessagesViewController.m */; settings = {ASSET_TAGS = (); }; };
 		C2A3FB091A278E2700DE791B /* PhoneChangeController.m in Sources */ = {isa = PBXBuildFile; fileRef = C2A3FB081A278E2700DE791B /* PhoneChangeController.m */; };
 		C2A3FB0D1A28A6B200DE791B /* TGHashContact.m in Sources */ = {isa = PBXBuildFile; fileRef = C2A3FB0C1A28A6B200DE791B /* TGHashContact.m */; };
 		C2A5BFBE18DC80620021BE68 /* info.c in Sources */ = {isa = PBXBuildFile; fileRef = C2A5BFB318DC80620021BE68 /* info.c */; };
@@ -952,6 +958,8 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				C2A2B4201BCEDADC0083DA8A /* Sparkle.framework in Copy Files (6 items) */,
+				C2A2B4211BCEDADC0083DA8A /* HockeySDK.framework in Copy Files (6 items) */,
 			);
 			name = "Copy Files (6 items)";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2039,6 +2047,10 @@
 		C297FBA21832997B00714B3C /* SSKeychain.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SSKeychain.m; sourceTree = "<group>"; };
 		C297FBA418329F3500714B3C /* TGDcAuth.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGDcAuth.h; sourceTree = "<group>"; };
 		C297FBA518329F3500714B3C /* TGDcAuth.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGDcAuth.m; sourceTree = "<group>"; };
+		C2A2B4241BD01FC20083DA8A /* TGHeadChatPanel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGHeadChatPanel.h; sourceTree = "<group>"; };
+		C2A2B4251BD01FC20083DA8A /* TGHeadChatPanel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGHeadChatPanel.m; sourceTree = "<group>"; };
+		C2A2B42C1BD519870083DA8A /* TGHCMessagesViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGHCMessagesViewController.h; sourceTree = "<group>"; };
+		C2A2B42D1BD519870083DA8A /* TGHCMessagesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGHCMessagesViewController.m; sourceTree = "<group>"; };
 		C2A3FB071A278E2700DE791B /* PhoneChangeController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PhoneChangeController.h; sourceTree = "<group>"; };
 		C2A3FB081A278E2700DE791B /* PhoneChangeController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PhoneChangeController.m; sourceTree = "<group>"; };
 		C2A3FB0B1A28A6B200DE791B /* TGHashContact.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGHashContact.h; sourceTree = "<group>"; };
@@ -2671,6 +2683,8 @@
 				CE05838017FDB68C0029EFCB /* CoreFoundation.framework in Frameworks */,
 				CEB0A23517DB03E00055F150 /* Security.framework in Frameworks */,
 				CEB0D71618E0CBB000457D08 /* libopus.a in Frameworks */,
+				C2A2B4221BCEDAE00083DA8A /* Sparkle.framework in Frameworks */,
+				C2A2B4231BCEDAE00083DA8A /* HockeySDK.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3380,6 +3394,7 @@
 		0AEE20821821340200F348F2 /* messages */ = {
 			isa = PBXGroup;
 			children = (
+				C2A2B4271BD01FC70083DA8A /* head-chats */,
 				C20F76EA1BBAC191003A1E86 /* hint-view */,
 				C2D51C091B21FA44009327C0 /* botcommands */,
 				C2D51B9C1B17A6A3009327C0 /* popuphelps */,
@@ -4433,6 +4448,17 @@
 				C291C7BF183759EE00ABBB50 /* SSKeychainQuery.m */,
 			);
 			name = security;
+			sourceTree = "<group>";
+		};
+		C2A2B4271BD01FC70083DA8A /* head-chats */ = {
+			isa = PBXGroup;
+			children = (
+				C2A2B4241BD01FC20083DA8A /* TGHeadChatPanel.h */,
+				C2A2B4251BD01FC20083DA8A /* TGHeadChatPanel.m */,
+				C2A2B42C1BD519870083DA8A /* TGHCMessagesViewController.h */,
+				C2A2B42D1BD519870083DA8A /* TGHCMessagesViewController.m */,
+			);
+			name = "head-chats";
 			sourceTree = "<group>";
 		};
 		C2A3FB0A1A28A68300DE791B /* contacts */ = {
@@ -6238,6 +6264,7 @@
 				C271525A19B637D200841C8A /* ComposeViewController.m in Sources */,
 				C22421D119EBCFBC0030078A /* BlockedUserRowView.m in Sources */,
 				C20A5E831B863979007F4B49 /* TGWebpageGifContainer.m in Sources */,
+				C2A2B42E1BD519870083DA8A /* TGHCMessagesViewController.m in Sources */,
 				0A613C1D18AD96A9004096DD /* MessageTableCellDocumentView.m in Sources */,
 				CEAE5D6D181EEFF000C17645 /* TLPeer+Extensions.m in Sources */,
 				0A6D098919535E8500A9AC64 /* NSArrayCategory.m in Sources */,
@@ -6435,6 +6462,7 @@
 				C2A5BFD418DDB1EE0021BE68 /* ASQueue.m in Sources */,
 				0AA7E1C618CCF1D60064EFC7 /* ChatInfoHeaderView.m in Sources */,
 				CEA589471815ADBD00462DF0 /* TGDownloadOperation.m in Sources */,
+				C2A2B4261BD01FC20083DA8A /* TGHeadChatPanel.m in Sources */,
 				C26E80301B7E106B003CC483 /* TGRecentSearchTableView.m in Sources */,
 				C2B0DF891BA9C6EC0023982C /* TGUserContainerView.m in Sources */,
 				0AB43BB518D89C5700FB805A /* TMSearchImage.m in Sources */,
@@ -7152,7 +7180,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = ru.keepcoder.Telegram;
 				PRODUCT_NAME = Telegram;
-				PROVISIONING_PROFILE = "64d39b9e-b45b-4a1a-8457-78d45ee157e3";
+				PROVISIONING_PROFILE = "";
 				SDKROOT = macosx;
 				USER_HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/libwebp-0.4.2-mac-10.8/include ./MtProtoKit/**";
 				VALIDATE_PRODUCT = NO;
@@ -7202,7 +7230,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = ru.keepcoder.Telegram;
 				PRODUCT_NAME = Telegram;
-				PROVISIONING_PROFILE = "64d39b9e-b45b-4a1a-8457-78d45ee157e3";
+				PROVISIONING_PROFILE = "";
 				SDKROOT = macosx;
 				USER_HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/libwebp-0.4.2-mac-10.8/include ./MtProtoKit/**";
 				VALIDATE_PRODUCT = NO;

@@ -83,6 +83,9 @@ typedef void (^selectHandler)(NSArray *result, NSRange range);
 
 -(int)posAtMessage:(TLMessage *)message;
 
+-(void)items:(NSArray *)msgIds complete:(void (^)(NSArray *list))complete;
+
+
 // protected methods
 -(NSArray *)selectAllItems;
 -(ASQueue *)queue;

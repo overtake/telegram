@@ -120,7 +120,7 @@
     
     GeneralSettingsBlockHeaderItem *chatSettingsHeader = [[GeneralSettingsBlockHeaderItem alloc] initWithObject:NSLocalizedString(@"Settings.ChatSettingsHeader", nil)];
     
-    chatSettingsHeader.height = 61;
+    chatSettingsHeader.height = 42;
     
     [self.tableView insert:chatSettingsHeader atIndex:self.tableView.list.count tableRedraw:NO];
     

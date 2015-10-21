@@ -28,6 +28,8 @@ typedef enum {
 
 @property (nonatomic,assign,readonly) TGModernCHState state;
 @property (atomic,assign,readonly) int offset;
+@property (atomic,assign,readonly) int remoteOffset;
+@property (atomic,assign,readonly) int localOffset;
 @property (atomic,assign,readonly) BOOL isLoading;
 
 -(id)initWithQueue:(ASQueue *)queue delegate:(id<TGModernConversationHistoryControllerDelegate>)deleagte;

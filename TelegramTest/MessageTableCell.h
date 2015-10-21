@@ -14,7 +14,7 @@
 @interface MessageTableCell : NSView
 
 @property (nonatomic, strong) MessageTableItem *item;
-@property (nonatomic, strong) MessagesViewController *messagesViewController;
+@property (nonatomic, weak) MessagesViewController *messagesViewController;
 
 - (void)setHover:(BOOL)isHover redraw:(BOOL)redraw;
 - (void)setItem:(MessageTableItem *)item;

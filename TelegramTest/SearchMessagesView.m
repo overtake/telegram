@@ -159,7 +159,7 @@
 
 -(void)load:(BOOL)first {
     
-    [RPCRequest sendRequest:[TLAPI_messages_search createWithFlags:0 peer:[Telegram conversation].inputPeer q:self.searchField.stringValue filter:[TL_inputMessagesFilterEmpty create] min_date:0 max_date:0 offset:(int)self.messages.count max_id:0 limit:100] successHandler:^(id request, TL_messages_messages *response) {
+    [RPCRequest sendRequest:[TLAPI_messages_search createWithFlags:0 peer:self.controller.conversation.inputPeer q:self.searchField.stringValue filter:[TL_inputMessagesFilterEmpty create] min_date:0 max_date:0 offset:(int)self.messages.count max_id:0 limit:100] successHandler:^(id request, TL_messages_messages *response) {
         
         
         if(response.messages.count > 0) {
@@ -262,7 +262,7 @@
     self.goToMessage = callback;
     self.closeCallback = closeCallback;
     
-    [self setFrameSize:NSMakeSize([Telegram rightViewController].view.frame.size.width, NSHeight(self.frame))];
+    [self setFrameSize:NSMakeSize(self.controller.view.frame.size.width, NSHeight(self.frame))];
     
     [self updateSearchArrows];
     

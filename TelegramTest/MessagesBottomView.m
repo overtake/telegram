@@ -273,6 +273,11 @@
     
 }
 
+-(void)setMessagesViewController:(MessagesViewController *)controller {
+    _messagesViewController = controller;
+    _inputMessageTextField.controller = controller;
+}
+
 -(void)updateBotButtons {
     if(self.dialog.type == DialogTypeUser) {
         [self.botCommandButton setHidden:!self.dialog.user.isBot];
@@ -428,6 +433,7 @@
     self.inputMessageTextField = [[MessageInputGrowingTextView alloc] initWithFrame:NSMakeRect(0, 0, 0, 0)];
     [self.inputMessageTextField setEditable:YES];
     [self.inputMessageTextField setRichText:NO];
+    _inputMessageTextField.controller = _messagesViewController;
  //   [self.inputMessageTextField.scrollView setFrameSize:NSMakeSize(100-30,100-10)];
 
     
@@ -820,6 +826,8 @@
 
 - (void)smileButtonClick:(BTRButton *)button {
     EmojiViewController *emojiViewController = [EmojiViewController instance];
+    
+    emojiViewController.messagesViewController = self.messagesViewController;
     weak();
     if(!self.smilePopover) {
        
@@ -1162,12 +1170,6 @@
     rect.origin.x += 100;
     
     
-    [self.messagesViewController.hintView hide];
-    
-    [TGMentionPopup close];
-    [TGHashtagPopup close];
-    [TGBotCommandsPopup close];
-    
     NSRange range;
     
     NSString *search;
@@ -1237,37 +1239,25 @@
                 
                 [self.messagesViewController.hintView showMentionPopupWithQuery:search chat:self.dialog.chat choiceHandler:callback];
                 
-             //   [TGMentionPopup show:search chat:self.dialog.chat view:self.window.contentView ofRect:rect callback:callback];
             }
             
         } else if(type == 2) {
             
             [self.messagesViewController.hintView showHashtagHintsWithQuery:search peer_id:self.dialog.peer_id choiceHandler:callback];
             
-         //   [TGHashtagPopup show:search peer_id:self.dialog.peer_id view:self.window.contentView ofRect:rect callback:callback];
         } else if(type == 3 && [self.inputMessageTextField.string rangeOfString:@"/"].location == 0) {
             if([_dialog.user isBot] || _dialog.fullChat.bot_info != nil) {
-                
-                
                 
                 [self.messagesViewController.hintView showCommandsHintsWithQuery:search botInfo:_userFull ? @[_userFull.bot_info] : _dialog.fullChat.bot_info choiceHandler:^(NSString *command) {
                     callback(command);
                     [self sendButtonAction];
                 }];
                 
-//                [TGBotCommandsPopup show:search botInfo:_userFull ? @[_userFull.bot_info] : _dialog.fullChat.bot_info view:self.window.contentView ofRect:rect callback:^(NSString *command) {
-//                    
-//                    callback(command);
-//                    
-//                    [[Telegram rightViewController].messagesViewController sendMessage];
-//                    
-//                }];
-                
             }
         }
         
     } else {
-        
+        [self.messagesViewController.hintView hide];
     }
     
 
