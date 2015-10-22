@@ -20,7 +20,7 @@
 -(void)show:(PreviewObject *)item conversation:(TL_conversation *)conversation;
 -(void)show:(PreviewObject *)item user:(TLUser *)user;
 -(void)show:(PreviewObject *)item;
-
+-(void)showDocuments:(PreviewObject *)item conversation:(TL_conversation *)conversation;
 -(void)prepareUser:(TLUser *)user;
 
 

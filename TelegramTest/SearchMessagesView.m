@@ -259,6 +259,8 @@
     self.currentIdx = -1;
     [self.searchField setStringValue:@""];
     
+    [self.searchField becomeFirstResponder];
+    
     self.goToMessage = callback;
     self.closeCallback = closeCallback;
     

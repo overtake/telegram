@@ -13,6 +13,9 @@
 @property (nonatomic,strong) TMView *backgroundView;
 
 @property (nonatomic,strong) TMView *animationContainerView;
+
+@property (nonatomic,strong) BTRButton *ok;
+@property (nonatomic,strong) BTRButton *cancel;
 @end
 
 @implementation TGModalView
@@ -32,6 +35,64 @@
     return self;
 }
 
+-(void)enableCancelAndOkButton {
+    weak();
+    
+    _ok = [[BTRButton alloc] initWithFrame:NSMakeRect(self.containerSize.width/2, 0, self.containerSize.width/2, 49)];
+    
+    _ok.layer.backgroundColor = [NSColor whiteColor].CGColor;
+    
+    [_ok setTitleColor:LINK_COLOR forControlState:BTRControlStateNormal];
+    
+    [_ok setTitle:NSLocalizedString(@"OK", nil) forControlState:BTRControlStateNormal];
+    
+    [_ok addBlock:^(BTRControlEvents events) {
+        
+        [weakSelf okAction];
+        
+    } forControlEvents:BTRControlEventMouseDownInside];
+    
+    
+    [self addSubview:_ok];
+    
+    
+    
+    _cancel = [[BTRButton alloc] initWithFrame:NSMakeRect(0, 0, self.containerSize.width/2, 50)];
+    
+    _cancel.layer.backgroundColor = [NSColor whiteColor].CGColor;
+    
+    [_cancel setTitleColor:LINK_COLOR forControlState:BTRControlStateNormal];
+    
+    [_cancel setTitle:NSLocalizedString(@"Cancel", nil) forControlState:BTRControlStateNormal];
+    
+    [_cancel addBlock:^(BTRControlEvents events) {
+        
+        [weakSelf cancelAction];
+        
+        
+    } forControlEvents:BTRControlEventMouseDownInside];
+    
+    [self addSubview:_cancel];
+    
+    
+    TMView *separator = [[TMView alloc] initWithFrame:NSMakeRect(0, 49, self.containerSize.width, 1)];
+    [separator setBackgroundColor:DIALOG_BORDER_COLOR];
+    [self addSubview:separator];
+    
+    separator = [[TMView alloc] initWithFrame:NSMakeRect(self.containerSize.width/2, 0, 1, 50)];
+    [separator setBackgroundColor:DIALOG_BORDER_COLOR];
+    [self addSubview:separator];
+
+}
+
+
+-(void)okAction {
+    
+}
+
+-(void)cancelAction {
+    [self close:YES];
+}
 
 -(void)initializeModalView {
     
@@ -72,7 +133,9 @@
 }
 
 -(void)mouseDown:(NSEvent *)theEvent {
-    if(![self mouse:[self convertPoint:[theEvent locationInWindow] fromView:nil] inRect:_containerView.frame]) {
+    
+    
+    if(![self mouse:[self convertPoint:[theEvent locationInWindow] fromView:nil] inRect:_animationContainerView.frame]) {
         [self close:YES];
     }
 }
@@ -91,13 +154,14 @@
     [window.contentView addSubview:self];
     
     [window makeFirstResponder:self];
+    
+    self.layer.opacity = 1;
 
     if(animated) {
         
         [[[Telegram delegate] window] makeFirstResponder:self];
         
         self.containerView.layer.opacity = 0;
-        
         //[_containerView.layer setFrameOrigin:];
 
         

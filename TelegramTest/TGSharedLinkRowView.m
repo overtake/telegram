@@ -239,6 +239,7 @@ static NSImage *sharedLinkCapImage() {
         [_textField setCenteredYByView:_textField.superview];
         [_textField setFrameOrigin:NSMakePoint(self.isEditable ? s_lox +60 : 62, NSMinY(_textField.frame))];
         
+        
     }
     
     if(!item.webpage.imageObject)

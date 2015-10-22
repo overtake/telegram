@@ -116,12 +116,11 @@
     
     [self.searchViewController viewWillAppear:animated];
     
-    [self.tableView.scrollView.contentView setFrameSize:self.tableView.scrollView.frame.size];
-    
-    dispatch_async(dispatch_get_main_queue(), ^{
+ //   [self.tableView.scrollView.contentView setFrameSize:self.tableView.scrollView.frame.size];
+ //   [self.tableView setFrameSize:self.tableView.frame.size];
+  //  dispatch_async(dispatch_get_main_queue(), ^{
         [self.tableView reloadData];
-        
-    });
+  //  });
     
 }
 

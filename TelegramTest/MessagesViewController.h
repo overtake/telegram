@@ -60,6 +60,10 @@ typedef enum {
 - (void)bottomViewChangeSize:(int)height animated:(BOOL)animated;
 - (void)setStringValueToTextField:(NSString *)stringValue;
 - (NSString *)inputText;
+
+- (void)showForwardMessagesModalView;
+- (void)showInfoPage;
+
 - (void)drop;
 
 //- (void)updateHeaderHeight:(BOOL)update animated:(BOOL)animated;
@@ -125,7 +129,7 @@ typedef enum {
 - (void)sendAudio:(NSString *)file_path forConversation:(TL_conversation *)conversation;
 - (void)sendMessage:(NSString *)message forConversation:(TL_conversation *)conversation;
 - (void)sendLocation:(CLLocationCoordinate2D)coordinates forConversation:(TL_conversation *)conversation;
-- (void)forwardMessages:(NSArray *)messages forConversation:(TL_conversation *)conversation callback:(dispatch_block_t)callback;
+- (void)forwardMessages:(NSArray *)messages conversation:(TL_conversation *)conversation callback:(dispatch_block_t)callback;
 - (void)shareContact:(TLUser *)contact forConversation:(TL_conversation *)conversation callback:(dispatch_block_t)callback;
 - (void)sendSecretTTL:(int)ttl forConversation:(TL_conversation *)conversation;
 - (void)sendSecretTTL:(int)ttl forConversation:(TL_conversation *)conversation callback:(dispatch_block_t)callback;

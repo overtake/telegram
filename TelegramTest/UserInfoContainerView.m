@@ -150,8 +150,8 @@
                 
                 if(!self.user.isBlocked && self.user.isBot)
                 {
-                    [[Telegram rightViewController] navigationGoBack];
-                    [[Telegram rightViewController].messagesViewController sendMessage:@"/start" forConversation:[Telegram conversation]];
+                    [self.controller.navigationViewController goBackWithAnimation:YES];
+                    [self.controller.messagesViewController sendMessage:@"/start" forConversation:self.controller.conversation];
                 }
             };
             
@@ -167,39 +167,63 @@
         
         self.addToGroupButton =[UserInfoShortButtonView buttonWithText:NSLocalizedString(@"Profile.AddToGroup", nil) tapBlock:^{
             
-            [[Telegram rightViewController] showComposeAddUserToGroup:[[ComposeAction alloc] initWithBehaviorClass:[ComposeActionAddUserToGroupBehavior class] filter:nil object:self.user]];
             
+            ComposeChooseGroupViewController *viewController = [[ComposeChooseGroupViewController alloc] initWithFrame:self.controller.view.bounds];
+           
+            [viewController setAction:[[ComposeAction alloc] initWithBehaviorClass:[ComposeActionAddUserToGroupBehavior class] filter:nil object:self.user]];
+            
+            [self.controller.navigationViewController pushViewController:viewController animated:YES];
         }];
         
         self.helpBotButton = [UserInfoShortButtonView buttonWithText:NSLocalizedString(@"Bot.Help", nil) tapBlock:^{
             
-            [[Telegram rightViewController] showByDialog:self.user.dialog sender:self];
+            [self.controller.navigationViewController goBackWithAnimation:YES];
             
-            [[Telegram rightViewController].messagesViewController sendMessage:@"/help" forConversation:self.user.dialog];
+            [self.controller.messagesViewController sendMessage:@"/help" forConversation:self.user.dialog];
             
         }];
 
         
         self.sharedMediaButton = [TMSharedMediaButton buttonWithText:NSLocalizedString(@"Profile.SharedMedia", nil) tapBlock:^{
             
-            [[Telegram rightViewController] showCollectionPage:weakSelf.controller.conversation];
-            [[Telegram rightViewController].collectionViewController showAllMedia];
+            TMCollectionPageController *viewController = [[TMCollectionPageController alloc] initWithFrame:self.controller.view.bounds];
             
+            [viewController loadViewIfNeeded];
+            
+            [viewController setConversation:self.controller.conversation];
+            
+            [self.controller.navigationViewController pushViewController:viewController animated:YES];
+            
+           
+            [viewController showAllMedia];
         }];
         
         
         self.filesMediaButton = [TMSharedMediaButton buttonWithText:NSLocalizedString(@"Profile.SharedMediaFiles", nil) tapBlock:^{
             
-            [[Telegram rightViewController] showCollectionPage:weakSelf.controller.conversation];
-            [[Telegram rightViewController].collectionViewController showFiles];
+            TMCollectionPageController *viewController = [[TMCollectionPageController alloc] initWithFrame:self.controller.view.bounds];
+            
+            [viewController loadViewIfNeeded];
+            
+            [viewController setConversation:self.controller.conversation];
+            
+            [self.controller.navigationViewController pushViewController:viewController animated:YES];
+            
+            [viewController showFiles];
         }];
         
         
         self.sharedLinksButton = [TMSharedMediaButton buttonWithText:NSLocalizedString(@"Conversation.Filter.SharedLinks", nil) tapBlock:^{
             
-            [[Telegram rightViewController] showCollectionPage:weakSelf.controller.conversation];
-            [[Telegram rightViewController].collectionViewController showSharedLinks];
+            TMCollectionPageController *viewController = [[TMCollectionPageController alloc] initWithFrame:self.controller.view.bounds];
             
+            [viewController loadViewIfNeeded];
+            
+            [viewController setConversation:self.controller.conversation];
+            
+            [self.controller.navigationViewController pushViewController:viewController animated:YES];
+            
+            [viewController showSharedLinks];
         }];
         
         
@@ -266,14 +290,18 @@
         
         self.deleteSecretChatButton = [UserInfoShortButtonView buttonWithText:NSLocalizedString(@"Conversation.DeleteSecretChat", nil) tapBlock:^{
             [weakSelf.deleteSecretChatButton setLocked:YES];
-            [[Telegram rightViewController].messagesViewController deleteDialog:[Telegram rightViewController].messagesViewController.conversation callback:^{
+            [[Telegram rightViewController].messagesViewController deleteDialog:self.controller.conversation callback:^{
                 [weakSelf.deleteSecretChatButton setLocked:NO];
             }];
         }];
         
         self.encryptedKeyButton = [UserInfoShortButtonView buttonWithText:NSLocalizedString(@"Profile.ShowEncryptedKey",nil) tapBlock:^{
-            [[Telegram rightViewController] showEncryptedKeyWindow:weakSelf.controller.conversation.encryptedChat];
-           // [EncryptedKeyWindow showForChat:weakSelf.controller.conversation.encryptedChat];
+            
+            EncryptedKeyViewController *viewController = [[EncryptedKeyViewController alloc] initWithFrame:self.controller.view.bounds];
+            
+            [viewController showForChat:weakSelf.controller.conversation.encryptedChat];
+            
+            [self.controller.navigationViewController pushViewController:viewController animated:YES];
         }];
         
         
@@ -411,6 +439,8 @@
     }
     return self;
 }
+
+
 
 -(void)didChangedBlockedUsers:(NSNotification *)notification {
     TL_contactBlocked *user = [notification.userInfo objectForKey:KEY_USER];

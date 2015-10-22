@@ -19,6 +19,10 @@ typedef enum {
 @property (nonatomic, strong, readonly) TLUser *user;
 @property (nonatomic, strong, readonly) TL_conversation *conversation;
 @property (nonatomic,strong, readonly) TMAvatarImageView *avatarImageView;
+
+@property (nonatomic,weak) MessagesViewController *messagesViewController;
+
+
 -(void)setUser:(TLUser *)user conversation:(TL_conversation *)conversation;
 
 - (void)successDeleteContact;

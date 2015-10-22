@@ -14,7 +14,8 @@
 typedef enum {
     SelectTableTypeUser,
     SelectTableTypeChats,
-    SelectTableTypeCommon
+    SelectTableTypeCommon,
+    SelectTableConversations
 } SelectTableType ;
 
 @protocol SelectTableDelegate <NSObject>
@@ -47,6 +48,8 @@ typedef enum {
 
 - (void)readyContacts;
 - (void)readyChats;
+
+- (void)readyConversations;
 
 //SelectUserItems;
 - (void)readyCommon:(NSArray *)items;

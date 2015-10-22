@@ -706,6 +706,8 @@ typedef enum {
     
     if(_currentItem.downloadItem) {
         
+        [_progressView setDisableChanges:YES];
+        
         weak();
        
         [self.progressView setDownloadProgress:_currentItem.downloadItem.progress];
@@ -715,6 +717,8 @@ typedef enum {
         [_currentItem.secondDownloadListener setCompleteHandler:^(DownloadItem * item) {
             
             [[ASQueue mainQueue] dispatchOnQueue:^{
+                
+                [weakSelf.progressView setDisableChanges:NO];
                 
                 [weakSelf.progressView setDownloadProgress:0];
                 
@@ -737,6 +741,8 @@ typedef enum {
             }];
         }];
         
+    } else {
+        [_progressView setDisableChanges:NO];
     }
 }
 

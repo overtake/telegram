@@ -123,6 +123,28 @@ static NSCache *cacheItems;
     
 }
 
+-(void)readyConversations {
+    _type = SelectTableConversations;
+    
+    NSArray *chats = [[[DialogsManager sharedManager] all] filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.type == %d OR self.type == %d",DialogTypeChat,DialogTypeUser]];
+    
+    
+    NSMutableArray *items = [[NSMutableArray alloc] init];
+    
+    [chats enumerateObjectsUsingBlock:^(TL_conversation * obj, NSUInteger idx, BOOL *stop) {
+        
+        if(obj.chat) {
+            [items addObject:[[SelectChatItem alloc] initWithObject:obj.chat]];
+        } else {
+            [items addObject:[[SelectUserItem alloc] initWithObject:obj.user]];
+        }
+        
+        
+    }];
+    
+    [self readyItems:items];
+}
+
 
 -(void)readyItems:(NSArray *)items {
     self.tm_delegate = self;
@@ -302,8 +324,41 @@ static NSCache *cacheItems;
     else
         if(_type == SelectTableTypeCommon)
             [self searchUsers:searchString];
+    else
+        if(_type == SelectTableConversations)
+            [self searchAll:searchString];
 }
 
+
+-(void)searchAll:(NSString *)searchString {
+    NSArray *sorted = self.items;
+    
+    
+    if(searchString.length > 0) {
+        sorted = [self.items filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(SelectUserItem *evaluatedObject, NSDictionary *bindings) {
+            if([evaluatedObject isKindOfClass:[SelectChatItem class]]) {
+                return [((SelectChatItem *)evaluatedObject).chat.title searchInStringByWordsSeparated:searchString];
+            } else {
+                return [[evaluatedObject.user fullName] searchInStringByWordsSeparated:searchString];
+            }
+        }]];
+    }
+    
+    
+    NSRange range = NSMakeRange(1, self.list.count-1);
+    
+    NSArray *list = [self.list subarrayWithRange:range];
+    
+    [list enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+        [self removeItem:obj tableRedraw:NO];
+    }];
+    
+    [self removeRowsAtIndexes:[NSIndexSet indexSetWithIndexesInRange:range] withAnimation:self.defaultAnimation];
+    
+    
+    [self insert:sorted startIndex:1 tableRedraw:YES];
+
+}
 
 -(void)searchChats:(NSString *)searchString {
     

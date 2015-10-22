@@ -40,6 +40,10 @@
     return self.object.placeholder;
 }
 
+-(void)didDownloadImage:(NSImage *)image object:(id)object {
+    [self setObject:object];
+}
+
 
 -(void)setImage:(NSImage *)image {
     [super setImage:image];

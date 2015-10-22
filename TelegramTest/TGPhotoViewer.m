@@ -17,6 +17,7 @@
 #import "TGPVEmptyBehavior.h"
 #import "TGCache.h"
 #import "TGPVZoomControl.h"
+#import "TGPVDocumentsBehavior.h"
 @interface TGPhotoViewer ()
 @property (nonatomic,strong) TL_conversation *conversation;
 @property (nonatomic,strong) TLUser *user;
@@ -424,6 +425,42 @@ static TGPhotoViewer *viewer;
     }];
 }
 
+
+-(void)showDocuments:(PreviewObject *)item conversation:(TL_conversation *)conversation {
+    _conversation = conversation;
+    
+    
+    _controls.convertsation = conversation;
+    _photoContainer.conversation = conversation;
+    
+    
+    _behavior = [[TGPVDocumentsBehavior alloc] init];
+    [_behavior setConversation:_conversation];
+    
+    [ASQueue dispatchOnStageQueue:^{
+        
+        self.list = [[NSMutableArray alloc] init];
+        [self insertObjects:@[item]];
+        
+    } synchronous:YES];
+    
+    self.currentItemId = 0;
+    
+    [self makeKeyAndOrderFront:self];
+    
+    [self mouseEntered:[NSApp currentEvent]];
+    
+    _waitRequest = YES;
+    
+    
+    [self.behavior load:[[[self itemAtIndex:[self listCount]-1] previewObject] msg_id] next:NO limit:10000 callback:^(NSArray *previewObjects) {
+        
+        [self insertObjects:previewObjects];
+        
+        _waitRequest = NO;
+    }];
+}
+
 -(void)show:(PreviewObject *)item conversation:(TL_conversation *)conversation {
     _conversation = conversation;
     
@@ -647,7 +684,7 @@ static TGPhotoViewer *viewer;
         
         [_list enumerateObjectsAtIndexes:[NSIndexSet indexSetWithIndexesInRange:range] options:NSEnumerationReverse usingBlock:^(TGPhotoViewerItem *obj, NSUInteger idx, BOOL *stop) {
             
-            if(![TGCache cachedImage:obj.imageObject.location.cacheKey group:@[PVCACHE]]) {
+            if(![TGCache cachedImage:obj.imageObject.cacheKey group:@[PVCACHE]]) {
                  [obj.imageObject initDownloadItem];
             }
             

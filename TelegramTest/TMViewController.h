@@ -44,6 +44,8 @@
 +(void)hideModalProgress;
 
 
+-(void)showModalProgressWithWindow:(NSWindow *)window;
+
 -(void)showModalProgress;
 -(void)hideModalProgress;
 

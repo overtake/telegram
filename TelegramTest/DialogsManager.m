@@ -273,6 +273,8 @@
                 
             } else {
                 dialog.last_marked_message = dialog.top_message = dialog.last_marked_date = 0;
+                dialog.unread_count = 0;
+                dialog.unread_important_count = 0;
             }
             
             dialog.top_important_message = importantMessage;
@@ -615,10 +617,11 @@
             
             NSUInteger position = [self positionForConversation:dialog];
             
-           
-            
-            [Notification perform:DIALOG_MOVE_POSITION data:@{KEY_DIALOG:dialog, KEY_POSITION:@(position)}];
-            [Notification perform:[Notification notificationNameByDialog:dialog action:@"message"] data:@{KEY_DIALOG:dialog,KEY_LAST_CONVRESATION_DATA:[MessagesUtils conversationLastData:dialog]}];
+            if(dialog != nil) {
+                [Notification perform:DIALOG_MOVE_POSITION data:@{KEY_DIALOG:dialog, KEY_POSITION:@(position)}];
+                [Notification perform:[Notification notificationNameByDialog:dialog action:@"message"] data:@{KEY_DIALOG:dialog,KEY_LAST_CONVRESATION_DATA:[MessagesUtils conversationLastData:dialog]}];
+            }
+
         }
         
     }];

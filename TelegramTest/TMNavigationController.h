@@ -57,7 +57,6 @@ typedef enum {
 @property (nonatomic, readonly) BOOL isLocked;
 
 
-
 -(void)addDelegate:(id<TMNavagationDelegate>)delegate;
 -(void)removeDelegate:(id<TMNavagationDelegate>)delegate;
 - (void)pushViewController:(TMViewController *)viewController animated:(BOOL)animated;

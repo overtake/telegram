@@ -7,11 +7,13 @@
 //
 
 #import "TGHCMessagesViewController.h"
-
+#import "TGModalForwardView.h"
 @interface TGHCMessagesViewController ()
 @property (nonatomic,strong) TMTextButton *pinButton;
 @property (nonatomic,strong) TMView *container;
 @property (nonatomic,strong) NSImageView *imageView;
+@property (nonatomic,strong) TGModalForwardView *forwardView;
+
 @end
 
 @implementation TGHCMessagesViewController
@@ -56,11 +58,66 @@
     return (TMView *)_container;
 }
 
+-(void)showInfoPage {
+    
+    TMViewController *infoViewController;
+    
+    switch (self.conversation.type) {
+        case DialogTypeChat:
+            
+            infoViewController = [[ChatInfoViewController alloc] initWithFrame:self.view.bounds];
+            
+            [(ChatInfoViewController *)infoViewController setChat:self.conversation.chat];
+            
+            break;
+            
+        case DialogTypeSecretChat:
+            
+            infoViewController = [[UserInfoViewController alloc] initWithFrame:self.view.bounds];
+            
+            
+            [(UserInfoViewController *)infoViewController setUser:self.conversation.encryptedChat.peerUser conversation:self.conversation];
+            
+            break;
+            
+        case DialogTypeUser: {
+            infoViewController = [[UserInfoViewController alloc] initWithFrame:self.view.bounds];
+            
+            
+            [(UserInfoViewController *)infoViewController setUser:self.conversation.user conversation:self.conversation];
+            break;
+        }
+            
+        case DialogTypeBroadcast:
+            infoViewController = [[BroadcastInfoViewController alloc] initWithFrame:self.view.bounds];
+            
+            [(BroadcastInfoViewController *)infoViewController setBroadcast:self.conversation.broadcast];
+        case DialogTypeChannel:
+            infoViewController = [[ChannelInfoViewController alloc] initWithFrame:self.view.bounds];
+            
+            [(ChannelInfoViewController *)infoViewController setChat:self.conversation.chat];
+
+        default:
+            break;
+    }
+    
+    [self.navigationViewController pushViewController:infoViewController animated:YES];
+
+}
+
 -(void)pinOrUnpin {
     [self.view.window setLevel:self.view.window.level == NSNormalWindowLevel ? NSScreenSaverWindowLevel : NSNormalWindowLevel];
     
     [_pinButton setStringValue:self.view.window.level == NSNormalWindowLevel ? NSLocalizedString(@"Conversation.Pin", nil) : NSLocalizedString(@"Conversation.Pinned", nil)];
     [_imageView setImage:self.view.window.level == NSNormalWindowLevel ? image_PinConversation() : image_PinnedConversation()];
+}
+
+- (void)showForwardMessagesModalView {
+    _forwardView = [[TGModalForwardView alloc] initWithFrame:NSMakeRect(0, 0, NSWidth(self.view.window.frame), NSHeight(self.view.window.frame))];
+    
+    _forwardView.messagesViewController = self;
+    
+    [_forwardView show:self.view.window animated:YES];
 }
 
 @end

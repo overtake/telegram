@@ -275,7 +275,7 @@ static NSArray *channelUpdates;
         return;
     }
     
-    if([statefulMessage isEmpty]) {
+    if([statefulMessage isEmpty] && _updateState != nil) {
         [self proccessStatefulMessage:statefulMessage needSave:NO];
         return;
     }
@@ -747,7 +747,7 @@ static NSArray *channelUpdates;
         if([update isKindOfClass:[TL_updateEncryptedMessagesRead class]]) {
             TL_conversation *dialog = [[DialogsManager sharedManager] findBySecretId:update.chat_id];
             if(dialog) {
-                [[DialogsManager sharedManager] markAllMessagesAsRead:dialog];
+                [[DialogsManager sharedManager] markAllMessagesAsRead:dialog.peer max_id:INT32_MAX out:YES];
             }
             return;
         }

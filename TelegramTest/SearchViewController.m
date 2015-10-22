@@ -614,8 +614,13 @@ static int insertCount = 3;
     if(params != self.searchParams)
         return;
     
+    
+    
     [self.tableView setDefaultAnimation:NSTableViewAnimationEffectNone];
     [self.tableView removeItem:self.messagesLoaderItem];
+    
+    
+    
     
     if(!params.messages.count) {
         [self.tableView removeItem:self.messagesSeparator];
@@ -626,6 +631,8 @@ static int insertCount = 3;
         [self.tableView.containerView setHidden:self.tableView.count == 0];
         [CATransaction commit];
         return;
+    } else if(self.tableView.count > 0) {
+        [self.tableView addItem:self.messagesSeparator tableRedraw:YES];
     }
     
     [CATransaction begin];
@@ -635,7 +642,7 @@ static int insertCount = 3;
     
     if(params.messages_offset <= 50) {
         if([self.tableView isItemInList:self.messagesSeparator]) {
-            [self.messagesSeparator setItemCount:params.messages_count];
+          //  [self.messagesSeparator setItemCount:params.messages_count];
             [self.tableView reloadDataForRowIndexes:[NSIndexSet indexSetWithIndex:self.tableView.count - 1] columnIndexes:[NSIndexSet indexSetWithIndex:0]];
         }
     }

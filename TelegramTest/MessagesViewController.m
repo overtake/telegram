@@ -341,28 +341,7 @@
     [self.normalNavigationCenterView setController:self];
     
     [self.normalNavigationCenterView setTapBlock:^{
-        switch (weakSelf.conversation.type) {
-            case DialogTypeChat:
-              //  if(strongSelf.conversation.chat.type == TLChatTypeNormal && !strongSelf.conversation.chat.left)
-                    [[Telegram rightViewController] showChatInfoPage:weakSelf.conversation.chat];
-                break;
-                
-            case DialogTypeSecretChat:
-                [[Telegram sharedInstance] showUserInfoWithUserId:weakSelf.conversation.encryptedChat.peerUser.n_id conversation:weakSelf.conversation sender:weakSelf];
-                break;
-                
-            case DialogTypeUser: {
-                [[Telegram sharedInstance] showUserInfoWithUserId:weakSelf.conversation.user.n_id conversation:weakSelf.conversation sender:weakSelf];
-                break;
-            }
-                
-            case DialogTypeBroadcast:
-                 [[Telegram rightViewController] showBroadcastInfoPage:weakSelf.conversation.broadcast];
-            case DialogTypeChannel:
-                [[Telegram rightViewController] showChannelInfoPage:weakSelf.conversation.chat];
-            default:
-                break;
-        }
+        [weakSelf showInfoPage];
     }];
     self.centerNavigationBarView = self.normalNavigationCenterView;
     
@@ -1552,7 +1531,35 @@ static NSTextAttachment *headerMediaIcon() {
 //    
 //}
 
+- (void)showForwardMessagesModalView {
+    [[Telegram rightViewController] showForwardMessagesModalView:self.conversation messagesCount:self.selectedMessages.count];
+}
 
+- (void)showInfoPage {
+    
+    switch (_conversation.type) {
+        case DialogTypeChat:
+            [[Telegram rightViewController] showChatInfoPage:_conversation.chat];
+            break;
+            
+        case DialogTypeSecretChat:
+            [[Telegram sharedInstance] showUserInfoWithUserId:_conversation.encryptedChat.peerUser.n_id conversation:_conversation sender:self];
+            break;
+            
+        case DialogTypeUser: {
+            [[Telegram sharedInstance] showUserInfoWithUserId:_conversation.user.n_id conversation:_conversation sender:self];
+            break;
+        }
+            
+        case DialogTypeBroadcast:
+            [[Telegram rightViewController] showBroadcastInfoPage:_conversation.broadcast];
+        case DialogTypeChannel:
+            [[Telegram rightViewController] showChannelInfoPage:_conversation.chat];
+        default:
+            break;
+    }
+   
+}
 
 - (void)jumpToBottomButtonDisplay {
     [self.jumpToBottomButton sizeToFit];
@@ -4093,7 +4100,7 @@ static NSTextAttachment *headerMediaIcon() {
         return;
     }
     
-    NSAlert *alert = [NSAlert alertWithMessageText:dialog.type == DialogTypeChat && dialog.chat.type == TLChatTypeNormal ? NSLocalizedString(@"Conversation.Confirm.LeaveAndClear", nil) :  NSLocalizedString(@"Conversation.Confirm.DeleteAndClear", nil) informativeText:NSLocalizedString(@"Conversation.Confirm.UndoneAction", nil) block:^(NSNumber *result) {
+    NSAlert *alert = [NSAlert alertWithMessageText:dialog.type == DialogTypeChannel ? (NSLocalizedString(@"Conversation.Confirm.DeleteChannel", nil)) : (dialog.type == DialogTypeChat && dialog.chat.type == TLChatTypeNormal ? NSLocalizedString(@"Conversation.Confirm.LeaveAndClear", nil) :  NSLocalizedString(@"Conversation.Confirm.DeleteAndClear", nil)) informativeText:dialog.type == DialogTypeChannel ? NSLocalizedString(@"Conversation.Confirm.DeleteChannelInfo", nil) : NSLocalizedString(@"Conversation.Confirm.UndoneAction", nil) block:^(NSNumber *result) {
         if([result intValue] == 1000) {
             if(startDeleting != nil)
                 startDeleting();
@@ -4101,7 +4108,7 @@ static NSTextAttachment *headerMediaIcon() {
         }
     }];
     
-    NSString *buttonText = dialog.type == DialogTypeChat && dialog.chat.type == TLChatTypeNormal ? NSLocalizedString(@"Conversation.DeleteAndExit", nil) : NSLocalizedString(@"Conversation.Delete", nil);
+    NSString *buttonText = dialog.type == DialogTypeChannel ? NSLocalizedString(@"Conversation.Confirm.DeleteChannel", nil) : (dialog.type == DialogTypeChat && dialog.chat.type == TLChatTypeNormal ? NSLocalizedString(@"Conversation.DeleteAndExit", nil) : NSLocalizedString(@"Conversation.Delete", nil));
     
     [alert addButtonWithTitle:buttonText];
     [alert addButtonWithTitle:NSLocalizedString(@"Profile.Cancel", nil)];

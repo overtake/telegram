@@ -97,11 +97,11 @@ static NSMutableDictionary *allChatHeads;
     [self setMinSize:NSMakeSize(380, 300)];
     
     self.contentView.wantsLayer = YES;
-  //  self.contentView.layer.cornerRadius = 4;
+   // self.contentView.autoresizingMask = NSViewWidthSizable | NSViewHeightSizable;
     
-    _navigationController = [[TMNavigationController alloc] initWithFrame:self.contentView.frame];
+    _navigationController = [[TMNavigationController alloc] initWithFrame:self.contentView.bounds];
     
-    _messagesViewController = [[TGHCMessagesViewController alloc] initWithFrame:self.contentView.frame];
+    _messagesViewController = [[TGHCMessagesViewController alloc] initWithFrame:self.contentView.bounds];
     
     
     [_messagesViewController loadViewIfNeeded];
@@ -110,5 +110,14 @@ static NSMutableDictionary *allChatHeads;
     [_navigationController pushViewController:_messagesViewController animated:NO];
 
 }
+
+-(void)setFrame:(NSRect)frameRect display:(BOOL)flag {
+    
+    [super setFrame:frameRect display:flag];
+  
+    [self.navigationController.view setFrameSize:NSMakeSize(frameRect.size.width, frameRect.size.height - 20)];
+    
+}
+
 
 @end

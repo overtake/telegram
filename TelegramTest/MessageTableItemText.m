@@ -129,21 +129,46 @@
     NSMutableAttributedString *attr = [[NSMutableAttributedString alloc] init];
     
     
+    
     [_links enumerateObjectsUsingBlock:^(NSString *obj, NSUInteger idx, BOOL *stop) {
-        NSRange range = [attr appendString:obj];
         
-        [attr addAttribute:NSLinkAttributeName value:obj range:range];
-        [attr addAttribute:NSForegroundColorAttributeName value:LINK_COLOR range:range];
-        [attr addAttribute:NSCursorAttributeName value:[NSCursor pointingHandCursor] range:range];
-        [attr addAttribute:NSUnderlineStyleAttributeName value:[NSNumber numberWithInt:NSUnderlineStyleNone] range:range];
+        if(idx == 0) {
+            
+            NSString *header = obj;
+            
+            if(![obj hasPrefix:@"http://"] && ![obj hasPrefix:@"https://"] && ![obj hasPrefix:@"ftp://"])
+                header = obj;
+            else  {
+                NSURLComponents *components = [[NSURLComponents alloc] initWithString:obj];
+                header = components.host;
+            }
+            
+            
+            
+            NSRange r = [attr appendString:[header stringByAppendingString:@"\n\n"] withColor:TEXT_COLOR];
+            [attr setFont:TGSystemMediumFont(13) forRange:r];
+            
+            NSRange range = [attr appendString:obj];
+            
+            [attr addAttribute:NSLinkAttributeName value:obj range:range];
+            [attr addAttribute:NSForegroundColorAttributeName value:LINK_COLOR range:range];
+            [attr addAttribute:NSCursorAttributeName value:[NSCursor pointingHandCursor] range:range];
+            [attr addAttribute:NSUnderlineStyleAttributeName value:[NSNumber numberWithInt:NSUnderlineStyleNone] range:range];
+            
+            
+            [attr addAttribute:NSFontAttributeName value:TGSystemFont(12.5) range:range];
+            
+            if(idx != _links.count - 1)
+                [attr appendString:@"\n"];
+        } else {
+            *stop = YES;
+        }
         
         
-        if(idx != _links.count - 1)
-            [attr appendString:@"\n"];
         
     }];
     
-    [attr addAttribute:NSFontAttributeName value:TGSystemFont(12.5) range:attr.range];
+    
     
     _allAttributedLinks = [attr copy];
     

@@ -104,7 +104,7 @@
         [self.descriptionView setString:NSLocalizedString(@"UserName.description", nil)];
         
         [self.descriptionView setFont:TGSystemFont(12)];
-        
+        [self.descriptionView setTextColor:GRAY_TEXT_COLOR];
         [self.descriptionView sizeToFit];
         [self.descriptionView setSelectable:NO];
         

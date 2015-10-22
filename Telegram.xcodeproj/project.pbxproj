@@ -248,6 +248,7 @@
 		C20B228818E971D0007BCCD6 /* bitwise.c in Sources */ = {isa = PBXBuildFile; fileRef = C20B228418E971D0007BCCD6 /* bitwise.c */; };
 		C20B228918E971D0007BCCD6 /* framing.c in Sources */ = {isa = PBXBuildFile; fileRef = C20B228518E971D0007BCCD6 /* framing.c */; };
 		C20B228D18E98A2C007BCCD6 /* SettingsArchiver.m in Sources */ = {isa = PBXBuildFile; fileRef = C20B228C18E98A2C007BCCD6 /* SettingsArchiver.m */; };
+		C20B82A11BD98EC700EF01AD /* TGPVDocumentsBehavior.m in Sources */ = {isa = PBXBuildFile; fileRef = C20B82A01BD98EC700EF01AD /* TGPVDocumentsBehavior.m */; settings = {ASSET_TAGS = (); }; };
 		C20BA5DC1B0BB992001ECE22 /* TGSNoAuthModalView.m in Sources */ = {isa = PBXBuildFile; fileRef = C20BA5DB1B0BB992001ECE22 /* TGSNoAuthModalView.m */; };
 		C20BA5DF1B0BBE85001ECE22 /* TGSAppManager.m in Sources */ = {isa = PBXBuildFile; fileRef = C20BA5DE1B0BBE85001ECE22 /* TGSAppManager.m */; };
 		C20BA5E21B0BCC04001ECE22 /* TGSEnterPasscodeView.m in Sources */ = {isa = PBXBuildFile; fileRef = C20BA5E11B0BCC04001ECE22 /* TGSEnterPasscodeView.m */; };
@@ -525,6 +526,7 @@
 		C2A2B4231BCEDAE00083DA8A /* HockeySDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2082B7219C1E1C4000005E2 /* HockeySDK.framework */; };
 		C2A2B4261BD01FC20083DA8A /* TGHeadChatPanel.m in Sources */ = {isa = PBXBuildFile; fileRef = C2A2B4251BD01FC20083DA8A /* TGHeadChatPanel.m */; settings = {ASSET_TAGS = (); }; };
 		C2A2B42E1BD519870083DA8A /* TGHCMessagesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C2A2B42D1BD519870083DA8A /* TGHCMessagesViewController.m */; settings = {ASSET_TAGS = (); }; };
+		C2A2B4311BD7C8DB0083DA8A /* TGModalForwardView.m in Sources */ = {isa = PBXBuildFile; fileRef = C2A2B4301BD7C8DB0083DA8A /* TGModalForwardView.m */; settings = {ASSET_TAGS = (); }; };
 		C2A3FB091A278E2700DE791B /* PhoneChangeController.m in Sources */ = {isa = PBXBuildFile; fileRef = C2A3FB081A278E2700DE791B /* PhoneChangeController.m */; };
 		C2A3FB0D1A28A6B200DE791B /* TGHashContact.m in Sources */ = {isa = PBXBuildFile; fileRef = C2A3FB0C1A28A6B200DE791B /* TGHashContact.m */; };
 		C2A5BFBE18DC80620021BE68 /* info.c in Sources */ = {isa = PBXBuildFile; fileRef = C2A5BFB318DC80620021BE68 /* info.c */; };
@@ -1478,6 +1480,8 @@
 		C20B228718E971D0007BCCD6 /* os_types.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = os_types.h; sourceTree = "<group>"; };
 		C20B228B18E98A2C007BCCD6 /* SettingsArchiver.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SettingsArchiver.h; sourceTree = "<group>"; };
 		C20B228C18E98A2C007BCCD6 /* SettingsArchiver.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SettingsArchiver.m; sourceTree = "<group>"; };
+		C20B829F1BD98EC700EF01AD /* TGPVDocumentsBehavior.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGPVDocumentsBehavior.h; sourceTree = "<group>"; };
+		C20B82A01BD98EC700EF01AD /* TGPVDocumentsBehavior.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGPVDocumentsBehavior.m; sourceTree = "<group>"; };
 		C20BA5DA1B0BB992001ECE22 /* TGSNoAuthModalView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGSNoAuthModalView.h; sourceTree = "<group>"; };
 		C20BA5DB1B0BB992001ECE22 /* TGSNoAuthModalView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGSNoAuthModalView.m; sourceTree = "<group>"; };
 		C20BA5DD1B0BBE85001ECE22 /* TGSAppManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGSAppManager.h; sourceTree = "<group>"; };
@@ -2051,6 +2055,8 @@
 		C2A2B4251BD01FC20083DA8A /* TGHeadChatPanel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGHeadChatPanel.m; sourceTree = "<group>"; };
 		C2A2B42C1BD519870083DA8A /* TGHCMessagesViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGHCMessagesViewController.h; sourceTree = "<group>"; };
 		C2A2B42D1BD519870083DA8A /* TGHCMessagesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGHCMessagesViewController.m; sourceTree = "<group>"; };
+		C2A2B42F1BD7C8DB0083DA8A /* TGModalForwardView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGModalForwardView.h; sourceTree = "<group>"; };
+		C2A2B4301BD7C8DB0083DA8A /* TGModalForwardView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGModalForwardView.m; sourceTree = "<group>"; };
 		C2A3FB071A278E2700DE791B /* PhoneChangeController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PhoneChangeController.h; sourceTree = "<group>"; };
 		C2A3FB081A278E2700DE791B /* PhoneChangeController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PhoneChangeController.m; sourceTree = "<group>"; };
 		C2A3FB0B1A28A6B200DE791B /* TGHashContact.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGHashContact.h; sourceTree = "<group>"; };
@@ -4792,6 +4798,8 @@
 				C267526F1A13D9F600152D9A /* TGPVUserBehavior.m */,
 				C26752751A15099A00152D9A /* TGPVEmptyBehavior.h */,
 				C26752761A15099A00152D9A /* TGPVEmptyBehavior.m */,
+				C20B829F1BD98EC700EF01AD /* TGPVDocumentsBehavior.h */,
+				C20B82A01BD98EC700EF01AD /* TGPVDocumentsBehavior.m */,
 			);
 			name = behavior;
 			sourceTree = "<group>";
@@ -5011,6 +5019,8 @@
 		C2D4B73A1AFCD35F0035B4E4 /* modal */ = {
 			isa = PBXGroup;
 			children = (
+				C2A2B42F1BD7C8DB0083DA8A /* TGModalForwardView.h */,
+				C2A2B4301BD7C8DB0083DA8A /* TGModalForwardView.m */,
 				C2B0DF961BAAFEC40023982C /* modalsettings */,
 				C2D4B73E1AFCD36A0035B4E4 /* TGModalView.h */,
 				C2D4B73F1AFCD36A0035B4E4 /* TGModalView.m */,
@@ -6357,6 +6367,7 @@
 				C2967B431AA4CFA9003759B2 /* TGMentionPopup.m in Sources */,
 				C26976B01A10CDED0047E2C3 /* TGPhotoViewer.m in Sources */,
 				C268C19419F0519C007F836A /* POPSpringAnimation.mm in Sources */,
+				C2A2B4311BD7C8DB0083DA8A /* TGModalForwardView.m in Sources */,
 				C268C14319F01AE3007F836A /* TMLoaderView.m in Sources */,
 				C2D51BE41B21C67B009327C0 /* EMInMemoryImageCache.m in Sources */,
 				C233FB3418B661B6008C9A96 /* TMCheckBox.m in Sources */,
@@ -6609,6 +6620,7 @@
 				0A6D098B19535E8500A9AC64 /* NSBezierPathCategory.m in Sources */,
 				CEA5894C181673E500462DF0 /* NS(Attributed)String+Geometrics.m in Sources */,
 				0A59068518AA32C8002ED7BA /* NSImage+BTRImageAdditions.m in Sources */,
+				C20B82A11BD98EC700EF01AD /* TGPVDocumentsBehavior.m in Sources */,
 				C268C19219F0519C007F836A /* POPMath.mm in Sources */,
 				C2CBF6D71AFBDB6F006BF90A /* TGLinearProgressView.m in Sources */,
 				C2AC8DB41A7BF13000655B9D /* TGSearchRowItem.m in Sources */,

@@ -70,7 +70,7 @@
         [self addSubview:_imageView];
         
         _siteName = [TMTextField defaultTextField];
-        
+        [[_siteName cell] setTruncatesLastVisibleLine:YES];
         
         [self.siteName setFrameOrigin:NSMakePoint(5, -6)];
         [self.author setFrameOrigin:NSMakePoint(5, 10)];
@@ -177,7 +177,7 @@
 
 -(int)maxTextWidth {
     
-    int width = self.containerSize.width;
+    int width = self.containerSize.width - 60;
     
     if([self.webpage.webpage.type isEqualToString:@"profile"]) {
         width = width - 75;

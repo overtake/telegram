@@ -102,12 +102,13 @@ static int offsetEditable = 30;
 
     
     [self setSelected:[[self rowItem] isSelected]];
+    [self.selectButton setHidden:![self isEditable]];
     
     [self.titleTextField sizeToFit];
     
     [self.lastSeenTextField sizeToFit];
     
-    [self.selectButton setHidden:![self isEditable]];
+   
     
   //  [self.titleTextField setFrameSize:[self rowItem].titleSize];
     //[self.lastSeenTextField setFrameSize:[self rowItem].lastSeenSize];

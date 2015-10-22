@@ -263,7 +263,7 @@
         return;
     }
     
-    if(self.cellState == CellStateNeedDownload) {
+    if(self.cellState == CellStateNeedDownload  && ![self.item isset]) {
         [self startDownload:YES];
         return;
     }

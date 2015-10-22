@@ -75,7 +75,7 @@
         
         
     } else {
-        [replyText appendString:[[MessagesUtils mediaMessage:_replyMessage] fixEmoji] withColor:GRAY_TEXT_COLOR];
+        [replyText appendString:[[[MessagesUtils mediaMessage:_replyMessage] stringByReplacingOccurrencesOfString:@"\n" withString:@" "] fixEmoji] withColor:GRAY_TEXT_COLOR];
     }
     
     
@@ -104,8 +104,6 @@
     }
     
     if([_replyMessage.media isKindOfClass:[TL_messageMediaGeo class]]) {
-        
-        //  _geoURL = [NSURL URLWithString:[NSString stringWithFormat:@"https://maps.googleapis.com/maps/api/staticmap?center=%f,%f&zoom=15&size=%@&sensor=true",replyMessage.media.geo.lat, replyMessage.media.geo.n_long, @"30x30"]];
         
         
     }
@@ -159,6 +157,7 @@
     [replyText setFont:TGSystemFont(13) forRange:replyText.range];
     
     _replyText = replyText;
+    
     
     
     _replyHeight = [_replyText coreTextSizeForTextFieldForWidth:INT32_MAX].height;

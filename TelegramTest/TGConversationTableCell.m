@@ -344,6 +344,8 @@ static NSDictionary *attributes() {
         [attr setFont:TGSystemFont(13) forRange:attr.range];
         [attr setSelected:self.isSelected];
         
+        
+        
         [_messageField setAttributedStringValue:attr];
         
         if(!self.item.typing) {

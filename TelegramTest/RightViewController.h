@@ -82,17 +82,12 @@
 @property (nonatomic, strong) PhoneChangeConfirmController *phoneChangeConfirmController;
 @property (nonatomic, strong) TGOpacityViewController *opacityViewController;
 @property (nonatomic, strong) TGPasscodeSettingsViewController *passcodeViewController;
-
 @property (nonatomic, strong) TGSessionsViewController *sessionsViewContoller;
 @property (nonatomic, strong) TGPasswosdMainViewController *passwordMainViewController;
 @property (nonatomic, strong) TGPasswordSetViewController *passwordSetViewController;
-
-
 @property (nonatomic, strong) ChatExportLinkViewController *chatExportLinkViewController;
 @property (nonatomic, strong) TGStickersSettingsViewController *stickersSettingsViewController;
-
 @property (nonatomic, strong) ComposeChooseGroupViewController *composeChooseGroupViewController;
-
 @property (nonatomic, strong) CacheSettingsViewController *cacheSettingsViewController;
 @property (nonatomic, strong) NotificationSettingsViewController *notificationSettingsViewController;
 @property (nonatomic, strong) ComposeCreateChannelViewController *composeCreateChannelViewController;
@@ -100,7 +95,6 @@
 @property (nonatomic, strong) ComposeCreateChannelUserNameStepViewController *composeCreateChannelUserNameStepViewController;
 @property (nonatomic, strong) ComposeConfirmModeratorViewController *composeConfirmModeratorViewController;
 @property (nonatomic,strong) ComposeManagmentViewController *composeManagmentViewController;
-
 @property (nonatomic,strong) ComposeChannelParticipantsViewController *composeChannelParticipantsViewController;
 @property (nonatomic,strong) ComposeSettingupNewChannelViewController *composeSettingupNewChannelViewController;
 

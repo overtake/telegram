@@ -89,20 +89,27 @@
 -(void)updateBackButton {
     
     
-    if((self.controller.navigationViewController.viewControllerStack.count > 2 || [[Telegram mainViewController] isSingleLayout]) && ![[Telegram rightViewController] isModalViewActive]) {
-        [self.field setStringValue:[NSString stringWithFormat:@"   %@", NSLocalizedString(@"Compose.Back",nil)]];
-    } else if([[Telegram rightViewController] isModalViewActive]) {
-        [self.field setStringValue:NSLocalizedString(@"Cancel", nil)];
+    if(self.controller.navigationViewController == [Telegram rightViewController].navigationViewController) {
+        if((self.controller.navigationViewController.viewControllerStack.count > 2 || [[Telegram mainViewController] isSingleLayout]) && ![[Telegram rightViewController] isModalViewActive]) {
+            [self.field setStringValue:[NSString stringWithFormat:@"   %@", NSLocalizedString(@"Compose.Back",nil)]];
+        } else if([[Telegram rightViewController] isModalViewActive]) {
+            [self.field setStringValue:NSLocalizedString(@"Cancel", nil)];
+        } else {
+            [self.field setStringValue:NSLocalizedString(@"Close", nil)];
+        }
+        
+        [self.imageView setHidden:(self.controller.navigationViewController.viewControllerStack.count <= 2 && ![Telegram isSingleLayout]) || [[Telegram rightViewController] isModalViewActive]];
+        
+        
+        [self.backUnreadMarkView setHidden:!([self.controller.navigationViewController.currentController isKindOfClass:[MessagesViewController class]] && [[Telegram mainViewController] isSingleLayout])];
     } else {
-        [self.field setStringValue:NSLocalizedString(@"Close", nil)];
+        [self.field setStringValue:[NSString stringWithFormat:@"   %@", NSLocalizedString(@"Compose.Back",nil)]];
+        [self.imageView setHidden:NO];
+        [self.backUnreadMarkView setHidden:YES];
     }
+   
     
-    [self.imageView setHidden:(self.controller.navigationViewController.viewControllerStack.count <= 2 && ![Telegram isSingleLayout]) || [[Telegram rightViewController] isModalViewActive]];
-    
-    
-    [self.backUnreadMarkView setHidden:!([self.controller.navigationViewController.currentController isKindOfClass:[MessagesViewController class]] && [[Telegram mainViewController] isSingleLayout])];
-    
-    
+   
     
     [self.field sizeToFit];
     
@@ -132,7 +139,7 @@
 }
 
 - (void)click {
-    [[Telegram rightViewController] navigationGoBack];
+    [self.controller.navigationViewController goBackWithAnimation:YES];
 }
 
 

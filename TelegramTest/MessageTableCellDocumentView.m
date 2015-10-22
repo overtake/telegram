@@ -630,7 +630,7 @@ static NSImage *attachBackgroundThumb() {
     PreviewObject *previewObject = [[PreviewObject alloc] initWithMsdId:self.item.message.n_id media:self.item.message peer_id:self.item.message.peer_id];
     
     if([self.item.message.media.document.mime_type hasPrefix:@"image"]) {
-        [[TGPhotoViewer viewer] show:previewObject];
+        [[TGPhotoViewer viewer] showDocuments:previewObject conversation:self.item.message.conversation];
     } else {
         TMPreviewDocumentItem *item = [[TMPreviewDocumentItem alloc] initWithItem:previewObject];
         [[TMMediaController controller] show:item];
