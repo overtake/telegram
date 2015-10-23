@@ -47,68 +47,16 @@
     if([self.action.currentViewController isKindOfClass:[ComposePickerViewController class]])  {
         
         if(!self.chat.isBroadcast) {
-            [[Telegram rightViewController] showComposeAddModerator:self.action];
+            
+            ComposeConfirmModeratorViewController *viewController = [[ComposeConfirmModeratorViewController alloc] initWithFrame:self.action.currentViewController.view.bounds];
+            
+            [viewController setAction:self.action];
+            
+            [self.action.currentViewController.navigationViewController pushViewController:viewController animated:YES];
         } else {
             self.action.result.singleObject = [TL_channelRoleEditor create];
             [self addAccess];
         }
-        
-        /*
-        
-        [self.delegate behaviorDidStartRequest];
-        
-        [RPCRequest sendRequest:[TLAPI_channels_getParticipant createWithChannel:self.chat.inputPeer user_id:[self.user inputUser]] successHandler:^(id request, TLChatParticipant *response) {
-            
-            [self.delegate behaviorDidEndRequest:response];
-            
-            if(!self.chat.isBroadcast) {
-              [[Telegram rightViewController] showComposeAddModerator:self.action];
-            } else {
-                self.action.result.singleObject = [TL_channelRoleEditor create];
-                [self addAccess];
-            }
-            
-        } errorHandler:^(id request, RpcError *error) {
-            [self.delegate behaviorDidEndRequest:nil];
-            
-            if(error.error_code == 400) {
-                
-                if([error.error_msg isEqualToString:@"USER_NOT_PARTICIPANT"]) {
-                    confirm(appName(), [NSString stringWithFormat:NSLocalizedString(error.error_msg, nil),self.user.first_name], ^{
-                        
-                        [self.delegate behaviorDidStartRequest];
-                        
-                        [RPCRequest sendRequest:[TLAPI_channels_inviteToChannel createWithChannel:self.chat.inputPeer users:[@[self.user.inputUser] mutableCopy]] successHandler:^(id request, id response) {
-                            
-                            [self.delegate behaviorDidEndRequest:response];
-                            
-                            if(!self.chat.isBroadcast) {
-                                [[Telegram rightViewController] showComposeAddModerator:self.action];
-                            } else {
-                                self.action.result.singleObject = [TL_channelRoleEditor create];
-                                [self addAccess];
-                            }
-                            
-                        } errorHandler:^(id request, RpcError *error) {
-                            
-                            if(error.error_code == 400) {
-                                alert(appName(), NSLocalizedString(error.error_msg, nil));
-                            }
-                            
-                            [self.delegate behaviorDidEndRequest:nil];
-                        }];
-                        
-                    }, nil);
-                } else {
-                    alert(appName(), NSLocalizedString(error.error_msg, nil));
-                }
-                
-                
-            }
-            
-            
-        }];*/
-        
         
     } else {
         
@@ -134,14 +82,11 @@
             action.result = [[ComposeResult alloc] initWithMultiObjects:response.participants];
             
             
-            NSArray *stack = self.action.currentViewController.navigationViewController.viewControllerStack;
+            ComposeManagmentViewController *viewController =  [[ComposeManagmentViewController alloc] initWithFrame:self.action.currentViewController.view.bounds];
             
-            NSUInteger idx = [stack indexOfObject:[Telegram rightViewController].composeManagmentViewController];
+            [viewController setAction:self.action];
             
-            self.action.currentViewController.navigationViewController.viewControllerStack =[[stack subarrayWithRange:NSMakeRange(0, idx)] mutableCopy];
-            
-            
-            [[Telegram rightViewController] showComposeManagment:action];
+            [self.action.currentViewController.navigationViewController gotoViewController:viewController];
             
             [self.delegate behaviorDidEndRequest:response];
             

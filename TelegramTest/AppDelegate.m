@@ -50,6 +50,8 @@
 #import "MessagesBottomView.h"
 #import "TGAudioPlayerWindow.h"
 #import "TGUpdater.h"
+#import "TGHeadChatPanel.h"
+#import "NSArrayCategory.h"
 @interface NSUserNotification(For107)
 
 @property (nonatomic, strong) NSAttributedString *response;
@@ -100,7 +102,6 @@ static void TGTelegramLoggingFunction(NSString *format, va_list args)
 
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification {
     
-        
 
     MTLogSetLoggingFunction(&TGTelegramLoggingFunction);
     
@@ -407,9 +408,14 @@ void exceptionHandler(NSException * exception)
                     return [[NSEvent alloc] init];
                 }
                 
-                
-                [result.window close];
-                
+                if(![result.window isKindOfClass:NSClassFromString(@"TGHeadChatPanel")])
+                    [result.window close];
+                else
+                {
+                    TGHeadChatPanel *panel = (TGHeadChatPanel *) result.window;
+                    
+                    [panel back];
+                }
                 
                 
                 return result;

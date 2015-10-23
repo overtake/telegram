@@ -8,6 +8,7 @@
 
 #import "TGHeadChatPanel.h"
 #import "TGHCMessagesViewController.h"
+#import "TGChatHeadLockView.h"
 @interface TGHeadChatPanel ()
 @property (nonatomic,strong) TMNavigationController *navigationController;
 @property (nonatomic,strong) TGHCMessagesViewController *messagesViewController;
@@ -25,7 +26,7 @@
 }
 
 -(instancetype)init {
-    if(self = [super initWithContentRect:NSMakeRect(300, 300, 350, 350) styleMask:NSResizableWindowMask | NSTitledWindowMask | NSClosableWindowMask backing:NSBackingStoreBuffered defer:YES]) {
+    if(self = [super initWithContentRect:NSMakeRect(300, 300, 380, 400) styleMask:NSResizableWindowMask | NSTitledWindowMask | NSClosableWindowMask backing:NSBackingStoreBuffered defer:YES]) {
         [self initializeHeadChatPanel];
     }
     
@@ -59,8 +60,12 @@ static NSMutableDictionary *allChatHeads;
 -(void)orderOut:(id)sender {
     
     [super orderOut:sender];
-    
 
+}
+
+-(void)back {
+    if(self.navigationController.viewControllerStack.count > 1)
+        [self.navigationController goBackWithAnimation:YES];
 }
 
 
@@ -90,11 +95,15 @@ static NSMutableDictionary *allChatHeads;
     [_messagesViewController setCurrentConversation:conversation];
 }
 
+
+
 -(void)initializeHeadChatPanel {
     
+    self.canHide = NO;
+    self.acceptEvents = YES;
     [self setReleasedWhenClosed:YES];
     
-    [self setMinSize:NSMakeSize(380, 300)];
+    [self setMinSize:NSMakeSize(380, 400)];
     
     self.contentView.wantsLayer = YES;
    // self.contentView.autoresizingMask = NSViewWidthSizable | NSViewHeightSizable;
@@ -103,6 +112,7 @@ static NSMutableDictionary *allChatHeads;
     
     _messagesViewController = [[TGHCMessagesViewController alloc] initWithFrame:self.contentView.bounds];
     
+    _navigationController.messagesViewController = _messagesViewController;
     
     [_messagesViewController loadViewIfNeeded];
     [self.contentView addSubview:_navigationController.view];
@@ -115,9 +125,36 @@ static NSMutableDictionary *allChatHeads;
     
     [super setFrame:frameRect display:flag];
   
-    [self.navigationController.view setFrameSize:NSMakeSize(frameRect.size.width, frameRect.size.height - 20)];
+    
+   
+   // [self.navigationController.view setFrameSize:NSMakeSize(frameRect.size.width, frameRect.size.height - 20)];
     
 }
+
++(void)lockAllControllers {
+    [allChatHeads enumerateKeysAndObjectsUsingBlock:^(id  _Nonnull key, TGHeadChatPanel  *obj, BOOL * _Nonnull stop) {
+        
+        if(obj.acceptEvents) {
+            [obj.contentView addSubview:[[TGChatHeadLockView alloc] initWithFrame:obj.contentView.bounds]];
+            
+            [obj setAcceptEvents:NO];
+        }
+        
+    }];
+}
+
++(void)unlockAllControllers {
+    [allChatHeads enumerateKeysAndObjectsUsingBlock:^(id  _Nonnull key, TGHeadChatPanel  *obj, BOOL * _Nonnull stop) {
+        
+        if(!obj.acceptEvents) {
+            [[obj.contentView.subviews lastObject] removeFromSuperview];
+            
+            [obj setAcceptEvents:YES];
+        }
+        
+    }];
+}
+
 
 
 @end

@@ -95,7 +95,6 @@
         [self.nameTextField setFont:TGSystemFont(15)];
         [self.nameTextField setTarget:self];
         [self.nameTextField setAction:@selector(enter)];
-
         [self addSubview:self.nameTextField];
         
         [[self.nameTextField cell] setTruncatesLastVisibleLine:YES];
@@ -130,7 +129,14 @@
             
             
             if(self.fullChat.participants.participants.count < maxChatUsers()) {
-                [[Telegram rightViewController] showComposeWithAction:[[ComposeAction alloc]initWithBehaviorClass:[ComposeActionAddGroupMembersBehavior class] filter:filter object:self.controller.fullChat reservedObjects:@[self.controller.chat]]];
+                
+                
+                ComposePickerViewController *viewController = [[ComposePickerViewController alloc] initWithFrame:self.controller.view.bounds];
+                
+                [viewController setAction:[[ComposeAction alloc]initWithBehaviorClass:[ComposeActionAddGroupMembersBehavior class] filter:filter object:self.controller.fullChat reservedObjects:@[self.controller.chat]]];
+                
+                [self.controller.navigationViewController pushViewController:viewController animated:YES];
+                
             }
             
             
@@ -162,11 +168,11 @@
                 
             } else {
                 
-                [TMViewController showModalProgress];
+                [self.controller showModalProgress];
                 
                 [RPCRequest sendRequest:[TLAPI_messages_exportChatInvite createWithChat_id:self.controller.chat.n_id] successHandler:^(RPCRequest *request, TL_chatInviteExported *response) {
                     
-                    [TMViewController hideModalProgressWithSuccess];
+                    [self.controller hideModalProgressWithSuccess];
                     
                     _fullChat.exported_invite = response;
                     
@@ -176,7 +182,7 @@
                     
                     
                 } errorHandler:^(RPCRequest *request, RpcError *error) {
-                    [TMViewController hideModalProgress];
+                    [self.controller hideModalProgress];
                 } timeout:10];
                 
             }
@@ -198,9 +204,15 @@
         
         self.sharedMediaButton = [TMSharedMediaButton buttonWithText:NSLocalizedString(@"Profile.SharedMedia", nil) tapBlock:^{
             
-            [[Telegram rightViewController] showCollectionPage:self.controller.chat.dialog];
+            TMCollectionPageController *viewController = [[TMCollectionPageController alloc] initWithFrame:self.controller.view.bounds];
             
-            [[Telegram rightViewController].collectionViewController showAllMedia];
+            [viewController loadViewIfNeeded];
+            
+            [viewController setConversation:self.controller.chat.dialog];
+            
+            [self.controller.navigationViewController pushViewController:viewController animated:YES];
+            
+            [viewController showAllMedia];
         }];
         
         [self.sharedMediaButton setFrameSize:NSMakeSize(self.exportChatInvite.bounds.size.width, 42)];
@@ -210,9 +222,15 @@
         
         self.filesMediaButton = [TMSharedMediaButton buttonWithText:NSLocalizedString(@"Profile.SharedMediaFiles", nil) tapBlock:^{
             
-            [[Telegram rightViewController] showCollectionPage:self.controller.chat.dialog];
+            TMCollectionPageController *viewController = [[TMCollectionPageController alloc] initWithFrame:self.controller.view.bounds];
             
-            [[Telegram rightViewController].collectionViewController showFiles];
+            [viewController loadViewIfNeeded];
+            
+            [viewController setConversation:self.controller.chat.dialog];
+            
+            [self.controller.navigationViewController pushViewController:viewController animated:YES];
+            
+            [viewController showFiles];
         }];
         
         
@@ -227,9 +245,16 @@
         
         self.sharedLinksButton = [TMSharedMediaButton buttonWithText:NSLocalizedString(@"Conversation.Filter.SharedLinks", nil) tapBlock:^{
             
-            [[Telegram rightViewController] showCollectionPage:self.controller.chat.dialog];
+            TMCollectionPageController *viewController = [[TMCollectionPageController alloc] initWithFrame:self.controller.view.bounds];
             
-            [[Telegram rightViewController].collectionViewController showSharedLinks];
+            [viewController loadViewIfNeeded];
+            
+            [viewController setConversation:self.controller.chat.dialog];
+            
+            [self.controller.navigationViewController pushViewController:viewController animated:YES];
+            
+            [viewController showSharedLinks];
+
         }];
         
         
@@ -336,7 +361,9 @@
 }
 
 - (void) TMNameTextFieldDidChanged:(TMNameTextField *)textField {
+    [self.nameTextField sizeToFit];
     
+    [self.statusTextField sizeToFit];
     
     [self setFrameSize:self.frame.size];
 }
@@ -344,13 +371,9 @@
 -(void)setFrameSize:(NSSize)newSize {
     [super setFrameSize:newSize];
     
-    [self.nameTextField sizeToFit];
+    [self.nameTextField setFrame:NSMakeRect(185, self.bounds.size.height - 43   - self.nameTextField.bounds.size.height, MIN(self.bounds.size.width - 185 - 100, NSWidth(self.nameTextField.frame)), self.nameTextField.bounds.size.height)];
     
-    [self.statusTextField sizeToFit];
-    
-//    [self.nameTextField setFrame:NSMakeRect(185, self.bounds.size.height - 43   - self.nameTextField.bounds.size.height, MIN(self.bounds.size.width - 185 - 100, NSWidth(self.nameTextField.frame)), self.nameTextField.bounds.size.height)];
-//    
-//    [self.statusTextField setFrame:NSMakeRect(182, self.nameTextField.frame.origin.y - self.statusTextField.bounds.size.height - 3, MIN(self.bounds.size.width - 310,NSWidth(self.statusTextField.frame)), self.nameTextField.bounds.size.height)];
+    [self.statusTextField setFrame:NSMakeRect(182, self.nameTextField.frame.origin.y - self.statusTextField.bounds.size.height - 3, MIN(self.bounds.size.width - 310,NSWidth(self.statusTextField.frame)), self.nameTextField.bounds.size.height)];
 }
 
 - (void)setController:(ChatInfoViewController *)controller {

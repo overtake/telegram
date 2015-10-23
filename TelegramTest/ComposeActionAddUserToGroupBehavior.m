@@ -56,10 +56,14 @@
         [self.delegate behaviorDidEndRequest:response];
             
         dispatch_after_seconds(0.2, ^{
-            [[Telegram rightViewController] showByDialog:chat.dialog sender:self];
+            
+            
+         
+            [self.action.currentViewController.navigationViewController gotoViewController:self.action.currentViewController.messagesViewController];
+            
             
             if(self.action.reservedObject1) {
-                [[Telegram rightViewController].messagesViewController showBotStartButton:self.action.reservedObject1[@"startgroup"] bot:user];
+                [self.action.currentViewController.messagesViewController showBotStartButton:self.action.reservedObject1[@"startgroup"] bot:user];
             }
             
         });

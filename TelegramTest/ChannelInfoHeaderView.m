@@ -177,11 +177,11 @@
                 
             } else {
                 
-                [TMViewController showModalProgress];
+                [weakSelf.controller showModalProgress];
                 
                 [RPCRequest sendRequest:[TLAPI_messages_exportChatInvite createWithChat_id:weakSelf.controller.chat.n_id] successHandler:^(RPCRequest *request, TL_chatInviteExported *response) {
                     
-                    [TMViewController hideModalProgressWithSuccess];
+                    [weakSelf.controller hideModalProgressWithSuccess];
                     
                     weakSelf.controller.fullChat.exported_invite = response;
                     
@@ -191,7 +191,7 @@
                     
                     
                 } errorHandler:^(RPCRequest *request, RpcError *error) {
-                    [TMViewController hideModalProgress];
+                    [weakSelf.controller hideModalProgress];
                 } timeout:10];
                 
             }
@@ -242,9 +242,6 @@
         
         [_commentsSwitch setDidChangeHandler:^(BOOL isOn){
            
-            [TMViewController showModalProgress];
-            
-            
              [RPCRequest sendRequest:[TLAPI_channels_toggleComments createWithChannel:weakSelf.controller.chat.inputPeer enabled:isOn] successHandler:^(id request, id response) {
                  
 
@@ -253,7 +250,6 @@
                  
              }];
             
-            [TMViewController hideModalProgress];
             
         }];
         
@@ -608,7 +604,7 @@
         self.controller.type = ChatInfoViewControllerNormal;
         [self reload];
         
-        [TMViewController hideModalProgress];
+        [self.controller hideModalProgress];
     };
     
     
@@ -640,7 +636,7 @@
         
     };
     
-    [TMViewController showModalProgress];
+    [self.controller showModalProgress];
     
     if(![self.nameTextField.stringValue isEqualToString:self.controller.chat.title] && self.nameTextField.stringValue.length > 0) {
         

@@ -173,6 +173,8 @@
 //    
    
     
+    self.navigationViewController.messagesViewController = self.messagesViewController;
+    
     [self.navigationViewController.view.window makeFirstResponder:nil];
     
 }

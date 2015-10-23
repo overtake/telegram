@@ -50,7 +50,7 @@
         
         if([_chat.exported_invite isKindOfClass:[TL_chatInviteExported class]]) {
             
-            [TMViewController showModalProgress];
+            [self showModalProgress];
             
             NSPasteboard* cb = [NSPasteboard generalPasteboard];
             
@@ -59,7 +59,7 @@
             
             dispatch_after_seconds(0.2, ^{
                 
-                [TMViewController hideModalProgressWithSuccess];
+                [self hideModalProgressWithSuccess];
 
             });
             
@@ -78,7 +78,7 @@
         
         confirm(appName(), NSLocalizedString(@"ChatExportLink.RevokeConfirm", nil), ^{
             
-            [TMViewController showModalProgress];
+            [self showModalProgress];
             
             id request = [TLAPI_messages_exportChatInvite createWithChat_id:_chat.n_id];
             
@@ -90,7 +90,7 @@
             
             [RPCRequest sendRequest:request successHandler:^(RPCRequest *request, TL_chatInviteExported *response) {
                 
-                [TMViewController hideModalProgressWithSuccess];
+                [self hideModalProgressWithSuccess];
                 
                 _chat.exported_invite = response;
                 
@@ -99,7 +99,7 @@
                 alert(nil, NSLocalizedString(@"ChatExportLink.Alert.Revoked", nil));
                 
             } errorHandler:^(RPCRequest *request, RpcError *error) {
-                [TMViewController hideModalProgress];
+                [self hideModalProgress];
             } timeout:10];
         }, nil);
         

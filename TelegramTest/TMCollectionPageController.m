@@ -85,7 +85,7 @@
 
 -(void)loadView {
     
-     weakify();
+     weak();
     
     [TGCache setMemoryLimit:100*1024*1024 group:PCCACHE];
     
@@ -96,9 +96,9 @@
     
     [self.centerTextField setClickBlock:^{
         
-        TMMenuPopover *menuPopover = [[TMMenuPopover alloc] initWithMenu:[strongSelf filterMenu]];
+        TMMenuPopover *menuPopover = [[TMMenuPopover alloc] initWithMenu:[weakSelf filterMenu]];
         
-        [menuPopover showRelativeToRect:strongSelf.centerNavigationBarView.bounds ofView:strongSelf.centerNavigationBarView preferredEdge:CGRectMinYEdge];
+        [menuPopover showRelativeToRect:weakSelf.centerNavigationBarView.bounds ofView:weakSelf.centerNavigationBarView preferredEdge:CGRectMinYEdge];
         
     }];
     
@@ -120,7 +120,7 @@
     
     [selectRightButton setTapBlock:^ {
         
-        [strongSelf setIsEditable:!strongSelf.isEditable animated:YES];
+        [weakSelf setIsEditable:!weakSelf.isEditable animated:YES];
         
     }];
     
@@ -203,9 +203,9 @@
     [NSAnimationContext runAnimationGroup:^(NSAnimationContext *context) {
         
         [[self.actionsView animator] setFrameOrigin:NSMakePoint(0, isEditable ? 0 : - NSHeight(self.actionsView.frame))];
-        [[self.photoCollection.containerView animator] setFrame:NSMakeRect(0, _isEditable ? NSHeight(self.actionsView.frame) : 0, NSWidth([Telegram rightViewController].view.frame), NSHeight([Telegram rightViewController].view.frame) - 48 - (_isEditable ? NSHeight(self.actionsView.frame) : 0))];
-        [[self.documentsTableView.containerView animator] setFrame:NSMakeRect(0, _isEditable ? NSHeight(self.actionsView.frame) : 0, NSWidth([Telegram rightViewController].view.frame), NSHeight([Telegram rightViewController].view.frame) - 48 - (_isEditable ? NSHeight(self.actionsView.frame) : 0))];
-        [[self.sharedLinksTableView.containerView animator] setFrame:NSMakeRect(0, _isEditable ? NSHeight(self.actionsView.frame) : 0, NSWidth([Telegram rightViewController].view.frame), NSHeight([Telegram rightViewController].view.frame) - 48 - (_isEditable ? NSHeight(self.actionsView.frame) : 0))];
+        [[self.photoCollection.containerView animator] setFrame:NSMakeRect(0, _isEditable ? NSHeight(self.actionsView.frame) : 0, NSWidth(self.navigationViewController.view.frame), NSHeight(self.navigationViewController.view.frame) - 48 - (_isEditable ? NSHeight(self.actionsView.frame) : 0))];
+        [[self.documentsTableView.containerView animator] setFrame:NSMakeRect(0, _isEditable ? NSHeight(self.actionsView.frame) : 0, NSWidth(self.navigationViewController.view.frame), NSHeight(self.navigationViewController.view.frame) - 48 - (_isEditable ? NSHeight(self.actionsView.frame) : 0))];
+        [[self.sharedLinksTableView.containerView animator] setFrame:NSMakeRect(0, _isEditable ? NSHeight(self.actionsView.frame) : 0, NSWidth(self.navigationViewController.view.frame), NSHeight(self.navigationViewController.view.frame) - 48 - (_isEditable ? NSHeight(self.actionsView.frame) : 0))];
         
     } completionHandler:^{
         
@@ -790,9 +790,9 @@ static const int maxWidth = 120;
     if(self->_actionsView)
         return self->_actionsView;
     
-    weakify();
+    weak();
     
-    self->_actionsView = [[TMView alloc] initWithFrame:NSMakeRect(0, 0, strongSelf.view.bounds.size.width, 58)];
+    self->_actionsView = [[TMView alloc] initWithFrame:NSMakeRect(0, 0, weakSelf.view.bounds.size.width, 58)];
     [self.actionsView setWantsLayer:YES];
     [self.actionsView setAutoresizesSubviews:YES];
     [self.actionsView setAutoresizingMask:NSViewWidthSizable];
@@ -806,28 +806,28 @@ static const int maxWidth = 120;
     [self.deleteButton setAutoresizingMask:NSViewMaxXMargin ];
     [self.deleteButton setTapBlock:^{
        
-        [[Telegram rightViewController].messagesViewController setState:MessagesViewControllerStateNone];
-        [[Telegram rightViewController].messagesViewController unSelectAll:NO];
+        [weakSelf.messagesViewController setState:MessagesViewControllerStateNone];
+        [weakSelf.messagesViewController unSelectAll:NO];
         
         
-        if(![strongSelf.documentsTableView.containerView isHidden]) {
+        if(![weakSelf.documentsTableView.containerView isHidden]) {
             
             
-            [strongSelf.documentsTableView.selectedItems enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+            [weakSelf.documentsTableView.selectedItems enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
                 
-                [[Telegram rightViewController].messagesViewController setSelectedMessage:obj selected:YES];
+                [weakSelf.messagesViewController setSelectedMessage:obj selected:YES];
             }];
             
             
-        } if(![strongSelf.sharedLinksTableView.containerView isHidden]) {
+        } if(![weakSelf.sharedLinksTableView.containerView isHidden]) {
             
-            [strongSelf.sharedLinksTableView.selectedItems enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+            [weakSelf.sharedLinksTableView.selectedItems enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
                 
                 [[Telegram rightViewController].messagesViewController setSelectedMessage:obj selected:YES];
             }];
         } else {
             
-            [strongSelf.selectedItems enumerateObjectsUsingBlock:^(PhotoCollectionImageObject *obj, NSUInteger idx, BOOL *stop) {
+            [weakSelf.selectedItems enumerateObjectsUsingBlock:^(PhotoCollectionImageObject *obj, NSUInteger idx, BOOL *stop) {
                 
                 MessageTableItem *item  = [MessageTableItem messageItemFromObject:obj.previewObject.media];
                 
@@ -838,7 +838,7 @@ static const int maxWidth = 120;
         
        [[Telegram rightViewController].messagesViewController deleteSelectedMessages];
         
-        [strongSelf setIsEditable:NO animated:YES];
+        [weakSelf setIsEditable:NO animated:YES];
         
     }];
     self.deleteButton.disableColor = NSColorFromRGB(0xa1a1a1);
@@ -865,28 +865,28 @@ static const int maxWidth = 120;
         
         NSUInteger count = 0;
         
-        if(![strongSelf.documentsTableView.containerView isHidden]) {
+        if(![weakSelf.documentsTableView.containerView isHidden]) {
             
-            count = strongSelf.documentsTableView.selectedItems.count;
+            count = weakSelf.documentsTableView.selectedItems.count;
             
-            [strongSelf.documentsTableView.selectedItems enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+            [weakSelf.documentsTableView.selectedItems enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
                 
                 [[Telegram rightViewController].messagesViewController setSelectedMessage:obj selected:YES];
             }];
             
             
-        } if(![strongSelf.sharedLinksTableView.containerView isHidden]) {
-            count = strongSelf.sharedLinksTableView.selectedItems.count;
+        } if(![weakSelf.sharedLinksTableView.containerView isHidden]) {
+            count = weakSelf.sharedLinksTableView.selectedItems.count;
             
-            [strongSelf.sharedLinksTableView.selectedItems enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+            [weakSelf.sharedLinksTableView.selectedItems enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
                 
                 [[Telegram rightViewController].messagesViewController setSelectedMessage:obj selected:YES];
             }];
         } else {
             
-            count = strongSelf.selectedItems.count;
+            count = weakSelf.selectedItems.count;
             
-            [strongSelf.selectedItems enumerateObjectsUsingBlock:^(PhotoCollectionImageObject *obj, NSUInteger idx, BOOL *stop) {
+            [weakSelf.selectedItems enumerateObjectsUsingBlock:^(PhotoCollectionImageObject *obj, NSUInteger idx, BOOL *stop) {
                 
                 MessageTableItem *item  = [MessageTableItem messageItemFromObject:obj.previewObject.media];
                 
@@ -895,9 +895,9 @@ static const int maxWidth = 120;
             
         }
         
-        [[Telegram rightViewController] showForwardMessagesModalView:strongSelf.conversation messagesCount:count];
+        [[Telegram rightViewController] showForwardMessagesModalView:weakSelf.conversation messagesCount:count];
         
-        [strongSelf setIsEditable:NO animated:YES];
+        [weakSelf setIsEditable:NO animated:YES];
         
     }];
     
@@ -905,11 +905,11 @@ static const int maxWidth = 120;
         
         [GRAY_BORDER_COLOR set];
         
-        NSRectFill(NSMakeRect(0, NSHeight(strongSelf.actionsView.frame) - 1, NSWidth(strongSelf.actionsView.frame), 1));
+        NSRectFill(NSMakeRect(0, NSHeight(weakSelf.actionsView.frame) - 1, NSWidth(weakSelf.actionsView.frame), 1));
         
-        [strongSelf.forwardButton setFrameOrigin:NSMakePoint(strongSelf.actionsView.bounds.size.width - strongSelf.forwardButton.bounds.size.width - 22, roundf((strongSelf.actionsView.bounds.size.height - strongSelf.deleteButton.bounds.size.height) / 2))];
-        [strongSelf.deleteButton setFrameOrigin:NSMakePoint(30, roundf((strongSelf.actionsView.bounds.size.height - strongSelf.deleteButton.bounds.size.height) / 2) )];
-        [strongSelf.messagesSelectedCount setCenterByView:strongSelf.actionsView];
+        [weakSelf.forwardButton setFrameOrigin:NSMakePoint(weakSelf.actionsView.bounds.size.width - weakSelf.forwardButton.bounds.size.width - 22, roundf((weakSelf.actionsView.bounds.size.height - weakSelf.deleteButton.bounds.size.height) / 2))];
+        [weakSelf.deleteButton setFrameOrigin:NSMakePoint(30, roundf((weakSelf.actionsView.bounds.size.height - weakSelf.deleteButton.bounds.size.height) / 2) )];
+        [weakSelf.messagesSelectedCount setCenterByView:weakSelf.actionsView];
         
     }];
     

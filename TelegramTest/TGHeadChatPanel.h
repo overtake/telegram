@@ -8,8 +8,13 @@
 
 #import <Cocoa/Cocoa.h>
 
-@interface TGHeadChatPanel : NSWindow
+@interface TGHeadChatPanel : TelegramWindow
 
 +(void)showWithConversation:(TL_conversation *)conversation;
+
+-(void)back;
+
++(void)lockAllControllers;
++(void)unlockAllControllers;
 
 @end

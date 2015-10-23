@@ -71,7 +71,7 @@
     if(isPublic) {
         
         if([self.action.reservedObject2 length] >= 5) {
-            [TMViewController showModalProgress];
+            [self.action.currentViewController showModalProgress];
             
             [[ChatsManager sharedManager] updateChannelUserName:self.action.reservedObject2 channel:self.action.object completeHandler:^(TL_channel *channel) {
                 
@@ -81,7 +81,7 @@
                 
             } errorHandler:^(NSString *result) {
                 
-                [TMViewController hideModalProgress];
+                [self.action.currentViewController hideModalProgress];
                 
             }];
 
@@ -96,11 +96,16 @@
 }
 
 -(void)showAddingCompose {
-    [[Telegram rightViewController] clearStack];
     
-    [[Telegram rightViewController] showByDialog:[self.action.object dialog] sender:self];
     
-    [[Telegram rightViewController] showComposeWithAction:[[ComposeAction alloc] initWithBehaviorClass:[ComposeActionAddGroupMembersBehavior class] filter:@[@([UsersManager currentUserId])] object:[[FullChatManager sharedManager] find:[(TLChat *)self.action.object n_id]]]];
+    [self.action.currentViewController.navigationViewController gotoViewController:self.action.currentViewController.messagesViewController animated:NO];
+    
+    ComposePickerViewController *viewController = [[ComposePickerViewController alloc] initWithFrame:self.action.currentViewController.view.bounds];
+    
+    [viewController setAction:[[ComposeAction alloc] initWithBehaviorClass:[ComposeActionAddGroupMembersBehavior class] filter:@[@([UsersManager currentUserId])] object:[[FullChatManager sharedManager] find:[(TLChat *)self.action.object n_id]]]];
+
+    
+    [self.action.currentViewController.navigationViewController pushViewController:viewController animated:YES];
 }
 
 
@@ -125,11 +130,13 @@
             dispatch_block_t block = ^{
                 [self.delegate behaviorDidEndRequest:response];
                 
-                [[Telegram rightViewController] clearStack];
+                [self.action.currentViewController.navigationViewController gotoViewController:self.action.currentViewController.messagesViewController animated:NO];
                 
-                [[Telegram rightViewController] showByDialog:channel.dialog sender:self];
+                ComposeSettingupNewChannelViewController *viewController = [[ComposeSettingupNewChannelViewController alloc] initWithFrame:self.action.currentViewController.view.bounds];;
                 
-                [[Telegram rightViewController] showComposeSettingsupNewChannel:self.action];
+                [viewController setAction:self.action];
+                
+                [self.action.currentViewController.navigationViewController pushViewController:viewController animated:YES];
                 
                 [self.delegate behaviorDidEndRequest:self];
             };

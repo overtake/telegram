@@ -249,6 +249,7 @@
 		C20B228918E971D0007BCCD6 /* framing.c in Sources */ = {isa = PBXBuildFile; fileRef = C20B228518E971D0007BCCD6 /* framing.c */; };
 		C20B228D18E98A2C007BCCD6 /* SettingsArchiver.m in Sources */ = {isa = PBXBuildFile; fileRef = C20B228C18E98A2C007BCCD6 /* SettingsArchiver.m */; };
 		C20B82A11BD98EC700EF01AD /* TGPVDocumentsBehavior.m in Sources */ = {isa = PBXBuildFile; fileRef = C20B82A01BD98EC700EF01AD /* TGPVDocumentsBehavior.m */; settings = {ASSET_TAGS = (); }; };
+		C20B82AD1BDA550600EF01AD /* TGChatHeadLockView.m in Sources */ = {isa = PBXBuildFile; fileRef = C20B82AC1BDA550600EF01AD /* TGChatHeadLockView.m */; settings = {ASSET_TAGS = (); }; };
 		C20BA5DC1B0BB992001ECE22 /* TGSNoAuthModalView.m in Sources */ = {isa = PBXBuildFile; fileRef = C20BA5DB1B0BB992001ECE22 /* TGSNoAuthModalView.m */; };
 		C20BA5DF1B0BBE85001ECE22 /* TGSAppManager.m in Sources */ = {isa = PBXBuildFile; fileRef = C20BA5DE1B0BBE85001ECE22 /* TGSAppManager.m */; };
 		C20BA5E21B0BCC04001ECE22 /* TGSEnterPasscodeView.m in Sources */ = {isa = PBXBuildFile; fileRef = C20BA5E11B0BCC04001ECE22 /* TGSEnterPasscodeView.m */; };
@@ -1482,6 +1483,8 @@
 		C20B228C18E98A2C007BCCD6 /* SettingsArchiver.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SettingsArchiver.m; sourceTree = "<group>"; };
 		C20B829F1BD98EC700EF01AD /* TGPVDocumentsBehavior.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGPVDocumentsBehavior.h; sourceTree = "<group>"; };
 		C20B82A01BD98EC700EF01AD /* TGPVDocumentsBehavior.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGPVDocumentsBehavior.m; sourceTree = "<group>"; };
+		C20B82AB1BDA550600EF01AD /* TGChatHeadLockView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGChatHeadLockView.h; sourceTree = "<group>"; };
+		C20B82AC1BDA550600EF01AD /* TGChatHeadLockView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGChatHeadLockView.m; sourceTree = "<group>"; };
 		C20BA5DA1B0BB992001ECE22 /* TGSNoAuthModalView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGSNoAuthModalView.h; sourceTree = "<group>"; };
 		C20BA5DB1B0BB992001ECE22 /* TGSNoAuthModalView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGSNoAuthModalView.m; sourceTree = "<group>"; };
 		C20BA5DD1B0BBE85001ECE22 /* TGSAppManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGSAppManager.h; sourceTree = "<group>"; };
@@ -4463,6 +4466,8 @@
 				C2A2B4251BD01FC20083DA8A /* TGHeadChatPanel.m */,
 				C2A2B42C1BD519870083DA8A /* TGHCMessagesViewController.h */,
 				C2A2B42D1BD519870083DA8A /* TGHCMessagesViewController.m */,
+				C20B82AB1BDA550600EF01AD /* TGChatHeadLockView.h */,
+				C20B82AC1BDA550600EF01AD /* TGChatHeadLockView.m */,
 			);
 			name = "head-chats";
 			sourceTree = "<group>";
@@ -6888,6 +6893,7 @@
 				0A6D098819535E8500A9AC64 /* NSAlertCategory.m in Sources */,
 				C2CBF6B71AFB860D006BF90A /* DownloadOperation.m in Sources */,
 				C2D51BF91B21C707009327C0 /* TGAudioProgressView.m in Sources */,
+				C20B82AD1BDA550600EF01AD /* TGChatHeadLockView.m in Sources */,
 				C26F7EC21A5EFB54001D1AE2 /* SecretLayer23.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

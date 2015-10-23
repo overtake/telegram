@@ -566,7 +566,42 @@ static const int navigationOffset = 48;
     return [[NSImage alloc] initWithCGImage:[rep CGImage] size:view.bounds.size];
 }
 
+-(void)gotoViewController:(TMViewController *)controller {
+    [self gotoViewController:controller back:YES];
+}
+-(void)gotoViewController:(TMViewController *)controller back:(BOOL)back {
+    
+    
+    [self gotoViewController:controller back:back animated:YES];
+    
+}
 
+-(void)gotoViewController:(TMViewController *)controller animated:(BOOL)animated {
+    [self gotoViewController:controller back:YES animated:animated];
+}
 
+-(void)gotoViewController:(TMViewController *)controller back:(BOOL)back animated:(BOOL)animated {
+    NSArray *stack = self.viewControllerStack;
+    
+    __block NSUInteger idx = 0;
+    
+    [stack enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger index, BOOL * _Nonnull stop) {
+        if([obj isKindOfClass:[controller class]]) {
+            idx = index;
+            *stop = YES;
+        }
+    }];
+    
+    
+    if(!back) {
+        self.viewControllerStack = [[stack subarrayWithRange:NSMakeRange(0, idx)] mutableCopy];
+        
+        [self pushViewController:controller animated:animated];
+    } else {
+        self.viewControllerStack =[[stack subarrayWithRange:NSMakeRange(0, MIN(0,idx-1))] mutableCopy];
+        
+        [self.navigationViewController goBackWithAnimation:animated];
+    }
+}
 
 @end

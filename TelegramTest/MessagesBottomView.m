@@ -917,7 +917,7 @@ static RBLPopover *popover;
        
         if(weakSelf.dialog.isInvisibleChannel) {
             
-            [TMViewController showModalProgress];
+            [weakSelf.messagesViewController showModalProgress];
             
             [RPCRequest sendRequest:[TLAPI_channels_joinChannel createWithChannel:weakSelf.dialog.chat.inputPeer] successHandler:^(RPCRequest *request, id response) {
                 
@@ -941,14 +941,14 @@ static RBLPopover *popover;
                 [ASQueue dispatchOnMainQueue:^{
                     [weakSelf.messagesViewController setState:MessagesViewControllerStateNone];
                     [weakSelf.messagesViewController tryRead];
-                    [TMViewController hideModalProgressWithSuccess];
+                    [weakSelf.messagesViewController hideModalProgressWithSuccess];
                 }];
                 
                 
             } errorHandler:^(RPCRequest *request, RpcError *error) {
                 
                 [ASQueue dispatchOnMainQueue:^{
-                    [TMViewController hideModalProgress];
+                    [weakSelf.messagesViewController hideModalProgress];
                 }];
                 
                 
@@ -971,7 +971,7 @@ static RBLPopover *popover;
             
         } else if(!weakSelf.dialog.canSendMessage && weakSelf.dialog.user.isBot && _onClickToLockedView == nil) {
             
-            [TMViewController showModalProgress];
+            [weakSelf.messagesViewController showModalProgress];
             
             [[BlockedUsersManager sharedManager] unblock:weakSelf.dialog.user.n_id completeHandler:^(BOOL response){
                 

@@ -70,7 +70,7 @@
         [RPCRequest sendRequest:[TLAPI_channels_inviteToChannel createWithChannel:chat.inputPeer users:array] successHandler:^(id request, id response) {
             
             
-            [[Telegram rightViewController] navigationGoBack];
+            [self.action.currentViewController.navigationViewController goBackWithAnimation:YES];
             
             [[FullChatManager sharedManager] loadIfNeed:chat.n_id force:YES];
             
@@ -109,7 +109,7 @@
             [self.delegate behaviorDidEndRequest:response];
             
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                [[Telegram rightViewController] navigationGoBack];
+                [self.action.currentViewController.navigationViewController goBackWithAnimation:YES];
             });
             
         }

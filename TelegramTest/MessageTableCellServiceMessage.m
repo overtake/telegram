@@ -59,19 +59,19 @@
     if(self.item.message.to_id.class == [TL_peerChat class] || self.item.message.to_id.class == [TL_peerUser class])  {
         [items addObject:[NSMenuItem menuItemWithTitle:NSLocalizedString(@"Context.Reply", nil) withBlock:^(id sender) {
             
-            [[Telegram rightViewController].messagesViewController addReplayMessage:self.item.message animated:YES];
+            [self.messagesViewController addReplayMessage:self.item.message animated:YES];
             
         }]];
     }
     
     [items addObject:[NSMenuItem menuItemWithTitle:NSLocalizedString(@"Context.Delete", nil) withBlock:^(id sender) {
         
-        [[Telegram rightViewController].messagesViewController setState:MessagesViewControllerStateNone];
-        [[Telegram rightViewController].messagesViewController unSelectAll:NO];
+        [self.messagesViewController setState:MessagesViewControllerStateNone];
+        [self.messagesViewController unSelectAll:NO];
         
-        [[Telegram rightViewController].messagesViewController setSelectedMessage:self.item selected:YES];
+        [self.messagesViewController setSelectedMessage:self.item selected:YES];
         
-        [[Telegram rightViewController].messagesViewController deleteSelectedMessages];
+        [self.messagesViewController deleteSelectedMessages];
         
         
     }]];
@@ -88,7 +88,7 @@
         [self.textField setFrameSize:item.textSize];
         
     
-        [self.textField setFrameOrigin:NSMakePoint(roundf((NSWidth([Telegram rightViewController].view.frame) - item.textSize.width) / 2),   (item.photoSize.height ? (item.photoSize.height + 5) : roundf((item.viewSize.height - NSHeight(_textField.frame))/2)))];
+        [self.textField setFrameOrigin:NSMakePoint(roundf((NSWidth(self.messagesViewController.view.frame) - item.textSize.width) / 2),   (item.photoSize.height ? (item.photoSize.height + 5) : roundf((item.viewSize.height - NSHeight(_textField.frame))/2)))];
                 
         if(item.photo) {
             

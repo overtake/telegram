@@ -10,7 +10,7 @@
 #import "TMView.h"
 #import "TMTextField.h"
 
-
+@class MessagesViewController;
 @class TGAttachObject;
 @class TMPopover;
 @class TMNavigationController;
@@ -31,6 +31,7 @@
 - (id)initWithFrame:(NSRect)frame;
 - (TMView *)view;
 - (void)setHidden:(BOOL)isHidden;
+
 
 
 
@@ -98,6 +99,8 @@
 
 -(void)setCenterBarViewText:(NSString *)text;
 -(void)setCenterBarViewTextAttributed:(NSAttributedString *)text;
+
+-(MessagesViewController *)messagesViewController;
 
 
 @end

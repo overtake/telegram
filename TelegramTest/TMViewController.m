@@ -14,6 +14,7 @@
 #import "TGPasslock.h"
 #import "TGModalSetCaptionView.h"
 #import "TGModalView.h"
+#import "TGHeadChatPanel.h"
 @interface TMViewController ()
 @property (nonatomic,strong) TMProgressModalView *progressView;
 @property (nonatomic,strong) TMBackButton *backButton;
@@ -355,7 +356,23 @@ static TGModalSetCaptionView *setCaptionView;
 }
 
 -(void)showModalProgress {
-    [TMViewController showModalProgress];
+    if(!progressView) {
+        progressView = [[TMProgressModalView alloc] initWithFrame:[self.view.window.contentView bounds]];
+        
+        progressView.layer.opacity = 0;
+        
+        [progressView setCenterByView:self.view.window.contentView];
+        
+        [self.view.window.contentView addSubview:progressView];
+    }
+    
+    
+    
+    [(TelegramWindow *)self.view.window setAcceptEvents:NO];
+    
+    POPBasicAnimation *anim = [TMViewController popAnimationForProgress:progressView.layer.opacity to:0.8];
+    
+    [progressView.layer pop_addAnimation:anim forKey:@"fade"];
 }
 -(void)hideModalProgress {
     [TMViewController hideModalProgress];
@@ -363,7 +380,7 @@ static TGModalSetCaptionView *setCaptionView;
 
 +(void)showPasslock:(passlockCallback)callback animated:(BOOL)animated {
     
-    
+    [TGHeadChatPanel lockAllControllers];
     assert([NSThread isMainThread]);
     
     if(passlockView.window)
@@ -430,7 +447,7 @@ static TGModalSetCaptionView *setCaptionView;
 
 +(void)hidePasslock {
     
-    
+    [TGHeadChatPanel unlockAllControllers];
     
     assert([NSThread isMainThread]);
     
@@ -488,6 +505,8 @@ static TGModalSetCaptionView *setCaptionView;
     return _view;
 }
 
-
+-(MessagesViewController *)messagesViewController {
+    return self.navigationViewController.messagesViewController;
+}
 
 @end

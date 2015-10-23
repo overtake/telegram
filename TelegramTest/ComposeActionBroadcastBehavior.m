@@ -54,7 +54,13 @@
         [self createBroadcast];
 
     } else {
-        [[Telegram rightViewController] showComposeWithAction:self.action];
+        
+        ComposePickerViewController *viewController = [[ComposePickerViewController alloc] initWithFrame:self.action.currentViewController.navigationViewController.view.bounds];
+        
+        [viewController setAction:self.action];
+        
+        [self.action.currentViewController.navigationViewController pushViewController:viewController animated:YES];
+        
     }
 }
 
@@ -97,7 +103,7 @@
      [self.delegate behaviorDidEndRequest:nil];
     
     
-    [[Telegram rightViewController] showByDialog:conversation sender:self];
+    [self.action.currentViewController.navigationViewController gotoViewController:self.action.currentViewController.messagesViewController];
     
 }
 
