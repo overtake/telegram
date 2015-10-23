@@ -54,6 +54,15 @@
     _unreadTextSize = [notification.userInfo[KEY_LAST_CONVRESATION_DATA][@"unreadTextSize"] sizeValue];
     
     
+    if(self.conversation.type != DialogTypeSecretChat && self.conversation.chat)
+        self.nameTextSize = [self.conversation.chat dialogTitleSize];
+     else if(self.conversation.type == DialogTypeSecretChat)
+         self.nameTextSize = [self.conversation.user dialogEncryptedTitleSize];
+    else
+        self.nameTextSize = [self.conversation.user dialogTitleSize];
+    
+    self.nameTextSize = NSMakeSize(self.nameTextSize.width + (self.conversation.isMute ? 20 : 0), self.nameTextSize.height);
+    
     BOOL isNotForReload = [notification.userInfo[@"isNotForReload"] boolValue];
     if(!isNotForReload)
         [self performReload];

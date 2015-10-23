@@ -73,12 +73,12 @@
 
 -(void)setProgress:(BOOL)progress {
     _progress = progress;
-    [_progressIndicator setHidden:!progress];
+    [_progressIndicator setHidden:YES];
     
-    if(progress)
-        [_progressIndicator startAnimation:self];
-    else
-        [_progressIndicator stopAnimation:self];
+//    if(progress)
+//        [_progressIndicator startAnimation:self];
+//    else
+//        [_progressIndicator stopAnimation:self];
     
     [_capImageView setHidden:progress];
     [_capTextField setHidden:progress];

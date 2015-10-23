@@ -16,6 +16,9 @@ typedef enum {
     TLChatTypeEmpty
 } TLChatType;
 
+
+- (NSSize)dialogTitleSize;
+
 - (NSAttributedString *)dialogTitle;
 - (NSAttributedString *)titleForMessage;
 - (NSAttributedString *)titleForChatInfo;

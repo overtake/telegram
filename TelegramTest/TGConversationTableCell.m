@@ -183,6 +183,9 @@ static NSDictionary *attributes() {
         _nameTextField.wantsLayer = YES;
 
         
+//        [_nameTextField setBackgroundColor:[NSColor redColor]];
+//        [_nameTextField setDrawsBackground:YES];
+        
         _messageField = [TMTextField defaultTextField];
         
         [_messageField setFrameOrigin:NSMakePoint(68, 3)];
@@ -240,6 +243,11 @@ static NSDictionary *attributes() {
                 NSRectFill(NSMakeRect(0, 0, self.bounds.size.width, self.bounds.size.height));
             }
             
+            
+            if(self.isVerify) {
+                [self.isSelected ? image_VerifyWhite() : image_Verify() drawInRect:NSMakeRect(NSMaxX(self.nameTextField.frame),NSMinY(self.nameTextField.frame) + 1, image_Verify().size.width, image_Verify().size.height) fromRect:NSZeroRect operation:NSCompositeHighlight fraction:1];
+            }
+            
          //
             
             if(self.item.unreadText.length && self.style != ConversationTableCellShortStyle && self.item.conversation.unread_count > 0)
@@ -282,7 +290,7 @@ static NSDictionary *attributes() {
     self.style = NSWidth(self.frame) == 70 ? ConversationTableCellShortStyle : ConversationTableCellFullStyle;
     
     
-    [_nameTextField setFrameSize:NSMakeSize(NSWidth(self.frame) - NSMinX(_nameTextField.frame) - NSWidth(_dateField.frame) - 10 - (self.item.message.n_out ? 18 : 0), 23)];
+    [_nameTextField setFrameSize:NSMakeSize(MIN(NSWidth(self.frame) - NSMinX(_nameTextField.frame) - NSWidth(_dateField.frame) - 10 - (self.item.message.n_out ? 18 : 0), self.item.nameTextSize.width), 23)];
     [_messageField setFrameSize:NSMakeSize(NSWidth(self.frame) - NSMinX(_messageField.frame) -40, 36)];
     [_dateField setFrameOrigin:NSMakePoint(self.bounds.size.width - self.item.dateSize.width - 10, _dateField.frame.origin.y)];
 
@@ -491,9 +499,7 @@ static NSDictionary *attributes() {
 
 - (void)drawRect:(NSRect)dirtyRect {
     
-//    if(self.isVerify) {
-//        [image_Verify() drawInRect:NSMakeRect(NSMaxX(self.nameTextField.frame),NSMinY(self.nameTextField.frame), image_Verify().size.width, image_Verify().size.height) fromRect:NSZeroRect operation:NSCompositeHighlight fraction:1];
-//    }
+    
 }
 
 

@@ -138,7 +138,9 @@
             [self.statusTextField setAttributedStringValue:item.status];
         }
         
-        [self.titleTextField setFrameSize:NSMakeSize(self.bounds.size.width - 75, self.titleTextField.bounds.size.height)];
+        [self.titleTextField sizeToFit];
+        
+        [self.titleTextField setFrameSize:NSMakeSize(MIN(self.bounds.size.width - 75,NSWidth(self.titleTextField.frame)), self.titleTextField.bounds.size.height)];
 
         
         [self.dateTextField setHidden:YES];
@@ -203,6 +205,10 @@
 //        [NSColorFromRGB(0xcccccc) set];
 //        
 //        NSRectFill(NSMakeRect(66, 0, self.bounds.size.width - DIALOG_BORDER_WIDTH - 66, 1));
+    }
+    
+    if([self rowItem].conversation.type == DialogTypeChannel && [self rowItem].conversation.chat.isVerify) {
+        [self.isSelected ? image_VerifyWhite() : image_Verify() drawInRect:NSMakeRect(NSMaxX(self.titleTextField.frame),NSMinY(self.titleTextField.frame) , image_Verify().size.width, image_Verify().size.height) fromRect:NSZeroRect operation:NSCompositeHighlight fraction:1];
     }
     
 }

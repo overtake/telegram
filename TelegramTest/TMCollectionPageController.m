@@ -140,7 +140,7 @@
 
     
     self.documentsTableView = [[TGDocumentsMediaTableView alloc] initWithFrame:self.frameInit];
-    
+    self.documentsTableView.collectionViewController = self;
     
     [self.view addSubview:self.documentsTableView.containerView];
     
@@ -148,7 +148,7 @@
     
     
     self.sharedLinksTableView = [[TGSharedLinksTableView alloc] initWithFrame:self.frameInit];
-    
+    self.sharedLinksTableView.collectionViewController = self;
     
     [self.view addSubview:self.sharedLinksTableView.containerView];
     
@@ -674,7 +674,7 @@ static const int maxWidth = 120;
     } else if(![self.sharedLinksTableView.containerView isHidden]) {
         [self.mediaCap setHidden:![self.sharedLinksTableView isNeedCap]];
         [self.mediaCap updateCap:image_SadAttach() text:NSLocalizedString(@"SharedMedia.NoSharedLinks", nil)];
-        [self.mediaCap setProgress:self.isProgress];
+        [self.mediaCap setProgress:self.sharedLinksTableView.isProgress];
         
         NSLog(@"%d",[self.sharedLinksTableView isNeedCap]);
     } else {
@@ -768,13 +768,13 @@ static const int maxWidth = 120;
     
     
     [TGCache removeAllCachedImages:@[PCCACHE]];
+    
+    [self.documentsTableView setConversation:nil];
+    [self.sharedLinksTableView setConversation:nil];
 }
 
 -(void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
-    
-    [self.documentsTableView setConversation:nil];
-    [self.sharedLinksTableView setConversation:nil];
 }
 
 

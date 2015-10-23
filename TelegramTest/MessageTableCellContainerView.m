@@ -647,7 +647,7 @@ static BOOL dragAction = NO;
             [self.fwdName setFrameOrigin:NSMakePoint(6, item.viewSize.height - 24 - minus)];
         }
         
-        
+        [self.fwdName setFrameSize:NSMakeSize(NSWidth(self.containerView.frame) , NSHeight(self.fwdName.frame))];
         [self.fwdName setAttributedStringValue:item.forwardMessageAttributedString];
         
     } else {

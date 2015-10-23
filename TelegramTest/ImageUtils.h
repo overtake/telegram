@@ -213,6 +213,8 @@ CACHE_IMAGE(ChannelViews);
 CACHE_IMAGE(PinConversation);
 CACHE_IMAGE(PinnedConversation);
 
+CACHE_IMAGE(ModernConversationSecretAccessoryTimer);
+
 @interface ImageUtils : NSObject
 
 

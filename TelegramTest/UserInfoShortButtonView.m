@@ -32,7 +32,7 @@
         self.textButton = [TMTextButton standartUserProfileButtonWithTitle:name];
         self.tapBlock = block;
         [self.textButton sizeToFit];
-        [self.textButton setFrameOrigin:NSMakePoint(0, 12)]; // 10
+        [self.textButton setFrameOrigin:NSMakePoint(0, 11)]; // 10
         [[self.textButton cell] setLineBreakMode:NSLineBreakByTruncatingTail];
         [[self.textButton cell] setTruncatesLastVisibleLine:YES];
         [self setAutoresizingMask:NSViewWidthSizable];

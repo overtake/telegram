@@ -49,6 +49,7 @@
 @property (nonatomic, strong) BTRButton *botKeyboardButton;
 @property (nonatomic, strong) BTRButton *botCommandButton;
 @property (nonatomic, strong) BTRButton *channelAdminButton;
+@property (nonatomic, strong) BTRButton *secretTimerButton;
 @property (nonatomic, strong) TMButton *sendButton;
 
 
@@ -283,7 +284,8 @@
         [self.botCommandButton setHidden:!self.dialog.user.isBot];
     } else if(self.dialog.type == DialogTypeChat || self.dialog.type == DialogTypeChannel) {
         [self.botCommandButton setHidden:_chatFull.bot_info.count == 0];
-    }
+    } else
+        [self.botCommandButton setHidden:YES];
     
     
     if(!_botCommandButton.isHidden)
@@ -301,6 +303,9 @@
         [_channelAdminButton setFrameOrigin:NSMakePoint(self.inputMessageTextField.containerView.frame.size.width - (_botCommandButton.isHidden ? 60 : 120), NSMinY(_channelAdminButton.frame))];
 
     }
+    
+    
+    [_secretTimerButton setHidden:self.dialog.type != DialogTypeSecretChat];
     
 }
 
@@ -574,6 +579,18 @@
     
     
     
+    self.secretTimerButton = [[BTRButton alloc] initWithFrame:NSMakeRect(self.inputMessageTextField.containerView.frame.size.width - 60, 2, 30, 30)];
+    [self.secretTimerButton setAutoresizingMask:NSViewMinXMargin | NSViewMinYMargin];
+    [self.secretTimerButton.layer disableActions];
+    
+    [self.secretTimerButton addTarget:self action:@selector(secretTimerAction:) forControlEvents:BTRControlEventMouseDownInside];
+    [self.secretTimerButton setImage: image_ModernConversationSecretAccessoryTimer() forControlState:BTRControlStateNormal];
+    
+    
+    [self.inputMessageTextField.containerView addSubview:self.secretTimerButton];
+    
+    
+    
     
     [self.smileButton addTarget:self action:@selector(smileButtonClick:) forControlEvents:BTRControlEventMouseEntered];
     
@@ -604,6 +621,28 @@
     
     
     [self updateBottomHeight:YES];
+}
+
+static RBLPopover *popover;
+
+-(void)secretTimerAction:(BTRButton *)button {
+    
+    NSMenu *menu = [MessagesViewController destructMenu:^ {
+        //  [self.setTTLButton setLocked:NO];
+        
+    } click:^{
+        [popover close];
+        popover = nil;
+    }];
+    
+    if(!popover) {
+        TMMenuController *controller = [[TMMenuController alloc] initWithMenu:menu];
+        
+        popover = [[RBLPopover alloc] initWithContentViewController:controller];
+        
+        [popover showRelativeToRect:button.bounds ofView:button preferredEdge:CGRectMinYEdge];
+    }
+
 }
 
 -(void)botCommandButtonAction:(BTRButton *)button {
@@ -1644,7 +1683,7 @@
     
     self.inputMessageTextField.containerView.frame = NSMakeRect(offsetX, 11, self.bounds.size.width - offsetX - self.sendButton.frame.size.width - 33, NSHeight(self.inputMessageTextField.containerView.frame));
     
-    [self.inputMessageTextField setFrameSize:NSMakeSize(NSWidth(self.inputMessageTextField.containerView.frame) - 40 - (_botKeyboardButton.isHidden ? 0 : 30) - (_botCommandButton.isHidden ? 0 : 30) - (_channelAdminButton.isHidden ? 0 : 30),NSHeight(self.inputMessageTextField.frame))];
+    [self.inputMessageTextField setFrameSize:NSMakeSize(NSWidth(self.inputMessageTextField.containerView.frame) - 40 - (_botKeyboardButton.isHidden ? 0 : 30) - (_botCommandButton.isHidden ? 0 : 30) - (_channelAdminButton.isHidden ? 0 : 30) - (_secretTimerButton.isHidden ? 0 : 30),NSHeight(self.inputMessageTextField.frame))];
     
     
 }

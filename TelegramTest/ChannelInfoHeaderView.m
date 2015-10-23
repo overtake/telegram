@@ -595,7 +595,11 @@
     [_aboutTextView.containerView setFrameOrigin:NSMakePoint(-5, 16)];
     
     [self.nameLiveView setFrameSize:NSMakeSize(NSWidth(self.frame) - NSMinX(self.nameLiveView.frame) - 100, NSHeight(self.nameLiveView.frame))];
-    [self.nameTextField setFrameSize:NSMakeSize(NSWidth(self.frame) - NSMinX(self.nameTextField.frame) - 100, NSHeight(self.nameTextField.frame))];
+    
+    
+    [self.nameTextField sizeToFit];
+    
+    [self.nameTextField setFrameSize:NSMakeSize(MIN(NSWidth(self.frame) - NSMinX(self.nameTextField.frame) - 100,NSWidth(self.nameTextField.frame)), NSHeight(self.nameTextField.frame))];
     
 }
 

@@ -20,6 +20,10 @@
 
 @property (nonatomic,strong,readonly) NSMutableAttributedString *messageText;
 @property (nonatomic,strong,readonly) NSMutableAttributedString *dateText;
+
+
+@property (nonatomic,assign) NSSize nameTextSize;
+
 @property (nonatomic,strong,readonly) NSString *selectText;
 
 @property (nonatomic, strong,readonly) NSString *unreadText;

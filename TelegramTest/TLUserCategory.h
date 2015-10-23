@@ -38,6 +38,9 @@ typedef enum {
 - (NSString *)phoneWithFormat;
 
 - (NSAttributedString *)dialogTitle;
+
+- (NSSize)dialogTitleSize;
+- (NSSize)dialogEncryptedTitleSize;
 - (NSAttributedString *)dialogTitleEncrypted;
 - (NSAttributedString *)chatInfoTitle;
 

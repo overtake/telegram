@@ -286,7 +286,7 @@
 
 -(void)checkCap {
     
-    [[Telegram rightViewController].collectionViewController checkCap];
+    [self.collectionViewController checkCap];
 }
 
 -(BOOL)isFlipped {

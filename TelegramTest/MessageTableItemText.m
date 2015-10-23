@@ -91,6 +91,10 @@
                 if([obj isKindOfClass:[TL_messageEntityBotCommand class]] && (!self.message.conversation.user.isBot && self.message.conversation.type != DialogTypeChat) )
                     return;
                 
+                if([obj isKindOfClass:[TL_messageEntityBotCommand class]] && self.message.conversation.type == DialogTypeChat) {
+                    if(self.message.chat.chatFull && self.message.chat.chatFull.bot_info.count == 0)
+                        return;
+                }
                 
                 NSRange range = [self checkAndReturnEntityRange:obj];
                 

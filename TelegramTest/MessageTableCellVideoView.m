@@ -180,7 +180,7 @@ static NSImage *playImage() {
     
     [self.playImage setCenterByView:self.imageView];
     
-    BOOL needBlur = self.item.message.media.video.thumb.w != 250;
+    BOOL needBlur = self.item.message.media.video.thumb.w <= 90;
     
     if(self.imageView.isAlwaysBlur != needBlur)
         [self.imageView setIsAlwaysBlur:needBlur];

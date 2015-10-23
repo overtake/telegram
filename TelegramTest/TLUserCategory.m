@@ -262,6 +262,15 @@ DYNAMIC_PROPERTY(ProfileTitle);
     return [self getDIALOGTITLE];
 }
 
+- (NSSize)dialogTitleSize {
+    return [[self dialogTitle] sizeForTextFieldForWidth:INT32_MAX];
+}
+
+
+- (NSSize)dialogEncryptedTitleSize {
+    return [[self dialogTitleEncrypted] sizeForTextFieldForWidth:INT32_MAX];
+}
+
 - (NSAttributedString *)profileTitle {
     
     id title = [self getProfileTitle];

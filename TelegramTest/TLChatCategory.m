@@ -102,10 +102,11 @@ DYNAMIC_PROPERTY(DIALOGTITLE);
     
     return [self getDIALOGTITLE];
 
-    
-    [self setDIALOGTITLE:dialogTitleAttributedString];
-    
-    return [self getDIALOGTITLE];
+}
+
+
+- (NSSize)dialogTitleSize {
+    return [[self dialogTitle] sizeForTextFieldForWidth:INT32_MAX];
 }
 
 DYNAMIC_PROPERTY(TITLEFORMESSAGE);
