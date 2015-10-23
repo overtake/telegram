@@ -152,6 +152,13 @@
             [self.tableView reloadData];
         }]];
         
+#ifdef TGDEBUG
+        [menu addItem:[NSMenuItem menuItemWithTitle:NSLocalizedString(@"Passcode.AutoLockTime5", nil) withBlock:^(id sender) {
+            [TGPasslock setAutoLockTime:5];
+            [self.tableView reloadData];
+        }]];
+#endif
+        
         [menu addItem:[NSMenuItem menuItemWithTitle:NSLocalizedString(@"Passcode.AutoLockTime60", nil) withBlock:^(id sender) {
             [TGPasslock setAutoLockTime:60];
             [self.tableView reloadData];

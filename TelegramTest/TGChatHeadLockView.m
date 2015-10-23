@@ -26,17 +26,18 @@
         
         [_textField setStringValue:NSLocalizedString(@"LockedChatHead.Description", nil)];
         [_textField setFont:TGSystemBoldFont(13)];
-        
+        [[_textField cell] setLineBreakMode:NSLineBreakByWordWrapping];
         [_textField setTextColor:GRAY_TEXT_COLOR];
         
-        [_textField setFrameSize:[_textField.attributedStringValue sizeForTextFieldForWidth:NSWidth(self.frame)]];
         [self addSubview:_textField];
+        
+        [_textField setAlignment:NSCenterTextAlignment];
         
         self.autoresizingMask = NSViewWidthSizable | NSViewHeightSizable;
         
         self.backgroundColor = [NSColor whiteColor];
         
-        [_textField setCenterByView:_textField.superview];
+        [self setFrameSize:self.frame.size];
     }
     
     return self;
@@ -45,7 +46,7 @@
 -(void)setFrameSize:(NSSize)newSize {
     [super setFrameSize:newSize];
     
-    [_textField setFrameSize:[_textField.attributedStringValue sizeForTextFieldForWidth:NSWidth(self.frame) - 20]];
+    [_textField setFrameSize:[_textField.attributedStringValue sizeForTextFieldForWidth:newSize.width - 20]];
     
     [_textField setCenterByView:_textField.superview];
 }
