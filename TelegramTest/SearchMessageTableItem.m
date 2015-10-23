@@ -65,6 +65,15 @@
         [_dateText appendString:@"" withColor:NSColorFromRGB(0xaeaeae)];
     }
     
+    if(self.conversation.type != DialogTypeSecretChat && self.conversation.chat)
+        self.nameTextSize = [self.conversation.chat dialogTitleSize];
+    else if(self.conversation.type == DialogTypeSecretChat)
+        self.nameTextSize = [self.conversation.user dialogEncryptedTitleSize];
+    else
+        self.nameTextSize = [self.conversation.user dialogTitleSize];
+    
+    self.nameTextSize = NSMakeSize(self.nameTextSize.width + (self.conversation.isMute ? 20 : 0), self.nameTextSize.height);
+    
     _dateSize = [_dateText size];
     _dateSize.width+=5;
     _dateSize.width = ceil(_dateSize.width);

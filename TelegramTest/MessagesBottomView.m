@@ -107,8 +107,6 @@
                 
         [self setState:MessagesBottomViewNormalState animated:NO];
         
-
-        [[EmojiViewController instance] loadView];
         
         [self normalView];
     }
