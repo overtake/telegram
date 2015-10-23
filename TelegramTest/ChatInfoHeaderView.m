@@ -157,7 +157,11 @@
             
             dispatch_block_t cblock = ^ {
                 
-                [[Telegram rightViewController] showChatExportLinkController:_fullChat];
+                ChatExportLinkViewController *viewController = [[ChatExportLinkViewController alloc] initWithFrame:self.controller.view.frame];
+                
+                [viewController setChat:_fullChat];
+                
+                [self.controller.navigationViewController pushViewController:viewController animated:YES];
 
             };
             

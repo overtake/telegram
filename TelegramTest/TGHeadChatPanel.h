@@ -17,4 +17,6 @@
 +(void)lockAllControllers;
 +(void)unlockAllControllers;
 
+-(void)showInfoPageWithConversation:(TL_conversation *)conversation;
+
 @end

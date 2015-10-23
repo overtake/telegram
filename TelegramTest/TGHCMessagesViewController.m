@@ -27,7 +27,7 @@
     
     if(!_container) {
         
-        _pinButton = [[TMTextButton alloc] initWithFrame:NSMakeRect(14, 6, 60, 20)];
+        _pinButton = [[TMTextButton alloc] initWithFrame:NSMakeRect(14, 6, 45, 20)];
         
         [_pinButton setStringValue:NSLocalizedString(@"Conversation.Pin", nil)];
         [_pinButton setFont:TGSystemFont(13)];
@@ -42,7 +42,7 @@
             
         }];
         
-        _container = [[TMView alloc] initWithFrame:NSMakeRect(0, 0, 80, 30)];
+        _container = [[TMView alloc] initWithFrame:NSMakeRect(0, 0, 60, 30)];
         
         _imageView = imageViewWithImage(image_PinConversation());
         

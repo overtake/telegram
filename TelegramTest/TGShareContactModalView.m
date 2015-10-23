@@ -1,19 +1,20 @@
 //
-//  TGModalForwardView.m
+//  TGShareContactModalView.m
 //  Telegram
 //
-//  Created by keepcoder on 21.10.15.
+//  Created by keepcoder on 23.10.15.
 //  Copyright © 2015 keepcoder. All rights reserved.
 //
 
-#import "TGModalForwardView.h"
+#import "TGShareContactModalView.h"
 #import "SelectUsersTableView.h"
 #import "MessageTableItem.h"
-@interface TGModalForwardView ()<SelectTableDelegate>
+
+@interface TGShareContactModalView ()<SelectTableDelegate>
 @property (nonatomic,strong) SelectUsersTableView *tableView;
 @end
 
-@implementation TGModalForwardView
+@implementation TGShareContactModalView
 
 
 -(instancetype)initWithFrame:(NSRect)frameRect {
@@ -41,26 +42,14 @@
 }
 
 -(void)okAction {
-    
-    
-    NSMutableArray *ids = [[NSMutableArray alloc] init];
-    for(MessageTableItem *item in _messagesViewController.selectedMessages)
-        [ids addObject:item.message];
-    
-    [ids sortUsingComparator:^NSComparisonResult(TLMessage * a, TLMessage * b) {
-        return a.n_id > b.n_id ? NSOrderedDescending : NSOrderedAscending;
-    }];
 
-    
     [_tableView.selectedItems enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
         
         TL_conversation *conversation = [obj isKindOfClass:[SelectUserItem class]] ? [[obj valueForKey:@"user"] dialog] : [[obj valueForKey:@"chat"] dialog];
         
-        [[Telegram rightViewController].messagesViewController forwardMessages:ids conversation:conversation callback:nil];
+        [_messagesViewController shareContact:_user forConversation:conversation callback:nil];
         
     }];
-    
-    [_messagesViewController cancelSelectionAndScrollToBottom];
     
     [self close:YES];
     
@@ -70,5 +59,6 @@
 -(void)selectTableDidChangedItem:(id)item {
     
 }
+
 
 @end

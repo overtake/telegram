@@ -9,6 +9,7 @@
 #import "TMInAppLinks.h"
 #import "Telegram.h"
 #import "TLPeer+Extensions.h"
+#import "TGHeadChatPanel.h"
 @implementation TMInAppLinks
 
 + (NSString *) userProfile:(int)user_id {
@@ -26,7 +27,17 @@
         if([action isEqualToString:@"USER_PROFILE"]) {
             int user_id = [[params objectAtIndex:1] intValue];
             
-            [[Telegram sharedInstance] showUserInfoWithUserId:user_id conversation:[[[UsersManager sharedManager] find:user_id] dialog] sender:self];
+            TL_conversation *conversation = [[[UsersManager sharedManager] find:user_id] dialog];
+            
+            if([[NSApp keyWindow] isKindOfClass:[TGHeadChatPanel class]]) {
+                TGHeadChatPanel *panel = (TGHeadChatPanel *) [NSApp keyWindow];
+                
+                [panel showInfoPageWithConversation:conversation];
+                
+            } else {
+                [[Telegram sharedInstance] showUserInfoWithUserId:user_id conversation:conversation sender:self];
+            }
+            
             return;
         }
     }

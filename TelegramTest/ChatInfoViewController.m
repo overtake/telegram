@@ -406,7 +406,16 @@
 }
 
 - (void)selectionDidChange:(NSInteger)row item:(ChatParticipantItem *) item {
-    [[Telegram rightViewController] showUserInfoPage:item.user];
+    
+    TMViewController *infoViewController;
+        
+    infoViewController = [[UserInfoViewController alloc] initWithFrame:self.view.bounds];
+    
+    [(UserInfoViewController *)infoViewController setUser:item.user conversation:item.user.dialog];
+    
+    [self.navigationViewController pushViewController:infoViewController animated:YES];
+    
+
 }
 
 - (BOOL)selectionWillChange:(NSInteger)row item:(TMRowItem *) item {

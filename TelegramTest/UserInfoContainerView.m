@@ -26,6 +26,7 @@
 #import "TMMenuPopover.h"
 #import "FullUsersManager.h"
 #import "ComposeActionAddUserToGroupBehavior.h"
+#import "TGShareContactModalView.h"
 @interface UserInfoContainerView()
 @property (nonatomic, strong) TMAvatarImageView *avatarImageView;
 @property (nonatomic, strong) NSTextView *nameTextView;
@@ -121,7 +122,7 @@
             if(weakSelf.user.isBot) {
                 
                 
-                [TMViewController showModalProgress];
+                [self.controller showModalProgress];
                 
                 NSPasteboard* cb = [NSPasteboard generalPasteboard];
                 
@@ -130,12 +131,20 @@
                 
                 dispatch_after_seconds(0.2, ^{
                     
-                    [TMViewController hideModalProgressWithSuccess];
+                    [self.controller hideModalProgressWithSuccess];
                     
                 });
                 
             } else {
-                [[Telegram rightViewController] showShareContactModalView:weakSelf.user];
+                
+                TGShareContactModalView *shareContactModalView = [[TGShareContactModalView alloc] initWithFrame:NSMakeRect(0, 0, NSWidth(weakSelf.window.frame), NSHeight(weakSelf.window.frame))];
+                
+                [shareContactModalView setMessagesViewController:weakSelf.controller.navigationViewController.messagesViewController];
+                [shareContactModalView setUser:weakSelf.user];
+                
+                [shareContactModalView show:weakSelf.window animated:YES];
+                
+               // [[Telegram rightViewController] showShareContactModalView:weakSelf.user];
             }
             
         }];

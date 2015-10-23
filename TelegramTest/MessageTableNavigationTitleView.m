@@ -38,6 +38,7 @@
     self = [super initWithFrame:frame];
     if (self) {
         
+                
         self.container = [[TMView alloc] initWithFrame:self.bounds];
         self.container.wantsLayer = YES;
         

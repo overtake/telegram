@@ -18,6 +18,7 @@
 #import "NSData+Extensions.h"
 #import "TGStickerPackModalView.h"
 #import "ComposeActionAddUserToGroupBehavior.h"
+#import "TGHeadChatPanel.h"
 @implementation OpenWithObject
 
 -(id)initWithFullname:(NSString *)fullname app:(NSURL *)app icon:(NSImage *)icon {
@@ -639,9 +640,7 @@ void open_link(NSString *link) {
     
     if([link hasPrefix:@"USER_PROFILE:"]) {
         
-        TLUser *user = [[UsersManager sharedManager] find:[[link substringFromIndex:@"USER_PROFILE:".length] intValue]];
-        
-        [[Telegram rightViewController] showUserInfoPage:user];
+        [TMInAppLinks parseUrlAndDo:link];
         
         return;
     }
@@ -652,18 +651,31 @@ void open_link(NSString *link) {
         int peer_id = [[peer_str substringFromIndex:[peer_str rangeOfString:@":"].location+1] intValue];
         Class peer = NSClassFromString([peer_str substringToIndex:[peer_str rangeOfString:@":"].location]);
         if(peer == [TL_peerUser class]) {
-            [[Telegram rightViewController] showUserInfoPage:[[UsersManager sharedManager] find:peer_id]];
+            
+            TLUser *user = [[UsersManager sharedManager] find:peer_id];
+            
+            TL_conversation *conversation = user.dialog;
+            
+            if([[NSApp keyWindow] isKindOfClass:[TGHeadChatPanel class]]) {
+                TGHeadChatPanel *panel = (TGHeadChatPanel *) [NSApp keyWindow];
+                
+                [panel showInfoPageWithConversation:conversation];
+                
+            } else {
+                [[Telegram rightViewController] showUserInfoPage:user];
+            }
+            
         } else if(peer == [TL_peerChat class] || peer == [TL_peerChannel class]) {
             
             TLChat *chat = [[ChatsManager sharedManager] find:abs(peer_id)];
             
-            
-            if(chat.type == TLChatTypeNormal) {
-                if(peer == [TL_peerChannel class] && chat.dialog != [Telegram conversation]) {
-                    [[Telegram rightViewController] showByDialog:chat.dialog sender:nil];
-                } else {
-                    [[Telegram rightViewController] showChatInfoPage:chat];
-                }
+            if([[NSApp keyWindow] isKindOfClass:[TGHeadChatPanel class]]) {
+                TGHeadChatPanel *panel = (TGHeadChatPanel *) [NSApp keyWindow];
+                
+                [panel showInfoPageWithConversation:chat.dialog];
+                
+            } else {
+                [[Telegram rightViewController] showChatInfoPage:chat];
             }
             
             
