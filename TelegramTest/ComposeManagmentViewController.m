@@ -64,7 +64,12 @@
     if(chat.isAdmin) {
         GeneralSettingsRowItem *addModerator = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeNext callback:^(GeneralSettingsRowItem *item) {
             
-            [[Telegram rightViewController] showComposeWithAction:[[ComposeAction alloc] initWithBehaviorClass:[ComposeActionAddChannelModeratorBehavior class] filter:@[] object:chat]];
+            
+            ComposePickerViewController *viewController = [[ComposePickerViewController alloc] initWithFrame:self.view.bounds];
+            
+            [viewController setAction:[[ComposeAction alloc] initWithBehaviorClass:[ComposeActionAddChannelModeratorBehavior class] filter:@[] object:chat]];
+            
+            [self.navigationViewController pushViewController:viewController animated:YES];
             
         } description:chat.isBroadcast ? NSLocalizedString(@"Channel.AddEditor", nil) : NSLocalizedString(@"Channel.AddModerator", nil) height:62 stateback:^id(GeneralSettingsRowItem *item) {
             return nil;
@@ -140,7 +145,11 @@
                     
                     action.result = [[ComposeResult alloc] initWithMultiObjects:@[user]];
                     
-                    [[Telegram rightViewController] showComposeAddModerator:action];
+                    ComposeConfirmModeratorViewController *viewController = [[ComposeConfirmModeratorViewController alloc] initWithFrame:self.view.bounds];
+                    
+                    [viewController setAction:action];
+                    
+                    [self.navigationViewController pushViewController:viewController animated:YES];
                 }
 
             }

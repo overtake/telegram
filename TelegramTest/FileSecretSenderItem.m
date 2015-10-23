@@ -17,6 +17,7 @@
 #import "SelfDestructionController.h"
 #import "DeleteRandomMessagesSenderItem.h"
 #import "TGCache.h"
+#import "NSData+Extensions.h"
 @interface FileSecretSenderItem ()
 //@property (nonatomic,strong) NSImage *thumb;
 //@property (nonatomic,strong) NSData *thumbData;
@@ -269,7 +270,7 @@
             } else if(strongSelf.params.layer == 20) {
                 strongSelf.media = [Secret20_DecryptedMessageMedia decryptedMessageMediaDocumentWithThumb:strongSelf.message.media.document.thumb.bytes thumb_w:@(msg.media.document.thumb.w) thumb_h:@(msg.media.document.thumb.h) file_name:[strongSelf.filePath lastPathComponent] mime_type:strongSelf.mimeType size:@(uploader.total_size) key:strongSelf.key iv:strongSelf.iv];
             } else if(strongSelf.params.layer == 23) {
-                strongSelf.media = [Secret23_DecryptedMessageMedia decryptedMessageMediaDocumentWithThumb:strongSelf.message.media.document.thumb.bytes thumb_w:@(msg.media.document.thumb.w) thumb_h:@(msg.media.document.thumb.h) file_name:[strongSelf.filePath lastPathComponent] mime_type:strongSelf.mimeType size:@(uploader.total_size) key:strongSelf.key iv:strongSelf.iv];
+                strongSelf.media = [Secret23_DecryptedMessageMedia decryptedMessageMediaDocumentWithThumb:strongSelf.message.media.document.thumb.bytes == nil ? [[NSData alloc] initWithEmptyBytes:16] : strongSelf.message.media.document.thumb.bytes thumb_w:@(msg.media.document.thumb.w) thumb_h:@(msg.media.document.thumb.h) file_name:[strongSelf.filePath lastPathComponent] mime_type:strongSelf.mimeType size:@(uploader.total_size) key:strongSelf.key iv:strongSelf.iv];
             }
         }
         

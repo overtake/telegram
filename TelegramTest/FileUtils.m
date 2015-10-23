@@ -251,7 +251,7 @@ void alert(NSString *text, NSString *info) {
         [alert setAlertStyle:NSInformationalAlertStyle];
         [alert setMessageText:text.length > 0 ? text : appName()];
         [alert setInformativeText:info];
-        [alert beginSheetModalForWindow:[[NSApp delegate] mainWindow] modalDelegate:nil didEndSelector:nil contextInfo:nil];
+        [alert beginSheetModalForWindow:[NSApp keyWindow] modalDelegate:nil didEndSelector:nil contextInfo:nil];
     }];
     
 }

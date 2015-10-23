@@ -354,21 +354,24 @@ static ChatHistoryController *observer;
             
             ChatHistoryController *obj = [weak nonretainedObjectValue];
             
-            if(obj.prevState != ChatHistoryStateFull || [accept[obj.filter.className][obj.internalId] count] != 1)
+            NSArray *ai = accept[obj.filter.className][obj.internalId];
+            
+            if(obj.prevState != ChatHistoryStateFull || [ai count] != 1)
                 return;
             
              if(message.peer_id == obj.controller.conversation.peer_id) {
                 
                 NSArray *items = [obj selectAllItems];
                 
-                int position = (int) [items indexOfObject:tableItem];
+                int position = (int) [items indexOfObject:[ai firstObject]];
                 
                 [SelfDestructionController addMessages:@[message]];
                     
                 [[ASQueue mainQueue] dispatchOnQueue:^{
                         
                     if([obj isFiltredAccepted:message.filterType]) {
-                        [obj.controller receivedMessage:tableItem position:position+1 itsSelf:NO];
+                        
+                        [obj.controller receivedMessageList:ai inRange:NSMakeRange(position+1, items.count) itsSelf:NO];
                     }
                     
                 }];
@@ -410,6 +413,8 @@ static ChatHistoryController *observer;
         
         
         [items enumerateObjectsUsingBlock:^(MessageTableItem *obj, NSUInteger idx, BOOL *stop) {
+            
+            obj = [obj copy];
             
             Class filterClass = controller.filter.class;
             

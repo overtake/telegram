@@ -156,7 +156,11 @@
             
             action.result.singleObject = self.controller.chat;
             
-            [[Telegram rightViewController] showComposeChangeUserName:action];
+            ComposeCreateChannelUserNameStepViewController *viewController = [[ComposeCreateChannelUserNameStepViewController alloc] initWithFrame:self.controller.view.bounds];
+            
+            [viewController setAction:action];
+            
+            [self.controller.navigationViewController pushViewController:viewController animated:YES];
             
             
         }];
@@ -166,7 +170,11 @@
         [self.exportChatInvite setCallback:^{
             dispatch_block_t cblock = ^ {
                 
-                [[Telegram rightViewController] showChatExportLinkController:weakSelf.controller.fullChat];
+                ChatExportLinkViewController *export = [[ChatExportLinkViewController alloc] initWithFrame:weakSelf.controller.view.bounds];
+                
+                [export setChat:weakSelf.controller.fullChat];
+                
+                [weakSelf.controller.navigationViewController pushViewController:export animated:YES];
                 
             };
             
@@ -206,8 +214,11 @@
         self.managmentButton = [UserInfoShortButtonView buttonWithText:NSLocalizedString(@"Profile.Managment", nil) tapBlock:^{
             
             
-             [[Telegram rightViewController] showComposeManagment:_composeActionManagment];
+            ComposeManagmentViewController *viewController = [[ComposeManagmentViewController alloc] initWithFrame:self.controller.view.bounds];
             
+            [viewController setAction:_composeActionManagment];
+            
+            [self.controller.navigationViewController pushViewController:viewController animated:YES];
             
         }];
         
@@ -217,7 +228,11 @@
         self.blackListButton = [UserInfoShortButtonView buttonWithText:NSLocalizedString(@"Profile.ChannelBlackList", nil) tapBlock:^{
             
             
-            [[Telegram rightViewController] showComposeChannelParticipants:[[ComposeAction alloc] initWithBehaviorClass:[ComposeActionBlackListBehavior class] filter:@[] object:self.controller.chat reservedObjects:@[[TL_channelParticipantsKicked create]]]];
+            ComposeChannelParticipantsViewController *viewController = [[ComposeChannelParticipantsViewController alloc] initWithFrame:self.controller.view.bounds];
+            
+            [viewController setAction:[[ComposeAction alloc] initWithBehaviorClass:[ComposeActionBlackListBehavior class] filter:@[] object:self.controller.chat reservedObjects:@[[TL_channelParticipantsKicked create]]]];
+            
+            [self.controller.navigationViewController pushViewController:viewController animated:YES];
             
         }];
         
@@ -227,7 +242,11 @@
         self.membersButton = [UserInfoShortButtonView buttonWithText:NSLocalizedString(@"Profile.ChannelMembers", nil) tapBlock:^{
             
             
-            [[Telegram rightViewController] showComposeChannelParticipants:[[ComposeAction alloc] initWithBehaviorClass:[ComposeActionChannelMembersBehavior class] filter:@[] object:self.controller.chat reservedObjects:@[[TL_channelParticipantsRecent create]]]];
+            ComposeChannelParticipantsViewController *viewController = [[ComposeChannelParticipantsViewController alloc] initWithFrame:self.controller.view.bounds];
+            
+            [viewController setAction:[[ComposeAction alloc] initWithBehaviorClass:[ComposeActionChannelMembersBehavior class] filter:@[] object:self.controller.chat reservedObjects:@[[TL_channelParticipantsRecent create]]]];
+            
+            [self.controller.navigationViewController pushViewController:viewController animated:YES];
             
         }];
         
@@ -275,7 +294,7 @@
         self.exportChatInvite.textButton.textColor = TEXT_COLOR;
         self.openOrJoinChannelButton = [UserInfoShortButtonView buttonWithText:NSLocalizedString(@"Profile.OpenChannel", nil) tapBlock:^{
             
-            [[Telegram rightViewController] showByDialog:self.controller.chat.dialog sender:self];
+            [self.controller.navigationViewController gotoViewController:self.controller.messagesViewController];
             
         }];
         

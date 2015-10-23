@@ -141,11 +141,14 @@
     
     self.leftNavigationBarView = [self standartLeftBarView];
     
-    
-    if([Telegram isSingleLayout] && [Telegram rightViewController].currentEmptyController == [Telegram rightViewController].navigationViewController.currentController && ![[Telegram rightViewController] isModalViewActive])
+    if(self.navigationViewController == [Telegram rightViewController].navigationViewController)
     {
-        self.leftNavigationBarView = nil;
+        if([Telegram isSingleLayout] && [Telegram rightViewController].currentEmptyController == [Telegram rightViewController].navigationViewController.currentController && ![[Telegram rightViewController] isModalViewActive])
+        {
+            self.leftNavigationBarView = nil;
+        }
     }
+    
 }
 
 

@@ -269,6 +269,10 @@ static NSImage * greenBackgroundImage(NSSize size) {
     
     [_addButton setTitle:[NSString stringWithFormat:NSLocalizedString(@"StickerPack.AddStickerPack", nil),stickerPack.documents.count] forControlState:BTRControlStateNormal];
   
+    _addButton.heightBugFix = 3;
+    
+    [_addButton setTitleFont:TGSystemBoldFont(14) forControlState:BTRControlStateNormal];
+    
     [_addButton setBackgroundImage:greenBackgroundImage(NSMakeSize(130, 27)) forControlState:BTRControlStateNormal];
     
     
