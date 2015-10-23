@@ -594,13 +594,13 @@ static const int navigationOffset = 48;
     
     
     if(!back) {
-        self.viewControllerStack = [[stack subarrayWithRange:NSMakeRange(0, idx)] mutableCopy];
+        self.viewControllerStack = [[stack subarrayWithRange:NSMakeRange(0, MAX(0,idx-1))] mutableCopy];
         
         [self pushViewController:controller animated:animated];
     } else {
-        self.viewControllerStack =[[stack subarrayWithRange:NSMakeRange(0, MIN(0,idx-1))] mutableCopy];
+        self.viewControllerStack =[[stack subarrayWithRange:NSMakeRange(0, MIN(idx,stack.count ))] mutableCopy];
         
-        [self.navigationViewController goBackWithAnimation:animated];
+        [self pushViewController:controller animated:animated];
     }
 }
 
