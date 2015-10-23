@@ -353,7 +353,7 @@
             
             channel.unread_count = fullChat.unread_count;
             channel.unread_important_count = fullChat.unread_important_count;
-            
+            channel.last_marked_date = [[MTNetwork instance] getTime];
             [channel save];
             [[DialogsManager sharedManager] notifyAfterUpdateConversation:channel];
             
@@ -431,7 +431,7 @@
                 channel.top_important_message = [response top_important_message];
                 channel.last_message_date = channel.lastMessage.date;
                 
-                channel.last_marked_message = [[MTNetwork instance] getTime];
+                channel.last_marked_message = [response top_message];
                 channel.last_marked_date = [[MTNetwork instance] getTime];
                 
                 channel.read_inbox_max_id = [response read_inbox_max_id];

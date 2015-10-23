@@ -291,7 +291,6 @@
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(windowBecomeNotification:) name:NSWindowDidResignKeyNotification object:self.view.window];
     
-    [Notification addObserver:self selector:@selector(changeDialogSelectionNotification:) name:@"ChangeDialogSelection"];
     [Notification addObserver:self selector:@selector(updateChat:) name:CHAT_UPDATE_TYPE];
     
     self.messages = [[NSMutableArray alloc] init];
@@ -441,7 +440,7 @@
 
 -(void)_didStackRemoved {
     
-    _conversation = nil;
+    self.conversation = nil;
     [self.historyController stopChannelPolling];
     
     [self flushMessages];
@@ -927,11 +926,6 @@ static NSTextAttachment *headerMediaIcon() {
     }];
 }
 
-
-- (void)changeDialogSelectionNotification:(NSNotification *)notify {
-    if([[notify.userInfo objectForKey:KEY_DIALOG] class] == [NSNull class])
-        self.conversation = nil;
-}
 
 - (void)updateChat:(NSNotification *)notify {
     TLChat *chat = [notify.userInfo objectForKey:KEY_CHAT];
@@ -3222,6 +3216,9 @@ static NSTextAttachment *headerMediaIcon() {
     return nil;
 }
 
+-(void)setConversation:(TL_conversation *)conversation {
+    _conversation = conversation;
+}
 
 - (void)sendMessage {
     NSString *message = [self.bottomView.inputMessageString trim];
