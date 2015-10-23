@@ -279,7 +279,7 @@
         [self.tableView cancelSelection];
         
         if(![conversation isKindOfClass:NSNull.class]) {
-            [self.tableView setSelectedByHash:[conversation peer_id]];
+            [self.tableView setSelectedByHash:[[Telegram conversation] peer_id]];
         }
     }
 }
