@@ -96,7 +96,7 @@
             self.photoImageView.object = item.imageObject;
             
             [self.photoImageView setHidden:NO];
-            [self.photoImageView setFrameOrigin:NSMakePoint(roundf((self.bounds.size.width - _photoImageView.frame.size.width) / 2), 0)];
+            [self.photoImageView setFrameOrigin:NSMakePoint(roundf((NSWidth(self.messagesViewController.view.frame) - _photoImageView.frame.size.width) / 2), 0)];
             
         } else {
             [self.photoImageView setHidden:YES];

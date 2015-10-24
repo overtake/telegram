@@ -92,7 +92,7 @@ static NSMutableDictionary *allChatHeads;
 -(void)showInfoPageWithConversation:(TL_conversation *)conversation {
     TMViewController *infoViewController;
     
-    switch (self.conversation.type) {
+    switch (conversation.type) {
         case DialogTypeChat:
             
             infoViewController = [[ChatInfoViewController alloc] initWithFrame:self.navigationController.view.bounds];

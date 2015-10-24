@@ -133,21 +133,25 @@
             [converted addObject:item];
         } else if([[(TL_localMessage *)obj.media media] isKindOfClass:[TL_messageMediaDocument class]]) {
             
-            TL_documentAttributeImageSize *size = (TL_documentAttributeImageSize *) [[[(TL_localMessage *)obj.media media] document] attributeWithClass:[TL_documentAttributeImageSize class]];
+            TL_messageMediaDocument *media = (TL_messageMediaDocument *) [(TL_localMessage *)obj.media media];
             
-            
-            TGPVDocumentObject *imgObj = [[TGPVDocumentObject alloc] initWithMessage:obj.media placeholder:nil];
+           TL_documentAttributeImageSize *size = (TL_documentAttributeImageSize *) [[media document] attributeWithClass:[TL_documentAttributeImageSize class]];
             
             if(size) {
-                imgObj.imageSize = NSMakeSize(size.w, size.h);
-            } else {
-                if(imgObj.placeholder.size.width == 0) {
-                    imgObj.imageSize = NSMakeSize(50, 50);
+                TGPVDocumentObject *imgObj = [[TGPVDocumentObject alloc] initWithMessage:obj.media placeholder:nil];
+                
+                if(size) {
+                    imgObj.imageSize = NSMakeSize(size.w, size.h);
+                } else {
+                    if(imgObj.placeholder.size.width == 0) {
+                        imgObj.imageSize = NSMakeSize(50, 50);
+                    }
                 }
+                
+                TGPhotoViewerItem *item = [[TGPhotoViewerItem alloc] initWithImageObject:imgObj previewObject:obj];
+                [converted addObject:item];
             }
             
-            TGPhotoViewerItem *item = [[TGPhotoViewerItem alloc] initWithImageObject:imgObj previewObject:obj];
-            [converted addObject:item];
         }
         
     }];

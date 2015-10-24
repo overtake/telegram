@@ -16,6 +16,7 @@
 #import "MessageReplyContainer.h"
 #import "POPCGUtils.h"
 #import "MessagesBottomView.h"
+#import "TGHeadChatPanel.h"
 @interface MessageTableCellContainerView() <TMHyperlinkTextFieldDelegate>
 @property (nonatomic, strong) TMHyperlinkTextField *nameTextField;
 @property (nonatomic, strong) BTRImageView *sendImageView;
@@ -216,7 +217,17 @@
         
        
         [self.avatarImageView setTapBlock:^{
-            [[Telegram sharedInstance] showUserInfoWithUserId:weakSelf.item.user.n_id conversation:weakSelf.item.user.dialog sender:weakSelf];
+            
+            if([[NSApp keyWindow] isKindOfClass:[TGHeadChatPanel class]]) {
+                TGHeadChatPanel *panel = (TGHeadChatPanel *) [NSApp keyWindow];
+                
+                [panel showInfoPageWithConversation:weakSelf.item.user.dialog];
+                
+            } else {
+                [[Telegram sharedInstance] showUserInfoWithUserId:weakSelf.item.user.n_id conversation:weakSelf.item.user.dialog sender:weakSelf];
+            }
+            
+         //
         }];
         [self addSubview:self.avatarImageView];
     }

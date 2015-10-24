@@ -160,7 +160,7 @@
                 if(!self.user.isBlocked && self.user.isBot)
                 {
                     [self.controller.navigationViewController goBackWithAnimation:YES];
-                    [self.controller.messagesViewController sendMessage:@"/start" forConversation:self.controller.conversation];
+                    [self.controller.navigationViewController.messagesViewController sendMessage:@"/start" forConversation:self.controller.conversation];
                 }
             };
             
@@ -188,7 +188,7 @@
             
             [self.controller.navigationViewController goBackWithAnimation:YES];
             
-            [self.controller.messagesViewController sendMessage:@"/help" forConversation:self.user.dialog];
+            [self.controller.navigationViewController.messagesViewController sendMessage:@"/help" forConversation:self.user.dialog];
             
         }];
 

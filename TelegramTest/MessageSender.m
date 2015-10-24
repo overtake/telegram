@@ -57,7 +57,7 @@
     AVAssetExportSession *exportSession = [[AVAssetExportSession alloc] initWithAsset:avAsset presetName:AVAssetExportPreset640x480];
     
     
-    
+    exportSession.shouldOptimizeForNetworkUse = YES;
     exportSession.outputURL = [NSURL fileURLWithPath:compressedPath];
     exportSession.outputFileType = AVFileTypeMPEG4;
    // exportSession
@@ -102,8 +102,9 @@
              [progressTimer invalidate];
              progressTimer = nil;
              
-             if(!success)
+             if(!success || fileSize(path) < fileSize(compressedPath))
              {
+                 [[NSFileManager defaultManager] removeItemAtPath:compressedPath error:nil];
                  [[NSFileManager defaultManager] copyItemAtPath:path toPath:compressedPath error:nil];
              }
              

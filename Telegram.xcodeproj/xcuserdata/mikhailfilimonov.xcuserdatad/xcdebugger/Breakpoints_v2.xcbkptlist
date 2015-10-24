@@ -458,7 +458,7 @@
                   moduleName = "Telegram"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/mikhailfilimonov/Dropbox/osx-cipher/TelegramTest/TGModernEncryptedUpdates.m"
-                  timestampString = "467312085.632285"
+                  timestampString = "467389755.313892"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "199"
@@ -473,7 +473,7 @@
                   moduleName = "Telegram"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/mikhailfilimonov/Dropbox/osx-cipher/TelegramTest/TGModernEncryptedUpdates.m"
-                  timestampString = "467312085.632605"
+                  timestampString = "467389755.314224"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "199"
@@ -496,6 +496,22 @@
             startingLineNumber = "194"
             endingLineNumber = "194"
             landmarkName = "-proccessServiceMessage:withLayer:params:conversation:"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "TelegramTest/TGHeadChatPanel.m"
+            timestampString = "467312886.053997"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "126"
+            endingLineNumber = "126"
+            landmarkName = "-showInfoPageWithConversation:"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
