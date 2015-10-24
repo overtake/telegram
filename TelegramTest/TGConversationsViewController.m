@@ -116,8 +116,8 @@
     
     [self.searchViewController viewWillAppear:animated];
     
-    [self.tableView.scrollView.contentView setFrameSize:self.tableView.scrollView.frame.size];
-    [self.tableView setFrameSize:self.tableView.frame.size];
+    [self.tableView.scrollView.contentView setFrameSize:[Telegram leftViewController].view.frame.size];
+    [self.tableView setFrameSize:[Telegram leftViewController].view.frame.size];
   //  dispatch_async(dispatch_get_main_queue(), ^{
         [self.tableView reloadData];
   //  });

@@ -286,7 +286,6 @@ static NSDictionary *attributes() {
     
      [_swipe setFrameSize:self.frame.size];
     
-    
     self.style = NSWidth(self.frame) == 70 ? ConversationTableCellShortStyle : ConversationTableCellFullStyle;
     
     
@@ -484,9 +483,6 @@ static NSDictionary *attributes() {
 }
 
 -(void)setStyle:(ConversationTableCellStyle)style {
-    
-    if(_style == style)
-        return;
     
     _style = style;
     
