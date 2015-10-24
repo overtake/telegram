@@ -414,7 +414,6 @@ static ChatHistoryController *observer;
         
         [items enumerateObjectsUsingBlock:^(MessageTableItem *obj, NSUInteger idx, BOOL *stop) {
             
-            obj = [obj copy];
             
             Class filterClass = controller.filter.class;
             
@@ -460,7 +459,7 @@ static ChatHistoryController *observer;
     
 
     if(accepted != NULL)
-        *accepted = [af copy];
+        *accepted = af;
     
    return filtred;
     
@@ -941,7 +940,7 @@ static ChatHistoryController *observer;
                 
                 if(filtred.count > 0) {
                     
-                    NSArray *copyItems = [[NSArray alloc] initWithArray:filtred copyItems:YES];
+                    NSArray *copyItems = filtred;
                     
                     [controller updateMessageTableItems:copyItems];
                     
@@ -992,7 +991,7 @@ static ChatHistoryController *observer;
             
             NSDictionary *accepted = nil;
             
-            [self filterAndAdd:[[NSArray alloc] initWithArray:items copyItems:YES] acceptToFilters:&accepted];
+            [self filterAndAdd:items acceptToFilters:&accepted];
             
             [listeners enumerateObjectsUsingBlock:^(WeakReference *weak, NSUInteger idx, BOOL *stop) {
                 
@@ -1002,7 +1001,7 @@ static ChatHistoryController *observer;
                 
                 if(filtred.count > 0) {
                     
-                    NSArray *copyItems = [[NSArray alloc] initWithArray:filtred copyItems:YES];
+                    NSArray *copyItems = filtred;
                     
                     [controller updateMessageTableItems:copyItems];
 
