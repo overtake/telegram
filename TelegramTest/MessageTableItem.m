@@ -277,59 +277,65 @@ static NSTextAttachment *channelIconAttachment() {
 + (id) messageItemFromObject:(TL_localMessage *)message {
     id objectReturn = nil;
 
-    
-    if(message.class == [TL_localMessage_old34 class] || message.class == [TL_localMessage_old32 class] || message.class == [TL_localMessage class] || message.class == [TL_destructMessage class]) {
-        
-        
-        if((message.media == nil || [message.media isKindOfClass:[TL_messageMediaEmpty class]]) || [message.media isMemberOfClass:[TL_messageMediaWebPage class]]) {
+    @try {
+        if(message.class == [TL_localMessage_old34 class] || message.class == [TL_localMessage_old32 class] || message.class == [TL_localMessage class] || message.class == [TL_destructMessage class]) {
             
-          objectReturn = [[MessageTableItemText alloc] initWithObject:message];
             
-        } else if([message.media isKindOfClass:[TL_messageMediaUnsupported class]]) {
-            
-            message.message = @"This message is not supported on your version of Telegram. Update the app to view: https://telegram.org/dl/osx";
-            objectReturn = [[MessageTableItemText alloc] initWithObject:message ];
-            
-        } else if([message.media isKindOfClass:[TL_messageMediaPhoto class]]) {
-            
-            objectReturn = [[MessageTableItemPhoto alloc] initWithObject:message ];
-            
-        } else if([message.media isKindOfClass:[TL_messageMediaVideo class]]) {
-
-            objectReturn = [[MessageTableItemVideo alloc] initWithObject:message ];
-            
-        } else if([message.media isKindOfClass:[TL_messageMediaDocument class]]) {
-            
-            TLDocument *document = message.media.document;
-            
-            if([document.mime_type isEqualToString:@"image/gif"] && ![document.thumb isKindOfClass:[TL_photoSizeEmpty class]]) {
-                objectReturn = [[MessageTableItemGif alloc] initWithObject:message];
-            } else if([document.mime_type hasPrefix:@"audio/"]) {
-                 objectReturn = [[MessageTableItemAudioDocument alloc] initWithObject:message];
-            } else if([document isSticker]) {
-                objectReturn = [[MessageTableItemSticker alloc] initWithObject:message];
-            } else {
-                 objectReturn = [[MessageTableItemDocument alloc] initWithObject:message];
+            if((message.media == nil || [message.media isKindOfClass:[TL_messageMediaEmpty class]]) || [message.media isMemberOfClass:[TL_messageMediaWebPage class]]) {
+                
+                objectReturn = [[MessageTableItemText alloc] initWithObject:message];
+                
+            } else if([message.media isKindOfClass:[TL_messageMediaUnsupported class]]) {
+                
+                message.message = @"This message is not supported on your version of Telegram. Update the app to view: https://telegram.org/dl/osx";
+                objectReturn = [[MessageTableItemText alloc] initWithObject:message ];
+                
+            } else if([message.media isKindOfClass:[TL_messageMediaPhoto class]]) {
+                
+                objectReturn = [[MessageTableItemPhoto alloc] initWithObject:message ];
+                
+            } else if([message.media isKindOfClass:[TL_messageMediaVideo class]]) {
+                
+                objectReturn = [[MessageTableItemVideo alloc] initWithObject:message ];
+                
+            } else if([message.media isKindOfClass:[TL_messageMediaDocument class]]) {
+                
+                TLDocument *document = message.media.document;
+                
+                if([document.mime_type isEqualToString:@"image/gif"] && ![document.thumb isKindOfClass:[TL_photoSizeEmpty class]]) {
+                    objectReturn = [[MessageTableItemGif alloc] initWithObject:message];
+                } else if([document.mime_type hasPrefix:@"audio/"]) {
+                    objectReturn = [[MessageTableItemAudioDocument alloc] initWithObject:message];
+                } else if([document isSticker]) {
+                    objectReturn = [[MessageTableItemSticker alloc] initWithObject:message];
+                } else {
+                    objectReturn = [[MessageTableItemDocument alloc] initWithObject:message];
+                }
+                
+            } else if([message.media isKindOfClass:[TL_messageMediaContact class]]) {
+                
+                objectReturn = [[MessageTableItemContact alloc] initWithObject:message];
+                
+            } else if([message.media isKindOfClass:[TL_messageMediaGeo class]] || [message.media isKindOfClass:[TL_messageMediaVenue class]]) {
+                
+                objectReturn = [[MessageTableItemGeo alloc] initWithObject:message];
+                
+            } else if([message.media isKindOfClass:[TL_messageMediaAudio class]]) {
+                
+                objectReturn = [[MessageTableItemAudio alloc] initWithObject:message];
+                
             }
-            
-        } else if([message.media isKindOfClass:[TL_messageMediaContact class]]) {
-            
-            objectReturn = [[MessageTableItemContact alloc] initWithObject:message];
-            
-        } else if([message.media isKindOfClass:[TL_messageMediaGeo class]] || [message.media isKindOfClass:[TL_messageMediaVenue class]]) {
-            
-            objectReturn = [[MessageTableItemGeo alloc] initWithObject:message];
-            
-        } else if([message.media isKindOfClass:[TL_messageMediaAudio class]]) {
-            
-            objectReturn = [[MessageTableItemAudio alloc] initWithObject:message];
-            
+        } else if(message.hole != nil) {
+            objectReturn = [[MessageTableItemHole alloc] initWithObject:message];
+        } else if([message isKindOfClass:[TL_localMessageService class]] || [message isKindOfClass:[TL_secretServiceMessage class]]) {
+            objectReturn = [[MessageTableItemServiceMessage alloc] initWithObject:message ];
         }
-    } else if(message.hole != nil) {
-        objectReturn = [[MessageTableItemHole alloc] initWithObject:message];
-    } else if([message isKindOfClass:[TL_localMessageService class]] || [message isKindOfClass:[TL_secretServiceMessage class]]) {
-        objectReturn = [[MessageTableItemServiceMessage alloc] initWithObject:message ];
+
     }
+    @catch (NSException *exception) {
+        
+    }
+    
     
     
     return objectReturn;

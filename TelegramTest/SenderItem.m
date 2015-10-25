@@ -10,6 +10,8 @@
 #import "SenderItem.h"
 #import "MessageTableItem.h"
 #import "StickerSenderItem.h"
+#import "WeakReference.h"
+#import "MessageTableCell.h"
 @interface SenderItem ()
 @property (nonatomic,strong) NSMutableArray *listeners;
 @end
@@ -164,42 +166,45 @@ static NSMutableArray *waiting;
     self->_state = state;
     
     
-    [ASQueue dispatchOnStageQueue:^{
+    [ASQueue dispatchOnMainQueue:^{
         [self notifyAllListeners:@selector(onStateChanged:)];
         
         if(state == MessageSendingStateSent || state == MessageSendingStateError || state == MessageSendingStateCancelled) {
             [self removeAllListeners];
-            self.rpc_request = nil;
             
-            
-            if(state == MessageSendingStateError) {
-                if(self.message.dstate != DeliveryStateError) {
-                    self.message.dstate = DeliveryStateError;
-                    [self.message save:YES];
+            [ASQueue dispatchOnStageQueue:^{
+                self.rpc_request = nil;
+                
+                
+                if(state == MessageSendingStateError) {
+                    if(self.message.dstate != DeliveryStateError) {
+                        self.message.dstate = DeliveryStateError;
+                        [self.message save:YES];
+                    }
+                    
+                    
+                    if([self isKindOfClass:[ForwardSenterItem class]]) {
+                        ForwardSenterItem *sender = (ForwardSenterItem *) self;
+                        [sender.fakes enumerateObjectsUsingBlock:^(TL_localMessage *obj, NSUInteger idx, BOOL *stop) {
+                            if(obj.dstate != DeliveryStateError) {
+                                obj.dstate = DeliveryStateError;
+                                [obj save:idx == sender.fakes.count-1];
+                            }
+                        }];
+                    }
                 }
                 
                 
-                if([self isKindOfClass:[ForwardSenterItem class]]) {
-                    ForwardSenterItem *sender = (ForwardSenterItem *) self;
-                    [sender.fakes enumerateObjectsUsingBlock:^(TL_localMessage *obj, NSUInteger idx, BOOL *stop) {
-                        if(obj.dstate != DeliveryStateError) {
-                            obj.dstate = DeliveryStateError;
-                            [obj save:idx == sender.fakes.count-1];
-                        }
-                    }];
+                if(state == MessageSendingStateError && self.conversation.type == DialogTypeSecretChat) {
+                    if(self.rpc_request.error.error_code == 400) {
+                        EncryptedParams *params = [EncryptedParams findAndCreate:self.conversation.peer.peer_id];
+                        
+                        [params setState:EncryptedDiscarted];
+                        
+                        [params save];
+                    }
                 }
-            }
-            
-            
-            if(state == MessageSendingStateError && self.conversation.type == DialogTypeSecretChat) {
-                if(self.rpc_request.error.error_code == 400) {
-                    EncryptedParams *params = [EncryptedParams findAndCreate:self.conversation.peer.peer_id];
-                    
-                    [params setState:EncryptedDiscarted];
-                    
-                    [params save];
-                }
-            }
+            }];
         }
         
         
@@ -210,6 +215,7 @@ static NSMutableArray *waiting;
             
             if(state == MessageSendingStateSent || state == MessageSendingStateCancelled) {
                 [waiting removeObject:self];
+                [senders removeObjectForKey:@(_message.randomId)];
             }
 
         }];
@@ -261,18 +267,23 @@ static NSMutableArray *waiting;
 
 -(void)setProgress:(float)progress {
     self->_progress = progress;
-    [ASQueue dispatchOnStageQueue:^{
+    [ASQueue dispatchOnMainQueue:^{
         [self notifyAllListeners:@selector(onProgressChanged:)];
     }];
     
 }
 
 -(void)notifyAllListeners:(SEL)selector {
-    NSArray *copy = [self.listeners copy];
-    for (id<SenderListener> current in copy) {
-        if([current respondsToSelector:selector])
-            [current performSelector:selector withObject:self];
-    }
+    
+    assert([NSThread isMainThread]);
+    
+    [_listeners enumerateObjectsUsingBlock:^(WeakReference *current, NSUInteger idx, BOOL * _Nonnull stop) {
+        id<SenderListener>listener = current.nonretainedObjectValue;
+        
+        if([listener respondsToSelector:selector])
+            [listener performSelector:selector withObject:self];
+    }];
+    
 }
 
 -(void)setTableItem:(MessageTableItem *)tableItem {
@@ -280,37 +291,70 @@ static NSMutableArray *waiting;
     tableItem.messageSender = self;
 }
 
+-(NSUInteger)indexOfListener:(id<SenderListener>)listener {
+    
+    
+    assert([NSThread isMainThread]);
+    __block NSUInteger index = NSNotFound;
+    
+    [_listeners enumerateObjectsUsingBlock:^(WeakReference *obj, NSUInteger idx, BOOL *stop) {
+        
+        if(obj.nonretainedObjectValue == (__bridge void *)(listener)) {
+            index = idx;
+            *stop = YES;
+        }
+        
+    }];
+    
+    return index;
+}
+
 
 -(void)addEventListener:(id<SenderListener>)listener {
-     [ASQueue dispatchOnStageQueue:^{
+     [ASQueue dispatchOnMainQueue:^{
          if(!self.listeners)
              self.listeners = [[NSMutableArray alloc] init];
-         if([self.listeners indexOfObject:listener] == NSNotFound)
-             [self.listeners addObject:listener];
+         if([self indexOfListener:listener] == NSNotFound)
+             [self.listeners addObject:[WeakReference weakReferenceWithObject:listener]];
          
          [self notifyAllListeners:@selector(onAddedListener:)];
      }];
 }
 
 -(void)enumerateEventListeners:(void (^)(id<SenderListener> listener, NSUInteger idx, BOOL *stop))enumerator {
-    [ASQueue dispatchOnStageQueue:^{
+    [ASQueue dispatchOnMainQueue:^{
         NSArray *copy = [self.listeners copy];
         
-        [copy enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
-            enumerator(obj,idx,stop);
+        [copy enumerateObjectsUsingBlock:^(WeakReference *obj, NSUInteger idx, BOOL *stop) {
+            enumerator(obj.nonretainedObjectValue,idx,stop);
         }];
     }];
 }
 
 -(void)removeAllListeners {
-    [self notifyAllListeners:@selector(onRemovedListener:)];
     
-    [self.listeners removeAllObjects];
+    assert([NSThread isMainThread]);
+    
+    NSArray *copy = [_listeners copy];
+    
+    [_listeners removeAllObjects];
+    
+    [copy enumerateObjectsUsingBlock:^(WeakReference *current, NSUInteger idx, BOOL * _Nonnull stop) {
+        id<SenderListener>listener = current.nonretainedObjectValue;
+        
+        if([listener respondsToSelector:@selector(onRemovedListener:)])
+            [listener performSelector:@selector(onRemovedListener:) withObject:self];
+    }]; 
+    
 }
 
 -(void)removeEventListener:(id<SenderListener>)listener {
-     [ASQueue dispatchOnStageQueue:^{
-         [self.listeners removeObject:listener];
+     [ASQueue dispatchOnMainQueue:^{
+         
+         NSUInteger idx = [self indexOfListener:listener];
+         
+         if(idx != NSNotFound)
+             [self.listeners removeObjectAtIndex:idx];
          
          [self notifyAllListeners:@selector(onRemovedListener:)];
          
@@ -334,14 +378,7 @@ static NSMutableArray *waiting;
 }
 
 
--(void)dealloc {
-    [self removeAllListeners];
-    
-    [ASQueue dispatchOnStageQueue:^{
-        [senders removeObjectForKey:@(_message.randomId)];
-    } synchronous:YES];
-    
-}
+
 
 
 -(void)perform {
@@ -416,6 +453,25 @@ static NSMutableArray *waiting;
     
     return update;
     
+}
+
+-(BOOL)canRelease {
+    
+    __block BOOL c = YES;
+    
+    [ASQueue dispatchOnMainQueue:^{
+        
+        [_listeners enumerateObjectsUsingBlock:^(WeakReference *obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            if([obj.nonretainedObjectValue isKindOfClass:[MessageTableCell class]]) {
+                c = NO;
+                *stop = YES;
+            }
+        }];
+        
+        c = _listeners.count == 0;
+    } synchronous:YES];
+    
+    return c;
 }
 
 @end

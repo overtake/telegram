@@ -545,7 +545,7 @@ static NSString *encryptionKey;
         while ([results next]) {
             TL_localMessage *msg = [TLClassStore deserialize:[[results resultDictionary] objectForKey:@"serialized"]];
             
-            if(msg.dstate == DeliveryStateNormal) {
+            if(msg.dstate == DeliveryStateNormal && ![msg isKindOfClass:[TL_messageEmpty class]]) {
                 msg.flags = -1;
                 msg.message = [results stringForColumn:@"message_text"];
                 msg.flags = [results intForColumn:@"flags"];
@@ -618,8 +618,8 @@ TL_localMessage *parseMessage(FMResultSet *result) {
         msg.flags = -1;
         msg.message = [result stringForColumn:@"message_text"];
         msg.flags = [result intForColumn:@"flags"];
-        
-        return msg;
+        if(![msg isKindOfClass:[TL_messageEmpty class]])
+            return msg;
 
     }
     @catch (NSException *exception) {
@@ -763,7 +763,7 @@ TL_localMessage *parseMessage(FMResultSet *result) {
             msg.pts = [result intForColumn:@"pts"];
             msg.views = [result intForColumn:@"views"];
             msg.viewed = [result intForColumn:@"is_viewed"];
-            if(msg) {
+            if(msg && ![msg isKindOfClass:[TL_messageEmpty class]]) {
                 [messages addObject:msg];
                 [ids addObject:@(msg.n_id)];
             }
@@ -792,7 +792,7 @@ TL_localMessage *parseMessage(FMResultSet *result) {
                     msg.pts = [result intForColumn:@"pts"];
                     msg.views = [result intForColumn:@"views"];
                     msg.viewed = [result intForColumn:@"is_viewed"];
-                    if(msg)
+                    if(msg && ![msg isKindOfClass:[TL_messageEmpty class]])
                         [messages addObject:msg];
                 }
                 [result close];
@@ -1678,10 +1678,14 @@ TL_localMessage *parseMessage(FMResultSet *result) {
             
             clearWithFakeId();
             
-            if(![message.to_id isKindOfClass:[TL_peerChannel class]])
-                 insertBlock(@"messages");
-            else
-                 insertChannelMessageBlock();
+            if(![message isKindOfClass:[TL_messageEmpty class]]) {
+                if(![message.to_id isKindOfClass:[TL_peerChannel class]])
+                    insertBlock(@"messages");
+                else
+                    insertChannelMessageBlock();
+            }
+            
+            
             
             
         }
@@ -2331,8 +2335,9 @@ TL_localMessage *parseMessage(FMResultSet *result) {
          while ([result next]) {
              TL_localMessage *message = [TLClassStore deserialize:[[result resultDictionary] objectForKey:@"serialized"]];
             
-             
-            [list addObject:[[PreviewObject alloc] initWithMsdId:message.n_id media:message peer_id:peer.peer_id]];
+             if(![message isKindOfClass:[TL_messageEmpty class]]) {
+                  [list addObject:[[PreviewObject alloc] initWithMsdId:message.n_id media:message peer_id:peer.peer_id]];
+             }
          }
          
          [LoopingUtils  runOnMainQueueAsync:^{
@@ -2853,11 +2858,14 @@ TL_localMessage *parseMessage(FMResultSet *result) {
             while ([result next]) {
                 
                 TL_localMessage *msg = [TLClassStore deserialize:[result dataForColumn:@"serialized"]];
-                msg.flags = -1;
-                msg.message = [result stringForColumn:@"message_text"];
-                msg.flags = [result intForColumn:@"flags"];
-                if(msg)
-                    [messages addObject:msg];
+                if(![msg isKindOfClass:[TL_messageEmpty class]]) {
+                    msg.flags = -1;
+                    msg.message = [result stringForColumn:@"message_text"];
+                    msg.flags = [result intForColumn:@"flags"];
+                    if(msg)
+                        [messages addObject:msg];
+                }
+               
             }
             [result close];
             
@@ -2944,6 +2952,11 @@ TL_localMessage *parseMessage(FMResultSet *result) {
                 
                 @try {
                     message = [TLClassStore deserialize:serializedMessage];
+                    
+                    if([message isKindOfClass:[TL_messageEmpty class]]) {
+                        message = nil;
+                    }
+                    
                     message.flags = [result intForColumn:@"flags"];
                 }
                 @catch (NSException *exception) {
@@ -2987,6 +3000,11 @@ TL_localMessage *parseMessage(FMResultSet *result) {
                 
                 @try {
                     message = [TLClassStore deserialize:serializedMessage];
+                    
+                    if([message isKindOfClass:[TL_messageEmpty class]]) {
+                        message = nil;
+                    }
+                    
                     message.flags = [result intForColumn:@"flags"];
                 }
                 @catch (NSException *exception) {

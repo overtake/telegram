@@ -96,14 +96,14 @@ const NSTimeInterval typingIntervalSecond = 0.14;
             
             TGActionTyping *action = actions[0];
             
-            TLUser *user = [[UsersManager sharedManager] find:action.user_id];
+            TLUser *user = action.user;
             if(user)
                 string =[NSString stringWithFormat:NSLocalizedString(NSStringFromClass(action.action.class), nil),user.fullName];
         } else {
             
             NSMutableArray *usersStrings = [[NSMutableArray alloc] init];
             for(TGActionTyping *action in actions) {
-                TLUser *user = [[UsersManager sharedManager] find:action.user_id];
+                TLUser *user = action.user;
                 if(user) {
                     [usersStrings addObject:user.fullName];
                 }

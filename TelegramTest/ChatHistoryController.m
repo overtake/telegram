@@ -870,14 +870,22 @@ static ChatHistoryController *observer;
 -(void)updateItemId:(long)randomId withId:(int)n_id {
     [queue dispatchOnQueue:^{
         
-        NSArray *f = [messageItems filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.message.randomId = %ld",randomId]];
-        MessageTableItem *item = [f firstObject];
+        [listeners enumerateObjectsUsingBlock:^(WeakReference *obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            
+            ChatHistoryController *controller = obj.nonretainedObjectValue;
+            
+            NSArray *f = [controller.messageItems filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.message.randomId = %ld",randomId]];
+            MessageTableItem *item = [f firstObject];
+            
+            if(item) {
+                [controller.messageKeys removeObjectForKey:@(item.message.n_id)];
+                item.message.n_id = n_id;
+                controller.messageKeys[@(item.message.n_id)] = item;
+            }
+            
+        }];
         
-        if(item) {
-            [messageKeys removeObjectForKey:@(item.message.n_id)];
-            item.message.n_id = n_id;
-            messageKeys[@(item.message.n_id)] = item;
-        }
+       
         
     }];
 }

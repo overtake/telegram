@@ -54,7 +54,7 @@
     
     AVURLAsset *avAsset = [[AVURLAsset alloc] initWithURL:[NSURL fileURLWithPath:path] options:nil];
     
-    AVAssetExportSession *exportSession = [[AVAssetExportSession alloc] initWithAsset:avAsset presetName:AVAssetExportPreset640x480];
+    AVAssetExportSession *exportSession = [[AVAssetExportSession alloc] initWithAsset:avAsset presetName:NSAppKitVersionNumber > NSAppKitVersionNumber10_10_Max ? AVAssetExportPresetMediumQuality : AVAssetExportPreset640x480];
     
     
     exportSession.shouldOptimizeForNetworkUse = YES;
@@ -154,7 +154,7 @@
 
     
     
-    NSSize size = NSMakeSize(MIN(640, [asset naturalSize].width), MIN(480,[asset naturalSize].height));
+    NSSize size = strongsize([asset naturalSize], 640);
     return @{@"duration": @(duration), @"image":thumbImg, @"size":NSStringFromSize(size)};
 }
 

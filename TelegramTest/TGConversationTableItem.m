@@ -93,9 +93,8 @@
             
             TGActionTyping *action = actions[0];
             
-            TLUser *user = [[UsersManager sharedManager] find:action.user_id];
-            if(user)
-                string =[NSString stringWithFormat:NSLocalizedString(NSStringFromClass(action.action.class), nil),user.dialogFullName];
+            if(action.user)
+                string =[NSString stringWithFormat:NSLocalizedString(NSStringFromClass(action.action.class), nil),action.user.dialogFullName];
             
         } else {
             

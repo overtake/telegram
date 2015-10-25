@@ -67,6 +67,14 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "__31-[SenderItem addEventListener:]_block_invoke:SenderItem.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "_listeners">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "+[StickersPanelView hasSticker:]:StickersPanelView.m">
       </ContextState>
       <ContextState
@@ -193,10 +201,10 @@
                value = "self.item.isset">
             </PersistentString>
             <PersistentString
-               value = "((TL_destructMessage *)self.item.message).ttl_seconds">
+               value = "self.item.message">
             </PersistentString>
             <PersistentString
-               value = "self.item.message">
+               value = "((TL_destructMessage *)self.item.message).ttl_seconds">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -207,7 +215,7 @@
          contextName = "__42-[NewContactsManager importCloudContacts:]_block_invoke:NewContactsManager.m">
          <PersistentStrings>
             <PersistentString
-               value = "abset.count">
+               value = "changeSet.count">
             </PersistentString>
             <PersistentString
                value = "deleteSet">
@@ -216,7 +224,7 @@
                value = "importedSet.count">
             </PersistentString>
             <PersistentString
-               value = "changeSet.count">
+               value = "abset.count">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -495,6 +503,11 @@
       </ContextState>
       <ContextState
          contextName = "-[SenderItem notifyAllListeners:]:SenderItem.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "_listeners">
+            </PersistentString>
+         </PersistentStrings>
       </ContextState>
       <ContextState
          contextName = "__49-[TGProccessUpdates uptodateWithConnectionState:]_block_invoke599:TGProccessUpdates.m">
@@ -844,10 +857,10 @@
          contextName = "-[MessagesViewController insertMessageTableItemsToList:startPosition:needCheckLastMessage:]:MessagesViewController.m">
          <PersistentStrings>
             <PersistentString
-               value = "self.messages">
+               value = "current.isHeaderMessage">
             </PersistentString>
             <PersistentString
-               value = "current.isHeaderMessage">
+               value = "self.messages">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -1897,6 +1910,14 @@
          contextName = "__56-[DocumentHistoryFilter remoteRequest:peer_id:callback:]_block_invoke:DocumentHistoryFilter.m">
       </ContextState>
       <ContextState
+         contextName = "__34-[SenderItem removeEventListener:]_block_invoke:SenderItem.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "_listeners">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "-[DownloadVideoItem setDownloadState:]:DownloadVideoItem.m">
       </ContextState>
       <ContextState
@@ -2088,6 +2109,14 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "-[SenderItem removeAllListeners]:SenderItem.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.listeners">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "-[TGStickerPackEmojiController drawWithStickers:]:TGStickerPackEmojiController.m">
       </ContextState>
       <ContextState
@@ -2180,10 +2209,10 @@
          contextName = "__81-[Storage loadImportantChannelMessages:localMaxId:limit:next:maxDate:filterMask:]_block_invoke:Storage.m">
          <PersistentStrings>
             <PersistentString
-               value = "msg.flags">
+               value = "messages">
             </PersistentString>
             <PersistentString
-               value = "messages">
+               value = "msg.flags">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -2221,6 +2250,9 @@
          contextName = "__44-[StickersPanelView showAndSearch:animated:]_block_invoke:StickersPanelView.m">
       </ContextState>
       <ContextState
+         contextName = "__48-[MessageTableCellContainerView onStateChanged:]_block_invoke:MessageTableCellContainerView.m">
+      </ContextState>
+      <ContextState
          contextName = "__33-[VideoSenderItem performRequest]_block_invoke:VideoSenderItem.m">
          <PersistentStrings>
             <PersistentString
@@ -2250,6 +2282,14 @@
       </ContextState>
       <ContextState
          contextName = "__33-[PhoneChangeController loadView]_block_invoke_2:PhoneChangeController.m">
+      </ContextState>
+      <ContextState
+         contextName = "-[QueueManager add:]:QueueManager.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.queue.operationCount">
+            </PersistentString>
+         </PersistentStrings>
       </ContextState>
       <ContextState
          contextName = "-[TGDownloadOperation load:]:TGDownloadOperation.m">
@@ -2373,16 +2413,16 @@
                value = "allItems">
             </PersistentString>
             <PersistentString
-               value = "memory">
-            </PersistentString>
-            <PersistentString
                value = "self.conversation.sync_message_id">
             </PersistentString>
             <PersistentString
-               value = "_controller.conversation.sync_message_id">
+               value = "memory">
             </PersistentString>
             <PersistentString
                value = "sync">
+            </PersistentString>
+            <PersistentString
+               value = "_controller.conversation.sync_message_id">
             </PersistentString>
             <PersistentString
                value = "_nextState">
@@ -2859,10 +2899,10 @@
                value = "self.table">
             </PersistentString>
             <PersistentString
-               value = "self.view.bounds">
+               value = "self.frameInit">
             </PersistentString>
             <PersistentString
-               value = "self.frameInit">
+               value = "self.view.bounds">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -3592,10 +3632,10 @@
          contextName = "-[Storage createAndCheckDatabase:]:Storage.m">
          <PersistentStrings>
             <PersistentString
-               value = "encryptedDatabasePath">
+               value = "encryptionKey">
             </PersistentString>
             <PersistentString
-               value = "encryptionKey">
+               value = "encryptedDatabasePath">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -3734,7 +3774,7 @@
          contextName = "__51-[NewContactsManager importCloudContacts:callback:]_block_invoke:NewContactsManager.m">
          <PersistentStrings>
             <PersistentString
-               value = "changedSet.count">
+               value = "importedSet.count">
             </PersistentString>
             <PersistentString
                value = "count">
@@ -3743,10 +3783,10 @@
                value = "import">
             </PersistentString>
             <PersistentString
-               value = "abset.count">
+               value = "changedSet.count">
             </PersistentString>
             <PersistentString
-               value = "importedSet.count">
+               value = "abset.count">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -4045,13 +4085,13 @@
          contextName = "__39-[SearchViewController searchByString:]_block_invoke_2:SearchViewController.m">
          <PersistentStrings>
             <PersistentString
-               value = "self.type &amp; SearchTypeGlobalUsers">
+               value = "self.type">
             </PersistentString>
             <PersistentString
                value = "tags">
             </PersistentString>
             <PersistentString
-               value = "self.type">
+               value = "self.type &amp; SearchTypeGlobalUsers">
             </PersistentString>
          </PersistentStrings>
       </ContextState>

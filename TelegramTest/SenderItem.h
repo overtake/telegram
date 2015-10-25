@@ -68,6 +68,9 @@ typedef enum {
 -(void)cancel;
 -(void)resend;
 
+
+-(BOOL)canRelease;
+
 -(int)senderFlags;
 
 -(void)updateMessageId:(TLUpdates *)updates;
