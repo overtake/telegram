@@ -135,9 +135,9 @@
             
             TL_messageMediaDocument *media = (TL_messageMediaDocument *) [(TL_localMessage *)obj.media media];
             
-           TL_documentAttributeImageSize *size = (TL_documentAttributeImageSize *) [[media document] attributeWithClass:[TL_documentAttributeImageSize class]];
-            
-            if(size) {
+            if([media.document.mime_type hasPrefix:@"image"]) {
+                TL_documentAttributeImageSize *size = (TL_documentAttributeImageSize *) [[media document] attributeWithClass:[TL_documentAttributeImageSize class]];
+                
                 TGPVDocumentObject *imgObj = [[TGPVDocumentObject alloc] initWithMessage:obj.media placeholder:nil];
                 
                 if(size) {
@@ -151,7 +151,6 @@
                 TGPhotoViewerItem *item = [[TGPhotoViewerItem alloc] initWithImageObject:imgObj previewObject:obj];
                 [converted addObject:item];
             }
-            
         }
         
     }];
