@@ -43,7 +43,6 @@
 @property (nonatomic) NSSize previewSize;
 @property (nonatomic) NSSize dateSize;
 @property (nonatomic, strong) DownloadItem *downloadItem;
-@property (nonatomic,strong) DownloadEventListener *downloadListener;
 
 
 @property (nonatomic,assign,readonly) int blockWidth;

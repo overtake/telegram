@@ -101,8 +101,10 @@
     [super doAfterDownload];
     
     self.state = DocumentStateDownloaded;
-   
-   
+}
+
+-(DownloadItem *)downloadItem {
+    return [DownloadQueue find:self.message.media.document.n_id];
 }
 
 - (BOOL)canDownload {

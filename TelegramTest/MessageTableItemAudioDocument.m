@@ -11,6 +11,7 @@
 #import "NSStringCategory.h"
 #import "NSString+Extended.h"
 #import <AVFoundation/AVFoundation.h>
+#import "DownloadQueue.h"
 @implementation MessageTableItemAudioDocument
 
 - (id)initWithObject:(TLMessage *)object {
@@ -126,8 +127,12 @@
     _secondDownloadListener = [[DownloadEventListener alloc] init];
 }
 
+-(DownloadItem *)downloadItem {
+    return [DownloadQueue find:self.message.media.document.n_id];
+}
+
 -(void)dealloc {
-    [self.downloadItem removeEvent:_secondDownloadListener];
+    [self.downloadItem removeAllEvents];
 }
 
 - (int)size {

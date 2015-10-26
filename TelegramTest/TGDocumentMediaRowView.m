@@ -27,6 +27,9 @@
 
 @property (nonatomic,strong) BTRButton *selectButton;
 
+@property (nonatomic,strong) DownloadEventListener *downloadEventListener;
+
+
 @end
 
 @implementation TGDocumentMediaRowView
@@ -295,7 +298,15 @@ static NSDictionary *colors;
     
     if(self.item.downloadItem) {
         
-        [self.item.downloadListener setCompleteHandler:^(DownloadItem * item) {
+        [self.item.downloadItem removeEvent:_downloadEventListener];
+        
+         _downloadEventListener = [[DownloadEventListener alloc] init];
+        
+        [self.item.downloadItem addEvent:_downloadEventListener];
+        
+       
+        
+        [_downloadEventListener setCompleteHandler:^(DownloadItem * item) {
             
             [[ASQueue mainQueue] dispatchOnQueue:^{
                 weakSelf.item.downloadItem = nil;
@@ -305,7 +316,7 @@ static NSDictionary *colors;
             
         }];
         
-        [self.item.downloadListener setProgressHandler:^(DownloadItem * item) {
+        [_downloadEventListener setProgressHandler:^(DownloadItem * item) {
             
             [ASQueue dispatchOnMainQueue:^{
                 [weakSelf updateCellState];

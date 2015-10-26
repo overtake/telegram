@@ -68,7 +68,7 @@
         
         NSImage *thumb = strongResize(image, 90);
         
-        NSData *thumbData = jpegNormalizedData(thumb);
+        NSData *thumbData = compressImage(jpegNormalizedData(thumb), 0.1);
         
         NSSize origin = image.size;
         

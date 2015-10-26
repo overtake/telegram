@@ -112,9 +112,7 @@
     TLPhotoSize *photoSize = ((TLPhotoSize *)[self.message.media.photo.sizes lastObject]);
     
     _imageSize = strongsize(NSMakeSize(photoSize.w, photoSize.h), MIN(MIN_IMG_SIZE.width,width - 40));
-    
-//    _imageSize = NSMakeSize(_imageSize.width < 60 ? _imageSize.width + 60 : _imageSize.height, _imageSize.width < 60 ? _imageSize.height + 60 : _imageSize.height);
-    
+        
     if(_caption) {
         _captionSize = [_caption coreTextSizeForTextFieldForWidth:_imageSize.width ];
         _captionSize.width = _imageSize.width ;
@@ -130,5 +128,8 @@
 -(BOOL)needUploader {
     return YES;
 }
+
+
+
 
 @end

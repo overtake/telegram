@@ -84,6 +84,9 @@
     return YES;
 }
 
+-(DownloadItem *)downloadItem {
+    return [DownloadQueue find:self.message.media.video.n_id];
+}
 
 - (Class)downloadClass {
     return [DownloadVideoItem class];

@@ -74,7 +74,7 @@ static NSCache *cItems;
         
         _containerOffset = 79;
         
-        _containerOffsetForward  = 87;
+        _containerOffsetForward = 87;
         
         
         if(self.message) {
@@ -386,10 +386,8 @@ static NSTextAttachment *channelIconAttachment() {
     self.downloadItem = nil;
 }
 
--(void)setDownloadItem:(DownloadItem *)downloadItem {
-    self->_downloadItem = downloadItem;
-    
-    [self.downloadItem addEvent:self.downloadListener];
+-(DownloadItem *)downloadItem {
+    return [DownloadQueue find:self.message.n_id];
 }
 
 -(void)rebuildDate {
@@ -450,13 +448,7 @@ static NSTextAttachment *channelIconAttachment() {
     
     if(size > [SettingsArchiver autoDownloadLimitSize])
         self.autoStart = NO;
-    
-    if(!self.downloadItem || self.downloadItem.downloadState == DownloadStateCompleted || self.downloadItem.downloadState == DownloadStateCanceled) {
-        if(![self isset])
-            self.downloadItem = [[[self downloadClass] alloc] initWithObject:self.message];
-        
-    }
-    
+
         
     if((self.autoStart && !self.downloadItem && !self.isset) || (self.downloadItem && self.downloadItem.downloadState != DownloadStateCanceled)) {
         [self startDownload:NO force:NO];
@@ -464,13 +456,7 @@ static NSTextAttachment *channelIconAttachment() {
     
 }
 
--(DownloadEventListener *)downloadListener {
-    if( _downloadListener == nil) {
-        _downloadListener = [[DownloadEventListener alloc] init];
-    }
-    
-    return _downloadListener;
-}
+
 
 -(id)identifier {
     return @(self.message.n_id);
@@ -483,12 +469,14 @@ static NSTextAttachment *channelIconAttachment() {
 
 - (void)startDownload:(BOOL)cancel force:(BOOL)force {
     
-    if(!self.downloadItem) {
-        self.downloadItem = [[[self downloadClass] alloc] initWithObject:self.message];
+    DownloadItem *downloadItem = self.downloadItem;
+    
+    if(!downloadItem) {
+        downloadItem = [[[self downloadClass] alloc] initWithObject:self.message];
     }
     
-    if((self.downloadItem.downloadState == DownloadStateCanceled || self.downloadItem.downloadState == DownloadStateWaitingStart) && (force || self.autoStart))
-        [self.downloadItem start];
+    if((downloadItem.downloadState == DownloadStateCanceled || downloadItem.downloadState == DownloadStateWaitingStart) && (force || self.autoStart))
+        [downloadItem start];
     
 }
 
@@ -510,10 +498,6 @@ static NSTextAttachment *channelIconAttachment() {
     return [SettingsArchiver checkMaskedSetting:BigFontSetting] ? 15 : 13;
 }
 
--(void)dealloc {
-    [self.downloadItem removeEvent:_downloadListener];
-    
-}
 
 -(BOOL)updateViews {
     

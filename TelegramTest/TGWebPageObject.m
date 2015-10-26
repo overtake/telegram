@@ -190,7 +190,9 @@ NSImage *placeholder() {
     
 }
 
-
+-(void)dealloc {
+    
+}
 
 -(Class)webpageContainer {
     return NSClassFromString(@"TGWebpageContainer");

@@ -585,6 +585,14 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "__28-[DownloadItem removeEvent:]_block_invoke:DownloadItem.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.events">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "-[TGAttachImageElement setLink:range:]:TGAttachImageElement.m">
          <PersistentStrings>
             <PersistentString
@@ -3729,6 +3737,9 @@
                value = "self.conversation">
             </PersistentString>
          </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "__52-[ChatHistoryController notificationReceiveMessage:]_block_invoke_3:ChatHistoryController.m">
       </ContextState>
       <ContextState
          contextName = "-[ComposeBroadcastTableItemView redrawRow]:ComposeBroadcastListViewController.m">

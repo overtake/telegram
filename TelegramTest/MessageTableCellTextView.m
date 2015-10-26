@@ -102,6 +102,8 @@
  
     [super setItem:item];
     
+    NSLog(@"Retain count is %ld", CFGetRetainCount((__bridge CFTypeRef)self));
+   
     
     if([item isWebPage]) {
         
@@ -231,6 +233,7 @@
     [self.textView setNeedsDisplay:YES];
     
 }
+
 
 -(void)setSelected:(BOOL)selected animation:(BOOL)animation {
     if(selected == self.isSelected)

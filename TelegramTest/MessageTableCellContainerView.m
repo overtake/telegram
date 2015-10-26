@@ -37,6 +37,8 @@
 @property (nonatomic, strong) MessageReplyContainer *replyContainer;
 
 
+@property (nonatomic,strong) DownloadEventListener *downloadEventListener;
+
 @end
 
 
@@ -910,6 +912,9 @@ static int offsetEditable = 30;
 
 
 - (void)downloadProgressHandler:(DownloadItem *)item {
+    
+    NSLog(@"%f",item.progress);
+    
     [self.progressView setProgress:item.progress animated:YES];
 }
 
@@ -932,8 +937,15 @@ static int offsetEditable = 30;
     if(self.item.downloadItem) {
         [self.progressView setProgress:self.item.downloadItem.progress animated:NO];
         
+        [self.item.downloadItem removeEvent:_downloadEventListener];
         
-        [self.item.downloadListener setCompleteHandler:^(DownloadItem * item) {
+        [_downloadEventListener clear];
+        
+        _downloadEventListener = [[DownloadEventListener alloc] init];
+        
+        [self.item.downloadItem addEvent:_downloadEventListener];
+        
+        [_downloadEventListener setCompleteHandler:^(DownloadItem * item) {
             
             [[ASQueue mainQueue] dispatchOnQueue:^{
                 
@@ -950,7 +962,7 @@ static int offsetEditable = 30;
             
         }];
         
-        [self.item.downloadListener setProgressHandler:^(DownloadItem * item) {
+        [_downloadEventListener setProgressHandler:^(DownloadItem * item) {
             
             [ASQueue dispatchOnMainQueue:^{
                 if(weakSelf.cellState != CellStateDownloading)
@@ -990,6 +1002,8 @@ static int offsetEditable = 30;
 - (void)onRemovedListener:(SenderItem *)item {
     if(item.canRelease) {
         self.item.messageSender = nil;
+        
+       [self updateCellState];
     } 
 }
 
@@ -1097,10 +1111,6 @@ static int offsetEditable = 30;
 -(void)dealloc {
     
  //   assert([NSThread isMainThread]);
-    
-    [self.item.downloadListener setCompleteHandler:nil];
-    [self.item.downloadListener setProgressHandler:nil];
-    [self.item.downloadListener setErrorHandler:nil];
     
     [self.item.messageSender removeEventListener:self];
 }

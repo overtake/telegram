@@ -31,7 +31,7 @@
                     
                 }]];
                 
-                if(list.count == 0 && next)
+                if(list.count < limit && next)
                     _state = _conversation.type == DialogTypeSecretChat || _conversation.type == DialogTypeBroadcast ? TGPVMediaBehaviorLoadingStateFull : TGPVMediaBehaviorLoadingStateRemote;
                 
                 [ASQueue dispatchOnStageQueue:^{

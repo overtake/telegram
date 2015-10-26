@@ -13,6 +13,7 @@
 #import "DownloadAudioItem.h"
 #import "MessagetableCellAudioController.h"
 #import "TGAudioPlayerWindow.h"
+#import "DownloadQueue.h"
 @implementation MessageTableItemAudio
 
 - (id)initWithObject:(TLMessage *)object {
@@ -89,6 +90,10 @@
         }];
     }
     
+}
+
+-(DownloadItem *)downloadItem {
+    return [DownloadQueue find:self.message.media.audio.n_id];
 }
 
 - (int)size {

@@ -8,7 +8,7 @@
 
 #import "MessageTableItemGif.h"
 #import "ImageUtils.h"
-
+#import "DownloadQueue.h"
 @interface TGGifImageObject : TGImageObject
 
 @end
@@ -91,6 +91,10 @@
     self.imageObject.imageSize = self.blockSize;
     
     return makeNew;
+}
+
+-(DownloadItem *)downloadItem {
+    return [DownloadQueue find:self.message.media.document.n_id];
 }
 
 -(Class)downloadClass {
