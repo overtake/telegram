@@ -27,7 +27,8 @@ typedef enum {
     SearchSectionContacts,
     SearchSectionUsers,
     SearchSectionMessages,
-    SearchSectionGlobalUsers
+    SearchSectionGlobalUsers,
+    SearchSectionChannels
 } SearchSection;
 
 @interface SearchParams : NSObject
@@ -101,6 +102,7 @@ typedef enum {
 @property (nonatomic, strong) SearchLoadMoreItem *usersLoadMoreItem;
 @property (nonatomic, strong) SearchLoadMoreItem *messagesLoadMoreItem;
 @property (nonatomic, strong) SearchLoadMoreItem *globalUsersLoadMoreItem;
+@property (nonatomic, strong) SearchLoadMoreItem *globalChannelsLoadMoreItem;
 @property (nonatomic, strong) SearchLoaderItem *messagesLoaderItem;
 
 
@@ -143,6 +145,12 @@ typedef enum {
     self.globalUsersLoadMoreItem = [[SearchLoadMoreItem alloc] init];
     [self.globalUsersLoadMoreItem setClickBlock:^{
         [strongSelf showMore:SearchSectionGlobalUsers animation:YES];
+    }];
+    
+    
+    self.globalUsersLoadMoreItem = [[SearchLoadMoreItem alloc] init];
+    [self.globalUsersLoadMoreItem setClickBlock:^{
+        [strongSelf showMore:SearchSectionChannels animation:YES];
     }];
     
     
@@ -784,9 +792,6 @@ static int insertCount = 3;
                 
                 
                 _dontLoadHashtagsForOneRequest = NO;
-                
-                
-                
                 
                 
                 [[Storage manager] searchDialogsByPeers:dialogsNeedCheck needMessages:NO searchString:nil completeHandler:^(NSArray *dialogsDB, NSArray *messagesDB, NSArray *searchMessagesDB) {
