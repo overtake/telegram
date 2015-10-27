@@ -362,6 +362,8 @@ NSImage *selectCheckActiveImage() {
         [self.layer setBackgroundColor:(self.isSelected ? NSColorFromRGB(0xf7f7f7) : NSColorFromRGB(0xffffff)).CGColor];
     }];
     
+    animation.removedOnCompletion = YES;
+    
     [self _didChangeBackgroundColorWithAnimation:animation toColor:color];
     
     [self.layer pop_addAnimation:animation forKey:@"background"];
@@ -443,6 +445,7 @@ NSImage *selectCheckActiveImage() {
         animation.fromValue = (__bridge id)(oldColor.CGColor);
         animation.toValue = (__bridge id)(color.CGColor);
         animation.duration = 0.2;
+        animation.removedOnCompletion = YES;
         [self _didChangeBackgroundColorWithAnimation:animation toColor:color];
         
         [self.layer pop_addAnimation:animation forKey:@"background"];
@@ -1089,6 +1092,7 @@ static int offsetEditable = 30;
     animation.toValue = anim.toValue;
     animation.fromValue = anim.fromValue;
     animation.duration = anim.duration;
+    animation.removedOnCompletion = YES;
     [_replyContainer.messageField pop_addAnimation:animation forKey:@"background"];
     
 }

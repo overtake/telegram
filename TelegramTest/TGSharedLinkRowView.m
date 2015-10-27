@@ -334,6 +334,7 @@ static NSImage *sharedLinkCapImage() {
     animation.toValue = anim.toValue;
     animation.fromValue = anim.fromValue;
     animation.duration = anim.duration;
+    animation.removedOnCompletion = YES;
     [self.textField pop_addAnimation:animation forKey:@"background"];
     
 }

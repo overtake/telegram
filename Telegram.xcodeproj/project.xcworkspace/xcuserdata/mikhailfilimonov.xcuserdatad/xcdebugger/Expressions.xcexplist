@@ -3839,6 +3839,17 @@
          contextName = "-[TGWebpageAttach didUpdateWebpage:]:TGWebpageAttach.m">
       </ContextState>
       <ContextState
+         contextName = "-[POPAnimator _renderTime:item:]:POPAnimator.mm">
+         <PersistentStrings>
+            <PersistentString
+               value = "state-&gt;repeatForever">
+            </PersistentString>
+            <PersistentString
+               value = "state-&gt;repeatCount">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "-[MessageTableItemDocument initWithObject:]:MessageTableItemDocument.m">
          <PersistentStrings>
             <PersistentString

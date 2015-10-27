@@ -298,6 +298,7 @@ static NSImage *playImage() {
     animation.toValue = anim.toValue;
     animation.fromValue = anim.fromValue;
     animation.duration = anim.duration;
+    animation.removedOnCompletion = YES;
     [_captionView.textView pop_addAnimation:animation forKey:@"background"];
     
     

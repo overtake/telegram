@@ -101,9 +101,7 @@
     
  
     [super setItem:item];
-    
-    NSLog(@"Retain count is %ld", CFGetRetainCount((__bridge CFTypeRef)self));
-   
+       
     
     if([item isWebPage]) {
         
@@ -215,6 +213,7 @@
     animation.toValue = anim.toValue;
     animation.fromValue = anim.fromValue;
     animation.duration = anim.duration;
+    animation.removedOnCompletion = YES;
     [self.textView pop_addAnimation:animation forKey:@"background"];
     
     [self.webpageContainerView.descriptionField pop_addAnimation:animation forKey:@"background"];

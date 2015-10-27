@@ -125,8 +125,13 @@ float ease(float t, float b, float c, float d) {
 
 - (void)drawRect:(NSRect)dirtyRect
 {
-    if(self.isHidden)
+    if(self.isHidden || self.window == nil) {
+        [self pop_removeAllAnimations];
+        [_timer invalidate];
+        _timer = nil;
         return;
+    }
+    
     
 	[super drawRect:dirtyRect];
     
@@ -303,46 +308,14 @@ float ease(float t, float b, float c, float d) {
         
         rotate.duration = 2;
         
-        
+        rotate.removedOnCompletion = YES;
         rotate.repeatForever = YES;
         
         [self pop_addAnimation:rotate forKey:@"rotate"];
     }
     
     
-   
-    
-    
-    
-//    if(!self.timer) {
-//        self.timer = [[TGTimer alloc] initWithTimeout:1.f/fps repeat:YES completion:^{
-//
-//            if(_currentAcceptProgress < _currentProgress) {
-//                float summ =  (_currentProgress - _currentAcceptProgress)/(fps*duration);
-//                if(summ < step)
-//                    summ = step;
-//                _currentAcceptProgress+= summ;
-//                
-//            }
-//            
-//            if(_currentAcceptProgress == max) {
-//                _currentAcceptProgress = min;
-//            }
-//            
-//            rotateAngel+= 360/fps;
-//            
-//            if(rotateAngel > 360)
-//                rotateAngel = 0;
-//            
-//            [LoopingUtils runOnMainQueueAsync:^{
-//                [self setNeedsDisplay:YES];
-//            }];
-//            
-//        } queue:[[ASQueue globalQueue] nativeQueue]];
-//        
-//        [self.timer start];
-//    }
-    
+
     
 }
 

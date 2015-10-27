@@ -366,6 +366,7 @@ NSImage *fireImage() {
     animation.toValue = anim.toValue;
     animation.fromValue = anim.fromValue;
     animation.duration = anim.duration;
+    animation.removedOnCompletion = YES;
     [_captionView.textView pop_addAnimation:animation forKey:@"background"];
     
     
@@ -388,6 +389,8 @@ NSImage *fireImage() {
 
 -(void)dealloc {
     MessageTableItemPhoto *item = (MessageTableItemPhoto *) self.item;
+    
+    [self.progressView pop_removeAllAnimations];
     
     [item.imageObject.supportDownloadListener setCompleteHandler:nil];
     [item.imageObject.supportDownloadListener setProgressHandler:nil];

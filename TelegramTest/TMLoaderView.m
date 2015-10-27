@@ -21,8 +21,11 @@
 
 - (void)drawRect:(NSRect)dirtyRect {
     
-    if(self.isHidden)
+    if(self.isHidden || !self.window) {
+        [self pop_removeAllAnimations];
         return;
+    }
+    
     
     
     if(self.style == TMCircularProgressDarkStyle) {
