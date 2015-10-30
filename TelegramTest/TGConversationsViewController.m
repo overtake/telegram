@@ -280,6 +280,11 @@
         
         if(![conversation isKindOfClass:NSNull.class]) {
             [self.tableView setSelectedByHash:[[Telegram conversation] peer_id]];
+            
+            if([Telegram isSingleLayout] && [self.navigationViewController.currentController isKindOfClass:[LeftViewController class]]) {
+                [self.tableView cancelSelection];
+            }
+            
         }
     }
 }

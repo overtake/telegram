@@ -39,7 +39,7 @@
     weak();
     
     _ok = [[BTRButton alloc] initWithFrame:NSMakeRect(self.containerSize.width/2, 0, self.containerSize.width/2, 49)];
-    
+    _ok.autoresizingMask = NSViewWidthSizable;
     _ok.layer.backgroundColor = [NSColor whiteColor].CGColor;
     
     [_ok setTitleColor:LINK_COLOR forControlState:BTRControlStateNormal];
@@ -58,7 +58,7 @@
     
     
     _cancel = [[BTRButton alloc] initWithFrame:NSMakeRect(0, 0, self.containerSize.width/2, 50)];
-    
+    _cancel.autoresizingMask = NSViewWidthSizable;
     _cancel.layer.backgroundColor = [NSColor whiteColor].CGColor;
     
     [_cancel setTitleColor:LINK_COLOR forControlState:BTRControlStateNormal];
@@ -77,11 +77,18 @@
     
     TMView *separator = [[TMView alloc] initWithFrame:NSMakeRect(0, 49, self.containerSize.width, 1)];
     [separator setBackgroundColor:DIALOG_BORDER_COLOR];
+    
+    separator.autoresizingMask = NSViewWidthSizable;
     [self addSubview:separator];
     
     separator = [[TMView alloc] initWithFrame:NSMakeRect(self.containerSize.width/2, 0, 1, 50)];
+    separator.autoresizingMask = NSViewMaxXMargin | NSViewMinXMargin;
     [separator setBackgroundColor:DIALOG_BORDER_COLOR];
     [self addSubview:separator];
+    
+    
+    
+    
 
 }
 
@@ -145,6 +152,7 @@
     
     [_backgroundView setFrameSize:newSize];
     [_animationContainerView setCenterByView:self];
+    
 }
 
 -(void)show:(NSWindow *)window animated:(BOOL)animated {
@@ -352,6 +360,10 @@
     [_containerView setFrameSize:size];
     [_animationContainerView setFrameSize:size];
     [_animationContainerView setCenterByView:self];
+    
+    
+    [_ok setFrame:NSMakeRect(self.containerSize.width/2, 0, self.containerSize.width/2, 49)];
+    [_cancel setFrame:NSMakeRect(0, 0, self.containerSize.width/2, 50)];
 }
 
 -(NSSize)containerSize {
