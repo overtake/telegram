@@ -338,12 +338,9 @@
         message.media.document.size = [msg media].document.size;
         message.media.document.access_hash = [msg media].document.access_hash;
         message.media.document.n_id = [msg media].document.n_id;
-    
+        message.media.document.attributes = msg.media.document.attributes;
         
       
-        
-        
-        
         
         if(![message.media.document.thumb isKindOfClass:[TL_photoSizeEmpty class]]) {
            

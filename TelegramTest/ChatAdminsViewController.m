@@ -22,6 +22,8 @@
 -(void)loadView {
     [super loadView];
     
+    [self setCenterBarViewText:NSLocalizedString(@"Chat.Administrators", nil)];
+    
     _tableView = [[TGSettingsTableView alloc] initWithFrame:self.view.bounds];
     
     [self.view addSubview:_tableView.containerView];

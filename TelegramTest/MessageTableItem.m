@@ -333,7 +333,7 @@ static NSTextAttachment *channelIconAttachment() {
 
     }
     @catch (NSException *exception) {
-        
+        int bp = 0;
     }
     
     

@@ -86,7 +86,7 @@
                 
         [self.message.entities enumerateObjectsUsingBlock:^(TLMessageEntity *obj, NSUInteger idx, BOOL *stop) {
             
-            if([obj isKindOfClass:[TL_messageEntityUrl class]] ||[obj isKindOfClass:[TL_messageEntityTextUrl class]] || [obj isKindOfClass:[TL_messageEntityMention class]] || [obj isKindOfClass:[TL_messageEntityBotCommand class]] || [obj isKindOfClass:[TL_messageEntityHashtag class]] || [obj isKindOfClass:[TL_messageEntityEmail class]] || [obj isKindOfClass:[TL_messageEntityPre class]]) {
+            if([obj isKindOfClass:[TL_messageEntityUrl class]] ||[obj isKindOfClass:[TL_messageEntityTextUrl class]] || [obj isKindOfClass:[TL_messageEntityMention class]] || [obj isKindOfClass:[TL_messageEntityBotCommand class]] || [obj isKindOfClass:[TL_messageEntityHashtag class]] || [obj isKindOfClass:[TL_messageEntityEmail class]] || [obj isKindOfClass:[TL_messageEntityPre class]] || [obj isKindOfClass:[TL_messageEntityCode class]]) {
                 
                 if([obj isKindOfClass:[TL_messageEntityBotCommand class]] && (!self.message.conversation.user.isBot && self.message.conversation.type != DialogTypeChat) )
                     return;
@@ -101,7 +101,7 @@
                 NSString *link = [self.message.message substringWithRange:range];
                 
         
-                range = [self.textAttributed.string rangeOfString:link options:NSCaseInsensitiveSearch range:nextRange];
+                //range = [self.textAttributed.string rangeOfString:link options:NSCaseInsensitiveSearch range:nextRange];
                 
                 
                 nextRange = NSMakeRange(range.location + range.length, self.textAttributed.length - (range.location + range.length));
@@ -115,11 +115,14 @@
                         [links addObject:link];
                     
                     
-                    if(![obj isKindOfClass:[TL_messageEntityPre class]]) {
+                    if([obj isKindOfClass:[TL_messageEntityCode class]]) {
+                        [self.textAttributed addAttribute:NSForegroundColorAttributeName value:[NSColor redColor] range:range];
+                        
+                    } else if([obj isKindOfClass:[TL_messageEntityPre class]]) {
+                         [self.textAttributed addAttribute:NSForegroundColorAttributeName value:DARK_GREEN range:range];
+                    } else {
                         [self.textAttributed addAttribute:NSLinkAttributeName value:link range:range];
                         [self.textAttributed addAttribute:NSForegroundColorAttributeName value:LINK_COLOR range:range];
-                    } else {
-                        [self.textAttributed addAttribute:NSForegroundColorAttributeName value:GRAY_TEXT_COLOR range:range];
                     }
                     
                 }
@@ -223,6 +226,8 @@
 
             
             [self.textAttributed addAttribute:NSFontAttributeName value:TGSystemItalicFont([self fontSize]) range:range];
+        } else if([obj isKindOfClass:[TL_messageEntityCode class]] || [obj isKindOfClass:[TL_messageEntityPre class]]) {
+            [self.textAttributed setFont:[NSFont fontWithName:@"Courier" size:[self fontSize]] forRange:range];
         }
         
     }];

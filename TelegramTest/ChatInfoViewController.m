@@ -121,9 +121,6 @@
     
 }
 
-- (void)navigationGoBack {
-    [[Telegram rightViewController] navigationGoBack];
-}
 
 -(void)buildFirstItem {
     [self.tableView reloadData];
@@ -142,53 +139,60 @@
     
     TMTextButton *button;
     
-    if(self.type == ChatInfoViewControllerNormal) {
-        
-        button = [TMTextButton standartUserProfileNavigationButtonWithTitle:NSLocalizedString(@"Profile.Edit", nil)];
-        [button setTapBlock:^{
-            self.type = ChatInfoViewControllerEdit;
-            [self buildRightView];
-        }];
-        [view addSubview:button];
-        
-    } else {
-        
-        
-        
-        button = [TMTextButton standartUserProfileNavigationButtonWithTitle:NSLocalizedString(@"Profile.Save", nil)];
-        
-        
-        
-        [button setTapBlock:^{
-            [self save];
-        }];
-        [view addSubview:button];
-        
-        
-        
-       TMTextButton *cancelButton = [TMTextButton standartUserProfileNavigationButtonWithTitle:NSLocalizedString(@"Profile.Cancel", nil)];
-        [cancelButton setFrameOrigin:NSMakePoint(button.bounds.size.width + 10, button.frame.origin.y)];
-        weakify();
-        
-        [cancelButton setTapBlock:^{
+    
+    if((!self.chat.isAdmins_enabled || self.chat.isAdmin) || self.chat.isCreator) {
+        if(self.type == ChatInfoViewControllerNormal) {
             
-            [strongSelf.headerView.nameTextField setChat:nil];
-            [strongSelf.headerView.nameTextField setChat:self.chat];
-            strongSelf.type = ChatInfoViewControllerNormal;
-            [self buildRightView];
-        }];
-        [view addSubview:cancelButton];
+            button = [TMTextButton standartUserProfileNavigationButtonWithTitle:NSLocalizedString(@"Profile.Edit", nil)];
+            [button setTapBlock:^{
+                self.type = ChatInfoViewControllerEdit;
+                [self buildRightView];
+            }];
+            [view addSubview:button];
+            
+        } else {
+            
+            
+            
+            button = [TMTextButton standartUserProfileNavigationButtonWithTitle:NSLocalizedString(@"Profile.Save", nil)];
+            
+            
+            
+            [button setTapBlock:^{
+                [self save];
+            }];
+            [view addSubview:button];
+            
+            
+            
+            TMTextButton *cancelButton = [TMTextButton standartUserProfileNavigationButtonWithTitle:NSLocalizedString(@"Profile.Cancel", nil)];
+            [cancelButton setFrameOrigin:NSMakePoint(button.bounds.size.width + 10, button.frame.origin.y)];
+            weakify();
+            
+            [cancelButton setTapBlock:^{
+                
+                [strongSelf.headerView.nameTextField setChat:nil];
+                [strongSelf.headerView.nameTextField setChat:self.chat];
+                strongSelf.type = ChatInfoViewControllerNormal;
+                [self buildRightView];
+            }];
+            [view addSubview:cancelButton];
+            
+            width = cancelButton.frame.size.width+10;
+            
+            [view setFrameSize:NSMakeSize(cancelButton.frame.origin.x + cancelButton.bounds.size.width, cancelButton.bounds.size.height)];
+            
+        }
         
-        width = cancelButton.frame.size.width+10;
+        width+= button.frame.size.width;
         
-        [view setFrameSize:NSMakeSize(cancelButton.frame.origin.x + cancelButton.bounds.size.width, cancelButton.bounds.size.height)];
-        
+        [view setFrameSize:NSMakeSize(width, button.frame.size.height)];
+        [self setRightNavigationBarView:view];
+    } else {
+        [self setRightNavigationBarView:nil];
     }
     
-    width+= button.frame.size.width;
-
-    [view setFrameSize:NSMakeSize(width, button.frame.size.height)];
-    [self setRightNavigationBarView:view];
+    
 }
 
 - (void)save {

@@ -358,6 +358,9 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "__35-[ForwardSenterItem performRequest]_block_invoke102:ForwardSenterItem.m">
+      </ContextState>
+      <ContextState
          contextName = "-[MainWindow validateMenuItem:]:MainWindow.m">
          <PersistentStrings>
             <PersistentString
@@ -1706,6 +1709,9 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "__55-[MessageSenderItem parseEntities:entities:backstrips:]_block_invoke:MessageSenderItem.m">
+      </ContextState>
+      <ContextState
          contextName = "-[TL_localMessage filterType]:TL_localMessage.m">
       </ContextState>
       <ContextState
@@ -2318,6 +2324,11 @@
       </ContextState>
       <ContextState
          contextName = "+[MessageTableItem messageItemFromObject:]:MessageTableItem.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "exception">
+            </PersistentString>
+         </PersistentStrings>
       </ContextState>
       <ContextState
          contextName = "__33-[PhoneChangeController loadView]_block_invoke_2:PhoneChangeController.m">
@@ -2714,6 +2725,14 @@
          <PersistentStrings>
             <PersistentString
                value = "self.list">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[MessageSenderItem initWithMessage:forConversation:noWebpage:additionFlags:]:MessageSenderItem.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.message.message">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -3426,6 +3445,9 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "-[ForwardSenterItem initWithMessages:forConversation:additionFlags:]:ForwardSenterItem.m">
+      </ContextState>
+      <ContextState
          contextName = "__46-[TGPVMediaBehavior load:next:limit:callback:]_block_invoke:TGPVMediaBehavior.m">
          <PersistentStrings>
             <PersistentString
@@ -4085,6 +4107,12 @@
       <ContextState
          contextName = "__61-[MessageTableItemText updateLinkAttributesByMessageEntities]_block_invoke:MessageTableItemText.m">
          <PersistentStrings>
+            <PersistentString
+               value = "self.message.message">
+            </PersistentString>
+            <PersistentString
+               value = "range">
+            </PersistentString>
             <PersistentString
                value = "self.message">
             </PersistentString>
