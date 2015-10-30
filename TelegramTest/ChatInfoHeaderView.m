@@ -456,7 +456,7 @@
         
         [_admins setFrameOrigin:NSMakePoint(self.exportChatInvite.frame.origin.x,self.exportChatInvite.isHidden ? (self.addMembersButton.isHidden ? _setGroupPhotoButton.frame.origin.y -42 : _addMembersButton.frame.origin.y-42) : _exportChatInvite.frame.origin.y-42)];
         
-        [_admins setHidden:!self.controller.chat.isCreator];
+        [_admins setHidden:!self.controller.chat.isCreator || !ACCEPT_FEATURE];
         
         
         [self.sharedMediaButton setFrameOrigin:NSMakePoint(NSMinX(_admins.isHidden ? self.addMembersButton.frame : self.admins.frame), (cantEditGroup ? NSHeight(self.frame) - 100 : NSMinY(_admins.isHidden ? self.addMembersButton.frame : self.admins.frame)) - 72)];

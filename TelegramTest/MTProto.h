@@ -968,6 +968,7 @@
 @property (nonatomic, strong) TLChatParticipant* self_participant;
 @property (nonatomic, strong) NSMutableArray* participants;
 @property int version;
+@property int admin_id;
 @end
 
 @interface TL_chatParticipantsForbidden : TLChatParticipants<NSCoding>
@@ -978,6 +979,9 @@
 @end
 @interface TL_chatParticipantsForbidden_old34 : TLChatParticipants<NSCoding>
 +(TL_chatParticipantsForbidden_old34*)createWithChat_id:(int)chat_id;
+@end
+@interface TL_chatParticipants_old38 : TLChatParticipants<NSCoding>
++(TL_chatParticipants_old38*)createWithChat_id:(int)chat_id admin_id:(int)admin_id participants:(NSMutableArray*)participants version:(int)version;
 @end
 	
 @interface TLChatPhoto()

@@ -806,6 +806,8 @@ static int offsetEditable = 30;
     
     if(!editable)
         [_shareImageView setFrameOrigin:NSMakePoint(NSMinX(_rightView.frame) + NSWidth(_shareImageView.frame) + NSWidth(_dateLayer.frame) + 15, NSMinY(_rightView.frame) - NSHeight(_shareImageView.frame) - 5)];
+    
+    [_shareImageView setHidden:editable];
 }
 
 - (void)setEditable:(BOOL)editable animation:(BOOL)animation {
@@ -815,6 +817,8 @@ static int offsetEditable = 30;
     else
         [self deallocSelectButton];
     
+    
+     [_shareImageView setHidden:editable];
     
     if(self.isEditable == editable && animation)
         return;
@@ -877,7 +881,7 @@ static int offsetEditable = 30;
     
     
     
-    [_shareImageView setHidden:editable];
+    
     
 }
 

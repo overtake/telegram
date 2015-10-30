@@ -4703,6 +4703,80 @@
         
 @end
 
+@implementation TL_chatParticipants_old38
++(TL_chatParticipants_old38*)createWithChat_id:(int)chat_id admin_id:(int)admin_id participants:(NSMutableArray*)participants version:(int)version {
+	TL_chatParticipants_old38* obj = [[TL_chatParticipants_old38 alloc] init];
+	obj.chat_id = chat_id;
+	obj.admin_id = admin_id;
+	obj.participants = participants;
+	obj.version = version;
+	return obj;
+}
+-(void)serialize:(SerializedData*)stream {
+	[stream writeInt:self.chat_id];
+	[stream writeInt:self.admin_id];
+	//Serialize FullVector
+	[stream writeInt:0x1cb5c415];
+	{
+		NSInteger tl_count = [self.participants count];
+		[stream writeInt:(int)tl_count];
+		for(int i = 0; i < (int)tl_count; i++) {
+            TLChatParticipant* obj = [self.participants objectAtIndex:i];
+            [ClassStore TLSerialize:obj stream:stream];
+		}
+	}
+	[stream writeInt:self.version];
+}
+-(void)unserialize:(SerializedData*)stream {
+	self.chat_id = [stream readInt];
+	self.admin_id = [stream readInt];
+	//UNS FullVector
+	[stream readInt];
+	{
+		if(!self.participants)
+			self.participants = [[NSMutableArray alloc] init];
+		int count = [stream readInt];
+		for(int i = 0; i < count; i++) {
+			TLChatParticipant* obj = [ClassStore TLDeserialize:stream];
+            if(obj != nil && [obj isKindOfClass:[TLChatParticipant class]])
+                 [self.participants addObject:obj];
+            else
+                break;
+		}
+	}
+	self.version = [stream readInt];
+}
+        
+-(TL_chatParticipants_old38 *)copy {
+    
+    TL_chatParticipants_old38 *objc = [[TL_chatParticipants_old38 alloc] init];
+    
+    objc.chat_id = self.chat_id;
+    objc.admin_id = self.admin_id;
+    objc.participants = [self.participants copy];
+    objc.version = self.version;
+    
+    return objc;
+}
+    
+-(id)initWithCoder:(NSCoder *)aDecoder {
+
+    if((self = [ClassStore deserialize:[aDecoder decodeObjectForKey:@"data"]])) {
+        
+    }
+    
+    return self;
+}
+        
+-(void)encodeWithCoder:(NSCoder *)aCoder {
+    [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
+}
+
+        
+
+        
+@end
+
 
 @implementation TLChatPhoto
 @end
