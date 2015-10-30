@@ -22,6 +22,12 @@
         
         self.message = [MessageSender createOutMessage:message media:[TL_messageMediaEmpty create] conversation:conversation];
         
+        NSMutableArray *entities = [NSMutableArray array];
+        
+        self.message.message = [self parseEntities:self.message.message entities:entities];
+        
+        self.message.entities = entities;
+        
         if(additionFlags & (1 << 4))
             self.message.from_id = 0;
             
@@ -53,15 +59,18 @@
     
     id request;
     
+    
+    
     if(self.conversation.type != DialogTypeBroadcast) {
         
-        request = [TLAPI_messages_sendMessage createWithFlags:[self senderFlags] peer:[self.conversation inputPeer] reply_to_msg_id:self.message.reply_to_msg_id message:[self.message message] random_id:[self.message randomId] reply_markup:[TL_replyKeyboardMarkup createWithFlags:0 rows:nil] entities:nil];
+        request = [TLAPI_messages_sendMessage createWithFlags:[self senderFlags] peer:[self.conversation inputPeer] reply_to_msg_id:self.message.reply_to_msg_id message:[self.message message] random_id:[self.message randomId] reply_markup:[TL_replyKeyboardMarkup createWithFlags:0 rows:nil] entities:self.message.entities];
     } else {
         
         TL_broadcast *broadcast = self.conversation.broadcast;
         
         request = [TLAPI_messages_sendBroadcast createWithContacts:[broadcast inputContacts] random_id:[broadcast generateRandomIds] message:self.message.message media:[TL_inputMediaEmpty create]];
     }
+    
     
     self.rpc_request = [RPCRequest sendRequest:request successHandler:^(RPCRequest *request, TL_updateShortSentMessage *response) {
         
@@ -81,8 +90,6 @@
              self.message.media = response.media;
              self.message.entities = response.entities;
         }
-        
-       
         
         self.message.dstate = DeliveryStateNormal;
         
@@ -108,6 +115,35 @@
     
 }
 
+
+
+
+-(NSString *)parseEntities:(NSString *)message entities:(NSMutableArray *)entities {
+    
+    NSRange startRange = [message rangeOfString:@"```"];
+    
+    
+    
+    if(startRange.location != NSNotFound) {
+        
+        NSRange stopRange = [message rangeOfString:@"```" options:0 range:NSMakeRange(startRange.location + startRange.length, message.length - (startRange.location + startRange.length ))];
+        
+        if(stopRange.location != NSNotFound) {
+            [entities addObject:[TL_messageEntityPre createWithOffset:(int)startRange.location length:(int)(stopRange.location - startRange.location - startRange.length) language:@""]];
+        
+            message = [message stringByReplacingOccurrencesOfString:@"```" withString:@"" options:0 range:NSMakeRange(startRange.location, stopRange.location + stopRange.length  - startRange.location)];
+            
+        }
+        
+        
+        if([message rangeOfString:@"```"].location != NSNotFound) {
+            return [self parseEntities:message entities:entities];
+        }
+    }
+    
+    return message;
+    
+}
 
 
 -(void)resend {

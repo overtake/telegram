@@ -323,7 +323,7 @@ static NSDictionary *attributes() {
 
 -(void)checkMessageState {
     
-    if(self.item.typing) {
+    if([[[TGModernTypingManager typingForConversation:self.item.conversation] currentActions] count] > 0) {
         [self startAnimation];
     } else {
         [_messageField setAttributedStringValue:self.item.messageText];
@@ -355,9 +355,10 @@ static NSDictionary *attributes() {
         
         [_messageField setAttributedStringValue:attr];
         
-        if(!self.item.typing) {
+        if([[[TGModernTypingManager typingForConversation:self.item.conversation] currentActions] count] == 0) {
             [_timer invalidate];
             _timer = nil;
+            [self checkMessageState];
         }
         
     } queue:[ASQueue mainQueue].nativeQueue];

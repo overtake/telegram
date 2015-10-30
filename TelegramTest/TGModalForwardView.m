@@ -18,13 +18,22 @@
 
 -(instancetype)initWithFrame:(NSRect)frameRect {
     if(self = [super initWithFrame:frameRect]) {
-        [self setContainerFrameSize:NSMakeSize(NSWidth(frameRect) - 60, NSHeight(frameRect) - 60)];
+        [self setContainerFrameSize:NSMakeSize(MIN(NSWidth(frameRect) - 60,400), MIN(NSHeight(frameRect) - 60,400))];
         
         
         [self initialize];
     }
     
     return self;
+}
+
+-(void)setFrameSize:(NSSize)newSize {
+    [super setFrameSize:newSize];
+    
+    
+    
+    [self setContainerFrameSize:NSMakeSize(MIN(NSWidth(self.frame) - 60,400), MIN(NSHeight(self.frame) - 60,400))];
+    
 }
 
 -(void)initialize {

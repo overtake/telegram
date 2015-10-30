@@ -483,9 +483,10 @@ void add_sticker_pack_by_name(TLInputStickerSet *set) {
         dispatch_after_seconds(0.2, ^{
             TGStickerPackModalView *stickerModalView = [[TGStickerPackModalView alloc] init];
             
-            [stickerModalView show:[Telegram delegate].mainWindow animated:YES];
-            
             [stickerModalView setStickerPack:response];
+            
+            [stickerModalView show:[Telegram delegate].mainWindow animated:YES];
+
         });
         
         

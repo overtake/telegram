@@ -159,7 +159,7 @@
 
     if(animated) {
         
-        [[[Telegram delegate] window] makeFirstResponder:self];
+        [window makeFirstResponder:self];
         
         self.containerView.layer.opacity = 0;
         //[_containerView.layer setFrameOrigin:];
@@ -348,6 +348,7 @@
 }
 
 -(void)setContainerFrameSize:(NSSize)size {
+    
     [_containerView setFrameSize:size];
     [_animationContainerView setFrameSize:size];
     [_animationContainerView setCenterByView:self];

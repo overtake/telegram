@@ -24,13 +24,7 @@
 
 - (NSString *) trim {
     
-    NSString *string = [self stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
-    
-    NSRange range = NSMakeRange(0, 1);
-    while(range.length != 0) {
-        range = [string rangeOfString:@"  "];
-        string = [string stringByReplacingOccurrencesOfString:@"  " withString:@" "];
-    }
+    NSString *string = self;
     
     string = [string stringByReplacingOccurrencesOfString:@" -- " withString:@" — "];
     string = [string stringByReplacingOccurrencesOfString:@"<<" withString:@"«"];

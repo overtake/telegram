@@ -435,6 +435,9 @@ static NSMutableArray *waiting;
     
     flags|=self.message.from_id == 0 ? 1 << 4 : 0;
     
+    if(self.message.entities.count > 0)
+        flags|= 1 << 3;
+    
     return flags;
 }
 

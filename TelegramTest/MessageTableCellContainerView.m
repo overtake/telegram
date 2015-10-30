@@ -17,6 +17,7 @@
 #import "POPCGUtils.h"
 #import "MessagesBottomView.h"
 #import "TGHeadChatPanel.h"
+#import "TGModalForwardView.h"
 @interface MessageTableCellContainerView() <TMHyperlinkTextFieldDelegate>
 @property (nonatomic, strong) TMHyperlinkTextField *nameTextField;
 @property (nonatomic, strong) BTRImageView *sendImageView;
@@ -38,6 +39,11 @@
 
 
 @property (nonatomic,strong) DownloadEventListener *downloadEventListener;
+
+
+@property (nonatomic,strong) NSImageView *shareImageView;
+
+@property (nonatomic,strong) TGModalForwardView *forwardModalView;
 
 @end
 
@@ -739,11 +745,45 @@ static BOOL dragAction = NO;
     [self.dateLayer setStringValue:item.dateStr];
     [self.dateLayer setFrameSize:CGSizeMake(item.dateSize.width, item.dateSize.height)];
     [self.dateLayer setFrameOrigin:CGPointMake(NSMaxX(_stateLayer.frame), NSMinY(self.dateLayer.frame))];
-    [self.rightView setFrameSize:CGSizeMake(item.dateSize.width + offserUnreadMark + NSWidth(self.stateLayer.frame) + 10 , 18)];
-    
+    [self.rightView setFrameSize:CGSizeMake(item.dateSize.width + offserUnreadMark + NSWidth(self.stateLayer.frame) + 15 , 18)];
     [self.rightView setToolTip:self.item.fullDate];
     
     [self setNeedsDisplay:YES];
+    
+    
+    if(item.message.isChannelMessage && item.message.from_id == 0) {
+        
+        if(!_shareImageView) {
+            _shareImageView = imageViewWithImage(image_ChannelShare());
+            
+            weak();
+            
+            [_shareImageView setCallback:^{
+                
+                [weakSelf.forwardModalView close:NO];
+                weakSelf.forwardModalView = nil;
+                
+                weakSelf.forwardModalView = [[TGModalForwardView alloc] initWithFrame:weakSelf.window.contentView.bounds];
+                
+                [weakSelf.messagesViewController setSelectedMessage:weakSelf.item selected:YES];
+                
+                 weakSelf.forwardModalView.messagesViewController = weakSelf.messagesViewController;
+                
+                [weakSelf.forwardModalView show:weakSelf.window animated:YES];
+                
+                
+            }];
+        }
+        
+        
+        [self addSubview:_shareImageView];
+        [_shareImageView setAutoresizingMask:NSViewMinXMargin];
+       // [_shareImageView setFrameOrigin:NSMakePoint(NSMinX(_rightView.frame) + NSWidth(_shareImageView.frame) + NSMaxX(_dateLayer.frame), NSMinY(_rightView.frame) - NSHeight(_shareImageView.frame))];
+        
+    } else {
+        [_shareImageView removeFromSuperview];
+        _shareImageView = nil;
+    }
     
 
 }
@@ -763,6 +803,8 @@ static int offsetEditable = 30;
     
     [self.rightView.layer setFrameOrigin:position];
     [self.rightView setFrameOrigin:position];
+    
+    [_shareImageView setFrameOrigin:NSMakePoint(NSMinX(_rightView.frame) + NSWidth(_shareImageView.frame) + NSWidth(_dateLayer.frame) + 15, NSMinY(_rightView.frame) - NSHeight(_shareImageView.frame) - 5)];
 }
 
 - (void)setEditable:(BOOL)editable animation:(BOOL)animation {

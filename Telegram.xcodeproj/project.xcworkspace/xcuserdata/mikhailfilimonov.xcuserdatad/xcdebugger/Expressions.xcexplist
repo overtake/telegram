@@ -1177,6 +1177,9 @@
          contextName = "__35-[MessageSenderItem performRequest]_block_invoke:MessageSenderItem.m">
          <PersistentStrings>
             <PersistentString
+               value = "request">
+            </PersistentString>
+            <PersistentString
                value = "self.message">
             </PersistentString>
          </PersistentStrings>
@@ -2146,6 +2149,14 @@
       </ContextState>
       <ContextState
          contextName = "-[TGStickerPackEmojiController drawWithStickers:]:TGStickerPackEmojiController.m">
+      </ContextState>
+      <ContextState
+         contextName = "-[MessageSenderItem parseEntities:nextLocation:entities:]:MessageSenderItem.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "stopRange.location">
+            </PersistentString>
+         </PersistentStrings>
       </ContextState>
       <ContextState
          contextName = "__46-[TMCollectionPageController setConversation:]_block_invoke:TMCollectionPageController.m">
@@ -3126,6 +3137,14 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "-[TGModalView show:animated:]:TGModalView.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.containerSize">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "-[ComposeActionGroupBehavior centerTitle]:ComposeActionGroupBehavior.m">
          <PersistentStrings>
             <PersistentString
@@ -3146,6 +3165,9 @@
       </ContextState>
       <ContextState
          contextName = "__36-[DownloadOperation start:selector:]_block_invoke:DownloadOperation.m">
+      </ContextState>
+      <ContextState
+         contextName = "-[MessageSenderItem parseEntities:entities:]:MessageSenderItem.m">
       </ContextState>
       <ContextState
          contextName = "__35-[TGPVImageObject initDownloadItem]_block_invoke:TGPVImageObject.m">
@@ -3237,6 +3259,9 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "-[MessageSenderItem performRequest]:MessageSenderItem.m">
+      </ContextState>
+      <ContextState
          contextName = "_POPAnimationState::setDelegate(objc_object*):POPAnimationInternal.h">
          <PersistentStrings>
             <PersistentString
@@ -3312,6 +3337,9 @@
       <ContextState
          contextName = "-[ComposePickerViewController viewWillAppear:]:ComposePickerViewController.m">
          <PersistentStrings>
+            <PersistentString
+               value = "self.action.filter">
+            </PersistentString>
             <PersistentString
                value = "self.action.behavior">
             </PersistentString>
@@ -4058,7 +4086,7 @@
          contextName = "__61-[MessageTableItemText updateLinkAttributesByMessageEntities]_block_invoke:MessageTableItemText.m">
          <PersistentStrings>
             <PersistentString
-               value = "self.message.message">
+               value = "self.message">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
