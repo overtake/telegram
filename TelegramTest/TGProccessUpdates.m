@@ -186,7 +186,7 @@ static NSArray *channelUpdates;
             
         }
         
-        if([update isKindOfClass:[TL_messages_affectedHistory class]]) {
+        if([update isKindOfClass:[TL_messages_affectedMessages class]]) {
             
             [self addStatefullUpdate:update seq:0 pts:[update pts] date:0 qts:0 pts_count:[update pts_count]];
             
@@ -782,6 +782,18 @@ static NSArray *channelUpdates;
             return;
         }
         
+        
+        if([update isKindOfClass:[TL_updateChatParticipantAdmin class]]) {
+            
+            
+            
+        }
+        
+        if([update isKindOfClass:[TL_updateChatAdmins class]]) {
+            
+            
+            
+        }
         
         if([update isKindOfClass:[TL_updateChatUserTyping class]] || [update isKindOfClass:[TL_updateUserTyping class]] || [update isKindOfClass:[TL_updateEncryptedChatTyping class]]) {
             [Notification perform:USER_TYPING data:@{KEY_SHORT_UPDATE:update}];

@@ -155,7 +155,7 @@ static long h_r_l;
     }];
 
     
-    if(!NSContainsRect([self.tableView visibleRect], [self.tableView rectOfRow:selectedIdx]))
+    if(![self.tableView rowIsVisible:selectedIdx])
         [self.tableView.scrollView.clipView scrollPoint:[self.tableView rectOfRow:selectedIdx].origin];
 }
 
@@ -316,7 +316,9 @@ static long h_r_l;
     
     [self.tableView redrawAll];
     
-    if(NSContainsRect([self.tableView visibleRect], [self.tableView rectOfRow:selectedIdx]))
+    
+    
+    if(![self.tableView rowIsVisible:selectedIdx])
         [self.tableView.scrollView.clipView scrollPoint:[self.tableView rectOfRow:selectedIdx].origin];
 
 }

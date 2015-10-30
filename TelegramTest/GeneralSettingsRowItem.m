@@ -16,19 +16,19 @@
 
 
 
--(id)initWithType:(SettingsRowItemType)type callback:(void (^)(GeneralSettingsRowItem *item))callback description:(NSString *)description  height:(int)height stateback:(id (^)(GeneralSettingsRowItem *item))stateback {
+-(id)initWithType:(SettingsRowItemType)type callback:(void (^)(TGGeneralRowItem *item))callback description:(NSString *)description  height:(int)height stateback:(id (^)(TGGeneralRowItem *item))stateback {
     if(self = [super initWithHeight:height]) {
-        _type = type;
-        _callback = callback;
+        self.type = type;
+        self.callback = callback;
         _desc = description;
-        _stateback = stateback;
+        self.stateback = stateback;
         _enabled = YES;
     }
     
     return self;
 }
 
--(id)initWithType:(SettingsRowItemType)type callback:(void (^)(GeneralSettingsRowItem *item))callback description:(NSString *)description subdesc:(NSString *)subdesc height:(int)height stateback:(id (^)(GeneralSettingsRowItem *item))stateback {
+-(id)initWithType:(SettingsRowItemType)type callback:(void (^)(TGGeneralRowItem *item))callback description:(NSString *)description subdesc:(NSString *)subdesc height:(int)height stateback:(id (^)(TGGeneralRowItem *item))stateback {
     if(self = [self initWithType:type callback:callback description:description height:height stateback:stateback]) {
         _subdesc = subdesc;
     }

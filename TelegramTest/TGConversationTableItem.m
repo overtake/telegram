@@ -28,7 +28,7 @@
         
         [Notification addObserver:self selector:@selector(didChangeNotifications:) name:[Notification notificationNameByDialog:conversation action:@"notification"]];
        
-        [self needUpdateMessage:[[NSNotification alloc] initWithName:@"" object:nil userInfo:@{KEY_LAST_CONVRESATION_DATA:[MessagesUtils conversationLastData:conversation]}]];
+        [self needUpdateMessage:[[NSNotification alloc] initWithName:@"" object:nil userInfo:@{KEY_LAST_CONVRESATION_DATA:[MessagesUtils conversationLastData:conversation],KEY_DIALOG:conversation,KEY_DIALOG:conversation}]];
     
         [self didChangeTyping:nil];
 
@@ -43,6 +43,10 @@
 
 
 -(void)needUpdateMessage:(NSNotification *)notification {
+    
+    _conversation = notification.userInfo[KEY_DIALOG];
+    
+    assert(_conversation != nil);
     
     _checkMessage = self.conversation.lastMessage;
     

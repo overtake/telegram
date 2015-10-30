@@ -35,6 +35,7 @@
 @property (nonatomic, strong,readonly) UserInfoShortButtonView *addMembersButton;
 
 @property (nonatomic, strong, readonly) UserInfoShortButtonView *exportChatInvite;
+@property (nonatomic, strong, readonly) UserInfoShortButtonView *admins;
 
 @property (nonatomic, strong,readonly) UserInfoShortButtonView *notificationView;
 @property (nonatomic, strong,readonly) ITSwitch *notificationSwitcher;

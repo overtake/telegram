@@ -103,6 +103,8 @@ typedef enum {
 @property (nonatomic,assign) TGAudioPlayerWindowState windowState;
 
 
+@property (nonatomic,strong) DownloadEventListener *downloadEventListener;
+
 @property (nonatomic,strong) NSMutableArray *eventListeners;
 
 @end
@@ -519,6 +521,8 @@ typedef enum {
 -(void)orderOut:(id)sender {
     [super orderOut:sender];
     _isVisibility = NO;
+    [self.currentItem.downloadItem removeEvent:_downloadEventListener];
+    _downloadEventListener = nil;
     [self clear];
 }
 
@@ -668,7 +672,7 @@ typedef enum {
 
 -(void)setCurrentItem:(MessageTableItemAudioDocument *)audioItem {
     
-    [_currentItem.downloadItem removeEvent:audioItem.secondDownloadListener];
+    [_currentItem.downloadItem removeEvent:_downloadEventListener];
     
     if(_currentItem == audioItem)
     {
@@ -676,7 +680,7 @@ typedef enum {
         return;
     }
     
-    [_currentItem.downloadItem removeEvent:_currentItem.secondDownloadListener];
+    [_currentItem.downloadItem removeEvent:_downloadEventListener];
     
     _currentItem = audioItem;
 
@@ -712,9 +716,15 @@ typedef enum {
        
         [self.progressView setDownloadProgress:_currentItem.downloadItem.progress];
         
-        [_currentItem.downloadItem addEvent:_currentItem.secondDownloadListener];
         
-        [_currentItem.secondDownloadListener setCompleteHandler:^(DownloadItem * item) {
+        [_currentItem.downloadItem removeEvent:_downloadEventListener];
+        
+        _downloadEventListener = [[DownloadEventListener alloc] init];
+        
+        [_currentItem.downloadItem addEvent:_downloadEventListener];
+        
+        
+        [_downloadEventListener setCompleteHandler:^(DownloadItem * item) {
             
             [[ASQueue mainQueue] dispatchOnQueue:^{
                 
@@ -732,7 +742,7 @@ typedef enum {
             
         }];
         
-        [_currentItem.secondDownloadListener setProgressHandler:^(DownloadItem * item) {
+        [_downloadEventListener setProgressHandler:^(DownloadItem * item) {
             
             [ASQueue dispatchOnMainQueue:^{
                 

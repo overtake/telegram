@@ -10,6 +10,23 @@
 
 @interface TGGeneralRowItem : TMRowItem
 
+typedef enum
+{
+    SettingsRowItemTypeSwitch,
+    SettingsRowItemTypeChoice,
+    SettingsRowItemTypeNext,
+    SettingsRowItemTypeSelected
+} SettingsRowItemType;
+
+
+
+@property (nonatomic,strong) void (^callback)(TGGeneralRowItem *item);
+
+@property (nonatomic,strong) id (^stateback)(TGGeneralRowItem *item);
+
+@property (nonatomic,assign) SettingsRowItemType type;
+
+
 @property (nonatomic,assign) int height;
 @property (nonatomic,assign) int xOffset;
 @property (nonatomic,assign) BOOL drawsSeparator;

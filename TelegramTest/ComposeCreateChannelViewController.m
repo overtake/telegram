@@ -252,13 +252,13 @@
     
     
 //    
-//    GeneralSettingsRowItem *discussionItem = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeSwitch callback:^(GeneralSettingsRowItem *item) {
+//    GeneralSettingsRowItem *discussionItem = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeSwitch callback:^(TGGeneralRowItem *item) {
 //        
 //        _headerItem.discussion = !_headerItem.discussion;
 //        
 //        [self updateCompose];
 //        
-//    } description:NSLocalizedString(@"Channel.Discussion", nil) height:60 stateback:^id(GeneralSettingsRowItem *item) {
+//    } description:NSLocalizedString(@"Channel.Discussion", nil) height:60 stateback:^id(TGGeneralRowItem *item) {
 //        
 //        return @(_headerItem.discussion);
 //        

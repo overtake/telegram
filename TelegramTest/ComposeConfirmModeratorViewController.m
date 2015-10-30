@@ -48,22 +48,22 @@
     
     [_tableView addItem:_userContainer tableRedraw:NO];
     
-    GeneralSettingsRowItem *moderatorItem = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeSelected callback:^(GeneralSettingsRowItem *item) {
+    GeneralSettingsRowItem *moderatorItem = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeSelected callback:^(TGGeneralRowItem *item) {
         
         self.participantRole = [TL_channelRoleModerator create];
         [_tableView reloadData];
         
-    } description:NSLocalizedString(@"Channel.Comments.Moderator", nil) height:42 stateback:^id(GeneralSettingsRowItem *item) {
+    } description:NSLocalizedString(@"Channel.Comments.Moderator", nil) height:42 stateback:^id(TGGeneralRowItem *item) {
         return @([self.participantRole isKindOfClass:[TL_channelRoleModerator class]]);
     }];
     
    
-    GeneralSettingsRowItem *editorItem = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeSelected callback:^(GeneralSettingsRowItem *item) {
+    GeneralSettingsRowItem *editorItem = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeSelected callback:^(TGGeneralRowItem *item) {
         
         self.participantRole = [TL_channelRoleEditor create];
         [_tableView reloadData];
         
-    } description:NSLocalizedString(@"Channel.Comments.Editor", nil) height:42 stateback:^id(GeneralSettingsRowItem *item) {
+    } description:NSLocalizedString(@"Channel.Comments.Editor", nil) height:42 stateback:^id(TGGeneralRowItem *item) {
         return @(![self.participantRole isKindOfClass:[TL_channelRoleModerator class]]);
     }];
     
@@ -95,7 +95,7 @@
     
     if([self.action.reservedObject1 boolValue]) {
        
-        GeneralSettingsRowItem *dismissModerator = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeNext callback:^(GeneralSettingsRowItem *item) {
+        GeneralSettingsRowItem *dismissModerator = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeNext callback:^(TGGeneralRowItem *item) {
             
             confirm(appName(), NSLocalizedString(@"Channel.DismissModeratorConfirm", nil), ^{
                 self.participantRole = [TL_channelRoleEmpty create];
@@ -105,7 +105,7 @@
             }, nil);
             
             
-        } description:NSLocalizedString(@"Channel.DismissModerator", nil) height:82 stateback:^id(GeneralSettingsRowItem *item) {
+        } description:NSLocalizedString(@"Channel.DismissModerator", nil) height:82 stateback:^id(TGGeneralRowItem *item) {
             return nil;
         }];
         

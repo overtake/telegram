@@ -595,4 +595,10 @@ static TMTableView *tableStatic;
         [self.scrollView mouseDragged:theEvent];
 }
 
+-(BOOL)rowIsVisible:(NSUInteger)index {
+    NSRange range = [self rowsInRect:[self visibleRect]];
+    
+    return range.location <= index && range.location + range.length >= index;
+}
+
 @end

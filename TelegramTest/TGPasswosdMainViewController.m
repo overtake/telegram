@@ -65,7 +65,7 @@
     
     if([self.passwordResult email_unconfirmed_pattern].length == 0) {
         if([self.passwordResult isKindOfClass:[TL_account_noPassword class]]) {
-            GeneralSettingsRowItem *turnPassword = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeSelected callback:^(GeneralSettingsRowItem *item) {
+            GeneralSettingsRowItem *turnPassword = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeSelected callback:^(TGGeneralRowItem *item) {
                 
                 TGSetPasswordAction *firstAction = [[TGSetPasswordAction alloc] init];
                 
@@ -152,7 +152,7 @@
                 [[Telegram rightViewController] showSetPasswordWithAction:firstAction];
                 
                 
-            } description:NSLocalizedString(@"PasswordSettings.TurnOnPassword", nil) height:82 stateback:^id(GeneralSettingsRowItem *item) {
+            } description:NSLocalizedString(@"PasswordSettings.TurnOnPassword", nil) height:82 stateback:^id(TGGeneralRowItem *item) {
                 return @(NO);
             }];
             
@@ -170,7 +170,7 @@
             
             
             
-            GeneralSettingsRowItem *changePassword = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeSelected callback:^(GeneralSettingsRowItem *item) {
+            GeneralSettingsRowItem *changePassword = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeSelected callback:^(TGGeneralRowItem *item) {
                 
                 
                 TGSetPasswordAction *sAction = [[TGSetPasswordAction alloc] init];
@@ -249,7 +249,7 @@
                 [[Telegram rightViewController] showSetPasswordWithAction:sAction];
                 
                 
-            } description: NSLocalizedString(@"PasswordSettings.ChangePassword", nil) height:82 stateback:^id(GeneralSettingsRowItem *item) {
+            } description: NSLocalizedString(@"PasswordSettings.ChangePassword", nil) height:82 stateback:^id(TGGeneralRowItem *item) {
                 return @(NO);
             }];
             
@@ -257,7 +257,7 @@
             
             
             
-            GeneralSettingsRowItem *turnPassword = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeSelected callback:^(GeneralSettingsRowItem *item) {
+            GeneralSettingsRowItem *turnPassword = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeSelected callback:^(TGGeneralRowItem *item) {
                 
                 
                 TGSetPasswordAction *sAction = [[TGSetPasswordAction alloc] init];
@@ -306,13 +306,13 @@
                 
                 
                 
-            } description: NSLocalizedString(@"PasswordSettings.TurnOffPassword", nil) height:42 stateback:^id(GeneralSettingsRowItem *item) {
+            } description: NSLocalizedString(@"PasswordSettings.TurnOffPassword", nil) height:42 stateback:^id(TGGeneralRowItem *item) {
                 return @(NO);
             }];
             
             [self.tableView insert:turnPassword atIndex:self.tableView.list.count tableRedraw:NO];
             
-            GeneralSettingsRowItem *recoveryEmail = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeSelected callback:^(GeneralSettingsRowItem *item) {
+            GeneralSettingsRowItem *recoveryEmail = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeSelected callback:^(TGGeneralRowItem *item) {
                 
                 
                 TGSetPasswordAction *sAction = [[TGSetPasswordAction alloc] init];
@@ -389,7 +389,7 @@
                 
                 
                 
-            } description:pwd.has_recovery ? NSLocalizedString(@"PasswordSettings.ChangeRecoveryEmail", nil) : NSLocalizedString(@"PasswordSettings.SetRecoveryEmail", nil) height:42 stateback:^id(GeneralSettingsRowItem *item) {
+            } description:pwd.has_recovery ? NSLocalizedString(@"PasswordSettings.ChangeRecoveryEmail", nil) : NSLocalizedString(@"PasswordSettings.SetRecoveryEmail", nil) height:42 stateback:^id(TGGeneralRowItem *item) {
                 return @(NO);
             }];
             
@@ -407,7 +407,7 @@
         
         if(![_passwordResult isKindOfClass:[TL_account_noPassword class]]) {
             
-            GeneralSettingsRowItem *recoveryEmail = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeSelected callback:^(GeneralSettingsRowItem *item) {
+            GeneralSettingsRowItem *recoveryEmail = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeSelected callback:^(TGGeneralRowItem *item) {
                 
                 
                 TGSetPasswordAction *sAction = [[TGSetPasswordAction alloc] init];
@@ -491,7 +491,7 @@
                 
                 
                 
-            } description:NSLocalizedString(@"PasswordSettings.ChangeRecoveryEmail", nil) height:82 stateback:^id(GeneralSettingsRowItem *item) {
+            } description:NSLocalizedString(@"PasswordSettings.ChangeRecoveryEmail", nil) height:82 stateback:^id(TGGeneralRowItem *item) {
                 return @(NO);
             }];
             
@@ -503,7 +503,7 @@
         
         
         
-        GeneralSettingsRowItem *turnPassword = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeSelected callback:^(GeneralSettingsRowItem *item) {
+        GeneralSettingsRowItem *turnPassword = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeSelected callback:^(TGGeneralRowItem *item) {
             
             
             if([_passwordResult isKindOfClass:[TL_account_noPassword class]]) {
@@ -564,7 +564,7 @@
             
             
             
-        } description: NSLocalizedString(@"PasswordSettings.AbortPassword", nil) height:self.tableView.count == 0 ? 82 : 42 stateback:^id(GeneralSettingsRowItem *item) {
+        } description: NSLocalizedString(@"PasswordSettings.AbortPassword", nil) height:self.tableView.count == 0 ? 82 : 42 stateback:^id(TGGeneralRowItem *item) {
             return @(NO);
         }];
         

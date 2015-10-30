@@ -433,7 +433,7 @@
         };
         
         if(dialog.type != DialogTypeSecretChat && dialog.type != DialogTypeBroadcast && dialog.type != DialogTypeChannel)
-            [self _clearHistory:dialog offset:0 completeHandler:^{
+            [self _clearHistory:dialog completeHandler:^{
                 block();
             }];
         else {
@@ -481,10 +481,10 @@
     newBlock();
 }
 
-- (void)_clearHistory:(TL_conversation *)dialog offset:(int)offset completeHandler:(dispatch_block_t)block {
-    [RPCRequest sendRequest:[TLAPI_messages_deleteHistory createWithPeer:[dialog inputPeer] offset:offset] successHandler:^(RPCRequest *request, TL_messages_affectedHistory *response) {
+- (void)_clearHistory:(TL_conversation *)dialog completeHandler:(dispatch_block_t)block {
+    [RPCRequest sendRequest:[TLAPI_messages_deleteHistory createWithPeer:[dialog inputPeer] max_id:INT32_MAX] successHandler:^(RPCRequest *request, TL_messages_affectedHistory *response) {
         if([response offset] != 0)
-            [self _clearHistory:dialog offset:[response offset] completeHandler:(dispatch_block_t)block];
+            [self _clearHistory:dialog completeHandler:(dispatch_block_t)block];
         else {
             if(block)
                 block();
@@ -519,7 +519,7 @@
     };
     
     if(dialog.type != DialogTypeSecretChat) {
-        [self _clearHistory:dialog offset:0 completeHandler:^{
+        [self _clearHistory:dialog completeHandler:^{
             blockSuccess();
         }];
     } else {

@@ -119,43 +119,43 @@
     
     [self.view addSubview:self.tableView.containerView];
     
-    GeneralSettingsRowItem *everbody = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeSelected callback:^(GeneralSettingsRowItem *item) {
+    GeneralSettingsRowItem *everbody = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeSelected callback:^(TGGeneralRowItem *item) {
         
         self.changedPrivacy.allowType = PrivacyAllowTypeEverbody;
         self.changedPrivacy = self.changedPrivacy;
         
-    } description:NSLocalizedString(@"PrivacySettingsController.Everbody", nil) height:70 stateback:^id(GeneralSettingsRowItem *item) {
+    } description:NSLocalizedString(@"PrivacySettingsController.Everbody", nil) height:70 stateback:^id(TGGeneralRowItem *item) {
         return @(self.changedPrivacy.allowType == PrivacyAllowTypeEverbody);
     }];
     
     [self.tableView insert:everbody atIndex:self.tableView.list.count tableRedraw:NO];
     
     
-    GeneralSettingsRowItem *myContacts = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeSelected callback:^(GeneralSettingsRowItem *item) {
+    GeneralSettingsRowItem *myContacts = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeSelected callback:^(TGGeneralRowItem *item) {
         
         self.changedPrivacy.allowType = PrivacyAllowTypeContacts;
         self.changedPrivacy = self.changedPrivacy;
         
-    } description:NSLocalizedString(@"PrivacySettingsController.MyContacts", nil) height:42 stateback:^id(GeneralSettingsRowItem *item) {
+    } description:NSLocalizedString(@"PrivacySettingsController.MyContacts", nil) height:42 stateback:^id(TGGeneralRowItem *item) {
         return @(self.changedPrivacy.allowType == PrivacyAllowTypeContacts);
     }];
     
     [self.tableView insert:myContacts atIndex:self.tableView.list.count tableRedraw:NO];
     
     
-    GeneralSettingsRowItem *nobody = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeSelected callback:^(GeneralSettingsRowItem *item) {
+    GeneralSettingsRowItem *nobody = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeSelected callback:^(TGGeneralRowItem *item) {
         
         self.changedPrivacy.allowType = PrivacyAllowTypeNobody;
         self.changedPrivacy = self.changedPrivacy;
         
-    } description:NSLocalizedString(@"PrivacySettingsController.Nobody", nil) height:42 stateback:^id(GeneralSettingsRowItem *item) {
+    } description:NSLocalizedString(@"PrivacySettingsController.Nobody", nil) height:42 stateback:^id(TGGeneralRowItem *item) {
         return @(self.changedPrivacy.allowType == PrivacyAllowTypeNobody);
     }];
     
     [self.tableView insert:nobody atIndex:self.tableView.list.count tableRedraw:NO];
     
     
-    self.allowSelector = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeNext callback:^(GeneralSettingsRowItem *item) {
+    self.allowSelector = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeNext callback:^(TGGeneralRowItem *item) {
         
         if(self.changedPrivacy.allowUsers.count == 0) {
             [[Telegram rightViewController] showComposeWithAction:self.allowUsersAction];
@@ -170,7 +170,7 @@
     } description:NSLocalizedString(@"PrivacySettingsController.AlwaysShareWith", nil) subdesc:@"5 users" height:42 stateback:nil];
     
     
-    self.disallowSelector = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeNext callback:^(GeneralSettingsRowItem *item) {
+    self.disallowSelector = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeNext callback:^(TGGeneralRowItem *item) {
         
         if(self.changedPrivacy.disallowUsers.count == 0) {
             [[Telegram rightViewController] showComposeWithAction:self.disallowUsersAction];

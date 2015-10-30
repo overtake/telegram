@@ -86,7 +86,7 @@
 }
 
 -(void)mouseDown:(NSEvent *)theEvent {
-    GeneralSettingsRowItem *item = (GeneralSettingsRowItem *) [self rowItem];
+    TGGeneralRowItem *item = (GeneralSettingsRowItem *) [self rowItem];
     
     if(item.type == SettingsRowItemTypeNext || item.type == SettingsRowItemTypeSelected) {
         item.callback(item);

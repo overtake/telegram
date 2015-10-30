@@ -8,10 +8,15 @@
 
 #import "TGUserContainerView.h"
 #import "TGUserContainerRowItem.h"
+#import "ITSwitch.h"
 @interface TGUserContainerView ()
 @property (nonatomic,strong) TMAvatarImageView *avatarImageView;
 @property (nonatomic,strong) TMStatusTextField *statusTextField;
 @property (nonatomic,strong) TMNameTextField *nameTextField;
+
+@property (nonatomic,strong) ITSwitch *switchView;
+@property (nonatomic,strong) NSImageView *selectImageView;
+
 @end
 
 @implementation TGUserContainerView
@@ -40,6 +45,13 @@
         [_statusTextField setTextColor:GRAY_TEXT_COLOR];
         
         
+        _selectImageView = imageViewWithImage(image_UsernameCheck());
+        _switchView = [[ITSwitch alloc] initWithFrame:NSMakeRect(0, 0, 36, 20)];
+        
+        
+        [self addSubview:_selectImageView];
+        [self addSubview:_switchView];
+        
     }
     return self;
 }
@@ -56,7 +68,23 @@
 
 -(void)redrawRow {
     TGUserContainerRowItem *item = (TGUserContainerRowItem *)[self rowItem];
+    
+    [_switchView setHidden:item.type != SettingsRowItemTypeSwitch];
+    [_selectImageView setHidden:item.type != SettingsRowItemTypeSelected];
+    
+    
+    if(item.stateback) {
+        [_switchView setOn:[item.stateback(item) boolValue]];
         
+        [_switchView setHidden:item.type != SettingsRowItemTypeSwitch];
+        
+        [_selectImageView setHidden:item.type != SettingsRowItemTypeSelected || ![item.stateback(item) boolValue]];
+    }
+    
+    
+    [_switchView setCenteredYByView:self];
+    [_selectImageView setCenteredYByView:self];
+    
     [self setUser:item.user];
 }
 
@@ -76,12 +104,18 @@
 -(void)setFrameSize:(NSSize)newSize {
     [super setFrameSize:newSize];
     
+    TGUserContainerRowItem *item = (TGUserContainerRowItem *)[self rowItem];
+    
     [self.nameTextField setFrameSize:NSMakeSize(NSWidth(self.frame) - NSMaxX(self.avatarImageView.frame) - 20, NSHeight(self.nameTextField.frame))];
     [self.statusTextField setFrameSize:NSMakeSize(NSWidth(self.frame) - NSMaxX(self.avatarImageView.frame) - 20, NSHeight(self.statusTextField.frame))];
     
     
     [self.statusTextField setFrameOrigin:NSMakePoint(NSMinX(self.statusTextField.frame), NSHeight(self.frame)/2 - NSHeight(self.statusTextField.frame))];
     [self.nameTextField setFrameOrigin:NSMakePoint(NSMinX(self.nameTextField.frame), NSHeight(self.frame)/2 )];
+    
+    
+    [_selectImageView setFrameOrigin:NSMakePoint(newSize.width - item.xOffset * 2, NSMinY(_selectImageView.frame))];
+    [_switchView setFrameOrigin:NSMakePoint(newSize.width - item.xOffset * 2, NSMinY(_selectImageView.frame))];
     
     [_avatarImageView setCenteredYByView:_avatarImageView.superview];
 }
@@ -101,6 +135,7 @@
     
     [self.statusTextField sizeToFit];
     [self.nameTextField sizeToFit];
+    
 }
 
 

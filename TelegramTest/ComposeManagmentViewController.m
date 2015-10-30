@@ -62,7 +62,7 @@
     TLChat *chat = self.action.object;
     
     if(chat.isAdmin) {
-        GeneralSettingsRowItem *addModerator = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeNext callback:^(GeneralSettingsRowItem *item) {
+        GeneralSettingsRowItem *addModerator = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeNext callback:^(TGGeneralRowItem *item) {
             
             
             ComposePickerViewController *viewController = [[ComposePickerViewController alloc] initWithFrame:self.view.bounds];
@@ -71,7 +71,7 @@
             
             [self.navigationViewController pushViewController:viewController animated:YES];
             
-        } description:chat.isBroadcast ? NSLocalizedString(@"Channel.AddEditor", nil) : NSLocalizedString(@"Channel.AddModerator", nil) height:62 stateback:^id(GeneralSettingsRowItem *item) {
+        } description:chat.isBroadcast ? NSLocalizedString(@"Channel.AddEditor", nil) : NSLocalizedString(@"Channel.AddModerator", nil) height:62 stateback:^id(TGGeneralRowItem *item) {
             return nil;
         }];
         

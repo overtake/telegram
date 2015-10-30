@@ -140,12 +140,12 @@
     
     
     
-    GeneralSettingsRowItem *terminate = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeNext callback:^(GeneralSettingsRowItem *item) {
+    GeneralSettingsRowItem *terminate = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeNext callback:^(TGGeneralRowItem *item) {
         
         [self terminateSessions];
         
         
-    } description:NSLocalizedString(@"AuthSessions.TerminateOtherSessions", nil) height:42 stateback:^id(GeneralSettingsRowItem *item) {
+    } description:NSLocalizedString(@"AuthSessions.TerminateOtherSessions", nil) height:42 stateback:^id(TGGeneralRowItem *item) {
         return @([SettingsArchiver checkMaskedSetting:AutoGroupAudio]);
     }];
     

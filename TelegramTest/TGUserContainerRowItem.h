@@ -11,6 +11,7 @@
 @interface TGUserContainerRowItem : TGGeneralRowItem
 
 
+
 @property (nonatomic,strong,readonly) TLUser *user;
 
 

@@ -20,6 +20,7 @@
 #import "ComposeActionAddGroupMembersBehavior.h"
 #import "TGPhotoViewer.h"
 #import "MessagesUtils.h"
+#import "ChatAdminsViewController.h"
 @implementation LineView
 
 - (void)drawRect:(NSRect)dirtyRect {
@@ -53,7 +54,7 @@
         
         [self.avatarImageView setFrameSize:NSMakeSize(70, 70)];
         
-        [self.avatarImageView setFrameOrigin:NSMakePoint(100, self.bounds.size.height - self.avatarImageView.bounds.size.height - 30)];
+        
         
         [self addSubview:self.avatarImageView];
         
@@ -129,7 +130,6 @@
             
             
             if(self.fullChat.participants.participants.count < maxChatUsers()) {
-                
                 
                 ComposePickerViewController *viewController = [[ComposePickerViewController alloc] initWithFrame:self.controller.view.bounds];
                 
@@ -296,6 +296,24 @@
 
         [self addSubview:self.notificationView];
         
+        
+        
+        _admins = [UserInfoShortButtonView buttonWithText:NSLocalizedString(@"Chat.Administrators", nil) tapBlock:^{
+            
+            ChatAdminsViewController *viewController = [[ChatAdminsViewController alloc] initWithFrame:self.controller.view.bounds];
+            
+            viewController.chat = self.controller.chat;
+            viewController.chatFull = self.controller.fullChat;
+            
+            [self.controller.navigationViewController pushViewController:viewController animated:YES];
+            
+        }];
+        
+        [_admins setFrameSize:NSMakeSize(self.addMembersButton.bounds.size.width, 42)];
+        
+        [self addSubview:_admins];
+        
+        
         self.sharedLinksButton.textButton.textColor = self.filesMediaButton.textButton.textColor = self.sharedMediaButton.textButton.textColor = self.notificationView.textButton.textColor = DARK_BLACK;
         
         
@@ -378,6 +396,8 @@
     [self.nameTextField setFrame:NSMakeRect(185, self.bounds.size.height - 43   - self.nameTextField.bounds.size.height, MIN(self.bounds.size.width - 185 - 100, NSWidth(self.nameTextField.frame)), self.nameTextField.bounds.size.height)];
     
     [self.statusTextField setFrame:NSMakeRect(182, self.nameTextField.frame.origin.y - self.statusTextField.bounds.size.height - 3, MIN(self.bounds.size.width - 310,NSWidth(self.statusTextField.frame)), self.nameTextField.bounds.size.height)];
+    
+    [self.avatarImageView setFrameOrigin:NSMakePoint(100, self.bounds.size.height - self.avatarImageView.bounds.size.height - 30)];
 }
 
 - (void)setController:(ChatInfoViewController *)controller {
@@ -393,6 +413,11 @@
     [[FullChatManager sharedManager]  performLoad:chat.n_id callback:^(TLChatFull *fullChat) {
     
          self.fullChat = fullChat;
+        
+        BOOL cantEditGroup = !self.controller.chat.isCreator && ( self.controller.chat.isAdmins_enabled && !self.controller.chat.isAdmin );
+
+        
+        [self setFrameSize:NSMakeSize(NSWidth(self.frame), self.controller.chat.isCreator ? 500 : cantEditGroup ?  324 : 408)];
         
         [self.statusTextField setChat:chat];
         [self.statusTextField sizeToFit];
@@ -418,12 +443,23 @@
         [self TMNameTextFieldDidChanged:self.nameTextField];
         
         
+        [self.setGroupPhotoButton setFrameOrigin:NSMakePoint(100, self.bounds.size.height - 156)];
+        [self.addMembersButton setFrameOrigin:NSMakePoint(self.setGroupPhotoButton.frame.origin.x, self.setGroupPhotoButton.frame.origin.y - 42)];
+        
+        [_addMembersButton setHidden:cantEditGroup];
+        [_setGroupPhotoButton setHidden:cantEditGroup];
+        
         [_exportChatInvite setFrameOrigin:NSMakePoint(self.sharedMediaButton.frame.origin.x,self.addMembersButton.isHidden ? _setGroupPhotoButton.frame.origin.y -42 : _addMembersButton.frame.origin.y-42)];
         
-        [_exportChatInvite setHidden:self.fullChat.participants.admin_id != [UsersManager currentUserId]];
+        [_exportChatInvite setHidden:!self.controller.chat.isCreator];
         
         
-        [self.sharedMediaButton setFrameOrigin:NSMakePoint(NSMinX(_exportChatInvite.isHidden ? self.addMembersButton.frame : self.exportChatInvite.frame), NSMinY(_exportChatInvite.isHidden ? self.addMembersButton.frame : self.exportChatInvite.frame) - 72)];
+        [_admins setFrameOrigin:NSMakePoint(self.exportChatInvite.frame.origin.x,self.exportChatInvite.isHidden ? (self.addMembersButton.isHidden ? _setGroupPhotoButton.frame.origin.y -42 : _addMembersButton.frame.origin.y-42) : _exportChatInvite.frame.origin.y-42)];
+        
+        [_admins setHidden:!self.controller.chat.isCreator];
+        
+        
+        [self.sharedMediaButton setFrameOrigin:NSMakePoint(NSMinX(_admins.isHidden ? self.addMembersButton.frame : self.admins.frame), (cantEditGroup ? NSHeight(self.frame) - 100 : NSMinY(_admins.isHidden ? self.addMembersButton.frame : self.admins.frame)) - 72)];
         
         
         [self.filesMediaButton setFrameOrigin:NSMakePoint(self.sharedMediaButton.frame.origin.x, self.sharedMediaButton.frame.origin.y -42)];
@@ -433,6 +469,7 @@
         [_notificationView setFrame:NSMakeRect(100,  NSMinY(self.sharedLinksButton.frame) - 42, NSWidth(self.frame) - 200, 42)];
         
 
+       
         
         [self.controller buildFirstItem];
 

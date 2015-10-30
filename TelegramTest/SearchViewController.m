@@ -628,7 +628,7 @@ static int insertCount = 3;
     [self.tableView removeItem:self.messagesLoaderItem];
     
     
-    
+    self.messagesSeparator.itemCount = params.isLoading  ? -1 : (int)params.messages.count;
     
     if(!params.messages.count) {
         [self.tableView removeItem:self.messagesSeparator];

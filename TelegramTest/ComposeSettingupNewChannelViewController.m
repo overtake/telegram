@@ -173,24 +173,24 @@
     headerItem.xOffset = 30;
     
     
-    GeneralSettingsRowItem *publicSelector = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeSelected callback:^(GeneralSettingsRowItem *item) {
+    GeneralSettingsRowItem *publicSelector = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeSelected callback:^(TGGeneralRowItem *item) {
         
 
         self.action.result.singleObject = @(YES);
         
         [self reload];
         
-    } description:NSLocalizedString(@"Channel.Public", nil) height:42 stateback:^id(GeneralSettingsRowItem *item) {
+    } description:NSLocalizedString(@"Channel.Public", nil) height:42 stateback:^id(TGGeneralRowItem *item) {
         return self.action.result.singleObject;
     }];
     
-    GeneralSettingsRowItem *privateSelector = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeSelected callback:^(GeneralSettingsRowItem *item) {
+    GeneralSettingsRowItem *privateSelector = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeSelected callback:^(TGGeneralRowItem *item) {
         
          self.action.result.singleObject = @(NO);
         
          [self reload];
         
-    } description:NSLocalizedString(@"Channel.Private", nil) height:42 stateback:^id(GeneralSettingsRowItem *item) {
+    } description:NSLocalizedString(@"Channel.Private", nil) height:42 stateback:^id(TGGeneralRowItem *item) {
         return @(![self.action.result.singleObject boolValue]);
     }];
 

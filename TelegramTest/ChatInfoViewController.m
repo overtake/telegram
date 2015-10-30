@@ -349,7 +349,7 @@
     for(TLChatParticipant *participant in participants.participants) {
         ChatParticipantItem *item = [[ChatParticipantItem alloc] initWithObject:participant];
         item.isBlocking = ((ChatParticipantItem *)[_tableView itemByHash:item.hash]).isBlocking;
-        item.isCanKicked = (participant.inviter_id == selfId || self.fullChat.participants.admin_id == selfId) && participant.user_id != selfId;
+        item.isCanKicked = self.chat.isAdmins_enabled ? (participant.user_id != selfId && self.chat.isAdmin && ![participant isKindOfClass:[TL_chatParticipantCreator class]]) : (participant.user_id != selfId && participant.inviter_id == [UsersManager currentUserId]);
         item.viewController = self;
         [array addObject:item];
         

@@ -2628,7 +2628,7 @@ static NSTextAttachment *headerMediaIcon() {
     
     [self.conversation save];
     
-    [Notification perform:[Notification notificationNameByDialog:self.conversation action:@"unread_count"] data:@{KEY_LAST_CONVRESATION_DATA:[MessagesUtils conversationLastData:self.conversation]}];
+    [Notification perform:[Notification notificationNameByDialog:self.conversation action:@"unread_count"] data:@{KEY_LAST_CONVRESATION_DATA:[MessagesUtils conversationLastData:self.conversation],KEY_DIALOG:self.conversation}];
     
     [MessagesManager updateUnreadBadge];
         

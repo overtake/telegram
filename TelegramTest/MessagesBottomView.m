@@ -633,13 +633,15 @@ static RBLPopover *popover;
         popover = nil;
     }];
     
-    if(!popover) {
-        TMMenuController *controller = [[TMMenuController alloc] initWithMenu:menu];
-        
-        popover = [[RBLPopover alloc] initWithContentViewController:controller];
-        
-        [popover showRelativeToRect:button.bounds ofView:button preferredEdge:CGRectMinYEdge];
-    }
+    
+    [popover close];
+    popover = nil;
+    
+    TMMenuController *controller = [[TMMenuController alloc] initWithMenu:menu];
+    
+    popover = [[RBLPopover alloc] initWithContentViewController:controller];
+    
+    [popover showRelativeToRect:button.bounds ofView:button preferredEdge:CGRectMinYEdge];
 
 }
 

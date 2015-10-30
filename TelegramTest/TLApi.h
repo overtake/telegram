@@ -2,7 +2,7 @@
 //  TLApi.h
 //  Telegram
 //
-//  Auto created by Mikhail Filimonov on 21.09.15.
+//  Auto created by Mikhail Filimonov on 30.10.15.
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -255,6 +255,7 @@
 
 @interface TLAPI_messages_search : TLApiObject
 @property int flags;
+@property (nonatomic,assign,readonly) BOOL isImportant_only;
 @property (nonatomic, strong) TLInputPeer* peer;
 @property (nonatomic, strong) NSString* q;
 @property (nonatomic, strong) TLMessagesFilter* filter;
@@ -264,22 +265,21 @@
 @property int max_id;
 @property int limit;
 
-+(TLAPI_messages_search*)createWithFlags:(int)flags peer:(TLInputPeer*)peer q:(NSString*)q filter:(TLMessagesFilter*)filter min_date:(int)min_date max_date:(int)max_date offset:(int)offset max_id:(int)max_id limit:(int)limit;
++(TLAPI_messages_search*)createWithFlags:(int)flags  peer:(TLInputPeer*)peer q:(NSString*)q filter:(TLMessagesFilter*)filter min_date:(int)min_date max_date:(int)max_date offset:(int)offset max_id:(int)max_id limit:(int)limit;
 @end
 
 @interface TLAPI_messages_readHistory : TLApiObject
 @property (nonatomic, strong) TLInputPeer* peer;
 @property int max_id;
-@property int offset;
 
-+(TLAPI_messages_readHistory*)createWithPeer:(TLInputPeer*)peer max_id:(int)max_id offset:(int)offset;
++(TLAPI_messages_readHistory*)createWithPeer:(TLInputPeer*)peer max_id:(int)max_id;
 @end
 
 @interface TLAPI_messages_deleteHistory : TLApiObject
 @property (nonatomic, strong) TLInputPeer* peer;
-@property int offset;
+@property int max_id;
 
-+(TLAPI_messages_deleteHistory*)createWithPeer:(TLInputPeer*)peer offset:(int)offset;
++(TLAPI_messages_deleteHistory*)createWithPeer:(TLInputPeer*)peer max_id:(int)max_id;
 @end
 
 @interface TLAPI_messages_deleteMessages : TLApiObject
@@ -303,6 +303,8 @@
 
 @interface TLAPI_messages_sendMessage : TLApiObject
 @property int flags;
+@property (nonatomic,assign,readonly) BOOL isNo_webpage;
+@property (nonatomic,assign,readonly) BOOL isBroadcast;
 @property (nonatomic, strong) TLInputPeer* peer;
 @property int reply_to_msg_id;
 @property (nonatomic, strong) NSString* message;
@@ -310,28 +312,30 @@
 @property (nonatomic, strong) TLReplyMarkup* reply_markup;
 @property (nonatomic, strong) NSMutableArray* entities;
 
-+(TLAPI_messages_sendMessage*)createWithFlags:(int)flags peer:(TLInputPeer*)peer reply_to_msg_id:(int)reply_to_msg_id message:(NSString*)message random_id:(long)random_id reply_markup:(TLReplyMarkup*)reply_markup entities:(NSMutableArray*)entities;
++(TLAPI_messages_sendMessage*)createWithFlags:(int)flags   peer:(TLInputPeer*)peer reply_to_msg_id:(int)reply_to_msg_id message:(NSString*)message random_id:(long)random_id reply_markup:(TLReplyMarkup*)reply_markup entities:(NSMutableArray*)entities;
 @end
 
 @interface TLAPI_messages_sendMedia : TLApiObject
 @property int flags;
+@property (nonatomic,assign,readonly) BOOL isBroadcast;
 @property (nonatomic, strong) TLInputPeer* peer;
 @property int reply_to_msg_id;
 @property (nonatomic, strong) TLInputMedia* media;
 @property long random_id;
 @property (nonatomic, strong) TLReplyMarkup* reply_markup;
 
-+(TLAPI_messages_sendMedia*)createWithFlags:(int)flags peer:(TLInputPeer*)peer reply_to_msg_id:(int)reply_to_msg_id media:(TLInputMedia*)media random_id:(long)random_id reply_markup:(TLReplyMarkup*)reply_markup;
++(TLAPI_messages_sendMedia*)createWithFlags:(int)flags  peer:(TLInputPeer*)peer reply_to_msg_id:(int)reply_to_msg_id media:(TLInputMedia*)media random_id:(long)random_id reply_markup:(TLReplyMarkup*)reply_markup;
 @end
 
 @interface TLAPI_messages_forwardMessages : TLApiObject
 @property int flags;
+@property (nonatomic,assign,readonly) BOOL isBroadcast;
 @property (nonatomic, strong) TLInputPeer* from_peer;
 @property (nonatomic, strong) NSMutableArray* n_id;
 @property (nonatomic, strong) NSMutableArray* random_id;
 @property (nonatomic, strong) TLInputPeer* to_peer;
 
-+(TLAPI_messages_forwardMessages*)createWithFlags:(int)flags from_peer:(TLInputPeer*)from_peer n_id:(NSMutableArray*)n_id random_id:(NSMutableArray*)random_id to_peer:(TLInputPeer*)to_peer;
++(TLAPI_messages_forwardMessages*)createWithFlags:(int)flags  from_peer:(TLInputPeer*)from_peer n_id:(NSMutableArray*)n_id random_id:(NSMutableArray*)random_id to_peer:(TLInputPeer*)to_peer;
 @end
 
 @interface TLAPI_messages_reportSpam : TLApiObject
@@ -901,11 +905,12 @@
 
 @interface TLAPI_channels_createChannel : TLApiObject
 @property int flags;
+@property (nonatomic,assign,readonly) BOOL isBroadcast;
 @property (nonatomic, strong) NSString* title;
 @property (nonatomic, strong) NSString* about;
 @property (nonatomic, strong) NSMutableArray* users;
 
-+(TLAPI_channels_createChannel*)createWithFlags:(int)flags title:(NSString*)title about:(NSString*)about users:(NSMutableArray*)users;
++(TLAPI_channels_createChannel*)createWithFlags:(int)flags  title:(NSString*)title about:(NSString*)about users:(NSMutableArray*)users;
 @end
 
 @interface TLAPI_channels_editAbout : TLApiObject
@@ -1004,5 +1009,20 @@
 @property int limit;
 
 +(TLAPI_updates_getChannelDifference*)createWithChannel:(TLInputChannel*)channel filter:(TLChannelMessagesFilter*)filter pts:(int)pts limit:(int)limit;
+@end
+
+@interface TLAPI_messages_toggleChatAdmins : TLApiObject
+@property int chat_id;
+@property Boolean enabled;
+
++(TLAPI_messages_toggleChatAdmins*)createWithChat_id:(int)chat_id enabled:(Boolean)enabled;
+@end
+
+@interface TLAPI_messages_editChatAdmin : TLApiObject
+@property int chat_id;
+@property (nonatomic, strong) TLInputUser* user_id;
+@property Boolean is_admin;
+
++(TLAPI_messages_editChatAdmin*)createWithChat_id:(int)chat_id user_id:(TLInputUser*)user_id is_admin:(Boolean)is_admin;
 @end
 

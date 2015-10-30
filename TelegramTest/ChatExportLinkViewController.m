@@ -46,7 +46,7 @@
     [self.tableView removeAllItems:YES];
     
     
-    GeneralSettingsRowItem *copyLink = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeNext callback:^(GeneralSettingsRowItem *item) {
+    GeneralSettingsRowItem *copyLink = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeNext callback:^(TGGeneralRowItem *item) {
         
         if([_chat.exported_invite isKindOfClass:[TL_chatInviteExported class]]) {
             
@@ -66,14 +66,14 @@
             
         }
 
-    } description:NSLocalizedString(@"ChatExportLink.CopyLink", nil) height:62 stateback:^id(GeneralSettingsRowItem *item) {
+    } description:NSLocalizedString(@"ChatExportLink.CopyLink", nil) height:62 stateback:^id(TGGeneralRowItem *item) {
         return nil;
     }];
     
     [self.tableView insert:copyLink atIndex:self.tableView.list.count tableRedraw:NO];
     
     
-    GeneralSettingsRowItem *revokeLink = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeNext callback:^(GeneralSettingsRowItem *item) {
+    GeneralSettingsRowItem *revokeLink = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeNext callback:^(TGGeneralRowItem *item) {
         
         
         confirm(appName(), NSLocalizedString(@"ChatExportLink.RevokeConfirm", nil), ^{
@@ -105,7 +105,7 @@
         
         
         
-    } description:NSLocalizedString(@"ChatExportLink.RevokeLink", nil) height:42 stateback:^id(GeneralSettingsRowItem *item) {
+    } description:NSLocalizedString(@"ChatExportLink.RevokeLink", nil) height:42 stateback:^id(TGGeneralRowItem *item) {
         return nil;
     }];
     

@@ -396,7 +396,7 @@
     
     TMTextField *textField = [TMTextField defaultTextField];
     
-    [textField setLineBreakMode:NSLineBreakByTruncatingTail];
+    [[textField cell] setLineBreakMode:NSLineBreakByTruncatingTail];
     
     NSMutableAttributedString *string = [[NSMutableAttributedString alloc] init];
     [string appendString:str withColor:NSColorFromRGB(0xa1a1a1)];

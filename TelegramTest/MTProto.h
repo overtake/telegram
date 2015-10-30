@@ -2,12 +2,15 @@
 //  MTProto.h
 //  Telegram
 //
-//  Auto created by Mikhail Filimonov on 21.09.15.
+//  Auto created by Mikhail Filimonov on 30.10.15.
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>
 #import "TLObject.h"
+	
+@interface TLTrue : TLObject
+@end
 	
 @interface TLInputPeer : TLObject
 @end
@@ -487,6 +490,14 @@
 
 
 	
+@interface TLTrue()
+
+@end
+
+@interface TL_true : TLTrue<NSCoding>
++(TL_true*)create;
+@end
+	
 @interface TLInputPeer()
 @property int chat_id;
 @property int user_id;
@@ -787,6 +798,14 @@
 @interface TLUser()
 @property int n_id;
 @property int flags;
+@property (nonatomic,assign,readonly) BOOL isSelf;
+@property (nonatomic,assign,readonly) BOOL isContact;
+@property (nonatomic,assign,readonly) BOOL isMutual_contact;
+@property (nonatomic,assign,readonly) BOOL isDeleted;
+@property (nonatomic,assign,readonly) BOOL isBot;
+@property (nonatomic,assign,readonly) BOOL isBot_chat_history;
+@property (nonatomic,assign,readonly) BOOL isBot_nochats;
+@property (nonatomic,assign,readonly) BOOL isVerified;
 @property long access_hash;
 @property (nonatomic, strong) NSString* first_name;
 @property (nonatomic, strong) NSString* last_name;
@@ -801,7 +820,7 @@
 +(TL_userEmpty*)createWithN_id:(int)n_id;
 @end
 @interface TL_user : TLUser<NSCoding>
-+(TL_user*)createWithFlags:(int)flags n_id:(int)n_id access_hash:(long)access_hash first_name:(NSString*)first_name last_name:(NSString*)last_name username:(NSString*)username phone:(NSString*)phone photo:(TLUserProfilePhoto*)photo status:(TLUserStatus*)status bot_info_version:(int)bot_info_version;
++(TL_user*)createWithFlags:(int)flags         n_id:(int)n_id access_hash:(long)access_hash first_name:(NSString*)first_name last_name:(NSString*)last_name username:(NSString*)username phone:(NSString*)phone photo:(TLUserProfilePhoto*)photo status:(TLUserStatus*)status bot_info_version:(int)bot_info_version;
 @end
 @interface TL_userSelf : TLUser<NSCoding>
 +(TL_userSelf*)createWithN_id:(int)n_id first_name:(NSString*)first_name last_name:(NSString*)last_name username:(NSString*)username phone:(NSString*)phone photo:(TLUserProfilePhoto*)photo status:(TLUserStatus*)status;
@@ -859,27 +878,35 @@
 @interface TLChat()
 @property int n_id;
 @property int flags;
+@property (nonatomic,assign,readonly) BOOL isCreator;
+@property (nonatomic,assign,readonly) BOOL isKicked;
+@property Boolean left;
+@property (nonatomic,assign,readonly) BOOL isAdmins_enabled;
+@property (nonatomic,assign,readonly) BOOL isAdmin;
 @property (nonatomic, strong) NSString* title;
 @property (nonatomic, strong) TLChatPhoto* photo;
 @property int participants_count;
 @property int date;
 @property int version;
+@property (nonatomic,assign,readonly) BOOL isEditor;
+@property (nonatomic,assign,readonly) BOOL isModerator;
+@property (nonatomic,assign,readonly) BOOL isBroadcast;
+@property (nonatomic,assign,readonly) BOOL isVerified;
 @property long access_hash;
 @property (nonatomic, strong) NSString* username;
-@property Boolean left;
 @end
 
 @interface TL_chatEmpty : TLChat<NSCoding>
 +(TL_chatEmpty*)createWithN_id:(int)n_id;
 @end
 @interface TL_chat : TLChat<NSCoding>
-+(TL_chat*)createWithFlags:(int)flags n_id:(int)n_id title:(NSString*)title photo:(TLChatPhoto*)photo participants_count:(int)participants_count date:(int)date version:(int)version;
++(TL_chat*)createWithFlags:(int)flags      n_id:(int)n_id title:(NSString*)title photo:(TLChatPhoto*)photo participants_count:(int)participants_count date:(int)date version:(int)version;
 @end
 @interface TL_chatForbidden : TLChat<NSCoding>
 +(TL_chatForbidden*)createWithN_id:(int)n_id title:(NSString*)title;
 @end
 @interface TL_channel : TLChat<NSCoding>
-+(TL_channel*)createWithFlags:(int)flags n_id:(int)n_id access_hash:(long)access_hash title:(NSString*)title username:(NSString*)username photo:(TLChatPhoto*)photo date:(int)date version:(int)version;
++(TL_channel*)createWithFlags:(int)flags        n_id:(int)n_id access_hash:(long)access_hash title:(NSString*)title username:(NSString*)username photo:(TLChatPhoto*)photo date:(int)date version:(int)version;
 @end
 @interface TL_channelForbidden : TLChat<NSCoding>
 +(TL_channelForbidden*)createWithN_id:(int)n_id access_hash:(long)access_hash title:(NSString*)title;
@@ -899,6 +926,7 @@
 @property (nonatomic, strong) TLExportedChatInvite* exported_invite;
 @property (nonatomic, strong) NSMutableArray* bot_info;
 @property int flags;
+@property (nonatomic,assign,readonly) BOOL isCan_view_participants;
 @property (nonatomic, strong) NSString* about;
 @property int participants_count;
 @property int admins_count;
@@ -912,7 +940,7 @@
 +(TL_chatFull*)createWithN_id:(int)n_id participants:(TLChatParticipants*)participants chat_photo:(TLPhoto*)chat_photo notify_settings:(TLPeerNotifySettings*)notify_settings exported_invite:(TLExportedChatInvite*)exported_invite bot_info:(NSMutableArray*)bot_info;
 @end
 @interface TL_channelFull : TLChatFull<NSCoding>
-+(TL_channelFull*)createWithFlags:(int)flags n_id:(int)n_id about:(NSString*)about participants_count:(int)participants_count admins_count:(int)admins_count kicked_count:(int)kicked_count read_inbox_max_id:(int)read_inbox_max_id unread_count:(int)unread_count unread_important_count:(int)unread_important_count chat_photo:(TLPhoto*)chat_photo notify_settings:(TLPeerNotifySettings*)notify_settings exported_invite:(TLExportedChatInvite*)exported_invite;
++(TL_channelFull*)createWithFlags:(int)flags  n_id:(int)n_id about:(NSString*)about participants_count:(int)participants_count admins_count:(int)admins_count kicked_count:(int)kicked_count read_inbox_max_id:(int)read_inbox_max_id unread_count:(int)unread_count unread_important_count:(int)unread_important_count chat_photo:(TLPhoto*)chat_photo notify_settings:(TLPeerNotifySettings*)notify_settings exported_invite:(TLExportedChatInvite*)exported_invite;
 @end
 @interface TL_chatFull_old29 : TLChatFull<NSCoding>
 +(TL_chatFull_old29*)createWithN_id:(int)n_id participants:(TLChatParticipants*)participants chat_photo:(TLPhoto*)chat_photo notify_settings:(TLPeerNotifySettings*)notify_settings exported_invite:(TLExportedChatInvite*)exported_invite;
@@ -927,12 +955,17 @@
 @interface TL_chatParticipant : TLChatParticipant<NSCoding>
 +(TL_chatParticipant*)createWithUser_id:(int)user_id inviter_id:(int)inviter_id date:(int)date;
 @end
+@interface TL_chatParticipantCreator : TLChatParticipant<NSCoding>
++(TL_chatParticipantCreator*)createWithUser_id:(int)user_id;
+@end
+@interface TL_chatParticipantAdmin : TLChatParticipant<NSCoding>
++(TL_chatParticipantAdmin*)createWithUser_id:(int)user_id inviter_id:(int)inviter_id date:(int)date;
+@end
 	
 @interface TLChatParticipants()
 @property int flags;
 @property int chat_id;
 @property (nonatomic, strong) TLChatParticipant* self_participant;
-@property int admin_id;
 @property (nonatomic, strong) NSMutableArray* participants;
 @property int version;
 @end
@@ -941,7 +974,7 @@
 +(TL_chatParticipantsForbidden*)createWithFlags:(int)flags chat_id:(int)chat_id self_participant:(TLChatParticipant*)self_participant;
 @end
 @interface TL_chatParticipants : TLChatParticipants<NSCoding>
-+(TL_chatParticipants*)createWithChat_id:(int)chat_id admin_id:(int)admin_id participants:(NSMutableArray*)participants version:(int)version;
++(TL_chatParticipants*)createWithChat_id:(int)chat_id participants:(NSMutableArray*)participants version:(int)version;
 @end
 @interface TL_chatParticipantsForbidden_old34 : TLChatParticipants<NSCoding>
 +(TL_chatParticipantsForbidden_old34*)createWithChat_id:(int)chat_id;
@@ -962,6 +995,10 @@
 @interface TLMessage()
 @property int n_id;
 @property int flags;
+@property (nonatomic,assign,readonly) BOOL isUnread;
+@property (nonatomic,assign,readonly) BOOL isN_out;
+@property (nonatomic,assign,readonly) BOOL isMentioned;
+@property (nonatomic,assign,readonly) BOOL isMedia_unread;
 @property int from_id;
 @property (nonatomic, strong) TLPeer* to_id;
 @property (nonatomic, strong) TLPeer* fwd_from_id;
@@ -980,10 +1017,10 @@
 +(TL_messageEmpty*)createWithN_id:(int)n_id;
 @end
 @interface TL_message : TLMessage<NSCoding>
-+(TL_message*)createWithFlags:(int)flags n_id:(int)n_id from_id:(int)from_id to_id:(TLPeer*)to_id fwd_from_id:(TLPeer*)fwd_from_id fwd_date:(int)fwd_date reply_to_msg_id:(int)reply_to_msg_id date:(int)date message:(NSString*)message media:(TLMessageMedia*)media reply_markup:(TLReplyMarkup*)reply_markup entities:(NSMutableArray*)entities views:(int)views;
++(TL_message*)createWithFlags:(int)flags     n_id:(int)n_id from_id:(int)from_id to_id:(TLPeer*)to_id fwd_from_id:(TLPeer*)fwd_from_id fwd_date:(int)fwd_date reply_to_msg_id:(int)reply_to_msg_id date:(int)date message:(NSString*)message media:(TLMessageMedia*)media reply_markup:(TLReplyMarkup*)reply_markup entities:(NSMutableArray*)entities views:(int)views;
 @end
 @interface TL_messageService : TLMessage<NSCoding>
-+(TL_messageService*)createWithFlags:(int)flags n_id:(int)n_id from_id:(int)from_id to_id:(TLPeer*)to_id date:(int)date action:(TLMessageAction*)action;
++(TL_messageService*)createWithFlags:(int)flags     n_id:(int)n_id from_id:(int)from_id to_id:(TLPeer*)to_id date:(int)date action:(TLMessageAction*)action;
 @end
 	
 @interface TLMessageMedia()
@@ -1531,6 +1568,8 @@
 @property int channel_id;
 @property (nonatomic, strong) TLMessageGroup* group;
 @property int views;
+@property Boolean enabled;
+@property Boolean is_admin;
 @end
 
 @interface TL_updateNewMessage : TLUpdate<NSCoding>
@@ -1638,6 +1677,12 @@
 @interface TL_updateChannelMessageViews : TLUpdate<NSCoding>
 +(TL_updateChannelMessageViews*)createWithChannel_id:(int)channel_id n_id:(int)n_id views:(int)views;
 @end
+@interface TL_updateChatAdmins : TLUpdate<NSCoding>
++(TL_updateChatAdmins*)createWithChat_id:(int)chat_id enabled:(Boolean)enabled version:(int)version;
+@end
+@interface TL_updateChatParticipantAdmin : TLUpdate<NSCoding>
++(TL_updateChatParticipantAdmin*)createWithChat_id:(int)chat_id user_id:(int)user_id is_admin:(Boolean)is_admin version:(int)version;
+@end
 	
 @interface TLupdates_State()
 @property int pts;
@@ -1675,6 +1720,10 @@
 	
 @interface TLUpdates()
 @property int flags;
+@property (nonatomic,assign,readonly) BOOL isUnread;
+@property (nonatomic,assign,readonly) BOOL isN_out;
+@property (nonatomic,assign,readonly) BOOL isMentioned;
+@property (nonatomic,assign,readonly) BOOL isMedia_unread;
 @property int n_id;
 @property int user_id;
 @property (nonatomic, strong) NSString* message;
@@ -1700,10 +1749,10 @@
 +(TL_updatesTooLong*)create;
 @end
 @interface TL_updateShortMessage : TLUpdates<NSCoding>
-+(TL_updateShortMessage*)createWithFlags:(int)flags n_id:(int)n_id user_id:(int)user_id message:(NSString*)message pts:(int)pts pts_count:(int)pts_count date:(int)date fwd_from_id:(TLPeer*)fwd_from_id fwd_date:(int)fwd_date reply_to_msg_id:(int)reply_to_msg_id entities:(NSMutableArray*)entities;
++(TL_updateShortMessage*)createWithFlags:(int)flags     n_id:(int)n_id user_id:(int)user_id message:(NSString*)message pts:(int)pts pts_count:(int)pts_count date:(int)date fwd_from_id:(TLPeer*)fwd_from_id fwd_date:(int)fwd_date reply_to_msg_id:(int)reply_to_msg_id entities:(NSMutableArray*)entities;
 @end
 @interface TL_updateShortChatMessage : TLUpdates<NSCoding>
-+(TL_updateShortChatMessage*)createWithFlags:(int)flags n_id:(int)n_id from_id:(int)from_id chat_id:(int)chat_id message:(NSString*)message pts:(int)pts pts_count:(int)pts_count date:(int)date fwd_from_id:(TLPeer*)fwd_from_id fwd_date:(int)fwd_date reply_to_msg_id:(int)reply_to_msg_id entities:(NSMutableArray*)entities;
++(TL_updateShortChatMessage*)createWithFlags:(int)flags     n_id:(int)n_id from_id:(int)from_id chat_id:(int)chat_id message:(NSString*)message pts:(int)pts pts_count:(int)pts_count date:(int)date fwd_from_id:(TLPeer*)fwd_from_id fwd_date:(int)fwd_date reply_to_msg_id:(int)reply_to_msg_id entities:(NSMutableArray*)entities;
 @end
 @interface TL_updateShort : TLUpdates<NSCoding>
 +(TL_updateShort*)createWithUpdate:(TLUpdate*)update date:(int)date;
@@ -1715,7 +1764,7 @@
 +(TL_updates*)createWithUpdates:(NSMutableArray*)updates users:(NSMutableArray*)users chats:(NSMutableArray*)chats date:(int)date seq:(int)seq;
 @end
 @interface TL_updateShortSentMessage : TLUpdates<NSCoding>
-+(TL_updateShortSentMessage*)createWithFlags:(int)flags n_id:(int)n_id pts:(int)pts pts_count:(int)pts_count date:(int)date media:(TLMessageMedia*)media entities:(NSMutableArray*)entities;
++(TL_updateShortSentMessage*)createWithFlags:(int)flags   n_id:(int)n_id pts:(int)pts pts_count:(int)pts_count date:(int)date media:(TLMessageMedia*)media entities:(NSMutableArray*)entities;
 @end
 	
 @interface TLphotos_Photos()
@@ -1752,13 +1801,15 @@
 	
 @interface TLDcOption()
 @property int flags;
+@property (nonatomic,assign,readonly) BOOL isIpv6;
+@property (nonatomic,assign,readonly) BOOL isMedia_only;
 @property int n_id;
 @property (nonatomic, strong) NSString* ip_address;
 @property int port;
 @end
 
 @interface TL_dcOption : TLDcOption<NSCoding>
-+(TL_dcOption*)createWithFlags:(int)flags n_id:(int)n_id ip_address:(NSString*)ip_address port:(int)port;
++(TL_dcOption*)createWithFlags:(int)flags   n_id:(int)n_id ip_address:(NSString*)ip_address port:(int)port;
 @end
 	
 @interface TLConfig()
@@ -2381,6 +2432,9 @@
 @interface TLChatInvite()
 @property (nonatomic, strong) TLChat* chat;
 @property int flags;
+@property (nonatomic,assign,readonly) BOOL isChannel;
+@property (nonatomic,assign,readonly) BOOL isBroadcast;
+@property (nonatomic,assign,readonly) BOOL isPublic;
 @property (nonatomic, strong) NSString* title;
 @end
 
@@ -2388,7 +2442,7 @@
 +(TL_chatInviteAlready*)createWithChat:(TLChat*)chat;
 @end
 @interface TL_chatInvite : TLChatInvite<NSCoding>
-+(TL_chatInvite*)createWithFlags:(int)flags title:(NSString*)title;
++(TL_chatInvite*)createWithFlags:(int)flags    title:(NSString*)title;
 @end
 	
 @interface TLInputStickerSet()
@@ -2409,6 +2463,9 @@
 	
 @interface TLStickerSet()
 @property int flags;
+@property (nonatomic,assign,readonly) BOOL isInstalled;
+@property (nonatomic,assign,readonly) BOOL isDisabled;
+@property (nonatomic,assign,readonly) BOOL isOfficial;
 @property long n_id;
 @property long access_hash;
 @property (nonatomic, strong) NSString* title;
@@ -2418,7 +2475,7 @@
 @end
 
 @interface TL_stickerSet : TLStickerSet<NSCoding>
-+(TL_stickerSet*)createWithFlags:(int)flags n_id:(long)n_id access_hash:(long)access_hash title:(NSString*)title short_name:(NSString*)short_name n_count:(int)n_count n_hash:(int)n_hash;
++(TL_stickerSet*)createWithFlags:(int)flags    n_id:(long)n_id access_hash:(long)access_hash title:(NSString*)title short_name:(NSString*)short_name n_count:(int)n_count n_hash:(int)n_hash;
 @end
 	
 @interface TLmessages_StickerSet()
@@ -2473,17 +2530,20 @@
 	
 @interface TLReplyMarkup()
 @property int flags;
+@property (nonatomic,assign,readonly) BOOL isSelective;
+@property (nonatomic,assign,readonly) BOOL isSingle_use;
+@property (nonatomic,assign,readonly) BOOL isResize;
 @property (nonatomic, strong) NSMutableArray* rows;
 @end
 
 @interface TL_replyKeyboardHide : TLReplyMarkup<NSCoding>
-+(TL_replyKeyboardHide*)createWithFlags:(int)flags;
++(TL_replyKeyboardHide*)createWithFlags:(int)flags ;
 @end
 @interface TL_replyKeyboardForceReply : TLReplyMarkup<NSCoding>
-+(TL_replyKeyboardForceReply*)createWithFlags:(int)flags;
++(TL_replyKeyboardForceReply*)createWithFlags:(int)flags  ;
 @end
 @interface TL_replyKeyboardMarkup : TLReplyMarkup<NSCoding>
-+(TL_replyKeyboardMarkup*)createWithFlags:(int)flags rows:(NSMutableArray*)rows;
++(TL_replyKeyboardMarkup*)createWithFlags:(int)flags    rows:(NSMutableArray*)rows;
 @end
 	
 @interface TLhelp_AppChangelog()
@@ -2582,6 +2642,7 @@
 	
 @interface TLupdates_ChannelDifference()
 @property int flags;
+@property (nonatomic,assign,readonly) BOOL isFinal;
 @property int pts;
 @property int timeout;
 @property int top_message;
@@ -2597,17 +2658,18 @@
 @end
 
 @interface TL_updates_channelDifferenceEmpty : TLupdates_ChannelDifference<NSCoding>
-+(TL_updates_channelDifferenceEmpty*)createWithFlags:(int)flags pts:(int)pts timeout:(int)timeout;
++(TL_updates_channelDifferenceEmpty*)createWithFlags:(int)flags  pts:(int)pts timeout:(int)timeout;
 @end
 @interface TL_updates_channelDifferenceTooLong : TLupdates_ChannelDifference<NSCoding>
-+(TL_updates_channelDifferenceTooLong*)createWithFlags:(int)flags pts:(int)pts timeout:(int)timeout top_message:(int)top_message top_important_message:(int)top_important_message read_inbox_max_id:(int)read_inbox_max_id unread_count:(int)unread_count unread_important_count:(int)unread_important_count messages:(NSMutableArray*)messages chats:(NSMutableArray*)chats users:(NSMutableArray*)users;
++(TL_updates_channelDifferenceTooLong*)createWithFlags:(int)flags  pts:(int)pts timeout:(int)timeout top_message:(int)top_message top_important_message:(int)top_important_message read_inbox_max_id:(int)read_inbox_max_id unread_count:(int)unread_count unread_important_count:(int)unread_important_count messages:(NSMutableArray*)messages chats:(NSMutableArray*)chats users:(NSMutableArray*)users;
 @end
 @interface TL_updates_channelDifference : TLupdates_ChannelDifference<NSCoding>
-+(TL_updates_channelDifference*)createWithFlags:(int)flags pts:(int)pts timeout:(int)timeout n_messages:(NSMutableArray*)n_messages other_updates:(NSMutableArray*)other_updates chats:(NSMutableArray*)chats users:(NSMutableArray*)users;
++(TL_updates_channelDifference*)createWithFlags:(int)flags  pts:(int)pts timeout:(int)timeout n_messages:(NSMutableArray*)n_messages other_updates:(NSMutableArray*)other_updates chats:(NSMutableArray*)chats users:(NSMutableArray*)users;
 @end
 	
 @interface TLChannelMessagesFilter()
 @property int flags;
+@property (nonatomic,assign,readonly) BOOL isImportant_only;
 @property (nonatomic, strong) NSMutableArray* ranges;
 @end
 
@@ -2615,7 +2677,7 @@
 +(TL_channelMessagesFilterEmpty*)create;
 @end
 @interface TL_channelMessagesFilter : TLChannelMessagesFilter<NSCoding>
-+(TL_channelMessagesFilter*)createWithFlags:(int)flags ranges:(NSMutableArray*)ranges;
++(TL_channelMessagesFilter*)createWithFlags:(int)flags  ranges:(NSMutableArray*)ranges;
 @end
 @interface TL_channelMessagesFilterCollapsed : TLChannelMessagesFilter<NSCoding>
 +(TL_channelMessagesFilterCollapsed*)create;

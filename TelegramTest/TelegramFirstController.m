@@ -40,15 +40,9 @@
     
     [main.submenu removeItem:[main.submenu itemWithTag:1000]];
     
-  
-    main = [menu itemAtIndex:1];
-    [main.submenu removeItemAtIndex:1];
     
 #endif
     
-    
-    
-
     
 }
 

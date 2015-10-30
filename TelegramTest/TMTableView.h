@@ -85,4 +85,6 @@
 
 - (BOOL) setSelectedObject:(NSObject *)item ;
 
+-(BOOL)rowIsVisible:(NSUInteger)index;
+
 @end

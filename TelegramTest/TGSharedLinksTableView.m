@@ -85,6 +85,10 @@
     }];
 }
 
+-(id)remoteFilter {
+    return [TL_inputMessagesFilterUrl create];
+}
+
 - (void)prepareItem:(MessageTableItemText *)item {
   //  [item.webpage makeSize:NSWidth(self.scrollView)-24];
 }

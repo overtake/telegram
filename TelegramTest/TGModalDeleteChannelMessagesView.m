@@ -116,11 +116,11 @@
     
     [_tableView addItem:header tableRedraw:NO];
     
-    GeneralSettingsRowItem *deleteItem = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeSelected callback:^(GeneralSettingsRowItem *item) {} description:NSLocalizedString(@"Channel.DeleteMessageModal", nil) height:42 stateback:^id(GeneralSettingsRowItem *item) {
+    GeneralSettingsRowItem *deleteItem = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeSelected callback:^(TGGeneralRowItem *item) {} description:NSLocalizedString(@"Channel.DeleteMessageModal", nil) height:42 stateback:^id(TGGeneralRowItem *item) {
         return _action.result.multiObjects[0];
     }];
     
-    GeneralSettingsRowItem *banUser = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeSelected callback:^(GeneralSettingsRowItem *item) {
+    GeneralSettingsRowItem *banUser = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeSelected callback:^(TGGeneralRowItem *item) {
         
         BOOL currentValue = [self.action.result.multiObjects[1] boolValue];
         
@@ -128,11 +128,11 @@
         
         [_tableView reloadData];
         
-    } description:NSLocalizedString(@"Channel.BanUserModal", nil) height:42 stateback:^id(GeneralSettingsRowItem *item) {
+    } description:NSLocalizedString(@"Channel.BanUserModal", nil) height:42 stateback:^id(TGGeneralRowItem *item) {
         return _action.result.multiObjects[1];
     }];
     
-    GeneralSettingsRowItem *reportSpam = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeSelected callback:^(GeneralSettingsRowItem *item) {
+    GeneralSettingsRowItem *reportSpam = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeSelected callback:^(TGGeneralRowItem *item) {
         
         BOOL currentValue = [self.action.result.multiObjects[2] boolValue];
         
@@ -140,11 +140,11 @@
         
         [_tableView reloadData];
         
-    } description:NSLocalizedString(@"Channel.ReportSpamModal", nil) height:42 stateback:^id(GeneralSettingsRowItem *item) {
+    } description:NSLocalizedString(@"Channel.ReportSpamModal", nil) height:42 stateback:^id(TGGeneralRowItem *item) {
         return _action.result.multiObjects[2];
     }];
     
-    GeneralSettingsRowItem *deleteAllMesages = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeSelected callback:^(GeneralSettingsRowItem *item) {
+    GeneralSettingsRowItem *deleteAllMesages = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeSelected callback:^(TGGeneralRowItem *item) {
         
         BOOL currentValue = [self.action.result.multiObjects[3] boolValue];
         
@@ -152,7 +152,7 @@
         
         [_tableView reloadData];
         
-    } description:NSLocalizedString(@"Channel.DeleteAllMessagesModal", nil) height:42 stateback:^id(GeneralSettingsRowItem *item) {
+    } description:NSLocalizedString(@"Channel.DeleteAllMessagesModal", nil) height:42 stateback:^id(TGGeneralRowItem *item) {
         return _action.result.multiObjects[3];
     }];
     

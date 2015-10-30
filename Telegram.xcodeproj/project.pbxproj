@@ -725,6 +725,8 @@
 		C2CBF6DE1AFBE812006BF90A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C2CBF6DD1AFBE812006BF90A /* Images.xcassets */; };
 		C2CC41C41BA7FC450097E973 /* WeakReference.m in Sources */ = {isa = PBXBuildFile; fileRef = C2CC41C31BA7FC450097E973 /* WeakReference.m */; };
 		C2CD77C91A2C9E04000B4BA9 /* TGEnterPasswordPanel.m in Sources */ = {isa = PBXBuildFile; fileRef = C2CD77C81A2C9E04000B4BA9 /* TGEnterPasswordPanel.m */; };
+		C2CE53C01BE2892E00BBEF5F /* ChatAdminsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C2CE53BF1BE2892E00BBEF5F /* ChatAdminsViewController.m */; settings = {ASSET_TAGS = (); }; };
+		C2CE53C31BE295A000BBEF5F /* TGGeneralSearchRowView.m in Sources */ = {isa = PBXBuildFile; fileRef = C2CE53C21BE295A000BBEF5F /* TGGeneralSearchRowView.m */; settings = {ASSET_TAGS = (); }; };
 		C2D235B91A2F2C5600765BA1 /* TGModernTypingManager.m in Sources */ = {isa = PBXBuildFile; fileRef = C2D235B81A2F2C5600765BA1 /* TGModernTypingManager.m */; };
 		C2D235BC1A2FA6F400765BA1 /* TGSendTypingManager.m in Sources */ = {isa = PBXBuildFile; fileRef = C2D235BB1A2FA6F400765BA1 /* TGSendTypingManager.m */; };
 		C2D4B7401AFCD36A0035B4E4 /* TGModalView.m in Sources */ = {isa = PBXBuildFile; fileRef = C2D4B73F1AFCD36A0035B4E4 /* TGModalView.m */; };
@@ -2317,6 +2319,10 @@
 		C2CC41C31BA7FC450097E973 /* WeakReference.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WeakReference.m; sourceTree = "<group>"; };
 		C2CD77C71A2C9E04000B4BA9 /* TGEnterPasswordPanel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGEnterPasswordPanel.h; sourceTree = "<group>"; };
 		C2CD77C81A2C9E04000B4BA9 /* TGEnterPasswordPanel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGEnterPasswordPanel.m; sourceTree = "<group>"; };
+		C2CE53BE1BE2892E00BBEF5F /* ChatAdminsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChatAdminsViewController.h; sourceTree = "<group>"; };
+		C2CE53BF1BE2892E00BBEF5F /* ChatAdminsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChatAdminsViewController.m; sourceTree = "<group>"; };
+		C2CE53C11BE295A000BBEF5F /* TGGeneralSearchRowView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGGeneralSearchRowView.h; sourceTree = "<group>"; };
+		C2CE53C21BE295A000BBEF5F /* TGGeneralSearchRowView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGGeneralSearchRowView.m; sourceTree = "<group>"; };
 		C2D235B71A2F2C5600765BA1 /* TGModernTypingManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGModernTypingManager.h; sourceTree = "<group>"; };
 		C2D235B81A2F2C5600765BA1 /* TGModernTypingManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGModernTypingManager.m; sourceTree = "<group>"; };
 		C2D235BA1A2FA6F400765BA1 /* TGSendTypingManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGSendTypingManager.h; sourceTree = "<group>"; };
@@ -3380,6 +3386,8 @@
 				C2AC8DB31A7BF13000655B9D /* TGSearchRowItem.m */,
 				C2CBF6D51AFBDB6F006BF90A /* TGLinearProgressView.h */,
 				C2CBF6D61AFBDB6F006BF90A /* TGLinearProgressView.m */,
+				C2CE53C11BE295A000BBEF5F /* TGGeneralSearchRowView.h */,
+				C2CE53C21BE295A000BBEF5F /* TGGeneralSearchRowView.m */,
 			);
 			name = elements;
 			sourceTree = "<group>";
@@ -3734,6 +3742,8 @@
 				C23536C519D453720044978E /* EncryptedKeyViewController.m */,
 				C2C85BA21AEEB82100FBEABD /* ChatExportLinkViewController.h */,
 				C2C85BA31AEEB82100FBEABD /* ChatExportLinkViewController.m */,
+				C2CE53BE1BE2892E00BBEF5F /* ChatAdminsViewController.h */,
+				C2CE53BF1BE2892E00BBEF5F /* ChatAdminsViewController.m */,
 			);
 			name = help;
 			sourceTree = "<group>";
@@ -6720,6 +6730,7 @@
 				C26752811A1CA7CC00152D9A /* TMAvaImageObject.m in Sources */,
 				C274C3C91AC48F6B000DFDE4 /* TGSessionRowitem.m in Sources */,
 				C2DE4FB11AD2E5D6001EC26C /* TGWebpageAttach.m in Sources */,
+				C2CE53C31BE295A000BBEF5F /* TGGeneralSearchRowView.m in Sources */,
 				0A9EDC501897BA0E0037E1BC /* NSImage+RBLResizableImageAdditions.m in Sources */,
 				C2182BBE19589246002469CA /* TL_localMessageService.m in Sources */,
 				0AB8F64E1861B07C000E6FF3 /* TMRowView.m in Sources */,
@@ -6890,6 +6901,7 @@
 				0A4A1A2218A153F800D756CD /* MessageTableItemDocument.m in Sources */,
 				C21C7B2C18D7044600253A7A /* MessageSenderItem.m in Sources */,
 				0A62CC8A181EFC1C0098720C /* Telegram.m in Sources */,
+				C2CE53C01BE2892E00BBEF5F /* ChatAdminsViewController.m in Sources */,
 				C2753DDC19E5A44300752BAF /* FLAnimatedImage.m in Sources */,
 				C2CB5CF21B467D5A00CD61DF /* TGViewController.m in Sources */,
 				C2233DA91A07EF060056594F /* MessageTableItemSocial.m in Sources */,
