@@ -804,7 +804,8 @@ static int offsetEditable = 30;
     [self.rightView.layer setFrameOrigin:position];
     [self.rightView setFrameOrigin:position];
     
-    [_shareImageView setFrameOrigin:NSMakePoint(NSMinX(_rightView.frame) + NSWidth(_shareImageView.frame) + NSWidth(_dateLayer.frame) + 15, NSMinY(_rightView.frame) - NSHeight(_shareImageView.frame) - 5)];
+    if(!editable)
+        [_shareImageView setFrameOrigin:NSMakePoint(NSMinX(_rightView.frame) + NSWidth(_shareImageView.frame) + NSWidth(_dateLayer.frame) + 15, NSMinY(_rightView.frame) - NSHeight(_shareImageView.frame) - 5)];
 }
 
 - (void)setEditable:(BOOL)editable animation:(BOOL)animation {
@@ -873,6 +874,10 @@ static int offsetEditable = 30;
         }
     }];
     [self.selectButton.layer pop_addAnimation:opacityAnim forKey:@"slide"];
+    
+    
+    
+    [_shareImageView setHidden:editable];
     
 }
 

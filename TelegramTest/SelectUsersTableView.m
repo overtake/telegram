@@ -126,12 +126,22 @@ static NSCache *cacheItems;
 -(void)readyConversations {
     _type = SelectTableConversations;
     
-    NSArray *chats = [[[DialogsManager sharedManager] all] filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.type == %d OR self.type == %d",DialogTypeChat,DialogTypeUser]];
+    NSArray *chats = [[DialogsManager sharedManager] all];
+    
+    NSMutableArray *accepted = [[NSMutableArray alloc] init];
+    
+    [chats enumerateObjectsUsingBlock:^(TL_conversation *obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        
+        if(obj.type == DialogTypeUser || obj.type == DialogTypeChat || (obj.type == DialogTypeChannel && obj.canSendChannelMessageAsAdmin)) {
+            [accepted addObject:obj];
+        }
+        
+    }];
     
     
     NSMutableArray *items = [[NSMutableArray alloc] init];
     
-    [chats enumerateObjectsUsingBlock:^(TL_conversation * obj, NSUInteger idx, BOOL *stop) {
+    [accepted enumerateObjectsUsingBlock:^(TL_conversation * obj, NSUInteger idx, BOOL *stop) {
         
         if(obj.chat) {
             [items addObject:[[SelectChatItem alloc] initWithObject:obj.chat]];
