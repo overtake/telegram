@@ -110,7 +110,7 @@
     [self.statusTextField setFrameSize:NSMakeSize(NSWidth(self.frame) - NSMaxX(self.avatarImageView.frame) - 20, NSHeight(self.statusTextField.frame))];
     
     
-    [self.statusTextField setFrameOrigin:NSMakePoint(NSMinX(self.statusTextField.frame), NSHeight(self.frame)/2 - NSHeight(self.statusTextField.frame))];
+    [self.statusTextField setFrameOrigin:NSMakePoint(NSMinX(self.statusTextField.frame), NSHeight(self.frame)/2 - NSHeight(self.statusTextField.frame) + 2)];
     [self.nameTextField setFrameOrigin:NSMakePoint(NSMinX(self.nameTextField.frame), NSHeight(self.frame)/2 )];
     
     
