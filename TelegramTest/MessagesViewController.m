@@ -1754,9 +1754,6 @@ static NSTextAttachment *headerMediaIcon() {
              
              NSUInteger idx = [self indexOfObject:item];
              
-             
-             NSLog(@"%ld : message:%@",idx,item.message.message);
-             
              if(idx != NSNotFound) {
                  [self.table reloadDataForRowIndexes:[NSIndexSet indexSetWithIndex:idx] columnIndexes:[NSIndexSet indexSetWithIndex:0]];
              }
