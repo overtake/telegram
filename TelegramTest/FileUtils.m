@@ -670,13 +670,18 @@ void open_link(NSString *link) {
             
             TLChat *chat = [[ChatsManager sharedManager] find:abs(peer_id)];
             
+            
+            
             if([[NSApp keyWindow] isKindOfClass:[TGHeadChatPanel class]]) {
                 TGHeadChatPanel *panel = (TGHeadChatPanel *) [NSApp keyWindow];
-                
+
                 [panel showInfoPageWithConversation:chat.dialog];
                 
             } else {
-                [[Telegram rightViewController] showChatInfoPage:chat];
+                if(peer == [TL_peerChannel class]) {
+                    [[Telegram rightViewController] showByDialog:chat.dialog sender:nil];
+                } else
+                    [[Telegram rightViewController] showChatInfoPage:chat];
             }
             
             

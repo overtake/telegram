@@ -74,11 +74,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "TelegramTest/Storage.m"
-            timestampString = "467992017.979716"
+            timestampString = "467993364.471144"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "3090"
-            endingLineNumber = "3090"
+            startingLineNumber = "3087"
+            endingLineNumber = "3087"
             landmarkName = "-groupHoles:min:max:"
             landmarkType = "5">
          </BreakpointContent>
@@ -432,22 +432,6 @@
             startingLineNumber = "27"
             endingLineNumber = "27"
             landmarkName = "-remoteRequest:peer_id:callback:"
-            landmarkType = "5">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "TelegramTest/TGHeadChatPanel.m"
-            timestampString = "467312886.053997"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "126"
-            endingLineNumber = "126"
-            landmarkName = "-showInfoPageWithConversation:"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>

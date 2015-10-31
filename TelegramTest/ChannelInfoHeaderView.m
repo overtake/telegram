@@ -417,6 +417,8 @@
     [self.filesMediaButton setHidden:self.type == ChatInfoViewControllerEdit];
     [self.sharedLinksButton setHidden:self.type == ChatInfoViewControllerEdit];
     
+    [self.admins setHidden:YES];
+    
     
     [self.linkView setHidden:self.type == ChatInfoViewControllerEdit || self.linkView.string.length == 0];
     [self.aboutView setHidden:self.type == ChatInfoViewControllerEdit || self.aboutView.string.length == 0];
