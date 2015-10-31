@@ -58,52 +58,7 @@
     return (TMView *)_container;
 }
 
--(void)showInfoPage {
-    
-    TMViewController *infoViewController;
-    
-    switch (self.conversation.type) {
-        case DialogTypeChat:
-            
-            infoViewController = [[ChatInfoViewController alloc] initWithFrame:self.view.bounds];
-            
-            [(ChatInfoViewController *)infoViewController setChat:self.conversation.chat];
-            
-            break;
-            
-        case DialogTypeSecretChat:
-            
-            infoViewController = [[UserInfoViewController alloc] initWithFrame:self.view.bounds];
-            
-            
-            [(UserInfoViewController *)infoViewController setUser:self.conversation.encryptedChat.peerUser conversation:self.conversation];
-            
-            break;
-            
-        case DialogTypeUser: {
-            infoViewController = [[UserInfoViewController alloc] initWithFrame:self.view.bounds];
-            
-            
-            [(UserInfoViewController *)infoViewController setUser:self.conversation.user conversation:self.conversation];
-            break;
-        }
-            
-        case DialogTypeBroadcast:
-            infoViewController = [[BroadcastInfoViewController alloc] initWithFrame:self.view.bounds];
-            
-            [(BroadcastInfoViewController *)infoViewController setBroadcast:self.conversation.broadcast];
-        case DialogTypeChannel:
-            infoViewController = [[ChannelInfoViewController alloc] initWithFrame:self.view.bounds];
-            
-            [(ChannelInfoViewController *)infoViewController setChat:self.conversation.chat];
 
-        default:
-            break;
-    }
-    
-    [self.navigationViewController pushViewController:infoViewController animated:YES];
-
-}
 
 -(void)pinOrUnpin {
     [self.view.window setLevel:self.view.window.level == NSNormalWindowLevel ? NSScreenSaverWindowLevel : NSNormalWindowLevel];

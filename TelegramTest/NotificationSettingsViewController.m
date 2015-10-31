@@ -50,6 +50,8 @@
     
     [self.searchView setXOffset:30];
     
+    self.searchItem.height = 40;
+    
     [self.searchView setDelegate:self];
     
     _tableView = [[TMTableView alloc] initWithFrame:self.view.bounds];

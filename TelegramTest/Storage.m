@@ -1349,22 +1349,28 @@ TL_localMessage *parseMessage(FMResultSet *result) {
         
         int flags = n_out ? TGOUTMESSAGE | TGUNREADMESSAGE : TGUNREADMESSAGE;
         
-        int read_inbox_max_id = [db intForQuery:[NSString stringWithFormat:@"select read_inbox_max_id from %@ where peer_id = ?",tableDialogs],@(peer_id)];
-        
-        FMResultSet *result = [db executeQuery:@"select n_id from messages where ((n_id <= ? and n_id > ?) OR dstate=?) and peer_id = ? and (flags & ?) = ?",@(max_id),@(read_inbox_max_id),@(DeliveryStatePending),@(peer_id),@(flags),@(flags)];
-        
-        
+        FMResultSet *result;
         
         if(!n_out) {
+            int read_inbox_max_id = [db intForQuery:[NSString stringWithFormat:@"select read_inbox_max_id from %@ where peer_id = ?",tableDialogs],@(peer_id)];
+            
+            result = [db executeQuery:@"select n_id from messages where ((n_id <= ? and n_id >= ?) OR dstate=?) and peer_id = ? and (flags & ?) = ?",@(max_id),@(read_inbox_max_id),@(DeliveryStatePending),@(peer_id),@(flags),@(flags)];
+            
+            
             [db executeUpdate:[NSString stringWithFormat:@"update %@ set read_inbox_max_id = ? where peer_id = ?",tableDialogs],@(max_id),@(peer_id)];
-
+        } else {
+            result = [db executeQuery:[NSString stringWithFormat:@"select n_id from %@ where (n_id <= ? OR dstate= ?) and peer_id = ? and (flags & ?) > 0",tableMessages],@(max_id),@(DeliveryStatePending),@(peer_id),@(flags)];
         }
+        
+        
         
         
         while ([result next]) {
             
             [ids addObject:@([result intForColumn:@"n_id"])];
         }
+        
+        
         
         
         [result close];

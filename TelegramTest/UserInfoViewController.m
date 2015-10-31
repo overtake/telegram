@@ -61,7 +61,9 @@
 
 -(void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-      [Notification addObserver:self selector:@selector(userNameChangedNotification:) name:USER_UPDATE_NAME];
+    [Notification addObserver:self selector:@selector(userNameChangedNotification:) name:USER_UPDATE_NAME];
+    
+    
 }
 
 -(void)viewWillDisappear:(BOOL)animated {
@@ -380,6 +382,8 @@
     [self.editContainer setUser:user];
     [self.avatarImageView setUser:user];
     [self setRightNavigationBarView:[self generateRightHeaderButtons]];
+    
+    
 }
 
 @end

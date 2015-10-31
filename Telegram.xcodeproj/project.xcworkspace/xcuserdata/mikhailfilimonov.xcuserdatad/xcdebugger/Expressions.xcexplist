@@ -716,6 +716,20 @@
          contextName = "__34-[LastSeenViewController loadView]_block_invoke:LastSeenViewController.m">
       </ContextState>
       <ContextState
+         contextName = "__60-[Storage markAllInConversation:max_id:out:completeHandler:]_block_invoke:Storage.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "max_id">
+            </PersistentString>
+            <PersistentString
+               value = "read_inbox_max_id">
+            </PersistentString>
+            <PersistentString
+               value = "n_out">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "-[MessagesViewController loadhistory:toEnd:prev:isFirst:]:MessagesViewController.m">
          <PersistentStrings>
             <PersistentString

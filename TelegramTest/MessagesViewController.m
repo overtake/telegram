@@ -1531,30 +1531,51 @@ static NSTextAttachment *headerMediaIcon() {
     [[Telegram rightViewController] showForwardMessagesModalView:self.conversation messagesCount:self.selectedMessages.count];
 }
 
-- (void)showInfoPage {
+-(void)showInfoPage {
     
-    switch (_conversation.type) {
+    TMViewController *infoViewController;
+    
+    switch (self.conversation.type) {
         case DialogTypeChat:
-            [[Telegram rightViewController] showChatInfoPage:_conversation.chat];
+            
+            infoViewController = [[ChatInfoViewController alloc] initWithFrame:self.view.bounds];
+            
+            [(ChatInfoViewController *)infoViewController setChat:self.conversation.chat];
+            
             break;
             
         case DialogTypeSecretChat:
-            [[Telegram sharedInstance] showUserInfoWithUserId:_conversation.encryptedChat.peerUser.n_id conversation:_conversation sender:self];
+            
+            infoViewController = [[UserInfoViewController alloc] initWithFrame:self.view.bounds];
+            
+            
+            [(UserInfoViewController *)infoViewController setUser:self.conversation.encryptedChat.peerUser conversation:self.conversation];
+            
             break;
             
         case DialogTypeUser: {
-            [[Telegram sharedInstance] showUserInfoWithUserId:_conversation.user.n_id conversation:_conversation sender:self];
+            infoViewController = [[UserInfoViewController alloc] initWithFrame:self.view.bounds];
+            
+            
+            [(UserInfoViewController *)infoViewController setUser:self.conversation.user conversation:self.conversation];
             break;
         }
             
         case DialogTypeBroadcast:
-            [[Telegram rightViewController] showBroadcastInfoPage:_conversation.broadcast];
+            infoViewController = [[BroadcastInfoViewController alloc] initWithFrame:self.view.bounds];
+            
+            [(BroadcastInfoViewController *)infoViewController setBroadcast:self.conversation.broadcast];
         case DialogTypeChannel:
-            [[Telegram rightViewController] showChannelInfoPage:_conversation.chat];
+            infoViewController = [[ChannelInfoViewController alloc] initWithFrame:self.view.bounds];
+            
+            [(ChannelInfoViewController *)infoViewController setChat:self.conversation.chat];
+            
         default:
             break;
     }
-   
+    
+    [self.navigationViewController pushViewController:infoViewController animated:YES];
+    
 }
 
 - (void)jumpToBottomButtonDisplay {
@@ -1725,12 +1746,16 @@ static NSTextAttachment *headerMediaIcon() {
 - (void)messageReadNotification:(NSNotification *)notify {
     
     NSArray *readed = [notify.userInfo objectForKey:KEY_MESSAGE_ID_LIST];
-
+    
+    
     [self.historyController items:readed complete:^(NSArray * filtred) {
          for (MessageTableItem *item in filtred) {
              item.message.flags&= ~TGUNREADMESSAGE;
              
              NSUInteger idx = [self indexOfObject:item];
+             
+             
+             NSLog(@"%ld : message:%@",idx,item.message.message);
              
              if(idx != NSNotFound) {
                  [self.table reloadDataForRowIndexes:[NSIndexSet indexSetWithIndex:idx] columnIndexes:[NSIndexSet indexSetWithIndex:0]];
