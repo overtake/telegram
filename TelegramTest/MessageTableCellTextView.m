@@ -235,6 +235,7 @@
 
 
 -(void)setSelected:(BOOL)selected animation:(BOOL)animation {
+    
     if(selected == self.isSelected)
         return;
     

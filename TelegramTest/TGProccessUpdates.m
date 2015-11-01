@@ -890,6 +890,9 @@ static NSArray *channelUpdates;
         
         [RPCRequest sendRequest:[TLAPI_updates_getState create] successHandler:^(RPCRequest *request, TL_updates_state * state) {
     
+            
+            MTLog(@"update dif broken pts:%d, date:%d, qts:%d,seq:%d",_updateState.pts,_updateState.date,_updateState.qts,_updateState.seq);
+            
             _updateState = [[TGUpdateState alloc] initWithPts:_updateState.pts == 0 ? state.pts : _updateState.pts qts:_updateState.qts == 0 ? state.qts : _updateState.qts date:_updateState.date == 0 ? state.date : _updateState.date seq:_updateState.seq == 0 ? state.seq : _updateState.seq pts_count:_updateState.pts_count];
 
             [self saveUpdateState];

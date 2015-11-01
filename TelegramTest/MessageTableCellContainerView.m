@@ -385,14 +385,17 @@ NSImage *selectCheckActiveImage() {
 
 - (void)setSelected:(BOOL)isSelected animation:(BOOL)animation {
     
+    if(self.isSelected == isSelected)
+        return;
+    
+    
     if([self isEditable])
         [self initSelectButton];
     else
         [self deallocSelectButton];
     
     
-    if(self.isSelected == isSelected)
-        return;
+    
     
     
     self.item.isSelected = isSelected;
