@@ -220,6 +220,15 @@
      [self reloadParticipants];
     
     [Notification addObserver:self selector:@selector(chatStatusNotification:) name:CHAT_STATUS];
+    [Notification addObserver:self selector:@selector(didChangeChatFlags:) name:CHAT_FLAGS_UPDATED];
+}
+
+-(void)didChangeChatFlags:(NSNotification *)notification {
+    TLChat *chat = notification.userInfo[KEY_CHAT];
+    
+    if(self.chat == chat) {
+        self.chat = chat;
+    }
 }
 
 - (void)viewWillDisappear:(BOOL)animated {

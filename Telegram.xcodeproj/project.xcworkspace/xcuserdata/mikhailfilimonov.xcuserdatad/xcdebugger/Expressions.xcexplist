@@ -727,6 +727,9 @@
             <PersistentString
                value = "n_out">
             </PersistentString>
+            <PersistentString
+               value = "ids">
+            </PersistentString>
          </PersistentStrings>
       </ContextState>
       <ContextState

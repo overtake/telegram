@@ -41,7 +41,33 @@
 -(void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     
+    [Notification addObserver:self selector:@selector(didChangeChatFlags:) name:CHAT_FLAGS_UPDATED];
+    [Notification addObserver:self selector:@selector(updateParticipantsNotification:) name:CHAT_UPDATE_PARTICIPANTS];
+
     [self reloadData];
+}
+
+- (void)updateParticipantsNotification:(NSNotification *)notify {
+    int chat_id = [[notify.userInfo objectForKey:KEY_CHAT_ID] intValue];
+    
+    if(self.chat.n_id == chat_id) {
+        [self reloadData];
+    }
+    
+    
+}
+
+-(void)didChangeChatFlags:(NSNotification *)notification {
+    TLChat *chat = notification.userInfo[KEY_CHAT];
+    
+    if(self.chat == chat) {
+        [self reloadData];
+    }
+}
+
+-(void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
+    [Notification removeObserver:self];
 }
 
 

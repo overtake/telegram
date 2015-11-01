@@ -785,12 +785,31 @@ static NSArray *channelUpdates;
         
         if([update isKindOfClass:[TL_updateChatParticipantAdmin class]]) {
             
+            TLChatFull *chatFull = [[FullChatManager sharedManager] find:[update chat_id]];
             
+            NSArray *f = [chatFull.participants.participants filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.user_id == %d",update.user_id]];
+            
+            if(f.count == 1)
+            {
+                TLChatParticipant *participant = [f firstObject];
+                
+                TLChatParticipant *newParticipant = [update is_admin] ? [TL_chatParticipantAdmin createWithUser_id:participant.user_id inviter_id:participant.inviter_id date:participant.date] : [TL_chatParticipant createWithUser_id:participant.user_id inviter_id:participant.inviter_id date:participant.date];
+                
+                [chatFull.participants.participants replaceObjectAtIndex:[chatFull.participants.participants indexOfObject:participant] withObject:newParticipant];
+                
+             }
+            
+            [Notification perform:CHAT_UPDATE_PARTICIPANTS data:@{KEY_CHAT_ID:@([update chat_id]),@"participants":chatFull.participants}];
             
         }
         
         if([update isKindOfClass:[TL_updateChatAdmins class]]) {
             
+            TLChat *chat = [[ChatsManager sharedManager] find:[update chat_id]];
+            
+            if(chat.version != update.version) {
+                [[FullChatManager sharedManager] loadIfNeed:[update chat_id] force:YES];
+            }
             
             
         }
