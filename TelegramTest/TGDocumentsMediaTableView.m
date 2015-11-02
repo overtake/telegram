@@ -390,7 +390,7 @@
         [self.controller.items addObjectsFromArray:filtred];
         
         
-        [self insertRowsAtIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(self.items.count - filtred.count, filtred.count)] withAnimation:NSTableViewAnimationEffectNone];
+        [self insertRowsAtIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(self.controller.items.count - filtred.count, filtred.count)] withAnimation:NSTableViewAnimationEffectNone];
         
         
         
