@@ -2,7 +2,7 @@
 //  MTProto.m
 //  Telegram
 //
-//  Auto created by Mikhail Filimonov on 30.10.15.
+//  Auto created by Mikhail Filimonov on 02.11.15.
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -2968,21 +2968,21 @@
 
         
             
--(BOOL)isSelf {return self.flags & (1 << 10);}
+-(BOOL)isSelf {return (self.flags & (1 << 10)) > 0;}
                         
--(BOOL)isContact {return self.flags & (1 << 11);}
+-(BOOL)isContact {return (self.flags & (1 << 11)) > 0;}
                         
--(BOOL)isMutual_contact {return self.flags & (1 << 12);}
+-(BOOL)isMutual_contact {return (self.flags & (1 << 12)) > 0;}
                         
--(BOOL)isDeleted {return self.flags & (1 << 13);}
+-(BOOL)isDeleted {return (self.flags & (1 << 13)) > 0;}
                         
--(BOOL)isBot {return self.flags & (1 << 14);}
+-(BOOL)isBot {return (self.flags & (1 << 14)) > 0;}
                         
--(BOOL)isBot_chat_history {return self.flags & (1 << 15);}
+-(BOOL)isBot_chat_history {return (self.flags & (1 << 15)) > 0;}
                         
--(BOOL)isBot_nochats {return self.flags & (1 << 16);}
+-(BOOL)isBot_nochats {return (self.flags & (1 << 16)) > 0;}
                         
--(BOOL)isVerified {return self.flags & (1 << 17);}
+-(BOOL)isVerified {return (self.flags & (1 << 17)) > 0;}
                         
 -(void)setAccess_hash:(long)access_hash
 {
@@ -3812,15 +3812,15 @@
 
         
             
--(BOOL)isCreator {return self.flags & (1 << 0);}
+-(BOOL)isCreator {return (self.flags & (1 << 0)) > 0;}
                         
--(BOOL)isKicked {return self.flags & (1 << 1);}
+-(BOOL)isKicked {return (self.flags & (1 << 1)) > 0;}
                         
--(BOOL)isLeft {return self.flags & (1 << 2);}
+-(BOOL)isLeft {return (self.flags & (1 << 2)) > 0;}
                         
--(BOOL)isAdmins_enabled {return self.flags & (1 << 3);}
+-(BOOL)isAdmins_enabled {return (self.flags & (1 << 3)) > 0;}
                         
--(BOOL)isAdmin {return self.flags & (1 << 4);}
+-(BOOL)isAdmin {return (self.flags & (1 << 4)) > 0;}
             
         
 @end
@@ -3870,9 +3870,10 @@
 @end
 
 @implementation TL_channel
-+(TL_channel*)createWithFlags:(int)flags        n_id:(int)n_id access_hash:(long)access_hash title:(NSString*)title username:(NSString*)username photo:(TLChatPhoto*)photo date:(int)date version:(int)version {
++(TL_channel*)createWithFlags:(int)flags         n_id:(int)n_id access_hash:(long)access_hash title:(NSString*)title username:(NSString*)username photo:(TLChatPhoto*)photo date:(int)date version:(int)version {
 	TL_channel* obj = [[TL_channel alloc] init];
 	obj.flags = flags;
+	
 	
 	
 	
@@ -3898,6 +3899,7 @@
 	
 	
 	
+	
 	[stream writeInt:self.n_id];
 	[stream writeLong:self.access_hash];
 	[stream writeString:self.title];
@@ -3908,6 +3910,7 @@
 }
 -(void)unserialize:(SerializedData*)stream {
 	self.flags = [stream readInt];
+	
 	
 	
 	
@@ -3929,6 +3932,7 @@
     TL_channel *objc = [[TL_channel alloc] init];
     
     objc.flags = self.flags;
+    
     
     
     
@@ -3962,19 +3966,21 @@
 
         
             
--(BOOL)isCreator {return self.flags & (1 << 0);}
+-(BOOL)isCreator {return (self.flags & (1 << 0)) > 0;}
                         
--(BOOL)isKicked {return self.flags & (1 << 1);}
+-(BOOL)isKicked {return (self.flags & (1 << 1)) > 0;}
                         
--(BOOL)isLeft {return self.flags & (1 << 2);}
+-(BOOL)isLeft {return (self.flags & (1 << 2)) > 0;}
                         
--(BOOL)isEditor {return self.flags & (1 << 3);}
+-(BOOL)isEditor {return (self.flags & (1 << 3)) > 0;}
                         
--(BOOL)isModerator {return self.flags & (1 << 4);}
+-(BOOL)isModerator {return (self.flags & (1 << 4)) > 0;}
                         
--(BOOL)isBroadcast {return self.flags & (1 << 5);}
+-(BOOL)isBroadcast {return (self.flags & (1 << 5)) > 0;}
                         
--(BOOL)isVerified {return self.flags & (1 << 7);}
+-(BOOL)isVerified {return (self.flags & (1 << 7)) > 0;}
+                        
+-(BOOL)isMegagroup {return (self.flags & (1 << 8)) > 0;}
                         
 -(void)setUsername:(NSString*)username
 {
@@ -4316,7 +4322,7 @@
 
         
             
--(BOOL)isCan_view_participants {return self.flags & (1 << 3);}
+-(BOOL)isCan_view_participants {return (self.flags & (1 << 3)) > 0;}
                         
 -(void)setParticipants_count:(int)participants_count
 {
@@ -5032,13 +5038,13 @@
 
         
             
--(BOOL)isUnread {return self.flags & (1 << 0);}
+-(BOOL)isUnread {return (self.flags & (1 << 0)) > 0;}
                         
--(BOOL)isN_out {return self.flags & (1 << 1);}
+-(BOOL)isN_out {return (self.flags & (1 << 1)) > 0;}
                         
--(BOOL)isMentioned {return self.flags & (1 << 4);}
+-(BOOL)isMentioned {return (self.flags & (1 << 4)) > 0;}
                         
--(BOOL)isMedia_unread {return self.flags & (1 << 5);}
+-(BOOL)isMedia_unread {return (self.flags & (1 << 5)) > 0;}
                         
 -(void)setFrom_id:(int)from_id
 {
@@ -5164,13 +5170,13 @@
 
         
             
--(BOOL)isUnread {return self.flags & (1 << 0);}
+-(BOOL)isUnread {return (self.flags & (1 << 0)) > 0;}
                         
--(BOOL)isN_out {return self.flags & (1 << 1);}
+-(BOOL)isN_out {return (self.flags & (1 << 1)) > 0;}
                         
--(BOOL)isMentioned {return self.flags & (1 << 4);}
+-(BOOL)isMentioned {return (self.flags & (1 << 4)) > 0;}
                         
--(BOOL)isMedia_unread {return self.flags & (1 << 5);}
+-(BOOL)isMedia_unread {return (self.flags & (1 << 5)) > 0;}
                         
 -(void)setFrom_id:(int)from_id
 {
@@ -12228,13 +12234,13 @@
 
         
             
--(BOOL)isUnread {return self.flags & (1 << 0);}
+-(BOOL)isUnread {return (self.flags & (1 << 0)) > 0;}
                         
--(BOOL)isN_out {return self.flags & (1 << 1);}
+-(BOOL)isN_out {return (self.flags & (1 << 1)) > 0;}
                         
--(BOOL)isMentioned {return self.flags & (1 << 4);}
+-(BOOL)isMentioned {return (self.flags & (1 << 4)) > 0;}
                         
--(BOOL)isMedia_unread {return self.flags & (1 << 5);}
+-(BOOL)isMedia_unread {return (self.flags & (1 << 5)) > 0;}
                         
 -(void)setFwd_from_id:(TLPeer*)fwd_from_id
 {
@@ -12382,13 +12388,13 @@
 
         
             
--(BOOL)isUnread {return self.flags & (1 << 0);}
+-(BOOL)isUnread {return (self.flags & (1 << 0)) > 0;}
                         
--(BOOL)isN_out {return self.flags & (1 << 1);}
+-(BOOL)isN_out {return (self.flags & (1 << 1)) > 0;}
                         
--(BOOL)isMentioned {return self.flags & (1 << 4);}
+-(BOOL)isMentioned {return (self.flags & (1 << 4)) > 0;}
                         
--(BOOL)isMedia_unread {return self.flags & (1 << 5);}
+-(BOOL)isMedia_unread {return (self.flags & (1 << 5)) > 0;}
                         
 -(void)setFwd_from_id:(TLPeer*)fwd_from_id
 {
@@ -12800,9 +12806,9 @@
 
         
             
--(BOOL)isUnread {return self.flags & (1 << 0);}
+-(BOOL)isUnread {return (self.flags & (1 << 0)) > 0;}
                         
--(BOOL)isN_out {return self.flags & (1 << 1);}
+-(BOOL)isN_out {return (self.flags & (1 << 1)) > 0;}
                         
 -(void)setMedia:(TLMessageMedia*)media
 {
@@ -13186,9 +13192,9 @@
 
         
             
--(BOOL)isIpv6 {return self.flags & (1 << 0);}
+-(BOOL)isIpv6 {return (self.flags & (1 << 0)) > 0;}
                         
--(BOOL)isMedia_only {return self.flags & (1 << 1);}
+-(BOOL)isMedia_only {return (self.flags & (1 << 1)) > 0;}
             
         
 @end
@@ -18448,11 +18454,11 @@
 
         
             
--(BOOL)isChannel {return self.flags & (1 << 0);}
+-(BOOL)isChannel {return (self.flags & (1 << 0)) > 0;}
                         
--(BOOL)isBroadcast {return self.flags & (1 << 1);}
+-(BOOL)isBroadcast {return (self.flags & (1 << 1)) > 0;}
                         
--(BOOL)isPublic {return self.flags & (1 << 2);}
+-(BOOL)isPublic {return (self.flags & (1 << 2)) > 0;}
             
         
 @end
@@ -18662,11 +18668,11 @@
 
         
             
--(BOOL)isInstalled {return self.flags & (1 << 0);}
+-(BOOL)isInstalled {return (self.flags & (1 << 0)) > 0;}
                         
--(BOOL)isDisabled {return self.flags & (1 << 1);}
+-(BOOL)isDisabled {return (self.flags & (1 << 1)) > 0;}
                         
--(BOOL)isOfficial {return self.flags & (1 << 2);}
+-(BOOL)isOfficial {return (self.flags & (1 << 2)) > 0;}
             
         
 @end
@@ -19092,7 +19098,7 @@
 
         
             
--(BOOL)isSelective {return self.flags & (1 << 2);}
+-(BOOL)isSelective {return (self.flags & (1 << 2)) > 0;}
             
         
 @end
@@ -19142,9 +19148,9 @@
 
         
             
--(BOOL)isSingle_use {return self.flags & (1 << 1);}
+-(BOOL)isSingle_use {return (self.flags & (1 << 1)) > 0;}
                         
--(BOOL)isSelective {return self.flags & (1 << 2);}
+-(BOOL)isSelective {return (self.flags & (1 << 2)) > 0;}
             
         
 @end
@@ -19224,11 +19230,11 @@
 
         
             
--(BOOL)isResize {return self.flags & (1 << 0);}
+-(BOOL)isResize {return (self.flags & (1 << 0)) > 0;}
                         
--(BOOL)isSingle_use {return self.flags & (1 << 1);}
+-(BOOL)isSingle_use {return (self.flags & (1 << 1)) > 0;}
                         
--(BOOL)isSelective {return self.flags & (1 << 2);}
+-(BOOL)isSelective {return (self.flags & (1 << 2)) > 0;}
             
         
 @end
@@ -20154,7 +20160,7 @@
 
         
             
--(BOOL)isFinal {return self.flags & (1 << 0);}
+-(BOOL)isFinal {return (self.flags & (1 << 0)) > 0;}
                         
 -(void)setTimeout:(int)timeout
 {
@@ -20312,7 +20318,7 @@
 
         
             
--(BOOL)isFinal {return self.flags & (1 << 0);}
+-(BOOL)isFinal {return (self.flags & (1 << 0)) > 0;}
                         
 -(void)setTimeout:(int)timeout
 {
@@ -20476,7 +20482,7 @@
 
         
             
--(BOOL)isFinal {return self.flags & (1 << 0);}
+-(BOOL)isFinal {return (self.flags & (1 << 0)) > 0;}
                         
 -(void)setTimeout:(int)timeout
 {
@@ -20598,7 +20604,7 @@
 
         
             
--(BOOL)isImportant_only {return self.flags & (1 << 0);}
+-(BOOL)isImportant_only {return (self.flags & (1 << 0)) > 0;}
             
         
 @end

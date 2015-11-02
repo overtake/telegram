@@ -174,6 +174,10 @@ static NSArray *channelUpdates;
             
             [[update updates] enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
                 
+                if([obj isKindOfClass:[TL_updateMessageID class]]) {
+                    [self proccessUpdate:obj];
+                }
+                
                 if([channelUpdates indexOfObject:[obj className]] != NSNotFound)
                 {
                     [_channelsUpdater addUpdate:obj];

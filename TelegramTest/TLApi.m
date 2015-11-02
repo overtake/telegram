@@ -2,7 +2,7 @@
 //  TLApi.m
 //  Telegram
 //
-//  Auto created by Mikhail Filimonov on 30.10.15..
+//  Auto created by Mikhail Filimonov on 02.11.15..
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -2167,31 +2167,22 @@
 @end
 
 @implementation TLAPI_channels_createChannel
-+(TLAPI_channels_createChannel*)createWithFlags:(int)flags  title:(NSString*)title about:(NSString*)about users:(NSMutableArray*)users {
++(TLAPI_channels_createChannel*)createWithFlags:(int)flags   title:(NSString*)title about:(NSString*)about {
     TLAPI_channels_createChannel* obj = [[TLAPI_channels_createChannel alloc] init];
     obj.flags = flags;
 	
+	
 	obj.title = title;
 	obj.about = about;
-	obj.users = users;
     return obj;
 }
 - (NSData*)getData {
-	SerializedData* stream = [ClassStore streamWithConstuctor:1428281412];
+	SerializedData* stream = [ClassStore streamWithConstuctor:-192332417];
 	[stream writeInt:self.flags];
+	
 	
 	[stream writeString:self.title];
 	[stream writeString:self.about];
-	//Serialize FullVector
-	[stream writeInt:0x1cb5c415];
-	{
-		NSInteger tl_count = [self.users count];
-		[stream writeInt:(int)tl_count];
-		for(int i = 0; i < (int)tl_count; i++) {
-            TLInputUser* obj = [self.users objectAtIndex:i];
-            [ClassStore TLSerialize:obj stream:stream];
-		}
-	}
 	return [stream getOutput];
 }
 @end

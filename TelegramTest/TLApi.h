@@ -2,7 +2,7 @@
 //  TLApi.h
 //  Telegram
 //
-//  Auto created by Mikhail Filimonov on 30.10.15.
+//  Auto created by Mikhail Filimonov on 02.11.15.
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -906,11 +906,11 @@
 @interface TLAPI_channels_createChannel : TLApiObject
 @property int flags;
 @property (nonatomic,assign,readonly) BOOL isBroadcast;
+@property (nonatomic,assign,readonly) BOOL isMegagroup;
 @property (nonatomic, strong) NSString* title;
 @property (nonatomic, strong) NSString* about;
-@property (nonatomic, strong) NSMutableArray* users;
 
-+(TLAPI_channels_createChannel*)createWithFlags:(int)flags  title:(NSString*)title about:(NSString*)about users:(NSMutableArray*)users;
++(TLAPI_channels_createChannel*)createWithFlags:(int)flags   title:(NSString*)title about:(NSString*)about;
 @end
 
 @interface TLAPI_channels_editAbout : TLApiObject

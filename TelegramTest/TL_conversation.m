@@ -410,16 +410,16 @@ static void *kType;
 }
 
 -(BOOL)canEditConversation {
-    return YES; //self.type != DialogTypeChannel || (!self.chat.isBroadcast || self.chat.isAdmin);
+    return YES;
 }
 
 
 -(BOOL)canSendChannelMessageAsAdmin {
-    return self.type == DialogTypeChannel && (self.chat.isAdmin || self.chat.isPublisher);
+    return self.type == DialogTypeChannel && !self.chat.isMegagroup && (self.chat.isAdmin || self.chat.isPublisher);
 }
 
 -(BOOL)canSendChannelMessageAsUser {
-    return self.type == DialogTypeChannel && ((self.chat.isAdmin && !self.chat.isBroadcast) || !self.chat.isBroadcast);
+    return self.type == DialogTypeChannel && (self.chat.isMegagroup || ((self.chat.isAdmin && !self.chat.isBroadcast) || !self.chat.isBroadcast));
 }
 
 

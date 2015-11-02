@@ -428,17 +428,17 @@
     
     [self.editAboutContainer setHidden:self.type != ChatInfoViewControllerEdit];
     
-    [self.linkEditButton setHidden:self.type != ChatInfoViewControllerEdit];
+    [self.linkEditButton setHidden:self.type != ChatInfoViewControllerEdit || self.controller.chat.isMegagroup];
     [self.setGroupPhotoButton setHidden:self.type != ChatInfoViewControllerEdit];
     
     
-    [self.openOrJoinChannelButton setHidden:self.controller.chat.isManager];
+    [self.openOrJoinChannelButton setHidden:self.controller.chat.isManager || self.controller.chat.isMegagroup];
    
     
     [self.managmentButton setHidden:!self.controller.chat.isManager];
     
-    [self.membersButton setHidden:!self.controller.chat.isManager];
-    [self.blackListButton setHidden:!self.controller.chat.isManager || self.controller.chat.isBroadcast];
+    [self.membersButton setHidden:!self.controller.chat.isManager || self.controller.chat.isMegagroup];
+    [self.blackListButton setHidden:self.type != ChatInfoViewControllerEdit || !self.controller.chat.isManager || self.controller.chat.isBroadcast];
     
     
     [self.enableCommentsButton setHidden:YES];
@@ -504,10 +504,7 @@
         
         [self.exportChatInvite setFrame:NSMakeRect(100, yOffset, NSWidth(self.frame) - 200, NSHeight(self.exportChatInvite.frame))];
      
-        if(!self.linkEditButton.isHidden)
-        {
-            yOffset+=42;
-        }
+        yOffset+=42;
         
     }
     
@@ -552,7 +549,7 @@
         yOffset+=NSHeight(self.linkEditButton.frame);
     }
     
-    if(!self.linkEditButton.isHidden) {
+    if(!self.setGroupPhotoButton.isHidden) {
         [self.setGroupPhotoButton setFrame:NSMakeRect(100, yOffset, NSWidth(self.frame) - 200, 42)];
         
         yOffset+=NSHeight(self.setGroupPhotoButton.frame) + 42;

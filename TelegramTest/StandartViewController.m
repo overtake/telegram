@@ -12,6 +12,7 @@
 #import "ComposeActionBroadcastBehavior.h"
 #import "TGRecentSearchTableView.h"
 #import "ComposeActionCreateChannelBehavior.h"
+#import "ComposeActionCreateMegaGroupBehavior.h"
 @interface StandartViewController ()<TMSearchTextFieldDelegate>
 @property (nonatomic, strong) BTRButton *topButton;
 @property (nonatomic, strong) TMSearchTextField *searchTextField;
@@ -231,6 +232,30 @@
         [theMenu addItem:createChannel];
  //   }
     
+    
+    
+    
+    NSMenuItem *createMegagroup = [NSMenuItem menuItemWithTitle:NSLocalizedString(@"ComposeMenu.CreateMegaGroup", nil) withBlock:^(id sender) {
+        
+        
+        ComposeAction *action = [[ComposeAction alloc] initWithBehaviorClass:[ComposeActionCreateMegaGroupBehavior class]];
+        
+        ComposeCreateChannelViewController *viewController = [[ComposeCreateChannelViewController alloc] initWithFrame:[Telegram rightViewController].view.bounds];
+        
+        [viewController setAction:action];
+        
+        
+        [[Telegram rightViewController].navigationViewController pushViewController:viewController animated:YES];
+        
+       
+        
+        [[NSApplication sharedApplication] activateIgnoringOtherApps:YES];
+        
+    }];
+    
+    [createMegagroup setImage:[NSImage imageNamed:@"ComposeMenuNewBroadcast"]];
+    [createMegagroup setHighlightedImage:[NSImage imageNamed:@"ComposeMenuNewBroadcastActive"]];
+    [theMenu addItem:createMegagroup];
     
     
     return theMenu;

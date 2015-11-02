@@ -572,10 +572,10 @@
         
         dialog.top_message = message.n_id;
         
-        if(message.isImportantMessage) {
+        if(message.isImportantMessage || message.chat.isMegagroup) {
             dialog.top_important_message = message.n_id;
         }
-        if(dialog.type != DialogTypeChannel || message.isImportantMessage)
+        if(dialog.type != DialogTypeChannel || (message.isImportantMessage || message.chat.isMegagroup))
             dialog.lastMessage = message;
         
         if(message.n_out) {
@@ -685,7 +685,7 @@
 
         [messages enumerateObjectsUsingBlock:^(TL_localMessage *obj, NSUInteger idx, BOOL *stop) {
             
-            if(obj.isChannelMessage && obj.isImportantMessage) {
+            if(obj.isChannelMessage && (obj.isImportantMessage || obj.chat.isMegagroup)) {
                 
                 TL_localMessage *top_message = topImportantMessages[@(obj.peer_id)];
                 

@@ -377,9 +377,11 @@ static NSString *kMessageItems = @"kMessageItems";
 
 -(void)dealloc {
     
+    if(self.request != nil) {
+        [self.request cancelRequest];
+        self.request = nil;
+    }
     
-    [self.request cancelRequest];
-    self.request = nil;
 }
 
 @end

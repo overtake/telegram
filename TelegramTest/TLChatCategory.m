@@ -302,6 +302,7 @@ static NSTextAttachment *channelVerifySelectedAttachment() {
 -(BOOL)isVerify {
     return self.flags & (1 << 7);
 }
+
         
 -(BOOL)isChannel {
     return [self isKindOfClass:[TL_channel class]] || [self isKindOfClass:[TL_channelForbidden class]];

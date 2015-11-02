@@ -2,7 +2,7 @@
 //  MTProto.h
 //  Telegram
 //
-//  Auto created by Mikhail Filimonov on 30.10.15.
+//  Auto created by Mikhail Filimonov on 02.11.15.
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -892,6 +892,7 @@
 @property (nonatomic,assign,readonly) BOOL isModerator;
 @property (nonatomic,assign,readonly) BOOL isBroadcast;
 @property (nonatomic,assign,readonly) BOOL isVerified;
+@property (nonatomic,assign,readonly) BOOL isMegagroup;
 @property long access_hash;
 @property (nonatomic, strong) NSString* username;
 @end
@@ -906,7 +907,7 @@
 +(TL_chatForbidden*)createWithN_id:(int)n_id title:(NSString*)title;
 @end
 @interface TL_channel : TLChat<NSCoding>
-+(TL_channel*)createWithFlags:(int)flags        n_id:(int)n_id access_hash:(long)access_hash title:(NSString*)title username:(NSString*)username photo:(TLChatPhoto*)photo date:(int)date version:(int)version;
++(TL_channel*)createWithFlags:(int)flags         n_id:(int)n_id access_hash:(long)access_hash title:(NSString*)title username:(NSString*)username photo:(TLChatPhoto*)photo date:(int)date version:(int)version;
 @end
 @interface TL_channelForbidden : TLChat<NSCoding>
 +(TL_channelForbidden*)createWithN_id:(int)n_id access_hash:(long)access_hash title:(NSString*)title;

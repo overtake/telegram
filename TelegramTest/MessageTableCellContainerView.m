@@ -1089,7 +1089,7 @@ static int offsetEditable = 30;
         } else if(self.item.messageSender.state == MessageStateSending)  {
             state = MessageTableCellSending;
         } else {
-            state = MessageTableCellUnread;
+            state = self.item.message.unread ? MessageTableCellUnread : MessageTableCellRead;
         }
     } else {
         if(self.item.message.n_out) {

@@ -291,6 +291,14 @@
          contextName = "-[TGProccessUpdates proccessUpdate:]:TGProccessUpdates.m">
       </ContextState>
       <ContextState
+         contextName = "-[ChannelHistoryController initWithController:historyFilter:]:ChannelHistoryController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "historyFilter">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "__45-[ComposeActionGroupBehavior createGroupChat]_block_invoke_2:ComposeActionGroupBehavior.m">
       </ContextState>
       <ContextState
@@ -813,6 +821,14 @@
       </ContextState>
       <ContextState
          contextName = "-[ExternalDocumentSecretSenderItem initWithConversation:document:]:ExternalDocumentSecretSenderItem.m">
+      </ContextState>
+      <ContextState
+         contextName = "-[TLChat(Category) isAdmin]:TLChatCategory.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.flags">
+            </PersistentString>
+         </PersistentStrings>
       </ContextState>
       <ContextState
          contextName = "-[TGUpdateChannels failUpdateWithChannelId:limit:withCallback:errorCallback:]:TGUpdateChannels.m">
@@ -3675,6 +3691,9 @@
             <PersistentString
                value = "dialog.type">
             </PersistentString>
+            <PersistentString
+               value = "dialog.chat">
+            </PersistentString>
          </PersistentStrings>
       </ContextState>
       <ContextState
@@ -4232,6 +4251,9 @@
          <PersistentStrings>
             <PersistentString
                value = "res">
+            </PersistentString>
+            <PersistentString
+               value = "[obj selectAllItems]">
             </PersistentString>
          </PersistentStrings>
       </ContextState>

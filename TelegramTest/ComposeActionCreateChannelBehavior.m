@@ -118,7 +118,7 @@
     
     BOOL discussion = [self.action.result.stepResult[1] intValue];
    
-    self.request = [RPCRequest sendRequest:[TLAPI_channels_createChannel createWithFlags:discussion ? 0 : 1 << 0 title:self.action.result.stepResult.firstObject[0] about:[self.action.result.stepResult.firstObject count] > 1 ? self.action.result.stepResult.firstObject[1] : nil users:nil] successHandler:^(RPCRequest *request, TLUpdates * response) {
+    self.request = [RPCRequest sendRequest:[TLAPI_channels_createChannel createWithFlags:discussion ? 0 : 1 << 0 title:self.action.result.stepResult.firstObject[0] about:[self.action.result.stepResult.firstObject count] > 1 ? self.action.result.stepResult.firstObject[1] : nil] successHandler:^(RPCRequest *request, TLUpdates * response) {
         
         
         if(response.chats.count > 0) {

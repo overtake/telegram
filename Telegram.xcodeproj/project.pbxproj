@@ -727,6 +727,7 @@
 		C2CD77C91A2C9E04000B4BA9 /* TGEnterPasswordPanel.m in Sources */ = {isa = PBXBuildFile; fileRef = C2CD77C81A2C9E04000B4BA9 /* TGEnterPasswordPanel.m */; };
 		C2CE53C01BE2892E00BBEF5F /* ChatAdminsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C2CE53BF1BE2892E00BBEF5F /* ChatAdminsViewController.m */; settings = {ASSET_TAGS = (); }; };
 		C2CE53C31BE295A000BBEF5F /* TGGeneralSearchRowView.m in Sources */ = {isa = PBXBuildFile; fileRef = C2CE53C21BE295A000BBEF5F /* TGGeneralSearchRowView.m */; settings = {ASSET_TAGS = (); }; };
+		C2CE53C61BE7688900BBEF5F /* ComposeActionCreateMegaGroupBehavior.m in Sources */ = {isa = PBXBuildFile; fileRef = C2CE53C51BE7688900BBEF5F /* ComposeActionCreateMegaGroupBehavior.m */; settings = {ASSET_TAGS = (); }; };
 		C2D235B91A2F2C5600765BA1 /* TGModernTypingManager.m in Sources */ = {isa = PBXBuildFile; fileRef = C2D235B81A2F2C5600765BA1 /* TGModernTypingManager.m */; };
 		C2D235BC1A2FA6F400765BA1 /* TGSendTypingManager.m in Sources */ = {isa = PBXBuildFile; fileRef = C2D235BB1A2FA6F400765BA1 /* TGSendTypingManager.m */; };
 		C2D4B7401AFCD36A0035B4E4 /* TGModalView.m in Sources */ = {isa = PBXBuildFile; fileRef = C2D4B73F1AFCD36A0035B4E4 /* TGModalView.m */; };
@@ -2323,6 +2324,8 @@
 		C2CE53BF1BE2892E00BBEF5F /* ChatAdminsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChatAdminsViewController.m; sourceTree = "<group>"; };
 		C2CE53C11BE295A000BBEF5F /* TGGeneralSearchRowView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGGeneralSearchRowView.h; sourceTree = "<group>"; };
 		C2CE53C21BE295A000BBEF5F /* TGGeneralSearchRowView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGGeneralSearchRowView.m; sourceTree = "<group>"; };
+		C2CE53C41BE7688900BBEF5F /* ComposeActionCreateMegaGroupBehavior.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ComposeActionCreateMegaGroupBehavior.h; sourceTree = "<group>"; };
+		C2CE53C51BE7688900BBEF5F /* ComposeActionCreateMegaGroupBehavior.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ComposeActionCreateMegaGroupBehavior.m; sourceTree = "<group>"; };
 		C2D235B71A2F2C5600765BA1 /* TGModernTypingManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGModernTypingManager.h; sourceTree = "<group>"; };
 		C2D235B81A2F2C5600765BA1 /* TGModernTypingManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGModernTypingManager.m; sourceTree = "<group>"; };
 		C2D235BA1A2FA6F400765BA1 /* TGSendTypingManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGSendTypingManager.h; sourceTree = "<group>"; };
@@ -3716,6 +3719,8 @@
 				C2B0DF9E1BAB13820023982C /* ComposeActionDeleteChannelMessagesBehavior.m */,
 				C2B0DFA01BAB34330023982C /* ComposeActionChannelMembersBehavior.h */,
 				C2B0DFA11BAB34330023982C /* ComposeActionChannelMembersBehavior.m */,
+				C2CE53C41BE7688900BBEF5F /* ComposeActionCreateMegaGroupBehavior.h */,
+				C2CE53C51BE7688900BBEF5F /* ComposeActionCreateMegaGroupBehavior.m */,
 			);
 			name = behavior;
 			sourceTree = "<group>";
@@ -6664,6 +6669,7 @@
 				CE7E5658189AC5E30058C532 /* QueueManager.m in Sources */,
 				C2D4B86E1AFCE8FA0035B4E4 /* YapTouch.m in Sources */,
 				C2201A03192CCB6C00C0E441 /* SelectUserRowView.m in Sources */,
+				C2CE53C61BE7688900BBEF5F /* ComposeActionCreateMegaGroupBehavior.m in Sources */,
 				C2A5BFC118DC80620021BE68 /* stream.c in Sources */,
 				0AB7927E182587E500B3E2A1 /* UploadOperation.m in Sources */,
 				0AB43B9218D304C400FB805A /* RegistrationAvatarView.m in Sources */,

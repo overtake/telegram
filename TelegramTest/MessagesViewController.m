@@ -250,7 +250,8 @@
 }
 
 -(Class)defHFClass {
-    return self.conversation.type == DialogTypeChannel ? [ChannelImportantFilter class] : [HistoryFilter class];
+    
+    return self.conversation.type == DialogTypeChannel ? (self.conversation.chat.isMegagroup ? [ChannelFilter class] : [ChannelImportantFilter class]) : [HistoryFilter class];
 }
 
 
