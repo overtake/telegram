@@ -91,7 +91,7 @@ typedef enum {
 
 - (DialogType) type;
 
-
+-(BOOL)isVerified;
 
 //channel methods
 -(BOOL)canSendChannelMessageAsAdmin;

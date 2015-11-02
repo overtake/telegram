@@ -104,7 +104,7 @@ static const TGTwoColors colors[] = {
     TMAvatarImageView *avatarImageView = [[self alloc] initWithFrame:NSMakeRect(0, 0, 36, 36)];
     avatarImageView.placeholder = [TMAvatarImageView placeholderImageBySize:avatarImageView.frame.size andColor:NSColorFromRGB(0xfafafa)];
     [avatarImageView setFont:TGSystemFont(14)];
-    [avatarImageView setOffsetTextY:1];
+    [avatarImageView setOffsetTextY:0];
     return avatarImageView;
 }
 
@@ -112,7 +112,7 @@ static const TGTwoColors colors[] = {
     TMAvatarImageView *avatarImageView = [[self alloc] initWithFrame:NSMakeRect(0, 0, 30, 30)];
     avatarImageView.placeholder = [TMAvatarImageView placeholderImageBySize:avatarImageView.frame.size andColor:NSColorFromRGB(0xfafafa)];
     [avatarImageView setFont:TGSystemFont(14)];
-    [avatarImageView setOffsetTextY:1];
+    [avatarImageView setOffsetTextY:0];
     return avatarImageView;
 }
 

@@ -388,6 +388,10 @@ static void *kType;
     return converted;
 }
 
+-(BOOL)isVerified {
+    return self.type == DialogTypeChannel ? self.chat.isVerified : self.type == DialogTypeUser ? self.user.isVerified : NO;
+}
+
 - (TL_encryptedChat *) encryptedChat {
     return (TL_encryptedChat *)[self chat];
 }

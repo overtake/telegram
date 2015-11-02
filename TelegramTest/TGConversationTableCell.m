@@ -244,8 +244,8 @@ static NSDictionary *attributes() {
             }
             
             
-            if(self.isVerify) {
-                [self.isSelected ? image_VerifyWhite() : image_Verify() drawInRect:NSMakeRect(NSMaxX(self.nameTextField.frame),NSMinY(self.nameTextField.frame) + 2, image_Verify().size.width, image_Verify().size.height) fromRect:NSZeroRect operation:NSCompositeHighlight fraction:1];
+            if(self.item.conversation.isVerified) {
+                [self.isSelected ? image_VerifyWhite() : image_Verify() drawInRect:NSMakeRect(NSMaxX(self.nameTextField.frame),NSMinY(self.nameTextField.frame) + 1, image_Verify().size.width, image_Verify().size.height) fromRect:NSZeroRect operation:NSCompositeHighlight fraction:1];
             }
             
          //
@@ -276,9 +276,6 @@ static NSDictionary *attributes() {
     
 }
 
--(BOOL)isVerify {
-    return self.item.conversation.type == DialogTypeChannel && self.item.conversation.chat.isVerify;
-}
 
 -(void)updateFrames {
     

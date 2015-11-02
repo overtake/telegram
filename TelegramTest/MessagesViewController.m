@@ -3147,8 +3147,7 @@ static NSTextAttachment *headerMediaIcon() {
     item.isHeaderMessage = YES;
     item.isHeaderForwardedMessage = YES;
     
-    if(item.message.isChannelMessage && item.message.isImportantMessage) {
-        
+    if(item.message.isChannelMessage && item.message.from_id == 0) {
         return;
     }
     

@@ -35,8 +35,6 @@
     id api;
     
     
-    if(_conversation.type == DialogTypeChannel)
-        return;
     
     if(_conversation.type == DialogTypeSecretChat)
         api = [TLAPI_messages_setEncryptedTyping createWithPeer:(TLInputEncryptedChat *)[_conversation.encryptedChat inputPeer] typing:YES];

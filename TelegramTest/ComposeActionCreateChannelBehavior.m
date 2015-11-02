@@ -97,15 +97,40 @@
 
 -(void)showAddingCompose {
     
+    int chatId = [(TLChat *)self.action.object n_id];
     
-    [self.action.currentViewController.navigationViewController gotoViewController:self.action.currentViewController.messagesViewController animated:NO];
+    __block TLChatFull *chatFull = [[FullChatManager sharedManager] find:chatId];
     
-    ComposePickerViewController *viewController = [[ComposePickerViewController alloc] initWithFrame:self.action.currentViewController.view.bounds];
     
-    [viewController setAction:[[ComposeAction alloc] initWithBehaviorClass:[ComposeActionAddGroupMembersBehavior class] filter:@[@([UsersManager currentUserId])] object:[[FullChatManager sharedManager] find:[(TLChat *)self.action.object n_id]]]];
-
+    dispatch_block_t block = ^{
+        [self.action.currentViewController.navigationViewController gotoViewController:self.action.currentViewController.messagesViewController animated:NO];
+        
+        ComposePickerViewController *viewController = [[ComposePickerViewController alloc] initWithFrame:self.action.currentViewController.view.bounds];
+        
+        [viewController setAction:[[ComposeAction alloc] initWithBehaviorClass:[ComposeActionAddGroupMembersBehavior class] filter:@[@([UsersManager currentUserId])] object:chatFull]];
+        
+        [self.action.currentViewController.navigationViewController pushViewController:viewController animated:YES];
+    };
     
-    [self.action.currentViewController.navigationViewController pushViewController:viewController animated:YES];
+    
+    if(!chatFull) {
+        
+        [self.action.currentViewController showModalProgress];
+        
+        [[FullChatManager sharedManager] performLoad:chatId force:YES callback:^(TLChatFull *fullChat) {
+            
+            chatFull = fullChat;
+            
+            [self.action.currentViewController hideModalProgressWithSuccess];
+            
+            block();
+            
+        }];
+    } else {
+        block();
+    }
+    
+    
 }
 
 
@@ -129,6 +154,11 @@
                 
             dispatch_block_t block = ^{
                 [self.delegate behaviorDidEndRequest:response];
+                
+                [[FullChatManager sharedManager] loadIfNeed:channel.n_id force:YES];
+                
+                
+                [self.action.currentViewController.messagesViewController setCurrentConversation:channel.dialog];
                 
                 [self.action.currentViewController.navigationViewController gotoViewController:self.action.currentViewController.messagesViewController animated:NO];
                 

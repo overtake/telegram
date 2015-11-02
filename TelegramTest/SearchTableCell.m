@@ -207,7 +207,7 @@
 //        NSRectFill(NSMakeRect(66, 0, self.bounds.size.width - DIALOG_BORDER_WIDTH - 66, 1));
     }
     
-    if([self rowItem].conversation.type == DialogTypeChannel && [self rowItem].conversation.chat.isVerify) {
+    if([self rowItem].conversation.isVerified) {
         [self.isSelected ? image_VerifyWhite() : image_Verify() drawInRect:NSMakeRect(NSMaxX(self.titleTextField.frame),NSMinY(self.titleTextField.frame) , image_Verify().size.width, image_Verify().size.height) fromRect:NSZeroRect operation:NSCompositeHighlight fraction:1];
     }
     

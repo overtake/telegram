@@ -408,8 +408,14 @@ void exceptionHandler(NSException * exception)
                     return [[NSEvent alloc] init];
                 }
                 
-                if(![result.window isKindOfClass:NSClassFromString(@"TGHeadChatPanel")])
-                    [result.window close];
+                if(![result.window isKindOfClass:NSClassFromString(@"TGHeadChatPanel")]) {
+                    if([result.window isKindOfClass:[NSPanel class]]) {
+                        [result.window cancelOperation:nil];
+                    } else {
+                        [result.window close];
+                    }
+                }
+                
                 else
                 {
                     TGHeadChatPanel *panel = (TGHeadChatPanel *) result.window;

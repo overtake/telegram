@@ -66,7 +66,7 @@
         [self.durationView setStringValue:@"00:00 / 00:00"];
         
         [[self.durationView cell] setLineBreakMode:NSLineBreakByTruncatingTail];
-        [self.durationView setFont:TGSystemFont(12)];
+        [self.durationView setFont:TGSystemFont(13)];
         [self.durationView sizeToFit];
         [self.durationView setTextColor:DARK_BLACK];
         [self.containerView addSubview:self.durationView];
@@ -134,6 +134,8 @@
     [self.durationView setStringValue:self.item.duration];
     [self.durationView sizeToFit];
     [self.durationView setFrameSize:NSMakeSize(MIN(NSWidth(self.containerView.frame) - NSMinX(self.durationView.frame) - NSWidth(self.stateTextField.frame) - 15,NSWidth(self.durationView.frame)), NSHeight(self.durationView.frame))];
+    
+    [self.durationView setFrameOrigin:NSMakePoint(NSMinX(self.durationView.frame), NSHeight(self.durationView.frame) > 15 ? 6 : 18)];
 }
 
 -(void)drawRect:(NSRect)dirtyRect {
@@ -256,7 +258,7 @@
     [self setDurationTextFieldString:item.duration];
     
     [self.stateTextField setFrameOrigin:NSMakePoint(NSMaxX(self.durationView.frame) + 2, self.durationView.frame.origin.y )];
-    
+    [self.stateTextField setHidden:YES];
     if(item.state != AudioStatePlaying && item.state != AudioStatePaused)
         [self updateCellState];
     else {

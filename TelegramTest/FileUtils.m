@@ -124,7 +124,7 @@ NSString *const TLBotCommandPrefix = @"/";
 
 
 + (void)showPanelWithTypes:(NSArray *)types completionHandler:(void (^)(NSArray * paths))handler {
-    [self showPanelWithTypes:types completionHandler:handler forWindow:[NSApp mainWindow]];
+    [self showPanelWithTypes:types completionHandler:handler forWindow:[NSApp keyWindow]];
 }
 
 

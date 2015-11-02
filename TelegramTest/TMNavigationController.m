@@ -604,7 +604,7 @@ static const int navigationOffset = 48;
         }
     } else {
         [self.viewControllerStack removeAllObjects];
-        [self pushViewController:controller animated:YES];
+        [self pushViewController:controller animated:animated];
     }
     
    

@@ -50,7 +50,7 @@
     TL_documentAttributeAudio *audio = (TL_documentAttributeAudio *) [self.message.media.document attributeWithClass:[TL_documentAttributeAudio class]];
     
     if(audio && ([audio.title trim].length > 0 && [audio.performer trim].length > 0)) {
-        self.duration = [NSString stringWithFormat:@"%@ - %@",audio.performer,audio.title];
+        self.duration = [NSString stringWithFormat:@"%@\n%@",audio.performer,audio.title];
     } else {
         self.duration = self.message.media.document.file_name;
     }

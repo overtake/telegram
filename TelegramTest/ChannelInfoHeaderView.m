@@ -437,7 +437,7 @@
     
     [self.managmentButton setHidden:!self.controller.chat.isManager];
     
-    [self.membersButton setHidden:!self.controller.chat.isManager || self.controller.chat.isMegagroup];
+    [self.membersButton setHidden:!self.controller.chat.isManager];
     [self.blackListButton setHidden:self.type != ChatInfoViewControllerEdit || !self.controller.chat.isManager || self.controller.chat.isBroadcast];
     
     

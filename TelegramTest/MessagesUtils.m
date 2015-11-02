@@ -175,7 +175,7 @@
         
         
         
-        if(message.conversation.type == DialogTypeChat && !message.action ) {
+        if(((message.conversation.type == DialogTypeChannel && message.from_id != 0) || message.conversation.type == DialogTypeChat) && !message.action ) {
             
             if(!message.n_out) {
                 userLast = [[UsersManager sharedManager] find:message.from_id];

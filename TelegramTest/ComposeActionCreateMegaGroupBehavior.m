@@ -74,7 +74,7 @@
             
             [self.delegate behaviorDidEndRequest:response];
             
-            [self.action.currentViewController.messagesViewController setConversation:chat.dialog];
+            [self.action.currentViewController.messagesViewController setCurrentConversation:chat.dialog];
             
             [self.action.currentViewController.navigationViewController gotoViewController:self.action.currentViewController.messagesViewController animated:NO];
             
