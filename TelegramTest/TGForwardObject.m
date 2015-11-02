@@ -27,7 +27,7 @@
         
         [messages enumerateObjectsUsingBlock:^(TL_localMessage  *obj, NSUInteger idx, BOOL *stop) {
             
-            if(![obj.to_id isKindOfClass:[TL_peerChannel class]]) {
+            if(obj.from_id != 0) {
                 if([exception indexOfObject:obj.fromUser] == NSNotFound) {
                     [firstNames addObject:obj.fromUser.first_name];
                     [exception addObject:obj.fromUser];

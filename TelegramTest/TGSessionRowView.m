@@ -27,7 +27,7 @@
         
         [self addSubview:self.textField];
         
-        [self.textField setFrameOrigin:NSMakePoint(100, 0)];
+        [self.textField setFrameOrigin:NSMakePoint(30, 0)];
         
         
         self.resetSession = [TMTextButton standartUserProfileButtonWithTitle:NSLocalizedString(@"Authorization.Reset", nil)];
@@ -96,9 +96,9 @@
 -(void)setFrameSize:(NSSize)newSize {
     [super setFrameSize:newSize];
     
-    [self.resetSession setFrameOrigin:NSMakePoint( NSWidth(self.frame) - NSWidth(self.resetSession.frame) - 113, 18)];
+    [self.resetSession setFrameOrigin:NSMakePoint( NSWidth(self.frame) - NSWidth(self.resetSession.frame) - 33, 18)];
     
-    [self.textField setFrameSize:NSMakeSize(NSMinX(self.resetSession.frame) - 110, NSHeight(self.frame))];
+    [self.textField setFrameSize:NSMakeSize(NSMinX(self.resetSession.frame) - 30, NSHeight(self.frame))];
 }
 
 
@@ -109,7 +109,7 @@
     
     [NSColorFromRGB(0xe0e0e0) setFill];
     
-    NSRectFill(NSMakeRect(100, 0, NSWidth(self.frame) - 200, 1));
+    NSRectFill(NSMakeRect(30, 0, NSWidth(self.frame) - 60, 1));
     
 }
 

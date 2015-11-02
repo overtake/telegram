@@ -200,6 +200,8 @@
     [self.sharedLinksTableView setEditable:isEditable animated:animated];
     [self reloadData];
     
+    [[NSAnimationContext currentContext] setDuration:animated ? 0.2 : 0];
+    
     [NSAnimationContext runAnimationGroup:^(NSAnimationContext *context) {
         
         [[self.actionsView animator] setFrameOrigin:NSMakePoint(0, isEditable ? 0 : - NSHeight(self.actionsView.frame))];
@@ -823,7 +825,7 @@ static const int maxWidth = 120;
             
             [weakSelf.sharedLinksTableView.selectedItems enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
                 
-                [[Telegram rightViewController].messagesViewController setSelectedMessage:obj selected:YES];
+                [weakSelf.navigationViewController.messagesViewController setSelectedMessage:obj selected:YES];
             }];
         } else {
             
@@ -831,7 +833,7 @@ static const int maxWidth = 120;
                 
                 MessageTableItem *item  = [MessageTableItem messageItemFromObject:obj.previewObject.media];
                 
-                [[Telegram rightViewController].messagesViewController setSelectedMessage:item selected:YES];
+                [weakSelf.navigationViewController.messagesViewController setSelectedMessage:item selected:YES];
             }];
             
         }

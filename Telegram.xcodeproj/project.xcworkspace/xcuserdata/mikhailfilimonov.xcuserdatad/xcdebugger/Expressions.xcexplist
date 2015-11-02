@@ -277,6 +277,14 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "__35-[ForwardSenterItem performRequest]_block_invoke:ForwardSenterItem.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "obj.fwd_from_id">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "__39-[MessagesViewController checkWebpage:]_block_invoke:MessagesViewController.m">
       </ContextState>
       <ContextState
@@ -286,9 +294,6 @@
                value = "self.messagesViewController">
             </PersistentString>
          </PersistentStrings>
-      </ContextState>
-      <ContextState
-         contextName = "-[TGProccessUpdates proccessUpdate:]:TGProccessUpdates.m">
       </ContextState>
       <ContextState
          contextName = "-[ChannelHistoryController initWithController:historyFilter:]:ChannelHistoryController.m">
