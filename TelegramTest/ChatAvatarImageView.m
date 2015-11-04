@@ -9,7 +9,7 @@
 #import "ChatAvatarImageView.h"
 #import "ImageUtils.h"
 #import "TMLoaderView.h"
-
+#import "TGPhotoViewer.h"
 @interface AvatarUpdaterItem : NSObject
 @property (nonatomic, strong) UploadOperation *operation;
 @property (nonatomic, strong) RPCRequest *request;
@@ -80,6 +80,36 @@
     [self.progressContainer addSubview:self.progress];
     
     return self.progressContainer;
+    
+}
+
+-(void)mouseDown:(NSEvent *)theEvent {
+    [super mouseDown:theEvent];
+    
+    PreviewObject *previewObject;
+    
+    if(self.sourceType == ChatAvatarSourceUser) {
+        if(![self.user.photo isKindOfClass:[TL_userProfilePhotoEmpty class]]) {
+            
+            previewObject = [[PreviewObject alloc] initWithMsdId:NSIntegerMax media:[TL_photoSize createWithType:@"x" location:self.user.photo.photo_big w:640 h:640 size:0] peer_id:self.user.n_id];
+            
+            previewObject.reservedObject = [TGCache cachedImage:self.user.photo.photo_small.cacheKey];
+            
+            
+            [[TGPhotoViewer viewer] show:previewObject user:self.user];
+        }
+    } else {
+                
+        if(![self.chat.photo isKindOfClass:[TL_chatPhotoEmpty class]]) {
+            
+            
+            previewObject = [[PreviewObject alloc] initWithMsdId:NSIntegerMax media:[TL_photoSize createWithType:@"x" location:self.chat.photo.photo_big w:640 h:640 size:0] peer_id:self.chat.n_id];
+            
+            previewObject.reservedObject = [TGCache cachedImage:self.chat.photo.photo_big.cacheKey];
+            
+            [[TGPhotoViewer viewer] show:previewObject];
+        }
+    }
     
 }
 

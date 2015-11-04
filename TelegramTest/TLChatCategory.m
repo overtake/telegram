@@ -53,8 +53,19 @@ DYNAMIC_PROPERTY(DDialog);
 
 }
 
+DYNAMIC_PROPERTY(ChatFull);
+
 -(TLChatFull *)chatFull  {
-    return [[FullChatManager sharedManager] find:self.n_id];
+    
+    TLChatFull *chatFull = [self getChatFull];
+    
+    if(!chatFull)
+    {
+        chatFull = [[FullChatManager sharedManager] find:self.n_id];
+        [self setChatFull:chatFull];
+    }
+    
+    return chatFull;
 }
 
 - (void) setType:(TLChatType)type {

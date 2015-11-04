@@ -36,7 +36,7 @@
 }
 
 -(NSString *)doneTitle {
-    return NSLocalizedString(@"Compose.Unban", nil);
+    return self.action.isEditable ? NSLocalizedString(@"Compose.Done", nil) : NSLocalizedString(@"Compose.Edit", nil);
 }
 
 -(NSUInteger)limit {

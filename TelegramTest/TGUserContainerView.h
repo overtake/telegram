@@ -9,6 +9,6 @@
 #import "TMView.h"
 @interface TGUserContainerView : TMRowView
 
-
+-(void)setEditable:(BOOL)editable animated:(BOOL)animated;
 
 @end

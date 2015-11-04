@@ -155,7 +155,7 @@
 
 
 - (BOOL)isEditable {
-    return [[self rowItem].table selectLimit] > 0;
+    return [(SelectUsersTableView *)[self rowItem].table selectLimit] > 0;
 }
 
 - (void)setEditable:(BOOL)editable animation:(BOOL)animation {

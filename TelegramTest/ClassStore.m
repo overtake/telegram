@@ -3,7 +3,7 @@
 //  ClassStore.m
 //  Telegram
 //
-    //  Created by keepcoder on 02.11.15.
+    //  Created by keepcoder on 03.11.15.
 //  Copyright (c) 2015 keepcoder. All rights reserved.
 //
 
@@ -305,7 +305,7 @@ static NSMutableDictionary *cs_constuctors;
    [cs_classes setObject:[TL_photos_photo class] forKey:[NSNumber numberWithInt:539045032]];
    [cs_classes setObject:[TL_upload_file class] forKey:[NSNumber numberWithInt:157948117]];
    [cs_classes setObject:[TL_dcOption class] forKey:[NSNumber numberWithInt:98092748]];
-   [cs_classes setObject:[TL_config class] forKey:[NSNumber numberWithInt:1311946900]];
+   [cs_classes setObject:[TL_config class] forKey:[NSNumber numberWithInt:1823925854]];
    [cs_classes setObject:[TL_nearestDc class] forKey:[NSNumber numberWithInt:-1910892683]];
    [cs_classes setObject:[TL_help_appUpdate class] forKey:[NSNumber numberWithInt:-1987579119]];
    [cs_classes setObject:[TL_help_noAppUpdate class] forKey:[NSNumber numberWithInt:-1000708810]];
@@ -511,6 +511,10 @@ static NSMutableDictionary *cs_constuctors;
    [cs_classes setObject:[TL_chatParticipantAdmin class] forKey:[NSNumber numberWithInt:-489233354]];
    [cs_classes setObject:[TL_updateChatAdmins class] forKey:[NSNumber numberWithInt:1855224129]];
    [cs_classes setObject:[TL_updateChatParticipantAdmin class] forKey:[NSNumber numberWithInt:-1232070311]];
+   [cs_classes setObject:[TL_messageActionChatMigrateTo class] forKey:[NSNumber numberWithInt:1371385889]];
+   [cs_classes setObject:[TL_messageActionChatDeactivate class] forKey:[NSNumber numberWithInt:1689067688]];
+   [cs_classes setObject:[TL_messageActionChatActivate class] forKey:[NSNumber numberWithInt:1085115570]];
+   [cs_classes setObject:[TL_messageActionChannelMigrateFrom class] forKey:[NSNumber numberWithInt:-1336546578]];
    [cs_classes setObject:[TL_userSelf class] forKey:[NSNumber numberWithInt:476112392]];
    [cs_classes setObject:[TL_userContact class] forKey:[NSNumber numberWithInt:-894214632]];
    [cs_classes setObject:[TL_userRequest class] forKey:[NSNumber numberWithInt:-640891665]];

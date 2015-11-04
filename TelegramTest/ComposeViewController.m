@@ -26,11 +26,17 @@
     
     TMView *rightView = [[TMView alloc] init];
     
-    weakify();
+    weak();
     
     _doneButton = [TMTextButton standartUserProfileNavigationButtonWithTitle:@"Done"];
     [self.doneButton setTapBlock:^{
-        [strongSelf.action.behavior composeDidDone];
+        [weakSelf.action.behavior composeDidDone];
+        
+        weakSelf.action.editable = !weakSelf.action.editable;
+        [weakSelf updateActionNavigation];
+        
+        [weakSelf didUpdatedEditableState];
+        
     }];
     
     [rightView setFrameSize:self.doneButton.frame.size];
@@ -83,8 +89,7 @@
     [self loadViewIfNeeded];
 }
 
--(void)viewWillAppear:(BOOL)animated {
-    [super viewWillAppear:animated];
+-(void)updateActionNavigation {
     _action.currentViewController = self;
     
     [self setCenterBarViewTextAttributed:self.action.behavior.centerTitle];
@@ -95,7 +100,16 @@
     
     [self.doneButton.superview setFrameSize:self.doneButton.frame.size];
     self.rightNavigationBarView = (TMView *) self.doneButton.superview;
+}
+
+-(void)didUpdatedEditableState {
     
+}
+
+-(void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    
+    [self updateActionNavigation];
 }
 
 

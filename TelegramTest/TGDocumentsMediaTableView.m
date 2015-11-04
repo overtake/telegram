@@ -425,7 +425,7 @@
 }
 
 -(BOOL)isEditable {
-    return [[Telegram rightViewController].collectionViewController isEditable];
+    return [self.collectionViewController isEditable];
 }
 
 -(BOOL)isNeedCap {

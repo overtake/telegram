@@ -48,4 +48,7 @@
 -(id)initWithBehaviorClass:(Class)behavior filter:(NSArray *)filter object:(id)object;
 
 -(id)initWithBehaviorClass:(Class)behavior filter:(NSArray *)filter object:(id)object reservedObjects:(NSArray *)objects;
+
+
+@property (nonatomic,assign, getter=isEditable) BOOL editable;
 @end

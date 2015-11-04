@@ -51,6 +51,9 @@ void setMaxBroadcastUsers(int max_broadcast_users);
 int maxBroadcastUsers();
 int maxChatUsers();
 
+void setMegagroupSizeMax(int b);
+int megagroupSizeMax();
+
 @property (nonatomic) BOOL isWindowActive;
 @property (nonatomic, assign) BOOL isOnline;
 

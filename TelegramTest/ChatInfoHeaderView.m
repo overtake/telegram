@@ -303,7 +303,6 @@
             ChatAdminsViewController *viewController = [[ChatAdminsViewController alloc] initWithFrame:self.controller.view.bounds];
             
             viewController.chat = self.controller.chat;
-            viewController.chatFull = self.controller.fullChat;
             
             [self.controller.navigationViewController pushViewController:viewController animated:YES];
             

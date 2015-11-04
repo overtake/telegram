@@ -130,6 +130,8 @@ static int pollingDelay = 5;
 -(void)checkInvalidatedMessages:(NSArray *)result important:(BOOL)important {
     
     
+    
+    
     result = [result filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.message.n_id > 0"]];
     
     BOOL invalidate = [result filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.message.invalidate == 1"]].count > 0;
@@ -174,7 +176,6 @@ static int pollingDelay = 5;
         
     } errorHandler:^(id request, RpcError *error) {
         
-        int bp = 0;
         
     } timeout:0 queue:dispatch_get_current_queue()];
     

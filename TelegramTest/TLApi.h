@@ -2,7 +2,7 @@
 //  TLApi.h
 //  Telegram
 //
-//  Auto created by Mikhail Filimonov on 02.11.15.
+//  Auto created by Mikhail Filimonov on 03.11.15.
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -1024,5 +1024,18 @@
 @property Boolean is_admin;
 
 +(TLAPI_messages_editChatAdmin*)createWithChat_id:(int)chat_id user_id:(TLInputUser*)user_id is_admin:(Boolean)is_admin;
+@end
+
+@interface TLAPI_messages_deactivateChat : TLApiObject
+@property int chat_id;
+@property Boolean enabled;
+
++(TLAPI_messages_deactivateChat*)createWithChat_id:(int)chat_id enabled:(Boolean)enabled;
+@end
+
+@interface TLAPI_messages_migrateChat : TLApiObject
+@property int chat_id;
+
++(TLAPI_messages_migrateChat*)createWithChat_id:(int)chat_id;
 @end
 

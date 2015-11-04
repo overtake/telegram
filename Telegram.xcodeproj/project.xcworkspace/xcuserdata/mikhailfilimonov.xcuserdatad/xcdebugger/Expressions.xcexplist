@@ -204,6 +204,9 @@
          contextName = "-[ChatHistoryController initWithController:historyFilter:]:ChatHistoryController.m">
       </ContextState>
       <ContextState
+         contextName = "__42-[TGModernChatInfoViewController loadView]_block_invoke_2:TGModernChatInfoViewController.m">
+      </ContextState>
+      <ContextState
          contextName = "-[MessageTableCellPhotoView setCellState:]:MessageTableCellPhotoView.m">
          <PersistentStrings>
             <PersistentString
@@ -788,6 +791,14 @@
          <PersistentStrings>
             <PersistentString
                value = "strongSelf.user.photo">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "__52-[ComposeChannelParticipantsViewController loadNext]_block_invoke142:ComposeChannelParticipantsViewController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "response.participants">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -1626,6 +1637,14 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "-[ComposeChannelParticipantsViewController setAction:]:ComposeChannelParticipantsViewController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "chat.participants_count">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "-[MessageTableCellContainerView setItem:]:MessageTableCellContainerView.m">
          <PersistentStrings>
             <PersistentString
@@ -1801,6 +1820,14 @@
             </PersistentString>
             <PersistentString
                value = "[UsersManager currentUser].photo">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "__50-[TGModernChatInfoViewController drawParticipants]_block_invoke_2:TGModernChatInfoViewController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "_chat.isAdmins_enabled">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -2184,6 +2211,14 @@
       </ContextState>
       <ContextState
          contextName = "-[TGProccessUpdates applyUpdate:]:TGProccessUpdates.m">
+      </ContextState>
+      <ContextState
+         contextName = "__46-[TGModernChannelInfoViewController configure]_block_invoke_2143:TGModernChannelInfoViewController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "action.result.singleObject">
+            </PersistentString>
+         </PersistentStrings>
       </ContextState>
       <ContextState
          contextName = "-[TGModernEncryptedUpdates proccessMessage:withLayer:params:conversation:]:TGModernEncryptedUpdates.m">
@@ -3090,6 +3125,9 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "__45-[TGMediaCounterLoader loadWithConversation:]_block_invoke_2:TGSProfileMediaRowView.m">
+      </ContextState>
+      <ContextState
          contextName = "__41-[UsersManager add:withCustomKey:update:]_block_invoke:UsersManager.m">
          <PersistentStrings>
             <PersistentString
@@ -3536,6 +3574,14 @@
          <PersistentStrings>
             <PersistentString
                value = "_descField.isHidden">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[ChatAvatarImageView mouseDown:]:ChatAvatarImageView.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.chat.chatFull">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -4032,6 +4078,9 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "__39-[ChatExportLinkViewController rebuild]_block_invoke:ChatExportLinkViewController.m">
+      </ContextState>
+      <ContextState
          contextName = "__54-[DialogsHistoryController loadremote:limit:callback:]_block_invoke_2:DialogsHistoryController.m">
          <PersistentStrings>
             <PersistentString
@@ -4195,6 +4244,9 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "__60-[ComposeChannelParticipantsViewController kickParticipant:]_block_invoke:ComposeChannelParticipantsViewController.m">
+      </ContextState>
+      <ContextState
          contextName = "__35-[TGPVMediaBehavior load:callback:]_block_invoke_2:TGPVMediaBehavior.m">
          <PersistentStrings>
             <PersistentString
@@ -4299,6 +4351,14 @@
          <PersistentStrings>
             <PersistentString
                value = "_replyObject.replyMessage">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[TGSharedLinkRowView setItem:]:TGSharedLinkRowView.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.isEditable">
             </PersistentString>
          </PersistentStrings>
       </ContextState>

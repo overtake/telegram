@@ -56,6 +56,18 @@
     [attr addAttribute:NSFontAttributeName value:font range:attr.range];
     
     _header = attr;
+    
+}
+
+-(BOOL)updateItemHeightWithWidth:(int)width {
+    
+    if(_autoHeight) {
+        self.height = [_header sizeForTextFieldForWidth:width - (self.xOffset * 2)].height;
+        
+        return YES;
+    }
+    
+    return NO;
 }
 
 -(Class)viewClass {

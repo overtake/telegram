@@ -39,7 +39,7 @@
 }
 
 -(NSString *)doneTitle {
-    return NSLocalizedString(@"Compose.Kick", nil);
+    return self.action.isEditable ? NSLocalizedString(@"Compose.Done", nil) : NSLocalizedString(@"Compose.Edit", nil);
 }
 
 

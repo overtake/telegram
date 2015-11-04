@@ -108,7 +108,7 @@
         
         [_telegramHolder setFrameOrigin:NSMakePoint(0, 2)];
         [self.textView addSubview:_telegramHolder];
-        [self.textView.textView setFrameOrigin:NSMakePoint(NSMaxX(_telegramHolder.frame) - 5, 3)];
+        [self.textView.textView setFrameOrigin:NSMakePoint(NSMaxX(_telegramHolder.frame) - 5, 5)];
         
         
         NSMutableAttributedString *str = [[NSMutableAttributedString alloc] init];

@@ -15,7 +15,8 @@ typedef enum
     SettingsRowItemTypeSwitch,
     SettingsRowItemTypeChoice,
     SettingsRowItemTypeNext,
-    SettingsRowItemTypeSelected
+    SettingsRowItemTypeSelected,
+    SettingsRowItemTypeNone
 } SettingsRowItemType;
 
 
@@ -31,9 +32,12 @@ typedef enum
 @property (nonatomic,assign) int xOffset;
 @property (nonatomic,assign) BOOL drawsSeparator;
 
+
 -(id)initWithHeight:(int)height;
 
 -(Class)viewClass;
+
+-(BOOL)updateItemHeightWithWidth:(int)width;
 
 
 @end

@@ -88,7 +88,7 @@
 -(void)mouseDown:(NSEvent *)theEvent {
     TGGeneralRowItem *item = (GeneralSettingsRowItem *) [self rowItem];
     
-    if(item.type == SettingsRowItemTypeNext || item.type == SettingsRowItemTypeSelected) {
+    if(item.type == SettingsRowItemTypeNext || item.type == SettingsRowItemTypeSelected || item.type == SettingsRowItemTypeNone) {
         item.callback(item);
     }
 }
@@ -142,7 +142,14 @@
            [self.switchControl setHidden:YES];
            [self.nextImage setHidden:YES];
            [self.selectedImageView setHidden:![item.stateback(item) boolValue] || item.locked];
-            [self.nextDesc setHidden:YES];
+           [self.nextDesc setHidden:YES];
+           break;
+        case SettingsRowItemTypeNone:
+           [self.subdescField setHidden:YES];
+           [self.switchControl setHidden:YES];
+           [self.nextImage setHidden:YES];
+           [self.selectedImageView setHidden:YES];
+           [self.nextDesc setHidden:YES];
         default:
             break;
     }
@@ -168,9 +175,9 @@
     
     TGGeneralRowItem *item = (TGGeneralRowItem *) [self rowItem];
     
-    [self.descriptionField setFrameOrigin:NSMakePoint( item.xOffset, 12)];
+    [self.descriptionField setFrameOrigin:NSMakePoint( item.xOffset - 2, 12)];
     
-    [self.subdescField setFrameOrigin:NSMakePoint(NSWidth(self.frame) - item.xOffset - NSWidth(self.subdescField.frame), 10)];
+    [self.subdescField setFrameOrigin:NSMakePoint(NSWidth(self.frame) - item.xOffset - NSWidth(self.subdescField.frame), 13)];
     
     [self.switchControl setFrameOrigin:NSMakePoint(NSWidth(self.frame) - item.xOffset - NSWidth(self.switchControl.frame), 10)];
     
@@ -197,6 +204,14 @@
         [NSColorFromRGB(0xe0e0e0) setFill];
         
         NSRectFill(NSMakeRect(item.xOffset, 0, NSWidth(self.frame) - item.xOffset * 2, 1));
+    }
+    
+    if(item.type == SettingsRowItemTypeNext && item.stateback != nil) {
+        NSImage *image = item.stateback(item);
+        
+        if([image isKindOfClass:[NSImage class]]) {
+            [image drawInRect:NSMakeRect(NSWidth(self.frame) - item.xOffset - image_ArrowGrey().size.width - image.size.width - 8, 13 , image.size.width, image.size.height) fromRect:NSZeroRect operation:NSCompositeHighlight fraction:1];
+        }
     }
     
 }

@@ -245,23 +245,32 @@
     
     id request = [TLAPI_account_updateNotifySettings createWithPeer:[TL_inputNotifyPeer createWithPeer:[self inputPeer]] settings:[TL_inputPeerNotifySettings createWithMute_until:mute_until sound:self.notify_settings.sound ? self.notify_settings.sound : @"" show_previews:self.notify_settings.show_previews events_mask:self.notify_settings.events_mask]];
     
-    [RPCRequest sendRequest:request successHandler:^(RPCRequest *request, id response) {
-        if([response isKindOfClass:[TL_boolTrue class]]) {
-            
-            self.notify_settings = [TL_peerNotifySettings createWithMute_until:mute_until sound:self.notify_settings.sound show_previews:self.notify_settings.show_previews events_mask:self.notify_settings.events_mask];
-            [self updateNotifySettings:self.notify_settings];
-
-        }
+    
+    dispatch_block_t successBlock = ^{
+        self.notify_settings = [TL_peerNotifySettings createWithMute_until:mute_until sound:self.notify_settings.sound show_previews:self.notify_settings.show_previews events_mask:self.notify_settings.events_mask];
+        [self updateNotifySettings:self.notify_settings];
         
         if(completeHandler)
             completeHandler();
         
         [MessagesManager updateUnreadBadge];
-        
-    } errorHandler:^(RPCRequest *request, RpcError *error) {
-        if(completeHandler)
-            completeHandler();
-    }];
+
+    };
+    
+    if(self.type != DialogTypeSecretChat && self.type != DialogTypeBroadcast) {
+        [RPCRequest sendRequest:request successHandler:^(RPCRequest *request, id response) {
+            
+            successBlock();
+            
+        } errorHandler:^(RPCRequest *request, RpcError *error) {
+            if(completeHandler)
+                completeHandler();
+        }];
+    } else {
+        successBlock();
+    }
+    
+    
 }
 
 - (void)muteOrUnmute:(dispatch_block_t)completeHandler until:(int)until {

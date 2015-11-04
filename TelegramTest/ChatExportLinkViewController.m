@@ -46,16 +46,20 @@
     [self.tableView removeAllItems:YES];
     
     
+    dispatch_block_t cblock = ^{
+        NSPasteboard* cb = [NSPasteboard generalPasteboard];
+        
+        [cb declareTypes:[NSArray arrayWithObjects:NSStringPboardType, nil] owner:self];
+        [cb setString:_chat.exported_invite.link forType:NSStringPboardType];
+    };
+    
     GeneralSettingsRowItem *copyLink = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeNext callback:^(TGGeneralRowItem *item) {
         
         if([_chat.exported_invite isKindOfClass:[TL_chatInviteExported class]]) {
             
             [self showModalProgress];
             
-            NSPasteboard* cb = [NSPasteboard generalPasteboard];
-            
-            [cb declareTypes:[NSArray arrayWithObjects:NSStringPboardType, nil] owner:self];
-            [cb setString:_chat.exported_invite.link forType:NSStringPboardType];
+            cblock();
             
             dispatch_after_seconds(0.2, ^{
                 
@@ -64,6 +68,32 @@
             });
             
             
+        } else if([_chat.exported_invite isKindOfClass:[TL_chatInviteEmpty class]]) {
+            
+            [self showModalProgress];
+            
+            id request = [TLAPI_messages_exportChatInvite createWithChat_id:_chat.n_id];
+            
+            TLChat *chat = [[ChatsManager sharedManager] find:self.chat.n_id];
+            
+            if([chat isKindOfClass:[TL_channel class]]) {
+                request = [TLAPI_channels_exportInvite createWithChannel:chat.inputPeer];
+            }
+            
+            [RPCRequest sendRequest:request successHandler:^(RPCRequest *request, TL_chatInviteExported *response) {
+                
+                [self hideModalProgressWithSuccess];
+                
+                _chat.exported_invite = response;
+                
+                [[Storage manager] insertFullChat:_chat completeHandler:nil];
+                
+                cblock();
+                
+                
+            } errorHandler:^(RPCRequest *request, RpcError *error) {
+                [self hideModalProgress];
+            } timeout:10];
         }
 
     } description:NSLocalizedString(@"ChatExportLink.CopyLink", nil) height:62 stateback:^id(TGGeneralRowItem *item) {

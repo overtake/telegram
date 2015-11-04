@@ -22,8 +22,6 @@ typedef enum {
 
 @property (nonatomic,assign) ChatAvatarSourceType sourceType;
 
-@property (nonatomic,strong) TLUser *user;
-@property (nonatomic,strong) TLChat *chat;
 
 @property (nonatomic, strong) ChatInfoViewController *controller;
 - (void)rebuild;

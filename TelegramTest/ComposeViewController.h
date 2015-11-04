@@ -18,6 +18,8 @@
 
 @property (nonatomic,assign, setter=setEditable:) BOOL isEditable;
 
+-(void)updateActionNavigation;
 
+-(void)didUpdatedEditableState;
 
 @end

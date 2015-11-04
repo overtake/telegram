@@ -29,8 +29,8 @@
     [self.view addSubview:_tableView.containerView];
 }
 
--(void)setChatFull:(TLChatFull *)chatFull {
-    _chatFull = chatFull;
+-(void)setChat:(TLChat *)chat {
+    _chat = chat;
     
     [self loadViewIfNeeded];
     
@@ -127,7 +127,9 @@
     
     [_tableView removeItemsInRange:NSMakeRange(3, _tableView.count - 3) tableRedraw:YES];
     
-    [self.chatFull.participants.participants enumerateObjectsUsingBlock:^(TLChatParticipant *obj, NSUInteger idx, BOOL * _Nonnull stop) {
+    NSArray *participants = [_chat.chatFull.participants.participants copy];
+    
+    [participants enumerateObjectsUsingBlock:^(TLChatParticipant *obj, NSUInteger idx, BOOL * _Nonnull stop) {
         
         TLUser *user = [[UsersManager sharedManager] find:obj.user_id];
         
@@ -160,7 +162,8 @@
                                 
                                 [[FullChatManager sharedManager] loadIfNeed:self.chat.n_id force:YES];
                                 
-                                NSArray *f = [self.chatFull.participants.participants filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.user_id == %d",user.n_id]];
+                                
+                                NSArray *f = [_chat.chatFull.participants.participants filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.user_id == %d",user.n_id]];
                                 
                                 if(f.count == 1)
                                 {
@@ -168,9 +171,11 @@
                                     
                                     TLChatParticipant *newParticipant = !isAdmin ? [TL_chatParticipantAdmin createWithUser_id:participant.user_id inviter_id:participant.inviter_id date:participant.date] : [TL_chatParticipant createWithUser_id:participant.user_id inviter_id:participant.inviter_id date:participant.date];
                                     
-                                    [self.chatFull.participants.participants replaceObjectAtIndex:[self.chatFull.participants.participants indexOfObject:participant] withObject:newParticipant];
+                                    [_chat.chatFull.participants.participants replaceObjectAtIndex:[_chat.chatFull.participants.participants indexOfObject:participant] withObject:newParticipant];
                                     
-                                    [self reloadData];
+                                    [ASQueue dispatchOnMainQueue:^{
+                                        [self reloadData];
+                                    }];
                                     
                                 }
                                 
@@ -180,7 +185,7 @@
                             
                         } errorHandler:^(id request, RpcError *error) {
                             [self hideModalProgress];
-                        }];
+                        } timeout:0 queue:[ASQueue globalQueue].nativeQueue];
                         
                     }, nil);
                     

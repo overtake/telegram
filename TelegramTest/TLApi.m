@@ -2,7 +2,7 @@
 //  TLApi.m
 //  Telegram
 //
-//  Auto created by Mikhail Filimonov on 02.11.15..
+//  Auto created by Mikhail Filimonov on 03.11.15..
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -2434,6 +2434,34 @@
 	[stream writeInt:self.chat_id];
 	[ClassStore TLSerialize:self.user_id stream:stream];
 	[stream writeBool:self.is_admin];
+	return [stream getOutput];
+}
+@end
+
+@implementation TLAPI_messages_deactivateChat
++(TLAPI_messages_deactivateChat*)createWithChat_id:(int)chat_id enabled:(Boolean)enabled {
+    TLAPI_messages_deactivateChat* obj = [[TLAPI_messages_deactivateChat alloc] init];
+    obj.chat_id = chat_id;
+	obj.enabled = enabled;
+    return obj;
+}
+- (NSData*)getData {
+	SerializedData* stream = [ClassStore streamWithConstuctor:1651444545];
+	[stream writeInt:self.chat_id];
+	[stream writeBool:self.enabled];
+	return [stream getOutput];
+}
+@end
+
+@implementation TLAPI_messages_migrateChat
++(TLAPI_messages_migrateChat*)createWithChat_id:(int)chat_id {
+    TLAPI_messages_migrateChat* obj = [[TLAPI_messages_migrateChat alloc] init];
+    obj.chat_id = chat_id;
+    return obj;
+}
+- (NSData*)getData {
+	SerializedData* stream = [ClassStore streamWithConstuctor:363051235];
+	[stream writeInt:self.chat_id];
 	return [stream getOutput];
 }
 @end

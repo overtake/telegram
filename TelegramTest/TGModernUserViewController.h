@@ -10,4 +10,7 @@
 
 @interface TGModernUserViewController : ComposeViewController
 
+
+-(void)setUser:(TLUser *)user conversation:(TL_conversation *)conversation;
+
 @end

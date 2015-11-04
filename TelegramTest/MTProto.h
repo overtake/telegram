@@ -2,7 +2,7 @@
 //  MTProto.h
 //  Telegram
 //
-//  Auto created by Mikhail Filimonov on 02.11.15.
+//  Auto created by Mikhail Filimonov on 03.11.15.
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -883,6 +883,7 @@
 @property Boolean left;
 @property (nonatomic,assign,readonly) BOOL isAdmins_enabled;
 @property (nonatomic,assign,readonly) BOOL isAdmin;
+@property (nonatomic,assign,readonly) BOOL isDeactivated;
 @property (nonatomic, strong) NSString* title;
 @property (nonatomic, strong) TLChatPhoto* photo;
 @property int participants_count;
@@ -901,7 +902,7 @@
 +(TL_chatEmpty*)createWithN_id:(int)n_id;
 @end
 @interface TL_chat : TLChat<NSCoding>
-+(TL_chat*)createWithFlags:(int)flags      n_id:(int)n_id title:(NSString*)title photo:(TLChatPhoto*)photo participants_count:(int)participants_count date:(int)date version:(int)version;
++(TL_chat*)createWithFlags:(int)flags       n_id:(int)n_id title:(NSString*)title photo:(TLChatPhoto*)photo participants_count:(int)participants_count date:(int)date version:(int)version;
 @end
 @interface TL_chatForbidden : TLChat<NSCoding>
 +(TL_chatForbidden*)createWithN_id:(int)n_id title:(NSString*)title;
@@ -1083,6 +1084,8 @@
 @property (nonatomic, strong) TLPhoto* photo;
 @property int user_id;
 @property int inviter_id;
+@property int channel_id;
+@property int chat_id;
 @end
 
 @interface TL_messageActionEmpty : TLMessageAction<NSCoding>
@@ -1111,6 +1114,18 @@
 @end
 @interface TL_messageActionChannelCreate : TLMessageAction<NSCoding>
 +(TL_messageActionChannelCreate*)createWithTitle:(NSString*)title;
+@end
+@interface TL_messageActionChatMigrateTo : TLMessageAction<NSCoding>
++(TL_messageActionChatMigrateTo*)createWithChannel_id:(int)channel_id;
+@end
+@interface TL_messageActionChatDeactivate : TLMessageAction<NSCoding>
++(TL_messageActionChatDeactivate*)create;
+@end
+@interface TL_messageActionChatActivate : TLMessageAction<NSCoding>
++(TL_messageActionChatActivate*)create;
+@end
+@interface TL_messageActionChannelMigrateFrom : TLMessageAction<NSCoding>
++(TL_messageActionChannelMigrateFrom*)createWithTitle:(NSString*)title chat_id:(int)chat_id;
 @end
 	
 @interface TLDialog()
@@ -1824,7 +1839,7 @@
 @property int this_dc;
 @property (nonatomic, strong) NSMutableArray* dc_options;
 @property int chat_size_max;
-@property int broadcast_size_max;
+@property int megagroup_size_max;
 @property int forwarded_count_max;
 @property int online_update_period_ms;
 @property int offline_blur_timeout_ms;
@@ -1839,7 +1854,7 @@
 @end
 
 @interface TL_config : TLConfig<NSCoding>
-+(TL_config*)createWithDate:(int)date expires:(int)expires test_mode:(Boolean)test_mode this_dc:(int)this_dc dc_options:(NSMutableArray*)dc_options chat_size_max:(int)chat_size_max broadcast_size_max:(int)broadcast_size_max forwarded_count_max:(int)forwarded_count_max online_update_period_ms:(int)online_update_period_ms offline_blur_timeout_ms:(int)offline_blur_timeout_ms offline_idle_timeout_ms:(int)offline_idle_timeout_ms online_cloud_timeout_ms:(int)online_cloud_timeout_ms notify_cloud_delay_ms:(int)notify_cloud_delay_ms notify_default_delay_ms:(int)notify_default_delay_ms chat_big_size:(int)chat_big_size push_chat_period_ms:(int)push_chat_period_ms push_chat_limit:(int)push_chat_limit disabled_features:(NSMutableArray*)disabled_features;
++(TL_config*)createWithDate:(int)date expires:(int)expires test_mode:(Boolean)test_mode this_dc:(int)this_dc dc_options:(NSMutableArray*)dc_options chat_size_max:(int)chat_size_max megagroup_size_max:(int)megagroup_size_max forwarded_count_max:(int)forwarded_count_max online_update_period_ms:(int)online_update_period_ms offline_blur_timeout_ms:(int)offline_blur_timeout_ms offline_idle_timeout_ms:(int)offline_idle_timeout_ms online_cloud_timeout_ms:(int)online_cloud_timeout_ms notify_cloud_delay_ms:(int)notify_cloud_delay_ms notify_default_delay_ms:(int)notify_default_delay_ms chat_big_size:(int)chat_big_size push_chat_period_ms:(int)push_chat_period_ms push_chat_limit:(int)push_chat_limit disabled_features:(NSMutableArray*)disabled_features;
 @end
 	
 @interface TLNearestDc()
@@ -2440,6 +2455,7 @@
 @property (nonatomic,assign,readonly) BOOL isChannel;
 @property (nonatomic,assign,readonly) BOOL isBroadcast;
 @property (nonatomic,assign,readonly) BOOL isPublic;
+@property (nonatomic,assign,readonly) BOOL isMegagroup;
 @property (nonatomic, strong) NSString* title;
 @end
 
@@ -2447,7 +2463,7 @@
 +(TL_chatInviteAlready*)createWithChat:(TLChat*)chat;
 @end
 @interface TL_chatInvite : TLChatInvite<NSCoding>
-+(TL_chatInvite*)createWithFlags:(int)flags    title:(NSString*)title;
++(TL_chatInvite*)createWithFlags:(int)flags     title:(NSString*)title;
 @end
 	
 @interface TLInputStickerSet()

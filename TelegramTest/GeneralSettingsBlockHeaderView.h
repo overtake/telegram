@@ -11,6 +11,7 @@
 @interface GeneralSettingsBlockHeaderItem : TGGeneralRowItem
 @property (nonatomic,strong,readonly) NSAttributedString *header;
 @property (nonatomic,assign) BOOL isFlipped;
+@property (nonatomic,assign) BOOL autoHeight;
 
 -(void)setTextColor:(NSColor *)textColor;
 -(void)setFont:(NSFont *)font;

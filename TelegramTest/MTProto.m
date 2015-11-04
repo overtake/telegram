@@ -2,7 +2,7 @@
 //  MTProto.m
 //  Telegram
 //
-//  Auto created by Mikhail Filimonov on 02.11.15.
+//  Auto created by Mikhail Filimonov on 03.11.15.
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -3732,9 +3732,10 @@
 @end
 
 @implementation TL_chat
-+(TL_chat*)createWithFlags:(int)flags      n_id:(int)n_id title:(NSString*)title photo:(TLChatPhoto*)photo participants_count:(int)participants_count date:(int)date version:(int)version {
++(TL_chat*)createWithFlags:(int)flags       n_id:(int)n_id title:(NSString*)title photo:(TLChatPhoto*)photo participants_count:(int)participants_count date:(int)date version:(int)version {
 	TL_chat* obj = [[TL_chat alloc] init];
 	obj.flags = flags;
+	
 	
 	
 	
@@ -3755,6 +3756,7 @@
 	
 	
 	
+	
 	[stream writeInt:self.n_id];
 	[stream writeString:self.title];
 	[ClassStore TLSerialize:self.photo stream:stream];
@@ -3764,6 +3766,7 @@
 }
 -(void)unserialize:(SerializedData*)stream {
 	self.flags = [stream readInt];
+	
 	
 	
 	
@@ -3782,6 +3785,7 @@
     TL_chat *objc = [[TL_chat alloc] init];
     
     objc.flags = self.flags;
+    
     
     
     
@@ -3821,6 +3825,8 @@
 -(BOOL)isAdmins_enabled {return (self.flags & (1 << 3)) > 0;}
                         
 -(BOOL)isAdmin {return (self.flags & (1 << 4)) > 0;}
+                        
+-(BOOL)isDeactivated {return (self.flags & (1 << 5)) > 0;}
             
         
 @end
@@ -5995,6 +6001,170 @@
     TL_messageActionChannelCreate *objc = [[TL_messageActionChannelCreate alloc] init];
     
     objc.title = self.title;
+    
+    return objc;
+}
+    
+-(id)initWithCoder:(NSCoder *)aDecoder {
+
+    if((self = [ClassStore deserialize:[aDecoder decodeObjectForKey:@"data"]])) {
+        
+    }
+    
+    return self;
+}
+        
+-(void)encodeWithCoder:(NSCoder *)aCoder {
+    [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
+}
+
+        
+
+        
+@end
+
+@implementation TL_messageActionChatMigrateTo
++(TL_messageActionChatMigrateTo*)createWithChannel_id:(int)channel_id {
+	TL_messageActionChatMigrateTo* obj = [[TL_messageActionChatMigrateTo alloc] init];
+	obj.channel_id = channel_id;
+	return obj;
+}
+-(void)serialize:(SerializedData*)stream {
+	[stream writeInt:self.channel_id];
+}
+-(void)unserialize:(SerializedData*)stream {
+	self.channel_id = [stream readInt];
+}
+        
+-(TL_messageActionChatMigrateTo *)copy {
+    
+    TL_messageActionChatMigrateTo *objc = [[TL_messageActionChatMigrateTo alloc] init];
+    
+    objc.channel_id = self.channel_id;
+    
+    return objc;
+}
+    
+-(id)initWithCoder:(NSCoder *)aDecoder {
+
+    if((self = [ClassStore deserialize:[aDecoder decodeObjectForKey:@"data"]])) {
+        
+    }
+    
+    return self;
+}
+        
+-(void)encodeWithCoder:(NSCoder *)aCoder {
+    [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
+}
+
+        
+
+        
+@end
+
+@implementation TL_messageActionChatDeactivate
++(TL_messageActionChatDeactivate*)create {
+	TL_messageActionChatDeactivate* obj = [[TL_messageActionChatDeactivate alloc] init];
+	
+	return obj;
+}
+-(void)serialize:(SerializedData*)stream {
+	
+}
+-(void)unserialize:(SerializedData*)stream {
+	
+}
+        
+-(TL_messageActionChatDeactivate *)copy {
+    
+    TL_messageActionChatDeactivate *objc = [[TL_messageActionChatDeactivate alloc] init];
+    
+    
+    
+    return objc;
+}
+    
+-(id)initWithCoder:(NSCoder *)aDecoder {
+
+    if((self = [ClassStore deserialize:[aDecoder decodeObjectForKey:@"data"]])) {
+        
+    }
+    
+    return self;
+}
+        
+-(void)encodeWithCoder:(NSCoder *)aCoder {
+    [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
+}
+
+        
+
+        
+@end
+
+@implementation TL_messageActionChatActivate
++(TL_messageActionChatActivate*)create {
+	TL_messageActionChatActivate* obj = [[TL_messageActionChatActivate alloc] init];
+	
+	return obj;
+}
+-(void)serialize:(SerializedData*)stream {
+	
+}
+-(void)unserialize:(SerializedData*)stream {
+	
+}
+        
+-(TL_messageActionChatActivate *)copy {
+    
+    TL_messageActionChatActivate *objc = [[TL_messageActionChatActivate alloc] init];
+    
+    
+    
+    return objc;
+}
+    
+-(id)initWithCoder:(NSCoder *)aDecoder {
+
+    if((self = [ClassStore deserialize:[aDecoder decodeObjectForKey:@"data"]])) {
+        
+    }
+    
+    return self;
+}
+        
+-(void)encodeWithCoder:(NSCoder *)aCoder {
+    [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
+}
+
+        
+
+        
+@end
+
+@implementation TL_messageActionChannelMigrateFrom
++(TL_messageActionChannelMigrateFrom*)createWithTitle:(NSString*)title chat_id:(int)chat_id {
+	TL_messageActionChannelMigrateFrom* obj = [[TL_messageActionChannelMigrateFrom alloc] init];
+	obj.title = title;
+	obj.chat_id = chat_id;
+	return obj;
+}
+-(void)serialize:(SerializedData*)stream {
+	[stream writeString:self.title];
+	[stream writeInt:self.chat_id];
+}
+-(void)unserialize:(SerializedData*)stream {
+	self.title = [stream readString];
+	self.chat_id = [stream readInt];
+}
+        
+-(TL_messageActionChannelMigrateFrom *)copy {
+    
+    TL_messageActionChannelMigrateFrom *objc = [[TL_messageActionChannelMigrateFrom alloc] init];
+    
+    objc.title = self.title;
+    objc.chat_id = self.chat_id;
     
     return objc;
 }
@@ -13204,7 +13374,7 @@
 @end
 
 @implementation TL_config
-+(TL_config*)createWithDate:(int)date expires:(int)expires test_mode:(Boolean)test_mode this_dc:(int)this_dc dc_options:(NSMutableArray*)dc_options chat_size_max:(int)chat_size_max broadcast_size_max:(int)broadcast_size_max forwarded_count_max:(int)forwarded_count_max online_update_period_ms:(int)online_update_period_ms offline_blur_timeout_ms:(int)offline_blur_timeout_ms offline_idle_timeout_ms:(int)offline_idle_timeout_ms online_cloud_timeout_ms:(int)online_cloud_timeout_ms notify_cloud_delay_ms:(int)notify_cloud_delay_ms notify_default_delay_ms:(int)notify_default_delay_ms chat_big_size:(int)chat_big_size push_chat_period_ms:(int)push_chat_period_ms push_chat_limit:(int)push_chat_limit disabled_features:(NSMutableArray*)disabled_features {
++(TL_config*)createWithDate:(int)date expires:(int)expires test_mode:(Boolean)test_mode this_dc:(int)this_dc dc_options:(NSMutableArray*)dc_options chat_size_max:(int)chat_size_max megagroup_size_max:(int)megagroup_size_max forwarded_count_max:(int)forwarded_count_max online_update_period_ms:(int)online_update_period_ms offline_blur_timeout_ms:(int)offline_blur_timeout_ms offline_idle_timeout_ms:(int)offline_idle_timeout_ms online_cloud_timeout_ms:(int)online_cloud_timeout_ms notify_cloud_delay_ms:(int)notify_cloud_delay_ms notify_default_delay_ms:(int)notify_default_delay_ms chat_big_size:(int)chat_big_size push_chat_period_ms:(int)push_chat_period_ms push_chat_limit:(int)push_chat_limit disabled_features:(NSMutableArray*)disabled_features {
 	TL_config* obj = [[TL_config alloc] init];
 	obj.date = date;
 	obj.expires = expires;
@@ -13212,7 +13382,7 @@
 	obj.this_dc = this_dc;
 	obj.dc_options = dc_options;
 	obj.chat_size_max = chat_size_max;
-	obj.broadcast_size_max = broadcast_size_max;
+	obj.megagroup_size_max = megagroup_size_max;
 	obj.forwarded_count_max = forwarded_count_max;
 	obj.online_update_period_ms = online_update_period_ms;
 	obj.offline_blur_timeout_ms = offline_blur_timeout_ms;
@@ -13242,7 +13412,7 @@
 		}
 	}
 	[stream writeInt:self.chat_size_max];
-	[stream writeInt:self.broadcast_size_max];
+	[stream writeInt:self.megagroup_size_max];
 	[stream writeInt:self.forwarded_count_max];
 	[stream writeInt:self.online_update_period_ms];
 	[stream writeInt:self.offline_blur_timeout_ms];
@@ -13284,7 +13454,7 @@
 		}
 	}
 	self.chat_size_max = [stream readInt];
-	self.broadcast_size_max = [stream readInt];
+	self.megagroup_size_max = [stream readInt];
 	self.forwarded_count_max = [stream readInt];
 	self.online_update_period_ms = [stream readInt];
 	self.offline_blur_timeout_ms = [stream readInt];
@@ -13321,7 +13491,7 @@
     objc.this_dc = self.this_dc;
     objc.dc_options = [self.dc_options copy];
     objc.chat_size_max = self.chat_size_max;
-    objc.broadcast_size_max = self.broadcast_size_max;
+    objc.megagroup_size_max = self.megagroup_size_max;
     objc.forwarded_count_max = self.forwarded_count_max;
     objc.online_update_period_ms = self.online_update_period_ms;
     objc.offline_blur_timeout_ms = self.offline_blur_timeout_ms;
@@ -18402,9 +18572,10 @@
 @end
 
 @implementation TL_chatInvite
-+(TL_chatInvite*)createWithFlags:(int)flags    title:(NSString*)title {
++(TL_chatInvite*)createWithFlags:(int)flags     title:(NSString*)title {
 	TL_chatInvite* obj = [[TL_chatInvite alloc] init];
 	obj.flags = flags;
+	
 	
 	
 	
@@ -18416,10 +18587,12 @@
 	
 	
 	
+	
 	[stream writeString:self.title];
 }
 -(void)unserialize:(SerializedData*)stream {
 	self.flags = [stream readInt];
+	
 	
 	
 	
@@ -18431,6 +18604,7 @@
     TL_chatInvite *objc = [[TL_chatInvite alloc] init];
     
     objc.flags = self.flags;
+    
     
     
     
@@ -18459,6 +18633,8 @@
 -(BOOL)isBroadcast {return (self.flags & (1 << 1)) > 0;}
                         
 -(BOOL)isPublic {return (self.flags & (1 << 2)) > 0;}
+                        
+-(BOOL)isMegagroup {return (self.flags & (1 << 3)) > 0;}
             
         
 @end

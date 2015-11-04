@@ -217,6 +217,8 @@ CACHE_IMAGE(ModernConversationSecretAccessoryTimer);
 
 CACHE_IMAGE(ChannelShare);
 
+CACHE_IMAGE(ModernMenuDeleteIcon);
+
 @interface ImageUtils : NSObject
 
 

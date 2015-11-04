@@ -39,9 +39,11 @@
 
 
 -(Class)viewClass {
-    return [TMView class];
+    return [TMRowView class];
 }
 
-
+-(BOOL)updateItemHeightWithWidth:(int)width {
+    return NO;
+}
 
 @end

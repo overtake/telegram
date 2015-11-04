@@ -8,9 +8,14 @@
 
 #import "ComposeChannelParticipantsViewController.h"
 #import "SelectUsersTableView.h"
-
-@interface ComposeChannelParticipantsViewController ()<SelectTableDelegate,ComposeBehaviorDelegate>
-@property (nonatomic,strong) SelectUsersTableView *tableView;
+#import "ComposeActionChannelMembersBehavior.h"
+#import "TGSettingsTableView.h"
+#import "TGUserContainerRowItem.h"
+#import "ComposeActionAddGroupMembersBehavior.h"
+#import "TGUserContainerView.h"
+#import "TGModernUserViewController.h"
+@interface ComposeChannelParticipantsViewController ()<ComposeBehaviorDelegate>
+@property (nonatomic,strong) TGSettingsTableView *tableView;
 @property (nonatomic,strong) RPCRequest *request;
 
 @property (nonatomic,assign) int offset;
@@ -21,22 +26,43 @@
 -(void)loadView {
     [super loadView];
     
-    _tableView = [[SelectUsersTableView alloc] initWithFrame:self.view.bounds];
+    _tableView = [[TGSettingsTableView alloc] initWithFrame:self.view.bounds];
     
     [self.view addSubview:_tableView.containerView];
     
+}
+
+-(void)didUpdatedEditableState {
     
+    [_tableView.list enumerateObjectsUsingBlock:^(TMRowItem *obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        
+        if([obj isKindOfClass:[TMRowItem class]]) {
+            [obj setEditable:self.action.isEditable];
+        }
+        
+    }];
     
+    [_tableView enumerateAvailableRowViewsUsingBlock:^(__kindof NSTableRowView * _Nonnull rowView, NSInteger row) {
+        
+        TMRowView *view = [rowView.subviews firstObject];
+        
+        TMRowItem *item = _tableView.list[row];
+        
+        if([view isKindOfClass:[TGUserContainerView class]]) {
+            
+            TGUserContainerView *v = (TGUserContainerView *) view;
+            
+            [v setEditable:item.isEditable animated:YES];
+            
+        }
+        
+    }];
 }
 
 -(void)behaviorDidEndRequest:(id)response {
     
-    [self.tableView removeSelectedItems];
-    [self selectTableDidChangedItem:nil];
     [self hideModalProgress];
-    
-    [[FullChatManager sharedManager] loadIfNeed:[(TLChat *)self.action.object n_id] force:YES];
-    
+ 
 }
 
 -(void)behaviorDidStartRequest {
@@ -45,52 +71,31 @@
 
 -(void)setAction:(ComposeAction *)action {
     [super setAction:action];
-    
-    self.action.behavior.delegate = self;
-    
-    [_tableView removeAllItems:YES];
-    
-    [self.doneButton setDisable:YES];
-    
-    [_tableView setSelectLimit:action.behavior.limit];
-    _tableView.selectDelegate = self;
-    
-    [self setLoading:YES];
-    
-    _offset = 0;
-    
-    [self loadNext];
-    
-}
-
--(void)selectTableDidChangedItem:(id)item {
-    NSMutableArray *users = [[NSMutableArray alloc] init];
-    
-    [self.tableView.selectedItems enumerateObjectsUsingBlock:^(SelectUserItem *obj, NSUInteger idx, BOOL *stop) {
-        
-        [users addObject:obj.user];
-        
-    }];
-    
-    if(!self.action.result)
-        self.action.result = [[ComposeResult alloc] initWithMultiObjects:users];
-    else
-        self.action.result.multiObjects = users;
-    
-    
-    [self setCenterBarViewTextAttributed:self.action.behavior.centerTitle];
-    
-    [self.action.behavior composeDidChangeSelected];
-    
-    [self.doneButton setDisable:(self.action.result.multiObjects.count == 0 || [(TLUser *)self.action.result.multiObjects[0] n_id] == [UsersManager currentUserId]) || self.action.behavior.doneTitle.length == 0];
 }
 
 
+-(void)setLoading:(BOOL)isLoading {
+    [super setLoading:isLoading];
+    
+    [self.doneButton setDisable:isLoading];
+}
 
 -(void)loadNext {
     TLChat *channel = self.action.object;
     
-    [RPCRequest sendRequest:[TLAPI_channels_getParticipants createWithChannel:channel.inputPeer filter:self.action.reservedObject1 offset:_offset limit:100] successHandler:^(id request, TL_channels_channelParticipants *response) {
+    _request = [RPCRequest sendRequest:[TLAPI_channels_getParticipants createWithChannel:channel.inputPeer filter:self.action.reservedObject1 offset:_offset limit:100] successHandler:^(id request, TL_channels_channelParticipants *response) {
+        
+        if(request != _request) {
+            
+            [ASQueue dispatchOnMainQueue:^{
+                [self setLoading:NO];
+            }];
+            
+            return;
+        }
+        
+        
+        _request = nil;
         
         NSMutableArray *items = [[NSMutableArray alloc] init];
         
@@ -103,15 +108,44 @@
         [response.participants enumerateObjectsUsingBlock:^(TLChannelParticipant *obj, NSUInteger idx, BOOL *stop) {
             TLUser *user = users[@(obj.user_id)];
             
-            [user rebuildNames];
+            TGUserContainerRowItem *item = [[TGUserContainerRowItem alloc] initWithUser:user];
+            item.type = SettingsRowItemTypeNone;
+            item.editable = self.action.isEditable;
+            [item setStateback:^id(TGGeneralRowItem *item) {
+                
+                TGUserContainerRowItem *userItem = (TGUserContainerRowItem *) item;
+                
+                return @(userItem.user.n_id != [UsersManager currentUserId]);
+                
+            }];
             
-            SelectUserItem *item = [[SelectUserItem alloc] initWithObject:user];
+            __weak TGUserContainerRowItem *weakItem = item;
             
+            [item setStateCallback:^ {
+                
+                if(self.action.isEditable) {
+                    if([weakItem.stateback(weakItem) boolValue])
+                        [self kickParticipant:weakItem];
+                } else {
+                    TGModernUserViewController *viewController = [[TGModernUserViewController alloc] initWithFrame:NSZeroRect];
+                    
+                    [viewController setUser:weakItem.user conversation:weakItem.user.dialog];
+                    
+                    [self.navigationViewController pushViewController:viewController animated:YES];
+                }
+
+            }];
+            
+            item.height = 50;
             [items addObject:item];
         }];
         
+        
+        
         [ASQueue dispatchOnMainQueue:^{
-            [self.tableView readyCommon:items];
+            
+            [_tableView insert:items startIndex:_tableView.count tableRedraw:NO];
+            [_tableView reloadData];
             
             [self setLoading:NO];
         }];
@@ -125,6 +159,102 @@
     } timeout:0 queue:[ASQueue globalQueue].nativeQueue];
     
     
+}
+
+-(void)kickParticipant:(TGUserContainerRowItem *)participant {
+    
+    _tableView.defaultAnimation = NSTableViewAnimationEffectFade;
+    
+    [_tableView removeItem:participant];
+    
+    _tableView.defaultAnimation  = NSTableViewAnimationEffectNone;
+    
+    TLChat *chat = self.action.object;
+    
+    [RPCRequest sendRequest:[TLAPI_channels_kickFromChannel createWithChannel:chat.inputPeer user_id:participant.user.inputUser kicked:[self.action.behavior isKindOfClass:[ComposeActionChannelMembersBehavior class]]] successHandler:^(id request, id response) {
+        
+       [[FullChatManager sharedManager] loadIfNeed:[chat n_id] force:YES];
+        
+       [[Storage manager] insertFullChat:chat.chatFull completeHandler:nil];
+        
+        
+    } errorHandler:^(id request, RpcError *error) {
+        
+        
+        
+    }];
+    
+}
+
+-(void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    
+    TLChat *chat = self.action.object;
+    
+    [[FullChatManager sharedManager] loadIfNeed:[chat n_id] force:YES];
+    
+    self.action.behavior.delegate = self;
+    
+    [_request cancelRequest];
+    _request = nil;
+    
+    [_tableView removeAllItems:YES];
+    
+    [_tableView addItem:[[TGGeneralRowItem alloc] initWithHeight:20] tableRedraw:YES];
+    
+    if([self.action.behavior isKindOfClass:[ComposeActionChannelMembersBehavior class]]) {
+        
+        if(chat.chatFull.participants_count < maxChatUsers()) {
+            GeneralSettingsRowItem *addMembersItem = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeNone callback:^(TGGeneralRowItem *item) {
+                
+                NSMutableArray *filter = [[NSMutableArray alloc] init];
+                
+                [_tableView.list enumerateObjectsUsingBlock:^(TGUserContainerRowItem *obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                    
+                    if([obj isKindOfClass:[TGUserContainerRowItem class]]) {
+                        [filter addObject:@(obj.user.n_id)];
+                    }
+                    
+                    ComposePickerViewController *viewController = [[ComposePickerViewController alloc] initWithFrame:NSZeroRect];
+                    
+                    [viewController setAction:[[ComposeAction alloc]initWithBehaviorClass:[ComposeActionAddGroupMembersBehavior class] filter:filter object:chat.chatFull reservedObjects:@[chat]]];
+                    
+                    [self.navigationViewController pushViewController:viewController animated:YES];
+                    
+                }];
+                
+            } description:NSLocalizedString(@"Group.AddMembers", nil) height:42 stateback:nil];
+            addMembersItem.textColor = BLUE_UI_COLOR;
+            [_tableView addItem:addMembersItem tableRedraw:YES];
+        }
+        
+        
+        if(chat.username.length == 0) {
+            GeneralSettingsRowItem *inviteViaLink = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeNone callback:^(TGGeneralRowItem *item) {
+                
+                ChatExportLinkViewController *export = [[ChatExportLinkViewController alloc] initWithFrame:NSZeroRect];
+                
+                [export setChat:chat.chatFull];
+                
+                [self.navigationViewController pushViewController:export animated:YES];
+                
+                
+            } description:NSLocalizedString(@"Modern.Channel.InviteViaLink", nil) height:42 stateback:nil];
+            inviteViaLink.textColor = BLUE_UI_COLOR;
+            [_tableView addItem:inviteViaLink tableRedraw:YES];
+        }
+        GeneralSettingsBlockHeaderItem *description = [[GeneralSettingsBlockHeaderItem alloc] initWithString:NSLocalizedString(@"Modern.Channel.ChannelMembersDescription", nil) height:42 flipped:YES];
+        
+        [_tableView addItem:description tableRedraw:YES];
+        
+        
+    }
+    
+    [self setLoading:YES];
+    
+    _offset = 0;
+    
+    [self loadNext];
 }
 
 -(void)viewWillDisappear:(BOOL)animated {

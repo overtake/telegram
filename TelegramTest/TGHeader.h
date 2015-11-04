@@ -69,7 +69,7 @@
 
 #define TGSystemFont(s) NSAppKitVersionNumber > NSAppKitVersionNumber10_10_Max ? [NSFont fontWithName:@".SFNSDisplay-Regular" size:(s)] : [NSFont fontWithName:@"HelveticaNeue" size:(s)]
 #define TGSystemMediumFont(s) NSAppKitVersionNumber > NSAppKitVersionNumber10_10_Max ? [NSFont fontWithName:@".SFNSText-Medium" size:(s)] : [NSFont fontWithName:@"HelveticaNeue-Medium" size:(s)]
-#define TGSystemLightFont(s) NSAppKitVersionNumber > NSAppKitVersionNumber10_10_Max ? [NSFont fontWithName:@".SFNSDisplay-Regular" size:(s)] : [NSFont fontWithName:@"HelveticaNeue-Light" size:(s)]
+#define TGSystemLightFont(s) NSAppKitVersionNumber > NSAppKitVersionNumber10_10_Max ? [NSFont fontWithName:@".SFNSText-Regular" size:(s)] : [NSFont fontWithName:@"HelveticaNeue-Light" size:(s)]
 #define TGSystemItalicFont(s) NSAppKitVersionNumber > NSAppKitVersionNumber10_10_Max ? [NSFont fontWithName:@".SFNSText-Italic" size:(s)] : [NSFont fontWithName:@"HelveticaNeue-Italic" size:(s)]
 #define TGSystemBoldItalicFont(s) NSAppKitVersionNumber > NSAppKitVersionNumber10_10_Max ? [NSFont fontWithName:@".SFNSText-BoldItalic" size:(s)] : [NSFont fontWithName:@"HelveticaNeue-BoldItalic" size:(s)]
 #define TGSystemBoldFont(s) NSAppKitVersionNumber > NSAppKitVersionNumber10_10_Max ? [NSFont fontWithName:@".SFNSDisplay-Semibold" size:(s)] : [NSFont fontWithName:@"HelveticaNeue-Bold" size:(s)]

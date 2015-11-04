@@ -11,7 +11,6 @@
 @interface ChatAdminsViewController : TMViewController
 
 
-@property (nonatomic,weak) TLChatFull *chatFull;
 @property (nonatomic,weak) TLChat *chat;
 
 @end

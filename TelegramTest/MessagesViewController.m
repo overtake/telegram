@@ -76,6 +76,9 @@
 #import "TGModalDeleteChannelMessagesView.h"
 #import "ComposeActionDeleteChannelMessagesBehavior.h"
 
+#import "TGModernUserViewController.h"
+#import "TGModernChatInfoViewController.h"
+#import "TGModernChannelInfoViewController.h"
 #define HEADER_MESSAGES_GROUPING_TIME (10 * 60)
 
 #define SCROLLDOWNBUTTON_OFFSET 1500
@@ -1539,37 +1542,37 @@ static NSTextAttachment *headerMediaIcon() {
     switch (self.conversation.type) {
         case DialogTypeChat:
             
-            infoViewController = [[ChatInfoViewController alloc] initWithFrame:self.view.bounds];
+            infoViewController = [[TGModernChatInfoViewController alloc] initWithFrame:NSZeroRect];
             
-            [(ChatInfoViewController *)infoViewController setChat:self.conversation.chat];
+            [(TGModernChatInfoViewController *)infoViewController setChat:self.conversation.chat];
             
             break;
             
         case DialogTypeSecretChat:
             
-            infoViewController = [[UserInfoViewController alloc] initWithFrame:self.view.bounds];
+            infoViewController = [[TGModernUserViewController alloc] initWithFrame:NSZeroRect];
             
             
-            [(UserInfoViewController *)infoViewController setUser:self.conversation.encryptedChat.peerUser conversation:self.conversation];
+            [(TGModernUserViewController *)infoViewController setUser:self.conversation.encryptedChat.peerUser conversation:self.conversation];
             
             break;
             
         case DialogTypeUser: {
-            infoViewController = [[UserInfoViewController alloc] initWithFrame:self.view.bounds];
+            infoViewController = [[TGModernUserViewController alloc] initWithFrame:NSZeroRect];
             
             
-            [(UserInfoViewController *)infoViewController setUser:self.conversation.user conversation:self.conversation];
+            [(TGModernUserViewController *)infoViewController setUser:self.conversation.user conversation:self.conversation];
             break;
         }
             
         case DialogTypeBroadcast:
-            infoViewController = [[BroadcastInfoViewController alloc] initWithFrame:self.view.bounds];
+            infoViewController = [[BroadcastInfoViewController alloc] initWithFrame:NSZeroRect];
             
             [(BroadcastInfoViewController *)infoViewController setBroadcast:self.conversation.broadcast];
         case DialogTypeChannel:
-            infoViewController = [[ChannelInfoViewController alloc] initWithFrame:self.view.bounds];
+            infoViewController = [[TGModernChannelInfoViewController alloc] initWithFrame:NSZeroRect];
             
-            [(ChannelInfoViewController *)infoViewController setChat:self.conversation.chat];
+            [(TGModernChannelInfoViewController *)infoViewController setChat:self.conversation.chat];
             
         default:
             break;

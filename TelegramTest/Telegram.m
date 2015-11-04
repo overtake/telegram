@@ -110,12 +110,19 @@ Telegram *TelegramInstance() {
 
 static int max_chat_users = 200;
 static int max_broadcast_users = 100;
+static int megagroup_size_max = 200;
 
 void setMaxChatUsers(int c) {
     max_chat_users = c;
 }
 
 int maxChatUsers() {
+    
+    
+#ifdef TGDEBUG
+    return 5;
+#endif
+    
     return max_chat_users;
 }
 
@@ -125,6 +132,15 @@ void setMaxBroadcastUsers(int b) {
 
 int maxBroadcastUsers() {
     return max_broadcast_users;
+}
+
+
+void setMegagroupSizeMax(int b) {
+    megagroup_size_max = b;
+}
+
+int megagroupSizeMax() {
+    return megagroup_size_max;
 }
 
 - (BOOL)canBeOnline {

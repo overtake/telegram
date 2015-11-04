@@ -11,8 +11,6 @@
 
 @interface TGConversationTableItem : TMRowItem
 
-@property (nonatomic,weak) TMTableView *table;
-
 @property (nonatomic,strong,readonly) TL_conversation *conversation;
 
 -(TL_localMessage *)message;

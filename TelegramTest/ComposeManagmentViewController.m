@@ -104,7 +104,7 @@
     [admins enumerateObjectsWithOptions:0 usingBlock:^(TL_channelParticipant *obj, NSUInteger idx, BOOL *stop) {
         
         TGUserContainerRowItem *item = [[TGUserContainerRowItem alloc] initWithUser:[[UsersManager sharedManager] find:obj.user_id]];
-        
+        item.type = SettingsRowItemTypeNone;
         item.height = 42;
         item.avatarHeight = 30;
         item.status = [obj isKindOfClass:[TL_channelParticipantCreator class]] ? NSLocalizedString(@"Channel.Creator", nil) : [obj isKindOfClass:[TL_channelParticipantModerator class]] ? NSLocalizedString(@"Channel.Moderator", nil) : [TL_channelParticipantEditor class] ? NSLocalizedString(@"Channel.Editor", nil) : @"";

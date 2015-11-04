@@ -123,6 +123,13 @@ static const TGTwoColors colors[] = {
     return avatarImageView;
 }
 
++ (instancetype) standartInfoAvatar {
+    TMAvatarImageView *avatarImageView = [[self alloc] initWithFrame:NSMakeRect(0, 0, 70, 70)];
+    avatarImageView.placeholder = [TMAvatarImageView placeholderImageBySize:avatarImageView.frame.size andColor:NSColorFromRGB(0xfafafa)];
+    [avatarImageView setFont:TGSystemLightFont(18)];
+    return avatarImageView;
+}
+
 - (id) initWithFrame:(NSRect)frameRect {
     self = [super initWithFrame:frameRect];
     if(self) {

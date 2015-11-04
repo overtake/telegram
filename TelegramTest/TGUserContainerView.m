@@ -10,12 +10,19 @@
 #import "TGUserContainerRowItem.h"
 #import "ITSwitch.h"
 @interface TGUserContainerView ()
+
+@property (nonatomic,strong) TMView *avatarContainerView;
+
 @property (nonatomic,strong) TMAvatarImageView *avatarImageView;
 @property (nonatomic,strong) TMStatusTextField *statusTextField;
 @property (nonatomic,strong) TMNameTextField *nameTextField;
 
 @property (nonatomic,strong) ITSwitch *switchView;
 @property (nonatomic,strong) NSImageView *selectImageView;
+
+@property (nonatomic,strong) TMView *separator;
+
+@property (nonatomic,strong) NSImageView *deleteMenuImageView;
 
 @end
 
@@ -27,18 +34,19 @@
         
         self.avatarImageView = [TMAvatarImageView standartMessageTableAvatar];
         
-        [self.avatarImageView setFrameOrigin:NSMakePoint(30, NSMinY(self.avatarImageView.frame))];
         
-        [self addSubview:self.avatarImageView];
+        _avatarContainerView = [[TMView alloc] initWithFrame:NSMakeRect(30, 0, NSWidth(_avatarImageView.frame), NSHeight(_avatarImageView.frame))];
+        
+        [_avatarContainerView addSubview:_avatarImageView];
+        
+        [self addSubview:_avatarContainerView];
         
         self.nameTextField = [[TMNameTextField alloc] init];
         [self.nameTextField setSelector:@selector(chatInfoTitle)];
-        [self.nameTextField setFrameOrigin:NSMakePoint(NSMaxX(self.avatarImageView.frame) + 10, 32)];
         [self addSubview:self.nameTextField];
         
         self.statusTextField = [[TMStatusTextField alloc] init];
         [self.statusTextField setSelector:@selector(statusForGroupInfo)];
-        [self.statusTextField setFrameOrigin:NSMakePoint(NSMaxX(self.avatarImageView.frame) + 10, 13)];
         [self addSubview:self.statusTextField];
         
         [_statusTextField setFont:TGSystemFont(12)];
@@ -52,18 +60,34 @@
         [self addSubview:_selectImageView];
         [self addSubview:_switchView];
         
+        _separator = [[TMView alloc] initWithFrame:NSZeroRect];
+        _separator.backgroundColor = DIALOG_BORDER_COLOR;
+        [self addSubview:_separator];
+        
+        _deleteMenuImageView = imageViewWithImage(image_ModernMenuDeleteIcon());
+        
+        [self addSubview:_deleteMenuImageView];
     }
     return self;
 }
 
+-(int)xOffset {
+    return [self rowItem].isEditable ? 40 + NSWidth(_deleteMenuImageView.frame) : 30;
+}
+
+-(void)setEditable:(BOOL)editable animated:(BOOL)animated {
+    
+    [self updateFramesWithAnimation:animated];
+    
+}
 
 - (void)drawRect:(NSRect)dirtyRect {
     [super drawRect:dirtyRect];
     
-    [NSColorFromRGB(0xe0e0e0) setFill];
-    
-    NSRectFill(NSMakeRect(NSMaxX(_avatarImageView.frame) + 10, 0, NSWidth(self.frame) - (NSMaxX(_avatarImageView.frame) + 40), 1));
-    
+}
+
+-(TGUserContainerRowItem *)item {
+    return (TGUserContainerRowItem *)[self rowItem];
 }
 
 -(void)redrawRow {
@@ -96,28 +120,50 @@
     } else {
         [super mouseDown:theEvent];
     }
-    
-    
+
 }
 
+
+-(void)updateFramesWithAnimation:(BOOL)animated {
+    
+    
+    
+    id statusF = animated ? [_statusTextField animator] : _statusTextField;
+    id nameF = animated ? [_nameTextField animator] : _nameTextField;
+    
+    id avatarF = animated ? [_avatarContainerView animator] : _avatarContainerView;
+    id separatorF = animated ? [_separator animator] : _separator;
+    
+    id deleteF = animated ? [_deleteMenuImageView animator] : _deleteMenuImageView;
+    
+    [statusF setFrameOrigin:NSMakePoint(self.xOffset + NSWidth(_avatarContainerView.frame) + 10, NSHeight(self.frame)/2 - NSHeight(self.statusTextField.frame) + 2)];
+    [nameF setFrameOrigin:NSMakePoint(self.xOffset + NSWidth(_avatarContainerView.frame) + 10, NSHeight(self.frame)/2 )];
+    
+    
+    [avatarF setFrameOrigin:NSMakePoint(self.xOffset, NSMinY(_avatarContainerView.frame))];
+    
+    [_selectImageView setFrameOrigin:NSMakePoint(NSWidth(self.frame) - self.xOffset - 30, NSMinY(_selectImageView.frame))];
+    [_switchView setFrameOrigin:NSMakePoint(NSWidth(self.frame) - self.xOffset - 30, NSMinY(_selectImageView.frame))];
+    
+   [separatorF setFrame:NSMakeRect(self.xOffset + 10 + NSWidth(_avatarContainerView.frame), 0, NSWidth(self.frame) - self.xOffset - 30 - 10 - NSWidth(_avatarContainerView.frame), DIALOG_BORDER_WIDTH)];
+    
+    [deleteF setFrameOrigin:NSMakePoint(self.item.isEditable ? 30 : - NSWidth(_deleteMenuImageView.frame), roundf((NSHeight(self.frame) - NSHeight(_deleteMenuImageView.frame))/2))];
+    
+    [(NSView *)deleteF setAlphaValue:self.item.isEditable ? 1 : 0];
+    
+    [_deleteMenuImageView setHidden:self.item.stateback == nil || ![self.item.stateback(self.item) boolValue]];
+}
 
 -(void)setFrameSize:(NSSize)newSize {
     [super setFrameSize:newSize];
     
-    TGUserContainerRowItem *item = (TGUserContainerRowItem *)[self rowItem];
-    
     [self.nameTextField setFrameSize:NSMakeSize(NSWidth(self.frame) - NSMaxX(self.avatarImageView.frame) - 20, NSHeight(self.nameTextField.frame))];
     [self.statusTextField setFrameSize:NSMakeSize(NSWidth(self.frame) - NSMaxX(self.avatarImageView.frame) - 20, NSHeight(self.statusTextField.frame))];
     
+    [self.avatarContainerView setCenteredYByView:self];
     
-    [self.statusTextField setFrameOrigin:NSMakePoint(NSMinX(self.statusTextField.frame), NSHeight(self.frame)/2 - NSHeight(self.statusTextField.frame) + 2)];
-    [self.nameTextField setFrameOrigin:NSMakePoint(NSMinX(self.nameTextField.frame), NSHeight(self.frame)/2 )];
+    [self updateFramesWithAnimation:NO];
     
-    
-    [_selectImageView setFrameOrigin:NSMakePoint(newSize.width - item.xOffset * 2, NSMinY(_selectImageView.frame))];
-    [_switchView setFrameOrigin:NSMakePoint(newSize.width - item.xOffset * 2, NSMinY(_selectImageView.frame))];
-    
-    [_avatarImageView setCenteredYByView:_avatarImageView.superview];
 }
 
 
@@ -137,8 +183,6 @@
     [self.nameTextField sizeToFit];
     
 }
-
-
 
 
 @end

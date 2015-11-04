@@ -228,6 +228,8 @@ CACHE_IMAGE(ModernConversationSecretAccessoryTimer);
 
 CACHE_IMAGE(ChannelShare);
 
+CACHE_IMAGE(ModernMenuDeleteIcon);
+
 @implementation ImageUtils
 
 NSImage *previewImageForDocument(NSString *path) {
