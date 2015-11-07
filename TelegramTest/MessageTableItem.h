@@ -57,7 +57,7 @@
 
 - (id) initWithObject:(id)object;
 + (id) messageItemFromObject:(id)object;
-
++ (NSArray *)messageTableItemsFromMessages:(NSArray *)input;
 - (NSSize)viewSize;
 - (void)setViewSize:(NSSize)size;
 

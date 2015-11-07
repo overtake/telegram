@@ -35,10 +35,29 @@
         [self addSubview:self.progressContainer];
         
         self.sourceType = ChatAvatarSourceGroup;
+        [self setFont:TGSystemLightFont(18)];
         
 
     }
     return self;
+}
+
+-(void)updateWithConversation:(TL_conversation *)conversation {
+    [super updateWithConversation:conversation];
+    
+    switch (conversation.type) {
+        case DialogTypeBroadcast:
+            _sourceType = ChatAvatarSourceBroadcast;
+            break;
+        case DialogTypeChannel:
+            _sourceType = ChatAvatarSourceChannel;
+            break;
+        case DialogTypeUser:
+            _sourceType = ChatAvatarSourceUser;
+            break;
+        default:
+            break;
+    }
 }
 
 - (void)drawRect:(NSRect)dirtyRect
@@ -126,7 +145,7 @@
         }]];
     } else {
         
-        if(self.sourceType == ChatAvatarSourceBroadcast || self.sourceType == ChatAvatarSourceGroup || (self.sourceType == ChatAvatarSourceUser && self.user.type == TLUserTypeSelf)) {
+        if(self.sourceType == ChatAvatarSourceBroadcast || self.sourceType == ChatAvatarSourceGroup  || self.sourceType == ChatAvatarSourceChannel || (self.sourceType == ChatAvatarSourceUser && self.user.type == TLUserTypeSelf)) {
             [menu addItem:[NSMenuItem menuItemWithTitle:NSLocalizedString(@"Profile.UpdatePhoto", nil) withBlock:^(id sender) {
                 [strongSelf showUpdateChatPhotoBox];
                 

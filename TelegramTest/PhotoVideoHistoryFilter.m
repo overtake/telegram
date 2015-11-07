@@ -19,22 +19,23 @@
 }
 
 
--(void)remoteRequest:(BOOL)next peer_id:(int)peer_id callback:(void (^)(id response))callback {
+-(void)remoteRequest:(BOOL)next peer_id:(int)peer_id callback:(void (^)(NSArray *, ChatHistoryState))callback {
     
-    self.request = [RPCRequest sendRequest:[TLAPI_messages_search createWithFlags:0 peer:[self.controller.conversation inputPeer] q:@"" filter:[TL_inputMessagesFilterPhotoVideo create] min_date:0 max_date:0 offset:0 max_id:self.controller.max_id limit:(int)self.controller.selectLimit] successHandler:^(RPCRequest *request, id response) {
+    self.request = [RPCRequest sendRequest:[TLAPI_messages_search createWithFlags:0 peer:[self.conversation inputPeer] q:@"" filter:[TL_inputMessagesFilterPhotoVideo create] min_date:0 max_date:0 offset:0 max_id:self.min_id limit:(int)self.controller.selectLimit] successHandler:^(RPCRequest *request, TL_messages_messages *response) {
         
+        [SharedManager proccessGlobalResponse:response];
         
         if(callback) {
-            callback(response);
+            callback(response.messages,response.messages.count < self.controller.selectLimit ? ChatHistoryStateFull : ChatHistoryStateRemote);
         }
         
     } errorHandler:^(RPCRequest *request, RpcError *error) {
         
         if(callback) {
-            callback(nil);
+            callback(nil,ChatHistoryStateRemote);
         }
         
-    } timeout:10 queue:[ASQueue globalQueue].nativeQueue];
+    } timeout:0 queue:[ASQueue globalQueue].nativeQueue];
     
 }
 

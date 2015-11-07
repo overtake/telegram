@@ -22,6 +22,8 @@
 #import "ChatAdminsViewController.h"
 #import "ComposeActionBlackListBehavior.h"
 #import "ComposeActionChannelMembersBehavior.h"
+#import "ComposeChangeChannelDescriptionViewController.h"
+#import "ComposeActionChangeChannelAboutBehavior.h"
 @interface TGModernChannelInfoViewController ()
 @property (nonatomic,strong) TGSettingsTableView *tableView;
 
@@ -53,6 +55,8 @@
     [super viewWillAppear:animated];
     
     self.action.editable = NO;
+    
+    [self updateActionNavigation];
     
     [self configure];
     
@@ -118,6 +122,9 @@
  */
 
 -(void)configure {
+    
+    [self.doneButton setHidden:!_chat.isManager || !_chat.isAdmin];
+    
     [_tableView removeAllItems:YES];
     
     _headerItem = [[TGProfileHeaderRowItem alloc] initWithObject:_conversation];
@@ -146,7 +153,18 @@
         }
         
         
-        if(_chat.isManager) {
+        if(_chat.chatFull.about.length > 0) {
+            TGProfileParamItem *aboutItem = [[TGProfileParamItem alloc] initWithHeight:30];
+            
+            [aboutItem setHeader:NSLocalizedString(@"Profile.About", nil) withValue:_chat.chatFull.about];
+            
+            [_tableView addItem:aboutItem tableRedraw:YES];
+            
+            [_tableView addItem:[[TGGeneralRowItem alloc] initWithHeight:20] tableRedraw:YES];
+        }
+        
+        
+        if(_chat.isManager || _chat.isAdmin) {
             adminsItem = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeNext callback:^(TGGeneralRowItem *item) {
                 
                 ComposeManagmentViewController *viewController = [[ComposeManagmentViewController alloc] initWithFrame:NSZeroRect];
@@ -195,6 +213,18 @@
         
         
         _mediaItem = [[TGSProfileMediaRowItem alloc] initWithObject:_conversation];
+        
+        weak();
+        [_mediaItem setCallback:^(TGGeneralRowItem *item) {
+            
+            TMCollectionPageController *viewController = [[TMCollectionPageController alloc] initWithFrame:NSZeroRect];
+            
+            [viewController setConversation:weakSelf.conversation];
+            
+            [weakSelf.navigationViewController pushViewController:viewController animated:YES];
+            
+        }];
+        
         _mediaItem.height = 50;
         
         [_tableView addItem:_mediaItem tableRedraw:YES];
@@ -220,6 +250,12 @@
         
         GeneralSettingsRowItem *descriptionItem = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeNext callback:^(TGGeneralRowItem *item) {
             
+            ComposeChangeChannelDescriptionViewController *viewController = [[ComposeChangeChannelDescriptionViewController alloc] init];
+            
+            [viewController setAction:[[ComposeAction alloc] initWithBehaviorClass:[ComposeActionChangeChannelAboutBehavior class] filter:nil object:_chat]];
+            
+            [self.navigationViewController pushViewController:viewController animated:YES];
+            
         } description:NSLocalizedString(@"Compose.ChannelAboutPlaceholder", nil) subdesc:_chat.chatFull.about height:42 stateback:nil];
         
         [_tableView addItem:descriptionItem tableRedraw:YES];
@@ -242,7 +278,7 @@
         
         [_tableView addItem:[[TGGeneralRowItem alloc] initWithHeight:20] tableRedraw:YES];
         
-        if(_chat.isCreator) {
+        if(_chat.isAdmin) {
             GeneralSettingsRowItem *deleteChannelItem = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeNone callback:^(TGGeneralRowItem *item) {
                 
                 [self.navigationViewController.messagesViewController deleteDialog:_conversation];
@@ -255,6 +291,23 @@
             [_tableView addItem:deleteChannelItem tableRedraw:YES];
         }
         
+    }
+    
+    if(!_chat.isManager && !_chat.isAdmin) {
+        
+        [_tableView addItem:[[TGGeneralRowItem alloc] initWithHeight:20] tableRedraw:YES];
+        
+        GeneralSettingsRowItem *deleteChannelItem = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeNone callback:^(TGGeneralRowItem *item) {
+            
+            [self.navigationViewController.messagesViewController deleteDialog:_conversation];
+            
+            
+        } description:NSLocalizedString(@"Profile.LeaveChannel", nil) height:42 stateback:nil];
+        
+        deleteChannelItem.textColor = [NSColor redColor];
+        
+        [_tableView addItem:deleteChannelItem tableRedraw:YES];
+
     }
     
     

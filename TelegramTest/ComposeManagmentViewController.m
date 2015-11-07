@@ -34,7 +34,6 @@
     
     
     
-    
     [self setLoading:YES];
     
     [RPCRequest sendRequest:[TLAPI_channels_getParticipants createWithChannel:[self.action.object inputPeer] filter:[TL_channelParticipantsAdmins create] offset:0 limit:100] successHandler:^(id request, TL_channels_channelParticipants *response) {
@@ -172,6 +171,8 @@
     [self setCenterBarViewText:NSLocalizedString(@"Channel.Managment", nil)];
     
     [self.doneButton setStringValue:@""];
+    
+    self.action = self.action;
 }
 
 @end

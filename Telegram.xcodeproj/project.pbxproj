@@ -737,6 +737,13 @@
 		C2CE53DD1BE9275700BBEF5F /* ComposeActionInfoProfileBehavior.m in Sources */ = {isa = PBXBuildFile; fileRef = C2CE53DC1BE9275700BBEF5F /* ComposeActionInfoProfileBehavior.m */; settings = {ASSET_TAGS = (); }; };
 		C2CE53E01BE938AC00BBEF5F /* TGModernChatInfoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C2CE53DF1BE938AC00BBEF5F /* TGModernChatInfoViewController.m */; settings = {ASSET_TAGS = (); }; };
 		C2CE53E31BEA75B800BBEF5F /* TGModernChannelInfoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C2CE53E21BEA75B800BBEF5F /* TGModernChannelInfoViewController.m */; settings = {ASSET_TAGS = (); }; };
+		C2CE53E61BEB4FAD00BBEF5F /* ComposeChangeChannelDescriptionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C2CE53E51BEB4FAD00BBEF5F /* ComposeChangeChannelDescriptionViewController.m */; settings = {ASSET_TAGS = (); }; };
+		C2CE53E91BEB543A00BBEF5F /* TGGeneralInputTextRowView.m in Sources */ = {isa = PBXBuildFile; fileRef = C2CE53E81BEB543A00BBEF5F /* TGGeneralInputTextRowView.m */; settings = {ASSET_TAGS = (); }; };
+		C2CE53EC1BEB5ACF00BBEF5F /* TGGeneralInputRowItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C2CE53EB1BEB5ACF00BBEF5F /* TGGeneralInputRowItem.m */; settings = {ASSET_TAGS = (); }; };
+		C2CE53EF1BEB748900BBEF5F /* ComposeActionChangeChannelAboutBehavior.m in Sources */ = {isa = PBXBuildFile; fileRef = C2CE53EE1BEB748900BBEF5F /* ComposeActionChangeChannelAboutBehavior.m */; settings = {ASSET_TAGS = (); }; };
+		C2CE53F21BECC3A700BBEF5F /* MegagroupChatFilter.m in Sources */ = {isa = PBXBuildFile; fileRef = C2CE53F11BECC3A700BBEF5F /* MegagroupChatFilter.m */; settings = {ASSET_TAGS = (); }; };
+		C2CE53F51BECE46600BBEF5F /* MegagroupHistoryController.m in Sources */ = {isa = PBXBuildFile; fileRef = C2CE53F41BECE46600BBEF5F /* MegagroupHistoryController.m */; settings = {ASSET_TAGS = (); }; };
+		C2CE53F81BED06BD00BBEF5F /* ChannelCommonFilter.m in Sources */ = {isa = PBXBuildFile; fileRef = C2CE53F71BED06BD00BBEF5F /* ChannelCommonFilter.m */; settings = {ASSET_TAGS = (); }; };
 		C2D235B91A2F2C5600765BA1 /* TGModernTypingManager.m in Sources */ = {isa = PBXBuildFile; fileRef = C2D235B81A2F2C5600765BA1 /* TGModernTypingManager.m */; };
 		C2D235BC1A2FA6F400765BA1 /* TGSendTypingManager.m in Sources */ = {isa = PBXBuildFile; fileRef = C2D235BB1A2FA6F400765BA1 /* TGSendTypingManager.m */; };
 		C2D4B7401AFCD36A0035B4E4 /* TGModalView.m in Sources */ = {isa = PBXBuildFile; fileRef = C2D4B73F1AFCD36A0035B4E4 /* TGModalView.m */; };
@@ -2353,6 +2360,20 @@
 		C2CE53DF1BE938AC00BBEF5F /* TGModernChatInfoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGModernChatInfoViewController.m; sourceTree = "<group>"; };
 		C2CE53E11BEA75B800BBEF5F /* TGModernChannelInfoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGModernChannelInfoViewController.h; sourceTree = "<group>"; };
 		C2CE53E21BEA75B800BBEF5F /* TGModernChannelInfoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGModernChannelInfoViewController.m; sourceTree = "<group>"; };
+		C2CE53E41BEB4FAD00BBEF5F /* ComposeChangeChannelDescriptionViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ComposeChangeChannelDescriptionViewController.h; sourceTree = "<group>"; };
+		C2CE53E51BEB4FAD00BBEF5F /* ComposeChangeChannelDescriptionViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ComposeChangeChannelDescriptionViewController.m; sourceTree = "<group>"; };
+		C2CE53E71BEB543A00BBEF5F /* TGGeneralInputTextRowView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGGeneralInputTextRowView.h; sourceTree = "<group>"; };
+		C2CE53E81BEB543A00BBEF5F /* TGGeneralInputTextRowView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGGeneralInputTextRowView.m; sourceTree = "<group>"; };
+		C2CE53EA1BEB5ACF00BBEF5F /* TGGeneralInputRowItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGGeneralInputRowItem.h; sourceTree = "<group>"; };
+		C2CE53EB1BEB5ACF00BBEF5F /* TGGeneralInputRowItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGGeneralInputRowItem.m; sourceTree = "<group>"; };
+		C2CE53ED1BEB748900BBEF5F /* ComposeActionChangeChannelAboutBehavior.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ComposeActionChangeChannelAboutBehavior.h; sourceTree = "<group>"; };
+		C2CE53EE1BEB748900BBEF5F /* ComposeActionChangeChannelAboutBehavior.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ComposeActionChangeChannelAboutBehavior.m; sourceTree = "<group>"; };
+		C2CE53F01BECC3A700BBEF5F /* MegagroupChatFilter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MegagroupChatFilter.h; sourceTree = "<group>"; };
+		C2CE53F11BECC3A700BBEF5F /* MegagroupChatFilter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MegagroupChatFilter.m; sourceTree = "<group>"; };
+		C2CE53F31BECE46600BBEF5F /* MegagroupHistoryController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MegagroupHistoryController.h; sourceTree = "<group>"; };
+		C2CE53F41BECE46600BBEF5F /* MegagroupHistoryController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MegagroupHistoryController.m; sourceTree = "<group>"; };
+		C2CE53F61BED06BD00BBEF5F /* ChannelCommonFilter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChannelCommonFilter.h; sourceTree = "<group>"; };
+		C2CE53F71BED06BD00BBEF5F /* ChannelCommonFilter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChannelCommonFilter.m; sourceTree = "<group>"; };
 		C2D235B71A2F2C5600765BA1 /* TGModernTypingManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGModernTypingManager.h; sourceTree = "<group>"; };
 		C2D235B81A2F2C5600765BA1 /* TGModernTypingManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGModernTypingManager.m; sourceTree = "<group>"; };
 		C2D235BA1A2FA6F400765BA1 /* TGSendTypingManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGSendTypingManager.h; sourceTree = "<group>"; };
@@ -4486,6 +4507,10 @@
 				C2B669851BA5571C004AF678 /* TGSettingsTableView.m */,
 				C2B669871BA5591F004AF678 /* TGGeneralRowItem.h */,
 				C2B669881BA5591F004AF678 /* TGGeneralRowItem.m */,
+				C2CE53E71BEB543A00BBEF5F /* TGGeneralInputTextRowView.h */,
+				C2CE53E81BEB543A00BBEF5F /* TGGeneralInputTextRowView.m */,
+				C2CE53EA1BEB5ACF00BBEF5F /* TGGeneralInputRowItem.h */,
+				C2CE53EB1BEB5ACF00BBEF5F /* TGGeneralInputRowItem.m */,
 			);
 			name = general;
 			sourceTree = "<group>";
@@ -5096,6 +5121,10 @@
 			children = (
 				C2CE53DB1BE9275700BBEF5F /* ComposeActionInfoProfileBehavior.h */,
 				C2CE53DC1BE9275700BBEF5F /* ComposeActionInfoProfileBehavior.m */,
+				C2CE53E41BEB4FAD00BBEF5F /* ComposeChangeChannelDescriptionViewController.h */,
+				C2CE53E51BEB4FAD00BBEF5F /* ComposeChangeChannelDescriptionViewController.m */,
+				C2CE53ED1BEB748900BBEF5F /* ComposeActionChangeChannelAboutBehavior.h */,
+				C2CE53EE1BEB748900BBEF5F /* ComposeActionChangeChannelAboutBehavior.m */,
 			);
 			name = compose;
 			sourceTree = "<group>";
@@ -5393,6 +5422,10 @@
 				C20A5EF21B8CEE8E007F4B49 /* ChannelFilter.m */,
 				C20A5F5D1B9330CD007F4B49 /* ChannelImportantFilter.h */,
 				C20A5F5E1B9330CD007F4B49 /* ChannelImportantFilter.m */,
+				C2CE53F01BECC3A700BBEF5F /* MegagroupChatFilter.h */,
+				C2CE53F11BECC3A700BBEF5F /* MegagroupChatFilter.m */,
+				C2CE53F61BED06BD00BBEF5F /* ChannelCommonFilter.h */,
+				C2CE53F71BED06BD00BBEF5F /* ChannelCommonFilter.m */,
 			);
 			name = filter;
 			sourceTree = "<group>";
@@ -5797,6 +5830,8 @@
 				C20A5F581B8F8B2B007F4B49 /* TGHistoryResponse.m */,
 				C2FF82E61B9F28D900DE2455 /* ChannelHistoryController.h */,
 				C2FF82E71B9F28D900DE2455 /* ChannelHistoryController.m */,
+				C2CE53F31BECE46600BBEF5F /* MegagroupHistoryController.h */,
+				C2CE53F41BECE46600BBEF5F /* MegagroupHistoryController.m */,
 			);
 			name = message_controllers;
 			sourceTree = "<group>";
@@ -6275,6 +6310,7 @@
 				C2CE53E01BE938AC00BBEF5F /* TGModernChatInfoViewController.m in Sources */,
 				C2E5A0611BABF33C00C1BCA1 /* TL_localMessageService_old34.m in Sources */,
 				C28261E9199291EF004AC73E /* TL_broadcast.m in Sources */,
+				C2CE53F21BECC3A700BBEF5F /* MegagroupChatFilter.m in Sources */,
 				0AAAE59218CA271600A2F9F1 /* MessagesBottomView.m in Sources */,
 				C248F3BF19BE03F600BF658E /* opusenc.c in Sources */,
 				C2233DB21A0818910056594F /* MessageCellDescriptionView.m in Sources */,
@@ -6414,6 +6450,7 @@
 				C297955819EC29EA00BE893E /* GeneralSettingsRowView.m in Sources */,
 				0AB43BA818D4D60B00FB805A /* MessageInputGrowingTextView.m in Sources */,
 				C248F3E419BE08A800BF658E /* lpc.c in Sources */,
+				C2CE53EC1BEB5ACF00BBEF5F /* TGGeneralInputRowItem.m in Sources */,
 				C2A5BFF318E02BAB0021BE68 /* TGAudioPlayer.m in Sources */,
 				C23298CA18CF1A34000826E5 /* TL_conversation.m in Sources */,
 				0A9EDC5F1897BA0E0037E1BC /* RBLTableView.m in Sources */,
@@ -6448,6 +6485,7 @@
 				C268C19F19F13721007F836A /* MessagetableCellAudioController.m in Sources */,
 				C274C3AC1AC083AA000DFDE4 /* SearchHashtagItem.m in Sources */,
 				0AAAE56F18C7821900A2F9F1 /* UserInfoShortButtonView.m in Sources */,
+				C2CE53E61BEB4FAD00BBEF5F /* ComposeChangeChannelDescriptionViewController.m in Sources */,
 				C2C6D9661A111B3E001EF8A2 /* TGPhotoViewerItem.m in Sources */,
 				C2D4B8681AFCE8F90035B4E4 /* YapDatabaseManager.m in Sources */,
 				C2CE53DD1BE9275700BBEF5F /* ComposeActionInfoProfileBehavior.m in Sources */,
@@ -6628,6 +6666,7 @@
 				C274C3E81ACAB97D000DFDE4 /* TGNotifyViewController.m in Sources */,
 				0AB43BC318D8A4AC00FB805A /* CNGridView.m in Sources */,
 				0A6D098E19535E8500A9AC64 /* NSImageCategory.m in Sources */,
+				C2CE53E91BEB543A00BBEF5F /* TGGeneralInputTextRowView.m in Sources */,
 				C2D825EC1B6A700300434D37 /* TGEmbedModalView.m in Sources */,
 				C274C3D91AC5A683000DFDE4 /* TGPasswordEmailViewController.m in Sources */,
 				C2CE53E31BEA75B800BBEF5F /* TGModernChannelInfoViewController.m in Sources */,
@@ -6647,6 +6686,7 @@
 				C247015919839A4B007AB338 /* TGTimerTarget.m in Sources */,
 				C2CBF6CE1AFBC5C0006BF90A /* RPC.m in Sources */,
 				0AAAE57D18C8CBB600A2F9F1 /* TMAnimations.m in Sources */,
+				C2CE53EF1BEB748900BBEF5F /* ComposeActionChangeChannelAboutBehavior.m in Sources */,
 				C2201A0D1934E6D600C0E441 /* DownloadPart.m in Sources */,
 				C274C41E1ACC09B0000DFDE4 /* XCDYouTubePlayerScript.m in Sources */,
 				C2AC8DAE1A77E51F00655B9D /* TGSharedMediaFileThumbnailView.m in Sources */,
@@ -6697,6 +6737,7 @@
 				0A6D099319535E8500A9AC64 /* NSTextFieldCategory.m in Sources */,
 				0A6B6E331903FED1005291FE /* ITSwitch.m in Sources */,
 				0AF4F49E189AA378004BA4DF /* TMTypingObject.m in Sources */,
+				C2CE53F81BED06BD00BBEF5F /* ChannelCommonFilter.m in Sources */,
 				C26F7EB21A56E5B0001D1AE2 /* RequestKeySecretSenderItem.m in Sources */,
 				0AB43BB018D84FA200FB805A /* TMImagesSearchController.m in Sources */,
 				C2531F541964412700F7D7A2 /* NSTextView+EmojiExtension.m in Sources */,
@@ -6900,6 +6941,7 @@
 				0A6D099019535E8500A9AC64 /* NSMenuCategory.m in Sources */,
 				0AB8F2AF194866050074E4E7 /* MapPanel.m in Sources */,
 				C268C18619F0519C007F836A /* POPAnimation.mm in Sources */,
+				C2CE53F51BECE46600BBEF5F /* MegagroupHistoryController.m in Sources */,
 				C2B326081A24F77E0012DE34 /* PhoneChangeAlertController.m in Sources */,
 				C297955119EC267200BE893E /* GeneralSettingsViewController.m in Sources */,
 				CE84549A18244F1600E73DF7 /* TelegramWindow.m in Sources */,

@@ -120,7 +120,7 @@ int maxChatUsers() {
     
     
 #ifdef TGDEBUG
-    return 5;
+    return 2;
 #endif
     
     return max_chat_users;

@@ -7,7 +7,7 @@
 //
 
 #import "HistoryFilter.h"
-
-@interface ChannelFilter : HistoryFilter
+#import "ChannelCommonFilter.h"
+@interface ChannelFilter : ChannelCommonFilter
 -(void)fillGroupHoles:(NSArray *)messages bottom:(BOOL)bottom;
 @end

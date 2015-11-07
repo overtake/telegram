@@ -23,11 +23,9 @@
     if (self) {
         [self setAutoresizingMask:NSViewWidthSizable];
         self.textView = [[TGCTextView alloc] initWithFrame:NSZeroRect];
-        [self.textView setAutoresizingMask:NSViewWidthSizable];
         [self.textView setEditable:YES];
         [self addSubview:self.textView];
-    
-        
+            
         _headerField = [TMTextField defaultTextField];
         
         [_headerField setFont:TGSystemFont(13)];
@@ -54,15 +52,13 @@
 
 
 
-
-
 -(void)setFrameSize:(NSSize)newSize {
     [super setFrameSize:newSize];
     
     int totalHeight = NSHeight(_textView.frame) + NSHeight(_headerField.frame);
     
     [_textView setFrameOrigin:NSMakePoint(self.item.xOffset, roundf((newSize.height - totalHeight)/2))];
-    [_headerField setFrameOrigin:NSMakePoint(self.item.xOffset, roundf((newSize.height - totalHeight)/2 + NSHeight(_textView.frame)))];
+    [_headerField setFrameOrigin:NSMakePoint(self.item.xOffset - 2, roundf((newSize.height - totalHeight)/2 + NSHeight(_textView.frame)))];
     
 }
 

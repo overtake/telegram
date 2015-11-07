@@ -123,7 +123,7 @@
     NSSize s = [item.header sizeForTextFieldForWidth:NSWidth(self.frame) - item.xOffset*2];
     
     [self.textField setFrameSize:NSMakeSize(NSWidth(self.frame) - item.xOffset*2, s.height )];
-    [self.textField setFrameOrigin:NSMakePoint(item.xOffset, item.isFlipped ? NSHeight(self.frame) - s.height : 2 )];
+    [self.textField setFrameOrigin:NSMakePoint(item.xOffset - 2, item.isFlipped ? NSHeight(self.frame) - s.height : 2 )];
 }
 
 - (void)drawRect:(NSRect)dirtyRect {

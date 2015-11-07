@@ -377,6 +377,42 @@
         
         GeneralSettingsRowItem *upgradeToMegagroup = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeNone callback:^(TGGeneralRowItem *item) {
             
+            confirm(NSLocalizedString(@"Modern.Chat.UpgradeConfirmHeader", nil), NSLocalizedString(@"Modern.Chat.UpgradeConfirmDescription", nil), ^{
+                
+                [self showModalProgress];
+                
+                [RPCRequest sendRequest:[TLAPI_messages_migrateChat createWithChat_id:_chat.n_id] successHandler:^(id request, id response) {
+                    
+                    
+                    
+                    TLChat *chat = [[ChatsManager sharedManager] find:_chat.migrated_to.channel_id];
+                    
+                    if(chat) {
+                        
+                        [ASQueue dispatchOnMainQueue:^{
+                            [self.navigationViewController.messagesViewController setCurrentConversation:chat.dialog];
+                            [self.navigationViewController gotoViewController:self.navigationViewController.messagesViewController];
+                            
+                        }];
+                        
+                    }
+                    
+                    [ASQueue dispatchOnMainQueue:^{
+                        [self hideModalProgressWithSuccess];
+                    }];
+                    
+                    
+                } errorHandler:^(id request, RpcError *error) {
+                    [self hideModalProgress];
+                    
+                    alert(appName(), NSLocalizedString(@"Alert.somethingIsWrong", nil));
+                } timeout:0 queue:[ASQueue globalQueue].nativeQueue];
+                
+            }, ^{
+                
+            });
+            
+            
         } description:NSLocalizedString(@"Modern.Chat.UpgrateToMegagroup", nil) height:42 stateback:nil];
         upgradeToMegagroup.textColor = BLUE_UI_COLOR;
         
@@ -385,8 +421,11 @@
         
         upgradeHeaderItem.autoHeight = YES;
         
+        
+        [_tableView insert:[[TGGeneralRowItem alloc] initWithHeight:20] atIndex:startIdx tableRedraw:YES];
         [_tableView insert:upgradeHeaderItem atIndex:startIdx tableRedraw:YES];
         [_tableView insert:upgradeToMegagroup atIndex:startIdx tableRedraw:YES];
+        
     } else if(addMembersItem) {
         [_tableView insert:[[TGGeneralRowItem alloc] initWithHeight:20] atIndex:startIdx tableRedraw:YES];
         [_tableView insert:addMembersItem atIndex:startIdx tableRedraw:YES];
@@ -436,20 +475,15 @@
         }
     };
     
+     updateBlock();
     
     [RPCRequest sendRequest:[TLAPI_messages_deleteChatUser createWithChat_id:_chat.n_id user_id:participant.user.inputUser] successHandler:^(RPCRequest *request, id response) {
         
-        updateBlock();
-        
     } errorHandler:^(RPCRequest *request, RpcError *error) {
         
-        if([error.error_msg isEqualToString:@"USER_NOT_PARTICIPANT"]) {
-            updateBlock();
-        } else {
-            [[FullChatManager sharedManager] performLoad:_chat.n_id callback:^(TLChatFull *fullChat) {
-                [self drawParticipants];
-            }];
-        }
+        [[FullChatManager sharedManager] performLoad:_chat.n_id callback:^(TLChatFull *fullChat) {
+            [self drawParticipants];
+        }];
 
     } timeout:0 queue:[ASQueue globalQueue].nativeQueue];
 }

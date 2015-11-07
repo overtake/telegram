@@ -157,7 +157,8 @@ extern NSString *const RECENT_SEARCH;
 
 
 
--(NSArray *)loadMessages:(int)conversationId localMaxId:(int)localMaxId limit:(int)limit next:(BOOL)next maxDate:(int)maxDate filterMask:(int)mask;
+-(TGHistoryResponse *)loadMessages:(int)conversationId min_id:(int)min_id max_id:(int)max_id minDate:(int)minDate maxDate:(int)maxDate limit:(int)limit next:(BOOL)next  filterMask:(int)mask isChannel:(BOOL)isChannel;
+
 -(TGHistoryResponse *)loadChannelMessages:(int)conversationId min_id:(int)min_id max_id:(int)max_id minDate:(int)minDate maxDate:(int)maxDate limit:(int)limit filterMask:(int)mask important:(BOOL)important next:(BOOL)next;
 
 -(void)invalidateChannelMessagesWithPts:(int)pts;
@@ -253,5 +254,5 @@ extern NSString *const RECENT_SEARCH;
 -(void)removeHole:(TGMessageHole *)hole;
 -(NSArray *)groupHoles:(int)peer_id min:(int)min max:(int)max;
 -(void)addHolesAroundMessage:(TL_localMessage *)message;
--(int)syncedMessageIdWithChannelId:(int)channel_id important:(BOOL)important latest:(BOOL)latest;
+-(int)syncedMessageIdWithPeerId:(int)peer_id important:(BOOL)important latest:(BOOL)latest isChannel:(BOOL)isChannel;
 @end

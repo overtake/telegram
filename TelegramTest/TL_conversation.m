@@ -101,7 +101,7 @@
     }
     
     if(self.type == DialogTypeChat) {
-        return !(self.chat.type != TLChatTypeNormal || self.chat.left);
+        return !(self.chat.type != TLChatTypeNormal || self.chat.left || self.chat.isDeactivated);
     }
     
     if(self.type == DialogTypeUser && self.user.isBot)
@@ -158,6 +158,9 @@
             
         }
         
+        if(self.chat.isDeactivated) {
+            return NSLocalizedString(@"Conversation.Action.ChatDeactivated", nil);
+        }
         
         if(self.chat.isKicked || self.type == TLChatTypeForbidden) {
             return NSLocalizedString(@"Conversation.Action.YouKickedGroup", nil);
@@ -215,7 +218,7 @@
     if(self.type == DialogTypeSecretChat)
         return YES;
     
-    return !self.isInvisibleChannel && self.last_message_date > 0  && !self.fake;
+    return !self.isInvisibleChannel && self.last_message_date > 0  && !self.fake && (!self.chat.isDeactivated);
 }
 
 //-(BOOL)isInvisibleChannel {

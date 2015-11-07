@@ -62,7 +62,7 @@
     [filters enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
         
       //  dispatch_after_seconds(idx, ^{
-            [RPCRequest sendRequest:[TLAPI_messages_search createWithFlags:0 peer:conversation.inputPeer q:@"" filter:obj min_date:0 max_date:0 offset:0 max_id:0 limit:10000] successHandler:^(RPCRequest *request, TL_messages_messages *response) {
+            [RPCRequest sendRequest:[TLAPI_messages_search createWithFlags:0 peer:conversation.inputPeer q:@"" filter:obj min_date:0 max_date:0 offset:0 max_id:0 limit:0] successHandler:^(RPCRequest *request, TL_messages_messages *response) {
                 
                 
                 NSString *property = properties[idx];

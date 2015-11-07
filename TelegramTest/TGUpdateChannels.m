@@ -584,7 +584,7 @@
                         
                         // insert holes
                         {
-                            int maxSyncedId = [[Storage manager] syncedMessageIdWithChannelId:conversation.peer_id important:NO latest:YES];
+                            int maxSyncedId = [[Storage manager] syncedMessageIdWithPeerId:conversation.peer_id important:NO latest:YES isChannel:YES];
                             
                             if(importantMsg.n_id > maxSyncedId && maxSyncedId > 0) {
                                 longHole = [[TGMessageHole alloc] initWithUniqueId:-rand_int() peer_id:importantMsg.peer_id min_id:maxSyncedId max_id:importantMsg.n_id date:0 count:0];

@@ -253,7 +253,9 @@
                 
                 msgText = NSLocalizedString(@"MessageAction.Service.ChannelCreated", nil);
                 
-            } 
+            } else if([action isKindOfClass:[TL_messageActionChannelMigrateFrom class]]) {
+                msgText = [NSString stringWithFormat:NSLocalizedString(@"MessageAction.Service.ChannelMigrated", nil),message.action.title];
+            }
 
             
             if(chatUserNameString)
@@ -383,7 +385,12 @@
         
     } else if([action isKindOfClass:[TL_messageActionChannelCreate class]]) {
          actionText = NSLocalizedString(@"MessageAction.Service.ChannelCreated", nil);
-    }     
+    }  else if([action isKindOfClass:[TL_messageActionChannelMigrateFrom class]]) {
+        actionText = [NSString stringWithFormat:NSLocalizedString(@"MessageAction.Service.ChannelMigrated", nil),message.action.title];
+    }if([action isKindOfClass:[TL_messageActionChatMigrateTo class]]) {
+        actionText = [NSString stringWithFormat:NSLocalizedString(@"MessageAction.Service.ChatMigrated", nil)];
+        user = nil;
+    }
     static float size = 11.5;
     
     if([action isKindOfClass:[TL_messageActionBotDescription class]]) {

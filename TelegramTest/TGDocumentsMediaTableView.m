@@ -82,7 +82,7 @@
     if(_conversation) {
         _loader = [[ChatHistoryController alloc] initWithController:self historyFilter:[self.tableView historyFilter]];
         
-        [_loader setPrevState:ChatHistoryStateFull];
+        [_loader.filter setState:ChatHistoryStateFull next:NO];
     } else {
         [_loader drop:YES];
         _loader = nil;

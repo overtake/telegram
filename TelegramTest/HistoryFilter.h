@@ -36,39 +36,66 @@ typedef enum {
     ChatHistoryStateFull = 3
 } ChatHistoryState;
 
+
+
+@property (nonatomic,assign) ChatHistoryState prevState;
+@property (nonatomic,assign) ChatHistoryState nextState;
+
 @property (nonatomic,weak) ChatHistoryController *controller;
+@property (nonatomic,strong) TL_conversation *conversation;
 
 
 
+-(int)max_id;
+-(int)min_id;
+-(int)server_max_id;
+-(int)server_min_id;
+-(int)minDate;
+-(int)maxDate;
+
+
+-(int)selectLimit;
+
+-(NSArray *)filterAndAdd:(NSArray *)items latest:(BOOL)latest;
+-(NSArray *)proccessResponse:(NSArray *)result state:(ChatHistoryState)state next:(BOOL)next;
 
 -(TGMessageHole *)holeWithNext:(BOOL)next;
 -(void)setHole:(TGMessageHole *)hole withNext:(BOOL)next;
 
--(id)initWithController:(ChatHistoryController *)controller;
+-(id)initWithController:(ChatHistoryController *)controller conversation:(TL_conversation *)conversation;
 
+-(NSMutableArray *)messageItems;
+-(NSMutableDictionary *)messageKeys;
 
-
-+(void)removeAllItems:(int)peerId;
-
+-(NSArray *)selectAllItems;
+-(NSArray *)sortItems:(NSArray *)sort;
+-(int)posAtMessage:(TL_localMessage *)message;
 
 -(int)type;
 +(int)type;
 
-+(void)drop;
-
+-(BOOL)checkState:(ChatHistoryState)state next:(BOOL)next;
+-(ChatHistoryState)stateWithNext:(BOOL)next;
+-(void)setState:(ChatHistoryState)state next:(BOOL)next;
 -(int)additionSenderFlags;
+
+-(int)peer_id;
 
 -(TGMessageHole *)proccessAndGetHoleWithHole:(TGMessageHole *)hole next:(BOOL)next messages:(NSArray *)messages;
 
 
--(NSArray *)storageRequest:(BOOL)next;
--(void)remoteRequest:(BOOL)next peer_id:(int)peer_id callback:(void (^)(id response))callback;
+-(void)remoteRequest:(BOOL)next peer_id:(int)peer_id callback:(void (^)(NSArray *response,ChatHistoryState state))callback;
 
 -(BOOL)confirmHoleWithNext:(BOOL)next;
 
 
+-(NSArray *)storageRequest:(BOOL)next state:(ChatHistoryState *)state;
+
 -(void)remoteRequest:(BOOL)next hole:(TGMessageHole *)hole callback:(void (^)(id response,ChatHistoryState state))callback;
 -(void)remoteRequest:(BOOL)next max_id:(int)max_id hole:(TGMessageHole *)hole callback:(void (^)(id response,ChatHistoryState state))callback;
 -(void)request:(BOOL)next callback:(void (^)(NSArray *response, ChatHistoryState state))callback;
+
+
+-(void)fillGroupHoles:(NSArray *)messages bottom:(BOOL)bottom;
 
 @end

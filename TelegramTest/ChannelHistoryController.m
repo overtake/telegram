@@ -12,6 +12,7 @@
 
 #import "ChannelImportantFilter.h"
 #import "ChannelFilter.h"
+#import "MegagroupChatFilter.h"
 @interface ChannelHistoryController () <TGChannelPollingDelegate>
 @property (nonatomic,assign) BOOL pollingIsStarted;
 @end
@@ -50,41 +51,52 @@ static TGChannelsPolling *channelPolling;
     
     [self.queue dispatchOnQueue:^{
         
-        if([self checkState:ChatHistoryStateFull next:next] || self.isProccessing) {
+        
+         HistoryFilter *filter = [self filterWithNext:next];
+        
+        if([filter checkState:ChatHistoryStateFull next:next] || self.isProccessing) {
             return;
         }
         
-        
         self.proccessing = YES;
         
-        
-       // ChannelHistoryController* __weak weakSelf = self;
        
-        [self.filter request:next callback:^(NSArray *result, ChatHistoryState state) {
+        [filter request:next callback:^(NSArray *result, ChatHistoryState state) {
             
-         //   ChannelHistoryController* strongSelf = weakSelf;
-            
-          //  if(strongSelf != nil) {
-            
-            if([self checkState:ChatHistoryStateLocal next:next] && result.count == 0) {
+            if([filter checkState:ChatHistoryStateLocal next:next] && result.count == 0) {
                 
-                [self proccessResponse:result state:state next:next];
+                [filter proccessResponse:[self.controller messageTableItemsFromMessages:result] state:state next:next];
+                
+                self.proccessing = NO;
                 
                 [self request:next anotherSource:anotherSource sync:sync selectHandler:selectHandler];
                 
                 return ;
             }
             
-            NSArray *converted = [self proccessResponse:result state:state next:next];
+            NSArray *converted = [filter proccessResponse:[self.controller messageTableItemsFromMessages:result] state:state next:next];
+            
+            
+            MessageTableItem *service = [[filter selectAllItems] lastObject];
+            
+            if(service.message.action && [service.message.action isKindOfClass:[TL_messageActionChannelMigrateFrom class]] && [filter checkState:ChatHistoryStateFull next:next]) {
+                
+                TLChat *chat = [[ChatsManager sharedManager] find:service.message.action.chat_id];
+                
+                HistoryFilter *filter = [[MegagroupChatFilter alloc] initWithController:self conversation:chat.dialog];
+                
+                [filter setState:ChatHistoryStateFull next:NO];
+                
+                [self addFilter:filter];
+                
+            }
             
             [self performCallback:selectHandler result:converted range:NSMakeRange(0, converted.count)];
             
             [channelPolling checkInvalidatedMessages:converted important:[self.filter isKindOfClass:[ChannelImportantFilter class]]];
-        //    } else {
-          //      MTLog(@"ChatHistoryController is dealloced");
-         //   }
             
-           
+            
+            
             
         }];
         
@@ -93,38 +105,6 @@ static TGChannelsPolling *channelPolling;
 }
 
 
--(NSArray *)proccessResponse:(NSArray *)result state:(ChatHistoryState)state next:(BOOL)next {
-    NSArray *items = [self.controller messageTableItemsFromMessages:result];
-    
-    
-    NSArray *converted = [self filterAndAdd:items acceptToFilters:nil];
-    
-    
-    converted = [self sortItems:converted];
-    
-    
-    state = !next && state != ChatHistoryStateFull && ([self.filter isKindOfClass:[ChannelFilter class]] ? self.conversation.top_message <= self.server_max_id : self.conversation.top_important_message <= self.server_max_id) ? ChatHistoryStateFull : state;
-    
-    if(state == ChatHistoryStateFull) {
-        
-    }
-    
-        
-    [self setState:state next:next];
-    
-    return converted;
-}
-
--(void)setFilter:(HistoryFilter *)filter {
-    
-    [self.queue dispatchOnQueue:^{
-        
-        [super setFilter:filter];
-    }];
-    
-    
-
-}
 
 -(void)pollingDidSaidTooLongWithHole:(TGMessageHole *)hole {
     
@@ -132,19 +112,17 @@ static TGChannelsPolling *channelPolling;
         
         [self.filter setHole:hole withNext:NO];
         
-        [self setState:ChatHistoryStateRemote next:NO];
+        [self.filter setState:ChatHistoryStateRemote next:NO];
         
         [self.filter request:NO callback:^(id response, ChatHistoryState state) {
             
-            NSArray *converted = [self proccessResponse:response state:state next:NO];
+            NSArray *converted = [self.filter proccessResponse:response state:state next:NO];
             
             [ASQueue dispatchOnMainQueue:^{
                 
                 [self.controller receivedMessageList:converted inRange:NSMakeRange(0, converted.count) itsSelf:NO];
                 
             }];
-            
-            
             
         }];
         
@@ -192,7 +170,7 @@ static TGChannelsPolling *channelPolling;
     
     if(nextLoaded && prevLoaded) {
         
-        NSArray *result = [self selectAllItems];
+        NSArray *result = [self.filter selectAllItems];
         
         [self performCallback:selectHandler result:result range:NSMakeRange(0, result.count)];
 
@@ -205,10 +183,9 @@ static TGChannelsPolling *channelPolling;
     BOOL nextRequest = prevLoaded;
     
     
-    
     [self.filter request:nextRequest callback:^(NSArray *result, ChatHistoryState state) {
         
-        NSArray *converted = [self proccessResponse:result state:state next:nextRequest];
+        NSArray *converted = [self.filter proccessResponse:[self.controller messageTableItemsFromMessages:result] state:state next:nextRequest];
         
         if(nextRequest) {
             [nextResult addObjectsFromArray:converted];
@@ -250,143 +227,7 @@ static TGChannelsPolling *channelPolling;
 }
 
 
--(int)min_id {
-    
-    NSArray *allItems = [self selectAllItems];
-    
-    if(allItems.count == 0)
-        return 0;
-    
-    
-    __block MessageTableItem *lastObject;
-    
-    [allItems enumerateObjectsWithOptions:NSEnumerationReverse usingBlock:^(MessageTableItem *obj, NSUInteger idx, BOOL *stop) {
-        
-        if(obj.message.n_id > 0)
-        {
-            lastObject = obj;
-            *stop = YES;
-        }
-        
-    }];
-    
-    return lastObject.message.n_id;
-    
-}
 
--(int)minDate {
-    NSArray *allItems = [self selectAllItems];
-    
-    if(allItems.count == 0)
-        return 0;
-    
-    
-    __block MessageTableItem *lastObject;
-    
-    [allItems enumerateObjectsWithOptions:NSEnumerationReverse usingBlock:^(MessageTableItem *obj, NSUInteger idx, BOOL *stop) {
-        
-        if(obj.message.n_id > 0)
-        {
-            lastObject = obj;
-            *stop = YES;
-        }
-        
-    }];
-    
-    return lastObject.message.date ;
-    
-}
-
-
-
--(int)max_id {
-    
-    NSArray *allItems = [self selectAllItems];
-    
-    
-    if(allItems.count == 0)
-        return self.conversation.last_marked_message;
-    
-    
-    
-    __block MessageTableItem *firstObject;
-    
-    [allItems enumerateObjectsWithOptions:0 usingBlock:^(MessageTableItem *obj, NSUInteger idx, BOOL *stop) {
-        
-        if(obj.message.n_id > 0)
-        {
-            firstObject = obj;
-            *stop = YES;
-        }
-        
-    }];
-    
-    return firstObject.message.n_id;
-}
-
--(int)maxDate {
-    NSArray *allItems = [self selectAllItems];
-    
-    if(allItems.count == 0)
-        return self.conversation.last_marked_date;
-    
-    __block MessageTableItem *firstObject;
-    
-    [allItems enumerateObjectsWithOptions:0 usingBlock:^(MessageTableItem *obj, NSUInteger idx, BOOL *stop) {
-        
-        if(obj.message.n_id > 0)
-        {
-            firstObject = obj;
-            *stop = YES;
-        }
-        
-    }];
-    
-    return firstObject.message.date;
-}
-
--(int)server_min_id {
-    
-    NSArray *allItems = [self selectAllItems];
-    
-    
-    __block int msgId;
-    
-    [allItems enumerateObjectsWithOptions:NSEnumerationReverse usingBlock:^(MessageTableItem *obj, NSUInteger idx, BOOL *stop) {
-        
-        
-        if(obj.message.n_id > 0 && obj.message.n_id < TGMINFAKEID)
-        {
-            msgId = obj.message.n_id;
-            *stop = YES;
-        }
-        
-    }];
-    
-    return msgId;
-    
-}
-
--(int)server_max_id {
-    
-    NSArray *allItems = [self selectAllItems];
-    
-    
-    __block MessageTableItem *item;
-    
-    [allItems enumerateObjectsUsingBlock:^(MessageTableItem *obj, NSUInteger idx, BOOL *stop) {
-        
-        if(obj.message.n_id > 0 && obj.message.n_id < TGMINFAKEID)
-        {
-            item = obj;
-            *stop = YES;
-        }
-        
-    }];
-    
-    return item.message.n_id;
-    
-}
 
 -(void)drop:(BOOL)dropMemory {
     

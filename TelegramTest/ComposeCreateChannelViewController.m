@@ -18,7 +18,7 @@
 @property (nonatomic,strong) NSString *channelName;
 @property (nonatomic,strong) NSString *channelAbout;
 @property (nonatomic,assign) BOOL discussion;
-@property (nonatomic,strong) ComposeCreateChannelViewController *controller;
+@property (nonatomic,weak) ComposeCreateChannelViewController *controller;
 @end
 
 @interface ComposeCreateChannelViewController ()

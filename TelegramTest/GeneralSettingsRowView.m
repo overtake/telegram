@@ -33,7 +33,7 @@
         [self.nextDesc setFont:TGSystemLightFont(14)];
         self.nextDesc.textColor = GRAY_TEXT_COLOR;
         
-        
+        _nextDesc.alignment = NSRightTextAlignment;
         
         [self.descriptionField setFont:TGSystemLightFont(14)];
         [self.subdescField setTitleFont:TGSystemFont(14) forControlState:BTRControlStateNormal];
@@ -165,7 +165,7 @@
     [self.descriptionField sizeToFit];
     [self.subdescField.titleLabel sizeToFit];
     [self.subdescField setFrameSize:self.subdescField.titleLabel.frame.size];
-    
+    [_nextDesc sizeToFit];
 }
 
 
@@ -185,11 +185,13 @@
     
     [self.nextImage setFrameOrigin:NSMakePoint(NSWidth(self.frame) - item.xOffset - image_ArrowGrey().size.width - 4, 14)];
     
-    [self.nextDesc setFrameOrigin:NSMakePoint(NSWidth(self.frame) - item.xOffset - NSWidth(self.nextImage.frame) - NSWidth(self.nextDesc.frame) - 8, 13)];
-    
     [self.lockedIndicator setFrameOrigin:NSMakePoint(NSWidth(self.frame) - item.xOffset - NSWidth(self.lockedIndicator.frame), 10)];
     
-    [self.descriptionField setFrameSize:NSMakeSize(NSWidth(self.frame) - (item.xOffset * 2 + 50), NSHeight(self.descriptionField.frame))];
+    [self.descriptionField setFrameSize:NSMakeSize(MIN(NSWidth(self.descriptionField.frame), NSWidth(self.frame) - (item.xOffset * 2 + 100) ), NSHeight(self.descriptionField.frame))];
+    
+    
+    [self.nextDesc setFrameSize:NSMakeSize(NSWidth(self.frame) - (item.xOffset * 2 + 50 + NSWidth(_descriptionField.frame)), NSHeight(self.nextDesc.frame))];
+    [self.nextDesc setFrameOrigin:NSMakePoint(NSWidth(self.frame) - item.xOffset - NSWidth(self.nextImage.frame) - NSWidth(self.nextDesc.frame) - 8, 13)];
 }
 
 

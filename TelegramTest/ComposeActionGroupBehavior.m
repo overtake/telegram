@@ -17,7 +17,7 @@
 @implementation ComposeActionGroupBehavior
 
 -(NSUInteger)limit {
-    return maxChatUsers();
+    return maxChatUsers()-1;
 }
 
 -(NSString *)doneTitle {

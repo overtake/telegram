@@ -86,10 +86,11 @@
 -(void)loadView {
     
      weak();
+   // [super loadView];
     
     [TGCache setMemoryLimit:100*1024*1024 group:PCCACHE];
     
-     self.view = [[TMCollectionPageView alloc] initWithFrame:self.frameInit];
+     self.view = [[TMCollectionPageView alloc] initWithFrame:NSZeroRect];
     
     
     [self setTitle:NSLocalizedString(@"Conversation.Filter.Photos", nil)];
@@ -200,9 +201,11 @@
     [self.sharedLinksTableView setEditable:isEditable animated:animated];
     [self reloadData];
     
-    [[NSAnimationContext currentContext] setDuration:animated ? 0.2 : 0];
+    
     
     [NSAnimationContext runAnimationGroup:^(NSAnimationContext *context) {
+        
+        [context setDuration:animated ? 0.2 : 0];
         
         [[self.actionsView animator] setFrameOrigin:NSMakePoint(0, isEditable ? 0 : - NSHeight(self.actionsView.frame))];
         [[self.photoCollection.containerView animator] setFrame:NSMakeRect(0, _isEditable ? NSHeight(self.actionsView.frame) : 0, NSWidth(self.navigationViewController.view.frame), NSHeight(self.navigationViewController.view.frame) - 48 - (_isEditable ? NSHeight(self.actionsView.frame) : 0))];
@@ -403,7 +406,12 @@ static const int maxWidth = 120;
     [self setIsEditable:NO animated:NO];
 }
 
+
+
 -(void)setConversation:(TL_conversation *)conversation {
+    
+    
+    
     self->_conversation = conversation;
     
     self.isProgress = YES;
@@ -411,7 +419,7 @@ static const int maxWidth = 120;
     self.selectedItems = [[NSMutableArray alloc] init];
    
     
-    [self setIsEditable:NO animated:NO];
+    
     
     [self setSectedMessagesCount:0];
    
@@ -782,6 +790,11 @@ static const int maxWidth = 120;
 
 -(void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
+    
+    
+    [self setIsEditable:NO animated:NO];
+    
+    
     [Notification addObserver:self selector:@selector(didReceivedMedia:) name:MEDIA_RECEIVE];
     [Notification addObserver:self selector:@selector(didDeleteMessages:) name:MESSAGE_DELETE_EVENT];
 }

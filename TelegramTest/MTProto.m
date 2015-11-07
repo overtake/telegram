@@ -2,7 +2,7 @@
 //  MTProto.m
 //  Telegram
 //
-//  Auto created by Mikhail Filimonov on 03.11.15.
+//  Auto created by Mikhail Filimonov on 05.11.15.
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -3732,7 +3732,7 @@
 @end
 
 @implementation TL_chat
-+(TL_chat*)createWithFlags:(int)flags       n_id:(int)n_id title:(NSString*)title photo:(TLChatPhoto*)photo participants_count:(int)participants_count date:(int)date version:(int)version {
++(TL_chat*)createWithFlags:(int)flags       n_id:(int)n_id title:(NSString*)title photo:(TLChatPhoto*)photo participants_count:(int)participants_count date:(int)date version:(int)version migrated_to:(TLInputChannel*)migrated_to {
 	TL_chat* obj = [[TL_chat alloc] init];
 	obj.flags = flags;
 	
@@ -3747,6 +3747,7 @@
 	obj.participants_count = participants_count;
 	obj.date = date;
 	obj.version = version;
+	obj.migrated_to = migrated_to;
 	return obj;
 }
 -(void)serialize:(SerializedData*)stream {
@@ -3763,6 +3764,7 @@
 	[stream writeInt:self.participants_count];
 	[stream writeInt:self.date];
 	[stream writeInt:self.version];
+	if(self.flags & (1 << 6)) {[ClassStore TLSerialize:self.migrated_to stream:stream];}
 }
 -(void)unserialize:(SerializedData*)stream {
 	self.flags = [stream readInt];
@@ -3778,6 +3780,7 @@
 	self.participants_count = [stream readInt];
 	self.date = [stream readInt];
 	self.version = [stream readInt];
+	if(self.flags & (1 << 6)) {self.migrated_to = [ClassStore TLDeserialize:stream];}
 }
         
 -(TL_chat *)copy {
@@ -3797,6 +3800,7 @@
     objc.participants_count = self.participants_count;
     objc.date = self.date;
     objc.version = self.version;
+    objc.migrated_to = [self.migrated_to copy];
     
     return objc;
 }
@@ -3827,7 +3831,13 @@
 -(BOOL)isAdmin {return (self.flags & (1 << 4)) > 0;}
                         
 -(BOOL)isDeactivated {return (self.flags & (1 << 5)) > 0;}
-            
+                        
+-(void)setMigrated_to:(TLInputChannel*)migrated_to
+{
+   [super setMigrated_to:migrated_to];
+                
+    if(self.migrated_to == nil)  { self.flags&= ~ (1 << 6) ;} else { self.flags|= (1 << 6); }
+}
         
 @end
 
@@ -4157,6 +4167,70 @@
         
 @end
 
+@implementation TL_chat_old38
++(TL_chat_old38*)createWithFlags:(int)flags n_id:(int)n_id title:(NSString*)title photo:(TLChatPhoto*)photo participants_count:(int)participants_count date:(int)date version:(int)version {
+	TL_chat_old38* obj = [[TL_chat_old38 alloc] init];
+	obj.flags = flags;
+	obj.n_id = n_id;
+	obj.title = title;
+	obj.photo = photo;
+	obj.participants_count = participants_count;
+	obj.date = date;
+	obj.version = version;
+	return obj;
+}
+-(void)serialize:(SerializedData*)stream {
+	[stream writeInt:self.flags];
+	[stream writeInt:self.n_id];
+	[stream writeString:self.title];
+	[ClassStore TLSerialize:self.photo stream:stream];
+	[stream writeInt:self.participants_count];
+	[stream writeInt:self.date];
+	[stream writeInt:self.version];
+}
+-(void)unserialize:(SerializedData*)stream {
+	self.flags = [stream readInt];
+	self.n_id = [stream readInt];
+	self.title = [stream readString];
+	self.photo = [ClassStore TLDeserialize:stream];
+	self.participants_count = [stream readInt];
+	self.date = [stream readInt];
+	self.version = [stream readInt];
+}
+        
+-(TL_chat_old38 *)copy {
+    
+    TL_chat_old38 *objc = [[TL_chat_old38 alloc] init];
+    
+    objc.flags = self.flags;
+    objc.n_id = self.n_id;
+    objc.title = self.title;
+    objc.photo = [self.photo copy];
+    objc.participants_count = self.participants_count;
+    objc.date = self.date;
+    objc.version = self.version;
+    
+    return objc;
+}
+    
+-(id)initWithCoder:(NSCoder *)aDecoder {
+
+    if((self = [ClassStore deserialize:[aDecoder decodeObjectForKey:@"data"]])) {
+        
+    }
+    
+    return self;
+}
+        
+-(void)encodeWithCoder:(NSCoder *)aCoder {
+    [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
+}
+
+        
+
+        
+@end
+
 
 @implementation TLChatFull
 @end
@@ -4244,7 +4318,7 @@
 @end
 
 @implementation TL_channelFull
-+(TL_channelFull*)createWithFlags:(int)flags  n_id:(int)n_id about:(NSString*)about participants_count:(int)participants_count admins_count:(int)admins_count kicked_count:(int)kicked_count read_inbox_max_id:(int)read_inbox_max_id unread_count:(int)unread_count unread_important_count:(int)unread_important_count chat_photo:(TLPhoto*)chat_photo notify_settings:(TLPeerNotifySettings*)notify_settings exported_invite:(TLExportedChatInvite*)exported_invite {
++(TL_channelFull*)createWithFlags:(int)flags  n_id:(int)n_id about:(NSString*)about participants_count:(int)participants_count admins_count:(int)admins_count kicked_count:(int)kicked_count read_inbox_max_id:(int)read_inbox_max_id unread_count:(int)unread_count unread_important_count:(int)unread_important_count chat_photo:(TLPhoto*)chat_photo notify_settings:(TLPeerNotifySettings*)notify_settings exported_invite:(TLExportedChatInvite*)exported_invite bot_info:(NSMutableArray*)bot_info migrated_from_chat_id:(int)migrated_from_chat_id migrated_from_max_id:(int)migrated_from_max_id {
 	TL_channelFull* obj = [[TL_channelFull alloc] init];
 	obj.flags = flags;
 	
@@ -4259,6 +4333,9 @@
 	obj.chat_photo = chat_photo;
 	obj.notify_settings = notify_settings;
 	obj.exported_invite = exported_invite;
+	obj.bot_info = bot_info;
+	obj.migrated_from_chat_id = migrated_from_chat_id;
+	obj.migrated_from_max_id = migrated_from_max_id;
 	return obj;
 }
 -(void)serialize:(SerializedData*)stream {
@@ -4275,6 +4352,18 @@
 	[ClassStore TLSerialize:self.chat_photo stream:stream];
 	[ClassStore TLSerialize:self.notify_settings stream:stream];
 	[ClassStore TLSerialize:self.exported_invite stream:stream];
+	//Serialize FullVector
+	[stream writeInt:0x1cb5c415];
+	{
+		NSInteger tl_count = [self.bot_info count];
+		[stream writeInt:(int)tl_count];
+		for(int i = 0; i < (int)tl_count; i++) {
+            TLBotInfo* obj = [self.bot_info objectAtIndex:i];
+            [ClassStore TLSerialize:obj stream:stream];
+		}
+	}
+	if(self.flags & (1 << 4)) {[stream writeInt:self.migrated_from_chat_id];}
+	if(self.flags & (1 << 4)) {[stream writeInt:self.migrated_from_max_id];}
 }
 -(void)unserialize:(SerializedData*)stream {
 	self.flags = [stream readInt];
@@ -4290,6 +4379,22 @@
 	self.chat_photo = [ClassStore TLDeserialize:stream];
 	self.notify_settings = [ClassStore TLDeserialize:stream];
 	self.exported_invite = [ClassStore TLDeserialize:stream];
+	//UNS FullVector
+	[stream readInt];
+	{
+		if(!self.bot_info)
+			self.bot_info = [[NSMutableArray alloc] init];
+		int count = [stream readInt];
+		for(int i = 0; i < count; i++) {
+			TLBotInfo* obj = [ClassStore TLDeserialize:stream];
+            if(obj != nil && [obj isKindOfClass:[TLBotInfo class]])
+                 [self.bot_info addObject:obj];
+            else
+                break;
+		}
+	}
+	if(self.flags & (1 << 4)) {self.migrated_from_chat_id = [stream readInt];}
+	if(self.flags & (1 << 4)) {self.migrated_from_max_id = [stream readInt];}
 }
         
 -(TL_channelFull *)copy {
@@ -4309,6 +4414,9 @@
     objc.chat_photo = [self.chat_photo copy];
     objc.notify_settings = [self.notify_settings copy];
     objc.exported_invite = [self.exported_invite copy];
+    objc.bot_info = [self.bot_info copy];
+    objc.migrated_from_chat_id = self.migrated_from_chat_id;
+    objc.migrated_from_max_id = self.migrated_from_max_id;
     
     return objc;
 }
@@ -4347,6 +4455,18 @@
    [super setKicked_count:kicked_count];
                 
     if(self.kicked_count == 0)  { self.flags&= ~ (1 << 2) ;} else { self.flags|= (1 << 2); }
+}            
+-(void)setMigrated_from_chat_id:(int)migrated_from_chat_id
+{
+   [super setMigrated_from_chat_id:migrated_from_chat_id];
+                
+    if(self.migrated_from_chat_id == 0)  { self.flags&= ~ (1 << 4) ;} else { self.flags|= (1 << 4); }
+}            
+-(void)setMigrated_from_max_id:(int)migrated_from_max_id
+{
+   [super setMigrated_from_max_id:migrated_from_max_id];
+                
+    if(self.migrated_from_max_id == 0)  { self.flags&= ~ (1 << 4) ;} else { self.flags|= (1 << 4); }
 }
         
 @end
@@ -21205,6 +21325,46 @@
 -(TL_channelParticipantsKicked *)copy {
     
     TL_channelParticipantsKicked *objc = [[TL_channelParticipantsKicked alloc] init];
+    
+    
+    
+    return objc;
+}
+    
+-(id)initWithCoder:(NSCoder *)aDecoder {
+
+    if((self = [ClassStore deserialize:[aDecoder decodeObjectForKey:@"data"]])) {
+        
+    }
+    
+    return self;
+}
+        
+-(void)encodeWithCoder:(NSCoder *)aCoder {
+    [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
+}
+
+        
+
+        
+@end
+
+@implementation TL_channelParticipantsBots
++(TL_channelParticipantsBots*)create {
+	TL_channelParticipantsBots* obj = [[TL_channelParticipantsBots alloc] init];
+	
+	return obj;
+}
+-(void)serialize:(SerializedData*)stream {
+	
+}
+-(void)unserialize:(SerializedData*)stream {
+	
+}
+        
+-(TL_channelParticipantsBots *)copy {
+    
+    TL_channelParticipantsBots *objc = [[TL_channelParticipantsBots alloc] init];
     
     
     

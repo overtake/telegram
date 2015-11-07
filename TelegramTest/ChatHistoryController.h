@@ -15,42 +15,29 @@
 @interface ChatHistoryController : NSObject<SenderListener>
 
 
-
-
-@property (atomic,assign) ChatHistoryState nextState;
-@property (atomic,assign) ChatHistoryState prevState;
+-(ChatHistoryState)prevState;
+-(ChatHistoryState)nextState;
 
 //@property (nonatomic,strong,readonly) TL_conversation *conversation;
 @property (nonatomic,readonly) id<MessagesDelegate> controller;
 
 
 -(BOOL)isProccessing;
--(BOOL)checkState:(ChatHistoryState)state next:(BOOL)next;
 
 @property (nonatomic,assign) BOOL need_save_to_db;
 
-@property (nonatomic,assign) int max_id;
-@property (nonatomic,assign) int min_id;
-
-@property (nonatomic,assign) int start_min;
-
-
-@property (nonatomic,assign) int server_max_id;
-@property (nonatomic,assign) int server_min_id;
-
-@property (nonatomic,assign) int server_start_min;
-
-@property (nonatomic,assign) int minDate;
-@property (nonatomic,assign) int maxDate;
 
 @property (nonatomic,assign) NSUInteger selectLimit; // default = 70;
 
 
 
 
+-(HistoryFilter *)filterWithNext:(BOOL)next;
+-(HistoryFilter *)filterWithPeerId:(int)peer_id;
+
 -(HistoryFilter *)filter;
 -(void)setFilter:(HistoryFilter *)filter;
-
+-(void)addFilter:(HistoryFilter *)filter;
 -(id)initWithController:(id<MessagesDelegate>)controller historyFilter:(Class)historyFilter;
 typedef void (^selectHandler)(NSArray *result, NSRange range);
 
@@ -59,6 +46,8 @@ typedef void (^selectHandler)(NSArray *result, NSRange range);
 
 
 -(void)loadAroundMessagesWithMessage:(MessageTableItem *)msg limit:(int)limit selectHandler:(selectHandler)selectHandler;
+-(void)loadAroundMessagesWithSelectHandler:(selectHandler)selectHandler limit:(int)limit prevResult:(NSMutableArray *)prevResult nextResult:(NSMutableArray *)nextResult;
+
 
 -(void)addItem:(MessageTableItem *)item;
 -(void)addItems:(NSArray *)items conversation:(TL_conversation *)conversation;
@@ -71,9 +60,7 @@ typedef void (^selectHandler)(NSArray *result, NSRange range);
 -(void)addItemWithoutSavingState:(MessageTableItem *)item;
 
 
--(void)removeAllItems;
--(void)removeAllItemsWithPeerId:(int)peer_id;
-+(void)drop;
+
 -(void)drop:(BOOL)dropMemory;
 
 -(void)startChannelPolling;
@@ -81,18 +68,14 @@ typedef void (^selectHandler)(NSArray *result, NSRange range);
 -(void)startChannelPollingIfAlreadyStoped;
 -(TL_conversation *)conversation;
 
--(int)posAtMessage:(TLMessage *)message;
-
 -(void)items:(NSArray *)msgIds complete:(void (^)(NSArray *list))complete;
 
 
 // protected methods
--(NSArray *)selectAllItems;
+
 -(ASQueue *)queue;
--(NSArray *)filterAndAdd:(NSArray *)items acceptToFilters:(NSDictionary **)accept;
--(NSArray *)sortItems:(NSArray *)sort;
+
 -(void)setProccessing:(BOOL)isProccessing;
--(void)setState:(ChatHistoryState)state next:(BOOL)next;
 -(void)performCallback:(selectHandler)selectHandler result:(NSArray *)result range:(NSRange )range;
 @end
 

@@ -286,7 +286,7 @@
 
 
 -(BOOL)isImportantMessage {
-    return ((self.flags & 2) || (self.flags & 16) || (self.flags & 256) == 0);
+    return self.isChannelMessage &&  ((self.flags & 2) || (self.flags & 16) || (self.flags & 256) == 0);
 }
 
 -(BOOL)isChannelMessage {
@@ -429,7 +429,7 @@ DYNAMIC_PROPERTY(DDialog);
 }
 
 -(long)channelMsgId {
-    return channelMsgId(self.n_id,self.peer_id);
+    return self.isChannelMessage ? channelMsgId(self.n_id,self.peer_id) : self.n_id;
 }
 
 

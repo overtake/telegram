@@ -19,245 +19,33 @@
 #import "SharedLinksHistoryFilter.h"
 #import "ChannelImportantFilter.h"
 #import "ChannelFilter.h"
-
+#import "MessageTableItem.h"
+#import "ChannelCommonFilter.h"
 @interface HistoryFilter ()
 @property (nonatomic,strong,readonly) TGMessageHole *botHole;
 @property (nonatomic,strong,readonly) TGMessageHole *topHole;
+
+
+@property (nonatomic,strong) NSMutableArray *messageItems;
+@property (nonatomic,strong) NSMutableDictionary *messageKeys;
 @end
 
 @implementation HistoryFilter
 
 
-static NSMutableDictionary * classItems;
 
-
-static NSString *kMessageKeys = @"kMessageKeys";
-static NSString *kMessageItems = @"kMessageItems";
-
--(id)initWithController:(ChatHistoryController *)controller {
+-(id)initWithController:(ChatHistoryController *)controller conversation:(TL_conversation *)conversation {
     if(self = [super init]) {
-        self.controller = controller;
+        _controller = controller;
+        _conversation = conversation;
+        _messageItems = [[NSMutableArray alloc] init];
+        _messageKeys = [[NSMutableDictionary alloc] init];
+        
+        _nextState = ChatHistoryStateLocal;
+        _prevState = ChatHistoryStateLocal;
     }
     
     return self;
-}
-
-
-+(id)removeItemWithMessageId:(int)messageId withPeer_id:(int)peer_id  {
-    
-    __block id item;
-    
-    [ASQueue dispatchOnStageQueue:^{
-        
-        
-        item = [self messageKeys:peer_id][@(messageId)];
-        
-        if(item) {
-            [[self messageKeys:peer_id] removeObjectForKey:@(messageId)];
-            [[self messageItems:peer_id] removeObject:item];
-        }
-        
-      
-    } synchronous:YES];
-    
-    return item;
-    
-}
-
-+(NSMutableDictionary *)fClassData {
-    
-    NSMutableDictionary *classData = classItems[NSStringFromClass(self.class)];
-    
-    if(classData == nil) {
-        classData = [NSMutableDictionary dictionary];
-        classData[kMessageItems] = [NSMutableDictionary dictionary];
-        classData[kMessageKeys] = [NSMutableDictionary dictionary];
-        
-        classItems[NSStringFromClass(self.class)] = classData;
-    }
-    
-    return classData;
-}
-
-+(NSMutableDictionary *)fClassItems {
-    
-    id items = self.fClassData[kMessageItems];
-    
-    
-    assert(items != nil);
-    
-    return items;
-}
-+(NSMutableDictionary *)fClassKeys {
-    id keys = self.fClassData[kMessageKeys];
-    
-    assert(keys != nil);
-    
-    return keys;
-}
-
-+(void)items:(NSArray *)msgIds complete:(void (^)(NSArray *list))complete  {
-    
-    NSMutableArray *messageIds = [msgIds mutableCopy];
-    
-    NSMutableArray *items = [[NSMutableArray alloc] init];
-    
-    dispatch_queue_t dqueue = dispatch_get_current_queue();
-    
-    [ASQueue dispatchOnStageQueue:^{
-        [self.fClassKeys enumerateKeysAndObjectsUsingBlock:^(id key, NSMutableDictionary *obj, BOOL *stop) {
-            
-            
-            NSMutableArray *finded = [[NSMutableArray alloc] init];
-            
-            [messageIds enumerateObjectsUsingBlock:^(NSNumber *msgId, NSUInteger idx, BOOL *stop) {
-                
-                if(obj[msgId] != nil) {
-                    [items addObject:obj[msgId]];
-                    [finded addObject:msgId];
-                }
-                
-            }];
-            
-            [messageIds removeObjectsInArray:finded];
-            
-            if(messageIds.count == 0)
-                *stop = YES;
-            
-            
-        }];
-        
-        dispatch_async(dqueue, ^{
-            complete([items copy]);
-        });
-    }];
-    
-
-}
-
-+(void)updateItemId:(long)randomId withId:(int)n_id {
-    
-    [ASQueue dispatchOnStageQueue:^{
-        
-        [self.fClassItems enumerateKeysAndObjectsUsingBlock:^(NSNumber *peer_id, NSMutableArray *obj, BOOL *stop) {
-            
-            NSArray *f = [obj filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.message.randomId = %ld",randomId]];
-            MessageTableItem *item = [f firstObject];
-            
-            if(item) {
-                NSMutableDictionary *keys =[self messageKeys:[peer_id intValue]];
-                [keys removeObjectForKey:@(item.message.n_id)];
-                item.message.n_id = n_id;
-                keys[@( item.message.n_id)] = item;
-            }
-            
-        }];
-        
-    }];
-    
-}
-
-+(void)items:(NSArray *)messageIds withPeer_id:(int)peer_id complete:(void (^)(NSArray *list))complete {
-    
-    __block NSMutableArray *items = [[NSMutableArray alloc] init];
-    
-    dispatch_queue_t dqueue = dispatch_get_current_queue();
-    
-    [ASQueue dispatchOnStageQueue:^{
-        
-        NSDictionary *keys = [self messageKeys:peer_id];
-        
-        [messageIds enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
-            
-            id item = keys[obj];
-            
-            if(item  != nil) {
-                [items addObject:item];
-            }
-            
-        }];
-        
-        dispatch_async(dqueue, ^{
-            complete([items copy]);
-        });
-        
-    }];
-    
-
-
-}
-
-+(void)removeAllItems:(int)peerId {
-    
-    [ASQueue dispatchOnStageQueue:^{
-        [[self messageKeys:peerId] removeAllObjects];
-        [[self messageItems:peerId] removeAllObjects];
-    }];
-    
-}
-
-- (NSMutableDictionary *)messageKeys:(int)peer_id {
-    
-    NSMutableDictionary *messageKeys = self.class.fClassKeys[@(peer_id)];
-    
-    
-    if(messageKeys == nil) {
-        messageKeys = [NSMutableDictionary dictionary];
-        self.class.fClassKeys[@(peer_id)] = messageKeys;
-    }
-    
-    return messageKeys;
-}
-
-- (NSMutableArray *)messageItems:(int)peer_id {
-    
-    NSMutableArray *messageItems = self.class.fClassItems[@(peer_id)];
-    
-    
-    if(messageItems == nil) {
-        messageItems = [NSMutableArray array];
-        self.class.fClassItems[@(peer_id)] = messageItems;
-    }
-    
-    return messageItems;
-}
-
-+ (NSMutableDictionary *)messageKeys:(int)peer_id {
-    
-    __block NSMutableDictionary *messageKeys;
-    [ASQueue dispatchOnStageQueue:^{
-        
-        messageKeys = self.fClassKeys[@(peer_id)];
-        
-        
-        if(messageKeys == nil) {
-            messageKeys = [NSMutableDictionary dictionary];
-            self.fClassKeys[@(peer_id)] = messageKeys;
-        }
-        
-    } synchronous:YES];
-    
-    return messageKeys;
-}
-
-+ (NSMutableArray *)messageItems:(int)peer_id {
-    __block NSMutableArray *items;
-    
-    [ASQueue dispatchOnStageQueue:^{
-        
-        items = self.fClassItems[@(peer_id)];
-        
-        if(!items)
-        {
-            items = [[NSMutableArray alloc] init];
-            self.fClassItems[@(peer_id)] = items;
-        }
-        
-    } synchronous:YES];
-    
-    
-    
-    return items;
 }
 
 
@@ -270,50 +58,341 @@ static NSString *kMessageItems = @"kMessageItems";
     return HistoryFilterNone;
 }
 
-+(void)drop {
-    [ASQueue dispatchOnStageQueue:^{
-        [self.fClassItems removeAllObjects];
-        [self.fClassItems removeAllObjects];
+
+-(BOOL)checkState:(ChatHistoryState)state next:(BOOL)next {
+    return next ? _nextState == state : _prevState == state;
+}
+
+-(ChatHistoryState)stateWithNext:(BOOL)next {
+    return next ? _nextState : _prevState;
+}
+
+
+-(void)setState:(ChatHistoryState)state next:(BOOL)next {
+    if(next)
+        _nextState = state;
+    else
+        _prevState = state;
+}
+
+
+
+-(int)min_id {
+    
+    NSArray *allItems = [self selectAllItems];
+    
+    if(allItems.count == 0)
+        return 0;
+    
+    
+    __block MessageTableItem *lastObject;
+    
+    [allItems enumerateObjectsWithOptions:NSEnumerationReverse usingBlock:^(MessageTableItem *obj, NSUInteger idx, BOOL *stop) {
+        
+        if(obj.message.n_id > 0)
+        {
+            lastObject = obj;
+            *stop = YES;
+        }
+        
     }];
     
+    return lastObject.message.n_id;
+    
 }
 
-+(void)initialize {
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
+-(int)minDate {
+    NSArray *allItems = [self selectAllItems];
+    
+    if(allItems.count == 0)
+        return 0;
+    
+    
+    __block MessageTableItem *lastObject;
+    
+    [allItems enumerateObjectsWithOptions:NSEnumerationReverse usingBlock:^(MessageTableItem *obj, NSUInteger idx, BOOL *stop) {
         
-        classItems = [NSMutableDictionary dictionary];
+        if(obj.message.n_id > 0)
+        {
+            lastObject = obj;
+            *stop = YES;
+        }
         
-    });
-}
-
--(NSArray *)storageRequest:(BOOL)next {
-    int source_id = next ? _controller.max_id : _controller.min_id;
-    int maxDate = next ? _controller.maxDate : _controller.minDate;
+    }];
     
-    return [[Storage manager] loadMessages:_controller.conversation.peer.peer_id localMaxId:source_id limit:(int)_controller.selectLimit next:next maxDate:maxDate filterMask:[self type]];
+    return lastObject.message.date ;
     
 }
 
 
 
--(void)remoteRequest:(BOOL)next peer_id:(int)peer_id callback:(void (^)(id response))callback {
+-(int)max_id {
     
-   int source_id = next ? _controller.server_max_id : _controller.server_min_id;
+    NSArray *allItems = [self selectAllItems];
+    
+    
+    if(allItems.count == 0)
+        return self.conversation.last_marked_message;
+    
+    
+    
+    __block MessageTableItem *firstObject;
+    
+    [allItems enumerateObjectsWithOptions:0 usingBlock:^(MessageTableItem *obj, NSUInteger idx, BOOL *stop) {
+        
+        if(obj.message.n_id > 0)
+        {
+            firstObject = obj;
+            *stop = YES;
+        }
+        
+    }];
+    
+    return firstObject.message.n_id;
+}
+
+-(int)maxDate {
+    NSArray *allItems = [self selectAllItems];
+    
+    if(allItems.count == 0)
+        return self.conversation.last_marked_date;
+    
+    __block MessageTableItem *firstObject;
+    
+    [allItems enumerateObjectsWithOptions:0 usingBlock:^(MessageTableItem *obj, NSUInteger idx, BOOL *stop) {
+        
+        if(obj.message.n_id > 0)
+        {
+            firstObject = obj;
+            *stop = YES;
+        }
+        
+    }];
+    
+    return firstObject.message.date;
+}
+
+-(int)server_min_id {
+    
+    NSArray *allItems = [self selectAllItems];
+    
+    
+    __block int msgId;
+    
+    [allItems enumerateObjectsWithOptions:NSEnumerationReverse usingBlock:^(MessageTableItem *obj, NSUInteger idx, BOOL *stop) {
+        
+        
+        if(obj.message.n_id > 0 && obj.message.n_id < TGMINFAKEID)
+        {
+            msgId = obj.message.n_id;
+            *stop = YES;
+        }
+        
+    }];
+    
+    return msgId;
+    
+}
+
+-(int)server_max_id {
+    
+    NSArray *allItems = [self selectAllItems];
+    
+    
+    __block MessageTableItem *item;
+    
+    [allItems enumerateObjectsUsingBlock:^(MessageTableItem *obj, NSUInteger idx, BOOL *stop) {
+        
+        if(obj.message.n_id > 0 && obj.message.n_id < TGMINFAKEID)
+        {
+            item = obj;
+            *stop = YES;
+        }
+        
+    }];
+    
+    return item.message.n_id;
+    
+}
+
+
+-(NSArray *)selectAllItems {
+    
+    NSArray *memory = [self sortItems:_messageItems];
+    
+    return memory;
+}
+
+
+-(NSArray *)sortItems:(NSArray *)sort {
+    
+    return [sort sortedArrayUsingComparator:^NSComparisonResult(MessageTableItem *obj1, MessageTableItem *obj2) {
+        
+        return (obj1.message.date < obj2.message.date ? NSOrderedDescending : (obj1.message.date > obj2.message.date ? NSOrderedAscending : (obj1.message.n_id < obj2.message.n_id ? NSOrderedDescending : NSOrderedAscending)));
+    }];
+}
+
+
+-(int)posAtMessage:(TL_localMessage *)message {
+    
+    
+    NSArray *memoryItems = [self selectAllItems];
+    
+    
+    int pos = 0;
+    if(memoryItems.count > 0) {
+        pos = [self posInArray:memoryItems date:message.date n_id:message.n_id];
+    }
+    
+    return pos;
+}
+
+-(int)selectLimit {
+    return (int) _controller.selectLimit;
+}
+
+-(int)posInArray:(NSArray *)list date:(int)date n_id:(int)n_id {
+    int pos = 0;
+    
+    
+    while (pos+1 < list.count &&
+           ([((MessageTableItem *)list[pos]).message date] > date ||
+            ([((MessageTableItem *)list[pos]).message date] == date && [((MessageTableItem *)list[pos]).message n_id] > n_id)))
+        pos++;
+    
+    return pos;
+}
+
+
+-(NSArray *)proccessResponse:(NSArray *)result state:(ChatHistoryState)state next:(BOOL)next {
+    
+    NSArray *converted = [self filterAndAdd:result latest:NO];
+    
+    converted = [self sortItems:converted];
+
+   [self setState:state next:next];
+    
+    return converted;
+}
+
+
+-(NSArray *)filterAndAdd:(NSArray *)items latest:(BOOL)latest {
+    
+    __block  NSMutableArray *filtred = [[NSMutableArray alloc] init];
+    
+    [items enumerateObjectsUsingBlock:^(MessageTableItem *obj, NSUInteger idx, BOOL *stop) {
+        
+        NSMutableArray *filterItems = [self messageItems];
+        NSMutableDictionary *filterKeys = [self messageKeys];
+        
+        BOOL needAdd = [filterItems indexOfObject:obj] == NSNotFound;
+        
+        if((obj.message.peer_id == self.peer_id) && ((obj.message.filterType & [self type]) > 0 && (_prevState == ChatHistoryStateFull || !latest))) {
+            
+            if(obj.message.n_id != 0) {
+                id saved = filterKeys[@(obj.message.n_id)];
+                if(!saved) {
+                    filterKeys[@(obj.message.n_id)] = obj;
+                    
+                } else {
+                    needAdd = NO;
+                }
+            }
+            
+            if(needAdd) {
+                [filterItems addObject:obj];
+                
+                [filtred addObject:obj];
+            }
+        }
+    }];
+
+     return filtred;
+    
+}
+
+
+-(NSArray *)storageRequest:(BOOL)next state:(ChatHistoryState *)state {
+    
+    
+    int maxId = next ? self.min_id : INT32_MAX;
+    int minId = next ? 0 : self.max_id;
+    
+    int maxDate = next ? self.minDate : INT32_MAX;
+    int minDate = next ? 0 : self.maxDate;
+    
+    
+    TGHistoryResponse *response = [[Storage manager] loadMessages:self.conversation.peer_id min_id:minId max_id:maxId minDate:minDate maxDate:maxDate limit:(int)self.selectLimit next:next filterMask:[self type] isChannel:[self isKindOfClass:[ChannelCommonFilter class]]];
+    
+    [self setHole:response.hole withNext:next];
+    
+    *state = response.result.count < self.selectLimit || [self confirmHoleWithNext:next] ? ChatHistoryStateRemote : ChatHistoryStateLocal;
+    
+    
+    return response.result;
+    
+}
+
+-(void)request:(BOOL)next callback:(void (^)(NSArray *response,ChatHistoryState state))callback {
+    
+    if([self checkState:ChatHistoryStateRemote next:next]) {
+        
+        [self remoteRequest:next hole:[self holeWithNext:next] callback:callback];
+        
+    } else {
+        
+        ChatHistoryState state;
+                
+        callback([self storageRequest:next state:&state],state);
+        
+    }
+    
+}
+
+
+-(void)remoteRequest:(BOOL)next hole:(TGMessageHole *)hole callback:(void (^)(id response,ChatHistoryState state))callback {
+    
+    int maxId = next ? self.server_min_id : self.server_max_id;
+    
+    if(hole != nil && !next) {
+        maxId = hole.min_id;
+    } else if(hole != nil && next) {
+        maxId = hole.max_id;
+    }
+    
+    [self remoteRequest:next max_id:maxId hole:hole callback:callback];
+    
+}
+
+-(void)remoteRequest:(BOOL)next max_id:(int)max_id hole:(TGMessageHole *)hole callback:(void (^)(id response,ChatHistoryState state))callback {
+    
+   int source_id = next ? self.server_min_id : self.server_max_id;
     
     if(!_controller)
         return;
 
-    self.request = [RPCRequest sendRequest:[TLAPI_messages_getHistory createWithPeer:[[_controller.controller conversation] inputPeer] offset_id:source_id add_offset:next ||  source_id == 0 ? 0 : -(int)_controller.selectLimit limit:(int)_controller.selectLimit max_id:next ? 0 : INT32_MAX min_id:0] successHandler:^(RPCRequest *request, id response) {
+    self.request = [RPCRequest sendRequest:[TLAPI_messages_getHistory createWithPeer:[_conversation inputPeer] offset_id:source_id add_offset:next ||  source_id == 0 ? 0 : -(int)self.selectLimit limit:(int)self.selectLimit max_id:next ? 0 : INT32_MAX min_id:0] successHandler:^(RPCRequest *request, TL_messages_channelMessages * response) {
+        
+        
+        [SharedManager proccessGlobalResponse:response];
+        
+        
+        NSArray *messages = [[response messages] copy];
+        
+        [self fillGroupHoles:messages bottom:!next];
+        
+        [self setHole:[self proccessAndGetHoleWithHole:hole next:next messages:messages] withNext:next];
         
         if(callback) {
-            callback(response);
+            ChatHistoryState state = hole && ![self holeWithNext:next] ? ChatHistoryStateLocal : messages.count < self.selectLimit && !hole && ![self holeWithNext:next] ? ChatHistoryStateFull : ChatHistoryStateRemote;
+            
+            callback(messages,state);
         }
         
     } errorHandler:^(RPCRequest *request, RpcError *error) {
         
-        if(callback && _controller) {
-            callback(nil);
+        if(callback && self.controller) {
+            callback(nil,ChatHistoryStateFull);
         }
         
     } timeout:0 queue:[ASQueue globalQueue].nativeQueue];
@@ -321,11 +400,16 @@ static NSString *kMessageItems = @"kMessageItems";
 }
 
 -(BOOL)confirmHoleWithNext:(BOOL)next {
-    return [self holeWithNext:next] && ( next ? [self holeWithNext:next].max_id <= self.controller.max_id : [self holeWithNext:next].max_id > [self holeWithNext:next].max_id);
+    return [self holeWithNext:next] && ( next ? [self holeWithNext:next].max_id <= self.max_id : [self holeWithNext:next].max_id > [self holeWithNext:next].max_id);
 }
 
 -(int)additionSenderFlags {
     return 0 ;
+}
+
+
+-(int)peer_id {
+    return _conversation.peer_id;
 }
 
 -(TGMessageHole *)holeWithNext:(BOOL)next {
@@ -373,6 +457,11 @@ static NSString *kMessageItems = @"kMessageItems";
     }
     
     return nHole;
+}
+
+
+-(void)fillGroupHoles:(NSArray *)messages bottom:(BOOL)bottom {
+    
 }
 
 -(void)dealloc {

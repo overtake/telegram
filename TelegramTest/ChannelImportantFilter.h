@@ -7,7 +7,7 @@
 //
 
 #import "HistoryFilter.h"
-
-@interface ChannelImportantFilter : HistoryFilter
+#import "ChannelCommonFilter.h"
+@interface ChannelImportantFilter : ChannelCommonFilter
 
 @end

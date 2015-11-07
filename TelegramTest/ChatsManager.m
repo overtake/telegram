@@ -24,7 +24,7 @@
 
 - (void)add:(NSArray *)all withCustomKey:(NSString*)key {
     
-    
+    int bp = 0;
     
     [self.queue dispatchOnQueue:^{
         
@@ -42,11 +42,7 @@
                     
                     BOOL isNeedUpdateTypeNotification = NO;
                     
-                    if(currentChat.flags != newChat.flags) {
-                        currentChat.flags = newChat.flags;
-                        isNeedUpdateTypeNotification = YES;
-                        [Notification perform:CHAT_FLAGS_UPDATED data:@{KEY_CHAT:currentChat}];
-                    }
+                    
                     
                     if([currentChat.photo.photo_small hashCacheKey] != [newChat.photo.photo_small hashCacheKey]) {
                         currentChat.photo = newChat.photo;
@@ -69,6 +65,20 @@
                          currentChat.version = newChat.version;
                         
                         [[FullChatManager sharedManager] loadIfNeed:currentChat.n_id force:YES]; // force load chat if changed version.
+                    }
+                    
+                    if(![currentChat.migrated_to isKindOfClass:newChat.migrated_to.class] || currentChat.migrated_to.channel_id !=  newChat.migrated_to.channel_id) {
+                        currentChat.migrated_to = newChat.migrated_to;
+                        
+                        if(currentChat.isDeactivated && currentChat.migrated_to.channel_id != 0) {
+                            if(currentChat.dialog)
+                                [Notification perform:DIALOG_DELETE data:@{KEY_DIALOG:currentChat.dialog}];
+                        }
+                    }
+                    
+                    if(currentChat.flags != newChat.flags) {
+                        currentChat.flags = newChat.flags;
+                        isNeedUpdateTypeNotification = YES;
                     }
                    
                      if(currentChat.type != newChat.type) {

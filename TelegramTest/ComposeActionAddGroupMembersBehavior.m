@@ -118,7 +118,7 @@
     } errorHandler:^(RPCRequest *request, RpcError *error) {
         [self.delegate behaviorDidEndRequest:request.response];
         alert(appName(), NSLocalizedString(error.error_msg, nil));
-    }];
+    } timeout:0 queue:[ASQueue globalQueue].nativeQueue];
 }
 
 

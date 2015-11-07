@@ -115,7 +115,7 @@
                 
                 TGUserContainerRowItem *userItem = (TGUserContainerRowItem *) item;
                 
-                return @(userItem.user.n_id != [UsersManager currentUserId]);
+                return @(userItem.user.n_id != [UsersManager currentUserId] && ![obj isKindOfClass:[TL_channelParticipantCreator class]]  && ![obj isKindOfClass:[TL_channelParticipantModerator class]] && ![obj isKindOfClass:[TL_channelParticipantEditor class]]);
                 
             }];
             
@@ -202,7 +202,7 @@
     
     [_tableView addItem:[[TGGeneralRowItem alloc] initWithHeight:20] tableRedraw:YES];
     
-    if([self.action.behavior isKindOfClass:[ComposeActionChannelMembersBehavior class]]) {
+    if([self.action.behavior isKindOfClass:[ComposeActionChannelMembersBehavior class]] && chat.isAdmin) {
         
         if(chat.chatFull.participants_count < maxChatUsers()) {
             GeneralSettingsRowItem *addMembersItem = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeNone callback:^(TGGeneralRowItem *item) {
@@ -229,7 +229,7 @@
         }
         
         
-        if(chat.username.length == 0) {
+        if(chat.username.length == 0 && chat.isAdmin) {
             GeneralSettingsRowItem *inviteViaLink = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeNone callback:^(TGGeneralRowItem *item) {
                 
                 ChatExportLinkViewController *export = [[ChatExportLinkViewController alloc] initWithFrame:NSZeroRect];

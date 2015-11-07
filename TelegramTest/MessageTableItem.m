@@ -274,6 +274,20 @@ static NSTextAttachment *channelIconAttachment() {
     self.viewSize = NSMakeSize(blockSize.width, blockSize.height);
 }
 
+
++ (NSArray *)messageTableItemsFromMessages:(NSArray *)input {
+    NSMutableArray *array = [NSMutableArray array];
+    for(TLMessage *message in input) {
+        MessageTableItem *item = [MessageTableItem messageItemFromObject:message];
+        if(item) {
+            //[item makeSizeByWidth:self.table.containerSize.width];
+            item.isSelected = NO;
+            [array insertObject:item atIndex:0];
+        }
+    }
+    return array;
+}
+
 + (id) messageItemFromObject:(TL_localMessage *)message {
     id objectReturn = nil;
 
