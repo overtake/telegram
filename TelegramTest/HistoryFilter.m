@@ -366,7 +366,7 @@
 
 -(void)remoteRequest:(BOOL)next max_id:(int)max_id hole:(TGMessageHole *)hole callback:(void (^)(id response,ChatHistoryState state))callback {
     
-   int source_id = next ? self.server_min_id : self.server_max_id;
+   int source_id = next ? self.server_min_id-1 : self.server_max_id+1;
     
     if(!_controller)
         return;
