@@ -14,6 +14,7 @@
 #import "TGProfileHeaderRowItem.h"
 #import <MtProtoKit/MTEncryption.h>
 #import "ComposeActionInfoProfileBehavior.h"
+#import "TGShareContactModalView.h"
 @interface TGModernUserViewController ()
 @property (nonatomic,strong) TLUser *user;
 @property (nonatomic,strong) TL_conversation *conversation;
@@ -109,11 +110,7 @@
 
 -(void)configure {
     
-    
-    
-    
     [_tableView removeAllItems:YES];
-    
     
     TGProfileHeaderRowItem *headerItem = [[TGProfileHeaderRowItem alloc] initWithObject:_conversation];
     headerItem.height = 142;
@@ -127,6 +124,8 @@
     
     if(_conversation.type != DialogTypeSecretChat) {
         sendMessage = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeNone callback:^(TGGeneralRowItem *item) {
+            
+            [[Telegram sharedInstance] showMessagesWidthUser:self.user sender:self];
             
         } description:NSLocalizedString(@"Profile.SendMessage", nil) height:42 stateback:^id(TGGeneralRowItem *item) {
             
@@ -143,6 +142,13 @@
     if(_user.type != TLUserTypeSelf && _conversation.type != DialogTypeSecretChat && !_user.isBot) {
         startSecretChat = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeNone callback:^(TGGeneralRowItem *item) {
             
+            [self showModalProgress];
+           
+            [MessageSender startEncryptedChat:self.user callback:^ {
+                
+                [self hideModalProgressWithSuccess];
+                
+            }];
             
         } description:NSLocalizedString(@"Conversation.StartSecretChat", nil) height:42 stateback:^id(TGGeneralRowItem *item) {
             
@@ -154,6 +160,36 @@
     GeneralSettingsRowItem *shareContact;
     if((_user.type == TLUserTypeContact || _user.type == TLUserTypeSelf || self.user.isBot) && _conversation.type != DialogTypeSecretChat) {
         shareContact = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeNone callback:^(TGGeneralRowItem *item) {
+            
+            
+            if(_user.isBot) {
+                
+                
+                [self showModalProgress];
+                
+                NSPasteboard* cb = [NSPasteboard generalPasteboard];
+                
+                [cb declareTypes:[NSArray arrayWithObjects:NSStringPboardType, nil] owner:self];
+                [cb setString:[NSString stringWithFormat:@"https://telegram.me/%@",self.user.username] forType:NSStringPboardType];
+                
+                dispatch_after_seconds(0.2, ^{
+                    
+                    [self hideModalProgressWithSuccess];
+                    
+                });
+                
+            } else {
+                
+                TGShareContactModalView *shareContactModalView = [[TGShareContactModalView alloc] initWithFrame:NSMakeRect(0, 0, NSWidth(self.view.window.frame), NSHeight(self.view.window.frame))];
+                
+                
+                [shareContactModalView setMessagesViewController:self.navigationViewController.messagesViewController];
+                [shareContactModalView setUser:self.user];
+                
+                [shareContactModalView show:self.view.window animated:YES];
+                
+            }
+
             
         } description:NSLocalizedString(_user.isBot ? @"Profile.ShareBot" : @"Profile.ShareContact", nil) height:42 stateback:^id(TGGeneralRowItem *item) {
             
@@ -172,7 +208,11 @@
     
     GeneralSettingsRowItem *encryptionKeyItem = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeNext callback:^(TGGeneralRowItem *item) {
         
+        EncryptedKeyViewController *viewController = [[EncryptedKeyViewController alloc] initWithFrame:NSZeroRect];
         
+        [viewController showForChat:self.conversation.encryptedChat];
+        
+        [self.navigationViewController pushViewController:viewController animated:YES];
         
     } description:NSLocalizedString(@"Profile.ShowEncryptedKey", nil) height:42 stateback:^id(TGGeneralRowItem *item) {
         
@@ -206,6 +246,22 @@
     
     GeneralSettingsRowItem *blockUserItem = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeNone callback:^(TGGeneralRowItem *item) {
         
+        BlockedHandler handlerBlock = ^(BOOL result) {
+            
+            if(!self.user.isBlocked && self.user.isBot)
+            {
+                [self.navigationViewController goBackWithAnimation:YES];
+                [self.navigationViewController.messagesViewController sendMessage:@"/start" forConversation:self.conversation];
+            }
+        };
+        
+        if(self.user.isBlocked) {
+            [[BlockedUsersManager sharedManager] unblock:self.user.n_id completeHandler:handlerBlock];
+        } else {
+            [[BlockedUsersManager sharedManager] block:self.user.n_id completeHandler:handlerBlock];
+        }
+        
+        
     } description:NSLocalizedString(@"Profile.BlockContact", nil) height:42 stateback:^id(TGGeneralRowItem *item) {
         return nil;
     }];
@@ -213,12 +269,29 @@
     
     GeneralSettingsRowItem *deleteSecretChatItem = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeNone callback:^(TGGeneralRowItem *item) {
         
+        [self showModalProgress];
+        [[Telegram rightViewController].messagesViewController deleteDialog:self.conversation callback:^{
+            [self hideModalProgressWithSuccess];
+        }];
+
+        
     } description:NSLocalizedString(@"Conversation.DeleteSecretChat", nil) height:42 stateback:^id(TGGeneralRowItem *item) {
         return nil;
     }];
     deleteSecretChatItem.textColor = [NSColor redColor];
     
     TGSProfileMediaRowItem *profileMediaItem = [[TGSProfileMediaRowItem alloc] initWithObject:_conversation];
+    
+    
+    [profileMediaItem setCallback:^(TGGeneralRowItem *item) {
+        TMCollectionPageController *viewController = [[TMCollectionPageController alloc] initWithFrame:NSZeroRect];
+        
+        [viewController setConversation:self.conversation];
+        
+        [self.navigationViewController pushViewController:viewController animated:YES];
+        
+        
+    }];
     
     profileMediaItem.height = 50;
     profileMediaItem.xOffset = 30;
