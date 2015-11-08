@@ -135,7 +135,7 @@
     [self.durationView sizeToFit];
     [self.durationView setFrameSize:NSMakeSize(MIN(NSWidth(self.containerView.frame) - NSMinX(self.durationView.frame) - NSWidth(self.stateTextField.frame) - 15,NSWidth(self.durationView.frame)), NSHeight(self.durationView.frame))];
     
-    [self.durationView setFrameOrigin:NSMakePoint(NSMinX(self.durationView.frame), NSHeight(self.durationView.frame) > 15 ? 6 : 18)];
+    [self.durationView setCenteredYByView:self.durationView.superview];
 }
 
 -(void)drawRect:(NSRect)dirtyRect {

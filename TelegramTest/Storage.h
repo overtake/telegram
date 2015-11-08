@@ -247,7 +247,6 @@ extern NSString *const RECENT_SEARCH;
 
 -(void)insertChannels:(NSArray *)channels;
 -(void)insertChannels:(NSArray *)channels completionHandler:(dispatch_block_t)completionHandler deliveryOnQueue:(ASQueue *)deliveryQueue;
--(void)allChannels:(void (^)(NSArray *channels, NSArray *messages))completeHandler deliveryOnQueue:(ASQueue *)deliveryQueue;
 
 
 -(void)insertMessagesHole:(TGMessageHole *)hole;

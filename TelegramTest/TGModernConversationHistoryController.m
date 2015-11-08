@@ -12,7 +12,7 @@
 #import "TLPeer+Extensions.h"
 
 static NSString *kYapChannelCollection = @"channels_keys";
-static NSString *kYapChannelKey = @"channels_is_loaded";
+static NSString *kYapChannelKey = @"channels_is_loaded_v4";
 @interface TGChannelsLoader : TGObservableObject
 
 @property (nonatomic,assign,readonly) BOOL channelsIsLoaded;
@@ -52,7 +52,7 @@ static NSString *kYapChannelKey = @"channels_is_loaded";
     
 }
 
-static const int limit = 1000;
+static const int limit = 100;
 
 -(void)loadNext:(int)offset result:(NSArray *)result onQueue:(ASQueue *)queue{
     
