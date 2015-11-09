@@ -11,6 +11,9 @@
 #import "TMRowView.h"
 #import "TMScrollView.h"
 
+
+@class TMViewController;
+
 @protocol TMTableViewDelegate <NSObject>
 
 - (CGFloat)rowHeight:(NSUInteger)row item:(TMRowItem *) item;
@@ -29,9 +32,11 @@
 @property (nonatomic, strong, readonly) TMScrollView *scrollView;
 @property (nonatomic, strong, readonly) NSTableColumn *tableColumn;
 @property (nonatomic) BOOL multipleSelection;
-@property (nonatomic, strong) id<TMTableViewDelegate> tm_delegate;
+@property (nonatomic, weak) id<TMTableViewDelegate> tm_delegate;
 @property (nonatomic) BOOL hoverCells;
 @property (nonatomic) NSTableViewAnimationOptions defaultAnimation;
+
+@property (nonatomic,weak) TMViewController *controller;
 
 
 + (TMTableView *)current;

@@ -59,13 +59,14 @@
     
     [item.previewObjects enumerateObjectsUsingBlock:^(PhotoCollectionImageObject *obj, NSUInteger idx, BOOL *stop) {
         
-        TGImageView *imageView;
+        PhotoCollectionImageView *imageView;
         
         if(self.images.count > idx) {
             imageView = self.images[idx];
             
         } else {
             imageView = [[PhotoCollectionImageView alloc] initWithFrame:NSZeroRect];
+            imageView.controller = (TMCollectionPageController *) self.rowItem.table.controller;
             [self.images addObject:imageView];
             [self addSubview:imageView];
         }

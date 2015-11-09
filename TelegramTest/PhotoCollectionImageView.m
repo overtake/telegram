@@ -51,9 +51,9 @@
     PhotoCollectionImageObject *obj = (PhotoCollectionImageObject *) self.object;
     
     
-    if([[Telegram rightViewController].collectionViewController isEditable]) {
+    if([_controller isEditable]) {
         
-        [[Telegram rightViewController].collectionViewController setSelected:![[Telegram rightViewController].collectionViewController isSelectedItem:obj] forItem:obj];
+        [_controller setSelected:![_controller isSelectedItem:obj] forItem:obj];
         
         [self setObject:obj];
         
@@ -63,7 +63,7 @@
     if([[(TL_localMessage *)obj.previewObject.media media] isKindOfClass:[TL_messageMediaPhoto class]]) {
         obj.previewObject.reservedObject = imageFromFile(locationFilePath(self.object.location, @"jpg"));
         
-        [[TGPhotoViewer viewer] show:obj.previewObject conversation:[Telegram rightViewController].collectionViewController.conversation];
+        [[TGPhotoViewer viewer] show:obj.previewObject conversation:self.controller.conversation];
     } else if([[(TL_localMessage *)obj.previewObject.media media] isKindOfClass:[TL_messageMediaVideo class]]) {
         [self checkAction];
     }
@@ -142,9 +142,9 @@ static NSImage *playVideoImage() {
     TL_localMessage *msg = object.previewObject.media;
     
     
-    [self.selectButton setHidden:![[Telegram rightViewController].collectionViewController isEditable]];
+    [self.selectButton setHidden:![_controller isEditable]];
     
-    [self.selectButton setSelected:[[Telegram rightViewController].collectionViewController isSelectedItem:object]];
+    [self.selectButton setSelected:[_controller isSelectedItem:object]];
     
     [self.loaderView setHidden:YES];
     [self.playImage setHidden:YES];

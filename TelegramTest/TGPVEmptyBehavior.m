@@ -71,8 +71,6 @@
     return 1;
 }
 
--(BOOL)isReversedContentView {
-    return NO;
-}
+
 
 @end

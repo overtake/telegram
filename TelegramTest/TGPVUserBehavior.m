@@ -123,8 +123,6 @@ static NSMutableDictionary *count;
 }
 
 
--(BOOL)isReversedContentView {
-    return NO;
-}
+
 
 @end

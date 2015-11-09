@@ -162,8 +162,6 @@
     
 }
 
--(BOOL)isReversedContentView {
-    return [Telegram rightViewController].navigationViewController.currentController != [Telegram rightViewController].collectionViewController;
-}
+
 
 @end

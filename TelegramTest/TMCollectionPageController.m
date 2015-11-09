@@ -110,7 +110,9 @@
     self.behavior = [[TGPVMediaBehavior alloc] init];
     
     _photoCollection = [[PhotoCollectionTableView alloc] initWithFrame:self.view.bounds];
-        
+    
+    _photoCollection.controller = self;
+    
      [_photoCollection setFrame:self.view.bounds];
     
     _photoCollection.tm_delegate = self;

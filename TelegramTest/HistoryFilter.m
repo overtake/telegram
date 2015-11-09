@@ -342,9 +342,7 @@
     
     [self setHole:response.hole withNext:next];
     
-    
-    NSLog(@"isChannel:%d",[self.peer isKindOfClass:[TL_peerChannel class]]);
-    
+        
     *state = response.result.count < self.selectLimit || [self confirmHoleWithNext:next] ? ChatHistoryStateRemote : ChatHistoryStateLocal;
     
         

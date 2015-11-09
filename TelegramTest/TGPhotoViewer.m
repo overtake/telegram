@@ -38,6 +38,8 @@
 
 @property (nonatomic,strong) TGPVZoomControl *zoomControl;
 
+@property (nonatomic,assign) BOOL isReversed;
+
 @end
 
 
@@ -461,8 +463,13 @@ static TGPhotoViewer *viewer;
 }
 
 -(void)show:(PreviewObject *)item conversation:(TL_conversation *)conversation {
+    [self show:item conversation:conversation isReversed:NO];
+}
+
+-(void)show:(PreviewObject *)item conversation:(TL_conversation *)conversation isReversed:(BOOL)isReversed {
     _conversation = conversation;
     
+    _isReversed = isReversed;
     
     _controls.convertsation = conversation;
     _photoContainer.conversation = conversation;
@@ -478,9 +485,7 @@ static TGPhotoViewer *viewer;
         
     } synchronous:YES];
     
-    self.currentItemId = 0;
-    
-    [self makeKeyAndOrderFront:self];
+   [self makeKeyAndOrderFront:self];
     
     [self mouseEntered:[NSApp currentEvent]];
     
@@ -500,6 +505,8 @@ static TGPhotoViewer *viewer;
         
     }];
     
+    
+     self.currentItemId = 0;
 }
 
 
@@ -589,7 +596,7 @@ static TGPhotoViewer *viewer;
 
 -(void)nextItem {
     
-    if([self.behavior isReversedContentView]) {
+    if(_isReversed) {
         
         [self performPrevItem];
         
@@ -605,7 +612,7 @@ static TGPhotoViewer *viewer;
 -(void)prevItem {
     
     
-    if([self.behavior isReversedContentView]) {
+    if(_isReversed) {
         
         [self performNextItem];
         
@@ -652,7 +659,7 @@ static TGPhotoViewer *viewer;
     
    
     
-    BOOL next = [self.behavior isReversedContentView] ? currentItemId > _currentItemId : currentItemId < _currentItemId;
+    BOOL next = _isReversed ? currentItemId > _currentItemId : currentItemId < _currentItemId;
     
     
     _currentItemId = currentItemId;
@@ -662,7 +669,7 @@ static TGPhotoViewer *viewer;
     
     
 
-    [self.controls setCurrentPosition:[self.behavior isReversedContentView] ? _totalCount - _currentItemId : _currentItemId+1 ofCount:_totalCount];
+    [self.controls setCurrentPosition:_isReversed ? _totalCount - _currentItemId : _currentItemId+1 ofCount:_totalCount];
         
     
     [[self photoContainer] setCurrentViewerItem:_currentItem animated:NO];
@@ -670,7 +677,7 @@ static TGPhotoViewer *viewer;
     
      [_zoomControl setHidden:[_currentItem.previewObject.reservedObject isKindOfClass:[NSDictionary class]]];
     
-    int rcurrent = [self.behavior isReversedContentView] ? _totalCount - (int)_currentItemId : (int)_currentItemId;
+    int rcurrent = _isReversed ? _totalCount - (int)_currentItemId : (int)_currentItemId;
     
     
     

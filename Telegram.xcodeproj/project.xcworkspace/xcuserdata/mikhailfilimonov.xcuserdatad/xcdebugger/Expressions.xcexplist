@@ -2240,6 +2240,12 @@
             <PersistentString
                value = "self.filter.peer_id">
             </PersistentString>
+            <PersistentString
+               value = "[self filterWithPeerId:item.message.peer_id]">
+            </PersistentString>
+            <PersistentString
+               value = "_filters">
+            </PersistentString>
          </PersistentStrings>
       </ContextState>
       <ContextState

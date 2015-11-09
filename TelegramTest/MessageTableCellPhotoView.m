@@ -76,7 +76,7 @@ NSImage *fireImage() {
             
             object.reservedObject = weakSelf.imageView.image;
             
-            [[TGPhotoViewer viewer] show:object conversation:weakSelf.messagesViewController.conversation];
+            [[TGPhotoViewer viewer] show:object conversation:weakSelf.messagesViewController.conversation isReversed:YES];
             
             if([weakSelf.item.message isKindOfClass:[TL_destructMessage class]]) {
                 
