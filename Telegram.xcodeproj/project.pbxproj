@@ -744,6 +744,8 @@
 		C2CE53F21BECC3A700BBEF5F /* MegagroupChatFilter.m in Sources */ = {isa = PBXBuildFile; fileRef = C2CE53F11BECC3A700BBEF5F /* MegagroupChatFilter.m */; settings = {ASSET_TAGS = (); }; };
 		C2CE53F51BECE46600BBEF5F /* MegagroupHistoryController.m in Sources */ = {isa = PBXBuildFile; fileRef = C2CE53F41BECE46600BBEF5F /* MegagroupHistoryController.m */; settings = {ASSET_TAGS = (); }; };
 		C2CE53F81BED06BD00BBEF5F /* ChannelCommonFilter.m in Sources */ = {isa = PBXBuildFile; fileRef = C2CE53F71BED06BD00BBEF5F /* ChannelCommonFilter.m */; settings = {ASSET_TAGS = (); }; };
+		C2CE53FB1BF0AE3800BBEF5F /* CommonMediaHistoryFilter.m in Sources */ = {isa = PBXBuildFile; fileRef = C2CE53FA1BF0AE3800BBEF5F /* CommonMediaHistoryFilter.m */; settings = {ASSET_TAGS = (); }; };
+		C2CE53FE1BF0E43A00BBEF5F /* TGPhotoViewerBehavior.m in Sources */ = {isa = PBXBuildFile; fileRef = C2CE53FD1BF0E43A00BBEF5F /* TGPhotoViewerBehavior.m */; settings = {ASSET_TAGS = (); }; };
 		C2D235B91A2F2C5600765BA1 /* TGModernTypingManager.m in Sources */ = {isa = PBXBuildFile; fileRef = C2D235B81A2F2C5600765BA1 /* TGModernTypingManager.m */; };
 		C2D235BC1A2FA6F400765BA1 /* TGSendTypingManager.m in Sources */ = {isa = PBXBuildFile; fileRef = C2D235BB1A2FA6F400765BA1 /* TGSendTypingManager.m */; };
 		C2D4B7401AFCD36A0035B4E4 /* TGModalView.m in Sources */ = {isa = PBXBuildFile; fileRef = C2D4B73F1AFCD36A0035B4E4 /* TGModalView.m */; };
@@ -1523,7 +1525,6 @@
 		C20D1891193E09C00095A906 /* TMBlueAddButtonView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TMBlueAddButtonView.h; sourceTree = "<group>"; };
 		C20D1892193E09C00095A906 /* TMBlueAddButtonView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TMBlueAddButtonView.m; sourceTree = "<group>"; };
 		C20D18B11945BE890095A906 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/Localizable.strings; sourceTree = "<group>"; };
-		C20D18ED1948A3F70095A906 /* ru */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = ru; path = ru.lproj/NewMainMenu.xib; sourceTree = "<group>"; };
 		C20D18F31948A3FB0095A906 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/NewMainMenu.xib; sourceTree = "<group>"; };
 		C20D18F51948A4970095A906 /* es */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = es; path = es.lproj/NewMainMenu.xib; sourceTree = "<group>"; };
 		C20D18F61948D1FE0095A906 /* SecretChatAccepter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SecretChatAccepter.h; sourceTree = "<group>"; };
@@ -2374,6 +2375,10 @@
 		C2CE53F41BECE46600BBEF5F /* MegagroupHistoryController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MegagroupHistoryController.m; sourceTree = "<group>"; };
 		C2CE53F61BED06BD00BBEF5F /* ChannelCommonFilter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChannelCommonFilter.h; sourceTree = "<group>"; };
 		C2CE53F71BED06BD00BBEF5F /* ChannelCommonFilter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChannelCommonFilter.m; sourceTree = "<group>"; };
+		C2CE53F91BF0AE3800BBEF5F /* CommonMediaHistoryFilter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CommonMediaHistoryFilter.h; sourceTree = "<group>"; };
+		C2CE53FA1BF0AE3800BBEF5F /* CommonMediaHistoryFilter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CommonMediaHistoryFilter.m; sourceTree = "<group>"; };
+		C2CE53FC1BF0E43A00BBEF5F /* TGPhotoViewerBehavior.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGPhotoViewerBehavior.h; sourceTree = "<group>"; };
+		C2CE53FD1BF0E43A00BBEF5F /* TGPhotoViewerBehavior.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGPhotoViewerBehavior.m; sourceTree = "<group>"; };
 		C2D235B71A2F2C5600765BA1 /* TGModernTypingManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGModernTypingManager.h; sourceTree = "<group>"; };
 		C2D235B81A2F2C5600765BA1 /* TGModernTypingManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGModernTypingManager.m; sourceTree = "<group>"; };
 		C2D235BA1A2FA6F400765BA1 /* TGSendTypingManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGSendTypingManager.h; sourceTree = "<group>"; };
@@ -4881,6 +4886,8 @@
 				C26752761A15099A00152D9A /* TGPVEmptyBehavior.m */,
 				C20B829F1BD98EC700EF01AD /* TGPVDocumentsBehavior.h */,
 				C20B82A01BD98EC700EF01AD /* TGPVDocumentsBehavior.m */,
+				C2CE53FC1BF0E43A00BBEF5F /* TGPhotoViewerBehavior.h */,
+				C2CE53FD1BF0E43A00BBEF5F /* TGPhotoViewerBehavior.m */,
 			);
 			name = behavior;
 			sourceTree = "<group>";
@@ -5426,6 +5433,8 @@
 				C2CE53F11BECC3A700BBEF5F /* MegagroupChatFilter.m */,
 				C2CE53F61BED06BD00BBEF5F /* ChannelCommonFilter.h */,
 				C2CE53F71BED06BD00BBEF5F /* ChannelCommonFilter.m */,
+				C2CE53F91BF0AE3800BBEF5F /* CommonMediaHistoryFilter.h */,
+				C2CE53FA1BF0AE3800BBEF5F /* CommonMediaHistoryFilter.m */,
 			);
 			name = filter;
 			sourceTree = "<group>";
@@ -6020,7 +6029,6 @@
 			knownRegions = (
 				en,
 				English,
-				ru,
 				es,
 				de,
 				fi,
@@ -6418,6 +6426,7 @@
 				C21D485619B07A21000F06E1 /* ComposeActionSecretChatBehavior.m in Sources */,
 				C222AB361A0901DC00BEF907 /* PhotoTableItem.m in Sources */,
 				C274C37C1AB831A3000DFDE4 /* TGForwardObject.m in Sources */,
+				C2CE53FE1BF0E43A00BBEF5F /* TGPhotoViewerBehavior.m in Sources */,
 				C2967B461AA8684E003759B2 /* TGReplayMessage.m in Sources */,
 				0AF4F497189A696A004BA4DF /* TMScrollAnimation.m in Sources */,
 				C291C7BC1836C39900ABBB50 /* Background.m in Sources */,
@@ -6603,6 +6612,7 @@
 				0AA7E1C618CCF1D60064EFC7 /* ChatInfoHeaderView.m in Sources */,
 				CEA589471815ADBD00462DF0 /* TGDownloadOperation.m in Sources */,
 				C2A2B4261BD01FC20083DA8A /* TGHeadChatPanel.m in Sources */,
+				C2CE53FB1BF0AE3800BBEF5F /* CommonMediaHistoryFilter.m in Sources */,
 				C26E80301B7E106B003CC483 /* TGRecentSearchTableView.m in Sources */,
 				C2B0DF891BA9C6EC0023982C /* TGUserContainerView.m in Sources */,
 				0AB43BB518D89C5700FB805A /* TMSearchImage.m in Sources */,
@@ -7062,7 +7072,6 @@
 		C20D18EE1948A3F70095A906 /* NewMainMenu.xib */ = {
 			isa = PBXVariantGroup;
 			children = (
-				C20D18ED1948A3F70095A906 /* ru */,
 				C20D18F31948A3FB0095A906 /* en */,
 				C20D18F51948A4970095A906 /* es */,
 				C2002D13199E9ADA002A1915 /* de */,

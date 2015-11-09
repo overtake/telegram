@@ -21,9 +21,12 @@
 #import "ChannelFilter.h"
 #import "MessageTableItem.h"
 #import "ChannelCommonFilter.h"
+
 @interface HistoryFilter ()
 @property (nonatomic,strong,readonly) TGMessageHole *botHole;
 @property (nonatomic,strong,readonly) TGMessageHole *topHole;
+
+
 
 
 @property (nonatomic,strong) NSMutableArray *messageItems;
@@ -34,10 +37,10 @@
 
 
 
--(id)initWithController:(ChatHistoryController *)controller conversation:(TL_conversation *)conversation {
+-(id)initWithController:(ChatHistoryController *)controller peer:(TLPeer *)peer {
     if(self = [super init]) {
         _controller = controller;
-        _conversation = conversation;
+        _peer = peer;
         _messageItems = [[NSMutableArray alloc] init];
         _messageKeys = [[NSMutableDictionary alloc] init];
         
@@ -82,7 +85,7 @@
     NSArray *allItems = [self selectAllItems];
     
     if(allItems.count == 0)
-        return 0;
+        return INT32_MAX;
     
     
     __block MessageTableItem *lastObject;
@@ -105,7 +108,7 @@
     NSArray *allItems = [self selectAllItems];
     
     if(allItems.count == 0)
-        return 0;
+        return INT32_MAX;
     
     
     __block MessageTableItem *lastObject;
@@ -131,8 +134,12 @@
     NSArray *allItems = [self selectAllItems];
     
     
-    if(allItems.count == 0)
-        return self.conversation.last_marked_message;
+    if(allItems.count == 0) {
+        if(self.controller.conversation.peer_id == _peer.peer_id)
+            return self.controller.conversation.last_marked_message;
+        return INT32_MAX;
+    }
+    
     
     
     
@@ -154,8 +161,13 @@
 -(int)maxDate {
     NSArray *allItems = [self selectAllItems];
     
-    if(allItems.count == 0)
-        return self.conversation.last_marked_date;
+    if(allItems.count == 0) {
+        if(self.controller.conversation.peer_id == _peer.peer_id)
+            return self.controller.conversation.last_marked_date;
+        else
+            return INT32_MAX;
+    }
+    
     
     __block MessageTableItem *firstObject;
     
@@ -177,7 +189,7 @@
     NSArray *allItems = [self selectAllItems];
     
     
-    __block int msgId;
+    __block int msgId = INT32_MAX;
     
     [allItems enumerateObjectsWithOptions:NSEnumerationReverse usingBlock:^(MessageTableItem *obj, NSUInteger idx, BOOL *stop) {
         
@@ -199,19 +211,20 @@
     NSArray *allItems = [self selectAllItems];
     
     
-    __block MessageTableItem *item;
+    __block int msgId = INT32_MAX;
     
-    [allItems enumerateObjectsUsingBlock:^(MessageTableItem *obj, NSUInteger idx, BOOL *stop) {
+    [allItems enumerateObjectsWithOptions:0 usingBlock:^(MessageTableItem *obj, NSUInteger idx, BOOL *stop) {
+        
         
         if(obj.message.n_id > 0 && obj.message.n_id < TGMINFAKEID)
         {
-            item = obj;
+            msgId = obj.message.n_id;
             *stop = YES;
         }
         
     }];
     
-    return item.message.n_id;
+    return msgId;
     
 }
 
@@ -270,6 +283,9 @@
     
     converted = [self sortItems:converted];
 
+    
+    state = !next && state != ChatHistoryStateFull && (self.controller.conversation.top_message <= self.server_max_id) ? ChatHistoryStateFull : state;
+    
    [self setState:state next:next];
     
     return converted;
@@ -322,13 +338,13 @@
     int minDate = next ? 0 : self.maxDate;
     
     
-    TGHistoryResponse *response = [[Storage manager] loadMessages:self.conversation.peer_id min_id:minId max_id:maxId minDate:minDate maxDate:maxDate limit:(int)self.selectLimit next:next filterMask:[self type] isChannel:[self isKindOfClass:[ChannelCommonFilter class]]];
+    TGHistoryResponse *response = [[Storage manager] loadMessages:self.peer_id min_id:minId max_id:maxId minDate:minDate maxDate:maxDate limit:(int)self.selectLimit next:next filterMask:[self type] isChannel:[self isKindOfClass:[ChannelCommonFilter class]]];
     
     [self setHole:response.hole withNext:next];
     
     *state = response.result.count < self.selectLimit || [self confirmHoleWithNext:next] ? ChatHistoryStateRemote : ChatHistoryStateLocal;
     
-    
+        
     return response.result;
     
 }
@@ -366,12 +382,12 @@
 
 -(void)remoteRequest:(BOOL)next max_id:(int)max_id hole:(TGMessageHole *)hole callback:(void (^)(id response,ChatHistoryState state))callback {
     
-   int source_id = next ? self.server_min_id-1 : self.server_max_id+1;
+   int source_id = next ? self.server_min_id : self.server_max_id;
     
     if(!_controller)
         return;
 
-    self.request = [RPCRequest sendRequest:[TLAPI_messages_getHistory createWithPeer:[_conversation inputPeer] offset_id:source_id add_offset:next ||  source_id == 0 ? 0 : -(int)self.selectLimit limit:(int)self.selectLimit max_id:next ? 0 : INT32_MAX min_id:0] successHandler:^(RPCRequest *request, TL_messages_channelMessages * response) {
+    self.request = [RPCRequest sendRequest:[TLAPI_messages_getHistory createWithPeer:[_peer inputPeer] offset_id:source_id add_offset:next ||  source_id == 0 ? 0 : -(int)self.selectLimit limit:(int)self.selectLimit max_id:next ? 0 : INT32_MAX min_id:0] successHandler:^(RPCRequest *request, TL_messages_channelMessages * response) {
         
         
         [SharedManager proccessGlobalResponse:response];
@@ -409,7 +425,7 @@
 
 
 -(int)peer_id {
-    return _conversation.peer_id;
+    return _peer.peer_id;
 }
 
 -(TGMessageHole *)holeWithNext:(BOOL)next {
@@ -471,6 +487,10 @@
         self.request = nil;
     }
     
+}
+
+-(TLMessagesFilter *)messagesFilter {
+    return [TL_inputMessagesFilterEmpty create];
 }
 
 @end

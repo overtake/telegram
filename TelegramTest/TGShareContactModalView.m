@@ -19,7 +19,7 @@
 
 -(instancetype)initWithFrame:(NSRect)frameRect {
     if(self = [super initWithFrame:frameRect]) {
-        [self setContainerFrameSize:NSMakeSize(NSWidth(frameRect) - 60, NSHeight(frameRect) - 60)];
+        [self setContainerFrameSize:NSMakeSize(300, 300)];
         
         
         [self initialize];

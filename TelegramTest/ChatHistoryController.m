@@ -98,7 +98,22 @@ static ChatHistoryController *observer;
             
             self.selectLimit = 50;
             
-            [self addFilter:[[historyFilter alloc] initWithController:self conversation:_conversation]];
+            [self addFilter:[[historyFilter alloc] initWithController:self peer:_conversation.peer]];
+            
+            
+            if(_conversation.type == DialogTypeChannel) {
+                
+                if(_conversation.chat.chatFull.migrated_from_chat_id != 0) {
+                    
+                    HistoryFilter *filter = [[historyFilter == [ChannelFilter class] ? [HistoryFilter class] : historyFilter alloc] initWithController:self peer:[TL_peerChat createWithChat_id:_conversation.chat.chatFull.migrated_from_chat_id]];
+                    
+                    [self addFilter:filter];
+                }
+                
+                
+            }
+            
+            
             _need_save_to_db = YES;
         
 
@@ -120,7 +135,7 @@ static ChatHistoryController *observer;
     
     __block HistoryFilter *filter = [_filters lastObject];
     
-    [_filters enumerateObjectsUsingBlock:^(HistoryFilter *obj, NSUInteger idx, BOOL * _Nonnull stop) {
+    [_filters enumerateObjectsWithOptions:0 usingBlock:^(HistoryFilter *obj, NSUInteger idx, BOOL * _Nonnull stop) {
                 
         if([obj stateWithNext:next] != ChatHistoryStateFull)
         {
@@ -182,12 +197,12 @@ static ChatHistoryController *observer;
 }
 
 -(ChatHistoryState)prevState {
-    HistoryFilter *filter = [self filterWithNext:NO];
+    HistoryFilter *filter = self.filter;
     return filter.prevState;
 }
 
 -(ChatHistoryState)nextState {
-    HistoryFilter *filter = [self filterWithNext:YES];
+    HistoryFilter *filter = self.filter;
     return filter.nextState;
 }
 
@@ -196,7 +211,7 @@ static ChatHistoryController *observer;
     
     [queue dispatchOnQueue:^{
         
-       NSArray *items = [self.filter filterAndAdd:@[item] latest:NO];
+       NSArray *items = [[self filterWithPeerId:item.message.peer_id] filterAndAdd:@[item] latest:NO];
         
         assert(items.count == 1);
 
@@ -390,7 +405,7 @@ static ChatHistoryController *observer;
                     
                 [[ASQueue mainQueue] dispatchOnQueue:^{
                         
-                    [obj.controller receivedMessageList:items inRange:NSMakeRange(position+1, items.count) itsSelf:NO];
+                    [obj.controller receivedMessageList:@[tableItem] inRange:NSMakeRange(position+1, items.count) itsSelf:NO];
                     
                 }];
                  
@@ -445,25 +460,22 @@ static ChatHistoryController *observer;
             return;
         }
         
-        
         self.proccessing = YES;
-        
-//        ChatHistoryState state;
-//        
-//        if(!next) {
-//            state = self.filter.class == HistoryFilter.class && ( _max_id == 0 || (_min_id >= self.conversation.sync_message_id && self.conversation.sync_message_id != 0) || self.conversation.type == DialogTypeSecretChat || self.conversation.type == DialogTypeBroadcast) ? ChatHistoryStateLocal : ChatHistoryStateRemote;
-//            
-//        } else {
-//            state = (self.filter.class == HistoryFilter.class && (_max_id == 0 ? _min_id >= _controller.conversation.sync_message_id : _max_id > self.conversation.sync_message_id) ) || self.conversation.type == DialogTypeSecretChat || self.conversation.type == DialogTypeBroadcast ? ChatHistoryStateLocal : ChatHistoryStateRemote;
-//            
-//        }
-//        
-//        [self setState:state next:next];
-        
-        
         
         
         [filter request:next callback:^(NSArray *result, ChatHistoryState state) {
+            
+            
+            if([filter checkState:ChatHistoryStateLocal next:next] && result.count == 0) {
+                
+                [filter proccessResponse:[self.controller messageTableItemsFromMessages:result] state:state next:next];
+                
+                self.proccessing = NO;
+                
+                [self request:next anotherSource:anotherSource sync:sync selectHandler:selectHandler];
+                
+                return ;
+            }
             
             NSArray *converted = [filter proccessResponse:[self.controller messageTableItemsFromMessages:result] state:state next:next];
             
@@ -708,6 +720,22 @@ static ChatHistoryController *observer;
         
         
     }];
+}
+
+-(int)itemsCount {
+    __block int count = 0;
+    
+    [self.queue dispatchOnQueue:^{
+        
+        [_filters enumerateObjectsUsingBlock:^(HistoryFilter *obj, NSUInteger idx, BOOL * _Nonnull stop) {
+           
+            count+=obj.selectAllItems.count;
+            
+        }];
+        
+    } synchronous:YES];
+    
+    return count;
 }
 
 

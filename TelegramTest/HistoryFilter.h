@@ -7,6 +7,8 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "TLPeer+Extensions.h"
+
 
 @class ChatHistoryController;
 
@@ -42,9 +44,9 @@ typedef enum {
 @property (nonatomic,assign) ChatHistoryState nextState;
 
 @property (nonatomic,weak) ChatHistoryController *controller;
-@property (nonatomic,strong) TL_conversation *conversation;
+@property (nonatomic,strong,readonly) TLPeer *peer;
 
-
+-(id)initWithController:(ChatHistoryController *)controller peer:(TLPeer *)peer;
 
 -(int)max_id;
 -(int)min_id;
@@ -62,7 +64,6 @@ typedef enum {
 -(TGMessageHole *)holeWithNext:(BOOL)next;
 -(void)setHole:(TGMessageHole *)hole withNext:(BOOL)next;
 
--(id)initWithController:(ChatHistoryController *)controller conversation:(TL_conversation *)conversation;
 
 -(NSMutableArray *)messageItems;
 -(NSMutableDictionary *)messageKeys;
@@ -97,5 +98,7 @@ typedef enum {
 
 
 -(void)fillGroupHoles:(NSArray *)messages bottom:(BOOL)bottom;
+
+-(TLMessagesFilter *)messagesFilter;
 
 @end

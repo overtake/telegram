@@ -77,11 +77,11 @@
     
     _loader = nil;
     
-    NSLog(@"test");
     
     if(_conversation) {
         _loader = [[ChatHistoryController alloc] initWithController:self historyFilter:[self.tableView historyFilter]];
         
+            
         [_loader.filter setState:ChatHistoryStateFull next:NO];
     } else {
         [_loader drop:YES];

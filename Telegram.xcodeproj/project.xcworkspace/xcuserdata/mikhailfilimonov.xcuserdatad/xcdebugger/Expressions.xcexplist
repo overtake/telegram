@@ -201,6 +201,9 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "__63-[CommonMediaHistoryFilter remoteRequest:max_id:hole:callback:]_block_invoke24:CommonMediaHistoryFilter.m">
+      </ContextState>
+      <ContextState
          contextName = "-[MessageTableCellAudioView setStateTextFieldString:]:MessageTableCellAudioView.m">
          <PersistentStrings>
             <PersistentString
@@ -1686,6 +1689,20 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "-[CommonMediaHistoryFilter remoteRequest:max_id:hole:callback:]:CommonMediaHistoryFilter.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "request">
+            </PersistentString>
+            <PersistentString
+               value = "next">
+            </PersistentString>
+            <PersistentString
+               value = "self.selectAllItems">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "-[MessageTableCellContainerView setItem:]:MessageTableCellContainerView.m">
          <PersistentStrings>
             <PersistentString
@@ -2212,10 +2229,16 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "__63-[CommonMediaHistoryFilter remoteRequest:max_id:hole:callback:]_block_invoke:CommonMediaHistoryFilter.m">
+      </ContextState>
+      <ContextState
          contextName = "__51-[ChatHistoryController addItemWithoutSavingState:]_block_invoke:ChatHistoryController.m">
          <PersistentStrings>
             <PersistentString
                value = "self.filter">
+            </PersistentString>
+            <PersistentString
+               value = "self.filter.peer_id">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -2478,6 +2501,14 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "-[HistoryFilter remoteRequest:max_id:hole:callback:]:HistoryFilter.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.selectAllItems">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "__33-[VideoSenderItem performRequest]_block_invoke:VideoSenderItem.m">
          <PersistentStrings>
             <PersistentString
@@ -2648,34 +2679,7 @@
          contextName = "__66-[ChatHistoryController request:anotherSource:sync:selectHandler:]_block_invoke:ChatHistoryController.m">
          <PersistentStrings>
             <PersistentString
-               value = "allItems">
-            </PersistentString>
-            <PersistentString
-               value = "memory">
-            </PersistentString>
-            <PersistentString
-               value = "self.conversation.sync_message_id">
-            </PersistentString>
-            <PersistentString
-               value = "_controller.conversation.sync_message_id">
-            </PersistentString>
-            <PersistentString
-               value = "sync">
-            </PersistentString>
-            <PersistentString
-               value = "_nextState">
-            </PersistentString>
-            <PersistentString
-               value = "next">
-            </PersistentString>
-            <PersistentString
-               value = "self.max_id">
-            </PersistentString>
-            <PersistentString
-               value = "self.min_id">
-            </PersistentString>
-            <PersistentString
-               value = "_min_id &gt;= _controller.conversation.sync_message_id">
+               value = "self.isProccessing">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -3655,6 +3659,9 @@
             <PersistentString
                value = "max_id">
             </PersistentString>
+            <PersistentString
+               value = "next">
+            </PersistentString>
          </PersistentStrings>
       </ContextState>
       <ContextState
@@ -4040,6 +4047,11 @@
       </ContextState>
       <ContextState
          contextName = "__69-[ChannelHistoryController request:anotherSource:sync:selectHandler:]_block_invoke_2:ChannelHistoryController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "chat.dialog">
+            </PersistentString>
+         </PersistentStrings>
       </ContextState>
       <ContextState
          contextName = "-[ComposeBroadcastTableItemView redrawRow]:ComposeBroadcastListViewController.m">
@@ -4201,6 +4213,14 @@
          <PersistentStrings>
             <PersistentString
                value = "self.type">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "__52-[HistoryFilter remoteRequest:max_id:hole:callback:]_block_invoke:HistoryFilter.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "request">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -4506,6 +4526,14 @@
       </ContextState>
       <ContextState
          contextName = "-[HistoryFilter storageRequest:state:]:HistoryFilter.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.peer_id">
+            </PersistentString>
+            <PersistentString
+               value = "self.controller.conversation">
+            </PersistentString>
+         </PersistentStrings>
       </ContextState>
       <ContextState
          contextName = "-[SettingsWindowController awakeFromNib]:SettingsWindowController.m">

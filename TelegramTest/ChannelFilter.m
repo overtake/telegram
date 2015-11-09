@@ -43,7 +43,7 @@
             
             
             
-            int lastImportantMessageId = [lastImportantMessage n_id] == 0 ? (bottom ? 1 : self.conversation.top_message) : [lastImportantMessage n_id];
+            int lastImportantMessageId = [lastImportantMessage n_id] == 0 ? (bottom ? 1 : self.controller.conversation.top_message) : [lastImportantMessage n_id];
                         
             NSArray *holes = [[Storage manager] groupHoles:obj.peer_id min:!bottom?obj.n_id:lastImportantMessageId max:bottom?obj.n_id:lastImportantMessageId];
             

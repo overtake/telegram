@@ -18,25 +18,8 @@
     return HistoryFilterPhoto | HistoryFilterVideo;
 }
 
-
--(void)remoteRequest:(BOOL)next peer_id:(int)peer_id callback:(void (^)(NSArray *, ChatHistoryState))callback {
-    
-    self.request = [RPCRequest sendRequest:[TLAPI_messages_search createWithFlags:0 peer:[self.conversation inputPeer] q:@"" filter:[TL_inputMessagesFilterPhotoVideo create] min_date:0 max_date:0 offset:0 max_id:self.min_id limit:(int)self.controller.selectLimit] successHandler:^(RPCRequest *request, TL_messages_messages *response) {
-        
-        [SharedManager proccessGlobalResponse:response];
-        
-        if(callback) {
-            callback(response.messages,response.messages.count < self.controller.selectLimit ? ChatHistoryStateFull : ChatHistoryStateRemote);
-        }
-        
-    } errorHandler:^(RPCRequest *request, RpcError *error) {
-        
-        if(callback) {
-            callback(nil,ChatHistoryStateRemote);
-        }
-        
-    } timeout:0 queue:[ASQueue globalQueue].nativeQueue];
-    
+-(TLMessagesFilter *)messagesFilter {
+    return [TL_inputMessagesFilterPhotoVideo create];
 }
 
 -(NSString *)description {

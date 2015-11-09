@@ -182,7 +182,7 @@ static const int controlsHeight = 75;
                 [self insertObjects:@[previewObject]];
                 
             } else {
-                TGPVUserBehavior *behavior = [[TGPVUserBehavior alloc] init];
+                TGPVUserBehavior *behavior = [[TGPVUserBehavior alloc] initWithConversation:_conversation commonItem:previewObject];
                 behavior.user = user;
                 
                 [behavior addItems:@[previewObject]];
@@ -289,7 +289,7 @@ static const int controlsHeight = 75;
     
     [ASQueue dispatchOnStageQueue:^{
         
-        [_list sortUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"previewObject.msg_id" ascending:NO]]];
+        [_list sortUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"previewObject.media.date" ascending:NO]]];
         
         _totalCount = MAX([_behavior totalCount],(int)[self listCount]);
         
@@ -433,8 +433,7 @@ static TGPhotoViewer *viewer;
     _controls.convertsation = conversation;
     _photoContainer.conversation = conversation;
     
-    
-    _behavior = [[TGPVDocumentsBehavior alloc] init];
+    _behavior = [[TGPVDocumentsBehavior alloc]  initWithConversation:_conversation commonItem:item];
     [_behavior setConversation:_conversation];
     
     [ASQueue dispatchOnStageQueue:^{
@@ -469,7 +468,7 @@ static TGPhotoViewer *viewer;
     _photoContainer.conversation = conversation;
     
     
-    _behavior = [[TGPVMediaBehavior alloc] init];
+    _behavior = [[TGPVMediaBehavior alloc]  initWithConversation:_conversation commonItem:item];
     [_behavior setConversation:_conversation];
     
     [ASQueue dispatchOnStageQueue:^{
@@ -488,11 +487,17 @@ static TGPhotoViewer *viewer;
     _waitRequest = YES;
     
     
-    [self.behavior load:[[[self itemAtIndex:[self listCount]-1] previewObject] msg_id] next:NO limit:10000 callback:^(NSArray *previewObjects) {
+    [self.behavior load:0 next:YES limit:100 callback:^(NSArray *nextObjects) {
         
-        [self insertObjects:previewObjects];
+        [self insertObjects:nextObjects];
         
-        _waitRequest = NO;
+        [self.behavior load:0 next:NO limit:100 callback:^(NSArray *prevObjects) {
+            
+            [self insertObjects:prevObjects];
+            
+            _waitRequest = NO;
+        }];
+        
     }];
     
 }
@@ -501,7 +506,7 @@ static TGPhotoViewer *viewer;
 -(void)show:(PreviewObject *)item user:(TLUser *)user {
     
     
-    _behavior = [[TGPVUserBehavior alloc] init];
+    _behavior = [[TGPVUserBehavior alloc] initWithConversation:_conversation commonItem:item];
     [_behavior setUser:user];
     
     
@@ -530,7 +535,7 @@ static TGPhotoViewer *viewer;
         
     }
     
-    _behavior = [[TGPVEmptyBehavior alloc] init];
+    _behavior = [[TGPVEmptyBehavior alloc] initWithConversation:_conversation commonItem:item];
     
     [ASQueue dispatchOnStageQueue:^{
         
@@ -644,33 +649,43 @@ static TGPhotoViewer *viewer;
     if(currentItemId == NSNotFound)
         return;
     
+    
+   
+    
+    BOOL next = [self.behavior isReversedContentView] ? currentItemId > _currentItemId : currentItemId < _currentItemId;
+    
+    
     _currentItemId = currentItemId;
     
-    _currentItem = [self itemAtIndex:currentItemId];
+    
+     _currentItem = [self itemAtIndex:currentItemId];
     
     
 
     [self.controls setCurrentPosition:[self.behavior isReversedContentView] ? _totalCount - _currentItemId : _currentItemId+1 ofCount:_totalCount];
+        
     
     [[self photoContainer] setCurrentViewerItem:_currentItem animated:NO];
     
     
      [_zoomControl setHidden:[_currentItem.previewObject.reservedObject isKindOfClass:[NSDictionary class]]];
     
-    if( (_currentItemId + 15 ) >= [self listCount] && !_waitRequest) {
+    NSUInteger rcurrent = [self.behavior isReversedContentView] ? _totalCount - _currentItemId : _currentItemId;
+    
+    if((next && (rcurrent <= 15 )) || ((!next && (rcurrent >= (_totalCount - 15))))) {
+       // _waitRequest = YES;
         
-        _waitRequest = YES;
+        NSLog(@"next:%d, rcurrent:%ld, total:%d",next,rcurrent,_totalCount);
         
-        
-        [self.behavior load:[[[self itemAtIndex:[self listCount]-1] previewObject] msg_id] next:YES limit:100 callback:^(NSArray *previewObjects) {
+        [self.behavior load:[[[self itemAtIndex:[self listCount]-1] previewObject] msg_id] next:next limit:100 callback:^(NSArray *previewObjects) {
             
             if(previewObjects.count > 0)
                 [self insertObjects:previewObjects];
             
-            _waitRequest = NO;
+            //_waitRequest = NO;
         }];
-        
     }
+    
     
     [ASQueue dispatchOnStageQueue:^{
         

@@ -436,7 +436,7 @@ static const int maxWidth = 120;
     self.locked = NO;
     
     
-    self.behavior = [[TGPVMediaBehavior alloc] init];
+    self.behavior = [[TGPVMediaBehavior alloc] initWithConversation:_conversation commonItem:nil];
     self.behavior.conversation = conversation;
     
     
@@ -874,8 +874,8 @@ static const int maxWidth = 120;
     [self.forwardButton setTapBlock:^{
         
         
-        [[Telegram rightViewController].messagesViewController setState:MessagesViewControllerStateNone];
-        [[Telegram rightViewController].messagesViewController unSelectAll:NO];
+        [weakSelf.messagesViewController setState:MessagesViewControllerStateNone];
+        [weakSelf.messagesViewController unSelectAll:NO];
         
         
         NSUInteger count = 0;
@@ -886,7 +886,7 @@ static const int maxWidth = 120;
             
             [weakSelf.documentsTableView.selectedItems enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
                 
-                [[Telegram rightViewController].messagesViewController setSelectedMessage:obj selected:YES];
+                [weakSelf.messagesViewController setSelectedMessage:obj selected:YES];
             }];
             
             
@@ -895,7 +895,7 @@ static const int maxWidth = 120;
             
             [weakSelf.sharedLinksTableView.selectedItems enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
                 
-                [[Telegram rightViewController].messagesViewController setSelectedMessage:obj selected:YES];
+                [weakSelf.messagesViewController setSelectedMessage:obj selected:YES];
             }];
         } else {
             
@@ -905,12 +905,12 @@ static const int maxWidth = 120;
                 
                 MessageTableItem *item  = [MessageTableItem messageItemFromObject:obj.previewObject.media];
                 
-                [[Telegram rightViewController].messagesViewController setSelectedMessage:item selected:YES];
+                [weakSelf.messagesViewController setSelectedMessage:item selected:YES];
             }];
             
         }
         
-        [[Telegram rightViewController] showForwardMessagesModalView:weakSelf.conversation messagesCount:count];
+        [weakSelf.messagesViewController showForwardMessagesModalView];
         
         [weakSelf setIsEditable:NO animated:YES];
         

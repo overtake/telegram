@@ -7,7 +7,7 @@
 //
 
 #import "HistoryFilter.h"
-
-@interface SharedLinksHistoryFilter : HistoryFilter
+#import "CommonMediaHistoryFilter.h"
+@interface SharedLinksHistoryFilter : CommonMediaHistoryFilter
 
 @end

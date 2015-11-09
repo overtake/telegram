@@ -8,6 +8,6 @@
 
 #import <Foundation/Foundation.h>
 #import "TGPVBehavior.h"
-@interface TGPVDocumentsBehavior : NSObject <TGPVBehavior>
+@interface TGPVDocumentsBehavior : TGPhotoViewerBehavior <TGPVBehavior>
 
 @end

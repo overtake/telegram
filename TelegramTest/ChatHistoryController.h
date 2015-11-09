@@ -12,6 +12,16 @@
 
 #import "HistoryFilter.h"
 #import "TGHistoryResponse.h"
+
+
+@interface TGHistoryFilterTrigger : NSObject
+@property (nonatomic,assign) BOOL swapAfterNext;
+@property (nonatomic,assign) BOOL swapAfterPrev;
+
+-(id)initWithSwapAfterNext:(BOOL)swapAfterNext andSwapAfterPrev:(BOOL)swapAfterPrev;
+
+@end
+
 @interface ChatHistoryController : NSObject<SenderListener>
 
 
@@ -70,6 +80,7 @@ typedef void (^selectHandler)(NSArray *result, NSRange range);
 
 -(void)items:(NSArray *)msgIds complete:(void (^)(NSArray *list))complete;
 
+-(int)itemsCount;
 
 // protected methods
 

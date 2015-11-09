@@ -2,7 +2,7 @@
 //  MTProto.m
 //  Telegram
 //
-//  Auto created by Mikhail Filimonov on 05.11.15.
+//  Auto created by Mikhail Filimonov on 09.11.15.
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -4505,6 +4505,88 @@
     objc.chat_photo = [self.chat_photo copy];
     objc.notify_settings = [self.notify_settings copy];
     objc.exported_invite = [self.exported_invite copy];
+    
+    return objc;
+}
+    
+-(id)initWithCoder:(NSCoder *)aDecoder {
+
+    if((self = [ClassStore deserialize:[aDecoder decodeObjectForKey:@"data"]])) {
+        
+    }
+    
+    return self;
+}
+        
+-(void)encodeWithCoder:(NSCoder *)aCoder {
+    [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
+}
+
+        
+
+        
+@end
+
+@implementation TL_chatFull_39
++(TL_chatFull_39*)createWithN_id:(int)n_id participants:(TLChatParticipants*)participants chat_photo:(TLPhoto*)chat_photo notify_settings:(TLPeerNotifySettings*)notify_settings exported_invite:(TLExportedChatInvite*)exported_invite bot_info:(NSMutableArray*)bot_info {
+	TL_chatFull_39* obj = [[TL_chatFull_39 alloc] init];
+	obj.n_id = n_id;
+	obj.participants = participants;
+	obj.chat_photo = chat_photo;
+	obj.notify_settings = notify_settings;
+	obj.exported_invite = exported_invite;
+	obj.bot_info = bot_info;
+	return obj;
+}
+-(void)serialize:(SerializedData*)stream {
+	[stream writeInt:self.n_id];
+	[ClassStore TLSerialize:self.participants stream:stream];
+	[ClassStore TLSerialize:self.chat_photo stream:stream];
+	[ClassStore TLSerialize:self.notify_settings stream:stream];
+	[ClassStore TLSerialize:self.exported_invite stream:stream];
+	//Serialize FullVector
+	[stream writeInt:0x1cb5c415];
+	{
+		NSInteger tl_count = [self.bot_info count];
+		[stream writeInt:(int)tl_count];
+		for(int i = 0; i < (int)tl_count; i++) {
+            TLBotInfo* obj = [self.bot_info objectAtIndex:i];
+            [ClassStore TLSerialize:obj stream:stream];
+		}
+	}
+}
+-(void)unserialize:(SerializedData*)stream {
+	self.n_id = [stream readInt];
+	self.participants = [ClassStore TLDeserialize:stream];
+	self.chat_photo = [ClassStore TLDeserialize:stream];
+	self.notify_settings = [ClassStore TLDeserialize:stream];
+	self.exported_invite = [ClassStore TLDeserialize:stream];
+	//UNS FullVector
+	[stream readInt];
+	{
+		if(!self.bot_info)
+			self.bot_info = [[NSMutableArray alloc] init];
+		int count = [stream readInt];
+		for(int i = 0; i < count; i++) {
+			TLBotInfo* obj = [ClassStore TLDeserialize:stream];
+            if(obj != nil && [obj isKindOfClass:[TLBotInfo class]])
+                 [self.bot_info addObject:obj];
+            else
+                break;
+		}
+	}
+}
+        
+-(TL_chatFull_39 *)copy {
+    
+    TL_chatFull_39 *objc = [[TL_chatFull_39 alloc] init];
+    
+    objc.n_id = self.n_id;
+    objc.participants = [self.participants copy];
+    objc.chat_photo = [self.chat_photo copy];
+    objc.notify_settings = [self.notify_settings copy];
+    objc.exported_invite = [self.exported_invite copy];
+    objc.bot_info = [self.bot_info copy];
     
     return objc;
 }

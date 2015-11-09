@@ -40,12 +40,17 @@
 
 -(void)remoteRequest:(BOOL)next max_id:(int)max_id hole:(TGMessageHole *)hole callback:(void (^)(id response,ChatHistoryState state))callback {
     
-    self.request = [RPCRequest sendRequest:[TLAPI_channels_getImportantHistory createWithChannel:[self.conversation.chat inputPeer] offset_id:max_id add_offset:next? 0 : -(int)self.controller.selectLimit limit:(int)self.controller.selectLimit max_id:hole ? hole.max_id : INT32_MAX min_id:hole ? hole.min_id : next ? 0 : max_id] successHandler:^(RPCRequest *request, TL_messages_channelMessages * response) {
+    
+    TLChat *chat = [[ChatsManager sharedManager] find:self.peer.channel_id];
+    
+    
+    
+    self.request = [RPCRequest sendRequest:[TLAPI_channels_getImportantHistory createWithChannel:[TL_inputChannel createWithChannel_id:self.peer.channel_id access_hash:chat.access_hash] offset_id:max_id add_offset:next? 0 : -(int)self.controller.selectLimit limit:(int)self.controller.selectLimit max_id:hole ? hole.max_id : INT32_MAX min_id:hole ? hole.min_id : next ? 0 : max_id] successHandler:^(RPCRequest *request, TL_messages_channelMessages * response) {
         
         [SharedManager proccessGlobalResponse:response];
         
         
-        NSArray *messages = [[response messages] arrayByAddingObjectsFromArray:[self fillGroupHoles:[response collapsed] peer_id:self.conversation.peer_id bottom:next]];
+        NSArray *messages = [[response messages] arrayByAddingObjectsFromArray:[self fillGroupHoles:[response collapsed] peer_id:self.peer_id bottom:next]];
          
          [self setHole:[self proccessAndGetHoleWithHole:hole next:next messages:[response messages]] withNext:next];
         

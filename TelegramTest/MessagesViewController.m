@@ -1464,7 +1464,7 @@ static NSTextAttachment *headerMediaIcon() {
     
     Class f = !self.normalNavigationCenterView.discussIsEnabled ? [ChannelImportantFilter class] : [ChannelFilter class];
     
-    [self.historyController setFilter:[[f alloc] initWithController:self.historyController conversation:_conversation]];
+    [self.historyController setFilter:[[f alloc] initWithController:self.historyController peer:_conversation.peer]];
     
     [self flushMessages];
     [self loadhistory:0 toEnd:YES prev:NO isFirst:YES];

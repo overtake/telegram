@@ -119,10 +119,6 @@ void setMaxChatUsers(int c) {
 int maxChatUsers() {
     
     
-#ifdef TGDEBUG
-    return 2;
-#endif
-    
     return max_chat_users;
 }
 

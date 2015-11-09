@@ -92,6 +92,7 @@ static const int limit = 100;
             }];
             
            
+            TLChat *chat = [[response.chats filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.n_id == %d",channel.peer.channel_id]] firstObject];
             
             if(f.count == 2) {
                 
@@ -106,13 +107,15 @@ static const int limit = 100;
                 
                 // need create group hole
                 
-                TGMessageGroupHole *groupHole = [[TGMessageGroupHole alloc] initWithUniqueId:-rand_int() peer_id:topMsg.peer_id min_id:minMsg.n_id max_id:topMsg.n_id+1 date:topMsg.date count:0];
-                
-                [[Storage manager] insertMessagesHole:groupHole];
+                if(!chat.isMegagroup) {
+                    TGMessageGroupHole *groupHole = [[TGMessageGroupHole alloc] initWithUniqueId:-rand_int() peer_id:topMsg.peer_id min_id:minMsg.n_id max_id:topMsg.n_id+1 date:topMsg.date count:0];
+                    
+                    [[Storage manager] insertMessagesHole:groupHole];
+                }
                 
             }
             
-            TLChat *chat = [[response.chats filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.n_id == %d",channel.peer.channel_id]] firstObject];
+            
             
             int top_important_message = chat.isMegagroup ? topMsg.n_id : minMsg.n_id;
             

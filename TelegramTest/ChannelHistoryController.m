@@ -76,21 +76,6 @@ static TGChannelsPolling *channelPolling;
             
             NSArray *converted = [filter proccessResponse:[self.controller messageTableItemsFromMessages:result] state:state next:next];
             
-            
-            MessageTableItem *service = [[filter selectAllItems] lastObject];
-            
-            if(service.message.action && [service.message.action isKindOfClass:[TL_messageActionChannelMigrateFrom class]] && [filter checkState:ChatHistoryStateFull next:next]) {
-                
-                TLChat *chat = [[ChatsManager sharedManager] find:service.message.action.chat_id];
-                
-                HistoryFilter *filter = [[MegagroupChatFilter alloc] initWithController:self conversation:chat.dialog];
-                
-                [filter setState:ChatHistoryStateFull next:NO];
-                
-                [self addFilter:filter];
-                
-            }
-            
             [self performCallback:selectHandler result:converted range:NSMakeRange(0, converted.count)];
             
             [channelPolling checkInvalidatedMessages:converted important:[self.filter isKindOfClass:[ChannelImportantFilter class]]];
@@ -237,6 +222,34 @@ static TGChannelsPolling *channelPolling;
 -(void)dealloc {
     [channelPolling stop];
 }
+
+/*
+ //            __block MessageTableItem *service;
+ //
+ //
+ //            if([filter checkState:ChatHistoryStateFull next:next]) {
+ //                [[filter selectAllItems] enumerateObjectsWithOptions:NSEnumerationReverse usingBlock:^(MessageTableItem *obj, NSUInteger idx, BOOL * _Nonnull stop) {
+ //                    if(obj.message.action && [obj.message.action isKindOfClass:[TL_messageActionChannelMigrateFrom class]]) {
+ //                        service = obj;
+ //                        *stop = YES;
+ //                    }
+ //                }];
+ //
+ //
+ //                if( service ) {
+ //
+ //                    TLChat *chat = [[ChatsManager sharedManager] find:service.message.action.chat_id];
+ //
+ //                    HistoryFilter *filter = [[MegagroupChatFilter alloc] initWithController:self peer:chat.dialog.peer];
+ //
+ //                    [filter setState:ChatHistoryStateFull next:NO];
+ //
+ //                    [self addFilter:filter];
+ //
+ //                }
+ //            }
+
+ */
 
 
 @end

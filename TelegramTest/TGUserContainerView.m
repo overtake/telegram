@@ -43,12 +43,12 @@
         
         self.nameTextField = [[TMNameTextField alloc] init];
         [self.nameTextField setSelector:@selector(chatInfoTitle)];
-        [self addSubview:self.nameTextField];
+        
         
         self.statusTextField = [[TMStatusTextField alloc] init];
         [self.statusTextField setSelector:@selector(statusForGroupInfo)];
         [self addSubview:self.statusTextField];
-        
+        [self addSubview:self.nameTextField];
         [_statusTextField setFont:TGSystemFont(12)];
         [_statusTextField setTextColor:GRAY_TEXT_COLOR];
         

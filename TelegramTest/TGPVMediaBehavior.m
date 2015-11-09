@@ -8,6 +8,13 @@
 
 #import "TGPVMediaBehavior.h"
 #import "TGPhotoViewer.h"
+#import "ChatHistoryController.h"
+#import "PhotoHistoryFilter.h"
+#import "MessageTableItem.h"
+@interface TGPVMediaBehavior () <MessagesDelegate>
+
+@end
+
 @implementation TGPVMediaBehavior
 
 @synthesize conversation = _conversation;
@@ -16,36 +23,82 @@
 @synthesize state = _state;
 @synthesize totalCount = _totalCount;
 
+@synthesize controller = _controller;
+
+
+-(id)initWithConversation:(TL_conversation *)conversation commonItem:(PreviewObject *)object {
+    
+    if(self = [super init]) {
+        _conversation = conversation;
+        _controller = [[ChatHistoryController alloc] initWithController:self historyFilter:[PhotoHistoryFilter class]];
+        
+        if(object != nil)
+            [_controller addItemWithoutSavingState:[[self messageTableItemsFromMessages:@[object.media]] firstObject]];
+    }
+    
+    return self;
+}
+
+-(void)addItems:(NSArray *)items {
+    
+}
+
+-(void)receivedMessage:(MessageTableItem *)message position:(int)position itsSelf:(BOOL)force {
+    
+}
+
+-(void)deleteItems:(NSArray *)items orMessageIds:(NSArray *)ids {
+    
+}
+
+-(void)flushMessages {
+    
+}
+
+-(void)receivedMessageList:(NSArray *)list inRange:(NSRange)range itsSelf:(BOOL)force {
+    
+}
+
+- (void)didAddIgnoredMessages:(NSArray *)items {
+    
+}
+
+-(NSArray *)messageTableItemsFromMessages:(NSArray *)messages  {
+    return [MessageTableItem messageTableItemsFromMessages:messages];
+}
+
+-(void)jumpToLastMessages:(BOOL)force {
+    
+}
+
+-(TL_conversation *)conversation {
+    return _conversation;
+}
+
+-(void)updateLoading {
+    
+}
+
 -(void)load:(long)max_id next:(BOOL)next limit:(int)limit callback:(void (^)(NSArray *))callback {
     
-    if(_state == TGPVMediaBehaviorLoadingStateLocal) {
-       
-        [[Storage manager] media:^(NSArray *list) {
+    
+    [_controller request:next anotherSource:YES sync:NO selectHandler:^(NSArray *result, NSRange range) {
+        
+        NSMutableArray * previewObjects = [NSMutableArray array];
+        
+        [result enumerateObjectsUsingBlock:^(MessageTableItem *obj, NSUInteger idx, BOOL *stop) {
             
+            PreviewObject *preview = [[PreviewObject alloc] initWithMsdId:obj.message.n_id media:obj.message peer_id:obj.message.peer_id];
             
-            if(self != nil) {
-                
-                list = [list filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(PreviewObject *evaluatedObject, NSDictionary *bindings) {
-                    
-                    return ![[[(TL_localMessage *)evaluatedObject.media media] photo] isKindOfClass:[TL_photoEmpty class]];
-                    
-                }]];
-                
-                if(list.count < limit && next)
-                    _state = _conversation.type == DialogTypeSecretChat || _conversation.type == DialogTypeBroadcast ? TGPVMediaBehaviorLoadingStateFull : TGPVMediaBehaviorLoadingStateRemote;
-                
-                [ASQueue dispatchOnStageQueue:^{
-                    callback(list);
-                }];
-            }
-       
-        } max_id:max_id filterMask:HistoryFilterPhoto peer:_conversation.peer next:next limit:limit];
+            [previewObjects addObject:preview];
+        }];
         
-    } else if(_state == TGPVMediaBehaviorLoadingStateRemote) {
+        [ASQueue dispatchOnStageQueue:^{
+            callback(previewObjects);
+        }];
         
-        [self loadRemote:max_id limit:limit callback:callback];
-        
-    }
+    }];
+    
     
 }
 
@@ -58,7 +111,7 @@
 }
 
 -(int)totalCount {
-    return [[Storage manager] countOfMedia:_conversation.peer_id];
+    return [_controller itemsCount];
 }
 
 
@@ -127,7 +180,6 @@
             
             
             TL_photoSize *photoSize = ((TL_photoSize *)[photo.sizes lastObject]);
-            
             
             
             NSImage *thumb;
