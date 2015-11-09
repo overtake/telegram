@@ -670,13 +670,14 @@ static TGPhotoViewer *viewer;
     
      [_zoomControl setHidden:[_currentItem.previewObject.reservedObject isKindOfClass:[NSDictionary class]]];
     
-    NSUInteger rcurrent = [self.behavior isReversedContentView] ? _totalCount - _currentItemId : _currentItemId;
+    int rcurrent = [self.behavior isReversedContentView] ? _totalCount - (int)_currentItemId : (int)_currentItemId;
     
-    if((next && (rcurrent <= 15 )) || ((!next && (rcurrent >= (_totalCount - 15))))) {
+    
+    
+    
+    if((next && (rcurrent <= 15 )) || (!next && (rcurrent >= (_totalCount - 15)))) {
        // _waitRequest = YES;
-        
-        NSLog(@"next:%d, rcurrent:%ld, total:%d",next,rcurrent,_totalCount);
-        
+                
         [self.behavior load:[[[self itemAtIndex:[self listCount]-1] previewObject] msg_id] next:next limit:100 callback:^(NSArray *previewObjects) {
             
             if(previewObjects.count > 0)

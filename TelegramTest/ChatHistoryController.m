@@ -42,6 +42,8 @@
 
 @property (nonatomic,strong) NSMutableArray *filters;
 
+@property (nonatomic,assign) BOOL isNeedSwapFilters;
+
 @end
 
 @implementation ChatHistoryController
@@ -105,7 +107,7 @@ static ChatHistoryController *observer;
                 
                 if(_conversation.chat.chatFull.migrated_from_chat_id != 0) {
                     
-                    HistoryFilter *filter = [[historyFilter == [ChannelFilter class] ? [HistoryFilter class] : historyFilter alloc] initWithController:self peer:[TL_peerChat createWithChat_id:_conversation.chat.chatFull.migrated_from_chat_id]];
+                    HistoryFilter *filter = [[historyFilter == [ChannelFilter class] ? [MegagroupChatFilter class] : historyFilter alloc] initWithController:self peer:[TL_peerChat createWithChat_id:_conversation.chat.chatFull.migrated_from_chat_id]];
                     
                     [self addFilter:filter];
                 }
@@ -135,7 +137,7 @@ static ChatHistoryController *observer;
     
     __block HistoryFilter *filter = [_filters lastObject];
     
-    [_filters enumerateObjectsWithOptions:0 usingBlock:^(HistoryFilter *obj, NSUInteger idx, BOOL * _Nonnull stop) {
+    [_filters enumerateObjectsWithOptions: _isNeedSwapFilters ? NSEnumerationReverse : 0 usingBlock:^(HistoryFilter *obj, NSUInteger idx, BOOL * _Nonnull stop) {
                 
         if([obj stateWithNext:next] != ChatHistoryStateFull)
         {
@@ -147,6 +149,12 @@ static ChatHistoryController *observer;
     
     
     return filter;
+}
+
+-(void)swapFiltersBeforePrevLoaded {
+    [self.queue dispatchOnQueue:^{
+        _isNeedSwapFilters = YES;
+    }];
 }
 
 -(HistoryFilter *)filterWithPeerId:(int)peer_id {
@@ -172,7 +180,18 @@ static ChatHistoryController *observer;
     __block HistoryFilter *filter;
     
     [self.queue dispatchOnQueue:^{
-        filter = [_filters firstObject];
+        
+        if(_isNeedSwapFilters) {
+            filter = [_filters lastObject];
+            
+            if([filter checkState:ChatHistoryStateFull next:NO]) {
+                filter = [_filters firstObject];
+            }
+        } else {
+            filter = [_filters firstObject];
+        }
+        
+        
     } synchronous:YES];
     
     return filter;
@@ -211,7 +230,13 @@ static ChatHistoryController *observer;
     
     [queue dispatchOnQueue:^{
         
+        
+        
        NSArray *items = [[self filterWithPeerId:item.message.peer_id] filterAndAdd:@[item] latest:NO];
+        
+        if(item.message.peer_id != self.filter.peer_id) {
+            [self swapFiltersBeforePrevLoaded];
+        }
         
         assert(items.count == 1);
 

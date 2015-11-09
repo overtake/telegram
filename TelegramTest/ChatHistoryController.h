@@ -14,13 +14,6 @@
 #import "TGHistoryResponse.h"
 
 
-@interface TGHistoryFilterTrigger : NSObject
-@property (nonatomic,assign) BOOL swapAfterNext;
-@property (nonatomic,assign) BOOL swapAfterPrev;
-
--(id)initWithSwapAfterNext:(BOOL)swapAfterNext andSwapAfterPrev:(BOOL)swapAfterPrev;
-
-@end
 
 @interface ChatHistoryController : NSObject<SenderListener>
 
@@ -69,7 +62,7 @@ typedef void (^selectHandler)(NSArray *result, NSRange range);
 
 -(void)addItemWithoutSavingState:(MessageTableItem *)item;
 
-
+-(void)swapFiltersBeforePrevLoaded;
 
 -(void)drop:(BOOL)dropMemory;
 

@@ -661,7 +661,7 @@ TL_localMessage *parseMessage(FMResultSet *result) {
         }
         
         if(min_id != 0 && localMinDate == 0) {
-            localMinDate = [db intForQuery:[NSString stringWithFormat:@"SELECT date FROM %@ WHERE n_id=?",tableMessages],@(max_id)];
+            localMinDate = [db intForQuery:[NSString stringWithFormat:@"SELECT date FROM %@ WHERE n_id=?",tableMessages],@(min_id)];
         }
         
         if(localMaxDate == 0)

@@ -135,9 +135,9 @@
     
     
     if(allItems.count == 0) {
-        if(self.controller.conversation.peer_id == _peer.peer_id)
+        if(self.controller.conversation.peer_id == _peer.peer_id && ![self isKindOfClass:[CommonMediaHistoryFilter class]])
             return self.controller.conversation.last_marked_message;
-        return INT32_MAX;
+        return 0;
     }
     
     
@@ -162,10 +162,10 @@
     NSArray *allItems = [self selectAllItems];
     
     if(allItems.count == 0) {
-        if(self.controller.conversation.peer_id == _peer.peer_id)
+        if(self.controller.conversation.peer_id == _peer.peer_id && ![self isKindOfClass:[CommonMediaHistoryFilter class]])
             return self.controller.conversation.last_marked_date;
         else
-            return INT32_MAX;
+            return 0;
     }
     
     
@@ -338,9 +338,12 @@
     int minDate = next ? 0 : self.maxDate;
     
     
-    TGHistoryResponse *response = [[Storage manager] loadMessages:self.peer_id min_id:minId max_id:maxId minDate:minDate maxDate:maxDate limit:(int)self.selectLimit next:next filterMask:[self type] isChannel:[self isKindOfClass:[ChannelCommonFilter class]]];
+    TGHistoryResponse *response = [[Storage manager] loadMessages:self.peer_id min_id:minId max_id:maxId minDate:minDate maxDate:maxDate limit:(int)self.selectLimit next:next filterMask:[self type] isChannel:[self.peer isKindOfClass:[TL_peerChannel class]]];
     
     [self setHole:response.hole withNext:next];
+    
+    
+    NSLog(@"isChannel:%d",[self.peer isKindOfClass:[TL_peerChannel class]]);
     
     *state = response.result.count < self.selectLimit || [self confirmHoleWithNext:next] ? ChatHistoryStateRemote : ChatHistoryStateLocal;
     
