@@ -148,6 +148,20 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "__86-[Storage loadMessages:min_id:max_id:minDate:maxDate:limit:next:filterMask:isChannel:]_block_invoke:Storage.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "holeSql">
+            </PersistentString>
+            <PersistentString
+               value = "conversationId">
+            </PersistentString>
+            <PersistentString
+               value = "allHoles">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "-[MessagesViewController deleteMessages:]:MessagesViewController.m">
          <PersistentStrings>
             <PersistentString
@@ -1641,6 +1655,9 @@
       </ContextState>
       <ContextState
          contextName = "-[TMCollectionPageController loadRemote]:TMCollectionPageController.m">
+      </ContextState>
+      <ContextState
+         contextName = "-[TGModernChatInfoViewController drawParticipants]:TGModernChatInfoViewController.m">
       </ContextState>
       <ContextState
          contextName = "-[MessageTableCellTextView _didChangeBackgroundColorWithAnimation:]:MessageTableCellTextView.m">
@@ -3380,9 +3397,6 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
-         contextName = "__26-[Storage insertMessages:]_block_invoke:Storage.m">
-      </ContextState>
-      <ContextState
          contextName = "-[DownloadItem initWithObject:]:DownloadItem.m">
          <PersistentStrings>
             <PersistentString
@@ -4321,6 +4335,9 @@
          contextName = "__31-[TGAllStickersTableView load:]_block_invoke:TGAllStickersTableView.m">
       </ContextState>
       <ContextState
+         contextName = "-[ChatAvatarImageView updateWithConversation:]:ChatAvatarImageView.m">
+      </ContextState>
+      <ContextState
          contextName = "-[TMCollectionPageController addNextItems:]:TMCollectionPageController.m">
       </ContextState>
       <ContextState
@@ -4472,6 +4489,9 @@
                value = "anItem.action">
             </PersistentString>
          </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[HistoryFilter proccessAndGetHoleWithHole:next:messages:]:HistoryFilter.m">
       </ContextState>
       <ContextState
          contextName = "__41-[TMSharedMediaButton loadCount:peer_id:]_block_invoke:TMSharedMediaButton.m">

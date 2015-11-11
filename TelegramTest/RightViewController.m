@@ -593,7 +593,7 @@
     
     if(self.messagesViewController.conversation == dialog && self.navigationViewController.currentController != self.messagesViewController && ![_mainViewController isSingleLayout] && ![sender isKindOfClass:[ComposeActionBehavior class]]) {
       
-        [self.messagesViewController setCurrentConversation:dialog withJump:messageId historyFilter:filter];
+    //    [self.messagesViewController setCurrentConversation:dialog withJump:messageId historyFilter:filter];
         
         [self.navigationViewController.viewControllerStack removeAllObjects];
         [self.navigationViewController.viewControllerStack addObject:[self currentEmptyController]];
@@ -602,7 +602,7 @@
         [self.navigationViewController goBackWithAnimation:YES];
     } else {
         
-        [self.messagesViewController setCurrentConversation:dialog withJump:messageId historyFilter:filter force:[Telegram isSingleLayout]];
+       // [self.messagesViewController setCurrentConversation:dialog withJump:messageId historyFilter:filter force:[Telegram isSingleLayout]];
         
         if(![_mainViewController isSingleLayout]) {
             

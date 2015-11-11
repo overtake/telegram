@@ -240,12 +240,8 @@
     
     [self.doneButton setHidden:!_chat.isManager || !_chat.isAdmin];
     
-    
     [_tableView removeAllItems:YES];
  
-    
-    
-    
     _headerItem = [[TGProfileHeaderRowItem alloc] initWithObject:_conversation];
     
     _headerItem.height = 142;

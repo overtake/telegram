@@ -119,7 +119,7 @@
 @property (nonatomic, strong) SelfDestructionController *destructionController;
 @property (nonatomic, strong) RPCRequest *typingRequest;
 
-@property (nonatomic,assign) int jumpMessageId;
+@property (nonatomic,strong) TL_localMessage *jumpMessage;
 //Bottom
 @property (nonatomic, strong) MessageTypingView *typingView;
 
@@ -2325,29 +2325,21 @@ static NSTextAttachment *headerMediaIcon() {
     [self.bottomView selectInputTextByText:text];
 }
 
-- (void)setCurrentConversation:(TL_conversation *)dialog withJump:(int)messageId historyFilter:(Class)historyFilter force:(BOOL)force {
+- (void)setCurrentConversation:(TL_conversation *)dialog withMessageJump:(TL_localMessage *)message force:(BOOL)force {
   
     [self loadViewIfNeeded];
     
     [self hideSearchBox:NO];
     
     
-    if(!self.locked &&  (((messageId != 0 && messageId != self.jumpMessageId) || force) || [self.conversation.peer peer_id] != [dialog.peer peer_id] || self.historyController.filter.class != historyFilter)) {
+    if(!self.locked &&  (((message != nil && message.channelMsgId != _jumpMessage.channelMsgId) || force) || [self.conversation.peer peer_id] != [dialog.peer peer_id] )) {
         
-        self.jumpMessageId = messageId;
+        self.jumpMessage = message;
         self.conversation = dialog;
-        
         
         [Notification perform:@"ChangeDialogSelection" data:@{KEY_DIALOG:self.conversation, @"sender":self}];
         
-        
-        if(dialog.type == DialogTypeChannel && historyFilter == HistoryFilter.class) {
-            historyFilter = self.defHFClass;
-        }
-        
         [self.normalNavigationCenterView enableDiscussion:NO force:NO];
-        [TGHelpPopup popover].fadeDuration = 0;
-        [TGHelpPopup close];
         
         [_replyMsgsStack removeAllObjects];
         
@@ -2367,15 +2359,9 @@ static NSTextAttachment *headerMediaIcon() {
         
         [self.typingView setDialog:dialog];
         
-        
-        if(!historyFilter)
-            historyFilter = [self defHFClass];
-        
-        
         [self.historyController drop:NO];
         
-        self.historyController = [[[self hControllerClass] alloc] initWithController:self historyFilter:historyFilter];
-        
+        self.historyController = [[[self hControllerClass] alloc] initWithController:self historyFilter:[self defHFClass]];
         
         
         [self.normalNavigationCenterView setDialog:dialog];
@@ -2391,17 +2377,15 @@ static NSTextAttachment *headerMediaIcon() {
         
         [self unSelectAll:NO];
         
-        
-        
         [self.typingReservation removeAllObjects];
         [self removeScrollEvent];
         
         [self flushMessages];
         
-        if(messageId != 0) {
-            [self showMessage:messageId fromMsgId:-1];
+        if(message != nil) {
+            [self showMessage:message.n_id fromMsgId:-1];
         } else {
-            [self loadhistory:messageId toEnd:YES prev:messageId != 0 isFirst:YES];
+            [self loadhistory:0 toEnd:YES prev:NO isFirst:YES];
         }
         
         [self addScrollEvent];
@@ -2413,21 +2397,19 @@ static NSTextAttachment *headerMediaIcon() {
         if(dialog.type == DialogTypeChannel) {
             [[FullChatManager sharedManager] performLoad:dialog.chat.n_id force:YES callback:nil];
         }
-        
-        
-        
+    
     }
 }
 
--(void)setCurrentConversation:(TL_conversation *)dialog withJump:(int)messageId historyFilter:(__unsafe_unretained Class)historyFilter {
+-(void)setCurrentConversation:(TL_conversation *)dialog withMessageJump:(TL_localMessage *)message   {
 
-    [self setCurrentConversation:dialog withJump:messageId historyFilter:historyFilter force:NO];
+    [self setCurrentConversation:dialog withMessageJump:message force:NO];
     
 }
 
 
 -(void)setCurrentConversation:(TL_conversation *)dialog {
-    [self setCurrentConversation:dialog withJump:0 historyFilter:nil];
+    [self setCurrentConversation:dialog withMessageJump:nil];
 }
 
 
@@ -2646,16 +2628,6 @@ static NSTextAttachment *headerMediaIcon() {
     
     [self.historyController request:!prev anotherSource:YES sync:isFirst selectHandler:^(NSArray *prevResult, NSRange range1) {
         
-//       if(prevResult.count > 0) {
-//            MessageTableItem *item = prevResult[0];
-//           if(self.conversation.peer_id != item.message.peer_id) {
-//               return;
-//           }
-//           
-//        }
-        
-        
-        // assert(prevResult.count > 0);
         
         if(message_id != 0 && prev && self.historyController.filter.prevState == ChatHistoryStateRemote) {
             self.historyController.filter.nextState = self.historyController.prevState;

@@ -139,18 +139,23 @@
 //        }
 
         FMDBRetain(self);
-         dispatch_async(_queue, ^() {
-//                MTLog(@"DB[#%lu]: %@", (unsigned long)hash, string);
-
-                FMDatabase *db = [self database];
-                block(db);
-                
-                if ([db hasOpenResultSets]) {
-                    MTLog(@"Warning: there is at least one open result set around after performing [FMDatabaseQueue inDatabase:]");
-                }
-                
-//                MTLog(@"DB[#%lu] end", hash);
-            });
+        
+        dispatch_block_t b = ^{
+            FMDatabase *db = [self database];
+            block(db);
+            
+            if ([db hasOpenResultSets]) {
+                MTLog(@"Warning: there is at least one open result set around after performing [FMDatabaseQueue inDatabase:]");
+            }
+        };
+        
+        
+        
+        if(dispatch_get_current_queue() != _queue)
+            dispatch_async(_queue, b);
+        else
+            b();
+        
     
         FMDBRelease(self);
     }

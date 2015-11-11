@@ -75,4 +75,5 @@ typedef enum {
 
 -(void)showInfoPage:(TL_conversation *)conversation;
 -(void)showMessagesViewController:(TL_conversation *)conversation;
+-(void)showMessagesViewController:(TL_conversation *)conversation withMessage:(TL_localMessage *)message;
 @end

@@ -331,10 +331,14 @@ typedef enum {
         }
         
         if(dialog){
-            BOOL success = [[Telegram rightViewController] showByDialog:dialog withJump:msg_id historyFilter:[HistoryFilter class] sender:self];
-            if(!success) {
-                [[Telegram rightViewController].messagesViewController setCurrentConversation:dialog withJump:msg_id historyFilter:[HistoryFilter class]];
-            }
+            
+            
+            [appWindow().navigationController showMessagesViewController:dialog withMessage:searchItem.message];
+            
+//            BOOL success = [[Telegram rightViewController] showByDialog:dialog withJump:msg_id historyFilter:[HistoryFilter class] sender:self];
+//            if(!success) {
+//                [[Telegram rightViewController].messagesViewController setCurrentConversation:dialog withJump:msg_id historyFilter:[HistoryFilter class]];
+//            }
             [self.tableView setSelectedByHash:item.hash];
         }
     } else if(item && [item isKindOfClass:[SearchHashtagItem class]]) {

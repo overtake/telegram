@@ -675,5 +675,11 @@ static const int navigationOffset = 48;
     [self gotoViewController:self.messagesViewController];
 }
 
+-(void)showMessagesViewController:(TL_conversation *)conversation withMessage:(TL_localMessage *)message {
+    
+     [self.messagesViewController setCurrentConversation:conversation withMessageJump:message];
+    
+    [self gotoViewController:self.messagesViewController];
+}
 
 @end

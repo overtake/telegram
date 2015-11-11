@@ -742,10 +742,31 @@ TL_localMessage *parseMessage(FMResultSet *result) {
         [result close];
         
         
+        
+        NSMutableArray *allHoles = [[NSMutableArray alloc] init];
+        {
+            // all holes
+            NSString *holeSql = [NSString stringWithFormat:@"select * from %@ where peer_id = %@",tableMessageHoles,@(conversationId)];
+            
+            
+            result = [db executeQuery:holeSql];
+            
+            while ([result next]) {
+                TGMessageHole *hole = [[TGMessageHole alloc] initWithUniqueId:[result intForColumn:@"unique_id"] peer_id:[result intForColumn:@"peer_id"] min_id:[result intForColumn:@"min_id"] max_id:[result intForColumn:@"max_id"] date:[result intForColumn:@"date"] count:[result intForColumn:@"count"]];
+                
+                [allHoles addObject:hole];
+            }
+            
+            [result close];
+        }
+        
+        
         if(!next)
             hole = [holes firstObject];
         else
             hole = [holes lastObject];
+        
+        
         
         
         if(mask & HistoryFilterImportantChannelMessage) {
@@ -911,26 +932,17 @@ TL_localMessage *parseMessage(FMResultSet *result) {
     
     [queue inDatabaseWithDealocing:^(FMDatabase *db) {
         
-        NSString *sql = [NSString stringWithFormat:@"select serialized,flags,message_text from messages where n_id = %d",msgId];
+        NSString *sql = [NSString stringWithFormat:@"select * from %@ where n_id = %d",tableMessages,msgId];
         
         if(channel_id != 0)
         {
-            sql = [NSString stringWithFormat:@"select serialized,flags,views,pts from %@ where n_id = %ld",tableChannelMessages,channelMsgId(msgId, channel_id)];
+            sql = [NSString stringWithFormat:@"select * from %@ where n_id = %ld",tableChannelMessages,channelMsgId(msgId, channel_id)];
         }
         
         FMResultSet *result = [db executeQueryWithFormat:sql,nil];
         
         while ([result next]) {
-            message = [TLClassStore deserialize:[result dataForColumn:@"serialized"]];
-            message.flags = [result intForColumn:@"flags"];
-            
-            if([message.to_id isKindOfClass:[TL_peerChannel class]]) {
-                message.pts = [result intForColumn:@"pts"];
-                message.views = [result intForColumn:@"views"];
-            } else {
-                message.message = [result stringForColumn:@"message_text"];
-            }
-            
+            message = parseMessage(result);
         }
         [result close];
         
@@ -1608,7 +1620,7 @@ TL_localMessage *parseMessage(FMResultSet *result) {
         return;
     }
     
-    if(!dialog.isAddToList) {
+    if(dialog.fake) {
         return;
     }
     
@@ -2947,6 +2959,9 @@ TL_localMessage *parseMessage(FMResultSet *result) {
         {
             int minSynchedId = [self syncedMessageIdWithPeerId:message.peer_id important:message.isImportantMessage latest:NO isChannel:message.isChannelMessage];
             
+            if(minSynchedId == 0) {
+                minSynchedId = INT32_MAX;
+            }
             
             if(minSynchedId > message.n_id) {
                 TGMessageHole *hole = [[TGMessageHole alloc] initWithUniqueId:-rand_int() peer_id:message.peer_id min_id:message.n_id+1 max_id:minSynchedId-1 date:message.date count:0];

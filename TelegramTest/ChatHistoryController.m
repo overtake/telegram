@@ -651,6 +651,10 @@ static ChatHistoryController *observer;
     BOOL prevLoaded = prevResult.count >= limit/2 || self.prevState == ChatHistoryStateFull;
     
     
+    if(self.nextState == ChatHistoryStateRemote || self.prevState == ChatHistoryStateRemote) {
+        int bp = 0;
+    }
+    
     if(nextLoaded && prevLoaded) {
         
         NSArray *result = [self.filter selectAllItems];

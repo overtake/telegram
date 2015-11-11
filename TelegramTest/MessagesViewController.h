@@ -69,9 +69,11 @@ typedef enum {
 - (void)jumpToLastMessages:(BOOL)force;
 - (void)saveInputText;
 
-- (void)setCurrentConversation:(TL_conversation *)dialog withJump:(int)messageId historyFilter:(Class)historyFilter;
-- (void)setCurrentConversation:(TL_conversation *)dialog withJump:(int)messageId historyFilter:(Class)historyFilter force:(BOOL)force;
+- (void)setCurrentConversation:(TL_conversation *)dialog withMessageJump:(TL_localMessage *)message;
+- (void)setCurrentConversation:(TL_conversation *)dialog withMessageJump:(TL_localMessage *)message force:(BOOL)force;
 - (void)setCurrentConversation:(TL_conversation *)dialog;
+
+
 
 - (void)showMessage:(int)messageId fromMsgId:(int)msgId;
 - (void)showMessage:(int)messageId fromMsgId:(int)msgId switchDiscussion:(BOOL)switchDiscussion;
