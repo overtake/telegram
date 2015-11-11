@@ -249,12 +249,18 @@ static const TGTwoColors colors[] = {
 
 
 - (void) setUser:(TLUser *)user {
+    
+    if(user.n_id == 40719684) {
+        int bp = 0;
+    }
+    
     [self setUser:user animated:NO];
 }
 
 - (void) setUser:(TLUser *)user animated:(BOOL)animated {
     if(self.user.n_id == user.n_id)
         return;
+    
     
     self->_chat = nil;
     self->_user = user;
@@ -361,7 +367,6 @@ static CAAnimation *ani2() {
     
     [self removeAnimationForKey:@"contents"];
     
-    
     if(self.type == TMAvatarTypeUser && self.user.n_id == 777000 && self.bounds.size.width == 50.0f) {
         self.image = image_TelegramNotifications();
         self.image.size = NSMakeSize(50.0f, 50.0f);
@@ -377,8 +382,6 @@ static CAAnimation *ani2() {
     
     __block NSString *key = [NSString stringWithFormat:@"%lu:%@",self.currentHash,NSStringFromSize(self.bounds.size)];
     
-    
-
     NSImage *image = [TGCache cachedImage:key group:@[AVACACHE]];
     if(image) {
         if(animated)
@@ -388,7 +391,6 @@ static CAAnimation *ani2() {
         return;
     }
 
-
     self.image = self.placeholder;
     
     if(self.fileLocation) {
@@ -397,10 +399,8 @@ static CAAnimation *ani2() {
         
     } else {
         
-        
         int colorMask = [TMAvatarImageView colorMask:self.type == TMAvatarTypeChat ? self.chat : (self.type == TMAvatarTypeBroadcast ? self.broadcast : self.user)];
 
-        
          __block NSString *text = self->_text;
         
         [ASQueue dispatchOnStageQueue:^{
@@ -448,7 +448,13 @@ static CAAnimation *ani2() {
                 lastName = [lastName stringByReplacingOccurrencesOfString:obj withString:@""];
             }];
             
-            text = [NSString stringWithFormat:@"%C%C", (unichar)([firstName length] ? [firstName characterAtIndex:0] : 0), (unichar)([lastName length] ? [lastName characterAtIndex:0] : 0)];
+            if(firstName.length == 0) {
+                text = [NSString stringWithFormat:@"%C",(unichar)([lastName length] ? [lastName characterAtIndex:0] : 0)];
+            } else {
+                text = [NSString stringWithFormat:@"%C%C", (unichar)([firstName length] ? [firstName characterAtIndex:0] : 0), (unichar)([lastName length] ? [lastName characterAtIndex:0] : 0)];
+            }
+            
+            
         }
         
     } else if([object isKindOfClass:[TLChat class]]) {
@@ -530,23 +536,13 @@ static CAAnimation *ani2() {
     NSImage *image = [[NSImage alloc] initWithSize:size];
     [image lockFocus];
     
-    
-   
-    
-    
-    
-    
-    
     TGTwoColors twoColors;
-    
     
     twoColors = colors[colorMask % (sizeof(colors) / sizeof(colors[0]))];
     
     
     if(colorMask != -1) {
         CGContextRef context = (CGContextRef)[[NSGraphicsContext currentContext] graphicsPort];
-        
-        
         
         CGColorRef colors[2] = {
             CGColorRetain(NSColorFromRGB(twoColors.bottom).CGColor),
@@ -574,6 +570,8 @@ static CAAnimation *ani2() {
         NSColor *color = [NSColor whiteColor];
         
          __block NSString *textResult = [text uppercaseString];
+        
+        
        
          NSArray *emoji = [textResult getEmojiFromString:NO];
         

@@ -421,6 +421,9 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "-[TGModernUserViewController setUser:conversation:]:TGModernUserViewController.m">
+      </ContextState>
+      <ContextState
          contextName = "__35-[TGUpdateChannels proccessUpdate:]_block_invoke_4:TGUpdateChannels.m">
       </ContextState>
       <ContextState
@@ -2982,6 +2985,9 @@
          contextName = "__42-[TGDocumentsMediaTableView remoteSearch:]_block_invoke:TGDocumentsMediaTableView.m">
       </ContextState>
       <ContextState
+         contextName = "__46-[TGPhotoViewer show:conversation:isReversed:]_block_invoke_2:TGPhotoViewer.m">
+      </ContextState>
+      <ContextState
          contextName = "-[AccountSettingsViewController defaultContainerView]:AccountSettingsViewController.m">
          <PersistentStrings>
             <PersistentString
@@ -3714,6 +3720,15 @@
          <PersistentStrings>
             <PersistentString
                value = "self.chat.chatFull">
+            </PersistentString>
+            <PersistentString
+               value = "self.user.photo">
+            </PersistentString>
+            <PersistentString
+               value = "self.user.n_id">
+            </PersistentString>
+            <PersistentString
+               value = "self.chat.photo">
             </PersistentString>
          </PersistentStrings>
       </ContextState>

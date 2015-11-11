@@ -120,6 +120,7 @@
 -(void)setUser:(TLUser *)user conversation:(TL_conversation *)conversation {
     [self loadViewIfNeeded];
     
+    
    _conversation = conversation;
     _user = user;
     

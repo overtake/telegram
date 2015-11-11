@@ -152,7 +152,7 @@
     PreviewObject *previewObject;
     
     if(self.sourceType == ChatAvatarSourceUser) {
-        if(![self.user.photo isKindOfClass:[TL_userProfilePhotoEmpty class]]) {
+        if(![self.user.photo isKindOfClass:[TL_userProfilePhotoEmpty class]] && self.user.photo != nil) {
             
             previewObject = [[PreviewObject alloc] initWithMsdId:NSIntegerMax media:[TL_photoSize createWithType:@"x" location:self.user.photo.photo_big w:640 h:640 size:0] peer_id:self.user.n_id];
             
@@ -163,7 +163,7 @@
         }
     } else {
                 
-        if(![self.chat.photo isKindOfClass:[TL_chatPhotoEmpty class]]) {
+        if(![self.chat.photo isKindOfClass:[TL_chatPhotoEmpty class]] && self.chat.photo != nil) {
             
             
             previewObject = [[PreviewObject alloc] initWithMsdId:NSIntegerMax media:[TL_photoSize createWithType:@"x" location:self.chat.photo.photo_big w:640 h:640 size:0] peer_id:self.chat.n_id];
