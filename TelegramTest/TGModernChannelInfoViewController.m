@@ -34,6 +34,7 @@
 @property (nonatomic,strong) TGProfileHeaderRowItem *headerItem;
 @property (nonatomic,strong) TGSProfileMediaRowItem *mediaItem;
 @property (nonatomic,strong) GeneralSettingsRowItem *notificationItem;
+@property (nonatomic,strong) GeneralSettingsBlockHeaderItem *participantsHeaderItem;
 
 
 
@@ -83,7 +84,20 @@
     }
     
     
+     [_tableView.list enumerateObjectsUsingBlock:^(TMRowItem *obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        
+        if([obj isKindOfClass:[TMRowItem class]]) {
+            [obj setEditable:self.action.isEditable];
+        }
+        
+    }];
+    
     [self configure];
+    
+  
+    
+    
+
     
 }
 
@@ -107,46 +121,130 @@
 }
 
 
-/*
- [self.exportChatInvite setHidden:YES];
- [self.sharedMediaButton setHidden:self.type == ChatInfoViewControllerEdit];
- [self.filesMediaButton setHidden:self.type == ChatInfoViewControllerEdit];
- [self.sharedLinksButton setHidden:self.type == ChatInfoViewControllerEdit];
- 
- [self.admins setHidden:YES];
- 
- 
- [self.linkView setHidden:self.type == ChatInfoViewControllerEdit || self.linkView.string.length == 0];
- [self.aboutView setHidden:self.type == ChatInfoViewControllerEdit || self.aboutView.string.length == 0];
- 
- 
- [self.exportChatInvite setHidden:self.type != ChatInfoViewControllerEdit || self.controller.chat.username.length > 0];
- 
- [self.editAboutContainer setHidden:self.type != ChatInfoViewControllerEdit];
- 
- [self.linkEditButton setHidden:self.type != ChatInfoViewControllerEdit || self.controller.chat.isMegagroup];
- [self.setGroupPhotoButton setHidden:self.type != ChatInfoViewControllerEdit];
- 
- 
- [self.openOrJoinChannelButton setHidden:self.controller.chat.isManager || self.controller.chat.isMegagroup];
- 
- 
- [self.managmentButton setHidden:!self.controller.chat.isManager];
- 
- [self.membersButton setHidden:!self.controller.chat.isManager];
- [self.blackListButton setHidden:self.type != ChatInfoViewControllerEdit || !self.controller.chat.isManager || self.controller.chat.isBroadcast];
- 
- 
- [self.enableCommentsButton setHidden:YES];
- 
- [self.addMembersButton setHidden:self.type == ChatInfoViewControllerEdit || !self.controller.chat.isAdmin || self.controller.fullChat.participants_count >= 200];
- */
+
+-(void)loadNextParticipants {
+    
+    [self removeScrollEvent];
+    
+    int offset = (int)(_tableView.count - 1 - [_tableView indexOfItem:_participantsHeaderItem]);
+    
+    [RPCRequest sendRequest:[TLAPI_channels_getParticipants createWithChannel:_chat.inputPeer filter:[TL_channelParticipantsRecent create] offset:offset limit:30] successHandler:^(id request, TL_channels_channelParticipants *response) {
+        
+        
+        NSMutableArray *items = [NSMutableArray array];
+        
+        [response.participants enumerateObjectsUsingBlock:^(TLChatParticipant *obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            
+            TGUserContainerRowItem *user = [[TGUserContainerRowItem alloc] initWithUser:[[UsersManager sharedManager] find:obj.user_id]];
+            user.height = 50;
+            user.type = SettingsRowItemTypeNone;
+            user.editable = self.action.isEditable;
+            
+            
+            [user setStateback:^id(TGGeneralRowItem *item) {
+                
+                BOOL canRemoveUser = (obj.user_id != [UsersManager currentUserId] && (self.chat.isAdmin || self.chat.isCreator) && ![obj isKindOfClass:[TL_chatParticipantCreator class]]);
+                
+                return @(canRemoveUser);
+                
+            }];
+            
+            __weak TGUserContainerRowItem *weakItem = user;
+            
+            [user setStateCallback:^{
+                
+                if(self.action.isEditable) {
+                    if([weakItem.stateback(weakItem) boolValue])
+                        [self kickParticipant:weakItem];
+                } else {
+                    TGModernUserViewController *viewController = [[TGModernUserViewController alloc] initWithFrame:NSZeroRect];
+                    
+                    [viewController setUser:weakItem.user conversation:weakItem.user.dialog];
+                    
+                    [self.navigationViewController pushViewController:viewController animated:YES];
+                }
+                
+            }];
+            
+            [items addObject:user];
+        }];
+        
+        
+        [_tableView insert:items startIndex:_tableView.list.count tableRedraw:YES];
+        
+        
+        if(items.count > 0)
+            [self addScrollEvent];
+         else
+            [self removeScrollEvent];
+
+        
+    } errorHandler:^(id request, RpcError *error) {
+        
+    }];
+
+}
+
+
+- (void)scrollViewDocumentOffsetChangingNotificationHandler:(NSNotification *)aNotification {
+    
+    
+    if([self.tableView.scrollView isNeedUpdateTop] ) {
+        
+        [self loadNextParticipants];
+        
+    }
+    
+}
+
+- (void) addScrollEvent {
+    id clipView = [[self.tableView enclosingScrollView] contentView];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(scrollViewDocumentOffsetChangingNotificationHandler:)
+                                                 name:NSViewBoundsDidChangeNotification
+                                               object:clipView];
+}
+
+- (void) removeScrollEvent {
+    id clipView = [[self.tableView enclosingScrollView] contentView];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:NSViewBoundsDidChangeNotification object:clipView];
+}
+
+
+-(void)kickParticipant:(TGUserContainerRowItem *)participant {
+    
+    
+    NSUInteger idx = [_tableView indexOfItem:participant];
+    
+    _chat.chatFull.participants_count--;
+    [_participantsHeaderItem redrawRow];
+    
+    if(idx != NSNotFound) {
+        [_tableView removeItem:participant tableRedraw:YES];
+        
+        [RPCRequest sendRequest:[TLAPI_channels_kickFromChannel createWithChannel:self.chat.inputPeer user_id:participant.user.inputUser kicked:YES] successHandler:^(id request, id response) {
+            
+            
+        } errorHandler:^(id request, RpcError *error) {
+            
+            [_tableView insert:participant atIndex:idx tableRedraw:YES];
+            
+        }];
+    }
+    
+    
+
+}
 
 -(void)configure {
     
     [self.doneButton setHidden:!_chat.isManager || !_chat.isAdmin];
     
+    
     [_tableView removeAllItems:YES];
+ 
+    
+    
     
     _headerItem = [[TGProfileHeaderRowItem alloc] initWithObject:_conversation];
     
@@ -281,23 +379,28 @@
         
         [_tableView addItem:descriptionItem tableRedraw:YES];
         
-        GeneralSettingsRowItem *linkItem = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeNext callback:^(TGGeneralRowItem *item) {
-            
-            ComposeAction *action = [[ComposeAction alloc] initWithBehaviorClass:[ComposeActionBehavior class]];
-            action.result = [[ComposeResult alloc] init];
-            action.result.singleObject = _chat;
-            ComposeCreateChannelUserNameStepViewController *viewController = [[ComposeCreateChannelUserNameStepViewController alloc] initWithFrame:NSZeroRect];
-            
-            [viewController setAction:action];
-            
-            [self.navigationViewController pushViewController:viewController animated:YES];
-            
-        } description:NSLocalizedString(@"Profile.EditLink", nil) subdesc:_chat.usernameLink height:42 stateback:nil];
         
-        [_tableView addItem:linkItem tableRedraw:YES];
+        if(!_chat.isMegagroup) {
+            GeneralSettingsRowItem *linkItem = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeNext callback:^(TGGeneralRowItem *item) {
+                
+                ComposeAction *action = [[ComposeAction alloc] initWithBehaviorClass:[ComposeActionBehavior class]];
+                action.result = [[ComposeResult alloc] init];
+                action.result.singleObject = _chat;
+                ComposeCreateChannelUserNameStepViewController *viewController = [[ComposeCreateChannelUserNameStepViewController alloc] initWithFrame:NSZeroRect];
+                
+                [viewController setAction:action];
+                
+                [self.navigationViewController pushViewController:viewController animated:YES];
+                
+            } description:NSLocalizedString(@"Profile.EditLink", nil) subdesc:_chat.usernameLink height:42 stateback:nil];
+            
+            [_tableView addItem:linkItem tableRedraw:YES];
+            
+        }
         
         
         [_tableView addItem:[[TGGeneralRowItem alloc] initWithHeight:20] tableRedraw:YES];
+       
         
         if(_chat.isAdmin) {
             GeneralSettingsRowItem *deleteChannelItem = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeNone callback:^(TGGeneralRowItem *item) {
@@ -314,7 +417,7 @@
         
     }
     
-    if(!_chat.isManager && !_chat.isAdmin) {
+    if(!_chat.isManager && !_chat.isAdmin && !_chat.isMegagroup) {
         
         [_tableView addItem:[[TGGeneralRowItem alloc] initWithHeight:20] tableRedraw:YES];
         
@@ -330,6 +433,18 @@
         [_tableView addItem:deleteChannelItem tableRedraw:YES];
 
     }
+    
+    if(_chat.isMegagroup) {
+        [_tableView addItem:[[TGGeneralRowItem alloc] initWithHeight:20] tableRedraw:YES];
+        
+        
+        _participantsHeaderItem = [[GeneralSettingsBlockHeaderItem alloc] initWithString:[NSString stringWithFormat:NSLocalizedString(@"Modern.Chat.Members", nil),_chat.chatFull.participants_count] height:42 flipped:NO];
+        
+        [_tableView addItem:_participantsHeaderItem tableRedraw:YES];
+        
+        [self loadNextParticipants];
+    }
+    
     
     
 }

@@ -33,6 +33,7 @@
 @property (nonatomic,strong) GeneralSettingsRowItem *deleteAndExitItem;
 @property (nonatomic,strong) TGProfileHeaderRowItem *headerItem;
 @property (nonatomic,strong) TGSProfileMediaRowItem *mediaItem;
+
 @end
 
 @implementation TGModernChatInfoViewController
@@ -272,6 +273,8 @@
 
 -(void)drawParticipants {
     
+    [_participantsHeaderItem redrawRow];
+    
     NSRange range = [self participantsRange];
     
     if(range.length > 0) {
@@ -390,7 +393,7 @@
         [_tableView addItem:[[TGGeneralRowItem alloc] initWithHeight:20] tableRedraw:YES];
     }
     
-    int uppgradeCount = ACCEPT_FEATURE ? 10 : maxChatUsers();
+    int uppgradeCount = ACCEPT_FEATURE ? 5 : maxChatUsers();
     
     if(self.participantsRange.length >= uppgradeCount && _chat.isCreator) {
         
