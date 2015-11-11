@@ -207,8 +207,6 @@ static const int controlsHeight = 75;
     
     if(![self.controls hitTest:point]) {
         
-        
-        
         if([self.photoContainer hitTest:point] && [self.photoContainer isInImageContainer:theEvent]) {
             highlight = TGPVControlHighLightNext;
         } else if(point.x > NSMinX(self.photoContainer.frame)) {
@@ -236,8 +234,6 @@ static const int controlsHeight = 75;
     [ASQueue dispatchOnStageQueue:^{
         
         NSArray *peer_update_data = notification.userInfo[KEY_DATA];
-        
-        
         
         [peer_update_data enumerateObjectsUsingBlock:^(NSDictionary *data, NSUInteger idx, BOOL *stop) {
             
@@ -291,7 +287,7 @@ static const int controlsHeight = 75;
     
     [ASQueue dispatchOnStageQueue:^{
         
-        [_list sortUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"previewObject.date" ascending:NO]]];
+        [_list sortUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"previewObject.date" ascending:NO],[NSSortDescriptor sortDescriptorWithKey:@"previewObject.msg_id" ascending:NO]]];
         
         _totalCount = MAX([_behavior totalCount],(int)[self listCount]);
         
@@ -435,8 +431,9 @@ static TGPhotoViewer *viewer;
     _controls.convertsation = conversation;
     _photoContainer.conversation = conversation;
     
-    _behavior = [[TGPVDocumentsBehavior alloc]  initWithConversation:_conversation commonItem:item];
-    [_behavior setConversation:_conversation];
+    _isReversed = YES;
+    
+    _behavior = [[TGPVDocumentsBehavior alloc] initWithConversation:_conversation commonItem:item];
     
     [ASQueue dispatchOnStageQueue:^{
         
@@ -454,12 +451,21 @@ static TGPhotoViewer *viewer;
     _waitRequest = YES;
     
     
-    [self.behavior load:[[[self itemAtIndex:[self listCount]-1] previewObject] msg_id] next:NO limit:10000 callback:^(NSArray *previewObjects) {
+    self.currentItemId = 0;
+    
+    [self.behavior load:0 next:YES limit:100 callback:^(NSArray *nextObjects) {
         
-        [self insertObjects:previewObjects];
+        [self insertObjects:nextObjects];
         
-        _waitRequest = NO;
+        [self.behavior load:0 next:NO limit:100 callback:^(NSArray *prevObjects) {
+            
+            [self insertObjects:prevObjects];
+            
+            _waitRequest = NO;
+        }];
+        
     }];
+    
 }
 
 -(void)show:(PreviewObject *)item conversation:(TL_conversation *)conversation {
@@ -474,7 +480,6 @@ static TGPhotoViewer *viewer;
     _controls.convertsation = conversation;
     _photoContainer.conversation = conversation;
     
-    
     _behavior = [[TGPVMediaBehavior alloc]  initWithConversation:_conversation commonItem:item];
     [_behavior setConversation:_conversation];
     
@@ -485,12 +490,14 @@ static TGPhotoViewer *viewer;
         
     } synchronous:YES];
     
-   [self makeKeyAndOrderFront:self];
+    [self makeKeyAndOrderFront:self];
     
     [self mouseEntered:[NSApp currentEvent]];
     
     _waitRequest = YES;
     
+    
+     self.currentItemId = 0;
     
     [self.behavior load:0 next:YES limit:100 callback:^(NSArray *nextObjects) {
         
@@ -506,7 +513,7 @@ static TGPhotoViewer *viewer;
     }];
     
     
-     self.currentItemId = 0;
+    
 }
 
 
@@ -653,13 +660,12 @@ static TGPhotoViewer *viewer;
 
 -(void)setCurrentItemId:(NSInteger)currentItemId {
     
+    
     if(currentItemId == NSNotFound)
         return;
     
     
-   
-    
-    BOOL next = _isReversed ? currentItemId > _currentItemId : currentItemId < _currentItemId;
+     BOOL next = _isReversed ? currentItemId > _currentItemId : currentItemId < _currentItemId;
     
     
     _currentItemId = currentItemId;
@@ -667,9 +673,7 @@ static TGPhotoViewer *viewer;
     
      _currentItem = [self itemAtIndex:currentItemId];
     
-    
-
-    [self.controls setCurrentPosition:_isReversed ? _totalCount - _currentItemId : _currentItemId+1 ofCount:_totalCount];
+     [self.controls setCurrentPosition:_isReversed ? _totalCount - _currentItemId : _currentItemId+1 ofCount:_totalCount];
         
     
     [[self photoContainer] setCurrentViewerItem:_currentItem animated:NO];
@@ -677,21 +681,19 @@ static TGPhotoViewer *viewer;
     
      [_zoomControl setHidden:[_currentItem.previewObject.reservedObject isKindOfClass:[NSDictionary class]]];
     
-    int rcurrent = _isReversed ? _totalCount - (int)_currentItemId : (int)_currentItemId;
-    
-    
-    
-    
-    if((next && (rcurrent <= 15 )) || (!next && (rcurrent == 0 || rcurrent >= (_totalCount - 15)))) {
-       // _waitRequest = YES;
+    if(_list.count > 1) {
+        int rcurrent = _isReversed ? _totalCount - (int)_currentItemId : (int)_currentItemId;
+        if((next && (rcurrent <= 15 )) || (!next && ( rcurrent >= (_totalCount - 15)))) {
+            // _waitRequest = YES;
+            
+            [self.behavior load:0 next:next limit:100 callback:^(NSArray *previewObjects) {
                 
-        [self.behavior load:[[[self itemAtIndex:[self listCount]-1] previewObject] msg_id] next:next limit:100 callback:^(NSArray *previewObjects) {
-            
-            if(previewObjects.count > 0)
-                [self insertObjects:previewObjects];
-            
-            //_waitRequest = NO;
-        }];
+                if(previewObjects.count > 0)
+                    [self insertObjects:previewObjects];
+                
+                //_waitRequest = NO;
+            }];
+        }
     }
     
     
@@ -738,10 +740,8 @@ static TGPhotoViewer *viewer;
     
     if(!self.photoContainer.ifVideoFullScreenPlayingNeedToogle) {
         [self orderOut:self];
-        
     }
-    
-    
+
 }
 
 

@@ -35,6 +35,9 @@
     NSImage *image = [[NSImage alloc] initWithContentsOfFile:mediaFilePath(self.message.media)];
     
     if(image.size.width > 0 && image.size.height > 0) {
+        
+         self.imageSize = image.size;
+        
         [TGCache cacheImage:image forKey:[self cacheKey] groups:@[PVCACHE]];
         
         [self.delegate didDownloadImage:image object:self];

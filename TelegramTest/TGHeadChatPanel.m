@@ -88,57 +88,13 @@ static NSMutableDictionary *allChatHeads;
     self.navigationController = nil;
 }
 
--(void)showInfoPageWithConversation:(TL_conversation *)conversation {
-    TMViewController *infoViewController;
-    
-    switch (conversation.type) {
-        case DialogTypeChat:
-            
-            infoViewController = [[ChatInfoViewController alloc] initWithFrame:self.navigationController.view.bounds];
-            
-            [(ChatInfoViewController *)infoViewController setChat:conversation.chat];
-            
-            break;
-            
-        case DialogTypeSecretChat:
-            
-            infoViewController = [[UserInfoViewController alloc] initWithFrame:self.navigationController.view.bounds];
-            
-            
-            [(UserInfoViewController *)infoViewController setUser:conversation.encryptedChat.peerUser conversation:conversation];
-            
-            break;
-            
-        case DialogTypeUser: {
-            infoViewController = [[UserInfoViewController alloc] initWithFrame:self.navigationController.view.bounds];
-            
-            
-            [(UserInfoViewController *)infoViewController setUser:conversation.user conversation:conversation];
-            break;
-        }
-            
-        case DialogTypeBroadcast:
-            infoViewController = [[BroadcastInfoViewController alloc] initWithFrame:self.navigationController.view.bounds];
-            
-            [(BroadcastInfoViewController *)infoViewController setBroadcast:self.conversation.broadcast];
-        case DialogTypeChannel:
-            infoViewController = [[ChannelInfoViewController alloc] initWithFrame:self.navigationController.view.bounds];
-            
-            [(ChannelInfoViewController *)infoViewController setChat:self.conversation.chat];
-            
-        default:
-            break;
-    }
-    
-    [self.navigationController pushViewController:infoViewController animated:YES];
-
-}
 
 -(void)showWithConversation:(TL_conversation *)conversation {
     _conversation = conversation;
     
     [_messagesViewController setCurrentConversation:conversation];
 }
+
 
 
 

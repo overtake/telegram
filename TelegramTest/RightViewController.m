@@ -217,7 +217,6 @@
         [self.navigationViewController.viewControllerStack removeObject:[self oldEmptyController]];
         
         
-        
         [self.navigationViewController.viewControllerStack insertObject:[self currentEmptyController] atIndex:0];
         
         if([self isModalViewActive]) {

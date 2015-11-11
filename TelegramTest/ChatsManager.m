@@ -67,7 +67,12 @@
                         [[FullChatManager sharedManager] loadIfNeed:currentChat.n_id force:YES]; // force load chat if changed version.
                     }
                     
-                    if(![currentChat.migrated_to isKindOfClass:newChat.migrated_to.class] || currentChat.migrated_to.channel_id !=  newChat.migrated_to.channel_id) {
+                    if(currentChat.flags != newChat.flags) {
+                        currentChat.flags = newChat.flags;
+                        isNeedUpdateTypeNotification = YES;
+                    }
+                    
+                    if((currentChat.migrated_to || newChat.migrated_to) && (![currentChat.migrated_to isKindOfClass:newChat.migrated_to.class] || currentChat.migrated_to.channel_id !=  newChat.migrated_to.channel_id)) {
                         currentChat.migrated_to = newChat.migrated_to;
                         
                         if(currentChat.isDeactivated && currentChat.migrated_to.channel_id != 0) {
@@ -76,10 +81,7 @@
                         }
                     }
                     
-                    if(currentChat.flags != newChat.flags) {
-                        currentChat.flags = newChat.flags;
-                        isNeedUpdateTypeNotification = YES;
-                    }
+                   
                    
                      if(currentChat.type != newChat.type) {
                         currentChat.type = newChat.type;

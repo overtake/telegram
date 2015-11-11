@@ -293,6 +293,9 @@
     TL_conversation *conversation = [notify.userInfo objectForKey:KEY_DIALOG];
     id object = [self.tableView itemByHash:[conversation peer_id]];
     [self.tableView removeItem:object];
+    
+    
+    
 }
 
 - (void) notificationDialogsReload:(NSNotification *)notify {
@@ -512,6 +515,17 @@
                 [[Telegram rightViewController].messagesViewController deleteDialog:dialog];
             }];
             [menu addItem:clearHistory];
+        }
+        
+        if(dialog.type == DialogTypeUser && dialog.user.isBot) {
+            
+            NSMenuItem *deleteAndStop = [NSMenuItem menuItemWithTitle:NSLocalizedString(@"Conversation.DeleteAndStopBot", nil) withBlock:^(id sender) {
+                [[Telegram rightViewController].messagesViewController deleteDialog:dialog];
+                [[BlockedUsersManager sharedManager] block:dialog.user.n_id completeHandler:^(BOOL response) {
+                    
+                }];
+            }];
+            [menu addItem:deleteAndStop];
         }
         
     } else {

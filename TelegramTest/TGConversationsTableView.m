@@ -56,33 +56,6 @@
     
     [[Telegram leftViewController].archiver save];
     
-    if([self inLiveResize]) {
-        NSRange visibleRows = [self.tableView rowsInRect:self.tableView.scrollView.contentView.bounds];
-        if(visibleRows.length > 0) {
-            [NSAnimationContext beginGrouping];
-            [[NSAnimationContext currentContext] setDuration:0];
-            
-            NSInteger count = visibleRows.location + visibleRows.length;
-            for(NSInteger i = visibleRows.location; i < count; i++) {
-                
-                TGConversationTableCell *view = [self.tableView viewAtColumn:0 row:i makeIfNecessary:NO];
-                
-                if([view isKindOfClass:[TGConversationTableCell class]])
-                    [view updateFrames];
-                else
-                    [view redrawRow];
-                
-            }
-            
-            [NSAnimationContext endGrouping];
-        }
-        
-        
-        
-        
-    } else {
-        
-    }
 }
 
 -(void)viewDidEndLiveResize {
@@ -158,7 +131,6 @@
 
 -(void)setFrameSize:(NSSize)newSize {
     [super setFrameSize:newSize];
-    
 }
 
 - (BOOL)canSelectItem {

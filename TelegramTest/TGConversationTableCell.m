@@ -274,6 +274,7 @@ static NSDictionary *attributes() {
     
     [super setFrameSize:newSize];
     
+    [self updateFrames];
 }
 
 

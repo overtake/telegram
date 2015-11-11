@@ -286,6 +286,8 @@
     [Notification addObserver:self selector:@selector(messageTableItemsEntitiesUpdate:) name:UPDATE_MESSAGE_ENTITIES];
     [Notification addObserver:self selector:@selector(messageTableItemsHoleUpdate:) name:UPDATE_MESSAGE_GROUP_HOLE];
     
+    [Notification addObserver:self selector:@selector(didChangeDeleteDialog:) name:DIALOG_DELETE];
+    
     [Notification addObserver:self selector:@selector(updateMessageViews:) name:UPDATE_MESSAGE_VIEWS];
     
     [self.view setAutoresizesSubviews:YES];
@@ -320,9 +322,6 @@
     [self.filtredNavigationCenterView setTextColor:BLUE_UI_COLOR];
     
     [self.filtredNavigationCenterView setFrameOrigin:NSMakePoint(0, -13)];
-    
-    
-
     
     
     
@@ -436,6 +435,15 @@
     
 }
 
+-(void)didChangeDeleteDialog:(NSNotification *)notification {
+    TL_conversation *conversation = notification.userInfo[KEY_DIALOG];
+    
+    if(conversation.peer_id == _conversation.peer_id) {
+        [self.navigationViewController goBackWithAnimation:YES];
+    }
+    
+}
+
 -(void)_didStackRemoved {
     
     self.conversation = nil;
@@ -480,7 +488,6 @@
     }];
     
 }
-
 
 
 -(void)messageTableItemsWebPageUpdate:(NSNotification *)notification {
@@ -677,77 +684,6 @@
     return !self.searchMessagesView.isHidden;
 }
 
-/*
- [self.searchMessagesView showSearchBox:^(NSString *search) {
- 
- clearItems();
- 
- [self.messages enumerateObjectsWithOptions:NSEnumerationReverse usingBlock:^(MessageTableItem *obj, NSUInteger idx, BOOL *stop) {
- 
- if([obj isKindOfClass:[MessageTableItemText class]]) {
- 
- SearchSelectItem *searchItem = [[SearchSelectItem alloc] init];
- 
- searchItem.item = obj;
- 
- 
- NSRange range = [obj.message.message rangeOfString:search options:NSCaseInsensitiveSearch];
- while(range.location != NSNotFound)
- {
- TGCTextMark *mark = [[TGCTextMark alloc] initWithRange:range color:NSColorFromRGBWithAlpha(0xe5bf29, 0.3) isReal:NO];
- 
- [searchItem.marks addObject:mark];
- 
- ((MessageTableItemText *)obj).mark = searchItem;
- 
- [self.searchItems addObject:searchItem];
- 
- [self.table reloadDataForRowIndexes:[NSIndexSet indexSetWithIndex:idx] columnIndexes:[NSIndexSet indexSetWithIndex:0]];
- 
- 
- range = [obj.message.message  rangeOfString:search options:NSCaseInsensitiveSearch range:NSMakeRange(range.location + 1, [obj.message.message length] - range.location - 1)];
- }
- 
- }
- 
- }];
- 
- if(self.searchItems.count > 0) {
- currentId++;
- next();
- }
- 
- 
- 
- } next:^ {
- 
- currentId++;
- 
- if(currentId >= self.searchItems.count)
- currentId = 0;
- 
- next();
- 
- 
- 
- } prevCallback:^{
- 
- currentId--;
- 
- if(currentId < 0)
- currentId = (int) self.searchItems.count - 1;
- 
- next();
- 
- 
- 
- 
- } closeCallback:^{
- 
- [self hideSearchBox:YES];
- 
- }];
- */
 
 -(void)hideSearchBox:(BOOL)animated {
     

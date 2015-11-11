@@ -59,6 +59,14 @@
 }
 
 
+-(void)didChangeDeleteDialog:(NSNotification *)notification {
+    TL_conversation *conversation = notification.userInfo[KEY_DIALOG];
+    
+    if(conversation.peer_id == self.conversation.peer_id) {
+        [self.view.window close];
+    }
+    
+}
 
 -(void)pinOrUnpin {
     [self.view.window setLevel:self.view.window.level == NSNormalWindowLevel ? NSScreenSaverWindowLevel : NSNormalWindowLevel];
