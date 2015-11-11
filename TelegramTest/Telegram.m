@@ -34,7 +34,7 @@
 }
 
 +(TL_conversation *)conversation {
-    return [Telegram rightViewController].messagesViewController.conversation;
+    return [Telegram delegate].mainWindow.navigationController.messagesViewController.conversation;
 }
 
 + (AppDelegate *)delegate {
@@ -229,11 +229,6 @@ int megagroupSizeMax() {
     [self showMessagesFromDialog:dn sender:sender];
 }
 
-- (void)showUserInfoWithUserId:(int)userID conversation:(TL_conversation *)conversation sender:(id)sender {
-    TLUser  *user = [[UsersManager sharedManager] find:userID];
-    
-    [self showUserInfoWithUser:user conversation:conversation sender:sender];
-}
 
 - (void)showNotSelectedDialog {
 
@@ -241,13 +236,6 @@ int megagroupSizeMax() {
 }
 
 
-- (void)showUserInfoWithUser:(TLUser *)user conversation:(TL_conversation *)conversation sender:(id)sender {
-    if(user == nil)
-        return ELog(@"User nil");
-    
-    [[Telegram rightViewController] showUserInfoPage:user conversation:conversation];
-    [[[Telegram mainViewController].view window] makeFirstResponder:nil];
-}
 
 - (void)onAuthSuccess {
     [[MTNetwork instance] successAuthForDatacenter:[[MTNetwork instance] currentDatacenter]];

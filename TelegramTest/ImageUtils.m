@@ -230,6 +230,8 @@ CACHE_IMAGE(ChannelShare);
 
 CACHE_IMAGE(ModernMenuDeleteIcon);
 
+CACHE_IMAGE(EditPhotoCamera);
+
 @implementation ImageUtils
 
 NSImage *previewImageForDocument(NSString *path) {

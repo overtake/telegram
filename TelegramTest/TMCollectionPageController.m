@@ -111,7 +111,7 @@
     
     _photoCollection = [[PhotoCollectionTableView alloc] initWithFrame:self.view.bounds];
     
-    _photoCollection.controller = self;
+    _photoCollection.viewController = self;
     
      [_photoCollection setFrame:self.view.bounds];
     

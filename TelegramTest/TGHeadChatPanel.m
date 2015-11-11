@@ -10,7 +10,6 @@
 #import "TGHCMessagesViewController.h"
 #import "TGChatHeadLockView.h"
 @interface TGHeadChatPanel ()
-@property (nonatomic,strong) TMNavigationController *navigationController;
 @property (nonatomic,strong) TGHCMessagesViewController *messagesViewController;
 @property (nonatomic,strong) TL_conversation *conversation;
 @end
@@ -72,21 +71,21 @@ static NSMutableDictionary *allChatHeads;
 -(void)dealloc {
     [allChatHeads removeObjectForKey:@(self.conversation.peer_id)];
     
-    [_navigationController.view removeFromSuperview];
+    [self.navigationController.view removeFromSuperview];
     [_messagesViewController.view removeFromSuperview];
     
-    [_navigationController.viewControllerStack removeAllObjects];
+    [self.navigationController.viewControllerStack removeAllObjects];
     
     [_messagesViewController _didStackRemoved];
     [_messagesViewController viewDidDisappear:NO];
     [_messagesViewController drop];
-    _navigationController.currentController = nil;
+    self.navigationController.currentController = nil;
     _messagesViewController.navigationViewController = nil;
     
     
     
     _messagesViewController = nil;
-    _navigationController = nil;
+    self.navigationController = nil;
 }
 
 -(void)showInfoPageWithConversation:(TL_conversation *)conversation {
@@ -154,16 +153,17 @@ static NSMutableDictionary *allChatHeads;
     self.contentView.wantsLayer = YES;
    // self.contentView.autoresizingMask = NSViewWidthSizable | NSViewHeightSizable;
     
-    _navigationController = [[TMNavigationController alloc] initWithFrame:self.contentView.bounds];
+    self.navigationController = [[TMNavigationController alloc] initWithFrame:self.contentView.bounds];
+    
     
     _messagesViewController = [[TGHCMessagesViewController alloc] initWithFrame:self.contentView.bounds];
     
-    _navigationController.messagesViewController = _messagesViewController;
+    self.navigationController.messagesViewController = _messagesViewController;
     
     [_messagesViewController loadViewIfNeeded];
-    [self.contentView addSubview:_navigationController.view];
+    [self.contentView addSubview:self.navigationController.view];
     
-    [_navigationController pushViewController:_messagesViewController animated:NO];
+    [self.navigationController pushViewController:_messagesViewController animated:NO];
 
 }
 

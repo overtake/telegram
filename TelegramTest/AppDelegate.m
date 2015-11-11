@@ -164,7 +164,8 @@ static void TGTelegramLoggingFunction(NSString *format, va_list args)
         return;
     }
     
-    [[Telegram sharedInstance] showMessagesFromDialog:dialog sender:self];
+    [self.mainWindow.navigationController showMessagesViewController:dialog];
+    
     
     
     

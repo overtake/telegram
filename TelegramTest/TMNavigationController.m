@@ -12,6 +12,12 @@
 #import "HackUtils.h"
 #import "TGAnimationBlockDelegate.h"
 #import "NotSelectedDialogsViewController.h"
+
+
+#import "TGModernChannelInfoViewController.h"
+#import "TGModernChatInfoViewController.h"
+#import "TGModernUserViewController.h"
+
 #define kDefaultAnimationDuration 0.1
 #define kSlowAnimationMultiplier 4
 #define kDefaultTimingFunction [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseIn]
@@ -581,6 +587,10 @@ static const int navigationOffset = 48;
 }
 
 -(void)gotoViewController:(TMViewController *)controller back:(BOOL)back animated:(BOOL)animated {
+    
+    if(self.currentController == controller)
+        return;
+    
     NSArray *stack = self.viewControllerStack;
     
     __block NSUInteger idx = 0;
@@ -607,7 +617,63 @@ static const int navigationOffset = 48;
         [self pushViewController:controller animated:animated];
     }
     
-   
 }
+
+
+
+
+-(void)showInfoPage:(TL_conversation *)conversation {
+    
+    TMViewController *infoViewController;
+    
+    switch (conversation.type) {
+        case DialogTypeChat:
+            
+            infoViewController = [[TGModernChatInfoViewController alloc] initWithFrame:NSZeroRect];
+            
+            [(TGModernChatInfoViewController *)infoViewController setChat:conversation.chat];
+            
+            break;
+            
+        case DialogTypeSecretChat:
+            
+            infoViewController = [[TGModernUserViewController alloc] initWithFrame:NSZeroRect];
+            
+            
+            [(TGModernUserViewController *)infoViewController setUser:conversation.encryptedChat.peerUser conversation:conversation];
+            
+            break;
+            
+        case DialogTypeUser: {
+            infoViewController = [[TGModernUserViewController alloc] initWithFrame:NSZeroRect];
+            
+            
+            [(TGModernUserViewController *)infoViewController setUser:conversation.user conversation:conversation];
+            break;
+        }
+            
+        case DialogTypeBroadcast:
+            infoViewController = [[BroadcastInfoViewController alloc] initWithFrame:NSZeroRect];
+            
+            [(BroadcastInfoViewController *)infoViewController setBroadcast:conversation.broadcast];
+        case DialogTypeChannel:
+            infoViewController = [[TGModernChannelInfoViewController alloc] initWithFrame:NSZeroRect];
+            
+            [(TGModernChannelInfoViewController *)infoViewController setChat:conversation.chat];
+            
+        default:
+            break;
+    }
+    
+    [self pushViewController:infoViewController animated:YES];
+    
+}
+
+-(void)showMessagesViewController:(TL_conversation *)conversation {
+    [self.messagesViewController setCurrentConversation:conversation];
+    
+    [self gotoViewController:self.messagesViewController];
+}
+
 
 @end

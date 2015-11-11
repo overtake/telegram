@@ -13,6 +13,9 @@
 @property (nonatomic, assign, readonly) long msg_id;
 @property (nonatomic, assign, readonly) int peerId;
 
+
+@property (nonatomic,assign) int date;
+
 @property (nonatomic,assign) long access_hash;
 
 @property (nonatomic,strong) id reservedObject;

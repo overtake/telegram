@@ -167,24 +167,11 @@
             
             if(isAdd) {
                 
-                TLDialog *dialog = user.dialog;
+                TL_conversation *dialog = user.dialog;
                 if(dialog) {
-                    [[Telegram sharedInstance] showMessagesFromDialog:dialog sender:self];
-                } else {
-                    [[Storage manager] dialogByPeer:user.n_id completeHandler:^(TLDialog *dialog, TLMessage *message) {
-                       
-                        if(dialog) {
-                            [[DialogsManager sharedManager] add:@[dialog]];
-                        } else {
-                            dialog = [[DialogsManager sharedManager] createDialogForUser:user];
-                        }
-                        
-                        if(message)
-                           [[MessagesManager sharedManager] add:@[message]];
-                        
-                        [[Telegram sharedInstance] showMessagesFromDialog:dialog sender:self];
-                    }];
+                    [appWindow().navigationController showMessagesViewController:dialog];
                 }
+                
                 
                 
             } else {

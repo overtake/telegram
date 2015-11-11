@@ -66,7 +66,7 @@
             
         } else {
             imageView = [[PhotoCollectionImageView alloc] initWithFrame:NSZeroRect];
-            imageView.controller = (TMCollectionPageController *) self.rowItem.table.controller;
+            imageView.controller = (TMCollectionPageController *) self.rowItem.table.viewController;
             [self.images addObject:imageView];
             [self addSubview:imageView];
         }

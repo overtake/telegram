@@ -63,7 +63,28 @@
 }
 
 -(void)didUpdatedEditableState {
+    
+    if(!self.action.isEditable && ![self.headerItem.firstChangedValue isEqualToString:_chat.title] && self.headerItem.firstChangedValue.length > 0) {
+        
+        NSString *prev = _chat.title;
+        
+        _chat.title = self.headerItem.firstChangedValue;
+        
+        [Notification perform:CHAT_UPDATE_TITLE data:@{KEY_CHAT:_chat}];
+        
+        
+        [RPCRequest sendRequest:[TLAPI_channels_editTitle createWithChannel:_chat.inputPeer title:self.headerItem.firstChangedValue] successHandler:^(RPCRequest *request, id response) {
+            
+        } errorHandler:^(RPCRequest *request, RpcError *error) {
+            _chat.title = prev;
+            
+            [Notification perform:CHAT_UPDATE_TITLE data:@{KEY_CHAT:_chat.title}];
+        }];
+    }
+    
+    
     [self configure];
+    
 }
 
 -(void)viewWillDisappear:(BOOL)animated {

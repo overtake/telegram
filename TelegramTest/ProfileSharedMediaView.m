@@ -52,7 +52,7 @@
 //}
 
 -(void)mouseUp:(NSEvent *)theEvent {
-    [[Telegram rightViewController] showCollectionPage:_conversation];
+    [appWindow().navigationController showInfoPage:_conversation];
 
 }
 

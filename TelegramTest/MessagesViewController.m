@@ -322,15 +322,9 @@
     [self.filtredNavigationCenterView setFrameOrigin:NSMakePoint(0, -13)];
     
     
-    [self.filtredNavigationCenterView setTapBlock:^ {
-        NSMenu *menu = [weakSelf filterMenu];
-        
-        [menu popUpForView:weakSelf.filtredNavigationCenterView center:YES];
-        
-    }];
+
     
     
-    [self.filtredNavigationCenterView setStringValue:NSLocalizedString(@"Shared Media", nil)];
     
     
     self.filtredNavigationLeftView = [TMTextButton standartMessageNavigationButtonWithTitle:NSLocalizedString(@"Profile.Cancel", nil)];
@@ -344,7 +338,7 @@
     [self.normalNavigationCenterView setController:self];
     
     [self.normalNavigationCenterView setTapBlock:^{
-        [weakSelf showInfoPage];
+        [weakSelf.navigationViewController showInfoPage:weakSelf.conversation];
     }];
     self.centerNavigationBarView = self.normalNavigationCenterView;
     
@@ -999,43 +993,11 @@ static NSTextAttachment *headerMediaIcon() {
     
     [[[Telegram sharedInstance] firstController] closeAllPopovers];
     
-    
-    if(self.conversation.type == DialogTypeChat) {
-        if(self.conversation.chat.type == TLChatTypeNormal && !self.conversation.chat.left)
-            [[Telegram rightViewController] showChatInfoPage:self.conversation.chat];
-    } else if(self.conversation.type == DialogTypeSecretChat) {
-        TLUser *user = self.conversation.encryptedChat.peerUser;
-        [[Telegram sharedInstance] showUserInfoWithUserId:user.n_id conversation:self.conversation sender:self];
-    } else {
-        TLUser *user = self.conversation.user;
-        [[Telegram sharedInstance] showUserInfoWithUserId:user.n_id conversation:self.conversation sender:self];
-    }
+    [self.navigationViewController showInfoPage:self.conversation];
 }
 
 
--(NSMenu *)filterMenu {
-    NSMenu *filterMenu = [[NSMenu alloc] init];
-    
-    
-    [filterMenu addItem:[NSMenuItem menuItemWithTitle:NSLocalizedString(@"Conversation.Filter.Photos",nil) withBlock:^(id sender) {
-        [[Telegram rightViewController] showCollectionPage:self.conversation];
-    }]];
-    
-    [filterMenu addItem:[NSMenuItem menuItemWithTitle:NSLocalizedString(@"Conversation.Filter.Video",nil) withBlock:^(id sender) {
-        [self setHistoryFilter:[VideoHistoryFilter class] force:NO];
-    }]];
-    
-    
-    [filterMenu addItem:[NSMenuItem menuItemWithTitle:NSLocalizedString(@"Conversation.Filter.Files",nil) withBlock:^(id sender) {
-        [self setHistoryFilter:[DocumentHistoryFilter class] force:NO];
-    }]];
-    
-    [filterMenu addItem:[NSMenuItem menuItemWithTitle:NSLocalizedString(@"Conversation.Filter.Audio",nil) withBlock:^(id sender) {
-        [self setHistoryFilter:[AudioHistoryFilter class] force:NO];
-    }]];
-    
-    return filterMenu;
-}
+
 
 +(NSMenu *)destructMenu:(dispatch_block_t)ttlCallback click:(dispatch_block_t)click {
     NSMenu *submenu = [[NSMenu alloc] init];
@@ -1531,52 +1493,6 @@ static NSTextAttachment *headerMediaIcon() {
     [[Telegram rightViewController] showForwardMessagesModalView:self.conversation messagesCount:self.selectedMessages.count];
 }
 
--(void)showInfoPage {
-    
-    TMViewController *infoViewController;
-    
-    switch (self.conversation.type) {
-        case DialogTypeChat:
-            
-            infoViewController = [[TGModernChatInfoViewController alloc] initWithFrame:NSZeroRect];
-            
-            [(TGModernChatInfoViewController *)infoViewController setChat:self.conversation.chat];
-            
-            break;
-            
-        case DialogTypeSecretChat:
-            
-            infoViewController = [[TGModernUserViewController alloc] initWithFrame:NSZeroRect];
-            
-            
-            [(TGModernUserViewController *)infoViewController setUser:self.conversation.encryptedChat.peerUser conversation:self.conversation];
-            
-            break;
-            
-        case DialogTypeUser: {
-            infoViewController = [[TGModernUserViewController alloc] initWithFrame:NSZeroRect];
-            
-            
-            [(TGModernUserViewController *)infoViewController setUser:self.conversation.user conversation:self.conversation];
-            break;
-        }
-            
-        case DialogTypeBroadcast:
-            infoViewController = [[BroadcastInfoViewController alloc] initWithFrame:NSZeroRect];
-            
-            [(BroadcastInfoViewController *)infoViewController setBroadcast:self.conversation.broadcast];
-        case DialogTypeChannel:
-            infoViewController = [[TGModernChannelInfoViewController alloc] initWithFrame:NSZeroRect];
-            
-            [(TGModernChannelInfoViewController *)infoViewController setChat:self.conversation.chat];
-            
-        default:
-            break;
-    }
-    
-    [self.navigationViewController pushViewController:infoViewController animated:YES];
-    
-}
 
 - (void)jumpToBottomButtonDisplay {
     [self.jumpToBottomButton sizeToFit];
@@ -2322,6 +2238,12 @@ static NSTextAttachment *headerMediaIcon() {
     
     MessageTableItem *item = [self itemOfMsgId:messageId];
     
+    if(item && !(item.message.isChannelMessage && !item.message.chat.isBroadcast)) {
+        [self scrollToItem:item animated:YES centered:YES highlight:YES];
+        
+        return;
+    }
+    
     if(fromMsgId != 0)
         [_replyMsgsStack addObject:@(fromMsgId)];
     
@@ -2474,13 +2396,13 @@ static NSTextAttachment *headerMediaIcon() {
     [self hideSearchBox:NO];
     
     
-    
-    
-    
     if(!self.locked &&  (((messageId != 0 && messageId != self.jumpMessageId) || force) || [self.conversation.peer peer_id] != [dialog.peer peer_id] || self.historyController.filter.class != historyFilter)) {
         
         self.jumpMessageId = messageId;
         self.conversation = dialog;
+        
+        
+        [Notification perform:@"ChangeDialogSelection" data:@{KEY_DIALOG:self.conversation, @"sender":self}];
         
         
         if(dialog.type == DialogTypeChannel && historyFilter == HistoryFilter.class) {
@@ -2569,7 +2491,7 @@ static NSTextAttachment *headerMediaIcon() {
 
 
 -(void)setCurrentConversation:(TL_conversation *)dialog {
-    [self setCurrentConversation:dialog withJump:0 historyFilter:[self defHFClass]];
+    [self setCurrentConversation:dialog withJump:0 historyFilter:nil];
 }
 
 
@@ -2782,6 +2704,7 @@ static NSTextAttachment *headerMediaIcon() {
     self.historyController.selectLimit = isFirst ? count : 50;
     
     
+    [self removeScrollEvent];
     
     _needNextRequest = NO;
     
@@ -2888,6 +2811,8 @@ static NSTextAttachment *headerMediaIcon() {
                     }
                 });
                 
+                [self addScrollEvent];
+                
                 
                 if(result.count < _historyController.selectLimit)
                     [self loadhistory:0 toEnd:YES prev:NO isFirst:NO];
@@ -2904,6 +2829,8 @@ static NSTextAttachment *headerMediaIcon() {
             if(prevResult.count+1 < 10) {
                 [self loadhistory:0 toEnd:YES prev:NO isFirst:NO];
             }
+            
+            [self addScrollEvent];
         }
         
     }];

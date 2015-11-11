@@ -36,7 +36,7 @@
 @property (nonatomic) BOOL hoverCells;
 @property (nonatomic) NSTableViewAnimationOptions defaultAnimation;
 
-@property (nonatomic,weak) TMViewController *controller;
+@property (nonatomic,weak) TMViewController *viewController;
 
 
 + (TMTableView *)current;

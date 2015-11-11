@@ -62,7 +62,6 @@ typedef enum {
 - (NSString *)inputText;
 
 - (void)showForwardMessagesModalView;
-- (void)showInfoPage;
 
 - (void)drop;
 

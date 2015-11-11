@@ -2687,6 +2687,9 @@
             <PersistentString
                value = "self.isProccessing">
             </PersistentString>
+            <PersistentString
+               value = "sync">
+            </PersistentString>
          </PersistentStrings>
       </ContextState>
       <ContextState
@@ -2722,6 +2725,9 @@
       </ContextState>
       <ContextState
          contextName = "__95-[TGPasswosdMainViewController setPassword:current_pswd_hash:email:hint:flags:successCallback:]_block_invoke314:TGPasswosdMainViewController.m">
+      </ContextState>
+      <ContextState
+         contextName = "-[TGPhotoViewer performNextItem]:TGPhotoViewer.m">
       </ContextState>
       <ContextState
          contextName = "-[TGReplyObject initWithReplyMessage:]:TGReplyObject.m">
@@ -3318,6 +3324,9 @@
       <ContextState
          contextName = "-[TMBackButton updateBackButton]:TMBackButton.m">
          <PersistentStrings>
+            <PersistentString
+               value = "self.controller.navigationViewController.viewControllerStack">
+            </PersistentString>
             <PersistentString
                value = "self.controller.navigationViewController">
             </PersistentString>
@@ -4325,6 +4334,17 @@
          contextName = "__35-[TGPVUserBehavior convertObjects:]_block_invoke:TGPVUserBehavior.m">
       </ContextState>
       <ContextState
+         contextName = "-[TGConversationsViewController selectionDidChange:item:]:TGConversationsViewController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "appWindow()">
+            </PersistentString>
+            <PersistentString
+               value = "appWindow().navigationController">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "__35-[ForwardSenterItem performRequest]_block_invoke_2:ForwardSenterItem.m">
          <PersistentStrings>
             <PersistentString
@@ -4366,6 +4386,14 @@
             </PersistentString>
             <PersistentString
                value = "self.message.message">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[TGModernChatInfoViewController changeEditable:]:TGModernChatInfoViewController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "_tableView.defaultAnimation">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -4515,6 +4543,14 @@
       </ContextState>
       <ContextState
          contextName = "__67-[MessageTableCellTextView _didChangeBackgroundColorWithAnimation:]_block_invoke_3:MessageTableCellTextView.m">
+      </ContextState>
+      <ContextState
+         contextName = "-[TGDocumentsMediaTableView setConversation:]:TGDocumentsMediaTableView.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.controller">
+            </PersistentString>
+         </PersistentStrings>
       </ContextState>
       <ContextState
          contextName = "-[TGUpdater initWithVersion:token:url:]:TGUpdater.m">

@@ -320,7 +320,7 @@ static NSDictionary *attributes() {
 
 -(void)checkMessageState {
     
-    if([[[TGModernTypingManager typingForConversation:self.item.conversation] currentActions] count] > 0) {
+    if(self.item.typing.length > 0) {
         [self startAnimation];
     } else {
         [_messageField setAttributedStringValue:self.item.messageText];
@@ -352,7 +352,7 @@ static NSDictionary *attributes() {
         
         [_messageField setAttributedStringValue:attr];
         
-        if([[[TGModernTypingManager typingForConversation:self.item.conversation] currentActions] count] == 0) {
+        if(self.item.typing.length == 0) {
             [_timer invalidate];
             _timer = nil;
             [self checkMessageState];

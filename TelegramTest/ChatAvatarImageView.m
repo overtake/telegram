@@ -24,6 +24,11 @@
 @property (nonatomic, strong) TMView *progressContainer;
 @property (nonatomic, strong) BTRButton *cancelButton;
 @property (nonatomic, strong) AvatarUpdaterItem  *updaterItem;
+
+@property (nonatomic,strong) NSImageView *editCamera;
+
+@property (nonatomic,strong) TMView *editBlank;
+
 @end
 
 @implementation ChatAvatarImageView
@@ -37,7 +42,29 @@
         self.sourceType = ChatAvatarSourceGroup;
         [self setFont:TGSystemLightFont(18)];
         
-
+        
+        _editCamera = imageViewWithImage(image_EditPhotoCamera());
+        
+        
+        
+        _editBlank = [[TMView alloc] initWithFrame:self.bounds];
+        
+        _editBlank.wantsLayer = YES;
+        _editBlank.layer.backgroundColor = [NSColor blackColor].CGColor;
+        _editBlank.layer.opacity = 0.7;
+        _editBlank.layer.cornerRadius = NSWidth(self.frame)/2;
+        
+        [self addSubview:_editBlank];
+        
+        [_editBlank setHidden:YES];
+        
+        [_editCamera setCenterByView:self];
+        [self addSubview:_editCamera];
+        
+        [_editCamera setHidden:YES];
+        
+        
+       
     }
     return self;
 }
@@ -58,6 +85,15 @@
         default:
             break;
     }
+}
+
+
+-(void)setEditable:(BOOL)editable {
+    _editable = editable;
+    
+    [_editCamera setHidden:!editable];
+    
+    [_editBlank setHidden:!editable];
 }
 
 - (void)drawRect:(NSRect)dirtyRect
@@ -104,6 +140,14 @@
 
 -(void)mouseDown:(NSEvent *)theEvent {
     [super mouseDown:theEvent];
+    
+    
+    if(self.isEditable)
+    {
+        [self rightMouseDown:theEvent];
+        
+        return;
+    }
     
     PreviewObject *previewObject;
     

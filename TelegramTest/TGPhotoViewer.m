@@ -291,7 +291,7 @@ static const int controlsHeight = 75;
     
     [ASQueue dispatchOnStageQueue:^{
         
-        [_list sortUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"previewObject.media.date" ascending:NO]]];
+        [_list sortUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"previewObject.date" ascending:NO]]];
         
         _totalCount = MAX([_behavior totalCount],(int)[self listCount]);
         
@@ -379,7 +379,7 @@ static TGPhotoViewer *viewer;
     [ASQueue dispatchOnStageQueue:^{
         [self.list enumerateObjectsUsingBlock:^(TGPhotoViewerItem *obj, NSUInteger index, BOOL *stop) {
             
-            if(obj.previewObject.msg_id == item.msg_id) {
+            if(obj.previewObject.msg_id == item.msg_id && obj.previewObject.peerId == item.peerId) {
                 idx = index;
                 *stop = YES;
             }
@@ -682,7 +682,7 @@ static TGPhotoViewer *viewer;
     
     
     
-    if((next && (rcurrent <= 15 )) || (!next && (rcurrent >= (_totalCount - 15)))) {
+    if((next && (rcurrent <= 15 )) || (!next && (rcurrent == 0 || rcurrent >= (_totalCount - 15)))) {
        // _waitRequest = YES;
                 
         [self.behavior load:[[[self itemAtIndex:[self listCount]-1] previewObject] msg_id] next:next limit:100 callback:^(NSArray *previewObjects) {

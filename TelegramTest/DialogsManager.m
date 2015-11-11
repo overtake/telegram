@@ -572,10 +572,10 @@
         
         dialog.top_message = message.n_id;
         
-        if(message.isImportantMessage || message.chat.isMegagroup) {
+        if(message.isImportantMessage || ([message.chat isKindOfClass:[TLChat class]] && message.chat.isMegagroup)) {
             dialog.top_important_message = message.n_id;
         }
-        if(dialog.type != DialogTypeChannel || (message.isImportantMessage || message.chat.isMegagroup))
+        if(dialog.type != DialogTypeChannel || (message.isImportantMessage || ([message.chat isKindOfClass:[TLChat class]] && message.chat.isMegagroup)))
             dialog.lastMessage = message;
         
         if(message.n_out) {
@@ -595,7 +595,7 @@
         
         int last_real_date = dialog.last_real_message_date;
         
-        if(dialog.type != DialogTypeChannel || message.isImportantMessage)
+        if(dialog.type != DialogTypeChannel || message.isImportantMessage || ([message.chat isKindOfClass:[TLChat class]] && message.chat.isMegagroup))
             dialog.last_message_date = message.date;
         
         if(update_real_date) {

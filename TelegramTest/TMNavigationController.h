@@ -71,4 +71,8 @@ typedef enum {
 - (void)pushViewController:(TMViewController *)viewController animated:(BOOL)animated;
 - (void)goBackWithAnimation:(BOOL)animated;
 - (void)clear;
+
+
+-(void)showInfoPage:(TL_conversation *)conversation;
+-(void)showMessagesViewController:(TL_conversation *)conversation;
 @end

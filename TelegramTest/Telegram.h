@@ -61,9 +61,6 @@ int megagroupSizeMax();
 - (void)setAccountOffline:(BOOL)force;
 
 
-- (void)showMessagesFromDialog:(TLDialog *)dialog sender:(id)sender;
-- (void)showUserInfoWithUserId:(int)userID conversation:(TL_conversation *)conversaion sender:(id)sender;
-- (void)showMessagesWidthUser:(TLUser *)user sender:(id)sender;
 - (void)showNotSelectedDialog;
 
 

@@ -17,7 +17,7 @@
     NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
     [paragraphStyle setAlignment:NSLeftTextAlignment];
     
-    NSAttributedString *attr = [[NSAttributedString alloc] initWithString:value attributes:@{NSForegroundColorAttributeName: NSColorFromRGB(0x333333), NSFontAttributeName:TGSystemLightFont(14), NSParagraphStyleAttributeName: paragraphStyle}];
+    NSAttributedString *attr = [[NSAttributedString alloc] initWithString:[value trim] attributes:@{NSForegroundColorAttributeName: NSColorFromRGB(0x333333), NSFontAttributeName:TGSystemLightFont(14), NSParagraphStyleAttributeName: paragraphStyle}];
     
 
     _value = attr;

@@ -387,8 +387,8 @@
          
             dispatch_async(dispatch_get_main_queue(), ^{
                 if(callback) callback();
-                [[Telegram rightViewController] clearStack];
-                [[Telegram sharedInstance] showMessagesFromDialog:dialog sender:self];
+                [appWindow().navigationController clear];
+                [appWindow().navigationController showMessagesViewController:dialog];
             });
             
         } errorHandler:^(RPCRequest *request, RpcError *error) {

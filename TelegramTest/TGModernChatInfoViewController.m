@@ -91,6 +91,25 @@
     if(self.action.isEditable == editable)
         return;
     
+    if(!editable && ![self.headerItem.firstChangedValue isEqualToString:_chat.title] && self.headerItem.firstChangedValue.length > 0) {
+        
+        NSString *prev = _chat.title;
+        
+        _chat.title = self.headerItem.firstChangedValue;
+        
+        [Notification perform:CHAT_UPDATE_TITLE data:@{KEY_CHAT:_chat}];
+        
+        [RPCRequest sendRequest:[TLAPI_messages_editChatTitle createWithChat_id:_chat.n_id title:self.headerItem.firstChangedValue] successHandler:^(RPCRequest *request, id response) {
+            
+        } errorHandler:^(RPCRequest *request, RpcError *error) {
+            _chat.title = prev;
+            
+            [Notification perform:CHAT_UPDATE_TITLE data:@{KEY_CHAT:_chat}];
+        }];
+    }
+    
+    
+    
     [self.action setEditable:editable];
     
     [self updateActionNavigation];
@@ -112,21 +131,21 @@
         
     }];
     
+
+    [_tableView reloadDataForRowIndexes:[NSIndexSet indexSetWithIndex:[_tableView indexOfItem:_headerItem]] columnIndexes:[NSIndexSet indexSetWithIndex:0]];
+    
+    
     [_tableView enumerateAvailableRowViewsUsingBlock:^(__kindof NSTableRowView * _Nonnull rowView, NSInteger row) {
         
         TMRowView *view = [rowView.subviews firstObject];
         
         TMRowItem *item = _tableView.list[row];
-        [item setEditable:self.action.isEditable];
-        
         if([view isKindOfClass:[TGUserContainerView class]]) {
             
             TGUserContainerView *v = (TGUserContainerView *) view;
             
             [v setEditable:item.isEditable animated:YES];
             
-        } else if([view isKindOfClass:[TGProfileHeaderRowView class]]) {
-            [view redrawRow];
         }
         
     }];

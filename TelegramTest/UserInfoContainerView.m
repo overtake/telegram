@@ -111,7 +111,7 @@
         __block UserInfoContainerView *weakSelf = self;
     
         self.sendMessageButton = [UserInfoShortButtonView buttonWithText:NSLocalizedString(@"Profile.SendMessage", nil) tapBlock:^{
-            [[Telegram sharedInstance] showMessagesWidthUser:weakSelf.user sender:weakSelf];
+            [appWindow().navigationController showMessagesViewController:weakSelf.user.dialog];
         }];
         [self.sendMessageButton setFrameSize:NSMakeSize(offsetRight, 42)];
         [self addSubview:self.sendMessageButton];

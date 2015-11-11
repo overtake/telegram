@@ -10,7 +10,7 @@
 #import "TGProfileHeaderRowItem.h"
 #import "UserInfoShortTextEditView.h"
 #import "ChatAvatarImageView.h"
-@interface TGProfileHeaderRowView () <TMNameTextFieldProtocol,TMStatusTextFieldProtocol>
+@interface TGProfileHeaderRowView () <TMNameTextFieldProtocol,TMStatusTextFieldProtocol,NSTextFieldDelegate>
 @property (nonatomic,strong) ChatAvatarImageView *imageView;
 @property (nonatomic,strong) TMNameTextField *nameTextField;
 @property (nonatomic,strong) TMStatusTextField *statusTextField;
@@ -75,13 +75,23 @@
     [self setFrameSize:self.frame.size];
 }
 
+- (void)controlTextDidChange:(NSNotification *)obj {
+    self.item.firstChangedValue = _firstNameView.textView.stringValue;
+    self.item.secondChangedValue = _lastNameView.textView.stringValue;
+}
+
 -(void)redrawRow {
     [super redrawRow];
+    
+    [_imageView setEditable:self.item.isEditable && self.item.conversation.type != DialogTypeUser && self.item.conversation.type != DialogTypeSecretChat];
     
     [_imageView updateWithConversation:self.item.conversation];
     [_nameTextField updateWithConversation:self.item.conversation];
     [_statusTextField updateWithConversation:self.item.conversation];
     
+    
+    _firstNameView.textView.delegate = self;
+    _lastNameView.textView.delegate = self;
     
     [_firstNameView.textView setStringValue:self.item.conversation.user.first_name];
     [_lastNameView.textView setStringValue:self.item.conversation.user.last_name];

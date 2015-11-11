@@ -23,6 +23,8 @@ typedef enum {
 @property (nonatomic,assign) ChatAvatarSourceType sourceType;
 
 
+@property (nonatomic,assign,getter=isEditable) BOOL editable;
+
 @property (nonatomic, strong) ChatInfoViewController *controller;
 - (void)rebuild;
 - (void)showUpdateChatPhotoBox;

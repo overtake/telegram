@@ -13,12 +13,12 @@
 
 
 -(void)remoteRequest:(BOOL)next max_id:(int)max_id hole:(TGMessageHole *)hole callback:(void (^)(id response,ChatHistoryState state))callback {
-        
+    
+    int maxDate = next ? self.minDate : INT32_MAX;
     int minDate = next ? 0 : self.maxDate;
     
-    int maxDate = next ? 0 : INT32_MAX;
     
-    self.request = [RPCRequest sendRequest:[TLAPI_messages_search createWithFlags:0 peer:[self.peer inputPeer] q:@"" filter:self.messagesFilter min_date:minDate max_date:maxDate offset:0  max_id:next ? self.server_min_id : 0 limit:(int)self.controller.selectLimit] successHandler:^(RPCRequest *request, TL_messages_messages *response) {
+    self.request = [RPCRequest sendRequest:[TLAPI_messages_search createWithFlags:0 peer:[self.peer inputPeer] q:@"" filter:self.messagesFilter min_date:minDate max_date:maxDate offset:0  max_id:INT32_MAX limit:(int)self.controller.selectLimit] successHandler:^(RPCRequest *request, TL_messages_messages *response) {
         
         
         NSMutableArray *messages = [response.messages mutableCopy];

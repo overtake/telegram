@@ -54,7 +54,7 @@
             if([[TGPhotoViewer behavior] class] == [TGPVMediaBehavior class]) {
                 [[TGPhotoViewer viewer] hide];
                 
-                [[Telegram rightViewController] showCollectionPage:weakSelf.convertsation];
+                [appWindow().navigationController showInfoPage:weakSelf.convertsation];
             }
             
            

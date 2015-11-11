@@ -913,6 +913,7 @@ static NSArray *channelUpdates;
         
         [RPCRequest sendRequest:[TLAPI_updates_getState create] successHandler:^(RPCRequest *request, TL_updates_state * state) {
     
+            _updateState = [[Storage manager] updateState];
             
             MTLog(@"update dif broken pts:%d, date:%d, qts:%d,seq:%d",_updateState.pts,_updateState.date,_updateState.qts,_updateState.seq);
             

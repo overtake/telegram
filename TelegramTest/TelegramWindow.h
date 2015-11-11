@@ -8,8 +8,12 @@
 
 #import <Cocoa/Cocoa.h>
 #import "TGWindowArchiver.h"
+#import "TMNavigationController.h"
 @interface TelegramWindow : NSWindow<NSWindowDelegate>
 @property (nonatomic, strong) TMViewController *rootViewController;
+
+@property (nonatomic,strong) TMNavigationController *navigationController;
+
 @property (nonatomic,strong) TGWindowArchiver *autoSaver;
 - (void)realClose;
 - (void)initialize;

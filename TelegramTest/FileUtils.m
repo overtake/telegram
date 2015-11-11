@@ -360,7 +360,9 @@ NSArray *urlSchemes() {
 }
 
 
-
+TelegramWindow *appWindow() {
+    return (TelegramWindow *) [NSApp keyWindow];
+}
 
 void open_card(NSString *link) {
     
@@ -379,7 +381,12 @@ void open_card(NSString *link) {
                 if(![response isKindOfClass:[TL_userEmpty class]]) {
                     [[UsersManager sharedManager] add:@[response]];
                     
-                    [[Telegram rightViewController] showUserInfoPage:[[UsersManager sharedManager] find:[(TLUser *)response n_id]]];
+                    
+                    TLUser *user = [[UsersManager sharedManager] find:[(TLUser *)response n_id]];
+                    
+                    [appWindow().navigationController showInfoPage:user.dialog];
+                    
+                    
                 } else {
                     alert(NSLocalizedString(@"CardImport.ErrorTextUserNotExist", nil), NSLocalizedString(@"CardImport.ErrorDescUserNotExist", nil));
                 }
@@ -515,7 +522,7 @@ void open_user_by_name(NSDictionary *params) {
             } else if(user.isBot && params[@"startgroup"] && (user.flags & TGBOTGROUPBLOCKED) == 0) {
                 [[Telegram rightViewController] showComposeAddUserToGroup:[[ComposeAction alloc] initWithBehaviorClass:[ComposeActionAddUserToGroupBehavior class] filter:nil object:user reservedObjects:@[params]]];
             } else if(params[@"open_profile"]) {
-                [[Telegram rightViewController] showUserInfoPage:user];
+                [appWindow().navigationController showInfoPage:user.dialog];
             } else {
                 [[Telegram rightViewController] showByDialog:user.dialog sender:nil];
             }
@@ -529,11 +536,7 @@ void open_user_by_name(NSDictionary *params) {
     
     dispatch_block_t showInfo = ^{
       
-        if([obj isKindOfClass:[TLUser class]]) {
-            [[Telegram rightViewController] showUserInfoPage:obj];
-        } else {
-            [[Telegram rightViewController] showChatInfoPage:obj];
-        }
+        [appWindow().navigationController showInfoPage:[obj dialog]];
         
     };
     
@@ -657,34 +660,13 @@ void open_link(NSString *link) {
             
             TL_conversation *conversation = user.dialog;
             
-            if([[NSApp keyWindow] isKindOfClass:[TGHeadChatPanel class]]) {
-                TGHeadChatPanel *panel = (TGHeadChatPanel *) [NSApp keyWindow];
-                
-                [panel showInfoPageWithConversation:conversation];
-                
-            } else {
-                [[Telegram rightViewController] showUserInfoPage:user];
-            }
+            [appWindow().navigationController showInfoPage:conversation];
             
         } else if(peer == [TL_peerChat class] || peer == [TL_peerChannel class]) {
             
             TLChat *chat = [[ChatsManager sharedManager] find:abs(peer_id)];
             
-            
-            
-            if([[NSApp keyWindow] isKindOfClass:[TGHeadChatPanel class]]) {
-                TGHeadChatPanel *panel = (TGHeadChatPanel *) [NSApp keyWindow];
-
-                [panel showInfoPageWithConversation:chat.dialog];
-                
-            } else {
-                if(peer == [TL_peerChannel class]) {
-                    [[Telegram rightViewController] showByDialog:chat.dialog sender:nil];
-                } else
-                    [[Telegram rightViewController] showChatInfoPage:chat];
-            }
-            
-            
+            [appWindow().navigationController showInfoPage:chat.dialog];
             
         }
         

@@ -115,11 +115,6 @@
 - (void)showComposeCreateChat:(ComposeAction *)composeAction;
 - (void)showComposeBroadcastList:(ComposeAction *)composeAction;
 - (void)showComposeAddUserToGroup:(ComposeAction *)composeAction;
-- (void)showUserInfoPage:(TLUser *)user conversation:(TL_conversation *)conversation;
-- (void)showUserInfoPage:(TLUser *)user;
-- (void)showCollectionPage:(TL_conversation *)conversation;
-- (void)showChatInfoPage:(TLChat *)chat;
-- (void)showBroadcastInfoPage:(TL_broadcast *)broadcast;
 - (void)showNotSelectedDialog;
 
 -(void)showEncryptedKeyWindow:(TL_encryptedChat *)chat;

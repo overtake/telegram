@@ -127,8 +127,13 @@
     [[Telegram leftViewController] showUserSettings];
 }
 - (IBAction)showMedia:(id)sender {
-    [[Telegram rightViewController] showCollectionPage:[Telegram rightViewController].messagesViewController.conversation];
-  //  [[TGPhotoViewer viewer] show:nil conversation:[Telegram rightViewController].messagesViewController.conversation];
+    
+    TMCollectionPageController *collectionViewController = [[TMCollectionPageController alloc] initWithFrame:NSZeroRect];
+    
+    [collectionViewController setConversation:[Telegram conversation]];
+    
+    [appWindow().navigationController pushViewController:collectionViewController animated:YES];
+    
 }
 
 - (BOOL)validateMenuItem:(NSMenuItem *)menuItem {

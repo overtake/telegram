@@ -412,7 +412,7 @@
 }
 
 - (void) selectionDidChange:(NSInteger)row item:(TGConversationTableItem *) item {
-    [[Telegram sharedInstance] showMessagesFromDialog:item.conversation sender:self];
+    [[Telegram delegate].mainWindow.navigationController showMessagesViewController:item.conversation];
     
     [self.tableView setSelectedByHash:[item hash]];
 }
@@ -459,7 +459,9 @@
     
     if(dialog.type != DialogTypeChat && dialog.type != DialogTypeBroadcast && dialog.type != DialogTypeChannel) {
         NSMenuItem *showUserProfile = [NSMenuItem menuItemWithTitle:[NSString stringWithFormat:NSLocalizedString(@"Conversation.ShowProfile", nil), user.dialogFullName] withBlock:^(id sender) {
-            [[Telegram rightViewController] showUserInfoPage:user conversation:user.dialog];
+            
+            [appWindow().navigationController showInfoPage:dialog];
+            
         }];
         [menu addItem:showUserProfile];
         
@@ -518,12 +520,12 @@
         
         if(dialog.type == DialogTypeChat || dialog.type == DialogTypeChannel) {
             showСhatProfile = [NSMenuItem menuItemWithTitle:dialog.type != DialogTypeChannel ? NSLocalizedString(@"Conversation.ShowGroupInfo", nil) : NSLocalizedString(@"Conversation.ShowChannelInfo", nil) withBlock:^(id sender) {
-                [[Telegram rightViewController] showChatInfoPage:chat];
+                [appWindow().navigationController showInfoPage:dialog];
             }];
             
         } else {
             showСhatProfile = [NSMenuItem menuItemWithTitle:NSLocalizedString(@"Conversation.ShowBroadcastInfo", nil) withBlock:^(id sender) {
-                [[Telegram rightViewController] showBroadcastInfoPage:dialog.broadcast];
+                [appWindow().navigationController showInfoPage:dialog];
             }];
             
         }

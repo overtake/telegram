@@ -106,6 +106,7 @@
     self.navigationViewController = [[TMNavigationController alloc] initWithFrame:self.view.bounds];
     [self.view addSubview:self.navigationViewController.view];
     
+    
     [self.view setBackgroundColor:[NSColor whiteColor]];
     [self.view setAutoresizesSubviews:YES];
     
@@ -371,7 +372,7 @@
             
             if(modalObject && modalObject.phone) {
                 
-                [[Telegram sharedInstance] showMessagesFromDialog:dialog sender:self];
+                [self.navigationViewController showMessagesViewController:dialog];
                 
                 [self.messagesViewController shareContact:modalObject forConversation:dialog callback:^{
                     
@@ -391,57 +392,49 @@
         
         NSDictionary *obj = self.modalObject;
         
-        [[Telegram sharedInstance] showMessagesFromDialog:dialog sender:self];
+        [appWindow().navigationController showMessagesViewController:dialog];
         
-        [[Telegram rightViewController].messagesViewController setStringValueToTextField:[NSString stringWithFormat:@"%@\n%@",obj[@"url"],obj[@"text"]]];
+        [appWindow().navigationController.messagesViewController setStringValueToTextField:[NSString stringWithFormat:@"%@\n%@",obj[@"url"],obj[@"text"]]];
         
-        [[Telegram rightViewController].messagesViewController selectInputTextByText:obj[@"text"]];
+        [appWindow().navigationController.messagesViewController selectInputTextByText:obj[@"text"]];
         
     } else  {
         
      //   confirm(NSLocalizedString(@"Alert.Forward", nil), [NSString stringWithFormat:NSLocalizedString(@"Alert.ForwardTo", nil),(dialog.type == DialogTypeChat) ? dialog.chat.title : (dialog.type == DialogTypeBroadcast) ? dialog.broadcast.title : dialog.user.fullName], ^{
             
-            NSMutableArray *messages = [self.messagesViewController selectedMessages];
-            NSMutableArray *ids = [[NSMutableArray alloc] init];
-            for(MessageTableItem *item in messages)
-                [ids addObject:item.message];
-            
-            [ids sortUsingComparator:^NSComparisonResult(TLMessage * a, TLMessage * b) {
-                return a.n_id > b.n_id ? NSOrderedDescending : NSOrderedAscending;
-            }];
-            
-            [self.messagesViewController cancelSelectionAndScrollToBottom];
-            weakify();
-            
-            
-            dialog.last_marked_date = [[MTNetwork instance] getTime]+1;
-            dialog.last_marked_message = dialog.top_message;
-            
-            [dialog save];
-            
-          //  self.messagesViewController.didUpdatedTable = ^ {
-                
-             //   strongSelf.messagesViewController.didUpdatedTable = nil;
-                
-            [strongSelf.messagesViewController setFwdMessages:ids forConversation:dialog];
-                
-         //   };
-            
-           // if(self.messagesViewController.conversation == dialog) {
-          //      self.messagesViewController.didUpdatedTable();
-          //  }
-            [self hideModalView:YES animation:YES];
-            
-            [[Telegram sharedInstance] showMessagesFromDialog:dialog sender:self];
-            
-            
-            TMViewController *controller = [_leftViewController currentTabController];
-            
-            if([controller isKindOfClass:[StandartViewController class]]) {
-                [(StandartViewController *)controller searchByString:@""];
-            }
-            
-            
+        NSMutableArray *messages = [self.messagesViewController selectedMessages];
+        NSMutableArray *ids = [[NSMutableArray alloc] init];
+        for(MessageTableItem *item in messages)
+            [ids addObject:item.message];
+        
+        [ids sortUsingComparator:^NSComparisonResult(TLMessage * a, TLMessage * b) {
+            return a.n_id > b.n_id ? NSOrderedDescending : NSOrderedAscending;
+        }];
+        
+        [self.messagesViewController cancelSelectionAndScrollToBottom];
+        
+        
+        dialog.last_marked_date = [[MTNetwork instance] getTime]+1;
+        dialog.last_marked_message = dialog.top_message;
+        
+        [dialog save];
+        
+        [self.messagesViewController setFwdMessages:ids forConversation:dialog];
+        
+
+        [self hideModalView:YES animation:YES];
+        
+        [appWindow().navigationController showMessagesViewController:dialog];
+        
+        
+        
+        TMViewController *controller = [_leftViewController currentTabController];
+        
+        if([controller isKindOfClass:[StandartViewController class]]) {
+            [(StandartViewController *)controller searchByString:@""];
+        }
+        
+        
     //    },nil);
         
     }

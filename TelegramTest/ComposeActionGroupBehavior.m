@@ -83,9 +83,7 @@
             [[FullChatManager sharedManager] performLoad:msg.conversation.chat.n_id callback:^(TLChatFull *fullChat) {
                 [self.delegate behaviorDidEndRequest:response];
                 
-                [[Telegram rightViewController] clearStack];
-                
-                [[Telegram sharedInstance] showMessagesFromDialog:msg.conversation sender:self];
+                [self.action.currentViewController.navigationViewController showMessagesViewController:msg.conversation];
             }];
         }
         

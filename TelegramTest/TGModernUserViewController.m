@@ -24,6 +24,8 @@
 @property (nonatomic,strong) TGProfileParamItem *userNameItem;
 @property (nonatomic,strong) TGProfileParamItem *phoneNumberItem;
 
+@property (nonatomic,strong) TGProfileHeaderRowItem *headerItem;
+
 
 
 @end
@@ -44,7 +46,34 @@
     
 }
 
+
+
+- (TL_inputPhoneContact *)newContact {
+    NSString *first_name = self.headerItem.firstChangedValue;
+    NSString *last_name = self.headerItem.secondChangedValue;
+    
+    if( ([first_name isEqualToString:self.user.first_name] && [last_name isEqualToString:self.user.last_name]) || (first_name.length == 0))
+        return nil;
+    
+    return [TL_inputPhoneContact createWithClient_id:0 phone:self.user.phone first_name:first_name last_name:last_name];
+}
+
 -(void)didUpdatedEditableState {
+    
+    if(!self.action.isEditable) {
+        TL_inputPhoneContact *contact = [self newContact];
+        
+        if(contact) {
+            [[NewContactsManager sharedManager] importContact:contact callback:^(BOOL isAdd, TL_importedContact *contact, TLUser *user) {
+                
+            }];
+        } 
+        
+    }
+    
+    
+    
+    
     [self configure];
 }
 
@@ -112,12 +141,12 @@
     
     [_tableView removeAllItems:YES];
     
-    TGProfileHeaderRowItem *headerItem = [[TGProfileHeaderRowItem alloc] initWithObject:_conversation];
-    headerItem.height = 142;
+    _headerItem = [[TGProfileHeaderRowItem alloc] initWithObject:_conversation];
+    _headerItem.height = 142;
     
-    [headerItem setEditable:self.action.isEditable];
+    [_headerItem setEditable:self.action.isEditable];
     self.tableView.defaultAnimation = NSTableViewAnimationEffectNone;
-    [_tableView addItem:headerItem tableRedraw:YES];
+    [_tableView addItem:_headerItem tableRedraw:YES];
     self.tableView.defaultAnimation = NSTableViewAnimationEffectFade;
     
     GeneralSettingsRowItem *sendMessage;
@@ -125,7 +154,7 @@
     if(_conversation.type != DialogTypeSecretChat) {
         sendMessage = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeNone callback:^(TGGeneralRowItem *item) {
             
-            [[Telegram sharedInstance] showMessagesWidthUser:self.user sender:self];
+            [self.navigationViewController showMessagesViewController:_conversation];
             
         } description:NSLocalizedString(@"Profile.SendMessage", nil) height:42 stateback:^id(TGGeneralRowItem *item) {
             
@@ -344,9 +373,10 @@
         
         [_tableView addItem:[[TGGeneralRowItem alloc] initWithHeight:20] tableRedraw:YES];
         
-        if(_conversation.type != DialogTypeSecretChat)
-            [_tableView addItem:blockUserItem tableRedraw:YES];
-        else
+        if(_conversation.type != DialogTypeSecretChat) {
+            if(self.user.type != TLUserTypeSelf)
+                [_tableView addItem:blockUserItem tableRedraw:YES];
+        } else
             [_tableView addItem:deleteSecretChatItem tableRedraw:YES];
     } else {
         [_tableView addItem:notificationItem tableRedraw:YES];

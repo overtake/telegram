@@ -114,57 +114,6 @@
     return [_controller itemsCount];
 }
 
-
--(void)loadRemote:(long)max_id limit:(int)limit callback:(void (^)(NSArray *previewObjects))callback {
-    
-    [_request cancelRequest];
-    
-   _request = [RPCRequest sendRequest:[TLAPI_messages_search createWithFlags:0 peer:_conversation.inputPeer q:@"" filter:[TL_inputMessagesFilterPhotoVideo create] min_date:0 max_date:0 offset:0 max_id:(int)max_id limit:limit] successHandler:^(RPCRequest *request, id response) {
-       
-       if(self == nil)
-           return;
-       
-       
-        NSMutableArray *messages = [[response messages] mutableCopy];
-       
-       [[response messages] removeAllObjects];
-       
-       [SharedManager proccessGlobalResponse:response];
-        
-       [TL_localMessage convertReceivedMessages:messages];
-       
-        NSMutableArray *previewObjects = [[NSMutableArray alloc] init];
-       
-        
-        [messages enumerateObjectsUsingBlock:^(TL_localMessage *obj, NSUInteger idx, BOOL *stop) {
-            
-            if(![obj isKindOfClass:[TL_messageEmpty class]]) {
-                PreviewObject *preview = [[PreviewObject alloc] initWithMsdId:obj.n_id media:obj peer_id:obj.peer_id];
-                                
-                [previewObjects addObject:preview];
-            }
-        }];
-       
-       if(messages.count == 0)
-           _state = TGPVMediaBehaviorLoadingStateFull;
-       
-       _request = nil;
-       
-       [ASQueue dispatchOnMainQueue:^{
-           if(callback)
-               callback(previewObjects);
-       }];
-       
-       
-        
-    } errorHandler:^(RPCRequest *request, RpcError *error) {
-        
-        _request = nil;
-      
-    } timeout:0 queue:[ASQueue globalQueue].nativeQueue];
-}
-
-
 -(void)clear {
     [_request cancelRequest];
 }
@@ -206,10 +155,6 @@
 
 -(void)dealloc {
     
-}
-
--(BOOL)isReversedContentView {
-    return [Telegram rightViewController].navigationViewController.currentController != [Telegram rightViewController].collectionViewController;
 }
 
 

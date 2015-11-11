@@ -427,7 +427,9 @@
     
     if([item isKindOfClass:[ContactUserItem class]]) {
          ContactUserItem *searchItem = (ContactUserItem *) item;
-        [[Telegram sharedInstance] showMessagesWidthUser:searchItem.user sender:self];
+        
+        [appWindow().navigationController showMessagesViewController:searchItem.user.dialog];
+        
     } else if([item isKindOfClass:[ContactFirstItem class]]) {
         
         [[Telegram rightViewController] showAddContactController];

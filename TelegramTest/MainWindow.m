@@ -30,7 +30,11 @@
         self.autoSaver.size = self.frame.size;
     }
     
-    self.rootViewController = [[MainViewController alloc] initWithFrame:((NSView *)self.contentView).bounds];
+    MainViewController *mainController = [[MainViewController alloc] initWithFrame:((NSView *)self.contentView).bounds];
+    
+    self.rootViewController = mainController;
+    
+    [self setNavigationController:mainController.rightViewController.navigationViewController];
 
     self.styleMask |= NSTitledWindowMask|NSClosableWindowMask|NSMiniaturizableWindowMask|NSResizableWindowMask;
     

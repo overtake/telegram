@@ -96,12 +96,16 @@
                     [items enumerateObjectsUsingBlock:^(MessageTableItem *obj, NSUInteger idx, BOOL *stop) {
                         BOOL needUpdate = obj.message.views != [result[idx] intValue];
                         
-                        obj.message.views = [result[idx] intValue];
-                        
-                        if(needUpdate) {
-                            [obj.message saveViews];
-                            [Notification perform:UPDATE_MESSAGE_ITEM data:@{@"item":obj}];
+                        if([result[idx] intValue] != 0) {
+                            obj.message.views = [result[idx] intValue];
+                            
+                            if(needUpdate) {
+                                [obj.message saveViews];
+                                [Notification perform:UPDATE_MESSAGE_ITEM data:@{@"item":obj}];
+                            }
                         }
+                        
+                       
 
                     }];
                     

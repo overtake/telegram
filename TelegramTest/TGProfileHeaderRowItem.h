@@ -12,5 +12,7 @@
 
 @property (nonatomic,strong) TL_conversation *conversation;
 
+@property (nonatomic,strong) NSString *firstChangedValue;
+@property (nonatomic,strong) NSString *secondChangedValue;
 
 @end

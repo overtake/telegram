@@ -61,7 +61,7 @@ static const int limit = 100;
     [RPCRequest sendRequest:[TLAPI_channels_getDialogs createWithOffset:offset limit:limit] successHandler:^(id request, TL_messages_dialogs *response) {
         
         
-         [SharedManager proccessGlobalResponse:response];
+        [SharedManager proccessGlobalResponse:response];
         
         NSMutableArray *converted = [[NSMutableArray alloc] initWithCapacity:response.dialogs.count];
         

@@ -2,7 +2,7 @@
 //  MTProto.h
 //  Telegram
 //
-//  Auto created by Mikhail Filimonov on 09.11.15.
+//  Auto created by Mikhail Filimonov on 10.11.15.
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -956,6 +956,9 @@
 @interface TL_chatFull_39 : TLChatFull<NSCoding>
 +(TL_chatFull_39*)createWithN_id:(int)n_id participants:(TLChatParticipants*)participants chat_photo:(TLPhoto*)chat_photo notify_settings:(TLPeerNotifySettings*)notify_settings exported_invite:(TLExportedChatInvite*)exported_invite bot_info:(NSMutableArray*)bot_info;
 @end
+@interface TL_channelFull_old39 : TLChatFull<NSCoding>
++(TL_channelFull_old39*)createWithFlags:(int)flags  n_id:(int)n_id about:(NSString*)about participants_count:(int)participants_count admins_count:(int)admins_count kicked_count:(int)kicked_count read_inbox_max_id:(int)read_inbox_max_id unread_count:(int)unread_count unread_important_count:(int)unread_important_count chat_photo:(TLPhoto*)chat_photo notify_settings:(TLPeerNotifySettings*)notify_settings exported_invite:(TLExportedChatInvite*)exported_invite;
+@end
 	
 @interface TLChatParticipant()
 @property int user_id;
@@ -993,6 +996,9 @@
 @end
 @interface TL_chatParticipants_old38 : TLChatParticipants<NSCoding>
 +(TL_chatParticipants_old38*)createWithChat_id:(int)chat_id admin_id:(int)admin_id participants:(NSMutableArray*)participants version:(int)version;
+@end
+@interface TL_chatParticipants_old39 : TLChatParticipants<NSCoding>
++(TL_chatParticipants_old39*)createWithChat_id:(int)chat_id admin_id:(int)admin_id participants:(NSMutableArray*)participants version:(int)version;
 @end
 	
 @interface TLChatPhoto()

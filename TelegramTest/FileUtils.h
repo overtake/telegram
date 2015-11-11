@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import <AVFoundation/AVFoundation.h>
-
+#import "TelegramWindow.h"
 @interface OpenWithObject : NSObject
 @property (nonatomic, strong,readonly) NSString *fullname;
 @property (nonatomic, strong,readonly) NSURL *app;
@@ -53,6 +53,7 @@ NSString* dp();
 +(NSString *)documentName:(TLDocument *)document;
 + (NSString *)dataMD5:(NSData *)data;
 
+TelegramWindow *appWindow();
 
 NSArray * soundsList();
 void playSentMessage(BOOL play);

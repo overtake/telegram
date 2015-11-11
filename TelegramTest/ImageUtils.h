@@ -218,6 +218,8 @@ CACHE_IMAGE(ModernConversationSecretAccessoryTimer);
 CACHE_IMAGE(ChannelShare);
 
 CACHE_IMAGE(ModernMenuDeleteIcon);
+CACHE_IMAGE(EditPhotoCamera);
+
 
 @interface ImageUtils : NSObject
 

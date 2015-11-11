@@ -29,14 +29,8 @@
             
             TL_conversation *conversation = [[[UsersManager sharedManager] find:user_id] dialog];
             
-            if([[NSApp keyWindow] isKindOfClass:[TGHeadChatPanel class]]) {
-                TGHeadChatPanel *panel = (TGHeadChatPanel *) [NSApp keyWindow];
-                
-                [panel showInfoPageWithConversation:conversation];
-                
-            } else {
-                [[Telegram sharedInstance] showUserInfoWithUserId:user_id conversation:conversation sender:self];
-            }
+            [appWindow().navigationController showInfoPage:conversation];
+            
             
             return;
         }
