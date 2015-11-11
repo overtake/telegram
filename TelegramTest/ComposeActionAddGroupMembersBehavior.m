@@ -99,7 +99,9 @@
         
         
         if(self.chat) {
+            
             [self.chat.participants.participants addObject:[TL_chatParticipant createWithUser_id:user.n_id inviter_id:[UsersManager currentUserId] date:[[MTNetwork instance] getTime]]];
+            
             [Notification perform:CHAT_STATUS data:@{KEY_CHAT_ID:@(self.chat.n_id)}];
             [Notification perform:CHAT_UPDATE_PARTICIPANTS data:@{KEY_CHAT:self.chat}];
         }

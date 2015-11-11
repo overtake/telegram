@@ -64,7 +64,6 @@ static ChatHistoryController *observer;
             
             queue = [ASQueue globalQueue];
             
-            
             listeners = [[NSMutableArray alloc] init];
             
             observer = [[ChatHistoryController alloc] init];
