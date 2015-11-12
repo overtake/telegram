@@ -42,7 +42,7 @@
 @property (nonatomic,strong) id reservedObject3;
 
 
-@property (nonatomic,strong) ComposeViewController *currentViewController;
+@property (nonatomic,weak) ComposeViewController *currentViewController;
 
 -(id)initWithBehaviorClass:(Class)behavior;
 -(id)initWithBehaviorClass:(Class)behavior filter:(NSArray *)filter object:(id)object;

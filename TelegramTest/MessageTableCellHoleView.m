@@ -11,6 +11,7 @@
 
 @interface TGCustomTextView : TGCTextView
 @property (nonatomic,weak) MessageTableItemHole *holeItem;
+@property (nonatomic,weak) MessagesViewController *controller;
 @end
 
 
@@ -18,10 +19,10 @@
 
 -(void)open_link:(NSString *)link itsReal:(BOOL)itsReal {
     if([link isEqualToString:@"showNewMessages"])
-        [[Telegram rightViewController].messagesViewController jumpToLastMessages:YES];
+        [_controller jumpToLastMessages:YES];
     else if([link isEqualToString:@"showComments"]) {
         
-        [[Telegram rightViewController].messagesViewController showMessage:_holeItem.message.hole.min_id fromMsgId:0 switchDiscussion:YES];
+        [_controller showMessage:_holeItem.message fromMsg:nil switchDiscussion:YES];
     }
 }
 
@@ -57,6 +58,8 @@
     [super setItem:item];
     
     _textView.holeItem = item;
+    
+    _textView.controller = self.messagesViewController;
     
     [_textView setFrameSize:item.textSize];
     [_textView setAttributedString:item.text];

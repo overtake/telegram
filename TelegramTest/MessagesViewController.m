@@ -217,11 +217,11 @@
     if(!force) {
         if(self.replyMsgsStack.count > 0)
         {
-            int msg_id = [[self.replyMsgsStack lastObject] intValue];
+            TL_localMessage *msg = [self.replyMsgsStack lastObject];
             
             [self.replyMsgsStack removeObject:[self.replyMsgsStack lastObject]];
             
-            [self showMessage:msg_id fromMsgId:0 animated:YES selectText:nil switchDiscussion:NO];
+            [self showMessage:msg fromMsg:nil animated:YES selectText:nil switchDiscussion:NO];
             return;
         }
     }
@@ -614,45 +614,9 @@
     }
     
     
-    
-    __block int currentId = 0;
-    
-    
-    dispatch_block_t clearItems = ^ {
-        [self.searchItems enumerateObjectsUsingBlock:^(SearchSelectItem *obj, NSUInteger idx, BOOL *stop) {
-            
-            [obj clear];
-            
-            [self.table reloadDataForRowIndexes:[NSIndexSet indexSetWithIndex:[self.messages indexOfObject:obj.item]] columnIndexes:[NSIndexSet indexSetWithIndex:0]];
-            
-        }];
+    [self.searchMessagesView showSearchBox:^(TL_localMessage *msg, NSString *searchString) {
         
-        
-        [self.searchItems removeAllObjects];
-        currentId = -1;
-    };
-    
-    dispatch_block_t next = ^ {
-        if(self.searchItems.count > 0) {
-            
-            SearchSelectItem *searchItem = self.searchItems[currentId];
-            
-            [self.table clearSelection];
-            
-            NSUInteger row = [self.messages indexOfObject:searchItem.item];
-            
-            NSRect rowRect = [self.table rectOfRow:row];
-            
-            [self.table.scrollView scrollToPoint:rowRect.origin animation:NO];
-            
-            [self scrollToRect:rowRect isCenter:YES animated:NO];
-            
-        }
-    };
-    
-    [self.searchMessagesView showSearchBox:^(int msg_id, NSString *searchString) {
-        
-        [self showMessage:msg_id fromMsgId:-1 animated:NO selectText:searchString switchDiscussion:NO];
+        [self showMessage:msg fromMsg:nil animated:NO selectText:searchString switchDiscussion:NO];
         
     } closeCallback:^{
          [self hideSearchBox:YES];
@@ -1353,7 +1317,7 @@ static NSTextAttachment *headerMediaIcon() {
         
         
         if(item) {
-            [self showMessage:item.message.n_id fromMsgId:0];
+            [self showMessage:item.message fromMsg:nil];
             return;
         } 
 
@@ -2067,8 +2031,8 @@ static NSTextAttachment *headerMediaIcon() {
     
 }
 
-- (MessageTableItem *) findMessageItemById:(int)msgId {
-    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"self.message.n_id == %d", msgId];
+- (MessageTableItem *) findMessageItemById:(long)msgId {
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"self.message.channelMsgId == %d", msgId];
     
     NSArray *filtred = [self.messages filteredArrayUsingPredicate:predicate];
     
@@ -2163,20 +2127,19 @@ static NSTextAttachment *headerMediaIcon() {
     
 }
 
-- (void)showMessage:(int)messageId fromMsgId:(int)msgId {
-    [self showMessage:messageId fromMsgId:msgId animated:YES selectText:nil switchDiscussion:NO];
+- (void)showMessage:(TL_localMessage *)message fromMsg:(TL_localMessage *)fromMsg {
+    [self showMessage:message fromMsg:fromMsg animated:YES selectText:nil switchDiscussion:NO];
 }
 
-- (void)showMessage:(int)messageId fromMsgId:(int)msgId switchDiscussion:(BOOL)switchDiscussion {
-    [self showMessage:messageId fromMsgId:msgId animated:YES selectText:nil switchDiscussion:switchDiscussion];
+- (void)showMessage:(TL_localMessage *)message fromMsg:(TL_localMessage *)fromMsg switchDiscussion:(BOOL)switchDiscussion {
+    [self showMessage:message fromMsg:fromMsg animated:YES selectText:nil switchDiscussion:switchDiscussion];
 }
 
-- (void)showMessage:(int)messageId fromMsgId:(int)fromMsgId animated:(BOOL)animated selectText:(NSString *)text switchDiscussion:(BOOL)switchDiscussion {
-    
+- (void)showMessage:(TL_localMessage *)message fromMsg:(TL_localMessage *)fromMsg animated:(BOOL)animated selectText:(NSString *)text switchDiscussion:(BOOL)switchDiscussion {
     
     _needNextRequest = YES;
     
-    MessageTableItem *item = [self itemOfMsgId:messageId];
+    MessageTableItem *item = message.hole != nil ? [self itemOfMsgId:channelMsgId(message.hole.min_id, message.peer_id)] : [self itemOfMsgId:message.channelMsgId];
     
     if(item && !(item.message.isChannelMessage && !item.message.chat.isBroadcast)) {
         [self scrollToItem:item animated:YES centered:YES highlight:YES];
@@ -2184,12 +2147,12 @@ static NSTextAttachment *headerMediaIcon() {
         return;
     }
     
-    if(fromMsgId != 0)
-        [_replyMsgsStack addObject:@(fromMsgId)];
+    if(fromMsg != nil)
+        [_replyMsgsStack addObject:fromMsg];
     
     TL_conversation *conversation = self.conversation;
     
-    __block TL_localMessage *msg = conversation.type == DialogTypeChannel && fromMsgId == 0 ? [[Storage manager] lastImportantMessageAroundMinId:channelMsgId(messageId, conversation.peer_id)] : [[Storage manager] messageById:messageId inChannel:self.conversation.type == DialogTypeChannel ? self.conversation.peer_id : 0];
+    __block TL_localMessage *msg = conversation.type == DialogTypeChannel && fromMsg == nil ? [[Storage manager] lastImportantMessageAroundMinId:message.channelMsgId] : [[Storage manager] messageById:message.n_id inChannel:message.isChannelMessage];
     
     dispatch_block_t block = ^{
         
@@ -2203,104 +2166,86 @@ static NSTextAttachment *headerMediaIcon() {
             [self.normalNavigationCenterView enableDiscussion:!self.normalNavigationCenterView.discussIsEnabled force:YES];
         
         
-        self.historyController = [[[self hControllerClass] alloc] initWithController:self historyFilter:msg.isChannelMessage ? ( fromMsgId == 0 ? self.normalNavigationCenterView.discussIsEnabled ? [ChannelFilter class] : [ChannelImportantFilter class] : msg.isImportantMessage ? self.historyController.filter.class : [ChannelFilter class]) : [HistoryFilter class]];
+        self.historyController = [[[self hControllerClass] alloc] initWithController:self historyFilter:msg.isChannelMessage ? ( fromMsg == nil ? self.normalNavigationCenterView.discussIsEnabled ? [ChannelFilter class] : [ChannelImportantFilter class] : msg.isImportantMessage ? self.historyController.filter.class : [ChannelFilter class]) : [HistoryFilter class]];
         
         [self.normalNavigationCenterView enableDiscussion:[self.historyController.filter isKindOfClass:[ChannelFilter class]] force:YES];
         
-        //conversation.type == DialogTypeChannel
-        if(true) {
+        MessageTableItem *importantItem = [self messageTableItemsFromMessages:@[msg]][0];
+        
+        NSUInteger index = [self indexOfObject:[self itemOfMsgId:importantItem.message.n_id]];
+        
+        __block NSRect rect = NSZeroRect;
+        
+        int yTopOffset = 0;
+        
+        if(index != NSNotFound) {
+            rect = [self.table rectOfRow:index];
             
-            MessageTableItem *importantItem = [self messageTableItemsFromMessages:@[msg]][0];
+            yTopOffset =  self.table.scrollView.documentOffset.y + NSHeight(self.table.containerView.frame) - (rect.origin.y);
             
-            NSUInteger index = [self indexOfObject:[self itemOfMsgId:importantItem.message.n_id]];
-            
-            __block NSRect rect = NSZeroRect;
-            
-            int yTopOffset = 0;
-            
-            if(index != NSNotFound) {
-                rect = [self.table rectOfRow:index];
-                
-                yTopOffset =  self.table.scrollView.documentOffset.y + NSHeight(self.table.containerView.frame) - (rect.origin.y);
-                
-            }
-            
-            [self removeScrollEvent];
-            
-            [self showModalProgress];
-            
-            
-            int count = NSHeight(self.table.containerView.frame)/20;
-            
-            [self.historyController loadAroundMessagesWithMessage:importantItem limit:count selectHandler:^(NSArray *result, NSRange range) {
-                
-                [self flushMessages];
-                
-                _needNextRequest = NO;
-                
-                [self messagesLoadedTryToInsert:result pos:range.location next:YES];
-                
-                [self.table setNeedsDisplay:YES];
-                [self.table display];
-                
-                if(rect.origin.y == 0 || fromMsgId != 0 || fromMsgId == -1) {
-                    [self scrollToItem:importantItem animated:NO centered:YES highlight:fromMsgId != 0];
-                } else {
-                    
-                    __block NSRect drect = [self.table rectOfRow:[self indexOfObject:importantItem]];
-                    
-                    
-                    dispatch_block_t block = ^{
-                        
-                        
-                        
-                        
-                        drect.origin.y -= (NSHeight(self.table.containerView.frame)  -yTopOffset);
-                        
-                        drect.origin.y = MAX(0,drect.origin.y);
-                        
-                        [self.table.scrollView scrollToPoint:drect.origin animation:NO];
-                        
-                    };
-                    
-                    if(NSEqualRects(drect, NSZeroRect)) {
-                        
-                        dispatch_async(dispatch_get_main_queue(), block);
-                    } else {
-                        block();
-                    }
-                    
-                    
-                }
-                
-                [self addScrollEvent];
-                
-                [self hideModalProgress];
-            }];
-            
-            
-            
-            
-        } else {
+        }
+        
+        [self removeScrollEvent];
+        
+        [self showModalProgress];
+        
+        
+        int count = NSHeight(self.table.containerView.frame)/20;
+        
+        [self.historyController loadAroundMessagesWithMessage:importantItem limit:count selectHandler:^(NSArray *result, NSRange range) {
             
             [self flushMessages];
             
+            _needNextRequest = NO;
             
-            [self loadhistory:messageId toEnd:YES prev:messageId != 0 isFirst:YES];
-        }
-        
-        
-        
-        
+            [self messagesLoadedTryToInsert:result pos:range.location next:YES];
+            
+            [self.table setNeedsDisplay:YES];
+            [self.table display];
+            
+            if(rect.origin.y == 0 || fromMsg == nil) {
+                [self scrollToItem:importantItem animated:NO centered:YES highlight:fromMsg == nil];
+            } else {
+                
+                __block NSRect drect = [self.table rectOfRow:[self indexOfObject:importantItem]];
+                
+                
+                dispatch_block_t block = ^{
+                    
+                    
+                    
+                    
+                    drect.origin.y -= (NSHeight(self.table.containerView.frame)  -yTopOffset);
+                    
+                    drect.origin.y = MAX(0,drect.origin.y);
+                    
+                    [self.table.scrollView scrollToPoint:drect.origin animation:NO];
+                    
+                };
+                
+                if(NSEqualRects(drect, NSZeroRect)) {
+                    
+                    dispatch_async(dispatch_get_main_queue(), block);
+                } else {
+                    block();
+                }
+                
+                
+            }
+            
+            [self addScrollEvent];
+            
+            [self hideModalProgress];
+        }];
         
     };
     
     if(!msg) {
         
-        id request = [TLAPI_messages_getMessages createWithN_id:[@[@(messageId)] mutableCopy]];
+        id request = [TLAPI_messages_getMessages createWithN_id:[@[@(message.n_id)] mutableCopy]];
         
         if(self.conversation.type == DialogTypeChannel) {
-            request = [TLAPI_channels_getMessages createWithChannel:self.conversation.inputPeer n_id:[@[@(messageId)] mutableCopy]];
+            request = [TLAPI_channels_getMessages createWithChannel:message.conversation.inputPeer n_id:[@[@(message.n_id)] mutableCopy]];
         }
         
         [RPCRequest sendRequest:request successHandler:^(RPCRequest *request, TL_messages_messages * response) {
@@ -2312,9 +2257,6 @@ static NSTextAttachment *headerMediaIcon() {
                     block();
                 }
             }
-            
-            
-            
             
         } errorHandler:^(RPCRequest *request, RpcError *error) {
             
@@ -2391,7 +2333,7 @@ static NSTextAttachment *headerMediaIcon() {
         
         
         if(message != nil) {
-            [self showMessage:message.n_id fromMsgId:-1];
+            [self showMessage:message fromMsg:nil];
         } else {
             
             [self flushMessages];
@@ -3848,7 +3790,7 @@ static NSTextAttachment *headerMediaIcon() {
     return [self.messages indexOfObject:item];
 }
 
-- (MessageTableItem *)itemOfMsgId:(int)msg_id {
+- (MessageTableItem *)itemOfMsgId:(long)msg_id {
     return [self findMessageItemById:msg_id];
 }
 

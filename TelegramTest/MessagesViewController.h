@@ -75,15 +75,15 @@ typedef enum {
 
 
 
-- (void)showMessage:(int)messageId fromMsgId:(int)msgId;
-- (void)showMessage:(int)messageId fromMsgId:(int)msgId switchDiscussion:(BOOL)switchDiscussion;
-- (void)showMessage:(int)messageId fromMsgId:(int)msgId animated:(BOOL)animated selectText:(NSString *)text switchDiscussion:(BOOL)switchDiscussion;
+- (void)showMessage:(TL_localMessage *)message fromMsg:(TL_localMessage *)fromMsg;
+- (void)showMessage:(TL_localMessage *)message fromMsg:(TL_localMessage *)fromMsg switchDiscussion:(BOOL)switchDiscussion;
+- (void)showMessage:(TL_localMessage *)message fromMsg:(TL_localMessage *)fromMsg animated:(BOOL)animated selectText:(NSString *)text switchDiscussion:(BOOL)switchDiscussion;
 
 - (void)setHistoryFilter:(Class)filter force:(BOOL)force;
 - (void)updateLoading;
 - (MessageTableItem *)objectAtIndex:(NSUInteger)position;
 - (NSUInteger)indexOfObject:(MessageTableItem *)item;
-- (MessageTableItem *)itemOfMsgId:(int)msg_id;
+- (MessageTableItem *)itemOfMsgId:(long)msg_id;
 
 +(NSMenu *)destructMenu:(dispatch_block_t)ttlCallback click:(dispatch_block_t)click;
 +(NSMenu *)notifications:(dispatch_block_t)callback conversation:(TL_conversation *)conversation click:(dispatch_block_t)click;

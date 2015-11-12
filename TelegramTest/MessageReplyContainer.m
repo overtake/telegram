@@ -189,7 +189,7 @@
         
         if(_messageField.selectRange.location == NSNotFound) {
             if(_item.table.viewController.state == MessagesViewControllerStateNone)
-                [_item.table.viewController showMessage:_replyObject.replyMessage.n_id fromMsgId:_item.message.n_id ];
+                [_item.table.viewController showMessage:_replyObject.replyMessage fromMsg:_item.message];
         }
         
         

@@ -314,23 +314,23 @@ DYNAMIC_PROPERTY(DDialog);
     __block TL_conversation *dialog;
     
     dialog = [self getDDialog];
+    
+    if(!dialog) {
+        dialog = [[DialogsManager sharedManager] find:self.peer_id];
+        [self setDDialog:dialog];
+    }
+    
+    if(!dialog) {
+        dialog = [[Storage manager] selectConversation:self.peer];
         
-        if(!dialog) {
-            dialog = [[DialogsManager sharedManager] find:self.peer_id];
-            [self setDDialog:dialog];
-        }
+        if(!dialog)
+            dialog = [[DialogsManager sharedManager] createDialogForMessage:self];
+        else
+            [[DialogsManager sharedManager] add:@[dialog]];
         
-        if(!dialog) {
-            dialog = [[Storage manager] selectConversation:self.peer];
-            
-            if(!dialog)
-                dialog = [[DialogsManager sharedManager] createDialogForMessage:self];
-            else
-                [[DialogsManager sharedManager] add:@[dialog]];
-            
-            [self setDDialog:dialog];
-        }
-
+        [self setDDialog:dialog];
+    }
+    
     
     return dialog;
 }
