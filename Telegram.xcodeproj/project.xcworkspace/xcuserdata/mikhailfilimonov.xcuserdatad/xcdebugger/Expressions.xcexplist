@@ -2206,6 +2206,14 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "-[Storage lastMessageAroundMinId:important:isTop:]:Storage.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "msgId">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "-[MessageTableItem initWithObject:]:MessageTableItem.m">
          <PersistentStrings>
             <PersistentString
@@ -3285,6 +3293,14 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "-[RightViewController didChangedLayout]:RightViewController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.navigationViewController.viewControllerStack">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "__49-[TGPasswosdMainViewController rebuildController]_block_invoke262:TGPasswosdMainViewController.m">
       </ContextState>
       <ContextState
@@ -4112,6 +4128,14 @@
          contextName = "__66-[ChatHistoryController request:anotherSource:sync:selectHandler:]_block_invoke289:ChatHistoryController.m">
       </ContextState>
       <ContextState
+         contextName = "__83-[MessagesViewController showMessage:fromMsg:animated:selectText:switchDiscussion:]_block_invoke:MessagesViewController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "msg.isImportantMessage">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "__31-[ChannelInfoHeaderView reload]_block_invoke_2:ChannelInfoHeaderView.m">
       </ContextState>
       <ContextState
@@ -4572,6 +4596,14 @@
       </ContextState>
       <ContextState
          contextName = "+[SharedManager proccessGlobalResponse:]:SharedManager.m">
+      </ContextState>
+      <ContextState
+         contextName = "-[MessagesViewController showMessage:fromMsg:animated:selectText:switchDiscussion:]:MessagesViewController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "message.hole">
+            </PersistentString>
+         </PersistentStrings>
       </ContextState>
       <ContextState
          contextName = "-[UserInfoContainerView buildTTLTitle]:UserInfoContainerView.m">

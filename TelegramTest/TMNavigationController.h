@@ -72,6 +72,7 @@ typedef enum {
 - (void)goBackWithAnimation:(BOOL)animated;
 - (void)clear;
 
+-(void)gotoEmptyController;
 
 -(void)showInfoPage:(TL_conversation *)conversation;
 -(void)showMessagesViewController:(TL_conversation *)conversation;

@@ -881,7 +881,7 @@ TL_localMessage *parseMessage(FMResultSet *result) {
         
         int peer_id = 0;
         
-        NSData *data = [[NSData alloc] initWithBytes:&channelMsgId length:8];
+        NSData *data = [[NSData alloc] initWithBytes:&msgId length:8];
         
         [data getBytes:&peer_id range:NSMakeRange(4, 4)];
         

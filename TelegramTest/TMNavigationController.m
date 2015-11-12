@@ -613,7 +613,8 @@ static const int navigationOffset = 48;
             [self pushViewController:controller animated:animated];
         }
     } else {
-        [self.viewControllerStack removeAllObjects];
+        
+        [self.viewControllerStack removeObjectsInRange:NSMakeRange(1, self.viewControllerStack.count - 1)];
         
         [self pushViewController:controller animated:animated && ![self.currentController isKindOfClass:[NotSelectedDialogsViewController class]]];
     }
@@ -668,6 +669,12 @@ static const int navigationOffset = 48;
     
     [self pushViewController:infoViewController animated:YES];
     
+}
+
+-(void)gotoEmptyController {
+    [self.viewControllerStack subarrayWithRange:NSMakeRange(1, self.viewControllerStack.count - 1)];
+    
+    [self goBackWithAnimation:YES];
 }
 
 -(void)showMessagesViewController:(TL_conversation *)conversation {

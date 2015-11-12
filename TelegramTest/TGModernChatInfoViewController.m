@@ -81,6 +81,14 @@
     
     _deleteAndExitItem = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeNone callback:^(TGGeneralRowItem *item) {
         
+        [self showModalProgress];
+        [self.messagesViewController deleteDialog:_conversation callback:^{
+            
+            [self.navigationViewController gotoEmptyController];
+            
+            [self hideModalProgressWithSuccess];
+            
+        }];
         
     } description:NSLocalizedString(@"Conversation.DeleteAndExit", nil) height:42 stateback:nil];
     _deleteAndExitItem.textColor = [NSColor redColor];

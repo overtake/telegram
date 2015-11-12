@@ -39,6 +39,12 @@
     
     [self.textField setStringValue:item.text];
     
+    [self.textField sizeToFit];
+    
+    [self.textField setCenteredYByView:self.textField.superview];
+    
+    [self.textField setFrameOrigin:NSMakePoint(roundf((NSWidth(self.messagesViewController.view.frame) - NSWidth(_textField.frame))/2), NSMinY(_textField.frame))];
+    
     
     if(item.removeType == RemoveUnreadMarkAfterSecondsType) {
         
@@ -54,7 +60,7 @@
 -(void)setFrameSize:(NSSize)newSize {
     [super setFrameSize:newSize];
     
-    [self.textField setFrameSize:NSMakeSize(newSize.width, 26)];
+    //[self.textField setFrameSize:NSMakeSize(newSize.width, 26)];
 }
 
 - (void)drawRect:(NSRect)dirtyRect {

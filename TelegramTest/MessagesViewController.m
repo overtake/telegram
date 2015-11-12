@@ -1436,7 +1436,7 @@ static NSTextAttachment *headerMediaIcon() {
         
         if(!hide)
         {
-            MessageTableItem *item = [self itemOfMsgId:[[_replyMsgsStack lastObject] intValue]];
+            MessageTableItem *item = [self itemOfMsgId:[[_replyMsgsStack lastObject] channelMsgId]];
             
             NSRect rowRect = [self.table rectOfRow:[self indexOfObject:item]];
             
@@ -2032,7 +2032,7 @@ static NSTextAttachment *headerMediaIcon() {
 }
 
 - (MessageTableItem *) findMessageItemById:(long)msgId {
-    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"self.message.channelMsgId == %d", msgId];
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"self.message.channelMsgId == %ld", msgId];
     
     NSArray *filtred = [self.messages filteredArrayUsingPredicate:predicate];
     
@@ -2139,6 +2139,7 @@ static NSTextAttachment *headerMediaIcon() {
     
     _needNextRequest = YES;
     
+    
     MessageTableItem *item = message.hole != nil ? [self itemOfMsgId:channelMsgId(message.hole.min_id, message.peer_id)] : [self itemOfMsgId:message.channelMsgId];
     
     if(item && !(item.message.isChannelMessage && !item.message.chat.isBroadcast)) {
@@ -2152,7 +2153,11 @@ static NSTextAttachment *headerMediaIcon() {
     
     TL_conversation *conversation = self.conversation;
     
-    __block TL_localMessage *msg = conversation.type == DialogTypeChannel && fromMsg == nil ? [[Storage manager] lastImportantMessageAroundMinId:message.channelMsgId] : [[Storage manager] messageById:message.n_id inChannel:message.isChannelMessage];
+    __block TL_localMessage *msg = conversation.type == DialogTypeChannel && fromMsg == nil ? [[Storage manager] lastImportantMessageAroundMinId: message.hole ? channelMsgId(message.hole.min_id, message.peer_id) : message.channelMsgId] : [[Storage manager] messageById:message.hole ? message.hole.min_id : message.n_id inChannel:message.isChannelMessage];
+    
+    NSLog(@"isImportantMessage:%d",msg.isImportantMessage);
+    
+    int bp = 0;
     
     dispatch_block_t block = ^{
         
@@ -2172,7 +2177,7 @@ static NSTextAttachment *headerMediaIcon() {
         
         MessageTableItem *importantItem = [self messageTableItemsFromMessages:@[msg]][0];
         
-        NSUInteger index = [self indexOfObject:[self itemOfMsgId:importantItem.message.n_id]];
+        NSUInteger index = [self indexOfObject:[self itemOfMsgId:importantItem.message.channelMsgId]];
         
         __block NSRect rect = NSZeroRect;
         
@@ -2203,17 +2208,14 @@ static NSTextAttachment *headerMediaIcon() {
             [self.table setNeedsDisplay:YES];
             [self.table display];
             
-            if(rect.origin.y == 0 || fromMsg == nil) {
-                [self scrollToItem:importantItem animated:NO centered:YES highlight:fromMsg == nil];
+            if(rect.origin.y == 0 || (fromMsg == nil && !importantItem.message.isChannelMessage)) {
+                [self scrollToItem:importantItem animated:NO centered:YES highlight:fromMsg == nil && !importantItem.message.isChannelMessage];
             } else {
                 
                 __block NSRect drect = [self.table rectOfRow:[self indexOfObject:importantItem]];
                 
                 
                 dispatch_block_t block = ^{
-                    
-                    
-                    
                     
                     drect.origin.y -= (NSHeight(self.table.containerView.frame)  -yTopOffset);
                     
@@ -2245,7 +2247,7 @@ static NSTextAttachment *headerMediaIcon() {
         id request = [TLAPI_messages_getMessages createWithN_id:[@[@(message.n_id)] mutableCopy]];
         
         if(self.conversation.type == DialogTypeChannel) {
-            request = [TLAPI_channels_getMessages createWithChannel:message.conversation.inputPeer n_id:[@[@(message.n_id)] mutableCopy]];
+            request = [TLAPI_channels_getMessages createWithChannel:message.conversation.inputPeer n_id:[@[@(message.hole ? message.hole.min_id : message.n_id)] mutableCopy]];
         }
         
         [RPCRequest sendRequest:request successHandler:^(RPCRequest *request, TL_messages_messages * response) {
