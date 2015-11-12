@@ -743,24 +743,6 @@ TL_localMessage *parseMessage(FMResultSet *result) {
         
         
         
-        NSMutableArray *allHoles = [[NSMutableArray alloc] init];
-        {
-            // all holes
-            NSString *holeSql = [NSString stringWithFormat:@"select * from %@ where peer_id = %@",tableMessageHoles,@(conversationId)];
-            
-            
-            result = [db executeQuery:holeSql];
-            
-            while ([result next]) {
-                TGMessageHole *hole = [[TGMessageHole alloc] initWithUniqueId:[result intForColumn:@"unique_id"] peer_id:[result intForColumn:@"peer_id"] min_id:[result intForColumn:@"min_id"] max_id:[result intForColumn:@"max_id"] date:[result intForColumn:@"date"] count:[result intForColumn:@"count"]];
-                
-                [allHoles addObject:hole];
-            }
-            
-            [result close];
-        }
-        
-        
         if(!next)
             hole = [holes firstObject];
         else

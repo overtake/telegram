@@ -130,6 +130,7 @@
     
     [RPCRequest sendRequest:[TLAPI_channels_getParticipants createWithChannel:_chat.inputPeer filter:[TL_channelParticipantsRecent create] offset:offset limit:30] successHandler:^(id request, TL_channels_channelParticipants *response) {
         
+        [SharedManager proccessGlobalResponse:response];
         
         NSMutableArray *items = [NSMutableArray array];
         
@@ -313,6 +314,19 @@
                 } description:NSLocalizedString(@"Profile.ChannelBlackList", nil) subdesc:[NSString stringWithFormat:@"%d",_chat.chatFull.kicked_count] height:42 stateback:nil];
             }
             
+        } else {
+            
+            GeneralSettingsRowItem *openChannel = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeNone callback:^(TGGeneralRowItem *item) {
+                
+               [self.navigationViewController showMessagesViewController:_conversation];
+               
+            } description:NSLocalizedString(@"Profile.OpenChannel", nil) height:42 stateback:nil];
+            
+            openChannel.textColor = BLUE_UI_COLOR;
+            
+            [_tableView addItem:openChannel tableRedraw:YES];
+            
+            [_tableView addItem:[[TGGeneralRowItem alloc] initWithHeight:20] tableRedraw:YES];
         }
         
         if(adminsItem)

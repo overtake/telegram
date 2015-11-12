@@ -443,11 +443,7 @@
 -(TGMessageHole *)proccessAndGetHoleWithHole:(TGMessageHole *)hole next:(BOOL)next messages:(NSArray *)messages {
     
     TGMessageHole *nHole;
-    
-    if(hole != nil) {
-        NSLog(@"holeMinId:%d,holeMaxId:%d",hole.min_id,hole.max_id);
-    }
-    
+
     
     if(hole != nil) {
         

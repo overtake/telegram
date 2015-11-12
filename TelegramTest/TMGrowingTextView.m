@@ -368,7 +368,7 @@
     if (self.string.length == 0) {
         if(self.placeholderTextAttributedString) {
             
-            [self.placeholderTextAttributedString drawAtPoint:NSMakePoint(6, NSAppKitVersionNumber > NSAppKitVersionNumber10_10_Max ? 3 : 4)];
+            [self.placeholderTextAttributedString drawAtPoint:NSMakePoint(6, NSAppKitVersionNumber > NSAppKitVersionNumber10_10_Max ? 5 : 4)];
         }
     }
 }

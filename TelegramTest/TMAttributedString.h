@@ -20,6 +20,7 @@
 - (NSRange)appendString:(NSString *)string;
 - (NSRange)appendString:(NSString *)string withColor:(NSColor*)color;
 - (void)setFont:(NSFont *)font forRange:(NSRange)range;
+- (void)setCTFont:(NSFont *)font forRange:(NSRange)range;
 - (void)setLink:(NSString *)link forRange:(NSRange)range;
 - (void)setLink:(NSString *)link withColor:(NSColor *)color forRange:(NSRange)range;
 

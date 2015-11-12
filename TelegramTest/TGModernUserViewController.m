@@ -42,10 +42,7 @@
     [self.view addSubview:_tableView.containerView];
     
     
-   
-    
 }
-
 
 
 - (TL_inputPhoneContact *)newContact {
@@ -344,6 +341,9 @@
             [_phoneNumberItem setHeader:NSLocalizedString(@"Profile.MobilePhone", nil) withValue:_user.phoneWithFormat];
             
             _phoneNumberItem.height = 50;
+            
+            if(_userNameItem)
+                [_tableView addItem:[[TGGeneralRowItem alloc] initWithHeight:20] tableRedraw:YES];
             
             [_tableView addItem:_phoneNumberItem tableRedraw:YES];
         }

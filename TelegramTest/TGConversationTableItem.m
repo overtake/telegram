@@ -97,8 +97,12 @@
             
             TGActionTyping *action = actions[0];
             
-            if(action.user)
+            if(action.user && _conversation.type != DialogTypeUser && _conversation.type != DialogTypeSecretChat) {
                 string =[NSString stringWithFormat:NSLocalizedString(NSStringFromClass(action.action.class), nil),action.user.dialogFullName];
+            } else {
+                string = NSLocalizedString(@"Typing.Typing", nil);
+            }
+            
             
         } else {
             

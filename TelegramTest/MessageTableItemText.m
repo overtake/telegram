@@ -158,7 +158,7 @@
             
             
             NSRange r = [attr appendString:[header stringByAppendingString:@"\n\n"] withColor:TEXT_COLOR];
-            [attr setFont:TGSystemMediumFont(13) forRange:r];
+            [attr setCTFont:TGSystemMediumFont(13) forRange:r];
             
             NSRange range = [attr appendString:obj];
             
@@ -194,10 +194,10 @@
 }
 
 -(void)updateFontAttributesByEntities {
-    [self.textAttributed removeAttribute:NSFontAttributeName range:self.textAttributed.range];
+    [self.textAttributed removeAttribute: (NSString *)kCTFontAttributeName range:self.textAttributed.range];
     
     
-    [self.textAttributed setFont:TGSystemFont([self fontSize]) forRange:self.textAttributed.range];
+    [self.textAttributed setCTFont:TGSystemFont([self fontSize]) forRange:self.textAttributed.range];
     
     
     
@@ -227,7 +227,7 @@
             
             [self.textAttributed addAttribute:NSFontAttributeName value:TGSystemItalicFont([self fontSize]) range:range];
         } else if([obj isKindOfClass:[TL_messageEntityCode class]] || [obj isKindOfClass:[TL_messageEntityPre class]]) {
-            [self.textAttributed setFont:[NSFont fontWithName:@"Courier" size:[self fontSize]] forRange:range];
+            [self.textAttributed setCTFont:[NSFont fontWithName:@"Courier" size:[self fontSize]] forRange:range];
         }
         
     }];

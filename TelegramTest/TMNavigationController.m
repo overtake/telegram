@@ -593,7 +593,7 @@ static const int navigationOffset = 48;
     
     NSArray *stack = self.viewControllerStack;
     
-    __block NSUInteger idx = 0;
+    __block NSUInteger idx = NSNotFound;
     
     [stack enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger index, BOOL * _Nonnull stop) {
         if([obj isKindOfClass:[controller class]]) {
@@ -614,7 +614,8 @@ static const int navigationOffset = 48;
         }
     } else {
         [self.viewControllerStack removeAllObjects];
-        [self pushViewController:controller animated:animated];
+        
+        [self pushViewController:controller animated:animated && ![self.currentController isKindOfClass:[NotSelectedDialogsViewController class]]];
     }
     
 }

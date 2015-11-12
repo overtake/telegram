@@ -1921,7 +1921,6 @@ static NSTextAttachment *headerMediaIcon() {
             
         }
         
-        
         dispatch_block_t completeBlock = ^ {
             
             if(conversation.type != DialogTypeChannel) {
@@ -1942,6 +1941,8 @@ static NSTextAttachment *headerMediaIcon() {
             DeleteRandomMessagesSenderItem *sender = [[DeleteRandomMessagesSenderItem alloc] initWithConversation:self.conversation random_ids:array];
             
             [sender send];
+            
+            [[DialogsManager sharedManager] deleteMessagesWithRandomMessageIds:array isChannelMessages:NO];
             
             completeBlock();
             
@@ -2172,6 +2173,9 @@ static NSTextAttachment *headerMediaIcon() {
 
 - (void)showMessage:(int)messageId fromMsgId:(int)fromMsgId animated:(BOOL)animated selectText:(NSString *)text switchDiscussion:(BOOL)switchDiscussion {
     
+    
+    _needNextRequest = YES;
+    
     MessageTableItem *item = [self itemOfMsgId:messageId];
     
     if(item && !(item.message.isChannelMessage && !item.message.chat.isBroadcast)) {
@@ -2189,8 +2193,11 @@ static NSTextAttachment *headerMediaIcon() {
     
     dispatch_block_t block = ^{
         
-        if(conversation != self.conversation || !msg)
+        if(conversation != self.conversation || !msg) {
+            _needNextRequest = NO;
             return;
+        }
+        
         
         if(switchDiscussion)
             [self.normalNavigationCenterView enableDiscussion:!self.normalNavigationCenterView.discussIsEnabled force:YES];
@@ -2227,8 +2234,9 @@ static NSTextAttachment *headerMediaIcon() {
             
             [self.historyController loadAroundMessagesWithMessage:importantItem limit:count selectHandler:^(NSArray *result, NSRange range) {
                 
-                
                 [self flushMessages];
+                
+                _needNextRequest = NO;
                 
                 [self messagesLoadedTryToInsert:result pos:range.location next:YES];
                 
@@ -2380,11 +2388,14 @@ static NSTextAttachment *headerMediaIcon() {
         [self.typingReservation removeAllObjects];
         [self removeScrollEvent];
         
-        [self flushMessages];
+        
         
         if(message != nil) {
             [self showMessage:message.n_id fromMsgId:-1];
         } else {
+            
+            [self flushMessages];
+            
             [self loadhistory:0 toEnd:YES prev:NO isFirst:YES];
         }
         
