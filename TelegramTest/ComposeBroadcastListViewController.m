@@ -195,7 +195,7 @@
     return [self.tableView cacheViewForClass:[ComposeBroadcastTableItemView class] identifier:@"BroadcastItem" withSize:NSMakeSize(self.view.bounds.size.width, 66)];
 }
 - (void)selectionDidChange:(NSInteger)row item:(ComposeBroadcastTableItem *) item {
-    [[Telegram rightViewController] showByDialog:item.broadcast.conversation sender:self];
+    [appWindow().navigationController showMessagesViewController:item.broadcast.conversation];
 }
 - (BOOL)selectionWillChange:(NSInteger)row item:(TMRowItem *) item {
     return YES;

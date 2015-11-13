@@ -581,43 +581,6 @@
     [self.messagesViewController drop];
 }
 
-- (void)showByDialog:(TL_conversation *)dialog sender:(id)sender {
-    [self showByDialog:dialog withJump:0 historyFilter:nil sender:sender];
-}
-
-
-- (BOOL)showByDialog:(TL_conversation *)dialog withJump:(int)messageId historyFilter:(Class )filter sender:(id)sender  {
-
-    
-    [self hideModalView:YES animation:NO];
-    
-    if(self.messagesViewController.conversation == dialog && self.navigationViewController.currentController != self.messagesViewController && ![_mainViewController isSingleLayout] && ![sender isKindOfClass:[ComposeActionBehavior class]]) {
-      
-    //    [self.messagesViewController setCurrentConversation:dialog withJump:messageId historyFilter:filter];
-        
-        [self.navigationViewController.viewControllerStack removeAllObjects];
-        [self.navigationViewController.viewControllerStack addObject:[self currentEmptyController]];
-        [self.navigationViewController.viewControllerStack addObject:self.messagesViewController];
-        [self.navigationViewController.viewControllerStack addObject:self.navigationViewController.currentController];
-        [self.navigationViewController goBackWithAnimation:YES];
-    } else {
-        
-       // [self.messagesViewController setCurrentConversation:dialog withJump:messageId historyFilter:filter force:[Telegram isSingleLayout]];
-        
-        if(![_mainViewController isSingleLayout]) {
-            
-            
-            
-            [self.navigationViewController.viewControllerStack removeAllObjects];
-            [self.navigationViewController.viewControllerStack addObject:[self currentEmptyController]];
-            
-        }
-        
-        [self.navigationViewController pushViewController:self.messagesViewController animated:((self.navigationViewController.currentController != self.noDialogsSelectedViewController && ![sender isKindOfClass:[NotSelectedDialogsViewController class]] && ![sender isKindOfClass:[SearchViewController class]]  && ![sender isKindOfClass:[ContactsViewController class]] && ![sender isKindOfClass:[RightViewController class]]) || [Telegram isSingleLayout]) && ![sender isKindOfClass:[AppDelegate class]] && ![sender isKindOfClass:[TGPhotoViewer class]] && ![sender isKindOfClass:[ComposeActionBehavior class]]];
-    }
-
-    return YES;
-}
 
 -(TMViewController *)currentEmptyController {
     return [_mainViewController isSingleLayout] ? [self conversationsController] : self.noDialogsSelectedViewController;

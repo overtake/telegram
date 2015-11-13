@@ -40,7 +40,10 @@ typedef enum {
 @property (nonatomic, strong,readonly) MessagesTableView *table;
 @property (nonatomic, strong) MessagesBottomView *bottomView;
 
-
+typedef enum {
+    ShowMessageTypeReply = 1 << 0,
+    ShowMessageTypeSearch = 1 << 1
+} ShowMessageType;
 
 
 -(void)setConversation:(TL_conversation *)conversation;
@@ -75,9 +78,9 @@ typedef enum {
 
 
 
-- (void)showMessage:(TL_localMessage *)message fromMsg:(TL_localMessage *)fromMsg;
+- (void)showMessage:(TL_localMessage *)message fromMsg:(TL_localMessage *)fromMsg flags:(int)flags;
 - (void)showMessage:(TL_localMessage *)message fromMsg:(TL_localMessage *)fromMsg switchDiscussion:(BOOL)switchDiscussion;
-- (void)showMessage:(TL_localMessage *)message fromMsg:(TL_localMessage *)fromMsg animated:(BOOL)animated selectText:(NSString *)text switchDiscussion:(BOOL)switchDiscussion;
+- (void)showMessage:(TL_localMessage *)message fromMsg:(TL_localMessage *)fromMsg animated:(BOOL)animated selectText:(NSString *)text switchDiscussion:(BOOL)switchDiscussion flags:(int)flags;
 
 - (void)setHistoryFilter:(Class)filter force:(BOOL)force;
 - (void)updateLoading;

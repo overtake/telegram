@@ -361,7 +361,15 @@ NSArray *urlSchemes() {
 
 
 TelegramWindow *appWindow() {
-    return (TelegramWindow *) [NSApp keyWindow];
+    
+    TelegramWindow *window = (TelegramWindow *) [NSApp keyWindow];
+    
+    if(!window)
+    {
+        window = (TelegramWindow *)[Telegram delegate].mainWindow;
+    }
+    
+    return window;
 }
 
 void open_card(NSString *link) {
@@ -420,8 +428,9 @@ void join_group_by_hash(NSString * hash) {
             
             if([response isKindOfClass:[TL_chatInviteAlready class]] && ![(TLChat *)[response chat] left]) {
                 
-                [[Telegram rightViewController] showByDialog:[[DialogsManager sharedManager] findByChatId:[[response chat] n_id]] sender:nil];
-                    
+                [appWindow().navigationController showMessagesViewController:[[DialogsManager sharedManager] findByChatId:[[response chat] n_id]]];
+                
+                
                 [TMViewController hideModalProgress];
     
             } else if([response isKindOfClass:[TL_chatInvite class]]) {
@@ -439,7 +448,7 @@ void join_group_by_hash(NSString * hash) {
                             
                             TL_conversation *conversation = chat.dialog;
                             
-                            [[Telegram rightViewController] showByDialog:conversation sender:nil];
+                            [appWindow().navigationController showMessagesViewController:conversation];
                             
                             dispatch_after_seconds(0.2, ^{
                                 
@@ -517,17 +526,17 @@ void open_user_by_name(NSDictionary *params) {
             TLUser *user = obj;
             
             if(user.isBot && params[@"start"]) {
-                [[Telegram rightViewController] showByDialog:user.dialog sender:nil];
-                [[Telegram rightViewController].messagesViewController showBotStartButton:params[@"start"] bot:user];
+                [appWindow().navigationController showMessagesViewController:user.dialog];
+                [appWindow().navigationController.messagesViewController showBotStartButton:params[@"start"] bot:user];
             } else if(user.isBot && params[@"startgroup"] && (user.flags & TGBOTGROUPBLOCKED) == 0) {
                 [[Telegram rightViewController] showComposeAddUserToGroup:[[ComposeAction alloc] initWithBehaviorClass:[ComposeActionAddUserToGroupBehavior class] filter:nil object:user reservedObjects:@[params]]];
             } else if(params[@"open_profile"]) {
                 [appWindow().navigationController showInfoPage:user.dialog];
             } else {
-                [[Telegram rightViewController] showByDialog:user.dialog sender:nil];
+               [appWindow().navigationController showMessagesViewController:user.dialog];
             }
         } else {
-            [[Telegram rightViewController] showByDialog:((TLChat *)obj).dialog sender:nil];
+            [appWindow().navigationController showMessagesViewController:((TLChat *)obj).dialog];
         }
         
         

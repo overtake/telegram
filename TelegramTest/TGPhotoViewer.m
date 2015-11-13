@@ -566,6 +566,8 @@ static TGPhotoViewer *viewer;
 
 -(void)makeKeyAndOrderFront:(id)sender {
     
+    self.invokeWindow = appWindow();
+    
     
     [Notification addObserver:self selector:@selector(didReceivedMedia:) name:MEDIA_RECEIVE];
     [Notification addObserver:self selector:@selector(didDeleteMessages:) name:MESSAGE_DELETE_EVENT];

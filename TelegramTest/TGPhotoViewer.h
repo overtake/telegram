@@ -17,6 +17,9 @@
 @property (nonatomic,strong,readonly) TGPVContainer *photoContainer;
 @property (nonatomic,strong,readonly) TGPVControls *controls;
 
+
+@property (nonatomic,weak) TelegramWindow *invokeWindow;
+
 -(void)show:(PreviewObject *)item conversation:(TL_conversation *)conversation;
 -(void)show:(PreviewObject *)item conversation:(TL_conversation *)conversation isReversed:(BOOL)isReversed;
 -(void)show:(PreviewObject *)item user:(TLUser *)user;

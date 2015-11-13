@@ -161,7 +161,8 @@
     if(!conv)
         conv = item.conversation;
     
-    [[Telegram rightViewController] showByDialog:conv sender:self];
+    [appWindow().navigationController showMessagesViewController:conv];
+    
     
 }
 - (BOOL)selectionWillChange:(NSInteger)row item:(TGRecentSearchRowItem *) item {

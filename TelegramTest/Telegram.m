@@ -214,7 +214,7 @@ int megagroupSizeMax() {
 }
 
 - (void)showMessagesFromDialog:(TL_conversation *)d sender:(id)sender {
-    [[Telegram rightViewController] showByDialog:d sender:(id)sender];
+    [appWindow().navigationController showMessagesViewController:d];
 }
 
 - (void)showMessagesWidthUser:(TLUser *)user sender:(id)sender {
@@ -350,7 +350,7 @@ static TGEnterPasswordPanel *panel;
     
     dispatch_block_t performBlock = ^ {
         
-        [[Telegram rightViewController] showByDialog:user.dialog sender:self];
+        [appWindow().navigationController showMessagesViewController:user.dialog];
         
         NSArray *files = TGGetLogFilePaths();
         

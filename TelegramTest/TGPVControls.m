@@ -349,16 +349,17 @@
         NSMenuItem *photoForward = [NSMenuItem menuItemWithTitle:NSLocalizedString(@"PhotoViewer.Forward", nil) withBlock:^(id sender) {
             
             
-            [[Telegram rightViewController] showByDialog:msg.conversation sender:[TGPhotoViewer viewer]];
-            [[Telegram rightViewController].messagesViewController setState:MessagesViewControllerStateNone];
-            [[Telegram rightViewController].messagesViewController unSelectAll:NO];
+            [[TGPhotoViewer viewer].invokeWindow.navigationController showMessagesViewController:msg.conversation];
+            
+            
+            [[TGPhotoViewer viewer].invokeWindow.navigationController.messagesViewController setState:MessagesViewControllerStateNone];
+            [[TGPhotoViewer viewer].invokeWindow.navigationController.messagesViewController unSelectAll:NO];
             
             MessageTableItem *item  = [MessageTableItem messageItemFromObject:msg];
             
-            [[Telegram rightViewController].messagesViewController setSelectedMessage:item selected:YES];
+            [[TGPhotoViewer viewer].invokeWindow.navigationController.messagesViewController setSelectedMessage:item selected:YES];
             
-            
-            [[Telegram rightViewController] showForwardMessagesModalView:_convertsation messagesCount:1];
+            [[TGPhotoViewer viewer].invokeWindow.navigationController.messagesViewController showForwardMessagesModalView];
             
             [[TGPhotoViewer viewer] hide];
             
@@ -407,9 +408,8 @@
         
         TL_localMessage *msg = [TGPhotoViewer currentItem].previewObject.media;
         
-        [[Telegram rightViewController] showByDialog:_convertsation withJump:msg.n_id historyFilter:nil sender:[TGPhotoViewer viewer]];
+        [[TGPhotoViewer viewer].invokeWindow.navigationController showMessagesViewController:msg.conversation];
 
-        
         [[TGPhotoViewer viewer] hide];
         
     }];

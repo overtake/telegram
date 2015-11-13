@@ -1064,7 +1064,7 @@ continueUserActivity: (id)userActivity
             
             [[DialogsManager sharedManager] add:@[conversation]];
             
-            [[Telegram rightViewController] showByDialog:conversation sender:self];
+            [self.mainWindow.navigationController showMessagesViewController:conversation];
             
             [[Telegram rightViewController].messagesViewController setStringValueToTextField:text];
             

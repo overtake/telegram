@@ -95,7 +95,7 @@
             [dialog save];
         }
         
-        [[Telegram rightViewController] showByDialog:dialog sender:self];
+        [appWindow().navigationController showMessagesViewController:dialog];
     };
     
     

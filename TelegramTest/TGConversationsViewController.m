@@ -439,9 +439,9 @@
     __block TLChat *chat = dialog.chat;
     
     NSMenuItem *openConversationMenuItem = [NSMenuItem menuItemWithTitle:NSLocalizedString(@"Conversation.OpenConversation", nil) withBlock:^(id sender) {
-        [[Telegram rightViewController] showByDialog:dialog sender:self];
+        [appWindow().navigationController showMessagesViewController:dialog];
     }];
-    if([Telegram rightViewController].messagesViewController.conversation == dialog)
+    if(appWindow().navigationController.messagesViewController.conversation == dialog)
         openConversationMenuItem.target = nil;
     
     [menu addItem:openConversationMenuItem];

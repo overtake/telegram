@@ -221,7 +221,7 @@
             
             [self.replyMsgsStack removeObject:[self.replyMsgsStack lastObject]];
             
-            [self showMessage:msg fromMsg:nil animated:YES selectText:nil switchDiscussion:NO];
+            [self showMessage:msg fromMsg:nil animated:YES selectText:nil switchDiscussion:NO flags:ShowMessageTypeReply];
             return;
         }
     }
@@ -616,7 +616,7 @@
     
     [self.searchMessagesView showSearchBox:^(TL_localMessage *msg, NSString *searchString) {
         
-        [self showMessage:msg fromMsg:nil animated:NO selectText:searchString switchDiscussion:NO];
+        [self showMessage:msg fromMsg:nil animated:NO selectText:searchString switchDiscussion:NO flags:ShowMessageTypeReply];
         
     } closeCallback:^{
          [self hideSearchBox:YES];
@@ -1317,7 +1317,7 @@ static NSTextAttachment *headerMediaIcon() {
         
         
         if(item) {
-            [self showMessage:item.message fromMsg:nil];
+            [self showMessage:item.message fromMsg:nil flags:0];
             return;
         } 
 
@@ -2127,22 +2127,22 @@ static NSTextAttachment *headerMediaIcon() {
     
 }
 
-- (void)showMessage:(TL_localMessage *)message fromMsg:(TL_localMessage *)fromMsg {
-    [self showMessage:message fromMsg:fromMsg animated:YES selectText:nil switchDiscussion:NO];
+- (void)showMessage:(TL_localMessage *)message fromMsg:(TL_localMessage *)fromMsg flags:(int)flags {
+    [self showMessage:message fromMsg:fromMsg animated:YES selectText:nil switchDiscussion:NO flags:flags];
 }
 
 - (void)showMessage:(TL_localMessage *)message fromMsg:(TL_localMessage *)fromMsg switchDiscussion:(BOOL)switchDiscussion {
-    [self showMessage:message fromMsg:fromMsg animated:YES selectText:nil switchDiscussion:switchDiscussion];
+    [self showMessage:message fromMsg:fromMsg animated:YES selectText:nil switchDiscussion:switchDiscussion flags:0];
 }
 
-- (void)showMessage:(TL_localMessage *)message fromMsg:(TL_localMessage *)fromMsg animated:(BOOL)animated selectText:(NSString *)text switchDiscussion:(BOOL)switchDiscussion {
+- (void)showMessage:(TL_localMessage *)message fromMsg:(TL_localMessage *)fromMsg animated:(BOOL)animated selectText:(NSString *)text switchDiscussion:(BOOL)switchDiscussion flags:(int)flags  {
     
     _needNextRequest = YES;
     
     
     MessageTableItem *item = message.hole != nil ? [self itemOfMsgId:channelMsgId(message.hole.min_id, message.peer_id)] : [self itemOfMsgId:message.channelMsgId];
     
-    if(item && !(item.message.isChannelMessage && !item.message.chat.isBroadcast)) {
+    if(item && (flags & ShowMessageTypeReply) > 0) {
         [self scrollToItem:item animated:YES centered:YES highlight:YES];
         
         return;
@@ -2155,9 +2155,6 @@ static NSTextAttachment *headerMediaIcon() {
     
     __block TL_localMessage *msg = conversation.type == DialogTypeChannel && fromMsg == nil ? [[Storage manager] lastImportantMessageAroundMinId: message.hole ? channelMsgId(message.hole.min_id, message.peer_id) : message.channelMsgId] : [[Storage manager] messageById:message.hole ? message.hole.min_id : message.n_id inChannel:message.isChannelMessage];
     
-    NSLog(@"isImportantMessage:%d",msg.isImportantMessage);
-    
-    int bp = 0;
     
     dispatch_block_t block = ^{
         
@@ -2208,8 +2205,8 @@ static NSTextAttachment *headerMediaIcon() {
             [self.table setNeedsDisplay:YES];
             [self.table display];
             
-            if(rect.origin.y == 0 || (fromMsg == nil && !importantItem.message.isChannelMessage)) {
-                [self scrollToItem:importantItem animated:NO centered:YES highlight:fromMsg == nil && !importantItem.message.isChannelMessage];
+            if(rect.origin.y == 0 || ((flags & ShowMessageTypeReply) > 0 || (flags & ShowMessageTypeSearch) > 0)) {
+                [self scrollToItem:importantItem animated:NO centered:YES highlight:fromMsg != nil];
             } else {
                 
                 __block NSRect drect = [self.table rectOfRow:[self indexOfObject:importantItem]];
@@ -2335,7 +2332,7 @@ static NSTextAttachment *headerMediaIcon() {
         
         
         if(message != nil) {
-            [self showMessage:message fromMsg:nil];
+            [self showMessage:message fromMsg:nil flags:ShowMessageTypeSearch];
         } else {
             
             [self flushMessages];
