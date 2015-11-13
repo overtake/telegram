@@ -65,17 +65,21 @@
         
     } description:NSLocalizedString(@"Modern.Profile.SetAdmins", nil) height:42 stateback:nil];
     
-    _notificationItem = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeChoice callback:^(TGGeneralRowItem *item) {
+    _notificationItem = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeSwitch callback:^(TGGeneralRowItem *item) {
+        
+        [_conversation mute:nil];
         
     } description:NSLocalizedString(@"Notifications", nil) height:42 stateback:^id(TGGeneralRowItem *item) {
-        return [MessagesUtils muteUntil:_conversation.notify_settings.mute_until];
+        return @(_conversation.isMute);
     }];
     
-    _notificationItem.menu = [MessagesViewController notifications:^{
-        
-        [self configure];
-        
-    } conversation:_conversation click:nil];
+//    _notificationItem.menu = [MessagesViewController notifications:^{
+//        
+//        [self configure];
+//        
+//        [self drawParticipants];
+//        
+//    } conversation:_conversation click:nil];
     
     
     

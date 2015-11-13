@@ -244,6 +244,7 @@
                 
             } else {
                 
+                
                 if(newUser.type == TLUserTypeEmpty) {
                     newUser.first_name = @"Deleted";
                     newUser.last_name = @"";

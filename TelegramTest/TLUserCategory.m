@@ -101,10 +101,6 @@ Online
     return [[MTNetwork instance] getTime] < self.status.lastSeenTime;
 }
 
--(BOOL)isBot {
-    return (self.flags & TGUSERFLAGBOT) == TGUSERFLAGBOT;
-}
-
 DYNAMIC_PROPERTY(FULLUPDATETIME)
 
 -(BOOL)needFullUpdate {

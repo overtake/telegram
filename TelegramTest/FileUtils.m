@@ -720,7 +720,7 @@ void open_link(NSString *link) {
     
     
     if([link hasPrefix:TLBotCommandPrefix]) {
-        [[Telegram rightViewController].messagesViewController sendMessage:link forConversation:[Telegram conversation]];
+        [appWindow().navigationController.messagesViewController sendMessage:link forConversation:[appWindow().navigationController.messagesViewController conversation]];
         return;
     }
     

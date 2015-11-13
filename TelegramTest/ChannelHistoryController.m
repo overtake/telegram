@@ -55,6 +55,7 @@ static TGChannelsPolling *channelPolling;
          HistoryFilter *filter = [self filterWithNext:next];
         
         if([filter checkState:ChatHistoryStateFull next:next] || self.isProccessing) {
+            [self performCallback:selectHandler result:@[] range:NSMakeRange(0, 0)];
             return;
         }
         
@@ -95,15 +96,23 @@ static TGChannelsPolling *channelPolling;
     
     if(hole != nil) {
         
-        [self.filter setHole:hole withNext:NO];
+        HistoryFilter *filter = [self filterWithPeerId:self.conversation.peer_id];
         
-        [self.filter setState:ChatHistoryStateRemote next:NO];
+        [filter setState:ChatHistoryStateRemote next:NO];
         
-        [self.filter request:NO callback:^(id response, ChatHistoryState state) {
+        [filter setHole:hole withNext:NO];
+        
+        
+        
+        [filter request:NO callback:^(id response, ChatHistoryState state) {
             
-            NSArray *converted = [self.filter proccessResponse:response state:state next:NO];
+            NSArray *converted = [filter proccessResponse:[self.controller messageTableItemsFromMessages:response] state:state next:NO];
             
             [ASQueue dispatchOnMainQueue:^{
+                
+                if([self.controller respondsToSelector:@selector(forceAddUnreadMark)]) {
+                    [self.controller forceAddUnreadMark];
+                }
                 
                 [self.controller receivedMessageList:converted inRange:NSMakeRange(0, converted.count) itsSelf:NO];
                 

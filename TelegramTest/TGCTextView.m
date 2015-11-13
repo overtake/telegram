@@ -69,37 +69,6 @@
 }
 
 
-//-(void)updateTrackingAreas {
-//    
-//    if(!self.needUpdateTrackingArea)
-//        return;
-//    
-//    
-//    if(self.trackingArea) {
-//        [self removeTrackingArea:self.trackingArea];
-//    }
-//    
-//    self.trackingArea = [[NSTrackingArea alloc] initWithRect:self.bounds
-//                                                     options: (NSTrackingMouseEnteredAndExited | NSTrackingMouseMoved | NSTrackingActiveInActiveApp | NSTrackingInVisibleRect)
-//                                                       owner:self userInfo:nil];
-//    
-//    [self addTrackingArea:self.trackingArea];
-//    
-//    self.needUpdateTrackingArea = NO;
-//}
-//
-//-(void)setFrameSize:(NSSize)newSize {
-//    
-//    if(newSize.width != self.currentSize.width || newSize.height != self.currentSize.height) {
-//        self.currentSize = newSize;
-//        self.needUpdateTrackingArea = YES;
-//        [super setFrameSize:newSize];
-//    }
-//    
-//    [self setNeedsDisplay:YES];
-//   
-//}
-
 -(void)setAttributedString:(NSAttributedString *)attributedString {
     self->_attributedString = attributedString;
     
@@ -212,9 +181,6 @@
     }
     
     
-    
-
-    
     CTFramesetterRef framesetter = CTFramesetterCreateWithAttributedString((CFAttributedStringRef) self.attributedString);
     
     if(CTFrame)
@@ -241,8 +207,6 @@
     
     _selectRange = NSMakeRange(NSNotFound, 0);
     
-        
-   
     [self.marks enumerateObjectsUsingBlock:^(TGCTextMark *mark, NSUInteger idx, BOOL *stop) {
         
         if( (currentSelectPosition.x != -1 && currentSelectPosition.y != -1) ||  mark.range.location != NSNotFound) {
@@ -601,7 +565,7 @@
         
          _selectRange = NSMakeRange(0, self.attributedString.length);
         
-    } else if(theEvent.clickCount == 2) {
+    } else if(theEvent.clickCount == 2 || theEvent.modifierFlags & 256) {
        
         
         int startIndex = [self currentIndexInLocation:[self convertPoint:[theEvent locationInWindow] fromView:nil]];
@@ -685,6 +649,7 @@
 
 
 -(void)mouseDragged:(NSEvent *)theEvent {
+        
     [super mouseDragged:theEvent];
     
     [[NSCursor IBeamCursor] set];
@@ -696,6 +661,8 @@
 -(void)_mouseDragged:(NSEvent *)theEvent {
     if(!_isEditable)
         return;
+    
+    
     
     currentSelectPosition = [self convertPoint:[theEvent locationInWindow] fromView:nil];
     
@@ -844,6 +811,8 @@
 
 
 -(void)rightMouseDown:(NSEvent *)theEvent {
+    
+    [self _checkClickCount:theEvent];
     
     if(self.selectRange.location != NSNotFound) {
         NSTextView *view = (NSTextView *) [self.window fieldEditor:YES forObject:self];

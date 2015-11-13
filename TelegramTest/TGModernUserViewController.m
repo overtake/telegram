@@ -253,22 +253,12 @@
     
     
     
-    GeneralSettingsRowItem *notificationItem = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeChoice callback:^(TGGeneralRowItem *item) {
+    GeneralSettingsRowItem *notificationItem = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeSwitch callback:^(TGGeneralRowItem *item) {
         
+        [_conversation mute:nil];
         
     } description:NSLocalizedString(@"Notifications", nil) height:42 stateback:^id(TGGeneralRowItem *item) {
-        
-        return [MessagesUtils muteUntil:self.conversation.notify_settings.mute_until];
-        
-    }];
-    
-    
-    notificationItem.menu = [MessagesViewController notifications:^{
-        
-        [self configure];
-        
-    } conversation:self.conversation click:^{
-        
+        return @(_conversation.isMute);
     }];
     
     GeneralSettingsRowItem *blockUserItem = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeNone callback:^(TGGeneralRowItem *item) {

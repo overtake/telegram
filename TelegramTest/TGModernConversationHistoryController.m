@@ -293,9 +293,7 @@ static BOOL isStorageLoaded;
         
         [RPCRequest sendRequest:[TLAPI_messages_getDialogs createWithOffset:_remoteOffset limit:100] successHandler:^(id request, TL_messages_dialogs *response) {
             
-            
-            
-            if([response isKindOfClass:[TL_messages_dialogsSlice class]] && _offset == response.n_count) {
+            if([response isKindOfClass:[TL_messages_dialogsSlice class]] && _remoteOffset == response.n_count) {
                 _state = TGModernCHStateFull;
                 return;
             }

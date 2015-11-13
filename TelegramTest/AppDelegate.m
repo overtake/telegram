@@ -715,16 +715,16 @@ void exceptionHandler(NSException * exception)
     
     id block3 = ^(NSEvent *incomingEvent) {
         
-        if([self.mainWindow.firstResponder class] == [SelectTextManager class]) { // hard fix for osx events bug
+        if([appWindow().firstResponder class] == [SelectTextManager class]) { // hard fix for osx events bug
             
-            NSPoint mouseLoc = [[Telegram rightViewController].messagesViewController.table.scrollView convertPoint:[incomingEvent locationInWindow] fromView:nil];
+            NSPoint mouseLoc = [appWindow().navigationController.messagesViewController.table.scrollView convertPoint:[incomingEvent locationInWindow] fromView:nil];
             
             
-            BOOL isInside = [[Telegram rightViewController].messagesViewController.table.scrollView mouse:mouseLoc inRect:[Telegram rightViewController].messagesViewController.table.scrollView.bounds];
+            BOOL isInside = [appWindow().navigationController.messagesViewController.table.scrollView mouse:mouseLoc inRect:appWindow().navigationController.messagesViewController.table.scrollView.bounds];
             
             
             if(isInside) {
-                [[Telegram rightViewController].messagesViewController.table mouseDragged:incomingEvent];
+                [appWindow().navigationController.messagesViewController.table mouseDragged:incomingEvent];
                 
                 return [[NSEvent alloc] init];
             }

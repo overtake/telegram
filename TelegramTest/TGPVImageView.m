@@ -40,8 +40,10 @@
     return self.object.placeholder;
 }
 
--(void)didDownloadImage:(NSImage *)image object:(id)object {
-    [self setObject:object];
+-(void)didDownloadImage:(NSImage *)image object:(TGImageObject *)object {
+    if([[object cacheKey] isEqualToString:[self.object cacheKey]]) {
+        [self setObject:object];
+    }
 }
 
 

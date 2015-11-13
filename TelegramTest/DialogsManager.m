@@ -562,45 +562,8 @@
     
     [self.queue dispatchOnQueue:^{
         TL_conversation *dialog = message.conversation;
-        if(dialog.top_message != 0 && dialog.top_message != -1 && (((dialog.type == DialogTypeChannel ? dialog.top_important_message : dialog.top_message) > message.n_id && dialog.top_message < TGMINFAKEID)))
-            return;
         
-        
-        if(message.unread && !message.n_out) {
-             dialog.unread_count++;
-        }
-        
-        dialog.top_message = message.n_id;
-        
-        if(message.isImportantMessage || ([message.chat isKindOfClass:[TLChat class]] && message.chat.isMegagroup)) {
-            dialog.top_important_message = message.n_id;
-        }
-        if(dialog.type != DialogTypeChannel || (message.isImportantMessage || ([message.chat isKindOfClass:[TLChat class]] && message.chat.isMegagroup)))
-            dialog.lastMessage = message;
-        
-        if(message.n_out) {
-            dialog.last_marked_message = message.n_id;
-            dialog.last_marked_date = message.date + 1;
-        }
-        if(dialog.last_marked_message == 0) {
-            dialog.last_marked_message = dialog.top_message;
-            dialog.last_marked_date = dialog.last_message_date;
-        }
-        
-        
-        if((message.n_out|| !message.unread) && dialog.last_marked_message < message.n_id) {
-            dialog.last_marked_message = message.n_id;
-            dialog.last_marked_date = message.date;
-        }
-        
-        int last_real_date = dialog.last_real_message_date;
-        
-        if(dialog.type != DialogTypeChannel || message.isImportantMessage || ([message.chat isKindOfClass:[TLChat class]] && message.chat.isMegagroup))
-            dialog.last_message_date = message.date;
-        
-        if(update_real_date) {
-            dialog.last_real_message_date = last_real_date;
-        }
+        [self updateConversation:dialog withLastMessage:message update_real_date:update_real_date];
         
         [dialog save];
         
@@ -708,6 +671,54 @@
     }];
 }
 
+-(BOOL)updateConversation:(TL_conversation *)dialog withLastMessage:(TL_localMessage *)message update_real_date:(BOOL)update_real_date {
+    
+    
+    int topMessageId = (dialog.type == DialogTypeChannel ? dialog.top_important_message : dialog.top_message);
+    
+    if(topMessageId != 0 && topMessageId != -1 && ((topMessageId > message.n_id && topMessageId < TGMINFAKEID)))
+        return NO;
+    
+    if(message.unread && !message.n_out) {
+        dialog.unread_count++;
+    }
+    
+    dialog.top_message = message.n_id;
+    
+    if(message.isImportantMessage || ([message.chat isKindOfClass:[TLChat class]] && message.chat.isMegagroup)) {
+        dialog.top_important_message = message.n_id;
+    }
+    if(dialog.type != DialogTypeChannel || (message.isImportantMessage || ([message.chat isKindOfClass:[TLChat class]] && message.chat.isMegagroup)))
+        dialog.lastMessage = message;
+    
+    if(message.n_out) {
+        dialog.last_marked_message = message.n_id;
+        dialog.last_marked_date = message.date + 1;
+    }
+    if(dialog.last_marked_message == 0) {
+        dialog.last_marked_message = dialog.top_message;
+        dialog.last_marked_date = dialog.last_message_date;
+    }
+    
+    
+    if((message.n_out|| !message.unread) && dialog.last_marked_message < message.n_id) {
+        dialog.last_marked_message = message.n_id;
+        dialog.last_marked_date = message.date;
+    }
+    
+    int last_real_date = dialog.last_real_message_date;
+    
+    if(dialog.type != DialogTypeChannel || message.isImportantMessage || ([message.chat isKindOfClass:[TLChat class]] && message.chat.isMegagroup))
+        dialog.last_message_date = message.date;
+    
+    if(update_real_date) {
+        dialog.last_real_message_date = last_real_date;
+    }
+    
+    return YES;
+    
+}
+
 - (void)setTopMessagesToDialogs:(NSNotification *)notify {
     NSArray *messages = [notify.userInfo objectForKey:KEY_MESSAGE_LIST];
     BOOL update_real_date = [[notify.userInfo objectForKey:@"update_real_date"] boolValue];
@@ -717,48 +728,9 @@
         for (TL_localMessage *message in messages) {
             TL_conversation *dialog = message.conversation;
             
-            if(dialog && (dialog.top_message > TGMINFAKEID || (dialog.type == DialogTypeChannel ? dialog.top_important_message : dialog.top_message) < message.n_id)) {
-                dialog.top_message = message.n_id;
-                
-                if(message.isImportantMessage)
-                    dialog.top_important_message = message.n_id;
-                
-                
-                int last_real_date = dialog.last_real_message_date;
-                
-                if(dialog.type != DialogTypeChannel || message.isImportantMessage)
-                    dialog.last_message_date = message.date;
-                
-                if(update_real_date) {
-                    dialog.last_real_message_date = last_real_date;
-                }
-                
-                if(dialog.last_marked_message == 0) {
-                    dialog.last_marked_message = dialog.top_message;
-                    dialog.last_marked_date = dialog.last_message_date;
-                }
-                
-                if((message.n_out|| !message.unread) && dialog.last_marked_message < message.n_id) {
-                    dialog.last_marked_message = message.n_id;
-                    dialog.last_marked_date = message.date;
-                }
-                
-                if(!message.n_out && message.unread) {
-                    if(dialog.type != DialogTypeChannel || message.isImportantMessage)
-                        dialog.unread_count++;
-                }
-                if(dialog.type != DialogTypeChannel || message.isImportantMessage)
-                    dialog.lastMessage = message;
-                
-                
-                [dialog save];
-                
-            } else {
-                [self updateTop:message needUpdate:NO update_real_date:NO];
-                dialog = message.conversation;
-            }
+            BOOL res = [self updateConversation:dialog withLastMessage:message update_real_date:update_real_date];
             
-            if(dialog) {
+            if(dialog && res) {
                 [last setObject:dialog forKey:@(dialog.peer.peer_id)];
             }
             

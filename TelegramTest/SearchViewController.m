@@ -643,7 +643,7 @@ static int insertCount = 3;
         [self.tableView.containerView setHidden:self.tableView.count == 0];
         [CATransaction commit];
         return;
-    } else if(self.tableView.count > 0) {
+    } else if(self.searchParams.dialogs.count > 0) {
         [self.tableView addItem:self.messagesSeparator tableRedraw:YES];
     }
     

@@ -613,8 +613,8 @@ static const int navigationOffset = 48;
             [self pushViewController:controller animated:animated];
         }
     } else {
-        
-        [self.viewControllerStack removeObjectsInRange:NSMakeRange(1, self.viewControllerStack.count - 1)];
+        if(self.viewControllerStack.count > 0)
+            [self.viewControllerStack removeObjectsInRange:NSMakeRange(1, self.viewControllerStack.count - 1)];
         
         [self pushViewController:controller animated:animated && ![self.currentController isKindOfClass:[NotSelectedDialogsViewController class]]];
     }

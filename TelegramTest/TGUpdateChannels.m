@@ -345,19 +345,8 @@
         
     } else if([update isKindOfClass:[TL_updateChannelTooLong class]]) {
         
-        [self failUpdateWithChannelId:[update channel_id] limit:100 withCallback:nil errorCallback:nil];
+        [self failUpdateWithChannelId:[update channel_id] limit:5 withCallback:nil errorCallback:nil];
         
-        [[FullChatManager sharedManager] performLoad:[update channel_id] force:YES callback:^(TLChatFull *fullChat) {
-            
-            TL_conversation *channel = [self conversationWithChannelId:fullChat.n_id];
-            
-            channel.unread_count = fullChat.unread_count;
-            channel.unread_important_count = fullChat.unread_important_count;
-            channel.last_marked_date = [[MTNetwork instance] getTime];
-            [channel save];
-            [[DialogsManager sharedManager] notifyAfterUpdateConversation:channel];
-            
-        }];
         
     } else if([update isKindOfClass:[TL_updateChannelMessageViews class]]) {
         
@@ -560,16 +549,16 @@
                         
                         conversation.top_message = [response top_message];
                         conversation.lastMessage = importantMsg;
-                        conversation.top_important_message = [response top_important_message];
+                        conversation.top_important_message = conversation.chat.isMegagroup ? [response top_message] : [response top_important_message];
                         conversation.last_message_date = conversation.lastMessage.date;
                         
                         if(conversation.last_marked_message == 0) {
-                            conversation.last_marked_message = conversation.top_message;
+                            conversation.last_marked_message =  conversation.chat.isMegagroup ? [response top_message] : [response top_important_message];
                             conversation.last_marked_date = conversation.last_message_date;
                         }
                         
                         conversation.read_inbox_max_id = [response read_inbox_max_id];
-                        conversation.unread_count = [response unread_important_count];
+                        conversation.unread_count = conversation.chat.isMegagroup ? [response unread_count] : [response unread_important_count];
                         
                         [conversation save];
                         
@@ -587,7 +576,7 @@
                             int maxSyncedId = [[Storage manager] syncedMessageIdWithPeerId:conversation.peer_id important:NO latest:YES isChannel:YES];
                             
                             if(importantMsg.n_id > maxSyncedId && maxSyncedId > 0) {
-                                longHole = [[TGMessageHole alloc] initWithUniqueId:-rand_int() peer_id:importantMsg.peer_id min_id:maxSyncedId max_id:importantMsg.n_id date:0 count:0];
+                                longHole = [[TGMessageHole alloc] initWithUniqueId:-rand_int() peer_id:importantMsg.peer_id min_id:maxSyncedId+1 max_id:importantMsg.n_id-1 date:0 count:0];
                                 
                                 [longHole save];
                             }

@@ -387,7 +387,6 @@
          
             dispatch_async(dispatch_get_main_queue(), ^{
                 if(callback) callback();
-                [appWindow().navigationController clear];
                 [appWindow().navigationController showMessagesViewController:dialog];
             });
             

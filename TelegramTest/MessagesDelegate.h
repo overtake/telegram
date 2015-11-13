@@ -21,4 +21,8 @@
 -(TL_conversation *)conversation;
 -(void)updateLoading;
 
+
+@optional
+-(void)forceAddUnreadMark;
+
 @end

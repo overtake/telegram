@@ -97,7 +97,7 @@ static ChatHistoryController *observer;
             
             self.semaphore = dispatch_semaphore_create(1);
             
-            self.selectLimit = 50;
+            self.selectLimit = 100;
             
             [self addFilter:[[historyFilter alloc] initWithController:self peer:_conversation.peer]];
             
@@ -145,6 +145,11 @@ static ChatHistoryController *observer;
 -(HistoryFilter *)filterWithNext:(BOOL)next {
     
     __block HistoryFilter *filter = [_filters lastObject];
+    
+    if(!next && !_isNeedSwapFilters)
+    {
+        return [_filters firstObject];
+    }
     
     [_filters enumerateObjectsWithOptions: _isNeedSwapFilters ? NSEnumerationReverse : 0 usingBlock:^(HistoryFilter *obj, NSUInteger idx, BOOL * _Nonnull stop) {
                 
@@ -491,6 +496,7 @@ static ChatHistoryController *observer;
         HistoryFilter *filter = [self filterWithNext:next];
         
         if([filter checkState:ChatHistoryStateFull next:next] || self.isProccessing) {
+            [self performCallback:selectHandler result:@[] range:NSMakeRange(0, 0)];
             return;
         }
         

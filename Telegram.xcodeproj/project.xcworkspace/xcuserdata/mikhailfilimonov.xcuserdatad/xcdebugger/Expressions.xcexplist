@@ -463,6 +463,9 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "-[TLUser(Category) type]:TLUserCategory.m">
+      </ContextState>
+      <ContextState
          contextName = "__47-[PrivacyViewController loadDeleteAccountTimer]_block_invoke:PrivacyViewController.m">
       </ContextState>
       <ContextState
@@ -506,6 +509,9 @@
          <PersistentStrings>
             <PersistentString
                value = "_fi">
+            </PersistentString>
+            <PersistentString
+               value = "next">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -1148,6 +1154,9 @@
       </ContextState>
       <ContextState
          contextName = "__56-[TGModernConversationHistoryController performLoadNext]_block_invoke195:TGModernConversationHistoryController.m">
+      </ContextState>
+      <ContextState
+         contextName = "__56-[TGModernConversationHistoryController performLoadNext]_block_invoke199:TGModernConversationHistoryController.m">
       </ContextState>
       <ContextState
          contextName = "__67-[MessagesViewController sendImage:file_data:addCompletionHandler:]_block_invoke:MessagesViewController.m">
@@ -2243,6 +2252,9 @@
       </ContextState>
       <ContextState
          contextName = "__55-[FullChatManager loadFullChatByChatId:force:callback:]_block_invoke:FullChatManager.m">
+      </ContextState>
+      <ContextState
+         contextName = "__57-[TGModernChannelInfoViewController loadNextParticipants]_block_invoke173:TGModernChannelInfoViewController.m">
       </ContextState>
       <ContextState
          contextName = "__51-[TGStickersSettingsViewController viewWillAppear:]_block_invoke:TGStickersSettingsViewController.m">

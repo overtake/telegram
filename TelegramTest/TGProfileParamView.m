@@ -25,9 +25,9 @@
         self.textView = [[TGCTextView alloc] initWithFrame:NSZeroRect];
         [self.textView setEditable:YES];
         [self addSubview:self.textView];
-            
-        _headerField = [TMTextField defaultTextField];
         
+        _headerField = [TMTextField defaultTextField];
+                
         [_headerField setFont:TGSystemFont(13)];
         [_headerField setTextColor:BLUE_UI_COLOR];
         
@@ -36,6 +36,7 @@
     }
     return self;
 }
+
 
 -(TGProfileParamItem *)item {
     return (TGProfileParamItem *)[self rowItem];

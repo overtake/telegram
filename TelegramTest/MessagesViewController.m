@@ -1631,6 +1631,16 @@ static NSTextAttachment *headerMediaIcon() {
     [CATransaction commit];
 }
 
+
+-(void)forceAddUnreadMark {
+    if(!_unreadMark)
+    {
+        _unreadMark = [[MessageTableItemUnreadMark alloc] initWithCount:0 type:RemoveUnreadMarkAfterSecondsType];
+    }
+    
+    [self messagesLoadedTryToInsert:@[_unreadMark] pos:0 next:NO];
+}
+
 - (void)insertAndGoToEnd:(NSRange)range forceEnd:(BOOL)forceEnd items:(NSArray *)items {
     
     
@@ -2550,8 +2560,6 @@ static NSTextAttachment *headerMediaIcon() {
         }
         
     }
-    
-    
     
 }
 

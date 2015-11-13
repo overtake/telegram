@@ -57,6 +57,8 @@
 -(void)open_link:(NSString *)link itsReal:(BOOL)itsReal {
     MessageTableItemText *item = self.owner;
     
+    NSLog(@"peer_id:%d isBot:%d",item.message.peer_id,item.message.fromUser.isBot);
+    
     if(item.message.peer_id < 0 && item.message.fromUser.isBot && [link hasPrefix:TLBotCommandPrefix]) {
         link = [NSString stringWithFormat:@"%@@%@",link,item.message.fromUser.username];
     }

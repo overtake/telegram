@@ -93,12 +93,7 @@
     }];
     
     [self configure];
-    
-  
-    
-    
-
-    
+     
 }
 
 -(void)viewWillDisappear:(BOOL)animated {
@@ -181,6 +176,8 @@
 
         
     } errorHandler:^(id request, RpcError *error) {
+        
+        int bp = 0;
         
     }];
 
@@ -316,17 +313,20 @@
             
         } else {
             
-            GeneralSettingsRowItem *openChannel = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeNone callback:^(TGGeneralRowItem *item) {
+            if(!_chat.isMegagroup) {
+                GeneralSettingsRowItem *openChannel = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeNone callback:^(TGGeneralRowItem *item) {
+                    
+                    [self.navigationViewController showMessagesViewController:_conversation];
+                    
+                } description:NSLocalizedString(@"Profile.OpenChannel", nil) height:42 stateback:nil];
                 
-               [self.navigationViewController showMessagesViewController:_conversation];
-               
-            } description:NSLocalizedString(@"Profile.OpenChannel", nil) height:42 stateback:nil];
+                openChannel.textColor = BLUE_UI_COLOR;
+                
+                [_tableView addItem:openChannel tableRedraw:YES];
+                
+                [_tableView addItem:[[TGGeneralRowItem alloc] initWithHeight:20] tableRedraw:YES];
+            }
             
-            openChannel.textColor = BLUE_UI_COLOR;
-            
-            [_tableView addItem:openChannel tableRedraw:YES];
-            
-            [_tableView addItem:[[TGGeneralRowItem alloc] initWithHeight:20] tableRedraw:YES];
         }
         
         if(adminsItem)
@@ -361,17 +361,13 @@
         
         [_tableView addItem:[[TGGeneralRowItem alloc] initWithHeight:20] tableRedraw:YES];
         
-        _notificationItem = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeChoice callback:^(TGGeneralRowItem *item) {
+        _notificationItem = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeSwitch callback:^(TGGeneralRowItem *item) {
+            
+            [_conversation mute:nil];
             
         } description:NSLocalizedString(@"Notifications", nil) height:42 stateback:^id(TGGeneralRowItem *item) {
-            return [MessagesUtils muteUntil:_conversation.notify_settings.mute_until];
+            return @(_conversation.isMute);
         }];
-        
-        _notificationItem.menu = [MessagesViewController notifications:^{
-            
-            [self configure];
-            
-        } conversation:_conversation click:nil];
         
         
         [_tableView addItem:_notificationItem tableRedraw:YES];
@@ -427,7 +423,7 @@
         
     }
     
-    if(!_chat.isManager && !_chat.isAdmin && !_chat.isMegagroup) {
+    if(!_chat.isAdmin && !_chat.isMegagroup) {
         
         [_tableView addItem:[[TGGeneralRowItem alloc] initWithHeight:20] tableRedraw:YES];
         

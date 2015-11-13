@@ -93,7 +93,6 @@
 -(void)mouseDown:(NSEvent *)theEvent {
     [super mouseDown:theEvent];
     
-    MessageTableItemText *item = (MessageTableItemText *)[self item];
     
 }
 

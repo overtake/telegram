@@ -286,6 +286,9 @@
     
     state = !next && state != ChatHistoryStateFull && (self.controller.conversation.top_message <= self.server_max_id) ? ChatHistoryStateFull : state;
     
+    state = next && (self.controller.conversation.type == DialogTypeChat || self.controller.conversation.type == DialogTypeBroadcast) ? ChatHistoryStateFull : state;
+    
+    
    [self setState:state next:next];
     
     return converted;
