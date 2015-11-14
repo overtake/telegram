@@ -128,7 +128,7 @@ static TGChannelsPolling *channelPolling;
 
 
 
--(void)loadAroundMessagesWithMessage:(MessageTableItem *)item limit:(int)limit selectHandler:(selectHandler)selectHandler {
+-(void)loadAroundMessagesWithMessage:(MessageTableItem *)item prevLimit:(int)prevLimit nextLimit:(int)nextLimit selectHandler:(selectHandler)selectHandler {
     
     
     [self.queue dispatchOnQueue:^{
@@ -147,7 +147,7 @@ static TGChannelsPolling *channelPolling;
         NSMutableArray *nextResult = [NSMutableArray array];
         
         self.proccessing = YES;
-        [self loadAroundMessagesWithSelectHandler:selectHandler limit:(int)limit prevResult:prevResult nextResult:nextResult];
+        [self loadAroundMessagesWithSelectHandler:selectHandler prevLimit:(int)prevLimit nextLimit:(int)nextLimit prevResult:prevResult nextResult:nextResult];
         
       
     } synchronous:YES];
@@ -155,11 +155,11 @@ static TGChannelsPolling *channelPolling;
     
 }
 
--(void)loadAroundMessagesWithSelectHandler:(selectHandler)selectHandler limit:(int)limit prevResult:(NSMutableArray *)prevResult nextResult:(NSMutableArray *)nextResult {
+-(void)loadAroundMessagesWithSelectHandler:(selectHandler)selectHandler  prevLimit:(int)prevLimit nextLimit:(int)nextLimit prevResult:(NSMutableArray *)prevResult nextResult:(NSMutableArray *)nextResult {
     
     
-    BOOL nextLoaded = nextResult.count >= limit/2 || self.nextState == ChatHistoryStateFull;
-    BOOL prevLoaded = prevResult.count >= limit/2 || self.prevState == ChatHistoryStateFull;
+    BOOL nextLoaded = nextResult.count >= nextLimit || self.nextState == ChatHistoryStateFull;
+    BOOL prevLoaded = prevResult.count >= prevLimit || self.prevState == ChatHistoryStateFull;
     
     
     if(nextLoaded && prevLoaded) {
@@ -188,7 +188,7 @@ static TGChannelsPolling *channelPolling;
         }
         
     
-        [self loadAroundMessagesWithSelectHandler:selectHandler limit:(int)limit prevResult:prevResult nextResult:nextResult];
+        [self loadAroundMessagesWithSelectHandler:selectHandler  prevLimit:(int)prevLimit nextLimit:(int)nextLimit prevResult:prevResult nextResult:nextResult];
         
     }];
     

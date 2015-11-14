@@ -357,7 +357,10 @@ NSString *const tableMessageHoles = @"message_holes_v1";
         
         if([db hadError]) {
             [self drop:^{
-                [self open:completeHandler queue:dqueue];
+                dispatch_async(dqueue, ^{
+                    [self open:completeHandler queue:dqueue];
+                });
+                
             }];
             return;
         }
@@ -476,17 +479,20 @@ static NSString *encryptionKey;
 }
 
 -(void)drop:(void (^)())completeHandler queue:(dispatch_queue_t)dqueue {
-    [self->queue inDatabase:^(FMDatabase *db) {
-        [[NSFileManager defaultManager] removeItemAtPath:self->queue.path error:nil];
-        
-        
-        [[Storage yap] readWriteWithBlock:^(YapDatabaseReadWriteTransaction * __nonnull transaction) {
-            [transaction removeAllObjectsInAllCollections];
-        }];
-        
-        [self open:completeHandler queue:dqueue];
-    }];
     
+    dispatch_async(dqueue, ^{
+        [self->queue inDatabase:^(FMDatabase *db) {
+            [[NSFileManager defaultManager] removeItemAtPath:self->queue.path error:nil];
+            
+            
+            [[Storage yap] readWriteWithBlock:^(YapDatabaseReadWriteTransaction * __nonnull transaction) {
+                [transaction removeAllObjectsInAllCollections];
+            }];
+            
+            [self open:completeHandler queue:dqueue];
+        }];
+    });
+     
    
 }
 

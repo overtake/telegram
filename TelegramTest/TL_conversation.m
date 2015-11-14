@@ -122,6 +122,10 @@
     return [[BroadcastManager sharedManager] find:self.peer.peer_id];
 }
 
+-(int)universalTopMessage {
+    return (self.type == DialogTypeChannel ? self.top_important_message : self.top_message);
+}
+
 -(NSString *)blockedText {
     if(self.type == DialogTypeSecretChat) {
         EncryptedParams *params = [EncryptedParams findAndCreate:self.peer.peer_id];

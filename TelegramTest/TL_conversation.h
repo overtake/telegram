@@ -38,6 +38,8 @@ typedef enum {
 @property (nonatomic) DeliveryState dstate;
 @property (nonatomic) int sync_message_id;
 
+-(int)universalTopMessage;
+
 
 @property (nonatomic,assign,getter=isInvisibleChannel) BOOL invisibleChannel;
 

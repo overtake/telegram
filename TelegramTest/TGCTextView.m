@@ -565,7 +565,7 @@
         
          _selectRange = NSMakeRange(0, self.attributedString.length);
         
-    } else if(theEvent.clickCount == 2 || theEvent.modifierFlags & 256) {
+    } else if(theEvent.clickCount == 2 || theEvent.type == 3) {
        
         
         int startIndex = [self currentIndexInLocation:[self convertPoint:[theEvent locationInWindow] fromView:nil]];

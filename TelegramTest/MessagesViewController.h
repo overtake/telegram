@@ -42,7 +42,8 @@ typedef enum {
 
 typedef enum {
     ShowMessageTypeReply = 1 << 0,
-    ShowMessageTypeSearch = 1 << 1
+    ShowMessageTypeSearch = 1 << 1,
+    ShowMessageTypeUnreadMark = 1 << 2
 } ShowMessageType;
 
 

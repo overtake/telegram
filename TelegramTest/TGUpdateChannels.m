@@ -345,7 +345,7 @@
         
     } else if([update isKindOfClass:[TL_updateChannelTooLong class]]) {
         
-        [self failUpdateWithChannelId:[update channel_id] limit:5 withCallback:nil errorCallback:nil];
+        [self failUpdateWithChannelId:[update channel_id] limit:50 withCallback:nil errorCallback:nil];
         
         
     } else if([update isKindOfClass:[TL_updateChannelMessageViews class]]) {
