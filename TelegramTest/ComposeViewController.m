@@ -90,8 +90,7 @@
 }
 
 -(void)updateActionNavigation {
-    _action.currentViewController = self;
-    
+   
     [self setCenterBarViewTextAttributed:self.action.behavior.centerTitle];
     
     [self.doneButton setStringValue:self.action.behavior.doneTitle];
@@ -108,7 +107,7 @@
 
 -(void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    
+     _action.currentViewController = self;
     [self updateActionNavigation];
 }
 

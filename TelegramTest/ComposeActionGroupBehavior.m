@@ -51,8 +51,12 @@
 -(void)composeDidDone {
     if([self.action.currentViewController isKindOfClass:[ComposePickerViewController class]]) {
         
-        [[Telegram rightViewController] showComposeCreateChat:self.action];
+        ComposeChatCreateViewController *viewController = [[ComposeChatCreateViewController alloc] initWithFrame:NSZeroRect];
         
+        [viewController setAction:self.action];
+        
+        [self.action.currentViewController.navigationViewController pushViewController:viewController animated:YES];
+                
     } else {
         
         [self.delegate behaviorDidStartRequest];

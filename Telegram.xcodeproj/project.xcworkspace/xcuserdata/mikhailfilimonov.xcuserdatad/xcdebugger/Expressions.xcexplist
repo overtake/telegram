@@ -494,6 +494,17 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "-[ComposeActionGroupBehavior composeDidDone]:ComposeActionGroupBehavior.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.action.currentViewController">
+            </PersistentString>
+            <PersistentString
+               value = "self.action">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "__35-[ForwardSenterItem performRequest]_block_invoke82:ForwardSenterItem.m">
       </ContextState>
       <ContextState

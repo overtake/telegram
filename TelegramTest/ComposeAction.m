@@ -47,6 +47,8 @@
     return self;
 }
 
+
+
 -(id)initWithBehaviorClass:(Class)behavior filter:(NSArray *)filter object:(id)object {
     if(self = [self initWithBehaviorClass:behavior]) {
         _filter = filter;

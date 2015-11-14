@@ -188,6 +188,14 @@
 }
 
 
+-(void)setFrameSize:(NSSize)newSize {
+    [super setFrameSize:newSize];
+    
+    [self.nameField setFrameOrigin:NSMakePoint(0, NSHeight(self.nameField.frame) - 5)];
+    
+    [self.textView setFrame:NSMakeRect(90, 45, newSize.width - 110, 23)];
+}
+
 -(void)drawRect:(NSRect)dirtyRect {
     [super drawRect:dirtyRect];
     
