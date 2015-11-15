@@ -535,6 +535,10 @@ static TGPhotoViewer *viewer;
     
     [self makeKeyAndOrderFront:self];
     
+    [self.behavior load:0 next:YES limit:100 callback:^(NSArray *result) {
+        [self insertObjects:result];
+    }];
+    
 }
 
 -(void)show:(PreviewObject *)item {
