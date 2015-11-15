@@ -2603,12 +2603,7 @@ static NSTextAttachment *headerMediaIcon() {
     if(!self.conversation || self.historyController.isProccessing || _locked)
         return;
     
-    if(prev && self.historyController.prevState == ChatHistoryStateFull)
-        return;
-    else if(!prev && self.historyController.nextState == ChatHistoryStateFull)
-        return;
-    
-    
+
     NSSize size = self.table.scrollView.documentSize;
     
     int count = size.height/20;
@@ -2630,7 +2625,7 @@ static NSTextAttachment *headerMediaIcon() {
             self.didUpdatedTable();
         }
         
-        if(prevResult.count+1 < 10) {
+        if(prevResult.count+1 < 10 && prevResult.count > 0) {
             [self loadhistory:0 toEnd:YES prev:prev isFirst:NO];
         }
         

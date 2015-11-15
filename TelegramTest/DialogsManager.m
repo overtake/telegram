@@ -742,6 +742,8 @@
                      [Notification perform:[Notification notificationNameByDialog:obj action:@"botKeyboard"] data:@{KEY_DIALOG:obj}];
                 }
                 
+                [dialog save];
+                
             }];
             
             if([message.media isKindOfClass:[TL_messageMediaPhoto class]]) {

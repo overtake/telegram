@@ -495,6 +495,8 @@ static ChatHistoryController *observer;
         
         HistoryFilter *filter = [self filterWithNext:next];
         
+        
+        
         if([filter checkState:ChatHistoryStateFull next:next] || self.isProccessing) {
             [self performCallback:selectHandler result:@[] range:NSMakeRange(0, 0)];
             return;

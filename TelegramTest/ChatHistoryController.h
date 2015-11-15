@@ -42,6 +42,7 @@
 -(void)setFilter:(HistoryFilter *)filter;
 -(void)addFilter:(HistoryFilter *)filter;
 -(id)initWithController:(id<MessagesDelegate>)controller historyFilter:(Class)historyFilter;
+
 typedef void (^selectHandler)(NSArray *result, NSRange range);
 
 -(void)request:(BOOL)next anotherSource:(BOOL)anotherSource sync:(BOOL)sync selectHandler:(selectHandler)selectHandler;
