@@ -57,7 +57,7 @@
     
     [replyHeader setFont:TGSystemMediumFont(13) forRange:replyHeader.range];
     
-    [replyHeader addAttribute:NSLinkAttributeName value:[TMInAppLinks peerProfile:_replyMessage.fwd_from_id != nil ? _replyMessage.fwd_from_id : [TL_peerUser createWithUser_id:_replyMessage.from_id]] range:replyHeader.range];
+  //  [replyHeader addAttribute:NSLinkAttributeName value:[TMInAppLinks peerProfile:_replyMessage.fwd_from_id != nil ? _replyMessage.fwd_from_id : [TL_peerUser createWithUser_id:_replyMessage.from_id]] range:replyHeader.range];
     
     _replyHeader = replyHeader;
     

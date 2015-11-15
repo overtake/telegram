@@ -45,6 +45,8 @@
         
         _messageField = [[TGCTextView alloc] initWithFrame:NSZeroRect];
         
+        [_messageField setEditable:NO];
+        
         [self.messageField setBackgroundColor:[NSColor whiteColor]];
 
         [self.messageField setFrameOrigin:NSMakePoint(15, 0)];
@@ -136,7 +138,7 @@
     
     [self.messageField setFrameOrigin:NSMakePoint(xOffset + 2, 0)];
     
-    [_messageField setEditable:_deleteHandler == nil];
+  //  [_messageField setEditable:_deleteHandler == nil];
     
     if(_deleteHandler != nil)
     {
@@ -184,15 +186,8 @@
 -(void)mouseUp:(NSEvent *)theEvent {
     
     if(!_deleteHandler) {
-        
-        // go to message
-        
-        if(_messageField.selectRange.location == NSNotFound) {
-            if(_item.table.viewController.state == MessagesViewControllerStateNone)
-                [_item.table.viewController showMessage:_replyObject.replyMessage fromMsg:_item.message flags:ShowMessageTypeReply];
-        }
-        
-        
+        if(_item.table.viewController.state == MessagesViewControllerStateNone)
+            [_item.table.viewController showMessage:_replyObject.replyMessage fromMsg:_item.message flags:ShowMessageTypeReply];
     }
     
 }

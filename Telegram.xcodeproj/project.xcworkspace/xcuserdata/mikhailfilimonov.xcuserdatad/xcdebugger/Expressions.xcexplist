@@ -3428,6 +3428,14 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "-[MessagesViewController updateScrollBtn]:MessagesViewController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.historyController.prevState">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "__38-[YoutubeServiceDescription loadInfo:]_block_invoke:YoutubeServiceDescription.m">
          <PersistentStrings>
             <PersistentString

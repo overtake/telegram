@@ -1091,6 +1091,7 @@ static NSTextAttachment *headerMediaIcon() {
     if(self.historyController.filter.class != filter || force) {
         self.ignoredCount = 0;
         [self flushMessages];
+        _historyController = [[self.historyController.class alloc] initWithController:self historyFilter:filter];
         [self loadhistory:0 toEnd:YES prev:NO isFirst:YES];
         self.state = MessagesViewControllerStateNone;
     }
@@ -1408,7 +1409,7 @@ static NSTextAttachment *headerMediaIcon() {
     
     
     
-    if(fabsf(_lastBottomScrollOffset - offset) < 100 || [self.table.scrollView isAnimating])
+    if([self.table.scrollView isAnimating])
         return;
     
     _lastBottomScrollOffset = offset;
@@ -1565,7 +1566,6 @@ static NSTextAttachment *headerMediaIcon() {
     
     NSArray *readed = [notify.userInfo objectForKey:KEY_MESSAGE_ID_LIST];
     
-    
     [self.historyController items:readed complete:^(NSArray * filtred) {
          for (MessageTableItem *item in filtred) {
              item.message.flags&= ~TGUNREADMESSAGE;
@@ -1577,8 +1577,6 @@ static NSTextAttachment *headerMediaIcon() {
              }
          }
     }];
-    
-   
 }
 
 - (MessageTableCell *)cellForRow:(NSInteger)row {
@@ -1586,9 +1584,8 @@ static NSTextAttachment *headerMediaIcon() {
 }
 
 
-
-
 - (void)receivedMessage:(MessageTableItem *)message position:(int)position itsSelf:(BOOL)force  {
+    
     
     NSArray *items;
     
@@ -1690,9 +1687,7 @@ static NSTextAttachment *headerMediaIcon() {
         }
     }
 
-    
-    
-    MessageTypingView *typingCell = [self.table viewAtColumn:0 row:0 makeIfNecessary:NO];
+     MessageTypingView *typingCell = [self.table viewAtColumn:0 row:0 makeIfNecessary:NO];
     
     if([typingCell isKindOfClass:[MessageTypingView class]]) {
         
@@ -1704,9 +1699,6 @@ static NSTextAttachment *headerMediaIcon() {
         }
     }
    
-   
-    
-    
     __block BOOL addAnimation = YES;
     
      NSRange visibleRange = [self.table rowsInRect:self.table.visibleRect];
@@ -1816,6 +1808,8 @@ static NSTextAttachment *headerMediaIcon() {
 
 
 - (void)receivedMessageList:(NSArray *)list inRange:(NSRange)range itsSelf:(BOOL)force {
+    
+    
     
     NSArray *items;
     
@@ -2152,6 +2146,9 @@ static NSTextAttachment *headerMediaIcon() {
     _needNextRequest = YES;
     
     
+    if(fromMsg != nil)
+        [_replyMsgsStack addObject:fromMsg];
+    
     MessageTableItem *item = message.hole != nil ? [self itemOfMsgId:channelMsgId(message.hole.min_id, message.peer_id)] : [self itemOfMsgId:message.channelMsgId];
     
     if(item && (flags & ShowMessageTypeReply) > 0) {
@@ -2159,9 +2156,6 @@ static NSTextAttachment *headerMediaIcon() {
         
         return;
     }
-    
-    if(fromMsg != nil)
-        [_replyMsgsStack addObject:fromMsg];
     
     TL_conversation *conversation = self.conversation;
     
@@ -2174,7 +2168,6 @@ static NSTextAttachment *headerMediaIcon() {
             _needNextRequest = NO;
             return;
         }
-        
         
         if(switchDiscussion)
             [self.normalNavigationCenterView enableDiscussion:!self.normalNavigationCenterView.discussIsEnabled force:YES];
@@ -2204,6 +2197,10 @@ static NSTextAttachment *headerMediaIcon() {
         
          if((flags & ShowMessageTypeUnreadMark) == 0 || msg.isChannelMessage)
              [self showModalProgress];
+        
+        if((flags & ShowMessageTypeUnreadMark) > 0 && msg.isChannelMessage ) {
+            [self flushMessages];
+        }
         
         
         int count = NSHeight(self.table.containerView.frame)/20;
@@ -2606,6 +2603,11 @@ static NSTextAttachment *headerMediaIcon() {
     if(!self.conversation || self.historyController.isProccessing || _locked)
         return;
     
+    if(prev && self.historyController.prevState == ChatHistoryStateFull)
+        return;
+    else if(!prev && self.historyController.nextState == ChatHistoryStateFull)
+        return;
+    
     
     NSSize size = self.table.scrollView.documentSize;
     
@@ -2650,6 +2652,9 @@ static NSTextAttachment *headerMediaIcon() {
         rect.origin.y = 0;
     
     [self.table.scrollView scrollToPoint:rect.origin animation:animated];
+    
+    
+    [self updateScrollBtn];
     
 }
 

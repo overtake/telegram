@@ -282,8 +282,6 @@
     NSArray *converted = [self filterAndAdd:result latest:NO];
     
     converted = [self sortItems:converted];
-
-    
     
     state = next && (self.controller.conversation.type == DialogTypeSecretChat || self.controller.conversation.type == DialogTypeBroadcast) ? ChatHistoryStateFull : state;
     

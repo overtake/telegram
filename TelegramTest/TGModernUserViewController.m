@@ -68,9 +68,6 @@
         
     }
     
-    
-    
-    
     [self configure];
 }
 
@@ -91,7 +88,6 @@
 {
     TLUser *user = [notification.userInfo objectForKey:KEY_USER];
     if(user.n_id == self.user.n_id) {
-        
         
         _tableView.defaultAnimation = NSTableViewAnimationEffectFade;
         if(![_userNameItem.value.string isEqualToString:user.username] && user.username.length > 0) {
@@ -117,8 +113,7 @@
 -(void)setUser:(TLUser *)user conversation:(TL_conversation *)conversation {
     [self loadViewIfNeeded];
     
-    
-   _conversation = conversation;
+    _conversation = conversation;
     _user = user;
     
     if(!conversation)
@@ -161,10 +156,7 @@
         }];
     }
     
-    
-    
     GeneralSettingsRowItem *startSecretChat;
-    
     
     if(_user.type != TLUserTypeSelf && _conversation.type != DialogTypeSecretChat && !_user.isBot) {
         startSecretChat = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeNone callback:^(TGGeneralRowItem *item) {
@@ -225,12 +217,9 @@
         }];
     }
     
-    
-    
     sendMessage.textColor = BLUE_UI_COLOR;
     startSecretChat.textColor = BLUE_UI_COLOR;
     shareContact.textColor = BLUE_UI_COLOR;
-    
     
     
     GeneralSettingsRowItem *encryptionKeyItem = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeNext callback:^(TGGeneralRowItem *item) {
@@ -250,8 +239,6 @@
         return TGIdenticonImage(hashData,NSMakeSize(20, 20));
         
     }];
-    
-    
     
     GeneralSettingsRowItem *notificationItem = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeSwitch callback:^(TGGeneralRowItem *item) {
         
@@ -313,7 +300,6 @@
     profileMediaItem.height = 50;
     profileMediaItem.xOffset = 30;
     
-    
     if(!self.action.isEditable) {
         if(_user.username.length > 0) {
             _userNameItem = [[TGProfileParamItem alloc] init];
@@ -349,7 +335,6 @@
         if(shareContact)
             [_tableView addItem:shareContact tableRedraw:YES];
         
-        
         [_tableView addItem:[[TGGeneralRowItem alloc] initWithHeight:20] tableRedraw:YES];
         
         [_tableView addItem:profileMediaItem tableRedraw:YES];
@@ -360,7 +345,6 @@
         
         if(_conversation.type == DialogTypeSecretChat)
             [_tableView addItem:encryptionKeyItem tableRedraw:YES];
-        
         
         [_tableView addItem:[[TGGeneralRowItem alloc] initWithHeight:20] tableRedraw:YES];
         
@@ -376,6 +360,11 @@
         
         GeneralSettingsRowItem *deleteContact = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeNone callback:^(TGGeneralRowItem *item) {
             
+            [[NewContactsManager sharedManager] deleteContact:self.user completeHandler:^(BOOL result) {
+                self.action.editable = NO;
+                [self updateActionNavigation];
+                [self didUpdatedEditableState];
+            }];
             
         } description:NSLocalizedString(@"Profile.DeleteContact", nil) height:42 stateback:^id(TGGeneralRowItem *item) {
             return nil;
@@ -384,14 +373,7 @@
         deleteContact.textColor = [NSColor redColor];
         
         [_tableView addItem:deleteContact tableRedraw:YES];
-        
     }
-    
-    
-    
-    
-   // [_tableView reloadData];
-    
 }
 
 @end
