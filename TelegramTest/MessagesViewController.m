@@ -1466,11 +1466,11 @@ static NSTextAttachment *headerMediaIcon() {
     
     [self scrollDidChange];
     
-    if([self.table.scrollView isNeedUpdateTop] && self.historyController.prevState != ChatHistoryStateFull) {
+    if([self.table.scrollView isNeedUpdateTop] && [self.historyController filterWithNext:NO].prevState != ChatHistoryStateFull) {
         
         [self loadhistory:0 toEnd:NO prev:YES isFirst:NO];
         
-    } else if([self.table.scrollView isNeedUpdateBottom] && self.historyController.nextState != ChatHistoryStateFull) {
+    } else if([self.table.scrollView isNeedUpdateBottom] && [self.historyController filterWithNext:YES].nextState != ChatHistoryStateFull) {
         
         [self loadhistory:0 toEnd:NO prev:NO isFirst:NO];
     }

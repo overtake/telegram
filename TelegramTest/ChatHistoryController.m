@@ -144,23 +144,32 @@ static ChatHistoryController *observer;
 
 -(HistoryFilter *)filterWithNext:(BOOL)next {
     
-    __block HistoryFilter *filter = [_filters lastObject];
+    __block HistoryFilter *filter;
     
-    if(!next && !_isNeedSwapFilters)
-    {
-        return [_filters firstObject];
-    }
     
-    [_filters enumerateObjectsWithOptions: _isNeedSwapFilters ? NSEnumerationReverse : 0 usingBlock:^(HistoryFilter *obj, NSUInteger idx, BOOL * _Nonnull stop) {
-                
-        if([obj stateWithNext:next] != ChatHistoryStateFull)
+    [ASQueue dispatchOnStageQueue:^{
+       
+        filter = [_filters lastObject];
+        
+        if(!next && !_isNeedSwapFilters)
         {
-            *stop = YES;
-            filter = obj;
+            filter = [_filters firstObject];
+        } else {
+            [_filters enumerateObjectsWithOptions: _isNeedSwapFilters ? NSEnumerationReverse : 0 usingBlock:^(HistoryFilter *obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                
+                if([obj stateWithNext:next] != ChatHistoryStateFull)
+                {
+                    *stop = YES;
+                    filter = obj;
+                }
+                
+            }];
         }
         
-    }];
-    
+        
+        
+        
+    } synchronous:YES];
     
     return filter;
 }
@@ -174,15 +183,19 @@ static ChatHistoryController *observer;
 -(HistoryFilter *)filterWithPeerId:(int)peer_id {
     __block HistoryFilter *filter;
     
-    [_filters enumerateObjectsUsingBlock:^(HistoryFilter *obj, NSUInteger idx, BOOL * _Nonnull stop) {
-        
-        if(obj.peer_id == peer_id)
-        {
-            *stop = YES;
-            filter = obj;
-        }
-        
-    }];
+    [ASQueue dispatchOnStageQueue:^{
+        [_filters enumerateObjectsUsingBlock:^(HistoryFilter *obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            
+            if(obj.peer_id == peer_id)
+            {
+                *stop = YES;
+                filter = obj;
+            }
+            
+        }];
+    } synchronous:YES];
+    
+    
     
     
     return filter;
