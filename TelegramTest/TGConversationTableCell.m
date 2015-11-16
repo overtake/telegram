@@ -188,7 +188,7 @@ static NSDictionary *attributes() {
         
         _messageField = [TMTextField defaultTextField];
         
-        [_messageField setFrameOrigin:NSMakePoint(68, 3)];
+        [_messageField setFrameOrigin:NSMakePoint(68, 5)];
         
         _messageField.wantsLayer = YES;
         

@@ -690,14 +690,14 @@ static TGPhotoViewer *viewer;
     if(_list.count > 1) {
         int rcurrent = _isReversed ? _totalCount - (int)_currentItemId : (int)_currentItemId;
         if((next && (rcurrent <= 15 )) || (!next && ( rcurrent >= (_totalCount - 15)))) {
-            // _waitRequest = YES;
+             _waitRequest = YES;
             
             [self.behavior load:0 next:next limit:100 callback:^(NSArray *previewObjects) {
                 
                 if(previewObjects.count > 0)
                     [self insertObjects:previewObjects];
                 
-                //_waitRequest = NO;
+                _waitRequest = NO;
             }];
         }
     }

@@ -194,7 +194,7 @@
 
 
 -(int)unread_count {
-    if(self.chat.isDeactivated || self.chat.migrated_to.channel_id != 0) {
+    if([self.chat isKindOfClass:[TLChat class]] && ( self.chat.isDeactivated || self.chat.migrated_to.channel_id != 0)) {
         return 0;
     }
     
@@ -202,7 +202,7 @@
 }
 
 -(int)unread_important_count {
-    if(self.chat.isDeactivated || self.chat.migrated_to.channel_id != 0) {
+    if([self.chat isKindOfClass:[TLChat class]] && ( self.chat.isDeactivated || self.chat.migrated_to.channel_id != 0)) {
         return 0;
     }
     
