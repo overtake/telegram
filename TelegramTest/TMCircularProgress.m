@@ -262,6 +262,8 @@ float ease(float t, float b, float c, float d) {
     }];
     
     
+    animation.repeatForever = NO;
+    
     animation.fromValue = @(_currentAcceptProgress);
     
     animation.toValue = @(_currentProgress);
@@ -308,9 +310,9 @@ float ease(float t, float b, float c, float d) {
         
         rotate.duration = 2;
         
+        
         rotate.removedOnCompletion = YES;
         rotate.repeatForever = YES;
-        
         [self pop_addAnimation:rotate forKey:@"rotate"];
     }
     

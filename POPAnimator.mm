@@ -466,12 +466,14 @@ static void stopAndCleanup(POPAnimator *self, POPAnimatorItemRef item, bool shou
   POPAnimation *anim = item->animation;
   POPAnimationState *state = POPAnimationGetState(anim);
     
-    if(state->repeatCount > 1 || state->repeatForever) {
-        
-        [obj pop_removeAllAnimations];
-        
-        return;
+    
+    if([obj respondsToSelector:@selector(isHidden)] && [obj respondsToSelector:@selector(superview)] && [obj respondsToSelector:@selector(window)]) {
+        if([obj isHidden] || [obj superview] == nil || [obj window] == nil) {
+            [obj pop_removeAllAnimations];
+            return;
+        }
     }
+    
 
   if (nil == obj) {
     // object exists not; stop animating

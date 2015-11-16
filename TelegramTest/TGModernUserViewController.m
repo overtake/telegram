@@ -245,7 +245,7 @@
         [_conversation mute:nil];
         
     } description:NSLocalizedString(@"Notifications", nil) height:42 stateback:^id(TGGeneralRowItem *item) {
-        return @(_conversation.isMute);
+        return @(!_conversation.isMute);
     }];
     
     GeneralSettingsRowItem *blockUserItem = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeNone callback:^(TGGeneralRowItem *item) {
