@@ -30,6 +30,8 @@
 
 -(void)markChannelMessagesAsRead:(int)channel_id max_id:(int)max_id;
 
+-(void)completeDeleteConversation:(dispatch_block_t)completeHandler dialog:(TL_conversation *)dialog;
+
 // delete messages
 -(void)deleteMessagesWithMessageIds:(NSArray *)ids;
 -(void)deleteChannelMessags:(NSArray *)messageIds;

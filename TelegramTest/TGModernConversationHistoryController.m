@@ -76,6 +76,7 @@ static const int limit = 100;
             NSArray *f = [response.messages filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.peer_id == %d", channel.peer.peer_id]];
             
             
+            
             assert(f.count > 0);
             
             __block TL_localMessage *topMsg;
@@ -289,15 +290,12 @@ static BOOL isStorageLoaded;
         }];
     }  else if(_state == TGModernCHStateRemote) {
         
-        
-        
         [RPCRequest sendRequest:[TLAPI_messages_getDialogs createWithOffset:_remoteOffset limit:100] successHandler:^(id request, TL_messages_dialogs *response) {
             
             if([response isKindOfClass:[TL_messages_dialogsSlice class]] && _remoteOffset == response.n_count) {
                 _state = TGModernCHStateFull;
                 return;
             }
-            
             
             [SharedManager proccessGlobalResponse:response];
             
@@ -308,7 +306,11 @@ static BOOL isStorageLoaded;
                 
                 TL_localMessage *msg = [TL_localMessage convertReceivedMessage:[[response.messages filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.n_id == %d",dialog.top_message]] firstObject]];
                 
-                [converted addObject:[TL_conversation createWithPeer:dialog.peer top_message:dialog.top_message unread_count:dialog.unread_count last_message_date:msg.date notify_settings:dialog.notify_settings last_marked_message:dialog.top_message top_message_fake:dialog.top_message last_marked_date:msg.date sync_message_id:msg.n_id read_inbox_max_id:dialog.read_inbox_max_id unread_important_count:dialog.unread_important_count lastMessage:msg pts:dialog.pts isInvisibleChannel:NO top_important_message:dialog.top_important_message]];
+                
+                TL_conversation *conversation = [TL_conversation createWithPeer:dialog.peer top_message:dialog.top_message unread_count:dialog.unread_count last_message_date:msg.date notify_settings:dialog.notify_settings last_marked_message:dialog.top_message top_message_fake:dialog.top_message last_marked_date:msg.date sync_message_id:msg.n_id read_inbox_max_id:dialog.read_inbox_max_id unread_important_count:dialog.unread_important_count lastMessage:msg pts:dialog.pts isInvisibleChannel:NO top_important_message:dialog.top_important_message];
+                
+                
+                [converted addObject:conversation];
                 
             }];
             
@@ -318,8 +320,6 @@ static BOOL isStorageLoaded;
                  converted = [[self mixChannelsWithConversations:[[[ChannelsManager sharedManager] all] arrayByAddingObjectsFromArray:converted]] mutableCopy];
                 _needMergeChannels = NO;
             }
-            
-           
             
             [[DialogsManager sharedManager] add:converted];
             [[Storage manager] insertDialogs:converted completeHandler:nil];

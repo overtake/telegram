@@ -2,7 +2,7 @@
 //  MTProto.m
 //  Telegram
 //
-//  Auto created by Mikhail Filimonov on 11.11.15.
+//  Auto created by Mikhail Filimonov on 16.11.15.
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -177,7 +177,7 @@
 	[stream writeInt:self.chat_id];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.chat_id = [stream readInt];
+	super.chat_id = [stream readInt];
 }
         
 -(TL_inputPeerChat *)copy {
@@ -219,8 +219,8 @@
 	[stream writeLong:self.access_hash];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.user_id = [stream readInt];
-	self.access_hash = [stream readLong];
+	super.user_id = [stream readInt];
+	super.access_hash = [stream readLong];
 }
         
 -(TL_inputPeerUser *)copy {
@@ -263,8 +263,8 @@
 	[stream writeLong:self.access_hash];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.channel_id = [stream readInt];
-	self.access_hash = [stream readLong];
+	super.channel_id = [stream readInt];
+	super.access_hash = [stream readLong];
 }
         
 -(TL_inputPeerChannel *)copy {
@@ -391,8 +391,8 @@
 	[stream writeLong:self.access_hash];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.user_id = [stream readInt];
-	self.access_hash = [stream readLong];
+	super.user_id = [stream readInt];
+	super.access_hash = [stream readLong];
 }
         
 -(TL_inputUser *)copy {
@@ -443,10 +443,10 @@
 	[stream writeString:self.last_name];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.client_id = [stream readLong];
-	self.phone = [stream readString];
-	self.first_name = [stream readString];
-	self.last_name = [stream readString];
+	super.client_id = [stream readLong];
+	super.phone = [stream readString];
+	super.first_name = [stream readString];
+	super.last_name = [stream readString];
 }
         
 -(TL_inputPhoneContact *)copy {
@@ -499,10 +499,10 @@
 	[stream writeString:self.md5_checksum];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.n_id = [stream readLong];
-	self.parts = [stream readInt];
-	self.name = [stream readString];
-	self.md5_checksum = [stream readString];
+	super.n_id = [stream readLong];
+	super.parts = [stream readInt];
+	super.name = [stream readString];
+	super.md5_checksum = [stream readString];
 }
         
 -(TL_inputFile *)copy {
@@ -549,9 +549,9 @@
 	[stream writeString:self.name];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.n_id = [stream readLong];
-	self.parts = [stream readInt];
-	self.name = [stream readString];
+	super.n_id = [stream readLong];
+	super.parts = [stream readInt];
+	super.name = [stream readString];
 }
         
 -(TL_inputFileBig *)copy {
@@ -640,7 +640,7 @@
 }
 -(void)unserialize:(SerializedData*)stream {
 	self.file = [ClassStore TLDeserialize:stream];
-	self.caption = [stream readString];
+	super.caption = [stream readString];
 }
         
 -(TL_inputMediaUploadedPhoto *)copy {
@@ -684,7 +684,7 @@
 }
 -(void)unserialize:(SerializedData*)stream {
 	self.n_id = [ClassStore TLDeserialize:stream];
-	self.caption = [stream readString];
+	super.caption = [stream readString];
 }
         
 -(TL_inputMediaPhoto *)copy {
@@ -769,9 +769,9 @@
 	[stream writeString:self.last_name];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.phone_number = [stream readString];
-	self.first_name = [stream readString];
-	self.last_name = [stream readString];
+	super.phone_number = [stream readString];
+	super.first_name = [stream readString];
+	super.last_name = [stream readString];
 }
         
 -(TL_inputMediaContact *)copy {
@@ -824,11 +824,11 @@
 }
 -(void)unserialize:(SerializedData*)stream {
 	self.file = [ClassStore TLDeserialize:stream];
-	self.duration = [stream readInt];
-	self.w = [stream readInt];
-	self.h = [stream readInt];
-	self.mime_type = [stream readString];
-	self.caption = [stream readString];
+	super.duration = [stream readInt];
+	super.w = [stream readInt];
+	super.h = [stream readInt];
+	super.mime_type = [stream readString];
+	super.caption = [stream readString];
 }
         
 -(TL_inputMediaUploadedVideo *)copy {
@@ -887,11 +887,11 @@
 -(void)unserialize:(SerializedData*)stream {
 	self.file = [ClassStore TLDeserialize:stream];
 	self.thumb = [ClassStore TLDeserialize:stream];
-	self.duration = [stream readInt];
-	self.w = [stream readInt];
-	self.h = [stream readInt];
-	self.mime_type = [stream readString];
-	self.caption = [stream readString];
+	super.duration = [stream readInt];
+	super.w = [stream readInt];
+	super.h = [stream readInt];
+	super.mime_type = [stream readString];
+	super.caption = [stream readString];
 }
         
 -(TL_inputMediaUploadedThumbVideo *)copy {
@@ -940,7 +940,7 @@
 }
 -(void)unserialize:(SerializedData*)stream {
 	self.n_id = [ClassStore TLDeserialize:stream];
-	self.caption = [stream readString];
+	super.caption = [stream readString];
 }
         
 -(TL_inputMediaVideo *)copy {
@@ -986,8 +986,8 @@
 }
 -(void)unserialize:(SerializedData*)stream {
 	self.file = [ClassStore TLDeserialize:stream];
-	self.duration = [stream readInt];
-	self.mime_type = [stream readString];
+	super.duration = [stream readInt];
+	super.mime_type = [stream readString];
 }
         
 -(TL_inputMediaUploadedAudio *)copy {
@@ -1083,7 +1083,7 @@
 }
 -(void)unserialize:(SerializedData*)stream {
 	self.file = [ClassStore TLDeserialize:stream];
-	self.mime_type = [stream readString];
+	super.mime_type = [stream readString];
 	//UNS FullVector
 	[stream readInt];
 	{
@@ -1156,7 +1156,7 @@
 -(void)unserialize:(SerializedData*)stream {
 	self.file = [ClassStore TLDeserialize:stream];
 	self.thumb = [ClassStore TLDeserialize:stream];
-	self.mime_type = [stream readString];
+	super.mime_type = [stream readString];
 	//UNS FullVector
 	[stream readInt];
 	{
@@ -1262,10 +1262,10 @@
 }
 -(void)unserialize:(SerializedData*)stream {
 	self.geo_point = [ClassStore TLDeserialize:stream];
-	self.title = [stream readString];
-	self.address = [stream readString];
-	self.provider = [stream readString];
-	self.venue_id = [stream readString];
+	super.title = [stream readString];
+	super.address = [stream readString];
+	super.provider = [stream readString];
+	super.venue_id = [stream readString];
 }
         
 -(TL_inputMediaVenue *)copy {
@@ -1318,10 +1318,10 @@
 }
 -(void)unserialize:(SerializedData*)stream {
 	self.file = [ClassStore TLDeserialize:stream];
-	self.duration = [stream readInt];
-	self.w = [stream readInt];
-	self.h = [stream readInt];
-	self.caption = [stream readString];
+	super.duration = [stream readInt];
+	super.w = [stream readInt];
+	super.h = [stream readInt];
+	super.caption = [stream readString];
 }
         
 -(TL_inputMediaUploadedVideo_old34 *)copy {
@@ -1377,10 +1377,10 @@
 -(void)unserialize:(SerializedData*)stream {
 	self.file = [ClassStore TLDeserialize:stream];
 	self.thumb = [ClassStore TLDeserialize:stream];
-	self.duration = [stream readInt];
-	self.w = [stream readInt];
-	self.h = [stream readInt];
-	self.caption = [stream readString];
+	super.duration = [stream readInt];
+	super.w = [stream readInt];
+	super.h = [stream readInt];
+	super.caption = [stream readString];
 }
         
 -(TL_inputMediaUploadedThumbVideo_old32 *)copy {
@@ -1603,8 +1603,8 @@
 	[stream writeDouble:self.n_long];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.lat = [stream readDouble];
-	self.n_long = [stream readDouble];
+	super.lat = [stream readDouble];
+	super.n_long = [stream readDouble];
 }
         
 -(TL_inputGeoPoint *)copy {
@@ -1691,8 +1691,8 @@
 	[stream writeLong:self.access_hash];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.n_id = [stream readLong];
-	self.access_hash = [stream readLong];
+	super.n_id = [stream readLong];
+	super.access_hash = [stream readLong];
 }
         
 -(TL_inputPhoto *)copy {
@@ -1779,8 +1779,8 @@
 	[stream writeLong:self.access_hash];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.n_id = [stream readLong];
-	self.access_hash = [stream readLong];
+	super.n_id = [stream readLong];
+	super.access_hash = [stream readLong];
 }
         
 -(TL_inputVideo *)copy {
@@ -1829,9 +1829,9 @@
 	[stream writeLong:self.secret];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.volume_id = [stream readLong];
-	self.local_id = [stream readInt];
-	self.secret = [stream readLong];
+	super.volume_id = [stream readLong];
+	super.local_id = [stream readInt];
+	super.secret = [stream readLong];
 }
         
 -(TL_inputFileLocation *)copy {
@@ -1875,8 +1875,8 @@
 	[stream writeLong:self.access_hash];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.n_id = [stream readLong];
-	self.access_hash = [stream readLong];
+	super.n_id = [stream readLong];
+	super.access_hash = [stream readLong];
 }
         
 -(TL_inputVideoFileLocation *)copy {
@@ -1919,8 +1919,8 @@
 	[stream writeLong:self.access_hash];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.n_id = [stream readLong];
-	self.access_hash = [stream readLong];
+	super.n_id = [stream readLong];
+	super.access_hash = [stream readLong];
 }
         
 -(TL_inputEncryptedFileLocation *)copy {
@@ -1963,8 +1963,8 @@
 	[stream writeLong:self.access_hash];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.n_id = [stream readLong];
-	self.access_hash = [stream readLong];
+	super.n_id = [stream readLong];
+	super.access_hash = [stream readLong];
 }
         
 -(TL_inputAudioFileLocation *)copy {
@@ -2007,8 +2007,8 @@
 	[stream writeLong:self.access_hash];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.n_id = [stream readLong];
-	self.access_hash = [stream readLong];
+	super.n_id = [stream readLong];
+	super.access_hash = [stream readLong];
 }
         
 -(TL_inputDocumentFileLocation *)copy {
@@ -2097,9 +2097,9 @@
 	[stream writeDouble:self.crop_width];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.crop_left = [stream readDouble];
-	self.crop_top = [stream readDouble];
-	self.crop_width = [stream readDouble];
+	super.crop_left = [stream readDouble];
+	super.crop_top = [stream readDouble];
+	super.crop_width = [stream readDouble];
 }
         
 -(TL_inputPhotoCrop *)copy {
@@ -2151,10 +2151,10 @@
 	[stream writeString:self.data];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.time = [stream readDouble];
-	self.type = [stream readString];
-	self.peer = [stream readLong];
-	self.data = [stream readString];
+	super.time = [stream readDouble];
+	super.type = [stream readString];
+	super.peer = [stream readLong];
+	super.data = [stream readString];
 }
         
 -(TL_inputAppEvent *)copy {
@@ -2201,7 +2201,7 @@
 	[stream writeInt:self.user_id];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.user_id = [stream readInt];
+	super.user_id = [stream readInt];
 }
         
 -(TL_peerUser *)copy {
@@ -2241,7 +2241,7 @@
 	[stream writeInt:self.chat_id];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.chat_id = [stream readInt];
+	super.chat_id = [stream readInt];
 }
         
 -(TL_peerChat *)copy {
@@ -2281,7 +2281,7 @@
 	[stream writeInt:self.channel_id];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.channel_id = [stream readInt];
+	super.channel_id = [stream readInt];
 }
         
 -(TL_peerChannel *)copy {
@@ -2733,9 +2733,9 @@
 	[stream writeLong:self.secret];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.volume_id = [stream readLong];
-	self.local_id = [stream readInt];
-	self.secret = [stream readLong];
+	super.volume_id = [stream readLong];
+	super.local_id = [stream readInt];
+	super.secret = [stream readLong];
 }
         
 -(TL_fileLocationUnavailable *)copy {
@@ -2783,10 +2783,10 @@
 	[stream writeLong:self.secret];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.dc_id = [stream readInt];
-	self.volume_id = [stream readLong];
-	self.local_id = [stream readInt];
-	self.secret = [stream readLong];
+	super.dc_id = [stream readInt];
+	super.volume_id = [stream readLong];
+	super.local_id = [stream readInt];
+	super.secret = [stream readLong];
 }
         
 -(TL_fileLocation *)copy {
@@ -2833,7 +2833,7 @@
 	[stream writeInt:self.n_id];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.n_id = [stream readInt];
+	super.n_id = [stream readInt];
 }
         
 -(TL_userEmpty *)copy {
@@ -2907,7 +2907,7 @@
 	if(self.flags & (1 << 14)) {[stream writeInt:self.bot_info_version];}
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.flags = [stream readInt];
+	super.flags = [stream readInt];
 	
 	
 	
@@ -2916,15 +2916,15 @@
 	
 	
 	
-	self.n_id = [stream readInt];
-	if(self.flags & (1 << 0)) {self.access_hash = [stream readLong];}
-	if(self.flags & (1 << 1)) {self.first_name = [stream readString];}
-	if(self.flags & (1 << 2)) {self.last_name = [stream readString];}
-	if(self.flags & (1 << 3)) {self.username = [stream readString];}
-	if(self.flags & (1 << 4)) {self.phone = [stream readString];}
+	super.n_id = [stream readInt];
+	if(self.flags & (1 << 0)) {super.access_hash = [stream readLong];}
+	if(self.flags & (1 << 1)) {super.first_name = [stream readString];}
+	if(self.flags & (1 << 2)) {super.last_name = [stream readString];}
+	if(self.flags & (1 << 3)) {super.username = [stream readString];}
+	if(self.flags & (1 << 4)) {super.phone = [stream readString];}
 	if(self.flags & (1 << 5)) {self.photo = [ClassStore TLDeserialize:stream];}
 	if(self.flags & (1 << 6)) {self.status = [ClassStore TLDeserialize:stream];}
-	if(self.flags & (1 << 14)) {self.bot_info_version = [stream readInt];}
+	if(self.flags & (1 << 14)) {super.bot_info_version = [stream readInt];}
 }
         
 -(TL_user *)copy {
@@ -3057,11 +3057,11 @@
 	[ClassStore TLSerialize:self.status stream:stream];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.n_id = [stream readInt];
-	self.first_name = [stream readString];
-	self.last_name = [stream readString];
-	self.username = [stream readString];
-	self.phone = [stream readString];
+	super.n_id = [stream readInt];
+	super.first_name = [stream readString];
+	super.last_name = [stream readString];
+	super.username = [stream readString];
+	super.phone = [stream readString];
 	self.photo = [ClassStore TLDeserialize:stream];
 	self.status = [ClassStore TLDeserialize:stream];
 }
@@ -3123,12 +3123,12 @@
 	[ClassStore TLSerialize:self.status stream:stream];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.n_id = [stream readInt];
-	self.first_name = [stream readString];
-	self.last_name = [stream readString];
-	self.username = [stream readString];
-	self.access_hash = [stream readLong];
-	self.phone = [stream readString];
+	super.n_id = [stream readInt];
+	super.first_name = [stream readString];
+	super.last_name = [stream readString];
+	super.username = [stream readString];
+	super.access_hash = [stream readLong];
+	super.phone = [stream readString];
 	self.photo = [ClassStore TLDeserialize:stream];
 	self.status = [ClassStore TLDeserialize:stream];
 }
@@ -3191,12 +3191,12 @@
 	[ClassStore TLSerialize:self.status stream:stream];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.n_id = [stream readInt];
-	self.first_name = [stream readString];
-	self.last_name = [stream readString];
-	self.username = [stream readString];
-	self.access_hash = [stream readLong];
-	self.phone = [stream readString];
+	super.n_id = [stream readInt];
+	super.first_name = [stream readString];
+	super.last_name = [stream readString];
+	super.username = [stream readString];
+	super.access_hash = [stream readLong];
+	super.phone = [stream readString];
 	self.photo = [ClassStore TLDeserialize:stream];
 	self.status = [ClassStore TLDeserialize:stream];
 }
@@ -3257,11 +3257,11 @@
 	[ClassStore TLSerialize:self.status stream:stream];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.n_id = [stream readInt];
-	self.first_name = [stream readString];
-	self.last_name = [stream readString];
-	self.username = [stream readString];
-	self.access_hash = [stream readLong];
+	super.n_id = [stream readInt];
+	super.first_name = [stream readString];
+	super.last_name = [stream readString];
+	super.username = [stream readString];
+	super.access_hash = [stream readLong];
 	self.photo = [ClassStore TLDeserialize:stream];
 	self.status = [ClassStore TLDeserialize:stream];
 }
@@ -3315,10 +3315,10 @@
 	[stream writeString:self.username];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.n_id = [stream readInt];
-	self.first_name = [stream readString];
-	self.last_name = [stream readString];
-	self.username = [stream readString];
+	super.n_id = [stream readInt];
+	super.first_name = [stream readString];
+	super.last_name = [stream readString];
+	super.username = [stream readString];
 }
         
 -(TL_userDeleted *)copy {
@@ -3409,7 +3409,7 @@
 	[ClassStore TLSerialize:self.photo_big stream:stream];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.photo_id = [stream readLong];
+	super.photo_id = [stream readLong];
 	self.photo_small = [ClassStore TLDeserialize:stream];
 	self.photo_big = [ClassStore TLDeserialize:stream];
 }
@@ -3497,7 +3497,7 @@
 	[stream writeInt:self.expires];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.expires = [stream readInt];
+	super.expires = [stream readInt];
 }
         
 -(TL_userStatusOnline *)copy {
@@ -3537,7 +3537,7 @@
 	[stream writeInt:self.was_online];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.was_online = [stream readInt];
+	super.was_online = [stream readInt];
 }
         
 -(TL_userStatusOffline *)copy {
@@ -3701,7 +3701,7 @@
 	[stream writeInt:self.n_id];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.n_id = [stream readInt];
+	super.n_id = [stream readInt];
 }
         
 -(TL_chatEmpty *)copy {
@@ -3767,19 +3767,19 @@
 	if(self.flags & (1 << 6)) {[ClassStore TLSerialize:self.migrated_to stream:stream];}
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.flags = [stream readInt];
+	super.flags = [stream readInt];
 	
 	
 	
 	
 	
 	
-	self.n_id = [stream readInt];
-	self.title = [stream readString];
+	super.n_id = [stream readInt];
+	super.title = [stream readString];
 	self.photo = [ClassStore TLDeserialize:stream];
-	self.participants_count = [stream readInt];
-	self.date = [stream readInt];
-	self.version = [stream readInt];
+	super.participants_count = [stream readInt];
+	super.date = [stream readInt];
+	super.version = [stream readInt];
 	if(self.flags & (1 << 6)) {self.migrated_to = [ClassStore TLDeserialize:stream];}
 }
         
@@ -3853,8 +3853,8 @@
 	[stream writeString:self.title];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.n_id = [stream readInt];
-	self.title = [stream readString];
+	super.n_id = [stream readInt];
+	super.title = [stream readString];
 }
         
 -(TL_chatForbidden *)copy {
@@ -3925,7 +3925,7 @@
 	[stream writeInt:self.version];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.flags = [stream readInt];
+	super.flags = [stream readInt];
 	
 	
 	
@@ -3934,13 +3934,13 @@
 	
 	
 	
-	self.n_id = [stream readInt];
-	self.access_hash = [stream readLong];
-	self.title = [stream readString];
-	if(self.flags & (1 << 6)) {self.username = [stream readString];}
+	super.n_id = [stream readInt];
+	super.access_hash = [stream readLong];
+	super.title = [stream readString];
+	if(self.flags & (1 << 6)) {super.username = [stream readString];}
 	self.photo = [ClassStore TLDeserialize:stream];
-	self.date = [stream readInt];
-	self.version = [stream readInt];
+	super.date = [stream readInt];
+	super.version = [stream readInt];
 }
         
 -(TL_channel *)copy {
@@ -4021,9 +4021,9 @@
 	[stream writeString:self.title];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.n_id = [stream readInt];
-	self.access_hash = [stream readLong];
-	self.title = [stream readString];
+	super.n_id = [stream readInt];
+	super.access_hash = [stream readLong];
+	super.title = [stream readString];
 }
         
 -(TL_channelForbidden *)copy {
@@ -4077,13 +4077,13 @@
 	[stream writeInt:self.version];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.n_id = [stream readInt];
-	self.title = [stream readString];
+	super.n_id = [stream readInt];
+	super.title = [stream readString];
 	self.photo = [ClassStore TLDeserialize:stream];
-	self.participants_count = [stream readInt];
-	self.date = [stream readInt];
-	self.left = [stream readBool];
-	self.version = [stream readInt];
+	super.participants_count = [stream readInt];
+	super.date = [stream readInt];
+	super.left = [stream readBool];
+	super.version = [stream readInt];
 }
         
 -(TL_chat_old34 *)copy {
@@ -4133,9 +4133,9 @@
 	[stream writeInt:self.date];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.n_id = [stream readInt];
-	self.title = [stream readString];
-	self.date = [stream readInt];
+	super.n_id = [stream readInt];
+	super.title = [stream readString];
+	super.date = [stream readInt];
 }
         
 -(TL_chatForbidden_old34 *)copy {
@@ -4189,13 +4189,13 @@
 	[stream writeInt:self.version];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.flags = [stream readInt];
-	self.n_id = [stream readInt];
-	self.title = [stream readString];
+	super.flags = [stream readInt];
+	super.n_id = [stream readInt];
+	super.title = [stream readString];
 	self.photo = [ClassStore TLDeserialize:stream];
-	self.participants_count = [stream readInt];
-	self.date = [stream readInt];
-	self.version = [stream readInt];
+	super.participants_count = [stream readInt];
+	super.date = [stream readInt];
+	super.version = [stream readInt];
 }
         
 -(TL_chat_old38 *)copy {
@@ -4264,7 +4264,7 @@
 	}
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.n_id = [stream readInt];
+	super.n_id = [stream readInt];
 	self.participants = [ClassStore TLDeserialize:stream];
 	self.chat_photo = [ClassStore TLDeserialize:stream];
 	self.notify_settings = [ClassStore TLDeserialize:stream];
@@ -4366,16 +4366,16 @@
 	if(self.flags & (1 << 4)) {[stream writeInt:self.migrated_from_max_id];}
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.flags = [stream readInt];
+	super.flags = [stream readInt];
 	
-	self.n_id = [stream readInt];
-	self.about = [stream readString];
-	if(self.flags & (1 << 0)) {self.participants_count = [stream readInt];}
-	if(self.flags & (1 << 1)) {self.admins_count = [stream readInt];}
-	if(self.flags & (1 << 2)) {self.kicked_count = [stream readInt];}
-	self.read_inbox_max_id = [stream readInt];
-	self.unread_count = [stream readInt];
-	self.unread_important_count = [stream readInt];
+	super.n_id = [stream readInt];
+	super.about = [stream readString];
+	if(self.flags & (1 << 0)) {super.participants_count = [stream readInt];}
+	if(self.flags & (1 << 1)) {super.admins_count = [stream readInt];}
+	if(self.flags & (1 << 2)) {super.kicked_count = [stream readInt];}
+	super.read_inbox_max_id = [stream readInt];
+	super.unread_count = [stream readInt];
+	super.unread_important_count = [stream readInt];
 	self.chat_photo = [ClassStore TLDeserialize:stream];
 	self.notify_settings = [ClassStore TLDeserialize:stream];
 	self.exported_invite = [ClassStore TLDeserialize:stream];
@@ -4393,8 +4393,8 @@
                 break;
 		}
 	}
-	if(self.flags & (1 << 4)) {self.migrated_from_chat_id = [stream readInt];}
-	if(self.flags & (1 << 4)) {self.migrated_from_max_id = [stream readInt];}
+	if(self.flags & (1 << 4)) {super.migrated_from_chat_id = [stream readInt];}
+	if(self.flags & (1 << 4)) {super.migrated_from_max_id = [stream readInt];}
 }
         
 -(TL_channelFull *)copy {
@@ -4489,7 +4489,7 @@
 	[ClassStore TLSerialize:self.exported_invite stream:stream];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.n_id = [stream readInt];
+	super.n_id = [stream readInt];
 	self.participants = [ClassStore TLDeserialize:stream];
 	self.chat_photo = [ClassStore TLDeserialize:stream];
 	self.notify_settings = [ClassStore TLDeserialize:stream];
@@ -4561,16 +4561,16 @@
 	[ClassStore TLSerialize:self.exported_invite stream:stream];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.flags = [stream readInt];
+	super.flags = [stream readInt];
 	
-	self.n_id = [stream readInt];
-	self.about = [stream readString];
-	if(self.flags & (1 << 0)) {self.participants_count = [stream readInt];}
-	if(self.flags & (1 << 1)) {self.admins_count = [stream readInt];}
-	if(self.flags & (1 << 2)) {self.kicked_count = [stream readInt];}
-	self.read_inbox_max_id = [stream readInt];
-	self.unread_count = [stream readInt];
-	self.unread_important_count = [stream readInt];
+	super.n_id = [stream readInt];
+	super.about = [stream readString];
+	if(self.flags & (1 << 0)) {super.participants_count = [stream readInt];}
+	if(self.flags & (1 << 1)) {super.admins_count = [stream readInt];}
+	if(self.flags & (1 << 2)) {super.kicked_count = [stream readInt];}
+	super.read_inbox_max_id = [stream readInt];
+	super.unread_count = [stream readInt];
+	super.unread_important_count = [stream readInt];
 	self.chat_photo = [ClassStore TLDeserialize:stream];
 	self.notify_settings = [ClassStore TLDeserialize:stream];
 	self.exported_invite = [ClassStore TLDeserialize:stream];
@@ -4653,9 +4653,9 @@
 	[stream writeInt:self.date];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.user_id = [stream readInt];
-	self.inviter_id = [stream readInt];
-	self.date = [stream readInt];
+	super.user_id = [stream readInt];
+	super.inviter_id = [stream readInt];
+	super.date = [stream readInt];
 }
         
 -(TL_chatParticipant *)copy {
@@ -4697,7 +4697,7 @@
 	[stream writeInt:self.user_id];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.user_id = [stream readInt];
+	super.user_id = [stream readInt];
 }
         
 -(TL_chatParticipantCreator *)copy {
@@ -4741,9 +4741,9 @@
 	[stream writeInt:self.date];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.user_id = [stream readInt];
-	self.inviter_id = [stream readInt];
-	self.date = [stream readInt];
+	super.user_id = [stream readInt];
+	super.inviter_id = [stream readInt];
+	super.date = [stream readInt];
 }
         
 -(TL_chatParticipantAdmin *)copy {
@@ -4793,8 +4793,8 @@
 	if(self.flags & (1 << 0)) {[ClassStore TLSerialize:self.self_participant stream:stream];}
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.flags = [stream readInt];
-	self.chat_id = [stream readInt];
+	super.flags = [stream readInt];
+	super.chat_id = [stream readInt];
 	if(self.flags & (1 << 0)) {self.self_participant = [ClassStore TLDeserialize:stream];}
 }
         
@@ -4856,7 +4856,7 @@
 	[stream writeInt:self.version];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.chat_id = [stream readInt];
+	super.chat_id = [stream readInt];
 	//UNS FullVector
 	[stream readInt];
 	{
@@ -4871,7 +4871,7 @@
                 break;
 		}
 	}
-	self.version = [stream readInt];
+	super.version = [stream readInt];
 }
         
 -(TL_chatParticipants *)copy {
@@ -4913,7 +4913,7 @@
 	[stream writeInt:self.chat_id];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.chat_id = [stream readInt];
+	super.chat_id = [stream readInt];
 }
         
 -(TL_chatParticipantsForbidden_old34 *)copy {
@@ -4968,8 +4968,8 @@
 	[stream writeInt:self.version];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.chat_id = [stream readInt];
-	self.admin_id = [stream readInt];
+	super.chat_id = [stream readInt];
+	super.admin_id = [stream readInt];
 	//UNS FullVector
 	[stream readInt];
 	{
@@ -4984,7 +4984,7 @@
                 break;
 		}
 	}
-	self.version = [stream readInt];
+	super.version = [stream readInt];
 }
         
 -(TL_chatParticipants_old38 *)copy {
@@ -5042,8 +5042,8 @@
 	[stream writeInt:self.version];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.chat_id = [stream readInt];
-	self.admin_id = [stream readInt];
+	super.chat_id = [stream readInt];
+	super.admin_id = [stream readInt];
 	//UNS FullVector
 	[stream readInt];
 	{
@@ -5058,7 +5058,7 @@
                 break;
 		}
 	}
-	self.version = [stream readInt];
+	super.version = [stream readInt];
 }
         
 -(TL_chatParticipants_old39 *)copy {
@@ -5193,7 +5193,7 @@
 	[stream writeInt:self.n_id];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.n_id = [stream readInt];
+	super.n_id = [stream readInt];
 }
         
 -(TL_messageEmpty *)copy {
@@ -5274,19 +5274,19 @@
 	if(self.flags & (1 << 10)) {[stream writeInt:self.views];}
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.flags = [stream readInt];
+	super.flags = [stream readInt];
 	
 	
 	
 	
-	self.n_id = [stream readInt];
-	if(self.flags & (1 << 8)) {self.from_id = [stream readInt];}
+	super.n_id = [stream readInt];
+	if(self.flags & (1 << 8)) {super.from_id = [stream readInt];}
 	self.to_id = [ClassStore TLDeserialize:stream];
 	if(self.flags & (1 << 2)) {self.fwd_from_id = [ClassStore TLDeserialize:stream];}
-	if(self.flags & (1 << 2)) {self.fwd_date = [stream readInt];}
-	if(self.flags & (1 << 3)) {self.reply_to_msg_id = [stream readInt];}
-	self.date = [stream readInt];
-	self.message = [stream readString];
+	if(self.flags & (1 << 2)) {super.fwd_date = [stream readInt];}
+	if(self.flags & (1 << 3)) {super.reply_to_msg_id = [stream readInt];}
+	super.date = [stream readInt];
+	super.message = [stream readString];
 	if(self.flags & (1 << 9)) {self.media = [ClassStore TLDeserialize:stream];}
 	if(self.flags & (1 << 6)) {self.reply_markup = [ClassStore TLDeserialize:stream];}
 	if(self.flags & (1 << 7)) {//UNS FullVector
@@ -5303,7 +5303,7 @@
                 break;
 		}
 	}}
-	if(self.flags & (1 << 10)) {self.views = [stream readInt];}
+	if(self.flags & (1 << 10)) {super.views = [stream readInt];}
 }
         
 -(TL_message *)copy {
@@ -5433,15 +5433,15 @@
 	[ClassStore TLSerialize:self.action stream:stream];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.flags = [stream readInt];
+	super.flags = [stream readInt];
 	
 	
 	
 	
-	self.n_id = [stream readInt];
-	if(self.flags & (1 << 8)) {self.from_id = [stream readInt];}
+	super.n_id = [stream readInt];
+	if(self.flags & (1 << 8)) {super.from_id = [stream readInt];}
 	self.to_id = [ClassStore TLDeserialize:stream];
-	self.date = [stream readInt];
+	super.date = [stream readInt];
 	self.action = [ClassStore TLDeserialize:stream];
 }
         
@@ -5552,7 +5552,7 @@
 }
 -(void)unserialize:(SerializedData*)stream {
 	self.photo = [ClassStore TLDeserialize:stream];
-	self.caption = [stream readString];
+	super.caption = [stream readString];
 }
         
 -(TL_messageMediaPhoto *)copy {
@@ -5596,7 +5596,7 @@
 }
 -(void)unserialize:(SerializedData*)stream {
 	self.video = [ClassStore TLDeserialize:stream];
-	self.caption = [stream readString];
+	super.caption = [stream readString];
 }
         
 -(TL_messageMediaVideo *)copy {
@@ -5683,10 +5683,10 @@
 	[stream writeInt:self.user_id];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.phone_number = [stream readString];
-	self.first_name = [stream readString];
-	self.last_name = [stream readString];
-	self.user_id = [stream readInt];
+	super.phone_number = [stream readString];
+	super.first_name = [stream readString];
+	super.last_name = [stream readString];
+	super.user_id = [stream readInt];
 }
         
 -(TL_messageMediaContact *)copy {
@@ -5898,10 +5898,10 @@
 }
 -(void)unserialize:(SerializedData*)stream {
 	self.geo = [ClassStore TLDeserialize:stream];
-	self.title = [stream readString];
-	self.address = [stream readString];
-	self.provider = [stream readString];
-	self.venue_id = [stream readString];
+	super.title = [stream readString];
+	super.address = [stream readString];
+	super.provider = [stream readString];
+	super.venue_id = [stream readString];
 }
         
 -(TL_messageMediaVenue *)copy {
@@ -6003,7 +6003,7 @@
 	}
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.title = [stream readString];
+	super.title = [stream readString];
 	//UNS ShortVector
 	[stream readInt];
 	{
@@ -6055,7 +6055,7 @@
 	[stream writeString:self.title];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.title = [stream readString];
+	super.title = [stream readString];
 }
         
 -(TL_messageActionChatEditTitle *)copy {
@@ -6175,7 +6175,7 @@
 	[stream writeInt:self.user_id];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.user_id = [stream readInt];
+	super.user_id = [stream readInt];
 }
         
 -(TL_messageActionChatAddUser *)copy {
@@ -6215,7 +6215,7 @@
 	[stream writeInt:self.user_id];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.user_id = [stream readInt];
+	super.user_id = [stream readInt];
 }
         
 -(TL_messageActionChatDeleteUser *)copy {
@@ -6255,7 +6255,7 @@
 	[stream writeInt:self.inviter_id];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.inviter_id = [stream readInt];
+	super.inviter_id = [stream readInt];
 }
         
 -(TL_messageActionChatJoinedByLink *)copy {
@@ -6295,7 +6295,7 @@
 	[stream writeString:self.title];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.title = [stream readString];
+	super.title = [stream readString];
 }
         
 -(TL_messageActionChannelCreate *)copy {
@@ -6335,7 +6335,7 @@
 	[stream writeInt:self.channel_id];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.channel_id = [stream readInt];
+	super.channel_id = [stream readInt];
 }
         
 -(TL_messageActionChatMigrateTo *)copy {
@@ -6457,8 +6457,8 @@
 	[stream writeInt:self.chat_id];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.title = [stream readString];
-	self.chat_id = [stream readInt];
+	super.title = [stream readString];
+	super.chat_id = [stream readInt];
 }
         
 -(TL_messageActionChannelMigrateFrom *)copy {
@@ -6512,9 +6512,9 @@
 }
 -(void)unserialize:(SerializedData*)stream {
 	self.peer = [ClassStore TLDeserialize:stream];
-	self.top_message = [stream readInt];
-	self.read_inbox_max_id = [stream readInt];
-	self.unread_count = [stream readInt];
+	super.top_message = [stream readInt];
+	super.read_inbox_max_id = [stream readInt];
+	super.unread_count = [stream readInt];
 	self.notify_settings = [ClassStore TLDeserialize:stream];
 }
         
@@ -6574,13 +6574,13 @@
 }
 -(void)unserialize:(SerializedData*)stream {
 	self.peer = [ClassStore TLDeserialize:stream];
-	self.top_message = [stream readInt];
-	self.top_important_message = [stream readInt];
-	self.read_inbox_max_id = [stream readInt];
-	self.unread_count = [stream readInt];
-	self.unread_important_count = [stream readInt];
+	super.top_message = [stream readInt];
+	super.top_important_message = [stream readInt];
+	super.read_inbox_max_id = [stream readInt];
+	super.unread_count = [stream readInt];
+	super.unread_important_count = [stream readInt];
 	self.notify_settings = [ClassStore TLDeserialize:stream];
-	self.pts = [stream readInt];
+	super.pts = [stream readInt];
 }
         
 -(TL_dialogChannel *)copy {
@@ -6631,7 +6631,7 @@
 	[stream writeLong:self.n_id];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.n_id = [stream readLong];
+	super.n_id = [stream readLong];
 }
         
 -(TL_photoEmpty *)copy {
@@ -6686,9 +6686,9 @@
 	}
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.n_id = [stream readLong];
-	self.access_hash = [stream readLong];
-	self.date = [stream readInt];
+	super.n_id = [stream readLong];
+	super.access_hash = [stream readLong];
+	super.date = [stream readInt];
 	//UNS FullVector
 	[stream readInt];
 	{
@@ -6764,10 +6764,10 @@
 	}
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.n_id = [stream readLong];
-	self.access_hash = [stream readLong];
-	self.user_id = [stream readInt];
-	self.date = [stream readInt];
+	super.n_id = [stream readLong];
+	super.access_hash = [stream readLong];
+	super.user_id = [stream readInt];
+	super.date = [stream readInt];
 	self.geo = [ClassStore TLDeserialize:stream];
 	//UNS FullVector
 	[stream readInt];
@@ -6831,7 +6831,7 @@
 	[stream writeString:self.type];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.type = [stream readString];
+	super.type = [stream readString];
 }
         
 -(TL_photoSizeEmpty *)copy {
@@ -6879,11 +6879,11 @@
 	[stream writeInt:self.size];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.type = [stream readString];
+	super.type = [stream readString];
 	self.location = [ClassStore TLDeserialize:stream];
-	self.w = [stream readInt];
-	self.h = [stream readInt];
-	self.size = [stream readInt];
+	super.w = [stream readInt];
+	super.h = [stream readInt];
+	super.size = [stream readInt];
 }
         
 -(TL_photoSize *)copy {
@@ -6935,11 +6935,11 @@
 	[stream writeByteArray:self.bytes];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.type = [stream readString];
+	super.type = [stream readString];
 	self.location = [ClassStore TLDeserialize:stream];
-	self.w = [stream readInt];
-	self.h = [stream readInt];
-	self.bytes = [stream readByteArray];
+	super.w = [stream readInt];
+	super.h = [stream readInt];
+	super.bytes = [stream readByteArray];
 }
         
 -(TL_photoCachedSize *)copy {
@@ -6987,7 +6987,7 @@
 	[stream writeLong:self.n_id];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.n_id = [stream readLong];
+	super.n_id = [stream readLong];
 }
         
 -(TL_videoEmpty *)copy {
@@ -7045,16 +7045,16 @@
 	[stream writeInt:self.h];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.n_id = [stream readLong];
-	self.access_hash = [stream readLong];
-	self.date = [stream readInt];
-	self.duration = [stream readInt];
-	self.mime_type = [stream readString];
-	self.size = [stream readInt];
+	super.n_id = [stream readLong];
+	super.access_hash = [stream readLong];
+	super.date = [stream readInt];
+	super.duration = [stream readInt];
+	super.mime_type = [stream readString];
+	super.size = [stream readInt];
 	self.thumb = [ClassStore TLDeserialize:stream];
-	self.dc_id = [stream readInt];
-	self.w = [stream readInt];
-	self.h = [stream readInt];
+	super.dc_id = [stream readInt];
+	super.w = [stream readInt];
+	super.h = [stream readInt];
 }
         
 -(TL_video *)copy {
@@ -7121,16 +7121,16 @@
 	[stream writeInt:self.h];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.n_id = [stream readLong];
-	self.access_hash = [stream readLong];
-	self.user_id = [stream readInt];
-	self.date = [stream readInt];
-	self.duration = [stream readInt];
-	self.size = [stream readInt];
+	super.n_id = [stream readLong];
+	super.access_hash = [stream readLong];
+	super.user_id = [stream readInt];
+	super.date = [stream readInt];
+	super.duration = [stream readInt];
+	super.size = [stream readInt];
 	self.thumb = [ClassStore TLDeserialize:stream];
-	self.dc_id = [stream readInt];
-	self.w = [stream readInt];
-	self.h = [stream readInt];
+	super.dc_id = [stream readInt];
+	super.w = [stream readInt];
+	super.h = [stream readInt];
 }
         
 -(TL_video_old29 *)copy {
@@ -7225,8 +7225,8 @@
 	[stream writeDouble:self.lat];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.n_long = [stream readDouble];
-	self.lat = [stream readDouble];
+	super.n_long = [stream readDouble];
+	super.lat = [stream readDouble];
 }
         
 -(TL_geoPoint *)copy {
@@ -7271,7 +7271,7 @@
 	[stream writeBool:self.phone_registered];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.phone_registered = [stream readBool];
+	super.phone_registered = [stream readBool];
 }
         
 -(TL_auth_checkedPhone *)copy {
@@ -7321,10 +7321,10 @@
 	[stream writeBool:self.is_password];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.phone_registered = [stream readBool];
-	self.phone_code_hash = [stream readString];
-	self.send_call_timeout = [stream readInt];
-	self.is_password = [stream readBool];
+	super.phone_registered = [stream readBool];
+	super.phone_code_hash = [stream readString];
+	super.send_call_timeout = [stream readInt];
+	super.is_password = [stream readBool];
 }
         
 -(TL_auth_sentCode *)copy {
@@ -7373,10 +7373,10 @@
 	[stream writeBool:self.is_password];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.phone_registered = [stream readBool];
-	self.phone_code_hash = [stream readString];
-	self.send_call_timeout = [stream readInt];
-	self.is_password = [stream readBool];
+	super.phone_registered = [stream readBool];
+	super.phone_code_hash = [stream readString];
+	super.send_call_timeout = [stream readInt];
+	super.is_password = [stream readBool];
 }
         
 -(TL_auth_sentAppCode *)copy {
@@ -7469,8 +7469,8 @@
 	[stream writeByteArray:self.bytes];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.n_id = [stream readInt];
-	self.bytes = [stream readByteArray];
+	super.n_id = [stream readInt];
+	super.bytes = [stream readByteArray];
 }
         
 -(TL_auth_exportedAuthorization *)copy {
@@ -7769,10 +7769,10 @@
 	[stream writeInt:self.events_mask];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.mute_until = [stream readInt];
-	self.sound = [stream readString];
-	self.show_previews = [stream readBool];
-	self.events_mask = [stream readInt];
+	super.mute_until = [stream readInt];
+	super.sound = [stream readString];
+	super.show_previews = [stream readBool];
+	super.events_mask = [stream readInt];
 }
         
 -(TL_inputPeerNotifySettings *)copy {
@@ -7949,10 +7949,10 @@
 	[stream writeInt:self.events_mask];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.mute_until = [stream readInt];
-	self.sound = [stream readString];
-	self.show_previews = [stream readBool];
-	self.events_mask = [stream readInt];
+	super.mute_until = [stream readInt];
+	super.sound = [stream readString];
+	super.show_previews = [stream readBool];
+	super.events_mask = [stream readInt];
 }
         
 -(TL_peerNotifySettings *)copy {
@@ -8014,8 +8014,8 @@
 	[stream writeInt:self.color];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.n_id = [stream readInt];
-	self.title = [stream readString];
+	super.n_id = [stream readInt];
+	super.title = [stream readString];
 	//UNS FullVector
 	[stream readInt];
 	{
@@ -8030,7 +8030,7 @@
                 break;
 		}
 	}
-	self.color = [stream readInt];
+	super.color = [stream readInt];
 }
         
 -(TL_wallPaper *)copy {
@@ -8079,10 +8079,10 @@
 	[stream writeInt:self.color];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.n_id = [stream readInt];
-	self.title = [stream readString];
-	self.bg_color = [stream readInt];
-	self.color = [stream readInt];
+	super.n_id = [stream readInt];
+	super.title = [stream readString];
+	super.bg_color = [stream readInt];
+	super.color = [stream readInt];
 }
         
 -(TL_wallPaperSolid *)copy {
@@ -8143,7 +8143,7 @@
 	self.link = [ClassStore TLDeserialize:stream];
 	self.profile_photo = [ClassStore TLDeserialize:stream];
 	self.notify_settings = [ClassStore TLDeserialize:stream];
-	self.blocked = [stream readBool];
+	super.blocked = [stream readBool];
 	self.bot_info = [ClassStore TLDeserialize:stream];
 }
         
@@ -8195,8 +8195,8 @@
 	[stream writeBool:self.mutual];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.user_id = [stream readInt];
-	self.mutual = [stream readBool];
+	super.user_id = [stream readInt];
+	super.mutual = [stream readBool];
 }
         
 -(TL_contact *)copy {
@@ -8243,8 +8243,8 @@
 	[stream writeLong:self.client_id];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.user_id = [stream readInt];
-	self.client_id = [stream readLong];
+	super.user_id = [stream readInt];
+	super.client_id = [stream readLong];
 }
         
 -(TL_importedContact *)copy {
@@ -8291,8 +8291,8 @@
 	[stream writeInt:self.date];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.user_id = [stream readInt];
-	self.date = [stream readInt];
+	super.user_id = [stream readInt];
+	super.date = [stream readInt];
 }
         
 -(TL_contactBlocked *)copy {
@@ -8339,8 +8339,8 @@
 	[stream writeInt:self.mutual_contacts];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.user_id = [stream readInt];
-	self.mutual_contacts = [stream readInt];
+	super.user_id = [stream readInt];
+	super.mutual_contacts = [stream readInt];
 }
         
 -(TL_contactSuggested *)copy {
@@ -8387,7 +8387,7 @@
 	[ClassStore TLSerialize:self.status stream:stream];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.user_id = [stream readInt];
+	super.user_id = [stream readInt];
 	self.status = [ClassStore TLDeserialize:stream];
 }
         
@@ -8845,7 +8845,7 @@
 	}
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.n_count = [stream readInt];
+	super.n_count = [stream readInt];
 	//UNS FullVector
 	[stream readInt];
 	{
@@ -9195,7 +9195,7 @@
 	}
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.n_count = [stream readInt];
+	super.n_count = [stream readInt];
 	//UNS FullVector
 	[stream readInt];
 	{
@@ -9446,7 +9446,7 @@
 	}
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.n_count = [stream readInt];
+	super.n_count = [stream readInt];
 	//UNS FullVector
 	[stream readInt];
 	{
@@ -9579,9 +9579,9 @@
 	}
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.flags = [stream readInt];
-	self.pts = [stream readInt];
-	self.n_count = [stream readInt];
+	super.flags = [stream readInt];
+	super.pts = [stream readInt];
+	super.n_count = [stream readInt];
 	//UNS FullVector
 	[stream readInt];
 	{
@@ -9859,9 +9859,9 @@
 	[stream writeInt:self.offset];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.pts = [stream readInt];
-	self.pts_count = [stream readInt];
-	self.offset = [stream readInt];
+	super.pts = [stream readInt];
+	super.pts_count = [stream readInt];
+	super.offset = [stream readInt];
 }
         
 -(TL_messages_affectedHistory *)copy {
@@ -10276,8 +10276,8 @@
 }
 -(void)unserialize:(SerializedData*)stream {
 	self.message = [ClassStore TLDeserialize:stream];
-	self.pts = [stream readInt];
-	self.pts_count = [stream readInt];
+	super.pts = [stream readInt];
+	super.pts_count = [stream readInt];
 }
         
 -(TL_updateNewMessage *)copy {
@@ -10321,8 +10321,8 @@
 	[stream writeLong:self.random_id];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.n_id = [stream readInt];
-	self.random_id = [stream readLong];
+	super.n_id = [stream readInt];
+	super.random_id = [stream readLong];
 }
         
 -(TL_updateMessageID *)copy {
@@ -10390,8 +10390,8 @@
 			[self.messages addObject:@(obj)];
 		}
 	}
-	self.pts = [stream readInt];
-	self.pts_count = [stream readInt];
+	super.pts = [stream readInt];
+	super.pts_count = [stream readInt];
 }
         
 -(TL_updateDeleteMessages *)copy {
@@ -10435,7 +10435,7 @@
 	[ClassStore TLSerialize:self.action stream:stream];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.user_id = [stream readInt];
+	super.user_id = [stream readInt];
 	self.action = [ClassStore TLDeserialize:stream];
 }
         
@@ -10481,8 +10481,8 @@
 	[ClassStore TLSerialize:self.action stream:stream];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.chat_id = [stream readInt];
-	self.user_id = [stream readInt];
+	super.chat_id = [stream readInt];
+	super.user_id = [stream readInt];
 	self.action = [ClassStore TLDeserialize:stream];
 }
         
@@ -10567,7 +10567,7 @@
 	[ClassStore TLSerialize:self.status stream:stream];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.user_id = [stream readInt];
+	super.user_id = [stream readInt];
 	self.status = [ClassStore TLDeserialize:stream];
 }
         
@@ -10615,10 +10615,10 @@
 	[stream writeString:self.username];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.user_id = [stream readInt];
-	self.first_name = [stream readString];
-	self.last_name = [stream readString];
-	self.username = [stream readString];
+	super.user_id = [stream readInt];
+	super.first_name = [stream readString];
+	super.last_name = [stream readString];
+	super.username = [stream readString];
 }
         
 -(TL_updateUserName *)copy {
@@ -10667,10 +10667,10 @@
 	[stream writeBool:self.previous];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.user_id = [stream readInt];
-	self.date = [stream readInt];
+	super.user_id = [stream readInt];
+	super.date = [stream readInt];
 	self.photo = [ClassStore TLDeserialize:stream];
-	self.previous = [stream readBool];
+	super.previous = [stream readBool];
 }
         
 -(TL_updateUserPhoto *)copy {
@@ -10715,8 +10715,8 @@
 	[stream writeInt:self.date];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.user_id = [stream readInt];
-	self.date = [stream readInt];
+	super.user_id = [stream readInt];
+	super.date = [stream readInt];
 }
         
 -(TL_updateContactRegistered *)copy {
@@ -10761,7 +10761,7 @@
 	[ClassStore TLSerialize:self.foreign_link stream:stream];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.user_id = [stream readInt];
+	super.user_id = [stream readInt];
 	self.my_link = [ClassStore TLDeserialize:stream];
 	self.foreign_link = [ClassStore TLDeserialize:stream];
 }
@@ -10811,10 +10811,10 @@
 	[stream writeString:self.location];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.auth_key_id = [stream readLong];
-	self.date = [stream readInt];
-	self.device = [stream readString];
-	self.location = [stream readString];
+	super.auth_key_id = [stream readLong];
+	super.date = [stream readInt];
+	super.device = [stream readString];
+	super.location = [stream readString];
 }
         
 -(TL_updateNewAuthorization *)copy {
@@ -10860,7 +10860,7 @@
 }
 -(void)unserialize:(SerializedData*)stream {
 	self.message = [ClassStore TLDeserialize:stream];
-	self.qts = [stream readInt];
+	super.qts = [stream readInt];
 }
         
 -(TL_updateNewEncryptedMessage *)copy {
@@ -10901,7 +10901,7 @@
 	[stream writeInt:self.chat_id];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.chat_id = [stream readInt];
+	super.chat_id = [stream readInt];
 }
         
 -(TL_updateEncryptedChatTyping *)copy {
@@ -10944,7 +10944,7 @@
 }
 -(void)unserialize:(SerializedData*)stream {
 	self.chat = [ClassStore TLDeserialize:stream];
-	self.date = [stream readInt];
+	super.date = [stream readInt];
 }
         
 -(TL_updateEncryption *)copy {
@@ -10989,9 +10989,9 @@
 	[stream writeInt:self.date];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.chat_id = [stream readInt];
-	self.max_date = [stream readInt];
-	self.date = [stream readInt];
+	super.chat_id = [stream readInt];
+	super.max_date = [stream readInt];
+	super.date = [stream readInt];
 }
         
 -(TL_updateEncryptedMessagesRead *)copy {
@@ -11041,11 +11041,11 @@
 	[stream writeInt:self.version];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.chat_id = [stream readInt];
-	self.user_id = [stream readInt];
-	self.inviter_id = [stream readInt];
-	self.date = [stream readInt];
-	self.version = [stream readInt];
+	super.chat_id = [stream readInt];
+	super.user_id = [stream readInt];
+	super.inviter_id = [stream readInt];
+	super.date = [stream readInt];
+	super.version = [stream readInt];
 }
         
 -(TL_updateChatParticipantAdd *)copy {
@@ -11093,9 +11093,9 @@
 	[stream writeInt:self.version];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.chat_id = [stream readInt];
-	self.user_id = [stream readInt];
-	self.version = [stream readInt];
+	super.chat_id = [stream readInt];
+	super.user_id = [stream readInt];
+	super.version = [stream readInt];
 }
         
 -(TL_updateChatParticipantDelete *)copy {
@@ -11201,8 +11201,8 @@
 	[stream writeBool:self.blocked];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.user_id = [stream readInt];
-	self.blocked = [stream readBool];
+	super.user_id = [stream readInt];
+	super.blocked = [stream readBool];
 }
         
 -(TL_updateUserBlocked *)copy {
@@ -11293,10 +11293,10 @@
 	[stream writeBool:self.popup];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.type = [stream readString];
-	self.message = [stream readString];
+	super.type = [stream readString];
+	super.message = [stream readString];
 	self.media = [ClassStore TLDeserialize:stream];
-	self.popup = [stream readBool];
+	super.popup = [stream readBool];
 }
         
 -(TL_updateServiceNotification *)copy {
@@ -11407,8 +11407,8 @@
 	[stream writeString:self.phone];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.user_id = [stream readInt];
-	self.phone = [stream readString];
+	super.user_id = [stream readInt];
+	super.phone = [stream readString];
 }
         
 -(TL_updateUserPhone *)copy {
@@ -11456,9 +11456,9 @@
 }
 -(void)unserialize:(SerializedData*)stream {
 	self.peer = [ClassStore TLDeserialize:stream];
-	self.max_id = [stream readInt];
-	self.pts = [stream readInt];
-	self.pts_count = [stream readInt];
+	super.max_id = [stream readInt];
+	super.pts = [stream readInt];
+	super.pts_count = [stream readInt];
 }
         
 -(TL_updateReadHistoryInbox *)copy {
@@ -11508,9 +11508,9 @@
 }
 -(void)unserialize:(SerializedData*)stream {
 	self.peer = [ClassStore TLDeserialize:stream];
-	self.max_id = [stream readInt];
-	self.pts = [stream readInt];
-	self.pts_count = [stream readInt];
+	super.max_id = [stream readInt];
+	super.pts = [stream readInt];
+	super.pts_count = [stream readInt];
 }
         
 -(TL_updateReadHistoryOutbox *)copy {
@@ -11558,8 +11558,8 @@
 }
 -(void)unserialize:(SerializedData*)stream {
 	self.webpage = [ClassStore TLDeserialize:stream];
-	self.pts = [stream readInt];
-	self.pts_count = [stream readInt];
+	super.pts = [stream readInt];
+	super.pts_count = [stream readInt];
 }
         
 -(TL_updateWebPage *)copy {
@@ -11628,8 +11628,8 @@
 			[self.messages addObject:@(obj)];
 		}
 	}
-	self.pts = [stream readInt];
-	self.pts_count = [stream readInt];
+	super.pts = [stream readInt];
+	super.pts_count = [stream readInt];
 }
         
 -(TL_updateReadMessagesContents *)copy {
@@ -11671,7 +11671,7 @@
 	[stream writeInt:self.channel_id];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.channel_id = [stream readInt];
+	super.channel_id = [stream readInt];
 }
         
 -(TL_updateChannelTooLong *)copy {
@@ -11711,7 +11711,7 @@
 	[stream writeInt:self.channel_id];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.channel_id = [stream readInt];
+	super.channel_id = [stream readInt];
 }
         
 -(TL_updateChannel *)copy {
@@ -11753,7 +11753,7 @@
 	[ClassStore TLSerialize:self.group stream:stream];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.channel_id = [stream readInt];
+	super.channel_id = [stream readInt];
 	self.group = [ClassStore TLDeserialize:stream];
 }
         
@@ -11800,8 +11800,8 @@
 }
 -(void)unserialize:(SerializedData*)stream {
 	self.message = [ClassStore TLDeserialize:stream];
-	self.pts = [stream readInt];
-	self.pts_count = [stream readInt];
+	super.pts = [stream readInt];
+	super.pts_count = [stream readInt];
 }
         
 -(TL_updateNewChannelMessage *)copy {
@@ -11845,8 +11845,8 @@
 	[stream writeInt:self.max_id];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.channel_id = [stream readInt];
-	self.max_id = [stream readInt];
+	super.channel_id = [stream readInt];
+	super.max_id = [stream readInt];
 }
         
 -(TL_updateReadChannelInbox *)copy {
@@ -11905,7 +11905,7 @@
 	[stream writeInt:self.pts_count];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.channel_id = [stream readInt];
+	super.channel_id = [stream readInt];
 	//UNS ShortVector
 	[stream readInt];
 	{
@@ -11917,8 +11917,8 @@
 			[self.messages addObject:@(obj)];
 		}
 	}
-	self.pts = [stream readInt];
-	self.pts_count = [stream readInt];
+	super.pts = [stream readInt];
+	super.pts_count = [stream readInt];
 }
         
 -(TL_updateDeleteChannelMessages *)copy {
@@ -11965,9 +11965,9 @@
 	[stream writeInt:self.views];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.channel_id = [stream readInt];
-	self.n_id = [stream readInt];
-	self.views = [stream readInt];
+	super.channel_id = [stream readInt];
+	super.n_id = [stream readInt];
+	super.views = [stream readInt];
 }
         
 -(TL_updateChannelMessageViews *)copy {
@@ -12013,9 +12013,9 @@
 	[stream writeInt:self.version];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.chat_id = [stream readInt];
-	self.enabled = [stream readBool];
-	self.version = [stream readInt];
+	super.chat_id = [stream readInt];
+	super.enabled = [stream readBool];
+	super.version = [stream readInt];
 }
         
 -(TL_updateChatAdmins *)copy {
@@ -12063,10 +12063,10 @@
 	[stream writeInt:self.version];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.chat_id = [stream readInt];
-	self.user_id = [stream readInt];
-	self.is_admin = [stream readBool];
-	self.version = [stream readInt];
+	super.chat_id = [stream readInt];
+	super.user_id = [stream readInt];
+	super.is_admin = [stream readBool];
+	super.version = [stream readInt];
 }
         
 -(TL_updateChatParticipantAdmin *)copy {
@@ -12121,11 +12121,11 @@
 	[stream writeInt:self.unread_count];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.pts = [stream readInt];
-	self.qts = [stream readInt];
-	self.date = [stream readInt];
-	self.seq = [stream readInt];
-	self.unread_count = [stream readInt];
+	super.pts = [stream readInt];
+	super.qts = [stream readInt];
+	super.date = [stream readInt];
+	super.seq = [stream readInt];
+	super.unread_count = [stream readInt];
 }
         
 -(TL_updates_state *)copy {
@@ -12175,8 +12175,8 @@
 	[stream writeInt:self.seq];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.date = [stream readInt];
-	self.seq = [stream readInt];
+	super.date = [stream readInt];
+	super.seq = [stream readInt];
 }
         
 -(TL_updates_differenceEmpty *)copy {
@@ -12638,20 +12638,20 @@
 	}}
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.flags = [stream readInt];
+	super.flags = [stream readInt];
 	
 	
 	
 	
-	self.n_id = [stream readInt];
-	self.user_id = [stream readInt];
-	self.message = [stream readString];
-	self.pts = [stream readInt];
-	self.pts_count = [stream readInt];
-	self.date = [stream readInt];
+	super.n_id = [stream readInt];
+	super.user_id = [stream readInt];
+	super.message = [stream readString];
+	super.pts = [stream readInt];
+	super.pts_count = [stream readInt];
+	super.date = [stream readInt];
 	if(self.flags & (1 << 2)) {self.fwd_from_id = [ClassStore TLDeserialize:stream];}
-	if(self.flags & (1 << 2)) {self.fwd_date = [stream readInt];}
-	if(self.flags & (1 << 3)) {self.reply_to_msg_id = [stream readInt];}
+	if(self.flags & (1 << 2)) {super.fwd_date = [stream readInt];}
+	if(self.flags & (1 << 3)) {super.reply_to_msg_id = [stream readInt];}
 	if(self.flags & (1 << 7)) {//UNS FullVector
 	[stream readInt];
 	{
@@ -12790,21 +12790,21 @@
 	}}
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.flags = [stream readInt];
+	super.flags = [stream readInt];
 	
 	
 	
 	
-	self.n_id = [stream readInt];
-	self.from_id = [stream readInt];
-	self.chat_id = [stream readInt];
-	self.message = [stream readString];
-	self.pts = [stream readInt];
-	self.pts_count = [stream readInt];
-	self.date = [stream readInt];
+	super.n_id = [stream readInt];
+	super.from_id = [stream readInt];
+	super.chat_id = [stream readInt];
+	super.message = [stream readString];
+	super.pts = [stream readInt];
+	super.pts_count = [stream readInt];
+	super.date = [stream readInt];
 	if(self.flags & (1 << 2)) {self.fwd_from_id = [ClassStore TLDeserialize:stream];}
-	if(self.flags & (1 << 2)) {self.fwd_date = [stream readInt];}
-	if(self.flags & (1 << 3)) {self.reply_to_msg_id = [stream readInt];}
+	if(self.flags & (1 << 2)) {super.fwd_date = [stream readInt];}
+	if(self.flags & (1 << 3)) {super.reply_to_msg_id = [stream readInt];}
 	if(self.flags & (1 << 7)) {//UNS FullVector
 	[stream readInt];
 	{
@@ -12908,7 +12908,7 @@
 }
 -(void)unserialize:(SerializedData*)stream {
 	self.update = [ClassStore TLDeserialize:stream];
-	self.date = [stream readInt];
+	super.date = [stream readInt];
 }
         
 -(TL_updateShort *)copy {
@@ -13028,9 +13028,9 @@
                 break;
 		}
 	}
-	self.date = [stream readInt];
-	self.seq_start = [stream readInt];
-	self.seq = [stream readInt];
+	super.date = [stream readInt];
+	super.seq_start = [stream readInt];
+	super.seq = [stream readInt];
 }
         
 -(TL_updatesCombined *)copy {
@@ -13152,8 +13152,8 @@
                 break;
 		}
 	}
-	self.date = [stream readInt];
-	self.seq = [stream readInt];
+	super.date = [stream readInt];
+	super.seq = [stream readInt];
 }
         
 -(TL_updates *)copy {
@@ -13222,13 +13222,13 @@
 	}}
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.flags = [stream readInt];
+	super.flags = [stream readInt];
 	
 	
-	self.n_id = [stream readInt];
-	self.pts = [stream readInt];
-	self.pts_count = [stream readInt];
-	self.date = [stream readInt];
+	super.n_id = [stream readInt];
+	super.pts = [stream readInt];
+	super.pts_count = [stream readInt];
+	super.date = [stream readInt];
 	if(self.flags & (1 << 9)) {self.media = [ClassStore TLDeserialize:stream];}
 	if(self.flags & (1 << 7)) {//UNS FullVector
 	[stream readInt];
@@ -13421,7 +13421,7 @@
 	}
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.n_count = [stream readInt];
+	super.n_count = [stream readInt];
 	//UNS FullVector
 	[stream readInt];
 	{
@@ -13570,8 +13570,8 @@
 }
 -(void)unserialize:(SerializedData*)stream {
 	self.type = [ClassStore TLDeserialize:stream];
-	self.mtime = [stream readInt];
-	self.bytes = [stream readByteArray];
+	super.mtime = [stream readInt];
+	super.bytes = [stream readByteArray];
 }
         
 -(TL_upload_file *)copy {
@@ -13627,12 +13627,12 @@
 	[stream writeInt:self.port];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.flags = [stream readInt];
+	super.flags = [stream readInt];
 	
 	
-	self.n_id = [stream readInt];
-	self.ip_address = [stream readString];
-	self.port = [stream readInt];
+	super.n_id = [stream readInt];
+	super.ip_address = [stream readString];
+	super.port = [stream readInt];
 }
         
 -(TL_dcOption *)copy {
@@ -13737,10 +13737,10 @@
 	}
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.date = [stream readInt];
-	self.expires = [stream readInt];
-	self.test_mode = [stream readBool];
-	self.this_dc = [stream readInt];
+	super.date = [stream readInt];
+	super.expires = [stream readInt];
+	super.test_mode = [stream readBool];
+	super.this_dc = [stream readInt];
 	//UNS FullVector
 	[stream readInt];
 	{
@@ -13755,18 +13755,18 @@
                 break;
 		}
 	}
-	self.chat_size_max = [stream readInt];
-	self.megagroup_size_max = [stream readInt];
-	self.forwarded_count_max = [stream readInt];
-	self.online_update_period_ms = [stream readInt];
-	self.offline_blur_timeout_ms = [stream readInt];
-	self.offline_idle_timeout_ms = [stream readInt];
-	self.online_cloud_timeout_ms = [stream readInt];
-	self.notify_cloud_delay_ms = [stream readInt];
-	self.notify_default_delay_ms = [stream readInt];
-	self.chat_big_size = [stream readInt];
-	self.push_chat_period_ms = [stream readInt];
-	self.push_chat_limit = [stream readInt];
+	super.chat_size_max = [stream readInt];
+	super.megagroup_size_max = [stream readInt];
+	super.forwarded_count_max = [stream readInt];
+	super.online_update_period_ms = [stream readInt];
+	super.offline_blur_timeout_ms = [stream readInt];
+	super.offline_idle_timeout_ms = [stream readInt];
+	super.online_cloud_timeout_ms = [stream readInt];
+	super.notify_cloud_delay_ms = [stream readInt];
+	super.notify_default_delay_ms = [stream readInt];
+	super.chat_big_size = [stream readInt];
+	super.push_chat_period_ms = [stream readInt];
+	super.push_chat_limit = [stream readInt];
 	//UNS FullVector
 	[stream readInt];
 	{
@@ -13845,9 +13845,9 @@
 	[stream writeInt:self.nearest_dc];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.country = [stream readString];
-	self.this_dc = [stream readInt];
-	self.nearest_dc = [stream readInt];
+	super.country = [stream readString];
+	super.this_dc = [stream readInt];
+	super.nearest_dc = [stream readInt];
 }
         
 -(TL_nearestDc *)copy {
@@ -13899,10 +13899,10 @@
 	[stream writeString:self.text];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.n_id = [stream readInt];
-	self.critical = [stream readBool];
-	self.url = [stream readString];
-	self.text = [stream readString];
+	super.n_id = [stream readInt];
+	super.critical = [stream readBool];
+	super.url = [stream readString];
+	super.text = [stream readString];
 }
         
 -(TL_help_appUpdate *)copy {
@@ -13989,7 +13989,7 @@
 	[stream writeString:self.message];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.message = [stream readString];
+	super.message = [stream readString];
 }
         
 -(TL_help_inviteText *)copy {
@@ -14033,7 +14033,7 @@
 	[stream writeInt:self.n_id];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.n_id = [stream readInt];
+	super.n_id = [stream readInt];
 }
         
 -(TL_encryptedChatEmpty *)copy {
@@ -14081,11 +14081,11 @@
 	[stream writeInt:self.participant_id];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.n_id = [stream readInt];
-	self.access_hash = [stream readLong];
-	self.date = [stream readInt];
-	self.admin_id = [stream readInt];
-	self.participant_id = [stream readInt];
+	super.n_id = [stream readInt];
+	super.access_hash = [stream readLong];
+	super.date = [stream readInt];
+	super.admin_id = [stream readInt];
+	super.participant_id = [stream readInt];
 }
         
 -(TL_encryptedChatWaiting *)copy {
@@ -14139,12 +14139,12 @@
 	[stream writeByteArray:self.g_a];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.n_id = [stream readInt];
-	self.access_hash = [stream readLong];
-	self.date = [stream readInt];
-	self.admin_id = [stream readInt];
-	self.participant_id = [stream readInt];
-	self.g_a = [stream readByteArray];
+	super.n_id = [stream readInt];
+	super.access_hash = [stream readLong];
+	super.date = [stream readInt];
+	super.admin_id = [stream readInt];
+	super.participant_id = [stream readInt];
+	super.g_a = [stream readByteArray];
 }
         
 -(TL_encryptedChatRequested *)copy {
@@ -14201,13 +14201,13 @@
 	[stream writeLong:self.key_fingerprint];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.n_id = [stream readInt];
-	self.access_hash = [stream readLong];
-	self.date = [stream readInt];
-	self.admin_id = [stream readInt];
-	self.participant_id = [stream readInt];
-	self.g_a_or_b = [stream readByteArray];
-	self.key_fingerprint = [stream readLong];
+	super.n_id = [stream readInt];
+	super.access_hash = [stream readLong];
+	super.date = [stream readInt];
+	super.admin_id = [stream readInt];
+	super.participant_id = [stream readInt];
+	super.g_a_or_b = [stream readByteArray];
+	super.key_fingerprint = [stream readLong];
 }
         
 -(TL_encryptedChat *)copy {
@@ -14253,7 +14253,7 @@
 	[stream writeInt:self.n_id];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.n_id = [stream readInt];
+	super.n_id = [stream readInt];
 }
         
 -(TL_encryptedChatDiscarded *)copy {
@@ -14299,8 +14299,8 @@
 	[stream writeLong:self.access_hash];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.chat_id = [stream readInt];
-	self.access_hash = [stream readLong];
+	super.chat_id = [stream readInt];
+	super.access_hash = [stream readLong];
 }
         
 -(TL_inputEncryptedChat *)copy {
@@ -14393,11 +14393,11 @@
 	[stream writeInt:self.key_fingerprint];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.n_id = [stream readLong];
-	self.access_hash = [stream readLong];
-	self.size = [stream readInt];
-	self.dc_id = [stream readInt];
-	self.key_fingerprint = [stream readInt];
+	super.n_id = [stream readLong];
+	super.access_hash = [stream readLong];
+	super.size = [stream readInt];
+	super.dc_id = [stream readInt];
+	super.key_fingerprint = [stream readInt];
 }
         
 -(TL_encryptedFile *)copy {
@@ -14491,10 +14491,10 @@
 	[stream writeInt:self.key_fingerprint];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.n_id = [stream readLong];
-	self.parts = [stream readInt];
-	self.md5_checksum = [stream readString];
-	self.key_fingerprint = [stream readInt];
+	super.n_id = [stream readLong];
+	super.parts = [stream readInt];
+	super.md5_checksum = [stream readString];
+	super.key_fingerprint = [stream readInt];
 }
         
 -(TL_inputEncryptedFileUploaded *)copy {
@@ -14539,8 +14539,8 @@
 	[stream writeLong:self.access_hash];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.n_id = [stream readLong];
-	self.access_hash = [stream readLong];
+	super.n_id = [stream readLong];
+	super.access_hash = [stream readLong];
 }
         
 -(TL_inputEncryptedFile *)copy {
@@ -14585,9 +14585,9 @@
 	[stream writeInt:self.key_fingerprint];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.n_id = [stream readLong];
-	self.parts = [stream readInt];
-	self.key_fingerprint = [stream readInt];
+	super.n_id = [stream readLong];
+	super.parts = [stream readInt];
+	super.key_fingerprint = [stream readInt];
 }
         
 -(TL_inputEncryptedFileBigUploaded *)copy {
@@ -14641,10 +14641,10 @@
 	[ClassStore TLSerialize:self.file stream:stream];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.random_id = [stream readLong];
-	self.chat_id = [stream readInt];
-	self.date = [stream readInt];
-	self.bytes = [stream readByteArray];
+	super.random_id = [stream readLong];
+	super.chat_id = [stream readInt];
+	super.date = [stream readInt];
+	super.bytes = [stream readByteArray];
 	self.file = [ClassStore TLDeserialize:stream];
 }
         
@@ -14695,10 +14695,10 @@
 	[stream writeByteArray:self.bytes];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.random_id = [stream readLong];
-	self.chat_id = [stream readInt];
-	self.date = [stream readInt];
-	self.bytes = [stream readByteArray];
+	super.random_id = [stream readLong];
+	super.chat_id = [stream readInt];
+	super.date = [stream readInt];
+	super.bytes = [stream readByteArray];
 }
         
 -(TL_encryptedMessageService *)copy {
@@ -14745,7 +14745,7 @@
 	[stream writeByteArray:self.random];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.random = [stream readByteArray];
+	super.random = [stream readByteArray];
 }
         
 -(TL_messages_dhConfigNotModified *)copy {
@@ -14791,10 +14791,10 @@
 	[stream writeByteArray:self.random];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.g = [stream readInt];
-	self.p = [stream readByteArray];
-	self.version = [stream readInt];
-	self.random = [stream readByteArray];
+	super.g = [stream readInt];
+	super.p = [stream readByteArray];
+	super.version = [stream readInt];
+	super.random = [stream readByteArray];
 }
         
 -(TL_messages_dhConfig *)copy {
@@ -14841,7 +14841,7 @@
 	[stream writeInt:self.date];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.date = [stream readInt];
+	super.date = [stream readInt];
 }
         
 -(TL_messages_sentEncryptedMessage *)copy {
@@ -14883,7 +14883,7 @@
 	[ClassStore TLSerialize:self.file stream:stream];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.date = [stream readInt];
+	super.date = [stream readInt];
 	self.file = [ClassStore TLDeserialize:stream];
 }
         
@@ -14971,8 +14971,8 @@
 	[stream writeLong:self.access_hash];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.n_id = [stream readLong];
-	self.access_hash = [stream readLong];
+	super.n_id = [stream readLong];
+	super.access_hash = [stream readLong];
 }
         
 -(TL_inputAudio *)copy {
@@ -15059,8 +15059,8 @@
 	[stream writeLong:self.access_hash];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.n_id = [stream readLong];
-	self.access_hash = [stream readLong];
+	super.n_id = [stream readLong];
+	super.access_hash = [stream readLong];
 }
         
 -(TL_inputDocument *)copy {
@@ -15105,7 +15105,7 @@
 	[stream writeLong:self.n_id];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.n_id = [stream readLong];
+	super.n_id = [stream readLong];
 }
         
 -(TL_audioEmpty *)copy {
@@ -15157,13 +15157,13 @@
 	[stream writeInt:self.dc_id];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.n_id = [stream readLong];
-	self.access_hash = [stream readLong];
-	self.date = [stream readInt];
-	self.duration = [stream readInt];
-	self.mime_type = [stream readString];
-	self.size = [stream readInt];
-	self.dc_id = [stream readInt];
+	super.n_id = [stream readLong];
+	super.access_hash = [stream readLong];
+	super.date = [stream readInt];
+	super.duration = [stream readInt];
+	super.mime_type = [stream readString];
+	super.size = [stream readInt];
+	super.dc_id = [stream readInt];
 }
         
 -(TL_audio *)copy {
@@ -15223,14 +15223,14 @@
 	[stream writeInt:self.dc_id];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.n_id = [stream readLong];
-	self.access_hash = [stream readLong];
-	self.user_id = [stream readInt];
-	self.date = [stream readInt];
-	self.duration = [stream readInt];
-	self.mime_type = [stream readString];
-	self.size = [stream readInt];
-	self.dc_id = [stream readInt];
+	super.n_id = [stream readLong];
+	super.access_hash = [stream readLong];
+	super.user_id = [stream readInt];
+	super.date = [stream readInt];
+	super.duration = [stream readInt];
+	super.mime_type = [stream readString];
+	super.size = [stream readInt];
+	super.dc_id = [stream readInt];
 }
         
 -(TL_audio_old29 *)copy {
@@ -15281,7 +15281,7 @@
 	[stream writeLong:self.n_id];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.n_id = [stream readLong];
+	super.n_id = [stream readLong];
 }
         
 -(TL_documentEmpty *)copy {
@@ -15344,13 +15344,13 @@
 	}
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.n_id = [stream readLong];
-	self.access_hash = [stream readLong];
-	self.date = [stream readInt];
-	self.mime_type = [stream readString];
-	self.size = [stream readInt];
+	super.n_id = [stream readLong];
+	super.access_hash = [stream readLong];
+	super.date = [stream readInt];
+	super.mime_type = [stream readString];
+	super.size = [stream readInt];
 	self.thumb = [ClassStore TLDeserialize:stream];
-	self.dc_id = [stream readInt];
+	super.dc_id = [stream readInt];
 	//UNS FullVector
 	[stream readInt];
 	{
@@ -15417,7 +15417,7 @@
 	[ClassStore TLSerialize:self.user stream:stream];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.phone_number = [stream readString];
+	super.phone_number = [stream readString];
 	self.user = [ClassStore TLDeserialize:stream];
 }
         
@@ -15747,7 +15747,7 @@
 	[stream writeInt:self.progress];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.progress = [stream readInt];
+	super.progress = [stream readInt];
 }
         
 -(TL_sendMessageUploadVideoAction *)copy {
@@ -15827,7 +15827,7 @@
 	[stream writeInt:self.progress];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.progress = [stream readInt];
+	super.progress = [stream readInt];
 }
         
 -(TL_sendMessageUploadAudioAction *)copy {
@@ -15867,7 +15867,7 @@
 	[stream writeInt:self.progress];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.progress = [stream readInt];
+	super.progress = [stream readInt];
 }
         
 -(TL_sendMessageUploadPhotoAction *)copy {
@@ -15907,7 +15907,7 @@
 	[stream writeInt:self.progress];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.progress = [stream readInt];
+	super.progress = [stream readInt];
 }
         
 -(TL_sendMessageUploadDocumentAction *)copy {
@@ -16905,7 +16905,7 @@
 	[stream writeInt:self.days];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.days = [stream readInt];
+	super.days = [stream readInt];
 }
         
 -(TL_accountDaysTTL *)copy {
@@ -16951,8 +16951,8 @@
 	[stream writeInt:self.send_call_timeout];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.phone_code_hash = [stream readString];
-	self.send_call_timeout = [stream readInt];
+	super.phone_code_hash = [stream readString];
+	super.send_call_timeout = [stream readInt];
 }
         
 -(TL_account_sentChangePhoneCode *)copy {
@@ -16999,8 +16999,8 @@
 	[stream writeInt:self.h];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.w = [stream readInt];
-	self.h = [stream readInt];
+	super.w = [stream readInt];
+	super.h = [stream readInt];
 }
         
 -(TL_documentAttributeImageSize *)copy {
@@ -17083,7 +17083,7 @@
 	[ClassStore TLSerialize:self.stickerset stream:stream];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.alt = [stream readString];
+	super.alt = [stream readString];
 	self.stickerset = [ClassStore TLDeserialize:stream];
 }
         
@@ -17129,9 +17129,9 @@
 	[stream writeInt:self.h];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.duration = [stream readInt];
-	self.w = [stream readInt];
-	self.h = [stream readInt];
+	super.duration = [stream readInt];
+	super.w = [stream readInt];
+	super.h = [stream readInt];
 }
         
 -(TL_documentAttributeVideo *)copy {
@@ -17177,9 +17177,9 @@
 	[stream writeString:self.performer];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.duration = [stream readInt];
-	self.title = [stream readString];
-	self.performer = [stream readString];
+	super.duration = [stream readInt];
+	super.title = [stream readString];
+	super.performer = [stream readString];
 }
         
 -(TL_documentAttributeAudio *)copy {
@@ -17221,7 +17221,7 @@
 	[stream writeString:self.file_name];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.file_name = [stream readString];
+	super.file_name = [stream readString];
 }
         
 -(TL_documentAttributeFilename *)copy {
@@ -17261,7 +17261,7 @@
 	[stream writeInt:self.duration];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.duration = [stream readInt];
+	super.duration = [stream readInt];
 }
         
 -(TL_documentAttributeAudio_old31 *)copy {
@@ -17356,7 +17356,7 @@
 	}
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.n_hash = [stream readString];
+	super.n_hash = [stream readString];
 	//UNS FullVector
 	[stream readInt];
 	{
@@ -17429,7 +17429,7 @@
 	}
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.emoticon = [stream readString];
+	super.emoticon = [stream readString];
 	//UNS ShortVector
 	[stream readInt];
 	{
@@ -17536,7 +17536,7 @@
 	}
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.n_hash = [stream readString];
+	super.n_hash = [stream readString];
 	//UNS FullVector
 	[stream readInt];
 	{
@@ -17597,8 +17597,8 @@
 	[stream writeString:self.n_description];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.feature = [stream readString];
-	self.n_description = [stream readString];
+	super.feature = [stream readString];
+	super.n_description = [stream readString];
 }
         
 -(TL_disabledFeature *)copy {
@@ -17645,8 +17645,8 @@
 	[stream writeInt:self.pts_count];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.pts = [stream readInt];
-	self.pts_count = [stream readInt];
+	super.pts = [stream readInt];
+	super.pts_count = [stream readInt];
 }
         
 -(TL_messages_affectedMessages *)copy {
@@ -17855,7 +17855,7 @@
 	[stream writeLong:self.n_id];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.n_id = [stream readLong];
+	super.n_id = [stream readLong];
 }
         
 -(TL_webPageEmpty *)copy {
@@ -17897,8 +17897,8 @@
 	[stream writeInt:self.date];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.n_id = [stream readLong];
-	self.date = [stream readInt];
+	super.n_id = [stream readLong];
+	super.date = [stream readInt];
 }
         
 -(TL_webPagePending *)copy {
@@ -17969,21 +17969,21 @@
 	if(self.flags & (1 << 9)) {[ClassStore TLSerialize:self.document stream:stream];}
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.flags = [stream readInt];
-	self.n_id = [stream readLong];
-	self.url = [stream readString];
-	self.display_url = [stream readString];
-	if(self.flags & (1 << 0)) {self.type = [stream readString];}
-	if(self.flags & (1 << 1)) {self.site_name = [stream readString];}
-	if(self.flags & (1 << 2)) {self.title = [stream readString];}
-	if(self.flags & (1 << 3)) {self.n_description = [stream readString];}
+	super.flags = [stream readInt];
+	super.n_id = [stream readLong];
+	super.url = [stream readString];
+	super.display_url = [stream readString];
+	if(self.flags & (1 << 0)) {super.type = [stream readString];}
+	if(self.flags & (1 << 1)) {super.site_name = [stream readString];}
+	if(self.flags & (1 << 2)) {super.title = [stream readString];}
+	if(self.flags & (1 << 3)) {super.n_description = [stream readString];}
 	if(self.flags & (1 << 4)) {self.photo = [ClassStore TLDeserialize:stream];}
-	if(self.flags & (1 << 5)) {self.embed_url = [stream readString];}
-	if(self.flags & (1 << 5)) {self.embed_type = [stream readString];}
-	if(self.flags & (1 << 6)) {self.embed_width = [stream readInt];}
-	if(self.flags & (1 << 6)) {self.embed_height = [stream readInt];}
-	if(self.flags & (1 << 7)) {self.duration = [stream readInt];}
-	if(self.flags & (1 << 8)) {self.author = [stream readString];}
+	if(self.flags & (1 << 5)) {super.embed_url = [stream readString];}
+	if(self.flags & (1 << 5)) {super.embed_type = [stream readString];}
+	if(self.flags & (1 << 6)) {super.embed_width = [stream readInt];}
+	if(self.flags & (1 << 6)) {super.embed_height = [stream readInt];}
+	if(self.flags & (1 << 7)) {super.duration = [stream readInt];}
+	if(self.flags & (1 << 8)) {super.author = [stream readString];}
 	if(self.flags & (1 << 9)) {self.document = [ClassStore TLDeserialize:stream];}
 }
         
@@ -18139,21 +18139,21 @@
 	if(self.flags & (1 << 8)) {[stream writeString:self.author];}
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.flags = [stream readInt];
-	self.n_id = [stream readLong];
-	self.url = [stream readString];
-	self.display_url = [stream readString];
-	if(self.flags & (1 << 0)) {self.type = [stream readString];}
-	if(self.flags & (1 << 1)) {self.site_name = [stream readString];}
-	if(self.flags & (1 << 2)) {self.title = [stream readString];}
-	if(self.flags & (1 << 3)) {self.n_description = [stream readString];}
+	super.flags = [stream readInt];
+	super.n_id = [stream readLong];
+	super.url = [stream readString];
+	super.display_url = [stream readString];
+	if(self.flags & (1 << 0)) {super.type = [stream readString];}
+	if(self.flags & (1 << 1)) {super.site_name = [stream readString];}
+	if(self.flags & (1 << 2)) {super.title = [stream readString];}
+	if(self.flags & (1 << 3)) {super.n_description = [stream readString];}
 	if(self.flags & (1 << 4)) {self.photo = [ClassStore TLDeserialize:stream];}
-	if(self.flags & (1 << 5)) {self.embed_url = [stream readString];}
-	if(self.flags & (1 << 5)) {self.embed_type = [stream readString];}
-	if(self.flags & (1 << 6)) {self.embed_width = [stream readInt];}
-	if(self.flags & (1 << 6)) {self.embed_height = [stream readInt];}
-	if(self.flags & (1 << 7)) {self.duration = [stream readInt];}
-	if(self.flags & (1 << 8)) {self.author = [stream readString];}
+	if(self.flags & (1 << 5)) {super.embed_url = [stream readString];}
+	if(self.flags & (1 << 5)) {super.embed_type = [stream readString];}
+	if(self.flags & (1 << 6)) {super.embed_width = [stream readInt];}
+	if(self.flags & (1 << 6)) {super.embed_height = [stream readInt];}
+	if(self.flags & (1 << 7)) {super.duration = [stream readInt];}
+	if(self.flags & (1 << 8)) {super.author = [stream readString];}
 }
         
 -(TL_webPage_old34 *)copy {
@@ -18301,19 +18301,19 @@
 	[stream writeString:self.region];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.n_hash = [stream readLong];
-	self.flags = [stream readInt];
-	self.device_model = [stream readString];
-	self.platform = [stream readString];
-	self.system_version = [stream readString];
-	self.api_id = [stream readInt];
-	self.app_name = [stream readString];
-	self.app_version = [stream readString];
-	self.date_created = [stream readInt];
-	self.date_active = [stream readInt];
-	self.ip = [stream readString];
-	self.country = [stream readString];
-	self.region = [stream readString];
+	super.n_hash = [stream readLong];
+	super.flags = [stream readInt];
+	super.device_model = [stream readString];
+	super.platform = [stream readString];
+	super.system_version = [stream readString];
+	super.api_id = [stream readInt];
+	super.app_name = [stream readString];
+	super.app_version = [stream readString];
+	super.date_created = [stream readInt];
+	super.date_active = [stream readInt];
+	super.ip = [stream readString];
+	super.country = [stream readString];
+	super.region = [stream readString];
 }
         
 -(TL_authorization *)copy {
@@ -18437,8 +18437,8 @@
 	[stream writeString:self.email_unconfirmed_pattern];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.n_salt = [stream readByteArray];
-	self.email_unconfirmed_pattern = [stream readString];
+	super.n_salt = [stream readByteArray];
+	super.email_unconfirmed_pattern = [stream readString];
 }
         
 -(TL_account_noPassword *)copy {
@@ -18487,11 +18487,11 @@
 	[stream writeString:self.email_unconfirmed_pattern];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.current_salt = [stream readByteArray];
-	self.n_salt = [stream readByteArray];
-	self.hint = [stream readString];
-	self.has_recovery = [stream readBool];
-	self.email_unconfirmed_pattern = [stream readString];
+	super.current_salt = [stream readByteArray];
+	super.n_salt = [stream readByteArray];
+	super.hint = [stream readString];
+	super.has_recovery = [stream readBool];
+	super.email_unconfirmed_pattern = [stream readString];
 }
         
 -(TL_account_password *)copy {
@@ -18539,7 +18539,7 @@
 	[stream writeString:self.email];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.email = [stream readString];
+	super.email = [stream readString];
 }
         
 -(TL_account_passwordSettings *)copy {
@@ -18591,11 +18591,11 @@
 	if(self.flags & (1 << 1)) {[stream writeString:self.email];}
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.flags = [stream readInt];
-	if(self.flags & (1 << 0)) {self.n_salt = [stream readByteArray];}
-	if(self.flags & (1 << 0)) {self.n_password_hash = [stream readByteArray];}
-	if(self.flags & (1 << 0)) {self.hint = [stream readString];}
-	if(self.flags & (1 << 1)) {self.email = [stream readString];}
+	super.flags = [stream readInt];
+	if(self.flags & (1 << 0)) {super.n_salt = [stream readByteArray];}
+	if(self.flags & (1 << 0)) {super.n_password_hash = [stream readByteArray];}
+	if(self.flags & (1 << 0)) {super.hint = [stream readString];}
+	if(self.flags & (1 << 1)) {super.email = [stream readString];}
 }
         
 -(TL_account_passwordInputSettings *)copy {
@@ -18667,7 +18667,7 @@
 	[stream writeString:self.email_pattern];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.email_pattern = [stream readString];
+	super.email_pattern = [stream readString];
 }
         
 -(TL_auth_passwordRecovery *)copy {
@@ -18713,8 +18713,8 @@
 	[stream writeInt:self.flags];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.n_id = [stream readInt];
-	self.flags = [stream readInt];
+	super.n_id = [stream readInt];
+	super.flags = [stream readInt];
 }
         
 -(TL_receivedNotifyMessage *)copy {
@@ -18799,7 +18799,7 @@
 	[stream writeString:self.link];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.link = [stream readString];
+	super.link = [stream readString];
 }
         
 -(TL_chatInviteExported *)copy {
@@ -18893,12 +18893,12 @@
 	[stream writeString:self.title];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.flags = [stream readInt];
+	super.flags = [stream readInt];
 	
 	
 	
 	
-	self.title = [stream readString];
+	super.title = [stream readString];
 }
         
 -(TL_chatInvite *)copy {
@@ -18997,8 +18997,8 @@
 	[stream writeLong:self.access_hash];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.n_id = [stream readLong];
-	self.access_hash = [stream readLong];
+	super.n_id = [stream readLong];
+	super.access_hash = [stream readLong];
 }
         
 -(TL_inputStickerSetID *)copy {
@@ -19039,7 +19039,7 @@
 	[stream writeString:self.short_name];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.short_name = [stream readString];
+	super.short_name = [stream readString];
 }
         
 -(TL_inputStickerSetShortName *)copy {
@@ -19101,16 +19101,16 @@
 	[stream writeInt:self.n_hash];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.flags = [stream readInt];
+	super.flags = [stream readInt];
 	
 	
 	
-	self.n_id = [stream readLong];
-	self.access_hash = [stream readLong];
-	self.title = [stream readString];
-	self.short_name = [stream readString];
-	self.n_count = [stream readInt];
-	self.n_hash = [stream readInt];
+	super.n_id = [stream readLong];
+	super.access_hash = [stream readLong];
+	super.title = [stream readString];
+	super.short_name = [stream readString];
+	super.n_count = [stream readInt];
+	super.n_hash = [stream readInt];
 }
         
 -(TL_stickerSet *)copy {
@@ -19267,8 +19267,8 @@
 	[stream writeString:self.n_description];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.command = [stream readString];
-	self.n_description = [stream readString];
+	super.command = [stream readString];
+	super.n_description = [stream readString];
 }
         
 -(TL_botCommand *)copy {
@@ -19370,10 +19370,10 @@
 	}
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.user_id = [stream readInt];
-	self.version = [stream readInt];
-	self.share_text = [stream readString];
-	self.n_description = [stream readString];
+	super.user_id = [stream readInt];
+	super.version = [stream readInt];
+	super.share_text = [stream readString];
+	super.n_description = [stream readString];
 	//UNS FullVector
 	[stream readInt];
 	{
@@ -19435,7 +19435,7 @@
 	[stream writeString:self.text];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.text = [stream readString];
+	super.text = [stream readString];
 }
         
 -(TL_keyboardButton *)copy {
@@ -19547,7 +19547,7 @@
 	
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.flags = [stream readInt];
+	super.flags = [stream readInt];
 	
 }
         
@@ -19595,7 +19595,7 @@
 	
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.flags = [stream readInt];
+	super.flags = [stream readInt];
 	
 	
 }
@@ -19660,7 +19660,7 @@
 	}
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.flags = [stream readInt];
+	super.flags = [stream readInt];
 	
 	
 	
@@ -19771,7 +19771,7 @@
 	[stream writeString:self.text];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.text = [stream readString];
+	super.text = [stream readString];
 }
         
 -(TL_help_appChangelog *)copy {
@@ -19817,8 +19817,8 @@
 	[stream writeInt:self.length];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.offset = [stream readInt];
-	self.length = [stream readInt];
+	super.offset = [stream readInt];
+	super.length = [stream readInt];
 }
         
 -(TL_messageEntityUnknown *)copy {
@@ -19861,8 +19861,8 @@
 	[stream writeInt:self.length];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.offset = [stream readInt];
-	self.length = [stream readInt];
+	super.offset = [stream readInt];
+	super.length = [stream readInt];
 }
         
 -(TL_messageEntityMention *)copy {
@@ -19905,8 +19905,8 @@
 	[stream writeInt:self.length];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.offset = [stream readInt];
-	self.length = [stream readInt];
+	super.offset = [stream readInt];
+	super.length = [stream readInt];
 }
         
 -(TL_messageEntityHashtag *)copy {
@@ -19949,8 +19949,8 @@
 	[stream writeInt:self.length];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.offset = [stream readInt];
-	self.length = [stream readInt];
+	super.offset = [stream readInt];
+	super.length = [stream readInt];
 }
         
 -(TL_messageEntityBotCommand *)copy {
@@ -19993,8 +19993,8 @@
 	[stream writeInt:self.length];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.offset = [stream readInt];
-	self.length = [stream readInt];
+	super.offset = [stream readInt];
+	super.length = [stream readInt];
 }
         
 -(TL_messageEntityUrl *)copy {
@@ -20037,8 +20037,8 @@
 	[stream writeInt:self.length];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.offset = [stream readInt];
-	self.length = [stream readInt];
+	super.offset = [stream readInt];
+	super.length = [stream readInt];
 }
         
 -(TL_messageEntityEmail *)copy {
@@ -20081,8 +20081,8 @@
 	[stream writeInt:self.length];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.offset = [stream readInt];
-	self.length = [stream readInt];
+	super.offset = [stream readInt];
+	super.length = [stream readInt];
 }
         
 -(TL_messageEntityBold *)copy {
@@ -20125,8 +20125,8 @@
 	[stream writeInt:self.length];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.offset = [stream readInt];
-	self.length = [stream readInt];
+	super.offset = [stream readInt];
+	super.length = [stream readInt];
 }
         
 -(TL_messageEntityItalic *)copy {
@@ -20169,8 +20169,8 @@
 	[stream writeInt:self.length];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.offset = [stream readInt];
-	self.length = [stream readInt];
+	super.offset = [stream readInt];
+	super.length = [stream readInt];
 }
         
 -(TL_messageEntityCode *)copy {
@@ -20215,9 +20215,9 @@
 	[stream writeString:self.language];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.offset = [stream readInt];
-	self.length = [stream readInt];
-	self.language = [stream readString];
+	super.offset = [stream readInt];
+	super.length = [stream readInt];
+	super.language = [stream readString];
 }
         
 -(TL_messageEntityPre *)copy {
@@ -20263,9 +20263,9 @@
 	[stream writeString:self.url];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.offset = [stream readInt];
-	self.length = [stream readInt];
-	self.url = [stream readString];
+	super.offset = [stream readInt];
+	super.length = [stream readInt];
+	super.url = [stream readString];
 }
         
 -(TL_messageEntityTextUrl *)copy {
@@ -20353,8 +20353,8 @@
 	[stream writeLong:self.access_hash];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.channel_id = [stream readInt];
-	self.access_hash = [stream readLong];
+	super.channel_id = [stream readInt];
+	super.access_hash = [stream readLong];
 }
         
 -(TL_inputChannel *)copy {
@@ -20497,8 +20497,8 @@
 	[stream writeInt:self.max_id];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.min_id = [stream readInt];
-	self.max_id = [stream readInt];
+	super.min_id = [stream readInt];
+	super.max_id = [stream readInt];
 }
         
 -(TL_messageRange *)copy {
@@ -20549,10 +20549,10 @@
 	[stream writeInt:self.date];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.min_id = [stream readInt];
-	self.max_id = [stream readInt];
-	self.n_count = [stream readInt];
-	self.date = [stream readInt];
+	super.min_id = [stream readInt];
+	super.max_id = [stream readInt];
+	super.n_count = [stream readInt];
+	super.date = [stream readInt];
 }
         
 -(TL_messageGroup *)copy {
@@ -20605,10 +20605,10 @@
 	if(self.flags & (1 << 1)) {[stream writeInt:self.timeout];}
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.flags = [stream readInt];
+	super.flags = [stream readInt];
 	
-	self.pts = [stream readInt];
-	if(self.flags & (1 << 1)) {self.timeout = [stream readInt];}
+	super.pts = [stream readInt];
+	if(self.flags & (1 << 1)) {super.timeout = [stream readInt];}
 }
         
 -(TL_updates_channelDifferenceEmpty *)copy {
@@ -20708,15 +20708,15 @@
 	}
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.flags = [stream readInt];
+	super.flags = [stream readInt];
 	
-	self.pts = [stream readInt];
-	if(self.flags & (1 << 1)) {self.timeout = [stream readInt];}
-	self.top_message = [stream readInt];
-	self.top_important_message = [stream readInt];
-	self.read_inbox_max_id = [stream readInt];
-	self.unread_count = [stream readInt];
-	self.unread_important_count = [stream readInt];
+	super.pts = [stream readInt];
+	if(self.flags & (1 << 1)) {super.timeout = [stream readInt];}
+	super.top_message = [stream readInt];
+	super.top_important_message = [stream readInt];
+	super.read_inbox_max_id = [stream readInt];
+	super.unread_count = [stream readInt];
+	super.unread_important_count = [stream readInt];
 	//UNS FullVector
 	[stream readInt];
 	{
@@ -20867,10 +20867,10 @@
 	}
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.flags = [stream readInt];
+	super.flags = [stream readInt];
 	
-	self.pts = [stream readInt];
-	if(self.flags & (1 << 1)) {self.timeout = [stream readInt];}
+	super.pts = [stream readInt];
+	if(self.flags & (1 << 1)) {super.timeout = [stream readInt];}
 	//UNS FullVector
 	[stream readInt];
 	{
@@ -21038,7 +21038,7 @@
 	}
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.flags = [stream readInt];
+	super.flags = [stream readInt];
 	
 	//UNS FullVector
 	[stream readInt];
@@ -21143,8 +21143,8 @@
 	[stream writeInt:self.date];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.user_id = [stream readInt];
-	self.date = [stream readInt];
+	super.user_id = [stream readInt];
+	super.date = [stream readInt];
 }
         
 -(TL_channelParticipant *)copy {
@@ -21189,9 +21189,9 @@
 	[stream writeInt:self.date];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.user_id = [stream readInt];
-	self.inviter_id = [stream readInt];
-	self.date = [stream readInt];
+	super.user_id = [stream readInt];
+	super.inviter_id = [stream readInt];
+	super.date = [stream readInt];
 }
         
 -(TL_channelParticipantSelf *)copy {
@@ -21237,9 +21237,9 @@
 	[stream writeInt:self.date];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.user_id = [stream readInt];
-	self.inviter_id = [stream readInt];
-	self.date = [stream readInt];
+	super.user_id = [stream readInt];
+	super.inviter_id = [stream readInt];
+	super.date = [stream readInt];
 }
         
 -(TL_channelParticipantModerator *)copy {
@@ -21285,9 +21285,9 @@
 	[stream writeInt:self.date];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.user_id = [stream readInt];
-	self.inviter_id = [stream readInt];
-	self.date = [stream readInt];
+	super.user_id = [stream readInt];
+	super.inviter_id = [stream readInt];
+	super.date = [stream readInt];
 }
         
 -(TL_channelParticipantEditor *)copy {
@@ -21333,9 +21333,9 @@
 	[stream writeInt:self.date];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.user_id = [stream readInt];
-	self.kicked_by = [stream readInt];
-	self.date = [stream readInt];
+	super.user_id = [stream readInt];
+	super.kicked_by = [stream readInt];
+	super.date = [stream readInt];
 }
         
 -(TL_channelParticipantKicked *)copy {
@@ -21377,7 +21377,7 @@
 	[stream writeInt:self.user_id];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.user_id = [stream readInt];
+	super.user_id = [stream readInt];
 }
         
 -(TL_channelParticipantCreator *)copy {
@@ -21731,7 +21731,7 @@
 	}
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.n_count = [stream readInt];
+	super.n_count = [stream readInt];
 	//UNS FullVector
 	[stream readInt];
 	{
@@ -21881,9 +21881,9 @@
 	[ClassStore TLSerialize:self.body stream:stream];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.msg_id = [stream readLong];
-	self.seqno = [stream readInt];
-	self.bytes = [stream readInt];
+	super.msg_id = [stream readLong];
+	super.seqno = [stream readInt];
+	super.bytes = [stream readInt];
 	self.body = [ClassStore TLDeserialize:stream];
 }
         
@@ -21996,7 +21996,7 @@
 	[stream writeData:self.nonce];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.nonce = [stream readData:16];
+	super.nonce = [stream readData:16];
 }
         
 -(TL_req_pq *)copy {
@@ -22054,9 +22054,9 @@
 	}
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.nonce = [stream readData:16];
-	self.server_nonce = [stream readData:16];
-	self.pq = [stream readByteArray];
+	super.nonce = [stream readData:16];
+	super.server_nonce = [stream readData:16];
+	super.pq = [stream readByteArray];
 	//UNS ShortVector
 	[stream readInt];
 	{
@@ -22124,12 +22124,12 @@
 	[stream writeInt:self.server_time];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.nonce = [stream readData:16];
-	self.server_nonce = [stream readData:16];
-	self.g = [stream readInt];
-	self.dh_prime = [stream readByteArray];
-	self.g_a = [stream readByteArray];
-	self.server_time = [stream readInt];
+	super.nonce = [stream readData:16];
+	super.server_nonce = [stream readData:16];
+	super.g = [stream readInt];
+	super.dh_prime = [stream readByteArray];
+	super.g_a = [stream readByteArray];
+	super.server_time = [stream readInt];
 }
         
 -(TL_server_DH_inner_data *)copy {
@@ -22188,12 +22188,12 @@
 	[stream writeData:self.n_nonce];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.pq = [stream readByteArray];
-	self.p = [stream readByteArray];
-	self.q = [stream readByteArray];
-	self.nonce = [stream readData:16];
-	self.server_nonce = [stream readData:16];
-	self.n_nonce = [stream readData:32];
+	super.pq = [stream readByteArray];
+	super.p = [stream readByteArray];
+	super.q = [stream readByteArray];
+	super.nonce = [stream readData:16];
+	super.server_nonce = [stream readData:16];
+	super.n_nonce = [stream readData:32];
 }
         
 -(TL_p_q_inner_data *)copy {
@@ -22252,12 +22252,12 @@
 	[stream writeByteArray:self.encrypted_data];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.nonce = [stream readData:16];
-	self.server_nonce = [stream readData:16];
-	self.p = [stream readByteArray];
-	self.q = [stream readByteArray];
-	self.public_key_fingerprint = [stream readLong];
-	self.encrypted_data = [stream readByteArray];
+	super.nonce = [stream readData:16];
+	super.server_nonce = [stream readData:16];
+	super.p = [stream readByteArray];
+	super.q = [stream readByteArray];
+	super.public_key_fingerprint = [stream readLong];
+	super.encrypted_data = [stream readByteArray];
 }
         
 -(TL_req_DH_params *)copy {
@@ -22306,9 +22306,9 @@
 	[stream writeData:self.n_nonce_hash];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.nonce = [stream readData:16];
-	self.server_nonce = [stream readData:16];
-	self.n_nonce_hash = [stream readData:16];
+	super.nonce = [stream readData:16];
+	super.server_nonce = [stream readData:16];
+	super.n_nonce_hash = [stream readData:16];
 }
         
 -(TL_server_DH_params_fail *)copy {
@@ -22354,9 +22354,9 @@
 	[stream writeByteArray:self.encrypted_answer];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.nonce = [stream readData:16];
-	self.server_nonce = [stream readData:16];
-	self.encrypted_answer = [stream readByteArray];
+	super.nonce = [stream readData:16];
+	super.server_nonce = [stream readData:16];
+	super.encrypted_answer = [stream readByteArray];
 }
         
 -(TL_server_DH_params_ok *)copy {
@@ -22408,10 +22408,10 @@
 	[stream writeByteArray:self.g_b];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.nonce = [stream readData:16];
-	self.server_nonce = [stream readData:16];
-	self.retry_id = [stream readLong];
-	self.g_b = [stream readByteArray];
+	super.nonce = [stream readData:16];
+	super.server_nonce = [stream readData:16];
+	super.retry_id = [stream readLong];
+	super.g_b = [stream readByteArray];
 }
         
 -(TL_client_DH_inner_data *)copy {
@@ -22462,9 +22462,9 @@
 	[stream writeByteArray:self.encrypted_data];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.nonce = [stream readData:16];
-	self.server_nonce = [stream readData:16];
-	self.encrypted_data = [stream readByteArray];
+	super.nonce = [stream readData:16];
+	super.server_nonce = [stream readData:16];
+	super.encrypted_data = [stream readByteArray];
 }
         
 -(TL_set_client_DH_params *)copy {
@@ -22510,9 +22510,9 @@
 	[stream writeData:self.n_nonce_hash1];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.nonce = [stream readData:16];
-	self.server_nonce = [stream readData:16];
-	self.n_nonce_hash1 = [stream readData:16];
+	super.nonce = [stream readData:16];
+	super.server_nonce = [stream readData:16];
+	super.n_nonce_hash1 = [stream readData:16];
 }
         
 -(TL_dh_gen_ok *)copy {
@@ -22558,9 +22558,9 @@
 	[stream writeData:self.n_nonce_hash2];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.nonce = [stream readData:16];
-	self.server_nonce = [stream readData:16];
-	self.n_nonce_hash2 = [stream readData:16];
+	super.nonce = [stream readData:16];
+	super.server_nonce = [stream readData:16];
+	super.n_nonce_hash2 = [stream readData:16];
 }
         
 -(TL_dh_gen_retry *)copy {
@@ -22606,9 +22606,9 @@
 	[stream writeData:self.n_nonce_hash3];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.nonce = [stream readData:16];
-	self.server_nonce = [stream readData:16];
-	self.n_nonce_hash3 = [stream readData:16];
+	super.nonce = [stream readData:16];
+	super.server_nonce = [stream readData:16];
+	super.n_nonce_hash3 = [stream readData:16];
 }
         
 -(TL_dh_gen_fail *)copy {
@@ -22654,7 +22654,7 @@
 	[stream writeLong:self.ping_id];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.ping_id = [stream readLong];
+	super.ping_id = [stream readLong];
 }
         
 -(TL_ping *)copy {
@@ -22696,8 +22696,8 @@
 	[stream writeLong:self.ping_id];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.msg_id = [stream readLong];
-	self.ping_id = [stream readLong];
+	super.msg_id = [stream readLong];
+	super.ping_id = [stream readLong];
 }
         
 -(TL_pong *)copy {
@@ -22746,9 +22746,9 @@
 	[stream writeInt:self.error_code];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.bad_msg_id = [stream readLong];
-	self.bad_msg_seqno = [stream readInt];
-	self.error_code = [stream readInt];
+	super.bad_msg_id = [stream readLong];
+	super.bad_msg_seqno = [stream readInt];
+	super.error_code = [stream readInt];
 }
         
 -(TL_bad_msg_notification *)copy {
@@ -22796,10 +22796,10 @@
 	[stream writeLong:self.new_server_salt];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.bad_msg_id = [stream readLong];
-	self.bad_msg_seqno = [stream readInt];
-	self.error_code = [stream readInt];
-	self.new_server_salt = [stream readLong];
+	super.bad_msg_id = [stream readLong];
+	super.bad_msg_seqno = [stream readInt];
+	super.error_code = [stream readInt];
+	super.new_server_salt = [stream readLong];
 }
         
 -(TL_bad_server_salt *)copy {
@@ -22850,9 +22850,9 @@
 	[stream writeLong:self.server_salt];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.first_msg_id = [stream readLong];
-	self.unique_id = [stream readLong];
-	self.server_salt = [stream readLong];
+	super.first_msg_id = [stream readLong];
+	super.unique_id = [stream readLong];
+	super.server_salt = [stream readLong];
 }
         
 -(TL_new_session_created *)copy {
@@ -22900,7 +22900,7 @@
 	[ClassStore TLSerialize:self.result stream:stream];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.req_msg_id = [stream readLong];
+	super.req_msg_id = [stream readLong];
 	self.result = [ClassStore TLDeserialize:stream];
 }
         
@@ -22948,8 +22948,8 @@
 	[stream writeString:self.error_message];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.error_code = [stream readInt];
-	self.error_message = [stream readString];
+	super.error_code = [stream readInt];
+	super.error_message = [stream readString];
 }
         
 -(TL_rpc_error *)copy {
@@ -22996,8 +22996,8 @@
 	[stream writeByteArray:self.e];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.n = [stream readByteArray];
-	self.e = [stream readByteArray];
+	super.n = [stream readByteArray];
+	super.e = [stream readByteArray];
 }
         
 -(TL_rsa_public_key *)copy {
@@ -23108,7 +23108,7 @@
 	[stream writeLong:self.req_msg_id];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.req_msg_id = [stream readLong];
+	super.req_msg_id = [stream readLong];
 }
         
 -(TL_rpc_drop_answer *)copy {
@@ -23232,9 +23232,9 @@
 	[stream writeInt:self.bytes];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.msg_id = [stream readLong];
-	self.seq_no = [stream readInt];
-	self.bytes = [stream readInt];
+	super.msg_id = [stream readLong];
+	super.seq_no = [stream readInt];
+	super.bytes = [stream readInt];
 }
         
 -(TL_rpc_answer_dropped *)copy {
@@ -23280,7 +23280,7 @@
 	[stream writeInt:self.num];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.num = [stream readInt];
+	super.num = [stream readInt];
 }
         
 -(TL_get_future_salts *)copy {
@@ -23333,8 +23333,8 @@
 	}
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.req_msg_id = [stream readLong];
-	self.now = [stream readInt];
+	super.req_msg_id = [stream readLong];
+	super.now = [stream readInt];
 	//UNS ShortVector (custom class) //TODO
 	{
 		if(!self.salts)
@@ -23397,9 +23397,9 @@
 	[stream writeLong:self.salt];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.valid_since = [stream readInt];
-	self.valid_until = [stream readInt];
-	self.salt = [stream readLong];
+	super.valid_since = [stream readInt];
+	super.valid_until = [stream readInt];
+	super.salt = [stream readLong];
 }
         
 -(TL_future_salt *)copy {
@@ -23445,7 +23445,7 @@
 	[stream writeLong:self.session_id];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.session_id = [stream readLong];
+	super.session_id = [stream readLong];
 }
         
 -(TL_destroy_session *)copy {
@@ -23485,7 +23485,7 @@
 	[stream writeLong:self.session_id];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.session_id = [stream readLong];
+	super.session_id = [stream readLong];
 }
         
 -(TL_destroy_session_ok *)copy {
@@ -23525,7 +23525,7 @@
 	[stream writeLong:self.session_id];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.session_id = [stream readLong];
+	super.session_id = [stream readLong];
 }
         
 -(TL_destroy_session_none *)copy {
@@ -23609,7 +23609,7 @@
 	[stream writeByteArray:self.packed_data];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.packed_data = [stream readByteArray];
+	super.packed_data = [stream readByteArray];
 }
         
 -(TL_gzip_packed *)copy {
@@ -23657,9 +23657,9 @@
 	[stream writeInt:self.max_wait];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.max_delay = [stream readInt];
-	self.wait_after = [stream readInt];
-	self.max_wait = [stream readInt];
+	super.max_delay = [stream readInt];
+	super.wait_after = [stream readInt];
+	super.max_wait = [stream readInt];
 }
         
 -(TL_http_wait *)copy {
@@ -23773,8 +23773,8 @@
 	[stream writeByteArray:self.info];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.req_msg_id = [stream readLong];
-	self.info = [stream readByteArray];
+	super.req_msg_id = [stream readLong];
+	super.info = [stream readByteArray];
 }
         
 -(TL_msgs_state_info *)copy {
@@ -23844,7 +23844,7 @@
 			[self.msg_ids addObject:@(obj)];
 		}
 	}
-	self.info = [stream readByteArray];
+	super.info = [stream readByteArray];
 }
         
 -(TL_msgs_all_info *)copy {
@@ -23895,10 +23895,10 @@
 	[stream writeInt:self.status];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.msg_id = [stream readLong];
-	self.answer_msg_id = [stream readLong];
-	self.bytes = [stream readInt];
-	self.status = [stream readInt];
+	super.msg_id = [stream readLong];
+	super.answer_msg_id = [stream readLong];
+	super.bytes = [stream readInt];
+	super.status = [stream readInt];
 }
         
 -(TL_msg_detailed_info *)copy {
@@ -23945,9 +23945,9 @@
 	[stream writeInt:self.status];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.answer_msg_id = [stream readLong];
-	self.bytes = [stream readInt];
-	self.status = [stream readInt];
+	super.answer_msg_id = [stream readLong];
+	super.bytes = [stream readInt];
+	super.status = [stream readInt];
 }
         
 -(TL_msg_new_detailed_info *)copy {

@@ -1450,13 +1450,21 @@ static NSTextAttachment *headerMediaIcon() {
     }
     
     if(hide) {
-        hide = self.historyController.prevState == ChatHistoryStateFull;
-    }
-    
-    
-    if(self.jumpToBottomButton.isHidden != hide) {
-        [self.jumpToBottomButton setHidden:hide];
-        [self jumpToBottomButtonDisplay];
+        [self.historyController prevStateAsync:^(ChatHistoryState state) {
+            
+            BOOL h = hide || state == ChatHistoryStateFull;
+            
+            if(self.jumpToBottomButton.isHidden != h) {
+                [self.jumpToBottomButton setHidden:h];
+                [self jumpToBottomButtonDisplay];
+            }
+            
+        }];
+    } else {
+        if(self.jumpToBottomButton.isHidden != hide) {
+            [self.jumpToBottomButton setHidden:hide];
+            [self jumpToBottomButtonDisplay];
+        }
     }
     
 }
@@ -2937,6 +2945,14 @@ static NSTextAttachment *headerMediaIcon() {
 
 - (void)sendMessage {
     NSString *message = [self.bottomView.inputMessageString trim];
+    
+    
+    NSCharacterSet *set = [NSCharacterSet whitespaceCharacterSet];
+    if ([[message stringByTrimmingCharactersInSet: set] length] == 0)
+    {
+        return;
+    }
+    
     
 #ifdef  TGDEBUG
     if([message isEqualToString:@"send100messages"]) {

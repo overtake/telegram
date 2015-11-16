@@ -76,8 +76,7 @@
                         currentChat.migrated_to = newChat.migrated_to;
                         
                         if(currentChat.isDeactivated && currentChat.migrated_to.channel_id != 0) {
-                            if(currentChat.dialog)
-                                [Notification perform:DIALOG_DELETE data:@{KEY_DIALOG:currentChat.dialog}];
+                            [[DialogsManager sharedManager] completeDeleteConversation:nil dialog:currentChat.dialog];
                         }
                     }
                     

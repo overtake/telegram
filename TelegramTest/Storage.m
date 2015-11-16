@@ -2173,14 +2173,15 @@ TL_localMessage *parseMessage(FMResultSet *result) {
         if(includeMuted) {
             unread_count = [db intForQuery:@"select sum(unread_count) from dialogs where unread_count > 0 and unread_count < 100000"];
             
+            
             unread_count+=[db intForQuery:[NSString stringWithFormat:@"select sum(unread_count) from %@ where is_invisible = 0 and unread_count > 0 and unread_count < 100000",tableChannelDialogs]];
+            
+            
         } else {
             unread_count = [db intForQuery:@"select sum(unread_count) from dialogs where unread_count > 0 and unread_count < 100000 and (mute_until == 0 OR mute_until < ?)",@([[MTNetwork instance] getTime])];
             
             unread_count+=[db intForQuery:[NSString stringWithFormat:@"select sum(unread_count) from %@ where is_invisible = 0 and unread_count > 0 and unread_count < 100000 and (mute_until == 0 OR mute_until < ?)",tableChannelDialogs],@([[MTNetwork instance] getTime])];
         }
-        
-        
         
         dispatch_async(dispatch_get_main_queue(), ^{
             if(completeHandler) completeHandler(unread_count);

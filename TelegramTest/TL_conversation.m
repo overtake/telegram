@@ -192,6 +192,23 @@
     return NSLocalizedString(@"Bot.Start", nil);
 }
 
+
+-(int)unread_count {
+    if(self.chat.isDeactivated || self.chat.migrated_to.channel_id != 0) {
+        return 0;
+    }
+    
+    return [super unread_count];
+}
+
+-(int)unread_important_count {
+    if(self.chat.isDeactivated || self.chat.migrated_to.channel_id != 0) {
+        return 0;
+    }
+    
+    return [super unread_important_count];
+}
+
 - (void)save {
     if(self.top_message && self.fake)
         self.fake = NO;

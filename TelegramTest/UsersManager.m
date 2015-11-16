@@ -187,6 +187,9 @@
                 newUser.first_name =  NSLocalizedString(@"User.Deleted", nil);
             }
             
+            
+           
+            
             BOOL needUpdateUserInDB = NO;
             if(currentUser) {
                 BOOL isNeedRebuildNames = NO;

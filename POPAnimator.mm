@@ -462,8 +462,16 @@ static void stopAndCleanup(POPAnimator *self, POPAnimatorItemRef item, bool shou
 - (void)_renderTime:(CFTimeInterval)time item:(POPAnimatorItemRef)item
 {
   id obj = item->object;
+    
   POPAnimation *anim = item->animation;
   POPAnimationState *state = POPAnimationGetState(anim);
+    
+    if(state->repeatCount > 1 || state->repeatForever) {
+        
+        [obj pop_removeAllAnimations];
+        
+        return;
+    }
 
   if (nil == obj) {
     // object exists not; stop animating

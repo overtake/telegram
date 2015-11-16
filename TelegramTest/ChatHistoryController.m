@@ -247,6 +247,36 @@ static ChatHistoryController *observer;
     return filter.prevState;
 }
 
+
+-(void)prevStateAsync:(void (^)(ChatHistoryState state))block {
+    
+    [ASQueue dispatchOnStageQueue:^{
+        
+        ChatHistoryState state = self.prevState;
+        
+        [ASQueue dispatchOnMainQueue:^{
+            
+            block(state);
+            
+        }];
+        
+    }];
+    
+}
+-(void)nextStateAsync:(void (^)(ChatHistoryState state))block {
+    [ASQueue dispatchOnStageQueue:^{
+        
+        ChatHistoryState state = self.nextState;
+        
+        [ASQueue dispatchOnMainQueue:^{
+            
+            block(state);
+            
+        }];
+        
+    }];
+}
+
 -(ChatHistoryState)nextState {
     HistoryFilter *filter = self.filter;
     return filter.nextState;

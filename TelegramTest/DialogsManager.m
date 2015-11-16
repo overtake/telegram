@@ -396,6 +396,37 @@
     return [self->list indexOfObject:dialog];
 }
 
+
+-(void)completeDeleteConversation:(dispatch_block_t)completeHandler dialog:(TL_conversation *)dialog {
+   
+    [[Storage manager] deleteDialog:dialog completeHandler:^{
+        [self.queue dispatchOnQueue:^{
+            
+            [Notification perform:DIALOG_DELETE data:@{KEY_DIALOG:dialog}];
+            
+            [Notification perform:MESSAGE_FLUSH_HISTORY data:@{KEY_DIALOG:dialog}];
+            
+            [self->list removeObject:dialog];
+            [self->keys removeObjectForKey:@(dialog.peer_id)];
+            
+            [[ChannelsManager sharedManager] removeObjectWithKey:@(dialog.peer_id)];
+            
+            [MessagesManager updateUnreadBadge];
+            
+            if(dialog.chat != nil) {
+                [[FullChatManager sharedManager] removeObjectWithKey:@(dialog.chat.n_id)];
+                [[ChatsManager sharedManager] removeObjectWithKey:@(dialog.chat.n_id)];
+            }
+            
+            
+        }];
+        
+        if(completeHandler)
+            completeHandler();
+    }];
+    
+}
+
 - (void)deleteDialog:(TL_conversation *)dialog completeHandler:(dispatch_block_t)completeHandler {
     if(dialog == nil) {
         ELog(@"dialog is nil, check this");
@@ -405,31 +436,7 @@
     dispatch_block_t newBlock = ^{
         
         dispatch_block_t block = ^{
-            [[Storage manager] deleteDialog:dialog completeHandler:^{
-                [self.queue dispatchOnQueue:^{
-                    
-                    [Notification perform:DIALOG_DELETE data:@{KEY_DIALOG:dialog}];
-                    
-                    [Notification perform:MESSAGE_FLUSH_HISTORY data:@{KEY_DIALOG:dialog}];
-                    
-                    [self->list removeObject:dialog];
-                    [self->keys removeObjectForKey:@(dialog.peer_id)];
-                    
-                    [[ChannelsManager sharedManager] removeObjectWithKey:@(dialog.peer_id)];
-                    
-                    [MessagesManager updateUnreadBadge];
-                    
-                    if(dialog.chat != nil) {
-                        [[FullChatManager sharedManager] removeObjectWithKey:@(dialog.chat.n_id)];
-                        [[ChatsManager sharedManager] removeObjectWithKey:@(dialog.chat.n_id)];
-                    }
-                    
-                    
-                }];
-               
-                if(completeHandler)
-                    completeHandler();
-            }];
+            [self completeDeleteConversation:completeHandler dialog:dialog];
         };
         
         if(dialog.type != DialogTypeSecretChat && dialog.type != DialogTypeBroadcast && dialog.type != DialogTypeChannel)
