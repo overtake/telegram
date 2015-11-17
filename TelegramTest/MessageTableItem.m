@@ -264,6 +264,9 @@ static NSTextAttachment *channelIconAttachment() {
             viewSize.height += FORWARMESSAGE_TITLE_HEIGHT;
     }
     
+    if(viewSize.height < 0)
+        viewSize.height = 32;
+    
     
     return viewSize;
 }
