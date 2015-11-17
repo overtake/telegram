@@ -407,7 +407,7 @@
     
     int uppgradeCount = ACCEPT_FEATURE ? 5 : maxChatUsers();
     
-    if(self.participantsRange.length >= uppgradeCount && _chat.isCreator) {
+    if(self.participantsRange.length >= uppgradeCount && _chat.isCreator && ACCEPT_FEATURE) {
         
        [_tableView addItem:[[TGGeneralRowItem alloc] initWithHeight:20] tableRedraw:YES];
         

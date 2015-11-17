@@ -154,11 +154,7 @@ static const int controlsHeight = 75;
     
     self.zoomControl = [[TGPVZoomControl alloc] initWithFrame:NSMakeRect(50, 16, 200, controlsHeight)];
     
-    
-    
-    [self.contentView addSubview:self.zoomControl];
-    
-    
+     [self.contentView addSubview:self.zoomControl];
 }
 
 
@@ -323,8 +319,6 @@ static const int controlsHeight = 75;
                     
                     pos = MAX(index - 1, 0);
                     
-//                    if(index != 0)
-//                        pos--;
                     
                     if(pos >= ([self listCount] - 1)) {
                         pos = [self listCount] - 1;
@@ -523,6 +517,7 @@ static TGPhotoViewer *viewer;
     _behavior = [[TGPVUserBehavior alloc] initWithConversation:_conversation commonItem:item];
     [_behavior setUser:user];
     
+    _isReversed = YES;
     
     [ASQueue dispatchOnStageQueue:^{
         
@@ -687,7 +682,7 @@ static TGPhotoViewer *viewer;
     
      [_zoomControl setHidden:[_currentItem.previewObject.reservedObject isKindOfClass:[NSDictionary class]]];
     
-    if(_list.count > 1) {
+    if(_list.count > 1 && !_waitRequest) {
         int rcurrent = _isReversed ? _totalCount - (int)_currentItemId : (int)_currentItemId;
         if((next && (rcurrent <= 15 )) || (!next && ( rcurrent >= (_totalCount - 15)))) {
              _waitRequest = YES;
