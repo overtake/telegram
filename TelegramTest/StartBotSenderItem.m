@@ -41,7 +41,7 @@
 
 -(void)performRequest {
     
-    id request = [TLAPI_messages_startBot createWithBot:_bot.inputUser chat_id:[self.conversation.chat isKindOfClass:[TL_channel class]] ? self.conversation.chat.n_id : 0 random_id:self.message.randomId start_param:_startParam];
+    id request = [TLAPI_messages_startBot createWithBot:_bot.inputUser peer:self.conversation.inputPeer random_id:self.message.randomId start_param:_startParam];
     
     self.rpc_request = [RPCRequest sendRequest:request successHandler:^(RPCRequest *request, TLUpdates * response) {
         

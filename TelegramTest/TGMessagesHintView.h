@@ -13,9 +13,9 @@
 
 
 
--(void)showCommandsHintsWithQuery:(NSString *)query botInfo:(NSArray *)botInfo choiceHandler:(void (^)(NSString *result))choiceHandler;
--(void)showHashtagHintsWithQuery:(NSString *)query peer_id:(int)peer_id choiceHandler:(void (^)(NSString *result))choiceHandler;
--(void)showMentionPopupWithQuery:(NSString *)query chat:(TLChat *)chat choiceHandler:(void (^)(NSString *result))choiceHandler;
+-(void)showCommandsHintsWithQuery:(NSString *)query conversation:(TL_conversation *)conversation botInfo:(NSArray *)botInfo choiceHandler:(void (^)(NSString *result))choiceHandler;
+-(void)showHashtagHintsWithQuery:(NSString *)query conversation:(TL_conversation *)conversation peer_id:(int)peer_id choiceHandler:(void (^)(NSString *result))choiceHandler;
+-(void)showMentionPopupWithQuery:(NSString *)query conversation:(TL_conversation *)conversation chat:(TLChat *)chat choiceHandler:(void (^)(NSString *result))choiceHandler;
 
 -(void)selectNext;
 -(void)selectPrev;

@@ -2,7 +2,7 @@
 //  TLApi.m
 //  Telegram
 //
-//  Auto created by Mikhail Filimonov on 16.11.15..
+//  Auto created by Mikhail Filimonov on 17.11.15..
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -1880,18 +1880,18 @@
 @end
 
 @implementation TLAPI_messages_startBot
-+(TLAPI_messages_startBot*)createWithBot:(TLInputUser*)bot chat_id:(int)chat_id random_id:(long)random_id start_param:(NSString*)start_param {
++(TLAPI_messages_startBot*)createWithBot:(TLInputUser*)bot peer:(TLInputPeer*)peer random_id:(long)random_id start_param:(NSString*)start_param {
     TLAPI_messages_startBot* obj = [[TLAPI_messages_startBot alloc] init];
     obj.bot = bot;
-	obj.chat_id = chat_id;
+	obj.peer = peer;
 	obj.random_id = random_id;
 	obj.start_param = start_param;
     return obj;
 }
 - (NSData*)getData {
-	SerializedData* stream = [ClassStore streamWithConstuctor:457052156];
+	SerializedData* stream = [ClassStore streamWithConstuctor:-421563528];
 	[ClassStore TLSerialize:self.bot stream:stream];
-	[stream writeInt:self.chat_id];
+	[ClassStore TLSerialize:self.peer stream:stream];
 	[stream writeLong:self.random_id];
 	[stream writeString:self.start_param];
 	return [stream getOutput];
@@ -2438,21 +2438,6 @@
 }
 @end
 
-@implementation TLAPI_messages_deactivateChat
-+(TLAPI_messages_deactivateChat*)createWithChat_id:(int)chat_id enabled:(Boolean)enabled {
-    TLAPI_messages_deactivateChat* obj = [[TLAPI_messages_deactivateChat alloc] init];
-    obj.chat_id = chat_id;
-	obj.enabled = enabled;
-    return obj;
-}
-- (NSData*)getData {
-	SerializedData* stream = [ClassStore streamWithConstuctor:1651444545];
-	[stream writeInt:self.chat_id];
-	[stream writeBool:self.enabled];
-	return [stream getOutput];
-}
-@end
-
 @implementation TLAPI_messages_migrateChat
 +(TLAPI_messages_migrateChat*)createWithChat_id:(int)chat_id {
     TLAPI_messages_migrateChat* obj = [[TLAPI_messages_migrateChat alloc] init];
@@ -2462,6 +2447,27 @@
 - (NSData*)getData {
 	SerializedData* stream = [ClassStore streamWithConstuctor:363051235];
 	[stream writeInt:self.chat_id];
+	return [stream getOutput];
+}
+@end
+
+@implementation TLAPI_messages_searchGlobal
++(TLAPI_messages_searchGlobal*)createWithQ:(NSString*)q offset_date:(int)offset_date offset_peer:(TLInputPeer*)offset_peer offset_id:(int)offset_id limit:(int)limit {
+    TLAPI_messages_searchGlobal* obj = [[TLAPI_messages_searchGlobal alloc] init];
+    obj.q = q;
+	obj.offset_date = offset_date;
+	obj.offset_peer = offset_peer;
+	obj.offset_id = offset_id;
+	obj.limit = limit;
+    return obj;
+}
+- (NSData*)getData {
+	SerializedData* stream = [ClassStore streamWithConstuctor:-1640190800];
+	[stream writeString:self.q];
+	[stream writeInt:self.offset_date];
+	[ClassStore TLSerialize:self.offset_peer stream:stream];
+	[stream writeInt:self.offset_id];
+	[stream writeInt:self.limit];
 	return [stream getOutput];
 }
 @end

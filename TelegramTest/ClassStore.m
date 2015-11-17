@@ -3,7 +3,7 @@
 //  ClassStore.m
 //  Telegram
 //
-    //  Created by keepcoder on 16.11.15.
+    //  Created by keepcoder on 17.11.15.
 //  Copyright (c) 2015 keepcoder. All rights reserved.
 //
 
@@ -221,7 +221,7 @@ static NSMutableDictionary *cs_constuctors;
    [cs_classes setObject:[TL_messageActionChatEditTitle class] forKey:[NSNumber numberWithInt:-1247687078]];
    [cs_classes setObject:[TL_messageActionChatEditPhoto class] forKey:[NSNumber numberWithInt:2144015272]];
    [cs_classes setObject:[TL_messageActionChatDeletePhoto class] forKey:[NSNumber numberWithInt:-1780220945]];
-   [cs_classes setObject:[TL_messageActionChatAddUser class] forKey:[NSNumber numberWithInt:1581055051]];
+   [cs_classes setObject:[TL_messageActionChatAddUser class] forKey:[NSNumber numberWithInt:1217033015]];
    [cs_classes setObject:[TL_messageActionChatDeleteUser class] forKey:[NSNumber numberWithInt:-1297179892]];
    [cs_classes setObject:[TL_dialog class] forKey:[NSNumber numberWithInt:-1042448310]];
    [cs_classes setObject:[TL_photoEmpty class] forKey:[NSNumber numberWithInt:590459437]];
@@ -512,8 +512,6 @@ static NSMutableDictionary *cs_constuctors;
    [cs_classes setObject:[TL_updateChatAdmins class] forKey:[NSNumber numberWithInt:1855224129]];
    [cs_classes setObject:[TL_updateChatParticipantAdmin class] forKey:[NSNumber numberWithInt:-1232070311]];
    [cs_classes setObject:[TL_messageActionChatMigrateTo class] forKey:[NSNumber numberWithInt:1371385889]];
-   [cs_classes setObject:[TL_messageActionChatDeactivate class] forKey:[NSNumber numberWithInt:1689067688]];
-   [cs_classes setObject:[TL_messageActionChatActivate class] forKey:[NSNumber numberWithInt:1085115570]];
    [cs_classes setObject:[TL_messageActionChannelMigrateFrom class] forKey:[NSNumber numberWithInt:-1336546578]];
    [cs_classes setObject:[TL_channelParticipantsBots class] forKey:[NSNumber numberWithInt:-1328445861]];
    [cs_classes setObject:[TL_userSelf class] forKey:[NSNumber numberWithInt:476112392]];
@@ -536,6 +534,7 @@ static NSMutableDictionary *cs_constuctors;
    [cs_classes setObject:[TL_chat_old38 class] forKey:[NSNumber numberWithInt:1930607688]];
    [cs_classes setObject:[TL_channelFull_old39 class] forKey:[NSNumber numberWithInt:-88925533]];
    [cs_classes setObject:[TL_chatParticipants_old39 class] forKey:[NSNumber numberWithInt:2017571861]];
+   [cs_classes setObject:[TL_messageActionChatAddUser_old40 class] forKey:[NSNumber numberWithInt:1581055051]];
    [cs_classes setObject:[TL_proto_message class] forKey:[NSNumber numberWithInt:1538843921]];
    [cs_classes setObject:[TL_msg_container class] forKey:[NSNumber numberWithInt:1945237724]];
    [cs_classes setObject:[TL_req_pq class] forKey:[NSNumber numberWithInt:1615239032]];

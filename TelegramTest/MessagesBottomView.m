@@ -922,7 +922,7 @@ static RBLPopover *popover;
             [RPCRequest sendRequest:[TLAPI_channels_joinChannel createWithChannel:weakSelf.dialog.chat.inputPeer] successHandler:^(RPCRequest *request, id response) {
                 
                 
-                TL_localMessage *msg = [TL_localMessageService createWithFlags:TGMENTIONMESSAGE n_id:0 from_id:[UsersManager currentUserId] to_id:weakSelf.dialog.peer date:[[MTNetwork instance] getTime] action:([TL_messageActionChatAddUser createWithUser_id:[UsersManager currentUserId]]) fakeId:[MessageSender getFakeMessageId] randomId:rand_long() dstate:DeliveryStateNormal];
+                TL_localMessage *msg = [TL_localMessageService createWithFlags:TGMENTIONMESSAGE n_id:0 from_id:[UsersManager currentUserId] to_id:weakSelf.dialog.peer date:[[MTNetwork instance] getTime] action:([TL_messageActionChatAddUser createWithUsers:[@[@([UsersManager currentUserId])] mutableCopy]]) fakeId:[MessageSender getFakeMessageId] randomId:rand_long() dstate:DeliveryStateNormal];
                 
                 [MessagesManager addAndUpdateMessage:msg];
                 
@@ -1278,18 +1278,18 @@ static RBLPopover *popover;
         if(type == 1) {
             if(self.dialog.type == DialogTypeChat || self.dialog.type == DialogTypeChannel) {
                 
-                [self.messagesViewController.hintView showMentionPopupWithQuery:search chat:self.dialog.chat choiceHandler:callback];
+                [self.messagesViewController.hintView showMentionPopupWithQuery:search conversation:self.dialog chat:self.dialog.chat choiceHandler:callback];
                 
             }
             
         } else if(type == 2) {
             
-            [self.messagesViewController.hintView showHashtagHintsWithQuery:search peer_id:self.dialog.peer_id choiceHandler:callback];
+            [self.messagesViewController.hintView showHashtagHintsWithQuery:search conversation:self.dialog peer_id:self.dialog.peer_id choiceHandler:callback];
             
         } else if(type == 3 && [self.inputMessageTextField.string rangeOfString:@"/"].location == 0) {
             if([_dialog.user isBot] || _dialog.fullChat.bot_info != nil) {
                 
-                [self.messagesViewController.hintView showCommandsHintsWithQuery:search botInfo:_userFull ? @[_userFull.bot_info] : _dialog.fullChat.bot_info choiceHandler:^(NSString *command) {
+                [self.messagesViewController.hintView showCommandsHintsWithQuery:search conversation:self.dialog botInfo:_userFull ? @[_userFull.bot_info] : _dialog.fullChat.bot_info choiceHandler:^(NSString *command) {
                     callback(command);
                     [self sendButtonAction];
                 }];

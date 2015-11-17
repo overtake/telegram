@@ -2,7 +2,7 @@
 //  TLApi.h
 //  Telegram
 //
-//  Auto created by Mikhail Filimonov on 16.11.15.
+//  Auto created by Mikhail Filimonov on 17.11.15.
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -797,11 +797,11 @@
 
 @interface TLAPI_messages_startBot : TLApiObject
 @property (nonatomic, strong) TLInputUser* bot;
-@property int chat_id;
+@property (nonatomic, strong) TLInputPeer* peer;
 @property long random_id;
 @property (nonatomic, strong) NSString* start_param;
 
-+(TLAPI_messages_startBot*)createWithBot:(TLInputUser*)bot chat_id:(int)chat_id random_id:(long)random_id start_param:(NSString*)start_param;
++(TLAPI_messages_startBot*)createWithBot:(TLInputUser*)bot peer:(TLInputPeer*)peer random_id:(long)random_id start_param:(NSString*)start_param;
 @end
 
 @interface TLAPI_help_getAppChangelog : TLApiObject
@@ -1026,16 +1026,19 @@
 +(TLAPI_messages_editChatAdmin*)createWithChat_id:(int)chat_id user_id:(TLInputUser*)user_id is_admin:(Boolean)is_admin;
 @end
 
-@interface TLAPI_messages_deactivateChat : TLApiObject
-@property int chat_id;
-@property Boolean enabled;
-
-+(TLAPI_messages_deactivateChat*)createWithChat_id:(int)chat_id enabled:(Boolean)enabled;
-@end
-
 @interface TLAPI_messages_migrateChat : TLApiObject
 @property int chat_id;
 
 +(TLAPI_messages_migrateChat*)createWithChat_id:(int)chat_id;
+@end
+
+@interface TLAPI_messages_searchGlobal : TLApiObject
+@property (nonatomic, strong) NSString* q;
+@property int offset_date;
+@property (nonatomic, strong) TLInputPeer* offset_peer;
+@property int offset_id;
+@property int limit;
+
++(TLAPI_messages_searchGlobal*)createWithQ:(NSString*)q offset_date:(int)offset_date offset_peer:(TLInputPeer*)offset_peer offset_id:(int)offset_id limit:(int)limit;
 @end
 

@@ -243,7 +243,7 @@ DYNAMIC_PROPERTY(DUser);
 
 
 
--(void)showCommandsHintsWithQuery:(NSString *)query botInfo:(NSArray *)botInfo choiceHandler:(void (^)(NSString *result))choiceHandler  {
+-(void)showCommandsHintsWithQuery:(NSString *)query conversation:(TL_conversation *)conversation botInfo:(NSArray *)botInfo choiceHandler:(void (^)(NSString *result))choiceHandler  {
     
     _choiceHandler = choiceHandler;
     
@@ -257,7 +257,7 @@ DYNAMIC_PROPERTY(DUser);
             
             NSString *cmd = command.command;
             
-            if([Telegram conversation].type == DialogTypeChat && (user.flags & TGUSERFLAGREADHISTORY) != TGUSERFLAGREADHISTORY) {
+            if((conversation.type == DialogTypeChat || conversation.type == DialogTypeChannel) && (user.flags & TGUSERFLAGREADHISTORY) != TGUSERFLAGREADHISTORY) {
                 cmd = [cmd stringByAppendingString:[NSString stringWithFormat:@"@%@",user.username]];
             }
             
@@ -296,7 +296,7 @@ DYNAMIC_PROPERTY(DUser);
     
 }
 
--(void)showHashtagHintsWithQuery:(NSString *)query peer_id:(int)peer_id choiceHandler:(void (^)(NSString *result))choiceHandler {
+-(void)showHashtagHintsWithQuery:(NSString *)query conversation:(TL_conversation *)conversation peer_id:(int)peer_id choiceHandler:(void (^)(NSString *result))choiceHandler {
     
     _choiceHandler = choiceHandler;
     
@@ -350,7 +350,7 @@ DYNAMIC_PROPERTY(DUser);
    
 }
 
--(void)showMentionPopupWithQuery:(NSString *)query chat:(TLChat *)chat choiceHandler:(void (^)(NSString *result))choiceHandler {
+-(void)showMentionPopupWithQuery:(NSString *)query conversation:(TL_conversation *)conversation chat:(TLChat *)chat choiceHandler:(void (^)(NSString *result))choiceHandler {
    
     _choiceHandler = choiceHandler;
     

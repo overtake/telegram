@@ -14,6 +14,27 @@
 #import "TGDateUtils.h"
 @implementation MessagesUtils
 
+
++(NSString *)joinUsersByUsers:(NSArray *)users {
+    __block NSString *resUsers;
+    
+    [users enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        TLUser *userAdd = [[UsersManager sharedManager] find:[obj intValue]];
+        
+        
+        resUsers = [NSString stringWithFormat:@"%@",[userAdd fullName]];
+        
+        if(idx != users.count -1 ) {
+            resUsers = [resUsers stringByAppendingString:@", "];
+        }
+        
+        
+    }];
+
+    return resUsers;
+    
+}
+
 +(NSString *)serviceMessage:(TL_localMessage *)message forAction:(TLMessageAction *)action {
     
     TLUser *user = [[UsersManager sharedManager] find:message.from_id];
@@ -27,19 +48,21 @@
     } else if([action isKindOfClass:[TL_messageActionChatAddUser class]]) {
         
         if(message.isChannelMessage) {
-            text = NSLocalizedString(@"MessageAction.Service.InvitedYouToChannel",nil);
+            
+            if(action.users.count == 1 && [action.users[0] intValue] == [UsersManager currentUserId]) {
+                text = NSLocalizedString(@"MessageAction.Service.InvitedYouToChannel",nil);
+            } else {
+                
+                text = [NSString stringWithFormat:NSLocalizedString(@"MessageAction.ServiceMessage.InvitedGroup", nil), [user fullName], [self joinUsersByUsers:action.users]];
+            }
+
             if(message.from_id == [UsersManager currentUserId]) {
                 text = NSLocalizedString(@"MessageAction.Service.YouChoinedToChannel", nil);
             }
-        } else {
-            TLUser *userAdd = [[UsersManager sharedManager] find:action.user_id];
-            if(action.user_id != message.from_id) {
-                text = [NSString stringWithFormat:NSLocalizedString(@"MessageAction.ServiceMessage.InvitedGroup", nil), [user fullName], [userAdd fullName]];
-            } else {
-                text = [NSString stringWithFormat:NSLocalizedString(@"MessageAction.ServiceMessage.JoinedGroup", nil), [user fullName]];
-            }
             
-            text = [NSString stringWithFormat:NSLocalizedString(@"MessageAction.ServiceMessage.InvitedGroup", nil), [user fullName], [userAdd fullName]];
+        } else {
+            
+            text = [NSString stringWithFormat:NSLocalizedString(@"MessageAction.ServiceMessage.InvitedGroup", nil), [user fullName], [self joinUsersByUsers:action.users]];
         }
         
         
@@ -169,7 +192,7 @@
     if(message) {
         
         NSString *msgText = @"";
-        TLUser *userSecond = nil;
+        NSMutableArray *users = [NSMutableArray array];
         TLUser *userLast;
         NSString *chatUserNameString;
         
@@ -212,18 +235,28 @@
             } else if([action isKindOfClass:[TL_messageActionChatAddUser class]]) {
                 
                 if(message.isChannelMessage) {
-                     msgText = NSLocalizedString(@"MessageAction.Service.InvitedYouToChannel",nil);
+                    
+                    if(action.users.count == 1 && [action.users[0] intValue] == [UsersManager currentUserId]) {
+                        msgText = NSLocalizedString(@"MessageAction.Service.InvitedYouToChannel",nil);
+                    } else {
+                        
+                        msgText = NSLocalizedString(@"MessageAction.Service.InvitedGroup", nil);
+                    }
+                    
+                    [users addObjectsFromArray:action.users];
+                    
                     if(message.from_id  == [UsersManager currentUserId]) {
                         msgText = NSLocalizedString(@"MessageAction.Service.YouChoinedToChannel", nil);
                     }
                 } else {
-                    userSecond = [[UsersManager sharedManager] find:action.user_id];
+                    
                     if(action.user_id == message.from_id) {
-                        userSecond = nil;
                         msgText = NSLocalizedString(@"MessageAction.Service.JoinedGroup", nil);
                     } else {
                         msgText = NSLocalizedString(@"MessageAction.Service.InvitedGroup", nil);
+                        [users addObject:@(action.user_id)];
                     }
+                    
                 }
                 
                 
@@ -234,7 +267,8 @@
             } else if([action isKindOfClass:[TL_messageActionChatDeleteUser class]]) {
                 
                 if(action.user_id != message.from_id) {
-                    userSecond = [[UsersManager sharedManager] find:action.user_id];
+                    
+                    [users addObject:@(action.user_id)];
                     
                     msgText = NSLocalizedString(@"MessageAction.Service.KickedGroup", nil);
                 } else {
@@ -289,8 +323,10 @@
             [messageText appendString:msgText withColor:GRAY_TEXT_COLOR];
         }
         
-        if(userSecond) {
-            [messageText appendString:[NSString stringWithFormat:@" %@", userSecond.fullName] withColor:GRAY_TEXT_COLOR];
+        NSString *joinUsers = [self joinUsersByUsers:users];
+        
+        if(joinUsers.length > 0) {
+            [messageText appendString:[NSString stringWithFormat:@" %@",joinUsers] withColor:GRAY_TEXT_COLOR];
         }
         
     } else {
@@ -326,7 +362,7 @@
     TLUser *user = [[UsersManager sharedManager] find:message.from_id];
     
     NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] init];
-    TLUser *user2;
+    NSMutableArray *users = [NSMutableArray array];
     NSString *actionText;
     
     NSString *title;
@@ -347,13 +383,38 @@
     } else if([action isKindOfClass:[TL_messageActionChatAddUser class]]) {
         
         if(message.isChannelMessage) {
-             actionText = NSLocalizedString(@"MessageAction.Service.InvitedYouToChannel",nil);
+            
+            if(action.users.count == 1 && [action.users[0] intValue] == [UsersManager currentUserId]) {
+               actionText = NSLocalizedString(@"MessageAction.Service.InvitedYouToChannel",nil);
+            } else {
+                
+                [action.users enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                    TLUser *user = [[UsersManager sharedManager] find:[obj intValue]];
+                    
+                    if(user != nil) {
+                        [users addObject:user];
+                    }
+                }];
+                
+                actionText = NSLocalizedString(@"MessageAction.Service.Invited",nil);
+                
+            }
+            
+           
             if(message.from_id  == [UsersManager currentUserId]) {
                 actionText = NSLocalizedString(@"MessageAction.Service.YouChoinedToChannel", nil);
             }
         } else {
             if(action.user_id != message.from_id) {
-                user2 = [[UsersManager sharedManager] find:action.user_id];
+                
+                [action.users enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                    TLUser *user = [[UsersManager sharedManager] find:[obj intValue]];
+                    
+                    if(user != nil) {
+                        [users addObject:user];
+                    }
+                }];
+                
                 actionText = NSLocalizedString(@"MessageAction.Service.InvitedGroup",nil);
             } else {
                 actionText = NSLocalizedString(@"MessageAction.Service.JoinedGroup", nil);
@@ -369,7 +430,13 @@
     } else if([action isKindOfClass:[TL_messageActionChatDeleteUser class]]) {
         
         if(action.user_id != message.from_id) {
-            user2  = [[UsersManager sharedManager] find:action.user_id];
+            
+            TLUser *user = [[UsersManager sharedManager] find:action.user_id];
+            
+            if(user != nil) {
+                [users addObject:user];
+            }
+            
             actionText = NSLocalizedString(@"MessageAction.Service.KickedGroup",nil);
         } else {
             actionText = NSLocalizedString(@"MessageAction.Service.LeftGroup",nil);
@@ -430,12 +497,23 @@
     start = [attributedString appendString:[NSString stringWithFormat:@" %@ ", actionText] withColor:NSColorFromRGB(0xaeaeae)];
     [attributedString setFont:TGSystemFont(size) forRange:start];
     
-    if(user2) {
-        start = [attributedString appendString:[user2 fullName] withColor:LINK_COLOR];
-        [attributedString setLink:[TMInAppLinks userProfile:user2.n_id] forRange:start];
-        [attributedString setFont:TGSystemMediumFont(size) forRange:start];
+    if(users.count > 0) {
+        
+        [users enumerateObjectsUsingBlock:^(TLUser *obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            
+            NSRange start = [attributedString appendString:[obj fullName] withColor:LINK_COLOR];
+            [attributedString setLink:[TMInAppLinks userProfile:obj.n_id] forRange:start];
+            [attributedString setFont:TGSystemMediumFont(size) forRange:start];
+            
+            if(idx != users.count -1) {
+                [attributedString appendString:@", " withColor:NSColorFromRGB(0xaeaeae)];
+            }
+            
+        }];
+        
     }
     
+
     if(title) {
         start = [attributedString appendString:[NSString stringWithFormat:@"\"%@\"", title] withColor:NSColorFromRGB(0xaeaeae)];
         [attributedString setFont:TGSystemMediumFont(size) forRange:start];

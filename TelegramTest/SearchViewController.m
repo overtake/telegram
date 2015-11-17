@@ -852,7 +852,7 @@ static int insertCount = 3;
                 
             }
             
-            if((self.type & SearchTypeGlobalUsers) == SearchTypeGlobalUsers && searchParams.searchString.length >= 5) {
+            if((self.type & SearchTypeGlobalUsers) == SearchTypeGlobalUsers) {
                 
                 searchParams.globalUsers = [[NSMutableArray alloc] init];
                 

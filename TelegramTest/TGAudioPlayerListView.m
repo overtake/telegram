@@ -191,10 +191,8 @@ static long h_r_l;
 
 -(void)setConversation:(TL_conversation *)conversation {
     _conversation = conversation;
-    
- 
-    
     [self reload];
+
 }
 
 
@@ -202,6 +200,7 @@ static long h_r_l;
     
     if(_conversation) {
         _list = @[];
+        [_tableView removeAllItems:YES];
         _fullItems = [[NSMutableArray alloc] init];
         _h_controller = [[ChatHistoryController alloc] initWithController:self historyFilter:[MP3HistoryFilter class]];
         [_searchRow.searchField setStringValue:@""];
@@ -212,6 +211,7 @@ static long h_r_l;
         [_tableView removeAllItems:YES];
         _fullItems = nil;
         _list = nil;
+        _h_controller = nil;
     }
     
     [self check];
@@ -325,6 +325,12 @@ static long h_r_l;
 
 -(void)reloadData {
     [_tableView redrawAll];
+}
+
+-(void)close {
+    _conversation = nil;
+    [_h_controller drop:YES];
+    _h_controller = nil;
 }
 
 -(void)selectNext {

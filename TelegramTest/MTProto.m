@@ -2,7 +2,7 @@
 //  MTProto.m
 //  Telegram
 //
-//  Auto created by Mikhail Filimonov on 16.11.15.
+//  Auto created by Mikhail Filimonov on 17.11.15.
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -6166,23 +6166,45 @@
 @end
 
 @implementation TL_messageActionChatAddUser
-+(TL_messageActionChatAddUser*)createWithUser_id:(int)user_id {
++(TL_messageActionChatAddUser*)createWithUsers:(NSMutableArray*)users {
 	TL_messageActionChatAddUser* obj = [[TL_messageActionChatAddUser alloc] init];
-	obj.user_id = user_id;
+	obj.users = users;
 	return obj;
 }
 -(void)serialize:(SerializedData*)stream {
-	[stream writeInt:self.user_id];
+	//Serialize ShortVector
+	[stream writeInt:0x1cb5c415];
+	{
+		NSInteger tl_count = [self.users count];
+		[stream writeInt:(int)tl_count];
+		for(int i = 0; i < (int)tl_count; i++) {
+            if([self.users count] > i) {
+                NSNumber* obj = [self.users objectAtIndex:i];
+			[stream writeInt:[obj intValue]];
+            }  else
+                break;
+		}
+	}
 }
 -(void)unserialize:(SerializedData*)stream {
-	super.user_id = [stream readInt];
+	//UNS ShortVector
+	[stream readInt];
+	{
+		if(!self.users)
+			self.users = [[NSMutableArray alloc] init];
+		int tl_count = [stream readInt];
+		for(int i = 0; i < tl_count; i++) {
+			int obj = [stream readInt];
+			[self.users addObject:@(obj)];
+		}
+	}
 }
         
 -(TL_messageActionChatAddUser *)copy {
     
     TL_messageActionChatAddUser *objc = [[TL_messageActionChatAddUser alloc] init];
     
-    objc.user_id = self.user_id;
+    objc.users = [self.users copy];
     
     return objc;
 }
@@ -6365,86 +6387,6 @@
         
 @end
 
-@implementation TL_messageActionChatDeactivate
-+(TL_messageActionChatDeactivate*)create {
-	TL_messageActionChatDeactivate* obj = [[TL_messageActionChatDeactivate alloc] init];
-	
-	return obj;
-}
--(void)serialize:(SerializedData*)stream {
-	
-}
--(void)unserialize:(SerializedData*)stream {
-	
-}
-        
--(TL_messageActionChatDeactivate *)copy {
-    
-    TL_messageActionChatDeactivate *objc = [[TL_messageActionChatDeactivate alloc] init];
-    
-    
-    
-    return objc;
-}
-    
--(id)initWithCoder:(NSCoder *)aDecoder {
-
-    if((self = [ClassStore deserialize:[aDecoder decodeObjectForKey:@"data"]])) {
-        
-    }
-    
-    return self;
-}
-        
--(void)encodeWithCoder:(NSCoder *)aCoder {
-    [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
-}
-
-        
-
-        
-@end
-
-@implementation TL_messageActionChatActivate
-+(TL_messageActionChatActivate*)create {
-	TL_messageActionChatActivate* obj = [[TL_messageActionChatActivate alloc] init];
-	
-	return obj;
-}
--(void)serialize:(SerializedData*)stream {
-	
-}
--(void)unserialize:(SerializedData*)stream {
-	
-}
-        
--(TL_messageActionChatActivate *)copy {
-    
-    TL_messageActionChatActivate *objc = [[TL_messageActionChatActivate alloc] init];
-    
-    
-    
-    return objc;
-}
-    
--(id)initWithCoder:(NSCoder *)aDecoder {
-
-    if((self = [ClassStore deserialize:[aDecoder decodeObjectForKey:@"data"]])) {
-        
-    }
-    
-    return self;
-}
-        
--(void)encodeWithCoder:(NSCoder *)aCoder {
-    [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
-}
-
-        
-
-        
-@end
-
 @implementation TL_messageActionChannelMigrateFrom
 +(TL_messageActionChannelMigrateFrom*)createWithTitle:(NSString*)title chat_id:(int)chat_id {
 	TL_messageActionChannelMigrateFrom* obj = [[TL_messageActionChannelMigrateFrom alloc] init];
@@ -6467,6 +6409,46 @@
     
     objc.title = self.title;
     objc.chat_id = self.chat_id;
+    
+    return objc;
+}
+    
+-(id)initWithCoder:(NSCoder *)aDecoder {
+
+    if((self = [ClassStore deserialize:[aDecoder decodeObjectForKey:@"data"]])) {
+        
+    }
+    
+    return self;
+}
+        
+-(void)encodeWithCoder:(NSCoder *)aCoder {
+    [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
+}
+
+        
+
+        
+@end
+
+@implementation TL_messageActionChatAddUser_old40
++(TL_messageActionChatAddUser_old40*)createWithUser_id:(int)user_id {
+	TL_messageActionChatAddUser_old40* obj = [[TL_messageActionChatAddUser_old40 alloc] init];
+	obj.user_id = user_id;
+	return obj;
+}
+-(void)serialize:(SerializedData*)stream {
+	[stream writeInt:self.user_id];
+}
+-(void)unserialize:(SerializedData*)stream {
+	super.user_id = [stream readInt];
+}
+        
+-(TL_messageActionChatAddUser_old40 *)copy {
+    
+    TL_messageActionChatAddUser_old40 *objc = [[TL_messageActionChatAddUser_old40 alloc] init];
+    
+    objc.user_id = self.user_id;
     
     return objc;
 }

@@ -2,7 +2,7 @@
 //  MTProto.h
 //  Telegram
 //
-//  Auto created by Mikhail Filimonov on 16.11.15.
+//  Auto created by Mikhail Filimonov on 17.11.15.
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -1116,7 +1116,7 @@
 +(TL_messageActionChatDeletePhoto*)create;
 @end
 @interface TL_messageActionChatAddUser : TLMessageAction<NSCoding>
-+(TL_messageActionChatAddUser*)createWithUser_id:(int)user_id;
++(TL_messageActionChatAddUser*)createWithUsers:(NSMutableArray*)users;
 @end
 @interface TL_messageActionChatDeleteUser : TLMessageAction<NSCoding>
 +(TL_messageActionChatDeleteUser*)createWithUser_id:(int)user_id;
@@ -1130,14 +1130,11 @@
 @interface TL_messageActionChatMigrateTo : TLMessageAction<NSCoding>
 +(TL_messageActionChatMigrateTo*)createWithChannel_id:(int)channel_id;
 @end
-@interface TL_messageActionChatDeactivate : TLMessageAction<NSCoding>
-+(TL_messageActionChatDeactivate*)create;
-@end
-@interface TL_messageActionChatActivate : TLMessageAction<NSCoding>
-+(TL_messageActionChatActivate*)create;
-@end
 @interface TL_messageActionChannelMigrateFrom : TLMessageAction<NSCoding>
 +(TL_messageActionChannelMigrateFrom*)createWithTitle:(NSString*)title chat_id:(int)chat_id;
+@end
+@interface TL_messageActionChatAddUser_old40 : TLMessageAction<NSCoding>
++(TL_messageActionChatAddUser_old40*)createWithUser_id:(int)user_id;
 @end
 	
 @interface TLDialog()
