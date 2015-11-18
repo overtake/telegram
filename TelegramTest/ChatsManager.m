@@ -76,7 +76,10 @@
                         currentChat.migrated_to = newChat.migrated_to;
                         
                         if(currentChat.isDeactivated && currentChat.migrated_to.channel_id != 0) {
-                            [[DialogsManager sharedManager] completeDeleteConversation:nil dialog:currentChat.dialog];
+                            [Notification perform:DIALOG_DELETE data:@{KEY_DIALOG:currentChat.dialog}];
+                            currentChat.dialog.unread_count = 0;
+                            [currentChat.dialog save];
+                            [MessagesManager updateUnreadBadge];
                         }
                     }
                     
