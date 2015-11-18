@@ -167,7 +167,7 @@
         
         NSBezierPath *path = [NSBezierPath bezierPath];
         
-        [path appendBezierPathWithRoundedRect:NSMakeRect(NSMinX(self.containerView.frame) + NSWidth(self.durationView.frame) + 3, NSMinY(self.containerView.frame) +  NSMinY(self.durationView.frame) + 2, 6, 6) xRadius:3 yRadius:3];
+        [path appendBezierPathWithRoundedRect:NSMakeRect(NSMinX(self.containerView.frame) + NSWidth(self.durationView.frame) + 3, NSMinY(self.containerView.frame) +  NSMinY(self.durationView.frame) + 4, 6, 6) xRadius:3 yRadius:3];
         
         [path fill];
     }
@@ -191,7 +191,7 @@
     }
     
     if(cellState == CellStateSending) {
-        [self.stateTextField setHidden:NO];
+        [self.stateTextField setHidden:self.item.message.fwd_from_id == nil];
     }
     
     if(cellState == CellStateNeedDownload) {

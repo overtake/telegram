@@ -400,10 +400,60 @@
         addMembersItem.textColor = BLUE_UI_COLOR;
     }
     
+     GeneralSettingsRowItem *exportInviteLink;
     
-    if(addMembersItem) {
+    if(_chat.isAdmin) {
+        exportInviteLink = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeNone callback:^(TGGeneralRowItem *item) {
+            
+            dispatch_block_t cblock = ^ {
+                
+                ChatExportLinkViewController *viewController = [[ChatExportLinkViewController alloc] initWithFrame:NSZeroRect];
+                
+                [viewController setChat:self.chat.chatFull];
+                
+                [self.navigationViewController pushViewController:viewController animated:YES];
+                
+            };
+            
+            
+            if([_chat.chatFull.exported_invite isKindOfClass:[TL_chatInviteExported class]]) {
+                
+                cblock();
+                
+            } else {
+                
+                [self showModalProgress];
+                
+                [RPCRequest sendRequest:[TLAPI_messages_exportChatInvite createWithChat_id:self.chat.n_id] successHandler:^(RPCRequest *request, TL_chatInviteExported *response) {
+                    
+                    [self hideModalProgressWithSuccess];
+                    
+                    _chat.chatFull.exported_invite = response;
+                    
+                    [[Storage manager] insertFullChat:self.chat.chatFull completeHandler:nil];
+                    
+                    cblock();
+                    
+                    
+                } errorHandler:^(RPCRequest *request, RpcError *error) {
+                    [self hideModalProgress];
+                } timeout:10];
+                
+            }
+
+            
+        } description:NSLocalizedString(@"Group.CopyExportChatInvite", nil) height:42 stateback:nil];
+    }
+    
+    if(exportInviteLink) {
+        [_tableView addItem:exportInviteLink tableRedraw:YES];
+    }
+    
+    if(addMembersItem || exportInviteLink) {
         [_tableView addItem:[[TGGeneralRowItem alloc] initWithHeight:20] tableRedraw:YES];
     }
+    
+    
     
     int uppgradeCount = ACCEPT_FEATURE ? 5 : maxChatUsers();
     

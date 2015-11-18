@@ -40,14 +40,14 @@
     TLUser *user = [[UsersManager sharedManager] find:message.from_id];
     NSString *text;
     if([action isKindOfClass:[TL_messageActionChatEditTitle class]]) {
-        text = [NSString stringWithFormat:NSLocalizedString(message.isChannelMessage ? @"MessageAction.ServiceMessage.ChangedChannelName" : @"MessageAction.ServiceMessage.ChangedChannelName", nil), message.isChannelMessage ? message.chat.title : [user fullName], action.title];
+        text = [NSString stringWithFormat:NSLocalizedString(message.isChannelMessage && !message.chat.isMegagroup  ? @"MessageAction.ServiceMessage.ChangedChannelName" : @"MessageAction.ServiceMessage.ChangedChannelName", nil), message.isChannelMessage ? message.chat.title : [user fullName], action.title];
     } else if([action isKindOfClass:[TL_messageActionChatDeletePhoto class]]) {
-        text = [NSString stringWithFormat:NSLocalizedString(message.isChannelMessage ? @"MessageAction.ServiceMessage.RemovedChannelPhoto" : @"MessageAction.ServiceMessage.RemovedGroupPhoto", nil), message.isChannelMessage ? message.chat.title : [user fullName]];
+        text = [NSString stringWithFormat:NSLocalizedString(message.isChannelMessage && !message.chat.isMegagroup  ? @"MessageAction.ServiceMessage.RemovedChannelPhoto" : @"MessageAction.ServiceMessage.RemovedGroupPhoto", nil), message.isChannelMessage && !message.chat.isMegagroup  ? message.chat.title : [user fullName]];
     } else if([action isKindOfClass:[TL_messageActionChatEditPhoto class]]) {
-        text = [NSString stringWithFormat:NSLocalizedString(message.isChannelMessage ? @"MessageAction.ServiceMessage.ChangedChannelPhoto" : @"MessageAction.ServiceMessage.ChangedGroupPhoto", nil), message.isChannelMessage ? message.chat.title : [user fullName]];
+        text = [NSString stringWithFormat:NSLocalizedString(message.isChannelMessage && !message.chat.isMegagroup  ? @"MessageAction.ServiceMessage.ChangedChannelPhoto" : @"MessageAction.ServiceMessage.ChangedGroupPhoto", nil), message.isChannelMessage && !message.chat.isMegagroup  ? message.chat.title : [user fullName]];
     } else if([action isKindOfClass:[TL_messageActionChatAddUser class]]) {
         
-        if(message.isChannelMessage) {
+        if(message.isChannelMessage && !message.chat.isMegagroup ) {
             
             if(action.users.count == 1 && [action.users[0] intValue] == [UsersManager currentUserId]) {
                 text = NSLocalizedString(@"MessageAction.Service.InvitedYouToChannel",nil);
@@ -227,14 +227,14 @@
             
             TLMessageAction *action = message.action;
             if([action isKindOfClass:[TL_messageActionChatEditTitle class]]) {
-                msgText =message.isChannelMessage ? NSLocalizedString(@"MessageAction.Service.ChannelGroupName", nil) : NSLocalizedString(@"MessageAction.Service.ChangedGroupName", nil);
+                msgText =message.isChannelMessage && !message.chat.isMegagroup  ? NSLocalizedString(@"MessageAction.Service.ChannelGroupName", nil) : NSLocalizedString(@"MessageAction.Service.ChangedGroupName", nil);
             } else if([action isKindOfClass:[TL_messageActionChatDeletePhoto class]]) {
-                msgText =message.isChannelMessage ? NSLocalizedString(@"MessageAction.Service.RemovedChannelPhoto", nil) : NSLocalizedString(@"MessageAction.Service.RemovedGroupPhoto", nil);
+                msgText =message.isChannelMessage && !message.chat.isMegagroup  ? NSLocalizedString(@"MessageAction.Service.RemovedChannelPhoto", nil) : NSLocalizedString(@"MessageAction.Service.RemovedGroupPhoto", nil);
             } else if([action isKindOfClass:[TL_messageActionChatEditPhoto class]]) {
-                 msgText =message.isChannelMessage ? NSLocalizedString(@"MessageAction.Service.ChangedChannelPhoto", nil) : NSLocalizedString(@"MessageAction.Service.ChangedGroupPhoto", nil);
+                 msgText =message.isChannelMessage && !message.chat.isMegagroup  ? NSLocalizedString(@"MessageAction.Service.ChangedChannelPhoto", nil) : NSLocalizedString(@"MessageAction.Service.ChangedGroupPhoto", nil);
             } else if([action isKindOfClass:[TL_messageActionChatAddUser class]]) {
                 
-                if(message.isChannelMessage) {
+                if(message.isChannelMessage && !message.chat.isMegagroup ) {
                     
                     if(action.users.count == 1 && [action.users[0] intValue] == [UsersManager currentUserId]) {
                         msgText = NSLocalizedString(@"MessageAction.Service.InvitedYouToChannel",nil);
@@ -250,11 +250,11 @@
                     }
                 } else {
                     
-                    if(action.user_id == message.from_id) {
+                    if(action.users.count == 1 && [action.users[0] intValue] == message.from_id) {
                         msgText = NSLocalizedString(@"MessageAction.Service.JoinedGroup", nil);
                     } else {
                         msgText = NSLocalizedString(@"MessageAction.Service.InvitedGroup", nil);
-                        [users addObject:@(action.user_id)];
+                        [users addObjectsFromArray:action.users];
                     }
                     
                 }
@@ -369,20 +369,20 @@
     
     if([action isKindOfClass:[TL_messageActionChatEditTitle class]]) {
         
-        actionText = NSLocalizedString(message.isChannelMessage ? @"MessageAction.Service.ChannelGroupName" : @"MessageAction.Service.ChangedGroupName",nil);
+        actionText = NSLocalizedString(message.isChannelMessage && !message.chat.isMegagroup ? @"MessageAction.Service.ChannelGroupName" : @"MessageAction.Service.ChangedGroupName",nil);
         title = action.title;
         
     } else if([action isKindOfClass:[TL_messageActionChatDeletePhoto class]]) {
         
-        actionText = NSLocalizedString(message.isChannelMessage ? @"MessageAction.Service.RemovedChannelPhoto" : @"MessageAction.Service.RemovedGroupPhoto",nil);
+        actionText = NSLocalizedString(message.isChannelMessage && !message.chat.isMegagroup  ? @"MessageAction.Service.RemovedChannelPhoto" : @"MessageAction.Service.RemovedGroupPhoto",nil);
         
     } else if([action isKindOfClass:[TL_messageActionChatEditPhoto class]]) {
         
-        actionText = NSLocalizedString(message.isChannelMessage ? @"MessageAction.Service.ChangedChannelPhoto" : @"MessageAction.Service.ChangedGroupPhoto",nil);
+        actionText = NSLocalizedString(message.isChannelMessage && !message.chat.isMegagroup  ? @"MessageAction.Service.ChangedChannelPhoto" : @"MessageAction.Service.ChangedGroupPhoto",nil);
         
     } else if([action isKindOfClass:[TL_messageActionChatAddUser class]]) {
         
-        if(message.isChannelMessage) {
+        if(message.isChannelMessage && !message.chat.isMegagroup ) {
             
             if(action.users.count == 1 && [action.users[0] intValue] == [UsersManager currentUserId]) {
                actionText = NSLocalizedString(@"MessageAction.Service.InvitedYouToChannel",nil);

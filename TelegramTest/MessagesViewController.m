@@ -2167,7 +2167,7 @@ static NSTextAttachment *headerMediaIcon() {
     
     TL_conversation *conversation = self.conversation;
     
-    __block TL_localMessage *msg = conversation.type == DialogTypeChannel && fromMsg == nil && ((flags & ShowMessageTypeUnreadMark) == 0 && (flags & ShowMessageTypeSearch) == 0) ? [[Storage manager] lastImportantMessageAroundMinId: message.hole ? channelMsgId(message.hole.min_id, message.peer_id) : message.channelMsgId] : [[Storage manager] messageById:message.hole ? message.hole.min_id : message.n_id inChannel:message.isChannelMessage];
+    __block TL_localMessage *msg = conversation.type == DialogTypeChannel && fromMsg == nil && ((flags & ShowMessageTypeUnreadMark) == 0 && (flags & ShowMessageTypeSearch) == 0) ? [[Storage manager] lastImportantMessageAroundMinId: message.hole ? channelMsgId(message.hole.min_id, message.peer_id) : message.channelMsgId] : [[Storage manager] messageById:message.hole ? message.hole.min_id : message.n_id inChannel:-message.to_id.channel_id];
     
     
     dispatch_block_t block = ^{
@@ -2280,6 +2280,12 @@ static NSTextAttachment *headerMediaIcon() {
     
     if(!msg) {
         
+        _needNextRequest = YES;
+        
+        [self flushMessages];
+        
+        
+        
         id request = [TLAPI_messages_getMessages createWithN_id:[@[@(message.n_id)] mutableCopy]];
         
         if(self.conversation.type == DialogTypeChannel) {
@@ -2287,6 +2293,8 @@ static NSTextAttachment *headerMediaIcon() {
         }
         
         [RPCRequest sendRequest:request successHandler:^(RPCRequest *request, TL_messages_messages * response) {
+            
+            _needNextRequest = NO;
             
             if(response.messages.count > 0 && ![response.messages[0] isKindOfClass:[TL_messageEmpty class]]) {
                 msg = [TL_localMessage convertReceivedMessage:response.messages[0]];

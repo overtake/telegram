@@ -116,10 +116,8 @@ typedef enum {
     [super loadView];
     weakify();
     
-    
     [self.view setAutoresizingMask:NSViewWidthSizable | NSViewHeightSizable];
 
-    
     self.contactsSeparator = [[SearchSeparatorItem alloc] initWithOneName:NSLocalizedString(@"Search.Separator.Contacts", nil) pluralName:NSLocalizedString(@"Search.Separator.Contacts", nil)];
     self.usersSeparator = [[SearchSeparatorItem alloc] initWithOneName:NSLocalizedString(@"Search.Separator.User", nil) pluralName:NSLocalizedString(@"Search.Separator.Users", nil)];
     self.messagesSeparator = [[SearchSeparatorItem alloc] initWithOneName:NSLocalizedString(@"Search.Separator.Messages", nil) pluralName:NSLocalizedString(@"Search.Separator.Messages", nil)];
@@ -175,8 +173,6 @@ typedef enum {
     [self.noResultsImageView setImage:image_noResults()];
     [self.noResultsImageView setAutoresizingMask:NSViewMaxXMargin | NSViewMaxYMargin | NSViewMinXMargin | NSViewMinYMargin | NSViewWidthSizable | NSViewHeightSizable];
    
-    
-    
     [self.noResultsView setCenterByView:self.view];
     [self.noResultsView addSubview:self.noResultsImageView];
     [self.noResultsView setAutoresizingMask:NSViewMaxXMargin | NSViewMaxYMargin | NSViewMinXMargin | NSViewMinYMargin | NSViewWidthSizable | NSViewHeightSizable];
@@ -189,8 +185,6 @@ typedef enum {
     [self.tableView addItem:[[SearchLoaderItem alloc] init] tableRedraw:NO];
     [self.tableView reloadData];
     [self.view addSubview:self.tableView.containerView];
-    
-    
     
     [Notification addObserver:self selector:@selector(notificationDialogSelectionChanged:) name:@"ChangeDialogSelection"];
     
@@ -222,8 +216,6 @@ typedef enum {
         }
     }
     
-    
-   // ;
 }
 
 
@@ -290,16 +282,12 @@ typedef enum {
         return res;
     }
     
-    
-    
     if(item && (![item isKindOfClass:[SearchSeparatorItem class]])) {
         TGConversationTableItem *searchItem = (TGConversationTableItem *)item;
         
         if(searchItem.conversation) {
             [[Telegram rightViewController] modalViewSendAction:searchItem.conversation];
-        } //else if(searchItem.user) {
-           // [[Telegram rightViewController] modalViewSendAction:[[DialogsManager sharedManager] findByUserId:searchItem.user.n_id]];
-       // }
+        }
     }
 
     return NO;
@@ -564,7 +552,12 @@ static int insertCount = 3;
     
     self.searchParams.isLoading = YES;
     
-    [RPCRequest sendRequest:[TLAPI_messages_search createWithFlags:0 peer:[TL_inputPeerEmpty create] q:params.searchString filter:[TL_inputMessagesFilterEmpty create] min_date:0 max_date:0 offset:params.remote_offset max_id:0 limit:50] successHandler:^(RPCRequest *request, TL_messages_messagesSlice *response) {
+    //createWithFlags:0 peer:[TL_inputPeerEmpty create] q:params.searchString filter:[TL_inputMessagesFilterEmpty create] min_date:0 max_date:0 offset:params.remote_offset max_id:0 limit:50
+    
+    int offset_id = [(TL_localMessage *)[params.messages lastObject] n_id];
+    int offset_date = [(TL_localMessage *)[params.messages lastObject] date];
+    
+    [RPCRequest sendRequest:[TLAPI_messages_searchGlobal createWithQ:params.searchString offset_date:offset_date offset_peer:[TL_inputPeerEmpty create] offset_id:offset_id limit:50] successHandler:^(RPCRequest *request, TL_messages_messagesSlice *response) {
 
         
         if(params != self.searchParams)

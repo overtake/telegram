@@ -283,7 +283,7 @@
     
     converted = [self sortItems:converted];
     
-    state = next && (self.controller.conversation.type == DialogTypeSecretChat || self.controller.conversation.type == DialogTypeBroadcast) ? ChatHistoryStateFull : state;
+    state = next && state == ChatHistoryStateRemote && (self.controller.conversation.type == DialogTypeSecretChat || self.controller.conversation.type == DialogTypeBroadcast) ? ChatHistoryStateFull : state;
     
     
    [self setState:state next:next];
