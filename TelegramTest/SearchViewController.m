@@ -552,12 +552,13 @@ static int insertCount = 3;
     
     self.searchParams.isLoading = YES;
     
-    //createWithFlags:0 peer:[TL_inputPeerEmpty create] q:params.searchString filter:[TL_inputMessagesFilterEmpty create] min_date:0 max_date:0 offset:params.remote_offset max_id:0 limit:50
     
     int offset_id = [(TL_localMessage *)[params.messages lastObject] n_id];
     int offset_date = [(TL_localMessage *)[params.messages lastObject] date];
     
-    [RPCRequest sendRequest:[TLAPI_messages_searchGlobal createWithQ:params.searchString offset_date:offset_date offset_peer:[TL_inputPeerEmpty create] offset_id:offset_id limit:50] successHandler:^(RPCRequest *request, TL_messages_messagesSlice *response) {
+    id request = ACCEPT_FEATURE ? [TLAPI_messages_searchGlobal createWithQ:params.searchString offset_date:offset_date offset_peer:[TL_inputPeerEmpty create] offset_id:offset_id limit:50] : [TLAPI_messages_search createWithFlags:0 peer:[TL_inputPeerEmpty create] q:params.searchString filter:[TL_inputMessagesFilterEmpty create] min_date:0 max_date:0 offset:params.remote_offset max_id:0 limit:50];
+    
+    [RPCRequest sendRequest:request successHandler:^(RPCRequest *request, TL_messages_messagesSlice *response) {
 
         
         if(params != self.searchParams)

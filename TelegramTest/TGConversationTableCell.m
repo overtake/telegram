@@ -199,7 +199,7 @@ static NSDictionary *attributes() {
         
         
         _dateField = [TMTextField defaultTextField];
-        [_dateField setFrameOrigin:NSMakePoint(0, 46)];
+        [_dateField setFrameOrigin:NSMakePoint(0, 44)];
         
         _dateField.wantsLayer = YES;
         [_dateField setFont:TGSystemFont(12)];
@@ -458,7 +458,7 @@ static NSDictionary *attributes() {
                     stateImage = self.isSelected ? image_MessageStateSentWhite() : image_MessageStateSent();
                 }
                 
-                point = NSMakePoint(NSMinX(self.dateField.frame) - stateImage.size.width , NSHeight(self.frame) - stateImage.size.height - 6);
+                point = NSMakePoint(NSMinX(self.dateField.frame) - stateImage.size.width , NSHeight(self.frame) - stateImage.size.height - 8);
                 
             } else if(self.item.message.dstate == DeliveryStateError) {
                 
