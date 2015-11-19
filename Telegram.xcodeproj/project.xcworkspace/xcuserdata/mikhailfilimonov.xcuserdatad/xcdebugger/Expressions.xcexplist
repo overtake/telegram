@@ -1264,6 +1264,9 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "-[MainWindow sendEvent:]:MainWindow.m">
+      </ContextState>
+      <ContextState
          contextName = "-[DownloadOperation initWithItem:]:DownloadOperation.m">
          <PersistentStrings>
             <PersistentString
@@ -3774,6 +3777,9 @@
       </ContextState>
       <ContextState
          contextName = "__40-[TMCollectionPageController reloadData]_block_invoke:TMCollectionPageController.m">
+      </ContextState>
+      <ContextState
+         contextName = "__37-[SearchViewController remoteSearch:]_block_invoke546:SearchViewController.m">
       </ContextState>
       <ContextState
          contextName = "-[RBLPopover showRelativeToRect:ofView:preferredEdge:]:RBLPopover.m">
