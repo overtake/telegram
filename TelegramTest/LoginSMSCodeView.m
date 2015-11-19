@@ -22,7 +22,7 @@
     self = [super initWithFrame:frame];
     if (self) {
         
-        self.smsCodeTextField = [[TMTextField alloc] initWithFrame:NSMakeRect(120, NSAppKitVersionNumber > NSAppKitVersionNumber10_10_Max ? 12 : 20, self.bounds.size.width, 20)];
+        self.smsCodeTextField = [[TMTextField alloc] initWithFrame:NSMakeRect(120,  20, self.bounds.size.width, 20)];
         self.smsCodeTextField.drawsBackground = NO;
         self.smsCodeTextField.delegate = self;
         [self.smsCodeTextField setPlaceholderPoint:NSMakePoint(2, 1)];

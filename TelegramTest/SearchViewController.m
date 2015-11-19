@@ -854,10 +854,11 @@ static int insertCount = 3;
                 
                 [filtred enumerateObjectsUsingBlock:^(TLUser *obj, NSUInteger idx, BOOL *stop) {
                     
-                    SearchItem *item = [[SearchItem alloc] initWithGlobalItem:obj searchString:searchString];
-                    
-                    [searchParams.globalUsers addObject:item];
-                    
+                    if(searchParams.searchString.length >= 5 || obj.isContact) {
+                        SearchItem *item = [[SearchItem alloc] initWithGlobalItem:obj searchString:searchString];
+                        
+                        [searchParams.globalUsers addObject:item];
+                    }
                 }];
                 
                 

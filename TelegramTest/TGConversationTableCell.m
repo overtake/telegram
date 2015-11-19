@@ -175,7 +175,7 @@ static NSDictionary *attributes() {
         _nameTextField = [[TMNameTextField alloc] init];
         
         
-        [_nameTextField setFrameOrigin:NSMakePoint(68, 40)];
+        [_nameTextField setFrameOrigin:NSMakePoint(68, 36)];
         
         [[_nameTextField cell] setLineBreakMode:NSLineBreakByTruncatingTail];
         [[_nameTextField cell] setTruncatesLastVisibleLine:YES];
@@ -188,7 +188,7 @@ static NSDictionary *attributes() {
         
         _messageField = [TMTextField defaultTextField];
         
-        [_messageField setFrameOrigin:NSMakePoint(68, 5)];
+        [_messageField setFrameOrigin:NSMakePoint(68, 3)];
         
         _messageField.wantsLayer = YES;
         
@@ -199,7 +199,7 @@ static NSDictionary *attributes() {
         
         
         _dateField = [TMTextField defaultTextField];
-        [_dateField setFrameOrigin:NSMakePoint(0, 44)];
+        [_dateField setFrameOrigin:NSMakePoint(0, 40)];
         
         _dateField.wantsLayer = YES;
         [_dateField setFont:TGSystemFont(12)];
@@ -245,7 +245,7 @@ static NSDictionary *attributes() {
             
             
             if(self.item.conversation.isVerified) {
-                [self.isSelected ? image_VerifyWhite() : image_Verify() drawInRect:NSMakeRect(NSMaxX(self.nameTextField.frame),NSMinY(self.nameTextField.frame) + 4, image_Verify().size.width, image_Verify().size.height) fromRect:NSZeroRect operation:NSCompositeHighlight fraction:1];
+                [self.isSelected ? image_VerifyWhite() : image_Verify() drawInRect:NSMakeRect(NSMaxX(self.nameTextField.frame),NSMinY(self.nameTextField.frame) + 6, image_Verify().size.width, image_Verify().size.height) fromRect:NSZeroRect operation:NSCompositeHighlight fraction:1];
             }
             
          //
@@ -458,7 +458,7 @@ static NSDictionary *attributes() {
                     stateImage = self.isSelected ? image_MessageStateSentWhite() : image_MessageStateSent();
                 }
                 
-                point = NSMakePoint(NSMinX(self.dateField.frame) - stateImage.size.width , NSHeight(self.frame) - stateImage.size.height - 8);
+                point = NSMakePoint(NSMinX(self.dateField.frame) - stateImage.size.width , NSHeight(self.frame) - stateImage.size.height - 12);
                 
             } else if(self.item.message.dstate == DeliveryStateError) {
                 

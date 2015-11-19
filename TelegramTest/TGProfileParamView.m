@@ -63,6 +63,10 @@
     
 }
 
+-(void)mouseDown:(NSEvent *)theEvent {
+    
+}
+
 -(NSString *)string {
     return [self.textView attributedString].string;
 }

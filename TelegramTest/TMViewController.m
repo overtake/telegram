@@ -31,6 +31,14 @@
     return self;
 }
 
+-(instancetype)init {
+    if(self = [super init]) {
+        self.frameInit = NSZeroRect;
+    }
+    
+    return self;
+}
+
 - (void) setHidden:(BOOL)isHidden {
     [self.view setHidden:isHidden];
 }
@@ -138,6 +146,8 @@
 
 
 - (void)viewWillAppear:(BOOL)animated {
+    
+    [self becomeFirstResponder];
     
     self.leftNavigationBarView = [self standartLeftBarView];
     

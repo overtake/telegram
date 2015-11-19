@@ -177,7 +177,7 @@ NSString *const tableOutSecretActions = @"out_secret_actions";
 NSString *const tableInSecretActions = @"in_secret_actions";
 NSString *const tableSupportMessages = @"support_messages2";
 NSString *const tableMessageHoles = @"message_holes_v1";
-
+NSString *const tableMessagesMedia = @"messages_media_v1";
 
 
 
@@ -1018,9 +1018,8 @@ TL_localMessage *parseMessage(FMResultSet *result) {
     return isset;
 }
 
--(void)lastMessageForPeer:(TLPeer *)peer completeHandler:(void (^)(TL_localMessage *message, int importantMessage))completeHandler {
+-(void)lastMessageWithConversation:(TL_conversation *)conversation completeHandler:(void (^)(TL_localMessage *message, int importantMessage))completeHandler {
     
-    int peer_id = [peer peer_id];
     [queue inDatabase:^(FMDatabase *db) {
         
         TL_localMessage *message;
@@ -1028,8 +1027,8 @@ TL_localMessage *parseMessage(FMResultSet *result) {
         int importantMessage = 0;
         
         
-        if([peer isKindOfClass:[TL_peerChannel class]]) {
-            NSString *topMessage = [NSString stringWithFormat:@"select serialized,flags,pts,views,invalidate from %@ where peer_id = %d and (filter_mask & %d) > 0 ORDER BY date DESC, n_id desc LIMIT 1",tableChannelMessages,peer_id,HistoryFilterImportantChannelMessage];
+        if([conversation.peer isKindOfClass:[TL_peerChannel class]]) {
+            NSString *topMessage = [NSString stringWithFormat:@"select serialized,flags,pts,views,invalidate from %@ where peer_id = %d and (filter_mask & %d) > 0 ORDER BY date DESC, n_id desc LIMIT 1",tableChannelMessages,conversation.peer_id,conversation.chat.isMegagroup ? HistoryFilterChannelMessage : HistoryFilterImportantChannelMessage];
             
              FMResultSet *result;
             
@@ -1055,7 +1054,7 @@ TL_localMessage *parseMessage(FMResultSet *result) {
             
         } else {
             
-            NSString *sql = [NSString stringWithFormat:@"select message_text,serialized,flags from %@ where peer_id = %d ORDER BY n_id DESC LIMIT 1",tableMessages,peer_id];
+            NSString *sql = [NSString stringWithFormat:@"select message_text,serialized,flags from %@ where peer_id = %d ORDER BY n_id DESC LIMIT 1",tableMessages,conversation.peer_id];
             
             FMResultSet *result = [db executeQueryWithFormat:sql,nil];
             
@@ -2715,6 +2714,9 @@ TL_localMessage *parseMessage(FMResultSet *result) {
 +(TLWebPage *)findWebpage:(NSString *)link {
     
     __block TLWebPage *webpage;
+    
+    if(link.length == 0)
+        return webpage;
     
     
     [[Storage yap] readWithBlock:^(YapDatabaseReadTransaction *transaction) {

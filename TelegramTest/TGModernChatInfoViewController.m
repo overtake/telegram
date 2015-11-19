@@ -67,7 +67,7 @@
     
     _notificationItem = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeSwitch callback:^(TGGeneralRowItem *item) {
         
-        [_conversation mute:nil];
+        [_conversation muteOrUnmute:nil until:0];
         
     } description:NSLocalizedString(@"Notifications", nil) height:42 stateback:^id(TGGeneralRowItem *item) {
         return @(!_conversation.isMute);
@@ -402,7 +402,7 @@
     
      GeneralSettingsRowItem *exportInviteLink;
     
-    if(_chat.isAdmin) {
+    if(_chat.isCreator) {
         exportInviteLink = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeNone callback:^(TGGeneralRowItem *item) {
             
             dispatch_block_t cblock = ^ {
@@ -443,11 +443,11 @@
 
             
         } description:NSLocalizedString(@"Group.CopyExportChatInvite", nil) height:42 stateback:nil];
+        
+         exportInviteLink.textColor = BLUE_UI_COLOR;
     }
     
-    if(exportInviteLink) {
-        [_tableView addItem:exportInviteLink tableRedraw:YES];
-    }
+    
     
     if(addMembersItem || exportInviteLink) {
         [_tableView addItem:[[TGGeneralRowItem alloc] initWithHeight:20] tableRedraw:YES];
@@ -455,7 +455,7 @@
     
     
     
-    int uppgradeCount = ACCEPT_FEATURE ? 5 : maxChatUsers();
+    int uppgradeCount = ACCEPT_FEATURE ? 15 : maxChatUsers();
     
     if(self.participantsRange.length >= uppgradeCount && _chat.isCreator && ACCEPT_FEATURE) {
         
@@ -514,7 +514,14 @@
         
     } else if(addMembersItem) {
         [_tableView insert:[[TGGeneralRowItem alloc] initWithHeight:20] atIndex:startIdx tableRedraw:YES];
+        
+        if(exportInviteLink) {
+            [_tableView insert:exportInviteLink atIndex:startIdx tableRedraw:YES];
+        }
+        
         [_tableView insert:addMembersItem atIndex:startIdx tableRedraw:YES];
+        
+        
         
     }
 }

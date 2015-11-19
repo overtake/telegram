@@ -312,7 +312,7 @@ static NSMutableDictionary *cache;
             
             [RPCRequest sendRequest:[TLAPI_messages_reportSpam createWithPeer:self.conversation.user.inputPeer] successHandler:^(id request, id response) {
                 
-                [[NSUserDefaults standardUserDefaults] setBool:NO forKey:[NSString stringWithFormat:@"showreport_%d",self.conversation.user.n_id]];
+                [[NSUserDefaults standardUserDefaults] setBool:YES forKey:[NSString stringWithFormat:@"always_showreport1_%d",self.conversation.user.n_id]];
                 
                 self.locked = NO;
                 self.conversation = self.conversation;

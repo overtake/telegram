@@ -7,7 +7,7 @@
 //
 
 #import "TGPhotoViewerBehavior.h"
-
+#import "ChatHistoryController.h"
 @implementation TGPhotoViewerBehavior
 
 -(id)initWithConversation:(TL_conversation *)conversation commonItem:(PreviewObject *)object {
@@ -16,6 +16,11 @@
     }
     
     return self;
+}
+
+-(void)drop {
+    [_controller drop:YES];
+    _controller = nil;
 }
 
 @end

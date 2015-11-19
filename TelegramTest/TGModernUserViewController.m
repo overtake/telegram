@@ -15,6 +15,7 @@
 #import <MtProtoKit/MTEncryption.h>
 #import "ComposeActionInfoProfileBehavior.h"
 #import "TGShareContactModalView.h"
+#import "ComposeActionAddUserToGroupBehavior.h"
 @interface TGModernUserViewController ()
 @property (nonatomic,strong) TLUser *user;
 @property (nonatomic,strong) TL_conversation *conversation;
@@ -36,10 +37,11 @@
     [super loadView];
     
     
-    
     _tableView = [[TGSettingsTableView alloc] initWithFrame:self.view.bounds];
     
     [self.view addSubview:_tableView.containerView];
+    
+    
     
     
 }
@@ -111,8 +113,9 @@
 }
 
 -(void)setUser:(TLUser *)user conversation:(TL_conversation *)conversation {
-    [self loadViewIfNeeded];
     
+    
+    [self loadViewIfNeeded];
     _conversation = conversation;
     _user = user;
     
@@ -122,8 +125,9 @@
     self.tableView.defaultAnimation = NSTableViewAnimationEffectFade;
     
     [self setAction:[[ComposeAction alloc] initWithBehaviorClass:[ComposeActionInfoProfileBehavior class] filter:nil object:_conversation]];
-    
+        
     [self configure];
+    
 }
 
 -(void)changeEditableWithAnimation {
@@ -131,6 +135,7 @@
 }
 
 -(void)configure {
+    
     
     [_tableView removeAllItems:YES];
     
@@ -142,18 +147,16 @@
     [_tableView addItem:_headerItem tableRedraw:YES];
     self.tableView.defaultAnimation = NSTableViewAnimationEffectFade;
     
+    weak();
+    
     GeneralSettingsRowItem *sendMessage;
     
     if(_conversation.type != DialogTypeSecretChat) {
         sendMessage = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeNone callback:^(TGGeneralRowItem *item) {
             
-            [self.navigationViewController showMessagesViewController:_conversation];
+            [weakSelf.navigationViewController showMessagesViewController:weakSelf.conversation];
             
-        } description:NSLocalizedString(@"Profile.SendMessage", nil) height:42 stateback:^id(TGGeneralRowItem *item) {
-            
-            return nil;
-            
-        }];
+        } description:NSLocalizedString(@"Profile.SendMessage", nil) height:42 stateback:nil];
     }
     
     GeneralSettingsRowItem *startSecretChat;
@@ -161,19 +164,15 @@
     if(_user.type != TLUserTypeSelf && _conversation.type != DialogTypeSecretChat && !_user.isBot) {
         startSecretChat = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeNone callback:^(TGGeneralRowItem *item) {
             
-            [self showModalProgress];
+            [weakSelf showModalProgress];
            
-            [MessageSender startEncryptedChat:self.user callback:^ {
+            [MessageSender startEncryptedChat:weakSelf.user callback:^ {
                 
-                [self hideModalProgressWithSuccess];
+                [weakSelf hideModalProgressWithSuccess];
                 
             }];
             
-        } description:NSLocalizedString(@"Conversation.StartSecretChat", nil) height:42 stateback:^id(TGGeneralRowItem *item) {
-            
-            return nil;
-            
-        }];
+        } description:NSLocalizedString(@"Conversation.StartSecretChat", nil) height:42 stateback:nil];
     }
     
     GeneralSettingsRowItem *shareContact;
@@ -181,19 +180,19 @@
         shareContact = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeNone callback:^(TGGeneralRowItem *item) {
             
             
-            if(_user.isBot) {
+            if(weakSelf.user.isBot) {
                 
                 
-                [self showModalProgress];
+                [weakSelf showModalProgress];
                 
                 NSPasteboard* cb = [NSPasteboard generalPasteboard];
                 
-                [cb declareTypes:[NSArray arrayWithObjects:NSStringPboardType, nil] owner:self];
-                [cb setString:[NSString stringWithFormat:@"https://telegram.me/%@",self.user.username] forType:NSStringPboardType];
+                [cb declareTypes:[NSArray arrayWithObjects:NSStringPboardType, nil] owner:weakSelf];
+                [cb setString:[NSString stringWithFormat:@"https://telegram.me/%@",weakSelf.user.username] forType:NSStringPboardType];
                 
                 dispatch_after_seconds(0.2, ^{
                     
-                    [self hideModalProgressWithSuccess];
+                    [weakSelf hideModalProgressWithSuccess];
                     
                 });
                 
@@ -210,13 +209,39 @@
             }
 
             
-        } description:NSLocalizedString(_user.isBot ? @"Profile.ShareBot" : @"Profile.ShareContact", nil) height:42 stateback:^id(TGGeneralRowItem *item) {
-            
-            return nil;
-            
-        }];
+        } description:NSLocalizedString(_user.isBot ? @"Profile.ShareBot" : @"Profile.ShareContact", nil) height:42 stateback:nil];
     }
     
+    GeneralSettingsRowItem *addToGroupItem;
+    
+    if(_user.isBot && !_user.isBot_nochats) {
+        
+       addToGroupItem = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeNone callback:^(TGGeneralRowItem *item) {
+            
+            ComposeChooseGroupViewController *viewController = [[ComposeChooseGroupViewController alloc] init];
+            
+            [viewController setAction:[[ComposeAction alloc] initWithBehaviorClass:[ComposeActionAddUserToGroupBehavior class] filter:nil object:weakSelf.user]];
+            
+            [weakSelf.navigationViewController pushViewController:viewController animated:YES];
+            
+        } description:NSLocalizedString(@"Profile.AddToGroup", nil) height:42 stateback:nil];
+        
+    }
+    
+    GeneralSettingsRowItem *helpItem;
+    if(_user.isBot) {
+        
+        helpItem = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeNone callback:^(TGGeneralRowItem *item) {
+            
+            [weakSelf.navigationViewController showMessagesViewController:_conversation];
+            [weakSelf.navigationViewController.messagesViewController sendMessage:@"/help" forConversation:weakSelf.conversation];
+            
+        } description:NSLocalizedString(@"Bot.Help", nil) height:42 stateback:nil];
+        
+    }
+
+    helpItem.textColor = BLUE_UI_COLOR;
+    addToGroupItem.textColor = BLUE_UI_COLOR;
     sendMessage.textColor = BLUE_UI_COLOR;
     startSecretChat.textColor = BLUE_UI_COLOR;
     shareContact.textColor = BLUE_UI_COLOR;
@@ -226,13 +251,13 @@
         
         EncryptedKeyViewController *viewController = [[EncryptedKeyViewController alloc] initWithFrame:NSZeroRect];
         
-        [viewController showForChat:self.conversation.encryptedChat];
+        [viewController showForChat:weakSelf.conversation.encryptedChat];
         
-        [self.navigationViewController pushViewController:viewController animated:YES];
+        [weakSelf.navigationViewController pushViewController:viewController animated:YES];
         
     } description:NSLocalizedString(@"Profile.ShowEncryptedKey", nil) height:42 stateback:^id(TGGeneralRowItem *item) {
         
-        EncryptedParams *params = [EncryptedParams findAndCreate:_conversation.encryptedChat.n_id];
+        EncryptedParams *params = [EncryptedParams findAndCreate:weakSelf.conversation.encryptedChat.n_id];
         
         NSData *hashData = MTSha1([params lastKey]);
         
@@ -242,7 +267,7 @@
     
     GeneralSettingsRowItem *notificationItem = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeSwitch callback:^(TGGeneralRowItem *item) {
         
-        [_conversation mute:nil];
+        [weakSelf.conversation muteOrUnmute:nil until:0];
         
     } description:NSLocalizedString(@"Notifications", nil) height:42 stateback:^id(TGGeneralRowItem *item) {
         return @(!_conversation.isMute);
@@ -252,36 +277,40 @@
         
         BlockedHandler handlerBlock = ^(BOOL result) {
             
-            if(!self.user.isBlocked && self.user.isBot)
+            [weakSelf hideModalProgressWithSuccess];
+            
+            if(!weakSelf.user.isBlocked && weakSelf.user.isBot)
             {
-                [self.navigationViewController goBackWithAnimation:YES];
-                [self.navigationViewController.messagesViewController sendMessage:@"/start" forConversation:self.conversation];
+                [weakSelf.navigationViewController showMessagesViewController:weakSelf.conversation];
+                [weakSelf.navigationViewController.messagesViewController sendMessage:@"/start" forConversation:weakSelf.conversation];
             }
+            
+            [weakSelf configure];
         };
         
-        if(self.user.isBlocked) {
-            [[BlockedUsersManager sharedManager] unblock:self.user.n_id completeHandler:handlerBlock];
+        [self showModalProgress];
+        
+        if(weakSelf.user.isBlocked) {
+            [[BlockedUsersManager sharedManager] unblock:weakSelf.user.n_id completeHandler:handlerBlock];
         } else {
-            [[BlockedUsersManager sharedManager] block:self.user.n_id completeHandler:handlerBlock];
+            [[BlockedUsersManager sharedManager] block:weakSelf.user.n_id completeHandler:handlerBlock];
         }
         
         
-    } description:NSLocalizedString(@"Profile.BlockContact", nil) height:42 stateback:^id(TGGeneralRowItem *item) {
-        return nil;
-    }];
+        
+        
+    } description:_user.isBlocked ? (_user.isBot ? NSLocalizedString(@"RestartBot", nil) : NSLocalizedString(@"Profile.UnblockContact", nil)) : (_user.isBot ? NSLocalizedString(@"StopBot", nil) : NSLocalizedString(@"Profile.BlockContact", nil)) height:42 stateback:nil];
     blockUserItem.textColor = [NSColor redColor];
     
     GeneralSettingsRowItem *deleteSecretChatItem = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeNone callback:^(TGGeneralRowItem *item) {
         
-        [self showModalProgress];
-        [[Telegram rightViewController].messagesViewController deleteDialog:self.conversation callback:^{
-            [self hideModalProgressWithSuccess];
+        [weakSelf showModalProgress];
+        [weakSelf.navigationViewController.messagesViewController deleteDialog:weakSelf.conversation callback:^{
+            [weakSelf hideModalProgressWithSuccess];
         }];
 
         
-    } description:NSLocalizedString(@"Conversation.DeleteSecretChat", nil) height:42 stateback:^id(TGGeneralRowItem *item) {
-        return nil;
-    }];
+    } description:NSLocalizedString(@"Conversation.DeleteSecretChat", nil) height:42 stateback:nil];
     deleteSecretChatItem.textColor = [NSColor redColor];
     
     TGSProfileMediaRowItem *profileMediaItem = [[TGSProfileMediaRowItem alloc] initWithObject:_conversation];
@@ -290,10 +319,9 @@
     [profileMediaItem setCallback:^(TGGeneralRowItem *item) {
         TMCollectionPageController *viewController = [[TMCollectionPageController alloc] initWithFrame:NSZeroRect];
         
-        [viewController setConversation:self.conversation];
+        [viewController setConversation:weakSelf.conversation];
         
-        [self.navigationViewController pushViewController:viewController animated:YES];
-        
+        [weakSelf.navigationViewController pushViewController:viewController animated:YES];
         
     }];
     
@@ -335,6 +363,11 @@
         if(shareContact)
             [_tableView addItem:shareContact tableRedraw:YES];
         
+        if(addToGroupItem)
+            [_tableView addItem:addToGroupItem tableRedraw:YES];
+        if(helpItem)
+            [_tableView addItem:helpItem tableRedraw:YES];
+        
         [_tableView addItem:[[TGGeneralRowItem alloc] initWithHeight:20] tableRedraw:YES];
         
         [_tableView addItem:profileMediaItem tableRedraw:YES];
@@ -358,22 +391,34 @@
         
         [_tableView addItem:[[TGGeneralRowItem alloc] initWithHeight:20] tableRedraw:YES];
         
-        GeneralSettingsRowItem *deleteContact = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeNone callback:^(TGGeneralRowItem *item) {
+        if(_user.isContact) {
+            GeneralSettingsRowItem *deleteContact = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeNone callback:^(TGGeneralRowItem *item) {
+                
+                [[NewContactsManager sharedManager] deleteContact:weakSelf.user completeHandler:^(BOOL result) {
+                    weakSelf.action.editable = NO;
+                    [weakSelf updateActionNavigation];
+                    [weakSelf didUpdatedEditableState];
+                }];
+                
+            } description:NSLocalizedString(@"Profile.DeleteContact", nil) height:42 stateback:nil];
             
-            [[NewContactsManager sharedManager] deleteContact:self.user completeHandler:^(BOOL result) {
-                self.action.editable = NO;
-                [self updateActionNavigation];
-                [self didUpdatedEditableState];
-            }];
+            deleteContact.textColor = [NSColor redColor];
             
-        } description:NSLocalizedString(@"Profile.DeleteContact", nil) height:42 stateback:^id(TGGeneralRowItem *item) {
-            return nil;
-        }];
-        
-        deleteContact.textColor = [NSColor redColor];
-        
-        [_tableView addItem:deleteContact tableRedraw:YES];
+            [_tableView addItem:deleteContact tableRedraw:YES];
+        }
+
     }
+}
+
+
+-(void)_didStackRemoved {
+    NSLog(@"Retain count is %ld", CFGetRetainCount((__bridge CFTypeRef)self));
+    
+    int bp = 0;
+}
+
+-(void)dealloc {
+    
 }
 
 @end

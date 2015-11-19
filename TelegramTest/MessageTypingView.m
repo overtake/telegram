@@ -72,8 +72,12 @@ const NSTimeInterval typingIntervalSecond = 0.14;
     [Notification removeObserver:self];
     [Notification addObserver:self selector:@selector(typingRedrawNotification:) name:[Notification notificationNameByDialog:dialog action:@"typing"]];
     
+    [TGModernTypingManager asyncTypingWithConversation:dialog handler:^(TMTypingObject *typing) {
+        
+        [self redrawByArray:[typing currentActions] animated:NO];
+        
+    }];
     
-    [self redrawByArray:[[TGModernTypingManager typingForConversation:dialog] currentActions] animated:NO];
 }
 
 - (void) typingRedrawNotification:(NSNotification *)notification {

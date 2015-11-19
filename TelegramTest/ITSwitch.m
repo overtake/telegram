@@ -235,6 +235,7 @@
 }
 
 - (void)mouseDown:(NSEvent *)theEvent {
+    
     self.isActive = YES;
     
     [self updateLayer];
@@ -250,6 +251,8 @@
 }
 
 - (void)mouseUp:(NSEvent *)theEvent {
+    
+    [super mouseUp:theEvent];
     
     if(!self.isEnabled)
         return;

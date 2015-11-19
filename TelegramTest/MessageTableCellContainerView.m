@@ -60,6 +60,13 @@
         
         assert(self.layer != nil);
         
+        
+        self.containerView = [[TMView alloc] initWithFrame:NSZeroRect];
+        [self.containerView setWantsLayer:YES];
+        [self.containerView setAutoresizingMask:NSViewWidthSizable];
+        [self.containerView setFrameSize:NSMakeSize(self.bounds.size.width - 160, self.bounds.size.height)];
+        [self addSubview:self.containerView];
+        
         self.rightView = [[NSView alloc] initWithFrame:NSMakeRect(0, 0, 100, 20)];
         [self.rightView setLayer:[CALayer layer]];
         [self.rightView.layer disableActions];
@@ -77,17 +84,13 @@
         [self.rightView addSubview:self.dateLayer];
         
         
-        self.stateLayer = [[MessageStateLayer alloc] initWithFrame:NSMakeRect(0, 0, 40, NSHeight(self.rightView.frame))];
+        self.stateLayer = [[MessageStateLayer alloc] initWithFrame:NSMakeRect(0, 0, 60, NSHeight(self.rightView.frame))];
                 
         
         [self.rightView addSubview:self.stateLayer];
         
         
-        self.containerView = [[TMView alloc] initWithFrame:NSZeroRect];
-        [self.containerView setWantsLayer:YES];
-        [self.containerView setAutoresizingMask:NSViewWidthSizable];
-        [self.containerView setFrameSize:NSMakeSize(self.bounds.size.width - 160, self.bounds.size.height)];
-        [self addSubview:self.containerView];
+    
         
         
         if(![self isKindOfClass:[MessageTableCellTextView class]] && ![self isKindOfClass:[MessageTableCellGeoView class]]) {
@@ -801,7 +804,7 @@ static int offsetEditable = 30;
     [self.rightView setFrameOrigin:position];
     
     if(!editable)
-        [_shareImageView setFrameOrigin:NSMakePoint(NSMinX(_rightView.frame) + NSWidth(_shareImageView.frame) + NSWidth(_dateLayer.frame) + 15, NSMinY(_rightView.frame) - NSHeight(_shareImageView.frame) - 5)];
+        [_shareImageView setFrameOrigin:NSMakePoint(NSMinX(_rightView.frame) + NSWidth(_shareImageView.frame) + NSWidth(_dateLayer.frame) + 35, NSMinY(_rightView.frame) - NSHeight(_shareImageView.frame) - 5)];
     
     [_shareImageView setHidden:editable];
 }

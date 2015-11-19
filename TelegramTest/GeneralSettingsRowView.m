@@ -85,12 +85,18 @@
     return self;
 }
 
+-(void)mouseUp:(NSEvent *)theEvent {
+    [super mouseUp:theEvent];
+}
+
+
 -(void)mouseDown:(NSEvent *)theEvent {
     TGGeneralRowItem *item = (GeneralSettingsRowItem *) [self rowItem];
     
     if(item.type == SettingsRowItemTypeNext || item.type == SettingsRowItemTypeSelected || item.type == SettingsRowItemTypeNone) {
         item.callback(item);
     }
+
 }
 
 

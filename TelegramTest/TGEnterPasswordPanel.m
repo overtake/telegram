@@ -385,6 +385,31 @@
     return _enterPasswordContainer;
 }
 
+
+-(void)getHint {
+    
+    [RPCRequest sendRequest:[TLAPI_account_getPassword create] successHandler:^(id request, TL_account_password *response) {
+        
+        if([response isKindOfClass:[TL_account_password class]]) {
+            NSMutableAttributedString *attrs = [[NSMutableAttributedString alloc] init];
+            
+            [attrs appendString:response.hint.length > 0 ? response.hint : NSLocalizedString(@"Password.password", nil) withColor:DARK_GRAY];
+            
+            [attrs setAttributes:@{NSFontAttributeName:TGSystemFont(14)} range:attrs.range];
+            
+            [attrs setAlignment:NSCenterTextAlignment range:attrs.range];
+            
+            [self.secureField.cell setPlaceholderAttributedString:attrs];
+        }
+        
+       
+        
+    } errorHandler:^(id request, RpcError *error) {
+        
+    }];
+    
+}
+
 -(void)checkPassword {
     
     [TMViewController showModalProgress];
@@ -503,6 +528,8 @@
 -(void)prepare {
     [self.secureField setStringValue:@""];
     [self.window makeFirstResponder:self.secureField];
+    
+    [self getHint];
 }
 
 -(void)hide {

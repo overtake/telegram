@@ -783,10 +783,14 @@ static const int maxWidth = 120;
     
     [self.documentsTableView setConversation:nil];
     [self.sharedLinksTableView setConversation:nil];
+    
+    [_behavior drop];
+    _behavior = nil;
 }
 
 -(void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
+
 }
 
 

@@ -83,6 +83,8 @@ static TMTableView *tableStatic;
     
     self.scrollView.documentView = self;
     
+    
+    
    
     
     self.scrollView.hasVerticalScroller = YES;
@@ -120,6 +122,16 @@ static TMTableView *tableStatic;
     self.lastOverRow = -1;
     
     [self updateTrackingAreas];
+    
+    
+    
+    id document = self.scrollView.documentView;
+    BTRClipView *clipView = [[BTRClipView alloc] initWithFrame:self.scrollView.contentView.bounds];
+    [clipView setWantsLayer:YES];
+    [clipView setDrawsBackground:YES];
+    [self.scrollView setContentView:clipView];
+    self.scrollView.documentView = document;
+    
 }
 
 - (void)setHoverCells:(BOOL)hoverCells {

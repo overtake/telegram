@@ -160,7 +160,9 @@
     
 }
 
-
+- (BOOL)acceptsFirstMouse:(NSEvent *)theEvent {
+    return YES;
+}
 
 - (void)mouseDragged:(NSEvent *)theEvent
 {

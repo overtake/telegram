@@ -15,4 +15,6 @@
 
 -(id)initWithConversation:(TL_conversation *)conversation commonItem:(PreviewObject *)object;
 
+-(void)drop;
+
 @end

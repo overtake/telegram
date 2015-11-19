@@ -419,8 +419,6 @@ DYNAMIC_PROPERTY(ENCRYPTED_TITLE_FOR_MESSAGE);
 }
 
 
-
-
 DYNAMIC_PROPERTY(DFullName);
 
 - (NSString *)fullName {
@@ -428,6 +426,13 @@ DYNAMIC_PROPERTY(DFullName);
     NSString *fullName = [self getDFullName];
     
     if(!fullName) {
+        
+        if(!self.first_name)
+            self.first_name = @"";
+        
+        if(!self.last_name)
+            self.last_name = @"";
+        
         NSString *fullName = [[[[NSString stringWithFormat:@"%@ %@", self.first_name, self.last_name] trim] singleLine] htmlentities];
         if(fullName.length > 30)
             fullName = [fullName substringToIndex:30];

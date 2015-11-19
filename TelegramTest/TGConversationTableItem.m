@@ -30,8 +30,6 @@
        
         [self needUpdateMessage:[[NSNotification alloc] initWithName:@"" object:nil userInfo:@{KEY_LAST_CONVRESATION_DATA:[MessagesUtils conversationLastData:conversation],KEY_DIALOG:conversation,KEY_DIALOG:conversation}]];
     
-        [self didChangeTyping:nil];
-
     }
     
     return self;
@@ -83,11 +81,7 @@
 -(void)didChangeTyping:(NSNotification *)notify {
     NSArray *actions;
     
-    if(!notify) {
-        actions = [[TGModernTypingManager typingForConversation:_conversation] currentActions];
-    } else {
-        actions = notify.userInfo[@"users"];
-    }
+    actions = notify.userInfo[@"users"];
     
     if(actions.count > 0) {
         

@@ -202,9 +202,6 @@
         [DIALOG_BORDER_COLOR set];
         NSRectFill(NSMakeRect(68, 0, self.bounds.size.width - DIALOG_BORDER_WIDTH - 68, 1));
         
-//        [NSColorFromRGB(0xcccccc) set];
-//        
-//        NSRectFill(NSMakeRect(66, 0, self.bounds.size.width - DIALOG_BORDER_WIDTH - 66, 1));
     }
     
     if([self rowItem].conversation.isVerified) {

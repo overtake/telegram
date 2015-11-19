@@ -363,7 +363,7 @@
         
         _notificationItem = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeSwitch callback:^(TGGeneralRowItem *item) {
             
-            [_conversation mute:nil];
+            [_conversation muteOrUnmute:nil until:0];
             
         } description:NSLocalizedString(@"Notifications", nil) height:42 stateback:^id(TGGeneralRowItem *item) {
             return @(!_conversation.isMute);

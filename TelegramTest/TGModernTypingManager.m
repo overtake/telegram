@@ -81,7 +81,7 @@
 
 
 
-+ (TMTypingObject *) typingForConversation:(TL_conversation *)conversation {
++ (TMTypingObject *) typingWithConversation:(TL_conversation *)conversation {
     
     __block TMTypingObject *obj;
     
@@ -90,6 +90,20 @@
     } synchronous:YES];
     
     return obj;
+    
+}
+
++ (void) asyncTypingWithConversation:(TL_conversation *)conversation handler:(void (^)(TMTypingObject *typing))handler {
+    
+    dispatch_queue_t dqueue = dispatch_get_current_queue();
+    
+    [ASQueue dispatchOnStageQueue:^{
+        
+        dispatch_async(dqueue, ^{
+            handler([[self manager] typingForConversation:conversation]);
+        });
+        
+    }];
     
 }
 

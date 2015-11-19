@@ -258,7 +258,7 @@
 
 -(void)updateLastMessageForDialog:(TL_conversation *)dialog {
     
-    [[Storage manager] lastMessageForPeer:dialog.peer completeHandler:^(TL_localMessage *lastMessage, int importantMessage) {
+    [[Storage manager] lastMessageWithConversation:dialog completeHandler:^(TL_localMessage *lastMessage, int importantMessage) {
         
         [self.queue dispatchOnQueue:^{
             

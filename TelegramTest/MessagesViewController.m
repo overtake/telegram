@@ -1437,14 +1437,18 @@ static NSTextAttachment *headerMediaIcon() {
         {
             MessageTableItem *item = [self itemOfMsgId:[[_replyMsgsStack lastObject] channelMsgId]];
             
-            NSRect rowRect = [self.table rectOfRow:[self indexOfObject:item]];
-            
-            hide = CGRectContainsRect([self.table visibleRect], rowRect) || self.table.scrollView.documentOffset.y < rowRect.origin.y;
-            
-            
-            if(hide) {
-                [_replyMsgsStack removeLastObject];
+            if(item) {
+                NSRect rowRect = [self.table rectOfRow:[self indexOfObject:item]];
+                
+                hide = CGRectContainsRect([self.table visibleRect], rowRect) || self.table.scrollView.documentOffset.y < rowRect.origin.y;
+                
+                
+                if(hide) {
+                    [_replyMsgsStack removeLastObject];
+                }
             }
+            
+           
             
         }
     }
@@ -2427,7 +2431,7 @@ static NSTextAttachment *headerMediaIcon() {
 
 
 - (void)cancelSelectionAndScrollToBottom {
-    [self unSelectAll];
+    [self unSelectAll:NO];
     self.state = MessagesViewControllerStateNone;
     [self.table.scrollView scrollToEndWithAnimation:YES];
 }
@@ -2582,7 +2586,7 @@ static NSTextAttachment *headerMediaIcon() {
         
         __block BOOL showReport = [[NSUserDefaults standardUserDefaults] boolForKey:[NSString stringWithFormat:@"showreport_%d",self.conversation.user.n_id]];
         
-        __block BOOL alwaysShowReport = [[NSUserDefaults standardUserDefaults] boolForKey:[NSString stringWithFormat:@"always_showreport_%d",self.conversation.user.n_id]];
+        __block BOOL alwaysShowReport = [[NSUserDefaults standardUserDefaults] boolForKey:[NSString stringWithFormat:@"always_showreport1_%d",self.conversation.user.n_id]];
         
         if(self.messages.count > 1 && (!showReport && !alwaysShowReport)) {
             if(self.messages.count > 2 || self.historyController.nextState == ChatHistoryStateFull) {
@@ -2601,7 +2605,6 @@ static NSTextAttachment *headerMediaIcon() {
                 alwaysShowReport = showReport;
                 
                 [[NSUserDefaults standardUserDefaults] setBool:showReport forKey:[NSString stringWithFormat:@"showreport_%d",self.conversation.user.n_id]];
-                [[NSUserDefaults standardUserDefaults] setBool:YES forKey:[NSString stringWithFormat:@"always_showreport_%d",self.conversation.user.n_id]];
             }
         }
         
