@@ -2,7 +2,7 @@
 //  MTProto.h
 //  Telegram
 //
-//  Auto created by Mikhail Filimonov on 17.11.15.
+//  Auto created by Mikhail Filimonov on 19.11.15.
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -133,6 +133,9 @@
 @end
 	
 @interface TLWallPaper : TLObject
+@end
+	
+@interface TLReportReason : TLObject
 @end
 	
 @interface TLUserFull : TLObject
@@ -400,6 +403,9 @@
 @end
 	
 @interface TLchannels_ChannelParticipant : TLObject
+@end
+	
+@interface TLhelp_TermsOfService : TLObject
 @end
 	
 @interface TLProtoMessage : TLObject
@@ -1345,6 +1351,20 @@
 @end
 @interface TL_wallPaperSolid : TLWallPaper<NSCoding>
 +(TL_wallPaperSolid*)createWithN_id:(int)n_id title:(NSString*)title bg_color:(int)bg_color color:(int)color;
+@end
+	
+@interface TLReportReason()
+
+@end
+
+@interface TL_inputReportReasonSpam : TLReportReason<NSCoding>
++(TL_inputReportReasonSpam*)create;
+@end
+@interface TL_inputReportReasonViolence : TLReportReason<NSCoding>
++(TL_inputReportReasonViolence*)create;
+@end
+@interface TL_inputReportReasonPornography : TLReportReason<NSCoding>
++(TL_inputReportReasonPornography*)create;
 @end
 	
 @interface TLUserFull()
@@ -2700,6 +2720,7 @@
 @interface TLChannelMessagesFilter()
 @property int flags;
 @property (nonatomic,assign,readonly) BOOL isImportant_only;
+@property (nonatomic,assign,readonly) BOOL isExclude_new_messages;
 @property (nonatomic, strong) NSMutableArray* ranges;
 @end
 
@@ -2707,7 +2728,7 @@
 +(TL_channelMessagesFilterEmpty*)create;
 @end
 @interface TL_channelMessagesFilter : TLChannelMessagesFilter<NSCoding>
-+(TL_channelMessagesFilter*)createWithFlags:(int)flags  ranges:(NSMutableArray*)ranges;
++(TL_channelMessagesFilter*)createWithFlags:(int)flags   ranges:(NSMutableArray*)ranges;
 @end
 @interface TL_channelMessagesFilterCollapsed : TLChannelMessagesFilter<NSCoding>
 +(TL_channelMessagesFilterCollapsed*)create;
@@ -2787,6 +2808,14 @@
 
 @interface TL_channels_channelParticipant : TLchannels_ChannelParticipant<NSCoding>
 +(TL_channels_channelParticipant*)createWithParticipant:(TLChannelParticipant*)participant users:(NSMutableArray*)users;
+@end
+	
+@interface TLhelp_TermsOfService()
+@property (nonatomic, strong) NSString* text;
+@end
+
+@interface TL_help_termsOfService : TLhelp_TermsOfService<NSCoding>
++(TL_help_termsOfService*)createWithText:(NSString*)text;
 @end
 	
 @interface TLProtoMessage()

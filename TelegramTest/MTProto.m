@@ -2,7 +2,7 @@
 //  MTProto.m
 //  Telegram
 //
-//  Auto created by Mikhail Filimonov on 17.11.15.
+//  Auto created by Mikhail Filimonov on 19.11.15.
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -8075,6 +8075,130 @@
     objc.title = self.title;
     objc.bg_color = self.bg_color;
     objc.color = self.color;
+    
+    return objc;
+}
+    
+-(id)initWithCoder:(NSCoder *)aDecoder {
+
+    if((self = [ClassStore deserialize:[aDecoder decodeObjectForKey:@"data"]])) {
+        
+    }
+    
+    return self;
+}
+        
+-(void)encodeWithCoder:(NSCoder *)aCoder {
+    [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
+}
+
+        
+
+        
+@end
+
+
+@implementation TLReportReason
+@end
+
+@implementation TL_inputReportReasonSpam
++(TL_inputReportReasonSpam*)create {
+	TL_inputReportReasonSpam* obj = [[TL_inputReportReasonSpam alloc] init];
+	
+	return obj;
+}
+-(void)serialize:(SerializedData*)stream {
+	
+}
+-(void)unserialize:(SerializedData*)stream {
+	
+}
+        
+-(TL_inputReportReasonSpam *)copy {
+    
+    TL_inputReportReasonSpam *objc = [[TL_inputReportReasonSpam alloc] init];
+    
+    
+    
+    return objc;
+}
+    
+-(id)initWithCoder:(NSCoder *)aDecoder {
+
+    if((self = [ClassStore deserialize:[aDecoder decodeObjectForKey:@"data"]])) {
+        
+    }
+    
+    return self;
+}
+        
+-(void)encodeWithCoder:(NSCoder *)aCoder {
+    [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
+}
+
+        
+
+        
+@end
+
+@implementation TL_inputReportReasonViolence
++(TL_inputReportReasonViolence*)create {
+	TL_inputReportReasonViolence* obj = [[TL_inputReportReasonViolence alloc] init];
+	
+	return obj;
+}
+-(void)serialize:(SerializedData*)stream {
+	
+}
+-(void)unserialize:(SerializedData*)stream {
+	
+}
+        
+-(TL_inputReportReasonViolence *)copy {
+    
+    TL_inputReportReasonViolence *objc = [[TL_inputReportReasonViolence alloc] init];
+    
+    
+    
+    return objc;
+}
+    
+-(id)initWithCoder:(NSCoder *)aDecoder {
+
+    if((self = [ClassStore deserialize:[aDecoder decodeObjectForKey:@"data"]])) {
+        
+    }
+    
+    return self;
+}
+        
+-(void)encodeWithCoder:(NSCoder *)aCoder {
+    [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
+}
+
+        
+
+        
+@end
+
+@implementation TL_inputReportReasonPornography
++(TL_inputReportReasonPornography*)create {
+	TL_inputReportReasonPornography* obj = [[TL_inputReportReasonPornography alloc] init];
+	
+	return obj;
+}
+-(void)serialize:(SerializedData*)stream {
+	
+}
+-(void)unserialize:(SerializedData*)stream {
+	
+}
+        
+-(TL_inputReportReasonPornography *)copy {
+    
+    TL_inputReportReasonPornography *objc = [[TL_inputReportReasonPornography alloc] init];
+    
+    
     
     return objc;
 }
@@ -20998,15 +21122,17 @@
 @end
 
 @implementation TL_channelMessagesFilter
-+(TL_channelMessagesFilter*)createWithFlags:(int)flags  ranges:(NSMutableArray*)ranges {
++(TL_channelMessagesFilter*)createWithFlags:(int)flags   ranges:(NSMutableArray*)ranges {
 	TL_channelMessagesFilter* obj = [[TL_channelMessagesFilter alloc] init];
 	obj.flags = flags;
+	
 	
 	obj.ranges = ranges;
 	return obj;
 }
 -(void)serialize:(SerializedData*)stream {
 	[stream writeInt:self.flags];
+	
 	
 	//Serialize FullVector
 	[stream writeInt:0x1cb5c415];
@@ -21021,6 +21147,7 @@
 }
 -(void)unserialize:(SerializedData*)stream {
 	super.flags = [stream readInt];
+	
 	
 	//UNS FullVector
 	[stream readInt];
@@ -21044,6 +21171,7 @@
     
     objc.flags = self.flags;
     
+    
     objc.ranges = [self.ranges copy];
     
     return objc;
@@ -21065,6 +21193,8 @@
         
             
 -(BOOL)isImportant_only {return (self.flags & (1 << 0)) > 0;}
+                        
+-(BOOL)isExclude_new_messages {return (self.flags & (1 << 1)) > 0;}
             
         
 @end
@@ -21821,6 +21951,50 @@
     
     objc.participant = [self.participant copy];
     objc.users = [self.users copy];
+    
+    return objc;
+}
+    
+-(id)initWithCoder:(NSCoder *)aDecoder {
+
+    if((self = [ClassStore deserialize:[aDecoder decodeObjectForKey:@"data"]])) {
+        
+    }
+    
+    return self;
+}
+        
+-(void)encodeWithCoder:(NSCoder *)aCoder {
+    [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
+}
+
+        
+
+        
+@end
+
+
+@implementation TLhelp_TermsOfService
+@end
+
+@implementation TL_help_termsOfService
++(TL_help_termsOfService*)createWithText:(NSString*)text {
+	TL_help_termsOfService* obj = [[TL_help_termsOfService alloc] init];
+	obj.text = text;
+	return obj;
+}
+-(void)serialize:(SerializedData*)stream {
+	[stream writeString:self.text];
+}
+-(void)unserialize:(SerializedData*)stream {
+	super.text = [stream readString];
+}
+        
+-(TL_help_termsOfService *)copy {
+    
+    TL_help_termsOfService *objc = [[TL_help_termsOfService alloc] init];
+    
+    objc.text = self.text;
     
     return objc;
 }

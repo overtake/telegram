@@ -2,7 +2,7 @@
 //  TLApi.m
 //  Telegram
 //
-//  Auto created by Mikhail Filimonov on 17.11.15..
+//  Auto created by Mikhail Filimonov on 19.11.15..
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -314,6 +314,21 @@
 - (NSData*)getData {
 	SerializedData* stream = [ClassStore streamWithConstuctor:-1068696894];
 	
+	return [stream getOutput];
+}
+@end
+
+@implementation TLAPI_account_reportPeer
++(TLAPI_account_reportPeer*)createWithPeer:(TLInputPeer*)peer reason:(TLReportReason*)reason {
+    TLAPI_account_reportPeer* obj = [[TLAPI_account_reportPeer alloc] init];
+    obj.peer = peer;
+	obj.reason = reason;
+    return obj;
+}
+- (NSData*)getData {
+	SerializedData* stream = [ClassStore streamWithConstuctor:-1374118561];
+	[ClassStore TLSerialize:self.peer stream:stream];
+	[ClassStore TLSerialize:self.reason stream:stream];
 	return [stream getOutput];
 }
 @end
@@ -2211,7 +2226,7 @@
     return obj;
 }
 - (NSData*)getData {
-	SerializedData* stream = [ClassStore streamWithConstuctor:1387358562];
+	SerializedData* stream = [ClassStore streamWithConstuctor:-344583728];
 	[ClassStore TLSerialize:self.channel stream:stream];
 	[ClassStore TLSerialize:self.user_id stream:stream];
 	[ClassStore TLSerialize:self.role stream:stream];
@@ -2468,6 +2483,19 @@
 	[ClassStore TLSerialize:self.offset_peer stream:stream];
 	[stream writeInt:self.offset_id];
 	[stream writeInt:self.limit];
+	return [stream getOutput];
+}
+@end
+
+@implementation TLAPI_help_getTermsOfService
++(TLAPI_help_getTermsOfService*)createWithLang_code:(NSString*)lang_code {
+    TLAPI_help_getTermsOfService* obj = [[TLAPI_help_getTermsOfService alloc] init];
+    obj.lang_code = lang_code;
+    return obj;
+}
+- (NSData*)getData {
+	SerializedData* stream = [ClassStore streamWithConstuctor:936873859];
+	[stream writeString:self.lang_code];
 	return [stream getOutput];
 }
 @end

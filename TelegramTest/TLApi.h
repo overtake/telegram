@@ -2,7 +2,7 @@
 //  TLApi.h
 //  Telegram
 //
-//  Auto created by Mikhail Filimonov on 17.11.15.
+//  Auto created by Mikhail Filimonov on 19.11.15.
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -147,6 +147,13 @@
 
 
 +(TLAPI_account_getWallPapers*)create;
+@end
+
+@interface TLAPI_account_reportPeer : TLApiObject
+@property (nonatomic, strong) TLInputPeer* peer;
+@property (nonatomic, strong) TLReportReason* reason;
+
++(TLAPI_account_reportPeer*)createWithPeer:(TLInputPeer*)peer reason:(TLReportReason*)reason;
 @end
 
 @interface TLAPI_users_getUsers : TLApiObject
@@ -1040,5 +1047,11 @@
 @property int limit;
 
 +(TLAPI_messages_searchGlobal*)createWithQ:(NSString*)q offset_date:(int)offset_date offset_peer:(TLInputPeer*)offset_peer offset_id:(int)offset_id limit:(int)limit;
+@end
+
+@interface TLAPI_help_getTermsOfService : TLApiObject
+@property (nonatomic, strong) NSString* lang_code;
+
++(TLAPI_help_getTermsOfService*)createWithLang_code:(NSString*)lang_code;
 @end
 

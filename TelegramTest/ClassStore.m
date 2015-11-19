@@ -3,7 +3,7 @@
 //  ClassStore.m
 //  Telegram
 //
-    //  Created by keepcoder on 17.11.15.
+    //  Created by keepcoder on 19.11.15.
 //  Copyright (c) 2015 keepcoder. All rights reserved.
 //
 
@@ -249,6 +249,9 @@ static NSMutableDictionary *cs_constuctors;
    [cs_classes setObject:[TL_peerNotifySettingsEmpty class] forKey:[NSNumber numberWithInt:1889961234]];
    [cs_classes setObject:[TL_peerNotifySettings class] forKey:[NSNumber numberWithInt:-1923214866]];
    [cs_classes setObject:[TL_wallPaper class] forKey:[NSNumber numberWithInt:-860866985]];
+   [cs_classes setObject:[TL_inputReportReasonSpam class] forKey:[NSNumber numberWithInt:1490799288]];
+   [cs_classes setObject:[TL_inputReportReasonViolence class] forKey:[NSNumber numberWithInt:505595789]];
+   [cs_classes setObject:[TL_inputReportReasonPornography class] forKey:[NSNumber numberWithInt:777640226]];
    [cs_classes setObject:[TL_userFull class] forKey:[NSNumber numberWithInt:1518971995]];
    [cs_classes setObject:[TL_contact class] forKey:[NSNumber numberWithInt:-116274796]];
    [cs_classes setObject:[TL_importedContact class] forKey:[NSNumber numberWithInt:-805141448]];
@@ -514,6 +517,7 @@ static NSMutableDictionary *cs_constuctors;
    [cs_classes setObject:[TL_messageActionChatMigrateTo class] forKey:[NSNumber numberWithInt:1371385889]];
    [cs_classes setObject:[TL_messageActionChannelMigrateFrom class] forKey:[NSNumber numberWithInt:-1336546578]];
    [cs_classes setObject:[TL_channelParticipantsBots class] forKey:[NSNumber numberWithInt:-1328445861]];
+   [cs_classes setObject:[TL_help_termsOfService class] forKey:[NSNumber numberWithInt:-236044656]];
    [cs_classes setObject:[TL_userSelf class] forKey:[NSNumber numberWithInt:476112392]];
    [cs_classes setObject:[TL_userContact class] forKey:[NSNumber numberWithInt:-894214632]];
    [cs_classes setObject:[TL_userRequest class] forKey:[NSNumber numberWithInt:-640891665]];

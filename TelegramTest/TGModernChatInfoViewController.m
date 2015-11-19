@@ -503,7 +503,7 @@
         upgradeToMegagroup.textColor = BLUE_UI_COLOR;
         
         
-        GeneralSettingsBlockHeaderItem *upgradeHeaderItem = [[GeneralSettingsBlockHeaderItem alloc] initWithString:NSLocalizedString(@"Modern.Chat.UpgradeToMegagroupDescription", nil) height:200 flipped:YES];
+        GeneralSettingsBlockHeaderItem *upgradeHeaderItem = [[GeneralSettingsBlockHeaderItem alloc] initWithString:[NSString stringWithFormat:NSLocalizedString(@"Modern.Chat.UpgradeToMegagroupDescription", nil),maxChatUsers()] height:200 flipped:YES];
         
         upgradeHeaderItem.autoHeight = YES;
         

@@ -675,7 +675,7 @@ void open_link(NSString *link) {
             
             TLChat *chat = [[ChatsManager sharedManager] find:abs(peer_id)];
             
-            [appWindow().navigationController showInfoPage:chat.dialog];
+            [appWindow().navigationController showMessagesViewController:chat.dialog];
             
         }
         
