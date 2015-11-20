@@ -199,13 +199,13 @@ static TGModalSetCaptionView *setCaptionView;
 +(void)showModalProgress {
     
     if(!progressView) {
-        progressView = [[TMProgressModalView alloc] initWithFrame:[[[Telegram delegate] window].contentView bounds]];
+        progressView = [[TMProgressModalView alloc] initWithFrame:[appWindow().contentView bounds]];
         
         progressView.layer.opacity = 0;
         
-        [progressView setCenterByView:[[Telegram delegate] window].contentView];
+        [progressView setCenterByView:appWindow().contentView];
         
-         [[[Telegram delegate] window].contentView addSubview:progressView];
+         [appWindow().contentView addSubview:progressView];
     }
     
    

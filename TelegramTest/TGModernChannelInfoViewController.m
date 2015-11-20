@@ -24,6 +24,7 @@
 #import "ComposeActionChannelMembersBehavior.h"
 #import "ComposeChangeChannelDescriptionViewController.h"
 #import "ComposeActionChangeChannelAboutBehavior.h"
+#import "TGReportChannelModalView.h"
 @interface TGModernChannelInfoViewController ()
 @property (nonatomic,strong) TGSettingsTableView *tableView;
 
@@ -426,6 +427,23 @@
     if(!_chat.isAdmin && !_chat.isMegagroup) {
         
         [_tableView addItem:[[TGGeneralRowItem alloc] initWithHeight:20] tableRedraw:YES];
+        
+        
+        GeneralSettingsRowItem *reportItem = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeNone callback:^(TGGeneralRowItem *item) {
+            
+            TGReportChannelModalView *reportModalView = [[TGReportChannelModalView alloc] initWithFrame:[self.view.window.contentView bounds]];
+            
+            reportModalView.conversation = _conversation;
+            
+            [reportModalView show:self.view.window animated:YES];
+            
+            
+        } description:NSLocalizedString(@"Profile.ReportChannel", nil) height:42 stateback:nil];
+        
+        reportItem.textColor = BLUE_UI_COLOR;
+        
+        [_tableView addItem:reportItem tableRedraw:YES];
+        
         
         GeneralSettingsRowItem *deleteChannelItem = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeNone callback:^(TGGeneralRowItem *item) {
             

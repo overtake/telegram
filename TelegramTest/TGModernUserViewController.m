@@ -16,6 +16,7 @@
 #import "ComposeActionInfoProfileBehavior.h"
 #import "TGShareContactModalView.h"
 #import "ComposeActionAddUserToGroupBehavior.h"
+#import "TGReportChannelModalView.h"
 @interface TGModernUserViewController ()
 @property (nonatomic,strong) TLUser *user;
 @property (nonatomic,strong) TL_conversation *conversation;
@@ -296,11 +297,22 @@
             [[BlockedUsersManager sharedManager] block:weakSelf.user.n_id completeHandler:handlerBlock];
         }
         
-        
-        
-        
     } description:_user.isBlocked ? (_user.isBot ? NSLocalizedString(@"RestartBot", nil) : NSLocalizedString(@"Profile.UnblockContact", nil)) : (_user.isBot ? NSLocalizedString(@"StopBot", nil) : NSLocalizedString(@"Profile.BlockContact", nil)) height:42 stateback:nil];
     blockUserItem.textColor = [NSColor redColor];
+    
+    
+    GeneralSettingsRowItem *reportItem = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeNone callback:^(TGGeneralRowItem *item) {
+        
+        TGReportChannelModalView *reportModalView = [[TGReportChannelModalView alloc] initWithFrame:[self.view.window.contentView bounds]];
+        
+        reportModalView.conversation = _conversation;
+        
+        [reportModalView show:self.view.window animated:YES];
+        
+        
+    } description:NSLocalizedString(@"Profile.ReportChannel", nil) height:42 stateback:nil];
+    
+    reportItem.textColor = BLUE_UI_COLOR;
     
     GeneralSettingsRowItem *deleteSecretChatItem = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeNone callback:^(TGGeneralRowItem *item) {
         
@@ -382,6 +394,10 @@
         [_tableView addItem:[[TGGeneralRowItem alloc] initWithHeight:20] tableRedraw:YES];
         
         if(_conversation.type != DialogTypeSecretChat) {
+            if(self.user.isBot) {
+                [_tableView addItem:reportItem tableRedraw:YES];
+            }
+            
             if(self.user.type != TLUserTypeSelf)
                 [_tableView addItem:blockUserItem tableRedraw:YES];
         } else
