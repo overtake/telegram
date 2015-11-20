@@ -18,12 +18,11 @@
     
     converted = [self sortItems:converted];
     
-    state = !next && state != ChatHistoryStateFull && (self.controller.conversation.universalTopMessage <= self.server_max_id) ? ChatHistoryStateFull : state;
-    
     state = next && state != ChatHistoryStateFull && self.server_min_id <= 1 ? ChatHistoryStateFull : state;
     
-    
-    if(self.prevState != ChatHistoryStateFull && self.controller.conversation.universalTopMessage <= self.server_max_id) {
+    TL_conversation *conversation = [[DialogsManager sharedManager] find:self.peer_id];
+
+    if(self.prevState != ChatHistoryStateFull && conversation.universalTopMessage > 0 && conversation.universalTopMessage <= self.server_max_id) {
         [self setState:ChatHistoryStateFull next:NO];
     }
     

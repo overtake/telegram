@@ -76,6 +76,10 @@
         _nextState = state;
     else
         _prevState = state;
+    
+    if(state == 3) {
+        int bp = 0;
+    }
 }
 
 
@@ -189,7 +193,7 @@
     NSArray *allItems = [self selectAllItems];
     
     
-    __block int msgId = INT32_MAX;
+    __block int msgId = 0;
     
     [allItems enumerateObjectsWithOptions:NSEnumerationReverse usingBlock:^(MessageTableItem *obj, NSUInteger idx, BOOL *stop) {
         
@@ -211,7 +215,7 @@
     NSArray *allItems = [self selectAllItems];
     
     
-    __block int msgId = INT32_MAX;
+    __block int msgId = 1;
     
     [allItems enumerateObjectsWithOptions:0 usingBlock:^(MessageTableItem *obj, NSUInteger idx, BOOL *stop) {
         
@@ -289,7 +293,9 @@
    [self setState:state next:next];
     
     
-    if(self.prevState != ChatHistoryStateFull && self.controller.conversation.top_message <= self.server_max_id)
+    TL_conversation *conversation = [[DialogsManager sharedManager] find:self.peer_id];
+    
+    if(self.prevState != ChatHistoryStateFull && conversation.top_message > 0 && conversation.top_message <= self.server_max_id)
         [self setState:ChatHistoryStateFull next:NO];
     
     return converted;

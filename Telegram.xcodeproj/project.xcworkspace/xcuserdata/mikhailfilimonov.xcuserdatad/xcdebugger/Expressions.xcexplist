@@ -533,6 +533,9 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "-[ChatHistoryController addFilter:]:ChatHistoryController.m">
+      </ContextState>
+      <ContextState
          contextName = "-[UserInfoContainerView setUser:]:UserInfoContainerView.m">
       </ContextState>
       <ContextState
@@ -936,6 +939,14 @@
          contextName = "-[ExternalDocumentSecretSenderItem initWithConversation:document:]:ExternalDocumentSecretSenderItem.m">
       </ContextState>
       <ContextState
+         contextName = "__40-[ChatHistoryController filterWithNext:]_block_invoke_2:ChatHistoryController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "_isNeedSwapFilters">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "-[TLChat(Category) isAdmin]:TLChatCategory.m">
          <PersistentStrings>
             <PersistentString
@@ -1018,6 +1029,17 @@
       </ContextState>
       <ContextState
          contextName = "-[MessageTableItemSticker initWithObject:]:MessageTableItemSticker.m">
+      </ContextState>
+      <ContextState
+         contextName = "-[HistoryFilter checkState:next:]:HistoryFilter.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "_prevState">
+            </PersistentString>
+            <PersistentString
+               value = "_nextState">
+            </PersistentString>
+         </PersistentStrings>
       </ContextState>
       <ContextState
          contextName = "-[MessagesViewController insertMessageTableItemsToList:startPosition:needCheckLastMessage:]:MessagesViewController.m">
@@ -1461,6 +1483,9 @@
       </ContextState>
       <ContextState
          contextName = "__49-[TGPasswosdMainViewController rebuildController]_block_invoke131:TGPasswosdMainViewController.m">
+      </ContextState>
+      <ContextState
+         contextName = "-[HistoryFilter proccessResponse:state:next:]:HistoryFilter.m">
       </ContextState>
       <ContextState
          contextName = "-[TMCollectionPageController imageObjectWithPreview:]:TMCollectionPageController.m">
@@ -1912,6 +1937,14 @@
       </ContextState>
       <ContextState
          contextName = "__55-[MessageSenderItem parseEntities:entities:backstrips:]_block_invoke:MessageSenderItem.m">
+      </ContextState>
+      <ContextState
+         contextName = "-[ChannelCommonFilter proccessResponse:state:next:]:ChannelCommonFilter.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.server_max_id">
+            </PersistentString>
+         </PersistentStrings>
       </ContextState>
       <ContextState
          contextName = "-[TL_localMessage filterType]:TL_localMessage.m">
@@ -2875,6 +2908,14 @@
          <PersistentStrings>
             <PersistentString
                value = "hole">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[ChatHistoryController prevState]:ChatHistoryController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "filter.prevState">
             </PersistentString>
          </PersistentStrings>
       </ContextState>

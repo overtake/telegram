@@ -2208,12 +2208,12 @@ TL_localMessage *parseMessage(FMResultSet *result) {
     
     [queue inDatabase:^(FMDatabase *db) {
         
-        int unread_count;
+        int unread_count = 0;
         
         if(includeMuted) {
-            unread_count+=[db intForQuery:[NSString stringWithFormat:@"select sum(unread_count) from %@ where is_invisible = 0 and unread_count > 0 and unread_count < 100000",tableModernDialogs]];
+            unread_count =[db intForQuery:[NSString stringWithFormat:@"select sum(unread_count) from %@ where is_invisible = 0 and unread_count > 0 and unread_count < 100000",tableModernDialogs]];
         } else {
-            unread_count+=[db intForQuery:[NSString stringWithFormat:@"select sum(unread_count) from %@ where is_invisible = 0 and unread_count > 0 and unread_count < 100000 and (mute_until == 0 OR mute_until < ?)",tableModernDialogs],@([[MTNetwork instance] getTime])];
+            unread_count = [db intForQuery:[NSString stringWithFormat:@"select sum(unread_count) from %@ where is_invisible = 0 and unread_count > 0 and unread_count < 100000 and (mute_until == 0 OR mute_until < ?)",tableModernDialogs],@([[MTNetwork instance] getTime])];
         }
         
         dispatch_async(dispatch_get_main_queue(), ^{

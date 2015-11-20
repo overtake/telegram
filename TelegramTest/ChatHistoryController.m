@@ -148,7 +148,7 @@ static ChatHistoryController *observer;
         } else {
             [_filters enumerateObjectsWithOptions: _isNeedSwapFilters ? NSEnumerationReverse : 0 usingBlock:^(HistoryFilter *obj, NSUInteger idx, BOOL * _Nonnull stop) {
                 
-                if([obj stateWithNext:next] != ChatHistoryStateFull)
+                if(![obj checkState:ChatHistoryStateFull next:next])
                 {
                     *stop = YES;
                     filter = obj;
@@ -230,7 +230,7 @@ static ChatHistoryController *observer;
     
     [_filters addObject:filter];
     
-    
+    int bp = 0;
 }
 
 -(ChatHistoryState)prevState {

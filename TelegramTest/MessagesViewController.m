@@ -2188,7 +2188,7 @@ static NSTextAttachment *headerMediaIcon() {
             [self.normalNavigationCenterView enableDiscussion:!self.normalNavigationCenterView.discussIsEnabled force:YES];
         
         
-        self.historyController = [[[self hControllerClass] alloc] initWithController:self historyFilter:msg.isChannelMessage ? ( flags == 0 ? self.normalNavigationCenterView.discussIsEnabled || msg.chat.isMegagroup ? [ChannelFilter class] : [ChannelImportantFilter class] : msg.isImportantMessage ? self.historyController.filter.class : [ChannelFilter class]) : [HistoryFilter class]];
+        self.historyController = [[[self hControllerClass] alloc] initWithController:self historyFilter:conversation.type == DialogTypeChannel ? ( flags == 0 ? self.normalNavigationCenterView.discussIsEnabled || conversation.chat.isMegagroup ? [ChannelFilter class] : [ChannelImportantFilter class] : msg.isImportantMessage ? self.historyController.filter.class : [ChannelFilter class]) : [HistoryFilter class]];
         
         [self.normalNavigationCenterView enableDiscussion:[self.historyController.filter isKindOfClass:[ChannelFilter class]] force:YES];
         
@@ -2364,9 +2364,6 @@ static NSTextAttachment *headerMediaIcon() {
         
         [self.historyController drop:NO];
         
-        self.historyController = [[[self hControllerClass] alloc] initWithController:self historyFilter:[self defHFClass]];
-        
-        
         [self.normalNavigationCenterView setDialog:dialog];
         
         
@@ -2383,7 +2380,7 @@ static NSTextAttachment *headerMediaIcon() {
         [self.typingReservation removeAllObjects];
         [self removeScrollEvent];
         
-        
+        self.historyController = nil;
         
         if(message != nil) {
             [self showMessage:message fromMsg:nil flags:ShowMessageTypeSearch];
@@ -2397,6 +2394,9 @@ static NSTextAttachment *headerMediaIcon() {
             [self showMessage:msg fromMsg:nil flags:ShowMessageTypeUnreadMark];
             
         } else {
+            
+            self.historyController = [[[self hControllerClass] alloc] initWithController:self historyFilter:[self defHFClass]];
+
             [self flushMessages];
             
             [self loadhistory:0 toEnd:YES prev:NO isFirst:YES];
