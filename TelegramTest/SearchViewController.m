@@ -711,9 +711,9 @@ static int insertCount = 3;
         
             for(TLChat *chat in searchChats) {
                 TL_conversation *dialog = chat.dialog;
-                if(dialog && !dialog.fake)
+                if(dialog && !dialog.fake && !chat.isDeactivated)
                     [dialogs addObject:dialog];
-                else
+                else if (!chat.isDeactivated)
                     [dialogsNeedCheck addObject:@(-chat.n_id)];
             }
             
