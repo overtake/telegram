@@ -782,8 +782,11 @@ static NSTextAttachment *headerMediaIcon() {
         [CATransaction begin];
         [CATransaction setDisableActions:YES];
         [self.noMessagesView setHidden:!show];
+        
         [self.table.containerView setHidden:show];
         [CATransaction commit];
+        
+        [self updateLoading];
     }];
 }
 

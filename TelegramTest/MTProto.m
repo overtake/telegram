@@ -2,7 +2,7 @@
 //  MTProto.m
 //  Telegram
 //
-//  Auto created by Mikhail Filimonov on 19.11.15.
+//  Auto created by Mikhail Filimonov on 20.11.15.
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -8199,6 +8199,46 @@
     TL_inputReportReasonPornography *objc = [[TL_inputReportReasonPornography alloc] init];
     
     
+    
+    return objc;
+}
+    
+-(id)initWithCoder:(NSCoder *)aDecoder {
+
+    if((self = [ClassStore deserialize:[aDecoder decodeObjectForKey:@"data"]])) {
+        
+    }
+    
+    return self;
+}
+        
+-(void)encodeWithCoder:(NSCoder *)aCoder {
+    [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
+}
+
+        
+
+        
+@end
+
+@implementation TL_inputReportReasonOther
++(TL_inputReportReasonOther*)createWithText:(NSString*)text {
+	TL_inputReportReasonOther* obj = [[TL_inputReportReasonOther alloc] init];
+	obj.text = text;
+	return obj;
+}
+-(void)serialize:(SerializedData*)stream {
+	[stream writeString:self.text];
+}
+-(void)unserialize:(SerializedData*)stream {
+	super.text = [stream readString];
+}
+        
+-(TL_inputReportReasonOther *)copy {
+    
+    TL_inputReportReasonOther *objc = [[TL_inputReportReasonOther alloc] init];
+    
+    objc.text = self.text;
     
     return objc;
 }

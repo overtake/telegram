@@ -91,7 +91,7 @@ static NSArray *channelUpdates;
 - (void)resetStateAndSync {
     
     [queue dispatchOnQueue:^{
-        _updateState = [[TGUpdateState alloc] initWithPts:1 qts:1 date:_updateState.date seq:1 pts_count:1];
+        _updateState = [[TGUpdateState alloc] initWithPts:914531 qts:1 date:_updateState.date seq:1 pts_count:1];
         
         [self saveUpdateState];
         
@@ -941,7 +941,8 @@ static NSArray *channelUpdates;
 
 -(void)uptodateWithConnectionState:(BOOL)updateConnectionState {
     
-    if(_holdUpdates || ![[MTNetwork instance] isAuth] ) return;
+    if(_holdUpdates || ![[MTNetwork instance] isAuth] )
+        return;
     
     _holdUpdates = YES;
     

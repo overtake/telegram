@@ -26,20 +26,17 @@ static TGChannelsPolling *channelPolling;
     if(self = [super initWithController:controller historyFilter:historyFilter]) {
         
         
-        [self.queue dispatchOnQueue:^{
+        static dispatch_once_t onceToken;
+        dispatch_once(&onceToken, ^{
+            channelPolling = [[TGChannelsPolling alloc] initWithDelegate:self withUpdatesLimit:50];
             
-            static dispatch_once_t onceToken;
-            dispatch_once(&onceToken, ^{
-                channelPolling = [[TGChannelsPolling alloc] initWithDelegate:self withUpdatesLimit:50];
-                
-            });
-            
-            [channelPolling setDelegate:self];
-            [channelPolling setCurrentConversation:controller.conversation];
-            
-            _pollingIsStarted = NO;
-            
-        } synchronous:YES];
+        });
+        
+        [channelPolling setDelegate:self];
+        [channelPolling setCurrentConversation:controller.conversation];
+        
+        _pollingIsStarted = NO;
+        
         
     }
     

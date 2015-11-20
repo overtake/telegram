@@ -85,10 +85,7 @@ extern NSString *const RECENT_SEARCH;
 + (NSMutableArray *)emoji;
 + (void)saveEmoji:(NSMutableArray *)emoji;
 
-
-- (void)updateDialog:(TL_conversation *)dialog;
-
--(void)insertDialogs:(NSArray *)dialogs completeHandler:(void (^)(BOOL result))completeHandler;
+-(void)insertDialogs:(NSArray *)dialogs;
 
 
 -(void)insertBroadcast:(TL_broadcast *)broadcast;
@@ -106,7 +103,7 @@ extern NSString *const RECENT_SEARCH;
 - (void)searchDialogsByPeers:(NSArray *)peers needMessages:(BOOL)needMessages searchString:(NSString *)searchString completeHandler:(void (^)(NSArray *dialogs, NSArray *messages, NSArray *searchMessages))completeHandler;
 
 
--(void)dialogsWithOffset:(int)offset limit:(int)limit completeHandler:(void (^)(NSArray *d, NSArray *m, NSArray *c))completeHandler;
+-(void)dialogsWithOffset:(int)offset limit:(int)limit completeHandler:(void (^)(NSArray *d))completeHandler;
 ;
 -(void)updateTopMessage:(TL_conversation *)dialog completeHandler:(void (^)(BOOL result))completeHandler;
 
@@ -203,6 +200,10 @@ extern NSString *const RECENT_SEARCH;
 -(void)selectTasks:(void (^)(NSArray *tasks))completeHandler;
 
 -(TL_conversation *)selectConversation:(TLPeer *)peer;
+
+
+-(void)conversationsWithPeerIds:(NSArray *)peer_ids completeHandler:(void (^)(NSArray * result))completeHandler;
+
 - (id)fileInfoByPathHash:(NSString *)pathHash;
 - (void)findFileInfoByPathHash:(NSString *)pathHash completeHandler:(void (^)(BOOL result, id file))completeHandler;
 - (void)setFileInfo:(id)file forPathHash:(NSString *)pathHash;
@@ -241,11 +242,7 @@ extern NSString *const RECENT_SEARCH;
 +(void)updateEncryptionKey:(NSString *)key;
 
 +(void)updateOldEncryptionKey:(NSString *)key;
-// signal requests
-+(SSignal *)requestMessagesWithDate:(int)date localMaxId:(int)localMaxId limit:(NSUInteger)limit cnv_id:(int)cnv_id next:(BOOL)next filter:(int)mask;
 
--(void)insertChannels:(NSArray *)channels;
--(void)insertChannels:(NSArray *)channels completionHandler:(dispatch_block_t)completionHandler deliveryOnQueue:(ASQueue *)deliveryQueue;
 
 
 -(void)insertMessagesHole:(TGMessageHole *)hole;

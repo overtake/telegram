@@ -73,10 +73,15 @@
     [Notification addObserver:self selector:@selector(notificationDialogSelectionChanged:) name:@"ChangeDialogSelection"];
     [self addScrollEvent];
     
+    
+    
+    
     if(![TGPasslock isEnabled] && [[MTNetwork instance] isAuth]) {
         [self initialize];
     }
-    
+//     [[MTNetwork instance] startNetwork];
+//    
+//    [[MTNetwork instance].updateService.proccessor resetStateAndSync];
 }
 
 -(void)initialize {

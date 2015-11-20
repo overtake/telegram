@@ -2428,6 +2428,9 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "__56-[TGModernConversationHistoryController performLoadNext]_block_invoke55:TGModernConversationHistoryController.m">
+      </ContextState>
+      <ContextState
          contextName = "-[TGStickerPackEmojiController drawWithStickers:]:TGStickerPackEmojiController.m">
       </ContextState>
       <ContextState
@@ -2874,6 +2877,14 @@
          contextName = "__57-[MessagesManager markAllInConversation:max_id:callback:]_block_invoke:MessagesManager.m">
       </ContextState>
       <ContextState
+         contextName = "__45-[Storage fillLastMessagesWithConversations:]_block_invoke_2:Storage.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "obj.top_message">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "-[TL_localMessage save:]:TL_localMessage.m">
          <PersistentStrings>
             <PersistentString
@@ -2939,6 +2950,14 @@
       </ContextState>
       <ContextState
          contextName = "__30-[Storage insertMessagesHole:]_block_invoke:Storage.m">
+      </ContextState>
+      <ContextState
+         contextName = "__56-[TGModernConversationHistoryController performLoadNext]_block_invoke_260:TGModernConversationHistoryController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "response">
+            </PersistentString>
+         </PersistentStrings>
       </ContextState>
       <ContextState
          contextName = "-[UserInfoViewController setUser:conversation:]:UserInfoViewController.m">
@@ -3060,6 +3079,14 @@
          <PersistentStrings>
             <PersistentString
                value = "isCleared">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[TGModernConversationHistoryController performLoadNext]:TGModernConversationHistoryController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "conversation.lastMessage.date">
             </PersistentString>
          </PersistentStrings>
       </ContextState>

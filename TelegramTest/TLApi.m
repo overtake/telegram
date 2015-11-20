@@ -2,7 +2,7 @@
 //  TLApi.m
 //  Telegram
 //
-//  Auto created by Mikhail Filimonov on 19.11.15..
+//  Auto created by Mikhail Filimonov on 20.11.15..
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -571,15 +571,19 @@
 @end
 
 @implementation TLAPI_messages_getDialogs
-+(TLAPI_messages_getDialogs*)createWithOffset:(int)offset limit:(int)limit {
++(TLAPI_messages_getDialogs*)createWithOffset_date:(int)offset_date offset_id:(int)offset_id offset_peer:(TLInputPeer*)offset_peer limit:(int)limit {
     TLAPI_messages_getDialogs* obj = [[TLAPI_messages_getDialogs alloc] init];
-    obj.offset = offset;
+    obj.offset_date = offset_date;
+	obj.offset_id = offset_id;
+	obj.offset_peer = offset_peer;
 	obj.limit = limit;
     return obj;
 }
 - (NSData*)getData {
-	SerializedData* stream = [ClassStore streamWithConstuctor:-2053423812];
-	[stream writeInt:self.offset];
+	SerializedData* stream = [ClassStore streamWithConstuctor:1799878989];
+	[stream writeInt:self.offset_date];
+	[stream writeInt:self.offset_id];
+	[ClassStore TLSerialize:self.offset_peer stream:stream];
 	[stream writeInt:self.limit];
 	return [stream getOutput];
 }

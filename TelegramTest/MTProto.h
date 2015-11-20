@@ -2,7 +2,7 @@
 //  MTProto.h
 //  Telegram
 //
-//  Auto created by Mikhail Filimonov on 19.11.15.
+//  Auto created by Mikhail Filimonov on 20.11.15.
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -1354,7 +1354,7 @@
 @end
 	
 @interface TLReportReason()
-
+@property (nonatomic, strong) NSString* text;
 @end
 
 @interface TL_inputReportReasonSpam : TLReportReason<NSCoding>
@@ -1365,6 +1365,9 @@
 @end
 @interface TL_inputReportReasonPornography : TLReportReason<NSCoding>
 +(TL_inputReportReasonPornography*)create;
+@end
+@interface TL_inputReportReasonOther : TLReportReason<NSCoding>
++(TL_inputReportReasonOther*)createWithText:(NSString*)text;
 @end
 	
 @interface TLUserFull()

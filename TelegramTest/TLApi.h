@@ -2,7 +2,7 @@
 //  TLApi.h
 //  Telegram
 //
-//  Auto created by Mikhail Filimonov on 19.11.15.
+//  Auto created by Mikhail Filimonov on 20.11.15.
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -243,10 +243,12 @@
 @end
 
 @interface TLAPI_messages_getDialogs : TLApiObject
-@property int offset;
+@property int offset_date;
+@property int offset_id;
+@property (nonatomic, strong) TLInputPeer* offset_peer;
 @property int limit;
 
-+(TLAPI_messages_getDialogs*)createWithOffset:(int)offset limit:(int)limit;
++(TLAPI_messages_getDialogs*)createWithOffset_date:(int)offset_date offset_id:(int)offset_id offset_peer:(TLInputPeer*)offset_peer limit:(int)limit;
 @end
 
 @interface TLAPI_messages_getHistory : TLApiObject

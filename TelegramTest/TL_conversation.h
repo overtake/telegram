@@ -90,7 +90,7 @@ typedef enum {
 -(BOOL)canEditConversation;
 
 -(long)channel_top_message_id;
-
+-(long)channel_top_important_message_id;
 - (DialogType) type;
 
 -(BOOL)isVerified;

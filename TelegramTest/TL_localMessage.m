@@ -321,8 +321,6 @@ DYNAMIC_PROPERTY(DDialog);
     }
     
     if(!dialog) {
-        dialog = [[Storage manager] selectConversation:self.peer];
-        
         if(!dialog)
             dialog = [[DialogsManager sharedManager] createDialogForMessage:self];
         else

@@ -34,7 +34,20 @@
     [Notification removeObserver:self];
 }
 
-
+-(NSArray *)unloadedConversationsWithMessages:(NSArray *)messages {
+    NSMutableDictionary *unloaded = [NSMutableDictionary dictionary];
+    
+    [messages enumerateObjectsUsingBlock:^(TL_localMessage *obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        
+        TL_conversation *conversation = [self find:obj.peer_id];
+        
+        if(!conversation)
+            unloaded[@(obj.peer_id)] = @(1);
+        
+    }];
+    
+    return unloaded.allKeys;
+}
 
 - (void)updateReadList:(NSNotification *)notify {
     NSArray *copy = [notify.userInfo objectForKey:KEY_MESSAGE_ID_LIST];
@@ -42,14 +55,16 @@
     [[Storage manager] messages:^(NSArray *messages) {
         
         NSMutableDictionary *updateDialogs = [[NSMutableDictionary alloc] init];
-        int total = 0;
-        for (TL_localMessage *message in messages) {
-            if(message.conversation) {
+        
+        NSArray *unloaded = [self unloadedConversationsWithMessages:messages];
+        
+        [[Storage manager] conversationsWithPeerIds:unloaded completeHandler:^(NSArray *result) {
+            
+            [self add:result];
+            
+            [messages enumerateObjectsUsingBlock:^(TL_localMessage *message, NSUInteger idx, BOOL * _Nonnull stop) {
                 if(!message.n_out) {
-                    if(message.conversation.unread_count != 0)
-                        ++total;
                     message.conversation.unread_count--;
-                    
                 }
                 
                 if(message.conversation.lastMessage.n_id == message.n_id) {
@@ -61,18 +76,17 @@
                     message.conversation.last_marked_date = message.date;
                 }
                 
-                [updateDialogs setObject:message.conversation forKey:@(message.conversation.peer.peer_id)];
-            }
+                [updateDialogs setObject:message.conversation forKey:@(message.conversation.peer_id)];
+            }];
             
-        }
+        }];
+        
         
         for (TL_conversation *dialog in updateDialogs.allValues) {
             [dialog save];
             [Notification perform:DIALOG_UPDATE data:@{KEY_DIALOG:dialog}];
             [Notification perform:[Notification notificationNameByDialog:dialog action:@"unread_count"] data:@{KEY_DIALOG:dialog,KEY_LAST_CONVRESATION_DATA:[MessagesUtils conversationLastData:dialog]}];
         }
-        
-        
         
         [[Storage manager] markMessagesAsRead:copy useRandomIds:@[]];
         
@@ -568,31 +582,39 @@
 - (void)updateTop:(TL_localMessage *)message needUpdate:(BOOL)needUpdate update_real_date:(BOOL)update_real_date {
     
     [self.queue dispatchOnQueue:^{
-        TL_conversation *dialog = message.conversation;
-        
-        [self updateConversation:dialog withLastMessage:message update_real_date:update_real_date];
-        
-        [dialog save];
-        
-        [MessagesManager updateUnreadBadge];
-        
-        [self add:@[dialog]];
         
         
-        [self checkBotKeyboard:dialog forMessage:message notify:YES];
+        NSArray *unloaded = [self unloadedConversationsWithMessages:@[message]];
         
-        
-        
-        if(needUpdate) {
+        [[Storage manager] conversationsWithPeerIds:unloaded completeHandler:^(NSArray *result) {
             
-            NSUInteger position = [self positionForConversation:dialog];
+            [self add:result];
             
-            if(dialog != nil) {
-                [Notification perform:DIALOG_MOVE_POSITION data:@{KEY_DIALOG:dialog, KEY_POSITION:@(position)}];
-                [Notification perform:[Notification notificationNameByDialog:dialog action:@"message"] data:@{KEY_DIALOG:dialog,KEY_LAST_CONVRESATION_DATA:[MessagesUtils conversationLastData:dialog]}];
+            TL_conversation *dialog = message.conversation;
+            
+            [self updateConversation:dialog withLastMessage:message update_real_date:update_real_date];
+            
+            [dialog save];
+            
+            [MessagesManager updateUnreadBadge];
+            
+            [self add:@[dialog]];
+            
+            
+            [self checkBotKeyboard:dialog forMessage:message notify:YES];
+            
+            if(needUpdate) {
+                
+                NSUInteger position = [self positionForConversation:dialog];
+                
+                if(dialog != nil) {
+                    [Notification perform:DIALOG_MOVE_POSITION data:@{KEY_DIALOG:dialog, KEY_POSITION:@(position)}];
+                    [Notification perform:[Notification notificationNameByDialog:dialog action:@"message"] data:@{KEY_DIALOG:dialog,KEY_LAST_CONVRESATION_DATA:[MessagesUtils conversationLastData:dialog]}];
+                }
+                
             }
-
-        }
+            
+        }];
         
     }];
     
@@ -732,38 +754,47 @@
     NSMutableDictionary *last = [[NSMutableDictionary alloc] init];
     
     [self.queue dispatchOnQueue:^{
-        for (TL_localMessage *message in messages) {
-            TL_conversation *dialog = message.conversation;
+        
+        NSArray *unloaded = [self unloadedConversationsWithMessages:messages];
+        
+        [[Storage manager] conversationsWithPeerIds:unloaded completeHandler:^(NSArray *conversations) {
+           
+            [self add:conversations];
             
-            BOOL res = [self updateConversation:dialog withLastMessage:message update_real_date:update_real_date];
-            
-            if(dialog && res) {
-                [last setObject:dialog forKey:@(dialog.peer.peer_id)];
-            }
-            
-            [last enumerateKeysAndObjectsUsingBlock:^(id key, TL_conversation *obj, BOOL *stop) {
+            [messages enumerateObjectsUsingBlock:^(TL_localMessage *message, NSUInteger idx, BOOL * _Nonnull stop) {
+             
+                TL_conversation *dialog = message.conversation;
                 
-                BOOL needNotify = [self checkBotKeyboard:obj forMessage:obj.lastMessage notify:NO];
+                BOOL res = [self updateConversation:dialog withLastMessage:message update_real_date:update_real_date];
                 
-                if(needNotify) {
-                     [Notification perform:[Notification notificationNameByDialog:obj action:@"botKeyboard"] data:@{KEY_DIALOG:obj}];
+                if(dialog && res) {
+                    [last setObject:dialog forKey:@(dialog.peer.peer_id)];
                 }
                 
-                [dialog save];
+                [last enumerateKeysAndObjectsUsingBlock:^(id key, TL_conversation *obj, BOOL *stop) {
+                    
+                    BOOL needNotify = [self checkBotKeyboard:obj forMessage:obj.lastMessage notify:NO];
+                    
+                    if(needNotify) {
+                        [Notification perform:[Notification notificationNameByDialog:obj action:@"botKeyboard"] data:@{KEY_DIALOG:obj}];
+                    }
+                    
+                    [dialog save];
+                    
+                }];
                 
+                if([message.media isKindOfClass:[TL_messageMediaPhoto class]]) {
+                    
+                    PreviewObject *previewObject = [[PreviewObject alloc] initWithMsdId:message.n_id media:message peer_id:message.peer_id];
+                    
+                    [Notification perform:MEDIA_RECEIVE data:@{KEY_PREVIEW_OBJECT:previewObject}];
+                }
+
             }];
             
-            if([message.media isKindOfClass:[TL_messageMediaPhoto class]]) {
-                
-                PreviewObject *previewObject = [[PreviewObject alloc] initWithMsdId:message.n_id media:message peer_id:message.peer_id];
-                
-                [Notification perform:MEDIA_RECEIVE data:@{KEY_PREVIEW_OBJECT:previewObject}];
-            }
-            
-            
-        }
+        }];
         
-        
+
         [self add:last.allValues];
         
         [MessagesManager updateUnreadBadge];

@@ -84,52 +84,43 @@ static ChatHistoryController *observer;
         
         _conversation = [controller conversation];
         
+        [listeners addObject:[WeakReference weakReferenceWithObject:self]];
         
-        [queue dispatchOnQueue:^{
+        
+        _filters = [NSMutableArray array];
+        
+        _controller = controller;
+        
+        
+        self.semaphore = dispatch_semaphore_create(1);
+        
+        self.selectLimit = 100;
+        
+        [self addFilter:[[historyFilter alloc] initWithController:self peer:_conversation.peer]];
+        
+        if(_conversation.type == DialogTypeChannel) {
             
-            [listeners addObject:[WeakReference weakReferenceWithObject:self]];
-            
-            
-            _filters = [NSMutableArray array];
-       
-            _controller = controller;
-            
-            
-            self.semaphore = dispatch_semaphore_create(1);
-            
-            self.selectLimit = 100;
-            
-            [self addFilter:[[historyFilter alloc] initWithController:self peer:_conversation.peer]];
-            
-            
-            if(_conversation.type == DialogTypeChannel) {
-                
-                dispatch_block_t block = ^{
-                    if( _conversation.chat.chatFull.migrated_from_chat_id != 0) {
-                        
-                        HistoryFilter *filter = [[historyFilter == [ChannelFilter class] ? [MegagroupChatFilter class] : historyFilter alloc] initWithController:self peer:[TL_peerChat createWithChat_id:_conversation.chat.chatFull.migrated_from_chat_id]];
-                        
-                        [self addFilter:filter];
-                    }
-                };
-                
-                if(_conversation.chat.chatFull != nil) {
-                    block();
-                } else {
-                    [[FullChatManager sharedManager] performLoad:_conversation.chat.n_id callback:^(TLChatFull *fullChat) {
-                        
-                        block();
-                        
-                    }];
+            dispatch_block_t block = ^{
+                if( _conversation.chat.chatFull.migrated_from_chat_id != 0) {
+                    
+                    HistoryFilter *filter = [[historyFilter == [ChannelFilter class] ? [MegagroupChatFilter class] : historyFilter alloc] initWithController:self peer:[TL_peerChat createWithChat_id:_conversation.chat.chatFull.migrated_from_chat_id]];
+                    
+                    [self addFilter:filter];
                 }
-                
+            };
+            
+            if(_conversation.chat.chatFull != nil) {
+                block();
+            } else {
+                [[FullChatManager sharedManager] performLoad:_conversation.chat.n_id callback:^(TLChatFull *fullChat) {
+                    
+                    block();
+                    
+                }];
             }
             
-            _need_save_to_db = YES;
-        
+        }
 
-         } synchronous:YES];
-        
         
         
     }

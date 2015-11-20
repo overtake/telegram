@@ -404,16 +404,26 @@ static NSString *kDefaultDatacenter = @"default_dc";
 }
 
 - (TGUpdateMessageService *)updateService {
-    return _updateService;
+    __block TGUpdateMessageService *s;
+    
+    [_queue dispatchOnQueue:^{
+        
+        s =  _updateService;
+        
+    } synchronous:YES];
+    
+    return s;
 }
 
 -(void)startNetwork {
     
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-         [self initConnectionWithId:_masterDatacenter];
-        
-         [_datacenterWatchdog execute:nil];
+        [_queue dispatchOnQueue:^{
+            [self initConnectionWithId:_masterDatacenter];
+            
+            [_datacenterWatchdog execute:nil];
+        }];
     });
 }
 

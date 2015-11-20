@@ -9,7 +9,7 @@
 #import "TL_conversation.h"
 #import "TLPeer+Extensions.h"
 #import "TGPasslock.h"
-
+#import "TL_localMessage.h"
 
 @interface TL_conversation ()
 @property (nonatomic,strong,readonly) TLUser *p_user;
@@ -193,26 +193,10 @@
 }
 
 
--(int)unread_count {
-    if([self.chat isKindOfClass:[TLChat class]] && ( self.chat.isDeactivated || self.chat.migrated_to.channel_id != 0)) {
-        return 0;
-    }
-    
-    return [super unread_count];
-}
-
--(int)unread_important_count {
-    if([self.chat isKindOfClass:[TLChat class]] && ( self.chat.isDeactivated || self.chat.migrated_to.channel_id != 0)) {
-        return 0;
-    }
-    
-    return [super unread_important_count];
-}
-
 - (void)save {
     if(self.top_message && self.fake)
         self.fake = NO;
-    [[Storage manager] updateDialog:self];
+    [[Storage manager] insertDialogs:@[self]];
 }
 
 -(void)dealloc {
@@ -404,21 +388,11 @@ static void *kType;
 }
 
 -(long)channel_top_message_id {
-    
-    NSMutableData *data = [NSMutableData data];
-    int msgId = self.top_message;
-    int channelId = self.peer_id;
-    
-    [data appendBytes:&msgId length:4];
-    [data appendBytes:&channelId length:4];
-    
-    
-    long converted;
-    
-    [data getBytes:&converted length:8];
-    
-    
-    return converted;
+    return channelMsgId(self.top_message,self.peer_id);
+}
+
+-(long)channel_top_important_message_id {
+    return channelMsgId(self.top_important_message,self.peer_id);
 }
 
 -(BOOL)isVerified {
