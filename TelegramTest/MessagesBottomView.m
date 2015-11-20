@@ -256,6 +256,8 @@
             
             _chatFull = chatFull;
             
+            [[FullChatManager sharedManager] loadParticipantsWithMegagroupId:chatFull.n_id];
+            
             [self updateBotButtons];
             
         }];

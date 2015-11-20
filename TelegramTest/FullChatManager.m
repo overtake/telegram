@@ -358,4 +358,29 @@
     
 }
 
+-(void)loadParticipantsWithMegagroupId:(int)chat_id {
+    
+    TLChatFull *chatFull = [self find:chat_id];
+    
+    if(!chatFull.participants)
+        chatFull.participants = [TL_chatParticipants createWithChat_id:chat_id participants:[NSMutableArray array] version:0];
+    
+    if(chatFull) {
+        int offset = (int) chatFull.participants.participants.count;
+        
+        [RPCRequest sendRequest:[TLAPI_channels_getParticipants createWithChannel:chatFull.chat.inputPeer filter:[TL_channelParticipantsRecent create] offset:offset limit:500] successHandler:^(id request, TL_channels_channelParticipants *response) {
+            
+            [SharedManager proccessGlobalResponse:response];
+            
+            [chatFull.participants.participants addObjectsFromArray:response.participants];
+
+            
+        } errorHandler:^(id request, RpcError *error) {
+            
+        }];
+    }
+    
+    
+}
+
 @end

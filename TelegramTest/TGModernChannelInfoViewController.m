@@ -108,6 +108,10 @@
     _chat = chat;
     _conversation = chat.dialog;
     
+    if(_chat.isMegagroup) {
+        _chat.chatFull.participants = [TL_chatParticipants createWithChat_id:_chat.n_id participants:[NSMutableArray array] version:0];
+    }
+    
     _composeActionManagment = [[ComposeAction alloc] initWithBehaviorClass:[ComposeActionBehavior class] filter:@[] object:chat];;
     
     [self setAction:[[ComposeAction alloc] initWithBehaviorClass:[ComposeActionInfoProfileBehavior class] filter:nil object:_conversation]];
@@ -122,13 +126,15 @@
     
     [self removeScrollEvent];
     
-    int offset = (int)(_tableView.count - 1 - [_tableView indexOfItem:_participantsHeaderItem]);
+    int offset = (int) _chat.chatFull.participants.participants.count;
     
     [RPCRequest sendRequest:[TLAPI_channels_getParticipants createWithChannel:_chat.inputPeer filter:[TL_channelParticipantsRecent create] offset:offset limit:30] successHandler:^(id request, TL_channels_channelParticipants *response) {
         
         [SharedManager proccessGlobalResponse:response];
         
         NSMutableArray *items = [NSMutableArray array];
+        
+        [_chat.chatFull.participants.participants addObjectsFromArray:response.participants];
         
         [response.participants enumerateObjectsUsingBlock:^(TLChatParticipant *obj, NSUInteger idx, BOOL * _Nonnull stop) {
             
@@ -178,7 +184,6 @@
         
     } errorHandler:^(id request, RpcError *error) {
         
-        int bp = 0;
         
     }];
 
@@ -187,8 +192,7 @@
 
 - (void)scrollViewDocumentOffsetChangingNotificationHandler:(NSNotification *)aNotification {
     
-    
-    if([self.tableView.scrollView isNeedUpdateTop] ) {
+    if([self.tableView.scrollView isNeedUpdateBottom] ) {
         
         [self loadNextParticipants];
         

@@ -19,6 +19,7 @@
 @property (nonatomic,assign) BOOL isLoad;
 @property (nonatomic,copy) void (^loadHandler)(void);
 
+-(void)loadParticipantsWithMegagroupId:(int)chat_id;
 
 
 - (void)loadStored;

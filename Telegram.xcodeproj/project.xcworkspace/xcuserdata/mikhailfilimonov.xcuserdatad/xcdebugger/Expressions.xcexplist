@@ -137,6 +137,9 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "-[MessagesViewController setCurrentConversation:withMessageJump:force:]:MessagesViewController.m">
+      </ContextState>
+      <ContextState
          contextName = "-[TGProccessUpdates addStatefullUpdate:seq:pts:date:qts:pts_count:]:TGProccessUpdates.m">
       </ContextState>
       <ContextState
@@ -2832,6 +2835,14 @@
       </ContextState>
       <ContextState
          contextName = "__39-[DialogsManager deleteChannelMessags:]_block_invoke_2:DialogsManager.m">
+      </ContextState>
+      <ContextState
+         contextName = "__57-[TGModernChannelInfoViewController loadNextParticipants]_block_invoke:TGModernChannelInfoViewController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "_chat.chatFull.participants.participants">
+            </PersistentString>
+         </PersistentStrings>
       </ContextState>
       <ContextState
          contextName = "-[TGImageObject _didDownloadImage:]:TGImageObject.m">

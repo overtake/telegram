@@ -2210,9 +2210,6 @@ static NSTextAttachment *headerMediaIcon() {
         [self removeScrollEvent];
         
         
-         if((flags & ShowMessageTypeUnreadMark) == 0 || msg.isChannelMessage)
-             [self showModalProgress];
-        
         if((flags & ShowMessageTypeUnreadMark) > 0 && msg.isChannelMessage ) {
             [self flushMessages];
         }
@@ -2279,8 +2276,6 @@ static NSTextAttachment *headerMediaIcon() {
             }
             
             [self addScrollEvent];
-            if((flags & ShowMessageTypeUnreadMark) == 0 || msg.isChannelMessage)
-                [self hideModalProgress];
         }];
         
     };
@@ -2392,7 +2387,7 @@ static NSTextAttachment *headerMediaIcon() {
         
         if(message != nil) {
             [self showMessage:message fromMsg:nil flags:ShowMessageTypeSearch];
-        } else if(dialog.last_marked_message < dialog.universalTopMessage) {
+        } else if(dialog.last_marked_message != -1 &&dialog.last_marked_message < dialog.universalTopMessage) {
             
             TL_localMessage *msg =  [[TL_localMessage alloc] init];
             
@@ -2640,7 +2635,6 @@ static NSTextAttachment *headerMediaIcon() {
     
     [self.historyController request:!prev anotherSource:YES sync:isFirst selectHandler:^(NSArray *prevResult, NSRange range1) {
         
-
         [self messagesLoadedTryToInsert:prevResult pos:pos next:!prev];
         
         if(self.didUpdatedTable) {

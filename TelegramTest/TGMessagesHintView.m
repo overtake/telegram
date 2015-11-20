@@ -358,7 +358,7 @@ DYNAMIC_PROPERTY(DUser);
     
     NSMutableArray *uids = [[NSMutableArray alloc] init];
     
-    if([chat isKindOfClass:[TL_chat class]]) {
+    if(fullChat.participants.participants) {
         [fullChat.participants.participants enumerateObjectsUsingBlock:^(TLChatParticipant * obj, NSUInteger idx, BOOL *stop) {
             [uids addObject:@(obj.user_id)];
             
