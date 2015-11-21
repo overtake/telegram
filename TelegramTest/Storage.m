@@ -735,7 +735,7 @@ TL_localMessage *parseMessage(FMResultSet *result) {
             localMaxDate = INT32_MAX;
         
         
-        NSString *sql = [NSString stringWithFormat:@"SELECT * FROM %@ WHERE  peer_id = %d AND date > %d AND date < %d %@  AND (filter_mask & %d > 0) ORDER BY date %@, n_id %@ LIMIT %d",isChannel ? tableChannelMessages : tableMessages,conversationId,localMinDate,localMaxDate,isChannel ? @"" : [NSString stringWithFormat: @"and destruct_time > %d",[[MTNetwork instance] getTime]],mask, next ? @"DESC" : @"ASC",next ? @"DESC" : @"ASC",limit];
+        NSString *sql = [NSString stringWithFormat:@"SELECT * FROM %@ WHERE  peer_id = %d AND date >= %d AND date < %d %@  AND (filter_mask & %d > 0) ORDER BY date %@, n_id %@ LIMIT %d",isChannel ? tableChannelMessages : tableMessages,conversationId,localMinDate,localMaxDate,isChannel ? @"" : [NSString stringWithFormat: @"and destruct_time > %d",[[MTNetwork instance] getTime]],mask, next ? @"DESC" : @"ASC",next ? @"DESC" : @"ASC",limit];
 
         
         
@@ -758,8 +758,6 @@ TL_localMessage *parseMessage(FMResultSet *result) {
         TL_localMessage *lastMessage = [messages lastObject];
         
         if(lastMessage) {
-            
-            
             
             NSArray *selectedCount = [messages filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.date == %d",lastMessage.date]];
            

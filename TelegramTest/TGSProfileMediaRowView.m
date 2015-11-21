@@ -250,6 +250,8 @@ static NSMutableDictionary *loaders;
     
     TMCollectionPageController *viewController = [[TMCollectionPageController alloc] initWithFrame:NSZeroRect];
     
+    [self.item.controller.navigationViewController pushViewController:viewController animated:YES];
+    
     [viewController setConversation:self.item.conversation];
     
     if([url isEqualToString:@"files"]) {
@@ -262,7 +264,7 @@ static NSMutableDictionary *loaders;
         
     }
     
-    [self.item.controller.navigationViewController pushViewController:viewController animated:YES];
+    
     
 }
 

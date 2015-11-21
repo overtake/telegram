@@ -88,7 +88,6 @@
         
         __block TL_conversation *conversation;
         
-        
         [all enumerateObjectsWithOptions:NSEnumerationReverse usingBlock:^(TL_conversation *obj, NSUInteger idx, BOOL * _Nonnull stop) {
             
             if(obj.type != DialogTypeSecretChat && obj.lastMessage && obj.lastMessage.n_id < TGMINFAKEID) {

@@ -127,7 +127,7 @@
         
     }];
     
-    return lastObject.message.date ;
+    return lastObject.message.date;
     
 }
 
@@ -355,7 +355,6 @@
         
     *state = response.result.count < self.selectLimit || [self confirmHoleWithNext:next] ? ChatHistoryStateRemote : ChatHistoryStateLocal;
     
-        
     return response.result;
     
 }

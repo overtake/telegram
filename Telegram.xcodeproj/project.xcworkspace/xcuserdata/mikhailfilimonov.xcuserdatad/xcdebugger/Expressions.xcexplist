@@ -157,10 +157,13 @@
                value = "holeSql">
             </PersistentString>
             <PersistentString
+               value = "allHoles">
+            </PersistentString>
+            <PersistentString
                value = "conversationId">
             </PersistentString>
             <PersistentString
-               value = "allHoles">
+               value = "sql">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -2238,6 +2241,11 @@
       </ContextState>
       <ContextState
          contextName = "__57-[MessagesManager notifyMessage:update_real_date:notify:]_block_invoke:MessagesManager.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "message.chat.isMegagroup">
+            </PersistentString>
+         </PersistentStrings>
       </ContextState>
       <ContextState
          contextName = "__42-[NewContactsManager importCloudContacts:]_block_invoke_2:NewContactsManager.m">
@@ -4467,6 +4475,14 @@
          <PersistentStrings>
             <PersistentString
                value = "self.type">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "__86-[Storage loadMessages:min_id:max_id:minDate:maxDate:limit:next:filterMask:isChannel:]_block_invoke_2:Storage.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "next">
             </PersistentString>
          </PersistentStrings>
       </ContextState>

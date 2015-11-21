@@ -120,7 +120,7 @@ static const int seconds_to_notify = 120;
         [Notification perform:MESSAGE_UPDATE_TOP_MESSAGE data:@{KEY_MESSAGE:message,@"update_real_date":@(update_real_date)}];
         
         
-        if(message.from_id == [UsersManager currentUserId] || (message.isChannelMessage && !message.isImportantMessage)) {
+        if(message.from_id == [UsersManager currentUserId] || (message.isChannelMessage && (!message.isImportantMessage && !message.chat.isMegagroup))) {
             return;
         }
         
