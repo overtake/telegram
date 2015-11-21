@@ -2971,8 +2971,9 @@ static NSTextAttachment *headerMediaIcon() {
     
     
     NSCharacterSet *set = [NSCharacterSet whitespaceCharacterSet];
-    if ([[message stringByTrimmingCharactersInSet: set] length] == 0)
-    {
+    if ([[message stringByTrimmingCharactersInSet: set] length] == 0) {
+        return;
+    } else if([message stringByReplacingOccurrencesOfString:@"\n" withString:@""].length == 0) {
         return;
     }
     
@@ -3855,7 +3856,7 @@ static NSTextAttachment *headerMediaIcon() {
         return;
     }
     
-    NSAlert *alert = [NSAlert alertWithMessageText:dialog.type == DialogTypeChannel && dialog.chat.isAdmin ? (NSLocalizedString(@"Conversation.Confirm.DeleteChannel", nil)) : (dialog.type == DialogTypeChat && dialog.chat.type == TLChatTypeNormal ? NSLocalizedString(@"Conversation.Confirm.LeaveAndClear", nil) :  NSLocalizedString(@"Conversation.Confirm.DeleteAndClear", nil)) informativeText:dialog.type == DialogTypeChannel && dialog.chat.isAdmin ? NSLocalizedString(@"Conversation.Confirm.DeleteChannelInfo", nil) : NSLocalizedString(@"Conversation.Confirm.UndoneAction", nil) block:^(NSNumber *result) {
+    NSAlert *alert = [NSAlert alertWithMessageText:dialog.type == DialogTypeChannel && dialog.chat.isAdmin && !dialog.chat.isMegagroup ? (NSLocalizedString(@"Conversation.Confirm.DeleteChannel", nil)) : (dialog.type == DialogTypeChat && dialog.chat.type == TLChatTypeNormal ? NSLocalizedString(@"Conversation.Confirm.LeaveAndClear", nil) :  NSLocalizedString(@"Conversation.Confirm.DeleteAndClear", nil)) informativeText:dialog.type == DialogTypeChannel && dialog.chat.isAdmin && !dialog.chat.isMegagroup ? NSLocalizedString(@"Conversation.Confirm.DeleteChannelInfo", nil) : NSLocalizedString(@"Conversation.Confirm.UndoneAction", nil) block:^(NSNumber *result) {
         if([result intValue] == 1000) {
             if(startDeleting != nil)
                 startDeleting();
@@ -3863,7 +3864,7 @@ static NSTextAttachment *headerMediaIcon() {
         }
     }];
     
-    NSString *buttonText = dialog.type == DialogTypeChannel && dialog.chat.isAdmin ? NSLocalizedString(@"Conversation.Confirm.DeleteChannel", nil) : (dialog.type == DialogTypeChat && dialog.chat.type == TLChatTypeNormal ? NSLocalizedString(@"Conversation.DeleteAndExit", nil) : NSLocalizedString(@"Conversation.Delete", nil));
+    NSString *buttonText = dialog.type == DialogTypeChannel && dialog.chat.isAdmin && !dialog.chat.isMegagroup ? NSLocalizedString(@"Conversation.Confirm.DeleteChannel", nil) : (dialog.type == DialogTypeChat && dialog.chat.type == TLChatTypeNormal ? NSLocalizedString(@"Conversation.DeleteAndExit", nil) : NSLocalizedString(@"Conversation.Delete", nil));
     
     [alert addButtonWithTitle:buttonText];
     [alert addButtonWithTitle:NSLocalizedString(@"Profile.Cancel", nil)];

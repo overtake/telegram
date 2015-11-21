@@ -9,7 +9,7 @@
 #import "ComposeChangeChannelDescriptionViewController.h"
 #import "TGSettingsTableView.h"
 #import "TGGeneralInputRowItem.h"
-
+#import "ComposeActionChangeChannelAboutBehavior.h"
 
 @interface ComposeChangeChannelDescriptionViewController ()
 @property (nonatomic,strong) TGSettingsTableView *tableView;
@@ -42,13 +42,13 @@
     [super viewWillAppear:animated];
     
     
+    
     [_tableView removeAllItems:YES];
     
     [_tableView addItem:[[TGGeneralRowItem alloc] initWithHeight:20] tableRedraw:YES];
     
-    _inputItem = [[TGGeneralInputRowItem alloc] initWithObject:NSLocalizedString(@"Channel.ChangeDescriptionPlaceholder", nil)];
     
-    
+    _inputItem = [[TGGeneralInputRowItem alloc] initWithObject:self.action.reservedObject1];
     
     TLChat *chat = self.action.object;
     
@@ -57,9 +57,7 @@
     [_tableView addItem:_inputItem tableRedraw:YES];
     
     
-    
-    
-    GeneralSettingsBlockHeaderItem *description = [[GeneralSettingsBlockHeaderItem alloc] initWithString:NSLocalizedString(@"Channel.ChangeAboutDescription", nil) height:50 flipped:YES];
+    GeneralSettingsBlockHeaderItem *description = [[GeneralSettingsBlockHeaderItem alloc] initWithString:self.action.reservedObject2 height:50 flipped:YES];
     
     
     [_tableView addItem:description tableRedraw:YES];

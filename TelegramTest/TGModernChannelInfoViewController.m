@@ -170,7 +170,7 @@
         
         [user setStateback:^id(TGGeneralRowItem *item) {
             
-            BOOL canRemoveUser = (obj.user_id != [UsersManager currentUserId] && (self.chat.isAdmin || self.chat.isCreator) && ![obj isKindOfClass:[TL_chatParticipantCreator class]]);
+            BOOL canRemoveUser = ((obj.user_id != [UsersManager currentUserId] && (self.chat.isAdmin || self.chat.isManager)) && ![obj isKindOfClass:[TL_channelParticipantCreator class]]);
             
             return @(canRemoveUser);
             
@@ -252,7 +252,7 @@
 
 -(void)configure {
     
-    [self.doneButton setHidden:!_chat.isManager || !_chat.isAdmin];
+    [self.doneButton setHidden:!_chat.isManager && !_chat.isAdmin];
     
     [_tableView removeAllItems:YES];
  
@@ -311,8 +311,7 @@
                 [viewController setAction:[[ComposeAction alloc] initWithBehaviorClass:[ComposeActionChannelMembersBehavior class] filter:@[] object:_chat reservedObjects:@[[TL_channelParticipantsRecent create]]]];
                 
                 [self.navigationViewController pushViewController:viewController animated:YES];
-                
-                
+                 
             } description:NSLocalizedString(@"Channel.Members", nil) subdesc:[NSString stringWithFormat:@"%d",_chat.chatFull.participants_count] height:42 stateback:nil];
             
             if(_chat.chatFull.kicked_count > 0) {
@@ -395,7 +394,7 @@
             
             ComposeChangeChannelDescriptionViewController *viewController = [[ComposeChangeChannelDescriptionViewController alloc] init];
             
-            [viewController setAction:[[ComposeAction alloc] initWithBehaviorClass:[ComposeActionChangeChannelAboutBehavior class] filter:nil object:_chat]];
+            [viewController setAction:[[ComposeAction alloc] initWithBehaviorClass:[ComposeActionChangeChannelAboutBehavior class] filter:nil object:_chat reservedObjects:@[NSLocalizedString(@"Compose.ChannelAboutPlaceholder", nil),(_chat.isMegagroup ? NSLocalizedString(@"Compose.ChatAboutDescription", nil) : NSLocalizedString(@"Compose.ChannelAboutDescription", nil))]]];
             
             [self.navigationViewController pushViewController:viewController animated:YES];
             
@@ -432,7 +431,7 @@
                 [self.navigationViewController.messagesViewController deleteDialog:_conversation];
                 
                 
-            } description:NSLocalizedString(@"Profile.DeleteChannel", nil) height:42 stateback:nil];
+            } description:_chat.isMegagroup ? NSLocalizedString(@"Profile.DeleteAndExit", nil) :NSLocalizedString(@"Profile.DeleteChannel", nil) height:42 stateback:nil];
             
             deleteChannelItem.textColor = [NSColor redColor];
             

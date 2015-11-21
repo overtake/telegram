@@ -404,7 +404,7 @@
                 actionText = NSLocalizedString(@"MessageAction.Service.YouChoinedToChannel", nil);
             }
         } else {
-            if(action.user_id != message.from_id) {
+            if(action.users.count == 1 && [action.users[0] intValue] != message.from_id) {
                 
                 [action.users enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
                     TLUser *user = [[UsersManager sharedManager] find:[obj intValue]];

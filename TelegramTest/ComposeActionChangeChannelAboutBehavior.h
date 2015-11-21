@@ -11,6 +11,7 @@
 @interface ComposeActionChangeChannelAboutBehavior : ComposeActionBehavior
 
 
-
+-(NSString *)placeholder;
+-(NSString *)placeholderDescription;
 
 @end

@@ -15,6 +15,7 @@
     return [[NSMutableAttributedString alloc] initWithString:NSLocalizedString(@"Compose.ChannelAboutPlaceholder", nil) attributes:@{NSFontAttributeName:TGSystemFont(15)}];
 }
 
+
 -(void)composeDidDone {
     [self.action.currentViewController showModalProgress];
     

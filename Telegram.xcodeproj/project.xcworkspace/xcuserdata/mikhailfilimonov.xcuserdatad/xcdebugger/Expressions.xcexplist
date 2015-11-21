@@ -2339,6 +2339,14 @@
       </ContextState>
       <ContextState
          contextName = "-[TGModernChannelInfoViewController configure]:TGModernChannelInfoViewController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "_chat.isAdmin">
+            </PersistentString>
+            <PersistentString
+               value = "_chat.isManager">
+            </PersistentString>
+         </PersistentStrings>
       </ContextState>
       <ContextState
          contextName = "__44-[TGChannelsPolling setCurrentConversation:]_block_invoke:TGChannelsPolling.m">
