@@ -106,6 +106,8 @@
     
     [_textField setAttributedStringValue:self.item.result];
     
+    [self.window makeFirstResponder:_textField];
+    
 }
 
 -(TGGeneralInputRowItem *)item {

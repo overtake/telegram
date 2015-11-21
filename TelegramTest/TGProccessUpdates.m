@@ -535,6 +535,8 @@ static NSArray *channelUpdates;
                 return;
             }
             
+            
+            
             return [MessagesManager addAndUpdateMessage:message];
         }
         

@@ -451,14 +451,11 @@
     }
     
     
-    
     if(addMembersItem || exportInviteLink) {
         [_tableView addItem:[[TGGeneralRowItem alloc] initWithHeight:20] tableRedraw:YES];
     }
     
-    
-    
-    int uppgradeCount = ACCEPT_FEATURE ? 15 : maxChatUsers();
+    int uppgradeCount = ACCEPT_FEATURE ? 2 : maxChatUsers();
     
     if(self.participantsRange.length >= uppgradeCount && _chat.isCreator && ACCEPT_FEATURE) {
         
@@ -472,23 +469,19 @@
                 
                 [RPCRequest sendRequest:[TLAPI_messages_migrateChat createWithChat_id:_chat.n_id] successHandler:^(id request, id response) {
                     
-                    
-                    
                     TLChat *chat = [[ChatsManager sharedManager] find:_chat.migrated_to.channel_id];
                     
                     if(chat) {
                         
-                        [ASQueue dispatchOnMainQueue:^{
-                            [self.navigationViewController.messagesViewController setCurrentConversation:chat.dialog];
-                            [self.navigationViewController gotoViewController:self.navigationViewController.messagesViewController];
+                        [[FullChatManager sharedManager] performLoad:chat.n_id callback:^(TLChatFull *fullChat) {
                             
+                            [self.navigationViewController showMessagesViewController:chat.dialog];
+                            
+                            [self hideModalProgressWithSuccess];
                         }];
                         
+                        
                     }
-                    
-                    [ASQueue dispatchOnMainQueue:^{
-                        [self hideModalProgressWithSuccess];
-                    }];
                     
                     
                 } errorHandler:^(id request, RpcError *error) {

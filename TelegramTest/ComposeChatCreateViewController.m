@@ -298,8 +298,7 @@
 
     [self setCenterBarViewTextAttributed:self.action.behavior.centerTitle];
     
-    
-    
+    [self.view.window makeFirstResponder:self.headerView.textView];
     
     [self.doneButton setStringValue:self.action.behavior.doneTitle];
     

@@ -114,10 +114,13 @@
             
             
             NSMutableArray *converted = [[NSMutableArray alloc] init];
+            
            
             [response.dialogs enumerateObjectsUsingBlock:^(TL_dialog *dialog, NSUInteger idx, BOOL *stop) {
                 
                 TL_localMessage *lastMessage = [TL_localMessage convertReceivedMessage:[[response.messages filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.n_id == %d",dialog.top_message]] firstObject]];
+                
+                TLChat *chat = [[response.chats filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.n_id == %d",-dialog.peer.peer_id]] firstObject];
                 
                 TL_conversation *conversation;
                 
@@ -139,7 +142,6 @@
                     }];
                     
                     
-                    TLChat *chat = [[response.chats filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.n_id == %d",dialog.peer.channel_id]] firstObject];
                     
                     if(f.count == 2) {
                         
@@ -167,9 +169,8 @@
                     
                     conversation = [TL_conversation createWithPeer:dialog.peer top_message:dialog.top_message unread_count:dialog.unread_important_count last_message_date:date notify_settings:dialog.notify_settings last_marked_message:top_important_message top_message_fake:top_important_message last_marked_date:minMsg.date sync_message_id:topMsg.n_id read_inbox_max_id:dialog.read_inbox_max_id unread_important_count:dialog.unread_important_count lastMessage:lastMessage pts:dialog.pts isInvisibleChannel:NO top_important_message:top_important_message];
                 } else {
-                    conversation = [TL_conversation createWithPeer:dialog.peer top_message:dialog.top_message unread_count:dialog.unread_count last_message_date:lastMessage.date notify_settings:dialog.notify_settings last_marked_message:dialog.top_message top_message_fake:dialog.top_message last_marked_date:lastMessage.date sync_message_id:lastMessage.n_id read_inbox_max_id:dialog.read_inbox_max_id unread_important_count:dialog.unread_important_count lastMessage:lastMessage pts:dialog.pts isInvisibleChannel:NO top_important_message:dialog.top_important_message];
+                    conversation = [TL_conversation createWithPeer:dialog.peer top_message:dialog.top_message unread_count:chat.migrated_to.channel_id != 0 ? 0 : dialog.unread_count last_message_date:lastMessage.date notify_settings:dialog.notify_settings last_marked_message:dialog.top_message top_message_fake:dialog.top_message last_marked_date:lastMessage.date sync_message_id:lastMessage.n_id read_inbox_max_id:dialog.read_inbox_max_id unread_important_count:dialog.unread_important_count lastMessage:lastMessage pts:dialog.pts isInvisibleChannel:NO top_important_message:dialog.top_important_message];
                 }
-
                 
                 [converted addObject:conversation];
                 

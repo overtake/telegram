@@ -23,8 +23,6 @@
 
 -(NSArray *)findWithWebPageId:(long)webpage_id;
 
--(void)addMessage:(TLMessage *)message;
-
 -(void)readMessagesContent:(NSArray *)msg_ids;
 
 +(void)notifyConversation:(int)peer_id title:(NSString *)title text:(NSString *)text;

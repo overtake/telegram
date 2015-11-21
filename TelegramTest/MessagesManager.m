@@ -98,6 +98,7 @@
 
 
 +(void)addAndUpdateMessage:(TL_localMessage *)message {
+    [[Storage manager] insertMessage:message];
     [self addAndUpdateMessage:message notify:YES];
 }
 
@@ -114,9 +115,6 @@ static const int seconds_to_notify = 120;
         if(!message)
             return;
         
-        
-        [self addMessage:message];
-         
         TL_conversation *conversation = message.conversation;
         
         [Notification perform:MESSAGE_UPDATE_TOP_MESSAGE data:@{KEY_MESSAGE:message,@"update_real_date":@(update_real_date)}];
@@ -359,10 +357,6 @@ static const int seconds_to_notify = 120;
 }
 
 
-
--(void)addMessage:(TLMessage *)message  {
-    [[Storage manager] insertMessage:message];
-}
 
 
 -(id)find:(NSInteger)_id {

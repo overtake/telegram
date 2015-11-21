@@ -245,7 +245,6 @@ static NSMutableDictionary *loaders;
     // handle
     if([url isEqualToString:@"audio"]) {
         [TGAudioPlayerWindow show:self.item.conversation playerState:TGAudioPlayerWindowStatePlayList];
-        
         return;
     }
     

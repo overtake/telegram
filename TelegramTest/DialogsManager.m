@@ -157,8 +157,6 @@
         
         [dialog save];
         
-        [[ChannelsManager sharedManager] add:@[dialog]];
-        
         
         dialog.fake = YES;
         [self add:@[dialog]];
@@ -422,9 +420,7 @@
             
             [self->list removeObject:dialog];
             [self->keys removeObjectForKey:@(dialog.peer_id)];
-            
-            [[ChannelsManager sharedManager] removeObjectWithKey:@(dialog.peer_id)];
-            
+                        
             [MessagesManager updateUnreadBadge];
             
             if(dialog.chat != nil) {

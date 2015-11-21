@@ -1446,6 +1446,9 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "-[MessagesViewController setCurrentConversation:]:MessagesViewController.m">
+      </ContextState>
+      <ContextState
          contextName = "__56-[DialogsManager updateTop:needUpdate:update_real_date:]_block_invoke:DialogsManager.m">
          <PersistentStrings>
             <PersistentString
@@ -2804,6 +2807,9 @@
             </PersistentString>
             <PersistentString
                value = "isFirst">
+            </PersistentString>
+            <PersistentString
+               value = "self.historyController">
             </PersistentString>
          </PersistentStrings>
       </ContextState>

@@ -32,6 +32,7 @@ static int offsetEditable = 30;
         [self setSelectedBackgroundColor: NSColorFromRGB(0xfafafa)];
         [self setNormalBackgroundColor:NSColorFromRGB(0xffffff)];
         self.avatarImageView = [TMAvatarImageView standartNewConversationTableAvatar];
+        self.avatarImageView.offsetTextY = -2;
         [self addSubview:self.avatarImageView];
         [self.avatarImageView setFont:TGSystemLightFont(15)];
         [self.avatarImageView setFrameSize:NSMakeSize(36, 36)];

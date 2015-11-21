@@ -25,9 +25,6 @@ DYNAMIC_PROPERTY(DDialog);
     TL_conversation *dialog = [self getDDialog];
     
     if(!dialog) {
-        if(self.isChannel)
-            dialog = [[ChannelsManager sharedManager] find:-self.n_id];
-        else
             dialog = [[DialogsManager sharedManager] findByChatId:self.n_id];
         [self setDDialog:dialog];
     }
@@ -36,13 +33,8 @@ DYNAMIC_PROPERTY(DDialog);
         dialog = [[Storage manager] selectConversation:self.peer];
         
         if(!dialog) {
-            if(self.isChannel) {
-                dialog = [[DialogsManager sharedManager] createDialogForChannel:self];
-                [[ChannelsManager sharedManager] add:@[dialog]];
-            }
-            
-            else
-                dialog = [[DialogsManager sharedManager] createDialogForChat:self];
+            dialog = [[DialogsManager sharedManager] createDialogForChat:self];
+                
         } else
             [[DialogsManager sharedManager] add:@[dialog]];
         
@@ -195,17 +187,19 @@ static NSTextAttachment *channelVerifySelectedAttachment() {
         if([self isChannel])
         {
             
-            TLChatFull *fullChat = [[FullChatManager sharedManager] find:self.n_id];
+            [str appendString:self.isMegagroup ? NSLocalizedString(@"Conversation.GroupTitle", nil) : NSLocalizedString(@"Conversation.ChannelTitle", nil) withColor:NSColorFromRGB(0xa9a9a9)];
             
-            if(fullChat.participants_count > 0) {
-                
-                NSString *count = fullChat.participants_count > 10000 ? [NSString stringWithFormat:@"%@ %@",[@(fullChat.participants_count) prettyNumber],NSLocalizedString(@"Conversation.Members", nil)] : [NSString stringWithFormat:@"%d %@", fullChat.participants_count, fullChat.participants_count > 1 ?  NSLocalizedString(@"Conversation.Members", nil) : NSLocalizedString(@"Conversation.Member", nil)];
-                
-                [str appendString:count withColor:NSColorFromRGB(0xa9a9a9)];
-            } else {
-                [str appendString:NSLocalizedString(@"Conversation.ChannelTitle", nil) withColor:NSColorFromRGB(0xa9a9a9)];
-            }
-            
+//            TLChatFull *fullChat = [[FullChatManager sharedManager] find:self.n_id];
+//            
+//            if(fullChat.participants_count > 0) {
+//                
+//                NSString *count = fullChat.participants_count > 10000 ? [NSString stringWithFormat:@"%@ %@",[@(fullChat.participants_count) prettyNumber],NSLocalizedString(@"Conversation.Members", nil)] : [NSString stringWithFormat:@"%d %@", fullChat.participants_count, fullChat.participants_count > 1 ?  NSLocalizedString(@"Conversation.Members", nil) : NSLocalizedString(@"Conversation.Member", nil)];
+//                
+//                [str appendString:count withColor:NSColorFromRGB(0xa9a9a9)];
+//            } else {
+//                [str appendString:NSLocalizedString(@"Conversation.ChannelTitle", nil) withColor:NSColorFromRGB(0xa9a9a9)];
+//            }
+//            
             [str setSelectionColor:NSColorFromRGB(0xffffff) forColor:BLUE_UI_COLOR];
             [str setSelectionColor:NSColorFromRGB(0xfffffe) forColor:NSColorFromRGB(0xa9a9a9)];
             [str setFont:TGSystemFont(13) forRange:str.range];

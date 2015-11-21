@@ -62,6 +62,8 @@
     
     [self configure];
     
+    [self drawParticipants:_chat.chatFull.participants.participants];
+    
 }
 
 -(void)didUpdatedEditableState {
@@ -136,44 +138,7 @@
         
         [_chat.chatFull.participants.participants addObjectsFromArray:response.participants];
         
-        [response.participants enumerateObjectsUsingBlock:^(TLChatParticipant *obj, NSUInteger idx, BOOL * _Nonnull stop) {
-            
-            TGUserContainerRowItem *user = [[TGUserContainerRowItem alloc] initWithUser:[[UsersManager sharedManager] find:obj.user_id]];
-            user.height = 50;
-            user.type = SettingsRowItemTypeNone;
-            user.editable = self.action.isEditable;
-            
-            
-            [user setStateback:^id(TGGeneralRowItem *item) {
-                
-                BOOL canRemoveUser = (obj.user_id != [UsersManager currentUserId] && (self.chat.isAdmin || self.chat.isCreator) && ![obj isKindOfClass:[TL_chatParticipantCreator class]]);
-                
-                return @(canRemoveUser);
-                
-            }];
-            
-            __weak TGUserContainerRowItem *weakItem = user;
-            
-            [user setStateCallback:^{
-                
-                if(self.action.isEditable) {
-                    if([weakItem.stateback(weakItem) boolValue])
-                        [self kickParticipant:weakItem];
-                } else {
-                    TGModernUserViewController *viewController = [[TGModernUserViewController alloc] initWithFrame:NSZeroRect];
-                    
-                    [viewController setUser:weakItem.user conversation:weakItem.user.dialog];
-                    
-                    [self.navigationViewController pushViewController:viewController animated:YES];
-                }
-                
-            }];
-            
-            [items addObject:user];
-        }];
-        
-        
-        [_tableView insert:items startIndex:_tableView.list.count tableRedraw:YES];
+        [self drawParticipants:response.participants];
         
         
         if(items.count > 0)
@@ -187,6 +152,50 @@
         
     }];
 
+}
+
+-(void)drawParticipants:(NSArray *)participants {
+    
+    NSMutableArray *items = [NSMutableArray array];
+    
+    [participants enumerateObjectsUsingBlock:^(TLChatParticipant *obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        
+        TGUserContainerRowItem *user = [[TGUserContainerRowItem alloc] initWithUser:[[UsersManager sharedManager] find:obj.user_id]];
+        user.height = 50;
+        user.type = SettingsRowItemTypeNone;
+        user.editable = self.action.isEditable;
+        
+        
+        [user setStateback:^id(TGGeneralRowItem *item) {
+            
+            BOOL canRemoveUser = (obj.user_id != [UsersManager currentUserId] && (self.chat.isAdmin || self.chat.isCreator) && ![obj isKindOfClass:[TL_chatParticipantCreator class]]);
+            
+            return @(canRemoveUser);
+            
+        }];
+        
+        __weak TGUserContainerRowItem *weakItem = user;
+        
+        [user setStateCallback:^{
+            
+            if(self.action.isEditable) {
+                if([weakItem.stateback(weakItem) boolValue])
+                    [self kickParticipant:weakItem];
+            } else {
+                TGModernUserViewController *viewController = [[TGModernUserViewController alloc] initWithFrame:NSZeroRect];
+                
+                [viewController setUser:weakItem.user conversation:weakItem.user.dialog];
+                
+                [self.navigationViewController pushViewController:viewController animated:YES];
+            }
+            
+        }];
+        
+        [items addObject:user];
+    }];
+    
+    
+    [_tableView insert:items startIndex:_tableView.list.count tableRedraw:YES];
 }
 
 

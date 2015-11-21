@@ -1989,6 +1989,10 @@ static NSTextAttachment *headerMediaIcon() {
             }
             
         }
+        
+        if(_unreadMark && [self indexOfObject:_unreadMark] == 1) {
+            [self.table removeRowsAtIndexes:[NSIndexSet indexSetWithIndex:[self indexOfObject:_unreadMark]] withAnimation:NSTableViewAnimationEffectFade];
+        }
 
         
         __block NSInteger row = self.messages.count - 1;

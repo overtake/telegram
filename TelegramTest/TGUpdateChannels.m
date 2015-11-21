@@ -38,18 +38,18 @@
 
 -(int)ptsWithChannelId:(int)channel_id {
     
-    return MAX([[[ChannelsManager sharedManager] find:-channel_id] pts],2);
+    return MAX([[[DialogsManager sharedManager] find:-channel_id] pts],2);
 }
 
 -(TL_conversation *)conversationWithChannelId:(int)channel_id {
     
-    TL_conversation *conversation = [[ChannelsManager sharedManager] find:-channel_id];
+    TL_conversation *conversation = [[DialogsManager sharedManager] find:-channel_id];
     
     if(!conversation) {
         conversation = [[Storage manager] selectConversation:[TL_peerChannel createWithChannel_id:channel_id]];
         
         if(conversation) {
-            [[ChannelsManager sharedManager] add:@[conversation]];
+            [[DialogsManager sharedManager] add:@[conversation]];
         }
                 
         
@@ -378,7 +378,7 @@
         if(!channel) {
             channel = [[DialogsManager sharedManager] createDialogForChannel:chat];
             
-            [[ChannelsManager sharedManager] add:@[channel]];
+            [[DialogsManager sharedManager] add:@[channel]];
             
             channel.invisibleChannel = NO;
             [channel save];
