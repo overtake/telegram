@@ -30,8 +30,6 @@
 -(void)setFrameSize:(NSSize)newSize {
     [super setFrameSize:newSize];
     
-    
-    
     [self setContainerFrameSize:NSMakeSize(MIN(NSWidth(self.frame) - 60,400), MIN(NSHeight(self.frame) - 60,400))];
     
 }
@@ -51,7 +49,6 @@
 
 -(void)okAction {
     
-    
     NSMutableArray *ids = [[NSMutableArray alloc] init];
     for(MessageTableItem *item in _messagesViewController.selectedMessages)
         [ids addObject:item.message];
@@ -65,7 +62,7 @@
         
         TL_conversation *conversation = [obj isKindOfClass:[SelectUserItem class]] ? [[obj valueForKey:@"user"] dialog] : [[obj valueForKey:@"chat"] dialog];
         
-        [[Telegram rightViewController].messagesViewController forwardMessages:ids conversation:conversation callback:nil];
+        [_messagesViewController forwardMessages:ids conversation:conversation callback:nil];
         
     }];
     

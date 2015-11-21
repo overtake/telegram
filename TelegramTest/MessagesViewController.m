@@ -2648,7 +2648,6 @@ static NSTextAttachment *headerMediaIcon() {
         if(self.historyController == controller) {
             [self messagesLoadedTryToInsert:prevResult pos:pos next:!prev];
             
-            
             if(self.didUpdatedTable) {
                 self.didUpdatedTable();
             }

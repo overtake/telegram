@@ -2498,6 +2498,9 @@ TL_localMessage *parseMessage(FMResultSet *result) {
         
         conversation = [[self parseDialogs:result] firstObject];
         
+        if(conversation != nil)
+            [self fillLastMessagesWithConversations:@[conversation]];
+        
         [result close];
         
     }];

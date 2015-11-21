@@ -193,7 +193,7 @@
     NSArray *allItems = [self selectAllItems];
     
     
-    __block int msgId = 0;
+    __block int msgId = INT32_MAX;
     
     [allItems enumerateObjectsWithOptions:NSEnumerationReverse usingBlock:^(MessageTableItem *obj, NSUInteger idx, BOOL *stop) {
         

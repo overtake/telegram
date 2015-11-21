@@ -298,8 +298,6 @@
             
         }
         
-        
-        
         if(chatUserNameString)
             [messageText appendString:chatUserNameString withColor:DARK_BLACK];
         
