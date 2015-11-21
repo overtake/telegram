@@ -348,6 +348,8 @@
         
         _mediaItem = [[TGSProfileMediaRowItem alloc] initWithObject:_conversation];
         
+        _mediaItem.controller = self;
+        
         weak();
         [_mediaItem setCallback:^(TGGeneralRowItem *item) {
             

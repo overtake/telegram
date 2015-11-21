@@ -327,6 +327,7 @@
     
     TGSProfileMediaRowItem *profileMediaItem = [[TGSProfileMediaRowItem alloc] initWithObject:_conversation];
     
+    profileMediaItem.controller = self;
     
     [profileMediaItem setCallback:^(TGGeneralRowItem *item) {
         TMCollectionPageController *viewController = [[TMCollectionPageController alloc] initWithFrame:NSZeroRect];

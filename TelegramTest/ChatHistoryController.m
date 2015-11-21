@@ -230,7 +230,6 @@ static ChatHistoryController *observer;
     
     [_filters addObject:filter];
     
-    int bp = 0;
 }
 
 -(ChatHistoryState)prevState {

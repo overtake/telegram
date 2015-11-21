@@ -1750,38 +1750,26 @@ TL_localMessage *parseMessage(FMResultSet *result) {
     
 }
 
-- (void)dialogByPeer:(int)peer completeHandler:(void (^)(TLDialog *dialog, TLMessage *message))completeHandler {
-    [self searchDialogsByPeers:[NSArray arrayWithObject:@(peer)] needMessages:NO searchString:nil completeHandler:^(NSArray *dialogs, NSArray *messages, NSArray *searchMessages) {
-        
-        if(completeHandler) {
-            completeHandler(dialogs.count ? dialogs[0] : nil, messages.count ? messages[0] : nil);
-        }
-        
-    }];
-}
 
-- (void)searchDialogsByPeers:(NSArray *)peers needMessages:(BOOL)needMessages searchString:(NSString *)searchString completeHandler:(void (^)(NSArray *dialogs, NSArray *messages, NSArray *searchMessages))completeHandler {
+
+- (void)searchDialogsByPeers:(NSArray *)peers needMessages:(BOOL)needMessages searchString:(NSString *)searchString completeHandler:(void (^)(NSArray *dialogs))completeHandler {
     
-    NSMutableArray *dialogs = [[NSMutableArray alloc] init];
-    NSMutableArray *messages = [[NSMutableArray alloc] init];
+    __block NSArray *conversations;
     
     [queue inDatabaseWithDealocing:^(FMDatabase *db) {
         
         if(peers.count) {
-            FMResultSet *result = [db executeQuery:[NSString stringWithFormat:@"select messages.message_text,messages.from_id, dialogs.peer_id, dialogs.type,dialogs.last_message_date, messages.serialized serialized_message, dialogs.top_message,dialogs.sync_message_id,dialogs.last_marked_date,dialogs.unread_count unread_count, dialogs.read_inbox_max_id, dialogs.top_message_fake top_message_fake, dialogs.last_marked_message last_marked_message,dialogs.last_real_message_date last_real_message_date, messages.flags from dialogs left join messages on dialogs.top_message = messages.n_id where dialogs.peer_id in (%@) ORDER BY dialogs.last_message_date DESC", [peers componentsJoinedByString:@","]]];
+            FMResultSet *result = [db executeQuery:[NSString stringWithFormat:@"select * from %@ ordery by last_message_date DESC", [peers componentsJoinedByString:@","]]];
             
-            
-             // [self parseDialogs:result dialogs:dialogs messages:messages];
-            
+            conversations = [self parseDialogs:result];
+            [self fillLastMessagesWithConversations:conversations];
             [result close];
         }
         
     }];
     
     if(completeHandler) {
-        //   [[ASQueue mainQueue] dispatchOnQueue:^{
-        completeHandler(dialogs, messages, nil);
-        // }];
+        completeHandler(conversations);
     }
     
 }

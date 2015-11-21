@@ -60,10 +60,7 @@
 
 
 
-typedef enum {
-    TGAudioPlayerWindowStateMini,
-    TGAudioPlayerWindowStatePlayList
-} TGAudioPlayerWindowState;
+
 
 @interface TGAudioPlayerWindow ()<TGAudioPlayerDelegate>
 {
@@ -444,6 +441,12 @@ typedef enum {
        // [self makeKeyAndOrderFront:self];
     }
     [self playAnimationForName];
+}
+
++(void)show:(TL_conversation *)conversation playerState:(TGAudioPlayerWindowState)state {
+    [self show:conversation];
+    
+    [self instance].windowState = state;
 }
 
 +(void)show:(TL_conversation *)conversation {

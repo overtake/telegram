@@ -12,4 +12,6 @@
 
 @property (nonatomic,strong) TL_conversation *conversation;
 
+@property (nonatomic,weak) TMViewController *controller;
+
 @end

@@ -254,6 +254,9 @@
     
 
     weak();
+    
+    _mediaItem.controller = self;
+    
     [_mediaItem setCallback:^(TGGeneralRowItem *item) {
         
         TMCollectionPageController *viewController = [[TMCollectionPageController alloc] initWithFrame:NSZeroRect];

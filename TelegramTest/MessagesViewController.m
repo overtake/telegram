@@ -2370,6 +2370,8 @@ static NSTextAttachment *headerMediaIcon() {
         [self.bottomView setDialog:dialog];
         
         
+        self.historyController = [[[self hControllerClass] alloc] initWithController:self historyFilter:[self defHFClass]];
+        
         self.state = MessagesViewControllerStateNone;
         
         
@@ -2380,7 +2382,7 @@ static NSTextAttachment *headerMediaIcon() {
         [self.typingReservation removeAllObjects];
         [self removeScrollEvent];
         
-        self.historyController = nil;
+  
         
         if(message != nil) {
             [self showMessage:message fromMsg:nil flags:ShowMessageTypeSearch];
@@ -2395,8 +2397,7 @@ static NSTextAttachment *headerMediaIcon() {
             
         } else {
             
-            self.historyController = [[[self hControllerClass] alloc] initWithController:self historyFilter:[self defHFClass]];
-
+           
             [self flushMessages];
             
             [self loadhistory:0 toEnd:YES prev:NO isFirst:YES];

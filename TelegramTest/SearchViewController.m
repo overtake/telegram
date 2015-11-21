@@ -553,8 +553,8 @@ static int insertCount = 3;
     self.searchParams.isLoading = YES;
     
     
-    int offset_id = [(TL_localMessage *)[params.messages lastObject] n_id];
-    int offset_date = [(TL_localMessage *)[params.messages lastObject] date];
+    int offset_id = [[(SearchMessageTableItem *)[params.messages lastObject] message] n_id];
+    int offset_date = [[(SearchMessageTableItem *)[params.messages lastObject] message] date];
     
     id request = ACCEPT_FEATURE ? [TLAPI_messages_searchGlobal createWithQ:params.searchString offset_date:offset_date offset_peer:[TL_inputPeerEmpty create] offset_id:offset_id limit:50] : [TLAPI_messages_search createWithFlags:0 peer:[TL_inputPeerEmpty create] q:params.searchString filter:[TL_inputMessagesFilterEmpty create] min_date:0 max_date:0 offset:params.remote_offset max_id:0 limit:50];
     
@@ -792,12 +792,9 @@ static int insertCount = 3;
                 _dontLoadHashtagsForOneRequest = NO;
                 
                 
-                [[Storage manager] searchDialogsByPeers:dialogsNeedCheck needMessages:NO searchString:nil completeHandler:^(NSArray *dialogsDB, NSArray *messagesDB, NSArray *searchMessagesDB) {
-                    
+                [[Storage manager] searchDialogsByPeers:dialogsNeedCheck needMessages:NO searchString:nil completeHandler:^(NSArray *dialogsDB) {
                     
                     [[DialogsManager sharedManager] add:dialogsDB];
-                    [[MessagesManager sharedManager] add:messagesDB];
-                        
                     [dialogs addObjectsFromArray:dialogsDB];
                         
                     NSArray *insertedDialogs = [dialogs sortedArrayWithOptions:NSSortStable usingComparator:^NSComparisonResult(TL_conversation *dialog1, TL_conversation *dialog2) {

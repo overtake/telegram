@@ -24,9 +24,15 @@ typedef enum {
 
 @interface TGAudioPlayerWindow : NSPanel
 
+typedef enum {
+    TGAudioPlayerWindowStateMini,
+    TGAudioPlayerWindowStatePlayList
+} TGAudioPlayerWindowState;
+
 @property (nonatomic,strong,readonly) MessageTableItemAudioDocument *currentItem;
 
 +(void)show:(TL_conversation *)conversation;
++(void)show:(TL_conversation *)conversation playerState:(TGAudioPlayerWindowState)state;
 +(void)hide;
 +(MessageTableItemAudioDocument *)currentItem;
 

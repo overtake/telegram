@@ -8,7 +8,7 @@
 
 #import "TGSProfileMediaRowView.h"
 #import "TGSProfileMediaRowItem.h"
-
+#import "TGAudioPlayerWindow.h"
 @interface TGMediaCounterLoader : NSObject
 @property (nonatomic,assign) int photoAndVideoCounter;
 @property (nonatomic,assign) int filesCounter;
@@ -100,9 +100,14 @@
         
         NSString *key = _photoAndVideoCounter == 1 ? NSLocalizedString(@"Modern.SharedMedia.PhotoOrVideo", nil) : NSLocalizedString(@"Modern.SharedMedia.PhotosAndVideos", nil);
         
-        [attr appendString:[NSString stringWithFormat:@"%d",_photoAndVideoCounter] withColor:BLUE_UI_COLOR];
+        NSRange range = [attr appendString:[NSString stringWithFormat:@"%d",_photoAndVideoCounter] withColor:BLUE_UI_COLOR];
         [attr appendString:@" "];
-        [attr appendString:key withColor:GRAY_TEXT_COLOR];
+        NSRange secondRange = [attr appendString:key withColor:GRAY_TEXT_COLOR];
+        
+        range.length+= (secondRange.location - range.length - range.location) + secondRange.length;
+        
+        [attr addAttribute:NSLinkAttributeName value:@"photoOrVideo" range:range];
+        
     
     }
     
@@ -117,9 +122,13 @@
        
         
         
-        [attr appendString:[NSString stringWithFormat:@"%d",_filesCounter] withColor:BLUE_UI_COLOR];
+        NSRange range = [attr appendString:[NSString stringWithFormat:@"%d",_filesCounter] withColor:BLUE_UI_COLOR];
         [attr appendString:@" "];
-        [attr appendString:key withColor:GRAY_TEXT_COLOR];
+        NSRange secondRange = [attr appendString:key withColor:GRAY_TEXT_COLOR];
+        
+        range.length+= (secondRange.location - range.length - range.location) + secondRange.length;
+        
+        [attr addAttribute:NSLinkAttributeName value:@"files" range:range];
         
     }
     
@@ -131,9 +140,14 @@
             [attr appendString:@"," withColor:GRAY_TEXT_COLOR];
             [attr appendString:@" "];
         }
-        [attr appendString:[NSString stringWithFormat:@"%d",_audioCounter] withColor:BLUE_UI_COLOR];
+        NSRange range = [attr appendString:[NSString stringWithFormat:@"%d",_audioCounter] withColor:BLUE_UI_COLOR];
         [attr appendString:@" "];
-        [attr appendString:key withColor:GRAY_TEXT_COLOR];
+        NSRange secondRange = [attr appendString:key withColor:GRAY_TEXT_COLOR];
+        
+        range.length+= (secondRange.location - range.length - range.location) + secondRange.length;
+        
+        [attr addAttribute:NSLinkAttributeName value:@"audio" range:range];
+
 
     }
     
@@ -145,9 +159,13 @@
             [attr appendString:@"," withColor:GRAY_TEXT_COLOR];
             [attr appendString:@" "];
         }
-        [attr appendString:[NSString stringWithFormat:@"%d",_linksCounter] withColor:BLUE_UI_COLOR];
+        NSRange range = [attr appendString:[NSString stringWithFormat:@"%d",_linksCounter] withColor:BLUE_UI_COLOR];
         [attr appendString:@" "];
-        [attr appendString:key withColor:GRAY_TEXT_COLOR];
+        NSRange secondRange = [attr appendString:key withColor:GRAY_TEXT_COLOR];
+        
+        range.length+= (secondRange.location - range.length - range.location) + secondRange.length;
+        
+        [attr addAttribute:NSLinkAttributeName value:@"links" range:range];
         
     }
     
@@ -162,9 +180,9 @@
 @end
 
 
-@interface TGSProfileMediaRowView ()
+@interface TGSProfileMediaRowView () <TMHyperlinkTextFieldDelegate>
 @property (nonatomic,strong) TMTextField *headerTextField;
-@property (nonatomic,strong) TMTextField *countersTextField;
+@property (nonatomic,strong) TMHyperlinkTextField *countersTextField;
 
 @property (nonatomic,strong) NSProgressIndicator *progressIndicator;
 
@@ -195,8 +213,9 @@ static NSMutableDictionary *loaders;
 -(instancetype)initWithFrame:(NSRect)frameRect {
     if(self = [super initWithFrame:frameRect]) {
         _headerTextField = [TMTextField defaultTextField];
-        _countersTextField = [TMTextField defaultTextField];
+        _countersTextField = [TMHyperlinkTextField defaultTextField];
         
+        _countersTextField.url_delegate = self;
         
         [_countersTextField setFont:TGSystemFont(13)];
         
@@ -219,6 +238,33 @@ static NSMutableDictionary *loaders;
     }
     
     return self;
+}
+
+-(void)textField:(id)textField handleURLClick:(NSString *)url {
+    
+    // handle
+    if([url isEqualToString:@"audio"]) {
+        [TGAudioPlayerWindow show:self.item.conversation playerState:TGAudioPlayerWindowStatePlayList];
+        
+        return;
+    }
+    
+    TMCollectionPageController *viewController = [[TMCollectionPageController alloc] initWithFrame:NSZeroRect];
+    
+    [viewController setConversation:self.item.conversation];
+    
+    if([url isEqualToString:@"files"]) {
+        
+        [viewController showFiles];
+        
+    } else if([url isEqualToString:@"links"]) {
+        
+        [viewController showSharedLinks];
+        
+    }
+    
+    [self.item.controller.navigationViewController pushViewController:viewController animated:YES];
+    
 }
 
 -(void)redrawRow {
@@ -306,7 +352,7 @@ static NSMutableDictionary *loaders;
     
 }
 
--(TGGeneralRowItem *)item {
+-(TGSProfileMediaRowItem *)item {
     return (TGGeneralRowItem *) [self rowItem];
 }
 
