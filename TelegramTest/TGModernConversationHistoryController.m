@@ -91,7 +91,7 @@
         
         [all enumerateObjectsWithOptions:NSEnumerationReverse usingBlock:^(TL_conversation *obj, NSUInteger idx, BOOL * _Nonnull stop) {
             
-            if(obj.type != DialogTypeSecretChat && obj.lastMessage) {
+            if(obj.type != DialogTypeSecretChat && obj.lastMessage && obj.lastMessage.n_id < TGMINFAKEID) {
                 conversation = obj;
                 *stop = YES;
             }
@@ -103,12 +103,8 @@
         
         const int limit = 50;
         
-        [RPCRequest sendRequest:[TLAPI_messages_getDialogs createWithOffset_date:date offset_id:0 offset_peer:inputPeer limit:limit] successHandler:^(id request, TL_messages_dialogs *response) {
+        [RPCRequest sendRequest:[TLAPI_messages_getDialogs createWithOffset_date:date offset_id:conversation.lastMessage.n_id offset_peer:inputPeer limit:limit] successHandler:^(id request, TL_messages_dialogs *response) {
             
-            if([response isKindOfClass:[TL_messages_dialogs class]]) {
-                _state = TGModernCHStateFull;
-                return;
-            }
             
             [SharedManager proccessGlobalResponse:response];
             
@@ -118,7 +114,8 @@
            
             [response.dialogs enumerateObjectsUsingBlock:^(TL_dialog *dialog, NSUInteger idx, BOOL *stop) {
                 
-                TL_localMessage *lastMessage = [TL_localMessage convertReceivedMessage:[[response.messages filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.n_id == %d",dialog.top_message]] firstObject]];
+                TL_localMessage *lastMessage = [[response.messages filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.n_id == %d",dialog.top_message]] firstObject];
+                
                 
                 TLChat *chat = [[response.chats filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.n_id == %d",-dialog.peer.peer_id]] firstObject];
                 
@@ -172,6 +169,7 @@
                     conversation = [TL_conversation createWithPeer:dialog.peer top_message:dialog.top_message unread_count:chat.migrated_to.channel_id != 0 ? 0 : dialog.unread_count last_message_date:lastMessage.date notify_settings:dialog.notify_settings last_marked_message:dialog.top_message top_message_fake:dialog.top_message last_marked_date:lastMessage.date sync_message_id:lastMessage.n_id read_inbox_max_id:dialog.read_inbox_max_id unread_important_count:dialog.unread_important_count lastMessage:lastMessage pts:dialog.pts isInvisibleChannel:NO top_important_message:dialog.top_important_message];
                 }
                 
+                
                 [converted addObject:conversation];
                 
             }];
@@ -181,8 +179,11 @@
             
             [MessagesManager updateUnreadBadge];
             
-            if(converted.count < [_delegate conversationsLoadingLimit])
+            if(converted.count < limit) {
                 _state = TGModernCHStateFull;
+
+            }
+            
             
             
             [self dispatchWithFullList:converted offset:(int)converted.count];

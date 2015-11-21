@@ -90,6 +90,8 @@
         
         text = NSLocalizedString(@"MessageAction.Service.ChannelCreated", nil);
         
+    } else if([action isKindOfClass:[TL_messageActionChatMigrateTo class]] || [action isKindOfClass:[TL_messageActionChannelMigrateFrom class]]) {
+        text = NSLocalizedString(@"MessageAction.Service.ChatMigrated", nil);
     }
    
     return text;
@@ -239,11 +241,9 @@
                     if(action.users.count == 1 && [action.users[0] intValue] == [UsersManager currentUserId]) {
                         msgText = NSLocalizedString(@"MessageAction.Service.InvitedYouToChannel",nil);
                     } else {
-                        
                         msgText = NSLocalizedString(@"MessageAction.Service.InvitedGroup", nil);
+                        [users addObjectsFromArray:action.users];
                     }
-                    
-                    [users addObjectsFromArray:action.users];
                     
                     if(message.from_id  == [UsersManager currentUserId]) {
                         msgText = NSLocalizedString(@"MessageAction.Service.YouChoinedToChannel", nil);

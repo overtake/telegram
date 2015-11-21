@@ -117,6 +117,7 @@
     
     TL_localMessage *msg;
     
+    
     if([message isKindOfClass:[TL_messageService class]]) {
         msg = [TL_localMessageService createWithFlags:message.flags n_id:message.n_id from_id:message.from_id to_id:message.to_id date:message.date action:message.action fakeId:[MessageSender getFakeMessageId] randomId:rand_long() dstate:DeliveryStateNormal];
     }  else if(![message isKindOfClass:[TL_messageEmpty class]]) {

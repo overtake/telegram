@@ -455,9 +455,13 @@
         [_tableView addItem:[[TGGeneralRowItem alloc] initWithHeight:20] tableRedraw:YES];
     }
     
-    int uppgradeCount = maxChatUsers()+1;
+    int upgradeCount = maxChatUsers()+1;
     
-    if(self.participantsRange.length >= uppgradeCount && _chat.isCreator && ACCEPT_FEATURE) {
+#ifdef TGDEBUG 
+    upgradeCount = ACCEPT_FEATURE ? 4 : upgradeCount;
+#endif
+    
+    if(self.participantsRange.length >= upgradeCount && _chat.isCreator && ACCEPT_FEATURE) {
         
        [_tableView addItem:[[TGGeneralRowItem alloc] initWithHeight:20] tableRedraw:YES];
         

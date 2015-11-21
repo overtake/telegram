@@ -2489,6 +2489,9 @@
          contextName = "__56-[TGModernConversationHistoryController performLoadNext]_block_invoke55:TGModernConversationHistoryController.m">
       </ContextState>
       <ContextState
+         contextName = "__56-[TGModernConversationHistoryController performLoadNext]_block_invoke63:TGModernConversationHistoryController.m">
+      </ContextState>
+      <ContextState
          contextName = "-[TGStickerPackEmojiController drawWithStickers:]:TGStickerPackEmojiController.m">
       </ContextState>
       <ContextState
@@ -3884,6 +3887,14 @@
       </ContextState>
       <ContextState
          contextName = "__37-[SearchViewController remoteSearch:]_block_invoke546:SearchViewController.m">
+      </ContextState>
+      <ContextState
+         contextName = "-[TGModernChatInfoViewController setChat:]:TGModernChatInfoViewController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "chat.n_id">
+            </PersistentString>
+         </PersistentStrings>
       </ContextState>
       <ContextState
          contextName = "-[RBLPopover showRelativeToRect:ofView:preferredEdge:]:RBLPopover.m">
