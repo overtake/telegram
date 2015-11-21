@@ -104,6 +104,8 @@
 
 @property (nonatomic,strong) NSMutableArray *eventListeners;
 
+@property (nonatomic,assign) BOOL autoStart;
+
 @end
 
 @implementation TGAudioPlayerWindow
@@ -444,14 +446,14 @@
 }
 
 +(void)show:(TL_conversation *)conversation playerState:(TGAudioPlayerWindowState)state {
-    [self show:conversation];
-    
     [self instance].windowState = state;
+    [self show:conversation];
+    [self instance].autoStart = NO;
 }
 
 +(void)show:(TL_conversation *)conversation {
     [[self instance] show:conversation];
-    
+    [self instance].autoStart = YES;
     [[self instance] makeKeyAndOrderFront:nil];
     
 }
@@ -631,6 +633,10 @@
 +(void)resume {
     if([self instance].playerState == TGAudioPlayerStateForcePaused)
         [[self instance] play:[self instance].currentTime];
+}
+
++(BOOL)autoStart {
+    return [self instance].autoStart;
 }
 
 

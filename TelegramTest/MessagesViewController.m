@@ -2230,61 +2230,64 @@ static NSTextAttachment *headerMediaIcon() {
         
         [self.historyController loadAroundMessagesWithMessage:importantItem prevLimit:count nextLimit:(flags & ShowMessageTypeUnreadMark) > 0 ? 1 : count selectHandler:^(NSArray *result, NSRange range, id controller) {
             
-            [self flushMessages];
-            
-            _needNextRequest = NO;
-            
-            
-            if((flags & ShowMessageTypeUnreadMark) > 0) {
+            if(controller == self.historyController && _conversation.peer_id == conversation.peer_id) {
+                [self flushMessages];
                 
-                _unreadMark = [[MessageTableItemUnreadMark alloc] initWithCount:0 type:RemoveUnreadMarkAfterSecondsType];
-                
-                NSMutableArray *copy = [result mutableCopy];
-                [copy insertObject:_unreadMark atIndex:[result indexOfObject:importantItem]];
-                
-                result = copy;
-                
-            }
-            
-            [self messagesLoadedTryToInsert:result pos:range.location next:YES];
-            
-            
-            
-            [self.table setNeedsDisplay:YES];
-            [self.table display];
-            
-            if((flags & ShowMessageTypeUnreadMark) > 0) {
-                
-                [self scrollToUnreadItem:NO];
-                
-            } else if(rect.origin.y == 0 || ((flags & ShowMessageTypeReply) > 0 || (flags & ShowMessageTypeSearch) > 0)) {
-                [self scrollToItem:importantItem animated:NO centered:YES highlight:fromMsg != nil];
-            } else {
-                
-                __block NSRect drect = [self.table rectOfRow:[self indexOfObject:importantItem]];
+                _needNextRequest = NO;
                 
                 
-                dispatch_block_t block = ^{
+                if((flags & ShowMessageTypeUnreadMark) > 0) {
                     
-                    drect.origin.y -= (NSHeight(self.table.containerView.frame)  -yTopOffset);
+                    _unreadMark = [[MessageTableItemUnreadMark alloc] initWithCount:0 type:RemoveUnreadMarkAfterSecondsType];
                     
-                    drect.origin.y = MAX(0,drect.origin.y);
+                    NSMutableArray *copy = [result mutableCopy];
+                    [copy insertObject:_unreadMark atIndex:[result indexOfObject:importantItem]];
                     
-                    [self.table.scrollView scrollToPoint:drect.origin animation:NO];
+                    result = copy;
                     
-                };
-                
-                if(NSEqualRects(drect, NSZeroRect)) {
-                    
-                    dispatch_async(dispatch_get_main_queue(), block);
-                } else {
-                    block();
                 }
                 
+                [self messagesLoadedTryToInsert:result pos:range.location next:YES];
                 
+                
+                
+                [self.table setNeedsDisplay:YES];
+                [self.table display];
+                
+                if((flags & ShowMessageTypeUnreadMark) > 0) {
+                    
+                    [self scrollToUnreadItem:NO];
+                    
+                } else if(rect.origin.y == 0 || ((flags & ShowMessageTypeReply) > 0 || (flags & ShowMessageTypeSearch) > 0)) {
+                    [self scrollToItem:importantItem animated:NO centered:YES highlight:fromMsg != nil];
+                } else {
+                    
+                    __block NSRect drect = [self.table rectOfRow:[self indexOfObject:importantItem]];
+                    
+                    
+                    dispatch_block_t block = ^{
+                        
+                        drect.origin.y -= (NSHeight(self.table.containerView.frame)  -yTopOffset);
+                        
+                        drect.origin.y = MAX(0,drect.origin.y);
+                        
+                        [self.table.scrollView scrollToPoint:drect.origin animation:NO];
+                        
+                    };
+                    
+                    if(NSEqualRects(drect, NSZeroRect)) {
+                        
+                        dispatch_async(dispatch_get_main_queue(), block);
+                    } else {
+                        block();
+                    }
+                    
+                    
+                }
+                
+                [self addScrollEvent];
             }
             
-            [self addScrollEvent];
         }];
         
     };

@@ -43,6 +43,8 @@ typedef enum {
 +(void)pause;
 +(void)resume;
 
++(BOOL)autoStart;
+
 +(void)addEventListener:(id<TGAudioPlayerWindowDelegate>)delegate;
 +(void)removeEventListener:(id<TGAudioPlayerWindowDelegate>)delegate;
 

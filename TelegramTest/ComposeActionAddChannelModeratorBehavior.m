@@ -46,7 +46,7 @@
     
     if([self.action.currentViewController isKindOfClass:[ComposePickerViewController class]])  {
         
-        if(!self.chat.isBroadcast) {
+        if(!self.chat.isBroadcast && !self.chat.isMegagroup) {
             
             ComposeConfirmModeratorViewController *viewController = [[ComposeConfirmModeratorViewController alloc] initWithFrame:self.action.currentViewController.view.bounds];
             

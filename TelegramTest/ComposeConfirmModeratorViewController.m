@@ -41,7 +41,7 @@
     _participantRole = [self.action.object isBroadcast] ? [TL_channelRoleEditor create] : [TL_channelRoleModerator create];
     
     _userContainer = [[TGUserContainerRowItem alloc] initWithUser:action.result.multiObjects[0]];
-    
+    _userContainer.type = SettingsRowItemTypeNone;
     _userContainer.height = 60;
     
     [_tableView removeAllItems:NO];
@@ -80,7 +80,7 @@
     GeneralSettingsBlockHeaderItem *accessDescription = [[GeneralSettingsBlockHeaderItem alloc] initWithString:NSLocalizedString(@"Channel.AccessDescription", nil) height:42 flipped:YES];
     
     accessDescription.xOffset = 30;
-
+    accessDescription.autoHeight = YES;
     
     
     [_tableView addItem:accessHeader tableRedraw:NO];
