@@ -96,7 +96,7 @@
     
     _loader.selectLimit = _loader.nextState != ChatHistoryStateRemote ? 50 : 50;
     
-    [_loader request:YES anotherSource:YES sync:isFirst selectHandler:^(NSArray *result, NSRange range) {
+    [_loader request:YES anotherSource:YES sync:isFirst selectHandler:^(NSArray *result, NSRange range,HistoryFilter *filter) {
         
         self.tableView.isProgress = NO;
         

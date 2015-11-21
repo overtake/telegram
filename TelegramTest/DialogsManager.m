@@ -649,6 +649,8 @@
             if(conversation) {
                 
                 conversation.unread_count = unread_count;
+                conversation.last_marked_message = max_id;
+                [conversation save];
                 [Notification perform:[Notification notificationNameByDialog:conversation action:@"unread_count"] data:@{KEY_DIALOG:conversation,KEY_LAST_CONVRESATION_DATA:[MessagesUtils conversationLastData:conversation]}];
             }
  

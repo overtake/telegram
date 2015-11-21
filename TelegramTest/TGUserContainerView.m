@@ -136,7 +136,7 @@
     
     id deleteF = animated ? [_deleteMenuImageView animator] : _deleteMenuImageView;
     
-    [statusF setFrameOrigin:NSMakePoint(self.xOffset + NSWidth(_avatarContainerView.frame) + 10, NSHeight(self.frame)/2 - NSHeight(self.statusTextField.frame) + 2)];
+    [statusF setFrameOrigin:NSMakePoint(self.xOffset + NSWidth(_avatarContainerView.frame) + 10, NSHeight(self.frame)/2 - NSHeight(self.statusTextField.frame) )];
     [nameF setFrameOrigin:NSMakePoint(self.xOffset + NSWidth(_avatarContainerView.frame) + 10, NSHeight(self.frame)/2 )];
     
     

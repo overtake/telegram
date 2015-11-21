@@ -268,6 +268,10 @@ static NSTextAttachment *channelIconAttachment() {
         viewSize.height = 32;
     
     
+    if([self.message.action isKindOfClass:[TL_messageActionChatMigrateTo class]]) {
+        viewSize.height = 1;
+    }
+    
     return viewSize;
 }
 
@@ -345,7 +349,8 @@ static NSTextAttachment *channelIconAttachment() {
         } else if(message.hole != nil) {
             objectReturn = [[MessageTableItemHole alloc] initWithObject:message];
         } else if([message isKindOfClass:[TL_localMessageService class]] || [message isKindOfClass:[TL_secretServiceMessage class]]) {
-            objectReturn = [[MessageTableItemServiceMessage alloc] initWithObject:message ];
+            
+             objectReturn = [[MessageTableItemServiceMessage alloc] initWithObject:message ];
         }
 
     }
@@ -353,7 +358,9 @@ static NSTextAttachment *channelIconAttachment() {
         int bp = 0;
     }
     
-    
+    if(objectReturn == nil) {
+        int bp = 0;
+    }
     
     return objectReturn;
 }

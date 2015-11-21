@@ -852,6 +852,9 @@
          contextName = "-[MessagesViewController loadhistory:toEnd:prev:isFirst:]:MessagesViewController.m">
          <PersistentStrings>
             <PersistentString
+               value = "self.conversation">
+            </PersistentString>
+            <PersistentString
                value = "self.historyController.prevState">
             </PersistentString>
             <PersistentString
@@ -1277,6 +1280,14 @@
          <PersistentStrings>
             <PersistentString
                value = "self.inputMessageTextField.containerView.frame">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "__35-[TGUpdateChannels proccessUpdate:]_block_invoke_3:TGUpdateChannels.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "chat">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -2183,6 +2194,14 @@
          <PersistentStrings>
             <PersistentString
                value = "artworkImage">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "__89-[MessagesViewController showMessage:fromMsg:animated:selectText:switchDiscussion:flags:]_block_invoke:MessagesViewController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.messages">
             </PersistentString>
          </PersistentStrings>
       </ContextState>

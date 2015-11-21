@@ -455,7 +455,7 @@
         [_tableView addItem:[[TGGeneralRowItem alloc] initWithHeight:20] tableRedraw:YES];
     }
     
-    int uppgradeCount = ACCEPT_FEATURE ? 2 : maxChatUsers();
+    int uppgradeCount = maxChatUsers()+1;
     
     if(self.participantsRange.length >= uppgradeCount && _chat.isCreator && ACCEPT_FEATURE) {
         
@@ -499,7 +499,7 @@
         upgradeToMegagroup.textColor = BLUE_UI_COLOR;
         
         
-        GeneralSettingsBlockHeaderItem *upgradeHeaderItem = [[GeneralSettingsBlockHeaderItem alloc] initWithString:[NSString stringWithFormat:NSLocalizedString(@"Modern.Chat.UpgradeToMegagroupDescription", nil),maxChatUsers()] height:200 flipped:YES];
+        GeneralSettingsBlockHeaderItem *upgradeHeaderItem = [[GeneralSettingsBlockHeaderItem alloc] initWithString:[NSString stringWithFormat:NSLocalizedString(@"Modern.Chat.UpgradeToMegagroupDescription", nil),maxChatUsers(),megagroupSizeMax()] height:200 flipped:YES];
         
         upgradeHeaderItem.autoHeight = YES;
         

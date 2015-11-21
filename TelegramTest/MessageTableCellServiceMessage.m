@@ -82,6 +82,8 @@
 
 - (void) setItem:(MessageTableItemServiceMessage *)item {
     [super setItem:item];
+    
+    [self setHidden:item.viewSize.height == 1];
 
     if(item.type == MessageTableItemServiceMessageAction) {
         [self.textField setAttributedString:item.messageAttributedString];

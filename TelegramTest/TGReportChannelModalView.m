@@ -19,7 +19,7 @@
 
 -(instancetype)initWithFrame:(NSRect)frameRect {
     if(self = [super initWithFrame:frameRect]) {
-        [self setContainerFrameSize:NSMakeSize(300, 218)];
+        [self setContainerFrameSize:NSMakeSize(300, 248)];
         
         
         [self initialize];
@@ -32,6 +32,8 @@
 -(void)configure {
     [self.tableView removeAllItems:YES];
     
+    
+    [_tableView addItem:[[TGGeneralRowItem alloc] initWithHeight:10] tableRedraw:YES];
     
     GeneralSettingsRowItem *spam = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeSelected callback:^(TGGeneralRowItem *item) {
         
@@ -75,6 +77,8 @@
     [_tableView addItem:violence tableRedraw:YES];
     [_tableView addItem:porno tableRedraw:YES];
     [_tableView addItem:other tableRedraw:YES];
+    
+    [_tableView addItem:[[TGGeneralRowItem alloc] initWithHeight:20] tableRedraw:YES];
 
 }
 

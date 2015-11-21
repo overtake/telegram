@@ -243,16 +243,44 @@
             
         });
         
-        
-       
-        
-        
-        
     } description:@"Send logs" height:42 stateback:^id(TGGeneralRowItem *item) {
         return nil;
     }];
     
     [self.tableView insert:sendLogs atIndex:self.tableView.list.count tableRedraw:NO];
+    
+    
+    
+    if(ACCEPT_FEATURE) {
+        
+        GeneralSettingsRowItem *switchBackend = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeNext callback:^(TGGeneralRowItem *item) {
+            
+            
+            confirm(appName(), @"Are You sure to switch backend?", ^{
+                
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    BOOL value = [[NSUserDefaults standardUserDefaults] boolForKey:@"test-backend"];
+                    
+                    [[NSUserDefaults standardUserDefaults] setBool:!value forKey:@"test-backend"];
+                    
+                    NSMutableArray *array = [NSMutableArray array];
+                    
+                    array[1] = array[2];
+                });
+                
+                
+            }, ^{
+                
+            });
+            
+        } description:@"Switch backend" height:42 stateback:^id(TGGeneralRowItem *item) {
+            return nil;
+        }];
+        
+        [self.tableView insert:switchBackend atIndex:self.tableView.list.count tableRedraw:NO];
+
+        
+    }
     
     
 #endif

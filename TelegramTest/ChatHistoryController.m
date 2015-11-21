@@ -165,6 +165,7 @@ static ChatHistoryController *observer;
     return filter;
 }
 
+
 -(void)swapFiltersBeforePrevLoaded {
     [self.queue dispatchOnQueue:^{
         _isNeedSwapFilters = YES;
@@ -504,7 +505,7 @@ static ChatHistoryController *observer;
 }
 
 
--(void)performCallback:(selectHandler)selectHandler result:(NSArray *)result range:(NSRange )range {
+-(void)performCallback:(selectHandler)selectHandler result:(NSArray *)result range:(NSRange )range controller:(id)controller {
    
     
     self.proccessing = NO;
@@ -512,7 +513,7 @@ static ChatHistoryController *observer;
    [[ASQueue mainQueue] dispatchOnQueue:^{
         
        if(selectHandler)
-            selectHandler(result,range);
+            selectHandler(result,range,controller);
     }];
     
     for (MessageTableItem *item in result) {
@@ -529,7 +530,7 @@ static ChatHistoryController *observer;
         HistoryFilter *filter = [self filterWithNext:next];
         
         if([filter checkState:ChatHistoryStateFull next:next] || self.isProccessing) {
-            [self performCallback:selectHandler result:@[] range:NSMakeRange(0, 0)];
+            [self performCallback:selectHandler result:@[] range:NSMakeRange(0, 0) controller:self];
             return;
         }
         
@@ -552,7 +553,7 @@ static ChatHistoryController *observer;
             
             NSArray *converted = [filter proccessResponse:[self.controller messageTableItemsFromMessages:result] state:state next:next];
             
-            [self performCallback:selectHandler result:converted range:NSMakeRange(0, converted.count)];
+            [self performCallback:selectHandler result:converted range:NSMakeRange(0, converted.count) controller:self];
             
         }];
         
@@ -694,7 +695,7 @@ static ChatHistoryController *observer;
         
         NSArray *result = [self.filter selectAllItems];
         
-        [self performCallback:selectHandler result:result range:NSMakeRange(0, result.count)];
+        [self performCallback:selectHandler result:result range:NSMakeRange(0, result.count) controller:self];
         
         self.proccessing = NO;
         return;

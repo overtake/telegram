@@ -20,6 +20,8 @@
     
     state = next && state != ChatHistoryStateFull && self.server_min_id <= 1 ? ChatHistoryStateFull : state;
     
+    [self setState:state next:next];
+    
     TL_conversation *conversation = [[DialogsManager sharedManager] find:self.peer_id];
 
     if(self.prevState != ChatHistoryStateFull && conversation.universalTopMessage > 0 && conversation.universalTopMessage <= self.server_max_id) {
@@ -27,7 +29,7 @@
     }
     
     
-    [self setState:state next:next];
+    
     
     return converted;
 }

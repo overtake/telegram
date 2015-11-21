@@ -38,7 +38,7 @@
 
 -(int)ptsWithChannelId:(int)channel_id {
     
-    return MAX([[[DialogsManager sharedManager] find:-channel_id] pts],2);
+    return MAX([[[DialogsManager sharedManager] find:-channel_id] pts],1);
 }
 
 -(TL_conversation *)conversationWithChannelId:(int)channel_id {
@@ -388,27 +388,39 @@
         
         dispatch_block_t dispatch = ^{
             if(!chat.left && chat.type != TLChatTypeForbidden) {
-                [RPCRequest sendRequest:[TLAPI_channels_getParticipant createWithChannel:chat.inputPeer user_id:[[UsersManager currentUser] inputUser]] successHandler:^(id request, TL_channels_channelParticipant *participant) {
-                    
-                    [SharedManager proccessGlobalResponse:participant];
-                    
-                    if([participant.participant isKindOfClass:[TL_channelParticipantSelf class]]) {
-                        TL_localMessage *msg = [TL_localMessageService createWithFlags:TGMENTIONMESSAGE n_id:0 from_id:[participant.participant inviter_id] to_id:channel.peer date:[[MTNetwork instance] getTime] action:([TL_messageActionChatAddUser createWithUsers:[@[@([UsersManager currentUserId])] mutableCopy]]) fakeId:[MessageSender getFakeMessageId] randomId:rand_long() dstate:DeliveryStateNormal];
+                
+                [[FullChatManager sharedManager] performLoad:chat.n_id callback:^(TLChatFull *fullChat) {
+                   
+                    if(fullChat.migrated_from_chat_id == 0) {
+                        [RPCRequest sendRequest:[TLAPI_channels_getParticipant createWithChannel:chat.inputPeer user_id:[[UsersManager currentUser] inputUser]] successHandler:^(id request, TL_channels_channelParticipant *participant) {
+                            
+                            [SharedManager proccessGlobalResponse:participant];
+                            
+                            if([participant.participant isKindOfClass:[TL_channelParticipantSelf class]]) {
+                                TL_localMessage *msg = [TL_localMessageService createWithFlags:TGMENTIONMESSAGE n_id:0 from_id:[participant.participant inviter_id] to_id:channel.peer date:[[MTNetwork instance] getTime] action:([TL_messageActionChatAddUser createWithUsers:[@[@([UsersManager currentUserId])] mutableCopy]]) fakeId:[MessageSender getFakeMessageId] randomId:rand_long() dstate:DeliveryStateNormal];
+                                
+                                channel.invisibleChannel = NO;
+                                
+                                [channel save];
+                                
+                                [MessagesManager addAndUpdateMessage:msg];
+                                
+                            }
+                            
+                            
+                        } errorHandler:^(id request, RpcError *error) {
+                            
+                            [self failUpdateWithChannelId:[update channel_id] limit:100 withCallback:nil errorCallback:nil];
+                            
+                        }];
+
+                    } else {
                         
-                        channel.invisibleChannel = NO;
-                        
-                        [channel save];
-                        
-                        [MessagesManager addAndUpdateMessage:msg];
-                        
+                        [self failUpdateWithChannelId:[update channel_id] limit:100 withCallback:nil errorCallback:nil];
                     }
-                    
-                    
-                } errorHandler:^(id request, RpcError *error) {
-                    
-                    [self failUpdateWithChannelId:[update channel_id] limit:100 withCallback:nil errorCallback:nil];
-                    
+                
                 }];
+                
             }
             
         };

@@ -100,5 +100,5 @@ typedef enum {
 -(void)fillGroupHoles:(NSArray *)messages bottom:(BOOL)bottom;
 
 -(TLMessagesFilter *)messagesFilter;
-
+-(BOOL)checkAcceptResult:(NSArray *)result;
 @end

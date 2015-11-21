@@ -287,8 +287,9 @@
                 
                 msgText = NSLocalizedString(@"MessageAction.Service.ChannelCreated", nil);
                 
-            } else if([action isKindOfClass:[TL_messageActionChannelMigrateFrom class]]) {
-                msgText = [NSString stringWithFormat:NSLocalizedString(@"MessageAction.Service.ChannelMigrated", nil),message.action.title];
+            } else if([action isKindOfClass:[TL_messageActionChannelMigrateFrom class]] || [action isKindOfClass:[TL_messageActionChatMigrateTo class]]) {
+                msgText = NSLocalizedString(@"MessageAction.Service.ChatMigrated", nil);
+                chatUserNameString = nil;
             }
 
             
@@ -452,10 +453,8 @@
         
     } else if([action isKindOfClass:[TL_messageActionChannelCreate class]]) {
          actionText = NSLocalizedString(@"MessageAction.Service.ChannelCreated", nil);
-    }  else if([action isKindOfClass:[TL_messageActionChannelMigrateFrom class]]) {
-        actionText = [NSString stringWithFormat:NSLocalizedString(@"MessageAction.Service.ChannelMigrated", nil),message.action.title];
-    }if([action isKindOfClass:[TL_messageActionChatMigrateTo class]]) {
-        actionText = [NSString stringWithFormat:NSLocalizedString(@"MessageAction.Service.ChatMigrated", nil)];
+    }  else if([action isKindOfClass:[TL_messageActionChannelMigrateFrom class]] || [action isKindOfClass:[TL_messageActionChatMigrateTo class]]) {
+        actionText = NSLocalizedString(@"MessageAction.Service.ChatMigrated", nil);
         user = nil;
     }
     static float size = 11.5;
@@ -483,12 +482,12 @@
     
     
     
-    NSRange start;
+    NSRange start = NSMakeRange(NSNotFound, 0);
     //  if(user != [UsersManager currentUser]) {
     if(user)
         start = [attributedString appendString:[user fullName] withColor:LINK_COLOR];
     
-    if(message.from_id > 0) {
+    if(message.from_id > 0 && start.location != NSNotFound) {
         [attributedString setLink:[TMInAppLinks userProfile:user.n_id] forRange:start];
         [attributedString setFont:TGSystemMediumFont(size) forRange:start];
     }

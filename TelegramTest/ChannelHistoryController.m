@@ -37,7 +37,6 @@ static TGChannelsPolling *channelPolling;
         
         _pollingIsStarted = NO;
         
-        
     }
     
     return self;
@@ -52,7 +51,7 @@ static TGChannelsPolling *channelPolling;
          HistoryFilter *filter = [self filterWithNext:next];
         
         if([filter checkState:ChatHistoryStateFull next:next] || self.isProccessing) {
-            [self performCallback:selectHandler result:@[] range:NSMakeRange(0, 0)];
+            [self performCallback:selectHandler result:@[] range:NSMakeRange(0, 0) controller:self];
             return;
         }
         
@@ -74,7 +73,7 @@ static TGChannelsPolling *channelPolling;
             
             NSArray *converted = [filter proccessResponse:[self.controller messageTableItemsFromMessages:result] state:state next:next];
             
-            [self performCallback:selectHandler result:converted range:NSMakeRange(0, converted.count)];
+            [self performCallback:selectHandler result:converted range:NSMakeRange(0, converted.count) controller:self];
             
             [channelPolling checkInvalidatedMessages:converted important:[self.filter isKindOfClass:[ChannelImportantFilter class]]];
             
@@ -163,7 +162,7 @@ static TGChannelsPolling *channelPolling;
         
         NSArray *result = [self.filter selectAllItems];
         
-        [self performCallback:selectHandler result:result range:NSMakeRange(0, result.count)];
+        [self performCallback:selectHandler result:result range:NSMakeRange(0, result.count) controller:self];
 
         [channelPolling checkInvalidatedMessages:result important:[self.filter isKindOfClass:[ChannelImportantFilter class]]];
         

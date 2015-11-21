@@ -110,7 +110,7 @@ Telegram *TelegramInstance() {
 
 static int max_chat_users = 200;
 static int max_broadcast_users = 100;
-static int megagroup_size_max = 200;
+static int megagroup_size_max = 1000;
 
 void setMaxChatUsers(int c) {
     max_chat_users = c;
@@ -249,7 +249,7 @@ int megagroupSizeMax() {
 
 BOOL isTestServer() {
     BOOL result = [[NSProcessInfo processInfo].environment[@"test_server"] boolValue];
-    return result;
+    return result || [[NSUserDefaults standardUserDefaults] boolForKey:@"test-backend"];
 }
 
 NSString * appName() {

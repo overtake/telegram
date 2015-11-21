@@ -505,4 +505,22 @@
     return [TL_inputMessagesFilterEmpty create];
 }
 
+
+-(BOOL)checkAcceptResult:(NSArray *)result {
+    
+    __block BOOL accept = YES;
+    
+    [result enumerateObjectsUsingBlock:^(MessageTableItem *messageItem, NSUInteger idx, BOOL * _Nonnull stop) {
+        
+        if(self.peer_id != messageItem.message.peer_id) {
+            accept = NO;
+            *stop = YES;
+        }
+        
+    }];
+
+    
+    return accept;
+}
+
 @end

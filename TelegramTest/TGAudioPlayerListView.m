@@ -221,7 +221,7 @@ static long h_r_l;
 -(void)loadNext {
     
     if(_h_controller.nextState != ChatHistoryStateFull) {
-        [_h_controller request:YES anotherSource:YES sync:NO selectHandler:^(NSArray *result, NSRange range) {
+        [_h_controller request:YES anotherSource:YES sync:NO selectHandler:^(NSArray *result, NSRange range, id controller) {
             
             NSArray *f = [result filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.class == %@",[MessageTableItemAudioDocument class]]];
             

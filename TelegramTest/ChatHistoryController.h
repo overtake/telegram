@@ -44,7 +44,7 @@
 -(void)addFilter:(HistoryFilter *)filter;
 -(id)initWithController:(id<MessagesDelegate>)controller historyFilter:(Class)historyFilter;
 
-typedef void (^selectHandler)(NSArray *result, NSRange range);
+typedef void (^selectHandler)(NSArray *result, NSRange range, id controller);
 
 -(void)request:(BOOL)next anotherSource:(BOOL)anotherSource sync:(BOOL)sync selectHandler:(selectHandler)selectHandler;
 
@@ -77,11 +77,13 @@ typedef void (^selectHandler)(NSArray *result, NSRange range);
 
 -(int)itemsCount;
 
+-(BOOL)checkAcceptResult:(NSArray *)result;
+
 // protected methods
 
 -(ASQueue *)queue;
 
 -(void)setProccessing:(BOOL)isProccessing;
--(void)performCallback:(selectHandler)selectHandler result:(NSArray *)result range:(NSRange )range;
+-(void)performCallback:(selectHandler)selectHandler result:(NSArray *)result range:(NSRange )range controller:(ChatHistoryController *)controller;
 @end
 

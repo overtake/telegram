@@ -95,12 +95,15 @@
         }];
         
         
-        
-        
         [self.delegate behaviorDidEndRequest:response];
         
     } errorHandler:^(id request, RpcError *error) {
         [self.delegate behaviorDidEndRequest:nil];
+        
+        if(error.error_code == 400) {
+            alert(appName(), NSLocalizedString(error.error_msg, nil));
+        }
+        
     }];
 }
 

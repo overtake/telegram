@@ -96,6 +96,8 @@
     }];
     
     [self configure];
+    
+    [self drawParticipants:_chat.chatFull.participants.participants];
      
 }
 
@@ -397,7 +399,7 @@
             
             [self.navigationViewController pushViewController:viewController animated:YES];
             
-        } description:NSLocalizedString(@"Compose.ChannelAboutPlaceholder", nil) subdesc:_chat.chatFull.about height:42 stateback:nil];
+        } description:NSLocalizedString(@"Compose.ChannelAboutPlaceholder", nil) subdesc:[_chat.chatFull.about stringByReplacingOccurrencesOfString:@"\n" withString:@" "] height:42 stateback:nil];
         
         [_tableView addItem:descriptionItem tableRedraw:YES];
         

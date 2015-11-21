@@ -1991,7 +1991,8 @@ static NSTextAttachment *headerMediaIcon() {
         }
         
         if(_unreadMark && [self indexOfObject:_unreadMark] == 1) {
-            [self.table removeRowsAtIndexes:[NSIndexSet indexSetWithIndex:[self indexOfObject:_unreadMark]] withAnimation:NSTableViewAnimationEffectFade];
+            [self.messages removeObjectAtIndex:1];
+            [self.table removeRowsAtIndexes:[NSIndexSet indexSetWithIndex:1] withAnimation:NSTableViewAnimationEffectFade];
         }
 
         
@@ -2180,6 +2181,10 @@ static NSTextAttachment *headerMediaIcon() {
     
     __block TL_localMessage *msg = conversation.type == DialogTypeChannel && fromMsg == nil && ((flags & ShowMessageTypeUnreadMark) == 0 && (flags & ShowMessageTypeSearch) == 0) ? [[Storage manager] lastImportantMessageAroundMinId: message.hole ? channelMsgId(message.hole.min_id, message.peer_id) : message.channelMsgId] : [[Storage manager] messageById:message.hole ? message.hole.min_id : message.n_id inChannel:-message.to_id.channel_id];
     
+    if((flags & ShowMessageTypeUnreadMark) > 0 && conversation.type == DialogTypeChannel && !msg) {
+        [self flushMessages];
+    }
+    
     
     dispatch_block_t block = ^{
         
@@ -2223,7 +2228,7 @@ static NSTextAttachment *headerMediaIcon() {
         
         self.historyController.selectLimit = count/2 + 20;
         
-        [self.historyController loadAroundMessagesWithMessage:importantItem prevLimit:count nextLimit:(flags & ShowMessageTypeUnreadMark) > 0 ? 1 : count selectHandler:^(NSArray *result, NSRange range) {
+        [self.historyController loadAroundMessagesWithMessage:importantItem prevLimit:count nextLimit:(flags & ShowMessageTypeUnreadMark) > 0 ? 1 : count selectHandler:^(NSArray *result, NSRange range, id controller) {
             
             [self flushMessages];
             
@@ -2638,19 +2643,22 @@ static NSTextAttachment *headerMediaIcon() {
     
     NSUInteger pos = prev ? 0 : self.messages.count;
     
-    [self.historyController request:!prev anotherSource:YES sync:isFirst selectHandler:^(NSArray *prevResult, NSRange range1) {
+    [self.historyController request:!prev anotherSource:YES sync:isFirst selectHandler:^(NSArray *prevResult, NSRange range1, id controller) {
         
-        [self messagesLoadedTryToInsert:prevResult pos:pos next:!prev];
-        
-        if(self.didUpdatedTable) {
-            self.didUpdatedTable();
+        if(self.historyController == controller) {
+            [self messagesLoadedTryToInsert:prevResult pos:pos next:!prev];
+            
+            
+            if(self.didUpdatedTable) {
+                self.didUpdatedTable();
+            }
+            
+            if(prevResult.count+1 < 10 && prevResult.count > 0) {
+                [self loadhistory:0 toEnd:YES prev:prev isFirst:NO];
+            }
+            
+            [self addScrollEvent];
         }
-        
-        if(prevResult.count+1 < 10 && prevResult.count > 0) {
-            [self loadhistory:0 toEnd:YES prev:prev isFirst:NO];
-        }
-        
-        [self addScrollEvent];
 
     }];
 }

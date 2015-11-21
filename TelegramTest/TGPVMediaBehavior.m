@@ -82,7 +82,7 @@
 -(void)load:(long)max_id next:(BOOL)next limit:(int)limit callback:(void (^)(NSArray *))callback {
     
     
-    [_controller request:next anotherSource:YES sync:NO selectHandler:^(NSArray *result, NSRange range) {
+    [_controller request:next anotherSource:YES sync:NO selectHandler:^(NSArray *result, NSRange range,HistoryFilter *filter) {
         
         NSMutableArray * previewObjects = [NSMutableArray array];
         
