@@ -2881,21 +2881,21 @@
 
 @implementation TLUser
             
--(BOOL)isSelf {return (self.flags & (1 << 10)) > 0;}
+-(BOOL)isSelf {return NO;}
                         
--(BOOL)isContact {return (self.flags & (1 << 11)) > 0;}
+-(BOOL)isContact {return NO;}
                         
--(BOOL)isMutual_contact {return (self.flags & (1 << 12)) > 0;}
+-(BOOL)isMutual_contact {return NO;}
                         
--(BOOL)isDeleted {return (self.flags & (1 << 13)) > 0;}
+-(BOOL)isDeleted {return NO;}
                         
--(BOOL)isBot {return (self.flags & (1 << 14)) > 0;}
+-(BOOL)isBot {return NO;}
                         
--(BOOL)isBot_chat_history {return (self.flags & (1 << 15)) > 0;}
+-(BOOL)isBot_chat_history {return NO;}
                         
--(BOOL)isBot_nochats {return (self.flags & (1 << 16)) > 0;}
+-(BOOL)isBot_nochats {return NO;}
                         
--(BOOL)isVerified {return (self.flags & (1 << 17)) > 0;}
+-(BOOL)isVerified {return NO;}
             
 @end
         
@@ -3061,7 +3061,55 @@
 -(BOOL)isBot_nochats {return (self.flags & (1 << 16)) > 0;}
                         
 -(BOOL)isVerified {return (self.flags & (1 << 17)) > 0;}
-            
+                        
+-(void)setAccess_hash:(long)access_hash
+{
+   super.access_hash = access_hash;
+                
+    if(super.access_hash == 0)  { super.flags&= ~ (1 << 0) ;} else { super.flags|= (1 << 0); }
+}            
+-(void)setFirst_name:(NSString*)first_name
+{
+   super.first_name = first_name;
+                
+    if(super.first_name == nil)  { super.flags&= ~ (1 << 1) ;} else { super.flags|= (1 << 1); }
+}            
+-(void)setLast_name:(NSString*)last_name
+{
+   super.last_name = last_name;
+                
+    if(super.last_name == nil)  { super.flags&= ~ (1 << 2) ;} else { super.flags|= (1 << 2); }
+}            
+-(void)setUsername:(NSString*)username
+{
+   super.username = username;
+                
+    if(super.username == nil)  { super.flags&= ~ (1 << 3) ;} else { super.flags|= (1 << 3); }
+}            
+-(void)setPhone:(NSString*)phone
+{
+   super.phone = phone;
+                
+    if(super.phone == nil)  { super.flags&= ~ (1 << 4) ;} else { super.flags|= (1 << 4); }
+}            
+-(void)setPhoto:(TLUserProfilePhoto*)photo
+{
+   super.photo = photo;
+                
+    if(super.photo == nil)  { super.flags&= ~ (1 << 5) ;} else { super.flags|= (1 << 5); }
+}            
+-(void)setStatus:(TLUserStatus*)status
+{
+   super.status = status;
+                
+    if(super.status == nil)  { super.flags&= ~ (1 << 6) ;} else { super.flags|= (1 << 6); }
+}            
+-(void)setBot_info_version:(int)bot_info_version
+{
+   super.bot_info_version = bot_info_version;
+                
+    if(super.bot_info_version == 0)  { super.flags&= ~ (1 << 14) ;} else { super.flags|= (1 << 14); }
+}
         
 @end
 
@@ -3732,27 +3780,27 @@
 
 @implementation TLChat
             
--(BOOL)isCreator {return (self.flags & (1 << 0)) > 0;}
+-(BOOL)isCreator {return NO;}
                         
--(BOOL)isKicked {return (self.flags & (1 << 1)) > 0;}
+-(BOOL)isKicked {return NO;}
                         
--(BOOL)isLeft {return (self.flags & (1 << 2)) > 0;}
+-(BOOL)isLeft {return NO;}
                         
--(BOOL)isAdmins_enabled {return (self.flags & (1 << 3)) > 0;}
+-(BOOL)isAdmins_enabled {return NO;}
                         
--(BOOL)isAdmin {return (self.flags & (1 << 4)) > 0;}
+-(BOOL)isAdmin {return NO;}
                         
--(BOOL)isDeactivated {return (self.flags & (1 << 5)) > 0;}
+-(BOOL)isDeactivated {return NO;}
                         
--(BOOL)isEditor {return (self.flags & (1 << 3)) > 0;}
+-(BOOL)isEditor {return NO;}
                         
--(BOOL)isModerator {return (self.flags & (1 << 4)) > 0;}
+-(BOOL)isModerator {return NO;}
                         
--(BOOL)isBroadcast {return (self.flags & (1 << 5)) > 0;}
+-(BOOL)isBroadcast {return NO;}
                         
--(BOOL)isVerified {return (self.flags & (1 << 7)) > 0;}
+-(BOOL)isVerified {return NO;}
                         
--(BOOL)isMegagroup {return (self.flags & (1 << 8)) > 0;}
+-(BOOL)isMegagroup {return NO;}
             
 @end
         
@@ -3898,7 +3946,13 @@
 -(BOOL)isAdmin {return (self.flags & (1 << 4)) > 0;}
                         
 -(BOOL)isDeactivated {return (self.flags & (1 << 5)) > 0;}
-            
+                        
+-(void)setMigrated_to:(TLInputChannel*)migrated_to
+{
+   super.migrated_to = migrated_to;
+                
+    if(super.migrated_to == nil)  { super.flags&= ~ (1 << 6) ;} else { super.flags|= (1 << 6); }
+}
         
 @end
 
@@ -4060,7 +4114,13 @@
 -(BOOL)isVerified {return (self.flags & (1 << 7)) > 0;}
                         
 -(BOOL)isMegagroup {return (self.flags & (1 << 8)) > 0;}
-            
+                        
+-(void)setUsername:(NSString*)username
+{
+   super.username = username;
+                
+    if(super.username == nil)  { super.flags&= ~ (1 << 6) ;} else { super.flags|= (1 << 6); }
+}
         
 @end
 
@@ -4294,7 +4354,7 @@
 
 @implementation TLChatFull
             
--(BOOL)isCan_view_participants {return (self.flags & (1 << 3)) > 0;}
+-(BOOL)isCan_view_participants {return NO;}
             
 @end
         
@@ -4502,7 +4562,37 @@
         
             
 -(BOOL)isCan_view_participants {return (self.flags & (1 << 3)) > 0;}
-            
+                        
+-(void)setParticipants_count:(int)participants_count
+{
+   super.participants_count = participants_count;
+                
+    if(super.participants_count == 0)  { super.flags&= ~ (1 << 0) ;} else { super.flags|= (1 << 0); }
+}            
+-(void)setAdmins_count:(int)admins_count
+{
+   super.admins_count = admins_count;
+                
+    if(super.admins_count == 0)  { super.flags&= ~ (1 << 1) ;} else { super.flags|= (1 << 1); }
+}            
+-(void)setKicked_count:(int)kicked_count
+{
+   super.kicked_count = kicked_count;
+                
+    if(super.kicked_count == 0)  { super.flags&= ~ (1 << 2) ;} else { super.flags|= (1 << 2); }
+}            
+-(void)setMigrated_from_chat_id:(int)migrated_from_chat_id
+{
+   super.migrated_from_chat_id = migrated_from_chat_id;
+                
+    if(super.migrated_from_chat_id == 0)  { super.flags&= ~ (1 << 4) ;} else { super.flags|= (1 << 4); }
+}            
+-(void)setMigrated_from_max_id:(int)migrated_from_max_id
+{
+   super.migrated_from_max_id = migrated_from_max_id;
+                
+    if(super.migrated_from_max_id == 0)  { super.flags&= ~ (1 << 4) ;} else { super.flags|= (1 << 4); }
+}
         
 @end
 
@@ -4650,7 +4740,25 @@
         
             
 -(BOOL)isCan_view_participants {return (self.flags & (1 << 3)) > 0;}
-            
+                        
+-(void)setParticipants_count:(int)participants_count
+{
+   super.participants_count = participants_count;
+                
+    if(super.participants_count == 0)  { super.flags&= ~ (1 << 0) ;} else { super.flags|= (1 << 0); }
+}            
+-(void)setAdmins_count:(int)admins_count
+{
+   super.admins_count = admins_count;
+                
+    if(super.admins_count == 0)  { super.flags&= ~ (1 << 1) ;} else { super.flags|= (1 << 1); }
+}            
+-(void)setKicked_count:(int)kicked_count
+{
+   super.kicked_count = kicked_count;
+                
+    if(super.kicked_count == 0)  { super.flags&= ~ (1 << 2) ;} else { super.flags|= (1 << 2); }
+}
         
 @end
 
@@ -4846,7 +4954,13 @@
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
         
-
+            
+-(void)setSelf_participant:(TLChatParticipant*)self_participant
+{
+   super.self_participant = self_participant;
+                
+    if(super.self_participant == nil)  { super.flags&= ~ (1 << 0) ;} else { super.flags|= (1 << 0); }
+}
         
 @end
 
@@ -5204,13 +5318,13 @@
 
 @implementation TLMessage
             
--(BOOL)isUnread {return (self.flags & (1 << 0)) > 0;}
+-(BOOL)isUnread {return NO;}
                         
--(BOOL)isN_out {return (self.flags & (1 << 1)) > 0;}
+-(BOOL)isN_out {return NO;}
                         
--(BOOL)isMentioned {return (self.flags & (1 << 4)) > 0;}
+-(BOOL)isMentioned {return NO;}
                         
--(BOOL)isMedia_unread {return (self.flags & (1 << 5)) > 0;}
+-(BOOL)isMedia_unread {return NO;}
             
 @end
         
@@ -5386,7 +5500,55 @@
 -(BOOL)isMentioned {return (self.flags & (1 << 4)) > 0;}
                         
 -(BOOL)isMedia_unread {return (self.flags & (1 << 5)) > 0;}
-            
+                        
+-(void)setFrom_id:(int)from_id
+{
+   super.from_id = from_id;
+                
+    if(super.from_id == 0)  { super.flags&= ~ (1 << 8) ;} else { super.flags|= (1 << 8); }
+}            
+-(void)setFwd_from_id:(TLPeer*)fwd_from_id
+{
+   super.fwd_from_id = fwd_from_id;
+                
+    if(super.fwd_from_id == nil)  { super.flags&= ~ (1 << 2) ;} else { super.flags|= (1 << 2); }
+}            
+-(void)setFwd_date:(int)fwd_date
+{
+   super.fwd_date = fwd_date;
+                
+    if(super.fwd_date == 0)  { super.flags&= ~ (1 << 2) ;} else { super.flags|= (1 << 2); }
+}            
+-(void)setReply_to_msg_id:(int)reply_to_msg_id
+{
+   super.reply_to_msg_id = reply_to_msg_id;
+                
+    if(super.reply_to_msg_id == 0)  { super.flags&= ~ (1 << 3) ;} else { super.flags|= (1 << 3); }
+}            
+-(void)setMedia:(TLMessageMedia*)media
+{
+   super.media = media;
+                
+    if(super.media == nil)  { super.flags&= ~ (1 << 9) ;} else { super.flags|= (1 << 9); }
+}            
+-(void)setReply_markup:(TLReplyMarkup*)reply_markup
+{
+   super.reply_markup = reply_markup;
+                
+    if(super.reply_markup == nil)  { super.flags&= ~ (1 << 6) ;} else { super.flags|= (1 << 6); }
+}            
+-(void)setEntities:(NSMutableArray*)entities
+{
+   super.entities = entities;
+                
+    if(super.entities == nil)  { super.flags&= ~ (1 << 7) ;} else { super.flags|= (1 << 7); }
+}            
+-(void)setViews:(int)views
+{
+   super.views = views;
+                
+    if(super.views == 0)  { super.flags&= ~ (1 << 10) ;} else { super.flags|= (1 << 10); }
+}
         
 @end
 
@@ -5471,7 +5633,13 @@
 -(BOOL)isMentioned {return (self.flags & (1 << 4)) > 0;}
                         
 -(BOOL)isMedia_unread {return (self.flags & (1 << 5)) > 0;}
-            
+                        
+-(void)setFrom_id:(int)from_id
+{
+   super.from_id = from_id;
+                
+    if(super.from_id == 0)  { super.flags&= ~ (1 << 8) ;} else { super.flags|= (1 << 8); }
+}
         
 @end
 
@@ -9870,7 +10038,13 @@
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
         
-
+            
+-(void)setCollapsed:(NSMutableArray*)collapsed
+{
+   super.collapsed = collapsed;
+                
+    if(super.collapsed == nil)  { super.flags&= ~ (1 << 0) ;} else { super.flags|= (1 << 0); }
+}
         
 @end
 
@@ -12797,13 +12971,13 @@
 
 @implementation TLUpdates
             
--(BOOL)isUnread {return (self.flags & (1 << 0)) > 0;}
+-(BOOL)isUnread {return NO;}
                         
--(BOOL)isN_out {return (self.flags & (1 << 1)) > 0;}
+-(BOOL)isN_out {return NO;}
                         
--(BOOL)isMentioned {return (self.flags & (1 << 4)) > 0;}
+-(BOOL)isMentioned {return NO;}
                         
--(BOOL)isMedia_unread {return (self.flags & (1 << 5)) > 0;}
+-(BOOL)isMedia_unread {return NO;}
             
 @end
         
@@ -12971,7 +13145,31 @@
 -(BOOL)isMentioned {return (self.flags & (1 << 4)) > 0;}
                         
 -(BOOL)isMedia_unread {return (self.flags & (1 << 5)) > 0;}
-            
+                        
+-(void)setFwd_from_id:(TLPeer*)fwd_from_id
+{
+   super.fwd_from_id = fwd_from_id;
+                
+    if(super.fwd_from_id == nil)  { super.flags&= ~ (1 << 2) ;} else { super.flags|= (1 << 2); }
+}            
+-(void)setFwd_date:(int)fwd_date
+{
+   super.fwd_date = fwd_date;
+                
+    if(super.fwd_date == 0)  { super.flags&= ~ (1 << 2) ;} else { super.flags|= (1 << 2); }
+}            
+-(void)setReply_to_msg_id:(int)reply_to_msg_id
+{
+   super.reply_to_msg_id = reply_to_msg_id;
+                
+    if(super.reply_to_msg_id == 0)  { super.flags&= ~ (1 << 3) ;} else { super.flags|= (1 << 3); }
+}            
+-(void)setEntities:(NSMutableArray*)entities
+{
+   super.entities = entities;
+                
+    if(super.entities == nil)  { super.flags&= ~ (1 << 7) ;} else { super.flags|= (1 << 7); }
+}
         
 @end
 
@@ -13102,7 +13300,31 @@
 -(BOOL)isMentioned {return (self.flags & (1 << 4)) > 0;}
                         
 -(BOOL)isMedia_unread {return (self.flags & (1 << 5)) > 0;}
-            
+                        
+-(void)setFwd_from_id:(TLPeer*)fwd_from_id
+{
+   super.fwd_from_id = fwd_from_id;
+                
+    if(super.fwd_from_id == nil)  { super.flags&= ~ (1 << 2) ;} else { super.flags|= (1 << 2); }
+}            
+-(void)setFwd_date:(int)fwd_date
+{
+   super.fwd_date = fwd_date;
+                
+    if(super.fwd_date == 0)  { super.flags&= ~ (1 << 2) ;} else { super.flags|= (1 << 2); }
+}            
+-(void)setReply_to_msg_id:(int)reply_to_msg_id
+{
+   super.reply_to_msg_id = reply_to_msg_id;
+                
+    if(super.reply_to_msg_id == 0)  { super.flags&= ~ (1 << 3) ;} else { super.flags|= (1 << 3); }
+}            
+-(void)setEntities:(NSMutableArray*)entities
+{
+   super.entities = entities;
+                
+    if(super.entities == nil)  { super.flags&= ~ (1 << 7) ;} else { super.flags|= (1 << 7); }
+}
         
 @end
 
@@ -13496,7 +13718,19 @@
 -(BOOL)isUnread {return (self.flags & (1 << 0)) > 0;}
                         
 -(BOOL)isN_out {return (self.flags & (1 << 1)) > 0;}
-            
+                        
+-(void)setMedia:(TLMessageMedia*)media
+{
+   super.media = media;
+                
+    if(super.media == nil)  { super.flags&= ~ (1 << 9) ;} else { super.flags|= (1 << 9); }
+}            
+-(void)setEntities:(NSMutableArray*)entities
+{
+   super.entities = entities;
+                
+    if(super.entities == nil)  { super.flags&= ~ (1 << 7) ;} else { super.flags|= (1 << 7); }
+}
         
 @end
 
@@ -13812,9 +14046,9 @@
 
 @implementation TLDcOption
             
--(BOOL)isIpv6 {return (self.flags & (1 << 0)) > 0;}
+-(BOOL)isIpv6 {return NO;}
                         
--(BOOL)isMedia_only {return (self.flags & (1 << 1)) > 0;}
+-(BOOL)isMedia_only {return NO;}
             
 @end
         
@@ -18323,7 +18557,79 @@
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
         
-
+            
+-(void)setType:(NSString*)type
+{
+   super.type = type;
+                
+    if(super.type == nil)  { super.flags&= ~ (1 << 0) ;} else { super.flags|= (1 << 0); }
+}            
+-(void)setSite_name:(NSString*)site_name
+{
+   super.site_name = site_name;
+                
+    if(super.site_name == nil)  { super.flags&= ~ (1 << 1) ;} else { super.flags|= (1 << 1); }
+}            
+-(void)setTitle:(NSString*)title
+{
+   super.title = title;
+                
+    if(super.title == nil)  { super.flags&= ~ (1 << 2) ;} else { super.flags|= (1 << 2); }
+}            
+-(void)setN_description:(NSString*)n_description
+{
+   super.n_description = n_description;
+                
+    if(super.n_description == nil)  { super.flags&= ~ (1 << 3) ;} else { super.flags|= (1 << 3); }
+}            
+-(void)setPhoto:(TLPhoto*)photo
+{
+   super.photo = photo;
+                
+    if(super.photo == nil)  { super.flags&= ~ (1 << 4) ;} else { super.flags|= (1 << 4); }
+}            
+-(void)setEmbed_url:(NSString*)embed_url
+{
+   super.embed_url = embed_url;
+                
+    if(super.embed_url == nil)  { super.flags&= ~ (1 << 5) ;} else { super.flags|= (1 << 5); }
+}            
+-(void)setEmbed_type:(NSString*)embed_type
+{
+   super.embed_type = embed_type;
+                
+    if(super.embed_type == nil)  { super.flags&= ~ (1 << 5) ;} else { super.flags|= (1 << 5); }
+}            
+-(void)setEmbed_width:(int)embed_width
+{
+   super.embed_width = embed_width;
+                
+    if(super.embed_width == 0)  { super.flags&= ~ (1 << 6) ;} else { super.flags|= (1 << 6); }
+}            
+-(void)setEmbed_height:(int)embed_height
+{
+   super.embed_height = embed_height;
+                
+    if(super.embed_height == 0)  { super.flags&= ~ (1 << 6) ;} else { super.flags|= (1 << 6); }
+}            
+-(void)setDuration:(int)duration
+{
+   super.duration = duration;
+                
+    if(super.duration == 0)  { super.flags&= ~ (1 << 7) ;} else { super.flags|= (1 << 7); }
+}            
+-(void)setAuthor:(NSString*)author
+{
+   super.author = author;
+                
+    if(super.author == nil)  { super.flags&= ~ (1 << 8) ;} else { super.flags|= (1 << 8); }
+}            
+-(void)setDocument:(TLDocument*)document
+{
+   super.document = document;
+                
+    if(super.document == nil)  { super.flags&= ~ (1 << 9) ;} else { super.flags|= (1 << 9); }
+}
         
 @end
 
@@ -18420,7 +18726,73 @@
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
         
-
+            
+-(void)setType:(NSString*)type
+{
+   super.type = type;
+                
+    if(super.type == nil)  { super.flags&= ~ (1 << 0) ;} else { super.flags|= (1 << 0); }
+}            
+-(void)setSite_name:(NSString*)site_name
+{
+   super.site_name = site_name;
+                
+    if(super.site_name == nil)  { super.flags&= ~ (1 << 1) ;} else { super.flags|= (1 << 1); }
+}            
+-(void)setTitle:(NSString*)title
+{
+   super.title = title;
+                
+    if(super.title == nil)  { super.flags&= ~ (1 << 2) ;} else { super.flags|= (1 << 2); }
+}            
+-(void)setN_description:(NSString*)n_description
+{
+   super.n_description = n_description;
+                
+    if(super.n_description == nil)  { super.flags&= ~ (1 << 3) ;} else { super.flags|= (1 << 3); }
+}            
+-(void)setPhoto:(TLPhoto*)photo
+{
+   super.photo = photo;
+                
+    if(super.photo == nil)  { super.flags&= ~ (1 << 4) ;} else { super.flags|= (1 << 4); }
+}            
+-(void)setEmbed_url:(NSString*)embed_url
+{
+   super.embed_url = embed_url;
+                
+    if(super.embed_url == nil)  { super.flags&= ~ (1 << 5) ;} else { super.flags|= (1 << 5); }
+}            
+-(void)setEmbed_type:(NSString*)embed_type
+{
+   super.embed_type = embed_type;
+                
+    if(super.embed_type == nil)  { super.flags&= ~ (1 << 5) ;} else { super.flags|= (1 << 5); }
+}            
+-(void)setEmbed_width:(int)embed_width
+{
+   super.embed_width = embed_width;
+                
+    if(super.embed_width == 0)  { super.flags&= ~ (1 << 6) ;} else { super.flags|= (1 << 6); }
+}            
+-(void)setEmbed_height:(int)embed_height
+{
+   super.embed_height = embed_height;
+                
+    if(super.embed_height == 0)  { super.flags&= ~ (1 << 6) ;} else { super.flags|= (1 << 6); }
+}            
+-(void)setDuration:(int)duration
+{
+   super.duration = duration;
+                
+    if(super.duration == 0)  { super.flags&= ~ (1 << 7) ;} else { super.flags|= (1 << 7); }
+}            
+-(void)setAuthor:(NSString*)author
+{
+   super.author = author;
+                
+    if(super.author == nil)  { super.flags&= ~ (1 << 8) ;} else { super.flags|= (1 << 8); }
+}
         
 @end
 
@@ -18792,7 +19164,31 @@
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
         
-
+            
+-(void)setN_salt:(NSData*)n_salt
+{
+   super.n_salt = n_salt;
+                
+    if(super.n_salt == nil)  { super.flags&= ~ (1 << 0) ;} else { super.flags|= (1 << 0); }
+}            
+-(void)setN_password_hash:(NSData*)n_password_hash
+{
+   super.n_password_hash = n_password_hash;
+                
+    if(super.n_password_hash == nil)  { super.flags&= ~ (1 << 0) ;} else { super.flags|= (1 << 0); }
+}            
+-(void)setHint:(NSString*)hint
+{
+   super.hint = hint;
+                
+    if(super.hint == nil)  { super.flags&= ~ (1 << 0) ;} else { super.flags|= (1 << 0); }
+}            
+-(void)setEmail:(NSString*)email
+{
+   super.email = email;
+                
+    if(super.email == nil)  { super.flags&= ~ (1 << 1) ;} else { super.flags|= (1 << 1); }
+}
         
 @end
 
@@ -18978,13 +19374,13 @@
 
 @implementation TLChatInvite
             
--(BOOL)isChannel {return (self.flags & (1 << 0)) > 0;}
+-(BOOL)isChannel {return NO;}
                         
--(BOOL)isBroadcast {return (self.flags & (1 << 1)) > 0;}
+-(BOOL)isBroadcast {return NO;}
                         
--(BOOL)isPublic {return (self.flags & (1 << 2)) > 0;}
+-(BOOL)isPublic {return NO;}
                         
--(BOOL)isMegagroup {return (self.flags & (1 << 3)) > 0;}
+-(BOOL)isMegagroup {return NO;}
             
 @end
         
@@ -19231,11 +19627,11 @@
 
 @implementation TLStickerSet
             
--(BOOL)isInstalled {return (self.flags & (1 << 0)) > 0;}
+-(BOOL)isInstalled {return NO;}
                         
--(BOOL)isDisabled {return (self.flags & (1 << 1)) > 0;}
+-(BOOL)isDisabled {return NO;}
                         
--(BOOL)isOfficial {return (self.flags & (1 << 2)) > 0;}
+-(BOOL)isOfficial {return NO;}
             
 @end
         
@@ -19706,11 +20102,11 @@
 
 @implementation TLReplyMarkup
             
--(BOOL)isSelective {return (self.flags & (1 << 2)) > 0;}
+-(BOOL)isSelective {return NO;}
                         
--(BOOL)isSingle_use {return (self.flags & (1 << 1)) > 0;}
+-(BOOL)isSingle_use {return NO;}
                         
--(BOOL)isResize {return (self.flags & (1 << 0)) > 0;}
+-(BOOL)isResize {return NO;}
             
 @end
         
@@ -20787,7 +21183,7 @@
 
 @implementation TLupdates_ChannelDifference
             
--(BOOL)isFinal {return (self.flags & (1 << 0)) > 0;}
+-(BOOL)isFinal {return NO;}
             
 @end
         
@@ -20842,7 +21238,13 @@
         
             
 -(BOOL)isFinal {return (self.flags & (1 << 0)) > 0;}
-            
+                        
+-(void)setTimeout:(int)timeout
+{
+   super.timeout = timeout;
+                
+    if(super.timeout == 0)  { super.flags&= ~ (1 << 1) ;} else { super.flags|= (1 << 1); }
+}
         
 @end
 
@@ -20995,7 +21397,13 @@
         
             
 -(BOOL)isFinal {return (self.flags & (1 << 0)) > 0;}
-            
+                        
+-(void)setTimeout:(int)timeout
+{
+   super.timeout = timeout;
+                
+    if(super.timeout == 0)  { super.flags&= ~ (1 << 1) ;} else { super.flags|= (1 << 1); }
+}
         
 @end
 
@@ -21154,15 +21562,21 @@
         
             
 -(BOOL)isFinal {return (self.flags & (1 << 0)) > 0;}
-            
+                        
+-(void)setTimeout:(int)timeout
+{
+   super.timeout = timeout;
+                
+    if(super.timeout == 0)  { super.flags&= ~ (1 << 1) ;} else { super.flags|= (1 << 1); }
+}
         
 @end
 
 @implementation TLChannelMessagesFilter
             
--(BOOL)isImportant_only {return (self.flags & (1 << 0)) > 0;}
+-(BOOL)isImportant_only {return NO;}
                         
--(BOOL)isExclude_new_messages {return (self.flags & (1 << 1)) > 0;}
+-(BOOL)isExclude_new_messages {return NO;}
             
 @end
         

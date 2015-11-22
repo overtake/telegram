@@ -1515,9 +1515,6 @@
          contextName = "__49-[TGPasswosdMainViewController rebuildController]_block_invoke131:TGPasswosdMainViewController.m">
       </ContextState>
       <ContextState
-         contextName = "-[HistoryFilter proccessResponse:state:next:]:HistoryFilter.m">
-      </ContextState>
-      <ContextState
          contextName = "-[TMCollectionPageController imageObjectWithPreview:]:TMCollectionPageController.m">
       </ContextState>
       <ContextState
@@ -4725,6 +4722,11 @@
       </ContextState>
       <ContextState
          contextName = "-[TGConversationsViewController insertAll:]:TGConversationsViewController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.chat.isDeactivated">
+            </PersistentString>
+         </PersistentStrings>
       </ContextState>
       <ContextState
          contextName = "-[ExternalDocumentSecretSenderItem performRequest]:ExternalDocumentSecretSenderItem.m">

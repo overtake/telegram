@@ -222,7 +222,7 @@
 - (BOOL) isAddToList {
     if(self.type == DialogTypeSecretChat)
         return YES;
-    
+        
     return !self.isInvisibleChannel && self.last_message_date > 0  && !self.fake && (!self.chat.isDeactivated);
 }
 

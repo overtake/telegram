@@ -105,6 +105,8 @@
         [RPCRequest sendRequest:[TLAPI_messages_getDialogs createWithOffset_date:date offset_id:conversation.lastMessage.n_id offset_peer:inputPeer limit:limit] successHandler:^(id request, TL_messages_dialogs *response) {
             
             
+            
+            
             [SharedManager proccessGlobalResponse:response];
             
             
@@ -119,6 +121,7 @@
                 TLChat *chat = [[response.chats filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.n_id == %d",-dialog.peer.peer_id]] firstObject];
                 
                 TL_conversation *conversation;
+                
                 
                 
                 if([dialog.peer isKindOfClass:[TL_peerChannel class]]) {
@@ -175,6 +178,22 @@
             
             [[DialogsManager sharedManager] add:converted];
             [[Storage manager] insertDialogs:converted];
+            
+//            NSArray *all = [[DialogsManager sharedManager] all];
+//            
+//            if(all.count > 0) {
+//                NSArray *res =all;//[all subarrayWithRange:NSMakeRange(150, 10)];
+//                
+//                [res enumerateObjectsUsingBlock:^(TL_conversation *obj, NSUInteger idx, BOOL * _Nonnull stop) {
+//                    if(obj.chat)
+//                        NSLog(@"chatTitle:%@ username:%@ peer_id:%d date:%d",obj.chat.title,obj.chat.username,obj.peer_id,obj.lastMessage.date);
+//                    else
+//                        NSLog(@"userTitle:%@ username:%@ peer_id:%d date:%d",obj.user.fullName,obj.user.username,obj.peer_id,obj.lastMessage.date);
+//                    
+//                }];
+//                
+//                int bp = 0;
+//            }
             
             [MessagesManager updateUnreadBadge];
             
