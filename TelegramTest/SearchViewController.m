@@ -312,9 +312,9 @@ typedef enum {
         } else {
             TMViewController *controller = [[Telegram leftViewController] currentTabController];
             
-            if([Telegram isSingleLayout] || ([controller isKindOfClass:[StandartViewController class]] && searchItem.type == SearchItemGlobalUser)) {
+           // if([Telegram isSingleLayout] || ([controller isKindOfClass:[StandartViewController class]] && searchItem.type == SearchItemGlobalUser)) {
                 [(StandartViewController *)controller searchByString:@""];
-            }
+           // }
             
         }
         
@@ -322,6 +322,8 @@ typedef enum {
             
             
             [appWindow().navigationController showMessagesViewController:dialog withMessage:searchItem.message];
+          
+          //  [self searchByString:@""];
             
 //            BOOL success = [[Telegram rightViewController] showByDialog:dialog withJump:msg_id historyFilter:[HistoryFilter class] sender:self];
 //            if(!success) {

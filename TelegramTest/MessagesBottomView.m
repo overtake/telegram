@@ -931,14 +931,9 @@ static RBLPopover *popover;
                 weakSelf.dialog.invisibleChannel = NO;
                 
                 [weakSelf.dialog save];
-                
-                
+                                
                 [[DialogsManager sharedManager] updateLastMessageForDialog:weakSelf.dialog];
                 
-                
-                
-                
-                [[DialogsManager sharedManager] notifyAfterUpdateConversation:weakSelf.dialog];
                 
                 [ASQueue dispatchOnMainQueue:^{
                     [weakSelf.messagesViewController setState:MessagesViewControllerStateNone];
