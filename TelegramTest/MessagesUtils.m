@@ -404,7 +404,14 @@
                 actionText = NSLocalizedString(@"MessageAction.Service.YouChoinedToChannel", nil);
             }
         } else {
-            if(action.users.count == 1 && [action.users[0] intValue] != message.from_id) {
+            
+           
+            
+            if(action.users.count == 1 && [action.users[0] intValue] == message.from_id) {
+                actionText = NSLocalizedString(@"MessageAction.Service.JoinedGroup", nil);
+                
+            } else {
+                actionText = NSLocalizedString(@"MessageAction.Service.InvitedGroup",nil);
                 
                 [action.users enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
                     TLUser *user = [[UsersManager sharedManager] find:[obj intValue]];
@@ -413,10 +420,6 @@
                         [users addObject:user];
                     }
                 }];
-                
-                actionText = NSLocalizedString(@"MessageAction.Service.InvitedGroup",nil);
-            } else {
-                actionText = NSLocalizedString(@"MessageAction.Service.JoinedGroup", nil);
             }
         }
         

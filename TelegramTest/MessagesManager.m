@@ -202,11 +202,9 @@ static const int seconds_to_notify = 120;
         
         
         
-        if(message.to_id.chat_id != 0) {
-            if(![message.to_id isSecret]) {
-                subTitle = title;
-                title = [chat title];
-            } 
+        if(message.peer_id < 0 && message.from_id != 0) {
+            subTitle = title;
+            title = [chat title];
         }
         
         

@@ -33,16 +33,10 @@ typedef enum {
 - (NSAttributedString *)statusForMessagesHeaderView;
 - (NSAttributedString *)statusForSearchTableView;
 
-
--(BOOL)isAdmin;
--(BOOL)isBroadcast;
--(BOOL)isPublic;
 -(BOOL)left;
--(BOOL)isKicked;
--(BOOL)isPublisher;
--(BOOL)isModerator;
+
+
 -(BOOL)isManager;
--(BOOL)isVerify;
 -(BOOL)isChannel;
 -(id)inputPeer;
 -(NSString *)usernameLink;

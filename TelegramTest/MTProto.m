@@ -2,7 +2,7 @@
 //  MTProto.m
 //  Telegram
 //
-//  Auto created by Mikhail Filimonov on 20.11.15.
+//  Auto created by Mikhail Filimonov on 22.11.15.
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -39,10 +39,10 @@
 @end
 
 
-
 @implementation TLTrue
-@end
 
+@end
+        
 @implementation TL_true
 +(TL_true*)create {
 	TL_true* obj = [[TL_true alloc] init];
@@ -79,14 +79,12 @@
 }
 
         
-
-        
 @end
-
 
 @implementation TLInputPeer
-@end
 
+@end
+        
 @implementation TL_inputPeerEmpty
 +(TL_inputPeerEmpty*)create {
 	TL_inputPeerEmpty* obj = [[TL_inputPeerEmpty alloc] init];
@@ -121,8 +119,6 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
-
-        
 
         
 @end
@@ -163,8 +159,6 @@
 }
 
         
-
-        
 @end
 
 @implementation TL_inputPeerChat
@@ -201,8 +195,6 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
-
-        
 
         
 @end
@@ -247,8 +239,6 @@
 }
 
         
-
-        
 @end
 
 @implementation TL_inputPeerChannel
@@ -291,14 +281,12 @@
 }
 
         
-
-        
 @end
-
 
 @implementation TLInputUser
-@end
 
+@end
+        
 @implementation TL_inputUserEmpty
 +(TL_inputUserEmpty*)create {
 	TL_inputUserEmpty* obj = [[TL_inputUserEmpty alloc] init];
@@ -333,8 +321,6 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
-
-        
 
         
 @end
@@ -373,8 +359,6 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
-
-        
 
         
 @end
@@ -419,14 +403,12 @@
 }
 
         
-
-        
 @end
-
 
 @implementation TLInputContact
-@end
 
+@end
+        
 @implementation TL_inputPhoneContact
 +(TL_inputPhoneContact*)createWithClient_id:(long)client_id phone:(NSString*)phone first_name:(NSString*)first_name last_name:(NSString*)last_name {
 	TL_inputPhoneContact* obj = [[TL_inputPhoneContact alloc] init];
@@ -475,14 +457,12 @@
 }
 
         
-
-        
 @end
-
 
 @implementation TLInputFile
-@end
 
+@end
+        
 @implementation TL_inputFile
 +(TL_inputFile*)createWithN_id:(long)n_id parts:(int)parts name:(NSString*)name md5_checksum:(NSString*)md5_checksum {
 	TL_inputFile* obj = [[TL_inputFile alloc] init];
@@ -531,8 +511,6 @@
 }
 
         
-
-        
 @end
 
 @implementation TL_inputFileBig
@@ -579,14 +557,12 @@
 }
 
         
-
-        
 @end
-
 
 @implementation TLInputMedia
-@end
 
+@end
+        
 @implementation TL_inputMediaEmpty
 +(TL_inputMediaEmpty*)create {
 	TL_inputMediaEmpty* obj = [[TL_inputMediaEmpty alloc] init];
@@ -621,8 +597,6 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
-
-        
 
         
 @end
@@ -667,8 +641,6 @@
 }
 
         
-
-        
 @end
 
 @implementation TL_inputMediaPhoto
@@ -711,8 +683,6 @@
 }
 
         
-
-        
 @end
 
 @implementation TL_inputMediaGeoPoint
@@ -749,8 +719,6 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
-
-        
 
         
 @end
@@ -797,8 +765,6 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
-
-        
 
         
 @end
@@ -857,8 +823,6 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
-
-        
 
         
 @end
@@ -923,8 +887,6 @@
 }
 
         
-
-        
 @end
 
 @implementation TL_inputMediaVideo
@@ -965,8 +927,6 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
-
-        
 
         
 @end
@@ -1015,8 +975,6 @@
 }
 
         
-
-        
 @end
 
 @implementation TL_inputMediaAudio
@@ -1053,8 +1011,6 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
-
-        
 
         
 @end
@@ -1123,8 +1079,6 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
-
-        
 
         
 @end
@@ -1199,8 +1153,6 @@
 }
 
         
-
-        
 @end
 
 @implementation TL_inputMediaDocument
@@ -1237,8 +1189,6 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
-
-        
 
         
 @end
@@ -1295,8 +1245,6 @@
 }
 
         
-
-        
 @end
 
 @implementation TL_inputMediaUploadedVideo_old34
@@ -1349,8 +1297,6 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
-
-        
 
         
 @end
@@ -1411,14 +1357,12 @@
 }
 
         
-
-        
 @end
-
 
 @implementation TLInputChatPhoto
-@end
 
+@end
+        
 @implementation TL_inputChatPhotoEmpty
 +(TL_inputChatPhotoEmpty*)create {
 	TL_inputChatPhotoEmpty* obj = [[TL_inputChatPhotoEmpty alloc] init];
@@ -1453,8 +1397,6 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
-
-        
 
         
 @end
@@ -1499,8 +1441,6 @@
 }
 
         
-
-        
 @end
 
 @implementation TL_inputChatPhoto
@@ -1543,14 +1483,12 @@
 }
 
         
-
-        
 @end
-
 
 @implementation TLInputGeoPoint
-@end
 
+@end
+        
 @implementation TL_inputGeoPointEmpty
 +(TL_inputGeoPointEmpty*)create {
 	TL_inputGeoPointEmpty* obj = [[TL_inputGeoPointEmpty alloc] init];
@@ -1585,8 +1523,6 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
-
-        
 
         
 @end
@@ -1631,14 +1567,12 @@
 }
 
         
-
-        
 @end
-
 
 @implementation TLInputPhoto
-@end
 
+@end
+        
 @implementation TL_inputPhotoEmpty
 +(TL_inputPhotoEmpty*)create {
 	TL_inputPhotoEmpty* obj = [[TL_inputPhotoEmpty alloc] init];
@@ -1673,8 +1607,6 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
-
-        
 
         
 @end
@@ -1719,14 +1651,12 @@
 }
 
         
-
-        
 @end
-
 
 @implementation TLInputVideo
-@end
 
+@end
+        
 @implementation TL_inputVideoEmpty
 +(TL_inputVideoEmpty*)create {
 	TL_inputVideoEmpty* obj = [[TL_inputVideoEmpty alloc] init];
@@ -1761,8 +1691,6 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
-
-        
 
         
 @end
@@ -1807,14 +1735,12 @@
 }
 
         
-
-        
 @end
-
 
 @implementation TLInputFileLocation
-@end
 
+@end
+        
 @implementation TL_inputFileLocation
 +(TL_inputFileLocation*)createWithVolume_id:(long)volume_id local_id:(int)local_id secret:(long)secret {
 	TL_inputFileLocation* obj = [[TL_inputFileLocation alloc] init];
@@ -1859,8 +1785,6 @@
 }
 
         
-
-        
 @end
 
 @implementation TL_inputVideoFileLocation
@@ -1901,8 +1825,6 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
-
-        
 
         
 @end
@@ -1947,8 +1869,6 @@
 }
 
         
-
-        
 @end
 
 @implementation TL_inputAudioFileLocation
@@ -1989,8 +1909,6 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
-
-        
 
         
 @end
@@ -2035,14 +1953,12 @@
 }
 
         
-
-        
 @end
-
 
 @implementation TLInputPhotoCrop
-@end
 
+@end
+        
 @implementation TL_inputPhotoCropAuto
 +(TL_inputPhotoCropAuto*)create {
 	TL_inputPhotoCropAuto* obj = [[TL_inputPhotoCropAuto alloc] init];
@@ -2077,8 +1993,6 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
-
-        
 
         
 @end
@@ -2127,14 +2041,12 @@
 }
 
         
-
-        
 @end
-
 
 @implementation TLInputAppEvent
-@end
 
+@end
+        
 @implementation TL_inputAppEvent
 +(TL_inputAppEvent*)createWithTime:(double)time type:(NSString*)type peer:(long)peer data:(NSString*)data {
 	TL_inputAppEvent* obj = [[TL_inputAppEvent alloc] init];
@@ -2183,14 +2095,12 @@
 }
 
         
-
-        
 @end
-
 
 @implementation TLPeer
-@end
 
+@end
+        
 @implementation TL_peerUser
 +(TL_peerUser*)createWithUser_id:(int)user_id {
 	TL_peerUser* obj = [[TL_peerUser alloc] init];
@@ -2225,8 +2135,6 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
-
-        
 
         
 @end
@@ -2267,8 +2175,6 @@
 }
 
         
-
-        
 @end
 
 @implementation TL_peerChannel
@@ -2307,14 +2213,12 @@
 }
 
         
-
-        
 @end
-
 
 @implementation TLstorage_FileType
-@end
 
+@end
+        
 @implementation TL_storage_fileUnknown
 +(TL_storage_fileUnknown*)create {
 	TL_storage_fileUnknown* obj = [[TL_storage_fileUnknown alloc] init];
@@ -2349,8 +2253,6 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
-
-        
 
         
 @end
@@ -2391,8 +2293,6 @@
 }
 
         
-
-        
 @end
 
 @implementation TL_storage_fileGif
@@ -2429,8 +2329,6 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
-
-        
 
         
 @end
@@ -2471,8 +2369,6 @@
 }
 
         
-
-        
 @end
 
 @implementation TL_storage_filePdf
@@ -2509,8 +2405,6 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
-
-        
 
         
 @end
@@ -2551,8 +2445,6 @@
 }
 
         
-
-        
 @end
 
 @implementation TL_storage_fileMov
@@ -2589,8 +2481,6 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
-
-        
 
         
 @end
@@ -2631,8 +2521,6 @@
 }
 
         
-
-        
 @end
 
 @implementation TL_storage_fileMp4
@@ -2669,8 +2557,6 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
-
-        
 
         
 @end
@@ -2711,14 +2597,12 @@
 }
 
         
-
-        
 @end
-
 
 @implementation TLFileLocation
-@end
 
+@end
+        
 @implementation TL_fileLocationUnavailable
 +(TL_fileLocationUnavailable*)createWithVolume_id:(long)volume_id local_id:(int)local_id secret:(long)secret {
 	TL_fileLocationUnavailable* obj = [[TL_fileLocationUnavailable alloc] init];
@@ -2761,8 +2645,6 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
-
-        
 
         
 @end
@@ -2815,14 +2697,76 @@
 }
 
         
-
-        
 @end
-
 
 @implementation TLUser
+            
+-(BOOL)isSelf {return (self.flags & (1 << 10)) > 0;}
+                        
+-(BOOL)isContact {return (self.flags & (1 << 11)) > 0;}
+                        
+-(BOOL)isMutual_contact {return (self.flags & (1 << 12)) > 0;}
+                        
+-(BOOL)isDeleted {return (self.flags & (1 << 13)) > 0;}
+                        
+-(BOOL)isBot {return (self.flags & (1 << 14)) > 0;}
+                        
+-(BOOL)isBot_chat_history {return (self.flags & (1 << 15)) > 0;}
+                        
+-(BOOL)isBot_nochats {return (self.flags & (1 << 16)) > 0;}
+                        
+-(BOOL)isVerified {return (self.flags & (1 << 17)) > 0;}
+                        
+-(void)setAccess_hash:(long)access_hash
+{
+   _access_hash = access_hash;
+                
+    if(_access_hash == 0)  { _flags&= ~ (1 << 0) ;} else { _flags|= (1 << 0); }
+}            
+-(void)setFirst_name:(NSString*)first_name
+{
+   _first_name = first_name;
+                
+    if(_first_name == nil)  { _flags&= ~ (1 << 1) ;} else { _flags|= (1 << 1); }
+}            
+-(void)setLast_name:(NSString*)last_name
+{
+   _last_name = last_name;
+                
+    if(_last_name == nil)  { _flags&= ~ (1 << 2) ;} else { _flags|= (1 << 2); }
+}            
+-(void)setUsername:(NSString*)username
+{
+   _username = username;
+                
+    if(_username == nil)  { _flags&= ~ (1 << 3) ;} else { _flags|= (1 << 3); }
+}            
+-(void)setPhone:(NSString*)phone
+{
+   _phone = phone;
+                
+    if(_phone == nil)  { _flags&= ~ (1 << 4) ;} else { _flags|= (1 << 4); }
+}            
+-(void)setPhoto:(TLUserProfilePhoto*)photo
+{
+   _photo = photo;
+                
+    if(_photo == nil)  { _flags&= ~ (1 << 5) ;} else { _flags|= (1 << 5); }
+}            
+-(void)setStatus:(TLUserStatus*)status
+{
+   _status = status;
+                
+    if(_status == nil)  { _flags&= ~ (1 << 6) ;} else { _flags|= (1 << 6); }
+}            
+-(void)setBot_info_version:(int)bot_info_version
+{
+   _bot_info_version = bot_info_version;
+                
+    if(_bot_info_version == 0)  { _flags&= ~ (1 << 14) ;} else { _flags|= (1 << 14); }
+}
 @end
-
+        
 @implementation TL_userEmpty
 +(TL_userEmpty*)createWithN_id:(int)n_id {
 	TL_userEmpty* obj = [[TL_userEmpty alloc] init];
@@ -2857,8 +2801,6 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
-
-        
 
         
 @end
@@ -2967,72 +2909,6 @@
 }
 
         
-            
--(BOOL)isSelf {return (self.flags & (1 << 10)) > 0;}
-                        
--(BOOL)isContact {return (self.flags & (1 << 11)) > 0;}
-                        
--(BOOL)isMutual_contact {return (self.flags & (1 << 12)) > 0;}
-                        
--(BOOL)isDeleted {return (self.flags & (1 << 13)) > 0;}
-                        
--(BOOL)isBot {return (self.flags & (1 << 14)) > 0;}
-                        
--(BOOL)isBot_chat_history {return (self.flags & (1 << 15)) > 0;}
-                        
--(BOOL)isBot_nochats {return (self.flags & (1 << 16)) > 0;}
-                        
--(BOOL)isVerified {return (self.flags & (1 << 17)) > 0;}
-                        
--(void)setAccess_hash:(long)access_hash
-{
-   [super setAccess_hash:access_hash];
-                
-    if(self.access_hash == 0)  { self.flags&= ~ (1 << 0) ;} else { self.flags|= (1 << 0); }
-}            
--(void)setFirst_name:(NSString*)first_name
-{
-   [super setFirst_name:first_name];
-                
-    if(self.first_name == nil)  { self.flags&= ~ (1 << 1) ;} else { self.flags|= (1 << 1); }
-}            
--(void)setLast_name:(NSString*)last_name
-{
-   [super setLast_name:last_name];
-                
-    if(self.last_name == nil)  { self.flags&= ~ (1 << 2) ;} else { self.flags|= (1 << 2); }
-}            
--(void)setUsername:(NSString*)username
-{
-   [super setUsername:username];
-                
-    if(self.username == nil)  { self.flags&= ~ (1 << 3) ;} else { self.flags|= (1 << 3); }
-}            
--(void)setPhone:(NSString*)phone
-{
-   [super setPhone:phone];
-                
-    if(self.phone == nil)  { self.flags&= ~ (1 << 4) ;} else { self.flags|= (1 << 4); }
-}            
--(void)setPhoto:(TLUserProfilePhoto*)photo
-{
-   [super setPhoto:photo];
-                
-    if(self.photo == nil)  { self.flags&= ~ (1 << 5) ;} else { self.flags|= (1 << 5); }
-}            
--(void)setStatus:(TLUserStatus*)status
-{
-   [super setStatus:status];
-                
-    if(self.status == nil)  { self.flags&= ~ (1 << 6) ;} else { self.flags|= (1 << 6); }
-}            
--(void)setBot_info_version:(int)bot_info_version
-{
-   [super setBot_info_version:bot_info_version];
-                
-    if(self.bot_info_version == 0)  { self.flags&= ~ (1 << 14) ;} else { self.flags|= (1 << 14); }
-}
-        
 @end
 
 @implementation TL_userSelf
@@ -3093,8 +2969,6 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
-
-        
 
         
 @end
@@ -3163,8 +3037,6 @@
 }
 
         
-
-        
 @end
 
 @implementation TL_userRequest
@@ -3231,8 +3103,6 @@
 }
 
         
-
-        
 @end
 
 @implementation TL_userForeign
@@ -3295,8 +3165,6 @@
 }
 
         
-
-        
 @end
 
 @implementation TL_userDeleted
@@ -3347,14 +3215,12 @@
 }
 
         
-
-        
 @end
-
 
 @implementation TLUserProfilePhoto
-@end
 
+@end
+        
 @implementation TL_userProfilePhotoEmpty
 +(TL_userProfilePhotoEmpty*)create {
 	TL_userProfilePhotoEmpty* obj = [[TL_userProfilePhotoEmpty alloc] init];
@@ -3389,8 +3255,6 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
-
-        
 
         
 @end
@@ -3439,14 +3303,12 @@
 }
 
         
-
-        
 @end
-
 
 @implementation TLUserStatus
-@end
 
+@end
+        
 @implementation TL_userStatusEmpty
 +(TL_userStatusEmpty*)create {
 	TL_userStatusEmpty* obj = [[TL_userStatusEmpty alloc] init];
@@ -3481,8 +3343,6 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
-
-        
 
         
 @end
@@ -3523,8 +3383,6 @@
 }
 
         
-
-        
 @end
 
 @implementation TL_userStatusOffline
@@ -3561,8 +3419,6 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
-
-        
 
         
 @end
@@ -3603,8 +3459,6 @@
 }
 
         
-
-        
 @end
 
 @implementation TL_userStatusLastWeek
@@ -3641,8 +3495,6 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
-
-        
 
         
 @end
@@ -3683,14 +3535,46 @@
 }
 
         
-
-        
 @end
-
 
 @implementation TLChat
+            
+-(BOOL)isCreator {return (self.flags & (1 << 0)) > 0;}
+                        
+-(BOOL)isKicked {return (self.flags & (1 << 1)) > 0;}
+                        
+-(BOOL)isLeft {return (self.flags & (1 << 2)) > 0;}
+                        
+-(BOOL)isAdmins_enabled {return (self.flags & (1 << 3)) > 0;}
+                        
+-(BOOL)isAdmin {return (self.flags & (1 << 4)) > 0;}
+                        
+-(BOOL)isDeactivated {return (self.flags & (1 << 5)) > 0;}
+                        
+-(void)setMigrated_to:(TLInputChannel*)migrated_to
+{
+   _migrated_to = migrated_to;
+                
+    if(_migrated_to == nil)  { _flags&= ~ (1 << 6) ;} else { _flags|= (1 << 6); }
+}            
+-(BOOL)isEditor {return (self.flags & (1 << 3)) > 0;}
+                        
+-(BOOL)isModerator {return (self.flags & (1 << 4)) > 0;}
+                        
+-(BOOL)isBroadcast {return (self.flags & (1 << 5)) > 0;}
+                        
+-(BOOL)isVerified {return (self.flags & (1 << 7)) > 0;}
+                        
+-(BOOL)isMegagroup {return (self.flags & (1 << 8)) > 0;}
+                        
+-(void)setUsername:(NSString*)username
+{
+   _username = username;
+                
+    if(_username == nil)  { _flags&= ~ (1 << 6) ;} else { _flags|= (1 << 6); }
+}
 @end
-
+        
 @implementation TL_chatEmpty
 +(TL_chatEmpty*)createWithN_id:(int)n_id {
 	TL_chatEmpty* obj = [[TL_chatEmpty alloc] init];
@@ -3725,8 +3609,6 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
-
-        
 
         
 @end
@@ -3819,26 +3701,6 @@
 }
 
         
-            
--(BOOL)isCreator {return (self.flags & (1 << 0)) > 0;}
-                        
--(BOOL)isKicked {return (self.flags & (1 << 1)) > 0;}
-                        
--(BOOL)isLeft {return (self.flags & (1 << 2)) > 0;}
-                        
--(BOOL)isAdmins_enabled {return (self.flags & (1 << 3)) > 0;}
-                        
--(BOOL)isAdmin {return (self.flags & (1 << 4)) > 0;}
-                        
--(BOOL)isDeactivated {return (self.flags & (1 << 5)) > 0;}
-                        
--(void)setMigrated_to:(TLInputChannel*)migrated_to
-{
-   [super setMigrated_to:migrated_to];
-                
-    if(self.migrated_to == nil)  { self.flags&= ~ (1 << 6) ;} else { self.flags|= (1 << 6); }
-}
-        
 @end
 
 @implementation TL_chatForbidden
@@ -3879,8 +3741,6 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
-
-        
 
         
 @end
@@ -3981,30 +3841,6 @@
 }
 
         
-            
--(BOOL)isCreator {return (self.flags & (1 << 0)) > 0;}
-                        
--(BOOL)isKicked {return (self.flags & (1 << 1)) > 0;}
-                        
--(BOOL)isLeft {return (self.flags & (1 << 2)) > 0;}
-                        
--(BOOL)isEditor {return (self.flags & (1 << 3)) > 0;}
-                        
--(BOOL)isModerator {return (self.flags & (1 << 4)) > 0;}
-                        
--(BOOL)isBroadcast {return (self.flags & (1 << 5)) > 0;}
-                        
--(BOOL)isVerified {return (self.flags & (1 << 7)) > 0;}
-                        
--(BOOL)isMegagroup {return (self.flags & (1 << 8)) > 0;}
-                        
--(void)setUsername:(NSString*)username
-{
-   [super setUsername:username];
-                
-    if(self.username == nil)  { self.flags&= ~ (1 << 6) ;} else { self.flags|= (1 << 6); }
-}
-        
 @end
 
 @implementation TL_channelForbidden
@@ -4049,8 +3885,6 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
-
-        
 
         
 @end
@@ -4115,8 +3949,6 @@
 }
 
         
-
-        
 @end
 
 @implementation TL_chatForbidden_old34
@@ -4161,8 +3993,6 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
-
-        
 
         
 @end
@@ -4227,14 +4057,44 @@
 }
 
         
-
-        
 @end
-
 
 @implementation TLChatFull
+            
+-(BOOL)isCan_view_participants {return (self.flags & (1 << 3)) > 0;}
+                        
+-(void)setParticipants_count:(int)participants_count
+{
+   _participants_count = participants_count;
+                
+    if(_participants_count == 0)  { _flags&= ~ (1 << 0) ;} else { _flags|= (1 << 0); }
+}            
+-(void)setAdmins_count:(int)admins_count
+{
+   _admins_count = admins_count;
+                
+    if(_admins_count == 0)  { _flags&= ~ (1 << 1) ;} else { _flags|= (1 << 1); }
+}            
+-(void)setKicked_count:(int)kicked_count
+{
+   _kicked_count = kicked_count;
+                
+    if(_kicked_count == 0)  { _flags&= ~ (1 << 2) ;} else { _flags|= (1 << 2); }
+}            
+-(void)setMigrated_from_chat_id:(int)migrated_from_chat_id
+{
+   _migrated_from_chat_id = migrated_from_chat_id;
+                
+    if(_migrated_from_chat_id == 0)  { _flags&= ~ (1 << 4) ;} else { _flags|= (1 << 4); }
+}            
+-(void)setMigrated_from_max_id:(int)migrated_from_max_id
+{
+   _migrated_from_max_id = migrated_from_max_id;
+                
+    if(_migrated_from_max_id == 0)  { _flags&= ~ (1 << 4) ;} else { _flags|= (1 << 4); }
+}
 @end
-
+        
 @implementation TL_chatFull
 +(TL_chatFull*)createWithN_id:(int)n_id participants:(TLChatParticipants*)participants chat_photo:(TLPhoto*)chat_photo notify_settings:(TLPeerNotifySettings*)notify_settings exported_invite:(TLExportedChatInvite*)exported_invite bot_info:(NSMutableArray*)bot_info {
 	TL_chatFull* obj = [[TL_chatFull alloc] init];
@@ -4311,8 +4171,6 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
-
-        
 
         
 @end
@@ -4435,40 +4293,6 @@
 }
 
         
-            
--(BOOL)isCan_view_participants {return (self.flags & (1 << 3)) > 0;}
-                        
--(void)setParticipants_count:(int)participants_count
-{
-   [super setParticipants_count:participants_count];
-                
-    if(self.participants_count == 0)  { self.flags&= ~ (1 << 0) ;} else { self.flags|= (1 << 0); }
-}            
--(void)setAdmins_count:(int)admins_count
-{
-   [super setAdmins_count:admins_count];
-                
-    if(self.admins_count == 0)  { self.flags&= ~ (1 << 1) ;} else { self.flags|= (1 << 1); }
-}            
--(void)setKicked_count:(int)kicked_count
-{
-   [super setKicked_count:kicked_count];
-                
-    if(self.kicked_count == 0)  { self.flags&= ~ (1 << 2) ;} else { self.flags|= (1 << 2); }
-}            
--(void)setMigrated_from_chat_id:(int)migrated_from_chat_id
-{
-   [super setMigrated_from_chat_id:migrated_from_chat_id];
-                
-    if(self.migrated_from_chat_id == 0)  { self.flags&= ~ (1 << 4) ;} else { self.flags|= (1 << 4); }
-}            
--(void)setMigrated_from_max_id:(int)migrated_from_max_id
-{
-   [super setMigrated_from_max_id:migrated_from_max_id];
-                
-    if(self.migrated_from_max_id == 0)  { self.flags&= ~ (1 << 4) ;} else { self.flags|= (1 << 4); }
-}
-        
 @end
 
 @implementation TL_chatFull_old29
@@ -4521,8 +4345,6 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
-
-        
 
         
 @end
@@ -4611,34 +4433,12 @@
 }
 
         
-            
--(BOOL)isCan_view_participants {return (self.flags & (1 << 3)) > 0;}
-                        
--(void)setParticipants_count:(int)participants_count
-{
-   [super setParticipants_count:participants_count];
-                
-    if(self.participants_count == 0)  { self.flags&= ~ (1 << 0) ;} else { self.flags|= (1 << 0); }
-}            
--(void)setAdmins_count:(int)admins_count
-{
-   [super setAdmins_count:admins_count];
-                
-    if(self.admins_count == 0)  { self.flags&= ~ (1 << 1) ;} else { self.flags|= (1 << 1); }
-}            
--(void)setKicked_count:(int)kicked_count
-{
-   [super setKicked_count:kicked_count];
-                
-    if(self.kicked_count == 0)  { self.flags&= ~ (1 << 2) ;} else { self.flags|= (1 << 2); }
-}
-        
 @end
-
 
 @implementation TLChatParticipant
-@end
 
+@end
+        
 @implementation TL_chatParticipant
 +(TL_chatParticipant*)createWithUser_id:(int)user_id inviter_id:(int)inviter_id date:(int)date {
 	TL_chatParticipant* obj = [[TL_chatParticipant alloc] init];
@@ -4683,8 +4483,6 @@
 }
 
         
-
-        
 @end
 
 @implementation TL_chatParticipantCreator
@@ -4721,8 +4519,6 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
-
-        
 
         
 @end
@@ -4771,14 +4567,18 @@
 }
 
         
-
-        
 @end
-
 
 @implementation TLChatParticipants
+            
+-(void)setSelf_participant:(TLChatParticipant*)self_participant
+{
+   _self_participant = self_participant;
+                
+    if(_self_participant == nil)  { _flags&= ~ (1 << 0) ;} else { _flags|= (1 << 0); }
+}
 @end
-
+        
 @implementation TL_chatParticipantsForbidden
 +(TL_chatParticipantsForbidden*)createWithFlags:(int)flags chat_id:(int)chat_id self_participant:(TLChatParticipant*)self_participant {
 	TL_chatParticipantsForbidden* obj = [[TL_chatParticipantsForbidden alloc] init];
@@ -4822,14 +4622,6 @@
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
 
-        
-            
--(void)setSelf_participant:(TLChatParticipant*)self_participant
-{
-   [super setSelf_participant:self_participant];
-                
-    if(self.self_participant == nil)  { self.flags&= ~ (1 << 0) ;} else { self.flags|= (1 << 0); }
-}
         
 @end
 
@@ -4899,8 +4691,6 @@
 }
 
         
-
-        
 @end
 
 @implementation TL_chatParticipantsForbidden_old34
@@ -4937,8 +4727,6 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
-
-        
 
         
 @end
@@ -5013,8 +4801,6 @@
 }
 
         
-
-        
 @end
 
 @implementation TL_chatParticipants_old39
@@ -5087,14 +4873,12 @@
 }
 
         
-
-        
 @end
-
 
 @implementation TLChatPhoto
-@end
 
+@end
+        
 @implementation TL_chatPhotoEmpty
 +(TL_chatPhotoEmpty*)create {
 	TL_chatPhotoEmpty* obj = [[TL_chatPhotoEmpty alloc] init];
@@ -5129,8 +4913,6 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
-
-        
 
         
 @end
@@ -5175,14 +4957,68 @@
 }
 
         
-
-        
 @end
-
 
 @implementation TLMessage
+            
+-(BOOL)isUnread {return (self.flags & (1 << 0)) > 0;}
+                        
+-(BOOL)isN_out {return (self.flags & (1 << 1)) > 0;}
+                        
+-(BOOL)isMentioned {return (self.flags & (1 << 4)) > 0;}
+                        
+-(BOOL)isMedia_unread {return (self.flags & (1 << 5)) > 0;}
+                        
+-(void)setFrom_id:(int)from_id
+{
+   _from_id = from_id;
+                
+    if(_from_id == 0)  { _flags&= ~ (1 << 8) ;} else { _flags|= (1 << 8); }
+}            
+-(void)setFwd_from_id:(TLPeer*)fwd_from_id
+{
+   _fwd_from_id = fwd_from_id;
+                
+    if(_fwd_from_id == nil)  { _flags&= ~ (1 << 2) ;} else { _flags|= (1 << 2); }
+}            
+-(void)setFwd_date:(int)fwd_date
+{
+   _fwd_date = fwd_date;
+                
+    if(_fwd_date == 0)  { _flags&= ~ (1 << 2) ;} else { _flags|= (1 << 2); }
+}            
+-(void)setReply_to_msg_id:(int)reply_to_msg_id
+{
+   _reply_to_msg_id = reply_to_msg_id;
+                
+    if(_reply_to_msg_id == 0)  { _flags&= ~ (1 << 3) ;} else { _flags|= (1 << 3); }
+}            
+-(void)setMedia:(TLMessageMedia*)media
+{
+   _media = media;
+                
+    if(_media == nil)  { _flags&= ~ (1 << 9) ;} else { _flags|= (1 << 9); }
+}            
+-(void)setReply_markup:(TLReplyMarkup*)reply_markup
+{
+   _reply_markup = reply_markup;
+                
+    if(_reply_markup == nil)  { _flags&= ~ (1 << 6) ;} else { _flags|= (1 << 6); }
+}            
+-(void)setEntities:(NSMutableArray*)entities
+{
+   _entities = entities;
+                
+    if(_entities == nil)  { _flags&= ~ (1 << 7) ;} else { _flags|= (1 << 7); }
+}            
+-(void)setViews:(int)views
+{
+   _views = views;
+                
+    if(_views == 0)  { _flags&= ~ (1 << 10) ;} else { _flags|= (1 << 10); }
+}
 @end
-
+        
 @implementation TL_messageEmpty
 +(TL_messageEmpty*)createWithN_id:(int)n_id {
 	TL_messageEmpty* obj = [[TL_messageEmpty alloc] init];
@@ -5217,8 +5053,6 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
-
-        
 
         
 @end
@@ -5345,64 +5179,6 @@
 }
 
         
-            
--(BOOL)isUnread {return (self.flags & (1 << 0)) > 0;}
-                        
--(BOOL)isN_out {return (self.flags & (1 << 1)) > 0;}
-                        
--(BOOL)isMentioned {return (self.flags & (1 << 4)) > 0;}
-                        
--(BOOL)isMedia_unread {return (self.flags & (1 << 5)) > 0;}
-                        
--(void)setFrom_id:(int)from_id
-{
-   [super setFrom_id:from_id];
-                
-    if(self.from_id == 0)  { self.flags&= ~ (1 << 8) ;} else { self.flags|= (1 << 8); }
-}            
--(void)setFwd_from_id:(TLPeer*)fwd_from_id
-{
-   [super setFwd_from_id:fwd_from_id];
-                
-    if(self.fwd_from_id == nil)  { self.flags&= ~ (1 << 2) ;} else { self.flags|= (1 << 2); }
-}            
--(void)setFwd_date:(int)fwd_date
-{
-   [super setFwd_date:fwd_date];
-                
-    if(self.fwd_date == 0)  { self.flags&= ~ (1 << 2) ;} else { self.flags|= (1 << 2); }
-}            
--(void)setReply_to_msg_id:(int)reply_to_msg_id
-{
-   [super setReply_to_msg_id:reply_to_msg_id];
-                
-    if(self.reply_to_msg_id == 0)  { self.flags&= ~ (1 << 3) ;} else { self.flags|= (1 << 3); }
-}            
--(void)setMedia:(TLMessageMedia*)media
-{
-   [super setMedia:media];
-                
-    if(self.media == nil)  { self.flags&= ~ (1 << 9) ;} else { self.flags|= (1 << 9); }
-}            
--(void)setReply_markup:(TLReplyMarkup*)reply_markup
-{
-   [super setReply_markup:reply_markup];
-                
-    if(self.reply_markup == nil)  { self.flags&= ~ (1 << 6) ;} else { self.flags|= (1 << 6); }
-}            
--(void)setEntities:(NSMutableArray*)entities
-{
-   [super setEntities:entities];
-                
-    if(self.entities == nil)  { self.flags&= ~ (1 << 7) ;} else { self.flags|= (1 << 7); }
-}            
--(void)setViews:(int)views
-{
-   [super setViews:views];
-                
-    if(self.views == 0)  { self.flags&= ~ (1 << 10) ;} else { self.flags|= (1 << 10); }
-}
-        
 @end
 
 @implementation TL_messageService
@@ -5477,28 +5253,12 @@
 }
 
         
-            
--(BOOL)isUnread {return (self.flags & (1 << 0)) > 0;}
-                        
--(BOOL)isN_out {return (self.flags & (1 << 1)) > 0;}
-                        
--(BOOL)isMentioned {return (self.flags & (1 << 4)) > 0;}
-                        
--(BOOL)isMedia_unread {return (self.flags & (1 << 5)) > 0;}
-                        
--(void)setFrom_id:(int)from_id
-{
-   [super setFrom_id:from_id];
-                
-    if(self.from_id == 0)  { self.flags&= ~ (1 << 8) ;} else { self.flags|= (1 << 8); }
-}
-        
 @end
-
 
 @implementation TLMessageMedia
-@end
 
+@end
+        
 @implementation TL_messageMediaEmpty
 +(TL_messageMediaEmpty*)create {
 	TL_messageMediaEmpty* obj = [[TL_messageMediaEmpty alloc] init];
@@ -5533,8 +5293,6 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
-
-        
 
         
 @end
@@ -5579,8 +5337,6 @@
 }
 
         
-
-        
 @end
 
 @implementation TL_messageMediaVideo
@@ -5623,8 +5379,6 @@
 }
 
         
-
-        
 @end
 
 @implementation TL_messageMediaGeo
@@ -5661,8 +5415,6 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
-
-        
 
         
 @end
@@ -5715,8 +5467,6 @@
 }
 
         
-
-        
 @end
 
 @implementation TL_messageMediaUnsupported
@@ -5753,8 +5503,6 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
-
-        
 
         
 @end
@@ -5795,8 +5543,6 @@
 }
 
         
-
-        
 @end
 
 @implementation TL_messageMediaAudio
@@ -5835,8 +5581,6 @@
 }
 
         
-
-        
 @end
 
 @implementation TL_messageMediaWebPage
@@ -5873,8 +5617,6 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
-
-        
 
         
 @end
@@ -5931,14 +5673,12 @@
 }
 
         
-
-        
 @end
-
 
 @implementation TLMessageAction
-@end
 
+@end
+        
 @implementation TL_messageActionEmpty
 +(TL_messageActionEmpty*)create {
 	TL_messageActionEmpty* obj = [[TL_messageActionEmpty alloc] init];
@@ -5973,8 +5713,6 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
-
-        
 
         
 @end
@@ -6041,8 +5779,6 @@
 }
 
         
-
-        
 @end
 
 @implementation TL_messageActionChatEditTitle
@@ -6079,8 +5815,6 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
-
-        
 
         
 @end
@@ -6121,8 +5855,6 @@
 }
 
         
-
-        
 @end
 
 @implementation TL_messageActionChatDeletePhoto
@@ -6159,8 +5891,6 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
-
-        
 
         
 @end
@@ -6223,8 +5953,6 @@
 }
 
         
-
-        
 @end
 
 @implementation TL_messageActionChatDeleteUser
@@ -6261,8 +5989,6 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
-
-        
 
         
 @end
@@ -6303,8 +6029,6 @@
 }
 
         
-
-        
 @end
 
 @implementation TL_messageActionChannelCreate
@@ -6343,8 +6067,6 @@
 }
 
         
-
-        
 @end
 
 @implementation TL_messageActionChatMigrateTo
@@ -6381,8 +6103,6 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
-
-        
 
         
 @end
@@ -6427,8 +6147,6 @@
 }
 
         
-
-        
 @end
 
 @implementation TL_messageActionChatAddUser_old40
@@ -6467,14 +6185,12 @@
 }
 
         
-
-        
 @end
-
 
 @implementation TLDialog
-@end
 
+@end
+        
 @implementation TL_dialog
 +(TL_dialog*)createWithPeer:(TLPeer*)peer top_message:(int)top_message read_inbox_max_id:(int)read_inbox_max_id unread_count:(int)unread_count notify_settings:(TLPeerNotifySettings*)notify_settings {
 	TL_dialog* obj = [[TL_dialog alloc] init];
@@ -6525,8 +6241,6 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
-
-        
 
         
 @end
@@ -6595,14 +6309,12 @@
 }
 
         
-
-        
 @end
-
 
 @implementation TLPhoto
-@end
 
+@end
+        
 @implementation TL_photoEmpty
 +(TL_photoEmpty*)createWithN_id:(long)n_id {
 	TL_photoEmpty* obj = [[TL_photoEmpty alloc] init];
@@ -6637,8 +6349,6 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
-
-        
 
         
 @end
@@ -6711,8 +6421,6 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
-
-        
 
         
 @end
@@ -6795,14 +6503,12 @@
 }
 
         
-
-        
 @end
-
 
 @implementation TLPhotoSize
-@end
 
+@end
+        
 @implementation TL_photoSizeEmpty
 +(TL_photoSizeEmpty*)createWithType:(NSString*)type {
 	TL_photoSizeEmpty* obj = [[TL_photoSizeEmpty alloc] init];
@@ -6837,8 +6543,6 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
-
-        
 
         
 @end
@@ -6895,8 +6599,6 @@
 }
 
         
-
-        
 @end
 
 @implementation TL_photoCachedSize
@@ -6951,14 +6653,12 @@
 }
 
         
-
-        
 @end
-
 
 @implementation TLVideo
-@end
 
+@end
+        
 @implementation TL_videoEmpty
 +(TL_videoEmpty*)createWithN_id:(long)n_id {
 	TL_videoEmpty* obj = [[TL_videoEmpty alloc] init];
@@ -6993,8 +6693,6 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
-
-        
 
         
 @end
@@ -7071,8 +6769,6 @@
 }
 
         
-
-        
 @end
 
 @implementation TL_video_old29
@@ -7147,14 +6843,12 @@
 }
 
         
-
-        
 @end
-
 
 @implementation TLGeoPoint
-@end
 
+@end
+        
 @implementation TL_geoPointEmpty
 +(TL_geoPointEmpty*)create {
 	TL_geoPointEmpty* obj = [[TL_geoPointEmpty alloc] init];
@@ -7189,8 +6883,6 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
-
-        
 
         
 @end
@@ -7235,14 +6927,12 @@
 }
 
         
-
-        
 @end
-
 
 @implementation TLauth_CheckedPhone
-@end
 
+@end
+        
 @implementation TL_auth_checkedPhone
 +(TL_auth_checkedPhone*)createWithPhone_registered:(Boolean)phone_registered {
 	TL_auth_checkedPhone* obj = [[TL_auth_checkedPhone alloc] init];
@@ -7279,14 +6969,12 @@
 }
 
         
-
-        
 @end
-
 
 @implementation TLauth_SentCode
-@end
 
+@end
+        
 @implementation TL_auth_sentCode
 +(TL_auth_sentCode*)createWithPhone_registered:(Boolean)phone_registered phone_code_hash:(NSString*)phone_code_hash send_call_timeout:(int)send_call_timeout is_password:(Boolean)is_password {
 	TL_auth_sentCode* obj = [[TL_auth_sentCode alloc] init];
@@ -7333,8 +7021,6 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
-
-        
 
         
 @end
@@ -7387,14 +7073,12 @@
 }
 
         
-
-        
 @end
-
 
 @implementation TLauth_Authorization
-@end
 
+@end
+        
 @implementation TL_auth_authorization
 +(TL_auth_authorization*)createWithUser:(TLUser*)user {
 	TL_auth_authorization* obj = [[TL_auth_authorization alloc] init];
@@ -7431,14 +7115,12 @@
 }
 
         
-
-        
 @end
-
 
 @implementation TLauth_ExportedAuthorization
-@end
 
+@end
+        
 @implementation TL_auth_exportedAuthorization
 +(TL_auth_exportedAuthorization*)createWithN_id:(int)n_id bytes:(NSData*)bytes {
 	TL_auth_exportedAuthorization* obj = [[TL_auth_exportedAuthorization alloc] init];
@@ -7479,14 +7161,12 @@
 }
 
         
-
-        
 @end
-
 
 @implementation TLInputNotifyPeer
-@end
 
+@end
+        
 @implementation TL_inputNotifyPeer
 +(TL_inputNotifyPeer*)createWithPeer:(TLInputPeer*)peer {
 	TL_inputNotifyPeer* obj = [[TL_inputNotifyPeer alloc] init];
@@ -7521,8 +7201,6 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
-
-        
 
         
 @end
@@ -7563,8 +7241,6 @@
 }
 
         
-
-        
 @end
 
 @implementation TL_inputNotifyChats
@@ -7601,8 +7277,6 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
-
-        
 
         
 @end
@@ -7643,14 +7317,12 @@
 }
 
         
-
-        
 @end
-
 
 @implementation TLInputPeerNotifyEvents
-@end
 
+@end
+        
 @implementation TL_inputPeerNotifyEventsEmpty
 +(TL_inputPeerNotifyEventsEmpty*)create {
 	TL_inputPeerNotifyEventsEmpty* obj = [[TL_inputPeerNotifyEventsEmpty alloc] init];
@@ -7685,8 +7357,6 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
-
-        
 
         
 @end
@@ -7727,14 +7397,12 @@
 }
 
         
-
-        
 @end
-
 
 @implementation TLInputPeerNotifySettings
-@end
 
+@end
+        
 @implementation TL_inputPeerNotifySettings
 +(TL_inputPeerNotifySettings*)createWithMute_until:(int)mute_until sound:(NSString*)sound show_previews:(Boolean)show_previews events_mask:(int)events_mask {
 	TL_inputPeerNotifySettings* obj = [[TL_inputPeerNotifySettings alloc] init];
@@ -7783,14 +7451,12 @@
 }
 
         
-
-        
 @end
-
 
 @implementation TLPeerNotifyEvents
-@end
 
+@end
+        
 @implementation TL_peerNotifyEventsEmpty
 +(TL_peerNotifyEventsEmpty*)create {
 	TL_peerNotifyEventsEmpty* obj = [[TL_peerNotifyEventsEmpty alloc] init];
@@ -7825,8 +7491,6 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
-
-        
 
         
 @end
@@ -7867,14 +7531,12 @@
 }
 
         
-
-        
 @end
-
 
 @implementation TLPeerNotifySettings
-@end
 
+@end
+        
 @implementation TL_peerNotifySettingsEmpty
 +(TL_peerNotifySettingsEmpty*)create {
 	TL_peerNotifySettingsEmpty* obj = [[TL_peerNotifySettingsEmpty alloc] init];
@@ -7909,8 +7571,6 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
-
-        
 
         
 @end
@@ -7963,14 +7623,12 @@
 }
 
         
-
-        
 @end
-
 
 @implementation TLWallPaper
-@end
 
+@end
+        
 @implementation TL_wallPaper
 +(TL_wallPaper*)createWithN_id:(int)n_id title:(NSString*)title sizes:(NSMutableArray*)sizes color:(int)color {
 	TL_wallPaper* obj = [[TL_wallPaper alloc] init];
@@ -8041,8 +7699,6 @@
 }
 
         
-
-        
 @end
 
 @implementation TL_wallPaperSolid
@@ -8093,14 +7749,12 @@
 }
 
         
-
-        
 @end
-
 
 @implementation TLReportReason
-@end
 
+@end
+        
 @implementation TL_inputReportReasonSpam
 +(TL_inputReportReasonSpam*)create {
 	TL_inputReportReasonSpam* obj = [[TL_inputReportReasonSpam alloc] init];
@@ -8135,8 +7789,6 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
-
-        
 
         
 @end
@@ -8177,8 +7829,6 @@
 }
 
         
-
-        
 @end
 
 @implementation TL_inputReportReasonPornography
@@ -8215,8 +7865,6 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
-
-        
 
         
 @end
@@ -8257,14 +7905,12 @@
 }
 
         
-
-        
 @end
-
 
 @implementation TLUserFull
-@end
 
+@end
+        
 @implementation TL_userFull
 +(TL_userFull*)createWithUser:(TLUser*)user link:(TLcontacts_Link*)link profile_photo:(TLPhoto*)profile_photo notify_settings:(TLPeerNotifySettings*)notify_settings blocked:(Boolean)blocked bot_info:(TLBotInfo*)bot_info {
 	TL_userFull* obj = [[TL_userFull alloc] init];
@@ -8321,14 +7967,12 @@
 }
 
         
-
-        
 @end
-
 
 @implementation TLContact
-@end
 
+@end
+        
 @implementation TL_contact
 +(TL_contact*)createWithUser_id:(int)user_id mutual:(Boolean)mutual {
 	TL_contact* obj = [[TL_contact alloc] init];
@@ -8369,14 +8013,12 @@
 }
 
         
-
-        
 @end
-
 
 @implementation TLImportedContact
-@end
 
+@end
+        
 @implementation TL_importedContact
 +(TL_importedContact*)createWithUser_id:(int)user_id client_id:(long)client_id {
 	TL_importedContact* obj = [[TL_importedContact alloc] init];
@@ -8417,14 +8059,12 @@
 }
 
         
-
-        
 @end
-
 
 @implementation TLContactBlocked
-@end
 
+@end
+        
 @implementation TL_contactBlocked
 +(TL_contactBlocked*)createWithUser_id:(int)user_id date:(int)date {
 	TL_contactBlocked* obj = [[TL_contactBlocked alloc] init];
@@ -8465,14 +8105,12 @@
 }
 
         
-
-        
 @end
-
 
 @implementation TLContactSuggested
-@end
 
+@end
+        
 @implementation TL_contactSuggested
 +(TL_contactSuggested*)createWithUser_id:(int)user_id mutual_contacts:(int)mutual_contacts {
 	TL_contactSuggested* obj = [[TL_contactSuggested alloc] init];
@@ -8513,14 +8151,12 @@
 }
 
         
-
-        
 @end
-
 
 @implementation TLContactStatus
-@end
 
+@end
+        
 @implementation TL_contactStatus
 +(TL_contactStatus*)createWithUser_id:(int)user_id status:(TLUserStatus*)status {
 	TL_contactStatus* obj = [[TL_contactStatus alloc] init];
@@ -8561,14 +8197,12 @@
 }
 
         
-
-        
 @end
-
 
 @implementation TLcontacts_Link
-@end
 
+@end
+        
 @implementation TL_contacts_link
 +(TL_contacts_link*)createWithMy_link:(TLContactLink*)my_link foreign_link:(TLContactLink*)foreign_link user:(TLUser*)user {
 	TL_contacts_link* obj = [[TL_contacts_link alloc] init];
@@ -8613,14 +8247,12 @@
 }
 
         
-
-        
 @end
-
 
 @implementation TLcontacts_Contacts
-@end
 
+@end
+        
 @implementation TL_contacts_contactsNotModified
 +(TL_contacts_contactsNotModified*)create {
 	TL_contacts_contactsNotModified* obj = [[TL_contacts_contactsNotModified alloc] init];
@@ -8655,8 +8287,6 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
-
-        
 
         
 @end
@@ -8745,14 +8375,12 @@
 }
 
         
-
-        
 @end
-
 
 @implementation TLcontacts_ImportedContacts
-@end
 
+@end
+        
 @implementation TL_contacts_importedContacts
 +(TL_contacts_importedContacts*)createWithImported:(NSMutableArray*)imported retry_contacts:(NSMutableArray*)retry_contacts users:(NSMutableArray*)users {
 	TL_contacts_importedContacts* obj = [[TL_contacts_importedContacts alloc] init];
@@ -8863,14 +8491,12 @@
 }
 
         
-
-        
 @end
-
 
 @implementation TLcontacts_Blocked
-@end
 
+@end
+        
 @implementation TL_contacts_blocked
 +(TL_contacts_blocked*)createWithBlocked:(NSMutableArray*)blocked users:(NSMutableArray*)users {
 	TL_contacts_blocked* obj = [[TL_contacts_blocked alloc] init];
@@ -8953,8 +8579,6 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
-
-        
 
         
 @end
@@ -9047,14 +8671,12 @@
 }
 
         
-
-        
 @end
-
 
 @implementation TLcontacts_Suggested
-@end
 
+@end
+        
 @implementation TL_contacts_suggested
 +(TL_contacts_suggested*)createWithResults:(NSMutableArray*)results users:(NSMutableArray*)users {
 	TL_contacts_suggested* obj = [[TL_contacts_suggested alloc] init];
@@ -9139,14 +8761,12 @@
 }
 
         
-
-        
 @end
-
 
 @implementation TLmessages_Dialogs
-@end
 
+@end
+        
 @implementation TL_messages_dialogs
 +(TL_messages_dialogs*)createWithDialogs:(NSMutableArray*)dialogs messages:(NSMutableArray*)messages chats:(NSMutableArray*)chats users:(NSMutableArray*)users {
 	TL_messages_dialogs* obj = [[TL_messages_dialogs alloc] init];
@@ -9281,8 +8901,6 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
-
-        
 
         
 @end
@@ -9427,14 +9045,18 @@
 }
 
         
-
-        
 @end
-
 
 @implementation TLmessages_Messages
+            
+-(void)setCollapsed:(NSMutableArray*)collapsed
+{
+   _collapsed = collapsed;
+                
+    if(_collapsed == nil)  { _flags&= ~ (1 << 0) ;} else { _flags|= (1 << 0); }
+}
 @end
-
+        
 @implementation TL_messages_messages
 +(TL_messages_messages*)createWithMessages:(NSMutableArray*)messages chats:(NSMutableArray*)chats users:(NSMutableArray*)users {
 	TL_messages_messages* obj = [[TL_messages_messages alloc] init];
@@ -9543,8 +9165,6 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
-
-        
 
         
 @end
@@ -9661,8 +9281,6 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
-
-        
 
         
 @end
@@ -9815,20 +9433,12 @@
 }
 
         
-            
--(void)setCollapsed:(NSMutableArray*)collapsed
-{
-   [super setCollapsed:collapsed];
-                
-    if(self.collapsed == nil)  { self.flags&= ~ (1 << 0) ;} else { self.flags|= (1 << 0); }
-}
-        
 @end
-
 
 @implementation TLmessages_Chats
-@end
 
+@end
+        
 @implementation TL_messages_chats
 +(TL_messages_chats*)createWithChats:(NSMutableArray*)chats {
 	TL_messages_chats* obj = [[TL_messages_chats alloc] init];
@@ -9887,14 +9497,12 @@
 }
 
         
-
-        
 @end
-
 
 @implementation TLmessages_ChatFull
-@end
 
+@end
+        
 @implementation TL_messages_chatFull
 +(TL_messages_chatFull*)createWithFull_chat:(TLChatFull*)full_chat chats:(NSMutableArray*)chats users:(NSMutableArray*)users {
 	TL_messages_chatFull* obj = [[TL_messages_chatFull alloc] init];
@@ -9983,14 +9591,12 @@
 }
 
         
-
-        
 @end
-
 
 @implementation TLmessages_AffectedHistory
-@end
 
+@end
+        
 @implementation TL_messages_affectedHistory
 +(TL_messages_affectedHistory*)createWithPts:(int)pts pts_count:(int)pts_count offset:(int)offset {
 	TL_messages_affectedHistory* obj = [[TL_messages_affectedHistory alloc] init];
@@ -10035,14 +9641,12 @@
 }
 
         
-
-        
 @end
-
 
 @implementation TLMessagesFilter
-@end
 
+@end
+        
 @implementation TL_inputMessagesFilterEmpty
 +(TL_inputMessagesFilterEmpty*)create {
 	TL_inputMessagesFilterEmpty* obj = [[TL_inputMessagesFilterEmpty alloc] init];
@@ -10077,8 +9681,6 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
-
-        
 
         
 @end
@@ -10119,8 +9721,6 @@
 }
 
         
-
-        
 @end
 
 @implementation TL_inputMessagesFilterVideo
@@ -10157,8 +9757,6 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
-
-        
 
         
 @end
@@ -10199,8 +9797,6 @@
 }
 
         
-
-        
 @end
 
 @implementation TL_inputMessagesFilterPhotoVideoDocuments
@@ -10237,8 +9833,6 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
-
-        
 
         
 @end
@@ -10279,8 +9873,6 @@
 }
 
         
-
-        
 @end
 
 @implementation TL_inputMessagesFilterAudio
@@ -10317,8 +9909,6 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
-
-        
 
         
 @end
@@ -10359,8 +9949,6 @@
 }
 
         
-
-        
 @end
 
 @implementation TL_inputMessagesFilterUrl
@@ -10399,14 +9987,12 @@
 }
 
         
-
-        
 @end
-
 
 @implementation TLUpdate
-@end
 
+@end
+        
 @implementation TL_updateNewMessage
 +(TL_updateNewMessage*)createWithMessage:(TLMessage*)message pts:(int)pts pts_count:(int)pts_count {
 	TL_updateNewMessage* obj = [[TL_updateNewMessage alloc] init];
@@ -10451,8 +10037,6 @@
 }
 
         
-
-        
 @end
 
 @implementation TL_updateMessageID
@@ -10493,8 +10077,6 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
-
-        
 
         
 @end
@@ -10565,8 +10147,6 @@
 }
 
         
-
-        
 @end
 
 @implementation TL_updateUserTyping
@@ -10607,8 +10187,6 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
-
-        
 
         
 @end
@@ -10657,8 +10235,6 @@
 }
 
         
-
-        
 @end
 
 @implementation TL_updateChatParticipants
@@ -10695,8 +10271,6 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
-
-        
 
         
 @end
@@ -10739,8 +10313,6 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
-
-        
 
         
 @end
@@ -10793,8 +10365,6 @@
 }
 
         
-
-        
 @end
 
 @implementation TL_updateUserPhoto
@@ -10845,8 +10415,6 @@
 }
 
         
-
-        
 @end
 
 @implementation TL_updateContactRegistered
@@ -10887,8 +10455,6 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
-
-        
 
         
 @end
@@ -10935,8 +10501,6 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
-
-        
 
         
 @end
@@ -10989,8 +10553,6 @@
 }
 
         
-
-        
 @end
 
 @implementation TL_updateNewEncryptedMessage
@@ -11033,8 +10595,6 @@
 }
 
         
-
-        
 @end
 
 @implementation TL_updateEncryptedChatTyping
@@ -11071,8 +10631,6 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
-
-        
 
         
 @end
@@ -11115,8 +10673,6 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
-
-        
 
         
 @end
@@ -11163,8 +10719,6 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
-
-        
 
         
 @end
@@ -11221,8 +10775,6 @@
 }
 
         
-
-        
 @end
 
 @implementation TL_updateChatParticipantDelete
@@ -11267,8 +10819,6 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
-
-        
 
         
 @end
@@ -11331,8 +10881,6 @@
 }
 
         
-
-        
 @end
 
 @implementation TL_updateUserBlocked
@@ -11375,8 +10923,6 @@
 }
 
         
-
-        
 @end
 
 @implementation TL_updateNotifySettings
@@ -11417,8 +10963,6 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
-
-        
 
         
 @end
@@ -11469,8 +11013,6 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
-
-        
 
         
 @end
@@ -11537,8 +11079,6 @@
 }
 
         
-
-        
 @end
 
 @implementation TL_updateUserPhone
@@ -11579,8 +11119,6 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
-
-        
 
         
 @end
@@ -11633,8 +11171,6 @@
 }
 
         
-
-        
 @end
 
 @implementation TL_updateReadHistoryOutbox
@@ -11685,8 +11221,6 @@
 }
 
         
-
-        
 @end
 
 @implementation TL_updateWebPage
@@ -11731,8 +11265,6 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
-
-        
 
         
 @end
@@ -11803,8 +11335,6 @@
 }
 
         
-
-        
 @end
 
 @implementation TL_updateChannelTooLong
@@ -11843,8 +11373,6 @@
 }
 
         
-
-        
 @end
 
 @implementation TL_updateChannel
@@ -11881,8 +11409,6 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
-
-        
 
         
 @end
@@ -11925,8 +11451,6 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
-
-        
 
         
 @end
@@ -11975,8 +11499,6 @@
 }
 
         
-
-        
 @end
 
 @implementation TL_updateReadChannelInbox
@@ -12017,8 +11539,6 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
-
-        
 
         
 @end
@@ -12093,8 +11613,6 @@
 }
 
         
-
-        
 @end
 
 @implementation TL_updateChannelMessageViews
@@ -12141,8 +11659,6 @@
 }
 
         
-
-        
 @end
 
 @implementation TL_updateChatAdmins
@@ -12187,8 +11703,6 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
-
-        
 
         
 @end
@@ -12241,14 +11755,12 @@
 }
 
         
-
-        
 @end
-
 
 @implementation TLupdates_State
-@end
 
+@end
+        
 @implementation TL_updates_state
 +(TL_updates_state*)createWithPts:(int)pts qts:(int)qts date:(int)date seq:(int)seq unread_count:(int)unread_count {
 	TL_updates_state* obj = [[TL_updates_state alloc] init];
@@ -12301,14 +11813,12 @@
 }
 
         
-
-        
 @end
-
 
 @implementation TLupdates_Difference
-@end
 
+@end
+        
 @implementation TL_updates_differenceEmpty
 +(TL_updates_differenceEmpty*)createWithDate:(int)date seq:(int)seq {
 	TL_updates_differenceEmpty* obj = [[TL_updates_differenceEmpty alloc] init];
@@ -12347,8 +11857,6 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
-
-        
 
         
 @end
@@ -12519,8 +12027,6 @@
 }
 
         
-
-        
 @end
 
 @implementation TL_updates_differenceSlice
@@ -12689,14 +12195,50 @@
 }
 
         
-
-        
 @end
-
 
 @implementation TLUpdates
+            
+-(BOOL)isUnread {return (self.flags & (1 << 0)) > 0;}
+                        
+-(BOOL)isN_out {return (self.flags & (1 << 1)) > 0;}
+                        
+-(BOOL)isMentioned {return (self.flags & (1 << 4)) > 0;}
+                        
+-(BOOL)isMedia_unread {return (self.flags & (1 << 5)) > 0;}
+                        
+-(void)setFwd_from_id:(TLPeer*)fwd_from_id
+{
+   _fwd_from_id = fwd_from_id;
+                
+    if(_fwd_from_id == nil)  { _flags&= ~ (1 << 2) ;} else { _flags|= (1 << 2); }
+}            
+-(void)setFwd_date:(int)fwd_date
+{
+   _fwd_date = fwd_date;
+                
+    if(_fwd_date == 0)  { _flags&= ~ (1 << 2) ;} else { _flags|= (1 << 2); }
+}            
+-(void)setReply_to_msg_id:(int)reply_to_msg_id
+{
+   _reply_to_msg_id = reply_to_msg_id;
+                
+    if(_reply_to_msg_id == 0)  { _flags&= ~ (1 << 3) ;} else { _flags|= (1 << 3); }
+}            
+-(void)setEntities:(NSMutableArray*)entities
+{
+   _entities = entities;
+                
+    if(_entities == nil)  { _flags&= ~ (1 << 7) ;} else { _flags|= (1 << 7); }
+}            
+-(void)setMedia:(TLMessageMedia*)media
+{
+   _media = media;
+                
+    if(_media == nil)  { _flags&= ~ (1 << 9) ;} else { _flags|= (1 << 9); }
+}
 @end
-
+        
 @implementation TL_updatesTooLong
 +(TL_updatesTooLong*)create {
 	TL_updatesTooLong* obj = [[TL_updatesTooLong alloc] init];
@@ -12731,8 +12273,6 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
-
-        
 
         
 @end
@@ -12850,40 +12390,6 @@
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
 
-        
-            
--(BOOL)isUnread {return (self.flags & (1 << 0)) > 0;}
-                        
--(BOOL)isN_out {return (self.flags & (1 << 1)) > 0;}
-                        
--(BOOL)isMentioned {return (self.flags & (1 << 4)) > 0;}
-                        
--(BOOL)isMedia_unread {return (self.flags & (1 << 5)) > 0;}
-                        
--(void)setFwd_from_id:(TLPeer*)fwd_from_id
-{
-   [super setFwd_from_id:fwd_from_id];
-                
-    if(self.fwd_from_id == nil)  { self.flags&= ~ (1 << 2) ;} else { self.flags|= (1 << 2); }
-}            
--(void)setFwd_date:(int)fwd_date
-{
-   [super setFwd_date:fwd_date];
-                
-    if(self.fwd_date == 0)  { self.flags&= ~ (1 << 2) ;} else { self.flags|= (1 << 2); }
-}            
--(void)setReply_to_msg_id:(int)reply_to_msg_id
-{
-   [super setReply_to_msg_id:reply_to_msg_id];
-                
-    if(self.reply_to_msg_id == 0)  { self.flags&= ~ (1 << 3) ;} else { self.flags|= (1 << 3); }
-}            
--(void)setEntities:(NSMutableArray*)entities
-{
-   [super setEntities:entities];
-                
-    if(self.entities == nil)  { self.flags&= ~ (1 << 7) ;} else { self.flags|= (1 << 7); }
-}
         
 @end
 
@@ -13005,40 +12511,6 @@
 }
 
         
-            
--(BOOL)isUnread {return (self.flags & (1 << 0)) > 0;}
-                        
--(BOOL)isN_out {return (self.flags & (1 << 1)) > 0;}
-                        
--(BOOL)isMentioned {return (self.flags & (1 << 4)) > 0;}
-                        
--(BOOL)isMedia_unread {return (self.flags & (1 << 5)) > 0;}
-                        
--(void)setFwd_from_id:(TLPeer*)fwd_from_id
-{
-   [super setFwd_from_id:fwd_from_id];
-                
-    if(self.fwd_from_id == nil)  { self.flags&= ~ (1 << 2) ;} else { self.flags|= (1 << 2); }
-}            
--(void)setFwd_date:(int)fwd_date
-{
-   [super setFwd_date:fwd_date];
-                
-    if(self.fwd_date == 0)  { self.flags&= ~ (1 << 2) ;} else { self.flags|= (1 << 2); }
-}            
--(void)setReply_to_msg_id:(int)reply_to_msg_id
-{
-   [super setReply_to_msg_id:reply_to_msg_id];
-                
-    if(self.reply_to_msg_id == 0)  { self.flags&= ~ (1 << 3) ;} else { self.flags|= (1 << 3); }
-}            
--(void)setEntities:(NSMutableArray*)entities
-{
-   [super setEntities:entities];
-                
-    if(self.entities == nil)  { self.flags&= ~ (1 << 7) ;} else { self.flags|= (1 << 7); }
-}
-        
 @end
 
 @implementation TL_updateShort
@@ -13079,8 +12551,6 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
-
-        
 
         
 @end
@@ -13207,8 +12677,6 @@
 }
 
         
-
-        
 @end
 
 @implementation TL_updates
@@ -13329,8 +12797,6 @@
 }
 
         
-
-        
 @end
 
 @implementation TL_updateShortSentMessage
@@ -13423,30 +12889,12 @@
 }
 
         
-            
--(BOOL)isUnread {return (self.flags & (1 << 0)) > 0;}
-                        
--(BOOL)isN_out {return (self.flags & (1 << 1)) > 0;}
-                        
--(void)setMedia:(TLMessageMedia*)media
-{
-   [super setMedia:media];
-                
-    if(self.media == nil)  { self.flags&= ~ (1 << 9) ;} else { self.flags|= (1 << 9); }
-}            
--(void)setEntities:(NSMutableArray*)entities
-{
-   [super setEntities:entities];
-                
-    if(self.entities == nil)  { self.flags&= ~ (1 << 7) ;} else { self.flags|= (1 << 7); }
-}
-        
 @end
-
 
 @implementation TLphotos_Photos
-@end
 
+@end
+        
 @implementation TL_photos_photos
 +(TL_photos_photos*)createWithPhotos:(NSMutableArray*)photos users:(NSMutableArray*)users {
 	TL_photos_photos* obj = [[TL_photos_photos alloc] init];
@@ -13529,8 +12977,6 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
-
-        
 
         
 @end
@@ -13623,14 +13069,12 @@
 }
 
         
-
-        
 @end
-
 
 @implementation TLphotos_Photo
-@end
 
+@end
+        
 @implementation TL_photos_photo
 +(TL_photos_photo*)createWithPhoto:(TLPhoto*)photo users:(NSMutableArray*)users {
 	TL_photos_photo* obj = [[TL_photos_photo alloc] init];
@@ -13693,14 +13137,12 @@
 }
 
         
-
-        
 @end
-
 
 @implementation TLupload_File
-@end
 
+@end
+        
 @implementation TL_upload_file
 +(TL_upload_file*)createWithType:(TLstorage_FileType*)type mtime:(int)mtime bytes:(NSData*)bytes {
 	TL_upload_file* obj = [[TL_upload_file alloc] init];
@@ -13745,14 +13187,16 @@
 }
 
         
-
-        
 @end
-
 
 @implementation TLDcOption
+            
+-(BOOL)isIpv6 {return (self.flags & (1 << 0)) > 0;}
+                        
+-(BOOL)isMedia_only {return (self.flags & (1 << 1)) > 0;}
+            
 @end
-
+        
 @implementation TL_dcOption
 +(TL_dcOption*)createWithFlags:(int)flags   n_id:(int)n_id ip_address:(NSString*)ip_address port:(int)port {
 	TL_dcOption* obj = [[TL_dcOption alloc] init];
@@ -13809,18 +13253,12 @@
 }
 
         
-            
--(BOOL)isIpv6 {return (self.flags & (1 << 0)) > 0;}
-                        
--(BOOL)isMedia_only {return (self.flags & (1 << 1)) > 0;}
-            
-        
 @end
-
 
 @implementation TLConfig
-@end
 
+@end
+        
 @implementation TL_config
 +(TL_config*)createWithDate:(int)date expires:(int)expires test_mode:(Boolean)test_mode this_dc:(int)this_dc dc_options:(NSMutableArray*)dc_options chat_size_max:(int)chat_size_max megagroup_size_max:(int)megagroup_size_max forwarded_count_max:(int)forwarded_count_max online_update_period_ms:(int)online_update_period_ms offline_blur_timeout_ms:(int)offline_blur_timeout_ms offline_idle_timeout_ms:(int)offline_idle_timeout_ms online_cloud_timeout_ms:(int)online_cloud_timeout_ms notify_cloud_delay_ms:(int)notify_cloud_delay_ms notify_default_delay_ms:(int)notify_default_delay_ms chat_big_size:(int)chat_big_size push_chat_period_ms:(int)push_chat_period_ms push_chat_limit:(int)push_chat_limit disabled_features:(NSMutableArray*)disabled_features {
 	TL_config* obj = [[TL_config alloc] init];
@@ -13969,14 +13407,12 @@
 }
 
         
-
-        
 @end
-
 
 @implementation TLNearestDc
-@end
 
+@end
+        
 @implementation TL_nearestDc
 +(TL_nearestDc*)createWithCountry:(NSString*)country this_dc:(int)this_dc nearest_dc:(int)nearest_dc {
 	TL_nearestDc* obj = [[TL_nearestDc alloc] init];
@@ -14021,14 +13457,12 @@
 }
 
         
-
-        
 @end
-
 
 @implementation TLhelp_AppUpdate
-@end
 
+@end
+        
 @implementation TL_help_appUpdate
 +(TL_help_appUpdate*)createWithN_id:(int)n_id critical:(Boolean)critical url:(NSString*)url text:(NSString*)text {
 	TL_help_appUpdate* obj = [[TL_help_appUpdate alloc] init];
@@ -14077,8 +13511,6 @@
 }
 
         
-
-        
 @end
 
 @implementation TL_help_noAppUpdate
@@ -14117,14 +13549,12 @@
 }
 
         
-
-        
 @end
-
 
 @implementation TLhelp_InviteText
-@end
 
+@end
+        
 @implementation TL_help_inviteText
 +(TL_help_inviteText*)createWithMessage:(NSString*)message {
 	TL_help_inviteText* obj = [[TL_help_inviteText alloc] init];
@@ -14161,14 +13591,12 @@
 }
 
         
-
-        
 @end
-
 
 @implementation TLEncryptedChat
-@end
 
+@end
+        
 @implementation TL_encryptedChatEmpty
 +(TL_encryptedChatEmpty*)createWithN_id:(int)n_id {
 	TL_encryptedChatEmpty* obj = [[TL_encryptedChatEmpty alloc] init];
@@ -14203,8 +13631,6 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
-
-        
 
         
 @end
@@ -14259,8 +13685,6 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
-
-        
 
         
 @end
@@ -14319,8 +13743,6 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
-
-        
 
         
 @end
@@ -14385,8 +13807,6 @@
 }
 
         
-
-        
 @end
 
 @implementation TL_encryptedChatDiscarded
@@ -14425,14 +13845,12 @@
 }
 
         
-
-        
 @end
-
 
 @implementation TLInputEncryptedChat
-@end
 
+@end
+        
 @implementation TL_inputEncryptedChat
 +(TL_inputEncryptedChat*)createWithChat_id:(int)chat_id access_hash:(long)access_hash {
 	TL_inputEncryptedChat* obj = [[TL_inputEncryptedChat alloc] init];
@@ -14473,14 +13891,12 @@
 }
 
         
-
-        
 @end
-
 
 @implementation TLEncryptedFile
-@end
 
+@end
+        
 @implementation TL_encryptedFileEmpty
 +(TL_encryptedFileEmpty*)create {
 	TL_encryptedFileEmpty* obj = [[TL_encryptedFileEmpty alloc] init];
@@ -14515,8 +13931,6 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
-
-        
 
         
 @end
@@ -14573,14 +13987,12 @@
 }
 
         
-
-        
 @end
-
 
 @implementation TLInputEncryptedFile
-@end
 
+@end
+        
 @implementation TL_inputEncryptedFileEmpty
 +(TL_inputEncryptedFileEmpty*)create {
 	TL_inputEncryptedFileEmpty* obj = [[TL_inputEncryptedFileEmpty alloc] init];
@@ -14615,8 +14027,6 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
-
-        
 
         
 @end
@@ -14669,8 +14079,6 @@
 }
 
         
-
-        
 @end
 
 @implementation TL_inputEncryptedFile
@@ -14711,8 +14119,6 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
-
-        
 
         
 @end
@@ -14761,14 +14167,12 @@
 }
 
         
-
-        
 @end
-
 
 @implementation TLEncryptedMessage
-@end
 
+@end
+        
 @implementation TL_encryptedMessage
 +(TL_encryptedMessage*)createWithRandom_id:(long)random_id chat_id:(int)chat_id date:(int)date bytes:(NSData*)bytes file:(TLEncryptedFile*)file {
 	TL_encryptedMessage* obj = [[TL_encryptedMessage alloc] init];
@@ -14821,8 +14225,6 @@
 }
 
         
-
-        
 @end
 
 @implementation TL_encryptedMessageService
@@ -14873,14 +14275,12 @@
 }
 
         
-
-        
 @end
-
 
 @implementation TLmessages_DhConfig
-@end
 
+@end
+        
 @implementation TL_messages_dhConfigNotModified
 +(TL_messages_dhConfigNotModified*)createWithRandom:(NSData*)random {
 	TL_messages_dhConfigNotModified* obj = [[TL_messages_dhConfigNotModified alloc] init];
@@ -14915,8 +14315,6 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
-
-        
 
         
 @end
@@ -14969,14 +14367,12 @@
 }
 
         
-
-        
 @end
-
 
 @implementation TLmessages_SentEncryptedMessage
-@end
 
+@end
+        
 @implementation TL_messages_sentEncryptedMessage
 +(TL_messages_sentEncryptedMessage*)createWithDate:(int)date {
 	TL_messages_sentEncryptedMessage* obj = [[TL_messages_sentEncryptedMessage alloc] init];
@@ -15011,8 +14407,6 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
-
-        
 
         
 @end
@@ -15057,14 +14451,12 @@
 }
 
         
-
-        
 @end
-
 
 @implementation TLInputAudio
-@end
 
+@end
+        
 @implementation TL_inputAudioEmpty
 +(TL_inputAudioEmpty*)create {
 	TL_inputAudioEmpty* obj = [[TL_inputAudioEmpty alloc] init];
@@ -15099,8 +14491,6 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
-
-        
 
         
 @end
@@ -15145,14 +14535,12 @@
 }
 
         
-
-        
 @end
-
 
 @implementation TLInputDocument
-@end
 
+@end
+        
 @implementation TL_inputDocumentEmpty
 +(TL_inputDocumentEmpty*)create {
 	TL_inputDocumentEmpty* obj = [[TL_inputDocumentEmpty alloc] init];
@@ -15187,8 +14575,6 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
-
-        
 
         
 @end
@@ -15233,14 +14619,12 @@
 }
 
         
-
-        
 @end
-
 
 @implementation TLAudio
-@end
 
+@end
+        
 @implementation TL_audioEmpty
 +(TL_audioEmpty*)createWithN_id:(long)n_id {
 	TL_audioEmpty* obj = [[TL_audioEmpty alloc] init];
@@ -15275,8 +14659,6 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
-
-        
 
         
 @end
@@ -15339,8 +14721,6 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
-
-        
 
         
 @end
@@ -15409,14 +14789,12 @@
 }
 
         
-
-        
 @end
-
 
 @implementation TLDocument
-@end
 
+@end
+        
 @implementation TL_documentEmpty
 +(TL_documentEmpty*)createWithN_id:(long)n_id {
 	TL_documentEmpty* obj = [[TL_documentEmpty alloc] init];
@@ -15451,8 +14829,6 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
-
-        
 
         
 @end
@@ -15543,14 +14919,12 @@
 }
 
         
-
-        
 @end
-
 
 @implementation TLhelp_Support
-@end
 
+@end
+        
 @implementation TL_help_support
 +(TL_help_support*)createWithPhone_number:(NSString*)phone_number user:(TLUser*)user {
 	TL_help_support* obj = [[TL_help_support alloc] init];
@@ -15591,14 +14965,12 @@
 }
 
         
-
-        
 @end
-
 
 @implementation TLNotifyPeer
-@end
 
+@end
+        
 @implementation TL_notifyPeer
 +(TL_notifyPeer*)createWithPeer:(TLPeer*)peer {
 	TL_notifyPeer* obj = [[TL_notifyPeer alloc] init];
@@ -15633,8 +15005,6 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
-
-        
 
         
 @end
@@ -15675,8 +15045,6 @@
 }
 
         
-
-        
 @end
 
 @implementation TL_notifyChats
@@ -15713,8 +15081,6 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
-
-        
 
         
 @end
@@ -15755,14 +15121,12 @@
 }
 
         
-
-        
 @end
-
 
 @implementation TLSendMessageAction
-@end
 
+@end
+        
 @implementation TL_sendMessageTypingAction
 +(TL_sendMessageTypingAction*)create {
 	TL_sendMessageTypingAction* obj = [[TL_sendMessageTypingAction alloc] init];
@@ -15797,8 +15161,6 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
-
-        
 
         
 @end
@@ -15839,8 +15201,6 @@
 }
 
         
-
-        
 @end
 
 @implementation TL_sendMessageRecordVideoAction
@@ -15877,8 +15237,6 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
-
-        
 
         
 @end
@@ -15919,8 +15277,6 @@
 }
 
         
-
-        
 @end
 
 @implementation TL_sendMessageRecordAudioAction
@@ -15957,8 +15313,6 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
-
-        
 
         
 @end
@@ -15999,8 +15353,6 @@
 }
 
         
-
-        
 @end
 
 @implementation TL_sendMessageUploadPhotoAction
@@ -16037,8 +15389,6 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
-
-        
 
         
 @end
@@ -16079,8 +15429,6 @@
 }
 
         
-
-        
 @end
 
 @implementation TL_sendMessageGeoLocationAction
@@ -16117,8 +15465,6 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
-
-        
 
         
 @end
@@ -16159,14 +15505,12 @@
 }
 
         
-
-        
 @end
-
 
 @implementation TLcontacts_Found
-@end
 
+@end
+        
 @implementation TL_contacts_found
 +(TL_contacts_found*)createWithResults:(NSMutableArray*)results chats:(NSMutableArray*)chats users:(NSMutableArray*)users {
 	TL_contacts_found* obj = [[TL_contacts_found alloc] init];
@@ -16277,14 +15621,12 @@
 }
 
         
-
-        
 @end
-
 
 @implementation TLInputPrivacyKey
-@end
 
+@end
+        
 @implementation TL_inputPrivacyKeyStatusTimestamp
 +(TL_inputPrivacyKeyStatusTimestamp*)create {
 	TL_inputPrivacyKeyStatusTimestamp* obj = [[TL_inputPrivacyKeyStatusTimestamp alloc] init];
@@ -16321,14 +15663,12 @@
 }
 
         
-
-        
 @end
-
 
 @implementation TLPrivacyKey
-@end
 
+@end
+        
 @implementation TL_privacyKeyStatusTimestamp
 +(TL_privacyKeyStatusTimestamp*)create {
 	TL_privacyKeyStatusTimestamp* obj = [[TL_privacyKeyStatusTimestamp alloc] init];
@@ -16365,14 +15705,12 @@
 }
 
         
-
-        
 @end
-
 
 @implementation TLInputPrivacyRule
-@end
 
+@end
+        
 @implementation TL_inputPrivacyValueAllowContacts
 +(TL_inputPrivacyValueAllowContacts*)create {
 	TL_inputPrivacyValueAllowContacts* obj = [[TL_inputPrivacyValueAllowContacts alloc] init];
@@ -16407,8 +15745,6 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
-
-        
 
         
 @end
@@ -16447,8 +15783,6 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
-
-        
 
         
 @end
@@ -16511,8 +15845,6 @@
 }
 
         
-
-        
 @end
 
 @implementation TL_inputPrivacyValueDisallowContacts
@@ -16551,8 +15883,6 @@
 }
 
         
-
-        
 @end
 
 @implementation TL_inputPrivacyValueDisallowAll
@@ -16589,8 +15919,6 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
-
-        
 
         
 @end
@@ -16653,14 +15981,12 @@
 }
 
         
-
-        
 @end
-
 
 @implementation TLPrivacyRule
-@end
 
+@end
+        
 @implementation TL_privacyValueAllowContacts
 +(TL_privacyValueAllowContacts*)create {
 	TL_privacyValueAllowContacts* obj = [[TL_privacyValueAllowContacts alloc] init];
@@ -16695,8 +16021,6 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
-
-        
 
         
 @end
@@ -16735,8 +16059,6 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
-
-        
 
         
 @end
@@ -16799,8 +16121,6 @@
 }
 
         
-
-        
 @end
 
 @implementation TL_privacyValueDisallowContacts
@@ -16839,8 +16159,6 @@
 }
 
         
-
-        
 @end
 
 @implementation TL_privacyValueDisallowAll
@@ -16877,8 +16195,6 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
-
-        
 
         
 @end
@@ -16941,14 +16257,12 @@
 }
 
         
-
-        
 @end
-
 
 @implementation TLaccount_PrivacyRules
-@end
 
+@end
+        
 @implementation TL_account_privacyRules
 +(TL_account_privacyRules*)createWithRules:(NSMutableArray*)rules users:(NSMutableArray*)users {
 	TL_account_privacyRules* obj = [[TL_account_privacyRules alloc] init];
@@ -17033,14 +16347,12 @@
 }
 
         
-
-        
 @end
-
 
 @implementation TLAccountDaysTTL
-@end
 
+@end
+        
 @implementation TL_accountDaysTTL
 +(TL_accountDaysTTL*)createWithDays:(int)days {
 	TL_accountDaysTTL* obj = [[TL_accountDaysTTL alloc] init];
@@ -17077,14 +16389,12 @@
 }
 
         
-
-        
 @end
-
 
 @implementation TLaccount_SentChangePhoneCode
-@end
 
+@end
+        
 @implementation TL_account_sentChangePhoneCode
 +(TL_account_sentChangePhoneCode*)createWithPhone_code_hash:(NSString*)phone_code_hash send_call_timeout:(int)send_call_timeout {
 	TL_account_sentChangePhoneCode* obj = [[TL_account_sentChangePhoneCode alloc] init];
@@ -17125,14 +16435,12 @@
 }
 
         
-
-        
 @end
-
 
 @implementation TLDocumentAttribute
-@end
 
+@end
+        
 @implementation TL_documentAttributeImageSize
 +(TL_documentAttributeImageSize*)createWithW:(int)w h:(int)h {
 	TL_documentAttributeImageSize* obj = [[TL_documentAttributeImageSize alloc] init];
@@ -17173,8 +16481,6 @@
 }
 
         
-
-        
 @end
 
 @implementation TL_documentAttributeAnimated
@@ -17211,8 +16517,6 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
-
-        
 
         
 @end
@@ -17255,8 +16559,6 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
-
-        
 
         
 @end
@@ -17305,8 +16607,6 @@
 }
 
         
-
-        
 @end
 
 @implementation TL_documentAttributeAudio
@@ -17353,8 +16653,6 @@
 }
 
         
-
-        
 @end
 
 @implementation TL_documentAttributeFilename
@@ -17391,8 +16689,6 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
-
-        
 
         
 @end
@@ -17433,14 +16729,12 @@
 }
 
         
-
-        
 @end
-
 
 @implementation TLmessages_Stickers
-@end
 
+@end
+        
 @implementation TL_messages_stickersNotModified
 +(TL_messages_stickersNotModified*)create {
 	TL_messages_stickersNotModified* obj = [[TL_messages_stickersNotModified alloc] init];
@@ -17475,8 +16769,6 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
-
-        
 
         
 @end
@@ -17543,14 +16835,12 @@
 }
 
         
-
-        
 @end
-
 
 @implementation TLStickerPack
-@end
 
+@end
+        
 @implementation TL_stickerPack
 +(TL_stickerPack*)createWithEmoticon:(NSString*)emoticon documents:(NSMutableArray*)documents {
 	TL_stickerPack* obj = [[TL_stickerPack alloc] init];
@@ -17613,14 +16903,12 @@
 }
 
         
-
-        
 @end
-
 
 @implementation TLmessages_AllStickers
-@end
 
+@end
+        
 @implementation TL_messages_allStickersNotModified
 +(TL_messages_allStickersNotModified*)create {
 	TL_messages_allStickersNotModified* obj = [[TL_messages_allStickersNotModified alloc] init];
@@ -17655,8 +16943,6 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
-
-        
 
         
 @end
@@ -17723,14 +17009,12 @@
 }
 
         
-
-        
 @end
-
 
 @implementation TLDisabledFeature
-@end
 
+@end
+        
 @implementation TL_disabledFeature
 +(TL_disabledFeature*)createWithFeature:(NSString*)feature n_description:(NSString*)n_description {
 	TL_disabledFeature* obj = [[TL_disabledFeature alloc] init];
@@ -17771,14 +17055,12 @@
 }
 
         
-
-        
 @end
-
 
 @implementation TLmessages_AffectedMessages
-@end
 
+@end
+        
 @implementation TL_messages_affectedMessages
 +(TL_messages_affectedMessages*)createWithPts:(int)pts pts_count:(int)pts_count {
 	TL_messages_affectedMessages* obj = [[TL_messages_affectedMessages alloc] init];
@@ -17819,14 +17101,12 @@
 }
 
         
-
-        
 @end
-
 
 @implementation TLContactLink
-@end
 
+@end
+        
 @implementation TL_contactLinkUnknown
 +(TL_contactLinkUnknown*)create {
 	TL_contactLinkUnknown* obj = [[TL_contactLinkUnknown alloc] init];
@@ -17861,8 +17141,6 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
-
-        
 
         
 @end
@@ -17903,8 +17181,6 @@
 }
 
         
-
-        
 @end
 
 @implementation TL_contactLinkHasPhone
@@ -17941,8 +17217,6 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
-
-        
 
         
 @end
@@ -17983,14 +17257,84 @@
 }
 
         
-
-        
 @end
-
 
 @implementation TLWebPage
+            
+-(void)setType:(NSString*)type
+{
+   _type = type;
+                
+    if(_type == nil)  { _flags&= ~ (1 << 0) ;} else { _flags|= (1 << 0); }
+}            
+-(void)setSite_name:(NSString*)site_name
+{
+   _site_name = site_name;
+                
+    if(_site_name == nil)  { _flags&= ~ (1 << 1) ;} else { _flags|= (1 << 1); }
+}            
+-(void)setTitle:(NSString*)title
+{
+   _title = title;
+                
+    if(_title == nil)  { _flags&= ~ (1 << 2) ;} else { _flags|= (1 << 2); }
+}            
+-(void)setN_description:(NSString*)n_description
+{
+   _n_description = n_description;
+                
+    if(_n_description == nil)  { _flags&= ~ (1 << 3) ;} else { _flags|= (1 << 3); }
+}            
+-(void)setPhoto:(TLPhoto*)photo
+{
+   _photo = photo;
+                
+    if(_photo == nil)  { _flags&= ~ (1 << 4) ;} else { _flags|= (1 << 4); }
+}            
+-(void)setEmbed_url:(NSString*)embed_url
+{
+   _embed_url = embed_url;
+                
+    if(_embed_url == nil)  { _flags&= ~ (1 << 5) ;} else { _flags|= (1 << 5); }
+}            
+-(void)setEmbed_type:(NSString*)embed_type
+{
+   _embed_type = embed_type;
+                
+    if(_embed_type == nil)  { _flags&= ~ (1 << 5) ;} else { _flags|= (1 << 5); }
+}            
+-(void)setEmbed_width:(int)embed_width
+{
+   _embed_width = embed_width;
+                
+    if(_embed_width == 0)  { _flags&= ~ (1 << 6) ;} else { _flags|= (1 << 6); }
+}            
+-(void)setEmbed_height:(int)embed_height
+{
+   _embed_height = embed_height;
+                
+    if(_embed_height == 0)  { _flags&= ~ (1 << 6) ;} else { _flags|= (1 << 6); }
+}            
+-(void)setDuration:(int)duration
+{
+   _duration = duration;
+                
+    if(_duration == 0)  { _flags&= ~ (1 << 7) ;} else { _flags|= (1 << 7); }
+}            
+-(void)setAuthor:(NSString*)author
+{
+   _author = author;
+                
+    if(_author == nil)  { _flags&= ~ (1 << 8) ;} else { _flags|= (1 << 8); }
+}            
+-(void)setDocument:(TLDocument*)document
+{
+   _document = document;
+                
+    if(_document == nil)  { _flags&= ~ (1 << 9) ;} else { _flags|= (1 << 9); }
+}
 @end
-
+        
 @implementation TL_webPageEmpty
 +(TL_webPageEmpty*)createWithN_id:(long)n_id {
 	TL_webPageEmpty* obj = [[TL_webPageEmpty alloc] init];
@@ -18025,8 +17369,6 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
-
-        
 
         
 @end
@@ -18069,8 +17411,6 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
-
-        
 
         
 @end
@@ -18171,80 +17511,6 @@
 }
 
         
-            
--(void)setType:(NSString*)type
-{
-   [super setType:type];
-                
-    if(self.type == nil)  { self.flags&= ~ (1 << 0) ;} else { self.flags|= (1 << 0); }
-}            
--(void)setSite_name:(NSString*)site_name
-{
-   [super setSite_name:site_name];
-                
-    if(self.site_name == nil)  { self.flags&= ~ (1 << 1) ;} else { self.flags|= (1 << 1); }
-}            
--(void)setTitle:(NSString*)title
-{
-   [super setTitle:title];
-                
-    if(self.title == nil)  { self.flags&= ~ (1 << 2) ;} else { self.flags|= (1 << 2); }
-}            
--(void)setN_description:(NSString*)n_description
-{
-   [super setN_description:n_description];
-                
-    if(self.n_description == nil)  { self.flags&= ~ (1 << 3) ;} else { self.flags|= (1 << 3); }
-}            
--(void)setPhoto:(TLPhoto*)photo
-{
-   [super setPhoto:photo];
-                
-    if(self.photo == nil)  { self.flags&= ~ (1 << 4) ;} else { self.flags|= (1 << 4); }
-}            
--(void)setEmbed_url:(NSString*)embed_url
-{
-   [super setEmbed_url:embed_url];
-                
-    if(self.embed_url == nil)  { self.flags&= ~ (1 << 5) ;} else { self.flags|= (1 << 5); }
-}            
--(void)setEmbed_type:(NSString*)embed_type
-{
-   [super setEmbed_type:embed_type];
-                
-    if(self.embed_type == nil)  { self.flags&= ~ (1 << 5) ;} else { self.flags|= (1 << 5); }
-}            
--(void)setEmbed_width:(int)embed_width
-{
-   [super setEmbed_width:embed_width];
-                
-    if(self.embed_width == 0)  { self.flags&= ~ (1 << 6) ;} else { self.flags|= (1 << 6); }
-}            
--(void)setEmbed_height:(int)embed_height
-{
-   [super setEmbed_height:embed_height];
-                
-    if(self.embed_height == 0)  { self.flags&= ~ (1 << 6) ;} else { self.flags|= (1 << 6); }
-}            
--(void)setDuration:(int)duration
-{
-   [super setDuration:duration];
-                
-    if(self.duration == 0)  { self.flags&= ~ (1 << 7) ;} else { self.flags|= (1 << 7); }
-}            
--(void)setAuthor:(NSString*)author
-{
-   [super setAuthor:author];
-                
-    if(self.author == nil)  { self.flags&= ~ (1 << 8) ;} else { self.flags|= (1 << 8); }
-}            
--(void)setDocument:(TLDocument*)document
-{
-   [super setDocument:document];
-                
-    if(self.document == nil)  { self.flags&= ~ (1 << 9) ;} else { self.flags|= (1 << 9); }
-}
-        
 @end
 
 @implementation TL_webPage_old34
@@ -18339,80 +17605,12 @@
 }
 
         
-            
--(void)setType:(NSString*)type
-{
-   [super setType:type];
-                
-    if(self.type == nil)  { self.flags&= ~ (1 << 0) ;} else { self.flags|= (1 << 0); }
-}            
--(void)setSite_name:(NSString*)site_name
-{
-   [super setSite_name:site_name];
-                
-    if(self.site_name == nil)  { self.flags&= ~ (1 << 1) ;} else { self.flags|= (1 << 1); }
-}            
--(void)setTitle:(NSString*)title
-{
-   [super setTitle:title];
-                
-    if(self.title == nil)  { self.flags&= ~ (1 << 2) ;} else { self.flags|= (1 << 2); }
-}            
--(void)setN_description:(NSString*)n_description
-{
-   [super setN_description:n_description];
-                
-    if(self.n_description == nil)  { self.flags&= ~ (1 << 3) ;} else { self.flags|= (1 << 3); }
-}            
--(void)setPhoto:(TLPhoto*)photo
-{
-   [super setPhoto:photo];
-                
-    if(self.photo == nil)  { self.flags&= ~ (1 << 4) ;} else { self.flags|= (1 << 4); }
-}            
--(void)setEmbed_url:(NSString*)embed_url
-{
-   [super setEmbed_url:embed_url];
-                
-    if(self.embed_url == nil)  { self.flags&= ~ (1 << 5) ;} else { self.flags|= (1 << 5); }
-}            
--(void)setEmbed_type:(NSString*)embed_type
-{
-   [super setEmbed_type:embed_type];
-                
-    if(self.embed_type == nil)  { self.flags&= ~ (1 << 5) ;} else { self.flags|= (1 << 5); }
-}            
--(void)setEmbed_width:(int)embed_width
-{
-   [super setEmbed_width:embed_width];
-                
-    if(self.embed_width == 0)  { self.flags&= ~ (1 << 6) ;} else { self.flags|= (1 << 6); }
-}            
--(void)setEmbed_height:(int)embed_height
-{
-   [super setEmbed_height:embed_height];
-                
-    if(self.embed_height == 0)  { self.flags&= ~ (1 << 6) ;} else { self.flags|= (1 << 6); }
-}            
--(void)setDuration:(int)duration
-{
-   [super setDuration:duration];
-                
-    if(self.duration == 0)  { self.flags&= ~ (1 << 7) ;} else { self.flags|= (1 << 7); }
-}            
--(void)setAuthor:(NSString*)author
-{
-   [super setAuthor:author];
-                
-    if(self.author == nil)  { self.flags&= ~ (1 << 8) ;} else { self.flags|= (1 << 8); }
-}
-        
 @end
-
 
 @implementation TLAuthorization
-@end
 
+@end
+        
 @implementation TL_authorization
 +(TL_authorization*)createWithN_hash:(long)n_hash flags:(int)flags device_model:(NSString*)device_model platform:(NSString*)platform system_version:(NSString*)system_version api_id:(int)api_id app_name:(NSString*)app_name app_version:(NSString*)app_version date_created:(int)date_created date_active:(int)date_active ip:(NSString*)ip country:(NSString*)country region:(NSString*)region {
 	TL_authorization* obj = [[TL_authorization alloc] init];
@@ -18497,14 +17695,12 @@
 }
 
         
-
-        
 @end
-
 
 @implementation TLaccount_Authorizations
-@end
 
+@end
+        
 @implementation TL_account_authorizations
 +(TL_account_authorizations*)createWithAuthorizations:(NSMutableArray*)authorizations {
 	TL_account_authorizations* obj = [[TL_account_authorizations alloc] init];
@@ -18563,14 +17759,12 @@
 }
 
         
-
-        
 @end
-
 
 @implementation TLaccount_Password
-@end
 
+@end
+        
 @implementation TL_account_noPassword
 +(TL_account_noPassword*)createWithN_salt:(NSData*)n_salt email_unconfirmed_pattern:(NSString*)email_unconfirmed_pattern {
 	TL_account_noPassword* obj = [[TL_account_noPassword alloc] init];
@@ -18609,8 +17803,6 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
-
-        
 
         
 @end
@@ -18667,14 +17859,12 @@
 }
 
         
-
-        
 @end
-
 
 @implementation TLaccount_PasswordSettings
-@end
 
+@end
+        
 @implementation TL_account_passwordSettings
 +(TL_account_passwordSettings*)createWithEmail:(NSString*)email {
 	TL_account_passwordSettings* obj = [[TL_account_passwordSettings alloc] init];
@@ -18711,14 +17901,36 @@
 }
 
         
-
-        
 @end
-
 
 @implementation TLaccount_PasswordInputSettings
+            
+-(void)setN_salt:(NSData*)n_salt
+{
+   _n_salt = n_salt;
+                
+    if(_n_salt == nil)  { _flags&= ~ (1 << 0) ;} else { _flags|= (1 << 0); }
+}            
+-(void)setN_password_hash:(NSData*)n_password_hash
+{
+   _n_password_hash = n_password_hash;
+                
+    if(_n_password_hash == nil)  { _flags&= ~ (1 << 0) ;} else { _flags|= (1 << 0); }
+}            
+-(void)setHint:(NSString*)hint
+{
+   _hint = hint;
+                
+    if(_hint == nil)  { _flags&= ~ (1 << 0) ;} else { _flags|= (1 << 0); }
+}            
+-(void)setEmail:(NSString*)email
+{
+   _email = email;
+                
+    if(_email == nil)  { _flags&= ~ (1 << 1) ;} else { _flags|= (1 << 1); }
+}
 @end
-
+        
 @implementation TL_account_passwordInputSettings
 +(TL_account_passwordInputSettings*)createWithFlags:(int)flags n_salt:(NSData*)n_salt n_password_hash:(NSData*)n_password_hash hint:(NSString*)hint email:(NSString*)email {
 	TL_account_passwordInputSettings* obj = [[TL_account_passwordInputSettings alloc] init];
@@ -18771,38 +17983,12 @@
 }
 
         
-            
--(void)setN_salt:(NSData*)n_salt
-{
-   [super setN_salt:n_salt];
-                
-    if(self.n_salt == nil)  { self.flags&= ~ (1 << 0) ;} else { self.flags|= (1 << 0); }
-}            
--(void)setN_password_hash:(NSData*)n_password_hash
-{
-   [super setN_password_hash:n_password_hash];
-                
-    if(self.n_password_hash == nil)  { self.flags&= ~ (1 << 0) ;} else { self.flags|= (1 << 0); }
-}            
--(void)setHint:(NSString*)hint
-{
-   [super setHint:hint];
-                
-    if(self.hint == nil)  { self.flags&= ~ (1 << 0) ;} else { self.flags|= (1 << 0); }
-}            
--(void)setEmail:(NSString*)email
-{
-   [super setEmail:email];
-                
-    if(self.email == nil)  { self.flags&= ~ (1 << 1) ;} else { self.flags|= (1 << 1); }
-}
-        
 @end
-
 
 @implementation TLauth_PasswordRecovery
-@end
 
+@end
+        
 @implementation TL_auth_passwordRecovery
 +(TL_auth_passwordRecovery*)createWithEmail_pattern:(NSString*)email_pattern {
 	TL_auth_passwordRecovery* obj = [[TL_auth_passwordRecovery alloc] init];
@@ -18839,14 +18025,12 @@
 }
 
         
-
-        
 @end
-
 
 @implementation TLReceivedNotifyMessage
-@end
 
+@end
+        
 @implementation TL_receivedNotifyMessage
 +(TL_receivedNotifyMessage*)createWithN_id:(int)n_id flags:(int)flags {
 	TL_receivedNotifyMessage* obj = [[TL_receivedNotifyMessage alloc] init];
@@ -18887,14 +18071,12 @@
 }
 
         
-
-        
 @end
-
 
 @implementation TLExportedChatInvite
-@end
 
+@end
+        
 @implementation TL_chatInviteEmpty
 +(TL_chatInviteEmpty*)create {
 	TL_chatInviteEmpty* obj = [[TL_chatInviteEmpty alloc] init];
@@ -18929,8 +18111,6 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
-
-        
 
         
 @end
@@ -18971,14 +18151,20 @@
 }
 
         
-
-        
 @end
-
 
 @implementation TLChatInvite
+            
+-(BOOL)isChannel {return (self.flags & (1 << 0)) > 0;}
+                        
+-(BOOL)isBroadcast {return (self.flags & (1 << 1)) > 0;}
+                        
+-(BOOL)isPublic {return (self.flags & (1 << 2)) > 0;}
+                        
+-(BOOL)isMegagroup {return (self.flags & (1 << 3)) > 0;}
+            
 @end
-
+        
 @implementation TL_chatInviteAlready
 +(TL_chatInviteAlready*)createWithChat:(TLChat*)chat {
 	TL_chatInviteAlready* obj = [[TL_chatInviteAlready alloc] init];
@@ -19013,8 +18199,6 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
-
-        
 
         
 @end
@@ -19075,22 +18259,12 @@
 }
 
         
-            
--(BOOL)isChannel {return (self.flags & (1 << 0)) > 0;}
-                        
--(BOOL)isBroadcast {return (self.flags & (1 << 1)) > 0;}
-                        
--(BOOL)isPublic {return (self.flags & (1 << 2)) > 0;}
-                        
--(BOOL)isMegagroup {return (self.flags & (1 << 3)) > 0;}
-            
-        
 @end
-
 
 @implementation TLInputStickerSet
-@end
 
+@end
+        
 @implementation TL_inputStickerSetEmpty
 +(TL_inputStickerSetEmpty*)create {
 	TL_inputStickerSetEmpty* obj = [[TL_inputStickerSetEmpty alloc] init];
@@ -19125,8 +18299,6 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
-
-        
 
         
 @end
@@ -19171,8 +18343,6 @@
 }
 
         
-
-        
 @end
 
 @implementation TL_inputStickerSetShortName
@@ -19211,14 +18381,18 @@
 }
 
         
-
-        
 @end
-
 
 @implementation TLStickerSet
+            
+-(BOOL)isInstalled {return (self.flags & (1 << 0)) > 0;}
+                        
+-(BOOL)isDisabled {return (self.flags & (1 << 1)) > 0;}
+                        
+-(BOOL)isOfficial {return (self.flags & (1 << 2)) > 0;}
+            
 @end
-
+        
 @implementation TL_stickerSet
 +(TL_stickerSet*)createWithFlags:(int)flags    n_id:(long)n_id access_hash:(long)access_hash title:(NSString*)title short_name:(NSString*)short_name n_count:(int)n_count n_hash:(int)n_hash {
 	TL_stickerSet* obj = [[TL_stickerSet alloc] init];
@@ -19291,20 +18465,12 @@
 }
 
         
-            
--(BOOL)isInstalled {return (self.flags & (1 << 0)) > 0;}
-                        
--(BOOL)isDisabled {return (self.flags & (1 << 1)) > 0;}
-                        
--(BOOL)isOfficial {return (self.flags & (1 << 2)) > 0;}
-            
-        
 @end
-
 
 @implementation TLmessages_StickerSet
-@end
 
+@end
+        
 @implementation TL_messages_stickerSet
 +(TL_messages_stickerSet*)createWithSet:(TLStickerSet*)set packs:(NSMutableArray*)packs documents:(NSMutableArray*)documents {
 	TL_messages_stickerSet* obj = [[TL_messages_stickerSet alloc] init];
@@ -19393,14 +18559,12 @@
 }
 
         
-
-        
 @end
-
 
 @implementation TLBotCommand
-@end
 
+@end
+        
 @implementation TL_botCommand
 +(TL_botCommand*)createWithCommand:(NSString*)command n_description:(NSString*)n_description {
 	TL_botCommand* obj = [[TL_botCommand alloc] init];
@@ -19441,14 +18605,12 @@
 }
 
         
-
-        
 @end
-
 
 @implementation TLBotInfo
-@end
 
+@end
+        
 @implementation TL_botInfoEmpty
 +(TL_botInfoEmpty*)create {
 	TL_botInfoEmpty* obj = [[TL_botInfoEmpty alloc] init];
@@ -19483,8 +18645,6 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
-
-        
 
         
 @end
@@ -19563,14 +18723,12 @@
 }
 
         
-
-        
 @end
-
 
 @implementation TLKeyboardButton
-@end
 
+@end
+        
 @implementation TL_keyboardButton
 +(TL_keyboardButton*)createWithText:(NSString*)text {
 	TL_keyboardButton* obj = [[TL_keyboardButton alloc] init];
@@ -19607,14 +18765,12 @@
 }
 
         
-
-        
 @end
-
 
 @implementation TLKeyboardButtonRow
-@end
 
+@end
+        
 @implementation TL_keyboardButtonRow
 +(TL_keyboardButtonRow*)createWithButtons:(NSMutableArray*)buttons {
 	TL_keyboardButtonRow* obj = [[TL_keyboardButtonRow alloc] init];
@@ -19673,14 +18829,18 @@
 }
 
         
-
-        
 @end
-
 
 @implementation TLReplyMarkup
+            
+-(BOOL)isSelective {return (self.flags & (1 << 2)) > 0;}
+                        
+-(BOOL)isSingle_use {return (self.flags & (1 << 1)) > 0;}
+                        
+-(BOOL)isResize {return (self.flags & (1 << 0)) > 0;}
+            
 @end
-
+        
 @implementation TL_replyKeyboardHide
 +(TL_replyKeyboardHide*)createWithFlags:(int)flags  {
 	TL_replyKeyboardHide* obj = [[TL_replyKeyboardHide alloc] init];
@@ -19720,10 +18880,6 @@
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
 
-        
-            
--(BOOL)isSelective {return (self.flags & (1 << 2)) > 0;}
-            
         
 @end
 
@@ -19770,12 +18926,6 @@
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
 
-        
-            
--(BOOL)isSingle_use {return (self.flags & (1 << 1)) > 0;}
-                        
--(BOOL)isSelective {return (self.flags & (1 << 2)) > 0;}
-            
         
 @end
 
@@ -19853,20 +19003,12 @@
 }
 
         
-            
--(BOOL)isResize {return (self.flags & (1 << 0)) > 0;}
-                        
--(BOOL)isSingle_use {return (self.flags & (1 << 1)) > 0;}
-                        
--(BOOL)isSelective {return (self.flags & (1 << 2)) > 0;}
-            
-        
 @end
-
 
 @implementation TLhelp_AppChangelog
-@end
 
+@end
+        
 @implementation TL_help_appChangelogEmpty
 +(TL_help_appChangelogEmpty*)create {
 	TL_help_appChangelogEmpty* obj = [[TL_help_appChangelogEmpty alloc] init];
@@ -19901,8 +19043,6 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
-
-        
 
         
 @end
@@ -19943,14 +19083,12 @@
 }
 
         
-
-        
 @end
-
 
 @implementation TLMessageEntity
-@end
 
+@end
+        
 @implementation TL_messageEntityUnknown
 +(TL_messageEntityUnknown*)createWithOffset:(int)offset length:(int)length {
 	TL_messageEntityUnknown* obj = [[TL_messageEntityUnknown alloc] init];
@@ -19989,8 +19127,6 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
-
-        
 
         
 @end
@@ -20035,8 +19171,6 @@
 }
 
         
-
-        
 @end
 
 @implementation TL_messageEntityHashtag
@@ -20077,8 +19211,6 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
-
-        
 
         
 @end
@@ -20123,8 +19255,6 @@
 }
 
         
-
-        
 @end
 
 @implementation TL_messageEntityUrl
@@ -20165,8 +19295,6 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
-
-        
 
         
 @end
@@ -20211,8 +19339,6 @@
 }
 
         
-
-        
 @end
 
 @implementation TL_messageEntityBold
@@ -20253,8 +19379,6 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
-
-        
 
         
 @end
@@ -20299,8 +19423,6 @@
 }
 
         
-
-        
 @end
 
 @implementation TL_messageEntityCode
@@ -20341,8 +19463,6 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
-
-        
 
         
 @end
@@ -20391,8 +19511,6 @@
 }
 
         
-
-        
 @end
 
 @implementation TL_messageEntityTextUrl
@@ -20439,14 +19557,12 @@
 }
 
         
-
-        
 @end
-
 
 @implementation TLInputChannel
-@end
 
+@end
+        
 @implementation TL_inputChannelEmpty
 +(TL_inputChannelEmpty*)create {
 	TL_inputChannelEmpty* obj = [[TL_inputChannelEmpty alloc] init];
@@ -20481,8 +19597,6 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
-
-        
 
         
 @end
@@ -20527,14 +19641,12 @@
 }
 
         
-
-        
 @end
-
 
 @implementation TLcontacts_ResolvedPeer
-@end
 
+@end
+        
 @implementation TL_contacts_resolvedPeer
 +(TL_contacts_resolvedPeer*)createWithPeer:(TLPeer*)peer chats:(NSMutableArray*)chats users:(NSMutableArray*)users {
 	TL_contacts_resolvedPeer* obj = [[TL_contacts_resolvedPeer alloc] init];
@@ -20623,14 +19735,12 @@
 }
 
         
-
-        
 @end
-
 
 @implementation TLMessageRange
-@end
 
+@end
+        
 @implementation TL_messageRange
 +(TL_messageRange*)createWithMin_id:(int)min_id max_id:(int)max_id {
 	TL_messageRange* obj = [[TL_messageRange alloc] init];
@@ -20671,14 +19781,12 @@
 }
 
         
-
-        
 @end
-
 
 @implementation TLMessageGroup
-@end
 
+@end
+        
 @implementation TL_messageGroup
 +(TL_messageGroup*)createWithMin_id:(int)min_id max_id:(int)max_id n_count:(int)n_count date:(int)date {
 	TL_messageGroup* obj = [[TL_messageGroup alloc] init];
@@ -20727,14 +19835,20 @@
 }
 
         
-
-        
 @end
-
 
 @implementation TLupdates_ChannelDifference
+            
+-(BOOL)isFinal {return (self.flags & (1 << 0)) > 0;}
+                        
+-(void)setTimeout:(int)timeout
+{
+   _timeout = timeout;
+                
+    if(_timeout == 0)  { _flags&= ~ (1 << 1) ;} else { _flags|= (1 << 1); }
+}
 @end
-
+        
 @implementation TL_updates_channelDifferenceEmpty
 +(TL_updates_channelDifferenceEmpty*)createWithFlags:(int)flags  pts:(int)pts timeout:(int)timeout {
 	TL_updates_channelDifferenceEmpty* obj = [[TL_updates_channelDifferenceEmpty alloc] init];
@@ -20782,16 +19896,6 @@
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
 
-        
-            
--(BOOL)isFinal {return (self.flags & (1 << 0)) > 0;}
-                        
--(void)setTimeout:(int)timeout
-{
-   [super setTimeout:timeout];
-                
-    if(self.timeout == 0)  { self.flags&= ~ (1 << 1) ;} else { self.flags|= (1 << 1); }
-}
         
 @end
 
@@ -20940,16 +20044,6 @@
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
 
-        
-            
--(BOOL)isFinal {return (self.flags & (1 << 0)) > 0;}
-                        
--(void)setTimeout:(int)timeout
-{
-   [super setTimeout:timeout];
-                
-    if(self.timeout == 0)  { self.flags&= ~ (1 << 1) ;} else { self.flags|= (1 << 1); }
-}
         
 @end
 
@@ -21105,22 +20199,16 @@
 }
 
         
-            
--(BOOL)isFinal {return (self.flags & (1 << 0)) > 0;}
-                        
--(void)setTimeout:(int)timeout
-{
-   [super setTimeout:timeout];
-                
-    if(self.timeout == 0)  { self.flags&= ~ (1 << 1) ;} else { self.flags|= (1 << 1); }
-}
-        
 @end
-
 
 @implementation TLChannelMessagesFilter
+            
+-(BOOL)isImportant_only {return (self.flags & (1 << 0)) > 0;}
+                        
+-(BOOL)isExclude_new_messages {return (self.flags & (1 << 1)) > 0;}
+            
 @end
-
+        
 @implementation TL_channelMessagesFilterEmpty
 +(TL_channelMessagesFilterEmpty*)create {
 	TL_channelMessagesFilterEmpty* obj = [[TL_channelMessagesFilterEmpty alloc] init];
@@ -21155,8 +20243,6 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
-
-        
 
         
 @end
@@ -21231,12 +20317,6 @@
 }
 
         
-            
--(BOOL)isImportant_only {return (self.flags & (1 << 0)) > 0;}
-                        
--(BOOL)isExclude_new_messages {return (self.flags & (1 << 1)) > 0;}
-            
-        
 @end
 
 @implementation TL_channelMessagesFilterCollapsed
@@ -21275,14 +20355,12 @@
 }
 
         
-
-        
 @end
-
 
 @implementation TLChannelParticipant
-@end
 
+@end
+        
 @implementation TL_channelParticipant
 +(TL_channelParticipant*)createWithUser_id:(int)user_id date:(int)date {
 	TL_channelParticipant* obj = [[TL_channelParticipant alloc] init];
@@ -21321,8 +20399,6 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
-
-        
 
         
 @end
@@ -21371,8 +20447,6 @@
 }
 
         
-
-        
 @end
 
 @implementation TL_channelParticipantModerator
@@ -21417,8 +20491,6 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
-
-        
 
         
 @end
@@ -21467,8 +20539,6 @@
 }
 
         
-
-        
 @end
 
 @implementation TL_channelParticipantKicked
@@ -21515,8 +20585,6 @@
 }
 
         
-
-        
 @end
 
 @implementation TL_channelParticipantCreator
@@ -21555,14 +20623,12 @@
 }
 
         
-
-        
 @end
-
 
 @implementation TLChannelParticipantsFilter
-@end
 
+@end
+        
 @implementation TL_channelParticipantsRecent
 +(TL_channelParticipantsRecent*)create {
 	TL_channelParticipantsRecent* obj = [[TL_channelParticipantsRecent alloc] init];
@@ -21597,8 +20663,6 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
-
-        
 
         
 @end
@@ -21639,8 +20703,6 @@
 }
 
         
-
-        
 @end
 
 @implementation TL_channelParticipantsKicked
@@ -21677,8 +20739,6 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
-
-        
 
         
 @end
@@ -21719,14 +20779,12 @@
 }
 
         
-
-        
 @end
-
 
 @implementation TLChannelParticipantRole
-@end
 
+@end
+        
 @implementation TL_channelRoleEmpty
 +(TL_channelRoleEmpty*)create {
 	TL_channelRoleEmpty* obj = [[TL_channelRoleEmpty alloc] init];
@@ -21761,8 +20819,6 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
-
-        
 
         
 @end
@@ -21803,8 +20859,6 @@
 }
 
         
-
-        
 @end
 
 @implementation TL_channelRoleEditor
@@ -21843,14 +20897,12 @@
 }
 
         
-
-        
 @end
-
 
 @implementation TLchannels_ChannelParticipants
-@end
 
+@end
+        
 @implementation TL_channels_channelParticipants
 +(TL_channels_channelParticipants*)createWithN_count:(int)n_count participants:(NSMutableArray*)participants users:(NSMutableArray*)users {
 	TL_channels_channelParticipants* obj = [[TL_channels_channelParticipants alloc] init];
@@ -21939,14 +20991,12 @@
 }
 
         
-
-        
 @end
-
 
 @implementation TLchannels_ChannelParticipant
-@end
 
+@end
+        
 @implementation TL_channels_channelParticipant
 +(TL_channels_channelParticipant*)createWithParticipant:(TLChannelParticipant*)participant users:(NSMutableArray*)users {
 	TL_channels_channelParticipant* obj = [[TL_channels_channelParticipant alloc] init];
@@ -22009,14 +21059,12 @@
 }
 
         
-
-        
 @end
-
 
 @implementation TLhelp_TermsOfService
-@end
 
+@end
+        
 @implementation TL_help_termsOfService
 +(TL_help_termsOfService*)createWithText:(NSString*)text {
 	TL_help_termsOfService* obj = [[TL_help_termsOfService alloc] init];
@@ -22053,14 +21101,12 @@
 }
 
         
-
-        
 @end
-
 
 @implementation TLProtoMessage
-@end
 
+@end
+        
 @implementation TL_proto_message
 +(TL_proto_message*)createWithMsg_id:(long)msg_id seqno:(int)seqno bytes:(int)bytes body:(TLObject*)body {
 	TL_proto_message* obj = [[TL_proto_message alloc] init];
@@ -22109,14 +21155,12 @@
 }
 
         
-
-        
 @end
-
 
 @implementation TLProtoMessageContainer
-@end
 
+@end
+        
 @implementation TL_msg_container
 +(TL_msg_container*)createWithMessages:(NSMutableArray*)messages {
 	TL_msg_container* obj = [[TL_msg_container alloc] init];
@@ -22174,14 +21218,12 @@
 }
 
         
-
-        
 @end
-
 
 @implementation TLResPQ
-@end
 
+@end
+        
 @implementation TL_req_pq
 +(TL_req_pq*)createWithNonce:(NSData*)nonce {
 	TL_req_pq* obj = [[TL_req_pq alloc] init];
@@ -22216,8 +21258,6 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
-
-        
 
         
 @end
@@ -22292,14 +21332,12 @@
 }
 
         
-
-        
 @end
-
 
 @implementation TLServer_DH_inner_data
-@end
 
+@end
+        
 @implementation TL_server_DH_inner_data
 +(TL_server_DH_inner_data*)createWithNonce:(NSData*)nonce server_nonce:(NSData*)server_nonce g:(int)g dh_prime:(NSData*)dh_prime g_a:(NSData*)g_a server_time:(int)server_time {
 	TL_server_DH_inner_data* obj = [[TL_server_DH_inner_data alloc] init];
@@ -22356,14 +21394,12 @@
 }
 
         
-
-        
 @end
-
 
 @implementation TLP_Q_inner_data
-@end
 
+@end
+        
 @implementation TL_p_q_inner_data
 +(TL_p_q_inner_data*)createWithPq:(NSData*)pq p:(NSData*)p q:(NSData*)q nonce:(NSData*)nonce server_nonce:(NSData*)server_nonce n_nonce:(NSData*)n_nonce {
 	TL_p_q_inner_data* obj = [[TL_p_q_inner_data alloc] init];
@@ -22420,14 +21456,12 @@
 }
 
         
-
-        
 @end
-
 
 @implementation TLServer_DH_Params
-@end
 
+@end
+        
 @implementation TL_req_DH_params
 +(TL_req_DH_params*)createWithNonce:(NSData*)nonce server_nonce:(NSData*)server_nonce p:(NSData*)p q:(NSData*)q public_key_fingerprint:(long)public_key_fingerprint encrypted_data:(NSData*)encrypted_data {
 	TL_req_DH_params* obj = [[TL_req_DH_params alloc] init];
@@ -22484,8 +21518,6 @@
 }
 
         
-
-        
 @end
 
 @implementation TL_server_DH_params_fail
@@ -22530,8 +21562,6 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
-
-        
 
         
 @end
@@ -22580,14 +21610,12 @@
 }
 
         
-
-        
 @end
-
 
 @implementation TLClient_DH_Inner_Data
-@end
 
+@end
+        
 @implementation TL_client_DH_inner_data
 +(TL_client_DH_inner_data*)createWithNonce:(NSData*)nonce server_nonce:(NSData*)server_nonce retry_id:(long)retry_id g_b:(NSData*)g_b {
 	TL_client_DH_inner_data* obj = [[TL_client_DH_inner_data alloc] init];
@@ -22636,14 +21664,12 @@
 }
 
         
-
-        
 @end
-
 
 @implementation TLSet_client_DH_params_answer
-@end
 
+@end
+        
 @implementation TL_set_client_DH_params
 +(TL_set_client_DH_params*)createWithNonce:(NSData*)nonce server_nonce:(NSData*)server_nonce encrypted_data:(NSData*)encrypted_data {
 	TL_set_client_DH_params* obj = [[TL_set_client_DH_params alloc] init];
@@ -22686,8 +21712,6 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
-
-        
 
         
 @end
@@ -22736,8 +21760,6 @@
 }
 
         
-
-        
 @end
 
 @implementation TL_dh_gen_retry
@@ -22782,8 +21804,6 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
-
-        
 
         
 @end
@@ -22832,14 +21852,12 @@
 }
 
         
-
-        
 @end
-
 
 @implementation TLPong
-@end
 
+@end
+        
 @implementation TL_ping
 +(TL_ping*)createWithPing_id:(long)ping_id {
 	TL_ping* obj = [[TL_ping alloc] init];
@@ -22874,8 +21892,6 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
-
-        
 
         
 @end
@@ -22920,14 +21936,12 @@
 }
 
         
-
-        
 @end
-
 
 @implementation TLBadMsgNotification
-@end
 
+@end
+        
 @implementation TL_bad_msg_notification
 +(TL_bad_msg_notification*)createWithBad_msg_id:(long)bad_msg_id bad_msg_seqno:(int)bad_msg_seqno error_code:(int)error_code {
 	TL_bad_msg_notification* obj = [[TL_bad_msg_notification alloc] init];
@@ -22970,8 +21984,6 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
-
-        
 
         
 @end
@@ -23024,14 +22036,12 @@
 }
 
         
-
-        
 @end
-
 
 @implementation TLNewSession
-@end
 
+@end
+        
 @implementation TL_new_session_created
 +(TL_new_session_created*)createWithFirst_msg_id:(long)first_msg_id unique_id:(long)unique_id server_salt:(long)server_salt {
 	TL_new_session_created* obj = [[TL_new_session_created alloc] init];
@@ -23076,14 +22086,12 @@
 }
 
         
-
-        
 @end
-
 
 @implementation TLRpcResult
-@end
 
+@end
+        
 @implementation TL_rpc_result
 +(TL_rpc_result*)createWithReq_msg_id:(long)req_msg_id result:(TLObject*)result {
 	TL_rpc_result* obj = [[TL_rpc_result alloc] init];
@@ -23124,14 +22132,12 @@
 }
 
         
-
-        
 @end
-
 
 @implementation TLRpcError
-@end
 
+@end
+        
 @implementation TL_rpc_error
 +(TL_rpc_error*)createWithError_code:(int)error_code error_message:(NSString*)error_message {
 	TL_rpc_error* obj = [[TL_rpc_error alloc] init];
@@ -23172,14 +22178,12 @@
 }
 
         
-
-        
 @end
-
 
 @implementation TLRSAPublicKey
-@end
 
+@end
+        
 @implementation TL_rsa_public_key
 +(TL_rsa_public_key*)createWithN:(NSData*)n e:(NSData*)e {
 	TL_rsa_public_key* obj = [[TL_rsa_public_key alloc] init];
@@ -23220,14 +22224,12 @@
 }
 
         
-
-        
 @end
-
 
 @implementation TLMsgsAck
-@end
 
+@end
+        
 @implementation TL_msgs_ack
 +(TL_msgs_ack*)createWithMsg_ids:(NSMutableArray*)msg_ids {
 	TL_msgs_ack* obj = [[TL_msgs_ack alloc] init];
@@ -23286,14 +22288,12 @@
 }
 
         
-
-        
 @end
-
 
 @implementation TLRpcDropAnswer
-@end
 
+@end
+        
 @implementation TL_rpc_drop_answer
 +(TL_rpc_drop_answer*)createWithReq_msg_id:(long)req_msg_id {
 	TL_rpc_drop_answer* obj = [[TL_rpc_drop_answer alloc] init];
@@ -23328,8 +22328,6 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
-
-        
 
         
 @end
@@ -23370,8 +22368,6 @@
 }
 
         
-
-        
 @end
 
 @implementation TL_rpc_answer_dropped_running
@@ -23408,8 +22404,6 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
-
-        
 
         
 @end
@@ -23458,14 +22452,12 @@
 }
 
         
-
-        
 @end
-
 
 @implementation TLFutureSalts
-@end
 
+@end
+        
 @implementation TL_get_future_salts
 +(TL_get_future_salts*)createWithNum:(int)num {
 	TL_get_future_salts* obj = [[TL_get_future_salts alloc] init];
@@ -23500,8 +22492,6 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
-
-        
 
         
 @end
@@ -23571,14 +22561,12 @@
 }
 
         
-
-        
 @end
-
 
 @implementation TLFutureSalt
-@end
 
+@end
+        
 @implementation TL_future_salt
 +(TL_future_salt*)createWithValid_since:(int)valid_since valid_until:(int)valid_until salt:(long)salt {
 	TL_future_salt* obj = [[TL_future_salt alloc] init];
@@ -23623,14 +22611,12 @@
 }
 
         
-
-        
 @end
-
 
 @implementation TLDestroySessionRes
-@end
 
+@end
+        
 @implementation TL_destroy_session
 +(TL_destroy_session*)createWithSession_id:(long)session_id {
 	TL_destroy_session* obj = [[TL_destroy_session alloc] init];
@@ -23665,8 +22651,6 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
-
-        
 
         
 @end
@@ -23707,8 +22691,6 @@
 }
 
         
-
-        
 @end
 
 @implementation TL_destroy_session_none
@@ -23747,14 +22729,12 @@
 }
 
         
-
-        
 @end
-
 
 @implementation TLProtoMessageCopy
-@end
 
+@end
+        
 @implementation TL_msg_copy
 +(TL_msg_copy*)createWithOrig_message:(TLProtoMessage*)orig_message {
 	TL_msg_copy* obj = [[TL_msg_copy alloc] init];
@@ -23789,8 +22769,6 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
-
-        
 
         
 @end
@@ -23831,14 +22809,12 @@
 }
 
         
-
-        
 @end
-
 
 @implementation TLHttpWait
-@end
 
+@end
+        
 @implementation TL_http_wait
 +(TL_http_wait*)createWithMax_delay:(int)max_delay wait_after:(int)wait_after max_wait:(int)max_wait {
 	TL_http_wait* obj = [[TL_http_wait alloc] init];
@@ -23883,14 +22859,12 @@
 }
 
         
-
-        
 @end
-
 
 @implementation TLMsgsStateReq
-@end
 
+@end
+        
 @implementation TL_msgs_state_req
 +(TL_msgs_state_req*)createWithMsg_ids:(NSMutableArray*)msg_ids {
 	TL_msgs_state_req* obj = [[TL_msgs_state_req alloc] init];
@@ -23949,14 +22923,12 @@
 }
 
         
-
-        
 @end
-
 
 @implementation TLMsgsStateInfo
-@end
 
+@end
+        
 @implementation TL_msgs_state_info
 +(TL_msgs_state_info*)createWithReq_msg_id:(long)req_msg_id info:(NSData*)info {
 	TL_msgs_state_info* obj = [[TL_msgs_state_info alloc] init];
@@ -23997,14 +22969,12 @@
 }
 
         
-
-        
 @end
-
 
 @implementation TLMsgsAllInfo
-@end
 
+@end
+        
 @implementation TL_msgs_all_info
 +(TL_msgs_all_info*)createWithMsg_ids:(NSMutableArray*)msg_ids info:(NSData*)info {
 	TL_msgs_all_info* obj = [[TL_msgs_all_info alloc] init];
@@ -24067,14 +23037,12 @@
 }
 
         
-
-        
 @end
-
 
 @implementation TLMsgDetailedInfo
-@end
 
+@end
+        
 @implementation TL_msg_detailed_info
 +(TL_msg_detailed_info*)createWithMsg_id:(long)msg_id answer_msg_id:(long)answer_msg_id bytes:(int)bytes status:(int)status {
 	TL_msg_detailed_info* obj = [[TL_msg_detailed_info alloc] init];
@@ -24123,8 +23091,6 @@
 }
 
         
-
-        
 @end
 
 @implementation TL_msg_new_detailed_info
@@ -24171,14 +23137,12 @@
 }
 
         
-
-        
 @end
-
 
 @implementation TLMsgResendReq
-@end
 
+@end
+        
 @implementation TL_msg_resend_req
 +(TL_msg_resend_req*)createWithMsg_ids:(NSMutableArray*)msg_ids {
 	TL_msg_resend_req* obj = [[TL_msg_resend_req alloc] init];
@@ -24235,8 +23199,6 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
-
-        
 
         
 @end

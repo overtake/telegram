@@ -70,41 +70,47 @@
 -(void)addAccess {
     [self.delegate behaviorDidStartRequest];
     
-    [RPCRequest sendRequest:[TLAPI_channels_editAdmin createWithChannel:self.chat.inputPeer user_id:[self.user inputUser] role: self.action.result.singleObject] successHandler:^(id request, id response) {
-        
-        
-        [RPCRequest sendRequest:[TLAPI_channels_getParticipants createWithChannel:self.chat.inputPeer filter:[TL_channelParticipantsAdmins create] offset:0 limit:100] successHandler:^(id request, TL_channels_channelParticipants *response) {
-            
-            [SharedManager proccessGlobalResponse:response];
-            
-            ComposeAction *action = [[ComposeAction alloc] initWithBehaviorClass:[ComposeActionBehavior class] filter:@[] object:self.chat];
-            
-            action.result = [[ComposeResult alloc] initWithMultiObjects:response.participants];
+    confirm(appName(), NSLocalizedString(@"Chat.ToggleUserToAdminConfirm", nil), ^{
+        [RPCRequest sendRequest:[TLAPI_channels_editAdmin createWithChannel:self.chat.inputPeer user_id:[self.user inputUser] role: self.action.result.singleObject] successHandler:^(id request, id response) {
             
             
-            ComposeManagmentViewController *viewController =  [[ComposeManagmentViewController alloc] initWithFrame:self.action.currentViewController.view.bounds];
+            [RPCRequest sendRequest:[TLAPI_channels_getParticipants createWithChannel:self.chat.inputPeer filter:[TL_channelParticipantsAdmins create] offset:0 limit:100] successHandler:^(id request, TL_channels_channelParticipants *response) {
+                
+                [SharedManager proccessGlobalResponse:response];
+                
+                [[FullChatManager sharedManager] performLoad:self.chat.n_id force:YES callback:^(TLChatFull *fullChat) {
+                    ComposeAction *action = [[ComposeAction alloc] initWithBehaviorClass:[ComposeActionBehavior class] filter:@[] object:self.chat];
+                    
+                    action.result = [[ComposeResult alloc] initWithMultiObjects:response.participants];
+                    
+                    ComposeManagmentViewController *viewController =  [[ComposeManagmentViewController alloc] initWithFrame:self.action.currentViewController.view.bounds];
+                    
+                    [viewController setAction:self.action];
+                    
+                    [self.action.currentViewController.navigationViewController gotoViewController:viewController];
+                    
+                    [self.delegate behaviorDidEndRequest:response];
+                }];
+                
+                
+                
+            } errorHandler:^(id request, RpcError *error) {
+                [self.delegate behaviorDidEndRequest:nil];
+            }];
             
-            [viewController setAction:self.action];
-            
-            [self.action.currentViewController.navigationViewController gotoViewController:viewController];
             
             [self.delegate behaviorDidEndRequest:response];
             
         } errorHandler:^(id request, RpcError *error) {
             [self.delegate behaviorDidEndRequest:nil];
+            
+            if(error.error_code == 400) {
+                alert(appName(), NSLocalizedString(error.error_msg, nil));
+            }
+            
         }];
-        
-        
-        [self.delegate behaviorDidEndRequest:response];
-        
-    } errorHandler:^(id request, RpcError *error) {
-        [self.delegate behaviorDidEndRequest:nil];
-        
-        if(error.error_code == 400) {
-            alert(appName(), NSLocalizedString(error.error_msg, nil));
-        }
-        
-    }];
+    }, nil);
+    
 }
 
 

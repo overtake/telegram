@@ -278,15 +278,7 @@ static NSTextAttachment *channelVerifySelectedAttachment() {
 
 
 
--(BOOL)isAdmin {
-    return self.flags & (1 << 0);
-}
--(BOOL)isBroadcast {
-    return self.flags & (1 << 5) || self.type != TLChatTypeNormal;
-}
--(BOOL)isPublic {
-    return self.flags & (1 << 6);
-}
+
 
 -(BOOL)left {
     return self.flags & (1 << 2);
@@ -296,9 +288,6 @@ static NSTextAttachment *channelVerifySelectedAttachment() {
     return self.flags & (1 << 1);
 }
 
--(BOOL)isPublisher {
-    return self.flags & (1 << 3);
-}
 
 -(BOOL)isModerator {
     return self.flags & (1 << 4);
@@ -314,7 +303,7 @@ static NSTextAttachment *channelVerifySelectedAttachment() {
 }
 
 -(BOOL)isManager {
-    return [self isAdmin] || [self isPublisher] || [self isModerator];
+    return [self isAdmin] || [self isEditor] || [self isModerator] || [self isCreator];
 }
 
 -(NSString *)usernameLink {

@@ -138,6 +138,11 @@
       </ContextState>
       <ContextState
          contextName = "-[MessagesViewController setCurrentConversation:withMessageJump:force:]:MessagesViewController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "dialog.last_marked_message">
+            </PersistentString>
+         </PersistentStrings>
       </ContextState>
       <ContextState
          contextName = "-[TGProccessUpdates addStatefullUpdate:seq:pts:date:qts:pts_count:]:TGProccessUpdates.m">
@@ -340,6 +345,14 @@
          <PersistentStrings>
             <PersistentString
                value = "historyFilter">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[DialogsManager updateConversation:withLastMessage:update_real_date:]:DialogsManager.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "message.chat">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -1843,6 +1856,14 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "__36-[MessagesBottomView secretInfoView]_block_invoke:MessagesBottomView.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "weakSelf.dialog">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "__42-[NewContactsManager remoteCheckContacts:]_block_invoke_2207:NewContactsManager.m">
          <PersistentStrings>
             <PersistentString
@@ -2354,6 +2375,9 @@
             <PersistentString
                value = "_chat.isManager">
             </PersistentString>
+            <PersistentString
+               value = "_chat.isCreator">
+            </PersistentString>
          </PersistentStrings>
       </ContextState>
       <ContextState
@@ -2704,6 +2728,14 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "-[TGCTextView open_link:itsReal:]:TGCTextView.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "item.message">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "-[TGDownloadOperation load:]:TGDownloadOperation.m">
       </ContextState>
       <ContextState
@@ -2743,6 +2775,9 @@
                value = "self.type">
             </PersistentString>
          </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[TL_conversation chat]:TL_conversation.m">
       </ContextState>
       <ContextState
          contextName = "main:main.m">
@@ -4013,6 +4048,14 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "-[MessagesViewController defHFClass]:MessagesViewController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.conversation.chat.type ">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "__59-[SharedLinksHistoryFilter remoteRequest:peer_id:callback:]_block_invoke:SharedLinksHistoryFilter.m">
       </ContextState>
       <ContextState
@@ -4231,6 +4274,9 @@
          contextName = "-[TGProccessUpdates processUpdates:stateSeq:]:TGProccessUpdates.m">
       </ContextState>
       <ContextState
+         contextName = "-[ComposeViewController viewWillAppear:]:ComposeViewController.m">
+      </ContextState>
+      <ContextState
          contextName = "__63-[TGUpdateChannels failUpdateWithChannelId:limit:withCallback:]_block_invoke_2:TGUpdateChannels.m">
       </ContextState>
       <ContextState
@@ -4276,6 +4322,20 @@
       </ContextState>
       <ContextState
          contextName = "__join_group_by_hash_block_invoke_3:FileUtils.m">
+      </ContextState>
+      <ContextState
+         contextName = "-[ComposeViewController updateActionNavigation]:ComposeViewController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.action.behavior.doneTitle">
+            </PersistentString>
+            <PersistentString
+               value = "self.doneButton">
+            </PersistentString>
+            <PersistentString
+               value = "self.action.behavior">
+            </PersistentString>
+         </PersistentStrings>
       </ContextState>
       <ContextState
          contextName = "__28-[TGDownloadOperation load:]_block_invoke169:TGDownloadOperation.m">
@@ -4449,6 +4509,9 @@
             <PersistentString
                value = "self.chat">
             </PersistentString>
+            <PersistentString
+               value = "self.chat.isKicked">
+            </PersistentString>
          </PersistentStrings>
       </ContextState>
       <ContextState
@@ -4587,6 +4650,11 @@
       </ContextState>
       <ContextState
          contextName = "+[MessagesUtils serviceAttributedMessage:forAction:]:MessagesUtils.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "action.users">
+            </PersistentString>
+         </PersistentStrings>
       </ContextState>
       <ContextState
          contextName = "__35-[TGPVUserBehavior convertObjects:]_block_invoke:TGPVUserBehavior.m">

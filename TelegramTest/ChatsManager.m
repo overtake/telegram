@@ -68,8 +68,10 @@
                     }
                     
                     if(currentChat.flags != newChat.flags) {
-                        currentChat.flags = newChat.flags;
-                        isNeedUpdateTypeNotification = YES;
+                        if(!(currentChat.type == TLChatTypeNormal && newChat.type == TLChatTypeForbidden)) {
+                            currentChat.flags = newChat.flags;
+                            isNeedUpdateTypeNotification = YES;
+                        }
                     }
                     
                     if((currentChat.migrated_to || newChat.migrated_to) && (![currentChat.migrated_to isKindOfClass:newChat.migrated_to.class] || currentChat.migrated_to.channel_id !=  newChat.migrated_to.channel_id)) {

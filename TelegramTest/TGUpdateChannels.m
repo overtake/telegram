@@ -458,11 +458,7 @@
         
         if(chat.type == TLChatTypeForbidden) {
             if(channel != nil) {
-                [[DialogsManager sharedManager] deleteDialog:channel completeHandler:^{
-                    if([Telegram conversation].peer_id == channel.peer_id) {
-                        [[Telegram rightViewController] showNotSelectedDialog];
-                    }
-                }];
+                
             }
             
             return;

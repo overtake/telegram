@@ -232,6 +232,7 @@ static NSImage *playImage() {
         [_captionView setFrame:NSMakeRect(0, NSHeight(self.containerView.frame) - item.captionSize.height , item.videoSize.width, item.captionSize.height)];
         
         [_captionView setAttributedString:item.caption fieldSize:item.captionSize];
+        [_captionView setItem:item];
         
     } else {
         [self deallocCaptionTextView];

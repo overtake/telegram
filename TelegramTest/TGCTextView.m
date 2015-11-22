@@ -9,6 +9,7 @@
 #import "TGCTextView.h"
 #import "NSString+Extended.h"
 #import "TGMultipleSelectTextView.h"
+#import "MessageTableItemText.h"
 @interface DrawsRect : NSObject
 
 @property(nonatomic,assign) CGColorRef color;

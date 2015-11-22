@@ -223,7 +223,6 @@
         
         if([error.error_msg isEqualToString:@"SESSION_PASSWORD_NEEDED"]) {
             
-            
             return;
         }
         

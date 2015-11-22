@@ -967,9 +967,8 @@ static RBLPopover *popover;
             } until:weakSelf.dialog.isMute ? 0 : 365*24*60*60];
             
             
-        } else if(weakSelf.dialog.type == DialogTypeChannel && (weakSelf.dialog.chat.left || weakSelf.dialog.chat.isKicked)) {
+        } else if(weakSelf.dialog.type == DialogTypeChannel && (weakSelf.dialog.chat.left || weakSelf.dialog.chat.isKicked || weakSelf.dialog.chat.type == TLChatTypeForbidden)) {
             [[DialogsManager sharedManager] deleteDialog:weakSelf.dialog completeHandler:nil];
-            [[Telegram rightViewController] showNotSelectedDialog];
             
         } else if(!weakSelf.dialog.canSendMessage && weakSelf.dialog.user.isBot && _onClickToLockedView == nil) {
             

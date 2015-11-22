@@ -73,6 +73,9 @@
         
         [conversations enumerateObjectsUsingBlock:^(TL_conversation *obj, NSUInteger idx, BOOL *stop) {
             
+            if(obj.type == DialogTypeChat && obj.chat.isDeactivated)
+                return;
+            
             TGRecentSearchRowItem *item = [[TGRecentSearchRowItem alloc] initWithObject:obj];
             
             [self addItem:item tableRedraw:NO];

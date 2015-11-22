@@ -48,19 +48,24 @@
     
     TLChat *chat = members[0];
     
-    [RPCRequest sendRequest:[TLAPI_messages_addChatUser createWithChat_id:chat.n_id user_id:user.inputUser fwd_limit:100] successHandler:^(RPCRequest *request, id response) {
+    id request = [TLAPI_messages_addChatUser createWithChat_id:chat.n_id user_id:user.inputUser fwd_limit:100];
+    
+    if(chat.isChannel) {
+        request = [TLAPI_channels_inviteToChannel createWithChannel:chat.inputPeer users:[@[user.inputUser] mutableCopy]];
+    }
+    
+    [RPCRequest sendRequest:request successHandler:^(RPCRequest *request, id response) {
         
-        [chat.chatFull.participants.participants addObject:[TL_chatParticipant createWithUser_id:user.n_id inviter_id:[UsersManager currentUserId] date:[[MTNetwork instance] getTime]]];
+        if(!chat.isChannel) {
+            [chat.chatFull.participants.participants addObject:[TL_chatParticipant createWithUser_id:user.n_id inviter_id:[UsersManager currentUserId] date:[[MTNetwork instance] getTime]]];
             [Notification perform:CHAT_STATUS data:@{KEY_CHAT_ID:@(chat.n_id)}];
+        }
         
         [self.delegate behaviorDidEndRequest:response];
             
         dispatch_after_seconds(0.2, ^{
             
-            
-         
-            [self.action.currentViewController.navigationViewController gotoViewController:self.action.currentViewController.messagesViewController];
-            
+            [self.action.currentViewController.navigationViewController showMessagesViewController:chat.dialog];
             
             if(self.action.reservedObject1) {
                 [self.action.currentViewController.messagesViewController showBotStartButton:self.action.reservedObject1[@"startgroup"] bot:user];

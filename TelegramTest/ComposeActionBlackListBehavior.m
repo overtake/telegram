@@ -68,7 +68,11 @@
         [RPCRequest sendRequest:[TLAPI_channels_kickFromChannel createWithChannel:self.chat.inputPeer user_id:user.inputUser kicked:NO] successHandler:^(id request, id response) {
             
             if(users.count == 0) {
-                [self.delegate behaviorDidEndRequest:nil];
+                
+                [[FullChatManager sharedManager] performLoad:self.chat.n_id force:YES callback:^(TLChatFull *fullChat) {
+                    [self.delegate behaviorDidEndRequest:nil];
+                }];
+                
             } else {
                 [self unbanUsers:users];
             }

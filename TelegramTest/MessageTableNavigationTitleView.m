@@ -128,7 +128,7 @@
     [_discussionSwitch setOn:enable];
     _discussForceSwitched = force;
     
-    [_discussionSwitch setHidden:(_dialog.type != DialogTypeChannel || (_dialog.chat.isBroadcast &&  !_discussionSwitch.isOn) || _dialog.chat.isMegagroup)];
+    [_discussionSwitch setHidden:(_dialog.type != DialogTypeChannel || _dialog.chat.type == TLChatTypeForbidden || (_dialog.chat.isBroadcast &&  !_discussionSwitch.isOn) || _dialog.chat.isMegagroup)];
     
     [self.nameTextField update];
     [self.statusTextField update];

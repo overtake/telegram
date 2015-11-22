@@ -659,6 +659,11 @@ static const int navigationOffset = 48;
             
             [(BroadcastInfoViewController *)infoViewController setBroadcast:conversation.broadcast];
         case DialogTypeChannel:
+            
+            
+            if(conversation.chat.type == TLChatTypeForbidden)
+                return;
+            
             infoViewController = [[TGModernChannelInfoViewController alloc] initWithFrame:NSZeroRect];
             
             [(TGModernChannelInfoViewController *)infoViewController setChat:conversation.chat];

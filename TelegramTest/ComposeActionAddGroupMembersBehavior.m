@@ -109,11 +109,12 @@
         if(members.count > 0) {
             [self addMembersToChat:members toChatId:chatId];
         } else {
-            [self.delegate behaviorDidEndRequest:response];
             
-            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            [[FullChatManager sharedManager] performLoad:chatId force:YES callback:^(TLChatFull *fullChat) {
+                [self.delegate behaviorDidEndRequest:response];
                 [self.action.currentViewController.navigationViewController goBackWithAnimation:YES];
-            });
+            }];
+            
             
         }
         

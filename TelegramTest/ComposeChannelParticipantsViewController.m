@@ -14,9 +14,49 @@
 #import "ComposeActionAddGroupMembersBehavior.h"
 #import "TGUserContainerView.h"
 #import "TGModernUserViewController.h"
+
+@interface ComposeChannelParticipantsViewControllerView : TMView
+@property (nonatomic,strong) TMTextField *textField;
+@end
+
+@implementation ComposeChannelParticipantsViewControllerView
+
+
+-(instancetype)initWithFrame:(NSRect)frameRect {
+    if(self = [super initWithFrame:frameRect]) {
+        _textField = [TMTextField defaultTextField];
+        
+        [_textField setFont:TGSystemFont(14)];
+        [_textField setAlignment:NSCenterTextAlignment];
+        [_textField setTextColor:GRAY_TEXT_COLOR];
+        [[_textField cell] setLineBreakMode:NSLineBreakByWordWrapping];
+        [self addSubview:_textField];
+        
+        
+        [_textField setHidden:YES];
+    }
+    
+    return self;
+}
+
+-(void)setFrameSize:(NSSize)newSize {
+    [super setFrameSize:newSize];
+    
+    NSSize size = [_textField.attributedStringValue sizeForTextFieldForWidth:newSize.width - 60];
+    
+    [_textField setFrame:NSMakeRect(30, 0, size.width, size.height)];
+    
+    [_textField setCenteredYByView:self];
+    
+}
+
+@end
+
 @interface ComposeChannelParticipantsViewController ()<ComposeBehaviorDelegate>
 @property (nonatomic,strong) TGSettingsTableView *tableView;
 @property (nonatomic,strong) RPCRequest *request;
+
+
 
 @property (nonatomic,assign) int offset;
 @end
@@ -24,11 +64,18 @@
 @implementation ComposeChannelParticipantsViewController
 
 -(void)loadView {
+   
+    ComposeChannelParticipantsViewControllerView *mview = [[ComposeChannelParticipantsViewControllerView alloc] initWithFrame:self.frameInit];
+    
+    self.view = mview;
+    
     [super loadView];
     
     _tableView = [[TGSettingsTableView alloc] initWithFrame:self.view.bounds];
     
     [self.view addSubview:_tableView.containerView];
+    
+    [mview.textField setStringValue:NSLocalizedString(@"Compose.ChannelEmptyBlackList", nil)];
     
 }
 
@@ -90,7 +137,7 @@
             [ASQueue dispatchOnMainQueue:^{
                 [self setLoading:NO];
             }];
-            
+            [self updateText];
             return;
         }
         
@@ -115,7 +162,7 @@
                 
                 TGUserContainerRowItem *userItem = (TGUserContainerRowItem *) item;
                 
-                return @(userItem.user.n_id != [UsersManager currentUserId] && ![obj isKindOfClass:[TL_channelParticipantCreator class]]  && ![obj isKindOfClass:[TL_channelParticipantModerator class]] && ![obj isKindOfClass:[TL_channelParticipantEditor class]]);
+                return @(userItem.user.n_id != [UsersManager currentUserId] && (channel.isCreator  || (channel.isManager && (![obj isKindOfClass:[TL_channelParticipantCreator class]]  && ![obj isKindOfClass:[TL_channelParticipantModerator class]] && ![obj isKindOfClass:[TL_channelParticipantEditor class]])) ));
                 
             }];
             
@@ -148,6 +195,8 @@
             [_tableView reloadData];
             
             [self setLoading:NO];
+            
+            [self updateText];
         }];
         
         
@@ -161,7 +210,17 @@
     
 }
 
+-(void)updateText {
+    ComposeChannelParticipantsViewControllerView *view = (ComposeChannelParticipantsViewControllerView *) self.view;
+    
+    [_tableView.containerView setHidden:_tableView.count == 1];
+    [view.textField setHidden:_tableView.count > 1];
+    
+    [self.doneButton setHidden:_tableView.count == 1];
+}
+
 -(void)kickParticipant:(TGUserContainerRowItem *)participant {
+    
     
     _tableView.defaultAnimation = NSTableViewAnimationEffectFade;
     
@@ -171,16 +230,23 @@
     
     TLChat *chat = self.action.object;
     
-    [RPCRequest sendRequest:[TLAPI_channels_kickFromChannel createWithChannel:chat.inputPeer user_id:participant.user.inputUser kicked:[self.action.behavior isKindOfClass:[ComposeActionChannelMembersBehavior class]]] successHandler:^(id request, id response) {
+    
+    [self updateText];
+    
+    BOOL kick = [self.action.behavior isKindOfClass:[ComposeActionChannelMembersBehavior class]];
+    
+    
+    [RPCRequest sendRequest:[TLAPI_channels_kickFromChannel createWithChannel:chat.inputPeer user_id:participant.user.inputUser kicked:kick] successHandler:^(id request, id response) {
         
-       [[FullChatManager sharedManager] loadIfNeed:[chat n_id] force:YES];
+        chat.chatFull.participants_count+= kick ? -1 : 1;
+        chat.chatFull.kicked_count+= !kick ? -1 : 1;
         
-       [[Storage manager] insertFullChat:chat.chatFull completeHandler:nil];
+        [[FullChatManager sharedManager] loadIfNeed:[chat n_id] force:YES];
+        
+        [[Storage manager] insertFullChat:chat.chatFull completeHandler:nil];
         
         
     } errorHandler:^(id request, RpcError *error) {
-        
-        
         
     }];
     
@@ -202,7 +268,7 @@
     
     [_tableView addItem:[[TGGeneralRowItem alloc] initWithHeight:20] tableRedraw:YES];
     
-    if([self.action.behavior isKindOfClass:[ComposeActionChannelMembersBehavior class]] && (chat.isAdmin || chat.isManager)) {
+    if([self.action.behavior isKindOfClass:[ComposeActionChannelMembersBehavior class]] && (chat.isManager)) {
         
         if(chat.chatFull.participants_count < maxChatUsers()) {
             GeneralSettingsRowItem *addMembersItem = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeNone callback:^(TGGeneralRowItem *item) {
@@ -229,7 +295,7 @@
         }
         
         
-        if(chat.username.length == 0 && chat.isAdmin) {
+        if(chat.username.length == 0 && chat.isCreator) {
             GeneralSettingsRowItem *inviteViaLink = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeNone callback:^(TGGeneralRowItem *item) {
                 
                 ChatExportLinkViewController *export = [[ChatExportLinkViewController alloc] initWithFrame:NSZeroRect];
@@ -243,10 +309,16 @@
             inviteViaLink.textColor = BLUE_UI_COLOR;
             [_tableView addItem:inviteViaLink tableRedraw:YES];
         }
-        GeneralSettingsBlockHeaderItem *description = [[GeneralSettingsBlockHeaderItem alloc] initWithString:NSLocalizedString(@"Modern.Channel.ChannelMembersDescription", nil) height:42 flipped:YES];
         
-        [_tableView addItem:description tableRedraw:YES];
+        if(!chat.isMegagroup) {
+            GeneralSettingsBlockHeaderItem *description = [[GeneralSettingsBlockHeaderItem alloc] initWithString:NSLocalizedString(@"Modern.Channel.ChannelMembersDescription", nil) height:42 flipped:YES];
+            
+            description.autoHeight = YES;
+            
+            [_tableView addItem:description tableRedraw:YES];
+        }
         
+         [_tableView addItem:[[TGGeneralRowItem alloc] initWithHeight:20] tableRedraw:YES];
         
     }
     

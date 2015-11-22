@@ -253,8 +253,7 @@
 }
 
 -(Class)defHFClass {
-    
-    return self.conversation.type == DialogTypeChannel ? (self.conversation.chat.isMegagroup ? [ChannelFilter class] : [ChannelImportantFilter class]) : [HistoryFilter class];
+    return self.conversation.type == DialogTypeChannel ? (self.conversation.chat.isMegagroup || self.conversation.chat.type == TLChatTypeForbidden ? [ChannelFilter class] : [ChannelImportantFilter class]) : [HistoryFilter class];
 }
 
 
@@ -810,7 +809,7 @@ static NSTextAttachment *headerMediaIcon() {
         
         [ASQueue dispatchOnStageQueue:^{
             
-            StartBotSenderItem *sender = [[StartBotSenderItem alloc] initWithMessage:conversation.type == DialogTypeChat ? [NSString stringWithFormat:@"/start@%@",bot.username] : @"/start" forConversation:conversation bot:bot startParam:startParam];
+            StartBotSenderItem *sender = [[StartBotSenderItem alloc] initWithMessage:conversation.type == DialogTypeChat || conversation.type == DialogTypeChannel ? [NSString stringWithFormat:@"/start@%@",bot.username] : @"/start" forConversation:conversation bot:bot startParam:startParam];
             sender.tableItem = [[weakSelf messageTableItemsFromMessages:@[sender.message]] lastObject];
             [weakSelf.historyController addItem:sender.tableItem conversation:conversation callback:nil sentControllerCallback:nil];
             
@@ -1112,7 +1111,12 @@ static NSTextAttachment *headerMediaIcon() {
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-//    
+    
+    if(self.conversation.type == DialogTypeChannel) {
+        [[FullChatManager sharedManager] performLoad:self.conversation.chat.n_id force:YES callback:nil];
+    }
+    
+//
     [self.table reloadData];
     
     [self setState:self.state];
@@ -2043,7 +2047,7 @@ static NSTextAttachment *headerMediaIcon() {
     if(conversation.type == DialogTypeChannel) {
         [messages enumerateObjectsUsingBlock:^(TL_localMessage *obj, NSUInteger idx, BOOL *stop) {
             
-            accept = obj.chat.isAdmin || (obj.chat.isPublisher && (obj.from_id != 0 || obj.n_out)) || (obj.chat.isModerator && obj.from_id != 0) || obj.n_out;
+            accept = obj.chat.isAdmin || (obj.chat.isEditor && (obj.from_id != 0 || obj.n_out)) || (obj.chat.isModerator && obj.from_id != 0) || obj.n_out;
             
             if(!accept) {
                 *stop = YES;
@@ -2238,12 +2242,16 @@ static NSTextAttachment *headerMediaIcon() {
                 
                 if((flags & ShowMessageTypeUnreadMark) > 0) {
                     
-                    _unreadMark = [[MessageTableItemUnreadMark alloc] initWithCount:0 type:RemoveUnreadMarkAfterSecondsType];
+                    NSUInteger index = [result indexOfObject:importantItem];
                     
-                    NSMutableArray *copy = [result mutableCopy];
-                    [copy insertObject:_unreadMark atIndex:[result indexOfObject:importantItem]];
-                    
-                    result = copy;
+                    if(index != 0 && index != NSNotFound) {
+                        _unreadMark = [[MessageTableItemUnreadMark alloc] initWithCount:0 type:RemoveUnreadMarkAfterSecondsType];
+                        
+                        NSMutableArray *copy = [result mutableCopy];
+                        [copy insertObject:_unreadMark atIndex:[result indexOfObject:importantItem]];
+                        
+                        result = copy;
+                    }
                     
                 }
                 
@@ -2398,7 +2406,7 @@ static NSTextAttachment *headerMediaIcon() {
         
         if(message != nil) {
             [self showMessage:message fromMsg:nil flags:ShowMessageTypeSearch];
-        } else if(dialog.last_marked_message != -1 &&dialog.last_marked_message < dialog.universalTopMessage) {
+        } else if(dialog.last_marked_message != -1 && dialog.last_marked_message < dialog.universalTopMessage && dialog.universalTopMessage < TGMINFAKEID) {
             
             TL_localMessage *msg =  [[TL_localMessage alloc] init];
             
@@ -2421,10 +2429,6 @@ static NSTextAttachment *headerMediaIcon() {
             [self.historyController startChannelPolling];
            
         }
-        if(dialog.type == DialogTypeChannel) {
-            [[FullChatManager sharedManager] performLoad:dialog.chat.n_id force:YES callback:nil];
-        }
-    
     }
 }
 

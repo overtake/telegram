@@ -60,7 +60,7 @@
     
     TLChat *chat = self.action.object;
     
-    if(chat.isAdmin) {
+    if(chat.isCreator) {
         GeneralSettingsRowItem *addModerator = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeNext callback:^(TGGeneralRowItem *item) {
             
             
@@ -79,14 +79,10 @@
         GeneralSettingsBlockHeaderItem *description = [[GeneralSettingsBlockHeaderItem alloc] initWithString:NSLocalizedString(@"Channel.AddModeratorDescription", nil) height:62 flipped:YES];
         
         [_tableView addItem:description tableRedraw:NO];
-        
-        addModerator.xOffset = 30;
-        description.xOffset = 30;
+
     } else {
         GeneralSettingsBlockHeaderItem *description = [[GeneralSettingsBlockHeaderItem alloc] initWithString:@"" height:30 flipped:YES];
         
-        
-        description.xOffset = 30;
         [_tableView addItem:description tableRedraw:NO];
     }
     
@@ -117,7 +113,7 @@
         item.stateCallback = ^{
             
             if(![obj isKindOfClass:[TL_channelParticipantCreator class]]) {
-                if((chat.isBroadcast || chat.isMegagroup) && chat.isAdmin) {
+                if((chat.isBroadcast || chat.isMegagroup) && chat.isCreator) {
                     
                     confirm(NSLocalizedString(@"Channel.DismissModerator", nil), NSLocalizedString(@"Channel.DismissModeratorConfirm", nil), ^{
                         

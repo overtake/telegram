@@ -108,7 +108,7 @@
         return  !self.user.isBot || !self.user.isBlocked;
     
     if(self.type == DialogTypeChannel)
-        return ((!self.chat.isBroadcast && !self.isInvisibleChannel) || self.chat.isAdmin || self.chat.isPublisher) && !self.chat.isKicked && !self.chat.left && self.chat.type == TLChatTypeNormal;
+        return ((!self.chat.isBroadcast && !self.isInvisibleChannel) || self.chat.isAdmin || self.chat.isEditor) && !self.chat.isKicked && !self.chat.left && self.chat.type == TLChatTypeNormal;
     
     return YES;
 }
@@ -151,7 +151,7 @@
                 return NSLocalizedString(@"Conversation.Action.JoinToChannel", nil);
             }
             
-            if(self.chat.isKicked || self.chat.left || self.type == TLChatTypeForbidden) {
+            if(self.chat.isKicked || self.chat.left || self.chat.type == TLChatTypeForbidden) {
                 return NSLocalizedString(@"Conversation.DeleteAndExit", nil);
             }
             
@@ -166,7 +166,7 @@
             return NSLocalizedString(@"Conversation.Action.ChatDeactivated", nil);
         }
         
-        if(self.chat.isKicked || self.type == TLChatTypeForbidden) {
+        if(self.chat.isKicked || self.chat.type == TLChatTypeForbidden) {
             return NSLocalizedString(@"Conversation.Action.YouKickedGroup", nil);
         }
         
@@ -282,7 +282,7 @@
 }
 
 - (void)muteOrUnmute:(dispatch_block_t)completeHandler until:(int)until {
-    [self mute:completeHandler until:until];
+    [self mute:completeHandler until:self.isMute ? 0 : 365*24*60*60];
 }
 
 -(int)peer_id {
@@ -426,7 +426,7 @@ static void *kType;
 
 
 -(BOOL)canSendChannelMessageAsAdmin {
-    return self.type == DialogTypeChannel && !self.chat.isMegagroup && (self.chat.isAdmin || self.chat.isPublisher);
+    return self.type == DialogTypeChannel && !self.chat.isMegagroup && (self.chat.isAdmin || self.chat.isEditor);
 }
 
 -(BOOL)canSendChannelMessageAsUser {

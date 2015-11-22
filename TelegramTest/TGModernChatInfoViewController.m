@@ -169,6 +169,8 @@
     
     self.action.editable = NO;
     
+    [self updateActionNavigation];
+    
     [self configure];
     
     [self drawParticipants];

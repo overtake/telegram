@@ -510,7 +510,7 @@
 - (void)drawRect:(NSRect)dirtyRect {
 	[super drawRect:dirtyRect];
 	
-    if(self.controller.chat.dialog.type == DialogTypeChannel && self.controller.chat.dialog.chat.isVerify) {
+    if(self.controller.chat.dialog.type == DialogTypeChannel && self.controller.chat.dialog.chat.isVerified) {
         [image_Verify() drawInRect:NSMakeRect(NSMaxX(self.nameTextField.frame),NSMinY(self.nameTextField.frame) +1 , image_Verify().size.width, image_Verify().size.height) fromRect:NSZeroRect operation:NSCompositeHighlight fraction:1];
     }
 }

@@ -249,6 +249,8 @@ NSImage *fireImage() {
         
         [_captionView setAttributedString:item.caption fieldSize:item.captionSize];
         
+        [_captionView setItem:item];
+        
     } else {
         [self deallocCaptionTextView];
     }

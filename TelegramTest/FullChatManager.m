@@ -186,7 +186,7 @@
     TLChatFull *fullChat = [self find:chat_id];
     
     if(fullChat ) {
-        if(callback != nil)
+        if(callback != nil && !force)
             callback(fullChat);
         if( (fullChat.lastUpdateTime + 300 > [[MTNetwork instance] getTime]) && !force) {
                 return;
@@ -252,7 +252,7 @@
         ELog(@"fullchat loading error %@", error.error_msg);
         [ASQueue dispatchOnMainQueue:^{
             if(callback)
-                callback(nil);
+                callback(fullChat);
         }];
     } timeout:0 queue:self.queue.nativeQueue];
     
@@ -364,7 +364,7 @@
     
     TLChatFull *chatFull = [self find:chat_id];
     
-    if(chatFull.chat.isMegagroup) {
+    if(chatFull.chat.isMegagroup && chatFull.chat.type != TLChatTypeForbidden) {
         if(!chatFull.participants)
             chatFull.participants = [TL_chatParticipants createWithChat_id:chat_id participants:[NSMutableArray array] version:0];
         

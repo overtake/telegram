@@ -170,7 +170,7 @@
         
         [user setStateback:^id(TGGeneralRowItem *item) {
             
-            BOOL canRemoveUser = ((obj.user_id != [UsersManager currentUserId] && (self.chat.isAdmin || self.chat.isManager)) && ![obj isKindOfClass:[TL_channelParticipantCreator class]]);
+            BOOL canRemoveUser = ((obj.user_id != [UsersManager currentUserId] && (self.chat.isCreator || self.chat.isManager)) && ![obj isKindOfClass:[TL_channelParticipantCreator class]]);
             
             return @(canRemoveUser);
             
@@ -238,7 +238,6 @@
         
         [RPCRequest sendRequest:[TLAPI_channels_kickFromChannel createWithChannel:self.chat.inputPeer user_id:participant.user.inputUser kicked:YES] successHandler:^(id request, id response) {
             
-            
         } errorHandler:^(id request, RpcError *error) {
             
             [_tableView insert:participant atIndex:idx tableRedraw:YES];
@@ -252,7 +251,7 @@
 
 -(void)configure {
     
-    [self.doneButton setHidden:!_chat.isManager && !_chat.isAdmin];
+    [self.doneButton setHidden:!_chat.isManager && !_chat.isCreator];
     
     [_tableView removeAllItems:YES];
  
@@ -293,7 +292,7 @@
         }
         
         
-        if(_chat.isManager || _chat.isAdmin) {
+        if(_chat.isManager || _chat.isCreator) {
             adminsItem = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeNext callback:^(TGGeneralRowItem *item) {
                 
                 ComposeManagmentViewController *viewController = [[ComposeManagmentViewController alloc] initWithFrame:NSZeroRect];
@@ -425,7 +424,7 @@
         [_tableView addItem:[[TGGeneralRowItem alloc] initWithHeight:20] tableRedraw:YES];
        
         
-        if(_chat.isAdmin) {
+        if(_chat.isCreator) {
             GeneralSettingsRowItem *deleteChannelItem = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeNone callback:^(TGGeneralRowItem *item) {
                 
                 [self.navigationViewController.messagesViewController deleteDialog:_conversation];
@@ -440,7 +439,7 @@
         
     }
     
-    if(!_chat.isAdmin && !_chat.isMegagroup) {
+    if(!_chat.isCreator && !_chat.isMegagroup) {
         
         [_tableView addItem:[[TGGeneralRowItem alloc] initWithHeight:20] tableRedraw:YES];
         
@@ -461,16 +460,19 @@
         [_tableView addItem:reportItem tableRedraw:YES];
         
         
-        GeneralSettingsRowItem *deleteChannelItem = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeNone callback:^(TGGeneralRowItem *item) {
+        if(!_conversation.invisibleChannel) {
+            GeneralSettingsRowItem *deleteChannelItem = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeNone callback:^(TGGeneralRowItem *item) {
+                
+                [self.navigationViewController.messagesViewController deleteDialog:_conversation];
+                
+                
+            } description:NSLocalizedString(@"Profile.LeaveChannel", nil) height:42 stateback:nil];
             
-            [self.navigationViewController.messagesViewController deleteDialog:_conversation];
+            deleteChannelItem.textColor = [NSColor redColor];
             
-            
-        } description:NSLocalizedString(@"Profile.LeaveChannel", nil) height:42 stateback:nil];
+            [_tableView addItem:deleteChannelItem tableRedraw:YES];
+        }
         
-        deleteChannelItem.textColor = [NSColor redColor];
-        
-        [_tableView addItem:deleteChannelItem tableRedraw:YES];
 
     }
     

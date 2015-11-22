@@ -504,7 +504,8 @@ static TGModalSetCaptionView *setCaptionView;
 }
 
 - (void)loadView {
-    self.view = [[TMView alloc] initWithFrame: self.frameInit];
+    if(!_view)
+        self.view = [[TMView alloc] initWithFrame: self.frameInit];
 
 }
 

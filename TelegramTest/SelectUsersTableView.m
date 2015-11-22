@@ -108,7 +108,11 @@ static NSCache *cacheItems;
     
     _type = SelectTableTypeChats;
     
-    NSArray *chats = [[[DialogsManager sharedManager] all] filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.type == %d",DialogTypeChat]];
+    NSArray *chats = [[[DialogsManager sharedManager] all] filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(TL_conversation *evaluatedObject, NSDictionary<NSString *,id> * _Nullable bindings) {
+        
+        return evaluatedObject.type == DialogTypeChat || (evaluatedObject.type == DialogTypeChannel && (evaluatedObject.chat.isMegagroup && evaluatedObject.chat.isManager));
+        
+    }]];
     
     
     NSMutableArray *items = [[NSMutableArray alloc] init];

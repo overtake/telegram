@@ -67,7 +67,9 @@
             
             
             if(users.count == 0) {
-                [self.delegate behaviorDidEndRequest:nil];
+                [[FullChatManager sharedManager] performLoad:self.chat.n_id force:YES callback:^(TLChatFull *fullChat) {
+                    [self.delegate behaviorDidEndRequest:nil];
+                }];
             } else {
                 [self banUsers:users];
             }
