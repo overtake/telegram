@@ -10,7 +10,7 @@
 
 @interface TGGeneralInputRowItem : TGGeneralRowItem
 
-@property (nonatomic,strong,readonly) NSString *placeholder;
+@property (nonatomic,strong) NSString *placeholder;
 @property (nonatomic,strong) NSAttributedString *result;
 
 @end

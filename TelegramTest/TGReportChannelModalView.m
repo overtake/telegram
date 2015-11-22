@@ -8,7 +8,7 @@
 
 #import "TGReportChannelModalView.h"
 #import "TGSettingsTableView.h"
-
+#import "TGGeneralInputRowItem.h"
 @interface TGReportChannelModalView ()
 @property (nonatomic,strong) TGSettingsTableView *tableView;
 
@@ -62,13 +62,14 @@
         return @([_reason isKindOfClass:[TL_inputReportReasonPornography class]]);
     }];
     
-    GeneralSettingsRowItem *other = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeSelected callback:^(TGGeneralRowItem *item) {
-        
-        _reason = [TL_inputReportReasonOther createWithText:@"hz"];
-        [self configure];
-        
-    } description:NSLocalizedString(@"Report.ReportOther", nil) height:42 stateback:^id(TGGeneralRowItem *item) {
-        return @([_reason isKindOfClass:[TL_inputReportReasonOther class]]);
+    TGGeneralInputRowItem *other = [[TGGeneralInputRowItem alloc] initWithHeight:42];
+    other.placeholder = NSLocalizedString(@"Report.ReportOther", nil);
+    
+    [other setCallback:^(TGGeneralRowItem *item) {
+        BOOL needConfigure = ![_reason isKindOfClass:[TL_inputReportReasonOther class]];
+        _reason = [TL_inputReportReasonOther createWithText:other.result.string];
+        if(needConfigure)
+            [_tableView reloadDataForRowIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, 3)] columnIndexes:[NSIndexSet indexSetWithIndex:0]];
     }];
     
     spam.xOffset = violence.xOffset = porno.xOffset = other.xOffset = 0;
@@ -76,6 +77,7 @@
     [_tableView addItem:spam tableRedraw:YES];
     [_tableView addItem:violence tableRedraw:YES];
     [_tableView addItem:porno tableRedraw:YES];
+    [_tableView addItem:[[TGGeneralRowItem alloc] initWithHeight:20]  tableRedraw:YES];
     [_tableView addItem:other tableRedraw:YES];
     
     [_tableView addItem:[[TGGeneralRowItem alloc] initWithHeight:20] tableRedraw:YES];

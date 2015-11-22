@@ -18,6 +18,9 @@
 
 -(void)textFieldDidChange:(id)field;
 
+@optional
+-(void)textFieldDidBecomeFirstResponder:(id)field;
+
 @end
 
 

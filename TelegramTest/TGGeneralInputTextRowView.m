@@ -9,7 +9,7 @@
 #import "TGGeneralInputTextRowView.h"
 #import "TGGeneralInputRowItem.h"
 
-@interface TGGeneralInputTextRowView () <NSTextFieldDelegate>
+@interface TGGeneralInputTextRowView () <NSTextFieldDelegate,TMTextFieldDelegate>
 @property (nonatomic,strong) TMTextField *textField;
 @property (nonatomic,strong) TMView *separator;
 
@@ -34,6 +34,7 @@
         
         [_textField setFrameSize:NSMakeSize(NSWidth(self.frame) - 60, 20)];
         
+        _textField.fieldDelegate = self;
         _textField.delegate = self;
         
         [self addSubview:_textField];
@@ -48,6 +49,17 @@
     return self;
 }
 
+
+
+-(void)textFieldDidChange:(id)field {
+   
+}
+
+-(void)textFieldDidBecomeFirstResponder:(id)field {
+    if( self.item.callback != nil) {
+        self.item.callback(self.item);
+    }
+}
 
 
 -(void)controlTextDidChange:(NSNotification *)obj {
@@ -90,7 +102,12 @@
         
     }
     
+    if( self.item.callback != nil) {
+        self.item.callback(self.item);
+    }
+    
 }
+
 
 -(void)setFrameSize:(NSSize)newSize {
     [super setFrameSize:newSize];
@@ -105,6 +122,10 @@
     [super redrawRow];
     
     [_textField setAttributedStringValue:self.item.result];
+    
+    if(self.item.placeholder.length > 0) {
+        [_textField setPlaceholderString:self.item.placeholder];
+    }
     
     [self.window makeFirstResponder:_textField];
     

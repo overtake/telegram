@@ -285,7 +285,7 @@
     
     [LIGHT_GRAY_BORDER_COLOR setFill];
     
-    NSRectFill(NSMakeRect(30, 0, NSWidth(self.frame) - 60 , 1));
+    NSRectFill(NSMakeRect(NSMinX(self.titleTextField.frame), 0, NSWidth(self.frame) - 60 , 1));
 
 }
 
