@@ -503,7 +503,7 @@
         [_selectedItems removeObject:item];
     }
     
-    [[Telegram rightViewController].collectionViewController setSectedMessagesCount:self.selectedItems.count];
+    [self.collectionViewController setSectedMessagesCount:self.selectedItems.count];
 }
 
 -(BOOL)isSelectedItem:(MessageTableItem *)item {

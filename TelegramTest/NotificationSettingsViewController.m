@@ -254,9 +254,9 @@
     
     all = [all filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.type != 2 && self.type != 3"]];
     
-    [all enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
-        
-        [self.tableView addItem:[[NotificationConversationRowItem alloc] initWithObject:obj] tableRedraw:NO];
+    [all enumerateObjectsUsingBlock:^(TL_conversation *obj, NSUInteger idx, BOOL *stop) {
+        if(!obj.isInvisibleChannel)
+            [self.tableView addItem:[[NotificationConversationRowItem alloc] initWithObject:obj] tableRedraw:NO];
         
     }];
     

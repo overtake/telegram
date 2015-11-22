@@ -64,6 +64,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -77,6 +79,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -106,6 +109,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -119,6 +124,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -144,6 +150,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -157,6 +165,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -182,6 +191,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -195,6 +206,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -224,6 +236,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -237,6 +251,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -266,6 +281,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -279,6 +296,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -308,6 +326,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -321,6 +341,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -346,6 +367,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -359,6 +382,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -388,6 +412,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -401,6 +427,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -442,6 +469,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -455,6 +484,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -496,6 +526,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -509,6 +541,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -542,6 +575,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -555,6 +590,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -584,6 +620,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -597,6 +635,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -626,6 +665,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -639,6 +680,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -668,6 +710,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -681,6 +725,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -706,6 +751,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -719,6 +766,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -752,6 +800,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -765,6 +815,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -810,6 +861,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -823,6 +876,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -872,6 +926,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -885,6 +941,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -914,6 +971,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -927,6 +986,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -960,6 +1020,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -973,6 +1035,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -998,6 +1061,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -1011,6 +1076,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -1066,6 +1132,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -1079,6 +1147,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -1138,6 +1207,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -1151,6 +1222,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -1176,6 +1248,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -1189,6 +1263,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -1230,6 +1305,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -1243,6 +1320,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -1284,6 +1362,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -1297,6 +1377,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -1342,6 +1423,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -1355,6 +1438,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -1384,6 +1468,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -1397,6 +1483,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -1426,6 +1513,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -1439,6 +1528,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -1468,6 +1558,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -1481,6 +1573,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -1510,6 +1603,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -1523,6 +1618,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -1552,6 +1648,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -1565,6 +1663,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -1594,6 +1693,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -1607,6 +1708,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -1636,6 +1738,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -1649,6 +1753,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -1678,6 +1783,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -1691,6 +1798,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -1720,6 +1828,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -1733,6 +1843,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -1770,6 +1881,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -1783,6 +1896,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -1812,6 +1926,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -1825,6 +1941,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -1854,6 +1971,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -1867,6 +1986,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -1896,6 +2016,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -1909,6 +2031,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -1938,6 +2061,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -1951,6 +2076,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -1980,6 +2106,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -1993,6 +2121,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -2026,6 +2155,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -2039,6 +2170,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -2080,6 +2212,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -2093,6 +2227,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -2122,6 +2257,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -2135,6 +2272,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -2160,6 +2298,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -2173,6 +2313,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -2198,6 +2339,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -2211,6 +2354,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -2240,6 +2384,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -2253,6 +2399,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -2278,6 +2425,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -2291,6 +2440,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -2316,6 +2466,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -2329,6 +2481,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -2354,6 +2507,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -2367,6 +2522,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -2392,6 +2548,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -2405,6 +2563,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -2430,6 +2589,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -2443,6 +2604,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -2468,6 +2630,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -2481,6 +2645,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -2506,6 +2671,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -2519,6 +2686,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -2544,6 +2712,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -2557,6 +2727,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -2582,6 +2753,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -2595,6 +2768,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -2632,6 +2806,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -2645,6 +2821,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -2682,6 +2859,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -2695,6 +2874,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -2716,55 +2896,7 @@
 -(BOOL)isBot_nochats {return (self.flags & (1 << 16)) > 0;}
                         
 -(BOOL)isVerified {return (self.flags & (1 << 17)) > 0;}
-                        
--(void)setAccess_hash:(long)access_hash
-{
-   _access_hash = access_hash;
-                
-    if(_access_hash == 0)  { _flags&= ~ (1 << 0) ;} else { _flags|= (1 << 0); }
-}            
--(void)setFirst_name:(NSString*)first_name
-{
-   _first_name = first_name;
-                
-    if(_first_name == nil)  { _flags&= ~ (1 << 1) ;} else { _flags|= (1 << 1); }
-}            
--(void)setLast_name:(NSString*)last_name
-{
-   _last_name = last_name;
-                
-    if(_last_name == nil)  { _flags&= ~ (1 << 2) ;} else { _flags|= (1 << 2); }
-}            
--(void)setUsername:(NSString*)username
-{
-   _username = username;
-                
-    if(_username == nil)  { _flags&= ~ (1 << 3) ;} else { _flags|= (1 << 3); }
-}            
--(void)setPhone:(NSString*)phone
-{
-   _phone = phone;
-                
-    if(_phone == nil)  { _flags&= ~ (1 << 4) ;} else { _flags|= (1 << 4); }
-}            
--(void)setPhoto:(TLUserProfilePhoto*)photo
-{
-   _photo = photo;
-                
-    if(_photo == nil)  { _flags&= ~ (1 << 5) ;} else { _flags|= (1 << 5); }
-}            
--(void)setStatus:(TLUserStatus*)status
-{
-   _status = status;
-                
-    if(_status == nil)  { _flags&= ~ (1 << 6) ;} else { _flags|= (1 << 6); }
-}            
--(void)setBot_info_version:(int)bot_info_version
-{
-   _bot_info_version = bot_info_version;
-                
-    if(_bot_info_version == 0)  { _flags&= ~ (1 << 14) ;} else { _flags|= (1 << 14); }
-}
+            
 @end
         
 @implementation TL_userEmpty
@@ -2788,6 +2920,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -2801,6 +2935,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -2894,6 +3029,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -2907,7 +3044,24 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
-
+        
+            
+-(BOOL)isSelf {return (self.flags & (1 << 10)) > 0;}
+                        
+-(BOOL)isContact {return (self.flags & (1 << 11)) > 0;}
+                        
+-(BOOL)isMutual_contact {return (self.flags & (1 << 12)) > 0;}
+                        
+-(BOOL)isDeleted {return (self.flags & (1 << 13)) > 0;}
+                        
+-(BOOL)isBot {return (self.flags & (1 << 14)) > 0;}
+                        
+-(BOOL)isBot_chat_history {return (self.flags & (1 << 15)) > 0;}
+                        
+-(BOOL)isBot_nochats {return (self.flags & (1 << 16)) > 0;}
+                        
+-(BOOL)isVerified {return (self.flags & (1 << 17)) > 0;}
+            
         
 @end
 
@@ -2956,6 +3110,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -2969,6 +3125,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -3022,6 +3179,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -3035,6 +3194,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -3088,6 +3248,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -3101,6 +3263,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -3150,6 +3313,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -3163,6 +3328,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -3200,6 +3366,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -3213,6 +3381,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -3242,6 +3411,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -3255,6 +3426,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -3288,6 +3460,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -3301,6 +3475,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -3330,6 +3505,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -3343,6 +3520,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -3368,6 +3546,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -3381,6 +3561,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -3406,6 +3587,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -3419,6 +3602,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -3444,6 +3628,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -3457,6 +3643,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -3482,6 +3669,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -3495,6 +3684,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -3520,6 +3710,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -3533,6 +3725,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -3551,12 +3744,6 @@
                         
 -(BOOL)isDeactivated {return (self.flags & (1 << 5)) > 0;}
                         
--(void)setMigrated_to:(TLInputChannel*)migrated_to
-{
-   _migrated_to = migrated_to;
-                
-    if(_migrated_to == nil)  { _flags&= ~ (1 << 6) ;} else { _flags|= (1 << 6); }
-}            
 -(BOOL)isEditor {return (self.flags & (1 << 3)) > 0;}
                         
 -(BOOL)isModerator {return (self.flags & (1 << 4)) > 0;}
@@ -3566,13 +3753,7 @@
 -(BOOL)isVerified {return (self.flags & (1 << 7)) > 0;}
                         
 -(BOOL)isMegagroup {return (self.flags & (1 << 8)) > 0;}
-                        
--(void)setUsername:(NSString*)username
-{
-   _username = username;
-                
-    if(_username == nil)  { _flags&= ~ (1 << 6) ;} else { _flags|= (1 << 6); }
-}
+            
 @end
         
 @implementation TL_chatEmpty
@@ -3596,6 +3777,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -3609,6 +3792,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -3686,6 +3870,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -3699,7 +3885,20 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
-
+        
+            
+-(BOOL)isCreator {return (self.flags & (1 << 0)) > 0;}
+                        
+-(BOOL)isKicked {return (self.flags & (1 << 1)) > 0;}
+                        
+-(BOOL)isLeft {return (self.flags & (1 << 2)) > 0;}
+                        
+-(BOOL)isAdmins_enabled {return (self.flags & (1 << 3)) > 0;}
+                        
+-(BOOL)isAdmin {return (self.flags & (1 << 4)) > 0;}
+                        
+-(BOOL)isDeactivated {return (self.flags & (1 << 5)) > 0;}
+            
         
 @end
 
@@ -3728,6 +3927,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -3741,6 +3942,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -3826,6 +4028,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -3839,7 +4043,24 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
-
+        
+            
+-(BOOL)isCreator {return (self.flags & (1 << 0)) > 0;}
+                        
+-(BOOL)isKicked {return (self.flags & (1 << 1)) > 0;}
+                        
+-(BOOL)isLeft {return (self.flags & (1 << 2)) > 0;}
+                        
+-(BOOL)isEditor {return (self.flags & (1 << 3)) > 0;}
+                        
+-(BOOL)isModerator {return (self.flags & (1 << 4)) > 0;}
+                        
+-(BOOL)isBroadcast {return (self.flags & (1 << 5)) > 0;}
+                        
+-(BOOL)isVerified {return (self.flags & (1 << 7)) > 0;}
+                        
+-(BOOL)isMegagroup {return (self.flags & (1 << 8)) > 0;}
+            
         
 @end
 
@@ -3872,6 +4093,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -3885,6 +4108,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -3934,6 +4158,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -3947,6 +4173,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -3980,6 +4207,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -3993,6 +4222,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -4042,6 +4272,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -4055,6 +4287,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -4062,37 +4295,7 @@
 @implementation TLChatFull
             
 -(BOOL)isCan_view_participants {return (self.flags & (1 << 3)) > 0;}
-                        
--(void)setParticipants_count:(int)participants_count
-{
-   _participants_count = participants_count;
-                
-    if(_participants_count == 0)  { _flags&= ~ (1 << 0) ;} else { _flags|= (1 << 0); }
-}            
--(void)setAdmins_count:(int)admins_count
-{
-   _admins_count = admins_count;
-                
-    if(_admins_count == 0)  { _flags&= ~ (1 << 1) ;} else { _flags|= (1 << 1); }
-}            
--(void)setKicked_count:(int)kicked_count
-{
-   _kicked_count = kicked_count;
-                
-    if(_kicked_count == 0)  { _flags&= ~ (1 << 2) ;} else { _flags|= (1 << 2); }
-}            
--(void)setMigrated_from_chat_id:(int)migrated_from_chat_id
-{
-   _migrated_from_chat_id = migrated_from_chat_id;
-                
-    if(_migrated_from_chat_id == 0)  { _flags&= ~ (1 << 4) ;} else { _flags|= (1 << 4); }
-}            
--(void)setMigrated_from_max_id:(int)migrated_from_max_id
-{
-   _migrated_from_max_id = migrated_from_max_id;
-                
-    if(_migrated_from_max_id == 0)  { _flags&= ~ (1 << 4) ;} else { _flags|= (1 << 4); }
-}
+            
 @end
         
 @implementation TL_chatFull
@@ -4158,6 +4361,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -4171,6 +4376,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -4278,6 +4484,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -4291,7 +4499,10 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
-
+        
+            
+-(BOOL)isCan_view_participants {return (self.flags & (1 << 3)) > 0;}
+            
         
 @end
 
@@ -4332,6 +4543,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -4345,6 +4558,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -4418,6 +4632,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -4431,7 +4647,10 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
-
+        
+            
+-(BOOL)isCan_view_participants {return (self.flags & (1 << 3)) > 0;}
+            
         
 @end
 
@@ -4468,6 +4687,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -4481,6 +4702,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -4506,6 +4728,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -4519,6 +4743,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -4552,6 +4777,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -4565,18 +4792,13 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
 
 @implementation TLChatParticipants
-            
--(void)setSelf_participant:(TLChatParticipant*)self_participant
-{
-   _self_participant = self_participant;
-                
-    if(_self_participant == nil)  { _flags&= ~ (1 << 0) ;} else { _flags|= (1 << 0); }
-}
+
 @end
         
 @implementation TL_chatParticipantsForbidden
@@ -4608,6 +4830,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -4621,6 +4845,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -4676,6 +4901,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -4689,6 +4916,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -4714,6 +4942,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -4727,6 +4957,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -4786,6 +5017,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -4799,6 +5032,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -4858,6 +5092,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -4871,6 +5107,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -4900,6 +5137,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -4913,6 +5152,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -4942,6 +5182,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -4955,6 +5197,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -4968,55 +5211,7 @@
 -(BOOL)isMentioned {return (self.flags & (1 << 4)) > 0;}
                         
 -(BOOL)isMedia_unread {return (self.flags & (1 << 5)) > 0;}
-                        
--(void)setFrom_id:(int)from_id
-{
-   _from_id = from_id;
-                
-    if(_from_id == 0)  { _flags&= ~ (1 << 8) ;} else { _flags|= (1 << 8); }
-}            
--(void)setFwd_from_id:(TLPeer*)fwd_from_id
-{
-   _fwd_from_id = fwd_from_id;
-                
-    if(_fwd_from_id == nil)  { _flags&= ~ (1 << 2) ;} else { _flags|= (1 << 2); }
-}            
--(void)setFwd_date:(int)fwd_date
-{
-   _fwd_date = fwd_date;
-                
-    if(_fwd_date == 0)  { _flags&= ~ (1 << 2) ;} else { _flags|= (1 << 2); }
-}            
--(void)setReply_to_msg_id:(int)reply_to_msg_id
-{
-   _reply_to_msg_id = reply_to_msg_id;
-                
-    if(_reply_to_msg_id == 0)  { _flags&= ~ (1 << 3) ;} else { _flags|= (1 << 3); }
-}            
--(void)setMedia:(TLMessageMedia*)media
-{
-   _media = media;
-                
-    if(_media == nil)  { _flags&= ~ (1 << 9) ;} else { _flags|= (1 << 9); }
-}            
--(void)setReply_markup:(TLReplyMarkup*)reply_markup
-{
-   _reply_markup = reply_markup;
-                
-    if(_reply_markup == nil)  { _flags&= ~ (1 << 6) ;} else { _flags|= (1 << 6); }
-}            
--(void)setEntities:(NSMutableArray*)entities
-{
-   _entities = entities;
-                
-    if(_entities == nil)  { _flags&= ~ (1 << 7) ;} else { _flags|= (1 << 7); }
-}            
--(void)setViews:(int)views
-{
-   _views = views;
-                
-    if(_views == 0)  { _flags&= ~ (1 << 10) ;} else { _flags|= (1 << 10); }
-}
+            
 @end
         
 @implementation TL_messageEmpty
@@ -5040,6 +5235,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -5053,6 +5250,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -5164,6 +5362,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -5177,7 +5377,16 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
-
+        
+            
+-(BOOL)isUnread {return (self.flags & (1 << 0)) > 0;}
+                        
+-(BOOL)isN_out {return (self.flags & (1 << 1)) > 0;}
+                        
+-(BOOL)isMentioned {return (self.flags & (1 << 4)) > 0;}
+                        
+-(BOOL)isMedia_unread {return (self.flags & (1 << 5)) > 0;}
+            
         
 @end
 
@@ -5238,6 +5447,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -5251,7 +5462,16 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
-
+        
+            
+-(BOOL)isUnread {return (self.flags & (1 << 0)) > 0;}
+                        
+-(BOOL)isN_out {return (self.flags & (1 << 1)) > 0;}
+                        
+-(BOOL)isMentioned {return (self.flags & (1 << 4)) > 0;}
+                        
+-(BOOL)isMedia_unread {return (self.flags & (1 << 5)) > 0;}
+            
         
 @end
 
@@ -5280,6 +5500,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -5293,6 +5515,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -5322,6 +5545,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -5335,6 +5560,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -5364,6 +5590,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -5377,6 +5605,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -5402,6 +5631,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -5415,6 +5646,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -5452,6 +5684,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -5465,6 +5699,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -5490,6 +5725,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -5503,6 +5740,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -5528,6 +5766,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -5541,6 +5781,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -5566,6 +5807,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -5579,6 +5822,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -5604,6 +5848,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -5617,6 +5863,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -5658,6 +5905,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -5671,6 +5920,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -5700,6 +5950,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -5713,6 +5965,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -5764,6 +6017,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -5777,6 +6032,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -5802,6 +6058,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -5815,6 +6073,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -5840,6 +6099,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -5853,6 +6114,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -5878,6 +6140,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -5891,6 +6155,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -5938,6 +6203,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -5951,6 +6218,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -5976,6 +6244,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -5989,6 +6259,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -6014,6 +6285,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -6027,6 +6300,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -6052,6 +6326,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -6065,6 +6341,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -6090,6 +6367,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -6103,6 +6382,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -6132,6 +6412,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -6145,6 +6427,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -6170,6 +6453,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -6183,6 +6468,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -6228,6 +6514,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -6241,6 +6529,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -6294,6 +6583,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -6307,6 +6598,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -6336,6 +6628,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -6349,6 +6643,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -6408,6 +6703,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -6421,6 +6718,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -6488,6 +6786,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -6501,6 +6801,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -6530,6 +6831,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -6543,6 +6846,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -6584,6 +6888,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -6597,6 +6903,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -6638,6 +6945,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -6651,6 +6960,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -6680,6 +6990,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -6693,6 +7005,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -6754,6 +7067,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -6767,6 +7082,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -6828,6 +7144,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -6841,6 +7159,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -6870,6 +7189,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -6883,6 +7204,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -6912,6 +7234,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -6925,6 +7249,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -6954,6 +7279,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -6967,6 +7294,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -7008,6 +7336,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -7021,6 +7351,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -7058,6 +7389,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -7071,6 +7404,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -7100,6 +7434,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -7113,6 +7449,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -7146,6 +7483,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -7159,6 +7498,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -7188,6 +7528,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -7201,6 +7543,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -7226,6 +7569,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -7239,6 +7584,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -7264,6 +7610,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -7277,6 +7625,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -7302,6 +7651,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -7315,6 +7666,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -7344,6 +7696,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -7357,6 +7711,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -7382,6 +7737,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -7395,6 +7752,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -7436,6 +7794,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -7449,6 +7809,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -7478,6 +7839,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -7491,6 +7854,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -7516,6 +7880,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -7529,6 +7895,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -7558,6 +7925,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -7571,6 +7940,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -7608,6 +7978,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -7621,6 +7993,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -7684,6 +8057,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -7697,6 +8072,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -7734,6 +8110,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -7747,6 +8125,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -7776,6 +8155,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -7789,6 +8170,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -7814,6 +8196,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -7827,6 +8211,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -7852,6 +8237,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -7865,6 +8252,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -7890,6 +8278,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -7903,6 +8293,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -7952,6 +8343,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -7965,6 +8358,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -7998,6 +8392,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -8011,6 +8407,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -8044,6 +8441,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -8057,6 +8456,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -8090,6 +8490,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -8103,6 +8505,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -8136,6 +8539,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -8149,6 +8554,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -8182,6 +8588,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -8195,6 +8603,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -8232,6 +8641,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -8245,6 +8656,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -8274,6 +8686,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -8287,6 +8701,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -8360,6 +8775,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -8373,6 +8790,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -8476,6 +8894,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -8489,6 +8909,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -8566,6 +8987,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -8579,6 +9002,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -8656,6 +9080,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -8669,6 +9095,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -8746,6 +9173,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -8759,6 +9188,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -8888,6 +9318,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -8901,6 +9333,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -9030,6 +9463,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -9043,18 +9478,13 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
 
 @implementation TLmessages_Messages
-            
--(void)setCollapsed:(NSMutableArray*)collapsed
-{
-   _collapsed = collapsed;
-                
-    if(_collapsed == nil)  { _flags&= ~ (1 << 0) ;} else { _flags|= (1 << 0); }
-}
+
 @end
         
 @implementation TL_messages_messages
@@ -9152,6 +9582,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -9165,6 +9597,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -9268,6 +9701,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -9281,6 +9716,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -9418,6 +9854,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -9431,6 +9869,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -9482,6 +9921,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -9495,6 +9936,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -9576,6 +10018,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -9589,6 +10033,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -9626,6 +10071,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -9639,6 +10086,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -9668,6 +10116,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -9681,6 +10131,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -9706,6 +10157,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -9719,6 +10172,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -9744,6 +10198,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -9757,6 +10213,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -9782,6 +10239,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -9795,6 +10254,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -9820,6 +10280,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -9833,6 +10295,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -9858,6 +10321,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -9871,6 +10336,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -9896,6 +10362,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -9909,6 +10377,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -9934,6 +10403,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -9947,6 +10418,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -9972,6 +10444,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -9985,6 +10459,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -10022,6 +10497,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -10035,6 +10512,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -10064,6 +10542,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -10077,6 +10557,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -10132,6 +10613,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -10145,6 +10628,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -10174,6 +10658,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -10187,6 +10673,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -10220,6 +10707,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -10233,6 +10722,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -10258,6 +10748,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -10271,6 +10763,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -10300,6 +10793,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -10313,6 +10808,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -10350,6 +10846,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -10363,6 +10861,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -10400,6 +10899,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -10413,6 +10914,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -10442,6 +10944,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -10455,6 +10959,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -10488,6 +10993,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -10501,6 +11008,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -10538,6 +11046,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -10551,6 +11061,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -10580,6 +11091,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -10593,6 +11106,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -10618,6 +11132,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -10631,6 +11147,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -10660,6 +11177,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -10673,6 +11192,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -10706,6 +11226,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -10719,6 +11241,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -10760,6 +11283,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -10773,6 +11298,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -10806,6 +11332,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -10819,6 +11347,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -10866,6 +11395,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -10879,6 +11410,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -10908,6 +11440,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -10921,6 +11455,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -10950,6 +11485,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -10963,6 +11500,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -11000,6 +11538,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -11013,6 +11553,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -11064,6 +11605,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -11077,6 +11620,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -11106,6 +11650,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -11119,6 +11665,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -11156,6 +11703,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -11169,6 +11718,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -11206,6 +11756,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -11219,6 +11771,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -11252,6 +11805,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -11265,6 +11820,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -11320,6 +11876,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -11333,6 +11891,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -11358,6 +11917,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -11371,6 +11932,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -11396,6 +11958,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -11409,6 +11973,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -11438,6 +12003,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -11451,6 +12018,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -11484,6 +12052,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -11497,6 +12067,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -11526,6 +12097,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -11539,6 +12112,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -11598,6 +12172,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -11611,6 +12187,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -11644,6 +12221,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -11657,6 +12236,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -11690,6 +12270,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -11703,6 +12285,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -11740,6 +12323,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -11753,6 +12338,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -11798,6 +12384,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -11811,6 +12399,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -11844,6 +12433,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -11857,6 +12448,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -12012,6 +12604,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -12025,6 +12619,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -12180,6 +12775,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -12193,6 +12790,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -12206,37 +12804,7 @@
 -(BOOL)isMentioned {return (self.flags & (1 << 4)) > 0;}
                         
 -(BOOL)isMedia_unread {return (self.flags & (1 << 5)) > 0;}
-                        
--(void)setFwd_from_id:(TLPeer*)fwd_from_id
-{
-   _fwd_from_id = fwd_from_id;
-                
-    if(_fwd_from_id == nil)  { _flags&= ~ (1 << 2) ;} else { _flags|= (1 << 2); }
-}            
--(void)setFwd_date:(int)fwd_date
-{
-   _fwd_date = fwd_date;
-                
-    if(_fwd_date == 0)  { _flags&= ~ (1 << 2) ;} else { _flags|= (1 << 2); }
-}            
--(void)setReply_to_msg_id:(int)reply_to_msg_id
-{
-   _reply_to_msg_id = reply_to_msg_id;
-                
-    if(_reply_to_msg_id == 0)  { _flags&= ~ (1 << 3) ;} else { _flags|= (1 << 3); }
-}            
--(void)setEntities:(NSMutableArray*)entities
-{
-   _entities = entities;
-                
-    if(_entities == nil)  { _flags&= ~ (1 << 7) ;} else { _flags|= (1 << 7); }
-}            
--(void)setMedia:(TLMessageMedia*)media
-{
-   _media = media;
-                
-    if(_media == nil)  { _flags&= ~ (1 << 9) ;} else { _flags|= (1 << 9); }
-}
+            
 @end
         
 @implementation TL_updatesTooLong
@@ -12260,6 +12828,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -12273,6 +12843,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -12376,6 +12947,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -12389,7 +12962,16 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
-
+        
+            
+-(BOOL)isUnread {return (self.flags & (1 << 0)) > 0;}
+                        
+-(BOOL)isN_out {return (self.flags & (1 << 1)) > 0;}
+                        
+-(BOOL)isMentioned {return (self.flags & (1 << 4)) > 0;}
+                        
+-(BOOL)isMedia_unread {return (self.flags & (1 << 5)) > 0;}
+            
         
 @end
 
@@ -12496,6 +13078,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -12509,7 +13093,16 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
-
+        
+            
+-(BOOL)isUnread {return (self.flags & (1 << 0)) > 0;}
+                        
+-(BOOL)isN_out {return (self.flags & (1 << 1)) > 0;}
+                        
+-(BOOL)isMentioned {return (self.flags & (1 << 4)) > 0;}
+                        
+-(BOOL)isMedia_unread {return (self.flags & (1 << 5)) > 0;}
+            
         
 @end
 
@@ -12538,6 +13131,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -12551,6 +13146,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -12662,6 +13258,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -12675,6 +13273,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -12782,6 +13381,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -12795,6 +13396,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -12874,6 +13476,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -12887,7 +13491,12 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
-
+        
+            
+-(BOOL)isUnread {return (self.flags & (1 << 0)) > 0;}
+                        
+-(BOOL)isN_out {return (self.flags & (1 << 1)) > 0;}
+            
         
 @end
 
@@ -12964,6 +13573,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -12977,6 +13588,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -13054,6 +13666,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -13067,6 +13681,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -13122,6 +13737,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -13135,6 +13752,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -13172,6 +13790,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -13185,6 +13805,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -13238,6 +13859,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -13251,7 +13874,12 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
-
+        
+            
+-(BOOL)isIpv6 {return (self.flags & (1 << 0)) > 0;}
+                        
+-(BOOL)isMedia_only {return (self.flags & (1 << 1)) > 0;}
+            
         
 @end
 
@@ -13392,6 +14020,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -13405,6 +14035,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -13442,6 +14073,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -13455,6 +14088,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -13496,6 +14130,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -13509,6 +14145,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -13534,6 +14171,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -13547,6 +14186,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -13576,6 +14216,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -13589,6 +14231,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -13618,6 +14261,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -13631,6 +14276,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -13672,6 +14318,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -13685,6 +14333,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -13730,6 +14379,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -13743,6 +14394,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -13792,6 +14444,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -13805,6 +14459,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -13830,6 +14485,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -13843,6 +14500,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -13876,6 +14534,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -13889,6 +14549,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -13918,6 +14579,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -13931,6 +14594,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -13972,6 +14636,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -13985,6 +14651,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -14014,6 +14681,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -14027,6 +14696,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -14064,6 +14734,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -14077,6 +14749,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -14106,6 +14779,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -14119,6 +14794,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -14152,6 +14828,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -14165,6 +14843,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -14210,6 +14889,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -14223,6 +14904,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -14260,6 +14942,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -14273,6 +14957,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -14302,6 +14987,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -14315,6 +15002,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -14352,6 +15040,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -14365,6 +15055,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -14394,6 +15085,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -14407,6 +15100,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -14436,6 +15130,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -14449,6 +15145,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -14478,6 +15175,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -14491,6 +15190,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -14520,6 +15220,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -14533,6 +15235,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -14562,6 +15265,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -14575,6 +15280,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -14604,6 +15310,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -14617,6 +15325,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -14646,6 +15355,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -14659,6 +15370,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -14708,6 +15420,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -14721,6 +15435,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -14774,6 +15489,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -14787,6 +15504,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -14816,6 +15534,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -14829,6 +15549,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -14904,6 +15625,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -14917,6 +15640,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -14950,6 +15674,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -14963,6 +15689,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -14992,6 +15719,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -15005,6 +15734,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -15030,6 +15760,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -15043,6 +15775,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -15068,6 +15801,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -15081,6 +15816,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -15106,6 +15842,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -15119,6 +15857,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -15148,6 +15887,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -15161,6 +15902,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -15186,6 +15928,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -15199,6 +15943,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -15224,6 +15969,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -15237,6 +15984,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -15262,6 +16010,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -15275,6 +16025,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -15300,6 +16051,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -15313,6 +16066,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -15338,6 +16092,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -15351,6 +16107,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -15376,6 +16133,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -15389,6 +16148,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -15414,6 +16174,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -15427,6 +16189,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -15452,6 +16215,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -15465,6 +16230,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -15490,6 +16256,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -15503,6 +16271,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -15606,6 +16375,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -15619,6 +16390,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -15648,6 +16420,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -15661,6 +16435,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -15690,6 +16465,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -15703,6 +16480,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -15732,6 +16510,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -15745,6 +16525,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -15770,6 +16551,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -15783,6 +16566,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -15830,6 +16614,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -15843,6 +16629,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -15868,6 +16655,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -15881,6 +16670,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -15906,6 +16696,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -15919,6 +16711,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -15966,6 +16759,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -15979,6 +16774,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -16008,6 +16804,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -16021,6 +16819,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -16046,6 +16845,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -16059,6 +16860,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -16106,6 +16908,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -16119,6 +16923,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -16144,6 +16949,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -16157,6 +16964,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -16182,6 +16990,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -16195,6 +17005,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -16242,6 +17053,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -16255,6 +17068,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -16332,6 +17146,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -16345,6 +17161,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -16374,6 +17191,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -16387,6 +17206,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -16420,6 +17240,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -16433,6 +17255,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -16466,6 +17289,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -16479,6 +17304,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -16504,6 +17330,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -16517,6 +17345,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -16546,6 +17375,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -16559,6 +17390,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -16592,6 +17424,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -16605,6 +17439,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -16638,6 +17473,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -16651,6 +17488,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -16676,6 +17514,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -16689,6 +17529,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -16714,6 +17555,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -16727,6 +17570,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -16756,6 +17600,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -16769,6 +17615,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -16820,6 +17667,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -16833,6 +17682,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -16888,6 +17738,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -16901,6 +17753,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -16930,6 +17783,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -16943,6 +17798,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -16994,6 +17850,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -17007,6 +17865,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -17040,6 +17899,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -17053,6 +17914,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -17086,6 +17948,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -17099,6 +17963,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -17128,6 +17993,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -17141,6 +18008,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -17166,6 +18034,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -17179,6 +18049,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -17204,6 +18075,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -17217,6 +18090,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -17242,6 +18116,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -17255,84 +18131,13 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
 
 @implementation TLWebPage
-            
--(void)setType:(NSString*)type
-{
-   _type = type;
-                
-    if(_type == nil)  { _flags&= ~ (1 << 0) ;} else { _flags|= (1 << 0); }
-}            
--(void)setSite_name:(NSString*)site_name
-{
-   _site_name = site_name;
-                
-    if(_site_name == nil)  { _flags&= ~ (1 << 1) ;} else { _flags|= (1 << 1); }
-}            
--(void)setTitle:(NSString*)title
-{
-   _title = title;
-                
-    if(_title == nil)  { _flags&= ~ (1 << 2) ;} else { _flags|= (1 << 2); }
-}            
--(void)setN_description:(NSString*)n_description
-{
-   _n_description = n_description;
-                
-    if(_n_description == nil)  { _flags&= ~ (1 << 3) ;} else { _flags|= (1 << 3); }
-}            
--(void)setPhoto:(TLPhoto*)photo
-{
-   _photo = photo;
-                
-    if(_photo == nil)  { _flags&= ~ (1 << 4) ;} else { _flags|= (1 << 4); }
-}            
--(void)setEmbed_url:(NSString*)embed_url
-{
-   _embed_url = embed_url;
-                
-    if(_embed_url == nil)  { _flags&= ~ (1 << 5) ;} else { _flags|= (1 << 5); }
-}            
--(void)setEmbed_type:(NSString*)embed_type
-{
-   _embed_type = embed_type;
-                
-    if(_embed_type == nil)  { _flags&= ~ (1 << 5) ;} else { _flags|= (1 << 5); }
-}            
--(void)setEmbed_width:(int)embed_width
-{
-   _embed_width = embed_width;
-                
-    if(_embed_width == 0)  { _flags&= ~ (1 << 6) ;} else { _flags|= (1 << 6); }
-}            
--(void)setEmbed_height:(int)embed_height
-{
-   _embed_height = embed_height;
-                
-    if(_embed_height == 0)  { _flags&= ~ (1 << 6) ;} else { _flags|= (1 << 6); }
-}            
--(void)setDuration:(int)duration
-{
-   _duration = duration;
-                
-    if(_duration == 0)  { _flags&= ~ (1 << 7) ;} else { _flags|= (1 << 7); }
-}            
--(void)setAuthor:(NSString*)author
-{
-   _author = author;
-                
-    if(_author == nil)  { _flags&= ~ (1 << 8) ;} else { _flags|= (1 << 8); }
-}            
--(void)setDocument:(TLDocument*)document
-{
-   _document = document;
-                
-    if(_document == nil)  { _flags&= ~ (1 << 9) ;} else { _flags|= (1 << 9); }
-}
+
 @end
         
 @implementation TL_webPageEmpty
@@ -17356,6 +18161,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -17369,6 +18176,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -17398,6 +18206,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -17411,6 +18221,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -17496,6 +18307,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -17509,6 +18322,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -17590,6 +18404,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -17603,6 +18419,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -17680,6 +18497,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -17693,6 +18512,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -17744,6 +18564,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -17757,6 +18579,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -17790,6 +18613,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -17803,6 +18628,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -17844,6 +18670,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -17857,6 +18685,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -17886,6 +18715,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -17899,36 +18730,13 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
 
 @implementation TLaccount_PasswordInputSettings
-            
--(void)setN_salt:(NSData*)n_salt
-{
-   _n_salt = n_salt;
-                
-    if(_n_salt == nil)  { _flags&= ~ (1 << 0) ;} else { _flags|= (1 << 0); }
-}            
--(void)setN_password_hash:(NSData*)n_password_hash
-{
-   _n_password_hash = n_password_hash;
-                
-    if(_n_password_hash == nil)  { _flags&= ~ (1 << 0) ;} else { _flags|= (1 << 0); }
-}            
--(void)setHint:(NSString*)hint
-{
-   _hint = hint;
-                
-    if(_hint == nil)  { _flags&= ~ (1 << 0) ;} else { _flags|= (1 << 0); }
-}            
--(void)setEmail:(NSString*)email
-{
-   _email = email;
-                
-    if(_email == nil)  { _flags&= ~ (1 << 1) ;} else { _flags|= (1 << 1); }
-}
+
 @end
         
 @implementation TL_account_passwordInputSettings
@@ -17968,6 +18776,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -17981,6 +18791,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -18010,6 +18821,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -18023,6 +18836,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -18056,6 +18870,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -18069,6 +18885,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -18098,6 +18915,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -18111,6 +18930,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -18136,6 +18956,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -18149,6 +18971,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -18186,6 +19009,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -18199,6 +19024,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -18244,6 +19070,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -18257,7 +19085,16 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
-
+        
+            
+-(BOOL)isChannel {return (self.flags & (1 << 0)) > 0;}
+                        
+-(BOOL)isBroadcast {return (self.flags & (1 << 1)) > 0;}
+                        
+-(BOOL)isPublic {return (self.flags & (1 << 2)) > 0;}
+                        
+-(BOOL)isMegagroup {return (self.flags & (1 << 3)) > 0;}
+            
         
 @end
 
@@ -18286,6 +19123,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -18299,6 +19138,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -18328,6 +19168,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -18341,6 +19183,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -18366,6 +19209,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -18379,6 +19224,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -18450,6 +19296,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -18463,7 +19311,14 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
-
+        
+            
+-(BOOL)isInstalled {return (self.flags & (1 << 0)) > 0;}
+                        
+-(BOOL)isDisabled {return (self.flags & (1 << 1)) > 0;}
+                        
+-(BOOL)isOfficial {return (self.flags & (1 << 2)) > 0;}
+            
         
 @end
 
@@ -18544,6 +19399,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -18557,6 +19414,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -18590,6 +19448,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -18603,6 +19463,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -18632,6 +19493,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -18645,6 +19508,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -18708,6 +19572,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -18721,6 +19587,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -18750,6 +19617,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -18763,6 +19632,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -18814,6 +19684,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -18827,6 +19699,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -18866,6 +19739,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -18879,7 +19754,10 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
-
+        
+            
+-(BOOL)isSelective {return (self.flags & (1 << 2)) > 0;}
+            
         
 @end
 
@@ -18912,6 +19790,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -18925,7 +19805,12 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
-
+        
+            
+-(BOOL)isSingle_use {return (self.flags & (1 << 1)) > 0;}
+                        
+-(BOOL)isSelective {return (self.flags & (1 << 2)) > 0;}
+            
         
 @end
 
@@ -18988,6 +19873,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -19001,7 +19888,14 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
-
+        
+            
+-(BOOL)isResize {return (self.flags & (1 << 0)) > 0;}
+                        
+-(BOOL)isSingle_use {return (self.flags & (1 << 1)) > 0;}
+                        
+-(BOOL)isSelective {return (self.flags & (1 << 2)) > 0;}
+            
         
 @end
 
@@ -19030,6 +19924,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -19043,6 +19939,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -19068,6 +19965,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -19081,6 +19980,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -19114,6 +20014,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -19127,6 +20029,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -19156,6 +20059,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -19169,6 +20074,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -19198,6 +20104,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -19211,6 +20119,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -19240,6 +20149,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -19253,6 +20164,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -19282,6 +20194,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -19295,6 +20209,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -19324,6 +20239,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -19337,6 +20254,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -19366,6 +20284,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -19379,6 +20299,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -19408,6 +20329,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -19421,6 +20344,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -19450,6 +20374,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -19463,6 +20389,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -19496,6 +20423,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -19509,6 +20438,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -19542,6 +20472,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -19555,6 +20487,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -19584,6 +20517,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -19597,6 +20532,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -19626,6 +20562,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -19639,6 +20577,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -19720,6 +20659,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -19733,6 +20674,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -19766,6 +20708,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -19779,6 +20723,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -19820,6 +20765,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -19833,6 +20780,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -19840,13 +20788,7 @@
 @implementation TLupdates_ChannelDifference
             
 -(BOOL)isFinal {return (self.flags & (1 << 0)) > 0;}
-                        
--(void)setTimeout:(int)timeout
-{
-   _timeout = timeout;
-                
-    if(_timeout == 0)  { _flags&= ~ (1 << 1) ;} else { _flags|= (1 << 1); }
-}
+            
 @end
         
 @implementation TL_updates_channelDifferenceEmpty
@@ -19882,6 +20824,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -19895,7 +20839,10 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
-
+        
+            
+-(BOOL)isFinal {return (self.flags & (1 << 0)) > 0;}
+            
         
 @end
 
@@ -20030,6 +20977,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -20043,7 +20992,10 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
-
+        
+            
+-(BOOL)isFinal {return (self.flags & (1 << 0)) > 0;}
+            
         
 @end
 
@@ -20184,6 +21136,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -20197,7 +21151,10 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
-
+        
+            
+-(BOOL)isFinal {return (self.flags & (1 << 0)) > 0;}
+            
         
 @end
 
@@ -20230,6 +21187,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -20243,6 +21202,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -20302,6 +21262,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -20315,7 +21277,12 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
-
+        
+            
+-(BOOL)isImportant_only {return (self.flags & (1 << 0)) > 0;}
+                        
+-(BOOL)isExclude_new_messages {return (self.flags & (1 << 1)) > 0;}
+            
         
 @end
 
@@ -20340,6 +21307,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -20353,6 +21322,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -20386,6 +21356,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -20399,6 +21371,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -20432,6 +21405,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -20445,6 +21420,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -20478,6 +21454,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -20491,6 +21469,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -20524,6 +21503,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -20537,6 +21518,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -20570,6 +21552,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -20583,6 +21567,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -20608,6 +21593,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -20621,6 +21608,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -20650,6 +21638,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -20663,6 +21653,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -20688,6 +21679,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -20701,6 +21694,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -20726,6 +21720,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -20739,6 +21735,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -20764,6 +21761,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -20777,6 +21776,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -20806,6 +21806,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -20819,6 +21821,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -20844,6 +21847,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -20857,6 +21862,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -20882,6 +21888,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -20895,6 +21903,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -20976,6 +21985,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -20989,6 +22000,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -21044,6 +22056,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -21057,6 +22071,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -21086,6 +22101,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -21099,6 +22116,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -21140,6 +22158,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -21153,6 +22173,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -21203,6 +22224,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -21216,6 +22239,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -21245,6 +22269,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -21258,6 +22284,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -21317,6 +22344,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -21330,6 +22359,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -21379,6 +22409,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -21392,6 +22424,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -21441,6 +22474,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -21454,6 +22489,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -21503,6 +22539,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -21516,6 +22554,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -21549,6 +22588,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -21562,6 +22603,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -21595,6 +22637,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -21608,6 +22652,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -21649,6 +22694,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -21662,6 +22709,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -21699,6 +22747,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -21712,6 +22762,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -21745,6 +22796,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -21758,6 +22811,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -21791,6 +22845,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -21804,6 +22860,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -21837,6 +22894,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -21850,6 +22909,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -21879,6 +22939,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -21892,6 +22954,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -21921,6 +22984,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -21934,6 +22999,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -21971,6 +23037,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -21984,6 +23052,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -22021,6 +23090,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -22034,6 +23105,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -22071,6 +23143,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -22084,6 +23158,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -22117,6 +23192,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -22130,6 +23207,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -22163,6 +23241,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -22176,6 +23256,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -22209,6 +23290,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -22222,6 +23305,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -22273,6 +23357,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -22286,6 +23372,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -22315,6 +23402,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -22328,6 +23417,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -22353,6 +23443,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -22366,6 +23458,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -22391,6 +23484,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -22404,6 +23499,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -22437,6 +23533,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -22450,6 +23548,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -22479,6 +23578,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -22492,6 +23593,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -22546,6 +23648,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -22559,6 +23663,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -22596,6 +23701,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -22609,6 +23716,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -22638,6 +23746,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -22651,6 +23761,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -22676,6 +23787,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -22689,6 +23802,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -22714,6 +23828,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -22727,6 +23843,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -22756,6 +23873,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -22769,6 +23888,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -22794,6 +23914,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -22807,6 +23929,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -22844,6 +23967,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -22857,6 +23982,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -22908,6 +24034,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -22921,6 +24049,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -22954,6 +24083,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -22967,6 +24098,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -23022,6 +24154,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -23035,6 +24169,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -23076,6 +24211,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -23089,6 +24226,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -23122,6 +24260,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -23135,6 +24275,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
@@ -23186,6 +24327,8 @@
     
     return objc;
 }
+        
+
     
 -(id)initWithCoder:(NSCoder *)aDecoder {
 
@@ -23199,6 +24342,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
+        
 
         
 @end
