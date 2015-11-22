@@ -158,7 +158,7 @@ static TGChannelsPolling *channelPolling;
     BOOL prevLoaded = prevResult.count >= prevLimit || self.prevState == ChatHistoryStateFull;
     
     
-    if(nextLoaded && prevLoaded) {
+    if((nextLoaded && prevLoaded) || (prevLoaded && self.nextState == ChatHistoryStateRemote && nextLimit == 1)) {
         
         NSArray *result = [self.filter selectAllItems];
         

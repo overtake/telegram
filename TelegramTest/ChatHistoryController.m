@@ -100,12 +100,19 @@ static ChatHistoryController *observer;
         
         if(_conversation.type == DialogTypeChannel) {
             
+            __block BOOL requestNext = NO;
+            
             dispatch_block_t block = ^{
+                
                 if( _conversation.chat.chatFull.migrated_from_chat_id != 0) {
                     
                     HistoryFilter *filter = [[historyFilter == [ChannelFilter class] ? [MegagroupChatFilter class] : historyFilter alloc] initWithController:self peer:[TL_peerChat createWithChat_id:_conversation.chat.chatFull.migrated_from_chat_id]];
                     
                     [self addFilter:filter];
+                    
+                    if(requestNext && [controller respondsToSelector:@selector(requestNextHistory)]) {
+                        [controller requestNextHistory];
+                    }
                 }
             };
             
@@ -114,6 +121,7 @@ static ChatHistoryController *observer;
             } else {
                 [[FullChatManager sharedManager] performLoad:_conversation.chat.n_id callback:^(TLChatFull *fullChat) {
                     
+                    requestNext = YES;
                     block();
                     
                 }];
@@ -691,7 +699,7 @@ static ChatHistoryController *observer;
     BOOL prevLoaded = prevResult.count >= prevLimit || self.prevState == ChatHistoryStateFull;
     
     
-    if(nextLoaded && prevLoaded) {
+    if((nextLoaded && prevLoaded) || (prevLoaded && self.nextState == ChatHistoryStateRemote && nextLimit == 1)) {
         
         NSArray *result = [self.filter selectAllItems];
         

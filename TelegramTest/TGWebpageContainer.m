@@ -71,7 +71,7 @@
         
         _siteName = [TMTextField defaultTextField];
         [[_siteName cell] setTruncatesLastVisibleLine:YES];
-        
+
         [self.siteName setFrameOrigin:NSMakePoint(5, -6)];
         [self.author setFrameOrigin:NSMakePoint(5, 10)];
         

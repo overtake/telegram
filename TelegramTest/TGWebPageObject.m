@@ -68,8 +68,6 @@ NSImage *placeholder() {
         if(webpage.title) {
             NSMutableAttributedString *title = [[NSMutableAttributedString alloc] init];
             
-            
-            
             [title appendString:webpage.title withColor:[NSColor blackColor]];
             [title setFont:TGSystemMediumFont(13) forRange:title.range];
             
@@ -89,10 +87,8 @@ NSImage *placeholder() {
         NSMutableAttributedString *siteName = [[NSMutableAttributedString alloc] init];
         
         [siteName appendString:webpage.site_name ? webpage.site_name : @"Link Preview" withColor:GRAY_TEXT_COLOR];
-        
+
         [siteName setFont:TGSystemMediumFont(13) forRange:siteName.range];
-        [siteName addAttribute:NSParagraphStyleAttributeName value:style range:siteName.range];
-        
         _siteName = siteName;
         
         

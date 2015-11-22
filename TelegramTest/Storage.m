@@ -1757,7 +1757,7 @@ TL_localMessage *parseMessage(FMResultSet *result) {
     [queue inDatabaseWithDealocing:^(FMDatabase *db) {
         
         if(peers.count) {
-            FMResultSet *result = [db executeQuery:[NSString stringWithFormat:@"select * from %@ ordery by last_message_date DESC", [peers componentsJoinedByString:@","]]];
+            FMResultSet *result = [db executeQuery:[NSString stringWithFormat:@"select * from %@ where peer_id IN(%@) order by last_message_date DESC",tableModernDialogs, [peers componentsJoinedByString:@","]]];
             
             conversations = [self parseDialogs:result];
             [self fillLastMessagesWithConversations:conversations];

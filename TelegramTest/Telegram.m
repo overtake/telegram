@@ -355,7 +355,7 @@ static TGEnterPasswordPanel *panel;
         NSArray *files = TGGetLogFilePaths();
         
         [files enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
-            [[Telegram rightViewController].messagesViewController sendDocument:obj forConversation:user.dialog];
+            [appWindow().navigationController.messagesViewController sendDocument:obj forConversation:user.dialog];
         }];
         
     };

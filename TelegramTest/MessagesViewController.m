@@ -2240,9 +2240,9 @@ static NSTextAttachment *headerMediaIcon() {
                 _needNextRequest = NO;
                 
                 
+                 NSUInteger index = [result indexOfObject:importantItem];
+                
                 if((flags & ShowMessageTypeUnreadMark) > 0) {
-                    
-                    NSUInteger index = [result indexOfObject:importantItem];
                     
                     if(index != 0 && index != NSNotFound) {
                         _unreadMark = [[MessageTableItemUnreadMark alloc] initWithCount:0 type:RemoveUnreadMarkAfterSecondsType];
@@ -2291,6 +2291,10 @@ static NSTextAttachment *headerMediaIcon() {
                     }
                     
                     
+                }
+                
+                if(index < 10) {
+                    [self requestNextHistory];
                 }
                 
                 [self addScrollEvent];
@@ -2631,7 +2635,9 @@ static NSTextAttachment *headerMediaIcon() {
     
 }
 
-
+-(void)requestNextHistory {
+    [self loadhistory:0 toEnd:NO prev:NO isFirst:NO];
+}
 
 - (void)loadhistory:(int)message_id toEnd:(BOOL)toEnd prev:(BOOL)prev isFirst:(BOOL)isFirst {
     if(!self.conversation || self.historyController.isProccessing || _locked)

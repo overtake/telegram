@@ -1092,6 +1092,14 @@
          contextName = "__37-[UsersManager setUserStatus:forUid:]_block_invoke:UsersManager.m">
       </ContextState>
       <ContextState
+         contextName = "__43-[MessageTableCellContainerView initHeader]_block_invoke:MessageTableCellContainerView.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "weakSelf.item.message">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "-[ChannelFilter remoteRequest:peer_id:callback:]:ChannelFilter.m">
          <PersistentStrings>
             <PersistentString
@@ -4471,6 +4479,14 @@
       </ContextState>
       <ContextState
          contextName = "-[ComposePickerViewController selectTableDidChangedItem:]:ComposePickerViewController.m">
+      </ContextState>
+      <ContextState
+         contextName = "-[MessageTableItem buildHeaderAndSaveToCache]:MessageTableItem.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.message.from_id">
+            </PersistentString>
+         </PersistentStrings>
       </ContextState>
       <ContextState
          contextName = "-[TGWebpageAttach didUpdateWebpage:]:TGWebpageAttach.m">

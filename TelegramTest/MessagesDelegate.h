@@ -24,5 +24,5 @@
 
 @optional
 -(void)forceAddUnreadMark;
-
+-(void)requestNextHistory;
 @end

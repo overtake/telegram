@@ -538,7 +538,7 @@
         NSMenuItem *showСhatProfile;
         
         if(dialog.type == DialogTypeChat || dialog.type == DialogTypeChannel) {
-            showСhatProfile = [NSMenuItem menuItemWithTitle:dialog.type != DialogTypeChannel ? NSLocalizedString(@"Conversation.ShowGroupInfo", nil) : NSLocalizedString(@"Conversation.ShowChannelInfo", nil) withBlock:^(id sender) {
+            showСhatProfile = [NSMenuItem menuItemWithTitle:dialog.type != DialogTypeChannel || dialog.chat.isMegagroup ? NSLocalizedString(@"Conversation.ShowGroupInfo", nil) : NSLocalizedString(@"Conversation.ShowChannelInfo", nil) withBlock:^(id sender) {
                 [appWindow().navigationController showInfoPage:dialog];
             }];
             
@@ -568,7 +568,7 @@
         
         if(dialog.type == DialogTypeChat || dialog.type == DialogTypeChannel) {
             
-            NSMenuItem *deleteAndExitItem = [NSMenuItem menuItemWithTitle:chat.type == TLChatTypeNormal ? (dialog.type != DialogTypeChannel ? NSLocalizedString(@"Profile.DeleteAndExit", nil) : (chat.isCreator ? NSLocalizedString(chat.isMegagroup ?@"Conversation.Confirm.DeleteGroup" : @"Profile.DeleteChannel", nil) : NSLocalizedString(chat.isMegagroup ? @"Profile.DeleteAndExit" : @"Profile.LeaveChannel", nil)) ) : NSLocalizedString(@"Profile.DeleteConversation", nil)  withBlock:^(id sender) {
+            NSMenuItem *deleteAndExitItem = [NSMenuItem menuItemWithTitle:chat.type == TLChatTypeNormal ? (dialog.type != DialogTypeChannel ? NSLocalizedString(@"Profile.DeleteAndExit", nil) : (chat.isCreator ? NSLocalizedString(chat.isMegagroup ?@"Conversation.Confirm.DeleteGroup" : @"Profile.DeleteChannel", nil) : NSLocalizedString(chat.isMegagroup ? @"Conversation.Actions.LeaveGroup" : @"Profile.LeaveChannel", nil)) ) : NSLocalizedString(@"Profile.DeleteConversation", nil)  withBlock:^(id sender) {
                 [[Telegram rightViewController].messagesViewController deleteDialog:dialog];
             }];
             [menu addItem:deleteAndExitItem];

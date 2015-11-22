@@ -362,11 +362,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "TelegramTest/MessageTableItem.m"
-            timestampString = "469811082.076654"
+            timestampString = "469917285.693304"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "358"
-            endingLineNumber = "358"
+            startingLineNumber = "363"
+            endingLineNumber = "363"
             landmarkName = "+messageItemFromObject:"
             landmarkType = "5">
          </BreakpointContent>
@@ -378,11 +378,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "TelegramTest/MessageTableItem.m"
-            timestampString = "469811092.539622"
+            timestampString = "469917285.693304"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "362"
-            endingLineNumber = "362"
+            startingLineNumber = "367"
+            endingLineNumber = "367"
             landmarkName = "+messageItemFromObject:"
             landmarkType = "5">
          </BreakpointContent>

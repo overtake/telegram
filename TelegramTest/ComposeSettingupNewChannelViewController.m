@@ -129,6 +129,23 @@
     _joinLinkItem.drawsSeparator = YES;
     
     
+    [_joinLinkItem setCallback:^(TGGeneralRowItem *item) {
+        
+        GeneralSettingsBlockHeaderItem *header = (GeneralSettingsBlockHeaderItem *) item;
+        
+        [TMViewController showModalProgress];
+        
+        NSPasteboard* cb = [NSPasteboard generalPasteboard];
+        
+        [cb declareTypes:[NSArray arrayWithObjects:NSStringPboardType, nil] owner:item];
+        [cb setString:header.header.string forType:NSStringPboardType];
+        
+        dispatch_after_seconds(0.2, ^{
+            [TMViewController hideModalProgressWithSuccess];
+        });
+        
+    }];
+    
     weak();
     
     [_userNameContainerItem.observer setWillNeedSaveUserName:^(NSString *username) {

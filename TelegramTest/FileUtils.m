@@ -369,6 +369,15 @@ TelegramWindow *appWindow() {
         window = (TelegramWindow *)[Telegram delegate].mainWindow;
     }
     
+    if(![window isKindOfClass:[TelegramWindow class]]) {
+        window = [window respondsToSelector:@selector(window)] ? [window performSelector:@selector(window)] : window;
+        
+        if(![window isKindOfClass:[TelegramWindow class]]) {
+            window = (TelegramWindow *)[Telegram delegate].mainWindow;
+        }
+        
+    }
+    
     return window;
 }
 
