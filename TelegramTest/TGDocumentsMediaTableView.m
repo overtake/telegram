@@ -535,7 +535,7 @@
 }
 
 -(BOOL)acceptMessageItem:(MessageTableItem *)item {
-    return [item isKindOfClass:[MessageTableItemDocument class]] || [item isKindOfClass:[MessageTableItemAudioDocument class]];
+    return [item isKindOfClass:[MessageTableItemDocument class]];
 }
 
 -(int)heightWithItem:(MessageTableItem *)item {

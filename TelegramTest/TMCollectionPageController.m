@@ -201,7 +201,7 @@
     
     [self.documentsTableView setEditable:isEditable animated:animated];
     [self.sharedLinksTableView setEditable:isEditable animated:animated];
-    [self reloadData];
+    [self.photoCollection reloadData];
     
     
     

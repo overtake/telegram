@@ -295,7 +295,7 @@
     
     TL_conversation *conversation = [[DialogsManager sharedManager] find:self.peer_id];
     
-    if(self.prevState != ChatHistoryStateFull && conversation.top_message > 0 && conversation.top_message <= self.server_max_id)
+    if(self.prevState != ChatHistoryStateFull && (conversation.top_message <= self.server_max_id || conversation.top_message == 0))
         [self setState:ChatHistoryStateFull next:NO];
     
     return converted;

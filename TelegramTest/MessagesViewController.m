@@ -3860,7 +3860,7 @@ static NSTextAttachment *headerMediaIcon() {
         return;
     }
     
-    NSAlert *alert = [NSAlert alertWithMessageText:dialog.type == DialogTypeChannel && dialog.chat.isAdmin && !dialog.chat.isMegagroup ? (NSLocalizedString(@"Conversation.Confirm.DeleteChannel", nil)) : (dialog.type == DialogTypeChat && dialog.chat.type == TLChatTypeNormal ? NSLocalizedString(@"Conversation.Confirm.LeaveAndClear", nil) :  NSLocalizedString(@"Conversation.Confirm.DeleteAndClear", nil)) informativeText:dialog.type == DialogTypeChannel && dialog.chat.isAdmin && !dialog.chat.isMegagroup ? NSLocalizedString(@"Conversation.Confirm.DeleteChannelInfo", nil) : NSLocalizedString(@"Conversation.Confirm.UndoneAction", nil) block:^(NSNumber *result) {
+    NSAlert *alert = [NSAlert alertWithMessageText:dialog.type == DialogTypeChannel && dialog.chat.isCreator ? (NSLocalizedString(dialog.chat.isMegagroup ? @"Conversation.Confirm.DeleteGroup" : @"Conversation.Confirm.DeleteChannel", nil)) : (dialog.type == DialogTypeChat && dialog.chat.type == TLChatTypeNormal ? NSLocalizedString(@"Conversation.Confirm.LeaveAndClear", nil) :  NSLocalizedString(@"Conversation.Confirm.DeleteAndClear", nil)) informativeText:dialog.type == DialogTypeChannel && dialog.chat.isCreator ? NSLocalizedString(dialog.chat.isMegagroup ? @"Conversation.Confirm.DeleteSupergroupInfo" : @"Conversation.Confirm.DeleteChannelInfo", nil) : NSLocalizedString(@"Conversation.Confirm.UndoneAction", nil) block:^(NSNumber *result) {
         if([result intValue] == 1000) {
             if(startDeleting != nil)
                 startDeleting();
