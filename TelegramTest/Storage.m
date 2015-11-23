@@ -217,6 +217,9 @@ NSString *const tableModernDialogs = @"modern_dialogs";
         res = [db setKey:encryptionKey];
         
         
+         [self upgradeDialogsTo42Layer];
+        
+        
         [db executeUpdate:[NSString stringWithFormat:@"create table if not exists %@ (n_id INTEGER PRIMARY KEY,message_text TEXT, flags integer, from_id integer, peer_id integer, date integer, serialized blob, random_id, destruct_time, filter_mask integer, fake_id integer, dstate integer, webpage_id blob)",tableMessages]];
         
         if (![db columnExists:@"webpage_id" inTableWithName:tableMessages])
@@ -255,41 +258,6 @@ NSString *const tableModernDialogs = @"modern_dialogs";
             [db executeUpdate:[NSString stringWithFormat:@"CREATE INDEX if not exists web_page_idx ON %@(webpage_id)",tableChannelMessages]];
         }
         
-        
-//        [db executeUpdate:[NSString stringWithFormat:@"create table if not exists %@ (peer_id INTEGER PRIMARY KEY, top_message integer, unread_count integer,last_message_date integer, type integer, notify_settings blob, last_marked_message integer, top_message_fake integer, dstate integer,sync_message_id integer,last_marked_date integer,last_real_message_date integer, read_inbox_max_id integer, mute_until integer)",tableDialogs]];
-//        
-//        
-//        if (![db columnExists:@"read_inbox_max_id" inTableWithName:tableDialogs])
-//        {
-//            [db executeUpdate:[NSString stringWithFormat:@"ALTER TABLE %@ ADD COLUMN read_inbox_max_id integer",tableDialogs]];
-//        }
-//        
-//        if (![db columnExists:@"mute_until" inTableWithName:tableDialogs])
-//        {
-//            [db executeUpdate:[NSString stringWithFormat:@"ALTER TABLE %@ ADD COLUMN mute_until integer",tableDialogs]];
-//        }
-//        
-//        
-//        //dialogs indexes
-//        {
-//            [db executeUpdate:[NSString stringWithFormat:@"CREATE INDEX if not exists c_l_idx ON %@(last_real_message_date)",tableDialogs]];
-//            [db executeUpdate:[NSString stringWithFormat:@"CREATE INDEX if not exists c_l_idx ON %@(top_message)",tableDialogs]];
-//        }
-        
-        
-//       [db executeUpdate:[NSString stringWithFormat:@"create table if not exists %@ (peer_id INTEGER PRIMARY KEY, top_message blob, unread_count integer,last_message_date integer, notify_settings blob, last_marked_message integer, dstate integer,sync_message_id integer,last_marked_date integer,last_real_message_date integer, read_inbox_max_id integer, unread_important_count integer, pts integer, is_invisible integer, top_important_message blob, mute_until integer)",tableChannelDialogs]];
-//        
-//        //channel indexes
-//        {
-//            [db executeUpdate:[NSString stringWithFormat:@"CREATE INDEX if not exists top_im_idx ON %@(top_important_message)",tableChannelDialogs]];
-//            [db executeUpdate:[NSString stringWithFormat:@"CREATE INDEX if not exists lrmd_cd_idx ON %@(last_real_message_date)",tableChannelDialogs]];
-//        }
-//        
-//        if (![db columnExists:@"mute_until" inTableWithName:tableChannelDialogs])
-//        {
-//            [db executeUpdate:[NSString stringWithFormat:@"ALTER TABLE %@ ADD COLUMN mute_until integer",tableChannelDialogs]];
-//        }
-//        
         
         
         
@@ -370,7 +338,7 @@ NSString *const tableModernDialogs = @"modern_dialogs";
         
         
         
-        [self upgradeDialogsTo42Layer];
+       
         
         
         if([db hadError]) {
@@ -430,7 +398,15 @@ NSString *const tableModernDialogs = @"modern_dialogs";
             
             [db executeUpdate:[NSString stringWithFormat:@"drop table if exists %@",oTable]];
             [db executeUpdate:[NSString stringWithFormat:@"drop table if exists %@",ocTable]];
+            [db executeUpdate:[NSString stringWithFormat:@"drop table if exists %@",tableMessages]];
             
+            TGUpdateState *state = [self updateState];
+            state.checkMinimum = NO;
+            state.pts = 0;
+            state.date = 0;
+            state.seq = 0;
+            state.checkMinimum = YES;
+            [self saveUpdateState:state];
             
             [result close];
             

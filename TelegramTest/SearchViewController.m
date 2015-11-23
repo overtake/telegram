@@ -310,11 +310,12 @@ typedef enum {
         if([item isKindOfClass:[SearchMessageTableItem class]]) {
             msg_id = [[(SearchMessageTableItem *)searchItem message] n_id];
         } else {
-            TMViewController *controller = [[Telegram leftViewController] currentTabController];
+            StandartViewController *controller = (StandartViewController *) [[Telegram leftViewController] currentTabController];
             
-           // if([Telegram isSingleLayout] || ([controller isKindOfClass:[StandartViewController class]] && searchItem.type == SearchItemGlobalUser)) {
-                [(StandartViewController *)controller searchByString:@""];
-           // }
+            ашчуыif([controller isKindOfClass:[StandartViewController class]] && dialog) {
+                [controller hideSearchViewControllerWithConversationUsed:dialog];
+            }
+            
             
         }
         
@@ -322,6 +323,8 @@ typedef enum {
             
             
             [appWindow().navigationController showMessagesViewController:dialog withMessage:searchItem.message];
+            
+            
           
           //  [self searchByString:@""];
             
