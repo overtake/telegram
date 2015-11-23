@@ -709,13 +709,15 @@
         dialog.unread_count++;
     }
     
+    if([message.action isKindOfClass:[TL_messageActionChatMigrateTo class]]) {
+        dialog.unread_count = 0;
+    }
+    
     dialog.top_message = message.n_id;
     
-    if(message.isImportantMessage || ([message.chat isKindOfClass:[TLChat class]] && message.chat.isMegagroup)) {
-        dialog.top_important_message = message.n_id;
-    }
-    if(dialog.type != DialogTypeChannel || (message.isImportantMessage || ([message.chat isKindOfClass:[TLChat class]] && message.chat.isMegagroup)))
-        dialog.lastMessage = message;
+    dialog.top_important_message = message.n_id;
+
+    dialog.lastMessage = message;
     
     if(message.n_out) {
         dialog.last_marked_message = message.n_id;
@@ -733,9 +735,8 @@
     }
     
     int last_real_date = dialog.last_real_message_date;
-    
-    if(dialog.type != DialogTypeChannel || message.isImportantMessage || ([message.chat isKindOfClass:[TLChat class]] && message.chat.isMegagroup))
-        dialog.last_message_date = message.date;
+  
+    dialog.last_message_date = message.date;
     
     if(update_real_date) {
         dialog.last_real_message_date = last_real_date;

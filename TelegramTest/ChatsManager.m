@@ -79,9 +79,6 @@
                         
                         if(currentChat.isDeactivated && currentChat.migrated_to.channel_id != 0) {
                             [Notification perform:DIALOG_DELETE data:@{KEY_DIALOG:currentChat.dialog}];
-                            currentChat.dialog.unread_count = 0;
-                            [currentChat.dialog save];
-                            [MessagesManager updateUnreadBadge];
                         }
                     }
                     

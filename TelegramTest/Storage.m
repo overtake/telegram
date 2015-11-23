@@ -1645,9 +1645,6 @@ TL_localMessage *parseMessage(FMResultSet *result) {
                     insertChannelMessageBlock();
             }
             
-            
-            
-            
         }
          
         
