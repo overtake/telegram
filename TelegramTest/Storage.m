@@ -1544,9 +1544,14 @@ TL_localMessage *parseMessage(FMResultSet *result) {
          [db beginTransaction];
         NSArray *msgs = [messages copy];
         
-        
-        
+         NSMutableDictionary *updatePeers = [[NSMutableDictionary alloc] init];
+        NSMutableDictionary *channelsUpdatePeers = [[NSMutableDictionary alloc] init];
         for (TL_localMessage *message in msgs) {
+            
+            if(message.isChannelMessage)
+                channelsUpdatePeers[@(message.peer_id)] = @(message.chat.isMegagroup);
+            else
+                updatePeers[@(message.peer_id)] = @(1);
             
             TL_localMessage *m = [message copy];
             m.message = @"";
@@ -1650,6 +1655,22 @@ TL_localMessage *parseMessage(FMResultSet *result) {
             
             
         }
+         
+         [updatePeers enumerateKeysAndObjectsUsingBlock:^(NSNumber * peer_id, NSNumber *value, BOOL * _Nonnull stop) {
+             
+             long max_id = [db longForQuery:[NSString stringWithFormat:@"select MAX(n_id) from %@ where peer_id = %d",tableMessages,[peer_id intValue]]];
+             
+             [db executeUpdate:[NSString stringWithFormat:@"update %@ set top_message = ? where peer_id = ?",tableModernDialogs],@(max_id),peer_id];
+             
+         }];
+         
+         [channelsUpdatePeers enumerateKeysAndObjectsUsingBlock:^(NSNumber * peer_id, NSNumber *isMegagroup, BOOL * _Nonnull stop) {
+             
+             long max_id = [db longForQuery:[NSString stringWithFormat:@"select max(n_id) from %@ where filter_mask = ? and peer_id = ?",tableChannelMessages],@([isMegagroup boolValue] ? HistoryFilterChannelMessage : HistoryFilterImportantChannelMessage),peer_id];
+             
+             [db executeUpdate:[NSString stringWithFormat:@"update %@ set top_message = ? where peer_id = ?",tableModernDialogs],@(max_id),peer_id];
+             
+         }];
         
         [db commit];
 

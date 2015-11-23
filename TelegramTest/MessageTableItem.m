@@ -120,11 +120,6 @@ static NSCache *cItems;
 -(void)buildHeaderAndSaveToCache {
     _user = [[UsersManager sharedManager] find:self.message.from_id];
     
-#ifdef TGDEBUG
-    if(self.message.from_id != 0)
-        assert(_user != nil );
-#endif
-    
     NSString *name = self.isChat ? self.user.fullName : self.user.dialogFullName;
     
     

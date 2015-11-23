@@ -261,6 +261,7 @@ static NSArray *channelUpdates;
 
 -(void)addStatefullUpdate:(id)update seq:(int)seq pts:(int)pts date:(int)date qts:(int)qts pts_count:(int)pts_count {
     
+    
     TGUpdateContainer *statefulMessage = [[TGUpdateContainer alloc] initWithSequence:seq pts:pts date:date qts:qts pts_count:pts_count update:update];
     
    
@@ -991,24 +992,24 @@ static NSArray *channelUpdates;
        
         
         
-        NSMutableArray *ids = [[NSMutableArray alloc] init];
-        
-        
-        [copy enumerateObjectsUsingBlock:^(TLMessage *obj, NSUInteger idx, BOOL *stop) {
-            [ids addObject:@(obj.n_id)];
-        }];
-        
-        if(ids.count > 0) {
-            
-            
-            NSArray *res = [[Storage manager] issetMessages:ids];
-            
-            [ids removeAllObjects];
-           
-            NSArray *f = [copy filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.n_id IN %@",res]];
-            
-            [copy removeObjectsInArray:f];
-        }
+//        NSMutableArray *ids = [[NSMutableArray alloc] init];
+//        
+//        
+//        [copy enumerateObjectsUsingBlock:^(TLMessage *obj, NSUInteger idx, BOOL *stop) {
+//            [ids addObject:@(obj.n_id)];
+//        }];
+//        
+//        if(ids.count > 0) {
+//            
+//            
+//            NSArray *res = [[Storage manager] issetMessages:ids];
+//            
+//            [ids removeAllObjects];
+//           
+//            NSArray *f = [copy filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.n_id IN %@",res]];
+//            
+//            [copy removeObjectsInArray:f];
+//        }
     
         
         

@@ -4021,6 +4021,11 @@
       </ContextState>
       <ContextState
          contextName = "__31-[TGProccessUpdates addUpdate:]_block_invoke:TGProccessUpdates.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "shortMessage.seq">
+            </PersistentString>
+         </PersistentStrings>
       </ContextState>
       <ContextState
          contextName = "-[TGProccessUpdates updateShort:]:TGProccessUpdates.m">

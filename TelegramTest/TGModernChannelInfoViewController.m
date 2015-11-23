@@ -268,7 +268,7 @@
         GeneralSettingsRowItem *adminsItem;
         GeneralSettingsRowItem *membersItem;
         GeneralSettingsRowItem *blacklistItem;
-        
+        GeneralSettingsRowItem *addMembersItem;
         
         if(_chat.username.length > 0) {
             TGProfileParamItem *linkItem = [[TGProfileParamItem alloc] initWithHeight:30];
@@ -313,6 +313,26 @@
                  
             } description:NSLocalizedString(@"Channel.Members", nil) subdesc:[NSString stringWithFormat:@"%d",_chat.chatFull.participants_count] height:42 stateback:nil];
             
+            
+            addMembersItem = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeNone callback:^(TGGeneralRowItem *item) {
+                
+                NSMutableArray *filter = [[NSMutableArray alloc] init];
+                
+                [_chat.chatFull.participants.participants enumerateObjectsUsingBlock:^(TLChatParticipant *obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                    
+                    [filter addObject:@(obj.user_id)];
+                    
+                    ComposePickerViewController *viewController = [[ComposePickerViewController alloc] initWithFrame:NSZeroRect];
+                    
+                    [viewController setAction:[[ComposeAction alloc]initWithBehaviorClass:[ComposeActionAddGroupMembersBehavior class] filter:filter object:_chat.chatFull reservedObjects:@[_chat]]];
+                    
+                    [self.navigationViewController pushViewController:viewController animated:YES];
+                    
+                }];
+                
+            } description:NSLocalizedString(@"Group.AddMembers", nil) height:42 stateback:nil];
+            
+            
             if(_chat.chatFull.kicked_count > 0) {
                 blacklistItem = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeNext callback:^(TGGeneralRowItem *item) {
                     
@@ -345,8 +365,17 @@
         
         if(adminsItem)
             [_tableView addItem:adminsItem tableRedraw:YES];
-        if(membersItem)
-            [_tableView addItem:membersItem tableRedraw:YES];
+        
+        if(_chat.isMegagroup) {
+            if(addMembersItem)
+                [_tableView addItem:addMembersItem tableRedraw:YES];
+        } else {
+            if(membersItem)
+                [_tableView addItem:membersItem tableRedraw:YES];
+        }
+        
+        
+        
         if(blacklistItem)
             [_tableView addItem:blacklistItem tableRedraw:YES];
         

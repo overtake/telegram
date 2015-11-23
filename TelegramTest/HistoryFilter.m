@@ -138,11 +138,9 @@
     NSArray *allItems = [self selectAllItems];
     
     
-    if(allItems.count == 0) {
-        if(self.controller.conversation.peer_id == _peer.peer_id && ![self isKindOfClass:[CommonMediaHistoryFilter class]])
-            return self.controller.conversation.last_marked_message;
+    if(allItems.count == 0)
         return 0;
-    }
+    
     
     
     
@@ -166,10 +164,7 @@
     NSArray *allItems = [self selectAllItems];
     
     if(allItems.count == 0) {
-        if(self.controller.conversation.peer_id == _peer.peer_id && ![self isKindOfClass:[CommonMediaHistoryFilter class]])
-            return self.controller.conversation.last_marked_date;
-        else
-            return 0;
+         return 0;
     }
     
     
