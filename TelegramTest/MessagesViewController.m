@@ -2044,10 +2044,16 @@ static NSTextAttachment *headerMediaIcon() {
     
     __block BOOL accept = YES;
     
+    
+    
     if(conversation.type == DialogTypeChannel) {
+        
+        if(conversation.chat.isManager)
+            return YES;
+        
         [messages enumerateObjectsUsingBlock:^(TL_localMessage *obj, NSUInteger idx, BOOL *stop) {
             
-            accept = obj.chat.isAdmin || (obj.chat.isEditor && (obj.from_id != 0 || obj.n_out)) || (obj.chat.isModerator && obj.from_id != 0) || obj.n_out;
+            accept = obj.chat.isCreator || (obj.chat.isEditor && (obj.from_id != 0 || obj.n_out)) || (obj.chat.isModerator && obj.from_id != 0) || obj.n_out;
             
             if(!accept) {
                 *stop = YES;

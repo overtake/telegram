@@ -162,6 +162,10 @@ static TGChannelsPolling *channelPolling;
         
         NSArray *result = [self.filter selectAllItems];
         
+        if(self.isNeedSwapFilters) {
+            result = [[self filterAtIndex:1] selectAllItems];
+        }
+        
         [self performCallback:selectHandler result:result range:NSMakeRange(0, result.count) controller:self];
 
         [channelPolling checkInvalidatedMessages:result important:[self.filter isKindOfClass:[ChannelImportantFilter class]]];

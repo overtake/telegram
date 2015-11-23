@@ -38,7 +38,7 @@
 
 -(HistoryFilter *)filterWithNext:(BOOL)next;
 -(HistoryFilter *)filterWithPeerId:(int)peer_id;
-
+-(HistoryFilter *)filterAtIndex:(int)index;
 -(HistoryFilter *)filter;
 -(void)setFilter:(HistoryFilter *)filter;
 -(void)addFilter:(HistoryFilter *)filter;
@@ -65,6 +65,7 @@ typedef void (^selectHandler)(NSArray *result, NSRange range, id controller);
 -(void)addItemWithoutSavingState:(MessageTableItem *)item;
 
 -(void)swapFiltersBeforePrevLoaded;
+-(BOOL)isNeedSwapFilters;
 
 -(void)drop:(BOOL)dropMemory;
 

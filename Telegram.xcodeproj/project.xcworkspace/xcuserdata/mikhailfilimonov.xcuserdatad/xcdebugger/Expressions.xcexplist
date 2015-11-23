@@ -1750,6 +1750,11 @@
       </ContextState>
       <ContextState
          contextName = "-[TGModernChatInfoViewController drawParticipants]:TGModernChatInfoViewController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "_chat.chatFull.participants.participants">
+            </PersistentString>
+         </PersistentStrings>
       </ContextState>
       <ContextState
          contextName = "-[MessageTableCellTextView _didChangeBackgroundColorWithAnimation:]:MessageTableCellTextView.m">
@@ -1870,6 +1875,9 @@
                value = "weakSelf.dialog">
             </PersistentString>
          </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "__60-[ComposeActionAddUserToGroupBehavior addMemberToChat:user:]_block_invoke119:ComposeActionAddUserToGroupBehavior.m">
       </ContextState>
       <ContextState
          contextName = "__42-[NewContactsManager remoteCheckContacts:]_block_invoke_2207:NewContactsManager.m">
@@ -2226,6 +2234,14 @@
          <PersistentStrings>
             <PersistentString
                value = "artworkImage">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[ChannelHistoryController loadAroundMessagesWithSelectHandler:prevLimit:nextLimit:prevResult:nextResult:]:ChannelHistoryController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.filter">
             </PersistentString>
          </PersistentStrings>
       </ContextState>

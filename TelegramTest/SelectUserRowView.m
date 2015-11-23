@@ -31,12 +31,10 @@ static int offsetEditable = 30;
     if (self) {
         [self setSelectedBackgroundColor: NSColorFromRGB(0xfafafa)];
         [self setNormalBackgroundColor:NSColorFromRGB(0xffffff)];
-        self.avatarImageView = [TMAvatarImageView standartNewConversationTableAvatar];
-        self.avatarImageView.offsetTextY = -2;
-        [self addSubview:self.avatarImageView];
-        [self.avatarImageView setFont:TGSystemLightFont(15)];
-        [self.avatarImageView setFrameSize:NSMakeSize(36, 36)];
+        self.avatarImageView = [TMAvatarImageView standartMessageTableAvatar];
         
+        [self addSubview:self.avatarImageView];
+
         
         _titleTextField = [[TMNameTextField alloc] init];
         [self.titleTextField setEditable:NO];
@@ -292,7 +290,7 @@ static int offsetEditable = 30;
 	
     [LIGHT_GRAY_BORDER_COLOR setFill];
     
-    NSRectFill(NSMakeRect(point.x+2, 0, NSWidth(self.frame) - point.x - [self rowItem].rightBorderMargin, 1));
+    NSRectFill(NSMakeRect(point.x+2, 0, NSWidth(self.frame) - point.x - 10, 1));
 //    
 //    [NSColorFromRGB(arc4random() % 16000000) setFill];
 //    

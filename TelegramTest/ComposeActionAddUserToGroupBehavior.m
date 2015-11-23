@@ -56,11 +56,6 @@
     
     [RPCRequest sendRequest:request successHandler:^(RPCRequest *request, id response) {
         
-        if(!chat.isChannel) {
-            [chat.chatFull.participants.participants addObject:[TL_chatParticipant createWithUser_id:user.n_id inviter_id:[UsersManager currentUserId] date:[[MTNetwork instance] getTime]]];
-            [Notification perform:CHAT_STATUS data:@{KEY_CHAT_ID:@(chat.n_id)}];
-        }
-        
         [self.delegate behaviorDidEndRequest:response];
             
         dispatch_after_seconds(0.2, ^{

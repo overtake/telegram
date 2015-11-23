@@ -180,6 +180,28 @@ static ChatHistoryController *observer;
     }];
 }
 
+-(BOOL)isNeedSwapFilters {
+    __block BOOL needSwap = NO;
+    
+    [self.queue dispatchOnQueue:^{
+        needSwap = _isNeedSwapFilters;
+    } synchronous:YES];
+    
+    return needSwap;
+}
+
+-(HistoryFilter *)filterAtIndex:(int)index
+{
+    __block HistoryFilter *filter;
+    
+    [ASQueue dispatchOnStageQueue:^{
+        filter = _filters[index];
+    } synchronous:YES];
+    
+   return filter;
+
+}
+
 -(HistoryFilter *)filterWithPeerId:(int)peer_id {
     __block HistoryFilter *filter;
     

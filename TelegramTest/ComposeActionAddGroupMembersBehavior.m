@@ -98,13 +98,13 @@
     [RPCRequest sendRequest:[TLAPI_messages_addChatUser createWithChat_id:chatId user_id:user.inputUser fwd_limit:100] successHandler:^(RPCRequest *request, id response) {
         
         
-        if(self.chat) {
-            
-            [self.chat.participants.participants addObject:[TL_chatParticipant createWithUser_id:user.n_id inviter_id:[UsersManager currentUserId] date:[[MTNetwork instance] getTime]]];
-            
-            [Notification perform:CHAT_STATUS data:@{KEY_CHAT_ID:@(self.chat.n_id)}];
-            [Notification perform:CHAT_UPDATE_PARTICIPANTS data:@{KEY_CHAT:self.chat}];
-        }
+//        if(self.chat) {
+//            
+//            [self.chat.participants.participants addObject:[TL_chatParticipant createWithUser_id:user.n_id inviter_id:[UsersManager currentUserId] date:[[MTNetwork instance] getTime]]];
+//            
+//            [Notification perform:CHAT_STATUS data:@{KEY_CHAT_ID:@(self.chat.n_id)}];
+//            [Notification perform:CHAT_UPDATE_PARTICIPANTS data:@{KEY_CHAT:self.chat}];
+//        }
         
         if(members.count > 0) {
             [self addMembersToChat:members toChatId:chatId];
