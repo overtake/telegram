@@ -180,7 +180,7 @@
     [self.nameTextField setFrameSize:NSMakeSize(MIN(NSWidth(self.frame) - 60,NSWidth(self.nameTextField.frame)), NSHeight(self.nameTextField.frame))];
     
     [_nameTextField setCenteredXByView:_nameTextField.superview];
-    [_nameTextField setFrameOrigin:NSMakePoint(NSMinX(_nameTextField.frame), self.bounds.size.height - self.nameTextField.bounds.size.height - 4)];
+    [_nameTextField setFrameOrigin:NSMakePoint(NSMinX(_nameTextField.frame), self.bounds.size.height - self.nameTextField.bounds.size.height - 6)];
     
 
   //  [self.statusTextField setFrame:NSMakeRect(10, 9, self.bounds.size.width - 40, self.statusTextField.frame.size.height)];
@@ -202,7 +202,7 @@
         
         [_discussionSwitch setFrameOrigin:NSMakePoint(NSMinX(_discussionSwitch.frame) - roundf(NSWidth(_statusTextField.frame)/2), 6)];
         
-        [self.statusTextField setFrameOrigin:NSMakePoint(NSMaxX(self.discussionSwitch.frame), 5)];
+        [self.statusTextField setFrameOrigin:NSMakePoint(NSMaxX(self.discussionSwitch.frame), 7)];
         
     } else {
         [self.statusTextField sizeToFit];
