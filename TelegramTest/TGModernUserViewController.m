@@ -245,12 +245,25 @@
     }
     
     GeneralSettingsRowItem *helpItem;
-    if(_user.isBot) {
+    if(_user.isBot && _userFull) {
+        
+        __block BOOL canHelp = NO;
+       __block  NSString *command = @"/help";
+        
+        [_userFull.bot_info.commands enumerateObjectsUsingBlock:^(TL_botCommand *obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            
+            if([obj.command hasPrefix:@"help"]) {
+                command = obj.command;
+                canHelp = YES;
+                *stop = YES;
+            }
+            
+        }];
         
         helpItem = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeNone callback:^(TGGeneralRowItem *item) {
             
             [weakSelf.navigationViewController showMessagesViewController:_conversation];
-            [weakSelf.navigationViewController.messagesViewController sendMessage:@"/help" forConversation:weakSelf.conversation];
+            [weakSelf.navigationViewController.messagesViewController sendMessage:command forConversation:weakSelf.conversation];
             
         } description:NSLocalizedString(@"Bot.Help", nil) height:42 stateback:nil];
         
