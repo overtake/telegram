@@ -23,7 +23,7 @@
 
 
 - (void)setFrameSize:(NSSize)newSize {
-    [super setFrameSize:newSize];
+   
     
     
     if([self inLiveResize]) {
@@ -58,20 +58,21 @@
         }
         
     } else {
-        [self fixedResize];
+        [self fixedResizeWithWidth:newSize.width];
     }
+    
+     [super setFrameSize:newSize];
 }
 
 
 
-- (void)fixedResize {
+- (void)fixedResizeWithWidth:(int)width {
     
     
     [self.list enumerateObjectsUsingBlock:^(TGGeneralRowItem  *item, NSUInteger idx, BOOL * _Nonnull stop) {
-        [item updateItemHeightWithWidth:NSWidth(self.frame)];
+        [item updateItemHeightWithWidth:width];
     }];
 
-    
 }
 - (void)viewDidEndLiveResize {
     

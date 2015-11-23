@@ -80,7 +80,6 @@
         self.messageAttributedString = [[MessagesUtils serviceAttributedMessage:object forAction:object.action] mutableCopy];
         
         
-        [self.messageAttributedString detectAndAddLinks:URLFindTypeAll];
         self.type = MessageTableItemServiceMessageAction;
         
         if([object.action isKindOfClass:[TL_messageActionBotDescription class]]) {
@@ -116,8 +115,8 @@
             
             self.imageObject.imageSize = self.photoSize;
         }
-        
-        [self.messageAttributedString detectAndAddLinks:URLFindTypeLinks | URLFindTypeMentions | URLFindTypeHashtags | (object.conversation.user.isBot || object.conversation.type == DialogTypeChat ? URLFindTypeBotCommands : 0)];
+        if([self.message.action isKindOfClass:[TL_messageActionBotDescription class]])
+            [self.messageAttributedString detectAndAddLinks:URLFindTypeAll];
     }
     return self;
 }

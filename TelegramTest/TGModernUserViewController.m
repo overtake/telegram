@@ -17,6 +17,7 @@
 #import "TGShareContactModalView.h"
 #import "ComposeActionAddUserToGroupBehavior.h"
 #import "TGReportChannelModalView.h"
+#import "FullUsersManager.h"
 @interface TGModernUserViewController ()
 @property (nonatomic,strong) TLUser *user;
 @property (nonatomic,strong) TL_conversation *conversation;
@@ -28,8 +29,7 @@
 
 @property (nonatomic,strong) TGProfileHeaderRowItem *headerItem;
 
-
-
+@property (nonatomic,strong) TL_userFull *userFull;
 @end
 
 @implementation TGModernUserViewController
@@ -79,6 +79,8 @@
     
     [self setEditable:YES];
     [Notification addObserver:self selector:@selector(changeUserName:) name:USER_UPDATE_NAME];
+    
+    [self configure];
 }
 
 -(void)viewWillDisappear:(BOOL)animated {
@@ -127,8 +129,20 @@
     
     [self setAction:[[ComposeAction alloc] initWithBehaviorClass:[ComposeActionInfoProfileBehavior class] filter:nil object:_conversation]];
         
-    [self configure];
+    _userFull = nil;
     
+    if(user.isBot) {
+        [[FullUsersManager sharedManager] loadUserFull:_user callback:^(TL_userFull *userFull) {
+            
+            _userFull = userFull;
+            
+            [self configure];
+            
+        }];
+    }
+    
+    [self configure];
+   
 }
 
 -(void)changeEditableWithAnimation {
@@ -343,6 +357,17 @@
     profileMediaItem.xOffset = 30;
     
     if(!self.action.isEditable) {
+        
+        
+        if(_userFull && _userFull.bot_info.n_description.length > 0) {
+            TGProfileParamItem *botInfo = [[TGProfileParamItem alloc] init];
+            
+            [botInfo setHeader:NSLocalizedString(@"Profile.About", nil) withValue:_userFull.bot_info.n_description];
+            [_tableView addItem:botInfo tableRedraw:YES];
+            [_tableView addItem:[[TGGeneralRowItem alloc] initWithHeight:20] tableRedraw:YES];
+        }
+        
+        
         if(_user.username.length > 0) {
             _userNameItem = [[TGProfileParamItem alloc] init];
             
@@ -365,6 +390,8 @@
             
             [_tableView addItem:_phoneNumberItem tableRedraw:YES];
         }
+        
+        
         
         if(sendMessage || startSecretChat || shareContact) {
             [_tableView addItem:[[TGGeneralRowItem alloc] initWithHeight:20] tableRedraw:YES];

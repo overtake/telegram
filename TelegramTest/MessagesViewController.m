@@ -2421,7 +2421,10 @@ static NSTextAttachment *headerMediaIcon() {
         
         if(self.conversation.type == DialogTypeChannel) {
             [self.historyController startChannelPolling];
-           
+        }
+        
+        if(self.conversation.type == DialogTypeUser && self.conversation.user.isBot) {
+            [[FullUsersManager sharedManager] loadUserFull:self.conversation.user callback:nil];
         }
     }
 }

@@ -30,9 +30,9 @@
 
 -(BOOL)updateItemHeightWithWidth:(int)width {
     
-    NSSize size = [_value coreTextSizeForTextFieldForWidth:width - (self.xOffset * 2)];
+    NSSize size = [_value coreTextSizeForTextFieldForWidth:roundf(width) - (self.xOffset * 2)];
     
-    self.height = size.height + 30;
+    self.height = size.height + 33;
     _size = size;
     return YES;
 }
