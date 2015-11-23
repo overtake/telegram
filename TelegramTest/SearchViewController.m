@@ -312,7 +312,7 @@ typedef enum {
         } else {
             StandartViewController *controller = (StandartViewController *) [[Telegram leftViewController] currentTabController];
             
-            ашчуыif([controller isKindOfClass:[StandartViewController class]] && dialog) {
+            if([controller isKindOfClass:[StandartViewController class]] && dialog) {
                 [controller hideSearchViewControllerWithConversationUsed:dialog];
             }
             
