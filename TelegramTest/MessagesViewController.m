@@ -800,30 +800,17 @@ static NSTextAttachment *headerMediaIcon() {
 }
 
 -(void)showBotStartButton:(NSString *)startParam bot:(TLUser *)bot {
-    [self.bottomView setStateBottom:MessagesBottomViewBlockChat];
-    self.bottomView.botStartParam = startParam;
-    weak();
-    [self.bottomView setOnClickToLockedView:^{
-       
-        TL_conversation *conversation = weakSelf.conversation;
-        
-        [ASQueue dispatchOnStageQueue:^{
-            
-            StartBotSenderItem *sender = [[StartBotSenderItem alloc] initWithMessage:conversation.type == DialogTypeChat || conversation.type == DialogTypeChannel ? [NSString stringWithFormat:@"/start@%@",bot.username] : @"/start" forConversation:conversation bot:bot startParam:startParam];
-            sender.tableItem = [[weakSelf messageTableItemsFromMessages:@[sender.message]] lastObject];
-            [weakSelf.historyController addItem:sender.tableItem conversation:conversation callback:nil sentControllerCallback:nil];
-            
-            [ASQueue dispatchOnMainQueue:^{
-                
-                [weakSelf.bottomView setOnClickToLockedView:nil];
-                [weakSelf.bottomView setStateBottom:MessagesBottomViewNormalState];
-                
-            }];
-       
-        }];
     
+    TL_conversation *conversation = self.conversation;
+    
+    [ASQueue dispatchOnStageQueue:^{
+        
+        StartBotSenderItem *sender = [[StartBotSenderItem alloc] initWithMessage:conversation.type == DialogTypeChat || conversation.type == DialogTypeChannel ? [NSString stringWithFormat:@"/start@%@",bot.username] : @"/start" forConversation:conversation bot:bot startParam:startParam];
+        sender.tableItem = [[self messageTableItemsFromMessages:@[sender.message]] lastObject];
+        [self.historyController addItem:sender.tableItem conversation:conversation callback:nil sentControllerCallback:nil];
         
     }];
+    
 }
 
 
