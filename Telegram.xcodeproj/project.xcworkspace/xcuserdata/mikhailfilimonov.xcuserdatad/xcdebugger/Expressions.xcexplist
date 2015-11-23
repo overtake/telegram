@@ -385,6 +385,9 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "parseMessage:Storage.m">
+      </ContextState>
+      <ContextState
          contextName = "-[TGProccessUpdates initWithQueue:]:TGProccessUpdates.m">
       </ContextState>
       <ContextState
@@ -3017,6 +3020,12 @@
          <PersistentStrings>
             <PersistentString
                value = "obj.top_message">
+            </PersistentString>
+            <PersistentString
+               value = "obj.channel_top_important_message_id">
+            </PersistentString>
+            <PersistentString
+               value = "obj.top_important_message">
             </PersistentString>
          </PersistentStrings>
       </ContextState>

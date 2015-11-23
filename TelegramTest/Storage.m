@@ -691,6 +691,7 @@ TL_localMessage *parseMessage(FMResultSet *result) {
             msg.viewed = [result intForColumn:@"is_viewed"];
         } else {
             msg.message = [result stringForColumn:@"message_text"];
+            
             msg.flags = [result intForColumn:@"flags"];
             
                 
@@ -1544,11 +1545,7 @@ TL_localMessage *parseMessage(FMResultSet *result) {
          [db beginTransaction];
         NSArray *msgs = [messages copy];
         
-         NSMutableDictionary *updatePeers = [[NSMutableDictionary alloc] init];
-        NSMutableDictionary *channelsUpdatePeers = [[NSMutableDictionary alloc] init];
         for (TL_localMessage *message in msgs) {
-            
-            updatePeers[@(message.peer_id)] = @(1);
             
             TL_localMessage *m = [message copy];
             m.message = @"";
@@ -1653,21 +1650,6 @@ TL_localMessage *parseMessage(FMResultSet *result) {
             
         }
          
-         [updatePeers enumerateKeysAndObjectsUsingBlock:^(NSNumber * peer_id, NSNumber *value, BOOL * _Nonnull stop) {
-             
-             long max_id = [db longForQuery:[NSString stringWithFormat:@"select MAX(n_id) from %@ where peer_id = %d",tableMessages,[peer_id intValue]]];
-             
-             [db executeUpdate:[NSString stringWithFormat:@"update %@ set top_message = ? where peer_id = ?",tableModernDialogs],@(max_id),peer_id];
-             
-         }];
-         
-//         [channelsUpdatePeers enumerateKeysAndObjectsUsingBlock:^(NSNumber * peer_id, NSNumber *isMegagroup, BOOL * _Nonnull stop) {
-//             
-//             long max_id = [db longForQuery:[NSString stringWithFormat:@"select max(n_id) from %@ where filter_mask = ? and peer_id = ?",tableChannelMessages],@([isMegagroup boolValue] ? HistoryFilterChannelMessage : HistoryFilterImportantChannelMessage),peer_id];
-//             
-//             [db executeUpdate:[NSString stringWithFormat:@"update %@ set top_message = ? where peer_id = ?",tableModernDialogs],@(max_id),peer_id];
-//             
-//         }];
         
         [db commit];
 
@@ -1796,13 +1778,13 @@ TL_localMessage *parseMessage(FMResultSet *result) {
         
         [list enumerateObjectsUsingBlock:^(TL_conversation *obj, NSUInteger idx, BOOL * _Nonnull stop) {
             
-            NSString *sql = [NSString stringWithFormat:@"select * from %@ where n_id = ?",obj.type == DialogTypeChannel ? tableChannelMessages : tableMessages];
+            NSString *sql = [NSString stringWithFormat:@"select * from %@ where peer_id = ? ORDER BY date DESC, n_id DESC LIMIT 1",obj.type == DialogTypeChannel ? tableChannelMessages : tableMessages];
             
-            FMResultSet *result = [db executeQuery:sql,obj.type == DialogTypeChannel ? @(obj.channel_top_important_message_id) : @(obj.top_message)];
+            FMResultSet *result = [db executeQuery:sql, @(obj.peer_id)];
             
-            [result next];
+            if([result next])
+                obj.lastMessage = parseMessage(result);
             
-            obj.lastMessage = parseMessage(result);
             
             [result close];
             
