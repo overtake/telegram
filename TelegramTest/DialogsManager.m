@@ -79,19 +79,18 @@
                 [updateDialogs setObject:message.conversation forKey:@(message.conversation.peer_id)];
             }];
             
+            for (TL_conversation *dialog in updateDialogs.allValues) {
+                [dialog save];
+                [Notification perform:DIALOG_UPDATE data:@{KEY_DIALOG:dialog}];
+                [Notification perform:[Notification notificationNameByDialog:dialog action:@"unread_count"] data:@{KEY_DIALOG:dialog,KEY_LAST_CONVRESATION_DATA:[MessagesUtils conversationLastData:dialog]}];
+            }
+            
+            [[Storage manager] markMessagesAsRead:copy useRandomIds:@[]];
+            
+            
+            [MessagesManager updateUnreadBadge];
+            
         }];
-        
-        
-        for (TL_conversation *dialog in updateDialogs.allValues) {
-            [dialog save];
-            [Notification perform:DIALOG_UPDATE data:@{KEY_DIALOG:dialog}];
-            [Notification perform:[Notification notificationNameByDialog:dialog action:@"unread_count"] data:@{KEY_DIALOG:dialog,KEY_LAST_CONVRESATION_DATA:[MessagesUtils conversationLastData:dialog]}];
-        }
-        
-        [[Storage manager] markMessagesAsRead:copy useRandomIds:@[]];
-        
-        
-        [MessagesManager updateUnreadBadge];
         
 
     } forIds:copy random:NO queue:self.queue];
@@ -790,15 +789,16 @@
 
             }];
             
+            
+            [self add:last.allValues];
+            
+            [MessagesManager updateUnreadBadge];
+            
+            [Notification perform:DIALOGS_NEED_FULL_RESORT data:@{KEY_DIALOGS:self->list}];
+            [Notification perform:MESSAGE_LIST_RECEIVE object:messages];
+            
         }];
         
-
-        [self add:last.allValues];
-        
-        [MessagesManager updateUnreadBadge];
-
-        [Notification perform:DIALOGS_NEED_FULL_RESORT data:@{KEY_DIALOGS:self->list}];
-        [Notification perform:MESSAGE_LIST_RECEIVE object:messages];
     }];
     
 }
@@ -822,8 +822,6 @@
 }
 
 - (void)add:(NSArray *)all {
-    
-    int bp = 0;
     
     [self.queue dispatchOnQueue:^{
         [all enumerateObjectsUsingBlock:^(TL_conversation * dialog, NSUInteger idx, BOOL *stop) {
