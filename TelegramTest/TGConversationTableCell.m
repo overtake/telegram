@@ -464,13 +464,13 @@ static NSDictionary *attributes() {
                 
                 stateImage = self.isSelected ? image_DialogSelectedSendError() : image_ChatMessageError() ;
                 
-                point = NSMakePoint(NSWidth(self.frame) - stateImage.size.width - 13, 6);
+                point = NSMakePoint(NSWidth(self.frame) - stateImage.size.width - 13, 10);
                 
             } else if(self.item.message.dstate == DeliveryStatePending) {
                 
                 stateImage = self.isSelected ? image_SendingClockWhite() : image_SendingClockGray();
                 
-                point = NSMakePoint(NSMinX(self.dateField.frame) - stateImage.size.width -2, NSHeight(self.frame) - stateImage.size.height - 7);
+                point = NSMakePoint(NSMinX(self.dateField.frame) - stateImage.size.width -2, NSHeight(self.frame) - stateImage.size.height - 11);
                 
             }
             

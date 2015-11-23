@@ -179,8 +179,6 @@ const static int textFieldXOffset = 30;
         [self.textField sizeToFit];
         [self.textField setStringValue:@""];
         
-        NSLog(@"%@",NSStringFromRect(self.textField.frame));
-        
         [self.textField setFrame:NSMakeRect(textFieldXOffset, roundf((self.frame.size.height - self.textField.frame.size.height) / 2) - 1, self.containerView.frame.size.width - 30 - textFieldXOffset, self.textField.bounds.size.height)];
         
         
@@ -255,7 +253,10 @@ const static int textFieldXOffset = 30;
     
     [super setFrameSize:newSize];
     
-    [self.textField setFrameOrigin:NSMakePoint(30, NSMinY(self.textField.frame))];
+    
+    [self.textField setFrame:NSMakeRect(textFieldXOffset, roundf((self.frame.size.height - self.textField.frame.size.height) / 2) - 2, self.containerView.frame.size.width - 30 - textFieldXOffset, self.textField.bounds.size.height)];
+    
+   // [self.textField setFrameOrigin:NSMakePoint(30, NSMinY(self.textField.frame))];
     
     [self.textField setFrameSize:NSMakeSize(self.containerView.frame.size.width - 30 - NSMinX(self.textField.frame), NSHeight(self.textField.frame))];
     

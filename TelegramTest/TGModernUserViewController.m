@@ -137,6 +137,7 @@
 
 -(void)configure {
     
+    [self.doneButton setHidden:_conversation.type == DialogTypeSecretChat || [_user isSelf]];
     
     [_tableView removeAllItems:YES];
     

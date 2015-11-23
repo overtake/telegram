@@ -441,6 +441,10 @@ static NSCache *cacheItems;
     if(_type == SelectTableTypeUser) {
         [_request cancelRequest];
         
+        NSArray *users = [UsersManager findUsersByName:searchString];
+        
+        [self filterAndAddGlobalUsers:users checkContact:YES];
+        
         dispatch_after_seconds(0.2, ^{
             [self remoteSearchByUserName:searchString];
         });
@@ -449,7 +453,7 @@ static NSCache *cacheItems;
 }
 
 
--(void)filterAndAddGlobalUsers:(NSArray *)users {
+-(void)filterAndAddGlobalUsers:(NSArray *)users checkContact:(BOOL)checkContact {
     NSMutableArray *converted = [NSMutableArray array];
     
     NSMutableArray *ids = [[NSMutableArray alloc] init];
@@ -463,6 +467,9 @@ static NSCache *cacheItems;
     NSArray *filtred = [users filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"NOT(self.n_id IN %@)",ids]];
     
     [filtred enumerateObjectsUsingBlock:^(TLUser *obj, NSUInteger idx, BOOL *stop) {
+        
+        if(checkContact && !obj.isContact)
+            return;
         
         [obj rebuildNames];
         
@@ -487,13 +494,9 @@ static NSCache *cacheItems;
     
     if(userName.length > 4) {
         
-        NSArray *users = [UsersManager findUsersByName:userName];
-        
-        [self filterAndAddGlobalUsers:users];
-        
         _request = [RPCRequest sendRequest:[TLAPI_contacts_search createWithQ:userName limit:100] successHandler:^(RPCRequest *request, TL_contacts_found *response) {
             
-            [self filterAndAddGlobalUsers:response.users];
+            [self filterAndAddGlobalUsers:response.users checkContact:NO];
   
         } errorHandler:^(RPCRequest *request, RpcError *error) {
             
