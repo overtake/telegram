@@ -190,7 +190,7 @@ NSString *const tableModernDialogs = @"modern_dialogs";
     
     NSString *dbPath = [[Storage path] stringByAppendingPathComponent:@"encrypted.sqlite"];
     
-    
+    //Users/mikhailfilimonov/Library/Containers/ru.keepcoder.Telegram/Data/Library/Application Support/Telegram/database/encrypted.sqlite
     
     if(!encryptionKey) {
         return;

@@ -32,7 +32,7 @@
         [_pinButton setStringValue:NSLocalizedString(@"Conversation.Pin", nil)];
         [_pinButton setFont:TGSystemFont(13)];
         [_pinButton setTextColor:BLUE_UI_COLOR];
-        
+        [_pinButton sizeToFit];
         weak();
         
         
@@ -72,6 +72,7 @@
     [self.view.window setLevel:self.view.window.level == NSNormalWindowLevel ? NSScreenSaverWindowLevel : NSNormalWindowLevel];
     
     [_pinButton setStringValue:self.view.window.level == NSNormalWindowLevel ? NSLocalizedString(@"Conversation.Pin", nil) : NSLocalizedString(@"Conversation.Pinned", nil)];
+    [_pinButton sizeToFit];
     [_imageView setImage:self.view.window.level == NSNormalWindowLevel ? image_PinConversation() : image_PinnedConversation()];
 }
 

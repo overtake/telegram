@@ -816,10 +816,7 @@
 		C2E5A0611BABF33C00C1BCA1 /* TL_localMessageService_old34.m in Sources */ = {isa = PBXBuildFile; fileRef = C2E5A0601BABF33C00C1BCA1 /* TL_localMessageService_old34.m */; };
 		C2E5A0731BAC75C200C1BCA1 /* TGMessageViewSender.m in Sources */ = {isa = PBXBuildFile; fileRef = C2E5A0721BAC75C100C1BCA1 /* TGMessageViewSender.m */; };
 		C2ED28041BFF7F0E00F19531 /* TGReportChannelModalView.m in Sources */ = {isa = PBXBuildFile; fileRef = C2ED28031BFF7F0E00F19531 /* TGReportChannelModalView.m */; settings = {ASSET_TAGS = (); }; };
-		C2ED28111C03247800F19531 /* Sparkle.framework in Copy Files (6 items) */ = {isa = PBXBuildFile; fileRef = C235364C19C88D620044978E /* Sparkle.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		C2ED28121C03247800F19531 /* HockeySDK.framework in Copy Files (6 items) */ = {isa = PBXBuildFile; fileRef = C2082B7219C1E1C4000005E2 /* HockeySDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		C2ED28131C03248000F19531 /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C235364C19C88D620044978E /* Sparkle.framework */; };
-		C2ED28141C03248000F19531 /* HockeySDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2082B7219C1E1C4000005E2 /* HockeySDK.framework */; };
+		C2ED28171C03631600F19531 /* TGShare.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = C2CBF3B61AF38426006BF90A /* TGShare.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		C2ED357D18D9FECB00D0027C /* CAProgressLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = C2ED357C18D9FECB00D0027C /* CAProgressLayer.m */; };
 		C2F07E0F1BBD7CD900B3DB39 /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2F07E0E1BBD7CD900B3DB39 /* IOKit.framework */; };
 		C2F07E111BBD7CEF00B3DB39 /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2F07E101BBD7CEF00B3DB39 /* WebKit.framework */; };
@@ -975,6 +972,13 @@
 			remoteGlobalIDString = D2AAC046055464E500DB518D;
 			remoteInfo = sqlcipher;
 		};
+		C2ED28151C03630C00F19531 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = CEB09E5017DAFC240055F150 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = C2CBF3B51AF38426006BF90A;
+			remoteInfo = TGShare;
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -984,8 +988,6 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				C2ED28111C03247800F19531 /* Sparkle.framework in Copy Files (6 items) */,
-				C2ED28121C03247800F19531 /* HockeySDK.framework in Copy Files (6 items) */,
 			);
 			name = "Copy Files (6 items)";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1005,6 +1007,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 13;
 			files = (
+				C2ED28171C03631600F19531 /* TGShare.appex in Embed App Extensions */,
 			);
 			name = "Embed App Extensions";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2723,8 +2726,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C2ED28131C03248000F19531 /* Sparkle.framework in Frameworks */,
-				C2ED28141C03248000F19531 /* HockeySDK.framework in Frameworks */,
 				C2F07E191BBD7D9300B3DB39 /* libz.tbd in Frameworks */,
 				C2F07E241BC0210600B3DB39 /* libcommonCrypto.tbd in Frameworks */,
 				C2F07E1F1BBDBACD00B3DB39 /* libstdc++.tbd in Frameworks */,
@@ -5969,6 +5970,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				C2ED28161C03630C00F19531 /* PBXTargetDependency */,
 			);
 			name = Telegram;
 			productName = TelegramTest;
@@ -7052,6 +7054,14 @@
 		};
 /* End PBXSourcesBuildPhase section */
 
+/* Begin PBXTargetDependency section */
+		C2ED28161C03630C00F19531 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = C2CBF3B51AF38426006BF90A /* TGShare */;
+			targetProxy = C2ED28151C03630C00F19531 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
 /* Begin PBXVariantGroup section */
 		0A9EDC191897BA0E0037E1BC /* InfoPlist.strings */ = {
 			isa = PBXVariantGroup;
@@ -7349,7 +7359,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = ru.keepcoder.Telegram;
 				PRODUCT_NAME = Telegram;
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "64d39b9e-b45b-4a1a-8457-78d45ee157e3";
 				SDKROOT = macosx;
 				USER_HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/libwebp-0.4.2-mac-10.8/include ./MtProtoKit/**";
 				VALIDATE_PRODUCT = NO;
@@ -7399,7 +7409,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = ru.keepcoder.Telegram;
 				PRODUCT_NAME = Telegram;
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "64d39b9e-b45b-4a1a-8457-78d45ee157e3";
 				SDKROOT = macosx;
 				USER_HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/libwebp-0.4.2-mac-10.8/include ./MtProtoKit/**";
 				VALIDATE_PRODUCT = NO;

@@ -284,7 +284,7 @@
         if(_chat.chatFull.about.length > 0) {
             TGProfileParamItem *aboutItem = [[TGProfileParamItem alloc] initWithHeight:30];
             
-            [aboutItem setHeader:NSLocalizedString(@"Profile.About", nil) withValue:_chat.chatFull.about];
+            [aboutItem setHeader:[NSLocalizedString(@"Compose.ChannelAboutPlaceholder", nil) lowercaseString] withValue:_chat.chatFull.about];
             
             [_tableView addItem:aboutItem tableRedraw:YES];
             

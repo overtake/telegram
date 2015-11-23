@@ -228,6 +228,9 @@ static NSMutableDictionary *loaders;
         [[_headerTextField cell] setTruncatesLastVisibleLine:YES];
         [[_headerTextField cell] setTruncatesLastVisibleLine:YES];
         
+        
+        [[_countersTextField cell] setTruncatesLastVisibleLine:YES];
+        [[_countersTextField cell] setLineBreakMode:NSLineBreakByTruncatingTail];
         _progressIndicator = [[NSProgressIndicator alloc] initWithFrame:NSMakeRect(0, 0, 15, 15)];
         [_progressIndicator setStyle:NSProgressIndicatorSpinningStyle];
         [self addSubview:_progressIndicator];
