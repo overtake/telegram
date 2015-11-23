@@ -235,7 +235,7 @@
     GeneralSettingsRowItem *sendLogs = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeNext callback:^(TGGeneralRowItem *item) {
         
         
-        confirm(appName(), @"Are You sure to send logs developer? Please, don't press 'ok', if you not have problems with application", ^{
+        confirm(appName(), @"Are you sure you want to send your logs to the developer? Please do this only if you have a problem with the application and a support volunteer asked you to send logs.", ^{
             
             [Telegram sendLogs];
 

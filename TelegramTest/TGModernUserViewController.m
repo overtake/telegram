@@ -260,12 +260,14 @@
             
         }];
         
-        helpItem = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeNone callback:^(TGGeneralRowItem *item) {
-            
-            [weakSelf.navigationViewController showMessagesViewController:_conversation];
-            [weakSelf.navigationViewController.messagesViewController sendMessage:command forConversation:weakSelf.conversation];
-            
-        } description:NSLocalizedString(@"Bot.Help", nil) height:42 stateback:nil];
+        if(canHelp) {
+            helpItem = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeNone callback:^(TGGeneralRowItem *item) {
+                
+                [weakSelf.navigationViewController showMessagesViewController:_conversation];
+                [weakSelf.navigationViewController.messagesViewController sendMessage:command forConversation:weakSelf.conversation];
+                
+            } description:NSLocalizedString(@"Bot.Help", nil) height:42 stateback:nil];
+        } 
         
     }
 

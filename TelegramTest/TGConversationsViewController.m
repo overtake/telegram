@@ -451,14 +451,12 @@
     
     [menu addItem:openConversationMenuItem];
     
-    if(ACCEPT_FEATURE) {
-        NSMenuItem *anotherWindow = [NSMenuItem menuItemWithTitle:NSLocalizedString(@"ShowConversationWithAnotherWindow", nil) withBlock:^(id sender) {
-            [TGHeadChatPanel showWithConversation:dialog];
-        }];
-        
-        
-        [menu addItem:anotherWindow];
-    }
+    NSMenuItem *anotherWindow = [NSMenuItem menuItemWithTitle:NSLocalizedString(@"ShowConversationWithAnotherWindow", nil) withBlock:^(id sender) {
+        [TGHeadChatPanel showWithConversation:dialog];
+    }];
+    
+    
+    [menu addItem:anotherWindow];
     
     
     

@@ -136,14 +136,13 @@
         
         [SharedManager proccessGlobalResponse:response];
         
-        NSMutableArray *items = [NSMutableArray array];
         
         [_chat.chatFull.participants.participants addObjectsFromArray:response.participants];
         
         [self drawParticipants:response.participants];
         
         
-        if(items.count > 0)
+        if(response.participants.count > 0)
             [self addScrollEvent];
          else
             [self removeScrollEvent];
