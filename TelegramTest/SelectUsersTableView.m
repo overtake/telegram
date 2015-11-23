@@ -110,7 +110,7 @@ static NSCache *cacheItems;
     
     NSArray *chats = [[[DialogsManager sharedManager] all] filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(TL_conversation *evaluatedObject, NSDictionary<NSString *,id> * _Nullable bindings) {
         
-        return (evaluatedObject.type == DialogTypeChat && !evaluatedObject.chat.isDeactivated && (!evaluatedObject.chat.isAdmins_enabled || evaluatedObject.chat.isAdmin)) || (evaluatedObject.type == DialogTypeChannel && evaluatedObject.chat.isManager);
+        return (evaluatedObject.type == DialogTypeChat && evaluatedObject.chat.type == TLChatTypeNormal && !evaluatedObject.chat.isDeactivated && (!evaluatedObject.chat.isAdmins_enabled || evaluatedObject.chat.isAdmin)) || (evaluatedObject.type == DialogTypeChannel && evaluatedObject.chat.isManager);
         
     }]];
     
@@ -136,7 +136,7 @@ static NSCache *cacheItems;
     
     [chats enumerateObjectsUsingBlock:^(TL_conversation *obj, NSUInteger idx, BOOL * _Nonnull stop) {
         
-        if(obj.type == DialogTypeUser || (obj.type == DialogTypeChat && !obj.chat.isDeactivated && (!obj.chat.isAdmins_enabled || obj.chat.isAdmin)) || (obj.type == DialogTypeChannel && obj.chat.isManager)) {
+        if(obj.type == DialogTypeUser || (obj.type == DialogTypeChat && obj.chat.type == TLChatTypeNormal && !obj.chat.isDeactivated && (!obj.chat.isAdmins_enabled || obj.chat.isAdmin)) || (obj.type == DialogTypeChannel && obj.chat.isManager)) {
             [accepted addObject:obj];
         }
         

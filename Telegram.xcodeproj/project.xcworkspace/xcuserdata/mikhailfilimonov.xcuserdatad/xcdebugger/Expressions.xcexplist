@@ -909,6 +909,14 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "-[SearchViewController showMore:animation:]:SearchViewController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "items">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "__26-[Storage insertMessages:]_block_invoke646:Storage.m">
          <PersistentStrings>
             <PersistentString
@@ -4806,6 +4814,9 @@
                value = "self.lastMessage.message">
             </PersistentString>
          </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[SearchViewController showSearchResults:]:SearchViewController.m">
       </ContextState>
       <ContextState
          contextName = "-[TGModernEncryptedUpdates proccess17Layer:params:conversation:]:TGModernEncryptedUpdates.m">

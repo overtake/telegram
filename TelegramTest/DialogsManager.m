@@ -766,7 +766,7 @@
                 BOOL res = [self updateConversation:dialog withLastMessage:message update_real_date:update_real_date];
                 
                 if(dialog && res) {
-                    [last setObject:dialog forKey:@(dialog.peer.peer_id)];
+                    [last setObject:dialog forKey:@(dialog.peer_id)];
                 }
                 
                 [last enumerateKeysAndObjectsUsingBlock:^(id key, TL_conversation *obj, BOOL *stop) {

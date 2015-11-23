@@ -241,7 +241,7 @@ static NSTextAttachment *channelVerifySelectedAttachment() {
         if(fullChat.participants_count > 0) {
             [attributedString appendString:[NSString stringWithFormat:@"%d %@", fullChat.participants_count, fullChat.participants_count > 1 ?  NSLocalizedString(@"Conversation.Members", nil) : NSLocalizedString(@"Conversation.Member", nil)] withColor:NSColorFromRGB(0xa9a9a9)];
         } else {
-            [attributedString appendString:NSLocalizedString(@"Conversation.ChannelTitle", nil) withColor:NSColorFromRGB(0xa9a9a9)];
+            [attributedString appendString:self.isMegagroup ? NSLocalizedString(@"Conversation.GroupTitle", nil) : NSLocalizedString(@"Conversation.ChannelTitle", nil) withColor:NSColorFromRGB(0xa9a9a9)];
         }
         
         return attributedString;

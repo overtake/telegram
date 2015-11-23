@@ -146,8 +146,8 @@ typedef enum {
     }];
     
     
-    self.globalUsersLoadMoreItem = [[SearchLoadMoreItem alloc] init];
-    [self.globalUsersLoadMoreItem setClickBlock:^{
+    self.globalChannelsLoadMoreItem = [[SearchLoadMoreItem alloc] init];
+    [self.globalChannelsLoadMoreItem setClickBlock:^{
         [strongSelf showMore:SearchSectionChannels animation:YES];
     }];
     
@@ -486,7 +486,8 @@ static int insertCount = 3;
         }
         
         if(params.globalUsers.count > insertCount) {
-            [self.tableView insert:[params.globalUsers subarrayWithRange:NSMakeRange(0, insertCount-1)] startIndex:[self.tableView count] tableRedraw:NO];
+            for(int i = 0; i < insertCount; i++)
+                [self.tableView addItem:[params.globalUsers objectAtIndex:i] tableRedraw:NO];
             
             self.globalUsersLoadMoreItem.num = (int)params.globalUsers.count - insertCount;
             [self.tableView addItem:self.globalUsersLoadMoreItem tableRedraw:NO];
