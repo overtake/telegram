@@ -75,16 +75,10 @@
         {
             _replyMessage = [MessagesManager supportMessage:self.reply_to_msg_id peer_id:self.peer_id];
             
-            if(!_replyMessage)
+            if(_replyMessage)
             {
-                if(!_replyMessage)
-                    _replyMessage = [[Storage manager] messageById:self.reply_to_msg_id inChannel:[self.to_id isKindOfClass:[TL_peerChannel class]] ? self.peer_id : 0];
-                
-                if(_replyMessage)
-                {
-                    [[Storage manager] addSupportMessages:@[_replyMessage]];
-                    [MessagesManager addSupportMessages:@[_replyMessage]];
-                }
+                [[Storage manager] addSupportMessages:@[_replyMessage]];
+                [MessagesManager addSupportMessages:@[_replyMessage]];
             }
         }
         

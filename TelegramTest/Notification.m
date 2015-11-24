@@ -155,11 +155,6 @@ NSString *const UNREAD_COUNT_CHANGED = @"TGUNREADCOUNTCHANGED";
 }
 
 
-+(void)perform:(NSString *)name object:(id)object {
-    
-    [[self center] postNotificationNameOnMainThread:name object:object userInfo:object ? @{name:object} : nil];
-}
-
 + (NSString *) notificationNameByDialog:(TL_conversation *)dialog
                                    action:(NSString *) action {
     return [NSString stringWithFormat:@"%@_%d_%d", action, dialog.type, dialog.peer_id];
@@ -181,6 +176,20 @@ NSString *const UNREAD_COUNT_CHANGED = @"TGUNREADCOUNTCHANGED";
 
 +(void)perform:(NSString *)name data:(NSDictionary *)data {
     [[self center] postNotificationNameOnMainThread:name object:nil userInfo:data];
+}
+
++(void)perform:(NSString *)name object:(id)object {
+    
+    [[self center] postNotificationNameOnMainThread:name object:object userInfo:object ? @{name:object} : nil];
+}
+
++(void)performOnStageQueue:(NSString *)name object:(id)object {
+    
+    [[self center] postNotificationNameOnStageThread:name object:object userInfo:object ? @{name:object} : nil];
+}
+
++(void)performOnStageQueue:(NSString *)name data:(NSDictionary *)data {
+    [[self center] postNotificationNameOnStageThread:name object:nil userInfo:data];
 }
 
 

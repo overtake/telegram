@@ -11,4 +11,8 @@
 @interface NSNotificationCenter (MainThread)
 - (void)postNotificationNameOnMainThread:(NSString *)notificationName object:(id)notificationSender;
 - (void)postNotificationNameOnMainThread:(NSString *)notificationName object:(id)notificationSender userInfo:(NSDictionary *)userInfo;
+
+- (void)postNotificationNameOnStageThread:(NSString *)notificationName object:(id)notificationSender;
+- (void)postNotificationNameOnStageThread:(NSString *)notificationName object:(id)notificationSender userInfo:(NSDictionary *)userInfo;
+
 @end

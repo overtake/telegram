@@ -19,7 +19,7 @@
 #import "DownloadVideoItem.h"
 #import "TGSharedMediaCap.h"
 #import "TGSharedLinksTableView.h"
-
+#import "TGAudioPlayerWindow.h"
 @interface TMCollectionPageController ()<TMTableViewDelegate>
 @property (nonatomic,strong) PhotoCollectionTableView *photoCollection;
 @property (nonatomic,strong) NSMutableArray *items;
@@ -758,6 +758,11 @@ static const int maxWidth = 120;
     
     [filterMenu addItem:[NSMenuItem menuItemWithTitle:NSLocalizedString(@"Conversation.Filter.SharedLinks",nil) withBlock:^(id sender) {
         [self showSharedLinks];
+    }]];
+    
+    
+    [filterMenu addItem:[NSMenuItem menuItemWithTitle:NSLocalizedString(@"Modern.SharedMedia.Audio",nil) withBlock:^(id sender) {
+        [TGAudioPlayerWindow show:_conversation playerState:TGAudioPlayerWindowStatePlayList];
     }]];
     
 //    [filterMenu addItem:[NSMenuItem menuItemWithTitle:NSLocalizedString(@"Conversation.Filter.Audio",nil) withBlock:^(id sender) {

@@ -1805,6 +1805,7 @@ TL_localMessage *parseMessage(FMResultSet *result) {
             if(dialog.fake)
                 return;
             
+            
             [db executeUpdate:[NSString stringWithFormat:@"insert or replace into %@ (peer_id,top_message,type,last_message_date,unread_count,last_marked_message,last_marked_date,last_real_message_date,read_inbox_max_id, unread_important_count, pts,is_invisible,top_important_message,mute_until) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?)",tableModernDialogs],
              @(dialog.peer_id),
              @(dialog.channel_top_message_id),
@@ -1855,7 +1856,6 @@ TL_localMessage *parseMessage(FMResultSet *result) {
         [db executeUpdate:[NSString stringWithFormat:@"delete from %@ where peer_id = ?",tableMessages],@(dialog.peer_id)];
         [db executeUpdate:[NSString stringWithFormat:@"delete from %@ where peer_id = ?",tableChannelMessages],@(dialog.peer_id)];
         [db executeUpdate:[NSString stringWithFormat:@"delete from %@ where peer_id = ?",tableMessageHoles],@(dialog.peer_id)];
-         [db executeUpdate:[NSString stringWithFormat:@"delete from %@ where n_id = ?",tableBroadcasts],@(dialog.peer_id)];
      
         TLChat *chat = dialog.chat;
         
@@ -1863,9 +1863,9 @@ TL_localMessage *parseMessage(FMResultSet *result) {
             chat = (TLChat *) dialog.encryptedChat;
         
         if(chat) {
-            [db executeUpdate:[NSString stringWithFormat:@"delete from %@ where chat_id = ?",tableEncryptedChats],@(dialog.chat.n_id)];
-            [db executeUpdate:[NSString stringWithFormat:@"delete from %@ where n_id = ?",tableChats],@(dialog.chat.n_id)];
-            [db executeUpdate:[NSString stringWithFormat:@"delete from %@ where n_id = ?",tableChatsFull], @(dialog.chat.n_id)];
+            [db executeUpdate:[NSString stringWithFormat:@"delete from %@ where chat_id = ?",tableEncryptedChats],@(chat.n_id)];
+            [db executeUpdate:[NSString stringWithFormat:@"delete from %@ where n_id = ?",tableChats],@(chat.n_id)];
+            [db executeUpdate:[NSString stringWithFormat:@"delete from %@ where n_id = ?",tableChatsFull], @(chat.n_id)];
             [db executeUpdate:[NSString stringWithFormat:@"delete from %@ where chat_id = ?",tableSelfDestruction],@(dialog.peer.chat_id)];
            
         }

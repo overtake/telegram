@@ -447,7 +447,7 @@
     
     self.conversation = nil;
     [self.historyController stopChannelPolling];
-    
+    [globalAudioPlayer() stop];
     [self flushMessages];
     
    
@@ -800,17 +800,38 @@ static NSTextAttachment *headerMediaIcon() {
 }
 
 -(void)showBotStartButton:(NSString *)startParam bot:(TLUser *)bot {
+    [self.bottomView setStateBottom:MessagesBottomViewBlockChat];
+    self.bottomView.botStartParam = startParam;
     
-    TL_conversation *conversation = self.conversation;
     
-    [ASQueue dispatchOnStageQueue:^{
+    
+    weak();
+    [self.bottomView setOnClickToLockedView:^{
+       
+        TL_conversation *conversation = weakSelf.conversation;
         
-        StartBotSenderItem *sender = [[StartBotSenderItem alloc] initWithMessage:conversation.type == DialogTypeChat || conversation.type == DialogTypeChannel ? [NSString stringWithFormat:@"/start@%@",bot.username] : @"/start" forConversation:conversation bot:bot startParam:startParam];
-        sender.tableItem = [[self messageTableItemsFromMessages:@[sender.message]] lastObject];
-        [self.historyController addItem:sender.tableItem conversation:conversation callback:nil sentControllerCallback:nil];
+        [ASQueue dispatchOnStageQueue:^{
+            
+            StartBotSenderItem *sender = [[StartBotSenderItem alloc] initWithMessage:conversation.type == DialogTypeChat || conversation.type == DialogTypeChannel ? [NSString stringWithFormat:@"/start@%@",bot.username] : @"/start" forConversation:conversation bot:bot startParam:startParam];
+            sender.tableItem = [[weakSelf messageTableItemsFromMessages:@[sender.message]] lastObject];
+            [weakSelf.historyController addItem:sender.tableItem conversation:conversation callback:nil sentControllerCallback:nil];
+            
+            [ASQueue dispatchOnMainQueue:^{
+                
+                [weakSelf.bottomView setOnClickToLockedView:nil];
+                [weakSelf.bottomView setStateBottom:MessagesBottomViewNormalState];
+                
+            }];
+       
+        }];
+    
         
     }];
     
+    
+    if(startParam.length > 0 && ![[startParam lowercaseString] isEqualToString:@"start"]) {
+        self.bottomView.onClickToLockedView();
+    }
 }
 
 
@@ -1572,17 +1593,20 @@ static NSTextAttachment *headerMediaIcon() {
     
     NSArray *readed = [notify.userInfo objectForKey:KEY_MESSAGE_ID_LIST];
     
-    [self.historyController items:readed complete:^(NSArray * filtred) {
-         for (MessageTableItem *item in filtred) {
-             item.message.flags&= ~TGUNREADMESSAGE;
-             
-             NSUInteger idx = [self indexOfObject:item];
-             
-             if(idx != NSNotFound) {
-                 [self.table reloadDataForRowIndexes:[NSIndexSet indexSetWithIndex:idx] columnIndexes:[NSIndexSet indexSetWithIndex:0]];
-             }
-         }
-    }];
+    [ASQueue dispatchOnMainQueue:^{
+        [self.historyController items:readed complete:^(NSArray * filtred) {
+            for (MessageTableItem *item in filtred) {
+                item.message.flags&= ~TGUNREADMESSAGE;
+                
+                NSUInteger idx = [self indexOfObject:item];
+                
+                if(idx != NSNotFound) {
+                    [self.table reloadDataForRowIndexes:[NSIndexSet indexSetWithIndex:idx] columnIndexes:[NSIndexSet indexSetWithIndex:0]];
+                }
+            }
+        }];
+    }]; 
+    
 }
 
 - (MessageTableCell *)cellForRow:(NSInteger)row {
@@ -1650,7 +1674,10 @@ static NSTextAttachment *headerMediaIcon() {
     
     
    // [CATransaction begin];
-    
+    StandartViewController *controller = (StandartViewController *) [[Telegram leftViewController] currentTabController];
+    if([controller isKindOfClass:[StandartViewController class]] && controller.isSearchActive && forceEnd) {
+        [(StandartViewController *)controller hideSearchViewControllerWithConversationUsed:self.conversation];
+    }
     
     NSRect prevRect;
     
@@ -2421,10 +2448,7 @@ static NSTextAttachment *headerMediaIcon() {
         
         if(self.conversation.type == DialogTypeChannel) {
             [self.historyController startChannelPolling];
-        }
-        
-        if(self.conversation.type == DialogTypeUser && self.conversation.user.isBot) {
-            [[FullUsersManager sharedManager] loadUserFull:self.conversation.user callback:nil];
+           
         }
     }
 }
@@ -2568,15 +2592,11 @@ static NSTextAttachment *headerMediaIcon() {
     [self showNoMessages:self.messages.count == 1 || (self.conversation.user.isBot && self.messages.count == 2 && [self.messages[1] isKindOfClass:[MessageTableItemServiceMessage class]])];
     
     
-    [self.historyController nextStateAsync:^(ChatHistoryState state) {
-        
-        if(state == ChatHistoryStateFull) {
-            if( self.conversation.user.isBot &&  (self.messages.count == 1 || (self.messages.count == 2 && [self.messages[1] isKindOfClass:[MessageTableItemServiceMessage class]]))) {
-                [self showBotStartButton:NSLocalizedString(@"Bot.Start", nil) bot:self.conversation.user];
-            }
-        }
-        
-    }];
+    if(self.conversation.user.isBot &&  (self.messages.count == 1 || (self.messages.count == 2 && [self.messages[1] isKindOfClass:[MessageTableItemServiceMessage class]]))) {
+        [self showBotStartButton:NSLocalizedString(@"Bot.Start", nil) bot:self.conversation.user];
+    } else if(self.conversation.user.isBot) {
+        [self.bottomView setStateBottom:MessagesBottomViewNormalState];
+    }
     
     BOOL isHaveMessages = NO;
     for(MessageTableItem *item in self.messages) {

@@ -357,7 +357,7 @@ static NSMutableDictionary *loaders;
 }
 
 -(TGSProfileMediaRowItem *)item {
-    return (TGGeneralRowItem *) [self rowItem];
+    return (TGSProfileMediaRowItem *) [self rowItem];
 }
 
 -(void)setFrameSize:(NSSize)newSize {

@@ -241,7 +241,7 @@
         }
     }];
     
-    [Notification perform:MESSAGE_LIST_UPDATE_TOP data:@{KEY_MESSAGE_LIST:messages}];
+    [Notification performOnStageQueue:MESSAGE_LIST_UPDATE_TOP data:@{KEY_MESSAGE_LIST:messages}];
     
     [groups enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
          [Notification perform:UPDATE_MESSAGE_GROUP_HOLE data:@{KEY_GROUP_HOLE:obj}];
@@ -329,7 +329,7 @@
                 [topHole save];
                 
                 [Notification perform:UPDATE_MESSAGE_GROUP_HOLE data:@{KEY_GROUP_HOLE:topHole}];
-                [Notification perform:MESSAGE_DELETE_EVENT data:@{KEY_DATA:@[@{KEY_PEER_ID:@(botHole.peer_id),KEY_MESSAGE_ID:@(botHole.uniqueId)}]}];
+                [Notification performOnStageQueue:MESSAGE_DELETE_EVENT data:@{KEY_DATA:@[@{KEY_PEER_ID:@(botHole.peer_id),KEY_MESSAGE_ID:@(botHole.uniqueId)}]}];
                 
             }
             
@@ -338,7 +338,7 @@
         
     } else if([update isKindOfClass:[TL_updateMessageID class]]) {
         [[Storage manager] updateMessageId:[(TL_updateMessageID *)update random_id] msg_id:[(TL_updateMessageID *)update n_id]];
-        [Notification perform:MESSAGE_UPDATE_MESSAGE_ID data:@{KEY_MESSAGE_ID:@([(TL_updateMessageID *)update n_id]),KEY_RANDOM_ID:@([(TL_updateMessageID *)update random_id])}];
+        [Notification performOnStageQueue:MESSAGE_UPDATE_MESSAGE_ID data:@{KEY_MESSAGE_ID:@([(TL_updateMessageID *)update n_id]),KEY_RANDOM_ID:@([(TL_updateMessageID *)update random_id])}];
     } else if([update isKindOfClass:[TL_updateReadChannelInbox class]]) {
         
         [[DialogsManager sharedManager] markChannelMessagesAsRead:[update channel_id] max_id:[(TL_updateReadChannelInbox *)update max_id]];

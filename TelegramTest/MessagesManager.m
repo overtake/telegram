@@ -117,7 +117,7 @@ static const int seconds_to_notify = 120;
         
         TL_conversation *conversation = message.conversation;
         
-        [Notification perform:MESSAGE_UPDATE_TOP_MESSAGE data:@{KEY_MESSAGE:message,@"update_real_date":@(update_real_date)}];
+        [Notification performOnStageQueue:MESSAGE_UPDATE_TOP_MESSAGE data:@{KEY_MESSAGE:message,@"update_real_date":@(update_real_date)}];
         
         
         if(message.n_out || (message.isChannelMessage && (!message.isImportantMessage && !message.chat.isMegagroup))) {
@@ -135,7 +135,7 @@ static const int seconds_to_notify = 120;
         TLChat *chat = [[ChatsManager sharedManager] find:message.chat.n_id];
         
         
-        NSString *title = message.isChannelMessage ? (chat.title) : ( [message.to_id isSecret] || [TGPasslock isVisibility] ? appName() : [fromUser fullName] );
+        NSString *title = message.isChannelMessage && !message.chat.isMegagroup ? (chat.title) : ( [message.to_id isSecret] || [TGPasslock isVisibility] ? appName() : [fromUser fullName] );
         NSString *msg = message.message;
         if(message.action) {
             msg = [MessagesUtils serviceMessage:message forAction:message.action];

@@ -140,6 +140,8 @@ extern NSString *const UNREAD_COUNT_CHANGED;
 + (void)perform:(NSString *)name object:(id)object;
 + (void)perform:(NSString *)name data:(NSDictionary *)data;
 
++(void)performOnStageQueue:(NSString *)name object:(id)object;
++(void)performOnStageQueue:(NSString *)name data:(NSDictionary *)data;
 
 extern NSString *const USER_ACTIVITY_CONVERSATION;
 

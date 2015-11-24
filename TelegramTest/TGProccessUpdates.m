@@ -518,7 +518,7 @@ static NSArray *channelUpdates;
             
             [[Storage manager] updateMessageId:update.random_id msg_id:[update n_id]];
             
-            [Notification perform:MESSAGE_UPDATE_MESSAGE_ID data:@{KEY_MESSAGE_ID:@(update.n_id),KEY_RANDOM_ID:@(update.random_id)}];
+            [Notification performOnStageQueue:MESSAGE_UPDATE_MESSAGE_ID data:@{KEY_MESSAGE_ID:@(update.n_id),KEY_RANDOM_ID:@(update.random_id)}];
             
             return;
             
@@ -1028,7 +1028,7 @@ static NSArray *channelUpdates;
         }
         
         if([response n_messages].count > 0) {
-            [Notification perform:MESSAGE_LIST_UPDATE_TOP data:@{KEY_MESSAGE_LIST:[response n_messages]}];
+            [Notification performOnStageQueue:MESSAGE_LIST_UPDATE_TOP data:@{KEY_MESSAGE_LIST:[response n_messages]}];
         }
         
         

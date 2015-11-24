@@ -478,7 +478,7 @@
         
         if(dialog.type == DialogTypeChannel) {
             request = [TLAPI_channels_leaveChannel createWithChannel:dialog.chat.inputPeer];
-            if(dialog.chat.isAdmin) {
+            if(dialog.chat.isCreator) {
                 request = [TLAPI_channels_deleteChannel createWithChannel:dialog.chat.inputPeer];
             }
             
@@ -629,7 +629,7 @@
             
             TL_conversation *conversation = [self find:peer.peer_id];
             if(conversation != nil) {
-                [Notification perform:MESSAGE_READ_EVENT data:@{KEY_MESSAGE_ID_LIST:ids}];
+                [Notification performOnStageQueue:MESSAGE_READ_EVENT data:@{KEY_MESSAGE_ID_LIST:ids}];
                 [Notification perform:[Notification notificationNameByDialog:conversation action:@"unread_count"] data:@{KEY_DIALOG:conversation,KEY_LAST_CONVRESATION_DATA:[MessagesUtils conversationLastData:conversation]}];
 
             }

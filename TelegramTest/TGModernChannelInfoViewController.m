@@ -471,7 +471,7 @@
                 [self.navigationViewController.messagesViewController deleteDialog:_conversation];
                 
                 
-            } description:_chat.isMegagroup ? NSLocalizedString(@"Profile.DeleteAndExit", nil) :NSLocalizedString(@"Profile.DeleteChannel", nil) height:42 stateback:nil];
+            } description:_chat.isMegagroup ? NSLocalizedString(@"Conversation.Confirm.DeleteGroup", nil) : NSLocalizedString(@"Profile.DeleteChannel", nil) height:42 stateback:nil];
             
             deleteChannelItem.textColor = [NSColor redColor];
             
@@ -507,7 +507,7 @@
                 [self.navigationViewController.messagesViewController deleteDialog:_conversation];
                 
                 
-            } description:NSLocalizedString(@"Profile.LeaveChannel", nil) height:42 stateback:nil];
+            } description:_chat.isMegagroup ? NSLocalizedString(@"Conversation.Actions.LeaveGroup", nil) : NSLocalizedString(@"Profile.LeaveChannel", nil) height:42 stateback:nil];
             
             deleteChannelItem.textColor = [NSColor redColor];
             
