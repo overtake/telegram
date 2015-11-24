@@ -108,7 +108,7 @@ Telegram *TelegramInstance() {
     [self.accountStatusTimer start];
 }
 
-static int max_chat_users = 200;
+static int max_chat_users = 199;
 static int max_broadcast_users = 100;
 static int megagroup_size_max = 1000;
 

@@ -213,7 +213,7 @@
        
         if(range.length > 0) {
             
-            if(range.length != _chat.chatFull.participants_count && (range.length == maxChatUsers() || _chat.chatFull.participants_count == maxChatUsers()) ) {
+            if(range.length != _chat.chatFull.participants_count && (range.length >= maxChatUsers()+1 || _chat.chatFull.participants_count >= maxChatUsers()+1) ) {
                 [self checkSupergroup];
             }
         }
@@ -459,9 +459,9 @@
     
     int upgradeCount = maxChatUsers()+1;
     
-#ifdef TGDEBUG 
-    upgradeCount = ACCEPT_FEATURE ? 4 : upgradeCount;
-#endif
+//#ifdef TGDEBUG 
+//    upgradeCount = ACCEPT_FEATURE ? 4 : upgradeCount;
+//#endif
     
     if(self.participantsRange.length >= upgradeCount && _chat.isCreator && ACCEPT_FEATURE) {
         
@@ -505,7 +505,7 @@
         upgradeToMegagroup.textColor = BLUE_UI_COLOR;
         
         
-        GeneralSettingsBlockHeaderItem *upgradeHeaderItem = [[GeneralSettingsBlockHeaderItem alloc] initWithString:[NSString stringWithFormat:NSLocalizedString(@"Modern.Chat.UpgradeToMegagroupDescription", nil),maxChatUsers(),megagroupSizeMax()] height:200 flipped:YES];
+        GeneralSettingsBlockHeaderItem *upgradeHeaderItem = [[GeneralSettingsBlockHeaderItem alloc] initWithString:[NSString stringWithFormat:NSLocalizedString(@"Modern.Chat.UpgradeToMegagroupDescription", nil),upgradeCount,megagroupSizeMax()] height:200 flipped:YES];
         
         upgradeHeaderItem.autoHeight = YES;
         
