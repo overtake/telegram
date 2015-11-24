@@ -40,7 +40,7 @@
     TLUser *user = [[UsersManager sharedManager] find:message.from_id];
     NSString *text;
     if([action isKindOfClass:[TL_messageActionChatEditTitle class]]) {
-        text = [NSString stringWithFormat:NSLocalizedString(message.isChannelMessage && !message.chat.isMegagroup  ? @"MessageAction.ServiceMessage.ChangedChatName" : @"MessageAction.Service.ChannelGroupName", nil), message.isChannelMessage ? message.chat.title : [user fullName], action.title];
+        text = [NSString stringWithFormat:NSLocalizedString(message.isChannelMessage && !message.chat.isMegagroup  ? @"MessageAction.Service.ChannelGroupName" : @"MessageAction.ServiceMessage.ChangedGroupName", nil), message.isChannelMessage && !message.chat.isMegagroup ? message.chat.title : [user fullName], action.title];
     } else if([action isKindOfClass:[TL_messageActionChatDeletePhoto class]]) {
         text = [NSString stringWithFormat:NSLocalizedString(message.isChannelMessage && !message.chat.isMegagroup  ? @"MessageAction.ServiceMessage.RemovedChannelPhoto" : @"MessageAction.ServiceMessage.RemovedGroupPhoto", nil), message.isChannelMessage && !message.chat.isMegagroup  ? message.chat.title : [user fullName]];
     } else if([action isKindOfClass:[TL_messageActionChatEditPhoto class]]) {

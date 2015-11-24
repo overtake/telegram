@@ -76,7 +76,7 @@
         
         [_tableView addItem:addModerator tableRedraw:NO];
         
-        GeneralSettingsBlockHeaderItem *description = [[GeneralSettingsBlockHeaderItem alloc] initWithString:NSLocalizedString(@"Channel.AddModeratorDescription", nil) height:62 flipped:YES];
+        GeneralSettingsBlockHeaderItem *description = [[GeneralSettingsBlockHeaderItem alloc] initWithString:chat.isMegagroup ? NSLocalizedString(@"Group.AddModeratorDescription", nil) : NSLocalizedString(@"Channel.AddModeratorDescription", nil) height:62 flipped:YES];
         
         [_tableView addItem:description tableRedraw:NO];
 

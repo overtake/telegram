@@ -701,6 +701,7 @@
     
     
     if([_currentItem isset]) {
+        [_progressView setDisableChanges:NO];
         [self play:self.currentTime];
     } else {
         [_currentItem startDownload:NO force:YES];

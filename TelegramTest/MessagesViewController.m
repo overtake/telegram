@@ -447,7 +447,6 @@
     
     self.conversation = nil;
     [self.historyController stopChannelPolling];
-    [globalAudioPlayer() stop];
     [self flushMessages];
     
    
@@ -2374,6 +2373,10 @@ static NSTextAttachment *headerMediaIcon() {
     [self loadViewIfNeeded];
     
     [self hideSearchBox:NO];
+    
+    if(![globalAudioPlayer().delegate isKindOfClass:[TGAudioPlayerWindow class]]) {
+        [globalAudioPlayer() stop];
+    }
     
     
     if(!self.locked &&  (((message != nil && message.channelMsgId != _jumpMessage.channelMsgId) || force) || [self.conversation.peer peer_id] != [dialog.peer peer_id] )) {

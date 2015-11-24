@@ -103,7 +103,7 @@
     
     [_tableView addItem:header tableRedraw:NO];
     
-    GeneralSettingsBlockHeaderItem *fakeItem = [[GeneralSettingsBlockHeaderItem alloc] initWithString:!self.chat.isAdmins_enabled ? NSLocalizedString(@"Chat.SwitchAdminsDescriptionOff", nil) : NSLocalizedString(@"Chat.SwitchAdminsDescription", nil) height:42 flipped:YES];
+    GeneralSettingsBlockHeaderItem *fakeItem = [[GeneralSettingsBlockHeaderItem alloc] initWithString:self.chat.isAdmins_enabled ? NSLocalizedString(@"Chat.SwitchAdminsDescriptionOff", nil) : NSLocalizedString(@"Chat.SwitchAdminsDescription", nil) height:42 flipped:YES];
     
     [_tableView addItem:fakeItem tableRedraw:NO];
     

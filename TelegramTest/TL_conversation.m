@@ -110,6 +110,9 @@
     if(self.type == DialogTypeChannel)
         return ((!self.chat.isBroadcast && !self.isInvisibleChannel) || self.chat.isCreator || self.chat.isEditor) && !self.chat.isKicked && !self.chat.left && self.chat.type == TLChatTypeNormal;
     
+    if(self.type == DialogTypeUser)
+        return !self.user.isBlocked;
+    
     return YES;
 }
 
@@ -184,7 +187,7 @@
         if(self.user.isBlocked) {
             if(self.user.isBot)
                 return NSLocalizedString(@"RestartBot", nil);
-            return NSLocalizedString(@"User.Blocked", nil);
+            return NSLocalizedString(@"User.Unlock", nil);
         }
         
     }

@@ -111,6 +111,10 @@ static NSMutableDictionary *cache;
 
 
 - (void)didChangeUserBlock:(NSNotification *)notification {
+    
+    return;
+    
+    
     TL_contactBlocked *contact = notification.userInfo[KEY_USER];
     
     if(_conversation.user.n_id != contact.user_id || _conversation.user.isBot)
@@ -193,9 +197,9 @@ static NSMutableDictionary *cache;
         newAction = MessagesTopInfoActionNone;//MessagesTopInfoActionShareContact;
     }
     
-    if(user.isBlocked) {
-         newAction = MessagesTopInfoActionUnblockUser;
-    }
+   // if(user.isBlocked) {
+     //    newAction = MessagesTopInfoActionUnblockUser;
+   // }
     
     if(user.isBot) {
         newAction = MessagesTopInfoActionNone;

@@ -449,6 +449,8 @@
                 
                 [_channelsInUpdating removeObjectForKey:@(channel.peer_id)];
                 
+                [[DialogsManager sharedManager] notifyAfterUpdateConversation:channel];
+                
             } errorHandler:^(id request, RpcError *error) {
                 
                 [_channelsInUpdating removeObjectForKey:@(channel.peer_id)];

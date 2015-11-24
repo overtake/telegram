@@ -231,6 +231,8 @@ CACHE_IMAGE(ChannelShare);
 CACHE_IMAGE(ModernMenuDeleteIcon);
 
 CACHE_IMAGE(EditPhotoCamera);
+CACHE_IMAGE(NoSharedLinks);
+
 
 @implementation ImageUtils
 

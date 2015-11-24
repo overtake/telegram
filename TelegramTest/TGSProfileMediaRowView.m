@@ -30,16 +30,16 @@
 
 -(instancetype)init {
     if(self = [super init]) {
-        _photoAndVideoCounter = -1;
-        _filesCounter = -1;
-        _audioCounter = -1;
-        _linksCounter = -1;
+        _photoAndVideoCounter = 0;
+        _filesCounter = 0;
+        _audioCounter = 0;
+        _linksCounter = 0;
     }
     
     return self;
 }
 
--(void)loadWithConversation:(TL_conversation *)conversation {
+-(void)loadWithConversation:(TL_conversation *)conversation inputPeer:(TLInputPeer *)inputPeer {
   
     if(conversation.type == DialogTypeSecretChat) {
         _isLoaded = YES;
@@ -54,6 +54,8 @@
     
     NSArray *filters = @[[TL_inputMessagesFilterPhotoVideo create],[TL_inputMessagesFilterDocument create],[TL_inputMessagesFilterAudioDocuments create],[TL_inputMessagesFilterUrl create]];
     
+    
+    
     NSArray *properties = @[@"photoAndVideoCounter",@"filesCounter",@"audioCounter",@"linksCounter"];
     
     
@@ -62,12 +64,16 @@
     [filters enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
         
       //  dispatch_after_seconds(idx, ^{
-            [RPCRequest sendRequest:[TLAPI_messages_search createWithFlags:0 peer:conversation.inputPeer q:@"" filter:obj min_date:0 max_date:0 offset:0 max_id:0 limit:0] successHandler:^(RPCRequest *request, TL_messages_messages *response) {
+            [RPCRequest sendRequest:[TLAPI_messages_search createWithFlags:0 peer:inputPeer q:@"" filter:obj min_date:0 max_date:0 offset:0 max_id:0 limit:0] successHandler:^(RPCRequest *request, TL_messages_messages *response) {
                 
                 
                 NSString *property = properties[idx];
                 
-                [self setValue:@(MAX([response n_count],[[response messages] count])) forKey:property];
+                int value = [[self valueForKey:property] intValue];
+                
+                value += MAX([response n_count],[[response messages] count]);
+                
+                [self setValue:@(value) forKey:property];
                 
                 [_inwork removeObject:obj];
                 
@@ -79,6 +85,12 @@
                     _changeHandler();
                 }
                 
+                if(_isLoaded && conversation.type == DialogTypeChannel && conversation.chat.chatFull.migrated_from_chat_id != 0)  {
+                    _isLoaded = NO;
+                    
+                    [self loadWithConversation:nil inputPeer:[TL_inputPeerChat createWithChat_id:conversation.chat.chatFull.migrated_from_chat_id]];
+                }
+                
                 
             } errorHandler:^(RPCRequest *request, RpcError *error) {
                 
@@ -88,6 +100,8 @@
         
         
     }];
+    
+    
     
     
 }
@@ -290,7 +304,7 @@ static NSMutableDictionary *loaders;
     
     if(!loader) {
         loader = [[TGMediaCounterLoader alloc] init];
-        [loader loadWithConversation:self.conversation];
+        [loader loadWithConversation:self.conversation inputPeer:self.conversation.inputPeer];
         
         loaders[@(self.conversation.peer_id)] = loader;
     }

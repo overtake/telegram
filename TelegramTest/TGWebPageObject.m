@@ -56,7 +56,7 @@ NSImage *placeholder() {
             
             [author setFont:TGSystemMediumFont(13) forRange:author.range];
             
-            [author addAttribute:NSParagraphStyleAttributeName value:style range:author.range];
+          //  [author addAttribute:NSParagraphStyleAttributeName value:style range:author.range];
             
             _author = author;
             
@@ -89,6 +89,7 @@ NSImage *placeholder() {
         [siteName appendString:webpage.site_name ? webpage.site_name : @"Link Preview" withColor:GRAY_TEXT_COLOR];
 
         [siteName setFont:TGSystemMediumFont(13) forRange:siteName.range];
+      //  [siteName addAttribute:NSParagraphStyleAttributeName value:style range:siteName.range];
         _siteName = siteName;
         
         

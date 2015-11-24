@@ -119,8 +119,15 @@
 }
 
 - (void)didChangeBlockedUser:(NSNotification *)notification {
+    
+    TL_contactBlocked *contact = notification.userInfo[KEY_USER];
+    
+    if(self.dialog.user.n_id != contact.user_id || self.dialog.user.isBot)
+        return;
+
+    
     if(self.dialog && self.dialog.type == DialogTypeUser) {
-        [self setState:self.stateBottom animated:YES];
+        [self setState:MessagesBottomViewNormalState animated:YES];
     }
 }
 
@@ -974,11 +981,15 @@ static RBLPopover *popover;
                 [TMViewController hideModalProgress];
                 
                 [weakSelf.messagesViewController sendMessage:@"/start" forConversation:weakSelf.dialog];
+                
+                [weakSelf setState:MessagesBottomViewNormalState animated:YES];
             }];
             
             
             
             return;
+        } else if(weakSelf.dialog.type == DialogTypeUser && weakSelf.dialog.user.isBlocked) {
+            [[BlockedUsersManager sharedManager] unblock:weakSelf.dialog.user.n_id completeHandler:nil];
         }
         if(_onClickToLockedView != nil)
         {
@@ -1051,10 +1062,10 @@ static RBLPopover *popover;
         [self.encryptedStateTextField setTextColor:[self.encryptedStateTextField.stringValue isEqualToString:[self.dialog blockedText]] ? LINK_COLOR : GRAY_TEXT_COLOR];
         
        
-        if(self.dialog.type == DialogTypeUser && !self.dialog.user.isBot)
-        {
-            [self.encryptedStateTextField setTextColor:[NSColor redColor]];
-        }
+//        if(self.dialog.type == DialogTypeUser && !self.dialog.user.isBot)
+//        {
+//            [self.encryptedStateTextField setTextColor:[NSColor redColor]];
+//        }
         
         
         [self.encryptedStateTextField sizeToFit];

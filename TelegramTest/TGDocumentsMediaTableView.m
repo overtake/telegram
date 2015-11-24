@@ -14,6 +14,7 @@
 #import "TGSharedMediaCap.h"
 #import "MessageTableItemAudioDocument.h"
 #import "SpacemanBlocks.h"
+#import "ChannelHistoryController.h"
 @interface TGDocumentsController : NSObject<MessagesDelegate>
 @property (nonatomic,strong) TL_conversation *conversation;
 @property (nonatomic,strong) TGDocumentsMediaTableView *tableView;
@@ -79,7 +80,7 @@
     
     
     if(_conversation) {
-        _loader = [[ChatHistoryController alloc] initWithController:self historyFilter:[self.tableView historyFilter]];
+        _loader = [[self.conversation.type == DialogTypeChannel ? ChatHistoryController.class : ChannelHistoryController.class alloc] initWithController:self historyFilter:[self.tableView historyFilter]];
         
             
         [_loader.filter setState:ChatHistoryStateFull next:NO];
@@ -96,7 +97,7 @@
     
     _loader.selectLimit = _loader.nextState != ChatHistoryStateRemote ? 50 : 50;
     
-    [_loader request:YES anotherSource:YES sync:isFirst selectHandler:^(NSArray *result, NSRange range,HistoryFilter *filter) {
+    [_loader request:YES anotherSource:YES sync:isFirst selectHandler:^(NSArray *result, NSRange range,id controller) {
         
         self.tableView.isProgress = NO;
         
@@ -120,7 +121,8 @@
         
         [self.tableView checkCap];
         
-        if(self.items.count < 30 && _loader.nextState != ChatHistoryStateFull) {
+        
+        if(self.items.count < 30 && [_loader filterWithNext:YES].nextState != ChatHistoryStateFull) {
             [self loadNext:NO];
         }
         

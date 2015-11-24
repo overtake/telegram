@@ -456,7 +456,7 @@ static NSCache *cacheItems;
     [self.list enumerateObjectsUsingBlock:^(SelectUserItem *obj, NSUInteger idx, BOOL * _Nonnull stop) {
         
         if([obj isKindOfClass:[SelectUserItem class]]) {
-            if(obj.isSearchUser && !obj.isSelected && ![[UsersManager sharedManager] find:obj.user.n_id]) {
+            if(obj.isSearchUser && !obj.isSelected) {
                 [rmrf addObject:obj];
             }
         }

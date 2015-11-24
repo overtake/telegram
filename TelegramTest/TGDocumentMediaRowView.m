@@ -91,7 +91,7 @@ static NSDictionary *colors;
         
         [_descriptionField setTextColor:GRAY_TEXT_COLOR];
         
-        [_descriptionField setFrame:NSMakeRect(s_dox + 50, 11, NSWidth(frameRect) - s_dox * 2 - 50, 20)];
+        [_descriptionField setFrame:NSMakeRect(s_dox + 50, 8, NSWidth(frameRect) - s_dox * 2 - 50, 20)];
         
         [_descriptionField setUrl_delegate:self];
                 

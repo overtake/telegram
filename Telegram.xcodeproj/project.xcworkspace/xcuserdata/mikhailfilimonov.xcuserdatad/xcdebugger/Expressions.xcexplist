@@ -1207,6 +1207,14 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "__35-[TGUpdateChannels proccessUpdate:]_block_invoke299:TGUpdateChannels.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "channel.lastMessage">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "__44-[TGUpdateChannels proccessStatefullUpdate:]_block_invoke:TGUpdateChannels.m">
       </ContextState>
       <ContextState

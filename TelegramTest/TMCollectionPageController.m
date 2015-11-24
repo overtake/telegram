@@ -393,7 +393,7 @@ static const int maxWidth = 120;
     [self.photoCollection.containerView setHidden:YES];
     [self.documentsTableView.containerView setHidden:YES];
     
-        [self setTitle:NSLocalizedString(@"Conversation.Filter.SharedLinks", nil)];
+    [self setTitle:NSLocalizedString(@"Conversation.Filter.SharedLinks", nil)];
     [self checkCap];
     [self setIsEditable:NO animated:NO];
 }
@@ -540,7 +540,8 @@ static const int maxWidth = 120;
         self.locked = YES;
         
         [self.behavior load:[[[self.items lastObject] previewObject] msg_id] next:YES limit:100 callback:^(NSArray *previewObjects) {
-            [[ASQueue mainQueue] dispatchOnQueue:^{
+           
+            [ASQueue dispatchOnMainQueue:^{
                 if(previewObjects.count > 0) {
                     
                     NSArray *converted = [self convertItems:previewObjects];
@@ -550,7 +551,14 @@ static const int maxWidth = 120;
                 }
                 
                 self.locked = NO;
+                
+                if(self.items.count < 20 && [self.behavior.controller filterWithNext:YES].nextState != ChatHistoryStateFull) {
+                    [self loadRemote];
+                }
+                
+                
             }];
+            
             
         }];
     }
@@ -685,10 +693,9 @@ static const int maxWidth = 120;
         [self.mediaCap setProgress:self.documentsTableView.isProgress];
     } else if(![self.sharedLinksTableView.containerView isHidden]) {
         [self.mediaCap setHidden:![self.sharedLinksTableView isNeedCap]];
-        [self.mediaCap updateCap:image_SadAttach() text:NSLocalizedString(@"SharedMedia.NoSharedLinks", nil)];
+        [self.mediaCap updateCap:image_NoSharedLinks() text:NSLocalizedString(@"SharedMedia.NoSharedLinks", nil)];
         [self.mediaCap setProgress:self.sharedLinksTableView.isProgress];
         
-        NSLog(@"%d",[self.sharedLinksTableView isNeedCap]);
     } else {
         [self.mediaCap setHidden:self.photoCollection.count != 0];
         [self.mediaCap updateCap:image_SadAttach() text:NSLocalizedString(@"SharedMedia.NoSharedMedia", nil)];
