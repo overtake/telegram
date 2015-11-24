@@ -2823,6 +2823,14 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "__30-[Storage selectConversation:]_block_invoke:Storage.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "peer.peer_id">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "-[TelegramSerialization serializeMessage:]:TelegramSerialization.m">
       </ContextState>
       <ContextState

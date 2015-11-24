@@ -397,12 +397,11 @@
                             [SharedManager proccessGlobalResponse:participant];
                             
                             if([participant.participant isKindOfClass:[TL_channelParticipantSelf class]]) {
-                                TL_localMessage *msg = [TL_localMessageService createWithFlags:TGMENTIONMESSAGE n_id:0 from_id:[participant.participant inviter_id] to_id:channel.peer date:[[MTNetwork instance] getTime] action:([TL_messageActionChatAddUser createWithUsers:[@[@([UsersManager currentUserId])] mutableCopy]]) fakeId:[MessageSender getFakeMessageId] randomId:rand_long() dstate:DeliveryStateNormal];
+                                TL_localMessage *msg = [TL_localMessageService createWithFlags:TGMENTIONMESSAGE n_id:0 from_id:[participant.participant inviter_id] to_id:channel.peer date:participant.participant.date action:([TL_messageActionChatAddUser createWithUsers:[@[@([UsersManager currentUserId])] mutableCopy]]) fakeId:[MessageSender getFakeMessageId] randomId:rand_long() dstate:DeliveryStateNormal];
                                 
                                 channel.invisibleChannel = NO;
                                 
                                 [channel save];
-                                
                                 [MessagesManager addAndUpdateMessage:msg];
                                 
                             }
@@ -426,6 +425,7 @@
         };
         
         if(addInviteMessage) {
+            
             _channelsInUpdating[@(channel.peer_id)] = [RPCRequest sendRequest:[TLAPI_updates_getChannelDifference createWithChannel:chat.inputPeer filter:[TL_channelMessagesFilterEmpty create] pts:1 limit:INT32_MAX] successHandler:^(id request, TL_updates_channelDifference *response) {
                 
                 channel.pts = response.pts;
@@ -438,7 +438,7 @@
                 channel.read_inbox_max_id = [response read_inbox_max_id];
                 channel.unread_count = [response unread_important_count];
                 
-                if(!chat.isAdmin)
+                if(!chat.isCreator)
                     dispatch();
                 else
                 {
@@ -453,15 +453,6 @@
                 
                 [_channelsInUpdating removeObjectForKey:@(channel.peer_id)];
             }];
-        }
-        
-        
-        if(chat.type == TLChatTypeForbidden) {
-            if(channel != nil) {
-                
-            }
-            
-            return;
         }
     
     }
