@@ -705,7 +705,7 @@
     if(topMessageId != 0 && topMessageId != -1 && ((topMessageId > message.n_id && topMessageId < TGMINFAKEID)))
         return NO;
     
-    if(topMessageId > TGMINFAKEID && dialog.last_message_date > message.date)
+    if(message.n_id > TGMINFAKEID && dialog.last_message_date > message.date)
         return NO;
     
     if(message.unread && !message.n_out) {

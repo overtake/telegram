@@ -1755,8 +1755,11 @@ TL_localMessage *parseMessage(FMResultSet *result) {
             
             FMResultSet *result = [db executeQuery:sql, @(obj.peer_id)];
             
-            if([result next])
+            if([result next]) {
                 obj.lastMessage = parseMessage(result);
+                obj.last_message_date = obj.lastMessage.date;
+            }
+            
             
             
             [result close];
