@@ -4389,6 +4389,14 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "+[MessagesUtils serviceMessage:forAction:]:MessagesUtils.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "message.isChannelMessage">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "-[ChannelImportantFilter remoteRequest:max_id:hole:callback:]:ChannelImportantFilter.m">
       </ContextState>
       <ContextState
@@ -4575,6 +4583,9 @@
       </ContextState>
       <ContextState
          contextName = "__39-[ChatExportLinkViewController rebuild]_block_invoke:ChatExportLinkViewController.m">
+      </ContextState>
+      <ContextState
+         contextName = "-[TGUpdateChannels conversationWithChannelId:]:TGUpdateChannels.m">
       </ContextState>
       <ContextState
          contextName = "__54-[DialogsHistoryController loadremote:limit:callback:]_block_invoke_2:DialogsHistoryController.m">

@@ -40,7 +40,7 @@
     TLUser *user = [[UsersManager sharedManager] find:message.from_id];
     NSString *text;
     if([action isKindOfClass:[TL_messageActionChatEditTitle class]]) {
-        text = [NSString stringWithFormat:NSLocalizedString(message.isChannelMessage && !message.chat.isMegagroup  ? @"MessageAction.ServiceMessage.ChangedChannelName" : @"MessageAction.ServiceMessage.ChangedChannelName", nil), message.isChannelMessage ? message.chat.title : [user fullName], action.title];
+        text = [NSString stringWithFormat:NSLocalizedString(message.isChannelMessage && !message.chat.isMegagroup  ? @"MessageAction.ServiceMessage.ChangedChatName" : @"MessageAction.Service.ChannelGroupName", nil), message.isChannelMessage ? message.chat.title : [user fullName], action.title];
     } else if([action isKindOfClass:[TL_messageActionChatDeletePhoto class]]) {
         text = [NSString stringWithFormat:NSLocalizedString(message.isChannelMessage && !message.chat.isMegagroup  ? @"MessageAction.ServiceMessage.RemovedChannelPhoto" : @"MessageAction.ServiceMessage.RemovedGroupPhoto", nil), message.isChannelMessage && !message.chat.isMegagroup  ? message.chat.title : [user fullName]];
     } else if([action isKindOfClass:[TL_messageActionChatEditPhoto class]]) {
@@ -86,9 +86,7 @@
         text = [NSString stringWithFormat:@"%@ %@", fullName,NSLocalizedString(@"MessageAction.Service.JoinedGroupByLink", nil)];
         
     }else if([action isKindOfClass:[TL_messageActionChannelCreate class]]) {
-        
-        
-        text = NSLocalizedString(@"MessageAction.Service.ChannelCreated", nil);
+        text = message.isChannelMessage && !message.chat.isMegagroup ? NSLocalizedString(@"MessageAction.Service.ChannelCreated", nil) : NSLocalizedString(@"MessageAction.ServiceMessage.CreatedChat", nil);
         
     } else if([action isKindOfClass:[TL_messageActionChatMigrateTo class]] || [action isKindOfClass:[TL_messageActionChannelMigrateFrom class]]) {
         text = NSLocalizedString(@"MessageAction.Service.ChatMigrated", nil);

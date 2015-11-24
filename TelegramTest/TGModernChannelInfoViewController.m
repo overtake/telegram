@@ -258,6 +258,8 @@
     
     _headerItem.height = 142;
     
+    
+    
     [_headerItem setEditable:self.action.isEditable];
     
     [_tableView addItem:_headerItem tableRedraw:YES];
@@ -352,7 +354,7 @@
                     
                     [self.navigationViewController pushViewController:viewController animated:YES];
                     
-                } description:NSLocalizedString(@"Profile.ChannelBlackList", nil) subdesc:[NSString stringWithFormat:@"%d",_chat.chatFull.kicked_count] height:42 stateback:nil];
+                } description:NSLocalizedString(@"Settings.BlackList", nil) subdesc:[NSString stringWithFormat:@"%d",_chat.chatFull.kicked_count] height:42 stateback:nil];
             }
             
         } else {
