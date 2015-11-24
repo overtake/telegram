@@ -128,12 +128,12 @@
     [_joinLinkItem setFont:TGSystemFont(14)];
     _joinLinkItem.drawsSeparator = YES;
     
-    
+    _joinLinkItem.type = SettingsRowItemTypeNone;
     [_joinLinkItem setCallback:^(TGGeneralRowItem *item) {
         
         GeneralSettingsBlockHeaderItem *header = (GeneralSettingsBlockHeaderItem *) item;
         
-        [TMViewController showModalProgress];
+        [TMViewController showModalProgressWithDescription:NSLocalizedString(@"Conversation.CopyToClipboard", nil)];
         
         NSPasteboard* cb = [NSPasteboard generalPasteboard];
         

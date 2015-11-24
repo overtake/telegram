@@ -52,6 +52,8 @@
 -(void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     
+    self.tableView.selectLimit = 0;
+    
     self.action.behavior.delegate = self;
     
     [self.tableView readyChats];
@@ -73,11 +75,16 @@
 
 -(void)selectTableDidChangedItem:(SelectChatItem *)item {
     
+    [self.tableView cancelSelection];
+    
     confirm(appName(), [NSString stringWithFormat:NSLocalizedString(@"Bot.confirmAddBot", nil),item.chat.title], ^{
         
         self.action.result = [[ComposeResult alloc] initWithMultiObjects:@[item.chat]];
         
         [self.action.behavior composeDidDone];
+        
+        [self.tableView cancelSelection];
+        
         
     }, nil);
     

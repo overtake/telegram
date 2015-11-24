@@ -103,7 +103,14 @@
     return self;
 }
 
-
+-(void)mouseDown:(NSEvent *)theEvent {
+    TGGeneralRowItem *item = (TGGeneralRowItem *) [self rowItem];
+    
+    if(item.callback != nil) {
+        item.callback(item);
+    }
+    
+}
 
 
 

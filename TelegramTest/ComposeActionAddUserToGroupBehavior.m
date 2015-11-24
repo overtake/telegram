@@ -54,26 +54,49 @@
         request = [TLAPI_channels_inviteToChannel createWithChannel:chat.inputPeer users:[@[user.inputUser] mutableCopy]];
     }
     
-    [RPCRequest sendRequest:request successHandler:^(RPCRequest *request, id response) {
-        
-        [self.delegate behaviorDidEndRequest:response];
+    
+    dispatch_block_t addblock = ^{
+        [RPCRequest sendRequest:request successHandler:^(RPCRequest *request, id response) {
             
-        dispatch_after_seconds(0.2, ^{
+            [self.delegate behaviorDidEndRequest:response];
             
-            [self.action.currentViewController.navigationViewController showMessagesViewController:chat.dialog];
+            dispatch_after_seconds(0.2, ^{
+                
+                [self.action.currentViewController.navigationViewController showMessagesViewController:chat.dialog];
+                
+                if(self.action.reservedObject1) {
+                    [self.action.currentViewController.messagesViewController showBotStartButton:self.action.reservedObject1[@"startgroup"] bot:user];
+                }
+                
+            });
             
-            if(self.action.reservedObject1) {
-                [self.action.currentViewController.messagesViewController showBotStartButton:self.action.reservedObject1[@"startgroup"] bot:user];
+            
+        } errorHandler:^(RPCRequest *request, RpcError *error) {
+            [self.delegate behaviorDidEndRequest:request.response];
+            
+            alert(appName(), NSLocalizedString([error.error_msg isEqualToString:@"USER_ALREADY_PARTICIPANT"] ? @"Bot.AlreadyInGroup" : error.error_msg, nil));
+        }];
+    };
+    
+    
+    if(chat.isChannel) {
+        [RPCRequest sendRequest:[TLAPI_channels_getParticipant createWithChannel:chat.inputPeer user_id:user.inputUser] successHandler:^(id request, TL_channels_channelParticipant *participant) {
+            
+            [self.delegate behaviorDidEndRequest:participant];
+            
+            alert(appName(), NSLocalizedString(@"Bot.AlreadyInGroup", nil));
+            
+        } errorHandler:^(id request, RpcError *error) {
+            if([error.error_msg isEqualToString:@"USER_NOT_PARTICIPANT"])  {
+                addblock();
+            } else {
+                [self.delegate behaviorDidEndRequest:nil];
+                alert(appName(), NSLocalizedString(error.error_msg, nil));
             }
-            
-        });
-
-        
-    } errorHandler:^(RPCRequest *request, RpcError *error) {
-        [self.delegate behaviorDidEndRequest:request.response];
-        
-        alert(appName(), NSLocalizedString([error.error_msg isEqualToString:@"USER_ALREADY_PARTICIPANT"] ? @"Bot.AlreadyInGroup" : error.error_msg, nil));
-    }];
+        }];
+    } else {
+        addblock();
+    }
 }
 
 

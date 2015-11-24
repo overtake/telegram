@@ -36,10 +36,9 @@
     if (self) {
         [self setSelectedBackgroundColor: NSColorFromRGB(0xfafafa)];
         [self setNormalBackgroundColor:NSColorFromRGB(0xffffff)];
-        _avatarImageView = [TMAvatarImageView standartNewConversationTableAvatar];
+        _avatarImageView = [TMAvatarImageView standartMessageTableAvatar];
         [self addSubview:_avatarImageView];
-        [_avatarImageView setFont:TGSystemLightFont(15)];
-        [_avatarImageView setFrameSize:NSMakeSize(36, 36)];
+
         
         
         _titleTextField = [[TMNameTextField alloc] init];
@@ -108,8 +107,8 @@
     
     const int editableOffset = 20;
     
-    [self.titleTextField setFrameOrigin:NSMakePoint(self.isEditable ? 77 + editableOffset : 77,25)];
-    [self.statusTextField setFrameOrigin:NSMakePoint(self.isEditable ? 77 + editableOffset : 77, 8)];
+    [self.titleTextField setFrameOrigin:NSMakePoint(self.isEditable ? 77 + editableOffset : 56,25)];
+    [self.statusTextField setFrameOrigin:NSMakePoint(self.isEditable ? 77 + editableOffset : 56, 8)];
     
     [self.avatarImageView setFrameOrigin:NSMakePoint(self.isEditable ? 30 + 20 : 10, (50 - 36) / 2)];
 
