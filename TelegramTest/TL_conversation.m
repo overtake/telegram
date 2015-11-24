@@ -203,6 +203,20 @@
 
 }
 
+-(int)unread_count {
+    if(super.unread_count > 1000000) {
+        
+        if(self.top_message < TGMINFAKEID) {
+            return MAX(self.top_message - self.last_marked_message,0);
+        }
+        
+        return 100;
+        
+    }
+    
+    return super.unread_count;
+}
+
 
 -(void)setUnread_count:(int)unread_count {
     
