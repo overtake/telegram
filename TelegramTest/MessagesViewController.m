@@ -1166,6 +1166,7 @@ static NSTextAttachment *headerMediaIcon() {
     
     if(![globalAudioPlayer().delegate isKindOfClass:[TGAudioPlayerWindow class]]) {
         [globalAudioPlayer() stop];
+        [globalAudioPlayer().delegate audioPlayerDidFinishPlaying:globalAudioPlayer()];
     }
     
 }
@@ -2367,6 +2368,7 @@ static NSTextAttachment *headerMediaIcon() {
     
     if(![globalAudioPlayer().delegate isKindOfClass:[TGAudioPlayerWindow class]]) {
         [globalAudioPlayer() stop];
+        [globalAudioPlayer().delegate audioPlayerDidFinishPlaying:globalAudioPlayer()];
     }
     
     
