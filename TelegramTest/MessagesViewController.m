@@ -2054,24 +2054,15 @@ static NSTextAttachment *headerMediaIcon() {
     
     __block BOOL accept = YES;
     
-    
-    
-    if(conversation.type == DialogTypeChannel) {
+    [messages enumerateObjectsUsingBlock:^(TL_localMessage *obj, NSUInteger idx, BOOL *stop) {
         
-        if(conversation.chat.isManager)
-            return YES;
+        accept =obj.conversation.type == DialogTypeChannel ? ( obj.chat.isCreator || (obj.chat.isEditor && (obj.from_id != 0 || obj.n_out)) || (obj.chat.isModerator && obj.from_id != 0) || obj.n_out) : YES;
         
-        [messages enumerateObjectsUsingBlock:^(TL_localMessage *obj, NSUInteger idx, BOOL *stop) {
-            
-            accept = obj.chat.isCreator || (obj.chat.isEditor && (obj.from_id != 0 || obj.n_out)) || (obj.chat.isModerator && obj.from_id != 0) || obj.n_out;
-            
-            if(!accept) {
-                *stop = YES;
-            }
-            
-        }];
-    }
-    
+        if(!accept) {
+            *stop = YES;
+        }
+        
+    }];
     
     return accept;
     

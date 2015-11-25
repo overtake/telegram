@@ -27,7 +27,7 @@
 
 @property (nonatomic,assign,readonly) BOOL isEditable;
 
-- (void)setSectedMessagesCount:(NSUInteger)count;
+- (void)setSectedMessagesCount:(NSUInteger)count enable:(BOOL)enable;
 
 -(BOOL)isSelectedItem:(PhotoCollectionImageObject *)item;
 -(void)setSelected:(BOOL)selected forItem:(PhotoCollectionImageObject *)item;

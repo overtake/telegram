@@ -505,7 +505,15 @@
         [_selectedItems removeObject:item];
     }
     
-    [self.collectionViewController setSectedMessagesCount:self.selectedItems.count];
+    
+    NSMutableArray *messages = [NSMutableArray array];
+    
+    [_selectedItems enumerateObjectsUsingBlock:^(MessageTableItem *obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        [messages addObject:obj.message];
+    }];
+    
+    [self.collectionViewController setSectedMessagesCount:self.selectedItems.count enable:[MessagesViewController canDeleteMessages:messages inConversation:self.controller.conversation]];
+
 }
 
 -(BOOL)isSelectedItem:(MessageTableItem *)item {

@@ -174,7 +174,7 @@
         
         timer = [[TGTimer alloc] initWithTimeout:2 repeat:NO completion:^{
             
-            [self failUpdateWithChannelId:statefullMessage.channel_id limit:100 withCallback:nil errorCallback:nil];
+            [self failUpdateWithChannelId:statefullMessage.channel_id limit:50 withCallback:nil errorCallback:nil];
             
         } queue:_queue.nativeQueue reservedObject:@(statefullMessage.channel_id)];
         
@@ -409,13 +409,13 @@
                             
                         } errorHandler:^(id request, RpcError *error) {
                             
-                            [self failUpdateWithChannelId:[update channel_id] limit:100 withCallback:nil errorCallback:nil];
+                            [self failUpdateWithChannelId:[update channel_id] limit:50 withCallback:nil errorCallback:nil];
                             
                         }];
 
                     } else {
                         
-                        [self failUpdateWithChannelId:[update channel_id] limit:100 withCallback:nil errorCallback:nil];
+                        [self failUpdateWithChannelId:[update channel_id] limit:50 withCallback:nil errorCallback:nil];
                     }
                 
                 }];

@@ -79,24 +79,28 @@
     };
     
     
-    if(chat.isChannel) {
-        [RPCRequest sendRequest:[TLAPI_channels_getParticipant createWithChannel:chat.inputPeer user_id:user.inputUser] successHandler:^(id request, TL_channels_channelParticipant *participant) {
-            
-            [self.delegate behaviorDidEndRequest:participant];
-            
-            alert(appName(), NSLocalizedString(@"Bot.AlreadyInGroup", nil));
-            
-        } errorHandler:^(id request, RpcError *error) {
-            if([error.error_msg isEqualToString:@"USER_NOT_PARTICIPANT"])  {
-                addblock();
-            } else {
-                [self.delegate behaviorDidEndRequest:nil];
-                alert(appName(), NSLocalizedString(error.error_msg, nil));
-            }
-        }];
-    } else {
-        addblock();
-    }
+    addblock();
+    
+//    if(chat.isChannel) {
+//        [RPCRequest sendRequest:[TLAPI_channels_getParticipant createWithChannel:chat.inputPeer user_id:user.inputUser] successHandler:^(id request, TL_channels_channelParticipant *participant) {
+//            
+//            
+//          //  TL_channelParticipant
+//            [self.delegate behaviorDidEndRequest:participant];
+//            
+//            alert(appName(), NSLocalizedString(@"Bot.AlreadyInGroup", nil));
+//            
+//        } errorHandler:^(id request, RpcError *error) {
+//            if([error.error_msg isEqualToString:@"USER_NOT_PARTICIPANT"])  {
+//                addblock();
+//            } else {
+//                [self.delegate behaviorDidEndRequest:nil];
+//                alert(appName(), NSLocalizedString(error.error_msg, nil));
+//            }
+//        }];
+//    } else {
+//        addblock();
+//    }
 }
 
 

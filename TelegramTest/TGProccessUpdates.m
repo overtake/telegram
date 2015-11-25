@@ -44,25 +44,6 @@ static ASQueue *queue;
 @synthesize holdUpdates = _holdUpdates;
 
 
--(id)init { 
-    if(self = [super init]) {
-        self.holdUpdates = NO;
-        _statefulUpdates = [[NSMutableArray alloc] init];
-        
-        _updateState = [[Storage manager] updateState];
-      //  _updateState = [[TGUpdateState alloc] initWithPts:1 qts:1 date:_updateState.date seq:1 pts_count:1];
-        _encryptedUpdates = [[TGModernEncryptedUpdates alloc] init];
-        
-        
-        static dispatch_once_t onceToken;
-        dispatch_once(&onceToken, ^{
-            queue = [[ASQueue alloc] initWithName:"UpdatesQueue"];
-        });
-        
-        [_encryptedUpdates setQueue:queue];
-    }
-    return self;
-}
 
 static NSArray *channelUpdates;
 
@@ -72,6 +53,11 @@ static NSArray *channelUpdates;
         _statefulUpdates = [[NSMutableArray alloc] init];
         
         _updateState = [[Storage manager] updateState];
+        
+        if(_updateState.pts == 0) {
+            _updateState = nil;
+        }
+        
        // _updateState = [[TGUpdateState alloc] initWithPts:1 qts:1 date:_updateState.date seq:1 pts_count:1];
         _encryptedUpdates = [[TGModernEncryptedUpdates alloc] init];
         _channelsUpdater = [[TGUpdateChannels alloc] initWithQueue:q];
@@ -84,6 +70,8 @@ static NSArray *channelUpdates;
         });
         
         queue = q;
+        
+        [_encryptedUpdates setQueue:queue];
     }
     return self;
 }

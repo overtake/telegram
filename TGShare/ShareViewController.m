@@ -85,6 +85,7 @@ static long h_r_l;
 
 @property (nonatomic,assign) BOOL isSearchActive;
 
+
 @end
 
 @implementation ShareViewController
@@ -290,7 +291,7 @@ static ShareViewController *shareViewController;
         
         [[response dialogs] enumerateObjectsUsingBlock:^(TLDialog *obj, NSUInteger idx, BOOL *stop) {
             
-            TLMessage *message = [response.messages filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.n_id == %d",obj.top_message]];
+            TLMessage *message = [[response.messages filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.n_id == %d",obj.top_message]] lastObject];
             
             TGS_ConversationRowItem *item;
             

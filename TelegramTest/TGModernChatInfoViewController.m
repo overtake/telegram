@@ -73,24 +73,10 @@
         return @(!_conversation.isMute);
     }];
     
-//    _notificationItem.menu = [MessagesViewController notifications:^{
-//        
-//        [self configure];
-//        
-//        [self drawParticipants];
-//        
-//    } conversation:_conversation click:nil];
-    
-    
-    
+
     _deleteAndExitItem = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeNone callback:^(TGGeneralRowItem *item) {
         
-        [self showModalProgress];
         [self.messagesViewController deleteDialog:_conversation callback:^{
-            
-            [self.navigationViewController gotoEmptyController];
-            
-            [self hideModalProgressWithSuccess];
             
         }];
         

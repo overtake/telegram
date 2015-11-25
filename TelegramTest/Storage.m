@@ -217,7 +217,7 @@ NSString *const tableModernDialogs = @"modern_dialogs";
         res = [db setKey:encryptionKey];
         
         
-         [self upgradeDialogsTo42Layer];
+        
         
         
         [db executeUpdate:[NSString stringWithFormat:@"create table if not exists %@ (n_id INTEGER PRIMARY KEY,message_text TEXT, flags integer, from_id integer, peer_id integer, date integer, serialized blob, random_id, destruct_time, filter_mask integer, fake_id integer, dstate integer, webpage_id blob)",tableMessages]];
@@ -336,7 +336,7 @@ NSString *const tableModernDialogs = @"modern_dialogs";
         }
 
         
-        
+        [self upgradeDialogsTo42Layer:db];
         
        
         
@@ -365,54 +365,57 @@ NSString *const tableModernDialogs = @"modern_dialogs";
    
 }
 
--(void)upgradeDialogsTo42Layer {
+-(BOOL)upgradeDialogsTo42Layer:(FMDatabase *)db {
     
     NSString *oTable = @"dialogs";
     NSString *ocTable = @"channel_dialogs";
-    [queue inDatabase:^(FMDatabase *db) {
+   
+    BOOL exist = [db tableExists:oTable];
+    
+    if(exist) {
         
-        BOOL exist = [db tableExists:oTable];
+        FMResultSet *result = [db executeQuery:[NSString stringWithFormat:@"select * from %@ where type = %d",oTable,DialogTypeSecretChat]];
         
-        if(exist) {
+        NSMutableArray *secretChats = [NSMutableArray array];
+        
+        while ([result next]) {
             
-            FMResultSet *result = [db executeQuery:[NSString stringWithFormat:@"select * from %@ where type = %d",oTable,DialogTypeSecretChat]];
+            TL_conversation *conversation = [[TL_conversation alloc] init];
+            conversation.peer = [self peerWithType:[result intForColumn:@"type"] peer_id:[result intForColumn:@"peer_id"]];
+            conversation.unread_count = [result intForColumn:@"unread_count"];
+            conversation.top_message = [result intForColumn:@"top_message"];
+            conversation.last_message_date = [result intForColumn:@"last_message_date"];
+            conversation.last_marked_message = [result intForColumn:@"last_marked_message"];
+            conversation.last_marked_date = [result intForColumn:@"last_marked_date"];
+            conversation.read_inbox_max_id = [result intForColumn:@"read_inbox_max_id"];
+            conversation.notify_settings = [TLClassStore deserialize:[result dataForColumn:@"notify_settings"]];
             
-            NSMutableArray *secretChats = [NSMutableArray array];
-            
-            while ([result next]) {
-                
-                TL_conversation *conversation = [[TL_conversation alloc] init];
-                conversation.peer = [self peerWithType:[result intForColumn:@"type"] peer_id:[result intForColumn:@"peer_id"]];
-                conversation.unread_count = [result intForColumn:@"unread_count"];
-                conversation.top_message = [result intForColumn:@"top_message"];
-                conversation.last_message_date = [result intForColumn:@"last_message_date"];
-                conversation.last_marked_message = [result intForColumn:@"last_marked_message"];
-                conversation.last_marked_date = [result intForColumn:@"last_marked_date"];
-                conversation.read_inbox_max_id = [result intForColumn:@"read_inbox_max_id"];
-                conversation.notify_settings = [TLClassStore deserialize:[result dataForColumn:@"notify_settings"]];
-                
-                [secretChats addObject:conversation];
-            }
-            
-            [self insertDialogs:secretChats];
-            
-            [db executeUpdate:[NSString stringWithFormat:@"drop table if exists %@",oTable]];
-            [db executeUpdate:[NSString stringWithFormat:@"drop table if exists %@",ocTable]];
-            [db executeUpdate:[NSString stringWithFormat:@"drop table if exists %@",tableMessages]];
-            
-            TGUpdateState *state = [self updateState];
-            state.checkMinimum = NO;
-            state.pts = 0;
-            state.date = 0;
-            state.seq = 0;
-            state.checkMinimum = YES;
-            [self saveUpdateState:state];
-            
-            [result close];
-            
+            [secretChats addObject:conversation];
         }
         
-    }];
+        [self insertDialogs:secretChats];
+        
+        [db executeUpdate:[NSString stringWithFormat:@"drop table if exists %@",oTable]];
+        [db executeUpdate:[NSString stringWithFormat:@"drop table if exists %@",ocTable]];
+        [db executeUpdate:[NSString stringWithFormat:@"delete from %@ where 1=1",tableChats]];
+        [db executeUpdate:[NSString stringWithFormat:@"delete from %@ where 1=1",tableChatsFull]];
+        [db executeUpdate:[NSString stringWithFormat:@"delete from %@ where 1=1",tableSupportMessages]];
+        [db executeUpdate:[NSString stringWithFormat:@"delete from %@ where n_id < ?",tableMessages],@(TGMINSECRETID)];
+        
+        TGUpdateState *state = [self updateState];
+        state.checkMinimum = NO;
+        state.pts = 0;
+        state.date = 0;
+        state.seq = 0;
+        state.checkMinimum = YES;
+        [self saveUpdateState:state];
+        
+        [result close];
+        
+    }
+    
+    return exist;
+
 }
 
 

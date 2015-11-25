@@ -423,7 +423,7 @@ static const int maxWidth = 120;
     
     
     
-    [self setSectedMessagesCount:0];
+    [self setSectedMessagesCount:0 enable:NO];
    
     [self view];
     
@@ -477,14 +477,19 @@ static const int maxWidth = 120;
 
 -(void)setSelected:(BOOL)selected forItem:(MessageTableItem *)item {
     
-    
     if(selected) {
         [_selectedItems addObject:item];
     } else {
         [_selectedItems removeObject:item];
     }
     
-    [self setSectedMessagesCount:self.selectedItems.count];
+    NSMutableArray *messages = [NSMutableArray array];
+    
+    [_selectedItems enumerateObjectsUsingBlock:^(MessageTableItem *obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        [messages addObject:obj.message];
+    }];
+    
+    [self setSectedMessagesCount:self.selectedItems.count enable:[MessagesViewController canDeleteMessages:messages inConversation:_conversation]];
 }
 
 -(BOOL)isSelectedItem:(PhotoCollectionImageObject *)item {
@@ -953,7 +958,7 @@ static const int maxWidth = 120;
     return self.actionsView;
 }
 
-- (void)setSectedMessagesCount:(NSUInteger)count {
+- (void)setSectedMessagesCount:(NSUInteger)count enable:(BOOL)enable {
     
     if(count == 0) {
         [self.messagesSelectedCount setHidden:YES];
@@ -961,8 +966,8 @@ static const int maxWidth = 120;
         [self.deleteButton setDisable:YES];
         return;
     } else {
-        [self.deleteButton setDisable:NO];
         [self.forwardButton setDisable:NO];
+        [self.deleteButton setDisable:!enable];
     }
     
     [self.messagesSelectedCount setHidden:NO];
