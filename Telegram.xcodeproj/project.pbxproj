@@ -248,9 +248,9 @@
 		C20B228818E971D0007BCCD6 /* bitwise.c in Sources */ = {isa = PBXBuildFile; fileRef = C20B228418E971D0007BCCD6 /* bitwise.c */; };
 		C20B228918E971D0007BCCD6 /* framing.c in Sources */ = {isa = PBXBuildFile; fileRef = C20B228518E971D0007BCCD6 /* framing.c */; };
 		C20B228D18E98A2C007BCCD6 /* SettingsArchiver.m in Sources */ = {isa = PBXBuildFile; fileRef = C20B228C18E98A2C007BCCD6 /* SettingsArchiver.m */; };
-		C20B82A11BD98EC700EF01AD /* TGPVDocumentsBehavior.m in Sources */ = {isa = PBXBuildFile; fileRef = C20B82A01BD98EC700EF01AD /* TGPVDocumentsBehavior.m */; settings = {ASSET_TAGS = (); }; };
-		C20B82AD1BDA550600EF01AD /* TGChatHeadLockView.m in Sources */ = {isa = PBXBuildFile; fileRef = C20B82AC1BDA550600EF01AD /* TGChatHeadLockView.m */; settings = {ASSET_TAGS = (); }; };
-		C20B82B01BDA975500EF01AD /* TGShareContactModalView.m in Sources */ = {isa = PBXBuildFile; fileRef = C20B82AF1BDA975500EF01AD /* TGShareContactModalView.m */; settings = {ASSET_TAGS = (); }; };
+		C20B82A11BD98EC700EF01AD /* TGPVDocumentsBehavior.m in Sources */ = {isa = PBXBuildFile; fileRef = C20B82A01BD98EC700EF01AD /* TGPVDocumentsBehavior.m */; };
+		C20B82AD1BDA550600EF01AD /* TGChatHeadLockView.m in Sources */ = {isa = PBXBuildFile; fileRef = C20B82AC1BDA550600EF01AD /* TGChatHeadLockView.m */; };
+		C20B82B01BDA975500EF01AD /* TGShareContactModalView.m in Sources */ = {isa = PBXBuildFile; fileRef = C20B82AF1BDA975500EF01AD /* TGShareContactModalView.m */; };
 		C20BA5DC1B0BB992001ECE22 /* TGSNoAuthModalView.m in Sources */ = {isa = PBXBuildFile; fileRef = C20BA5DB1B0BB992001ECE22 /* TGSNoAuthModalView.m */; };
 		C20BA5DF1B0BBE85001ECE22 /* TGSAppManager.m in Sources */ = {isa = PBXBuildFile; fileRef = C20BA5DE1B0BBE85001ECE22 /* TGSAppManager.m */; };
 		C20BA5E21B0BCC04001ECE22 /* TGSEnterPasscodeView.m in Sources */ = {isa = PBXBuildFile; fileRef = C20BA5E11B0BCC04001ECE22 /* TGSEnterPasscodeView.m */; };
@@ -522,9 +522,9 @@
 		C297955F19EC587900BE893E /* SettingsSecurityViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C297955E19EC587900BE893E /* SettingsSecurityViewController.m */; };
 		C297FBA31832997B00714B3C /* SSKeychain.m in Sources */ = {isa = PBXBuildFile; fileRef = C297FBA21832997B00714B3C /* SSKeychain.m */; };
 		C297FBA618329F3500714B3C /* TGDcAuth.m in Sources */ = {isa = PBXBuildFile; fileRef = C297FBA518329F3500714B3C /* TGDcAuth.m */; };
-		C2A2B4261BD01FC20083DA8A /* TGHeadChatPanel.m in Sources */ = {isa = PBXBuildFile; fileRef = C2A2B4251BD01FC20083DA8A /* TGHeadChatPanel.m */; settings = {ASSET_TAGS = (); }; };
-		C2A2B42E1BD519870083DA8A /* TGHCMessagesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C2A2B42D1BD519870083DA8A /* TGHCMessagesViewController.m */; settings = {ASSET_TAGS = (); }; };
-		C2A2B4311BD7C8DB0083DA8A /* TGModalForwardView.m in Sources */ = {isa = PBXBuildFile; fileRef = C2A2B4301BD7C8DB0083DA8A /* TGModalForwardView.m */; settings = {ASSET_TAGS = (); }; };
+		C2A2B4261BD01FC20083DA8A /* TGHeadChatPanel.m in Sources */ = {isa = PBXBuildFile; fileRef = C2A2B4251BD01FC20083DA8A /* TGHeadChatPanel.m */; };
+		C2A2B42E1BD519870083DA8A /* TGHCMessagesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C2A2B42D1BD519870083DA8A /* TGHCMessagesViewController.m */; };
+		C2A2B4311BD7C8DB0083DA8A /* TGModalForwardView.m in Sources */ = {isa = PBXBuildFile; fileRef = C2A2B4301BD7C8DB0083DA8A /* TGModalForwardView.m */; };
 		C2A3FB091A278E2700DE791B /* PhoneChangeController.m in Sources */ = {isa = PBXBuildFile; fileRef = C2A3FB081A278E2700DE791B /* PhoneChangeController.m */; };
 		C2A3FB0D1A28A6B200DE791B /* TGHashContact.m in Sources */ = {isa = PBXBuildFile; fileRef = C2A3FB0C1A28A6B200DE791B /* TGHashContact.m */; };
 		C2A5BFBE18DC80620021BE68 /* info.c in Sources */ = {isa = PBXBuildFile; fileRef = C2A5BFB318DC80620021BE68 /* info.c */; };
@@ -721,27 +721,27 @@
 		C2CBF6DE1AFBE812006BF90A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C2CBF6DD1AFBE812006BF90A /* Images.xcassets */; };
 		C2CC41C41BA7FC450097E973 /* WeakReference.m in Sources */ = {isa = PBXBuildFile; fileRef = C2CC41C31BA7FC450097E973 /* WeakReference.m */; };
 		C2CD77C91A2C9E04000B4BA9 /* TGEnterPasswordPanel.m in Sources */ = {isa = PBXBuildFile; fileRef = C2CD77C81A2C9E04000B4BA9 /* TGEnterPasswordPanel.m */; };
-		C2CE53C01BE2892E00BBEF5F /* ChatAdminsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C2CE53BF1BE2892E00BBEF5F /* ChatAdminsViewController.m */; settings = {ASSET_TAGS = (); }; };
-		C2CE53C31BE295A000BBEF5F /* TGGeneralSearchRowView.m in Sources */ = {isa = PBXBuildFile; fileRef = C2CE53C21BE295A000BBEF5F /* TGGeneralSearchRowView.m */; settings = {ASSET_TAGS = (); }; };
-		C2CE53C61BE7688900BBEF5F /* ComposeActionCreateMegaGroupBehavior.m in Sources */ = {isa = PBXBuildFile; fileRef = C2CE53C51BE7688900BBEF5F /* ComposeActionCreateMegaGroupBehavior.m */; settings = {ASSET_TAGS = (); }; };
-		C2CE53CA1BE8C0DB00BBEF5F /* TGSProfileMediaRowView.m in Sources */ = {isa = PBXBuildFile; fileRef = C2CE53C91BE8C0DB00BBEF5F /* TGSProfileMediaRowView.m */; settings = {ASSET_TAGS = (); }; };
-		C2CE53CD1BE8D96600BBEF5F /* TGSProfileMediaRowItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C2CE53CC1BE8D96600BBEF5F /* TGSProfileMediaRowItem.m */; settings = {ASSET_TAGS = (); }; };
-		C2CE53D01BE8E6F900BBEF5F /* TGProfileParamView.m in Sources */ = {isa = PBXBuildFile; fileRef = C2CE53CF1BE8E6F900BBEF5F /* TGProfileParamView.m */; settings = {ASSET_TAGS = (); }; };
-		C2CE53D31BE8EC7B00BBEF5F /* TGProfileParamItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C2CE53D21BE8EC7B00BBEF5F /* TGProfileParamItem.m */; settings = {ASSET_TAGS = (); }; };
-		C2CE53D61BE905D800BBEF5F /* TGProfileHeaderRowView.m in Sources */ = {isa = PBXBuildFile; fileRef = C2CE53D51BE905D800BBEF5F /* TGProfileHeaderRowView.m */; settings = {ASSET_TAGS = (); }; };
-		C2CE53D91BE9060500BBEF5F /* TGProfileHeaderRowItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C2CE53D81BE9060500BBEF5F /* TGProfileHeaderRowItem.m */; settings = {ASSET_TAGS = (); }; };
-		C2CE53DD1BE9275700BBEF5F /* ComposeActionInfoProfileBehavior.m in Sources */ = {isa = PBXBuildFile; fileRef = C2CE53DC1BE9275700BBEF5F /* ComposeActionInfoProfileBehavior.m */; settings = {ASSET_TAGS = (); }; };
-		C2CE53E01BE938AC00BBEF5F /* TGModernChatInfoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C2CE53DF1BE938AC00BBEF5F /* TGModernChatInfoViewController.m */; settings = {ASSET_TAGS = (); }; };
-		C2CE53E31BEA75B800BBEF5F /* TGModernChannelInfoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C2CE53E21BEA75B800BBEF5F /* TGModernChannelInfoViewController.m */; settings = {ASSET_TAGS = (); }; };
-		C2CE53E61BEB4FAD00BBEF5F /* ComposeChangeChannelDescriptionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C2CE53E51BEB4FAD00BBEF5F /* ComposeChangeChannelDescriptionViewController.m */; settings = {ASSET_TAGS = (); }; };
-		C2CE53E91BEB543A00BBEF5F /* TGGeneralInputTextRowView.m in Sources */ = {isa = PBXBuildFile; fileRef = C2CE53E81BEB543A00BBEF5F /* TGGeneralInputTextRowView.m */; settings = {ASSET_TAGS = (); }; };
-		C2CE53EC1BEB5ACF00BBEF5F /* TGGeneralInputRowItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C2CE53EB1BEB5ACF00BBEF5F /* TGGeneralInputRowItem.m */; settings = {ASSET_TAGS = (); }; };
-		C2CE53EF1BEB748900BBEF5F /* ComposeActionChangeChannelAboutBehavior.m in Sources */ = {isa = PBXBuildFile; fileRef = C2CE53EE1BEB748900BBEF5F /* ComposeActionChangeChannelAboutBehavior.m */; settings = {ASSET_TAGS = (); }; };
-		C2CE53F21BECC3A700BBEF5F /* MegagroupChatFilter.m in Sources */ = {isa = PBXBuildFile; fileRef = C2CE53F11BECC3A700BBEF5F /* MegagroupChatFilter.m */; settings = {ASSET_TAGS = (); }; };
-		C2CE53F51BECE46600BBEF5F /* MegagroupHistoryController.m in Sources */ = {isa = PBXBuildFile; fileRef = C2CE53F41BECE46600BBEF5F /* MegagroupHistoryController.m */; settings = {ASSET_TAGS = (); }; };
-		C2CE53F81BED06BD00BBEF5F /* ChannelCommonFilter.m in Sources */ = {isa = PBXBuildFile; fileRef = C2CE53F71BED06BD00BBEF5F /* ChannelCommonFilter.m */; settings = {ASSET_TAGS = (); }; };
-		C2CE53FB1BF0AE3800BBEF5F /* CommonMediaHistoryFilter.m in Sources */ = {isa = PBXBuildFile; fileRef = C2CE53FA1BF0AE3800BBEF5F /* CommonMediaHistoryFilter.m */; settings = {ASSET_TAGS = (); }; };
-		C2CE53FE1BF0E43A00BBEF5F /* TGPhotoViewerBehavior.m in Sources */ = {isa = PBXBuildFile; fileRef = C2CE53FD1BF0E43A00BBEF5F /* TGPhotoViewerBehavior.m */; settings = {ASSET_TAGS = (); }; };
+		C2CE53C01BE2892E00BBEF5F /* ChatAdminsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C2CE53BF1BE2892E00BBEF5F /* ChatAdminsViewController.m */; };
+		C2CE53C31BE295A000BBEF5F /* TGGeneralSearchRowView.m in Sources */ = {isa = PBXBuildFile; fileRef = C2CE53C21BE295A000BBEF5F /* TGGeneralSearchRowView.m */; };
+		C2CE53C61BE7688900BBEF5F /* ComposeActionCreateMegaGroupBehavior.m in Sources */ = {isa = PBXBuildFile; fileRef = C2CE53C51BE7688900BBEF5F /* ComposeActionCreateMegaGroupBehavior.m */; };
+		C2CE53CA1BE8C0DB00BBEF5F /* TGSProfileMediaRowView.m in Sources */ = {isa = PBXBuildFile; fileRef = C2CE53C91BE8C0DB00BBEF5F /* TGSProfileMediaRowView.m */; };
+		C2CE53CD1BE8D96600BBEF5F /* TGSProfileMediaRowItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C2CE53CC1BE8D96600BBEF5F /* TGSProfileMediaRowItem.m */; };
+		C2CE53D01BE8E6F900BBEF5F /* TGProfileParamView.m in Sources */ = {isa = PBXBuildFile; fileRef = C2CE53CF1BE8E6F900BBEF5F /* TGProfileParamView.m */; };
+		C2CE53D31BE8EC7B00BBEF5F /* TGProfileParamItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C2CE53D21BE8EC7B00BBEF5F /* TGProfileParamItem.m */; };
+		C2CE53D61BE905D800BBEF5F /* TGProfileHeaderRowView.m in Sources */ = {isa = PBXBuildFile; fileRef = C2CE53D51BE905D800BBEF5F /* TGProfileHeaderRowView.m */; };
+		C2CE53D91BE9060500BBEF5F /* TGProfileHeaderRowItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C2CE53D81BE9060500BBEF5F /* TGProfileHeaderRowItem.m */; };
+		C2CE53DD1BE9275700BBEF5F /* ComposeActionInfoProfileBehavior.m in Sources */ = {isa = PBXBuildFile; fileRef = C2CE53DC1BE9275700BBEF5F /* ComposeActionInfoProfileBehavior.m */; };
+		C2CE53E01BE938AC00BBEF5F /* TGModernChatInfoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C2CE53DF1BE938AC00BBEF5F /* TGModernChatInfoViewController.m */; };
+		C2CE53E31BEA75B800BBEF5F /* TGModernChannelInfoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C2CE53E21BEA75B800BBEF5F /* TGModernChannelInfoViewController.m */; };
+		C2CE53E61BEB4FAD00BBEF5F /* ComposeChangeChannelDescriptionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C2CE53E51BEB4FAD00BBEF5F /* ComposeChangeChannelDescriptionViewController.m */; };
+		C2CE53E91BEB543A00BBEF5F /* TGGeneralInputTextRowView.m in Sources */ = {isa = PBXBuildFile; fileRef = C2CE53E81BEB543A00BBEF5F /* TGGeneralInputTextRowView.m */; };
+		C2CE53EC1BEB5ACF00BBEF5F /* TGGeneralInputRowItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C2CE53EB1BEB5ACF00BBEF5F /* TGGeneralInputRowItem.m */; };
+		C2CE53EF1BEB748900BBEF5F /* ComposeActionChangeChannelAboutBehavior.m in Sources */ = {isa = PBXBuildFile; fileRef = C2CE53EE1BEB748900BBEF5F /* ComposeActionChangeChannelAboutBehavior.m */; };
+		C2CE53F21BECC3A700BBEF5F /* MegagroupChatFilter.m in Sources */ = {isa = PBXBuildFile; fileRef = C2CE53F11BECC3A700BBEF5F /* MegagroupChatFilter.m */; };
+		C2CE53F51BECE46600BBEF5F /* MegagroupHistoryController.m in Sources */ = {isa = PBXBuildFile; fileRef = C2CE53F41BECE46600BBEF5F /* MegagroupHistoryController.m */; };
+		C2CE53F81BED06BD00BBEF5F /* ChannelCommonFilter.m in Sources */ = {isa = PBXBuildFile; fileRef = C2CE53F71BED06BD00BBEF5F /* ChannelCommonFilter.m */; };
+		C2CE53FB1BF0AE3800BBEF5F /* CommonMediaHistoryFilter.m in Sources */ = {isa = PBXBuildFile; fileRef = C2CE53FA1BF0AE3800BBEF5F /* CommonMediaHistoryFilter.m */; };
+		C2CE53FE1BF0E43A00BBEF5F /* TGPhotoViewerBehavior.m in Sources */ = {isa = PBXBuildFile; fileRef = C2CE53FD1BF0E43A00BBEF5F /* TGPhotoViewerBehavior.m */; };
 		C2D235B91A2F2C5600765BA1 /* TGModernTypingManager.m in Sources */ = {isa = PBXBuildFile; fileRef = C2D235B81A2F2C5600765BA1 /* TGModernTypingManager.m */; };
 		C2D235BC1A2FA6F400765BA1 /* TGSendTypingManager.m in Sources */ = {isa = PBXBuildFile; fileRef = C2D235BB1A2FA6F400765BA1 /* TGSendTypingManager.m */; };
 		C2D4B7401AFCD36A0035B4E4 /* TGModalView.m in Sources */ = {isa = PBXBuildFile; fileRef = C2D4B73F1AFCD36A0035B4E4 /* TGModalView.m */; };
@@ -815,7 +815,7 @@
 		C2E561041AF3729600B4CAF0 /* libsqlcipher.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C2E561031AF3726300B4CAF0 /* libsqlcipher.a */; };
 		C2E5A0611BABF33C00C1BCA1 /* TL_localMessageService_old34.m in Sources */ = {isa = PBXBuildFile; fileRef = C2E5A0601BABF33C00C1BCA1 /* TL_localMessageService_old34.m */; };
 		C2E5A0731BAC75C200C1BCA1 /* TGMessageViewSender.m in Sources */ = {isa = PBXBuildFile; fileRef = C2E5A0721BAC75C100C1BCA1 /* TGMessageViewSender.m */; };
-		C2ED28041BFF7F0E00F19531 /* TGReportChannelModalView.m in Sources */ = {isa = PBXBuildFile; fileRef = C2ED28031BFF7F0E00F19531 /* TGReportChannelModalView.m */; settings = {ASSET_TAGS = (); }; };
+		C2ED28041BFF7F0E00F19531 /* TGReportChannelModalView.m in Sources */ = {isa = PBXBuildFile; fileRef = C2ED28031BFF7F0E00F19531 /* TGReportChannelModalView.m */; };
 		C2ED357D18D9FECB00D0027C /* CAProgressLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = C2ED357C18D9FECB00D0027C /* CAProgressLayer.m */; };
 		C2F07E0F1BBD7CD900B3DB39 /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2F07E0E1BBD7CD900B3DB39 /* IOKit.framework */; };
 		C2F07E111BBD7CEF00B3DB39 /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2F07E101BBD7CEF00B3DB39 /* WebKit.framework */; };
@@ -826,7 +826,6 @@
 		C2F07E1B1BBD7E0E00B3DB39 /* libsqlite3.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = C2F07E1A1BBD7E0E00B3DB39 /* libsqlite3.tbd */; };
 		C2F07E1D1BBDBABF00B3DB39 /* ImageIO.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2F07E1C1BBDBABF00B3DB39 /* ImageIO.framework */; };
 		C2F07E1F1BBDBACD00B3DB39 /* libstdc++.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = C2F07E1E1BBDBACD00B3DB39 /* libstdc++.tbd */; };
-		C2F07E241BC0210600B3DB39 /* libcommonCrypto.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = C2F07E231BC0210600B3DB39 /* libcommonCrypto.tbd */; };
 		C2F07E251BC02F6200B3DB39 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A2576A4181D09E500FB386C /* SystemConfiguration.framework */; };
 		C2F07E281BC02FC500B3DB39 /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = C2F07E181BBD7D9300B3DB39 /* libz.tbd */; };
 		C2F3995F190E7692006B36F7 /* ReadHistroryTask.m in Sources */ = {isa = PBXBuildFile; fileRef = C2F3995E190E7692006B36F7 /* ReadHistroryTask.m */; };
@@ -2726,7 +2725,6 @@
 				C2FB6C941C05F08600B066A4 /* Sparkle.framework in Frameworks */,
 				C2FB6C951C05F08600B066A4 /* HockeySDK.framework in Frameworks */,
 				C2F07E191BBD7D9300B3DB39 /* libz.tbd in Frameworks */,
-				C2F07E241BC0210600B3DB39 /* libcommonCrypto.tbd in Frameworks */,
 				C2F07E1F1BBDBACD00B3DB39 /* libstdc++.tbd in Frameworks */,
 				C2F07E1D1BBDBABF00B3DB39 /* ImageIO.framework in Frameworks */,
 				0A2576A5181D09E500FB386C /* SystemConfiguration.framework in Frameworks */,
