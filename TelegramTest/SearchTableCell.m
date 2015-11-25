@@ -36,7 +36,7 @@
         [self.titleTextField setAutoresizingMask:NSViewWidthSizable];
         [[self.titleTextField cell] setTruncatesLastVisibleLine:YES];
         [[self.titleTextField cell] setLineBreakMode:NSLineBreakByTruncatingTail];
-        [self.titleTextField setFont:[NSFont fontWithName:@"HelveticaNeue" size:14]];
+        [self.titleTextField setFont:TGSystemFont(14)];
         [self.titleTextField setDrawsBackground:NO];
 //        [self.titleTextField setBackgroundColor:[NSColor redColor]];
 
@@ -46,7 +46,7 @@
         [self.statusTextField setEditable:NO];
         [self.statusTextField setBordered:NO];
         [self.statusTextField setDrawsBackground:NO];
-        [self.statusTextField setFont:[NSFont fontWithName:@"HelveticaNeue" size:13]];
+        [self.statusTextField setFont:TGSystemFont(13)];
         [self.statusTextField setSelector:@selector(statusForSearchTableView)];
         [self.statusTextField setAutoresizingMask:NSViewWidthSizable];
         [[self.statusTextField cell] setLineBreakMode:NSLineBreakByCharWrapping];
@@ -59,7 +59,7 @@
         [self.dateTextField setBordered:NO];
         [self.dateTextField setAutoresizingMask:NSViewMinXMargin];
         [self.dateTextField setBackgroundColor:[NSColor clearColor]];
-        [self.dateTextField setFont:[NSFont fontWithName:@"Helvetica-Light" size:12]];
+        [self.dateTextField setFont:TGSystemLightFont(12)];
         [self addSubview:self.dateTextField];
         
         self.avatarImageView = [TMAvatarImageView standartTableAvatar];
@@ -95,7 +95,7 @@
     SearchItem *item = [self rowItem];
     
     
-    if(item.conversation.type == DialogTypeChat) {
+    if(item.conversation.type == DialogTypeChat || item.conversation.type == DialogTypeChannel) {
          [self.titleTextField setChat:item.chat];
     }
     
@@ -129,19 +129,26 @@
             [self.avatarImageView setUser:item.user];
             [self.statusTextField setUser:item.user];
 
-            if(item.type == SearchItemGlobalUser) {
-                [self.statusTextField setUser:nil];
-                [self.statusTextField setAttributedStringValue:item.status];
-            }
+            
         }
         
-        [self.titleTextField setFrameSize:NSMakeSize(self.bounds.size.width - 75, self.titleTextField.bounds.size.height)];
+        if(item.type == SearchItemGlobalUser) {
+            [self.statusTextField setUser:nil];
+            [self.statusTextField setChat:nil];
+            [self.statusTextField setAttributedStringValue:item.status];
+        }
+        
+        [self.titleTextField sizeToFit];
+        
+        [self.titleTextField setFrameSize:NSMakeSize(MIN(self.bounds.size.width - 75,NSWidth(self.titleTextField.frame)), self.titleTextField.bounds.size.height)];
 
         
         [self.dateTextField setHidden:YES];
     } else {
         
-        if(item.conversation.type == DialogTypeChat) {
+        
+        
+        if(item.conversation.type == DialogTypeChat || item.conversation.type == DialogTypeChannel) {
             [self.avatarImageView setChat:item.chat];
         }
         
@@ -195,9 +202,10 @@
         [DIALOG_BORDER_COLOR set];
         NSRectFill(NSMakeRect(68, 0, self.bounds.size.width - DIALOG_BORDER_WIDTH - 68, 1));
         
-//        [NSColorFromRGB(0xcccccc) set];
-//        
-//        NSRectFill(NSMakeRect(66, 0, self.bounds.size.width - DIALOG_BORDER_WIDTH - 66, 1));
+    }
+    
+    if([self rowItem].conversation.isVerified) {
+        [self.isSelected ? image_VerifyWhite() : image_Verify() drawInRect:NSMakeRect(NSMaxX(self.titleTextField.frame),NSMinY(self.titleTextField.frame) , image_Verify().size.width, image_Verify().size.height) fromRect:NSZeroRect operation:NSCompositeHighlight fraction:1];
     }
     
 }

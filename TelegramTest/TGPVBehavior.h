@@ -8,13 +8,17 @@
 
 #import <Foundation/Foundation.h>
 #import "TGPVImageObject.h"
+#import "ChatHistoryController.h"
+#import "TGPhotoViewerBehavior.h"
 @protocol TGPVBehavior <NSObject>
 
 @property (nonatomic,strong) TL_conversation *conversation;
 @property (nonatomic,strong) TLUser *user;
 @property (nonatomic,assign,readonly) int totalCount;
 
+
 @property (nonatomic,strong) RPCRequest *request;
+
 
 
 typedef enum {
@@ -33,6 +37,5 @@ typedef enum {
 -(void)removeItems:(NSArray *)items;
 -(void)addItems:(NSArray *)items;
 
--(BOOL)isReversedContentView;
 
 @end

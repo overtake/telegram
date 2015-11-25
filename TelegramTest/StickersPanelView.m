@@ -106,16 +106,16 @@ static NSImage *higlightedImage() {
             
             TGMessagesStickerImageObject *imgObj = [[TGMessagesStickerImageObject alloc] initWithLocation:obj.thumb.location placeHolder:placeholder];
             
-            imgObj.imageSize = strongsize(NSMakeSize(obj.thumb.w, obj.thumb.h), NSHeight(self.frame) - 6);
+            imgObj.imageSize = strongsize(NSMakeSize(obj.thumb.w, obj.thumb.h), NSHeight(self.frame) - 10);
                         
             TGStickerImageView *imgView = [[TGStickerImageView alloc] initWithFrame:NSMakeRect(0, 0, imgObj.imageSize.width, imgObj.imageSize.height)];
             
             
             [imgView setTapBlock:^{
                 
-                [[Telegram rightViewController].messagesViewController sendSticker:obj forConversation:[Telegram conversation] addCompletionHandler:nil];
+                [_messagesViewController sendSticker:obj forConversation:[Telegram conversation] addCompletionHandler:nil];
                 
-                [[Telegram rightViewController].messagesViewController setStringValueToTextField:@""];
+                [_messagesViewController setStringValueToTextField:@""];
             }];
             
             imgView.object = imgObj;

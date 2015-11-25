@@ -14,7 +14,7 @@
 @property (nonatomic,assign,readonly) NSSize titleSize;
 
 @property (nonatomic,strong,readonly) TGImageObject *imageObject;
-
+@property (nonatomic,strong,readonly) TGImageObject *roundObject;
 
 @property (nonatomic,strong,readonly) NSAttributedString *desc;
 @property (nonatomic,assign,readonly) NSSize descSize;

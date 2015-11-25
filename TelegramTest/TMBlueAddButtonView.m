@@ -40,7 +40,7 @@
         
         self.textLayer = [TMTextLayer layer];
         self.textLayer.contentsScale = self.containerView.layer.contentsScale;
-        self.textLayer.textFont = [NSFont fontWithName:@"HelveticaNeue" size:13];
+        self.textLayer.textFont = TGSystemFont(13);
         
         [self.containerView.layer addSublayer:self.textLayer];
         

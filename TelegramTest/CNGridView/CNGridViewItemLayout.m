@@ -69,7 +69,7 @@ static CGFloat kDefaultItemBorderRadius;
 		NSMutableParagraphStyle *textStyle = [[NSMutableParagraphStyle defaultParagraphStyle] mutableCopy];
 		[textStyle setAlignment:NSCenterTextAlignment];
 
-        _itemTitleTextAttributes = @{NSFontAttributeName: [NSFont fontWithName:@"HelveticaNeue" size:12],
+        _itemTitleTextAttributes = @{NSFontAttributeName: TGSystemFont(12),
                                      NSShadowAttributeName: textShadow,
                                      NSForegroundColorAttributeName: textColor,
                                      NSParagraphStyleAttributeName: textStyle};

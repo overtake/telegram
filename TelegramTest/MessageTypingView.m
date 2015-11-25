@@ -51,7 +51,7 @@ const NSTimeInterval typingIntervalSecond = 0.14;
         [self addSubview:self.typingView];
         
         self.attributedString = [[NSMutableAttributedString alloc] init];
-        self.textField = [[TMTextField alloc] initWithFrame:NSMakeRect(77, 10, 0, 0)];
+        self.textField = [[TMTextField alloc] initWithFrame:NSMakeRect(77, 10, 0,20)];
         [self.textField setBordered:NO];
         [self.textField setEditable:NO];
         [self.textField setEnabled:NO];
@@ -72,20 +72,22 @@ const NSTimeInterval typingIntervalSecond = 0.14;
     [Notification removeObserver:self];
     [Notification addObserver:self selector:@selector(typingRedrawNotification:) name:[Notification notificationNameByDialog:dialog action:@"typing"]];
     
+    [TGModernTypingManager asyncTypingWithConversation:dialog handler:^(TMTypingObject *typing) {
+        
+        [self redrawByArray:[typing currentActions] animated:NO];
+        
+    }];
     
-    [self redrawByArray:[[TGModernTypingManager typingForConversation:dialog] currentActions]];
 }
 
 - (void) typingRedrawNotification:(NSNotification *)notification {
     NSArray *users = (NSArray *)([notification.userInfo objectForKey:@"users"]);
     
-    [self redrawByArray:users];
+    [self redrawByArray:users animated:YES];
 }
 
-- (void) redrawByArray:(NSArray *)actions {
+- (void) redrawByArray:(NSArray *)actions animated:(BOOL)animated {
     [[self.attributedString mutableString] setString:@""];
-    
-    
     
     NSString *string = nil;
     if(actions.count) {
@@ -96,14 +98,14 @@ const NSTimeInterval typingIntervalSecond = 0.14;
             
             TGActionTyping *action = actions[0];
             
-            TLUser *user = [[UsersManager sharedManager] find:action.user_id];
+            TLUser *user = action.user;
             if(user)
                 string =[NSString stringWithFormat:NSLocalizedString(NSStringFromClass(action.action.class), nil),user.fullName];
         } else {
             
             NSMutableArray *usersStrings = [[NSMutableArray alloc] init];
             for(TGActionTyping *action in actions) {
-                TLUser *user = [[UsersManager sharedManager] find:action.user_id];
+                TLUser *user = action.user;
                 if(user) {
                     [usersStrings addObject:user.fullName];
                 }
@@ -120,10 +122,24 @@ const NSTimeInterval typingIntervalSecond = 0.14;
         self.needDots = 0;
     }
     
-    [self.textField setFont:[NSFont fontWithName:@"HelveticaNeue" size:12]];
+    if(animated && self.textField.attributedStringValue.length == 0 && string.length > 0) {
+        [self.textField setFrameOrigin:NSMakePoint(NSMinX(_textField.frame), -20)];
+    }
+    
+    [self.textField setFont:TGSystemFont(12)];
     self.textField.attributedStringValue = self.attributedString;
     self.endString = (int) self.attributedString.length;
     [self.textField sizeToFit];
+    
+    
+    id typingF = animated ? [self.typingView animator] : self.typingView;
+    
+    
+    [typingF setFrameOrigin:NSMakePoint(NSMinX(_typingView.frame), string.length > 0 ? 10 : - 20)];
+    
+    id fieldF = animated ? [self.textField animator] : self.textField;
+    
+    [fieldF setFrameOrigin:NSMakePoint(NSMinX(_textField.frame), string.length > 0 ? 10 : - 20)];
     
     int maxWidth = NSWidth(self.frame)-NSMinX(self.textField.frame) - 20;
     

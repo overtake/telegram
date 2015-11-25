@@ -53,6 +53,14 @@
     return self;
 }
 
+- (id)initWithTimeout:(NSTimeInterval)timeout repeat:(bool)repeat completion:(dispatch_block_t)completion queue:(dispatch_queue_t)queue reservedObject:(id)object {
+    if(self = [self initWithTimeout:timeout repeat:repeat completion:completion queue:queue]) {
+        _reservedObject = [object copy];
+    }
+    
+    return self;
+}
+
 - (void)dealloc
 {
     if (_timer != nil)

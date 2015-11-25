@@ -11,8 +11,6 @@
 
 @interface TGConversationTableItem : TMRowItem
 
-@property (nonatomic,weak) TMTableView *table;
-
 @property (nonatomic,strong,readonly) TL_conversation *conversation;
 
 -(TL_localMessage *)message;
@@ -20,6 +18,10 @@
 
 @property (nonatomic,strong,readonly) NSMutableAttributedString *messageText;
 @property (nonatomic,strong,readonly) NSMutableAttributedString *dateText;
+
+
+@property (nonatomic,assign) NSSize nameTextSize;
+
 @property (nonatomic,strong,readonly) NSString *selectText;
 
 @property (nonatomic, strong,readonly) NSString *unreadText;
@@ -35,6 +37,5 @@
 
 -(void)needUpdateMessage:(NSNotification *)notification;
 
--(void)update;
 -(void)performReload;
 @end

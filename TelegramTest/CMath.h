@@ -13,4 +13,6 @@ int gcd(int m, int n);
 int rand_limit(int limit);
 int uniqueElement(int first, int last, int exception);
 long rand_long();
+int rand_int();
+
 #endif

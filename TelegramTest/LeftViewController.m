@@ -8,7 +8,6 @@
 
 #import "LeftViewController.h"
 #import "SearchViewController.h"
-#import "NewConversationViewController.h"
 #import "RBLPopover.h"
 #import "TMTabViewController.h"
 #import "AccountSettingsViewController.h"
@@ -235,6 +234,10 @@ static const int bottomOffset = 58;
 static TMViewController *changedController;
 
 -(void)tabItemDidChanged:(TMTabItem *)item index:(NSUInteger)index {
+    
+    if([Telegram mainViewController].isMinimisze && index != 1)
+        return;
+    
     [self.tabViewController showControllerByIndex:index];
     
     if(![Telegram isSingleLayout]) {
@@ -272,8 +275,10 @@ static TMViewController *changedController;
     
     [self.tabController setFrameSize:NSMakeSize(NSWidth(self.view.frame), NSHeight(self.tabController.frame))];
     
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self.conversationsViewController viewWillAppear:NO];
+    });
     
-    [self.conversationsViewController viewWillAppear:NO];
 //    
 //    self.tabController.selectedIndex = self.tabController.selectedIndex;
 }

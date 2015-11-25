@@ -192,7 +192,7 @@ static NSImage *sharedLinkCapImage() {
     if(url != nil)
     {
         
-        if(![url hasPrefix:@"http://"] || ![url hasPrefix:@"https://"] | ![url hasPrefix:@"ftp://"])
+        if(![url hasPrefix:@"http://"] && ![url hasPrefix:@"https://"] && ![url hasPrefix:@"ftp://"])
             return [[url substringToIndex:1] uppercaseString];
         
         NSURLComponents *components = [[NSURLComponents alloc] initWithString:url];
@@ -226,7 +226,7 @@ static NSImage *sharedLinkCapImage() {
         
         [_linkField setStringValue:item.webpage.webpage.url];
         
-        [_imageView setObject:item.webpage.imageObject];
+        [_imageView setObject:item.webpage.roundObject];
         
         if(_textField.attributedString.string.length == 0) {
             [_linkField setCenteredYByView:_linkField.superview];
@@ -238,6 +238,7 @@ static NSImage *sharedLinkCapImage() {
         
         [_textField setCenteredYByView:_textField.superview];
         [_textField setFrameOrigin:NSMakePoint(self.isEditable ? s_lox +60 : 62, NSMinY(_textField.frame))];
+        
         
     }
     
@@ -333,6 +334,7 @@ static NSImage *sharedLinkCapImage() {
     animation.toValue = anim.toValue;
     animation.fromValue = anim.fromValue;
     animation.duration = anim.duration;
+    animation.removedOnCompletion = YES;
     [self.textField pop_addAnimation:animation forKey:@"background"];
     
 }

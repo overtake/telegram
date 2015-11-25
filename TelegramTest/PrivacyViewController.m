@@ -37,14 +37,12 @@
     [self.view addSubview:self.tableView.containerView];
     
     
-    GeneralSettingsBlockHeaderItem *privacyHeader = [[GeneralSettingsBlockHeaderItem alloc] initWithObject:NSLocalizedString(@"PrivacyAndSecurity.PrivacyHeader", nil)];
-    
-    privacyHeader.height = 61;
+    GeneralSettingsBlockHeaderItem *privacyHeader = [[GeneralSettingsBlockHeaderItem alloc] initWithString:NSLocalizedString(@"PrivacyAndSecurity.PrivacyHeader", nil) height:51 flipped:NO];
     
     [self.tableView insert:privacyHeader atIndex:self.tableView.list.count tableRedraw:NO];
     
     
-    self.blockedUsersRowIten = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeNext callback:^(GeneralSettingsRowItem *item) {
+    self.blockedUsersRowIten = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeNext callback:^(TGGeneralRowItem *item) {
         
         [[Telegram rightViewController] showBlockedUsers];
         
@@ -53,7 +51,7 @@
     [self.tableView insert:self.blockedUsersRowIten atIndex:self.tableView.list.count tableRedraw:NO];
     
     
-    self.lastSeenRowItem = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeNext callback:^(GeneralSettingsRowItem *item) {
+    self.lastSeenRowItem = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeNext callback:^(TGGeneralRowItem *item) {
         
         if(!self.lastSeenRowItem.locked)
             [[Telegram rightViewController] showLastSeenController];
@@ -64,18 +62,16 @@
     
 
     
-    GeneralSettingsBlockHeaderItem *security = [[GeneralSettingsBlockHeaderItem alloc] initWithObject:NSLocalizedString(@"PrivacyAndSecurity.SecurityHeader", nil)];
-    
-    security.height = 51;
+    GeneralSettingsBlockHeaderItem *security = [[GeneralSettingsBlockHeaderItem alloc] initWithString:NSLocalizedString(@"PrivacyAndSecurity.SecurityHeader", nil) height:51 flipped:NO];
     
     [self.tableView insert:security atIndex:self.tableView.list.count tableRedraw:NO];
     
     
-    GeneralSettingsRowItem *passcode = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeNext callback:^(GeneralSettingsRowItem *item) {
+    GeneralSettingsRowItem *passcode = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeNext callback:^(TGGeneralRowItem *item) {
         
         [[Telegram rightViewController] showPasscodeController];
         
-    } description:NSLocalizedString(@"PrivacyAndSecurity.PassCode", nil) height:42 stateback:^id(GeneralSettingsRowItem *item) {
+    } description:NSLocalizedString(@"PrivacyAndSecurity.PassCode", nil) height:42 stateback:^id(TGGeneralRowItem *item) {
         return @(YES);
     }];
     
@@ -94,23 +90,23 @@
     
     if(accept) {
         
-        GeneralSettingsRowItem *terminateSessions = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeNext callback:^(GeneralSettingsRowItem *item) {
+        GeneralSettingsRowItem *terminateSessions = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeNext callback:^(TGGeneralRowItem *item) {
             
             [[Telegram rightViewController] showSessionsController];
             
             //  [self terminateSessions];
             
-        } description:NSLocalizedString(@"PrivacyAndSecurity.TerminateSessions", nil) height:42 stateback:^id(GeneralSettingsRowItem *item) {
+        } description:NSLocalizedString(@"PrivacyAndSecurity.TerminateSessions", nil) height:42 stateback:^id(TGGeneralRowItem *item) {
             return @(YES);
         }];
         
         [self.tableView insert:terminateSessions atIndex:self.tableView.list.count tableRedraw:NO];
         
-        GeneralSettingsRowItem *twoStepVerification = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeNext callback:^(GeneralSettingsRowItem *item) {
+        GeneralSettingsRowItem *twoStepVerification = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeNext callback:^(TGGeneralRowItem *item) {
             
             [[Telegram rightViewController] showPasswordMainController];
             
-        } description:NSLocalizedString(@"PrivacyAndSecurity.TwoStepVerification", nil) height:42 stateback:^id(GeneralSettingsRowItem *item) {
+        } description:NSLocalizedString(@"PrivacyAndSecurity.TwoStepVerification", nil) height:42 stateback:^id(TGGeneralRowItem *item) {
             return @(YES);
         }];
         
@@ -121,26 +117,24 @@
     
     
 //    
-//    GeneralSettingsRowItem *logout = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeNext callback:^(GeneralSettingsRowItem *item) {
+//    GeneralSettingsRowItem *logout = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeNext callback:^(TGGeneralRowItem *item) {
 //        N
 //        [self logOut];
 //        
 //        
-//    } description:NSLocalizedString(@"PrivacyAndSecurity.Logout", nil) height:42 stateback:^id(GeneralSettingsRowItem *item) {
+//    } description:NSLocalizedString(@"PrivacyAndSecurity.Logout", nil) height:42 stateback:^id(TGGeneralRowItem *item) {
 //        return @([SettingsArchiver checkMaskedSetting:AutoGroupAudio]);
 //    }];
 //    
 //    [self.tableView insert:logout atIndex:self.tableView.list.count tableRedraw:NO];
     
     
-    GeneralSettingsBlockHeaderItem *deleteAccountHeader = [[GeneralSettingsBlockHeaderItem alloc] initWithObject:NSLocalizedString(@"PrivacyAndSecurity.DeleteAccountHeader", nil)];
-    
-    deleteAccountHeader.height = 51;
+    GeneralSettingsBlockHeaderItem *deleteAccountHeader = [[GeneralSettingsBlockHeaderItem alloc] initWithString:NSLocalizedString(@"PrivacyAndSecurity.DeleteAccountHeader", nil) height:51 flipped:NO];
     
     [self.tableView insert:deleteAccountHeader atIndex:self.tableView.list.count tableRedraw:NO];
     
     
-    self.accountDaysItem = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeNext callback:^(GeneralSettingsRowItem *item) {
+    self.accountDaysItem = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeNext callback:^(TGGeneralRowItem *item) {
         
        /// [self logOut];
         
@@ -170,7 +164,7 @@
             [menu popUpForView:view.subdescField];
         }
         
-    } description:NSLocalizedString(@"PrivacyAndSecurity.DeleteAccount", nil) height:42 stateback:^id(GeneralSettingsRowItem *item) {
+    } description:NSLocalizedString(@"PrivacyAndSecurity.DeleteAccount", nil) height:42 stateback:^id(TGGeneralRowItem *item) {
         return @([SettingsArchiver checkMaskedSetting:AutoGroupAudio]);
     }];
     
@@ -190,9 +184,9 @@
 //    [self.tableView insert:deleteAccountHeader atIndex:self.tableView.list.count tableRedraw:NO];
 //    
 //    
-//    GeneralSettingsRowItem *deleteAccount = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeNext callback:^(GeneralSettingsRowItem *item) {
+//    GeneralSettingsRowItem *deleteAccount = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeNext callback:^(TGGeneralRowItem *item) {
 //        
-//    } description:NSLocalizedString(@"PrivacyAndSecurity.DeleteAccount", nil) height:42 stateback:^id(GeneralSettingsRowItem *item) {
+//    } description:NSLocalizedString(@"PrivacyAndSecurity.DeleteAccount", nil) height:42 stateback:^id(TGGeneralRowItem *item) {
 //        return @([SettingsArchiver checkMaskedSetting:EmojiReplaces]);
 //    }];
 //    

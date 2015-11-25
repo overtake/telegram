@@ -140,11 +140,15 @@
     
 }
 
--(void)mouseUp:(NSEvent*)theEvent {
-    
+-(void)mouseDown:(NSEvent *)theEvent {
     
     if(_movableWindow)
         _movableStartLocation = [theEvent locationInWindow];
+    
+    [super mouseDown:theEvent];
+}
+
+-(void)mouseUp:(NSEvent*)theEvent {
     
     if(self.callback)
         self.callback();
@@ -156,7 +160,9 @@
     
 }
 
-
+- (BOOL)acceptsFirstMouse:(NSEvent *)theEvent {
+    return YES;
+}
 
 - (void)mouseDragged:(NSEvent *)theEvent
 {

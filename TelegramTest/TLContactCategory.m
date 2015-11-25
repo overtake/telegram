@@ -10,8 +10,19 @@
 
 @implementation TLContact (Category)
 
+DYNAMIC_PROPERTY(dUser);
+
 - (TLUser *)user {
-    return [[UsersManager sharedManager] find:self.user_id];
+    
+    TLUser *u = [self getdUser];
+    
+    if(!u)
+    {
+        u = [[UsersManager sharedManager] find:self.user_id];
+        [self setdUser:u];
+    }
+    
+    return u;
 }
 
 @end

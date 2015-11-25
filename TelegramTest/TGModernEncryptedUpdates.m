@@ -171,34 +171,7 @@
             
             NSArray *random_ids = [action valueForKey:@"random_ids"];
             
-            [[Storage manager] deleteMessagesWithRandomIds:random_ids completeHandler:^(BOOL result) {
-                
-                NSMutableDictionary *update = [[NSMutableDictionary alloc] init];
-                
-                NSMutableArray *ids = [[NSMutableArray alloc] init];
-                
-                
-                for (NSNumber *msgId in random_ids) {
-                    
-                    TL_destructMessage *message = [[MessagesManager sharedManager] findWithRandomId:[msgId longValue]];
-                    
-                    if(message) {
-                        [ids addObject:@(message.n_id)];
-                    }
-                    
-                    if(message && message.conversation) {
-                        [update setObject:message.conversation forKey:@(message.conversation.peer.peer_id)];
-                    }
-                    
-                }
-                
-                for (TL_conversation *dialog in update.allValues) {
-                    [[DialogsManager sharedManager] updateLastMessageForDialog:dialog];
-                }
-                
-                [Notification perform:MESSAGE_DELETE_EVENT data:@{KEY_MESSAGE_ID_LIST:ids}];
-                
-            }];
+            [[DialogsManager sharedManager] deleteMessagesWithRandomMessageIds:random_ids isChannelMessages:NO];
             
             return YES;
         }
@@ -220,30 +193,14 @@
             
             NSArray *items = [action valueForKey:@"random_ids"];
             
-            NSMutableArray *storageMessages = [[NSMutableArray alloc] init];
-            
-            [items enumerateObjectsUsingBlock:^(NSNumber *obj, NSUInteger idx, BOOL *stop) {
-                
-                
-                
-               TL_destructMessage *msg = (TL_destructMessage *) [[MessagesManager sharedManager] findWithRandomId:[obj longValue]];
-                if(msg) {
-                    [SelfDestructionController addMessage:msg force:YES];
-                } else {
-                    [storageMessages addObject:obj];
-                }
-                
-            }];
             
             [[Storage manager] messages:^(NSArray *result) {
-                
-                [[MessagesManager sharedManager] add:result];
                 
                 [result enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
                     [SelfDestructionController addMessage:obj force:YES];
                 }];
                 
-            } forIds:storageMessages random:YES sync:YES queue:_queue ? _queue : [ASQueue globalQueue]];
+            } forIds:items random:YES sync:NO queue:_queue ? _queue : [ASQueue globalQueue]];
             
             return YES;
         }

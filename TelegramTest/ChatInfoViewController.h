@@ -8,6 +8,7 @@
 
 #import "TMViewController.h"
 #import "UserInfoShortButtonView.h"
+#import "ChatAvatarImageView.h"
 @interface ChatHeaderItem : TMRowItem
 @end
 
@@ -18,6 +19,7 @@
 @interface ChatBottomView : TMRowView
 @property (nonatomic,strong) UserInfoShortButtonView *button;
 @property (nonatomic,strong) TL_conversation *conversation;
+
 @end
 
 @class ChatParticipantItem;
@@ -28,6 +30,9 @@ typedef enum {
 } ChatInfoViewControllerType;
 
 @interface ChatInfoViewController : TMViewController<TMTableViewDelegate>
+
+
+@property (nonatomic,weak) MessagesViewController *messagesViewController;
 
 @property (nonatomic, strong) TLChat *chat;
 @property (nonatomic) ChatInfoViewControllerType type;

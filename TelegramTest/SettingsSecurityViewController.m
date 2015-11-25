@@ -66,7 +66,7 @@
     
     TMTextField *cacheDesc = [TMTextField defaultTextField];
     
-    [cacheDesc setFont:[NSFont fontWithName:@"HelveticaNeue" size:12]];
+    [cacheDesc setFont:TGSystemFont(12)];
     
     
     [cacheDesc setStringValue:NSLocalizedString(@"Settings.ClearCacheDescription",nil)];
@@ -98,7 +98,7 @@
     
     TMTextField *terminateDesc = [TMTextField defaultTextField];
     
-    [terminateDesc setFont:[NSFont fontWithName:@"HelveticaNeue" size:12]];
+    [terminateDesc setFont:TGSystemFont(12)];
     
     
     [terminateDesc setStringValue:NSLocalizedString(@"Settings.TerminateOtherSessionsDescription",nil)];

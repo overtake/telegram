@@ -79,6 +79,7 @@
 
 - (void)textDidChange:(NSNotification *)notification {
     
+    
     if(_limit > 0 && self.string.length > _limit) {
         
         [self setString:[self.string substringWithRange:NSMakeRange(0, _limit)]];
@@ -89,9 +90,7 @@
     
     
     
-    [self detectAndAddLinks:URLFindTypeHashtags | URLFindTypeLinks | URLFindTypeMentions];
-    
-    self.font = [NSFont fontWithName:@"HelveticaNeue" size:[SettingsArchiver checkMaskedSetting:BigFontSetting] ? 15 : 13];
+    self.font = TGSystemFont([SettingsArchiver checkMaskedSetting:BigFontSetting] ? 15 : 13);
     
     
 //    NSUInteger numberOfLines, index, numberOfGlyphs = [self.layoutManager numberOfGlyphs];
@@ -233,7 +232,7 @@
     self.autoresizingMask = NSViewWidthSizable | NSViewHeightSizable;
     self.autoresizesSubviews = YES;
     self.delegate = self;
-    self.font = [NSFont fontWithName:@"HelveticaNeue" size:15];
+    self.font = TGSystemFont(15);
     self.insertionPointColor = NSColorFromRGB(0x0f92dd);
     
     
@@ -245,14 +244,19 @@
     weakify();
     self.containerView = [[TMView alloc] initWithFrame:self.bounds];
     [self.containerView setDrawBlock:^{
-        NSRect rect = NSMakeRect(1, 1, strongSelf.containerView.bounds.size.width - 2, strongSelf.containerView.bounds.size.height - 2);
-        NSBezierPath *circlePath = [NSBezierPath bezierPath];
-        [circlePath appendBezierPathWithRoundedRect:rect xRadius:3 yRadius:3];
-        [NSColorFromRGB(0xdedede) setStroke];
-        [circlePath setLineWidth:IS_RETINA ? 2 : 1];
-        [circlePath stroke];
-        [[NSColor whiteColor] setFill];
-        [circlePath fill];
+        
+        if(!strongSelf.disabledBorder) {
+            NSRect rect = NSMakeRect(1, 1, strongSelf.containerView.bounds.size.width - 2, strongSelf.containerView.bounds.size.height - 2);
+            NSBezierPath *circlePath = [NSBezierPath bezierPath];
+            [circlePath appendBezierPathWithRoundedRect:rect xRadius:3 yRadius:3];
+            [NSColorFromRGB(0xdedede) setStroke];
+            [circlePath setLineWidth:IS_RETINA ? 2 : 1];
+            [circlePath stroke];
+            [[NSColor whiteColor] setFill];
+            [circlePath fill];
+
+        }
+        
         
         [strongSelf.scrollView setFrame:NSMakeRect(2, 2, strongSelf.containerView.bounds.size.width - 4, strongSelf.containerView.bounds.size.height - 4)];
         
@@ -350,7 +354,7 @@
 }
 
 - (void)setPlaceholderString:(NSString *)placeHodlder {
-    self.placeholderTextAttributedString = [[NSAttributedString alloc] initWithString:placeHodlder attributes:@{NSForegroundColorAttributeName: NSColorFromRGB(0xc8c8c8), NSFontAttributeName: [NSFont fontWithName:@"HelveticaNeue" size:[SettingsArchiver checkMaskedSetting:BigFontSetting] ? 15 : 13]}];
+    self.placeholderTextAttributedString = [[NSAttributedString alloc] initWithString:placeHodlder attributes:@{NSForegroundColorAttributeName: NSColorFromRGB(0xc8c8c8), NSFontAttributeName: TGSystemFont([SettingsArchiver checkMaskedSetting:BigFontSetting] ? 15 : 13)}];
 }
 
 
@@ -361,10 +365,10 @@
     
     [super drawRect:dirtyRect];
     
-    if ([[self string] isEqualToString:@""] ) {
+    if (self.string.length == 0) {
         if(self.placeholderTextAttributedString) {
             
-           [self.placeholderTextAttributedString drawAtPoint:NSMakePoint(6, 4)];
+            [self.placeholderTextAttributedString drawAtPoint:NSMakePoint(6, NSAppKitVersionNumber > NSAppKitVersionNumber10_10_Max ? 6 : 4)];
         }
     }
 }

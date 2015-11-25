@@ -16,7 +16,7 @@
 
 @property (nonatomic,strong) NSProgressIndicator *progressIndicator;
 
-@property (nonatomic,copy) void (^goToMessage)(int msg_id, NSString *searchString);
+@property (nonatomic,copy) void (^goToMessage)(TL_localMessage *msg, NSString *searchString);
 @property (nonatomic,copy) dispatch_block_t closeCallback;
 
 
@@ -57,7 +57,7 @@
         
         [self.cancelButton setTapBlock:^ {
             strongSelf.closeCallback();
-            [strongSelf.controller jumpToLastMessages];
+            [strongSelf.controller jumpToLastMessages:YES];
             [strongSelf.request cancelRequest];
             strongSelf.request = nil;
         }];
@@ -159,8 +159,10 @@
 
 -(void)load:(BOOL)first {
     
-    [RPCRequest sendRequest:[TLAPI_messages_search createWithPeer:[Telegram conversation].inputPeer q:self.searchField.stringValue filter:[TL_inputMessagesFilterEmpty create] min_date:0 max_date:0 offset:(int)self.messages.count max_id:0 limit:100] successHandler:^(id request, TL_messages_messages *response) {
+    [RPCRequest sendRequest:[TLAPI_messages_search createWithFlags:0 peer:self.controller.conversation.inputPeer q:self.searchField.stringValue filter:[TL_inputMessagesFilterEmpty create] min_date:0 max_date:0 offset:(int)self.messages.count max_id:0 limit:100] successHandler:^(id request, TL_messages_messages *response) {
         
+        
+        [TL_localMessage convertReceivedMessages:response.messages];
         
         if(response.messages.count > 0) {
             [self.messages addObjectsFromArray:response.messages];
@@ -201,7 +203,7 @@
         _currentIdx = 0;
     }
     
-    _goToMessage([(TLMessage *)_messages[_currentIdx] n_id],_searchField.stringValue);
+    _goToMessage(_messages[_currentIdx],_searchField.stringValue);
 }
 
 -(void)prev {
@@ -214,7 +216,7 @@
         _currentIdx = (int)_messages.count - 1;
     }
     
-    _goToMessage([(TLMessage *)_messages[_currentIdx] n_id],_searchField.stringValue);
+    _goToMessage(_messages[_currentIdx],_searchField.stringValue);
 }
 
 -(void)setLocked:(BOOL)locked {
@@ -253,16 +255,18 @@
 
 
 
--(void)showSearchBox:( void (^)(int msg_id, NSString *searchString))callback closeCallback:(dispatch_block_t) closeCallback {
+-(void)showSearchBox:( void (^)(TL_localMessage *msg, NSString *searchString))callback closeCallback:(dispatch_block_t) closeCallback {
     
     self.messages = nil;
     self.currentIdx = -1;
     [self.searchField setStringValue:@""];
     
+    [self.searchField becomeFirstResponder];
+    
     self.goToMessage = callback;
     self.closeCallback = closeCallback;
     
-    [self setFrameSize:NSMakeSize([Telegram rightViewController].view.frame.size.width, NSHeight(self.frame))];
+    [self setFrameSize:NSMakeSize(self.controller.view.frame.size.width, NSHeight(self.frame))];
     
     [self updateSearchArrows];
     

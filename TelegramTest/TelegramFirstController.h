@@ -10,8 +10,8 @@
 
 @interface TelegramFirstController : NSObject
 
-@property (nonatomic, strong) TMViewController *viewController;
-@property (nonatomic, strong) TMViewController *oldViewController;
+@property (nonatomic, weak) TMViewController *viewController;
+@property (nonatomic, weak) TMViewController *oldViewController;
 
 
 - (IBAction)backOrClose:(NSMenuItem *)sender;

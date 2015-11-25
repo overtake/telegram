@@ -78,7 +78,7 @@ static NSMutableDictionary *keychains()
 
 
 NSString * serviceName() {
-    return [[NSProcessInfo processInfo].environment[@"test_server"] boolValue] ? @"telegram-test-server" : @"Telegram";
+    return [[NSProcessInfo processInfo].environment[@"test_server"] boolValue] || [[NSUserDefaults standardUserDefaults] boolForKey:@"test-backend"] ? @"telegram-test-server" : @"Telegram";
 }
 
 + (instancetype)keychainWithName:(NSString *)name
@@ -124,7 +124,7 @@ NSString * serviceName() {
     static NSString *dataDirectory = nil;
                       
     NSString *applicationSupportPath = NSSearchPathForDirectoriesInDomains(NSApplicationSupportDirectory, NSUserDomainMask, YES)[0];
-                      NSString *applicationName = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleName"];
+    NSString *applicationName = serviceName();
     dataDirectory = [[applicationSupportPath stringByAppendingPathComponent:applicationName] stringByAppendingPathComponent:_notEncryptedKeychain ? @"mtkeychain" : @"encrypt-mtkeychain"];
     
     [[NSFileManager defaultManager] createDirectoryAtPath:dataDirectory withIntermediateDirectories:YES attributes:nil error:nil];

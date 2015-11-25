@@ -45,7 +45,7 @@
         
         self.progress.autoresizingMask = self.field.autoresizingMask = NSViewMinXMargin | NSViewMaxXMargin;
         
-        [self.field setFont:[NSFont fontWithName:@"HelveticaNeue" size:15]];
+        [self.field setFont:TGSystemFont(15)];
         
         [self addSubview:self.field];
         

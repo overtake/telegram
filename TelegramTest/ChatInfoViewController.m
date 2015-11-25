@@ -49,7 +49,7 @@
 }
 
 -(void)redrawRow {
-    [self.button.textButton setStringValue:_conversation.type == DialogTypeChat ? NSLocalizedString(@"Conversation.DeleteAndExit", nil) : NSLocalizedString(@"Profile.DeleteBroadcast", nil)];
+    [self.button.textButton setStringValue:_conversation.type == DialogTypeChat ? NSLocalizedString(@"Conversation.DeleteAndExit", nil) : (_conversation.chat.isAdmin ? NSLocalizedString(@"Profile.DeleteChannel", nil) : NSLocalizedString(@"Profile.LeaveChannel", nil))];
     
     [self.button sizeToFit];
 }
@@ -109,7 +109,8 @@
 
     
     
-    _headerView = [[ChatInfoHeaderView alloc] initWithFrame:NSMakeRect(0, 0, self.view.bounds.size.width, 410)];
+    
+    _headerView = [[ChatInfoHeaderView alloc] initWithFrame:NSMakeRect(0, 0, self.view.bounds.size.width, 450)];
     
 
     _tableView = [[TMTableView alloc] initWithFrame:self.view.bounds];
@@ -120,66 +121,78 @@
     
 }
 
-- (void)navigationGoBack {
-    [[Telegram rightViewController] navigationGoBack];
+
+-(void)buildFirstItem {
+    [self.tableView reloadData];
+}
+
+-(void)setType:(ChatInfoViewControllerType)type {
+    _type = type;
+    [self.headerView setType:type];
+    [self buildRightView];
 }
 
 - (void)buildRightView {
     TMView *view = [[TMView alloc] init];
-    
-    [_headerView setType:self.type];
-    
+        
     int width = 0;
     
     TMTextButton *button;
     
-    if(self.type == ChatInfoViewControllerNormal) {
-        
-        button = [TMTextButton standartUserProfileNavigationButtonWithTitle:NSLocalizedString(@"Profile.Edit", nil)];
-        [button setTapBlock:^{
-            self.type = ChatInfoViewControllerEdit;
-            [self buildRightView];
-        }];
-        [view addSubview:button];
-        
-    } else {
-        
-        
-        
-        button = [TMTextButton standartUserProfileNavigationButtonWithTitle:NSLocalizedString(@"Profile.Save", nil)];
-        
-        
-        
-        [button setTapBlock:^{
-            [self save];
-        }];
-        [view addSubview:button];
-        
-        
-        
-       TMTextButton *cancelButton = [TMTextButton standartUserProfileNavigationButtonWithTitle:NSLocalizedString(@"Profile.Cancel", nil)];
-        [cancelButton setFrameOrigin:NSMakePoint(button.bounds.size.width + 10, button.frame.origin.y)];
-        weakify();
-        
-        [cancelButton setTapBlock:^{
+    
+    if((!self.chat.isAdmins_enabled || self.chat.isAdmin) || self.chat.isCreator) {
+        if(self.type == ChatInfoViewControllerNormal) {
             
-            [strongSelf.headerView.nameTextField setChat:nil];
-            [strongSelf.headerView.nameTextField setChat:self.chat];
-            strongSelf.type = ChatInfoViewControllerNormal;
-            [self buildRightView];
-        }];
-        [view addSubview:cancelButton];
+            button = [TMTextButton standartUserProfileNavigationButtonWithTitle:NSLocalizedString(@"Profile.Edit", nil)];
+            [button setTapBlock:^{
+                self.type = ChatInfoViewControllerEdit;
+                [self buildRightView];
+            }];
+            [view addSubview:button];
+            
+        } else {
+            
+            
+            
+            button = [TMTextButton standartUserProfileNavigationButtonWithTitle:NSLocalizedString(@"Profile.Save", nil)];
+            
+            
+            
+            [button setTapBlock:^{
+                [self save];
+            }];
+            [view addSubview:button];
+            
+            
+            
+            TMTextButton *cancelButton = [TMTextButton standartUserProfileNavigationButtonWithTitle:NSLocalizedString(@"Profile.Cancel", nil)];
+            [cancelButton setFrameOrigin:NSMakePoint(button.bounds.size.width + 10, button.frame.origin.y)];
+            weakify();
+            
+            [cancelButton setTapBlock:^{
+                
+                [strongSelf.headerView.nameTextField setChat:nil];
+                [strongSelf.headerView.nameTextField setChat:self.chat];
+                strongSelf.type = ChatInfoViewControllerNormal;
+                [self buildRightView];
+            }];
+            [view addSubview:cancelButton];
+            
+            width = cancelButton.frame.size.width+10;
+            
+            [view setFrameSize:NSMakeSize(cancelButton.frame.origin.x + cancelButton.bounds.size.width, cancelButton.bounds.size.height)];
+            
+        }
         
-        width = cancelButton.frame.size.width+10;
+        width+= button.frame.size.width;
         
-        [view setFrameSize:NSMakeSize(cancelButton.frame.origin.x + cancelButton.bounds.size.width, cancelButton.bounds.size.height)];
-        
+        [view setFrameSize:NSMakeSize(width, button.frame.size.height)];
+        [self setRightNavigationBarView:view];
+    } else {
+        [self setRightNavigationBarView:nil];
     }
     
-    width+= button.frame.size.width;
-
-    [view setFrameSize:NSMakeSize(width, button.frame.size.height)];
-    [self setRightNavigationBarView:view];
+    
 }
 
 - (void)save {
@@ -207,6 +220,15 @@
      [self reloadParticipants];
     
     [Notification addObserver:self selector:@selector(chatStatusNotification:) name:CHAT_STATUS];
+    [Notification addObserver:self selector:@selector(didChangeChatFlags:) name:CHAT_FLAGS_UPDATED];
+}
+
+-(void)didChangeChatFlags:(NSNotification *)notification {
+    TLChat *chat = notification.userInfo[KEY_CHAT];
+    
+    if(self.chat == chat) {
+        self.chat = chat;
+    }
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
@@ -244,41 +266,38 @@
 - (void)setChat:(TLChat *)chat {
     self->_chat = chat;
     
-    [self view];
+    if(chat) {
+        [self view];
+        
+        [_headerView setController:self];
     
-    if(chat)
+        [_headerView reload];
+        
         _bottomView.conversation = chat.dialog;
+        
+        [_tableView scrollToBeginningOfDocument:_tableView];
+        [_tableView.scrollView scrollToPoint:NSMakePoint(0, 0) animation:NO];
+        
+        
+        self.fullChat = [[FullChatManager sharedManager] find:chat.n_id];
+        
+        
+        
+        
+        [_tableView noteHeightOfRowsWithIndexesChanged:[NSIndexSet indexSetWithIndex:0]];
+        
+        [_tableView reloadDataForRowIndexes:[NSIndexSet indexSetWithIndex:0] columnIndexes:[NSIndexSet indexSetWithIndex:0]];
+        [self reloadParticipants];
+        
+        self.type = ChatInfoViewControllerNormal;
+        [self buildRightView];
+
+    } else {
+        _type = ChatInfoViewControllerNormal;
+        [_tableView removeAllItems:NO];
+        [_tableView reloadData];
+    }
     
-    [_tableView scrollToBeginningOfDocument:_tableView];
-    [_tableView.scrollView scrollToPoint:NSMakePoint(0, 0) animation:NO];
-    
-    
-    
-    self.fullChat = [[FullChatManager sharedManager] find:chat.n_id];
-    
-    [_headerView setController:self];
-    [_headerView reload];
-    
-    
-//    [self.fullChat.participants.participants enumerateObjectsUsingBlock:^(TL_chatParticipant *obj, NSUInteger idx, BOOL *stop) {
-//        
-//        if(obj.user_id == [UsersManager currentUserId]) {
-//            
-//            MTLog(@"inviter:%@, inviteDate:%@",[[[UsersManager sharedManager] find:obj.inviter_id] fullName],[NSDate dateWithTimeIntervalSince1970:obj.date]);
-//            
-//        }
-//        
-//    }];
-    
-   // [_tableView.con setFrameOrigin:NSMakePoint(_tableView.frame.origin.x, _headerView.frame.size.height)];
-    
-    [_tableView noteHeightOfRowsWithIndexesChanged:[NSIndexSet indexSetWithIndex:0]];
-    
-    [_tableView reloadDataForRowIndexes:[NSIndexSet indexSetWithIndex:0] columnIndexes:[NSIndexSet indexSetWithIndex:0]];
-    [self reloadParticipants];
-    
-    self.type = ChatInfoViewControllerNormal;
-    [self buildRightView];
 }
 
 - (void)kickParticipantByItem:(ChatParticipantItem *)item {
@@ -288,10 +307,7 @@
     
     [RPCRequest sendRequest:[TLAPI_messages_deleteChatUser createWithChat_id:self.chat.n_id user_id:item.user.inputUser] successHandler:^(RPCRequest *request, id response) {
         
-        
-        
-        
-        TLChatParticipants *participants = strongSelf.fullChat.participants;
+         TLChatParticipants *participants = strongSelf.fullChat.participants;
         
         
         NSArray *participant = [participants.participants filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.user_id == %d",item.user.n_id]];
@@ -346,7 +362,7 @@
     for(TLChatParticipant *participant in participants.participants) {
         ChatParticipantItem *item = [[ChatParticipantItem alloc] initWithObject:participant];
         item.isBlocking = ((ChatParticipantItem *)[_tableView itemByHash:item.hash]).isBlocking;
-        item.isCanKicked = (participant.inviter_id == selfId || self.fullChat.participants.admin_id == selfId) && participant.user_id != selfId;
+        item.isCanKicked = self.chat.isAdmins_enabled ? (participant.user_id != selfId && self.chat.isAdmin && ![participant isKindOfClass:[TL_chatParticipantCreator class]]) : (participant.user_id != selfId && participant.inviter_id == [UsersManager currentUserId]);
         item.viewController = self;
         [array addObject:item];
         
@@ -381,7 +397,7 @@
 - (CGFloat)rowHeight:(NSUInteger)row item:(TMRowItem *) item {
     if([item isEqualTo:_headerItem]) {
         return _headerView.bounds.size.height;
-    }  else if([item isEqualTo:_bottomItem]) {
+    }  else if([item isKindOfClass:[ChatBottomItem class]]) {
         return 70;
     } else {
         return 50;
@@ -403,7 +419,16 @@
 }
 
 - (void)selectionDidChange:(NSInteger)row item:(ChatParticipantItem *) item {
-    [[Telegram rightViewController] showUserInfoPage:item.user];
+    
+    TMViewController *infoViewController;
+        
+    infoViewController = [[UserInfoViewController alloc] initWithFrame:self.view.bounds];
+    
+    [(UserInfoViewController *)infoViewController setUser:item.user conversation:item.user.dialog];
+    
+    [self.navigationViewController pushViewController:infoViewController animated:YES];
+    
+
 }
 
 - (BOOL)selectionWillChange:(NSInteger)row item:(TMRowItem *) item {

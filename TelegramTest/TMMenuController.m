@@ -107,6 +107,7 @@
     [_item removeObserver:self forKeyPath:@"image"];
 }
 
+
 - (void)click {
   
     [self.controller close];
@@ -232,6 +233,8 @@
     }
     
     [_documentView setFrameSize:NSMakeSize(NSWidth(_documentView.frame), h)];
+    
+    [_scrollView.clipView scrollToPoint:NSMakePoint(0, h)];
 }
 
 -(void)selectNext {

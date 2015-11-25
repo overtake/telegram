@@ -49,19 +49,20 @@
     [ASQueue dispatchOnStageQueue:^{
         
         TL_conversation *conversation = nil;
-        NSUInteger user_id = 0;
+        TLUser *user = nil;
         
         TLUpdate *update = [notify.userInfo objectForKey:KEY_SHORT_UPDATE];
         
         if([update isKindOfClass:[TL_updateChatUserTyping class]]) {
             conversation = [[DialogsManager sharedManager] findByChatId:update.chat_id];
-            user_id = update.user_id;
+            user = [[UsersManager sharedManager] find:update.user_id];
         } else if([update isKindOfClass:[TL_updateUserTyping class]]) {
             conversation = [[DialogsManager sharedManager] findByUserId:update.user_id];
-            user_id = update.user_id;
+           user = [[UsersManager sharedManager] find:update.user_id];
         } else if([update isKindOfClass:[TL_updateEncryptedChatTyping class]]) {
             conversation = [[DialogsManager sharedManager] findBySecretId:update.chat_id];
-            user_id = [UsersManager currentUserId] == conversation.encryptedChat.participant_id ? conversation.encryptedChat.admin_id : conversation.encryptedChat.participant_id;
+           
+            user = [[UsersManager sharedManager] find:[UsersManager currentUserId] == conversation.encryptedChat.participant_id ? conversation.encryptedChat.admin_id : conversation.encryptedChat.participant_id];
             
         }
         
@@ -71,7 +72,7 @@
             if(![update action])
                 update.action = [TL_sendMessageTypingAction create];
             
-            [object addMember:user_id withAction:[update action]];
+            [object addMember:user withAction:[update action]];
             
         }
     }];
@@ -80,7 +81,7 @@
 
 
 
-+ (TMTypingObject *) typingForConversation:(TL_conversation *)conversation {
++ (TMTypingObject *) typingWithConversation:(TL_conversation *)conversation {
     
     __block TMTypingObject *obj;
     
@@ -89,6 +90,20 @@
     } synchronous:YES];
     
     return obj;
+    
+}
+
++ (void) asyncTypingWithConversation:(TL_conversation *)conversation handler:(void (^)(TMTypingObject *typing))handler {
+    
+    dispatch_queue_t dqueue = dispatch_get_current_queue();
+    
+    [ASQueue dispatchOnStageQueue:^{
+        
+        dispatch_async(dqueue, ^{
+            handler([[self manager] typingForConversation:conversation]);
+        });
+        
+    }];
     
 }
 

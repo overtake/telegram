@@ -40,6 +40,9 @@ typedef enum {
 
 @property (nonatomic,assign) int maxHeight;
 @property (nonatomic,assign) int minHeight;
+
+@property (nonatomic,assign) BOOL disabledBorder;
+
 //@property (nonatomic) int maxLines;
 @property (nonatomic, strong) id<TMGrowingTextViewDelegate> growingDelegate;
 @property (nonatomic, strong) NSImage *backgroundImage;

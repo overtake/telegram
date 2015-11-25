@@ -63,6 +63,14 @@ typedef enum {
     return NO;
 }
 
+-(void)insertText:(id)insertString {
+    //lol. MessagesBottomView
+    if(!self.superview.superview.superview.superview.superview.isHidden) {
+         [super insertText:insertString];
+    }
+   
+}
+
 
 -(NSDragOperation)draggingEntered:(id<NSDraggingInfo>)sender {
      NSPasteboard *pst = [sender draggingPasteboard];
@@ -162,6 +170,8 @@ typedef enum {
             }
         } else {
             [super paste:sender];
+            
+            [self checkWebpages];
             
             return;
         }
@@ -268,7 +278,7 @@ typedef enum {
 
 
 -(void)updateFont {
-    self.font = [NSFont fontWithName:@"HelveticaNeue" size:[SettingsArchiver checkMaskedSetting:BigFontSetting] ? 15 : 13];
+    self.font = TGSystemFont([SettingsArchiver checkMaskedSetting:BigFontSetting] ? 15 : 13);
     [self textDidChange:nil];
     [self setPlaceholderString:NSLocalizedString(@"Messages.SendPlaceholder", nil)];
 }
@@ -277,7 +287,6 @@ typedef enum {
     
     [super textDidChange:notification];
     
-    [self checkWebpages];
 }
 
 
@@ -392,24 +401,22 @@ typedef enum {
 
 -(void)keyDown:(NSEvent *)theEvent {
     
-    if([TGMentionPopup isVisibility] || [TGHashtagPopup isVisibility] || [TGBotCommandsPopup isVisibility]) {
-        
-        
+    TGMessagesHintView *hint = self.controller.hintView;
+    
+    
+    if(!hint.isHidden) {
         if(theEvent.keyCode == 125 || theEvent.keyCode == 126) {
             
             if(theEvent.keyCode == 125) {
-                [TGMentionPopup selectNext];
-                [TGHashtagPopup selectNext];
-                [TGBotCommandsPopup selectNext];
+                [hint selectNext];
             } else {
-                [TGMentionPopup selectPrev];
-                [TGHashtagPopup selectPrev];
-                [TGBotCommandsPopup selectPrev];
+                [hint selectPrev];
             }
             
             return;
             
         }
+        
         
         if([self isEnterEvent:theEvent] || [self isCommandEnterEvent:theEvent]) {
             
@@ -417,21 +424,20 @@ typedef enum {
             
             if(result) {
                 
-                [TGMentionPopup performSelected];
-                [TGHashtagPopup performSelected];
-                [TGBotCommandsPopup performSelected];
+                [hint performSelected];
                 return;
             }
             
         }
         
-        
-        
-        
-        
     }
     
-    [super keyDown:theEvent];
+    //lol. MessagesBottomView
+    if(!self.superview.superview.superview.superview.superview.isHidden) {
+        [super keyDown:theEvent];
+    }
+    
+    
     
 
     

@@ -205,6 +205,10 @@
     
     [self drawWithStickers:sets];
     
+    
+    [self.stickers scrollToBeginningOfDocument:nil];
+    if(_packsContainerView.subviews.count > 0)
+        [self didSelected:_packsContainerView.subviews[0] scrollToPack:NO selectItem:YES];
 }
 
 -(void)drawWithStickers:(NSArray *)stickers {

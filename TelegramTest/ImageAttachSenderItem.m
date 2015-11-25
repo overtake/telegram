@@ -19,7 +19,7 @@
 @implementation ImageAttachSenderItem
 
 
--(id)initWithConversation:(TL_conversation *)conversation attachObject:(TGAttachObject *)attach {
+-(id)initWithConversation:(TL_conversation *)conversation attachObject:(TGAttachObject *)attach additionFlags:(int)additionFlags {
     
     if(self = [super initWithConversation:conversation]) {
         
@@ -45,7 +45,9 @@
         
         self.message = [MessageSender createOutMessage:@"" media:photo conversation:conversation];
         
-       
+        if(additionFlags & (1 << 4))
+            self.message.from_id = 0;
+
          [[NSFileManager defaultManager] copyItemAtPath:path toPath:mediaFilePath(self.message.media) error:nil];
         
         [self.message save:YES];
@@ -75,21 +77,21 @@
     if(self.conversation.type == DialogTypeBroadcast) {
         request = [TLAPI_messages_sendBroadcast createWithContacts:[self.conversation.broadcast inputContacts] random_id:[self.conversation.broadcast generateRandomIds] message:@"" media:media];
     } else {
-        request = [TLAPI_messages_sendMedia createWithFlags:self.message.reply_to_msg_id != 0 ? 1 : 0 peer:self.conversation.inputPeer reply_to_msg_id:self.message.reply_to_msg_id media:media random_id:self.message.randomId reply_markup:[TL_replyKeyboardMarkup createWithFlags:0 rows:[@[]mutableCopy]]] ;
+        request = [TLAPI_messages_sendMedia createWithFlags:[self senderFlags] peer:self.conversation.inputPeer reply_to_msg_id:self.message.reply_to_msg_id media:media random_id:self.message.randomId reply_markup:[TL_replyKeyboardMarkup createWithFlags:0 rows:[@[]mutableCopy]]] ;
     }
     
     self.rpc_request = [RPCRequest sendRequest:request successHandler:^(RPCRequest *request, TLUpdates *response) {
         
         
+        [self updateMessageId:response];
         
+        TL_localMessage *msg = [TL_localMessage convertReceivedMessage:[[self updateNewMessageWithUpdates:response] message]];
         
-        if(response.updates.count < 2)
+        if(msg == nil)
         {
             [self cancel];
             return;
         }
-        
-        TL_localMessage *msg = [TL_localMessage convertReceivedMessage:(TLMessage *) ( [response.updates[1] message])];
         
         
         [[Storage manager] setFileInfo:[TL_inputPhoto createWithN_id:msg.media.photo.n_id access_hash:msg.media.photo.access_hash] forPathHash:fileMD5(self.filePath)];
@@ -121,9 +123,7 @@
         self.message.dstate = DeliveryStateNormal;
         
         [self.message save:YES];
-        
-        [[Storage manager] insertMedia:self.message];
-        
+                
         [[NSFileManager defaultManager] moveItemAtPath:self.filePath toPath:mediaFilePath(self.message.media) error:nil];
         
         

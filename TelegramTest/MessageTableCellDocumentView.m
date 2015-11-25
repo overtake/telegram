@@ -230,7 +230,7 @@ static NSImage *attachBackgroundThumb() {
         [self.fileNameTextField setEditable:NO];
         [self.fileNameTextField setSelectable:NO];
         [self.fileNameTextField setTextColor:NSColorFromRGB(0x333333)];
-        [self.fileNameTextField setFont:[NSFont fontWithName:@"HelveticaNeue-Medium" size:13]];
+        [self.fileNameTextField setFont:TGSystemMediumFont(13)];
         [self.fileNameTextField setDrawsBackground:NO];
 //        [self.fileNameTextField setBackgroundColor:[NSColor redColor]];
         
@@ -244,7 +244,7 @@ static NSImage *attachBackgroundThumb() {
         [self.fileSizeTextField setEditable:NO];
         [self.fileSizeTextField setSelectable:NO];
         [self.fileSizeTextField setTextColor:NSColorFromRGB(0x9b9b9b)];
-        [self.fileSizeTextField setFont:[NSFont fontWithName:@"HelveticaNeue" size:12]];
+        [self.fileSizeTextField setFont:TGSystemFont(12)];
         [self.fileSizeTextField setDrawsBackground:NO];
         [self.fileSizeTextField setBackgroundColor:[NSColor grayColor]];
         [self.containerView addSubview:self.fileSizeTextField];
@@ -299,7 +299,7 @@ static NSImage *attachBackgroundThumb() {
     
     NSString *downloadString = [NSString stringWithFormat:format, progress];
     
-    [self.actionsTextField setAttributedStringValue:[[NSAttributedString alloc] initWithString:downloadString attributes:@{NSFontAttributeName: [NSFont fontWithName:@"HelveticaNeue" size:14], NSForegroundColorAttributeName: NSColorFromRGB(0x9b9b9b)}]];
+    [self.actionsTextField setAttributedStringValue:[[NSAttributedString alloc] initWithString:downloadString attributes:@{NSFontAttributeName: TGSystemFont(14), NSForegroundColorAttributeName: NSColorFromRGB(0x9b9b9b)}]];
     
     [CATransaction commit];
 }
@@ -630,7 +630,7 @@ static NSImage *attachBackgroundThumb() {
     PreviewObject *previewObject = [[PreviewObject alloc] initWithMsdId:self.item.message.n_id media:self.item.message peer_id:self.item.message.peer_id];
     
     if([self.item.message.media.document.mime_type hasPrefix:@"image"]) {
-        [[TGPhotoViewer viewer] show:previewObject];
+        [[TGPhotoViewer viewer] showDocuments:previewObject conversation:self.item.message.conversation];
     } else {
         TMPreviewDocumentItem *item = [[TMPreviewDocumentItem alloc] initWithItem:previewObject];
         [[TMMediaController controller] show:item];
@@ -689,7 +689,7 @@ static NSAttributedString *docStateDownload() {
     static NSAttributedString *instance;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        instance = [[NSAttributedString alloc] initWithString:NSLocalizedString(@"Message.File.Download", nil) attributes:@{NSForegroundColorAttributeName:LINK_COLOR, NSLinkAttributeName: @"download", NSFontAttributeName: [NSFont fontWithName:@"HelveticaNeue" size:13]}];
+        instance = [[NSAttributedString alloc] initWithString:NSLocalizedString(@"Message.File.Download", nil) attributes:@{NSForegroundColorAttributeName:LINK_COLOR, NSLinkAttributeName: @"download", NSFontAttributeName: TGSystemFont(13)}];
     });
     return instance;
 }
@@ -705,7 +705,7 @@ static NSAttributedString *docStateLoaded() {
         [mutableAttributedString setLink:@"finder" forRange:range];
         
         
-        [mutableAttributedString setFont:[NSFont fontWithName:@"HelveticaNeue" size:13] forRange:mutableAttributedString.range];
+        [mutableAttributedString setFont:TGSystemFont(13) forRange:mutableAttributedString.range];
 
         instance = mutableAttributedString;
     });

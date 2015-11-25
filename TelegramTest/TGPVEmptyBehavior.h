@@ -8,6 +8,6 @@
 
 #import <Cocoa/Cocoa.h>
 #import "TGPVBehavior.h"
-@interface TGPVEmptyBehavior : NSObject<TGPVBehavior>
+@interface TGPVEmptyBehavior : TGPhotoViewerBehavior<TGPVBehavior>
 
 @end

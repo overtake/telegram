@@ -46,43 +46,81 @@
     [self.tableView removeAllItems:YES];
     
     
-    GeneralSettingsRowItem *copyLink = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeNext callback:^(GeneralSettingsRowItem *item) {
+    dispatch_block_t cblock = ^{
+        NSPasteboard* cb = [NSPasteboard generalPasteboard];
+        
+        [cb declareTypes:[NSArray arrayWithObjects:NSStringPboardType, nil] owner:self];
+        [cb setString:_chat.exported_invite.link forType:NSStringPboardType];
+    };
+    
+    GeneralSettingsRowItem *copyLink = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeNext callback:^(TGGeneralRowItem *item) {
         
         if([_chat.exported_invite isKindOfClass:[TL_chatInviteExported class]]) {
             
-            [TMViewController showModalProgress];
+            [self showModalProgress];
             
-            NSPasteboard* cb = [NSPasteboard generalPasteboard];
-            
-            [cb declareTypes:[NSArray arrayWithObjects:NSStringPboardType, nil] owner:self];
-            [cb setString:_chat.exported_invite.link forType:NSStringPboardType];
+            cblock();
             
             dispatch_after_seconds(0.2, ^{
                 
-                [TMViewController hideModalProgressWithSuccess];
+                [self hideModalProgressWithSuccess];
 
             });
             
             
+        } else if([_chat.exported_invite isKindOfClass:[TL_chatInviteEmpty class]]) {
+            
+            [self showModalProgress];
+            
+            id request = [TLAPI_messages_exportChatInvite createWithChat_id:_chat.n_id];
+            
+            TLChat *chat = [[ChatsManager sharedManager] find:self.chat.n_id];
+            
+            if([chat isKindOfClass:[TL_channel class]]) {
+                request = [TLAPI_channels_exportInvite createWithChannel:chat.inputPeer];
+            }
+            
+            [RPCRequest sendRequest:request successHandler:^(RPCRequest *request, TL_chatInviteExported *response) {
+                
+                [self hideModalProgressWithSuccess];
+                
+                _chat.exported_invite = response;
+                
+                [[Storage manager] insertFullChat:_chat completeHandler:nil];
+                
+                cblock();
+                
+                
+            } errorHandler:^(RPCRequest *request, RpcError *error) {
+                [self hideModalProgress];
+            } timeout:10];
         }
 
-    } description:NSLocalizedString(@"ChatExportLink.CopyLink", nil) height:62 stateback:^id(GeneralSettingsRowItem *item) {
+    } description:NSLocalizedString(@"ChatExportLink.CopyLink", nil) height:62 stateback:^id(TGGeneralRowItem *item) {
         return nil;
     }];
     
     [self.tableView insert:copyLink atIndex:self.tableView.list.count tableRedraw:NO];
     
     
-    GeneralSettingsRowItem *revokeLink = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeNext callback:^(GeneralSettingsRowItem *item) {
+    GeneralSettingsRowItem *revokeLink = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeNext callback:^(TGGeneralRowItem *item) {
         
         
         confirm(appName(), NSLocalizedString(@"ChatExportLink.RevokeConfirm", nil), ^{
             
-            [TMViewController showModalProgress];
+            [self showModalProgress];
             
-            [RPCRequest sendRequest:[TLAPI_messages_exportChatInvite createWithChat_id:_chat.n_id] successHandler:^(RPCRequest *request, TL_chatInviteExported *response) {
+            id request = [TLAPI_messages_exportChatInvite createWithChat_id:_chat.n_id];
+            
+            TLChat *chat = [[ChatsManager sharedManager] find:self.chat.n_id];
+            
+            if([chat isKindOfClass:[TL_channel class]]) {
+                request = [TLAPI_channels_exportInvite createWithChannel:chat.inputPeer];
+            }
+            
+            [RPCRequest sendRequest:request successHandler:^(RPCRequest *request, TL_chatInviteExported *response) {
                 
-                [TMViewController hideModalProgressWithSuccess];
+                [self hideModalProgressWithSuccess];
                 
                 _chat.exported_invite = response;
                 
@@ -91,13 +129,13 @@
                 alert(nil, NSLocalizedString(@"ChatExportLink.Alert.Revoked", nil));
                 
             } errorHandler:^(RPCRequest *request, RpcError *error) {
-                [TMViewController hideModalProgress];
+                [self hideModalProgress];
             } timeout:10];
         }, nil);
         
         
         
-    } description:NSLocalizedString(@"ChatExportLink.RevokeLink", nil) height:42 stateback:^id(GeneralSettingsRowItem *item) {
+    } description:NSLocalizedString(@"ChatExportLink.RevokeLink", nil) height:42 stateback:^id(TGGeneralRowItem *item) {
         return nil;
     }];
     
@@ -105,11 +143,7 @@
     [self.tableView insert:revokeLink atIndex:self.tableView.list.count tableRedraw:NO];
     
     
-    GeneralSettingsBlockHeaderItem *description = [[GeneralSettingsBlockHeaderItem alloc] initWithObject:[NSString stringWithFormat:NSLocalizedString(@"ChatExportLink.Description", nil)]];
-    
-    description.height = 100;
-    
-    description.isFlipped = YES;
+    GeneralSettingsBlockHeaderItem *description = [[GeneralSettingsBlockHeaderItem alloc] initWithString:[NSString stringWithFormat:NSLocalizedString(@"ChatExportLink.Description", nil)] height:100 flipped:YES];
     
     [self.tableView insert:description atIndex:self.tableView.count tableRedraw:NO];
     

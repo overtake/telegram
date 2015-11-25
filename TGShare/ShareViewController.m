@@ -85,6 +85,7 @@ static long h_r_l;
 
 @property (nonatomic,assign) BOOL isSearchActive;
 
+
 @end
 
 @implementation ShareViewController
@@ -273,12 +274,24 @@ static ShareViewController *shareViewController;
     
     _isLocked = YES;
     
-    [TGS_RPCRequest sendRequest:[TLAPI_messages_getDialogs createWithOffset:(int)_items.count max_id:0 limit:100] successHandler:^(TGS_RPCRequest *request, TL_messages_dialogsSlice *response) {
-        
+     NSArray *items = [_tableView.list copy];
+    
+    __block TGS_ConversationRowItem *rowItem = [items lastObject];
+    
+    int date = 0;
+    
+    if([rowItem isKindOfClass:[TGS_ConversationRowItem class]]) {
+        date = rowItem.date;
+    }
+
+    
+    [TGS_RPCRequest sendRequest:[TLAPI_messages_getDialogs createWithOffset_date:date offset_id:0 offset_peer:[TL_inputPeerEmpty create] limit:100] successHandler:^(TGS_RPCRequest *request, TL_messages_dialogsSlice *response) {
         
         NSMutableArray *items = [[NSMutableArray alloc] init];
         
         [[response dialogs] enumerateObjectsUsingBlock:^(TLDialog *obj, NSUInteger idx, BOOL *stop) {
+            
+            TLMessage *message = [[response.messages filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.n_id == %d",obj.top_message]] lastObject];
             
             TGS_ConversationRowItem *item;
             
@@ -300,6 +313,8 @@ static ShareViewController *shareViewController;
                         item = [[TGS_ConversationRowItem alloc] initWithConversation:obj user:users[0]];
                 }
             }
+            
+            item.date = message.date;
             if(item) {
                 [items addObject:item];
             }

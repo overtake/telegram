@@ -156,17 +156,14 @@ static NSMutableArray *managers;
         
         [TL_localMessage convertReceivedMessages:[response messages]];
         
-        
-        [[MessagesManager sharedManager] add:[response messages]];
-        [[Storage manager] insertMessages:[response messages]  completeHandler:nil];
+        [[Storage manager] insertMessages:[response messages]];
     }
    
     if([response respondsToSelector:@selector(n_messages)] && [response n_messages].count > 0) {
         
         [TL_localMessage convertReceivedMessages:[response n_messages]];
         
-        [[MessagesManager sharedManager] add:[response n_messages]];
-        [[Storage manager] insertMessages:[response n_messages]  completeHandler:nil];
+        [[Storage manager] insertMessages:[response n_messages]];
     }
     
     if([response respondsToSelector:@selector(users)] && [response users].count > 0) {

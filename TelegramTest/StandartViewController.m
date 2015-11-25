@@ -11,6 +11,8 @@
 #import "ComposeActionSecretChatBehavior.h"
 #import "ComposeActionBroadcastBehavior.h"
 #import "TGRecentSearchTableView.h"
+#import "ComposeActionCreateChannelBehavior.h"
+#import "ComposeActionCreateMegaGroupBehavior.h"
 @interface StandartViewController ()<TMSearchTextFieldDelegate>
 @property (nonatomic, strong) BTRButton *topButton;
 @property (nonatomic, strong) TMSearchTextField *searchTextField;
@@ -174,6 +176,10 @@
 +(NSMenu *)attachMenu {
     NSMenu *theMenu = [[NSMenu alloc] init];
     
+    
+   
+    
+    
     NSMenuItem *createGropup = [NSMenuItem menuItemWithTitle:NSLocalizedString(@"ComposeMenu.CreateGroup", nil) withBlock:^(id sender) {
         
     
@@ -192,25 +198,6 @@
     
     
     
-    NSMenuItem *broadcast = [NSMenuItem menuItemWithTitle:NSLocalizedString(@"ComposeMenu.Broadcast", nil) withBlock:^(id sender) {
-        ComposeAction *action = [[ComposeAction alloc] initWithBehaviorClass:[ComposeActionBroadcastBehavior class]];
-        
-        if([[BroadcastManager sharedManager] all].count == 0) {
-             [[Telegram rightViewController] showComposeWithAction:action];
-        } else {
-             [[Telegram rightViewController] showComposeBroadcastList:action];
-        }
-        
-       [[NSApplication sharedApplication] activateIgnoringOtherApps:YES];
-        
-    }];
-
-    [broadcast setImage:[NSImage imageNamed:@"ComposeMenuNewBroadcast"]];
-    [broadcast setHighlightedImage:[NSImage imageNamed:@"ComposeMenuNewBroadcastActive"]];
-    [theMenu addItem:broadcast];
-    
-   
-    
     NSMenuItem *secretChat = [NSMenuItem menuItemWithTitle:NSLocalizedString(@"ComposeMenu.SecretChat", nil) withBlock:^(id sender) {
         
         ComposeAction *action = [[ComposeAction alloc] initWithBehaviorClass:[ComposeActionSecretChatBehavior class]];
@@ -226,6 +213,50 @@
     
     
     [theMenu addItem:secretChat];
+    
+    
+   // if(ACCEPT_FEATURE) {
+        NSMenuItem *createChannel = [NSMenuItem menuItemWithTitle:NSLocalizedString(@"ComposeMenu.CreateChannel", nil) withBlock:^(id sender) {
+            
+            
+            ComposeAction *action = [[ComposeAction alloc] initWithBehaviorClass:[ComposeActionCreateChannelBehavior class]];
+            
+            [[Telegram rightViewController] showComposeCreateChannel:action];
+            
+            [[NSApplication sharedApplication] activateIgnoringOtherApps:YES];
+            
+        }];
+        
+        [createChannel setImage:[NSImage imageNamed:@"ComposeMenuNewBroadcast"]];
+        [createChannel setHighlightedImage:[NSImage imageNamed:@"ComposeMenuNewBroadcastActive"]];
+        [theMenu addItem:createChannel];
+ //   }
+    
+    
+    
+    
+//    NSMenuItem *createMegagroup = [NSMenuItem menuItemWithTitle:NSLocalizedString(@"ComposeMenu.CreateMegaGroup", nil) withBlock:^(id sender) {
+//        
+//        
+//        ComposeAction *action = [[ComposeAction alloc] initWithBehaviorClass:[ComposeActionCreateMegaGroupBehavior class]];
+//        
+//        ComposeCreateChannelViewController *viewController = [[ComposeCreateChannelViewController alloc] initWithFrame:[Telegram rightViewController].view.bounds];
+//        
+//        [viewController setAction:action];
+//        
+//        
+//        [[Telegram rightViewController].navigationViewController pushViewController:viewController animated:YES];
+//        
+//       
+//        
+//        [[NSApplication sharedApplication] activateIgnoringOtherApps:YES];
+//        
+//    }];
+//    
+//    [createMegagroup setImage:[NSImage imageNamed:@"ComposeMenuNewBroadcast"]];
+//    [createMegagroup setHighlightedImage:[NSImage imageNamed:@"ComposeMenuNewBroadcastActive"]];
+//    [theMenu addItem:createMegagroup];
+    
     
     return theMenu;
 }
@@ -254,6 +285,10 @@
     } else {
         [self.searchTextField resignFirstResponder];
     }
+}
+
+-(BOOL)becomeFirstResponder {
+    return [super becomeFirstResponder];
 }
 
 -(void)hideSearchViewControllerWithConversationUsed:(TL_conversation*)conversation {
@@ -303,6 +338,7 @@
         [self.recentTableView.containerView setFrame:tableRect];
         
         [self.view addSubview:self.recentTableView.containerView];
+        
     }
     
     return canShow;

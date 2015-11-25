@@ -37,7 +37,7 @@
         self.titleTextButton = [[TMTextButton alloc] init];
         [[self.titleTextButton cell] setTruncatesLastVisibleLine:YES];
         [[self.titleTextButton cell] setLineBreakMode:NSLineBreakByTruncatingTail];
-        [self.titleTextButton setFont:[NSFont fontWithName:@"HelveticaNeue" size:12]];
+        [self.titleTextButton setFont:TGSystemFont(12)];
         [self.titleTextButton setTextColor:LINK_COLOR];
         [self.titleTextButton setTapBlock:block];
         [self.titleTextButton setFrameOrigin:NSMakePoint(self.contactImageView.bounds.size.width + 10, 20)];
@@ -47,7 +47,7 @@
         [self.phoneNumberTextView setDrawsBackground:NO];
         [self.phoneNumberTextView setEditable:NO];
         [self.phoneNumberTextView setFrameOrigin:NSMakePoint(self.contactImageView.bounds.size.width + 8, -3)];
-        [self.phoneNumberTextView setFont:[NSFont fontWithName:@"HelveticaNeue" size:12]];
+        [self.phoneNumberTextView setFont:TGSystemFont(12)];
         [self.containerView addSubview:self.phoneNumberTextView];
         
         self.addButton = [[TMBlueAddButtonView alloc] initWithFrame:NSMakeRect(0, 0, 60, 25)];
@@ -74,6 +74,8 @@
     
     [self.phoneNumberTextView setFrameOrigin:point];
     
+    
+    
     if(item.contactUser) {
         [self.contactImageView setUser:item.contactUser];
     } else {
@@ -93,7 +95,7 @@
         if(!self.addButton.superview) {
             [self.addButton setString:NSLocalizedString(@"Messages.AddContact", nil)];
             [self.containerView addSubview:self.addButton];
-            [self.addButton setFrameOrigin:NSMakePoint(self.phoneNumberTextView.frame.origin.x + self.phoneNumberTextView.frame.size.width + 0, 4)];
+            [self.addButton setFrameOrigin:NSMakePoint(MAX(NSMaxX(self.phoneNumberTextView.frame),NSMaxX(_titleTextButton.frame)) + 0, 4)];
         }
     }
     

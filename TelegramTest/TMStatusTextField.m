@@ -169,7 +169,7 @@
     if(chat == nil || self.lock)
         return;
     
-    if(self.chat.type == TLChatTypeNormal && !self.chat.left) {
+    if((self.chat.type == TLChatTypeNormal && !self.chat.left) || self.chat.isChannel) {
         self.attributedStringValue = [chat performSelector:self.selector withObject:nil];
     } else {
         self.attributedStringValue = [[NSAttributedString alloc] init];
@@ -188,6 +188,37 @@
     if(self.statusDelegate) {
         [self.statusDelegate TMStatusTextFieldDidChanged:self];
     }
+}
+
+
+-(void)updateWithConversation:(TL_conversation *)conversation {
+    
+    switch (conversation.type) {
+            
+        case DialogTypeBroadcast:
+            [self setBroadcast:conversation.broadcast];
+            break;
+        case DialogTypeChat: case DialogTypeChannel:
+            [self setChat:conversation.chat];
+            break;
+        case DialogTypeSecretChat:
+            [self setUser:conversation.encryptedChat.peerUser];
+            break;
+        case DialogTypeUser:
+            [self setUser:conversation.user];
+        default:
+            break;
+            
+    }
+    
+}
+
+-(void)clear {
+    self.chat = nil;
+    self.user = nil;
+    self->_broadcast = nil;
+    
+    self.attributedStringValue = nil;
 }
 
 @end
@@ -252,5 +283,7 @@
     NSValue *value = [NSValue valueWithNonretainedObject:statusTextField];
     [self.list removeObject:value];
 }
+
+
 
 @end

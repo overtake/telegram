@@ -12,17 +12,27 @@
 @implementation NSNotificationCenter (MainThread)
 
 - (void)postNotificationNameOnMainThread:(NSString *)notificationName object:(id)notificationSender {
-    [LoopingUtils runOnMainQueueAsync:^{
+    [ASQueue dispatchOnMainQueue:^{
         [self postNotificationName:notificationName object:notificationSender];
     }];
 }
 
 - (void)postNotificationNameOnMainThread:(NSString *)notificationName object:(id)notificationSender userInfo:(NSDictionary *)userInfo {
-
-  //  MTLog(@"notification perform %@", notificationName);
-    
-    [LoopingUtils runOnMainQueueAsync:^{
+    [ASQueue dispatchOnMainQueue:^{
         [self postNotificationName:notificationName  object:notificationSender userInfo:userInfo];
     }];
 }
+
+
+- (void)postNotificationNameOnStageThread:(NSString *)notificationName object:(id)notificationSender {
+    [ASQueue dispatchOnStageQueue:^{
+        [self postNotificationName:notificationName object:notificationSender];
+    }];
+}
+- (void)postNotificationNameOnStageThread:(NSString *)notificationName object:(id)notificationSender userInfo:(NSDictionary *)userInfo {
+    [ASQueue dispatchOnStageQueue:^{
+        [self postNotificationName:notificationName  object:notificationSender userInfo:userInfo];
+    }];
+}
+
 @end

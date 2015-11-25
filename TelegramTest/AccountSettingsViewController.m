@@ -162,7 +162,7 @@ typedef enum {
     
     [header setStringValue:NSLocalizedString(@"Settings", nil)];
     
-    [header setFont:[NSFont fontWithName:@"HelveticaNeue" size:15]];
+    [header setFont:TGSystemFont(15)];
     [header setTextColor:DARK_BLACK];
     
     [header sizeToFit];
@@ -357,7 +357,7 @@ typedef enum {
     self.userNameTextField.attributedStringValue = attr;
     
     
-    attr = [[NSMutableAttributedString alloc] initWithString:[UsersManager currentUser].phoneWithFormat attributes:@{NSFontAttributeName:[NSFont fontWithName:@"HelveticaNeue" size:14]}];
+    attr = [[NSMutableAttributedString alloc] initWithString:[UsersManager currentUser].phoneWithFormat attributes:@{NSFontAttributeName:TGSystemFont(14)}];
     
     [attr addAttribute:NSForegroundColorAttributeName value:self.selectedController == self.phoneNumber ? NSColorFromRGB(0xffffff) : GRAY_TEXT_COLOR range:attr.range];
     self.phoneNumberTextField.attributedStringValue = attr;
@@ -776,7 +776,8 @@ typedef enum {
                 [dialog save];
             }
             
-            [[Telegram rightViewController] showByDialog:dialog sender:self];
+            [appWindow().navigationController showMessagesViewController:dialog];
+            
         };
         
         
@@ -932,8 +933,8 @@ typedef enum {
     [self.lastNameView.textView setTarget:self];
     [self.lastNameView.textView setAction:@selector(enterClick)];
     
-    [self.firstNameView.textView setFont:[NSFont fontWithName:@"HelveticaNeue" size:14]];
-    [self.lastNameView.textView setFont:[NSFont fontWithName:@"HelveticaNeue" size:14]];
+    [self.firstNameView.textView setFont:TGSystemFont(14)];
+    [self.lastNameView.textView setFont:TGSystemFont(14)];
     
     [self.firstNameView.textView setAlignment:NSLeftTextAlignment];
     [self.lastNameView.textView setAlignment:NSLeftTextAlignment];

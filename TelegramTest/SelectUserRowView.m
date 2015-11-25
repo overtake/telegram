@@ -31,17 +31,16 @@ static int offsetEditable = 30;
     if (self) {
         [self setSelectedBackgroundColor: NSColorFromRGB(0xfafafa)];
         [self setNormalBackgroundColor:NSColorFromRGB(0xffffff)];
-        self.avatarImageView = [TMAvatarImageView standartNewConversationTableAvatar];
-        [self addSubview:self.avatarImageView];
-        [self.avatarImageView setFont:[NSFont fontWithName:@"HelveticaNeue-Light" size:15]];
-        [self.avatarImageView setFrameSize:NSMakeSize(36, 36)];
+        self.avatarImageView = [TMAvatarImageView standartMessageTableAvatar];
         
+        [self addSubview:self.avatarImageView];
+
         
         _titleTextField = [[TMNameTextField alloc] init];
         [self.titleTextField setEditable:NO];
         [self.titleTextField setBordered:NO];
         [self.titleTextField setBackgroundColor:[NSColor clearColor]];
-        [self.titleTextField setFont:[NSFont fontWithName:@"HelveticaNeue-Medium" size:12]];
+        [self.titleTextField setFont:TGSystemMediumFont(12)];
         [[self.titleTextField cell] setLineBreakMode:NSLineBreakByTruncatingTail];
         [[self.titleTextField cell] setTruncatesLastVisibleLine:YES];
         
@@ -54,7 +53,7 @@ static int offsetEditable = 30;
         [self.lastSeenTextField setEditable:NO];
         [self.lastSeenTextField setBordered:NO];
         [self.lastSeenTextField setBackgroundColor:[NSColor clearColor]];
-        [self.lastSeenTextField setFont:[NSFont fontWithName:@"HelveticaNeue" size:12]];
+        [self.lastSeenTextField setFont:TGSystemFont(12)];
         [[self.lastSeenTextField cell] setLineBreakMode:NSLineBreakByTruncatingTail];
         [[self.lastSeenTextField cell] setTruncatesLastVisibleLine:YES];
         [self.lastSeenTextField setSelector:@selector(statusForGroupInfo)];
@@ -102,12 +101,13 @@ static int offsetEditable = 30;
 
     
     [self setSelected:[[self rowItem] isSelected]];
+    [self.selectButton setHidden:![self isEditable]];
     
     [self.titleTextField sizeToFit];
     
     [self.lastSeenTextField sizeToFit];
     
-    [self.selectButton setHidden:![self isEditable]];
+   
     
   //  [self.titleTextField setFrameSize:[self rowItem].titleSize];
     //[self.lastSeenTextField setFrameSize:[self rowItem].lastSeenSize];
@@ -147,9 +147,11 @@ static int offsetEditable = 30;
             return;
         }
         
-        [self setSelected:[self rowItem].isSelected animation:YES];
-        
-        [((SelectUsersTableView *)[self rowItem].table).selectDelegate selectTableDidChangedItem:[self rowItem]];
+        if([self rowItem].user.n_id != [UsersManager currentUserId]) {
+            [self setSelected:[self rowItem].isSelected animation:YES];
+            
+            [((SelectUsersTableView *)[self rowItem].table).selectDelegate selectTableDidChangedItem:[self rowItem]];
+        }
         
     }
     
@@ -157,7 +159,7 @@ static int offsetEditable = 30;
 
 
 - (BOOL)isEditable {
-    return [[self rowItem].table selectLimit] > 0;
+    return [(SelectUsersTableView *)[self rowItem].table selectLimit] > 0;
 }
 
 - (void)setEditable:(BOOL)editable animation:(BOOL)animation {
@@ -288,7 +290,7 @@ static int offsetEditable = 30;
 	
     [LIGHT_GRAY_BORDER_COLOR setFill];
     
-    NSRectFill(NSMakeRect(point.x+2, 0, NSWidth(self.frame) - point.x - [self rowItem].rightBorderMargin, 1));
+    NSRectFill(NSMakeRect(point.x+2, 0, NSWidth(self.frame) - point.x - 10, 1));
 //    
 //    [NSColorFromRGB(arc4random() % 16000000) setFill];
 //    

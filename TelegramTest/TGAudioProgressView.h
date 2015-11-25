@@ -19,4 +19,6 @@
 
 @property (nonatomic,assign) BOOL showDivider;
 
+@property (nonatomic,assign) BOOL disableChanges;
+
 @end

@@ -27,6 +27,9 @@
 
 @property (nonatomic,strong) BTRButton *selectButton;
 
+@property (nonatomic,strong) DownloadEventListener *downloadEventListener;
+
+
 @end
 
 @implementation TGDocumentMediaRowView
@@ -70,7 +73,7 @@ static NSDictionary *colors;
         [_nameField setEditable:NO];
         [_nameField setBordered:NO];
         [_nameField setBackgroundColor:[NSColor clearColor]];
-        [_nameField setFont:[NSFont fontWithName:@"HelveticaNeue-Medium" size:12]];
+        [_nameField setFont:TGSystemMediumFont(12)];
         [[_nameField cell] setLineBreakMode:NSLineBreakByTruncatingTail];
         [[_nameField cell] setTruncatesLastVisibleLine:YES];
         
@@ -82,13 +85,13 @@ static NSDictionary *colors;
         [_descriptionField setEditable:NO];
         [_descriptionField setBordered:NO];
         [_descriptionField setBackgroundColor:[NSColor clearColor]];
-        [_descriptionField setFont:[NSFont fontWithName:@"HelveticaNeue" size:12]];
+        [_descriptionField setFont:TGSystemFont(12)];
         [[_descriptionField cell] setLineBreakMode:NSLineBreakByTruncatingTail];
         [[_descriptionField cell] setTruncatesLastVisibleLine:YES];
         
         [_descriptionField setTextColor:GRAY_TEXT_COLOR];
         
-        [_descriptionField setFrame:NSMakeRect(s_dox + 50, 11, NSWidth(frameRect) - s_dox * 2 - 50, 20)];
+        [_descriptionField setFrame:NSMakeRect(s_dox + 50, 8, NSWidth(frameRect) - s_dox * 2 - 50, 20)];
         
         [_descriptionField setUrl_delegate:self];
                 
@@ -254,7 +257,7 @@ static NSDictionary *colors;
         if(self.item.downloadItem.downloadState == DownloadStateDownloading) {
             NSString *downloadString = [NSString stringWithFormat:NSLocalizedString(@"Document.Downloading", nil), self.item.downloadItem.progress];
             
-            [self.descriptionField setAttributedStringValue:[[NSAttributedString alloc] initWithString:downloadString attributes:@{NSFontAttributeName: [NSFont fontWithName:@"HelveticaNeue" size:12], NSForegroundColorAttributeName: NSColorFromRGB(0x9b9b9b)}]];
+            [self.descriptionField setAttributedStringValue:[[NSAttributedString alloc] initWithString:downloadString attributes:@{NSFontAttributeName: TGSystemFont(12), NSForegroundColorAttributeName: NSColorFromRGB(0x9b9b9b)}]];
          } else {
             [self.descriptionField setStringValue:[NSString stringWithFormat:@"%@ • %@",item.fileSize,item.fullDate]];
         }
@@ -295,7 +298,15 @@ static NSDictionary *colors;
     
     if(self.item.downloadItem) {
         
-        [self.item.downloadListener setCompleteHandler:^(DownloadItem * item) {
+        [self.item.downloadItem removeEvent:_downloadEventListener];
+        
+         _downloadEventListener = [[DownloadEventListener alloc] init];
+        
+        [self.item.downloadItem addEvent:_downloadEventListener];
+        
+       
+        
+        [_downloadEventListener setCompleteHandler:^(DownloadItem * item) {
             
             [[ASQueue mainQueue] dispatchOnQueue:^{
                 weakSelf.item.downloadItem = nil;
@@ -305,7 +316,7 @@ static NSDictionary *colors;
             
         }];
         
-        [self.item.downloadListener setProgressHandler:^(DownloadItem * item) {
+        [_downloadEventListener setProgressHandler:^(DownloadItem * item) {
             
             [ASQueue dispatchOnMainQueue:^{
                 [weakSelf updateCellState];
@@ -687,7 +698,7 @@ static NSAttributedString *docLoadedAttributedString() {
         NSRange range = [mutableAttributedString appendString:NSLocalizedString(@"Message.File.ShowInFinder", nil) withColor:BLUE_UI_COLOR];
         [mutableAttributedString setLink:@"finder" forRange:range];
         
-        [mutableAttributedString setFont:[NSFont fontWithName:@"HelveticaNeue" size:12] forRange:mutableAttributedString.range];
+        [mutableAttributedString setFont:TGSystemFont(12) forRange:mutableAttributedString.range];
         
         instance = mutableAttributedString;
     });

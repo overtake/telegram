@@ -60,9 +60,6 @@ static NSTextField *testTextField() {
     [paths enumerateObjectsUsingBlock:^(NSValue *obj, NSUInteger idx, BOOL *stop) {
             
         CGPathAddRect(path, NULL, [obj rectValue]);
-        
-        
-            
     }];
 
     
@@ -86,9 +83,12 @@ static NSTextField *testTextField() {
         
         CTLineGetTypographicBounds(line, &ascent, &descent, &leading);
         
-        height+= floor(ascent + ceil(descent) + leading);
+        height+= floor(ascent + floor(descent) + leading);
     }
     
+    CFRelease(framesetter);
+    CFRelease(CTFrame);
+    CFRelease(path);
     
     
     return NSMakeSize(width, height );
@@ -133,6 +133,9 @@ static NSTextField *testTextField() {
         
         int currentSelectLineIndex = [self lineIndex:origins count:(int) CFArrayGetCount(lines) location:currentPoint frame:CTFrame frameSize:frameSize];
         
+     //   NSLog(@"start:%@, current:%@",NSStringFromPoint(startPoint),NSStringFromPoint(currentPoint));
+
+    //    NSLog(@"start:%d, end:%d",startSelectLineIndex,currentSelectLineIndex);
         
         int dif = abs(startSelectLineIndex - currentSelectLineIndex);
         
@@ -212,10 +215,9 @@ static NSTextField *testTextField() {
     
     CTLineGetTypographicBounds(line, &ascent, &descent, &leading);
     
-    int lineHeight = floor(ascent + ceil(descent) + leading);
+    int lineHeight = ceil(ascent + ceil(descent) + leading);
     
-    
-    return (position.y > linePosition.y) && position.y < (linePosition.y + lineHeight);
+    return (position.y > linePosition.y) && position.y <= (linePosition.y + lineHeight);
 }
 
 
@@ -229,6 +231,8 @@ static NSTextField *testTextField() {
     
     return location.y >= frameSize.height ? 0 : (count -1);
 }
+
+
 
 
 @end

@@ -13,7 +13,8 @@
 #import "TGSearchRowView.h"
 #import "TGSharedMediaCap.h"
 #import "MessageTableItemAudioDocument.h"
-
+#import "SpacemanBlocks.h"
+#import "ChannelHistoryController.h"
 @interface TGDocumentsController : NSObject<MessagesDelegate>
 @property (nonatomic,strong) TL_conversation *conversation;
 @property (nonatomic,strong) TGDocumentsMediaTableView *tableView;
@@ -30,10 +31,16 @@
 
 
 @interface TGDocumentsMediaTableView ()
-
+{
+    __block SMDelayedBlockHandle _remoteBlock;
+}
 @property (nonatomic,strong) TGDocumentsController *controller;
 @property (nonatomic,assign,getter=isEditable) BOOL editable;
 @property (nonatomic,strong) NSMutableArray *selectedItems;
+
+
+@property (nonatomic,weak) RPCRequest *request;
+
 -(void)checkCap;
 @end
 
@@ -68,13 +75,19 @@
     
     [self.tableView reloadData];
     
-    [_loader drop:NO];
     
     _loader = nil;
     
-    _loader = [[ChatHistoryController alloc] initWithController:self historyFilter:[self.tableView historyFilter]];
     
-    [_loader setPrevState:ChatHistoryStateFull];
+    if(_conversation) {
+        _loader = [[self.conversation.type == DialogTypeChannel ? ChatHistoryController.class : ChannelHistoryController.class alloc] initWithController:self historyFilter:[self.tableView historyFilter]];
+        
+            
+        [_loader.filter setState:ChatHistoryStateFull next:NO];
+    } else {
+        [_loader drop:YES];
+        _loader = nil;
+    }
     
     [self loadNext:YES];
 
@@ -82,11 +95,12 @@
 
 -(void)loadNext:(BOOL)isFirst {
     
-    _loader.selectLimit = _loader.nextState != ChatHistoryStateRemote ? 500 : 50;
+    _loader.selectLimit = _loader.nextState != ChatHistoryStateRemote ? 50 : 50;
     
-    [_loader request:YES anotherSource:YES sync:isFirst selectHandler:^(NSArray *result, NSRange range) {
+    [_loader request:YES anotherSource:YES sync:isFirst selectHandler:^(NSArray *result, NSRange range,id controller) {
         
         self.tableView.isProgress = NO;
+        
         
         NSArray *filtred = [result filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary *bindings) {
             
@@ -104,9 +118,11 @@
         
         [self.tableView insertRowsAtIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(self.items.count - filtred.count, filtred.count)] withAnimation:NSTableViewAnimationEffectNone];
         
+        
         [self.tableView checkCap];
         
-        if(self.items.count < 30 && _loader.nextState != ChatHistoryStateFull) {
+        
+        if(self.items.count < 30 && [_loader filterWithNext:YES].nextState != ChatHistoryStateFull) {
             [self loadNext:NO];
         }
         
@@ -126,15 +142,16 @@
     }
 }
 
--(void)deleteMessages:(NSArray *)ids {
+-(void)deleteItems:(NSArray *)items orMessageIds:(NSArray *)ids {
     
     if(self.items.count > 1) {
-        NSArray *items = [[self.items subarrayWithRange:NSMakeRange(1, self.items.count - 1)] filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.message.n_id IN %@",ids]];
         
         [items enumerateObjectsUsingBlock:^(MessageTableItem *obj, NSUInteger idx, BOOL *stop) {
             
-            [self.tableView removeRowsAtIndexes:[NSIndexSet indexSetWithIndex:[self.items indexOfObject:obj]] withAnimation:NSTableViewAnimationEffectFade];
-            
+            NSUInteger itemIndex = [self.items indexOfObject:obj];
+            if(itemIndex != NSNotFound) {
+                [self.tableView removeRowsAtIndexes:[NSIndexSet indexSetWithIndex:itemIndex] withAnimation:NSTableViewAnimationEffectFade];
+            }
         }];
         
         [self.items removeObjectsInArray:items];
@@ -277,7 +294,7 @@
 
 -(void)checkCap {
     
-    [[Telegram rightViewController].collectionViewController checkCap];
+    [self.collectionViewController checkCap];
 }
 
 -(BOOL)isFlipped {
@@ -329,6 +346,64 @@
     
     [self.controller.searchView.searchField becomeFirstResponder];
     
+    if(_remoteBlock)
+        cancel_delayed_block(_remoteBlock);
+    
+    if(_request)
+        [_request cancelRequest];
+    
+    _remoteBlock = perform_block_after_delay(0.4, ^{
+        _remoteBlock = nil;
+        
+        [self remoteSearch:string];
+        
+    });
+    
+}
+
+
+-(void)remoteSearch:(NSString *)search {
+    
+    if(_request)
+        [_request cancelRequest];
+    
+    
+    MessageTableItem *item = [self.controller.items lastObject];
+    
+    if(![item isKindOfClass:[MessageTableItem class]])
+        item = nil;
+    
+    _request = [RPCRequest sendRequest:[TLAPI_messages_search createWithFlags:0 peer:self.controller.conversation.inputPeer q:search filter:[self remoteFilter] min_date:0 max_date:0 offset:0 max_id:item.message.n_id limit:100] successHandler:^(id request, id response) {
+        
+        [TL_localMessage convertReceivedMessages:[response messages]];
+        
+        NSArray *converted = [[Telegram rightViewController].messagesViewController messageTableItemsFromMessages:[response messages]];
+        
+        NSArray *filtred = [converted filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary *bindings) {
+            
+            return [self acceptMessageItem:evaluatedObject];
+            
+        }]];
+        
+        [filtred enumerateObjectsUsingBlock:^(MessageTableItem *obj, NSUInteger idx, BOOL *stop) {
+            [obj makeSizeByWidth:NSWidth(self.frame) - 60];
+        }];
+        
+        [self.controller.items addObjectsFromArray:filtred];
+        
+        
+        [self insertRowsAtIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(self.controller.items.count - filtred.count, filtred.count)] withAnimation:NSTableViewAnimationEffectNone];
+        
+        
+        
+    } errorHandler:^(id request, RpcError *error) {
+        
+    }];
+}
+
+
+-(id)remoteFilter {
+    return [TL_inputMessagesFilterDocument create];
 }
 
 -(void)setEditable:(BOOL)editable animated:(BOOL)animated {
@@ -352,7 +427,7 @@
 }
 
 -(BOOL)isEditable {
-    return [[Telegram rightViewController].collectionViewController isEditable];
+    return [self.collectionViewController isEditable];
 }
 
 -(BOOL)isNeedCap {
@@ -430,7 +505,15 @@
         [_selectedItems removeObject:item];
     }
     
-    [[Telegram rightViewController].collectionViewController setSectedMessagesCount:self.selectedItems.count];
+    
+    NSMutableArray *messages = [NSMutableArray array];
+    
+    [_selectedItems enumerateObjectsUsingBlock:^(MessageTableItem *obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        [messages addObject:obj.message];
+    }];
+    
+    [self.collectionViewController setSectedMessagesCount:self.selectedItems.count enable:[MessagesViewController canDeleteMessages:messages inConversation:self.controller.conversation]];
+
 }
 
 -(BOOL)isSelectedItem:(MessageTableItem *)item {
@@ -462,7 +545,7 @@
 }
 
 -(BOOL)acceptMessageItem:(MessageTableItem *)item {
-    return [item isKindOfClass:[MessageTableItemDocument class]] || [item isKindOfClass:[MessageTableItemAudioDocument class]];
+    return [item isKindOfClass:[MessageTableItemDocument class]];
 }
 
 -(int)heightWithItem:(MessageTableItem *)item {

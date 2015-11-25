@@ -48,6 +48,8 @@
 @property (nonatomic, strong) BTRButton *smileButton;
 @property (nonatomic, strong) BTRButton *botKeyboardButton;
 @property (nonatomic, strong) BTRButton *botCommandButton;
+@property (nonatomic, strong) BTRButton *channelAdminButton;
+@property (nonatomic, strong) BTRButton *secretTimerButton;
 @property (nonatomic, strong) TMButton *sendButton;
 
 
@@ -105,8 +107,6 @@
                 
         [self setState:MessagesBottomViewNormalState animated:NO];
         
-
-        [[EmojiViewController instance] loadView];
         
         [self normalView];
     }
@@ -119,8 +119,25 @@
 }
 
 - (void)didChangeBlockedUser:(NSNotification *)notification {
+    
+    TL_contactBlocked *contact = notification.userInfo[KEY_USER];
+    
+    if(self.dialog.user.n_id != contact.user_id || self.dialog.user.isBot)
+        return;
+
+    
     if(self.dialog && self.dialog.type == DialogTypeUser) {
-        [self setState:self.stateBottom animated:YES];
+        [self setState:MessagesBottomViewNormalState animated:YES];
+    }
+}
+
+-(void)didChannelUpdatedFlags:(NSNotification *)notification {
+    TLChat *chat = notification.userInfo[KEY_CHAT];
+    
+    if(chat.n_id == self.dialog.chat.n_id) {
+        
+        [self setState:self.stateBottom animated:NO];
+        
     }
 }
 
@@ -185,8 +202,8 @@
 
     
     [Notification addObserver:self selector:@selector(didChangeBlockedUser:) name:USER_BLOCK];
+    [Notification addObserver:self selector:@selector(didChannelUpdatedFlags:) name:CHAT_FLAGS_UPDATED];
     //botKeyboard
-    
     
     
     if(self.dialog.type == DialogTypeSecretChat) {
@@ -215,6 +232,9 @@
     _userFull = nil;
     _chatFull = nil;
     
+    [_channelAdminButton setSelected:NO];
+    [self channelAdminButtonAction:_channelAdminButton];
+    
     [self updateBotButtons];
     
     
@@ -238,10 +258,12 @@
         }];
         
         
-    } else if(self.dialog.type == DialogTypeChat) {
-        [[FullChatManager sharedManager] performLoad:self.dialog.peer.chat_id force:self.dialog.fullChat.class == [TL_chatFull_old29 class] && !self.dialog.fullChat.isLastLayerUpdated callback:^(TLChatFull * chatFull) {
+    } else if(self.dialog.type == DialogTypeChat || self.dialog.type == DialogTypeChannel) {
+        [[FullChatManager sharedManager] performLoad:self.dialog.chat.n_id force:(self.dialog.fullChat.class == [TL_chatFull_old29 class] && !self.dialog.fullChat.isLastLayerUpdated) || dialog.type == DialogTypeChannel callback:^(TLChatFull * chatFull) {
             
             _chatFull = chatFull;
+            
+            [[FullChatManager sharedManager] loadParticipantsWithMegagroupId:chatFull.n_id];
             
             [self updateBotButtons];
             
@@ -255,14 +277,22 @@
     
     
     [self setHiddenRecoderControllers];
+    
+    
+}
+
+-(void)setMessagesViewController:(MessagesViewController *)controller {
+    _messagesViewController = controller;
+    _inputMessageTextField.controller = controller;
 }
 
 -(void)updateBotButtons {
     if(self.dialog.type == DialogTypeUser) {
         [self.botCommandButton setHidden:!self.dialog.user.isBot];
-    } else if(self.dialog.type == DialogTypeChat) {
+    } else if(self.dialog.type == DialogTypeChat || self.dialog.type == DialogTypeChannel) {
         [self.botCommandButton setHidden:_chatFull.bot_info.count == 0];
-    }
+    } else
+        [self.botCommandButton setHidden:YES];
     
     
     if(!_botCommandButton.isHidden)
@@ -272,6 +302,17 @@
         [_botCommandButton setFrameOrigin:NSMakePoint(self.inputMessageTextField.containerView.frame.size.width - (_botKeyboardButton.isHidden ? 60 : 90), NSMinY(_botKeyboardButton.frame))];
         
     }
+    
+    [_channelAdminButton setHidden:!self.dialog.canSendChannelMessageAsAdmin || (!self.dialog.canSendChannelMessageAsUser && self.dialog.canSendChannelMessageAsAdmin)];
+    
+    
+    if(!_channelAdminButton.isHidden) {
+        [_channelAdminButton setFrameOrigin:NSMakePoint(self.inputMessageTextField.containerView.frame.size.width - (_botCommandButton.isHidden ? 60 : 120), NSMinY(_channelAdminButton.frame))];
+
+    }
+    
+    
+    [_secretTimerButton setHidden:self.dialog.type != DialogTypeSecretChat];
     
 }
 
@@ -301,7 +342,7 @@
     
     self.messagesSelectedCount = [TMTextButton standartUserProfileNavigationButtonWithTitle:@""];
     self.messagesSelectedCount.textColor = DARK_BLACK;
-    self.messagesSelectedCount.font = [NSFont fontWithName:@"HelveticaNeue" size:14];
+    self.messagesSelectedCount.font = TGSystemFont(14);
     [self.messagesSelectedCount setAutoresizingMask:NSViewMinXMargin | NSViewMaxXMargin];
     [self.actionsView addSubview:self.messagesSelectedCount];
     
@@ -314,7 +355,9 @@
 //        strongify();
     
         
-        [[Telegram rightViewController] showForwardMessagesModalView:strongSelf.messagesViewController.conversation messagesCount:strongSelf.messagesViewController.selectedMessages.count];
+        [self.messagesViewController showForwardMessagesModalView];
+        
+        
     }];
      
      [self.actionsView setDrawBlock:^{
@@ -343,7 +386,7 @@
     [self checkFwdMessages:updateHeight animated:animated];
 }
 
-- (void)setSectedMessagesCount:(NSUInteger)count {
+- (void)setSectedMessagesCount:(NSUInteger)count enable:(BOOL)enable {
     if(count == 0) {
         [self.messagesSelectedCount setHidden:YES];
         [self.forwardButton setDisable:YES];
@@ -352,7 +395,10 @@
     } else {
         if(self.forwardEnabled)
             [self.forwardButton setDisable:NO];
-        [self.deleteButton setDisable:NO];
+        
+        
+        
+        [self.deleteButton setDisable:!enable];
     }
     
     [self.messagesSelectedCount setHidden:NO];
@@ -401,6 +447,7 @@
     self.inputMessageTextField = [[MessageInputGrowingTextView alloc] initWithFrame:NSMakeRect(0, 0, 0, 0)];
     [self.inputMessageTextField setEditable:YES];
     [self.inputMessageTextField setRichText:NO];
+    _inputMessageTextField.controller = _messagesViewController;
  //   [self.inputMessageTextField.scrollView setFrameSize:NSMakeSize(100-30,100-10)];
 
     
@@ -413,7 +460,7 @@
     [self.attachButton setBackgroundImage:image_AttachHighlighted() forControlState:BTRControlStateSelected | BTRControlStateHover];
     [self.attachButton setBackgroundImage:image_AttachHighlighted() forControlState:BTRControlStateHighlighted];
     [self.attachButton addTarget:self action:@selector(attachButtonPressed) forControlEvents:BTRControlEventMouseEntered];
-
+[self.attachButton addTarget:self action:@selector(attachButtonPressed) forControlEvents:BTRControlEventMouseDownInside];
     
     [self.normalView addSubview:self.attachButton];
     
@@ -422,7 +469,7 @@
     [self.sendButton setAutoresizingMask:NSViewMinXMargin];
     [self.sendButton setTarget:self selector:@selector(sendButtonAction)];
     [self.sendButton setText:NSLocalizedString(@"Message.Send", nil)];
-    [self.sendButton setTextFont:[NSFont fontWithName:@"HelveticaNeue-Medium" size:14]];
+    [self.sendButton setTextFont:TGSystemMediumFont(14)];
     NSSize size = [self.sendButton sizeOfText];
     [self.sendButton setFrameSize:size];
     [self.sendButton setFrameOrigin:NSMakePoint(self.bounds.size.width - size.width - 17, 19)];
@@ -460,7 +507,7 @@
     [self.recordDurationLayer disableActions];
     self.recordDurationLayer.contentsScale = self.normalView.layer.contentsScale;
     [self.recordDurationLayer setTextColor:[NSColor blackColor]];
-    [self.recordDurationLayer setTextFont:[NSFont fontWithName:@"HelveticaNeue" size:14]];
+    [self.recordDurationLayer setTextFont:TGSystemFont(14)];
     [self.recordDurationLayer setString:@"00:34"];
     [self.recordDurationLayer sizeToFit];
     [self.recordDurationLayer setFrameOrigin:CGPointMake(52, roundf( (self.bounds.size.height - self.recordDurationLayer.bounds.size.height) / 2.f) - 1)];
@@ -469,7 +516,7 @@
     self.recordHelpLayer = [TMTextLayer layer];
     [self.recordHelpLayer disableActions];
     self.recordHelpLayer.contentsScale = self.normalView.layer.contentsScale;
-    [self.recordHelpLayer setTextFont:[NSFont fontWithName:@"HelveticaNeue" size:14]];
+    [self.recordHelpLayer setTextFont:TGSystemFont(14)];
     [self.normalView.layer addSublayer:self.recordHelpLayer];
 
 
@@ -524,6 +571,34 @@
     [self.inputMessageTextField.containerView addSubview:self.botCommandButton];
     
     
+    
+    
+    
+    self.channelAdminButton = [[BTRButton alloc] initWithFrame:NSMakeRect(self.inputMessageTextField.containerView.frame.size.width - 90, 7, image_ChannelMessageAsAdmin().size.width, image_ChannelMessageAsAdmin().size.height)];
+    [self.channelAdminButton setAutoresizingMask:NSViewMinXMargin | NSViewMinYMargin];
+    [self.channelAdminButton.layer disableActions];
+    
+    [self.channelAdminButton addTarget:self action:@selector(channelAdminButtonAction:) forControlEvents:BTRControlEventMouseDownInside];
+    [self.channelAdminButton setBackgroundImage: image_ChannelMessageAsAdmin() forControlState:BTRControlStateNormal];
+    
+    
+    [self.inputMessageTextField.containerView addSubview:self.channelAdminButton];
+    
+    
+    
+    self.secretTimerButton = [[BTRButton alloc] initWithFrame:NSMakeRect(self.inputMessageTextField.containerView.frame.size.width - 60, 2, 30, 30)];
+    [self.secretTimerButton setAutoresizingMask:NSViewMinXMargin | NSViewMinYMargin];
+    [self.secretTimerButton.layer disableActions];
+    
+    [self.secretTimerButton addTarget:self action:@selector(secretTimerAction:) forControlEvents:BTRControlEventMouseDownInside];
+    [self.secretTimerButton setImage: image_ModernConversationSecretAccessoryTimer() forControlState:BTRControlStateNormal];
+    
+    
+    [self.inputMessageTextField.containerView addSubview:self.secretTimerButton];
+    
+    
+    
+    
     [self.smileButton addTarget:self action:@selector(smileButtonClick:) forControlEvents:BTRControlEventMouseEntered];
     
     [self.inputMessageTextField.containerView addSubview:self.smileButton];
@@ -540,6 +615,10 @@
     return self.normalView;
 }
 
+-(BOOL)sendMessageAsAdmin {
+    return _channelAdminButton.isSelected && [self.dialog canSendChannelMessageAsAdmin];
+}
+
 -(void)botKeyboardButtonAction:(BTRButton *)button {
     [self.botKeyboard setHidden:!self.botKeyboard.isHidden];
     
@@ -551,9 +630,40 @@
     [self updateBottomHeight:YES];
 }
 
+static RBLPopover *popover;
+
+-(void)secretTimerAction:(BTRButton *)button {
+    
+    NSMenu *menu = [MessagesViewController destructMenu:^ {
+        //  [self.setTTLButton setLocked:NO];
+        
+    } click:^{
+        [popover close];
+        popover = nil;
+    }];
+    
+    
+    [popover close];
+    popover = nil;
+    
+    TMMenuController *controller = [[TMMenuController alloc] initWithMenu:menu];
+    
+    popover = [[RBLPopover alloc] initWithContentViewController:controller];
+    
+    [popover showRelativeToRect:button.bounds ofView:button preferredEdge:CGRectMinYEdge];
+
+}
+
 -(void)botCommandButtonAction:(BTRButton *)button {
     [self.inputMessageTextField setString:@"/"];
     [self.inputMessageTextField textDidChange:nil];
+}
+
+
+-(void)channelAdminButtonAction:(BTRButton *)button {
+    [_channelAdminButton setSelected:!_channelAdminButton.isSelected];
+    
+    [_channelAdminButton setBackgroundImage:!_channelAdminButton.isSelected ? image_ChannelMessageAsAdmin() : image_ChannelMessageAsAdminHighlighted() forControlState:BTRControlStateNormal];
 }
 
 -(NSMenu *)attachMenu {
@@ -766,6 +876,8 @@
 
 - (void)smileButtonClick:(BTRButton *)button {
     EmojiViewController *emojiViewController = [EmojiViewController instance];
+    
+    emojiViewController.messagesViewController = self.messagesViewController;
     weak();
     if(!self.smilePopover) {
        
@@ -812,24 +924,73 @@
     
     [_secretInfoView setCallback:^{
        
-        
-        if(!weakSelf.dialog.canSendMessage && weakSelf.dialog.user.isBot && _onClickToLockedView == nil)
-        {
+        if(weakSelf.dialog.isInvisibleChannel) {
             
-            [TMViewController showModalProgress];
+            [weakSelf.messagesViewController showModalProgress];
+            
+            [RPCRequest sendRequest:[TLAPI_channels_joinChannel createWithChannel:weakSelf.dialog.chat.inputPeer] successHandler:^(RPCRequest *request, id response) {
+                
+                
+                TL_localMessage *msg = [TL_localMessageService createWithFlags:TGMENTIONMESSAGE n_id:0 from_id:[UsersManager currentUserId] to_id:weakSelf.dialog.peer date:[[MTNetwork instance] getTime] action:([TL_messageActionChatAddUser createWithUsers:[@[@([UsersManager currentUserId])] mutableCopy]]) fakeId:[MessageSender getFakeMessageId] randomId:rand_long() dstate:DeliveryStateNormal];
+                
+                [MessagesManager addAndUpdateMessage:msg];
+                
+                weakSelf.dialog.invisibleChannel = NO;
+                
+                [weakSelf.dialog save];
+                                
+                [[DialogsManager sharedManager] updateLastMessageForDialog:weakSelf.dialog];
+                
+                
+                [ASQueue dispatchOnMainQueue:^{
+                    [weakSelf.messagesViewController setState:MessagesViewControllerStateNone];
+                    [weakSelf.messagesViewController tryRead];
+                    [weakSelf.messagesViewController hideModalProgressWithSuccess];
+                }];
+                
+                
+            } errorHandler:^(RPCRequest *request, RpcError *error) {
+                
+                [ASQueue dispatchOnMainQueue:^{
+                    [weakSelf.messagesViewController hideModalProgress];
+                }];
+                
+                
+            } timeout:0 queue:[ASQueue globalQueue].nativeQueue];
+            
+            
+        } else if(weakSelf.dialog.chat.isBroadcast  && !(weakSelf.dialog.chat.left || weakSelf.dialog.chat.isKicked)) {
+            
+            
+            [weakSelf.dialog muteOrUnmute:^{
+                
+                [weakSelf setState:weakSelf.stateBottom animated:YES];
+                
+            } until:weakSelf.dialog.isMute ? 0 : 365*24*60*60];
+            
+            
+        } else if(weakSelf.dialog.type == DialogTypeChannel && (weakSelf.dialog.chat.left || weakSelf.dialog.chat.isKicked || weakSelf.dialog.chat.type == TLChatTypeForbidden)) {
+            [[DialogsManager sharedManager] deleteDialog:weakSelf.dialog completeHandler:nil];
+            
+        } else if(!weakSelf.dialog.canSendMessage && weakSelf.dialog.user.isBot && _onClickToLockedView == nil) {
+            
+            [weakSelf.messagesViewController showModalProgress];
             
             [[BlockedUsersManager sharedManager] unblock:weakSelf.dialog.user.n_id completeHandler:^(BOOL response){
                 
                 [TMViewController hideModalProgress];
                 
                 [weakSelf.messagesViewController sendMessage:@"/start" forConversation:weakSelf.dialog];
+                
+                [weakSelf setState:MessagesBottomViewNormalState animated:YES];
             }];
             
             
             
             return;
+        } else if(weakSelf.dialog.type == DialogTypeUser && weakSelf.dialog.user.isBlocked) {
+            [[BlockedUsersManager sharedManager] unblock:weakSelf.dialog.user.n_id completeHandler:nil];
         }
-        
         if(_onClickToLockedView != nil)
         {
             weakSelf.onClickToLockedView();
@@ -850,8 +1011,9 @@
             }
         }
         
-        if(!self.dialog.canSendMessage)
+        if(!self.dialog.canSendMessage || self.dialog.isInvisibleChannel)
             state = MessagesBottomViewBlockChat;
+        
     }
     
     
@@ -900,10 +1062,10 @@
         [self.encryptedStateTextField setTextColor:[self.encryptedStateTextField.stringValue isEqualToString:[self.dialog blockedText]] ? LINK_COLOR : GRAY_TEXT_COLOR];
         
        
-        if(self.dialog.type == DialogTypeUser && !self.dialog.user.isBot)
-        {
-            [self.encryptedStateTextField setTextColor:[NSColor redColor]];
-        }
+//        if(self.dialog.type == DialogTypeUser && !self.dialog.user.isBot)
+//        {
+//            [self.encryptedStateTextField setTextColor:[NSColor redColor]];
+//        }
         
         
         [self.encryptedStateTextField sizeToFit];
@@ -958,6 +1120,9 @@
     
     
     [self becomeFirstResponder];
+    
+    [self TMGrowingTextViewHeightChanged:self.inputMessageTextField height:NSHeight(self.inputMessageTextField.containerView.frame) cleared:animated];
+
 }
 
 - (void)sendButtonAction {
@@ -982,10 +1147,12 @@
 - (BOOL) TMGrowingTextViewCommandOrControlPressed:(id)textView isCommandPressed:(BOOL)isCommandPressed {
     BOOL isNeedSend = ([SettingsArchiver checkMaskedSetting:SendEnter] && !isCommandPressed) || ([SettingsArchiver checkMaskedSetting:SendCmdEnter] && isCommandPressed);
     
-    if(isNeedSend && ![TGMentionPopup isVisibility] && ![TGHashtagPopup isVisibility] && ![TGBotCommandsPopup isVisibility]) {
+    
+    
+    if(isNeedSend && self.messagesViewController.hintView.isHidden) {
          [self sendButtonAction];
     }
-    return isNeedSend || ([TGMentionPopup isVisibility] || [TGHashtagPopup isVisibility] || [TGBotCommandsPopup isVisibility]);
+    return isNeedSend || (!self.messagesViewController.hintView.isHidden);
 }
 
 - (void) TMGrowingTextViewFirstResponder:(id)textView isFirstResponder:(BOOL)isFirstResponder {
@@ -1051,10 +1218,6 @@
     rect.origin.x += 100;
     
     
-    [TGMentionPopup close];
-    [TGHashtagPopup close];
-    [TGBotCommandsPopup close];
-    
     NSRange range;
     
     NSString *search;
@@ -1116,29 +1279,33 @@
             
         };
         
-        
+
         
         
         if(type == 1) {
-            if(self.dialog.type == DialogTypeChat)
-                [TGMentionPopup show:search chat:self.dialog.chat view:self.window.contentView ofRect:rect callback:callback];
+            if(self.dialog.type == DialogTypeChat || self.dialog.type == DialogTypeChannel) {
+                
+                [self.messagesViewController.hintView showMentionPopupWithQuery:search conversation:self.dialog chat:self.dialog.chat choiceHandler:callback];
+                
+            }
+            
         } else if(type == 2) {
-            [TGHashtagPopup show:search peer_id:self.dialog.peer_id view:self.window.contentView ofRect:rect callback:callback];
+            
+            [self.messagesViewController.hintView showHashtagHintsWithQuery:search conversation:self.dialog peer_id:self.dialog.peer_id choiceHandler:callback];
+            
         } else if(type == 3 && [self.inputMessageTextField.string rangeOfString:@"/"].location == 0) {
             if([_dialog.user isBot] || _dialog.fullChat.bot_info != nil) {
-                [TGBotCommandsPopup show:search botInfo:_userFull ? @[_userFull.bot_info] : _dialog.fullChat.bot_info view:self.window.contentView ofRect:rect callback:^(NSString *command) {
-                    
+                
+                [self.messagesViewController.hintView showCommandsHintsWithQuery:search conversation:self.dialog botInfo:_userFull ? @[_userFull.bot_info] : _dialog.fullChat.bot_info choiceHandler:^(NSString *command) {
                     callback(command);
-                    
-                    [[Telegram rightViewController].messagesViewController sendMessage];
-                    
+                    [self sendButtonAction];
                 }];
                 
             }
         }
         
     } else {
-        
+        [self.messagesViewController.hintView hide];
     }
     
 
@@ -1298,7 +1465,7 @@
     if(replyMessage) {
         int startX = self.attachButton.frame.origin.x + self.attachButton.frame.size.width + 21;
         
-        TGReplyObject *replyObject = [[TGReplyObject alloc] initWithReplyMessage:replyMessage];
+        TGReplyObject *replyObject = [[TGReplyObject alloc] initWithReplyMessage:replyMessage fromMessage:nil tableItem:nil];
         
         
         _replyContainer = [[MessageReplyContainer alloc] initWithFrame:NSMakeRect(startX, NSHeight(self.inputMessageTextField.containerView.frame) + NSMinX(self.inputMessageTextField.frame) + 20 , NSWidth(self.inputMessageTextField.containerView.frame), replyObject.containerHeight)];
@@ -1406,32 +1573,37 @@
     height = height % 2 == 1 ? height + 1 : height;
 //    MTLog(@"height %d", height);
     
-    if(_imageAttachmentsController.isShown ) {
-        height += 75;
-    }
+    
 
     
-    if(self.replyContainer != nil) {
-        height+= self.replyContainer.replyObject.containerHeight + 5;
+    if(self.stateBottom == MessagesBottomViewNormalState) {
+        
+        if(_imageAttachmentsController.isShown ) {
+            height += 75;
+        }
+        
+        if(self.replyContainer != nil || self.fwdContainer != nil || (self.webpageAttach != nil && self.inputMessageString.length > 0)) {
+            height+= 40;
+        }
+        
+        [_webpageAttach setHidden:_fwdContainer != nil];
+        [_replyContainer setHidden:self.fwdContainer != nil || (self.webpageAttach != nil && self.inputMessageString.length > 0)];
+        
+        
+        if(_botKeyboard != nil) {
+            height+= (!_botKeyboard.isHidden ? NSHeight(_botKeyboard.frame) : 0);
+        }
+
+    } else {
+        height = 58;
     }
     
-    if(self.fwdContainer != nil) {
-        height+= 35;
-    }
-    
-    if(self.webpageAttach != nil && self.inputMessageString.length > 0) {
-        height+= 35;
-    }
-    
-    if(_botKeyboard != nil) {
-        height+= (!_botKeyboard.isHidden ? NSHeight(_botKeyboard.frame) : 0);
-    }
-    
+     NSSize layoutSize = NSMakeSize(self.bounds.size.width, height);
     
     if(self.stateBottom == MessagesBottomViewNormalState) {
         [self.layer setNeedsDisplay];
         
-        NSSize layoutSize = NSMakeSize(self.bounds.size.width, height);
+       
         
         if(isCleared) {
             
@@ -1454,9 +1626,9 @@
             
             [[_replyContainer animator] setFrameOrigin:NSMakePoint(NSMinX(_replyContainer.frame), NSHeight(self.inputMessageTextField.containerView.frame) + offset )];
             
-            [[_fwdContainer animator] setFrameOrigin:NSMakePoint(NSMinX(_fwdContainer.frame), NSHeight(self.inputMessageTextField.containerView.frame) + offset + (_replyContainer ? 40 : 0))];
+            [[_fwdContainer animator] setFrameOrigin:NSMakePoint(NSMinX(_fwdContainer.frame), NSHeight(self.inputMessageTextField.containerView.frame) + offset )];
             
-            [[_webpageAttach animator] setFrameOrigin:NSMakePoint(NSMinX(_webpageAttach.frame), NSHeight(self.inputMessageTextField.containerView.frame) + offset + (_fwdContainer ? (_replyContainer ? 80 : 40) : _replyContainer ? 40 : 0))];
+            [[_webpageAttach animator] setFrameOrigin:NSMakePoint(NSMinX(_webpageAttach.frame), NSHeight(self.inputMessageTextField.containerView.frame) + offset )];
             
         } else {
             
@@ -1474,12 +1646,12 @@
             
             [_imageAttachmentsController setFrameOrigin:NSMakePoint(NSMinX(_imageAttachmentsController.frame), NSHeight(self.inputMessageTextField.containerView.frame) + 20 )];
             
-            [_replyContainer setFrameOrigin:NSMakePoint(NSMinX(_replyContainer.frame), NSHeight(self.inputMessageTextField.containerView.frame) + offset )];
+            [_replyContainer setFrameOrigin:NSMakePoint(NSMinX(_replyContainer.frame), NSHeight(self.inputMessageTextField.containerView.frame) + offset)];
             
             
-            [_fwdContainer setFrameOrigin:NSMakePoint(NSMinX(_fwdContainer.frame), NSHeight(self.inputMessageTextField.containerView.frame) + offset + (_replyContainer ? 40 : 0))];
+            [_fwdContainer setFrameOrigin:NSMakePoint(NSMinX(_fwdContainer.frame), NSHeight(self.inputMessageTextField.containerView.frame) + offset)];
             
-            [_webpageAttach setFrameOrigin:NSMakePoint(NSMinX(_webpageAttach.frame), NSHeight(self.inputMessageTextField.containerView.frame) + offset + (_fwdContainer ? _replyContainer ? 80 : 40 : _replyContainer ? 40 : 0))];
+            [_webpageAttach setFrameOrigin:NSMakePoint(NSMinX(_webpageAttach.frame), NSHeight(self.inputMessageTextField.containerView.frame) + offset)];
         }
         
         
@@ -1487,6 +1659,9 @@
         
         
        // [self.layer setNeedsDisplay];
+    } else {
+        [self setFrameSize:layoutSize];
+        [self.messagesViewController bottomViewChangeSize:height animated:isCleared];
     }
 }
 
@@ -1497,9 +1672,15 @@
     
     [self updateTextFieldContainer];
     
-    [self.inputMessageTextField textDidChange:nil];
+//    [self.inputMessageTextField textDidChange:nil];
     
     [_botKeyboard setFrameSize:NSMakeSize(NSWidth(self.inputMessageTextField.containerView.frame), NSHeight(_botKeyboard.frame))];
+}
+
+-(void)selectInputTextByText:(NSString *)text {
+    [self.inputMessageTextField setSelectedRange:[self.inputMessageTextField.string rangeOfString:text]];
+    
+    [self updateWebpage:NO];
 }
 
 
@@ -1509,7 +1690,9 @@
     
     self.inputMessageTextField.containerView.frame = NSMakeRect(offsetX, 11, self.bounds.size.width - offsetX - self.sendButton.frame.size.width - 33, NSHeight(self.inputMessageTextField.containerView.frame));
     
-    [self.inputMessageTextField setFrameSize:NSMakeSize(NSWidth(self.inputMessageTextField.containerView.frame) - 40 - (_botKeyboardButton.isHidden ? 0 : 30) - (_botCommandButton.isHidden ? 0 : 30),NSHeight(self.inputMessageTextField.frame))];
+    [self.inputMessageTextField setFrameSize:NSMakeSize(NSWidth(self.inputMessageTextField.containerView.frame) - 40 - (_botKeyboardButton.isHidden ? 0 : 30) - (_botCommandButton.isHidden ? 0 : 30) - (_channelAdminButton.isHidden ? 0 : 30) - (_secretTimerButton.isHidden ? 0 : 30),NSHeight(self.inputMessageTextField.frame))];
+    
+    
 }
 
 

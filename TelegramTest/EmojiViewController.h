@@ -20,6 +20,8 @@
 
 + (EmojiViewController *)instance;
 
+@property (nonatomic,weak) MessagesViewController *messagesViewController;
+
 +(void)reloadStickers;
 +(void)loadStickersIfNeeded;
 

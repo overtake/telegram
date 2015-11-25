@@ -1,16 +1,3 @@
-// DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE
-// Version 2, December 2004
-//
-// Copyright (C) 2013 Ilija Tovilo <support@ilijatovilo.ch>
-//
-// Everyone is permitted to copy and distribute verbatim or modified
-// copies of this license document, and changing it is allowed as long
-// as the name is changed.
-//
-// DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE
-// TERMS AND CONDITIONS FOR COPYING, DISTRIBUTION AND MODIFICATION
-//
-// 0. You just DO WHAT THE FUCK YOU WANT TO.
 
 //
 //  ITNavigationView.m
@@ -25,6 +12,12 @@
 #import "HackUtils.h"
 #import "TGAnimationBlockDelegate.h"
 #import "NotSelectedDialogsViewController.h"
+
+
+#import "TGModernChannelInfoViewController.h"
+#import "TGModernChatInfoViewController.h"
+#import "TGModernUserViewController.h"
+
 #define kDefaultAnimationDuration 0.1
 #define kSlowAnimationMultiplier 4
 #define kDefaultTimingFunction [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseIn]
@@ -87,9 +80,7 @@ static const int navigationOffset = 48;
     
     self.containerView.layer.backgroundColor = [NSColor clearColor].CGColor;
     [self.view addSubview:self.containerView];
-    
-    int connectingHeight = navigationOffset-navigationHeight;
-    
+        
     
     // [self.containerView addSubview:_connectionController];
     
@@ -142,7 +133,6 @@ static const int navigationOffset = 48;
 - (void)pushViewController:(TMViewController *)viewController animated:(BOOL)animated {
     if(_isLocked)
         return;
-    
     
     
     if([self.viewControllerStack indexOfObject:viewController] == NSNotFound) {
@@ -229,6 +219,10 @@ static const int navigationOffset = 48;
     [view.layer setOpacity:1];
 }
 
+-(void)setCurrentController:(TMViewController *)currentController {
+    _currentController = currentController;
+}
+
 - (void)setCurrentViewController:(TMViewController *)newViewController withAnimation:(BOOL)animationFlag {
     
    
@@ -281,7 +275,7 @@ static const int navigationOffset = 48;
     
     self.currentController = newViewController;
     
-        
+    
     // Make view resize properly
     newView.autoresizingMask = NSViewWidthSizable | NSViewHeightSizable;
     
@@ -320,6 +314,8 @@ static const int navigationOffset = 48;
     if (!isAnimate) {
         // Add the new view
         
+        if(oldViewController && oldViewController != newViewController && [self.viewControllerStack indexOfObject:oldViewController] == NSNotFound)
+            [oldViewController _didStackRemoved];
                 
         [oldView removeFromSuperview];
         [newView removeFromSuperview];
@@ -417,7 +413,8 @@ static const int navigationOffset = 48;
             if(two > 0)
                 return;
             
-            
+            if(oldViewController && oldViewController != newViewController && [self.viewControllerStack indexOfObject:oldViewController] == NSNotFound)
+                [oldViewController _didStackRemoved];
             
             _isLocked = NO;
             
@@ -510,6 +507,7 @@ static const int navigationOffset = 48;
        
         
     }
+    
 }
 
 
@@ -574,7 +572,127 @@ static const int navigationOffset = 48;
     return [[NSImage alloc] initWithCGImage:[rep CGImage] size:view.bounds.size];
 }
 
+-(void)gotoViewController:(TMViewController *)controller {
+    [self gotoViewController:controller back:YES];
+}
+-(void)gotoViewController:(TMViewController *)controller back:(BOOL)back {
+    
+    
+    [self gotoViewController:controller back:back animated:YES];
+    
+}
+
+-(void)gotoViewController:(TMViewController *)controller animated:(BOOL)animated {
+    [self gotoViewController:controller back:YES animated:animated];
+}
+
+-(void)gotoViewController:(TMViewController *)controller back:(BOOL)back animated:(BOOL)animated {
+    
+    if(self.currentController == controller)
+        return;
+    
+    NSArray *stack = self.viewControllerStack;
+    
+    __block NSUInteger idx = NSNotFound;
+    
+    [stack enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger index, BOOL * _Nonnull stop) {
+        if([obj isKindOfClass:[controller class]]) {
+            idx = index;
+            *stop = YES;
+        }
+    }];
+    
+    if(idx != NSNotFound) {
+        if(!back) {
+            self.viewControllerStack = [[stack subarrayWithRange:NSMakeRange(0, MAX(0,idx-1))] mutableCopy];
+            
+            [self pushViewController:controller animated:animated];
+        } else {
+            self.viewControllerStack =[[stack subarrayWithRange:NSMakeRange(0, MIN(idx,stack.count ))] mutableCopy];
+            
+            [self pushViewController:controller animated:animated];
+        }
+    } else {
+        if(self.viewControllerStack.count > 0)
+            [self.viewControllerStack removeObjectsInRange:NSMakeRange(1, self.viewControllerStack.count - 1)];
+        
+        [self pushViewController:controller animated:animated && ![self.currentController isKindOfClass:[NotSelectedDialogsViewController class]]];
+    }
+    
+}
 
 
+
+
+-(void)showInfoPage:(TL_conversation *)conversation {
+    
+    TMViewController *infoViewController;
+    
+    switch (conversation.type) {
+        case DialogTypeChat:
+            
+            infoViewController = [[TGModernChatInfoViewController alloc] initWithFrame:NSZeroRect];
+            
+            [(TGModernChatInfoViewController *)infoViewController setChat:conversation.chat];
+            
+            break;
+            
+        case DialogTypeSecretChat:
+            
+            infoViewController = [[TGModernUserViewController alloc] initWithFrame:NSZeroRect];
+            
+            
+            [(TGModernUserViewController *)infoViewController setUser:conversation.encryptedChat.peerUser conversation:conversation];
+            
+            break;
+            
+        case DialogTypeUser: {
+            infoViewController = [[TGModernUserViewController alloc] initWithFrame:NSZeroRect];
+            
+            
+            [(TGModernUserViewController *)infoViewController setUser:conversation.user conversation:conversation];
+            break;
+        }
+            
+        case DialogTypeBroadcast:
+            infoViewController = [[BroadcastInfoViewController alloc] initWithFrame:NSZeroRect];
+            
+            [(BroadcastInfoViewController *)infoViewController setBroadcast:conversation.broadcast];
+        case DialogTypeChannel:
+            
+            
+            if(conversation.chat.type == TLChatTypeForbidden)
+                return;
+            
+            infoViewController = [[TGModernChannelInfoViewController alloc] initWithFrame:NSZeroRect];
+            
+            [(TGModernChannelInfoViewController *)infoViewController setChat:conversation.chat];
+            
+        default:
+            break;
+    }
+    
+    [self pushViewController:infoViewController animated:YES];
+    
+}
+
+-(void)gotoEmptyController {
+    [self.viewControllerStack subarrayWithRange:NSMakeRange(1, self.viewControllerStack.count - 1)];
+    
+    [self goBackWithAnimation:YES];
+}
+
+-(void)showMessagesViewController:(TL_conversation *)conversation {
+    [self.messagesViewController setCurrentConversation:conversation];
+    
+    [self gotoViewController:self.messagesViewController];
+}
+
+-(void)showMessagesViewController:(TL_conversation *)conversation withMessage:(TL_localMessage *)message {
+    
+     [self.messagesViewController setCurrentConversation:conversation withMessageJump:message];
+    
+    [self gotoViewController:self.messagesViewController];
+}
 
 @end

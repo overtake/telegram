@@ -14,7 +14,7 @@
 @synthesize imageSize = _imageSize;
 @synthesize author = _author;
 @synthesize imageObject = _imageObject;
-
+@synthesize descSize = _descSize;
 
 -(id)initWithWebPage:(TLWebPage *)webpage {
     
@@ -47,15 +47,20 @@
     
     _size = [super size];
 
-    if(self.imageObject) {
+   // if(self.imageObject) {
         
         _imageSize = strongsize(self.imageObject.imageSize,60);
-        
-        _size.height = [self.desc coreTextSizeForTextFieldForWidth:width - 67 withPaths:@[[NSValue valueWithRect:NSMakeRect(0, 300, _size.width - 77, 60)],[NSValue valueWithRect:NSMakeRect(0, 0, _size.width -7, 300)]]].height;
-        
-        
-        _size.height = MAX(_size.height, 60);
-    }
+    
+        _descSize = [self.desc coreTextSizeForTextFieldForWidth: width-67];
+    
+//        _size.height = [self.desc coreTextSizeForTextFieldForWidth:width - 67 withPaths:@[[NSValue valueWithRect:NSMakeRect(0, 300, _size.width - 77, 60)],[NSValue valueWithRect:NSMakeRect(0, 0, _size.width -7, 300)]]].height;
+//
+        _size.width = _descSize.width + _imageSize.width + 100;
+        _size.height = _descSize.width > 200 ? _descSize.height : _descSize.height + _imageSize.height + 10;
+    
+    
+        _size.height = MAX(_size.height, _imageSize.height);
+ //   }
     
 }
 

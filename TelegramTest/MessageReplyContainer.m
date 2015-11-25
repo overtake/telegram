@@ -31,7 +31,7 @@
         
         self.nameTextField = [[TMHyperlinkTextField alloc] initWithFrame:NSMakeRect(15, NSHeight(frameRect) - 13, 200, 20)];
         [self.nameTextField setBordered:NO];
-        [self.nameTextField setFont:[NSFont fontWithName:@"HelveticaNeue-Medium" size:13]];
+        [self.nameTextField setFont:TGSystemMediumFont(13)];
         [self.nameTextField setDrawsBackground:NO];
         
         [self addSubview:self.nameTextField];
@@ -39,11 +39,13 @@
         self.dateField = [TMTextField defaultTextField];
         
         [self.dateField setTextColor:GRAY_TEXT_COLOR];
-        [self.dateField setFont:[NSFont fontWithName:@"HelveticaNeue" size:12]];
+        [self.dateField setFont:TGSystemFont(12)];
         
        // [self addSubview:self.dateField];
         
         _messageField = [[TGCTextView alloc] initWithFrame:NSZeroRect];
+        
+        [_messageField setEditable:NO];
         
         [self.messageField setBackgroundColor:[NSColor whiteColor]];
 
@@ -92,7 +94,7 @@
     
     if(_replyObject.replyHeader.string.length == 0)
     {
-        return LINK_COLOR;
+        return BLUE_SEPARATOR_COLOR;
     }
     
     return [_replyObject.replyHeader attribute:NSForegroundColorAttributeName atIndex:0 effectiveRange:&range];
@@ -103,7 +105,7 @@
 -(void)update {
     
    
-    int xOffset = _replyObject.replyThumb || _replyObject.geoURL ? 40 : 5;
+    int xOffset = _replyObject.replyThumb || _replyObject.geoURL ? 40 : 6;
     
     
     if(_replyObject.replyThumb) {
@@ -136,7 +138,7 @@
     
     [self.messageField setFrameOrigin:NSMakePoint(xOffset + 2, 0)];
     
-    [_messageField setEditable:_deleteHandler == nil];
+  //  [_messageField setEditable:_deleteHandler == nil];
     
     if(_deleteHandler != nil)
     {
@@ -184,15 +186,8 @@
 -(void)mouseUp:(NSEvent *)theEvent {
     
     if(!_deleteHandler) {
-        
-        // go to message
-        
-        if(_messageField.selectRange.location == NSNotFound) {
-            if([Telegram rightViewController].messagesViewController.state == MessagesViewControllerStateNone)
-                [[Telegram rightViewController].messagesViewController showMessage:_replyObject.replyMessage.n_id fromMsgId:_item.message.n_id];
-        }
-        
-        
+        if(_item.table.viewController.state == MessagesViewControllerStateNone)
+            [_item.table.viewController showMessage:_replyObject.replyMessage fromMsg:_item.message flags:ShowMessageTypeReply];
     }
     
 }

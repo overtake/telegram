@@ -15,14 +15,15 @@
 typedef enum {
     ChatAvatarSourceUser,
     ChatAvatarSourceGroup,
-    ChatAvatarSourceBroadcast
+    ChatAvatarSourceBroadcast,
+    ChatAvatarSourceChannel
 } ChatAvatarSourceType;
 
 
 @property (nonatomic,assign) ChatAvatarSourceType sourceType;
 
-@property (nonatomic,strong) TLUser *user;
-@property (nonatomic,strong) TLChat *chat;
+
+@property (nonatomic,assign,getter=isEditable) BOOL editable;
 
 @property (nonatomic, strong) ChatInfoViewController *controller;
 - (void)rebuild;

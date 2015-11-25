@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import <AVFoundation/AVFoundation.h>
-
+#import "TelegramWindow.h"
 @interface OpenWithObject : NSObject
 @property (nonatomic, strong,readonly) NSString *fullname;
 @property (nonatomic, strong,readonly) NSURL *app;
@@ -30,6 +30,7 @@ extern NSString *const TLHashTagPrefix;
 extern NSString *const TLBotCommandPrefix;
 extern NSString *const TGJoinGroupPrefix;
 extern NSString *const TGStickerPackPrefix;
+extern NSString *const TGImportShareLinkPrefix;
 unsigned long fileSize(NSString *path);
 + (void)showPanelWithTypes:(NSArray *)types completionHandler:(void (^)(NSArray * result))handler;
 
@@ -52,12 +53,13 @@ NSString* dp();
 +(NSString *)documentName:(TLDocument *)document;
 + (NSString *)dataMD5:(NSData *)data;
 
+TelegramWindow *appWindow();
 
 NSArray * soundsList();
 void playSentMessage(BOOL play);
 void open_link(NSString *link);
 void open_card(NSString *link);
-
+void share_link(NSString *url, NSString *text);
 NSString *exportPath(long randomId,NSString *extension);
 
 

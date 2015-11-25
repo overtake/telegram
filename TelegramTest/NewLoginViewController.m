@@ -68,7 +68,7 @@
     
     TMTextField *applicationNameTextField = [TMTextField defaultTextField];
     applicationNameTextField.stringValue = NSLocalizedString(@"App.Name", nil);
-    applicationNameTextField.font = [NSFont fontWithName:@"HelveticaNeue-Light" size:28];
+    applicationNameTextField.font = TGSystemLightFont(28);
     applicationNameTextField.textColor = NSColorFromRGB(0x333333);
     [applicationNameTextField sizeToFit];
     applicationNameTextField.wantsLayer = IS_RETINA;
@@ -88,7 +88,7 @@
   //  [applicationInfoAttributedString appendString:@".\n"  withColor:NSColorFromRGB(0x9b9b9b)];
    // [applicationInfoAttributedString appendString:NSLocalizedString(@"Login.Description", nil) withColor:NSColorFromRGB(0x9b9b9b)];
     
-    [applicationInfoAttributedString setFont:[NSFont fontWithName:@"HelveticaNeue" size:13] forRange:applicationInfoAttributedString.range];
+    [applicationInfoAttributedString setFont:TGSystemFont(13) forRange:applicationInfoAttributedString.range];
     
     NSMutableParagraphStyle *applicationInfoParagraphStyle = [[NSMutableParagraphStyle alloc] init];
     [applicationInfoParagraphStyle setLineSpacing:2];
@@ -222,7 +222,6 @@
     } errorHandler:^(RPCRequest *request, RpcError *error) {
         
         if([error.error_msg isEqualToString:@"SESSION_PASSWORD_NEEDED"]) {
-            
             
             return;
         }

@@ -51,6 +51,9 @@ void setMaxBroadcastUsers(int max_broadcast_users);
 int maxBroadcastUsers();
 int maxChatUsers();
 
+void setMegagroupSizeMax(int b);
+int megagroupSizeMax();
+
 @property (nonatomic) BOOL isWindowActive;
 @property (nonatomic, assign) BOOL isOnline;
 
@@ -58,9 +61,6 @@ int maxChatUsers();
 - (void)setAccountOffline:(BOOL)force;
 
 
-- (void)showMessagesFromDialog:(TLDialog *)dialog sender:(id)sender;
-- (void)showUserInfoWithUserId:(int)userID conversation:(TL_conversation *)conversaion sender:(id)sender;
-- (void)showMessagesWidthUser:(TLUser *)user sender:(id)sender;
 - (void)showNotSelectedDialog;
 
 
@@ -73,6 +73,8 @@ int maxChatUsers();
 +(void)initializeDatabase;
 
 +(void)sendLogs;
+
++(id)findObjectWithName:(NSString *)name;
 
 
 +(void)saveHashTags:(NSString *)message peer_id:(int)peer_id;

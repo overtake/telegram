@@ -124,7 +124,7 @@
             for(NSInteger i = visibleRows.location; i < count; i++) {
                 MessageTableItem *item = (MessageTableItem *)[self itemByPosition:i];
                 
-                if([item makeSizeByWidth:MAX(NSWidth([Telegram rightViewController].view.frame) - 150,100)]) {
+                if([item makeSizeByWidth:item.makeSize]) {
                     id view = [self viewAtColumn:0 row:i makeIfNecessary:NO];
                   //  if([view isKindOfClass:[MessageTableCellTextView class]]) {
                     if(view)
@@ -164,7 +164,7 @@
 
     for(NSUInteger i = 0; i < self.viewController.messagesCount; i++) {
         MessageTableItem *item = (MessageTableItem *)[self itemByPosition:i];
-        [item makeSizeByWidth:MAX(NSWidth([Telegram rightViewController].view.frame) - 150,100)];
+        [item makeSizeByWidth:item.makeSize];
     }
     
   //  [self reloadData];
@@ -324,10 +324,12 @@
             
             TGCTextView *textView = ((MessageTableCellTextView *)view).textView;
             
-            NSPoint startConverted = NSMakePoint(_startSelectPosition.x - rect.origin.x - item.containerOffset, _startSelectPosition.y - rect.origin.y - NSMinY(view.containerView.frame));
+            NSPoint startConverted = NSMakePoint(_startSelectPosition.x - rect.origin.x - (item.isForwadedMessage ? item.containerOffsetForward : item.containerOffset), _startSelectPosition.y - rect.origin.y - NSMinY(view.containerView.frame));
             
-            NSPoint currentConverted = NSMakePoint(startTablePoint.x - rect.origin.x - item.containerOffset, startTablePoint.y - rect.origin.y - NSMinY(view.containerView.frame));
+            NSPoint currentConverted = NSMakePoint(startTablePoint.x - rect.origin.x - (item.isForwadedMessage ? item.containerOffsetForward : item.containerOffset), startTablePoint.y - rect.origin.y - NSMinY(view.containerView.frame));
             
+            
+
             
             if(i > startRow && i < endRow) {
                 
@@ -400,7 +402,7 @@
 - (void)viewDidEndLiveResize {
     for(NSUInteger i = 0; i < self.viewController.messagesCount; i++) {
         MessageTableItem *item = (MessageTableItem *)[self itemByPosition:i];
-        [item makeSizeByWidth:MAX(NSWidth([Telegram rightViewController].view.frame) - 150,100)];
+        [item makeSizeByWidth:item.makeSize];
     }
     
     [self reloadData];

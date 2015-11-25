@@ -79,6 +79,13 @@
     return [NSString stringWithFormat:@"%4.0f %@", convertedValue, [tokens objectAtIndex:multiplyFactor]];
 }
 
+- (NSString *)stringByDecodingURLFormat
+{
+    NSString *result = [(NSString *)self stringByReplacingOccurrencesOfString:@"+" withString:@" "];
+    result = [result stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+    return result;
+}
+
 + (NSString *) md5String:(NSString *)string {
     return [string md5];
 }

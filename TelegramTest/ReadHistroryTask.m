@@ -62,25 +62,25 @@
     if(_conversation.type == DialogTypeSecretChat) {
         
         request = [TLAPI_messages_readEncryptedHistory createWithPeer:[_conversation.encryptedChat inputPeer] max_date:[[MTNetwork instance] getTime]];
+    } else if(_conversation.type != DialogTypeChannel) {
+        request = [TLAPI_messages_readHistory createWithPeer:[_conversation inputPeer] max_id:_conversation.read_inbox_max_id];
     } else {
-        request = [TLAPI_messages_readHistory createWithPeer:[_conversation inputPeer] max_id:_conversation.top_message offset:offset];
+        request = [TLAPI_channels_readHistory createWithChannel:[_conversation inputPeer] max_id:_conversation.read_inbox_max_id]; //TODO
     }
     
     [RPCRequest sendRequest:request successHandler:^(RPCRequest *request, id response) {
        
         if(![response isKindOfClass:[TL_boolTrue class]] && ![response isKindOfClass:[TL_boolFalse class]])  {
-            TL_messages_affectedHistory *history = response;
-            if(history.offset > 0) {
-                [self loop:history.offset];
-            } else {
-                [ASQueue dispatchOnMainQueue:^{
-                    if([_delegate respondsToSelector:@selector(didCompleteTaskRequest:)]) {
-                        [_delegate didCompleteTaskRequest:self];
-                    }
-                }];
-                
-            }
+            TL_messages_affectedMessages *history = response;
+           
+            [ASQueue dispatchOnMainQueue:^{
+                if([_delegate respondsToSelector:@selector(didCompleteTaskRequest:)]) {
+                    [_delegate didCompleteTaskRequest:self];
+                }
+            }];
+            
         } else {
+            
             [ASQueue dispatchOnMainQueue:^{
                 if([_delegate respondsToSelector:@selector(didCompleteTaskRequest:)]) {
                     [_delegate didCompleteTaskRequest:self];

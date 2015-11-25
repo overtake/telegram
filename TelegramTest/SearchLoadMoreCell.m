@@ -23,7 +23,7 @@
     self.loadMore = [[TMTextButton alloc] init];
     [self.loadMore setTextColor:BLUE_UI_COLOR];
     [self.loadMore setAutoresizingMask:NSViewMinXMargin | NSViewMaxXMargin];
-    [self.loadMore setFont:[NSFont fontWithName:@"HelveticaNeue" size:13]];
+    [self.loadMore setFont:TGSystemFont(13)];
     [self.loadMore setTapBlock:^{
         SearchLoadMoreItem *item = (SearchLoadMoreItem *)[strongSelf rowItem];
         if(item.clickBlock)

@@ -8,7 +8,6 @@
 
 #import "TGConversationsViewController.h"
 #import "TGSecretAction.h"
-#import "DialogsHistoryController.h"
 #import "SearchViewController.h"
 #import "SelfDestructionController.h"
 #import "TGModernTypingManager.h"
@@ -19,7 +18,8 @@
 #import "TGConversationTableCell.h"
 #import "TGConversationsTableView.h"
 #import "MessagesUtils.h"
-
+#import "TGModernConversationHistoryController.h"
+#import "TGHeadChatPanel.h"
 @interface TestView : TMView
 
 @end
@@ -32,10 +32,12 @@
 
 @end
 
-@interface TGConversationsViewController ()<NSTableViewDataSource,NSTableViewDelegate,TMTableViewDelegate>
-@property (nonatomic, strong) DialogsHistoryController *history;
+@interface TGConversationsViewController ()<NSTableViewDataSource,NSTableViewDelegate,TMTableViewDelegate,TGModernConversationHistoryControllerDelegate>
+@property (nonatomic, strong) TGModernConversationHistoryController *modernHistory;
 @property (nonatomic, strong) TGConversationsTableView *tableView;
 @property (nonatomic, strong) NSMutableArray *list;
+
+@property (nonatomic,assign) BOOL initedNext;
 
 @end
 
@@ -48,11 +50,6 @@
     
     
     int topOffset = 48;
-    
- //   self.view.wantsLayer = NO;
-    
-    
-    _history = [DialogsHistoryController sharedController];
     
     self.searchViewController.type = SearchTypeDialogs | SearchTypeMessages | SearchTypeContacts | SearchTypeGlobalUsers;
     
@@ -77,14 +74,14 @@
     [self addScrollEvent];
     
     
-
+    
     
     if(![TGPasslock isEnabled] && [[MTNetwork instance] isAuth]) {
         [self initialize];
-       // [[MTNetwork instance] startNetwork];
     }
-    
-    
+//     [[MTNetwork instance] startNetwork];
+//    
+//    [[MTNetwork instance].updateService.proccessor resetStateAndSync];
 }
 
 -(void)initialize {
@@ -92,28 +89,29 @@
     
     [[Storage manager] users:^(NSArray *result) {
         
-        
         [[UsersManager sharedManager] addFromDB:result];
         
         [[Storage manager] broadcastList:^(NSArray *broadcasts) {
             
             [[BroadcastManager sharedManager] add:broadcasts];
             
-            
             [[Storage manager] loadChats:^(NSArray *chats) {
-                
-                
                 
                 [[ChatsManager sharedManager] add:chats];
                 
-                [self initConversations];
+                [ASQueue dispatchOnStageQueue:^{
+                    
+                    
+                    [self initConversations];
+                }];
+                
+               
+                
             }];
         }];
         
         
     }];
-    
-    [MessagesManager updateUnreadBadge];
     
     
 }
@@ -123,65 +121,70 @@
     
     [self.searchViewController viewWillAppear:animated];
     
-    [self.tableView.scrollView.contentView setFrameSize:self.tableView.scrollView.frame.size];
-    
-    dispatch_async(dispatch_get_main_queue(), ^{
+    [self.tableView.scrollView.contentView setFrameSize:[Telegram leftViewController].view.frame.size];
+    [self.tableView setFrameSize:[Telegram leftViewController].view.frame.size];
+  //  dispatch_async(dispatch_get_main_queue(), ^{
         [self.tableView reloadData];
-        
-    });
+  //  });
     
 }
 
+
+-(void)didLoadedConversations:(NSArray *)conversations withRange:(NSRange)range {
+    [self insertAll:conversations];
+    
+    if(!_initedNext) {
+        [self didLoadedStartedConversationNeedNext];
+    }
+    
+}
+
+-(int)conversationsLoadingLimit {
+    return 20;
+}
 
 -(void)initConversations {
     
     [SecretChatAccepter instance];
     
-  
-    [[DialogsHistoryController sharedController] next:0 limit:20 callback:^(NSArray *result) {
-        
-        [[MTNetwork instance] startNetwork];
-        
-        [EmojiViewController reloadStickers];
-        
-        [[BlockedUsersManager sharedManager] remoteLoad];
-        
-        if(result.count != 0 || _history.state == DialogsHistoryStateEnd) {
-            
-            
-            [TMTaskRequest executeAll];
-            
-            [self insertAll:result];
-            
-            
-            [Notification perform:APP_RUN object:nil];
-            
-            [SelfDestructionController initialize];
-            
-            [TGModernTypingManager initialize];
-            
-            [[NewContactsManager sharedManager] fullReload];
-            [[FullChatManager sharedManager] loadStored];
-            
-            [TGSecretAction dequeAllStorageActions];
-            
-            
-            dispatch_after_seconds(3, ^{
-                [self loadhistory:35];
-            });
-            
-            
-            
-        } else if(_history.state != DialogsHistoryStateEnd) {
-            [self initConversations];
-        }
-        
-       
-        
-    } usersCallback:nil];
+   
+    _initedNext = NO;
     
+     [[MTNetwork instance] startNetwork];
+    
+    _modernHistory = [[TGModernConversationHistoryController alloc] initWithQueue:[[ASQueue alloc] initWithName:"c_h_queue"] delegate:self];
+    
+    
+    [self loadhistory:30];
+    
+
+    
+}
+
+-(void)didLoadedStartedConversationNeedNext {
+    [[BlockedUsersManager sharedManager] remoteLoad];
+    
+    [TMTaskRequest executeAll];
+    
+    
+    [Notification perform:APP_RUN object:nil];
+    
+    [SelfDestructionController initialize];
+    
+    [TGModernTypingManager initialize];
+    
+    [[NewContactsManager sharedManager] fullReload];
+    [[FullChatManager sharedManager] loadStored];
+    
+    [TGSecretAction dequeAllStorageActions];
+    
+    
+    [ASQueue dispatchOnMainQueue:^{
+        [EmojiViewController reloadStickers];
+    }];
     
     [MessagesManager updateUnreadBadge];
+    _initedNext = YES;
 }
 
 - (void)addScrollEvent {
@@ -202,72 +205,61 @@
 }
 
 -(void)notificationLogout:(NSNotification *)notification {
-    [_history drop];
     [self.tableView removeAllItems:NO];
     [self.tableView reloadData];
+    [_modernHistory clear];
+    _modernHistory = nil;
 }
 
 - (void) scrollViewDocumentOffsetChangingNotificationHandler:(NSNotification *)aNotification {
-    if(_history.isLoading || _history.state == DialogsHistoryStateEnd || ![self.tableView.scrollView isNeedUpdateBottom])
+    if(_modernHistory.isLoading || _modernHistory.state == TGModernCHStateFull || ![self.tableView.scrollView isNeedUpdateBottom])
         return;
     
-    static int limit = 30;
-    [self loadhistory:limit];
+     [_modernHistory requestNextConversation];
 }
 
 -(void)loadhistory:(int)limit  {
     
-    
-    
-    int offset = (int) self.tableView.count;
-    
-    if(_history.state == DialogsHistoryStateNeedRemote) {
-        NSArray *filtred = [self.tableView.list filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.conversation.peer.class != %@ AND self.conversation.peer.class != %@",[TL_peerSecret class], [TL_peerBroadcast class]]];
+    if(_modernHistory != nil) {
+        [_modernHistory requestNextConversation];
         
-        offset = (int) filtred.count;
+        dispatch_after_seconds(5, ^{
+            [self loadhistory:limit];
+        });
     }
     
-    [_history next:offset limit:limit callback:^(NSArray *result) {
-        
-        [self insertAll:result];
-        
-        if(_history.state != DialogsHistoryStateEnd) {
-            dispatch_after_seconds(5, ^{
-                [self loadhistory:limit];
-            });
-        }
-        
-    } usersCallback:^(NSArray *users) {
-        
-    }];
 }
 
 -(void)insertAll:(NSArray *)all {
-    NSMutableArray *dialogs = [[NSMutableArray alloc] init];
+    
+    NSMutableArray *items = [[NSMutableArray alloc] init];
     
     for(TL_conversation *conversation in all) {
         if(!conversation.isAddToList)
             continue;
         
         TGConversationTableItem *item = [[TGConversationTableItem alloc] initWithConversation:conversation];
-        [dialogs addObject:item];
+        [items addObject:item];
     }
     
-    NSTableViewAnimationOptions animation = self.tableView.defaultAnimation;
-    
-    self.tableView.defaultAnimation = NSTableViewAnimationEffectNone;
-    
-    [self.tableView insert:dialogs startIndex:self.tableView.list.count tableRedraw:YES];
-    
-    self.tableView.defaultAnimation = animation;
-    
-    if(self.tableView.selectedItem  != self.selectedItem) {
+    [ASQueue dispatchOnMainQueue:^{
+        NSTableViewAnimationOptions animation = self.tableView.defaultAnimation;
         
-        if([self.tableView itemByHash:[self.selectedItem hash]]) {
-            [self.tableView cancelSelection];
-            [self.tableView setSelectedByHash:[self.selectedItem hash]];
+        self.tableView.defaultAnimation = NSTableViewAnimationEffectNone;
+        
+        [self.tableView insert:items startIndex:self.tableView.list.count tableRedraw:YES];
+        
+        self.tableView.defaultAnimation = animation;
+        
+        if(self.tableView.selectedItem  != self.selectedItem) {
+            
+            if([self.tableView itemByHash:[self.selectedItem hash]]) {
+                [self.tableView cancelSelection];
+                [self.tableView setSelectedByHash:[self.selectedItem hash]];
+            }
         }
-    }
+    }];
+    
 }
 - (void)dealloc {
     [Notification removeObserver:self];
@@ -292,7 +284,12 @@
         [self.tableView cancelSelection];
         
         if(![conversation isKindOfClass:NSNull.class]) {
-            [self.tableView setSelectedByHash:[conversation peer_id]];
+            [self.tableView setSelectedByHash:[[Telegram conversation] peer_id]];
+            
+            if([Telegram isSingleLayout] && [self.navigationViewController.currentController isKindOfClass:[LeftViewController class]]) {
+                [self.tableView cancelSelection];
+            }
+            
         }
     }
 }
@@ -301,6 +298,9 @@
     TL_conversation *conversation = [notify.userInfo objectForKey:KEY_DIALOG];
     id object = [self.tableView itemByHash:[conversation peer_id]];
     [self.tableView removeItem:object];
+    
+    
+    
 }
 
 - (void) notificationDialogsReload:(NSNotification *)notify {
@@ -330,7 +330,8 @@
                 
                 if(![item itemIsUpdated])
                 {
-                    [item needUpdateMessage:[[NSNotification alloc] initWithName:@"" object:nil userInfo:@{KEY_LAST_CONVRESATION_DATA:[MessagesUtils conversationLastData:obj],@"isNotForReload":@(YES)}]];
+                    [item needUpdateMessage:[[NSNotification alloc] initWithName:@"" object:nil userInfo:@{KEY_LAST_CONVRESATION_DATA:[MessagesUtils conversationLastData:obj],@"isNotForReload":@(YES),KEY_DIALOG:obj}]];
+                    
                 }
             } else {
                 item = [[TGConversationTableItem alloc] initWithConversation:obj];
@@ -347,6 +348,8 @@
             [self.tableView removeAllItems:NO];
             [self.tableView insert:items startIndex:0 tableRedraw:NO];
             [self.tableView reloadData];
+            
+            [self.tableView setSelectedByHash:self.tableView.selectedItem.hash];
             
         }];
     }];
@@ -365,6 +368,9 @@
 
 -(void)move:(int)position conversation:(TL_conversation *)conversation {
     
+    if(!conversation.isAddToList)
+        return;
+    
     if(position == 0 && conversation.top_message > TGMINFAKEID) {
         [self.tableView scrollToBeginningOfDocument:self];
     }
@@ -378,9 +384,10 @@
     } else {
         object = [[TGConversationTableItem alloc] initWithConversation:conversation];
         [self.tableView insert:object atIndex:position tableRedraw:YES];
-        if(conversation == [Telegram rightViewController].messagesViewController.conversation)
-            [self.tableView setSelectedByHash:object.hash];
     }
+    
+    if(conversation == [Telegram rightViewController].messagesViewController.conversation)
+        [self.tableView setSelectedByHash:object.hash];
     
 }
 
@@ -413,7 +420,7 @@
 }
 
 - (void) selectionDidChange:(NSInteger)row item:(TGConversationTableItem *) item {
-    [[Telegram sharedInstance] showMessagesFromDialog:item.conversation sender:self];
+    [[Telegram delegate].mainWindow.navigationController showMessagesViewController:item.conversation];
     
     [self.tableView setSelectedByHash:[item hash]];
 }
@@ -437,19 +444,30 @@
     __block TLChat *chat = dialog.chat;
     
     NSMenuItem *openConversationMenuItem = [NSMenuItem menuItemWithTitle:NSLocalizedString(@"Conversation.OpenConversation", nil) withBlock:^(id sender) {
-        [[Telegram rightViewController] showByDialog:dialog sender:self];
+        [appWindow().navigationController showMessagesViewController:dialog];
     }];
-    if([Telegram rightViewController].messagesViewController.conversation == dialog)
+    if(appWindow().navigationController.messagesViewController.conversation == dialog)
         openConversationMenuItem.target = nil;
     
     [menu addItem:openConversationMenuItem];
     
+    NSMenuItem *anotherWindow = [NSMenuItem menuItemWithTitle:NSLocalizedString(@"ShowConversationWithAnotherWindow", nil) withBlock:^(id sender) {
+        [TGHeadChatPanel showWithConversation:dialog];
+    }];
+    
+    
+    [menu addItem:anotherWindow];
+    
+    
+    
     
     [menu addItem:[NSMenuItem separatorItem]];
     
-    if(dialog.type != DialogTypeChat && dialog.type != DialogTypeBroadcast) {
+    if(dialog.type != DialogTypeChat && dialog.type != DialogTypeBroadcast && dialog.type != DialogTypeChannel) {
         NSMenuItem *showUserProfile = [NSMenuItem menuItemWithTitle:[NSString stringWithFormat:NSLocalizedString(@"Conversation.ShowProfile", nil), user.dialogFullName] withBlock:^(id sender) {
-            [[Telegram rightViewController] showUserInfoPage:user conversation:user.dialog];
+            
+            [appWindow().navigationController showInfoPage:dialog];
+            
         }];
         [menu addItem:showUserProfile];
         
@@ -502,18 +520,29 @@
             [menu addItem:clearHistory];
         }
         
+        if(dialog.type == DialogTypeUser && dialog.user.isBot) {
+            
+            NSMenuItem *deleteAndStop = [NSMenuItem menuItemWithTitle:NSLocalizedString(@"Conversation.DeleteAndStopBot", nil) withBlock:^(id sender) {
+                [[Telegram rightViewController].messagesViewController deleteDialog:dialog];
+                [[BlockedUsersManager sharedManager] block:dialog.user.n_id completeHandler:^(BOOL response) {
+                    
+                }];
+            }];
+            [menu addItem:deleteAndStop];
+        }
+        
     } else {
         
         NSMenuItem *showСhatProfile;
         
-        if(dialog.type == DialogTypeChat) {
-            showСhatProfile = [NSMenuItem menuItemWithTitle:NSLocalizedString(@"Conversation.ShowGroupInfo", nil) withBlock:^(id sender) {
-                [[Telegram rightViewController] showChatInfoPage:chat];
+        if(dialog.type == DialogTypeChat || dialog.type == DialogTypeChannel) {
+            showСhatProfile = [NSMenuItem menuItemWithTitle:dialog.type != DialogTypeChannel || dialog.chat.isMegagroup ? NSLocalizedString(@"Conversation.ShowGroupInfo", nil) : NSLocalizedString(@"Conversation.ShowChannelInfo", nil) withBlock:^(id sender) {
+                [appWindow().navigationController showInfoPage:dialog];
             }];
             
         } else {
             showСhatProfile = [NSMenuItem menuItemWithTitle:NSLocalizedString(@"Conversation.ShowBroadcastInfo", nil) withBlock:^(id sender) {
-                [[Telegram rightViewController] showBroadcastInfoPage:dialog.broadcast];
+                [appWindow().navigationController showInfoPage:dialog];
             }];
             
         }
@@ -535,20 +564,24 @@
         
         [menu addItem:[NSMenuItem separatorItem]];
         
-        if(dialog.type == DialogTypeChat) {
+        if(dialog.type == DialogTypeChat || dialog.type == DialogTypeChannel) {
             
-            NSMenuItem *deleteAndExitItem = [NSMenuItem menuItemWithTitle:chat.type == TLChatTypeNormal ? NSLocalizedString(@"Profile.DeleteAndExit", nil) : NSLocalizedString(@"Profile.DeleteConversation", nil)  withBlock:^(id sender) {
+            NSMenuItem *deleteAndExitItem = [NSMenuItem menuItemWithTitle:chat.type == TLChatTypeNormal ? (dialog.type != DialogTypeChannel ? NSLocalizedString(@"Profile.DeleteAndExit", nil) : (chat.isCreator ? NSLocalizedString(chat.isMegagroup ?@"Conversation.Confirm.DeleteGroup" : @"Profile.DeleteChannel", nil) : NSLocalizedString(chat.isMegagroup ? @"Conversation.Actions.LeaveGroup" : @"Profile.LeaveChannel", nil)) ) : NSLocalizedString(@"Profile.DeleteConversation", nil)  withBlock:^(id sender) {
                 [[Telegram rightViewController].messagesViewController deleteDialog:dialog];
             }];
             [menu addItem:deleteAndExitItem];
             
-            NSMenuItem *leaveFromGroupItem = [NSMenuItem menuItemWithTitle:!dialog.chat.left ? NSLocalizedString(@"Conversation.Actions.LeaveGroup", nil) : NSLocalizedString(@"Conversation.Actions.ReturnToGroup", nil) withBlock:^(id sender) {
-                [[Telegram rightViewController].messagesViewController leaveOrReturn:dialog];
-            }];
-            if(chat.type != TLChatTypeNormal)
-                leaveFromGroupItem.target = nil;
+            if(dialog.type == DialogTypeChat) {
+                NSMenuItem *leaveFromGroupItem = [NSMenuItem menuItemWithTitle:!dialog.chat.left ? NSLocalizedString(@"Conversation.Actions.LeaveGroup", nil) : NSLocalizedString(@"Conversation.Actions.ReturnToGroup", nil) withBlock:^(id sender) {
+                    [[Telegram rightViewController].messagesViewController leaveOrReturn:dialog];
+                }];
+                if(chat.type != TLChatTypeNormal)
+                    leaveFromGroupItem.target = nil;
+                
+                [menu addItem:leaveFromGroupItem];
+            }
             
-            [menu addItem:leaveFromGroupItem];
+            
         } else {
             NSMenuItem *deleteBroadcast = [NSMenuItem menuItemWithTitle: NSLocalizedString(@"Profile.DeleteBroadcast", nil) withBlock:^(id sender) {
                 [[Telegram rightViewController].messagesViewController deleteDialog:dialog];
@@ -561,8 +594,6 @@
     
     [NSMenu popUpContextMenu:menu withEvent:theEvent forView:view];
 }
-
-
 
 
 

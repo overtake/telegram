@@ -24,13 +24,7 @@
 
 - (NSString *) trim {
     
-    NSString *string = [self stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
-    
-    NSRange range = NSMakeRange(0, 1);
-    while(range.length != 0) {
-        range = [string rangeOfString:@"  "];
-        string = [string stringByReplacingOccurrencesOfString:@"  " withString:@" "];
-    }
+    NSString *string = self;
     
     string = [string stringByReplacingOccurrencesOfString:@" -- " withString:@" — "];
     string = [string stringByReplacingOccurrencesOfString:@"<<" withString:@"«"];
@@ -991,7 +985,9 @@
 
 //   'D83DDC4D': [27, ':like:'], 'D83DDC4E': [28, ':dislike:'], '261D': [29, ':up:'], '270C': [30, ':v:'], 'D83DDC4C': [31, ':ok:']
 
-
+-(NSString *)emojiString {
+    return [[self getEmojiFromString:YES] componentsJoinedByString:@""];
+}
 
 - (NSArray *)getEmojiFromString:(BOOL)checkColor {
     
@@ -1222,7 +1218,16 @@ static NSTextField *testTextField() {
         
         if(range.location != NSNotFound) {
             
-            if(range.location == 0 || [[self substringWithRange:NSMakeRange(range.location - 1, 1)] isEqualToString:@" "]) {
+            NSRange acceptRange = NSMakeRange(0, 0);
+            
+            if(range.location != 0) {
+                NSString *s = [self substringWithRange:NSMakeRange(range.location - 1, 1)];
+                
+                acceptRange = [s rangeOfCharacterFromSet:[NSCharacterSet letterCharacterSet] options:NSCaseInsensitiveSearch];
+            }
+            
+            
+            if(range.location == 0 || acceptRange.location == NSNotFound) {
                 result = YES;
                 *stop = YES;
             }

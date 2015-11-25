@@ -22,11 +22,11 @@
     self = [super initWithFrame:frame];
     if (self) {
         
-        self.smsCodeTextField = [[TMTextField alloc] initWithFrame:NSMakeRect(120, 20, self.bounds.size.width, 20)];
+        self.smsCodeTextField = [[TMTextField alloc] initWithFrame:NSMakeRect(120,  20, self.bounds.size.width, 20)];
         self.smsCodeTextField.drawsBackground = NO;
         self.smsCodeTextField.delegate = self;
         [self.smsCodeTextField setPlaceholderPoint:NSMakePoint(2, 1)];
-        self.smsCodeTextField.font = [NSFont fontWithName:@"Helvetica-Light" size:15];
+        self.smsCodeTextField.font = TGSystemLightFont(15);
         self.smsCodeTextField.focusRingType = NSFocusRingTypeNone;
         [self.smsCodeTextField setBordered:NO];
         [self addSubview:self.smsCodeTextField];
@@ -40,7 +40,7 @@
 //        [self.callTextField setEditable:NO];
 //        [self.callTextField setDrawsBackground:NO];
 //        [self.callTextField setTextColor:NSColorFromRGB(0xaeaeae)];
-//        [self.callTextField setFont:[NSFont fontWithName:@"HelveticaNeue" size:13]];
+//        [self.callTextField setFont:TGSystemFont(13)];
 //        [self addSubview:self.callTextField];
 //        
 //        [self.callTextField setHardXOffset:44];
@@ -139,7 +139,7 @@
     
     
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(duration * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        NSAttributedString *placeHolder = [[NSAttributedString alloc] initWithString:NSLocalizedString(@"Login.code",nil) attributes:@{NSFontAttributeName: [NSFont fontWithName:@"Helvetica-Light" size:15], NSForegroundColorAttributeName: NSColorFromRGB(0xaeaeae)}];
+        NSAttributedString *placeHolder = [[NSAttributedString alloc] initWithString:NSLocalizedString(@"Login.code",nil) attributes:@{NSFontAttributeName: TGSystemLightFont(15), NSForegroundColorAttributeName: NSColorFromRGB(0xaeaeae)}];
         [self.smsCodeTextField.cell setPlaceholderAttributedString:placeHolder];
 //        [self.smsCodeTextField setPlaceholderAttributedString:placeHolder];
         [self.smsCodeTextField.window makeFirstResponder:self.smsCodeTextField];

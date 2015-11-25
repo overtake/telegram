@@ -164,8 +164,8 @@
         [cancelButton setCursor:[NSCursor pointingHandCursor] forControlState:BTRControlStateHover];
         [sendButton setCursor:[NSCursor pointingHandCursor] forControlState:BTRControlStateHover];
         
-        [sendButton setTitleFont:[NSFont fontWithName:@"HelveticaNeue" size:13] forControlState:BTRControlStateNormal];
-        [cancelButton setTitleFont:[NSFont fontWithName:@"HelveticaNeue" size:13] forControlState:BTRControlStateNormal];
+        [sendButton setTitleFont:TGSystemFont(13) forControlState:BTRControlStateNormal];
+        [cancelButton setTitleFont:TGSystemFont(13) forControlState:BTRControlStateNormal];
         
         
         [cancelButton setTitleColor:BLUE_UI_COLOR forControlState:BTRControlStateNormal];

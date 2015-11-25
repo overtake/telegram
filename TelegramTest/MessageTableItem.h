@@ -10,11 +10,11 @@
 #import "SenderHeader.h"
 #import "DownloadItem.h"
 #import "TGReplyObject.h"
-#define FORWARMESSAGE_TITLE_HEIGHT 28
+#define FORWARMESSAGE_TITLE_HEIGHT 20
 
 @interface MessageTableItem : NSObject<SelectTextDelegate>
 
-@property (nonatomic,weak) TMTableView *table;
+@property (nonatomic,weak) MessagesTableView *table;
 
 @property (nonatomic, strong) TL_localMessage *message;
 
@@ -27,32 +27,37 @@
 @property (nonatomic, strong) NSString *dateStr;
 
 @property (nonatomic, strong) TLUser *fwd_user;
+@property (nonatomic, strong) TLChat *fwd_chat;
 
 @property (nonatomic) BOOL isForwadedMessage;
 @property (nonatomic) BOOL isSelected;
 @property (nonatomic) BOOL isHeaderMessage;
 @property (nonatomic) BOOL isHeaderForwardedMessage;
 
+@property (nonatomic,assign,readonly) int containerOffsetForward;
 @property (nonatomic,assign,readonly) int containerOffset;
 
+@property (nonatomic,assign,readonly) int makeSize;
 
 @property (nonatomic) NSSize blockSize;
 @property (nonatomic) NSSize previewSize;
 @property (nonatomic) NSSize dateSize;
 @property (nonatomic, strong) DownloadItem *downloadItem;
-@property (nonatomic,strong) DownloadEventListener *downloadListener;
 
 
 @property (nonatomic,assign,readonly) int blockWidth;
 
 
-@property (nonatomic,strong,readonly) TGReplyObject *replyObject;
 
+@property (nonatomic,strong) TGReplyObject *replyObject;
 
+@property (nonatomic,strong,readonly) NSString *viewsCount;
+
+-(BOOL)updateViews;
 
 - (id) initWithObject:(id)object;
 + (id) messageItemFromObject:(id)object;
-
++ (NSArray *)messageTableItemsFromMessages:(NSArray *)input;
 - (NSSize)viewSize;
 - (void)setViewSize:(NSSize)size;
 
@@ -78,6 +83,8 @@
 
 -(BOOL)isReplyMessage;
 -(BOOL)isFwdMessage;
+
+-(int)fontSize;
 
 
 @end

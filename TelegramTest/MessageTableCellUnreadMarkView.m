@@ -23,7 +23,7 @@
         [self.textField setEnabled:NO];
         [self.textField setEditable:NO];
         [self.textField setStringValue:@"2 unread messages"];
-        [self.textField setFont:[NSFont fontWithName:@"HelveticaNeue" size:13]];
+        [self.textField setFont:TGSystemFont(13)];
         [self.textField setTextColor:NSColorFromRGB(0x9b9b9b)];
         [self.textField setDrawsBackground:NO];
         [self.textField setAlignment:NSCenterTextAlignment];
@@ -38,6 +38,8 @@
     [super setItem:item];
     
     [self.textField setStringValue:item.text];
+    
+    [self.textField sizeToFit];
     
     
     if(item.removeType == RemoveUnreadMarkAfterSecondsType) {
@@ -54,7 +56,7 @@
 -(void)setFrameSize:(NSSize)newSize {
     [super setFrameSize:newSize];
     
-    [self.textField setFrameSize:NSMakeSize(newSize.width, 26)];
+    [self.textField setFrameOrigin:NSMakePoint(roundf((NSWidth(self.messagesViewController.view.frame) - NSWidth(_textField.frame))/2), roundf((self.item.viewSize.height - NSHeight(_textField.frame))/2))];
 }
 
 - (void)drawRect:(NSRect)dirtyRect {

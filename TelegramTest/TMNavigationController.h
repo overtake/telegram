@@ -24,6 +24,8 @@
 #import "TMNavigationBar.h"
 #import "ConnectionStatusViewControllerView.h"
 
+@class MessagesViewController;
+
 @protocol TMNavagationDelegate <NSObject>
 
 -(void)willChangedController:(TMViewController *)controller;
@@ -57,10 +59,22 @@ typedef enum {
 @property (nonatomic, readonly) BOOL isLocked;
 
 
+@property (nonatomic,weak) MessagesViewController *messagesViewController;
+
+-(void)gotoViewController:(TMViewController *)controller;
+-(void)gotoViewController:(TMViewController *)controller animated:(BOOL)animated;
+-(void)gotoViewController:(TMViewController *)controller back:(BOOL)back;
+-(void)gotoViewController:(TMViewController *)controller back:(BOOL)back animated:(BOOL)animated;
 
 -(void)addDelegate:(id<TMNavagationDelegate>)delegate;
 -(void)removeDelegate:(id<TMNavagationDelegate>)delegate;
 - (void)pushViewController:(TMViewController *)viewController animated:(BOOL)animated;
 - (void)goBackWithAnimation:(BOOL)animated;
 - (void)clear;
+
+-(void)gotoEmptyController;
+
+-(void)showInfoPage:(TL_conversation *)conversation;
+-(void)showMessagesViewController:(TL_conversation *)conversation;
+-(void)showMessagesViewController:(TL_conversation *)conversation withMessage:(TL_localMessage *)message;
 @end

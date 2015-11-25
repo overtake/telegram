@@ -62,24 +62,7 @@ static const NSMutableDictionary *cache;
 }
 
 -(void)didDeletedMessages:(NSNotification *)notification {
-    
-//    NSArray *ids = notification.userInfo[KEY_MESSAGE_ID_LIST];
-//    
-//    [ids enumerateObjectsUsingBlock:^(NSNumber *msg_id, NSUInteger idx, BOOL *stop) {
-//        
-//        TL_localMessage *msg = [[MessagesManager sharedManager] find:[msg_id intValue]];
-//        
-//        if([msg.media isKindOfClass:[TL_messageMediaPhoto class]] && !self.isFiles) {
-//            
-//            NSNumber *count = cache[[self primaryKey]][@(msg.peer_id)];
-//            
-//            if(count != nil) {
-//                cache[[self primaryKey]][@(msg.peer_id)] = @([count intValue] - 1);
-//            }
-//        }
-//        
-//    }];
-//    
+     
 }
 
 
@@ -145,7 +128,7 @@ static const NSMutableDictionary *cache;
     //self.count = [[Storage manager] countOfMedia:peer_id];
     
     
-    [RPCRequest sendRequest:[TLAPI_messages_search createWithPeer:input q:@"" filter:self.type == TMSharedMediaDocumentsType ? [TL_inputMessagesFilterDocument create] : self.type == TMSharedMediaPhotoVideoType ? [TL_inputMessagesFilterPhotoVideo create] : [TL_inputMessagesFilterUrl create] min_date:0 max_date:0 offset:0 max_id:0 limit:10000] successHandler:^(RPCRequest *request, TL_messages_messages *response) {
+    [RPCRequest sendRequest:[TLAPI_messages_search createWithFlags:0 peer:input q:@"" filter:self.type == TMSharedMediaDocumentsType ? [TL_inputMessagesFilterDocument create] : self.type == TMSharedMediaPhotoVideoType ? [TL_inputMessagesFilterPhotoVideo create] : [TL_inputMessagesFilterUrl create] min_date:0 max_date:0 offset:0 max_id:0 limit:10000] successHandler:^(RPCRequest *request, TL_messages_messages *response) {
         
         [self setLocked:NO];
         
@@ -177,7 +160,7 @@ static const NSMutableDictionary *cache;
     
     [string appendString:str withColor:NSColorFromRGB(0xa1a1a1)];
     
-    [string setFont:[NSFont fontWithName:@"HelveticaNeue-Light" size:15] forRange:string.range];
+    [string setFont:TGSystemLightFont(15) forRange:string.range];
     
     
     [self.field setAttributedStringValue:string];

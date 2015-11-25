@@ -59,7 +59,7 @@
         
         ((TLMessageMedia *)[(TL_localMessage *)self.object media]).document = document;
         
-        [[Storage manager] updateMessages:@[self.object]];
+        [(TL_localMessage *)self.object save:NO];
         
     }
     [super setDownloadState:downloadState];

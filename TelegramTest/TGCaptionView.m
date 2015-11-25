@@ -12,6 +12,22 @@
 
 @end
 
+
+
+
+
+@implementation TGCaptionTextView
+
+-(void)open_link:(NSString *)link itsReal:(BOOL)itsReal {
+    if(_item.message.peer_id < 0 && _item.message.fromUser.isBot && [link hasPrefix:TLBotCommandPrefix]) {
+        link = [NSString stringWithFormat:@"%@@%@",link,_item.message.fromUser.username];
+    }
+    
+    open_link(link);
+}
+
+@end
+
 @implementation TGCaptionView
 
 - (void)drawRect:(NSRect)dirtyRect {
@@ -21,7 +37,7 @@
 -(instancetype)initWithFrame:(NSRect)frameRect {
     if(self = [super initWithFrame:frameRect]) {
         
-        _textView = [[TGCTextView alloc] initWithFrame:NSZeroRect];
+        _textView = [[TGCaptionTextView alloc] initWithFrame:NSZeroRect];
         [_textView setFrameOrigin:NSMakePoint(0, 0)];
         [_textView setEditable:YES];
         [self addSubview:_textView];
@@ -36,6 +52,11 @@
     [_textView setFrameSize:size];
     [_textView setAttributedString:string];
     
+}
+
+-(void)setItem:(MessageTableItem *)item {
+    _item = item;
+    _textView.item = item;
 }
 
 @end

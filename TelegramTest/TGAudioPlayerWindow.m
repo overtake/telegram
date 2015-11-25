@@ -60,10 +60,7 @@
 
 
 
-typedef enum {
-    TGAudioPlayerWindowStateMini,
-    TGAudioPlayerWindowStatePlayList
-} TGAudioPlayerWindowState;
+
 
 @interface TGAudioPlayerWindow ()<TGAudioPlayerDelegate>
 {
@@ -103,7 +100,11 @@ typedef enum {
 @property (nonatomic,assign) TGAudioPlayerWindowState windowState;
 
 
+@property (nonatomic,strong) DownloadEventListener *downloadEventListener;
+
 @property (nonatomic,strong) NSMutableArray *eventListeners;
+
+@property (nonatomic,assign) BOOL autoStart;
 
 @end
 
@@ -444,9 +445,15 @@ typedef enum {
     [self playAnimationForName];
 }
 
++(void)show:(TL_conversation *)conversation playerState:(TGAudioPlayerWindowState)state {
+    [self instance].windowState = state;
+    [self show:conversation];
+    [self instance].autoStart = NO;
+}
+
 +(void)show:(TL_conversation *)conversation {
     [[self instance] show:conversation];
-    
+    [self instance].autoStart = YES;
     [[self instance] makeKeyAndOrderFront:nil];
     
 }
@@ -519,6 +526,8 @@ typedef enum {
 -(void)orderOut:(id)sender {
     [super orderOut:sender];
     _isVisibility = NO;
+    [self.currentItem.downloadItem removeEvent:_downloadEventListener];
+    _downloadEventListener = nil;
     [self clear];
 }
 
@@ -626,6 +635,10 @@ typedef enum {
         [[self instance] play:[self instance].currentTime];
 }
 
++(BOOL)autoStart {
+    return [self instance].autoStart;
+}
+
 
 +(void)addEventListener:(id<TGAudioPlayerWindowDelegate>)delegate {
     [[self instance] addEventListener:delegate];
@@ -668,7 +681,7 @@ typedef enum {
 
 -(void)setCurrentItem:(MessageTableItemAudioDocument *)audioItem {
     
-    [_currentItem.downloadItem removeEvent:audioItem.secondDownloadListener];
+    [_currentItem.downloadItem removeEvent:_downloadEventListener];
     
     if(_currentItem == audioItem)
     {
@@ -676,7 +689,7 @@ typedef enum {
         return;
     }
     
-    [_currentItem.downloadItem removeEvent:_currentItem.secondDownloadListener];
+    [_currentItem.downloadItem removeEvent:_downloadEventListener];
     
     _currentItem = audioItem;
 
@@ -688,6 +701,7 @@ typedef enum {
     
     
     if([_currentItem isset]) {
+        [_progressView setDisableChanges:NO];
         [self play:self.currentTime];
     } else {
         [_currentItem startDownload:NO force:YES];
@@ -706,15 +720,25 @@ typedef enum {
     
     if(_currentItem.downloadItem) {
         
+        [_progressView setDisableChanges:YES];
+        
         weak();
        
         [self.progressView setDownloadProgress:_currentItem.downloadItem.progress];
         
-        [_currentItem.downloadItem addEvent:_currentItem.secondDownloadListener];
         
-        [_currentItem.secondDownloadListener setCompleteHandler:^(DownloadItem * item) {
+        [_currentItem.downloadItem removeEvent:_downloadEventListener];
+        
+        _downloadEventListener = [[DownloadEventListener alloc] init];
+        
+        [_currentItem.downloadItem addEvent:_downloadEventListener];
+        
+        
+        [_downloadEventListener setCompleteHandler:^(DownloadItem * item) {
             
             [[ASQueue mainQueue] dispatchOnQueue:^{
+                
+                [weakSelf.progressView setDisableChanges:NO];
                 
                 [weakSelf.progressView setDownloadProgress:0];
                 
@@ -728,7 +752,7 @@ typedef enum {
             
         }];
         
-        [_currentItem.secondDownloadListener setProgressHandler:^(DownloadItem * item) {
+        [_downloadEventListener setProgressHandler:^(DownloadItem * item) {
             
             [ASQueue dispatchOnMainQueue:^{
                 
@@ -737,6 +761,8 @@ typedef enum {
             }];
         }];
         
+    } else {
+        [_progressView setDisableChanges:NO];
     }
 }
 

@@ -38,7 +38,9 @@
     return 0;
 }
 
-
+-(NSString *)path_with_cache {
+    return [NSString stringWithFormat:@"%@/%ld.doc",[FileUtils path],self.n_id];
+}
 
 -(TLDocumentAttribute *)attributeWithClass:(Class)className {
     

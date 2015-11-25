@@ -54,7 +54,7 @@
         
         [self.capTextField setStringValue:text];
         
-        [self.capTextField setFont:[NSFont fontWithName:@"HelveticaNeue" size:14]];
+        [self.capTextField setFont:TGSystemFont(14)];
         [self.capTextField setTextColor:GRAY_TEXT_COLOR];
         
         [self.capTextField sizeToFit];
@@ -73,12 +73,12 @@
 
 -(void)setProgress:(BOOL)progress {
     _progress = progress;
-    [_progressIndicator setHidden:!progress];
+    [_progressIndicator setHidden:YES];
     
-    if(progress)
-        [_progressIndicator startAnimation:self];
-    else
-        [_progressIndicator stopAnimation:self];
+//    if(progress)
+//        [_progressIndicator startAnimation:self];
+//    else
+//        [_progressIndicator stopAnimation:self];
     
     [_capImageView setHidden:progress];
     [_capTextField setHidden:progress];

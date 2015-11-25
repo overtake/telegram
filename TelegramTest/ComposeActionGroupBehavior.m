@@ -17,7 +17,7 @@
 @implementation ComposeActionGroupBehavior
 
 -(NSUInteger)limit {
-    return maxChatUsers();
+    return maxChatUsers()-1;
 }
 
 -(NSString *)doneTitle {
@@ -34,7 +34,7 @@
         
         NSRange range = [attr appendString:[NSString stringWithFormat:@" - %lu/%lu",self.action.result.multiObjects.count,[self limit]] withColor:DARK_GRAY];
         
-        [attr setFont:[NSFont fontWithName:@"HelveticaNeue" size:12] forRange:range];
+        [attr setFont:TGSystemFont(12) forRange:range];
         
 
         
@@ -51,8 +51,12 @@
 -(void)composeDidDone {
     if([self.action.currentViewController isKindOfClass:[ComposePickerViewController class]]) {
         
-        [[Telegram rightViewController] showComposeCreateChat:self.action];
+        ComposeChatCreateViewController *viewController = [[ComposeChatCreateViewController alloc] initWithFrame:NSZeroRect];
         
+        [viewController setAction:self.action];
+        
+        [self.action.currentViewController.navigationViewController pushViewController:viewController animated:YES];
+                
     } else {
         
         [self.delegate behaviorDidStartRequest];
@@ -68,9 +72,9 @@
     
 
     NSMutableArray *array = [[NSMutableArray alloc] init];
-    for(SelectUserItem* item in selected) {
-        if(item.user.type != TLUserTypeSelf) {
-            [array addObject:[item.user inputUser]];
+    for(TLUser* item in selected) {
+        if(item.type != TLUserTypeSelf) {
+            [array addObject:[item inputUser]];
         }
         
     }
@@ -83,9 +87,7 @@
             [[FullChatManager sharedManager] performLoad:msg.conversation.chat.n_id callback:^(TLChatFull *fullChat) {
                 [self.delegate behaviorDidEndRequest:response];
                 
-                [[Telegram rightViewController] clearStack];
-                
-                [[Telegram sharedInstance] showMessagesFromDialog:msg.conversation sender:self];
+                [self.action.currentViewController.navigationViewController showMessagesViewController:msg.conversation];
             }];
         }
         

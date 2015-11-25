@@ -47,7 +47,7 @@
     
     self->_messagesCount = messagesCount;
     if(messagesCount) {
-        self.messagesCountAttributedString = [[NSAttributedString alloc] initWithString:[NSString stringWithFormat:NSLocalizedString(messagesCount == 1 ? @"Messages.scrollToBottomNewMessage" : @"Messages.scrollToBottomNewMessages", nil), messagesCount] attributes:@{NSFontAttributeName: [NSFont fontWithName:@"HelveticaNeue" size:14], NSForegroundColorAttributeName: BLUE_UI_COLOR}];
+        self.messagesCountAttributedString = [[NSAttributedString alloc] initWithString:[NSString stringWithFormat:NSLocalizedString(messagesCount == 1 ? @"Messages.scrollToBottomNewMessage" : @"Messages.scrollToBottomNewMessages", nil), messagesCount] attributes:@{NSFontAttributeName: TGSystemFont(14), NSForegroundColorAttributeName: BLUE_UI_COLOR}];
     } else {
         self.messagesCountAttributedString = nil;
     }

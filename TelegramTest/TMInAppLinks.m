@@ -8,11 +8,16 @@
 
 #import "TMInAppLinks.h"
 #import "Telegram.h"
-
+#import "TLPeer+Extensions.h"
+#import "TGHeadChatPanel.h"
 @implementation TMInAppLinks
 
 + (NSString *) userProfile:(int)user_id {
     return [NSString stringWithFormat:@"USER_PROFILE:%d", user_id];
+}
+
++ (NSString *)peerProfile:(TLPeer*)peer {
+    return [NSString stringWithFormat:@"openWithPeer:%@:%d",peer.className,peer.peer_id];
 }
 
 + (void) parseUrlAndDo:(NSString *)url {
@@ -22,7 +27,11 @@
         if([action isEqualToString:@"USER_PROFILE"]) {
             int user_id = [[params objectAtIndex:1] intValue];
             
-            [[Telegram sharedInstance] showUserInfoWithUserId:user_id conversation:[[[UsersManager sharedManager] find:user_id] dialog] sender:self];
+            TL_conversation *conversation = [[[UsersManager sharedManager] find:user_id] dialog];
+            
+            [appWindow().navigationController showInfoPage:conversation];
+            
+            
             return;
         }
     }

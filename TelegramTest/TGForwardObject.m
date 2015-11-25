@@ -27,17 +27,24 @@
         
         [messages enumerateObjectsUsingBlock:^(TL_localMessage  *obj, NSUInteger idx, BOOL *stop) {
             
-            if([exception indexOfObject:obj.fromUser] == NSNotFound) {
-                [firstNames addObject:obj.fromUser.first_name];
-                [exception addObject:obj.fromUser];
+            if(obj.from_id != 0) {
+                if([exception indexOfObject:obj.fromUser] == NSNotFound) {
+                    [firstNames addObject:obj.fromUser.first_name];
+                    [exception addObject:obj.fromUser];
+                }
+            } else {
+                [firstNames addObject:obj.chat.title];
+                *stop = YES;
             }
             
         }];
         
         
+        
+        
         [n appendString:[firstNames componentsJoinedByString:@", "] withColor:LINK_COLOR];
         
-        [n setFont:[NSFont fontWithName:@"HelveticaNeue-Medium" size:13] forRange:n.range];
+        [n setFont:TGSystemMediumFont(13) forRange:n.range];
         
         _names = n;
         
@@ -47,7 +54,7 @@
         
         [d appendString:[NSString stringWithFormat:NSLocalizedString(messages.count == 1 ? @"Forward.Message" : @"Forward.Messages", nil), messages.count] withColor:GRAY_TEXT_COLOR];
         
-        [d setFont:[NSFont fontWithName:@"HelveticaNeue" size:13] forRange:d.range];
+        [d setFont:TGSystemFont(13) forRange:d.range];
         
         _fwd_desc = d;
         

@@ -12,6 +12,40 @@
 #import "ImageUtils.h"
 #import "TGDateUtils.h"
 #import "NSAttributedString+Hyperlink.h"
+#import "TGImageObject.h"
+#import "TMImageUtils.h"
+
+
+@interface TGImageGroupPhotoObject : TGImageObject
+
+@end
+
+@implementation TGImageGroupPhotoObject
+
+
+-(void)_didDownloadImage:(DownloadItem *)item {
+    __block NSImage *imageOrigin = [[NSImage alloc] initWithData:item.result];
+    
+    NSImage *image = renderedImage(imageOrigin, imageOrigin.size.width == 0 || imageOrigin.size.height ? self.imageSize : imageOrigin.size);
+    
+    [TGCache cacheImage:image forKey:self.location.cacheKey groups:@[IMGCACHE]];
+    
+    image = [TMImageUtils roundedImageNew:image size:self.imageSize];
+    
+    [TGCache cacheImage:image forKey:[self cacheKey] groups:@[IMGCACHE]];
+    
+    [ASQueue dispatchOnMainQueue:^{
+        [self.delegate didDownloadImage:image object:self];
+    }];
+}
+
+-(NSString *)cacheKey {
+    return [NSString stringWithFormat:@"group:%lu:%@",self.location.hashCacheKey,NSStringFromSize(self.imageSize)];
+}
+
+@end
+
+
 @implementation MessageTableItemServiceMessage
 
 - (id) initWithDate:(int)date {
@@ -22,7 +56,7 @@
         self.viewSize = NSMakeSize(0, 10);
         
         NSDictionary *attributes = @{
-                                     NSFontAttributeName: [NSFont fontWithName:@"HelveticaNeue" size:13],
+                                     NSFontAttributeName: TGSystemFont(13),
                                      NSForegroundColorAttributeName: NSColorFromRGB(0xbbbbbb)
                                      };
         
@@ -46,7 +80,6 @@
         self.messageAttributedString = [[MessagesUtils serviceAttributedMessage:object forAction:object.action] mutableCopy];
         
         
-        [self.messageAttributedString detectAndAddLinks:URLFindTypeAll];
         self.type = MessageTableItemServiceMessageAction;
         
         if([object.action isKindOfClass:[TL_messageActionBotDescription class]]) {
@@ -76,15 +109,14 @@
                 
                 TLPhotoSize *photoSize = ((TLPhotoSize *)[self.photo.sizes objectAtIndex:MIN(2, self.photo.sizes.count) - 1]);
                 self.photoLocation = photoSize.location;
-                self.photoSize = strongsizeWithMinMax(NSMakeSize(photoSize.w, photoSize.h), 40, 250);
             }
             
-            self.imageObject = [[TGImageObject alloc] initWithLocation:self.photoLocation placeHolder:self.cachePhoto];
+            self.imageObject = [[TGImageGroupPhotoObject alloc] initWithLocation:self.photoLocation placeHolder:self.cachePhoto];
             
             self.imageObject.imageSize = self.photoSize;
         }
-        
-        [self.messageAttributedString detectAndAddLinks:URLFindTypeLinks | URLFindTypeMentions | URLFindTypeHashtags | (object.conversation.user.isBot || object.conversation.type == DialogTypeChat ? URLFindTypeBotCommands : 0)];
+        if([self.message.action isKindOfClass:[TL_messageActionBotDescription class]])
+            [self.messageAttributedString detectAndAddLinks:URLFindTypeAll];
     }
     return self;
 }
@@ -99,7 +131,7 @@
     
     size.width = width;
     size.height += 10;
-    size.height += self.photoSize.height ? self.photoSize.height + 10 : 0;
+    size.height += self.photoSize.height ? self.photoSize.height  : 0;
     self.blockSize = size;
     
     return YES;

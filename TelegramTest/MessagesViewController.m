@@ -42,7 +42,7 @@
 #import "EncryptedKeyWindow.h"
 
 #import "ChatHistoryController.h"
-#import "OnlineNotificationManager.h"
+#import "ChannelHistoryController.h"
 
 #import "TMBottomScrollView.h"
 #import "ReadHistroryTask.h"
@@ -52,6 +52,7 @@
 #import "DocumentHistoryFilter.h"
 #import "VideoHistoryFilter.h"
 #import "AudioHistoryFilter.h"
+#import "ChannelFilter.h"
 #import "NoMessagesView.h"
 #import "TMAudioRecorder.h"
 #import "MessagesTopInfoView.h"
@@ -71,6 +72,13 @@
 #import "TGHelpPopup.h"
 #import "TGAudioPlayerWindow.h"
 #import "MessagesUtils.h"
+#import "ChannelImportantFilter.h"
+#import "TGModalDeleteChannelMessagesView.h"
+#import "ComposeActionDeleteChannelMessagesBehavior.h"
+
+#import "TGModernUserViewController.h"
+#import "TGModernChatInfoViewController.h"
+#import "TGModernChannelInfoViewController.h"
 #define HEADER_MESSAGES_GROUPING_TIME (10 * 60)
 
 #define SCROLLDOWNBUTTON_OFFSET 1500
@@ -98,7 +106,7 @@
 
 @end
 
-@interface MessagesViewController () <SettingsListener> {
+@interface MessagesViewController () <SettingsListener,TMNavagationDelegate> {
     __block SMDelayedBlockHandle _delayedBlockHandle;
 }
 
@@ -111,7 +119,7 @@
 @property (nonatomic, strong) SelfDestructionController *destructionController;
 @property (nonatomic, strong) RPCRequest *typingRequest;
 
-@property (nonatomic,assign) int jumpMessageId;
+@property (nonatomic,strong) TL_localMessage *jumpMessage;
 //Bottom
 @property (nonatomic, strong) MessageTypingView *typingView;
 
@@ -122,8 +130,6 @@
 
 @property (nonatomic, strong) NoMessagesView *noMessagesView;
 @property (nonatomic, strong) TMBottomScrollView *jumpToBottomButton;
-
-@property (nonatomic, strong) TelegramPopover *popover;
 
 @property (nonatomic, assign) BOOL isMarkIsset;
 
@@ -167,6 +173,8 @@
 
 @property (nonatomic, strong) TL_conversation *conversation;
 
+@property (nonatomic, strong) TGMessagesHintView *hintView;
+
 @property (nonatomic,assign) BOOL needNextRequest;
 
 @end
@@ -201,24 +209,26 @@
     return self.noMessagesView;
 }
 
-- (void)jumpToLastMessages {
+- (void)jumpToLastMessages:(BOOL)force {
     
     BOOL animated = YES;
     
     
-    if(self.replyMsgsStack.count > 0)
-    {
-        int msg_id = [[self.replyMsgsStack lastObject] intValue];
-        
-        [self.replyMsgsStack removeObject:[self.replyMsgsStack lastObject]];
-        
-        [self showMessage:msg_id fromMsgId:0 animated:YES selectText:nil];
-        return;
+    if(!force) {
+        if(self.replyMsgsStack.count > 0)
+        {
+            TL_localMessage *msg = [self.replyMsgsStack lastObject];
+            
+            [self.replyMsgsStack removeObject:[self.replyMsgsStack lastObject]];
+            
+            [self showMessage:msg fromMsg:nil animated:YES selectText:nil switchDiscussion:NO flags:ShowMessageTypeReply];
+            return;
+        }
     }
     
-    if(_historyController.prevState != ChatHistoryStateFull) {
-        
-        
+    
+    
+    if(_historyController.prevState != ChatHistoryStateFull || force) {
         
         [self flushMessages];
         
@@ -228,7 +238,7 @@
                 
         self.historyController = nil;
         
-        self.historyController = [[ChatHistoryController alloc] initWithController:self];
+        self.historyController = [[[self hControllerClass] alloc] initWithController:self historyFilter:self.defHFClass];
         animated = NO;
         
         
@@ -236,6 +246,14 @@
     }
     
     [self.table.scrollView scrollToPoint:NSMakePoint(0, 0) animation:animated];
+}
+
+-(Class)hControllerClass {
+    return self.conversation.type == DialogTypeChannel ? [ChannelHistoryController class] : [ChatHistoryController class];
+}
+
+-(Class)defHFClass {
+    return self.conversation.type == DialogTypeChannel ? (self.conversation.chat.isMegagroup || self.conversation.chat.type == TLChatTypeForbidden ? [ChannelFilter class] : [ChannelImportantFilter class]) : [HistoryFilter class];
 }
 
 
@@ -265,6 +283,11 @@
     [Notification addObserver:self selector:@selector(messageTableItemsWebPageUpdate:) name:UPDATE_WEB_PAGE_ITEMS];
     [Notification addObserver:self selector:@selector(messageTableItemsReadContents:) name:UPDATE_READ_CONTENTS];
     [Notification addObserver:self selector:@selector(messageTableItemsEntitiesUpdate:) name:UPDATE_MESSAGE_ENTITIES];
+    [Notification addObserver:self selector:@selector(messageTableItemsHoleUpdate:) name:UPDATE_MESSAGE_GROUP_HOLE];
+    
+    [Notification addObserver:self selector:@selector(didChangeDeleteDialog:) name:DIALOG_DELETE];
+    
+    [Notification addObserver:self selector:@selector(updateMessageViews:) name:UPDATE_MESSAGE_VIEWS];
     
     [self.view setAutoresizesSubviews:YES];
     [self.view setAutoresizingMask:NSViewHeightSizable | NSViewWidthSizable];
@@ -273,18 +296,17 @@
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(windowBecomeNotification:) name:NSWindowDidResignKeyNotification object:self.view.window];
     
-    [Notification addObserver:self selector:@selector(changeDialogSelectionNotification:) name:@"ChangeDialogSelection"];
     [Notification addObserver:self selector:@selector(updateChat:) name:CHAT_UPDATE_TYPE];
     
     self.messages = [[NSMutableArray alloc] init];
     self.selectedMessages = [[NSMutableArray alloc] init];
     
-    __block MessagesViewController *strongSelf = self;
+    weak();
     
     //Navigation
     self.normalNavigationRightView = [TMTextButton standartMessageNavigationButtonWithTitle:NSLocalizedString(@"Profile.Edit", nil)];
     [self.normalNavigationRightView setTapBlock:^{
-        [strongSelf setCellsEditButtonShow:YES animated:YES];
+        [weakSelf setCellsEditButtonShow:YES animated:YES];
     }];
     [self.normalNavigationRightView setDisableColor:NSColorFromRGB(0xa0a0a0)];
     
@@ -293,7 +315,7 @@
     
     self.filtredNavigationCenterView = [TMTextButton standartUserProfileButtonWithTitle:@"nil"];
     
-    [self.filtredNavigationCenterView setFont:[NSFont fontWithName:@"HelveticaNeue" size:14]];
+    [self.filtredNavigationCenterView setFont:TGSystemFont(14)];
     [self.filtredNavigationCenterView setAlignment:NSCenterTextAlignment];
     
     [self.filtredNavigationCenterView setTextColor:BLUE_UI_COLOR];
@@ -301,49 +323,20 @@
     [self.filtredNavigationCenterView setFrameOrigin:NSMakePoint(0, -13)];
     
     
-    [self.filtredNavigationCenterView setTapBlock:^ {
-        NSMenu *menu = [strongSelf filterMenu];
-        
-        [menu popUpForView:strongSelf.filtredNavigationCenterView center:YES];
-        
-    }];
-    
-    
-    [self.filtredNavigationCenterView setStringValue:NSLocalizedString(@"Shared Media", nil)];
     
     
     self.filtredNavigationLeftView = [TMTextButton standartMessageNavigationButtonWithTitle:NSLocalizedString(@"Profile.Cancel", nil)];
     
     
-    [self.filtredNavigationLeftView setTapBlock:^{
-        [strongSelf setHistoryFilter:[HistoryFilter class] force:NO];
+    [self.filtredNavigationLeftView setTapBlock:^{ 
+        [weakSelf setHistoryFilter:[weakSelf defHFClass] force:NO];
     }];
     
     self.normalNavigationCenterView = [[MessageTableNavigationTitleView alloc] initWithFrame:NSZeroRect];
-    
+    [self.normalNavigationCenterView setController:self];
     
     [self.normalNavigationCenterView setTapBlock:^{
-        switch (strongSelf.conversation.type) {
-            case DialogTypeChat:
-              //  if(strongSelf.conversation.chat.type == TLChatTypeNormal && !strongSelf.conversation.chat.left)
-                    [[Telegram rightViewController] showChatInfoPage:strongSelf.conversation.chat];
-                break;
-                
-            case DialogTypeSecretChat:
-                [[Telegram sharedInstance] showUserInfoWithUserId:strongSelf.conversation.encryptedChat.peerUser.n_id conversation:strongSelf.conversation sender:strongSelf];
-                break;
-                
-            case DialogTypeUser: {
-                [[Telegram sharedInstance] showUserInfoWithUserId:strongSelf.conversation.user.n_id conversation:strongSelf.conversation sender:strongSelf];
-                break;
-            }
-                
-            case DialogTypeBroadcast:
-                 [[Telegram rightViewController] showBroadcastInfoPage:strongSelf.conversation.broadcast];
-                
-            default:
-                break;
-        }
+        [weakSelf.navigationViewController showInfoPage:weakSelf.conversation];
     }];
     self.centerNavigationBarView = self.normalNavigationCenterView;
     
@@ -352,13 +345,13 @@
     self.editableNavigationLeftView = [TMTextButton standartMessageNavigationButtonWithTitle:NSLocalizedString(@"Profile.DeleteAll", nil)];
     
     [self.editableNavigationLeftView setTapBlock:^{
-          [strongSelf clearHistory:strongSelf.conversation];
+          [weakSelf clearHistory:weakSelf.conversation];
     }];
     
     
     self.editableNavigationRightView = [TMTextButton standartMessageNavigationButtonWithTitle:NSLocalizedString(@"Profile.Done", nil)];
     [self.editableNavigationRightView setTapBlock:^{
-        [strongSelf unSelectAll];
+        [weakSelf unSelectAll];
     }];
     
     
@@ -394,7 +387,7 @@
     [self.jumpToBottomButton setAutoresizingMask:NSViewMinXMargin];
     [self.jumpToBottomButton setHidden:YES];
     [self.jumpToBottomButton setCallback:^{
-        [strongSelf jumpToLastMessages];
+        [weakSelf jumpToLastMessages:NO];
     }];
     [self.view addSubview:self.jumpToBottomButton];
     
@@ -419,30 +412,53 @@
     self.searchItems = [[NSMutableArray alloc] init];
     
     
-   [self.historyController drop:NO];
-    
-    self.historyController = nil;
-    
-    self.historyController = [[ChatHistoryController alloc] initWithController:self];
     
     [self.searchMessagesView setHidden:YES];
     
     
     self.stickerPanel = [[StickersPanelView alloc] initWithFrame:NSMakeRect(0, NSHeight(self.bottomView.frame), NSWidth(self.view.frame), 76)];
-    
+    self.stickerPanel.messagesViewController = self;
     
     [self.view addSubview:self.stickerPanel];
     
     [self.stickerPanel hide:NO];
 
     
+    
+    
+    self.hintView = [[TGMessagesHintView alloc] initWithFrame:NSMakeRect(0, NSHeight(self.bottomView.frame), NSWidth(self.view.frame), 100)];
+    
+     [self.hintView setHidden:YES];
+    
+    [self.view addSubview:self.hintView];
+    
 }
 
+-(void)didChangeDeleteDialog:(NSNotification *)notification {
+    TL_conversation *conversation = notification.userInfo[KEY_DIALOG];
+    
+    if(conversation.peer_id == _conversation.peer_id) {
+        [self.navigationViewController goBackWithAnimation:YES];
+    }
+    
+}
+
+-(void)_didStackRemoved {
+    
+    self.conversation = nil;
+    [self.historyController stopChannelPolling];
+    [self flushMessages];
+    
+   
+    
+}
 
 
 -(void)messageTableItemUpdate:(NSNotification *)notification {
     
     MessageTableItem *item = notification.userInfo[@"item"];
+    
+    [item makeSizeByWidth:item.makeSize];
     
     NSUInteger index = [self indexOfObject:item];
     
@@ -454,52 +470,113 @@
 
 -(void)messageTableItemsReadContents:(NSNotification *)notification  {
     NSArray *messages = notification.userInfo[KEY_MESSAGE_ID_LIST];
-    
-    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"self.message.n_id IN (%@)", messages];
-    
-    NSArray *items = [[HistoryFilter messageItems:self.conversation.peer_id] filteredArrayUsingPredicate:predicate];
-    
-    [items enumerateObjectsUsingBlock:^(MessageTableItemText *obj, NSUInteger idx, BOOL *stop) {
         
-        NSUInteger index = [self indexOfObject:obj];
+    [self.historyController items:messages complete:^(NSArray *items) {
         
-        if(index != NSNotFound) {            
-            [self.table reloadDataForRowIndexes:[NSIndexSet indexSetWithIndex:index] columnIndexes:[NSIndexSet indexSetWithIndex:0]];
-        }
+        [items enumerateObjectsUsingBlock:^(MessageTableItemText *obj, NSUInteger idx, BOOL *stop) {
+            
+            NSUInteger index = [self indexOfObject:obj];
+            
+            if(index != NSNotFound) {
+                [self.table reloadDataForRowIndexes:[NSIndexSet indexSetWithIndex:index] columnIndexes:[NSIndexSet indexSetWithIndex:0]];
+            }
+            
+        }];
         
     }];
     
 }
 
 
-
 -(void)messageTableItemsWebPageUpdate:(NSNotification *)notification {
     
-    NSArray *messages = notification.userInfo[KEY_MESSAGE_ID_LIST];
+    NSArray *messages = notification.userInfo[KEY_DATA][@(self.conversation.peer_id)];
     
+    TLWebPage *webpage = notification.userInfo[KEY_WEBPAGE];
     
-    NSArray *items = [HistoryFilter items:messages];
-    
-    [items enumerateObjectsUsingBlock:^(MessageTableItemText *obj, NSUInteger idx, BOOL *stop) {
-       
-        NSUInteger index = [self indexOfObject:obj];
-        
-        
 
-        [obj updateWebPage];
-        
-        obj.isHeaderMessage = obj.isHeaderMessage || obj.webpage != nil;
-        
-        if(index != NSNotFound) {
-            [self.table noteHeightOfRowsWithIndexesChanged:[NSIndexSet indexSetWithIndex:index]];
+    [self.historyController items:messages complete:^(NSArray *items) {
+        [items enumerateObjectsUsingBlock:^(MessageTableItemText *obj, NSUInteger idx, BOOL *stop) {
             
-            [self.table reloadDataForRowIndexes:[NSIndexSet indexSetWithIndex:index] columnIndexes:[NSIndexSet indexSetWithIndex:0]];
-        }
-        
+            NSUInteger index = [self indexOfObject:obj];
+            
+            obj.message.media.webpage = webpage;
+            
+            [obj updateWebPage];
+            
+            obj.isHeaderMessage = obj.isHeaderMessage || obj.webpage != nil;
+            
+            if(index != NSNotFound) {
+                [self.table noteHeightOfRowsWithIndexesChanged:[NSIndexSet indexSetWithIndex:index]];
+                
+                [self.table reloadDataForRowIndexes:[NSIndexSet indexSetWithIndex:index] columnIndexes:[NSIndexSet indexSetWithIndex:0]];
+            }
+            
+        }];
     }];
     
     
+}
+
+-(void)updateMessageViews:(NSNotification *)notification {
     
+    
+    if(self.conversation.peer_id == [notification.userInfo[KEY_PEER_ID] intValue]) {
+        [self.historyController items:notification.userInfo[KEY_MESSAGE_ID_LIST] complete:^(NSArray *items) {
+            NSDictionary *data = notification.userInfo[KEY_DATA];
+            
+            [items enumerateObjectsUsingBlock:^(MessageTableItemText *item, NSUInteger idx, BOOL *stop) {
+                NSUInteger index = [self indexOfObject:item];
+                
+                item.message.views = [data[@(item.message.n_id)] intValue];
+                
+                BOOL upd = [item updateViews];
+                
+                if(upd && index != NSNotFound) {
+                    [self.table reloadDataForRowIndexes:[NSIndexSet indexSetWithIndex:index] columnIndexes:[NSIndexSet indexSetWithIndex:0]];
+                }
+            }];
+            
+        }];
+    }
+    
+}
+
+-(void)messageTableItemsHoleUpdate:(NSNotification *)notification {
+    
+    
+    if(self.historyController.filter.class == [ChannelImportantFilter class]) {
+        TGMessageGroupHole *hole = notification.userInfo[KEY_GROUP_HOLE];
+        
+        if(hole.peer_id == self.conversation.peer_id) {
+            [self.historyController items:@[@(hole.uniqueId)] complete:^(NSArray *items) {
+                MessageTableItemHole *item;
+                
+                if(items.count == 1) {
+                    item = [items firstObject];
+                    
+                    if(hole.messagesCount != 0) {
+                        NSUInteger index = [self indexOfObject:item];
+                        
+                        [item updateWithHole:hole];
+                        
+                        if(index != NSNotFound) {
+                            [self.table reloadDataForRowIndexes:[NSIndexSet indexSetWithIndex:index] columnIndexes:[NSIndexSet indexSetWithIndex:0]];
+                        }
+                    } else {
+                        [Notification perform:MESSAGE_DELETE_EVENT data:@{KEY_DATA:@[@{KEY_PEER_ID:@(hole.peer_id),KEY_MESSAGE_ID:@(hole.uniqueId)}]}];
+                    }
+                    
+                    
+                    
+                } else {
+                    
+                    [Notification perform:MESSAGE_RECEIVE_EVENT data:@{KEY_MESSAGE:[TL_localMessageService createWithHole:hole]}];
+                }
+            }];
+        }
+    }
+
 }
 
 -(void)messageTableItemsEntitiesUpdate:(NSNotification *)notification {
@@ -507,19 +584,23 @@
     TL_localMessage *message = notification.userInfo[KEY_MESSAGE];
     
     
-    NSArray *items = [HistoryFilter items:@[@(message.n_id)]];
+    if(message.peer_id == self.conversation.peer_id) {
+        [self.historyController items:@[@(message.n_id)] complete:^(NSArray *items){
+            [items enumerateObjectsUsingBlock:^(MessageTableItemText *obj, NSUInteger idx, BOOL *stop) {
+                
+                NSUInteger index = [self indexOfObject:obj];
+                
+                [obj updateEntities];
+                
+                if(index != NSNotFound) {
+                    [self.table reloadDataForRowIndexes:[NSIndexSet indexSetWithIndex:index] columnIndexes:[NSIndexSet indexSetWithIndex:0]];
+                }
+                
+            }];
+        }];
+    }
     
-    [items enumerateObjectsUsingBlock:^(MessageTableItemText *obj, NSUInteger idx, BOOL *stop) {
-        
-        NSUInteger index = [self indexOfObject:obj];
-        
-        [obj updateEntities];
-        
-        if(index != NSNotFound) {
-            [self.table reloadDataForRowIndexes:[NSIndexSet indexSetWithIndex:index] columnIndexes:[NSIndexSet indexSetWithIndex:0]];
-        }
-        
-    }];
+    
 }
 
 
@@ -531,45 +612,9 @@
     }
     
     
-    
-    __block int currentId = 0;
-    
-    
-    dispatch_block_t clearItems = ^ {
-        [self.searchItems enumerateObjectsUsingBlock:^(SearchSelectItem *obj, NSUInteger idx, BOOL *stop) {
-            
-            [obj clear];
-            
-            [self.table reloadDataForRowIndexes:[NSIndexSet indexSetWithIndex:[self.messages indexOfObject:obj.item]] columnIndexes:[NSIndexSet indexSetWithIndex:0]];
-            
-        }];
+    [self.searchMessagesView showSearchBox:^(TL_localMessage *msg, NSString *searchString) {
         
-        
-        [self.searchItems removeAllObjects];
-        currentId = -1;
-    };
-    
-    dispatch_block_t next = ^ {
-        if(self.searchItems.count > 0) {
-            
-            SearchSelectItem *searchItem = self.searchItems[currentId];
-            
-            [self.table clearSelection];
-            
-            NSUInteger row = [self.messages indexOfObject:searchItem.item];
-            
-            NSRect rowRect = [self.table rectOfRow:row];
-            
-            [self.table.scrollView scrollToPoint:rowRect.origin animation:NO];
-            
-            [self scrollToRect:rowRect isCenter:YES animated:NO];
-            
-        }
-    };
-    
-    [self.searchMessagesView showSearchBox:^(int msg_id, NSString *searchString) {
-        
-        [self showMessage:msg_id fromMsgId:0 animated:NO selectText:searchString];
+        [self showMessage:msg fromMsg:nil animated:NO selectText:searchString switchDiscussion:NO flags:ShowMessageTypeReply];
         
     } closeCallback:^{
          [self hideSearchBox:YES];
@@ -601,88 +646,14 @@
     return !self.searchMessagesView.isHidden;
 }
 
-/*
- [self.searchMessagesView showSearchBox:^(NSString *search) {
- 
- clearItems();
- 
- [self.messages enumerateObjectsWithOptions:NSEnumerationReverse usingBlock:^(MessageTableItem *obj, NSUInteger idx, BOOL *stop) {
- 
- if([obj isKindOfClass:[MessageTableItemText class]]) {
- 
- SearchSelectItem *searchItem = [[SearchSelectItem alloc] init];
- 
- searchItem.item = obj;
- 
- 
- NSRange range = [obj.message.message rangeOfString:search options:NSCaseInsensitiveSearch];
- while(range.location != NSNotFound)
- {
- TGCTextMark *mark = [[TGCTextMark alloc] initWithRange:range color:NSColorFromRGBWithAlpha(0xe5bf29, 0.3) isReal:NO];
- 
- [searchItem.marks addObject:mark];
- 
- ((MessageTableItemText *)obj).mark = searchItem;
- 
- [self.searchItems addObject:searchItem];
- 
- [self.table reloadDataForRowIndexes:[NSIndexSet indexSetWithIndex:idx] columnIndexes:[NSIndexSet indexSetWithIndex:0]];
- 
- 
- range = [obj.message.message  rangeOfString:search options:NSCaseInsensitiveSearch range:NSMakeRange(range.location + 1, [obj.message.message length] - range.location - 1)];
- }
- 
- }
- 
- }];
- 
- if(self.searchItems.count > 0) {
- currentId++;
- next();
- }
- 
- 
- 
- } next:^ {
- 
- currentId++;
- 
- if(currentId >= self.searchItems.count)
- currentId = 0;
- 
- next();
- 
- 
- 
- } prevCallback:^{
- 
- currentId--;
- 
- if(currentId < 0)
- currentId = (int) self.searchItems.count - 1;
- 
- next();
- 
- 
- 
- 
- } closeCallback:^{
- 
- [self hideSearchBox:YES];
- 
- }];
- */
 
 -(void)hideSearchBox:(BOOL)animated {
-    
-    
-    
     
     if(self.searchMessagesView.isHidden)
         return;
     
-    if(self.historyController.prevState != ChatHistoryStateFull)
-        [self jumpToLastMessages];
+    if(self.historyController != nil && self.historyController.prevState != ChatHistoryStateFull)
+        [self jumpToLastMessages:YES];
     
     [self.searchItems enumerateObjectsUsingBlock:^(SearchSelectItem *obj, NSUInteger idx, BOOL *stop) {
         
@@ -720,13 +691,17 @@
         [self.searchMessagesView setNeedsDisplay:YES];
         [self.searchMessagesView setHidden:YES];
     }
+    
 }
 
 
 - (void)setCellsEditButtonShow:(BOOL)show animated:(BOOL)animated {
     
-    if(self.bottomView.stateBottom == MessagesBottomViewNormalState || self.bottomView.stateBottom == MessagesBottomViewActionsState)
-    {
+    if(![self acceptState: show ? MessagesViewControllerStateEditable : MessagesViewControllerStateNone])
+        return;
+    
+   // if(self.bottomView.stateBottom == MessagesBottomViewNormalState || self.bottomView.stateBottom == MessagesBottomViewActionsState)
+  //  {
         [self setState: show ? MessagesViewControllerStateEditable : MessagesViewControllerStateNone animated:animated];
         for(int i = 0; i < self.messages.count; i++) {
             MessageTableCellContainerView *cell = (MessageTableCellContainerView *)[self cellForRow:i];
@@ -734,15 +709,13 @@
                 [cell setEditable:show animation:animated];
             }
         }
-    }
+  //  }
     
     
     
 }
 
--(void)_didStackRemoved {
-    [self flushMessages];
-}
+
 
 
 -(NSAttributedString *)stringForSharedMedia:(NSString *)mediaString {
@@ -750,7 +723,7 @@
     
     [string appendString:mediaString withColor:BLUE_UI_COLOR];
     
-    [string setFont:[NSFont fontWithName:@"HelveticaNeue" size:14] forRange:NSMakeRange(0, string.length)];
+    [string setFont:TGSystemFont(14) forRange:NSMakeRange(0, string.length)];
     
     [string appendAttributedString:[NSAttributedString attributedStringWithAttachment:headerMediaIcon()]];
     
@@ -793,7 +766,7 @@ static NSTextAttachment *headerMediaIcon() {
             
             if(nState != self.bottomView.stateBottom) {
                 [self.bottomView setStateBottom:nState];
-                [self.bottomView setSectedMessagesCount:self.selectedMessages.count];
+                [self.bottomView setSectedMessagesCount:self.selectedMessages.count enable:[self canDeleteMessages]];
             }
             
             
@@ -807,8 +780,11 @@ static NSTextAttachment *headerMediaIcon() {
         [CATransaction begin];
         [CATransaction setDisableActions:YES];
         [self.noMessagesView setHidden:!show];
+        
         [self.table.containerView setHidden:show];
         [CATransaction commit];
+        
+        [self updateLoading];
     }];
 }
 
@@ -825,6 +801,9 @@ static NSTextAttachment *headerMediaIcon() {
 -(void)showBotStartButton:(NSString *)startParam bot:(TLUser *)bot {
     [self.bottomView setStateBottom:MessagesBottomViewBlockChat];
     self.bottomView.botStartParam = startParam;
+    
+    
+    
     weak();
     [self.bottomView setOnClickToLockedView:^{
        
@@ -832,7 +811,7 @@ static NSTextAttachment *headerMediaIcon() {
         
         [ASQueue dispatchOnStageQueue:^{
             
-            StartBotSenderItem *sender = [[StartBotSenderItem alloc] initWithMessage:conversation.type == DialogTypeChat ? [NSString stringWithFormat:@"/start@%@",bot.username] : @"/start" forConversation:conversation bot:bot startParam:startParam];
+            StartBotSenderItem *sender = [[StartBotSenderItem alloc] initWithMessage:conversation.type == DialogTypeChat || conversation.type == DialogTypeChannel ? [NSString stringWithFormat:@"/start@%@",bot.username] : @"/start" forConversation:conversation bot:bot startParam:startParam];
             sender.tableItem = [[weakSelf messageTableItemsFromMessages:@[sender.message]] lastObject];
             [weakSelf.historyController addItem:sender.tableItem conversation:conversation callback:nil sentControllerCallback:nil];
             
@@ -847,13 +826,13 @@ static NSTextAttachment *headerMediaIcon() {
     
         
     }];
+    
+    
+    if(startParam.length > 0 && ![[startParam lowercaseString] isEqualToString:@"start"]) {
+        self.bottomView.onClickToLockedView();
+    }
 }
 
-
-- (void)changeDialogSelectionNotification:(NSNotification *)notify {
-    if([[notify.userInfo objectForKey:KEY_DIALOG] class] == [NSNull class])
-        self.conversation = nil;
-}
 
 - (void)updateChat:(NSNotification *)notify {
     TLChat *chat = [notify.userInfo objectForKey:KEY_CHAT];
@@ -865,18 +844,21 @@ static NSTextAttachment *headerMediaIcon() {
 
 - (void)setState:(MessagesViewControllerState)state {
     [self setState:state animated:NO];
+    
+}
+
+-(BOOL)acceptState:(MessagesViewControllerState)state {
+    return self.conversation.canEditConversation || state == MessagesViewControllerStateNone;
 }
 
 - (void)setState:(MessagesViewControllerState)state animated:(BOOL)animated {
+    
     self->_state = state;
     
     id rightView, leftView, centerView;
     
     centerView = self.normalNavigationCenterView;
     
-    if(state == MessagesViewControllerStateNone && self.historyController.filter.class != HistoryFilter.class) {
-        state = MessagesViewControllerStateFiltred;
-    }
     
     if(state == MessagesViewControllerStateNone) {
         rightView = self.normalNavigationRightView;
@@ -894,9 +876,12 @@ static NSTextAttachment *headerMediaIcon() {
         
     } else {
         rightView = self.editableNavigationRightView;
-        leftView = self.editableNavigationLeftView;
+        leftView = self.conversation.type == DialogTypeChannel ? [self standartLeftBarView]  : self.editableNavigationLeftView;
         [self.bottomView setState:MessagesBottomViewActionsState animated:animated];
     }
+    
+    if(!self.conversation.canEditConversation)
+        rightView = nil;
     
     if(self.rightNavigationBarView != rightView)
         [self setRightNavigationBarView:rightView animated:YES];
@@ -907,6 +892,7 @@ static NSTextAttachment *headerMediaIcon() {
     if(self.centerNavigationBarView != centerView) {
         [self setCenterNavigationBarView:centerView];
     }
+    
 }
 
 - (void)rightButtonAction {
@@ -916,43 +902,11 @@ static NSTextAttachment *headerMediaIcon() {
     
     [[[Telegram sharedInstance] firstController] closeAllPopovers];
     
-    
-    if(self.conversation.type == DialogTypeChat) {
-        if(self.conversation.chat.type == TLChatTypeNormal && !self.conversation.chat.left)
-            [[Telegram rightViewController] showChatInfoPage:self.conversation.chat];
-    } else if(self.conversation.type == DialogTypeSecretChat) {
-        TLUser *user = self.conversation.encryptedChat.peerUser;
-        [[Telegram sharedInstance] showUserInfoWithUserId:user.n_id conversation:self.conversation sender:self];
-    } else {
-        TLUser *user = self.conversation.user;
-        [[Telegram sharedInstance] showUserInfoWithUserId:user.n_id conversation:self.conversation sender:self];
-    }
+    [self.navigationViewController showInfoPage:self.conversation];
 }
 
 
--(NSMenu *)filterMenu {
-    NSMenu *filterMenu = [[NSMenu alloc] init];
-    
-    
-    [filterMenu addItem:[NSMenuItem menuItemWithTitle:NSLocalizedString(@"Conversation.Filter.Photos",nil) withBlock:^(id sender) {
-        [[Telegram rightViewController] showCollectionPage:self.conversation];
-    }]];
-    
-    [filterMenu addItem:[NSMenuItem menuItemWithTitle:NSLocalizedString(@"Conversation.Filter.Video",nil) withBlock:^(id sender) {
-        [self setHistoryFilter:[VideoHistoryFilter class] force:NO];
-    }]];
-    
-    
-    [filterMenu addItem:[NSMenuItem menuItemWithTitle:NSLocalizedString(@"Conversation.Filter.Files",nil) withBlock:^(id sender) {
-        [self setHistoryFilter:[DocumentHistoryFilter class] force:NO];
-    }]];
-    
-    [filterMenu addItem:[NSMenuItem menuItemWithTitle:NSLocalizedString(@"Conversation.Filter.Audio",nil) withBlock:^(id sender) {
-        [self setHistoryFilter:[AudioHistoryFilter class] force:NO];
-    }]];
-    
-    return filterMenu;
-}
+
 
 +(NSMenu *)destructMenu:(dispatch_block_t)ttlCallback click:(dispatch_block_t)click {
     NSMenu *submenu = [[NSMenu alloc] init];
@@ -1140,12 +1094,15 @@ static NSTextAttachment *headerMediaIcon() {
     
     assert([NSThread isMainThread]);
     
+    if(self.conversation.type == DialogTypeChannel)
+        filter = self.historyController.filter.class;
+    
     if(self.historyController.filter.class != filter || force) {
         self.ignoredCount = 0;
-        self.historyController.filter = [[filter alloc] initWithController:self.historyController];
         [self flushMessages];
+        _historyController = [[self.historyController.class alloc] initWithController:self historyFilter:filter];
         [self loadhistory:0 toEnd:YES prev:NO isFirst:YES];
-        self.state = filter != HistoryFilter.class ? MessagesViewControllerStateFiltred : MessagesViewControllerStateNone;
+        self.state = MessagesViewControllerStateNone;
     }
 }
 
@@ -1162,11 +1119,16 @@ static NSTextAttachment *headerMediaIcon() {
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     
+    if(self.conversation.type == DialogTypeChannel) {
+        [[FullChatManager sharedManager] performLoad:self.conversation.chat.n_id force:YES callback:nil];
+    }
+    
+//
     [self.table reloadData];
     
     [self setState:self.state];
     if(self.state == MessagesViewControllerStateEditable)
-        [self.bottomView setSectedMessagesCount:self.selectedMessages.count];
+        [self.bottomView setSectedMessagesCount:self.selectedMessages.count enable:[self canDeleteMessages]];
     
     #ifdef __MAC_10_10
     
@@ -1197,38 +1159,53 @@ static NSTextAttachment *headerMediaIcon() {
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
     
+    
     [Notification perform:@"ChangeDialogSelection" data:@{}];
     
    [self.table.scrollView setHasVerticalScroller:NO];
+    
+    if(![globalAudioPlayer().delegate isKindOfClass:[TGAudioPlayerWindow class]]) {
+        [globalAudioPlayer() stop];
+    }
+    
 }
 
 -(void)viewDidDisappear:(BOOL)animated {
     
     
-    
     if(NSClassFromString(@"NSUserActivity")) {
         [self.activity invalidate];
     }
+    
 }
 
 
-- (void)scrollDidStart {
-    for(int i = 0; i < self.messages.count; i++) {
-        MessageTableCellGifView *view = [self.table viewAtColumn:0 row:i makeIfNecessary:NO];
-        if(view && [view isKindOfClass:[MessageTableCellGifView class]]) {
-            [view pauseAnimation];
-        }
-    }
+
+- (void)scrollDidChange {
+    
+//    int bp = 0;
+//    
+//    [self.messages enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+//        
+//        MessageTableCellGifView *view = [self.table viewAtColumn:0 row:idx makeIfNecessary:NO];
+//        
+//        if(view && [view isKindOfClass:[MessageTableCellGifView class]]) {
+//            NSRange visibleRange = [_table rowsInRect:_table.visibleRect];
+//            
+//            if(idx < visibleRange.location || idx > visibleRange.location + visibleRange.length) {
+//                [view pauseAnimation];
+//            } else {
+//                [view resumeAnimation];
+//            }
+//        }
+//        
+//       
+//        
+//    }];
+    
 }
 
-- (void)scrollDidEnd {
-    for(int i = 0; i < self.messages.count; i++) {
-        MessageTableCellGifView *view = [self.table viewAtColumn:0 row:i makeIfNecessary:NO];
-        if(view && [view isKindOfClass:[MessageTableCellGifView class]]) {
-            [view resumeAnimation];
-        }
-    }
-}
+
 
 - (void)setStringValueToTextField:(NSString *)stringValue {
     if(stringValue)
@@ -1268,12 +1245,13 @@ static NSTextAttachment *headerMediaIcon() {
         [[self.noMessagesView animator] setFrame:newFrame];
         
         [[self.stickerPanel animator] setFrameOrigin:NSMakePoint(NSMinX(self.stickerPanel.frame), height)];
-        
+        [[self.hintView animator] setFrameOrigin:NSMakePoint(NSMinX(self.hintView.frame), height)];
     } else {
         [self.table.scrollView setFrame:newFrame];
         [self.noMessagesView setFrame:newFrame];
         
         [self.stickerPanel setFrameOrigin:NSMakePoint(NSMinX(self.stickerPanel.frame), height)];
+        [self.hintView setFrameOrigin:NSMakePoint(NSMinX(self.hintView.frame), height)];
     }
     
     
@@ -1333,6 +1311,45 @@ static NSTextAttachment *headerMediaIcon() {
     
 }
 
+-(void)showOrHideChannelDiscussion {
+    
+    
+    [self.replyMsgsStack removeAllObjects];
+    
+    if(self.table.scrollView.documentOffset.y > 0) {
+        NSRange range = [self.table rowsInRect:[self.table visibleRect]];
+        __block MessageTableItem *item;
+        
+        [self.messages enumerateObjectsAtIndexes:[NSIndexSet indexSetWithIndexesInRange:range] options:NSEnumerationReverse usingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+            
+            if(![obj isKindOfClass:[MessageTableItemHole class]] && idx >= 2) {
+                item = obj;
+                *stop = YES;
+            }
+            
+            
+        }];
+        
+        
+        if(item) {
+            [self showMessage:item.message fromMsg:nil flags:0];
+            return;
+        } 
+
+    }
+    
+    
+    Class f = !self.normalNavigationCenterView.discussIsEnabled ? [ChannelImportantFilter class] : [ChannelFilter class];
+    
+    [self.historyController setFilter:[[f alloc] initWithController:self.historyController peer:_conversation.peer]];
+    
+    [self flushMessages];
+    [self loadhistory:0 toEnd:YES prev:NO isFirst:YES];
+
+    
+    
+}
+
 //- (void)showConnectionController:(BOOL)animated {
 //    
 //    [self hideTopInfoView:NO];
@@ -1387,6 +1404,9 @@ static NSTextAttachment *headerMediaIcon() {
 //    
 //}
 
+- (void)showForwardMessagesModalView {
+    [[Telegram rightViewController] showForwardMessagesModalView:self.conversation messagesCount:self.selectedMessages.count];
+}
 
 
 - (void)jumpToBottomButtonDisplay {
@@ -1403,7 +1423,7 @@ static NSTextAttachment *headerMediaIcon() {
     
     
     
-    if(fabsf(_lastBottomScrollOffset - offset) < 100 || [self.table.scrollView isAnimating])
+    if([self.table.scrollView isAnimating])
         return;
     
     _lastBottomScrollOffset = offset;
@@ -1421,9 +1441,7 @@ static NSTextAttachment *headerMediaIcon() {
         hide = self.jumpToBottomButton.messagesCount == 0;
     }
 //    
-//    if(hide) {
-//        hide = self.historyController.prevState == ChatHistoryStateFull;
-//    }
+//
     
     if(hide)
     {
@@ -1431,24 +1449,40 @@ static NSTextAttachment *headerMediaIcon() {
         
         if(!hide)
         {
-            MessageTableItem *item = [self itemOfMsgId:[[_replyMsgsStack lastObject] intValue]];
+            MessageTableItem *item = [self itemOfMsgId:[[_replyMsgsStack lastObject] channelMsgId]];
             
-            NSRect rowRect = [self.table rectOfRow:[self indexOfObject:item]];
-            
-            hide = CGRectContainsRect([self.table visibleRect], rowRect) || self.table.scrollView.documentOffset.y < rowRect.origin.y;
-            
-            
-            if(hide) {
-                [_replyMsgsStack removeLastObject];
+            if(item) {
+                NSRect rowRect = [self.table rectOfRow:[self indexOfObject:item]];
+                
+                hide = CGRectContainsRect([self.table visibleRect], rowRect) || self.table.scrollView.documentOffset.y < rowRect.origin.y;
+                
+                
+                if(hide) {
+                    [_replyMsgsStack removeLastObject];
+                }
             }
+            
+           
             
         }
     }
     
-    
-    if(self.jumpToBottomButton.isHidden != hide) {
-        [self.jumpToBottomButton setHidden:hide];
-        [self jumpToBottomButtonDisplay];
+    if(hide) {
+        [self.historyController prevStateAsync:^(ChatHistoryState state) {
+            
+            BOOL h = hide || state == ChatHistoryStateFull;
+            
+            if(self.jumpToBottomButton.isHidden != h) {
+                [self.jumpToBottomButton setHidden:h];
+                [self jumpToBottomButtonDisplay];
+            }
+            
+        }];
+    } else {
+        if(self.jumpToBottomButton.isHidden != hide) {
+            [self.jumpToBottomButton setHidden:hide];
+            [self jumpToBottomButtonDisplay];
+        }
     }
     
 }
@@ -1456,11 +1490,13 @@ static NSTextAttachment *headerMediaIcon() {
 - (void)scrollViewDocumentOffsetChangingNotificationHandler:(NSNotification *)aNotification {
     [self updateScrollBtn];
     
-    if([self.table.scrollView isNeedUpdateTop] && self.historyController.prevState != ChatHistoryStateFull) {
+    [self scrollDidChange];
+    
+    if([self.table.scrollView isNeedUpdateTop] && [self.historyController filterWithNext:NO].prevState != ChatHistoryStateFull) {
         
         [self loadhistory:0 toEnd:NO prev:YES isFirst:NO];
         
-    } else if([self.table.scrollView isNeedUpdateBottom] && self.historyController.nextState != ChatHistoryStateFull) {
+    } else if([self.table.scrollView isNeedUpdateBottom] && [self.historyController filterWithNext:YES].nextState != ChatHistoryStateFull) {
         
         [self loadhistory:0 toEnd:NO prev:NO isFirst:NO];
     }
@@ -1475,12 +1511,12 @@ static NSTextAttachment *headerMediaIcon() {
 - (void) drop {
     self.conversation = nil;
     // [self.historyController setDialog:nil];
-    [ChatHistoryController drop];
     [self.historyController drop:YES];
     self.historyController = nil;
     [self.messages removeAllObjects];
     [self.table deselectRow:self.table.selectedRow];
     [self.table reloadData];
+    [Notification removeObserver:self];
 }
 
 -(void)dialogDeleteNotification:(NSNotification *)notify {
@@ -1556,17 +1592,20 @@ static NSTextAttachment *headerMediaIcon() {
     
     NSArray *readed = [notify.userInfo objectForKey:KEY_MESSAGE_ID_LIST];
     
-    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"self.message.n_id IN %@", readed];
+    [ASQueue dispatchOnMainQueue:^{
+        [self.historyController items:readed complete:^(NSArray * filtred) {
+            for (MessageTableItem *item in filtred) {
+                item.message.flags&= ~TGUNREADMESSAGE;
+                
+                NSUInteger idx = [self indexOfObject:item];
+                
+                if(idx != NSNotFound) {
+                    [self.table reloadDataForRowIndexes:[NSIndexSet indexSetWithIndex:idx] columnIndexes:[NSIndexSet indexSetWithIndex:0]];
+                }
+            }
+        }];
+    }]; 
     
-    NSArray *filtred = [self.messages filteredArrayUsingPredicate:predicate];
-    
-    for (MessageTableItem *msg in filtred) {
-        msg.message.flags&= ~TGUNREADMESSAGE;
-        MessageTableCellContainerView *view = (MessageTableCellContainerView *)[self cellForRow:[self.messages indexOfObject:msg]];
-        if([view isKindOfClass:[MessageTableCellContainerView class]]) {
-            [view checkActionState:YES];
-        }
-    }
 }
 
 - (MessageTableCell *)cellForRow:(NSInteger)row {
@@ -1575,6 +1614,7 @@ static NSTextAttachment *headerMediaIcon() {
 
 
 - (void)receivedMessage:(MessageTableItem *)message position:(int)position itsSelf:(BOOL)force  {
+    
     
     NSArray *items;
     
@@ -1619,6 +1659,16 @@ static NSTextAttachment *headerMediaIcon() {
     [CATransaction commit];
 }
 
+
+-(void)forceAddUnreadMark {
+    if(!_unreadMark)
+    {
+        _unreadMark = [[MessageTableItemUnreadMark alloc] initWithCount:0 type:RemoveUnreadMarkAfterSecondsType];
+    }
+    
+    [self messagesLoadedTryToInsert:@[_unreadMark] pos:0 next:NO];
+}
+
 - (void)insertAndGoToEnd:(NSRange)range forceEnd:(BOOL)forceEnd items:(NSArray *)items {
     
     
@@ -1659,16 +1709,14 @@ static NSTextAttachment *headerMediaIcon() {
     
     if(isScrollToEnd || forceEnd) {
         if(_historyController.prevState != ChatHistoryStateFull) {
-            [self jumpToLastMessages];
+            [self jumpToLastMessages:YES];
             return;
         } else {
              [self.table.scrollView scrollToEndWithAnimation:YES];
         }
     }
 
-    
-    
-    MessageTypingView *typingCell = [self.table viewAtColumn:0 row:0 makeIfNecessary:NO];
+     MessageTypingView *typingCell = [self.table viewAtColumn:0 row:0 makeIfNecessary:NO];
     
     if([typingCell isKindOfClass:[MessageTypingView class]]) {
         
@@ -1680,9 +1728,6 @@ static NSTextAttachment *headerMediaIcon() {
         }
     }
    
-   
-    
-    
     __block BOOL addAnimation = YES;
     
      NSRange visibleRange = [self.table rowsInRect:self.table.visibleRect];
@@ -1793,6 +1838,8 @@ static NSTextAttachment *headerMediaIcon() {
 
 - (void)receivedMessageList:(NSArray *)list inRange:(NSRange)range itsSelf:(BOOL)force {
     
+    
+    
     NSArray *items;
     
     NSRange r = [self insertMessageTableItemsToList:list startPosition:range.location needCheckLastMessage:YES backItems:&items checkActive:!force];
@@ -1805,52 +1852,120 @@ static NSTextAttachment *headerMediaIcon() {
 }
 
 - (void) deleteSelectedMessages {
-    NSMutableArray *array = [[NSMutableArray alloc] init];
-    NSMutableArray *random = [[NSMutableArray alloc] init];
-    for(MessageTableItem *item in self.selectedMessages) {
-        if(item.message.n_id && item.message.dstate == DeliveryStateNormal) {
-            [array addObject:@(item.message.n_id)];
+    
+    if(![self canDeleteMessages])
+        return;
+    
+    NSMutableDictionary *peers = [NSMutableDictionary dictionary];
+    
+    [self.selectedMessages enumerateObjectsUsingBlock:^(MessageTableItem *item, NSUInteger idx, BOOL * _Nonnull stop) {
+        
+        NSMutableDictionary *data = peers[@(item.message.peer_id)];
+        
+        if(!data) {
+            data = [NSMutableDictionary dictionary];
+            peers[@(item.message.peer_id)] = data;
+            data[@"conversation"] = item.message.conversation;
+            data[@"ids"] = [NSMutableArray array];
+            data[@"messages"] = [NSMutableArray array];
         }
         
-        if([item.message isKindOfClass:[TL_destructMessage class]]) {
-            [random addObject:@(item.message.randomId)];
-        }
-    }
-    
-    
-    id request = [TLAPI_messages_deleteMessages createWithN_id:array];
-    
-    
-    dispatch_block_t completeBlock = ^ {
-        [[Storage manager] deleteMessages:array completeHandler:nil];
-        [Notification perform:MESSAGE_DELETE_EVENT data:@{KEY_MESSAGE_ID_LIST:array}];
-        [self unSelectAll];
-    };
-    
-    if(self.conversation.type == DialogTypeSecretChat) {
-        
-        if(!self.conversation.canSendMessage)
-        {
-            completeBlock();
-            return;
+        if(item.message.dstate == DeliveryStateNormal) {
+            
+            if([item.message isChannelMessage])
+                [data[@"ids"] addObject:@(item.message.channelMsgId)];
+            else if([item.message isKindOfClass:[TL_destructMessage class]])
+                [data[@"ids"] addObject:@(item.message.randomId)];
+            else
+                [data[@"ids"] addObject:@(item.message.n_id)];
+            
+            [data[@"messages"] addObject:item];
+            
         }
         
         
-        DeleteRandomMessagesSenderItem *sender = [[DeleteRandomMessagesSenderItem alloc] initWithConversation:self.conversation random_ids:random];
+    }];
+    
+    
+    
+    [peers enumerateKeysAndObjectsUsingBlock:^(id  _Nonnull key, NSDictionary  *obj, BOOL * _Nonnull stop) {
         
-        [sender send];
+        TL_conversation *conversation = obj[@"conversation"];
+        NSMutableArray *array = obj[@"ids"];
+        NSMutableArray *messages = obj[@"messages"];
         
-        completeBlock();
+        id request = [TLAPI_messages_deleteMessages createWithN_id:array];
         
-    } else {
-        [RPCRequest sendRequest:request successHandler:^(RPCRequest *request, id response) {
+        if(conversation.type == DialogTypeChannel) {
+            
+            
+            request = [TLAPI_channels_deleteMessages createWithChannel:[TL_inputChannel createWithChannel_id:conversation.peer.channel_id access_hash:conversation.chat.access_hash] n_id:array];
+            
+            if(array.count > 0 && ![[(MessageTableItem *)messages[0] message] n_out] && [[(MessageTableItem *)messages[0] message] from_id] != 0) {
+                TGModalDeleteChannelMessagesView *modalDeleteView = [[TGModalDeleteChannelMessagesView alloc] initWithFrame:[[[NSApp delegate] mainWindow].contentView bounds]];
+                
+                ComposeAction *action = [[ComposeAction alloc] initWithBehaviorClass:[ComposeActionDeleteChannelMessagesBehavior class] filter:@[] object:conversation.chat reservedObjects:@[array]];
+                
+                action.result = [[ComposeResult alloc] initWithMultiObjects:@[@(YES),@(YES),@(NO),@(NO)]];
+                
+                
+                action.result.singleObject = [[(MessageTableItem *)messages[0] message] fromUser];
+                
+                [modalDeleteView showWithAction:action];
+                
+                return;
+                
+            }
+            
+            
+        }
+        
+        dispatch_block_t completeBlock = ^ {
+            
+            if(conversation.type != DialogTypeChannel) {
+                [[DialogsManager sharedManager] deleteMessagesWithMessageIds:array];
+            }
+            
+        };
+        
+        if(conversation.type == DialogTypeSecretChat) {
+            
+            if(!conversation.canSendMessage)
+            {
+                completeBlock();
+                return;
+            }
+            
+            
+            DeleteRandomMessagesSenderItem *sender = [[DeleteRandomMessagesSenderItem alloc] initWithConversation:self.conversation random_ids:array];
+            
+            [sender send];
+            
+            [[DialogsManager sharedManager] deleteMessagesWithRandomMessageIds:array isChannelMessages:NO];
             
             completeBlock();
             
-        } errorHandler:^(RPCRequest *request, RpcError *error) {
-            completeBlock();
-        }];
-    }
+        } else {
+            [RPCRequest sendRequest:request successHandler:^(RPCRequest *request, id response) {
+                
+                if(conversation.type == DialogTypeChannel)
+                {
+                    [[MTNetwork instance].updateService.proccessor addUpdate:[TL_updateDeleteChannelMessages createWithChannel_id:conversation.peer.channel_id messages:array pts:[response pts] pts_count:[response pts_count]]];
+                }
+                
+                completeBlock();
+                
+                
+                
+            } errorHandler:^(RPCRequest *request, RpcError *error) {
+                completeBlock();
+            }];
+        }
+        
+    }];
+    
+    
+    [self unSelectAll];
     
 }
 
@@ -1868,24 +1983,30 @@ static NSTextAttachment *headerMediaIcon() {
     
 }
 
-- (void)deleteMessages:(NSArray *)ids {
+- (void)deleteItems:(NSArray *)items orMessageIds:(NSArray *)ids {
     
   //  [self.table beginUpdates];
     
     if(self.messages.count > 0) {
         NSUInteger count = self.selectedMessages.count;
         
-        for (NSNumber *msg_id in ids) {
-            MessageTableItem *message = [self findMessageItemById:[msg_id intValue]];
+        for (MessageTableItem *item in items) {
             
-            if(message != nil) {
-                NSUInteger row = [self.messages indexOfObject:message];
+            NSUInteger row = [self.messages indexOfObject:item];
+           
+            if(row != NSNotFound) {
                 [self.messages removeObjectAtIndex:row];
-                [self.selectedMessages removeObject:message];
+                [self.selectedMessages removeObject:item];
                 
                 [self.table removeRowsAtIndexes:[NSIndexSet indexSetWithIndex:row] withAnimation:NSTableViewAnimationEffectFade];
-                [message clean];
+                [item clean];
             }
+            
+        }
+        
+        if(_unreadMark && [self indexOfObject:_unreadMark] == 1) {
+            [self.messages removeObjectAtIndex:1];
+            [self.table removeRowsAtIndexes:[NSIndexSet indexSetWithIndex:1] withAnimation:NSTableViewAnimationEffectFade];
         }
 
         
@@ -1908,7 +2029,7 @@ static NSTextAttachment *headerMediaIcon() {
         
         if(count != self.selectedMessages.count) {
             if(self.selectedMessages.count)
-                [self.bottomView setSectedMessagesCount:self.selectedMessages.count];
+                [self.bottomView setSectedMessagesCount:self.selectedMessages.count enable:[self canDeleteMessages]];
             else
                 [self.bottomView setStateBottom:MessagesBottomViewNormalState];
         }
@@ -1918,8 +2039,37 @@ static NSTextAttachment *headerMediaIcon() {
     
 }
 
-- (MessageTableItem *) findMessageItemById:(int)msgId {
-    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"self.message.n_id == %d", msgId];
+-(BOOL)canDeleteMessages {
+    
+    NSMutableArray *msgs = [[NSMutableArray alloc] init];
+    
+    [self.selectedMessages enumerateObjectsUsingBlock:^(MessageTableItem *obj, NSUInteger idx, BOOL *stop) {
+        [msgs addObject:obj.message];
+    }];
+    
+    return [MessagesViewController canDeleteMessages:msgs inConversation:self.conversation];
+}
+
++(BOOL)canDeleteMessages:(NSArray *)messages inConversation:(TL_conversation *)conversation {
+    
+    __block BOOL accept = YES;
+    
+    [messages enumerateObjectsUsingBlock:^(TL_localMessage *obj, NSUInteger idx, BOOL *stop) {
+        
+        accept =obj.conversation.type == DialogTypeChannel ? ( obj.chat.isCreator || (obj.chat.isEditor && (obj.from_id != 0 || obj.n_out)) || (obj.chat.isModerator && obj.from_id != 0) || obj.n_out) : YES;
+        
+        if(!accept) {
+            *stop = YES;
+        }
+        
+    }];
+    
+    return accept;
+    
+}
+
+- (MessageTableItem *) findMessageItemById:(long)msgId {
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"self.message.channelMsgId == %ld", msgId];
     
     NSArray *filtred = [self.messages filteredArrayUsingPredicate:predicate];
     
@@ -1945,7 +2095,7 @@ static NSTextAttachment *headerMediaIcon() {
         [self.selectedMessages removeObject:item];
     }
     
-    [self.bottomView setSectedMessagesCount:self.selectedMessages.count];
+    [self.bottomView setSectedMessagesCount:self.selectedMessages.count enable:[self canDeleteMessages]];
 }
 
 -(void)unSelectAll {
@@ -2014,93 +2164,222 @@ static NSTextAttachment *headerMediaIcon() {
     
 }
 
-- (void)showMessage:(int)messageId fromMsgId:(int)msgId {
-    [self showMessage:messageId fromMsgId:msgId animated:YES selectText:nil];
+- (void)showMessage:(TL_localMessage *)message fromMsg:(TL_localMessage *)fromMsg flags:(int)flags {
+    [self showMessage:message fromMsg:fromMsg animated:YES selectText:nil switchDiscussion:NO flags:flags];
 }
 
-- (void)showMessage:(int)messageId fromMsgId:(int)fromMsgId animated:(BOOL)animated selectText:(NSString *)text {
+- (void)showMessage:(TL_localMessage *)message fromMsg:(TL_localMessage *)fromMsg switchDiscussion:(BOOL)switchDiscussion {
+    [self showMessage:message fromMsg:fromMsg animated:YES selectText:nil switchDiscussion:switchDiscussion flags:0];
+}
+
+- (void)showMessage:(TL_localMessage *)message fromMsg:(TL_localMessage *)fromMsg animated:(BOOL)animated selectText:(NSString *)text switchDiscussion:(BOOL)switchDiscussion flags:(int)flags  {
     
-    MessageTableItem *item = [self itemOfMsgId:messageId];
+    _needNextRequest = YES;
     
-    if(fromMsgId != 0)
-        [_replyMsgsStack addObject:@(fromMsgId)];
     
-    if(item)
-    {
-        [self scrollToItem:item animated:animated centered:YES highlight:YES];
-    } else {
+    if(fromMsg != nil)
+        [_replyMsgsStack addObject:fromMsg];
+    
+    MessageTableItem *item = message.hole != nil ? [self itemOfMsgId:channelMsgId(message.hole.min_id, message.peer_id)] : [self itemOfMsgId:message.channelMsgId];
+    
+    if(item && (flags & ShowMessageTypeReply) > 0) {
+        [self scrollToItem:item animated:YES centered:YES highlight:YES];
+        
+        return;
+    }
+    
+    TL_conversation *conversation = self.conversation;
+    
+    __block TL_localMessage *msg = conversation.type == DialogTypeChannel && fromMsg == nil && ((flags & ShowMessageTypeUnreadMark) == 0 && (flags & ShowMessageTypeSearch) == 0) ? [[Storage manager] lastImportantMessageAroundMinId: message.hole ? channelMsgId(message.hole.min_id, message.peer_id) : message.channelMsgId] : [[Storage manager] messageById:message.hole ? message.hole.min_id : message.n_id inChannel:-message.to_id.channel_id];
+    
+    if((flags & ShowMessageTypeUnreadMark) > 0 && conversation.type == DialogTypeChannel && !msg) {
+        [self flushMessages];
+    }
+    
+    
+    dispatch_block_t block = ^{
+        
+        if(conversation != self.conversation || !msg) {
+            _needNextRequest = NO;
+            return;
+        }
+        
+        if(switchDiscussion)
+            [self.normalNavigationCenterView enableDiscussion:!self.normalNavigationCenterView.discussIsEnabled force:YES];
         
         
-        dispatch_block_t block = ^{
+        self.historyController = [[[self hControllerClass] alloc] initWithController:self historyFilter:conversation.type == DialogTypeChannel ? ( flags == 0 ? self.normalNavigationCenterView.discussIsEnabled || conversation.chat.isMegagroup ? [ChannelFilter class] : [ChannelImportantFilter class] : msg.isImportantMessage ? self.historyController.filter.class : [ChannelFilter class]) : [HistoryFilter class]];
+        
+        [self.normalNavigationCenterView enableDiscussion:[self.historyController.filter isKindOfClass:[ChannelFilter class]] force:YES];
+        
+        MessageTableItem *importantItem = [self messageTableItemsFromMessages:@[msg]][0];
+        
+        NSUInteger index = [self indexOfObject:[self itemOfMsgId:importantItem.message.channelMsgId]];
+        
+        __block NSRect rect = NSZeroRect;
+        
+        int yTopOffset = 0;
+        
+        if(index != NSNotFound) {
+            rect = [self.table rectOfRow:index];
             
+            yTopOffset =  self.table.scrollView.documentOffset.y + NSHeight(self.table.containerView.frame) - (rect.origin.y);
             
-            
-            [self.historyController drop:NO];
-            
-            self.historyController = [[ChatHistoryController alloc] initWithController:self historyFilter:[HistoryFilter class]];
-            
-            self.historyController.min_id = messageId;
-            self.historyController.start_min = messageId;
-            self.historyController.max_id = messageId;
-            self.historyController.need_save_to_db = NO;
-            self.historyController.maxDate = 0;
-            self.historyController.minDate = 0;
-            [self.historyController removeAllItems];
-            
-            
+        }
+        
+        [self removeScrollEvent];
+        
+        
+        if((flags & ShowMessageTypeUnreadMark) > 0 && msg.isChannelMessage ) {
             [self flushMessages];
+        }
+        
+        
+        int count = NSHeight(self.table.containerView.frame)/20;
+        
+        self.historyController.selectLimit = count/2 + 20;
+        
+        [self.historyController loadAroundMessagesWithMessage:importantItem prevLimit:count nextLimit:(flags & ShowMessageTypeUnreadMark) > 0 ? 1 : count selectHandler:^(NSArray *result, NSRange range, id controller) {
             
-            [self loadhistory:messageId toEnd:YES prev:messageId != 0 isFirst:YES];
-        };
-        
-        TL_localMessage *msg = [[Storage manager] messageById:messageId];
-        
-        
-        if(!msg) {
-            
-            [RPCRequest sendRequest:[TLAPI_messages_getMessages createWithN_id:[@[@(messageId)] mutableCopy]] successHandler:^(RPCRequest *request, TL_messages_messages * response) {
+            if(controller == self.historyController && _conversation.peer_id == conversation.peer_id) {
+                [self flushMessages];
                 
-                if(response.messages.count > 0) {
-                    TLMessage *msg = response.messages[0];
+                _needNextRequest = NO;
+                
+                
+                 NSUInteger index = [result indexOfObject:importantItem];
+                
+                if((flags & ShowMessageTypeUnreadMark) > 0) {
                     
-                    if(![msg isKindOfClass:[TL_messageEmpty class]]) {
-                        block();
+                    if(index != 0 && index != NSNotFound) {
+                        _unreadMark = [[MessageTableItemUnreadMark alloc] initWithCount:0 type:RemoveUnreadMarkAfterSecondsType];
+                        
+                        NSMutableArray *copy = [result mutableCopy];
+                        [copy insertObject:_unreadMark atIndex:[result indexOfObject:importantItem]];
+                        
+                        result = copy;
                     }
+                    
                 }
                 
+                [self messagesLoadedTryToInsert:result pos:range.location next:YES];
                 
                 
                 
-            } errorHandler:^(RPCRequest *request, RpcError *error) {
+                [self.table setNeedsDisplay:YES];
+                [self.table display];
                 
+                if((flags & ShowMessageTypeUnreadMark) > 0) {
+                    
+                    [self scrollToUnreadItem:NO];
+                    
+                } else if(rect.origin.y == 0 || ((flags & ShowMessageTypeReply) > 0 || (flags & ShowMessageTypeSearch) > 0)) {
+                    [self scrollToItem:importantItem animated:NO centered:YES highlight:fromMsg != nil];
+                } else {
+                    
+                    __block NSRect drect = [self.table rectOfRow:[self indexOfObject:importantItem]];
+                    
+                    
+                    dispatch_block_t block = ^{
+                        
+                        drect.origin.y -= (NSHeight(self.table.containerView.frame)  -yTopOffset);
+                        
+                        drect.origin.y = MAX(0,drect.origin.y);
+                        
+                        [self.table.scrollView scrollToPoint:drect.origin animation:NO];
+                        
+                    };
+                    
+                    if(NSEqualRects(drect, NSZeroRect)) {
+                        
+                        dispatch_async(dispatch_get_main_queue(), block);
+                    } else {
+                        block();
+                    }
+                    
+                    
+                }
                 
-            } timeout:10];
+                if(index < 10) {
+                    [self requestNextHistory];
+                }
+                
+                [self addScrollEvent];
+            }
             
-            
-        } else {
-            block();
+        }];
+        
+    };
+    
+    if(!msg) {
+        
+        _needNextRequest = YES;
+        
+        [self flushMessages];
+        
+        
+        
+        id request = [TLAPI_messages_getMessages createWithN_id:[@[@(message.n_id)] mutableCopy]];
+        
+        if(self.conversation.type == DialogTypeChannel) {
+            request = [TLAPI_channels_getMessages createWithChannel:message.conversation.inputPeer n_id:[@[@(message.hole ? message.hole.min_id : message.n_id)] mutableCopy]];
         }
-    
         
-    
-    
+        [RPCRequest sendRequest:request successHandler:^(RPCRequest *request, TL_messages_messages * response) {
+            
+            _needNextRequest = NO;
+            
+            if(response.messages.count > 0 && ![response.messages[0] isKindOfClass:[TL_messageEmpty class]]) {
+                msg = [TL_localMessage convertReceivedMessage:response.messages[0]];
+                
+                if(![msg isKindOfClass:[TL_messageEmpty class]]) {
+                    block();
+                } else {
+                    if((flags & ShowMessageTypeUnreadMark)) {
+                        [self jumpToLastMessages:YES];
+                    }
+                }
+            }
+            
+        } errorHandler:^(RPCRequest *request, RpcError *error) {
+            
+             [self jumpToLastMessages:YES];
+            
+        } timeout:10];
         
+        
+    } else {
+        block();
     }
     
 }
 
-- (void)setCurrentConversation:(TL_conversation *)dialog withJump:(int)messageId historyFilter:(Class)historyFilter force:(BOOL)force {
+
+-(void)selectInputTextByText:(NSString *)text {
+    [self.bottomView selectInputTextByText:text];
+}
+
+- (void)setCurrentConversation:(TL_conversation *)dialog withMessageJump:(TL_localMessage *)message force:(BOOL)force {
+  
+    [self loadViewIfNeeded];
+    
     [self hideSearchBox:NO];
+    
+    if(![globalAudioPlayer().delegate isKindOfClass:[TGAudioPlayerWindow class]]) {
+        [globalAudioPlayer() stop];
+    }
+    
+    
+    if(!self.locked &&  (((message != nil && message.channelMsgId != _jumpMessage.channelMsgId) || force) || [self.conversation.peer peer_id] != [dialog.peer peer_id] )) {
         
-    if(!self.locked &&  (((messageId != 0 && messageId != self.jumpMessageId) || force) || [self.conversation.peer peer_id] != [dialog.peer peer_id] || self.historyController.filter.class != historyFilter)) {
+        self.jumpMessage = message;
+        self.conversation = dialog;
         
-        [TGHelpPopup popover].fadeDuration = 0;
-        [TGHelpPopup close];
+        [Notification perform:@"ChangeDialogSelection" data:@{KEY_DIALOG:self.conversation, @"sender":self}];
+        
+        [self.normalNavigationCenterView enableDiscussion:NO force:NO];
         
         [_replyMsgsStack removeAllObjects];
-        
-        self.jumpMessageId = messageId;
-        self.conversation = dialog;
         
         NSString *cachedText = [self.cacheTextForPeer objectForKey:dialog.cacheKey];
         [self becomeFirstResponder];
@@ -2118,37 +2397,15 @@ static NSTextAttachment *headerMediaIcon() {
         
         [self.typingView setDialog:dialog];
         
-        
-        if(!historyFilter)
-            historyFilter = [HistoryFilter class];
-        
         [self.historyController drop:NO];
-        
-        self.historyController = [[ChatHistoryController alloc] initWithController:self historyFilter:historyFilter];
-        
-        
-        
-        if(messageId != 0) {
-            self.historyController.min_id = messageId;
-            self.historyController.start_min = messageId;
-            self.historyController.max_id = messageId;
-            self.historyController.need_save_to_db = NO;
-            self.historyController.maxDate = 0;
-            self.historyController.minDate = 0;
-            [self.historyController removeAllItems];
-        }
-        
-        if(dialog.top_message != dialog.last_marked_message) {
-            [self.historyController removeAllItems];
-        }
-        
-        
         
         [self.normalNavigationCenterView setDialog:dialog];
         
         
         [self.bottomView setDialog:dialog];
         
+        
+        self.historyController = [[[self hControllerClass] alloc] initWithController:self historyFilter:[self defHFClass]];
         
         self.state = MessagesViewControllerStateNone;
         
@@ -2157,53 +2414,75 @@ static NSTextAttachment *headerMediaIcon() {
         
         [self unSelectAll:NO];
         
-        
-        
         [self.typingReservation removeAllObjects];
         [self removeScrollEvent];
         
-        [self flushMessages];
+  
         
-        [self loadhistory:messageId toEnd:YES prev:messageId != 0 isFirst:YES];
+        if(message != nil) {
+            [self showMessage:message fromMsg:nil flags:ShowMessageTypeSearch];
+        } else if(dialog.last_marked_message != -1 && dialog.last_marked_message < dialog.universalTopMessage && dialog.universalTopMessage < TGMINFAKEID) {
+            
+            TL_localMessage *msg =  [[TL_localMessage alloc] init];
+            
+            msg.n_id = dialog.last_marked_message;
+            msg.to_id = dialog.peer;
+            
+            [self showMessage:msg fromMsg:nil flags:ShowMessageTypeUnreadMark];
+            
+        } else {
+            
+           
+            [self flushMessages];
+            
+            [self loadhistory:0 toEnd:YES prev:NO isFirst:YES];
+        }
+        
         [self addScrollEvent];
         
+        if(self.conversation.type == DialogTypeChannel) {
+            [self.historyController startChannelPolling];
+           
+        }
     }
 }
 
--(void)setCurrentConversation:(TL_conversation *)dialog withJump:(int)messageId historyFilter:(__unsafe_unretained Class)historyFilter {
+-(void)setCurrentConversation:(TL_conversation *)dialog withMessageJump:(TL_localMessage *)message   {
 
-    [self setCurrentConversation:dialog withJump:messageId historyFilter:historyFilter force:NO];
+    [self setCurrentConversation:dialog withMessageJump:message force:NO];
     
 }
 
 
 -(void)setCurrentConversation:(TL_conversation *)dialog {
-    [self setCurrentConversation:dialog withJump:0 historyFilter:[HistoryFilter class]];
+    [self setCurrentConversation:dialog withMessageJump:nil];
 }
 
 
 
 - (void)cancelSelectionAndScrollToBottom {
-    [self unSelectAll];
+    [self unSelectAll:NO];
     self.state = MessagesViewControllerStateNone;
     [self.table.scrollView scrollToEndWithAnimation:YES];
 }
 
 - (void)tryRead {
-    if(!self.view.isHidden && self.view.window.isKeyWindow && self.historyController.filter.class == HistoryFilter.class && ![TGPasslock isVisibility]) {
+    if(!self.view.isHidden && self.view.window.isKeyWindow && ![TGPasslock isVisibility]) {
         if(_delayedBlockHandle)
             _delayedBlockHandle(YES);
         
-        if(self.conversation.last_marked_message != self.conversation.top_message) {
-            self.conversation.last_marked_message = self.conversation.top_message;
-            self.conversation.last_marked_date = [[MTNetwork instance] getTime];
-            [self.conversation save];
-        }
+        [ASQueue dispatchOnStageQueue:^{
+            if(self.conversation.last_marked_message != self.conversation.top_message) {
+                self.conversation.last_marked_message = self.conversation.top_message;
+                self.conversation.last_marked_date = [[MTNetwork instance] getTime];
+                [self.conversation save];
+            }
+        }];
         
-        
+       
         _delayedBlockHandle = perform_block_after_delay(0.2f, ^{
             _delayedBlockHandle = nil;
-            if(self.conversation.unread_count > 0 || self.conversation.peer.user_id == [UsersManager currentUserId]) {
+            if(self.conversation.unread_count > 0 || (self.conversation.unread_important_count > 0) || self.conversation.peer.user_id == [UsersManager currentUserId]) {
                 [self readHistory:0];
             }
         });
@@ -2213,20 +2492,20 @@ static NSTextAttachment *headerMediaIcon() {
 
 
 - (void)readHistory:(int)offset{
-    if(!self.conversation || self.conversation.unread_count == 0)
+    if(!self.conversation || (self.conversation.unread_count == 0 && self.conversation.unread_important_count == 0) || (self.conversation.type != DialogTypeSecretChat && (self.conversation.chat.isKicked || self.conversation.chat.left)))
         return;
     
-     [(MessagesManager *)[MessagesManager sharedManager] markAllInDialog:self.conversation callback:^(NSArray *ids) {
-         
-     }];
+    [[DialogsManager sharedManager] markAllMessagesAsRead:self.conversation];
     
     
     
     self.conversation.unread_count = 0;
+    self.conversation.unread_important_count = 0;
+    _conversation.read_inbox_max_id = self.conversation.type == DialogTypeChannel ? self.conversation.top_important_message : self.conversation.top_message;
     
     [self.conversation save];
     
-    [Notification perform:[Notification notificationNameByDialog:self.conversation action:@"unread_count"] data:@{KEY_LAST_CONVRESATION_DATA:[MessagesUtils conversationLastData:self.conversation]}];
+    [Notification perform:[Notification notificationNameByDialog:self.conversation action:@"unread_count"] data:@{KEY_LAST_CONVRESATION_DATA:[MessagesUtils conversationLastData:self.conversation],KEY_DIALOG:self.conversation}];
     
     [MessagesManager updateUnreadBadge];
         
@@ -2284,7 +2563,7 @@ static NSTextAttachment *headerMediaIcon() {
         [[FullUsersManager sharedManager] loadUserFull:_conversation.user callback:^(TL_userFull *userFull) {
             
             if(userFull.bot_info.n_description.length > 0) {
-                TL_localMessageService *service = [TL_localMessageService createWithN_id:0 flags:0 from_id:0 to_id:_conversation.peer date:0 action:[TL_messageActionBotDescription createWithTitle:userFull.bot_info.n_description] fakeId:0 randomId:rand_long() dstate:DeliveryStateNormal];
+                TL_localMessageService *service = [TL_localMessageService createWithFlags:0 n_id:0 from_id:0 to_id:_conversation.peer date:0 action:[TL_messageActionBotDescription createWithTitle:userFull.bot_info.n_description] fakeId:0 randomId:rand_long() dstate:DeliveryStateNormal];
                 
                 NSArray *items;
                 
@@ -2306,6 +2585,13 @@ static NSTextAttachment *headerMediaIcon() {
 - (void)didUpdateTable {
     [self showNoMessages:self.messages.count == 1 || (self.conversation.user.isBot && self.messages.count == 2 && [self.messages[1] isKindOfClass:[MessageTableItemServiceMessage class]])];
     
+    
+    if(self.conversation.user.isBot &&  (self.messages.count == 1 || (self.messages.count == 2 && [self.messages[1] isKindOfClass:[MessageTableItemServiceMessage class]]))) {
+        [self showBotStartButton:NSLocalizedString(@"Bot.Start", nil) bot:self.conversation.user];
+    } else if(self.conversation.user.isBot) {
+        [self.bottomView setStateBottom:MessagesBottomViewNormalState];
+    }
+    
     BOOL isHaveMessages = NO;
     for(MessageTableItem *item in self.messages) {
         if(item.message && !item.message.action) {
@@ -2322,152 +2608,81 @@ static NSTextAttachment *headerMediaIcon() {
     
     [self updateScrollBtn];
     
+    [self.table setNeedsDisplay:YES];
+    [self.table display];
+    
+    
+    if(self.conversation.type == DialogTypeUser && (self.conversation.user.type == TLUserTypeRequest)) {
+        
+        __block BOOL showReport = [[NSUserDefaults standardUserDefaults] boolForKey:[NSString stringWithFormat:@"showreport_%d",self.conversation.user.n_id]];
+        
+        __block BOOL alwaysShowReport = [[NSUserDefaults standardUserDefaults] boolForKey:[NSString stringWithFormat:@"always_showreport1_%d",self.conversation.user.n_id]];
+        
+        if(self.messages.count > 1 && (!showReport && !alwaysShowReport)) {
+            if(self.messages.count > 2 || self.historyController.nextState == ChatHistoryStateFull) {
+                
+                showReport = YES;
+                
+                [self.messages enumerateObjectsAtIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(1, self.messages.count - 1)] options:0 usingBlock:^(MessageTableItem*  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                    
+                    if(obj.message.n_out) {
+                        showReport = NO;
+                        *stop = YES;
+                    }
+                    
+                }];
+                
+                alwaysShowReport = showReport;
+                
+                [[NSUserDefaults standardUserDefaults] setBool:showReport forKey:[NSString stringWithFormat:@"showreport_%d",self.conversation.user.n_id]];
+            }
+        }
+        
+        if(showReport) {
+            [_topInfoView setConversation:self.conversation];
+        }
+        
+    }
+    
 }
 
-
+-(void)requestNextHistory {
+    [self loadhistory:0 toEnd:NO prev:NO isFirst:NO];
+}
 
 - (void)loadhistory:(int)message_id toEnd:(BOOL)toEnd prev:(BOOL)prev isFirst:(BOOL)isFirst {
     if(!self.conversation || self.historyController.isProccessing || _locked)
         return;
     
-    prev = prev || (isFirst && _historyController.conversation.top_message != _historyController.conversation.last_marked_message && _historyController.conversation.last_marked_message != 0 && _historyController.conversation.unread_count > 0);
-    
-    if(!prev && isFirst) {
-        _historyController.prevState = ChatHistoryStateFull;
-    }
-    
+
     NSSize size = self.table.scrollView.documentSize;
     
     int count = size.height/20;
     
     self.historyController.selectLimit = isFirst ? count : 50;
     
-    
+     [self removeScrollEvent];
     
     _needNextRequest = NO;
     
-    [self.historyController request:!prev anotherSource:YES sync:isFirst selectHandler:^(NSArray *prevResult, NSRange range) {
+    NSUInteger pos = prev ? 0 : self.messages.count;
+    
+    [self.historyController request:!prev anotherSource:YES sync:isFirst selectHandler:^(NSArray *prevResult, NSRange range1, id controller) {
         
-       if(prevResult.count > 0) {
-            MessageTableItem *item = prevResult[0];
-            if(self.conversation.peer_id != item.message.peer_id)
-                return;
-        }
-        
-        
-        // assert(prevResult.count > 0);
-        
-        if(message_id != 0 && prev && self.historyController.prevState == ChatHistoryStateRemote) {
-            self.historyController.nextState = self.historyController.prevState;
-        }
-        
-        
-       NSUInteger pos = prev ? 0 : self.messages.count;
-        if(isFirst && prev) {
-            
-            _needNextRequest = YES;
-            
-            [_historyController request:YES anotherSource:YES sync:isFirst selectHandler:^(NSArray *result, NSRange range) {
-                
-                _needNextRequest = NO;
-                
-                self.isMarkIsset = YES;
-                
-                [self updateScrollBtn];
-                
-                self.unreadMark = [[MessageTableItemUnreadMark alloc] initWithCount:_historyController.conversation.unread_count type:RemoveUnreadMarkAfterSecondsType];
-                
-                
-                NSArray *completeResult = message_id == 0 && self.historyController.filter.class == HistoryFilter.class && prevResult.count > 0 ? [prevResult arrayByAddingObject:self.unreadMark] : prevResult;
-                
-                NSArray *nextResult = [completeResult arrayByAddingObjectsFromArray:result];
-                
-                
-                [self messagesLoadedTryToInsert:nextResult pos:0 next:NO];
-                
-                
-                id item = message_id == 0 ? self.unreadMark : [self findMessageItemById:message_id];
-                
-                NSUInteger index = [self indexOfObject:item];
-                NSRect rect = [self.table rectOfRow:index];
-                
-                [self scrollToRect:rect isCenter:message_id != 0  animated:NO];
-                //bug fix
-                
-                
-                
-                if([item isKindOfClass:[MessageTableItemText class]] && [self searchBoxIsVisible]) {
-                    MessageTableItemText *textItem = item;
-                    
-                    [self.searchItems enumerateObjectsUsingBlock:^(SearchSelectItem *obj, NSUInteger idx, BOOL *stop) {
-                        
-                        [obj clear];
-                        
-                    }];
-                    
-                    NSRange range = [textItem.message.message rangeOfString:self.searchMessagesView.currentString options:NSCaseInsensitiveSearch];
-                    
-                    if(range.location != NSNotFound)
-                    {
-                        SearchSelectItem *searchItem = [[SearchSelectItem alloc] init];
-                        searchItem.item = textItem;
-                        
-                        searchItem.isCurrent = YES;
-                        
-                        [searchItem.marks addObject:[[TGCTextMark alloc] initWithRange:range color:NSColorFromRGBWithAlpha(0xe5bf29, 0.3) isReal:NO]];
-                        
-                        [textItem setMark:searchItem];
-                        
-                        [self.searchItems addObject:searchItem];
-                        
-                    }
-                    
-                    
-                }
-                
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    NSUInteger idx = [self indexOfObject:item];
-                    if(message_id && idx != NSNotFound) {
-                        MessageTableCellContainerView *cell = (MessageTableCellContainerView *)[self cellForRow:idx];
-                        
-                        if(cell && [cell isKindOfClass:[MessageTableCellContainerView class]]) {
-                            
-                            for(int i = 0; i < self.messages.count; i++) {
-                                MessageTableCellContainerView *cell2 = (MessageTableCellContainerView *)[self cellForRow:i];
-                                if(cell2 && [cell2 isKindOfClass:[MessageTableCellContainerView class]]) {
-                                    [cell2 stopSearchSelection];
-                                }
-                            }
-                            
-                           [cell searchSelection];
-                            
-                            if([item isKindOfClass:[MessageTableItemText class]] && [(MessageTableItemText *)item mark] != nil) {
-                                [cell setItem:item];
-                            }
-                        }
-                    }
-                });
-                
-                
-                if(result.count < _historyController.selectLimit)
-                    [self loadhistory:0 toEnd:YES prev:NO isFirst:NO];
-                
-               
-                
-            }];
-            
-        } else {
+        if(self.historyController == controller) {
             [self messagesLoadedTryToInsert:prevResult pos:pos next:!prev];
             
             if(self.didUpdatedTable) {
                 self.didUpdatedTable();
             }
             
-            if(prevResult.count < _historyController.selectLimit) {
-                [self loadhistory:0 toEnd:YES prev:NO isFirst:NO];
+            if(prevResult.count+1 < 10 && prevResult.count > 0) {
+                [self loadhistory:0 toEnd:YES prev:prev isFirst:NO];
             }
+            
+            [self addScrollEvent];
         }
-        
+
     }];
 }
 
@@ -2484,6 +2699,9 @@ static NSTextAttachment *headerMediaIcon() {
         rect.origin.y = 0;
     
     [self.table.scrollView scrollToPoint:rect.origin animation:animated];
+    
+    
+    [self updateScrollBtn];
     
 }
 
@@ -2511,9 +2729,6 @@ static NSTextAttachment *headerMediaIcon() {
                 rect.origin.y -= roundf((self.table.containerView.frame.size.height - rect.size.height) / 2) ;
             else
                 rect.origin.y += roundf((self.table.containerView.frame.size.height - rect.size.height) / 2) ;
-            //
-            //        if(rect.origin.y < 0)
-            //            rect.origin.y = 0;
             
             [self.table.scrollView.clipView scrollRectToVisible:rect animated:animated completion:^(BOOL scrolled) {
                 if(highlight) {
@@ -2572,7 +2787,8 @@ static NSTextAttachment *headerMediaIcon() {
         
         if(!self.unreadMark) {
             _unreadMark = [[MessageTableItemUnreadMark alloc] initWithCount:0 type:RemoveUnreadMarkNoneType];
-            array = [array arrayByAddingObjectsFromArray:@[_unreadMark]];
+            if(array.count > 0)
+                array = [array arrayByAddingObjectsFromArray:@[_unreadMark]];
         }
     }
     
@@ -2601,8 +2817,13 @@ static NSTextAttachment *headerMediaIcon() {
     
     NSMutableIndexSet *rld = [[NSMutableIndexSet alloc] init];
     
+    
+    
     [self.messages enumerateObjectsAtIndexes:[NSIndexSet indexSetWithIndexesInRange:range] options:NSEnumerationReverse usingBlock:^(MessageTableItem *current, NSUInteger idx, BOOL *stop) {
         
+        
+        [current setTable:_table];
+        [backItem setTable:_table];
         
         BOOL isCHdr = current.isHeaderMessage;
         BOOL isCFwdHdr = current.isHeaderForwardedMessage;
@@ -2628,8 +2849,8 @@ static NSTextAttachment *headerMediaIcon() {
         }
         
         
-        [current makeSizeByWidth:MAX(NSWidth([Telegram rightViewController].view.frame) - 150,100)];
-        [backItem makeSizeByWidth:MAX(NSWidth([Telegram rightViewController].view.frame) - 150,100)];
+        [current makeSizeByWidth:current.makeSize];
+        [backItem makeSizeByWidth:backItem.makeSize];
         backItem = current;
         
     }];
@@ -2668,6 +2889,10 @@ static NSTextAttachment *headerMediaIcon() {
     
     item.isHeaderMessage = YES;
     item.isHeaderForwardedMessage = YES;
+    
+    if(item.message.isChannelMessage && item.message.from_id == 0) {
+        return;
+    }
     
     if(prevItem.message && item.message && ![item isReplyMessage] && (!item.message.media.webpage || [item.message.media.webpage isKindOfClass:[TL_webPageEmpty class]])) {
         if(!prevItem.message.action && !item.message.action) {
@@ -2758,16 +2983,34 @@ static NSTextAttachment *headerMediaIcon() {
     return nil;
 }
 
+-(void)setConversation:(TL_conversation *)conversation {
+    _conversation = conversation;
+}
 
 - (void)sendMessage {
     NSString *message = [self.bottomView.inputMessageString trim];
     
-    if([message isEqualToString:@"performcrash"]) {
-        [ASQueue dispatchOnStageQueue:^{
-            [(TMView *)self.conversation becomeFirstResponder];
-        }];
+    
+    NSCharacterSet *set = [NSCharacterSet whitespaceCharacterSet];
+    if ([[message stringByTrimmingCharactersInSet: set] length] == 0) {
+        return;
+    } else if([message stringByReplacingOccurrencesOfString:@"\n" withString:@""].length == 0) {
         return;
     }
+    
+    
+#ifdef  TGDEBUG
+    if([message isEqualToString:@"send100messages"]) {
+        
+        TL_conversation *conversation = _conversation;
+        for (int i = 1; i <= 100; i++) {
+            [self sendMessage:[NSString stringWithFormat:@"messageId:%d",i] forConversation:conversation];
+        }
+        
+        return;
+    }
+    
+#endif
     
     if(!self.conversation.canSendMessage)  {
         NSBeep();
@@ -2798,7 +3041,7 @@ static NSTextAttachment *headerMediaIcon() {
     
     BOOL noWebpage = [self noWebpage:message];
     
-    [self setHistoryFilter:HistoryFilter.class force:self.historyController.prevState != ChatHistoryStateFull];
+    [self setHistoryFilter:self.defHFClass force:self.historyController.prevState != ChatHistoryStateFull];
     
     
     if([SettingsArchiver checkMaskedSetting:EmojiReplaces])
@@ -2822,7 +3065,7 @@ static NSTextAttachment *headerMediaIcon() {
         NSMutableArray *preparedItems = [[NSMutableArray alloc] init];
         
         if (message.length <= messagePartLimit) {
-            MessageSenderItem *sender = [[cs alloc] initWithMessage:message forConversation:conversation noWebpage:noWebpage];
+            MessageSenderItem *sender = [[cs alloc] initWithMessage:message forConversation:conversation noWebpage:noWebpage additionFlags:self.senderFlags];
             sender.tableItem = [[self messageTableItemsFromMessages:@[sender.message]] lastObject];
             [self.historyController addItem:sender.tableItem conversation:conversation callback:callback sentControllerCallback:nil];
             
@@ -2835,7 +3078,7 @@ static NSTextAttachment *headerMediaIcon() {
                 NSString *substring = [message substringWithRange:NSMakeRange(i, MIN(messagePartLimit, message.length - i))];
                 if (substring.length != 0) {
                     
-                    MessageSenderItem *sender = [[cs alloc] initWithMessage:substring forConversation:conversation noWebpage:noWebpage];
+                    MessageSenderItem *sender = [[cs alloc] initWithMessage:substring forConversation:conversation noWebpage:noWebpage  additionFlags:self.senderFlags];
                     sender.tableItem = [[self messageTableItemsFromMessages:@[sender.message]] lastObject];
                     
                     [preparedItems insertObject:sender.tableItem atIndex:0];
@@ -2853,17 +3096,18 @@ static NSTextAttachment *headerMediaIcon() {
     }];
 }
 
+
 - (void)sendLocation:(CLLocationCoordinate2D)coordinates forConversation:(TL_conversation *)conversation {
     if(!conversation.canSendMessage)
         return;
     
-    [self setHistoryFilter:HistoryFilter.class force:self.historyController.prevState != ChatHistoryStateFull];
+    [self setHistoryFilter:self.defHFClass force:self.historyController.prevState != ChatHistoryStateFull];
     
     [ASQueue dispatchOnStageQueue:^{
         
         Class cs = self.conversation.type == DialogTypeSecretChat ? [LocationSenderItem class] : [LocationSenderItem class];
         
-        LocationSenderItem *sender = [[cs alloc] initWithCoordinates:coordinates conversation:conversation];
+        LocationSenderItem *sender = [[cs alloc] initWithCoordinates:coordinates conversation:conversation additionFlags:self.senderFlags];
         sender.tableItem = [[self messageTableItemsFromMessages:@[sender.message]] lastObject];
         [self.historyController addItem:sender.tableItem];
         
@@ -2878,7 +3122,7 @@ static NSTextAttachment *headerMediaIcon() {
 -(void)sendVideo:(NSString *)file_path forConversation:(TL_conversation *)conversation addCompletionHandler:(dispatch_block_t)completeHandler {
     if(!conversation.canSendMessage) return;
     
-    [self setHistoryFilter:HistoryFilter.class force:self.historyController.prevState != ChatHistoryStateFull];
+    [self setHistoryFilter:self.defHFClass force:self.historyController.prevState != ChatHistoryStateFull];
     
     [ASQueue dispatchOnStageQueue:^{
         SenderItem *sender;
@@ -2891,7 +3135,7 @@ static NSTextAttachment *headerMediaIcon() {
         if(self.conversation.type == DialogTypeSecretChat) {
             sender = [[FileSecretSenderItem alloc] initWithPath:file_path uploadType:UploadVideoType forConversation:conversation];
         } else {
-            sender = [[VideoSenderItem alloc] initWithPath:file_path forConversation:conversation];
+            sender = [[VideoSenderItem alloc] initWithPath:file_path forConversation:conversation additionFlags:self.senderFlags];
         }
         sender.tableItem = [[self messageTableItemsFromMessages:@[sender.message]] lastObject];
         [self.historyController addItem:sender.tableItem sentControllerCallback:completeHandler];
@@ -2906,7 +3150,7 @@ static NSTextAttachment *headerMediaIcon() {
 - (void)sendDocument:(NSString *)file_path forConversation:(TL_conversation *)conversation addCompletionHandler:(dispatch_block_t)completeHandler {
     if(!conversation.canSendMessage) return;
     
-    [self setHistoryFilter:HistoryFilter.class force:self.historyController.prevState != ChatHistoryStateFull];
+    [self setHistoryFilter:self.defHFClass force:self.historyController.prevState != ChatHistoryStateFull];
     
     [ASQueue dispatchOnStageQueue:^{
         
@@ -2919,7 +3163,7 @@ static NSTextAttachment *headerMediaIcon() {
         if(self.conversation.type == DialogTypeSecretChat) {
             sender = [[FileSecretSenderItem alloc] initWithPath:file_path uploadType:UploadDocumentType forConversation:conversation];
         } else {
-            sender = [[DocumentSenderItem alloc] initWithPath:file_path forConversation:conversation];
+            sender = [[DocumentSenderItem alloc] initWithPath:file_path forConversation:conversation additionFlags:self.senderFlags];
         }
         
         sender.tableItem = [[self messageTableItemsFromMessages:@[sender.message]] lastObject];
@@ -2949,12 +3193,9 @@ static NSTextAttachment *headerMediaIcon() {
         
     }];
     
-    [self setHistoryFilter:HistoryFilter.class force:self.historyController.prevState != ChatHistoryStateFull];
+    [self setHistoryFilter:self.defHFClass force:self.historyController.prevState != ChatHistoryStateFull];
     
     [self.bottomView closeEmoji];
-    
-    
-    
     
     
     [ASQueue dispatchOnStageQueue:^{
@@ -2963,7 +3204,7 @@ static NSTextAttachment *headerMediaIcon() {
         SenderItem *sender;
         
         if(self.conversation.type != DialogTypeSecretChat) {
-            sender = [[StickerSenderItem alloc] initWithDocument:sticker forConversation:conversation];
+            sender = [[StickerSenderItem alloc] initWithDocument:sticker forConversation:conversation additionFlags:self.senderFlags];
         } else {
             sender = [[ExternalDocumentSecretSenderItem alloc] initWithConversation:conversation document:sticker];
         }
@@ -2981,7 +3222,7 @@ static NSTextAttachment *headerMediaIcon() {
     
     if(!conversation.canSendMessage) return;
     
-    [self setHistoryFilter:HistoryFilter.class force:self.historyController.prevState != ChatHistoryStateFull];
+    [self setHistoryFilter:self.defHFClass force:self.historyController.prevState != ChatHistoryStateFull];
     
     [ASQueue dispatchOnStageQueue:^{
         
@@ -2994,7 +3235,7 @@ static NSTextAttachment *headerMediaIcon() {
         if(self.conversation.type == DialogTypeSecretChat) {
             sender = [[FileSecretSenderItem alloc] initWithPath:file_path uploadType:UploadAudioType forConversation:conversation];
         } else {
-            sender = [[AudioSenderItem alloc] initWithPath:file_path forConversation:conversation];
+            sender = [[AudioSenderItem alloc] initWithPath:file_path forConversation:conversation additionFlags:self.senderFlags];
         }
         
         sender.tableItem = [[self messageTableItemsFromMessages:@[sender.message]] lastObject];
@@ -3007,13 +3248,13 @@ static NSTextAttachment *headerMediaIcon() {
     if(!conversation.canSendMessage)
         return;
     
-    [self setHistoryFilter:HistoryFilter.class force:self.historyController.prevState != ChatHistoryStateFull];
+    [self setHistoryFilter:self.defHFClass force:self.historyController.prevState != ChatHistoryStateFull];
     
     [ASQueue dispatchOnStageQueue:^{
         
         
         void (^fwd_blck) (NSArray *fwd_msgs) = ^(NSArray *fwd_messages) {
-            ForwardSenterItem *sender = [[ForwardSenterItem alloc] initWithMessages:fwd_messages forConversation:conversation];
+            ForwardSenterItem *sender = [[ForwardSenterItem alloc] initWithMessages:fwd_messages forConversation:conversation additionFlags:self.senderFlags];
             sender.tableItems = [[self messageTableItemsFromMessages:sender.fakes] reversedArray];
             [self.historyController addItems:sender.tableItems conversation:conversation callback:callback sentControllerCallback:nil];
         };
@@ -3046,11 +3287,11 @@ static NSTextAttachment *headerMediaIcon() {
     
     if(!self.conversation.canSendMessage) return;
     
-    [self setHistoryFilter:HistoryFilter.class force:self.historyController.prevState != ChatHistoryStateFull];
+    [self setHistoryFilter:self.defHFClass force:self.historyController.prevState != ChatHistoryStateFull];
     
     [ASQueue dispatchOnStageQueue:^{
         
-        ShareContactSenterItem *sender = [[ShareContactSenterItem alloc] initWithContact:contact forConversation:conversation];
+        ShareContactSenterItem *sender = [[ShareContactSenterItem alloc] initWithContact:contact forConversation:conversation additionFlags:self.senderFlags];
         
         sender.tableItem = [[self messageTableItemsFromMessages:@[sender.message]] lastObject];
         [self.historyController addItem:sender.tableItem conversation:conversation callback:callback sentControllerCallback:nil];
@@ -3063,12 +3304,12 @@ static NSTextAttachment *headerMediaIcon() {
 
 - (void)sendSecretTTL:(int)ttl forConversation:(TL_conversation *)conversation callback:(dispatch_block_t)callback {
     
-    if(!conversation.canSendMessage) {
+    if(!conversation.canSendMessage || conversation.type != DialogTypeSecretChat) {
         if(callback) callback();
         return;
     }
     
-    [self setHistoryFilter:HistoryFilter.class force:self.historyController.prevState != ChatHistoryStateFull];
+    [self setHistoryFilter:self.defHFClass force:self.historyController.prevState != ChatHistoryStateFull];
     
     NSUInteger lastTTL = [EncryptedParams findAndCreate:conversation.peer.peer_id].ttl;
     
@@ -3095,7 +3336,7 @@ static NSTextAttachment *headerMediaIcon() {
     if(!conversation.canSendMessage || conversation.type == DialogTypeSecretChat)
         return;
     
-    [self setHistoryFilter:HistoryFilter.class force:self.historyController.prevState != ChatHistoryStateFull];
+    [self setHistoryFilter:self.defHFClass force:self.historyController.prevState != ChatHistoryStateFull];
     
     [ASQueue dispatchOnStageQueue:^{
         
@@ -3103,7 +3344,7 @@ static NSTextAttachment *headerMediaIcon() {
         
         [attachments enumerateObjectsUsingBlock:^(TGAttachObject *obj, NSUInteger idx, BOOL *stop) {
             
-            SenderItem *sender = [[[obj senderClass] alloc] initWithConversation:conversation attachObject:obj];
+            SenderItem *sender = [[[obj senderClass] alloc] initWithConversation:conversation attachObject:obj additionFlags:self.senderFlags];
             
             
             sender.tableItem = [[self messageTableItemsFromMessages:@[sender.message]] lastObject];
@@ -3119,7 +3360,7 @@ static NSTextAttachment *headerMediaIcon() {
 }
 
 - (void)addImageAttachment:(NSString *)file_path forConversation:(TL_conversation *)conversation file_data:(NSData *)data addCompletionHandler:(dispatch_block_t)completeHandler {
-    if(self.conversation.type == DialogTypeSecretChat)
+    if(self.conversation.type == DialogTypeSecretChat || (!file_path && !data))
         return;
     
     [[Storage yap] asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
@@ -3159,7 +3400,7 @@ static NSTextAttachment *headerMediaIcon() {
     }
 
     
-    [self setHistoryFilter:HistoryFilter.class force:self.historyController.prevState != ChatHistoryStateFull];
+    [self setHistoryFilter:self.defHFClass force:self.historyController.prevState != ChatHistoryStateFull];
     
     [ASQueue dispatchOnStageQueue:^{
         
@@ -3214,7 +3455,7 @@ static NSTextAttachment *headerMediaIcon() {
         if(self.conversation.type == DialogTypeSecretChat) {
             sender = [[FileSecretSenderItem alloc] initWithImage:originImage uploadType:UploadImageType forConversation:conversation];
         } else {
-            sender = [[ImageSenderItem alloc] initWithImage:originImage jpegData:imageData forConversation:conversation];
+            sender = [[ImageSenderItem alloc] initWithImage:originImage jpegData:imageData forConversation:conversation additionFlags:self.senderFlags];
         }
         
         sender.tableItem = [[self messageTableItemsFromMessages:@[sender.message]] lastObject];
@@ -3225,7 +3466,7 @@ static NSTextAttachment *headerMediaIcon() {
 
 - (void)addReplayMessage:(TL_localMessage *)message animated:(BOOL)animated {
     
-    if(message.to_id.class == [TL_peerChat class] || message.to_id.class == [TL_peerUser class])  {
+    if((message.to_id.class == [TL_peerChannel class] || message.to_id.class == [TL_peerChat class] || message.to_id.class == [TL_peerUser class]) && message.peer_id == _conversation.peer_id)  {
         [[Storage yap] readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
             
             [transaction setObject:message forKey:self.conversation.cacheKey inCollection:REPLAY_COLLECTION];
@@ -3234,9 +3475,10 @@ static NSTextAttachment *headerMediaIcon() {
         
         [self.bottomView updateReplayMessage:YES animated:animated];
         
-        if([Telegram rightViewController].navigationViewController.currentController != self)
+        if(self.navigationViewController.currentController != self)
         {
-            [[Telegram rightViewController] showByDialog:message.conversation sender:self];
+            [self setCurrentConversation:message.conversation];
+            [self.navigationViewController gotoViewController:self];
         }
     }
 }
@@ -3267,6 +3509,13 @@ static NSTextAttachment *headerMediaIcon() {
     
 }
 
+
+-(int)senderFlags {
+    if(self.conversation.type != DialogTypeChannel)
+        return self.historyController.filter.additionSenderFlags;
+    
+    return [self.bottomView sendMessageAsAdmin] ? self.historyController.filter.additionSenderFlags : self.conversation.canSendChannelMessageAsUser ? 0 : self.historyController.filter.additionSenderFlags;
+}
 
 -(void)markAsNoWebpage {
     
@@ -3363,8 +3612,17 @@ static NSTextAttachment *headerMediaIcon() {
     MessageTableItem *item = [self.messages objectAtIndex:row];
     MessageTableCell *cell = nil;
     
-    
-    if(item.class == [MessageTableItemServiceMessage class]) {
+    if(item.message.hole != nil) {
+        
+        static NSString *const kRowIdentifier = @"holeItem";
+        cell = [self.table makeViewWithIdentifier:kRowIdentifier owner:self];
+        if(!cell) {
+            cell = [[MessageTableCellHoleView alloc] initWithFrame:self.view.bounds];
+            cell.identifier = kRowIdentifier;
+            cell.messagesViewController = self;
+        }
+        
+    } else if(item.class == [MessageTableItemServiceMessage class]) {
         
         static NSString *const kRowIdentifier = @"service";
         cell = [self.table makeViewWithIdentifier:kRowIdentifier owner:self];
@@ -3501,7 +3759,6 @@ static NSTextAttachment *headerMediaIcon() {
     NSDate *start = [NSDate new];
     
     [cell setItem:item];
-    
    
     
     if([cell isKindOfClass:[MessageTableCellContainerView class]]) {
@@ -3516,6 +3773,7 @@ static NSTextAttachment *headerMediaIcon() {
     
     return cell;
 }
+
 
 - (void)backOrClose:(NSMenuItem *)sender {
     if(self.state == MessagesViewControllerStateEditable) {
@@ -3533,21 +3791,20 @@ static NSTextAttachment *headerMediaIcon() {
     return [self.messages indexOfObject:item];
 }
 
-- (MessageTableItem *)itemOfMsgId:(int)msg_id {
+- (MessageTableItem *)itemOfMsgId:(long)msg_id {
     return [self findMessageItemById:msg_id];
 }
 
 - (void)clearHistory:(TL_conversation *)dialog {
     
-    weakify();
+    weak();
     
     NSAlert *alert = [NSAlert alertWithMessageText:NSLocalizedString(@"Conversation.Confirm.ClearHistory", nil) informativeText:NSLocalizedString(@"Conversation.Confirm.UndoneAction", nil) block:^(NSNumber *result) {
         if([result intValue] == 1000) {
             [[DialogsManager sharedManager] clearHistory:dialog completeHandler:^{
-                if(strongSelf.conversation == dialog) {
-                    [strongSelf.historyController removeAllItems];
-                    strongSelf.conversation = nil;
-                    [strongSelf setCurrentConversation:dialog];
+                if(weakSelf.conversation == dialog) {
+                    weakSelf.conversation = nil;
+                    [weakSelf setCurrentConversation:dialog];
                 }
             }];
         }
@@ -3585,7 +3842,9 @@ static NSTextAttachment *headerMediaIcon() {
 }
 
 - (void)deleteDialog:(TL_conversation *)dialog callback:(dispatch_block_t)callback startDeleting:(dispatch_block_t)startDeleting {
-    weakify();
+   
+    
+    weak();
     
     
     if(!dialog)
@@ -3596,12 +3855,12 @@ static NSTextAttachment *headerMediaIcon() {
     
     dispatch_block_t block = ^{
         [[DialogsManager sharedManager] deleteDialog:dialog completeHandler:^{
-            if(dialog == strongSelf.conversation) {
-                [strongSelf.historyController removeAllItems];
+            
+            if(callback) callback();
+            
+            if(dialog == weakSelf.conversation) {
                 [[Telegram sharedInstance] showNotSelectedDialog];
-                strongSelf.conversation = nil;
-                
-                if(callback) callback();
+                weakSelf.conversation = nil;
             }
         }];
     };
@@ -3618,7 +3877,7 @@ static NSTextAttachment *headerMediaIcon() {
         return;
     }
     
-    NSAlert *alert = [NSAlert alertWithMessageText:dialog.type == DialogTypeChat && dialog.chat.type == TLChatTypeNormal ? NSLocalizedString(@"Conversation.Confirm.LeaveAndClear", nil) :  NSLocalizedString(@"Conversation.Confirm.DeleteAndClear", nil) informativeText:NSLocalizedString(@"Conversation.Confirm.UndoneAction", nil) block:^(NSNumber *result) {
+    NSAlert *alert = [NSAlert alertWithMessageText:dialog.type == DialogTypeChannel && dialog.chat.isCreator ? (NSLocalizedString(dialog.chat.isMegagroup ? @"Conversation.Confirm.DeleteGroup" : @"Conversation.Confirm.DeleteChannel", nil)) : (dialog.type == DialogTypeChat && dialog.chat.type == TLChatTypeNormal ? NSLocalizedString(@"Conversation.Confirm.LeaveAndClear", nil) :  NSLocalizedString(@"Conversation.Confirm.DeleteAndClear", nil)) informativeText:dialog.type == DialogTypeChannel && dialog.chat.isCreator ? NSLocalizedString(dialog.chat.isMegagroup ? @"Conversation.Confirm.DeleteSupergroupInfo" : @"Conversation.Confirm.DeleteChannelInfo", nil) : NSLocalizedString(@"Conversation.Confirm.UndoneAction", nil) block:^(NSNumber *result) {
         if([result intValue] == 1000) {
             if(startDeleting != nil)
                 startDeleting();
@@ -3626,7 +3885,7 @@ static NSTextAttachment *headerMediaIcon() {
         }
     }];
     
-    NSString *buttonText = dialog.type == DialogTypeChat && dialog.chat.type == TLChatTypeNormal ? NSLocalizedString(@"Conversation.DeleteAndExit", nil) : NSLocalizedString(@"Conversation.Delete", nil);
+    NSString *buttonText = dialog.type == DialogTypeChannel && dialog.chat.isAdmin && !dialog.chat.isMegagroup ? NSLocalizedString(@"Conversation.Confirm.DeleteChannel", nil) : (dialog.type == DialogTypeChat && dialog.chat.type == TLChatTypeNormal ? NSLocalizedString(@"Conversation.DeleteAndExit", nil) : NSLocalizedString(@"Conversation.Delete", nil));
     
     [alert addButtonWithTitle:buttonText];
     [alert addButtonWithTitle:NSLocalizedString(@"Profile.Cancel", nil)];

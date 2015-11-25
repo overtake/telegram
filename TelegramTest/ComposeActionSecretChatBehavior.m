@@ -39,10 +39,13 @@
         
         [self.delegate behaviorDidStartRequest];
         
-        SelectUserItem *item = self.action.result.multiObjects[0];
+        TLUser *user = self.action.result.multiObjects[0];
         
-        [MessageSender startEncryptedChat:item.user callback:^{
+        [MessageSender startEncryptedChat:user callback:^{
             [self.delegate behaviorDidEndRequest:nil];
+            
+            
+            
         }];
     }
     

@@ -56,7 +56,11 @@
         
         [supportMessages enumerateObjectsUsingBlock:^(TL_localMessage *obj, NSUInteger idx, BOOL *stop) {
             
-            _supportMessages[@(obj.n_id)] = obj;
+            if(!_supportMessages[@(obj.peer_id)]) {
+                _supportMessages[@(obj.peer_id)] = [[NSMutableDictionary alloc] init];
+            }
+            
+            _supportMessages[@(obj.peer_id)][@(obj.n_id)] = obj;
             
         }];
         
@@ -65,19 +69,27 @@
    
 }
 
--(TL_localMessage *)supportMessage:(int)n_id {
+-(TL_localMessage *)supportMessage:(int)n_id peer_id:(int)peer_id {
     
     __block TL_localMessage *message;
     
     [self.queue dispatchOnQueue:^{
         
-        message = _supportMessages[@(n_id)];
+        message = _supportMessages[@(peer_id)][@(n_id)];
         
     } synchronous:YES];
     
     return message;
 }
 
+
++(void)addSupportMessages:(NSArray *)supportMessages {
+    [[self sharedManager] addSupportMessages:supportMessages];
+}
+
++(TL_localMessage *)supportMessage:(int)n_id peer_id:(int)peer_id {
+    return [[self sharedManager] supportMessage:n_id peer_id:peer_id];
+}
 
 -(void)dealloc {
     [Notification removeObserver:self];
@@ -86,6 +98,7 @@
 
 
 +(void)addAndUpdateMessage:(TL_localMessage *)message {
+    [[Storage manager] insertMessage:message];
     [self addAndUpdateMessage:message notify:YES];
 }
 
@@ -99,18 +112,15 @@ static const int seconds_to_notify = 120;
 -(void)notifyMessage:(TL_localMessage *)message update_real_date:(BOOL)update_real_date notify:(BOOL)notify {
     [self.queue dispatchOnQueue:^{
       
-        if(!message || [self find:message.n_id])
+        if(!message)
             return;
         
-        
-        [self addMessage:message];
-         
         TL_conversation *conversation = message.conversation;
         
-        [Notification perform:MESSAGE_UPDATE_TOP_MESSAGE data:@{KEY_MESSAGE:message,@"update_real_date":@(update_real_date)}];
+        [Notification performOnStageQueue:MESSAGE_UPDATE_TOP_MESSAGE data:@{KEY_MESSAGE:message,@"update_real_date":@(update_real_date)}];
         
         
-        if(message.from_id == [UsersManager currentUserId]) {
+        if(message.n_out || (message.isChannelMessage && (!message.isImportantMessage && !message.chat.isMegagroup))) {
             return;
         }
         
@@ -119,12 +129,13 @@ static const int seconds_to_notify = 120;
                 return;
         
         
+        
         TLUser *fromUser = [[UsersManager sharedManager] find:message.from_id];
         
-        TLChat *chat = [[ChatsManager sharedManager] find:message.to_id.chat_id];
+        TLChat *chat = [[ChatsManager sharedManager] find:message.chat.n_id];
         
         
-        NSString *title = [message.to_id isSecret] || [TGPasslock isVisibility] ? appName() : [fromUser fullName];
+        NSString *title = message.isChannelMessage && !message.chat.isMegagroup ? (chat.title) : ( [message.to_id isSecret] || [TGPasslock isVisibility] ? appName() : [fromUser fullName] );
         NSString *msg = message.message;
         if(message.action) {
             msg = [MessagesUtils serviceMessage:message forAction:message.action];
@@ -141,7 +152,7 @@ static const int seconds_to_notify = 120;
         if(![message.to_id isSecret] && ![TGPasslock isVisibility]) {
             NSString *cacheKey = [fromUser.photo.photo_small cacheKey];
             
-            if(message.to_id.chat_id != 0) {
+            if(chat != nil) {
                 cacheKey = [chat.photo.photo_small cacheKey];
             }
             
@@ -179,7 +190,7 @@ static const int seconds_to_notify = 120;
                     
                     NSString *text = [TMAvatarImageView text:chat ? chat : fromUser];
                     
-                    image = [TMAvatarImageView generateTextAvatar:colorMask size:NSMakeSize(100, 100) text:text type:chat ? TMAvatarTypeChat : TMAvatarTypeUser font:[NSFont fontWithName:@"HelveticaNeue" size:30] offsetY:0];
+                    image = [TMAvatarImageView generateTextAvatar:colorMask size:NSMakeSize(100, 100) text:text type:chat ? TMAvatarTypeChat : TMAvatarTypeUser font:TGSystemFont(30) offsetY:0];
                     
                     [TGCache cacheImage:image forKey:p groups:@[AVACACHE]];
                 }
@@ -191,11 +202,9 @@ static const int seconds_to_notify = 120;
         
         
         
-        if(message.to_id.chat_id != 0) {
-            if(![message.to_id isSecret]) {
-                subTitle = title;
-                title = [chat title];
-            } 
+        if(message.peer_id < 0 && message.from_id != 0) {
+            subTitle = title;
+            title = [chat title];
         }
         
         
@@ -222,7 +231,7 @@ static const int seconds_to_notify = 120;
                 notification.soundName = [SettingsArchiver soundNotification];
             if (floor(NSAppKitVersionNumber) > 1187)
             {
-                if(![message.to_id isSecret])
+                if(![message.to_id isSecret] && (!message.isChannelMessage || message.chat.dialog.canSendMessage))
                     notification.hasReplyButton = YES;
                 notification.contentImage = image;
             }
@@ -335,7 +344,6 @@ static const int seconds_to_notify = 120;
     [self.queue dispatchOnQueue:^{
         for (TLMessage *message in all) {
             assert([message isKindOfClass:[TL_localMessage class]]);
-            [self TGsetMessage:message];
         }
     }];
 
@@ -347,36 +355,6 @@ static const int seconds_to_notify = 120;
 }
 
 
-
--(void)addMessage:(TLMessage *)message  {
-    [self TGsetMessage:message];
-    [[Storage manager] insertMessage:message  completeHandler:nil];
-}
-
--(void)TGsetMessage:(TL_localMessage *)message {
-    
-    [self.queue dispatchOnQueue:^{
-        if(!message || message.n_id == 0) return;
-        
-        TL_localMessage *m = self.messages[@(message.n_id)];
-        
-        
-        if(m) {
-            m.message = message.message;
-            m.flags = message.flags;
-            m.dstate = message.dstate;
-            m.media = message.media;
-            m.action = message.action;
-            m.randomId = message.randomId;
-            m.fakeId = message.fakeId;
-        } else {
-            [self.messages setObject:message forKey:@(message.n_id)];
-            
-            [self.messages_with_random_ids setObject:message forKey:@(message.randomId)];
-        }
-        
-    }];
-}
 
 
 -(id)find:(NSInteger)_id {
@@ -391,37 +369,7 @@ static const int seconds_to_notify = 120;
 }
 
 
--(void)markAllInDialog:(TL_conversation *)dialog callback:(void (^)(NSArray *ids))callback {
-    [self markAllInConversation:dialog max_id:dialog.top_message out:NO callback:callback];
-}
 
-
--(void)markAllInConversation:(TL_conversation *)conversation max_id:(int)max_id out:(BOOL)n_out callback:(void (^)(NSArray *ids))callback{
-    
-    dispatch_queue_t queue = dispatch_get_current_queue();
-    
-    [self.queue dispatchOnQueue:^{
-        
-        [[Storage manager] markAllInConversation:conversation max_id:max_id out:n_out completeHandler:^(NSArray *ids) {
-            
-            [ids enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
-                
-                TL_localMessage *message = self.messages[obj];
-                 message.flags&=~TGUNREADMESSAGE;
-                
-            }];
-            
-            dispatch_async(queue, ^{
-                callback(ids);
-            });
-            
-            
-        }];
-        
-    }];
-    
-    
-}
 
 -(void)readMessagesContent:(NSArray *)msg_ids {
     
@@ -448,7 +396,7 @@ static const int seconds_to_notify = 120;
 }
 
 -(void)setUnread_count:(int)unread_count {
-    _unread_count = unread_count > 0 ? unread_count : 0;
+    _unread_count = MAX(0,unread_count);
 }
 
 +(void)updateUnreadBadge {
@@ -460,7 +408,7 @@ static const int seconds_to_notify = 120;
         NSString *str = [[self sharedManager] unread_count] > 0 ? [NSString stringWithFormat:@"%d",count] : nil;
         [[[NSApplication sharedApplication] dockTile] setBadgeLabel:str];
         [Notification perform:UNREAD_COUNT_CHANGED data:@{@"count":@(count)}];
-    }];
+    } includeMuted:[SettingsArchiver checkMaskedSetting:IncludeMutedUnreadCount]];
     
 }
 

@@ -61,7 +61,9 @@
 
 -(void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-      [Notification addObserver:self selector:@selector(userNameChangedNotification:) name:USER_UPDATE_NAME];
+    [Notification addObserver:self selector:@selector(userNameChangedNotification:) name:USER_UPDATE_NAME];
+    
+    
 }
 
 -(void)viewWillDisappear:(BOOL)animated {
@@ -82,7 +84,7 @@
     [flippedClipView setAutoresizesSubviews:YES];
     [flippedClipView setAutoresizingMask:NSViewWidthSizable | NSViewHeightSizable];
     
-    self.containerView = [[TMView alloc] initWithFrame:NSMakeRect(0, 0, self.view.bounds.size.width, 700)];
+    self.containerView = [[TMView alloc] initWithFrame:NSMakeRect(0, 0, self.view.bounds.size.width, 800)];
     [self.containerView setAutoresizingMask:NSViewWidthSizable];
     
     self.normalContainer = [[UserInfoContainerView alloc] initWithFrame:self.containerView.bounds];
@@ -102,7 +104,7 @@
     [self setCenterBarViewText:NSLocalizedString(@"Profile.Info", nil)];
     
     
-    _avatarImageView = [ChatAvatarImageView standartUserInfoAvatar];
+    _avatarImageView = [TMAvatarImageView standartUserInfoAvatar];
     
     [_avatarImageView setFrameSize:NSMakeSize(70, 70)];
     [_avatarImageView setFrameOrigin:NSMakePoint(100, self.containerView.bounds.size.height - self.avatarImageView.bounds.size.height - 36)];
@@ -119,8 +121,6 @@
             [[TGPhotoViewer viewer] show:previewObject user:strongSelf.user];
         }
     }];
-    
-    [_avatarImageView setSourceType:ChatAvatarSourceUser];
     
     
     self.scrollView = [[BTRScrollView alloc] initWithFrame:self.view.bounds];
@@ -382,6 +382,8 @@
     [self.editContainer setUser:user];
     [self.avatarImageView setUser:user];
     [self setRightNavigationBarView:[self generateRightHeaderButtons]];
+    
+    
 }
 
 @end

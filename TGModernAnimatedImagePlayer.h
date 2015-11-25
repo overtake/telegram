@@ -12,4 +12,6 @@
 
 @property (nonatomic,assign) BOOL isPlaying;
 
+-(NSImage *)poster;
+
 @end

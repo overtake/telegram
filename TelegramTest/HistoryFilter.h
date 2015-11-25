@@ -7,6 +7,8 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "TLPeer+Extensions.h"
+
 
 @class ChatHistoryController;
 
@@ -24,33 +26,79 @@ typedef enum {
     HistoryFilterContact = 1 << 8,
     HistoryFilterSearch = 1 << 9,
     HistoryFilterAudioDocument = 1 << 10,
-    HistoryFilterSharedLink = 1 << 11
+    HistoryFilterSharedLink = 1 << 11,
+    HistoryFilterChannelMessage = 1 << 12,
+    HistoryFilterImportantChannelMessage = 1 << 13
 } HistoryFilterType;
 
+typedef enum {
+    ChatHistoryStateCache = 0,
+    ChatHistoryStateLocal = 1,
+    ChatHistoryStateRemote = 2,
+    ChatHistoryStateFull = 3
+} ChatHistoryState;
+
+
+
+@property (nonatomic,assign) ChatHistoryState prevState;
+@property (nonatomic,assign) ChatHistoryState nextState;
+
 @property (nonatomic,weak) ChatHistoryController *controller;
+@property (nonatomic,strong,readonly) TLPeer *peer;
+
+-(id)initWithController:(ChatHistoryController *)controller peer:(TLPeer *)peer;
+
+-(int)max_id;
+-(int)min_id;
+-(int)server_max_id;
+-(int)server_min_id;
+-(int)minDate;
+-(int)maxDate;
 
 
--(id)initWithController:(ChatHistoryController *)controller;
+-(int)selectLimit;
 
-- (NSMutableDictionary *)messageKeys:(int)peer_id;
-- (NSMutableArray *)messageItems:(int)peer_id;
+-(NSArray *)filterAndAdd:(NSArray *)items latest:(BOOL)latest;
+-(NSArray *)proccessResponse:(NSArray *)result state:(ChatHistoryState)state next:(BOOL)next;
 
-+ (NSMutableDictionary *)messageKeys:(int)peer_id;
-+ (NSMutableArray *)messageItems:(int)peer_id;
+-(TGMessageHole *)holeWithNext:(BOOL)next;
+-(void)setHole:(TGMessageHole *)hole withNext:(BOOL)next;
 
-+(NSArray *)removeItems:(NSArray *)messageIds;
 
-+(void)removeAllItems:(int)peerId;
+-(NSMutableArray *)messageItems;
+-(NSMutableDictionary *)messageKeys;
 
-+(NSArray *)items:(NSArray *)messageIds;
+-(NSArray *)selectAllItems;
+-(NSArray *)sortItems:(NSArray *)sort;
+-(int)posAtMessage:(TL_localMessage *)message;
 
 -(int)type;
 +(int)type;
 
-+(void)drop;
+-(BOOL)checkState:(ChatHistoryState)state next:(BOOL)next;
+-(ChatHistoryState)stateWithNext:(BOOL)next;
+-(void)setState:(ChatHistoryState)state next:(BOOL)next;
+-(int)additionSenderFlags;
+
+-(int)peer_id;
+
+-(TGMessageHole *)proccessAndGetHoleWithHole:(TGMessageHole *)hole next:(BOOL)next messages:(NSArray *)messages;
 
 
--(void)storageRequest:(BOOL)next callback:(void (^)(NSArray *result))callback;
--(void)remoteRequest:(BOOL)next peer_id:(int)peer_id callback:(void (^)(id response))callback;
+-(void)remoteRequest:(BOOL)next peer_id:(int)peer_id callback:(void (^)(NSArray *response,ChatHistoryState state))callback;
 
+-(BOOL)confirmHoleWithNext:(BOOL)next;
+
+
+-(NSArray *)storageRequest:(BOOL)next state:(ChatHistoryState *)state;
+
+-(void)remoteRequest:(BOOL)next hole:(TGMessageHole *)hole callback:(void (^)(id response,ChatHistoryState state))callback;
+-(void)remoteRequest:(BOOL)next max_id:(int)max_id hole:(TGMessageHole *)hole callback:(void (^)(id response,ChatHistoryState state))callback;
+-(void)request:(BOOL)next callback:(void (^)(NSArray *response, ChatHistoryState state))callback;
+
+
+-(void)fillGroupHoles:(NSArray *)messages bottom:(BOOL)bottom;
+
+-(TLMessagesFilter *)messagesFilter;
+-(BOOL)checkAcceptResult:(NSArray *)result;
 @end

@@ -18,6 +18,7 @@
 @property (nonatomic,strong) TGSearchRowView *searchView;
 @property (nonatomic,strong) TGSearchRowItem *searchItem;
 @property (nonatomic,strong) RPCRequest *request;
+
 @end
 
 @implementation SelectUsersTableView
@@ -51,7 +52,7 @@ static NSCache *cacheItems;
     
     NSMutableArray *items = [[NSMutableArray alloc] init];
     
-    contacts = [contacts filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"NOT(self.user_id IN %@ AND (self.user.flags & 1 << 16) == 0)",self.exceptions]];
+    contacts = [contacts filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"NOT(self.user_id IN (%@)) || (self.user.flags & 1 << 16) == 0",self.exceptions]];
     
     
     
@@ -70,23 +71,7 @@ static NSCache *cacheItems;
     [items filterUsingPredicate:[NSPredicate predicateWithFormat:@"self.user.n_id != %d",[UsersManager currentUserId]]];
     
     
-    
-    self.tm_delegate = self;
-    
-    [self removeAllItems:NO];
-    
-    self.items = items;
-    
-    self.searchItem = [[TGSearchRowItem alloc] init];
-    
-    self.searchView = [[TGSearchRowView alloc] initWithFrame:NSMakeRect(0, 0, NSWidth(self.bounds), 50)];
-    
-    [self insert:self.searchItem atIndex:0 tableRedraw:NO];
-    
-    [self insert:self.items startIndex:1 tableRedraw:NO];
-    
-    
-    [self reloadData];
+    [self readyItems:items];
     
     if(contacts.count > 30)
         dispatch_after_seconds(0.3, ^{
@@ -95,13 +80,40 @@ static NSCache *cacheItems;
     
 }
 
+- (void)readyCommon:(NSArray *)items {
+    
+    _type = SelectTableTypeCommon;
+    
+    [self readyItems:items];
+}
+
+-(void)removeSelectedItems {
+    self.defaultAnimation = NSTableViewAnimationEffectFade;
+    
+    NSArray *copy = [self.selectedItems copy];
+    
+    [copy enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+        
+        [self.items removeObject:obj];
+        
+        [self removeItem:obj tableRedraw:YES];
+        
+    }];
+    
+    self.defaultAnimation = NSTableViewAnimationEffectNone;
+}
+
 
 -(void)readyChats {
     
     
     _type = SelectTableTypeChats;
     
-    NSArray *chats = [[[DialogsManager sharedManager] all] filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.type == %d",DialogTypeChat]];
+    NSArray *chats = [[[DialogsManager sharedManager] all] filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(TL_conversation *evaluatedObject, NSDictionary<NSString *,id> * _Nullable bindings) {
+        
+        return (evaluatedObject.type == DialogTypeChat && evaluatedObject.chat.type == TLChatTypeNormal && !evaluatedObject.chat.isDeactivated && (!evaluatedObject.chat.isAdmins_enabled || evaluatedObject.chat.isAdmin)) || (evaluatedObject.type == DialogTypeChannel && evaluatedObject.chat.isManager);
+        
+    }]];
     
     
     NSMutableArray *items = [[NSMutableArray alloc] init];
@@ -112,12 +124,49 @@ static NSCache *cacheItems;
         
     }];
     
+    [self readyItems:items];
     
+}
+
+-(void)readyConversations {
+    _type = SelectTableConversations;
+    
+    NSArray *chats = [[DialogsManager sharedManager] all];
+    
+    NSMutableArray *accepted = [[NSMutableArray alloc] init];
+    
+    [chats enumerateObjectsUsingBlock:^(TL_conversation *obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        
+        if(obj.type == DialogTypeUser || (obj.type == DialogTypeChat && obj.chat.type == TLChatTypeNormal && !obj.chat.isDeactivated && (!obj.chat.isAdmins_enabled || obj.chat.isAdmin)) || (obj.type == DialogTypeChannel && obj.chat.isManager)) {
+            [accepted addObject:obj];
+        }
+        
+    }];
+    
+    
+    NSMutableArray *items = [[NSMutableArray alloc] init];
+    
+    [accepted enumerateObjectsUsingBlock:^(TL_conversation * obj, NSUInteger idx, BOOL *stop) {
+        
+        if(obj.chat) {
+            [items addObject:[[SelectChatItem alloc] initWithObject:obj.chat]];
+        } else {
+            [items addObject:[[SelectUserItem alloc] initWithObject:obj.user]];
+        }
+        
+        
+    }];
+    
+    [self readyItems:items];
+}
+
+
+-(void)readyItems:(NSArray *)items {
     self.tm_delegate = self;
     
     [self removeAllItems:NO];
     
-    self.items = items;
+    self.items = [items mutableCopy];
     
     self.searchItem = [[TGSearchRowItem alloc] init];
     
@@ -129,7 +178,15 @@ static NSCache *cacheItems;
     
     
     [self reloadData];
+
+}
+
+-(void)addItems:(NSArray *)items {
+    [self.items addObjectsFromArray:items];
     
+    [self insert:items startIndex:self.count tableRedraw:NO];
+    
+    [self reloadData];
 }
 
 -(void)insertOther:(NSArray *)other {
@@ -220,12 +277,13 @@ static NSCache *cacheItems;
 
 - (void)selectionDidChange:(NSInteger)row item:(SelectUserItem *)item {
     
-    [self.selectDelegate selectTableDidChangedItem:item];
-    
-    if(self.multipleCallback != nil) {
-        self.multipleCallback(@[item.user]);
+    if(![item isKindOfClass:[TGSearchRowItem class]]) {
+        [self.selectDelegate selectTableDidChangedItem:item];
+        
+        if(self.multipleCallback != nil) {
+            self.multipleCallback(@[item.user]);
+        }
     }
-    
 }
 
 
@@ -278,8 +336,44 @@ static NSCache *cacheItems;
     else
         if(_type == SelectTableTypeChats)
             [self searchChats:searchString];
+    else
+        if(_type == SelectTableTypeCommon)
+            [self searchUsers:searchString];
+    else
+        if(_type == SelectTableConversations)
+            [self searchAll:searchString];
 }
 
+
+-(void)searchAll:(NSString *)searchString {
+    NSArray *sorted = self.items;
+    
+    
+    if(searchString.length > 0) {
+        sorted = [self.items filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(SelectUserItem *evaluatedObject, NSDictionary *bindings) {
+            if([evaluatedObject isKindOfClass:[SelectChatItem class]]) {
+                return [((SelectChatItem *)evaluatedObject).chat.title searchInStringByWordsSeparated:searchString];
+            } else {
+                return [[evaluatedObject.user fullName] searchInStringByWordsSeparated:searchString];
+            }
+        }]];
+    }
+    
+    
+    NSRange range = NSMakeRange(1, self.list.count-1);
+    
+    NSArray *list = [self.list subarrayWithRange:range];
+    
+    [list enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+        [self removeItem:obj tableRedraw:NO];
+    }];
+    
+    [self removeRowsAtIndexes:[NSIndexSet indexSetWithIndexesInRange:range] withAnimation:self.defaultAnimation];
+    
+    
+    [self insert:sorted startIndex:1 tableRedraw:YES];
+
+}
 
 -(void)searchChats:(NSString *)searchString {
     
@@ -314,9 +408,7 @@ static NSCache *cacheItems;
 
     __block NSArray *sorted = [self.items filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.user.n_id != %d",[UsersManager currentUserId]]];
     
-    
     if(searchString.length > 0) {
-        
         
         if([searchString hasPrefix:@"@"])
             searchString = [searchString substringFromIndex:1];
@@ -328,9 +420,6 @@ static NSCache *cacheItems;
         }]];
     }
     
-    
-    
-    
     NSRange range = NSMakeRange(1, self.list.count-1);
     
     NSArray *list = [self.list subarrayWithRange:range];
@@ -341,55 +430,83 @@ static NSCache *cacheItems;
     
     [self removeRowsAtIndexes:[NSIndexSet indexSetWithIndexesInRange:range] withAnimation:self.defaultAnimation];
     
-    
     [self insert:sorted startIndex:1 tableRedraw:YES];
     
     
-    [_request cancelRequest];
-   
-    dispatch_after_seconds(0.2, ^{
-        [self remoteSearchByUserName:searchString];
-    });
+    if(_type == SelectTableTypeUser) {
+        [_request cancelRequest];
+        
+         NSArray *users = [UsersManager findUsersByName:searchString];
+        
+        [self filterAndAddGlobalUsers:users checkContact:YES];
+        
+        dispatch_after_seconds(0.2, ^{
+            [self remoteSearchByUserName:searchString];
+        });
+    }
     
 }
 
 
+-(void)filterAndAddGlobalUsers:(NSArray *)users checkContact:(BOOL)checkContact {
+    
+    
+    NSMutableArray *rmrf = [NSMutableArray array];
+    
+    [self.list enumerateObjectsUsingBlock:^(SelectUserItem *obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        
+        if([obj isKindOfClass:[SelectUserItem class]]) {
+            if(obj.isSearchUser && !obj.isSelected) {
+                [rmrf addObject:obj];
+            }
+        }
+    }];
+    
+    [rmrf enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        [self removeItem:obj];
+        [self.items removeObject:obj];
+    }];
+    
+    NSMutableArray *converted = [NSMutableArray array];
+    
+    NSMutableArray *ids = [[NSMutableArray alloc] init];
+    
+    [self.list enumerateObjectsUsingBlock:^(SelectUserItem *obj, NSUInteger idx, BOOL *stop) {
+        if([obj isKindOfClass:[SelectUserItem class]])
+            [ids addObject:@(obj.user.n_id)];
+    }];
+    
+    
+    NSArray *filtred = [users filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"NOT(self.n_id IN %@)",ids]];
+    
+    
+    [filtred enumerateObjectsUsingBlock:^(TLUser *obj, NSUInteger idx, BOOL *stop) {
+        
+        if(checkContact && !obj.isContact)
+            return;
+        
+        SelectUserItem *item = [[SelectUserItem alloc] initWithObject:obj];
+        item.isSearchUser = YES;
+        [converted addObject:item];
+        
+    }];
+    
+    if(converted.count > 0) {
+        [self.items insertObjects:converted atIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, converted.count)]];
+        
+        [self insert:converted startIndex:self.count tableRedraw:YES];
+    }
+
+}
+
 -(void)remoteSearchByUserName:(NSString *)userName {
     
     if(userName.length > 4) {
+        
         _request = [RPCRequest sendRequest:[TLAPI_contacts_search createWithQ:userName limit:100] successHandler:^(RPCRequest *request, TL_contacts_found *response) {
-                        
-            NSMutableArray *converted = [[NSMutableArray alloc] init];
             
-            
-            NSMutableArray *ids = [[NSMutableArray alloc] init];
-            
-            [_items enumerateObjectsUsingBlock:^(SelectUserItem *obj, NSUInteger idx, BOOL *stop) {
-                [ids addObject:@(obj.user.n_id)];
-            }];
-            
-            NSArray *filtred = [response.users filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"NOT(self.n_id IN %@)",ids]];
-            
-            [filtred enumerateObjectsUsingBlock:^(TLUser *obj, NSUInteger idx, BOOL *stop) {
-                
-                [obj rebuildNames];
-                
-               // if([obj isKindOfClass:[TL_userContact class]]) {
-                
-                SelectUserItem *item = [[SelectUserItem alloc] initWithObject:obj];
-                item.isSearchUser = YES;
-                [converted addObject:item];
-              //  }
-                
-            }];
-            
-            if(converted.count > 0) {
-                [self.items insertObjects:converted atIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, converted.count)]];
-                
-                [self insert:converted startIndex:self.count tableRedraw:YES];
-            }
-            
-            
+            [self filterAndAddGlobalUsers:response.users checkContact:NO];
+  
         } errorHandler:^(RPCRequest *request, RpcError *error) {
             
             

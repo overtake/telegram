@@ -13,7 +13,6 @@
 
 #import "SelectUserItem.h"
 #import "SelectUserRowView.h"
-#import "NewConversationViewController.h"
 #import "RBLPopover.h"
 #import "TLPeer+Extensions.h"
 #import "AddContactViewController.h"
@@ -43,7 +42,7 @@
         self.field = [TMTextField defaultTextField];
         
         [self.field setBackgroundColor:[NSColor clearColor]];
-        [self.field setFont:[NSFont fontWithName:@"HelveticaNeue-Medium" size:12]];
+        [self.field setFont:TGSystemMediumFont(12)];
         [[self.field cell] setLineBreakMode:NSLineBreakByCharWrapping];
         [[self.field cell] setTruncatesLastVisibleLine:YES];
         
@@ -428,7 +427,9 @@
     
     if([item isKindOfClass:[ContactUserItem class]]) {
          ContactUserItem *searchItem = (ContactUserItem *) item;
-        [[Telegram sharedInstance] showMessagesWidthUser:searchItem.user sender:self];
+        
+        [appWindow().navigationController showMessagesViewController:searchItem.user.dialog];
+        
     } else if([item isKindOfClass:[ContactFirstItem class]]) {
         
         [[Telegram rightViewController] showAddContactController];

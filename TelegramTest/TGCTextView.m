@@ -9,6 +9,7 @@
 #import "TGCTextView.h"
 #import "NSString+Extended.h"
 #import "TGMultipleSelectTextView.h"
+#import "MessageTableItemText.h"
 @interface DrawsRect : NSObject
 
 @property(nonatomic,assign) CGColorRef color;
@@ -68,37 +69,6 @@
     [self addTrackingArea:_trackingArea];
 }
 
-
-//-(void)updateTrackingAreas {
-//    
-//    if(!self.needUpdateTrackingArea)
-//        return;
-//    
-//    
-//    if(self.trackingArea) {
-//        [self removeTrackingArea:self.trackingArea];
-//    }
-//    
-//    self.trackingArea = [[NSTrackingArea alloc] initWithRect:self.bounds
-//                                                     options: (NSTrackingMouseEnteredAndExited | NSTrackingMouseMoved | NSTrackingActiveInActiveApp | NSTrackingInVisibleRect)
-//                                                       owner:self userInfo:nil];
-//    
-//    [self addTrackingArea:self.trackingArea];
-//    
-//    self.needUpdateTrackingArea = NO;
-//}
-//
-//-(void)setFrameSize:(NSSize)newSize {
-//    
-//    if(newSize.width != self.currentSize.width || newSize.height != self.currentSize.height) {
-//        self.currentSize = newSize;
-//        self.needUpdateTrackingArea = YES;
-//        [super setFrameSize:newSize];
-//    }
-//    
-//    [self setNeedsDisplay:YES];
-//   
-//}
 
 -(void)setAttributedString:(NSAttributedString *)attributedString {
     self->_attributedString = attributedString;
@@ -193,10 +163,7 @@
     CGContextSetShouldSmoothFonts(context, !IS_RETINA);
     CGContextSetAllowsFontSmoothing(context,!IS_RETINA);
     
-    
-
-    
-  //  CGContextSetFillColorWithColor(context, self.layer.backgroundColor);
+   
     
    NSRectFill(self.bounds);
     
@@ -214,9 +181,6 @@
         }];
     }
     
-    
-    
-
     
     CTFramesetterRef framesetter = CTFramesetterCreateWithAttributedString((CFAttributedStringRef) self.attributedString);
     
@@ -244,7 +208,6 @@
     
     _selectRange = NSMakeRange(NSNotFound, 0);
     
-   
     [self.marks enumerateObjectsUsingBlock:^(TGCTextMark *mark, NSUInteger idx, BOOL *stop) {
         
         if( (currentSelectPosition.x != -1 && currentSelectPosition.y != -1) ||  mark.range.location != NSNotFound) {
@@ -372,7 +335,7 @@
                 
                 
                 runBounds.size.width = width;
-                runBounds.size.height = floor(ascent + ceil(descent) + leading);
+                runBounds.size.height = ceil(ascent + ceil(descent) + leading);
                 
                 if(runBounds.size.height == 22)
                     runBounds.size.height--;
@@ -393,7 +356,7 @@
                 CGContextFillPath(context);
                 CGPathRelease(highlightPath);
                 
-
+                
                 
                 // CFRelease(line);
                 
@@ -471,7 +434,7 @@
     
     CTLineGetTypographicBounds(line, &ascent, &descent, &leading);
     
-    int lineHeight = floor(ascent + ceil(descent) + leading);
+    int lineHeight = ceil(ascent + ceil(descent) + leading);
 
     
     return (position.y > linePosition.y) && position.y < (linePosition.y + lineHeight);
@@ -603,7 +566,7 @@
         
          _selectRange = NSMakeRange(0, self.attributedString.length);
         
-    } else if(theEvent.clickCount == 2) {
+    } else if(theEvent.clickCount == 2 || (theEvent.type == 3 && _selectRange.location == NSNotFound)) {
        
         
         int startIndex = [self currentIndexInLocation:[self convertPoint:[theEvent locationInWindow] fromView:nil]];
@@ -687,6 +650,7 @@
 
 
 -(void)mouseDragged:(NSEvent *)theEvent {
+        
     [super mouseDragged:theEvent];
     
     [[NSCursor IBeamCursor] set];
@@ -698,6 +662,8 @@
 -(void)_mouseDragged:(NSEvent *)theEvent {
     if(!_isEditable)
         return;
+    
+    
     
     currentSelectPosition = [self convertPoint:[theEvent locationInWindow] fromView:nil];
     
@@ -829,6 +795,9 @@
 }
 
 -(void)open_link:(NSString *)link  itsReal:(BOOL)itsReal {
+    
+    itsReal = itsReal || [link rangeOfString:@"USER_PROFILE:"].location != NSNotFound || [link rangeOfString:@"openWithPeer"].location != NSNotFound;
+    
     if(itsReal) {
         open_link(link);
     } else {
@@ -843,6 +812,8 @@
 
 
 -(void)rightMouseDown:(NSEvent *)theEvent {
+    
+    [self _checkClickCount:theEvent];
     
     if(self.selectRange.location != NSNotFound) {
         NSTextView *view = (NSTextView *) [self.window fieldEditor:YES forObject:self];

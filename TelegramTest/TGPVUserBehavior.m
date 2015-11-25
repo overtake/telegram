@@ -56,6 +56,8 @@ static NSMutableDictionary *count;
                 
                 PreviewObject *previewObject = [[PreviewObject alloc] initWithMsdId:[photo n_id] media:[photo.sizes lastObject] peer_id:_user.n_id];
                 
+                previewObject.date = photo.date;
+                
                 previewObject.access_hash = photo.access_hash;
                 
                 [converted addObject:previewObject];
@@ -123,8 +125,6 @@ static NSMutableDictionary *count;
 }
 
 
--(BOOL)isReversedContentView {
-    return NO;
-}
+
 
 @end

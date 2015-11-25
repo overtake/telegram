@@ -9,13 +9,13 @@
 #import "ForwardSenterItem.h"
 #import "NSArray+BlockFiltering.h"
 #import "MessageTableItem.h"
-
+#import "TLPeer+Extensions.h"
 
 
 
 @interface ForwardSenterItem ()
 
-
+@property (nonatomic,strong) TLInputPeer *from_peer;
 @end
 
 
@@ -26,7 +26,7 @@
 }
 
 
--(id)initWithMessages:(NSArray *)msgs forConversation:(TL_conversation *)conversation {
+-(id)initWithMessages:(NSArray *)msgs forConversation:(TL_conversation *)conversation additionFlags:(int)additionFlags {
     if(self = [super init]) {
         self.conversation = conversation;
         
@@ -44,11 +44,22 @@
             
             long random = rand_long();
             
-            TLMessage *f = copy[i];
+            TL_localMessage *f = copy[i];
+            
+            
             
             [ids addObject:@([f n_id])];
             
-            TL_localMessage *fake = [TL_localMessage createWithN_id:0 flags:TGOUTUNREADMESSAGE | TGFWDMESSAGE from_id:[UsersManager currentUserId] to_id:conversation.peer fwd_from_id:f.fwd_from_id == 0 ? f.from_id : f.fwd_from_id fwd_date:f.date reply_to_msg_id:0 date:[[MTNetwork instance] getTime] message:f.message media:f.media fakeId:[MessageSender getFakeMessageId] randomId:random reply_markup:nil entities:f.entities state:DeliveryStatePending];
+            TL_localMessage *fake = [TL_localMessage createWithN_id:0 flags:TGOUTUNREADMESSAGE | TGFWDMESSAGE from_id:[UsersManager currentUserId] to_id:conversation.peer fwd_from_id:[f.to_id isKindOfClass:[TL_peerChannel class]] && !f.chat.isMegagroup ? f.to_id : [f.fwd_from_id isKindOfClass:[TL_peerChannel class]] && !f.chat.isMegagroup ? f.fwd_from_id : [TL_peerUser createWithUser_id:f.fwd_from_id.user_id != 0 ? f.fwd_from_id.user_id : f.from_id] fwd_date:f.date reply_to_msg_id:0 date:[[MTNetwork instance] getTime] message:f.message media:f.media fakeId:[MessageSender getFakeMessageId] randomId:random reply_markup:nil entities:f.entities views:f.views isViewed:NO state:DeliveryStatePending];
+            
+            
+            if([f.fwd_from_id isKindOfClass:[TL_peerChannel class]] || ([f.to_id isKindOfClass:[TL_peerChannel class]] && f.chat.isMegagroup)) {
+                _from_peer = [f.to_id inputPeer];
+            }
+            
+            
+            if(additionFlags & (1 << 4))
+                fake.from_id = 0;
              
             [fake save:i == copy.count-1];
             
@@ -67,6 +78,7 @@
 }
 
 
+
 -(void)setTableItems:(NSArray *)tableItems {
     self->_tableItems = tableItems;
     for (MessageTableItem *item in tableItems) {
@@ -83,11 +95,18 @@
     
     NSMutableArray *random_ids = [[NSMutableArray alloc] init];
     
+    __block TLInputPeer *from_peer = _from_peer;
+    
     [self.fakes enumerateObjectsWithOptions:NSEnumerationReverse usingBlock:^(TL_localMessage  *obj, NSUInteger idx, BOOL *stop) {
         [random_ids addObject:@(obj.randomId)];
+        
+        if(!from_peer) {
+            from_peer = [obj.fwd_from_id inputPeer];
+        }
+        
     }];
     
-    TLAPI_messages_forwardMessages *request = [TLAPI_messages_forwardMessages createWithPeer:self.conversation.inputPeer n_id:[self.msg_ids mutableCopy] random_id:random_ids];
+    TLAPI_messages_forwardMessages *request = [TLAPI_messages_forwardMessages createWithFlags:[self senderFlags] from_peer:from_peer n_id:[self.msg_ids mutableCopy] random_id:random_ids to_peer:self.conversation.inputPeer];
     
     self.rpc_request = [RPCRequest sendRequest:request successHandler:^(RPCRequest *request, TLUpdates *response) {
         
@@ -102,7 +121,7 @@
         
         [response.updates enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
             
-            if([obj isKindOfClass:[TL_updateNewMessage class]]) {
+            if([obj isKindOfClass:[TL_updateNewMessage class]] || [obj isKindOfClass:[TL_updateNewChannelMessage class]]) {
                 [messages addObject:[TL_localMessage convertReceivedMessage:(TL_localMessage *)[obj message]]];
             }
             
@@ -121,10 +140,6 @@
             fake.n_id = stated.n_id;
             fake.dstate = DeliveryStateNormal;
             
-            if([fake.media isKindOfClass:[TL_messageMediaPhoto class]]  || [fake.media isKindOfClass:[TL_messageMediaVideo class]]) {
-                [[Storage manager] insertMedia:fake];
-            }
-            
             [fake save:i == 0];
         }
         
@@ -136,6 +151,27 @@
         self.state = MessageSendingStateError;
     } timeout:0 queue:[ASQueue globalQueue].nativeQueue];
 
+}
+
+-(int)senderFlags {
+    
+    if(self.fakes.count > 0) {
+        
+        TL_localMessage *msg = [self.fakes firstObject];
+        
+        int flags = 0;
+        
+        flags|=msg.from_id == 0 ? 1 << 4 : 0;
+        
+        return flags;
+        
+    } else
+        return [super senderFlags];
+    
+}
+
+-(void)updateMessageId:(TLUpdates *)updates {
+    
 }
 
 @end

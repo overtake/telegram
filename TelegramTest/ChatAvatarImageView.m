@@ -9,7 +9,7 @@
 #import "ChatAvatarImageView.h"
 #import "ImageUtils.h"
 #import "TMLoaderView.h"
-
+#import "TGPhotoViewer.h"
 @interface AvatarUpdaterItem : NSObject
 @property (nonatomic, strong) UploadOperation *operation;
 @property (nonatomic, strong) RPCRequest *request;
@@ -24,6 +24,11 @@
 @property (nonatomic, strong) TMView *progressContainer;
 @property (nonatomic, strong) BTRButton *cancelButton;
 @property (nonatomic, strong) AvatarUpdaterItem  *updaterItem;
+
+@property (nonatomic,strong) NSImageView *editCamera;
+
+@property (nonatomic,strong) TMView *editBlank;
+
 @end
 
 @implementation ChatAvatarImageView
@@ -35,10 +40,60 @@
         [self addSubview:self.progressContainer];
         
         self.sourceType = ChatAvatarSourceGroup;
+        [self setFont:TGSystemLightFont(18)];
         
-
+        
+        _editCamera = imageViewWithImage(image_EditPhotoCamera());
+        
+        
+        
+        _editBlank = [[TMView alloc] initWithFrame:self.bounds];
+        
+        _editBlank.wantsLayer = YES;
+        _editBlank.layer.backgroundColor = [NSColor blackColor].CGColor;
+        _editBlank.layer.opacity = 0.7;
+        _editBlank.layer.cornerRadius = NSWidth(self.frame)/2;
+        
+        [self addSubview:_editBlank];
+        
+        [_editBlank setHidden:YES];
+        
+        [_editCamera setCenterByView:self];
+        [self addSubview:_editCamera];
+        
+        [_editCamera setHidden:YES];
+        
+        
+       
     }
     return self;
+}
+
+-(void)updateWithConversation:(TL_conversation *)conversation {
+    [super updateWithConversation:conversation];
+    
+    switch (conversation.type) {
+        case DialogTypeBroadcast:
+            _sourceType = ChatAvatarSourceBroadcast;
+            break;
+        case DialogTypeChannel:
+            _sourceType = ChatAvatarSourceChannel;
+            break;
+        case DialogTypeUser:
+            _sourceType = ChatAvatarSourceUser;
+            break;
+        default:
+            break;
+    }
+}
+
+
+-(void)setEditable:(BOOL)editable {
+    _editable = editable;
+    
+    [_editCamera setHidden:!editable];
+    
+    [_editBlank setHidden:!editable];
 }
 
 - (void)drawRect:(NSRect)dirtyRect
@@ -83,6 +138,44 @@
     
 }
 
+-(void)mouseDown:(NSEvent *)theEvent {
+    [super mouseDown:theEvent];
+    
+    
+    if(self.isEditable)
+    {
+        [self rightMouseDown:theEvent];
+        
+        return;
+    }
+    
+    PreviewObject *previewObject;
+    
+    if(self.sourceType == ChatAvatarSourceUser) {
+        if(![self.user.photo isKindOfClass:[TL_userProfilePhotoEmpty class]] && self.user.photo != nil) {
+            
+            previewObject = [[PreviewObject alloc] initWithMsdId:NSIntegerMax media:[TL_photoSize createWithType:@"x" location:self.user.photo.photo_big w:640 h:640 size:0] peer_id:self.user.n_id];
+            
+            previewObject.reservedObject = [TGCache cachedImage:self.user.photo.photo_small.cacheKey];
+            
+            
+            [[TGPhotoViewer viewer] show:previewObject user:self.user];
+        }
+    } else {
+                
+        if(![self.chat.photo isKindOfClass:[TL_chatPhotoEmpty class]] && self.chat.photo != nil) {
+            
+            
+            previewObject = [[PreviewObject alloc] initWithMsdId:NSIntegerMax media:[TL_photoSize createWithType:@"x" location:self.chat.photo.photo_big w:640 h:640 size:0] peer_id:self.chat.n_id];
+            
+            previewObject.reservedObject = [TGCache cachedImage:self.chat.photo.photo_big.cacheKey];
+            
+            [[TGPhotoViewer viewer] show:previewObject];
+        }
+    }
+    
+}
+
 - (void)rightMouseDown:(NSEvent *)theEvent {
     [super rightMouseDown:theEvent];
     
@@ -96,7 +189,7 @@
         }]];
     } else {
         
-        if(self.sourceType == ChatAvatarSourceBroadcast || self.sourceType == ChatAvatarSourceGroup || (self.sourceType == ChatAvatarSourceUser && self.user.type == TLUserTypeSelf)) {
+        if(self.sourceType == ChatAvatarSourceBroadcast || self.sourceType == ChatAvatarSourceGroup  || self.sourceType == ChatAvatarSourceChannel || (self.sourceType == ChatAvatarSourceUser && self.user.type == TLUserTypeSelf)) {
             [menu addItem:[NSMenuItem menuItemWithTitle:NSLocalizedString(@"Profile.UpdatePhoto", nil) withBlock:^(id sender) {
                 [strongSelf showUpdateChatPhotoBox];
                 
@@ -273,12 +366,19 @@
     };
     
     
+    if(self.sourceType == ChatAvatarSourceGroup) {
+        request = [TLAPI_messages_editChatPhoto createWithChat_id:lockId photo:[TL_inputChatPhotoEmpty create]];
+    } else if(self.sourceType == ChatAvatarSourceChannel) {
+        request = [TLAPI_channels_editPhoto createWithChannel:self.chat.inputPeer photo:[TL_inputChatPhotoEmpty create]];
+    } else {
+        request = [TLAPI_photos_updateProfilePhoto createWithN_id:[TL_inputPhotoEmpty create] crop:[TL_inputPhotoCropAuto create]];
+    }
+    
+    
     if(!image) {
-        if(self.sourceType == ChatAvatarSourceGroup) {
-            request = [TLAPI_messages_editChatPhoto createWithChat_id:lockId photo:[TL_inputChatPhotoEmpty create]];
+        if(self.sourceType == ChatAvatarSourceGroup || self.sourceType == ChatAvatarSourceChannel) {
             groupBlock();
-        } else {
-            request = [TLAPI_photos_updateProfilePhoto createWithN_id:[TL_inputPhotoEmpty create] crop:[TL_inputPhotoCropAuto create]];
+        } else  {
             userBlock();
         } 
         
@@ -287,11 +387,19 @@
     
     UploadOperation *operation = [[UploadOperation alloc] init];
     [operation setUploadComplete:^(UploadOperation *operation, id input) {
+        
+        
         if(self.sourceType == ChatAvatarSourceGroup) {
             request = [TLAPI_messages_editChatPhoto createWithChat_id:lockId photo:[TL_inputChatUploadedPhoto createWithFile:input crop:[TL_inputPhotoCropAuto create]]];
-            groupBlock();
+        } else if(self.sourceType == ChatAvatarSourceChannel) {
+            request = [TLAPI_channels_editPhoto createWithChannel:self.chat.inputPeer photo:[TL_inputChatUploadedPhoto createWithFile:input crop:[TL_inputPhotoCropAuto create]]];
         } else {
             request = [TLAPI_photos_uploadProfilePhoto createWithFile:input caption:@"me" geo_point:[TL_inputGeoPointEmpty create] crop:[TL_inputPhotoCropAuto create]];
+        }
+        
+        if(self.sourceType == ChatAvatarSourceGroup || self.sourceType == ChatAvatarSourceChannel) {
+            groupBlock();
+        } else {
             userBlock();
         }
     }];

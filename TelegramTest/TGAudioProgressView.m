@@ -49,6 +49,9 @@
 
 -(void)mouseDown:(NSEvent *)theEvent {
     
+    if(_disableChanges)
+        return;
+    
     _isUserUpdate = YES;
     
     NSPoint point = [self convertPoint:[theEvent locationInWindow] fromView:nil];
@@ -68,6 +71,9 @@
 
 -(void)mouseUp:(NSEvent *)theEvent {
     
+    if(_disableChanges)
+        return;
+    
     _isUserUpdate = NO;
     
     if(_progressCallback)
@@ -79,6 +85,9 @@
 
 
 -(void)mouseDragged:(NSEvent *)theEvent {
+    
+    if(_disableChanges)
+        return;
     
     NSPoint point = [self convertPoint:[theEvent locationInWindow] fromView:nil];
     

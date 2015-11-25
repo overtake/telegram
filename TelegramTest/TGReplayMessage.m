@@ -27,7 +27,7 @@
         
         self.nameTextField = [[TMHyperlinkTextField alloc] initWithFrame:NSMakeRect(15, NSHeight(frameRect) - 12, 200, 20)];
         [self.nameTextField setBordered:NO];
-        [self.nameTextField setFont:[NSFont fontWithName:@"HelveticaNeue-Medium" size:13]];
+        [self.nameTextField setFont:TGSystemMediumFont(13)];
         [self.nameTextField setDrawsBackground:NO];
         
         [self addSubview:self.nameTextField];
@@ -65,7 +65,7 @@
     
     
     
-    if([self.message.message.media isKindOfClass:[TL_messageMediaEmpty class]]) {
+    if([self.message.message.media isKindOfClass:[TL_messageMediaEmpty class]] || self.message.message.media == nil) {
        
         [self.messageField setAttributedStringValue:((MessageTableItemText *)self.message).textAttributed];
         

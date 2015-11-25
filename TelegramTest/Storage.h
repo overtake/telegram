@@ -20,6 +20,8 @@
 #import "TGSecretAction.h"
 #import "ASQueue.h"
 #import <SSignalKit/SSignalKit.h>
+#import "TGMessageHole.h"
+#import "TGHistoryResponse.h"
 @interface Storage : NSObject
 {
  //   FMDatabase *db;
@@ -58,17 +60,18 @@ extern NSString *const RECENT_SEARCH;
 -(void)messages:(void (^)(NSArray *))completeHandler forIds:(NSArray *)ids random:(BOOL)random queue:(ASQueue *)q;
 -(void)messages:(void (^)(NSArray *))completeHandler forIds:(NSArray *)ids random:(BOOL)random sync:(BOOL)sync queue:(ASQueue *)q;
 -(NSArray *)issetMessages:(NSArray *)ids;
--(void)insertMessage:(TLMessage *)message completeHandler:(dispatch_block_t)completeHandler;
+-(void)insertMessage:(TLMessage *)message;
 
 
--(void)insertMessages:(NSArray *)messages completeHandler:(dispatch_block_t)completeHandler;
+-(void)insertMessages:(NSArray *)messages;
 
--(void)deleteMessages:(NSArray *)messages completeHandler:(void (^)(BOOL result))completeHandler;
--(void)deleteMessagesWithRandomIds:(NSArray *)messages completeHandler:(void (^)(BOOL result))completeHandler;
+-(void)updateChannelMessageViews:(long)channelMsgId views:(int)views;
 
+-(void)deleteMessages:(NSArray *)messages completeHandler:(void (^)(NSArray *peer_update_data))completeHandler;
+-(void)deleteMessagesWithRandomIds:(NSArray *)messages isChannelMessages:(BOOL)isChannelMessages completeHandler:(void (^)(NSArray *peer_update_data))completeHandler;
+-(void)deleteChannelMessages:(NSArray *)messages completeHandler:(void (^)(NSArray *peer_update_data, NSDictionary *readCount))completeHandler;
 -(void)markMessagesAsRead:(NSArray *)messages useRandomIds:(NSArray *)randomIds;
--(void)lastMessageForPeer:(TLPeer *)peer completeHandler:(void (^)(TL_localMessage *message))completeHandler;
-
+-(void)lastMessageWithConversation:(TL_conversation *)conversation completeHandler:(void (^)(TL_localMessage *message, int importantMessage))completeHandler;
 -(TL_localMessage *)lastMessage:(int)peer_id from_id:(int)from_id;
 
 // end messages
@@ -82,10 +85,7 @@ extern NSString *const RECENT_SEARCH;
 + (NSMutableArray *)emoji;
 + (void)saveEmoji:(NSMutableArray *)emoji;
 
-
-- (void)updateDialog:(TL_conversation *)dialog;
-
--(void)insertDialogs:(NSArray *)dialogs completeHandler:(void (^)(BOOL result))completeHandler;
+-(void)insertDialogs:(NSArray *)dialogs;
 
 
 -(void)insertBroadcast:(TL_broadcast *)broadcast;
@@ -98,12 +98,10 @@ extern NSString *const RECENT_SEARCH;
 -(void)loadChats:(void (^)(NSArray *chats))completeHandler;
 
 
-- (void)dialogByPeer:(int)peer completeHandler:(void (^)(TLDialog *dialog, TLMessage *message))completeHandler;
-
-- (void)searchDialogsByPeers:(NSArray *)peers needMessages:(BOOL)needMessages searchString:(NSString *)searchString completeHandler:(void (^)(NSArray *dialogs, NSArray *messages, NSArray *searchMessages))completeHandler;
+- (void)searchDialogsByPeers:(NSArray *)peers needMessages:(BOOL)needMessages searchString:(NSString *)searchString completeHandler:(void (^)(NSArray *dialogs))completeHandler;
 
 
--(void)dialogsWithOffset:(int)offset limit:(int)limit completeHandler:(void (^)(NSArray *d, NSArray *m))completeHandler;
+-(void)dialogsWithOffset:(int)offset limit:(int)limit completeHandler:(void (^)(NSArray *d))completeHandler;
 ;
 -(void)updateTopMessage:(TL_conversation *)dialog completeHandler:(void (^)(BOOL result))completeHandler;
 
@@ -143,26 +141,43 @@ extern NSString *const RECENT_SEARCH;
 -(void)deleteImportedContacts:(NSSet *)result;
 
 
--(void)unreadCount:(void (^)(int count))completeHandler;
+-(void)unreadCount:(void (^)(int count))completeHandler includeMuted:(BOOL)includeMuted;
 
--(void)markAllInDialog:(TL_conversation *)dialog;
+-(void)markAllInConversation:(int)peer_id;
 
--(void)markAllInConversation:(TL_conversation *)conversation max_id:(int)max_id out:(BOOL)n_out completeHandler:(void (^)(NSArray * ids))completeHandler;
+-(void)markAllInConversation:(int)peer_id max_id:(int)max_id out:(BOOL)n_out completeHandler:(void (^)(NSArray * ids))completeHandler;
 
 -(void)insertEncryptedChat:(TLEncryptedChat *)chat;
 
 
 
--(void)loadMessages:(int)conversationId localMaxId:(int)localMaxId limit:(int)limit next:(BOOL)next maxDate:(int)maxDate filterMask:(int)mask completeHandler:(void (^)(NSArray *))completeHandler;
--(TL_localMessage *)messageById:(int)msgId;
--(void)insertMedia:(TL_localMessage *)message;
+-(TGHistoryResponse *)loadMessages:(int)conversationId min_id:(int)min_id max_id:(int)max_id minDate:(int)minDate maxDate:(int)maxDate limit:(int)limit next:(BOOL)next  filterMask:(int)mask isChannel:(BOOL)isChannel;
 
+-(TGHistoryResponse *)loadChannelMessages:(int)conversationId min_id:(int)min_id max_id:(int)max_id minDate:(int)minDate maxDate:(int)maxDate limit:(int)limit filterMask:(int)mask important:(BOOL)important next:(BOOL)next;
+
+-(void)invalidateChannelMessagesWithPts:(int)pts;
+-(void)validateChannelMessages:(NSArray *)messages;
+
+-(void)updateMessageViews:(int)views channelMsgId:(long)channelMsgId;
+
+-(void)markChannelMessagesAsRead:(int)channel_id max_id:(int)max_id callback:(void (^)(int unread_count))callback;
+-(void)updateTopMessagesWithMessages:(NSDictionary *)topMessages topImportantMessages:(NSDictionary *)topImportantMessages;
+
+-(TL_localMessage *)lastImportantMessageAroundMinId:(long)channelMsgId;
+-(TL_localMessage *)lastMessageAroundMinId:(long)channelMsgId important:(BOOL)important isTop:(BOOL)isTop;
+-(TL_localMessage *)messageById:(int)msgId inChannel:(int)channel_id;
+
+
+-(TL_localMessage *)messageById:(int)msgId;
+
+
+-(void)updateUsersStatus:(NSArray *)users;
 
 -(void)addUserPhoto:(int)user_id media:(TLUserProfilePhoto *)photo;
 -(void)deleteUserPhoto:(int)user_id;
 -(void)countOfUserPhotos:(int)user_id;
 
--(void)media:(void (^)(NSArray *))completeHandler max_id:(long)max_id peer_id:(int)peer_id next:(BOOL)next limit:(int)limit;
+-(void)media:(void (^)(NSArray *))completeHandler max_id:(int)max_id filterMask:(int)filterMask peer:(TLPeer *)peer next:(BOOL)next limit:(int)limit;
 
 -(int)countOfMedia:(int)peer_id;
 
@@ -183,11 +198,17 @@ extern NSString *const RECENT_SEARCH;
 -(void)selectTasks:(void (^)(NSArray *tasks))completeHandler;
 
 -(TL_conversation *)selectConversation:(TLPeer *)peer;
+
+
+-(void)conversationsWithPeerIds:(NSArray *)peer_ids completeHandler:(void (^)(NSArray * result))completeHandler;
+
 - (id)fileInfoByPathHash:(NSString *)pathHash;
 - (void)findFileInfoByPathHash:(NSString *)pathHash completeHandler:(void (^)(BOOL result, id file))completeHandler;
 - (void)setFileInfo:(id)file forPathHash:(NSString *)pathHash;
 - (void)deleteFileHash:(NSString *)pathHash;
 -(void)updateMessages:(NSArray *)messages;
+
+-(void)messagesWithWebpage:(TLMessageMedia *)mediaWebpage callback:(void (^)(NSDictionary *))callback;
 
 
 -(void)insertSecretAction:(TGSecretAction *)action;
@@ -217,9 +238,14 @@ extern NSString *const RECENT_SEARCH;
 -(NSArray *)conversationsWithIds:(NSArray *)ids;
 
 +(void)updateEncryptionKey:(NSString *)key;
+
 +(void)updateOldEncryptionKey:(NSString *)key;
-// signal requests
-+(SSignal *)requestMessagesWithDate:(int)date localMaxId:(int)localMaxId limit:(NSUInteger)limit cnv_id:(int)cnv_id next:(BOOL)next filter:(int)mask;
 
 
+
+-(void)insertMessagesHole:(TGMessageHole *)hole;
+-(void)removeHole:(TGMessageHole *)hole;
+-(NSArray *)groupHoles:(int)peer_id min:(int)min max:(int)max;
+-(void)addHolesAroundMessage:(TL_localMessage *)message;
+-(int)syncedMessageIdWithPeerId:(int)peer_id important:(BOOL)important latest:(BOOL)latest isChannel:(BOOL)isChannel;
 @end

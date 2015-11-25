@@ -22,7 +22,7 @@
         
 //        [[self.textView cell] setTruncatesLastVisibleLine:NO];
 //        [[self.textView cell] setLineBreakMode:NSLineBreakByTruncatingTail];
-        [self.textView setFont:[NSFont fontWithName:@"HelveticaNeue" size:15]];
+        [self.textView setFont:TGSystemFont(15)];
 //        [self.textView setVerticallyResizable:NO];
         [self setAutoresizingMask:NSViewWidthSizable];
         [self addSubview:self.textView];

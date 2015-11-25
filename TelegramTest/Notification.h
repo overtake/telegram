@@ -18,6 +18,7 @@ extern NSString *const AUTH_COMPLETE;
 extern NSString *const MESSAGE_SEND_EVENT; // событие проихсодит когда сообщение вроде как отправилось, просто поставлено в очередь на отправку
 extern NSString *const MESSAGE_SENT_EVENT; // событие проихсодит когда сообщение отправено
 extern NSString *const MESSAGE_RECEIVE_EVENT; // событие: пришло сообщение
+extern NSString *const MESSAGE_UPDATE_MESSAGE_ID;
 extern NSString *const MESSAGE_READ_EVENT; // сообщение прочитенно сообщение
 
 extern NSString *const MESSAGE_CHANGED_DSTATE; // поменялось состояние отправления сообщения
@@ -82,6 +83,10 @@ extern NSString *const UPDATE_WEB_PAGES;
 extern NSString *const UPDATE_READ_CONTENTS;
 extern NSString *const UPDATE_AUDIO_PLAYER_STATE;
 extern NSString *const UPDATE_MESSAGE_ENTITIES;
+extern NSString *const UPDATE_MESSAGE_GROUP_HOLE;
+extern NSString *const UPDATE_MESSAGE_VIEWS;
+
+extern NSString *const CHAT_FLAGS_UPDATED;
 
 extern NSString *const KEY_PREVIEW_OBJECT;
 
@@ -99,6 +104,7 @@ extern NSString *const KEY_BROADCAST;
 extern NSString *const KEY_PHOTO;
 extern NSString *const KEY_MESSAGE_ID_LIST;
 extern NSString *const KEY_MESSAGE_LIST;
+extern NSString *const KEY_DATA;
 extern NSString *const KEY_DIALOG;
 extern NSString *const KEY_POSITION;
 extern NSString *const KEY_DIALOGS;
@@ -106,8 +112,11 @@ extern NSString *const KEY_MEDIA;
 extern NSString *const KEY_PEER_ID;
 extern NSString *const KEY_IS_MUTE;
 extern NSString *const KEY_PARTICIPANTS;
-
+extern NSString *const KEY_GROUP_HOLE;
 extern NSString *const KEY_WEBPAGE;
+extern NSString *const KEY_MESSAGE_ID;
+extern NSString *const KEY_RANDOM_ID;
+
 
 extern NSString *const KEY_PRIVACY;
 extern NSString *const PRIVACY_UPDATE;
@@ -131,6 +140,8 @@ extern NSString *const UNREAD_COUNT_CHANGED;
 + (void)perform:(NSString *)name object:(id)object;
 + (void)perform:(NSString *)name data:(NSDictionary *)data;
 
++(void)performOnStageQueue:(NSString *)name object:(id)object;
++(void)performOnStageQueue:(NSString *)name data:(NSDictionary *)data;
 
 extern NSString *const USER_ACTIVITY_CONVERSATION;
 

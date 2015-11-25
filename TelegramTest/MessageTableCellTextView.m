@@ -93,7 +93,6 @@
 -(void)mouseDown:(NSEvent *)theEvent {
     [super mouseDown:theEvent];
     
-    MessageTableItemText *item = (MessageTableItemText *)[self item];
     
 }
 
@@ -101,7 +100,7 @@
     
  
     [super setItem:item];
-    
+       
     
     if([item isWebPage]) {
         
@@ -213,6 +212,7 @@
     animation.toValue = anim.toValue;
     animation.fromValue = anim.fromValue;
     animation.duration = anim.duration;
+    animation.removedOnCompletion = YES;
     [self.textView pop_addAnimation:animation forKey:@"background"];
     
     [self.webpageContainerView.descriptionField pop_addAnimation:animation forKey:@"background"];
@@ -232,7 +232,9 @@
     
 }
 
+
 -(void)setSelected:(BOOL)selected animation:(BOOL)animation {
+    
     if(selected == self.isSelected)
         return;
     

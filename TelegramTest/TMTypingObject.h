@@ -15,8 +15,8 @@
 @interface TGActionTyping : NSObject
 @property (nonatomic,strong,readonly) TLSendMessageAction *action;
 @property (nonatomic,assign,readonly) NSUInteger time;
-@property (nonatomic,assign,readonly) NSUInteger user_id;
--(id)initWithAction:(TLSendMessageAction *)action time:(int)time user_id:(NSUInteger)user_id;
+@property (nonatomic,strong,readonly) TLUser *user;
+-(id)initWithAction:(TLSendMessageAction *)action time:(int)time user:(TLUser *)user;
 
 @end
 
@@ -26,7 +26,7 @@
 - (id) initWithDialog:(TL_conversation *)dialog;
 - (NSArray *) writeArray;
 
-- (void) addMember:(NSUInteger)uid withAction:(TLSendMessageAction *)action;
+- (void) addMember:(TLUser *)user withAction:(TLSendMessageAction *)action;
 - (void) removeMember:(NSUInteger)uid;
 - (NSArray *)currentActions;
 @end

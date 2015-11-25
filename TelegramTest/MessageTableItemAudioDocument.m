@@ -11,6 +11,7 @@
 #import "NSStringCategory.h"
 #import "NSString+Extended.h"
 #import <AVFoundation/AVFoundation.h>
+#import "DownloadQueue.h"
 @implementation MessageTableItemAudioDocument
 
 - (id)initWithObject:(TLMessage *)object {
@@ -33,7 +34,7 @@
 }
 
 -(void)checkStartDownload:(SettingsMask)setting size:(int)size {
-    [super checkStartDownload:[self.message.to_id isKindOfClass:[TL_peerChat class]] ? AutoGroupDocuments : AutoPrivateDocuments size:[self size]];
+    [super checkStartDownload:[self.message.to_id isKindOfClass:[TL_peerChat class]] || [self.message.to_id isKindOfClass:[TL_peerChannel class]] ? AutoGroupDocuments : AutoPrivateDocuments size:[self size]];
 }
 
 -(BOOL)canShare {
@@ -49,7 +50,7 @@
     TL_documentAttributeAudio *audio = (TL_documentAttributeAudio *) [self.message.media.document attributeWithClass:[TL_documentAttributeAudio class]];
     
     if(audio && ([audio.title trim].length > 0 && [audio.performer trim].length > 0)) {
-        self.duration = [NSString stringWithFormat:@"%@ - %@",audio.performer,audio.title];
+        self.duration = [NSString stringWithFormat:@"%@\n%@",audio.performer,audio.title];
     } else {
         self.duration = self.message.media.document.file_name;
     }
@@ -126,6 +127,14 @@
     _secondDownloadListener = [[DownloadEventListener alloc] init];
 }
 
+-(DownloadItem *)downloadItem {
+    return [DownloadQueue find:self.message.media.document.n_id];
+}
+
+-(void)dealloc {
+    [self.downloadItem removeAllEvents];
+}
+
 - (int)size {
     return self.message.media.document.size;
 }
@@ -137,7 +146,9 @@
 -(BOOL)makeSizeByWidth:(int)width {
     [super makeSizeByWidth:width];
     
-    self.blockSize = NSMakeSize(width - 200, 60);
+    
+    
+    self.blockSize = NSMakeSize(width - self.dateSize.width - 20, 50);
     
     return NO;
 }

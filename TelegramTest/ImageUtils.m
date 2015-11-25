@@ -106,11 +106,12 @@ CACHE_IMAGE(VoiceMic)
 CACHE_IMAGE(VoiceMicHighlighted)
 CACHE_IMAGE(VoiceMicHighlighted2)
 CACHE_IMAGE(TelegramNotifications)
+CACHE_IMAGE(newConversationBroadcast)
 CACHE_IMAGE(PlayButtonBig)
 CACHE_IMAGE(ArrowWhite)
 CACHE_IMAGE(ArrowGrey)
-
-
+CACHE_IMAGE(Verify)
+CACHE_IMAGE(VerifyWhite)
 CACHE_IMAGE(DownloadIconGrey)
 CACHE_IMAGE(DownloadIconWhite)
 CACHE_IMAGE(DownloadPauseIconGrey)
@@ -213,6 +214,26 @@ CACHE_IMAGE(SearchDown);
 
 CACHE_IMAGE(ZoomIn);
 CACHE_IMAGE(ZoomOut);
+CACHE_IMAGE(Camera);
+
+CACHE_IMAGE(ChannelMessageAsAdmin);
+CACHE_IMAGE(ChannelMessageAsAdminHighlighted);
+CACHE_IMAGE(ChannelViews);
+
+CACHE_IMAGE(PinConversation);
+CACHE_IMAGE(PinnedConversation);
+
+
+CACHE_IMAGE(ModernConversationSecretAccessoryTimer);
+
+CACHE_IMAGE(ChannelShare);
+
+CACHE_IMAGE(ModernMenuDeleteIcon);
+
+CACHE_IMAGE(EditPhotoCamera);
+CACHE_IMAGE(NoSharedLinks);
+
+
 @implementation ImageUtils
 
 NSImage *previewImageForDocument(NSString *path) {
@@ -782,68 +803,44 @@ NSImage *renderedImage(NSImage * oldImage, NSSize size) {
         layer = [CALayer layer];
     }
     
-    @try {
-        [CATransaction begin];
-    }
-    @catch (NSException *exception) {
-        
-    }
-    @finally {
-        
-    }
     
     
     NSImage *image = nil;
-    @autoreleasepool {
-        CGFloat displayScale = [[NSScreen mainScreen] backingScaleFactor];
-        
-        size.width *= displayScale;
-        size.height *= displayScale;
-        
-        CGImageSourceRef source = CGImageSourceCreateWithData((__bridge CFDataRef)[oldImage TIFFRepresentation], NULL);
-        
-        if(source != NULL) {
-            CGImageRef maskRef =  CGImageSourceCreateImageAtIndex(source, 0, NULL);
-            CFRelease(source);
-            
-            [layer setContents:(__bridge id)(maskRef)];
-            [layer setFrame:NSMakeRect(0, 0, size.width, size.height)];
-            [layer setBounds:NSMakeRect(0, 0, size.width, size.height)];
-            [layer setMasksToBounds:YES];
-            
-            
-            CGContextRef context = CGBitmapContextCreate(NULL/*data - pass NULL to let CG allocate the memory*/,
-                                                         size.width,
-                                                         size.height,
-                                                         8 /*bitsPerComponent*/,
-                                                         0 /*bytesPerRow - CG will calculate it for you if it's allocating the data.  This might get padded out a bit for better alignment*/,
-                                                         [[NSColorSpace genericRGBColorSpace] CGColorSpace],
-                                                         kCGBitmapByteOrder32Host|kCGImageAlphaPremultipliedFirst);
-            [layer renderInContext:context];
-            
-            
-            CGImageRef cgImage = CGBitmapContextCreateImage(context);
-            
-            
-            CGContextRelease(context);
-            
-            
-            
-            image = [[NSImage alloc] initWithCGImage:cgImage size:size];
-            CGImageRelease(cgImage);
-            CGImageRelease(maskRef);
-        }
-    }
+    CGFloat displayScale = [[NSScreen mainScreen] backingScaleFactor];
     
-    @try {
-        [CATransaction commit];
-    }
-    @catch (NSException *exception) {
+    size.width *= displayScale;
+    size.height *= displayScale;
+    
+    CGImageSourceRef source = CGImageSourceCreateWithData((__bridge CFDataRef)[oldImage TIFFRepresentation], NULL);
+    
+    if(source != NULL) {
+        CGImageRef maskRef =  CGImageSourceCreateImageAtIndex(source, 0, NULL);
+        CFRelease(source);
         
-    }
-    @finally {
+        CGContextRef context = CGBitmapContextCreate(NULL/*data - pass NULL to let CG allocate the memory*/,
+                                                     size.width,
+                                                     size.height,
+                                                     8 /*bitsPerComponent*/,
+                                                     0 /*bytesPerRow - CG will calculate it for you if it's allocating the data.  This might get padded out a bit for better alignment*/,
+                                                     [[NSColorSpace genericRGBColorSpace] CGColorSpace],
+                                                     kCGBitmapByteOrder32Host|kCGImageAlphaPremultipliedFirst);
         
+        
+        CGContextDrawImage(context, CGRectMake(0, 0, size.width, size.height), maskRef);
+        
+        CGImageRef cgImage = CGBitmapContextCreateImage(context);
+        
+        
+        
+        CGContextRelease(context);
+        
+        
+        
+        image = [[NSImage alloc] initWithCGImage:cgImage size:size];
+        CGImageRelease(cgImage);
+        CGImageRelease(maskRef);
     }
+
     
     
     

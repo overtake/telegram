@@ -41,7 +41,7 @@
         NSString *phoneNumber = contact.phone_number.length ? [RMPhoneFormat formatPhoneNumber:contact.phone_number] : NSLocalizedString(@"User.Hidden", nil);
      
         self.contactNumberString = phoneNumber;
-        self.contactNumber = [[NSAttributedString alloc] initWithString:phoneNumber attributes:@{NSFontAttributeName: [NSFont fontWithName:@"HelveticaNeue" size:12]}];
+        self.contactNumber = [[NSAttributedString alloc] initWithString:phoneNumber attributes:@{NSFontAttributeName: TGSystemFont(12)}];
         
         self.contactNumberSize = [self.contactNumber sizeForWidth:FLT_MAX height:FLT_MAX];
         
@@ -53,8 +53,9 @@
 -(BOOL)makeSizeByWidth:(int)width {
     [super makeSizeByWidth:width];
     
+    NSAttributedString *attr = [[NSAttributedString alloc] initWithString:_contactName attributes:@{NSFontAttributeName:TGSystemFont(13)}];
     
-    _contactNameSize = NSMakeSize(width - 100, 20);
+    _contactNameSize = [attr sizeForTextFieldForWidth:width];
     
     return YES;
 }

@@ -193,3 +193,6 @@ xwd:image/x-xwindowdump
 z:application/x-compress
 xml:text/xml
 webp:image/webp
+zip:application/zip
+7z:application/zip
+dmg:application/zip

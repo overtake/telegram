@@ -14,13 +14,14 @@ typedef enum {
     MessagesTopInfoActionAddContact,
     MessagesTopInfoActionUnblockUser,
     MessagesTopInfoActionShareContact,
+    MessagesTopInfoActionReportSpam,
     MessagesTopInfoActionNone
 } MessagesTopInfoAction;
 
 
 @property (nonatomic,assign) MessagesTopInfoAction action;
 
-@property (nonatomic,strong) MessagesViewController *controller;
+@property (nonatomic,weak) MessagesViewController *controller;
 @property (nonatomic,strong) TL_conversation *conversation;
 
 @property (nonatomic,assign,readonly) BOOL isShown;

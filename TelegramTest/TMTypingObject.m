@@ -48,11 +48,11 @@
 
 @implementation TGActionTyping
 
--(id)initWithAction:(TLSendMessageAction *)action time:(int)time user_id:(NSUInteger)user_id {
+-(id)initWithAction:(TLSendMessageAction *)action time:(int)time user:(TLUser *)user {
     if(self = [super init]) {
         _action = action;
         _time = time;
-        _user_id = user_id;
+        _user = user;
     }
     
     return self;
@@ -86,16 +86,16 @@
     return self;
 }
 
-- (void) addMember:(NSUInteger)uid withAction:(TLSendMessageAction *)action {
+- (void) addMember:(TLUser *)user withAction:(TLSendMessageAction *)action {
     
-    TGActionTyping *taction = [[TGActionTyping alloc] initWithAction:action time:[[NSDate date] timeIntervalSince1970] + 5 user_id:uid];
+    TGActionTyping *taction = [[TGActionTyping alloc] initWithAction:action time:[[NSDate date] timeIntervalSince1970] + 5 user:user];
     
     
-    NSMutableDictionary *actions = [self.actions objectForKey:@(uid)];
+    NSMutableDictionary *actions = [self.actions objectForKey:@(user.n_id)];
     if(!actions)
     {
         actions = [[NSMutableDictionary alloc] init];
-        [self.actions setObject:actions forKey:@(uid)];
+        [self.actions setObject:actions forKey:@(user.n_id)];
     }
     
     if(![action isKindOfClass:[TL_sendMessageCancelAction class]]) {

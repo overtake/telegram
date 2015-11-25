@@ -21,6 +21,10 @@
 
 @property (nonatomic,strong,readonly) TL_localMessage *replyMessage;
 
--(id)initWithReplyMessage:(TL_localMessage *)message;
+@property (nonatomic,strong,readonly) TL_localMessage *fromMessage;
+
+@property (nonatomic,weak,readonly) MessageTableItem *item;
+
+-(id)initWithReplyMessage:(TL_localMessage *)replyMessage fromMessage:(TL_localMessage *)fromMessage tableItem:(MessageTableItem *)item;
 
 @end

@@ -30,5 +30,6 @@
 @property (nonatomic,assign) BOOL lock;
 
 -(void)update;
-
+-(void)updateWithConversation:(TL_conversation *)conversation;
+-(void)clear;
 @end

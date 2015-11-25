@@ -10,6 +10,6 @@
 #import <CoreLocation/CoreLocation.h>
 @interface LocationSenderItem : SenderItem
 
--(id)initWithCoordinates:(CLLocationCoordinate2D)coordinates conversation:(TL_conversation *)conversation;
+-(id)initWithCoordinates:(CLLocationCoordinate2D)coordinates conversation:(TL_conversation *)conversation additionFlags:(int)additionFlags;
 
 @end

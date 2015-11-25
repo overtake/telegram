@@ -43,12 +43,10 @@ typedef enum {
 
 @property (nonatomic, strong) NSString *filePath;
 
-- (id)initWithMessage:(NSString *)message forConversation:(TL_conversation *)conversation;
+- (id)initWithMessage:(NSString *)message forConversation:(TL_conversation *)conversation additionFlags:(int)additionFlags;
 
 
-- (id)initWithPath:(NSString *)filePath forConversation:(TL_conversation *)conversation;
-
-- (id)initWithPath:(NSString *)filePath forConversation:(TL_conversation *)conversation;
+- (id)initWithPath:(NSString *)filePath forConversation:(TL_conversation *)conversation additionFlags:(int)additionFlags;
 
 -(id)initWithConversation:(TL_conversation *)conversation;
 
@@ -70,5 +68,12 @@ typedef enum {
 -(void)cancel;
 -(void)resend;
 
+
+-(BOOL)canRelease;
+
+-(int)senderFlags;
+
+-(void)updateMessageId:(TLUpdates *)updates;
+-(TL_updateNewMessage *)updateNewMessageWithUpdates:(TLUpdates *)updates;
 
 @end

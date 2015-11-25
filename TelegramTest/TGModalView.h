@@ -14,6 +14,11 @@
 -(void)close:(BOOL)animated;
 
 
+-(void)enableCancelAndOkButton;
+-(void)okAction;
+-(void)cancelAction;
+
+
 -(void)modalViewDidShow;
 -(void)modalViewDidHide;
 

@@ -22,13 +22,26 @@
 - (TL_conversation *)createDialogForUser:(TLUser *)user;
 - (TL_conversation *)createDialogForChat:(TLChat *)chat;
 - (TL_conversation *)createDialogEncryptedChat:(TLEncryptedChat *)chat;
-
+- (TL_conversation *)createDialogForChannel:(TLChat *)chat;
 - (void) insertDialog:(TL_conversation *)dialog;
 - (void) markAllMessagesAsRead:(TL_conversation *)dialog;
 
 - (void) markAllMessagesAsRead:(TLPeer *)peer max_id:(int)max_id out:(BOOL)n_out;
 
+-(void)markChannelMessagesAsRead:(int)channel_id max_id:(int)max_id;
+
+-(void)completeDeleteConversation:(dispatch_block_t)completeHandler dialog:(TL_conversation *)dialog;
+
+// delete messages
+-(void)deleteMessagesWithMessageIds:(NSArray *)ids;
+-(void)deleteChannelMessags:(NSArray *)messageIds;
+-(void)deleteMessagesWithRandomMessageIds:(NSArray *)ids isChannelMessages:(BOOL)isChannelMessages;
+
+
 - (void)deleteDialog:(TL_conversation *)dialog completeHandler:(dispatch_block_t)completeHandler;
 - (void)clearHistory:(TL_conversation *)dialog completeHandler:(dispatch_block_t)block;
 -(void)updateLastMessageForDialog:(TL_conversation *)dialog;
+
+-(void)notifyAfterUpdateConversation:(TL_conversation *)conversation;
+
 @end

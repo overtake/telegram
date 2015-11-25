@@ -12,6 +12,8 @@
 
 + (NSString *) userProfile:(int)user_id;
 
++ (NSString *)peerProfile:(TLPeer*)peer;
+
 + (void) parseUrlAndDo:(NSString *)url;
 
 @end

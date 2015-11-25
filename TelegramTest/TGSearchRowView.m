@@ -33,6 +33,12 @@
     [_searchField setFrame:NSMakeRect(MAX(_xOffset, 10), NSMinY(_searchField.frame), newSize.width - MAX(_xOffset, 10)*2, NSHeight(_searchField.frame))];
 }
 
+-(void)mouseDown:(NSEvent *)theEvent {
+    [super mouseDown:theEvent];
+    
+    [self.searchField becomeFirstResponder];
+}
+
 -(BOOL)becomeFirstResponder {
     return [_searchField becomeFirstResponder];
 }

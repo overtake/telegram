@@ -77,21 +77,21 @@
     self.phoneNumberView = [[UserInfoShortTextEditView alloc] initWithFrame:NSMakeRect(100, 115 + offsetY, self.view.frame.size.width-200, 35)];
     
     
-    self.phoneNumberView.textView.font = [NSFont fontWithName:@"HelveticaNeue" size:13];
+    self.phoneNumberView.textView.font = TGSystemFont(13);
     
-    NSAttributedString *phoneViewPlaceHolder = [[NSAttributedString alloc] initWithString:NSLocalizedString(@"AddContact.PhoneNumberPlaceholder", nil) attributes:@{NSFontAttributeName:[NSFont fontWithName:@"HelveticaNeue" size:13], NSForegroundColorAttributeName:GRAY_TEXT_COLOR}];
-    
-    
-    [self.phoneNumberView.textView.cell setPlaceholderAttributedString:phoneViewPlaceHolder];
-    
-    
-    NSAttributedString *firstNameViewPlaceHolder = [[NSAttributedString alloc] initWithString:NSLocalizedString(@"AddContact.FirstNamePlaceholder", nil) attributes:@{NSFontAttributeName:[NSFont fontWithName:@"HelveticaNeue" size:13], NSForegroundColorAttributeName:GRAY_TEXT_COLOR}];
+    NSAttributedString *phoneViewPlaceHolder = [[NSAttributedString alloc] initWithString:NSLocalizedString(@"AddContact.PhoneNumberPlaceholder", nil) attributes:@{NSFontAttributeName:TGSystemFont(13), NSForegroundColorAttributeName:GRAY_TEXT_COLOR}];
     
     
     [self.phoneNumberView.textView.cell setPlaceholderAttributedString:phoneViewPlaceHolder];
     
     
-    NSAttributedString *lastNameViewPlaceHolder = [[NSAttributedString alloc] initWithString:NSLocalizedString(@"AddContact.LastNamePlaceholder", nil) attributes:@{NSFontAttributeName:[NSFont fontWithName:@"HelveticaNeue" size:13], NSForegroundColorAttributeName:GRAY_TEXT_COLOR}];
+    NSAttributedString *firstNameViewPlaceHolder = [[NSAttributedString alloc] initWithString:NSLocalizedString(@"AddContact.FirstNamePlaceholder", nil) attributes:@{NSFontAttributeName:TGSystemFont(13), NSForegroundColorAttributeName:GRAY_TEXT_COLOR}];
+    
+    
+    [self.phoneNumberView.textView.cell setPlaceholderAttributedString:phoneViewPlaceHolder];
+    
+    
+    NSAttributedString *lastNameViewPlaceHolder = [[NSAttributedString alloc] initWithString:NSLocalizedString(@"AddContact.LastNamePlaceholder", nil) attributes:@{NSFontAttributeName:TGSystemFont(13), NSForegroundColorAttributeName:GRAY_TEXT_COLOR}];
     
     
     [self.phoneNumberView.textView.cell setPlaceholderAttributedString:phoneViewPlaceHolder];
@@ -111,8 +111,8 @@
     [self.lastNameView.textView setTarget:self];
     [self.lastNameView.textView setAction:@selector(enterClick:)];
     
-    [self.firstNameView.textView setFont:[NSFont fontWithName:@"HelveticaNeue" size:14]];
-    [self.lastNameView.textView setFont:[NSFont fontWithName:@"HelveticaNeue" size:14]];
+    [self.firstNameView.textView setFont:TGSystemFont(14)];
+    [self.lastNameView.textView setFont:TGSystemFont(14)];
     
     [self.firstNameView.textView setAlignment:NSLeftTextAlignment];
     [self.lastNameView.textView setAlignment:NSLeftTextAlignment];
@@ -170,23 +170,9 @@
             
             if(isAdd) {
                 
-                TLDialog *dialog = user.dialog;
+                TL_conversation *dialog = user.dialog;
                 if(dialog) {
-                    [[Telegram sharedInstance] showMessagesFromDialog:dialog sender:self];
-                } else {
-                    [[Storage manager] dialogByPeer:user.n_id completeHandler:^(TLDialog *dialog, TLMessage *message) {
-                        
-                        if(dialog) {
-                            [[DialogsManager sharedManager] add:@[dialog]];
-                        } else {
-                            dialog = [[DialogsManager sharedManager] createDialogForUser:user];
-                        }
-                        
-                        if(message)
-                            [[MessagesManager sharedManager] add:@[message]];
-                        
-                        [[Telegram sharedInstance] showMessagesFromDialog:dialog sender:self];
-                    }];
+                    [appWindow().navigationController showMessagesViewController:dialog];
                 }
                 
                 

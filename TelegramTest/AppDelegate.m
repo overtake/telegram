@@ -26,7 +26,6 @@
 #import "SelfDestructionController.h"
 #import "TGProccessUpdates.h"
 #import "TMMediaController.h"
-#import "DialogsHistoryController.h"
 #import "SettingsWindowController.h"
 #import "TGTimer.h"
 #import "NSString+Extended.h"
@@ -51,6 +50,8 @@
 #import "MessagesBottomView.h"
 #import "TGAudioPlayerWindow.h"
 #import "TGUpdater.h"
+#import "TGHeadChatPanel.h"
+#import "NSArrayCategory.h"
 @interface NSUserNotification(For107)
 
 @property (nonatomic, strong) NSAttributedString *response;
@@ -101,9 +102,7 @@ static void TGTelegramLoggingFunction(NSString *format, va_list args)
 
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification {
     
-    
-   
-    
+
     MTLogSetLoggingFunction(&TGTelegramLoggingFunction);
     
     NSAppleEventManager *appleEventManager = [NSAppleEventManager sharedAppleEventManager];
@@ -165,7 +164,8 @@ static void TGTelegramLoggingFunction(NSString *format, va_list args)
         return;
     }
     
-    [[Telegram sharedInstance] showMessagesFromDialog:dialog sender:self];
+    [self.mainWindow.navigationController showMessagesViewController:dialog];
+    
     
     
     
@@ -174,11 +174,11 @@ static void TGTelegramLoggingFunction(NSString *format, va_list args)
         
         dispatch_async(dispatch_get_main_queue(), ^{
             
-            TL_localMessage *msg = [[MessagesManager sharedManager] find:[[userInfo objectForKey:@"msg_id"] intValue]];
+            TL_localMessage *msg = [[Storage manager] messageById:[[userInfo objectForKey:@"msg_id"] intValue] inChannel:dialog.type == DialogTypeChannel ? dialog.peer_id : 0];
             
             if(dialog.type == DialogTypeChat) {
-                if(msg) [[Telegram rightViewController].messagesViewController addReplayMessage:msg animated:NO];
-                
+                if(msg)
+                    [[Telegram rightViewController].messagesViewController addReplayMessage:msg animated:NO];
             }
             
              [[Telegram rightViewController].messagesViewController sendMessage:userResponse forConversation:dialog];
@@ -409,9 +409,20 @@ void exceptionHandler(NSException * exception)
                     return [[NSEvent alloc] init];
                 }
                 
+                if(![result.window isKindOfClass:NSClassFromString(@"TGHeadChatPanel")]) {
+                    if([result.window isKindOfClass:[NSPanel class]]) {
+                        [result.window cancelOperation:nil];
+                    } else {
+                        [result.window close];
+                    }
+                }
                 
-                [result.window close];
-                
+                else
+                {
+                    TGHeadChatPanel *panel = (TGHeadChatPanel *) result.window;
+                    
+                    [panel back];
+                }
                 
                 
                 return result;
@@ -464,7 +475,7 @@ void exceptionHandler(NSException * exception)
             return result;
         
         
-        id responder = self.mainWindow.firstResponder;
+        id responder = incomingEvent.window.firstResponder;
                 
         if(incomingEvent.keyCode == 48) {
             
@@ -688,7 +699,6 @@ void exceptionHandler(NSException * exception)
                 }
                 
             }
-            
             return result;
             
         }
@@ -704,16 +714,16 @@ void exceptionHandler(NSException * exception)
     
     id block3 = ^(NSEvent *incomingEvent) {
         
-        if([self.mainWindow.firstResponder class] == [SelectTextManager class]) { // hard fix for osx events bug
+        if([appWindow().firstResponder class] == [SelectTextManager class]) { // hard fix for osx events bug
             
-            NSPoint mouseLoc = [[Telegram rightViewController].messagesViewController.table.scrollView convertPoint:[incomingEvent locationInWindow] fromView:nil];
+            NSPoint mouseLoc = [appWindow().navigationController.messagesViewController.table.scrollView convertPoint:[incomingEvent locationInWindow] fromView:nil];
             
             
-            BOOL isInside = [[Telegram rightViewController].messagesViewController.table.scrollView mouse:mouseLoc inRect:[Telegram rightViewController].messagesViewController.table.scrollView.bounds];
+            BOOL isInside = [appWindow().navigationController.messagesViewController.table.scrollView mouse:mouseLoc inRect:appWindow().navigationController.messagesViewController.table.scrollView.bounds];
             
             
             if(isInside) {
-                [[Telegram rightViewController].messagesViewController.table mouseDragged:incomingEvent];
+                [appWindow().navigationController.messagesViewController.table mouseDragged:incomingEvent];
                 
                 return [[NSEvent alloc] init];
             }
@@ -727,6 +737,10 @@ void exceptionHandler(NSException * exception)
     [NSEvent addLocalMonitorForEventsMatchingMask:(NSLeftMouseDraggedMask) handler:block3];
     
 }
+
+
+
+
 
 - (void)windowDidChangeBackingProperties:(NSNotification *)notification {
     
@@ -742,6 +756,8 @@ void exceptionHandler(NSException * exception)
     
     return NSTerminateCancel;
 }
+
+
 
 
 -(void)initializeSounds {
@@ -868,13 +884,13 @@ void exceptionHandler(NSException * exception)
             
             [TGAudioPlayerWindow hide];
             
+            [[MTNetwork instance] drop];
             
             [Storage drop];
             
-            [[MTNetwork instance] drop];
-            
-
             [Storage open:^{
+                
+                [[MTNetwork instance] initConnectionWithId:-1];
                 
                 [TGCache clear];
                 [TGModernTypingManager drop];
@@ -889,26 +905,34 @@ void exceptionHandler(NSException * exception)
                 
                 [self initializeLoginWindow];
             }];
-        }];  
+            
+        }];
         
     };
+    
     
     if([[MTNetwork instance] isAuth] && !force) {
         
          [TMViewController showModalProgress];
         
-        
-        dispatch_block_t clearCache = ^ {
+         dispatch_block_t clearCache = ^ {
             [RPCRequest sendRequest:[TLAPI_auth_logOut create] successHandler:^(RPCRequest *request, id response) {
                 
-                block();
+                [[Storage manager] drop:^{
+                    block();
+                }];
+                
                 
             } errorHandler:^(RPCRequest *request, RpcError *error) {
                 
                 [TMViewController hideModalProgress];
                 
                 confirm(NSLocalizedString(@"Auth.CantLogout", nil), NSLocalizedString(@"Auth.ForceLogout", nil), ^ {
-                    [self logoutWithForce:YES];
+                    
+                    [[Storage manager] drop:^{
+                        [self logoutWithForce:YES];
+                    }];
+                    
                 },nil);
                 
             } timeout:5];
@@ -1016,9 +1040,7 @@ continueUserActivity: (id)userActivity
         int peerId = [userInfo[@"peer"][@"id"] intValue];
         
         NSString *text = userInfo[@"text"];
-        
-        NSString *username = userInfo[@"peer"][@"username"];
-        
+                
         
         TLPeer *peer;
         if([peerType isEqualToString:@"group"]) {
@@ -1041,7 +1063,7 @@ continueUserActivity: (id)userActivity
             
             [[DialogsManager sharedManager] add:@[conversation]];
             
-            [[Telegram rightViewController] showByDialog:conversation sender:self];
+            [self.mainWindow.navigationController showMessagesViewController:conversation];
             
             [[Telegram rightViewController].messagesViewController setStringValueToTextField:text];
             

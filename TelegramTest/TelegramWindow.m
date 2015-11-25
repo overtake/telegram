@@ -159,7 +159,13 @@
 }
 
 - (void)close {
-    [[NSApplication sharedApplication] hide:nil];
+    if(self.class != NSClassFromString(@"TGHeadChatPanel")) {
+        [(NSApplication *)[NSApplication sharedApplication] hide:nil];
+    } else {
+        [super close];
+    }
+    
+    
 }
 
 - (void)dealloc {

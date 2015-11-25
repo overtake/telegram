@@ -17,7 +17,8 @@
 #import <MtProtoKit/MTLogging.h>
 #import "ImageUtils.h"
 #import "POP.h"
-
+#import "ASQueue.h"
+#import "TGDispatcher.h"
 #import "SelectTextManager.h"
 #import "CMath.h"
 #import "SharedManager.h"
@@ -25,11 +26,13 @@
 #import "TL_destructMessage.h"
 #import "TL_outDocument.h"
 #import "TL_localMessageService.h"
+
 #import "TL_secretServiceMessage.h"
 #import "TL_messageActionSetMessageTTL.h"
 #import "TL_peerSecret.h"
 #import "TL_peerBroadcast.h"
 #import "TL_localMessage.h"
+#import "TL_localEmptyMessage.h"
 #import "TL_broadcast.h"
 #import "TL_messageActionEncryptedChat.h"
 #import "TL_messageActionBotDescription.h"
@@ -37,6 +40,7 @@
 #import "TLClassStore.h"
 #import "UsersManager.h"
 #import "DialogsManager.h"
+#import "ChannelsManager.h"
 #import "MessagesManager.h"
 #import "BlockedUsersManager.h"
 #import "BroadcastManager.h"
@@ -70,7 +74,7 @@
 
 
 #ifdef TGDEBUG
-#define ACCEPT_FEATURE ([@[@"vihor",@"Marvin",@"Ricdallaglio",@"Victor",@"Jdkdkdkdmdmdmx",@"dmitry",@"peter",@"Zlomch",@"MarcoK",@"VitocoEP",@"zinoviev",@"ecstasy",@"Gerardo",@"kondratyevdev",@"Markus"] indexOfObject:[UsersManager currentUser].username] != NSNotFound)
+#define ACCEPT_FEATURE ([@[@"vihor",@"Marvin",@"Ricdallaglio",@"Victor",@"Jdkdkdkdmdmdmx",@"dmitry",@"peter",@"Zlomch",@"MarcoK",@"VitocoEP",@"zinoviev",@"ecstasy",@"Gerardo",@"kondratyevdev",@"Markus",@"Telegrafm",@"doublespb"] indexOfObject:[UsersManager currentUser].username] != NSNotFound)
 #else
 #define ACCEPT_FEATURE YES
 #endif

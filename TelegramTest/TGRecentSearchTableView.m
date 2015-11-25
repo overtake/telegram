@@ -73,6 +73,9 @@
         
         [conversations enumerateObjectsUsingBlock:^(TL_conversation *obj, NSUInteger idx, BOOL *stop) {
             
+            if(obj.type == DialogTypeChat && obj.chat.isDeactivated)
+                return;
+            
             TGRecentSearchRowItem *item = [[TGRecentSearchRowItem alloc] initWithObject:obj];
             
             [self addItem:item tableRedraw:NO];
@@ -161,10 +164,17 @@
     if(!conv)
         conv = item.conversation;
     
-    [[Telegram rightViewController] showByDialog:conv sender:self];
+    [appWindow().navigationController showMessagesViewController:conv];
+    
     
 }
-- (BOOL)selectionWillChange:(NSInteger)row item:(TMRowItem *) item {
+- (BOOL)selectionWillChange:(NSInteger)row item:(TGRecentSearchRowItem *) item {
+    
+    if([[Telegram rightViewController] isModalViewActive]) {
+        [[Telegram rightViewController] modalViewSendAction:item.conversation];
+        return NO;
+    }
+    
     return YES;
 }
 - (BOOL)isSelectable:(NSInteger)row item:(TMRowItem *) item {

@@ -155,7 +155,7 @@ static long h_r_l;
     }];
 
     
-    if(!NSContainsRect([self.tableView visibleRect], [self.tableView rectOfRow:selectedIdx]))
+    if(![self.tableView rowIsVisible:selectedIdx])
         [self.tableView.scrollView.clipView scrollPoint:[self.tableView rectOfRow:selectedIdx].origin];
 }
 
@@ -191,10 +191,8 @@ static long h_r_l;
 
 -(void)setConversation:(TL_conversation *)conversation {
     _conversation = conversation;
-    
- 
-    
     [self reload];
+
 }
 
 
@@ -202,6 +200,7 @@ static long h_r_l;
     
     if(_conversation) {
         _list = @[];
+        [_tableView removeAllItems:YES];
         _fullItems = [[NSMutableArray alloc] init];
         _h_controller = [[ChatHistoryController alloc] initWithController:self historyFilter:[MP3HistoryFilter class]];
         [_searchRow.searchField setStringValue:@""];
@@ -212,6 +211,7 @@ static long h_r_l;
         [_tableView removeAllItems:YES];
         _fullItems = nil;
         _list = nil;
+        _h_controller = nil;
     }
     
     [self check];
@@ -221,7 +221,7 @@ static long h_r_l;
 -(void)loadNext {
     
     if(_h_controller.nextState != ChatHistoryStateFull) {
-        [_h_controller request:YES anotherSource:YES sync:NO selectHandler:^(NSArray *result, NSRange range) {
+        [_h_controller request:YES anotherSource:YES sync:NO selectHandler:^(NSArray *result, NSRange range, id controller) {
             
             NSArray *f = [result filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.class == %@",[MessageTableItemAudioDocument class]]];
             
@@ -244,13 +244,15 @@ static long h_r_l;
             
             [self resort];
             
-            [_tableView removeItemsInRange:NSMakeRange(1, _tableView.count-1) tableRedraw:YES];
+            if(_tableView.count > 0) {
+                 [_tableView removeItemsInRange:NSMakeRange(1, _tableView.count-1) tableRedraw:YES];
+            }
             
             [_tableView insert:_fullItems startIndex:1 tableRedraw:YES];
             
             [self check];
             
-            if([TGAudioPlayerWindow currentItem] == nil && _tableView.count > 1) {
+            if([TGAudioPlayerWindow currentItem] == nil && _tableView.count > 1 && [TGAudioPlayerWindow autoStart]) {
                 [self selectNext];
             }
             
@@ -314,7 +316,9 @@ static long h_r_l;
     
     [self.tableView redrawAll];
     
-    if(NSContainsRect([self.tableView visibleRect], [self.tableView rectOfRow:selectedIdx]))
+    
+    
+    if(![self.tableView rowIsVisible:selectedIdx])
         [self.tableView.scrollView.clipView scrollPoint:[self.tableView rectOfRow:selectedIdx].origin];
 
 }
@@ -323,38 +327,51 @@ static long h_r_l;
     [_tableView redrawAll];
 }
 
+-(void)close {
+    _conversation = nil;
+    [_h_controller drop:YES];
+    _h_controller = nil;
+}
+
 -(void)selectNext {
-    long rowId = (long) [_tableView indexOfItem:[_tableView itemByHash:_selectedId]];
     
-    if(rowId == NSNotFound)
-    {
-        rowId = 0;
-    }
+    [ASQueue dispatchOnMainQueue:^{
+        long rowId = (long) [_tableView indexOfItem:[_tableView itemByHash:_selectedId]];
+        
+        if(rowId == NSNotFound)
+        {
+            rowId = 0;
+        }
+        
+        rowId++;
+        
+        if(rowId == _tableView.count ) {
+            rowId = 1;
+        }
+        
+        _changedAudio([(TGAudioRowItem *)[_tableView itemAtPosition:rowId] document]);
+    }];
     
-    rowId++;
-    
-    if(rowId == _tableView.count ) {
-        rowId = 1;
-    }
-    
-    _changedAudio([(TGAudioRowItem *)[_tableView itemAtPosition:rowId] document]);
+   
     
 }
 -(void)selectPrev {
-    long rowId = (long) [_tableView indexOfItem:[_tableView itemByHash:_selectedId]];
-    
-    if(rowId == NSNotFound)
-    {
-        rowId = 0;
-    }
-    
-    rowId--;
-    
-    if(rowId < 1) {
-        rowId = (int)_tableView.count - 1;
-    }
-    
-    _changedAudio([(TGAudioRowItem *)[_tableView itemAtPosition:rowId] document]);
+    [ASQueue dispatchOnMainQueue:^{
+        long rowId = (long) [_tableView indexOfItem:[_tableView itemByHash:_selectedId]];
+        
+        if(rowId == NSNotFound)
+        {
+            rowId = 0;
+        }
+        
+        rowId--;
+        
+        if(rowId < 1) {
+            rowId = (int)_tableView.count - 1;
+        }
+        
+        _changedAudio([(TGAudioRowItem *)[_tableView itemAtPosition:rowId] document]);
+    }];
 }
 
 -(void)receivedMessage:(MessageTableItem *)message position:(int)position itsSelf:(BOOL)force {
@@ -399,7 +416,9 @@ static long h_r_l;
     return [_fullItems indexOfObject:item];
 }
 
--(void)deleteMessages:(NSArray *)ids {
+-(void)deleteItems:(NSArray *)dItems orMessageIds:(NSArray *)ids {
+    
+    
     NSArray *items = [_fullItems filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.document.message.n_id IN (%@)",ids]];
     
     [items enumerateObjectsUsingBlock:^(TGAudioRowItem *obj, NSUInteger idx, BOOL *stop) {

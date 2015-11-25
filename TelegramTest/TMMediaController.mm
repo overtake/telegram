@@ -250,55 +250,57 @@ static NSMutableDictionary *twoFingersTouches;
         
         if(controller.class == TMMediaController.class) {
             [menu addItem:[NSMenuItem separatorItem]];
-            [menu addItem:[NSMenuItem menuItemWithTitle:NSLocalizedString(@"MediaPreview.Forward", nil) withBlock:^(id sender) {
-               // [controller.panel performSelector:@selector(selectPreviousItem) withObject:nil];
-                
-                id<TMPreviewItem> previewItem = controller.currentItem;
-                
-                TL_localMessage *msg = previewItem.previewObject.media;
-                
-                [[Telegram rightViewController] showByDialog:msg.conversation sender:controller];
-                [[Telegram rightViewController].messagesViewController setState:MessagesViewControllerStateNone];
-                [[Telegram rightViewController].messagesViewController unSelectAll:NO];
-                
-                MessageTableItem *item  = [MessageTableItem messageItemFromObject:previewItem.previewObject.media];
-                
-                [[Telegram rightViewController].messagesViewController setSelectedMessage:item selected:YES];
-                
-                
-                [[Telegram rightViewController] showForwardMessagesModalView:[Telegram rightViewController].messagesViewController.conversation messagesCount:1];
-                
-                [[TMMediaController controller] close];
-                
-                
-            }]];
-            [menu addItem:[NSMenuItem menuItemWithTitle:NSLocalizedString(@"MediaPreview.Delete", nil) withBlock:^(id sender) {
-                id<TMPreviewItem> previewItem = controller.currentItem;
-                
-                TL_localMessage *msg = previewItem.previewObject.media;
-                
-                [[Telegram rightViewController] showByDialog:msg.conversation sender:controller];
-                
-                [[Telegram rightViewController].messagesViewController setState:MessagesViewControllerStateNone];
-                [[Telegram rightViewController].messagesViewController unSelectAll:NO];
-                
-                MessageTableItem *item  = [MessageTableItem messageItemFromObject:previewItem.previewObject.media];
-                [[Telegram rightViewController].messagesViewController setSelectedMessage:item selected:YES];
-                
-                [[Telegram rightViewController].messagesViewController deleteSelectedMessages];
-                
-                [[TMMediaController controller] deleteItem:previewItem];
-                
-            }]];
-            
-            [menu addItem:[NSMenuItem menuItemWithTitle:NSLocalizedString(@"MediaPreview.GoToMessage", nil) withBlock:^(id sender) {
-                id<TMPreviewItem> previewItem = controller.currentItem;
-                
-                TL_localMessage *msg = previewItem.previewObject.media;
-                
-                [[Telegram rightViewController] showByDialog:msg.conversation withJump:msg.n_id historyFilter:[HistoryFilter class] sender:controller];
-            
-            }]];
+//            [menu addItem:[NSMenuItem menuItemWithTitle:NSLocalizedString(@"MediaPreview.Forward", nil) withBlock:^(id sender) {
+//               // [controller.panel performSelector:@selector(selectPreviousItem) withObject:nil];
+//                
+//                id<TMPreviewItem> previewItem = controller.currentItem;
+//                
+//                TL_localMessage *msg = previewItem.previewObject.media;
+//                
+//                
+//                
+//                [[Telegram rightViewController] showByDialog:msg.conversation sender:controller];
+//                [[Telegram rightViewController].messagesViewController setState:MessagesViewControllerStateNone];
+//                [[Telegram rightViewController].messagesViewController unSelectAll:NO];
+//                
+//                MessageTableItem *item  = [MessageTableItem messageItemFromObject:previewItem.previewObject.media];
+//                
+//                [[Telegram rightViewController].messagesViewController setSelectedMessage:item selected:YES];
+//                
+//                
+//                [[Telegram rightViewController] showForwardMessagesModalView:[Telegram rightViewController].messagesViewController.conversation messagesCount:1];
+//                
+//                [[TMMediaController controller] close];
+//                
+//                
+//            }]];
+//            [menu addItem:[NSMenuItem menuItemWithTitle:NSLocalizedString(@"MediaPreview.Delete", nil) withBlock:^(id sender) {
+//                id<TMPreviewItem> previewItem = controller.currentItem;
+//                
+//                TL_localMessage *msg = previewItem.previewObject.media;
+//                
+//                [[Telegram rightViewController] showByDialog:msg.conversation sender:controller];
+//                
+//                [[Telegram rightViewController].messagesViewController setState:MessagesViewControllerStateNone];
+//                [[Telegram rightViewController].messagesViewController unSelectAll:NO];
+//                
+//                MessageTableItem *item  = [MessageTableItem messageItemFromObject:previewItem.previewObject.media];
+//                [[Telegram rightViewController].messagesViewController setSelectedMessage:item selected:YES];
+//                
+//                [[Telegram rightViewController].messagesViewController deleteSelectedMessages];
+//                
+//                [[TMMediaController controller] deleteItem:previewItem];
+//                
+//            }]];
+//            
+//            [menu addItem:[NSMenuItem menuItemWithTitle:NSLocalizedString(@"MediaPreview.GoToMessage", nil) withBlock:^(id sender) {
+//                id<TMPreviewItem> previewItem = controller.currentItem;
+//                
+//                TL_localMessage *msg = previewItem.previewObject.media;
+//                
+//                [[Telegram rightViewController] showByDialog:msg.conversation withJump:msg.n_id historyFilter:[HistoryFilter class] sender:controller];
+//            
+//            }]];
             
         }
         
@@ -625,7 +627,7 @@ static TMMediaController* currentController;
             
             if(completionHandler) completionHandler();
             
-        } max_id:0 peer_id:_dialog.peer_id next:YES limit:10000];
+        } max_id:0 filterMask:HistoryFilterPhoto peer:_dialog.peer next:YES limit:10000];
     } else if(_dialog) {
         self->items = [self media:_dialog.peer.peer_id];
         if(completionHandler) completionHandler();

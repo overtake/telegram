@@ -14,6 +14,7 @@
 #import "TGPasslock.h"
 #import "TGModalSetCaptionView.h"
 #import "TGModalView.h"
+#import "TGHeadChatPanel.h"
 @interface TMViewController ()
 @property (nonatomic,strong) TMProgressModalView *progressView;
 @property (nonatomic,strong) TMBackButton *backButton;
@@ -27,6 +28,14 @@
     if(self) {
         self.frameInit = frame;
     }
+    return self;
+}
+
+-(instancetype)init {
+    if(self = [super init]) {
+        self.frameInit = NSZeroRect;
+    }
+    
     return self;
 }
 
@@ -97,7 +106,7 @@
         _centerTextField = [TMTextField defaultTextField];
         [_centerTextField setAlignment:NSCenterTextAlignment];
         [_centerTextField setAutoresizingMask:NSViewMinXMargin | NSViewMaxXMargin];
-        [_centerTextField setFont:[NSFont fontWithName:@"HelveticaNeue" size:15]];
+        [_centerTextField setFont:TGSystemFont(15)];
         [_centerTextField setTextColor:NSColorFromRGB(0x222222)];
         [[_centerTextField cell] setTruncatesLastVisibleLine:YES];
         [[_centerTextField cell] setLineBreakMode:NSLineBreakByTruncatingTail];
@@ -138,13 +147,18 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     
+    [self becomeFirstResponder];
+    
     self.leftNavigationBarView = [self standartLeftBarView];
     
-    
-    if([Telegram isSingleLayout] && [Telegram rightViewController].currentEmptyController == [Telegram rightViewController].navigationViewController.currentController && ![[Telegram rightViewController] isModalViewActive])
+    if(self.navigationViewController == [Telegram rightViewController].navigationViewController)
     {
-        self.leftNavigationBarView = nil;
+        if([Telegram isSingleLayout] && [Telegram rightViewController].currentEmptyController == [Telegram rightViewController].navigationViewController.currentController && ![[Telegram rightViewController] isModalViewActive])
+        {
+            self.leftNavigationBarView = nil;
+        }
     }
+    
 }
 
 
@@ -185,13 +199,13 @@ static TGModalSetCaptionView *setCaptionView;
 +(void)showModalProgress {
     
     if(!progressView) {
-        progressView = [[TMProgressModalView alloc] initWithFrame:[[[Telegram delegate] window].contentView bounds]];
+        progressView = [[TMProgressModalView alloc] initWithFrame:[appWindow().contentView bounds]];
         
         progressView.layer.opacity = 0;
         
-        [progressView setCenterByView:[[Telegram delegate] window].contentView];
+        [progressView setCenterByView:appWindow().contentView];
         
-         [[[Telegram delegate] window].contentView addSubview:progressView];
+         [appWindow().contentView addSubview:progressView];
     }
     
    
@@ -355,7 +369,23 @@ static TGModalSetCaptionView *setCaptionView;
 }
 
 -(void)showModalProgress {
-    [TMViewController showModalProgress];
+    if(!progressView) {
+        progressView = [[TMProgressModalView alloc] initWithFrame:[self.view.window.contentView bounds]];
+        
+        progressView.layer.opacity = 0;
+        
+        [progressView setCenterByView:self.view.window.contentView];
+        
+        [self.view.window.contentView addSubview:progressView];
+    }
+    
+    
+    
+    [(TelegramWindow *)self.view.window setAcceptEvents:NO];
+    
+    POPBasicAnimation *anim = [TMViewController popAnimationForProgress:progressView.layer.opacity to:0.8];
+    
+    [progressView.layer pop_addAnimation:anim forKey:@"fade"];
 }
 -(void)hideModalProgress {
     [TMViewController hideModalProgress];
@@ -363,7 +393,7 @@ static TGModalSetCaptionView *setCaptionView;
 
 +(void)showPasslock:(passlockCallback)callback animated:(BOOL)animated {
     
-    
+    [TGHeadChatPanel lockAllControllers];
     assert([NSThread isMainThread]);
     
     if(passlockView.window)
@@ -430,7 +460,7 @@ static TGModalSetCaptionView *setCaptionView;
 
 +(void)hidePasslock {
     
-    
+    [TGHeadChatPanel unlockAllControllers];
     
     assert([NSThread isMainThread]);
     
@@ -474,7 +504,8 @@ static TGModalSetCaptionView *setCaptionView;
 }
 
 - (void)loadView {
-    self.view = [[TMView alloc] initWithFrame: self.frameInit];
+    if(!_view)
+        self.view = [[TMView alloc] initWithFrame: self.frameInit];
 
 }
 
@@ -488,6 +519,8 @@ static TGModalSetCaptionView *setCaptionView;
     return _view;
 }
 
-
+-(MessagesViewController *)messagesViewController {
+    return self.navigationViewController.messagesViewController;
+}
 
 @end

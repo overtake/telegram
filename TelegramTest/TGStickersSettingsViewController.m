@@ -255,10 +255,7 @@
     }];
     
     
-    GeneralSettingsBlockHeaderItem *description = [[GeneralSettingsBlockHeaderItem alloc] initWithObject:NSLocalizedString(@"Stickers.StickersSetDescription", nil)];
-    
-    description.isFlipped = YES;
-    description.height = 150;
+    GeneralSettingsBlockHeaderItem *description = [[GeneralSettingsBlockHeaderItem alloc] initWithString:NSLocalizedString(@"Stickers.StickersSetDescription", nil) height:YES flipped:150];
     
     [_tableView insert:description atIndex:_tableView.count tableRedraw:NO];
     

@@ -44,11 +44,10 @@
         
         [self.namesField setFrame:NSMakeRect(5, NSHeight(frameRect) - 13, NSWidth(frameRect), 20)];
         
-        [self.descriptionField setFrame:NSMakeRect(5, 0, NSWidth(frameRect), 19)];
+        [self.descriptionField setFrame:NSMakeRect(5, 0, NSWidth(frameRect), 17)];
         
         [self addSubview:self.descriptionField];
         [self addSubview:self.namesField];
-        
         
         
         _deleteImageView = [[NSImageView alloc] initWithFrame:NSMakeRect(NSWidth(self.frame) - image_CancelReply().size.width , NSHeight(self.frame) - image_CancelReply().size.height , image_CancelReply().size.width , image_CancelReply().size.height)];

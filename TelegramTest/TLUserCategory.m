@@ -89,6 +89,8 @@ DYNAMIC_PROPERTY(DType);
     
     [self setType:type];
     
+    [self rebuildNames];
+    
     return type;
 }
 
@@ -97,10 +99,6 @@ Online
 */
 - (BOOL)isOnline {
     return [[MTNetwork instance] getTime] < self.status.lastSeenTime;
-}
-
--(BOOL)isBot {
-    return (self.flags & TGUSERFLAGBOT) == TGUSERFLAGBOT;
 }
 
 DYNAMIC_PROPERTY(FULLUPDATETIME)
@@ -171,14 +169,13 @@ DYNAMIC_PROPERTY(SEEN_UPDATE);
 - (void)setLastSeenUpdate:(int)seenUpdate {
     [self setSEEN_UPDATE:@(seenUpdate)];
 }
-/*
- Names
- */
 
-
-
+-(NSColor *)colorByNameOrPhone {
+    return NSColorFromRGB(0x333333);
+}
 
 - (void) rebuildNames {
+    
     
     if(!self.last_name)
         self.last_name = @"";
@@ -188,114 +185,20 @@ DYNAMIC_PROPERTY(SEEN_UPDATE);
     
     
     //Fullname
-    NSString *fullName = [[[[NSString stringWithFormat:@"%@ %@", self.first_name, self.last_name] trim] singleLine] htmlentities];
-    NSString *fullNameFull = fullName;
-    if(fullName.length > 30)
-        fullName = [fullName substringToIndex:30];
-    
-    [self setDFullName:fullName];
-    
-    
-    NSString *fullNameOrPhone = fullName;
-    
-    NSColor *colorByNameOrPhone;
-    if(self.type == TLUserTypeRequest) {
-        fullNameOrPhone = self.phoneWithFormat;
-        colorByNameOrPhone = BLUE_UI_COLOR;
-    } else if(self.type == TLUserTypeForeign || self.type == TLUserTypeDeleted || self.type == TLUserTypeEmpty) {
-        colorByNameOrPhone = BLUE_UI_COLOR;
-    } else if(self.type == TLUserTypeSelf) {
-        colorByNameOrPhone = BLUE_UI_COLOR;
-    } else {
-        colorByNameOrPhone = NSColorFromRGB(0x333333);
-    }
-    
-    colorByNameOrPhone = NSColorFromRGB(0x333333);
-    
-    //Dialogs
-    NSMutableAttributedString *dialogTitleAttributedString = [[NSMutableAttributedString alloc] init];
-    
-    [dialogTitleAttributedString appendString:fullName withColor:colorByNameOrPhone];
-    [dialogTitleAttributedString setSelectionColor:NSColorFromRGB(0xffffff) forColor:NSColorFromRGB(0x333333)];
-    [dialogTitleAttributedString setSelectionColor:NSColorFromRGB(0xfffffe) forColor:BLUE_UI_COLOR];
-    
-    
-
-    [dialogTitleAttributedString setFont:[NSFont fontWithName:@"HelveticaNeue" size:14] forRange:dialogTitleAttributedString.range];
-    [self setDIALOGTITLE:dialogTitleAttributedString];
-    
-    NSMutableAttributedString *dialogEncryptedTitleAttributedString = [[NSMutableAttributedString alloc] init];
-    [dialogEncryptedTitleAttributedString appendAttributedString:[NSAttributedString attributedStringWithAttachment:encryptedIconAttachment()]];
-    [dialogEncryptedTitleAttributedString setSelectionAttachment:encryptedIconSelectedAttachment() forAttachment:encryptedIconAttachment()];
-    
-    [dialogEncryptedTitleAttributedString appendString:fullNameOrPhone withColor:DARK_GREEN];
-    [dialogEncryptedTitleAttributedString setSelectionColor:NSColorFromRGB(0xffffff) forColor:DARK_GREEN];
-    [dialogEncryptedTitleAttributedString setFont:[NSFont fontWithName:@"HelveticaNeue" size:14] forRange:dialogEncryptedTitleAttributedString.range];
-    [self setDIALOGTITLEENCRYPTED:dialogEncryptedTitleAttributedString];
-    
-    
-    NSMutableAttributedString *chatInfoTitleAttributedString = [[NSMutableAttributedString alloc] init];
-    
-    [chatInfoTitleAttributedString appendString:fullName withColor:DARK_BLACK];
-    [chatInfoTitleAttributedString setSelectionColor:NSColorFromRGB(0xffffff) forColor:DARK_BLACK];
-    
-    [chatInfoTitleAttributedString setFont:[NSFont fontWithName:@"HelveticaNeue" size:12.5] forRange:chatInfoTitleAttributedString.range];
-    [self setCHATINFOTITLE:chatInfoTitleAttributedString];
-    
-    
-    NSMutableAttributedString *userNameTitle = [[NSMutableAttributedString alloc] init];
-    
-    [userNameTitle appendString:[NSString stringWithFormat:@"%@%@",self.username.length > 0 ? @"@" : @"",self.username] withColor:GRAY_TEXT_COLOR];
-    [userNameTitle setSelectionColor:NSColorFromRGB(0xffffff) forColor:GRAY_TEXT_COLOR];
-    
-    [userNameTitle setFont:[NSFont fontWithName:@"HelveticaNeue" size:14] forRange:userNameTitle.range];
-    [self setUserNameTitle:userNameTitle];
-    
-    
-    NSMutableAttributedString *userNameProfileTitle = [[NSMutableAttributedString alloc] init];
-    
-    [userNameProfileTitle appendString:[NSString stringWithFormat:@"@%@",self.username] withColor:NSColorFromRGB(0x333333)];
-    [userNameProfileTitle setSelectionColor:NSColorFromRGB(0xffffff) forColor:NSColorFromRGB(0x333333)];
-    
-    
-    [userNameProfileTitle setFont:[NSFont fontWithName:@"HelveticaNeue-Light" size:14] forRange:userNameProfileTitle.range];
-    [self setUserNameProfileTitle:userNameProfileTitle];
     
     
     
-    NSMutableAttributedString *userNameSearchTitle = [[NSMutableAttributedString alloc] init];
-    
-    [userNameSearchTitle appendString:[NSString stringWithFormat:@"@%@",self.username] withColor:BLUE_UI_COLOR];
-    [userNameSearchTitle setSelectionColor:NSColorFromRGB(0xffffff) forColor:BLUE_UI_COLOR];
-    
-    
-    [userNameSearchTitle setFont:[NSFont fontWithName:@"HelveticaNeue" size:13] forRange:userNameSearchTitle.range];
-    [self setUserNameSearchTitle:userNameSearchTitle];
-    
-    //Message Tite
-    
-    NSMutableAttributedString *titleForMessageAttributedString = [[NSMutableAttributedString alloc] init];
-    [titleForMessageAttributedString appendString:fullNameOrPhone withColor:NSColorFromRGB(0x222222)];
-    [titleForMessageAttributedString setFont:[NSFont fontWithName:@"HelveticaNeue" size:14] forRange:titleForMessageAttributedString.range];
-    
-    NSMutableParagraphStyle *style = [[NSMutableParagraphStyle alloc] init];
-    [style setAlignment:NSCenterTextAlignment];
-    [titleForMessageAttributedString addAttribute:NSParagraphStyleAttributeName value:style range:titleForMessageAttributedString.range];
-    [self setTITLE_FOR_MESSAGE:titleForMessageAttributedString];
+    [self setDFullName:nil];
+    [self setDIALOGTITLE:nil];
+    [self setDIALOGTITLEENCRYPTED:nil];
+    [self setCHATINFOTITLE:nil];
+    [self setUserNameProfileTitle:nil];
+    [self setUserNameSearchTitle:nil];
+    [self setTITLE_FOR_MESSAGE:nil];
+    [self setENCRYPTED_TITLE_FOR_MESSAGE:nil];
     
     
-    NSMutableAttributedString *profileAttributedString = [[NSMutableAttributedString alloc] init];
-    [profileAttributedString appendString:fullNameOrPhone withColor:NSColorFromRGB(0x222222)];
-    [profileAttributedString setFont:[NSFont fontWithName:@"HelveticaNeue" size:15] forRange:profileAttributedString.range];
-    [profileAttributedString setAlignment:NSLeftTextAlignment range:profileAttributedString.range];
-    [self setProfileTitle:profileAttributedString];
     
-    NSMutableAttributedString *encryptedTitleForMessageAttributedString = [[NSMutableAttributedString alloc] init];
-    [encryptedTitleForMessageAttributedString appendAttributedString:[NSAttributedString attributedStringWithAttachment:encryptedIconAttachmentBlack()]];
-    [encryptedTitleForMessageAttributedString appendString:fullNameFull withColor:DARK_BLACK];
-    [encryptedTitleForMessageAttributedString setFont:[NSFont fontWithName:@"HelveticaNeue" size:14] forRange:encryptedTitleForMessageAttributedString.range];
-    [encryptedTitleForMessageAttributedString addAttribute:NSParagraphStyleAttributeName value:style range:encryptedTitleForMessageAttributedString.range];
-    [self setENCRYPTED_TITLE_FOR_MESSAGE:encryptedTitleForMessageAttributedString];
 }
 
 static NSTextAttachment *encryptedIconAttachment() {
@@ -338,31 +241,138 @@ DYNAMIC_PROPERTY(DIALOGTITLEENCRYPTED);
 DYNAMIC_PROPERTY(ProfileTitle);
 
 - (NSAttributedString *)dialogTitle {
+    
+    id title = [self getDIALOGTITLE];
+    
+    if(!title) {
+        NSMutableAttributedString *dialogTitleAttributedString = [[NSMutableAttributedString alloc] init];
+        
+        [dialogTitleAttributedString appendString:self.fullName withColor:[self colorByNameOrPhone]];
+        [dialogTitleAttributedString setSelectionColor:NSColorFromRGB(0xffffff) forColor:NSColorFromRGB(0x333333)];
+        [dialogTitleAttributedString setSelectionColor:NSColorFromRGB(0xfffffe) forColor:BLUE_UI_COLOR];
+        
+        [dialogTitleAttributedString setFont:TGSystemFont(14) forRange:dialogTitleAttributedString.range];
+        [self setDIALOGTITLE:dialogTitleAttributedString];
+    }
+    
     return [self getDIALOGTITLE];
 }
 
+- (NSSize)dialogTitleSize {
+    return [[self dialogTitle] sizeForTextFieldForWidth:INT32_MAX];
+}
+
+
+- (NSSize)dialogEncryptedTitleSize {
+    return [[self dialogTitleEncrypted] sizeForTextFieldForWidth:INT32_MAX];
+}
+
 - (NSAttributedString *)profileTitle {
+    
+    id title = [self getProfileTitle];
+    
+    if(!title) {
+        NSMutableAttributedString *profileAttributedString = [[NSMutableAttributedString alloc] init];
+        [profileAttributedString appendString:self.fullName withColor:NSColorFromRGB(0x222222)];
+        [profileAttributedString setFont:TGSystemFont(15) forRange:profileAttributedString.range];
+        [profileAttributedString setAlignment:NSLeftTextAlignment range:profileAttributedString.range];
+        [self setProfileTitle:profileAttributedString];
+    }
+    
     return [self getProfileTitle];
 }
 
 - (NSAttributedString *)dialogTitleEncrypted {
+    
+    id title = [self getDIALOGTITLEENCRYPTED];
+    
+    if(!title) {
+        NSMutableAttributedString *dialogEncryptedTitleAttributedString = [[NSMutableAttributedString alloc] init];
+        [dialogEncryptedTitleAttributedString appendAttributedString:[NSAttributedString attributedStringWithAttachment:encryptedIconAttachment()]];
+        [dialogEncryptedTitleAttributedString setSelectionAttachment:encryptedIconSelectedAttachment() forAttachment:encryptedIconAttachment()];
+        
+        [dialogEncryptedTitleAttributedString appendString:self.fullName withColor:DARK_GREEN];
+        [dialogEncryptedTitleAttributedString setSelectionColor:NSColorFromRGB(0xffffff) forColor:DARK_GREEN];
+        [dialogEncryptedTitleAttributedString setFont:TGSystemFont(14) forRange:dialogEncryptedTitleAttributedString.range];
+        [self setDIALOGTITLEENCRYPTED:dialogEncryptedTitleAttributedString];
+    }
+    
+    
     return [self getDIALOGTITLEENCRYPTED];
 }
 
 - (NSAttributedString *)chatInfoTitle {
+    
+    id title = [self getCHATINFOTITLE];
+    
+    if(!title) {
+        NSMutableAttributedString *chatInfoTitleAttributedString = [[NSMutableAttributedString alloc] init];
+        
+        [chatInfoTitleAttributedString appendString:self.fullName withColor:DARK_BLACK];
+        [chatInfoTitleAttributedString setSelectionColor:NSColorFromRGB(0xffffff) forColor:DARK_BLACK];
+        
+        [chatInfoTitleAttributedString setFont:TGSystemFont(12.5) forRange:chatInfoTitleAttributedString.range];
+        [self setCHATINFOTITLE:chatInfoTitleAttributedString];
+    }
+    
+    
     return [self getCHATINFOTITLE];
 }
 
 
 - (NSAttributedString *)userNameTitle {
+    
+    
+    id title = [self getUserNameTitle];
+    
+    if(!title) {
+        NSMutableAttributedString *userNameTitle = [[NSMutableAttributedString alloc] init];
+        
+        [userNameTitle appendString:[NSString stringWithFormat:@"%@%@",self.username.length > 0 ? @"@" : @"",self.username.length > 0 ? self.username : @""] withColor:GRAY_TEXT_COLOR];
+        [userNameTitle setSelectionColor:NSColorFromRGB(0xffffff) forColor:GRAY_TEXT_COLOR];
+        
+        [userNameTitle setFont:TGSystemFont(14) forRange:userNameTitle.range];
+        [self setUserNameTitle:userNameTitle];
+    }
+    
     return [self getUserNameTitle];
 }
 
 - (NSAttributedString *)userNameProfileTitle {
+    
+    id title = [self getUserNameProfileTitle];
+    
+    if(!title) {
+        NSMutableAttributedString *userNameProfileTitle = [[NSMutableAttributedString alloc] init];
+        
+        [userNameProfileTitle appendString:[NSString stringWithFormat:@"@%@",self.username] withColor:NSColorFromRGB(0x333333)];
+        [userNameProfileTitle setSelectionColor:NSColorFromRGB(0xffffff) forColor:NSColorFromRGB(0x333333)];
+        
+        
+        [userNameProfileTitle setFont:TGSystemLightFont(14) forRange:userNameProfileTitle.range];
+        [self setUserNameProfileTitle:userNameProfileTitle];
+
+    }
+    
+    
     return [self getUserNameProfileTitle];
 }
 
 - (NSAttributedString *)userNameSearchTitle {
+    
+    id title = [self userNameSearchTitle];
+    
+    if(!title) {
+        NSMutableAttributedString *userNameSearchTitle = [[NSMutableAttributedString alloc] init];
+        
+        [userNameSearchTitle appendString:[NSString stringWithFormat:@"@%@",self.username] withColor:BLUE_UI_COLOR];
+        [userNameSearchTitle setSelectionColor:NSColorFromRGB(0xffffff) forColor:BLUE_UI_COLOR];
+        
+        
+        [userNameSearchTitle setFont:TGSystemFont(13) forRange:userNameSearchTitle.range];
+        [self setUserNameSearchTitle:userNameSearchTitle];
+    }
+    
     return [self getUserNameSearchTitle];
 }
 
@@ -370,19 +380,68 @@ DYNAMIC_PROPERTY(TITLE_FOR_MESSAGE);
 DYNAMIC_PROPERTY(ENCRYPTED_TITLE_FOR_MESSAGE);
 
 - (NSAttributedString *) titleForMessage {
+    
+    id title = [self getTITLE_FOR_MESSAGE];
+    
+    if(!title) {
+        NSMutableAttributedString *titleForMessageAttributedString = [[NSMutableAttributedString alloc] init];
+        [titleForMessageAttributedString appendString:self.fullName withColor:NSColorFromRGB(0x222222)];
+        [titleForMessageAttributedString setFont:TGSystemFont(14) forRange:titleForMessageAttributedString.range];
+        
+        NSMutableParagraphStyle *style = [[NSMutableParagraphStyle alloc] init];
+        [style setAlignment:NSCenterTextAlignment];
+        [titleForMessageAttributedString addAttribute:NSParagraphStyleAttributeName value:style range:titleForMessageAttributedString.range];
+        [self setTITLE_FOR_MESSAGE:titleForMessageAttributedString];
+    }
+    
     return [self getTITLE_FOR_MESSAGE];
 }
 
 - (NSAttributedString *) encryptedTitleForMessage {
+    
+    
+    id title = [self getENCRYPTED_TITLE_FOR_MESSAGE];
+    
+    if(!title) {
+        
+        NSMutableParagraphStyle *style = [[NSMutableParagraphStyle alloc] init];
+        [style setAlignment:NSCenterTextAlignment];
+        
+        NSMutableAttributedString *encryptedTitleForMessageAttributedString = [[NSMutableAttributedString alloc] init];
+        [encryptedTitleForMessageAttributedString appendAttributedString:[NSAttributedString attributedStringWithAttachment:encryptedIconAttachmentBlack()]];
+        [encryptedTitleForMessageAttributedString appendString:self.fullName withColor:DARK_BLACK];
+        [encryptedTitleForMessageAttributedString setFont:TGSystemFont(14) forRange:encryptedTitleForMessageAttributedString.range];
+        [encryptedTitleForMessageAttributedString addAttribute:NSParagraphStyleAttributeName value:style range:encryptedTitleForMessageAttributedString.range];
+        [self setENCRYPTED_TITLE_FOR_MESSAGE:encryptedTitleForMessageAttributedString];
+    }
+    
     return [self getENCRYPTED_TITLE_FOR_MESSAGE];
 }
-
-
 
 
 DYNAMIC_PROPERTY(DFullName);
 
 - (NSString *)fullName {
+    
+    NSString *fullName = [self getDFullName];
+    
+    if(!fullName) {
+        
+        if(!self.first_name)
+            self.first_name = @"";
+        
+        if(!self.last_name)
+            self.last_name = @"";
+        
+        NSString *fullName = [[[[NSString stringWithFormat:@"%@ %@", self.first_name, self.last_name] trim] singleLine] htmlentities];
+        if(fullName.length > 30)
+            fullName = [fullName substringToIndex:30];
+        
+        
+        [self setDFullName:fullName];
+        
+    }
+    
     return [self getDFullName];
 }
 
@@ -428,7 +487,7 @@ DYNAMIC_PROPERTY(STATUS_MESSAGES_HEADER_VIEW);
             range = [str appendString:string withColor:NSColorFromRGB(0xa9a9a9)];
         }
         
-        [str setFont:[NSFont fontWithName:@"HelveticaNeue" size:12] forRange:range];
+        [str setFont:TGSystemFont(12) forRange:range];
 //        [self setSTATUS_MESSAGES_HEADER_VIEW:str];
     }
     
@@ -450,7 +509,7 @@ DYNAMIC_PROPERTY(STATUS_MESSAGES_HEADER_VIEW);
             range = [str appendString:string withColor:NSColorFromRGB(0xa1a1a1)];
         }
         
-        [str setFont:[NSFont fontWithName:@"Helvetica-Light" size:12.5] forRange:range];
+        [str setFont:TGSystemLightFont(12.5) forRange:range];
     }
     return str;
 }
@@ -469,7 +528,7 @@ DYNAMIC_PROPERTY(STATUS_MESSAGES_HEADER_VIEW);
         
         [str setSelectionColor:NSColorFromRGB(0xffffff) forColor:BLUE_UI_COLOR];
         [str setSelectionColor:NSColorFromRGB(0xfffffe) forColor:NSColorFromRGB(0x9b9b9b)];
-        [str setFont:[NSFont fontWithName:@"HelveticaNeue" size:13] forRange:range];
+        [str setFont:TGSystemFont(13) forRange:range];
     }
     return str;
 }
@@ -499,7 +558,7 @@ DYNAMIC_PROPERTY(STATUS_MESSAGES_HEADER_VIEW);
             range = [str appendString:string withColor:GRAY_TEXT_COLOR];
         }
         
-        [str setFont:[NSFont fontWithName:@"HelveticaNeue" size:12.5f] forRange:range];
+        [str setFont:TGSystemFont(12.5f) forRange:range];
     }
     return str;
 }
@@ -518,7 +577,7 @@ DYNAMIC_PROPERTY(STATUS_MESSAGES_HEADER_VIEW);
             range = [str appendString:string withColor:GRAY_TEXT_COLOR];
         }
         
-        [str setFont:[NSFont fontWithName:@"HelveticaNeue-Light" size:14] forRange:range];
+        [str setFont:TGSystemLightFont(14) forRange:range];
         
         [str setAlignment:NSLeftTextAlignment range:range];
     }

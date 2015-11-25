@@ -83,8 +83,8 @@
         }
     }
     if(todelete.count) {
-        [[Storage manager] deleteMessages:todelete completeHandler:nil];
-        [Notification perform:MESSAGE_DELETE_EVENT data:@{KEY_MESSAGE_ID_LIST:todelete}];
+        
+        [[DialogsManager sharedManager] deleteMessagesWithMessageIds:todelete];
         
         [remoteDelete enumerateKeysAndObjectsUsingBlock:^(NSNumber *chat_id, NSMutableArray *obj, BOOL *stop) {
             
@@ -129,7 +129,7 @@
         }
         
         if(tosave.count)
-            [[Storage manager] insertMessages:tosave  completeHandler:nil];
+            [[Storage manager] insertMessages:tosave];
     }];
     
 }
@@ -159,7 +159,7 @@
         if(message.ttl_seconds != 0) {
             message.destruction_time = [[NSDate date] timeIntervalSince1970]+message.ttl_seconds;
             [self.targets addObject:message];
-            [[Storage manager] updateMessages:@[message]];
+            [message save:NO];
         }
     }];
     

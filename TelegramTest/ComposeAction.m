@@ -27,6 +27,12 @@
     return self;
 }
 
+-(id)initWithStepResult:(NSArray *)stepResult {
+    if(self = [super init]) {
+        _stepResult = stepResult;
+    }
+    return self;
+}
 
 @end
 
@@ -40,6 +46,8 @@
     
     return self;
 }
+
+
 
 -(id)initWithBehaviorClass:(Class)behavior filter:(NSArray *)filter object:(id)object {
     if(self = [self initWithBehaviorClass:behavior]) {

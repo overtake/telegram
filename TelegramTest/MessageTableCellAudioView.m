@@ -79,7 +79,7 @@
         [self.durationView setDrawsBackground:NO];
         [self.durationView setStringValue:@"00:00 / 00:00"];
         [self.durationView sizeToFit];
-        [self.durationView setFont:[NSFont fontWithName:@"HelveticaNeue" size:12]];
+        [self.durationView setFont:TGSystemFont(12)];
         [self.durationView setTextColor:NSColorFromRGB(0xbebebe)];
         [self.containerView addSubview:self.durationView];
         
@@ -89,7 +89,7 @@
         [self.stateTextField setBordered:NO];
         [self.stateTextField setEditable:NO];
         [self.stateTextField setDrawsBackground:NO];
-        [self.stateTextField setFont:[NSFont fontWithName:@"HelveticaNeue" size:12]];
+        [self.stateTextField setFont:TGSystemFont(12)];
         [self.stateTextField setTextColor:NSColorFromRGB(0xbebebe)];
 
         
@@ -167,7 +167,7 @@
         
         NSBezierPath *path = [NSBezierPath bezierPath];
         
-        [path appendBezierPathWithRoundedRect:NSMakeRect(NSMinX(self.containerView.frame) + NSWidth(self.durationView.frame) + 3, NSMinY(self.containerView.frame) +  NSMinY(self.durationView.frame) + 2, 6, 6) xRadius:3 yRadius:3];
+        [path appendBezierPathWithRoundedRect:NSMakeRect(NSMinX(self.containerView.frame) + NSWidth(self.durationView.frame) + 3, NSMinY(self.containerView.frame) +  NSMinY(self.durationView.frame) + 4, 6, 6) xRadius:3 yRadius:3];
         
         [path fill];
     }
@@ -191,7 +191,7 @@
     }
     
     if(cellState == CellStateSending) {
-        [self.stateTextField setHidden:NO];
+        [self.stateTextField setHidden:self.item.message.fwd_from_id == nil];
     }
     
     if(cellState == CellStateNeedDownload) {
@@ -262,6 +262,8 @@
     [self updateDownloadState];
     
     [self.durationView setStringValue:item.duration];
+    
+    [self.durationView setFrameSize:NSMakeSize(80, NSHeight(self.durationView.frame))];
     
     if(item.state != AudioStatePlaying && item.state != AudioStatePaused)
         [self updateCellState];

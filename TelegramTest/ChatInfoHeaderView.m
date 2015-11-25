@@ -20,6 +20,7 @@
 #import "ComposeActionAddGroupMembersBehavior.h"
 #import "TGPhotoViewer.h"
 #import "MessagesUtils.h"
+#import "ChatAdminsViewController.h"
 @implementation LineView
 
 - (void)drawRect:(NSRect)dirtyRect {
@@ -53,7 +54,7 @@
         
         [self.avatarImageView setFrameSize:NSMakeSize(70, 70)];
         
-        [self.avatarImageView setFrameOrigin:NSMakePoint(100, self.bounds.size.height - self.avatarImageView.bounds.size.height - 30)];
+        
         
         [self addSubview:self.avatarImageView];
         
@@ -64,7 +65,7 @@
             
             if(strongSelf.avatarImageView.sourceType != ChatAvatarSourceBroadcast) {
                 
-                if(![strongSelf.fullChat.chat_photo isKindOfClass:[TL_photoEmpty class]]) {
+                if(![strongSelf.fullChat.chat_photo isKindOfClass:[TL_photoEmpty class]] && strongSelf.fullChat.chat_photo) {
                     
                     TL_photoSize *size = [strongSelf.fullChat.chat_photo.sizes lastObject];
                     
@@ -97,6 +98,8 @@
         [self.nameTextField setAction:@selector(enter)];
         [self addSubview:self.nameTextField];
         
+        [[self.nameTextField cell] setTruncatesLastVisibleLine:YES];
+        
         _nameLiveView = [[LineView alloc] initWithFrame:NSMakeRect(185, self.bounds.size.height - 80, NSWidth(self.frame) - 310, 1)];
         [self.nameLiveView setHidden:YES];
         [self addSubview:self.nameLiveView];
@@ -126,8 +129,16 @@
             }
             
             
-            if(self.fullChat.participants.participants.count < maxChatUsers())
-                [[Telegram rightViewController] showComposeWithAction:[[ComposeAction alloc]initWithBehaviorClass:[ComposeActionAddGroupMembersBehavior class] filter:filter object:self.fullChat]];
+            if(self.fullChat.participants.participants.count < maxChatUsers()) {
+                
+                ComposePickerViewController *viewController = [[ComposePickerViewController alloc] initWithFrame:self.controller.view.bounds];
+                
+                [viewController setAction:[[ComposeAction alloc]initWithBehaviorClass:[ComposeActionAddGroupMembersBehavior class] filter:filter object:self.controller.fullChat reservedObjects:@[self.controller.chat]]];
+                
+                [self.controller.navigationViewController pushViewController:viewController animated:YES];
+                
+            }
+            
             
             
         }];
@@ -146,7 +157,11 @@
             
             dispatch_block_t cblock = ^ {
                 
-                [[Telegram rightViewController] showChatExportLinkController:_fullChat];
+                ChatExportLinkViewController *viewController = [[ChatExportLinkViewController alloc] initWithFrame:self.controller.view.frame];
+                
+                [viewController setChat:_fullChat];
+                
+                [self.controller.navigationViewController pushViewController:viewController animated:YES];
 
             };
             
@@ -157,11 +172,11 @@
                 
             } else {
                 
-                [TMViewController showModalProgress];
+                [self.controller showModalProgress];
                 
-                [RPCRequest sendRequest:[TLAPI_messages_exportChatInvite createWithChat_id:_fullChat.n_id] successHandler:^(RPCRequest *request, TL_chatInviteExported *response) {
+                [RPCRequest sendRequest:[TLAPI_messages_exportChatInvite createWithChat_id:self.controller.chat.n_id] successHandler:^(RPCRequest *request, TL_chatInviteExported *response) {
                     
-                    [TMViewController hideModalProgressWithSuccess];
+                    [self.controller hideModalProgressWithSuccess];
                     
                     _fullChat.exported_invite = response;
                     
@@ -171,7 +186,7 @@
                     
                     
                 } errorHandler:^(RPCRequest *request, RpcError *error) {
-                    [TMViewController hideModalProgress];
+                    [self.controller hideModalProgress];
                 } timeout:10];
                 
             }
@@ -193,9 +208,15 @@
         
         self.sharedMediaButton = [TMSharedMediaButton buttonWithText:NSLocalizedString(@"Profile.SharedMedia", nil) tapBlock:^{
             
-            [[Telegram rightViewController] showCollectionPage:self.controller.chat.dialog];
+            TMCollectionPageController *viewController = [[TMCollectionPageController alloc] initWithFrame:self.controller.view.bounds];
             
-            [[Telegram rightViewController].collectionViewController showAllMedia];
+            [viewController loadViewIfNeeded];
+            
+            [viewController setConversation:self.controller.chat.dialog];
+            
+            [self.controller.navigationViewController pushViewController:viewController animated:YES];
+            
+            [viewController showAllMedia];
         }];
         
         [self.sharedMediaButton setFrameSize:NSMakeSize(self.exportChatInvite.bounds.size.width, 42)];
@@ -205,9 +226,15 @@
         
         self.filesMediaButton = [TMSharedMediaButton buttonWithText:NSLocalizedString(@"Profile.SharedMediaFiles", nil) tapBlock:^{
             
-            [[Telegram rightViewController] showCollectionPage:self.controller.chat.dialog];
+            TMCollectionPageController *viewController = [[TMCollectionPageController alloc] initWithFrame:self.controller.view.bounds];
             
-            [[Telegram rightViewController].collectionViewController showFiles];
+            [viewController loadViewIfNeeded];
+            
+            [viewController setConversation:self.controller.chat.dialog];
+            
+            [self.controller.navigationViewController pushViewController:viewController animated:YES];
+            
+            [viewController showFiles];
         }];
         
         
@@ -222,9 +249,16 @@
         
         self.sharedLinksButton = [TMSharedMediaButton buttonWithText:NSLocalizedString(@"Conversation.Filter.SharedLinks", nil) tapBlock:^{
             
-            [[Telegram rightViewController] showCollectionPage:self.controller.chat.dialog];
+            TMCollectionPageController *viewController = [[TMCollectionPageController alloc] initWithFrame:self.controller.view.bounds];
             
-            [[Telegram rightViewController].collectionViewController showSharedLinks];
+            [viewController loadViewIfNeeded];
+            
+            [viewController setConversation:self.controller.chat.dialog];
+            
+            [self.controller.navigationViewController pushViewController:viewController animated:YES];
+            
+            [viewController showSharedLinks];
+
         }];
         
         
@@ -256,26 +290,28 @@
             [menuPopover showRelativeToRect:strongSelf.muteUntilTitle.bounds ofView:strongSelf.muteUntilTitle preferredEdge:CGRectMinYEdge];
             
         }];
-//        
-//        _notificationSwitcher = [[ITSwitch alloc] initWithFrame:NSMakeRect(0, 0, 36, 20)];
-//        
-//        _notificationView.rightContainer = self.notificationSwitcher;
-//        
-//        [self.notificationSwitcher setDidChangeHandler:^(BOOL isOn) {
-//            
-//            TL_conversation *dialog = [[DialogsManager sharedManager] findByChatId:strongSelf.controller.chat.n_id];
-//            
-//            BOOL isMute =  dialog.isMute;
-//            if(isMute == isOn) {
-//             //   [dialog muteOrUnmute:nil];
-//            }
-//
-//        }];
         
         [_notificationView setFrame:NSMakeRect(100,  NSMinY(self.sharedLinksButton.frame) - 42, NSWidth(self.frame) - 200, 42)];
         
 
         [self addSubview:self.notificationView];
+        
+        
+        
+        _admins = [UserInfoShortButtonView buttonWithText:NSLocalizedString(@"Chat.Administrators", nil) tapBlock:^{
+            
+            ChatAdminsViewController *viewController = [[ChatAdminsViewController alloc] initWithFrame:self.controller.view.bounds];
+            
+            viewController.chat = self.controller.chat;
+            
+            [self.controller.navigationViewController pushViewController:viewController animated:YES];
+            
+        }];
+        
+        [_admins setFrameSize:NSMakeSize(self.addMembersButton.bounds.size.width, 42)];
+        
+        [self addSubview:_admins];
+        
         
         self.sharedLinksButton.textButton.textColor = self.filesMediaButton.textButton.textColor = self.sharedMediaButton.textButton.textColor = self.notificationView.textButton.textColor = DARK_BLACK;
         
@@ -347,20 +383,20 @@
 
 - (void) TMNameTextFieldDidChanged:(TMNameTextField *)textField {
     [self.nameTextField sizeToFit];
-    [self.nameTextField setFrame:NSMakeRect(185, self.bounds.size.height - 43   - self.nameTextField.bounds.size.height, self.bounds.size.width - 185 - 30, self.nameTextField.bounds.size.height)];
-    
     
     [self.statusTextField sizeToFit];
-    [self.statusTextField setFrame:NSMakeRect(182, self.nameTextField.frame.origin.y - self.statusTextField.bounds.size.height - 3, MIN(self.bounds.size.width - 310,NSWidth(self.statusTextField.frame)), self.nameTextField.bounds.size.height)];
+    
+    [self setFrameSize:self.frame.size];
 }
 
 -(void)setFrameSize:(NSSize)newSize {
     [super setFrameSize:newSize];
     
-    [self.nameTextField setFrame:NSMakeRect(185, self.bounds.size.height - 43   - self.nameTextField.bounds.size.height, self.bounds.size.width - 185 - 30, self.nameTextField.bounds.size.height)];
-    
+    [self.nameTextField setFrame:NSMakeRect(185, self.bounds.size.height - 43   - self.nameTextField.bounds.size.height, MIN(self.bounds.size.width - 185 - 100, NSWidth(self.nameTextField.frame)), self.nameTextField.bounds.size.height)];
     
     [self.statusTextField setFrame:NSMakeRect(182, self.nameTextField.frame.origin.y - self.statusTextField.bounds.size.height - 3, MIN(self.bounds.size.width - 310,NSWidth(self.statusTextField.frame)), self.nameTextField.bounds.size.height)];
+    
+    [self.avatarImageView setFrameOrigin:NSMakePoint(100, self.bounds.size.height - self.avatarImageView.bounds.size.height - 30)];
 }
 
 - (void)setController:(ChatInfoViewController *)controller {
@@ -373,45 +409,72 @@
     
     TLChat *chat = self.controller.chat;
     
-    [self.statusTextField setChat:chat];
-    [self.statusTextField sizeToFit];
+    [[FullChatManager sharedManager]  performLoad:chat.n_id callback:^(TLChatFull *fullChat) {
     
-    self.fullChat = [[FullChatManager sharedManager] find:chat.n_id];
-    if(!self.fullChat) {
-        MTLog(@"full chat is not loading");
-        return;
-    }
-    
-    [self.avatarImageView setChat:chat];
-    [self.avatarImageView rebuild];
+         self.fullChat = fullChat;
         
-    [_mediaView setConversation:chat.dialog];
-    [self.sharedMediaButton setConversation:chat.dialog];
-    [self.filesMediaButton setConversation:chat.dialog];
-    [self.sharedLinksButton setConversation:chat.dialog];
-    
-    [self.nameTextField setChat:chat];
-    
-    
-    [self buildNotificationsTitle];
-    
-    [self TMNameTextFieldDidChanged:self.nameTextField];
-    
-    
-    [_exportChatInvite setHidden:self.fullChat.participants.admin_id != [UsersManager currentUserId]];
-    
-    
-    
-    [self.sharedMediaButton setFrameOrigin:NSMakePoint(NSMinX(_exportChatInvite.isHidden ? self.addMembersButton.frame : self.exportChatInvite.frame), NSMinY(_exportChatInvite.isHidden ? self.addMembersButton.frame : self.exportChatInvite.frame) - 72)];
+        BOOL cantEditGroup = !self.controller.chat.isCreator && ( self.controller.chat.isAdmins_enabled && !self.controller.chat.isAdmin );
 
-  
-    [self.filesMediaButton setFrameOrigin:NSMakePoint(self.sharedMediaButton.frame.origin.x, self.sharedMediaButton.frame.origin.y -42)];
-    
-    [self.sharedLinksButton setFrameOrigin:NSMakePoint(self.filesMediaButton.frame.origin.x, self.filesMediaButton.frame.origin.y -42)];
+        
+        [self setFrameSize:NSMakeSize(NSWidth(self.frame), self.controller.chat.isCreator ? 500 : cantEditGroup ?  324 : 408)];
+        
+        [self.statusTextField setChat:chat];
+        [self.statusTextField sizeToFit];
+        
+        if(!self.fullChat) {
+            MTLog(@"full chat is not loading");
+            return;
+        }
+        
+        [self.avatarImageView setChat:chat];
+        [self.avatarImageView rebuild];
+        
+        [_mediaView setConversation:chat.dialog];
+        [self.sharedMediaButton setConversation:chat.dialog];
+        [self.filesMediaButton setConversation:chat.dialog];
+        [self.sharedLinksButton setConversation:chat.dialog];
+        
+        [self.nameTextField setChat:chat];
+        
+        
+        [self buildNotificationsTitle];
+        
+        [self TMNameTextFieldDidChanged:self.nameTextField];
+        
+        
+        [self.setGroupPhotoButton setFrameOrigin:NSMakePoint(100, self.bounds.size.height - 156)];
+        [self.addMembersButton setFrameOrigin:NSMakePoint(self.setGroupPhotoButton.frame.origin.x, self.setGroupPhotoButton.frame.origin.y - 42)];
+        
+        [_addMembersButton setHidden:cantEditGroup];
+        [_setGroupPhotoButton setHidden:cantEditGroup];
+        
+        [_exportChatInvite setFrameOrigin:NSMakePoint(self.sharedMediaButton.frame.origin.x,self.addMembersButton.isHidden ? _setGroupPhotoButton.frame.origin.y -42 : _addMembersButton.frame.origin.y-42)];
+        
+        [_exportChatInvite setHidden:!self.controller.chat.isCreator];
+        
+        
+        [_admins setFrameOrigin:NSMakePoint(self.exportChatInvite.frame.origin.x,self.exportChatInvite.isHidden ? (self.addMembersButton.isHidden ? _setGroupPhotoButton.frame.origin.y -42 : _addMembersButton.frame.origin.y-42) : _exportChatInvite.frame.origin.y-42)];
+        
+        [_admins setHidden:!self.controller.chat.isCreator || !ACCEPT_FEATURE];
+        
+        
+        [self.sharedMediaButton setFrameOrigin:NSMakePoint(NSMinX(_admins.isHidden ? self.addMembersButton.frame : self.admins.frame), (cantEditGroup ? NSHeight(self.frame) - 100 : NSMinY(_admins.isHidden ? self.addMembersButton.frame : self.admins.frame)) - 72)];
+        
+        
+        [self.filesMediaButton setFrameOrigin:NSMakePoint(self.sharedMediaButton.frame.origin.x, self.sharedMediaButton.frame.origin.y -42)];
+        
+        [self.sharedLinksButton setFrameOrigin:NSMakePoint(self.filesMediaButton.frame.origin.x, self.filesMediaButton.frame.origin.y -42)];
+        
+        [_notificationView setFrame:NSMakeRect(100,  NSMinY(self.sharedLinksButton.frame) - 42, NSWidth(self.frame) - 200, 42)];
+        
 
-    [_notificationView setFrame:NSMakeRect(100,  NSMinY(self.sharedLinksButton.frame) - 42, NSWidth(self.frame) - 200, 42)];
-    
+       
+        
+        [self.controller buildFirstItem];
 
+    }];
+    
+   
     
 }
 
@@ -429,7 +492,7 @@
     
     [string appendString:str withColor:NSColorFromRGB(0xa1a1a1)];
     
-    [string setFont:[NSFont fontWithName:@"HelveticaNeue-Light" size:15] forRange:NSMakeRange(0, string.length)];
+    [string setFont:TGSystemLightFont(15) forRange:NSMakeRange(0, string.length)];
     
     [string appendAttributedString:[NSAttributedString attributedStringWithAttachment:attach]];
     [self.muteUntilTitle setAttributedStringValue:string];
@@ -440,11 +503,16 @@
     
 }
 
+-(void)save {
+    
+}
 
 - (void)drawRect:(NSRect)dirtyRect {
 	[super drawRect:dirtyRect];
 	
-    // Drawing code here.
+    if(self.controller.chat.dialog.type == DialogTypeChannel && self.controller.chat.dialog.chat.isVerified) {
+        [image_Verify() drawInRect:NSMakeRect(NSMaxX(self.nameTextField.frame),NSMinY(self.nameTextField.frame) +1 , image_Verify().size.width, image_Verify().size.height) fromRect:NSZeroRect operation:NSCompositeHighlight fraction:1];
+    }
 }
 
 @end

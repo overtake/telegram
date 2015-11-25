@@ -8,6 +8,9 @@
 
 #import "TMGrowingTextView.h"
 #import "SettingsArchiver.h"
+#import "MessagesViewController.h"
 @interface MessageInputGrowingTextView : TMGrowingTextView<SettingsListener>
+
+@property (nonatomic,weak) MessagesViewController *controller;
 
 @end

@@ -20,6 +20,8 @@
 @property (nonatomic, strong) NSMutableAttributedString *forwardAttributedString;
 @property (nonatomic,strong) id requestKey;
 
+@property (nonatomic,assign) BOOL isEmojiMessage;
+
 
 @end
 
@@ -32,6 +34,20 @@
     
     NSString *message = [[object.message trim] fixEmoji];
     
+//    NSArray *emoji = [message getEmojiFromString:NO];
+//    
+//    if(emoji.count <= 5) {
+//        NSMutableString *c = [message mutableCopy];
+//        
+//        [emoji enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+//            
+//            [c replaceOccurrencesOfString:obj withString:@"" options:0 range:NSMakeRange(0, c.length)];
+//            
+//        }];
+//        
+//        _isEmojiMessage = [c trim].length == 0;
+//    }
+//    
     
     [self.textAttributed appendString:message withColor:TEXT_COLOR];
     
@@ -39,7 +55,8 @@
     
     [self updateEntities];
     
-    [SettingsArchiver addEventListener:self];
+   // [SettingsArchiver addEventListener:self];
+    
     
     
     
@@ -69,18 +86,22 @@
                 
         [self.message.entities enumerateObjectsUsingBlock:^(TLMessageEntity *obj, NSUInteger idx, BOOL *stop) {
             
-            if([obj isKindOfClass:[TL_messageEntityUrl class]] ||[obj isKindOfClass:[TL_messageEntityTextUrl class]] || [obj isKindOfClass:[TL_messageEntityMention class]] || [obj isKindOfClass:[TL_messageEntityBotCommand class]] || [obj isKindOfClass:[TL_messageEntityHashtag class]] || [obj isKindOfClass:[TL_messageEntityEmail class]]) {
+            if([obj isKindOfClass:[TL_messageEntityUrl class]] ||[obj isKindOfClass:[TL_messageEntityTextUrl class]] || [obj isKindOfClass:[TL_messageEntityMention class]] || [obj isKindOfClass:[TL_messageEntityBotCommand class]] || [obj isKindOfClass:[TL_messageEntityHashtag class]] || [obj isKindOfClass:[TL_messageEntityEmail class]] || [obj isKindOfClass:[TL_messageEntityPre class]] || [obj isKindOfClass:[TL_messageEntityCode class]]) {
                 
-                if([obj isKindOfClass:[TL_messageEntityBotCommand class]] && (!self.message.conversation.user.isBot && self.message.conversation.type != DialogTypeChat) )
+                if([obj isKindOfClass:[TL_messageEntityBotCommand class]] && (!self.message.conversation.user.isBot && self.message.conversation.type != DialogTypeChat  && (self.message.conversation.type != DialogTypeChannel && !self.message.chat.isMegagroup)) )
                     return;
                 
+                if([obj isKindOfClass:[TL_messageEntityBotCommand class]] && self.message.conversation.type == DialogTypeChat) {
+                    if(self.message.chat.chatFull && self.message.chat.chatFull.bot_info.count == 0)
+                        return;
+                }
                 
                 NSRange range = [self checkAndReturnEntityRange:obj];
                 
                 NSString *link = [self.message.message substringWithRange:range];
                 
         
-                range = [self.textAttributed.string rangeOfString:link options:NSCaseInsensitiveSearch range:nextRange];
+                //range = [self.textAttributed.string rangeOfString:link options:NSCaseInsensitiveSearch range:nextRange];
                 
                 
                 nextRange = NSMakeRange(range.location + range.length, self.textAttributed.length - (range.location + range.length));
@@ -94,8 +115,16 @@
                         [links addObject:link];
                     
                     
-                    [self.textAttributed addAttribute:NSLinkAttributeName value:link range:range];
-                    [self.textAttributed addAttribute:NSForegroundColorAttributeName value:LINK_COLOR range:range];
+                    if([obj isKindOfClass:[TL_messageEntityCode class]]) {
+                        [self.textAttributed addAttribute:NSForegroundColorAttributeName value:[NSColor redColor] range:range];
+                        
+                    } else if([obj isKindOfClass:[TL_messageEntityPre class]]) {
+                         [self.textAttributed addAttribute:NSForegroundColorAttributeName value:DARK_GREEN range:range];
+                    } else {
+                        [self.textAttributed addAttribute:NSLinkAttributeName value:link range:range];
+                        [self.textAttributed addAttribute:NSForegroundColorAttributeName value:LINK_COLOR range:range];
+                    }
+                    
                 }
                 
             }
@@ -103,7 +132,7 @@
         }];
         
     } else {
-        links = (NSMutableArray *) [self.textAttributed detectAndAddLinks:URLFindTypeLinks | URLFindTypeMentions | URLFindTypeHashtags | (self.message.conversation.user.isBot || self.message.conversation.type == DialogTypeChat ? URLFindTypeBotCommands : 0)];
+        links = (NSMutableArray *) [self.textAttributed detectAndAddLinks:URLFindTypeLinks | URLFindTypeMentions | URLFindTypeHashtags | (self.message.conversation.user.isBot || (self.message.conversation.type == DialogTypeChat || (self.message.conversation.type == DialogTypeChannel && self.message.chat.isMegagroup)) ? URLFindTypeBotCommands : 0)];
     }
     
     
@@ -112,21 +141,46 @@
     NSMutableAttributedString *attr = [[NSMutableAttributedString alloc] init];
     
     
+    
     [_links enumerateObjectsUsingBlock:^(NSString *obj, NSUInteger idx, BOOL *stop) {
-        NSRange range = [attr appendString:obj];
         
-        [attr addAttribute:NSLinkAttributeName value:obj range:range];
-        [attr addAttribute:NSForegroundColorAttributeName value:LINK_COLOR range:range];
-        [attr addAttribute:NSCursorAttributeName value:[NSCursor pointingHandCursor] range:range];
-        [attr addAttribute:NSUnderlineStyleAttributeName value:[NSNumber numberWithInt:NSUnderlineStyleNone] range:range];
+        if(idx == 0) {
+            
+            NSString *header = obj;
+            
+            if(![obj hasPrefix:@"http://"] && ![obj hasPrefix:@"https://"] && ![obj hasPrefix:@"ftp://"])
+                header = obj;
+            else  {
+                NSURLComponents *components = [[NSURLComponents alloc] initWithString:obj];
+                header = components.host;
+            }
+            
+            
+            
+            NSRange r = [attr appendString:[header stringByAppendingString:@"\n\n"] withColor:TEXT_COLOR];
+            [attr setCTFont:TGSystemMediumFont(13) forRange:r];
+            
+            NSRange range = [attr appendString:obj];
+            
+            [attr addAttribute:NSLinkAttributeName value:obj range:range];
+            [attr addAttribute:NSForegroundColorAttributeName value:LINK_COLOR range:range];
+            [attr addAttribute:NSCursorAttributeName value:[NSCursor pointingHandCursor] range:range];
+            [attr addAttribute:NSUnderlineStyleAttributeName value:[NSNumber numberWithInt:NSUnderlineStyleNone] range:range];
+            
+            
+            [attr addAttribute:NSFontAttributeName value:TGSystemFont(12.5) range:range];
+            
+            if(idx != _links.count - 1)
+                [attr appendString:@"\n"];
+        } else {
+            *stop = YES;
+        }
         
         
-        if(idx != _links.count - 1)
-            [attr appendString:@"\n"];
         
     }];
     
-    [attr addAttribute:NSFontAttributeName value:TGSystemFont(13) range:attr.range];
+    
     
     _allAttributedLinks = [attr copy];
     
@@ -140,10 +194,17 @@
 }
 
 -(void)updateFontAttributesByEntities {
-    [self.textAttributed removeAttribute:NSFontAttributeName range:self.textAttributed.range];
+    [self.textAttributed removeAttribute: (NSString *)kCTFontAttributeName range:self.textAttributed.range];
     
-    [self.textAttributed setFont:[NSFont fontWithName:@"HelveticaNeue" size:[SettingsArchiver checkMaskedSetting:BigFontSetting] ? 15 : 13] forRange:self.textAttributed.range];
     
+    [self.textAttributed setCTFont:TGSystemFont([self fontSize]) forRange:self.textAttributed.range];
+    
+    
+    NSMutableParagraphStyle *style = [NSMutableParagraphStyle new];
+    style.lineSpacing = 0;
+    style.alignment = NSLeftTextAlignment;
+    
+    [self.textAttributed addAttribute:NSParagraphStyleAttributeName value:style range:self.textAttributed.range];
     
     [self.message.entities enumerateObjectsUsingBlock:^(TLMessageEntity *obj, NSUInteger idx, BOOL *stop) {
         
@@ -155,7 +216,7 @@
             
             range = [self.textAttributed.string rangeOfString:link];
             
-            [self.textAttributed addAttribute:NSFontAttributeName value:TGSystemMediumFont([SettingsArchiver checkMaskedSetting:BigFontSetting] ? 15 : 13) range:range];
+            [self.textAttributed addAttribute:NSFontAttributeName value:TGSystemMediumFont([self fontSize]) range:range];
         } else if([obj isKindOfClass:[TL_messageEntityItalic class]]) {
             
             NSString *link = [self.message.message substringWithRange:range];
@@ -163,7 +224,9 @@
             range = [self.textAttributed.string rangeOfString:link];
 
             
-            [self.textAttributed addAttribute:NSFontAttributeName value:TGSystemItalicFont([SettingsArchiver checkMaskedSetting:BigFontSetting] ? 15 : 13) range:range];
+            [self.textAttributed addAttribute:NSFontAttributeName value:TGSystemItalicFont([self fontSize]) range:range];
+        } else if([obj isKindOfClass:[TL_messageEntityCode class]] || [obj isKindOfClass:[TL_messageEntityPre class]]) {
+            [self.textAttributed setCTFont:[NSFont fontWithName:@"Courier" size:[self fontSize]] forRange:range];
         }
         
     }];
@@ -182,18 +245,7 @@
 -(void)updateMessageFont {
    
     [self updateFontAttributesByEntities];
-    
-//    static NSMutableParagraphStyle *paragraph;
-//    
-//    static dispatch_once_t onceToken;
-//    dispatch_once(&onceToken, ^{
-//        paragraph = [[NSMutableParagraphStyle alloc] init];
-//        
-//    });
-//    
-//    [paragraph setLineSpacing:[SettingsArchiver checkMaskedSetting:BigFontSetting] ? 1 : 2];
-//    
-//    [self.textAttributed addAttribute:NSParagraphStyleAttributeName value:paragraph range:self.textAttributed.range];
+
     
     if(self.blockWidth != 0)
         [self makeSizeByWidth:self.blockWidth];
@@ -205,16 +257,16 @@
 
 - (BOOL)makeSizeByWidth:(int)width {
     
-    width = MAX(100,width);
     
     [super makeSizeByWidth:width];
     
-    [_webpage makeSize:width];
+    [_webpage makeSize:width - 30];
     
     width -= self.dateSize.width+10;
     
+    
     if(self.isForwadedMessage) {
-        width -= 50;
+        width -= 6;
     }
 
 
@@ -263,9 +315,12 @@
                         self.message.media = msg.media;
                     }
                     
-                    [[Storage manager] updateMessages:@[self.message]];
                     
-                    [Notification perform:UPDATE_WEB_PAGE_ITEMS data:@{KEY_MESSAGE_ID_LIST:@[@(self.message.n_id)]}];
+                    [self.message save:NO];
+                    
+                    if([self.message.media.webpage isKindOfClass:[TL_webPage class]]) {
+                        [Notification perform:UPDATE_WEB_PAGE_ITEMS data:@{KEY_DATA:@{@(self.message.peer_id):@[@(self.message.n_id)]},KEY_WEBPAGE:self.message.media.webpage}];
+                    }
                     
                 }
                 
@@ -307,8 +362,15 @@
 
 
 
+-(int)fontSize {
+    if(_isEmojiMessage)
+        return 36;
+    else
+        return [super fontSize];
+}
+
 -(void)dealloc {
-    [SettingsArchiver removeEventListener:self];
+    //[SettingsArchiver removeEventListener:self];
 }
 
 @end

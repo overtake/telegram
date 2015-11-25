@@ -11,6 +11,9 @@
 @interface TGDocumentsMediaTableView : MessagesTableView
 @property (nonatomic,assign) BOOL isProgress;
 
+
+@property (nonatomic,weak) TMCollectionPageController *collectionViewController;
+
 -(Class)rowViewClass;
 -(Class)historyFilter;
 -(BOOL)acceptMessageItem:(MessageTableItem *)item;

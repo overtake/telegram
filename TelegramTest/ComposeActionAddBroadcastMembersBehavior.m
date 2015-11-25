@@ -31,7 +31,7 @@
     
     NSRange range = [attr appendString:[NSString stringWithFormat:@" - %lu/%lu",self.action.result.multiObjects.count,[self limit]] withColor:DARK_GRAY];
     
-    [attr setFont:[NSFont fontWithName:@"HelveticaNeue" size:12] forRange:range];
+    [attr setFont:TGSystemFont(12) forRange:range];
     
     [attr setAlignment:NSCenterTextAlignment range:NSMakeRange(0, attr.length-1)];
     
@@ -57,7 +57,7 @@
     
     
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-         [[Telegram rightViewController] navigationGoBack];
+         [self.action.currentViewController.navigationViewController goBackWithAnimation:YES];
     });
     
     
