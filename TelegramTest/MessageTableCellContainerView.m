@@ -794,7 +794,7 @@ static int offsetEditable = 30;
 - (void)setRightLayerToEditablePosition:(BOOL)editable {
     //    static int offserUnreadMark = 12;
     
-    CGPoint position = CGPointMake(self.bounds.size.width - self.rightView.bounds.size.width , self.item.viewSize.height - self.rightView.bounds.size.height - (self.item.isHeaderMessage ? 9 : 4));
+    CGPoint position = CGPointMake(self.bounds.size.width - self.rightView.bounds.size.width , self.item.viewSize.height - self.rightView.bounds.size.height - (self.item.isHeaderMessage ? 7 : 4));
     
     if(editable)
         position.x -= offsetEditable;
