@@ -97,38 +97,6 @@
             endingLineNumber = "143"
             landmarkName = "-addItemWithoutSavingState:"
             landmarkType = "5">
-            <Locations>
-               <Location
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "__38-[ChatHistoryController checkMaxItems]_block_invoke"
-                  moduleName = "Telegram"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/mikhailfilimonov/Dropbox/osx-cipher/TelegramTest/ChatHistoryController.m"
-                  timestampString = "464255593.502412"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "143"
-                  endingLineNumber = "143"
-                  offsetFromSymbolStart = "765">
-               </Location>
-               <Location
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "__38-[ChatHistoryController checkMaxItems]_block_invoke"
-                  moduleName = "Telegram"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/mikhailfilimonov/Dropbox/osx-cipher/TelegramTest/ChatHistoryController.m"
-                  timestampString = "464255593.502714"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "143"
-                  endingLineNumber = "143"
-                  offsetFromSymbolStart = "781">
-               </Location>
-            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -193,38 +161,6 @@
             endingLineNumber = "72"
             landmarkName = "-composeDidDone"
             landmarkType = "5">
-            <Locations>
-               <Location
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "__66-[ComposeActionAddGroupMembersBehavior addMembersToChat:toChatId:]_block_invoke"
-                  moduleName = "Telegram"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/mikhailfilimonov/Dropbox/osx-cipher/TelegramTest/ComposeActionAddGroupMembersBehavior.m"
-                  timestampString = "464255593.505223"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "72"
-                  endingLineNumber = "72"
-                  offsetFromSymbolStart = "1085">
-               </Location>
-               <Location
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "__66-[ComposeActionAddGroupMembersBehavior addMembersToChat:toChatId:]_block_invoke_2"
-                  moduleName = "Telegram"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/mikhailfilimonov/Dropbox/osx-cipher/TelegramTest/ComposeActionAddGroupMembersBehavior.m"
-                  timestampString = "464255593.506624"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "73"
-                  endingLineNumber = "73"
-                  offsetFromSymbolStart = "16">
-               </Location>
-            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
