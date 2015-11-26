@@ -297,7 +297,7 @@
             
             
             
-        } timeout:10];
+        }  alwayContinueWithErrorContext:YES];
         
     }];
     
@@ -406,7 +406,7 @@
         
     } errorHandler:^(id request, RpcError *error) {
         
-    }];
+    } alwayContinueWithErrorContext:YES];
     
 }
 
@@ -461,7 +461,7 @@
         
         [TMViewController hideModalProgress];
         
-    } timeout:10];
+    } alwayContinueWithErrorContext:YES];
 }
 
 -(void)checkCode {
@@ -496,7 +496,7 @@
         
         [TMViewController hideModalProgress];
         
-    } timeout:10];
+    }  alwayContinueWithErrorContext:YES];
 }
 
 -(void)mouseDown:(NSEvent *)theEvent {

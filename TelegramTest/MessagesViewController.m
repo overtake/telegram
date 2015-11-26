@@ -2333,6 +2333,9 @@ static NSTextAttachment *headerMediaIcon() {
             if(response.messages.count > 0 && ![response.messages[0] isKindOfClass:[TL_messageEmpty class]]) {
                 msg = [TL_localMessage convertReceivedMessage:response.messages[0]];
                 
+                [response.messages removeAllObjects];
+                [SharedManager proccessGlobalResponse:response];
+                
                 if(![msg isKindOfClass:[TL_messageEmpty class]]) {
                     block();
                 } else {

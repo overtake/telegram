@@ -17,6 +17,7 @@
 @property (nonatomic,strong,readonly) NSURL *geoURL;
 
 @property (nonatomic,assign,readonly) int replyHeight;
+@property (nonatomic,assign,readonly) int replyHeaderHeight;
 @property (nonatomic,assign,readonly) int containerHeight;
 
 @property (nonatomic,strong,readonly) TL_localMessage *replyMessage;

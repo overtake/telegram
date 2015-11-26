@@ -665,6 +665,13 @@ static int MAX_WORKER_POLL = 5;
          
     }];
     
+    
+    if(request.alwayContinueWithErrorContext) {
+        [mtrequest setShouldContinueExecutionWithErrorContext:^bool(MTRequestErrorContext *errorContext) {
+            return false;
+        }];
+    }
+    
     return mtrequest;
 }
 

@@ -10,6 +10,7 @@
 #import "MessagesUtils.h"
 #import "NSString+Extended.h"
 #import "MessageTableItem.h"
+#import "TGArticleImageObject.h"
 @interface TGReplyObject ()
 @property (nonatomic,strong) RPCRequest *request;
 @end
@@ -79,6 +80,25 @@
     }
     
     
+    
+    NSMutableParagraphStyle *style = [[NSMutableParagraphStyle alloc] init];
+    style.lineBreakMode = NSLineBreakByTruncatingTail;
+    
+    [replyText addAttribute:NSParagraphStyleAttributeName value:style range:replyText.range];
+    
+    [replyText setFont:TGSystemFont(13) forRange:replyText.range];
+    
+    _replyText = replyText;
+    
+    _replyHeight = [_replyText coreTextSizeForTextFieldForWidth:INT32_MAX].height;
+    
+    
+    _replyHeaderHeight = [replyHeader sizeForTextFieldForWidth:INT32_MAX].height;
+    
+    _containerHeight = 15 + _replyHeight;
+    
+    
+    
     if([_replyMessage.media isKindOfClass:[TL_messageMediaPhoto class]]) {
         
         NSImage *thumb;
@@ -97,9 +117,9 @@
         
         
         
-        _replyThumb = [[TGImageObject alloc] initWithLocation:!thumb ? photoSize.location : nil placeHolder:thumb];
+        _replyThumb = [[TGArticleImageObject alloc] initWithLocation:!thumb ? photoSize.location : nil placeHolder:thumb];
         
-        _replyThumb.imageSize = strongsize(NSMakeSize(photoSize.w, photoSize.h), 30);
+        _replyThumb.imageSize = NSMakeSize(_containerHeight-2, _containerHeight-2);
         
     }
     
@@ -121,7 +141,7 @@
         
         _replyThumb = [[TGImageObject alloc] initWithLocation:!thumb ? photoSize.location : nil placeHolder:thumb];
         
-        _replyThumb.imageSize = strongsize(NSMakeSize(photoSize.w, photoSize.h), 30);
+        _replyThumb.imageSize = strongsize(NSMakeSize(photoSize.w, photoSize.h), _containerHeight-2);
         
     }
     
@@ -135,12 +155,12 @@
                 
                 if(_replyMessage.media.document.thumb.bytes) {
                     thumb = [[NSImage alloc] initWithData:_replyMessage.media.document.thumb.bytes];
-                    thumb = renderedImage(thumb, strongsize(NSMakeSize(_replyMessage.media.document.thumb.w, _replyMessage.media.document.thumb.h), 30));
+                    thumb = renderedImage(thumb, strongsize(NSMakeSize(_replyMessage.media.document.thumb.w, _replyMessage.media.document.thumb.h), _containerHeight-2));
                 }
                 
                 _replyThumb = [[TGImageObject alloc] initWithLocation:!thumb ? _replyMessage.media.document.thumb.location : nil placeHolder:thumb];
                 
-                _replyThumb.imageSize = strongsize(NSMakeSize(_replyMessage.media.document.thumb.w, _replyMessage.media.document.thumb.h), 30);
+                _replyThumb.imageSize = strongsize(NSMakeSize(_replyMessage.media.document.thumb.w, _replyMessage.media.document.thumb.h), _containerHeight-2);
                 
             }
             
@@ -149,20 +169,7 @@
     
     
     
-    NSMutableParagraphStyle *style = [[NSMutableParagraphStyle alloc] init];
-    style.lineBreakMode = NSLineBreakByTruncatingTail;
-    
-    [replyText addAttribute:NSParagraphStyleAttributeName value:style range:replyText.range];
-    
-    [replyText setFont:TGSystemFont(13) forRange:replyText.range];
-    
-    _replyText = replyText;
-    
-    
-    
-    _replyHeight = [_replyText coreTextSizeForTextFieldForWidth:INT32_MAX].height;
-    
-    _containerHeight = 15 + _replyHeight;
+  
 }
 
 

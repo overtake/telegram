@@ -255,7 +255,7 @@
         r.phone_code_hash = self.phone_code_hash;
         r.phone_code = self.SMSCodeView.code;
         [self.navigationViewController pushViewController:r animated:YES];
-    }];
+    } alwayContinueWithErrorContext:YES];
 }
 
 - (void)setIsPhoneRegistered:(BOOL)isPhoneRegistered {
@@ -419,7 +419,7 @@
             [self.getSMSCodeView showErrorWithText:error.error_msg];
             [self.countrySelectorView performBlocking:NO];
         }
-    }];
+    } alwayContinueWithErrorContext:YES];
 }
 
 -(void)sendSmsCode {
@@ -436,7 +436,7 @@
        }
    } errorHandler:^(RPCRequest *request, RpcError *error) {
        
-   }];
+   } alwayContinueWithErrorContext:YES];
 }
 
 - (void)startTimer:(int)time {
@@ -548,7 +548,7 @@
     } errorHandler:^(RPCRequest *request, RpcError *error) {
         if([strongSelf.phone_code_hash isEqualToString:phone_code_hash])
             [self.SMSCodeView changeCallTextFieldString:NSLocalizedString(@"Login.Error", nil)];
-    }];
+    } alwayContinueWithErrorContext:YES];
 }
 
 - (void)textField:(id)textField handleURLClick:(NSString *)url {
