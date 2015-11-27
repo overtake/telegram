@@ -106,11 +106,18 @@
         
         _stickers = [[TGAllStickersTableView alloc] initWithFrame:NSMakeRect(0, 0, NSWidth(frameRect), NSHeight(frameRect) - 44)];
         
+        
+        [_stickers setDidNeedReload:^{
+           
+            [weakSelf reload:NO];
+            
+        }];
+        
         [self addSubview:_stickers.containerView];
         
-         [self addScrollEvent];
+        [self addScrollEvent];
         
-          }
+    }
     
     return self;
 }
@@ -159,10 +166,14 @@
     [_stickers reloadData];
 }
 
-
 -(void)reload {
+    [self reload:YES];
+}
+
+-(void)reload:(BOOL)reloadStickers {
     
-    [_stickers load:NO];
+    if(reloadStickers)
+        [_stickers load:NO];
     
     NSArray *stickers = [_stickers allStickers];
     
@@ -209,7 +220,7 @@
     
     
     [self.stickers scrollToBeginningOfDocument:nil];
-    if(_packsContainerView.subviews.count > 0)
+    if(_packsContainerView.subviews.count > 0 && reloadStickers)
         [self didSelected:_packsContainerView.subviews[0] scrollToPack:NO selectItem:YES];
 }
 
@@ -224,7 +235,7 @@
     __block int x = 0;
     
     
-    float itemWidth = MAX(roundf(NSWidth(self.frame)/stickers.count),48);
+    float itemWidth = MAX(roundf(NSWidth(self.frame)/(stickers.count + 1)),48);
     
     [stickers enumerateObjectsUsingBlock:^(TLDocument *obj, NSUInteger idx, BOOL *stop) {
         
@@ -269,6 +280,22 @@
         
     }];
     
+    {
+        TGStickerPackButton *button = [[TGStickerPackButton alloc] initWithFrame:NSMakeRect(x, 0, itemWidth, 44)];
+        
+        button.packId = -2;
+        button.delegate = self;
+        [button.imageView setContentMode:BTRViewContentModeCenter];
+        button.imageView.image = image_StickerSettings();
+        
+        [_packsContainerView addSubview:button];
+        
+         x+=itemWidth;
+    }
+    
+    
+    
+    
     [_packsContainerView setFrameSize:NSMakeSize(x, NSHeight(_packsContainerView.frame))];
     
 }
@@ -281,6 +308,21 @@
 }
 
 -(void)didSelected:(TGStickerPackButton *)button scrollToPack:(BOOL)scrollToPack selectItem:(BOOL)selectItem {
+    
+    if(button.packId == -2) {
+        
+        if(selectItem) {
+            [self selectItem:button];
+        }
+        
+        TGStickersSettingsViewController *settingViewController = [[TGStickersSettingsViewController alloc] initWithFrame:NSZeroRect];
+        
+        [[EmojiViewController instance].messagesViewController.navigationViewController pushViewController:settingViewController animated:YES];
+        
+        [[EmojiViewController instance] close];
+        
+        return;
+    }
     
     [self removeScrollEvent];
     

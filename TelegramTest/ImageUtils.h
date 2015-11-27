@@ -221,6 +221,8 @@ CACHE_IMAGE(ModernMenuDeleteIcon);
 CACHE_IMAGE(EditPhotoCamera);
 CACHE_IMAGE(NoSharedLinks);
 
+CACHE_IMAGE(StickerSettings);
+
 @interface ImageUtils : NSObject
 
 

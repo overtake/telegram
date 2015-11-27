@@ -2670,9 +2670,11 @@ static NSTextAttachment *headerMediaIcon() {
     
     _needNextRequest = NO;
     
-    NSUInteger pos = prev ? 0 : self.messages.count;
+    
     
     [self.historyController request:!prev anotherSource:YES sync:isFirst selectHandler:^(NSArray *prevResult, NSRange range1, id controller) {
+        
+        NSUInteger pos = prev ? 0 : self.messages.count;
         
         if(self.historyController == controller) {
             [self messagesLoadedTryToInsert:prevResult pos:pos next:!prev];

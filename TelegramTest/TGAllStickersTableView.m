@@ -677,6 +677,10 @@ static NSImage *higlightedImage() {
     
     [super reloadData];
     
+    if(_didNeedReload) {
+        _didNeedReload();
+    }
+    
 }
 
 - (CGFloat)rowHeight:(NSUInteger)row item:(TMRowItem *) item

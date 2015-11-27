@@ -694,6 +694,14 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "-[TGConversationsViewController notificationDialogSelectionChanged:]:TGConversationsViewController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.navigationViewController.currentController">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "-[TGKeychain _storeKeychain:]:TGKeychain.m">
       </ContextState>
       <ContextState
@@ -1205,6 +1213,9 @@
                value = "messages">
             </PersistentString>
          </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "__59-[TGStickersSettingsViewController tableViewDidChangeOrder]_block_invoke368:TGStickersSettingsViewController.m">
       </ContextState>
       <ContextState
          contextName = "__35-[TGUpdateChannels proccessUpdate:]_block_invoke299:TGUpdateChannels.m">
@@ -4700,6 +4711,9 @@
       </ContextState>
       <ContextState
          contextName = "__45-[SelfDestructionController didReadMessages:]_block_invoke:SelfDestructionController.m">
+      </ContextState>
+      <ContextState
+         contextName = "-[TGAllStickersTableView stickersHash:]:TGAllStickersTableView.m">
       </ContextState>
       <ContextState
          contextName = "__28-[Storage importedContacts:]_block_invoke:Storage.m">
