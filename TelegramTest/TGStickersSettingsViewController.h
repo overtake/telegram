@@ -7,7 +7,7 @@
 //
 
 #import "TMViewController.h"
-
-@interface TGStickersSettingsViewController : TMViewController
+#import "ComposeViewController.h"
+@interface TGStickersSettingsViewController : ComposeViewController
 
 @end

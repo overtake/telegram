@@ -13,6 +13,8 @@
 #import "EmojiViewController.h"
 #import "TGMessagesStickerImageObject.h"
 #import "TGStickerPackModalView.h"
+#import "ComposeActionStickersBehavior.h"
+#import "TGMovableTableView.h"
 
 
 
@@ -28,12 +30,22 @@
 @interface TGStickerPackRowView : TMRowView
 @property (nonatomic,strong) TMTextField *titleField;
 @property (nonatomic,strong) TGImageView *imageView;
-@property (nonatomic,strong) TMTextButton *removeButton;
+@property (nonatomic,strong) TMView *imageContainerView;
+
+@property (nonatomic,strong) BTRButton *deletePack;
+@property (nonatomic,strong) NSImageView *reorderPack;
+@property (nonatomic,strong) BTRButton *disablePack;
+
+
+@property (nonatomic,strong) TMView *separator;
+
+-(void)setEditable:(BOOL)editable animated:(BOOL)animated;
+
 @property (nonatomic,weak) TGStickersSettingsViewController *controller;
 @end
 
-@interface TGStickersSettingsViewController ()<TMTableViewDelegate>
-@property (nonatomic,strong) TMTableView *tableView;
+@interface TGStickersSettingsViewController ()<TGMovableTableDelegate>
+@property (nonatomic,strong) TGMovableTableView *tableView;
 
 
 -(void)removeStickerPack:(TGStickerPackRowItem *)item;
@@ -102,39 +114,58 @@
 
 -(instancetype)initWithFrame:(NSRect)frameRect {
     if (self = [super initWithFrame:frameRect]) {
+
+        
         _titleField = [TMTextField defaultTextField];
         
         [[_titleField cell] setTruncatesLastVisibleLine:YES];
         
         [self addSubview:_titleField];
         
+        _imageContainerView = [[TMView alloc] initWithFrame:NSMakeRect(0, 0, 35, 35)];
+        
+        [self addSubview:_imageContainerView];
+        
         _imageView = [[TGImageView alloc] initWithFrame:NSMakeRect(0, 0, 35, 35)];
         
-        [self addSubview:_imageView];
-        
-        _removeButton = [TMTextButton standartUserProfileButtonWithTitle:NSLocalizedString(@"Remove", nil)];
-        
-        [_removeButton setFont:TGSystemFont(14)];
-        [_removeButton setTextColor:BLUE_UI_COLOR];
-        
-        [_removeButton sizeToFit];
+        [_imageContainerView addSubview:_imageView];
         
         weak();
         
-        [_removeButton setTapBlock:^ {
-            
-            [weakSelf.controller removeStickerPack:(TGStickerPackRowItem *)[weakSelf rowItem]];
-            
-        }];
+        _deletePack = [[BTRButton alloc] initWithFrame:NSMakeRect(0, 0, image_ModernMenuDeleteIcon().size.width, image_ModernMenuDeleteIcon().size.height)];
+        [_deletePack setImage:image_ModernMenuDeleteIcon() forControlState:BTRControlStateNormal];
         
-        [_removeButton setCenterByView:self];
-        [self addSubview:_removeButton];
+        [_deletePack addBlock:^(BTRControlEvents events) {
+            [weakSelf.controller removeStickerPack:(TGStickerPackRowItem *)[weakSelf rowItem]];
+        } forControlEvents:BTRControlEventClick];
+        
+        [self addSubview:_deletePack];
+        
+        _reorderPack = imageViewWithImage(image_AudioPlayerList());
+        
+        [self addSubview:_reorderPack];
+        
+        
+        _separator = [[TMView alloc] initWithFrame:NSMakeRect(30, 0, NSWidth(frameRect) - 60, DIALOG_BORDER_WIDTH)];
+        _separator.backgroundColor = DIALOG_BORDER_COLOR;
+        [self addSubview:_separator];
 
     }
     
     return self;
 }
 
+
+-(void)mouseDown:(NSEvent *)theEvent {
+   
+    if([self mouse:[self convertPoint:[theEvent locationInWindow] fromView:nil] inRect:_reorderPack.frame]) {
+        TGMovableTableView *tableView = ((TGMovableTableView *)[self rowItem].table);
+        
+        [tableView startMoveItemAtIndex:[tableView indexOfObject:[self rowItem]]];
+    } else {
+        [super mouseDown:theEvent];
+    }
+}
 
 -(void)redrawRow {
     [super redrawRow];
@@ -147,31 +178,67 @@
     
     [_titleField setCenterByView:self];
     
-    
-   
     [_imageView setFrameSize:item.imageObject.imageSize];
     _imageView.object = item.imageObject;
     
+    [_deletePack setHidden:(item.set.flags & (1 << 2)) == (1 << 2)];
     
-    [_removeButton setHidden:(item.set.flags & (1 << 2)) == (1 << 2)];
+    TGMovableTableView *tableView = ((TGMovableTableView *)[self rowItem].table);
+    
     
 }
 
 -(void)setFrameSize:(NSSize)newSize {
     [super setFrameSize:newSize];
     
-    [_removeButton setFrameOrigin:NSMakePoint(newSize.width - 100 - NSWidth(_removeButton.frame), 17)];
-    [_titleField setFrameOrigin:NSMakePoint(100, 8)];
-    [_titleField setFrameSize:NSMakeSize(newSize.width - 280, NSHeight(_titleField.frame))];
-    [_imageView setFrameOrigin:NSMakePoint( roundf((50 -NSWidth(_imageView.frame))/2) + 50, 5)];
+    [_titleField setFrameOrigin:NSMakePoint(80, 8)];
+    [_titleField setFrameSize:NSMakeSize(newSize.width - 140, NSHeight(_titleField.frame))];
+    [_deletePack setCenteredYByView:_deletePack.superview];
+    [_reorderPack setCenteredYByView:_deletePack.superview];
+    [_imageContainerView setCenteredYByView:_imageContainerView.superview];
+    [self updatePositionAnimated:NO];
+    
+}
+
+-(void)setEditable:(BOOL)editable animated:(BOOL)animated {
+    
+    [self updatePositionAnimated:animated];
+}
+
+
+-(void)updatePositionAnimated:(BOOL)animated {
+    
+    TMRowItem *item = [self rowItem];
+    
+    id deleteView = animated ? [_deletePack animator] : _deletePack;
+    id titleView = animated ?[_titleField animator] : _titleField;
+    id imageView = animated ? [_imageContainerView animator] : _imageContainerView;
+    id separatorView = animated ? [_separator animator] : _separator;
+    id reoderView = animated ? [_reorderPack animator] : _reorderPack;
+    
+    int defImageX = roundf((30 -NSWidth(_imageContainerView.frame))/2) + 30;
+    
+    
+    int defTitleX = item.isEditable ? 80  + NSWidth(_deletePack.frame) - 2: 80-2;
+    
+    [deleteView setFrameOrigin:NSMakePoint(item.isEditable ? 10 : - NSWidth(_deletePack.frame), NSMinY(_deletePack.frame))];
+    [titleView setFrameOrigin:NSMakePoint(defTitleX , NSMinY(_titleField.frame))];
+    [imageView setFrameOrigin:NSMakePoint(item.isEditable ? defImageX + NSWidth(_deletePack.frame)  : defImageX, NSMinY(_imageContainerView.frame))];
+    
+    [_reorderPack setFrameOrigin:NSMakePoint(NSWidth(self.frame) - 30 - NSWidth(_reorderPack.frame), roundf((NSHeight(self.frame) - NSHeight(_reorderPack.frame))/2))];
+    
+    [reoderView setAlphaValue:item.isEditable ? 1 : 0];
+    [deleteView setAlphaValue:item.isEditable ? 1 : 0];
+    
+    [separatorView setFrame:NSMakeRect(defTitleX, 0, NSWidth(self.frame) - defTitleX - 30, DIALOG_BORDER_WIDTH)];
 }
 
 -(void)drawRect:(NSRect)dirtyRect {
     
-    [DIALOG_BORDER_COLOR setFill];
-    
-    NSRectFill(NSMakeRect(100, 0, NSWidth(dirtyRect) - 200, DIALOG_BORDER_WIDTH));
-    
+    [[NSColor whiteColor] set];
+    NSRectFill(dirtyRect);
+    [_separator setHidden:self.dragInSuperView];
+
 }
 
 @end
@@ -187,17 +254,37 @@
     
     [self setCenterBarViewText:NSLocalizedString(@"Sticker.StickerSettings", nil)];
     
-    _tableView = [[TMTableView alloc] initWithFrame:self.view.bounds];
+    _tableView = [[TGMovableTableView alloc] initWithFrame:self.view.bounds];
     
-    [self.view addSubview:_tableView.containerView];
+    [self.view addSubview:_tableView];
     
-    _tableView.tm_delegate = self;
-    
+    _tableView.mdelegate = self;
     
 }
 
+
+
+-(void)didUpdatedEditableState {
+    [super didUpdatedEditableState];
+    
+    [_tableView enumerateAvailableRowViewsUsingBlock:^(__kindof TMRowView *rowView, TMRowItem *rowItem, NSInteger row) {
+        
+        TGStickerPackRowView *view = (TGStickerPackRowView *)rowView;
+        
+        [rowItem setEditable:self.action.isEditable];
+        
+        [view setEditable:rowItem.isEditable animated:YES];
+        
+    }];
+}
+
 -(void)viewWillAppear:(BOOL)animated {
+    
+    [self setAction:[[ComposeAction alloc] initWithBehaviorClass:[ComposeActionStickersBehavior class]]];
+
+    
     [super viewWillAppear:animated];
+    
     
     NSArray *stickers = [EmojiViewController allStickers];
     
@@ -243,47 +330,52 @@
 
 -(void)reloadDataWithPacks:(NSArray *)packs {
     
-    [_tableView removeAllItems:YES];
+    [_tableView removeAllItems];
     
+    
+    NSMutableArray *items = [[NSMutableArray alloc] init];
  
     [packs enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
         
         TGStickerPackRowItem *item = [[TGStickerPackRowItem alloc] initWithObject:obj];
         
-        [_tableView insert:item atIndex:_tableView.count tableRedraw:NO];
+        [items addObject:item];
         
     }];
     
     
-    GeneralSettingsBlockHeaderItem *description = [[GeneralSettingsBlockHeaderItem alloc] initWithString:NSLocalizedString(@"Stickers.StickersSetDescription", nil) height:YES flipped:150];
+    [_tableView addItems:items];
     
-    [_tableView insert:description atIndex:_tableView.count tableRedraw:NO];
     
-    [_tableView reloadData];
+//    GeneralSettingsBlockHeaderItem *description = [[GeneralSettingsBlockHeaderItem alloc] initWithString:NSLocalizedString(@"Stickers.StickersSetDescription", nil) height:YES flipped:150];
+//    
+//    [_tableView insert:description atIndex:_tableView.count tableRedraw:NO];
+//    
+//    [_tableView reloadData];
     
 }
 
 -(void)removeStickerPack:(TGStickerPackRowItem *)item {
     
+    //[_tableView startMoveItemAtIndex:[_tableView indexOfObject:item]];
+    
+    
     confirm(appName(), [NSString stringWithFormat:NSLocalizedString(@"Stickers.RemoveStickerAlert", nil),[item.pack[@"set"] title]], ^{
         
         [self showModalProgress];
         
-        [RPCRequest sendRequest:[TLAPI_messages_uninstallStickerSet createWithStickerset:item.inputSet] successHandler:^(id request, id response) {
+      //  [RPCRequest sendRequest:[TLAPI_messages_uninstallStickerSet createWithStickerset:item.inputSet] successHandler:^(id request, id response) {
             
-            _tableView.defaultAnimation = NSTableViewAnimationEffectFade;
             
-            [_tableView removeItem:item];
-            
-            _tableView.defaultAnimation = NSTableViewAnimationEffectNone;
+            [_tableView removeItemAtIndex:[_tableView indexOfObject:item] animated:YES];
             
             [EmojiViewController reloadStickers];
             
             [self hideModalProgress];
             
-        } errorHandler:^(id request, RpcError *error) {
-            [self hideModalProgress];
-        } timeout:10];
+     //   } errorHandler:^(id request, RpcError *error) {
+      //      [self hideModalProgress];
+      //  } timeout:10];
         
     }, nil);
     
@@ -301,10 +393,10 @@
 - (TMRowView *)viewForRow:(NSUInteger)row item:(TMRowItem *) item {
     
     if([item isKindOfClass:[GeneralSettingsBlockHeaderItem class]]) {
-        return [self.tableView cacheViewForClass:[GeneralSettingsBlockHeaderView class] identifier:@"GeneralSettingsBlockHeaderView"];
+        return [[GeneralSettingsBlockHeaderView alloc] initWithFrame:NSZeroRect];
     }
     
-    TGStickerPackRowView *view = (TGStickerPackRowView *)[_tableView cacheViewForClass:[TGStickerPackRowView class] identifier:@"TGStickerPackRowView" withSize:NSMakeSize(NSWidth(self.view.frame), 42)];
+    TGStickerPackRowView *view = [[TGStickerPackRowView alloc] initWithFrame:NSZeroRect];
     
     view.controller = self;
     

@@ -433,7 +433,7 @@ DYNAMIC_PROPERTY(DFullName);
         if(!self.last_name)
             self.last_name = @"";
         
-        NSString *fullName = [[[[NSString stringWithFormat:@"%@ %@", self.first_name, self.last_name] trim] singleLine] htmlentities];
+        NSString *fullName = [[[[NSString stringWithFormat:@"%@%@%@", self.first_name,self.first_name.length > 0 ? @" " : @"", self.last_name] trim] singleLine] htmlentities];
         if(fullName.length > 30)
             fullName = [fullName substringToIndex:30];
         

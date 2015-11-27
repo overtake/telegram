@@ -2084,6 +2084,14 @@
          contextName = "__37-[TGEnterPasswordPanel checkPassword]_block_invoke_2:TGEnterPasswordPanel.m">
       </ContextState>
       <ContextState
+         contextName = "-[TMView mouseDragged:]:TMView.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "_dragInSuperView">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "-[UpgradeLayerSenderItem decryptedMessageLayer20]:UpgradeLayerSenderItem.m">
       </ContextState>
       <ContextState
@@ -2720,6 +2728,14 @@
          <PersistentStrings>
             <PersistentString
                value = "chat">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "__39-[AppDelegate initializeKeyDownHandler]_block_invoke_2399:AppDelegate.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "incomingEvent.responder">
             </PersistentString>
          </PersistentStrings>
       </ContextState>

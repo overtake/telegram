@@ -32,6 +32,9 @@ typedef NSUInteger TMViewBorder;
 
 @property (nonatomic,assign) BOOL movableWindow;
 
+@property (nonatomic,assign) BOOL dragInSuperView;
+
+
 - (void)sizeToFit;
 
 -(void)removeAllSubviews;

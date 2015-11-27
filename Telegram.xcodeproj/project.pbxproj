@@ -377,6 +377,8 @@
 		C256E91718D22622008FFA04 /* DownloadDocumentItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C256E91618D22622008FFA04 /* DownloadDocumentItem.m */; };
 		C256E91A18D24C4C008FFA04 /* DownloadAudioItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C256E91918D24C4C008FFA04 /* DownloadAudioItem.m */; };
 		C256E91D18D25324008FFA04 /* TMPreviewAudioItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C256E91C18D25324008FFA04 /* TMPreviewAudioItem.m */; };
+		C25A57E01C072D1D0038169F /* ComposeActionStickersBehavior.m in Sources */ = {isa = PBXBuildFile; fileRef = C25A57DF1C072D1D0038169F /* ComposeActionStickersBehavior.m */; };
+		C25A57EC1C0736D70038169F /* TGMovableTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = C25A57EB1C0736D70038169F /* TGMovableTableView.m */; };
 		C25F91B31977E115006868F3 /* TGImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = C25F91B21977E115006868F3 /* TGImageView.m */; };
 		C25F91B91977EB17006868F3 /* TGImageObject.m in Sources */ = {isa = PBXBuildFile; fileRef = C25F91B81977EB17006868F3 /* TGImageObject.m */; };
 		C25F91C4197858BF006868F3 /* LocationSenderItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C25F91C3197858BF006868F3 /* LocationSenderItem.m */; };
@@ -1771,6 +1773,10 @@
 		C256E91918D24C4C008FFA04 /* DownloadAudioItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DownloadAudioItem.m; sourceTree = "<group>"; };
 		C256E91B18D25324008FFA04 /* TMPreviewAudioItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TMPreviewAudioItem.h; sourceTree = "<group>"; };
 		C256E91C18D25324008FFA04 /* TMPreviewAudioItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TMPreviewAudioItem.m; sourceTree = "<group>"; };
+		C25A57DE1C072D1D0038169F /* ComposeActionStickersBehavior.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ComposeActionStickersBehavior.h; sourceTree = "<group>"; };
+		C25A57DF1C072D1D0038169F /* ComposeActionStickersBehavior.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ComposeActionStickersBehavior.m; sourceTree = "<group>"; };
+		C25A57EA1C0736D70038169F /* TGMovableTableView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGMovableTableView.h; sourceTree = "<group>"; };
+		C25A57EB1C0736D70038169F /* TGMovableTableView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGMovableTableView.m; sourceTree = "<group>"; };
 		C25F91B11977E115006868F3 /* TGImageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGImageView.h; sourceTree = "<group>"; };
 		C25F91B21977E115006868F3 /* TGImageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGImageView.m; sourceTree = "<group>"; };
 		C25F91B71977EB17006868F3 /* TGImageObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGImageObject.h; sourceTree = "<group>"; };
@@ -5403,6 +5409,10 @@
 			children = (
 				C2F429C31B00C88B00C2CE4E /* TGStickersSettingsViewController.h */,
 				C2F429C41B00C88B00C2CE4E /* TGStickersSettingsViewController.m */,
+				C25A57DE1C072D1D0038169F /* ComposeActionStickersBehavior.h */,
+				C25A57DF1C072D1D0038169F /* ComposeActionStickersBehavior.m */,
+				C25A57EA1C0736D70038169F /* TGMovableTableView.h */,
+				C25A57EB1C0736D70038169F /* TGMovableTableView.m */,
 			);
 			name = stickers;
 			sourceTree = "<group>";
@@ -6476,6 +6486,7 @@
 				C2B0DF831BA9B7840023982C /* ComposeActionAddChannelModeratorBehavior.m in Sources */,
 				C24435921A1E1C7E00F9BB38 /* PrivacyUserListItemView.m in Sources */,
 				C2544E8A1A8128A8006E44DF /* TGSharedMediaCap.m in Sources */,
+				C25A57E01C072D1D0038169F /* ComposeActionStickersBehavior.m in Sources */,
 				C2C1DC0F1A4336CE00BBCC63 /* TGStickerImageObject.m in Sources */,
 				C20F76E91BB994A6003A1E86 /* TGModernUserViewController.m in Sources */,
 				0AB43BC618D8A4AC00FB805A /* NSColor+CNGridViewPalette.m in Sources */,
@@ -7010,6 +7021,7 @@
 				C2D4B8791AFCE8FA0035B4E4 /* YapDatabaseTransaction.m in Sources */,
 				C2FA78DF1923A3BB001A9D1B /* PhotoVideoHistoryFilter.m in Sources */,
 				0ACDB13B18CF45A5009FE910 /* LoginCountrySelectorView.m in Sources */,
+				C25A57EC1C0736D70038169F /* TGMovableTableView.m in Sources */,
 				C2ED28041BFF7F0E00F19531 /* TGReportChannelModalView.m in Sources */,
 				C2AA5D35187597680026EA1F /* LoopingUtils.m in Sources */,
 				C24F87941A0015BD00EC962E /* TGSecretAction.m in Sources */,
