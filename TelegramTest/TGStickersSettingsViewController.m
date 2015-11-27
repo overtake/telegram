@@ -157,13 +157,15 @@
 
 
 -(void)mouseDown:(NSEvent *)theEvent {
+    
+    TGMovableTableView *tableView = ((TGMovableTableView *)[self rowItem].table);
    
     if([self mouse:[self convertPoint:[theEvent locationInWindow] fromView:nil] inRect:_reorderPack.frame]) {
-        TGMovableTableView *tableView = ((TGMovableTableView *)[self rowItem].table);
-        
         [tableView startMoveItemAtIndex:[tableView indexOfObject:[self rowItem]]];
     } else {
-        [super mouseDown:theEvent];
+        if(![[self rowItem] isEditable]) {
+            [tableView.mdelegate selectionDidChange:[tableView indexOfObject:[self rowItem]] item:[self rowItem]];
+        }
     }
 }
 
@@ -182,8 +184,6 @@
     _imageView.object = item.imageObject;
     
     [_deletePack setHidden:(item.set.flags & (1 << 2)) == (1 << 2)];
-    
-    TGMovableTableView *tableView = ((TGMovableTableView *)[self rowItem].table);
     
     
 }
@@ -286,45 +286,20 @@
     [super viewWillAppear:animated];
     
     
-    NSArray *stickers = [EmojiViewController allStickers];
-    
-    
-    NSMutableDictionary *packs = [[NSMutableDictionary alloc] init];
+    NSMutableArray *packSets = [NSMutableArray array];
     
     NSArray *sets = [EmojiViewController allSets];
     
-    [stickers enumerateObjectsUsingBlock:^(TL_document *obj, NSUInteger idx, BOOL *stop) {
+    
+    [sets enumerateObjectsUsingBlock:^(TL_stickerSet *set, NSUInteger setIdx, BOOL * _Nonnull setStop) {
+        NSDictionary *val = @{@"stickers":[EmojiViewController stickersWithId:set.n_id],@"set":set};
         
-        if(obj.class == TL_document.class) {
-            
-            TL_documentAttributeSticker *attr = (TL_documentAttributeSticker *) [obj attributeWithClass:TL_documentAttributeSticker.class];
-            
-            if(attr) {
-                NSMutableArray *p = [packs objectForKey:@(attr.stickerset.n_id)][@"stickers"];
-                
-                if(!p) {
-                    p = [[NSMutableArray alloc] init];
-                    
-                    NSArray *f = [sets filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.n_id == %ld",attr.stickerset.n_id]];
-                    
-                    id set;
-                    
-                    if(f.count == 1)
-                        set = f[0];
-                    else
-                        set = [TL_stickerSet createWithFlags:4 n_id:0 access_hash:0 title:@"Great Minds" short_name:@"" n_count:0 n_hash:0];
-                    
-                    [packs setObject:@{@"stickers":p,@"set":set} forKey:@(attr.stickerset.n_id)];
-                }
-                
-                [p addObject:obj];
-                
-            }
-            
-        }
+        [packSets addObject:val];
     }];
     
-    [self reloadDataWithPacks:packs.allValues];
+    
+    
+    [self reloadDataWithPacks:packSets];
 }
 
 
@@ -347,24 +322,17 @@
     [_tableView addItems:items];
     
     
-//    GeneralSettingsBlockHeaderItem *description = [[GeneralSettingsBlockHeaderItem alloc] initWithString:NSLocalizedString(@"Stickers.StickersSetDescription", nil) height:YES flipped:150];
-//    
-//    [_tableView insert:description atIndex:_tableView.count tableRedraw:NO];
-//    
-//    [_tableView reloadData];
-    
 }
 
 -(void)removeStickerPack:(TGStickerPackRowItem *)item {
     
-    //[_tableView startMoveItemAtIndex:[_tableView indexOfObject:item]];
     
     
     confirm(appName(), [NSString stringWithFormat:NSLocalizedString(@"Stickers.RemoveStickerAlert", nil),[item.pack[@"set"] title]], ^{
         
         [self showModalProgress];
         
-      //  [RPCRequest sendRequest:[TLAPI_messages_uninstallStickerSet createWithStickerset:item.inputSet] successHandler:^(id request, id response) {
+     //   [RPCRequest sendRequest:[TLAPI_messages_uninstallStickerSet createWithStickerset:item.inputSet] successHandler:^(id request, id response) {
             
             
             [_tableView removeItemAtIndex:[_tableView indexOfObject:item] animated:YES];
@@ -373,14 +341,37 @@
             
             [self hideModalProgress];
             
-     //   } errorHandler:^(id request, RpcError *error) {
-      //      [self hideModalProgress];
-      //  } timeout:10];
+    //    } errorHandler:^(id request, RpcError *error) {
+       //     [self hideModalProgress];
+     //   } timeout:10];
         
     }, nil);
     
 }
 
+-(void)tableViewDidChangeOrder {
+    
+    NSMutableArray *reoder = [NSMutableArray array];
+    
+    [_tableView enumerateAvailableRowViewsUsingBlock:^(__kindof TMRowView *rowView, TMRowItem *rowItem, NSInteger row) {
+        
+        TGStickerPackRowItem *item = (TGStickerPackRowItem *)rowItem;
+        
+        [reoder addObject:@(item.set.n_id)];
+        
+    }];
+    
+    [RPCRequest sendRequest:[TLAPI_messages_reorderStickerSets createWithOrder:reoder] successHandler:^(id request, id response) {
+        
+        [EmojiViewController reloadStickers];
+        
+        
+    } errorHandler:^(id request, RpcError *error) {
+        
+        
+        
+    }];
+}
 
 - (CGFloat)rowHeight:(NSUInteger)row item:(TMRowItem *) item {
     return  [item isKindOfClass:[GeneralSettingsBlockHeaderItem class]] ? ((GeneralSettingsBlockHeaderItem *)item).height : 50;
@@ -407,9 +398,7 @@
     
     if([item isKindOfClass:[TGStickerPackRowItem class]]) {
         TGStickerPackModalView *modalView = [[TGStickerPackModalView alloc] init];
-        
-        
-        
+       
         [modalView setStickerPack:[TL_messages_stickerSet createWithSet:item.pack[@"set"] packs:nil documents:[item.pack[@"stickers"] mutableCopy]]];
         
         [modalView show:self.view.window animated:YES];

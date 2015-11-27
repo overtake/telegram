@@ -116,8 +116,8 @@ extern NSString *const KEY_GROUP_HOLE;
 extern NSString *const KEY_WEBPAGE;
 extern NSString *const KEY_MESSAGE_ID;
 extern NSString *const KEY_RANDOM_ID;
-
-
+extern NSString *const KEY_ORDER;
+extern NSString *const KEY_STICKERSET;
 extern NSString *const KEY_PRIVACY;
 extern NSString *const PRIVACY_UPDATE;
 extern NSString *const LOGOUT_EVENT;
@@ -125,6 +125,13 @@ extern NSString *const LOGOUT_EVENT;
 
 extern NSString *const LAYOUT_CHANGED;
 extern NSString *const UNREAD_COUNT_CHANGED;
+
+
+extern NSString *const STICKERS_REORDER;
+extern NSString *const STICKERS_NEW_PACK;
+extern NSString *const STICKERS_ALL_CHANGED;
+
+
 
 + (void)addObserver:(id)target selector:(SEL)selector name:(NSString *)name;
 

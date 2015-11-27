@@ -2017,6 +2017,17 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "-[TGMovableTableView removeItemAtIndex:animated:]:TGMovableTableView.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.containerView.frame">
+            </PersistentString>
+            <PersistentString
+               value = "self.documentVisibleRect">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "-[TL_localMessage filterType]:TL_localMessage.m">
       </ContextState>
       <ContextState
@@ -3504,6 +3515,9 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "__59-[TGStickersSettingsViewController tableViewDidChangeOrder]_block_invoke_2:TGStickersSettingsViewController.m">
+      </ContextState>
+      <ContextState
          contextName = "-[DeleteRandomMessagesSenderItem performRequest]:DeleteRandomMessagesSenderItem.m">
       </ContextState>
       <ContextState
@@ -3891,6 +3905,9 @@
                value = "self.image">
             </PersistentString>
          </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "__31-[TGAllStickersTableView load:]_block_invoke226:TGAllStickersTableView.m">
       </ContextState>
       <ContextState
          contextName = "__41-[UsersManager add:withCustomKey:update:]_block_invoke_3:UsersManager.m">

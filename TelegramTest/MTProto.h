@@ -2,7 +2,7 @@
 //  MTProto.h
 //  Telegram
 //
-//  Auto created by Mikhail Filimonov on 22.11.15.
+//  Auto created by Mikhail Filimonov on 27.11.15.
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -1622,6 +1622,8 @@
 @property int views;
 @property Boolean enabled;
 @property Boolean is_admin;
+@property (nonatomic, strong) TLmessages_StickerSet* stickerset;
+@property (nonatomic, strong) NSMutableArray* order;
 @end
 
 @interface TL_updateNewMessage : TLUpdate<NSCoding>
@@ -1734,6 +1736,15 @@
 @end
 @interface TL_updateChatParticipantAdmin : TLUpdate<NSCoding>
 +(TL_updateChatParticipantAdmin*)createWithChat_id:(int)chat_id user_id:(int)user_id is_admin:(Boolean)is_admin version:(int)version;
+@end
+@interface TL_updateNewStickerSet : TLUpdate<NSCoding>
++(TL_updateNewStickerSet*)createWithStickerset:(TLmessages_StickerSet*)stickerset;
+@end
+@interface TL_updateStickerSetsOrder : TLUpdate<NSCoding>
++(TL_updateStickerSetsOrder*)createWithOrder:(NSMutableArray*)order;
+@end
+@interface TL_updateStickerSets : TLUpdate<NSCoding>
++(TL_updateStickerSets*)create;
 @end
 	
 @interface TLupdates_State()
@@ -2311,7 +2322,7 @@
 @end
 	
 @interface TLmessages_AllStickers()
-@property (nonatomic, strong) NSString* n_hash;
+@property int n_hash;
 @property (nonatomic, strong) NSMutableArray* sets;
 @end
 
@@ -2319,7 +2330,7 @@
 +(TL_messages_allStickersNotModified*)create;
 @end
 @interface TL_messages_allStickers : TLmessages_AllStickers<NSCoding>
-+(TL_messages_allStickers*)createWithN_hash:(NSString*)n_hash sets:(NSMutableArray*)sets;
++(TL_messages_allStickers*)createWithN_hash:(int)n_hash sets:(NSMutableArray*)sets;
 @end
 	
 @interface TLDisabledFeature()

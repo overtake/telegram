@@ -2,7 +2,7 @@
 //  MTProto.m
 //  Telegram
 //
-//  Auto created by Mikhail Filimonov on 22.11.15.
+//  Auto created by Mikhail Filimonov on 27.11.15.
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -12517,6 +12517,151 @@
         
 @end
 
+@implementation TL_updateNewStickerSet
++(TL_updateNewStickerSet*)createWithStickerset:(TLmessages_StickerSet*)stickerset {
+	TL_updateNewStickerSet* obj = [[TL_updateNewStickerSet alloc] init];
+	obj.stickerset = stickerset;
+	return obj;
+}
+-(void)serialize:(SerializedData*)stream {
+	[ClassStore TLSerialize:self.stickerset stream:stream];
+}
+-(void)unserialize:(SerializedData*)stream {
+	self.stickerset = [ClassStore TLDeserialize:stream];
+}
+        
+-(TL_updateNewStickerSet *)copy {
+    
+    TL_updateNewStickerSet *objc = [[TL_updateNewStickerSet alloc] init];
+    
+    objc.stickerset = [self.stickerset copy];
+    
+    return objc;
+}
+        
+
+    
+-(id)initWithCoder:(NSCoder *)aDecoder {
+
+    if((self = [ClassStore deserialize:[aDecoder decodeObjectForKey:@"data"]])) {
+        
+    }
+    
+    return self;
+}
+        
+-(void)encodeWithCoder:(NSCoder *)aCoder {
+    [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
+}
+        
+
+        
+@end
+
+@implementation TL_updateStickerSetsOrder
++(TL_updateStickerSetsOrder*)createWithOrder:(NSMutableArray*)order {
+	TL_updateStickerSetsOrder* obj = [[TL_updateStickerSetsOrder alloc] init];
+	obj.order = order;
+	return obj;
+}
+-(void)serialize:(SerializedData*)stream {
+	//Serialize ShortVector
+	[stream writeInt:0x1cb5c415];
+	{
+		NSInteger tl_count = [self.order count];
+		[stream writeInt:(int)tl_count];
+		for(int i = 0; i < (int)tl_count; i++) {
+            if([self.order count] > i) {
+                NSNumber* obj = [self.order objectAtIndex:i];
+			[stream writeLong:[obj longValue]];
+            }  else
+                break;
+		}
+	}
+}
+-(void)unserialize:(SerializedData*)stream {
+	//UNS ShortVector
+	[stream readInt];
+	{
+		if(!self.order)
+			self.order = [[NSMutableArray alloc] init];
+		int tl_count = [stream readInt];
+		for(int i = 0; i < tl_count; i++) {
+			long obj = [stream readLong];
+			[self.order addObject:@(obj)];
+		}
+	}
+}
+        
+-(TL_updateStickerSetsOrder *)copy {
+    
+    TL_updateStickerSetsOrder *objc = [[TL_updateStickerSetsOrder alloc] init];
+    
+    objc.order = [self.order copy];
+    
+    return objc;
+}
+        
+
+    
+-(id)initWithCoder:(NSCoder *)aDecoder {
+
+    if((self = [ClassStore deserialize:[aDecoder decodeObjectForKey:@"data"]])) {
+        
+    }
+    
+    return self;
+}
+        
+-(void)encodeWithCoder:(NSCoder *)aCoder {
+    [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
+}
+        
+
+        
+@end
+
+@implementation TL_updateStickerSets
++(TL_updateStickerSets*)create {
+	TL_updateStickerSets* obj = [[TL_updateStickerSets alloc] init];
+	
+	return obj;
+}
+-(void)serialize:(SerializedData*)stream {
+	
+}
+-(void)unserialize:(SerializedData*)stream {
+	
+}
+        
+-(TL_updateStickerSets *)copy {
+    
+    TL_updateStickerSets *objc = [[TL_updateStickerSets alloc] init];
+    
+    
+    
+    return objc;
+}
+        
+
+    
+-(id)initWithCoder:(NSCoder *)aDecoder {
+
+    if((self = [ClassStore deserialize:[aDecoder decodeObjectForKey:@"data"]])) {
+        
+    }
+    
+    return self;
+}
+        
+-(void)encodeWithCoder:(NSCoder *)aCoder {
+    [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
+}
+        
+
+        
+@end
+
 @implementation TLupdates_State
 
 @end
@@ -18038,14 +18183,14 @@
 @end
 
 @implementation TL_messages_allStickers
-+(TL_messages_allStickers*)createWithN_hash:(NSString*)n_hash sets:(NSMutableArray*)sets {
++(TL_messages_allStickers*)createWithN_hash:(int)n_hash sets:(NSMutableArray*)sets {
 	TL_messages_allStickers* obj = [[TL_messages_allStickers alloc] init];
 	obj.n_hash = n_hash;
 	obj.sets = sets;
 	return obj;
 }
 -(void)serialize:(SerializedData*)stream {
-	[stream writeString:self.n_hash];
+	[stream writeInt:self.n_hash];
 	//Serialize FullVector
 	[stream writeInt:0x1cb5c415];
 	{
@@ -18058,7 +18203,7 @@
 	}
 }
 -(void)unserialize:(SerializedData*)stream {
-	super.n_hash = [stream readString];
+	super.n_hash = [stream readInt];
 	//UNS FullVector
 	[stream readInt];
 	{

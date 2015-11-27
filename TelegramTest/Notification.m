@@ -119,9 +119,9 @@ NSString *const KEY_PARTICIPANTS = @"participants";
 NSString *const KEY_GROUP_HOLE = @"group_hole";
 NSString *const KEY_MESSAGE_ID = @"KEY_MESSAGE_ID";
 NSString *const KEY_RANDOM_ID = @"KEY_RANDOM_ID";
-
 NSString *const KEY_WEBPAGE = @"WEBPAGE";
-
+NSString *const KEY_ORDER = @"order";
+NSString *const KEY_STICKERSET = @"sticker_set";
 NSString *const LOGOUT_EVENT = @"logout";
 
 NSString *const KEY_PRIVACY = @"key_privacy";
@@ -129,6 +129,11 @@ NSString *const PRIVACY_UPDATE = @"privacy_update";
 
 NSString *const LAYOUT_CHANGED = @"TGAPPLICATIONLAYOUTCHANGED";
 NSString *const UNREAD_COUNT_CHANGED = @"TGUNREADCOUNTCHANGED";
+
+NSString *const STICKERS_REORDER = @"stickers_reoder";
+NSString *const STICKERS_NEW_PACK = @"stickers_new_pack";;
+NSString *const STICKERS_ALL_CHANGED = @"stickers_all_changed";
+
 
 +(NSNotificationCenter *)center {
     static NSNotificationCenter *center;

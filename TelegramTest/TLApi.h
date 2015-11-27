@@ -2,7 +2,7 @@
 //  TLApi.h
 //  Telegram
 //
-//  Auto created by Mikhail Filimonov on 22.11.15.
+//  Auto created by Mikhail Filimonov on 27.11.15.
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -692,9 +692,9 @@
 @end
 
 @interface TLAPI_messages_getAllStickers : TLApiObject
-@property (nonatomic, strong) NSString* n_hash;
+@property int n_hash;
 
-+(TLAPI_messages_getAllStickers*)createWithN_hash:(NSString*)n_hash;
++(TLAPI_messages_getAllStickers*)createWithN_hash:(int)n_hash;
 @end
 
 @interface TLAPI_account_updateDeviceLocked : TLApiObject
@@ -1055,5 +1055,11 @@
 @property (nonatomic, strong) NSString* lang_code;
 
 +(TLAPI_help_getTermsOfService*)createWithLang_code:(NSString*)lang_code;
+@end
+
+@interface TLAPI_messages_reorderStickerSets : TLApiObject
+@property (nonatomic, strong) NSMutableArray* order;
+
++(TLAPI_messages_reorderStickerSets*)createWithOrder:(NSMutableArray*)order;
 @end
 

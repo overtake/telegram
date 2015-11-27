@@ -110,10 +110,12 @@
         
          [self addScrollEvent];
         
-    }
+          }
     
     return self;
 }
+
+
 
 
 - (void) addScrollEvent {

@@ -133,10 +133,6 @@ static NSTextField *testTextField() {
         
         int currentSelectLineIndex = [self lineIndex:origins count:(int) CFArrayGetCount(lines) location:currentPoint frame:CTFrame frameSize:frameSize];
         
-     //   NSLog(@"start:%@, current:%@",NSStringFromPoint(startPoint),NSStringFromPoint(currentPoint));
-
-    //    NSLog(@"start:%d, end:%d",startSelectLineIndex,currentSelectLineIndex);
-        
         int dif = abs(startSelectLineIndex - currentSelectLineIndex);
         
         

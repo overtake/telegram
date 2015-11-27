@@ -219,24 +219,10 @@ static NSImage * greenBackgroundImage(NSSize size) {
     
     [_tableView showWithStickerPack:stickerPack];
     
-    __block BOOL packIsset = NO;
+    __block BOOL packIsset = [EmojiViewController setWithId:stickerPack.set.n_id] != nil;
     
     
-    __block TLDocument *headerSticker;
-    
-    [[stickerPack documents] enumerateObjectsUsingBlock:^(TLDocument *obj, NSUInteger idx, BOOL *stop) {
-        
-        if(idx == 0)
-            headerSticker = obj;
-        
-        NSArray *filter = [[EmojiViewController allStickers] filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.n_id == %ld",obj.n_id]];
-        
-        if(filter.count > 0) {
-            packIsset = YES;
-            *stop = YES;
-        }
-        
-    }];
+    __block TLDocument *headerSticker = [stickerPack.documents firstObject];
     
     
     NSUInteger dif = ceil((float)stickerPack.documents.count/5.0);

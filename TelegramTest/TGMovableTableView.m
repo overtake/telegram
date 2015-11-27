@@ -78,7 +78,7 @@
 
 -(void)setFrameSize:(NSSize)newSize {
     [super setFrameSize:newSize];
-    [_containerView setFrameSize:NSMakeSize(newSize.width, NSHeight(_containerView.frame))];
+    [_containerView setFrameSize:NSMakeSize(newSize.width, MAX(self.containerHeight,newSize.height))];
     
     [_containerView.subviews enumerateObjectsUsingBlock:^(TMRowView *obj, NSUInteger idx, BOOL * _Nonnull stop) {
         
@@ -159,9 +159,9 @@
     
    TMRowView *removeView = [self viewAtIndex:index];
     
-    BOOL reverse = NSMaxY(self.documentVisibleRect) > self.containerHeight - NSHeight(removeView.frame);
+    BOOL reverse = (NSHeight(self.frame) != NSHeight(self.containerView.frame)) && (NSMaxY(self.documentVisibleRect) > NSHeight(self.containerView.frame) - NSHeight(removeView.frame));
     
-    int reverseScrollDif = reverse ? NSHeight(removeView.frame) - (NSMaxY(self.documentVisibleRect) - (self.containerHeight - NSHeight(removeView.frame))) : 0;
+    int reverseScrollDif = reverse ? NSHeight(removeView.frame) - (NSMaxY(self.documentVisibleRect) - (NSHeight(self.containerView.frame) - NSHeight(removeView.frame))) : 0;
     
     __block int yHeight = reverse ? self.containerHeight - NSHeight(removeView.frame) : 0;
     
@@ -190,9 +190,7 @@
         [removeView removeFromSuperview];
         [_items removeObjectAtIndex:index];
         
-        [_containerView setFrameSize:NSMakeSize(NSWidth(_containerView.frame), self.containerHeight)];
         [self setFrameSize:self.frame.size];
-        
         
         if(reverseScrollDif > 0 && reverseScrollDif != NSHeight(removeView.frame)) {
             [self.clipView scrollRectToVisible:NSMakeRect(0, self.documentVisibleRect.origin.y - reverseScrollDif, 1, 1) animated:NO];
@@ -200,9 +198,6 @@
         
         
         [self tile];
-        
-        
-        
         
         [self endUpdates];
         
@@ -346,10 +341,9 @@
     [_movableView setDragInSuperView:NO];
     
     [_movableView setNeedsDisplay:YES];
-
-    NSLog(@"saveItemAtIndex:%ld",_currentHoleIndex);
     
     int y = [self yOfIndex:_currentHoleIndex-1];
+
     
     [NSAnimationContext runAnimationGroup:^(NSAnimationContext * _Nonnull context) {
         
@@ -377,14 +371,21 @@
         
         _containerView.subviews = subviews;
         
+        
+        if(_movableIndex != _currentHoleIndex && [_mdelegate respondsToSelector:@selector(tableViewDidChangeOrder)]) {
+            [_mdelegate tableViewDidChangeOrder];
+        }
+        
         _movableItem = nil;
-        
-        
+        _movableIndex = 0;
         _movableView = nil;
+        
+        
         
         _movableIndex = NSNotFound;
         _currentHoleIndex = 0;
         _prevHoleIndex = 0;
+        
         
         
         
@@ -420,8 +421,9 @@
     if(_movableItem != nil && !_locked) {
         [self updateMovableItem:[_containerView convertPoint:[theEvent locationInWindow] fromView:nil]];
     }
-    
+
 }
+
 
 -(void)scrollWheel:(NSEvent *)theEvent {
     [super scrollWheel:theEvent];

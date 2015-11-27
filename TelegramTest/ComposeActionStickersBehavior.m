@@ -11,7 +11,18 @@
 @implementation ComposeActionStickersBehavior
 
 -(NSString *)doneTitle {
-    return self.action.isEditable ? NSLocalizedString(@"Save", nil) : NSLocalizedString(@"Profile.Edit", nil);
+    return self.action.isEditable ? NSLocalizedString(@"Profile.Done", nil) : NSLocalizedString(@"Profile.Edit", nil);
+}
+
+-(NSAttributedString *)centerTitle {
+    
+    NSMutableAttributedString *attr = [[NSMutableAttributedString alloc] init];
+    
+    [attr appendString:NSLocalizedString(@"Settings.Stickers", nil) withColor:NSColorFromRGB(0x333333)];
+    
+    [attr setAlignment:NSCenterTextAlignment range:attr.range];
+    
+    return attr;
 }
 
 @end

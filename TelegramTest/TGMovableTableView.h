@@ -16,6 +16,9 @@
 - (BOOL)selectionWillChange:(NSInteger)row item:(TMRowItem *) item;
 - (BOOL)isSelectable:(NSInteger)row item:(TMRowItem *) item;
 
+@optional
+- (void)tableViewDidChangeOrder;
+
 @end
 
 @interface TGMovableTableView : BTRScrollView

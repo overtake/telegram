@@ -3,7 +3,7 @@
 //  ClassStore.m
 //  Telegram
 //
-    //  Created by keepcoder on 22.11.15.
+    //  Created by keepcoder on 27.11.15.
 //  Copyright (c) 2015 keepcoder. All rights reserved.
 //
 
@@ -411,7 +411,7 @@ static NSMutableDictionary *cs_constuctors;
    [cs_classes setObject:[TL_messages_stickers class] forKey:[NSNumber numberWithInt:-1970352846]];
    [cs_classes setObject:[TL_stickerPack class] forKey:[NSNumber numberWithInt:313694676]];
    [cs_classes setObject:[TL_messages_allStickersNotModified class] forKey:[NSNumber numberWithInt:-395967805]];
-   [cs_classes setObject:[TL_messages_allStickers class] forKey:[NSNumber numberWithInt:-719474725]];
+   [cs_classes setObject:[TL_messages_allStickers class] forKey:[NSNumber numberWithInt:-302170017]];
    [cs_classes setObject:[TL_disabledFeature class] forKey:[NSNumber numberWithInt:-1369215196]];
    [cs_classes setObject:[TL_updateReadHistoryInbox class] forKey:[NSNumber numberWithInt:-1721631396]];
    [cs_classes setObject:[TL_updateReadHistoryOutbox class] forKey:[NSNumber numberWithInt:791617983]];
@@ -519,6 +519,9 @@ static NSMutableDictionary *cs_constuctors;
    [cs_classes setObject:[TL_messageActionChannelMigrateFrom class] forKey:[NSNumber numberWithInt:-1336546578]];
    [cs_classes setObject:[TL_channelParticipantsBots class] forKey:[NSNumber numberWithInt:-1328445861]];
    [cs_classes setObject:[TL_help_termsOfService class] forKey:[NSNumber numberWithInt:-236044656]];
+   [cs_classes setObject:[TL_updateNewStickerSet class] forKey:[NSNumber numberWithInt:1753886890]];
+   [cs_classes setObject:[TL_updateStickerSetsOrder class] forKey:[NSNumber numberWithInt:-253774767]];
+   [cs_classes setObject:[TL_updateStickerSets class] forKey:[NSNumber numberWithInt:1135492588]];
    [cs_classes setObject:[TL_userSelf class] forKey:[NSNumber numberWithInt:476112392]];
    [cs_classes setObject:[TL_userContact class] forKey:[NSNumber numberWithInt:-894214632]];
    [cs_classes setObject:[TL_userRequest class] forKey:[NSNumber numberWithInt:-640891665]];

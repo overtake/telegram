@@ -262,6 +262,41 @@
     return [[self instance].stickersTableView.stickers sets];
 }
 
++(TL_stickerSet *)setWithId:(long)n_id {
+    NSArray *sets = [self allSets];
+    
+    __block TL_stickerSet *set;
+    
+    [sets enumerateObjectsUsingBlock:^(TL_stickerSet *obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        
+        if(obj.n_id == n_id) {
+            set = obj;
+            *stop = YES;
+        }
+        
+    }];
+    
+    return set;
+}
+
++(NSArray *)stickersWithId:(long)n_id {
+    NSArray *stickers = [self allStickers];
+    
+    __block NSMutableArray *s = [NSMutableArray array];
+    
+    [stickers enumerateObjectsUsingBlock:^(TLDocument *obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        
+        TL_documentAttributeSticker *attr = (TL_documentAttributeSticker *) [obj attributeWithClass:TL_documentAttributeSticker.class];
+        
+        if(attr.stickerset.n_id == n_id) {
+            [s addObject:obj];
+        }
+        
+    }];
+    
+    return s;
+}
+
 +(void)loadStickersIfNeeded {
    [[self instance].stickersTableView.stickers load:NO];
 }

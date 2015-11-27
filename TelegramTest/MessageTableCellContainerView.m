@@ -965,9 +965,7 @@ static int offsetEditable = 30;
 
 
 - (void)downloadProgressHandler:(DownloadItem *)item {
-    
-    NSLog(@"%f",item.progress);
-    
+        
     [self.progressView setProgress:item.progress animated:YES];
 }
 

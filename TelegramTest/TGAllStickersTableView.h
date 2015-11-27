@@ -21,6 +21,8 @@
 -(NSArray *)allStickers;
 -(NSArray *)sets;
 
+-(void)updateSets:(NSArray *)sets;
+
 -(void)scrollToStickerPack:(long)packId;
 
 @end

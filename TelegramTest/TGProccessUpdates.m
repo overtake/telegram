@@ -502,6 +502,30 @@ static NSArray *channelUpdates;
             return;
         }
         
+        
+        if([update isKindOfClass:[TL_updateStickerSets class]]) {
+        
+            [Notification perform:STICKERS_ALL_CHANGED data:@{}];
+            
+            return;
+        }
+        
+        if([update isKindOfClass:[TL_updateNewStickerSet class]]) {
+            
+            [Notification perform:STICKERS_NEW_PACK data:@{KEY_STICKERSET:update.stickerset}];
+            
+            return;
+        }
+        
+        if([update isKindOfClass:[TL_updateStickerSetsOrder class]]) {
+            
+            [Notification perform:STICKERS_REORDER data:@{KEY_ORDER:update.order}];
+            
+            return;
+        }
+        
+        
+        
         if([update isKindOfClass:[TL_updateMessageID class]]) {
             
             [[Storage manager] updateMessageId:update.random_id msg_id:[update n_id]];

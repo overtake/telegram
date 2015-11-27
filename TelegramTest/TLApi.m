@@ -2,7 +2,7 @@
 //  TLApi.m
 //  Telegram
 //
-//  Auto created by Mikhail Filimonov on 22.11.15..
+//  Auto created by Mikhail Filimonov on 27.11.15..
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -1655,14 +1655,14 @@
 @end
 
 @implementation TLAPI_messages_getAllStickers
-+(TLAPI_messages_getAllStickers*)createWithN_hash:(NSString*)n_hash {
++(TLAPI_messages_getAllStickers*)createWithN_hash:(int)n_hash {
     TLAPI_messages_getAllStickers* obj = [[TLAPI_messages_getAllStickers alloc] init];
     obj.n_hash = n_hash;
     return obj;
 }
 - (NSData*)getData {
-	SerializedData* stream = [ClassStore streamWithConstuctor:-1438922648];
-	[stream writeString:self.n_hash];
+	SerializedData* stream = [ClassStore streamWithConstuctor:479598769];
+	[stream writeInt:self.n_hash];
 	return [stream getOutput];
 }
 @end
@@ -2500,6 +2500,31 @@
 - (NSData*)getData {
 	SerializedData* stream = [ClassStore streamWithConstuctor:936873859];
 	[stream writeString:self.lang_code];
+	return [stream getOutput];
+}
+@end
+
+@implementation TLAPI_messages_reorderStickerSets
++(TLAPI_messages_reorderStickerSets*)createWithOrder:(NSMutableArray*)order {
+    TLAPI_messages_reorderStickerSets* obj = [[TLAPI_messages_reorderStickerSets alloc] init];
+    obj.order = order;
+    return obj;
+}
+- (NSData*)getData {
+	SerializedData* stream = [ClassStore streamWithConstuctor:-1613775824];
+	//Serialize ShortVector
+	[stream writeInt:0x1cb5c415];
+	{
+		NSInteger tl_count = [self.order count];
+		[stream writeInt:(int)tl_count];
+		for(int i = 0; i < (int)tl_count; i++) {
+            if([self.order count] > i) {
+                NSNumber* obj = [self.order objectAtIndex:i];
+			[stream writeLong:[obj longValue]];
+            }  else
+                break;
+		}
+	}
 	return [stream getOutput];
 }
 @end
