@@ -260,7 +260,29 @@
     
     _tableView.mdelegate = self;
     
+    
+    
 }
+
+
+-(void)stickersNeedFullReload:(NSNotification *)notification {
+    [self reload];
+}
+
+-(void)stickersNeedReorder:(NSNotification *)notification {
+    
+    [self reload];
+}
+
+-(void)stickersNewPackAdded:(NSNotification *)notification {
+    TL_messages_stickerSet *set = notification.userInfo[KEY_STICKERSET];
+    
+    TGStickerPackRowItem *item = [[TGStickerPackRowItem alloc] initWithObject:@{@"set":set.set,@"stickers":set.documents}];
+    
+    [_tableView insertItem:item atIndex:0];
+    
+}
+
 
 
 
@@ -285,7 +307,21 @@
     
     [super viewWillAppear:animated];
     
+    [Notification addObserver:self selector:@selector(stickersNeedFullReload:) name:STICKERS_ALL_CHANGED];
+    [Notification addObserver:self selector:@selector(stickersNeedReorder:) name:STICKERS_REORDER];
+    [Notification addObserver:self selector:@selector(stickersNewPackAdded:) name:STICKERS_NEW_PACK];
     
+    [self reload];
+}
+
+
+-(void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
+    
+    [Notification removeObserver:self];
+}
+
+-(void)reload {
     NSMutableArray *packSets = [NSMutableArray array];
     
     NSArray *sets = [EmojiViewController allSets];
@@ -332,7 +368,7 @@
         
         [self showModalProgress];
         
-     //   [RPCRequest sendRequest:[TLAPI_messages_uninstallStickerSet createWithStickerset:item.inputSet] successHandler:^(id request, id response) {
+        [RPCRequest sendRequest:[TLAPI_messages_uninstallStickerSet createWithStickerset:item.inputSet] successHandler:^(id request, id response) {
             
             
             [_tableView removeItemAtIndex:[_tableView indexOfObject:item] animated:YES];
@@ -341,9 +377,9 @@
             
             [self hideModalProgress];
             
-    //    } errorHandler:^(id request, RpcError *error) {
-       //     [self hideModalProgress];
-     //   } timeout:10];
+        } errorHandler:^(id request, RpcError *error) {
+            [self hideModalProgress];
+        } timeout:10];
         
     }, nil);
     

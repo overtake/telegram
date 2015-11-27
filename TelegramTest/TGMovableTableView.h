@@ -27,6 +27,8 @@
 
 -(NSUInteger)count;
 
+
+- (void)insertItem:(TMRowItem *)item atIndex:(NSInteger)index;
 - (void)addItems:(NSArray *)items;
 - (void)removeItemAtIndex:(NSUInteger)index animated:(BOOL)animated;
 - (void)removeItems:(NSArray *)items animated:(BOOL)animated;

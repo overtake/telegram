@@ -105,6 +105,10 @@
     
 }
 
+- (void)insertItem:(TMRowItem *)item atIndex:(NSInteger)index {
+    [self insertItemAtIndex:index item:item tile:YES];
+}
+
 - (void)addItems:(NSArray *)items {
     
     NSUInteger insertIndex = _items.count;
@@ -148,7 +152,7 @@
     
     [_containerView addSubview:view positioned:NSWindowAbove relativeTo:lastView];
     
-    [_containerView setFrameSize:NSMakeSize(NSWidth(_containerView.frame), NSMaxY( [[_containerView subviews] lastObject].frame))];
+    [_containerView setFrameSize:NSMakeSize(NSWidth(_containerView.frame), self.containerHeight)];
    
     if(tile)
         [self tile];
