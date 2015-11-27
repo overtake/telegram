@@ -361,9 +361,10 @@
         
     }];
     
+    [Notification perform:STICKERS_REORDER data:@{KEY_ORDER:reoder}];
+    
     [RPCRequest sendRequest:[TLAPI_messages_reorderStickerSets createWithOrder:reoder] successHandler:^(id request, id response) {
         
-        [EmojiViewController reloadStickers];
         
         
     } errorHandler:^(id request, RpcError *error) {
