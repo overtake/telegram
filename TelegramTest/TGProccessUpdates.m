@@ -920,7 +920,7 @@ static NSArray *channelUpdates;
 
 -(void)updateDifference:(BOOL)force updateConnectionState:(BOOL)updateConnectionState  {
     
-   if(_holdUpdates || ![[MTNetwork instance] isAuth] ) return;
+   if(![[MTNetwork instance] isAuth] ) return;
    
     _holdUpdates = YES;
     
@@ -943,7 +943,9 @@ static NSArray *channelUpdates;
             
             [self uptodateWithConnectionState:updateConnectionState];
             
-        } errorHandler:nil timeout:0 queue:queue.nativeQueue];
+        } errorHandler:^(id request, RpcError *error) {
+            _holdUpdates = NO;
+        } timeout:0 queue:queue.nativeQueue];
     } else {
         _holdUpdates = NO;
         [self uptodateWithConnectionState:updateConnectionState];
@@ -956,7 +958,7 @@ static NSArray *channelUpdates;
 
 -(void)uptodateWithConnectionState:(BOOL)updateConnectionState {
     
-    if(_holdUpdates || ![[MTNetwork instance] isAuth] )
+    if( ![[MTNetwork instance] isAuth] )
         return;
     
     _holdUpdates = YES;
