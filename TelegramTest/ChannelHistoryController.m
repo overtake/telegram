@@ -137,7 +137,7 @@ static TGChannelsPolling *channelPolling;
             [(ChannelFilter *)self.filter fillGroupHoles:@[message] bottom:NO];
         }
         
-        [[Storage manager] insertMessage:message];
+        [[Storage manager] insertMessages:@[message]];
         
         NSMutableArray *prevResult = [NSMutableArray array];
         NSMutableArray *nextResult = [NSMutableArray array];

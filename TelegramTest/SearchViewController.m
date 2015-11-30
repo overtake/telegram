@@ -211,8 +211,6 @@ typedef enum {
         if(self.searchParams.isStorageLoaded)
         {
             [self remoteSearch:self.searchParams];
-        } else {
-            [self localSearch:self.searchParams];
         }
     }
     
@@ -610,9 +608,7 @@ static int insertCount = 3;
         
         
         params.isRemoteLoaded = YES;
-        if(params.isStorageLoaded) {
-            [self showMessagesResults:params];
-        }
+        [self showMessagesResults:params];
         
     } errorHandler:^(RPCRequest *request, RpcError *error) {
         if(params != self.searchParams)
@@ -893,8 +889,7 @@ static int insertCount = 3;
                     self.searchParams.isFinishLoading = YES;
                 } else {
                     dispatch_after_seconds(0.1, ^{
-                        // [self remoteSearch:searchParams];
-                        [self localSearch:searchParams];
+                         [self remoteSearch:searchParams];
                     });
                 }
                 
@@ -977,68 +972,6 @@ static int insertCount = 3;
 }
 
 
--(void)localSearch:(SearchParams *)params {
-    
-    
-    
-    //self.searchParams.isLoading = YES;
-    
-    params.isStorageLoaded = YES;
-    params.messages_count = 0;
-    [self remoteSearch:params];
-    
-    return;
-    
-    
-    [[Storage manager] searchMessagesBySearchString:params.searchString offset:params.local_offset completeHandler:^(NSInteger count, NSArray *messages) {
-        
-        
-        [ASQueue dispatchOnStageQueue:^{
-            if(self.searchParams != params)
-                return;
-            
-            [[MessagesManager sharedManager] add:messages];
-            
-            
-            self.searchParams.isLoading = NO;
-            
-            params.local_offset += (int) count;
-            
-            
-            params.messages_offset+= (int)count;
-            
-            params.messages_count+=(int)count;
-            
-            
-            if(!params.messages)
-                params.messages = [NSMutableArray array];
-            
-            for(TL_localMessage *message in messages)
-                [params.messages addObject:[[SearchMessageTableItem alloc] initWithMessage:message selectedText:params.searchString]];
-            
-            if(params.messages.count > 0) {
-                [[ASQueue mainQueue] dispatchOnQueue:^{
-                     [self showMessagesResults:params];
-                }];
-            }
-            
-            
-            
-            if(count < 50) {
-                params.isStorageLoaded = YES;
-                params.messages_count = 0;
-                [self remoteSearch:params];
-            }
-
-        }];
-        
-        
-    }];
-    
-  
-    
-  
-}
 
 -(void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];

@@ -53,18 +53,15 @@ extern NSString *const RECENT_SEARCH;
 // START MESSAGE AND DIALOGS PROCEDURES!!!
 
 
-- (void)searchMessagesBySearchString:(NSString *)searchString offset:(int)offset completeHandler:(void (^)(NSInteger count, NSArray *messages))completeHandler;
-
 -(TGUpdateState *)updateState;
 -(void)saveUpdateState:(TGUpdateState *)state;
 -(void)messages:(void (^)(NSArray *))completeHandler forIds:(NSArray *)ids random:(BOOL)random queue:(ASQueue *)q;
 -(void)messages:(void (^)(NSArray *))completeHandler forIds:(NSArray *)ids random:(BOOL)random sync:(BOOL)sync queue:(ASQueue *)q;
 -(NSArray *)issetMessages:(NSArray *)ids;
--(void)insertMessage:(TLMessage *)message;
 
 
 -(void)insertMessages:(NSArray *)messages;
-
+-(void)insertMessages:(NSArray *)messages completeHandler:(dispatch_block_t)completeHandler;
 -(void)updateChannelMessageViews:(long)channelMsgId views:(int)views;
 
 -(void)deleteMessages:(NSArray *)messages completeHandler:(void (^)(NSArray *peer_update_data))completeHandler;
@@ -72,7 +69,6 @@ extern NSString *const RECENT_SEARCH;
 -(void)deleteChannelMessages:(NSArray *)messages completeHandler:(void (^)(NSArray *peer_update_data, NSDictionary *readCount))completeHandler;
 -(void)markMessagesAsRead:(NSArray *)messages useRandomIds:(NSArray *)randomIds;
 -(void)lastMessageWithConversation:(TL_conversation *)conversation completeHandler:(void (^)(TL_localMessage *message, int importantMessage))completeHandler;
--(TL_localMessage *)lastMessage:(int)peer_id from_id:(int)from_id;
 
 // end messages
 -(void)deleteMessagesInDialog:(TL_conversation *)dialog completeHandler:(dispatch_block_t)completeHandler;
@@ -206,7 +202,6 @@ extern NSString *const RECENT_SEARCH;
 - (void)findFileInfoByPathHash:(NSString *)pathHash completeHandler:(void (^)(BOOL result, id file))completeHandler;
 - (void)setFileInfo:(id)file forPathHash:(NSString *)pathHash;
 - (void)deleteFileHash:(NSString *)pathHash;
--(void)updateMessages:(NSArray *)messages;
 
 -(void)messagesWithWebpage:(TLMessageMedia *)mediaWebpage callback:(void (^)(NSDictionary *))callback;
 

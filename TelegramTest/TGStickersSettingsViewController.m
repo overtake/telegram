@@ -160,7 +160,7 @@
     
     TGMovableTableView *tableView = ((TGMovableTableView *)[self rowItem].table);
    
-    if([self mouse:[self convertPoint:[theEvent locationInWindow] fromView:nil] inRect:_reorderPack.frame]) {
+    if([self mouse:[self convertPoint:[theEvent locationInWindow] fromView:nil] inRect:_reorderPack.frame] && [[self rowItem] isEditable]) {
         [tableView startMoveItemAtIndex:[tableView indexOfObject:[self rowItem]]];
     } else {
         if(![[self rowItem] isEditable]) {

@@ -21,6 +21,7 @@
 
 @property (nonatomic,strong) NSMutableDictionary *channelsInUpdating;
 
+
 @end
 
 @implementation TGUpdateChannels

@@ -98,7 +98,7 @@
 
 
 +(void)addAndUpdateMessage:(TL_localMessage *)message {
-    [[Storage manager] insertMessage:message];
+    [[Storage manager] insertMessages:@[message]];
     [self addAndUpdateMessage:message notify:YES];
 }
 

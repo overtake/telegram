@@ -329,7 +329,7 @@ static ChatHistoryController *observer;
             
             ChatHistoryController *controller = [weak nonretainedObjectValue];
             
-            NSMutableArray *accepted = [[controller.filter filterAndAdd:messages latest:YES] mutableCopy];
+            NSArray *accepted = [controller.filter sortItems:[controller.filter filterAndAdd:messages latest:YES]];
             
             if(accepted.count == 0) {
                 return;
@@ -341,7 +341,6 @@ static ChatHistoryController *observer;
             
             NSRange range = NSMakeRange(pos+1, accepted.count);
             
-            accepted = [accepted mutableCopy];
             [SelfDestructionController addMessages:accepted];
             
             NSArray *converted = [controller.controller messageTableItemsFromMessages:accepted];
@@ -599,7 +598,7 @@ static ChatHistoryController *observer;
         
         [[Storage manager] addHolesAroundMessage:message];
         
-        [[Storage manager] insertMessage:message];
+        [[Storage manager] insertMessages:@[message]];
         
         
         NSMutableArray *prevResult = [NSMutableArray array];

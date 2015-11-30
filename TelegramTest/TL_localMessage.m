@@ -134,7 +134,7 @@
 
 
 - (void)save:(BOOL)updateConversation {
-    [[Storage manager] insertMessage:self];
+    [[Storage manager] insertMessages:@[self]];
     if(updateConversation && (self.n_id != self.conversation.top_message || [self isKindOfClass:[TL_destructMessage class]])) {
         [[DialogsManager sharedManager] updateTop:self needUpdate:YES update_real_date:NO];
     }
@@ -365,7 +365,7 @@ DYNAMIC_PROPERTY(DDialog);
             mask|=HistoryFilterPhoto;
         }
         
-        if([self.message isStringWithUrl]) {
+        if(self.entities.count > 0) {
             mask|=HistoryFilterSharedLink;
         }
         

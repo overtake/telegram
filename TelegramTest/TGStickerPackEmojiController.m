@@ -280,7 +280,7 @@
         
     }];
     
-    {
+    if(self.stickers.sets.count > 1) {
         TGStickerPackButton *button = [[TGStickerPackButton alloc] initWithFrame:NSMakeRect(x, 0, itemWidth, 44)];
         
         button.packId = -2;

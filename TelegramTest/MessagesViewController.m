@@ -1505,11 +1505,21 @@ static NSTextAttachment *headerMediaIcon() {
     
     if([self.table.scrollView isNeedUpdateTop] && [self.historyController filterWithNext:NO].prevState != ChatHistoryStateFull) {
         
-        [self loadhistory:0 toEnd:NO prev:YES isFirst:NO];
+        [self.historyController prevStateAsync:^(ChatHistoryState state) {
+            if(state != ChatHistoryStateFull) {
+                [self loadhistory:0 toEnd:NO prev:YES isFirst:NO];
+            }
+        }];
         
-    } else if([self.table.scrollView isNeedUpdateBottom] && [self.historyController filterWithNext:YES].nextState != ChatHistoryStateFull) {
+   } else if([self.table.scrollView isNeedUpdateBottom]) {
         
-        [self loadhistory:0 toEnd:NO prev:NO isFirst:NO];
+        [self.historyController nextStateAsync:^(ChatHistoryState state) {
+            if(state != ChatHistoryStateFull) {
+                [self loadhistory:0 toEnd:NO prev:NO isFirst:NO];
+            }
+        }];
+        
+        
     }
     
     

@@ -79,7 +79,7 @@ static NSArray *channelUpdates;
 - (void)resetStateAndSync {
     
     [queue dispatchOnQueue:^{
-        _updateState = [[TGUpdateState alloc] initWithPts:914531 qts:1 date:_updateState.date seq:1 pts_count:1];
+        _updateState = [[TGUpdateState alloc] initWithPts:989352 qts:1 date:_updateState.date seq:1 pts_count:1];
         
         [self saveUpdateState];
         
@@ -1003,67 +1003,57 @@ static NSArray *channelUpdates;
         }
         
         NSMutableArray *copy = [[response n_messages] mutableCopy];
+        
+        [TL_localMessage convertReceivedMessages:copy];
+        
+        
+        
+        [[response n_messages] removeAllObjects];
+        
+        [SharedManager proccessGlobalResponse:response];
        
         
-        
-//        NSMutableArray *ids = [[NSMutableArray alloc] init];
-//        
-//        
-//        [copy enumerateObjectsUsingBlock:^(TLMessage *obj, NSUInteger idx, BOOL *stop) {
-//            [ids addObject:@(obj.n_id)];
-//        }];
-//        
-//        if(ids.count > 0) {
-//            
-//            
-//            NSArray *res = [[Storage manager] issetMessages:ids];
-//            
-//            [ids removeAllObjects];
-//           
-//            NSArray *f = [copy filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.n_id IN %@",res]];
-//            
-//            [copy removeObjectsInArray:f];
-//        }
-    
-        
-        
-        
-        [response setN_messages:copy];
-        
-        [SharedManager proccessGlobalResponse:updates];
-        
-        
-        for (TLUpdate *update in [updates other_updates]) {
+        [[Storage manager] insertMessages:copy completeHandler:^{
             
-            if([channelUpdates indexOfObject:update.className] != NSNotFound)
-                [self.channelsUpdater addUpdate:update];
-            else
-                [self proccessUpdate:update];
-        }
-        
-        if([response n_messages].count > 0) {
-            [Notification performOnStageQueue:MESSAGE_LIST_UPDATE_TOP data:@{KEY_MESSAGE_LIST:[response n_messages]}];
-        }
-        
-        
-        _updateState.checkMinimum = NO;
-        _updateState.qts = stateQts;
-        _updateState.pts = statePts;
-        _updateState.date = stateDate;
-        _updateState.seq = stateSeq;
-        _updateState.checkMinimum = YES;
-        
-        [self saveUpdateState];
-        
-        _holdUpdates = NO;
-        
-        if(intstate != nil) {
-            [self uptodateWithConnectionState:updateConnectionState];
-        } else {
-            [Notification perform:PROTOCOL_UPDATED data:nil];
-            [Telegram setConnectionState:ConnectingStatusTypeNormal];
-        }
+            [response setN_messages:copy];
+            
+            for (TLUpdate *update in [updates other_updates]) {
+                
+                if([channelUpdates indexOfObject:update.className] != NSNotFound)
+                    [self.channelsUpdater addUpdate:update];
+                else
+                    [self proccessUpdate:update];
+            }
+            
+            if([response n_messages].count > 0) {
+                [Notification performOnStageQueue:MESSAGE_LIST_UPDATE_TOP data:@{KEY_MESSAGE_LIST:[response n_messages]}];
+            }
+            
+            
+            _updateState.checkMinimum = NO;
+            _updateState.qts = stateQts;
+            _updateState.pts = statePts;
+            _updateState.date = stateDate;
+            _updateState.seq = stateSeq;
+            _updateState.checkMinimum = YES;
+            
+            [self saveUpdateState];
+            
+            _holdUpdates = NO;
+            
+            if(intstate != nil) {
+                dispatch_after_seconds_queue(0.5, ^{
+                    [self uptodateWithConnectionState:updateConnectionState];
+                }, queue.nativeQueue);
+                
+            } else {
+                [Notification perform:PROTOCOL_UPDATED data:nil];
+                [Telegram setConnectionState:ConnectingStatusTypeNormal];
+            }
 
+        }];
+        
+        
     } errorHandler:^(RPCRequest *request, RpcError *error) {
         
         _holdUpdates = NO;
