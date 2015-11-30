@@ -2656,7 +2656,7 @@ static NSTextAttachment *headerMediaIcon() {
 }
 
 - (void)loadhistory:(int)message_id toEnd:(BOOL)toEnd prev:(BOOL)prev isFirst:(BOOL)isFirst {
-    if(!self.conversation || self.historyController.isProccessing || _locked)
+    if(!self.conversation || _locked)
         return;
     
 

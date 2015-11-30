@@ -249,16 +249,11 @@ static const TGTwoColors colors[] = {
 
 
 - (void) setUser:(TLUser *)user {
-    
-    if(user.n_id == 40719684) {
-        int bp = 0;
-    }
-    
     [self setUser:user animated:NO];
 }
 
 - (void) setUser:(TLUser *)user animated:(BOOL)animated {
-    if(self.user.n_id == user.n_id)
+    if(self.user.n_id == user.n_id && [[self.fileLocation cacheKey] isEqualToString:user.photo.photo_small.cacheKey])
         return;
     
     

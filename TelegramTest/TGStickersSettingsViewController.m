@@ -349,7 +349,7 @@
     [packs enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
         
         TGStickerPackRowItem *item = [[TGStickerPackRowItem alloc] initWithObject:obj];
-        
+        item.editable = self.action.isEditable;
         [items addObject:item];
         
     }];

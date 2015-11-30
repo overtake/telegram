@@ -19,7 +19,6 @@
 #import "SharedLinksHistoryFilter.h"
 #import "ChannelImportantFilter.h"
 #import "ChannelFilter.h"
-#import "MessageTableItem.h"
 #import "ChannelCommonFilter.h"
 
 @interface HistoryFilter ()
@@ -77,9 +76,6 @@
     else
         _prevState = state;
     
-    if(state == 3) {
-        int bp = 0;
-    }
 }
 
 
