@@ -830,17 +830,15 @@ static ChatHistoryController *observer;
                 
                 ChatHistoryController *controller = weak.nonretainedObjectValue;
                 
-                NSArray *filtred =  [controller.filter filterAndAdd:messages latest:YES];
+                NSArray *filtred = [controller.filter filterAndAdd:messages latest:YES];
                 
                 if(filtred.count > 0) {
-                    
-                    NSArray *copyItems = [controller.controller messageTableItemsFromMessages:filtred];
                     
                     [controller updateMessageIds:filtred];
 
                     [[ASQueue mainQueue] dispatchOnQueue:^{
                         
-                        [controller.controller receivedMessageList:copyItems inRange:NSMakeRange(0, filtred.count) itsSelf:YES];
+                        [controller.controller receivedMessageList:items inRange:NSMakeRange(0, filtred.count) itsSelf:YES];
                         
                         if(controller == self) {
                             if(sentControllerCallback)

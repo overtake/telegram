@@ -1068,7 +1068,7 @@ TL_localMessage *parseMessage(FMResultSet *result) {
             
         } else {
             
-            NSString *sql = [NSString stringWithFormat:@"select serialized,flags from %@ where peer_id = %d ORDER BY n_id DESC LIMIT 1",tableMessages,conversation.peer_id];
+            NSString *sql = [NSString stringWithFormat:@"select serialized,flags,message_text from %@ where peer_id = %d ORDER BY n_id DESC LIMIT 1",tableMessages,conversation.peer_id];
             
             FMResultSet *result = [db executeQueryWithFormat:sql,nil];
             
