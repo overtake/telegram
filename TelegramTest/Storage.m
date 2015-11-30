@@ -1286,6 +1286,7 @@ TL_localMessage *parseMessage(FMResultSet *result) {
         
         FMResultSet *result = [db executeQueryWithFormat:sql,nil];
        
+       
         
         while ([result next]) {
             
@@ -1293,9 +1294,7 @@ TL_localMessage *parseMessage(FMResultSet *result) {
         }
         
         [result close];
-        
-        [result close];
-        
+
 
         sql = [NSString stringWithFormat:@"delete from %@ WHERE random_id IN (%@)",tableMessages,mark];
         [db executeUpdateWithFormat:sql,nil];
