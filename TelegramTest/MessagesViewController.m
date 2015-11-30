@@ -473,9 +473,11 @@
         
     [self.historyController items:messages complete:^(NSArray *items) {
         
-        [items enumerateObjectsUsingBlock:^(MessageTableItemText *obj, NSUInteger idx, BOOL *stop) {
+        [items enumerateObjectsUsingBlock:^(TL_localMessage *obj, NSUInteger idx, BOOL *stop) {
             
-            NSUInteger index = [self indexOfObject:obj];
+            MessageTableItem *item = [self itemOfMsgId:obj.channelMsgId];
+            
+            NSUInteger index = [self indexOfObject:item];
             
             if(index != NSNotFound) {
                 [self.table reloadDataForRowIndexes:[NSIndexSet indexSetWithIndex:index] columnIndexes:[NSIndexSet indexSetWithIndex:0]];
@@ -494,17 +496,19 @@
     
     TLWebPage *webpage = notification.userInfo[KEY_WEBPAGE];
     
-
     [self.historyController items:messages complete:^(NSArray *items) {
-        [items enumerateObjectsUsingBlock:^(MessageTableItemText *obj, NSUInteger idx, BOOL *stop) {
+        
+        [items enumerateObjectsUsingBlock:^(TL_localMessage *obj, NSUInteger idx, BOOL *stop) {
             
-            NSUInteger index = [self indexOfObject:obj];
+            MessageTableItemText *item = (MessageTableItemText *) [self itemOfMsgId:obj.channelMsgId];
             
-            obj.message.media.webpage = webpage;
+            NSUInteger index = [self indexOfObject:item];
             
-            [obj updateWebPage];
+            item.message.media.webpage = webpage;
             
-            obj.isHeaderMessage = obj.isHeaderMessage || obj.webpage != nil;
+            [item updateWebPage];
+            
+            item.isHeaderMessage = item.isHeaderMessage || item.webpage != nil;
             
             if(index != NSNotFound) {
                 [self.table noteHeightOfRowsWithIndexesChanged:[NSIndexSet indexSetWithIndex:index]];
@@ -513,6 +517,7 @@
             }
             
         }];
+        
     }];
     
     
@@ -525,7 +530,10 @@
         [self.historyController items:notification.userInfo[KEY_MESSAGE_ID_LIST] complete:^(NSArray *items) {
             NSDictionary *data = notification.userInfo[KEY_DATA];
             
-            [items enumerateObjectsUsingBlock:^(MessageTableItemText *item, NSUInteger idx, BOOL *stop) {
+            [items enumerateObjectsUsingBlock:^(TL_localMessage *message, NSUInteger idx, BOOL *stop) {
+                
+                MessageTableItem *item = [self itemOfMsgId:message.channelMsgId];
+                
                 NSUInteger index = [self indexOfObject:item];
                 
                 item.message.views = [data[@(item.message.n_id)] intValue];
@@ -550,12 +558,15 @@
         
         if(hole.peer_id == self.conversation.peer_id) {
             [self.historyController items:@[@(hole.uniqueId)] complete:^(NSArray *items) {
+                
                 MessageTableItemHole *item;
                 
                 if(items.count == 1) {
-                    item = [items firstObject];
+                    
+                    item = (MessageTableItemHole *) [self itemOfMsgId:[[items firstObject] channelMsgId]];
                     
                     if(hole.messagesCount != 0) {
+                        
                         NSUInteger index = [self indexOfObject:item];
                         
                         [item updateWithHole:hole];
@@ -566,12 +577,8 @@
                     } else {
                         [Notification perform:MESSAGE_DELETE_EVENT data:@{KEY_DATA:@[@{KEY_PEER_ID:@(hole.peer_id),KEY_MESSAGE_ID:@(hole.uniqueId)}]}];
                     }
-                    
-                    
-                    
                 } else {
-                    
-                    [Notification perform:MESSAGE_RECEIVE_EVENT data:@{KEY_MESSAGE:[TL_localMessageService createWithHole:hole]}];
+                    [Notification performOnStageQueue:MESSAGE_RECEIVE_EVENT data:@{KEY_MESSAGE:[TL_localMessageService createWithHole:hole]}];
                 }
             }];
         }
@@ -586,11 +593,14 @@
     
     if(message.peer_id == self.conversation.peer_id) {
         [self.historyController items:@[@(message.n_id)] complete:^(NSArray *items){
-            [items enumerateObjectsUsingBlock:^(MessageTableItemText *obj, NSUInteger idx, BOOL *stop) {
+            
+            [items enumerateObjectsUsingBlock:^(TL_localMessage *obj, NSUInteger idx, BOOL *stop) {
                 
-                NSUInteger index = [self indexOfObject:obj];
+                MessageTableItemText *item = (MessageTableItemText *) [self itemOfMsgId:obj.channelMsgId];
                 
-                [obj updateEntities];
+                NSUInteger index = [self indexOfObject:item];
+                
+                [item updateEntities];
                 
                 if(index != NSNotFound) {
                     [self.table reloadDataForRowIndexes:[NSIndexSet indexSetWithIndex:index] columnIndexes:[NSIndexSet indexSetWithIndex:0]];
@@ -1595,15 +1605,22 @@ static NSTextAttachment *headerMediaIcon() {
     
     [ASQueue dispatchOnMainQueue:^{
         [self.historyController items:readed complete:^(NSArray * filtred) {
-            for (MessageTableItem *item in filtred) {
+            
+            [filtred enumerateObjectsUsingBlock:^(TL_localMessage *obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                
+               MessageTableItem *item = [self itemOfMsgId:obj.channelMsgId];
+                
                 item.message.flags&= ~TGUNREADMESSAGE;
                 
-                NSUInteger idx = [self indexOfObject:item];
+                NSUInteger index = [self indexOfObject:item];
                 
-                if(idx != NSNotFound) {
-                    [self.table reloadDataForRowIndexes:[NSIndexSet indexSetWithIndex:idx] columnIndexes:[NSIndexSet indexSetWithIndex:0]];
+                if(index != NSNotFound) {
+                    [self.table reloadDataForRowIndexes:[NSIndexSet indexSetWithIndex:index] columnIndexes:[NSIndexSet indexSetWithIndex:0]];
                 }
-            }
+                
+            }];
+            
+            
         }];
     }]; 
     
@@ -1984,17 +2001,20 @@ static NSTextAttachment *headerMediaIcon() {
     
 }
 
-- (void)deleteItems:(NSArray *)items orMessageIds:(NSArray *)ids {
+- (void)deleteItems:(NSArray *)messages orMessageIds:(NSArray *)ids {
     
   //  [self.table beginUpdates];
     
     if(self.messages.count > 0) {
         NSUInteger count = self.selectedMessages.count;
         
-        for (MessageTableItem *item in items) {
+        
+        [messages enumerateObjectsUsingBlock:^(TL_localMessage *obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            
+            MessageTableItem *item = [self itemOfMsgId:obj.channelMsgId];
             
             NSUInteger row = [self.messages indexOfObject:item];
-           
+            
             if(row != NSNotFound) {
                 [self.messages removeObjectAtIndex:row];
                 [self.selectedMessages removeObject:item];
@@ -2002,8 +2022,10 @@ static NSTextAttachment *headerMediaIcon() {
                 [self.table removeRowsAtIndexes:[NSIndexSet indexSetWithIndex:row] withAnimation:NSTableViewAnimationEffectFade];
                 [item clean];
             }
+
             
-        }
+        }];
+        
         
         if(_unreadMark && [self indexOfObject:_unreadMark] == 1) {
             [self.messages removeObjectAtIndex:1];
@@ -2213,9 +2235,8 @@ static NSTextAttachment *headerMediaIcon() {
         
         [self.normalNavigationCenterView enableDiscussion:[self.historyController.filter isKindOfClass:[ChannelFilter class]] force:YES];
         
-        MessageTableItem *importantItem = [self messageTableItemsFromMessages:@[msg]][0];
         
-        NSUInteger index = [self indexOfObject:[self itemOfMsgId:importantItem.message.channelMsgId]];
+        NSUInteger index = [self indexOfObject:[self itemOfMsgId:msg.channelMsgId]];
         
         __block NSRect rect = NSZeroRect;
         
@@ -2240,15 +2261,24 @@ static NSTextAttachment *headerMediaIcon() {
         
         self.historyController.selectLimit = count/2 + 20;
         
-        [self.historyController loadAroundMessagesWithMessage:importantItem prevLimit:count nextLimit:(flags & ShowMessageTypeUnreadMark) > 0 ? 1 : count selectHandler:^(NSArray *result, NSRange range, id controller) {
+        [self.historyController loadAroundMessagesWithMessage:msg prevLimit:count nextLimit:(flags & ShowMessageTypeUnreadMark) > 0 ? 1 : count selectHandler:^(NSArray *result, NSRange range, id controller) {
             
             if(controller == self.historyController && _conversation.peer_id == conversation.peer_id) {
                 [self flushMessages];
                 
                 _needNextRequest = NO;
                 
+               
+                NSUInteger index = [result indexOfObjectPassingTest:^BOOL(MessageTableItem *obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                    
+                    BOOL res = obj.message.channelMsgId == msg.channelMsgId;
+                    
+                    *stop = res;
+                    
+                    return res;
+                }];
                 
-                 NSUInteger index = [result indexOfObject:importantItem];
+                MessageTableItem *item = result[index];
                 
                 if((flags & ShowMessageTypeUnreadMark) > 0) {
                     
@@ -2256,7 +2286,7 @@ static NSTextAttachment *headerMediaIcon() {
                         _unreadMark = [[MessageTableItemUnreadMark alloc] initWithCount:0 type:RemoveUnreadMarkAfterSecondsType];
                         
                         NSMutableArray *copy = [result mutableCopy];
-                        [copy insertObject:_unreadMark atIndex:[result indexOfObject:importantItem]];
+                        [copy insertObject:_unreadMark atIndex:index];
                         
                         result = copy;
                     }
@@ -2275,10 +2305,10 @@ static NSTextAttachment *headerMediaIcon() {
                     [self scrollToUnreadItem:NO];
                     
                 } else if(rect.origin.y == 0 || ((flags & ShowMessageTypeReply) > 0 || (flags & ShowMessageTypeSearch) > 0)) {
-                    [self scrollToItem:importantItem animated:NO centered:YES highlight:fromMsg != nil];
+                    [self scrollToItem:item animated:NO centered:YES highlight:fromMsg != nil];
                 } else {
                     
-                    __block NSRect drect = [self.table rectOfRow:[self indexOfObject:importantItem]];
+                    __block NSRect drect = [self.table rectOfRow:[self indexOfObject:item]];
                     
                     
                     dispatch_block_t block = ^{
@@ -2776,7 +2806,7 @@ static NSTextAttachment *headerMediaIcon() {
         if(item) {
             //[item makeSizeByWidth:self.table.containerSize.width];
             item.isSelected = NO;
-            [array insertObject:item atIndex:0];
+            [array addObject:item];
         }
     }
     return array;

@@ -84,9 +84,6 @@ typedef enum {
 
 -(TGMessageHole *)proccessAndGetHoleWithHole:(TGMessageHole *)hole next:(BOOL)next messages:(NSArray *)messages;
 
-
--(void)remoteRequest:(BOOL)next peer_id:(int)peer_id callback:(void (^)(NSArray *response,ChatHistoryState state))callback;
-
 -(BOOL)confirmHoleWithNext:(BOOL)next;
 
 
@@ -101,4 +98,7 @@ typedef enum {
 
 -(TLMessagesFilter *)messagesFilter;
 -(BOOL)checkAcceptResult:(NSArray *)result;
+
+-(void)clear;
+
 @end

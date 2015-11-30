@@ -9,7 +9,6 @@
 #import "TGChannelsPolling.h"
 #import "TGTimer.h"
 #import "TGForceChannelUpdate.h"
-#import "MessageTableItem.h"
 @interface TGChannelsPolling ()
 @property (nonatomic,strong) TL_conversation *conversation;
 @property (nonatomic,assign) int pts;
@@ -132,9 +131,9 @@ static int pollingDelay = 5;
     
     
     
-    result = [result filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.message.n_id > 0"]];
+    result = [result filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.n_id > 0"]];
     
-    BOOL invalidate = [result filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.message.invalidate == 1"]].count > 0;
+    BOOL invalidate = [result filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.invalidate == 1"]].count > 0;
     
     
     
@@ -143,17 +142,15 @@ static int pollingDelay = 5;
         return;
     }
     
-    MessageTableItem *firstObject = [result firstObject];
-    MessageTableItem *lastObject = [result lastObject];
+    TL_localMessage *firstObject = [result firstObject];
+    TL_localMessage *lastObject = [result lastObject];
     
-    int pts = lastObject.message.n_id;
+    int pts = lastObject.n_id;
     
     int limit = _conversation.pts - pts;
     
     
-    
-    
-    [RPCRequest sendRequest:[TLAPI_updates_getChannelDifference createWithChannel:[TL_inputChannel createWithChannel_id:_conversation.chat.n_id access_hash:_conversation.chat.access_hash] filter:[TL_channelMessagesFilter createWithFlags:important ? (1 << 0) : 0 ranges:[@[[TL_messageRange createWithMin_id:lastObject.message.n_id max_id:firstObject.message.n_id]] mutableCopy]] pts:pts limit:limit] successHandler:^(id request, TL_updates_channelDifference *response) {
+    [RPCRequest sendRequest:[TLAPI_updates_getChannelDifference createWithChannel:[TL_inputChannel createWithChannel_id:_conversation.chat.n_id access_hash:_conversation.chat.access_hash] filter:[TL_channelMessagesFilter createWithFlags:important ? (1 << 0) : 0 ranges:[@[[TL_messageRange createWithMin_id:lastObject.n_id max_id:firstObject.n_id]] mutableCopy]] pts:pts limit:limit] successHandler:^(id request, TL_updates_channelDifference *response) {
         
         
         if([response isKindOfClass:[TL_updates_channelDifference class]]) {
@@ -167,8 +164,8 @@ static int pollingDelay = 5;
         
         NSMutableArray *ids = [NSMutableArray array];
         
-        [result enumerateObjectsUsingBlock:^(MessageTableItem *obj, NSUInteger idx, BOOL *stop) {
-            [ids addObject:@(obj.message.channelMsgId)];
+        [result enumerateObjectsUsingBlock:^(TL_localMessage *obj, NSUInteger idx, BOOL *stop) {
+            [ids addObject:@(obj.channelMsgId)];
         }];
 
         [[Storage manager] validateChannelMessages:ids];

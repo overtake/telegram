@@ -50,7 +50,7 @@ typedef void (^selectHandler)(NSArray *result, NSRange range, id controller);
 
 
 
--(void)loadAroundMessagesWithMessage:(MessageTableItem *)msg prevLimit:(int)prevLimit nextLimit:(int)nextLimit selectHandler:(selectHandler)selectHandler;
+-(void)loadAroundMessagesWithMessage:(TL_localMessage *)msg prevLimit:(int)prevLimit nextLimit:(int)nextLimit selectHandler:(selectHandler)selectHandler;
 -(void)loadAroundMessagesWithSelectHandler:(selectHandler)selectHandler prevLimit:(int)prevLimit nextLimit:(int)nextLimit prevResult:(NSMutableArray *)prevResult nextResult:(NSMutableArray *)nextResult;
 
 
@@ -62,7 +62,7 @@ typedef void (^selectHandler)(NSArray *result, NSRange range, id controller);
 -(void)addItem:(MessageTableItem *)item conversation:(TL_conversation *)conversation callback:(dispatch_block_t)callback sentControllerCallback:(dispatch_block_t)sentControllerCallback;
 -(void)addItems:(NSArray *)items conversation:(TL_conversation *)conversation callback:(dispatch_block_t)callback sentControllerCallback:(dispatch_block_t)sentControllerCallback;
 
--(void)addItemWithoutSavingState:(MessageTableItem *)item;
+-(void)addMessageWithoutSavingState:(TL_localMessage *)message;
 
 -(void)swapFiltersBeforePrevLoaded;
 -(BOOL)isNeedSwapFilters;
@@ -77,8 +77,6 @@ typedef void (^selectHandler)(NSArray *result, NSRange range, id controller);
 -(void)items:(NSArray *)msgIds complete:(void (^)(NSArray *list))complete;
 
 -(int)itemsCount;
-
--(BOOL)checkAcceptResult:(NSArray *)result;
 
 // protected methods
 

@@ -570,7 +570,7 @@
         
         
         [self updateTop:message needUpdate:YES update_real_date:update_real_date];
-        [Notification perform:MESSAGE_RECEIVE_EVENT data:@{KEY_MESSAGE:message}];
+        [Notification performOnStageQueue:MESSAGE_RECEIVE_EVENT data:@{KEY_MESSAGE:message}];
     }];
 }
 

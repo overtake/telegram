@@ -62,20 +62,20 @@ static TGChannelsPolling *channelPolling;
             
             if([filter checkState:ChatHistoryStateLocal next:next] && result.count == 0) {
                 
-                [filter proccessResponse:[self.controller messageTableItemsFromMessages:result] state:state next:next];
+                [filter proccessResponse:result state:state next:next];
                 
                 self.proccessing = NO;
                 
                 [self request:next anotherSource:anotherSource sync:sync selectHandler:selectHandler];
                 
-                return ;
+                return;
             }
             
-            NSArray *converted = [filter proccessResponse:[self.controller messageTableItemsFromMessages:result] state:state next:next];
+            NSArray *converted = [self.controller messageTableItemsFromMessages:[filter proccessResponse:result state:state next:next]];
             
             [self performCallback:selectHandler result:converted range:NSMakeRange(0, converted.count) controller:self];
             
-            [channelPolling checkInvalidatedMessages:converted important:[self.filter isKindOfClass:[ChannelImportantFilter class]]];
+            [channelPolling checkInvalidatedMessages:result important:[self.filter isKindOfClass:[ChannelImportantFilter class]]];
             
             
             
@@ -102,7 +102,7 @@ static TGChannelsPolling *channelPolling;
         
         [filter request:NO callback:^(id response, ChatHistoryState state) {
             
-            NSArray *converted = [filter proccessResponse:[self.controller messageTableItemsFromMessages:response] state:state next:NO];
+            NSArray *converted = [self.controller messageTableItemsFromMessages:[filter proccessResponse:response state:state next:NO]];
             
             [ASQueue dispatchOnMainQueue:^{
                 
@@ -124,20 +124,20 @@ static TGChannelsPolling *channelPolling;
 
 
 
--(void)loadAroundMessagesWithMessage:(MessageTableItem *)item prevLimit:(int)prevLimit nextLimit:(int)nextLimit selectHandler:(selectHandler)selectHandler {
+-(void)loadAroundMessagesWithMessage:(TL_localMessage *)message prevLimit:(int)prevLimit nextLimit:(int)nextLimit selectHandler:(selectHandler)selectHandler {
     
     
     [self.queue dispatchOnQueue:^{
         
-        [self addItemWithoutSavingState:item];
+        [self addMessageWithoutSavingState:message];
     
-        [[Storage manager] addHolesAroundMessage:item.message];
+        [[Storage manager] addHolesAroundMessage:message];
         
         if(self.filter.class == [ChannelFilter class]) {
-            [(ChannelFilter *)self.filter fillGroupHoles:@[item.message] bottom:NO];
+            [(ChannelFilter *)self.filter fillGroupHoles:@[message] bottom:NO];
         }
         
-        [[Storage manager] insertMessage:item.message];
+        [[Storage manager] insertMessage:message];
         
         NSMutableArray *prevResult = [NSMutableArray array];
         NSMutableArray *nextResult = [NSMutableArray array];
@@ -166,7 +166,9 @@ static TGChannelsPolling *channelPolling;
             result = [[self filterAtIndex:1] selectAllItems];
         }
         
-        [self performCallback:selectHandler result:result range:NSMakeRange(0, result.count) controller:self];
+        NSArray *converted = [self.controller messageTableItemsFromMessages:result];
+        
+        [self performCallback:selectHandler result:converted range:NSMakeRange(0, converted.count) controller:self];
 
         [channelPolling checkInvalidatedMessages:result important:[self.filter isKindOfClass:[ChannelImportantFilter class]]];
         
@@ -179,7 +181,7 @@ static TGChannelsPolling *channelPolling;
     
     [self.filter request:nextRequest callback:^(NSArray *result, ChatHistoryState state) {
         
-        NSArray *converted = [self.filter proccessResponse:[self.controller messageTableItemsFromMessages:result] state:state next:nextRequest];
+        NSArray *converted = [self.filter proccessResponse:result state:state next:nextRequest];
         
         if(nextRequest) {
             [nextResult addObjectsFromArray:converted];
@@ -187,8 +189,7 @@ static TGChannelsPolling *channelPolling;
             [prevResult addObjectsFromArray:converted];
         }
         
-    
-        [self loadAroundMessagesWithSelectHandler:selectHandler  prevLimit:(int)prevLimit nextLimit:(int)nextLimit prevResult:prevResult nextResult:nextResult];
+        [self loadAroundMessagesWithSelectHandler:selectHandler prevLimit:(int)prevLimit nextLimit:(int)nextLimit prevResult:prevResult nextResult:nextResult];
         
     }];
     

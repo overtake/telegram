@@ -15,12 +15,11 @@
 #import "DocumentHistoryFilter.h"
 #import "AudioHistoryFilter.h"
 #import "MP3HistoryFilter.h"
-#import "MessageTableItem.h"
 #import "SharedLinksHistoryFilter.h"
 #import "ChannelImportantFilter.h"
 #import "ChannelFilter.h"
 #import "ChannelCommonFilter.h"
-
+#import "SelfDestructionController.h"
 @interface HistoryFilter ()
 @property (nonatomic,strong,readonly) TGMessageHole *botHole;
 @property (nonatomic,strong,readonly) TGMessageHole *topHole;
@@ -75,7 +74,6 @@
         _nextState = state;
     else
         _prevState = state;
-    
 }
 
 
@@ -88,11 +86,11 @@
         return INT32_MAX;
     
     
-    __block MessageTableItem *lastObject;
+    __block TL_localMessage *lastObject;
     
-    [allItems enumerateObjectsWithOptions:NSEnumerationReverse usingBlock:^(MessageTableItem *obj, NSUInteger idx, BOOL *stop) {
+    [allItems enumerateObjectsWithOptions:NSEnumerationReverse usingBlock:^(TL_localMessage *obj, NSUInteger idx, BOOL *stop) {
         
-        if(obj.message.n_id > 0)
+        if(obj.n_id > 0)
         {
             lastObject = obj;
             *stop = YES;
@@ -100,7 +98,7 @@
         
     }];
     
-    return lastObject.message.n_id;
+    return lastObject.n_id;
     
 }
 
@@ -111,11 +109,11 @@
         return INT32_MAX;
     
     
-    __block MessageTableItem *lastObject;
+    __block TL_localMessage *lastObject;
     
-    [allItems enumerateObjectsWithOptions:NSEnumerationReverse usingBlock:^(MessageTableItem *obj, NSUInteger idx, BOOL *stop) {
+    [allItems enumerateObjectsWithOptions:NSEnumerationReverse usingBlock:^(TL_localMessage *obj, NSUInteger idx, BOOL *stop) {
         
-        if(obj.message.n_id > 0)
+        if(obj.n_id > 0)
         {
             lastObject = obj;
             *stop = YES;
@@ -123,7 +121,7 @@
         
     }];
     
-    return lastObject.message.date;
+    return lastObject.date;
     
 }
 
@@ -137,15 +135,11 @@
     if(allItems.count == 0)
         return 0;
     
+    __block TL_localMessage *firstObject;
     
-    
-    
-    
-    __block MessageTableItem *firstObject;
-    
-    [allItems enumerateObjectsWithOptions:0 usingBlock:^(MessageTableItem *obj, NSUInteger idx, BOOL *stop) {
+    [allItems enumerateObjectsWithOptions:0 usingBlock:^(TL_localMessage *obj, NSUInteger idx, BOOL *stop) {
         
-        if(obj.message.n_id > 0)
+        if(obj.n_id > 0)
         {
             firstObject = obj;
             *stop = YES;
@@ -153,7 +147,7 @@
         
     }];
     
-    return firstObject.message.n_id;
+    return firstObject.n_id;
 }
 
 -(int)maxDate {
@@ -164,11 +158,11 @@
     }
     
     
-    __block MessageTableItem *firstObject;
+    __block TL_localMessage *firstObject;
     
-    [allItems enumerateObjectsWithOptions:0 usingBlock:^(MessageTableItem *obj, NSUInteger idx, BOOL *stop) {
+    [allItems enumerateObjectsWithOptions:0 usingBlock:^(TL_localMessage *obj, NSUInteger idx, BOOL *stop) {
         
-        if(obj.message.n_id > 0)
+        if(obj.n_id > 0)
         {
             firstObject = obj;
             *stop = YES;
@@ -176,7 +170,7 @@
         
     }];
     
-    return firstObject.message.date;
+    return firstObject.date;
 }
 
 -(int)server_min_id {
@@ -186,12 +180,12 @@
     
     __block int msgId = INT32_MAX;
     
-    [allItems enumerateObjectsWithOptions:NSEnumerationReverse usingBlock:^(MessageTableItem *obj, NSUInteger idx, BOOL *stop) {
+    [allItems enumerateObjectsWithOptions:NSEnumerationReverse usingBlock:^(TL_localMessage *obj, NSUInteger idx, BOOL *stop) {
         
         
-        if(obj.message.n_id > 0 && obj.message.n_id < TGMINFAKEID)
+        if(obj.n_id > 0 && obj.n_id < TGMINFAKEID)
         {
-            msgId = obj.message.n_id;
+            msgId = obj.n_id;
             *stop = YES;
         }
         
@@ -208,12 +202,12 @@
     
     __block int msgId = 1;
     
-    [allItems enumerateObjectsWithOptions:0 usingBlock:^(MessageTableItem *obj, NSUInteger idx, BOOL *stop) {
+    [allItems enumerateObjectsWithOptions:0 usingBlock:^(TL_localMessage *obj, NSUInteger idx, BOOL *stop) {
         
         
-        if(obj.message.n_id > 0 && obj.message.n_id < TGMINFAKEID)
+        if(obj.n_id > 0 && obj.n_id < TGMINFAKEID)
         {
-            msgId = obj.message.n_id;
+            msgId = obj.n_id;
             *stop = YES;
         }
         
@@ -234,9 +228,9 @@
 
 -(NSArray *)sortItems:(NSArray *)sort {
     
-    return [sort sortedArrayUsingComparator:^NSComparisonResult(MessageTableItem *obj1, MessageTableItem *obj2) {
+    return [sort sortedArrayUsingComparator:^NSComparisonResult(TL_localMessage *obj1, TL_localMessage *obj2) {
         
-        return (obj1.message.date < obj2.message.date ? NSOrderedDescending : (obj1.message.date > obj2.message.date ? NSOrderedAscending : (obj1.message.n_id < obj2.message.n_id ? NSOrderedDescending : NSOrderedAscending)));
+        return (obj1.date < obj2.date ? NSOrderedDescending : (obj1.date > obj2.date ? NSOrderedAscending : (obj1.n_id < obj2.n_id ? NSOrderedDescending : NSOrderedAscending)));
     }];
 }
 
@@ -264,8 +258,8 @@
     
     
     while (pos+1 < list.count &&
-           ([((MessageTableItem *)list[pos]).message date] > date ||
-            ([((MessageTableItem *)list[pos]).message date] == date && [((MessageTableItem *)list[pos]).message n_id] > n_id)))
+           ([(TL_localMessage *)list[pos] date] > date ||
+            ([(TL_localMessage *)list[pos] date] == date && [(TL_localMessage *)list[pos] n_id] > n_id)))
         pos++;
     
     return pos;
@@ -283,6 +277,7 @@
     
    [self setState:state next:next];
     
+    [SelfDestructionController addMessages:converted];
     
     TL_conversation *conversation = [[DialogsManager sharedManager] find:self.peer_id];
     
@@ -297,19 +292,19 @@
     
     __block  NSMutableArray *filtred = [[NSMutableArray alloc] init];
     
-    [items enumerateObjectsUsingBlock:^(MessageTableItem *obj, NSUInteger idx, BOOL *stop) {
+    [items enumerateObjectsUsingBlock:^(TL_localMessage *obj, NSUInteger idx, BOOL *stop) {
         
         NSMutableArray *filterItems = [self messageItems];
         NSMutableDictionary *filterKeys = [self messageKeys];
         
         BOOL needAdd = [filterItems indexOfObject:obj] == NSNotFound;
         
-        if((obj.message.peer_id == self.peer_id) && ((obj.message.filterType & [self type]) > 0 && (_prevState == ChatHistoryStateFull || !latest))) {
+        if((obj.peer_id == self.peer_id) && ((obj.filterType & [self type]) > 0 && (_prevState == ChatHistoryStateFull || !latest))) {
             
-            if(obj.message.n_id != 0) {
-                id saved = filterKeys[@(obj.message.n_id)];
+            if(obj.n_id != 0) {
+                id saved = filterKeys[@(obj.n_id)];
                 if(!saved) {
-                    filterKeys[@(obj.message.n_id)] = obj;
+                    filterKeys[@(obj.n_id)] = obj;
                     
                 } else {
                     needAdd = NO;
@@ -500,9 +495,9 @@
     
     __block BOOL accept = YES;
     
-    [result enumerateObjectsUsingBlock:^(MessageTableItem *messageItem, NSUInteger idx, BOOL * _Nonnull stop) {
+    [result enumerateObjectsUsingBlock:^(TL_localMessage *messageItem, NSUInteger idx, BOOL * _Nonnull stop) {
         
-        if(self.peer_id != messageItem.message.peer_id) {
+        if(self.peer_id != messageItem.peer_id) {
             accept = NO;
             *stop = YES;
         }
@@ -511,6 +506,11 @@
 
     
     return accept;
+}
+
+-(void)clear {
+    [_messageItems removeAllObjects];
+    [_messageKeys removeAllObjects];
 }
 
 @end

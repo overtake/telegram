@@ -33,7 +33,7 @@
         _controller = [[ChatHistoryController alloc] initWithController:self historyFilter:[PhotoHistoryFilter class]];
         
         if(object != nil)
-            [_controller addItemWithoutSavingState:[[self messageTableItemsFromMessages:@[object.media]] firstObject]];
+            [_controller addMessageWithoutSavingState:object.media];
     }
     
     return self;
@@ -64,7 +64,17 @@
 }
 
 -(NSArray *)messageTableItemsFromMessages:(NSArray *)messages  {
-    return [MessageTableItem messageTableItemsFromMessages:messages];
+    
+    NSMutableArray *previewObjects = [NSMutableArray array];
+    
+    [messages enumerateObjectsUsingBlock:^(TL_localMessage *obj, NSUInteger idx, BOOL *stop) {
+        
+        PreviewObject *preview = [[PreviewObject alloc] initWithMsdId:obj.n_id media:obj peer_id:obj.peer_id];
+        
+        [previewObjects addObject:preview];
+    }];
+    
+    return previewObjects;
 }
 
 -(void)jumpToLastMessages:(BOOL)force {
@@ -84,17 +94,8 @@
     
     [_controller request:next anotherSource:YES sync:NO selectHandler:^(NSArray *result, NSRange range,HistoryFilter *filter) {
         
-        NSMutableArray * previewObjects = [NSMutableArray array];
-        
-        [result enumerateObjectsUsingBlock:^(MessageTableItem *obj, NSUInteger idx, BOOL *stop) {
-            
-            PreviewObject *preview = [[PreviewObject alloc] initWithMsdId:obj.message.n_id media:obj.message peer_id:obj.message.peer_id];
-            
-            [previewObjects addObject:preview];
-        }];
-        
         [ASQueue dispatchOnStageQueue:^{
-            callback(previewObjects);
+            callback(result);
         }];
         
     }];
