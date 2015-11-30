@@ -27,11 +27,9 @@
     self = [super initWithFrame:frame];
     if (self) {
         
-        self.avatarImageView = [TMAvatarImageView standartNewConversationTableAvatar];
+        self.avatarImageView = [TMAvatarImageView standartMessageTableAvatar];
         [self addSubview:self.avatarImageView];
-        [self.avatarImageView setFont:TGSystemLightFont(15)];
-        [self.avatarImageView setFrameSize:NSMakeSize(36, 36)];
-        
+
         
         self.titleTextField = [[TMTextField alloc] init];
         [self.titleTextField setEditable:NO];
@@ -42,7 +40,7 @@
         [[self.titleTextField cell] setTruncatesLastVisibleLine:YES];
         [self addSubview:self.titleTextField];
         
-        [self.titleTextField setFrameOrigin:NSMakePoint(145, 27)];
+        [self.titleTextField setFrameOrigin:NSMakePoint(80, 27)];
         
         
         self.numberTextField = [[TMTextField alloc] init];
@@ -55,11 +53,11 @@
         [[self.numberTextField cell] setTruncatesLastVisibleLine:YES];
         [self addSubview:self.numberTextField];
         
-        [self.numberTextField setFrameOrigin:NSMakePoint(145, 10)];
+        [self.numberTextField setFrameOrigin:NSMakePoint(80, 10)];
         
         
         
-        [self.avatarImageView setFrameOrigin:NSMakePoint(100, 7)];
+        [self.avatarImageView setFrameOrigin:NSMakePoint(30, 7)];
         
         self.unblockButton = [TMTextButton standartUserProfileButtonWithTitle:NSLocalizedString(@"User.Unlock", nil)];
         
@@ -105,10 +103,10 @@
 -(void)setFrameSize:(NSSize)newSize {
     [super setFrameSize:newSize];
     
-    [self.unblockButton setFrameOrigin:NSMakePoint( NSWidth(self.frame) - NSWidth(self.unblockButton.frame) - 113, 18)];
+    [self.unblockButton setFrameOrigin:NSMakePoint( NSWidth(self.frame) - NSWidth(self.unblockButton.frame) - 30, 18)];
     
-    [self.titleTextField setFrameSize:NSMakeSize(NSWidth(self.frame) - NSWidth(self.unblockButton.frame) - 260, NSHeight(_titleTextField.frame))];
-    [self.numberTextField setFrameSize:NSMakeSize(NSWidth(self.frame) - NSWidth(self.unblockButton.frame) - 260, NSHeight(_numberTextField.frame))];
+    [self.titleTextField setFrameSize:NSMakeSize(NSWidth(self.frame) - NSWidth(self.unblockButton.frame) - 110, NSHeight(_titleTextField.frame))];
+    [self.numberTextField setFrameSize:NSMakeSize(NSWidth(self.frame) - NSWidth(self.unblockButton.frame) - 110, NSHeight(_numberTextField.frame))];
 }
 
 
@@ -123,7 +121,7 @@
     
     [NSColorFromRGB(0xe0e0e0) setFill];
     
-    NSRectFill(NSMakeRect(145, 0, NSWidth(self.frame) - 245, 1));
+    NSRectFill(NSMakeRect(80, 0, NSWidth(self.frame) - 110, 1));
 
 }
 
