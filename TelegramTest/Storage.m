@@ -965,7 +965,7 @@ TL_localMessage *parseMessage(FMResultSet *result) {
     void (^block)(FMDatabase *db) = ^(FMDatabase *db) {
         NSString *strIds = [ids componentsJoinedByString:@","];
         
-        NSString *sql = [NSString stringWithFormat:@"select serialized,flags from %@ where %@ in (%@) order by date DESC",tableMessages,random ? @"random_id" : @"n_id",strIds];
+        NSString *sql = [NSString stringWithFormat:@"select serialized,flags,message_text from %@ where %@ in (%@) order by date DESC",tableMessages,random ? @"random_id" : @"n_id",strIds];
         
         FMResultSet *result = [db executeQueryWithFormat:sql,nil];
         __block NSMutableArray *messages = [[NSMutableArray alloc] init];

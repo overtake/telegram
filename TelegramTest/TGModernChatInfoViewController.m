@@ -370,7 +370,7 @@
     
     GeneralSettingsRowItem *addMembersItem;
     
-    if(!_chat.isAdmins_enabled || _chat.isAdmin) {
+    if(!_chat.isAdmins_enabled || (_chat.isManager)) {
         addMembersItem = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeNone callback:^(TGGeneralRowItem *item) {
             
             NSMutableArray *filter = [[NSMutableArray alloc] init];
