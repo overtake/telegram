@@ -46,7 +46,7 @@
 
 @interface TGStickersSettingsViewController ()<TGMovableTableDelegate>
 @property (nonatomic,strong) TGMovableTableView *tableView;
-
+@property (nonatomic,assign) BOOL needSaveOrder;
 
 -(void)removeStickerPack:(TGStickerPackRowItem *)item;
 
@@ -299,28 +299,38 @@
         
     }];
     
-    if(!self.action.isEditable) {
-        NSMutableArray *reoder = [NSMutableArray array];
-        
-        [_tableView enumerateAvailableRowViewsUsingBlock:^(__kindof TMRowView *rowView, TMRowItem *rowItem, NSInteger row) {
-            
-            TGStickerPackRowItem *item = (TGStickerPackRowItem *)rowItem;
-            
-            [reoder addObject:@(item.set.n_id)];
-            
-        }];
-        
-        [Notification perform:STICKERS_REORDER data:@{KEY_ORDER:reoder}];
-        
-        [RPCRequest sendRequest:[TLAPI_messages_reorderStickerSets createWithOrder:reoder] successHandler:^(id request, id response) {
-            
-            
-        } errorHandler:^(id request, RpcError *error) {
-            
-            
-            
-        }];
+    if(!self.action.isEditable && _needSaveOrder) {
+        dispatch_after_seconds(0.2, ^{
+             [self saveOrder];
+        });
+       
     }
+}
+
+-(void)saveOrder {
+    NSMutableArray *reoder = [NSMutableArray array];
+    
+    [_tableView enumerateAvailableRowViewsUsingBlock:^(__kindof TMRowView *rowView, TMRowItem *rowItem, NSInteger row) {
+        
+        TGStickerPackRowItem *item = (TGStickerPackRowItem *)rowItem;
+        
+        [reoder addObject:@(item.set.n_id)];
+        
+    }];
+    
+    [Notification perform:STICKERS_REORDER data:@{KEY_ORDER:reoder}];
+    
+    [RPCRequest sendRequest:[TLAPI_messages_reorderStickerSets createWithOrder:reoder] successHandler:^(id request, id response) {
+        
+        
+    } errorHandler:^(id request, RpcError *error) {
+        
+        
+        
+    }];
+    
+    _needSaveOrder = NO;
+
 }
 
 -(void)viewWillAppear:(BOOL)animated {
@@ -329,6 +339,8 @@
 
     
     [super viewWillAppear:animated];
+    
+    _needSaveOrder = NO;
     
     [Notification addObserver:self selector:@selector(stickersNeedFullReload:) name:STICKERS_ALL_CHANGED];
     [Notification addObserver:self selector:@selector(stickersNeedReorder:) name:STICKERS_REORDER];
@@ -342,6 +354,10 @@
     [super viewWillDisappear:animated];
     
     [Notification removeObserver:self];
+    
+    if(_needSaveOrder) {
+        [self saveOrder];
+    }
 }
 
 -(void)reload {
@@ -408,9 +424,11 @@
     
 }
 
+
 -(void)tableViewDidChangeOrder {
     
     
+    _needSaveOrder = YES;
 }
 
 - (CGFloat)rowHeight:(NSUInteger)row item:(TMRowItem *) item {
