@@ -99,7 +99,7 @@
         [self.textView.textView setFrameOrigin:NSMakePoint(0, NSMinY(self.textView.textView.frame))];
         
         
-        self.descriptionView = [[NSTextView alloc] initWithFrame:NSMakeRect(96, 122, NSWidth(self.frame) - 200, 100)];
+        self.descriptionView = [[NSTextView alloc] initWithFrame:NSMakeRect(96, 122, NSWidth(self.frame) - 200, 150)];
         
         [self.descriptionView setString:NSLocalizedString(@"UserName.description", nil)];
         

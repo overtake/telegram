@@ -364,26 +364,29 @@
     
     [RPCRequest sendRequest:[TLAPI_account_updateUsername createWithUsername:userName] successHandler:^(RPCRequest *request, TLUser *response) {
         
-        [self.queue dispatchOnQueue:^{
-            if(response.type == TLUserTypeSelf) {
-                [self add:@[response]];
-            }
-            
-            [[Storage manager] insertUser:self.userSelf completeHandler:nil];
-            
-            [[ASQueue mainQueue] dispatchOnQueue:^{
-                completeHandler(self.userSelf);
-            }];
-            
-            [Notification perform:USER_UPDATE_NAME data:@{KEY_USER:self.userSelf}];
+        if(response.type == TLUserTypeSelf) {
+            [self add:@[response]];
+        }
+        
+        [self.userSelf rebuildNames];
+        
+        [[Storage manager] insertUser:self.userSelf completeHandler:nil];
+        
+        [[ASQueue mainQueue] dispatchOnQueue:^{
+            completeHandler(self.userSelf);
         }];
         
-       
+        [Notification perform:USER_UPDATE_NAME data:@{KEY_USER:self.userSelf}];
+
         
      } errorHandler:^(RPCRequest *request, RpcError *error) {
-         if(errorHandler)
-             errorHandler(NSLocalizedString(@"Profile.CantUpdate", nil));
-     } timeout:10];
+         
+         [ASQueue dispatchOnMainQueue:^{
+             if(errorHandler)
+                 errorHandler(NSLocalizedString(@"Profile.CantUpdate", nil));
+         }];
+         
+     } timeout:10 queue:self.queue.nativeQueue];
 }
 
 

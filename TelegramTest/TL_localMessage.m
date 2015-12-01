@@ -15,6 +15,7 @@
 @property (nonatomic,strong) NSUserNotification *notification;
 @property (nonatomic,assign) int type;
 @property (nonatomic,strong,readonly) TLChat *p_chat;
+@property (nonatomic,weak) TLUser *fUser;
 @end
 
 @implementation TL_localMessage
@@ -92,7 +93,15 @@
 
 
 -(TLUser *)fromUser {
-    return [[UsersManager sharedManager] find:self.from_id];
+    
+    if(_fUser != nil)
+        return _fUser;
+    else {
+        if(self.from_id != 0)
+            _fUser = [[UsersManager sharedManager] find:self.from_id];;
+    }
+    
+    return _fUser;
 }
 
 -(TLUser *)fromFwdUser {
@@ -120,6 +129,9 @@
     } else {
         return (TL_localMessage *) message;
     }
+    
+    if(msg.from_id > 0)
+        msg.fUser = [[UsersManager sharedManager] find:msg.from_id];
     
     return msg;
 }

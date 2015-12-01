@@ -303,7 +303,6 @@ static NSImage *higlightedImage() {
             
             NSDictionary *info  = [transaction objectForKey:@"allstickers" inCollection:STICKERS_COLLECTION];
             
-            hash = info[@"hash"];
             
             stickers = info[@"serialized"];
             
@@ -370,7 +369,6 @@ static NSImage *higlightedImage() {
         {
             data = [[NSMutableDictionary alloc] init];
             data[@"sets"] = [[NSMutableArray alloc] init];
-            data[@"hash"] = @"";
         }
         
         data[@"serialized"] = serializedStickers;
@@ -378,7 +376,6 @@ static NSImage *higlightedImage() {
         if(saveSets) {
             
             data[@"sets"] = sets;
-            data[@"hash"] = @(n_hash);
         }
         
         [transaction setObject:data forKey:@"allstickers" inCollection:STICKERS_COLLECTION];
@@ -472,19 +469,20 @@ static NSImage *higlightedImage() {
             if(!data) {
                 data = [[NSMutableDictionary alloc] init];
                 data[@"serialized"] = [[NSMutableArray alloc] init];
-                data[@"hash"] = @"";
                 data[@"sets"] = [[NSMutableArray alloc] init];
             }
             
             [stickers addObjectsFromArray:response.documents];
             
             if(save) {
-                data[@"hash"] = @(n_hash);
-                
-                data[@"sets"] = allSets;
+                data[@"sets"] = allSets == nil ? [NSMutableArray array] : allSets;
             }
             
-            [transaction setObject:@{@"hash":data[@"hash"],@"serialized":stickers,@"sets":data[@"sets"]} forKey:@"allstickers" inCollection:STICKERS_COLLECTION];
+            if(!data[@"sets"]) {
+                data[@"sets"] = [[NSMutableArray alloc] init];
+            }
+            
+            [transaction setObject:@{@"serialized":stickers,@"sets":data[@"sets"]} forKey:@"allstickers" inCollection:STICKERS_COLLECTION];
             
         }];
         

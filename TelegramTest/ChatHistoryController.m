@@ -838,7 +838,7 @@ static ChatHistoryController *observer;
 
                     [[ASQueue mainQueue] dispatchOnQueue:^{
                         
-                        [controller.controller receivedMessageList:items inRange:NSMakeRange(0, filtred.count) itsSelf:YES];
+                        [controller.controller receivedMessageList:[items reversedArray] inRange:NSMakeRange(0, items.count) itsSelf:YES];
                         
                         if(controller == self) {
                             if(sentControllerCallback)

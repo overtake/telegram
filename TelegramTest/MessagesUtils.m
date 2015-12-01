@@ -201,7 +201,7 @@
         if(((message.conversation.type == DialogTypeChannel && message.from_id != 0) || message.conversation.type == DialogTypeChat) && !message.action ) {
             
             if(!message.n_out) {
-                userLast = [[UsersManager sharedManager] find:message.from_id];
+                userLast = message.fromUser;
                 chatUserNameString = [userLast ? userLast.fullName : @"" stringByAppendingString:@"\n"];
             } else {
                 chatUserNameString = [NSLocalizedString(@"Profile.You", nil) stringByAppendingString:@"\n"];
@@ -215,11 +215,7 @@
         if(message.action) {
             isAction = YES;
             if(!userLast && message.from_id != 0)
-                userLast = [[UsersManager sharedManager] find:message.from_id];
-            // if(userLast == [UsersManager currentUser])
-            //  chatUserNameString = NSLocalizedString(@"Profile.You", nil);
-            //  else
-            
+                userLast = message.fromUser;
              if(message.conversation.type != DialogTypeSecretChat && userLast)
                 chatUserNameString = userLast ? userLast.fullName : NSLocalizedString(@"MessageAction.Service.LeaveChat", nil);
 

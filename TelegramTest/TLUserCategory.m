@@ -196,7 +196,7 @@ DYNAMIC_PROPERTY(SEEN_UPDATE);
     [self setUserNameSearchTitle:nil];
     [self setTITLE_FOR_MESSAGE:nil];
     [self setENCRYPTED_TITLE_FOR_MESSAGE:nil];
-    
+    [self setUserNameTitle:nil];
     
     
 }
