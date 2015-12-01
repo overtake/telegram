@@ -2590,7 +2590,7 @@ static NSTextAttachment *headerMediaIcon() {
     
     
     if(self.conversation.user.isBot &&  (self.messages.count == 1 || (self.messages.count == 2 && [self.messages[1] isKindOfClass:[MessageTableItemServiceMessage class]]))) {
-        [self showBotStartButton:NSLocalizedString(@"Bot.Start", nil) bot:self.conversation.user];
+        [self showBotStartButton:@"start" bot:self.conversation.user];
     } else if(self.conversation.user.isBot) {
         [self.bottomView setStateBottom:MessagesBottomViewNormalState];
     }
