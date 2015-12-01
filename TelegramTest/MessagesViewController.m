@@ -1548,48 +1548,6 @@ static NSTextAttachment *headerMediaIcon() {
     }
 }
 
-- (void)sendTypingWithAction:(TLSendMessageAction *)action {
-    
-    
-    
-    NSMutableDictionary *list = [_typingReservation objectForKey:@(self.conversation.peer_id)];
-    
-    
-    if(!list)
-    {
-        list = [[NSMutableDictionary alloc] init];
-        [_typingReservation setObject:list forKey:@(self.conversation.peer_id)];
-    }
-    
-    if(list[NSStringFromClass(action.class)] == nil) {
-        
-        [list setObject:action forKey:NSStringFromClass(action.class)];
-        
-        if(self.conversation.type == DialogTypeBroadcast)
-            return;
-        
-        
-        [self.typingRequest cancelRequest];
-        
-        id request;
-        
-        if(self.conversation.type == DialogTypeSecretChat)
-            request = [TLAPI_messages_setEncryptedTyping createWithPeer:(TLInputEncryptedChat *)[self.conversation.encryptedChat inputPeer] typing:YES];
-         else
-            request = [TLAPI_messages_setTyping createWithPeer:[self.conversation inputPeer] action:action];
-    
-        
-        self.typingRequest = [RPCRequest sendRequest:request successHandler:^(RPCRequest *request, id response) {
-
-            dispatch_after_seconds(4, ^{
-                [list removeObjectForKey:NSStringFromClass(action.class)];
-            });
-            
-            
-        } errorHandler:nil];
-    }
-}
-
 - (void)windowBecomeNotification:(NSNotification *)notify {
     [self becomeFirstResponder];
     [self tryRead];

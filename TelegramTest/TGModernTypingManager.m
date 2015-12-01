@@ -66,7 +66,7 @@
             
         }
         
-        if(conversation) {
+        if(conversation && user) {
             TMTypingObject *object = [self typingForConversation:conversation];
             
             if(![update action])

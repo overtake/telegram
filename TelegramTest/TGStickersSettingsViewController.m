@@ -298,6 +298,29 @@
         [view setEditable:rowItem.isEditable animated:YES];
         
     }];
+    
+    if(!self.action.isEditable) {
+        NSMutableArray *reoder = [NSMutableArray array];
+        
+        [_tableView enumerateAvailableRowViewsUsingBlock:^(__kindof TMRowView *rowView, TMRowItem *rowItem, NSInteger row) {
+            
+            TGStickerPackRowItem *item = (TGStickerPackRowItem *)rowItem;
+            
+            [reoder addObject:@(item.set.n_id)];
+            
+        }];
+        
+        [Notification perform:STICKERS_REORDER data:@{KEY_ORDER:reoder}];
+        
+        [RPCRequest sendRequest:[TLAPI_messages_reorderStickerSets createWithOrder:reoder] successHandler:^(id request, id response) {
+            
+            
+        } errorHandler:^(id request, RpcError *error) {
+            
+            
+            
+        }];
+    }
 }
 
 -(void)viewWillAppear:(BOOL)animated {
@@ -387,27 +410,7 @@
 
 -(void)tableViewDidChangeOrder {
     
-    NSMutableArray *reoder = [NSMutableArray array];
     
-    [_tableView enumerateAvailableRowViewsUsingBlock:^(__kindof TMRowView *rowView, TMRowItem *rowItem, NSInteger row) {
-        
-        TGStickerPackRowItem *item = (TGStickerPackRowItem *)rowItem;
-        
-        [reoder addObject:@(item.set.n_id)];
-        
-    }];
-    
-    [Notification perform:STICKERS_REORDER data:@{KEY_ORDER:reoder}];
-    
-    [RPCRequest sendRequest:[TLAPI_messages_reorderStickerSets createWithOrder:reoder] successHandler:^(id request, id response) {
-        
-        
-        
-    } errorHandler:^(id request, RpcError *error) {
-        
-        
-        
-    }];
 }
 
 - (CGFloat)rowHeight:(NSUInteger)row item:(TMRowItem *) item {
