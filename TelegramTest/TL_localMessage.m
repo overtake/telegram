@@ -377,7 +377,9 @@ DYNAMIC_PROPERTY(DDialog);
             mask|=HistoryFilterPhoto;
         }
         
-        if(self.entities.count > 0) {
+        NSArray *entities = [self.entities filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.class = %@",[TL_messageEntityUrl class]]];
+        
+        if([self.media.webpage isKindOfClass:[TL_webPage class]] || entities.count > 0) {
             mask|=HistoryFilterSharedLink;
         }
         

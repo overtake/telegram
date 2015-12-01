@@ -68,11 +68,12 @@
 
 
 -(void)addAccess {
-    [self.delegate behaviorDidStartRequest];
+   
     
     confirm(appName(), NSLocalizedString(@"Chat.ToggleUserToAdminConfirm", nil), ^{
         [RPCRequest sendRequest:[TLAPI_channels_editAdmin createWithChannel:self.chat.inputPeer user_id:[self.user inputUser] role: self.action.result.singleObject] successHandler:^(id request, id response) {
             
+             [self.delegate behaviorDidStartRequest];
             
             [RPCRequest sendRequest:[TLAPI_channels_getParticipants createWithChannel:self.chat.inputPeer filter:[TL_channelParticipantsAdmins create] offset:0 limit:100] successHandler:^(id request, TL_channels_channelParticipants *response) {
                 
@@ -99,7 +100,6 @@
             }];
             
             
-            [self.delegate behaviorDidEndRequest:response];
             
         } errorHandler:^(id request, RpcError *error) {
             [self.delegate behaviorDidEndRequest:nil];
