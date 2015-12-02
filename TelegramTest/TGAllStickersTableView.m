@@ -623,9 +623,10 @@ static NSImage *higlightedImage() {
 
 -(void)showWithStickerPack:(TL_messages_stickerSet *)stickerPack {
     
-    
     [_stickers removeAllObjects];
+    _sets = [NSMutableArray array];
     
+    [_sets addObject:stickerPack.set];
     _stickers[@(stickerPack.set.n_id)] = [stickerPack documents];
     
     _isCustomStickerPack = YES;
