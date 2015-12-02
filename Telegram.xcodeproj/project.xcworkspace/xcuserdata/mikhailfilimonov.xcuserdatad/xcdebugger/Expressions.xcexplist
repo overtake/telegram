@@ -1387,6 +1387,9 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "-[TLUser(Category) userNameTitle]:TLUserCategory.m">
+      </ContextState>
+      <ContextState
          contextName = "__39-[SearchViewController searchByString:]_block_invoke599:SearchViewController.m">
       </ContextState>
       <ContextState
@@ -3071,6 +3074,14 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "__89-[MessagesViewController showMessage:fromMsg:animated:selectText:switchDiscussion:flags:]_block_invoke1320:MessagesViewController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "result">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "-[TL_conversation updateNotifySettings:]:TL_conversation.m">
       </ContextState>
       <ContextState
@@ -4461,6 +4472,9 @@
       </ContextState>
       <ContextState
          contextName = "__join_group_by_hash_block_invoke_3:FileUtils.m">
+      </ContextState>
+      <ContextState
+         contextName = "open_link:FileUtils.m">
       </ContextState>
       <ContextState
          contextName = "-[ComposeViewController updateActionNavigation]:ComposeViewController.m">

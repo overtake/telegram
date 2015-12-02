@@ -724,10 +724,10 @@ static NSImage *higlightedImage() {
 
 -(int)stickersHash:(NSArray *)stickersets {
     
-    __block long acc = 0;
+    __block int acc = 0;
     
     [stickersets enumerateObjectsUsingBlock:^(TL_stickerSet *obj, NSUInteger idx, BOOL * _Nonnull stop) {
-        acc = (acc + obj.n_hash) * 20261;
+        acc = (acc * 20261) + obj.n_hash;
     }];
     
     return (int)(acc % 0x7FFFFFFF);

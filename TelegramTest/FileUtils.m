@@ -684,7 +684,12 @@ void open_link(NSString *link) {
             
             TLChat *chat = [[ChatsManager sharedManager] find:abs(peer_id)];
             
+            if(chat.username.length == 0 && chat.isBroadcast && chat.dialog.isInvisibleChannel)
+                return;
+            
             [appWindow().navigationController showMessagesViewController:chat.dialog];
+            
+            
             
         }
         

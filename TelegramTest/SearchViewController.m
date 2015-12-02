@@ -208,10 +208,7 @@ typedef enum {
         return;
     
     if((self.type & SearchTypeMessages) == SearchTypeMessages) {
-        if(self.searchParams.isStorageLoaded)
-        {
-            [self remoteSearch:self.searchParams];
-        }
+        [self remoteSearch:self.searchParams];
     }
     
 }
@@ -606,8 +603,9 @@ static int insertCount = 3;
         
         params.messages_offset += (int)filtred.count;
         
+        if([response isKindOfClass:[TL_messages_messages class]])
+            params.isRemoteLoaded = YES;
         
-        params.isRemoteLoaded = YES;
         [self showMessagesResults:params];
         
     } errorHandler:^(RPCRequest *request, RpcError *error) {

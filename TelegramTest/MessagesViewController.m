@@ -2229,7 +2229,7 @@ static NSTextAttachment *headerMediaIcon() {
         
         self.historyController.selectLimit = count/2 + 20;
         
-        [self.historyController loadAroundMessagesWithMessage:msg prevLimit:count nextLimit:(flags & ShowMessageTypeUnreadMark) > 0 ? 1 : count selectHandler:^(NSArray *result, NSRange range, id controller) {
+        [self.historyController loadAroundMessagesWithMessage:msg prevLimit:count nextLimit:(flags & ShowMessageTypeUnreadMark) > 0 ? 0 : count selectHandler:^(NSArray *result, NSRange range, id controller) {
             
             if(controller == self.historyController && _conversation.peer_id == conversation.peer_id) {
                 [self flushMessages];
@@ -2237,7 +2237,7 @@ static NSTextAttachment *headerMediaIcon() {
                 _needNextRequest = NO;
                 
                
-                NSUInteger index = [result indexOfObjectPassingTest:^BOOL(MessageTableItem *obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                __block NSUInteger index = [result indexOfObjectPassingTest:^BOOL(MessageTableItem *obj, NSUInteger idx, BOOL * _Nonnull stop) {
                     
                     BOOL res = obj.message.channelMsgId == msg.channelMsgId;
                     
@@ -2252,6 +2252,14 @@ static NSTextAttachment *headerMediaIcon() {
                     
                     if(index != 0 && index != NSNotFound) {
                         _unreadMark = [[MessageTableItemUnreadMark alloc] initWithCount:0 type:RemoveUnreadMarkAfterSecondsType];
+                        
+                        [result enumerateObjectsAtIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, index)] options:NSEnumerationReverse usingBlock:^(MessageTableItem *obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                            
+                            if(obj.message.n_out)
+                                index--;
+                             else
+                                 *stop = YES;
+                        }];
                         
                         NSMutableArray *copy = [result mutableCopy];
                         [copy insertObject:_unreadMark atIndex:index];
