@@ -283,15 +283,13 @@
     
     if(button.packId == -2) {
         
-        if(selectItem) {
-            [self selectItem:button];
-        }
-        
         TGStickersSettingsViewController *settingViewController = [[TGStickersSettingsViewController alloc] initWithFrame:NSZeroRect];
         
         [[EmojiViewController instance].messagesViewController.navigationViewController pushViewController:settingViewController animated:YES];
         
         [[EmojiViewController instance] close];
+        
+        [self.scrollView.clipView scrollRectToVisible:NSZeroRect animated:NO];
         
         return;
     }

@@ -1676,6 +1676,9 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "__55-[TGMediaCounterLoader loadWithConversation:inputPeer:]_block_invoke_2:TGSProfileMediaRowView.m">
+      </ContextState>
+      <ContextState
          contextName = "-[TGModernEncryptedUpdates proccess1Layer:]:TGModernEncryptedUpdates.m">
       </ContextState>
       <ContextState
@@ -2012,6 +2015,9 @@
                value = "self.currentController.view">
             </PersistentString>
          </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "__36-[TGAllStickersTableView reloadData]_block_invoke397:TGAllStickersTableView.m">
       </ContextState>
       <ContextState
          contextName = "__55-[MessageSenderItem parseEntities:entities:backstrips:]_block_invoke:MessageSenderItem.m">
@@ -2733,6 +2739,11 @@
       </ContextState>
       <ContextState
          contextName = "__44-[StickersPanelView showAndSearch:animated:]_block_invoke:StickersPanelView.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "sets">
+            </PersistentString>
+         </PersistentStrings>
       </ContextState>
       <ContextState
          contextName = "-[TGBotCommandsKeyboard drawKeyboardWithKeyboard:]:TGBotCommandsKeyboard.m">

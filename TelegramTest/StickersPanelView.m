@@ -178,43 +178,41 @@ bool isRemoteStickersLoaded() {
 }
 
 -(void)showAndSearch:(NSString *)emotion animated:(BOOL)animated {
-
-    __block NSMutableArray *stickers = [[NSMutableArray alloc] init];
     
-    [[Storage yap] readWithBlock:^(YapDatabaseReadTransaction *transaction) {
+    
+    [[Storage yap] asyncReadWithBlock:^(YapDatabaseReadTransaction *transaction) {
         
         
-         NSDictionary *data = [transaction objectForKey:@"modern_stickers" inCollection:STICKERS_COLLECTION];
+        NSDictionary *data = [transaction objectForKey:@"modern_stickers" inCollection:STICKERS_COLLECTION];
         
-        stickers = [[data[@"serialized"] filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(TL_document *evaluatedObject, NSDictionary *bindings) {
-            
-            TL_documentAttributeSticker *attr = (TL_documentAttributeSticker *) [evaluatedObject attributeWithClass:[TL_documentAttributeSticker class]];
-            
-            return [attr.alt isEqualToString:emotion];
-            
-        }]] mutableCopy];
+        NSDictionary *sets = data[@"serialized"];
         
-        NSMutableDictionary *sort = [transaction objectForKey:@"recentStickers" inCollection:STICKERS_COLLECTION];
-        
-        [stickers sortUsingComparator:^NSComparisonResult(TL_document *obj1, TL_document *obj2) {
+        NSMutableArray *s = [NSMutableArray array];
+                              
+        [sets enumerateKeysAndObjectsUsingBlock:^(id  _Nonnull set_id, id  _Nonnull stickers, BOOL * _Nonnull stop) {
             
-            NSNumber *c1 = sort[@(obj1.n_id)];
-            NSNumber *c2 = sort[@(obj2.n_id)];
+            [stickers enumerateObjectsUsingBlock:^(TL_document *evaluatedObject, NSUInteger idx, BOOL * _Nonnull stop) {
+                
+                TL_documentAttributeSticker *attr = (TL_documentAttributeSticker *) [evaluatedObject attributeWithClass:[TL_documentAttributeSticker class]];
+                
+                if([attr.alt isEqualToString:emotion]) {
+                    [s addObject:evaluatedObject];
+                }
+                
+            }];
             
-            if ([c1 longValue] > [c2 longValue])
-                return NSOrderedAscending;
-            else if ([c1 longValue] < [c2 longValue])
-                return NSOrderedDescending;
-            
-            return NSOrderedSame;
         }];
+        
+        if(s.count > 0) {
+            [ASQueue dispatchOnMainQueue:^{
+               [self show:YES stickers:s];
+            }];
+        }
         
     }];
     
     
-    if(stickers.count > 0) {
-        [self show:YES stickers:stickers];
-    }
+    
     
 }
 
