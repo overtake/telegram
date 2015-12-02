@@ -20,7 +20,7 @@
 
 -(void)showWithStickerPack:(TL_messages_stickerSet *)stickerPack;
 
--(NSArray *)allStickers;
+-(NSDictionary *)allStickers;
 -(NSArray *)sets;
 
 -(void)updateSets:(NSArray *)sets;

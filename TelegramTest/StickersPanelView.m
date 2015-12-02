@@ -184,7 +184,7 @@ bool isRemoteStickersLoaded() {
     [[Storage yap] readWithBlock:^(YapDatabaseReadTransaction *transaction) {
         
         
-         NSDictionary *data = [transaction objectForKey:@"allstickers" inCollection:STICKERS_COLLECTION];
+         NSDictionary *data = [transaction objectForKey:@"modern_stickers" inCollection:STICKERS_COLLECTION];
         
         stickers = [[data[@"serialized"] filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(TL_document *evaluatedObject, NSDictionary *bindings) {
             
@@ -194,7 +194,7 @@ bool isRemoteStickersLoaded() {
             
         }]] mutableCopy];
         
-        NSMutableDictionary *sort = [transaction objectForKey:@"stickersUsed" inCollection:STICKERS_COLLECTION];
+        NSMutableDictionary *sort = [transaction objectForKey:@"recentStickers" inCollection:STICKERS_COLLECTION];
         
         [stickers sortUsingComparator:^NSComparisonResult(TL_document *obj1, TL_document *obj2) {
             
@@ -257,7 +257,7 @@ bool isRemoteStickersLoaded() {
     [[Storage yap] readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
         
         
-        NSArray *serialized = [transaction objectForKey:@"allstickers" inCollection:STICKERS_COLLECTION][@"serialized"];
+        NSArray *serialized = [transaction objectForKey:@"modern_stickers" inCollection:STICKERS_COLLECTION][@"serialized"];
         
         [serialized enumerateObjectsUsingBlock:^(TL_document *ds, NSUInteger idx, BOOL *stop) {
             
@@ -368,8 +368,8 @@ bool isRemoteStickersLoaded() {
  }];
  
  
- NSArray *serializedStickers = [transaction objectForKey:@"allstickers" inCollection:STICKERS_COLLECTION][@"serialized"];
- NSArray *serializedSets = [transaction objectForKey:@"allstickers" inCollection:STICKERS_COLLECTION][@"sets"];
+ NSArray *serializedStickers = [transaction objectForKey:@"modern_stickers" inCollection:STICKERS_COLLECTION][@"serialized"];
+ NSArray *serializedSets = [transaction objectForKey:@"modern_stickers" inCollection:STICKERS_COLLECTION][@"sets"];
  
  
  NSMutableArray *allStickers = [[NSMutableArray alloc] init];
@@ -460,7 +460,7 @@ bool isRemoteStickersLoaded() {
  
  serializedSets = ser;
  
- [transaction setObject:@{@"hash":n_hash,@"serialized":serializedStickers,@"sets":serializedSets} forKey:@"allstickers" inCollection:STICKERS_COLLECTION];
+ [transaction setObject:@{@"hash":n_hash,@"serialized":serializedStickers,@"sets":serializedSets} forKey:@"modern_stickers" inCollection:STICKERS_COLLECTION];
  
  }];
  

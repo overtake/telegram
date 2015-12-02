@@ -391,9 +391,6 @@
          contextName = "-[TGProccessUpdates initWithQueue:]:TGProccessUpdates.m">
       </ContextState>
       <ContextState
-         contextName = "__77-[TGUpdateChannels failUpdateWithChannelId:limit:withCallback:errorCallback:]_block_invoke:TGUpdateChannels.m">
-      </ContextState>
-      <ContextState
          contextName = "__59-[TGAllStickersTableView performLoadSet:allSets:hash:save:]_block_invoke337:TGAllStickersTableView.m">
       </ContextState>
       <ContextState
@@ -450,9 +447,6 @@
       </ContextState>
       <ContextState
          contextName = "-[TLUser(Category) type]:TLUserCategory.m">
-      </ContextState>
-      <ContextState
-         contextName = "-[TGModernUserViewController setUser:conversation:]:TGModernUserViewController.m">
       </ContextState>
       <ContextState
          contextName = "-[ChannelInfoViewController reloadParticipants]:ChannelInfoViewController.m">
@@ -3504,6 +3498,14 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "-[TGProfileHeaderRowView redrawRow]:TGProfileHeaderRowView.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.item.conversation">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "__47-[ChatHistoryController pollingDidSaidTooLong:]_block_invoke:ChatHistoryController.m">
          <PersistentStrings>
             <PersistentString
@@ -5082,6 +5084,17 @@
       </ContextState>
       <ContextState
          contextName = "-[TGConversationTableItem initWithConversation:]:TGConversationTableItem.m">
+      </ContextState>
+      <ContextState
+         contextName = "__52-[ComposeChannelParticipantsViewController loadNext]_block_invoke187:ComposeChannelParticipantsViewController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "weakItem.user">
+            </PersistentString>
+            <PersistentString
+               value = "weakItem.user.dialog">
+            </PersistentString>
+         </PersistentStrings>
       </ContextState>
       <ContextState
          contextName = "__39-[TGPhotoViewer convertPreviewObjects:]_block_invoke:TGPhotoViewer.m">

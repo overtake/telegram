@@ -299,12 +299,6 @@
         
     }];
     
-    if(!self.action.isEditable && _needSaveOrder) {
-        dispatch_after_seconds(0.2, ^{
-             [self saveOrder];
-        });
-       
-    }
 }
 
 -(void)saveOrder {

@@ -3193,16 +3193,23 @@ static NSTextAttachment *headerMediaIcon() {
     
     [[Storage yap] readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
         
-        NSMutableDictionary *sc = [transaction objectForKey:@"stickersUsed" inCollection:STICKERS_COLLECTION];
+        NSMutableDictionary *sc = [transaction objectForKey:@"recentStickers" inCollection:STICKERS_COLLECTION];
         
         if(!sc)
         {
             sc = [[NSMutableDictionary alloc] init];
         }
         
-        sc[@(sticker.n_id)] = @([sc[@(sticker.n_id)] intValue]+1);
+        TL_documentAttributeSticker *attr = (TL_documentAttributeSticker *) [sticker attributeWithClass:[TL_documentAttributeSticker class]];
         
-        [transaction setObject:sc forKey:@"stickersUsed" inCollection:STICKERS_COLLECTION];
+        
+        if(!sc[@(attr.stickerset.n_id)]) {
+            sc[@(attr.stickerset.n_id)] = [NSMutableDictionary dictionary];
+        }
+        
+        sc[@(attr.stickerset.n_id)][@(sticker.n_id)] = @([sc[@(attr.stickerset.n_id)][@(sticker.n_id)] intValue]+1);
+        
+        [transaction setObject:sc forKey:@"recentStickers" inCollection:STICKERS_COLLECTION];
         
     }];
     

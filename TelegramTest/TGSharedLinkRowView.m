@@ -26,6 +26,9 @@
 
 @property (nonatomic,strong) TMView *imageContainerView;
 
+
+@property (nonatomic,strong) TMView *separator;
+
 @end
 
 #define s_lox 30
@@ -33,14 +36,6 @@
 @implementation TGSharedLinkRowView
 
 
-- (void)drawRect:(NSRect)dirtyRect {
-    [super drawRect:dirtyRect];
-    
-    [DIALOG_BORDER_COLOR set];
-    
-    NSRectFill(NSMakeRect(72, 0, NSWidth(dirtyRect) - 24, 1));
-
-}
 
 -(instancetype)initWithFrame:(NSRect)frameRect {
     if(self = [super initWithFrame:frameRect]) {
@@ -64,10 +59,7 @@
         [_linkField setTextColor:LINK_COLOR];
         
         [_linkField setFrameSize:NSMakeSize(0, 20)];
-        dispatch_block_t block = ^{
-            
-        };
-        
+
         
         [_containerView addSubview:_linkField];
         
@@ -76,28 +68,6 @@
         _imageView = [[TGImageView alloc] initWithFrame:NSMakeRect(0, 0, 50, 50)];
         
         _imageView.cornerRadius = 4;
-        
-        
-        dispatch_block_t embed = ^{
-           
-            
-            MessageTableItemText *item = ((MessageTableItemText *)self.item);
-            
-            if([item.webpage.webpage.embed_type isEqualToString:@"iframe"])
-            {
-                TGEmbedModalView *embed =  [[TGEmbedModalView alloc] init];
-                
-                [embed setWebpage:item.webpage.webpage];
-                
-                [embed show:self.window animated:YES];
-                
-                
-            } else {
-                block();
-            }
-            
-        };
-        
         
         
         self.imageContainerView = [[TMView alloc] initWithFrame:NSMakeRect(0, 0, 50, 50)];
@@ -126,6 +96,12 @@
         [self.selectButton setHidden:YES];
         [self.containerView addSubview:self.selectButton];
 
+        
+        
+        _separator = [[TMView alloc] initWithFrame:NSZeroRect];
+        _separator.backgroundColor = DIALOG_BORDER_COLOR;
+        
+        [self addSubview:_separator];
         
     }
     
@@ -160,6 +136,10 @@ static NSImage *sharedLinkCapImage() {
     {
         [_imageContainerView setCenteredYByView:_imageContainerView.superview];
     }
+    
+    int x = self.isEditable ? s_lox + 70 : 72;
+    
+    [_separator setFrame:NSMakeRect(x, 0, NSWidth(self.frame) - x - 10, DIALOG_BORDER_WIDTH)];
 }
 
 -(void)mouseDown:(NSEvent *)theEvent {
@@ -217,7 +197,7 @@ static NSImage *sharedLinkCapImage() {
     
     
     
-    if(item.webpage) {
+    if(item.webpage && item.webpage.desc.length > 0) {
         [_textField setAttributedString:item.webpage.desc];
         
         [_textField setFrameSize:item.webpage.descSize];
@@ -244,6 +224,8 @@ static NSImage *sharedLinkCapImage() {
     
     if(!item.webpage.imageObject)
          self.imageView.image = sharedLinkCapImage();
+    else
+        [_imageView setObject:item.webpage.roundObject];
     
     
     [_domainTextField setHidden:item.webpage.imageObject != nil];
@@ -251,6 +233,9 @@ static NSImage *sharedLinkCapImage() {
     [_domainTextField setStringValue:[self firstDomainCharacter]];
     [_domainTextField sizeToFit];
     [_domainTextField setCenterByView:_imageView];
+    
+    
+    [self.selectButton setSelected:self.isSelected];
     
 }
 
@@ -274,6 +259,8 @@ static NSImage *sharedLinkCapImage() {
             
             [context setDuration:0.2];
             
+            int x = self.isEditable ? s_lox + 70 : 72;
+            [[_separator animator] setFrame:NSMakeRect(x, 0, NSWidth(self.frame) - x - 10, DIALOG_BORDER_WIDTH)];
             
             [[self.textField animator] setFrameOrigin:NSMakePoint(editable ? s_lox + 60 : 62, NSMinY(self.textField.frame))];
             [[self.imageContainerView animator] setFrameOrigin:NSMakePoint(editable ? s_lox : 0, NSMinY(self.imageContainerView.frame))];
@@ -304,7 +291,10 @@ static NSImage *sharedLinkCapImage() {
 }
 
 -(BOOL)isSelected {
-    return [(TGSharedLinksTableView *)self.item.table isSelectedItem:self.item];
+    
+    TGDocumentsMediaTableView *table = (TGDocumentsMediaTableView *) self.item.table;
+    
+    return [table isSelectedItem:self.item];
 }
 
 -(void)_didChangeBackgroundColorWithAnimation:(POPBasicAnimation *)anim toColor:(NSColor *)color {

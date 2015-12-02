@@ -59,6 +59,8 @@
         
         ((TLMessageMedia *)[(TL_localMessage *)self.object media]).document = document;
         
+        [[Storage manager] addHolesAroundMessage:self.object];
+        
         [(TL_localMessage *)self.object save:NO];
         
     }

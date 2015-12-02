@@ -254,7 +254,7 @@
     [[self instance].stickersTableView.stickers load:YES];
 }
 
-+(NSArray *)allStickers {
++(NSDictionary *)allStickers {
     return [[self instance].stickersTableView.stickers allStickers];
 }
 
@@ -280,21 +280,11 @@
 }
 
 +(NSArray *)stickersWithId:(long)n_id {
-    NSArray *stickers = [self allStickers];
+    NSDictionary *stickers = [self allStickers];
     
-    __block NSMutableArray *s = [NSMutableArray array];
     
-    [stickers enumerateObjectsUsingBlock:^(TLDocument *obj, NSUInteger idx, BOOL * _Nonnull stop) {
-        
-        TL_documentAttributeSticker *attr = (TL_documentAttributeSticker *) [obj attributeWithClass:TL_documentAttributeSticker.class];
-        
-        if(attr.stickerset.n_id == n_id) {
-            [s addObject:obj];
-        }
-        
-    }];
     
-    return s;
+    return stickers[@(n_id)];
 }
 
 +(void)loadStickersIfNeeded {

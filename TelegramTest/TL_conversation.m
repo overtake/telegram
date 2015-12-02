@@ -322,8 +322,8 @@
     } else if([self.peer isKindOfClass:[TL_peerChannel class]]) {
             return [TL_inputPeerChannel createWithChannel_id:self.peer.channel_id access_hash:self.chat.access_hash];
     } else {
-        TLUser *user = [[UsersManager sharedManager] find:self.peer.user_id];
-        input = [user inputPeer];
+
+        input = [self.user inputPeer];
     }
     if(!input)
         return [TL_inputPeerEmpty create];
@@ -435,6 +435,10 @@ static void *kType;
     }
     
     return _p_user;
+}
+
+- (void)setUser:(TLUser *)user {
+    _p_user = user;
 }
 
 -(BOOL)canEditConversation {

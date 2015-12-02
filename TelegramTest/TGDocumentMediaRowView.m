@@ -200,6 +200,8 @@ static NSDictionary *colors;
     
 }
 
+
+
 -(void)setItem:(MessageTableItemDocument *)item {
     
     [super setItem:item];
@@ -219,8 +221,16 @@ static NSDictionary *colors;
     [_thumbImageView setObject:item.thumbObject];
     
     [self updateCellState];
+    
+    
 }
 
+-(BOOL)isSelected {
+    
+    TGDocumentsMediaTableView *table = (TGDocumentsMediaTableView *) self.item.table;
+    
+    return [table isSelectedItem:self.item];
+}
 
 -(void)mouseDown:(NSEvent *)theEvent {
     if(!self.isEditable) {
@@ -486,9 +496,6 @@ static NSDictionary *colors;
     [self.selectButton setSelected:selected];
 }
 
--(BOOL)isSelected {
-    return [(TGDocumentsMediaTableView *)self.item.table isSelectedItem:self.item];
-}
 
 -(BOOL)isEditable {
     return [(TGDocumentsMediaTableView *)self.item.table isEditable];
