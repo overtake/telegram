@@ -11,7 +11,7 @@
 #import "TGTimer.h"
 #import "TGForceChannelUpdate.h"
 #import "TLPeer+Extensions.h"
-
+#import "ChannelFilter.h"
 
 
 @interface TGUpdateChannels ()
@@ -346,7 +346,7 @@
         
     } else if([update isKindOfClass:[TL_updateChannelTooLong class]]) {
         
-        [self failUpdateWithChannelId:[update channel_id] limit:50 withCallback:nil errorCallback:nil];
+        [self failUpdateWithChannelId:[update channel_id] limit:1 withCallback:nil errorCallback:nil];
         
         
     } else if([update isKindOfClass:[TL_updateChannelMessageViews class]]) {
@@ -581,6 +581,7 @@
                                 longHole = [[TGMessageHole alloc] initWithUniqueId:-rand_int() peer_id:importantMsg.peer_id min_id:maxSyncedId+1 max_id:importantMsg.n_id-1 date:0 count:0];
                                 
                                 [longHole save];
+                                
                             }
                             
                             
