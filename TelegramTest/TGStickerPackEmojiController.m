@@ -281,15 +281,29 @@
 
 -(void)didSelected:(TGStickerPackButton *)button scrollToPack:(BOOL)scrollToPack selectItem:(BOOL)selectItem {
     
+    if(self.selectedItem.packId == -2)
+        return;
+    
     if(button.packId == -2) {
         
-        TGStickersSettingsViewController *settingViewController = [[TGStickersSettingsViewController alloc] initWithFrame:NSZeroRect];
         
-        [[EmojiViewController instance].messagesViewController.navigationViewController pushViewController:settingViewController animated:YES];
+        [self selectItem:button];
         
         [[EmojiViewController instance] close];
         
+        TGStickersSettingsViewController *settingViewController = [[TGStickersSettingsViewController alloc] initWithFrame:NSZeroRect];
+        
+        settingViewController.action = [[ComposeAction alloc] initWithBehaviorClass:NSClassFromString(@"ComposeActionStickersBehavior")];
+        
+        settingViewController.action.editable = YES;
+        
+        [[EmojiViewController instance].messagesViewController.navigationViewController pushViewController:settingViewController animated:YES];
+        
+        
         [self.scrollView.clipView scrollRectToVisible:NSZeroRect animated:NO];
+   
+        
+       
         
         return;
     }

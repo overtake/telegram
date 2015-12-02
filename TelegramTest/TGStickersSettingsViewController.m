@@ -160,7 +160,7 @@
     
     TGMovableTableView *tableView = ((TGMovableTableView *)[self rowItem].table);
    
-    if([self mouse:[self convertPoint:[theEvent locationInWindow] fromView:nil] inRect:_reorderPack.frame] && [[self rowItem] isEditable]) {
+    if([self mouse:[self convertPoint:[theEvent locationInWindow] fromView:nil] inRect:NSMakeRect(NSMinX(_separator.frame), 0, NSWidth(self.frame) - NSMinX(_separator.frame), NSHeight(self.frame))] && [[self rowItem] isEditable]) {
         [tableView startMoveItemAtIndex:[tableView indexOfObject:[self rowItem]]];
     } else {
         if(![[self rowItem] isEditable]) {
@@ -329,7 +329,8 @@
 
 -(void)viewWillAppear:(BOOL)animated {
     
-    [self setAction:[[ComposeAction alloc] initWithBehaviorClass:[ComposeActionStickersBehavior class]]];
+    if(!self.action)
+        [self setAction:[[ComposeAction alloc] initWithBehaviorClass:[ComposeActionStickersBehavior class]]];
 
     
     [super viewWillAppear:animated];

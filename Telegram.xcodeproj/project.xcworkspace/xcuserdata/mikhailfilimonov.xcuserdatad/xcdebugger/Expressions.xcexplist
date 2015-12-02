@@ -198,6 +198,14 @@
          contextName = "__35-[DownloadQueue operationComplete:]_block_invoke_2:DownloadQueue.mm">
       </ContextState>
       <ContextState
+         contextName = "-[TGMovableTableView checkAndScroll:]:TGMovableTableView.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.documentVisibleRect.origin">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "__28-[ChatInfoHeaderView reload]_block_invoke:ChatInfoHeaderView.m">
          <PersistentStrings>
             <PersistentString
@@ -2432,6 +2440,9 @@
       </ContextState>
       <ContextState
          contextName = "__55-[FullChatManager loadFullChatByChatId:force:callback:]_block_invoke:FullChatManager.m">
+      </ContextState>
+      <ContextState
+         contextName = "__44-[StickersPanelView showAndSearch:animated:]_block_invoke_3:StickersPanelView.m">
       </ContextState>
       <ContextState
          contextName = "__51-[TGStickersSettingsViewController viewWillAppear:]_block_invoke:TGStickersSettingsViewController.m">

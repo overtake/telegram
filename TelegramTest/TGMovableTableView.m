@@ -7,7 +7,7 @@
 //
 
 #import "TGMovableTableView.h"
-
+#import "TGTimer.h"
 @interface TGMovableHoleView : TMView
 
 @end
@@ -43,6 +43,9 @@
 
 @property (nonatomic,assign) NSInteger prevHoleIndex;
 @property (nonatomic,assign) NSInteger currentHoleIndex;
+
+
+@property (nonatomic,strong) TGTimer *timer;
 @end
 
 @implementation TGMovableTableView
@@ -236,6 +239,7 @@
     
     if(index != NSNotFound) {
         
+        
         _movableItem = _items[index];
         _movableIndex = index;
         _movableView = [self viewAtIndex:index];
@@ -265,6 +269,7 @@
         
         _prevHoleIndex = index-1;
         _currentHoleIndex = index;
+        
         
     }
 }
@@ -424,6 +429,10 @@
   
     if(_movableItem != nil && !_locked) {
         [self updateMovableItem:[_containerView convertPoint:[theEvent locationInWindow] fromView:nil]];
+        
+        if(_timer == nil)
+            [self checkAndScroll:[self convertPoint:[theEvent locationInWindow] fromView:nil]];
+        
     }
 
 }
@@ -483,6 +492,69 @@
         
     }
     
+}
+
+
+-(void)checkAndScroll:(NSPoint)point {
+    
+    NSPoint topCorner = NSMakePoint(0, roundf(NSHeight(self.frame) - 100));
+    
+    NSPoint botCorner = NSMakePoint(0, 100);
+    
+    int counter = 0;
+    
+    BOOL next = YES;
+    
+    BOOL prev = NO;
+    
+    if(point.y > topCorner.y) {
+        
+        counter = fabs(point.y - topCorner.y );
+        
+        [self.clipView scrollRectToVisible:NSMakeRect(self.documentVisibleRect.origin.x, self.documentVisibleRect.origin.y + counter, 1, NSHeight(self.frame)) animated:NO];
+        
+    } else if(point.y < botCorner.y) {
+        
+        prev = YES;
+        
+        counter = fabs(point.y - botCorner.y );
+        
+        [self.clipView scrollRectToVisible:NSMakeRect(self.documentVisibleRect.origin.x, self.documentVisibleRect.origin.y - counter, 1, 1) animated:NO];
+    } else
+        next = NO;
+    
+    
+    if(next && _movableItem != nil && !_locked) {
+        if(_timer) {
+            
+            [_movableView mouseDragged:[self.window currentEvent]];
+        }  else
+            [self startUpdateScrollTimerIfNeeded];
+        
+    } else
+        [self stopUpdateScrollTimer];
+    
+    
+}
+
+
+-(void)startUpdateScrollTimerIfNeeded {
+    if(!_timer) {
+        
+        _timer = [[TGTimer alloc] initWithTimeout:0.016 repeat:YES completion:^{
+            
+            [self checkAndScroll:[self convertPoint:[self.window mouseLocationOutsideOfEventStream] fromView:nil]];
+            
+        } queue:dispatch_get_current_queue()];
+        
+        
+        [_timer start];
+    }
+}
+
+-(void)stopUpdateScrollTimer {
+    [_timer invalidate];
+    _timer = nil;
 }
 
 @end

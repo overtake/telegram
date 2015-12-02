@@ -166,14 +166,14 @@
     [self.tableView insert:bigFong atIndex:self.tableView.list.count tableRedraw:NO];
     
 
- 
-    
-    
     GeneralSettingsRowItem *stickers = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeNext callback:^(TGGeneralRowItem *item) {
+        
+        TGStickersSettingsViewController *settingViewController = [[TGStickersSettingsViewController alloc] initWithFrame:NSZeroRect];
+        
+        [self.navigationViewController pushViewController:settingViewController animated:YES];
         
         [[Telegram rightViewController] showStickerSettingsController];
         
-        //   [[Telegram mainViewController].settingsWindowController showWindowWithAction:SettingsWindowActionChatSettings];
         
     } description:NSLocalizedString(@"Settings.Stickers", nil) height:42 stateback:^id(TGGeneralRowItem *item) {
         return nil;

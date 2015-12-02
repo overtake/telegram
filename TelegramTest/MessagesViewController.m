@@ -838,9 +838,9 @@ static NSTextAttachment *headerMediaIcon() {
     }];
     
     
-    if(startParam.length > 0 && ![[startParam lowercaseString] isEqualToString:@"start"]) {
-        self.bottomView.onClickToLockedView();
-    }
+//    if(startParam.length > 0 && ![[startParam lowercaseString] isEqualToString:@"start"]) {
+//        self.bottomView.onClickToLockedView();
+//    }
 }
 
 

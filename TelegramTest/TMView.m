@@ -193,16 +193,14 @@
     if(_dragInSuperView) {
         
         {
-            
             NSPoint newDragLocation = [[self superview] convertPoint:[theEvent locationInWindow] fromView:nil];
             NSPoint thisOrigin = [self frame].origin;
             thisOrigin.x += (-self.startPoint.x + newDragLocation.x);
             thisOrigin.y += (-self.startPoint.y + newDragLocation.y);
             [self setFrameOrigin:thisOrigin];
             self.startPoint = newDragLocation;
-         
-            [super mouseDragged:theEvent];
             
+            [super mouseDragged:theEvent];
         }
         
         return;
