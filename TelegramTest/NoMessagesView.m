@@ -207,7 +207,7 @@
             }];
             
         } else {
-            [self.field setAttributedString:_defAttrString];
+            [(TMTextField *)self.field setAttributedStringValue:_defAttrString];
         }
         
     }
