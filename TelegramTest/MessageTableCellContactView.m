@@ -26,7 +26,8 @@
         
         dispatch_block_t block = ^{
             MessageTableItemContact *contactItem = (MessageTableItemContact *)weakSelf.item;
-            [TMInAppLinks parseUrlAndDo:[TMInAppLinks userProfile:contactItem.user_id]];
+            if(contactItem.contactUser)
+                [TMInAppLinks parseUrlAndDo:[TMInAppLinks userProfile:contactItem.user_id]];
         };
         
         self.contactImageView = [TMAvatarImageView standartMessageTableAvatar];

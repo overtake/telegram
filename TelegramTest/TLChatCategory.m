@@ -213,7 +213,7 @@ static NSTextAttachment *channelVerifySelectedAttachment() {
         [str appendString:[NSString stringWithFormat:@"%d %@", self.participants_count, self.participants_count > 1 ?  NSLocalizedString(@"Conversation.Members", nil) : NSLocalizedString(@"Conversation.Member", nil)] withColor:NSColorFromRGB(0x9b9b9b)];
 
         
-        int online = [[FullChatManager sharedManager] getOnlineCount:self.n_id];
+        int online = [[FullChatManager sharedManager] getOnlineCount:self.chatFull];
         if(online > 0) {
             [str appendString:@", " withColor:NSColorFromRGB(0x9b9b9b)];
             [str appendString:[NSString stringWithFormat:@"%d %@", online, NSLocalizedString(@"Account.Online", @"")] withColor:NSColorFromRGB(0x9b9b9b)];
@@ -226,6 +226,8 @@ static NSTextAttachment *channelVerifySelectedAttachment() {
     return str;
 }
 
+
+
 - (NSAttributedString *)statusForMessagesHeaderView {
     
     
@@ -236,7 +238,7 @@ static NSTextAttachment *channelVerifySelectedAttachment() {
     if([self isChannel])
     {
         
-        TLChatFull *fullChat = [[FullChatManager sharedManager] find:self.n_id];
+        TLChatFull *fullChat = self.chatFull;
         
         if(fullChat.participants_count > 0) {
             [attributedString appendString:[NSString stringWithFormat:@"%d %@", fullChat.participants_count, fullChat.participants_count > 1 ?  NSLocalizedString(@"Conversation.Members", nil) : NSLocalizedString(@"Conversation.Member", nil)] withColor:NSColorFromRGB(0xa9a9a9)];
@@ -249,7 +251,7 @@ static NSTextAttachment *channelVerifySelectedAttachment() {
     
     [attributedString appendString:[NSString stringWithFormat:@"%d %@", self.participants_count, self.participants_count > 1 ?  NSLocalizedString(@"Conversation.Members", nil) : NSLocalizedString(@"Conversation.Member", nil)] withColor:NSColorFromRGB(0xa9a9a9)];
     
-    int online = [[FullChatManager sharedManager] getOnlineCount:self.n_id];
+    int online = [[FullChatManager sharedManager] getOnlineCount:self.chatFull];
     if(online > 0) {
         [attributedString appendString:@", " withColor:NSColorFromRGB(0xa9a9a9)];
         [attributedString appendString:[NSString stringWithFormat:@"%d %@", online, NSLocalizedString(@"Account.Online", @"")] withColor:NSColorFromRGB(0x9b9b9b)];

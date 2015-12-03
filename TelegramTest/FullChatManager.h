@@ -23,7 +23,7 @@
 
 
 - (void)loadStored;
-- (int) getOnlineCount:(int)chat_id;
+- (int)getOnlineCount:(TLChatFull *)chatFull;
 - (void)loadIfNeed:(int)chat_id force:(BOOL)force;
 - (void)performLoad:(int)chat_id callback:(void (^)(TLChatFull *fullChat))callback;
 - (void)performLoad:(int)chat_id force:(BOOL)force callback:(void (^)(TLChatFull *fullChat))callback;

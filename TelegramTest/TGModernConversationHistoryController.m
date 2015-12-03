@@ -12,7 +12,7 @@
 #import "TLPeer+Extensions.h"
 
 @interface TGModernConversationHistoryController ()
-@property (nonatomic,strong) ASQueue *queue;
+
 @property (nonatomic,weak) id<TGModernConversationHistoryControllerDelegate> delegate;
 @property (nonatomic,assign) BOOL loadNextAfterLoadChannels;
 @property (nonatomic,assign) int channelsOffset;

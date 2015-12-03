@@ -26,6 +26,9 @@ typedef enum {
 
 @interface TGModernConversationHistoryController : NSObject
 
+
+@property (nonatomic,strong,readonly) ASQueue *queue;
+
 @property (nonatomic,assign,readonly) TGModernCHState state;
 @property (atomic,assign,readonly) int offset;
 @property (atomic,assign,readonly) int remoteOffset;

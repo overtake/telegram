@@ -308,7 +308,7 @@
     
     NSArray *copy = [self.tableView.list copy];
     
-    [ASQueue dispatchOnStageQueue:^{
+    [_modernHistory.queue dispatchOnQueue:^{
         
         NSMutableArray *items = [[NSMutableArray alloc] init];
         

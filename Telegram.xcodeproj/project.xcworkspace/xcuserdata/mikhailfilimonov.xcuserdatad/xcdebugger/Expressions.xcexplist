@@ -1609,6 +1609,14 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "__45-[MessageTableCellContactView initWithFrame:]_block_invoke:MessageTableCellContactView.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "-[ChannelInfoHeaderView setFrameSize:]:ChannelInfoHeaderView.m">
          <PersistentStrings>
             <PersistentString

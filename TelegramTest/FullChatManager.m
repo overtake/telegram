@@ -262,18 +262,17 @@
     [self loadFullChatByChatId:chat_id force:force callback:nil];
 }
 
-- (int)getOnlineCount:(int)chat_id {
+- (int)getOnlineCount:(TLChatFull *)chatFull {
     
     __block int count;
     
     [ASQueue dispatchOnMainQueue:^{
         
-        FullChatMembersChecker *checker = [self.membersCheker objectForKey:@(chat_id)];
+        FullChatMembersChecker *checker = [self.membersCheker objectForKey:@(chatFull.n_id)];
         if(!checker) {
-            TLChatFull *chatFull = [[FullChatManager sharedManager] find:chat_id];
             if(chatFull && ![chatFull isKindOfClass:[TL_channelFull class]]) {
                 checker = [[FullChatMembersChecker alloc] initWithFullChat:chatFull queue:self.queue];
-                [self.membersCheker setObject:checker forKey:@(chat_id)];
+                [self.membersCheker setObject:checker forKey:@(chatFull.n_id)];
             }
         }
         
