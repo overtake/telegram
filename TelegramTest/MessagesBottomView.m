@@ -36,6 +36,7 @@
 #import "TGBotCommandsKeyboard.h"
 #import "FullChatManager.h"
 #import "BlockedUsersManager.h"
+#import "TGModalGifSearch.h"
 @interface MessagesBottomView()<TGImageAttachmentsControllerDelegate>
 
 @property (nonatomic, strong) TMView *actionsView;
@@ -713,14 +714,6 @@ static RBLPopover *popover;
             
         }];
         
-        
-        
-        //        [FileUtils showPanelWithTypes:[NSArray arrayWithObjects:@"png", @"tiff", @"jpeg", @"jpg", @"mp4",@"mov",@"avi", nil] completionHandler:^(NSString *result) {
-        //
-        //            MTLog(@"result %@", result);
-        //
-        //            [self.messagesViewController sendImage:result file_data:nil toDialog:self.messagesViewController.conversation];
-        //        }];
     }];
     
     
@@ -729,19 +722,9 @@ static RBLPopover *popover;
     [attachLocationItem setHighlightedImage:image_AttachLocationHighlighted()];
     
     
-#ifndef TGDEBUG
-    
-    if(self.messagesViewController.conversation.type != DialogTypeSecretChat && floor(NSAppKitVersionNumber) > 1187)
-        [theMenu addItem:attachLocationItem];
-    
-#else
-    
-    if(ACCEPT_FEATURE) {
+    if(ACCEPT_FEATURE && self.dialog.type != DialogTypeSecretChat && floor(NSAppKitVersionNumber) > 1187) {
         [theMenu addItem:attachLocationItem];
     }
-    
-    
-#endif
     
     NSMenuItem *attachFileItem = [NSMenuItem menuItemWithTitle:NSLocalizedString(@"Attach.File", nil) withBlock:^(id sender) {
         [FileUtils showPanelWithTypes:nil completionHandler:^(NSArray *paths) {
@@ -761,6 +744,26 @@ static RBLPopover *popover;
     
     
     [theMenu addItem:attachFileItem];
+    
+    
+    
+    NSMenuItem *attachGifSearchItem = [NSMenuItem menuItemWithTitle:NSLocalizedString(@"Attach.Gif", nil) withBlock:^(id sender) {
+        
+        TGModalGifSearch *modal = [[TGModalGifSearch alloc] initWithFrame:self.window.contentView.bounds];
+        [modal show:self.window animated:YES];
+       
+    }];
+    
+    
+    
+    [attachGifSearchItem setImage:image_AttachLocation()];
+    [attachGifSearchItem setHighlightedImage:image_AttachLocationHighlighted()];
+    
+    if(ACCEPT_FEATURE) {
+         [theMenu addItem:attachGifSearchItem];
+    }
+    
+   
     
     return theMenu;
 }
