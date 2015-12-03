@@ -554,10 +554,7 @@
                         conversation.top_important_message = conversation.chat.isMegagroup ? [response top_message] : [response top_important_message];
                         conversation.last_message_date = conversation.lastMessage.date;
                         
-                        if(conversation.last_marked_message == 0) {
-                            conversation.last_marked_message =  conversation.chat.isMegagroup ? [response top_message] : [response top_important_message];
-                            conversation.last_marked_date = conversation.last_message_date;
-                        }
+                        conversation.last_marked_message = [response read_inbox_max_id];
                         
                         conversation.read_inbox_max_id = [response read_inbox_max_id];
                         conversation.unread_count = conversation.chat.isMegagroup ? [response unread_count] : [response unread_important_count];
