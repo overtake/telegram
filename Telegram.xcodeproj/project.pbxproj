@@ -379,6 +379,7 @@
 		C256E91D18D25324008FFA04 /* TMPreviewAudioItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C256E91C18D25324008FFA04 /* TMPreviewAudioItem.m */; };
 		C25A57E01C072D1D0038169F /* ComposeActionStickersBehavior.m in Sources */ = {isa = PBXBuildFile; fileRef = C25A57DF1C072D1D0038169F /* ComposeActionStickersBehavior.m */; };
 		C25A57EC1C0736D70038169F /* TGMovableTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = C25A57EB1C0736D70038169F /* TGMovableTableView.m */; };
+		C25A57EF1C105AA50038169F /* TGModalGifSearch.m in Sources */ = {isa = PBXBuildFile; fileRef = C25A57EE1C105AA50038169F /* TGModalGifSearch.m */; };
 		C25F91B31977E115006868F3 /* TGImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = C25F91B21977E115006868F3 /* TGImageView.m */; };
 		C25F91B91977EB17006868F3 /* TGImageObject.m in Sources */ = {isa = PBXBuildFile; fileRef = C25F91B81977EB17006868F3 /* TGImageObject.m */; };
 		C25F91C4197858BF006868F3 /* LocationSenderItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C25F91C3197858BF006868F3 /* LocationSenderItem.m */; };
@@ -1777,6 +1778,8 @@
 		C25A57DF1C072D1D0038169F /* ComposeActionStickersBehavior.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ComposeActionStickersBehavior.m; sourceTree = "<group>"; };
 		C25A57EA1C0736D70038169F /* TGMovableTableView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGMovableTableView.h; sourceTree = "<group>"; };
 		C25A57EB1C0736D70038169F /* TGMovableTableView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGMovableTableView.m; sourceTree = "<group>"; };
+		C25A57ED1C105AA50038169F /* TGModalGifSearch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGModalGifSearch.h; sourceTree = "<group>"; };
+		C25A57EE1C105AA50038169F /* TGModalGifSearch.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGModalGifSearch.m; sourceTree = "<group>"; };
 		C25F91B11977E115006868F3 /* TGImageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGImageView.h; sourceTree = "<group>"; };
 		C25F91B21977E115006868F3 /* TGImageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGImageView.m; sourceTree = "<group>"; };
 		C25F91B71977EB17006868F3 /* TGImageObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGImageObject.h; sourceTree = "<group>"; };
@@ -5157,6 +5160,8 @@
 				C20B82AF1BDA975500EF01AD /* TGShareContactModalView.m */,
 				C2ED28021BFF7F0E00F19531 /* TGReportChannelModalView.h */,
 				C2ED28031BFF7F0E00F19531 /* TGReportChannelModalView.m */,
+				C25A57ED1C105AA50038169F /* TGModalGifSearch.h */,
+				C25A57EE1C105AA50038169F /* TGModalGifSearch.m */,
 			);
 			name = modal;
 			sourceTree = "<group>";
@@ -6507,6 +6512,7 @@
 				0A9EDC4E1897BA0E0037E1BC /* NSColor+RBLCGColorAdditions.m in Sources */,
 				C268C19F19F13721007F836A /* MessagetableCellAudioController.m in Sources */,
 				C274C3AC1AC083AA000DFDE4 /* SearchHashtagItem.m in Sources */,
+				C25A57EF1C105AA50038169F /* TGModalGifSearch.m in Sources */,
 				0AAAE56F18C7821900A2F9F1 /* UserInfoShortButtonView.m in Sources */,
 				C2CE53E61BEB4FAD00BBEF5F /* ComposeChangeChannelDescriptionViewController.m in Sources */,
 				C2C6D9661A111B3E001EF8A2 /* TGPhotoViewerItem.m in Sources */,
