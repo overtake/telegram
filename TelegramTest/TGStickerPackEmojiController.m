@@ -200,6 +200,8 @@
     
     [_packsContainerView removeAllSubviews];
     
+    [self setSelectedItem:nil];
+    
     if(_stickers.hasRecentStickers) {
         stickers = [@[[[NSObject alloc] init]] arrayByAddingObjectsFromArray:stickers];
     }
@@ -258,7 +260,7 @@
         button.packId = -2;
         button.delegate = self;
         button.imageView.image = image_StickerSettings();
-        
+        [button.imageView setContentMode:BTRViewContentModeCenter];
         [_packsContainerView addSubview:button];
         
          x+=itemWidth;
