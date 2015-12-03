@@ -4039,6 +4039,15 @@
 			name = download_items;
 			sourceTree = "<group>";
 		};
+		C25A57F61C108B700038169F /* gif */ = {
+			isa = PBXGroup;
+			children = (
+				C25A57ED1C105AA50038169F /* TGModalGifSearch.h */,
+				C25A57EE1C105AA50038169F /* TGModalGifSearch.m */,
+			);
+			name = gif;
+			sourceTree = "<group>";
+		};
 		C25F91E9197D36BC006868F3 /* test_utilites */ = {
 			isa = PBXGroup;
 			children = (
@@ -5149,6 +5158,7 @@
 		C2D4B73A1AFCD35F0035B4E4 /* modal */ = {
 			isa = PBXGroup;
 			children = (
+				C25A57F61C108B700038169F /* gif */,
 				C2A2B42F1BD7C8DB0083DA8A /* TGModalForwardView.h */,
 				C2A2B4301BD7C8DB0083DA8A /* TGModalForwardView.m */,
 				C2B0DF961BAAFEC40023982C /* modalsettings */,
@@ -5160,8 +5170,6 @@
 				C20B82AF1BDA975500EF01AD /* TGShareContactModalView.m */,
 				C2ED28021BFF7F0E00F19531 /* TGReportChannelModalView.h */,
 				C2ED28031BFF7F0E00F19531 /* TGReportChannelModalView.m */,
-				C25A57ED1C105AA50038169F /* TGModalGifSearch.h */,
-				C25A57EE1C105AA50038169F /* TGModalGifSearch.m */,
 			);
 			name = modal;
 			sourceTree = "<group>";

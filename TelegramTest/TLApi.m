@@ -2,7 +2,7 @@
 //  TLApi.m
 //  Telegram
 //
-//  Auto created by Mikhail Filimonov on 27.11.15..
+//  Auto created by Mikhail Filimonov on 03.12.15..
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -2525,6 +2525,21 @@
                 break;
 		}
 	}
+	return [stream getOutput];
+}
+@end
+
+@implementation TLAPI_messages_searchGifs
++(TLAPI_messages_searchGifs*)createWithQ:(NSString*)q offset:(int)offset {
+    TLAPI_messages_searchGifs* obj = [[TLAPI_messages_searchGifs alloc] init];
+    obj.q = q;
+	obj.offset = offset;
+    return obj;
+}
+- (NSData*)getData {
+	SerializedData* stream = [ClassStore streamWithConstuctor:-1080395925];
+	[stream writeString:self.q];
+	[stream writeInt:self.offset];
 	return [stream getOutput];
 }
 @end

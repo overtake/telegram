@@ -2,7 +2,7 @@
 //  TLApi.h
 //  Telegram
 //
-//  Auto created by Mikhail Filimonov on 27.11.15.
+//  Auto created by Mikhail Filimonov on 03.12.15.
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -1061,5 +1061,12 @@
 @property (nonatomic, strong) NSMutableArray* order;
 
 +(TLAPI_messages_reorderStickerSets*)createWithOrder:(NSMutableArray*)order;
+@end
+
+@interface TLAPI_messages_searchGifs : TLApiObject
+@property (nonatomic, strong) NSString* q;
+@property int offset;
+
++(TLAPI_messages_searchGifs*)createWithQ:(NSString*)q offset:(int)offset;
 @end
 

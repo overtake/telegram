@@ -2,7 +2,7 @@
 //  MTProto.h
 //  Telegram
 //
-//  Auto created by Mikhail Filimonov on 27.11.15.
+//  Auto created by Mikhail Filimonov on 03.12.15.
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -408,6 +408,12 @@
 @interface TLhelp_TermsOfService : TLObject
 @end
 	
+@interface TLFoundGif : TLObject
+@end
+	
+@interface TLmessages_FoundGifs : TLObject
+@end
+	
 @interface TLProtoMessage : TLObject
 @end
 	
@@ -585,6 +591,8 @@
 @property (nonatomic, strong) NSString* address;
 @property (nonatomic, strong) NSString* provider;
 @property (nonatomic, strong) NSString* venue_id;
+@property (nonatomic, strong) NSString* url;
+@property (nonatomic, strong) NSString* q;
 @end
 
 @interface TL_inputMediaEmpty : TLInputMedia<NSCoding>
@@ -628,6 +636,9 @@
 @end
 @interface TL_inputMediaVenue : TLInputMedia<NSCoding>
 +(TL_inputMediaVenue*)createWithGeo_point:(TLInputGeoPoint*)geo_point title:(NSString*)title address:(NSString*)address provider:(NSString*)provider venue_id:(NSString*)venue_id;
+@end
+@interface TL_inputMediaGifExternal : TLInputMedia<NSCoding>
++(TL_inputMediaGifExternal*)createWithUrl:(NSString*)url q:(NSString*)q;
 @end
 @interface TL_inputMediaUploadedVideo_old34 : TLInputMedia<NSCoding>
 +(TL_inputMediaUploadedVideo_old34*)createWithFile:(TLInputFile*)file duration:(int)duration w:(int)w h:(int)h caption:(NSString*)caption;
@@ -812,6 +823,7 @@
 @property (nonatomic,assign,readonly) BOOL isBot_chat_history;
 @property (nonatomic,assign,readonly) BOOL isBot_nochats;
 @property (nonatomic,assign,readonly) BOOL isVerified;
+@property (nonatomic,assign,readonly) BOOL isExplicit_content;
 @property long access_hash;
 @property (nonatomic, strong) NSString* first_name;
 @property (nonatomic, strong) NSString* last_name;
@@ -826,7 +838,7 @@
 +(TL_userEmpty*)createWithN_id:(int)n_id;
 @end
 @interface TL_user : TLUser<NSCoding>
-+(TL_user*)createWithFlags:(int)flags         n_id:(int)n_id access_hash:(long)access_hash first_name:(NSString*)first_name last_name:(NSString*)last_name username:(NSString*)username phone:(NSString*)phone photo:(TLUserProfilePhoto*)photo status:(TLUserStatus*)status bot_info_version:(int)bot_info_version;
++(TL_user*)createWithFlags:(int)flags          n_id:(int)n_id access_hash:(long)access_hash first_name:(NSString*)first_name last_name:(NSString*)last_name username:(NSString*)username phone:(NSString*)phone photo:(TLUserProfilePhoto*)photo status:(TLUserStatus*)status bot_info_version:(int)bot_info_version;
 @end
 @interface TL_userSelf : TLUser<NSCoding>
 +(TL_userSelf*)createWithN_id:(int)n_id first_name:(NSString*)first_name last_name:(NSString*)last_name username:(NSString*)username phone:(NSString*)phone photo:(TLUserProfilePhoto*)photo status:(TLUserStatus*)status;
@@ -901,6 +913,7 @@
 @property (nonatomic,assign,readonly) BOOL isBroadcast;
 @property (nonatomic,assign,readonly) BOOL isVerified;
 @property (nonatomic,assign,readonly) BOOL isMegagroup;
+@property (nonatomic,assign,readonly) BOOL isExplicit_content;
 @property long access_hash;
 @property (nonatomic, strong) NSString* username;
 @end
@@ -915,7 +928,7 @@
 +(TL_chatForbidden*)createWithN_id:(int)n_id title:(NSString*)title;
 @end
 @interface TL_channel : TLChat<NSCoding>
-+(TL_channel*)createWithFlags:(int)flags         n_id:(int)n_id access_hash:(long)access_hash title:(NSString*)title username:(NSString*)username photo:(TLChatPhoto*)photo date:(int)date version:(int)version;
++(TL_channel*)createWithFlags:(int)flags          n_id:(int)n_id access_hash:(long)access_hash title:(NSString*)title username:(NSString*)username photo:(TLChatPhoto*)photo date:(int)date version:(int)version;
 @end
 @interface TL_channelForbidden : TLChat<NSCoding>
 +(TL_channelForbidden*)createWithN_id:(int)n_id access_hash:(long)access_hash title:(NSString*)title;
@@ -2830,6 +2843,31 @@
 
 @interface TL_help_termsOfService : TLhelp_TermsOfService<NSCoding>
 +(TL_help_termsOfService*)createWithText:(NSString*)text;
+@end
+	
+@interface TLFoundGif()
+@property (nonatomic, strong) NSString* url;
+@property (nonatomic, strong) TLDocument* document;
+@property (nonatomic, strong) NSString* thumb_url;
+@property (nonatomic, strong) NSString* original_url;
+@property int w;
+@property int h;
+@end
+
+@interface TL_foundGifCached : TLFoundGif<NSCoding>
++(TL_foundGifCached*)createWithUrl:(NSString*)url document:(TLDocument*)document;
+@end
+@interface TL_foundGifExternal : TLFoundGif<NSCoding>
++(TL_foundGifExternal*)createWithUrl:(NSString*)url thumb_url:(NSString*)thumb_url original_url:(NSString*)original_url w:(int)w h:(int)h;
+@end
+	
+@interface TLmessages_FoundGifs()
+@property int next_offset;
+@property (nonatomic, strong) NSMutableArray* results;
+@end
+
+@interface TL_messages_foundGifs : TLmessages_FoundGifs<NSCoding>
++(TL_messages_foundGifs*)createWithNext_offset:(int)next_offset results:(NSMutableArray*)results;
 @end
 	
 @interface TLProtoMessage()

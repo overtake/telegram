@@ -254,6 +254,9 @@
          contextName = "-[ChatHistoryController initWithController:historyFilter:]:ChatHistoryController.m">
       </ContextState>
       <ContextState
+         contextName = "__42-[TGModalGifSearch searchFieldTextChange:]_block_invoke:TGModalGifSearch.m">
+      </ContextState>
+      <ContextState
          contextName = "-[MessageTableCellPhotoView setCellState:]:MessageTableCellPhotoView.m">
          <PersistentStrings>
             <PersistentString
@@ -3702,6 +3705,14 @@
          <PersistentStrings>
             <PersistentString
                value = "mark">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[TGModalGifSearch drawResponse:]:TGModalGifSearch.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "gifs">
             </PersistentString>
          </PersistentStrings>
       </ContextState>

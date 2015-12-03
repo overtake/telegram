@@ -2,7 +2,7 @@
 //  MTProto.m
 //  Telegram
 //
-//  Auto created by Mikhail Filimonov on 27.11.15.
+//  Auto created by Mikhail Filimonov on 03.12.15.
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -1302,6 +1302,51 @@
     objc.address = self.address;
     objc.provider = self.provider;
     objc.venue_id = self.venue_id;
+    
+    return objc;
+}
+        
+
+    
+-(id)initWithCoder:(NSCoder *)aDecoder {
+
+    if((self = [ClassStore deserialize:[aDecoder decodeObjectForKey:@"data"]])) {
+        
+    }
+    
+    return self;
+}
+        
+-(void)encodeWithCoder:(NSCoder *)aCoder {
+    [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
+}
+        
+
+        
+@end
+
+@implementation TL_inputMediaGifExternal
++(TL_inputMediaGifExternal*)createWithUrl:(NSString*)url q:(NSString*)q {
+	TL_inputMediaGifExternal* obj = [[TL_inputMediaGifExternal alloc] init];
+	obj.url = url;
+	obj.q = q;
+	return obj;
+}
+-(void)serialize:(SerializedData*)stream {
+	[stream writeString:self.url];
+	[stream writeString:self.q];
+}
+-(void)unserialize:(SerializedData*)stream {
+	super.url = [stream readString];
+	super.q = [stream readString];
+}
+        
+-(TL_inputMediaGifExternal *)copy {
+    
+    TL_inputMediaGifExternal *objc = [[TL_inputMediaGifExternal alloc] init];
+    
+    objc.url = self.url;
+    objc.q = self.q;
     
     return objc;
 }
@@ -2896,6 +2941,8 @@
 -(BOOL)isBot_nochats {return NO;}
                         
 -(BOOL)isVerified {return NO;}
+                        
+-(BOOL)isExplicit_content {return NO;}
             
 @end
         
@@ -2941,9 +2988,10 @@
 @end
 
 @implementation TL_user
-+(TL_user*)createWithFlags:(int)flags         n_id:(int)n_id access_hash:(long)access_hash first_name:(NSString*)first_name last_name:(NSString*)last_name username:(NSString*)username phone:(NSString*)phone photo:(TLUserProfilePhoto*)photo status:(TLUserStatus*)status bot_info_version:(int)bot_info_version {
++(TL_user*)createWithFlags:(int)flags          n_id:(int)n_id access_hash:(long)access_hash first_name:(NSString*)first_name last_name:(NSString*)last_name username:(NSString*)username phone:(NSString*)phone photo:(TLUserProfilePhoto*)photo status:(TLUserStatus*)status bot_info_version:(int)bot_info_version {
 	TL_user* obj = [[TL_user alloc] init];
 	obj.flags = flags;
+	
 	
 	
 	
@@ -2973,6 +3021,7 @@
 	
 	
 	
+	
 	[stream writeInt:self.n_id];
 	if(self.flags & (1 << 0)) {[stream writeLong:self.access_hash];}
 	if(self.flags & (1 << 1)) {[stream writeString:self.first_name];}
@@ -2985,6 +3034,7 @@
 }
 -(void)unserialize:(SerializedData*)stream {
 	super.flags = [stream readInt];
+	
 	
 	
 	
@@ -3009,6 +3059,7 @@
     TL_user *objc = [[TL_user alloc] init];
     
     objc.flags = self.flags;
+    
     
     
     
@@ -3061,6 +3112,8 @@
 -(BOOL)isBot_nochats {return (self.flags & (1 << 16)) > 0;}
                         
 -(BOOL)isVerified {return (self.flags & (1 << 17)) > 0;}
+                        
+-(BOOL)isExplicit_content {return (self.flags & (1 << 18)) > 0;}
                         
 -(void)setAccess_hash:(long)access_hash
 {
@@ -3801,6 +3854,8 @@
 -(BOOL)isVerified {return NO;}
                         
 -(BOOL)isMegagroup {return NO;}
+                        
+-(BOOL)isExplicit_content {return NO;}
             
 @end
         
@@ -4002,9 +4057,10 @@
 @end
 
 @implementation TL_channel
-+(TL_channel*)createWithFlags:(int)flags         n_id:(int)n_id access_hash:(long)access_hash title:(NSString*)title username:(NSString*)username photo:(TLChatPhoto*)photo date:(int)date version:(int)version {
++(TL_channel*)createWithFlags:(int)flags          n_id:(int)n_id access_hash:(long)access_hash title:(NSString*)title username:(NSString*)username photo:(TLChatPhoto*)photo date:(int)date version:(int)version {
 	TL_channel* obj = [[TL_channel alloc] init];
 	obj.flags = flags;
+	
 	
 	
 	
@@ -4032,6 +4088,7 @@
 	
 	
 	
+	
 	[stream writeInt:self.n_id];
 	[stream writeLong:self.access_hash];
 	[stream writeString:self.title];
@@ -4042,6 +4099,7 @@
 }
 -(void)unserialize:(SerializedData*)stream {
 	super.flags = [stream readInt];
+	
 	
 	
 	
@@ -4064,6 +4122,7 @@
     TL_channel *objc = [[TL_channel alloc] init];
     
     objc.flags = self.flags;
+    
     
     
     
@@ -4114,6 +4173,8 @@
 -(BOOL)isVerified {return (self.flags & (1 << 7)) > 0;}
                         
 -(BOOL)isMegagroup {return (self.flags & (1 << 8)) > 0;}
+                        
+-(BOOL)isExplicit_content {return (self.flags & (1 << 9)) > 0;}
                         
 -(void)setUsername:(NSString*)username
 {
@@ -22657,6 +22718,183 @@
     TL_help_termsOfService *objc = [[TL_help_termsOfService alloc] init];
     
     objc.text = self.text;
+    
+    return objc;
+}
+        
+
+    
+-(id)initWithCoder:(NSCoder *)aDecoder {
+
+    if((self = [ClassStore deserialize:[aDecoder decodeObjectForKey:@"data"]])) {
+        
+    }
+    
+    return self;
+}
+        
+-(void)encodeWithCoder:(NSCoder *)aCoder {
+    [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
+}
+        
+
+        
+@end
+
+@implementation TLFoundGif
+
+@end
+        
+@implementation TL_foundGifCached
++(TL_foundGifCached*)createWithUrl:(NSString*)url document:(TLDocument*)document {
+	TL_foundGifCached* obj = [[TL_foundGifCached alloc] init];
+	obj.url = url;
+	obj.document = document;
+	return obj;
+}
+-(void)serialize:(SerializedData*)stream {
+	[stream writeString:self.url];
+	[ClassStore TLSerialize:self.document stream:stream];
+}
+-(void)unserialize:(SerializedData*)stream {
+	super.url = [stream readString];
+	self.document = [ClassStore TLDeserialize:stream];
+}
+        
+-(TL_foundGifCached *)copy {
+    
+    TL_foundGifCached *objc = [[TL_foundGifCached alloc] init];
+    
+    objc.url = self.url;
+    objc.document = [self.document copy];
+    
+    return objc;
+}
+        
+
+    
+-(id)initWithCoder:(NSCoder *)aDecoder {
+
+    if((self = [ClassStore deserialize:[aDecoder decodeObjectForKey:@"data"]])) {
+        
+    }
+    
+    return self;
+}
+        
+-(void)encodeWithCoder:(NSCoder *)aCoder {
+    [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
+}
+        
+
+        
+@end
+
+@implementation TL_foundGifExternal
++(TL_foundGifExternal*)createWithUrl:(NSString*)url thumb_url:(NSString*)thumb_url original_url:(NSString*)original_url w:(int)w h:(int)h {
+	TL_foundGifExternal* obj = [[TL_foundGifExternal alloc] init];
+	obj.url = url;
+	obj.thumb_url = thumb_url;
+	obj.original_url = original_url;
+	obj.w = w;
+	obj.h = h;
+	return obj;
+}
+-(void)serialize:(SerializedData*)stream {
+	[stream writeString:self.url];
+	[stream writeString:self.thumb_url];
+	[stream writeString:self.original_url];
+	[stream writeInt:self.w];
+	[stream writeInt:self.h];
+}
+-(void)unserialize:(SerializedData*)stream {
+	super.url = [stream readString];
+	super.thumb_url = [stream readString];
+	super.original_url = [stream readString];
+	super.w = [stream readInt];
+	super.h = [stream readInt];
+}
+        
+-(TL_foundGifExternal *)copy {
+    
+    TL_foundGifExternal *objc = [[TL_foundGifExternal alloc] init];
+    
+    objc.url = self.url;
+    objc.thumb_url = self.thumb_url;
+    objc.original_url = self.original_url;
+    objc.w = self.w;
+    objc.h = self.h;
+    
+    return objc;
+}
+        
+
+    
+-(id)initWithCoder:(NSCoder *)aDecoder {
+
+    if((self = [ClassStore deserialize:[aDecoder decodeObjectForKey:@"data"]])) {
+        
+    }
+    
+    return self;
+}
+        
+-(void)encodeWithCoder:(NSCoder *)aCoder {
+    [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
+}
+        
+
+        
+@end
+
+@implementation TLmessages_FoundGifs
+
+@end
+        
+@implementation TL_messages_foundGifs
++(TL_messages_foundGifs*)createWithNext_offset:(int)next_offset results:(NSMutableArray*)results {
+	TL_messages_foundGifs* obj = [[TL_messages_foundGifs alloc] init];
+	obj.next_offset = next_offset;
+	obj.results = results;
+	return obj;
+}
+-(void)serialize:(SerializedData*)stream {
+	[stream writeInt:self.next_offset];
+	//Serialize FullVector
+	[stream writeInt:0x1cb5c415];
+	{
+		NSInteger tl_count = [self.results count];
+		[stream writeInt:(int)tl_count];
+		for(int i = 0; i < (int)tl_count; i++) {
+            TLFoundGif* obj = [self.results objectAtIndex:i];
+            [ClassStore TLSerialize:obj stream:stream];
+		}
+	}
+}
+-(void)unserialize:(SerializedData*)stream {
+	super.next_offset = [stream readInt];
+	//UNS FullVector
+	[stream readInt];
+	{
+		if(!self.results)
+			self.results = [[NSMutableArray alloc] init];
+		int count = [stream readInt];
+		for(int i = 0; i < count; i++) {
+			TLFoundGif* obj = [ClassStore TLDeserialize:stream];
+            if(obj != nil && [obj isKindOfClass:[TLFoundGif class]])
+                 [self.results addObject:obj];
+            else
+                break;
+		}
+	}
+}
+        
+-(TL_messages_foundGifs *)copy {
+    
+    TL_messages_foundGifs *objc = [[TL_messages_foundGifs alloc] init];
+    
+    objc.next_offset = self.next_offset;
+    objc.results = [self.results copy];
     
     return objc;
 }
