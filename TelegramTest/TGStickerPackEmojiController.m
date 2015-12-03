@@ -254,10 +254,9 @@
     
     if(self.stickers.sets.count > 1) {
         TGStickerPackButton *button = [[TGStickerPackButton alloc] initWithFrame:NSMakeRect(x, 0, itemWidth, 44)];
-        
+                
         button.packId = -2;
         button.delegate = self;
-        [button.imageView setContentMode:BTRViewContentModeCenter];
         button.imageView.image = image_StickerSettings();
         
         [_packsContainerView addSubview:button];
