@@ -247,43 +247,12 @@ bool isRemoteStickersLoaded() {
     
     TL_documentAttributeSticker *attribute = (TL_documentAttributeSticker *) [document attributeWithClass:[TL_documentAttributeSticker class]];
     
-    if(attribute && attribute.alt.length > 0)
+    if(attribute && attribute.stickerset)
     {
         return YES;
     }
     
-    [[Storage yap] readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
-        
-        
-        NSArray *serialized = [transaction objectForKey:@"modern_stickers" inCollection:STICKERS_COLLECTION][@"serialized"];
-        
-        [serialized enumerateObjectsUsingBlock:^(TL_document *ds, NSUInteger idx, BOOL *stop) {
-            
-            
-            if(ds.n_id == document.n_id)
-            {
-                has = YES;
-                *stop = YES;
-            }
-            
-        }];
-        
-        if(!has) {
-            serialized = [transaction objectForKey:@"localStickers" inCollection:STICKERS_COLLECTION];
-            
-            [serialized enumerateObjectsUsingBlock:^(TL_document *ds, NSUInteger idx, BOOL *stop) {
-                
-                
-                if(ds.n_id == document.n_id)
-                {
-                    has = YES;
-                    *stop = YES;
-                }
-            }];
-        }
-        
-        
-    }];
+    
     
     return has;
 }

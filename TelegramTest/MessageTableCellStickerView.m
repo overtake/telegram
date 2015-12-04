@@ -97,28 +97,20 @@
     [super mouseUp:theEvent];
     
     if([self.containerView mouse:[self.containerView convertPoint:[theEvent locationInWindow] fromView:nil] inRect:self.imageView.frame]) {
-        if([StickersPanelView hasSticker:self.item.message.media.document])
-        {
+        TL_documentAttributeSticker *attr = (TL_documentAttributeSticker *) [self.item.message.media.document attributeWithClass:TL_documentAttributeSticker.class];
+        
+        if(![attr.stickerset isKindOfClass:[TL_inputStickerSetEmpty class]]) {
             
-            TL_documentAttributeSticker *attr = (TL_documentAttributeSticker *) [self.item.message.media.document attributeWithClass:TL_documentAttributeSticker.class];
-            
-            if(![attr.stickerset isKindOfClass:[TL_inputStickerSetEmpty class]]) {
+            TL_stickerSet *set = [EmojiViewController setWithId:attr.stickerset.n_id];
+            NSMutableArray *stickers = (NSMutableArray *) [EmojiViewController stickersWithId:attr.stickerset.n_id];
+            if(set && stickers.count > 0) {
+                TGStickerPackModalView *modalView = [[TGStickerPackModalView alloc] init];
                 
-                TL_stickerSet *set = [EmojiViewController setWithId:attr.stickerset.n_id];
-                NSMutableArray *stickers = (NSMutableArray *) [EmojiViewController stickersWithId:attr.stickerset.n_id];
-                if(set && stickers.count > 0) {
-                    TGStickerPackModalView *modalView = [[TGStickerPackModalView alloc] init];
-                    
-                    [modalView setStickerPack:[TL_messages_stickerSet createWithSet:set packs:nil documents:stickers]];
-                    
-                    [modalView show:self.window animated:YES];
-                } else
-                    add_sticker_pack_by_name(attr.stickerset);
+                [modalView setStickerPack:[TL_messages_stickerSet createWithSet:set packs:nil documents:stickers]];
                 
-                
-                
-            }
-            
+                [modalView show:self.window animated:YES];
+            } else
+                add_sticker_pack_by_name(attr.stickerset);
         }
     }
 }
