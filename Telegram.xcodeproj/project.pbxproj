@@ -380,6 +380,7 @@
 		C25A57E01C072D1D0038169F /* ComposeActionStickersBehavior.m in Sources */ = {isa = PBXBuildFile; fileRef = C25A57DF1C072D1D0038169F /* ComposeActionStickersBehavior.m */; };
 		C25A57EC1C0736D70038169F /* TGMovableTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = C25A57EB1C0736D70038169F /* TGMovableTableView.m */; };
 		C25A57EF1C105AA50038169F /* TGModalGifSearch.m in Sources */ = {isa = PBXBuildFile; fileRef = C25A57EE1C105AA50038169F /* TGModalGifSearch.m */; };
+		C25A581F1C10C9DF0038169F /* ExternalGifSenderItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C25A581E1C10C9DF0038169F /* ExternalGifSenderItem.m */; };
 		C25F91B31977E115006868F3 /* TGImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = C25F91B21977E115006868F3 /* TGImageView.m */; };
 		C25F91B91977EB17006868F3 /* TGImageObject.m in Sources */ = {isa = PBXBuildFile; fileRef = C25F91B81977EB17006868F3 /* TGImageObject.m */; };
 		C25F91C4197858BF006868F3 /* LocationSenderItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C25F91C3197858BF006868F3 /* LocationSenderItem.m */; };
@@ -1780,6 +1781,8 @@
 		C25A57EB1C0736D70038169F /* TGMovableTableView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGMovableTableView.m; sourceTree = "<group>"; };
 		C25A57ED1C105AA50038169F /* TGModalGifSearch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGModalGifSearch.h; sourceTree = "<group>"; };
 		C25A57EE1C105AA50038169F /* TGModalGifSearch.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGModalGifSearch.m; sourceTree = "<group>"; };
+		C25A581D1C10C9DF0038169F /* ExternalGifSenderItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ExternalGifSenderItem.h; sourceTree = "<group>"; };
+		C25A581E1C10C9DF0038169F /* ExternalGifSenderItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ExternalGifSenderItem.m; sourceTree = "<group>"; };
 		C25F91B11977E115006868F3 /* TGImageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGImageView.h; sourceTree = "<group>"; };
 		C25F91B21977E115006868F3 /* TGImageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGImageView.m; sourceTree = "<group>"; };
 		C25F91B71977EB17006868F3 /* TGImageObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGImageObject.h; sourceTree = "<group>"; };
@@ -3660,6 +3663,8 @@
 				C2C85B861AE6597000FBEABD /* ImageAttachSenderItem.m */,
 				C2D7C5BC1B3091400042DC01 /* StartBotSenderItem.h */,
 				C2D7C5BD1B3091400042DC01 /* StartBotSenderItem.m */,
+				C25A581D1C10C9DF0038169F /* ExternalGifSenderItem.h */,
+				C25A581E1C10C9DF0038169F /* ExternalGifSenderItem.m */,
 			);
 			name = sender;
 			sourceTree = "<group>";
@@ -6509,6 +6514,7 @@
 				CEAE5D2E181E4C6F00C17645 /* TLFileLocation+Extensions.m in Sources */,
 				C244358B1A1E159900F9BB38 /* PrivacyUserListController.m in Sources */,
 				CEAE5D56181ECDD300C17645 /* Storage.m in Sources */,
+				C25A581F1C10C9DF0038169F /* ExternalGifSenderItem.m in Sources */,
 				0AAAE58518C9F9A500A2F9F1 /* UserInfoShortTextEditView.m in Sources */,
 				C26976A91A0ABF060047E2C3 /* DownloadPhotoCollectionItem.m in Sources */,
 				0AAAE56518C612F800A2F9F1 /* NSView-DisableSubsAdditions.m in Sources */,

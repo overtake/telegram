@@ -138,7 +138,7 @@ typedef enum {
 - (void)shareContact:(TLUser *)contact forConversation:(TL_conversation *)conversation callback:(dispatch_block_t)callback;
 - (void)sendSecretTTL:(int)ttl forConversation:(TL_conversation *)conversation;
 - (void)sendSecretTTL:(int)ttl forConversation:(TL_conversation *)conversation callback:(dispatch_block_t)callback;
-
+- (void)sendFoundGif:(TLMessageMedia *)media forConversation:(TL_conversation *)conversation;
 - (NSArray *)messageTableItemsFromMessages:(NSArray *)input;
 
 - (void)hideTopInfoView:(BOOL)animated;

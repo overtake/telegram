@@ -10,4 +10,6 @@
 
 @interface TGModalGifSearch : TGModalView
 
+@property (nonatomic,weak) MessagesViewController *messagesViewController;
+
 @end

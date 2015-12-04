@@ -79,6 +79,7 @@
 #import "TGModernUserViewController.h"
 #import "TGModernChatInfoViewController.h"
 #import "TGModernChannelInfoViewController.h"
+#import "ExternalGifSenderItem.h"
 #define HEADER_MESSAGES_GROUPING_TIME (10 * 60)
 
 #define SCROLLDOWNBUTTON_OFFSET 1500
@@ -3481,6 +3482,22 @@ static NSTextAttachment *headerMediaIcon() {
         sender.tableItem = [[self messageTableItemsFromMessages:@[sender.message]] lastObject];
         [self.historyController addItem:sender.tableItem sentControllerCallback:completeHandler];
     }];
+}
+
+- (void)sendFoundGif:(TLMessageMedia *)media forConversation:(TL_conversation *)conversation; {
+   
+    if(!self.conversation.canSendMessage) return;
+    
+    [self setHistoryFilter:self.defHFClass force:self.historyController.prevState != ChatHistoryStateFull];
+    
+    [ASQueue dispatchOnStageQueue:^{
+        
+        ExternalGifSenderItem *sender = [[ExternalGifSenderItem alloc] initWithMedia:media forConversation:conversation];
+        
+        sender.tableItem = [[self messageTableItemsFromMessages:@[sender.message]] lastObject];
+        [self.historyController addItem:sender.tableItem conversation:conversation callback:nil sentControllerCallback:nil];
+    }];
+    
 }
 
 

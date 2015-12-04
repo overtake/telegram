@@ -750,6 +750,8 @@ static RBLPopover *popover;
     NSMenuItem *attachGifSearchItem = [NSMenuItem menuItemWithTitle:NSLocalizedString(@"Attach.Gif", nil) withBlock:^(id sender) {
         
         TGModalGifSearch *modal = [[TGModalGifSearch alloc] initWithFrame:self.window.contentView.bounds];
+       
+        modal.messagesViewController = self.messagesViewController;
         [modal show:self.window animated:YES];
        
     }];

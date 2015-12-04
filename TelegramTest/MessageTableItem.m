@@ -493,6 +493,9 @@ static NSTextAttachment *channelIconAttachment() {
 
 - (void)startDownload:(BOOL)cancel force:(BOOL)force {
     
+    if([self.message.media.document isKindOfClass:[TL_externalDocument class]])
+        return;
+    
     DownloadItem *downloadItem = self.downloadItem;
     
     if(!downloadItem) {

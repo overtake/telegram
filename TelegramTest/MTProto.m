@@ -2,7 +2,7 @@
 //  MTProto.m
 //  Telegram
 //
-//  Auto created by Mikhail Filimonov on 03.12.15.
+//  Auto created by Mikhail Filimonov on 04.12.15.
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -2103,6 +2103,55 @@
     
     objc.n_id = self.n_id;
     objc.access_hash = self.access_hash;
+    
+    return objc;
+}
+        
+
+    
+-(id)initWithCoder:(NSCoder *)aDecoder {
+
+    if((self = [ClassStore deserialize:[aDecoder decodeObjectForKey:@"data"]])) {
+        
+    }
+    
+    return self;
+}
+        
+-(void)encodeWithCoder:(NSCoder *)aCoder {
+    [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
+}
+        
+
+        
+@end
+
+@implementation TL_inputDocumentSubfileLocation
++(TL_inputDocumentSubfileLocation*)createWithN_id:(long)n_id access_hash:(long)access_hash type:(NSString*)type {
+	TL_inputDocumentSubfileLocation* obj = [[TL_inputDocumentSubfileLocation alloc] init];
+	obj.n_id = n_id;
+	obj.access_hash = access_hash;
+	obj.type = type;
+	return obj;
+}
+-(void)serialize:(SerializedData*)stream {
+	[stream writeLong:self.n_id];
+	[stream writeLong:self.access_hash];
+	[stream writeString:self.type];
+}
+-(void)unserialize:(SerializedData*)stream {
+	super.n_id = [stream readLong];
+	super.access_hash = [stream readLong];
+	super.type = [stream readString];
+}
+        
+-(TL_inputDocumentSubfileLocation *)copy {
+    
+    TL_inputDocumentSubfileLocation *objc = [[TL_inputDocumentSubfileLocation alloc] init];
+    
+    objc.n_id = self.n_id;
+    objc.access_hash = self.access_hash;
+    objc.type = self.type;
     
     return objc;
 }
@@ -16085,6 +16134,101 @@
         
 @end
 
+@implementation TL_externalDocument
++(TL_externalDocument*)createWithN_id:(long)n_id date:(int)date mime_type:(NSString*)mime_type thumb:(TLPhotoSize*)thumb external_url:(NSString*)external_url search_q:(NSString*)search_q perform_date:(int)perform_date external_webpage:(TLWebPage*)external_webpage attributes:(NSMutableArray*)attributes {
+	TL_externalDocument* obj = [[TL_externalDocument alloc] init];
+	obj.n_id = n_id;
+	obj.date = date;
+	obj.mime_type = mime_type;
+	obj.thumb = thumb;
+	obj.external_url = external_url;
+	obj.search_q = search_q;
+	obj.perform_date = perform_date;
+	obj.external_webpage = external_webpage;
+	obj.attributes = attributes;
+	return obj;
+}
+-(void)serialize:(SerializedData*)stream {
+	[stream writeLong:self.n_id];
+	[stream writeInt:self.date];
+	[stream writeString:self.mime_type];
+	[ClassStore TLSerialize:self.thumb stream:stream];
+	[stream writeString:self.external_url];
+	[stream writeString:self.search_q];
+	[stream writeInt:self.perform_date];
+	[ClassStore TLSerialize:self.external_webpage stream:stream];
+	//Serialize FullVector
+	[stream writeInt:0x1cb5c415];
+	{
+		NSInteger tl_count = [self.attributes count];
+		[stream writeInt:(int)tl_count];
+		for(int i = 0; i < (int)tl_count; i++) {
+            TLDocumentAttribute* obj = [self.attributes objectAtIndex:i];
+            [ClassStore TLSerialize:obj stream:stream];
+		}
+	}
+}
+-(void)unserialize:(SerializedData*)stream {
+	super.n_id = [stream readLong];
+	super.date = [stream readInt];
+	super.mime_type = [stream readString];
+	self.thumb = [ClassStore TLDeserialize:stream];
+	super.external_url = [stream readString];
+	super.search_q = [stream readString];
+	super.perform_date = [stream readInt];
+	self.external_webpage = [ClassStore TLDeserialize:stream];
+	//UNS FullVector
+	[stream readInt];
+	{
+		if(!self.attributes)
+			self.attributes = [[NSMutableArray alloc] init];
+		int count = [stream readInt];
+		for(int i = 0; i < count; i++) {
+			TLDocumentAttribute* obj = [ClassStore TLDeserialize:stream];
+            if(obj != nil && [obj isKindOfClass:[TLDocumentAttribute class]])
+                 [self.attributes addObject:obj];
+            else
+                break;
+		}
+	}
+}
+        
+-(TL_externalDocument *)copy {
+    
+    TL_externalDocument *objc = [[TL_externalDocument alloc] init];
+    
+    objc.n_id = self.n_id;
+    objc.date = self.date;
+    objc.mime_type = self.mime_type;
+    objc.thumb = [self.thumb copy];
+    objc.external_url = self.external_url;
+    objc.search_q = self.search_q;
+    objc.perform_date = self.perform_date;
+    objc.external_webpage = [self.external_webpage copy];
+    objc.attributes = [self.attributes copy];
+    
+    return objc;
+}
+        
+
+    
+-(id)initWithCoder:(NSCoder *)aDecoder {
+
+    if((self = [ClassStore deserialize:[aDecoder decodeObjectForKey:@"data"]])) {
+        
+    }
+    
+    return self;
+}
+        
+-(void)encodeWithCoder:(NSCoder *)aCoder {
+    [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
+}
+        
+
+        
+@end
+
 @implementation TLhelp_Support
 
 @end
@@ -17951,6 +18095,55 @@
     TL_documentAttributeFilename *objc = [[TL_documentAttributeFilename alloc] init];
     
     objc.file_name = self.file_name;
+    
+    return objc;
+}
+        
+
+    
+-(id)initWithCoder:(NSCoder *)aDecoder {
+
+    if((self = [ClassStore deserialize:[aDecoder decodeObjectForKey:@"data"]])) {
+        
+    }
+    
+    return self;
+}
+        
+-(void)encodeWithCoder:(NSCoder *)aCoder {
+    [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
+}
+        
+
+        
+@end
+
+@implementation TL_documentAttributeSubfile
++(TL_documentAttributeSubfile*)createWithType:(NSString*)type mime_type:(NSString*)mime_type size:(int)size {
+	TL_documentAttributeSubfile* obj = [[TL_documentAttributeSubfile alloc] init];
+	obj.type = type;
+	obj.mime_type = mime_type;
+	obj.size = size;
+	return obj;
+}
+-(void)serialize:(SerializedData*)stream {
+	[stream writeString:self.type];
+	[stream writeString:self.mime_type];
+	[stream writeInt:self.size];
+}
+-(void)unserialize:(SerializedData*)stream {
+	super.type = [stream readString];
+	super.mime_type = [stream readString];
+	super.size = [stream readInt];
+}
+        
+-(TL_documentAttributeSubfile *)copy {
+    
+    TL_documentAttributeSubfile *objc = [[TL_documentAttributeSubfile alloc] init];
+    
+    objc.type = self.type;
+    objc.mime_type = self.mime_type;
+    objc.size = self.size;
     
     return objc;
 }
@@ -22791,11 +22984,12 @@
 @end
 
 @implementation TL_foundGifExternal
-+(TL_foundGifExternal*)createWithUrl:(NSString*)url thumb_url:(NSString*)thumb_url original_url:(NSString*)original_url w:(int)w h:(int)h {
++(TL_foundGifExternal*)createWithUrl:(NSString*)url thumb_url:(NSString*)thumb_url original_url:(NSString*)original_url mp4_url:(NSString*)mp4_url w:(int)w h:(int)h {
 	TL_foundGifExternal* obj = [[TL_foundGifExternal alloc] init];
 	obj.url = url;
 	obj.thumb_url = thumb_url;
 	obj.original_url = original_url;
+	obj.mp4_url = mp4_url;
 	obj.w = w;
 	obj.h = h;
 	return obj;
@@ -22804,6 +22998,7 @@
 	[stream writeString:self.url];
 	[stream writeString:self.thumb_url];
 	[stream writeString:self.original_url];
+	[stream writeString:self.mp4_url];
 	[stream writeInt:self.w];
 	[stream writeInt:self.h];
 }
@@ -22811,6 +23006,7 @@
 	super.url = [stream readString];
 	super.thumb_url = [stream readString];
 	super.original_url = [stream readString];
+	super.mp4_url = [stream readString];
 	super.w = [stream readInt];
 	super.h = [stream readInt];
 }
@@ -22822,6 +23018,7 @@
     objc.url = self.url;
     objc.thumb_url = self.thumb_url;
     objc.original_url = self.original_url;
+    objc.mp4_url = self.mp4_url;
     objc.w = self.w;
     objc.h = self.h;
     

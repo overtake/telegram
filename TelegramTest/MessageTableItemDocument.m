@@ -66,6 +66,7 @@
             self.state = DocumentStateWaitingDownload;
         }
         
+        
           [self checkStartDownload:[self.message.to_id isKindOfClass:[TL_peerChat class]] ? AutoGroupDocuments : AutoPrivateDocuments size:self.message.media.document.size];
         
     }

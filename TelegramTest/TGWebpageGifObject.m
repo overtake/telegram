@@ -22,7 +22,7 @@
         
         _imageObject = [[TGImageObject alloc] initWithLocation:webpage.document.thumb.location placeHolder:nil sourceId:0 size:webpage.document.thumb.size];
         _imageObject.imageSize = NSMakeSize(roundf(webpage.document.thumb.w * (320 / webpage.document.thumb.w)), roundf(webpage.document.thumb.h * (320 / webpage.document.thumb.h)));
-        
+
         
     }
     

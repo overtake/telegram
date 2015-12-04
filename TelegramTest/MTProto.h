@@ -2,7 +2,7 @@
 //  MTProto.h
 //  Telegram
 //
-//  Auto created by Mikhail Filimonov on 03.12.15.
+//  Auto created by Mikhail Filimonov on 04.12.15.
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -705,6 +705,7 @@
 @property long secret;
 @property long n_id;
 @property long access_hash;
+@property (nonatomic, strong) NSString* type;
 @end
 
 @interface TL_inputFileLocation : TLInputFileLocation<NSCoding>
@@ -721,6 +722,9 @@
 @end
 @interface TL_inputDocumentFileLocation : TLInputFileLocation<NSCoding>
 +(TL_inputDocumentFileLocation*)createWithN_id:(long)n_id access_hash:(long)access_hash;
+@end
+@interface TL_inputDocumentSubfileLocation : TLInputFileLocation<NSCoding>
++(TL_inputDocumentSubfileLocation*)createWithN_id:(long)n_id access_hash:(long)access_hash type:(NSString*)type;
 @end
 	
 @interface TLInputPhotoCrop()
@@ -2112,6 +2116,10 @@
 @property (nonatomic, strong) TLPhotoSize* thumb;
 @property int dc_id;
 @property (nonatomic, strong) NSMutableArray* attributes;
+@property (nonatomic, strong) NSString* external_url;
+@property (nonatomic, strong) NSString* search_q;
+@property int perform_date;
+@property (nonatomic, strong) TLWebPage* external_webpage;
 @end
 
 @interface TL_documentEmpty : TLDocument<NSCoding>
@@ -2119,6 +2127,9 @@
 @end
 @interface TL_document : TLDocument<NSCoding>
 +(TL_document*)createWithN_id:(long)n_id access_hash:(long)access_hash date:(int)date mime_type:(NSString*)mime_type size:(int)size thumb:(TLPhotoSize*)thumb dc_id:(int)dc_id attributes:(NSMutableArray*)attributes;
+@end
+@interface TL_externalDocument : TLDocument<NSCoding>
++(TL_externalDocument*)createWithN_id:(long)n_id date:(int)date mime_type:(NSString*)mime_type thumb:(TLPhotoSize*)thumb external_url:(NSString*)external_url search_q:(NSString*)search_q perform_date:(int)perform_date external_webpage:(TLWebPage*)external_webpage attributes:(NSMutableArray*)attributes;
 @end
 	
 @interface TLhelp_Support()
@@ -2289,6 +2300,9 @@
 @property (nonatomic, strong) NSString* title;
 @property (nonatomic, strong) NSString* performer;
 @property (nonatomic, strong) NSString* file_name;
+@property (nonatomic, strong) NSString* type;
+@property (nonatomic, strong) NSString* mime_type;
+@property int size;
 @end
 
 @interface TL_documentAttributeImageSize : TLDocumentAttribute<NSCoding>
@@ -2308,6 +2322,9 @@
 @end
 @interface TL_documentAttributeFilename : TLDocumentAttribute<NSCoding>
 +(TL_documentAttributeFilename*)createWithFile_name:(NSString*)file_name;
+@end
+@interface TL_documentAttributeSubfile : TLDocumentAttribute<NSCoding>
++(TL_documentAttributeSubfile*)createWithType:(NSString*)type mime_type:(NSString*)mime_type size:(int)size;
 @end
 @interface TL_documentAttributeAudio_old31 : TLDocumentAttribute<NSCoding>
 +(TL_documentAttributeAudio_old31*)createWithDuration:(int)duration;
@@ -2850,6 +2867,7 @@
 @property (nonatomic, strong) TLDocument* document;
 @property (nonatomic, strong) NSString* thumb_url;
 @property (nonatomic, strong) NSString* original_url;
+@property (nonatomic, strong) NSString* mp4_url;
 @property int w;
 @property int h;
 @end
@@ -2858,7 +2876,7 @@
 +(TL_foundGifCached*)createWithUrl:(NSString*)url document:(TLDocument*)document;
 @end
 @interface TL_foundGifExternal : TLFoundGif<NSCoding>
-+(TL_foundGifExternal*)createWithUrl:(NSString*)url thumb_url:(NSString*)thumb_url original_url:(NSString*)original_url w:(int)w h:(int)h;
++(TL_foundGifExternal*)createWithUrl:(NSString*)url thumb_url:(NSString*)thumb_url original_url:(NSString*)original_url mp4_url:(NSString*)mp4_url w:(int)w h:(int)h;
 @end
 	
 @interface TLmessages_FoundGifs()

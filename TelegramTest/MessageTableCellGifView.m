@@ -256,11 +256,22 @@ static NSImage *playImage() {
 }
 
 - (void)setCellState:(CellState)cellState {
+    
+    if(self.cellState == CellStateSending && cellState == CellStateNormal) {
+        [self.item checkStartDownload:0 size:0];
+        
+        if(self.item.downloadItem != nil) {
+            [self updateDownloadState];
+        }
+    }
+    
+    
     [super setCellState:cellState];
     
     [self.playImage setHidden:YES];
     
     [self.progressView setState:cellState];
+    
 }
 
 - (void) setItem:(MessageTableItemGif *)item {
