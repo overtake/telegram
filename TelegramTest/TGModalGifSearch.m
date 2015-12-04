@@ -259,6 +259,11 @@
 
 -(void)searchFieldTextChange:(NSString *)searchString {
     
+    if(searchString.length == 0) {
+        [self drawResponse:@[]];
+        return;
+    }
+    
     cancel_delayed_block(_delayedBlockHandle);
     
     [_request cancelRequest];
@@ -269,11 +274,19 @@
             [self drawResponse:response.results];
             
         } errorHandler:^(id request, RpcError *error) {
-            
+            [self drawResponse:@[]];
             
         }];
     });
     
+    
+}
+
+-(void)modalViewDidShow {
+    [super modalViewDidShow];
+    dispatch_after_seconds(0.2, ^{
+        [self.searchField becomeFirstResponder];
+    });
     
 }
 

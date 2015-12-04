@@ -62,6 +62,14 @@
 }
 
 
+- (void)checkStartDownload:(SettingsMask)setting size:(int)size {
+    
+    if(([self size] <= 10*1024*1024 && !self.downloadItem && !self.isset) || (self.downloadItem && self.downloadItem.downloadState != DownloadStateCanceled)) {
+        [self startDownload:NO force:YES];
+    }
+    
+}
+
 -(BOOL)makeSizeByWidth:(int)width {
     
     [super makeSizeByWidth:width];
