@@ -231,7 +231,7 @@ NSImage *placeholder() {
         return [[TGWebpageArticle alloc] initWithWebPage:webpage];
     }
     
-    if([webpage.type isEqualToString:@"document"]) {
+    if([webpage.type isEqualToString:@"document"] || [webpage.type isEqualToString:@"gif"]) {
         if([webpage.document.mime_type isEqualToString:@"image/gif"])
             return [[TGWebpageGifObject alloc] initWithWebPage:webpage];
     }
