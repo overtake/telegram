@@ -263,6 +263,10 @@
 		C20D190219542AB80095A906 /* SearchHistoryFilter.m in Sources */ = {isa = PBXBuildFile; fileRef = C20D190119542AB80095A906 /* SearchHistoryFilter.m */; };
 		C20F76E91BB994A6003A1E86 /* TGModernUserViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C20F76E81BB994A6003A1E86 /* TGModernUserViewController.m */; };
 		C20F76ED1BBAC41A003A1E86 /* TGMessagesHintView.m in Sources */ = {isa = PBXBuildFile; fileRef = C20F76EC1BBAC41A003A1E86 /* TGMessagesHintView.m */; };
+		C210687B1C15A91500815859 /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C235364C19C88D620044978E /* Sparkle.framework */; };
+		C210687C1C15A91500815859 /* HockeySDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2082B7219C1E1C4000005E2 /* HockeySDK.framework */; };
+		C210687D1C15A91800815859 /* Sparkle.framework in Copy Files (6 items) */ = {isa = PBXBuildFile; fileRef = C235364C19C88D620044978E /* Sparkle.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		C210687E1C15A91800815859 /* HockeySDK.framework in Copy Files (6 items) */ = {isa = PBXBuildFile; fileRef = C2082B7219C1E1C4000005E2 /* HockeySDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		C2182BBE19589246002469CA /* TL_localMessageService.m in Sources */ = {isa = PBXBuildFile; fileRef = C2182BBD19589246002469CA /* TL_localMessageService.m */; };
 		C21C7B2C18D7044600253A7A /* MessageSenderItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C21C7B2B18D7044600253A7A /* MessageSenderItem.m */; };
 		C21C7B2F18D7334D00253A7A /* MessageSenderSecretItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C21C7B2E18D7334D00253A7A /* MessageSenderSecretItem.m */; };
@@ -379,10 +383,6 @@
 		C256E91D18D25324008FFA04 /* TMPreviewAudioItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C256E91C18D25324008FFA04 /* TMPreviewAudioItem.m */; };
 		C25A57E01C072D1D0038169F /* ComposeActionStickersBehavior.m in Sources */ = {isa = PBXBuildFile; fileRef = C25A57DF1C072D1D0038169F /* ComposeActionStickersBehavior.m */; };
 		C25A57EC1C0736D70038169F /* TGMovableTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = C25A57EB1C0736D70038169F /* TGMovableTableView.m */; };
-		C25A58161C10ACEE0038169F /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C235364C19C88D620044978E /* Sparkle.framework */; };
-		C25A58171C10ACEE0038169F /* HockeySDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2082B7219C1E1C4000005E2 /* HockeySDK.framework */; };
-		C25A58181C10ACF60038169F /* Sparkle.framework in Copy Files (6 items) */ = {isa = PBXBuildFile; fileRef = C235364C19C88D620044978E /* Sparkle.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		C25A58191C10ACF60038169F /* HockeySDK.framework in Copy Files (6 items) */ = {isa = PBXBuildFile; fileRef = C2082B7219C1E1C4000005E2 /* HockeySDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		C25F91B31977E115006868F3 /* TGImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = C25F91B21977E115006868F3 /* TGImageView.m */; };
 		C25F91B91977EB17006868F3 /* TGImageObject.m in Sources */ = {isa = PBXBuildFile; fileRef = C25F91B81977EB17006868F3 /* TGImageObject.m */; };
 		C25F91C4197858BF006868F3 /* LocationSenderItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C25F91C3197858BF006868F3 /* LocationSenderItem.m */; };
@@ -985,8 +985,8 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				C25A58181C10ACF60038169F /* Sparkle.framework in Copy Files (6 items) */,
-				C25A58191C10ACF60038169F /* HockeySDK.framework in Copy Files (6 items) */,
+				C210687D1C15A91800815859 /* Sparkle.framework in Copy Files (6 items) */,
+				C210687E1C15A91800815859 /* HockeySDK.framework in Copy Files (6 items) */,
 			);
 			name = "Copy Files (6 items)";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2728,8 +2728,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C25A58161C10ACEE0038169F /* Sparkle.framework in Frameworks */,
-				C25A58171C10ACEE0038169F /* HockeySDK.framework in Frameworks */,
+				C210687B1C15A91500815859 /* Sparkle.framework in Frameworks */,
+				C210687C1C15A91500815859 /* HockeySDK.framework in Frameworks */,
 				C2F07E191BBD7D9300B3DB39 /* libz.tbd in Frameworks */,
 				C2F07E1F1BBDBACD00B3DB39 /* libstdc++.tbd in Frameworks */,
 				C2F07E1D1BBDBABF00B3DB39 /* ImageIO.framework in Frameworks */,
@@ -7204,7 +7204,7 @@
 				"OTHER_CODE_SIGN_FLAGS[sdk=*]" = "--deep";
 				PRODUCT_BUNDLE_IDENTIFIER = "ru.keepcoder.Telegram.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "1c746dc7-fbd8-40fe-8897-361d3f52bd07";
 				SDKROOT = macosx;
 				SKIP_INSTALL = YES;
 				USER_HEADER_SEARCH_PATHS = "./MtProtoKit/**";
@@ -7248,7 +7248,7 @@
 				"OTHER_CODE_SIGN_FLAGS[sdk=*]" = "--deep";
 				PRODUCT_BUNDLE_IDENTIFIER = "ru.keepcoder.Telegram.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "1c746dc7-fbd8-40fe-8897-361d3f52bd07";
 				SDKROOT = macosx;
 				SKIP_INSTALL = YES;
 				USER_HEADER_SEARCH_PATHS = "./MtProtoKit/**";

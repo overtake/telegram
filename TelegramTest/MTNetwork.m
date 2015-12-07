@@ -339,6 +339,11 @@ static NSString *kDefaultDatacenter = @"default_dc";
    
 }
 
+
+-(NSString *)encryptionKey {
+    return [_keychain objectForKey:@"e_key" group:@"persistent"];
+}
+
 -(void)updateStorageEncryptionKey {
     
     NSString *key = [_keychain objectForKey:@"e_key" group:@"persistent"];

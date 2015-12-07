@@ -51,7 +51,7 @@
 -(void)updatePasscode:(NSData *)md5Hash;
 -(BOOL)checkPasscode:(NSData *)md5Hash;
 -(BOOL)passcodeIsEnabled;
-
+-(NSString *)encryptionKey;
 
 id dispatch_in_time(int time, dispatch_block_t callback);
 void remove_global_dispatcher(id internalId);
