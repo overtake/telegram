@@ -631,9 +631,12 @@ static const int navigationOffset = 48;
     switch (conversation.type) {
         case DialogTypeChat:
             
-            infoViewController = [[TGModernChatInfoViewController alloc] initWithFrame:NSZeroRect];
-            
-            [(TGModernChatInfoViewController *)infoViewController setChat:conversation.chat];
+            if(conversation.chat.type == TLChatTypeNormal) {
+                infoViewController = [[TGModernChatInfoViewController alloc] initWithFrame:NSZeroRect];
+                
+                [(TGModernChatInfoViewController *)infoViewController setChat:conversation.chat];
+
+            }
             
             break;
             
@@ -647,10 +650,14 @@ static const int navigationOffset = 48;
             break;
             
         case DialogTypeUser: {
-            infoViewController = [[TGModernUserViewController alloc] initWithFrame:NSZeroRect];
             
+            if(conversation.user != nil) {
+                infoViewController = [[TGModernUserViewController alloc] initWithFrame:NSZeroRect];
+                
+                
+                [(TGModernUserViewController *)infoViewController setUser:conversation.user conversation:conversation];
+            }
             
-            [(TGModernUserViewController *)infoViewController setUser:conversation.user conversation:conversation];
             break;
         }
             
@@ -672,7 +679,11 @@ static const int navigationOffset = 48;
             break;
     }
     
-    [self pushViewController:infoViewController animated:YES];
+    if(infoViewController) {
+        [self pushViewController:infoViewController animated:YES];
+    }
+    
+    
     
 }
 

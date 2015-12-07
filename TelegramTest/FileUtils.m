@@ -687,9 +687,11 @@ void open_link(NSString *link) {
             if(chat.username.length == 0 && chat.isBroadcast && chat.dialog.isInvisibleChannel)
                 return;
             
-            [appWindow().navigationController showMessagesViewController:chat.dialog];
-            
-            
+            if(appWindow().navigationController.messagesViewController.conversation.peer_id == peer_id) {
+                 [appWindow().navigationController showInfoPage:chat.dialog];
+            } else {
+                [appWindow().navigationController showMessagesViewController:chat.dialog];
+            }
             
         }
         

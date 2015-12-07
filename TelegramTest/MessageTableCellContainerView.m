@@ -229,7 +229,7 @@
        
         [self.avatarImageView setTapBlock:^{
             
-            [appWindow().navigationController showInfoPage:weakSelf.item.user.dialog];
+            [appWindow().navigationController showInfoPage:weakSelf.item.message.from_id == 0 ? weakSelf.item.message.conversation : weakSelf.item.user.dialog];
             
          //
         }];
