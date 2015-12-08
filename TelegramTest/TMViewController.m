@@ -261,9 +261,7 @@ static TGModalSetCaptionView *setCaptionView;
         
         setCaptionView.layer.opacity = 0;
         
-        
-        
-        [setCaptionView setCenterByView:[[Telegram delegate] window].contentView];
+         [setCaptionView setCenterByView:[[Telegram delegate] window].contentView];
         
         [[[Telegram delegate] window].contentView addSubview:setCaptionView];
     } else {

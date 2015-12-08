@@ -118,7 +118,7 @@ static NSCache *cItems;
 }
 
 -(void)buildHeaderAndSaveToCache {
-    _user = [[UsersManager sharedManager] find:self.message.from_id];
+    _user = self.message.fromUser;
     
     NSString *name = self.isChat ? self.user.fullName : self.user.dialogFullName;
     
@@ -499,8 +499,10 @@ static NSTextAttachment *channelIconAttachment() {
         downloadItem = [[[self downloadClass] alloc] initWithObject:self.message];
     }
     
-    if((downloadItem.downloadState == DownloadStateCanceled || downloadItem.downloadState == DownloadStateWaitingStart) && (force || self.autoStart))
+    if((downloadItem.downloadState == DownloadStateCanceled || downloadItem.downloadState == DownloadStateWaitingStart) && (force || self.autoStart)) {
         [downloadItem start];
+    }
+    
     
 }
 

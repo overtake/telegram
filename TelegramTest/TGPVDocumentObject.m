@@ -78,14 +78,21 @@
         }
     }];
     
-    
+    [Notification perform:UPDATE_READ_CONTENTS data:@{KEY_MESSAGE_ID_LIST:@[@(self.message.n_id)]}];
     [self.downloadItem start];
     
 }
 
 
 -(void)_didDownloadImage:(DownloadItem *)item {
-    NSImage *image = [[NSImage alloc] initWithData:item.result];
+    
+    NSError *error = nil;
+    
+    NSImage *image = [[NSImage alloc] initWithContentsOfFile:item.path];
+    
+    if(!image)
+        image = [NSImage imageWithWebP:item.path error:&error];
+    
     
     if(image != nil) {
         

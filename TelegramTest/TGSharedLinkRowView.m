@@ -12,6 +12,7 @@
 #import "POPCGUtils.h"
 #import "TGEmbedModalView.h"
 #import "TGSharedLinksTableView.h"
+#import "NSAttributedString+Hyperlink.h"
 @interface TGSharedLinkRowView ()
 @property (nonatomic,strong) TGCTextView *textField;
 @property (nonatomic,strong) TMView *containerView;
@@ -150,10 +151,6 @@ static NSImage *sharedLinkCapImage() {
         [table setSelected:![table isSelectedItem:self.item] forItem:self.item];
         
         [self setSelected:[table isSelectedItem:self.item]];
-    } else {
-        if(((MessageTableItemText *)self.item).webpage != nil) {
-            open_link(_linkField.stringValue);
-        }
     }
 }
 
@@ -205,6 +202,11 @@ static NSImage *sharedLinkCapImage() {
         [_textField setFrameOrigin:NSMakePoint(self.isEditable ? s_lox +60 : 62, NSHeight(self.frame) - NSHeight(_textField.frame) - 5 )];
         
         [_linkField setStringValue:item.webpage.webpage.url];
+        
+        NSMutableAttributedString *attr = [_linkField.attributedStringValue mutableCopy];
+        [attr detectAndAddLinks:URLFindTypeAll];
+        
+        _linkField.attributedStringValue = attr;
         
         [_imageView setObject:item.webpage.roundObject];
         

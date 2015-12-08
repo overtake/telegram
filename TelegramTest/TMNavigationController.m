@@ -106,6 +106,10 @@ static const int navigationOffset = 48;
 
 
 - (void)goBackWithAnimation:(BOOL)animated {
+    
+    [[Telegram rightViewController] hideModalView:YES animation:YES];
+    
+    
     if(_isLocked)
         return;
     

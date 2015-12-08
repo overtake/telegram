@@ -397,7 +397,7 @@ static float duration = 0.1;
 }
 
 - (void) controlTextDidChange:(NSNotification *)obj {
-    [self.cancelButton setHidden:!self.textField.stringValue.length];
+    [self.cancelButton setHidden:![self isTextFieldInFocus:self.textField]];
     [self.delegate searchFieldTextChange:self.textField.stringValue];
 }
 
@@ -421,7 +421,7 @@ static float duration = 0.1;
  //   [self centerPosition:YES];
 //    [self setNeedsDisplay:YES];
     
-    [self.cancelButton setHidden:self.textField.stringValue.length == 0];
+    [self.cancelButton setHidden:![self isTextFieldInFocus:self.textField]];
     if([self.delegate respondsToSelector:@selector(searchFieldBlur)])
         [self.delegate searchFieldBlur];
 }
@@ -437,7 +437,7 @@ static float duration = 0.1;
 }
 
 - (void) searchFieldDidResign {
-    [self.cancelButton setHidden:self.textField.stringValue.length == 0];
+    [self.cancelButton setHidden:![self isTextFieldInFocus:self.textField]];
     if([self.delegate respondsToSelector:@selector(searchFieldFocus)])
         [self.delegate searchFieldFocus];
 }

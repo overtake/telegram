@@ -93,8 +93,11 @@
             
             if(action.user && _conversation.type != DialogTypeUser && _conversation.type != DialogTypeSecretChat) {
                 string =[NSString stringWithFormat:NSLocalizedString(NSStringFromClass(action.action.class), nil),action.user.dialogFullName];
-            } else {
-                string = NSLocalizedString(@"Typing.Typing", nil);
+            } else if(_conversation.type == DialogTypeUser) {
+                
+                NSString *key = [NSString stringWithFormat:@"%@_ConversationUser",NSStringFromClass(action.action.class)];
+                
+                string = NSLocalizedString(key, nil);
             }
             
             

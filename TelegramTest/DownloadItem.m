@@ -90,6 +90,7 @@ static int futureUniqueKey = 0;
 -(void)start {
     self.downloadState = DownloadStateDownloading;
     [DownloadQueue addAndStartItem:self];
+    
 }
 
 -(void)cancel {

@@ -471,14 +471,5 @@
 }
 
 
--(void)_didStackRemoved {
-    NSLog(@"Retain count is %ld", CFGetRetainCount((__bridge CFTypeRef)self));
-    
-    int bp = 0;
-}
-
--(void)dealloc {
-    
-}
 
 @end

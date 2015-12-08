@@ -379,23 +379,23 @@ NSImage *selectCheckActiveImage() {
     [self.layer pop_removeAnimationForKey:@"background"];
 }
 
+-(BOOL)isSelected {
+    return self.item.isSelected;
+}
+
 - (void)setSelected:(BOOL)isSelected animation:(BOOL)animation {
-    
-    if(self.isSelected == isSelected)
-        return;
     
     
     if([self isEditable])
         [self initSelectButton];
-    else
+    else {
         [self deallocSelectButton];
-    
-    
+    }
     
     
     
     self.item.isSelected = isSelected;
-    _isSelected = isSelected;
+    
     
 
     [self.selectButton setSelected:isSelected];
