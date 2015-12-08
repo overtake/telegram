@@ -286,9 +286,6 @@
 -(void)setFrameSize:(NSSize)newSize {
     [super setFrameSize:newSize];
     
-    
-   
-    
     [self.descriptionView setFrameSize:NSMakeSize(newSize.width - 200, 400)];
 }
 

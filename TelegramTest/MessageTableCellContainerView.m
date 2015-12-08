@@ -392,7 +392,7 @@ NSImage *selectCheckActiveImage() {
         [self deallocSelectButton];
     }
     
-    
+    animation = animation && self.item.isSelected != isSelected;
     
     self.item.isSelected = isSelected;
     

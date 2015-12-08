@@ -169,14 +169,14 @@
         
         [window makeFirstResponder:self];
         
-        self.containerView.layer.opacity = 0;
+       // self.containerView.layer.opacity = 0;
         //[_containerView.layer setFrameOrigin:];
 
         
         POPBasicAnimation *anim = [TMViewController popAnimationForProgress:self.containerView.layer.opacity to:1];
         anim.duration = 0.2;
         anim.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseIn];
-        [self.containerView.layer pop_addAnimation:anim forKey:@"fade"];
+       // [self.containerView.layer pop_addAnimation:anim forKey:@"fade"];
         
         
         
@@ -186,20 +186,20 @@
         
         POPBasicAnimation *sizeAnim = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerSize];
         
-        sizeAnim.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseIn];
+        sizeAnim.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut];
         
         sizeAnim.fromValue = [NSValue valueWithSize:NSMakeSize(0, 0)];
         sizeAnim.toValue = [NSValue valueWithSize:self.containerSize];
-        sizeAnim.duration = 0.1;
+        sizeAnim.duration = 0.15;
         [_animationContainerView.layer pop_addAnimation:sizeAnim forKey:@"size"];
         
         
         
         POPBasicAnimation *originContainerAnim = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerPosition];
-        originContainerAnim.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseIn];
+        originContainerAnim.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut];
         originContainerAnim.fromValue = [NSValue valueWithPoint:NSMakePoint(- roundf(NSWidth(_animationContainerView.frame)/2), - roundf(NSHeight(_animationContainerView.frame)/2))];
         originContainerAnim.toValue = [NSValue valueWithPoint:NSMakePoint(0, 0)];
-        originContainerAnim.duration = 0.1;
+        originContainerAnim.duration = 0.15;
         
         [_containerView.layer pop_addAnimation:originContainerAnim forKey:@"origin"];
         
