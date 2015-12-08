@@ -175,6 +175,9 @@
     self.chat.title = self.textView.stringValue;
    
     NSString *holder = self.textView.stringValue.length > 0 ? [self.textView.stringValue substringToIndex:1] : [[self.textView.cell placeholderAttributedString].string substringToIndex:1];
+    
+    holder = [holder uppercaseString];
+    
     [self.nameField setStringValue:holder];
     [self.nameField sizeToFit];
     
