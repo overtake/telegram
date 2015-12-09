@@ -444,28 +444,32 @@ static NSString *kDefaultDatacenter = @"default_dc";
     [[self instance]->_mtProto resume];
 }
 
-static int MAX_WORKER_POLL = 5;
+static int MAX_WORKER_POLL = 3;
 
 -(void)resetWorkers {
-    
     
     [_objectiveDatacenter removeAllObjects];
     [_pollConnections removeAllObjects];
     
-    for (int i = 1; i < _datacenterCount+1; i++) {
-        NSMutableArray *poll = [[NSMutableArray alloc] init];
+    if([self isAuth]) {
         
-        for (int j = 0; j < MAX_WORKER_POLL; j++) {
-            TGNetworkWorker *worker = [[TGNetworkWorker alloc] initWithContext:_context datacenterId:i masterDatacenterId:_mtProto.datacenterId];
-            [poll addObject:worker];
+        for (int i = 1; i < _datacenterCount+1; i++) {
+            NSMutableArray *poll = [[NSMutableArray alloc] init];
+            
+            for (int j = 0; j < MAX_WORKER_POLL; j++) {
+                TGNetworkWorker *worker = [[TGNetworkWorker alloc] initWithContext:_context datacenterId:i masterDatacenterId:_mtProto.datacenterId];
+                [poll addObject:worker];
+            }
+            [_objectiveDatacenter setObject:poll forKey:@(i)];
         }
-        [_objectiveDatacenter setObject:poll forKey:@(i)];
+        
+        for (int i = 1; i < _datacenterCount+1; i++) {
+            TGNetworkWorker *worker = [[TGNetworkWorker alloc] initWithContext:_context datacenterId:_mtProto.datacenterId masterDatacenterId:_mtProto.datacenterId];
+            [_pollConnections addObject:worker];
+        }
     }
     
-    for (int i = 1; i < _datacenterCount+1; i++) {
-        TGNetworkWorker *worker = [[TGNetworkWorker alloc] initWithContext:_context datacenterId:_mtProto.datacenterId masterDatacenterId:_mtProto.datacenterId];
-        [_pollConnections addObject:worker];
-    }
+    
 }
 
 
@@ -709,6 +713,11 @@ static int MAX_WORKER_POLL = 5;
 -(void)successAuthForDatacenter:(int)dc_id {
     [_queue dispatchOnQueue:^{
         [_context updateAuthTokenForDatacenterWithId:dc_id authToken:@(dc_id)];
+        
+        if(dc_id == _masterDatacenter) {
+            [self resetWorkers];
+        }
+        
     }];
     
 }
@@ -746,9 +755,12 @@ static int MAX_WORKER_POLL = 5;
 }
 - (void)contextDatacenterAuthInfoUpdated:(MTContext *)context datacenterId:(NSInteger)datacenterId authInfo:(MTDatacenterAuthInfo *)authInfo {
     
+    
 }
 - (void)contextDatacenterAuthTokenUpdated:(MTContext *)context datacenterId:(NSInteger)datacenterId authToken:(id)authToken {
     MTLog(@"");
+    
+    
 }
 
 - (void)contextIsPasswordRequiredUpdated:(MTContext *)context datacenterId:(NSInteger)datacenterId
