@@ -98,7 +98,7 @@
     
     TLPhotoSize *photoSize = ((TLPhotoSize *)[self.message.media.photo.sizes lastObject]);
     
-    return[TGCache cachedImage:self.imageObject.cacheKey] || ((fileSize(photoSize.location.path) >= photoSize.size || (self.imageObject.size == 0 && isPathExists(photoSize.location.path))) && self.messageSender == nil && self.downloadItem == nil);
+    return [TGCache cachedImage:self.imageObject.cacheKey] || ((fileSize(photoSize.location.path) >= photoSize.size || (self.imageObject.size == 0 && isPathExists(photoSize.location.path))) && self.messageSender == nil && self.downloadItem == nil);
 }
 
 -(void)doAfterDownload {
