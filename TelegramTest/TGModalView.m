@@ -169,14 +169,14 @@
         
         [window makeFirstResponder:self];
         
-       // self.containerView.layer.opacity = 0;
+        self.containerView.layer.opacity = 0;
         //[_containerView.layer setFrameOrigin:];
 
         
         POPBasicAnimation *anim = [TMViewController popAnimationForProgress:self.containerView.layer.opacity to:1];
         anim.duration = 0.2;
         anim.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseIn];
-       // [self.containerView.layer pop_addAnimation:anim forKey:@"fade"];
+        [self.containerView.layer pop_addAnimation:anim forKey:@"fade"];
         
         
         
@@ -191,7 +191,7 @@
         sizeAnim.fromValue = [NSValue valueWithSize:NSMakeSize(0, 0)];
         sizeAnim.toValue = [NSValue valueWithSize:self.containerSize];
         sizeAnim.duration = 0.15;
-        [_animationContainerView.layer pop_addAnimation:sizeAnim forKey:@"size"];
+      //  [_animationContainerView.layer pop_addAnimation:sizeAnim forKey:@"size"];
         
         
         
@@ -201,7 +201,7 @@
         originContainerAnim.toValue = [NSValue valueWithPoint:NSMakePoint(0, 0)];
         originContainerAnim.duration = 0.15;
         
-        [_containerView.layer pop_addAnimation:originContainerAnim forKey:@"origin"];
+       // [_containerView.layer pop_addAnimation:originContainerAnim forKey:@"origin"];
         
         
     }
