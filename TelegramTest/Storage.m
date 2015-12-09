@@ -1461,6 +1461,9 @@ TL_localMessage *parseMessage(FMResultSet *result) {
     
     
     [queue inDatabase:^(FMDatabase *db) {
+        
+        [db beginTransaction];
+        
         NSArray *msgs = [messages copy];
         
         test_start_group(@"insert_test");
@@ -1565,6 +1568,8 @@ TL_localMessage *parseMessage(FMResultSet *result) {
             }
             
         }
+        
+        [db commit];
         
         test_step_group(@"insert_test");
         test_release_group(@"insert_test");
@@ -1751,6 +1756,8 @@ TL_localMessage *parseMessage(FMResultSet *result) {
         
     [queue inDatabase:^(FMDatabase *db) {
         
+        [db beginTransaction];
+        
         [dialogs enumerateObjectsUsingBlock:^(TL_conversation *dialog, NSUInteger idx, BOOL * _Nonnull stop) {
             
             if(dialog.fake)
@@ -1776,6 +1783,7 @@ TL_localMessage *parseMessage(FMResultSet *result) {
 
         }];
         
+        [db commit];
         
     }];
 }
@@ -2744,11 +2752,15 @@ TL_localMessage *parseMessage(FMResultSet *result) {
                 minSynchedId = INT32_MAX;
             }
             
+            TGMessageHole *hole;
+            
             if(minSynchedId > message.n_id) {
-                TGMessageHole *hole = [[TGMessageHole alloc] initWithUniqueId:-rand_int() peer_id:message.peer_id min_id:message.n_id+1 max_id:minSynchedId-1 date:message.date count:0];
-                
-                [self insertMessagesHole:hole];
+                hole  = [[TGMessageHole alloc] initWithUniqueId:-rand_int() peer_id:message.peer_id min_id:message.n_id+1 max_id:minSynchedId-1 date:message.date count:0];
+            } else {
+                hole = [[TGMessageHole alloc] initWithUniqueId:-rand_int() peer_id:message.peer_id min_id:minSynchedId+1 max_id:message.n_id-1 date:message.date count:0];
             }
+            
+            [self insertMessagesHole:hole];
         }
         
     }];

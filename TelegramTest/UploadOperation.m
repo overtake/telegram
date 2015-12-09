@@ -272,10 +272,6 @@
         }
     }];
     
-    _semaphore = dispatch_semaphore_create(0);
-    dispatch_semaphore_wait(_semaphore, DISPATCH_TIME_FOREVER);
-    MTLog(@"end");
-    dispatch_semaphore_signal(_semaphore);
 }
 
 - (NSData *)readDataFromPosition:(NSUInteger)position length:(NSUInteger)length {
@@ -313,8 +309,6 @@
     }
     [self.blocksRequests removeAllObjects];
     
-    if(_semaphore)
-        dispatch_semaphore_signal(_semaphore);
 }
 
 - (void)startUploadPart:(int)partNumber {

@@ -8,7 +8,7 @@
 
 #import "TMView.h"
 #import "HackUtils.h"
-
+#import "TGPasslock.h"
 @interface TMView ()
 @property (nonatomic,assign) NSPoint movableStartLocation;
 @property (nonatomic,assign) NSPoint startPoint;
@@ -181,7 +181,7 @@
 }
 
 - (BOOL)acceptsFirstMouse:(NSEvent *)theEvent {
-    return YES;
+    return ![TGPasslock isVisibility];
 }
 
 

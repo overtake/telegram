@@ -144,5 +144,11 @@
     [self.operation ready:UploadAudioType];
 }
 
+-(void)cancel {
+    [self.operation cancel];
+    [self.rpc_request cancelRequest];
+    [super cancel];
+}
+
 
 @end

@@ -263,6 +263,10 @@
 		C20D190219542AB80095A906 /* SearchHistoryFilter.m in Sources */ = {isa = PBXBuildFile; fileRef = C20D190119542AB80095A906 /* SearchHistoryFilter.m */; };
 		C20F76E91BB994A6003A1E86 /* TGModernUserViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C20F76E81BB994A6003A1E86 /* TGModernUserViewController.m */; };
 		C20F76ED1BBAC41A003A1E86 /* TGMessagesHintView.m in Sources */ = {isa = PBXBuildFile; fileRef = C20F76EC1BBAC41A003A1E86 /* TGMessagesHintView.m */; };
+		C210687B1C15A91500815859 /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C235364C19C88D620044978E /* Sparkle.framework */; };
+		C210687C1C15A91500815859 /* HockeySDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2082B7219C1E1C4000005E2 /* HockeySDK.framework */; };
+		C210687D1C15A91800815859 /* Sparkle.framework in Copy Files (6 items) */ = {isa = PBXBuildFile; fileRef = C235364C19C88D620044978E /* Sparkle.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		C210687E1C15A91800815859 /* HockeySDK.framework in Copy Files (6 items) */ = {isa = PBXBuildFile; fileRef = C2082B7219C1E1C4000005E2 /* HockeySDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		C2182BBE19589246002469CA /* TL_localMessageService.m in Sources */ = {isa = PBXBuildFile; fileRef = C2182BBD19589246002469CA /* TL_localMessageService.m */; };
 		C21C7B2C18D7044600253A7A /* MessageSenderItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C21C7B2B18D7044600253A7A /* MessageSenderItem.m */; };
 		C21C7B2F18D7334D00253A7A /* MessageSenderSecretItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C21C7B2E18D7334D00253A7A /* MessageSenderSecretItem.m */; };
@@ -849,10 +853,6 @@
 		C2FA78E91923CB76001A9D1B /* DocumentHistoryFilter.m in Sources */ = {isa = PBXBuildFile; fileRef = C2FA78E81923CB76001A9D1B /* DocumentHistoryFilter.m */; };
 		C2FA78EC1923CBA1001A9D1B /* PhotoHistoryFilter.m in Sources */ = {isa = PBXBuildFile; fileRef = C2FA78EB1923CBA1001A9D1B /* PhotoHistoryFilter.m */; };
 		C2FA78EF1924D934001A9D1B /* NoMessagesView.m in Sources */ = {isa = PBXBuildFile; fileRef = C2FA78EE1924D934001A9D1B /* NoMessagesView.m */; };
-		C2FB6C921C05F08200B066A4 /* Sparkle.framework in Copy Files (6 items) */ = {isa = PBXBuildFile; fileRef = C235364C19C88D620044978E /* Sparkle.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		C2FB6C931C05F08200B066A4 /* HockeySDK.framework in Copy Files (6 items) */ = {isa = PBXBuildFile; fileRef = C2082B7219C1E1C4000005E2 /* HockeySDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		C2FB6C941C05F08600B066A4 /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C235364C19C88D620044978E /* Sparkle.framework */; };
-		C2FB6C951C05F08600B066A4 /* HockeySDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2082B7219C1E1C4000005E2 /* HockeySDK.framework */; };
 		C2FF82A31B99C7CE00DE2455 /* TGForceChannelUpdate.m in Sources */ = {isa = PBXBuildFile; fileRef = C2FF82A21B99C7CE00DE2455 /* TGForceChannelUpdate.m */; };
 		C2FF82E81B9F28DA00DE2455 /* ChannelHistoryController.m in Sources */ = {isa = PBXBuildFile; fileRef = C2FF82E71B9F28D900DE2455 /* ChannelHistoryController.m */; };
 		C2FF82EB1BA0796400DE2455 /* ChannelsManager.m in Sources */ = {isa = PBXBuildFile; fileRef = C2FF82EA1BA0796400DE2455 /* ChannelsManager.m */; };
@@ -987,8 +987,8 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				C2FB6C921C05F08200B066A4 /* Sparkle.framework in Copy Files (6 items) */,
-				C2FB6C931C05F08200B066A4 /* HockeySDK.framework in Copy Files (6 items) */,
+				C210687D1C15A91800815859 /* Sparkle.framework in Copy Files (6 items) */,
+				C210687E1C15A91800815859 /* HockeySDK.framework in Copy Files (6 items) */,
 			);
 			name = "Copy Files (6 items)";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2734,8 +2734,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C2FB6C941C05F08600B066A4 /* Sparkle.framework in Frameworks */,
-				C2FB6C951C05F08600B066A4 /* HockeySDK.framework in Frameworks */,
+				C210687B1C15A91500815859 /* Sparkle.framework in Frameworks */,
+				C210687C1C15A91500815859 /* HockeySDK.framework in Frameworks */,
 				C2F07E191BBD7D9300B3DB39 /* libz.tbd in Frameworks */,
 				C2F07E1F1BBDBACD00B3DB39 /* libstdc++.tbd in Frameworks */,
 				C2F07E1D1BBDBABF00B3DB39 /* ImageIO.framework in Frameworks */,

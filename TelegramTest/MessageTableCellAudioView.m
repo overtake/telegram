@@ -167,7 +167,7 @@
         
         NSBezierPath *path = [NSBezierPath bezierPath];
         
-        [path appendBezierPathWithRoundedRect:NSMakeRect(NSMinX(self.containerView.frame) + NSWidth(self.durationView.frame) + 3, NSMinY(self.containerView.frame) +  NSMinY(self.durationView.frame) + 4, 6, 6) xRadius:3 yRadius:3];
+        [path appendBezierPathWithRoundedRect:NSMakeRect(NSMinX(self.containerView.frame) + NSWidth(self.playerButton.frame) + 45, NSMinY(self.containerView.frame) +  NSMinY(self.durationView.frame) + 4, 6, 6) xRadius:3 yRadius:3];
         
         [path fill];
     }
@@ -250,6 +250,8 @@
     
     return menu;
 }
+
+
 
 
 - (void)setItem:(MessageTableItemAudio *)item {

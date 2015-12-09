@@ -229,7 +229,7 @@
        
         [self.avatarImageView setTapBlock:^{
             
-            [appWindow().navigationController showInfoPage:weakSelf.item.user.dialog];
+            [appWindow().navigationController showInfoPage:weakSelf.item.message.from_id == 0 ? weakSelf.item.message.conversation : weakSelf.item.user.dialog];
             
          //
         }];
@@ -379,23 +379,23 @@ NSImage *selectCheckActiveImage() {
     [self.layer pop_removeAnimationForKey:@"background"];
 }
 
+-(BOOL)isSelected {
+    return self.item.isSelected;
+}
+
 - (void)setSelected:(BOOL)isSelected animation:(BOOL)animation {
-    
-    if(self.isSelected == isSelected)
-        return;
     
     
     if([self isEditable])
         [self initSelectButton];
-    else
+    else {
         [self deallocSelectButton];
+    }
     
-    
-    
-    
+    animation = animation && self.item.isSelected != isSelected;
     
     self.item.isSelected = isSelected;
-    _isSelected = isSelected;
+    
     
 
     [self.selectButton setSelected:isSelected];

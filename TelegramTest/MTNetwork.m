@@ -339,6 +339,11 @@ static NSString *kDefaultDatacenter = @"default_dc";
    
 }
 
+
+-(NSString *)encryptionKey {
+    return [_keychain objectForKey:@"e_key" group:@"persistent"];
+}
+
 -(void)updateStorageEncryptionKey {
     
     NSString *key = [_keychain objectForKey:@"e_key" group:@"persistent"];
@@ -439,10 +444,9 @@ static NSString *kDefaultDatacenter = @"default_dc";
     [[self instance]->_mtProto resume];
 }
 
-static int MAX_WORKER_POLL = 5;
+static int MAX_WORKER_POLL = 3;
 
 -(void)resetWorkers {
-    
     
     [_objectiveDatacenter removeAllObjects];
     [_pollConnections removeAllObjects];
@@ -461,6 +465,7 @@ static int MAX_WORKER_POLL = 5;
         TGNetworkWorker *worker = [[TGNetworkWorker alloc] initWithContext:_context datacenterId:_mtProto.datacenterId masterDatacenterId:_mtProto.datacenterId];
         [_pollConnections addObject:worker];
     }
+    
 }
 
 
@@ -704,6 +709,11 @@ static int MAX_WORKER_POLL = 5;
 -(void)successAuthForDatacenter:(int)dc_id {
     [_queue dispatchOnQueue:^{
         [_context updateAuthTokenForDatacenterWithId:dc_id authToken:@(dc_id)];
+        
+        if(dc_id == _masterDatacenter) {
+            [self resetWorkers];
+        }
+        
     }];
     
 }
@@ -741,9 +751,12 @@ static int MAX_WORKER_POLL = 5;
 }
 - (void)contextDatacenterAuthInfoUpdated:(MTContext *)context datacenterId:(NSInteger)datacenterId authInfo:(MTDatacenterAuthInfo *)authInfo {
     
+    
 }
 - (void)contextDatacenterAuthTokenUpdated:(MTContext *)context datacenterId:(NSInteger)datacenterId authToken:(id)authToken {
     MTLog(@"");
+    
+    
 }
 
 - (void)contextIsPasswordRequiredUpdated:(MTContext *)context datacenterId:(NSInteger)datacenterId

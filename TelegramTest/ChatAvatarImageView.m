@@ -180,24 +180,32 @@
     [super rightMouseDown:theEvent];
     
     NSMenu *menu = [[NSMenu alloc] init];
-    weakify();
+    
+
+    if([self.chat isKindOfClass:[TL_channel class]] && !self.chat.isManager)
+        return;
+    else
+        if([self.chat isKindOfClass:[TL_chat class]] && !(!self.chat.isAdmins_enabled || self.chat.isAdmin))
+            return;
+    
+    weak();
 
     if(self.updaterItem) {
         [menu addItem:[NSMenuItem menuItemWithTitle:NSLocalizedString(@"Profile.CancelPhotoUpload", nil) withBlock:^(id sender) {
-            [strongSelf cancelUploading];
+            [weakSelf cancelUploading];
             
         }]];
     } else {
         
         if(self.sourceType == ChatAvatarSourceBroadcast || self.sourceType == ChatAvatarSourceGroup  || self.sourceType == ChatAvatarSourceChannel || (self.sourceType == ChatAvatarSourceUser && self.user.type == TLUserTypeSelf)) {
             [menu addItem:[NSMenuItem menuItemWithTitle:NSLocalizedString(@"Profile.UpdatePhoto", nil) withBlock:^(id sender) {
-                [strongSelf showUpdateChatPhotoBox];
+                [weakSelf showUpdateChatPhotoBox];
                 
             }]];
             
             if(self.fileLocation) {
                 [menu addItem:[NSMenuItem menuItemWithTitle:NSLocalizedString(@"Profile.RemovePhoto", nil) withBlock:^(id sender) {
-                    [strongSelf updateChatPhoto:nil];
+                    [weakSelf updateChatPhoto:nil];
                     
                 }]];
             }

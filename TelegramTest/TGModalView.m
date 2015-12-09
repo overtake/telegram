@@ -186,22 +186,22 @@
         
         POPBasicAnimation *sizeAnim = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerSize];
         
-        sizeAnim.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseIn];
+        sizeAnim.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut];
         
         sizeAnim.fromValue = [NSValue valueWithSize:NSMakeSize(0, 0)];
         sizeAnim.toValue = [NSValue valueWithSize:self.containerSize];
-        sizeAnim.duration = 0.1;
-        [_animationContainerView.layer pop_addAnimation:sizeAnim forKey:@"size"];
+        sizeAnim.duration = 0.15;
+      //  [_animationContainerView.layer pop_addAnimation:sizeAnim forKey:@"size"];
         
         
         
         POPBasicAnimation *originContainerAnim = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerPosition];
-        originContainerAnim.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseIn];
+        originContainerAnim.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut];
         originContainerAnim.fromValue = [NSValue valueWithPoint:NSMakePoint(- roundf(NSWidth(_animationContainerView.frame)/2), - roundf(NSHeight(_animationContainerView.frame)/2))];
         originContainerAnim.toValue = [NSValue valueWithPoint:NSMakePoint(0, 0)];
-        originContainerAnim.duration = 0.1;
+        originContainerAnim.duration = 0.15;
         
-        [_containerView.layer pop_addAnimation:originContainerAnim forKey:@"origin"];
+       // [_containerView.layer pop_addAnimation:originContainerAnim forKey:@"origin"];
         
         
     }

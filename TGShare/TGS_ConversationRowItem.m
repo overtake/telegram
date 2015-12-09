@@ -79,7 +79,10 @@
     
     if(_chat)
     {
-        return [NSString stringWithFormat:NSLocalizedString(_chat.participants_count > 1 ? @"Group.membersCount" : @"Group.memberCount", nil),_chat.participants_count];
+        if(!_chat.isMegagroup)
+            return [NSString stringWithFormat:NSLocalizedString(_chat.participants_count > 1 ? @"Group.membersCount" : @"Group.memberCount", nil),_chat.participants_count];
+        else
+            return NSLocalizedString(@"Group.group", nil);
     }
     
     if(_user.n_id == 777000) {

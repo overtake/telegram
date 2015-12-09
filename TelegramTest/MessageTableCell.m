@@ -55,6 +55,11 @@
 
 -(void)rightMouseDown:(NSEvent *)theEvent {
     
+    if(self.item.messageSender != nil || self.item.message.n_id > TGMINFAKEID) {
+        [super rightMouseDown:theEvent];
+        return;
+    }
+    
     NSMenu *contextMenu = [self contextMenu];
     
     if(contextMenu && self.messagesViewController.state == MessagesViewControllerStateNone) {
@@ -92,6 +97,7 @@
 }
 
 -(NSArray *)defaultMenuItems {
+    
     
     NSMutableArray *items = [[NSMutableArray alloc] init];
     

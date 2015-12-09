@@ -312,6 +312,13 @@ static ShareViewController *shareViewController;
                     if(users.count == 1)
                         item = [[TGS_ConversationRowItem alloc] initWithConversation:obj user:users[0]];
                 }
+            } else if([obj.peer isKindOfClass:[TL_peerChannel class]]) {
+                TL_channel *channel = [[[response chats] filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.n_id == %d",obj.peer.channel_id]] lastObject];
+                
+                if(channel && channel.isMegagroup) {
+                    item = [[TGS_ConversationRowItem alloc] initWithConversation:obj chat:channel];
+                }
+                
             }
             
             item.date = message.date;

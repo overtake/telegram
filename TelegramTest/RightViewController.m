@@ -397,6 +397,8 @@
         
         [appWindow().navigationController.messagesViewController selectInputTextByText:obj[@"text"]];
         
+        [self hideModalView:YES animation:YES];
+        
     } else  {
         
      //   confirm(NSLocalizedString(@"Alert.Forward", nil), [NSString stringWithFormat:NSLocalizedString(@"Alert.ForwardTo", nil),(dialog.type == DialogTypeChat) ? dialog.chat.title : (dialog.type == DialogTypeBroadcast) ? dialog.broadcast.title : dialog.user.fullName], ^{

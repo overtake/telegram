@@ -303,7 +303,7 @@
 
 -(BOOL)becomeFirstResponder
 {
-    [self.window makeFirstResponder:self.secureField];
+    [self.window makeFirstResponder:self];
     
     return [self.secureField becomeFirstResponder];
 }
@@ -321,6 +321,10 @@
 }
 
 -(void)mouseEntered:(NSEvent *)theEvent {
+    
+}
+
+-(void)mouseDragged:(NSEvent *)theEvent {
     
 }
 

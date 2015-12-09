@@ -41,8 +41,10 @@ static int workerCount = 0;
         _datacenterId = datacenterId;
         
         _mtProto = [[MTProto alloc] initWithContext:_context datacenterId:_datacenterId];
-        _mtProto.requiredAuthToken = @(masterDatacenterId);
-        _mtProto.authTokenMasterDatacenterId = masterDatacenterId;
+        if (_datacenterId != masterDatacenterId) {
+            _mtProto.requiredAuthToken = @(masterDatacenterId);
+            _mtProto.authTokenMasterDatacenterId = masterDatacenterId;
+        }
         
         _requestService = [[MTRequestMessageService alloc] initWithContext:_context];
         _requestService.delegate = self;

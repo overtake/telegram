@@ -220,6 +220,9 @@ static NSMutableDictionary *loaders;
     dispatch_once(&onceToken, ^{
         counters = [[NSMutableDictionary alloc] init];
         loaders = [[NSMutableDictionary alloc] init];
+        
+        [Notification addObserver:self selector:@selector(didReceiveMessage:) name:MESSAGE_RECEIVE_EVENT];
+        [Notification addObserver:self selector:@selector(didReceiveMessageList:) name:MESSAGE_RECEIVE_EVENT];
     });
 }
 
@@ -386,6 +389,83 @@ static NSMutableDictionary *loaders;
     
     if(self.item.callback)
         self.item.callback(self.item);
+}
+
+
++(void)didReceiveMessage:(NSNotification *)notification {
+    
+    [ASQueue dispatchOnMainQueue:^{
+        
+        TL_localMessage *message = notification.userInfo[KEY_MESSAGE];
+        
+        TGMediaCounterLoader *loader = loaders[@(message.peer_id)];
+        
+        [self incrementCountersWithMessage:message toLoader:loader];
+
+    }];
+    
+}
+
++(void)incrementCountersWithMessage:(TL_localMessage*)message toLoader:(TGMediaCounterLoader *)loader {
+    if(loader) {
+        
+        NSArray *entities = [message.entities filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.class = %@",[TL_messageEntityUrl class]]];
+        
+        if((message.media || entities.count > 0)) {
+            
+            if([message.media isKindOfClass:[TL_messageMediaDocument class]]) {
+                
+                TL_documentAttributeAudio *attr =  (TL_documentAttributeAudio *)[message.media.document attributeWithClass:[TL_documentAttributeAudio class]];
+                
+                if(attr)
+                    loader.audioCounter++;
+                else
+                    loader.filesCounter++;
+                
+            } else if([message.media isKindOfClass:[TL_messageMediaPhoto class]] || [message.media isKindOfClass:[TL_messageMediaVideo class]]) {
+                
+                loader.photoAndVideoCounter++;
+                
+            } else if([message.media isKindOfClass:[TL_messageMediaWebPage class]] || entities.count > 0) {
+                
+                loader.linksCounter++;
+                
+            }
+            
+            if(loader.changeHandler) {
+                [loader updateCountersText];
+                loader.changeHandler();
+            }
+            
+            
+        }
+        
+    }
+}
+
++(void)didReceiveMessageList:(NSNotification *)notification {
+    [ASQueue dispatchOnMainQueue:^{
+        
+        NSArray *messages = notification.object;
+        
+        [messages enumerateObjectsUsingBlock:^(TL_localMessage *obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            
+            TGMediaCounterLoader *loader = loaders[@(obj.peer_id)];
+            if(loader) {
+                 [self incrementCountersWithMessage:obj toLoader:loader];
+            }
+        }];
+        
+        
+        
+    }];
+}
+
+-(void)viewDidMoveToWindow {
+    if(!self.window) {
+        TGMediaCounterLoader *loader = loaders[@(self.conversation.peer_id)];
+        [loader setChangeHandler:nil];
+    }
 }
 
 @end

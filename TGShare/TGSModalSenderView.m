@@ -346,6 +346,9 @@
     
     id input;
     if(rowItem.chat.n_id != 0) {
+        if(rowItem.chat.isMegagroup) {
+            return [TL_inputPeerChannel createWithChannel_id:rowItem.chat.n_id access_hash:rowItem.chat.access_hash];
+        }
         input = [TL_inputPeerChat createWithChat_id:rowItem.chat.n_id];
     } else {
         

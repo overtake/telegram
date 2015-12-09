@@ -7,7 +7,7 @@
 //
 
 #import "TGProfileParamItem.h"
-
+#import "NSAttributedString+Hyperlink.h"
 @implementation TGProfileParamItem
 
 
@@ -17,8 +17,9 @@
     NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
     [paragraphStyle setAlignment:NSLeftTextAlignment];
     
-    NSAttributedString *attr = [[NSAttributedString alloc] initWithString:[value trim] attributes:@{NSForegroundColorAttributeName: NSColorFromRGB(0x333333), (NSString *)kCTFontAttributeName:TGSystemLightFont(14), NSParagraphStyleAttributeName: paragraphStyle}];
+    NSMutableAttributedString *attr = [[NSMutableAttributedString alloc] initWithString:[value trim] attributes:@{NSForegroundColorAttributeName: NSColorFromRGB(0x333333), (NSString *)kCTFontAttributeName:TGSystemLightFont(14), NSParagraphStyleAttributeName: paragraphStyle}];
     
+    [attr detectAndAddLinks:URLFindTypeAll];
 
     _value = attr;
     

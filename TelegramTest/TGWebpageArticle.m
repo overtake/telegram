@@ -27,7 +27,7 @@
             
             TLPhotoSize *size = [webpage.photo.sizes lastObject];
             
-            _imageObject = [[TGArticleImageObject alloc] initWithLocation:size.location placeHolder:[super imageObject].placeholder sourceId:0 size:[super imageObject].size];
+            _imageObject = [[TGArticleImageObject alloc] initWithLocation:size.location placeHolder:[super imageObject].placeholder sourceId:0 size:size.size];
             
             _imageObject.imageSize = NSMakeSize(60, 60);
         }

@@ -1504,7 +1504,7 @@ static NSTextAttachment *headerMediaIcon() {
     
     [self scrollDidChange];
     
-    if([self.table.scrollView isNeedUpdateTop] && [self.historyController filterWithNext:NO].prevState != ChatHistoryStateFull) {
+    if([self.table.scrollView isNeedUpdateTop]) {
         
         [self.historyController prevStateAsync:^(ChatHistoryState state) {
             if(state != ChatHistoryStateFull) {
@@ -2182,7 +2182,7 @@ static NSTextAttachment *headerMediaIcon() {
     
     TL_conversation *conversation = self.conversation;
     
-    __block TL_localMessage *msg = conversation.type == DialogTypeChannel && fromMsg == nil && ((flags & ShowMessageTypeUnreadMark) == 0 && (flags & ShowMessageTypeSearch) == 0) ? [[Storage manager] lastImportantMessageAroundMinId: message.hole ? channelMsgId(message.hole.min_id, message.peer_id) : message.channelMsgId] : [[Storage manager] messageById:message.hole ? message.hole.min_id : message.n_id inChannel:-message.to_id.channel_id];
+    __block TL_localMessage *msg = conversation.type == DialogTypeChannel && !conversation.chat.isMegagroup && fromMsg == nil && ((flags & ShowMessageTypeUnreadMark) == 0 && (flags & ShowMessageTypeSearch) == 0) ? [[Storage manager] lastImportantMessageAroundMinId: message.hole ? channelMsgId(message.hole.min_id, message.peer_id) : message.channelMsgId] : [[Storage manager] messageById:message.hole ? message.hole.min_id : message.n_id inChannel:-message.to_id.channel_id];
     
     if((flags & ShowMessageTypeUnreadMark) > 0 && conversation.type == DialogTypeChannel && !msg) {
         [self flushMessages];
@@ -2350,6 +2350,8 @@ static NSTextAttachment *headerMediaIcon() {
                         [self jumpToLastMessages:YES];
                     }
                 }
+            } else {
+                [self jumpToLastMessages:YES];
             }
             
         } errorHandler:^(RPCRequest *request, RpcError *error) {
@@ -3369,7 +3371,7 @@ static NSTextAttachment *headerMediaIcon() {
             
             
             sender.tableItem = [[self messageTableItemsFromMessages:@[sender.message]] lastObject];
-            [items addObject:sender.tableItem];
+            [items insertObject:sender.tableItem atIndex:0];
  
         }];
         

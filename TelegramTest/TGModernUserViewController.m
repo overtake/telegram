@@ -151,7 +151,7 @@
 
 -(void)configure {
     
-    [self.doneButton setHidden:_conversation.type == DialogTypeSecretChat || [_user isSelf]];
+    [self.doneButton setHidden:_conversation.type == DialogTypeSecretChat || [_user isSelf] || ![_user isContact]];
     
     [_tableView removeAllItems:YES];
     
@@ -471,14 +471,5 @@
 }
 
 
--(void)_didStackRemoved {
-    NSLog(@"Retain count is %ld", CFGetRetainCount((__bridge CFTypeRef)self));
-    
-    int bp = 0;
-}
-
--(void)dealloc {
-    
-}
 
 @end

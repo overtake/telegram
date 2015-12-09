@@ -486,7 +486,14 @@ static const int maxWidth = 120;
     NSMutableArray *messages = [NSMutableArray array];
     
     [_selectedItems enumerateObjectsUsingBlock:^(MessageTableItem *obj, NSUInteger idx, BOOL * _Nonnull stop) {
-        [messages addObject:obj.message];
+        if([obj isKindOfClass:[MessageTableItem class]]) {
+            [messages addObject:obj.message];
+        } else {
+            PhotoCollectionImageObject *photo =  (PhotoCollectionImageObject *) obj;
+            
+            [messages addObject:photo.previewObject.media];
+        }
+        
     }];
     
     [self setSectedMessagesCount:self.selectedItems.count enable:[MessagesViewController canDeleteMessages:messages inConversation:_conversation]];

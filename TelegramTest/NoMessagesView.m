@@ -207,7 +207,11 @@
             }];
             
         } else {
-            [self.field setAttributedString:_defAttrString];
+            
+            if([self.field isKindOfClass:[TMTextField class]])
+                [(TMTextField *)self.field setAttributedStringValue:_defAttrString];
+            else
+                [self.field setAttributedString:_defAttrString];
         }
         
     }

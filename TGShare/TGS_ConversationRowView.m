@@ -25,7 +25,7 @@
     
     [DIALOG_BORDER_COLOR set];
     
-    NSRectFill(NSMakeRect(60, 0, NSWidth(dirtyRect) - 60, DIALOG_BORDER_WIDTH));
+    NSRectFill(NSMakeRect(60, 0, NSWidth(dirtyRect) - 70, DIALOG_BORDER_WIDTH));
     
 }
 
@@ -39,9 +39,9 @@
         [_nameField setSelectable:NO];
         [_nameField setEditable:NO];
         [[_nameField cell] setLineBreakMode:NSLineBreakByTruncatingTail];
-        
+        [[_nameField cell] setTruncatesLastVisibleLine:YES];
         [_nameField setFrameOrigin:NSMakePoint(60, 17)];
-        [_nameField setFrameSize:NSMakeSize(NSWidth(frameRect) - 85, 40)];
+        [_nameField setFrameSize:NSMakeSize(NSWidth(frameRect) - 100, 40)];
         
         [self addSubview:_nameField];
         
