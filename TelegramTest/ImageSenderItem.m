@@ -156,6 +156,7 @@
                 item.imageObject.location = newSize.location;
             }
             
+             [[NSFileManager defaultManager] moveItemAtPath:strongSelf.filePath toPath:mediaFilePath(strongSelf.message.media) error:nil];
             
            
             strongSelf.uploadOperation = nil;
@@ -163,10 +164,7 @@
             strongSelf.message.dstate = DeliveryStateNormal;
             
             [strongSelf.message save:YES];
-                        
-            [[NSFileManager defaultManager] moveItemAtPath:strongSelf.filePath toPath:mediaFilePath(strongSelf.message.media) error:nil];
             
-           
             
             PreviewObject *previewObject = [[PreviewObject alloc] initWithMsdId:strongSelf.message.n_id media:strongSelf.message peer_id:strongSelf.message.peer_id];
             

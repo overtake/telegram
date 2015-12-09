@@ -164,10 +164,22 @@ NSImage *fireImage() {
 
 
 -(void)setCellState:(CellState)cellState {
-    [super setCellState:cellState];
     
     
     MessageTableItemPhoto *item = (MessageTableItemPhoto *)self.item;
+    
+    if(cellState == CellStateNeedDownload) {
+        if(item.imageObject.downloadItem) {
+            if(item.imageObject.downloadItem && (item.imageObject.downloadItem.downloadState != DownloadStateWaitingStart && item.imageObject.downloadItem.downloadState != DownloadStateCompleted))
+                cellState = item.imageObject.downloadItem.downloadState == DownloadStateCanceled ? CellStateCancelled : CellStateDownloading;
+        }
+    }
+    
+    [super setCellState:cellState];
+    
+    
+   
+    
     
     [self.progressView setImage:cellState == CellStateSending ? image_DownloadIconWhite() : nil forState:TMLoaderViewStateNeedDownload];
     [self.progressView setImage:cellState == CellStateSending ? image_LoadCancelWhiteIcon() : nil forState:TMLoaderViewStateDownloading];
@@ -207,6 +219,7 @@ NSImage *fireImage() {
     
     [self.progressView setCenterByView:self.imageView];
 }
+
 
 - (void) setItem:(MessageTableItemPhoto *)item {
     

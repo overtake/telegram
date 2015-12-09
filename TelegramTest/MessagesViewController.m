@@ -1503,7 +1503,7 @@ static NSTextAttachment *headerMediaIcon() {
     
     [self scrollDidChange];
     
-    if([self.table.scrollView isNeedUpdateTop] && [self.historyController filterWithNext:NO].prevState != ChatHistoryStateFull) {
+    if([self.table.scrollView isNeedUpdateTop]) {
         
         [self.historyController prevStateAsync:^(ChatHistoryState state) {
             if(state != ChatHistoryStateFull) {
@@ -3370,7 +3370,7 @@ static NSTextAttachment *headerMediaIcon() {
             
             
             sender.tableItem = [[self messageTableItemsFromMessages:@[sender.message]] lastObject];
-            [items addObject:sender.tableItem];
+            [items insertObject:sender.tableItem atIndex:0];
  
         }];
         

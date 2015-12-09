@@ -974,6 +974,9 @@
          contextName = "-[MessageTableCellContainerView updateCellState]:MessageTableCellContainerView.m">
          <PersistentStrings>
             <PersistentString
+               value = "item.downloadItem ">
+            </PersistentString>
+            <PersistentString
                value = "self.cellState">
             </PersistentString>
          </PersistentStrings>
@@ -4084,6 +4087,9 @@
       </ContextState>
       <ContextState
          contextName = "-[TelegramSerialization parseMessage:responseParsingBlock:]:TelegramSerialization.m">
+      </ContextState>
+      <ContextState
+         contextName = "-[MTProto initWithContext:datacenterId:]:MTProto.m">
       </ContextState>
       <ContextState
          contextName = "-[MessageTableItemText updateLinkAttributesByMessageEntities]:MessageTableItemText.m">
