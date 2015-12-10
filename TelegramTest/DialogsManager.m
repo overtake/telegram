@@ -610,21 +610,18 @@
                     
                     [messages enumerateObjectsUsingBlock:^(TL_localMessage *message, NSUInteger idx, BOOL * _Nonnull stop) {
                         if(!message.n_out) {
-                            message.conversation.unread_count--;
+                            conversation.unread_count--;
                         }
                         
-                        if(message.conversation.lastMessage.n_id == message.n_id) {
-                            message.conversation.lastMessage.flags&= ~TGUNREADMESSAGE;
+                        if(conversation.lastMessage.n_id == message.n_id) {
+                            conversation.lastMessage.flags&= ~TGUNREADMESSAGE;
                         }
                         
-                        [updateDialogs setObject:message.conversation forKey:@(message.conversation.peer_id)];
+                        [updateDialogs setObject:conversation forKey:@(conversation.peer_id)];
                     }];
                     
-                    for (TL_conversation *dialog in updateDialogs.allValues) {
-                        [Notification perform:[Notification notificationNameByDialog:dialog action:@"unread_count"] data:@{KEY_DIALOG:dialog,KEY_LAST_CONVRESATION_DATA:[MessagesUtils conversationLastData:dialog]}];
-                    }
-                    
-                    [[Storage manager] insertDialogs:updateDialogs.allValues];
+                    [Notification perform:[Notification notificationNameByDialog:conversation action:@"unread_count"] data:@{KEY_DIALOG:conversation,KEY_LAST_CONVRESATION_DATA:[MessagesUtils conversationLastData:conversation]}];
+                    [Notification perform:MESSAGE_READ_EVENT data:@{KEY_MESSAGE_ID_LIST:ids}];
                     
                     [MessagesManager updateUnreadBadge];
                     
