@@ -591,12 +591,13 @@
         [self.queue dispatchOnQueue:^{
             
             if(messages.count > 0) {
-                NSMutableDictionary *updateDialogs = [[NSMutableDictionary alloc] init];
                 
                 NSArray *unloaded = [self unloadedConversationsWithMessages:@[[messages firstObject]]];
                 
                 [[Storage manager] conversationsWithPeerIds:unloaded completeHandler:^(NSArray *result) {
                    
+                    [self add:result];
+                    
                     TL_conversation *conversation = [(TL_localMessage *)[messages firstObject] conversation];
                     
                     if(!n_out) {
@@ -606,8 +607,7 @@
                     
                     conversation.last_marked_message = max_id;
                     
-                    [self add:result];
-                    
+                   
                     [messages enumerateObjectsUsingBlock:^(TL_localMessage *message, NSUInteger idx, BOOL * _Nonnull stop) {
                         if(!message.n_out) {
                             conversation.unread_count--;
@@ -617,11 +617,12 @@
                             conversation.lastMessage.flags&= ~TGUNREADMESSAGE;
                         }
                         
-                        [updateDialogs setObject:conversation forKey:@(conversation.peer_id)];
                     }];
                     
                     [Notification perform:[Notification notificationNameByDialog:conversation action:@"unread_count"] data:@{KEY_DIALOG:conversation,KEY_LAST_CONVRESATION_DATA:[MessagesUtils conversationLastData:conversation]}];
                     [Notification perform:MESSAGE_READ_EVENT data:@{KEY_MESSAGE_ID_LIST:ids}];
+                    
+                    [conversation save];
                     
                     [MessagesManager updateUnreadBadge];
                     
