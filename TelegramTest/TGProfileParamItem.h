@@ -16,5 +16,5 @@
 
 @property (nonatomic,assign) NSSize size;
 
--(void)setHeader:(NSString *)header withValue:(NSString *)value;
+-(void)setHeader:(NSString *)header withValue:(NSString *)value detectUrls:(BOOL)detectUrls;
 @end

@@ -11,7 +11,7 @@
 @implementation TGProfileParamItem
 
 
--(void)setHeader:(NSString *)header withValue:(NSString *)value {
+-(void)setHeader:(NSString *)header withValue:(NSString *)value detectUrls:(BOOL)detectUrls {
     _header = header;
     
     NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
@@ -19,7 +19,8 @@
     
     NSMutableAttributedString *attr = [[NSMutableAttributedString alloc] initWithString:[value trim] attributes:@{NSForegroundColorAttributeName: NSColorFromRGB(0x333333), (NSString *)kCTFontAttributeName:TGSystemLightFont(14), NSParagraphStyleAttributeName: paragraphStyle}];
     
-    [attr detectAndAddLinks:URLFindTypeAll];
+    if(detectUrls)
+        [attr detectAndAddLinks:URLFindTypeAll];
 
     _value = attr;
     

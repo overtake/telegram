@@ -25,7 +25,6 @@
     if(self = [super initWithQueue:queue]) {
         [Notification addObserver:self selector:@selector(setTopMessageToDialog:) name:MESSAGE_UPDATE_TOP_MESSAGE];
         [Notification addObserver:self selector:@selector(setTopMessagesToDialogs:) name:MESSAGE_LIST_UPDATE_TOP];
-        [Notification addObserver:self selector:@selector(updateReadList:) name:MESSAGE_READ_EVENT];
     }
     return self;
 }
@@ -54,44 +53,7 @@
    
     [[Storage manager] messages:^(NSArray *messages) {
         
-        NSMutableDictionary *updateDialogs = [[NSMutableDictionary alloc] init];
-        
-        NSArray *unloaded = [self unloadedConversationsWithMessages:messages];
-        
-        [[Storage manager] conversationsWithPeerIds:unloaded completeHandler:^(NSArray *result) {
-            
-            [self add:result];
-            
-            [messages enumerateObjectsUsingBlock:^(TL_localMessage *message, NSUInteger idx, BOOL * _Nonnull stop) {
-                if(!message.n_out) {
-                    message.conversation.unread_count--;
-                }
-                
-                if(message.conversation.lastMessage.n_id == message.n_id) {
-                    message.conversation.lastMessage.flags&= ~TGUNREADMESSAGE;
-                }
-                
-                if(message.n_id > message.conversation.last_marked_message) {
-                    message.conversation.last_marked_message = message.n_id;
-                    message.conversation.last_marked_date = message.date;
-                }
-                
-                [updateDialogs setObject:message.conversation forKey:@(message.conversation.peer_id)];
-            }];
-            
-            for (TL_conversation *dialog in updateDialogs.allValues) {
-                [dialog save];
-                [Notification perform:DIALOG_UPDATE data:@{KEY_DIALOG:dialog}];
-                [Notification perform:[Notification notificationNameByDialog:dialog action:@"unread_count"] data:@{KEY_DIALOG:dialog,KEY_LAST_CONVRESATION_DATA:[MessagesUtils conversationLastData:dialog]}];
-            }
-            
-            [[Storage manager] markMessagesAsRead:copy useRandomIds:@[]];
-            
-            
-            [MessagesManager updateUnreadBadge];
-            
-        }];
-        
+
 
     } forIds:copy random:NO queue:self.queue];
     
@@ -617,22 +579,56 @@
 
 - (void)markAllMessagesAsRead:(TL_conversation *)dialog {
     
-    [[Storage manager] markAllInConversation:dialog.peer_id max_id:dialog.top_message out:NO completeHandler:^(NSArray *ids) {
+    [[Storage manager] markAllInConversation:dialog.peer_id max_id:dialog.top_message out:NO completeHandler:^(NSArray *ids,NSArray *messages) {
         
     }];
 }
 
 - (void) markAllMessagesAsRead:(TLPeer *)peer max_id:(int)max_id out:(BOOL)n_out {
     
-    [[Storage manager] markAllInConversation:peer.peer_id max_id:max_id out:n_out completeHandler:^(NSArray *ids) {
+    
+    [[Storage manager] markAllInConversation:peer.peer_id max_id:max_id out:n_out completeHandler:^(NSArray *ids,NSArray *messages) {
         [self.queue dispatchOnQueue:^{
             
-            TL_conversation *conversation = [self find:peer.peer_id];
-            if(conversation != nil) {
-                [Notification performOnStageQueue:MESSAGE_READ_EVENT data:@{KEY_MESSAGE_ID_LIST:ids}];
-                [Notification perform:[Notification notificationNameByDialog:conversation action:@"unread_count"] data:@{KEY_DIALOG:conversation,KEY_LAST_CONVRESATION_DATA:[MessagesUtils conversationLastData:conversation]}];
-
+            if(messages.count > 0) {
+                
+                NSArray *unloaded = [self unloadedConversationsWithMessages:@[[messages firstObject]]];
+                
+                [[Storage manager] conversationsWithPeerIds:unloaded completeHandler:^(NSArray *result) {
+                   
+                    [self add:result];
+                    
+                    TL_conversation *conversation = [(TL_localMessage *)[messages firstObject] conversation];
+                    
+                    if(!n_out) {
+                        
+                        conversation.read_inbox_max_id = max_id;
+                    }
+                    
+                    conversation.last_marked_message = max_id;
+                    
+                   
+                    [messages enumerateObjectsUsingBlock:^(TL_localMessage *message, NSUInteger idx, BOOL * _Nonnull stop) {
+                        if(!message.n_out) {
+                            conversation.unread_count--;
+                        }
+                        
+                        if(conversation.lastMessage.n_id == message.n_id) {
+                            conversation.lastMessage.flags&= ~TGUNREADMESSAGE;
+                        }
+                        
+                    }];
+                    
+                    [Notification perform:[Notification notificationNameByDialog:conversation action:@"unread_count"] data:@{KEY_DIALOG:conversation,KEY_LAST_CONVRESATION_DATA:[MessagesUtils conversationLastData:conversation]}];
+                    [Notification perform:MESSAGE_READ_EVENT data:@{KEY_MESSAGE_ID_LIST:ids}];
+                    
+                    [conversation save];
+                    
+                    [MessagesManager updateUnreadBadge];
+                    
+                }];
             }
+            
         }];
     }];
     
