@@ -1210,9 +1210,10 @@ TL_localMessage *parseMessage(FMResultSet *result) {
     }];
 }
 
--(void)markAllInConversation:(int)peer_id max_id:(int)max_id out:(BOOL)n_out completeHandler:(void (^)(NSArray * ids))completeHandler {
+-(void)markAllInConversation:(int)peer_id max_id:(int)max_id out:(BOOL)n_out completeHandler:(void (^)(NSArray * ids,NSArray *messages))completeHandler {
     
     NSMutableArray *ids = [[NSMutableArray alloc] init];
+    NSMutableArray *messages = [NSMutableArray array];
     
     dispatch_queue_t q = dispatch_get_current_queue();
     
@@ -1227,18 +1228,20 @@ TL_localMessage *parseMessage(FMResultSet *result) {
         if(!n_out) {
             int read_inbox_max_id = [db intForQuery:[NSString stringWithFormat:@"select read_inbox_max_id from %@ where peer_id = ?",tableModernDialogs],@(peer_id)];
             
-            result = [db executeQuery:@"select n_id from messages where ((n_id <= ? and n_id >= ?) OR dstate=?) and peer_id = ? and (flags & ?) = ? and (flags & ?) = 0",@(max_id),@(read_inbox_max_id),@(DeliveryStatePending),@(peer_id),@(flags),@(flags),@(TGOUTMESSAGE)];
+            result = [db executeQuery:[NSString stringWithFormat:@"select * from %@ where ((n_id <= ? and n_id >= ?) OR dstate=?) and peer_id = ? and (flags & ?) = ? and (flags & ?) = 0",tableMessages],@(max_id),@(read_inbox_max_id),@(DeliveryStatePending),@(peer_id),@(flags),@(flags),@(TGOUTMESSAGE)];
             
             
             [db executeUpdate:[NSString stringWithFormat:@"update %@ set read_inbox_max_id = ? where peer_id = ?",tableModernDialogs],@(max_id),@(peer_id)];
         } else {
-            result = [db executeQuery:[NSString stringWithFormat:@"select n_id from %@ where (n_id <= ? OR dstate= ?) and peer_id = ? and (flags & ?) = ?",tableMessages],@(max_id),@(DeliveryStatePending),@(peer_id),@(flags),@(flags)];
+            result = [db executeQuery:[NSString stringWithFormat:@"select * from %@ where (n_id <= ? OR dstate= ?) and peer_id = ? and (flags & ?) = ?",tableMessages],@(max_id),@(DeliveryStatePending),@(peer_id),@(flags),@(flags)];
         }
         
         
-        
-        
         while ([result next]) {
+            TL_localMessage *msg = parseMessage(result);
+            
+            if(msg != nil)
+                [messages addObject:msg];
             
             [ids addObject:@([result intForColumn:@"n_id"])];
         }
@@ -1257,7 +1260,7 @@ TL_localMessage *parseMessage(FMResultSet *result) {
         [db commit];
         
         dispatch_async(q,^{
-            completeHandler(ids);
+            completeHandler(ids,messages);
         });
         
     }];

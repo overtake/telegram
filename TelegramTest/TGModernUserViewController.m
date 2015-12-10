@@ -100,7 +100,7 @@
             if(!_userNameItem)
             {
                 _userNameItem = [[TGProfileParamItem alloc] init];
-                [_userNameItem setHeader:NSLocalizedString(@"Profile.username", nil) withValue:[NSString stringWithFormat:@"@%@",_user.username]];
+                [_userNameItem setHeader:NSLocalizedString(@"Profile.username", nil) withValue:[NSString stringWithFormat:@"@%@",_user.username] detectUrls:NO];
                 
                 _userNameItem.height = 50;
             }
@@ -377,7 +377,7 @@
         if(_userFull && _userFull.bot_info.n_description.length > 0) {
             TGProfileParamItem *botInfo = [[TGProfileParamItem alloc] init];
             
-            [botInfo setHeader:NSLocalizedString(@"Profile.About", nil) withValue:_userFull.bot_info.n_description];
+            [botInfo setHeader:NSLocalizedString(@"Profile.About", nil) withValue:_userFull.bot_info.n_description detectUrls:NO];
             [_tableView addItem:botInfo tableRedraw:YES];
             [_tableView addItem:[[TGGeneralRowItem alloc] initWithHeight:20] tableRedraw:YES];
         }
@@ -386,7 +386,7 @@
         if(_user.username.length > 0) {
             _userNameItem = [[TGProfileParamItem alloc] init];
             
-            [_userNameItem setHeader:NSLocalizedString(@"Profile.username", nil) withValue:[NSString stringWithFormat:@"@%@",_user.username]];
+            [_userNameItem setHeader:NSLocalizedString(@"Profile.username", nil) withValue:[NSString stringWithFormat:@"@%@",_user.username] detectUrls:NO];
             
             _userNameItem.height = 50;
             
@@ -396,7 +396,7 @@
         if(_user.phone.length > 0) {
             _phoneNumberItem = [[TGProfileParamItem alloc] init];
             
-            [_phoneNumberItem setHeader:NSLocalizedString(@"Profile.MobilePhone", nil) withValue:_user.phoneWithFormat];
+            [_phoneNumberItem setHeader:NSLocalizedString(@"Profile.MobilePhone", nil) withValue:_user.phoneWithFormat detectUrls:NO];
             
             _phoneNumberItem.height = 50;
             

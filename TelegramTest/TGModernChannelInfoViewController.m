@@ -274,7 +274,7 @@
         if(_chat.username.length > 0) {
             TGProfileParamItem *linkItem = [[TGProfileParamItem alloc] initWithHeight:30];
             
-            [linkItem setHeader:NSLocalizedString(@"Profile.ShareLink", nil) withValue:_chat.usernameLink];
+            [linkItem setHeader:NSLocalizedString(@"Profile.ShareLink", nil) withValue:_chat.usernameLink detectUrls:NO];
             
             [_tableView addItem:linkItem tableRedraw:YES];
             
@@ -285,7 +285,7 @@
         if(_chat.chatFull.about.length > 0) {
             TGProfileParamItem *aboutItem = [[TGProfileParamItem alloc] initWithHeight:30];
             
-            [aboutItem setHeader:[NSLocalizedString(@"Compose.ChannelAboutPlaceholder", nil) lowercaseString] withValue:_chat.chatFull.about];
+            [aboutItem setHeader:[NSLocalizedString(@"Compose.ChannelAboutPlaceholder", nil) lowercaseString] withValue:_chat.chatFull.about detectUrls:YES];
             
             [_tableView addItem:aboutItem tableRedraw:YES];
             
