@@ -32,7 +32,7 @@
 }
 
 -(NSString *)path {
-    return @"/Users/mikhailfilimonov/Desktop/giphy.mp4";
+    return @"/Users/mikhailfilimonov/Desktop/1.mov";
 }
 
 @end

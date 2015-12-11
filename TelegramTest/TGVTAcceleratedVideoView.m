@@ -478,12 +478,12 @@ static NSData *vertexShaderSource() {
 }
 
 - (void)setupBuffers {
-//    glGenFramebuffers(1, &_frameBufferHandle);
-//    glBindFramebuffer(GL_FRAMEBUFFER, _frameBufferHandle);
-//    
-//    glGenRenderbuffers(1, &_colorBufferHandle);
-//    glBindRenderbuffer(GL_RENDERBUFFER, _colorBufferHandle);
-//    
+    glGenFramebuffers(0, &_frameBufferHandle);
+    glBindFramebuffer(GL_FRAMEBUFFER, _frameBufferHandle);
+//
+    glGenRenderbuffers(1, &_colorBufferHandle);
+    glBindRenderbuffer(GL_RENDERBUFFER, _colorBufferHandle);
+//
 //    
    glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT16, NSWidth(self.frame), NSHeight(self.frame));
 //    
@@ -520,7 +520,7 @@ static NSData *vertexShaderSource() {
     }
 }
 
-- (void)displayPixelBuffer:(CVPixelBufferRef)pixelBuffer
+- (void)displayPixelBuffer:(CVImageBufferRef)pixelBuffer
 {
     if (pixelBuffer != NULL) {
         CFRetain(pixelBuffer);
@@ -563,10 +563,7 @@ static NSData *vertexShaderSource() {
             glActiveTexture(GL_TEXTURE0);
             
             
-            
-  
-            
-            CVOpenGLTextureCacheCreateTextureFromImage(kCFAllocatorDefault, [TGVTAcceleratedVideoContext instance].videoTextureCache, pixelBuffer, 0, &_lumaTexture);
+           CVReturn res = CVOpenGLTextureCacheCreateTextureFromImage(kCFAllocatorDefault, [TGVTAcceleratedVideoContext instance].videoTextureCache, pixelBuffer, 0, &_lumaTexture);
             if (_lumaTexture == NULL) {
                 MTLog(@"Error at CVOpenGLESTextureCache.TextureFromImage");
             }

@@ -1113,7 +1113,7 @@ continueUserActivity: (id)userActivity
 }
 
 - (void)application:(NSApplication *)application didUpdateUserActivity:(id)userActivity  {
-    
+    [TMViewController hideModalProgress];
 }
 
 -(void)application:(NSApplication *)application
