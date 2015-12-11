@@ -59,7 +59,7 @@ typedef enum {
 - (void)setCellsEditButtonShow:(BOOL)show animated:(BOOL)animated;
 - (void)setSelectedMessage:(MessageTableItem *)item selected:(BOOL)selected;
 - (void)deleteSelectedMessages;
-- (void)cancelSelectionAndScrollToBottom;
+- (void)cancelSelectionAndScrollToBottom:(BOOL)scrollToBottom;
 - (void)unSelectAll:(BOOL)animated;
 - (void)bottomViewChangeSize:(int)height animated:(BOOL)animated;
 - (void)setStringValueToTextField:(NSString *)stringValue;

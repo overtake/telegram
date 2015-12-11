@@ -2471,12 +2471,14 @@ static NSTextAttachment *headerMediaIcon() {
     [self setCurrentConversation:dialog withMessageJump:nil];
 }
 
-
-
 - (void)cancelSelectionAndScrollToBottom {
+    [self cancelSelectionAndScrollToBottom:YES];
+}
+
+- (void)cancelSelectionAndScrollToBottom:(BOOL)scrollToBottom {
     [self unSelectAll:NO];
     self.state = MessagesViewControllerStateNone;
-    [self.table.scrollView scrollToEndWithAnimation:YES];
+    [self.table.scrollView scrollToEndWithAnimation:scrollToBottom];
 }
 
 - (void)tryRead {
@@ -3276,7 +3278,7 @@ static NSTextAttachment *headerMediaIcon() {
         
         
         void (^fwd_blck) (NSArray *fwd_msgs) = ^(NSArray *fwd_messages) {
-            ForwardSenterItem *sender = [[ForwardSenterItem alloc] initWithMessages:fwd_messages forConversation:conversation additionFlags:self.senderFlags];
+            ForwardSenterItem *sender = [[ForwardSenterItem alloc] initWithMessages:fwd_messages forConversation:conversation additionFlags:conversation != _conversation ? 0 : self.senderFlags];
             sender.tableItems = [[self messageTableItemsFromMessages:sender.fakes] reversedArray];
             [self.historyController addItems:sender.tableItems conversation:conversation callback:callback sentControllerCallback:nil];
         };

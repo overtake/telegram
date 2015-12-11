@@ -412,7 +412,7 @@
             return a.n_id > b.n_id ? NSOrderedDescending : NSOrderedAscending;
         }];
         
-        [self.messagesViewController cancelSelectionAndScrollToBottom];
+        [self.messagesViewController cancelSelectionAndScrollToBottom:YES];
         
         
         dialog.last_marked_date = [[MTNetwork instance] getTime]+1;
