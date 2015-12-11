@@ -218,8 +218,10 @@ static NSCache *cItems;
         
         NSMutableParagraphStyle *style = [[NSMutableParagraphStyle alloc] init];
         style.lineBreakMode = NSLineBreakByTruncatingTail;
+       // style.hyphenationFactor = 0;
         
         [self.forwardMessageAttributedString addAttribute:NSParagraphStyleAttributeName value:style range:self.forwardMessageAttributedString.range];
+
     }
 }
 
