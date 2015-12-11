@@ -2,7 +2,7 @@
 //  MTProto.m
 //  Telegram
 //
-//  Auto created by Mikhail Filimonov on 04.12.15.
+//  Auto created by Mikhail Filimonov on 10.12.15.
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -19032,6 +19032,145 @@
         
 @end
 
+@implementation TL_webPageExternal
++(TL_webPageExternal*)createWithFlags:(int)flags url:(NSString*)url display_url:(NSString*)display_url type:(NSString*)type title:(NSString*)title n_description:(NSString*)n_description thumb_url:(NSString*)thumb_url original_url:(NSString*)original_url mp4_url:(NSString*)mp4_url w:(int)w h:(int)h duration:(int)duration {
+	TL_webPageExternal* obj = [[TL_webPageExternal alloc] init];
+	obj.flags = flags;
+	obj.url = url;
+	obj.display_url = display_url;
+	obj.type = type;
+	obj.title = title;
+	obj.n_description = n_description;
+	obj.thumb_url = thumb_url;
+	obj.original_url = original_url;
+	obj.mp4_url = mp4_url;
+	obj.w = w;
+	obj.h = h;
+	obj.duration = duration;
+	return obj;
+}
+-(void)serialize:(SerializedData*)stream {
+	[stream writeInt:self.flags];
+	[stream writeString:self.url];
+	[stream writeString:self.display_url];
+	if(self.flags & (1 << 0)) {[stream writeString:self.type];}
+	if(self.flags & (1 << 1)) {[stream writeString:self.title];}
+	if(self.flags & (1 << 2)) {[stream writeString:self.n_description];}
+	if(self.flags & (1 << 3)) {[stream writeString:self.thumb_url];}
+	if(self.flags & (1 << 4)) {[stream writeString:self.original_url];}
+	if(self.flags & (1 << 5)) {[stream writeString:self.mp4_url];}
+	if(self.flags & (1 << 6)) {[stream writeInt:self.w];}
+	if(self.flags & (1 << 6)) {[stream writeInt:self.h];}
+	if(self.flags & (1 << 7)) {[stream writeInt:self.duration];}
+}
+-(void)unserialize:(SerializedData*)stream {
+	super.flags = [stream readInt];
+	super.url = [stream readString];
+	super.display_url = [stream readString];
+	if(self.flags & (1 << 0)) {super.type = [stream readString];}
+	if(self.flags & (1 << 1)) {super.title = [stream readString];}
+	if(self.flags & (1 << 2)) {super.n_description = [stream readString];}
+	if(self.flags & (1 << 3)) {super.thumb_url = [stream readString];}
+	if(self.flags & (1 << 4)) {super.original_url = [stream readString];}
+	if(self.flags & (1 << 5)) {super.mp4_url = [stream readString];}
+	if(self.flags & (1 << 6)) {super.w = [stream readInt];}
+	if(self.flags & (1 << 6)) {super.h = [stream readInt];}
+	if(self.flags & (1 << 7)) {super.duration = [stream readInt];}
+}
+        
+-(TL_webPageExternal *)copy {
+    
+    TL_webPageExternal *objc = [[TL_webPageExternal alloc] init];
+    
+    objc.flags = self.flags;
+    objc.url = self.url;
+    objc.display_url = self.display_url;
+    objc.type = self.type;
+    objc.title = self.title;
+    objc.n_description = self.n_description;
+    objc.thumb_url = self.thumb_url;
+    objc.original_url = self.original_url;
+    objc.mp4_url = self.mp4_url;
+    objc.w = self.w;
+    objc.h = self.h;
+    objc.duration = self.duration;
+    
+    return objc;
+}
+        
+
+    
+-(id)initWithCoder:(NSCoder *)aDecoder {
+
+    if((self = [ClassStore deserialize:[aDecoder decodeObjectForKey:@"data"]])) {
+        
+    }
+    
+    return self;
+}
+        
+-(void)encodeWithCoder:(NSCoder *)aCoder {
+    [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
+}
+        
+            
+-(void)setType:(NSString*)type
+{
+   super.type = type;
+                
+    if(super.type == nil)  { super.flags&= ~ (1 << 0) ;} else { super.flags|= (1 << 0); }
+}            
+-(void)setTitle:(NSString*)title
+{
+   super.title = title;
+                
+    if(super.title == nil)  { super.flags&= ~ (1 << 1) ;} else { super.flags|= (1 << 1); }
+}            
+-(void)setN_description:(NSString*)n_description
+{
+   super.n_description = n_description;
+                
+    if(super.n_description == nil)  { super.flags&= ~ (1 << 2) ;} else { super.flags|= (1 << 2); }
+}            
+-(void)setThumb_url:(NSString*)thumb_url
+{
+   super.thumb_url = thumb_url;
+                
+    if(super.thumb_url == nil)  { super.flags&= ~ (1 << 3) ;} else { super.flags|= (1 << 3); }
+}            
+-(void)setOriginal_url:(NSString*)original_url
+{
+   super.original_url = original_url;
+                
+    if(super.original_url == nil)  { super.flags&= ~ (1 << 4) ;} else { super.flags|= (1 << 4); }
+}            
+-(void)setMp4_url:(NSString*)mp4_url
+{
+   super.mp4_url = mp4_url;
+                
+    if(super.mp4_url == nil)  { super.flags&= ~ (1 << 5) ;} else { super.flags|= (1 << 5); }
+}            
+-(void)setW:(int)w
+{
+   super.w = w;
+                
+    if(super.w == 0)  { super.flags&= ~ (1 << 6) ;} else { super.flags|= (1 << 6); }
+}            
+-(void)setH:(int)h
+{
+   super.h = h;
+                
+    if(super.h == 0)  { super.flags&= ~ (1 << 6) ;} else { super.flags|= (1 << 6); }
+}            
+-(void)setDuration:(int)duration
+{
+   super.duration = duration;
+                
+    if(super.duration == 0)  { super.flags&= ~ (1 << 7) ;} else { super.flags|= (1 << 7); }
+}
+        
+@end
+
 @implementation TL_webPage_old34
 +(TL_webPage_old34*)createWithFlags:(int)flags n_id:(long)n_id url:(NSString*)url display_url:(NSString*)display_url type:(NSString*)type site_name:(NSString*)site_name title:(NSString*)title n_description:(NSString*)n_description photo:(TLPhoto*)photo embed_url:(NSString*)embed_url embed_type:(NSString*)embed_type embed_width:(int)embed_width embed_height:(int)embed_height duration:(int)duration author:(NSString*)author {
 	TL_webPage_old34* obj = [[TL_webPage_old34 alloc] init];
@@ -22938,89 +23077,24 @@
 
 @end
         
-@implementation TL_foundGifCached
-+(TL_foundGifCached*)createWithUrl:(NSString*)url document:(TLDocument*)document {
-	TL_foundGifCached* obj = [[TL_foundGifCached alloc] init];
-	obj.url = url;
-	obj.document = document;
+@implementation TL_foundGif
++(TL_foundGif*)createWithWebpage:(TLWebPage*)webpage {
+	TL_foundGif* obj = [[TL_foundGif alloc] init];
+	obj.webpage = webpage;
 	return obj;
 }
 -(void)serialize:(SerializedData*)stream {
-	[stream writeString:self.url];
-	[ClassStore TLSerialize:self.document stream:stream];
+	[ClassStore TLSerialize:self.webpage stream:stream];
 }
 -(void)unserialize:(SerializedData*)stream {
-	super.url = [stream readString];
-	self.document = [ClassStore TLDeserialize:stream];
+	self.webpage = [ClassStore TLDeserialize:stream];
 }
         
--(TL_foundGifCached *)copy {
+-(TL_foundGif *)copy {
     
-    TL_foundGifCached *objc = [[TL_foundGifCached alloc] init];
+    TL_foundGif *objc = [[TL_foundGif alloc] init];
     
-    objc.url = self.url;
-    objc.document = [self.document copy];
-    
-    return objc;
-}
-        
-
-    
--(id)initWithCoder:(NSCoder *)aDecoder {
-
-    if((self = [ClassStore deserialize:[aDecoder decodeObjectForKey:@"data"]])) {
-        
-    }
-    
-    return self;
-}
-        
--(void)encodeWithCoder:(NSCoder *)aCoder {
-    [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
-}
-        
-
-        
-@end
-
-@implementation TL_foundGifExternal
-+(TL_foundGifExternal*)createWithUrl:(NSString*)url thumb_url:(NSString*)thumb_url original_url:(NSString*)original_url mp4_url:(NSString*)mp4_url w:(int)w h:(int)h {
-	TL_foundGifExternal* obj = [[TL_foundGifExternal alloc] init];
-	obj.url = url;
-	obj.thumb_url = thumb_url;
-	obj.original_url = original_url;
-	obj.mp4_url = mp4_url;
-	obj.w = w;
-	obj.h = h;
-	return obj;
-}
--(void)serialize:(SerializedData*)stream {
-	[stream writeString:self.url];
-	[stream writeString:self.thumb_url];
-	[stream writeString:self.original_url];
-	[stream writeString:self.mp4_url];
-	[stream writeInt:self.w];
-	[stream writeInt:self.h];
-}
--(void)unserialize:(SerializedData*)stream {
-	super.url = [stream readString];
-	super.thumb_url = [stream readString];
-	super.original_url = [stream readString];
-	super.mp4_url = [stream readString];
-	super.w = [stream readInt];
-	super.h = [stream readInt];
-}
-        
--(TL_foundGifExternal *)copy {
-    
-    TL_foundGifExternal *objc = [[TL_foundGifExternal alloc] init];
-    
-    objc.url = self.url;
-    objc.thumb_url = self.thumb_url;
-    objc.original_url = self.original_url;
-    objc.mp4_url = self.mp4_url;
-    objc.w = self.w;
-    objc.h = self.h;
+    objc.webpage = [self.webpage copy];
     
     return objc;
 }

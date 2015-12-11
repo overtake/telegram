@@ -3779,6 +3779,15 @@ static NSTextAttachment *headerMediaIcon() {
         }
         
         
+    } else if(item.class == [MessageTableItemMpeg class]) {
+        static NSString *const kRowIdentifier = @"mpeg_cell";
+        cell = [self.table makeViewWithIdentifier:kRowIdentifier owner:self];
+        
+        if(!cell) {
+            cell = [[MessageTableCellMpegView alloc] initWithFrame:self.view.bounds];
+            cell.identifier = kRowIdentifier;
+            cell.messagesViewController = self;
+        }
     } else if(!(item.class == [MessageTableCellServiceMessage class]) && !(item.class == [MessageTableItemTyping class])) {
         
         assert(NO);

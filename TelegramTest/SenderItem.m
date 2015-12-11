@@ -12,6 +12,7 @@
 #import "StickerSenderItem.h"
 #import "WeakReference.h"
 #import "MessageTableCell.h"
+#import "ExternalGifSenderItem.h"
 @interface SenderItem ()
 @property (nonatomic,strong) NSMutableArray *listeners;
 @end
@@ -98,7 +99,9 @@ static NSMutableDictionary *senders;
                         item = [[StickerSenderItem alloc] init];
                     }
                     
-                    
+                    if([msg.media.document isKindOfClass:[TL_externalDocument class]]) {
+                        item = [[ExternalGifSenderItem alloc] init];
+                    }
                     
                 } else if([msg.media isKindOfClass:[TL_messageMediaAudio class]]) {
                     item = [[AudioSenderItem alloc] init];

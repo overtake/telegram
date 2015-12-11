@@ -72,8 +72,8 @@
     [self.subviews enumerateObjectsUsingBlock:^(NSImageView * imageView, NSUInteger idx, BOOL * _Nonnull stop) {
         
         if(idx < item.gifs.count) {
-            TL_foundGifExternal *gif = item.gifs[idx];
-            [imageView setImageWithURL:[NSURL URLWithString:gif.thumb_url]];
+            TL_foundGif *gif = item.gifs[idx];
+            [imageView setImageWithURL:[NSURL URLWithString:gif.webpage.thumb_url]];
             [imageView setImageScaling:NSImageScaleAxesIndependently];
         } else {
             imageView.image = nil;
@@ -193,58 +193,29 @@
     
     [self close:YES];
     
-    __block TLDocument *document = gif.document;
-    __block TLWebPage *webpage = nil;
-    dispatch_block_t execute = ^{
-        
-        if(document == nil) {
-            
-            NSMutableArray *attrs = [[NSMutableArray alloc] init];
-            
-            [attrs addObject:[TL_documentAttributeImageSize createWithW:gif.w h:gif.h]];
-            
-            TGGifSearchRowView *view = [_tableView viewAtColumn:0 row:[_tableView indexOfItem:item] makeIfNecessary:NO];
-            
-            NSImageView *imageView = view.subviews[row];
-            
-            
-            
-            NSSize thumbSize = strongsize(NSMakeSize(gif.w, gif.h), 90);
-            document = [TL_externalDocument createWithN_id:webpage.n_id date:[[MTNetwork instance] getTime] mime_type:@"image/gif" thumb:[TL_photoCachedSize createWithType:@"x" location:[TL_fileLocationUnavailable createWithVolume_id:0 local_id:0 secret:0] w:thumbSize.width h:thumbSize.height bytes:jpegNormalizedData(imageView.image)] external_url:gif.url search_q:self.searchField.stringValue perform_date:webpage.date external_webpage:webpage attributes:attrs];
-        }
-        
-        TLMessageMedia *media = [TL_messageMediaDocument createWithDocument:document];
-        
-        [self.messagesViewController sendFoundGif:media forConversation:self.messagesViewController.conversation];
-    };
+    __block TLDocument *document = gif.webpage.document;
+    __block TLWebPage *webpage = gif.webpage;
     
     
-    if(!document) {
+    if(document == nil) {
         
-        [TMViewController showModalProgress];
+        NSMutableArray *attrs = [[NSMutableArray alloc] init];
         
-        [RPCRequest sendRequest:[TLAPI_messages_getWebPagePreview createWithMessage:gif.url] successHandler:^(id request, TL_messageMediaWebPage * response) {
-            
-            if(![response.webpage isKindOfClass:[TL_webPageEmpty class]]) {
-                
-                if([response.webpage isKindOfClass:[TL_webPagePending class]] || ([response.webpage isKindOfClass:[TL_webPage class]] && response.webpage.document != nil)) {
-                    webpage = response.webpage;
-                    document = webpage.document;
-                    
-                    execute();
-                    [TMViewController hideModalProgressWithSuccess];
-                }
-                
-            }
-            
-            [TMViewController hideModalProgress];
-            
-        } errorHandler:^(id request, RpcError *error) {
-            [TMViewController hideModalProgress];
-        }];
-    } else {
-        execute();
+        [attrs addObject:[TL_documentAttributeImageSize createWithW:webpage.w h:webpage.h]];
+        
+        TGGifSearchRowView *view = [_tableView viewAtColumn:0 row:[_tableView indexOfItem:item] makeIfNecessary:NO];
+        
+        NSImageView *imageView = view.subviews[row];
+        
+        
+        
+        NSSize thumbSize = strongsize(NSMakeSize(webpage.w, webpage.h), 90);
+        document = [TL_externalDocument createWithN_id:webpage.n_id date:[[MTNetwork instance] getTime] mime_type:@"image/gif" thumb:[TL_photoCachedSize createWithType:@"x" location:[TL_fileLocationUnavailable createWithVolume_id:0 local_id:0 secret:0] w:thumbSize.width h:thumbSize.height bytes:jpegNormalizedData(imageView.image)] external_url:webpage.url search_q:self.searchField.stringValue perform_date:webpage.date external_webpage:webpage attributes:attrs];
     }
+    
+    TLMessageMedia *media = [TL_messageMediaDocument createWithDocument:document];
+    
+    [self.messagesViewController sendFoundGif:media forConversation:self.messagesViewController.conversation];
     
     
     

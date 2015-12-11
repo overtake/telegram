@@ -2,7 +2,7 @@
 //  MTProto.h
 //  Telegram
 //
-//  Auto created by Mikhail Filimonov on 04.12.15.
+//  Auto created by Mikhail Filimonov on 10.12.15.
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -2416,6 +2416,11 @@
 @property int duration;
 @property (nonatomic, strong) NSString* author;
 @property (nonatomic, strong) TLDocument* document;
+@property (nonatomic, strong) NSString* thumb_url;
+@property (nonatomic, strong) NSString* original_url;
+@property (nonatomic, strong) NSString* mp4_url;
+@property int w;
+@property int h;
 @end
 
 @interface TL_webPageEmpty : TLWebPage<NSCoding>
@@ -2426,6 +2431,9 @@
 @end
 @interface TL_webPage : TLWebPage<NSCoding>
 +(TL_webPage*)createWithFlags:(int)flags n_id:(long)n_id url:(NSString*)url display_url:(NSString*)display_url type:(NSString*)type site_name:(NSString*)site_name title:(NSString*)title n_description:(NSString*)n_description photo:(TLPhoto*)photo embed_url:(NSString*)embed_url embed_type:(NSString*)embed_type embed_width:(int)embed_width embed_height:(int)embed_height duration:(int)duration author:(NSString*)author document:(TLDocument*)document;
+@end
+@interface TL_webPageExternal : TLWebPage<NSCoding>
++(TL_webPageExternal*)createWithFlags:(int)flags url:(NSString*)url display_url:(NSString*)display_url type:(NSString*)type title:(NSString*)title n_description:(NSString*)n_description thumb_url:(NSString*)thumb_url original_url:(NSString*)original_url mp4_url:(NSString*)mp4_url w:(int)w h:(int)h duration:(int)duration;
 @end
 @interface TL_webPage_old34 : TLWebPage<NSCoding>
 +(TL_webPage_old34*)createWithFlags:(int)flags n_id:(long)n_id url:(NSString*)url display_url:(NSString*)display_url type:(NSString*)type site_name:(NSString*)site_name title:(NSString*)title n_description:(NSString*)n_description photo:(TLPhoto*)photo embed_url:(NSString*)embed_url embed_type:(NSString*)embed_type embed_width:(int)embed_width embed_height:(int)embed_height duration:(int)duration author:(NSString*)author;
@@ -2863,20 +2871,11 @@
 @end
 	
 @interface TLFoundGif()
-@property (nonatomic, strong) NSString* url;
-@property (nonatomic, strong) TLDocument* document;
-@property (nonatomic, strong) NSString* thumb_url;
-@property (nonatomic, strong) NSString* original_url;
-@property (nonatomic, strong) NSString* mp4_url;
-@property int w;
-@property int h;
+@property (nonatomic, strong) TLWebPage* webpage;
 @end
 
-@interface TL_foundGifCached : TLFoundGif<NSCoding>
-+(TL_foundGifCached*)createWithUrl:(NSString*)url document:(TLDocument*)document;
-@end
-@interface TL_foundGifExternal : TLFoundGif<NSCoding>
-+(TL_foundGifExternal*)createWithUrl:(NSString*)url thumb_url:(NSString*)thumb_url original_url:(NSString*)original_url mp4_url:(NSString*)mp4_url w:(int)w h:(int)h;
+@interface TL_foundGif : TLFoundGif<NSCoding>
++(TL_foundGif*)createWithWebpage:(TLWebPage*)webpage;
 @end
 	
 @interface TLmessages_FoundGifs()

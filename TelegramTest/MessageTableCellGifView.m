@@ -303,8 +303,6 @@ static NSImage *playImage() {
     [self.progressView setCenterByView:self.imageView];
     
     
-    
-    
 }
 
 

@@ -29,7 +29,7 @@
 #import "TL_localMessage_old32.h"
 #import "TL_localMessage_old34.h"
 #import "NSNumber+NumberFormatter.h"
-
+#import "MessageTableItemMpeg.h"
 @interface TGItemCache : NSObject
 @property (nonatomic,strong) NSAttributedString *header;
 @property (nonatomic,strong) TLUser *user;
@@ -298,6 +298,9 @@ static NSTextAttachment *channelIconAttachment() {
 + (id) messageItemFromObject:(TL_localMessage *)message {
     id objectReturn = nil;
 
+    
+    return [[MessageTableItemMpeg alloc] initWithObject:message];
+    
     @try {
         if(message.class == [TL_localMessage_old34 class] || message.class == [TL_localMessage_old32 class] || message.class == [TL_localMessage class] || message.class == [TL_destructMessage class]) {
             
