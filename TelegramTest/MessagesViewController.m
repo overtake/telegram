@@ -1140,14 +1140,23 @@ static NSTextAttachment *headerMediaIcon() {
     if(self.state == MessagesViewControllerStateEditable)
         [self.bottomView setSectedMessagesCount:self.selectedMessages.count enable:[self canDeleteMessages]];
     
-    #ifdef __MAC_10_10
+    [self checkUserActivity];
     
-    if([NSUserActivity class] && (self.conversation.type == DialogTypeChat || self.conversation.type == DialogTypeUser)) {
+    if(self.conversation) {
+        [Notification perform:@"ChangeDialogSelection" data:@{KEY_DIALOG:self.conversation, @"sender":self}];
+    }
+    
+    [self.table.scrollView setHasVerticalScroller:YES];
+}
+
+-(void)checkUserActivity {
+#ifdef __MAC_10_10
+    
+    if([NSUserActivity class] && (self.conversation.type == DialogTypeChannel || self.conversation.type == DialogTypeChat || self.conversation.type == DialogTypeUser)) {
         NSUserActivity *activity = [[NSUserActivity alloc] initWithActivityType:USER_ACTIVITY_CONVERSATION];
-     //   activity.webpageURL = [NSURL URLWithString:@"http://telegram.org/dl"];
+        //   activity.webpageURL = [NSURL URLWithString:@"http://telegram.org/dl"];
         activity.userInfo = @{@"peer":@{
-                                      @"id":@(abs(self.conversation.peer_id)),
-                                      @"type":self.conversation.type == DialogTypeChat ? @"group" : @"user"},
+                                      @"id":@(self.conversation.peer_id)},
                               @"user_id":@([UsersManager currentUserId])};
         
         activity.title = @"org.telegram.conversation";
@@ -1158,12 +1167,6 @@ static NSTextAttachment *headerMediaIcon() {
     }
     
 #endif
-    
-    if(self.conversation) {
-        [Notification perform:@"ChangeDialogSelection" data:@{KEY_DIALOG:self.conversation, @"sender":self}];
-    }
-    
-    [self.table.scrollView setHasVerticalScroller:YES];
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
@@ -2387,6 +2390,8 @@ static NSTextAttachment *headerMediaIcon() {
         
         self.jumpMessage = message;
         self.conversation = dialog;
+        
+        [self checkUserActivity];
         
         [Notification perform:@"ChangeDialogSelection" data:@{KEY_DIALOG:self.conversation, @"sender":self}];
         
