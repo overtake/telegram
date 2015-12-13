@@ -275,9 +275,9 @@
 		C21068B81C19EDFF00815859 /* VTPlayer_Shader.fsh in Resources */ = {isa = PBXBuildFile; fileRef = C21068B51C19EDFF00815859 /* VTPlayer_Shader.fsh */; };
 		C21068B91C19EDFF00815859 /* VTPlayer_Shader.vsh in Resources */ = {isa = PBXBuildFile; fileRef = C21068B61C19EDFF00815859 /* VTPlayer_Shader.vsh */; };
 		C21068BA1C19F4B500815859 /* GLKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A7C78FC1947E147001617DB /* GLKit.framework */; };
-		C21068BD1C1B044600815859 /* VideoView.m in Sources */ = {isa = PBXBuildFile; fileRef = C21068BC1C1B044600815859 /* VideoView.m */; };
 		C21068BE1C1B04A100815859 /* QuickTime.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C21068A91C19DBCB00815859 /* QuickTime.framework */; };
 		C21068C61C1B417200815859 /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C21068C51C1B417200815859 /* CoreVideo.framework */; };
+		C21068D81C1C476300815859 /* VideoLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = C21068D71C1C476300815859 /* VideoLayer.m */; };
 		C2182BBE19589246002469CA /* TL_localMessageService.m in Sources */ = {isa = PBXBuildFile; fileRef = C2182BBD19589246002469CA /* TL_localMessageService.m */; };
 		C21C7B2C18D7044600253A7A /* MessageSenderItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C21C7B2B18D7044600253A7A /* MessageSenderItem.m */; };
 		C21C7B2F18D7334D00253A7A /* MessageSenderSecretItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C21C7B2E18D7334D00253A7A /* MessageSenderSecretItem.m */; };
@@ -342,6 +342,8 @@
 		C23536A819CB1A430044978E /* FFYDaemonController.m in Sources */ = {isa = PBXBuildFile; fileRef = C23536A719CB1A430044978E /* FFYDaemonController.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		C23536AD19CC64330044978E /* LoginBottomView.m in Sources */ = {isa = PBXBuildFile; fileRef = C23536AC19CC64330044978E /* LoginBottomView.m */; };
 		C23536C619D453720044978E /* EncryptedKeyViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C23536C519D453720044978E /* EncryptedKeyViewController.m */; };
+		C23578981C1C4DE900F38698 /* TGGLVideoPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = C23578971C1C4DE900F38698 /* TGGLVideoPlayer.m */; };
+		C23578A41C1CD3AB00F38698 /* TGGLVideoFrame.m in Sources */ = {isa = PBXBuildFile; fileRef = C23578A31C1CD3AB00F38698 /* TGGLVideoFrame.m */; };
 		C240B1B51B627A3300912248 /* TGSharedLinksTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = C240B1B41B627A3300912248 /* TGSharedLinksTableView.m */; };
 		C240B1B81B627B3700912248 /* SharedLinksHistoryFilter.m in Sources */ = {isa = PBXBuildFile; fileRef = C240B1B71B627B3700912248 /* SharedLinksHistoryFilter.m */; };
 		C240B1BB1B627E6F00912248 /* TGSharedLinkRowView.m in Sources */ = {isa = PBXBuildFile; fileRef = C240B1BA1B627E6F00912248 /* TGSharedLinkRowView.m */; };
@@ -1561,9 +1563,9 @@
 		C21068B41C19EDFF00815859 /* TGVTAcceleratedVideoView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGVTAcceleratedVideoView.m; sourceTree = "<group>"; };
 		C21068B51C19EDFF00815859 /* VTPlayer_Shader.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = VTPlayer_Shader.fsh; sourceTree = "<group>"; };
 		C21068B61C19EDFF00815859 /* VTPlayer_Shader.vsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = VTPlayer_Shader.vsh; sourceTree = "<group>"; };
-		C21068BB1C1B044600815859 /* VideoView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VideoView.h; sourceTree = "<group>"; };
-		C21068BC1C1B044600815859 /* VideoView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VideoView.m; sourceTree = "<group>"; };
 		C21068C51C1B417200815859 /* CoreVideo.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreVideo.framework; path = System/Library/Frameworks/CoreVideo.framework; sourceTree = SDKROOT; };
+		C21068D61C1C476300815859 /* VideoLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VideoLayer.h; sourceTree = "<group>"; };
+		C21068D71C1C476300815859 /* VideoLayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VideoLayer.m; sourceTree = "<group>"; };
 		C2182BBC19589246002469CA /* TL_localMessageService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TL_localMessageService.h; sourceTree = "<group>"; };
 		C2182BBD19589246002469CA /* TL_localMessageService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TL_localMessageService.m; sourceTree = "<group>"; };
 		C21C7B2A18D7044600253A7A /* MessageSenderItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MessageSenderItem.h; sourceTree = "<group>"; };
@@ -1697,6 +1699,10 @@
 		C23536AC19CC64330044978E /* LoginBottomView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LoginBottomView.m; sourceTree = "<group>"; };
 		C23536C419D453720044978E /* EncryptedKeyViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EncryptedKeyViewController.h; sourceTree = "<group>"; };
 		C23536C519D453720044978E /* EncryptedKeyViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EncryptedKeyViewController.m; sourceTree = "<group>"; };
+		C23578961C1C4DE900F38698 /* TGGLVideoPlayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGGLVideoPlayer.h; sourceTree = "<group>"; };
+		C23578971C1C4DE900F38698 /* TGGLVideoPlayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGGLVideoPlayer.m; sourceTree = "<group>"; };
+		C23578A21C1CD3AB00F38698 /* TGGLVideoFrame.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGGLVideoFrame.h; sourceTree = "<group>"; };
+		C23578A31C1CD3AB00F38698 /* TGGLVideoFrame.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGGLVideoFrame.m; sourceTree = "<group>"; };
 		C240B1B31B627A3300912248 /* TGSharedLinksTableView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGSharedLinksTableView.h; sourceTree = "<group>"; };
 		C240B1B41B627A3300912248 /* TGSharedLinksTableView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGSharedLinksTableView.m; sourceTree = "<group>"; };
 		C240B1B61B627B3700912248 /* SharedLinksHistoryFilter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SharedLinksHistoryFilter.h; sourceTree = "<group>"; };
@@ -3669,14 +3675,18 @@
 		C210689C1C19D2C300815859 /* video */ = {
 			isa = PBXGroup;
 			children = (
-				C21068BB1C1B044600815859 /* VideoView.h */,
-				C21068BC1C1B044600815859 /* VideoView.m */,
+				C21068D61C1C476300815859 /* VideoLayer.h */,
+				C21068D71C1C476300815859 /* VideoLayer.m */,
 				C21068B31C19EDFF00815859 /* TGVTAcceleratedVideoView.h */,
 				C21068B41C19EDFF00815859 /* TGVTAcceleratedVideoView.m */,
 				C21068B51C19EDFF00815859 /* VTPlayer_Shader.fsh */,
 				C21068B61C19EDFF00815859 /* VTPlayer_Shader.vsh */,
 				C21068A41C19D91000815859 /* TGOpenGLVideoPlayer.h */,
 				C21068A51C19D91000815859 /* TGOpenGLVideoPlayer.m */,
+				C23578961C1C4DE900F38698 /* TGGLVideoPlayer.h */,
+				C23578971C1C4DE900F38698 /* TGGLVideoPlayer.m */,
+				C23578A21C1CD3AB00F38698 /* TGGLVideoFrame.h */,
+				C23578A31C1CD3AB00F38698 /* TGGLVideoFrame.m */,
 			);
 			name = video;
 			sourceTree = "<group>";
@@ -6432,6 +6442,7 @@
 				C2D8CFC61B84D73D00080775 /* ComposeCreateChannelViewController.m in Sources */,
 				CEB26165180C928A00378932 /* RpcError.m in Sources */,
 				0A6D098D19535E8500A9AC64 /* NSEventCategory.m in Sources */,
+				C23578A41C1CD3AB00F38698 /* TGGLVideoFrame.m in Sources */,
 				C274C44D1ACDA00A000DFDE4 /* TGWebpageStandartContainer.m in Sources */,
 				C24F877619FE7CAB00EC962E /* SecretLayer1.m in Sources */,
 				C282485518BBB7FB00131533 /* Destructor.m in Sources */,
@@ -6599,7 +6610,6 @@
 				0AB8F65818635E53000E6FF3 /* TMImageManager.mm in Sources */,
 				CE4961C818034ACD000C3738 /* Crypto.m in Sources */,
 				0AC7F47C185DBA7A00F90558 /* TMViewController.m in Sources */,
-				C21068BD1C1B044600815859 /* VideoView.m in Sources */,
 				0AA0145F1831140D00901B7A /* NSString+FindURLs.m in Sources */,
 				0A9EDC601897BA0E0037E1BC /* RBLView.m in Sources */,
 				C20D190219542AB80095A906 /* SearchHistoryFilter.m in Sources */,
@@ -6820,6 +6830,7 @@
 				C271525419B61E5700841C8A /* ComposeActionBroadcastBehavior.m in Sources */,
 				C2D51BFA1B21C707009327C0 /* TGAudioRowItem.m in Sources */,
 				C270D2F11A1CD8BA00522FB0 /* PrivacyViewController.m in Sources */,
+				C21068D81C1C476300815859 /* VideoLayer.m in Sources */,
 				C2B669861BA5571C004AF678 /* TGSettingsTableView.m in Sources */,
 				C24F878519FEA70200EC962E /* UpgradeLayerSenderItem.m in Sources */,
 				C20A5F591B8F8B2B007F4B49 /* TGHistoryResponse.m in Sources */,
@@ -7070,6 +7081,7 @@
 				C20A5EE61B8CC813007F4B49 /* TGEvent.m in Sources */,
 				C2B0DF8F1BAAD9330023982C /* ComposeManagmentViewController.m in Sources */,
 				C2A3FB0D1A28A6B200DE791B /* TGHashContact.m in Sources */,
+				C23578981C1C4DE900F38698 /* TGGLVideoPlayer.m in Sources */,
 				C20A7E5F19D7069C008844F2 /* TGActor.m in Sources */,
 				C2200B6018EDD1E200F28803 /* AboutViewControllerWindowController.m in Sources */,
 				C2D931401991140F00668F86 /* TGWindowArchiver.m in Sources */,

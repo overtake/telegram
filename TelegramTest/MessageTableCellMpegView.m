@@ -9,9 +9,9 @@
 #import "MessageTableCellMpegView.h"
 #import "TGVTAcceleratedVideoView.h"
 #import "MessageTableItemMpeg.h"
-#import "VideoView.h"
+#import "TGGLVideoPlayer.h"
 @interface MessageTableCellMpegView ()
-@property (nonatomic,strong) TGVTAcceleratedVideoView *player;
+@property (nonatomic,strong) TGGLVideoPlayer *player;
 @end
 
 @implementation MessageTableCellMpegView
@@ -19,15 +19,19 @@
 -(instancetype)initWithFrame:(NSRect)frameRect {
     if(self = [super initWithFrame:frameRect]) {
         
-        _player = [[TGVTAcceleratedVideoView alloc] initWithFrame:NSMakeRect(0, 0, 300, 300)];
+//        _player = [[TGVTAcceleratedVideoView alloc] initWithFrame:NSMakeRect(0, 0, 300, 300)];
+//        
+//        
+//        
+//        
+//        [self.containerView addSubview:_player];
+//        
         
         
-        
+        _player = [[TGGLVideoPlayer alloc] initWithFrame:NSMakeRect(0, 0, 500, 280)];
         
         [self.containerView addSubview:_player];
         
-        
-
     }
     
     return self;
@@ -44,8 +48,8 @@
     [super setItem:item];
     
     [_player setPath:item.path];
-    [_player prepareForRecycle];
-    
+//    [_player prepareForRecycle];
+//    
     [_player setFrameSize:item.blockSize];
     
 }
