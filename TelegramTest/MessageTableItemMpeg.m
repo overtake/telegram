@@ -36,7 +36,7 @@
             _thumbObject.imageSize = NSMakeSize(_imagesize.w, _imagesize.h);
         } else {
             if(![object.media.document.thumb isKindOfClass:[TL_photoSizeEmpty class]]) {
-                _thumbObject = [[TGBlurImageObject alloc] initWithLocation:object.media.document.thumb.location placeHolder:object.media.document.thumb.bytes sourceId:0 size:object.media.document.thumb.size];
+                _thumbObject = [[TGBlurImageObject alloc] initWithLocation:object.media.document.thumb.location thumbData:object.media.document.thumb.bytes size:object.media.document.thumb.size];
                 _thumbObject.imageSize = NSMakeSize(object.media.document.thumb.w, object.media.document.thumb.h);
             }
         }
@@ -48,6 +48,14 @@
     }
     
     return self;
+}
+
+-(void)doAfterDownload {
+    [super doAfterDownload];
+    
+    _thumbObject = [[TGThumbnailObject alloc] initWithFilepath:[self path]];
+    _thumbObject.imageSize = NSMakeSize(_imagesize.w, _imagesize.h);
+
 }
 
 -(Class)downloadClass {

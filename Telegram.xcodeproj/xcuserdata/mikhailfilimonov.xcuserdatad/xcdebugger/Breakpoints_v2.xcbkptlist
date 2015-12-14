@@ -58,11 +58,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "TelegramTest/MessagesViewController.m"
-            timestampString = "471566626.134466"
+            timestampString = "470944749.118689"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "2326"
-            endingLineNumber = "2326"
+            startingLineNumber = "2323"
+            endingLineNumber = "2323"
             landmarkName = "-showMessage:fromMsg:animated:selectText:switchDiscussion:flags:"
             landmarkType = "5">
          </BreakpointContent>
