@@ -149,6 +149,19 @@ NSString* mediaFilePath(TLMessageMedia *media) {
     return nil;
 }
 
+NSString *mediaFilePathWithSubfile(TLMessageMedia *media,TL_documentAttributeSubfile *subfile) {
+    if([media isKindOfClass:[TL_messageMediaDocument class]] && subfile) {
+        
+        NSRange srange = [subfile.mime_type rangeOfString:@"/"];
+        if(srange.location != NSNotFound) {
+            return [NSString stringWithFormat:@"%@/%ld_%@.%@",path(),media.document.n_id,subfile.type,[subfile.mime_type substringFromIndex:srange.location+1]];
+        }
+        
+    }
+    
+    return mediaFilePath(media);
+}
+
 NSString* documentPath(TLDocument *document) {
     NSString *fileName = document.file_name;
     

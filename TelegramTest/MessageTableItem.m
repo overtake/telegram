@@ -299,8 +299,6 @@ static NSTextAttachment *channelIconAttachment() {
     id objectReturn = nil;
 
     
-    return [[MessageTableItemMpeg alloc] initWithObject:message];
-    
     @try {
         if(message.class == [TL_localMessage_old34 class] || message.class == [TL_localMessage_old32 class] || message.class == [TL_localMessage class] || message.class == [TL_destructMessage class]) {
             
@@ -326,7 +324,11 @@ static NSTextAttachment *channelIconAttachment() {
                 
                 TLDocument *document = message.media.document;
                 
-                if([document.mime_type isEqualToString:@"image/gif"] && ![document.thumb isKindOfClass:[TL_photoSizeEmpty class]]) {
+                TL_documentAttributeSubfile *attr = (TL_documentAttributeSubfile *) [document attributeWithClass:[TL_documentAttributeSubfile class]];
+                
+                if([document.mime_type isEqualToString:@"image/gif"] && attr != nil && [attr.mime_type hasPrefix:@"video"]) {
+                    objectReturn = [[MessageTableItemMpeg alloc] initWithObject:message];
+                } else if([document.mime_type isEqualToString:@"image/gif"] && ![document.thumb isKindOfClass:[TL_photoSizeEmpty class]]) {
                     objectReturn = [[MessageTableItemGif alloc] initWithObject:message];
                 } else if([document.mime_type hasPrefix:@"audio/"]) {
                     objectReturn = [[MessageTableItemAudioDocument alloc] initWithObject:message];
@@ -414,7 +416,11 @@ static NSTextAttachment *channelIconAttachment() {
 }
 
 -(DownloadItem *)downloadItem {
-    return [DownloadQueue find:self.message.n_id];
+    if(_downloadItem == nil)
+        _downloadItem = [DownloadQueue find:self.message.n_id];
+    
+    return _downloadItem;
+
 }
 
 -(void)rebuildDate {
@@ -458,7 +464,7 @@ static NSTextAttachment *channelIconAttachment() {
 }
 
 -(NSURL *)shareObject {
-    return [NSURL fileURLWithPath:mediaFilePath(self.message.media)];;
+    return [NSURL fileURLWithPath:mediaFilePath(self.message.media)];
 }
 
 - (BOOL)needUploader {

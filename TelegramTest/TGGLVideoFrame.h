@@ -11,6 +11,8 @@
 @interface TGGLVideoFrame : NSObject
 @property (nonatomic, readonly) CVImageBufferRef buffer;
 @property (nonatomic, readonly) NSTimeInterval timestamp;
+@property (nonatomic) CMTime outTime;
+@property (nonatomic) CMSampleBufferRef sampleVideo;
 
 - (instancetype)initWithBuffer:(CVImageBufferRef)buffer timestamp:(NSTimeInterval)timestamp;
 

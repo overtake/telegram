@@ -93,7 +93,11 @@
 }
 
 -(DownloadItem *)downloadItem {
-    return [DownloadQueue find:self.message.media.audio.n_id];
+    
+    if(super.downloadItem == nil)
+        [super setDownloadItem:[DownloadQueue find:self.message.media.audio.n_id]];
+    
+    return [super downloadItem];
 }
 
 - (int)size {

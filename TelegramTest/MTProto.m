@@ -2,7 +2,7 @@
 //  MTProto.m
 //  Telegram
 //
-//  Auto created by Mikhail Filimonov on 10.12.15.
+//  Auto created by Mikhail Filimonov on 14.12.15.
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -19033,7 +19033,7 @@
 @end
 
 @implementation TL_webPageExternal
-+(TL_webPageExternal*)createWithFlags:(int)flags url:(NSString*)url display_url:(NSString*)display_url type:(NSString*)type title:(NSString*)title n_description:(NSString*)n_description thumb_url:(NSString*)thumb_url original_url:(NSString*)original_url mp4_url:(NSString*)mp4_url w:(int)w h:(int)h duration:(int)duration {
++(TL_webPageExternal*)createWithFlags:(int)flags url:(NSString*)url display_url:(NSString*)display_url type:(NSString*)type title:(NSString*)title n_description:(NSString*)n_description thumb_url:(NSString*)thumb_url content_url:(NSString*)content_url mp4_url:(NSString*)mp4_url w:(int)w h:(int)h duration:(int)duration {
 	TL_webPageExternal* obj = [[TL_webPageExternal alloc] init];
 	obj.flags = flags;
 	obj.url = url;
@@ -19042,7 +19042,7 @@
 	obj.title = title;
 	obj.n_description = n_description;
 	obj.thumb_url = thumb_url;
-	obj.original_url = original_url;
+	obj.content_url = content_url;
 	obj.mp4_url = mp4_url;
 	obj.w = w;
 	obj.h = h;
@@ -19057,7 +19057,7 @@
 	if(self.flags & (1 << 1)) {[stream writeString:self.title];}
 	if(self.flags & (1 << 2)) {[stream writeString:self.n_description];}
 	if(self.flags & (1 << 3)) {[stream writeString:self.thumb_url];}
-	if(self.flags & (1 << 4)) {[stream writeString:self.original_url];}
+	if(self.flags & (1 << 4)) {[stream writeString:self.content_url];}
 	if(self.flags & (1 << 5)) {[stream writeString:self.mp4_url];}
 	if(self.flags & (1 << 6)) {[stream writeInt:self.w];}
 	if(self.flags & (1 << 6)) {[stream writeInt:self.h];}
@@ -19071,7 +19071,7 @@
 	if(self.flags & (1 << 1)) {super.title = [stream readString];}
 	if(self.flags & (1 << 2)) {super.n_description = [stream readString];}
 	if(self.flags & (1 << 3)) {super.thumb_url = [stream readString];}
-	if(self.flags & (1 << 4)) {super.original_url = [stream readString];}
+	if(self.flags & (1 << 4)) {super.content_url = [stream readString];}
 	if(self.flags & (1 << 5)) {super.mp4_url = [stream readString];}
 	if(self.flags & (1 << 6)) {super.w = [stream readInt];}
 	if(self.flags & (1 << 6)) {super.h = [stream readInt];}
@@ -19089,7 +19089,7 @@
     objc.title = self.title;
     objc.n_description = self.n_description;
     objc.thumb_url = self.thumb_url;
-    objc.original_url = self.original_url;
+    objc.content_url = self.content_url;
     objc.mp4_url = self.mp4_url;
     objc.w = self.w;
     objc.h = self.h;
@@ -19138,11 +19138,11 @@
                 
     if(super.thumb_url == nil)  { super.flags&= ~ (1 << 3) ;} else { super.flags|= (1 << 3); }
 }            
--(void)setOriginal_url:(NSString*)original_url
+-(void)setContent_url:(NSString*)content_url
 {
-   super.original_url = original_url;
+   super.content_url = content_url;
                 
-    if(super.original_url == nil)  { super.flags&= ~ (1 << 4) ;} else { super.flags|= (1 << 4); }
+    if(super.content_url == nil)  { super.flags&= ~ (1 << 4) ;} else { super.flags|= (1 << 4); }
 }            
 -(void)setMp4_url:(NSString*)mp4_url
 {

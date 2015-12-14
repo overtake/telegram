@@ -85,7 +85,10 @@
 }
 
 -(DownloadItem *)downloadItem {
-    return [DownloadQueue find:self.message.media.video.n_id];
+    if(super.downloadItem == nil)
+        [super setDownloadItem:[DownloadQueue find:self.message.media.video.n_id]];
+    
+    return [super downloadItem];
 }
 
 - (Class)downloadClass {

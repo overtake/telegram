@@ -25,4 +25,9 @@
 -(void)clearSelection;
 -(BOOL)mouseInText:(NSEvent *)theEvent;
 
+-(void)addScrollEvent;
+-(void)removeScrollEvent;
+
+-(void)_didScrolledTableView:(NSNotification *)notification;
+
 @end

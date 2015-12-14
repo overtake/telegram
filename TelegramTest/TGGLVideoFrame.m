@@ -29,7 +29,6 @@
 
 - (void)dealloc {
     if (_buffer) {
-        NSLog(@"%ld",CFGetRetainCount(_buffer));
         CFRelease(_buffer);
     }
     

@@ -7,10 +7,15 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "VideoLayer.h"
-@interface TGGLVideoPlayer : NSOpenGLView
 
-@property (nonatomic,strong) VideoLayer *videoLayer;
+@interface TGGLVideoPlayer : TMView
+
 @property (nonatomic,strong) NSString *path;
+
+
+-(void)pause;
+-(void)resume;
+
+
 
 @end

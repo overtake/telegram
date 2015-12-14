@@ -103,7 +103,10 @@
 }
 
 -(DownloadItem *)downloadItem {
-    return [DownloadQueue find:self.message.media.document.n_id];
+    if(super.downloadItem == nil)
+        [super setDownloadItem:[DownloadQueue find:self.message.media.document.n_id]];
+    
+    return [super downloadItem];
 }
 
 -(Class)downloadClass {

@@ -9,8 +9,7 @@
 #import "MessageTableItem.h"
 
 @interface MessageTableItemMpeg : MessageTableItem
-@property (nonatomic,strong,readonly) AVPlayer *player;
-
+@property (nonatomic,strong,readonly) TGImageObject *thumbObject;
 -(NSString *)path;
 
 @end

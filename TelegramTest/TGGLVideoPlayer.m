@@ -7,11 +7,10 @@
 //
 
 #import "TGGLVideoPlayer.h"
-#import "VideoLayer.h"
 #import "TGTimer.h"
 
 #import "TGGLVideoFrame.h"
-
+#import <AVFoundation/AVFoundation.h>
 @interface TGGLVideoFrameQueue : NSObject
 {
     SQueue *_queue;
@@ -25,7 +24,7 @@
     
     NSMutableArray *_frames;
     
-    TGTimer *_timer;
+    @public TGTimer *_timer;
     
     int32_t _sessionId;
 }
@@ -37,6 +36,8 @@
 - (instancetype)initWithRequestFrame:(TGGLVideoFrame *(^)())requestFrame drawFrame:(void (^)(TGGLVideoFrame *, int32_t sessionId))drawFrame {
     self = [super init];
     if (self != nil) {
+        
+        
         _queue = [[SQueue alloc] init];
         
         _maxFrames = 5;
@@ -159,7 +160,11 @@
     AVAssetReaderTrackOutput *_output;
     int32_t _sessionId;
     TGGLVideoFrameQueue *_frameQueue;
+    CMVideoFormatDescriptionRef _videoInfo;
+
 }
+
+@property (nonatomic,strong) AVSampleBufferDisplayLayer *videoLayer;
 
 @end
 
@@ -169,9 +174,14 @@
 -(instancetype)initWithFrame:(NSRect)frameRect {
     if(self = [super initWithFrame:frameRect]) {
         
-        self.wantsLayer = YES;
-        self.layer = _videoLayer = [[VideoLayer alloc] init];
-        _videoLayer.frame = self.bounds;
+        self.videoLayer = [[AVSampleBufferDisplayLayer alloc] init];
+        self.videoLayer.bounds = self.bounds;
+        self.videoLayer.position = CGPointMake(CGRectGetMidX(self.bounds), CGRectGetMidY(self.bounds));
+        self.videoLayer.backgroundColor = [NSColor grayColor].CGColor;
+        
+        [self setLayer:self.videoLayer];
+        [self setWantsLayer:YES];
+        
         
         __weak TGGLVideoPlayer *weakSelf = self;
         _frameQueue = [[TGGLVideoFrameQueue alloc] initWithRequestFrame:^TGGLVideoFrame *{
@@ -183,7 +193,8 @@
         } drawFrame:^(TGGLVideoFrame *videoFrame, int32_t sessionId) {
             __strong TGGLVideoPlayer *strongSelf = weakSelf;
             if (strongSelf != nil && strongSelf->_sessionId == sessionId) {
-                [strongSelf displayPixelBuffer:videoFrame.buffer];
+                [strongSelf displayPixelBuffer:videoFrame.buffer atTime:videoFrame.outTime];
+                
             }
         }];
 
@@ -208,24 +219,106 @@
         _reader = nil;
         _output = nil;
         
-        if (_path.length == 0) {
-            [_frameQueue pauseRequests];
-        } else {
-            [_frameQueue beginRequests:_sessionId];
-        }
+        [_videoLayer flushAndRemoveImage];
         
         
     }];
     
 }
 
--(void)displayPixelBuffer:(CVImageBufferRef)pixelBuffer {
+
+
+-(void)resume {
     
-    _videoLayer.pixelBuffer = pixelBuffer;
-    
-    [ASQueue dispatchOnMainQueue:^{
-        [_videoLayer setNeedsDisplay];
+    [_frameQueue dispatch:^{
+        if(_frameQueue->_timer == nil) {
+            
+            [self cleanup];
+
+            [_frameQueue beginRequests:_sessionId];
+            
+            [ASQueue dispatchOnMainQueue:^{
+                [self.subviews enumerateObjectsUsingBlock:^(__kindof NSView * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                    [obj setHidden:YES];
+                }];
+            }];
+        }
+        
     }];
+    
+}
+
+-(void)dealloc {
+    [self cleanup];
+    [_frameQueue pauseRequests];
+    _frameQueue = nil;
+}
+
+-(void)pause {
+    
+    [_frameQueue dispatch:^{
+        [_frameQueue pauseRequests];
+        [_videoLayer flush];
+        
+        [ASQueue dispatchOnMainQueue:^{
+            [self.subviews enumerateObjectsUsingBlock:^(__kindof NSView * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                [obj setHidden:NO];
+            }];
+        }];
+        
+    }];
+    
+}
+
+-(void)viewDidMoveToWindow {
+    if(self.window == nil) {
+        [_videoLayer flushAndRemoveImage];
+        [_frameQueue pauseRequests];
+    }
+}
+
+-(void)displayPixelBuffer:(CVImageBufferRef)pixelBuffer atTime:(CMTime)outputTime {
+    
+    
+    CMSampleBufferRef sampleBuffer = NULL;
+    OSStatus err = noErr;
+    
+    
+    
+    if (!_videoInfo || !CMVideoFormatDescriptionMatchesImageBuffer(_videoInfo, pixelBuffer)) {
+        if (_videoInfo) {
+            CFRelease(_videoInfo);
+            _videoInfo = nil;
+        }
+        err = CMVideoFormatDescriptionCreateForImageBuffer(NULL, pixelBuffer, &_videoInfo);
+    }
+    
+    
+    if (err) {
+        NSLog(@"Error at CMVideoFormatDescriptionCreateForImageBuffer %d", err);
+    }
+    
+    // decodeTimeStamp is set to kCMTimeInvalid since we already receive decoded frames
+    CMSampleTimingInfo sampleTimingInfo = {
+        .duration = kCMTimeInvalid,
+        .presentationTimeStamp = outputTime,
+        .decodeTimeStamp = kCMTimeInvalid
+    };
+    
+    
+    // Wrap the pixel buffer in a sample buffer
+    err = CMSampleBufferCreateForImageBuffer(kCFAllocatorDefault, pixelBuffer, true, NULL, NULL, _videoInfo, &sampleTimingInfo, &sampleBuffer);
+    
+    if (err) {
+        NSLog(@"Error at CMSampleBufferCreateForImageBuffer %d", err);
+    }
+    
+    // Enqueue sample buffers which will be displayed at their above set presentationTimeStamp
+    if (self.videoLayer.readyForMoreMediaData) {
+       
+        [self.videoLayer enqueueSampleBuffer:sampleBuffer];
+    }
+    CFRelease(sampleBuffer);
     
 }
 
@@ -236,7 +329,7 @@
             AVURLAsset *asset = [[AVURLAsset alloc] initWithURL:[NSURL fileURLWithPath:_path] options:nil];
             AVAssetTrack *track = [asset tracksWithMediaType:AVMediaTypeVideo].firstObject;
             if (track != nil) {
-                _output = [[AVAssetReaderTrackOutput alloc] initWithTrack:track outputSettings:@{(NSString *)kCVPixelBufferPixelFormatTypeKey: @(kCVPixelFormatType_422YpCbCr8FullRange), (id)kCVPixelBufferOpenGLCompatibilityKey: @(true)}];
+                _output = [[AVAssetReaderTrackOutput alloc] initWithTrack:track outputSettings:@{(NSString *)kCVPixelBufferPixelFormatTypeKey: @(kCVPixelFormatType_420YpCbCr8BiPlanarVideoRange)}];
                 _output.alwaysCopiesSampleData = false;
                 
                 _reader = [[AVAssetReader alloc] initWithAsset:asset error:nil];
@@ -246,6 +339,8 @@
                     MTLog(@"Failed to begin reading video frames");
                     _reader = nil;
                 }
+                
+
             }
         }
         
@@ -258,18 +353,35 @@
                 CVImageBufferRef imageBuffer = CMSampleBufferGetImageBuffer(sampleVideo);
                 
                 TGGLVideoFrame *videoFrame = [[TGGLVideoFrame alloc] initWithBuffer:imageBuffer timestamp:presentationSeconds];
+                videoFrame.outTime = presentationTime;
+                
                 CFRelease(sampleVideo);
                 
                 return videoFrame;
             } else {
-                [_reader cancelReading];
-                _reader = nil;
-                _output = nil;
+                
+                [self cleanup];
+                [_frameQueue pauseRequests];
             }
         }
     }
     
     return nil;
+}
+
+-(void)cleanup {
+    [_reader cancelReading];
+    _reader = nil;
+    _output = nil;
+    
+    if(_videoInfo != NULL) {
+        CFRelease(_videoInfo);
+        _videoInfo = NULL;
+    }
+    
+    [self.videoLayer flushAndRemoveImage];
+    
+    
 }
 
 @end

@@ -47,6 +47,7 @@ NSString* md5sum(NSString *fp);
 
 NSDictionary *getUrlVars(NSString *url);
 NSString *mediaFilePath(TLMessageMedia *media);
+NSString *mediaFilePathWithSubfile(TLMessageMedia *media,TL_documentAttributeSubfile *subfile);
 NSString *documentPath(TLDocument *document);
 NSString* dp();
 +(BOOL)checkNormalizedSize:(NSString *)path checksize:(int)checksize;

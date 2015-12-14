@@ -3,7 +3,7 @@
 //  ClassStore.m
 //  Telegram
 //
-    //  Created by keepcoder on 10.12.15.
+    //  Created by keepcoder on 14.12.15.
 //  Copyright (c) 2015 keepcoder. All rights reserved.
 //
 
@@ -522,7 +522,7 @@ static NSMutableDictionary *cs_constuctors;
    [cs_classes setObject:[TL_updateNewStickerSet class] forKey:[NSNumber numberWithInt:1753886890]];
    [cs_classes setObject:[TL_updateStickerSetsOrder class] forKey:[NSNumber numberWithInt:-253774767]];
    [cs_classes setObject:[TL_updateStickerSets class] forKey:[NSNumber numberWithInt:1135492588]];
-   [cs_classes setObject:[TL_webPageExternal class] forKey:[NSNumber numberWithInt:-428893175]];
+   [cs_classes setObject:[TL_webPageExternal class] forKey:[NSNumber numberWithInt:631549911]];
    [cs_classes setObject:[TL_foundGif class] forKey:[NSNumber numberWithInt:-713438005]];
    [cs_classes setObject:[TL_inputMediaGifExternal class] forKey:[NSNumber numberWithInt:1212395773]];
    [cs_classes setObject:[TL_messages_foundGifs class] forKey:[NSNumber numberWithInt:1158290442]];

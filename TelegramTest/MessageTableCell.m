@@ -52,6 +52,27 @@
 }
 
 
+-(void)addScrollEvent {
+    id clipView = [[self.item.table enclosingScrollView] contentView];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(_didScrolledTableView:)
+                                                 name:NSViewBoundsDidChangeNotification
+                                               object:clipView];
+
+}
+
+-(void)removeScrollEvent {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
+-(void)_didScrolledTableView:(NSNotification *)notification {
+    
+}
+
+-(void)dealloc {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
 
 -(void)rightMouseDown:(NSEvent *)theEvent {
     
