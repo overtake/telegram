@@ -591,7 +591,8 @@ static TMTableView *tableStatic;
     
     [super mouseDown:theEvent];
     
-    [TMTableView setCurrent:self];
+    if(![self.className isEqualToString:@"TGRecentSearchTableView"])
+        [TMTableView setCurrent:self];
     
     if([self.className isEqualToString:@"TGConversationsTableView"] && !self.isHidden )
          [self.scrollView mouseDown:theEvent];

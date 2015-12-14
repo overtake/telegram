@@ -1035,22 +1035,24 @@ continueUserActivity: (id)userActivity
     
     if([type isEqualToString:USER_ACTIVITY_CONVERSATION]) {
         
-        
         NSString *peerType = userInfo[@"peer"][@"type"];
         int peerId = [userInfo[@"peer"][@"id"] intValue];
         
         NSString *text = userInfo[@"text"];
-                
-        
+
         TLPeer *peer;
-        if([peerType isEqualToString:@"group"]) {
-            peerId = -peerId;
-            peer = [TL_peerChat createWithChat_id:peerId];
-        } else {
-            peer = [TL_peerUser createWithUser_id:peerId];
-        }
         
-        TL_conversation *conversation = [[DialogsManager sharedManager] find:peerId];
+        TL_conversation *conversation;
+        
+        if(peerId > 0 ) {
+            TLUser *user = [[UsersManager sharedManager] find:peerId];
+            peer = [TL_peerUser createWithUser_id:peerId];
+            conversation = user.dialog;
+        } else {
+            TLChat *chat = [[ChatsManager sharedManager] find:-peerId];
+            peer = [TL_peerChat createWithChat_id:-peerId];
+            conversation = chat.dialog;
+        }
         
         if(!conversation)
             conversation = [[Storage manager] selectConversation:peer];
@@ -1128,8 +1130,6 @@ continueUserActivity: (id)userActivity
     
     BOOL accept = [types indexOfObject:userActivityType] != NSNotFound;;
     
-    if(accept)
-         [TMViewController showModalProgress];
     
     return accept;
 }

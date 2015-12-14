@@ -776,9 +776,11 @@
                         [Notification perform:[Notification notificationNameByDialog:obj action:@"botKeyboard"] data:@{KEY_DIALOG:obj}];
                     }
                     
-                    [dialog save];
+                   
                     
                 }];
+                
+                [[Storage manager] insertDialogs:last.allValues];
                 
                 if([message.media isKindOfClass:[TL_messageMediaPhoto class]]) {
                     

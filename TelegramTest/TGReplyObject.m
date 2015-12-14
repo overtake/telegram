@@ -155,12 +155,12 @@
                 
                 if(_replyMessage.media.document.thumb.bytes) {
                     thumb = [[NSImage alloc] initWithData:_replyMessage.media.document.thumb.bytes];
-                    thumb = renderedImage(thumb, strongsize(NSMakeSize(_replyMessage.media.document.thumb.w, _replyMessage.media.document.thumb.h), _containerHeight-2));
+                    thumb = cropCenterWithSize(thumb, NSMakeSize(_containerHeight-2, _containerHeight-2));
                 }
                 
-                _replyThumb = [[TGImageObject alloc] initWithLocation:!thumb ? _replyMessage.media.document.thumb.location : nil placeHolder:thumb];
+                _replyThumb = [[TGArticleImageObject alloc] initWithLocation:!thumb ? _replyMessage.media.document.thumb.location : nil placeHolder:thumb];
                 
-                _replyThumb.imageSize = strongsize(NSMakeSize(_replyMessage.media.document.thumb.w, _replyMessage.media.document.thumb.h), _containerHeight-2);
+                _replyThumb.imageSize = NSMakeSize(_containerHeight-2, _containerHeight-2);
                 
             }
             

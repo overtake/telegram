@@ -268,6 +268,9 @@
          contextName = "-[ChatHistoryController initWithController:historyFilter:]:ChatHistoryController.m">
       </ContextState>
       <ContextState
+         contextName = "__45-[ExternalGifSenderItem requestFutureWebpage]_block_invoke_2:ExternalGifSenderItem.m">
+      </ContextState>
+      <ContextState
          contextName = "-[MessageTableCellPhotoView setCellState:]:MessageTableCellPhotoView.m">
          <PersistentStrings>
             <PersistentString
@@ -1191,6 +1194,17 @@
                value = "self.passwordResult">
             </PersistentString>
          </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[MessageTableCell rightMouseDown:]:MessageTableCell.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.item.message">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[MessagesViewController forwardMessages:conversation:callback:]:MessagesViewController.m">
       </ContextState>
       <ContextState
          contextName = "__36-[TGAllStickersTableView reloadData]_block_invoke:TGAllStickersTableView.m">
@@ -2485,6 +2499,9 @@
       </ContextState>
       <ContextState
          contextName = "__51-[TGStickersSettingsViewController viewWillAppear:]_block_invoke:TGStickersSettingsViewController.m">
+      </ContextState>
+      <ContextState
+         contextName = "__42-[TGVTAcceleratedVideoView initWithFrame:]_block_invoke_2:TGVTAcceleratedVideoView.m">
       </ContextState>
       <ContextState
          contextName = "-[TGUpdateMessageService processMessage:]:TGUpdateMessageService.m">
@@ -4153,9 +4170,6 @@
                value = "encryptionKey">
             </PersistentString>
          </PersistentStrings>
-      </ContextState>
-      <ContextState
-         contextName = "-[ForwardSenterItem initWithMessages:forConversation:additionFlags:]:ForwardSenterItem.m">
       </ContextState>
       <ContextState
          contextName = "__46-[TGPVMediaBehavior load:next:limit:callback:]_block_invoke:TGPVMediaBehavior.m">

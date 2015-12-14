@@ -66,7 +66,7 @@
         
     }];
     
-    [_messagesViewController cancelSelectionAndScrollToBottom];
+    [_messagesViewController cancelSelectionAndScrollToBottom:NO];
     
     [self close:YES];
     
