@@ -344,4 +344,16 @@
     
 }
 
+-(void)rightMouseDown:(NSEvent *)theEvent {
+    
+}
+
+-(void)rightMouseUp:(NSEvent *)theEvent {
+    
+}
+
+-(void)rightMouseDragged:(NSEvent *)theEvent {
+    
+}
+
 @end

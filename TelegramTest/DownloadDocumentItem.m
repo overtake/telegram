@@ -32,7 +32,7 @@
         NSString *old_path = self.path;
         
         
-        self.path = mediaFilePath([(TL_localMessage *)self.object media]);
+        self.path = mediaFilePath(self.object);
         
         NSError *error = nil;
         

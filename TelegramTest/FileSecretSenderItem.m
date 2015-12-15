@@ -88,9 +88,10 @@
         
         [TGCache cacheImage:renderedImage(image, maxSize) forKey:photoSize.location.cacheKey groups:@[IMGCACHE]];
         
-        [jpegNormalizedData(image) writeToFile:mediaFilePath(media) atomically:YES];
         
         self.message.media = media;
+        
+        [jpegNormalizedData(image) writeToFile:mediaFilePath(self.message) atomically:YES];
         
         [self.message save:YES];
         
@@ -205,7 +206,7 @@
     } else if([self.message.media isKindOfClass:[TL_messageMediaAudio class]]) {
         export = exportPath(self.message.randomId,@"mp3");
     } else if([self.message.media isKindOfClass:[TL_messageMediaPhoto class]]) {
-        export = mediaFilePath(self.message.media);
+        export = mediaFilePath(self.message);
     }
     
     
@@ -219,10 +220,12 @@
         [self.message save:YES];
     }
     
-    
-    
-    weakify();
+    __weak FileSecretSenderItem *weakSelf = self;
     [self.uploader setUploadComplete:^(UploadOperation *uploader,TL_inputEncryptedFile *inputFile) {
+        __strong FileSecretSenderItem *strongSelf = weakSelf;
+        
+        if(strongSelf == nil || strongSelf != weakSelf)
+            return;
         
         
         if(strongSelf.uploadType == UploadImageType) {
@@ -326,7 +329,7 @@
                 [strongSelf.message media].video.n_id = newLocation.volume_id;
                 [strongSelf.message media].video.size = uploader.total_size;
                 
-                [[NSFileManager defaultManager] moveItemAtPath:strongSelf.filePath toPath:mediaFilePath([strongSelf.message media]) error:nil];
+                [[NSFileManager defaultManager] moveItemAtPath:strongSelf.filePath toPath:mediaFilePath(strongSelf.message) error:nil];
                 
             }
             
@@ -345,7 +348,7 @@
                 [strongSelf.message media].audio.n_id = newLocation.volume_id;
                 [strongSelf.message media].audio.size = uploader.total_size;
                 
-                [[NSFileManager defaultManager] moveItemAtPath:strongSelf.filePath toPath:mediaFilePath([strongSelf.message media]) error:nil];
+                [[NSFileManager defaultManager] moveItemAtPath:strongSelf.filePath toPath:mediaFilePath(strongSelf.message) error:nil];
                 
             }
             
@@ -360,7 +363,7 @@
             if(strongSelf.uploadType == UploadImageType) {
                 NSImage *image  = imageFromFile(strongSelf.filePath);
                 
-                [[NSFileManager defaultManager] moveItemAtPath:strongSelf.filePath toPath:mediaFilePath(strongSelf.message.media) error:nil];
+                [[NSFileManager defaultManager] moveItemAtPath:strongSelf.filePath toPath:mediaFilePath(strongSelf.message) error:nil];
                 
                 [TGCache cacheImage:renderedImage(image, strongsizeWithMinMax(image.size, MIN_IMG_SIZE.height, MIN_IMG_SIZE.width)) forKey:newLocation.cacheKey groups:@[IMGCACHE]];
                 
@@ -381,6 +384,9 @@
     }];
     
     [self.uploader setUploadProgress:^(UploadOperation *operation, NSUInteger current, NSUInteger total) {
+        
+        __strong FileSecretSenderItem *strongSelf = weakSelf;
+
         if(strongSelf.uploadType == UploadVideoType) {
             strongSelf.progress =VIDEO_COMPRESSED_PROGRESS + (((float)current/(float)total) * (100.0f - VIDEO_COMPRESSED_PROGRESS));
         } else {

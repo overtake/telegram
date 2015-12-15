@@ -466,7 +466,7 @@ static NSTextAttachment *channelIconAttachment() {
 }
 
 -(NSURL *)shareObject {
-    return [NSURL fileURLWithPath:mediaFilePath(self.message.media)];
+    return [NSURL fileURLWithPath:mediaFilePath(self.message)];
 }
 
 - (BOOL)needUploader {

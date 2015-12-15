@@ -318,11 +318,14 @@ static NSImage *attachBackgroundThumb() {
     [super setCellState:cellState];
     
     if(cellState == CellStateNormal) {
-        [self.actionsTextField setAttributedStringValue:docStateLoaded()];
+        if([self.item.message isKindOfClass:[TL_destructMessage class]])
+            [self.actionsTextField setAttributedStringValue:[[NSAttributedString alloc] init]];
+         else
+            [self.actionsTextField setAttributedStringValue:docStateLoaded()];
     }
     
     if(cellState == CellStateSending) {
-        [self.actionsTextField setAttributedStringValue:nil];
+        [self.actionsTextField setAttributedStringValue:[[NSAttributedString alloc] init]];
     }
     
     if(cellState == CellStateNeedDownload) {
@@ -399,10 +402,12 @@ static NSImage *attachBackgroundThumb() {
     
     
     if([self.item isset]) {
+        if(![self.item.message isKindOfClass:[TL_destructMessage class]]) {
+            [menu addItem:[NSMenuItem menuItemWithTitle:NSLocalizedString(@"Message.File.ShowInFinder", nil) withBlock:^(id sender) {
+                [[NSWorkspace sharedWorkspace] activateFileViewerSelectingURLs:@[[NSURL fileURLWithPath:self.item.path]]];
+            }]];
+        }
         
-        [menu addItem:[NSMenuItem menuItemWithTitle:NSLocalizedString(@"Message.File.ShowInFinder", nil) withBlock:^(id sender) {
-            [[NSWorkspace sharedWorkspace] activateFileViewerSelectingURLs:@[[NSURL fileURLWithPath:self.item.path]]];
-        }]];
         
         [menu addItem:[NSMenuItem menuItemWithTitle:NSLocalizedString(@"Context.SaveAs", nil) withBlock:^(id sender) {
             [self performSelector:@selector(saveAs:) withObject:self];
@@ -660,7 +665,7 @@ static NSImage *attachBackgroundThumb() {
     if([_attachButton hitTest:eventLocation]) {
         NSPoint dragPosition = NSMakePoint(80, 8);
         
-        NSString *path = mediaFilePath(self.item.message.media);
+        NSString *path = mediaFilePath(self.item.message);
         
         
         NSPasteboard *pasteBrd=[NSPasteboard pasteboardWithName:TGImagePType];

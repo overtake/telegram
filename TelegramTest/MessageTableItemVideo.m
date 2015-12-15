@@ -117,7 +117,7 @@
 }
 
 - (NSString *)filePath {
-    return mediaFilePath(self.message.media);
+    return mediaFilePath(self.message);
 }
 
 -(BOOL)isset {

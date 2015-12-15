@@ -48,7 +48,7 @@
         if(additionFlags & (1 << 4))
             self.message.from_id = 0;
 
-         [[NSFileManager defaultManager] copyItemAtPath:path toPath:mediaFilePath(self.message.media) error:nil];
+         [[NSFileManager defaultManager] copyItemAtPath:path toPath:mediaFilePath(self.message) error:nil];
         
         [self.message save:YES];
         
@@ -62,7 +62,7 @@
     
     _attach.uploader = nil;
     
-    self.filePath = mediaFilePath(self.message.media);
+    self.filePath = mediaFilePath(self.message);
     
     TLInputMedia *media;
     
@@ -124,7 +124,7 @@
         
         [self.message save:YES];
                 
-        [[NSFileManager defaultManager] moveItemAtPath:self.filePath toPath:mediaFilePath(self.message.media) error:nil];
+        [[NSFileManager defaultManager] moveItemAtPath:self.filePath toPath:mediaFilePath(self.message) error:nil];
         
         
         [[NSFileManager defaultManager] removeItemAtPath:_attach.generatedPath error:nil];

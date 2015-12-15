@@ -115,7 +115,7 @@
             }
             
             
-            NSString *filePath = mediaFilePath(msg.media);
+            NSString *filePath = mediaFilePath(msg);
             
             
             if ([[NSFileManager defaultManager] isReadableFileAtPath:weakSelf.filePath]) {

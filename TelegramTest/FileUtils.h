@@ -46,8 +46,9 @@ void confirm(NSString *text, NSString *info, void (^block)(void), void (^cancelB
 NSString* md5sum(NSString *fp);
 
 NSDictionary *getUrlVars(NSString *url);
-NSString *mediaFilePath(TLMessageMedia *media);
-NSString *mediaFilePathWithSubfile(TLMessageMedia *media,TL_documentAttributeSubfile *subfile);
+NSString *mediaFilePath(TL_localMessage *message);
+void removeMessageMedia(TL_localMessage *message);
+NSString *mediaFilePathWithSubfile(TL_localMessage *message,TL_documentAttributeSubfile *subfile);
 NSString *documentPath(TLDocument *document);
 NSString* dp();
 +(BOOL)checkNormalizedSize:(NSString *)path checksize:(int)checksize;

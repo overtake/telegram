@@ -47,7 +47,7 @@
 }
 
 - (NSString *)path {
-    return mediaFilePath(self.message.media);
+    return mediaFilePath(self.message);
 }
 
 - (BOOL)canDownload {

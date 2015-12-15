@@ -261,7 +261,10 @@ static NSDictionary *colors;
     MessageTableItemDocument *item = (MessageTableItemDocument *) self.item;
     
     if([item isset]) {
-        [self.descriptionField setAttributedStringValue:docLoadedAttributedString()];
+        if ([item.message isKindOfClass:[TL_destructMessage class]])
+            [self.descriptionField setAttributedStringValue:[[NSAttributedString alloc] init]];
+        else
+            [self.descriptionField setAttributedStringValue:docLoadedAttributedString()];
     } else {
         
         if(self.item.downloadItem.downloadState == DownloadStateDownloading) {
@@ -397,9 +400,14 @@ static NSDictionary *colors;
     NSMenu *menu = [[NSMenu alloc] initWithTitle:@"Documents menu"];
     
     if([self.item isset]) {
-        [menu addItem:[NSMenuItem menuItemWithTitle:NSLocalizedString(@"Message.File.ShowInFinder", nil) withBlock:^(id sender) {
-            [[NSWorkspace sharedWorkspace] activateFileViewerSelectingURLs:@[[NSURL fileURLWithPath:((MessageTableItemDocument *)self.item).path]]];
-        }]];
+        
+        if(![self.item.message isKindOfClass:[TL_destructMessage class]]) {
+            [menu addItem:[NSMenuItem menuItemWithTitle:NSLocalizedString(@"Message.File.ShowInFinder", nil) withBlock:^(id sender) {
+                [[NSWorkspace sharedWorkspace] activateFileViewerSelectingURLs:@[[NSURL fileURLWithPath:((MessageTableItemDocument *)self.item).path]]];
+            }]];
+        }
+        
+        
         
         [menu addItem:[NSMenuItem menuItemWithTitle:NSLocalizedString(@"Context.SaveAs", nil) withBlock:^(id sender) {
             [self performSelector:@selector(saveAs:) withObject:self];
@@ -488,7 +496,7 @@ static NSDictionary *colors;
     if(![self.item.message.media isKindOfClass:[TL_messageMediaEmpty class]]) {
         NSPasteboard *pasteboard = [NSPasteboard generalPasteboard];
         [pasteboard clearContents];
-        [pasteboard writeObjects:[NSArray arrayWithObject:[NSURL fileURLWithPath:mediaFilePath(self.item.message.media)]]];
+        [pasteboard writeObjects:[NSArray arrayWithObject:[NSURL fileURLWithPath:mediaFilePath(self.item.message)]]];
     }
 }
 
@@ -586,7 +594,7 @@ static NSDictionary *colors;
         
         NSSavePanel *panel = [NSSavePanel savePanel];
         
-        NSString *path = mediaFilePath(self.item.message.media);
+        NSString *path = mediaFilePath(self.item.message);
         
         NSString *fileName = [path lastPathComponent];
         

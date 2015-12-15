@@ -136,9 +136,9 @@
                 
                 
                 
-                [[NSFileManager defaultManager] moveItemAtPath:strongSelf.path_for_file toPath:mediaFilePath(strongSelf.message.media) error:nil];
+                [[NSFileManager defaultManager] moveItemAtPath:strongSelf.path_for_file toPath:mediaFilePath(strongSelf.message) error:nil];
             
-                NSImage *thumb = [MessageSender videoParams:mediaFilePath(strongSelf.message.media) thumbSize:strongsize(NSMakeSize(640, 480), 250)][@"image"];
+                NSImage *thumb = [MessageSender videoParams:mediaFilePath(strongSelf.message) thumbSize:strongsize(NSMakeSize(640, 480), 250)][@"image"];
                 
                 
                 strongSelf.message.media.video.thumb = [TL_photoCachedSize createWithType:@"x" location:msg.media.video.thumb.location w:thumb.size.width h:thumb.size.height bytes:jpegNormalizedData(thumb)];

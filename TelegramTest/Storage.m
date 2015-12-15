@@ -1285,7 +1285,7 @@ TL_localMessage *parseMessage(FMResultSet *result) {
         NSMutableArray *peer_update_data = [[NSMutableArray alloc] init];
         
         
-        NSString *sql = [NSString stringWithFormat:@"select n_id,peer_id from %@ where random_id IN (%@)",isChannelMessages ? tableChannelMessages: tableMessages,mark];
+        NSString *sql = [NSString stringWithFormat:@"select * from %@ where random_id IN (%@)",isChannelMessages ? tableChannelMessages: tableMessages,mark];
         
         FMResultSet *result = [db executeQueryWithFormat:sql,nil];
        
@@ -1293,7 +1293,12 @@ TL_localMessage *parseMessage(FMResultSet *result) {
         
         while ([result next]) {
             
-            [peer_update_data addObject:@{KEY_PEER_ID:@([result intForColumn:@"peer_id"]),KEY_MESSAGE_ID:@([result intForColumn:@"n_id"])}];
+            TL_localMessage *msg = parseMessage(result);
+            
+            removeMessageMedia(msg);
+            
+           [peer_update_data addObject:@{KEY_PEER_ID:@([result intForColumn:@"peer_id"]),KEY_MESSAGE_ID:@([result intForColumn:@"n_id"])}];
+            
         }
         
         [result close];
@@ -1326,11 +1331,15 @@ TL_localMessage *parseMessage(FMResultSet *result) {
         NSMutableArray *peer_updates = [[NSMutableArray alloc] init];
         
         
-        NSString *sql = [NSString stringWithFormat:@"SELECT n_id,peer_id FROM messages WHERE n_id IN (%@)",mark];
+        NSString *sql = [NSString stringWithFormat:@"SELECT * FROM messages WHERE n_id IN (%@)",mark];
         
         FMResultSet *result = [db executeQueryWithFormat:sql,nil];
         
         while ([result next]) {
+            
+            TL_localMessage *msg = parseMessage(result);
+            
+            removeMessageMedia(msg);
             
             [peer_updates addObject:@{KEY_PEER_ID:@([result intForColumn:@"peer_id"]),KEY_MESSAGE_ID:@([result intForColumn:@"n_id"])}];
         }

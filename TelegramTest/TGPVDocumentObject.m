@@ -32,7 +32,7 @@
 -(void)initDownloadItem {
     
     
-    NSImage *image = [[NSImage alloc] initWithContentsOfFile:mediaFilePath(self.message.media)];
+    NSImage *image = [[NSImage alloc] initWithContentsOfFile:mediaFilePath(self.message)];
     
     if(image.size.width > 0 && image.size.height > 0) {
         

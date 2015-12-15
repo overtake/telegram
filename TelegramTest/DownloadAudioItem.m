@@ -14,7 +14,7 @@
     if(self = [super initWithObject:object]) {
         self.isEncrypted = [object isKindOfClass:[TL_destructMessage class]];
         self.n_id = object.media.audio.n_id;
-        self.path = mediaFilePath(object.media);
+        self.path = mediaFilePath(object);
         self.fileType = DownloadFileAudio;
         self.dc_id = object.media.audio.dc_id;
         self.size = object.media.audio.size;

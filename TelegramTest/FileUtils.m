@@ -129,37 +129,56 @@ NSString *const TLBotCommandPrefix = @"/";
 
 
 
-NSString* mediaFilePath(TLMessageMedia *media) {
-    if([media isKindOfClass:[TL_messageMediaAudio class]]) {
-        return [NSString stringWithFormat:@"%@/%lu_%lu.ogg",path(),media.audio.n_id,media.audio.access_hash];
+NSString* mediaFilePath(TL_localMessage *message) {
+    if([message.media isKindOfClass:[TL_messageMediaAudio class]]) {
+        return [NSString stringWithFormat:@"%@/%lu_%lu.ogg",path(),message.media.audio.n_id,message.media.audio.access_hash];
     }
-    if([media isKindOfClass:[TL_messageMediaVideo class]]) {
-        return [NSString stringWithFormat:@"%@/%lu_%lu.mp4",path(),media.video.n_id,media.video.access_hash];
-    }
-    
-    if([media isKindOfClass:[TL_messageMediaDocument class]]) {
-        return [media.document isSticker] ? [NSString stringWithFormat:@"%@/%ld.webp",path(),media.document.n_id] : [FileUtils documentName:media.document];
+    if([message.media isKindOfClass:[TL_messageMediaVideo class]]) {
+        return [NSString stringWithFormat:@"%@/%lu_%lu.mp4",path(),message.media.video.n_id,message.media.video.access_hash];
     }
     
-    if([media isKindOfClass:[TL_messageMediaPhoto class]]) {
-        TL_photoSize *size = [media.photo.sizes lastObject];
+    if([message.media isKindOfClass:[TL_messageMediaDocument class]]) {
+        
+        if([message isKindOfClass:[TL_destructMessage class]]) {
+            
+            TL_documentAttributeFilename *name = (TL_documentAttributeFilename *) [message.media.document attributeWithClass:[TL_documentAttributeFilename class]];
+            
+            return [NSString stringWithFormat:@"%@/%ld_%@",path(),message.media.document.n_id,name.file_name];
+        }
+        
+        return [message.media.document isSticker] ? [NSString stringWithFormat:@"%@/%ld.webp",path(),message.media.document.n_id] : [FileUtils documentName:message.media.document];
+    }
+    
+    if([message.media isKindOfClass:[TL_messageMediaPhoto class]]) {
+        TL_photoSize *size = [message.media.photo.sizes lastObject];
         return locationFilePath(size.location, @"jpg");
     }
     
     return nil;
 }
 
-NSString *mediaFilePathWithSubfile(TLMessageMedia *media,TL_documentAttributeSubfile *subfile) {
-    if([media isKindOfClass:[TL_messageMediaDocument class]] && subfile) {
+void removeMessageMedia(TL_localMessage *message) {
+    if(message) {
+        NSString *path = mediaFilePath(message);
+        
+        if(path != nil) {
+            [[NSFileManager defaultManager] removeItemAtPath:path error:nil];
+        }
+    }
+    
+}
+
+NSString *mediaFilePathWithSubfile(TL_localMessage *message,TL_documentAttributeSubfile *subfile) {
+    if([message.media isKindOfClass:[TL_messageMediaDocument class]] && subfile) {
         
         NSRange srange = [subfile.mime_type rangeOfString:@"/"];
         if(srange.location != NSNotFound) {
-            return [NSString stringWithFormat:@"%@/%ld_%@.%@",path(),media.document.n_id,subfile.type,[subfile.mime_type substringFromIndex:srange.location+1]];
+            return [NSString stringWithFormat:@"%@/%ld_%@.%@",path(),message.media.document.n_id,subfile.type,[subfile.mime_type substringFromIndex:srange.location+1]];
         }
         
     }
     
-    return mediaFilePath(media);
+    return mediaFilePath(message);
 }
 
 NSString* documentPath(TLDocument *document) {
