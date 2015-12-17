@@ -16,6 +16,7 @@
 #import <CoreLocation/CoreLocation.h>
 #import "TGCTextMark.h"
 #import "TGMessagesHintView.h"
+#import "TGCompressItem.h"
 @class MessagesBottomView;
 
 @interface SearchSelectItem : NSObject
@@ -139,6 +140,9 @@ typedef enum {
 - (void)sendSecretTTL:(int)ttl forConversation:(TL_conversation *)conversation;
 - (void)sendSecretTTL:(int)ttl forConversation:(TL_conversation *)conversation callback:(dispatch_block_t)callback;
 - (void)sendFoundGif:(TLMessageMedia *)media forConversation:(TL_conversation *)conversation;
+- (void)sendCompressedItem:(TGCompressItem *)compressedItem;
+
+
 - (NSArray *)messageTableItemsFromMessages:(NSArray *)input;
 
 - (void)hideTopInfoView:(BOOL)animated;

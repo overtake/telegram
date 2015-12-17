@@ -139,6 +139,7 @@ NSString* mediaFilePath(TL_localMessage *message) {
     
     if([message.media isKindOfClass:[TL_messageMediaDocument class]]) {
         
+        
         if([message isKindOfClass:[TL_destructMessage class]]) {
             
             TL_documentAttributeFilename *name = (TL_documentAttributeFilename *) [message.media.document attributeWithClass:[TL_documentAttributeFilename class]];
@@ -146,7 +147,23 @@ NSString* mediaFilePath(TL_localMessage *message) {
             return [NSString stringWithFormat:@"%@/%ld_%@",path(),message.media.document.n_id,name.file_name];
         }
         
-        return [message.media.document isSticker] ? [NSString stringWithFormat:@"%@/%ld.webp",path(),message.media.document.n_id] : [FileUtils documentName:message.media.document];
+        
+        id nondocValue = non_documents_mime_types()[message.media.document.mime_type];
+        
+        BOOL hasAttr = YES;
+        
+        if([nondocValue isKindOfClass:[TLDocumentAttribute class]]) {
+            hasAttr = [message.media.document attributeWithClass:[nondocValue class]] != nil;
+        }
+        
+        if(nondocValue != nil && hasAttr) {
+            
+            return [NSString stringWithFormat:@"%@/%ld.%@",path(),message.media.document.n_id,[message.media.document.mime_type substringFromIndex:[message.media.document.mime_type rangeOfString:@"/"].location + 1]];
+            
+        }
+        
+        
+        return [FileUtils documentName:message.media.document];
     }
     
     if([message.media isKindOfClass:[TL_messageMediaPhoto class]]) {
@@ -156,6 +173,18 @@ NSString* mediaFilePath(TL_localMessage *message) {
     
     return nil;
 }
+
+NSDictionary *non_documents_mime_types() {
+    
+    static NSDictionary *res;
+    
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        res = @{@"video/mp4":[TL_documentAttributeAnimated create],@"image/gif":@(0),@"webp:image/webp":@(0)};
+    });
+    
+    return res;
+};
 
 void removeMessageMedia(TL_localMessage *message) {
     if(message) {
@@ -168,18 +197,6 @@ void removeMessageMedia(TL_localMessage *message) {
     
 }
 
-NSString *mediaFilePathWithSubfile(TL_localMessage *message,TL_documentAttributeSubfile *subfile) {
-    if([message.media isKindOfClass:[TL_messageMediaDocument class]] && subfile) {
-        
-        NSRange srange = [subfile.mime_type rangeOfString:@"/"];
-        if(srange.location != NSNotFound) {
-            return [NSString stringWithFormat:@"%@/%ld_%@.%@",path(),message.media.document.n_id,subfile.type,[subfile.mime_type substringFromIndex:srange.location+1]];
-        }
-        
-    }
-    
-    return mediaFilePath(message);
-}
 
 NSString* documentPath(TLDocument *document) {
     NSString *fileName = document.file_name;

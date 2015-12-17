@@ -200,6 +200,9 @@
     if(document == nil) {
         
         NSMutableArray *attrs = [[NSMutableArray alloc] init];
+        [attrs addObject:[TL_documentAttributeAnimated create]];
+        [attrs addObject:[TL_documentAttributeImageSize createWithW:gif.webpage.w h:gif.webpage.h]];
+        [attrs addObject:[TL_documentAttributeFilename createWithFile_name:@"giphy.gif"]];
         
         [attrs addObject:[TL_documentAttributeImageSize createWithW:webpage.w h:webpage.h]];
         
@@ -210,7 +213,7 @@
         
         
         NSSize thumbSize = strongsize(NSMakeSize(webpage.w, webpage.h), 90);
-        document = [TL_externalDocument createWithN_id:webpage.n_id date:[[MTNetwork instance] getTime] mime_type:@"image/gif" thumb:[TL_photoCachedSize createWithType:@"x" location:[TL_fileLocationUnavailable createWithVolume_id:0 local_id:0 secret:0] w:thumbSize.width h:thumbSize.height bytes:jpegNormalizedData(imageView.image)] external_url:webpage.url search_q:self.searchField.stringValue perform_date:webpage.date external_webpage:webpage attributes:attrs];
+        document = [TL_externalDocument createWithN_id:webpage.n_id date:[[MTNetwork instance] getTime] mime_type:@"video/mp4" thumb:[TL_photoCachedSize createWithType:@"x" location:[TL_fileLocationUnavailable createWithVolume_id:rand_long() local_id:0 secret:0] w:thumbSize.width h:thumbSize.height bytes:jpegNormalizedData(imageView.image)] external_url:webpage.url search_q:self.searchField.stringValue perform_date:webpage.date external_webpage:webpage attributes:attrs];
     }
     
     TLMessageMedia *media = [TL_messageMediaDocument createWithDocument:document];

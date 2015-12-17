@@ -2,7 +2,7 @@
 //  MTProto.h
 //  Telegram
 //
-//  Auto created by Mikhail Filimonov on 14.12.15.
+//  Auto created by Mikhail Filimonov on 17.12.15.
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -414,6 +414,15 @@
 @interface TLmessages_FoundGifs : TLObject
 @end
 	
+@interface TLInputBotContextResult : TLObject
+@end
+	
+@interface TLBotContextResult : TLObject
+@end
+	
+@interface TLmessages_BotResults : TLObject
+@end
+	
 @interface TLProtoMessage : TLObject
 @end
 	
@@ -593,6 +602,8 @@
 @property (nonatomic, strong) NSString* venue_id;
 @property (nonatomic, strong) NSString* url;
 @property (nonatomic, strong) NSString* q;
+@property (nonatomic, strong) TLInputUser* bot;
+@property long query_id;
 @end
 
 @interface TL_inputMediaEmpty : TLInputMedia<NSCoding>
@@ -639,6 +650,9 @@
 @end
 @interface TL_inputMediaGifExternal : TLInputMedia<NSCoding>
 +(TL_inputMediaGifExternal*)createWithUrl:(NSString*)url q:(NSString*)q;
+@end
+@interface TL_inputMediaContextBotResult : TLInputMedia<NSCoding>
++(TL_inputMediaContextBotResult*)createWithBot:(TLInputUser*)bot url:(NSString*)url query_id:(long)query_id;
 @end
 @interface TL_inputMediaUploadedVideo_old34 : TLInputMedia<NSCoding>
 +(TL_inputMediaUploadedVideo_old34*)createWithFile:(TLInputFile*)file duration:(int)duration w:(int)w h:(int)h caption:(NSString*)caption;
@@ -705,7 +719,6 @@
 @property long secret;
 @property long n_id;
 @property long access_hash;
-@property (nonatomic, strong) NSString* type;
 @end
 
 @interface TL_inputFileLocation : TLInputFileLocation<NSCoding>
@@ -722,9 +735,6 @@
 @end
 @interface TL_inputDocumentFileLocation : TLInputFileLocation<NSCoding>
 +(TL_inputDocumentFileLocation*)createWithN_id:(long)n_id access_hash:(long)access_hash;
-@end
-@interface TL_inputDocumentSubfileLocation : TLInputFileLocation<NSCoding>
-+(TL_inputDocumentSubfileLocation*)createWithN_id:(long)n_id access_hash:(long)access_hash type:(NSString*)type;
 @end
 	
 @interface TLInputPhotoCrop()
@@ -827,7 +837,7 @@
 @property (nonatomic,assign,readonly) BOOL isBot_chat_history;
 @property (nonatomic,assign,readonly) BOOL isBot_nochats;
 @property (nonatomic,assign,readonly) BOOL isVerified;
-@property (nonatomic,assign,readonly) BOOL isExplicit_content;
+@property (nonatomic,assign,readonly) BOOL isRestricted;
 @property long access_hash;
 @property (nonatomic, strong) NSString* first_name;
 @property (nonatomic, strong) NSString* last_name;
@@ -836,13 +846,14 @@
 @property (nonatomic, strong) TLUserProfilePhoto* photo;
 @property (nonatomic, strong) TLUserStatus* status;
 @property int bot_info_version;
+@property (nonatomic, strong) NSString* restiction_reason;
 @end
 
 @interface TL_userEmpty : TLUser<NSCoding>
 +(TL_userEmpty*)createWithN_id:(int)n_id;
 @end
 @interface TL_user : TLUser<NSCoding>
-+(TL_user*)createWithFlags:(int)flags          n_id:(int)n_id access_hash:(long)access_hash first_name:(NSString*)first_name last_name:(NSString*)last_name username:(NSString*)username phone:(NSString*)phone photo:(TLUserProfilePhoto*)photo status:(TLUserStatus*)status bot_info_version:(int)bot_info_version;
++(TL_user*)createWithFlags:(int)flags          n_id:(int)n_id access_hash:(long)access_hash first_name:(NSString*)first_name last_name:(NSString*)last_name username:(NSString*)username phone:(NSString*)phone photo:(TLUserProfilePhoto*)photo status:(TLUserStatus*)status bot_info_version:(int)bot_info_version restiction_reason:(NSString*)restiction_reason;
 @end
 @interface TL_userSelf : TLUser<NSCoding>
 +(TL_userSelf*)createWithN_id:(int)n_id first_name:(NSString*)first_name last_name:(NSString*)last_name username:(NSString*)username phone:(NSString*)phone photo:(TLUserProfilePhoto*)photo status:(TLUserStatus*)status;
@@ -858,6 +869,9 @@
 @end
 @interface TL_userDeleted : TLUser<NSCoding>
 +(TL_userDeleted*)createWithN_id:(int)n_id first_name:(NSString*)first_name last_name:(NSString*)last_name username:(NSString*)username;
+@end
+@interface TL_user_old43 : TLUser<NSCoding>
++(TL_user_old43*)createWithFlags:(int)flags n_id:(int)n_id access_hash:(long)access_hash first_name:(NSString*)first_name last_name:(NSString*)last_name username:(NSString*)username phone:(NSString*)phone photo:(TLUserProfilePhoto*)photo status:(TLUserStatus*)status bot_info_version:(int)bot_info_version;
 @end
 	
 @interface TLUserProfilePhoto()
@@ -917,9 +931,10 @@
 @property (nonatomic,assign,readonly) BOOL isBroadcast;
 @property (nonatomic,assign,readonly) BOOL isVerified;
 @property (nonatomic,assign,readonly) BOOL isMegagroup;
-@property (nonatomic,assign,readonly) BOOL isExplicit_content;
+@property (nonatomic,assign,readonly) BOOL isRestricted;
 @property long access_hash;
 @property (nonatomic, strong) NSString* username;
+@property (nonatomic, strong) NSString* restiction_reason;
 @end
 
 @interface TL_chatEmpty : TLChat<NSCoding>
@@ -932,7 +947,7 @@
 +(TL_chatForbidden*)createWithN_id:(int)n_id title:(NSString*)title;
 @end
 @interface TL_channel : TLChat<NSCoding>
-+(TL_channel*)createWithFlags:(int)flags          n_id:(int)n_id access_hash:(long)access_hash title:(NSString*)title username:(NSString*)username photo:(TLChatPhoto*)photo date:(int)date version:(int)version;
++(TL_channel*)createWithFlags:(int)flags          n_id:(int)n_id access_hash:(long)access_hash title:(NSString*)title username:(NSString*)username photo:(TLChatPhoto*)photo date:(int)date version:(int)version restiction_reason:(NSString*)restiction_reason;
 @end
 @interface TL_channelForbidden : TLChat<NSCoding>
 +(TL_channelForbidden*)createWithN_id:(int)n_id access_hash:(long)access_hash title:(NSString*)title;
@@ -945,6 +960,9 @@
 @end
 @interface TL_chat_old38 : TLChat<NSCoding>
 +(TL_chat_old38*)createWithFlags:(int)flags n_id:(int)n_id title:(NSString*)title photo:(TLChatPhoto*)photo participants_count:(int)participants_count date:(int)date version:(int)version;
+@end
+@interface TL_channel_old43 : TLChat<NSCoding>
++(TL_channel_old43*)createWithFlags:(int)flags n_id:(int)n_id access_hash:(long)access_hash title:(NSString*)title username:(NSString*)username photo:(TLChatPhoto*)photo date:(int)date version:(int)version;
 @end
 	
 @interface TLChatFull()
@@ -1641,6 +1659,9 @@
 @property Boolean is_admin;
 @property (nonatomic, strong) TLmessages_StickerSet* stickerset;
 @property (nonatomic, strong) NSMutableArray* order;
+@property long query_id;
+@property (nonatomic, strong) NSString* query;
+@property (nonatomic, strong) NSString* offset;
 @end
 
 @interface TL_updateNewMessage : TLUpdate<NSCoding>
@@ -1762,6 +1783,9 @@
 @end
 @interface TL_updateStickerSets : TLUpdate<NSCoding>
 +(TL_updateStickerSets*)create;
+@end
+@interface TL_updateBotContextQuery : TLUpdate<NSCoding>
++(TL_updateBotContextQuery*)createWithQuery_id:(long)query_id user_id:(int)user_id query:(NSString*)query offset:(NSString*)offset;
 @end
 	
 @interface TLupdates_State()
@@ -2120,6 +2144,7 @@
 @property (nonatomic, strong) NSString* search_q;
 @property int perform_date;
 @property (nonatomic, strong) TLWebPage* external_webpage;
+@property (nonatomic, strong) NSData* compressor;
 @end
 
 @interface TL_documentEmpty : TLDocument<NSCoding>
@@ -2130,6 +2155,9 @@
 @end
 @interface TL_externalDocument : TLDocument<NSCoding>
 +(TL_externalDocument*)createWithN_id:(long)n_id date:(int)date mime_type:(NSString*)mime_type thumb:(TLPhotoSize*)thumb external_url:(NSString*)external_url search_q:(NSString*)search_q perform_date:(int)perform_date external_webpage:(TLWebPage*)external_webpage attributes:(NSMutableArray*)attributes;
+@end
+@interface TL_compressDocument : TLDocument<NSCoding>
++(TL_compressDocument*)createWithN_id:(long)n_id access_hash:(long)access_hash date:(int)date mime_type:(NSString*)mime_type size:(int)size thumb:(TLPhotoSize*)thumb dc_id:(int)dc_id attributes:(NSMutableArray*)attributes compressor:(NSData*)compressor;
 @end
 	
 @interface TLhelp_Support()
@@ -2300,9 +2328,6 @@
 @property (nonatomic, strong) NSString* title;
 @property (nonatomic, strong) NSString* performer;
 @property (nonatomic, strong) NSString* file_name;
-@property (nonatomic, strong) NSString* type;
-@property (nonatomic, strong) NSString* mime_type;
-@property int size;
 @end
 
 @interface TL_documentAttributeImageSize : TLDocumentAttribute<NSCoding>
@@ -2322,9 +2347,6 @@
 @end
 @interface TL_documentAttributeFilename : TLDocumentAttribute<NSCoding>
 +(TL_documentAttributeFilename*)createWithFile_name:(NSString*)file_name;
-@end
-@interface TL_documentAttributeSubfile : TLDocumentAttribute<NSCoding>
-+(TL_documentAttributeSubfile*)createWithType:(NSString*)type mime_type:(NSString*)mime_type size:(int)size;
 @end
 @interface TL_documentAttributeAudio_old31 : TLDocumentAttribute<NSCoding>
 +(TL_documentAttributeAudio_old31*)createWithDuration:(int)duration;
@@ -2418,7 +2440,6 @@
 @property (nonatomic, strong) TLDocument* document;
 @property (nonatomic, strong) NSString* thumb_url;
 @property (nonatomic, strong) NSString* content_url;
-@property (nonatomic, strong) NSString* mp4_url;
 @property int w;
 @property int h;
 @end
@@ -2433,7 +2454,7 @@
 +(TL_webPage*)createWithFlags:(int)flags n_id:(long)n_id url:(NSString*)url display_url:(NSString*)display_url type:(NSString*)type site_name:(NSString*)site_name title:(NSString*)title n_description:(NSString*)n_description photo:(TLPhoto*)photo embed_url:(NSString*)embed_url embed_type:(NSString*)embed_type embed_width:(int)embed_width embed_height:(int)embed_height duration:(int)duration author:(NSString*)author document:(TLDocument*)document;
 @end
 @interface TL_webPageExternal : TLWebPage<NSCoding>
-+(TL_webPageExternal*)createWithFlags:(int)flags url:(NSString*)url display_url:(NSString*)display_url type:(NSString*)type title:(NSString*)title n_description:(NSString*)n_description thumb_url:(NSString*)thumb_url content_url:(NSString*)content_url mp4_url:(NSString*)mp4_url w:(int)w h:(int)h duration:(int)duration;
++(TL_webPageExternal*)createWithFlags:(int)flags url:(NSString*)url display_url:(NSString*)display_url type:(NSString*)type title:(NSString*)title n_description:(NSString*)n_description thumb_url:(NSString*)thumb_url content_url:(NSString*)content_url w:(int)w h:(int)h duration:(int)duration;
 @end
 @interface TL_webPage_old34 : TLWebPage<NSCoding>
 +(TL_webPage_old34*)createWithFlags:(int)flags n_id:(long)n_id url:(NSString*)url display_url:(NSString*)display_url type:(NSString*)type site_name:(NSString*)site_name title:(NSString*)title n_description:(NSString*)n_description photo:(TLPhoto*)photo embed_url:(NSString*)embed_url embed_type:(NSString*)embed_type embed_width:(int)embed_width embed_height:(int)embed_height duration:(int)duration author:(NSString*)author;
@@ -2885,6 +2906,46 @@
 
 @interface TL_messages_foundGifs : TLmessages_FoundGifs<NSCoding>
 +(TL_messages_foundGifs*)createWithNext_offset:(int)next_offset results:(NSMutableArray*)results;
+@end
+	
+@interface TLInputBotContextResult()
+@property int flags;
+@property (nonatomic,assign,readonly) BOOL isHide_url;
+@property (nonatomic, strong) NSString* url;
+@property (nonatomic, strong) NSString* type;
+@property (nonatomic, strong) NSString* title;
+@property (nonatomic, strong) NSString* n_description;
+@property (nonatomic, strong) NSString* thumb_url;
+@property (nonatomic, strong) NSString* content_url;
+@property int w;
+@property int h;
+@property int duration;
+@end
+
+@interface TL_inputBotContextResult : TLInputBotContextResult<NSCoding>
++(TL_inputBotContextResult*)createWithFlags:(int)flags  url:(NSString*)url type:(NSString*)type title:(NSString*)title n_description:(NSString*)n_description thumb_url:(NSString*)thumb_url content_url:(NSString*)content_url w:(int)w h:(int)h duration:(int)duration;
+@end
+	
+@interface TLBotContextResult()
+@property int flags;
+@property (nonatomic,assign,readonly) BOOL isHide_url;
+@property (nonatomic, strong) TLWebPage* webpage;
+@end
+
+@interface TL_botContextResult : TLBotContextResult<NSCoding>
++(TL_botContextResult*)createWithFlags:(int)flags  webpage:(TLWebPage*)webpage;
+@end
+	
+@interface TLmessages_BotResults()
+@property int flags;
+@property (nonatomic,assign,readonly) BOOL isMedia;
+@property long query_id;
+@property (nonatomic, strong) NSString* next_offset;
+@property (nonatomic, strong) NSMutableArray* results;
+@end
+
+@interface TL_messages_botResults : TLmessages_BotResults<NSCoding>
++(TL_messages_botResults*)createWithFlags:(int)flags  query_id:(long)query_id next_offset:(NSString*)next_offset results:(NSMutableArray*)results;
 @end
 	
 @interface TLProtoMessage()

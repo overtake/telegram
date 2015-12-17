@@ -15,11 +15,11 @@
 
 
 
--(id)initWithObject:(TLMessage *)object {
+-(id)initWithObject:(TL_localMessage *)object {
     if(self = [super initWithObject:object]) {
         self.isEncrypted = [object isKindOfClass:[TL_destructMessage class]];
         self.n_id = object.media.document.n_id;
-        self.path = [NSString stringWithFormat:@"%@/%lu.download",[SettingsArchiver documentsFolder],object.media.document.n_id];
+        self.path = non_documents_mime_types()[object.media.document.mime_type] != nil ? mediaFilePath(object) :  [NSString stringWithFormat:@"%@/%lu.download",[SettingsArchiver documentsFolder],object.media.document.n_id];
         self.fileType = DownloadFileDocument;
         self.dc_id = object.media.document.dc_id;
         self.size = object.media.document.size;
@@ -31,37 +31,41 @@
     if(self.downloadState != DownloadStateCompleted && downloadState == DownloadStateCompleted) {
         NSString *old_path = self.path;
         
+        TL_localMessage *message = self.object;
         
-        self.path = mediaFilePath(self.object);
         
-        NSError *error = nil;
-        
-        [[NSFileManager defaultManager] moveItemAtPath:old_path toPath:self.path error:&error];
-        
-        if(![self.path isEqualToString:old_path] && error && error.code == 516) {
-            [[NSFileManager defaultManager] removeItemAtPath:old_path error:&error];
+        if(non_documents_mime_types()[message.media.document.mime_type] == nil) {
+            self.path = mediaFilePath(self.object);
+            
+            NSError *error = nil;
+            
+            [[NSFileManager defaultManager] moveItemAtPath:old_path toPath:self.path error:&error];
+            
+            if(![self.path isEqualToString:old_path] && error && error.code == 516) {
+                [[NSFileManager defaultManager] removeItemAtPath:old_path error:&error];
+            }
+            
+            TL_outDocument *document = [TL_outDocument outWithDocument:(TL_document *)((TLMessageMedia *)[(TL_localMessage *)self.object media]).document file_path:self.path];
+            
+            
+            TL_documentAttributeAudio *attr = (TL_documentAttributeAudio *) [document attributeWithClass:[TL_documentAttributeAudio class]];
+            
+            if(attr && !attr.performer.length == 0 && attr.title.length == 0) {
+                
+                AVURLAsset *asset = [AVURLAsset assetWithURL:[NSURL fileURLWithPath:self.path]];
+                NSDictionary *tags = audioTags(asset);
+                
+                attr.title = tags[@"songName"];
+                attr.performer = tags[@"artist"];
+                
+            }
+            
+            message.media.document = document;
+            
+            [[Storage manager] addHolesAroundMessage:self.object];
+            
+            [message save:NO];
         }
-        
-        TL_outDocument *document = [TL_outDocument outWithDocument:(TL_document *)((TLMessageMedia *)[(TL_localMessage *)self.object media]).document file_path:self.path];
-        
-        
-         TL_documentAttributeAudio *attr = (TL_documentAttributeAudio *) [document attributeWithClass:[TL_documentAttributeAudio class]];
-        
-        if(attr && !attr.performer.length == 0 && attr.title.length == 0) {
-            
-            AVURLAsset *asset = [AVURLAsset assetWithURL:[NSURL fileURLWithPath:self.path]];
-            NSDictionary *tags = audioTags(asset);
-            
-            attr.title = tags[@"songName"];
-            attr.performer = tags[@"artist"];
-            
-        }
-        
-        ((TLMessageMedia *)[(TL_localMessage *)self.object media]).document = document;
-        
-        [[Storage manager] addHolesAroundMessage:self.object];
-        
-        [(TL_localMessage *)self.object save:NO];
         
     }
     [super setDownloadState:downloadState];

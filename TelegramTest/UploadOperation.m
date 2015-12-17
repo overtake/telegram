@@ -52,13 +52,7 @@
     return self;
 }
 
-- (BOOL)isConcurrent {
-    return YES;
-}
 
-- (BOOL)isFinished {
-    return self.uploadState == UploadFinished || self.uploadState == UploadError || self.uploadState == UploadCancelled;
-}
 
 -(void)setUploadCancelled:(void (^)(UploadOperation *))uploadCancelled {
     
@@ -85,6 +79,13 @@
     }];
 }
 
+- (BOOL)isConcurrent {
+    return YES;
+}
+
+- (BOOL)isFinished {
+    return self.uploadState == UploadFinished || self.uploadState == UploadError || self.uploadState == UploadCancelled;
+}
 
 - (BOOL)isExecuting {
     return self.uploadState == UploadExecuting;

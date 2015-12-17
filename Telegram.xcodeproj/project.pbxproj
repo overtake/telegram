@@ -245,7 +245,6 @@
 		C20A7E7519DAAF51008844F2 /* CoreText.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C20A7E7419DAAF51008844F2 /* CoreText.framework */; };
 		C20A7E7C19DC1379008844F2 /* TGCTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = C20A7E7B19DC1379008844F2 /* TGCTextView.m */; };
 		C20A7E7E19DC1816008844F2 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C20A7E7D19DC1816008844F2 /* CoreGraphics.framework */; };
-		C20AEF3A1C1F1BE4001BAAA0 /* DownloadSubfileItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C20AEF391C1F1BE4001BAAA0 /* DownloadSubfileItem.m */; };
 		C20AEF3E1C1F2953001BAAA0 /* TGBlurImageObject.m in Sources */ = {isa = PBXBuildFile; fileRef = C20AEF3D1C1F2953001BAAA0 /* TGBlurImageObject.m */; };
 		C20AEF411C1F347D001BAAA0 /* TGThumbnailObject.m in Sources */ = {isa = PBXBuildFile; fileRef = C20AEF401C1F347D001BAAA0 /* TGThumbnailObject.m */; };
 		C20B228818E971D0007BCCD6 /* bitwise.c in Sources */ = {isa = PBXBuildFile; fileRef = C20B228418E971D0007BCCD6 /* bitwise.c */; };
@@ -330,6 +329,15 @@
 		C226CC7C1B341CED0042C5D8 /* ComposeChooseGroupViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C226CC7B1B341CED0042C5D8 /* ComposeChooseGroupViewController.m */; };
 		C226CC7F1B3422F80042C5D8 /* SelectChatRowView.m in Sources */ = {isa = PBXBuildFile; fileRef = C226CC7E1B3422F80042C5D8 /* SelectChatRowView.m */; };
 		C226CC821B3427390042C5D8 /* ComposeActionAddUserToGroupBehavior.m in Sources */ = {isa = PBXBuildFile; fileRef = C226CC811B3427390042C5D8 /* ComposeActionAddUserToGroupBehavior.m */; };
+		C22A29F81C20434000678172 /* TGGifConverter.m in Sources */ = {isa = PBXBuildFile; fileRef = C22A29F71C20434000678172 /* TGGifConverter.m */; };
+		C22A29FC1C208A2100678172 /* TGContextBotsPanelView.m in Sources */ = {isa = PBXBuildFile; fileRef = C22A29FB1C208A2100678172 /* TGContextBotsPanelView.m */; };
+		C22A29FF1C209FEE00678172 /* TGModalCompressingView.m in Sources */ = {isa = PBXBuildFile; fileRef = C22A29FE1C209FEE00678172 /* TGModalCompressingView.m */; };
+		C22A2A031C218A9800678172 /* TGCompressItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C22A2A021C218A9800678172 /* TGCompressItem.m */; };
+		C22A2A061C218AE400678172 /* TGCompressGifItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C22A2A051C218AE400678172 /* TGCompressGifItem.m */; };
+		C22A2A091C218AF000678172 /* TGCompressVideoItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C22A2A081C218AF000678172 /* TGCompressVideoItem.m */; };
+		C22A2A0C1C21A38100678172 /* TGDocumentThumbObject.m in Sources */ = {isa = PBXBuildFile; fileRef = C22A2A0B1C21A38100678172 /* TGDocumentThumbObject.m */; };
+		C22A2A0F1C21C67A00678172 /* CompressedDocumentSenderItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C22A2A0E1C21C67A00678172 /* CompressedDocumentSenderItem.m */; };
+		C22A2A121C21CC1500678172 /* CompressedSecretFileSenderItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C22A2A111C21CC1500678172 /* CompressedSecretFileSenderItem.m */; };
 		C22C7F2C18B2163F007C4D17 /* MTNetwork.m in Sources */ = {isa = PBXBuildFile; fileRef = C22C7F2918B2163F007C4D17 /* MTNetwork.m */; };
 		C23223D21A024CC600E476E2 /* TGSecretInAction.m in Sources */ = {isa = PBXBuildFile; fileRef = C23223D11A024CC600E476E2 /* TGSecretInAction.m */; };
 		C23223D91A029ED600E476E2 /* FlushHistorySecretSenderItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C23223D81A029ED600E476E2 /* FlushHistorySecretSenderItem.m */; };
@@ -1512,8 +1520,6 @@
 		C20A7E7A19DC1379008844F2 /* TGCTextView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGCTextView.h; sourceTree = "<group>"; };
 		C20A7E7B19DC1379008844F2 /* TGCTextView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGCTextView.m; sourceTree = "<group>"; };
 		C20A7E7D19DC1816008844F2 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
-		C20AEF381C1F1BE4001BAAA0 /* DownloadSubfileItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DownloadSubfileItem.h; sourceTree = "<group>"; };
-		C20AEF391C1F1BE4001BAAA0 /* DownloadSubfileItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DownloadSubfileItem.m; sourceTree = "<group>"; };
 		C20AEF3C1C1F2953001BAAA0 /* TGBlurImageObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGBlurImageObject.h; sourceTree = "<group>"; };
 		C20AEF3D1C1F2953001BAAA0 /* TGBlurImageObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGBlurImageObject.m; sourceTree = "<group>"; };
 		C20AEF3F1C1F347D001BAAA0 /* TGThumbnailObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGThumbnailObject.h; sourceTree = "<group>"; };
@@ -1673,6 +1679,24 @@
 		C226CC7E1B3422F80042C5D8 /* SelectChatRowView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SelectChatRowView.m; sourceTree = "<group>"; };
 		C226CC801B3427390042C5D8 /* ComposeActionAddUserToGroupBehavior.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ComposeActionAddUserToGroupBehavior.h; sourceTree = "<group>"; };
 		C226CC811B3427390042C5D8 /* ComposeActionAddUserToGroupBehavior.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ComposeActionAddUserToGroupBehavior.m; sourceTree = "<group>"; };
+		C22A29F61C20434000678172 /* TGGifConverter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGGifConverter.h; sourceTree = "<group>"; };
+		C22A29F71C20434000678172 /* TGGifConverter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGGifConverter.m; sourceTree = "<group>"; };
+		C22A29FA1C208A2100678172 /* TGContextBotsPanelView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGContextBotsPanelView.h; sourceTree = "<group>"; };
+		C22A29FB1C208A2100678172 /* TGContextBotsPanelView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGContextBotsPanelView.m; sourceTree = "<group>"; };
+		C22A29FD1C209FEE00678172 /* TGModalCompressingView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGModalCompressingView.h; sourceTree = "<group>"; };
+		C22A29FE1C209FEE00678172 /* TGModalCompressingView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGModalCompressingView.m; sourceTree = "<group>"; };
+		C22A2A011C218A9800678172 /* TGCompressItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGCompressItem.h; sourceTree = "<group>"; };
+		C22A2A021C218A9800678172 /* TGCompressItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGCompressItem.m; sourceTree = "<group>"; };
+		C22A2A041C218AE400678172 /* TGCompressGifItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGCompressGifItem.h; sourceTree = "<group>"; };
+		C22A2A051C218AE400678172 /* TGCompressGifItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGCompressGifItem.m; sourceTree = "<group>"; };
+		C22A2A071C218AF000678172 /* TGCompressVideoItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGCompressVideoItem.h; sourceTree = "<group>"; };
+		C22A2A081C218AF000678172 /* TGCompressVideoItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGCompressVideoItem.m; sourceTree = "<group>"; };
+		C22A2A0A1C21A38100678172 /* TGDocumentThumbObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGDocumentThumbObject.h; sourceTree = "<group>"; };
+		C22A2A0B1C21A38100678172 /* TGDocumentThumbObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGDocumentThumbObject.m; sourceTree = "<group>"; };
+		C22A2A0D1C21C67A00678172 /* CompressedDocumentSenderItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CompressedDocumentSenderItem.h; sourceTree = "<group>"; };
+		C22A2A0E1C21C67A00678172 /* CompressedDocumentSenderItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CompressedDocumentSenderItem.m; sourceTree = "<group>"; };
+		C22A2A101C21CC1500678172 /* CompressedSecretFileSenderItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CompressedSecretFileSenderItem.h; sourceTree = "<group>"; };
+		C22A2A111C21CC1500678172 /* CompressedSecretFileSenderItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CompressedSecretFileSenderItem.m; sourceTree = "<group>"; };
 		C22C7F2818B2163F007C4D17 /* MTNetwork.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTNetwork.h; sourceTree = "<group>"; };
 		C22C7F2918B2163F007C4D17 /* MTNetwork.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MTNetwork.m; path = TelegramTest/MTNetwork.m; sourceTree = SOURCE_ROOT; };
 		C23223D01A024CC600E476E2 /* TGSecretInAction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGSecretInAction.h; sourceTree = "<group>"; };
@@ -3627,6 +3651,8 @@
 				C20AEF3D1C1F2953001BAAA0 /* TGBlurImageObject.m */,
 				C20AEF3F1C1F347D001BAAA0 /* TGThumbnailObject.h */,
 				C20AEF401C1F347D001BAAA0 /* TGThumbnailObject.m */,
+				C22A2A0A1C21A38100678172 /* TGDocumentThumbObject.h */,
+				C22A2A0B1C21A38100678172 /* TGDocumentThumbObject.m */,
 			);
 			name = tgimage;
 			sourceTree = "<group>";
@@ -3731,6 +3757,8 @@
 				C2D7C5BD1B3091400042DC01 /* StartBotSenderItem.m */,
 				C25A581D1C10C9DF0038169F /* ExternalGifSenderItem.h */,
 				C25A581E1C10C9DF0038169F /* ExternalGifSenderItem.m */,
+				C22A2A0D1C21C67A00678172 /* CompressedDocumentSenderItem.h */,
+				C22A2A0E1C21C67A00678172 /* CompressedDocumentSenderItem.m */,
 			);
 			name = sender;
 			sourceTree = "<group>";
@@ -3764,6 +3792,8 @@
 				C26F7EC51A602837001D1AE2 /* ResendSecretSenderItem.m */,
 				C26F7EC71A602CB3001D1AE2 /* ExternalDocumentSecretSenderItem.h */,
 				C26F7EC81A602CB3001D1AE2 /* ExternalDocumentSecretSenderItem.m */,
+				C22A2A101C21CC1500678172 /* CompressedSecretFileSenderItem.h */,
+				C22A2A111C21CC1500678172 /* CompressedSecretFileSenderItem.m */,
 			);
 			name = secret;
 			sourceTree = "<group>";
@@ -3966,6 +3996,30 @@
 			name = add_to_group;
 			sourceTree = "<group>";
 		};
+		C22A29F91C208A0000678172 /* context-bots */ = {
+			isa = PBXGroup;
+			children = (
+				C22A29FA1C208A2100678172 /* TGContextBotsPanelView.h */,
+				C22A29FB1C208A2100678172 /* TGContextBotsPanelView.m */,
+			);
+			name = "context-bots";
+			sourceTree = "<group>";
+		};
+		C22A2A001C21899500678172 /* compress */ = {
+			isa = PBXGroup;
+			children = (
+				C22A29FD1C209FEE00678172 /* TGModalCompressingView.h */,
+				C22A29FE1C209FEE00678172 /* TGModalCompressingView.m */,
+				C22A2A011C218A9800678172 /* TGCompressItem.h */,
+				C22A2A021C218A9800678172 /* TGCompressItem.m */,
+				C22A2A041C218AE400678172 /* TGCompressGifItem.h */,
+				C22A2A051C218AE400678172 /* TGCompressGifItem.m */,
+				C22A2A071C218AF000678172 /* TGCompressVideoItem.h */,
+				C22A2A081C218AF000678172 /* TGCompressVideoItem.m */,
+			);
+			name = compress;
+			sourceTree = "<group>";
+		};
 		C23298D818CF6180000826E5 /* qlmedia */ = {
 			isa = PBXGroup;
 			children = (
@@ -4106,8 +4160,6 @@
 				C2CBF6AC1AFB84DB006BF90A /* TGDownloadItem.m */,
 				C20A5E8D1B86404D007F4B49 /* DownloadCacheDocumentItem.h */,
 				C20A5E8E1B86404D007F4B49 /* DownloadCacheDocumentItem.m */,
-				C20AEF381C1F1BE4001BAAA0 /* DownloadSubfileItem.h */,
-				C20AEF391C1F1BE4001BAAA0 /* DownloadSubfileItem.m */,
 			);
 			name = download_items;
 			sourceTree = "<group>";
@@ -5231,6 +5283,7 @@
 		C2D4B73A1AFCD35F0035B4E4 /* modal */ = {
 			isa = PBXGroup;
 			children = (
+				C22A2A001C21899500678172 /* compress */,
 				C25A57F61C108B700038169F /* gif */,
 				C2A2B42F1BD7C8DB0083DA8A /* TGModalForwardView.h */,
 				C2A2B4301BD7C8DB0083DA8A /* TGModalForwardView.m */,
@@ -5349,6 +5402,7 @@
 		C2D51B9C1B17A6A3009327C0 /* popuphelps */ = {
 			isa = PBXGroup;
 			children = (
+				C22A29F91C208A0000678172 /* context-bots */,
 				C2D51BA01B17AA02009327C0 /* botcommands */,
 				C274C3A21ABC6221000DFDE4 /* hashtags */,
 				C2967B3C1AA4CF5C003759B2 /* mentions */,
@@ -6008,6 +6062,8 @@
 				C20A5EDE1B8B8905007F4B49 /* TGObservableObject.m */,
 				C2CC41C21BA7FC450097E973 /* WeakReference.h */,
 				C2CC41C31BA7FC450097E973 /* WeakReference.m */,
+				C22A29F61C20434000678172 /* TGGifConverter.h */,
+				C22A29F71C20434000678172 /* TGGifConverter.m */,
 			);
 			name = utils;
 			sourceTree = "<group>";
@@ -6416,6 +6472,7 @@
 				C2D4B8661AFCE8F90035B4E4 /* YapDatabaseConnectionState.m in Sources */,
 				C2CE53E01BE938AC00BBEF5F /* TGModernChatInfoViewController.m in Sources */,
 				C2E5A0611BABF33C00C1BCA1 /* TL_localMessageService_old34.m in Sources */,
+				C22A29FC1C208A2100678172 /* TGContextBotsPanelView.m in Sources */,
 				C28261E9199291EF004AC73E /* TL_broadcast.m in Sources */,
 				C2CE53F21BECC3A700BBEF5F /* MegagroupChatFilter.m in Sources */,
 				0AAAE59218CA271600A2F9F1 /* MessagesBottomView.m in Sources */,
@@ -6508,6 +6565,7 @@
 				C20A5E831B863979007F4B49 /* TGWebpageGifContainer.m in Sources */,
 				C2A2B42E1BD519870083DA8A /* TGHCMessagesViewController.m in Sources */,
 				0A613C1D18AD96A9004096DD /* MessageTableCellDocumentView.m in Sources */,
+				C22A2A0F1C21C67A00678172 /* CompressedDocumentSenderItem.m in Sources */,
 				CEAE5D6D181EEFF000C17645 /* TLPeer+Extensions.m in Sources */,
 				0A6D098919535E8500A9AC64 /* NSArrayCategory.m in Sources */,
 				C222AB391A0901F500BEF907 /* PhotoTableItemView.m in Sources */,
@@ -6682,6 +6740,7 @@
 				C2D51BF71B21C707009327C0 /* TGAudioPlayerListView.m in Sources */,
 				C21D484919AF3C53000F06E1 /* ComposePickerViewController.m in Sources */,
 				CE7E5654189AC25C0058C532 /* UploadQueue.m in Sources */,
+				C22A29F81C20434000678172 /* TGGifConverter.m in Sources */,
 				C274C3D31AC585C1000DFDE4 /* TGPasswordSetViewController.m in Sources */,
 				C2C6D96D1A12650B001EF8A2 /* TGPVMediaBehavior.m in Sources */,
 				C20A5EC31B878E7C007F4B49 /* TL_channelConversation.m in Sources */,
@@ -6786,7 +6845,6 @@
 				C2CE53E31BEA75B800BBEF5F /* TGModernChannelInfoViewController.m in Sources */,
 				0A6D099419535E8500A9AC64 /* NSViewCategory.m in Sources */,
 				C2F429C51B00C88B00C2CE4E /* TGStickersSettingsViewController.m in Sources */,
-				C20AEF3A1C1F1BE4001BAAA0 /* DownloadSubfileItem.m in Sources */,
 				C20A5F561B8F6CDD007F4B49 /* MessageTableCellHoleView.m in Sources */,
 				0A7EB71B183A873D00F02E04 /* NSString+Extended.m in Sources */,
 				C226CC7C1B341CED0042C5D8 /* ComposeChooseGroupViewController.m in Sources */,
@@ -6797,6 +6855,7 @@
 				0AB4789818E304B100DF283B /* ChatAvatarImageView.m in Sources */,
 				C281C1781917D9C2007B160F /* DraggingControllerView.m in Sources */,
 				C24F877719FE7CAB00EC962E /* SecretLayer17.m in Sources */,
+				C22A2A0C1C21A38100678172 /* TGDocumentThumbObject.m in Sources */,
 				CE84548E1822C41D00E73DF7 /* ImageStorage.m in Sources */,
 				C247015919839A4B007AB338 /* TGTimerTarget.m in Sources */,
 				C2CBF6CE1AFBC5C0006BF90A /* RPC.m in Sources */,
@@ -6887,6 +6946,7 @@
 				C2D51C081B21F18F009327C0 /* SelectChatItem.m in Sources */,
 				C21C7B3B18D769E400253A7A /* SenderItem.m in Sources */,
 				C273805C1B3D90DC000C479E /* TGAudioPlayerWindow.m in Sources */,
+				C22A2A061C218AE400678172 /* TGCompressGifItem.m in Sources */,
 				0AE2E3F41867263C004926A7 /* TMSearchTextField.m in Sources */,
 				C2CE53D01BE8E6F900BBEF5F /* TGProfileParamView.m in Sources */,
 				C2C1DC131A433C3900BBCC63 /* DownloadStickerItem.m in Sources */,
@@ -6922,6 +6982,7 @@
 				C20A5EDF1B8B8905007F4B49 /* TGObservableObject.m in Sources */,
 				C2D4B8701AFCE8FA0035B4E4 /* YapCache.m in Sources */,
 				C270D2F91A1CE12000522FB0 /* PrivacySettingsViewController.m in Sources */,
+				C22A2A121C21CC1500678172 /* CompressedSecretFileSenderItem.m in Sources */,
 				0A613C2318AD9924004096DD /* MessageTableCellContactView.m in Sources */,
 				C268C14019EFF70E007F836A /* GLView.m in Sources */,
 				C26E80271B7D14E2003CC483 /* TL_localMessage_old32.m in Sources */,
@@ -6932,6 +6993,7 @@
 				0AB43B8B18D2FBC400FB805A /* RegistrationViewController.m in Sources */,
 				C267527A1A1A7CEF00152D9A /* TGCache.m in Sources */,
 				C21C7B4C18D840F500253A7A /* ForwardSenterItem.m in Sources */,
+				C22A2A031C218A9800678172 /* TGCompressItem.m in Sources */,
 				C2D235BC1A2FA6F400765BA1 /* TGSendTypingManager.m in Sources */,
 				C2689F6B18B3A1E300272CD4 /* TGNetworkWorker.m in Sources */,
 				0AB850211875C61F001A796C /* TMAttributedString.m in Sources */,
@@ -7016,6 +7078,7 @@
 				C2C85B811AE54C3F00FBEABD /* TGImageAttachment.m in Sources */,
 				C2D4B8771AFCE8FA0035B4E4 /* YapDatabaseConnection.m in Sources */,
 				C21DD98618D0786700F6B822 /* TMPreviewDocumentItem.m in Sources */,
+				C22A2A091C218AF000678172 /* TGCompressVideoItem.m in Sources */,
 				0AFE39FD18ED752D0014B525 /* MessageTableItemGif.m in Sources */,
 				0AB8501818757E31001A796C /* SearchItem.m in Sources */,
 				0A9EDC5A1897BA0E0037E1BC /* RBLResizableImage.m in Sources */,
@@ -7045,6 +7108,7 @@
 				0AB8501B18757F1F001A796C /* SearchTableCell.m in Sources */,
 				0ACF9E361921F2EE001F9E1E /* SearchLoaderItem.m in Sources */,
 				0A9EDC4C1897BA0E0037E1BC /* NSApplication+RBLBlockAdditions.m in Sources */,
+				C22A29FF1C209FEE00678172 /* TGModalCompressingView.m in Sources */,
 				C2ACCE561ADD2A0600ABEE78 /* TGConversationsViewController.m in Sources */,
 				C2FA78EC1923CBA1001A9D1B /* PhotoHistoryFilter.m in Sources */,
 				C2FF82A31B99C7CE00DE2455 /* TGForceChannelUpdate.m in Sources */,

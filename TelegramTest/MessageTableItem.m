@@ -325,10 +325,10 @@ static NSTextAttachment *channelIconAttachment() {
             } else if([message.media isKindOfClass:[TL_messageMediaDocument class]]) {
                 
                 TLDocument *document = message.media.document;
+            
+                TL_documentAttributeAnimated *attr = (TL_documentAttributeAnimated *) [document attributeWithClass:[TL_documentAttributeAnimated class]];
                 
-                TL_documentAttributeSubfile *attr = (TL_documentAttributeSubfile *) [document attributeWithClass:[TL_documentAttributeSubfile class]];
-                
-                if([document.mime_type isEqualToString:@"image/gif"] && attr != nil && [attr.mime_type hasPrefix:@"video"]) {
+                if([document.mime_type hasPrefix:@"video"] && attr != nil) {
                     objectReturn = [[MessageTableItemMpeg alloc] initWithObject:message];
                 } else if([document.mime_type isEqualToString:@"image/gif"] && ![document.thumb isKindOfClass:[TL_photoSizeEmpty class]]) {
                     objectReturn = [[MessageTableItemGif alloc] initWithObject:message];

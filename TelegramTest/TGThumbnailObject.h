@@ -9,5 +9,9 @@
 #import "TGImageObject.h"
 
 @interface TGThumbnailObject : TGImageObject
+
+@property (nonatomic,strong) NSString *path;
+
+
 -(id)initWithFilepath:(NSString *)filepath;
 @end

@@ -1,3 +1,4 @@
+
 //
 //  MessageTableItemMpeg.m
 //  Telegram
@@ -7,15 +8,14 @@
 //
 
 #import "MessageTableItemMpeg.h"
-#import "DownloadSubfileItem.h"
 #import "TGBlurImageObject.h"
 #import "DownloadQueue.h"
 #import "TGThumbnailObject.h"
+#import "DownloadDocumentItem.h"
 @interface MessageTableItemMpeg () {
     NSString *_path;
 }
-@property (nonatomic,strong) TL_documentAttributeSubfile *subfile;
-@property (nonatomic,strong) TL_documentAttributeImageSize *imagesize;
+@property (nonatomic,strong) TL_documentAttributeVideo *imagesize;
 @end
 
 @implementation MessageTableItemMpeg
@@ -23,12 +23,10 @@
 
 -(id)initWithObject:(TL_localMessage *)object {
     if(self = [super initWithObject:object]) {
-        _subfile = (TL_documentAttributeSubfile *) [object.media.document attributeWithClass:[TL_documentAttributeSubfile class]];
-        _path = mediaFilePathWithSubfile(object.media, _subfile);
-        _imagesize = (TL_documentAttributeImageSize *) [object.media.document attributeWithClass:[TL_documentAttributeImageSize class]];
+        _imagesize = (TL_documentAttributeVideo *) [object.media.document attributeWithClass:[TL_documentAttributeVideo class]];
         
         if(!_imagesize && ![object.media.document.thumb isKindOfClass:[TL_photoSizeEmpty class]]) {
-            _imagesize = [TL_documentAttributeImageSize createWithW:object.media.document.thumb.w h:object.media.document.thumb.h];
+            _imagesize = [TL_documentAttributeVideo createWithDuration:0 w:object.media.document.thumb.w h:object.media.document.thumb.h];
         }
         
         if(self.isset) {
@@ -37,7 +35,7 @@
         } else {
             if(![object.media.document.thumb isKindOfClass:[TL_photoSizeEmpty class]]) {
                 _thumbObject = [[TGBlurImageObject alloc] initWithLocation:object.media.document.thumb.location thumbData:object.media.document.thumb.bytes size:object.media.document.thumb.size];
-                _thumbObject.imageSize = NSMakeSize(object.media.document.thumb.w, object.media.document.thumb.h);
+                _thumbObject.imageSize = NSMakeSize(_imagesize.w, _imagesize.h);
             }
         }
         
@@ -59,7 +57,7 @@
 }
 
 -(Class)downloadClass {
-    return [DownloadSubfileItem class];
+    return [DownloadDocumentItem class];
 }
 
 -(DownloadItem *)downloadItem {
@@ -72,7 +70,7 @@
 }
 
 -(int)size {
-    return _subfile.size;
+    return self.message.media.document.size;
 }
 
 -(BOOL)makeSizeByWidth:(int)width {
@@ -97,7 +95,7 @@
 }
 
 -(NSString *)path {
-    return _path;
+    return mediaFilePath(self.message);
 }
 
 @end

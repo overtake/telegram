@@ -762,7 +762,7 @@ static RBLPopover *popover;
     [attachGifSearchItem setHighlightedImage:image_AttachLocationHighlighted()];
     
     if(ACCEPT_FEATURE) {
-        // [theMenu addItem:attachGifSearchItem];
+         [theMenu addItem:attachGifSearchItem];
     }
     
    

@@ -36,7 +36,7 @@
     
     [ASQueue dispatchOnStageQueue:^{
         
-        if(self.message.media.document.n_id == webpage.n_id) {
+        if([self.message.media.document.external_url isEqualToString:webpage.url]) {
            
             [self clear];
             

@@ -58,11 +58,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "TelegramTest/MessagesViewController.m"
-            timestampString = "470944749.118689"
+            timestampString = "471977087.266708"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "2323"
-            endingLineNumber = "2323"
+            startingLineNumber = "2340"
+            endingLineNumber = "2340"
             landmarkName = "-showMessage:fromMsg:animated:selectText:switchDiscussion:flags:"
             landmarkType = "5">
          </BreakpointContent>
@@ -153,13 +153,13 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "TelegramTest/DownloadItem.m"
-            timestampString = "471805996.685664"
+            filePath = "TelegramTest/TGModalCompressingView.m"
+            timestampString = "472052997.311055"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "99"
-            endingLineNumber = "99"
-            landmarkName = "-cancel"
+            startingLineNumber = "28"
+            endingLineNumber = "28"
+            landmarkName = "-initWithObject:"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>

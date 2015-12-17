@@ -17,12 +17,12 @@
     
     NSUInteger _maxFrames;
     NSUInteger _fillFrames;
-    NSTimeInterval _previousFrameTimestamp;
+   @public NSTimeInterval _previousFrameTimestamp;
     
     TGGLVideoFrame *(^_requestFrame)();
     void (^_drawFrame)(TGGLVideoFrame *videoFrame, int32_t sessionId);
     
-    NSMutableArray *_frames;
+    @public NSMutableArray *_frames;
     
     @public TGTimer *_timer;
     
@@ -161,6 +161,7 @@
     int32_t _sessionId;
     TGGLVideoFrameQueue *_frameQueue;
     CMVideoFormatDescriptionRef _videoInfo;
+    BOOL _paused;
 
 }
 
@@ -211,10 +212,11 @@
 
 -(void)setPath:(NSString *)path {
     
+     _paused = YES;
+    
     [_frameQueue dispatch:^{
         _path = path;
         _sessionId++;
-        
         [_reader cancelReading];
         _reader = nil;
         _output = nil;
@@ -230,6 +232,8 @@
 
 -(void)resume {
     
+    _paused = NO;
+    
     [_frameQueue dispatch:^{
         if(_frameQueue->_timer == nil) {
             
@@ -239,7 +243,9 @@
             
             [ASQueue dispatchOnMainQueue:^{
                 [self.subviews enumerateObjectsUsingBlock:^(__kindof NSView * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-                    [obj setHidden:YES];
+                    if([obj isKindOfClass:NSClassFromString(@"TGImageView")]) {
+                        [obj setHidden:YES];
+                    }
                 }];
             }];
         }
@@ -256,13 +262,18 @@
 
 -(void)pause {
     
+    _paused = YES;
+    
     [_frameQueue dispatch:^{
+        
         [_frameQueue pauseRequests];
         [_videoLayer flush];
         
         [ASQueue dispatchOnMainQueue:^{
             [self.subviews enumerateObjectsUsingBlock:^(__kindof NSView * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-                [obj setHidden:NO];
+                if([obj isKindOfClass:NSClassFromString(@"TGImageView")]) {
+                    [obj setHidden:NO];
+                }
             }];
         }];
         
@@ -361,7 +372,14 @@
             } else {
                 
                 [self cleanup];
-                [_frameQueue pauseRequests];
+                
+                if(!_paused)
+                    [_frameQueue pauseRequests];
+                 else
+                    return nil;
+                
+                
+                
             }
         }
     }

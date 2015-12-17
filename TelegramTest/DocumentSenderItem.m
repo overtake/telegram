@@ -42,20 +42,16 @@
         self.filePath = path;
         self.conversation = conversation;
         
-        self.mimeType = mimetypefromExtension([path pathExtension]);
-        
         long randomId = rand_long();
         
         
         NSMutableArray *attrs = [[NSMutableArray alloc] init];
         
         
+        
         TL_documentAttributeFilename *filenameAttr = [TL_documentAttributeFilename createWithFile_name:[self.filePath lastPathComponent]];
         
         [attrs addObject:filenameAttr];
-        
-        
-        
         
         __block NSData *thumbData;
         __block NSImage *thumbImage;
@@ -203,7 +199,9 @@
 
 - (void)performRequest {
     
-    NSString *export = exportPath(self.message.randomId,[self.message.media.document.file_name pathExtension]);
+    TL_documentAttributeFilename *fileName = (TL_documentAttributeFilename *) [self.message.media.document attributeWithClass:[TL_documentAttributeFilename class]];
+    
+    NSString *export = exportPath(self.message.randomId,extensionForMimetype(self.message.media.document.mime_type));
     
     if(!self.filePath)
         self.filePath = export;
@@ -237,7 +235,7 @@
     
     
     [self.uploader setFilePath:self.filePath];
-    [self.uploader setFileName:self.message.media.document.file_name];
+    [self.uploader setFileName:fileName.file_name];
     [self.uploader ready:UploadDocumentType];
     
     TLPhotoSize *size = [self.message.media.document thumb];
@@ -246,7 +244,6 @@
         self.uploaderThumb = [[UploadOperation alloc] init];
         
         [self.uploaderThumb setFileData:size.bytes];
-        [self.uploaderThumb setFileName:size.type];
         [self.uploaderThumb setUploadComplete:^(UploadOperation *tu, id inputThumb) {
             strongSelf.thumbFile = inputThumb;
             strongSelf.isThumbUploaded = YES;
@@ -272,9 +269,9 @@
    
     if(isNewDocument) {
         if([self.thumbFile isKindOfClass:[TLInputFile class]]) {
-            media = [TL_inputMediaUploadedThumbDocument createWithFile:self.inputFile thumb:self.thumbFile mime_type:self.mimeType attributes:self.message.media.document.attributes];
+            media = [TL_inputMediaUploadedThumbDocument createWithFile:self.inputFile thumb:self.thumbFile mime_type:self.message.media.document.mime_type attributes:self.message.media.document.attributes];
         } else {
-            media = [TL_inputMediaUploadedDocument createWithFile:self.inputFile mime_type:self.mimeType attributes:self.message.media.document.attributes];
+            media = [TL_inputMediaUploadedDocument createWithFile:self.inputFile mime_type:self.message.media.document.mime_type attributes:self.message.media.document.attributes];
         }
     } else {
         TLDocument *document = (TLDocument *)self.inputFile;
@@ -284,11 +281,7 @@
     
     id request = nil;
     
-    if(self.conversation.type == DialogTypeBroadcast) {
-        request = [TLAPI_messages_sendBroadcast createWithContacts:[self.conversation.broadcast inputContacts] random_id:[self.conversation.broadcast generateRandomIds] message:@"" media:media];
-    } else {
-        request = [TLAPI_messages_sendMedia createWithFlags:[self senderFlags] peer:self.conversation.inputPeer reply_to_msg_id:self.message.reply_to_msg_id media:media random_id:self.message.randomId  reply_markup:[TL_replyKeyboardMarkup createWithFlags:0 rows:[@[]mutableCopy]]];
-    }
+    request = [TLAPI_messages_sendMedia createWithFlags:[self senderFlags] peer:self.conversation.inputPeer reply_to_msg_id:self.message.reply_to_msg_id media:media random_id:self.message.randomId  reply_markup:[TL_replyKeyboardMarkup createWithFlags:0 rows:[@[]mutableCopy]]];
     
     
     weakify();
@@ -305,13 +298,9 @@
             return;
         }
         
-        if(strongSelf.conversation.type != DialogTypeBroadcast)  {
-            
-            strongSelf.message.n_id = msg.n_id;
-            strongSelf.message.date = msg.date;
-            
-        }
-        
+        strongSelf.message.n_id = msg.n_id;
+        strongSelf.message.date = msg.date;
+
         
         TL_localMessage *message = strongSelf.message;
         
@@ -346,16 +335,6 @@
            
             [message.media.document.thumb.bytes writeToFile:locationFilePath(message.media.document.thumb.location, @"tiff") atomically:NO];
         }
-        
-        
-        if(message.media.document.isSticker) {
-            
-            [ASQueue dispatchOnMainQueue:^{
-                 [StickersPanelView addLocalSticker:message.media.document];
-            }];
-            
-        }
-        
         
         
         

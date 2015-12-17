@@ -10,16 +10,15 @@
 #import "DownloadQueue.h"
 @implementation TGBlurImageObject
 
-@synthesize thumbData = _thumbData;
 
 -(void)initDownloadItem {
     
-    if(_thumbData == nil) {
+    if(self.thumbData == nil) {
         [super initDownloadItem];
     } else {
         [DownloadQueue dispatchOnDownloadQueue:^{
             
-            [self proccessAndDispatchData:_thumbData];
+            [self proccessAndDispatchData:self.thumbData];
             
         }];
     }

@@ -54,6 +54,14 @@
     
     MessageTableItemMpeg *item = (MessageTableItemMpeg *) self.item;
     
+    if(self.cellState == CellStateSending && cellState == CellStateNormal) {
+        [self.item checkStartDownload:0 size:0];
+        
+        if(self.item.downloadItem != nil) {
+            [self updateDownloadState];
+        }
+    }
+    
     [super setCellState:cellState];
     
     
@@ -68,6 +76,8 @@
     [super doAfterDownload];
     
     MessageTableItemMpeg *item = (MessageTableItemMpeg *) self.item;
+    
+    _thumbImage.object = item.thumbObject;
     
     [_player setPath:item.path];
     
@@ -114,11 +124,13 @@
 
 
 
-
 -(void)viewDidMoveToWindow {
     if(self.window == nil) {
+        
         [self removeScrollEvent];
         [_player pause];
+        [_player setPath:nil];
+        
     } else {
         [self addScrollEvent];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_didScrolledTableView:) name:NSWindowDidBecomeKeyNotification object:self.window];

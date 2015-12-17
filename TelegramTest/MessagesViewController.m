@@ -80,6 +80,10 @@
 #import "TGModernChatInfoViewController.h"
 #import "TGModernChannelInfoViewController.h"
 #import "ExternalGifSenderItem.h"
+#import "TGContextBotsPanelView.h"
+#import "TGModalCompressingView.h"
+#import "CompressedDocumentSenderItem.h"
+#import "CompressedSecretFileSenderItem.h"
 #define HEADER_MESSAGES_GROUPING_TIME (10 * 60)
 
 #define SCROLLDOWNBUTTON_OFFSET 1500
@@ -164,6 +168,7 @@
 @property (nonatomic,strong) MessageTableItemUnreadMark *unreadMark;
 
 @property (nonatomic,strong) StickersPanelView *stickerPanel;
+@property (nonatomic,strong) TGContextBotsPanelView *contextBotsPanelView;
 
 @property (nonatomic,strong) NSMutableDictionary *fwdCache;
 
@@ -177,6 +182,8 @@
 @property (nonatomic, strong) TGMessagesHintView *hintView;
 
 @property (nonatomic,assign) BOOL needNextRequest;
+
+@property (nonatomic,strong) TGModalCompressingView *compressingView;
 
 @end
 
@@ -424,14 +431,21 @@
     
     [self.stickerPanel hide:NO];
 
+    _contextBotsPanelView = [[TGContextBotsPanelView alloc] initWithFrame:NSMakeRect(0, NSHeight(self.bottomView.frame), NSWidth(self.view.frame), 76)];
     
+    [self.view addSubview:_contextBotsPanelView];
     
+    [_contextBotsPanelView setHidden:YES];
     
     self.hintView = [[TGMessagesHintView alloc] initWithFrame:NSMakeRect(0, NSHeight(self.bottomView.frame), NSWidth(self.view.frame), 100)];
     
      [self.hintView setHidden:YES];
     
     [self.view addSubview:self.hintView];
+    
+    
+    _compressingView = [[TGModalCompressingView alloc] initWithFrame:self.view.window.contentView.bounds];
+    _compressingView.controller = self;
     
 }
 
@@ -2145,6 +2159,9 @@ static NSTextAttachment *headerMediaIcon() {
     NSArray *emoji = [self.bottomView.inputMessageString getEmojiFromString:NO];
     
     
+//    if([self.bottomView.inputMessageString hasPrefix:@"@gif"]) {
+//       // [_contextBotsPanelView initializeContextBotWithUser: contextRequestString:<#(NSString *)#>]
+//    }
     
     if([self.bottomView.inputMessageString isEqualToString:[emoji lastObject]])
     {
@@ -3169,9 +3186,37 @@ static NSTextAttachment *headerMediaIcon() {
     [self sendDocument:file_path forConversation:conversation addCompletionHandler:nil];
 }
 
+-(void)sendCompressedItem:(TGCompressItem *)compressedItem {
+    [ASQueue dispatchOnStageQueue:^{
+        
+        SenderItem *sender;
+        if(self.conversation.type == DialogTypeSecretChat) {
+            sender = [[CompressedSecretFileSenderItem alloc] initWithItem:compressedItem];
+        } else {
+            sender = [[CompressedDocumentSenderItem alloc] initWithItem:compressedItem];
+        }
+        
+        sender.tableItem = [[self messageTableItemsFromMessages:@[sender.message]] lastObject];
+        [self.historyController addItem:sender.tableItem sentControllerCallback:nil];
+    }];
+
+}
 
 - (void)sendDocument:(NSString *)file_path forConversation:(TL_conversation *)conversation addCompletionHandler:(dispatch_block_t)completeHandler {
     if(!conversation.canSendMessage) return;
+    
+    if([[file_path pathExtension] isEqualToString:@"gif"]) {
+        
+        TGCompressGifItem *gifItem = [[TGCompressGifItem alloc] initWithPath:file_path conversation:conversation];
+        
+        if(gifItem != nil) {
+            [self sendCompressedItem:gifItem];
+        }
+        
+        
+        return;
+    }
+    
     
     [self setHistoryFilter:self.defHFClass force:self.historyController.prevState != ChatHistoryStateFull];
     

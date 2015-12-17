@@ -10,7 +10,7 @@
 
 @interface TGThumbnailObject ()
 {
-    NSString *_path;
+    BOOL _inited;
 }
 @end
 
@@ -28,29 +28,34 @@
 -(void)initDownloadItem {
     
     
-    AVURLAsset *asset=[[AVURLAsset alloc] initWithURL:[NSURL fileURLWithPath:_path] options:nil];
-    AVAssetImageGenerator *generator = [[AVAssetImageGenerator alloc] initWithAsset:asset];
-    generator.appliesPreferredTrackTransform=TRUE;
-    CMTime thumbTime = CMTimeMakeWithSeconds(0,1);
+    if(!_inited) {
+        _inited = YES;
+        
+        AVURLAsset *asset=[[AVURLAsset alloc] initWithURL:[NSURL fileURLWithPath:_path] options:nil];
+        AVAssetImageGenerator *generator = [[AVAssetImageGenerator alloc] initWithAsset:asset];
+        generator.appliesPreferredTrackTransform=TRUE;
+        CMTime thumbTime = CMTimeMakeWithSeconds(0,1);
+        
+        AVAssetImageGeneratorCompletionHandler handler = ^(CMTime requestedTime, CGImageRef im, CMTime actualTime, AVAssetImageGeneratorResult result, NSError *error){
+            if (result != AVAssetImageGeneratorSucceeded) {
+                NSLog(@"couldn't generate thumbnail, error:%@", error);
+            }
+            
+            NSImage* thumbImg = [[NSImage alloc] initWithCGImage:im size:self.imageSize];
+            
+            [TGCache cacheImage:thumbImg forKey:[self cacheKey] groups:@[IMGCACHE]];
+            
+            
+            [ASQueue dispatchOnMainQueue:^{
+                [self.delegate didDownloadImage:thumbImg object:self];
+            }];
+        };
+        
+        
+        generator.maximumSize = self.imageSize;
+        [generator generateCGImagesAsynchronouslyForTimes:[NSArray arrayWithObject:[NSValue valueWithCMTime:thumbTime]] completionHandler:handler];
+    }
     
-    AVAssetImageGeneratorCompletionHandler handler = ^(CMTime requestedTime, CGImageRef im, CMTime actualTime, AVAssetImageGeneratorResult result, NSError *error){
-        if (result != AVAssetImageGeneratorSucceeded) {
-            NSLog(@"couldn't generate thumbnail, error:%@", error);
-        }
-        
-        NSImage* thumbImg = [[NSImage alloc] initWithCGImage:im size:self.imageSize];
-        
-        [TGCache cacheImage:thumbImg forKey:[self cacheKey] groups:@[IMGCACHE]];
-        
-        
-        [ASQueue dispatchOnMainQueue:^{
-            [self.delegate didDownloadImage:thumbImg object:self];
-        }];
-    };
-    
-
-    generator.maximumSize = self.imageSize;
-    [generator generateCGImagesAsynchronouslyForTimes:[NSArray arrayWithObject:[NSValue valueWithCMTime:thumbTime]] completionHandler:handler];
 }
 
 -(NSString *)cacheKey {

@@ -473,8 +473,11 @@ static NSDictionary *attributes() {
                 point = NSMakePoint(NSMinX(self.dateField.frame) - stateImage.size.width -2, NSHeight(self.frame) - stateImage.size.height - 11);
                 
             }
-            
+        
+        if(stateImage != nil) {
             return @{@"image":stateImage,@"point":[NSValue valueWithPoint:point]};
+        }
+        
             
     }
     
