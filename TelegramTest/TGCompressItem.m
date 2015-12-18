@@ -55,12 +55,12 @@
     [[QueueManager sharedManager] add:self];
 }
 
-- (void)setState:(TGCompressItemState)uploadState {
+- (void)setState:(TGCompressItemState)state {
     @synchronized(self) {
         [self willChangeValueForKey:@"isFinished"];
         [self willChangeValueForKey:@"isExecuting"];
         [self willChangeValueForKey:@"isCancelled"];
-        _state = uploadState;
+        _state = state;
         [self didChangeValueForKey:@"isExecuting"];
         [self didChangeValueForKey:@"isFinished"];
         [self didChangeValueForKey:@"isCancelled"];
@@ -77,7 +77,7 @@
 }
 
 - (BOOL)isExecuting {
-    return self.state == TGCompressItemStateWaitingCompress;
+    return self.state == TGCompressItemStateCompressing;
 }
 
 - (BOOL)isCancelled {

@@ -21,12 +21,12 @@
     
     TGGLVideoFrame *(^_requestFrame)();
     void (^_drawFrame)(TGGLVideoFrame *videoFrame, int32_t sessionId);
-    
     @public NSMutableArray *_frames;
     
     @public TGTimer *_timer;
     
     int32_t _sessionId;
+    BOOL _stopAndWaitDone;
 }
 
 @end
@@ -82,6 +82,7 @@
     bool initializedNextDelay = false;
     
     if (_frames.count != 0) {
+        
         nextDelay = 1.0;
         initializedNextDelay = true;
         
@@ -99,13 +100,16 @@
         if (firstFrame.timestamp <= DBL_EPSILON) {
             nextDelay = 0.0;
         } else {
+            
             if (_drawFrame) {
                 _drawFrame(firstFrame, _sessionId);
             }
         }
+    } else if(_stopAndWaitDone) {
+        _stopAndWaitDone = NO;
     }
     
-    if (_frames.count <= _fillFrames) {
+    if (_frames.count <= _fillFrames && !_stopAndWaitDone) {
         while (_frames.count < _maxFrames) {
             TGGLVideoFrame *frame = nil;
             if (_requestFrame) {
@@ -117,12 +121,16 @@
                     nextDelay = 1.0;
                     initializedNextDelay = true;
                 }
+                _stopAndWaitDone = YES;
                 break;
             } else {
                 [_frames addObject:frame];
             }
         }
     }
+    
+    
+    
     
     __weak TGGLVideoFrameQueue *weakSelf = self;
     _timer = [[TGTimer alloc]  initWithTimeout:nextDelay repeat:NO completion:^{
@@ -133,7 +141,12 @@
         }
         
     } queue:_queue._dispatch_queue];
-    [_timer start];
+    
+    if(nextDelay == 0.0)
+        [_timer fire];
+    else
+        [_timer start];
+    
 }
 
 @end
@@ -162,6 +175,7 @@
     TGGLVideoFrameQueue *_frameQueue;
     CMVideoFormatDescriptionRef _videoInfo;
     BOOL _paused;
+    BOOL _pollingFirstFrame;
 
 }
 
@@ -194,7 +208,7 @@
         } drawFrame:^(TGGLVideoFrame *videoFrame, int32_t sessionId) {
             __strong TGGLVideoPlayer *strongSelf = weakSelf;
             if (strongSelf != nil && strongSelf->_sessionId == sessionId) {
-                [strongSelf displayPixelBuffer:videoFrame.buffer atTime:videoFrame.outTime];
+                [strongSelf displayPixelBuffer:videoFrame.buffer atTime:videoFrame.outTime flush:videoFrame.firstFrame];
                 
             }
         }];
@@ -211,8 +225,8 @@
 }
 
 -(void)setPath:(NSString *)path {
-    
      _paused = YES;
+    
     
     [_frameQueue dispatch:^{
         _path = path;
@@ -234,11 +248,12 @@
     
     _paused = NO;
     
+    
     [_frameQueue dispatch:^{
         if(_frameQueue->_timer == nil) {
             
             [self cleanup];
-
+            
             [_frameQueue beginRequests:_sessionId];
             
             [ASQueue dispatchOnMainQueue:^{
@@ -248,6 +263,7 @@
                     }
                 }];
             }];
+            
         }
         
     }];
@@ -264,18 +280,20 @@
     
     _paused = YES;
     
+    [self.subviews enumerateObjectsUsingBlock:^(__kindof NSView * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        if([obj isKindOfClass:NSClassFromString(@"TGImageView")]) {
+            [obj setHidden:NO];
+        }
+    }];
+    
     [_frameQueue dispatch:^{
         
-        [_frameQueue pauseRequests];
-        [_videoLayer flush];
+        [_reader cancelReading];
+        [self cleanup];
         
-        [ASQueue dispatchOnMainQueue:^{
-            [self.subviews enumerateObjectsUsingBlock:^(__kindof NSView * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-                if([obj isKindOfClass:NSClassFromString(@"TGImageView")]) {
-                    [obj setHidden:NO];
-                }
-            }];
-        }];
+        
+        [_frameQueue pauseRequests];
+        
         
     }];
     
@@ -283,13 +301,12 @@
 
 -(void)viewDidMoveToWindow {
     if(self.window == nil) {
-        [_videoLayer flushAndRemoveImage];
+        [_videoLayer flush];
         [_frameQueue pauseRequests];
     }
 }
 
--(void)displayPixelBuffer:(CVImageBufferRef)pixelBuffer atTime:(CMTime)outputTime {
-    
+-(void)displayPixelBuffer:(CVImageBufferRef)pixelBuffer atTime:(CMTime)outputTime flush:(BOOL)flush {
     
     CMSampleBufferRef sampleBuffer = NULL;
     OSStatus err = noErr;
@@ -309,7 +326,6 @@
         NSLog(@"Error at CMVideoFormatDescriptionCreateForImageBuffer %d", err);
     }
     
-    // decodeTimeStamp is set to kCMTimeInvalid since we already receive decoded frames
     CMSampleTimingInfo sampleTimingInfo = {
         .duration = kCMTimeInvalid,
         .presentationTimeStamp = outputTime,
@@ -324,11 +340,19 @@
         NSLog(@"Error at CMSampleBufferCreateForImageBuffer %d", err);
     }
     
-    // Enqueue sample buffers which will be displayed at their above set presentationTimeStamp
+    if(flush) {
+         [self.videoLayer flush];
+    }
+//
+    
+    
     if (self.videoLayer.readyForMoreMediaData) {
        
         [self.videoLayer enqueueSampleBuffer:sampleBuffer];
+    } else {
+        int bp = 0;
     }
+    
     CFRelease(sampleBuffer);
     
 }
@@ -336,12 +360,17 @@
 
 - (TGGLVideoFrame *)readNextFrame {
     for (int i = 0; i < 2; i++) {
+        
+        
         if (_reader == nil) {
+            
+            _pollingFirstFrame = YES;
+            
             AVURLAsset *asset = [[AVURLAsset alloc] initWithURL:[NSURL fileURLWithPath:_path] options:nil];
             AVAssetTrack *track = [asset tracksWithMediaType:AVMediaTypeVideo].firstObject;
             if (track != nil) {
                 _output = [[AVAssetReaderTrackOutput alloc] initWithTrack:track outputSettings:@{(NSString *)kCVPixelBufferPixelFormatTypeKey: @(kCVPixelFormatType_420YpCbCr8BiPlanarVideoRange)}];
-                _output.alwaysCopiesSampleData = false;
+                _output.alwaysCopiesSampleData = true;
                 
                 _reader = [[AVAssetReader alloc] initWithAsset:asset error:nil];
                 [_reader addOutput:_output];
@@ -353,9 +382,11 @@
                 
 
             }
+            
         }
         
         if (_reader != nil) {
+            
             CMSampleBufferRef sampleVideo = NULL;
             if (([_reader status] == AVAssetReaderStatusReading) && (sampleVideo = [_output copyNextSampleBuffer])) {
                 CMTime presentationTime = CMSampleBufferGetPresentationTimeStamp(sampleVideo);
@@ -363,8 +394,14 @@
                 
                 CVImageBufferRef imageBuffer = CMSampleBufferGetImageBuffer(sampleVideo);
                 
+                
                 TGGLVideoFrame *videoFrame = [[TGGLVideoFrame alloc] initWithBuffer:imageBuffer timestamp:presentationSeconds];
                 videoFrame.outTime = presentationTime;
+                
+                if(_pollingFirstFrame &&  presentationSeconds > DBL_EPSILON) {
+                    videoFrame.firstFrame = YES;
+                    _pollingFirstFrame = NO;
+                }
                 
                 CFRelease(sampleVideo);
                 
@@ -373,10 +410,13 @@
                 
                 [self cleanup];
                 
-                if(!_paused)
-                    [_frameQueue pauseRequests];
-                 else
-                    return nil;
+//                if(!_paused) {
+//                    if(_frameQueue->_frames.count == 0) {
+//                    [_frameQueue pauseRequests];
+//                } else
+                
+           //     [_frameQueue pauseRequests];
+                return nil;
                 
                 
                 
@@ -388,16 +428,16 @@
 }
 
 -(void)cleanup {
-    [_reader cancelReading];
+   // [_reader cancelReading];
     _reader = nil;
     _output = nil;
     
-    if(_videoInfo != NULL) {
-        CFRelease(_videoInfo);
-        _videoInfo = NULL;
-    }
-    
-    [self.videoLayer flushAndRemoveImage];
+//    if(_videoInfo != NULL) {
+//        CFRelease(_videoInfo);
+//        _videoInfo = NULL;
+//    }
+//
+//    [self.videoLayer flush];
     
     
 }

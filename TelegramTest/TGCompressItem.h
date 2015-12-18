@@ -15,6 +15,9 @@
 -(void)didEndCompressing:(id)item success:(BOOL)success;
 -(void)didProgressUpdate:(id)item progress:(int)progress;
 -(void)didCancelCompressing:(id)item;
+
+
+
 @end
 
 @interface TGCompressItem : NSOperation<NSCoding>

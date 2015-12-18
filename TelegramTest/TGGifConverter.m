@@ -11,7 +11,7 @@
 #import <ImageIO/ImageIO.h>
 #import <AVFoundation/AVFoundation.h>
 
-static const int32_t FPS = 30;
+static const int32_t FPS = 600;
 
 @implementation TGGifConverter
 
@@ -35,17 +35,10 @@ static const int32_t FPS = 30;
     __block size_t currentFrameNumber = 0;
     __block Float64 totalFrameDelay = 0.f;
     
-    NSString *uuidString = nil;
-    {
-        CFUUIDRef uuid = CFUUIDCreate(kCFAllocatorDefault);
-        uuidString = (__bridge_transfer NSString *)CFUUIDCreateString(kCFAllocatorDefault, uuid);
-        CFRelease(uuid);
-    }
-    
-    NSURL *outFilePath = [[NSURL fileURLWithPath:NSTemporaryDirectory() isDirectory:true] URLByAppendingPathComponent:[uuidString stringByAppendingPathExtension:@"mp4"]];
+    NSURL *outFilePath = [NSURL fileURLWithPath:exportPath(rand_long(), @"mp4")];
     
     AVAssetWriter* videoWriter = [[AVAssetWriter alloc] initWithURL: outFilePath
-                                                           fileType: AVFileTypeQuickTimeMovie
+                                                           fileType: AVFileTypeMPEG4
                                                               error: &error];
     if (error) {
         CFRelease(source);
@@ -55,21 +48,6 @@ static const int32_t FPS = 30;
         return;
     }
     
-    if (sourceWidth > 640 || sourceWidth == 0) {
-        CFRelease(source);
-        if(errorHandler != nil) {
-            errorHandler();
-        }
-        return;
-    }
-    
-    if (sourceHeight > 640 || sourceHeight == 0) {
-        CFRelease(source);
-        if(errorHandler != nil) {
-            errorHandler();
-        }
-        return;
-    }
     
     size_t totalFrameCount = CGImageSourceGetCount(source);
     
@@ -107,10 +85,14 @@ static const int32_t FPS = 30;
     [videoWriter startWriting];
     [videoWriter startSessionAtSourceTime: CMTimeMakeWithSeconds(totalFrameDelay, FPS)];
     
+    BOOL addedLastFrame = NO;
+    BOOL needAddSecondaryLastFrame = NO;
+    
     while (!cancelHandler()) {
         if(videoWriterInput.isReadyForMoreMediaData) {
             NSDictionary* options = @{(NSString*)kCGImageSourceTypeIdentifierHint : (id)kUTTypeGIF};
             CGImageRef imgRef = CGImageSourceCreateImageAtIndex(source, currentFrameNumber, (__bridge CFDictionaryRef)options);
+            
             if (imgRef) {
                 CFDictionaryRef properties = CGImageSourceCopyPropertiesAtIndex(source, currentFrameNumber, NULL);
                 CFDictionaryRef gifProperties = CFDictionaryGetValue(properties, kCGImagePropertyGIFDictionary);
@@ -119,18 +101,31 @@ static const int32_t FPS = 30;
                     CVPixelBufferRef pxBuffer = [self newBufferFrom: imgRef
                                                 withPixelBufferPool: adaptor.pixelBufferPool
                                                       andAttributes: adaptor.sourcePixelBufferAttributes];
-                    if( pxBuffer ) {
-                        NSNumber* delayTime = CFDictionaryGetValue(gifProperties, kCGImagePropertyGIFDelayTime);
-                        totalFrameDelay += delayTime.floatValue;
+                    if( pxBuffer) {
+                        
+                        float delayTime = [self frameDurationAtIndex:currentFrameNumber source:source];
+                       
                         CMTime time = CMTimeMakeWithSeconds(totalFrameDelay, FPS);
                         
-                        if( ![adaptor appendPixelBuffer: pxBuffer withPresentationTime: time] ) {
+
+                       if( ![adaptor appendPixelBuffer: pxBuffer withPresentationTime: time] ) {
                             MTLog(@"Could not save pixel buffer!: %@", videoWriter.error);
                             CFRelease(properties);
                             CGImageRelease(imgRef);
                             CVBufferRelease(pxBuffer);
                             break;
                         }
+                        
+                        
+                        
+                        if(currentFrameNumber == totalFrameCount-1 && delayTime > 0.33) {
+                            needAddSecondaryLastFrame = YES;
+                        }
+                        
+                       
+                        
+                        totalFrameDelay += delayTime;
+                                               
                         
                         CVBufferRelease(pxBuffer);
                     }
@@ -140,9 +135,15 @@ static const int32_t FPS = 30;
                 CGImageRelease(imgRef);
                 
                 currentFrameNumber++;
+                
+                if(needAddSecondaryLastFrame && !addedLastFrame && currentFrameNumber == totalFrameCount) {
+                    currentFrameNumber--;
+                    addedLastFrame = YES;
+                }
+                
+                
             }
             else {
-                //was no image returned -> end of file?
                 [videoWriterInput markAsFinished];
                 
                 void (^videoSaveFinished)(void) = ^{
@@ -163,6 +164,32 @@ static const int32_t FPS = 30;
     CFRelease(source);
 
 };
+
++ (float)frameDurationAtIndex:(NSUInteger)index source:(CGImageSourceRef)source
+{
+    float frameDuration = 0.1f;
+    CFDictionaryRef cfFrameProperties = CGImageSourceCopyPropertiesAtIndex(source,index,nil);
+    NSDictionary *frameProperties = (__bridge NSDictionary*)cfFrameProperties;
+    NSDictionary *gifProperties = frameProperties[(NSString*)kCGImagePropertyGIFDictionary];
+    
+    NSNumber *delayTimeUnclampedProp = gifProperties[(NSString*)kCGImagePropertyGIFUnclampedDelayTime];
+    if(delayTimeUnclampedProp) {
+        frameDuration = [delayTimeUnclampedProp floatValue];
+    } else {
+        
+        NSNumber *delayTimeProp = gifProperties[(NSString*)kCGImagePropertyGIFDelayTime];
+        if(delayTimeProp) {
+            frameDuration = [delayTimeProp floatValue];
+        }
+    }
+    
+    
+    if (frameDuration < 0.011f)
+        frameDuration = 0.100f;
+    
+    CFRelease(cfFrameProperties);
+    return frameDuration;
+}
 
 + (CVPixelBufferRef) newBufferFrom: (CGImageRef) frame
                withPixelBufferPool: (CVPixelBufferPoolRef) pixelBufferPool

@@ -25,9 +25,6 @@
     if(self = [super initWithObject:object]) {
         _imagesize = (TL_documentAttributeVideo *) [object.media.document attributeWithClass:[TL_documentAttributeVideo class]];
         
-        if(!_imagesize && ![object.media.document.thumb isKindOfClass:[TL_photoSizeEmpty class]]) {
-            _imagesize = [TL_documentAttributeVideo createWithDuration:0 w:object.media.document.thumb.w h:object.media.document.thumb.h];
-        }
         
         if(self.isset) {
             _thumbObject = [[TGThumbnailObject alloc] initWithFilepath:[self path]];
@@ -46,6 +43,39 @@
     }
     
     return self;
+}
+
+-(TL_documentAttributeVideo *)imagesize {
+    
+    __block TL_documentAttributeVideo *imageSize = _imagesize;
+    
+    if(imageSize == nil) {
+        
+        dispatch_block_t thumbblock = ^{
+            if(![self.message.media.document.thumb isKindOfClass:[TL_photoSizeEmpty class]])  {
+                imageSize = [TL_documentAttributeVideo createWithDuration:0 w:self.message.media.document.thumb.w * 3 h:self.message.media.document.thumb.h * 3];
+            } else {
+                imageSize = [TL_documentAttributeVideo createWithDuration:0 w:300 h:300];
+            }
+        };
+        
+        if(self.isset) {
+            
+            AVAsset *asset = [AVAsset assetWithURL:[NSURL fileURLWithPath:self.path]];
+            
+            if(asset.naturalSize.width > 0 && asset.naturalSize.height > 0) {
+                 _imagesize = imageSize = [TL_documentAttributeVideo createWithDuration:CMTimeGetSeconds([asset duration]) w:[asset naturalSize].width h:[asset naturalSize].height];
+            } else {
+                thumbblock();
+            }
+            
+            
+        } else {
+            thumbblock();
+        }
+    }
+    
+    return imageSize;
 }
 
 -(void)doAfterDownload {
@@ -76,7 +106,7 @@
 -(BOOL)makeSizeByWidth:(int)width {
     [super makeSizeByWidth:width];
     
-    self.blockSize = strongsize(NSMakeSize(_imagesize.w, _imagesize.h), width - 60);
+    self.blockSize = strongsize(NSMakeSize(self.imagesize.w, self.imagesize.h), width - 60);
     
     return YES;
 }
@@ -95,7 +125,7 @@
 }
 
 -(NSString *)path {
-    return mediaFilePath(self.message);
+    return  mediaFilePath(self.message);
 }
 
 @end

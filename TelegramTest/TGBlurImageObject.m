@@ -29,8 +29,8 @@
 -(void)proccessAndDispatchData:(NSData *)data {
     NSImage *image = [[NSImage alloc] initWithData:data];
     
-    if(image != nil) {
-        
+    if(image != nil && image.size.width > 0 && image.size.height > 0) {
+
         image = [ImageUtils blurImage:image blurRadius:10 frameSize:self.imageSize];
         
         [TGCache cacheImage:image forKey:[self cacheKey] groups:@[IMGCACHE]];

@@ -13,7 +13,6 @@
 @interface TGCompressGifItem ()
 {
     TGTimer *_timer;
-    TLDocument *_document;
 }
 @end
 
@@ -82,55 +81,21 @@
         
         _outputPath = path;
         
-        AVURLAsset *asset=[[AVURLAsset alloc] initWithURL:[NSURL fileURLWithPath:path] options:nil];
-        AVAssetImageGenerator *generator = [[AVAssetImageGenerator alloc] initWithAsset:asset];
-        generator.appliesPreferredTrackTransform=TRUE;
-        CMTime thumbTime = CMTimeMakeWithSeconds(0,1);
+        self.state = TGCompressItemStateCompressingSuccess;
         
-        NSSize thumbSize = strongsize([asset naturalSize], 90);
-        
-        AVAssetImageGeneratorCompletionHandler handler = ^(CMTime requestedTime, CGImageRef im, CMTime actualTime, AVAssetImageGeneratorResult result, NSError *error){
-            if (result != AVAssetImageGeneratorSucceeded) {
-                NSLog(@"couldn't generate thumbnail, error:%@", error);
-            }
+        [ASQueue dispatchOnMainQueue:^{
             
-            NSImage *_thumbImage;
+            _progress = 100.0;
+            [_timer invalidate];
+            _timer = nil;
+            [self.delegate didProgressUpdate:self progress:_progress];
             
-            if(im != NULL) {
-                _thumbImage = [[NSImage alloc] initWithCGImage:im size:thumbSize];
-            }
+            dispatch_after_seconds(0.2, ^{
+                [self.delegate didEndCompressing:self success:YES];
+            });
             
-            
-            TLPhotoSize *photoSize = _thumbImage != nil ? [TL_photoCachedSize createWithType:@"x" location:[TL_fileLocation createWithDc_id:0 volume_id:randomId local_id:0 secret:0] w:_thumbImage.size.width h:_thumbImage.size.height bytes:jpegNormalizedData(_thumbImage)] : [TL_photoSizeEmpty createWithType:@"x"];
-            
-            
-            NSArray *attributes = @[[TL_documentAttributeAnimated create],[TL_documentAttributeFilename createWithFile_name:[self.path lastPathComponent]],[TL_documentAttributeVideo createWithDuration:CMTimeGetSeconds([asset duration]) w:self.size.width h:self.size.height]];
-            
-            _document = [TL_document createWithN_id:randomId access_hash:0 date:[[MTNetwork instance] getTime] mime_type:[self mime_type] size:(int)fileSize(path) thumb:photoSize dc_id:0 attributes:[attributes mutableCopy]];
-            
-            
-            self.state = TGCompressItemStateCompressingSuccess;
-            
-            [ASQueue dispatchOnMainQueue:^{
-                
-                _progress = 100.0;
-                [_timer invalidate];
-                _timer = nil;
-                [self.delegate didProgressUpdate:self progress:_progress];
-                
-                dispatch_after_seconds(0.2, ^{
-                    [self.delegate didEndCompressing:self success:YES];
-                });
-                
-            }];
-            
-        };
-        
-        self.size = [asset naturalSize];
-        
-        
-        generator.maximumSize = thumbSize;
-        [generator generateCGImagesAsynchronouslyForTimes:[NSArray arrayWithObject:[NSValue valueWithCMTime:thumbTime]] completionHandler:handler];
+        }];
+
         
     } errorHandler:^{
         self.state = TGCompressItemStateCompressingFail;
@@ -148,7 +113,7 @@
 }
 
 -(NSArray *)attributes {
-   return @[[TL_documentAttributeAnimated create],[TL_documentAttributeFilename createWithFile_name:[self.path lastPathComponent]],[TL_documentAttributeVideo createWithDuration:0 w:self.size.width h:self.size.height]];
+   return @[[TL_documentAttributeAnimated create],[TL_documentAttributeFilename createWithFile_name:[[self.path lastPathComponent] stringByAppendingPathExtension:@"mp4"]],[TL_documentAttributeVideo createWithDuration:0 w:self.size.width h:self.size.height]];
 }
 
 

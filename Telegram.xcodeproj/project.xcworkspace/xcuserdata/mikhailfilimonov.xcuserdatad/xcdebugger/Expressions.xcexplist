@@ -128,6 +128,9 @@
             <PersistentString
                value = "self.superview">
             </PersistentString>
+            <PersistentString
+               value = "_frameQueue-&gt;_previousFrameTimestamp">
+            </PersistentString>
          </PersistentStrings>
       </ContextState>
       <ContextState
@@ -596,6 +599,14 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "-[TGBlurImageObject proccessAndDispatchData:]:TGBlurImageObject.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "image.size">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "-[TMTextButton setDisable:]:TMTextButton.m">
          <PersistentStrings>
             <PersistentString
@@ -746,6 +757,17 @@
          contextName = "__49-[Storage deleteChannelMessages:completeHandler:]_block_invoke:Storage.m">
       </ContextState>
       <ContextState
+         contextName = "-[TGGLVideoFrameQueue checkQueue]:TGGLVideoPlayer.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "nextDelay">
+            </PersistentString>
+            <PersistentString
+               value = "firstFrame.timestamp">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "-[TMMediaController previewPanel:sourceFrameOnScreenForPreviewItem:]:TMMediaController.mm">
          <PersistentStrings>
             <PersistentString
@@ -782,6 +804,14 @@
       </ContextState>
       <ContextState
          contextName = "__35-[TGUpdateChannels proccessUpdate:]_block_invoke:TGUpdateChannels.m">
+      </ContextState>
+      <ContextState
+         contextName = "-[TGCompressItem isFinished]:TGCompressItem.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.state">
+            </PersistentString>
+         </PersistentStrings>
       </ContextState>
       <ContextState
          contextName = "-[ImageSenderItem initWithImage:forDialog:]:ImageSenderItem.m">
@@ -1024,13 +1054,16 @@
          contextName = "-[TGCompressGifItem initWithPath:conversation:]:TGCompressGifItem.m">
          <PersistentStrings>
             <PersistentString
+               value = "[asset naturalSize]">
+            </PersistentString>
+            <PersistentString
+               value = "self.size">
+            </PersistentString>
+            <PersistentString
                value = "asset.duration">
             </PersistentString>
             <PersistentString
                value = "width">
-            </PersistentString>
-            <PersistentString
-               value = "[asset naturalSize]">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -1133,6 +1166,9 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "-[CompressedDocumentSenderItem didEndCompressing:success:]:CompressedDocumentSenderItem.m">
+      </ContextState>
+      <ContextState
          contextName = "-[SearchSeparatorTableCell redrawRow]:SearchSeparatorTableCell.m">
          <PersistentStrings>
             <PersistentString
@@ -1218,6 +1254,9 @@
       <ContextState
          contextName = "-[MessageTableCell rightMouseDown:]:MessageTableCell.m">
          <PersistentStrings>
+            <PersistentString
+               value = "self.item.path">
+            </PersistentString>
             <PersistentString
                value = "self.item.message">
             </PersistentString>
@@ -2501,6 +2540,14 @@
          contextName = "-[Storage parseDialogs:dialogs:messages:]:Storage.m">
       </ContextState>
       <ContextState
+         contextName = "-[MessageTableItemMpeg path]:MessageTableItemMpeg.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.message.media">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "-[TGDownloadOperation proccessPartData:]:TGDownloadOperation.m">
          <PersistentStrings>
             <PersistentString
@@ -2918,6 +2965,9 @@
          contextName = "-[QueueManager add:]:QueueManager.m">
          <PersistentStrings>
             <PersistentString
+               value = "self.queue.operations">
+            </PersistentString>
+            <PersistentString
                value = "self.queue.operationCount">
             </PersistentString>
          </PersistentStrings>
@@ -3302,6 +3352,14 @@
          contextName = "__38-[TGEnterPasswordPanel initWithFrame:]_block_invoke_8:TGEnterPasswordPanel.m">
       </ContextState>
       <ContextState
+         contextName = "-[TGBlurImageObject cacheKey]:TGBlurImageObject.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.location">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "+[SearchItem hash:]:SearchItem.m">
       </ContextState>
       <ContextState
@@ -3492,6 +3550,9 @@
                value = "photoSize.h">
             </PersistentString>
          </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "__25-[TGGLVideoPlayer resume]_block_invoke:TGGLVideoPlayer.m">
       </ContextState>
       <ContextState
          contextName = "-[TGMessagesHintView performSelected]:TGMessagesHintView.m">
@@ -3913,6 +3974,9 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "-[DocumentSenderItem sendMessage]:DocumentSenderItem.m">
+      </ContextState>
+      <ContextState
          contextName = "-[ComposeActionGroupBehavior centerTitle]:ComposeActionGroupBehavior.m">
          <PersistentStrings>
             <PersistentString
@@ -4246,6 +4310,17 @@
       </ContextState>
       <ContextState
          contextName = "+[RPCRequest sendRequest:successHandler:errorHandler:]:RPCRequest.m">
+      </ContextState>
+      <ContextState
+         contextName = "+[TGGifConverter convertGifToMp4:completionHandler:errorHandler:cancelHandler:]:TGGifConverter.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "totalFrameDelay">
+            </PersistentString>
+            <PersistentString
+               value = "totalFrameCount">
+            </PersistentString>
+         </PersistentStrings>
       </ContextState>
       <ContextState
          contextName = "-[TGMessagesHintRowView redrawRow]:TGMessagesHintView.m">
@@ -4660,6 +4735,14 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "__33-[TGGLVideoPlayer initWithFrame:]_block_invoke94:TGGLVideoPlayer.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "videoFrame.timestamp">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "__28-[TGDownloadOperation load:]_block_invoke169:TGDownloadOperation.m">
          <PersistentStrings>
             <PersistentString
@@ -4755,6 +4838,14 @@
       </ContextState>
       <ContextState
          contextName = "-[TGRaceEmoji initWithFrame:emoji:]:TGRaceEmoji.m">
+      </ContextState>
+      <ContextState
+         contextName = "-[MessageTableItemMpeg initWithObject:]:MessageTableItemMpeg.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "object.media.document.thumb">
+            </PersistentString>
+         </PersistentStrings>
       </ContextState>
       <ContextState
          contextName = "__51-[NewContactsManager importCloudContacts:callback:]_block_invoke:NewContactsManager.m">

@@ -356,6 +356,9 @@ CGImageRef CGImageCreateBlurredImage(CGImageRef inImage, NSUInteger blurRadius)
     size_t height = CGImageGetHeight(inImage);
     size_t bytesPerRow = CGImageGetBytesPerRow(inImage);
     
+    if(width == 0 || height == 0)
+        return NULL;
+    
     //    MTLog(@"width %zu", width);
     
     CGBitmapInfo bitmapInfo = CGImageGetBitmapInfo(inImage);

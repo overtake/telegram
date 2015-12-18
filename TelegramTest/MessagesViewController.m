@@ -3190,11 +3190,7 @@ static NSTextAttachment *headerMediaIcon() {
     [ASQueue dispatchOnStageQueue:^{
         
         SenderItem *sender;
-        if(self.conversation.type == DialogTypeSecretChat) {
-            sender = [[CompressedSecretFileSenderItem alloc] initWithItem:compressedItem];
-        } else {
-            sender = [[CompressedDocumentSenderItem alloc] initWithItem:compressedItem];
-        }
+        sender = [[CompressedDocumentSenderItem alloc] initWithItem:compressedItem];
         
         sender.tableItem = [[self messageTableItemsFromMessages:@[sender.message]] lastObject];
         [self.historyController addItem:sender.tableItem sentControllerCallback:nil];

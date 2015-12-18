@@ -29,7 +29,7 @@
         
         _thumbImage = [[TGImageView alloc] init];
         
-        [_player addSubview:_thumbImage];
+        
         
         
         [self setProgressStyle:TMCircularProgressDarkStyle];
@@ -52,22 +52,24 @@
 
 - (void)setCellState:(CellState)cellState {
     
-    MessageTableItemMpeg *item = (MessageTableItemMpeg *) self.item;
+    [_thumbImage setHidden:NO];
     
     if(self.cellState == CellStateSending && cellState == CellStateNormal) {
-        [self.item checkStartDownload:0 size:0];
+        [super setCellState:cellState];
         
-        if(self.item.downloadItem != nil) {
-            [self updateDownloadState];
+        if(!self.item.isset) {
+            [self.item checkStartDownload:0 size:0];
+            if(self.item.downloadItem != nil) {
+                [self updateDownloadState];
+            }
+        } else {
+            [self.item doAfterDownload];
+            [self doAfterDownload];
+
         }
     }
     
     [super setCellState:cellState];
-    
-    
-    [_thumbImage setHidden:NO];
-    
-    
     [self.progressView setState:cellState];
     
 }
@@ -89,9 +91,27 @@
 -(void)setItem:(MessageTableItemMpeg *)item {
     [super setItem:item];
     
+    [_player removeFromSuperview];
+    
+    [_player setPath:nil];
+    [_player pause];
+    
+    _player = nil;
+    
+    _player = [[TGGLVideoPlayer alloc] initWithFrame:NSMakeRect(0, 0, 500, 280)];
+    
+    [self.containerView addSubview:_player];
+    
+    _player.layer.cornerRadius = 4;
+    
     [_player setFrameSize:item.blockSize];
     
     [_player setPath:item.path];
+    
+    
+    [_thumbImage removeFromSuperview];
+    [_player addSubview:_thumbImage];
+    
     
     [_thumbImage setObject:item.thumbObject];
     [_thumbImage setFrameSize:item.blockSize];
@@ -103,14 +123,12 @@
 
 -(void)_didScrolledTableView:(NSNotification *)notification {
     
-    
     NSRange visibleRange = [self.messagesViewController.table rowsInRect:self.messagesViewController.table.visibleRect];
     
     if(visibleRange.location > 0) {
         visibleRange.location--;
         visibleRange.length++;
     }
-    
     
     NSUInteger idx = [self.messagesViewController.table indexOfItem:self.item];
     
