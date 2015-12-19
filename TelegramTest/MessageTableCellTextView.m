@@ -114,9 +114,11 @@
         
         [_webpageContainerView setFrame:NSMakeRect(0, item.textSize.height + 5, item.webpage.size.width, item.webpage.blockHeight)];
         
+        [_webpageContainerView setItem:item];
+        
         [_webpageContainerView setWebpage:item.webpage];
         
-        [_webpageContainerView setItem:item];
+        
         
         
     } else {

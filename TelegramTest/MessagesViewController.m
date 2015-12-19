@@ -2282,10 +2282,14 @@ static NSTextAttachment *headerMediaIcon() {
                                  *stop = YES;
                         }];
                         
-                        NSMutableArray *copy = [result mutableCopy];
-                        [copy insertObject:_unreadMark atIndex:index];
+                        if(index != 0) {
+                            NSMutableArray *copy = [result mutableCopy];
+                            [copy insertObject:_unreadMark atIndex:index];
+                            
+                            result = copy;
+                        }
                         
-                        result = copy;
+                        
                     }
                     
                 }
@@ -2505,6 +2509,8 @@ static NSTextAttachment *headerMediaIcon() {
 }
 
 - (void)tryRead {
+    
+    
     if(!self.view.isHidden && self.view.window.isKeyWindow && ![TGPasslock isVisibility]) {
         if(_delayedBlockHandle)
             _delayedBlockHandle(YES);
@@ -2530,6 +2536,7 @@ static NSTextAttachment *headerMediaIcon() {
 
 
 - (void)readHistory:(int)offset{
+        
     if(!self.conversation || (self.conversation.unread_count == 0 && self.conversation.unread_important_count == 0) || (self.conversation.type != DialogTypeSecretChat && (self.conversation.chat.isKicked || self.conversation.chat.left)))
         return;
     
@@ -3853,7 +3860,7 @@ static NSTextAttachment *headerMediaIcon() {
     }
     
     NSDate *start = [NSDate new];
-    
+    item.table = self.table;
     [cell setItem:item];
    
     

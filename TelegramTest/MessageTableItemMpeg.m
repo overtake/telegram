@@ -28,11 +28,11 @@
         
         if(self.isset) {
             _thumbObject = [[TGThumbnailObject alloc] initWithFilepath:[self path]];
-            _thumbObject.imageSize = NSMakeSize(_imagesize.w, _imagesize.h);
+            _thumbObject.imageSize = NSMakeSize(self.imagesize.w, self.imagesize.h);
         } else {
             if(![object.media.document.thumb isKindOfClass:[TL_photoSizeEmpty class]]) {
                 _thumbObject = [[TGBlurImageObject alloc] initWithLocation:object.media.document.thumb.location thumbData:object.media.document.thumb.bytes size:object.media.document.thumb.size];
-                _thumbObject.imageSize = NSMakeSize(_imagesize.w, _imagesize.h);
+                _thumbObject.imageSize = NSMakeSize(self.imagesize.w, self.imagesize.h);
             }
         }
         
@@ -82,7 +82,7 @@
     [super doAfterDownload];
     
     _thumbObject = [[TGThumbnailObject alloc] initWithFilepath:[self path]];
-    _thumbObject.imageSize = NSMakeSize(_imagesize.w, _imagesize.h);
+    _thumbObject.imageSize = NSMakeSize(self.imagesize.w, self.imagesize.h);
 
 }
 

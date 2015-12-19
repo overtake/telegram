@@ -844,6 +844,7 @@
 		C2E5A0731BAC75C200C1BCA1 /* TGMessageViewSender.m in Sources */ = {isa = PBXBuildFile; fileRef = C2E5A0721BAC75C100C1BCA1 /* TGMessageViewSender.m */; };
 		C2ED28041BFF7F0E00F19531 /* TGReportChannelModalView.m in Sources */ = {isa = PBXBuildFile; fileRef = C2ED28031BFF7F0E00F19531 /* TGReportChannelModalView.m */; };
 		C2ED357D18D9FECB00D0027C /* CAProgressLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = C2ED357C18D9FECB00D0027C /* CAProgressLayer.m */; };
+		C2ED75141C25BB0900002ACF /* TGVideoContainerView.m in Sources */ = {isa = PBXBuildFile; fileRef = C2ED75131C25BB0900002ACF /* TGVideoContainerView.m */; };
 		C2F07E0F1BBD7CD900B3DB39 /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2F07E0E1BBD7CD900B3DB39 /* IOKit.framework */; };
 		C2F07E111BBD7CEF00B3DB39 /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2F07E101BBD7CEF00B3DB39 /* WebKit.framework */; };
 		C2F07E131BBD7CFA00B3DB39 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2F07E121BBD7CFA00B3DB39 /* MapKit.framework */; };
@@ -2590,6 +2591,8 @@
 		C2ED28031BFF7F0E00F19531 /* TGReportChannelModalView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGReportChannelModalView.m; sourceTree = "<group>"; };
 		C2ED357B18D9FECB00D0027C /* CAProgressLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CAProgressLayer.h; sourceTree = "<group>"; };
 		C2ED357C18D9FECB00D0027C /* CAProgressLayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CAProgressLayer.m; sourceTree = "<group>"; };
+		C2ED75121C25BB0900002ACF /* TGVideoContainerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGVideoContainerView.h; sourceTree = "<group>"; };
+		C2ED75131C25BB0900002ACF /* TGVideoContainerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGVideoContainerView.m; sourceTree = "<group>"; };
 		C2F07E0E1BBD7CD900B3DB39 /* IOKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOKit.framework; path = System/Library/Frameworks/IOKit.framework; sourceTree = SDKROOT; };
 		C2F07E101BBD7CEF00B3DB39 /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = System/Library/Frameworks/WebKit.framework; sourceTree = SDKROOT; };
 		C2F07E121BBD7CFA00B3DB39 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
@@ -3721,6 +3724,8 @@
 				C23578971C1C4DE900F38698 /* TGGLVideoPlayer.m */,
 				C23578A21C1CD3AB00F38698 /* TGGLVideoFrame.h */,
 				C23578A31C1CD3AB00F38698 /* TGGLVideoFrame.m */,
+				C2ED75121C25BB0900002ACF /* TGVideoContainerView.h */,
+				C2ED75131C25BB0900002ACF /* TGVideoContainerView.m */,
 			);
 			name = video;
 			sourceTree = "<group>";
@@ -6745,6 +6750,7 @@
 				C2C6D96D1A12650B001EF8A2 /* TGPVMediaBehavior.m in Sources */,
 				C20A5EC31B878E7C007F4B49 /* TL_channelConversation.m in Sources */,
 				C28261EC1992974C004AC73E /* BroadcastManager.m in Sources */,
+				C2ED75141C25BB0900002ACF /* TGVideoContainerView.m in Sources */,
 				C268C13D19EEB580007F836A /* UserNameViewController.m in Sources */,
 				0ACDB13E18CF5535009FE910 /* СountriesManager.m in Sources */,
 				C20B228D18E98A2C007BCCD6 /* SettingsArchiver.m in Sources */,

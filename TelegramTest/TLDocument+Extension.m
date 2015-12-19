@@ -39,7 +39,9 @@
 }
 
 -(NSString *)path_with_cache {
-    return [NSString stringWithFormat:@"%@/%ld.doc",[FileUtils path],self.n_id];
+    TL_localMessage *fake = [[TL_localMessage alloc] init];
+    fake.media = [TL_messageMediaDocument createWithDocument:self];
+    return mediaFilePath(fake);
 }
 
 -(TLDocumentAttribute *)attributeWithClass:(Class)className {

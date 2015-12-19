@@ -16,6 +16,8 @@
 -(void)pause;
 -(void)resume;
 
+-(void)clear;
+
 
 
 @end

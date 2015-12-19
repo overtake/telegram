@@ -25,13 +25,17 @@
 
 
 -(NSString *)doneTitle {
+    
+    if([self.chat isKindOfClass:[TL_channelFull class]] && self.action.result.multiObjects.count == 0) {
+        return nil;
+    }
+    
     return NSLocalizedString(@"Compose.AddMembers", nil);
 }
 
 -(NSAttributedString *)centerTitle {
     
     NSMutableAttributedString *attr = [[NSMutableAttributedString alloc] init];
-    
     
     
     if([self.chat isKindOfClass:[TL_channelFull class]]) {

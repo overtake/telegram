@@ -99,6 +99,10 @@
     
 }
 
+-(void)mouseDown:(NSEvent *)theEvent {
+    [appWindow().navigationController showInfoPage:[self rowItem].user.dialog];
+}
+
 
 -(void)setFrameSize:(NSSize)newSize {
     [super setFrameSize:newSize];

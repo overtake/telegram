@@ -9,10 +9,10 @@
 #import "TGWebpageGifContainer.h"
 #import "TGWebpageGifObject.h"
 #import "TGModernAnimatedImagePlayer.h"
-
+#import "TGGLVideoPlayer.h"
 @interface TGWebpageGifContainer ()
-@property (nonatomic,strong) TGModernAnimatedImagePlayer *animatedPlayer;
-@property (nonatomic,strong) NSImageView *playImage;
+@property (nonatomic,strong) TGGLVideoPlayer *player;
+@property (nonatomic,strong) TMView *playerContainer;
 @end
 
 @implementation TGWebpageGifContainer
@@ -20,32 +20,19 @@
 @synthesize loaderView = _loaderView;
 
 
-static NSImage *gifPlayImage() {
-    static NSImage *image = nil;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        NSRect rect = NSMakeRect(0, 0, 48, 48);
-        image = [[NSImage alloc] initWithSize:rect.size];
-        [image lockFocus];
-        [NSColorFromRGBWithAlpha(0x000000, 0.5) set];
-        NSBezierPath *path = [NSBezierPath bezierPath];
-        [path appendBezierPathWithRoundedRect:NSMakeRect(0, 0, rect.size.width, rect.size.height) xRadius:rect.size.width/2 yRadius:rect.size.height/2];
-        [path fill];
-        
-        [image_PlayIconWhite() drawInRect:NSMakeRect(roundf((48 - image_PlayIconWhite().size.width)/2) + 2, roundf((48 - image_PlayIconWhite().size.height)/2) , image_PlayIconWhite().size.width, image_PlayIconWhite().size.height) fromRect:NSZeroRect operation:NSCompositeHighlight fraction:1];
-        [image unlockFocus];
-    });
-    return image;//image_VideoPlay();
-}
-
 -(instancetype)initWithFrame:(NSRect)frameRect {
     if(self = [super initWithFrame:frameRect]) {
         
-        self.playImage = imageViewWithImage(gifPlayImage());
+        _playerContainer = [[TMView alloc] initWithFrame:NSZeroRect];
+        [_playerContainer setWantsLayer:YES];
         
-        [self.imageView addSubview:self.playImage];
+        _playerContainer.layer.cornerRadius = 4;
         
-        [self.playImage setCenterByView:self.imageView];
+        _player = [[TGGLVideoPlayer alloc] initWithFrame:NSZeroRect];
+        
+        [_playerContainer addSubview:_player];
+        
+        [self addSubview:_playerContainer];
         
     }
     
@@ -56,6 +43,8 @@ static NSImage *gifPlayImage() {
     
     [super setWebpage:webpage];
     
+    [webpage.imageObject.downloadItem removeEvent:webpage.imageObject.supportDownloadListener];
+    
     
     [self.descriptionField setFrame:NSMakeRect([self textX], 0, webpage.descSize.width , webpage.descSize.height )];
     
@@ -64,57 +53,22 @@ static NSImage *gifPlayImage() {
     
     [self.imageView setFrame:NSMakeRect(0, webpage.size.height - webpage.imageSize.height, webpage.imageSize.width, webpage.imageSize.height)];
     
-    [self.playImage setCenterByView:self.imageView];
+    [self.playerContainer setFrame:NSMakeRect(0, webpage.size.height - webpage.imageSize.height, webpage.imageSize.width, webpage.imageSize.height)];
+    [self.player setFrameSize:self.playerContainer.frame.size];
     
-}
-
-
--(void)showPhoto {
-    [self playAnimation];
-}
-
-
-- (void)playAnimation {
+    [self.player setPath:webpage.path];
     
-    TGWebpageGifObject *item = (TGWebpageGifObject *)self.webpage;
+    [self.imageView removeFromSuperview];
     
-    if([item isset]) {
-        
-        weak();
-        
-        if(!self.animatedPlayer) {
-            self.animatedPlayer = [[TGModernAnimatedImagePlayer alloc] initWithSize:self.imageView.frame.size path:item.path];
-            [self.animatedPlayer setFrameReady:^(NSImage *image) {
-                weakSelf.imageView.image = image;
-            }];
-            
-            [self.playImage setHidden:YES];
-            
-            [self.animatedPlayer play];
-            
-        } else {
-            [self animationDidStop:nil finished:YES];
-        }
-    } else {
-        [self startDownload:YES];
+    [self.player addSubview:self.imageView];
+    
+    [self updateDownloadState];
+    
+    if(![webpage isset]) {
+        [self startDownload:NO];
     }
     
-}
-
-- (void)animationDidStart:(CAAnimation *)theAnimation {
-    
-}
-
-- (void)animationDidStop:(CAAnimation *)anim finished:(BOOL)flag {
-    
-    [self.animatedPlayer stop];
-    self.animatedPlayer = nil;
-    
-    TGWebpageGifObject *item = (TGWebpageGifObject *)self.webpage;
-    
-    self.imageView.object = item.imageObject;
-    [self.playImage setHidden:NO];
-    
+    [self _didScrolledTableView:nil];
 }
 
 
@@ -169,8 +123,6 @@ static NSImage *gifPlayImage() {
     TGWebpageGifObject *item = (TGWebpageGifObject *)self.webpage;
     
     
-    [self.playImage setHidden:item.downloadItem != nil && item.downloadItem.downloadState != DownloadStateCompleted];
-    
     if(!item.isset && item.downloadItem && item.downloadItem.downloadState != DownloadStateCompleted) {
         [self.loaderView removeFromSuperview];
         
@@ -194,6 +146,12 @@ static NSImage *gifPlayImage() {
         
     } else  {
         [self.loaderView removeFromSuperview];
+        
+        if(self.loaderView.state != 0 && state == 0) {
+            
+            [self.webpage doAfterDownload];
+            [self _didScrolledTableView:nil];
+        }
     }
     
 }
@@ -201,5 +159,49 @@ static NSImage *gifPlayImage() {
 -(void)downloadProgressHandler:(DownloadItem *)item {
     [self.loaderView setProgress:item.progress animated:YES];
 }
+
+-(void)_didScrolledTableView:(NSNotification *)notification {
+    
+    NSRange visibleRange = [self.item.table rowsInRect:self.item.table.visibleRect];
+    
+    if(visibleRange.location > 0) {
+        visibleRange.location--;
+        visibleRange.length++;
+    }
+    
+    NSUInteger idx = [self.item.table indexOfItem:self.item];
+    
+    TGWebpageGifObject *webpage = (TGWebpageGifObject *)self.webpage;
+
+    
+    if(idx > visibleRange.location && idx <= visibleRange.location + visibleRange.length && ((self.window != nil && self.window.isKeyWindow) || notification == nil) && webpage.isset) {
+        [_player resume];
+    } else {
+        [_player pause];
+    }
+    
+}
+
+
+-(void)dealloc {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
+-(void)viewDidMoveToWindow {
+    if(self.window == nil) {
+        [[NSNotificationCenter defaultCenter] removeObserver:self];
+        [_player pause];
+        [_player setPath:nil];
+        
+    } else {
+        id clipView = [[self.item.table enclosingScrollView] contentView];
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(_didScrolledTableView:)
+                                                     name:NSViewBoundsDidChangeNotification
+                                                   object:clipView];        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_didScrolledTableView:) name:NSWindowDidBecomeKeyNotification object:self.window];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_didScrolledTableView:) name:NSWindowDidResignKeyNotification object:self.window];
+    }
+}
+
 
 @end

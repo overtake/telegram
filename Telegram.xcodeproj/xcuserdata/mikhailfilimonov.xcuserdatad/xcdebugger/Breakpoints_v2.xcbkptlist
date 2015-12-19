@@ -57,22 +57,6 @@
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "TelegramTest/MessagesViewController.m"
-            timestampString = "471977087.266708"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "2340"
-            endingLineNumber = "2340"
-            landmarkName = "-showMessage:fromMsg:animated:selectText:switchDiscussion:flags:"
-            landmarkType = "5">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
             filePath = "MtProtoKit/MTProtoKit/MTProto.m"
             timestampString = "471356296.354995"
             startingColumnNumber = "9223372036854775807"
@@ -160,6 +144,22 @@
             startingLineNumber = "28"
             endingLineNumber = "28"
             landmarkName = "-initWithObject:"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "TelegramTest/TGWebpageGifContainer.m"
+            timestampString = "472239352.972984"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "178"
+            endingLineNumber = "178"
+            landmarkName = "-_didScrolledTableView:"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>

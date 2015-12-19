@@ -189,14 +189,7 @@
 -(instancetype)initWithFrame:(NSRect)frameRect {
     if(self = [super initWithFrame:frameRect]) {
         
-        self.videoLayer = [[AVSampleBufferDisplayLayer alloc] init];
-        self.videoLayer.bounds = self.bounds;
-        self.videoLayer.position = CGPointMake(CGRectGetMidX(self.bounds), CGRectGetMidY(self.bounds));
-        self.videoLayer.backgroundColor = [NSColor grayColor].CGColor;
-        
-        [self setLayer:self.videoLayer];
         [self setWantsLayer:YES];
-        
         
         __weak TGGLVideoPlayer *weakSelf = self;
         _frameQueue = [[TGGLVideoFrameQueue alloc] initWithRequestFrame:^TGGLVideoFrame *{
@@ -224,9 +217,19 @@
     [_videoLayer setFrameSize:newSize];
 }
 
+-(void)clear {
+    self.videoLayer = [[AVSampleBufferDisplayLayer alloc] init];
+    self.videoLayer.bounds = self.bounds;
+    self.videoLayer.position = CGPointMake(CGRectGetMidX(self.bounds), CGRectGetMidY(self.bounds));
+    self.videoLayer.backgroundColor = [NSColor grayColor].CGColor;
+    
+    [self setLayer:self.videoLayer];
+}
+
 -(void)setPath:(NSString *)path {
      _paused = YES;
     
+    [self clear];
     
     [_frameQueue dispatch:^{
         _path = path;

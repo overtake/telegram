@@ -8,8 +8,11 @@
 
 #import "TGWebpageGifObject.h"
 #import "DownloadCacheDocumentItem.h"
+#import "TGGLVideoPlayer.h"
+#import "TGBlurImageObject.h"
+#import "TGThumbnailObject.h"
 @interface TGWebpageGifObject ()
-
+@property (nonatomic,strong) TL_documentAttributeVideo *imagesize;
 @end
 
 @implementation TGWebpageGifObject
@@ -20,18 +23,58 @@
 -(id)initWithWebPage:(TLWebPage *)webpage {
     if(self = [super initWithWebPage:webpage]) {
         
-        _imageObject = [[TGImageObject alloc] initWithLocation:webpage.document.thumb.location placeHolder:nil sourceId:0 size:webpage.document.thumb.size];
-        _imageObject.imageSize = NSMakeSize(roundf(webpage.document.thumb.w * (320 / webpage.document.thumb.w)), roundf(webpage.document.thumb.h * (320 / webpage.document.thumb.h)));
+        
+        _imagesize = (TL_documentAttributeVideo *) [webpage.document attributeWithClass:[TL_documentAttributeVideo class]];
 
         
-        if(![webpage.document.thumb isKindOfClass:[TL_photoSizeEmpty class]]) {
-            _imageObject = [[TGImageObject alloc] initWithLocation:webpage.document.thumb.location placeHolder:nil sourceId:0 size:webpage.document.thumb.size];
-            _imageObject.imageSize = NSMakeSize(roundf(webpage.document.thumb.w * (320 / webpage.document.thumb.w)), roundf(webpage.document.thumb.h * (320 / webpage.document.thumb.h)));
-        } 
+        
+        if(self.isset) {
+            _imageObject = [[TGThumbnailObject alloc] initWithFilepath:[self path]];
+            _imageObject.imageSize = NSMakeSize(self.imagesize.w, self.imagesize.h);
+        } else {
+            if(![webpage.document.thumb isKindOfClass:[TL_photoSizeEmpty class]]) {
+                _imageObject = [[TGBlurImageObject alloc] initWithLocation:webpage.document.thumb.location thumbData:webpage.document.thumb.bytes size:webpage.document.thumb.size];
+                _imageObject.imageSize = NSMakeSize(self.imagesize.w, self.imagesize.h);
+            }
+        }
         
     }
     
     return self;
+}
+
+
+-(TL_documentAttributeVideo *)imagesize {
+    
+    __block TL_documentAttributeVideo *imageSize = _imagesize;
+    
+    if(imageSize == nil) {
+        
+        dispatch_block_t thumbblock = ^{
+            if(![self.webpage.document.thumb isKindOfClass:[TL_photoSizeEmpty class]])  {
+                imageSize = [TL_documentAttributeVideo createWithDuration:0 w:self.webpage.document.thumb.w * 3 h:self.webpage.document.thumb.h * 3];
+            } else {
+                imageSize = [TL_documentAttributeVideo createWithDuration:0 w:300 h:300];
+            }
+        };
+        
+        if(self.isset) {
+            
+            AVAsset *asset = [AVAsset assetWithURL:[NSURL fileURLWithPath:self.path]];
+            
+            if(asset.naturalSize.width > 0 && asset.naturalSize.height > 0) {
+                _imagesize = imageSize = [TL_documentAttributeVideo createWithDuration:CMTimeGetSeconds([asset duration]) w:[asset naturalSize].width h:[asset naturalSize].height];
+            } else {
+                thumbblock();
+            }
+            
+            
+        } else {
+            thumbblock();
+        }
+    }
+    
+    return imageSize;
 }
 
 - (void)startDownload:(BOOL)cancel force:(BOOL)force {
@@ -52,7 +95,7 @@
 -(void)makeSize:(int)width {
     [super makeSize:width];
     
-    _imageSize = strongsize(_imageObject.imageSize, MIN(320, width - 67));
+    _imageSize = strongsize(NSMakeSize(self.imagesize.w, self.imagesize.h), MIN(320, width - 67));
     
     _size = _imageSize;
     _size.width+=20;
@@ -65,6 +108,14 @@
 
 -(NSString *)path {
     return self.webpage.document.path_with_cache;
+}
+
+-(void)doAfterDownload {
+    [super doAfterDownload];
+    
+    _imageObject = [[TGThumbnailObject alloc] initWithFilepath:[self path]];
+    _imageObject.imageSize = NSMakeSize(self.imagesize.w, self.imagesize.h);
+    
 }
 
 

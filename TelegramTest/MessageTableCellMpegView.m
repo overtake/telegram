@@ -14,6 +14,8 @@
 @property (nonatomic,strong) TGGLVideoPlayer *player;
 
 @property (nonatomic,strong) TGImageView *thumbImage;
+
+@property (nonatomic,strong) TMView *playerContainer;
 @end
 
 @implementation MessageTableCellMpegView
@@ -21,15 +23,21 @@
 -(instancetype)initWithFrame:(NSRect)frameRect {
     if(self = [super initWithFrame:frameRect]) {
         
+        _playerContainer = [[TMView alloc] initWithFrame:NSZeroRect];
+        
+        _playerContainer.wantsLayer = YES;
+        _playerContainer.layer.cornerRadius = 4;
+        
+        [self.containerView addSubview:_playerContainer];
+        
         _player = [[TGGLVideoPlayer alloc] initWithFrame:NSMakeRect(0, 0, 500, 280)];
         
-        [self.containerView addSubview:_player];
+        [_playerContainer addSubview:_player];
         
-        _player.layer.cornerRadius = 4;
-        
+                
         _thumbImage = [[TGImageView alloc] init];
         
-        
+        [_player addSubview:_thumbImage];
         
         
         [self setProgressStyle:TMCircularProgressDarkStyle];
@@ -91,27 +99,11 @@
 -(void)setItem:(MessageTableItemMpeg *)item {
     [super setItem:item];
     
-    [_player removeFromSuperview];
-    
-    [_player setPath:nil];
-    [_player pause];
-    
-    _player = nil;
-    
-    _player = [[TGGLVideoPlayer alloc] initWithFrame:NSMakeRect(0, 0, 500, 280)];
-    
-    [self.containerView addSubview:_player];
-    
-    _player.layer.cornerRadius = 4;
-    
+    [_playerContainer setFrameSize:item.blockSize];
     [_player setFrameSize:item.blockSize];
     
+    
     [_player setPath:item.path];
-    
-    
-    [_thumbImage removeFromSuperview];
-    [_player addSubview:_thumbImage];
-    
     
     [_thumbImage setObject:item.thumbObject];
     [_thumbImage setFrameSize:item.blockSize];
