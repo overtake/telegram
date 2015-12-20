@@ -232,7 +232,10 @@ NSImage *placeholder() {
     }
     
     if([webpage.type isEqualToString:@"document"] || [webpage.type isEqualToString:@"gif"]) {
-        if([webpage.document.mime_type isEqualToString:@"image/gif"])
+        
+        id animated = [webpage.document attributeWithClass:[TL_documentAttributeAnimated class]];
+        
+        if([webpage.document.mime_type isEqualToString:@"video/mp4"] && animated)
             return [[TGWebpageGifObject alloc] initWithWebPage:webpage];
     }
     
@@ -243,6 +246,10 @@ NSImage *placeholder() {
 
 -(NSImage *)siteIcon  {
     return nil;
+}
+
+-(void)doAfterDownload {
+    
 }
 
 -(int)blockHeight {

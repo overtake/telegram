@@ -403,7 +403,7 @@
                                 channel.invisibleChannel = NO;
                                 
                                 [channel save];
-                                [MessagesManager addAndUpdateMessage:msg];
+                                [msg save:participant.participant.date > channel.last_message_date];
                                 
                             }
                             

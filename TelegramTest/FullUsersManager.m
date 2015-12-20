@@ -35,10 +35,15 @@
         }
     }
     
-    [RPCRequest sendRequest:[TLAPI_users_getFullUser createWithN_id:user.inputUser] successHandler:^(id request, id response) {
+    [RPCRequest sendRequest:[TLAPI_users_getFullUser createWithN_id:user.inputUser] successHandler:^(id request, TLUserFull *response) {
         
         if(![response isKindOfClass:[TL_userEmpty class]]) {
             [self add:@[response] withCustomKey:@"n_id"];
+            
+            if(user.dialog.notify_settings.mute_until != response.notify_settings.mute_until)  {
+                user.dialog.notify_settings = response.notify_settings;
+                [user.dialog save];
+            }
         }
         
         [ASQueue dispatchOnMainQueue:^{

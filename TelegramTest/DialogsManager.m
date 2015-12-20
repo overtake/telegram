@@ -13,6 +13,7 @@
 #import "SenderHeader.h"
 #import "MessagesBottomView.h"
 #import "MessagesUtils.h"
+#import "FullUsersManager.h"
 @interface DialogsManager ()
 @property (nonatomic,strong) NSMutableArray *dialogs;
 @property (nonatomic,assign) NSInteger maxCount;
@@ -40,8 +41,18 @@
         
         TL_conversation *conversation = [self find:obj.peer_id];
         
-        if(!conversation)
+        if(!conversation) {
             unloaded[@(obj.peer_id)] = @(1);
+            
+            if([obj.to_id isKindOfClass:[TL_peerUser class]]) {
+                TLUserFull *full = [[FullUsersManager sharedManager] find:obj.from_id];
+                
+                if(!full) {
+                    [[FullUsersManager sharedManager] loadUserFull:obj.fromUser callback:nil];
+                }
+            }
+        }
+        
         
     }];
     
@@ -546,6 +557,7 @@
         [[Storage manager] conversationsWithPeerIds:unloaded completeHandler:^(NSArray *result) {
             
             [self add:result];
+            
             
             TL_conversation *dialog = message.conversation;
             

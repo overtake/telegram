@@ -42,6 +42,8 @@
 
 +(id)objectForWebpage:(TLWebPage *)webpage;
 
+-(void)doAfterDownload;
+
 -(NSImage *)siteIcon;
 
 @end

@@ -13,6 +13,7 @@
 #import "WeakReference.h"
 #import "MessageTableCell.h"
 #import "ExternalGifSenderItem.h"
+#import "CompressedDocumentSenderItem.h"
 @interface SenderItem ()
 @property (nonatomic,strong) NSMutableArray *listeners;
 @end
@@ -101,6 +102,10 @@ static NSMutableDictionary *senders;
                     
                     if([msg.media.document isKindOfClass:[TL_externalDocument class]]) {
                         item = [[ExternalGifSenderItem alloc] init];
+                    }
+                    
+                    if([msg.media.document isKindOfClass:[TL_compressDocument class]]) {
+                        item = [[CompressedDocumentSenderItem alloc] init];
                     }
                     
                 } else if([msg.media isKindOfClass:[TL_messageMediaAudio class]]) {
