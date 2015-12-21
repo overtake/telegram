@@ -1062,7 +1062,7 @@ static int offsetEditable = 30;
     
     if(item == self.item.messageSender) {
         [self checkState:item];
-        [self uploadProgressHandler:item animated:NO];
+        [self uploadProgressHandler:item animated:YES];
         [self updateCellState];
         
         if(item.state == MessageSendingStateCancelled) {
@@ -1082,6 +1082,10 @@ static int offsetEditable = 30;
             state = MessageTableCellSendingError;
         } else if(self.item.messageSender.state == MessageStateSending)  {
             state = MessageTableCellSending;
+            
+            [self uploadProgressHandler:self.item.messageSender animated:NO];
+            [self uploadProgressHandler:self.item.messageSender animated:YES];
+            
         } else {
             state = self.item.message.unread ? MessageTableCellUnread : MessageTableCellRead;
         }

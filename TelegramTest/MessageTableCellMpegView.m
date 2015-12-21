@@ -97,6 +97,9 @@
     
     [_player setPath:item.path];
     
+    [_player pause];
+    
+    [self _didScrolledTableView:nil];
     [self _didScrolledTableView:nil];
 }
 
@@ -121,6 +124,8 @@
 -(void)_didScrolledTableView:(NSNotification *)notification {
 
     
+     MessageTableItemMpeg *item = (MessageTableItemMpeg *) self.item;
+    
     BOOL (^check_block)() = ^BOOL() {
         
         NSRange visibleRange = [self.messagesViewController.table rowsInRect:self.messagesViewController.table.visibleRect];
@@ -136,7 +141,7 @@
         
     };
     
-    if(check_block() && [[NSFileManager defaultManager] fileExistsAtPath:_player.path isDirectory:NO]) {
+    if(check_block() && [[NSFileManager defaultManager] fileExistsAtPath:item.path isDirectory:NO]) {
         [_player resume];
     } else {
         [_player pause];

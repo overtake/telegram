@@ -238,9 +238,6 @@
         _reader = nil;
         _output = nil;
         
-        [_videoLayer flushAndRemoveImage];
-        
-        
     }];
     
 }
@@ -343,8 +340,8 @@
         NSLog(@"Error at CMSampleBufferCreateForImageBuffer %d", err);
     }
     
-    if(flush) {
-         [self.videoLayer flush];
+    if(flush) {        
+        [self.videoLayer flush];
     }
 //
     
