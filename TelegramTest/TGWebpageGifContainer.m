@@ -62,6 +62,9 @@
     
     [self.player addSubview:self.imageView];
     
+    
+    [self.imageView setHidden:NO];
+    
     [self updateDownloadState];
     
     if(![webpage isset]) {

@@ -491,10 +491,7 @@
         dialog.top_message = 0;
         
         dialog.top_important_message = 0;
-        
-        
         dialog.unread_count = 0;
-        
         dialog.lastMessage = nil;
         
         
@@ -558,7 +555,6 @@
             
             [self add:result];
             
-            
             TL_conversation *dialog = message.conversation;
             
             [self updateConversation:dialog withLastMessage:message update_real_date:update_real_date];
@@ -568,7 +564,6 @@
             [MessagesManager updateUnreadBadge];
             
             [self add:@[dialog]];
-            
             
             [self checkBotKeyboard:dialog forMessage:message notify:YES];
             
