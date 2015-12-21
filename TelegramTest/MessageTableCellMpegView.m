@@ -80,6 +80,8 @@
     [super setCellState:cellState];
     [self.progressView setState:cellState];
     
+     [self _didScrolledTableView:nil];
+    
 }
 
 -(void)doAfterDownload {
@@ -110,7 +112,6 @@
 
     [self updateDownloadState];
     
-    [self _didScrolledTableView:nil];
 }
 
 -(void)_didScrolledTableView:(NSNotification *)notification {
