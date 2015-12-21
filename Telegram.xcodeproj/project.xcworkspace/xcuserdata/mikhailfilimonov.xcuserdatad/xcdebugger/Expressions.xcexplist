@@ -151,6 +151,17 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "-[MessageTableCellMpegView setCellState:]:MessageTableCellMpegView.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.item.isset">
+            </PersistentString>
+            <PersistentString
+               value = "self.item.path">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "-[MessagesViewController setCurrentConversation:withMessageJump:force:]:MessagesViewController.m">
          <PersistentStrings>
             <PersistentString

@@ -84,6 +84,7 @@ static NSMutableDictionary *senders;
         
         item = senders[@(msg.randomId)];
         
+        
         if(!item) {
             if(![msg isKindOfClass:[TL_destructMessage class]]) {
                 if([msg.media isKindOfClass:[TL_messageMediaEmpty class]] || msg.media == nil) {
@@ -145,15 +146,10 @@ static NSMutableDictionary *senders;
             }
             
             
-            item.conversation = msg.conversation;
-            item.message = msg;
-            
             item.state = msg.dstate == DeliveryStateError ? MessageSendingStateError : MessageStateWaitSend;
         }
         
     } synchronous:YES];
-    
-    
     
     return item;
 }

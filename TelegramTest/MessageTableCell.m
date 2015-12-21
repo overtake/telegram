@@ -31,7 +31,7 @@
     if(item.message && ( item.message.dstate != DeliveryStateNormal && item.messageSender == nil )) {
         item.messageSender = [SenderItem senderForMessage:item.message];
         item.messageSender.tableItem = item;
-        
+        item.message = item.messageSender.message;
         if(item.messageSender.state == MessageStateWaitSend) {
             [item.messageSender send];
         }
