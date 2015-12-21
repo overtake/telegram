@@ -2,7 +2,7 @@
 //  MTProto.m
 //  Telegram
 //
-//  Auto created by Mikhail Filimonov on 17.12.15.
+//  Auto created by Mikhail Filimonov on 21.12.15.
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -1347,55 +1347,6 @@
     
     objc.url = self.url;
     objc.q = self.q;
-    
-    return objc;
-}
-        
-
-    
--(id)initWithCoder:(NSCoder *)aDecoder {
-
-    if((self = [ClassStore deserialize:[aDecoder decodeObjectForKey:@"data"]])) {
-        
-    }
-    
-    return self;
-}
-        
--(void)encodeWithCoder:(NSCoder *)aCoder {
-    [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
-}
-        
-
-        
-@end
-
-@implementation TL_inputMediaContextBotResult
-+(TL_inputMediaContextBotResult*)createWithBot:(TLInputUser*)bot url:(NSString*)url query_id:(long)query_id {
-	TL_inputMediaContextBotResult* obj = [[TL_inputMediaContextBotResult alloc] init];
-	obj.bot = bot;
-	obj.url = url;
-	obj.query_id = query_id;
-	return obj;
-}
--(void)serialize:(SerializedData*)stream {
-	[ClassStore TLSerialize:self.bot stream:stream];
-	[stream writeString:self.url];
-	[stream writeLong:self.query_id];
-}
--(void)unserialize:(SerializedData*)stream {
-	self.bot = [ClassStore TLDeserialize:stream];
-	super.url = [stream readString];
-	super.query_id = [stream readLong];
-}
-        
--(TL_inputMediaContextBotResult *)copy {
-    
-    TL_inputMediaContextBotResult *objc = [[TL_inputMediaContextBotResult alloc] init];
-    
-    objc.bot = [self.bot copy];
-    objc.url = self.url;
-    objc.query_id = self.query_id;
     
     return objc;
 }
@@ -2992,6 +2943,8 @@
 -(BOOL)isVerified {return NO;}
                         
 -(BOOL)isRestricted {return NO;}
+                        
+-(BOOL)isExplicit_content {return NO;}
             
 @end
         
@@ -3037,7 +2990,7 @@
 @end
 
 @implementation TL_user
-+(TL_user*)createWithFlags:(int)flags          n_id:(int)n_id access_hash:(long)access_hash first_name:(NSString*)first_name last_name:(NSString*)last_name username:(NSString*)username phone:(NSString*)phone photo:(TLUserProfilePhoto*)photo status:(TLUserStatus*)status bot_info_version:(int)bot_info_version restiction_reason:(NSString*)restiction_reason {
++(TL_user*)createWithFlags:(int)flags          n_id:(int)n_id access_hash:(long)access_hash first_name:(NSString*)first_name last_name:(NSString*)last_name username:(NSString*)username phone:(NSString*)phone photo:(TLUserProfilePhoto*)photo status:(TLUserStatus*)status bot_info_version:(int)bot_info_version restriction_reason:(NSString*)restriction_reason {
 	TL_user* obj = [[TL_user alloc] init];
 	obj.flags = flags;
 	
@@ -3058,7 +3011,7 @@
 	obj.photo = photo;
 	obj.status = status;
 	obj.bot_info_version = bot_info_version;
-	obj.restiction_reason = restiction_reason;
+	obj.restriction_reason = restriction_reason;
 	return obj;
 }
 -(void)serialize:(SerializedData*)stream {
@@ -3081,7 +3034,7 @@
 	if(self.flags & (1 << 5)) {[ClassStore TLSerialize:self.photo stream:stream];}
 	if(self.flags & (1 << 6)) {[ClassStore TLSerialize:self.status stream:stream];}
 	if(self.flags & (1 << 14)) {[stream writeInt:self.bot_info_version];}
-	if(self.flags & (1 << 18)) {[stream writeString:self.restiction_reason];}
+	if(self.flags & (1 << 18)) {[stream writeString:self.restriction_reason];}
 }
 -(void)unserialize:(SerializedData*)stream {
 	super.flags = [stream readInt];
@@ -3103,7 +3056,7 @@
 	if(self.flags & (1 << 5)) {self.photo = [ClassStore TLDeserialize:stream];}
 	if(self.flags & (1 << 6)) {self.status = [ClassStore TLDeserialize:stream];}
 	if(self.flags & (1 << 14)) {super.bot_info_version = [stream readInt];}
-	if(self.flags & (1 << 18)) {super.restiction_reason = [stream readString];}
+	if(self.flags & (1 << 18)) {super.restriction_reason = [stream readString];}
 }
         
 -(TL_user *)copy {
@@ -3129,7 +3082,7 @@
     objc.photo = [self.photo copy];
     objc.status = [self.status copy];
     objc.bot_info_version = self.bot_info_version;
-    objc.restiction_reason = self.restiction_reason;
+    objc.restriction_reason = self.restriction_reason;
     
     return objc;
 }
@@ -3216,11 +3169,11 @@
                 
     if(super.bot_info_version == 0)  { super.flags&= ~ (1 << 14) ;} else { super.flags|= (1 << 14); }
 }            
--(void)setRestiction_reason:(NSString*)restiction_reason
+-(void)setRestriction_reason:(NSString*)restriction_reason
 {
-   super.restiction_reason = restiction_reason;
+   super.restriction_reason = restriction_reason;
                 
-    if(super.restiction_reason == nil)  { super.flags&= ~ (1 << 18) ;} else { super.flags|= (1 << 18); }
+    if(super.restriction_reason == nil)  { super.flags&= ~ (1 << 18) ;} else { super.flags|= (1 << 18); }
 }
         
 @end
@@ -3547,9 +3500,18 @@
 @end
 
 @implementation TL_user_old43
-+(TL_user_old43*)createWithFlags:(int)flags n_id:(int)n_id access_hash:(long)access_hash first_name:(NSString*)first_name last_name:(NSString*)last_name username:(NSString*)username phone:(NSString*)phone photo:(TLUserProfilePhoto*)photo status:(TLUserStatus*)status bot_info_version:(int)bot_info_version {
++(TL_user_old43*)createWithFlags:(int)flags          n_id:(int)n_id access_hash:(long)access_hash first_name:(NSString*)first_name last_name:(NSString*)last_name username:(NSString*)username phone:(NSString*)phone photo:(TLUserProfilePhoto*)photo status:(TLUserStatus*)status bot_info_version:(int)bot_info_version {
 	TL_user_old43* obj = [[TL_user_old43 alloc] init];
 	obj.flags = flags;
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	obj.n_id = n_id;
 	obj.access_hash = access_hash;
 	obj.first_name = first_name;
@@ -3563,6 +3525,15 @@
 }
 -(void)serialize:(SerializedData*)stream {
 	[stream writeInt:self.flags];
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	[stream writeInt:self.n_id];
 	if(self.flags & (1 << 0)) {[stream writeLong:self.access_hash];}
 	if(self.flags & (1 << 1)) {[stream writeString:self.first_name];}
@@ -3575,6 +3546,15 @@
 }
 -(void)unserialize:(SerializedData*)stream {
 	super.flags = [stream readInt];
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	super.n_id = [stream readInt];
 	if(self.flags & (1 << 0)) {super.access_hash = [stream readLong];}
 	if(self.flags & (1 << 1)) {super.first_name = [stream readString];}
@@ -3591,6 +3571,15 @@
     TL_user_old43 *objc = [[TL_user_old43 alloc] init];
     
     objc.flags = self.flags;
+    
+    
+    
+    
+    
+    
+    
+    
+    
     objc.n_id = self.n_id;
     objc.access_hash = self.access_hash;
     objc.first_name = self.first_name;
@@ -3620,6 +3609,24 @@
 }
         
             
+-(BOOL)isSelf {return (self.flags & (1 << 10)) > 0;}
+                        
+-(BOOL)isContact {return (self.flags & (1 << 11)) > 0;}
+                        
+-(BOOL)isMutual_contact {return (self.flags & (1 << 12)) > 0;}
+                        
+-(BOOL)isDeleted {return (self.flags & (1 << 13)) > 0;}
+                        
+-(BOOL)isBot {return (self.flags & (1 << 14)) > 0;}
+                        
+-(BOOL)isBot_chat_history {return (self.flags & (1 << 15)) > 0;}
+                        
+-(BOOL)isBot_nochats {return (self.flags & (1 << 16)) > 0;}
+                        
+-(BOOL)isVerified {return (self.flags & (1 << 17)) > 0;}
+                        
+-(BOOL)isExplicit_content {return (self.flags & (1 << 18)) > 0;}
+                        
 -(void)setAccess_hash:(long)access_hash
 {
    super.access_hash = access_hash;
@@ -4040,6 +4047,8 @@
 -(BOOL)isMegagroup {return NO;}
                         
 -(BOOL)isRestricted {return NO;}
+                        
+-(BOOL)isExplicit_content {return NO;}
             
 @end
         
@@ -4241,7 +4250,7 @@
 @end
 
 @implementation TL_channel
-+(TL_channel*)createWithFlags:(int)flags          n_id:(int)n_id access_hash:(long)access_hash title:(NSString*)title username:(NSString*)username photo:(TLChatPhoto*)photo date:(int)date version:(int)version restiction_reason:(NSString*)restiction_reason {
++(TL_channel*)createWithFlags:(int)flags          n_id:(int)n_id access_hash:(long)access_hash title:(NSString*)title username:(NSString*)username photo:(TLChatPhoto*)photo date:(int)date version:(int)version restriction_reason:(NSString*)restriction_reason {
 	TL_channel* obj = [[TL_channel alloc] init];
 	obj.flags = flags;
 	
@@ -4260,7 +4269,7 @@
 	obj.photo = photo;
 	obj.date = date;
 	obj.version = version;
-	obj.restiction_reason = restiction_reason;
+	obj.restriction_reason = restriction_reason;
 	return obj;
 }
 -(void)serialize:(SerializedData*)stream {
@@ -4281,7 +4290,7 @@
 	[ClassStore TLSerialize:self.photo stream:stream];
 	[stream writeInt:self.date];
 	[stream writeInt:self.version];
-	if(self.flags & (1 << 9)) {[stream writeString:self.restiction_reason];}
+	if(self.flags & (1 << 9)) {[stream writeString:self.restriction_reason];}
 }
 -(void)unserialize:(SerializedData*)stream {
 	super.flags = [stream readInt];
@@ -4301,7 +4310,7 @@
 	self.photo = [ClassStore TLDeserialize:stream];
 	super.date = [stream readInt];
 	super.version = [stream readInt];
-	if(self.flags & (1 << 9)) {super.restiction_reason = [stream readString];}
+	if(self.flags & (1 << 9)) {super.restriction_reason = [stream readString];}
 }
         
 -(TL_channel *)copy {
@@ -4325,7 +4334,7 @@
     objc.photo = [self.photo copy];
     objc.date = self.date;
     objc.version = self.version;
-    objc.restiction_reason = self.restiction_reason;
+    objc.restriction_reason = self.restriction_reason;
     
     return objc;
 }
@@ -4370,11 +4379,11 @@
                 
     if(super.username == nil)  { super.flags&= ~ (1 << 6) ;} else { super.flags|= (1 << 6); }
 }            
--(void)setRestiction_reason:(NSString*)restiction_reason
+-(void)setRestriction_reason:(NSString*)restriction_reason
 {
-   super.restiction_reason = restiction_reason;
+   super.restriction_reason = restriction_reason;
                 
-    if(super.restiction_reason == nil)  { super.flags&= ~ (1 << 9) ;} else { super.flags|= (1 << 9); }
+    if(super.restriction_reason == nil)  { super.flags&= ~ (1 << 9) ;} else { super.flags|= (1 << 9); }
 }
         
 @end
@@ -4608,9 +4617,16 @@
 @end
 
 @implementation TL_channel_old43
-+(TL_channel_old43*)createWithFlags:(int)flags n_id:(int)n_id access_hash:(long)access_hash title:(NSString*)title username:(NSString*)username photo:(TLChatPhoto*)photo date:(int)date version:(int)version {
++(TL_channel_old43*)createWithFlags:(int)flags        n_id:(int)n_id access_hash:(long)access_hash title:(NSString*)title username:(NSString*)username photo:(TLChatPhoto*)photo date:(int)date version:(int)version {
 	TL_channel_old43* obj = [[TL_channel_old43 alloc] init];
 	obj.flags = flags;
+	
+	
+	
+	
+	
+	
+	
 	obj.n_id = n_id;
 	obj.access_hash = access_hash;
 	obj.title = title;
@@ -4622,6 +4638,13 @@
 }
 -(void)serialize:(SerializedData*)stream {
 	[stream writeInt:self.flags];
+	
+	
+	
+	
+	
+	
+	
 	[stream writeInt:self.n_id];
 	[stream writeLong:self.access_hash];
 	[stream writeString:self.title];
@@ -4632,6 +4655,13 @@
 }
 -(void)unserialize:(SerializedData*)stream {
 	super.flags = [stream readInt];
+	
+	
+	
+	
+	
+	
+	
 	super.n_id = [stream readInt];
 	super.access_hash = [stream readLong];
 	super.title = [stream readString];
@@ -4646,6 +4676,13 @@
     TL_channel_old43 *objc = [[TL_channel_old43 alloc] init];
     
     objc.flags = self.flags;
+    
+    
+    
+    
+    
+    
+    
     objc.n_id = self.n_id;
     objc.access_hash = self.access_hash;
     objc.title = self.title;
@@ -4673,6 +4710,20 @@
 }
         
             
+-(BOOL)isCreator {return (self.flags & (1 << 0)) > 0;}
+                        
+-(BOOL)isEditor {return (self.flags & (1 << 3)) > 0;}
+                        
+-(BOOL)isModerator {return (self.flags & (1 << 4)) > 0;}
+                        
+-(BOOL)isBroadcast {return (self.flags & (1 << 5)) > 0;}
+                        
+-(BOOL)isVerified {return (self.flags & (1 << 7)) > 0;}
+                        
+-(BOOL)isMegagroup {return (self.flags & (1 << 8)) > 0;}
+                        
+-(BOOL)isExplicit_content {return (self.flags & (1 << 9)) > 0;}
+                        
 -(void)setUsername:(NSString*)username
 {
    super.username = username;
@@ -12992,59 +13043,6 @@
         
 @end
 
-@implementation TL_updateBotContextQuery
-+(TL_updateBotContextQuery*)createWithQuery_id:(long)query_id user_id:(int)user_id query:(NSString*)query offset:(NSString*)offset {
-	TL_updateBotContextQuery* obj = [[TL_updateBotContextQuery alloc] init];
-	obj.query_id = query_id;
-	obj.user_id = user_id;
-	obj.query = query;
-	obj.offset = offset;
-	return obj;
-}
--(void)serialize:(SerializedData*)stream {
-	[stream writeLong:self.query_id];
-	[stream writeInt:self.user_id];
-	[stream writeString:self.query];
-	[stream writeString:self.offset];
-}
--(void)unserialize:(SerializedData*)stream {
-	super.query_id = [stream readLong];
-	super.user_id = [stream readInt];
-	super.query = [stream readString];
-	super.offset = [stream readString];
-}
-        
--(TL_updateBotContextQuery *)copy {
-    
-    TL_updateBotContextQuery *objc = [[TL_updateBotContextQuery alloc] init];
-    
-    objc.query_id = self.query_id;
-    objc.user_id = self.user_id;
-    objc.query = self.query;
-    objc.offset = self.offset;
-    
-    return objc;
-}
-        
-
-    
--(id)initWithCoder:(NSCoder *)aDecoder {
-
-    if((self = [ClassStore deserialize:[aDecoder decodeObjectForKey:@"data"]])) {
-        
-    }
-    
-    return self;
-}
-        
--(void)encodeWithCoder:(NSCoder *)aCoder {
-    [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
-}
-        
-
-        
-@end
-
 @implementation TLupdates_State
 
 @end
@@ -19352,7 +19350,7 @@
 @end
 
 @implementation TL_webPageExternal
-+(TL_webPageExternal*)createWithFlags:(int)flags url:(NSString*)url display_url:(NSString*)display_url type:(NSString*)type title:(NSString*)title n_description:(NSString*)n_description thumb_url:(NSString*)thumb_url content_url:(NSString*)content_url w:(int)w h:(int)h duration:(int)duration {
++(TL_webPageExternal*)createWithFlags:(int)flags url:(NSString*)url display_url:(NSString*)display_url type:(NSString*)type title:(NSString*)title n_description:(NSString*)n_description thumb_url:(NSString*)thumb_url content_url:(NSString*)content_url content_type:(NSString*)content_type w:(int)w h:(int)h duration:(int)duration {
 	TL_webPageExternal* obj = [[TL_webPageExternal alloc] init];
 	obj.flags = flags;
 	obj.url = url;
@@ -19362,6 +19360,7 @@
 	obj.n_description = n_description;
 	obj.thumb_url = thumb_url;
 	obj.content_url = content_url;
+	obj.content_type = content_type;
 	obj.w = w;
 	obj.h = h;
 	obj.duration = duration;
@@ -19376,6 +19375,7 @@
 	if(self.flags & (1 << 2)) {[stream writeString:self.n_description];}
 	if(self.flags & (1 << 3)) {[stream writeString:self.thumb_url];}
 	if(self.flags & (1 << 4)) {[stream writeString:self.content_url];}
+	if(self.flags & (1 << 4)) {[stream writeString:self.content_type];}
 	if(self.flags & (1 << 5)) {[stream writeInt:self.w];}
 	if(self.flags & (1 << 5)) {[stream writeInt:self.h];}
 	if(self.flags & (1 << 6)) {[stream writeInt:self.duration];}
@@ -19389,6 +19389,7 @@
 	if(self.flags & (1 << 2)) {super.n_description = [stream readString];}
 	if(self.flags & (1 << 3)) {super.thumb_url = [stream readString];}
 	if(self.flags & (1 << 4)) {super.content_url = [stream readString];}
+	if(self.flags & (1 << 4)) {super.content_type = [stream readString];}
 	if(self.flags & (1 << 5)) {super.w = [stream readInt];}
 	if(self.flags & (1 << 5)) {super.h = [stream readInt];}
 	if(self.flags & (1 << 6)) {super.duration = [stream readInt];}
@@ -19406,6 +19407,7 @@
     objc.n_description = self.n_description;
     objc.thumb_url = self.thumb_url;
     objc.content_url = self.content_url;
+    objc.content_type = self.content_type;
     objc.w = self.w;
     objc.h = self.h;
     objc.duration = self.duration;
@@ -19458,6 +19460,12 @@
    super.content_url = content_url;
                 
     if(super.content_url == nil)  { super.flags&= ~ (1 << 4) ;} else { super.flags|= (1 << 4); }
+}            
+-(void)setContent_type:(NSString*)content_type
+{
+   super.content_type = content_type;
+                
+    if(super.content_type == nil)  { super.flags&= ~ (1 << 4) ;} else { super.flags|= (1 << 4); }
 }            
 -(void)setW:(int)w
 {
@@ -23495,293 +23503,6 @@
 }
         
 
-        
-@end
-
-@implementation TLInputBotContextResult
-            
--(BOOL)isHide_url {return NO;}
-            
-@end
-        
-@implementation TL_inputBotContextResult
-+(TL_inputBotContextResult*)createWithFlags:(int)flags  url:(NSString*)url type:(NSString*)type title:(NSString*)title n_description:(NSString*)n_description thumb_url:(NSString*)thumb_url content_url:(NSString*)content_url w:(int)w h:(int)h duration:(int)duration {
-	TL_inputBotContextResult* obj = [[TL_inputBotContextResult alloc] init];
-	obj.flags = flags;
-	
-	obj.url = url;
-	obj.type = type;
-	obj.title = title;
-	obj.n_description = n_description;
-	obj.thumb_url = thumb_url;
-	obj.content_url = content_url;
-	obj.w = w;
-	obj.h = h;
-	obj.duration = duration;
-	return obj;
-}
--(void)serialize:(SerializedData*)stream {
-	[stream writeInt:self.flags];
-	
-	[stream writeString:self.url];
-	if(self.flags & (1 << 0)) {[stream writeString:self.type];}
-	if(self.flags & (1 << 1)) {[stream writeString:self.title];}
-	if(self.flags & (1 << 2)) {[stream writeString:self.n_description];}
-	if(self.flags & (1 << 3)) {[stream writeString:self.thumb_url];}
-	if(self.flags & (1 << 4)) {[stream writeString:self.content_url];}
-	if(self.flags & (1 << 5)) {[stream writeInt:self.w];}
-	if(self.flags & (1 << 5)) {[stream writeInt:self.h];}
-	if(self.flags & (1 << 6)) {[stream writeInt:self.duration];}
-}
--(void)unserialize:(SerializedData*)stream {
-	super.flags = [stream readInt];
-	
-	super.url = [stream readString];
-	if(self.flags & (1 << 0)) {super.type = [stream readString];}
-	if(self.flags & (1 << 1)) {super.title = [stream readString];}
-	if(self.flags & (1 << 2)) {super.n_description = [stream readString];}
-	if(self.flags & (1 << 3)) {super.thumb_url = [stream readString];}
-	if(self.flags & (1 << 4)) {super.content_url = [stream readString];}
-	if(self.flags & (1 << 5)) {super.w = [stream readInt];}
-	if(self.flags & (1 << 5)) {super.h = [stream readInt];}
-	if(self.flags & (1 << 6)) {super.duration = [stream readInt];}
-}
-        
--(TL_inputBotContextResult *)copy {
-    
-    TL_inputBotContextResult *objc = [[TL_inputBotContextResult alloc] init];
-    
-    objc.flags = self.flags;
-    
-    objc.url = self.url;
-    objc.type = self.type;
-    objc.title = self.title;
-    objc.n_description = self.n_description;
-    objc.thumb_url = self.thumb_url;
-    objc.content_url = self.content_url;
-    objc.w = self.w;
-    objc.h = self.h;
-    objc.duration = self.duration;
-    
-    return objc;
-}
-        
-
-    
--(id)initWithCoder:(NSCoder *)aDecoder {
-
-    if((self = [ClassStore deserialize:[aDecoder decodeObjectForKey:@"data"]])) {
-        
-    }
-    
-    return self;
-}
-        
--(void)encodeWithCoder:(NSCoder *)aCoder {
-    [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
-}
-        
-            
--(BOOL)isHide_url {return (self.flags & (1 << 20)) > 0;}
-                        
--(void)setType:(NSString*)type
-{
-   super.type = type;
-                
-    if(super.type == nil)  { super.flags&= ~ (1 << 0) ;} else { super.flags|= (1 << 0); }
-}            
--(void)setTitle:(NSString*)title
-{
-   super.title = title;
-                
-    if(super.title == nil)  { super.flags&= ~ (1 << 1) ;} else { super.flags|= (1 << 1); }
-}            
--(void)setN_description:(NSString*)n_description
-{
-   super.n_description = n_description;
-                
-    if(super.n_description == nil)  { super.flags&= ~ (1 << 2) ;} else { super.flags|= (1 << 2); }
-}            
--(void)setThumb_url:(NSString*)thumb_url
-{
-   super.thumb_url = thumb_url;
-                
-    if(super.thumb_url == nil)  { super.flags&= ~ (1 << 3) ;} else { super.flags|= (1 << 3); }
-}            
--(void)setContent_url:(NSString*)content_url
-{
-   super.content_url = content_url;
-                
-    if(super.content_url == nil)  { super.flags&= ~ (1 << 4) ;} else { super.flags|= (1 << 4); }
-}            
--(void)setW:(int)w
-{
-   super.w = w;
-                
-    if(super.w == 0)  { super.flags&= ~ (1 << 5) ;} else { super.flags|= (1 << 5); }
-}            
--(void)setH:(int)h
-{
-   super.h = h;
-                
-    if(super.h == 0)  { super.flags&= ~ (1 << 5) ;} else { super.flags|= (1 << 5); }
-}            
--(void)setDuration:(int)duration
-{
-   super.duration = duration;
-                
-    if(super.duration == 0)  { super.flags&= ~ (1 << 6) ;} else { super.flags|= (1 << 6); }
-}
-        
-@end
-
-@implementation TLBotContextResult
-            
--(BOOL)isHide_url {return NO;}
-            
-@end
-        
-@implementation TL_botContextResult
-+(TL_botContextResult*)createWithFlags:(int)flags  webpage:(TLWebPage*)webpage {
-	TL_botContextResult* obj = [[TL_botContextResult alloc] init];
-	obj.flags = flags;
-	
-	obj.webpage = webpage;
-	return obj;
-}
--(void)serialize:(SerializedData*)stream {
-	[stream writeInt:self.flags];
-	
-	[ClassStore TLSerialize:self.webpage stream:stream];
-}
--(void)unserialize:(SerializedData*)stream {
-	super.flags = [stream readInt];
-	
-	self.webpage = [ClassStore TLDeserialize:stream];
-}
-        
--(TL_botContextResult *)copy {
-    
-    TL_botContextResult *objc = [[TL_botContextResult alloc] init];
-    
-    objc.flags = self.flags;
-    
-    objc.webpage = [self.webpage copy];
-    
-    return objc;
-}
-        
-
-    
--(id)initWithCoder:(NSCoder *)aDecoder {
-
-    if((self = [ClassStore deserialize:[aDecoder decodeObjectForKey:@"data"]])) {
-        
-    }
-    
-    return self;
-}
-        
--(void)encodeWithCoder:(NSCoder *)aCoder {
-    [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
-}
-        
-            
--(BOOL)isHide_url {return (self.flags & (1 << 0)) > 0;}
-            
-        
-@end
-
-@implementation TLmessages_BotResults
-            
--(BOOL)isMedia {return NO;}
-            
-@end
-        
-@implementation TL_messages_botResults
-+(TL_messages_botResults*)createWithFlags:(int)flags  query_id:(long)query_id next_offset:(NSString*)next_offset results:(NSMutableArray*)results {
-	TL_messages_botResults* obj = [[TL_messages_botResults alloc] init];
-	obj.flags = flags;
-	
-	obj.query_id = query_id;
-	obj.next_offset = next_offset;
-	obj.results = results;
-	return obj;
-}
--(void)serialize:(SerializedData*)stream {
-	[stream writeInt:self.flags];
-	
-	[stream writeLong:self.query_id];
-	if(self.flags & (1 << 1)) {[stream writeString:self.next_offset];}
-	//Serialize FullVector
-	[stream writeInt:0x1cb5c415];
-	{
-		NSInteger tl_count = [self.results count];
-		[stream writeInt:(int)tl_count];
-		for(int i = 0; i < (int)tl_count; i++) {
-            TLBotContextResult* obj = [self.results objectAtIndex:i];
-            [ClassStore TLSerialize:obj stream:stream];
-		}
-	}
-}
--(void)unserialize:(SerializedData*)stream {
-	super.flags = [stream readInt];
-	
-	super.query_id = [stream readLong];
-	if(self.flags & (1 << 1)) {super.next_offset = [stream readString];}
-	//UNS FullVector
-	[stream readInt];
-	{
-		if(!self.results)
-			self.results = [[NSMutableArray alloc] init];
-		int count = [stream readInt];
-		for(int i = 0; i < count; i++) {
-			TLBotContextResult* obj = [ClassStore TLDeserialize:stream];
-            if(obj != nil && [obj isKindOfClass:[TLBotContextResult class]])
-                 [self.results addObject:obj];
-            else
-                break;
-		}
-	}
-}
-        
--(TL_messages_botResults *)copy {
-    
-    TL_messages_botResults *objc = [[TL_messages_botResults alloc] init];
-    
-    objc.flags = self.flags;
-    
-    objc.query_id = self.query_id;
-    objc.next_offset = self.next_offset;
-    objc.results = [self.results copy];
-    
-    return objc;
-}
-        
-
-    
--(id)initWithCoder:(NSCoder *)aDecoder {
-
-    if((self = [ClassStore deserialize:[aDecoder decodeObjectForKey:@"data"]])) {
-        
-    }
-    
-    return self;
-}
-        
--(void)encodeWithCoder:(NSCoder *)aCoder {
-    [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
-}
-        
-            
--(BOOL)isMedia {return (self.flags & (1 << 0)) > 0;}
-                        
--(void)setNext_offset:(NSString*)next_offset
-{
-   super.next_offset = next_offset;
-                
-    if(super.next_offset == nil)  { super.flags&= ~ (1 << 1) ;} else { super.flags|= (1 << 1); }
-}
         
 @end
 

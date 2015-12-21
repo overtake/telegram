@@ -265,10 +265,6 @@
 		C20D190219542AB80095A906 /* SearchHistoryFilter.m in Sources */ = {isa = PBXBuildFile; fileRef = C20D190119542AB80095A906 /* SearchHistoryFilter.m */; };
 		C20F76E91BB994A6003A1E86 /* TGModernUserViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C20F76E81BB994A6003A1E86 /* TGModernUserViewController.m */; };
 		C20F76ED1BBAC41A003A1E86 /* TGMessagesHintView.m in Sources */ = {isa = PBXBuildFile; fileRef = C20F76EC1BBAC41A003A1E86 /* TGMessagesHintView.m */; };
-		C210687B1C15A91500815859 /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C235364C19C88D620044978E /* Sparkle.framework */; };
-		C210687C1C15A91500815859 /* HockeySDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2082B7219C1E1C4000005E2 /* HockeySDK.framework */; };
-		C210687D1C15A91800815859 /* Sparkle.framework in Copy Files (6 items) */ = {isa = PBXBuildFile; fileRef = C235364C19C88D620044978E /* Sparkle.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		C210687E1C15A91800815859 /* HockeySDK.framework in Copy Files (6 items) */ = {isa = PBXBuildFile; fileRef = C2082B7219C1E1C4000005E2 /* HockeySDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		C210688D1C19C07A00815859 /* MessageTableItemMpeg.m in Sources */ = {isa = PBXBuildFile; fileRef = C210688C1C19C07A00815859 /* MessageTableItemMpeg.m */; };
 		C21068991C19C09D00815859 /* MessageTableCellMpegView.m in Sources */ = {isa = PBXBuildFile; fileRef = C21068981C19C09D00815859 /* MessageTableCellMpegView.m */; };
 		C21068A61C19D91000815859 /* TGOpenGLVideoPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = C21068A51C19D91000815859 /* TGOpenGLVideoPlayer.m */; };
@@ -845,6 +841,10 @@
 		C2ED28041BFF7F0E00F19531 /* TGReportChannelModalView.m in Sources */ = {isa = PBXBuildFile; fileRef = C2ED28031BFF7F0E00F19531 /* TGReportChannelModalView.m */; };
 		C2ED357D18D9FECB00D0027C /* CAProgressLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = C2ED357C18D9FECB00D0027C /* CAProgressLayer.m */; };
 		C2ED75141C25BB0900002ACF /* TGVideoContainerView.m in Sources */ = {isa = PBXBuildFile; fileRef = C2ED75131C25BB0900002ACF /* TGVideoContainerView.m */; };
+		C2ED751E1C2857D100002ACF /* Sparkle.framework in Copy Files (6 items) */ = {isa = PBXBuildFile; fileRef = C235364C19C88D620044978E /* Sparkle.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		C2ED751F1C2857D100002ACF /* HockeySDK.framework in Copy Files (6 items) */ = {isa = PBXBuildFile; fileRef = C2082B7219C1E1C4000005E2 /* HockeySDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		C2ED75201C2857D400002ACF /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C235364C19C88D620044978E /* Sparkle.framework */; };
+		C2ED75211C2857D400002ACF /* HockeySDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2082B7219C1E1C4000005E2 /* HockeySDK.framework */; };
 		C2F07E0F1BBD7CD900B3DB39 /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2F07E0E1BBD7CD900B3DB39 /* IOKit.framework */; };
 		C2F07E111BBD7CEF00B3DB39 /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2F07E101BBD7CEF00B3DB39 /* WebKit.framework */; };
 		C2F07E131BBD7CFA00B3DB39 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2F07E121BBD7CFA00B3DB39 /* MapKit.framework */; };
@@ -1007,8 +1007,8 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				C210687D1C15A91800815859 /* Sparkle.framework in Copy Files (6 items) */,
-				C210687E1C15A91800815859 /* HockeySDK.framework in Copy Files (6 items) */,
+				C2ED751E1C2857D100002ACF /* Sparkle.framework in Copy Files (6 items) */,
+				C2ED751F1C2857D100002ACF /* HockeySDK.framework in Copy Files (6 items) */,
 			);
 			name = "Copy Files (6 items)";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2791,13 +2791,13 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C2ED75201C2857D400002ACF /* Sparkle.framework in Frameworks */,
+				C2ED75211C2857D400002ACF /* HockeySDK.framework in Frameworks */,
 				C21068C61C1B417200815859 /* CoreVideo.framework in Frameworks */,
 				C21068BE1C1B04A100815859 /* QuickTime.framework in Frameworks */,
 				C21068BA1C19F4B500815859 /* GLKit.framework in Frameworks */,
 				C21068A81C19DBCB00815859 /* QuickLook.framework in Frameworks */,
 				C2E40E3519D58F160079046E /* OpenGL.framework in Frameworks */,
-				C210687B1C15A91500815859 /* Sparkle.framework in Frameworks */,
-				C210687C1C15A91500815859 /* HockeySDK.framework in Frameworks */,
 				C2F07E191BBD7D9300B3DB39 /* libz.tbd in Frameworks */,
 				C2F07E1F1BBDBACD00B3DB39 /* libstdc++.tbd in Frameworks */,
 				C2F07E1D1BBDBABF00B3DB39 /* ImageIO.framework in Frameworks */,

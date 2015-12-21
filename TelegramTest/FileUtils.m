@@ -190,9 +190,11 @@ void removeMessageMedia(TL_localMessage *message) {
     if(message) {
         NSString *path = mediaFilePath(message);
         
-        if(path != nil) {
+        if(path != nil &&![message.media.document isKindOfClass:[TL_outDocument class]]) {
             [[NSFileManager defaultManager] removeItemAtPath:path error:nil];
         }
+        
+        
     }
     
 }

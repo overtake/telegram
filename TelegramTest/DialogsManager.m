@@ -713,6 +713,8 @@
     
     if(message.unread && !message.n_out) {
         dialog.unread_count++;
+    } else if(!message.unread) {
+        dialog.unread_count = 0;
     }
     
     if([message.action isKindOfClass:[TL_messageActionChatMigrateTo class]]) {

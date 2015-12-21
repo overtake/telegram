@@ -32,13 +32,13 @@
 
 -(void)initializeContextBotWithUser:(TLInputUser *)user contextRequestString:(NSString *)requestString {
     
-    [RPCRequest sendRequest:[TLAPI_messages_getContextBotResults createWithBot:user query:requestString offset:nil] successHandler:^(id request, id response) {
-        
-        int bp = 0;
-        
-    } errorHandler:^(id request, RpcError *error) {
-        
-    }];
+//    [RPCRequest sendRequest:[TLAPI_messages_getContextBotResults createWithBot:user query:requestString offset:nil] successHandler:^(id request, id response) {
+//        
+//        int bp = 0;
+//        
+//    } errorHandler:^(id request, RpcError *error) {
+//        
+//    }];
     
 }
 
