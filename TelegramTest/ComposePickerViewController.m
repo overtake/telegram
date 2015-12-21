@@ -133,10 +133,7 @@
     
     [self.action.behavior composeDidChangeSelected];
     
-    [self.doneButton setStringValue:self.action.behavior.doneTitle];
-    
-    [self.doneButton sizeToFit];
-    [self setRightNavigationBarView:self.doneButton];
+    [self updateActionNavigation];
     
     [self.doneButton setDisable:self.action.result.multiObjects.count == 0 || self.action.behavior.doneTitle.length == 0];
 }

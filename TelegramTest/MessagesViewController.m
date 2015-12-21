@@ -3195,12 +3195,14 @@ static NSTextAttachment *headerMediaIcon() {
 
 -(void)sendCompressedItem:(TGCompressItem *)compressedItem {
     
+    int senderFlags = self.senderFlags;
+    
     [self setHistoryFilter:self.defHFClass force:self.historyController.prevState != ChatHistoryStateFull];
     
     [ASQueue dispatchOnStageQueue:^{
         
         SenderItem *sender;
-        sender = [[CompressedDocumentSenderItem alloc] initWithItem:compressedItem];
+        sender = [[CompressedDocumentSenderItem alloc] initWithItem:compressedItem additionFlags:senderFlags];
         
         sender.tableItem = [[self messageTableItemsFromMessages:@[sender.message]] lastObject];
         [self.historyController addItem:sender.tableItem sentControllerCallback:nil];

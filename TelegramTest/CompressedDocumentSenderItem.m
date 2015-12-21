@@ -18,7 +18,7 @@
 
 @implementation CompressedDocumentSenderItem
 
--(id)initWithItem:(TGCompressItem *)compressItem {
+-(id)initWithItem:(TGCompressItem *)compressItem additionFlags:(int)additionFlags {
     if(self = [super initWithConversation:compressItem.conversation]) {
         self.item = compressItem;
         
@@ -53,6 +53,9 @@
         super.message = [MessageSender createOutMessage:nil media:[TL_messageMediaDocument createWithDocument:document] conversation:compressItem.conversation];
         
         [self.message save:YES];
+        
+        if(additionFlags & (1 << 4))
+            self.message.from_id = 0;
         
 
     }

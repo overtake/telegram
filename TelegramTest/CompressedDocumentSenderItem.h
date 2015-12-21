@@ -9,5 +9,5 @@
 #import "DocumentSenderItem.h"
 
 @interface CompressedDocumentSenderItem : DocumentSenderItem
--(id)initWithItem:(TGCompressItem *)compressItem;
+-(id)initWithItem:(TGCompressItem *)compressItem additionFlags:(int)additionFlags;
 @end
