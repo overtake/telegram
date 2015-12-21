@@ -80,7 +80,7 @@
     [super setCellState:cellState];
     [self.progressView setState:cellState];
     
-     [self _didScrolledTableView:nil];
+    [self _didScrolledTableView:nil];
     
 }
 

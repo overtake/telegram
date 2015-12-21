@@ -162,6 +162,8 @@
             
             NSRange range = [attr appendString:obj];
             
+            
+            
             [attr addAttribute:NSLinkAttributeName value:obj range:range];
             [attr addAttribute:NSForegroundColorAttributeName value:LINK_COLOR range:range];
             [attr addAttribute:NSCursorAttributeName value:[NSCursor pointingHandCursor] range:range];
@@ -180,6 +182,10 @@
         
     }];
     
+    NSMutableParagraphStyle *style = [[NSMutableParagraphStyle alloc] init];
+    style.lineBreakMode = NSLineBreakByTruncatingTail;
+
+    [attr addAttribute:NSParagraphStyleAttributeName value:style range:attr.range];
     
     
     _allAttributedLinks = [attr copy];
