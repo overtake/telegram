@@ -3194,6 +3194,9 @@ static NSTextAttachment *headerMediaIcon() {
 }
 
 -(void)sendCompressedItem:(TGCompressItem *)compressedItem {
+    
+    [self setHistoryFilter:self.defHFClass force:self.historyController.prevState != ChatHistoryStateFull];
+    
     [ASQueue dispatchOnStageQueue:^{
         
         SenderItem *sender;
@@ -3212,12 +3215,13 @@ static NSTextAttachment *headerMediaIcon() {
         
         TGCompressGifItem *gifItem = [[TGCompressGifItem alloc] initWithPath:file_path conversation:conversation];
         
-        if(gifItem != nil) {
+        if(gifItem != nil && fileSize(gifItem.path) < 8*1024*1024) {
             [self sendCompressedItem:gifItem];
+            return;
         }
         
         
-        return;
+       
     }
     
     
