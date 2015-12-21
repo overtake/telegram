@@ -100,7 +100,6 @@
     [_player pause];
     
     [self _didScrolledTableView:nil];
-    [self _didScrolledTableView:nil];
 }
 
 
