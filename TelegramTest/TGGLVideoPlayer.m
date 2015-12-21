@@ -352,8 +352,6 @@
     if (self.videoLayer.readyForMoreMediaData) {
        
         [self.videoLayer enqueueSampleBuffer:sampleBuffer];
-    } else {
-        int bp = 0;
     }
     
     CFRelease(sampleBuffer);
@@ -365,7 +363,7 @@
     for (int i = 0; i < 2; i++) {
         
         
-        if (_reader == nil) {
+        if (_reader == nil && _path.length > 0 && [[NSFileManager defaultManager] fileExistsAtPath:_path isDirectory:nil]) {
             
             _pollingFirstFrame = YES;
             

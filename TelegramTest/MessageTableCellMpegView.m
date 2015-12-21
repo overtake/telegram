@@ -10,12 +10,16 @@
 #import "MessageTableItemMpeg.h"
 #import "TGGLVideoPlayer.h"
 #import "TGImageView.h"
-@interface MessageTableCellMpegView ()
+#import "SpacemanBlocks.h"
+@interface MessageTableCellMpegView () {
+    SMDelayedBlockHandle _handle;
+}
 @property (nonatomic,strong) TGGLVideoPlayer *player;
 
 @property (nonatomic,strong) TGImageView *thumbImage;
 
 @property (nonatomic,strong) TMView *playerContainer;
+
 @end
 
 @implementation MessageTableCellMpegView
@@ -115,17 +119,24 @@
 }
 
 -(void)_didScrolledTableView:(NSNotification *)notification {
+
     
-    NSRange visibleRange = [self.messagesViewController.table rowsInRect:self.messagesViewController.table.visibleRect];
+    BOOL (^check_block)() = ^BOOL() {
+        
+        NSRange visibleRange = [self.messagesViewController.table rowsInRect:self.messagesViewController.table.visibleRect];
+        
+        if(visibleRange.location > 0) {
+            visibleRange.location--;
+            visibleRange.length++;
+        }
+        
+        NSUInteger idx = [self.messagesViewController.table indexOfItem:self.item];
+        
+        return  idx > visibleRange.location && idx <= visibleRange.location + visibleRange.length && ((self.window != nil && self.window.isKeyWindow) || notification == nil) && self.item.isset;
+        
+    };
     
-    if(visibleRange.location > 0) {
-        visibleRange.location--;
-        visibleRange.length++;
-    }
-    
-    NSUInteger idx = [self.messagesViewController.table indexOfItem:self.item];
-    
-    if(idx > visibleRange.location && idx <= visibleRange.location + visibleRange.length && ((self.window != nil && self.window.isKeyWindow) || notification == nil) && self.item.isset) {
+    if(check_block() && [[NSFileManager defaultManager] fileExistsAtPath:_player.path isDirectory:NO]) {
         [_player resume];
     } else {
         [_player pause];

@@ -16,6 +16,7 @@
 #import "EmojiViewController.h"
 #import "StickersPanelView.h"
 #import <AVFoundation/AVFoundation.h>
+#import "MessageTableItem.h"
 @interface DocumentSenderItem ()
 
 @property (nonatomic, strong) NSString *mimeType;
@@ -335,6 +336,8 @@
         if([message.media.document isKindOfClass:[TL_compressDocument class]]) {
             message.media = [msg media];
         }
+        
+        strongSelf.tableItem.message.media = message.media;
         
       
         NSString *ep = exportPath(self.message.randomId,extensionForMimetype(self.message.media.document.mime_type));

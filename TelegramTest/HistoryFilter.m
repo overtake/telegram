@@ -98,7 +98,7 @@
         
     }];
     
-    return lastObject.n_id - 1;
+    return lastObject.n_id;
     
 }
 
@@ -121,7 +121,7 @@
         
     }];
     
-    return lastObject.date - 1;
+    return lastObject.date;
     
 }
 
@@ -147,7 +147,7 @@
         
     }];
     
-    return firstObject.n_id + 1;
+    return firstObject.n_id ;
 }
 
 -(int)maxDate {
@@ -170,7 +170,7 @@
         
     }];
     
-    return firstObject.date + 1;
+    return firstObject.date;
 }
 
 -(int)server_min_id {
@@ -191,7 +191,7 @@
         
     }];
     
-    return msgId - 1;
+    return msgId;
     
 }
 
@@ -213,7 +213,7 @@
         
     }];
     
-    return msgId + 1;
+    return msgId;
     
 }
 

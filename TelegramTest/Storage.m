@@ -187,8 +187,12 @@ NSString *const tableModernDialogs = @"modern_dialogs";
     if(!dqueue)
         dqueue = dispatch_get_current_queue();
     
-    
+
     NSString *dbPath = [[Storage path] stringByAppendingPathComponent:@"encrypted.sqlite"];
+    
+#ifdef TGDEBUG 
+     dbPath = [[Storage path] stringByAppendingPathComponent:@"encrypted2.sqlite"];
+#endif
     
     if(!encryptionKey) {
         return;
@@ -213,14 +217,6 @@ NSString *const tableModernDialogs = @"modern_dialogs";
         
                 
         res = [db setKey:encryptionKey];
-        
-        char* errorMessage;
-
-        
-        sqlite3_exec(db.sqliteHandle, "PRAGMA synchronous=OFF", NULL, NULL, &errorMessage);
-        sqlite3_exec(db.sqliteHandle, "PRAGMA count_changes=OFF", NULL, NULL, &errorMessage);
-        sqlite3_exec(db.sqliteHandle, "PRAGMA journal_mode=MEMORY", NULL, NULL, &errorMessage);
-        sqlite3_exec(db.sqliteHandle, "PRAGMA temp_store=MEMORY", NULL, NULL, &errorMessage);
         
         
         [db executeUpdate:[NSString stringWithFormat:@"create table if not exists %@ (n_id INTEGER PRIMARY KEY,message_text TEXT, flags integer, from_id integer, peer_id integer, date integer, serialized blob, random_id, destruct_time, filter_mask integer, fake_id integer, dstate integer, webpage_id blob)",tableMessages]];

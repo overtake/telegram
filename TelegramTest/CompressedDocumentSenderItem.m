@@ -37,7 +37,11 @@
             
             NSData *jpeg = jpegNormalizedData(image);
             
-            document.thumb = [TL_photoSize createWithType:@"" location:[TL_fileLocation createWithDc_id:0 volume_id:rand_long() local_id:0 secret:0] w:image.size.width h:image.size.height size:(int)jpeg.length];
+            NSImage *thumb = [ImageUtils imageResize:image newSize:strongsize(image.size, 80)];
+            
+            
+            
+            document.thumb = [TL_photoCachedSize createWithType:@"" location:[TL_fileLocation createWithDc_id:0 volume_id:rand_long() local_id:0 secret:0] w:image.size.width h:image.size.height bytes:compressImage(jpegNormalizedData(thumb), 0.1) ];
             
             [TGCache cacheImage:image forKey:[NSString stringWithFormat:@"%@:blurred",[document.thumb.location cacheKey]] groups:@[IMGCACHE]];
             
