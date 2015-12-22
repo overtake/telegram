@@ -15,7 +15,7 @@
 
 @implementation TGGLVideoFrame
 
-- (instancetype)initWithBuffer:(CVImageBufferRef)buffer timestamp:(NSTimeInterval)timestamp {
+- (instancetype)initWithBuffer:(CMSampleBufferRef)buffer timestamp:(NSTimeInterval)timestamp {
     self = [super init];
     if (self != nil) {
         if (buffer) {

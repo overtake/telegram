@@ -1474,8 +1474,6 @@ TL_localMessage *parseMessage(FMResultSet *result) {
         
         NSArray *msgs = [messages copy];
         
-        test_start_group(@"insert_test");
-        
         for (TL_localMessage *message in msgs) {
             
             TL_localMessage *m = [message copy];
@@ -1579,8 +1577,6 @@ TL_localMessage *parseMessage(FMResultSet *result) {
         
         [db commit];
         
-        test_step_group(@"insert_test");
-        test_release_group(@"insert_test");
         
         if(completeHandler != nil) {
             dispatch_async(dqueue, completeHandler);

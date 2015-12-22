@@ -61,7 +61,7 @@
     
     TLChat *chat = [[ChatsManager sharedManager] find:self.chat.n_id];
     
-    if([chat isKindOfClass:[TL_channel class]]) {
+    if([chat isKindOfClass:[TL_channel class]] || [self.chat isKindOfClass:[TL_channel_old43 class]]) {
         
         NSMutableArray *array = [[NSMutableArray alloc] init];
         for(TLUser* item in self.action.result.multiObjects) {

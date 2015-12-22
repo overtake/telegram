@@ -8,7 +8,6 @@
 
 #import "TMView.h"
 #import "HackUtils.h"
-#import "TGPasslock.h"
 @interface TMView ()
 @property (nonatomic,assign) NSPoint movableStartLocation;
 @property (nonatomic,assign) NSPoint startPoint;
@@ -178,10 +177,6 @@
         _startPoint = [self.superview convertPoint:[[self window] mouseLocationOutsideOfEventStream] fromView:nil];
     } else
         _startPoint =  NSMakePoint(0, 0);
-}
-
-- (BOOL)acceptsFirstMouse:(NSEvent *)theEvent {
-    return ![TGPasslock isVisibility];
 }
 
 

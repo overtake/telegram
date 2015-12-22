@@ -15,6 +15,7 @@
 @interface TGGifSearchRowItem : TMRowItem
 @property (nonatomic,strong) NSArray *gifs;
 @property (nonatomic,assign) long randKey;
+@property (nonatomic,strong) NSArray *proportions;
 @end
 
 @implementation TGGifSearchRowItem
@@ -23,6 +24,9 @@
     if(self = [super initWithObject:object]) {
         _gifs = object;
         _randKey = rand_long();
+        
+        
+        
     }
     
     return self;
@@ -47,8 +51,8 @@
         
         int s = NSHeight(frameRect);
         
-        for (int i = 0; i < 4; i++) {
-            NSImageView *imageView = [[NSImageView alloc] initWithFrame:NSMakeRect(i == 0 ? 10 : 10 + (i*s) + (2*i), 1, s, s-2)];
+        for (int i = 0; i < 3; i++) {
+            NSImageView *imageView = [[NSImageView alloc] initWithFrame:NSZeroRect];
             
             imageView.wantsLayer = YES;
             imageView.layer.cornerRadius = 4;
@@ -69,12 +73,20 @@
     
     TGGifSearchRowItem *item = (TGGifSearchRowItem *)[self rowItem];
     
+    float w = (NSWidth(self.frame) - 20)/3.0;
+    
+    __block int x = 0;
+    
     [self.subviews enumerateObjectsUsingBlock:^(NSImageView * imageView, NSUInteger idx, BOOL * _Nonnull stop) {
         
         if(idx < item.gifs.count) {
             TL_foundGif *gif = item.gifs[idx];
             [imageView setImageWithURL:[NSURL URLWithString:gif.webpage.thumb_url]];
             [imageView setImageScaling:NSImageScaleAxesIndependently];
+            [imageView setFrameSize:strongsize(NSMakeSize(gif.webpage.w, gif.webpage.h), MIN(w,NSHeight(self.frame)))];
+            [imageView setFrameOrigin:NSMakePoint(x, 0)];
+            
+            x+=NSWidth(imageView.frame);
         } else {
             imageView.image = nil;
         }
@@ -156,7 +168,7 @@
 
 -(instancetype)initWithFrame:(NSRect)frameRect {
     if(self = [super initWithFrame:frameRect]) {
-        [self setContainerFrameSize:NSMakeSize(300, 300)];
+        [self setContainerFrameSize:NSMakeSize(350, 300)];
         
         [self initialize];
     }
@@ -274,16 +286,23 @@
     
     NSMutableArray *row = [[NSMutableArray alloc] init];
     
-    [gifs enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+    __block BOOL doneRow = NO;
+    
+    [gifs enumerateObjectsUsingBlock:^(TL_foundGif *obj, NSUInteger idx, BOOL * _Nonnull stop) {
         
-        if(row.count < 4) {
+        if(!doneRow) {
             [row addObject:obj];
         } else  {
             TGGifSearchRowItem *item = [[TGGifSearchRowItem alloc] initWithObject:[row copy]];
             [row removeAllObjects];
             [row addObject:obj];
-            
             [_tableView addItem:item tableRedraw:NO];
+            
+            NSSize size = strongsize(NSMakeSize(obj.webpage.w, obj.webpage.h), 50);
+            
+            
+            
+            doneRow = NO;
         }
         
     }];

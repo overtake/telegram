@@ -202,7 +202,7 @@
     
     id request;
     
-    if([chat isKindOfClass:[TL_channel class]]) {
+    if([chat isKindOfClass:[TL_channel class]] || [chat isKindOfClass:[TL_channel_old43 class]]) {
         request = [TLAPI_channels_getFullChannel createWithChannel:chat.inputPeer];
     } else {
         request = [TLAPI_messages_getFullChat createWithChat_id:chat.n_id];

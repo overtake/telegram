@@ -306,52 +306,16 @@
     }
 }
 
--(void)displayPixelBuffer:(CVImageBufferRef)pixelBuffer atTime:(CMTime)outputTime flush:(BOOL)flush {
+-(void)displayPixelBuffer:(CMSampleBufferRef)sampleBuffer atTime:(CMTime)outputTime flush:(BOOL)flush {
     
-    CMSampleBufferRef sampleBuffer = NULL;
-    OSStatus err = noErr;
-    
-    
-    
-    if (!_videoInfo || !CMVideoFormatDescriptionMatchesImageBuffer(_videoInfo, pixelBuffer)) {
-        if (_videoInfo) {
-            CFRelease(_videoInfo);
-            _videoInfo = nil;
-        }
-        err = CMVideoFormatDescriptionCreateForImageBuffer(NULL, pixelBuffer, &_videoInfo);
-    }
-    
-    
-    if (err) {
-        NSLog(@"Error at CMVideoFormatDescriptionCreateForImageBuffer %d", err);
-    }
-    
-    CMSampleTimingInfo sampleTimingInfo = {
-        .duration = kCMTimeInvalid,
-        .presentationTimeStamp = outputTime,
-        .decodeTimeStamp = kCMTimeInvalid
-    };
-    
-    
-    // Wrap the pixel buffer in a sample buffer
-    err = CMSampleBufferCreateForImageBuffer(kCFAllocatorDefault, pixelBuffer, true, NULL, NULL, _videoInfo, &sampleTimingInfo, &sampleBuffer);
-    
-    if (err) {
-        NSLog(@"Error at CMSampleBufferCreateForImageBuffer %d", err);
-    }
-    
-    if(flush) {        
+    if(flush) {
         [self.videoLayer flush];
     }
-//
-    
     
     if (self.videoLayer.readyForMoreMediaData) {
        
         [self.videoLayer enqueueSampleBuffer:sampleBuffer];
     }
-    
-    CFRelease(sampleBuffer);
     
 }
 
@@ -390,10 +354,8 @@
                 CMTime presentationTime = CMSampleBufferGetPresentationTimeStamp(sampleVideo);
                 NSTimeInterval presentationSeconds = CMTimeGetSeconds(presentationTime);
                 
-                CVImageBufferRef imageBuffer = CMSampleBufferGetImageBuffer(sampleVideo);
                 
-                
-                TGGLVideoFrame *videoFrame = [[TGGLVideoFrame alloc] initWithBuffer:imageBuffer timestamp:presentationSeconds];
+                TGGLVideoFrame *videoFrame = [[TGGLVideoFrame alloc] initWithBuffer:sampleVideo timestamp:presentationSeconds];
                 videoFrame.outTime = presentationTime;
                 
                 if(_pollingFirstFrame &&  presentationSeconds > DBL_EPSILON) {
@@ -408,12 +370,6 @@
                 
                 [self cleanup];
                 
-//                if(!_paused) {
-//                    if(_frameQueue->_frames.count == 0) {
-//                    [_frameQueue pauseRequests];
-//                } else
-                
-           //     [_frameQueue pauseRequests];
                 return nil;
                 
                 
@@ -429,14 +385,6 @@
    // [_reader cancelReading];
     _reader = nil;
     _output = nil;
-    
-//    if(_videoInfo != NULL) {
-//        CFRelease(_videoInfo);
-//        _videoInfo = NULL;
-//    }
-//
-//    [self.videoLayer flush];
-    
     
 }
 

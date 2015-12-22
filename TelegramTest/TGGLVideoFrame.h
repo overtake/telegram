@@ -9,12 +9,12 @@
 #import <Foundation/Foundation.h>
 
 @interface TGGLVideoFrame : NSObject
-@property (nonatomic, readonly) CVImageBufferRef buffer;
+@property (nonatomic, readonly) CMSampleBufferRef buffer;
 @property (nonatomic, readonly) NSTimeInterval timestamp;
 @property (nonatomic) CMTime outTime;
 @property (nonatomic) BOOL firstFrame;
 @property (nonatomic) CMSampleBufferRef sampleVideo;
 
-- (instancetype)initWithBuffer:(CVImageBufferRef)buffer timestamp:(NSTimeInterval)timestamp;
+- (instancetype)initWithBuffer:(CMSampleBufferRef)buffer timestamp:(NSTimeInterval)timestamp;
 
 @end
