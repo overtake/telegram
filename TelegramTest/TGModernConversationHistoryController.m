@@ -217,8 +217,6 @@
         } errorHandler:^(id request, RpcError *error) {
             
             
-            int bp = 0;
-            
         } timeout:0 queue:_queue.nativeQueue];
         
     }
