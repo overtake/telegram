@@ -16,6 +16,8 @@
 
 @property (nonatomic,weak) MessagesTableView *table;
 
+@property (nonatomic,assign) NSUInteger rowId;
+
 @property (nonatomic, strong) TL_localMessage *message;
 
 @property (nonatomic, strong) SenderItem *messageSender;

@@ -43,10 +43,15 @@
             
             NSImage* thumbImg = [[NSImage alloc] initWithCGImage:im size:self.imageSize];
             
+            thumbImg = renderedImage(thumbImg, self.imageSize);
+            
             [TGCache cacheImage:thumbImg forKey:[self cacheKey] groups:@[IMGCACHE]];
             
             
             [ASQueue dispatchOnMainQueue:^{
+                
+                _inited = NO;
+                
                 [self.delegate didDownloadImage:thumbImg object:self];
             }];
         };

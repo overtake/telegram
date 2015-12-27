@@ -173,8 +173,6 @@ static NSArray *channelUpdates;
                 
             }];
             
-            [_updateState setDate:[(TL_updates *)update date]];
-            [self saveUpdateState];
             
         }
         

@@ -93,7 +93,7 @@ static NSMutableDictionary *senders;
                     item = [[ImageSenderItem alloc] init];
                 } else if([msg.media isKindOfClass:[TL_messageMediaVideo class]]) {
                     item = [[VideoSenderItem alloc] init];
-                } else if([msg.media isKindOfClass:[TL_messageMediaDocument class]]) {
+                } else if([msg.media isKindOfClass:[TL_messageMediaDocument class]] || [msg.media isKindOfClass:[TL_messageMediaDocument_old44 class]]) {
                     
                     item = [[DocumentSenderItem alloc] init];
                     
@@ -134,7 +134,7 @@ static NSMutableDictionary *senders;
                             [(FileSecretSenderItem *)item setUploaderType:UploadImageType];
                         } else if([msg.media isKindOfClass:[TL_messageMediaVideo class]]) {
                             [(FileSecretSenderItem *)item setUploaderType:UploadVideoType];
-                        } else if([msg.media isKindOfClass:[TL_messageMediaDocument class]]) {
+                        } else if([msg.media isKindOfClass:[TL_messageMediaDocument class]] || [msg.media isKindOfClass:[TL_messageMediaDocument_old44 class]]) {
                             [(FileSecretSenderItem *)item setUploaderType:UploadDocumentType];
                         } else if([msg.media isKindOfClass:[TL_messageMediaAudio class]]) {
                             [(FileSecretSenderItem *)item setUploaderType:UploadAudioType];

@@ -13,6 +13,7 @@
 -(int)duration;
 -(NSString *)file_name;
 -(NSString *)path_with_cache;
+- (BOOL)isset;
 -(BOOL)isSticker;
 -(TLDocumentAttribute *)attributeWithClass:(Class)className;
 -(NSSize)imageSize;

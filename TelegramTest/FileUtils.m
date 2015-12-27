@@ -137,7 +137,7 @@ NSString* mediaFilePath(TL_localMessage *message) {
         return [NSString stringWithFormat:@"%@/%lu_%lu.mp4",path(),message.media.video.n_id,message.media.video.access_hash];
     }
     
-    if([message.media isKindOfClass:[TL_messageMediaDocument class]]) {
+    if([message.media isKindOfClass:[TL_messageMediaDocument class]] || [message.media isKindOfClass:[TL_messageMediaDocument_old44 class]]) {
         
         
         if([message isKindOfClass:[TL_destructMessage class]]) {
@@ -147,6 +147,10 @@ NSString* mediaFilePath(TL_localMessage *message) {
             return [NSString stringWithFormat:@"%@/%ld_%@",path(),message.media.document.n_id,name.file_name];
         }
         
+        
+        if([message.media.document isKindOfClass:[TL_externalDocument class]]) {
+            return  path_for_external_link(message.media.document.external_webpage.content_url);
+        }
         
         id nondocValue = non_documents_mime_types()[message.media.document.mime_type];
         
@@ -619,7 +623,7 @@ void open_user_by_name(NSDictionary *params) {
         
     };
     
-    if(obj) {
+    if(false) {
         
         perform();
         
@@ -1209,6 +1213,26 @@ NSDictionary *audioTags(AVURLAsset *asset) {
     }
     
     return @{@"artist":[artistName trim],@"songName":[songName trim]};
+}
+
+
+NSString *first_domain_character(NSString *url) {
+    if(url != nil)
+    {
+        
+        if(![url hasPrefix:@"http://"] && ![url hasPrefix:@"https://"] && ![url hasPrefix:@"ftp://"])
+            return [[url substringToIndex:1] uppercaseString];
+        
+        NSURLComponents *components = [[NSURLComponents alloc] initWithString:url];
+        
+        return [[components.host substringToIndex:1] uppercaseString];
+    }
+    
+    return @"L";
+}
+
+NSString *path_for_external_link(NSString *link) {
+    return [NSString stringWithFormat:@"%@/%ld.%@",[FileUtils path],[link hash],[link pathExtension]];
 }
 
 

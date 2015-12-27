@@ -40,8 +40,12 @@
 
 -(NSString *)path_with_cache {
     TL_localMessage *fake = [[TL_localMessage alloc] init];
-    fake.media = [TL_messageMediaDocument createWithDocument:self];
+    fake.media = [TL_messageMediaDocument createWithDocument:self caption:@""];
     return mediaFilePath(fake);
+}
+
+- (BOOL)isset {
+    return isPathExists(self.path_with_cache) && [FileUtils checkNormalizedSize:self.path_with_cache checksize:[self size]];
 }
 
 -(TLDocumentAttribute *)attributeWithClass:(Class)className {

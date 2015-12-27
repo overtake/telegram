@@ -225,13 +225,13 @@ const static int textFieldXOffset = 30;
 - (bool)endEditing;
 {
     bool success;
-    id responder = [[NSApp mainWindow] firstResponder];
+    id responder = [self.window firstResponder];
     
     
     if ( (responder != nil) && [responder isKindOfClass:[NSTextView class]] && [(NSTextView*)responder isFieldEditor] )
         responder = ( [[responder delegate] isKindOfClass:[NSResponder class]] ) ? [responder delegate] : nil;
     
-    success = [[NSApp mainWindow] makeFirstResponder:nil];
+    success = [self.window makeFirstResponder:nil];
     
     [self centerPosition:YES];
     
@@ -432,7 +432,7 @@ static float duration = 0.1;
     self.isActive = YES;
     [self leftPosition:YES];
 //    [self setNeedsDisplay:YES];
-     [self.cancelButton setHidden:NO];
+     [self.cancelButton setHidden:![self isTextFieldInFocus:self.textField] && self.textField.stringValue.length == 0];
     
     if([self.delegate respondsToSelector:@selector(searchFieldFocus)])
         [self.delegate searchFieldFocus];

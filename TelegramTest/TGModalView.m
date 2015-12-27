@@ -164,6 +164,9 @@
     [window makeFirstResponder:self];
     
     self.layer.opacity = 1;
+    
+    
+    [[NSNotificationCenter defaultCenter] postNotificationName:NSWindowDidBecomeKeyNotification object:window];
 
     if(animated) {
         
@@ -295,6 +298,8 @@
 
 
 -(void)close:(BOOL)animated {
+    
+    [[NSNotificationCenter defaultCenter] postNotificationName:NSWindowDidBecomeKeyNotification object:self.window];
     
     if(animated) {
         POPBasicAnimation *anim = [TMViewController popAnimationForProgress:self.layer.opacity to:0];

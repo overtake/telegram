@@ -111,27 +111,31 @@
     [self.siteName setAttributedStringValue:webpage.siteName];
 
     
-    [_imageView setObject:webpage.imageObject];
-    
-    [webpage.imageObject.supportDownloadListener setProgressHandler:^(DownloadItem *item) {
+    if(!_imageView.isHidden) {
+        [_imageView setObject:webpage.imageObject];
         
-        [ASQueue dispatchOnMainQueue:^{
+        [webpage.imageObject.supportDownloadListener setProgressHandler:^(DownloadItem *item) {
             
-             [self.loaderView setProgress:item.progress animated:YES];
-            
-        }];
-        
-    }];
-    
-    [webpage.imageObject.supportDownloadListener setCompleteHandler:^(DownloadItem *item) {
-        
-        [ASQueue dispatchOnMainQueue:^{
-            
-            [self updateState:0];
+            [ASQueue dispatchOnMainQueue:^{
+                
+                [self.loaderView setProgress:item.progress animated:YES];
+                
+            }];
             
         }];
         
-    }];
+        [webpage.imageObject.supportDownloadListener setCompleteHandler:^(DownloadItem *item) {
+            
+            [ASQueue dispatchOnMainQueue:^{
+                
+                [self updateState:0];
+                
+            }];
+            
+        }];
+
+    }
+    
     
 }
 

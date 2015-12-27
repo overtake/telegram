@@ -19,6 +19,12 @@
         
         self.message = [MessageSender createOutMessage:nil media:media conversation:conversation];
         
+        if(![media.document.thumb isKindOfClass:[TL_photoSizeEmpty class]]) {
+            NSString *key = [media.document.thumb.location cacheKey];
+            [TGCache cacheImage:[TGCache cachedImage:key group:@[IMGCACHE]] forKey:[NSString stringWithFormat:@"%@:blurred",key] groups:@[IMGCACHE]];
+        }
+        
+        
         [self.message save:YES];
         
     }
@@ -37,13 +43,25 @@
             return;
         
         
-        id request = [TLAPI_messages_sendMedia createWithFlags:0 peer:self.conversation.inputPeer reply_to_msg_id:0 media:[self.message.media.document isKindOfClass:[TL_externalDocument class]] ? [TL_inputMediaGifExternal createWithUrl:self.message.media.document.external_url q:self.message.media.document.search_q] : [TL_inputMediaDocument createWithN_id:[TL_inputDocument createWithN_id:self.message.media.document.n_id access_hash:self.message.media.document.access_hash]] random_id:self.message.randomId reply_markup:nil];
+        id request = [TLAPI_messages_sendMedia createWithFlags:[self senderFlags] peer:self.conversation.inputPeer reply_to_msg_id:self.message.reply_to_msg_id media:[self.message.media.document isKindOfClass:[TL_externalDocument class]] ? [TL_inputMediaGifExternal createWithUrl:self.message.media.document.external_url q:self.message.media.document.search_q] : [TL_inputMediaDocument createWithN_id:[TL_inputDocument createWithN_id:self.message.media.document.n_id access_hash:self.message.media.document.access_hash] caption:@""] random_id:self.message.randomId reply_markup:[TL_replyKeyboardMarkup createWithFlags:0 rows:nil]];
         
         self.rpc_request = [RPCRequest sendRequest:request successHandler:^(id request, id response) {
+            
             
             [self updateMessageId:response];
             
             TL_localMessage *msg = [TL_localMessage convertReceivedMessage:[[self updateNewMessageWithUpdates:response] message]];
+            
+            
+            if([self.message.media.document isKindOfClass:[TL_externalDocument class]]) {
+                NSString *path = path_for_external_link(self.message.media.document.external_webpage.content_url);
+                NSError *error;
+                
+                [[NSFileManager defaultManager] removeItemAtPath:mediaFilePath(msg) error:nil];
+                
+                [[NSFileManager defaultManager] copyItemAtPath:path toPath:mediaFilePath(msg) error:&error];
+            }
+            
             
             self.message.n_id = msg.n_id;
             self.message.date = msg.date;

@@ -28,6 +28,7 @@
 @interface TMRowItem : NSObject<TMRowItemProtocol>
 
 @property (nonatomic, weak) TMTableView *table;
+@property (nonatomic,assign) NSUInteger rowId;
 -(id)initWithObject:(id)object;
 - (void) redrawRow;
 - (NSUInteger)hash;

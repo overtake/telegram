@@ -98,8 +98,9 @@ NSImage *placeholder() {
             
             NSMutableAttributedString *desc = [[NSMutableAttributedString alloc] init];
             
-            [desc appendString:webpage.n_description withColor:[NSColor blackColor]];
+            [desc appendString:webpage.n_description withColor:NSColorFromRGB(0x000000)];
             [desc setFont:TGSystemFont(13) forRange:desc.range];
+            
             
             NSMutableParagraphStyle *style = [NSMutableParagraphStyle new];
             style.lineBreakMode = NSLineBreakByWordWrapping;
@@ -113,16 +114,19 @@ NSImage *placeholder() {
             if(t.length > 0 && _author == nil)  {
                 NSMutableAttributedString *title = [[NSMutableAttributedString alloc] init];
                 
-                [title appendString:[NSString stringWithFormat:@"%@\n",t] withColor:[NSColor blackColor]];
+                [title appendString:[NSString stringWithFormat:@"%@\n",t] withColor:NSColorFromRGB(0x000000)];
                 [title setFont:TGSystemMediumFont(13) forRange:title.range];
+                
                 
                 [desc insertAttributedString:title atIndex:0];
             }
             
-            
             _desc = desc;
             
             [desc detectAndAddLinks:URLFindTypeLinks];
+            
+            [desc setSelectionColor:NSColorFromRGB(0xffffff) forColor:NSColorFromRGB(0x000000)];
+            
         } else {
             _desc = [[NSAttributedString alloc] init];
         }

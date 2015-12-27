@@ -438,8 +438,8 @@
     [_contextBotsPanelView setHidden:YES];
     
     self.hintView = [[TGMessagesHintView alloc] initWithFrame:NSMakeRect(0, NSHeight(self.bottomView.frame), NSWidth(self.view.frame), 100)];
-    
-     [self.hintView setHidden:YES];
+    self.hintView.messagesViewController = self;
+    [self.hintView setHidden:YES];
     
     [self.view addSubview:self.hintView];
     
@@ -3867,6 +3867,7 @@ static NSTextAttachment *headerMediaIcon() {
     
     NSDate *start = [NSDate new];
     item.table = self.table;
+    item.rowId = row;
     [cell setItem:item];
    
     

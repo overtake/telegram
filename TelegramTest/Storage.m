@@ -33,6 +33,8 @@ NSString *const FILE_NAMES = @"file_names";
 NSString *const ATTACHMENTS = @"attachments";
 NSString *const BOT_COMMANDS = @"bot_commands_v2";
 NSString *const RECENT_SEARCH = @"recent_search";
+NSString *const RECENT_GIFS = @"RECENT_GIFS";
+
 -(id)init {
     if(self = [super init]) {
         [self open:nil queue:nil];
@@ -2624,7 +2626,9 @@ TL_localMessage *parseMessage(FMResultSet *result) {
     
     [queue inDatabase:^(FMDatabase *db) {
         
-        [db executeUpdate:@"update messages set n_id = (?), dstate = (?) where random_id = ?",@(n_id),@(DeliveryStateNormal),@(random_id)];
+        if(![db boolForQuery:[NSString stringWithFormat:@"select count(*) from %@ where n_id = ?",tableMessages],@(n_id)]) {
+            [db executeUpdate:[NSString stringWithFormat:@"update %@ set n_id = (?), dstate = (?) where random_id = ?",tableMessages],@(n_id),@(DeliveryStateNormal),@(random_id)];
+        }
         
         int  peer_id = [db intForQuery:[NSString stringWithFormat:@"select peer_id from %@ where random_id = ?",tableChannelMessages],@(random_id)];
       

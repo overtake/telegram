@@ -166,18 +166,7 @@ static NSImage *sharedLinkCapImage() {
          if(item.links.count > 0)
              url = item.links[0];
     
-    if(url != nil)
-    {
-        
-        if(![url hasPrefix:@"http://"] && ![url hasPrefix:@"https://"] && ![url hasPrefix:@"ftp://"])
-            return [[url substringToIndex:1] uppercaseString];
-        
-        NSURLComponents *components = [[NSURLComponents alloc] initWithString:url];
-        
-        return [[components.host substringToIndex:1] uppercaseString];
-    }
-   
-    return @"L";
+    return first_domain_character(url);
 }
 
 

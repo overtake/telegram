@@ -11,6 +11,19 @@
 
 #import "TGGLVideoFrame.h"
 #import <AVFoundation/AVFoundation.h>
+#import "SpacemanBlocks.h"
+
+@interface TGAVSampleBufferDisplayLayer : AVSampleBufferDisplayLayer
+@property (nonatomic,assign) int sessionId;
+@end
+
+
+@implementation TGAVSampleBufferDisplayLayer
+
+
+
+@end
+
 @interface TGGLVideoFrameQueue : NSObject
 {
     SQueue *_queue;
@@ -37,11 +50,24 @@
     self = [super init];
     if (self != nil) {
         
+        static int k = 0;
+        static NSMutableArray *queues;
+        static dispatch_once_t onceToken;
+        dispatch_once(&onceToken, ^{
+            queues = [[NSMutableArray alloc] init];
+            for (int i = 0; i < 4; i++) {
+                [queues addObject:[[SQueue alloc] init]];
+            }
+        });
         
-        _queue = [[SQueue alloc] init];
+        _queue = queues[k];
         
-        _maxFrames = 5;
-        _fillFrames = 2;
+        if(++k == 4)
+            k = 0;
+        
+        
+        _maxFrames = 3;
+        _fillFrames = 1;
         
         _requestFrame = [requestFrame copy];
         _drawFrame = [drawFrame copy];
@@ -166,7 +192,7 @@
 
 
 
-@interface TGGLVideoPlayer ()
+@interface TGGLVideoPlayer () <TGImageObjectDelegate>
 {
     
     AVAssetReader *_reader;
@@ -176,10 +202,11 @@
     CMVideoFormatDescriptionRef _videoInfo;
     BOOL _paused;
     BOOL _pollingFirstFrame;
-
+    SMDelayedBlockHandle _resumeHandle;
+    SMDelayedBlockHandle _pauseHandle;
 }
 
-@property (nonatomic,strong) AVSampleBufferDisplayLayer *videoLayer;
+@property (nonatomic,strong) TGAVSampleBufferDisplayLayer *videoLayer;
 
 @end
 
@@ -190,6 +217,7 @@
     if(self = [super initWithFrame:frameRect]) {
         
         [self setWantsLayer:YES];
+        [self clear];
         
         __weak TGGLVideoPlayer *weakSelf = self;
         _frameQueue = [[TGGLVideoFrameQueue alloc] initWithRequestFrame:^TGGLVideoFrame *{
@@ -201,7 +229,7 @@
         } drawFrame:^(TGGLVideoFrame *videoFrame, int32_t sessionId) {
             __strong TGGLVideoPlayer *strongSelf = weakSelf;
             if (strongSelf != nil && strongSelf->_sessionId == sessionId) {
-                [strongSelf displayPixelBuffer:videoFrame.buffer atTime:videoFrame.outTime flush:videoFrame.firstFrame];
+                [strongSelf displayPixelBuffer:videoFrame.buffer sessionId:sessionId flush:videoFrame.firstFrame];
                 
             }
         }];
@@ -214,30 +242,76 @@
 -(void)setFrameSize:(NSSize)newSize {
     [super setFrameSize:newSize];
     
-    [_videoLayer setFrameSize:newSize];
+    [_videoLayer setBounds:self.bounds];
+}
+
+
+-(void)setImageObject:(TGImageObject *)imageObject {
+    
+     if(_imageObject.delegate == self)
+        imageObject.delegate = nil;
+    
+    
+    self->_imageObject = imageObject;
+    
+    NSImage *image = [self cachedImage:[_imageObject cacheKey]];
+    if(image) {
+        self.videoLayer.contents = image;
+        return;
+    }
+    
+    self.videoLayer.contents = [self cachedThumb:[_imageObject cacheKey]];
+    
+    _imageObject.delegate = self;
+    
+    [_imageObject initDownloadItem];
+    
+}
+
+-(NSImage *)cachedImage:(NSString *)key {
+    return [TGCache cachedImage:key group:@[IMGCACHE]];
+}
+
+
+-(NSImage *)cachedThumb:(NSString *)key {
+    return _imageObject.placeholder;
+}
+
+
+-(void)didDownloadImage:(NSImage *)newImage object:(TGImageObject *)imageObject {
+    if([[imageObject cacheKey] isEqualToString:[_imageObject cacheKey]]) {
+        
+        if(_paused)
+            self.videoLayer.contents = newImage;
+    }
 }
 
 -(void)clear {
-    self.videoLayer = [[AVSampleBufferDisplayLayer alloc] init];
-    self.videoLayer.bounds = self.bounds;
-    self.videoLayer.position = CGPointMake(CGRectGetMidX(self.bounds), CGRectGetMidY(self.bounds));
-    self.videoLayer.backgroundColor = [NSColor grayColor].CGColor;
     
+    self.videoLayer = [[TGAVSampleBufferDisplayLayer alloc] init];
+    self.videoLayer.bounds = self.bounds;
+    self.videoLayer.sessionId = _sessionId;
+    self.videoLayer.backgroundColor = NSColorFromRGB(0xb6b6b6).CGColor;
+    self.videoLayer.videoGravity = AVLayerVideoGravityResizeAspectFill;
     [self setLayer:self.videoLayer];
+    
 }
 
 -(void)setPath:(NSString *)path {
      _paused = YES;
-    
+    _sessionId++;
+  
     [self clear];
     
     [_frameQueue dispatch:^{
         _path = path;
-        _sessionId++;
         [_reader cancelReading];
         _reader = nil;
         _output = nil;
         
+        if(_path == nil) {
+            [_frameQueue pauseRequests];
+        }
     }];
     
 }
@@ -248,47 +322,26 @@
     
     _paused = NO;
     
-    
     [_frameQueue dispatch:^{
+        
         if(_frameQueue->_timer == nil) {
-            
             [self cleanup];
-            
             [_frameQueue beginRequests:_sessionId];
-            
-            [ASQueue dispatchOnMainQueue:^{
-                [self.subviews enumerateObjectsUsingBlock:^(__kindof NSView * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-                    if([obj isKindOfClass:NSClassFromString(@"TGImageView")]) {
-                        [obj setHidden:YES];
-                    }
-                }];
-            }];
-            
         }
         
     }];
     
-}
-
--(void)dealloc {
-    [self cleanup];
-    [_frameQueue pauseRequests];
-    _frameQueue = nil;
+   
+    
 }
 
 -(void)pause {
     
     _paused = YES;
     
-    [self.subviews enumerateObjectsUsingBlock:^(__kindof NSView * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-        if([obj isKindOfClass:NSClassFromString(@"TGImageView")]) {
-            [obj setHidden:NO];
-        }
-    }];
-    
     [_frameQueue dispatch:^{
         
-        [_reader cancelReading];
+        
         [self cleanup];
         
         
@@ -297,25 +350,45 @@
         
     }];
     
+    
 }
 
 -(void)viewDidMoveToWindow {
     if(self.window == nil) {
         [_videoLayer flush];
-        [_frameQueue pauseRequests];
+        [_frameQueue dispatch:^{
+            [_frameQueue pauseRequests];
+        }];
     }
 }
 
--(void)displayPixelBuffer:(CMSampleBufferRef)sampleBuffer atTime:(CMTime)outputTime flush:(BOOL)flush {
+-(void)displayPixelBuffer:(CMSampleBufferRef)sampleBuffer sessionId:(int)sessionId flush:(BOOL)flush {
     
-    if(flush) {
-        [self.videoLayer flush];
-    }
     
-    if (self.videoLayer.readyForMoreMediaData) {
-       
-        [self.videoLayer enqueueSampleBuffer:sampleBuffer];
-    }
+     CFRetain(sampleBuffer);
+    
+    [ASQueue dispatchOnMainQueue:^{
+        
+        
+        if(self.videoLayer.sessionId == sessionId) {
+            if(flush) {
+                [self.videoLayer flush];
+            }
+            
+            if(sampleBuffer != NULL) {
+                
+                if (self.videoLayer.readyForMoreMediaData) {
+                    
+                    [self.videoLayer enqueueSampleBuffer:sampleBuffer];
+                }
+                
+            }
+        }
+        
+        
+        CFRelease(sampleBuffer);
+    }];
+    
     
 }
 
@@ -368,6 +441,7 @@
                 return videoFrame;
             } else {
                 
+                
                 [self cleanup];
                 
                 return nil;
@@ -382,7 +456,7 @@
 }
 
 -(void)cleanup {
-   // [_reader cancelReading];
+    //[_reader cancelReading];
     _reader = nil;
     _output = nil;
     

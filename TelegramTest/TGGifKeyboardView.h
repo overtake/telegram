@@ -10,4 +10,9 @@
 
 @interface TGGifKeyboardView : TMView
 
+@property (nonatomic,strong) MessagesViewController *messagesViewController;
+
+
+-(void)prepareSavedGifvs;
+-(void)clear;
 @end

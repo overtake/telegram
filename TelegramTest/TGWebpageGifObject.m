@@ -8,7 +8,7 @@
 
 #import "TGWebpageGifObject.h"
 #import "DownloadCacheDocumentItem.h"
-#import "TGGLVideoPlayer.h"
+#import "TGVTVideoView.h"
 #import "TGBlurImageObject.h"
 #import "TGThumbnailObject.h"
 @interface TGWebpageGifObject ()

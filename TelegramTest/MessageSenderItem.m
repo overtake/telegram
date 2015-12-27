@@ -63,15 +63,7 @@
     
     
     
-    if(self.conversation.type != DialogTypeBroadcast) {
-        
-        request = [TLAPI_messages_sendMessage createWithFlags:[self senderFlags] peer:[self.conversation inputPeer] reply_to_msg_id:self.message.reply_to_msg_id message:[self.message message] random_id:[self.message randomId] reply_markup:[TL_replyKeyboardMarkup createWithFlags:0 rows:nil] entities:self.message.entities];
-    } else {
-        
-        TL_broadcast *broadcast = self.conversation.broadcast;
-        
-        request = [TLAPI_messages_sendBroadcast createWithContacts:[broadcast inputContacts] random_id:[broadcast generateRandomIds] message:self.message.message media:[TL_inputMediaEmpty create]];
-    }
+    request = [TLAPI_messages_sendMessage createWithFlags:[self senderFlags] peer:[self.conversation inputPeer] reply_to_msg_id:self.message.reply_to_msg_id message:[self.message message] random_id:[self.message randomId] reply_markup:[TL_replyKeyboardMarkup createWithFlags:0 rows:nil] entities:self.message.entities];
     
     
     self.rpc_request = [RPCRequest sendRequest:request successHandler:^(RPCRequest *request, TL_updateShortSentMessage *response) {
@@ -86,12 +78,10 @@
             
         }
         
-        if(self.conversation.type != DialogTypeBroadcast)  {
-             self.message.n_id = response.n_id;
-             self.message.date = response.date;
-             self.message.media = response.media;
-             self.message.entities = response.entities;
-        }
+        self.message.n_id = response.n_id;
+        self.message.date = response.date;
+        self.message.media = response.media;
+        self.message.entities = response.entities;
         
         self.message.dstate = DeliveryStateNormal;
         

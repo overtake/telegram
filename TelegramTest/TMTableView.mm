@@ -286,7 +286,7 @@ static TMTableView *tableStatic;
     [self.list insertObject:item atIndex:atIndex];
     TMRowItem *rowItem = (TMRowItem *)(item);
     rowItem.table = self;
-    
+    rowItem.rowId = atIndex;
     if(tableRedraw) {
         [self beginUpdates];
         [self insertRowsAtIndexes:[NSIndexSet indexSetWithIndex:atIndex] withAnimation:self.defaultAnimation];

@@ -12,6 +12,7 @@
 
 @property (nonatomic,strong) NSString *path;
 
+@property (nonatomic,strong) TGImageObject *imageObject;
 
 -(void)pause;
 -(void)resume;

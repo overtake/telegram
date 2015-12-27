@@ -8,15 +8,15 @@
 
 #import "MessageTableCellMpegView.h"
 #import "MessageTableItemMpeg.h"
-#import "TGGLVideoPlayer.h"
+#import "TGVTVideoView.h"
+#import "TGVTVideoView.h"
 #import "TGImageView.h"
 #import "SpacemanBlocks.h"
 @interface MessageTableCellMpegView () {
     SMDelayedBlockHandle _handle;
+    BOOL _prevState;
 }
-@property (nonatomic,strong) TGGLVideoPlayer *player;
-
-@property (nonatomic,strong) TGImageView *thumbImage;
+@property (nonatomic,strong) TGVTVideoView *player;
 
 @property (nonatomic,strong) TMView *playerContainer;
 
@@ -34,14 +34,10 @@
         
         [self.containerView addSubview:_playerContainer];
         
-        _player = [[TGGLVideoPlayer alloc] initWithFrame:NSMakeRect(0, 0, 500, 280)];
+        _player = [[TGVTVideoView alloc] initWithFrame:NSMakeRect(0, 0, 500, 280)];
         
         [_playerContainer addSubview:_player];
         
-                
-        _thumbImage = [[TGImageView alloc] init];
-        
-        [_player addSubview:_thumbImage];
         
         
         [self setProgressStyle:TMCircularProgressDarkStyle];
@@ -50,7 +46,7 @@
         [self.progressView setImage:image_LoadCancelWhiteIcon() forState:TMLoaderViewStateUploading];
         
         
-        [self setProgressToView:_player];
+        [self setProgressToView:_playerContainer];
     }
     
     return self;
@@ -64,8 +60,6 @@
 
 - (void)setCellState:(CellState)cellState {
     
-    [_thumbImage setHidden:NO];
-    
     if(self.cellState == CellStateSending && cellState == CellStateNormal) {
         [super setCellState:cellState];
         
@@ -74,10 +68,11 @@
             if(self.item.downloadItem != nil) {
                 [self updateDownloadState];
             }
-        } else {
+        }
+    } else if(self.cellState == CellStateDownloading && cellState == CellStateNormal) {
+        if(self.item.isset) {
             [self.item doAfterDownload];
             [self doAfterDownload];
-
         }
     }
     
@@ -92,12 +87,10 @@
     [super doAfterDownload];
     
     MessageTableItemMpeg *item = (MessageTableItemMpeg *) self.item;
+        
+    _prevState = NO;
     
-    _thumbImage.object = item.thumbObject;
-    
-    [_player setPath:item.path];
-    
-    [_player pause];
+    _player.imageObject = item.thumbObject;
     
     [self _didScrolledTableView:nil];
 }
@@ -107,14 +100,15 @@
 -(void)setItem:(MessageTableItemMpeg *)item {
     [super setItem:item];
     
+    _prevState = NO;
+    
     [_playerContainer setFrameSize:item.blockSize];
     [_player setFrameSize:item.blockSize];
     
+    [self.progressView setCenterByView:self.progressView.superview];
     
-    [_player setPath:item.path];
     
-    [_thumbImage setObject:item.thumbObject];
-    [_thumbImage setFrameSize:item.blockSize];
+    [_player setImageObject:item.thumbObject];
 
     [self updateDownloadState];
     
@@ -127,24 +121,32 @@
     
     BOOL (^check_block)() = ^BOOL() {
         
-        NSRange visibleRange = [self.messagesViewController.table rowsInRect:self.messagesViewController.table.visibleRect];
+        BOOL completelyVisible = self.visibleRect.size.width > 0 && self.visibleRect.size.height > 0 && ![TMViewController isModalActive];
         
-        if(visibleRange.location > 0) {
-            visibleRange.location--;
-            visibleRange.length++;
-        }
-        
-        NSUInteger idx = [self.messagesViewController.table indexOfItem:self.item];
-        
-        return  idx > visibleRange.location && idx <= visibleRange.location + visibleRange.length && ((self.window != nil && self.window.isKeyWindow) || notification == nil) && self.item.isset;
+        return  completelyVisible && ((self.window != nil && self.window.isKeyWindow) || notification == nil) && item.isset;
         
     };
     
-    if(check_block() && [[NSFileManager defaultManager] fileExistsAtPath:item.path isDirectory:NO]) {
-        [_player resume];
+    cancel_delayed_block(_handle);
+    
+    dispatch_block_t block = ^{
+        BOOL nextState = check_block();
+        
+        if(_prevState != nextState) {
+            [_player setPath:nextState ? item.path : nil];
+        }
+        
+        _prevState = nextState;
+    };
+    
+    
+    
+    if(check_block()) {
+        _handle = perform_block_after_delay(0.05, block);
     } else {
-        [_player pause];
+        block();
     }
+
     
 }
 
@@ -154,7 +156,6 @@
     if(self.window == nil) {
         
         [self removeScrollEvent];
-        [_player pause];
         [_player setPath:nil];
         
     } else {

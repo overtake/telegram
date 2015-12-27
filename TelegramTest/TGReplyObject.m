@@ -145,7 +145,7 @@
         
     }
     
-    if([_replyMessage.media isKindOfClass:[TL_messageMediaDocument class]]) {
+    if([_replyMessage.media isKindOfClass:[TL_messageMediaDocument class]] || [_replyMessage.media isKindOfClass:[TL_messageMediaDocument_old44 class]]) {
         
         if(![_replyMessage.media.document isSticker]) {
             

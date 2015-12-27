@@ -31,6 +31,7 @@
             [TGCache cacheImage:image forKey:self.cacheKey groups:@[IMGCACHE]];
             
             [ASQueue dispatchOnMainQueue:^{
+                _inited = NO;
                 [self.delegate didDownloadImage:image object:self];
             }];
             

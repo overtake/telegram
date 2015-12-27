@@ -362,9 +362,14 @@
     
     
     [sets enumerateObjectsUsingBlock:^(TL_stickerSet *set, NSUInteger setIdx, BOOL * _Nonnull setStop) {
-        NSDictionary *val = @{@"stickers":[EmojiViewController stickersWithId:set.n_id],@"set":set};
         
-        [packSets addObject:val];
+        NSArray *stickers = [EmojiViewController stickersWithId:set.n_id];
+        if(stickers != nil) {
+            NSDictionary *val = @{@"stickers":stickers,@"set":set};
+            
+            [packSets addObject:val];
+        }
+        
     }];
     
     

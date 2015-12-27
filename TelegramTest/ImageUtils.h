@@ -223,6 +223,8 @@ CACHE_IMAGE(NoSharedLinks);
 
 CACHE_IMAGE(StickerSettings);
 
+CACHE_IMAGE(emojiContainer8);
+CACHE_IMAGE(emojiContainer8Highlighted);
 @interface ImageUtils : NSObject
 
 
@@ -256,5 +258,10 @@ NSData *pngNormalizedData(NSImage *image);
 NSImage *decompressedImage(NSImage *image);
 NSImage *renderedImage(NSImage * oldImage, NSSize size);
 NSImage *cropImage(NSImage *image,NSSize backSize, NSPoint difference);
+
+
+typedef NSImage * (^ImageProccessor)(NSImage *image, NSSize size);
+
++(ImageProccessor)c_proccessor;
 
 @end

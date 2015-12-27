@@ -138,7 +138,7 @@
         
         
         
-        media = [TL_messageMediaDocument createWithDocument:[TL_outDocument createWithN_id:rand_long() access_hash:0 date:[[MTNetwork instance] getTime] mime_type:self.mimeType size:(int)fileSize(self.filePath) thumb:size dc_id:0 file_path:self.filePath attributes:[@[[TL_documentAttributeFilename createWithFile_name:[filePath lastPathComponent]]] mutableCopy]]];
+        media = [TL_messageMediaDocument createWithDocument:[TL_outDocument createWithN_id:rand_long() access_hash:0 date:[[MTNetwork instance] getTime] mime_type:self.mimeType size:(int)fileSize(self.filePath) thumb:size dc_id:0 file_path:self.filePath attributes:[@[[TL_documentAttributeFilename createWithFile_name:[filePath lastPathComponent]]] mutableCopy]] caption:@""];
     } else if(self.uploadType == UploadAudioType) {
         
         NSTimeInterval duration = [TGOpusAudioPlayerAU durationFile:filePath];
@@ -201,7 +201,7 @@
     
     NSString *export;
     
-    if([self.message.media isKindOfClass:[TL_messageMediaDocument class]]) {
+    if([self.message.media isKindOfClass:[TL_messageMediaDocument class]] || [self.message.media isKindOfClass:[TL_messageMediaDocument_old44 class]]) {
         export = exportPath(self.message.randomId,[self.message.media.document.file_name pathExtension]);
     } else if([self.message.media isKindOfClass:[TL_messageMediaAudio class]]) {
         export = exportPath(self.message.randomId,@"mp3");

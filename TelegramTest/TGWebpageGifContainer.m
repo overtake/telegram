@@ -9,9 +9,9 @@
 #import "TGWebpageGifContainer.h"
 #import "TGWebpageGifObject.h"
 #import "TGModernAnimatedImagePlayer.h"
-#import "TGGLVideoPlayer.h"
+#import "TGVTVideoView.h"
 @interface TGWebpageGifContainer ()
-@property (nonatomic,strong) TGGLVideoPlayer *player;
+@property (nonatomic,strong) TGVTVideoView *player;
 @property (nonatomic,strong) TMView *playerContainer;
 @end
 
@@ -28,7 +28,7 @@
         
         _playerContainer.layer.cornerRadius = 4;
         
-        _player = [[TGGLVideoPlayer alloc] initWithFrame:NSZeroRect];
+        _player = [[TGVTVideoView alloc] initWithFrame:NSZeroRect];
         
         [_playerContainer addSubview:_player];
         
@@ -41,9 +41,10 @@
 
 -(void)setWebpage:(TGWebpageGifObject *)webpage {
     
-    [super setWebpage:webpage];
     
-    [webpage.imageObject.downloadItem removeEvent:webpage.imageObject.supportDownloadListener];
+    [self.imageView setHidden:YES];
+    
+    [super setWebpage:webpage];
     
     
     [self.descriptionField setFrame:NSMakeRect([self textX], 0, webpage.descSize.width , webpage.descSize.height )];
@@ -57,6 +58,8 @@
     [self.player setFrameSize:self.playerContainer.frame.size];
     
     [self.player setPath:webpage.path];
+    
+    [self.player setImageObject:webpage.imageObject];
     
     [self.imageView removeFromSuperview];
     
@@ -172,7 +175,7 @@
         visibleRange.length++;
     }
     
-    NSUInteger idx = [self.item.table indexOfItem:self.item];
+    NSUInteger idx = self.item.rowId;
     
     TGWebpageGifObject *webpage = (TGWebpageGifObject *)self.webpage;
 

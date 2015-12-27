@@ -38,6 +38,7 @@ extern NSString *const FILE_NAMES;
 extern NSString *const ATTACHMENTS;
 extern NSString *const BOT_COMMANDS;
 extern NSString *const RECENT_SEARCH;
+extern NSString *const RECENT_GIFS;
 -(void)drop:(void (^)())completeHandler;
 +(void)drop;
 +(void)open:(void (^)())completeHandler;

@@ -2,7 +2,7 @@
 //  MTProto.h
 //  Telegram
 //
-//  Auto created by Mikhail Filimonov on 21.12.15.
+//  Auto created by Mikhail Filimonov on 22.12.15.
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -414,6 +414,18 @@
 @interface TLmessages_FoundGifs : TLObject
 @end
 	
+@interface TLmessages_SavedGifs : TLObject
+@end
+	
+@interface TLInputBotContextResult : TLObject
+@end
+	
+@interface TLBotContextResult : TLObject
+@end
+	
+@interface TLmessages_BotResults : TLObject
+@end
+	
 @interface TLProtoMessage : TLObject
 @end
 	
@@ -593,6 +605,10 @@
 @property (nonatomic, strong) NSString* venue_id;
 @property (nonatomic, strong) NSString* url;
 @property (nonatomic, strong) NSString* q;
+@property int flags;
+@property (nonatomic,assign,readonly) BOOL isMedia;
+@property (nonatomic, strong) TLInputUser* bot;
+@property long query_id;
 @end
 
 @interface TL_inputMediaEmpty : TLInputMedia<NSCoding>
@@ -626,19 +642,22 @@
 +(TL_inputMediaAudio*)createWithN_id:(TLInputAudio*)n_id;
 @end
 @interface TL_inputMediaUploadedDocument : TLInputMedia<NSCoding>
-+(TL_inputMediaUploadedDocument*)createWithFile:(TLInputFile*)file mime_type:(NSString*)mime_type attributes:(NSMutableArray*)attributes;
++(TL_inputMediaUploadedDocument*)createWithFile:(TLInputFile*)file mime_type:(NSString*)mime_type attributes:(NSMutableArray*)attributes caption:(NSString*)caption;
 @end
 @interface TL_inputMediaUploadedThumbDocument : TLInputMedia<NSCoding>
-+(TL_inputMediaUploadedThumbDocument*)createWithFile:(TLInputFile*)file thumb:(TLInputFile*)thumb mime_type:(NSString*)mime_type attributes:(NSMutableArray*)attributes;
++(TL_inputMediaUploadedThumbDocument*)createWithFile:(TLInputFile*)file thumb:(TLInputFile*)thumb mime_type:(NSString*)mime_type attributes:(NSMutableArray*)attributes caption:(NSString*)caption;
 @end
 @interface TL_inputMediaDocument : TLInputMedia<NSCoding>
-+(TL_inputMediaDocument*)createWithN_id:(TLInputDocument*)n_id;
++(TL_inputMediaDocument*)createWithN_id:(TLInputDocument*)n_id caption:(NSString*)caption;
 @end
 @interface TL_inputMediaVenue : TLInputMedia<NSCoding>
 +(TL_inputMediaVenue*)createWithGeo_point:(TLInputGeoPoint*)geo_point title:(NSString*)title address:(NSString*)address provider:(NSString*)provider venue_id:(NSString*)venue_id;
 @end
 @interface TL_inputMediaGifExternal : TLInputMedia<NSCoding>
 +(TL_inputMediaGifExternal*)createWithUrl:(NSString*)url q:(NSString*)q;
+@end
+@interface TL_inputMediaContextBotResult : TLInputMedia<NSCoding>
++(TL_inputMediaContextBotResult*)createWithFlags:(int)flags  bot:(TLInputUser*)bot url:(NSString*)url query_id:(long)query_id;
 @end
 @interface TL_inputMediaUploadedVideo_old34 : TLInputMedia<NSCoding>
 +(TL_inputMediaUploadedVideo_old34*)createWithFile:(TLInputFile*)file duration:(int)duration w:(int)w h:(int)h caption:(NSString*)caption;
@@ -1107,7 +1126,7 @@
 +(TL_messageMediaUnsupported*)create;
 @end
 @interface TL_messageMediaDocument : TLMessageMedia<NSCoding>
-+(TL_messageMediaDocument*)createWithDocument:(TLDocument*)document;
++(TL_messageMediaDocument*)createWithDocument:(TLDocument*)document caption:(NSString*)caption;
 @end
 @interface TL_messageMediaAudio : TLMessageMedia<NSCoding>
 +(TL_messageMediaAudio*)createWithAudio:(TLAudio*)audio;
@@ -1117,6 +1136,9 @@
 @end
 @interface TL_messageMediaVenue : TLMessageMedia<NSCoding>
 +(TL_messageMediaVenue*)createWithGeo:(TLGeoPoint*)geo title:(NSString*)title address:(NSString*)address provider:(NSString*)provider venue_id:(NSString*)venue_id;
+@end
+@interface TL_messageMediaDocument_old44 : TLMessageMedia<NSCoding>
++(TL_messageMediaDocument_old44*)createWithDocument:(TLDocument*)document;
 @end
 	
 @interface TLMessageAction()
@@ -1647,6 +1669,9 @@
 @property Boolean is_admin;
 @property (nonatomic, strong) TLmessages_StickerSet* stickerset;
 @property (nonatomic, strong) NSMutableArray* order;
+@property long query_id;
+@property (nonatomic, strong) NSString* query;
+@property (nonatomic, strong) NSString* offset;
 @end
 
 @interface TL_updateNewMessage : TLUpdate<NSCoding>
@@ -1768,6 +1793,12 @@
 @end
 @interface TL_updateStickerSets : TLUpdate<NSCoding>
 +(TL_updateStickerSets*)create;
+@end
+@interface TL_updateSavedGifs : TLUpdate<NSCoding>
++(TL_updateSavedGifs*)create;
+@end
+@interface TL_updateBotContextQuery : TLUpdate<NSCoding>
++(TL_updateBotContextQuery*)createWithQuery_id:(long)query_id user_id:(int)user_id query:(NSString*)query offset:(NSString*)offset;
 @end
 	
 @interface TLupdates_State()
@@ -2889,6 +2920,59 @@
 
 @interface TL_messages_foundGifs : TLmessages_FoundGifs<NSCoding>
 +(TL_messages_foundGifs*)createWithNext_offset:(int)next_offset results:(NSMutableArray*)results;
+@end
+	
+@interface TLmessages_SavedGifs()
+@property int n_hash;
+@property (nonatomic, strong) NSMutableArray* gifs;
+@end
+
+@interface TL_messages_savedGifsNotModified : TLmessages_SavedGifs<NSCoding>
++(TL_messages_savedGifsNotModified*)create;
+@end
+@interface TL_messages_savedGifs : TLmessages_SavedGifs<NSCoding>
++(TL_messages_savedGifs*)createWithN_hash:(int)n_hash gifs:(NSMutableArray*)gifs;
+@end
+	
+@interface TLInputBotContextResult()
+@property int flags;
+@property (nonatomic,assign,readonly) BOOL isHide_url;
+@property (nonatomic, strong) NSString* url;
+@property (nonatomic, strong) NSString* type;
+@property (nonatomic, strong) NSString* title;
+@property (nonatomic, strong) NSString* n_description;
+@property (nonatomic, strong) NSString* thumb_url;
+@property (nonatomic, strong) NSString* content_url;
+@property (nonatomic, strong) NSString* content_type;
+@property int w;
+@property int h;
+@property int duration;
+@end
+
+@interface TL_inputBotContextResult : TLInputBotContextResult<NSCoding>
++(TL_inputBotContextResult*)createWithFlags:(int)flags  url:(NSString*)url type:(NSString*)type title:(NSString*)title n_description:(NSString*)n_description thumb_url:(NSString*)thumb_url content_url:(NSString*)content_url content_type:(NSString*)content_type w:(int)w h:(int)h duration:(int)duration;
+@end
+	
+@interface TLBotContextResult()
+@property int flags;
+@property (nonatomic,assign,readonly) BOOL isHide_url;
+@property (nonatomic, strong) TLWebPage* webpage;
+@end
+
+@interface TL_botContextResult : TLBotContextResult<NSCoding>
++(TL_botContextResult*)createWithFlags:(int)flags  webpage:(TLWebPage*)webpage;
+@end
+	
+@interface TLmessages_BotResults()
+@property int flags;
+@property (nonatomic,assign,readonly) BOOL isMedia;
+@property long query_id;
+@property (nonatomic, strong) NSString* next_offset;
+@property (nonatomic, strong) NSMutableArray* results;
+@end
+
+@interface TL_messages_botResults : TLmessages_BotResults<NSCoding>
++(TL_messages_botResults*)createWithFlags:(int)flags  query_id:(long)query_id next_offset:(NSString*)next_offset results:(NSMutableArray*)results;
 @end
 	
 @interface TLProtoMessage()

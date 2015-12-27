@@ -67,7 +67,7 @@ static NSCache *cItems;
         if(object.peer.peer_id == [UsersManager currentUserId])
             object.flags&= ~TGUNREADMESSAGE;
         //&& ![self.message.media isKindOfClass:[TL_messageMediaPhoto class]] && ![self.message.media isKindOfClass:[TL_messageMediaVideo class]]
-        self.isForwadedMessage = (self.message.fwd_from_id != nil )  && (![self.message.media isKindOfClass:[TL_messageMediaDocument class]] || (![self.message.media.document isSticker])) && ![self.message.media isKindOfClass:[TL_messageMediaAudio class]];
+        self.isForwadedMessage = (self.message.fwd_from_id != nil )  && (![self.message.media isKindOfClass:[TL_messageMediaDocument class]]  || ![self.message.media isKindOfClass:[TL_messageMediaDocument_old44 class]] || (![self.message.media.document isSticker])) && ![self.message.media isKindOfClass:[TL_messageMediaAudio class]];
         
         
         self.isChat = [self.message.to_id isKindOfClass:[TL_peerChat class]] || [self.message.to_id isKindOfClass:[TL_peerChannel class]];
@@ -322,7 +322,7 @@ static NSTextAttachment *channelIconAttachment() {
                 
                 objectReturn = [[MessageTableItemVideo alloc] initWithObject:message ];
                 
-            } else if([message.media isKindOfClass:[TL_messageMediaDocument class]]) {
+            } else if([message.media isKindOfClass:[TL_messageMediaDocument class]] || [message.media isKindOfClass:[TL_messageMediaDocument_old44 class]]) {
                 
                 TLDocument *document = message.media.document;
             

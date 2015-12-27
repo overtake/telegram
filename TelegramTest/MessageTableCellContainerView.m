@@ -601,7 +601,7 @@ static BOOL dragAction = NO;
         
         NSString *path = mediaFilePath(self.item.message);
         
-        NSString *fileName = [self.item.message.media isKindOfClass:[TL_messageMediaDocument class]] ? [self.item.message.media.document file_name] : [path lastPathComponent];
+        NSString *fileName = [self.item.message.media isKindOfClass:[TL_messageMediaDocument class]]  || [self.item.message.media isKindOfClass:[TL_messageMediaDocument_old44 class]] ? [self.item.message.media.document file_name] : [path lastPathComponent];
         
         [panel setNameFieldStringValue:fileName];
         
@@ -813,8 +813,10 @@ static int offsetEditable = 30;
     
     if(editable)
         [self initSelectButton];
-    else
-        [self deallocSelectButton];
+    else {
+         [self deallocSelectButton];
+    }
+    
     
     
      [_shareImageView setHidden:editable];
@@ -965,7 +967,6 @@ static int offsetEditable = 30;
 
 
 - (void)downloadProgressHandler:(DownloadItem *)item {
-        
     [self.progressView setProgress:item.progress animated:YES];
 }
 

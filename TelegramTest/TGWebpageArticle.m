@@ -8,6 +8,7 @@
 
 #import "TGWebpageArticle.h"
 #import "TGArticleImageObject.h"
+#import "TGExternalImageObject.h"
 @implementation TGWebpageArticle
 
 @synthesize size = _size;
@@ -27,9 +28,17 @@
             
             TLPhotoSize *size = [webpage.photo.sizes lastObject];
             
-            _imageObject = [[TGArticleImageObject alloc] initWithLocation:size.location placeHolder:[super imageObject].placeholder sourceId:0 size:size.size];
+            {
+                _imageObject = [[TGArticleImageObject alloc] initWithLocation:size.location placeHolder:[super imageObject].placeholder sourceId:0 size:size.size];
+                
+                _imageObject.imageSize = NSMakeSize(60, 60);
+            }
             
+            
+        } else if(webpage.thumb_url.length > 0) {
+            _imageObject = [[TGExternalImageObject alloc] initWithURL:webpage.thumb_url];
             _imageObject.imageSize = NSMakeSize(60, 60);
+            _imageObject.imageProccessor = [ImageUtils c_proccessor];
         }
         
     }

@@ -191,6 +191,7 @@
 - (void)setDialog:(TL_conversation *)dialog {
     self->_dialog = dialog;
     
+    
     self.botStartParam = nil;
     
     [self setOnClickToLockedView:nil];
@@ -745,26 +746,6 @@ static RBLPopover *popover;
     
     [theMenu addItem:attachFileItem];
     
-    
-    
-    NSMenuItem *attachGifSearchItem = [NSMenuItem menuItemWithTitle:NSLocalizedString(@"Attach.Gif", nil) withBlock:^(id sender) {
-        
-        TGModalGifSearch *modal = [[TGModalGifSearch alloc] initWithFrame:self.window.contentView.bounds];
-       
-        modal.messagesViewController = self.messagesViewController;
-        [modal show:self.window animated:YES];
-       
-    }];
-    
-    
-    
-    [attachGifSearchItem setImage:image_AttachLocation()];
-    [attachGifSearchItem setHighlightedImage:image_AttachLocationHighlighted()];
-    
-    if(ACCEPT_FEATURE) {
-        // [theMenu addItem:attachGifSearchItem];
-    }
-    
    
     
     return theMenu;
@@ -888,6 +869,7 @@ static RBLPopover *popover;
        
        self.smilePopover = [[RBLPopover alloc] initWithContentViewController:(NSViewController *)emojiViewController];
         [self.smilePopover setHoverView:self.smileButton];
+        [self.smilePopover setCanBecomeKey:YES];
         [self.smilePopover setDidCloseBlock:^(RBLPopover *popover){
             [weakSelf.smileButton setSelected:NO];
             [[EmojiViewController instance] close];
@@ -1284,9 +1266,6 @@ static RBLPopover *popover;
             
         };
         
-
-        
-        
         if(type == 1) {
             if(self.dialog.type == DialogTypeChat || self.dialog.type == DialogTypeChannel) {
                 
@@ -1308,6 +1287,20 @@ static RBLPopover *popover;
                 
             }
         }
+        
+    } else if(self.inputMessageTextField.stringValue.length > 1 && [[self.inputMessageTextField.stringValue substringToIndex:1] isEqualToString:@"@"]) {
+        
+        NSString *value = self.inputMessageTextField.stringValue;
+        
+        NSRange split = [value rangeOfString:@" "];
+        
+        if(split.location != NSNotFound && split.location != 1) {
+            NSString *bot = [value substringWithRange:NSMakeRange(1,split.location-1)];
+            NSString *query = [value substringFromIndex:split.location];
+            
+            [self.messagesViewController.hintView showContextPopupWithQuery:bot query:query conversation:self.dialog];
+        }
+        
         
     } else {
         [self.messagesViewController.hintView hide];

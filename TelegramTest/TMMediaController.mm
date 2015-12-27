@@ -693,7 +693,7 @@ static TMMediaController* currentController;
     
     id<TMPreviewItem> item;
     
-    if([[(TL_localMessage *)from.media media] isKindOfClass:[TL_messageMediaDocument class]]) {
+    if([[(TL_localMessage *)from.media media] isKindOfClass:[TL_messageMediaDocument class]]  || [[(TL_localMessage *)from.media media] isKindOfClass:[TL_messageMediaDocument_old44 class]]) {
         item = [[TMPreviewDocumentItem alloc] initWithItem:from];
     }
     

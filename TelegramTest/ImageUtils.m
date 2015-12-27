@@ -234,6 +234,9 @@ CACHE_IMAGE(EditPhotoCamera);
 CACHE_IMAGE(NoSharedLinks);
 CACHE_IMAGE(StickerSettings);
 
+CACHE_IMAGE(emojiContainer8);
+CACHE_IMAGE(emojiContainer8Highlighted);
+
 @implementation ImageUtils
 
 NSImage *previewImageForDocument(NSString *path) {
@@ -593,6 +596,15 @@ NSSize convertSize(NSSize from, NSSize maxSize)  {
     }
     return from;
 }
+
+NSImage * (^c_proccessor)(NSImage *, NSSize size) =  ^NSImage* (NSImage *image,NSSize size){
+    return cropCenterWithSize(image, size);
+};
+
++(ImageProccessor)c_proccessor {
+    return c_proccessor;
+}
+
 
 NSSize resizeToMaxCorner(NSSize from, float size) {
     NSSize newSize;

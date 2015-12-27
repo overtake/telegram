@@ -25,17 +25,7 @@
     if(self = [super initWithObject:object]) {
         _imagesize = (TL_documentAttributeVideo *) [object.media.document attributeWithClass:[TL_documentAttributeVideo class]];
         
-        
-        if(self.isset) {
-            _thumbObject = [[TGThumbnailObject alloc] initWithFilepath:[self path]];
-            _thumbObject.imageSize = NSMakeSize(self.imagesize.w, self.imagesize.h);
-        } else {
-            if(![object.media.document.thumb isKindOfClass:[TL_photoSizeEmpty class]]) {
-                _thumbObject = [[TGBlurImageObject alloc] initWithLocation:object.media.document.thumb.location thumbData:object.media.document.thumb.bytes size:object.media.document.thumb.size];
-                _thumbObject.imageSize = NSMakeSize(self.imagesize.w, self.imagesize.h);
-            }
-        }
-        
+        [self doAfterDownload];
         
         
         [self checkStartDownload:0 size:[self size]];
@@ -81,9 +71,11 @@
 -(void)doAfterDownload {
     [super doAfterDownload];
     
-    _thumbObject = [[TGThumbnailObject alloc] initWithFilepath:[self path]];
-    _thumbObject.imageSize = NSMakeSize(self.imagesize.w, self.imagesize.h);
-
+    if(![self.message.media.document.thumb isKindOfClass:[TL_photoSizeEmpty class]]) {
+        _thumbObject = [[TGBlurImageObject alloc] initWithLocation:self.message.media.document.thumb.location thumbData:self.message.media.document.thumb.bytes size:self.message.media.document.thumb.size];
+        _thumbObject.imageSize = NSMakeSize(self.imagesize.w, self.imagesize.h);
+    }
+    
 }
 
 -(Class)downloadClass {
@@ -98,6 +90,8 @@
     
     return [super downloadItem];
 }
+
+
 
 -(int)size {
     return self.message.media.document.size;
@@ -114,14 +108,16 @@
 
 - (void)checkStartDownload:(SettingsMask)setting size:(int)size {
     
-    if((size <= 10*1024*1024 && !self.downloadItem && !self.isset) || (self.downloadItem && self.downloadItem.downloadState != DownloadStateCanceled)) {
+    if((self.size <= 10*1024*1024 && !self.downloadItem && !self.isset) || (self.downloadItem && self.downloadItem.downloadState != DownloadStateCanceled)) {
         [self startDownload:NO force:YES];
     }
     
 }
 
 - (BOOL)isset {
-    return isPathExists([self path]) && [FileUtils checkNormalizedSize:[self path] checksize:[self size]];
+    BOOL isset = isPathExists([self path]) && (fileSize([self path]) >= self.size || [self.message.media.document isKindOfClass:[TL_externalDocument class]]);
+    
+    return isset;
 }
 
 -(NSString *)path {

@@ -86,4 +86,8 @@ NSData *passwordHash(NSString *password, NSData *salt);
 
 NSDictionary *audioTags(AVURLAsset *asset);
 
+NSString *first_domain_character(NSString *url);
+
+NSString *path_for_external_link(NSString *link);
+
 @end
