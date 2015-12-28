@@ -1091,3 +1091,35 @@
 +(TLAPI_messages_saveGif*)createWithN_id:(TLInputDocument*)n_id unsave:(Boolean)unsave;
 @end
 
+@interface TLAPI_messages_getContextBotResults : TLApiObject
+@property (nonatomic, strong) TLInputUser* bot;
+@property (nonatomic, strong) NSString* query;
+@property (nonatomic, strong) NSString* offset;
+
++(TLAPI_messages_getContextBotResults*)createWithBot:(TLInputUser*)bot query:(NSString*)query offset:(NSString*)offset;
+@end
+
+@interface TLAPI_messages_setContextBotResults : TLApiObject
+@property int flags;
+@property (nonatomic,assign,readonly) BOOL isMedia;
+@property (nonatomic,assign,readonly) BOOL isPrivate;
+@property long query_id;
+@property (nonatomic, strong) NSMutableArray* results;
+@property int cache_time;
+@property (nonatomic, strong) NSString* next_offset;
+
++(TLAPI_messages_setContextBotResults*)createWithFlags:(int)flags   query_id:(long)query_id results:(NSMutableArray*)results cache_time:(int)cache_time next_offset:(NSString*)next_offset;
+@end
+
+@interface TLAPI_messages_sendContextBotResult : TLApiObject
+@property int flags;
+@property (nonatomic,assign,readonly) BOOL isBroadcast;
+@property (nonatomic, strong) TLInputPeer* peer;
+@property int reply_to_msg_id;
+@property long random_id;
+@property long query_id;
+@property (nonatomic, strong) NSString* n_id;
+
++(TLAPI_messages_sendContextBotResult*)createWithFlags:(int)flags  peer:(TLInputPeer*)peer reply_to_msg_id:(int)reply_to_msg_id random_id:(long)random_id query_id:(long)query_id n_id:(NSString*)n_id;
+@end
+

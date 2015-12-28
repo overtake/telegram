@@ -11,7 +11,7 @@
 #import "TGGeneralRowItem.h"
 #import "TGExternalImageObject.h"
 @interface TGContextRowItem : TGGeneralRowItem
-@property (nonatomic,strong,readonly) TLWebPage *webpage;
+@property (nonatomic,strong,readonly) TLBotContextResult *botResult;
 @property (nonatomic,strong,readonly) NSMutableAttributedString *desc;
 @property (nonatomic,strong) TGImageObject *imageObject;
 

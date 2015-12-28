@@ -30,6 +30,7 @@
 #import "TL_localMessage_old34.h"
 #import "NSNumber+NumberFormatter.h"
 #import "MessageTableItemMpeg.h"
+#import "NSAttributedString+Hyperlink.h"
 @interface TGItemCache : NSObject
 @property (nonatomic,strong) NSAttributedString *header;
 @property (nonatomic,strong) TLUser *user;
@@ -67,7 +68,7 @@ static NSCache *cItems;
         if(object.peer.peer_id == [UsersManager currentUserId])
             object.flags&= ~TGUNREADMESSAGE;
         //&& ![self.message.media isKindOfClass:[TL_messageMediaPhoto class]] && ![self.message.media isKindOfClass:[TL_messageMediaVideo class]]
-        self.isForwadedMessage = (self.message.fwd_from_id != nil )  && (![self.message.media isKindOfClass:[TL_messageMediaDocument class]] || (![self.message.media.document isSticker])) && ![self.message.media isKindOfClass:[TL_messageMediaAudio class]];
+        self.isForwadedMessage = (self.message.fwd_from_id != nil )  && (![self.message.media isKindOfClass:[TL_messageMediaDocument class]]  || ![self.message.media isKindOfClass:[TL_messageMediaDocument_old44 class]] || (![self.message.media.document isSticker])) && ![self.message.media isKindOfClass:[TL_messageMediaAudio class]];
         
         
         self.isChat = [self.message.to_id isKindOfClass:[TL_peerChat class]] || [self.message.to_id isKindOfClass:[TL_peerChannel class]];
@@ -93,6 +94,19 @@ static NSCache *cItems;
             }
             
             
+            if(self.isViaBot) {
+                _via_bot_user = [UsersManager findUserByName:@"vihor"];
+                
+                if(!self.isForwadedMessage)
+                {
+                    NSMutableAttributedString *bot = [[NSMutableAttributedString alloc] init];
+                    [bot appendString: NSLocalizedString(@"ContextBot.Message.Via", nil) withColor:GRAY_TEXT_COLOR];
+                    [bot appendString:[NSString stringWithFormat:@" @%@",_via_bot_user.username] withColor:LINK_COLOR];
+                    [bot detectAndAddLinks:URLFindTypeMentions];
+                    _via_attr_string = bot;
+                }
+                
+            }
             
             if(self.isForwadedMessage) {
                 if([object.fwd_from_id isKindOfClass:[TL_peerUser class]]) {
@@ -101,6 +115,20 @@ static NSCache *cItems;
                     self.fwd_chat = [[ChatsManager sharedManager] find:object.fwd_from_id.chat_id == 0 ? object.fwd_from_id.channel_id : object.fwd_from_id.chat_id];
                 }
                 
+                NSMutableAttributedString *attr = [[NSMutableAttributedString alloc] init];
+                
+                [attr appendString:NSLocalizedString(@"Messages.ForwardedMessages", nil) withColor:GRAY_TEXT_COLOR];
+                [attr setFont:TGSystemFont(13) forRange:attr.range];
+                
+                
+                if(self.isViaBot) {
+                    [attr appendString:[NSString stringWithFormat:@" %@ @%@",NSLocalizedString(@"ContextBot.Message.Via", nil),_via_bot_user.username] withColor:GRAY_TEXT_COLOR];
+                }
+                
+                [attr detectAndAddLinks:URLFindTypeMentions];
+                
+                _forwardHeaderAttr = attr;
+                
             }
             
             [self headerStringBuilder];
@@ -108,10 +136,14 @@ static NSCache *cItems;
             [self rebuildDate];
             
             
+            
+            
+            
         }
     }
     return self;
 }
+
 
 -(int)makeSize {
     return MAX(NSWidth(((MessagesTableView *)self.table).viewController.view.frame) - 150,100);
@@ -248,6 +280,9 @@ static NSTextAttachment *channelIconAttachment() {
             if(self.isForwadedMessage)
                 viewSize.height += 20;
             
+            if(self.isViaBot && !self.isForwadedMessage)
+                viewSize.height+=16;
+            
             if(viewSize.height < 44)
                 viewSize.height = 44;
         } else {
@@ -277,6 +312,10 @@ static NSTextAttachment *channelIconAttachment() {
     return viewSize;
 }
 
+-(BOOL)isViaBot {
+    return self.message.via_bot_id != 0;
+}
+
 - (void) setBlockSize:(NSSize)blockSize {
     self->_blockSize = blockSize;
     
@@ -302,7 +341,7 @@ static NSTextAttachment *channelIconAttachment() {
 
     
     @try {
-        if(message.class == [TL_localMessage_old34 class] || message.class == [TL_localMessage_old32 class] || message.class == [TL_localMessage class] || message.class == [TL_destructMessage class]) {
+        if([message isKindOfClass:[TL_localMessage class]]) {
             
             
             if((message.media == nil || [message.media isKindOfClass:[TL_messageMediaEmpty class]]) || [message.media isMemberOfClass:[TL_messageMediaWebPage class]]) {
@@ -322,7 +361,7 @@ static NSTextAttachment *channelIconAttachment() {
                 
                 objectReturn = [[MessageTableItemVideo alloc] initWithObject:message ];
                 
-            } else if([message.media isKindOfClass:[TL_messageMediaDocument class]]) {
+            } else if([message.media isKindOfClass:[TL_messageMediaDocument class]] || [message.media isKindOfClass:[TL_messageMediaDocument_old44 class]]) {
                 
                 TLDocument *document = message.media.document;
             
@@ -531,6 +570,9 @@ static NSTextAttachment *channelIconAttachment() {
 
 - (BOOL)makeSizeByWidth:(int)width {
     _blockWidth = width;
+    
+    
+    
     return NO;
 }
 

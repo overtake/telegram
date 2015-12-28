@@ -464,7 +464,6 @@ DYNAMIC_PROPERTY(DUser);
 
 -(void)showContextPopupWithQuery:(NSString *)bot query:(NSString *)query conversation:(TL_conversation *)conversation  {
     
-    return;
     
     __block TLUser *user = [UsersManager findUserByName:bot];
     
@@ -486,76 +485,76 @@ DYNAMIC_PROPERTY(DUser);
             _isLockedWithRequest = YES;
 
             
-//            [RPCRequest sendRequest:[TLAPI_messages_getContextBotResults createWithBot:user.inputUser query:query offset:offset] successHandler:^(id request, TL_messages_botResults *response) {
-//                
-//                if(self.messagesViewController.conversation == conversation) {
-//                    
-//                    offset = response.next_offset;
-//                    
-//                    NSMutableArray *items = [NSMutableArray array];
-//                    
-//                    if(!response.isMedia) {
-//                        
-//                        
-//                        [response.results enumerateObjectsUsingBlock:^(TL_botContextResult *obj, NSUInteger idx, BOOL * _Nonnull stop) {
-//                            
-//                            TGContextRowItem *item = [[TGContextRowItem alloc] initWithObject:obj.webpage bot:bot];
-//                            
-//                            [items addObject:item];
-//                            
-//                        }];
-//                        
-//                        [self setCurrentTableView:_contextTableView];
-//                        
-//                        [_contextTableView removeAllItems:YES];
-//                        [_contextTableView insert:items startIndex:0 tableRedraw:YES];
-//                        
-//                        
-//                    } else {
-//                        
-//                        [response.results enumerateObjectsUsingBlock:^(TL_botContextResult *obj, NSUInteger idx, BOOL * _Nonnull stop) {
-//                            
-//                            [items addObject:obj.webpage];
-//                            
-//                        }];
-//                        
-//                        [_mediaContextTableView drawResponse:items];
-//                        
-//                        [self setCurrentTableView:_mediaContextTableView];
-//                    }
-//                    
-//                    [_mediaContextTableView setMessagesViewController:self.messagesViewController];
-//                    
-//                   
-//                    if(items.count > 0) {
-//                        if(self.alphaValue == 0.0f)
-//                            [self show:NO];
-//                    } else
-//                        [self hide];
-//
-//                } else if(_currentTableView == _mediaContextTableView) {
-//                    [self hide];
-//                }
-//                
-//                weak();
-//                
-//                [_mediaContextTableView setChoiceHandler:^(TLDocument *document) {
-//                    __strong TGMessagesHintView *strongSelf = weakSelf;
-//                    
-//                    if(strongSelf != nil) {
-//                        [strongSelf.messagesViewController sendFoundGif:[TL_messageMediaDocument createWithDocument:document caption:query] forConversation:strongSelf.messagesViewController.conversation];
-//                        [strongSelf.messagesViewController.bottomView setInputMessageString:@"" disableAnimations:YES];
-//                    }
-//                }];
-//                
-//                
-//                
-//                _isLockedWithRequest = NO;
-//                k++;
-//                
-//            } errorHandler:^(id request, RpcError *error) {
-//                _isLockedWithRequest = NO;
-//            }];
+            [RPCRequest sendRequest:[TLAPI_messages_getContextBotResults createWithBot:user.inputUser query:query offset:offset] successHandler:^(id request, TL_messages_botResults *response) {
+                
+                if(self.messagesViewController.conversation == conversation) {
+                    
+                    offset = response.next_offset;
+                    
+                    NSMutableArray *items = [NSMutableArray array];
+                    
+                    if(!response.isMedia) {
+                        
+                        
+                        [response.results enumerateObjectsUsingBlock:^(TL_botContextResult *obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                            
+                            TGContextRowItem *item = [[TGContextRowItem alloc] initWithObject:obj bot:bot];
+                            
+                            [items addObject:item];
+                            
+                        }];
+                        
+                        [self setCurrentTableView:_contextTableView];
+                        
+                        [_contextTableView removeAllItems:YES];
+                        [_contextTableView insert:items startIndex:0 tableRedraw:YES];
+                        
+                        
+                    } else {
+                        
+                        [response.results enumerateObjectsUsingBlock:^(TL_botContextResult *obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                            
+                            [items addObject:obj];
+                            
+                        }];
+                        
+                        [_mediaContextTableView drawResponse:items];
+                        
+                        [self setCurrentTableView:_mediaContextTableView];
+                    }
+                    
+                    [_mediaContextTableView setMessagesViewController:self.messagesViewController];
+                    
+                   
+                    if(items.count > 0) {
+                        if(self.alphaValue == 0.0f)
+                            [self show:NO];
+                    } else
+                        [self hide];
+
+                } else if(_currentTableView == _mediaContextTableView) {
+                    [self hide];
+                }
+                
+                weak();
+                
+                [_mediaContextTableView setChoiceHandler:^(TLDocument *document) {
+                    __strong TGMessagesHintView *strongSelf = weakSelf;
+                    
+                    if(strongSelf != nil) {
+                        [strongSelf.messagesViewController sendFoundGif:[TL_messageMediaDocument createWithDocument:document caption:query] forConversation:strongSelf.messagesViewController.conversation];
+                        [strongSelf.messagesViewController.bottomView setInputMessageString:@"" disableAnimations:YES];
+                    }
+                }];
+                
+                
+                
+                _isLockedWithRequest = NO;
+                k++;
+                
+            } errorHandler:^(id request, RpcError *error) {
+                _isLockedWithRequest = NO;
+            }];
             
         };
         

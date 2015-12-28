@@ -42,7 +42,7 @@
 
 @property (nonatomic,strong) DownloadEventListener *downloadEventListener;
 
-@property (nonatomic,strong) TLWebPage *webpage;
+@property (nonatomic,strong) TLBotContextResult *botResult;
 @property (nonatomic,assign) NSSize size;
 @property (nonatomic,strong) TGImageObject *imageObject;
 
@@ -65,7 +65,7 @@
         
         _fakeMessage = [[TL_localMessage alloc] init];
         
-        _fakeMessage.media = [TL_messageMediaDocument createWithDocument:nil];
+        _fakeMessage.media = [TL_messageMediaDocument createWithDocument:nil caption:@""];
         
         self.wantsLayer = YES;
         self.layer.borderColor = [NSColor whiteColor].CGColor;
@@ -132,15 +132,15 @@
     [_player setFrame:NSMakeRect(MIN(- roundf((size.width - NSWidth(self.frame))/2),0), MIN(- roundf((size.height - NSHeight(self.frame))/2),0), MAX(size.width,NSWidth(self.frame)), MAX(size.height,NSHeight(self.frame)))];
 }
 
--(void)setWebpage:(TLWebPage *)webpage {
+-(void)setBotResult:(TLBotContextResult *)botResult {
     
     [self.downloadItem removeEvent:_downloadEventListener];
     _prevState = NO;
     [_player setPath:nil];
     
-    _webpage = webpage;
+    _botResult = botResult;
     
-    _fakeMessage.media.document = _webpage.document;
+    _fakeMessage.media.document = _botResult.document;
 }
 
 -(void)dealloc {
@@ -166,23 +166,23 @@
 }
 
 -(NSString *)path {
-    if(self.webpage.document != nil) {
-        return self.webpage.document.path_with_cache;
+    if(self.botResult.document != nil) {
+        return self.botResult.document.path_with_cache;
     } else {
-        return path_for_external_link(self.webpage.content_url);
+        return path_for_external_link(self.botResult.content_url);
     }
 }
 
 -(BOOL)isset {
-    if(self.webpage.document != nil) {
-        return self.webpage.document.isset;
+    if(self.botResult.document != nil) {
+        return self.botResult.document.isset;
     } else {
         return fileSize(self.path) > 0;
     }
 }
 
 -(NSUInteger)hash {
-    return self.webpage.document != nil ? self.webpage.document.n_id : [self.webpage.content_url hash];
+    return self.botResult.document != nil ? self.botResult.document.n_id : [self.botResult.content_url hash];
 }
 
 
@@ -201,10 +201,10 @@
         DownloadItem *item;
         
         if(!self.downloadItem) {
-            if(self.webpage.document != nil) {
+            if(self.botResult.document != nil) {
                 item = [[DownloadDocumentItem alloc] initWithObject:_fakeMessage];
             } else {
-                item = [[DownloadExternalItem alloc] initWithObject:self.webpage.content_url];
+                item = [[DownloadExternalItem alloc] initWithObject:self.botResult.content_url];
             }
             
             
@@ -408,7 +408,7 @@
     }
     
     
-    [item.gifs enumerateObjectsUsingBlock:^(TL_webPage *webpage, NSUInteger idx, BOOL * _Nonnull stop) {
+    [item.gifs enumerateObjectsUsingBlock:^(TLBotContextResult *botResult, NSUInteger idx, BOOL * _Nonnull stop) {
         
         
         NSSize size = [item.proportions[idx] sizeValue];
@@ -417,7 +417,7 @@
         
         NSRect rect = NSMakeRect(x, 0, (idx == (item.gifs.count - 1) && !(item.table.count-1 == item.rowId) ? NSWidth(self.frame) - x : size.width - containerWidthDif), NSHeight(self.frame));
         
-        if([webpage.type isEqualToString:@"gifv"] || (webpage.document && [webpage.document.mime_type isEqualToString:@"video/mp4"] && [webpage.document attributeWithClass:[TL_documentAttributeAnimated class]] != nil)) {
+        if([botResult.type isEqualToString:@"gifv"] || (botResult.document && [botResult.document.mime_type isEqualToString:@"video/mp4"] && [botResult.document attributeWithClass:[TL_documentAttributeAnimated class]] != nil)) {
             
             TGGifPlayerItemView *videoContainer;
             
@@ -431,7 +431,7 @@
             
             videoContainer.size = size;
             
-            videoContainer.webpage = webpage;
+            videoContainer.botResult = botResult;
             videoContainer.table = item.table;
             videoContainer.item = item;
             [videoContainer setImageObject:item.imageObjects[idx]];

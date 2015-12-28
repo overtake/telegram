@@ -501,6 +501,24 @@ static NSArray *channelUpdates;
         }
         
         
+        if([update isKindOfClass:[TL_updateSavedGifs class]]) {
+            
+            //TODO
+            
+            int bp = 0;
+            
+            return;
+        }
+        
+        if([update isKindOfClass:[TL_updateBotContextQuery class]]) {
+            
+            //TODO
+            
+            int bp = 0;
+            
+            return;
+        }
+        
         if([update isKindOfClass:[TL_updateStickerSets class]]) {
         
             [Notification perform:STICKERS_ALL_CHANGED data:@{}];

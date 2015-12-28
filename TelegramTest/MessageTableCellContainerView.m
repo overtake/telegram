@@ -29,7 +29,7 @@
 @property (nonatomic, strong) TMAvatarImageView *fwdAvatar;
 
 @property (nonatomic, strong) NSView *rightView;
-@property (nonatomic, strong) TMTextLayer *forwardMessagesTextLayer;
+@property (nonatomic, strong) TGCTextView *forwardMessagesTextLayer;
 @property (nonatomic, strong) TMTextField *dateLayer;
 @property (nonatomic, strong) BTRButton *selectButton;
 
@@ -44,6 +44,8 @@
 @property (nonatomic,strong) NSImageView *shareImageView;
 
 @property (nonatomic,strong) TGModalForwardView *forwardModalView;
+
+@property (nonatomic,strong) TGCTextView *viaBotTextField;
 
 @end
 
@@ -113,14 +115,10 @@
     
     
     if(!self.forwardMessagesTextLayer) {
-        self.forwardMessagesTextLayer = [TMTextLayer layer];
-        [self.forwardMessagesTextLayer disableActions];
-        [self.forwardMessagesTextLayer setFrameSize:NSMakeSize(180, 20)];
-        [self.forwardMessagesTextLayer setContentsScale:self.layer.contentsScale];
-        [self.forwardMessagesTextLayer setTextColor:NSColorFromRGB(0x9b9b9b)];
-        [self.forwardMessagesTextLayer setTextFont:TGSystemFont(13)];
-        [self.forwardMessagesTextLayer setString:NSLocalizedString(@"Messages.ForwardedMessages",nil)];
-        [self.layer addSublayer:self.forwardMessagesTextLayer];
+        self.forwardMessagesTextLayer = [[TGCTextView alloc] initWithFrame:NSZeroRect];
+        [self.forwardMessagesTextLayer setFrameSize:NSMakeSize(300, 20)];
+        [self.forwardMessagesTextLayer setAttributedString:self.item.forwardHeaderAttr];
+        [self addSubview:self.forwardMessagesTextLayer];
     }
     
     if(!self.fwdContainer) {
@@ -158,7 +156,7 @@
     [self.fwdAvatar removeFromSuperview];
     self.fwdAvatar = nil;
     
-    [self.forwardMessagesTextLayer removeFromSuperlayer];
+    [self.forwardMessagesTextLayer removeFromSuperview];
     self.forwardMessagesTextLayer = nil;
     
     [self.fwdContainer removeFromSuperview];
@@ -189,6 +187,21 @@
     
     [_replyContainer setReplyObject:nil];
     _replyContainer = nil;
+}
+
+
+-(void)initViaBotContainer {
+    if(!_viaBotTextField)
+    {
+        _viaBotTextField = [[TGCTextView alloc] initWithFrame:NSZeroRect];
+        
+        [self addSubview:_viaBotTextField];
+    }
+}
+
+-(void)deallocViaBotContainer {
+    [_viaBotTextField removeFromSuperview];
+    _viaBotTextField = nil;
 }
 
 -(void)initSelectButton {
@@ -601,7 +614,7 @@ static BOOL dragAction = NO;
         
         NSString *path = mediaFilePath(self.item.message);
         
-        NSString *fileName = [self.item.message.media isKindOfClass:[TL_messageMediaDocument class]] ? [self.item.message.media.document file_name] : [path lastPathComponent];
+        NSString *fileName = [self.item.message.media isKindOfClass:[TL_messageMediaDocument class]]  || [self.item.message.media isKindOfClass:[TL_messageMediaDocument_old44 class]] ? [self.item.message.media.document file_name] : [path lastPathComponent];
         
         [panel setNameFieldStringValue:fileName];
         
@@ -679,6 +692,17 @@ static BOOL dragAction = NO;
         
         [self deallocForwardContainer];
         
+    }
+    
+    if(item.isViaBot) {
+        [self initViaBotContainer];
+        
+        [_viaBotTextField setFrame:NSMakeRect(item.containerOffset, item.viewSize.height - 44, NSWidth(self.frame) - 160, 17)];
+        
+        [_viaBotTextField setAttributedString:item.via_attr_string];
+        
+    } else {
+        [self deallocViaBotContainer];
     }
 
     if(item.isHeaderMessage) {

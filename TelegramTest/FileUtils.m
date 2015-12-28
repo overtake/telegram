@@ -137,7 +137,7 @@ NSString* mediaFilePath(TL_localMessage *message) {
         return [NSString stringWithFormat:@"%@/%lu_%lu.mp4",path(),message.media.video.n_id,message.media.video.access_hash];
     }
     
-    if([message.media isKindOfClass:[TL_messageMediaDocument class]]) {
+    if([message.media isKindOfClass:[TL_messageMediaDocument class]] || [message.media isKindOfClass:[TL_messageMediaDocument_old44 class]]) {
         
         
         if([message isKindOfClass:[TL_destructMessage class]]) {

@@ -87,7 +87,7 @@
     
     [_textField setAttributedStringValue:self.item.desc];
     
-    [_domainField setStringValue:first_domain_character(self.item.webpage.url)];
+    [_domainField setStringValue:first_domain_character(self.item.botResult.content_url)];
     [_domainField sizeToFit];
     [_domainField setCenterByView:_imageView];
     [_domainField setHidden:self.item.imageObject != nil];

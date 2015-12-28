@@ -10,7 +10,7 @@
 
 @implementation TGContextGifItem
 
-@synthesize webpage = _webpage;
+@synthesize botResult = _botResult;
 
 -(id)initWithObject:(NSArray *)items bot:(NSString *)bot {
     if(self = [super initWithObject:items]) {

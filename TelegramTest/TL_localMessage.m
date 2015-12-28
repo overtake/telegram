@@ -163,6 +163,7 @@
     [TLClassStore TLSerialize:self.to_id stream:stream];
     if(self.flags & (1 << 2)) {[ClassStore TLSerialize:self.fwd_from_id stream:stream];}
     if(self.flags & (1 << 2)) [stream writeInt:self.fwd_date];
+    if(self.flags & (1 << 11)) {[stream writeInt:self.via_bot_id];}
     if(self.flags & (1 << 3)) [stream writeInt:self.reply_to_msg_id];
     [stream writeInt:self.date];
     [stream writeString:self.message];
@@ -195,6 +196,7 @@
     self.to_id = [TLClassStore TLDeserialize:stream];
     if(self.flags & (1 << 2)) {self.fwd_from_id = [ClassStore TLDeserialize:stream];}
     if(self.flags & (1 << 2)) self.fwd_date = [stream readInt];
+    if(self.flags & (1 << 11)) {self.via_bot_id = [stream readInt];}
     if(self.flags & (1 << 3)) self.reply_to_msg_id = [stream readInt];
     self.date = [stream readInt];
     self.message = [stream readString];
@@ -356,7 +358,7 @@ DYNAMIC_PROPERTY(DDialog);
             mask|=HistoryFilterAudio;
         }
         
-        if([self.media isKindOfClass:[TL_messageMediaDocument class]]) {
+        if([self.media isKindOfClass:[TL_messageMediaDocument class]] || [self.media isKindOfClass:[TL_messageMediaDocument_old44 class]]) {
             TL_documentAttributeAudio *attr =  (TL_documentAttributeAudio *)[self.media.document attributeWithClass:[TL_documentAttributeAudio class]];
             if(attr != nil || [self.media.document.mime_type hasPrefix:@"audio/"]) {
                 mask|=HistoryFilterAudioDocument;

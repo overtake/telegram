@@ -582,7 +582,7 @@ Class convertClass(NSString *c, int layer) {
         
         NSMutableArray *attrs = [self convertDocumentAttributes:[media valueForKey:@"attributes"] layer:layer];
         
-        return [TL_messageMediaDocument createWithDocument:[TL_document createWithN_id:[[media valueForKey:@"pid"] longValue] access_hash:[[media valueForKey:@"access_hash"] longValue] date:[[media valueForKey:@"date"] intValue] mime_type:[media valueForKey:@"mime_type"] size:[[media valueForKey:@"size"] intValue] thumb:pthumb dc_id:[[media valueForKey:@"dc_id"] intValue] attributes:attrs]];
+        return [TL_messageMediaDocument createWithDocument:[TL_document createWithN_id:[[media valueForKey:@"pid"] longValue] access_hash:[[media valueForKey:@"access_hash"] longValue] date:[[media valueForKey:@"date"] intValue] mime_type:[media valueForKey:@"mime_type"] size:[[media valueForKey:@"size"] intValue] thumb:pthumb dc_id:[[media valueForKey:@"dc_id"] intValue] attributes:attrs] caption:@""];
         
     }
     
@@ -622,7 +622,7 @@ Class convertClass(NSString *c, int layer) {
             size = [TL_photoCachedSize createWithType:@"x" location:[TL_fileLocation createWithDc_id:0 volume_id:0 local_id:0 secret:0] w:[[media valueForKey:@"thumb_w"] intValue] h:[[media valueForKey:@"thumb_h"] intValue] bytes:[media valueForKey:@"thumb"]];
          }
             
-        return [TL_messageMediaDocument createWithDocument:[TL_document createWithN_id:file.n_id access_hash:file.access_hash date:[[MTNetwork instance] getTime] mime_type:[media valueForKey:@"mime_type"] size:file.size thumb:size dc_id:[file dc_id] attributes:[@[[TL_documentAttributeFilename createWithFile_name:[media valueForKey:@"file_name"]]] mutableCopy]]];
+        return [TL_messageMediaDocument createWithDocument:[TL_document createWithN_id:file.n_id access_hash:file.access_hash date:[[MTNetwork instance] getTime] mime_type:[media valueForKey:@"mime_type"] size:file.size thumb:size dc_id:[file dc_id] attributes:[@[[TL_documentAttributeFilename createWithFile_name:[media valueForKey:@"file_name"]]] mutableCopy]] caption:@""];
        
            
     } else if([media isKindOfClass:convertClass(@"Secret%d_DecryptedMessageMedia_decryptedMessageMediaVideo", layer)]) {

@@ -11,6 +11,7 @@
 #import "TL_localMessage_old34.h"
 #import "TL_conversation_old34.h"
 #import "TL_localMessageService_old34.h"
+#import "TL_localMessage_old44.h"
 @implementation TLClassStore
 
 
@@ -42,12 +43,14 @@
     [self.cs_classes setObject:[TL_messageActionBotDescription class] forKey:[NSNumber numberWithInt:13]];
     
     [self.cs_classes setObject:[TL_localMessage_old34 class] forKey:[NSNumber numberWithInt:14]];
-    [self.cs_classes setObject:[TL_localMessage class] forKey:[NSNumber numberWithInt:15]];
+    [self.cs_classes setObject:[TL_localMessage_old44 class] forKey:[NSNumber numberWithInt:15]];
     
     [self.cs_classes setObject:[TL_conversation class] forKey:[NSNumber numberWithInt:16]];
     
     [self.cs_classes setObject:[TL_localEmptyMessage class] forKey:[NSNumber numberWithInt:17]];
     [self.cs_classes setObject:[TL_localMessageService class] forKey:[NSNumber numberWithInt:18]];
+    
+    [self.cs_classes setObject:[TL_localMessage class] forKey:@(19)];
     
     for(NSNumber* number in [self.cs_classes allKeys]) {
         [self.cs_constuctors setObject:number forKey:[self.cs_classes objectForKey:number]];

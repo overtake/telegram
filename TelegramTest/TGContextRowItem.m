@@ -13,18 +13,18 @@
 @end
 
 @implementation TGContextRowItem
--(id)initWithObject:(TLWebPage *)webpage bot:(NSString *)bot {
-    if(self = [super initWithObject:webpage]) {
+-(id)initWithObject:(TLBotContextResult *)botResult bot:(NSString *)bot {
+    if(self = [super initWithObject:bot]) {
         _bot = bot;
-        _webpage = webpage;
+        _botResult = botResult;
         
         
-        if(webpage.n_description || webpage.title) {
+        if(botResult.n_description || botResult.title) {
             
             
             NSMutableAttributedString *desc = [[NSMutableAttributedString alloc] init];
             
-            [desc appendString:webpage.n_description withColor:NSColorFromRGB(0x000000)];
+            [desc appendString:botResult.n_description withColor:NSColorFromRGB(0x000000)];
             [desc setFont:TGSystemFont(13) forRange:desc.range];
             
             
@@ -35,7 +35,7 @@
             [desc addAttribute:NSParagraphStyleAttributeName value:style range:desc.range];
             
             
-            NSString *t = webpage.title.length > 0 ? webpage.title : webpage.author;
+            NSString *t = botResult.title;
             
             if(t.length > 0)  {
                 NSMutableAttributedString *title = [[NSMutableAttributedString alloc] init];
@@ -56,9 +56,9 @@
             _desc = [[NSMutableAttributedString alloc] init];
         }
         
-        if([webpage.photo isKindOfClass:[TL_photo class]]) {
+        if([botResult.photo isKindOfClass:[TL_photo class]]) {
             
-            TLPhotoSize *size = [webpage.photo.sizes lastObject];
+            TLPhotoSize *size = [botResult.photo.sizes lastObject];
             
             {
                 _imageObject = [[TGArticleImageObject alloc] initWithLocation:size.location placeHolder:nil sourceId:0 size:size.size];
@@ -67,8 +67,8 @@
             }
             
             
-        } else if(webpage.thumb_url.length > 0) {
-            _imageObject = [[TGExternalImageObject alloc] initWithURL:webpage.thumb_url];
+        } else if(botResult.thumb_url.length > 0) {
+            _imageObject = [[TGExternalImageObject alloc] initWithURL:botResult.thumb_url];
             _imageObject.imageSize = NSMakeSize(60, 60);
             _imageObject.imageProccessor = [ImageUtils c_proccessor];
         }
@@ -79,8 +79,9 @@
 }
 
 -(NSString *)outMessage {
-    return [NSString stringWithFormat:@"@%@ %@",_bot,_webpage.url];
+    return nil;
 }
+
 
 -(BOOL)updateItemHeightWithWidth:(int)width {
     return NO;

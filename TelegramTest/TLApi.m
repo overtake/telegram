@@ -2588,3 +2588,79 @@
 	return [stream getOutput];
 }
 @end
+
+@implementation TLAPI_messages_getContextBotResults
++(TLAPI_messages_getContextBotResults*)createWithBot:(TLInputUser*)bot query:(NSString*)query offset:(NSString*)offset {
+    TLAPI_messages_getContextBotResults* obj = [[TLAPI_messages_getContextBotResults alloc] init];
+    obj.bot = bot;
+	obj.query = query;
+	obj.offset = offset;
+    return obj;
+}
+- (NSData*)getData {
+	SerializedData* stream = [ClassStore streamWithConstuctor:921161836];
+	[ClassStore TLSerialize:self.bot stream:stream];
+	[stream writeString:self.query];
+	[stream writeString:self.offset];
+	return [stream getOutput];
+}
+@end
+
+@implementation TLAPI_messages_setContextBotResults
++(TLAPI_messages_setContextBotResults*)createWithFlags:(int)flags   query_id:(long)query_id results:(NSMutableArray*)results cache_time:(int)cache_time next_offset:(NSString*)next_offset {
+    TLAPI_messages_setContextBotResults* obj = [[TLAPI_messages_setContextBotResults alloc] init];
+    obj.flags = flags;
+	
+	
+	obj.query_id = query_id;
+	obj.results = results;
+	obj.cache_time = cache_time;
+	obj.next_offset = next_offset;
+    return obj;
+}
+- (NSData*)getData {
+	SerializedData* stream = [ClassStore streamWithConstuctor:-671949297];
+	[stream writeInt:self.flags];
+	
+	
+	[stream writeLong:self.query_id];
+	//Serialize FullVector
+	[stream writeInt:0x1cb5c415];
+	{
+		NSInteger tl_count = [self.results count];
+		[stream writeInt:(int)tl_count];
+		for(int i = 0; i < (int)tl_count; i++) {
+            TLInputBotContextResult* obj = [self.results objectAtIndex:i];
+            [ClassStore TLSerialize:obj stream:stream];
+		}
+	}
+	[stream writeInt:self.cache_time];
+	if(self.flags & (1 << 2)) {[stream writeString:self.next_offset];}
+	return [stream getOutput];
+}
+@end
+
+@implementation TLAPI_messages_sendContextBotResult
++(TLAPI_messages_sendContextBotResult*)createWithFlags:(int)flags  peer:(TLInputPeer*)peer reply_to_msg_id:(int)reply_to_msg_id random_id:(long)random_id query_id:(long)query_id n_id:(NSString*)n_id {
+    TLAPI_messages_sendContextBotResult* obj = [[TLAPI_messages_sendContextBotResult alloc] init];
+    obj.flags = flags;
+	
+	obj.peer = peer;
+	obj.reply_to_msg_id = reply_to_msg_id;
+	obj.random_id = random_id;
+	obj.query_id = query_id;
+	obj.n_id = n_id;
+    return obj;
+}
+- (NSData*)getData {
+	SerializedData* stream = [ClassStore streamWithConstuctor:-1112292144];
+	[stream writeInt:self.flags];
+	
+	[ClassStore TLSerialize:self.peer stream:stream];
+	if(self.flags & (1 << 0)) {[stream writeInt:self.reply_to_msg_id];}
+	[stream writeLong:self.random_id];
+	[stream writeLong:self.query_id];
+	[stream writeString:self.n_id];
+	return [stream getOutput];
+}
+@end

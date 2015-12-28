@@ -42,7 +42,7 @@
         __strong TGGifKeyboardView *strongSelf = weakSelf;
         
         if(strongSelf != nil) {
-            [strongSelf.messagesViewController sendFoundGif:[TL_messageMediaDocument createWithDocument:document] forConversation:strongSelf.messagesViewController.conversation];
+            [strongSelf.messagesViewController sendFoundGif:[TL_messageMediaDocument createWithDocument:document caption:@""] forConversation:strongSelf.messagesViewController.conversation];
             [strongSelf.messagesViewController.bottomView.smilePopover close];
         }
     }];
@@ -210,10 +210,10 @@
     NSMutableArray *result = [NSMutableArray array];
     
     [items enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-        TL_webPage *webpage = [[TL_webPage alloc] init];
-        webpage.document = obj;
-        webpage.type = @"gifv";
-        [result addObject:webpage];
+        TLBotContextResult *botResult = [[TLBotContextResult alloc] init];
+        botResult.document = obj;
+        botResult.type = @"gifv";
+        [result addObject:botResult];
     }];
     
     _items = [items mutableCopy];

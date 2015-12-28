@@ -420,6 +420,9 @@
             <PersistentString
                value = "self.item">
             </PersistentString>
+            <PersistentString
+               value = "self.visibleRect">
+            </PersistentString>
          </PersistentStrings>
       </ContextState>
       <ContextState
