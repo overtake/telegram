@@ -755,6 +755,7 @@ static NSMutableDictionary *queueItemsByPath() {
 }
 
 -(void)displayFrame:(TGVTAcceleratedVideoFrame *)frame {
+    
     CMSampleBufferRef sampleBuffer = NULL;
     OSStatus err = noErr;
     

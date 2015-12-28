@@ -65,7 +65,7 @@
         
         _fakeMessage = [[TL_localMessage alloc] init];
         
-        _fakeMessage.media = [TL_messageMediaDocument createWithDocument:nil caption:@""];
+        _fakeMessage.media = [TL_messageMediaDocument createWithDocument:nil];
         
         self.wantsLayer = YES;
         self.layer.borderColor = [NSColor whiteColor].CGColor;
@@ -239,7 +239,7 @@
     dispatch_block_t block = ^{
         BOOL nextState = check_block();
         
-        if(_prevState != nextState) {
+        if(_prevState != nextState || !nextState) {
             [_player setPath:nextState ? self.path : nil];
         }
         
@@ -248,11 +248,11 @@
     
     
     
-    if(check_block()) {
-        _handle = perform_block_after_delay(0.05, block);
-    } else {
+   // if(check_block()) {
+   //     _handle = perform_block_after_delay(0.02, block);
+   // } else {
         block();
-    }
+  //  }
     
     
     
@@ -382,10 +382,7 @@
         
         NSRange range = NSMakeRange(item.gifs.count, self.subviews.count - item.gifs.count);
 
-        int bp = 0;
-        
-        
-        
+
         NSArray *copy = [self.subviews copy];
         
         [copy enumerateObjectsAtIndexes:[NSIndexSet indexSetWithIndexesInRange:range] options:0 usingBlock:^(__kindof NSView * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
@@ -553,10 +550,10 @@
     
 }
 - (BOOL)selectionWillChange:(NSInteger)row item:(TMRowItem *) item {
-    return NO;
+    return YES;
 }
 - (BOOL)isSelectable:(NSInteger)row item:(TMRowItem *) item {
-    return NO;
+    return YES;
 }
 
 
@@ -589,13 +586,17 @@
                 size.width+=max;
                 size.height+=max;
                 
-                
-                if(!isLastRowItem && idx == (gifs.count - 1) && currentWidth+size.width < NSWidth(self.frame)) {
+            
+            }
+            
+            if(!isLastRowItem && idx == (gifs.count - 1)) {
+                if(currentWidth+size.width < NSWidth(self.frame)) {
                     int dif = NSWidth(self.frame) - (currentWidth+size.width);
                     
                     size.width+=dif;
                     size.height+=dif;
                 }
+                
             }
             
             currentWidth+=size.width;
@@ -645,8 +646,6 @@
     
     [_items addObjectsFromArray:items];
     
-   // [self removeAllItems:NO];
-    
     
     NSMutableArray *draw = [items mutableCopy];
     
@@ -656,7 +655,7 @@
         
         NSMutableArray *r = [[draw subarrayWithRange:NSMakeRange(0, rowCount)] mutableCopy];
         
-        NSArray *s = [self makeRow:r isLastRowItem:r.count <= rowCount];
+        NSArray *s = [self makeRow:r isLastRowItem:r.count < rowCount];
         
         [draw removeObjectsInArray:r];
         

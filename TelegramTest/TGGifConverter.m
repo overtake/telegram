@@ -40,6 +40,9 @@ static const int32_t FPS = 600;
     AVAssetWriter* videoWriter = [[AVAssetWriter alloc] initWithURL: outFilePath
                                                            fileType: AVFileTypeMPEG4
                                                               error: &error];
+    
+    videoWriter.shouldOptimizeForNetworkUse = YES;
+    
     if (error) {
         CFRelease(source);
         if(errorHandler != nil) {
@@ -61,7 +64,13 @@ static const int32_t FPS = 600;
     
     NSDictionary *videoSettings = @{AVVideoCodecKey : AVVideoCodecH264,
                                     AVVideoWidthKey : @(sourceWidth),
-                                    AVVideoHeightKey : @(sourceHeight)};
+                                    AVVideoHeightKey : @(sourceHeight),
+                                    AVVideoCompressionPropertiesKey:@
+                                        {
+                                        AVVideoAverageBitRateKey: @2300000,
+                                        AVVideoProfileLevelKey: AVVideoProfileLevelH264Baseline31,
+                                        }
+                                    };
     
     AVAssetWriterInput* videoWriterInput = [AVAssetWriterInput assetWriterInputWithMediaType: AVMediaTypeVideo
                                                                               outputSettings: videoSettings];

@@ -356,7 +356,7 @@ DYNAMIC_PROPERTY(DDialog);
             mask|=HistoryFilterAudio;
         }
         
-        if([self.media isKindOfClass:[TL_messageMediaDocument class]] || [self.media isKindOfClass:[TL_messageMediaDocument_old44 class]]) {
+        if([self.media isKindOfClass:[TL_messageMediaDocument class]]) {
             TL_documentAttributeAudio *attr =  (TL_documentAttributeAudio *)[self.media.document attributeWithClass:[TL_documentAttributeAudio class]];
             if(attr != nil || [self.media.document.mime_type hasPrefix:@"audio/"]) {
                 mask|=HistoryFilterAudioDocument;

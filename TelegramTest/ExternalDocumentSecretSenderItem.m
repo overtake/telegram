@@ -16,7 +16,7 @@
         
         int ttl = self.params.ttl;
         
-        self.message = [TL_destructMessage createWithN_id:[MessageSender getFutureMessageId] flags:TGOUTUNREADMESSAGE from_id:UsersManager.currentUserId to_id:conversation.peer date:[[MTNetwork instance] getTime] message:@"" media:[TL_messageMediaDocument createWithDocument:document caption:@""] destruction_time:0 randomId:rand_long() fakeId:[MessageSender getFakeMessageId] ttl_seconds:ttl == -1 ? 0 : ttl out_seq_no:-1 dstate:DeliveryStatePending];
+        self.message = [TL_destructMessage createWithN_id:[MessageSender getFutureMessageId] flags:TGOUTUNREADMESSAGE from_id:UsersManager.currentUserId to_id:conversation.peer date:[[MTNetwork instance] getTime] message:@"" media:[TL_messageMediaDocument createWithDocument:document] destruction_time:0 randomId:rand_long() fakeId:[MessageSender getFakeMessageId] ttl_seconds:ttl == -1 ? 0 : ttl out_seq_no:-1 dstate:DeliveryStatePending];
         
         [self.message save:YES];
     }

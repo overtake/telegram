@@ -538,11 +538,45 @@
             [Notification perform:MEDIA_RECEIVE data:@{KEY_PREVIEW_OBJECT:previewObject}];
         }
         
+        [self checkAndProccessGifMessage:message];
+        
         
         [self updateTop:message needUpdate:YES update_real_date:update_real_date];
         [Notification performOnStageQueue:MESSAGE_RECEIVE_EVENT data:@{KEY_MESSAGE:message}];
     }];
 }
+
+
+-(BOOL)checkAndProccessGifMessage:(TL_localMessage *)message {
+    
+    if(message.isN_out && [message.media.document.mime_type isEqualToString:@"video/mp4"] && [message.media.document attributeWithClass:[TL_documentAttributeVideo class]] != nil) {
+        
+        [[Storage yap] asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
+            
+            NSMutableArray *items = [transaction objectForKey:@"gif" inCollection:RECENT_GIFS];
+            
+            TL_document *item = [[items filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.n_id == %ld",message.media.document.n_id]] firstObject];
+            
+            if(item) {
+                [items removeObjectAtIndex:[items indexOfObject:item]];
+            } else {
+                
+            }
+            [items insertObject:message.media.document atIndex:0];
+
+            
+            [transaction setObject:items forKey:@"gifs" inCollection:RECENT_GIFS];
+        }];
+        
+        
+        
+        return YES;
+    }
+    
+    return NO;
+    
+}
+
 
 - (void)updateTop:(TL_localMessage *)message needUpdate:(BOOL)needUpdate update_real_date:(BOOL)update_real_date {
     
@@ -770,6 +804,8 @@
             [self add:conversations];
             
             [messages enumerateObjectsUsingBlock:^(TL_localMessage *message, NSUInteger idx, BOOL * _Nonnull stop) {
+                
+                [self checkAndProccessGifMessage:message];
              
                 TL_conversation *dialog = message.conversation;
                 

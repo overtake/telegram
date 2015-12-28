@@ -42,13 +42,88 @@
         __strong TGGifKeyboardView *strongSelf = weakSelf;
         
         if(strongSelf != nil) {
-            [strongSelf.messagesViewController sendFoundGif:[TL_messageMediaDocument createWithDocument:document caption:@""] forConversation:strongSelf.messagesViewController.conversation];
+            [strongSelf.messagesViewController sendFoundGif:[TL_messageMediaDocument createWithDocument:document] forConversation:strongSelf.messagesViewController.conversation];
             [strongSelf.messagesViewController.bottomView.smilePopover close];
         }
     }];
     
 }
 
+
+
+
+-(void)didReceiveMessage:(NSNotification *)notification {
+    
+    [ASQueue dispatchOnMainQueue:^{
+        
+        TL_localMessage *message = notification.userInfo[KEY_MESSAGE];
+        
+        BOOL c = [self proccessMessage:message];
+        
+        if(!self.isHidden && c) {
+            [self proccessAndSendToDraw:_items];
+        }
+        
+    }];
+}
+
+-(void)didReceiveMessages:(NSNotification *)notification {
+    
+    [ASQueue dispatchOnMainQueue:^{
+        NSArray *messages = notification.object;
+        
+        __block BOOL changed;
+        
+        [messages enumerateObjectsUsingBlock:^(TL_localMessage *obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            
+            BOOL c = [self proccessMessage:obj];
+            
+            if(!changed && c)
+                changed = c;
+            
+        }];
+        
+        if(!self.isHidden && changed) {
+           [self proccessAndSendToDraw:_items];
+        }
+    }];
+    
+}
+
+
+-(BOOL)proccessMessage:(TL_localMessage *)message {
+    
+    if(message.isN_out && [message.media.document.mime_type isEqualToString:@"video/mp4"] && [message.media.document attributeWithClass:[TL_documentAttributeVideo class]] != nil) {
+        
+        
+        TL_document *item = [[_items filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.n_id == %ld",message.media.document.n_id]] firstObject];
+        
+        if(item) {
+            [_items removeObjectAtIndex:[_items indexOfObject:item]];
+        } else {
+           
+        }
+        [_items insertObject:message.media.document atIndex:0];
+        
+        return YES;
+    }
+    
+    return NO;
+    
+}
+
+-(void)viewDidUnhide {
+    [Notification addObserver:self selector:@selector(didReceiveMessage:) name:MESSAGE_RECEIVE_EVENT];
+    [Notification addObserver:self selector:@selector(didReceiveMessages:) name:MESSAGE_LIST_RECEIVE];
+}
+
+-(void)viewDidHide {
+    [Notification removeObserver:self];
+}
+
+-(void)dealloc {
+    [Notification removeObserver:self];
+}
 
 -(void)searchFieldTextChange:(NSString *)searchString {
     
@@ -84,42 +159,15 @@
 
 -(int)gifsHash {
     
-    __block int hash = 0;
+    __block int acc = 0;
     
-    NSMutableArray *high = [NSMutableArray array];
-    NSMutableArray *low = [NSMutableArray array];
-    
-    [_items enumerateObjectsUsingBlock:^(TLWebPage *obj, NSUInteger idx, BOOL * _Nonnull stop) {
-        [high addObject:@(obj.document.n_id >> 32)];
-        [low addObject:@(obj.document.n_id & 0xFFFFFFFFL)];
+    [_items enumerateObjectsUsingBlock:^(TLDocument *obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        
+        acc = (acc * 20261) + (obj.n_id >> 32);
+        acc = (acc * 20261) + (obj.n_id & 0xFFFFFFFF);
     }];
-    
-    
-    [high sortUsingComparator:^NSComparisonResult(NSNumber *obj1, NSNumber *obj2) {
-        return [obj1 compare:obj2];
-    }];
-    
-    [low sortUsingComparator:^NSComparisonResult(NSNumber *obj1, NSNumber *obj2) {
-        return [obj1 compare:obj2];
-    }];
-    
-    
-    NSMutableArray *compared = [NSMutableArray array];
-    
-    for (int i = 0; i < low.count; i++) {
-        [compared addObject:high[i]];
-        [compared addObject:low[i]];
-    }
-    
-    
-    
-    [compared enumerateObjectsUsingBlock:^(NSNumber *obj, NSUInteger idx, BOOL * _Nonnull stop) {
-        hash = (hash * 20261) + [obj intValue];
-    }];
-    
-    return (int)(hash % 0x7FFFFFFF);
-    
-    return hash;
+     
+    return (int)(acc & 0x7FFFFFFF);
 }
 
 -(void)prepareSavedGifvs {
@@ -127,11 +175,14 @@
     
     [[Storage yap] asyncReadWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
         
-        NSMutableArray *result = [transaction objectForKey:@"recent_gifs" inCollection:RECENT_GIFS];
+        NSMutableArray *result = [transaction objectForKey:@"gifs" inCollection:RECENT_GIFS];
         
-        [self proccessAndSendToDraw:result];
+        [ASQueue dispatchOnMainQueue:^{
+            [self proccessAndSendToDraw:result];
+            
+            [self checkRemoteWithHash];
+        }];
         
-        [self checkRemoteWithHash];
     }];
     
     
@@ -140,7 +191,14 @@
 -(void)checkRemoteWithHash {
     [RPCRequest sendRequest:[TLAPI_messages_getSavedGifs createWithN_hash:[self gifsHash]] successHandler:^(id request, TL_messages_savedGifs *response) {
         
-        [self proccessAndSendToDraw:response.gifs];
+        if([response isKindOfClass:[TL_messages_savedGifs class]]) {
+            
+            [self proccessAndSendToDraw:response.gifs];
+            
+            [[Storage yap] asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
+                [transaction setObject:_items forKey:@"gifs" inCollection:RECENT_GIFS];
+            }];
+        }
         
     } errorHandler:^(id request, RpcError *error) {
         
@@ -158,7 +216,9 @@
         [result addObject:webpage];
     }];
     
-    _items = result;
+    _items = [items mutableCopy];
+    
+    [_tableView clear];
     
     [_tableView drawResponse:result];
 }

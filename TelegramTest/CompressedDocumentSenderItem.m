@@ -50,7 +50,7 @@
         }
         
         
-        super.message = [MessageSender createOutMessage:nil media:[TL_messageMediaDocument createWithDocument:document caption:@""] conversation:compressItem.conversation];
+        super.message = [MessageSender createOutMessage:nil media:[TL_messageMediaDocument createWithDocument:document] conversation:compressItem.conversation];
         
         [self.message save:YES];
         

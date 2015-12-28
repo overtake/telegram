@@ -40,7 +40,7 @@
 
 -(NSString *)path_with_cache {
     TL_localMessage *fake = [[TL_localMessage alloc] init];
-    fake.media = [TL_messageMediaDocument createWithDocument:self caption:@""];
+    fake.media = [TL_messageMediaDocument createWithDocument:self];
     return mediaFilePath(fake);
 }
 

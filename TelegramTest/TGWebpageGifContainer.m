@@ -10,7 +10,9 @@
 #import "TGWebpageGifObject.h"
 #import "TGModernAnimatedImagePlayer.h"
 #import "TGVTVideoView.h"
-@interface TGWebpageGifContainer ()
+@interface TGWebpageGifContainer () {
+    BOOL _prevState;
+}
 @property (nonatomic,strong) TGVTVideoView *player;
 @property (nonatomic,strong) TMView *playerContainer;
 @end
@@ -41,7 +43,7 @@
 
 -(void)setWebpage:(TGWebpageGifObject *)webpage {
     
-    
+    _prevState = NO;
     [self.imageView setHidden:YES];
     
     [super setWebpage:webpage];
@@ -96,15 +98,18 @@
     
     if(item.downloadItem) {
         
-        
         [item.downloadListener setCompleteHandler:^(DownloadItem * item) {
+            
+            __strong TGWebpageGifContainer *strongSelf = weakSelf;
             
             [[ASQueue mainQueue] dispatchOnQueue:^{
                 
-                [weakSelf downloadProgressHandler:item];
+                [strongSelf downloadProgressHandler:item];
                 
                 dispatch_after_seconds(0.2, ^{
-                    weakSelf.item.downloadItem = nil;
+                    strongSelf.item.downloadItem = nil;
+                    strongSelf->_prevState = NO;
+                    
                     [self updateState:0];
                 });
             }];
@@ -168,23 +173,31 @@
 
 -(void)_didScrolledTableView:(NSNotification *)notification {
     
-    NSRange visibleRange = [self.item.table rowsInRect:self.item.table.visibleRect];
-    
-    if(visibleRange.location > 0) {
-        visibleRange.location--;
-        visibleRange.length++;
-    }
-    
-    NSUInteger idx = self.item.rowId;
-    
-    TGWebpageGifObject *webpage = (TGWebpageGifObject *)self.webpage;
+     TGWebpageGifObject *webpage = (TGWebpageGifObject *)self.webpage;
 
     
-    if(idx > visibleRange.location && idx <= visibleRange.location + visibleRange.length && ((self.window != nil && self.window.isKeyWindow) || notification == nil) && webpage.isset) {
-        [_player resume];
-    } else {
-        [_player pause];
-    }
+    BOOL (^check_block)() = ^BOOL() {
+        
+        BOOL completelyVisible = self.visibleRect.size.width > 0 && self.visibleRect.size.height > 0 && ![TMViewController isModalActive];
+        
+        return  completelyVisible && ((self.window != nil && self.window.isKeyWindow) || notification == nil) && webpage.isset;
+        
+    };
+    
+    dispatch_block_t block = ^{
+        BOOL nextState = check_block();
+        
+        if(_prevState != nextState || !nextState) {
+            [_player setPath:nextState ? webpage.path : nil];
+        }
+        
+        _prevState = nextState;
+    };
+    
+    
+    
+    block();
+
     
 }
 

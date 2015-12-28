@@ -43,7 +43,7 @@
             return;
         
         
-        id request = [TLAPI_messages_sendMedia createWithFlags:[self senderFlags] peer:self.conversation.inputPeer reply_to_msg_id:self.message.reply_to_msg_id media:[self.message.media.document isKindOfClass:[TL_externalDocument class]] ? [TL_inputMediaGifExternal createWithUrl:self.message.media.document.external_url q:self.message.media.document.search_q] : [TL_inputMediaDocument createWithN_id:[TL_inputDocument createWithN_id:self.message.media.document.n_id access_hash:self.message.media.document.access_hash] caption:@""] random_id:self.message.randomId reply_markup:[TL_replyKeyboardMarkup createWithFlags:0 rows:nil]];
+        id request = [TLAPI_messages_sendMedia createWithFlags:[self senderFlags] peer:self.conversation.inputPeer reply_to_msg_id:self.message.reply_to_msg_id media:[self.message.media.document isKindOfClass:[TL_externalDocument class]] ? [TL_inputMediaGifExternal createWithUrl:self.message.media.document.external_url q:self.message.media.document.search_q] : [TL_inputMediaDocument createWithN_id:[TL_inputDocument createWithN_id:self.message.media.document.n_id access_hash:self.message.media.document.access_hash]] random_id:self.message.randomId reply_markup:[TL_replyKeyboardMarkup createWithFlags:0 rows:nil]];
         
         self.rpc_request = [RPCRequest sendRequest:request successHandler:^(id request, id response) {
             

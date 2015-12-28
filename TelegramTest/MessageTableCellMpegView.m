@@ -126,13 +126,11 @@
         return  completelyVisible && ((self.window != nil && self.window.isKeyWindow) || notification == nil) && item.isset;
         
     };
-    
-    cancel_delayed_block(_handle);
-    
+        
     dispatch_block_t block = ^{
         BOOL nextState = check_block();
         
-        if(_prevState != nextState) {
+        if(_prevState != nextState || !nextState) {
             [_player setPath:nextState ? item.path : nil];
         }
         
@@ -141,11 +139,7 @@
     
     
     
-    if(check_block()) {
-        _handle = perform_block_after_delay(0.05, block);
-    } else {
-        block();
-    }
+    block();
 
     
 }

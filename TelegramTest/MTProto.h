@@ -2,7 +2,7 @@
 //  MTProto.h
 //  Telegram
 //
-//  Auto created by Mikhail Filimonov on 22.12.15.
+//  Auto created by Mikhail Filimonov on 28.12.15.
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -417,15 +417,6 @@
 @interface TLmessages_SavedGifs : TLObject
 @end
 	
-@interface TLInputBotContextResult : TLObject
-@end
-	
-@interface TLBotContextResult : TLObject
-@end
-	
-@interface TLmessages_BotResults : TLObject
-@end
-	
 @interface TLProtoMessage : TLObject
 @end
 	
@@ -605,10 +596,6 @@
 @property (nonatomic, strong) NSString* venue_id;
 @property (nonatomic, strong) NSString* url;
 @property (nonatomic, strong) NSString* q;
-@property int flags;
-@property (nonatomic,assign,readonly) BOOL isMedia;
-@property (nonatomic, strong) TLInputUser* bot;
-@property long query_id;
 @end
 
 @interface TL_inputMediaEmpty : TLInputMedia<NSCoding>
@@ -642,22 +629,19 @@
 +(TL_inputMediaAudio*)createWithN_id:(TLInputAudio*)n_id;
 @end
 @interface TL_inputMediaUploadedDocument : TLInputMedia<NSCoding>
-+(TL_inputMediaUploadedDocument*)createWithFile:(TLInputFile*)file mime_type:(NSString*)mime_type attributes:(NSMutableArray*)attributes caption:(NSString*)caption;
++(TL_inputMediaUploadedDocument*)createWithFile:(TLInputFile*)file mime_type:(NSString*)mime_type attributes:(NSMutableArray*)attributes;
 @end
 @interface TL_inputMediaUploadedThumbDocument : TLInputMedia<NSCoding>
-+(TL_inputMediaUploadedThumbDocument*)createWithFile:(TLInputFile*)file thumb:(TLInputFile*)thumb mime_type:(NSString*)mime_type attributes:(NSMutableArray*)attributes caption:(NSString*)caption;
++(TL_inputMediaUploadedThumbDocument*)createWithFile:(TLInputFile*)file thumb:(TLInputFile*)thumb mime_type:(NSString*)mime_type attributes:(NSMutableArray*)attributes;
 @end
 @interface TL_inputMediaDocument : TLInputMedia<NSCoding>
-+(TL_inputMediaDocument*)createWithN_id:(TLInputDocument*)n_id caption:(NSString*)caption;
++(TL_inputMediaDocument*)createWithN_id:(TLInputDocument*)n_id;
 @end
 @interface TL_inputMediaVenue : TLInputMedia<NSCoding>
 +(TL_inputMediaVenue*)createWithGeo_point:(TLInputGeoPoint*)geo_point title:(NSString*)title address:(NSString*)address provider:(NSString*)provider venue_id:(NSString*)venue_id;
 @end
 @interface TL_inputMediaGifExternal : TLInputMedia<NSCoding>
 +(TL_inputMediaGifExternal*)createWithUrl:(NSString*)url q:(NSString*)q;
-@end
-@interface TL_inputMediaContextBotResult : TLInputMedia<NSCoding>
-+(TL_inputMediaContextBotResult*)createWithFlags:(int)flags  bot:(TLInputUser*)bot url:(NSString*)url query_id:(long)query_id;
 @end
 @interface TL_inputMediaUploadedVideo_old34 : TLInputMedia<NSCoding>
 +(TL_inputMediaUploadedVideo_old34*)createWithFile:(TLInputFile*)file duration:(int)duration w:(int)w h:(int)h caption:(NSString*)caption;
@@ -1126,7 +1110,7 @@
 +(TL_messageMediaUnsupported*)create;
 @end
 @interface TL_messageMediaDocument : TLMessageMedia<NSCoding>
-+(TL_messageMediaDocument*)createWithDocument:(TLDocument*)document caption:(NSString*)caption;
++(TL_messageMediaDocument*)createWithDocument:(TLDocument*)document;
 @end
 @interface TL_messageMediaAudio : TLMessageMedia<NSCoding>
 +(TL_messageMediaAudio*)createWithAudio:(TLAudio*)audio;
@@ -1136,9 +1120,6 @@
 @end
 @interface TL_messageMediaVenue : TLMessageMedia<NSCoding>
 +(TL_messageMediaVenue*)createWithGeo:(TLGeoPoint*)geo title:(NSString*)title address:(NSString*)address provider:(NSString*)provider venue_id:(NSString*)venue_id;
-@end
-@interface TL_messageMediaDocument_old44 : TLMessageMedia<NSCoding>
-+(TL_messageMediaDocument_old44*)createWithDocument:(TLDocument*)document;
 @end
 	
 @interface TLMessageAction()
@@ -1621,6 +1602,9 @@
 @interface TL_inputMessagesFilterUrl : TLMessagesFilter<NSCoding>
 +(TL_inputMessagesFilterUrl*)create;
 @end
+@interface TL_inputMessagesFilterGif : TLMessagesFilter<NSCoding>
++(TL_inputMessagesFilterGif*)create;
+@end
 	
 @interface TLUpdate()
 @property (nonatomic, strong) TLMessage* message;
@@ -1669,9 +1653,6 @@
 @property Boolean is_admin;
 @property (nonatomic, strong) TLmessages_StickerSet* stickerset;
 @property (nonatomic, strong) NSMutableArray* order;
-@property long query_id;
-@property (nonatomic, strong) NSString* query;
-@property (nonatomic, strong) NSString* offset;
 @end
 
 @interface TL_updateNewMessage : TLUpdate<NSCoding>
@@ -1796,9 +1777,6 @@
 @end
 @interface TL_updateSavedGifs : TLUpdate<NSCoding>
 +(TL_updateSavedGifs*)create;
-@end
-@interface TL_updateBotContextQuery : TLUpdate<NSCoding>
-+(TL_updateBotContextQuery*)createWithQuery_id:(long)query_id user_id:(int)user_id query:(NSString*)query offset:(NSString*)offset;
 @end
 	
 @interface TLupdates_State()
@@ -1947,11 +1925,12 @@
 @property int chat_big_size;
 @property int push_chat_period_ms;
 @property int push_chat_limit;
+@property int saved_gifs_limit;
 @property (nonatomic, strong) NSMutableArray* disabled_features;
 @end
 
 @interface TL_config : TLConfig<NSCoding>
-+(TL_config*)createWithDate:(int)date expires:(int)expires test_mode:(Boolean)test_mode this_dc:(int)this_dc dc_options:(NSMutableArray*)dc_options chat_size_max:(int)chat_size_max megagroup_size_max:(int)megagroup_size_max forwarded_count_max:(int)forwarded_count_max online_update_period_ms:(int)online_update_period_ms offline_blur_timeout_ms:(int)offline_blur_timeout_ms offline_idle_timeout_ms:(int)offline_idle_timeout_ms online_cloud_timeout_ms:(int)online_cloud_timeout_ms notify_cloud_delay_ms:(int)notify_cloud_delay_ms notify_default_delay_ms:(int)notify_default_delay_ms chat_big_size:(int)chat_big_size push_chat_period_ms:(int)push_chat_period_ms push_chat_limit:(int)push_chat_limit disabled_features:(NSMutableArray*)disabled_features;
++(TL_config*)createWithDate:(int)date expires:(int)expires test_mode:(Boolean)test_mode this_dc:(int)this_dc dc_options:(NSMutableArray*)dc_options chat_size_max:(int)chat_size_max megagroup_size_max:(int)megagroup_size_max forwarded_count_max:(int)forwarded_count_max online_update_period_ms:(int)online_update_period_ms offline_blur_timeout_ms:(int)offline_blur_timeout_ms offline_idle_timeout_ms:(int)offline_idle_timeout_ms online_cloud_timeout_ms:(int)online_cloud_timeout_ms notify_cloud_delay_ms:(int)notify_cloud_delay_ms notify_default_delay_ms:(int)notify_default_delay_ms chat_big_size:(int)chat_big_size push_chat_period_ms:(int)push_chat_period_ms push_chat_limit:(int)push_chat_limit saved_gifs_limit:(int)saved_gifs_limit disabled_features:(NSMutableArray*)disabled_features;
 @end
 	
 @interface TLNearestDc()
@@ -2932,47 +2911,6 @@
 @end
 @interface TL_messages_savedGifs : TLmessages_SavedGifs<NSCoding>
 +(TL_messages_savedGifs*)createWithN_hash:(int)n_hash gifs:(NSMutableArray*)gifs;
-@end
-	
-@interface TLInputBotContextResult()
-@property int flags;
-@property (nonatomic,assign,readonly) BOOL isHide_url;
-@property (nonatomic, strong) NSString* url;
-@property (nonatomic, strong) NSString* type;
-@property (nonatomic, strong) NSString* title;
-@property (nonatomic, strong) NSString* n_description;
-@property (nonatomic, strong) NSString* thumb_url;
-@property (nonatomic, strong) NSString* content_url;
-@property (nonatomic, strong) NSString* content_type;
-@property int w;
-@property int h;
-@property int duration;
-@end
-
-@interface TL_inputBotContextResult : TLInputBotContextResult<NSCoding>
-+(TL_inputBotContextResult*)createWithFlags:(int)flags  url:(NSString*)url type:(NSString*)type title:(NSString*)title n_description:(NSString*)n_description thumb_url:(NSString*)thumb_url content_url:(NSString*)content_url content_type:(NSString*)content_type w:(int)w h:(int)h duration:(int)duration;
-@end
-	
-@interface TLBotContextResult()
-@property int flags;
-@property (nonatomic,assign,readonly) BOOL isHide_url;
-@property (nonatomic, strong) TLWebPage* webpage;
-@end
-
-@interface TL_botContextResult : TLBotContextResult<NSCoding>
-+(TL_botContextResult*)createWithFlags:(int)flags  webpage:(TLWebPage*)webpage;
-@end
-	
-@interface TLmessages_BotResults()
-@property int flags;
-@property (nonatomic,assign,readonly) BOOL isMedia;
-@property long query_id;
-@property (nonatomic, strong) NSString* next_offset;
-@property (nonatomic, strong) NSMutableArray* results;
-@end
-
-@interface TL_messages_botResults : TLmessages_BotResults<NSCoding>
-+(TL_messages_botResults*)createWithFlags:(int)flags  query_id:(long)query_id next_offset:(NSString*)next_offset results:(NSMutableArray*)results;
 @end
 	
 @interface TLProtoMessage()

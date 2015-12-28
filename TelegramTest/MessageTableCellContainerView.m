@@ -601,7 +601,7 @@ static BOOL dragAction = NO;
         
         NSString *path = mediaFilePath(self.item.message);
         
-        NSString *fileName = [self.item.message.media isKindOfClass:[TL_messageMediaDocument class]]  || [self.item.message.media isKindOfClass:[TL_messageMediaDocument_old44 class]] ? [self.item.message.media.document file_name] : [path lastPathComponent];
+        NSString *fileName = [self.item.message.media isKindOfClass:[TL_messageMediaDocument class]] ? [self.item.message.media.document file_name] : [path lastPathComponent];
         
         [panel setNameFieldStringValue:fileName];
         

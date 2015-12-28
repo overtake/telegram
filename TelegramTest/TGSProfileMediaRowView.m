@@ -413,7 +413,7 @@ static NSMutableDictionary *loaders;
         
         if((message.media || entities.count > 0)) {
             
-            if([message.media isKindOfClass:[TL_messageMediaDocument class]] || [message.media isKindOfClass:[TL_messageMediaDocument_old44 class]]) {
+            if([message.media isKindOfClass:[TL_messageMediaDocument class]]) {
                 
                 TL_documentAttributeAudio *attr =  (TL_documentAttributeAudio *)[message.media.document attributeWithClass:[TL_documentAttributeAudio class]];
                 
