@@ -162,20 +162,23 @@
         
     };
         
+    cancel_delayed_block(_handle);
+    
     dispatch_block_t block = ^{
         BOOL nextState = check_block();
         
         if(_prevState != nextState) {
             [_player setPath:nextState ? item.path : nil];
-            [self setProgressToView:self.progressView.superview];
         }
         
         _prevState = nextState;
     };
     
-    
-    
-    block();
+    if(!check_block())
+        block();
+    else
+        _handle = perform_block_after_delay(0.03, block);
+
 
     
 }

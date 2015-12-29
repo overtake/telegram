@@ -183,6 +183,7 @@ DYNAMIC_PROPERTY(DUser);
 
 @interface TGMessagesHintView () <TMTableViewDelegate> {
     SMDelayedBlockHandle _handle;
+    RPCRequest *_contextRequest;
 }
 @property (nonatomic,strong) TMTableView *tableView;
 @property (nonatomic,copy) void (^choiceHandler)(NSString *result);
@@ -397,29 +398,33 @@ DYNAMIC_PROPERTY(DUser);
    
     _choiceHandler = choiceHandler;
     
-    TLChatFull *fullChat = [[FullChatManager sharedManager] find:chat.n_id];
-    
     NSMutableArray *uids = [[NSMutableArray alloc] init];
     
-    if(fullChat.participants.participants) {
-        [fullChat.participants.participants enumerateObjectsUsingBlock:^(TLChatParticipant * obj, NSUInteger idx, BOOL *stop) {
-            [uids addObject:@(obj.user_id)];
-            
-        }];
-    } else {
+    if(chat) {
+        TLChatFull *fullChat = [[FullChatManager sharedManager] find:chat.n_id];
         
-        NSArray *contacts = [[NewContactsManager sharedManager] all];
-        
-        [contacts enumerateObjectsUsingBlock:^(TLContact *obj, NSUInteger idx, BOOL *stop) {
+         if(fullChat.participants.participants) {
+            [fullChat.participants.participants enumerateObjectsUsingBlock:^(TLChatParticipant * obj, NSUInteger idx, BOOL *stop) {
+                [uids addObject:@(obj.user_id)];
+                
+            }];
+        } else {
             
-            [uids addObject:@(obj.user_id)];
+            NSArray *contacts = [[NewContactsManager sharedManager] all];
             
-        }];
+            [contacts enumerateObjectsUsingBlock:^(TLContact *obj, NSUInteger idx, BOOL *stop) {
+                
+                [uids addObject:@(obj.user_id)];
+                
+            }];
+        }
+
     }
     
     
     
-    NSArray *users = [UsersManager findUsersByMention:query withUids:uids];
+    
+    NSArray *users = [UsersManager findUsersByMention:query withUids:uids acceptContextBots:YES];
     
     
     NSMutableArray *items = [[NSMutableArray alloc] init];
@@ -473,10 +478,11 @@ DYNAMIC_PROPERTY(DUser);
             
             _isLockedWithRequest = YES;
 
+            [_contextRequest cancelRequest];
             
-            [RPCRequest sendRequest:[TLAPI_messages_getContextBotResults createWithBot:user.inputUser query:query offset:offset] successHandler:^(id request, TL_messages_botResults *response) {
+            _contextRequest = [RPCRequest sendRequest:[TLAPI_messages_getContextBotResults createWithBot:user.inputUser query:query offset:offset] successHandler:^(id request, TL_messages_botResults *response) {
                 
-                if(self.messagesViewController.conversation == conversation) {
+                if(self.messagesViewController.conversation == conversation && request == _contextRequest) {
                     
                     offset = response.next_offset;
                     
@@ -548,7 +554,7 @@ DYNAMIC_PROPERTY(DUser);
         };
         
         [_mediaContextTableView setNeedLoadNext:^(BOOL next) {
-            if(next && !_isLockedWithRequest && offset.length > 0 && k < 4) {
+            if(next && !_isLockedWithRequest && offset.length > 0 && k < 30) {
                 performQuery();
             }
             
@@ -649,6 +655,8 @@ DYNAMIC_PROPERTY(DUser);
     [_tableView removeAllItems:YES];
     [_contextTableView removeAllItems:YES];
     [_mediaContextTableView clear];
+    cancel_delayed_block(_handle);
+    [_contextRequest cancelRequest];
 }
 
 -(void)hide:(BOOL)animated {

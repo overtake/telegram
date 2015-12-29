@@ -264,14 +264,14 @@ static NSImage *tgContextPicCap() {
     
     BOOL (^check_block)() = ^BOOL() {
         
-        BOOL completelyVisible = self.visibleRect.size.width > 0 && self.visibleRect.size.height > 0; //idx >= visibleRange.location && idx <= visibleRange.location + visibleRange.length;
+        BOOL completelyVisible = self.visibleRect.size.width > 0 && self.visibleRect.size.height > 20;
                 
         return  completelyVisible && ((self.window != nil && self.window.isKeyWindow) || notification == nil) && self.isset;
         
     };
     
     cancel_delayed_block(_handle);
-    
+        
     dispatch_block_t block = ^{
         BOOL nextState = check_block();
         
@@ -282,11 +282,17 @@ static NSImage *tgContextPicCap() {
         _prevState = nextState;
     };
     
-    block();
+    if(!check_block())
+        block();
+    else
+        _handle = perform_block_after_delay(0.03, block);
     
 }
 
-
+-(void)removeFromSuperview {
+    [super removeFromSuperview];
+    [_player setPath:nil];
+}
 
 -(void)viewDidMoveToWindow {
     if(self.window == nil) {
@@ -403,6 +409,8 @@ static NSImage *tgContextPicCap() {
     
     TGGifSearchRowItem *item = (TGGifSearchRowItem *)[self rowItem];
     
+    [self removeAllSubviews];
+    
     if(self.subviews.count > item.gifs.count) {
         
         NSRange range = NSMakeRange(item.gifs.count, self.subviews.count - item.gifs.count);
@@ -440,7 +448,7 @@ static NSImage *tgContextPicCap() {
         
         NSSize size = [item.proportions[idx] sizeValue];
         
-        TMView *container = self.subviews.count > idx ? self.subviews[idx] : nil;
+        TMView *container; //self.subviews.count > idx ? self.subviews[idx] : nil;
         
         NSRect rect = NSMakeRect(x, 0, (idx == (item.gifs.count - 1) && !(item.table.count-1 == item.rowId) ? NSWidth(self.frame) - x : size.width - containerWidthDif), NSHeight(self.frame));
         
@@ -485,6 +493,9 @@ static NSImage *tgContextPicCap() {
             [picContainer.imageView setObject:item.imageObjects[idx]];
             container = picContainer;
            
+        } else {
+            [container removeFromSuperview];
+            container = nil;
         }
         
         if(container != nil) {
@@ -495,9 +506,9 @@ static NSImage *tgContextPicCap() {
     }];
     
     
+    int bp = 0;
     
-    
-    
+    assert(self.subviews.count == item.gifs.count);
 }
 
 -(void)mouseUp:(NSEvent *)theEvent {
@@ -661,6 +672,18 @@ static NSImage *tgContextPicCap() {
 
 
 -(void)drawResponse:(NSArray *)items {
+    
+    NSMutableArray *filter = [NSMutableArray array];
+    
+    [items enumerateObjectsUsingBlock:^(TLBotContextResult *obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        
+        if(!((obj.document == nil || [obj.document isKindOfClass:[TL_documentEmpty class]]) && (obj.photo == nil || [obj.photo isKindOfClass:[TL_photoEmpty class]]) && obj.content_url.length ==0)) {
+            [filter addObject:obj];
+        }
+        
+    }];
+    
+    items = filter;
     
     [_items addObjectsFromArray:items];
     

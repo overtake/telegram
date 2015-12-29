@@ -3705,6 +3705,7 @@ static NSTextAttachment *headerMediaIcon() {
 
 - (CGFloat) tableView:(NSTableView *)tableView heightOfRow:(NSInteger)row {
     MessageTableItem *item = [self.messages objectAtIndex:row];
+    
     return item.viewSize.height;
 }
 

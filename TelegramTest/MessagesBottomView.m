@@ -1182,7 +1182,7 @@ static RBLPopover *popover;
     
     
     [self updateWebpage:YES];
-    
+   
     [self checkMentionsOrTags];
     
     [self updateBotButtons];
@@ -1267,11 +1267,7 @@ static RBLPopover *popover;
         };
         
         if(type == 1) {
-            if(self.dialog.type == DialogTypeChat || self.dialog.type == DialogTypeChannel) {
-                
-                [self.messagesViewController.hintView showMentionPopupWithQuery:search conversation:self.dialog chat:self.dialog.chat choiceHandler:callback];
-                
-            }
+            [self.messagesViewController.hintView showMentionPopupWithQuery:search conversation:self.dialog chat:self.dialog.chat choiceHandler:callback];
             
         } else if(type == 2) {
             

@@ -10,8 +10,10 @@
 #import "TGWebpageGifObject.h"
 #import "TGModernAnimatedImagePlayer.h"
 #import "TGVTVideoView.h"
+#import "SpacemanBlocks.h"
 @interface TGWebpageGifContainer () {
     BOOL _prevState;
+    SMDelayedBlockHandle _handle;
 }
 @property (nonatomic,strong) TGVTVideoView *player;
 @property (nonatomic,strong) TMView *playerContainer;
@@ -184,6 +186,8 @@
         
     };
     
+    cancel_delayed_block(_handle);
+    
     dispatch_block_t block = ^{
         BOOL nextState = check_block();
         
@@ -194,8 +198,10 @@
         _prevState = nextState;
     };
     
-    
-    block();
+    if(!check_block())
+        block();
+    else
+        _handle = perform_block_after_delay(0.03, block);
 
     
 }

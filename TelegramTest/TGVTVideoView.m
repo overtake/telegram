@@ -13,6 +13,7 @@
 #import <VideoToolbox/VideoToolbox.h>
 
 #import "WeakReference.h"
+#import "TGImageView.h"
 
 static NSMutableDictionary *sessions() {
     static NSMutableDictionary *dict = nil;
@@ -26,51 +27,6 @@ static NSMutableDictionary *sessions() {
 static OSSpinLock sessionsLock = 0;
 static int32_t nextSessionId = 0;
 
-typedef enum {
-    UniformIndex_Y = 0,
-    UniformIndex_UV,
-    UniformIndex_RotationAngle,
-    UniformIndex_ColorConversionMatrix,
-    UniformIndex_NumUniforms
-} UniformIndex;
-
-typedef enum {
-    AttributeIndex_Vertex = 0,
-    AttributeIndex_TextureCoordinates,
-    AttributeIndex_NumAttributes
-} AttributeIndex;
-
-// BT.601, which is the standard for SDTV.
-static GLfloat colorConversion601[] = {
-    1.164f, 1.164f, 1.164f,
-    0.0f, -0.392f, 2.017f,
-    1.596f, -0.813f, 0.0f
-};
-
-// BT.709, which is the standard for HDTV.
-static GLfloat colorConversion709[] = {
-    1.164f, 1.164f, 1.164f,
-    0.0f, -0.213f, 2.112f,
-    1.793f, -0.533f, 0.0f
-};
-
-static NSData *fragmentShaderSource() {
-    static NSData *value = nil;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        value = [[NSData alloc] initWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"VTPlayer/VTPlayer_Shader" ofType:@"fsh"]];
-    });
-    return value;
-}
-
-static NSData *vertexShaderSource() {
-    static NSData *value = nil;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        value = [[NSData alloc] initWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"VTPlayer/VTPlayer_Shader" ofType:@"vsh"]];
-    });
-    return value;
-}
 
 @interface TGVTAcceleratedVideoFrame : NSObject
 
@@ -589,6 +545,7 @@ static NSMutableDictionary *queueItemsByPath() {
     
     AVSampleBufferDisplayLayer *_videoLayer;
     CMVideoFormatDescriptionRef _videoInfo;
+    TGImageView *_thumbView;
 }
 
 @end
@@ -607,6 +564,10 @@ static NSMutableDictionary *queueItemsByPath() {
         
         _pendingFrames = [[NSMutableArray alloc] init];
         
+        _thumbView = [[TGImageView alloc] initWithFrame:NSZeroRect];
+        
+        [self addSubview:_thumbView];
+        
        
     }
     return self;
@@ -624,54 +585,37 @@ static NSMutableDictionary *queueItemsByPath() {
     [super setFrame:frame];
     
     [_videoLayer setBounds:self.bounds];
+    [_thumbView setFrame:self.bounds];
+}
+
+static NSImage *TGVTThumbCap() {
+    static NSImage *image = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        NSRect rect = NSMakeRect(0, 0, 100, 100);
+        image = [[NSImage alloc] initWithSize:rect.size];
+        [image lockFocus];
+        [[NSColor grayColor] set];
+        NSBezierPath *path = [NSBezierPath bezierPath];
+        [path appendBezierPathWithRoundedRect:NSMakeRect(0, 0, rect.size.width, rect.size.height) xRadius:4 yRadius:4];
+        [path fill];
+        
+        [image unlockFocus];
+    });
+    return image;
 }
 
 -(void)setImageObject:(TGImageObject *)imageObject {
     
-    if(_imageObject.delegate == self)
-        imageObject.delegate = nil;
     
     
-    self->_imageObject = imageObject;
     
-    NSImage *image = [self cachedImage:[_imageObject cacheKey]];
-    if(image) {
-        _videoLayer.contents = image;
-        return;
+    if(imageObject) {
+        [_thumbView setObject:imageObject];
+    } else {
+        [_thumbView setImage:TGVTThumbCap()];
     }
-    
-    _videoLayer.contents = [self cachedThumb:[_imageObject cacheKey]];
-    
-    _imageObject.delegate = self;
-    
-    [_imageObject initDownloadItem];
-    
-}
 
--(NSImage *)cachedImage:(NSString *)key {
-    return [TGCache cachedImage:key group:@[IMGCACHE]];
-}
-
-
--(NSImage *)cachedThumb:(NSString *)key {
-    return _imageObject.placeholder;
-}
-
-
--(void)didDownloadImage:(NSImage *)newImage object:(TGImageObject *)imageObject {
-    if([[imageObject cacheKey] isEqualToString:[_imageObject cacheKey]]) {
-        [[TGVTAcceleratedVideoFrameQueueGuard controlQueue] dispatch:^{
-            
-            if(_frameQueueGuard == nil)
-            {
-                [ASQueue dispatchOnMainQueue:^{
-                    _videoLayer.contents = newImage;
-                }];
-            }
-            
-        }];
-       
-    }
 }
 
 
@@ -688,13 +632,12 @@ static NSMutableDictionary *queueItemsByPath() {
     
 }
 
+
+
 - (void)setPath:(NSString *)path {
     
     
-    if(path == nil) {
-        [self reconfigLayer];
-        self.imageObject = _imageObject;
-    }
+    [_thumbView setHidden:NO];
 
     
     [[TGVTAcceleratedVideoFrameQueueGuard controlQueue] dispatch:^{
@@ -790,8 +733,11 @@ static NSMutableDictionary *queueItemsByPath() {
     
     [ASQueue dispatchOnMainQueue:^{
         if(frame.timestamp == 0) {
-            [_videoLayer flush];
+            [_videoLayer flushAndRemoveImage];
+            
         }
+        
+        [_thumbView setHidden:frame.timestamp != 0];
         
         if (_videoLayer.readyForMoreMediaData) {
             [_videoLayer enqueueSampleBuffer:sampleBuffer];
