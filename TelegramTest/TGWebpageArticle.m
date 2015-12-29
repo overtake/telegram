@@ -35,11 +35,7 @@
             }
             
             
-        } else if(webpage.thumb_url.length > 0) {
-            _imageObject = [[TGExternalImageObject alloc] initWithURL:webpage.thumb_url];
-            _imageObject.imageSize = NSMakeSize(60, 60);
-            _imageObject.imageProccessor = [ImageUtils c_proccessor];
-        }
+        } 
         
     }
     

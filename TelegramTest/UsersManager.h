@@ -17,7 +17,10 @@
 
 +(TLUser *)findUserByName:(NSString *)userName;
 +(NSArray *)findUsersByName:(NSString *)userName;
+
 +(NSArray *)findUsersByMention:(NSString *)userName withUids:(NSArray *)uids;
++(NSArray *)findUsersByMention:(NSString *)userName withUids:(NSArray *)uids acceptContextBots:(BOOL)acceptContextBots;
+
 
 - (void)addFromDB:(NSArray *)array;
 

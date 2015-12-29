@@ -95,7 +95,7 @@ static NSCache *cItems;
             
             
             if(self.isViaBot) {
-                _via_bot_user = [UsersManager findUserByName:@"vihor"];
+                _via_bot_user = [[UsersManager sharedManager] find:self.message.via_bot_id];
                 
                 if(!self.isForwadedMessage)
                 {
@@ -391,6 +391,39 @@ static NSTextAttachment *channelIconAttachment() {
                 
                 objectReturn = [[MessageTableItemAudio alloc] initWithObject:message];
                 
+            } else if([message.media isKindOfClass:[TL_messageMediaBotResult class]]) {
+                
+                if([message.media.bot_result.send_message isKindOfClass:[TL_botContextMessageText class]]) {
+                    objectReturn = [[MessageTableItemText alloc] initWithObject:message];
+                }
+                
+                if([message.media.bot_result.send_message isKindOfClass:[TL_botContextMessageMediaAuto class]]) {
+                    
+                    if([message.media.bot_result isKindOfClass:[TL_botContextMediaResultDocument class]]) {
+                        if(([message.media.bot_result.document.mime_type isEqualToString:@"video/mp4"] && [message.media.bot_result.document attributeWithClass:[TL_documentAttributeAnimated class]]))
+                            objectReturn = [[MessageTableItemMpeg alloc] initWithObject:message];
+                         else
+                            objectReturn = [[MessageTableItemDocument alloc] initWithObject:message];
+                    } else if([message.media.bot_result isKindOfClass:[TL_botContextMediaResultPhoto class]])
+                        objectReturn = [[MessageTableItemPhoto alloc] initWithObject:message];
+                    else if([message.media.bot_result isKindOfClass:[TL_botContextResult class]]) {
+                        
+                        if(([message.media.bot_result.content_type isEqualToString:@"video/mp4"] && [message.media.bot_result.type isEqualToString:@"gif"])) {
+                            objectReturn = [[MessageTableItemMpeg alloc] initWithObject:message];
+                        } else if([message.media.bot_result.content_type isEqualToString:@"photo"]) {
+                            objectReturn = [[MessageTableItemPhoto alloc] initWithObject:message];
+                        }
+ 
+                    }
+                    
+                }
+                
+                
+                if(!objectReturn) {
+                    message.message = @"This message is not supported on your version of Telegram. Update the app to view: https://telegram.org/dl/osx";
+                    objectReturn = [[MessageTableItemText alloc] initWithObject:message];
+                }
+                
             }
         } else if(message.hole != nil) {
             objectReturn = [[MessageTableItemHole alloc] initWithObject:message];
@@ -513,7 +546,7 @@ static NSTextAttachment *channelIconAttachment() {
 }
 
 - (void)doAfterDownload {
- 
+    _downloadItem = nil;
 }
 
 
@@ -542,9 +575,7 @@ static NSTextAttachment *channelIconAttachment() {
 }
 
 - (void)startDownload:(BOOL)cancel force:(BOOL)force {
-    
-    if([self.message.media.document isKindOfClass:[TL_externalDocument class]])
-        return;
+
     
     DownloadItem *downloadItem = self.downloadItem;
     

@@ -38,15 +38,13 @@
         
         [_playerContainer addSubview:_player];
         
-        
-        
         [self setProgressStyle:TMCircularProgressDarkStyle];
         [self.progressView setImage:image_DownloadIconWhite() forState:TMLoaderViewStateNeedDownload];
         [self.progressView setImage:image_LoadCancelWhiteIcon() forState:TMLoaderViewStateDownloading];
         [self.progressView setImage:image_LoadCancelWhiteIcon() forState:TMLoaderViewStateUploading];
         
         
-        [self setProgressToView:_playerContainer];
+        
     }
     
     return self;
@@ -80,7 +78,7 @@
     [self.progressView setState:cellState];
     
     [self _didScrolledTableView:nil];
-    
+        
 }
 
 -(void)doAfterDownload {
@@ -105,12 +103,50 @@
     [_playerContainer setFrameSize:item.blockSize];
     [_player setFrameSize:item.blockSize];
     
-    [self.progressView setCenterByView:self.progressView.superview];
-    
-    
     [_player setImageObject:item.thumbObject];
+    
+    [self setProgressToView:_playerContainer];
 
     [self updateDownloadState];
+    
+}
+
+-(NSMenu *)contextMenu {
+    
+    NSMenu *menu = [[NSMenu alloc] initWithTitle:@"Gifs"];
+    
+    
+    __block NSMutableArray *items;
+    
+    [[Storage yap] readWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
+        items = [transaction objectForKey:@"gif" inCollection:RECENT_GIFS];
+    }];
+    
+    TLDocument *item = [[items filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.n_id == %ld",self.item.message.media.document.n_id]] firstObject];
+    
+    
+    [menu addItem:[NSMenuItem menuItemWithTitle:item == nil ? NSLocalizedString(@"Context.AddGif", nil) : NSLocalizedString(@"Context.RemoveGif", nil) withBlock:^(id sender) {
+        
+        [TMViewController showModalProgress];
+        
+        [RPCRequest sendRequest:[TLAPI_messages_saveGif createWithN_id:[TL_inputDocument createWithN_id:self.item.message.media.document.n_id access_hash:self.item.message.media.document.access_hash] unsave:item != nil] successHandler:^(id request, id response) {
+            
+            [TMViewController hideModalProgressWithSuccess];
+            
+        } errorHandler:^(id request, RpcError *error) {
+            [TMViewController hideModalProgress];
+        }];
+        
+    }]];
+    
+    [menu addItem:[NSMenuItem separatorItem]];
+    
+    
+    [self.defaultMenuItems enumerateObjectsUsingBlock:^(NSMenuItem *item, NSUInteger idx, BOOL *stop) {
+        [menu addItem:item];
+    }];
+    
+    return menu;
     
 }
 
@@ -130,8 +166,9 @@
     dispatch_block_t block = ^{
         BOOL nextState = check_block();
         
-        if(_prevState != nextState || !nextState) {
+        if(_prevState != nextState) {
             [_player setPath:nextState ? item.path : nil];
+            [self setProgressToView:self.progressView.superview];
         }
         
         _prevState = nextState;
@@ -151,6 +188,7 @@
         
         [self removeScrollEvent];
         [_player setPath:nil];
+        [self setProgressToView:self.progressView.superview];
         
     } else {
         [self addScrollEvent];

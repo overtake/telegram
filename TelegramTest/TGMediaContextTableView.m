@@ -143,6 +143,14 @@
     _fakeMessage.media.document = _botResult.document;
 }
 
+
+-(void)setImageObject:(TGImageObject *)imageObject {
+    if([imageObject isKindOfClass:[ImageObject class]]) {
+        _imageObject = imageObject;
+    } else
+        _imageObject = nil;
+}
+
 -(void)dealloc {
     [self.downloadItem removeEvent:_downloadEventListener];
 }
@@ -239,7 +247,7 @@
     dispatch_block_t block = ^{
         BOOL nextState = check_block();
         
-        if(_prevState != nextState || !nextState) {
+        if(_prevState != nextState) {
             [_player setPath:nextState ? self.path : nil];
         }
         
@@ -265,7 +273,6 @@
     if(self.window == nil) {
         
         [self removeScrollEvent];
-        [_player pause];
         [_player setPath:nil];
         [self.downloadItem removeEvent:_downloadEventListener];
         
@@ -311,22 +318,22 @@
         
         NSMutableArray *imageObjects = [NSMutableArray array];
         
-        [_gifs enumerateObjectsUsingBlock:^(TL_webPage *webpage, NSUInteger idx, BOOL * _Nonnull stop) {
+        [_gifs enumerateObjectsUsingBlock:^(TLBotContextResult *botResult, NSUInteger idx, BOOL * _Nonnull stop) {
             
             TGImageObject *imageObject;
             
-            if(webpage.photo.sizes.count > 0) {
+            if(botResult.photo.sizes.count > 0) {
                 
-                TLPhotoSize *size = webpage.photo.sizes[MIN(2,webpage.photo.sizes.count-1)];
+                TLPhotoSize *size = botResult.photo.sizes[MIN(2,botResult.photo.sizes.count-1)];
                 
                 imageObject = [[TGImageObject alloc] initWithLocation:size.location placeHolder:nil sourceId:0 size:size.size];
-            } else if([webpage.document.thumb isKindOfClass:[TL_photoSize class]] || [webpage.document.thumb isKindOfClass:[TL_photoCachedSize class]]) {
+            } else if([botResult.document.thumb isKindOfClass:[TL_photoSize class]] || [botResult.document.thumb isKindOfClass:[TL_photoCachedSize class]]) {
                 
-                TLPhotoSize *size = webpage.document.thumb;
+                TLPhotoSize *size = botResult.document.thumb;
                 
-                imageObject = [[TGImageObject alloc] initWithLocation:size.location placeHolder:webpage.document.thumb.bytes.length > 0 ?[[NSImage alloc] initWithData:webpage.document.thumb.bytes] : nil sourceId:0 size:size.size];
-            } else if(webpage.thumb_url.length > 0) {
-                imageObject = [[TGExternalImageObject alloc] initWithURL:webpage.thumb_url];
+                imageObject = [[TGImageObject alloc] initWithLocation:size.location placeHolder:botResult.document.thumb.bytes.length > 0 ?[[NSImage alloc] initWithData:botResult.document.thumb.bytes] : nil sourceId:0 size:size.size];
+            } else if(botResult.thumb_url.length > 0) {
+                imageObject = [[TGExternalImageObject alloc] initWithURL:botResult.thumb_url];
             }
             
             imageObject.imageSize = [sizes[idx] sizeValue];
@@ -373,10 +380,7 @@
     [super redrawRow];
     
     
-    
-    
     TGGifSearchRowItem *item = (TGGifSearchRowItem *)[self rowItem];
-    
     
     if(self.subviews.count > item.gifs.count) {
         
@@ -390,6 +394,8 @@
             [obj removeFromSuperview];
             
         }];
+        
+        assert(self.subviews.count == item.gifs.count);
     }
     
     
@@ -417,11 +423,11 @@
         
         NSRect rect = NSMakeRect(x, 0, (idx == (item.gifs.count - 1) && !(item.table.count-1 == item.rowId) ? NSWidth(self.frame) - x : size.width - containerWidthDif), NSHeight(self.frame));
         
-        if([botResult.type isEqualToString:@"gifv"] || (botResult.document && [botResult.document.mime_type isEqualToString:@"video/mp4"] && [botResult.document attributeWithClass:[TL_documentAttributeAnimated class]] != nil)) {
+        if([botResult.content_type isEqualToString:@"video/mp4"] || (botResult.document && [botResult.document.mime_type isEqualToString:@"video/mp4"] && [botResult.document attributeWithClass:[TL_documentAttributeAnimated class]] != nil)) {
             
             TGGifPlayerItemView *videoContainer;
             
-            if(false) {
+            if(container) {
                 videoContainer = (TGGifPlayerItemView *) container;
                 [videoContainer setFrame:rect];
             } else {
@@ -521,32 +527,11 @@
 }
 - (void)selectionDidChange:(NSInteger)row item:(TGGifSearchRowItem *) item {
     
-    TL_webPage *webpage = item.gifs[row];
-    
-    __block TLDocument *document = webpage.document;
-    
-    
-    if(document == nil) {
-        
-        NSMutableArray *attrs = [[NSMutableArray alloc] init];
-        [attrs addObject:[TL_documentAttributeAnimated create]];
-        [attrs addObject:[TL_documentAttributeImageSize createWithW:webpage.w h:webpage.h]];
-        [attrs addObject:[TL_documentAttributeFilename createWithFile_name:@"giphy.gif"]];
-        
-        [attrs addObject:[TL_documentAttributeImageSize createWithW:webpage.w h:webpage.h]];
-        
-        TGGifSearchRowView *view = [self viewAtColumn:0 row:[self indexOfItem:item] makeIfNecessary:NO];
-        
-        NSImage *image = view.subviews[row].subviews[0].layer.contents;
-        
-        NSSize thumbSize = strongsize(NSMakeSize(webpage.w, webpage.h), 90);
-        document = [TL_externalDocument createWithN_id:webpage.n_id date:[[MTNetwork instance] getTime] mime_type:@"video/mp4" thumb:[TL_photoCachedSize createWithType:@"x" location:[TL_fileLocationUnavailable createWithVolume_id:rand_long() local_id:0 secret:0] w:thumbSize.width h:thumbSize.height bytes:jpegNormalizedData(image)] external_url:webpage.url search_q:@"" perform_date:webpage.date external_webpage:webpage attributes:attrs];
-    }
+    TLBotContextResult *botResult = item.gifs[row];
     
     if(_choiceHandler) {
-        _choiceHandler(document);
+        _choiceHandler(botResult);
     }
-    
     
 }
 - (BOOL)selectionWillChange:(NSInteger)row item:(TMRowItem *) item {
@@ -565,15 +550,15 @@
     NSMutableArray *sizes = [[NSMutableArray alloc] init];
     
     dispatch_block_t block = ^{
-        [gifs enumerateObjectsUsingBlock:^(TL_webPage *webpage, NSUInteger idx, BOOL * _Nonnull stop) {
+        [gifs enumerateObjectsUsingBlock:^(TLBotContextResult *botResult, NSUInteger idx, BOOL * _Nonnull stop) {
             
-            TL_documentAttributeVideo *video = (TL_documentAttributeVideo *) [webpage.document attributeWithClass:[TL_documentAttributeVideo class]];
+            TL_documentAttributeVideo *video = (TL_documentAttributeVideo *) [botResult.document attributeWithClass:[TL_documentAttributeVideo class]];
             
-            int w = MAX(video.w,webpage.w);
-            int h = MAX(video.h,webpage.h);
+            int w = MAX(video.w,botResult.w);
+            int h = MAX(video.h,botResult.h);
             
-            if(webpage.photo.sizes.count > 0 && video == nil) {
-                TLPhotoSize *s = webpage.photo.sizes[MIN(webpage.photo.sizes.count-1,2)];
+            if(botResult.photo.sizes.count > 0 && video == nil) {
+                TLPhotoSize *s = botResult.photo.sizes[MIN(botResult.photo.sizes.count-1,2)];
                 w = s.w;
                 h = s.h;
             }
@@ -651,11 +636,13 @@
     
     dispatch_block_t next = ^{
         
-        int rowCount = MIN(floor(NSWidth(self.frame)/100),draw.count);
+        int f = floor(NSWidth(self.frame)/100);
+        
+        int rowCount = MIN(f,(int)draw.count);
         
         NSMutableArray *r = [[draw subarrayWithRange:NSMakeRange(0, rowCount)] mutableCopy];
         
-        NSArray *s = [self makeRow:r isLastRowItem:r.count < rowCount];
+        NSArray *s = [self makeRow:r isLastRowItem:r.count < rowCount || (f > rowCount && r.count <= rowCount)];
         
         [draw removeObjectsInArray:r];
         

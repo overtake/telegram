@@ -9,15 +9,15 @@
 #import "TGContextRowItem.h"
 #import "TGArticleImageObject.h"
 @interface TGContextRowItem ()
-@property (nonatomic,strong) NSString *bot;
+
 @end
 
 @implementation TGContextRowItem
--(id)initWithObject:(TLBotContextResult *)botResult bot:(NSString *)bot {
+-(id)initWithObject:(TLBotContextResult *)botResult bot:(TLUser *)bot queryId:(long)queryId {
     if(self = [super initWithObject:bot]) {
         _bot = bot;
         _botResult = botResult;
-        
+        _queryId = queryId;
         
         if(botResult.n_description || botResult.title) {
             

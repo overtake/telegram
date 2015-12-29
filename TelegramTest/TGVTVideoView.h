@@ -7,9 +7,6 @@
 - (void)setPath:(NSString *)path;
 
 
--(void)resume;
--(void)pause;
-
 @property (nonatomic,strong) TGImageObject *imageObject;
 
 @end

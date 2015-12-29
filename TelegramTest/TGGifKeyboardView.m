@@ -38,11 +38,11 @@
     
     weak();
     
-    [_tableView setChoiceHandler:^(TLDocument *document) {
+    [_tableView setChoiceHandler:^(TLBotContextResult *result) {
         __strong TGGifKeyboardView *strongSelf = weakSelf;
         
         if(strongSelf != nil) {
-            [strongSelf.messagesViewController sendFoundGif:[TL_messageMediaDocument createWithDocument:document caption:@""] forConversation:strongSelf.messagesViewController.conversation];
+            [strongSelf.messagesViewController sendFoundGif:[TL_messageMediaDocument createWithDocument:result.document caption:@""] forConversation:strongSelf.messagesViewController.conversation];
             [strongSelf.messagesViewController.bottomView.smilePopover close];
         }
     }];
@@ -125,37 +125,6 @@
     [Notification removeObserver:self];
 }
 
--(void)searchFieldTextChange:(NSString *)searchString {
-    
-    [_tableView clear];
-    
-    if(searchString.length == 0) {
-        [_tableView drawResponse:@[]];
-        return;
-    }
-    
-    cancel_delayed_block(_delayedBlockHandle);
-    
-    [_request cancelRequest];
-    
-    _delayedBlockHandle = perform_block_after_delay(0.5, ^{
-        _request = [RPCRequest sendRequest:[TLAPI_messages_searchGifs createWithQ:searchString offset:0] successHandler:^(id request, TL_messages_foundGifs *response) {
-            
-            NSMutableArray *items = [NSMutableArray array];
-            [response.results enumerateObjectsUsingBlock:^(TL_foundGif *obj, NSUInteger idx, BOOL * _Nonnull stop) {
-                [items addObject:obj.webpage];
-            }];
-            
-            [_tableView drawResponse:items];
-            
-        } errorHandler:^(id request, RpcError *error) {
-            [_tableView drawResponse:@[]];
-            
-        }];
-    });
-    
-    
-}
 
 -(int)gifsHash {
     

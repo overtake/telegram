@@ -2,7 +2,7 @@
 //  MTProto.h
 //  Telegram
 //
-//  Auto created by Mikhail Filimonov on 28.12.15.
+//  Auto created by Mikhail Filimonov on 29.12.15.
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -1106,6 +1106,8 @@
 @property (nonatomic, strong) NSString* address;
 @property (nonatomic, strong) NSString* provider;
 @property (nonatomic, strong) NSString* venue_id;
+@property (nonatomic, strong) TLBotContextResult* bot_result;
+@property long query_id;
 @end
 
 @interface TL_messageMediaEmpty : TLMessageMedia<NSCoding>
@@ -1140,6 +1142,9 @@
 @end
 @interface TL_messageMediaDocument_old44 : TLMessageMedia<NSCoding>
 +(TL_messageMediaDocument_old44*)createWithDocument:(TLDocument*)document;
+@end
+@interface TL_messageMediaBotResult : TLMessageMedia<NSCoding>
++(TL_messageMediaBotResult*)createWithBot_result:(TLBotContextResult*)bot_result query_id:(long)query_id;
 @end
 	
 @interface TLMessageAction()
@@ -2172,8 +2177,8 @@
 @interface TL_document : TLDocument<NSCoding>
 +(TL_document*)createWithN_id:(long)n_id access_hash:(long)access_hash date:(int)date mime_type:(NSString*)mime_type size:(int)size thumb:(TLPhotoSize*)thumb dc_id:(int)dc_id attributes:(NSMutableArray*)attributes;
 @end
-@interface TL_externalDocument : TLDocument<NSCoding>
-+(TL_externalDocument*)createWithN_id:(long)n_id date:(int)date mime_type:(NSString*)mime_type thumb:(TLPhotoSize*)thumb external_url:(NSString*)external_url search_q:(NSString*)search_q perform_date:(int)perform_date external_webpage:(TLWebPage*)external_webpage attributes:(NSMutableArray*)attributes;
+@interface TL_contextBotSender : TLDocument<NSCoding>
++(TL_contextBotSender*)createWithN_id:(long)n_id date:(int)date mime_type:(NSString*)mime_type thumb:(TLPhotoSize*)thumb external_url:(NSString*)external_url search_q:(NSString*)search_q perform_date:(int)perform_date external_webpage:(TLWebPage*)external_webpage attributes:(NSMutableArray*)attributes;
 @end
 @interface TL_compressDocument : TLDocument<NSCoding>
 +(TL_compressDocument*)createWithN_id:(long)n_id access_hash:(long)access_hash date:(int)date mime_type:(NSString*)mime_type size:(int)size thumb:(TLPhotoSize*)thumb dc_id:(int)dc_id attributes:(NSMutableArray*)attributes compressor:(NSData*)compressor;

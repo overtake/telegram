@@ -209,7 +209,7 @@ static NSData *vertexShaderSource() {
         _path = path;
         _frameReady = [frameReady copy];
         
-        _maxFrames = 2;
+        _maxFrames = 5;
         _fillFrames = 1;
         
         _frames = [[NSMutableArray alloc] init];
@@ -680,7 +680,6 @@ static NSMutableDictionary *queueItemsByPath() {
     [_videoLayer flushAndRemoveImage];
     [_videoLayer removeFromSuperlayer];
     
-    
     _videoLayer = [[AVSampleBufferDisplayLayer alloc] init];
     _videoLayer.bounds = self.bounds;
     _videoLayer.backgroundColor = NSColorFromRGB(0xb6b6b6).CGColor;
@@ -779,6 +778,8 @@ static NSMutableDictionary *queueItemsByPath() {
         
     };
     
+    
+    
     // Wrap the pixel buffer in a sample buffer
     err = CMSampleBufferCreateForImageBuffer(kCFAllocatorDefault, frame.buffer, true, NULL, NULL, _videoInfo, &sampleTimingInfo, &sampleBuffer);
     
@@ -786,24 +787,20 @@ static NSMutableDictionary *queueItemsByPath() {
         NSLog(@"Error at CMSampleBufferCreateForImageBuffer %d", err);
     }
     
-    if(frame.timestamp == 0) {
-        [_videoLayer flush];
-    }
     
-    // Enqueue sample buffers which will be displayed at their above set presentationTimeStamp
-    if (_videoLayer.readyForMoreMediaData) {
-        [_videoLayer enqueueSampleBuffer:sampleBuffer];
-    }
+    [ASQueue dispatchOnMainQueue:^{
+        if(frame.timestamp == 0) {
+            [_videoLayer flush];
+        }
+        
+        if (_videoLayer.readyForMoreMediaData) {
+            [_videoLayer enqueueSampleBuffer:sampleBuffer];
+        }
+        
+        CFRelease(sampleBuffer);
+    }];
     
-    CFRelease(sampleBuffer);
 }
 
--(void)pause {
-    
-}
-
--(void)resume {
-    
-}
 
 @end

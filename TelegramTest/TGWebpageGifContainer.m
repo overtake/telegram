@@ -187,7 +187,7 @@
     dispatch_block_t block = ^{
         BOOL nextState = check_block();
         
-        if(_prevState != nextState || !nextState) {
+        if(_prevState != nextState) {
             [_player setPath:nextState ? webpage.path : nil];
         }
         
@@ -208,7 +208,6 @@
 -(void)viewDidMoveToWindow {
     if(self.window == nil) {
         [[NSNotificationCenter defaultCenter] removeObserver:self];
-        [_player pause];
         [_player setPath:nil];
         
     } else {

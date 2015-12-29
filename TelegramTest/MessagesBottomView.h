@@ -36,6 +36,8 @@ typedef enum {
 
 - (void)setState:(MessagesBottomViewState)state animated:(BOOL)animated;
 
+- (void)setContextBotString:(NSString *)bot;
+
 - (void)setInputMessageString:(NSString *)message disableAnimations:(BOOL)disableAnimations;
 - (NSString *)inputMessageString;
 - (void)setSectedMessagesCount:(NSUInteger)count enable:(BOOL)enable;

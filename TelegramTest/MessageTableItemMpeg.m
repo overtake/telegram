@@ -12,6 +12,8 @@
 #import "DownloadQueue.h"
 #import "TGThumbnailObject.h"
 #import "DownloadDocumentItem.h"
+#import "DownloadExternalItem.h"
+#import "TGExternalImageObject.h"
 @interface MessageTableItemMpeg () {
     NSString *_path;
 }
@@ -23,7 +25,10 @@
 
 -(id)initWithObject:(TL_localMessage *)object {
     if(self = [super initWithObject:object]) {
-        _imagesize = (TL_documentAttributeVideo *) [object.media.document attributeWithClass:[TL_documentAttributeVideo class]];
+        
+        
+        
+        _imagesize = (TL_documentAttributeVideo *) [self.document attributeWithClass:[TL_documentAttributeVideo class]];
         
         [self doAfterDownload];
         
@@ -35,6 +40,13 @@
     return self;
 }
 
+-(TLDocument *)document {
+    if([self.message.media isKindOfClass:[TL_messageMediaBotResult class]]) {
+        return self.message.media.bot_result.document;
+    } else
+        return self.message.media.document;
+}
+
 -(TL_documentAttributeVideo *)imagesize {
     
     __block TL_documentAttributeVideo *imageSize = _imagesize;
@@ -42,10 +54,13 @@
     if(imageSize == nil) {
         
         dispatch_block_t thumbblock = ^{
-            if(![self.message.media.document.thumb isKindOfClass:[TL_photoSizeEmpty class]])  {
-                imageSize = [TL_documentAttributeVideo createWithDuration:0 w:self.message.media.document.thumb.w * 3 h:self.message.media.document.thumb.h * 3];
+            if(self.document && ![self.document.thumb isKindOfClass:[TL_photoSizeEmpty class]])  {
+                imageSize = [TL_documentAttributeVideo createWithDuration:0 w:self.document.thumb.w * 3 h:self.document.thumb.h * 3];
             } else {
-                imageSize = [TL_documentAttributeVideo createWithDuration:0 w:300 h:300];
+                if(self.message.media.bot_result != nil)
+                    imageSize = [TL_documentAttributeVideo createWithDuration:0 w:self.message.media.bot_result.w h:self.message.media.bot_result.h];
+                else
+                    imageSize = [TL_documentAttributeVideo createWithDuration:0 w:480 h:320];
             }
         };
         
@@ -71,21 +86,49 @@
 -(void)doAfterDownload {
     [super doAfterDownload];
     
-    if(![self.message.media.document.thumb isKindOfClass:[TL_photoSizeEmpty class]]) {
-        _thumbObject = [[TGBlurImageObject alloc] initWithLocation:self.message.media.document.thumb.location thumbData:self.message.media.document.thumb.bytes size:self.message.media.document.thumb.size];
+    if(self.document && ![self.document.thumb isKindOfClass:[TL_photoSizeEmpty class]]) {
+        _thumbObject = [[TGBlurImageObject alloc] initWithLocation:self.document.thumb.location thumbData:self.document.thumb.bytes size:self.document.thumb.size];
         _thumbObject.imageSize = NSMakeSize(self.imagesize.w, self.imagesize.h);
+    } else {
+        if(self.message.media.bot_result.thumb_url.length > 0) {
+            _thumbObject = [[TGExternalImageObject alloc] initWithURL:self.message.media.bot_result.thumb_url];
+            _thumbObject.imageSize = NSMakeSize(self.imagesize.w, self.imagesize.h);
+        }
     }
     
 }
 
 -(Class)downloadClass {
-    return [DownloadDocumentItem class];
+    return self.document != nil ? [DownloadDocumentItem class] : [DownloadExternalItem class];
+}
+
+
+
+- (void)startDownload:(BOOL)cancel force:(BOOL)force {
+    
+    
+    DownloadItem *downloadItem = self.downloadItem;
+    
+    if(!downloadItem) {
+        if(self.document != nil)
+            downloadItem = [[DownloadDocumentItem alloc] initWithObject:self.message];
+         else
+             downloadItem = [[DownloadExternalItem alloc] initWithObject:self.message.media.bot_result.content_url];
+            
+        
+    }
+    
+    if((downloadItem.downloadState == DownloadStateCanceled || downloadItem.downloadState == DownloadStateWaitingStart) && (force)) {
+        [downloadItem start];
+    }
+    
+    
 }
 
 -(DownloadItem *)downloadItem {
     
     if(super.downloadItem == nil) {
-        [super setDownloadItem:[DownloadQueue find:self.message.media.document.n_id]];
+        [super setDownloadItem:[DownloadQueue find:self.document.n_id]];
     }
     
     return [super downloadItem];
@@ -94,7 +137,7 @@
 
 
 -(int)size {
-    return self.message.media.document.size;
+    return self.document.size;
 }
 
 -(BOOL)makeSizeByWidth:(int)width {
@@ -115,7 +158,7 @@
 }
 
 - (BOOL)isset {
-    BOOL isset = isPathExists([self path]) && (fileSize([self path]) >= self.size || [self.message.media.document isKindOfClass:[TL_externalDocument class]]);
+    BOOL isset = isPathExists([self path]) && (fileSize([self path]) >= self.size);
     
     return isset;
 }

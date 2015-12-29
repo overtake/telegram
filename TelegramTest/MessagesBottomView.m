@@ -1298,7 +1298,7 @@ static RBLPopover *popover;
             NSString *bot = [value substringWithRange:NSMakeRange(1,split.location-1)];
             NSString *query = [value substringFromIndex:split.location];
             
-            [self.messagesViewController.hintView showContextPopupWithQuery:bot query:query conversation:self.dialog];
+            [self.messagesViewController.hintView showContextPopupWithQuery:bot query:[query trim] conversation:self.dialog];
         }
         
         
@@ -1728,6 +1728,11 @@ static RBLPopover *popover;
 
     }
 }
+
+- (void)setContextBotString:(NSString *)bot {
+    [self setInputMessageString:bot disableAnimations:YES];
+}
+
 
 - (void)setInputMessageString:(NSString *)message disableAnimations:(BOOL)disableAnimations {
     [self.inputMessageTextField setString:message];

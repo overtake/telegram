@@ -67,8 +67,8 @@ static const int32_t FPS = 600;
                                     AVVideoHeightKey : @(sourceHeight),
                                     AVVideoCompressionPropertiesKey:@
                                         {
-                                        AVVideoAverageBitRateKey: @2300000,
-                                        AVVideoProfileLevelKey: AVVideoProfileLevelH264Baseline31,
+                                        AVVideoAverageBitRateKey: @512000,
+                                        AVVideoProfileLevelKey: AVVideoProfileLevelH264High40,
                                         }
                                     };
     

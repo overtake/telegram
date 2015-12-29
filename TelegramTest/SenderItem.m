@@ -14,6 +14,7 @@
 #import "MessageTableCell.h"
 #import "ExternalGifSenderItem.h"
 #import "CompressedDocumentSenderItem.h"
+#import "ContextBotSenderItem.h"
 @interface SenderItem ()
 @property (nonatomic,strong) NSMutableArray *listeners;
 @end
@@ -101,9 +102,9 @@ static NSMutableDictionary *senders;
                         item = [[StickerSenderItem alloc] init];
                     }
                     
-                    if([msg.media.document isKindOfClass:[TL_externalDocument class]]) {
-                        item = [[ExternalGifSenderItem alloc] init];
-                    }
+//                    if([msg.media.document isKindOfClass:[TL_externalDocument class]]) {
+//                        item = [[ExternalGifSenderItem alloc] init];
+//                    }
                     
                     if([msg.media.document isKindOfClass:[TL_compressDocument class]]) {
                         item = [[CompressedDocumentSenderItem alloc] init];
@@ -113,6 +114,8 @@ static NSMutableDictionary *senders;
                     item = [[AudioSenderItem alloc] init];
                 } else if([msg.media isKindOfClass:[TL_messageMediaContact class]]) {
                     item = [[ShareContactSenterItem alloc] init];
+                } else if([msg.media isKindOfClass:[TL_messageMediaBotResult class]]) {
+                    item = [[ContextBotSenderItem alloc] init];
                 }
                 
                 if(msg.fwd_from_id != 0) {
@@ -145,7 +148,8 @@ static NSMutableDictionary *senders;
                 
             }
             
-            
+            item.message = msg;
+            item.conversation = msg.conversation;
             item.state = msg.dstate == DeliveryStateError ? MessageSendingStateError : MessageStateWaitSend;
         }
         

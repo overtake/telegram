@@ -54,12 +54,8 @@
             return;
         }
         
-        if(self.conversation.type != DialogTypeBroadcast)  {
-            
-            self.message.n_id = msg.n_id;
-            self.message.date = msg.date;
-            
-        }
+        self.message.n_id = msg.n_id;
+        self.message.date = msg.date;
         
         self.message.dstate = DeliveryStateNormal;
         

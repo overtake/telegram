@@ -47,6 +47,8 @@
 
 -(void)open_link:(NSString *)link itsReal:(BOOL)itsReal;
 
+@property (nonatomic,copy) void (^linkCallback)(NSString *link);
+
 
 // its private not for use
 -(BOOL)_checkClickCount:(NSEvent *)theEvent;

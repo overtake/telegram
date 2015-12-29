@@ -50,7 +50,7 @@
             
             [ids addObject:@([f n_id])];
             
-            TL_localMessage *fake = [TL_localMessage createWithN_id:0 flags:TGOUTUNREADMESSAGE | TGFWDMESSAGE from_id:[UsersManager currentUserId] to_id:conversation.peer fwd_from_id:[f.to_id isKindOfClass:[TL_peerChannel class]] && !f.chat.isMegagroup ? f.to_id : [f.fwd_from_id isKindOfClass:[TL_peerChannel class]] && !f.chat.isMegagroup ? f.fwd_from_id : [TL_peerUser createWithUser_id:f.fwd_from_id.user_id != 0 ? f.fwd_from_id.user_id : f.from_id] fwd_date:f.date reply_to_msg_id:0 date:[[MTNetwork instance] getTime] message:f.message media:f.media fakeId:[MessageSender getFakeMessageId] randomId:random reply_markup:nil entities:f.entities views:f.views isViewed:NO state:DeliveryStatePending];
+            TL_localMessage *fake = [TL_localMessage createWithN_id:0 flags:TGOUTUNREADMESSAGE | TGFWDMESSAGE from_id:[UsersManager currentUserId] to_id:conversation.peer fwd_from_id:[f.to_id isKindOfClass:[TL_peerChannel class]] && !f.chat.isMegagroup ? f.to_id : [f.fwd_from_id isKindOfClass:[TL_peerChannel class]] && !f.chat.isMegagroup ? f.fwd_from_id : [TL_peerUser createWithUser_id:f.fwd_from_id.user_id != 0 ? f.fwd_from_id.user_id : f.from_id] fwd_date:f.date reply_to_msg_id:0 date:[[MTNetwork instance] getTime] message:f.message media:f.media fakeId:[MessageSender getFakeMessageId] randomId:random reply_markup:nil entities:f.entities views:f.views via_bot_id:f.via_bot_id isViewed:NO state:DeliveryStatePending];
             
             
             if([f.fwd_from_id isKindOfClass:[TL_peerChannel class]] || ([f.to_id isKindOfClass:[TL_peerChannel class]] && f.chat.isMegagroup)) {

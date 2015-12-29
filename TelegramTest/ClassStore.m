@@ -3,7 +3,7 @@
 //  ClassStore.m
 //  Telegram
 //
-    //  Created by keepcoder on 28.12.15.
+    //  Created by keepcoder on 29.12.15.
 //  Copyright (c) 2015 keepcoder. All rights reserved.
 //
 
@@ -561,11 +561,12 @@ static NSMutableDictionary *cs_constuctors;
    [cs_classes setObject:[TL_channelFull_old39 class] forKey:[NSNumber numberWithInt:-88925533]];
    [cs_classes setObject:[TL_chatParticipants_old39 class] forKey:[NSNumber numberWithInt:2017571861]];
    [cs_classes setObject:[TL_messageActionChatAddUser_old40 class] forKey:[NSNumber numberWithInt:1581055051]];
-   [cs_classes setObject:[TL_externalDocument class] forKey:[NSNumber numberWithInt:-19]];
+   [cs_classes setObject:[TL_contextBotSender class] forKey:[NSNumber numberWithInt:-19]];
    [cs_classes setObject:[TL_user_old43 class] forKey:[NSNumber numberWithInt:585404530]];
    [cs_classes setObject:[TL_channel_old43 class] forKey:[NSNumber numberWithInt:1737397639]];
    [cs_classes setObject:[TL_compressDocument class] forKey:[NSNumber numberWithInt:-20]];
    [cs_classes setObject:[TL_messageMediaDocument_old44 class] forKey:[NSNumber numberWithInt:802824708]];
+   [cs_classes setObject:[TL_messageMediaBotResult class] forKey:[NSNumber numberWithInt:-21]];
    [cs_classes setObject:[TL_proto_message class] forKey:[NSNumber numberWithInt:1538843921]];
    [cs_classes setObject:[TL_msg_container class] forKey:[NSNumber numberWithInt:1945237724]];
    [cs_classes setObject:[TL_req_pq class] forKey:[NSNumber numberWithInt:1615239032]];

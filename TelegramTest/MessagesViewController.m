@@ -84,6 +84,7 @@
 #import "TGModalCompressingView.h"
 #import "CompressedDocumentSenderItem.h"
 #import "CompressedSecretFileSenderItem.h"
+#import "ContextBotSenderItem.h"
 #define HEADER_MESSAGES_GROUPING_TIME (10 * 60)
 
 #define SCROLLDOWNBUTTON_OFFSET 1500
@@ -3210,6 +3211,17 @@ static NSTextAttachment *headerMediaIcon() {
 
 }
 
+- (void)sendContextBotResult:(TLBotContextResult *)botContextResult via_bot_id:(int)via_bot_id queryId:(long)queryId forConversation:(TL_conversation *)conversation {
+    [ASQueue dispatchOnStageQueue:^{
+        SenderItem *sender;
+        sender = [[ContextBotSenderItem alloc] initWithBotContextResult:botContextResult via_bot_id:via_bot_id queryId:queryId conversation:conversation];
+        
+        sender.tableItem = [[self messageTableItemsFromMessages:@[sender.message]] lastObject];
+        [self.historyController addItem:sender.tableItem sentControllerCallback:nil];
+        
+    }];
+}
+
 - (void)sendDocument:(NSString *)file_path forConversation:(TL_conversation *)conversation addCompletionHandler:(dispatch_block_t)completeHandler {
     if(!conversation.canSendMessage) return;
     
@@ -3217,13 +3229,11 @@ static NSTextAttachment *headerMediaIcon() {
         
         TGCompressGifItem *gifItem = [[TGCompressGifItem alloc] initWithPath:file_path conversation:conversation];
         
-        if(gifItem != nil && fileSize(gifItem.path) < 8*1024*1024) {
+        if(gifItem != nil && fileSize(gifItem.path) < 15*1024*1024) {
             [self sendCompressedItem:gifItem];
             return;
         }
         
-        
-       
     }
     
     

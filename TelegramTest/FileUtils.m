@@ -137,7 +137,7 @@ NSString* mediaFilePath(TL_localMessage *message) {
         return [NSString stringWithFormat:@"%@/%lu_%lu.mp4",path(),message.media.video.n_id,message.media.video.access_hash];
     }
     
-    if([message.media isKindOfClass:[TL_messageMediaDocument class]] || [message.media isKindOfClass:[TL_messageMediaDocument_old44 class]]) {
+    if([message.media isKindOfClass:[TL_messageMediaDocument class]] || [message.media isKindOfClass:[TL_messageMediaDocument_old44 class]] || message.media.bot_result.document) {
         
         
         if([message isKindOfClass:[TL_destructMessage class]]) {
@@ -148,11 +148,10 @@ NSString* mediaFilePath(TL_localMessage *message) {
         }
         
         
-        if([message.media.document isKindOfClass:[TL_externalDocument class]]) {
-            return  path_for_external_link(message.media.document.external_webpage.content_url);
-        }
+        TLDocument *document = [message.media isKindOfClass:[TL_messageMediaBotResult class]] ? message.media.bot_result.document : message.media.document;
         
-        id nondocValue = non_documents_mime_types()[message.media.document.mime_type];
+        
+        id nondocValue = non_documents_mime_types()[document.mime_type];
         
         BOOL hasAttr = YES;
         
@@ -162,12 +161,27 @@ NSString* mediaFilePath(TL_localMessage *message) {
         
         if(nondocValue != nil && hasAttr) {
             
-            return [NSString stringWithFormat:@"%@/%ld.%@",path(),message.media.document.n_id,[message.media.document.mime_type substringFromIndex:[message.media.document.mime_type rangeOfString:@"/"].location + 1]];
+            return [NSString stringWithFormat:@"%@/%ld.%@",path(),document.n_id,[document.mime_type substringFromIndex:[document.mime_type rangeOfString:@"/"].location + 1]];
             
         }
         
-        
-        return [FileUtils documentName:message.media.document];
+        return [FileUtils documentName:document];
+    }
+    
+    if([message.media isKindOfClass:[TL_messageMediaBotResult class]]) {
+        if([message.media.bot_result isKindOfClass:[TL_botContextMediaResultPhoto class]]) {
+            TL_photoSize *size = [message.media.bot_result.photo.sizes lastObject];
+            return locationFilePath(size.location, @"jpg");
+        } else if([message.media.bot_result isKindOfClass:[TL_botContextMediaResultDocument class]]) {
+            
+            NSRange srange = [message.media.bot_result.document.mime_type rangeOfString:@"/"];
+            
+            NSString *ext = srange.location == NSNotFound ? @"file" : [message.media.bot_result.document.mime_type substringFromIndex:srange.location + 1];
+            
+            return [NSString stringWithFormat:@"%@/%ld.%@",path(),message.media.bot_result.document.n_id,ext];
+        } else if([message.media.bot_result isKindOfClass:[TL_messageMediaBotResult class]]) {
+            return [NSString stringWithFormat:@"%@/%ld.%@",path(),[message.media.bot_result.content_url hash],[message.media.bot_result.content_url pathExtension]];
+        }
     }
     
     if([message.media isKindOfClass:[TL_messageMediaPhoto class]]) {

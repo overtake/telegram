@@ -425,21 +425,10 @@ DYNAMIC_PROPERTY(DUser);
     NSMutableArray *items = [[NSMutableArray alloc] init];
     
     
-    NSArray *chats = [ChatsManager findChatsByName:query];
-    
-    [chats enumerateObjectsUsingBlock:^(TLChat *obj, NSUInteger idx, BOOL *stop) {
-        
-        TGMessagesHintRowItem *item = [[TGMessagesHintRowItem alloc] initWithImageObject:obj text:obj.title desc:[NSString stringWithFormat:@"@%@",obj.username]];
-        
-        item.result = obj.username;
-        
-        [items addObject:item];
-    }];
-    
     
     [users enumerateObjectsUsingBlock:^(TLUser *obj, NSUInteger idx, BOOL *stop) {
         
-        TGMessagesHintRowItem *item = [[TGMessagesHintRowItem alloc] initWithImageObject:obj text:obj.fullName desc:[NSString stringWithFormat:@"@%@",obj.username]];
+        TGMessagesHintRowItem *item = [[TGMessagesHintRowItem alloc] initWithImageObject:obj text:obj.bot_context_placeholder.length > 0 ? obj.bot_context_placeholder : obj.fullName desc:[NSString stringWithFormat:@"@%@",obj.username]];
         
         item.result = obj.username;
         
@@ -478,7 +467,7 @@ DYNAMIC_PROPERTY(DUser);
     
     cancel_delayed_block(_handle);
     
-    _handle = perform_block_after_delay(1, ^{
+    _handle = perform_block_after_delay(0.4, ^{
         
         dispatch_block_t performQuery = ^{
             
@@ -498,7 +487,7 @@ DYNAMIC_PROPERTY(DUser);
                         
                         [response.results enumerateObjectsUsingBlock:^(TL_botContextResult *obj, NSUInteger idx, BOOL * _Nonnull stop) {
                             
-                            TGContextRowItem *item = [[TGContextRowItem alloc] initWithObject:obj bot:bot];
+                            TGContextRowItem *item = [[TGContextRowItem alloc] initWithObject:obj bot:user queryId:response.query_id];
                             
                             [items addObject:item];
                             
@@ -513,9 +502,7 @@ DYNAMIC_PROPERTY(DUser);
                     } else {
                         
                         [response.results enumerateObjectsUsingBlock:^(TL_botContextResult *obj, NSUInteger idx, BOOL * _Nonnull stop) {
-                            
-                            [items addObject:obj];
-                            
+                            [items addObject:obj];  
                         }];
                         
                         [_mediaContextTableView drawResponse:items];
@@ -538,13 +525,15 @@ DYNAMIC_PROPERTY(DUser);
                 
                 weak();
                 
-                [_mediaContextTableView setChoiceHandler:^(TLDocument *document) {
+                [_mediaContextTableView setChoiceHandler:^(TLBotContextResult *botResult) {
+                    
                     __strong TGMessagesHintView *strongSelf = weakSelf;
                     
                     if(strongSelf != nil) {
-                        [strongSelf.messagesViewController sendFoundGif:[TL_messageMediaDocument createWithDocument:document caption:query] forConversation:strongSelf.messagesViewController.conversation];
-                        [strongSelf.messagesViewController.bottomView setInputMessageString:@"" disableAnimations:YES];
+                        [strongSelf.messagesViewController sendContextBotResult:botResult via_bot_id:user.n_id queryId:response.query_id forConversation:conversation];
+                        [strongSelf.messagesViewController.bottomView setInputMessageString:@"" disableAnimations:NO];
                     }
+                    
                 }];
                 
                 
@@ -625,6 +614,8 @@ DYNAMIC_PROPERTY(DUser);
     
     if(_currentTableView == _mediaContextTableView) {
         height = _currentTableView.count == 1 ? 100 : 200;
+    } else if(_currentTableView == _contextTableView) {
+        height = MIN(_currentTableView.count * 60, 180 );
     }
     
     if(animated) {
@@ -655,6 +646,9 @@ DYNAMIC_PROPERTY(DUser);
 -(void)hide {
         
     [self hide:NO];
+    [_tableView removeAllItems:YES];
+    [_contextTableView removeAllItems:YES];
+    [_mediaContextTableView clear];
 }
 
 -(void)hide:(BOOL)animated {
@@ -689,8 +683,8 @@ DYNAMIC_PROPERTY(DUser);
      } else if(_currentTableView == _contextTableView) {
         TGContextRowItem *item = (TGContextRowItem *)_contextTableView.selectedItem;
         
-        [appWindow().navigationController.messagesViewController sendMessage:item.outMessage forConversation:appWindow().navigationController.messagesViewController.conversation];
-        [appWindow().navigationController.messagesViewController.bottomView setInputMessageString:@"" disableAnimations:NO];
+        [self.messagesViewController sendContextBotResult:item.botResult via_bot_id:item.bot.n_id queryId:item.queryId forConversation:self.messagesViewController.conversation];
+        [self.messagesViewController.bottomView setInputMessageString:@"" disableAnimations:NO];
     }
     
     [self hide:YES];

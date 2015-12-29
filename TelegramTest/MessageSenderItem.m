@@ -20,6 +20,8 @@
     
     if(self = [super initWithConversation:conversation]) {
         
+        [message trim];
+        
         self.message = [MessageSender createOutMessage:message media:[TL_messageMediaEmpty create] conversation:conversation];
         
         NSMutableArray *entities = [NSMutableArray array];
@@ -82,7 +84,6 @@
         self.message.date = response.date;
         self.message.media = response.media;
         self.message.entities = response.entities;
-        
         self.message.dstate = DeliveryStateNormal;
         
         [self.message save:YES];

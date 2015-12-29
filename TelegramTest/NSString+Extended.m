@@ -26,6 +26,10 @@
     
     NSString *string = self;
     
+    while ([string rangeOfCharacterFromSet:[NSCharacterSet whitespaceCharacterSet]].location == 0) {
+        string = [string substringFromIndex:1];
+    }
+    
 //    string = [string stringByReplacingOccurrencesOfString:@" -- " withString:@" — "];
 //    string = [string stringByReplacingOccurrencesOfString:@"<<" withString:@"«"];
 //    string = [string stringByReplacingOccurrencesOfString:@">>" withString:@"»"];

@@ -12,10 +12,11 @@
 #import "TGExternalImageObject.h"
 @interface TGContextRowItem : TGGeneralRowItem
 @property (nonatomic,strong,readonly) TLBotContextResult *botResult;
+@property (nonatomic,strong,readonly) TLUser *bot;
+@property (nonatomic,assign,readonly) long queryId;
 @property (nonatomic,strong,readonly) NSMutableAttributedString *desc;
 @property (nonatomic,strong) TGImageObject *imageObject;
 
--(id)initWithObject:(id)object bot:(NSString *)bot;
+-(id)initWithObject:(id)object bot:(TLUser *)bot queryId:(long)queryId;
 
--(NSString *)outMessage;
 @end

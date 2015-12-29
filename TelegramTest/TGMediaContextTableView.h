@@ -13,7 +13,7 @@
 
 @property (nonatomic,weak) MessagesViewController *messagesViewController;
 
-@property (nonatomic,copy) void (^choiceHandler)(TLDocument *document);
+@property (nonatomic,copy) void (^choiceHandler)(TLBotContextResult *document);
 @property (nonatomic,copy) void (^needLoadNext)(BOOL next);
 
 -(void)drawResponse:(NSArray *)items;

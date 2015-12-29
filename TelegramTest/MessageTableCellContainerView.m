@@ -18,6 +18,9 @@
 #import "MessagesBottomView.h"
 #import "TGHeadChatPanel.h"
 #import "TGModalForwardView.h"
+
+
+
 @interface MessageTableCellContainerView() <TMHyperlinkTextFieldDelegate>
 @property (nonatomic, strong) TMHyperlinkTextField *nameTextField;
 @property (nonatomic, strong) BTRImageView *sendImageView;
@@ -194,6 +197,16 @@
     if(!_viaBotTextField)
     {
         _viaBotTextField = [[TGCTextView alloc] initWithFrame:NSZeroRect];
+        
+        weak();
+        
+        [_viaBotTextField setLinkCallback:^(NSString *link) {
+            __strong MessageTableCellContainerView *strongSelf = weakSelf;
+            
+            [strongSelf.messagesViewController.bottomView setContextBotString:[NSString stringWithFormat:@"%@ ",link]];
+            
+            
+        }];
         
         [self addSubview:_viaBotTextField];
     }

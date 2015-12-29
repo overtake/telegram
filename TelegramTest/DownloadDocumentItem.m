@@ -18,13 +18,23 @@
 -(id)initWithObject:(TL_localMessage *)object {
     if(self = [super initWithObject:object]) {
         self.isEncrypted = [object isKindOfClass:[TL_destructMessage class]];
-        self.n_id = object.media.document.n_id;
-        self.path = non_documents_mime_types()[object.media.document.mime_type] != nil ? mediaFilePath(object) :  [NSString stringWithFormat:@"%@/%lu.download",[SettingsArchiver documentsFolder],object.media.document.n_id];
+        self.n_id = self.document.n_id;
+        self.path = non_documents_mime_types()[self.document.mime_type] != nil ? mediaFilePath(object) :  [NSString stringWithFormat:@"%@/%lu.download",[SettingsArchiver documentsFolder],self.document.n_id];
         self.fileType = DownloadFileDocument;
-        self.dc_id = object.media.document.dc_id;
-        self.size = object.media.document.size;
+        self.dc_id = self.document.dc_id;
+        self.size =  self.document.size;
     }
     return self;
+}
+
+-(TL_document *)document {
+    TL_localMessage *message = self.object;
+    
+    if([message.media isKindOfClass:[TL_messageMediaBotResult class]]) {
+        return (TL_document *) message.media.bot_result.document;
+    }
+    
+    return (TL_document *) message.media.document;
 }
 
 -(void)setDownloadState:(DownloadState)downloadState {
@@ -33,8 +43,8 @@
         
         TL_localMessage *message = self.object;
         
-        
         if(non_documents_mime_types()[message.media.document.mime_type] == nil) {
+            
             self.path = mediaFilePath(self.object);
             
             NSError *error = nil;
@@ -45,7 +55,7 @@
                 [[NSFileManager defaultManager] removeItemAtPath:old_path error:&error];
             }
             
-            TL_outDocument *document = [TL_outDocument outWithDocument:(TL_document *)((TLMessageMedia *)[(TL_localMessage *)self.object media]).document file_path:self.path];
+            TL_outDocument *document = [TL_outDocument outWithDocument:self.document file_path:self.path];
             
             
             TL_documentAttributeAudio *attr = (TL_documentAttributeAudio *) [document attributeWithClass:[TL_documentAttributeAudio class]];
@@ -60,9 +70,12 @@
                 
             }
             
-            message.media.document = document;
+            if([message.media isKindOfClass:[TL_messageMediaBotResult class]])
+                message.media.bot_result.document = document;
+             else
+                message.media.document = document;
             
-            [[Storage manager] addHolesAroundMessage:self.object];
+            [[Storage manager] addHolesAroundMessage:message];
             
             [message save:NO];
         }
@@ -73,11 +86,10 @@
 
 
 -(TLInputFileLocation *)input {
-    TLMessage *message = self.object;
     if(self.isEncrypted)
-        return [TL_inputEncryptedFileLocation createWithN_id:message.media.document.n_id access_hash:message.media.document.access_hash];
+        return [TL_inputEncryptedFileLocation createWithN_id:self.document.n_id access_hash:self.document.access_hash];
     
-    return [TL_inputDocumentFileLocation createWithN_id:message.media.document.n_id access_hash:message.media.document.access_hash];
+    return [TL_inputDocumentFileLocation createWithN_id:self.document.n_id access_hash:self.document.access_hash];
 }
 
 @end

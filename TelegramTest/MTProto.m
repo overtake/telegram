@@ -2,7 +2,7 @@
 //  MTProto.m
 //  Telegram
 //
-//  Auto created by Mikhail Filimonov on 28.12.15.
+//  Auto created by Mikhail Filimonov on 29.12.15.
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -6528,6 +6528,51 @@
     TL_messageMediaDocument_old44 *objc = [[TL_messageMediaDocument_old44 alloc] init];
     
     objc.document = [self.document copy];
+    
+    return objc;
+}
+        
+
+    
+-(id)initWithCoder:(NSCoder *)aDecoder {
+
+    if((self = [ClassStore deserialize:[aDecoder decodeObjectForKey:@"data"]])) {
+        
+    }
+    
+    return self;
+}
+        
+-(void)encodeWithCoder:(NSCoder *)aCoder {
+    [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
+}
+        
+
+        
+@end
+
+@implementation TL_messageMediaBotResult
++(TL_messageMediaBotResult*)createWithBot_result:(TLBotContextResult*)bot_result query_id:(long)query_id {
+	TL_messageMediaBotResult* obj = [[TL_messageMediaBotResult alloc] init];
+	obj.bot_result = bot_result;
+	obj.query_id = query_id;
+	return obj;
+}
+-(void)serialize:(SerializedData*)stream {
+	[ClassStore TLSerialize:self.bot_result stream:stream];
+	[stream writeLong:self.query_id];
+}
+-(void)unserialize:(SerializedData*)stream {
+	self.bot_result = [ClassStore TLDeserialize:stream];
+	super.query_id = [stream readLong];
+}
+        
+-(TL_messageMediaBotResult *)copy {
+    
+    TL_messageMediaBotResult *objc = [[TL_messageMediaBotResult alloc] init];
+    
+    objc.bot_result = [self.bot_result copy];
+    objc.query_id = self.query_id;
     
     return objc;
 }
@@ -16641,9 +16686,9 @@
         
 @end
 
-@implementation TL_externalDocument
-+(TL_externalDocument*)createWithN_id:(long)n_id date:(int)date mime_type:(NSString*)mime_type thumb:(TLPhotoSize*)thumb external_url:(NSString*)external_url search_q:(NSString*)search_q perform_date:(int)perform_date external_webpage:(TLWebPage*)external_webpage attributes:(NSMutableArray*)attributes {
-	TL_externalDocument* obj = [[TL_externalDocument alloc] init];
+@implementation TL_contextBotSender
++(TL_contextBotSender*)createWithN_id:(long)n_id date:(int)date mime_type:(NSString*)mime_type thumb:(TLPhotoSize*)thumb external_url:(NSString*)external_url search_q:(NSString*)search_q perform_date:(int)perform_date external_webpage:(TLWebPage*)external_webpage attributes:(NSMutableArray*)attributes {
+	TL_contextBotSender* obj = [[TL_contextBotSender alloc] init];
 	obj.n_id = n_id;
 	obj.date = date;
 	obj.mime_type = mime_type;
@@ -16700,9 +16745,9 @@
 	}
 }
         
--(TL_externalDocument *)copy {
+-(TL_contextBotSender *)copy {
     
-    TL_externalDocument *objc = [[TL_externalDocument alloc] init];
+    TL_contextBotSender *objc = [[TL_contextBotSender alloc] init];
     
     objc.n_id = self.n_id;
     objc.date = self.date;

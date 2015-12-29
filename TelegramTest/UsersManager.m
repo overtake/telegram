@@ -116,7 +116,7 @@
     return nil;
 }
 
-+(NSArray *)findUsersByMention:(NSString *)userName withUids:(NSArray *)uids {
++(NSArray *)findUsersByMention:(NSString *)userName withUids:(NSArray *)uids acceptContextBots:(BOOL)acceptContextBots {
     if([userName hasPrefix:@"@"])
         userName = [userName substringFromIndex:1];
     
@@ -125,7 +125,7 @@
     NSArray *fullName;
     
     if(userName.length > 0) {
-        userNames = [[[UsersManager sharedManager] all] filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.username BEGINSWITH[c] %@ AND self.n_id IN %@",userName,uids]];
+        userNames = [[[UsersManager sharedManager] all] filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.username BEGINSWITH[c] %@ AND (self.n_id IN %@ OR self.bot_context_placeholder.length > 0)",userName,uids]];
         
         
         fullName = [[[UsersManager sharedManager] all] filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(TLUser *evaluatedObject, NSDictionary *bindings) {
@@ -162,7 +162,11 @@
     [result removeObject:[self currentUser]];
     
     return result;
+}
 
++(NSArray *)findUsersByMention:(NSString *)userName withUids:(NSArray *)uids {
+   
+    return [self findUsersByMention:userName withUids:uids acceptContextBots:NO];
 }
 
 - (void)addFromDB:(NSArray *)array {
