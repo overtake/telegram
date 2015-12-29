@@ -3212,6 +3212,7 @@ static NSTextAttachment *headerMediaIcon() {
 }
 
 - (void)sendContextBotResult:(TLBotContextResult *)botContextResult via_bot_id:(int)via_bot_id queryId:(long)queryId forConversation:(TL_conversation *)conversation {
+   
     [ASQueue dispatchOnStageQueue:^{
         SenderItem *sender;
         sender = [[ContextBotSenderItem alloc] initWithBotContextResult:botContextResult via_bot_id:via_bot_id queryId:queryId conversation:conversation];

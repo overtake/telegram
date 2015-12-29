@@ -19,9 +19,31 @@
 
 @implementation TGPicItemView
 
--(instancetype)initWithFrame:(NSRect)frameRect size:(NSSize)size {
+static NSImage *tgContextPicCap() {
+    static NSImage *image = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        NSRect rect = NSMakeRect(0, 0, 1, 1);
+        image = [[NSImage alloc] initWithSize:rect.size];
+        [image lockFocus];
+        [NSColorFromRGB(0xf1f1f1) set];
+        NSBezierPath *path = [NSBezierPath bezierPath];
+        [path appendBezierPathWithRoundedRect:NSMakeRect(0, 0, rect.size.width, rect.size.height) xRadius:4 yRadius:4];
+        [path fill];
+        
+        [image unlockFocus];
+    });
+    return image;
+}
+
+-(instancetype)initWithFrame:(NSRect)frameRect {
     if(self = [super initWithFrame:frameRect]) {
-        _imageView = [[TGImageView alloc] initWithFrame:NSMakeRect(MIN(- roundf((size.width - NSWidth(self.frame))/2),0), MIN(- roundf((size.height - NSHeight(self.frame))/2),0), size.width, size.height)];
+        _imageView = [[TGImageView alloc] initWithFrame:NSZeroRect];
+        
+        NSImage *image = [tgContextPicCap() copy];
+        image.size = _imageView.frame.size;
+        [_imageView setImage:image];
+        
         self.wantsLayer = YES;
         self.layer.borderColor = [NSColor whiteColor].CGColor;
         self.layer.borderWidth = 1;
@@ -29,6 +51,11 @@
     }
     
     return self;
+}
+
+
+-(void)setSize:(NSSize)size {
+    [_imageView setFrame:NSMakeRect(MIN(- roundf((size.width - NSWidth(self.frame))/2),0), MIN(- roundf((size.height - NSHeight(self.frame))/2),0), size.width, size.height)];
 }
 
 @end
@@ -326,6 +353,8 @@
                 imageObject = [[TGImageObject alloc] initWithLocation:size.location placeHolder:botResult.document.thumb.bytes.length > 0 ?[[NSImage alloc] initWithData:botResult.document.thumb.bytes] : nil sourceId:0 size:size.size];
             } else if(botResult.thumb_url.length > 0) {
                 imageObject = [[TGExternalImageObject alloc] initWithURL:botResult.thumb_url];
+            } else if([botResult.type isEqualToString:@"photo"] && botResult.content_url.length > 0) {
+                imageObject = [[TGExternalImageObject alloc] initWithURL:botResult.content_url];
             }
             
             imageObject.imageSize = [sizes[idx] sizeValue];
@@ -419,10 +448,11 @@
             
             TGGifPlayerItemView *videoContainer;
             
-            if(container) {
+            if(container && [container isKindOfClass:[TGGifPlayerItemView class]]) {
                 videoContainer = (TGGifPlayerItemView *) container;
                 [videoContainer setFrame:rect];
             } else {
+                [container removeFromSuperview];
                 videoContainer = [[TGGifPlayerItemView alloc] initWithFrame:rect];
                 [self addSubview:videoContainer];
             }
@@ -440,10 +470,21 @@
             
         } else if(![item.imageObjects[idx] isKindOfClass:[NSNull class]]) {
             
-            TGPicItemView *picContainer = [[TGPicItemView alloc] initWithFrame:rect size:size];
+            TGPicItemView *picContainer;
+            
+            if(container && [container isKindOfClass:[TGPicItemView class]]) {
+                picContainer = (TGPicItemView *) container;
+                [container setFrame:rect];
+            } else {
+                [container removeFromSuperview];
+                picContainer = [[TGPicItemView alloc] initWithFrame:rect];
+                [self addSubview:picContainer];
+            }
+            
+            [picContainer setSize:size];
             [picContainer.imageView setObject:item.imageObjects[idx]];
             container = picContainer;
-            [self addSubview:container];
+           
         }
         
         if(container != nil) {
@@ -630,15 +671,15 @@
     
      NSMutableArray *draw = [items mutableCopy];
     
-    if(prevItem.gifs.count < f) {
+    
+    __block BOOL redrawPrev = NO;
+    
+    
+    if(prevItem && prevItem.gifs.count < f) {
         [draw insertObjects:prevItem.gifs atIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, prevItem.gifs.count)]];
         
-        [self removeItem:prevItem tableRedraw:YES];
+        redrawPrev = YES;
     }
-    
-   
-    
-    
     
     dispatch_block_t next = ^{
         
@@ -651,8 +692,17 @@
         [draw removeObjectsInArray:r];
         
         TGGifSearchRowItem *item = [[TGGifSearchRowItem alloc] initWithObject:[r copy] sizes:[s copy]];
-        [self addItem:item tableRedraw:YES];
-        
+       
+        if(redrawPrev) {
+            NSUInteger index = [self.list indexOfObject:prevItem];
+            
+            [self.list replaceObjectAtIndex:index withObject:item];
+            [self reloadDataForRowIndexes:[NSIndexSet indexSetWithIndex:index] columnIndexes:[NSIndexSet indexSetWithIndex:0]];
+            
+            redrawPrev = NO;
+        } else {
+            [self addItem:item tableRedraw:YES];
+        }
     };
     
     while (draw.count > 0) {

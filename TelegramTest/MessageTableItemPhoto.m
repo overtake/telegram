@@ -37,7 +37,6 @@
             
             imageSize = strongsize(NSMakeSize(photoSize.w, photoSize.h), MIN_IMG_SIZE.width);
             
-          //  imageSize.width = MAX(MIN_IMG_SIZE.width,imageSize.width);
             imageSize.height = MAX(MIN_IMG_SIZE.height,imageSize.height);
             
             cachePhoto.size = imageSize;
@@ -52,7 +51,7 @@
             }
             
             if(cachePhoto) {
-                cachePhoto = [ImageUtils blurImage:renderedImage(cachePhoto, cachePhoto.size) blurRadius:80 frameSize:cachePhoto.size] ;
+                cachePhoto = [ImageUtils blurImage:renderedImage(cachePhoto, cachePhoto.size) blurRadius:80 frameSize:cachePhoto.size];
             }
             
             
@@ -62,20 +61,20 @@
             
             self.imageObject.realSize = NSMakeSize(photoSize.w, photoSize.h);
             
-            if(self.message.media.caption.length > 0) {
-                NSMutableAttributedString *c = [[NSMutableAttributedString alloc] init];
-                
-                [c appendString:[[self.message.media.caption trim] fixEmoji] withColor:TEXT_COLOR];
-                
-                [c setFont:TGSystemFont(13) forRange:c.range];
-                
-                [c detectAndAddLinks:URLFindTypeHashtags | URLFindTypeLinks | URLFindTypeMentions | (self.user.isBot || self.message.peer.isChat ? URLFindTypeBotCommands : 0)];
-                
-                _caption = c;
-            }
-            
         }
-                
+        
+        if(self.message.media.caption.length > 0) {
+            NSMutableAttributedString *c = [[NSMutableAttributedString alloc] init];
+            
+            [c appendString:[[self.message.media.caption trim] fixEmoji] withColor:TEXT_COLOR];
+            
+            [c setFont:TGSystemFont(13) forRange:c.range];
+            
+            [c detectAndAddLinks:URLFindTypeHashtags | URLFindTypeLinks | URLFindTypeMentions | (self.user.isBot || self.message.peer.isChat ? URLFindTypeBotCommands : 0)];
+            
+            _caption = c;
+        }
+        
         self.imageObject.imageSize = imageSize;
         
         self.previewSize = imageSize;
@@ -128,8 +127,6 @@
 -(BOOL)needUploader {
     return YES;
 }
-
-
 
 
 @end

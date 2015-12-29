@@ -101,7 +101,7 @@ static NSCache *cItems;
                 {
                     NSMutableAttributedString *bot = [[NSMutableAttributedString alloc] init];
                     [bot appendString: NSLocalizedString(@"ContextBot.Message.Via", nil) withColor:GRAY_TEXT_COLOR];
-                    [bot appendString:[NSString stringWithFormat:@" @%@",_via_bot_user.username] withColor:LINK_COLOR];
+                    [bot appendString:[NSString stringWithFormat:@" @%@",_via_bot_user.username] withColor:GRAY_TEXT_COLOR];
                     [bot detectAndAddLinks:URLFindTypeMentions];
                     _via_attr_string = bot;
                 }
@@ -410,7 +410,7 @@ static NSTextAttachment *channelIconAttachment() {
                         
                         if(([message.media.bot_result.content_type isEqualToString:@"video/mp4"] && [message.media.bot_result.type isEqualToString:@"gif"])) {
                             objectReturn = [[MessageTableItemMpeg alloc] initWithObject:message];
-                        } else if([message.media.bot_result.content_type isEqualToString:@"photo"]) {
+                        } else if([message.media.bot_result.type isEqualToString:@"photo"]) {
                             objectReturn = [[MessageTableItemPhoto alloc] initWithObject:message];
                         }
  

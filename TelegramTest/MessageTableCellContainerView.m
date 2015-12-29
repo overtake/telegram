@@ -1156,11 +1156,12 @@ static int offsetEditable = 30;
 
 -(void)_didChangeBackgroundColorWithAnimation:(POPBasicAnimation *)anim toColor:(NSColor *)color {
     
-    if(!_replyContainer)
+    if(!_replyContainer && !_viaBotTextField)
         return;
     
     if(!anim) {
         _replyContainer.messageField.backgroundColor = color;
+      //  _viaBotTextField.backgroundColor = color;
         return;
     }
     
@@ -1183,8 +1184,12 @@ static int offsetEditable = 30;
     animation.fromValue = anim.fromValue;
     animation.duration = anim.duration;
     animation.removedOnCompletion = YES;
-    [_replyContainer.messageField pop_addAnimation:animation forKey:@"background"];
     
+    if(_replyContainer)
+        [_replyContainer.messageField pop_addAnimation:animation forKey:@"background"];
+    if(_viaBotTextField)
+        [_viaBotTextField pop_addAnimation:animation forKey:@"background"];
+
 }
 
 
