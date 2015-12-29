@@ -158,7 +158,8 @@
 -(void)updateContainer {
     
     _prevState = NO;
-    
+    [_loaderView removeFromSuperview];
+    [self addSubview:_loaderView];
     [_loaderView setHidden:self.isset];
     
     if(_loaderView.isHidden) {
@@ -254,16 +255,7 @@
         _prevState = nextState;
     };
     
-    
-    
-   // if(check_block()) {
-   //     _handle = perform_block_after_delay(0.02, block);
-   // } else {
-        block();
-  //  }
-    
-    
-    
+    block();
     
 }
 
@@ -632,11 +624,23 @@
     [_items addObjectsFromArray:items];
     
     
-    NSMutableArray *draw = [items mutableCopy];
+    TGGifSearchRowItem *prevItem = [self.list lastObject];
+    
+     int f = floor(NSWidth(self.frame)/100);
+    
+     NSMutableArray *draw = [items mutableCopy];
+    
+    if(prevItem.gifs.count < f) {
+        [draw insertObjects:prevItem.gifs atIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, prevItem.gifs.count)]];
+        
+        [self removeItem:prevItem tableRedraw:YES];
+    }
+    
+   
+    
+    
     
     dispatch_block_t next = ^{
-        
-        int f = floor(NSWidth(self.frame)/100);
         
         int rowCount = MIN(f,(int)draw.count);
         

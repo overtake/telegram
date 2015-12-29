@@ -26,8 +26,6 @@
 -(id)initWithObject:(TL_localMessage *)object {
     if(self = [super initWithObject:object]) {
         
-        
-        
         _imagesize = (TL_documentAttributeVideo *) [self.document attributeWithClass:[TL_documentAttributeVideo class]];
         
         [self doAfterDownload];

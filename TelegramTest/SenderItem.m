@@ -15,6 +15,7 @@
 #import "ExternalGifSenderItem.h"
 #import "CompressedDocumentSenderItem.h"
 #import "ContextBotSenderItem.h"
+
 @interface SenderItem ()
 @property (nonatomic,strong) NSMutableArray *listeners;
 @end
@@ -102,9 +103,9 @@ static NSMutableDictionary *senders;
                         item = [[StickerSenderItem alloc] init];
                     }
                     
-//                    if([msg.media.document isKindOfClass:[TL_externalDocument class]]) {
-//                        item = [[ExternalGifSenderItem alloc] init];
-//                    }
+                    if(msg.media.document.access_hash != 0) {
+                        item = [[ExternalGifSenderItem alloc] init];
+                    }
                     
                     if([msg.media.document isKindOfClass:[TL_compressDocument class]]) {
                         item = [[CompressedDocumentSenderItem alloc] init];

@@ -94,7 +94,6 @@
 }
 
 
-
 -(void)setItem:(MessageTableItemMpeg *)item {
     [super setItem:item];
     
@@ -153,7 +152,7 @@
 -(void)_didScrolledTableView:(NSNotification *)notification {
 
     
-     MessageTableItemMpeg *item = (MessageTableItemMpeg *) self.item;
+    MessageTableItemMpeg *item = (MessageTableItemMpeg *) self.item;
     
     BOOL (^check_block)() = ^BOOL() {
         
@@ -188,7 +187,6 @@
         
         [self removeScrollEvent];
         [_player setPath:nil];
-        [self setProgressToView:self.progressView.superview];
         
     } else {
         [self addScrollEvent];
