@@ -334,21 +334,11 @@
     [super loadView];
     
    
-    if(ACCEPT_FEATURE) {
-        self.bottomView = [[TMView alloc] initWithFrame:NSMakeRect(0, 0, self.view.bounds.size.width, 42)];
-        for(int i = 1; i <= 8; i++) {
-            BTRButton *button = [self createButtonForIndex:i];//20
-            [button setFrameOrigin:NSMakePoint(i * 12 + 30 * (i - 1), 12)];
-            [self.bottomView addSubview:button];
-        }
-        
-    } else {
-        self.bottomView = [[TMView alloc] initWithFrame:NSMakeRect(0, 0, self.view.bounds.size.width, 42)];
-        for(int i = 1; i <= 7; i++) {
-            BTRButton *button = [self createButtonForIndex:i];//20
-            [button setFrameOrigin:NSMakePoint(i * 18 + 30 * (i - 1), 12)];
-            [self.bottomView addSubview:button];
-        }
+    self.bottomView = [[TMView alloc] initWithFrame:NSMakeRect(0, 0, self.view.bounds.size.width, 42)];
+    for(int i = 1; i <= 8; i++) {
+        BTRButton *button = [self createButtonForIndex:i];//20
+        [button setFrameOrigin:NSMakePoint(i * 12 + 30 * (i - 1), 12)];
+        [self.bottomView addSubview:button];
     }
 
     
@@ -475,6 +465,7 @@
     
     if(self.messagesViewController.conversation.type == DialogTypeSecretChat && button.index == 8)
         return;
+    
     
     for(EmojiBottomButton *btn in self.bottomView.subviews) {
         [btn setSelected:btn == button];

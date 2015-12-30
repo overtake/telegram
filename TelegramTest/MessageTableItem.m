@@ -408,8 +408,6 @@ static NSTextAttachment *channelIconAttachment() {
                     if([message.media.bot_result isKindOfClass:[TL_botInlineMediaResultDocument class]]) {
                         if(([message.media.bot_result.document.mime_type isEqualToString:@"video/mp4"] && [message.media.bot_result.document attributeWithClass:[TL_documentAttributeAnimated class]]))
                             objectReturn = [[MessageTableItemMpeg alloc] initWithObject:message];
-                         else
-                            objectReturn = [[MessageTableItemDocument alloc] initWithObject:message];
                     } else if([message.media.bot_result isKindOfClass:[TL_botInlineMediaResultPhoto class]])
                         objectReturn = [[MessageTableItemPhoto alloc] initWithObject:message];
                     else if([message.media.bot_result isKindOfClass:[TL_botInlineResult class]]) {

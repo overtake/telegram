@@ -679,13 +679,15 @@
 
 -(NSString *)linkAtPoint:(NSPoint)location hitTest:(BOOL *)hitTest itsReal:(BOOL *)itsReal {
     
-   if(_disableLinks)
+   if(_disableLinks || CTFrame == NULL)
        return nil;
     
     if([self mouse:location inRect:self.bounds]) {
         
         
         @try {
+            
+            
             CFArrayRef lines = CTFrameGetLines(CTFrame);
             
             

@@ -122,6 +122,18 @@
         [self.forwardMessagesTextLayer setFrameSize:NSMakeSize(300, 20)];
         [self.forwardMessagesTextLayer setAttributedString:self.item.forwardHeaderAttr];
         [self addSubview:self.forwardMessagesTextLayer];
+        
+        
+        weak();
+        
+        [_forwardMessagesTextLayer setLinkCallback:^(NSString *link) {
+            __strong MessageTableCellContainerView *strongSelf = weakSelf;
+            
+            [strongSelf.messagesViewController.bottomView setContextBotString:[NSString stringWithFormat:@"%@ ",link]];
+            
+            
+        }];
+
     }
     
     if(!self.fwdContainer) {
@@ -1156,12 +1168,13 @@ static int offsetEditable = 30;
 
 -(void)_didChangeBackgroundColorWithAnimation:(POPBasicAnimation *)anim toColor:(NSColor *)color {
     
-    if(!_replyContainer && !_viaBotTextField)
+    if(!_replyContainer && !_viaBotTextField && !_forwardMessagesTextLayer)
         return;
     
     if(!anim) {
         _replyContainer.messageField.backgroundColor = color;
         _viaBotTextField.backgroundColor = color;
+        _forwardMessagesTextLayer.backgroundColor = color;
         return;
     }
     
@@ -1189,7 +1202,8 @@ static int offsetEditable = 30;
         [_replyContainer.messageField pop_addAnimation:animation forKey:@"background"];
     if(_viaBotTextField)
         [_viaBotTextField pop_addAnimation:animation forKey:@"background"];
-
+    if(_forwardMessagesTextLayer)
+        [_forwardMessagesTextLayer pop_addAnimation:animation forKey:@"background"];
 }
 
 
