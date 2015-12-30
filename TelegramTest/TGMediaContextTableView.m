@@ -171,7 +171,6 @@ static NSImage *tgContextPicCap() {
 
 -(void)setBotResult:(TLBotContextResult *)botResult {
     
-    [self.downloadItem removeEvent:_downloadEventListener];
     _prevState = NO;
     [_player setPath:nil];
     
@@ -288,6 +287,7 @@ static NSImage *tgContextPicCap() {
         if(_prevState != nextState) {
             [_player setPath:nextState ? self.path : nil];
         }
+        
         
         _prevState = nextState;
     };
@@ -684,6 +684,17 @@ static NSImage *tgContextPicCap() {
     [items enumerateObjectsUsingBlock:^(TLBotContextResult *obj, NSUInteger idx, BOOL * _Nonnull stop) {
         
         if(!((obj.document == nil || [obj.document isKindOfClass:[TL_documentEmpty class]]) && (obj.photo == nil || [obj.photo isKindOfClass:[TL_photoEmpty class]]) && obj.content_url.length ==0)) {
+            
+            static NSArray *acceptTypes;
+            
+            static dispatch_once_t onceToken;
+            dispatch_once(&onceToken, ^{
+                acceptTypes = @[@"photo",@"gif"];
+            });
+            
+            if([acceptTypes indexOfObject:obj.type] != NSNotFound) {
+                
+            }
             [filter addObject:obj];
         }
         

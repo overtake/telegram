@@ -491,6 +491,8 @@ DYNAMIC_PROPERTY(DUser);
     
     _handle = perform_block_after_delay(0.4, ^{
         
+        __block BOOL forceNextLoad = NO;
+        
         dispatch_block_t performQuery = ^{
             
             [self.messagesViewController.bottomView setProgress:offset.length == 0];
@@ -504,6 +506,8 @@ DYNAMIC_PROPERTY(DUser);
                 [self.messagesViewController.bottomView setProgress:NO];
                 
                 if(self.messagesViewController.conversation == conversation && request == _contextRequest) {
+                    
+                    forceNextLoad = offset.length == 0 && response.next_offset.length > 0;
                     
                     offset = response.next_offset;
                     
@@ -539,12 +543,16 @@ DYNAMIC_PROPERTY(DUser);
                     
                     [_mediaContextTableView setMessagesViewController:self.messagesViewController];
                     
-                   
+                    
                     if(items.count > 0) {
                         if(self.alphaValue == 0.0f)
                             [self show:NO];
                     } else
                         [self hide];
+                    
+                    if(forceNextLoad && _mediaContextTableView.needLoadNext) {
+                        _mediaContextTableView.needLoadNext(YES);
+                    }
 
                 } else if(_currentTableView == _mediaContextTableView) {
                     [self hide];
@@ -563,10 +571,12 @@ DYNAMIC_PROPERTY(DUser);
                     
                 }];
                 
-                
+               
                 
                 _isLockedWithRequest = NO;
                 k++;
+                
+                
                 
             } errorHandler:^(id request, RpcError *error) {
                 _isLockedWithRequest = NO;
@@ -574,8 +584,10 @@ DYNAMIC_PROPERTY(DUser);
             
         };
         
+
+        
         [_mediaContextTableView setNeedLoadNext:^(BOOL next) {
-            if(next && !_isLockedWithRequest && offset.length > 0 && k < 30) {
+            if(forceNextLoad || (next && !_isLockedWithRequest && offset.length > 0 && k < 30)) {
                 performQuery();
             }
             
