@@ -460,6 +460,10 @@ DYNAMIC_PROPERTY(DFullName);
 
 
 
+-(BOOL)isBotInlinePlaceholder {
+    return (self.flags & (1 << 19)) > 0;
+}
+
 /*
 Statuses
  */

@@ -112,58 +112,62 @@
 
 -(NSMenu *)contextMenu {
     
+     MessageTableItemMpeg *item = (MessageTableItemMpeg *) self.item;
     NSMenu *menu = [[NSMenu alloc] initWithTitle:@"Gifs"];
     
     
-    __block NSMutableArray *items;
-    
-    [[Storage yap] readWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
-        items = [transaction objectForKey:@"gifs" inCollection:RECENT_GIFS];
-    }];
-    
-    TLDocument *document = self.item.message.media.document;
-    
-    TLDocument *item = [[items filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.n_id == %ld",document.n_id]] firstObject];
-    
-    
-    [menu addItem:[NSMenuItem menuItemWithTitle:item == nil ? NSLocalizedString(@"Context.AddGif", nil) : NSLocalizedString(@"Context.RemoveGif", nil) withBlock:^(id sender) {
+    if(item.isset) {
         
-        [TMViewController showModalProgress];
+        __block NSMutableArray *items;
         
-        [RPCRequest sendRequest:[TLAPI_messages_saveGif createWithN_id:[TL_inputDocument createWithN_id:self.item.message.media.document.n_id access_hash:self.item.message.media.document.access_hash] unsave:item != nil] successHandler:^(id request, id response) {
-            
-            if([response isKindOfClass:[TL_boolTrue class]]) {
-                [[Storage yap] asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
-                    
-                    NSMutableArray *items = [transaction objectForKey:@"gifs" inCollection:RECENT_GIFS];
-                    
-                    TLDocument *d = [[items filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.n_id == %ld",document.n_id]] firstObject];
-                    
-                    if(d != nil)
-                        [items removeObject:d];
-                    
-                    if(item == nil) {
-                        [items insertObject:document atIndex:0];
-                    }
-                    
-                    
-                    [transaction setObject:items forKey:@"gifs" inCollection:RECENT_GIFS];
-                }];
-            }
-            
-            
-            
-            [TMViewController hideModalProgressWithSuccess];
-            
-        } errorHandler:^(id request, RpcError *error) {
-            [TMViewController hideModalProgress];
+        [[Storage yap] readWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
+            items = [transaction objectForKey:@"gifs" inCollection:RECENT_GIFS];
         }];
         
-    }]];
+        TLDocument *document = self.item.message.media.document;
+        
+        TLDocument *item = [[items filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.n_id == %ld",document.n_id]] firstObject];
+        
+        
+        [menu addItem:[NSMenuItem menuItemWithTitle:item == nil ? NSLocalizedString(@"Context.AddGif", nil) : NSLocalizedString(@"Context.RemoveGif", nil) withBlock:^(id sender) {
+            
+            [TMViewController showModalProgress];
+            
+            [RPCRequest sendRequest:[TLAPI_messages_saveGif createWithN_id:[TL_inputDocument createWithN_id:self.item.message.media.document.n_id access_hash:self.item.message.media.document.access_hash] unsave:item != nil] successHandler:^(id request, id response) {
+                
+                if([response isKindOfClass:[TL_boolTrue class]]) {
+                    [[Storage yap] asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
+                        
+                        NSMutableArray *items = [transaction objectForKey:@"gifs" inCollection:RECENT_GIFS];
+                        
+                        TLDocument *d = [[items filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.n_id == %ld",document.n_id]] firstObject];
+                        
+                        if(d != nil)
+                            [items removeObject:d];
+                        
+                        if(item == nil) {
+                            [items insertObject:document atIndex:0];
+                        }
+                        
+                        
+                        [transaction setObject:items forKey:@"gifs" inCollection:RECENT_GIFS];
+                    }];
+                }
+                
+                
+                
+                [TMViewController hideModalProgressWithSuccess];
+                
+            } errorHandler:^(id request, RpcError *error) {
+                [TMViewController hideModalProgress];
+            }];
+            
+        }]];
+        
+        [menu addItem:[NSMenuItem separatorItem]];
+    }
     
-    [menu addItem:[NSMenuItem separatorItem]];
-    
-    
+
     [self.defaultMenuItems enumerateObjectsUsingBlock:^(NSMenuItem *item, NSUInteger idx, BOOL *stop) {
         [menu addItem:item];
     }];

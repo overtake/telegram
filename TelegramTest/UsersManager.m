@@ -125,7 +125,7 @@
     NSArray *fullName;
     
     if(userName.length > 0) {
-        userNames = [[[UsersManager sharedManager] all] filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.username BEGINSWITH[c] %@ AND (self.n_id IN %@ OR (self.bot_context_placeholder.length > 0 AND %d == 1))",userName,uids,acceptContextBots]];
+        userNames = [[[UsersManager sharedManager] all] filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.username BEGINSWITH[c] %@ AND (self.n_id IN %@ OR (self.isBotInlinePlaceholder == 1 AND %d == 1))",userName,uids,acceptContextBots]];
         
         
         fullName = [[[UsersManager sharedManager] all] filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(TLUser *evaluatedObject, NSDictionary *bindings) {
@@ -135,8 +135,8 @@
         }]];
     } else if(acceptContextBots) {
         
-       userNames = [[[UsersManager sharedManager] all] filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"(self.bot_context_placeholder.length > 0)",acceptContextBots]];
-        
+       userNames = [[[UsersManager sharedManager] all] filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"(self.isBotInlinePlaceholder == 1)"]];
+                
     } else {
         userNames = [[[UsersManager sharedManager] all] filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(TLUser *evaluatedObject, NSDictionary *bindings) {
             

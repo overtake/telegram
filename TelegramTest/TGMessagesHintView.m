@@ -474,7 +474,7 @@ DYNAMIC_PROPERTY(DUser);
     
     __block TLUser *user = [UsersManager findUserByName:bot];
     
-    if(!user.isBot || user.bot_context_placeholder.length == 0 || conversation.type == DialogTypeSecretChat) {
+    if(!user.isBot || !user.isBotInlinePlaceholder || conversation.type == DialogTypeSecretChat) {
         return;
     }
     
@@ -602,7 +602,7 @@ DYNAMIC_PROPERTY(DUser);
                 if([response.peer isKindOfClass:[TL_peerUser class]]) {
                     user = [response.users firstObject];
                     
-                    if(!user.isBot || user.bot_context_placeholder.length == 0) {
+                    if(!user.isBot || !user.isBotInlinePlaceholder) {
                         return;
                     }
                 }

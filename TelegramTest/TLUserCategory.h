@@ -73,5 +73,6 @@ typedef enum {
 - (TL_conversation *)dialog;
 - (TL_contact *)contact;
 
+-(BOOL)isBotInlinePlaceholder;
 
 @end

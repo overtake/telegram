@@ -297,6 +297,8 @@ static NSImage *tgContextPicCap() {
     else
         _handle = perform_block_after_delay(0.03, block);
     
+    [self.loaderView setHidden:self.isset];
+    
 }
 
 -(void)removeFromSuperview {
