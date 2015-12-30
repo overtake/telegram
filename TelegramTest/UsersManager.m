@@ -133,21 +133,27 @@
             return evaluatedObject.username.length > 0 && [evaluatedObject.fullName searchInStringByWordsSeparated:userName] && [uids indexOfObject:@(evaluatedObject.n_id)] != NSNotFound;
             
         }]];
-    } else if(acceptContextBots) {
-        
-       userNames = [[[UsersManager sharedManager] all] filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"(self.isBotInlinePlaceholder == 1)"]];
-        
-    } else {
+    }  else {
         userNames = [[[UsersManager sharedManager] all] filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(TLUser *evaluatedObject, NSDictionary *bindings) {
             
             return (evaluatedObject.username.length > 0 && [uids indexOfObject:@(evaluatedObject.n_id)] != NSNotFound) || evaluatedObject.isBotInlinePlaceholder;
             
         }]];
         
+        
+        
         fullName = @[];
     }
     
-    
+    userNames = [userNames sortedArrayUsingComparator:^NSComparisonResult(TLUser *obj1, TLUser *obj2) {
+        
+        if(obj1.isBotInlinePlaceholder && !obj2.isBotInlinePlaceholder)
+            return NSOrderedAscending;
+        else if(obj2.isBotInlinePlaceholder && !obj1.isBotInlinePlaceholder)
+            return NSOrderedDescending;
+        else
+            return NSOrderedSame;
+    }];
     
     
     
