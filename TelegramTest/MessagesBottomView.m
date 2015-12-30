@@ -51,6 +51,10 @@
 @property (nonatomic, strong) BTRButton *botCommandButton;
 @property (nonatomic, strong) BTRButton *channelAdminButton;
 @property (nonatomic, strong) BTRButton *secretTimerButton;
+
+@property (nonatomic, strong) NSProgressIndicator *progressView;
+@property (nonatomic,assign,setter=setProgress:) BOOL isProgress;
+
 @property (nonatomic, strong) TMButton *sendButton;
 
 
@@ -88,6 +92,7 @@
 
 @property (nonatomic,strong) TLUserFull *userFull;
 @property (nonatomic,strong) TLChatFull *chatFull;
+
 
 @end
 
@@ -142,6 +147,21 @@
     }
 }
 
+-(void)setProgress:(BOOL)progress {
+    _isProgress = progress;
+    
+    [self.progressView setHidden:!progress];
+    
+    if(progress) {
+        [self.progressView startAnimation:self];
+    } else {
+        [self.progressView stopAnimation:self];
+    }
+    
+    [self updateBotButtons];
+    
+}
+
 -(void)didChangeAttachmentsCount:(int)futureCount {
     
     if(futureCount == 0 && _imageAttachmentsController.isShown) {
@@ -191,6 +211,7 @@
 - (void)setDialog:(TL_conversation *)dialog {
     self->_dialog = dialog;
     
+
     
     self.botStartParam = nil;
     
@@ -289,6 +310,9 @@
 }
 
 -(void)updateBotButtons {
+    
+    
+    
     if(self.dialog.type == DialogTypeUser) {
         [self.botCommandButton setHidden:!self.dialog.user.isBot];
     } else if(self.dialog.type == DialogTypeChat || self.dialog.type == DialogTypeChannel) {
@@ -316,6 +340,11 @@
     
     [_secretTimerButton setHidden:self.dialog.type != DialogTypeSecretChat];
     
+    
+    [_botCommandButton setHidden:_botCommandButton.isHidden || self.isProgress];
+    [_channelAdminButton setHidden:_channelAdminButton.isHidden || self.isProgress];
+    [_secretTimerButton setHidden:_secretTimerButton.isHidden || self.isProgress];
+    [_smileButton setHidden:self.isProgress];
 }
 
 - (TMView *)actionsView {
@@ -599,6 +628,11 @@
     [self.inputMessageTextField.containerView addSubview:self.secretTimerButton];
     
     
+    
+    self.progressView = [[NSProgressIndicator alloc] initWithFrame:NSMakeRect(self.inputMessageTextField.containerView.frame.size.width - 30, 7,20,20)];
+    [self.progressView setAutoresizingMask:NSViewMinXMargin | NSViewMinYMargin];
+    [self.progressView setStyle:NSProgressIndicatorSpinningStyle];
+    [self.inputMessageTextField.containerView addSubview:self.progressView];
     
     
     [self.smileButton addTarget:self action:@selector(smileButtonClick:) forControlEvents:BTRControlEventMouseEntered];
@@ -1300,6 +1334,7 @@ static RBLPopover *popover;
         
     } else {
         [self.messagesViewController.hintView hide];
+        [self setProgress:NO];
     }
     
 
@@ -1684,7 +1719,7 @@ static RBLPopover *popover;
     
     self.inputMessageTextField.containerView.frame = NSMakeRect(offsetX, 11, self.bounds.size.width - offsetX - self.sendButton.frame.size.width - 33, NSHeight(self.inputMessageTextField.containerView.frame));
     
-    [self.inputMessageTextField setFrameSize:NSMakeSize(NSWidth(self.inputMessageTextField.containerView.frame) - 40 - (_botKeyboardButton.isHidden ? 0 : 30) - (_botCommandButton.isHidden ? 0 : 30) - (_channelAdminButton.isHidden ? 0 : 30) - (_secretTimerButton.isHidden ? 0 : 30),NSHeight(self.inputMessageTextField.frame))];
+    [self.inputMessageTextField setFrameSize:NSMakeSize(NSWidth(self.inputMessageTextField.containerView.frame) - 40 - (_botKeyboardButton.isHidden ? 0 : 30) - (_botCommandButton.isHidden ? 0 : 30) - (_channelAdminButton.isHidden ? 0 : 30) - (_secretTimerButton.isHidden ? 0 : 30) - (_progressView.isHidden ? 0 : 30),NSHeight(self.inputMessageTextField.frame))];
     
     
 }

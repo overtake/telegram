@@ -3265,6 +3265,12 @@
             <PersistentString
                value = "object">
             </PersistentString>
+            <PersistentString
+               value = "self.imageObject.imageSize">
+            </PersistentString>
+            <PersistentString
+               value = "self.message.media.bot_result">
+            </PersistentString>
          </PersistentStrings>
       </ContextState>
       <ContextState

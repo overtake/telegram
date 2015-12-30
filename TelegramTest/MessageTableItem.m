@@ -281,8 +281,13 @@ static NSTextAttachment *channelIconAttachment() {
             if(self.isForwadedMessage)
                 viewSize.height += 20;
             
-            if(self.isViaBot && !self.isForwadedMessage)
+            if(self.isViaBot && !self.isForwadedMessage) {
                 viewSize.height+=16;
+                if(self.message.media != nil && ![self.message.media isKindOfClass:[TL_messageMediaWebPage class]]) {
+                    viewSize.height+=6;
+                }
+            }
+            
             
             if(viewSize.height < 44)
                 viewSize.height = 44;

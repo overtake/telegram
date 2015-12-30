@@ -431,12 +431,6 @@
     [self.view addSubview:self.stickerPanel];
     
     [self.stickerPanel hide:NO];
-
-    _contextBotsPanelView = [[TGContextBotsPanelView alloc] initWithFrame:NSMakeRect(0, NSHeight(self.bottomView.frame), NSWidth(self.view.frame), 76)];
-    
-    [self.view addSubview:_contextBotsPanelView];
-    
-    [_contextBotsPanelView setHidden:YES];
     
     self.hintView = [[TGMessagesHintView alloc] initWithFrame:NSMakeRect(0, NSHeight(self.bottomView.frame), NSWidth(self.view.frame), 100)];
     self.hintView.messagesViewController = self;
@@ -2158,9 +2152,6 @@ static NSTextAttachment *headerMediaIcon() {
     NSArray *emoji = [self.bottomView.inputMessageString getEmojiFromString:NO];
     
     
-//    if([self.bottomView.inputMessageString hasPrefix:@"@gif"]) {
-//       // [_contextBotsPanelView initializeContextBotWithUser: contextRequestString:<#(NSString *)#>]
-//    }
     
     if([self.bottomView.inputMessageString isEqualToString:[emoji lastObject]])
     {
@@ -3211,9 +3202,11 @@ static NSTextAttachment *headerMediaIcon() {
 
 - (void)sendContextBotResult:(TLBotContextResult *)botContextResult via_bot_id:(int)via_bot_id queryId:(long)queryId forConversation:(TL_conversation *)conversation {
    
+    int additionFlags = [self senderFlags];
+    
     [ASQueue dispatchOnStageQueue:^{
         SenderItem *sender;
-        sender = [[ContextBotSenderItem alloc] initWithBotContextResult:botContextResult via_bot_id:via_bot_id queryId:queryId conversation:conversation];
+        sender = [[ContextBotSenderItem alloc] initWithBotContextResult:botContextResult via_bot_id:via_bot_id queryId:queryId additionFlags:additionFlags conversation:conversation];
         
         sender.tableItem = [[self messageTableItemsFromMessages:@[sender.message]] lastObject];
         [self.historyController addItem:sender.tableItem sentControllerCallback:nil];

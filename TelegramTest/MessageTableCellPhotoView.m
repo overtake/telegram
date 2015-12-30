@@ -16,6 +16,7 @@
 #import "TGCTextView.h"
 #import "POPCGUtils.h"
 #import "TGCaptionView.h"
+#import "TGExternalImageObject.h"
 @interface MessageTableCellPhotoView()<TGImageObjectDelegate>
 @property (nonatomic,strong) NSImageView *fireImageView;
 @property (nonatomic,strong) TGCaptionView *captionView;
@@ -164,10 +165,26 @@ NSImage *fireImage() {
 
 
 -(void)setCellState:(CellState)cellState {
+    
+    
+     MessageTableItemPhoto *item = (MessageTableItemPhoto *)self.item;
+    
+    if(self.cellState == CellStateSending && cellState == CellStateNormal) {
+        [super setCellState:cellState];
+        
+        if([item.imageObject isKindOfClass:[TGExternalImageObject class]]) {
+            [self.item doAfterDownload];
+            [self.imageView setObject:item.imageObject];
+            [self updateDownloadListeners];
+        }
+        
+    }
+    
+    
     [super setCellState:cellState];
     
     
-    MessageTableItemPhoto *item = (MessageTableItemPhoto *)self.item;
+   
     
     [self.progressView setImage:cellState == CellStateSending ? image_DownloadIconWhite() : nil forState:TMLoaderViewStateNeedDownload];
     [self.progressView setImage:cellState == CellStateSending ? image_LoadCancelWhiteIcon() : nil forState:TMLoaderViewStateDownloading];
@@ -189,7 +206,10 @@ NSImage *fireImage() {
         [self.fireImageView setHidden:!isNeedSecretBlur];
         [self.fireImageView setCenterByView:self.imageView];
     }
-        
+    
+    
+    
+    
     
     [self.progressView setHidden:self.item.isset];
     
@@ -218,9 +238,32 @@ NSImage *fireImage() {
     [self.imageView setFrameSize:item.imageSize];
 
     [self updateCellState];
+    
+    
+    [self updateDownloadListeners];
+    
+    
+    if(item.caption) {
+        [self initCaptionTextView];
+        
+        [_captionView setFrame:NSMakeRect(0, NSHeight(self.containerView.frame) - item.captionSize.height , item.imageSize.width, item.captionSize.height)];
+        
+        [_captionView setAttributedString:item.caption fieldSize:item.captionSize];
+        
+        [_captionView setItem:item];
+        
+    } else {
+        [self deallocCaptionTextView];
+    }
+        
+}
 
+-(void)updateDownloadListeners {
+    
+    MessageTableItemPhoto *item = (MessageTableItemPhoto *)self.item;
+    
     [item.imageObject.supportDownloadListener setProgressHandler:^(DownloadItem *item) {
-       
+        
         [ASQueue dispatchOnMainQueue:^{
             
             [self.progressView setProgress:5 + MAX(( item.progress - 5),0) animated:YES];
@@ -241,21 +284,9 @@ NSImage *fireImage() {
         
     }];
     
-    
-    if(item.caption) {
-        [self initCaptionTextView];
-        
-        [_captionView setFrame:NSMakeRect(0, NSHeight(self.containerView.frame) - item.captionSize.height , item.imageSize.width, item.captionSize.height)];
-        
-        [_captionView setAttributedString:item.caption fieldSize:item.captionSize];
-        
-        [_captionView setItem:item];
-        
-    } else {
-        [self deallocCaptionTextView];
-    }
-        
 }
+
+
 
 -(void)clearSelection {
     [super clearSelection];
@@ -310,7 +341,7 @@ NSImage *fireImage() {
     if([self.imageView hitTest:eventLocation]) {
         NSPoint dragPosition = NSMakePoint(80, 8);
         
-        NSString *path = locationFilePath(((MessageTableItemPhoto *)self.item).photoLocation,@"jpg");
+        NSString *path = locationFilePath(((MessageTableItemPhoto *)self.item).imageObject.location,@"jpg");
         
         
         NSPasteboard *pasteBrd=[NSPasteboard pasteboardWithName:TGImagePType];

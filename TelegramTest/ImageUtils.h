@@ -260,8 +260,8 @@ NSImage *renderedImage(NSImage * oldImage, NSSize size);
 NSImage *cropImage(NSImage *image,NSSize backSize, NSPoint difference);
 
 
-typedef NSImage * (^ImageProccessor)(NSImage *image, NSSize size);
+typedef NSImage * (^ImageProcessor)(NSImage *image, NSSize size);
 
-+(ImageProccessor)c_proccessor;
-
++(ImageProcessor)c_processor;
++(ImageProcessor)b_processor;
 @end

@@ -10,9 +10,6 @@
 #import "TGImageObject.h"
 @interface MessageTableItemPhoto : MessageTableItem
 
-@property (nonatomic, strong) TLFileLocation *photoLocation;
-
-@property (nonatomic) int photoSize;
 
 @property (nonatomic,strong) TGImageObject *imageObject;
 

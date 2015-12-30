@@ -14,6 +14,7 @@
 
 @interface TGPicItemView : TMView
 @property (nonatomic,strong) TGImageView *imageView;
+@property (nonatomic,assign) NSSize size;
 @end
 
 
@@ -39,11 +40,7 @@ static NSImage *tgContextPicCap() {
 -(instancetype)initWithFrame:(NSRect)frameRect {
     if(self = [super initWithFrame:frameRect]) {
         _imageView = [[TGImageView alloc] initWithFrame:NSZeroRect];
-        
-        NSImage *image = [tgContextPicCap() copy];
-        image.size = _imageView.frame.size;
-        [_imageView setImage:image];
-        
+
         self.wantsLayer = YES;
         self.layer.borderColor = [NSColor whiteColor].CGColor;
         self.layer.borderWidth = 1;
@@ -55,7 +52,14 @@ static NSImage *tgContextPicCap() {
 
 
 -(void)setSize:(NSSize)size {
+    _size = size;
     [_imageView setFrame:NSMakeRect(MIN(- roundf((size.width - NSWidth(self.frame))/2),0), MIN(- roundf((size.height - NSHeight(self.frame))/2),0), size.width, size.height)];
+}
+
+-(void)setFrameSize:(NSSize)newSize {
+    [super setFrameSize:newSize];
+    
+     [_imageView setFrame:NSMakeRect(MIN(- roundf((_size.width - NSWidth(self.frame))/2),0), MIN(- roundf((_size.height - NSHeight(self.frame))/2),0), _size.width, _size.height)];
 }
 
 @end
@@ -157,6 +161,12 @@ static NSImage *tgContextPicCap() {
 -(void)setSize:(NSSize)size {
     _size = size;
     [_player setFrame:NSMakeRect(MIN(- roundf((size.width - NSWidth(self.frame))/2),0), MIN(- roundf((size.height - NSHeight(self.frame))/2),0), MAX(size.width,NSWidth(self.frame)), MAX(size.height,NSHeight(self.frame)))];
+}
+
+-(void)setFrameSize:(NSSize)newSize {
+    [super setFrameSize:newSize];
+    
+    [_player setFrame:NSMakeRect(MIN(- roundf((_size.width - NSWidth(self.frame))/2),0), MIN(- roundf((_size.height - NSHeight(self.frame))/2),0), MAX(_size.width,NSWidth(self.frame)), MAX(_size.height,NSHeight(self.frame)))];
 }
 
 -(void)setBotResult:(TLBotContextResult *)botResult {
@@ -299,12 +309,15 @@ static NSImage *tgContextPicCap() {
         
         [self removeScrollEvent];
         [_player setPath:nil];
+        _prevState = NO;
         [self.downloadItem removeEvent:_downloadEventListener];
         
     } else {
         [self addScrollEvent];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_didScrolledTableView:) name:NSWindowDidBecomeKeyNotification object:self.window];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_didScrolledTableView:) name:NSWindowDidResignKeyNotification object:self.window];
+        
+        [self _didScrolledTableView:nil];
     }
 }
 
@@ -411,22 +424,6 @@ static NSImage *tgContextPicCap() {
     
     [self removeAllSubviews];
     
-    if(self.subviews.count > item.gifs.count) {
-        
-        NSRange range = NSMakeRange(item.gifs.count, self.subviews.count - item.gifs.count);
-
-
-        NSArray *copy = [self.subviews copy];
-        
-        [copy enumerateObjectsAtIndexes:[NSIndexSet indexSetWithIndexesInRange:range] options:0 usingBlock:^(__kindof NSView * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-            
-            [obj removeFromSuperview];
-            
-        }];
-        
-        assert(self.subviews.count == item.gifs.count);
-    }
-    
     
     
     __block int x = 0;
@@ -498,6 +495,7 @@ static NSImage *tgContextPicCap() {
             container = nil;
         }
         
+        container.autoresizingMask = NSViewWidthSizable | NSViewMinXMargin | NSViewMaxXMargin;
         if(container != nil) {
             
             x+= NSWidth(container.frame);
@@ -505,8 +503,6 @@ static NSImage *tgContextPicCap() {
         
     }];
     
-    
-    int bp = 0;
     
     assert(self.subviews.count == item.gifs.count);
 }
@@ -664,9 +660,19 @@ static NSImage *tgContextPicCap() {
     
 }
 
+-(void)viewDidEndLiveResize {
+    [super viewDidEndLiveResize];
+    
+    NSArray *items = [_items copy];
+    
+    [self clear];
+    [self drawResponse:items];
+}
+
 
 -(void)clear {
-    [self removeAllItems:YES];
+    [self removeAllItems:NO];
+    [self reloadData];
     _items = [NSMutableArray array];
 }
 
@@ -733,6 +739,10 @@ static NSImage *tgContextPicCap() {
     }
     
 }
+
+
+
+
 
 -(void)draw {
     

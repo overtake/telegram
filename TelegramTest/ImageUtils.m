@@ -597,14 +597,23 @@ NSSize convertSize(NSSize from, NSSize maxSize)  {
     return from;
 }
 
-NSImage * (^c_proccessor)(NSImage *, NSSize size) =  ^NSImage* (NSImage *image,NSSize size){
+NSImage * (^c_processor)(NSImage *, NSSize size) =  ^NSImage* (NSImage *image,NSSize size){
     return cropCenterWithSize(image, size);
 };
 
-+(ImageProccessor)c_proccessor {
-    return c_proccessor;
+
+NSImage * (^b_processor)(NSImage *, NSSize size) =  ^NSImage* (NSImage *image,NSSize size){
+    return [ImageUtils blurImage:image blurRadius:20 frameSize:size];;
+};
+
+
++(ImageProcessor)c_processor {
+    return c_processor;
 }
 
++(ImageProcessor)b_processor {
+    return b_processor;
+}
 
 NSSize resizeToMaxCorner(NSSize from, float size) {
     NSSize newSize;

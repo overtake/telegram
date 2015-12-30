@@ -54,8 +54,8 @@
                 
                 NSImage *image;
                 
-                if(self.imageProccessor) {
-                    image = self.imageProccessor(responseObject,self.imageSize);
+                if(self.imageProcessor) {
+                    image = self.imageProcessor(responseObject,self.imageSize);
                 } else {
                     image = renderedImage(responseObject, self.imageSize);
                 }

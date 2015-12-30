@@ -11,7 +11,7 @@
 
 @implementation ContextBotSenderItem
 
--(id)initWithBotContextResult:(TLBotContextResult *)result via_bot_id:(int)via_bot_id queryId:(long)queryId conversation:(TL_conversation *)conversation {
+-(id)initWithBotContextResult:(TLBotContextResult *)result via_bot_id:(int)via_bot_id queryId:(long)queryId additionFlags:(int)additionFlags conversation:(TL_conversation *)conversation {
     if(self = [super initWithConversation:conversation]) {
         
         TLMessageMedia *media = [TL_messageMediaBotResult createWithBot_result:result query_id:queryId];
@@ -21,6 +21,9 @@
         self.message.entities = result.send_message.entities;
         
         [self.message setVia_bot_id:via_bot_id];
+        
+        if(additionFlags & (1 << 4))
+            self.message.from_id = 0;
         
         [self.message save:YES];
         
@@ -56,7 +59,7 @@
         
     } errorHandler:^(id request, RpcError *error) {
         
-        if([error.error_msg isEqualToString:@"CONTEXT_RESULT_EXPIRED"]) {
+        if(error.error_code == 400) {
             [self cancel];
         } else {
             self.message.dstate = DeliveryStateError;

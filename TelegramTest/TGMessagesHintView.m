@@ -493,11 +493,15 @@ DYNAMIC_PROPERTY(DUser);
         
         dispatch_block_t performQuery = ^{
             
+            [self.messagesViewController.bottomView setProgress:offset.length == 0];
+            
             _isLockedWithRequest = YES;
 
             [_contextRequest cancelRequest];
             
             _contextRequest = [RPCRequest sendRequest:[TLAPI_messages_getContextBotResults createWithBot:user.inputUser query:query offset:offset] successHandler:^(id request, TL_messages_botResults *response) {
+                
+                [self.messagesViewController.bottomView setProgress:NO];
                 
                 if(self.messagesViewController.conversation == conversation && request == _contextRequest) {
                     

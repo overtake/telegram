@@ -70,7 +70,7 @@
         } else if(botResult.thumb_url.length > 0) {
             _imageObject = [[TGExternalImageObject alloc] initWithURL:botResult.thumb_url];
             _imageObject.imageSize = NSMakeSize(60, 60);
-            _imageObject.imageProccessor = [ImageUtils c_proccessor];
+            _imageObject.imageProcessor = [ImageUtils c_processor];
         }
 
     }

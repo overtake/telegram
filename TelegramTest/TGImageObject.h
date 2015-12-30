@@ -28,6 +28,6 @@
 
 @interface TGImageObject : ImageObject
 
-@property (nonatomic,assign) ImageProccessor imageProccessor;
+@property (nonatomic,assign) ImageProcessor imageProcessor;
 
 @end

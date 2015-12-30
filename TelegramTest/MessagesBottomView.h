@@ -43,7 +43,7 @@ typedef enum {
 - (void)setSectedMessagesCount:(NSUInteger)count enable:(BOOL)enable;
 
 -(void)closeEmoji;
-
+-(void)setProgress:(BOOL)progress;
 -(void)updateReplayMessage:(BOOL)updateHeight animated:(BOOL)animated;
 -(void)updateFwdMessage:(BOOL)updateHeight animated:(BOOL)animated;
 
