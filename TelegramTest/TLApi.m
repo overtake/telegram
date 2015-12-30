@@ -2,7 +2,7 @@
 //  TLApi.m
 //  Telegram
 //
-//  Auto created by Mikhail Filimonov on 29.12.15..
+//  Auto created by Mikhail Filimonov on 30.12.15..
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -2589,16 +2589,16 @@
 }
 @end
 
-@implementation TLAPI_messages_getContextBotResults
-+(TLAPI_messages_getContextBotResults*)createWithBot:(TLInputUser*)bot query:(NSString*)query offset:(NSString*)offset {
-    TLAPI_messages_getContextBotResults* obj = [[TLAPI_messages_getContextBotResults alloc] init];
+@implementation TLAPI_messages_getInlineBotResults
++(TLAPI_messages_getInlineBotResults*)createWithBot:(TLInputUser*)bot query:(NSString*)query offset:(NSString*)offset {
+    TLAPI_messages_getInlineBotResults* obj = [[TLAPI_messages_getInlineBotResults alloc] init];
     obj.bot = bot;
 	obj.query = query;
 	obj.offset = offset;
     return obj;
 }
 - (NSData*)getData {
-	SerializedData* stream = [ClassStore streamWithConstuctor:921161836];
+	SerializedData* stream = [ClassStore streamWithConstuctor:-1826332659];
 	[ClassStore TLSerialize:self.bot stream:stream];
 	[stream writeString:self.query];
 	[stream writeString:self.offset];
@@ -2606,9 +2606,9 @@
 }
 @end
 
-@implementation TLAPI_messages_setContextBotResults
-+(TLAPI_messages_setContextBotResults*)createWithFlags:(int)flags   query_id:(long)query_id results:(NSMutableArray*)results cache_time:(int)cache_time next_offset:(NSString*)next_offset {
-    TLAPI_messages_setContextBotResults* obj = [[TLAPI_messages_setContextBotResults alloc] init];
+@implementation TLAPI_messages_setInlineBotResults
++(TLAPI_messages_setInlineBotResults*)createWithFlags:(int)flags   query_id:(long)query_id results:(NSMutableArray*)results cache_time:(int)cache_time next_offset:(NSString*)next_offset {
+    TLAPI_messages_setInlineBotResults* obj = [[TLAPI_messages_setInlineBotResults alloc] init];
     obj.flags = flags;
 	
 	
@@ -2619,7 +2619,7 @@
     return obj;
 }
 - (NSData*)getData {
-	SerializedData* stream = [ClassStore streamWithConstuctor:-671949297];
+	SerializedData* stream = [ClassStore streamWithConstuctor:1059318802];
 	[stream writeInt:self.flags];
 	
 	
@@ -2630,7 +2630,7 @@
 		NSInteger tl_count = [self.results count];
 		[stream writeInt:(int)tl_count];
 		for(int i = 0; i < (int)tl_count; i++) {
-            TLInputBotContextResult* obj = [self.results objectAtIndex:i];
+            TLInputBotInlineResult* obj = [self.results objectAtIndex:i];
             [ClassStore TLSerialize:obj stream:stream];
 		}
 	}
@@ -2640,9 +2640,9 @@
 }
 @end
 
-@implementation TLAPI_messages_sendContextBotResult
-+(TLAPI_messages_sendContextBotResult*)createWithFlags:(int)flags  peer:(TLInputPeer*)peer reply_to_msg_id:(int)reply_to_msg_id random_id:(long)random_id query_id:(long)query_id n_id:(NSString*)n_id {
-    TLAPI_messages_sendContextBotResult* obj = [[TLAPI_messages_sendContextBotResult alloc] init];
+@implementation TLAPI_messages_sendInlineBotResult
++(TLAPI_messages_sendInlineBotResult*)createWithFlags:(int)flags  peer:(TLInputPeer*)peer reply_to_msg_id:(int)reply_to_msg_id random_id:(long)random_id query_id:(long)query_id n_id:(NSString*)n_id {
+    TLAPI_messages_sendInlineBotResult* obj = [[TLAPI_messages_sendInlineBotResult alloc] init];
     obj.flags = flags;
 	
 	obj.peer = peer;
@@ -2653,7 +2653,7 @@
     return obj;
 }
 - (NSData*)getData {
-	SerializedData* stream = [ClassStore streamWithConstuctor:-1112292144];
+	SerializedData* stream = [ClassStore streamWithConstuctor:-1318189314];
 	[stream writeInt:self.flags];
 	
 	[ClassStore TLSerialize:self.peer stream:stream];

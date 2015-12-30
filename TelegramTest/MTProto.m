@@ -2,7 +2,7 @@
 //  MTProto.m
 //  Telegram
 //
-//  Auto created by Mikhail Filimonov on 29.12.15.
+//  Auto created by Mikhail Filimonov on 30.12.15.
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -3002,7 +3002,7 @@
 @end
 
 @implementation TL_user
-+(TL_user*)createWithFlags:(int)flags          n_id:(int)n_id access_hash:(long)access_hash first_name:(NSString*)first_name last_name:(NSString*)last_name username:(NSString*)username phone:(NSString*)phone photo:(TLUserProfilePhoto*)photo status:(TLUserStatus*)status bot_info_version:(int)bot_info_version restriction_reason:(NSString*)restriction_reason bot_context_placeholder:(NSString*)bot_context_placeholder {
++(TL_user*)createWithFlags:(int)flags          n_id:(int)n_id access_hash:(long)access_hash first_name:(NSString*)first_name last_name:(NSString*)last_name username:(NSString*)username phone:(NSString*)phone photo:(TLUserProfilePhoto*)photo status:(TLUserStatus*)status bot_info_version:(int)bot_info_version restriction_reason:(NSString*)restriction_reason bot_inline_placeholder:(NSString*)bot_inline_placeholder {
 	TL_user* obj = [[TL_user alloc] init];
 	obj.flags = flags;
 	
@@ -3024,7 +3024,7 @@
 	obj.status = status;
 	obj.bot_info_version = bot_info_version;
 	obj.restriction_reason = restriction_reason;
-	obj.bot_context_placeholder = bot_context_placeholder;
+	obj.bot_inline_placeholder = bot_inline_placeholder;
 	return obj;
 }
 -(void)serialize:(SerializedData*)stream {
@@ -3048,7 +3048,7 @@
 	if(self.flags & (1 << 6)) {[ClassStore TLSerialize:self.status stream:stream];}
 	if(self.flags & (1 << 14)) {[stream writeInt:self.bot_info_version];}
 	if(self.flags & (1 << 18)) {[stream writeString:self.restriction_reason];}
-	if(self.flags & (1 << 19)) {[stream writeString:self.bot_context_placeholder];}
+	if(self.flags & (1 << 19)) {[stream writeString:self.bot_inline_placeholder];}
 }
 -(void)unserialize:(SerializedData*)stream {
 	super.flags = [stream readInt];
@@ -3071,7 +3071,7 @@
 	if(self.flags & (1 << 6)) {self.status = [ClassStore TLDeserialize:stream];}
 	if(self.flags & (1 << 14)) {super.bot_info_version = [stream readInt];}
 	if(self.flags & (1 << 18)) {super.restriction_reason = [stream readString];}
-	if(self.flags & (1 << 19)) {super.bot_context_placeholder = [stream readString];}
+	if(self.flags & (1 << 19)) {super.bot_inline_placeholder = [stream readString];}
 }
         
 -(TL_user *)copy {
@@ -3098,7 +3098,7 @@
     objc.status = [self.status copy];
     objc.bot_info_version = self.bot_info_version;
     objc.restriction_reason = self.restriction_reason;
-    objc.bot_context_placeholder = self.bot_context_placeholder;
+    objc.bot_inline_placeholder = self.bot_inline_placeholder;
     
     return objc;
 }
@@ -3191,11 +3191,11 @@
                 
     if(super.restriction_reason == nil)  { super.flags&= ~ (1 << 18) ;} else { super.flags|= (1 << 18); }
 }            
--(void)setBot_context_placeholder:(NSString*)bot_context_placeholder
+-(void)setBot_inline_placeholder:(NSString*)bot_inline_placeholder
 {
-   super.bot_context_placeholder = bot_context_placeholder;
+   super.bot_inline_placeholder = bot_inline_placeholder;
                 
-    if(super.bot_context_placeholder == nil)  { super.flags&= ~ (1 << 19) ;} else { super.flags|= (1 << 19); }
+    if(super.bot_inline_placeholder == nil)  { super.flags&= ~ (1 << 19) ;} else { super.flags|= (1 << 19); }
 }
         
 @end
@@ -6552,7 +6552,7 @@
 @end
 
 @implementation TL_messageMediaBotResult
-+(TL_messageMediaBotResult*)createWithBot_result:(TLBotContextResult*)bot_result query_id:(long)query_id {
++(TL_messageMediaBotResult*)createWithBot_result:(TLBotInlineResult*)bot_result query_id:(long)query_id {
 	TL_messageMediaBotResult* obj = [[TL_messageMediaBotResult alloc] init];
 	obj.bot_result = bot_result;
 	obj.query_id = query_id;
@@ -13247,9 +13247,9 @@
         
 @end
 
-@implementation TL_updateBotContextQuery
-+(TL_updateBotContextQuery*)createWithQuery_id:(long)query_id user_id:(int)user_id query:(NSString*)query offset:(NSString*)offset {
-	TL_updateBotContextQuery* obj = [[TL_updateBotContextQuery alloc] init];
+@implementation TL_updateBotInlineQuery
++(TL_updateBotInlineQuery*)createWithQuery_id:(long)query_id user_id:(int)user_id query:(NSString*)query offset:(NSString*)offset {
+	TL_updateBotInlineQuery* obj = [[TL_updateBotInlineQuery alloc] init];
 	obj.query_id = query_id;
 	obj.user_id = user_id;
 	obj.query = query;
@@ -13269,9 +13269,9 @@
 	super.offset = [stream readString];
 }
         
--(TL_updateBotContextQuery *)copy {
+-(TL_updateBotInlineQuery *)copy {
     
-    TL_updateBotContextQuery *objc = [[TL_updateBotContextQuery alloc] init];
+    TL_updateBotInlineQuery *objc = [[TL_updateBotInlineQuery alloc] init];
     
     objc.query_id = self.query_id;
     objc.user_id = self.user_id;
@@ -23598,18 +23598,21 @@
 @end
 
 @implementation TL_foundGifCached
-+(TL_foundGifCached*)createWithUrl:(NSString*)url document:(TLDocument*)document {
++(TL_foundGifCached*)createWithUrl:(NSString*)url photo:(TLPhoto*)photo document:(TLDocument*)document {
 	TL_foundGifCached* obj = [[TL_foundGifCached alloc] init];
 	obj.url = url;
+	obj.photo = photo;
 	obj.document = document;
 	return obj;
 }
 -(void)serialize:(SerializedData*)stream {
 	[stream writeString:self.url];
+	[ClassStore TLSerialize:self.photo stream:stream];
 	[ClassStore TLSerialize:self.document stream:stream];
 }
 -(void)unserialize:(SerializedData*)stream {
 	super.url = [stream readString];
+	self.photo = [ClassStore TLDeserialize:stream];
 	self.document = [ClassStore TLDeserialize:stream];
 }
         
@@ -23618,6 +23621,7 @@
     TL_foundGifCached *objc = [[TL_foundGifCached alloc] init];
     
     objc.url = self.url;
+    objc.photo = [self.photo copy];
     objc.document = [self.document copy];
     
     return objc;
@@ -23825,15 +23829,15 @@
         
 @end
 
-@implementation TLInputBotContextMessage
+@implementation TLInputBotInlineMessage
             
 -(BOOL)isNo_webpage {return NO;}
             
 @end
         
-@implementation TL_inputBotContextMessageMediaAuto
-+(TL_inputBotContextMessageMediaAuto*)createWithCaption:(NSString*)caption {
-	TL_inputBotContextMessageMediaAuto* obj = [[TL_inputBotContextMessageMediaAuto alloc] init];
+@implementation TL_inputBotInlineMessageMediaAuto
++(TL_inputBotInlineMessageMediaAuto*)createWithCaption:(NSString*)caption {
+	TL_inputBotInlineMessageMediaAuto* obj = [[TL_inputBotInlineMessageMediaAuto alloc] init];
 	obj.caption = caption;
 	return obj;
 }
@@ -23844,9 +23848,9 @@
 	super.caption = [stream readString];
 }
         
--(TL_inputBotContextMessageMediaAuto *)copy {
+-(TL_inputBotInlineMessageMediaAuto *)copy {
     
-    TL_inputBotContextMessageMediaAuto *objc = [[TL_inputBotContextMessageMediaAuto alloc] init];
+    TL_inputBotInlineMessageMediaAuto *objc = [[TL_inputBotInlineMessageMediaAuto alloc] init];
     
     objc.caption = self.caption;
     
@@ -23872,9 +23876,9 @@
         
 @end
 
-@implementation TL_inputBotContextMessageText
-+(TL_inputBotContextMessageText*)createWithFlags:(int)flags  message:(NSString*)message entities:(NSMutableArray*)entities {
-	TL_inputBotContextMessageText* obj = [[TL_inputBotContextMessageText alloc] init];
+@implementation TL_inputBotInlineMessageText
++(TL_inputBotInlineMessageText*)createWithFlags:(int)flags  message:(NSString*)message entities:(NSMutableArray*)entities {
+	TL_inputBotInlineMessageText* obj = [[TL_inputBotInlineMessageText alloc] init];
 	obj.flags = flags;
 	
 	obj.message = message;
@@ -23916,9 +23920,9 @@
 	}}
 }
         
--(TL_inputBotContextMessageText *)copy {
+-(TL_inputBotInlineMessageText *)copy {
     
-    TL_inputBotContextMessageText *objc = [[TL_inputBotContextMessageText alloc] init];
+    TL_inputBotInlineMessageText *objc = [[TL_inputBotInlineMessageText alloc] init];
     
     objc.flags = self.flags;
     
@@ -23955,13 +23959,13 @@
         
 @end
 
-@implementation TLInputBotContextResult
+@implementation TLInputBotInlineResult
 
 @end
         
-@implementation TL_inputBotContextResult
-+(TL_inputBotContextResult*)createWithFlags:(int)flags n_id:(NSString*)n_id type:(NSString*)type title:(NSString*)title n_description:(NSString*)n_description url:(NSString*)url thumb_url:(NSString*)thumb_url content_url:(NSString*)content_url content_type:(NSString*)content_type w:(int)w h:(int)h duration:(int)duration send_message:(TLInputBotContextMessage*)send_message {
-	TL_inputBotContextResult* obj = [[TL_inputBotContextResult alloc] init];
+@implementation TL_inputBotInlineResult
++(TL_inputBotInlineResult*)createWithFlags:(int)flags n_id:(NSString*)n_id type:(NSString*)type title:(NSString*)title n_description:(NSString*)n_description url:(NSString*)url thumb_url:(NSString*)thumb_url content_url:(NSString*)content_url content_type:(NSString*)content_type w:(int)w h:(int)h duration:(int)duration send_message:(TLInputBotInlineMessage*)send_message {
+	TL_inputBotInlineResult* obj = [[TL_inputBotInlineResult alloc] init];
 	obj.flags = flags;
 	obj.n_id = n_id;
 	obj.type = type;
@@ -24008,9 +24012,9 @@
 	self.send_message = [ClassStore TLDeserialize:stream];
 }
         
--(TL_inputBotContextResult *)copy {
+-(TL_inputBotInlineResult *)copy {
     
-    TL_inputBotContextResult *objc = [[TL_inputBotContextResult alloc] init];
+    TL_inputBotInlineResult *objc = [[TL_inputBotInlineResult alloc] init];
     
     objc.flags = self.flags;
     objc.n_id = self.n_id;
@@ -24102,15 +24106,15 @@
         
 @end
 
-@implementation TLBotContextMessage
+@implementation TLBotInlineMessage
             
 -(BOOL)isNo_webpage {return NO;}
             
 @end
         
-@implementation TL_botContextMessageMediaAuto
-+(TL_botContextMessageMediaAuto*)createWithCaption:(NSString*)caption {
-	TL_botContextMessageMediaAuto* obj = [[TL_botContextMessageMediaAuto alloc] init];
+@implementation TL_botInlineMessageMediaAuto
++(TL_botInlineMessageMediaAuto*)createWithCaption:(NSString*)caption {
+	TL_botInlineMessageMediaAuto* obj = [[TL_botInlineMessageMediaAuto alloc] init];
 	obj.caption = caption;
 	return obj;
 }
@@ -24121,9 +24125,9 @@
 	super.caption = [stream readString];
 }
         
--(TL_botContextMessageMediaAuto *)copy {
+-(TL_botInlineMessageMediaAuto *)copy {
     
-    TL_botContextMessageMediaAuto *objc = [[TL_botContextMessageMediaAuto alloc] init];
+    TL_botInlineMessageMediaAuto *objc = [[TL_botInlineMessageMediaAuto alloc] init];
     
     objc.caption = self.caption;
     
@@ -24149,9 +24153,9 @@
         
 @end
 
-@implementation TL_botContextMessageText
-+(TL_botContextMessageText*)createWithFlags:(int)flags  message:(NSString*)message entities:(NSMutableArray*)entities {
-	TL_botContextMessageText* obj = [[TL_botContextMessageText alloc] init];
+@implementation TL_botInlineMessageText
++(TL_botInlineMessageText*)createWithFlags:(int)flags  message:(NSString*)message entities:(NSMutableArray*)entities {
+	TL_botInlineMessageText* obj = [[TL_botInlineMessageText alloc] init];
 	obj.flags = flags;
 	
 	obj.message = message;
@@ -24193,9 +24197,9 @@
 	}}
 }
         
--(TL_botContextMessageText *)copy {
+-(TL_botInlineMessageText *)copy {
     
-    TL_botContextMessageText *objc = [[TL_botContextMessageText alloc] init];
+    TL_botInlineMessageText *objc = [[TL_botInlineMessageText alloc] init];
     
     objc.flags = self.flags;
     
@@ -24232,13 +24236,13 @@
         
 @end
 
-@implementation TLBotContextResult
+@implementation TLBotInlineResult
 
 @end
         
-@implementation TL_botContextMediaResultDocument
-+(TL_botContextMediaResultDocument*)createWithN_id:(NSString*)n_id type:(NSString*)type document:(TLDocument*)document send_message:(TLBotContextMessage*)send_message {
-	TL_botContextMediaResultDocument* obj = [[TL_botContextMediaResultDocument alloc] init];
+@implementation TL_botInlineMediaResultDocument
++(TL_botInlineMediaResultDocument*)createWithN_id:(NSString*)n_id type:(NSString*)type document:(TLDocument*)document send_message:(TLBotInlineMessage*)send_message {
+	TL_botInlineMediaResultDocument* obj = [[TL_botInlineMediaResultDocument alloc] init];
 	obj.n_id = n_id;
 	obj.type = type;
 	obj.document = document;
@@ -24258,9 +24262,9 @@
 	self.send_message = [ClassStore TLDeserialize:stream];
 }
         
--(TL_botContextMediaResultDocument *)copy {
+-(TL_botInlineMediaResultDocument *)copy {
     
-    TL_botContextMediaResultDocument *objc = [[TL_botContextMediaResultDocument alloc] init];
+    TL_botInlineMediaResultDocument *objc = [[TL_botInlineMediaResultDocument alloc] init];
     
     objc.n_id = self.n_id;
     objc.type = self.type;
@@ -24289,9 +24293,9 @@
         
 @end
 
-@implementation TL_botContextMediaResultPhoto
-+(TL_botContextMediaResultPhoto*)createWithN_id:(NSString*)n_id type:(NSString*)type photo:(TLPhoto*)photo send_message:(TLBotContextMessage*)send_message {
-	TL_botContextMediaResultPhoto* obj = [[TL_botContextMediaResultPhoto alloc] init];
+@implementation TL_botInlineMediaResultPhoto
++(TL_botInlineMediaResultPhoto*)createWithN_id:(NSString*)n_id type:(NSString*)type photo:(TLPhoto*)photo send_message:(TLBotInlineMessage*)send_message {
+	TL_botInlineMediaResultPhoto* obj = [[TL_botInlineMediaResultPhoto alloc] init];
 	obj.n_id = n_id;
 	obj.type = type;
 	obj.photo = photo;
@@ -24311,9 +24315,9 @@
 	self.send_message = [ClassStore TLDeserialize:stream];
 }
         
--(TL_botContextMediaResultPhoto *)copy {
+-(TL_botInlineMediaResultPhoto *)copy {
     
-    TL_botContextMediaResultPhoto *objc = [[TL_botContextMediaResultPhoto alloc] init];
+    TL_botInlineMediaResultPhoto *objc = [[TL_botInlineMediaResultPhoto alloc] init];
     
     objc.n_id = self.n_id;
     objc.type = self.type;
@@ -24342,9 +24346,9 @@
         
 @end
 
-@implementation TL_botContextResult
-+(TL_botContextResult*)createWithFlags:(int)flags n_id:(NSString*)n_id type:(NSString*)type title:(NSString*)title n_description:(NSString*)n_description url:(NSString*)url thumb_url:(NSString*)thumb_url content_url:(NSString*)content_url content_type:(NSString*)content_type w:(int)w h:(int)h duration:(int)duration send_message:(TLBotContextMessage*)send_message {
-	TL_botContextResult* obj = [[TL_botContextResult alloc] init];
+@implementation TL_botInlineResult
++(TL_botInlineResult*)createWithFlags:(int)flags n_id:(NSString*)n_id type:(NSString*)type title:(NSString*)title n_description:(NSString*)n_description url:(NSString*)url thumb_url:(NSString*)thumb_url content_url:(NSString*)content_url content_type:(NSString*)content_type w:(int)w h:(int)h duration:(int)duration send_message:(TLBotInlineMessage*)send_message {
+	TL_botInlineResult* obj = [[TL_botInlineResult alloc] init];
 	obj.flags = flags;
 	obj.n_id = n_id;
 	obj.type = type;
@@ -24391,9 +24395,9 @@
 	self.send_message = [ClassStore TLDeserialize:stream];
 }
         
--(TL_botContextResult *)copy {
+-(TL_botInlineResult *)copy {
     
-    TL_botContextResult *objc = [[TL_botContextResult alloc] init];
+    TL_botInlineResult *objc = [[TL_botInlineResult alloc] init];
     
     objc.flags = self.flags;
     objc.n_id = self.n_id;
@@ -24487,7 +24491,7 @@
 
 @implementation TLmessages_BotResults
             
--(BOOL)isMedia {return NO;}
+-(BOOL)isGallery {return NO;}
             
 @end
         
@@ -24512,7 +24516,7 @@
 		NSInteger tl_count = [self.results count];
 		[stream writeInt:(int)tl_count];
 		for(int i = 0; i < (int)tl_count; i++) {
-            TLBotContextResult* obj = [self.results objectAtIndex:i];
+            TLBotInlineResult* obj = [self.results objectAtIndex:i];
             [ClassStore TLSerialize:obj stream:stream];
 		}
 	}
@@ -24529,8 +24533,8 @@
 			self.results = [[NSMutableArray alloc] init];
 		int count = [stream readInt];
 		for(int i = 0; i < count; i++) {
-			TLBotContextResult* obj = [ClassStore TLDeserialize:stream];
-            if(obj != nil && [obj isKindOfClass:[TLBotContextResult class]])
+			TLBotInlineResult* obj = [ClassStore TLDeserialize:stream];
+            if(obj != nil && [obj isKindOfClass:[TLBotInlineResult class]])
                  [self.results addObject:obj];
             else
                 break;
@@ -24567,7 +24571,7 @@
 }
         
             
--(BOOL)isMedia {return (self.flags & (1 << 0)) > 0;}
+-(BOOL)isGallery {return (self.flags & (1 << 0)) > 0;}
                         
 -(void)setNext_offset:(NSString*)next_offset
 {

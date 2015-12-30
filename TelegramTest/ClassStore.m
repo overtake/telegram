@@ -3,7 +3,7 @@
 //  ClassStore.m
 //  Telegram
 //
-    //  Created by keepcoder on 29.12.15.
+    //  Created by keepcoder on 30.12.15.
 //  Copyright (c) 2015 keepcoder. All rights reserved.
 //
 
@@ -447,7 +447,7 @@ static NSMutableDictionary *cs_constuctors;
    [cs_classes setObject:[TL_inputStickerSetShortName class] forKey:[NSNumber numberWithInt:-2044933984]];
    [cs_classes setObject:[TL_stickerSet class] forKey:[NSNumber numberWithInt:-852477119]];
    [cs_classes setObject:[TL_messages_stickerSet class] forKey:[NSNumber numberWithInt:-1240849242]];
-   [cs_classes setObject:[TL_user class] forKey:[NSNumber numberWithInt:-883471244]];
+   [cs_classes setObject:[TL_user class] forKey:[NSNumber numberWithInt:-787638374]];
    [cs_classes setObject:[TL_botCommand class] forKey:[NSNumber numberWithInt:-1032140601]];
    [cs_classes setObject:[TL_botInfoEmpty class] forKey:[NSNumber numberWithInt:-1154598962]];
    [cs_classes setObject:[TL_botInfo class] forKey:[NSNumber numberWithInt:164583517]];
@@ -524,22 +524,22 @@ static NSMutableDictionary *cs_constuctors;
    [cs_classes setObject:[TL_updateStickerSetsOrder class] forKey:[NSNumber numberWithInt:-253774767]];
    [cs_classes setObject:[TL_updateStickerSets class] forKey:[NSNumber numberWithInt:1135492588]];
    [cs_classes setObject:[TL_foundGif class] forKey:[NSNumber numberWithInt:372165663]];
-   [cs_classes setObject:[TL_foundGifCached class] forKey:[NSNumber numberWithInt:-33661363]];
+   [cs_classes setObject:[TL_foundGifCached class] forKey:[NSNumber numberWithInt:-1670052855]];
    [cs_classes setObject:[TL_inputMediaGifExternal class] forKey:[NSNumber numberWithInt:1212395773]];
    [cs_classes setObject:[TL_messages_foundGifs class] forKey:[NSNumber numberWithInt:1158290442]];
    [cs_classes setObject:[TL_messages_savedGifsNotModified class] forKey:[NSNumber numberWithInt:-402498398]];
    [cs_classes setObject:[TL_messages_savedGifs class] forKey:[NSNumber numberWithInt:772213157]];
    [cs_classes setObject:[TL_updateSavedGifs class] forKey:[NSNumber numberWithInt:-1821035490]];
-   [cs_classes setObject:[TL_inputBotContextMessageMediaAuto class] forKey:[NSNumber numberWithInt:289171347]];
-   [cs_classes setObject:[TL_inputBotContextMessageText class] forKey:[NSNumber numberWithInt:1384328278]];
-   [cs_classes setObject:[TL_inputBotContextResult class] forKey:[NSNumber numberWithInt:1926804283]];
-   [cs_classes setObject:[TL_botContextMessageMediaAuto class] forKey:[NSNumber numberWithInt:-1444136701]];
-   [cs_classes setObject:[TL_botContextMessageText class] forKey:[NSNumber numberWithInt:783711624]];
-   [cs_classes setObject:[TL_botContextMediaResultDocument class] forKey:[NSNumber numberWithInt:959364681]];
-   [cs_classes setObject:[TL_botContextMediaResultPhoto class] forKey:[NSNumber numberWithInt:329048887]];
-   [cs_classes setObject:[TL_botContextResult class] forKey:[NSNumber numberWithInt:1352847055]];
-   [cs_classes setObject:[TL_messages_botResults class] forKey:[NSNumber numberWithInt:1999061169]];
-   [cs_classes setObject:[TL_updateBotContextQuery class] forKey:[NSNumber numberWithInt:-1823749610]];
+   [cs_classes setObject:[TL_inputBotInlineMessageMediaAuto class] forKey:[NSNumber numberWithInt:776201607]];
+   [cs_classes setObject:[TL_inputBotInlineMessageText class] forKey:[NSNumber numberWithInt:-1376723087]];
+   [cs_classes setObject:[TL_inputBotInlineResult class] forKey:[NSNumber numberWithInt:750510426]];
+   [cs_classes setObject:[TL_botInlineMessageMediaAuto class] forKey:[NSNumber numberWithInt:-61413251]];
+   [cs_classes setObject:[TL_botInlineMessageText class] forKey:[NSNumber numberWithInt:-1520330839]];
+   [cs_classes setObject:[TL_botInlineMediaResultDocument class] forKey:[NSNumber numberWithInt:-124267714]];
+   [cs_classes setObject:[TL_botInlineMediaResultPhoto class] forKey:[NSNumber numberWithInt:-984447609]];
+   [cs_classes setObject:[TL_botInlineResult class] forKey:[NSNumber numberWithInt:-1679053127]];
+   [cs_classes setObject:[TL_messages_botResults class] forKey:[NSNumber numberWithInt:292597923]];
+   [cs_classes setObject:[TL_updateBotInlineQuery class] forKey:[NSNumber numberWithInt:-1071715832]];
    [cs_classes setObject:[TL_userSelf class] forKey:[NSNumber numberWithInt:476112392]];
    [cs_classes setObject:[TL_userContact class] forKey:[NSNumber numberWithInt:-894214632]];
    [cs_classes setObject:[TL_userRequest class] forKey:[NSNumber numberWithInt:-640891665]];

@@ -10,6 +10,6 @@
 
 @interface ContextBotSenderItem : SenderItem
 
--(id)initWithBotContextResult:(TLBotContextResult *)result via_bot_id:(int)via_bot_id queryId:(long)queryId additionFlags:(int)additionFlags conversation:(TL_conversation *)conversation;
+-(id)initWithBotContextResult:(TLBotInlineResult *)result via_bot_id:(int)via_bot_id queryId:(long)queryId additionFlags:(int)additionFlags conversation:(TL_conversation *)conversation;
 
 @end

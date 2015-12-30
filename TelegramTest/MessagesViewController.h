@@ -141,7 +141,7 @@ typedef enum {
 - (void)sendSecretTTL:(int)ttl forConversation:(TL_conversation *)conversation callback:(dispatch_block_t)callback;
 - (void)sendFoundGif:(TLMessageMedia *)media forConversation:(TL_conversation *)conversation;
 - (void)sendCompressedItem:(TGCompressItem *)compressedItem;
-- (void)sendContextBotResult:(TLBotContextResult *)botContextResult via_bot_id:(int)via_bot_id queryId:(long)queryId forConversation:(TL_conversation *)conversation;
+- (void)sendContextBotResult:(TLBotInlineResult *)botContextResult via_bot_id:(int)via_bot_id queryId:(long)queryId forConversation:(TL_conversation *)conversation;
 
 - (NSArray *)messageTableItemsFromMessages:(NSArray *)input;
 

@@ -3200,7 +3200,7 @@ static NSTextAttachment *headerMediaIcon() {
 
 }
 
-- (void)sendContextBotResult:(TLBotContextResult *)botContextResult via_bot_id:(int)via_bot_id queryId:(long)queryId forConversation:(TL_conversation *)conversation {
+- (void)sendContextBotResult:(TLBotInlineResult *)botContextResult via_bot_id:(int)via_bot_id queryId:(long)queryId forConversation:(TL_conversation *)conversation {
    
     int additionFlags = [self senderFlags];
     

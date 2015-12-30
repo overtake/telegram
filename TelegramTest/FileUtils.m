@@ -169,10 +169,10 @@ NSString* mediaFilePath(TL_localMessage *message) {
     }
     
     if([message.media isKindOfClass:[TL_messageMediaBotResult class]]) {
-        if([message.media.bot_result isKindOfClass:[TL_botContextMediaResultPhoto class]]) {
+        if([message.media.bot_result isKindOfClass:[TL_botInlineMediaResultPhoto class]]) {
             TL_photoSize *size = [message.media.bot_result.photo.sizes lastObject];
             return locationFilePath(size.location, @"jpg");
-        } else if([message.media.bot_result isKindOfClass:[TL_botContextMediaResultDocument class]]) {
+        } else if([message.media.bot_result isKindOfClass:[TL_botInlineMediaResultDocument class]]) {
             
             NSRange srange = [message.media.bot_result.document.mime_type rangeOfString:@"/"];
             

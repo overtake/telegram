@@ -2,7 +2,7 @@
 //  TLApi.h
 //  Telegram
 //
-//  Auto created by Mikhail Filimonov on 29.12.15.
+//  Auto created by Mikhail Filimonov on 30.12.15.
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -1091,27 +1091,27 @@
 +(TLAPI_messages_saveGif*)createWithN_id:(TLInputDocument*)n_id unsave:(Boolean)unsave;
 @end
 
-@interface TLAPI_messages_getContextBotResults : TLApiObject
+@interface TLAPI_messages_getInlineBotResults : TLApiObject
 @property (nonatomic, strong) TLInputUser* bot;
 @property (nonatomic, strong) NSString* query;
 @property (nonatomic, strong) NSString* offset;
 
-+(TLAPI_messages_getContextBotResults*)createWithBot:(TLInputUser*)bot query:(NSString*)query offset:(NSString*)offset;
++(TLAPI_messages_getInlineBotResults*)createWithBot:(TLInputUser*)bot query:(NSString*)query offset:(NSString*)offset;
 @end
 
-@interface TLAPI_messages_setContextBotResults : TLApiObject
+@interface TLAPI_messages_setInlineBotResults : TLApiObject
 @property int flags;
-@property (nonatomic,assign,readonly) BOOL isMedia;
+@property (nonatomic,assign,readonly) BOOL isGallery;
 @property (nonatomic,assign,readonly) BOOL isPrivate;
 @property long query_id;
 @property (nonatomic, strong) NSMutableArray* results;
 @property int cache_time;
 @property (nonatomic, strong) NSString* next_offset;
 
-+(TLAPI_messages_setContextBotResults*)createWithFlags:(int)flags   query_id:(long)query_id results:(NSMutableArray*)results cache_time:(int)cache_time next_offset:(NSString*)next_offset;
++(TLAPI_messages_setInlineBotResults*)createWithFlags:(int)flags   query_id:(long)query_id results:(NSMutableArray*)results cache_time:(int)cache_time next_offset:(NSString*)next_offset;
 @end
 
-@interface TLAPI_messages_sendContextBotResult : TLApiObject
+@interface TLAPI_messages_sendInlineBotResult : TLApiObject
 @property int flags;
 @property (nonatomic,assign,readonly) BOOL isBroadcast;
 @property (nonatomic, strong) TLInputPeer* peer;
@@ -1120,6 +1120,6 @@
 @property long query_id;
 @property (nonatomic, strong) NSString* n_id;
 
-+(TLAPI_messages_sendContextBotResult*)createWithFlags:(int)flags  peer:(TLInputPeer*)peer reply_to_msg_id:(int)reply_to_msg_id random_id:(long)random_id query_id:(long)query_id n_id:(NSString*)n_id;
++(TLAPI_messages_sendInlineBotResult*)createWithFlags:(int)flags  peer:(TLInputPeer*)peer reply_to_msg_id:(int)reply_to_msg_id random_id:(long)random_id query_id:(long)query_id n_id:(NSString*)n_id;
 @end
 

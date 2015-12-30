@@ -446,7 +446,7 @@ DYNAMIC_PROPERTY(DUser);
     
     [users enumerateObjectsUsingBlock:^(TLUser *obj, NSUInteger idx, BOOL *stop) {
         
-        TGMessagesHintRowItem *item = [[TGMessagesHintRowItem alloc] initWithImageObject:obj text:obj.bot_context_placeholder.length > 0 ? obj.bot_context_placeholder : obj.fullName desc:[NSString stringWithFormat:@"@%@",obj.username]];
+        TGMessagesHintRowItem *item = [[TGMessagesHintRowItem alloc] initWithImageObject:obj text:obj.bot_inline_placeholder.length > 0 ? obj.bot_inline_placeholder : obj.fullName desc:[NSString stringWithFormat:@"@%@",obj.username]];
         
         item.result = obj.username;
         
@@ -501,7 +501,7 @@ DYNAMIC_PROPERTY(DUser);
 
             [_contextRequest cancelRequest];
             
-            _contextRequest = [RPCRequest sendRequest:[TLAPI_messages_getContextBotResults createWithBot:user.inputUser query:query offset:offset] successHandler:^(id request, TL_messages_botResults *response) {
+            _contextRequest = [RPCRequest sendRequest:[TLAPI_messages_getInlineBotResults createWithBot:user.inputUser query:query offset:offset] successHandler:^(id request, TL_messages_botResults *response) {
                 
                 [self.messagesViewController.bottomView setProgress:NO];
                 
@@ -513,10 +513,10 @@ DYNAMIC_PROPERTY(DUser);
                     
                     NSMutableArray *items = [NSMutableArray array];
                     
-                    if(!response.isMedia) {
+                    if(!response.isGallery) {
                         
                         
-                        [response.results enumerateObjectsUsingBlock:^(TL_botContextResult *obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                        [response.results enumerateObjectsUsingBlock:^(TLBotInlineResult *obj, NSUInteger idx, BOOL * _Nonnull stop) {
                             
                             TGContextRowItem *item = [[TGContextRowItem alloc] initWithObject:obj bot:user queryId:response.query_id];
                             
@@ -532,7 +532,7 @@ DYNAMIC_PROPERTY(DUser);
                         
                     } else {
                         
-                        [response.results enumerateObjectsUsingBlock:^(TL_botContextResult *obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                        [response.results enumerateObjectsUsingBlock:^(TLBotInlineResult *obj, NSUInteger idx, BOOL * _Nonnull stop) {
                             [items addObject:obj];  
                         }];
                         
@@ -560,7 +560,7 @@ DYNAMIC_PROPERTY(DUser);
                 
                 weak();
                 
-                [_mediaContextTableView setChoiceHandler:^(TLBotContextResult *botResult) {
+                [_mediaContextTableView setChoiceHandler:^(TLBotInlineResult *botResult) {
                     
                     __strong TGMessagesHintView *strongSelf = weakSelf;
                     

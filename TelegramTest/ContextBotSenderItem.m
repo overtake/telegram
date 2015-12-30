@@ -11,7 +11,7 @@
 
 @implementation ContextBotSenderItem
 
--(id)initWithBotContextResult:(TLBotContextResult *)result via_bot_id:(int)via_bot_id queryId:(long)queryId additionFlags:(int)additionFlags conversation:(TL_conversation *)conversation {
+-(id)initWithBotContextResult:(TLBotInlineResult *)result via_bot_id:(int)via_bot_id queryId:(long)queryId additionFlags:(int)additionFlags conversation:(TL_conversation *)conversation {
     if(self = [super initWithConversation:conversation]) {
         
         TLMessageMedia *media = [TL_messageMediaBotResult createWithBot_result:result query_id:queryId];
@@ -34,7 +34,7 @@
 
 -(void)performRequest {
     
-    self.rpc_request = [RPCRequest sendRequest:[TLAPI_messages_sendContextBotResult createWithFlags:[self senderFlags] peer:self.conversation.inputPeer reply_to_msg_id:self.message.reply_to_msg_id random_id:self.message.randomId query_id:self.message.media.query_id n_id:self.message.media.bot_result.n_id] successHandler:^(id request, id response) {
+    self.rpc_request = [RPCRequest sendRequest:[TLAPI_messages_sendInlineBotResult createWithFlags:[self senderFlags] peer:self.conversation.inputPeer reply_to_msg_id:self.message.reply_to_msg_id random_id:self.message.randomId query_id:self.message.media.query_id n_id:self.message.media.bot_result.n_id] successHandler:^(id request, id response) {
         
         [self updateMessageId:response];
         

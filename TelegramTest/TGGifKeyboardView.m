@@ -38,7 +38,7 @@
     
     weak();
     
-    [_tableView setChoiceHandler:^(TLBotContextResult *result) {
+    [_tableView setChoiceHandler:^(TLBotInlineResult *result) {
         __strong TGGifKeyboardView *strongSelf = weakSelf;
         
         if(strongSelf != nil) {
@@ -179,7 +179,7 @@
     NSMutableArray *result = [NSMutableArray array];
     
     [items enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-        TLBotContextResult *botResult = [[TLBotContextResult alloc] init];
+        TLBotInlineResult *botResult = [[TLBotInlineResult alloc] init];
         botResult.document = obj;
         botResult.type = @"gifv";
         [result addObject:botResult];

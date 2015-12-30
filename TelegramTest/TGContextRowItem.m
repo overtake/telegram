@@ -13,7 +13,7 @@
 @end
 
 @implementation TGContextRowItem
--(id)initWithObject:(TLBotContextResult *)botResult bot:(TLUser *)bot queryId:(long)queryId {
+-(id)initWithObject:(TLBotInlineResult *)botResult bot:(TLUser *)bot queryId:(long)queryId {
     if(self = [super initWithObject:bot]) {
         _bot = bot;
         _botResult = botResult;

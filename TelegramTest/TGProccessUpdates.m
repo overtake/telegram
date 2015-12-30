@@ -510,7 +510,7 @@ static NSArray *channelUpdates;
             return;
         }
         
-        if([update isKindOfClass:[TL_updateBotContextQuery class]]) {
+        if([update isKindOfClass:[TL_updateBotInlineQuery class]]) {
             
             //TODO
             

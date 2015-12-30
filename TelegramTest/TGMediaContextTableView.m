@@ -73,7 +73,7 @@ static NSImage *tgContextPicCap() {
 
 @property (nonatomic,strong) DownloadEventListener *downloadEventListener;
 
-@property (nonatomic,strong) TLBotContextResult *botResult;
+@property (nonatomic,strong) TLBotInlineResult *botResult;
 @property (nonatomic,assign) NSSize size;
 @property (nonatomic,strong) TGImageObject *imageObject;
 
@@ -169,7 +169,7 @@ static NSImage *tgContextPicCap() {
     [_player setFrame:NSMakeRect(MIN(- roundf((_size.width - NSWidth(self.frame))/2),0), MIN(- roundf((_size.height - NSHeight(self.frame))/2),0), MAX(_size.width,NSWidth(self.frame)), MAX(_size.height,NSHeight(self.frame)))];
 }
 
--(void)setBotResult:(TLBotContextResult *)botResult {
+-(void)setBotResult:(TLBotInlineResult *)botResult {
     
     _prevState = NO;
     [_player setPath:nil];
@@ -358,7 +358,7 @@ static NSImage *tgContextPicCap() {
         
         NSMutableArray *imageObjects = [NSMutableArray array];
         
-        [_gifs enumerateObjectsUsingBlock:^(TLBotContextResult *botResult, NSUInteger idx, BOOL * _Nonnull stop) {
+        [_gifs enumerateObjectsUsingBlock:^(TLBotInlineResult *botResult, NSUInteger idx, BOOL * _Nonnull stop) {
             
             TGImageObject *imageObject;
             
@@ -442,7 +442,7 @@ static NSImage *tgContextPicCap() {
     }
     
     
-    [item.gifs enumerateObjectsUsingBlock:^(TLBotContextResult *botResult, NSUInteger idx, BOOL * _Nonnull stop) {
+    [item.gifs enumerateObjectsUsingBlock:^(TLBotInlineResult *botResult, NSUInteger idx, BOOL * _Nonnull stop) {
         
         
         NSSize size = [item.proportions[idx] sizeValue];
@@ -569,7 +569,7 @@ static NSImage *tgContextPicCap() {
 }
 - (void)selectionDidChange:(NSInteger)row item:(TGGifSearchRowItem *) item {
     
-    TLBotContextResult *botResult = item.gifs[row];
+    TLBotInlineResult *botResult = item.gifs[row];
     
     if(_choiceHandler) {
         _choiceHandler(botResult);
@@ -592,7 +592,7 @@ static NSImage *tgContextPicCap() {
     NSMutableArray *sizes = [[NSMutableArray alloc] init];
     
     dispatch_block_t block = ^{
-        [gifs enumerateObjectsUsingBlock:^(TLBotContextResult *botResult, NSUInteger idx, BOOL * _Nonnull stop) {
+        [gifs enumerateObjectsUsingBlock:^(TLBotInlineResult *botResult, NSUInteger idx, BOOL * _Nonnull stop) {
             
             TL_documentAttributeVideo *video = (TL_documentAttributeVideo *) [botResult.document attributeWithClass:[TL_documentAttributeVideo class]];
             
@@ -683,7 +683,7 @@ static NSImage *tgContextPicCap() {
     
     NSMutableArray *filter = [NSMutableArray array];
     
-    [items enumerateObjectsUsingBlock:^(TLBotContextResult *obj, NSUInteger idx, BOOL * _Nonnull stop) {
+    [items enumerateObjectsUsingBlock:^(TLBotInlineResult *obj, NSUInteger idx, BOOL * _Nonnull stop) {
         
         if(!((obj.document == nil || [obj.document isKindOfClass:[TL_documentEmpty class]]) && (obj.photo == nil || [obj.photo isKindOfClass:[TL_photoEmpty class]]) && obj.content_url.length ==0)) {
             

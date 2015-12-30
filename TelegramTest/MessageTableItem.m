@@ -399,20 +399,20 @@ static NSTextAttachment *channelIconAttachment() {
                 
             } else if([message.media isKindOfClass:[TL_messageMediaBotResult class]]) {
                 
-                if([message.media.bot_result.send_message isKindOfClass:[TL_botContextMessageText class]]) {
+                if([message.media.bot_result.send_message isKindOfClass:[TL_botInlineMessageText class]]) {
                     objectReturn = [[MessageTableItemText alloc] initWithObject:message];
                 }
                 
-                if([message.media.bot_result.send_message isKindOfClass:[TL_botContextMessageMediaAuto class]]) {
+                if([message.media.bot_result.send_message isKindOfClass:[TL_botInlineMessageMediaAuto class]]) {
                     
-                    if([message.media.bot_result isKindOfClass:[TL_botContextMediaResultDocument class]]) {
+                    if([message.media.bot_result isKindOfClass:[TL_botInlineMediaResultDocument class]]) {
                         if(([message.media.bot_result.document.mime_type isEqualToString:@"video/mp4"] && [message.media.bot_result.document attributeWithClass:[TL_documentAttributeAnimated class]]))
                             objectReturn = [[MessageTableItemMpeg alloc] initWithObject:message];
                          else
                             objectReturn = [[MessageTableItemDocument alloc] initWithObject:message];
-                    } else if([message.media.bot_result isKindOfClass:[TL_botContextMediaResultPhoto class]])
+                    } else if([message.media.bot_result isKindOfClass:[TL_botInlineMediaResultPhoto class]])
                         objectReturn = [[MessageTableItemPhoto alloc] initWithObject:message];
-                    else if([message.media.bot_result isKindOfClass:[TL_botContextResult class]]) {
+                    else if([message.media.bot_result isKindOfClass:[TL_botInlineResult class]]) {
                         
                         if(([message.media.bot_result.content_type isEqualToString:@"video/mp4"] && [message.media.bot_result.type isEqualToString:@"gif"])) {
                             objectReturn = [[MessageTableItemMpeg alloc] initWithObject:message];

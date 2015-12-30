@@ -136,7 +136,7 @@
     } else if(acceptContextBots) {
         
        userNames = [[[UsersManager sharedManager] all] filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"(self.isBotInlinePlaceholder == 1)"]];
-                
+        
     } else {
         userNames = [[[UsersManager sharedManager] all] filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(TLUser *evaluatedObject, NSDictionary *bindings) {
             
