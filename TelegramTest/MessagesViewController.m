@@ -445,8 +445,6 @@
     [self.view addSubview:self.hintView];
     
     
-    _compressingView = [[TGModalCompressingView alloc] initWithFrame:self.view.window.contentView.bounds];
-    _compressingView.controller = self;
     
 }
 
@@ -3226,7 +3224,7 @@ static NSTextAttachment *headerMediaIcon() {
 - (void)sendDocument:(NSString *)file_path forConversation:(TL_conversation *)conversation addCompletionHandler:(dispatch_block_t)completeHandler {
     if(!conversation.canSendMessage) return;
     
-    if([[file_path pathExtension] isEqualToString:@"gif"]) {
+    if([[file_path pathExtension] isEqualToString:@"gif"] && conversation.type != DialogTypeSecretChat) {
         
         TGCompressGifItem *gifItem = [[TGCompressGifItem alloc] initWithPath:file_path conversation:conversation];
         

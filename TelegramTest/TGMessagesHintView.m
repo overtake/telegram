@@ -286,6 +286,11 @@ DYNAMIC_PROPERTY(DUser);
 -(void)showCommandsHintsWithQuery:(NSString *)query conversation:(TL_conversation *)conversation botInfo:(NSArray *)botInfo choiceHandler:(void (^)(NSString *result))choiceHandler  {
     
     _choiceHandler = choiceHandler;
+    cancel_delayed_block(_handle);
+    [_contextRequest cancelRequest];
+    
+    if(conversation.type == DialogTypeSecretChat)
+        return;
     
     NSMutableArray *commands = [[NSMutableArray alloc] init];
     
@@ -341,6 +346,8 @@ DYNAMIC_PROPERTY(DUser);
 -(void)showHashtagHintsWithQuery:(NSString *)query conversation:(TL_conversation *)conversation peer_id:(int)peer_id choiceHandler:(void (^)(NSString *result))choiceHandler {
     
     _choiceHandler = choiceHandler;
+    cancel_delayed_block(_handle);
+    [_contextRequest cancelRequest];
     
     __block NSMutableDictionary *tags;
     
@@ -397,6 +404,12 @@ DYNAMIC_PROPERTY(DUser);
 -(void)showMentionPopupWithQuery:(NSString *)query conversation:(TL_conversation *)conversation chat:(TLChat *)chat choiceHandler:(void (^)(NSString *result))choiceHandler {
    
     _choiceHandler = choiceHandler;
+    cancel_delayed_block(_handle);
+    [_contextRequest cancelRequest];
+    
+    
+    if(conversation.type == DialogTypeSecretChat)
+        return;
     
     NSMutableArray *uids = [[NSMutableArray alloc] init];
     
@@ -460,6 +473,10 @@ DYNAMIC_PROPERTY(DUser);
     
     
     __block TLUser *user = [UsersManager findUserByName:bot];
+    
+    if(!user.isBot || user.bot_context_placeholder.length == 0 || conversation.type == DialogTypeSecretChat) {
+        return;
+    }
     
     __block NSString *offset = @"";
     
@@ -568,6 +585,10 @@ DYNAMIC_PROPERTY(DUser);
                 
                 if([response.peer isKindOfClass:[TL_peerUser class]]) {
                     user = [response.users firstObject];
+                    
+                    if(!user.isBot || user.bot_context_placeholder.length == 0) {
+                        return;
+                    }
                 }
                 
                 performQuery();

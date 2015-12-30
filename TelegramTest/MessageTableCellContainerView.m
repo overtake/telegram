@@ -1161,7 +1161,7 @@ static int offsetEditable = 30;
     
     if(!anim) {
         _replyContainer.messageField.backgroundColor = color;
-      //  _viaBotTextField.backgroundColor = color;
+        _viaBotTextField.backgroundColor = color;
         return;
     }
     

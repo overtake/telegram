@@ -473,6 +473,9 @@
 
 - (void)bottomButtonClick:(EmojiBottomButton *)button {
     
+    if(self.messagesViewController.conversation.type == DialogTypeSecretChat && button.index == 8)
+        return;
+    
     for(EmojiBottomButton *btn in self.bottomView.subviews) {
         [btn setSelected:btn == button];
     }

@@ -578,6 +578,7 @@ static NSMutableDictionary *queueItemsByPath() {
     [super setFrameSize:newSize];
     
     [_videoLayer setBounds:self.bounds];
+    [_thumbView setFrame:self.bounds];
 }
 
 
@@ -595,9 +596,9 @@ static NSImage *TGVTThumbCap() {
         NSRect rect = NSMakeRect(0, 0, 100, 100);
         image = [[NSImage alloc] initWithSize:rect.size];
         [image lockFocus];
-        [[NSColor grayColor] set];
+        [[NSColor blackColor] set];
         NSBezierPath *path = [NSBezierPath bezierPath];
-        [path appendBezierPathWithRoundedRect:NSMakeRect(0, 0, rect.size.width, rect.size.height) xRadius:4 yRadius:4];
+        [path appendBezierPathWithRoundedRect:NSMakeRect(0, 0, rect.size.width, rect.size.height) xRadius:0 yRadius:0];
         [path fill];
         
         [image unlockFocus];
@@ -607,10 +608,7 @@ static NSImage *TGVTThumbCap() {
 
 -(void)setImageObject:(TGImageObject *)imageObject {
     
-    
-    
-    
-    if(imageObject) {
+     if(imageObject) {
         [_thumbView setObject:imageObject];
     } else {
         [_thumbView setImage:TGVTThumbCap()];
