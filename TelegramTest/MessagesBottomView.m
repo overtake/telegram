@@ -1301,7 +1301,7 @@ static RBLPopover *popover;
         };
         
         if(type == 1) {
-            [self.messagesViewController.hintView showMentionPopupWithQuery:search conversation:self.dialog chat:self.dialog.chat choiceHandler:callback];
+            [self.messagesViewController.hintView showMentionPopupWithQuery:search conversation:self.dialog chat:self.dialog.chat allowInlineBot:[self.inputMessageTextField.string rangeOfString:@"@"].location == 0 choiceHandler:callback];
             
         } else if(type == 2) {
             

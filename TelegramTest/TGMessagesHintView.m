@@ -401,7 +401,7 @@ DYNAMIC_PROPERTY(DUser);
    
 }
 
--(void)showMentionPopupWithQuery:(NSString *)query conversation:(TL_conversation *)conversation chat:(TLChat *)chat choiceHandler:(void (^)(NSString *result))choiceHandler {
+-(void)showMentionPopupWithQuery:(NSString *)query conversation:(TL_conversation *)conversation chat:(TLChat *)chat allowInlineBot:(BOOL)allowInlineBot choiceHandler:(void (^)(NSString *result))choiceHandler {
    
     _choiceHandler = choiceHandler;
     cancel_delayed_block(_handle);
@@ -437,7 +437,7 @@ DYNAMIC_PROPERTY(DUser);
     
     
     
-    NSArray *users = [UsersManager findUsersByMention:query withUids:uids acceptContextBots:YES];
+    NSArray *users = [UsersManager findUsersByMention:query withUids:uids acceptContextBots:allowInlineBot];
     
     
     NSMutableArray *items = [[NSMutableArray alloc] init];
