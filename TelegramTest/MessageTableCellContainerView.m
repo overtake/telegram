@@ -119,7 +119,7 @@
     
     if(!self.forwardMessagesTextLayer) {
         self.forwardMessagesTextLayer = [[TGCTextView alloc] initWithFrame:NSZeroRect];
-        [self.forwardMessagesTextLayer setFrameSize:NSMakeSize(300, 20)];
+        [self.forwardMessagesTextLayer setFrameSize:NSMakeSize(self.item.blockSize.width, 20)];
         [self.forwardMessagesTextLayer setAttributedString:self.item.forwardHeaderAttr];
         [self addSubview:self.forwardMessagesTextLayer];
         
