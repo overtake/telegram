@@ -193,7 +193,7 @@ NSString *const tableModernDialogs = @"modern_dialogs";
     NSString *dbPath = [[Storage path] stringByAppendingPathComponent:@"encrypted.sqlite"];
     
 #ifdef TGDEBUG 
-     dbPath = [[Storage path] stringByAppendingPathComponent:@"encrypted5.sqlite"];
+     dbPath = [[Storage path] stringByAppendingPathComponent:@"encrypted6.sqlite"];
 #endif
     
     if(!encryptionKey) {

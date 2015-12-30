@@ -12,6 +12,9 @@
 @property (nonatomic,weak) RPCRequest *request;
 
 @property (nonatomic,strong) NSMutableArray *items;
+
+@property (nonatomic,strong) NSImageView *emptyImageView;
+
 @end
 
 @implementation TGGifKeyboardView
@@ -35,6 +38,13 @@
 -(void)initialize {
     _tableView = [[TGMediaContextTableView alloc] initWithFrame:NSMakeRect(0, 0, NSWidth(self.frame), NSHeight(self.frame))];
     [self addSubview:_tableView.containerView];
+    
+
+    _emptyImageView = imageViewWithImage(image_noResults());
+    [_emptyImageView setCenterByView:self];
+    [self addSubview:_emptyImageView];
+    
+    [_emptyImageView setHidden:YES];
     
     weak();
     
@@ -190,6 +200,9 @@
     [_tableView clear];
     
     [_tableView drawResponse:result];
+    
+    [_tableView.containerView setHidden:items.count == 0];
+    [_emptyImageView setHidden:items.count > 0];
 }
 
 -(void)clear {
