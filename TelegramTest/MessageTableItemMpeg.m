@@ -141,7 +141,7 @@
 -(BOOL)makeSizeByWidth:(int)width {
     [super makeSizeByWidth:width];
     
-    self.blockSize = strongsize(NSMakeSize(self.imagesize.w, self.imagesize.h), width - 60);
+    self.blockSize = strongsize(NSMakeSize(self.imagesize.w, self.imagesize.h), MIN(380,width - 60));
     
     return YES;
 }

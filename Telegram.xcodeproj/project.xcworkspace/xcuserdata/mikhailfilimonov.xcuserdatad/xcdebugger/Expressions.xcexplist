@@ -1355,6 +1355,14 @@
          contextName = "-[MessagesViewController forwardMessages:conversation:callback:]:MessagesViewController.m">
       </ContextState>
       <ContextState
+         contextName = "-[TGMessagesHintView showContextPopupWithQuery:query:conversation:]:TGMessagesHintView.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "query">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "__36-[TGAllStickersTableView reloadData]_block_invoke:TGAllStickersTableView.m">
          <PersistentStrings>
             <PersistentString
@@ -1400,6 +1408,9 @@
       </ContextState>
       <ContextState
          contextName = "-[TGContextRowItem initWithObject:]:TGContextRowItem.m">
+      </ContextState>
+      <ContextState
+         contextName = "__38-[ContextBotSenderItem performRequest]_block_invoke65:ContextBotSenderItem.m">
       </ContextState>
       <ContextState
          contextName = "__35-[TGUpdateChannels proccessUpdate:]_block_invoke299:TGUpdateChannels.m">
@@ -2071,6 +2082,9 @@
       </ContextState>
       <ContextState
          contextName = "-[PhotoCollectionTableView setItems:conversation:]:PhotoCollectionTableView.m">
+      </ContextState>
+      <ContextState
+         contextName = "__40-[TGMediaContextTableView drawResponse:]_block_invoke:TGMediaContextTableView.m">
       </ContextState>
       <ContextState
          contextName = "-[TMSharedMediaButton setCount:]:TMSharedMediaButton.m">

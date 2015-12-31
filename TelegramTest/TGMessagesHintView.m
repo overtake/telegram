@@ -12,6 +12,7 @@
 #import "TGContextBotTableView.h"
 #import "MessagesBottomView.h"
 #import "TGMediaContextTableView.h"
+#import "TLBotInlineResult+Extension.h"
 @interface TL_botCommand (BotCommandCategory2)
 
 -(void)setUser:(TLUser *)user;
@@ -485,9 +486,13 @@ DYNAMIC_PROPERTY(DUser);
     _choiceHandler = nil;
     
     [_mediaContextTableView clear];
+    [_contextTableView removeAllItems:YES];
     [self hide];
     
     cancel_delayed_block(_handle);
+    
+    [_contextRequest cancelRequest];
+    
     
     _handle = perform_block_after_delay(0.4, ^{
         
@@ -499,8 +504,6 @@ DYNAMIC_PROPERTY(DUser);
             
             _isLockedWithRequest = YES;
 
-            [_contextRequest cancelRequest];
-            
             _contextRequest = [RPCRequest sendRequest:[TLAPI_messages_getInlineBotResults createWithBot:user.inputUser query:query offset:offset] successHandler:^(id request, TL_messages_botResults *response) {
                 
                 [self.messagesViewController.bottomView setProgress:NO];
@@ -526,13 +529,13 @@ DYNAMIC_PROPERTY(DUser);
                         
                         [self setCurrentTableView:_contextTableView];
                         
-                        [_contextTableView removeAllItems:YES];
-                        [_contextTableView insert:items startIndex:0 tableRedraw:YES];
+                        [_contextTableView insert:items startIndex:_contextTableView.count tableRedraw:YES];
                         
                         
                     } else {
                         
                         [response.results enumerateObjectsUsingBlock:^(TLBotInlineResult *obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                            [obj setQueryId:response.query_id];
                             [items addObject:obj];  
                         }];
                         
@@ -550,9 +553,7 @@ DYNAMIC_PROPERTY(DUser);
                     } else
                         [self hide];
                     
-                    if(forceNextLoad && _mediaContextTableView.needLoadNext) {
-                        _mediaContextTableView.needLoadNext(YES);
-                    }
+                    
 
                 } else if(_currentTableView == _mediaContextTableView) {
                     [self hide];
@@ -565,7 +566,7 @@ DYNAMIC_PROPERTY(DUser);
                     __strong TGMessagesHintView *strongSelf = weakSelf;
                     
                     if(strongSelf != nil) {
-                        [strongSelf.messagesViewController sendContextBotResult:botResult via_bot_id:user.n_id queryId:response.query_id forConversation:conversation];
+                        [strongSelf.messagesViewController sendContextBotResult:botResult via_bot_id:user.n_id queryId:botResult.queryId forConversation:conversation];
                         [strongSelf.messagesViewController.bottomView setInputMessageString:@"" disableAnimations:NO];
                     }
                     
@@ -576,7 +577,9 @@ DYNAMIC_PROPERTY(DUser);
                 _isLockedWithRequest = NO;
                 k++;
                 
-                
+                if(forceNextLoad && _mediaContextTableView.needLoadNext) {
+                    _mediaContextTableView.needLoadNext(YES);
+                }
                 
             } errorHandler:^(id request, RpcError *error) {
                 _isLockedWithRequest = NO;
