@@ -218,10 +218,10 @@
 		C2034BB31C2EB1C70080D023 /* VideoToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2034BB21C2EB1C70080D023 /* VideoToolbox.framework */; };
 		C2034BBC1C31C1D20080D023 /* TL_localMessage_old44.m in Sources */ = {isa = PBXBuildFile; fileRef = C2034BBB1C31C1D20080D023 /* TL_localMessage_old44.m */; };
 		C2034BC81C31C8000080D023 /* ContextBotSenderItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C2034BC71C31C8000080D023 /* ContextBotSenderItem.m */; };
-		C2034BD81C3430600080D023 /* Sparkle.framework in Copy Files (6 items) */ = {isa = PBXBuildFile; fileRef = C235364C19C88D620044978E /* Sparkle.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		C2034BD91C3430600080D023 /* HockeySDK.framework in Copy Files (6 items) */ = {isa = PBXBuildFile; fileRef = C2082B7219C1E1C4000005E2 /* HockeySDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		C2034BDA1C3430640080D023 /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C235364C19C88D620044978E /* Sparkle.framework */; };
-		C2034BDB1C3430640080D023 /* HockeySDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2082B7219C1E1C4000005E2 /* HockeySDK.framework */; };
+		C2034BDD1C3527510080D023 /* Sparkle.framework in Copy Files (6 items) */ = {isa = PBXBuildFile; fileRef = C235364C19C88D620044978E /* Sparkle.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		C2034BDE1C3527510080D023 /* HockeySDK.framework in Copy Files (6 items) */ = {isa = PBXBuildFile; fileRef = C2082B7219C1E1C4000005E2 /* HockeySDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		C2034BDF1C3527560080D023 /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C235364C19C88D620044978E /* Sparkle.framework */; };
+		C2034BE01C3527560080D023 /* HockeySDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2082B7219C1E1C4000005E2 /* HockeySDK.framework */; };
 		C20932241938BABF00DFF3EC /* AudioHistoryFilter.m in Sources */ = {isa = PBXBuildFile; fileRef = C20932231938BABF00DFF3EC /* AudioHistoryFilter.m */; };
 		C20A5E711B86290C007F4B49 /* TGWebpageGifObject.m in Sources */ = {isa = PBXBuildFile; fileRef = C20A5E701B86290C007F4B49 /* TGWebpageGifObject.m */; };
 		C20A5E831B863979007F4B49 /* TGWebpageGifContainer.m in Sources */ = {isa = PBXBuildFile; fileRef = C20A5E821B863979007F4B49 /* TGWebpageGifContainer.m */; };
@@ -1011,13 +1011,6 @@
 			remoteGlobalIDString = D2AAC046055464E500DB518D;
 			remoteInfo = sqlcipher;
 		};
-		C2ED75221C29058B00002ACF /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = CEB09E5017DAFC240055F150 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = C2CBF3B51AF38426006BF90A;
-			remoteInfo = TGShare;
-		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -1027,8 +1020,8 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				C2034BD81C3430600080D023 /* Sparkle.framework in Copy Files (6 items) */,
-				C2034BD91C3430600080D023 /* HockeySDK.framework in Copy Files (6 items) */,
+				C2034BDD1C3527510080D023 /* Sparkle.framework in Copy Files (6 items) */,
+				C2034BDE1C3527510080D023 /* HockeySDK.framework in Copy Files (6 items) */,
 			);
 			name = "Copy Files (6 items)";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2836,8 +2829,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C2034BDA1C3430640080D023 /* Sparkle.framework in Frameworks */,
-				C2034BDB1C3430640080D023 /* HockeySDK.framework in Frameworks */,
+				C2034BDF1C3527560080D023 /* Sparkle.framework in Frameworks */,
+				C2034BE01C3527560080D023 /* HockeySDK.framework in Frameworks */,
 				C2034BB31C2EB1C70080D023 /* VideoToolbox.framework in Frameworks */,
 				C21068C61C1B417200815859 /* CoreVideo.framework in Frameworks */,
 				C21068BE1C1B04A100815859 /* QuickTime.framework in Frameworks */,
@@ -6203,7 +6196,6 @@
 			buildRules = (
 			);
 			dependencies = (
-				C2ED75231C29058B00002ACF /* PBXTargetDependency */,
 			);
 			name = Telegram;
 			productName = TelegramTest;
@@ -7320,14 +7312,6 @@
 		};
 /* End PBXSourcesBuildPhase section */
 
-/* Begin PBXTargetDependency section */
-		C2ED75231C29058B00002ACF /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = C2CBF3B51AF38426006BF90A /* TGShare */;
-			targetProxy = C2ED75221C29058B00002ACF /* PBXContainerItemProxy */;
-		};
-/* End PBXTargetDependency section */
-
 /* Begin PBXVariantGroup section */
 		0A9EDC191897BA0E0037E1BC /* InfoPlist.strings */ = {
 			isa = PBXVariantGroup;
@@ -7470,7 +7454,7 @@
 				"OTHER_CODE_SIGN_FLAGS[sdk=*]" = "--deep";
 				PRODUCT_BUNDLE_IDENTIFIER = "ru.keepcoder.Telegram.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "1c746dc7-fbd8-40fe-8897-361d3f52bd07";
 				SDKROOT = macosx;
 				SKIP_INSTALL = YES;
 				USER_HEADER_SEARCH_PATHS = "./MtProtoKit/**";
@@ -7514,7 +7498,7 @@
 				"OTHER_CODE_SIGN_FLAGS[sdk=*]" = "--deep";
 				PRODUCT_BUNDLE_IDENTIFIER = "ru.keepcoder.Telegram.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "1c746dc7-fbd8-40fe-8897-361d3f52bd07";
 				SDKROOT = macosx;
 				SKIP_INSTALL = YES;
 				USER_HEADER_SEARCH_PATHS = "./MtProtoKit/**";

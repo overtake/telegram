@@ -124,8 +124,6 @@
         [self addSubview:self.forwardMessagesTextLayer];
         
         
-        weak();
-        
         [_forwardMessagesTextLayer setLinkCallback:^(NSString *link) {
             __strong MessageTableCellContainerView *strongSelf = weakSelf;
             

@@ -903,7 +903,7 @@ static RBLPopover *popover;
        
        self.smilePopover = [[RBLPopover alloc] initWithContentViewController:(NSViewController *)emojiViewController];
         [self.smilePopover setHoverView:self.smileButton];
-        [self.smilePopover setCanBecomeKey:YES];
+//        [self.smilePopover setCanBecomeKey:YES];
         [self.smilePopover setDidCloseBlock:^(RBLPopover *popover){
             [weakSelf.smileButton setSelected:NO];
             [[EmojiViewController instance] close];

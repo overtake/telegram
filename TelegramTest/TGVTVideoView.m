@@ -339,7 +339,7 @@ static void TGVTPlayerDecompressionOutputCallback(void *decompressionOutputRefCo
                 _output = [AVAssetReaderTrackOutput assetReaderTrackOutputWithTrack:track outputSettings:nil];
                 if (_output != nil) {
                     _output.alwaysCopiesSampleData = false;
-                    _output.supportsRandomAccess = true;
+                    //_output.supportsRandomAccess = true;
                     
                     _reader = [[AVAssetReader alloc] initWithAsset:asset error:nil];
                     if ([_reader canAddOutput:_output]) {
