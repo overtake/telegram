@@ -57,6 +57,12 @@
         
         self.state = MessageSendingStateSent;
         
+        
+        if([self.message.media isKindOfClass:[TL_messageMediaWebPage class]])
+        {
+            [Notification perform:UPDATE_WEB_PAGE_ITEMS data:@{KEY_DATA:@{@(self.message.peer_id):@[@(self.message.n_id)]},KEY_WEBPAGE:self.message.media.webpage}];
+        }
+        
     } errorHandler:^(id request, RpcError *error) {
         
         if(error.error_code == 400) {

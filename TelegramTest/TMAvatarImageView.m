@@ -398,19 +398,28 @@ static CAAnimation *ani2() {
 
          __block NSString *text = self->_text;
         
+        id object = self.fileLocation;
+        
         [ASQueue dispatchOnStageQueue:^{
             
-            __block NSImage *image = [TMAvatarImageView generateTextAvatar:colorMask size:self.bounds.size text:text type:self.type font:self.font offsetY:self.offsetTextY];
+            if(object == self.fileLocation) {
+                __block NSImage *image = [TMAvatarImageView generateTextAvatar:colorMask size:self.bounds.size text:text type:self.type font:self.font offsetY:self.offsetTextY];
+                
+                [[ASQueue mainQueue] dispatchOnQueue:^{
+                    
+                    if(object == self.fileLocation) {
+                        [TGCache cacheImage:image forKey:key groups:@[AVACACHE]];
+                        
+                        if(animated)
+                            [self addAnimation:ani() forKey:@"contents"];
+                        
+                        self.image = (BTRImage *) image;
+                    }
+                    
+                }];
+            }
             
-            [[ASQueue mainQueue] dispatchOnQueue:^{
-                    
-                [TGCache cacheImage:image forKey:key groups:@[AVACACHE]];
-                    
-                if(animated)
-                    [self addAnimation:ani() forKey:@"contents"];
-                    
-                self.image = (BTRImage *) image;
-            }];
+           
             
         }];
     }

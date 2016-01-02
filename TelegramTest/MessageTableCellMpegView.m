@@ -122,6 +122,8 @@
         
         [[Storage yap] readWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
             items = [transaction objectForKey:@"gifs" inCollection:RECENT_GIFS];
+            
+            int bp = 0;
         }];
         
         TLDocument *document = self.item.message.media.document;

@@ -588,14 +588,18 @@
         
         if([message.media.document.mime_type isEqualToString:@"video/mp4"] && [message.media.document attributeWithClass:[TL_documentAttributeAnimated class]] != nil) {
             return @"GIF";
-        } else if([message.media.bot_result.type isEqualToString:@"gif"] && [message.media.bot_result.send_message isKindOfClass:[TL_botInlineMessageMediaAuto class]]) {
-            return @"GIF";
-        } else if([message.media.bot_result.type isEqualToString:@"photo"] && [message.media.bot_result.send_message isKindOfClass:[TL_botInlineMessageMediaAuto class]]) {
-            return  NSLocalizedString(@"ChatMedia.Photo", nil);
         }
         
         return [message.media.document isSticker] ? (((TL_documentAttributeSticker *)[message.media.document attributeWithClass:[TL_documentAttributeSticker class]]).alt.length > 0 ? [NSString stringWithFormat:@"%@ %@",((TL_documentAttributeSticker *)[message.media.document attributeWithClass:[TL_documentAttributeSticker class]]).alt,NSLocalizedString(@"Sticker", nil)] : NSLocalizedString(@"Sticker", nil)) : (message.media.document.file_name.length == 0 ? NSLocalizedString(@"ChatMedia.File", nil) : message.media.document.file_name);
     } else {
+        
+        if([message.media.bot_result.type isEqualToString:@"gif"] && [message.media.bot_result.send_message isKindOfClass:[TL_botInlineMessageMediaAuto class]]) {
+            return @"GIF";
+        } else if([message.media.bot_result.type isEqualToString:@"photo"] && [message.media.bot_result.send_message isKindOfClass:[TL_botInlineMessageMediaAuto class]]) {
+            return  NSLocalizedString(@"ChatMedia.Photo", nil);
+        } else if([message.media.bot_result.send_message isKindOfClass:[TL_botInlineMessageText class]]) {
+            return message.message;
+        }
         
         if(message.action != nil) {
             return [self serviceMessage:message forAction:message.action];

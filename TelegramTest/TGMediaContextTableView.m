@@ -12,6 +12,15 @@
 #import "DownloadExternalItem.h"
 #import "MessagesBottomView.h"
 
+@interface TGGifSearchRowItem : TMRowItem
+@property (nonatomic,strong) NSArray *gifs;
+@property (nonatomic,assign) long randKey;
+@property (nonatomic,strong) NSArray *proportions;
+@property (nonatomic,strong) NSArray *imageObjects;
+@property (nonatomic,assign) BOOL needCheckKeyWindow;
+
+@end
+
 @interface TGPicItemView : TMView
 @property (nonatomic,strong) TGImageView *imageView;
 @property (nonatomic,assign) NSSize size;
@@ -81,7 +90,7 @@ static NSImage *tgContextPicCap() {
 
 
 @property (nonatomic,weak) TMTableView *table;
-@property (nonatomic,weak) TMRowItem *item;
+@property (nonatomic,weak) TGGifSearchRowItem *item;
 
 
 
@@ -273,9 +282,9 @@ static NSImage *tgContextPicCap() {
     
     BOOL (^check_block)() = ^BOOL() {
         
-        BOOL completelyVisible = self.visibleRect.size.width > 0 && self.visibleRect.size.height > 20;
+        BOOL completelyVisible = self.visibleRect.size.width > 0 && self.visibleRect.size.height > 0;
                 
-        return  completelyVisible && ((self.window != nil && self.window.isKeyWindow) || notification == nil) && self.isset;
+        return  completelyVisible && ((self.window != nil && (!self.item.needCheckKeyWindow || self.window.isKeyWindow )) || notification == nil) && self.isset;
         
     };
     
@@ -340,13 +349,7 @@ static NSImage *tgContextPicCap() {
 @end
 
 
-@interface TGGifSearchRowItem : TMRowItem
-@property (nonatomic,strong) NSArray *gifs;
-@property (nonatomic,assign) long randKey;
-@property (nonatomic,strong) NSArray *proportions;
-@property (nonatomic,strong) NSArray *imageObjects;
 
-@end
 
 @implementation TGGifSearchRowItem
 
@@ -550,6 +553,7 @@ static NSImage *tgContextPicCap() {
         
         self.tm_delegate = self;
         _items = [NSMutableArray array];
+        _needCheckKeyWindow = YES;
         [self addScrollEvent];
     }
     
@@ -673,9 +677,21 @@ static NSImage *tgContextPicCap() {
 
 
 -(void)clear {
+    
+    BOOL needCheckKey = _needCheckKeyWindow;
+    
+    _needCheckKeyWindow = YES;
+    
+    
+    
     [self removeAllItems:NO];
     [self reloadData];
     _items = [NSMutableArray array];
+    [self removeScrollEvent];
+    [self addScrollEvent];
+    
+    _needCheckKeyWindow = needCheckKey;
+    
 }
 
 
@@ -734,7 +750,7 @@ static NSImage *tgContextPicCap() {
         [draw removeObjectsInArray:r];
         
         TGGifSearchRowItem *item = [[TGGifSearchRowItem alloc] initWithObject:[r copy] sizes:[s copy]];
-       
+        item.needCheckKeyWindow = _needCheckKeyWindow;
         if(redrawPrev) {
             NSUInteger index = [self.list indexOfObject:prevItem];
             
@@ -774,6 +790,7 @@ static NSImage *tgContextPicCap() {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
+
 -(void)_didScrolledTableView:(NSNotification *)notification {
     if(_needLoadNext) {
         _needLoadNext([self.scrollView isNeedUpdateBottom]);
@@ -781,7 +798,7 @@ static NSImage *tgContextPicCap() {
 }
 
 -(void)dealloc {
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
+    [self removeScrollEvent];
 }
 
 

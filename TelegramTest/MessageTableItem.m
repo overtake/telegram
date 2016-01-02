@@ -284,6 +284,8 @@ static NSTextAttachment *channelIconAttachment() {
             if(self.isViaBot && !self.isForwadedMessage) {
                 viewSize.height+=16;
                 if(self.message.media != nil && ![self.message.media isKindOfClass:[TL_messageMediaWebPage class]] && self.message.reply_to_msg_id == 0) {
+                    
+                    if([self.message.media isKindOfClass:[TL_messageMediaBotResult class]] && ![self.message.media.bot_result.send_message isKindOfClass:[TL_botInlineMessageText class]])
                     viewSize.height+=6;
                 }
             }

@@ -469,9 +469,22 @@ DYNAMIC_PROPERTY(DUser);
 }
 
 
+static NSMutableDictionary *inlineBotsExceptions;
+
++(void)initialize {
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        inlineBotsExceptions = [NSMutableDictionary dictionary];
+    });
+}
+
+
 
 -(void)showContextPopupWithQuery:(NSString *)bot query:(NSString *)query conversation:(TL_conversation *)conversation  {
     
+    
+    if(inlineBotsExceptions[bot])
+        return;
     
     __block TLUser *user = [UsersManager findUserByName:bot];
     
@@ -491,7 +504,7 @@ DYNAMIC_PROPERTY(DUser);
     
     cancel_delayed_block(_handle);
     
-    [_contextRequest cancelRequest];
+    
     
     
     _handle = perform_block_after_delay(0.4, ^{
@@ -499,6 +512,8 @@ DYNAMIC_PROPERTY(DUser);
         __block BOOL forceNextLoad = NO;
         
         dispatch_block_t performQuery = ^{
+            
+            [_contextRequest cancelRequest];
             
             [self.messagesViewController.bottomView setProgress:offset.length == 0];
             
@@ -590,7 +605,7 @@ DYNAMIC_PROPERTY(DUser);
 
         
         [_mediaContextTableView setNeedLoadNext:^(BOOL next) {
-            if(forceNextLoad || (next && !_isLockedWithRequest && offset.length > 0 && k < 30)) {
+            if(forceNextLoad || (next && !_isLockedWithRequest && offset.length > 0)) {
                 performQuery();
             }
             
@@ -598,7 +613,7 @@ DYNAMIC_PROPERTY(DUser);
         
         
         if(!user) {
-            [RPCRequest sendRequest:[TLAPI_contacts_resolveUsername createWithUsername:bot] successHandler:^(id request, TL_contacts_resolvedPeer * response) {
+            [RPCRequest sendRequest:[TLAPI_contacts_resolveUsername createWithUsername:bot] successHandler:^(RPCRequest *request, TL_contacts_resolvedPeer * response) {
                 
                 [SharedManager proccessGlobalResponse:response];
                 
@@ -606,11 +621,20 @@ DYNAMIC_PROPERTY(DUser);
                     user = [response.users firstObject];
                     
                     if(!user.isBot || !user.isBotInlinePlaceholder) {
+                        inlineBotsExceptions[user.username] = @(1);
                         return;
                     }
+                    
+                    performQuery();
+                    
+                }  else {
+                    
+                    TLAPI_contacts_resolveUsername *req = request.object;
+                    
+                    inlineBotsExceptions[req.username] = @(1);
                 }
                 
-                performQuery();
+               
                 
             } errorHandler:^(id request, RpcError *error) {
                 

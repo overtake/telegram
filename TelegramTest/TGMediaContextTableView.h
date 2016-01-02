@@ -19,4 +19,6 @@
 -(void)drawResponse:(NSArray *)items;
 -(void)clear;
 
+@property (nonatomic,assign) BOOL needCheckKeyWindow;
+
 @end

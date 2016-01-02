@@ -2,7 +2,7 @@
 //  MTProto.m
 //  Telegram
 //
-//  Auto created by Mikhail Filimonov on 30.12.15.
+//  Auto created by Mikhail Filimonov on 01.01.16.
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -13840,7 +13840,7 @@
 	[stream writeInt:self.date];
 	if(self.flags & (1 << 2)) {[ClassStore TLSerialize:self.fwd_from_id stream:stream];}
 	if(self.flags & (1 << 2)) {[stream writeInt:self.fwd_date];}
-	if(self.flags & (1 << 8)) {[stream writeInt:self.via_bot_id];}
+	if(self.flags & (1 << 11)) {[stream writeInt:self.via_bot_id];}
 	if(self.flags & (1 << 3)) {[stream writeInt:self.reply_to_msg_id];}
 	if(self.flags & (1 << 7)) {//Serialize FullVector
 	[stream writeInt:0x1cb5c415];
@@ -13867,7 +13867,7 @@
 	super.date = [stream readInt];
 	if(self.flags & (1 << 2)) {self.fwd_from_id = [ClassStore TLDeserialize:stream];}
 	if(self.flags & (1 << 2)) {super.fwd_date = [stream readInt];}
-	if(self.flags & (1 << 8)) {super.via_bot_id = [stream readInt];}
+	if(self.flags & (1 << 11)) {super.via_bot_id = [stream readInt];}
 	if(self.flags & (1 << 3)) {super.reply_to_msg_id = [stream readInt];}
 	if(self.flags & (1 << 7)) {//UNS FullVector
 	[stream readInt];
@@ -13949,7 +13949,7 @@
 {
    super.via_bot_id = via_bot_id;
                 
-    if(super.via_bot_id == 0)  { super.flags&= ~ (1 << 8) ;} else { super.flags|= (1 << 8); }
+    if(super.via_bot_id == 0)  { super.flags&= ~ (1 << 11) ;} else { super.flags|= (1 << 11); }
 }            
 -(void)setReply_to_msg_id:(int)reply_to_msg_id
 {
@@ -14003,7 +14003,7 @@
 	[stream writeInt:self.date];
 	if(self.flags & (1 << 2)) {[ClassStore TLSerialize:self.fwd_from_id stream:stream];}
 	if(self.flags & (1 << 2)) {[stream writeInt:self.fwd_date];}
-	if(self.flags & (1 << 8)) {[stream writeInt:self.via_bot_id];}
+	if(self.flags & (1 << 11)) {[stream writeInt:self.via_bot_id];}
 	if(self.flags & (1 << 3)) {[stream writeInt:self.reply_to_msg_id];}
 	if(self.flags & (1 << 7)) {//Serialize FullVector
 	[stream writeInt:0x1cb5c415];
@@ -14031,7 +14031,7 @@
 	super.date = [stream readInt];
 	if(self.flags & (1 << 2)) {self.fwd_from_id = [ClassStore TLDeserialize:stream];}
 	if(self.flags & (1 << 2)) {super.fwd_date = [stream readInt];}
-	if(self.flags & (1 << 8)) {super.via_bot_id = [stream readInt];}
+	if(self.flags & (1 << 11)) {super.via_bot_id = [stream readInt];}
 	if(self.flags & (1 << 3)) {super.reply_to_msg_id = [stream readInt];}
 	if(self.flags & (1 << 7)) {//UNS FullVector
 	[stream readInt];
@@ -14114,7 +14114,7 @@
 {
    super.via_bot_id = via_bot_id;
                 
-    if(super.via_bot_id == 0)  { super.flags&= ~ (1 << 8) ;} else { super.flags|= (1 << 8); }
+    if(super.via_bot_id == 0)  { super.flags&= ~ (1 << 11) ;} else { super.flags|= (1 << 11); }
 }            
 -(void)setReply_to_msg_id:(int)reply_to_msg_id
 {

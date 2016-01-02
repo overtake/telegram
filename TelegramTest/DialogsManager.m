@@ -553,7 +553,7 @@
         
         [[Storage yap] asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
             
-            NSMutableArray *items = [transaction objectForKey:@"gif" inCollection:RECENT_GIFS];
+            NSMutableArray *items = [transaction objectForKey:@"gifs" inCollection:RECENT_GIFS];
             
             TL_document *item = [[items filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.n_id == %ld",message.media.document.n_id]] firstObject];
             

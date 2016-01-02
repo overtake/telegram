@@ -41,7 +41,7 @@
             
             
             
-            document.thumb = [TL_photoCachedSize createWithType:@"" location:[TL_fileLocation createWithDc_id:0 volume_id:rand_long() local_id:0 secret:0] w:image.size.width h:image.size.height bytes:compressImage(jpegNormalizedData(thumb), 0.1) ];
+            document.thumb = [TL_photoCachedSize createWithType:@"" location:[TL_fileLocation createWithDc_id:0 volume_id:rand_long() local_id:0 secret:0] w:thumb.size.width h:thumb.size.height bytes:compressImage(jpegNormalizedData(thumb), 0.1) ];
             
             [TGCache cacheImage:image forKey:[NSString stringWithFormat:@"%@:blurred",[document.thumb.location cacheKey]] groups:@[IMGCACHE]];
             

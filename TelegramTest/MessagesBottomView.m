@@ -891,7 +891,7 @@ static RBLPopover *popover;
 }
 
 -(void)closeEmoji {
-    [self.smilePopover close];
+    [[EmojiViewController instance] close];
 }
 
 - (void)smileButtonClick:(BTRButton *)button {
@@ -1556,9 +1556,6 @@ static RBLPopover *popover;
     }
     
     
-    
-    
-        
     TLWebPage *webpage = ![self.messagesViewController noWebpage:self.inputMessageString] ? [Storage findWebpage:[self.inputMessageString webpageLink]] : nil;
     
     if(!webpage && !self.webpageAttach)
@@ -1761,7 +1758,9 @@ static RBLPopover *popover;
 }
 
 - (void)setContextBotString:(NSString *)bot {
-    [self setInputMessageString:bot disableAnimations:YES];
+    [self.inputMessageTextField insertText:bot replacementRange:NSMakeRange(0,self.inputMessageTextField.stringValue.length)];
+    [self.window makeFirstResponder:self.inputMessageTextField];
+    [self.inputMessageTextField setSelectedRange:NSMakeRange(bot.length,0)];
 }
 
 

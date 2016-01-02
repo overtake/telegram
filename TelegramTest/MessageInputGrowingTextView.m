@@ -292,6 +292,7 @@ typedef enum {
 
 -(void)setSelectedRange:(NSRange)selectedRange {
     [super setSelectedRange:selectedRange];
+   
 }
 
 

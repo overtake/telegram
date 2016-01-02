@@ -40,6 +40,7 @@
     [self addSubview:_tableView.containerView];
     
 
+    _tableView.needCheckKeyWindow = NO;
     _emptyImageView = imageViewWithImage(image_noResults());
     [_emptyImageView setCenterByView:self];
     [self addSubview:_emptyImageView];
@@ -53,7 +54,7 @@
         
         if(strongSelf != nil) {
             [strongSelf.messagesViewController sendFoundGif:[TL_messageMediaDocument createWithDocument:result.document caption:@""] forConversation:strongSelf.messagesViewController.conversation];
-            [strongSelf.messagesViewController.bottomView.smilePopover close];
+           // [strongSelf.messagesViewController.bottomView closeEmoji];
         }
     }];
     
@@ -156,6 +157,8 @@
         
         NSMutableArray *result = [transaction objectForKey:@"gifs" inCollection:RECENT_GIFS];
         
+        int bp = 0;
+        
         [ASQueue dispatchOnMainQueue:^{
             [self proccessAndSendToDraw:result];
             
@@ -172,10 +175,10 @@
         
         if([response isKindOfClass:[TL_messages_savedGifs class]]) {
             
-            [self proccessAndSendToDraw:response.gifs];
+            [self proccessAndSendToDraw:[response.gifs copy]];
             
             [[Storage yap] asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
-                [transaction setObject:_items forKey:@"gifs" inCollection:RECENT_GIFS];
+                [transaction setObject:response.gifs forKey:@"gifs" inCollection:RECENT_GIFS];
             }];
         }
         
