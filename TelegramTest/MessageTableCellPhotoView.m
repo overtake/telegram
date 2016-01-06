@@ -211,7 +211,7 @@ NSImage *fireImage() {
     
     
     
-    [self.progressView setHidden:self.item.isset];
+    [self.progressView setHidden:self.item.isset && cellState != CellStateSending];
     
     
     if(!self.progressView.isHidden)
