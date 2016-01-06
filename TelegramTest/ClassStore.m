@@ -97,8 +97,9 @@ static NSMutableDictionary *cs_constuctors;
         if(constructor == 481674261) {
             return [self deserializeVector:stream];
         }
-        MTLog(@"Error, constructor %d not found, return nil", constructor);
-        return nil;
+        
+        @throw [NSException exceptionWithName:@"TLError" reason:[NSString stringWithFormat:@"constructor %d not found",constructor] userInfo:nil]
+        ;
     } else {
         //TLog("@ create class %@ with constructor %d", class, constructor);
     }

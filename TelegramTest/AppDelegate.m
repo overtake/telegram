@@ -888,6 +888,8 @@ void exceptionHandler(NSException * exception)
             
             [Storage drop];
             
+            [[NSUserNotificationCenter defaultUserNotificationCenter] removeAllDeliveredNotifications];
+            
             [Storage open:^{
                 
                 [[MTNetwork instance] initConnectionWithId:-1];

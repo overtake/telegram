@@ -284,7 +284,7 @@ static NSImage *tgContextPicCap() {
         
         BOOL completelyVisible = self.visibleRect.size.width > 0 && self.visibleRect.size.height > 0;
                 
-        return  completelyVisible && ((self.window != nil && (!self.item.needCheckKeyWindow || self.window.isKeyWindow )) || notification == nil) && self.isset;
+        return  completelyVisible && ((self.window != nil && (!self.item.needCheckKeyWindow || self.window.isKeyWindow )) || notification == nil) && self.isset  && ![self inLiveResize];
         
     };
     
@@ -569,7 +569,7 @@ static NSImage *tgContextPicCap() {
     return NO;
 }
 - (TMRowView *)viewForRow:(NSUInteger)row item:(TMRowItem *) item {
-    return [self cacheViewForClass:[TGGifSearchRowView class] identifier:@"TGGifSearchRowView" withSize:NSMakeSize(NSWidth(self.frame), 100)];
+    return [self cacheViewForClass:[TGGifSearchRowView class] identifier:@"TGGifSearchRowView" withSize:NSMakeSize(NSWidth(self.containerView.frame), 100)];
 }
 - (void)selectionDidChange:(NSInteger)row item:(TGGifSearchRowItem *) item {
     
@@ -621,8 +621,8 @@ static NSImage *tgContextPicCap() {
             }
             
             if(!isLastRowItem && idx == (gifs.count - 1)) {
-                if(currentWidth+size.width < NSWidth(self.frame)) {
-                    int dif = NSWidth(self.frame) - (currentWidth+size.width);
+                if(currentWidth+size.width < NSWidth(self.containerView.frame)) {
+                    int dif = NSWidth(self.containerView.frame) - (currentWidth+size.width);
                     
                     size.width+=dif;
                     size.height+=dif;
@@ -646,13 +646,13 @@ static NSImage *tgContextPicCap() {
         
         block();
         
-        if((currentWidth - NSWidth(self.frame)) > 100 && gifs.count > 1) {
+        if((currentWidth - NSWidth(self.containerView.frame)) > 100 && gifs.count > 1) {
             [gifs removeLastObject];
             continue;
         }
         
         
-        if((currentWidth < NSWidth(self.frame) && !isLastRowItem) && gifs.count > 0) {
+        if((currentWidth < NSWidth(self.containerView.frame) && !isLastRowItem) && gifs.count > 0) {
             
             maxHeight+=(6*gifs.count);
             
@@ -684,11 +684,8 @@ static NSImage *tgContextPicCap() {
     
     
     
-    [self removeAllItems:NO];
-    [self reloadData];
+    [self removeAllItems:YES];
     _items = [NSMutableArray array];
-    [self removeScrollEvent];
-    [self addScrollEvent];
     
     _needCheckKeyWindow = needCheckKey;
     
@@ -725,7 +722,7 @@ static NSImage *tgContextPicCap() {
     
     TGGifSearchRowItem *prevItem = [self.list lastObject];
     
-     int f = floor(NSWidth(self.frame)/100);
+     int f = floor(NSWidth(self.containerView.frame)/100);
     
      NSMutableArray *draw = [items mutableCopy];
     

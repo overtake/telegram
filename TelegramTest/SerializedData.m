@@ -43,8 +43,7 @@
         memcpy(&intValue, buffer, 4);
         return intValue;
     } else {
-        MTLog(@"Read int buffer length = 0");
-        return 0;
+        @throw [NSException exceptionWithName:@"TLError" reason:@"Read int buffer length = 0" userInfo:nil];
     }
 }
 
@@ -67,8 +66,7 @@
         memcpy(&longValue, buffer, 8);
         return longValue;
     } else {
-        MTLog(@"Read dobule buffer length = 0");
-        return 0;
+        @throw [NSException exceptionWithName:@"TLError" reason:@"Read long buffer length = 0" userInfo:nil];
     }
 }
 
@@ -90,8 +88,7 @@
         memcpy(&doubleValue, buffer, 8);
         return doubleValue;
     } else {
-        MTLog(@"Read dobule buffer length = 0");
-        return 0;
+        @throw [NSException exceptionWithName:@"TLError" reason:@"Read double buffer length = 0" userInfo:nil];
     }
 }
 
@@ -110,7 +107,6 @@
     } else if (consructor == 0xbc799737) {
         return NO;
     }
-    MTLog(@"Not bool");
     return NO;
 }
 
@@ -123,18 +119,13 @@
 }
 
 - (NSData*)readData:(int)count {
-    @try {
-        uint8_t *buf = malloc(count);
-        NSInteger len = [self.input read:buf maxLength:count];
-        if(len > 0) {
-            
-            return [[NSData alloc] initWithBytesNoCopy:buf length:count freeWhenDone:true];
-        } else {
-            MTLog(@"Read data length = 0");
-        }
-    } @catch(NSException *exception) {
-        MTLog(@"Read data exception");
+    uint8_t *buf = malloc(count);
+    NSInteger len = [self.input read:buf maxLength:count];
+    if(len > 0) {
+        return [[NSData alloc] initWithBytesNoCopy:buf length:count freeWhenDone:true];
     }
+    
+   @throw [NSException exceptionWithName:@"TLError" reason:@"Read data error" userInfo:nil];
 }
 
 - (NSData*)readByteArray {
@@ -142,8 +133,7 @@
     int length = 0;
     
     if([self.input read:&buf maxLength:1] < 1) {
-        MTLog(@"readByteArray read error #1");
-        return 0;
+        @throw [NSException exceptionWithName:@"TLError" reason:@"Read ByteArray error" userInfo:nil];
     }
     
     length |= buf;
@@ -156,8 +146,7 @@
         if(len > 0) {
             memcpy(&length, buff, 3);
         } else {
-            MTLog(@"Read length buffer length = %ld", (long)len);
-            return 0;
+            @throw [NSException exceptionWithName:@"TLError" reason:[NSString stringWithFormat:@"Read length buffer length = %ld", (long)len] userInfo:nil];
         }
         sl = 4;
     }
@@ -173,7 +162,7 @@
     while((length + i) % 4 != 0) {
         uint8_t length;
         if([self.input read:&length maxLength:1] < 1) {
-            MTLog(@"readByteArray read error #4");
+            @throw [NSException exceptionWithName:@"TLError" reason:@"readByteArray read error #4" userInfo:nil];
         }
         i++;
     }

@@ -17,6 +17,7 @@
 }
 @property (nonatomic,strong) TGVTVideoView *player;
 @property (nonatomic,strong) TMView *playerContainer;
+@property (nonatomic,strong) NSImageView *playImageView;
 @end
 
 @implementation TGWebpageGifContainer
@@ -26,6 +27,10 @@
 
 -(instancetype)initWithFrame:(NSRect)frameRect {
     if(self = [super initWithFrame:frameRect]) {
+        
+        _playImageView = imageViewWithImage(image_PlayButtonBig());
+        _playerContainer = [[TMView alloc] initWithFrame:NSZeroRect];
+        [_playerContainer addSubview:_playImageView];
         
         _playerContainer = [[TMView alloc] initWithFrame:NSZeroRect];
         [_playerContainer setWantsLayer:YES];
@@ -48,6 +53,8 @@
     _prevState = NO;
     [self.imageView setHidden:YES];
     
+    [self.player setPath:nil];
+    
     [super setWebpage:webpage];
     
     
@@ -60,9 +67,7 @@
     
     [self.playerContainer setFrame:NSMakeRect(0, webpage.size.height - webpage.imageSize.height, webpage.imageSize.width, webpage.imageSize.height)];
     [self.player setFrameSize:self.playerContainer.frame.size];
-    
-    [self.player setPath:webpage.path];
-    
+        
     [self.player setImageObject:webpage.imageObject];
     
     [self.imageView removeFromSuperview];
@@ -71,6 +76,13 @@
     
     
     [self.imageView setHidden:NO];
+    
+    [_playImageView removeFromSuperview];
+    [_playerContainer addSubview:_playImageView];
+    
+    [_playImageView setHidden:![SettingsArchiver checkMaskedSetting:DisableAutoplayGifSetting]];
+    if(!_playImageView.isHidden)
+        [_playImageView setCenterByView:_playImageView.superview];
     
     [self updateDownloadState];
     
@@ -91,12 +103,28 @@
     [self updateDownloadState];
 }
 
+-(void)showPhoto {
+    TGWebpageGifObject *item = (TGWebpageGifObject *)self.webpage;
+    
+    if(item.isset && [SettingsArchiver checkMaskedSetting:DisableAutoplayGifSetting]) {
+        
+        [_player setPath:_playImageView.isHidden ? nil : item.path];
+        [_playImageView setHidden:!_playImageView.isHidden];
+    } else {
+        [super showPhoto];
+    }
+}
+
+
+
 
 -(void)updateDownloadState {
     
     weak();
     
     TGWebpageGifObject *item = (TGWebpageGifObject *)self.webpage;
+    
+    [self.playImageView setHidden:![SettingsArchiver checkMaskedSetting:DisableAutoplayGifSetting] || item.downloadItem != nil];
     
     if(item.downloadItem) {
         
@@ -182,7 +210,7 @@
         
         BOOL completelyVisible = self.visibleRect.size.width > 0 && self.visibleRect.size.height > 0 && ![TMViewController isModalActive];
         
-        return  completelyVisible && ((self.window != nil && self.window.isKeyWindow) || notification == nil) && webpage.isset;
+        return  ![SettingsArchiver checkMaskedSetting:DisableAutoplayGifSetting] && completelyVisible && ((self.window != nil && self.window.isKeyWindow) || notification == nil) && webpage.isset && ![self inLiveResize];
         
     };
     

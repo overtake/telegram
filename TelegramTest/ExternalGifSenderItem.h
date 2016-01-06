@@ -10,7 +10,7 @@
 
 @interface ExternalGifSenderItem : SenderItem
 
--(id)initWithMedia:(TLMessageMedia *)media forConversation:(TL_conversation *)conversation;
+-(id)initWithMedia:(TLMessageMedia *)media additionFlags:(int)additionFlags forConversation:(TL_conversation *)conversation;
 
 
 @end

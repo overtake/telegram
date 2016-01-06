@@ -3555,9 +3555,11 @@ static NSTextAttachment *headerMediaIcon() {
     
     [self setHistoryFilter:self.defHFClass force:self.historyController.prevState != ChatHistoryStateFull];
     
+    int senderFlags = [self senderFlags];
+    
     [ASQueue dispatchOnStageQueue:^{
         
-        ExternalGifSenderItem *sender = [[ExternalGifSenderItem alloc] initWithMedia:media forConversation:conversation];
+        ExternalGifSenderItem *sender = [[ExternalGifSenderItem alloc] initWithMedia:media additionFlags:senderFlags forConversation:conversation];
         
         sender.tableItem = [[self messageTableItemsFromMessages:@[sender.message]] lastObject];
         [self.historyController addItem:sender.tableItem conversation:conversation callback:nil sentControllerCallback:nil];

@@ -31,7 +31,7 @@
     
     if(image != nil && image.size.width > 0 && image.size.height > 0) {
 
-        image = [ImageUtils blurImage:image blurRadius:10 frameSize:self.imageSize];
+        image = [ImageUtils blurImage:image blurRadius:25 frameSize:self.imageSize];
         
         [TGCache cacheImage:image forKey:[self cacheKey] groups:@[IMGCACHE]];
     }

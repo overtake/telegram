@@ -266,6 +266,8 @@ DYNAMIC_PROPERTY(DUser);
         self.autoresizingMask = NSViewWidthSizable;
         
         
+        
+        
         _separator = [[TMView alloc] initWithFrame:NSMakeRect(0, NSHeight(frameRect) - DIALOG_BORDER_WIDTH, NSWidth(frameRect), DIALOG_BORDER_WIDTH)];
         
         _separator.backgroundColor = DIALOG_BORDER_COLOR;
@@ -281,7 +283,13 @@ DYNAMIC_PROPERTY(DUser);
     return self;
 }
 
-
+-(void)setFrameSize:(NSSize)newSize {
+    [super setFrameSize:newSize];
+    
+    [_contextTableView.containerView setFrameSize:newSize];
+    [_mediaContextTableView.containerView setFrameSize:newSize];
+    [_tableView.containerView setFrameSize:newSize];
+}
 
 
 -(void)showCommandsHintsWithQuery:(NSString *)query conversation:(TL_conversation *)conversation botInfo:(NSArray *)botInfo choiceHandler:(void (^)(NSString *result))choiceHandler  {

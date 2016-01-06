@@ -14,12 +14,13 @@
 @implementation ExternalGifSenderItem
 
 
--(id)initWithMedia:(TLMessageMedia *)media forConversation:(TL_conversation *)conversation {
+-(id)initWithMedia:(TLMessageMedia *)media additionFlags:(int)additionFlags forConversation:(TL_conversation *)conversation {
     if(self = [super initWithConversation:conversation]) {
         
         self.message = [MessageSender createOutMessage:nil media:media conversation:conversation];
         
-        
+        if(additionFlags & (1 << 4))
+            self.message.from_id = 0;
         
         [self.message save:YES];
         

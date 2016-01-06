@@ -230,6 +230,20 @@
     [self.tableView insert:mutedChatsInUnreadCount atIndex:self.tableView.list.count tableRedraw:NO];
     
     
+    GeneralSettingsRowItem *autoplayGifs = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeSwitch callback:^(TGGeneralRowItem *item) {
+        
+        [SettingsArchiver addOrRemoveSetting:DisableAutoplayGifSetting];
+        
+        
+    } description:NSLocalizedString(@"Settings.AutoplayGifs", nil) height:42 stateback:^id(TGGeneralRowItem *item) {
+        return @(![SettingsArchiver checkMaskedSetting:DisableAutoplayGifSetting]);
+    }];
+    
+    [self.tableView insert:autoplayGifs atIndex:self.tableView.list.count tableRedraw:NO];
+    
+    
+    
+    
 #ifdef TGDEBUG
     
     GeneralSettingsRowItem *sendLogs = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeNext callback:^(TGGeneralRowItem *item) {

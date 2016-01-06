@@ -141,7 +141,8 @@
         
         _replyThumb = [[TGImageObject alloc] initWithLocation:!thumb ? photoSize.location : nil placeHolder:thumb];
         
-        _replyThumb.imageSize = strongsize(NSMakeSize(photoSize.w, photoSize.h), _containerHeight-2);
+        
+        _replyThumb.imageSize = NSMakeSize(_containerHeight-2, _containerHeight-2);
         
     }
     

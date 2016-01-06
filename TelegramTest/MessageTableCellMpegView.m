@@ -19,6 +19,7 @@
 @property (nonatomic,strong) TGVTVideoView *player;
 
 @property (nonatomic,strong) TMView *playerContainer;
+@property (nonatomic,strong) NSImageView *playImageView;
 
 @end
 
@@ -27,7 +28,9 @@
 -(instancetype)initWithFrame:(NSRect)frameRect {
     if(self = [super initWithFrame:frameRect]) {
         
+        _playImageView = imageViewWithImage(image_PlayButtonBig());
         _playerContainer = [[TMView alloc] initWithFrame:NSZeroRect];
+        [_playerContainer addSubview:_playImageView];
         
         _playerContainer.wantsLayer = YES;
         _playerContainer.layer.cornerRadius = 4;
@@ -77,6 +80,8 @@
     [super setCellState:cellState];
     [self.progressView setState:cellState];
     
+    [_playImageView setHidden:![SettingsArchiver checkMaskedSetting:DisableAutoplayGifSetting] || cellState != CellStateNormal];
+    
     [self _didScrolledTableView:nil];
         
 }
@@ -98,6 +103,7 @@
     [super setItem:item];
     
     _prevState = NO;
+    [_player setPath:nil];
     
     [_playerContainer setFrameSize:item.blockSize];
     [_player setFrameSize:item.blockSize];
@@ -105,6 +111,11 @@
     [_player setImageObject:item.thumbObject];
     
     [self setProgressToView:_playerContainer];
+    
+    [_playImageView removeFromSuperview];
+    [_playerContainer addSubview:_playImageView];
+    
+    [_playImageView setCenterByView:_playImageView.superview];
 
     [self updateDownloadState];
     
@@ -122,8 +133,6 @@
         
         [[Storage yap] readWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
             items = [transaction objectForKey:@"gifs" inCollection:RECENT_GIFS];
-            
-            int bp = 0;
         }];
         
         TLDocument *document = self.item.message.media.document;
@@ -187,7 +196,7 @@
         
         BOOL completelyVisible = self.visibleRect.size.width > 0 && self.visibleRect.size.height > 0 && ![TMViewController isModalActive];
         
-        return  completelyVisible && ((self.window != nil && self.window.isKeyWindow) || notification == nil) && item.isset;
+        return ![SettingsArchiver checkMaskedSetting:DisableAutoplayGifSetting] && completelyVisible && ((self.window != nil && self.window.isKeyWindow) || notification == nil) && item.isset && ![self inLiveResize];
         
     };
         
@@ -199,6 +208,8 @@
         if(_prevState != nextState) {
             [_player setPath:nextState ? item.path : nil];
         }
+        
+        
         
         _prevState = nextState;
     };
@@ -212,6 +223,19 @@
     
 }
 
+
+
+-(void)mouseUp:(NSEvent *)theEvent {
+    MessageTableItemMpeg *item = (MessageTableItemMpeg *) self.item;
+    
+    if(item.isset && [SettingsArchiver checkMaskedSetting:DisableAutoplayGifSetting]) {
+        
+        [_player setPath:_playImageView.isHidden ? nil : item.path];
+        [_playImageView setHidden:!_playImageView.isHidden];
+    } else {
+        [super mouseUp:theEvent];
+    }
+}
 
 
 -(void)viewDidMoveToWindow {

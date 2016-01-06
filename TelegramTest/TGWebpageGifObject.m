@@ -28,15 +28,7 @@
 
         
         
-        if(self.isset) {
-            _imageObject = [[TGThumbnailObject alloc] initWithFilepath:[self path]];
-            _imageObject.imageSize = NSMakeSize(self.imagesize.w, self.imagesize.h);
-        } else {
-            if(![webpage.document.thumb isKindOfClass:[TL_photoSizeEmpty class]]) {
-                _imageObject = [[TGBlurImageObject alloc] initWithLocation:webpage.document.thumb.location thumbData:webpage.document.thumb.bytes size:webpage.document.thumb.size];
-                _imageObject.imageSize = NSMakeSize(self.imagesize.w, self.imagesize.h);
-            }
-        }
+        [self doAfterDownload];
         
     }
     
@@ -113,8 +105,15 @@
 -(void)doAfterDownload {
     [super doAfterDownload];
     
-    _imageObject = [[TGThumbnailObject alloc] initWithFilepath:[self path]];
-    _imageObject.imageSize = NSMakeSize(self.imagesize.w, self.imagesize.h);
+    if(![self.webpage.document.thumb isKindOfClass:[TL_photoSizeEmpty class]]) {
+        _imageObject = [[TGBlurImageObject alloc] initWithLocation:self.webpage.document.thumb.location thumbData:self.webpage.document.thumb.bytes size:self.webpage.document.thumb.size];
+        _imageObject.imageSize = NSMakeSize(self.imagesize.w, self.imagesize.h);
+    } else {
+        if([self isset]) {
+            _imageObject = [[TGThumbnailObject alloc] initWithFilepath:[self path]];
+            _imageObject.imageSize = NSMakeSize(self.imagesize.w, self.imagesize.h);
+        }
+    }
     
 }
 
