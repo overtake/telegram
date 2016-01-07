@@ -104,6 +104,10 @@ static const int width = 180;
         
     }
     
+    if(self.imageProcessor) {
+        image = self.imageProcessor(image,image.size);
+    }
+    
     image = decompressedImage(image);
     
     [TGCache cacheImage:image forKey:self.location.cacheKey groups:@[PCCACHE]];

@@ -14,7 +14,7 @@
 
 
 -(id)initWithConversation:(TL_conversation *)conversation commonItem:(PreviewObject *)object;
-
+-(id)initWithConversation:(TL_conversation *)conversation commonItem:(PreviewObject *)object filter:(Class)filter;
 -(void)drop;
 
 @end

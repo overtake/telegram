@@ -164,9 +164,9 @@ static void TGTelegramLoggingFunction(NSString *format, va_list args)
         return;
     }
     
+     [self.mainWindow deminiaturize:self];
+    
     [self.mainWindow.navigationController showMessagesViewController:dialog];
-    
-    
     
     
     if (floor(NSAppKitVersionNumber) > 1187 && notification.activationType == 3) { //NSUserNotificationActivationTypeReplied)
@@ -188,7 +188,7 @@ static void TGTelegramLoggingFunction(NSString *format, va_list args)
         return;
     }
     
-    [self.mainWindow deminiaturize:self];
+   
     
     
 }

@@ -13,6 +13,7 @@
 #import "TGPVMediaBehavior.h"
 #import "PhotoHistoryFilter.h"
 #import "VideoHistoryFilter.h"
+#import "PhotoVideoHistoryFilter.h"
 #import "DocumentHistoryFilter.h"
 #import "AudioHistoryFilter.h"
 #import "TGDocumentsMediaTableView.h"
@@ -107,7 +108,6 @@
     
     self.items = [[NSMutableArray alloc] init];
     
-    self.behavior = [[TGPVMediaBehavior alloc] init];
     
     _photoCollection = [[PhotoCollectionTableView alloc] initWithFrame:self.view.bounds];
     
@@ -164,14 +164,7 @@
     
     [self.view addSubview:self.mediaCap];
     
-   // [self.mediaCap setHidden:YES];
-    
-    
-    [self.view addSubview:self.actionsView];
-    
-  //  [self.actionsView setHidden:YES];
-    
-    
+     [self.view addSubview:self.actionsView];
     
    
     
@@ -438,8 +431,7 @@ static const int maxWidth = 120;
     self.locked = NO;
     
     
-    self.behavior = [[TGPVMediaBehavior alloc] initWithConversation:_conversation commonItem:nil];
-    self.behavior.conversation = conversation;
+    self.behavior = [[TGPVMediaBehavior alloc] initWithConversation:_conversation commonItem:nil filter:[PhotoVideoHistoryFilter class]];
     
     
     
@@ -745,7 +737,8 @@ static const int maxWidth = 120;
         
         TLVideo *video = media.video;
         
-        imageObject = [[PhotoCollectionImageObject alloc] initWithLocation:[video.thumb isKindOfClass:[TL_photoCachedSize class]] ? nil : video.thumb.location placeHolder:[video.thumb isKindOfClass:[TL_photoCachedSize class]] ? [[NSImage alloc] initWithData:video.thumb.bytes] : nil sourceId:arc4random()];
+        imageObject = [[PhotoCollectionImageObject alloc] initWithLocation:video.thumb.location placeHolder:[video.thumb isKindOfClass:[TL_photoCachedSize class]] ? [[NSImage alloc] initWithData:video.thumb.bytes] : nil sourceId:arc4random()];
+        imageObject.imageProcessor = [ImageUtils b_processor];
         imageObject.previewObject = previewObject;
         
         previewObject.reservedObject = [[DownloadVideoItem alloc] initWithObject:previewObject.media];

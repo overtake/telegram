@@ -689,6 +689,9 @@ static NSImage *tgContextPicCap() {
     
     _needCheckKeyWindow = needCheckKey;
     
+    
+    [self removeScrollEvent];
+    [self addScrollEvent];
 }
 
 

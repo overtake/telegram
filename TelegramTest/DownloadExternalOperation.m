@@ -75,7 +75,7 @@
     dispatch_once(&onceToken, ^{
         queues = [[NSMutableArray alloc] init];
         
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < 10; i++) {
             [queues addObject:[[NSOperationQueue alloc] init]];
         }
     });

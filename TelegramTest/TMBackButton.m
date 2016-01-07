@@ -89,7 +89,7 @@
 -(void)updateBackButton {
     
     
-    if(self.controller.navigationViewController == ((TelegramWindow *)[NSApp mainWindow]).navigationController) {
+    if(self.controller.navigationViewController == ((TelegramWindow *)[[Telegram delegate] mainWindow]).navigationController) {
         if((self.controller.navigationViewController.viewControllerStack.count > 2 || [[Telegram mainViewController] isSingleLayout]) && ![[Telegram rightViewController] isModalViewActive]) {
             [self.field setStringValue:[NSString stringWithFormat:@"   %@", NSLocalizedString(@"Compose.Back",nil)]];
         } else if([[Telegram rightViewController] isModalViewActive] && [Telegram isSingleLayout]) {

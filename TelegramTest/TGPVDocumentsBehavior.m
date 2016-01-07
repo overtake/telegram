@@ -27,9 +27,17 @@
 
 -(id)initWithConversation:(TL_conversation *)conversation commonItem:(PreviewObject *)object {
     
+    if(self = [self initWithConversation:conversation commonItem:object filter:[DocumentHistoryFilter class]]) {
+        
+    }
+    
+    return self;
+}
+
+-(id)initWithConversation:(TL_conversation *)conversation commonItem:(PreviewObject *)object filter:(Class)filter {
     if(self = [super init]) {
         _conversation = conversation;
-        _controller = [[ChatHistoryController alloc] initWithController:self historyFilter:[DocumentHistoryFilter class]];
+        _controller = [[ChatHistoryController alloc] initWithController:self historyFilter:filter];
         
         if(object != nil)
             [_controller addMessageWithoutSavingState:object.media];

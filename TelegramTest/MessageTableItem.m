@@ -69,8 +69,7 @@ static NSCache *cItems;
         if(object.peer.peer_id == [UsersManager currentUserId])
             object.flags&= ~TGUNREADMESSAGE;
         //&& ![self.message.media isKindOfClass:[TL_messageMediaPhoto class]] && ![self.message.media isKindOfClass:[TL_messageMediaVideo class]]
-        self.isForwadedMessage = (self.message.fwd_from_id != nil )  && (![self.message.media isKindOfClass:[TL_messageMediaDocument class]]  || ![self.message.media isKindOfClass:[TL_messageMediaDocument_old44 class]] || (![self.message.media.document isSticker])) && ![self.message.media isKindOfClass:[TL_messageMediaAudio class]];
-        
+        self.isForwadedMessage = (self.message.fwd_from_id != nil )  && ((![self.message.media isKindOfClass:[TL_messageMediaDocument class]] || ![self.message.media isKindOfClass:[TL_messageMediaDocument_old44 class]]) && ( ![self.message.media.document isSticker] && ![self.message.media.document.mime_type hasPrefix:@"audio/"]));
         
         self.isChat = [self.message.to_id isKindOfClass:[TL_peerChat class]] || [self.message.to_id isKindOfClass:[TL_peerChannel class]];
         

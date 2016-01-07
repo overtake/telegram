@@ -519,7 +519,7 @@
 
 - (void)resort {
     [self->list sortUsingComparator:^NSComparisonResult(TL_conversation * obj1, TL_conversation * obj2) {
-        return (obj1.last_real_message_date < obj2.last_real_message_date ? NSOrderedDescending : (obj1.last_real_message_date > obj2.last_real_message_date ? NSOrderedAscending : (obj1.top_message < obj2.top_message ? NSOrderedDescending : NSOrderedAscending)));
+        return (obj1.last_message_date < obj2.last_message_date ? NSOrderedDescending : (obj1.last_message_date > obj2.last_message_date ? NSOrderedAscending : (obj1.top_message < obj2.top_message ? NSOrderedDescending : NSOrderedAscending)));
     }];
     
 }
@@ -641,16 +641,11 @@
                     
                     TL_conversation *conversation = [(TL_localMessage *)[messages firstObject] conversation];
                     
-                    if(!n_out) {
-                        
-                        conversation.read_inbox_max_id = max_id;
-                    }
-                    
                     conversation.last_marked_message = max_id;
                     
                    
                     [messages enumerateObjectsUsingBlock:^(TL_localMessage *message, NSUInteger idx, BOOL * _Nonnull stop) {
-                        if(!message.n_out) {
+                        if(!message.n_out && message.unread) {
                             conversation.unread_count--;
                         }
                         
@@ -659,6 +654,11 @@
                         }
                         
                     }];
+                    
+                    if(!n_out && conversation.read_inbox_max_id < max_id) {
+                        
+                        conversation.read_inbox_max_id = max_id;
+                    }
                     
                     [Notification perform:[Notification notificationNameByDialog:conversation action:@"unread_count"] data:@{KEY_DIALOG:conversation,KEY_LAST_CONVRESATION_DATA:[MessagesUtils conversationLastData:conversation]}];
                     [Notification perform:MESSAGE_READ_EVENT data:@{KEY_MESSAGE_ID_LIST:ids}];
@@ -747,7 +747,7 @@
     
     if(message.unread && !message.n_out) {
         dialog.unread_count++;
-    } else if(!message.unread) {
+    } else if(!message.unread && !message.n_out) {
         dialog.unread_count = 0;
     }
     
