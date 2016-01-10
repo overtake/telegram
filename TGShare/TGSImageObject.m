@@ -11,7 +11,7 @@
 #import <CommonCrypto/CommonDigest.h>
 #include "NSString+Extended.h"
 #import "TGS_MTNetwork.h"
-
+#import "DownloadQueue.h"
 typedef struct
 {
     int top;
@@ -63,11 +63,13 @@ static const TGTwoColors colors[] = {
     weak();
     
     [self.downloadListener setCompleteHandler:^(DownloadItem * item) {
-        weakSelf.isLoaded = YES;
-        
-        [weakSelf _didDownloadImage:item];
-        weakSelf.downloadItem = nil;
-        weakSelf.downloadListener = nil;
+        [DownloadQueue dispatchOnDownloadQueue:^{
+            weakSelf.isLoaded = YES;
+            
+            [weakSelf _didDownloadImage:item];
+            weakSelf.downloadItem = nil;
+            weakSelf.downloadListener = nil;
+        }];
     }];
     
     

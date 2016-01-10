@@ -38,11 +38,15 @@
     weak();
 
     [self.downloadListener setCompleteHandler:^(DownloadItem * item) {
-        weakSelf.isLoaded = YES;
         
-        [weakSelf _didDownloadImage:item];
-        weakSelf.downloadItem = nil;
-        weakSelf.downloadListener = nil;
+        [DownloadQueue dispatchOnDownloadQueue:^{
+            weakSelf.isLoaded = YES;
+            
+            [weakSelf _didDownloadImage:item];
+            weakSelf.downloadItem = nil;
+            weakSelf.downloadListener = nil;
+        }];
+       
     }];
     
     

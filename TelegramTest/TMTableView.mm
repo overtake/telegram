@@ -524,8 +524,6 @@ static TMTableView *tableStatic;
     if (cell == nil) {
         cell = [[classObject alloc] initWithFrame:NSMakeRect(0, 0, size.width, size.height)];
         cell.identifier = identifier;
-    } else {
-        [cell setFrameSize:size];
     }
     return cell;
 }

@@ -75,8 +75,11 @@
     dispatch_once(&onceToken, ^{
         queues = [[NSMutableArray alloc] init];
         
-        for (int i = 0; i < 10; i++) {
-            [queues addObject:[[NSOperationQueue alloc] init]];
+        for (int i = 0; i < 2; i++) {
+            
+            NSOperationQueue *queue = [[NSOperationQueue alloc] init];
+            queue.maxConcurrentOperationCount = 10;
+            [queues addObject:queue];
         }
     });
     

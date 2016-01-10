@@ -561,6 +561,8 @@
 -(void)messageTableItemsHoleUpdate:(NSNotification *)notification {
     
     
+    
+    
     if(self.historyController.filter.class == [ChannelImportantFilter class]) {
         TGMessageGroupHole *hole = notification.userInfo[KEY_GROUP_HOLE];
         
@@ -575,13 +577,17 @@
                     
                     if(hole.messagesCount != 0) {
                         
-                        NSUInteger index = [self indexOfObject:item];
+                        [ASQueue dispatchOnMainQueue:^{
+                            NSUInteger index = [self indexOfObject:item];
+                            
+                            [item updateWithHole:hole];
+                            
+                            if(index != NSNotFound) {
+                                [self.table reloadDataForRowIndexes:[NSIndexSet indexSetWithIndex:index] columnIndexes:[NSIndexSet indexSetWithIndex:0]];
+                            }
+                        }];
                         
-                        [item updateWithHole:hole];
                         
-                        if(index != NSNotFound) {
-                            [self.table reloadDataForRowIndexes:[NSIndexSet indexSetWithIndex:index] columnIndexes:[NSIndexSet indexSetWithIndex:0]];
-                        }
                     } else {
                         [Notification perform:MESSAGE_DELETE_EVENT data:@{KEY_DATA:@[@{KEY_PEER_ID:@(hole.peer_id),KEY_MESSAGE_ID:@(hole.uniqueId)}]}];
                     }
@@ -3531,11 +3537,6 @@ static NSTextAttachment *headerMediaIcon() {
         NSData *imageData = jpegNormalizedData(originImage);
         
         
-
-        MTLog(@"imageSize: %ld kb",imageData.length / 1024);
-        
-        
-       
         SenderItem *sender;
         
         if(self.conversation.type == DialogTypeSecretChat) {

@@ -30,6 +30,7 @@
 - (id) initWithObject:(TL_localMessage *)object {
     self = [super initWithObject:object];
     
+    
     self.textAttributed = [[NSMutableAttributedString alloc] init];
     
     NSString *message = [[object.message trim] fixEmoji];
@@ -40,16 +41,10 @@
     [self.textAttributed setAlignment:NSLeftTextAlignment range:self.textAttributed.range];
     
     [self updateEntities];
-    
-   // [SettingsArchiver addEventListener:self];
-    
-    
+
     
     
     [self updateWebPage];
-    
-    
-  //  [self makeSizeByWidth:280];
     
     return self;
 }

@@ -9,6 +9,7 @@
 #import "TGPVDocumentObject.h"
 #import "DownloadDocumentItem.h"
 #import "DownloadDocumentItem.h"
+#import "DownloadQueue.h"
 @interface TGPVDocumentObject ()
 @property (nonatomic,strong) TL_localMessage *message;
 @end
@@ -64,11 +65,14 @@
     weak();
     
     [self.downloadListener setCompleteHandler:^(DownloadItem * item) {
-        weakSelf.isLoaded = YES;
+        [DownloadQueue dispatchOnDownloadQueue:^{
+            weakSelf.isLoaded = YES;
+            
+            [weakSelf _didDownloadImage:item];
+            weakSelf.downloadItem = nil;
+            weakSelf.downloadListener = nil;
+        }];
         
-        [weakSelf _didDownloadImage:item];
-        weakSelf.downloadItem = nil;
-        weakSelf.downloadListener = nil;
     }];
     
     

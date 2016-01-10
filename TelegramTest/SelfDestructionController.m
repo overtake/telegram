@@ -32,15 +32,21 @@
         _readWaiting = [[NSMutableArray alloc] init];
         self.targets = [[NSMutableArray alloc] init];
       
-        self.ticker = [[TGTimer alloc] initWithTimeout:1.0 repeat:YES completion:^{
-            [self loopAndCheckMessages];
-        } queue:[ASQueue globalQueue].nativeQueue];
-        
-        [self.ticker start];
-        [Notification addObserver:self selector:@selector(didReadMessages:) name:MESSAGE_READ_EVENT];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(windowBecomeNotification:) name:NSWindowDidBecomeKeyNotification object:[NSApp mainWindow]];
     }
     return self;
+}
+
+-(void)startTicker {
+    [_ticker invalidate];
+    
+    self.ticker = [[TGTimer alloc] initWithTimeout:1.0 repeat:YES completion:^{
+        [self loopAndCheckMessages];
+    } queue:[ASQueue globalQueue].nativeQueue];
+    
+    [self.ticker start];
+    
+    [_ticker fire];
 }
 
 - (void)windowBecomeNotification:(NSNotification *)notification {
@@ -82,6 +88,12 @@
             
         }
     }
+    
+    if(self.targets.count == 0) {
+        [_ticker invalidate];
+        _ticker = nil;
+    }
+    
     if(todelete.count) {
         
         [[DialogsManager sharedManager] deleteMessagesWithMessageIds:todelete];
@@ -103,38 +115,6 @@
     [Notification removeObserver:self];
 }
 
-
--(void)didReadMessages:(NSNotification *)notification {
-    
-    [ASQueue dispatchOnStageQueue:^{
-        NSArray *ids = [notification.userInfo objectForKey:KEY_MESSAGE_ID_LIST];
-        NSMutableArray *tosave = [[NSMutableArray alloc] init];
-        for (NSNumber *msg_id in ids) {
-            int n_id = [msg_id intValue];
-            if(n_id > TGMINSECRETID) {
-                TL_destructMessage *message = [(MessagesManager *)[MessagesManager sharedManager] find:n_id];
-                
-                if(![message isKindOfClass:[TL_destructMessage class]])
-                    return;
-                
-                if([message isKindOfClass:[TL_destructMessage class]] && message.params.layer > 1 && [message.media isKindOfClass:[TL_messageMediaPhoto class]] && message.ttl_seconds <  60*60)
-                    continue;
-                
-                if(message.ttl_seconds != 0) {
-                    message.destruction_time = [[NSDate date] timeIntervalSince1970]+message.ttl_seconds;
-                    [tosave addObject:message];
-                    [self.targets addObject:message];
-                }
-            }
-        }
-        
-        if(tosave.count)
-            [[Storage manager] insertMessages:tosave];
-    }];
-    
-}
-
-
 -(void)addMessage:(TL_destructMessage *)message force:(BOOL)force {
     
     [ASQueue dispatchOnStageQueue:^{
@@ -149,6 +129,7 @@
         
         if(message.destruction_time != 0) {
             [self.targets addObject:message];
+             [self startTicker];
             return;
         }
         
@@ -159,8 +140,10 @@
         if(message.ttl_seconds != 0) {
             message.destruction_time = [[NSDate date] timeIntervalSince1970]+message.ttl_seconds;
             [self.targets addObject:message];
+             [self startTicker];
             [message save:NO];
         }
+        
     }];
     
  

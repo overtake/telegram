@@ -37,13 +37,10 @@
         CMTime thumbTime = CMTimeMakeWithSeconds(0,1);
         
         AVAssetImageGeneratorCompletionHandler handler = ^(CMTime requestedTime, CGImageRef im, CMTime actualTime, AVAssetImageGeneratorResult result, NSError *error){
-            if (result != AVAssetImageGeneratorSucceeded) {
-                NSLog(@"couldn't generate thumbnail, error:%@", error);
-            }
             
             NSImage* thumbImg = [[NSImage alloc] initWithCGImage:im size:self.imageSize];
             
-            thumbImg = renderedImage(thumbImg, self.imageSize);
+            thumbImg = decompressedImage(thumbImg);
             
             [TGCache cacheImage:thumbImg forKey:[self cacheKey] groups:@[IMGCACHE]];
             

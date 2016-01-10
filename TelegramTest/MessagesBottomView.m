@@ -631,6 +631,7 @@
     
     self.progressView = [[NSProgressIndicator alloc] initWithFrame:NSMakeRect(self.inputMessageTextField.containerView.frame.size.width - 30, 10,16,16)];
     [self.progressView setAutoresizingMask:NSViewMinXMargin | NSViewMinYMargin];
+    [self.progressView setControlSize:NSSmallControlSize];
     [self.progressView setStyle:NSProgressIndicatorSpinningStyle];
     [self.inputMessageTextField.containerView addSubview:self.progressView];
     

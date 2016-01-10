@@ -9,6 +9,7 @@
 #import "TGStickerImageObject.h"
 #import "DownloadStickerItem.h"
 #import "webp/decode.h"
+#import "DownloadQueue.h"
 @interface TGStickerImageObject ()
 @property (nonatomic,strong) TL_localMessage *message;
 @end
@@ -50,12 +51,12 @@
     weak();
     
     [self.downloadListener setCompleteHandler:^(DownloadItem * item) {
-        
-        weakSelf.isLoaded = YES;
-        
-        [weakSelf _didDownloadImage:item];
-        weakSelf.downloadItem = nil;
-        weakSelf.downloadListener = nil;
+        [DownloadQueue dispatchOnDownloadQueue:^{
+            weakSelf.isLoaded = YES;
+            [weakSelf _didDownloadImage:item];
+            weakSelf.downloadItem = nil;
+            weakSelf.downloadListener = nil;
+        }];  
     }];
     
     

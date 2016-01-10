@@ -206,46 +206,114 @@
     }];
 }
 
+-(void)checkStartScroll {
+    if(!_timer) {
+         [self checkAndScroll:[self.scrollView convertPoint:[self.window mouseLocationOutsideOfEventStream] fromView:nil]];
+    }
+}
+
 -(NSUInteger)indexOfItem:(NSObject *)item {
     return [[self.viewController messageList] indexOfObject:item];
 }
 
 
+//-(void)checkAndScroll:(NSPoint)point {
+//    
+//    //
+//    //    NSPoint topCorner = NSMakePoint(0, roundf(NSHeight(self.scrollView.frame) - 70));
+//    //
+//    //
+//    //    NSPoint botCorner = NSMakePoint(0, 70);
+//    //
+//    //    int counter = 0;
+//    //
+//    //    BOOL next = YES;
+//    //
+//    //    if(point.y > topCorner.y) {
+//    //
+//    //        counter = abs(point.y - topCorner.y - 20);
+//    //
+//    //        [self.scrollView scrollToPoint:NSMakePoint(self.scrollView.documentOffset.x, self.scrollView.documentOffset.y - counter) animation:NO];
+//    //
+//    //    } else if(point.y < botCorner.y) {
+//    //
+//    //        counter = abs(point.y - botCorner.y - 20);
+//    //
+//    //       [self.scrollView scrollToPoint:NSMakePoint(self.scrollView.documentOffset.x, self.scrollView.documentOffset.y + counter) animation:NO];
+//    //    } else
+//    //        next = NO;
+//    
+//}
+
 -(void)checkAndScroll:(NSPoint)point {
     
-//    
-//    NSPoint topCorner = NSMakePoint(0, roundf(NSHeight(self.scrollView.frame) - 70));
-//    
-//    
-//    NSPoint botCorner = NSMakePoint(0, 70);
-//    
-//    int counter = 0;
-//    
-//    BOOL next = YES;
-//    
-//    if(point.y > topCorner.y) {
-//        
-//        counter = abs(point.y - topCorner.y - 20);
-//        
-//        [self.scrollView scrollToPoint:NSMakePoint(self.scrollView.documentOffset.x, self.scrollView.documentOffset.y - counter) animation:NO];
-//        
-//    } else if(point.y < botCorner.y) {
-//        
-//        counter = abs(point.y - botCorner.y - 20);
-//        
-//       [self.scrollView scrollToPoint:NSMakePoint(self.scrollView.documentOffset.x, self.scrollView.documentOffset.y + counter) animation:NO];
-//    } else
-//        next = NO;
+    NSPoint topCorner = NSMakePoint(0, roundf(NSHeight(self.scrollView.frame) - 100));
     
+    NSPoint botCorner = NSMakePoint(0, 100);
+    
+    int counter = 0;
+    
+    BOOL next = YES;
+    
+    BOOL prev = NO;
+    
+    if(point.y > topCorner.y) {
+        
+        counter = fabs(point.y - topCorner.y - 20 );
+
+       [self.scrollView scrollToPoint:NSMakePoint(self.scrollView.documentOffset.x, self.scrollView.documentOffset.y - counter) animation:NO];
+        
+    } else if(point.y < botCorner.y) {
+        
+        prev = YES;
+        
+        counter = fabs(point.y - botCorner.y + 20 );
+        
+        [self.scrollView scrollToPoint:NSMakePoint(self.scrollView.documentOffset.x, self.scrollView.documentOffset.y + counter) animation:NO];
+    } else
+        next = NO;
+    
+    
+    if(next) {
+        if(_timer == nil)
+            [self startUpdateScrollTimerIfNeeded];
+    } else
+        [self stopUpdateScrollTimer];
+    
+    
+}
+
+
+-(void)startUpdateScrollTimerIfNeeded {
+    if(!_timer) {
+        
+        _timer = [[TGTimer alloc] initWithTimeout:0.016 repeat:YES completion:^{
+            
+            [self checkAndScroll:[self.scrollView convertPoint:[self.window mouseLocationOutsideOfEventStream] fromView:nil]];
+            
+        } queue:dispatch_get_current_queue()];
+        
+        
+        [_timer start];
+    }
+}
+
+-(void)stopUpdateScrollTimer {
+    [_timer invalidate];
+    _timer = nil;
 }
 
 -(void)mouseUp:(NSEvent *)theEvent {
     _startSelectPosition = NSMakePoint(INT32_MIN, INT32_MIN);
+    [self stopUpdateScrollTimer];
     [super mouseUp:theEvent];
 }
 
 -(void)mouseDragged:(NSEvent *)theEvent {
     [super mouseDragged:theEvent];
+    
+    if(_timer == nil)
+        [self checkAndScroll:[self.scrollView convertPoint:[theEvent locationInWindow] fromView:nil]];
     
     
     if(_startSelectPosition.x == INT32_MIN && _startSelectPosition.y == INT32_MIN)

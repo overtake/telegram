@@ -233,17 +233,17 @@ DYNAMIC_PROPERTY(DUser);
         
         self.alphaValue = 0.0f;
         
-        _tableView = [[TMTableView alloc] initWithFrame:NSMakeRect(0, 0, NSWidth(frameRect), NSHeight(frameRect))];
+        _tableView = [[TMTableView alloc] initWithFrame:self.bounds];
         _tableView.defaultAnimation = NSTableViewAnimationEffectFade;
         _tableView.tm_delegate = self;
         
         [self addSubview:_tableView.containerView];
         
-        _contextTableView = [[TGContextBotTableView alloc]  initWithFrame:NSMakeRect(0, 0, NSWidth(frameRect), NSHeight(frameRect))];
+        _contextTableView = [[TGContextBotTableView alloc]  initWithFrame:self.bounds];
         
         [self addSubview:_contextTableView.containerView];
         
-        _mediaContextTableView = [[TGMediaContextTableView alloc]  initWithFrame:NSMakeRect(0, 0, NSWidth(frameRect), NSHeight(frameRect))];
+        _mediaContextTableView = [[TGMediaContextTableView alloc]  initWithFrame:self.bounds];
         
         [self addSubview:_mediaContextTableView.containerView];
         
@@ -286,9 +286,9 @@ DYNAMIC_PROPERTY(DUser);
 -(void)setFrameSize:(NSSize)newSize {
     [super setFrameSize:newSize];
     
-    [_contextTableView.containerView setFrameSize:newSize];
-    [_mediaContextTableView.containerView setFrameSize:newSize];
-    [_tableView.containerView setFrameSize:newSize];
+    [_contextTableView setFrameSize:newSize];
+    [_mediaContextTableView setFrameSize:newSize];
+    [_tableView setFrameSize:newSize];
 }
 
 

@@ -67,12 +67,11 @@ static ASQueue *queue;
             
             NSData *imageData = jpegNormalizedData(originImage);
             
+            imageData = compressImage(imageData, 0.54);
+            
             _generatedPath = exportPath(_unique_id, @"jpg");
             
             [imageData writeToFile:_generatedPath atomically:YES];
-            
-            
-            
             
             _thumb = cropCenterWithSize(originImage, NSMakeSize(70, 70));
             

@@ -1503,6 +1503,14 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "+[TGVTAcceleratedVideoFrameQueueGuard removeGuardFromPath:key:]:TGVTVideoView.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "queueItemsByPath()">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "__50-[Storage lastMessageAroundMinId:important:isTop:]_block_invoke:Storage.m">
          <PersistentStrings>
             <PersistentString
@@ -3184,6 +3192,14 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "__63+[TGVTAcceleratedVideoFrameQueueGuard removeGuardFromPath:key:]_block_invoke:TGVTVideoView.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "queueItemsByPath()">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "-[TGDownloadOperation load:]:TGDownloadOperation.m">
       </ContextState>
       <ContextState
@@ -3501,6 +3517,9 @@
       <ContextState
          contextName = "-[VideoLayer drawInCGLContext:pixelFormat:forLayerTime:displayTime:]:VideoLayer.m">
          <PersistentStrings>
+            <PersistentString
+               value = "img">
+            </PersistentString>
             <PersistentString
                value = "self.pixelBuffer">
             </PersistentString>
@@ -5244,6 +5263,9 @@
       </ContextState>
       <ContextState
          contextName = "__58-[TGModernEncryptedUpdates dequeueInActions:conversation:]_block_invoke_2:TGModernEncryptedUpdates.m">
+      </ContextState>
+      <ContextState
+         contextName = "__16-[TGTimer start]_block_invoke:TGTimer.m">
       </ContextState>
       <ContextState
          contextName = "-[TGGLVideoPlayer setPath:]:TGGLVideoPlayer.m">

@@ -14,6 +14,44 @@
 
 #import "WeakReference.h"
 #import "TGImageView.h"
+#import "VideoLayer.h"
+#import "HackUtils.h"
+@class AVSampleBufferDisplayLayerInternal;
+
+@interface AVSampleBufferDisplayLayer ()
+-(long)_createVideoQueue;
+@end
+
+@interface TGSampleBufferDiplayLayer : AVSampleBufferDisplayLayer
+
+@end
+
+
+@implementation TGSampleBufferDiplayLayer
+
+static id vQueue;
+
+-(long)_createVideoQueue {
+    
+    
+    
+    long q = [super _createVideoQueue];
+    
+    
+//    id internal = [self valueForKey:@"_sampleBufferDisplayLayerInternal"];
+//    
+//    id queue = [internal valueForKey:@"serialQueue"];
+//    
+    
+
+    return q;
+    
+}
+
+
+
+@end
+
 
 static NSMutableDictionary *sessions() {
     static NSMutableDictionary *dict = nil;
@@ -136,6 +174,8 @@ static int32_t nextSessionId = 0;
     
     VTDecompressionSessionRef _decompressionSession;
     
+    bool _useVT;
+    
 }
 
 @property (nonatomic, strong) NSMutableArray *pendingFrames;
@@ -148,6 +188,7 @@ static int32_t nextSessionId = 0;
     self = [super init];
     if (self != nil) {
 
+        _useVT = YES;
         
         _sessionId = nextSessionId++;
         OSSpinLockLock(&sessionsLock);
@@ -318,28 +359,31 @@ static void TGVTPlayerDecompressionOutputCallback(void *decompressionOutputRefCo
             if (track != nil) {
                 _timeRange = track.timeRange;
                 
-                NSArray *formatDescriptions = track.formatDescriptions;
-                CMVideoFormatDescriptionRef formatDescription = (__bridge CMVideoFormatDescriptionRef)formatDescriptions.firstObject;
-                VTDecompressionOutputCallbackRecord callbackRecord = {&TGVTPlayerDecompressionOutputCallback, (void *)(intptr_t)_sessionId};
-                
-                NSDictionary *imageOutputDescription = nil;
-                OSStatus status = VTDecompressionSessionCreate(kCFAllocatorDefault, formatDescription, NULL, (__bridge CFDictionaryRef)imageOutputDescription, &callbackRecord, &_decompressionSession);
-                if (_decompressionSession == NULL) {
-                    if (status != -12983) {
-                        MTLog(@"VTDecompressionSessionCreate failed with %d", (int)status);
-                    }
-                    _failed = true;
+                if (_useVT) {
+                    NSArray *formatDescriptions = track.formatDescriptions;
+                    CMVideoFormatDescriptionRef formatDescription = (__bridge CMVideoFormatDescriptionRef)formatDescriptions.firstObject;
+                    VTDecompressionOutputCallbackRecord callbackRecord = {&TGVTPlayerDecompressionOutputCallback, (void *)(intptr_t)_sessionId};
                     
-                    _reader = nil;
-                    _output = nil;
-                    _failed = true;
-                    return nil;
+                    NSDictionary *imageOutputDescription = nil;
+                    OSStatus status = VTDecompressionSessionCreate(kCFAllocatorDefault, formatDescription, NULL, (__bridge CFDictionaryRef)imageOutputDescription, &callbackRecord, &_decompressionSession);
+                    if (_decompressionSession == NULL) {
+                        if (status != -12983) {
+                            MTLog(@"VTDecompressionSessionCreate failed with %d", (int)status);
+                        }
+                        _failed = true;
+                        
+                        _reader = nil;
+                        _output = nil;
+                        _failed = true;
+                        return nil;
+                    }
+                    
+                    _output = [AVAssetReaderTrackOutput assetReaderTrackOutputWithTrack:track outputSettings:nil];
+                } else {
+                    _output = [AVAssetReaderTrackOutput assetReaderTrackOutputWithTrack:track outputSettings:@{(NSString *)kCVPixelBufferPixelFormatTypeKey: @(kCVPixelFormatType_420YpCbCr8BiPlanarVideoRange)}];
                 }
-                
-                _output = [AVAssetReaderTrackOutput assetReaderTrackOutputWithTrack:track outputSettings:nil];
                 if (_output != nil) {
                     _output.alwaysCopiesSampleData = false;
-                    //_output.supportsRandomAccess = true;
                     
                     _reader = [[AVAssetReader alloc] initWithAsset:asset error:nil];
                     if ([_reader canAddOutput:_output]) {
@@ -377,33 +421,40 @@ static void TGVTPlayerDecompressionOutputCallback(void *decompressionOutputRefCo
             CMSampleBufferRef sampleVideo = NULL;
             if (([_reader status] == AVAssetReaderStatusReading) && (sampleVideo = [_output copyNextSampleBuffer])) {
                 TGVTAcceleratedVideoFrame *videoFrame = nil;
-                if (_decompressionSession != NULL) {
-                    VTDecodeFrameFlags decodeFlags = kVTDecodeFrame_EnableTemporalProcessing;
-                    VTDecodeInfoFlags outFlags = 0;
-                    VTDecompressionSessionDecodeFrame(_decompressionSession, sampleVideo, decodeFlags, NULL, &outFlags);
-                    if (outFlags & kVTDecodeInfo_Asynchronous) {
-                        VTDecompressionSessionFinishDelayedFrames(_decompressionSession);
-                        VTDecompressionSessionWaitForAsynchronousFrames(_decompressionSession);
-                    }
-                }
-                
-                if (_pendingFrames.count >= 3) {
-                    TGVTAcceleratedVideoFrame *earliestFrame = nil;
-                    for (TGVTAcceleratedVideoFrame *frame in _pendingFrames) {
-                        if (earliestFrame == nil || earliestFrame.timestamp > frame.timestamp) {
-                            earliestFrame = frame;
+                if (_useVT) {
+                    if (_decompressionSession != NULL) {
+                        VTDecodeFrameFlags decodeFlags = kVTDecodeFrame_EnableTemporalProcessing;
+                        VTDecodeInfoFlags outFlags = 0;
+                        VTDecompressionSessionDecodeFrame(_decompressionSession, sampleVideo, decodeFlags, NULL, &outFlags);
+                        if (outFlags & kVTDecodeInfo_Asynchronous) {
+                            VTDecompressionSessionFinishDelayedFrames(_decompressionSession);
+                            VTDecompressionSessionWaitForAsynchronousFrames(_decompressionSession);
                         }
                     }
-                    if (earliestFrame != nil) {
-                        [_pendingFrames removeObject:earliestFrame];
-                    }
                     
-                    videoFrame = earliestFrame;
-                } else {
-                    if (sampleVideo != NULL) {
-                        CFRelease(sampleVideo);
+                    if (_pendingFrames.count >= 3) {
+                        TGVTAcceleratedVideoFrame *earliestFrame = nil;
+                        for (TGVTAcceleratedVideoFrame *frame in _pendingFrames) {
+                            if (earliestFrame == nil || earliestFrame.timestamp > frame.timestamp) {
+                                earliestFrame = frame;
+                            }
+                        }
+                        if (earliestFrame != nil) {
+                            [_pendingFrames removeObject:earliestFrame];
+                        }
+                        
+                        videoFrame = earliestFrame;
+                    } else {
+                        if (sampleVideo != NULL) {
+                            CFRelease(sampleVideo);
+                        }
+                        continue;
                     }
-                    continue;
+                } else {
+                    CMTime presentationTime = CMSampleBufferGetPresentationTimeStamp(sampleVideo);
+                    NSTimeInterval presentationSeconds = CMTimeGetSeconds(presentationTime);
+                    CVImageBufferRef imageBuffer = CMSampleBufferGetImageBuffer(sampleVideo);
+                    videoFrame = [[TGVTAcceleratedVideoFrame alloc] initWithBuffer:imageBuffer timestamp:presentationSeconds outputTime:presentationTime];
                 }
                 
                 CFRelease(sampleVideo);
@@ -438,6 +489,7 @@ static void TGVTPlayerDecompressionOutputCallback(void *decompressionOutputRefCo
     
     return nil;
 }
+
 
 @end
 
@@ -529,7 +581,7 @@ static NSMutableDictionary *queueItemsByPath() {
 
 @end
 
-@interface TGVTVideoView () <TGImageObjectDelegate> {
+@interface TGVTVideoView (){
 
     
     GLfloat *_preferredConversion;
@@ -543,7 +595,7 @@ static NSMutableDictionary *queueItemsByPath() {
     OSSpinLock _pendingFramesLock;
     NSMutableArray *_pendingFrames;
     
-    AVSampleBufferDisplayLayer *_videoLayer;
+    TGSampleBufferDiplayLayer *_videoLayer;
     CMVideoFormatDescriptionRef _videoInfo;
     TGImageView *_thumbView;
 }
@@ -622,7 +674,7 @@ static NSImage *TGVTThumbCap() {
     [_videoLayer flushAndRemoveImage];
     [_videoLayer removeFromSuperlayer];
     
-    _videoLayer = [[AVSampleBufferDisplayLayer alloc] init];
+    _videoLayer = [[TGSampleBufferDiplayLayer alloc] init];
     _videoLayer.bounds = self.bounds;
     _videoLayer.backgroundColor = NSColorFromRGB(0xb6b6b6).CGColor;
     _videoLayer.videoGravity = AVLayerVideoGravityResizeAspectFill;
@@ -630,13 +682,20 @@ static NSImage *TGVTThumbCap() {
     
 }
 
-
+-(void)dealloc {
+    if(_videoInfo != NULL) {
+        CFRelease(_videoInfo);
+        _videoInfo = NULL;
+    }
+    [_videoLayer flushAndRemoveImage];
+}
 
 - (void)setPath:(NSString *)path {
     
     
     [_thumbView setHidden:NO];
-
+    [_videoLayer flushAndRemoveImage];
+    
     
     [[TGVTAcceleratedVideoFrameQueueGuard controlQueue] dispatch:^{
         NSString *realPath = path;
@@ -696,6 +755,7 @@ static NSImage *TGVTThumbCap() {
 
 -(void)displayFrame:(TGVTAcceleratedVideoFrame *)frame {
     
+    
     CMSampleBufferRef sampleBuffer = NULL;
     OSStatus err = noErr;
     
@@ -711,7 +771,6 @@ static NSImage *TGVTThumbCap() {
         NSLog(@"Error at CMVideoFormatDescriptionCreateForImageBuffer %d", err);
     }
     
-    // decodeTimeStamp is set to kCMTimeInvalid since we already receive decoded frames
     CMSampleTimingInfo sampleTimingInfo = {
         .duration = kCMTimeInvalid,
         .presentationTimeStamp = frame.outputTime,
@@ -721,7 +780,6 @@ static NSImage *TGVTThumbCap() {
     
     
     
-    // Wrap the pixel buffer in a sample buffer
     err = CMSampleBufferCreateForImageBuffer(kCFAllocatorDefault, frame.buffer, true, NULL, NULL, _videoInfo, &sampleTimingInfo, &sampleBuffer);
     
     if (err) {
@@ -735,7 +793,7 @@ static NSImage *TGVTThumbCap() {
             
         }
         
-        [_thumbView setHidden:frame.timestamp != 0];
+        [_thumbView setHidden:YES];
         
         if (_videoLayer.readyForMoreMediaData) {
             [_videoLayer enqueueSampleBuffer:sampleBuffer];

@@ -525,9 +525,7 @@ static BOOL mouseIsDown = NO;
     
     if(!self.isEditable)
         return false;
-    
-    [self.messagesViewController.table checkAndScroll:[self.messagesViewController.table.scrollView convertPoint:[theEvent locationInWindow] fromView:nil]];
-    
+        
     NSPoint pos = [self.messagesViewController.table convertPoint:[theEvent locationInWindow] fromView:nil];
     
     

@@ -47,6 +47,10 @@
     return [TGCache cachedImage:self.imageObject.cacheKey] || ((fileSize(photoSize.location.path) >= photoSize.size || (self.imageObject.size == 0 && isPathExists(photoSize.location.path))) && self.messageSender == nil && self.downloadItem == nil);
 }
 
+-(DownloadItem *)downloadItem {
+    return nil;
+}
+
 
 -(BOOL)makeSizeByWidth:(int)width {
     [super makeSizeByWidth:width];
