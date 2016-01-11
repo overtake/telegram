@@ -18,6 +18,7 @@
 @property (nonatomic,strong) NSImageView *locationImageView;
 
 @property (nonatomic,strong) NSImageView *deleteImageView;
+@property (nonatomic,strong) TMTextField *loadingTextField;
 
 
 @end
@@ -28,6 +29,12 @@
 
 -(id)initWithFrame:(NSRect)frameRect {
     if(self = [super initWithFrame:frameRect]) {
+        
+        _loadingTextField = [TMTextField defaultTextField];
+        [_loadingTextField setFont:TGSystemFont(13)];
+        [_loadingTextField setStringValue:NSLocalizedString(@"Reply.Loading", nil)];
+        [_loadingTextField sizeToFit];
+        [_loadingTextField setFrameOrigin:NSMakePoint(6, 0)];
         
         self.nameTextField = [[TMHyperlinkTextField alloc] initWithFrame:NSMakeRect(15, NSHeight(frameRect) - 13, 200, 20)];
         [self.nameTextField setBordered:NO];
@@ -101,7 +108,15 @@
 
 -(void)update {
     
+    
+    
+    if(_replyObject.replyMessage == nil) {
+        [self addSubview:_loadingTextField];
+    } else {
+        [_loadingTextField removeFromSuperview];
+    }
    
+    
     int xOffset = _replyObject.replyThumb || _replyObject.geoURL ? 40 : 6;
     
     
@@ -170,6 +185,8 @@
     [self.messageField setFrameSize:NSMakeSize(NSWidth(self.frame) - NSMinX(self.messageField.frame), self.replyObject.replyHeight)];
     
     [self.nameTextField setFrameOrigin:NSMakePoint(NSMinX(self.nameTextField.frame), NSHeight(self.frame) - _replyObject.replyHeaderHeight + 6)];
+    
+    [_loadingTextField setCenteredYByView:self];
 }
 
 -(void)setBackgroundColor:(NSColor *)backgroundColor {

@@ -24,7 +24,7 @@
         _fromMessage = fromMessage;
         _replyMessage = replyMessage;
         
-        assert(_fromMessage != nil || _replyMessage != nil);
+      //  assert(_fromMessage != nil || _replyMessage != nil);
         
         _containerHeight = 15+18;
         
@@ -32,7 +32,7 @@
             [self updateObject];
         else
             [self loadReplyMessage];
-        
+//
         
         
     }

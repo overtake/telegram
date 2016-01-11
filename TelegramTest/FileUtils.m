@@ -140,12 +140,13 @@ NSString* mediaFilePath(TL_localMessage *message) {
     if([message.media isKindOfClass:[TL_messageMediaDocument class]] || [message.media isKindOfClass:[TL_messageMediaDocument_old44 class]] || message.media.bot_result.document) {
         
         
-        if([message isKindOfClass:[TL_destructMessage class]]) {
+        if([message isKindOfClass:[TL_destructMessage class]] || [message.media.document.mime_type hasPrefix:@"image/gif"] || [message.media.document.mime_type hasPrefix:@"audio"]) {
             
             TL_documentAttributeFilename *name = (TL_documentAttributeFilename *) [message.media.document attributeWithClass:[TL_documentAttributeFilename class]];
             
             return [NSString stringWithFormat:@"%@/%ld_%@",path(),message.media.document.n_id,name.file_name];
         }
+        
         
         
         TLDocument *document = [message.media isKindOfClass:[TL_messageMediaBotResult class]] ? message.media.bot_result.document : message.media.document;

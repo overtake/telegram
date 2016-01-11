@@ -313,8 +313,13 @@
 }
 
 - (void)startUploadPart:(int)partNumber {
-    if(partNumber >= self.total_parts)
+    if(partNumber >= self.total_parts) {
+        if(self.total_parts == 0) {
+            [self cancel];
+        }
         return;
+    }
+    
     
     __block int readFromBufferSize = [self lengthOfReadBytesForPart:partNumber];
 
