@@ -88,9 +88,11 @@
     [super makeSize:width];
     
     _imageSize = strongsize(NSMakeSize(self.imagesize.w, self.imagesize.h), MIN(320, width - 67));
-    
     _size = _imageSize;
+    _size.width = MAX(_imageSize.width,self.descSize.width);
+    
     _size.width+=20;
+    _size.height +=self.descSize.height;
     
 }
 

@@ -412,6 +412,9 @@
             <PersistentString
                value = "message.chat">
             </PersistentString>
+            <PersistentString
+               value = "dialog.unread_count">
+            </PersistentString>
          </PersistentStrings>
       </ContextState>
       <ContextState
@@ -924,6 +927,14 @@
          <PersistentStrings>
             <PersistentString
                value = "self.isHidden">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[TL_conversation unread_count]:TL_conversation.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "super.unread_count">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -5287,6 +5298,9 @@
          contextName = "-[ComposePickerViewController selectTableDidChangedItem:]:ComposePickerViewController.m">
       </ContextState>
       <ContextState
+         contextName = "-[UploadOperation startUploadPart:]:UploadOperation.m">
+      </ContextState>
+      <ContextState
          contextName = "__47-[TGVTAcceleratedVideoView displayPixelBuffer:]_block_invoke:TGVTAcceleratedVideoView.m">
          <PersistentStrings>
             <PersistentString
@@ -5644,6 +5658,9 @@
          <PersistentStrings>
             <PersistentString
                value = "conversation.unread_count">
+            </PersistentString>
+            <PersistentString
+               value = "messages">
             </PersistentString>
          </PersistentStrings>
       </ContextState>

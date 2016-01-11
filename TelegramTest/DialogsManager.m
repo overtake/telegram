@@ -627,23 +627,23 @@
 
 - (void) markAllMessagesAsRead:(TLPeer *)peer max_id:(int)max_id out:(BOOL)n_out {
     
-    
-    [[Storage manager] markAllInConversation:peer.peer_id max_id:max_id out:n_out completeHandler:^(NSArray *ids,NSArray *messages) {
-        [self.queue dispatchOnQueue:^{
+    [self.queue dispatchOnQueue:^{
+        [[Storage manager] markAllInConversation:peer.peer_id max_id:max_id out:n_out completeHandler:^(NSArray *ids,NSArray *messages) {
+            
             
             if(messages.count > 0) {
                 
                 NSArray *unloaded = [self unloadedConversationsWithMessages:@[[messages firstObject]]];
                 
                 [[Storage manager] conversationsWithPeerIds:unloaded completeHandler:^(NSArray *result) {
-                   
+                    
                     [self add:result];
                     
                     TL_conversation *conversation = [(TL_localMessage *)[messages firstObject] conversation];
                     
                     conversation.last_marked_message = max_id;
                     
-                   
+                    
                     [messages enumerateObjectsUsingBlock:^(TL_localMessage *message, NSUInteger idx, BOOL * _Nonnull stop) {
                         if(!message.n_out && message.unread) {
                             conversation.unread_count--;
@@ -744,6 +744,8 @@
     
     if(message.n_id > TGMINFAKEID && dialog.last_message_date > message.date)
         return NO;
+    
+    
     
     if(message.unread && !message.n_out) {
         dialog.unread_count++;
