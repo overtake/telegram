@@ -408,7 +408,8 @@
         
         TL_localMessage *msg = [TGPhotoViewer currentItem].previewObject.media;
         
-        [[TGPhotoViewer viewer].invokeWindow.navigationController showMessagesViewController:msg.conversation];
+        [[TGPhotoViewer viewer].invokeWindow.navigationController showMessagesViewController:msg.conversation withMessage:msg];
+        
 
         [[TGPhotoViewer viewer] hide];
         
