@@ -425,9 +425,6 @@ static NSImage *tgContextPicCap() {
     [super redrawRow];
     
    
-    
-    NSLog(@"%@",NSStringFromRect(self.frame));
-    
     TGGifSearchRowItem *item = (TGGifSearchRowItem *)[self rowItem];
     
     [self removeAllSubviews];
@@ -674,7 +671,7 @@ static NSImage *tgContextPicCap() {
 }
 
 -(void)setFrameSize:(NSSize)newSize {
-    [super setFrameSize:NSMakeSize(NSWidth(appWindow().navigationController.messagesViewController.view.frame), newSize.height)];
+    [super setFrameSize:NSMakeSize(NSWidth(self.superview.frame), newSize.height)];
     
     [self enumerateAvailableRowViewsUsingBlock:^(__kindof NSTableRowView * _Nonnull rowView, NSInteger row) {
         [rowView.subviews[0] setFrameSize:NSMakeSize(newSize.width, NSHeight(rowView.subviews[0].frame))];

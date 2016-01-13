@@ -87,7 +87,7 @@ NSImage *placeholder() {
         
         NSMutableAttributedString *siteName = [[NSMutableAttributedString alloc] init];
         
-        [siteName appendString:webpage.site_name ? webpage.site_name : @"Link Preview" withColor:GRAY_TEXT_COLOR];
+        [siteName appendString:webpage.site_name ? webpage.site_name : webpage.document ? NSLocalizedString(webpage.type, nil) : @"Link Preview" withColor:GRAY_TEXT_COLOR];
 
         [siteName setFont:TGSystemMediumFont(13) forRange:siteName.range];
       //  [siteName addAttribute:NSParagraphStyleAttributeName value:style range:siteName.range];

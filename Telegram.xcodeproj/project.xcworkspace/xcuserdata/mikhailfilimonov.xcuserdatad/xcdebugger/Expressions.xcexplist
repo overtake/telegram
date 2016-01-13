@@ -4221,13 +4221,19 @@
          contextName = "-[TGGifSearchRowView redrawRow]:TGMediaContextTableView.m">
          <PersistentStrings>
             <PersistentString
+               value = "self.rowItem.table.frame">
+            </PersistentString>
+            <PersistentString
+               value = "self.subviews.count ">
+            </PersistentString>
+            <PersistentString
                value = "item.gifs.count">
             </PersistentString>
             <PersistentString
                value = "self.subviews.count">
             </PersistentString>
             <PersistentString
-               value = "self.subviews.count ">
+               value = "self.rowItem.table">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -5849,6 +5855,14 @@
       </ContextState>
       <ContextState
          contextName = "-[TGConversationTableItem initWithConversation:]:TGConversationTableItem.m">
+      </ContextState>
+      <ContextState
+         contextName = "-[TGGifKeyboardView initialize]:TGGifKeyboardView.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.frame">
+            </PersistentString>
+         </PersistentStrings>
       </ContextState>
       <ContextState
          contextName = "__52-[ComposeChannelParticipantsViewController loadNext]_block_invoke187:ComposeChannelParticipantsViewController.m">

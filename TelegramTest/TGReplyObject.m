@@ -222,7 +222,7 @@
     } errorHandler:^(id request, RpcError *error) {
         
         
-    }];
+    } timeout:0 queue:[ASQueue globalQueue].nativeQueue];
 }
 
 -(void)dealloc {

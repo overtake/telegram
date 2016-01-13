@@ -285,10 +285,7 @@ DYNAMIC_PROPERTY(DUser);
 
 -(void)setFrameSize:(NSSize)newSize {
     [super setFrameSize:newSize];
-    
-    [_contextTableView setFrameSize:newSize];
-    [_mediaContextTableView setFrameSize:newSize];
-    [_tableView setFrameSize:newSize];
+    [_mediaContextTableView setFrameSize:NSMakeSize(newSize.width, NSHeight(_mediaContextTableView.frame))];
 }
 
 
@@ -556,6 +553,8 @@ static NSMutableDictionary *inlineBotsExceptions;
                         [self setCurrentTableView:_contextTableView];
                         
                         [_contextTableView insert:items startIndex:_contextTableView.count tableRedraw:YES];
+                        
+                        [self updateFrames:YES];
                         
                         
                     } else {
