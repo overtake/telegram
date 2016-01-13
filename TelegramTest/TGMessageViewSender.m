@@ -101,6 +101,7 @@
                             
                             if(needUpdate) {
                                 [obj.message saveViews];
+                                [obj updateViews];
                                 [Notification perform:UPDATE_MESSAGE_ITEM data:@{@"item":obj}];
                             }
                         }

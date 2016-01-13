@@ -17,6 +17,7 @@
 #import "POPCGUtils.h"
 #import "TGCaptionView.h"
 #import "TGExternalImageObject.h"
+
 @interface MessageTableCellPhotoView()<TGImageObjectDelegate>
 @property (nonatomic,strong) NSImageView *fireImageView;
 @property (nonatomic,strong) TGCaptionView *captionView;
@@ -109,12 +110,35 @@ NSImage *fireImage() {
 }
 
 
+-(void)openInQuickLook:(id)sender {
+    PreviewObject *previewObject = [[PreviewObject alloc] initWithMsdId:self.item.message.n_id media:self.item.message peer_id:self.item.message.peer_id];
+    
+    
+    if(!self.item.isset)
+        return;
+    
+    TMPreviewPhotoItem *item = [[TMPreviewPhotoItem alloc] initWithItem:previewObject];
+    if(item) {
+        [[TMMediaController controller] show:item];
+    }
+
+}
+
 - (NSMenu *)contextMenu {
     NSMenu *menu = [[NSMenu alloc] initWithTitle:@"Photo menu"];
+    
+    [menu addItem:[NSMenuItem menuItemWithTitle:NSLocalizedString(@"Context.OpenInQuickLook", nil) withBlock:^(id sender) {
+        [self performSelector:@selector(openInQuickLook:) withObject:self];
+    }]];
+    
+    [menu addItem:[NSMenuItem separatorItem]];
     
     [menu addItem:[NSMenuItem menuItemWithTitle:NSLocalizedString(@"Context.SaveAs", nil) withBlock:^(id sender) {
         [self performSelector:@selector(saveAs:) withObject:self];
     }]];
+    
+    
+   
     
     [menu addItem:[NSMenuItem menuItemWithTitle:NSLocalizedString(@"Context.CopyToClipBoard", nil) withBlock:^(id sender) {
         [self performSelector:@selector(copy:) withObject:self];

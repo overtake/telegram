@@ -212,6 +212,7 @@
             
             previewObject.reservedObject = @{@"url":[NSURL URLWithString:self.webpage.webpage.embed_url],@"size":[NSValue valueWithSize:NSMakeSize(self.webpage.webpage.embed_width, self.webpage.webpage.embed_height)]};
             
+            
         } else if([self.webpage.webpage.embed_type isEqualToString:@"iframe"]) {
             
             TGEmbedModalView *embed =  [[TGEmbedModalView alloc] init];

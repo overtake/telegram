@@ -55,29 +55,31 @@
                 [[NSFileManager defaultManager] removeItemAtPath:old_path error:&error];
             }
             
-            TL_outDocument *document = [TL_outDocument outWithDocument:self.document file_path:self.path];
-            
-            
-            TL_documentAttributeAudio *attr = (TL_documentAttributeAudio *) [document attributeWithClass:[TL_documentAttributeAudio class]];
-            
-            if(attr && !attr.performer.length == 0 && attr.title.length == 0) {
+            if(message.n_id > 0) {
+                TL_outDocument *document = [TL_outDocument outWithDocument:self.document file_path:self.path];
                 
-                AVURLAsset *asset = [AVURLAsset assetWithURL:[NSURL fileURLWithPath:self.path]];
-                NSDictionary *tags = audioTags(asset);
                 
-                attr.title = tags[@"songName"];
-                attr.performer = tags[@"artist"];
+                TL_documentAttributeAudio *attr = (TL_documentAttributeAudio *) [document attributeWithClass:[TL_documentAttributeAudio class]];
                 
+                if(attr && !attr.performer.length == 0 && attr.title.length == 0) {
+                    
+                    AVURLAsset *asset = [AVURLAsset assetWithURL:[NSURL fileURLWithPath:self.path]];
+                    NSDictionary *tags = audioTags(asset);
+                    
+                    attr.title = tags[@"songName"];
+                    attr.performer = tags[@"artist"];
+                    
+                }
+                
+                if([message.media isKindOfClass:[TL_messageMediaBotResult class]])
+                    message.media.bot_result.document = document;
+                else
+                    message.media.document = document;
+                
+                [[Storage manager] addHolesAroundMessage:message];
+                
+                [message save:NO];
             }
-            
-            if([message.media isKindOfClass:[TL_messageMediaBotResult class]])
-                message.media.bot_result.document = document;
-             else
-                message.media.document = document;
-            
-            [[Storage manager] addHolesAroundMessage:message];
-            
-            [message save:NO];
         }
         
     }

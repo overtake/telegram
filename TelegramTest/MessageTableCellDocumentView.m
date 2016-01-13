@@ -395,6 +395,14 @@ static NSImage *attachBackgroundThumb() {
     }
 }
 
+
+-(void)openInQuickLook:(id)sender {
+    PreviewObject *previewObject = [[PreviewObject alloc] initWithMsdId:self.item.message.n_id media:self.item.message peer_id:self.item.message.peer_id];
+    TMPreviewDocumentItem *item = [[TMPreviewDocumentItem alloc] initWithItem:previewObject];
+    [[TMMediaController controller] show:item];
+
+}
+
 - (NSMenu *)contextMenu {
     NSMenu *menu = [[NSMenu alloc] initWithTitle:@"Documents menu"];
     
@@ -402,6 +410,16 @@ static NSImage *attachBackgroundThumb() {
     
     
     if([self.item isset]) {
+        
+        if([self.item.message.media.document.mime_type hasPrefix:@"image"]) {
+            [menu addItem:[NSMenuItem menuItemWithTitle:NSLocalizedString(@"Context.OpenInQuickLook", nil) withBlock:^(id sender) {
+                [self performSelector:@selector(openInQuickLook:) withObject:self];
+            }]];
+        }
+        
+        
+        [menu addItem:[NSMenuItem separatorItem]];
+        
         if(![self.item.message isKindOfClass:[TL_destructMessage class]]) {
             [menu addItem:[NSMenuItem menuItemWithTitle:NSLocalizedString(@"Message.File.ShowInFinder", nil) withBlock:^(id sender) {
                 [[NSWorkspace sharedWorkspace] activateFileViewerSelectingURLs:@[[NSURL fileURLWithPath:self.item.path]]];

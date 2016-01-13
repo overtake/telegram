@@ -1630,6 +1630,9 @@
          contextName = "+[MTDiscoverConnectionSignals discoverSchemeWithContext:addressList:media:]:MTDiscoverConnectionSignals.m">
       </ContextState>
       <ContextState
+         contextName = "-[TGWebpageDocumentObject initWithWebPage:]:TGWebpageDocumentObject.m">
+      </ContextState>
+      <ContextState
          contextName = "__join_group_by_hash_block_invoke:FileUtils.m">
       </ContextState>
       <ContextState
@@ -3679,6 +3682,14 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "-[TGWebpageDocumentObject startDownload:force:]:TGWebpageDocumentObject.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "downloadItem.downloadState">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "-[SelectUserRowView redrawRow]:SelectUserRowView.m">
          <PersistentStrings>
             <PersistentString
@@ -5547,6 +5558,9 @@
       </ContextState>
       <ContextState
          contextName = "__35-[TGPVUserBehavior convertObjects:]_block_invoke:TGPVUserBehavior.m">
+      </ContextState>
+      <ContextState
+         contextName = "__42-[DialogsManager setTopMessagesToDialogs:]_block_invoke_3:DialogsManager.m">
       </ContextState>
       <ContextState
          contextName = "-[TGConversationsViewController selectionDidChange:item:]:TGConversationsViewController.m">

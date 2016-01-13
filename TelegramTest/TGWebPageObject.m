@@ -14,6 +14,7 @@
 #import "TGWebpageStandartObject.h"
 #import "TGWebpageArticle.h"
 #import "TGWebpageGifObject.h"
+#import "TGWebpageDocumentObject.h"
 #import "NSAttributedString+Hyperlink.h"
 
 #import "TGArticleImageObject.h"
@@ -243,9 +244,12 @@ NSImage *placeholder() {
             return [[TGWebpageGifObject alloc] initWithWebPage:webpage];
     }
     
+    if([webpage.type isEqualToString:@"document"]) {
+        return [[TGWebpageDocumentObject alloc] initWithWebPage:webpage];
+    }
+    
     return [[TGWebpageStandartObject alloc] initWithWebPage:webpage];
     
-    return nil;
 }
 
 -(NSImage *)siteIcon  {

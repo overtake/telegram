@@ -12,8 +12,7 @@
 #import "ImageCache.h"
 #import "TLPeer+Extensions.h"
 #import "TMPreviewDocumentItem.h"
-#include <map>
-#include <set>
+
 #import "TMPreviewItem.h"
 #import "TMPreviewVideoItem.h"
 #import "TMPreviewAudioItem.h"
@@ -356,7 +355,6 @@ static NSMutableDictionary *twoFingersTouches;
 
 @interface TMMediaController ()
 
-@property (nonatomic) std::map<NSUInteger, bool> *listCacheHash;
 @property (nonatomic,strong,readonly) NSMutableDictionary *cachedMedia;
 @property (nonatomic,strong) NSMutableDictionary *itsFull;
 @property (nonatomic,strong,readonly) TL_conversation *dialog;
@@ -370,7 +368,6 @@ static NSMutableDictionary *twoFingersTouches;
 @implementation TMMediaController
 @synthesize dialog = _dialog;
 @synthesize currentItemPosition = _currentItemPosition;
-@synthesize listCacheHash = _listCacheHash;
 
 static TMMediaController* currentController;
 
@@ -469,8 +466,6 @@ static TMMediaController* currentController;
 
 -(void)dealloc {
     [Notification removeObserver:self];
-    if(_listCacheHash)
-        _listCacheHash->clear();
 }
 
 +(void)setCurrentController:(TMMediaController *)controller {
@@ -608,42 +603,14 @@ static TMMediaController* currentController;
 
 -(void)prepare:(TL_conversation *)object  completionHandler:(dispatch_block_t)completionHandler {
     
-    _dialog = object;
-    
-    if(_dialog && ![self initialized:_dialog.peer.peer_id]) {
-        [[Storage manager] media:^(NSArray *list) {
-            
-            NSMutableArray *media = [self media:_dialog.peer.peer_id];
-            [media removeAllObjects];
-            for (int i = 0; i < list.count; i++) {
-                id<TMPreviewItem> item = [self convert:list[i]];
-                
-                if(!item) continue;
-                [media addObject:item];
-                
-            }
-            self->items = media;
-            _listCacheHash->insert(std::pair<NSUInteger, bool>(_dialog.peer.peer_id, true));
-            
-            if(completionHandler) completionHandler();
-            
-        } max_id:0 filterMask:HistoryFilterPhoto peer:_dialog.peer next:YES limit:10000];
-    } else if(_dialog) {
-        self->items = [self media:_dialog.peer.peer_id];
-        if(completionHandler) completionHandler();
-    }
 }
 
-- (bool) initialized:(NSUInteger)peer_id {
-    std::map<NSUInteger, bool>::iterator it = _listCacheHash->find(peer_id);
-    if(it != self.listCacheHash->end())
-        return it->second;
-    return false;
-}
+
 
 - (void)show:(id<TMPreviewItem>)showItem {
     [TMMediaController setCurrentController:self];
     _currentItemPosition = 0;
+    [self removeAllObjects];
     [[NSApp mainWindow] makeFirstResponder:nil];
     [_panel updateController];
     
@@ -738,7 +705,6 @@ static TMMediaController* currentController;
     dispatch_once(&onceToken, ^{
         controller = [[TMMediaController alloc] init];
         
-        controller.listCacheHash = new std::map<NSUInteger, bool>();
       //  [Notification addObserver:controller selector:@selector(didAddMedia:) name:MEDIA_RECEIVE];
         
     });
@@ -759,7 +725,7 @@ static TMMediaController* currentController;
         return imageView.image;
     }
     
-    MessagesViewController *controller = [Telegram rightViewController].messagesViewController;
+    MessagesViewController *controller = appWindow().navigationController.messagesViewController;
     MessageTableItem *messageItem = [controller itemOfMsgId:item.previewObject.msg_id];
     
     NSInteger row = [controller indexOfObject:messageItem];
@@ -807,7 +773,7 @@ static TMMediaController* currentController;
         return [[NSApp mainWindow] convertRectToScreen:viewFrameInWindowCoords];
     }
     
-    MessagesViewController *controller = [Telegram rightViewController].messagesViewController;
+    MessagesViewController *controller = appWindow().navigationController.messagesViewController;
     MessageTableItem *messageItem = [controller itemOfMsgId:item.previewObject.msg_id];
     
     NSInteger row = [controller indexOfObject:messageItem];

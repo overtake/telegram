@@ -266,7 +266,7 @@
                                 NSRange mentionRange = NSMakeRange(range.location - 1, range.length + 1);
                                 
                                 unichar mentionStartChar = [text characterAtIndex:mentionRange.location + 1];
-                                if (!(mentionRange.length <= 3 || (mentionStartChar >= '0' && mentionStartChar <= '9')))
+                                if (!(mentionRange.length <= 1 || (mentionStartChar >= '0' && mentionStartChar <= '9')))
                                 {
                                     [results addObject:[NSValue valueWithRange:mentionRange]];
                                 }
@@ -324,7 +324,7 @@
                 NSRange range = NSMakeRange(mentionStart + 1, length - mentionStart - 1);
                 NSRange mentionRange = NSMakeRange(range.location - 1, range.length + 1);
                 unichar mentionStartChar = [text characterAtIndex:mentionRange.location + 1];
-                if (!(mentionRange.length <= 3 || (mentionStartChar >= '0' && mentionStartChar <= '9')))
+                if (!(mentionRange.length <= 1 || (mentionStartChar >= '0' && mentionStartChar <= '9')))
                 {
                     [results addObject:[NSValue valueWithRange:mentionRange]];
                 }

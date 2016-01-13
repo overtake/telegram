@@ -496,7 +496,10 @@ static NSMutableDictionary *inlineBotsExceptions;
     
     __block TLUser *user = [UsersManager findUserByName:bot];
     
-    if(!user.isBot || !user.isBotInlinePlaceholder || conversation.type == DialogTypeSecretChat) {
+    
+    if(conversation.type == DialogTypeSecretChat)
+        return;
+    if(user && (!user.isBot || !user.isBotInlinePlaceholder)) {
         return;
     }
     

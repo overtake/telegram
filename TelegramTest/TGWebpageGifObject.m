@@ -20,6 +20,8 @@
 @synthesize size = _size;
 @synthesize imageObject = _imageObject;
 @synthesize imageSize = _imageSize;
+
+
 -(id)initWithWebPage:(TLWebPage *)webpage {
     if(self = [super initWithWebPage:webpage]) {
         

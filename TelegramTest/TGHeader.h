@@ -104,7 +104,7 @@
 #define weakify() __block __typeof(&*self)strongSelf = self;
 
 #define weak() __weak typeof(self) weakSelf = self;
-
+#define strongWeak() __block __typeof(&*self)strongSelf = weakSelf;
 #define APP_VERSION [[[[[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleShortVersionString"] componentsSeparatedByCharactersInSet:[[NSCharacterSet decimalDigitCharacterSet] invertedSet]] componentsJoinedByString:@""] intValue]
 
 #import "CFunctions.h"
