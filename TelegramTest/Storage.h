@@ -129,7 +129,6 @@ extern NSString *const RECENT_GIFS;
 
 -(void)fullChats:(void (^)(NSArray *chats))completeHandler;
 -(void)insertFullChat:(TLChatFull *)fullChat completeHandler:(void (^)(void))completeHandler;
--(void)chatFull:(int)n_id completeHandler:(void (^)(TLChatFull *chat))completeHandler;
 
 
 

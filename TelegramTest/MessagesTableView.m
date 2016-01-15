@@ -18,7 +18,51 @@
 #import "MessageTableHeaderItem.h"
 #import "TGTimer.h"
 
+@interface TGSecretChatInactiveCap : TMView
+@property (nonatomic,strong) TMTextField *textField;
+@end
 
+@implementation TGSecretChatInactiveCap
+
+-(instancetype)initWithFrame:(NSRect)frameRect {
+    if(self = [super initWithFrame:frameRect]) {
+        
+        self.wantsLayer = YES;
+        self.layer.cornerRadius = 4;
+        self.layer.borderWidth = 2;
+        self.layer.borderColor = GRAY_BORDER_COLOR.CGColor;
+        self.layer.backgroundColor = [NSColor whiteColor].CGColor;
+        
+        _textField = [TMTextField defaultTextField];
+        [[_textField cell] setLineBreakMode:NSLineBreakByWordWrapping];
+        [_textField setFont:TGSystemFont(15)];
+        [_textField setAlignment:NSCenterTextAlignment];
+        [_textField setTextColor:GRAY_TEXT_COLOR];
+        
+        [_textField setStringValue:NSLocalizedString(@"Secret.InactiveCap", nil)];
+        
+       
+        
+        [self addSubview:_textField];
+        
+        
+        
+    }
+    return self;
+}
+
+-(void)setFrame:(NSRect)frame {
+    [super setFrame:frame];
+    
+    NSSize size = [_textField.attributedStringValue sizeForTextFieldForWidth:NSWidth(frame) - 60];
+    
+    [_textField setFrameSize:size];
+    
+    [_textField setCenterByView:self];
+    
+}
+
+@end
 
 
 
@@ -38,6 +82,8 @@
 
 @property (nonatomic,strong) TGTimer *timer;
 
+@property (nonatomic,strong) TGSecretChatInactiveCap *secretChatInactiveCap;
+
 @end
 
 
@@ -48,6 +94,9 @@
 - (id)initWithFrame:(NSRect)frame{
     self = [super initWithFrame:frame];
     if (self) {
+        
+        _secretChatInactiveCap = [[TGSecretChatInactiveCap alloc] initWithFrame:self.bounds];
+        
         
         
 //        self.wantsLayer = YES;
@@ -63,6 +112,38 @@
         [SelectTextManager addSelectManagerDelegate:self];
     }
     return self;
+}
+
+-(void)viewDidMoveToWindow {
+    
+    [super viewDidMoveToWindow];
+    
+    
+    if(self.window) {
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_didChangedWindowKey:) name:NSWindowDidBecomeKeyNotification object:self.window];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_didChangedWindowKey:) name:NSWindowDidResignKeyNotification object:self.window];
+        
+    }
+}
+
+
+-(void)_didChangedWindowKey:(NSNotification *)notification {
+    if(self.viewController.conversation.type == DialogTypeSecretChat) {
+        
+        if(self.viewController.conversation.encryptedChat.encryptedParams.ttl > 0) {
+            
+            NSWindow *window = notification.object;
+            
+            if(window.isKeyWindow) {
+                [_secretChatInactiveCap removeFromSuperview];
+            } else {
+                [_secretChatInactiveCap setFrame:NSMakeRect(2, 2, NSWidth(self.frame) - 4, NSHeight(self.frame) - 4)];
+                [self addSubview:_secretChatInactiveCap];
+            }
+            
+        }
+        
+    }
 }
 
 -(void)scrollDidChangeFrameSize:(NSSize)size {

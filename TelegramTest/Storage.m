@@ -386,7 +386,13 @@ NSString *const tableModernDialogs = @"modern_dialogs";
             conversation.last_marked_message = [result intForColumn:@"last_marked_message"];
             conversation.last_marked_date = [result intForColumn:@"last_marked_date"];
             conversation.read_inbox_max_id = [result intForColumn:@"read_inbox_max_id"];
-            conversation.notify_settings = [TLClassStore deserialize:[result dataForColumn:@"notify_settings"]];
+            @try {
+                conversation.notify_settings = [TLClassStore deserialize:[result dataForColumn:@"notify_settings"]];
+            }
+            @catch (NSException *exception) {
+                
+            }
+            
             
             [secretChats addObject:conversation];
         }
@@ -587,7 +593,12 @@ static NSString *encryptionKey;
         id file = nil;
         
         if([result next]) {
-            file = [TLClassStore deserialize:[[result resultDictionary] objectForKey:@"serialized"]];
+            @try {
+                 file = [TLClassStore deserialize:[[result resultDictionary] objectForKey:@"serialized"]];
+            }
+            @catch (NSException *exception) {
+                
+            }
         }
         [result close];
         
@@ -608,7 +619,13 @@ static NSString *encryptionKey;
         FMResultSet *result = [db executeQuery:@"select serialized from files where hash = ?", pathHash];
         
         if([result next]) {
-            file = [TLClassStore deserialize:[result dataForColumn:@"serialized"]];
+            @try {
+                file = [TLClassStore deserialize:[result dataForColumn:@"serialized"]];
+            }
+            @catch (NSException *exception) {
+                
+            }
+            
         }
         [result close];
     }];
@@ -908,10 +925,16 @@ TL_localMessage *parseMessage(FMResultSet *result) {
         FMResultSet *result = [db executeQuery:[NSString stringWithFormat:@"select flags,serialized,views,pts from %@ where n_id %@ ? and n_id < ? and peer_id = ? and  (filter_mask & ?) = ? order by n_id %@ limit 1",tableChannelMessages,!isTop ? @"<=" : @">=",isTop ? @"asc" : @"desc"],@(msgId),@(channelMsgId(TGMINFAKEID,peer_id)),@(peer_id),@(important ? HistoryFilterImportantChannelMessage : HistoryFilterChannelMessage),@(important ? HistoryFilterImportantChannelMessage : HistoryFilterChannelMessage)];
         
         if([result next]) {
-            msg = [TLClassStore deserialize:[result dataForColumn:@"serialized"]];
-            msg.flags = [result intForColumn:@"flags"];
-            msg.views = [result intForColumn:@"views"];
-            msg.pts = [result intForColumn:@"pts"];
+            @try {
+                msg = [TLClassStore deserialize:[result dataForColumn:@"serialized"]];
+                msg.flags = [result intForColumn:@"flags"];
+                msg.views = [result intForColumn:@"views"];
+                msg.pts = [result intForColumn:@"pts"];
+            }
+            @catch (NSException *exception) {
+                
+            }
+            
         }
         
         [result close];
@@ -968,11 +991,18 @@ TL_localMessage *parseMessage(FMResultSet *result) {
         FMResultSet *result = [db executeQueryWithFormat:sql,nil];
         __block NSMutableArray *messages = [[NSMutableArray alloc] init];
         while ([result next]) {
-            TLMessage *msg = [TLClassStore deserialize:[result dataForColumn:@"serialized"]];
-            msg.flags = -1;
-            msg.flags = [result intForColumn:@"flags"];
-            msg.message = [result stringForColumn:@"message_text"];
-            [messages addObject:msg];
+            
+            @try {
+                TLMessage *msg = [TLClassStore deserialize:[result dataForColumn:@"serialized"]];
+                msg.flags = -1;
+                msg.flags = [result intForColumn:@"flags"];
+                msg.message = [result stringForColumn:@"message_text"];
+                [messages addObject:msg];
+            }
+            @catch (NSException *exception) {
+                
+            }
+            
         }
         [result close];
         
@@ -1055,8 +1085,16 @@ TL_localMessage *parseMessage(FMResultSet *result) {
             result = [db executeQueryWithFormat:topMessage,nil];
             
             if([result next]) {
-                message = [TLClassStore deserialize:[result dataForColumn:@"serialized"]];
-                fillMessage(message);
+                
+                @try {
+                    message = [TLClassStore deserialize:[result dataForColumn:@"serialized"]];
+                    fillMessage(message);
+                }
+                @catch (NSException *exception) {
+                    
+                }
+                
+               
             }
             
             [result close];
@@ -1072,9 +1110,17 @@ TL_localMessage *parseMessage(FMResultSet *result) {
             
             
             if([result next]) {
-                message = [TLClassStore deserialize:[result dataForColumn:@"serialized"]];
-                message.flags = [result intForColumn:@"flags"];
-                message.message = [result stringForColumn:@"message_text"];
+                
+                @try {
+                    message = [TLClassStore deserialize:[result dataForColumn:@"serialized"]];
+                    message.flags = [result intForColumn:@"flags"];
+                    message.message = [result stringForColumn:@"message_text"];
+                }
+                @catch (NSException *exception) {
+                    
+                }
+
+                
             }
             
             
@@ -1127,24 +1173,31 @@ TL_localMessage *parseMessage(FMResultSet *result) {
         
         void (^proccessResult)(NSString *tableName, FMResultSet *result) = ^(NSString *tableName, FMResultSet *result){
             
-            TL_localMessage *msg = [TLClassStore deserialize:[result dataForColumn:@"serialized"]];
-            
-            msg.media = mediaWebpage;
-            
-            long random_id = [result longForColumn:@"random_id"];
-            
-            [db executeUpdate:[NSString stringWithFormat:@"update %@ set serialized = ? where random_id = ?",tableName],[TLClassStore serialize:msg],@(random_id)];
-            
-            int peer_id = msg.peer_id;
-            int n_id = msg.n_id;
-            
-            NSMutableArray *msgs = peers[@(peer_id)];
-            
-            if(!msgs) {
-                msgs = peers[@(peer_id)] = [NSMutableArray array];
+            @try {
+                TL_localMessage *msg = [TLClassStore deserialize:[result dataForColumn:@"serialized"]];
+                
+                msg.media = mediaWebpage;
+                
+                long random_id = [result longForColumn:@"random_id"];
+                
+                [db executeUpdate:[NSString stringWithFormat:@"update %@ set serialized = ? where random_id = ?",tableName],[TLClassStore serialize:msg],@(random_id)];
+                
+                int peer_id = msg.peer_id;
+                int n_id = msg.n_id;
+                
+                NSMutableArray *msgs = peers[@(peer_id)];
+                
+                if(!msgs) {
+                    msgs = peers[@(peer_id)] = [NSMutableArray array];
+                }
+                
+                [msgs addObject:@(n_id)];
+            }
+            @catch (NSException *exception) {
+                
             }
             
-            [msgs addObject:@(n_id)];
+            
         };
         
         
@@ -1599,19 +1652,30 @@ TL_localMessage *parseMessage(FMResultSet *result) {
          NSMutableArray *chats = [[NSMutableArray alloc] init];
         FMResultSet *secretResult = [db executeQuery:@"select * from encrypted_chats"];
         while ([secretResult next]) {
+            @try {
+                id chat = [TLClassStore deserialize:[secretResult dataForColumn:@"serialized"]];
+                if(chat)
+                    [chats addObject:chat];
+            }
+            @catch (NSException *exception) {
+                
+            }
             
-            id chat = [TLClassStore deserialize:[secretResult dataForColumn:@"serialized"]];
-            if(chat)
-                [chats addObject:chat];
         }
         [secretResult close];
         
         
         FMResultSet *chatResult = [db executeQuery:@"select * from chats"];
         while ([chatResult next]) {
-            id obj = [TLClassStore deserialize:[chatResult dataForColumn:@"serialized"]];
-            if(obj)
-            [chats addObject:obj];
+            @try {
+                id obj = [TLClassStore deserialize:[chatResult dataForColumn:@"serialized"]];
+                if(obj)
+                    [chats addObject:obj];
+            }
+            @catch (NSException *exception) {
+                
+            }
+            
         }
         
         [chatResult close];
@@ -1866,8 +1930,14 @@ TL_localMessage *parseMessage(FMResultSet *result) {
         //[db beginTransaction];
       FMResultSet *result = [db executeQuery:@"select * from chats"];
         while ([result next]) {
-            TLChat *chat = [TLClassStore deserialize:[[result resultDictionary] objectForKey:@"serialized"]];
-            [chats addObject:chat];
+            @try {
+                TLChat *chat = [TLClassStore deserialize:[[result resultDictionary] objectForKey:@"serialized"]];
+                [chats addObject:chat];
+            }
+            @catch (NSException *exception) {
+                
+            }
+            
         }
         [result close];
         //[db commit];
@@ -1889,19 +1959,25 @@ TL_localMessage *parseMessage(FMResultSet *result) {
         
         
         while ([result next]) {
-            TLUser *user = [TLClassStore deserialize:[result dataForColumn:@"serialized"]];
-            if([user isKindOfClass:[TLUser class]]) {
-                user.lastSeenUpdate = [result intForColumn:@"lastseen_update"];
-                
-                int last_seen = [result intForColumn:@"last_seen"];
-                
-                if(last_seen != 0) {
-                    user.status = last_seen < [[MTNetwork instance] getTime] ? [TL_userStatusOffline createWithWas_online:last_seen] : [TL_userStatusOnline createWithExpires:last_seen];
+            @try {
+                TLUser *user = [TLClassStore deserialize:[result dataForColumn:@"serialized"]];
+                if([user isKindOfClass:[TLUser class]]) {
+                    user.lastSeenUpdate = [result intForColumn:@"lastseen_update"];
+                    
+                    int last_seen = [result intForColumn:@"last_seen"];
+                    
+                    if(last_seen != 0) {
+                        user.status = last_seen < [[MTNetwork instance] getTime] ? [TL_userStatusOffline createWithWas_online:last_seen] : [TL_userStatusOnline createWithExpires:last_seen];
+                    }
+                    
+                    [users addObject:user];
+                    
                 }
-                
-                [users addObject:user];
-
             }
+            @catch (NSException *exception) {
+                
+            }
+            
         }
         
         [result close];
@@ -2039,12 +2115,17 @@ TL_localMessage *parseMessage(FMResultSet *result) {
         NSMutableArray *chats = [[NSMutableArray alloc] init];
         FMResultSet *result = [db executeQuery:@"select * from chats_full_new"];
         while ([result next]) {
-            TLChatFull *fullChat = [TLClassStore deserialize:[result dataForColumn:@"serialized"]];
-            
-            if(fullChat) {
-                fullChat.lastUpdateTime = [result intForColumn:@"last_update_time"];
+            @try {
+                TLChatFull *fullChat = [TLClassStore deserialize:[result dataForColumn:@"serialized"]];
                 
-                [chats addObject:fullChat];
+                if(fullChat) {
+                    fullChat.lastUpdateTime = [result intForColumn:@"last_update_time"];
+                    
+                    [chats addObject:fullChat];
+                }
+            }
+            @catch (NSException *exception) {
+                
             }
             
         }
@@ -2066,22 +2147,7 @@ TL_localMessage *parseMessage(FMResultSet *result) {
     }];
 }
 
--(void)chatFull:(int)n_id completeHandler:(void (^)(TLChatFull *chat))completeHandler {
-    [queue inDatabase:^(FMDatabase *db) {
-        //[db beginTransaction];
-        FMResultSet *result = [db executeQuery:@"select * from chats_full where n_id = ?",[NSNumber numberWithInt:n_id]];
-        [result next];
-        if([result resultDictionary]) {
-             TLChatFull *fullChat = [TLClassStore deserialize:[[result resultDictionary] objectForKey:@"serialized"]];
-            dispatch_async(dispatch_get_main_queue(), ^{
-                if(completeHandler) completeHandler(fullChat);
-            });
-        }
-        [result close];
-        //[db commit];
-        
-    }];
-}
+
 
 -(void)insertImportedContacts:(NSSet *)result {
     [queue inDatabase:^(FMDatabase *db) {
@@ -2191,11 +2257,17 @@ TL_localMessage *parseMessage(FMResultSet *result) {
          
          __block NSMutableArray *list = [[NSMutableArray alloc] init];
          while ([result next]) {
-             TL_localMessage *message = [TLClassStore deserialize:[[result resultDictionary] objectForKey:@"serialized"]];
-            
-             if(![message isKindOfClass:[TL_messageEmpty class]]) {
-                  [list addObject:[[PreviewObject alloc] initWithMsdId:message.n_id media:message peer_id:peer.peer_id]];
+             @try {
+                 TL_localMessage *message = [TLClassStore deserialize:[[result resultDictionary] objectForKey:@"serialized"]];
+                 
+                 if(![message isKindOfClass:[TL_messageEmpty class]]) {
+                     [list addObject:[[PreviewObject alloc] initWithMsdId:message.n_id media:message peer_id:peer.peer_id]];
+                 }
              }
+             @catch (NSException *exception) {
+                 
+             }
+             
          }
          
          [LoopingUtils  runOnMainQueueAsync:^{
@@ -2221,9 +2293,15 @@ TL_localMessage *parseMessage(FMResultSet *result) {
         FMResultSet *result = [db executeQueryWithFormat:sql,nil];
         __block NSMutableArray *list = [[NSMutableArray alloc] init];
         while ([result next]) {
-            TLUserProfilePhoto *photo = [TLClassStore deserialize:[[result resultDictionary] objectForKey:@"serialized"]];
+            @try {
+                TLUserProfilePhoto *photo = [TLClassStore deserialize:[[result resultDictionary] objectForKey:@"serialized"]];
+                
+                [list addObject:[[PreviewObject alloc] initWithMsdId:[result intForColumn:@"id"] media:photo peer_id:user_id]];
+            }
+            @catch (NSException *exception) {
+                
+            }
             
-             [list addObject:[[PreviewObject alloc] initWithMsdId:[result intForColumn:@"id"] media:photo peer_id:user_id]];
         }
         
         [LoopingUtils  runOnMainQueueAsync:^{
@@ -2396,12 +2474,15 @@ TL_localMessage *parseMessage(FMResultSet *result) {
             NSMutableDictionary *accepted = [[NSMutableDictionary alloc] init];
             
             for (NSString *key in params.allKeys) {
-                id tl = [TLClassStore deserialize:params[key]];
-                
-                if(tl)
-                    accepted[key] = tl;
-                
-                
+                @try {
+                    id tl = [TLClassStore deserialize:params[key]];
+                    
+                    if(tl)
+                        accepted[key] = tl;
+                }
+                @catch (NSException *exception) {
+                    
+                }
             }
             
             NSUInteger taskId = [result intForColumn:@"task_id"];
@@ -2590,9 +2671,13 @@ TL_localMessage *parseMessage(FMResultSet *result) {
         
         
         while ([result next]) {
-            id msg = [TLClassStore deserialize:[result dataForColumn:@"serialized"]];
-            [messages addObject:msg];
-            
+            @try {
+                id msg = [TLClassStore deserialize:[result dataForColumn:@"serialized"]];
+                [messages addObject:msg];
+            }
+            @catch (NSException *exception) {
+                
+            }
         }
         
         [result close];
@@ -2679,8 +2764,15 @@ TL_localMessage *parseMessage(FMResultSet *result) {
     [[Storage yap] readWithBlock:^(YapDatabaseReadTransaction *transaction) {
         
         NSData *wp = [transaction objectForKey:link inCollection:@"webpage"];
-        if(wp)
-            webpage = [TLClassStore deserialize:wp];
+        if(wp) {
+            @try {
+                webpage = [TLClassStore deserialize:wp];
+            }
+            @catch (NSException *exception) {
+                
+            }
+        }
+        
         
     }];
     

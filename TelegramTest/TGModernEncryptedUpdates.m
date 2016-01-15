@@ -472,8 +472,13 @@ Class convertClass(NSString *c, int layer) {
                     
                     
                     id messageObject = [NSClassFromString([NSString stringWithFormat:@"Secret%d__Environment",action.layer]) parseObject:action.messageData];
-                    
-                    id media = [TLClassStore deserialize:action.fileData];
+                    id media;
+                    @try {
+                        media = [TLClassStore deserialize:action.fileData];
+                    }
+                    @catch (NSException *exception) {
+                        
+                    }
                     
                     BOOL isProccessed = [self proccessServiceMessage:messageObject withLayer:action.layer params:params conversation:conversation];
                     
