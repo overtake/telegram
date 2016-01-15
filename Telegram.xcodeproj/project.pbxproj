@@ -557,6 +557,7 @@
 		C29A401A1C40192C00AE4B71 /* VideoLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = C29A40191C40192B00AE4B71 /* VideoLayer.m */; };
 		C29A40201C45588C00AE4B71 /* TGWebpageDocumentContainer.m in Sources */ = {isa = PBXBuildFile; fileRef = C29A401F1C45588C00AE4B71 /* TGWebpageDocumentContainer.m */; };
 		C29A40231C45589E00AE4B71 /* TGWebpageDocumentObject.m in Sources */ = {isa = PBXBuildFile; fileRef = C29A40221C45589E00AE4B71 /* TGWebpageDocumentObject.m */; };
+		C29A40261C48173700AE4B71 /* VideoView.m in Sources */ = {isa = PBXBuildFile; fileRef = C29A40251C48173600AE4B71 /* VideoView.m */; };
 		C2A2B4261BD01FC20083DA8A /* TGHeadChatPanel.m in Sources */ = {isa = PBXBuildFile; fileRef = C2A2B4251BD01FC20083DA8A /* TGHeadChatPanel.m */; };
 		C2A2B42E1BD519870083DA8A /* TGHCMessagesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C2A2B42D1BD519870083DA8A /* TGHCMessagesViewController.m */; };
 		C2A2B4311BD7C8DB0083DA8A /* TGModalForwardView.m in Sources */ = {isa = PBXBuildFile; fileRef = C2A2B4301BD7C8DB0083DA8A /* TGModalForwardView.m */; };
@@ -2176,6 +2177,8 @@
 		C29A401F1C45588C00AE4B71 /* TGWebpageDocumentContainer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGWebpageDocumentContainer.m; sourceTree = "<group>"; };
 		C29A40211C45589E00AE4B71 /* TGWebpageDocumentObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGWebpageDocumentObject.h; sourceTree = "<group>"; };
 		C29A40221C45589E00AE4B71 /* TGWebpageDocumentObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGWebpageDocumentObject.m; sourceTree = "<group>"; };
+		C29A40241C48173600AE4B71 /* VideoView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VideoView.h; sourceTree = "<group>"; };
+		C29A40251C48173600AE4B71 /* VideoView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VideoView.m; sourceTree = "<group>"; };
 		C2A2B4241BD01FC20083DA8A /* TGHeadChatPanel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGHeadChatPanel.h; sourceTree = "<group>"; };
 		C2A2B4251BD01FC20083DA8A /* TGHeadChatPanel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGHeadChatPanel.m; sourceTree = "<group>"; };
 		C2A2B42C1BD519870083DA8A /* TGHCMessagesViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGHCMessagesViewController.h; sourceTree = "<group>"; };
@@ -3772,6 +3775,8 @@
 		C210689C1C19D2C300815859 /* video */ = {
 			isa = PBXGroup;
 			children = (
+				C29A40241C48173600AE4B71 /* VideoView.h */,
+				C29A40251C48173600AE4B71 /* VideoView.m */,
 				C29A40181C40192B00AE4B71 /* VideoLayer.h */,
 				C29A40191C40192B00AE4B71 /* VideoLayer.m */,
 				C2034BAF1C2EB1A00080D023 /* TGVTVideoView.h */,
@@ -7073,6 +7078,7 @@
 				CEAE5D32181E63B000C17645 /* NSNotificationCenter+MainThread.m in Sources */,
 				C2D235B91A2F2C5600765BA1 /* TGModernTypingManager.m in Sources */,
 				0A59068718AA32C8002ED7BA /* BTRControlAction.m in Sources */,
+				C29A40261C48173700AE4B71 /* VideoView.m in Sources */,
 				C26F7EAF1A56E5A1001D1AE2 /* AcceptKeySecretSenderItem.m in Sources */,
 				C20AEF3E1C1F2953001BAAA0 /* TGBlurImageObject.m in Sources */,
 				C267527D1A1B68F500152D9A /* TGPVImageObject.m in Sources */,

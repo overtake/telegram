@@ -19,7 +19,10 @@
 @class AVSampleBufferDisplayLayerInternal;
 
 @interface AVSampleBufferDisplayLayer ()
--(long)_createVideoQueue;
+- (long)_createVideoQueue;
+- (void)_refreshAboveHighWaterLevel;
+- (void)_removeFigVideoQueueListeners;
+- (void)_flushComplete;
 @end
 
 @interface TGSampleBufferDiplayLayer : AVSampleBufferDisplayLayer
@@ -612,7 +615,7 @@ static NSMutableDictionary *queueItemsByPath() {
        
         [self setWantsLayer:YES];
         
-        [self reconfigLayer];
+        [self reconfigLayer:NO];
         
         _pendingFrames = [[NSMutableArray alloc] init];
         
@@ -669,16 +672,21 @@ static NSImage *TGVTThumbCap() {
 }
 
 
--(void)reconfigLayer {
+-(void)reconfigLayer:(BOOL)allocNew {
     
-    [_videoLayer flushAndRemoveImage];
+    [_videoLayer flush];
     [_videoLayer removeFromSuperlayer];
+    [_videoLayer _flushComplete];
+    [_videoLayer _refreshAboveHighWaterLevel];
+    [self setLayer:nil];
+    if(allocNew) {
+        _videoLayer = [[TGSampleBufferDiplayLayer alloc] init];
+        _videoLayer.bounds = self.bounds;
+        _videoLayer.backgroundColor = NSColorFromRGB(0xb6b6b6).CGColor;
+        _videoLayer.videoGravity = AVLayerVideoGravityResizeAspectFill;
+        [self setLayer:_videoLayer];
+    }
     
-    _videoLayer = [[TGSampleBufferDiplayLayer alloc] init];
-    _videoLayer.bounds = self.bounds;
-    _videoLayer.backgroundColor = NSColorFromRGB(0xb6b6b6).CGColor;
-    _videoLayer.videoGravity = AVLayerVideoGravityResizeAspectFill;
-    [self setLayer:_videoLayer];
     
 }
 
@@ -695,6 +703,8 @@ static NSImage *TGVTThumbCap() {
     
     [_thumbView setHidden:NO];
     [_videoLayer flushAndRemoveImage];
+    
+    [self reconfigLayer:[[NSFileManager defaultManager] fileExistsAtPath:path]];
     
     
     [[TGVTAcceleratedVideoFrameQueueGuard controlQueue] dispatch:^{

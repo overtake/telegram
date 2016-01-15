@@ -32,7 +32,7 @@
         _readWaiting = [[NSMutableArray alloc] init];
         self.targets = [[NSMutableArray alloc] init];
       
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(windowBecomeNotification:) name:NSWindowDidBecomeKeyNotification object:[NSApp mainWindow]];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(windowBecomeNotification:) name:NSWindowDidBecomeKeyNotification object:appWindow()];
     }
     return self;
 }
@@ -50,14 +50,12 @@
 }
 
 - (void)windowBecomeNotification:(NSNotification *)notification {
-    if([[NSApp mainWindow] isKeyWindow]) {
-        [ASQueue dispatchOnStageQueue:^{
-            for (TL_destructMessage *msg in _keyWindowWaiting) {
-                [self addMessage:msg force:NO];
-            }
-            [_keyWindowWaiting removeAllObjects];
-        }];
-    }
+    [ASQueue dispatchOnStageQueue:^{
+        for (TL_destructMessage *msg in _keyWindowWaiting) {
+            [self addMessage:msg force:NO];
+        }
+        [_keyWindowWaiting removeAllObjects];
+    }];
 }
 
 
@@ -122,7 +120,7 @@
            (message.from_id == UsersManager.currentUserId && message.unread))
             return;
         
-        if(![[NSApp mainWindow] isKeyWindow] && !force) {
+        if(![appWindow() isKeyWindow] && !force) {
             [_keyWindowWaiting addObject:message];
             return;
         }
