@@ -166,6 +166,7 @@
         conv = item.conversation;
         conv.top_message = 0;
         conv.fake = YES;
+        [[DialogsManager sharedManager] add:@[conv]];
     }
     
     
