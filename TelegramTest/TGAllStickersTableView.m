@@ -11,7 +11,7 @@
 #import "TGMessagesStickerImageObject.h"
 #import "EmojiViewController.h"
 #import "StickersPanelView.h"
-
+#import "TGStickerPreviewModalView.h"
 
 
 
@@ -21,44 +21,9 @@
 @property (nonatomic,strong) NSMutableDictionary *stickers;
 @property (nonatomic,strong) NSMutableArray *sets;
 @property (nonatomic,assign) BOOL isCustomStickerPack;
+@property (nonatomic,strong) TGStickerPreviewModalView *previewModal;
 @end
 
-
-@interface TGSticker : NSObject<NSCoding>
-@property (nonatomic,strong) TL_document *document;
-@property (nonatomic,strong) NSString *emoji;
-
--(id)initWithDocument:(TL_document *)document emoji:(NSString *)emoji;
-
-@end
-
-@implementation TGSticker
-
--(id)initWithCoder:(NSCoder *)aDecoder {
-    if(self = [super init]) {
-        _document = [TLClassStore deserialize:[aDecoder decodeObjectForKey:@"document"]];
-        _emoji = [aDecoder decodeObjectForKey:@"emoji"];
-    }
-    
-    return self;
-}
-
-
--(void)encodeWithCoder:(NSCoder *)aCoder {
-    [aCoder encodeObject:[TLClassStore serialize:_document] forKey:@"document"];
-    [aCoder encodeObject:_emoji forKey:@"emoji"];
-}
-
--(id)initWithDocument:(TL_document *)document emoji:(NSString *)emoji {
-    if(self = [super init]) {
-        _document = document;
-        _emoji = emoji;
-    }
-    
-    return self;
-}
-
-@end
 
 
 @interface TGAllStickersTableItem : TMRowItem
@@ -184,12 +149,25 @@ static NSImage *higlightedImage() {
         TGStickerImageView *imageView = [[TGStickerImageView alloc] initWithFrame:NSMakeRect(xOffset, 0, width, NSHeight(self.bounds))];
         
         
-        [imageView setTapBlock:^ {
+        [button addBlock:^(BTRControlEvents events) {
             
             if(!_tableView.isCustomStickerPack)
                 [[EmojiViewController instance].messagesViewController sendSticker:item.stickers[idx] forConversation:[Telegram conversation] addCompletionHandler:nil];
             
-        }];
+        } forControlEvents:BTRControlEventMouseUpInside];
+
+        
+        [button addBlock:^(BTRControlEvents events) {
+            
+            TGStickerPreviewModalView *preview = [[TGStickerPreviewModalView alloc] init];
+            
+            [preview setSticker:item.stickers[idx]];
+            
+            [preview show:appWindow() animated:YES];
+            
+            self.tableView.previewModal = preview;
+            
+        } forControlEvents:BTRControlEventLongLeftClick];
         
         [imageView setFrameSize:[item.objects[idx] imageSize]];
         
@@ -666,5 +644,28 @@ static NSImage *higlightedImage() {
 }
 
 
+
+-(void)mouseDragged:(NSEvent *)theEvent {
+    if(_previewModal != nil) {
+        NSUInteger index = [self rowAtPoint:[self convertPoint:[theEvent locationInWindow] fromView:nil]];
+        
+        TGAllStickerTableItemView *view = [self viewAtColumn:0 row:index makeIfNecessary:NO];
+        
+        TGAllStickersTableItem *item = [self itemAtPosition:index];
+        
+        NSPoint point = [view convertPoint:[theEvent locationInWindow] fromView:nil];
+        
+        [view.subviews enumerateObjectsUsingBlock:^(__kindof NSView * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            
+            if(NSMinX(obj.frame) < point.x && NSMaxX(obj.frame) < point.x) {
+                [_previewModal setSticker:item.stickers[idx]];
+            }
+            
+        }];
+        
+    } else {
+        [super mouseDragged:theEvent];
+    }
+}
 
 @end

@@ -558,6 +558,7 @@
 		C29A40201C45588C00AE4B71 /* TGWebpageDocumentContainer.m in Sources */ = {isa = PBXBuildFile; fileRef = C29A401F1C45588C00AE4B71 /* TGWebpageDocumentContainer.m */; };
 		C29A40231C45589E00AE4B71 /* TGWebpageDocumentObject.m in Sources */ = {isa = PBXBuildFile; fileRef = C29A40221C45589E00AE4B71 /* TGWebpageDocumentObject.m */; };
 		C29A40261C48173700AE4B71 /* VideoView.m in Sources */ = {isa = PBXBuildFile; fileRef = C29A40251C48173600AE4B71 /* VideoView.m */; };
+		C29A402A1C4949E000AE4B71 /* TGStickerPreviewModalView.m in Sources */ = {isa = PBXBuildFile; fileRef = C29A40291C4949E000AE4B71 /* TGStickerPreviewModalView.m */; };
 		C2A2B4261BD01FC20083DA8A /* TGHeadChatPanel.m in Sources */ = {isa = PBXBuildFile; fileRef = C2A2B4251BD01FC20083DA8A /* TGHeadChatPanel.m */; };
 		C2A2B42E1BD519870083DA8A /* TGHCMessagesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C2A2B42D1BD519870083DA8A /* TGHCMessagesViewController.m */; };
 		C2A2B4311BD7C8DB0083DA8A /* TGModalForwardView.m in Sources */ = {isa = PBXBuildFile; fileRef = C2A2B4301BD7C8DB0083DA8A /* TGModalForwardView.m */; };
@@ -2179,6 +2180,8 @@
 		C29A40221C45589E00AE4B71 /* TGWebpageDocumentObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGWebpageDocumentObject.m; sourceTree = "<group>"; };
 		C29A40241C48173600AE4B71 /* VideoView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VideoView.h; sourceTree = "<group>"; };
 		C29A40251C48173600AE4B71 /* VideoView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VideoView.m; sourceTree = "<group>"; };
+		C29A40281C4949E000AE4B71 /* TGStickerPreviewModalView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGStickerPreviewModalView.h; sourceTree = "<group>"; };
+		C29A40291C4949E000AE4B71 /* TGStickerPreviewModalView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGStickerPreviewModalView.m; sourceTree = "<group>"; };
 		C2A2B4241BD01FC20083DA8A /* TGHeadChatPanel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGHeadChatPanel.h; sourceTree = "<group>"; };
 		C2A2B4251BD01FC20083DA8A /* TGHeadChatPanel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGHeadChatPanel.m; sourceTree = "<group>"; };
 		C2A2B42C1BD519870083DA8A /* TGHCMessagesViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGHCMessagesViewController.h; sourceTree = "<group>"; };
@@ -4762,6 +4765,15 @@
 			name = security;
 			sourceTree = "<group>";
 		};
+		C29A40271C4949BA00AE4B71 /* sticker-preview */ = {
+			isa = PBXGroup;
+			children = (
+				C29A40281C4949E000AE4B71 /* TGStickerPreviewModalView.h */,
+				C29A40291C4949E000AE4B71 /* TGStickerPreviewModalView.m */,
+			);
+			name = "sticker-preview";
+			sourceTree = "<group>";
+		};
 		C2A2B4271BD01FC70083DA8A /* head-chats */ = {
 			isa = PBXGroup;
 			children = (
@@ -5361,6 +5373,7 @@
 		C2D4B73A1AFCD35F0035B4E4 /* modal */ = {
 			isa = PBXGroup;
 			children = (
+				C29A40271C4949BA00AE4B71 /* sticker-preview */,
 				C22A2A001C21899500678172 /* compress */,
 				C25A57F61C108B700038169F /* gif */,
 				C2A2B42F1BD7C8DB0083DA8A /* TGModalForwardView.h */,
@@ -6954,6 +6967,7 @@
 				0A6D098E19535E8500A9AC64 /* NSImageCategory.m in Sources */,
 				C2CE53E91BEB543A00BBEF5F /* TGGeneralInputTextRowView.m in Sources */,
 				C2D825EC1B6A700300434D37 /* TGEmbedModalView.m in Sources */,
+				C29A402A1C4949E000AE4B71 /* TGStickerPreviewModalView.m in Sources */,
 				C274C3D91AC5A683000DFDE4 /* TGPasswordEmailViewController.m in Sources */,
 				C2CE53E31BEA75B800BBEF5F /* TGModernChannelInfoViewController.m in Sources */,
 				0A6D099419535E8500A9AC64 /* NSViewCategory.m in Sources */,

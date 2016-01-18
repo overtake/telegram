@@ -11,6 +11,7 @@
 #import "StickersPanelView.h"
 #import "EmojiViewController.h"
 #import "TGStickerPackModalView.h"
+#import "TGStickerPreviewModalView.h"
 @interface MessageTableCellStickerView ()
 @property (nonatomic,strong) TGImageView *imageView;
 @end
@@ -97,6 +98,7 @@
     [super mouseUp:theEvent];
     
     if([self.containerView mouse:[self.containerView convertPoint:[theEvent locationInWindow] fromView:nil] inRect:self.imageView.frame]) {
+
         TL_documentAttributeSticker *attr = (TL_documentAttributeSticker *) [self.item.message.media.document attributeWithClass:TL_documentAttributeSticker.class];
         
         if(![attr.stickerset isKindOfClass:[TL_inputStickerSetEmpty class]]) {

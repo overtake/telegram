@@ -340,7 +340,7 @@
     
     if(point.y > topCorner.y) {
         
-        counter = fabs(point.y - topCorner.y - 20 );
+        counter = fabs(point.y - topCorner.y  )/ 10;
 
        [self.scrollView scrollToPoint:NSMakePoint(self.scrollView.documentOffset.x, self.scrollView.documentOffset.y - counter) animation:NO];
         
@@ -348,7 +348,7 @@
         
         prev = YES;
         
-        counter = fabs(point.y - botCorner.y + 20 );
+        counter = fabs(point.y - botCorner.y  ) / 10;
         
         [self.scrollView scrollToPoint:NSMakePoint(self.scrollView.documentOffset.x, self.scrollView.documentOffset.y + counter) animation:NO];
     } else

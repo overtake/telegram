@@ -74,7 +74,7 @@
             tableRedraw:(BOOL)tableRedraw;
 
 - (NSObject *) itemByHash:(NSUInteger)hash;
-- (NSObject *) itemAtPosition:(NSUInteger)positionOfItem;
+- (id) itemAtPosition:(NSUInteger)positionOfItem;
 - (NSUInteger)indexOfItem:(NSObject *)item;
 - (NSObject *)selectedItem;
 - (BOOL) setSelectedByHash:(NSUInteger)hash;

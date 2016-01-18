@@ -676,8 +676,6 @@ static NSImage *TGVTThumbCap() {
     
     [_videoLayer flush];
     [_videoLayer removeFromSuperlayer];
-    [_videoLayer _flushComplete];
-    [_videoLayer _refreshAboveHighWaterLevel];
     [self setLayer:nil];
     if(allocNew) {
         _videoLayer = [[TGSampleBufferDiplayLayer alloc] init];
@@ -702,7 +700,6 @@ static NSImage *TGVTThumbCap() {
     
     
     [_thumbView setHidden:NO];
-    [_videoLayer flushAndRemoveImage];
     
     [self reconfigLayer:[[NSFileManager defaultManager] fileExistsAtPath:path]];
     

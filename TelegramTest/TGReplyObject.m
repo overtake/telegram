@@ -26,7 +26,7 @@
         
       //  assert(_fromMessage != nil || _replyMessage != nil);
         
-        _containerHeight = 15+18;
+        _containerHeight = 31;
         
         if(_replyMessage != nil)
             [self updateObject];

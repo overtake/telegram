@@ -323,7 +323,7 @@ static TMTableView *tableStatic;
     
 }
 
-- (NSObject *) itemAtPosition:(NSUInteger)positionOfItem {
+- (id) itemAtPosition:(NSUInteger)positionOfItem {
     return [self.list objectAtIndex:positionOfItem];
 }
 

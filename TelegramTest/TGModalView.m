@@ -317,6 +317,12 @@
     [self modalViewDidHide];
 }
 
+-(void)setOpaqueContent:(BOOL)opaqueContent {
+    _opaqueContent = opaqueContent;
+    _animationContainerView.layer.backgroundColor = self.containerView.layer.backgroundColor = _opaqueContent ? [NSColor clearColor].CGColor : [NSColor whiteColor].CGColor;
+    _animationContainerView.layer.cornerRadius = self.containerView.layer.cornerRadius = _opaqueContent ? 0 : 4;
+}
+
 -(void)modalViewDidShow {
     
 }

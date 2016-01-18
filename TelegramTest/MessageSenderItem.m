@@ -26,11 +26,12 @@
         
         NSMutableArray *entities = [NSMutableArray array];
         
-        self.message.message = [self parseEntities:self.message.message entities:entities backstrips:@"```"];
+        self.message.message = [self parseEntities:self.message.message entities:entities backstrips:@"```" startIndex:0];
         
-        self.message.message = [self parseEntities:self.message.message entities:entities backstrips:@"`"];
+        self.message.message = [self parseEntities:self.message.message entities:entities backstrips:@"`" startIndex:0];
         
         self.message.entities = entities;
+        
         
         if(additionFlags & (1 << 4))
             self.message.from_id = 0;
@@ -109,9 +110,10 @@
 }
 
 
--(NSString *)parseEntities:(NSString *)message entities:(NSMutableArray *)entities backstrips:(NSString *)backstrips {
+-(NSString *)parseEntities:(NSString *)message entities:(NSMutableArray *)entities backstrips:(NSString *)backstrips startIndex:(NSUInteger)startIndex {
     
-    NSRange startRange = [message rangeOfString:backstrips];
+    NSRange startRange = [message rangeOfString:backstrips options:0 range:NSMakeRange(startIndex, message.length - startIndex)];
+    
     
     if(startRange.location != NSNotFound) {
         
@@ -121,18 +123,26 @@
             
             TLMessageEntity *entity;
             
-            if(backstrips.length == 3) {
-                entity = [TL_messageEntityPre createWithOffset:(int)startRange.location length:(int)(stopRange.location - startRange.location - startRange.length) language:@""];
-            } else
-                entity = [TL_messageEntityCode createWithOffset:(int)startRange.location length:(int)(stopRange.location - startRange.location - startRange.length)];
-            
-            [entities addObject:entity];
+            NSString *innerMessage = [message substringWithRange:NSMakeRange(startRange.location + 1,stopRange.location - (startRange.location + 1))];
             
             
-        
-            message = [message stringByReplacingOccurrencesOfString:backstrips withString:@"" options:0 range:NSMakeRange(startRange.location, stopRange.location + stopRange.length  - startRange.location)];
+            if(innerMessage.trim.length > 0)  {
+                message = [message stringByReplacingOccurrencesOfString:backstrips withString:@"" options:0 range:NSMakeRange(startRange.location, stopRange.location + stopRange.length  - startRange.location)];
+                
+                
+                
+                if(backstrips.length == 3) {
+                    entity = [TL_messageEntityPre createWithOffset:(int)startRange.location length:(int)(stopRange.location - startRange.location - startRange.length) language:@""];
+                } else
+                    entity = [TL_messageEntityCode createWithOffset:(int)startRange.location length:(int)(stopRange.location - startRange.location - startRange.length)];
+                
+                [entities addObject:entity];
+            } else {
+                startIndex = stopRange.location + 1;
+            }
+           
             
-            if(message.length > 0) {
+             if(message.length > 0) {
                 
                 
                 int others = 0;
@@ -155,7 +165,7 @@
                 }];
                 
                 if([message rangeOfString:backstrips].location != NSNotFound) {
-                    return [self parseEntities:message entities:entities backstrips:backstrips];
+                    return [self parseEntities:message entities:entities backstrips:backstrips startIndex:startIndex];
                 }
             }
             

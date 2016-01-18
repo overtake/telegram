@@ -23,6 +23,7 @@
 -(void)modalViewDidHide;
 
 @property (assign) BOOL acceptEvents;
+@property (assign,nonatomic) BOOL opaqueContent;
 
 -(void)setContainerFrameSize:(NSSize)size;
 -(NSSize)containerSize;
