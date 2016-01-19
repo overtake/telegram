@@ -149,7 +149,7 @@ static NSImage *webpage_background_thumb() {
     
     [self.descriptionField setAttributedString:webpage.desc];
     [self.descriptionField setFrameSize:webpage.descSize];
-    [self.descriptionField setFrameOrigin:NSMakePoint(self.textX + self.imageView.image.size.width + 5, 9)];
+    [self.descriptionField setFrameOrigin:NSMakePoint(self.textX + self.imageView.image.size.width + 5, 4)];
     
     [self updateDownloadState];
 }

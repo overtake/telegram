@@ -65,6 +65,15 @@
         
         [downloadedStr setFont:TGSystemFont(13) forRange:range];
         
+        
+        NSMutableParagraphStyle *style = [[NSMutableParagraphStyle alloc] init];
+        style.lineBreakMode = NSLineBreakByTruncatingTail;
+        style.lineSpacing = 4;
+        
+        [attr addAttribute:NSParagraphStyleAttributeName value:style range:attr.range];
+        [downloadedStr addAttribute:NSParagraphStyleAttributeName value:style range:downloadedStr.range];
+        
+        
         _downloadedDesc = [downloadedStr copy];
         
         _desc = [attr copy];
@@ -113,8 +122,8 @@
 
 -(void)makeSize:(int)width {
     [super makeSize:width];
-    _descSize = [_desc coreTextSizeForTextFieldForWidth:width - 210];
-    _size = NSMakeSize(width - 160, 50 );
+    _descSize = [_desc coreTextSizeForTextFieldForWidth:width - 60];
+    _size = NSMakeSize(width , 50 );
         
 }
 
