@@ -36,6 +36,10 @@
 }
 
 -(void)setSticker:(TLDocument *)sticker {
+    
+    if(_sticker == sticker)
+        return;
+    
     _sticker = sticker;
     
     NSImage *placeholder;

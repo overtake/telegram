@@ -151,6 +151,12 @@ static NSImage *higlightedImage() {
         
         [button addBlock:^(BTRControlEvents events) {
             
+            if(self.tableView.previewModal != nil) {
+                [self.tableView.previewModal close:YES];
+                self.tableView.previewModal = nil;
+                return;
+            }
+            
             if(!_tableView.isCustomStickerPack)
                 [[EmojiViewController instance].messagesViewController sendSticker:item.stickers[idx] forConversation:[Telegram conversation] addCompletionHandler:nil];
             
@@ -657,7 +663,9 @@ static NSImage *higlightedImage() {
         
         [view.subviews enumerateObjectsUsingBlock:^(__kindof NSView * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
             
-            if(NSMinX(obj.frame) < point.x && NSMaxX(obj.frame) < point.x) {
+            if(NSMinX(obj.frame) < point.x && NSMaxX(obj.frame) > point.x) {
+                
+                
                 [_previewModal setSticker:item.stickers[idx]];
             }
             
