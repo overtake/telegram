@@ -30,11 +30,28 @@
         string = [string substringFromIndex:1];
     }
     
-//    string = [string stringByReplacingOccurrencesOfString:@" -- " withString:@" — "];
-//    string = [string stringByReplacingOccurrencesOfString:@"<<" withString:@"«"];
-//    string = [string stringByReplacingOccurrencesOfString:@">>" withString:@"»"];
+
+    NSMutableString *replaceSlowCoreTextCharacters = [[NSMutableString alloc] init];
     
-    return string;
+    [string enumerateSubstringsInRange: NSMakeRange(0, [self length]) options:NSStringEnumerationByComposedCharacterSequences usingBlock:
+     ^(NSString *substring, NSRange substringRange, NSRange enclosingRange, BOOL *stop){
+         
+        
+         if(substring.length == 2) {
+             NSString *special = [substring substringFromIndex:1];
+             
+             if([special isEqualToString:@"\u0335"] || [special isEqualToString:@"\u0336"] || [special isEqualToString:@"\u0337"] || [special isEqualToString:@"\u0338"]) {
+                 [replaceSlowCoreTextCharacters appendString:[NSString stringWithFormat:@"-%@",[substring substringToIndex:1]]];
+                 return;
+             }
+         }
+         
+         [replaceSlowCoreTextCharacters appendString:substring];
+         
+     }];
+
+    
+    return replaceSlowCoreTextCharacters;
 }
 
 -(NSString *)fixEmoji {

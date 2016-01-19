@@ -186,15 +186,5 @@
     
 }
 
-/*
- self.message.message = @"Hello, world!";
- 
- NSMutableArray *items = [NSMutableArray array];
- 
- [items addObject:[TL_messageEntityBold createWithOffset:0 length:5]];
- [items addObject:[TL_messageEntityItalic createWithOffset:7 length:6]];
- 
- self.message.entities = items;
- */
 
 @end
