@@ -1801,6 +1801,17 @@
          contextName = "__49-[TGPasswosdMainViewController rebuildController]_block_invoke131:TGPasswosdMainViewController.m">
       </ContextState>
       <ContextState
+         contextName = "-[HistoryFilter proccessResponse:state:next:]:HistoryFilter.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.server_max_id">
+            </PersistentString>
+            <PersistentString
+               value = "conversation.top_message">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "-[TMCollectionPageController imageObjectWithPreview:]:TMCollectionPageController.m">
       </ContextState>
       <ContextState
@@ -2238,6 +2249,9 @@
                value = "">
             </PersistentString>
          </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[TGStickerImageObject initDownloadItem]:TGStickerImageObject.m">
       </ContextState>
       <ContextState
          contextName = "__71-[StandartViewController hideSearchViewControllerWithConversationUsed:]_block_invoke:StandartViewController.m">
@@ -4681,6 +4695,9 @@
                value = "totalFrameCount">
             </PersistentString>
          </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[TGRecentSearchTableView selectionDidChange:item:]:TGRecentSearchTableView.m">
       </ContextState>
       <ContextState
          contextName = "-[TGMessagesHintRowView redrawRow]:TGMessagesHintView.m">
