@@ -33,7 +33,7 @@
 
     NSMutableString *replaceSlowCoreTextCharacters = [[NSMutableString alloc] init];
     
-    [string enumerateSubstringsInRange: NSMakeRange(0, [self length]) options:NSStringEnumerationByComposedCharacterSequences usingBlock:
+    [string enumerateSubstringsInRange: NSMakeRange(0, [string length]) options:NSStringEnumerationByComposedCharacterSequences usingBlock:
      ^(NSString *substring, NSRange substringRange, NSRange enclosingRange, BOOL *stop){
          
         
