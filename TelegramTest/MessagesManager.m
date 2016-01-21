@@ -34,6 +34,8 @@
 
 @property (nonatomic,assign) int unread_count;
 
+
+
 @end
 
 @implementation MessagesManager
@@ -45,6 +47,7 @@
         self.supportMessages = [[NSMutableDictionary alloc] init];
         self.lastNotificationTimes = [[NSMutableDictionary alloc] init];
         self.orderedMessages = [[NSMutableOrderedSet alloc] init];
+        //_supportMessagesQueue = [[ASQueue alloc] initWithName:"SupportMessagesQueue"];
     }
     return self;
 }

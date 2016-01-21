@@ -34,4 +34,6 @@
 
 +(int)unreadBadgeCount;
 
+@property (nonatomic,strong,readonly) ASQueue *supportMessagesQueue;
+
 @end

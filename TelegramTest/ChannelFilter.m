@@ -30,7 +30,7 @@
 
 -(void)fillGroupHoles:(NSArray *)messages bottom:(BOOL)bottom {
     
-    if(messages.count == 0)
+    if(messages.count == 0 || self.controller.conversation.chat.isMegagroup)
         return;
     
     // max to min

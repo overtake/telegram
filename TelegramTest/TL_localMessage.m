@@ -77,11 +77,6 @@
         {
             _replyMessage = [MessagesManager supportMessage:self.reply_to_msg_id peer_id:self.peer_id];
             
-            if(_replyMessage)
-            {
-                [[Storage manager] addSupportMessages:@[_replyMessage]];
-                [MessagesManager addSupportMessages:@[_replyMessage]];
-            }
         }
         
         return _replyMessage;
