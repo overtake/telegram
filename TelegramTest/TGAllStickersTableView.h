@@ -23,6 +23,8 @@
 -(NSDictionary *)allStickers;
 -(NSArray *)sets;
 
+-(void)hideStickerPreview;
+
 -(void)updateSets:(NSArray *)sets;
 
 -(void)scrollToStickerPack:(long)packId;

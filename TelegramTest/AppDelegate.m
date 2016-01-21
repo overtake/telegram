@@ -699,9 +699,16 @@ void exceptionHandler(NSException * exception)
                 }
                 
             }
+            
+            
+            if(result.type == NSLeftMouseUp && [TMViewController isModalActive]) {
+                [EmojiViewController hideStickerPreviewIfNeeded];
+            }
+            
             return result;
             
         }
+        
         
         if(( result.type == NSLeftMouseDown || result.type == NSLeftMouseUp) && result.clickCount > 1)
             return [NSEvent mouseEventWithType:result.type location:result.locationInWindow modifierFlags:result.modifierFlags timestamp:result.timestamp windowNumber:result.windowNumber context:result.context eventNumber:result.eventNumber clickCount:1 pressure:result.pressure];

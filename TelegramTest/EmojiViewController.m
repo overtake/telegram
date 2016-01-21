@@ -293,6 +293,10 @@
    [[self instance].stickersTableView.stickers load:NO];
 }
 
++(void)hideStickerPreviewIfNeeded {
+    [[self instance].stickersTableView.stickers hideStickerPreview];
+}
+
 -(void)saveModifier:(NSString *)modifier forEmoji:(NSString *)emoji {
     
     NSUserDefaults *s = [NSUserDefaults standardUserDefaults];

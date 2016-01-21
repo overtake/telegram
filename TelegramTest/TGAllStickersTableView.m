@@ -676,4 +676,11 @@ static NSImage *higlightedImage() {
     }
 }
 
+-(void)hideStickerPreview {
+    [_previewModal close:YES];
+    _previewModal = nil;
+}
+
+
+
 @end
