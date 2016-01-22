@@ -11,6 +11,7 @@
 #import "SecretLayer17.h"
 #import "SecretLayer20.h"
 #import "SecretLayer23.h"
+#import "SecretLayer45.h"
 #import <MtProtoKit/MTEncryption.h>
 #import "Crypto.h"
 #import "SenderHeader.h"
@@ -21,6 +22,7 @@
 #import "AbortKeySecretSenderItem.h"
 #import "ResendSecretSenderItem.h"
 #import "Crypto.h"
+#import "TL_destructMessage45.h"
 @implementation TGModernEncryptedUpdates
 
 
@@ -456,6 +458,32 @@ Class convertClass(NSString *c, int layer) {
 }
 
 
+-(void)proccess45Layer:(Secret23_DecryptedMessage *)message params:(EncryptedParams *)params conversation:(TL_conversation *)conversation  encryptedMessage:(TL_encryptedMessage *)encryptedMessage  {
+    
+    Secret23_DecryptedMessageLayer *layerMessage = (Secret23_DecryptedMessageLayer *)message;
+    
+    if([layerMessage.out_seq_no intValue] != 0 && [layerMessage.out_seq_no intValue] < params.in_seq_no * 2 + [params in_x] )
+        return;
+    
+    
+    id media = [TL_messageMediaEmpty create];
+    
+    
+    
+    if([layerMessage.message isKindOfClass:[Secret23_DecryptedMessage_decryptedMessage class]]) {
+        media = [self media:[layerMessage.message valueForKey:@"media"] layer:45 file:encryptedMessage.file];
+    }
+    
+    TGSecretInAction *action = [[TGSecretInAction alloc] initWithActionId:arc4random() chat_id:params.n_id messageData:[Secret23__Environment serializeObject:layerMessage.message]  fileData:[TLClassStore serialize:media] date:encryptedMessage.date in_seq_no:[layerMessage.out_seq_no intValue] layer:23];
+    
+    
+    [[Storage manager] insertSecretInAction:action];
+    
+    [self dequeueInActions:params conversation:conversation];
+    
+}
+
+
 -(void)dequeueInActions:(EncryptedParams *)params conversation:(TL_conversation *)conversation {
     
     [[Storage manager] selectSecretInActions:params.n_id completeHandler:^(NSArray *list) {
@@ -486,7 +514,18 @@ Class convertClass(NSString *c, int layer) {
                     if(!isProccessed && [messageObject isKindOfClass:NSClassFromString([NSString stringWithFormat:@"Secret%d_DecryptedMessage_decryptedMessage",action.layer])]) {
                         
                         
-                        TL_destructMessage *localMessage = [TL_destructMessage createWithN_id:[MessageSender getFutureMessageId] flags:TGUNREADMESSAGE from_id:[conversation.encryptedChat peerUser].n_id to_id:[TL_peerSecret createWithChat_id:params.n_id] date:action.date message:[messageObject valueForKey:@"message"] media:media destruction_time:0 randomId:[[messageObject valueForKey:@"random_id"] longValue] fakeId:[MessageSender getFakeMessageId] ttl_seconds:[[messageObject valueForKey:@"ttl"] intValue] out_seq_no:-1 dstate:DeliveryStateNormal];
+                        TL_destructMessage *localMessage;
+                        
+                        
+                        if(action.layer >= 45) {
+                            Secret45_DecryptedMessage_decryptedMessage *message = (Secret45_DecryptedMessage_decryptedMessage *)messageObject;
+                            
+                            localMessage = [TL_destructMessage45 createWithN_id:[MessageSender getFutureMessageId] flags:[message.flags intValue] from_id:[conversation.encryptedChat peerUser].n_id to_id:[TL_peerSecret createWithChat_id:params.n_id] date:action.date message:[messageObject valueForKey:@"message"] media:media destruction_time:0 randomId:[[messageObject valueForKey:@"random_id"] longValue] fakeId:[MessageSender getFakeMessageId] ttl_seconds:[[messageObject valueForKey:@"ttl"] intValue] entities:[self convertEntities:message.entities layer:45] via_bot_name:message.via_bot_name reply_to_random_id:[message.reply_to_random_id longValue] out_seq_no:-1 dstate:DeliveryStateNormal];
+                            
+                        } else {
+                            localMessage = [TL_destructMessage createWithN_id:[MessageSender getFutureMessageId] flags: TGUNREADMESSAGE from_id:[conversation.encryptedChat peerUser].n_id to_id:[TL_peerSecret createWithChat_id:params.n_id] date:action.date message:[messageObject valueForKey:@"message"] media:media destruction_time:0 randomId:[[messageObject valueForKey:@"random_id"] longValue] fakeId:[MessageSender getFakeMessageId] ttl_seconds:[[messageObject valueForKey:@"ttl"] intValue] out_seq_no:-1 dstate:DeliveryStateNormal];
+                        }
+                        
                         
                         [MessagesManager addAndUpdateMessage:localMessage];
                         
@@ -551,6 +590,51 @@ Class convertClass(NSString *c, int layer) {
     }];
     
     return attrs;
+}
+
+-(NSMutableArray *)convertEntities:(NSArray *)list layer:(int)layer {
+    NSMutableArray *entities = [[NSMutableArray alloc] init];
+    
+    
+    [list enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+        
+        Class messageEntityUnknown = convertClass(@"Secret%d_MessageEntity_messageEntityUnknown", layer);
+        Class messageEntityMention = convertClass(@"Secret%d_MessageEntity_messageEntityMention", layer);
+        Class messageEntityHashtag = convertClass(@"Secret%d_MessageEntity_messageEntityHashtag", layer);
+        Class messageEntityBotCommand = convertClass(@"Secret%d_MessageEntity_messageEntityBotCommand", layer);
+        Class messageEntityEmail = convertClass(@"Secret%d_MessageEntity_messageEntityEmail", layer);
+        Class messageEntityBold = convertClass(@"Secret%d_MessageEntity_messageEntityBold", layer);
+        Class messageEntityItalic = convertClass(@"Secret%d_MessageEntity_messageEntityItalic", layer);
+        Class messageEntityCode = convertClass(@"Secret%d_MessageEntity_messageEntityCode", layer);
+        Class messageEntityPre = convertClass(@"Secret%d_MessageEntity_messageEntityPre", layer);
+        Class messageEntityTextUrl = convertClass(@"Secret%d_MessageEntity_messageEntityTextUrl", layer);
+        
+        
+        if([obj isKindOfClass:messageEntityUnknown]) {
+            [entities addObject:[TL_messageEntityUnknown createWithOffset:[[obj valueForKey:@"offset"] intValue] length:[[obj valueForKey:@"length"] intValue]]];
+        } else if([obj isKindOfClass:messageEntityMention]) {
+            [entities addObject:[TL_messageEntityMention createWithOffset:[[obj valueForKey:@"offset"] intValue] length:[[obj valueForKey:@"length"] intValue]]];
+        } else if([obj isKindOfClass:messageEntityHashtag]) {
+            [entities addObject:[TL_messageEntityHashtag createWithOffset:[[obj valueForKey:@"offset"] intValue] length:[[obj valueForKey:@"length"] intValue]]];
+        } else if([obj isKindOfClass:messageEntityBotCommand]) {
+            [entities addObject:[TL_messageEntityBotCommand createWithOffset:[[obj valueForKey:@"offset"] intValue] length:[[obj valueForKey:@"length"] intValue]]];
+        } else if([obj isKindOfClass:messageEntityEmail]) {
+            [entities addObject:[TL_messageEntityEmail createWithOffset:[[obj valueForKey:@"offset"] intValue] length:[[obj valueForKey:@"length"] intValue]]];
+        } else if([obj isKindOfClass:messageEntityBold]) {
+            [entities addObject:[TL_messageEntityBold createWithOffset:[[obj valueForKey:@"offset"] intValue] length:[[obj valueForKey:@"length"] intValue]]];
+        } else if([obj isKindOfClass:messageEntityItalic]) {
+            [entities addObject:[TL_messageEntityItalic createWithOffset:[[obj valueForKey:@"offset"] intValue] length:[[obj valueForKey:@"length"] intValue]]];
+        } else if([obj isKindOfClass:messageEntityCode]) {
+            [entities addObject:[TL_messageEntityCode createWithOffset:[[obj valueForKey:@"offset"] intValue] length:[[obj valueForKey:@"length"] intValue]]];
+        } else if([obj isKindOfClass:messageEntityPre]) {
+            [entities addObject:[TL_messageEntityPre createWithOffset:[[obj valueForKey:@"offset"] intValue] length:[[obj valueForKey:@"length"] intValue] language:[obj valueForKey:@"language"]]];
+        } else if([obj isKindOfClass:messageEntityTextUrl]) {
+            [entities addObject:[TL_messageEntityTextUrl createWithOffset:[[obj valueForKey:@"offset"] intValue] length:[[obj valueForKey:@"length"] intValue] url:[obj valueForKey:@"url"]]];
+        }
+        
+    }];
+    
+    return entities;
 }
 
 -(TLMessageMedia *)media:(id)media layer:(int)layer file:(TLEncryptedFile *)file {

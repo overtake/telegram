@@ -257,7 +257,8 @@
     if(reply_to_msg_id != 0)
     {
         [[Storage manager] addSupportMessages:@[replyMessage]];
-        [MessagesManager addSupportMessages:@[replyMessage]];
+        outMessage.replyMessage = replyMessage;
+       // [MessagesManager addSupportMessages:@[replyMessage]];
     }
     
     

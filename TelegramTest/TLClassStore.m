@@ -12,6 +12,7 @@
 #import "TL_conversation_old34.h"
 #import "TL_localMessageService_old34.h"
 #import "TL_localMessage_old44.h"
+#import "TL_destructMessage45.h"
 @implementation TLClassStore
 
 
@@ -51,6 +52,8 @@
     [self.cs_classes setObject:[TL_localMessageService class] forKey:[NSNumber numberWithInt:18]];
     
     [self.cs_classes setObject:[TL_localMessage class] forKey:@(19)];
+    [self.cs_classes setObject:[TL_destructMessage45 class] forKey:@(20)];
+    
     
     for(NSNumber* number in [self.cs_classes allKeys]) {
         [self.cs_constuctors setObject:number forKey:[self.cs_classes objectForKey:number]];

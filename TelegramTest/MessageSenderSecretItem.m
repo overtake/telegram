@@ -24,9 +24,50 @@
         
         int ttl = self.params.ttl;
         
-        self.message = [TL_destructMessage createWithN_id:[MessageSender getFutureMessageId] flags:TGOUTUNREADMESSAGE from_id:UsersManager.currentUserId to_id:[TL_peerSecret createWithChat_id:conversation.peer.chat_id] date:[[MTNetwork instance] getTime] message:message media:[TL_messageMediaEmpty create] destruction_time:0 randomId:rand_long() fakeId:[MessageSender getFakeMessageId] ttl_seconds:ttl == -1 ? 0 : ttl out_seq_no:-1 dstate:DeliveryStatePending];
+        if(self.params.layer < 45) {
+            self.message = [TL_destructMessage createWithN_id:[MessageSender getFutureMessageId] flags:TGOUTUNREADMESSAGE from_id:UsersManager.currentUserId to_id:[TL_peerSecret createWithChat_id:conversation.peer.chat_id] date:[[MTNetwork instance] getTime] message:message media:[TL_messageMediaEmpty create] destruction_time:0 randomId:rand_long() fakeId:[MessageSender getFakeMessageId] ttl_seconds:ttl == -1 ? 0 : ttl out_seq_no:-1 dstate:DeliveryStatePending];
+        } else {
+            
+            TL_destructMessage45 *msg = [TL_destructMessage45 createWithN_id:[MessageSender getFutureMessageId] flags:TGOUTUNREADMESSAGE from_id:UsersManager.currentUserId to_id:[TL_peerSecret createWithChat_id:conversation.peer.chat_id] date:[[MTNetwork instance] getTime] message:message media:[TL_messageMediaEmpty create] destruction_time:0 randomId:rand_long() fakeId:[MessageSender getFakeMessageId] ttl_seconds:ttl == -1 ? 0 : ttl entities:nil via_bot_name:nil reply_to_random_id:0 out_seq_no:-1 dstate:DeliveryStatePending];
+            
+            self.message = msg;
+            
+            
+            [self takeAndFillReplyMessage];
+            
+            NSMutableArray *entities = [NSMutableArray array];
+            
+           
+           
+            self.message.message = [self parseEntities:self.message.message entities:entities backstrips:@"```" startIndex:0];
+            
+            self.message.message = [self parseEntities:self.message.message entities:entities backstrips:@"`" startIndex:0];
+            
+            self.message.entities = entities;
+        }
+        
+        
         
         [self.message save:YES];
+    }
+    
+    return self;
+}
+
+-(id)initWithBotContextResult:(TLBotInlineResult *)result via_bot_name:(NSString *)via_bot_name queryId:(long)queryId conversation:(TL_conversation *)conversation {
+    if(self = [super initWithConversation:conversation]) {
+        
+        if(self.params.layer < 45)
+            return nil;
+        
+        int ttl = self.params.ttl;
+        
+        TLMessageMedia *media = [TL_messageMediaBotResult createWithBot_result:result query_id:queryId];
+        
+         self.message = [TL_destructMessage45 createWithN_id:[MessageSender getFutureMessageId] flags:TGOUTUNREADMESSAGE from_id:UsersManager.currentUserId to_id:[TL_peerSecret createWithChat_id:conversation.peer.chat_id] date:[[MTNetwork instance] getTime] message:result.send_message.message media:media destruction_time:0 randomId:rand_long() fakeId:[MessageSender getFakeMessageId] ttl_seconds:ttl == -1 ? 0 : ttl entities:result.send_message.entities via_bot_name:via_bot_name reply_to_random_id:0 out_seq_no:-1 dstate:DeliveryStatePending];
+        
+        [self.message save:YES];
+        
     }
     
     return self;
@@ -65,6 +106,13 @@
 
 -(NSData *)decryptedMessageLayer23 {
     return [Secret23__Environment serializeObject:[Secret23_DecryptedMessageLayer decryptedMessageLayerWithRandom_bytes:self.random_bytes layer:@(23) in_seq_no:@(2*self.params.in_seq_no + [self.params in_x]) out_seq_no:@(2*(self.params.out_seq_no++) + [self.params out_x]) message:[Secret23_DecryptedMessage decryptedMessageWithRandom_id:@(self.message.randomId) ttl:@(((TL_destructMessage *)self.message).ttl_seconds) message:self.message.message media:[Secret23_DecryptedMessageMedia decryptedMessageMediaEmpty]]]];
+}
+
+-(NSData *)decryptedMessageLayer45 {
+    
+    TL_destructMessage45 * message = (TL_destructMessage45 *) self.message;
+    
+    return [Secret45__Environment serializeObject:[Secret45_DecryptedMessageLayer decryptedMessageLayerWithRandom_bytes:self.random_bytes layer:@(45) in_seq_no:@(2*self.params.in_seq_no + [self.params in_x]) out_seq_no:@(2*(self.params.out_seq_no++) + [self.params out_x]) message:[Secret45_DecryptedMessage decryptedMessageWithFlags:@(self.message.flags) random_id:@(self.message.randomId) ttl:@(((TL_destructMessage *)self.message).ttl_seconds) message:self.message.message media:[Secret45_DecryptedMessageMedia decryptedMessageMediaEmpty] entities:[self convertLEntities:self.message.entities layer:45] via_bot_name:message.via_bot_name reply_to_random_id:@(message.reply_to_random_id)]]];
 }
 
 

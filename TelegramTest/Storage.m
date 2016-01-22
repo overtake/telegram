@@ -832,21 +832,33 @@ TL_localMessage *parseMessage(FMResultSet *result) {
     
     
     
-    NSArray *supportList = [messages filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.reply_to_msg_id != 0"]];
-    
     NSMutableArray *supportIds = [[NSMutableArray alloc] init];
     
-    [supportList enumerateObjectsUsingBlock:^(TL_localMessage *obj, NSUInteger idx, BOOL *stop) {
+    [messages enumerateObjectsUsingBlock:^(TL_localMessage *obj, NSUInteger idx, BOOL *stop) {
         
-        [supportIds addObject:@(isChannel ? channelMsgId([obj reply_to_msg_id], obj.peer_id) :obj.reply_to_msg_id)];
-        
+        if(obj.reply_to_msg_id != 0) {
+            [supportIds addObject:@(isChannel ? channelMsgId([obj reply_to_msg_id], obj.peer_id) :obj.reply_to_msg_id)];
+        } else if(([obj isKindOfClass:[TL_destructMessage45 class]] && ((TL_destructMessage45 *)obj).reply_to_random_id != 0)) {
+            [supportIds addObject:@(((TL_destructMessage45 *)obj).reply_to_random_id)];
+        }
+
     }];
     
     
-    NSArray *support = [self selectSupportMessages:supportIds];
     
-    [MessagesManager addSupportMessages:support];
+    NSDictionary *support = [self selectSupportMessages:supportIds];
     
+    [messages enumerateObjectsUsingBlock:^(TL_localMessage *obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        
+        if(obj.reply_to_msg_id != 0) {
+            obj.replyMessage = support[@(channelMsgId(obj.reply_to_msg_id, obj.peer_id))];
+        } else if(([obj isKindOfClass:[TL_destructMessage45 class]] && ((TL_destructMessage45 *)obj).reply_to_random_id != 0)) {
+            obj.replyMessage = support[@(((TL_destructMessage45 *)obj).reply_to_random_id)];
+        }
+        
+    }];
+    
+        
     return [[TGHistoryResponse alloc] initWithResult:[messages copy] hole:hole groupHoles:nil];
 
 }
@@ -2656,9 +2668,9 @@ TL_localMessage *parseMessage(FMResultSet *result) {
 }
 
 
--(NSArray *)selectSupportMessages:(NSArray *)ids {
+-(NSDictionary *)selectSupportMessages:(NSArray *)ids {
     
-    NSMutableArray *messages = [[NSMutableArray alloc] init];
+    NSMutableDictionary *messages = [[NSMutableDictionary alloc] init];
     
     [queue inDatabaseWithDealocing:^(FMDatabase *db) {
         
@@ -2672,8 +2684,8 @@ TL_localMessage *parseMessage(FMResultSet *result) {
         
         while ([result next]) {
             @try {
-                id msg = [TLClassStore deserialize:[result dataForColumn:@"serialized"]];
-                [messages addObject:msg];
+                TL_localMessage *msg = [TLClassStore deserialize:[result dataForColumn:@"serialized"]];
+                messages[@(msg.channelMsgId)] = msg;
             }
             @catch (NSException *exception) {
                 

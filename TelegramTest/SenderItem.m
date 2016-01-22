@@ -15,7 +15,7 @@
 #import "ExternalGifSenderItem.h"
 #import "CompressedDocumentSenderItem.h"
 #import "ContextBotSenderItem.h"
-
+#import "ExternalDocumentSecretSenderItem.h"
 @interface SenderItem ()
 @property (nonatomic,strong) NSMutableArray *listeners;
 @end
@@ -134,7 +134,9 @@ static NSMutableDictionary *senders;
                         
                         item = [[FileSecretSenderItem alloc] init];
                         
-                        if([msg.media isKindOfClass:[TL_messageMediaPhoto class]]) {
+                        if([msg.media isKindOfClass:[TL_messageMediaDocument class]] && msg.media.document.access_hash != 0 && [msg.media.document isSticker]) {
+                            item = [[ExternalDocumentSecretSenderItem alloc] init];
+                        } else if([msg.media isKindOfClass:[TL_messageMediaPhoto class]]) {
                             [(FileSecretSenderItem *)item setUploaderType:UploadImageType];
                         } else if([msg.media isKindOfClass:[TL_messageMediaVideo class]]) {
                             [(FileSecretSenderItem *)item setUploaderType:UploadVideoType];
@@ -485,5 +487,79 @@ static NSMutableArray *waiting;
     
     return c;
 }
+
+
+
+-(NSString *)parseEntities:(NSString *)message entities:(NSMutableArray *)entities backstrips:(NSString *)backstrips startIndex:(NSUInteger)startIndex {
+    
+    NSRange startRange = [message rangeOfString:backstrips options:0 range:NSMakeRange(startIndex, message.length - startIndex)];
+    
+    
+    if(startRange.location != NSNotFound) {
+        
+        NSRange stopRange = [message rangeOfString:backstrips options:0 range:NSMakeRange(startRange.location + startRange.length, message.length - (startRange.location + startRange.length ))];
+        
+        if(stopRange.location != NSNotFound) {
+            
+            TLMessageEntity *entity;
+            
+            NSString *innerMessage = [message substringWithRange:NSMakeRange(startRange.location + 1,stopRange.location - (startRange.location + 1))];
+            
+            
+            if(innerMessage.trim.length > 0)  {
+                message = [message stringByReplacingOccurrencesOfString:backstrips withString:@"" options:0 range:NSMakeRange(startRange.location, stopRange.location + stopRange.length  - startRange.location)];
+                
+                
+                
+                if(backstrips.length == 3) {
+                    entity = [TL_messageEntityPre createWithOffset:(int)startRange.location length:(int)(stopRange.location - startRange.location - startRange.length) language:@""];
+                } else
+                    entity = [TL_messageEntityCode createWithOffset:(int)startRange.location length:(int)(stopRange.location - startRange.location - startRange.length)];
+                
+                [entities addObject:entity];
+            } else {
+                startIndex = stopRange.location + 1;
+            }
+            
+            
+            if(message.length > 0) {
+                
+                
+                int others = 0;
+                if([[message substringToIndex:1] isEqualToString:@"\n"]) {
+                    message = [message substringFromIndex:1];
+                    others = 1;
+                }
+                
+                
+                [entities enumerateObjectsUsingBlock:^(TLMessageEntity *obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                    
+                    if(obj.offset > stopRange.location + stopRange.length) {
+                        obj.offset-=((int)stopRange.length*2);
+                    }
+                    
+                    if(obj.offset > 0) {
+                        obj.offset-=others;
+                    }
+                    
+                }];
+                
+                if([message rangeOfString:backstrips].location != NSNotFound) {
+                    return [self parseEntities:message entities:entities backstrips:backstrips startIndex:startIndex];
+                }
+            }
+            
+            
+            
+        }
+        
+        
+        
+    }
+    
+    return message;
+    
+}
+
 
 @end

@@ -205,7 +205,7 @@
             [SharedManager proccessGlobalResponse:response];
             
             [[Storage manager] addSupportMessages:messages];
-            [MessagesManager addSupportMessages:messages];
+            //[MessagesManager addSupportMessages:messages];
             
             
             _replyMessage = messages[0];

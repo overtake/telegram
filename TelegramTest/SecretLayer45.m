@@ -364,34 +364,34 @@ static const char *Secret45__Serializer_Key = "Secret45__Serializer";
 
         parsers[@((int32_t)0xa1733aec)] = [^id (NSData *data, NSUInteger* _offset, __unused id metaInfo)
         {
-            NSNumber * ttlSeconds = nil;
-            if ((ttlSeconds = [Secret45__Environment parseObject:data offset:_offset implicitSignature:(int32_t)0xa8509bda metaInfo:nil]) == nil)
+            NSNumber * ttl_seconds = nil;
+            if ((ttl_seconds = [Secret45__Environment parseObject:data offset:_offset implicitSignature:(int32_t)0xa8509bda metaInfo:nil]) == nil)
                return nil;
-            return [Secret45_DecryptedMessageAction decryptedMessageActionSetMessageTTLWithTtlSeconds:ttlSeconds];
+            return [Secret45_DecryptedMessageAction decryptedMessageActionSetMessageTTLWithTtl_seconds:ttl_seconds];
         } copy];
         parsers[@((int32_t)0xc4f40be)] = [^id (NSData *data, NSUInteger* _offset, __unused id metaInfo)
         {
-            NSArray * randomIds = nil;
-            int32_t randomIds_signature = 0; [data getBytes:(void *)&randomIds_signature range:NSMakeRange(*_offset, 4)]; *_offset += 4;
-            if ((randomIds = [Secret45__Environment parseObject:data offset:_offset implicitSignature:randomIds_signature metaInfo:[[Secret45__UnboxedTypeMetaInfo alloc] initWithConstructorSignature:(int32_t)0x22076cba]]) == nil)
+            NSArray * random_ids = nil;
+            int32_t random_ids_signature = 0; [data getBytes:(void *)&random_ids_signature range:NSMakeRange(*_offset, 4)]; *_offset += 4;
+            if ((random_ids = [Secret45__Environment parseObject:data offset:_offset implicitSignature:random_ids_signature metaInfo:[[Secret45__UnboxedTypeMetaInfo alloc] initWithConstructorSignature:(int32_t)0x22076cba]]) == nil)
                return nil;
-            return [Secret45_DecryptedMessageAction decryptedMessageActionReadMessagesWithRandomIds:randomIds];
+            return [Secret45_DecryptedMessageAction decryptedMessageActionReadMessagesWithRandom_ids:random_ids];
         } copy];
         parsers[@((int32_t)0x65614304)] = [^id (NSData *data, NSUInteger* _offset, __unused id metaInfo)
         {
-            NSArray * randomIds = nil;
-            int32_t randomIds_signature = 0; [data getBytes:(void *)&randomIds_signature range:NSMakeRange(*_offset, 4)]; *_offset += 4;
-            if ((randomIds = [Secret45__Environment parseObject:data offset:_offset implicitSignature:randomIds_signature metaInfo:[[Secret45__UnboxedTypeMetaInfo alloc] initWithConstructorSignature:(int32_t)0x22076cba]]) == nil)
+            NSArray * random_ids = nil;
+            int32_t random_ids_signature = 0; [data getBytes:(void *)&random_ids_signature range:NSMakeRange(*_offset, 4)]; *_offset += 4;
+            if ((random_ids = [Secret45__Environment parseObject:data offset:_offset implicitSignature:random_ids_signature metaInfo:[[Secret45__UnboxedTypeMetaInfo alloc] initWithConstructorSignature:(int32_t)0x22076cba]]) == nil)
                return nil;
-            return [Secret45_DecryptedMessageAction decryptedMessageActionDeleteMessagesWithRandomIds:randomIds];
+            return [Secret45_DecryptedMessageAction decryptedMessageActionDeleteMessagesWithRandom_ids:random_ids];
         } copy];
         parsers[@((int32_t)0x8ac1f475)] = [^id (NSData *data, NSUInteger* _offset, __unused id metaInfo)
         {
-            NSArray * randomIds = nil;
-            int32_t randomIds_signature = 0; [data getBytes:(void *)&randomIds_signature range:NSMakeRange(*_offset, 4)]; *_offset += 4;
-            if ((randomIds = [Secret45__Environment parseObject:data offset:_offset implicitSignature:randomIds_signature metaInfo:[[Secret45__UnboxedTypeMetaInfo alloc] initWithConstructorSignature:(int32_t)0x22076cba]]) == nil)
+            NSArray * random_ids = nil;
+            int32_t random_ids_signature = 0; [data getBytes:(void *)&random_ids_signature range:NSMakeRange(*_offset, 4)]; *_offset += 4;
+            if ((random_ids = [Secret45__Environment parseObject:data offset:_offset implicitSignature:random_ids_signature metaInfo:[[Secret45__UnboxedTypeMetaInfo alloc] initWithConstructorSignature:(int32_t)0x22076cba]]) == nil)
                return nil;
-            return [Secret45_DecryptedMessageAction decryptedMessageActionScreenshotMessagesWithRandomIds:randomIds];
+            return [Secret45_DecryptedMessageAction decryptedMessageActionScreenshotMessagesWithRandom_ids:random_ids];
         } copy];
         parsers[@((int32_t)0x6719e45c)] = [^id (__unused NSData *data, __unused NSUInteger* _offset, __unused id metaInfo)
         {
@@ -414,53 +414,53 @@ static const char *Secret45__Serializer_Key = "Secret45__Serializer";
         } copy];
         parsers[@((int32_t)0x511110b0)] = [^id (NSData *data, NSUInteger* _offset, __unused id metaInfo)
         {
-            NSNumber * startSeqNo = nil;
-            if ((startSeqNo = [Secret45__Environment parseObject:data offset:_offset implicitSignature:(int32_t)0xa8509bda metaInfo:nil]) == nil)
+            NSNumber * start_seq_no = nil;
+            if ((start_seq_no = [Secret45__Environment parseObject:data offset:_offset implicitSignature:(int32_t)0xa8509bda metaInfo:nil]) == nil)
                return nil;
-            NSNumber * endSeqNo = nil;
-            if ((endSeqNo = [Secret45__Environment parseObject:data offset:_offset implicitSignature:(int32_t)0xa8509bda metaInfo:nil]) == nil)
+            NSNumber * end_seq_no = nil;
+            if ((end_seq_no = [Secret45__Environment parseObject:data offset:_offset implicitSignature:(int32_t)0xa8509bda metaInfo:nil]) == nil)
                return nil;
-            return [Secret45_DecryptedMessageAction decryptedMessageActionResendWithStartSeqNo:startSeqNo endSeqNo:endSeqNo];
+            return [Secret45_DecryptedMessageAction decryptedMessageActionResendWithStart_seq_no:start_seq_no end_seq_no:end_seq_no];
         } copy];
         parsers[@((int32_t)0xf3c9611b)] = [^id (NSData *data, NSUInteger* _offset, __unused id metaInfo)
         {
-            NSNumber * exchangeId = nil;
-            if ((exchangeId = [Secret45__Environment parseObject:data offset:_offset implicitSignature:(int32_t)0x22076cba metaInfo:nil]) == nil)
+            NSNumber * exchange_id = nil;
+            if ((exchange_id = [Secret45__Environment parseObject:data offset:_offset implicitSignature:(int32_t)0x22076cba metaInfo:nil]) == nil)
                return nil;
-            NSData * gA = nil;
-            if ((gA = [Secret45__Environment parseObject:data offset:_offset implicitSignature:(int32_t)0xb5286e24 metaInfo:[Secret45__PreferNSDataTypeMetaInfo preferNSDataTypeMetaInfo]]) == nil)
+            NSData * g_a = nil;
+            if ((g_a = [Secret45__Environment parseObject:data offset:_offset implicitSignature:(int32_t)0xb5286e24 metaInfo:[Secret45__PreferNSDataTypeMetaInfo preferNSDataTypeMetaInfo]]) == nil)
                return nil;
-            return [Secret45_DecryptedMessageAction decryptedMessageActionRequestKeyWithExchangeId:exchangeId gA:gA];
+            return [Secret45_DecryptedMessageAction decryptedMessageActionRequestKeyWithExchange_id:exchange_id g_a:g_a];
         } copy];
         parsers[@((int32_t)0x6fe1735b)] = [^id (NSData *data, NSUInteger* _offset, __unused id metaInfo)
         {
-            NSNumber * exchangeId = nil;
-            if ((exchangeId = [Secret45__Environment parseObject:data offset:_offset implicitSignature:(int32_t)0x22076cba metaInfo:nil]) == nil)
+            NSNumber * exchange_id = nil;
+            if ((exchange_id = [Secret45__Environment parseObject:data offset:_offset implicitSignature:(int32_t)0x22076cba metaInfo:nil]) == nil)
                return nil;
-            NSData * gB = nil;
-            if ((gB = [Secret45__Environment parseObject:data offset:_offset implicitSignature:(int32_t)0xb5286e24 metaInfo:[Secret45__PreferNSDataTypeMetaInfo preferNSDataTypeMetaInfo]]) == nil)
+            NSData * g_b = nil;
+            if ((g_b = [Secret45__Environment parseObject:data offset:_offset implicitSignature:(int32_t)0xb5286e24 metaInfo:[Secret45__PreferNSDataTypeMetaInfo preferNSDataTypeMetaInfo]]) == nil)
                return nil;
-            NSNumber * keyFingerprint = nil;
-            if ((keyFingerprint = [Secret45__Environment parseObject:data offset:_offset implicitSignature:(int32_t)0x22076cba metaInfo:nil]) == nil)
+            NSNumber * key_fingerprint = nil;
+            if ((key_fingerprint = [Secret45__Environment parseObject:data offset:_offset implicitSignature:(int32_t)0x22076cba metaInfo:nil]) == nil)
                return nil;
-            return [Secret45_DecryptedMessageAction decryptedMessageActionAcceptKeyWithExchangeId:exchangeId gB:gB keyFingerprint:keyFingerprint];
+            return [Secret45_DecryptedMessageAction decryptedMessageActionAcceptKeyWithExchange_id:exchange_id g_b:g_b key_fingerprint:key_fingerprint];
         } copy];
         parsers[@((int32_t)0xec2e0b9b)] = [^id (NSData *data, NSUInteger* _offset, __unused id metaInfo)
         {
-            NSNumber * exchangeId = nil;
-            if ((exchangeId = [Secret45__Environment parseObject:data offset:_offset implicitSignature:(int32_t)0x22076cba metaInfo:nil]) == nil)
+            NSNumber * exchange_id = nil;
+            if ((exchange_id = [Secret45__Environment parseObject:data offset:_offset implicitSignature:(int32_t)0x22076cba metaInfo:nil]) == nil)
                return nil;
-            NSNumber * keyFingerprint = nil;
-            if ((keyFingerprint = [Secret45__Environment parseObject:data offset:_offset implicitSignature:(int32_t)0x22076cba metaInfo:nil]) == nil)
+            NSNumber * key_fingerprint = nil;
+            if ((key_fingerprint = [Secret45__Environment parseObject:data offset:_offset implicitSignature:(int32_t)0x22076cba metaInfo:nil]) == nil)
                return nil;
-            return [Secret45_DecryptedMessageAction decryptedMessageActionCommitKeyWithExchangeId:exchangeId keyFingerprint:keyFingerprint];
+            return [Secret45_DecryptedMessageAction decryptedMessageActionCommitKeyWithExchange_id:exchange_id key_fingerprint:key_fingerprint];
         } copy];
         parsers[@((int32_t)0xdd05ec6b)] = [^id (NSData *data, NSUInteger* _offset, __unused id metaInfo)
         {
-            NSNumber * exchangeId = nil;
-            if ((exchangeId = [Secret45__Environment parseObject:data offset:_offset implicitSignature:(int32_t)0x22076cba metaInfo:nil]) == nil)
+            NSNumber * exchange_id = nil;
+            if ((exchange_id = [Secret45__Environment parseObject:data offset:_offset implicitSignature:(int32_t)0x22076cba metaInfo:nil]) == nil)
                return nil;
-            return [Secret45_DecryptedMessageAction decryptedMessageActionAbortKeyWithExchangeId:exchangeId];
+            return [Secret45_DecryptedMessageAction decryptedMessageActionAbortKeyWithExchange_id:exchange_id];
         } copy];
         parsers[@((int32_t)0xa82fdd63)] = [^id (__unused NSData *data, __unused NSUInteger* _offset, __unused id metaInfo)
         {
@@ -555,71 +555,71 @@ static const char *Secret45__Serializer_Key = "Secret45__Serializer";
         } copy];
         parsers[@((int32_t)0x7c596b46)] = [^id (NSData *data, NSUInteger* _offset, __unused id metaInfo)
         {
-            NSNumber * volumeId = nil;
-            if ((volumeId = [Secret45__Environment parseObject:data offset:_offset implicitSignature:(int32_t)0x22076cba metaInfo:nil]) == nil)
+            NSNumber * volume_id = nil;
+            if ((volume_id = [Secret45__Environment parseObject:data offset:_offset implicitSignature:(int32_t)0x22076cba metaInfo:nil]) == nil)
                return nil;
-            NSNumber * localId = nil;
-            if ((localId = [Secret45__Environment parseObject:data offset:_offset implicitSignature:(int32_t)0xa8509bda metaInfo:nil]) == nil)
+            NSNumber * local_id = nil;
+            if ((local_id = [Secret45__Environment parseObject:data offset:_offset implicitSignature:(int32_t)0xa8509bda metaInfo:nil]) == nil)
                return nil;
             NSNumber * secret = nil;
             if ((secret = [Secret45__Environment parseObject:data offset:_offset implicitSignature:(int32_t)0x22076cba metaInfo:nil]) == nil)
                return nil;
-            return [Secret45_FileLocation fileLocationUnavailableWithVolumeId:volumeId localId:localId secret:secret];
+            return [Secret45_FileLocation fileLocationUnavailableWithVolume_id:volume_id local_id:local_id secret:secret];
         } copy];
         parsers[@((int32_t)0x53d69076)] = [^id (NSData *data, NSUInteger* _offset, __unused id metaInfo)
         {
-            NSNumber * dcId = nil;
-            if ((dcId = [Secret45__Environment parseObject:data offset:_offset implicitSignature:(int32_t)0xa8509bda metaInfo:nil]) == nil)
+            NSNumber * dc_id = nil;
+            if ((dc_id = [Secret45__Environment parseObject:data offset:_offset implicitSignature:(int32_t)0xa8509bda metaInfo:nil]) == nil)
                return nil;
-            NSNumber * volumeId = nil;
-            if ((volumeId = [Secret45__Environment parseObject:data offset:_offset implicitSignature:(int32_t)0x22076cba metaInfo:nil]) == nil)
+            NSNumber * volume_id = nil;
+            if ((volume_id = [Secret45__Environment parseObject:data offset:_offset implicitSignature:(int32_t)0x22076cba metaInfo:nil]) == nil)
                return nil;
-            NSNumber * localId = nil;
-            if ((localId = [Secret45__Environment parseObject:data offset:_offset implicitSignature:(int32_t)0xa8509bda metaInfo:nil]) == nil)
+            NSNumber * local_id = nil;
+            if ((local_id = [Secret45__Environment parseObject:data offset:_offset implicitSignature:(int32_t)0xa8509bda metaInfo:nil]) == nil)
                return nil;
             NSNumber * secret = nil;
             if ((secret = [Secret45__Environment parseObject:data offset:_offset implicitSignature:(int32_t)0x22076cba metaInfo:nil]) == nil)
                return nil;
-            return [Secret45_FileLocation fileLocationWithDcId:dcId volumeId:volumeId localId:localId secret:secret];
+            return [Secret45_FileLocation fileLocationWithDc_id:dc_id volume_id:volume_id local_id:local_id secret:secret];
         } copy];
         parsers[@((int32_t)0x1be31789)] = [^id (NSData *data, NSUInteger* _offset, __unused id metaInfo)
         {
-            NSData * randomBytes = nil;
-            if ((randomBytes = [Secret45__Environment parseObject:data offset:_offset implicitSignature:(int32_t)0xb5286e24 metaInfo:[Secret45__PreferNSDataTypeMetaInfo preferNSDataTypeMetaInfo]]) == nil)
+            NSData * random_bytes = nil;
+            if ((random_bytes = [Secret45__Environment parseObject:data offset:_offset implicitSignature:(int32_t)0xb5286e24 metaInfo:[Secret45__PreferNSDataTypeMetaInfo preferNSDataTypeMetaInfo]]) == nil)
                return nil;
             NSNumber * layer = nil;
             if ((layer = [Secret45__Environment parseObject:data offset:_offset implicitSignature:(int32_t)0xa8509bda metaInfo:nil]) == nil)
                return nil;
-            NSNumber * inSeqNo = nil;
-            if ((inSeqNo = [Secret45__Environment parseObject:data offset:_offset implicitSignature:(int32_t)0xa8509bda metaInfo:nil]) == nil)
+            NSNumber * in_seq_no = nil;
+            if ((in_seq_no = [Secret45__Environment parseObject:data offset:_offset implicitSignature:(int32_t)0xa8509bda metaInfo:nil]) == nil)
                return nil;
-            NSNumber * outSeqNo = nil;
-            if ((outSeqNo = [Secret45__Environment parseObject:data offset:_offset implicitSignature:(int32_t)0xa8509bda metaInfo:nil]) == nil)
+            NSNumber * out_seq_no = nil;
+            if ((out_seq_no = [Secret45__Environment parseObject:data offset:_offset implicitSignature:(int32_t)0xa8509bda metaInfo:nil]) == nil)
                return nil;
             Secret45_DecryptedMessage * message = nil;
             int32_t message_signature = 0; [data getBytes:(void *)&message_signature range:NSMakeRange(*_offset, 4)]; *_offset += 4;
             if ((message = [Secret45__Environment parseObject:data offset:_offset implicitSignature:message_signature metaInfo:nil]) == nil)
                return nil;
-            return [Secret45_DecryptedMessageLayer decryptedMessageLayerWithRandomBytes:randomBytes layer:layer inSeqNo:inSeqNo outSeqNo:outSeqNo message:message];
+            return [Secret45_DecryptedMessageLayer decryptedMessageLayerWithRandom_bytes:random_bytes layer:layer in_seq_no:in_seq_no out_seq_no:out_seq_no message:message];
         } copy];
         parsers[@((int32_t)0x73164160)] = [^id (NSData *data, NSUInteger* _offset, __unused id metaInfo)
         {
-            NSNumber * randomId = nil;
-            if ((randomId = [Secret45__Environment parseObject:data offset:_offset implicitSignature:(int32_t)0x22076cba metaInfo:nil]) == nil)
+            NSNumber * random_id = nil;
+            if ((random_id = [Secret45__Environment parseObject:data offset:_offset implicitSignature:(int32_t)0x22076cba metaInfo:nil]) == nil)
                return nil;
             Secret45_DecryptedMessageAction * action = nil;
             int32_t action_signature = 0; [data getBytes:(void *)&action_signature range:NSMakeRange(*_offset, 4)]; *_offset += 4;
             if ((action = [Secret45__Environment parseObject:data offset:_offset implicitSignature:action_signature metaInfo:nil]) == nil)
                return nil;
-            return [Secret45_DecryptedMessage decryptedMessageServiceWithRandomId:randomId action:action];
+            return [Secret45_DecryptedMessage decryptedMessageServiceWithRandom_id:random_id action:action];
         } copy];
         parsers[@((int32_t)0x36b091de)] = [^id (NSData *data, NSUInteger* _offset, __unused id metaInfo)
         {
             NSNumber * flags = nil;
             if ((flags = [Secret45__Environment parseObject:data offset:_offset implicitSignature:(int32_t)0xa8509bda metaInfo:nil]) == nil)
                return nil;
-            NSNumber * randomId = nil;
-            if ((randomId = [Secret45__Environment parseObject:data offset:_offset implicitSignature:(int32_t)0x22076cba metaInfo:nil]) == nil)
+            NSNumber * random_id = nil;
+            if ((random_id = [Secret45__Environment parseObject:data offset:_offset implicitSignature:(int32_t)0x22076cba metaInfo:nil]) == nil)
                return nil;
             NSNumber * ttl = nil;
             if ((ttl = [Secret45__Environment parseObject:data offset:_offset implicitSignature:(int32_t)0xa8509bda metaInfo:nil]) == nil)
@@ -639,17 +639,17 @@ static const char *Secret45__Serializer_Key = "Secret45__Serializer";
             if ((entities = [Secret45__Environment parseObject:data offset:_offset implicitSignature:entities_signature metaInfo:[Secret45__BoxedTypeMetaInfo boxedTypeMetaInfo]]) == nil)
                return nil;
             }
-            NSString * viaBotName = nil;
+            NSString * via_bot_name = nil;
             if (flags != nil && ([flags intValue] & (1 << 11))) {
-            if ((viaBotName = [Secret45__Environment parseObject:data offset:_offset implicitSignature:(int32_t)0xb5286e24 metaInfo:nil]) == nil)
+            if ((via_bot_name = [Secret45__Environment parseObject:data offset:_offset implicitSignature:(int32_t)0xb5286e24 metaInfo:nil]) == nil)
                return nil;
             }
-            NSNumber * replyToRandomId = nil;
+            NSNumber * reply_to_random_id = nil;
             if (flags != nil && ([flags intValue] & (1 << 3))) {
-            if ((replyToRandomId = [Secret45__Environment parseObject:data offset:_offset implicitSignature:(int32_t)0x22076cba metaInfo:nil]) == nil)
+            if ((reply_to_random_id = [Secret45__Environment parseObject:data offset:_offset implicitSignature:(int32_t)0x22076cba metaInfo:nil]) == nil)
                return nil;
             }
-            return [Secret45_DecryptedMessage decryptedMessageWithFlags:flags randomId:randomId ttl:ttl message:message media:media entities:entities viaBotName:viaBotName replyToRandomId:replyToRandomId];
+            return [Secret45_DecryptedMessage decryptedMessageWithFlags:flags random_id:random_id ttl:ttl message:message media:media entities:entities via_bot_name:via_bot_name reply_to_random_id:reply_to_random_id];
         } copy];
         parsers[@((int32_t)0x6c37c15c)] = [^id (NSData *data, NSUInteger* _offset, __unused id metaInfo)
         {
@@ -680,10 +680,10 @@ static const char *Secret45__Serializer_Key = "Secret45__Serializer";
         } copy];
         parsers[@((int32_t)0x15590068)] = [^id (NSData *data, NSUInteger* _offset, __unused id metaInfo)
         {
-            NSString * fileName = nil;
-            if ((fileName = [Secret45__Environment parseObject:data offset:_offset implicitSignature:(int32_t)0xb5286e24 metaInfo:nil]) == nil)
+            NSString * file_name = nil;
+            if ((file_name = [Secret45__Environment parseObject:data offset:_offset implicitSignature:(int32_t)0xb5286e24 metaInfo:nil]) == nil)
                return nil;
-            return [Secret45_DocumentAttribute documentAttributeFilenameWithFileName:fileName];
+            return [Secret45_DocumentAttribute documentAttributeFilenameWithFile_name:file_name];
         } copy];
         parsers[@((int32_t)0x3a556302)] = [^id (NSData *data, NSUInteger* _offset, __unused id metaInfo)
         {
@@ -711,10 +711,10 @@ static const char *Secret45__Serializer_Key = "Secret45__Serializer";
         } copy];
         parsers[@((int32_t)0x861cc8a0)] = [^id (NSData *data, NSUInteger* _offset, __unused id metaInfo)
         {
-            NSString * shortName = nil;
-            if ((shortName = [Secret45__Environment parseObject:data offset:_offset implicitSignature:(int32_t)0xb5286e24 metaInfo:nil]) == nil)
+            NSString * short_name = nil;
+            if ((short_name = [Secret45__Environment parseObject:data offset:_offset implicitSignature:(int32_t)0xb5286e24 metaInfo:nil]) == nil)
                return nil;
-            return [Secret45_InputStickerSet inputStickerSetShortNameWithShortName:shortName];
+            return [Secret45_InputStickerSet inputStickerSetShortNameWithShort_name:short_name];
         } copy];
         parsers[@((int32_t)0xffb62b95)] = [^id (__unused NSData *data, __unused NSUInteger* _offset, __unused id metaInfo)
         {
@@ -840,34 +840,6 @@ static const char *Secret45__Serializer_Key = "Secret45__Serializer";
         {
             return [Secret45_DecryptedMessageMedia decryptedMessageMediaEmpty];
         } copy];
-        parsers[@((int32_t)0x32798a8c)] = [^id (NSData *data, NSUInteger* _offset, __unused id metaInfo)
-        {
-            NSData * thumb = nil;
-            if ((thumb = [Secret45__Environment parseObject:data offset:_offset implicitSignature:(int32_t)0xb5286e24 metaInfo:[Secret45__PreferNSDataTypeMetaInfo preferNSDataTypeMetaInfo]]) == nil)
-               return nil;
-            NSNumber * thumbW = nil;
-            if ((thumbW = [Secret45__Environment parseObject:data offset:_offset implicitSignature:(int32_t)0xa8509bda metaInfo:nil]) == nil)
-               return nil;
-            NSNumber * thumbH = nil;
-            if ((thumbH = [Secret45__Environment parseObject:data offset:_offset implicitSignature:(int32_t)0xa8509bda metaInfo:nil]) == nil)
-               return nil;
-            NSNumber * w = nil;
-            if ((w = [Secret45__Environment parseObject:data offset:_offset implicitSignature:(int32_t)0xa8509bda metaInfo:nil]) == nil)
-               return nil;
-            NSNumber * h = nil;
-            if ((h = [Secret45__Environment parseObject:data offset:_offset implicitSignature:(int32_t)0xa8509bda metaInfo:nil]) == nil)
-               return nil;
-            NSNumber * size = nil;
-            if ((size = [Secret45__Environment parseObject:data offset:_offset implicitSignature:(int32_t)0xa8509bda metaInfo:nil]) == nil)
-               return nil;
-            NSData * key = nil;
-            if ((key = [Secret45__Environment parseObject:data offset:_offset implicitSignature:(int32_t)0xb5286e24 metaInfo:[Secret45__PreferNSDataTypeMetaInfo preferNSDataTypeMetaInfo]]) == nil)
-               return nil;
-            NSData * iv = nil;
-            if ((iv = [Secret45__Environment parseObject:data offset:_offset implicitSignature:(int32_t)0xb5286e24 metaInfo:[Secret45__PreferNSDataTypeMetaInfo preferNSDataTypeMetaInfo]]) == nil)
-               return nil;
-            return [Secret45_DecryptedMessageMedia decryptedMessageMediaPhotoWithThumb:thumb thumbW:thumbW thumbH:thumbH w:w h:h size:size key:key iv:iv];
-        } copy];
         parsers[@((int32_t)0x35480a59)] = [^id (NSData *data, NSUInteger* _offset, __unused id metaInfo)
         {
             NSNumber * lat = nil;
@@ -880,36 +852,79 @@ static const char *Secret45__Serializer_Key = "Secret45__Serializer";
         } copy];
         parsers[@((int32_t)0x588a0a97)] = [^id (NSData *data, NSUInteger* _offset, __unused id metaInfo)
         {
-            NSString * phoneNumber = nil;
-            if ((phoneNumber = [Secret45__Environment parseObject:data offset:_offset implicitSignature:(int32_t)0xb5286e24 metaInfo:nil]) == nil)
+            NSString * phone_number = nil;
+            if ((phone_number = [Secret45__Environment parseObject:data offset:_offset implicitSignature:(int32_t)0xb5286e24 metaInfo:nil]) == nil)
                return nil;
-            NSString * firstName = nil;
-            if ((firstName = [Secret45__Environment parseObject:data offset:_offset implicitSignature:(int32_t)0xb5286e24 metaInfo:nil]) == nil)
+            NSString * first_name = nil;
+            if ((first_name = [Secret45__Environment parseObject:data offset:_offset implicitSignature:(int32_t)0xb5286e24 metaInfo:nil]) == nil)
                return nil;
-            NSString * lastName = nil;
-            if ((lastName = [Secret45__Environment parseObject:data offset:_offset implicitSignature:(int32_t)0xb5286e24 metaInfo:nil]) == nil)
+            NSString * last_name = nil;
+            if ((last_name = [Secret45__Environment parseObject:data offset:_offset implicitSignature:(int32_t)0xb5286e24 metaInfo:nil]) == nil)
                return nil;
-            NSNumber * userId = nil;
-            if ((userId = [Secret45__Environment parseObject:data offset:_offset implicitSignature:(int32_t)0xa8509bda metaInfo:nil]) == nil)
+            NSNumber * user_id = nil;
+            if ((user_id = [Secret45__Environment parseObject:data offset:_offset implicitSignature:(int32_t)0xa8509bda metaInfo:nil]) == nil)
                return nil;
-            return [Secret45_DecryptedMessageMedia decryptedMessageMediaContactWithPhoneNumber:phoneNumber firstName:firstName lastName:lastName userId:userId];
+            return [Secret45_DecryptedMessageMedia decryptedMessageMediaContactWithPhone_number:phone_number first_name:first_name last_name:last_name user_id:user_id];
         } copy];
-        parsers[@((int32_t)0x524a415d)] = [^id (NSData *data, NSUInteger* _offset, __unused id metaInfo)
+        parsers[@((int32_t)0x57e0a9cb)] = [^id (NSData *data, NSUInteger* _offset, __unused id metaInfo)
+        {
+            NSNumber * duration = nil;
+            if ((duration = [Secret45__Environment parseObject:data offset:_offset implicitSignature:(int32_t)0xa8509bda metaInfo:nil]) == nil)
+               return nil;
+            NSString * mime_type = nil;
+            if ((mime_type = [Secret45__Environment parseObject:data offset:_offset implicitSignature:(int32_t)0xb5286e24 metaInfo:nil]) == nil)
+               return nil;
+            NSNumber * size = nil;
+            if ((size = [Secret45__Environment parseObject:data offset:_offset implicitSignature:(int32_t)0xa8509bda metaInfo:nil]) == nil)
+               return nil;
+            NSData * key = nil;
+            if ((key = [Secret45__Environment parseObject:data offset:_offset implicitSignature:(int32_t)0xb5286e24 metaInfo:[Secret45__PreferNSDataTypeMetaInfo preferNSDataTypeMetaInfo]]) == nil)
+               return nil;
+            NSData * iv = nil;
+            if ((iv = [Secret45__Environment parseObject:data offset:_offset implicitSignature:(int32_t)0xb5286e24 metaInfo:[Secret45__PreferNSDataTypeMetaInfo preferNSDataTypeMetaInfo]]) == nil)
+               return nil;
+            return [Secret45_DecryptedMessageMedia decryptedMessageMediaAudioWithDuration:duration mime_type:mime_type size:size key:key iv:iv];
+        } copy];
+        parsers[@((int32_t)0xfa95b0dd)] = [^id (NSData *data, NSUInteger* _offset, __unused id metaInfo)
+        {
+            NSNumber * pid = nil;
+            if ((pid = [Secret45__Environment parseObject:data offset:_offset implicitSignature:(int32_t)0x22076cba metaInfo:nil]) == nil)
+               return nil;
+            NSNumber * access_hash = nil;
+            if ((access_hash = [Secret45__Environment parseObject:data offset:_offset implicitSignature:(int32_t)0x22076cba metaInfo:nil]) == nil)
+               return nil;
+            NSNumber * date = nil;
+            if ((date = [Secret45__Environment parseObject:data offset:_offset implicitSignature:(int32_t)0xa8509bda metaInfo:nil]) == nil)
+               return nil;
+            NSString * mime_type = nil;
+            if ((mime_type = [Secret45__Environment parseObject:data offset:_offset implicitSignature:(int32_t)0xb5286e24 metaInfo:nil]) == nil)
+               return nil;
+            NSNumber * size = nil;
+            if ((size = [Secret45__Environment parseObject:data offset:_offset implicitSignature:(int32_t)0xa8509bda metaInfo:nil]) == nil)
+               return nil;
+            Secret45_PhotoSize * thumb = nil;
+            int32_t thumb_signature = 0; [data getBytes:(void *)&thumb_signature range:NSMakeRange(*_offset, 4)]; *_offset += 4;
+            if ((thumb = [Secret45__Environment parseObject:data offset:_offset implicitSignature:thumb_signature metaInfo:nil]) == nil)
+               return nil;
+            NSNumber * dc_id = nil;
+            if ((dc_id = [Secret45__Environment parseObject:data offset:_offset implicitSignature:(int32_t)0xa8509bda metaInfo:nil]) == nil)
+               return nil;
+            NSArray * attributes = nil;
+            int32_t attributes_signature = 0; [data getBytes:(void *)&attributes_signature range:NSMakeRange(*_offset, 4)]; *_offset += 4;
+            if ((attributes = [Secret45__Environment parseObject:data offset:_offset implicitSignature:attributes_signature metaInfo:[Secret45__BoxedTypeMetaInfo boxedTypeMetaInfo]]) == nil)
+               return nil;
+            return [Secret45_DecryptedMessageMedia decryptedMessageMediaExternalDocumentWithPid:pid access_hash:access_hash date:date mime_type:mime_type size:size thumb:thumb dc_id:dc_id attributes:attributes];
+        } copy];
+        parsers[@((int32_t)0xf1fa8d78)] = [^id (NSData *data, NSUInteger* _offset, __unused id metaInfo)
         {
             NSData * thumb = nil;
             if ((thumb = [Secret45__Environment parseObject:data offset:_offset implicitSignature:(int32_t)0xb5286e24 metaInfo:[Secret45__PreferNSDataTypeMetaInfo preferNSDataTypeMetaInfo]]) == nil)
                return nil;
-            NSNumber * thumbW = nil;
-            if ((thumbW = [Secret45__Environment parseObject:data offset:_offset implicitSignature:(int32_t)0xa8509bda metaInfo:nil]) == nil)
+            NSNumber * thumb_w = nil;
+            if ((thumb_w = [Secret45__Environment parseObject:data offset:_offset implicitSignature:(int32_t)0xa8509bda metaInfo:nil]) == nil)
                return nil;
-            NSNumber * thumbH = nil;
-            if ((thumbH = [Secret45__Environment parseObject:data offset:_offset implicitSignature:(int32_t)0xa8509bda metaInfo:nil]) == nil)
-               return nil;
-            NSNumber * duration = nil;
-            if ((duration = [Secret45__Environment parseObject:data offset:_offset implicitSignature:(int32_t)0xa8509bda metaInfo:nil]) == nil)
-               return nil;
-            NSString * mimeType = nil;
-            if ((mimeType = [Secret45__Environment parseObject:data offset:_offset implicitSignature:(int32_t)0xb5286e24 metaInfo:nil]) == nil)
+            NSNumber * thumb_h = nil;
+            if ((thumb_h = [Secret45__Environment parseObject:data offset:_offset implicitSignature:(int32_t)0xa8509bda metaInfo:nil]) == nil)
                return nil;
             NSNumber * w = nil;
             if ((w = [Secret45__Environment parseObject:data offset:_offset implicitSignature:(int32_t)0xa8509bda metaInfo:nil]) == nil)
@@ -926,70 +941,24 @@ static const char *Secret45__Serializer_Key = "Secret45__Serializer";
             NSData * iv = nil;
             if ((iv = [Secret45__Environment parseObject:data offset:_offset implicitSignature:(int32_t)0xb5286e24 metaInfo:[Secret45__PreferNSDataTypeMetaInfo preferNSDataTypeMetaInfo]]) == nil)
                return nil;
-            return [Secret45_DecryptedMessageMedia decryptedMessageMediaVideoWithThumb:thumb thumbW:thumbW thumbH:thumbH duration:duration mimeType:mimeType w:w h:h size:size key:key iv:iv];
+            NSString * caption = nil;
+            if ((caption = [Secret45__Environment parseObject:data offset:_offset implicitSignature:(int32_t)0xb5286e24 metaInfo:nil]) == nil)
+               return nil;
+            return [Secret45_DecryptedMessageMedia decryptedMessageMediaPhotoWithThumb:thumb thumb_w:thumb_w thumb_h:thumb_h w:w h:h size:size key:key iv:iv caption:caption];
         } copy];
-        parsers[@((int32_t)0x57e0a9cb)] = [^id (NSData *data, NSUInteger* _offset, __unused id metaInfo)
-        {
-            NSNumber * duration = nil;
-            if ((duration = [Secret45__Environment parseObject:data offset:_offset implicitSignature:(int32_t)0xa8509bda metaInfo:nil]) == nil)
-               return nil;
-            NSString * mimeType = nil;
-            if ((mimeType = [Secret45__Environment parseObject:data offset:_offset implicitSignature:(int32_t)0xb5286e24 metaInfo:nil]) == nil)
-               return nil;
-            NSNumber * size = nil;
-            if ((size = [Secret45__Environment parseObject:data offset:_offset implicitSignature:(int32_t)0xa8509bda metaInfo:nil]) == nil)
-               return nil;
-            NSData * key = nil;
-            if ((key = [Secret45__Environment parseObject:data offset:_offset implicitSignature:(int32_t)0xb5286e24 metaInfo:[Secret45__PreferNSDataTypeMetaInfo preferNSDataTypeMetaInfo]]) == nil)
-               return nil;
-            NSData * iv = nil;
-            if ((iv = [Secret45__Environment parseObject:data offset:_offset implicitSignature:(int32_t)0xb5286e24 metaInfo:[Secret45__PreferNSDataTypeMetaInfo preferNSDataTypeMetaInfo]]) == nil)
-               return nil;
-            return [Secret45_DecryptedMessageMedia decryptedMessageMediaAudioWithDuration:duration mimeType:mimeType size:size key:key iv:iv];
-        } copy];
-        parsers[@((int32_t)0xfa95b0dd)] = [^id (NSData *data, NSUInteger* _offset, __unused id metaInfo)
-        {
-            NSNumber * pid = nil;
-            if ((pid = [Secret45__Environment parseObject:data offset:_offset implicitSignature:(int32_t)0x22076cba metaInfo:nil]) == nil)
-               return nil;
-            NSNumber * accessHash = nil;
-            if ((accessHash = [Secret45__Environment parseObject:data offset:_offset implicitSignature:(int32_t)0x22076cba metaInfo:nil]) == nil)
-               return nil;
-            NSNumber * date = nil;
-            if ((date = [Secret45__Environment parseObject:data offset:_offset implicitSignature:(int32_t)0xa8509bda metaInfo:nil]) == nil)
-               return nil;
-            NSString * mimeType = nil;
-            if ((mimeType = [Secret45__Environment parseObject:data offset:_offset implicitSignature:(int32_t)0xb5286e24 metaInfo:nil]) == nil)
-               return nil;
-            NSNumber * size = nil;
-            if ((size = [Secret45__Environment parseObject:data offset:_offset implicitSignature:(int32_t)0xa8509bda metaInfo:nil]) == nil)
-               return nil;
-            Secret45_PhotoSize * thumb = nil;
-            int32_t thumb_signature = 0; [data getBytes:(void *)&thumb_signature range:NSMakeRange(*_offset, 4)]; *_offset += 4;
-            if ((thumb = [Secret45__Environment parseObject:data offset:_offset implicitSignature:thumb_signature metaInfo:nil]) == nil)
-               return nil;
-            NSNumber * dcId = nil;
-            if ((dcId = [Secret45__Environment parseObject:data offset:_offset implicitSignature:(int32_t)0xa8509bda metaInfo:nil]) == nil)
-               return nil;
-            NSArray * attributes = nil;
-            int32_t attributes_signature = 0; [data getBytes:(void *)&attributes_signature range:NSMakeRange(*_offset, 4)]; *_offset += 4;
-            if ((attributes = [Secret45__Environment parseObject:data offset:_offset implicitSignature:attributes_signature metaInfo:[Secret45__BoxedTypeMetaInfo boxedTypeMetaInfo]]) == nil)
-               return nil;
-            return [Secret45_DecryptedMessageMedia decryptedMessageMediaExternalDocumentWithPid:pid accessHash:accessHash date:date mimeType:mimeType size:size thumb:thumb dcId:dcId attributes:attributes];
-        } copy];
-        parsers[@((int32_t)0xfee613da)] = [^id (NSData *data, NSUInteger* _offset, __unused id metaInfo)
+        parsers[@((int32_t)0x7afe8ae2)] = [^id (NSData *data, NSUInteger* _offset, __unused id metaInfo)
         {
             NSData * thumb = nil;
             if ((thumb = [Secret45__Environment parseObject:data offset:_offset implicitSignature:(int32_t)0xb5286e24 metaInfo:[Secret45__PreferNSDataTypeMetaInfo preferNSDataTypeMetaInfo]]) == nil)
                return nil;
-            NSNumber * thumbW = nil;
-            if ((thumbW = [Secret45__Environment parseObject:data offset:_offset implicitSignature:(int32_t)0xa8509bda metaInfo:nil]) == nil)
+            NSNumber * thumb_w = nil;
+            if ((thumb_w = [Secret45__Environment parseObject:data offset:_offset implicitSignature:(int32_t)0xa8509bda metaInfo:nil]) == nil)
                return nil;
-            NSNumber * thumbH = nil;
-            if ((thumbH = [Secret45__Environment parseObject:data offset:_offset implicitSignature:(int32_t)0xa8509bda metaInfo:nil]) == nil)
+            NSNumber * thumb_h = nil;
+            if ((thumb_h = [Secret45__Environment parseObject:data offset:_offset implicitSignature:(int32_t)0xa8509bda metaInfo:nil]) == nil)
                return nil;
-            NSString * mimeType = nil;
-            if ((mimeType = [Secret45__Environment parseObject:data offset:_offset implicitSignature:(int32_t)0xb5286e24 metaInfo:nil]) == nil)
+            NSString * mime_type = nil;
+            if ((mime_type = [Secret45__Environment parseObject:data offset:_offset implicitSignature:(int32_t)0xb5286e24 metaInfo:nil]) == nil)
                return nil;
             NSNumber * size = nil;
             if ((size = [Secret45__Environment parseObject:data offset:_offset implicitSignature:(int32_t)0xa8509bda metaInfo:nil]) == nil)
@@ -1004,7 +973,47 @@ static const char *Secret45__Serializer_Key = "Secret45__Serializer";
             int32_t attributes_signature = 0; [data getBytes:(void *)&attributes_signature range:NSMakeRange(*_offset, 4)]; *_offset += 4;
             if ((attributes = [Secret45__Environment parseObject:data offset:_offset implicitSignature:attributes_signature metaInfo:[Secret45__BoxedTypeMetaInfo boxedTypeMetaInfo]]) == nil)
                return nil;
-            return [Secret45_DecryptedMessageMedia decryptedMessageMediaDocumentWithThumb:thumb thumbW:thumbW thumbH:thumbH mimeType:mimeType size:size key:key iv:iv attributes:attributes];
+            NSString * caption = nil;
+            if ((caption = [Secret45__Environment parseObject:data offset:_offset implicitSignature:(int32_t)0xb5286e24 metaInfo:nil]) == nil)
+               return nil;
+            return [Secret45_DecryptedMessageMedia decryptedMessageMediaDocumentWithThumb:thumb thumb_w:thumb_w thumb_h:thumb_h mime_type:mime_type size:size key:key iv:iv attributes:attributes caption:caption];
+        } copy];
+        parsers[@((int32_t)0x970c8c0e)] = [^id (NSData *data, NSUInteger* _offset, __unused id metaInfo)
+        {
+            NSData * thumb = nil;
+            if ((thumb = [Secret45__Environment parseObject:data offset:_offset implicitSignature:(int32_t)0xb5286e24 metaInfo:[Secret45__PreferNSDataTypeMetaInfo preferNSDataTypeMetaInfo]]) == nil)
+               return nil;
+            NSNumber * thumb_w = nil;
+            if ((thumb_w = [Secret45__Environment parseObject:data offset:_offset implicitSignature:(int32_t)0xa8509bda metaInfo:nil]) == nil)
+               return nil;
+            NSNumber * thumb_h = nil;
+            if ((thumb_h = [Secret45__Environment parseObject:data offset:_offset implicitSignature:(int32_t)0xa8509bda metaInfo:nil]) == nil)
+               return nil;
+            NSNumber * duration = nil;
+            if ((duration = [Secret45__Environment parseObject:data offset:_offset implicitSignature:(int32_t)0xa8509bda metaInfo:nil]) == nil)
+               return nil;
+            NSString * mime_type = nil;
+            if ((mime_type = [Secret45__Environment parseObject:data offset:_offset implicitSignature:(int32_t)0xb5286e24 metaInfo:nil]) == nil)
+               return nil;
+            NSNumber * w = nil;
+            if ((w = [Secret45__Environment parseObject:data offset:_offset implicitSignature:(int32_t)0xa8509bda metaInfo:nil]) == nil)
+               return nil;
+            NSNumber * h = nil;
+            if ((h = [Secret45__Environment parseObject:data offset:_offset implicitSignature:(int32_t)0xa8509bda metaInfo:nil]) == nil)
+               return nil;
+            NSNumber * size = nil;
+            if ((size = [Secret45__Environment parseObject:data offset:_offset implicitSignature:(int32_t)0xa8509bda metaInfo:nil]) == nil)
+               return nil;
+            NSData * key = nil;
+            if ((key = [Secret45__Environment parseObject:data offset:_offset implicitSignature:(int32_t)0xb5286e24 metaInfo:[Secret45__PreferNSDataTypeMetaInfo preferNSDataTypeMetaInfo]]) == nil)
+               return nil;
+            NSData * iv = nil;
+            if ((iv = [Secret45__Environment parseObject:data offset:_offset implicitSignature:(int32_t)0xb5286e24 metaInfo:[Secret45__PreferNSDataTypeMetaInfo preferNSDataTypeMetaInfo]]) == nil)
+               return nil;
+            NSString * caption = nil;
+            if ((caption = [Secret45__Environment parseObject:data offset:_offset implicitSignature:(int32_t)0xb5286e24 metaInfo:nil]) == nil)
+               return nil;
+            return [Secret45_DecryptedMessageMedia decryptedMessageMediaVideoWithThumb:thumb thumb_w:thumb_w thumb_h:thumb_h duration:duration mime_type:mime_type w:w h:h size:size key:key iv:iv caption:caption];
         } copy];
 });
 
@@ -1237,25 +1246,25 @@ static const char *Secret45__Serializer_Key = "Secret45__Serializer";
 
 @interface Secret45_DecryptedMessageAction_decryptedMessageActionSetMessageTTL ()
 
-@property (nonatomic, strong) NSNumber * ttlSeconds;
+@property (nonatomic, strong) NSNumber * ttl_seconds;
 
 @end
 
 @interface Secret45_DecryptedMessageAction_decryptedMessageActionReadMessages ()
 
-@property (nonatomic, strong) NSArray * randomIds;
+@property (nonatomic, strong) NSArray * random_ids;
 
 @end
 
 @interface Secret45_DecryptedMessageAction_decryptedMessageActionDeleteMessages ()
 
-@property (nonatomic, strong) NSArray * randomIds;
+@property (nonatomic, strong) NSArray * random_ids;
 
 @end
 
 @interface Secret45_DecryptedMessageAction_decryptedMessageActionScreenshotMessages ()
 
-@property (nonatomic, strong) NSArray * randomIds;
+@property (nonatomic, strong) NSArray * random_ids;
 
 @end
 
@@ -1277,36 +1286,36 @@ static const char *Secret45__Serializer_Key = "Secret45__Serializer";
 
 @interface Secret45_DecryptedMessageAction_decryptedMessageActionResend ()
 
-@property (nonatomic, strong) NSNumber * startSeqNo;
-@property (nonatomic, strong) NSNumber * endSeqNo;
+@property (nonatomic, strong) NSNumber * start_seq_no;
+@property (nonatomic, strong) NSNumber * end_seq_no;
 
 @end
 
 @interface Secret45_DecryptedMessageAction_decryptedMessageActionRequestKey ()
 
-@property (nonatomic, strong) NSNumber * exchangeId;
-@property (nonatomic, strong) NSData * gA;
+@property (nonatomic, strong) NSNumber * exchange_id;
+@property (nonatomic, strong) NSData * g_a;
 
 @end
 
 @interface Secret45_DecryptedMessageAction_decryptedMessageActionAcceptKey ()
 
-@property (nonatomic, strong) NSNumber * exchangeId;
-@property (nonatomic, strong) NSData * gB;
-@property (nonatomic, strong) NSNumber * keyFingerprint;
+@property (nonatomic, strong) NSNumber * exchange_id;
+@property (nonatomic, strong) NSData * g_b;
+@property (nonatomic, strong) NSNumber * key_fingerprint;
 
 @end
 
 @interface Secret45_DecryptedMessageAction_decryptedMessageActionCommitKey ()
 
-@property (nonatomic, strong) NSNumber * exchangeId;
-@property (nonatomic, strong) NSNumber * keyFingerprint;
+@property (nonatomic, strong) NSNumber * exchange_id;
+@property (nonatomic, strong) NSNumber * key_fingerprint;
 
 @end
 
 @interface Secret45_DecryptedMessageAction_decryptedMessageActionAbortKey ()
 
-@property (nonatomic, strong) NSNumber * exchangeId;
+@property (nonatomic, strong) NSNumber * exchange_id;
 
 @end
 
@@ -1316,24 +1325,24 @@ static const char *Secret45__Serializer_Key = "Secret45__Serializer";
 
 @implementation Secret45_DecryptedMessageAction
 
-+ (Secret45_DecryptedMessageAction_decryptedMessageActionSetMessageTTL *)decryptedMessageActionSetMessageTTLWithTtlSeconds:(NSNumber *)ttlSeconds
++ (Secret45_DecryptedMessageAction_decryptedMessageActionSetMessageTTL *)decryptedMessageActionSetMessageTTLWithTtl_seconds:(NSNumber *)ttl_seconds
 {
     Secret45_DecryptedMessageAction_decryptedMessageActionSetMessageTTL *_object = [[Secret45_DecryptedMessageAction_decryptedMessageActionSetMessageTTL alloc] init];
-    _object.ttlSeconds = [Secret45__Serializer addSerializerToObject:[[Secret45__Number alloc] initWithNumber:ttlSeconds] serializer:[[Secret45_BuiltinSerializer_Int alloc] init]];
+    _object.ttl_seconds = [Secret45__Serializer addSerializerToObject:[[Secret45__Number alloc] initWithNumber:ttl_seconds] serializer:[[Secret45_BuiltinSerializer_Int alloc] init]];
     return _object;
 }
 
-+ (Secret45_DecryptedMessageAction_decryptedMessageActionReadMessages *)decryptedMessageActionReadMessagesWithRandomIds:(NSArray *)randomIds
++ (Secret45_DecryptedMessageAction_decryptedMessageActionReadMessages *)decryptedMessageActionReadMessagesWithRandom_ids:(NSArray *)random_ids
 {
     Secret45_DecryptedMessageAction_decryptedMessageActionReadMessages *_object = [[Secret45_DecryptedMessageAction_decryptedMessageActionReadMessages alloc] init];
-    _object.randomIds = 
+    _object.random_ids = 
 ({
-NSMutableArray *randomIds_copy = [[NSMutableArray alloc] initWithCapacity:randomIds.count];
-for (id randomIds_item in randomIds)
+NSMutableArray *random_ids_copy = [[NSMutableArray alloc] initWithCapacity:random_ids.count];
+for (id random_ids_item in random_ids)
 {
-    [randomIds_copy addObject:[Secret45__Serializer addSerializerToObject:[[Secret45__Number alloc] initWithNumber:randomIds_item] serializer:[[Secret45_BuiltinSerializer_Long alloc] init]]];
+    [random_ids_copy addObject:[Secret45__Serializer addSerializerToObject:[[Secret45__Number alloc] initWithNumber:random_ids_item] serializer:[[Secret45_BuiltinSerializer_Long alloc] init]]];
 }
-id randomIds_result = [Secret45__Serializer addSerializerToObject:randomIds_copy serializer:[[Secret45__Serializer alloc] initWithConstructorSignature:(int32_t)0x1cb5c415 serializeBlock:^bool (NSArray *object, NSMutableData *data)
+id random_ids_result = [Secret45__Serializer addSerializerToObject:random_ids_copy serializer:[[Secret45__Serializer alloc] initWithConstructorSignature:(int32_t)0x1cb5c415 serializeBlock:^bool (NSArray *object, NSMutableData *data)
 {
     int32_t count = (int32_t)object.count;
     [data appendBytes:(void *)&count length:4];
@@ -1343,21 +1352,21 @@ id randomIds_result = [Secret45__Serializer addSerializerToObject:randomIds_copy
         return false;
     }
     return true;
-}]]; randomIds_result;});
+}]]; random_ids_result;});
     return _object;
 }
 
-+ (Secret45_DecryptedMessageAction_decryptedMessageActionDeleteMessages *)decryptedMessageActionDeleteMessagesWithRandomIds:(NSArray *)randomIds
++ (Secret45_DecryptedMessageAction_decryptedMessageActionDeleteMessages *)decryptedMessageActionDeleteMessagesWithRandom_ids:(NSArray *)random_ids
 {
     Secret45_DecryptedMessageAction_decryptedMessageActionDeleteMessages *_object = [[Secret45_DecryptedMessageAction_decryptedMessageActionDeleteMessages alloc] init];
-    _object.randomIds = 
+    _object.random_ids = 
 ({
-NSMutableArray *randomIds_copy = [[NSMutableArray alloc] initWithCapacity:randomIds.count];
-for (id randomIds_item in randomIds)
+NSMutableArray *random_ids_copy = [[NSMutableArray alloc] initWithCapacity:random_ids.count];
+for (id random_ids_item in random_ids)
 {
-    [randomIds_copy addObject:[Secret45__Serializer addSerializerToObject:[[Secret45__Number alloc] initWithNumber:randomIds_item] serializer:[[Secret45_BuiltinSerializer_Long alloc] init]]];
+    [random_ids_copy addObject:[Secret45__Serializer addSerializerToObject:[[Secret45__Number alloc] initWithNumber:random_ids_item] serializer:[[Secret45_BuiltinSerializer_Long alloc] init]]];
 }
-id randomIds_result = [Secret45__Serializer addSerializerToObject:randomIds_copy serializer:[[Secret45__Serializer alloc] initWithConstructorSignature:(int32_t)0x1cb5c415 serializeBlock:^bool (NSArray *object, NSMutableData *data)
+id random_ids_result = [Secret45__Serializer addSerializerToObject:random_ids_copy serializer:[[Secret45__Serializer alloc] initWithConstructorSignature:(int32_t)0x1cb5c415 serializeBlock:^bool (NSArray *object, NSMutableData *data)
 {
     int32_t count = (int32_t)object.count;
     [data appendBytes:(void *)&count length:4];
@@ -1367,21 +1376,21 @@ id randomIds_result = [Secret45__Serializer addSerializerToObject:randomIds_copy
         return false;
     }
     return true;
-}]]; randomIds_result;});
+}]]; random_ids_result;});
     return _object;
 }
 
-+ (Secret45_DecryptedMessageAction_decryptedMessageActionScreenshotMessages *)decryptedMessageActionScreenshotMessagesWithRandomIds:(NSArray *)randomIds
++ (Secret45_DecryptedMessageAction_decryptedMessageActionScreenshotMessages *)decryptedMessageActionScreenshotMessagesWithRandom_ids:(NSArray *)random_ids
 {
     Secret45_DecryptedMessageAction_decryptedMessageActionScreenshotMessages *_object = [[Secret45_DecryptedMessageAction_decryptedMessageActionScreenshotMessages alloc] init];
-    _object.randomIds = 
+    _object.random_ids = 
 ({
-NSMutableArray *randomIds_copy = [[NSMutableArray alloc] initWithCapacity:randomIds.count];
-for (id randomIds_item in randomIds)
+NSMutableArray *random_ids_copy = [[NSMutableArray alloc] initWithCapacity:random_ids.count];
+for (id random_ids_item in random_ids)
 {
-    [randomIds_copy addObject:[Secret45__Serializer addSerializerToObject:[[Secret45__Number alloc] initWithNumber:randomIds_item] serializer:[[Secret45_BuiltinSerializer_Long alloc] init]]];
+    [random_ids_copy addObject:[Secret45__Serializer addSerializerToObject:[[Secret45__Number alloc] initWithNumber:random_ids_item] serializer:[[Secret45_BuiltinSerializer_Long alloc] init]]];
 }
-id randomIds_result = [Secret45__Serializer addSerializerToObject:randomIds_copy serializer:[[Secret45__Serializer alloc] initWithConstructorSignature:(int32_t)0x1cb5c415 serializeBlock:^bool (NSArray *object, NSMutableData *data)
+id random_ids_result = [Secret45__Serializer addSerializerToObject:random_ids_copy serializer:[[Secret45__Serializer alloc] initWithConstructorSignature:(int32_t)0x1cb5c415 serializeBlock:^bool (NSArray *object, NSMutableData *data)
 {
     int32_t count = (int32_t)object.count;
     [data appendBytes:(void *)&count length:4];
@@ -1391,7 +1400,7 @@ id randomIds_result = [Secret45__Serializer addSerializerToObject:randomIds_copy
         return false;
     }
     return true;
-}]]; randomIds_result;});
+}]]; random_ids_result;});
     return _object;
 }
 
@@ -1415,43 +1424,43 @@ id randomIds_result = [Secret45__Serializer addSerializerToObject:randomIds_copy
     return _object;
 }
 
-+ (Secret45_DecryptedMessageAction_decryptedMessageActionResend *)decryptedMessageActionResendWithStartSeqNo:(NSNumber *)startSeqNo endSeqNo:(NSNumber *)endSeqNo
++ (Secret45_DecryptedMessageAction_decryptedMessageActionResend *)decryptedMessageActionResendWithStart_seq_no:(NSNumber *)start_seq_no end_seq_no:(NSNumber *)end_seq_no
 {
     Secret45_DecryptedMessageAction_decryptedMessageActionResend *_object = [[Secret45_DecryptedMessageAction_decryptedMessageActionResend alloc] init];
-    _object.startSeqNo = [Secret45__Serializer addSerializerToObject:[[Secret45__Number alloc] initWithNumber:startSeqNo] serializer:[[Secret45_BuiltinSerializer_Int alloc] init]];
-    _object.endSeqNo = [Secret45__Serializer addSerializerToObject:[[Secret45__Number alloc] initWithNumber:endSeqNo] serializer:[[Secret45_BuiltinSerializer_Int alloc] init]];
+    _object.start_seq_no = [Secret45__Serializer addSerializerToObject:[[Secret45__Number alloc] initWithNumber:start_seq_no] serializer:[[Secret45_BuiltinSerializer_Int alloc] init]];
+    _object.end_seq_no = [Secret45__Serializer addSerializerToObject:[[Secret45__Number alloc] initWithNumber:end_seq_no] serializer:[[Secret45_BuiltinSerializer_Int alloc] init]];
     return _object;
 }
 
-+ (Secret45_DecryptedMessageAction_decryptedMessageActionRequestKey *)decryptedMessageActionRequestKeyWithExchangeId:(NSNumber *)exchangeId gA:(NSData *)gA
++ (Secret45_DecryptedMessageAction_decryptedMessageActionRequestKey *)decryptedMessageActionRequestKeyWithExchange_id:(NSNumber *)exchange_id g_a:(NSData *)g_a
 {
     Secret45_DecryptedMessageAction_decryptedMessageActionRequestKey *_object = [[Secret45_DecryptedMessageAction_decryptedMessageActionRequestKey alloc] init];
-    _object.exchangeId = [Secret45__Serializer addSerializerToObject:[[Secret45__Number alloc] initWithNumber:exchangeId] serializer:[[Secret45_BuiltinSerializer_Long alloc] init]];
-    _object.gA = [Secret45__Serializer addSerializerToObject:[gA copy] serializer:[[Secret45_BuiltinSerializer_Bytes alloc] init]];
+    _object.exchange_id = [Secret45__Serializer addSerializerToObject:[[Secret45__Number alloc] initWithNumber:exchange_id] serializer:[[Secret45_BuiltinSerializer_Long alloc] init]];
+    _object.g_a = [Secret45__Serializer addSerializerToObject:[g_a copy] serializer:[[Secret45_BuiltinSerializer_Bytes alloc] init]];
     return _object;
 }
 
-+ (Secret45_DecryptedMessageAction_decryptedMessageActionAcceptKey *)decryptedMessageActionAcceptKeyWithExchangeId:(NSNumber *)exchangeId gB:(NSData *)gB keyFingerprint:(NSNumber *)keyFingerprint
++ (Secret45_DecryptedMessageAction_decryptedMessageActionAcceptKey *)decryptedMessageActionAcceptKeyWithExchange_id:(NSNumber *)exchange_id g_b:(NSData *)g_b key_fingerprint:(NSNumber *)key_fingerprint
 {
     Secret45_DecryptedMessageAction_decryptedMessageActionAcceptKey *_object = [[Secret45_DecryptedMessageAction_decryptedMessageActionAcceptKey alloc] init];
-    _object.exchangeId = [Secret45__Serializer addSerializerToObject:[[Secret45__Number alloc] initWithNumber:exchangeId] serializer:[[Secret45_BuiltinSerializer_Long alloc] init]];
-    _object.gB = [Secret45__Serializer addSerializerToObject:[gB copy] serializer:[[Secret45_BuiltinSerializer_Bytes alloc] init]];
-    _object.keyFingerprint = [Secret45__Serializer addSerializerToObject:[[Secret45__Number alloc] initWithNumber:keyFingerprint] serializer:[[Secret45_BuiltinSerializer_Long alloc] init]];
+    _object.exchange_id = [Secret45__Serializer addSerializerToObject:[[Secret45__Number alloc] initWithNumber:exchange_id] serializer:[[Secret45_BuiltinSerializer_Long alloc] init]];
+    _object.g_b = [Secret45__Serializer addSerializerToObject:[g_b copy] serializer:[[Secret45_BuiltinSerializer_Bytes alloc] init]];
+    _object.key_fingerprint = [Secret45__Serializer addSerializerToObject:[[Secret45__Number alloc] initWithNumber:key_fingerprint] serializer:[[Secret45_BuiltinSerializer_Long alloc] init]];
     return _object;
 }
 
-+ (Secret45_DecryptedMessageAction_decryptedMessageActionCommitKey *)decryptedMessageActionCommitKeyWithExchangeId:(NSNumber *)exchangeId keyFingerprint:(NSNumber *)keyFingerprint
++ (Secret45_DecryptedMessageAction_decryptedMessageActionCommitKey *)decryptedMessageActionCommitKeyWithExchange_id:(NSNumber *)exchange_id key_fingerprint:(NSNumber *)key_fingerprint
 {
     Secret45_DecryptedMessageAction_decryptedMessageActionCommitKey *_object = [[Secret45_DecryptedMessageAction_decryptedMessageActionCommitKey alloc] init];
-    _object.exchangeId = [Secret45__Serializer addSerializerToObject:[[Secret45__Number alloc] initWithNumber:exchangeId] serializer:[[Secret45_BuiltinSerializer_Long alloc] init]];
-    _object.keyFingerprint = [Secret45__Serializer addSerializerToObject:[[Secret45__Number alloc] initWithNumber:keyFingerprint] serializer:[[Secret45_BuiltinSerializer_Long alloc] init]];
+    _object.exchange_id = [Secret45__Serializer addSerializerToObject:[[Secret45__Number alloc] initWithNumber:exchange_id] serializer:[[Secret45_BuiltinSerializer_Long alloc] init]];
+    _object.key_fingerprint = [Secret45__Serializer addSerializerToObject:[[Secret45__Number alloc] initWithNumber:key_fingerprint] serializer:[[Secret45_BuiltinSerializer_Long alloc] init]];
     return _object;
 }
 
-+ (Secret45_DecryptedMessageAction_decryptedMessageActionAbortKey *)decryptedMessageActionAbortKeyWithExchangeId:(NSNumber *)exchangeId
++ (Secret45_DecryptedMessageAction_decryptedMessageActionAbortKey *)decryptedMessageActionAbortKeyWithExchange_id:(NSNumber *)exchange_id
 {
     Secret45_DecryptedMessageAction_decryptedMessageActionAbortKey *_object = [[Secret45_DecryptedMessageAction_decryptedMessageActionAbortKey alloc] init];
-    _object.exchangeId = [Secret45__Serializer addSerializerToObject:[[Secret45__Number alloc] initWithNumber:exchangeId] serializer:[[Secret45_BuiltinSerializer_Long alloc] init]];
+    _object.exchange_id = [Secret45__Serializer addSerializerToObject:[[Secret45__Number alloc] initWithNumber:exchange_id] serializer:[[Secret45_BuiltinSerializer_Long alloc] init]];
     return _object;
 }
 
@@ -1473,7 +1482,7 @@ id randomIds_result = [Secret45__Serializer addSerializerToObject:randomIds_copy
     {
         [Secret45__Serializer addSerializerToObject:self withConstructorSignature:0xa1733aec serializeBlock:^bool (Secret45_DecryptedMessageAction_decryptedMessageActionSetMessageTTL *object, NSMutableData *data)
         {
-            if (![Secret45__Environment serializeObject:object.ttlSeconds data:data addSignature:false])
+            if (![Secret45__Environment serializeObject:object.ttl_seconds data:data addSignature:false])
                 return false;
             return true;
         }];
@@ -1483,7 +1492,7 @@ id randomIds_result = [Secret45__Serializer addSerializerToObject:randomIds_copy
 
 - (NSString *)description
 {
-    return [[NSString alloc] initWithFormat:@"(decryptedMessageActionSetMessageTTL ttl_seconds:%@)", self.ttlSeconds];
+    return [[NSString alloc] initWithFormat:@"(decryptedMessageActionSetMessageTTL ttl_seconds:%@)", self.ttl_seconds];
 }
 
 @end
@@ -1497,7 +1506,7 @@ id randomIds_result = [Secret45__Serializer addSerializerToObject:randomIds_copy
     {
         [Secret45__Serializer addSerializerToObject:self withConstructorSignature:0xc4f40be serializeBlock:^bool (Secret45_DecryptedMessageAction_decryptedMessageActionReadMessages *object, NSMutableData *data)
         {
-            if (![Secret45__Environment serializeObject:object.randomIds data:data addSignature:true])
+            if (![Secret45__Environment serializeObject:object.random_ids data:data addSignature:true])
                 return false;
             return true;
         }];
@@ -1507,7 +1516,7 @@ id randomIds_result = [Secret45__Serializer addSerializerToObject:randomIds_copy
 
 - (NSString *)description
 {
-    return [[NSString alloc] initWithFormat:@"(decryptedMessageActionReadMessages random_ids:%@)", self.randomIds];
+    return [[NSString alloc] initWithFormat:@"(decryptedMessageActionReadMessages random_ids:%@)", self.random_ids];
 }
 
 @end
@@ -1521,7 +1530,7 @@ id randomIds_result = [Secret45__Serializer addSerializerToObject:randomIds_copy
     {
         [Secret45__Serializer addSerializerToObject:self withConstructorSignature:0x65614304 serializeBlock:^bool (Secret45_DecryptedMessageAction_decryptedMessageActionDeleteMessages *object, NSMutableData *data)
         {
-            if (![Secret45__Environment serializeObject:object.randomIds data:data addSignature:true])
+            if (![Secret45__Environment serializeObject:object.random_ids data:data addSignature:true])
                 return false;
             return true;
         }];
@@ -1531,7 +1540,7 @@ id randomIds_result = [Secret45__Serializer addSerializerToObject:randomIds_copy
 
 - (NSString *)description
 {
-    return [[NSString alloc] initWithFormat:@"(decryptedMessageActionDeleteMessages random_ids:%@)", self.randomIds];
+    return [[NSString alloc] initWithFormat:@"(decryptedMessageActionDeleteMessages random_ids:%@)", self.random_ids];
 }
 
 @end
@@ -1545,7 +1554,7 @@ id randomIds_result = [Secret45__Serializer addSerializerToObject:randomIds_copy
     {
         [Secret45__Serializer addSerializerToObject:self withConstructorSignature:0x8ac1f475 serializeBlock:^bool (Secret45_DecryptedMessageAction_decryptedMessageActionScreenshotMessages *object, NSMutableData *data)
         {
-            if (![Secret45__Environment serializeObject:object.randomIds data:data addSignature:true])
+            if (![Secret45__Environment serializeObject:object.random_ids data:data addSignature:true])
                 return false;
             return true;
         }];
@@ -1555,7 +1564,7 @@ id randomIds_result = [Secret45__Serializer addSerializerToObject:randomIds_copy
 
 - (NSString *)description
 {
-    return [[NSString alloc] initWithFormat:@"(decryptedMessageActionScreenshotMessages random_ids:%@)", self.randomIds];
+    return [[NSString alloc] initWithFormat:@"(decryptedMessageActionScreenshotMessages random_ids:%@)", self.random_ids];
 }
 
 @end
@@ -1639,9 +1648,9 @@ id randomIds_result = [Secret45__Serializer addSerializerToObject:randomIds_copy
     {
         [Secret45__Serializer addSerializerToObject:self withConstructorSignature:0x511110b0 serializeBlock:^bool (Secret45_DecryptedMessageAction_decryptedMessageActionResend *object, NSMutableData *data)
         {
-            if (![Secret45__Environment serializeObject:object.startSeqNo data:data addSignature:false])
+            if (![Secret45__Environment serializeObject:object.start_seq_no data:data addSignature:false])
                 return false;
-            if (![Secret45__Environment serializeObject:object.endSeqNo data:data addSignature:false])
+            if (![Secret45__Environment serializeObject:object.end_seq_no data:data addSignature:false])
                 return false;
             return true;
         }];
@@ -1651,7 +1660,7 @@ id randomIds_result = [Secret45__Serializer addSerializerToObject:randomIds_copy
 
 - (NSString *)description
 {
-    return [[NSString alloc] initWithFormat:@"(decryptedMessageActionResend start_seq_no:%@ end_seq_no:%@)", self.startSeqNo, self.endSeqNo];
+    return [[NSString alloc] initWithFormat:@"(decryptedMessageActionResend start_seq_no:%@ end_seq_no:%@)", self.start_seq_no, self.end_seq_no];
 }
 
 @end
@@ -1665,9 +1674,9 @@ id randomIds_result = [Secret45__Serializer addSerializerToObject:randomIds_copy
     {
         [Secret45__Serializer addSerializerToObject:self withConstructorSignature:0xf3c9611b serializeBlock:^bool (Secret45_DecryptedMessageAction_decryptedMessageActionRequestKey *object, NSMutableData *data)
         {
-            if (![Secret45__Environment serializeObject:object.exchangeId data:data addSignature:false])
+            if (![Secret45__Environment serializeObject:object.exchange_id data:data addSignature:false])
                 return false;
-            if (![Secret45__Environment serializeObject:object.gA data:data addSignature:false])
+            if (![Secret45__Environment serializeObject:object.g_a data:data addSignature:false])
                 return false;
             return true;
         }];
@@ -1677,7 +1686,7 @@ id randomIds_result = [Secret45__Serializer addSerializerToObject:randomIds_copy
 
 - (NSString *)description
 {
-    return [[NSString alloc] initWithFormat:@"(decryptedMessageActionRequestKey exchange_id:%@ g_a:%d)", self.exchangeId, (int)[self.gA length]];
+    return [[NSString alloc] initWithFormat:@"(decryptedMessageActionRequestKey exchange_id:%@ g_a:%d)", self.exchange_id, (int)[self.g_a length]];
 }
 
 @end
@@ -1691,11 +1700,11 @@ id randomIds_result = [Secret45__Serializer addSerializerToObject:randomIds_copy
     {
         [Secret45__Serializer addSerializerToObject:self withConstructorSignature:0x6fe1735b serializeBlock:^bool (Secret45_DecryptedMessageAction_decryptedMessageActionAcceptKey *object, NSMutableData *data)
         {
-            if (![Secret45__Environment serializeObject:object.exchangeId data:data addSignature:false])
+            if (![Secret45__Environment serializeObject:object.exchange_id data:data addSignature:false])
                 return false;
-            if (![Secret45__Environment serializeObject:object.gB data:data addSignature:false])
+            if (![Secret45__Environment serializeObject:object.g_b data:data addSignature:false])
                 return false;
-            if (![Secret45__Environment serializeObject:object.keyFingerprint data:data addSignature:false])
+            if (![Secret45__Environment serializeObject:object.key_fingerprint data:data addSignature:false])
                 return false;
             return true;
         }];
@@ -1705,7 +1714,7 @@ id randomIds_result = [Secret45__Serializer addSerializerToObject:randomIds_copy
 
 - (NSString *)description
 {
-    return [[NSString alloc] initWithFormat:@"(decryptedMessageActionAcceptKey exchange_id:%@ g_b:%d key_fingerprint:%@)", self.exchangeId, (int)[self.gB length], self.keyFingerprint];
+    return [[NSString alloc] initWithFormat:@"(decryptedMessageActionAcceptKey exchange_id:%@ g_b:%d key_fingerprint:%@)", self.exchange_id, (int)[self.g_b length], self.key_fingerprint];
 }
 
 @end
@@ -1719,9 +1728,9 @@ id randomIds_result = [Secret45__Serializer addSerializerToObject:randomIds_copy
     {
         [Secret45__Serializer addSerializerToObject:self withConstructorSignature:0xec2e0b9b serializeBlock:^bool (Secret45_DecryptedMessageAction_decryptedMessageActionCommitKey *object, NSMutableData *data)
         {
-            if (![Secret45__Environment serializeObject:object.exchangeId data:data addSignature:false])
+            if (![Secret45__Environment serializeObject:object.exchange_id data:data addSignature:false])
                 return false;
-            if (![Secret45__Environment serializeObject:object.keyFingerprint data:data addSignature:false])
+            if (![Secret45__Environment serializeObject:object.key_fingerprint data:data addSignature:false])
                 return false;
             return true;
         }];
@@ -1731,7 +1740,7 @@ id randomIds_result = [Secret45__Serializer addSerializerToObject:randomIds_copy
 
 - (NSString *)description
 {
-    return [[NSString alloc] initWithFormat:@"(decryptedMessageActionCommitKey exchange_id:%@ key_fingerprint:%@)", self.exchangeId, self.keyFingerprint];
+    return [[NSString alloc] initWithFormat:@"(decryptedMessageActionCommitKey exchange_id:%@ key_fingerprint:%@)", self.exchange_id, self.key_fingerprint];
 }
 
 @end
@@ -1745,7 +1754,7 @@ id randomIds_result = [Secret45__Serializer addSerializerToObject:randomIds_copy
     {
         [Secret45__Serializer addSerializerToObject:self withConstructorSignature:0xdd05ec6b serializeBlock:^bool (Secret45_DecryptedMessageAction_decryptedMessageActionAbortKey *object, NSMutableData *data)
         {
-            if (![Secret45__Environment serializeObject:object.exchangeId data:data addSignature:false])
+            if (![Secret45__Environment serializeObject:object.exchange_id data:data addSignature:false])
                 return false;
             return true;
         }];
@@ -1755,7 +1764,7 @@ id randomIds_result = [Secret45__Serializer addSerializerToObject:randomIds_copy
 
 - (NSString *)description
 {
-    return [[NSString alloc] initWithFormat:@"(decryptedMessageActionAbortKey exchange_id:%@)", self.exchangeId];
+    return [[NSString alloc] initWithFormat:@"(decryptedMessageActionAbortKey exchange_id:%@)", self.exchange_id];
 }
 
 @end
@@ -2272,8 +2281,8 @@ id randomIds_result = [Secret45__Serializer addSerializerToObject:randomIds_copy
 
 @interface Secret45_FileLocation ()
 
-@property (nonatomic, strong) NSNumber * volumeId;
-@property (nonatomic, strong) NSNumber * localId;
+@property (nonatomic, strong) NSNumber * volume_id;
+@property (nonatomic, strong) NSNumber * local_id;
 @property (nonatomic, strong) NSNumber * secret;
 
 @end
@@ -2284,27 +2293,27 @@ id randomIds_result = [Secret45__Serializer addSerializerToObject:randomIds_copy
 
 @interface Secret45_FileLocation_fileLocation ()
 
-@property (nonatomic, strong) NSNumber * dcId;
+@property (nonatomic, strong) NSNumber * dc_id;
 
 @end
 
 @implementation Secret45_FileLocation
 
-+ (Secret45_FileLocation_fileLocationUnavailable *)fileLocationUnavailableWithVolumeId:(NSNumber *)volumeId localId:(NSNumber *)localId secret:(NSNumber *)secret
++ (Secret45_FileLocation_fileLocationUnavailable *)fileLocationUnavailableWithVolume_id:(NSNumber *)volume_id local_id:(NSNumber *)local_id secret:(NSNumber *)secret
 {
     Secret45_FileLocation_fileLocationUnavailable *_object = [[Secret45_FileLocation_fileLocationUnavailable alloc] init];
-    _object.volumeId = [Secret45__Serializer addSerializerToObject:[[Secret45__Number alloc] initWithNumber:volumeId] serializer:[[Secret45_BuiltinSerializer_Long alloc] init]];
-    _object.localId = [Secret45__Serializer addSerializerToObject:[[Secret45__Number alloc] initWithNumber:localId] serializer:[[Secret45_BuiltinSerializer_Int alloc] init]];
+    _object.volume_id = [Secret45__Serializer addSerializerToObject:[[Secret45__Number alloc] initWithNumber:volume_id] serializer:[[Secret45_BuiltinSerializer_Long alloc] init]];
+    _object.local_id = [Secret45__Serializer addSerializerToObject:[[Secret45__Number alloc] initWithNumber:local_id] serializer:[[Secret45_BuiltinSerializer_Int alloc] init]];
     _object.secret = [Secret45__Serializer addSerializerToObject:[[Secret45__Number alloc] initWithNumber:secret] serializer:[[Secret45_BuiltinSerializer_Long alloc] init]];
     return _object;
 }
 
-+ (Secret45_FileLocation_fileLocation *)fileLocationWithDcId:(NSNumber *)dcId volumeId:(NSNumber *)volumeId localId:(NSNumber *)localId secret:(NSNumber *)secret
++ (Secret45_FileLocation_fileLocation *)fileLocationWithDc_id:(NSNumber *)dc_id volume_id:(NSNumber *)volume_id local_id:(NSNumber *)local_id secret:(NSNumber *)secret
 {
     Secret45_FileLocation_fileLocation *_object = [[Secret45_FileLocation_fileLocation alloc] init];
-    _object.dcId = [Secret45__Serializer addSerializerToObject:[[Secret45__Number alloc] initWithNumber:dcId] serializer:[[Secret45_BuiltinSerializer_Int alloc] init]];
-    _object.volumeId = [Secret45__Serializer addSerializerToObject:[[Secret45__Number alloc] initWithNumber:volumeId] serializer:[[Secret45_BuiltinSerializer_Long alloc] init]];
-    _object.localId = [Secret45__Serializer addSerializerToObject:[[Secret45__Number alloc] initWithNumber:localId] serializer:[[Secret45_BuiltinSerializer_Int alloc] init]];
+    _object.dc_id = [Secret45__Serializer addSerializerToObject:[[Secret45__Number alloc] initWithNumber:dc_id] serializer:[[Secret45_BuiltinSerializer_Int alloc] init]];
+    _object.volume_id = [Secret45__Serializer addSerializerToObject:[[Secret45__Number alloc] initWithNumber:volume_id] serializer:[[Secret45_BuiltinSerializer_Long alloc] init]];
+    _object.local_id = [Secret45__Serializer addSerializerToObject:[[Secret45__Number alloc] initWithNumber:local_id] serializer:[[Secret45_BuiltinSerializer_Int alloc] init]];
     _object.secret = [Secret45__Serializer addSerializerToObject:[[Secret45__Number alloc] initWithNumber:secret] serializer:[[Secret45_BuiltinSerializer_Long alloc] init]];
     return _object;
 }
@@ -2321,9 +2330,9 @@ id randomIds_result = [Secret45__Serializer addSerializerToObject:randomIds_copy
     {
         [Secret45__Serializer addSerializerToObject:self withConstructorSignature:0x7c596b46 serializeBlock:^bool (Secret45_FileLocation_fileLocationUnavailable *object, NSMutableData *data)
         {
-            if (![Secret45__Environment serializeObject:object.volumeId data:data addSignature:false])
+            if (![Secret45__Environment serializeObject:object.volume_id data:data addSignature:false])
                 return false;
-            if (![Secret45__Environment serializeObject:object.localId data:data addSignature:false])
+            if (![Secret45__Environment serializeObject:object.local_id data:data addSignature:false])
                 return false;
             if (![Secret45__Environment serializeObject:object.secret data:data addSignature:false])
                 return false;
@@ -2335,7 +2344,7 @@ id randomIds_result = [Secret45__Serializer addSerializerToObject:randomIds_copy
 
 - (NSString *)description
 {
-    return [[NSString alloc] initWithFormat:@"(fileLocationUnavailable volume_id:%@ local_id:%@ secret:%@)", self.volumeId, self.localId, self.secret];
+    return [[NSString alloc] initWithFormat:@"(fileLocationUnavailable volume_id:%@ local_id:%@ secret:%@)", self.volume_id, self.local_id, self.secret];
 }
 
 @end
@@ -2349,11 +2358,11 @@ id randomIds_result = [Secret45__Serializer addSerializerToObject:randomIds_copy
     {
         [Secret45__Serializer addSerializerToObject:self withConstructorSignature:0x53d69076 serializeBlock:^bool (Secret45_FileLocation_fileLocation *object, NSMutableData *data)
         {
-            if (![Secret45__Environment serializeObject:object.dcId data:data addSignature:false])
+            if (![Secret45__Environment serializeObject:object.dc_id data:data addSignature:false])
                 return false;
-            if (![Secret45__Environment serializeObject:object.volumeId data:data addSignature:false])
+            if (![Secret45__Environment serializeObject:object.volume_id data:data addSignature:false])
                 return false;
-            if (![Secret45__Environment serializeObject:object.localId data:data addSignature:false])
+            if (![Secret45__Environment serializeObject:object.local_id data:data addSignature:false])
                 return false;
             if (![Secret45__Environment serializeObject:object.secret data:data addSignature:false])
                 return false;
@@ -2365,7 +2374,7 @@ id randomIds_result = [Secret45__Serializer addSerializerToObject:randomIds_copy
 
 - (NSString *)description
 {
-    return [[NSString alloc] initWithFormat:@"(fileLocation dc_id:%@ volume_id:%@ local_id:%@ secret:%@)", self.dcId, self.volumeId, self.localId, self.secret];
+    return [[NSString alloc] initWithFormat:@"(fileLocation dc_id:%@ volume_id:%@ local_id:%@ secret:%@)", self.dc_id, self.volume_id, self.local_id, self.secret];
 }
 
 @end
@@ -2375,10 +2384,10 @@ id randomIds_result = [Secret45__Serializer addSerializerToObject:randomIds_copy
 
 @interface Secret45_DecryptedMessageLayer ()
 
-@property (nonatomic, strong) NSData * randomBytes;
+@property (nonatomic, strong) NSData * random_bytes;
 @property (nonatomic, strong) NSNumber * layer;
-@property (nonatomic, strong) NSNumber * inSeqNo;
-@property (nonatomic, strong) NSNumber * outSeqNo;
+@property (nonatomic, strong) NSNumber * in_seq_no;
+@property (nonatomic, strong) NSNumber * out_seq_no;
 @property (nonatomic, strong) Secret45_DecryptedMessage * message;
 
 @end
@@ -2389,13 +2398,13 @@ id randomIds_result = [Secret45__Serializer addSerializerToObject:randomIds_copy
 
 @implementation Secret45_DecryptedMessageLayer
 
-+ (Secret45_DecryptedMessageLayer_decryptedMessageLayer *)decryptedMessageLayerWithRandomBytes:(NSData *)randomBytes layer:(NSNumber *)layer inSeqNo:(NSNumber *)inSeqNo outSeqNo:(NSNumber *)outSeqNo message:(Secret45_DecryptedMessage *)message
++ (Secret45_DecryptedMessageLayer_decryptedMessageLayer *)decryptedMessageLayerWithRandom_bytes:(NSData *)random_bytes layer:(NSNumber *)layer in_seq_no:(NSNumber *)in_seq_no out_seq_no:(NSNumber *)out_seq_no message:(Secret45_DecryptedMessage *)message
 {
     Secret45_DecryptedMessageLayer_decryptedMessageLayer *_object = [[Secret45_DecryptedMessageLayer_decryptedMessageLayer alloc] init];
-    _object.randomBytes = [Secret45__Serializer addSerializerToObject:[randomBytes copy] serializer:[[Secret45_BuiltinSerializer_Bytes alloc] init]];
+    _object.random_bytes = [Secret45__Serializer addSerializerToObject:[random_bytes copy] serializer:[[Secret45_BuiltinSerializer_Bytes alloc] init]];
     _object.layer = [Secret45__Serializer addSerializerToObject:[[Secret45__Number alloc] initWithNumber:layer] serializer:[[Secret45_BuiltinSerializer_Int alloc] init]];
-    _object.inSeqNo = [Secret45__Serializer addSerializerToObject:[[Secret45__Number alloc] initWithNumber:inSeqNo] serializer:[[Secret45_BuiltinSerializer_Int alloc] init]];
-    _object.outSeqNo = [Secret45__Serializer addSerializerToObject:[[Secret45__Number alloc] initWithNumber:outSeqNo] serializer:[[Secret45_BuiltinSerializer_Int alloc] init]];
+    _object.in_seq_no = [Secret45__Serializer addSerializerToObject:[[Secret45__Number alloc] initWithNumber:in_seq_no] serializer:[[Secret45_BuiltinSerializer_Int alloc] init]];
+    _object.out_seq_no = [Secret45__Serializer addSerializerToObject:[[Secret45__Number alloc] initWithNumber:out_seq_no] serializer:[[Secret45_BuiltinSerializer_Int alloc] init]];
     _object.message = message;
     return _object;
 }
@@ -2412,13 +2421,13 @@ id randomIds_result = [Secret45__Serializer addSerializerToObject:randomIds_copy
     {
         [Secret45__Serializer addSerializerToObject:self withConstructorSignature:0x1be31789 serializeBlock:^bool (Secret45_DecryptedMessageLayer_decryptedMessageLayer *object, NSMutableData *data)
         {
-            if (![Secret45__Environment serializeObject:object.randomBytes data:data addSignature:false])
+            if (![Secret45__Environment serializeObject:object.random_bytes data:data addSignature:false])
                 return false;
             if (![Secret45__Environment serializeObject:object.layer data:data addSignature:false])
                 return false;
-            if (![Secret45__Environment serializeObject:object.inSeqNo data:data addSignature:false])
+            if (![Secret45__Environment serializeObject:object.in_seq_no data:data addSignature:false])
                 return false;
-            if (![Secret45__Environment serializeObject:object.outSeqNo data:data addSignature:false])
+            if (![Secret45__Environment serializeObject:object.out_seq_no data:data addSignature:false])
                 return false;
             if (![Secret45__Environment serializeObject:object.message data:data addSignature:true])
                 return false;
@@ -2430,7 +2439,7 @@ id randomIds_result = [Secret45__Serializer addSerializerToObject:randomIds_copy
 
 - (NSString *)description
 {
-    return [[NSString alloc] initWithFormat:@"(decryptedMessageLayer random_bytes:%d layer:%@ in_seq_no:%@ out_seq_no:%@ message:%@)", (int)[self.randomBytes length], self.layer, self.inSeqNo, self.outSeqNo, self.message];
+    return [[NSString alloc] initWithFormat:@"(decryptedMessageLayer random_bytes:%d layer:%@ in_seq_no:%@ out_seq_no:%@ message:%@)", (int)[self.random_bytes length], self.layer, self.in_seq_no, self.out_seq_no, self.message];
 }
 
 @end
@@ -2440,7 +2449,7 @@ id randomIds_result = [Secret45__Serializer addSerializerToObject:randomIds_copy
 
 @interface Secret45_DecryptedMessage ()
 
-@property (nonatomic, strong) NSNumber * randomId;
+@property (nonatomic, strong) NSNumber * random_id;
 
 @end
 
@@ -2457,26 +2466,26 @@ id randomIds_result = [Secret45__Serializer addSerializerToObject:randomIds_copy
 @property (nonatomic, strong) NSString * message;
 @property (nonatomic, strong) Secret45_DecryptedMessageMedia * media;
 @property (nonatomic, strong) NSArray * entities;
-@property (nonatomic, strong) NSString * viaBotName;
-@property (nonatomic, strong) NSNumber * replyToRandomId;
+@property (nonatomic, strong) NSString * via_bot_name;
+@property (nonatomic, strong) NSNumber * reply_to_random_id;
 
 @end
 
 @implementation Secret45_DecryptedMessage
 
-+ (Secret45_DecryptedMessage_decryptedMessageService *)decryptedMessageServiceWithRandomId:(NSNumber *)randomId action:(Secret45_DecryptedMessageAction *)action
++ (Secret45_DecryptedMessage_decryptedMessageService *)decryptedMessageServiceWithRandom_id:(NSNumber *)random_id action:(Secret45_DecryptedMessageAction *)action
 {
     Secret45_DecryptedMessage_decryptedMessageService *_object = [[Secret45_DecryptedMessage_decryptedMessageService alloc] init];
-    _object.randomId = [Secret45__Serializer addSerializerToObject:[[Secret45__Number alloc] initWithNumber:randomId] serializer:[[Secret45_BuiltinSerializer_Long alloc] init]];
+    _object.random_id = [Secret45__Serializer addSerializerToObject:[[Secret45__Number alloc] initWithNumber:random_id] serializer:[[Secret45_BuiltinSerializer_Long alloc] init]];
     _object.action = action;
     return _object;
 }
 
-+ (Secret45_DecryptedMessage_decryptedMessage *)decryptedMessageWithFlags:(NSNumber *)flags randomId:(NSNumber *)randomId ttl:(NSNumber *)ttl message:(NSString *)message media:(Secret45_DecryptedMessageMedia *)media entities:(NSArray *)entities viaBotName:(NSString *)viaBotName replyToRandomId:(NSNumber *)replyToRandomId
++ (Secret45_DecryptedMessage_decryptedMessage *)decryptedMessageWithFlags:(NSNumber *)flags random_id:(NSNumber *)random_id ttl:(NSNumber *)ttl message:(NSString *)message media:(Secret45_DecryptedMessageMedia *)media entities:(NSArray *)entities via_bot_name:(NSString *)via_bot_name reply_to_random_id:(NSNumber *)reply_to_random_id
 {
     Secret45_DecryptedMessage_decryptedMessage *_object = [[Secret45_DecryptedMessage_decryptedMessage alloc] init];
     _object.flags = [Secret45__Serializer addSerializerToObject:[[Secret45__Number alloc] initWithNumber:flags] serializer:[[Secret45_BuiltinSerializer_Int alloc] init]];
-    _object.randomId = [Secret45__Serializer addSerializerToObject:[[Secret45__Number alloc] initWithNumber:randomId] serializer:[[Secret45_BuiltinSerializer_Long alloc] init]];
+    _object.random_id = [Secret45__Serializer addSerializerToObject:[[Secret45__Number alloc] initWithNumber:random_id] serializer:[[Secret45_BuiltinSerializer_Long alloc] init]];
     _object.ttl = [Secret45__Serializer addSerializerToObject:[[Secret45__Number alloc] initWithNumber:ttl] serializer:[[Secret45_BuiltinSerializer_Int alloc] init]];
     _object.message = [Secret45__Serializer addSerializerToObject:[message copy] serializer:[[Secret45_BuiltinSerializer_String alloc] init]];
     _object.media = media;
@@ -2498,8 +2507,8 @@ id entities_result = [Secret45__Serializer addSerializerToObject:entities_copy s
     }
     return true;
 }]]; entities_result;});
-    _object.viaBotName = [Secret45__Serializer addSerializerToObject:[viaBotName copy] serializer:[[Secret45_BuiltinSerializer_String alloc] init]];
-    _object.replyToRandomId = [Secret45__Serializer addSerializerToObject:[[Secret45__Number alloc] initWithNumber:replyToRandomId] serializer:[[Secret45_BuiltinSerializer_Long alloc] init]];
+    _object.via_bot_name = [Secret45__Serializer addSerializerToObject:[via_bot_name copy] serializer:[[Secret45_BuiltinSerializer_String alloc] init]];
+    _object.reply_to_random_id = [Secret45__Serializer addSerializerToObject:[[Secret45__Number alloc] initWithNumber:reply_to_random_id] serializer:[[Secret45_BuiltinSerializer_Long alloc] init]];
     return _object;
 }
 
@@ -2515,7 +2524,7 @@ id entities_result = [Secret45__Serializer addSerializerToObject:entities_copy s
     {
         [Secret45__Serializer addSerializerToObject:self withConstructorSignature:0x73164160 serializeBlock:^bool (Secret45_DecryptedMessage_decryptedMessageService *object, NSMutableData *data)
         {
-            if (![Secret45__Environment serializeObject:object.randomId data:data addSignature:false])
+            if (![Secret45__Environment serializeObject:object.random_id data:data addSignature:false])
                 return false;
             if (![Secret45__Environment serializeObject:object.action data:data addSignature:true])
                 return false;
@@ -2527,7 +2536,7 @@ id entities_result = [Secret45__Serializer addSerializerToObject:entities_copy s
 
 - (NSString *)description
 {
-    return [[NSString alloc] initWithFormat:@"(decryptedMessageService random_id:%@ action:%@)", self.randomId, self.action];
+    return [[NSString alloc] initWithFormat:@"(decryptedMessageService random_id:%@ action:%@)", self.random_id, self.action];
 }
 
 @end
@@ -2543,7 +2552,7 @@ id entities_result = [Secret45__Serializer addSerializerToObject:entities_copy s
         {
             if (![Secret45__Environment serializeObject:object.flags data:data addSignature:false])
                 return false;
-            if (![Secret45__Environment serializeObject:object.randomId data:data addSignature:false])
+            if (![Secret45__Environment serializeObject:object.random_id data:data addSignature:false])
                 return false;
             if (![Secret45__Environment serializeObject:object.ttl data:data addSignature:false])
                 return false;
@@ -2558,11 +2567,11 @@ id entities_result = [Secret45__Serializer addSerializerToObject:entities_copy s
                 return false;
             }
             if ([object.flags intValue] & (1 << 11)) {
-            if (![Secret45__Environment serializeObject:object.viaBotName data:data addSignature:false])
+            if (![Secret45__Environment serializeObject:object.via_bot_name data:data addSignature:false])
                 return false;
             }
             if ([object.flags intValue] & (1 << 3)) {
-            if (![Secret45__Environment serializeObject:object.replyToRandomId data:data addSignature:false])
+            if (![Secret45__Environment serializeObject:object.reply_to_random_id data:data addSignature:false])
                 return false;
             }
             return true;
@@ -2573,7 +2582,7 @@ id entities_result = [Secret45__Serializer addSerializerToObject:entities_copy s
 
 - (NSString *)description
 {
-    return [[NSString alloc] initWithFormat:@"(decryptedMessage flags:%@ random_id:%@ ttl:%@ message:%d media:%@ entities:%@ via_bot_name:%d reply_to_random_id:%@)", self.flags, self.randomId, self.ttl, (int)[self.message length], self.media, self.entities, (int)[self.viaBotName length], self.replyToRandomId];
+    return [[NSString alloc] initWithFormat:@"(decryptedMessage flags:%@ random_id:%@ ttl:%@ message:%d media:%@ entities:%@ via_bot_name:%d reply_to_random_id:%@)", self.flags, self.random_id, self.ttl, (int)[self.message length], self.media, self.entities, (int)[self.via_bot_name length], self.reply_to_random_id];
 }
 
 @end
@@ -2606,7 +2615,7 @@ id entities_result = [Secret45__Serializer addSerializerToObject:entities_copy s
 
 @interface Secret45_DocumentAttribute_documentAttributeFilename ()
 
-@property (nonatomic, strong) NSString * fileName;
+@property (nonatomic, strong) NSString * file_name;
 
 @end
 
@@ -2650,10 +2659,10 @@ id entities_result = [Secret45__Serializer addSerializerToObject:entities_copy s
     return _object;
 }
 
-+ (Secret45_DocumentAttribute_documentAttributeFilename *)documentAttributeFilenameWithFileName:(NSString *)fileName
++ (Secret45_DocumentAttribute_documentAttributeFilename *)documentAttributeFilenameWithFile_name:(NSString *)file_name
 {
     Secret45_DocumentAttribute_documentAttributeFilename *_object = [[Secret45_DocumentAttribute_documentAttributeFilename alloc] init];
-    _object.fileName = [Secret45__Serializer addSerializerToObject:[fileName copy] serializer:[[Secret45_BuiltinSerializer_String alloc] init]];
+    _object.file_name = [Secret45__Serializer addSerializerToObject:[file_name copy] serializer:[[Secret45_BuiltinSerializer_String alloc] init]];
     return _object;
 }
 
@@ -2762,7 +2771,7 @@ id entities_result = [Secret45__Serializer addSerializerToObject:entities_copy s
     {
         [Secret45__Serializer addSerializerToObject:self withConstructorSignature:0x15590068 serializeBlock:^bool (Secret45_DocumentAttribute_documentAttributeFilename *object, NSMutableData *data)
         {
-            if (![Secret45__Environment serializeObject:object.fileName data:data addSignature:false])
+            if (![Secret45__Environment serializeObject:object.file_name data:data addSignature:false])
                 return false;
             return true;
         }];
@@ -2772,7 +2781,7 @@ id entities_result = [Secret45__Serializer addSerializerToObject:entities_copy s
 
 - (NSString *)description
 {
-    return [[NSString alloc] initWithFormat:@"(documentAttributeFilename file_name:%d)", (int)[self.fileName length]];
+    return [[NSString alloc] initWithFormat:@"(documentAttributeFilename file_name:%d)", (int)[self.file_name length]];
 }
 
 @end
@@ -2840,7 +2849,7 @@ id entities_result = [Secret45__Serializer addSerializerToObject:entities_copy s
 
 @interface Secret45_InputStickerSet_inputStickerSetShortName ()
 
-@property (nonatomic, strong) NSString * shortName;
+@property (nonatomic, strong) NSString * short_name;
 
 @end
 
@@ -2850,10 +2859,10 @@ id entities_result = [Secret45__Serializer addSerializerToObject:entities_copy s
 
 @implementation Secret45_InputStickerSet
 
-+ (Secret45_InputStickerSet_inputStickerSetShortName *)inputStickerSetShortNameWithShortName:(NSString *)shortName
++ (Secret45_InputStickerSet_inputStickerSetShortName *)inputStickerSetShortNameWithShort_name:(NSString *)short_name
 {
     Secret45_InputStickerSet_inputStickerSetShortName *_object = [[Secret45_InputStickerSet_inputStickerSetShortName alloc] init];
-    _object.shortName = [Secret45__Serializer addSerializerToObject:[shortName copy] serializer:[[Secret45_BuiltinSerializer_String alloc] init]];
+    _object.short_name = [Secret45__Serializer addSerializerToObject:[short_name copy] serializer:[[Secret45_BuiltinSerializer_String alloc] init]];
     return _object;
 }
 
@@ -2875,7 +2884,7 @@ id entities_result = [Secret45__Serializer addSerializerToObject:entities_copy s
     {
         [Secret45__Serializer addSerializerToObject:self withConstructorSignature:0x861cc8a0 serializeBlock:^bool (Secret45_InputStickerSet_inputStickerSetShortName *object, NSMutableData *data)
         {
-            if (![Secret45__Environment serializeObject:object.shortName data:data addSignature:false])
+            if (![Secret45__Environment serializeObject:object.short_name data:data addSignature:false])
                 return false;
             return true;
         }];
@@ -2885,7 +2894,7 @@ id entities_result = [Secret45__Serializer addSerializerToObject:entities_copy s
 
 - (NSString *)description
 {
-    return [[NSString alloc] initWithFormat:@"(inputStickerSetShortName short_name:%d)", (int)[self.shortName length]];
+    return [[NSString alloc] initWithFormat:@"(inputStickerSetShortName short_name:%d)", (int)[self.short_name length]];
 }
 
 @end
@@ -3366,19 +3375,6 @@ id entities_result = [Secret45__Serializer addSerializerToObject:entities_copy s
 
 @end
 
-@interface Secret45_DecryptedMessageMedia_decryptedMessageMediaPhoto ()
-
-@property (nonatomic, strong) NSData * thumb;
-@property (nonatomic, strong) NSNumber * thumbW;
-@property (nonatomic, strong) NSNumber * thumbH;
-@property (nonatomic, strong) NSNumber * w;
-@property (nonatomic, strong) NSNumber * h;
-@property (nonatomic, strong) NSNumber * size;
-@property (nonatomic, strong) NSData * key;
-@property (nonatomic, strong) NSData * iv;
-
-@end
-
 @interface Secret45_DecryptedMessageMedia_decryptedMessageMediaGeoPoint ()
 
 @property (nonatomic, strong) NSNumber * lat;
@@ -3388,32 +3384,17 @@ id entities_result = [Secret45__Serializer addSerializerToObject:entities_copy s
 
 @interface Secret45_DecryptedMessageMedia_decryptedMessageMediaContact ()
 
-@property (nonatomic, strong) NSString * phoneNumber;
-@property (nonatomic, strong) NSString * firstName;
-@property (nonatomic, strong) NSString * lastName;
-@property (nonatomic, strong) NSNumber * userId;
-
-@end
-
-@interface Secret45_DecryptedMessageMedia_decryptedMessageMediaVideo ()
-
-@property (nonatomic, strong) NSData * thumb;
-@property (nonatomic, strong) NSNumber * thumbW;
-@property (nonatomic, strong) NSNumber * thumbH;
-@property (nonatomic, strong) NSNumber * duration;
-@property (nonatomic, strong) NSString * mimeType;
-@property (nonatomic, strong) NSNumber * w;
-@property (nonatomic, strong) NSNumber * h;
-@property (nonatomic, strong) NSNumber * size;
-@property (nonatomic, strong) NSData * key;
-@property (nonatomic, strong) NSData * iv;
+@property (nonatomic, strong) NSString * phone_number;
+@property (nonatomic, strong) NSString * first_name;
+@property (nonatomic, strong) NSString * last_name;
+@property (nonatomic, strong) NSNumber * user_id;
 
 @end
 
 @interface Secret45_DecryptedMessageMedia_decryptedMessageMediaAudio ()
 
 @property (nonatomic, strong) NSNumber * duration;
-@property (nonatomic, strong) NSString * mimeType;
+@property (nonatomic, strong) NSString * mime_type;
 @property (nonatomic, strong) NSNumber * size;
 @property (nonatomic, strong) NSData * key;
 @property (nonatomic, strong) NSData * iv;
@@ -3423,26 +3404,57 @@ id entities_result = [Secret45__Serializer addSerializerToObject:entities_copy s
 @interface Secret45_DecryptedMessageMedia_decryptedMessageMediaExternalDocument ()
 
 @property (nonatomic, strong) NSNumber * pid;
-@property (nonatomic, strong) NSNumber * accessHash;
+@property (nonatomic, strong) NSNumber * access_hash;
 @property (nonatomic, strong) NSNumber * date;
-@property (nonatomic, strong) NSString * mimeType;
+@property (nonatomic, strong) NSString * mime_type;
 @property (nonatomic, strong) NSNumber * size;
 @property (nonatomic, strong) Secret45_PhotoSize * thumb;
-@property (nonatomic, strong) NSNumber * dcId;
+@property (nonatomic, strong) NSNumber * dc_id;
 @property (nonatomic, strong) NSArray * attributes;
+
+@end
+
+@interface Secret45_DecryptedMessageMedia_decryptedMessageMediaPhoto ()
+
+@property (nonatomic, strong) NSData * thumb;
+@property (nonatomic, strong) NSNumber * thumb_w;
+@property (nonatomic, strong) NSNumber * thumb_h;
+@property (nonatomic, strong) NSNumber * w;
+@property (nonatomic, strong) NSNumber * h;
+@property (nonatomic, strong) NSNumber * size;
+@property (nonatomic, strong) NSData * key;
+@property (nonatomic, strong) NSData * iv;
+@property (nonatomic, strong) NSString * caption;
 
 @end
 
 @interface Secret45_DecryptedMessageMedia_decryptedMessageMediaDocument ()
 
 @property (nonatomic, strong) NSData * thumb;
-@property (nonatomic, strong) NSNumber * thumbW;
-@property (nonatomic, strong) NSNumber * thumbH;
-@property (nonatomic, strong) NSString * mimeType;
+@property (nonatomic, strong) NSNumber * thumb_w;
+@property (nonatomic, strong) NSNumber * thumb_h;
+@property (nonatomic, strong) NSString * mime_type;
 @property (nonatomic, strong) NSNumber * size;
 @property (nonatomic, strong) NSData * key;
 @property (nonatomic, strong) NSData * iv;
 @property (nonatomic, strong) NSArray * attributes;
+@property (nonatomic, strong) NSString * caption;
+
+@end
+
+@interface Secret45_DecryptedMessageMedia_decryptedMessageMediaVideo ()
+
+@property (nonatomic, strong) NSData * thumb;
+@property (nonatomic, strong) NSNumber * thumb_w;
+@property (nonatomic, strong) NSNumber * thumb_h;
+@property (nonatomic, strong) NSNumber * duration;
+@property (nonatomic, strong) NSString * mime_type;
+@property (nonatomic, strong) NSNumber * w;
+@property (nonatomic, strong) NSNumber * h;
+@property (nonatomic, strong) NSNumber * size;
+@property (nonatomic, strong) NSData * key;
+@property (nonatomic, strong) NSData * iv;
+@property (nonatomic, strong) NSString * caption;
 
 @end
 
@@ -3454,20 +3466,6 @@ id entities_result = [Secret45__Serializer addSerializerToObject:entities_copy s
     return _object;
 }
 
-+ (Secret45_DecryptedMessageMedia_decryptedMessageMediaPhoto *)decryptedMessageMediaPhotoWithThumb:(NSData *)thumb thumbW:(NSNumber *)thumbW thumbH:(NSNumber *)thumbH w:(NSNumber *)w h:(NSNumber *)h size:(NSNumber *)size key:(NSData *)key iv:(NSData *)iv
-{
-    Secret45_DecryptedMessageMedia_decryptedMessageMediaPhoto *_object = [[Secret45_DecryptedMessageMedia_decryptedMessageMediaPhoto alloc] init];
-    _object.thumb = [Secret45__Serializer addSerializerToObject:[thumb copy] serializer:[[Secret45_BuiltinSerializer_Bytes alloc] init]];
-    _object.thumbW = [Secret45__Serializer addSerializerToObject:[[Secret45__Number alloc] initWithNumber:thumbW] serializer:[[Secret45_BuiltinSerializer_Int alloc] init]];
-    _object.thumbH = [Secret45__Serializer addSerializerToObject:[[Secret45__Number alloc] initWithNumber:thumbH] serializer:[[Secret45_BuiltinSerializer_Int alloc] init]];
-    _object.w = [Secret45__Serializer addSerializerToObject:[[Secret45__Number alloc] initWithNumber:w] serializer:[[Secret45_BuiltinSerializer_Int alloc] init]];
-    _object.h = [Secret45__Serializer addSerializerToObject:[[Secret45__Number alloc] initWithNumber:h] serializer:[[Secret45_BuiltinSerializer_Int alloc] init]];
-    _object.size = [Secret45__Serializer addSerializerToObject:[[Secret45__Number alloc] initWithNumber:size] serializer:[[Secret45_BuiltinSerializer_Int alloc] init]];
-    _object.key = [Secret45__Serializer addSerializerToObject:[key copy] serializer:[[Secret45_BuiltinSerializer_Bytes alloc] init]];
-    _object.iv = [Secret45__Serializer addSerializerToObject:[iv copy] serializer:[[Secret45_BuiltinSerializer_Bytes alloc] init]];
-    return _object;
-}
-
 + (Secret45_DecryptedMessageMedia_decryptedMessageMediaGeoPoint *)decryptedMessageMediaGeoPointWithLat:(NSNumber *)lat plong:(NSNumber *)plong
 {
     Secret45_DecryptedMessageMedia_decryptedMessageMediaGeoPoint *_object = [[Secret45_DecryptedMessageMedia_decryptedMessageMediaGeoPoint alloc] init];
@@ -3476,81 +3474,80 @@ id entities_result = [Secret45__Serializer addSerializerToObject:entities_copy s
     return _object;
 }
 
-+ (Secret45_DecryptedMessageMedia_decryptedMessageMediaContact *)decryptedMessageMediaContactWithPhoneNumber:(NSString *)phoneNumber firstName:(NSString *)firstName lastName:(NSString *)lastName userId:(NSNumber *)userId
++ (Secret45_DecryptedMessageMedia_decryptedMessageMediaContact *)decryptedMessageMediaContactWithPhone_number:(NSString *)phone_number first_name:(NSString *)first_name last_name:(NSString *)last_name user_id:(NSNumber *)user_id
 {
     Secret45_DecryptedMessageMedia_decryptedMessageMediaContact *_object = [[Secret45_DecryptedMessageMedia_decryptedMessageMediaContact alloc] init];
-    _object.phoneNumber = [Secret45__Serializer addSerializerToObject:[phoneNumber copy] serializer:[[Secret45_BuiltinSerializer_String alloc] init]];
-    _object.firstName = [Secret45__Serializer addSerializerToObject:[firstName copy] serializer:[[Secret45_BuiltinSerializer_String alloc] init]];
-    _object.lastName = [Secret45__Serializer addSerializerToObject:[lastName copy] serializer:[[Secret45_BuiltinSerializer_String alloc] init]];
-    _object.userId = [Secret45__Serializer addSerializerToObject:[[Secret45__Number alloc] initWithNumber:userId] serializer:[[Secret45_BuiltinSerializer_Int alloc] init]];
+    _object.phone_number = [Secret45__Serializer addSerializerToObject:[phone_number copy] serializer:[[Secret45_BuiltinSerializer_String alloc] init]];
+    _object.first_name = [Secret45__Serializer addSerializerToObject:[first_name copy] serializer:[[Secret45_BuiltinSerializer_String alloc] init]];
+    _object.last_name = [Secret45__Serializer addSerializerToObject:[last_name copy] serializer:[[Secret45_BuiltinSerializer_String alloc] init]];
+    _object.user_id = [Secret45__Serializer addSerializerToObject:[[Secret45__Number alloc] initWithNumber:user_id] serializer:[[Secret45_BuiltinSerializer_Int alloc] init]];
     return _object;
 }
 
-+ (Secret45_DecryptedMessageMedia_decryptedMessageMediaVideo *)decryptedMessageMediaVideoWithThumb:(NSData *)thumb thumbW:(NSNumber *)thumbW thumbH:(NSNumber *)thumbH duration:(NSNumber *)duration mimeType:(NSString *)mimeType w:(NSNumber *)w h:(NSNumber *)h size:(NSNumber *)size key:(NSData *)key iv:(NSData *)iv
++ (Secret45_DecryptedMessageMedia_decryptedMessageMediaAudio *)decryptedMessageMediaAudioWithDuration:(NSNumber *)duration mime_type:(NSString *)mime_type size:(NSNumber *)size key:(NSData *)key iv:(NSData *)iv
 {
-    Secret45_DecryptedMessageMedia_decryptedMessageMediaVideo *_object = [[Secret45_DecryptedMessageMedia_decryptedMessageMediaVideo alloc] init];
-    _object.thumb = [Secret45__Serializer addSerializerToObject:[thumb copy] serializer:[[Secret45_BuiltinSerializer_Bytes alloc] init]];
-    _object.thumbW = [Secret45__Serializer addSerializerToObject:[[Secret45__Number alloc] initWithNumber:thumbW] serializer:[[Secret45_BuiltinSerializer_Int alloc] init]];
-    _object.thumbH = [Secret45__Serializer addSerializerToObject:[[Secret45__Number alloc] initWithNumber:thumbH] serializer:[[Secret45_BuiltinSerializer_Int alloc] init]];
+    Secret45_DecryptedMessageMedia_decryptedMessageMediaAudio *_object = [[Secret45_DecryptedMessageMedia_decryptedMessageMediaAudio alloc] init];
     _object.duration = [Secret45__Serializer addSerializerToObject:[[Secret45__Number alloc] initWithNumber:duration] serializer:[[Secret45_BuiltinSerializer_Int alloc] init]];
-    _object.mimeType = [Secret45__Serializer addSerializerToObject:[mimeType copy] serializer:[[Secret45_BuiltinSerializer_String alloc] init]];
+    _object.mime_type = [Secret45__Serializer addSerializerToObject:[mime_type copy] serializer:[[Secret45_BuiltinSerializer_String alloc] init]];
+    _object.size = [Secret45__Serializer addSerializerToObject:[[Secret45__Number alloc] initWithNumber:size] serializer:[[Secret45_BuiltinSerializer_Int alloc] init]];
+    _object.key = [Secret45__Serializer addSerializerToObject:[key copy] serializer:[[Secret45_BuiltinSerializer_Bytes alloc] init]];
+    _object.iv = [Secret45__Serializer addSerializerToObject:[iv copy] serializer:[[Secret45_BuiltinSerializer_Bytes alloc] init]];
+    return _object;
+}
+
++ (Secret45_DecryptedMessageMedia_decryptedMessageMediaExternalDocument *)decryptedMessageMediaExternalDocumentWithPid:(NSNumber *)pid access_hash:(NSNumber *)access_hash date:(NSNumber *)date mime_type:(NSString *)mime_type size:(NSNumber *)size thumb:(Secret45_PhotoSize *)thumb dc_id:(NSNumber *)dc_id attributes:(NSArray *)attributes
+{
+    Secret45_DecryptedMessageMedia_decryptedMessageMediaExternalDocument *_object = [[Secret45_DecryptedMessageMedia_decryptedMessageMediaExternalDocument alloc] init];
+    _object.pid = [Secret45__Serializer addSerializerToObject:[[Secret45__Number alloc] initWithNumber:pid] serializer:[[Secret45_BuiltinSerializer_Long alloc] init]];
+    _object.access_hash = [Secret45__Serializer addSerializerToObject:[[Secret45__Number alloc] initWithNumber:access_hash] serializer:[[Secret45_BuiltinSerializer_Long alloc] init]];
+    _object.date = [Secret45__Serializer addSerializerToObject:[[Secret45__Number alloc] initWithNumber:date] serializer:[[Secret45_BuiltinSerializer_Int alloc] init]];
+    _object.mime_type = [Secret45__Serializer addSerializerToObject:[mime_type copy] serializer:[[Secret45_BuiltinSerializer_String alloc] init]];
+    _object.size = [Secret45__Serializer addSerializerToObject:[[Secret45__Number alloc] initWithNumber:size] serializer:[[Secret45_BuiltinSerializer_Int alloc] init]];
+    _object.thumb = thumb;
+    _object.dc_id = [Secret45__Serializer addSerializerToObject:[[Secret45__Number alloc] initWithNumber:dc_id] serializer:[[Secret45_BuiltinSerializer_Int alloc] init]];
+    _object.attributes = 
+({
+NSMutableArray *attributes_copy = [[NSMutableArray alloc] initWithCapacity:attributes.count];
+for (id attributes_item in attributes)
+{
+    [attributes_copy addObject:attributes_item];
+}
+id attributes_result = [Secret45__Serializer addSerializerToObject:attributes_copy serializer:[[Secret45__Serializer alloc] initWithConstructorSignature:(int32_t)0x1cb5c415 serializeBlock:^bool (NSArray *object, NSMutableData *data)
+{
+    int32_t count = (int32_t)object.count;
+    [data appendBytes:(void *)&count length:4];
+    for (id item in object)
+    {
+        if (![Secret45__Environment serializeObject:item data:data addSignature:true])
+        return false;
+    }
+    return true;
+}]]; attributes_result;});
+    return _object;
+}
+
++ (Secret45_DecryptedMessageMedia_decryptedMessageMediaPhoto *)decryptedMessageMediaPhotoWithThumb:(NSData *)thumb thumb_w:(NSNumber *)thumb_w thumb_h:(NSNumber *)thumb_h w:(NSNumber *)w h:(NSNumber *)h size:(NSNumber *)size key:(NSData *)key iv:(NSData *)iv caption:(NSString *)caption
+{
+    Secret45_DecryptedMessageMedia_decryptedMessageMediaPhoto *_object = [[Secret45_DecryptedMessageMedia_decryptedMessageMediaPhoto alloc] init];
+    _object.thumb = [Secret45__Serializer addSerializerToObject:[thumb copy] serializer:[[Secret45_BuiltinSerializer_Bytes alloc] init]];
+    _object.thumb_w = [Secret45__Serializer addSerializerToObject:[[Secret45__Number alloc] initWithNumber:thumb_w] serializer:[[Secret45_BuiltinSerializer_Int alloc] init]];
+    _object.thumb_h = [Secret45__Serializer addSerializerToObject:[[Secret45__Number alloc] initWithNumber:thumb_h] serializer:[[Secret45_BuiltinSerializer_Int alloc] init]];
     _object.w = [Secret45__Serializer addSerializerToObject:[[Secret45__Number alloc] initWithNumber:w] serializer:[[Secret45_BuiltinSerializer_Int alloc] init]];
     _object.h = [Secret45__Serializer addSerializerToObject:[[Secret45__Number alloc] initWithNumber:h] serializer:[[Secret45_BuiltinSerializer_Int alloc] init]];
     _object.size = [Secret45__Serializer addSerializerToObject:[[Secret45__Number alloc] initWithNumber:size] serializer:[[Secret45_BuiltinSerializer_Int alloc] init]];
     _object.key = [Secret45__Serializer addSerializerToObject:[key copy] serializer:[[Secret45_BuiltinSerializer_Bytes alloc] init]];
     _object.iv = [Secret45__Serializer addSerializerToObject:[iv copy] serializer:[[Secret45_BuiltinSerializer_Bytes alloc] init]];
+    _object.caption = [Secret45__Serializer addSerializerToObject:[caption copy] serializer:[[Secret45_BuiltinSerializer_String alloc] init]];
     return _object;
 }
 
-+ (Secret45_DecryptedMessageMedia_decryptedMessageMediaAudio *)decryptedMessageMediaAudioWithDuration:(NSNumber *)duration mimeType:(NSString *)mimeType size:(NSNumber *)size key:(NSData *)key iv:(NSData *)iv
-{
-    Secret45_DecryptedMessageMedia_decryptedMessageMediaAudio *_object = [[Secret45_DecryptedMessageMedia_decryptedMessageMediaAudio alloc] init];
-    _object.duration = [Secret45__Serializer addSerializerToObject:[[Secret45__Number alloc] initWithNumber:duration] serializer:[[Secret45_BuiltinSerializer_Int alloc] init]];
-    _object.mimeType = [Secret45__Serializer addSerializerToObject:[mimeType copy] serializer:[[Secret45_BuiltinSerializer_String alloc] init]];
-    _object.size = [Secret45__Serializer addSerializerToObject:[[Secret45__Number alloc] initWithNumber:size] serializer:[[Secret45_BuiltinSerializer_Int alloc] init]];
-    _object.key = [Secret45__Serializer addSerializerToObject:[key copy] serializer:[[Secret45_BuiltinSerializer_Bytes alloc] init]];
-    _object.iv = [Secret45__Serializer addSerializerToObject:[iv copy] serializer:[[Secret45_BuiltinSerializer_Bytes alloc] init]];
-    return _object;
-}
-
-+ (Secret45_DecryptedMessageMedia_decryptedMessageMediaExternalDocument *)decryptedMessageMediaExternalDocumentWithPid:(NSNumber *)pid accessHash:(NSNumber *)accessHash date:(NSNumber *)date mimeType:(NSString *)mimeType size:(NSNumber *)size thumb:(Secret45_PhotoSize *)thumb dcId:(NSNumber *)dcId attributes:(NSArray *)attributes
-{
-    Secret45_DecryptedMessageMedia_decryptedMessageMediaExternalDocument *_object = [[Secret45_DecryptedMessageMedia_decryptedMessageMediaExternalDocument alloc] init];
-    _object.pid = [Secret45__Serializer addSerializerToObject:[[Secret45__Number alloc] initWithNumber:pid] serializer:[[Secret45_BuiltinSerializer_Long alloc] init]];
-    _object.accessHash = [Secret45__Serializer addSerializerToObject:[[Secret45__Number alloc] initWithNumber:accessHash] serializer:[[Secret45_BuiltinSerializer_Long alloc] init]];
-    _object.date = [Secret45__Serializer addSerializerToObject:[[Secret45__Number alloc] initWithNumber:date] serializer:[[Secret45_BuiltinSerializer_Int alloc] init]];
-    _object.mimeType = [Secret45__Serializer addSerializerToObject:[mimeType copy] serializer:[[Secret45_BuiltinSerializer_String alloc] init]];
-    _object.size = [Secret45__Serializer addSerializerToObject:[[Secret45__Number alloc] initWithNumber:size] serializer:[[Secret45_BuiltinSerializer_Int alloc] init]];
-    _object.thumb = thumb;
-    _object.dcId = [Secret45__Serializer addSerializerToObject:[[Secret45__Number alloc] initWithNumber:dcId] serializer:[[Secret45_BuiltinSerializer_Int alloc] init]];
-    _object.attributes = 
-({
-NSMutableArray *attributes_copy = [[NSMutableArray alloc] initWithCapacity:attributes.count];
-for (id attributes_item in attributes)
-{
-    [attributes_copy addObject:attributes_item];
-}
-id attributes_result = [Secret45__Serializer addSerializerToObject:attributes_copy serializer:[[Secret45__Serializer alloc] initWithConstructorSignature:(int32_t)0x1cb5c415 serializeBlock:^bool (NSArray *object, NSMutableData *data)
-{
-    int32_t count = (int32_t)object.count;
-    [data appendBytes:(void *)&count length:4];
-    for (id item in object)
-    {
-        if (![Secret45__Environment serializeObject:item data:data addSignature:true])
-        return false;
-    }
-    return true;
-}]]; attributes_result;});
-    return _object;
-}
-
-+ (Secret45_DecryptedMessageMedia_decryptedMessageMediaDocument *)decryptedMessageMediaDocumentWithThumb:(NSData *)thumb thumbW:(NSNumber *)thumbW thumbH:(NSNumber *)thumbH mimeType:(NSString *)mimeType size:(NSNumber *)size key:(NSData *)key iv:(NSData *)iv attributes:(NSArray *)attributes
++ (Secret45_DecryptedMessageMedia_decryptedMessageMediaDocument *)decryptedMessageMediaDocumentWithThumb:(NSData *)thumb thumb_w:(NSNumber *)thumb_w thumb_h:(NSNumber *)thumb_h mime_type:(NSString *)mime_type size:(NSNumber *)size key:(NSData *)key iv:(NSData *)iv attributes:(NSArray *)attributes caption:(NSString *)caption
 {
     Secret45_DecryptedMessageMedia_decryptedMessageMediaDocument *_object = [[Secret45_DecryptedMessageMedia_decryptedMessageMediaDocument alloc] init];
     _object.thumb = [Secret45__Serializer addSerializerToObject:[thumb copy] serializer:[[Secret45_BuiltinSerializer_Bytes alloc] init]];
-    _object.thumbW = [Secret45__Serializer addSerializerToObject:[[Secret45__Number alloc] initWithNumber:thumbW] serializer:[[Secret45_BuiltinSerializer_Int alloc] init]];
-    _object.thumbH = [Secret45__Serializer addSerializerToObject:[[Secret45__Number alloc] initWithNumber:thumbH] serializer:[[Secret45_BuiltinSerializer_Int alloc] init]];
-    _object.mimeType = [Secret45__Serializer addSerializerToObject:[mimeType copy] serializer:[[Secret45_BuiltinSerializer_String alloc] init]];
+    _object.thumb_w = [Secret45__Serializer addSerializerToObject:[[Secret45__Number alloc] initWithNumber:thumb_w] serializer:[[Secret45_BuiltinSerializer_Int alloc] init]];
+    _object.thumb_h = [Secret45__Serializer addSerializerToObject:[[Secret45__Number alloc] initWithNumber:thumb_h] serializer:[[Secret45_BuiltinSerializer_Int alloc] init]];
+    _object.mime_type = [Secret45__Serializer addSerializerToObject:[mime_type copy] serializer:[[Secret45_BuiltinSerializer_String alloc] init]];
     _object.size = [Secret45__Serializer addSerializerToObject:[[Secret45__Number alloc] initWithNumber:size] serializer:[[Secret45_BuiltinSerializer_Int alloc] init]];
     _object.key = [Secret45__Serializer addSerializerToObject:[key copy] serializer:[[Secret45_BuiltinSerializer_Bytes alloc] init]];
     _object.iv = [Secret45__Serializer addSerializerToObject:[iv copy] serializer:[[Secret45_BuiltinSerializer_Bytes alloc] init]];
@@ -3572,6 +3569,24 @@ id attributes_result = [Secret45__Serializer addSerializerToObject:attributes_co
     }
     return true;
 }]]; attributes_result;});
+    _object.caption = [Secret45__Serializer addSerializerToObject:[caption copy] serializer:[[Secret45_BuiltinSerializer_String alloc] init]];
+    return _object;
+}
+
++ (Secret45_DecryptedMessageMedia_decryptedMessageMediaVideo *)decryptedMessageMediaVideoWithThumb:(NSData *)thumb thumb_w:(NSNumber *)thumb_w thumb_h:(NSNumber *)thumb_h duration:(NSNumber *)duration mime_type:(NSString *)mime_type w:(NSNumber *)w h:(NSNumber *)h size:(NSNumber *)size key:(NSData *)key iv:(NSData *)iv caption:(NSString *)caption
+{
+    Secret45_DecryptedMessageMedia_decryptedMessageMediaVideo *_object = [[Secret45_DecryptedMessageMedia_decryptedMessageMediaVideo alloc] init];
+    _object.thumb = [Secret45__Serializer addSerializerToObject:[thumb copy] serializer:[[Secret45_BuiltinSerializer_Bytes alloc] init]];
+    _object.thumb_w = [Secret45__Serializer addSerializerToObject:[[Secret45__Number alloc] initWithNumber:thumb_w] serializer:[[Secret45_BuiltinSerializer_Int alloc] init]];
+    _object.thumb_h = [Secret45__Serializer addSerializerToObject:[[Secret45__Number alloc] initWithNumber:thumb_h] serializer:[[Secret45_BuiltinSerializer_Int alloc] init]];
+    _object.duration = [Secret45__Serializer addSerializerToObject:[[Secret45__Number alloc] initWithNumber:duration] serializer:[[Secret45_BuiltinSerializer_Int alloc] init]];
+    _object.mime_type = [Secret45__Serializer addSerializerToObject:[mime_type copy] serializer:[[Secret45_BuiltinSerializer_String alloc] init]];
+    _object.w = [Secret45__Serializer addSerializerToObject:[[Secret45__Number alloc] initWithNumber:w] serializer:[[Secret45_BuiltinSerializer_Int alloc] init]];
+    _object.h = [Secret45__Serializer addSerializerToObject:[[Secret45__Number alloc] initWithNumber:h] serializer:[[Secret45_BuiltinSerializer_Int alloc] init]];
+    _object.size = [Secret45__Serializer addSerializerToObject:[[Secret45__Number alloc] initWithNumber:size] serializer:[[Secret45_BuiltinSerializer_Int alloc] init]];
+    _object.key = [Secret45__Serializer addSerializerToObject:[key copy] serializer:[[Secret45_BuiltinSerializer_Bytes alloc] init]];
+    _object.iv = [Secret45__Serializer addSerializerToObject:[iv copy] serializer:[[Secret45_BuiltinSerializer_Bytes alloc] init]];
+    _object.caption = [Secret45__Serializer addSerializerToObject:[caption copy] serializer:[[Secret45_BuiltinSerializer_String alloc] init]];
     return _object;
 }
 
@@ -3596,44 +3611,6 @@ id attributes_result = [Secret45__Serializer addSerializerToObject:attributes_co
 - (NSString *)description
 {
     return [[NSString alloc] initWithFormat:@"(decryptedMessageMediaEmpty)"];
-}
-
-@end
-
-@implementation Secret45_DecryptedMessageMedia_decryptedMessageMediaPhoto
-
-- (instancetype)init
-{
-    self = [super init];
-    if (self != nil)
-    {
-        [Secret45__Serializer addSerializerToObject:self withConstructorSignature:0x32798a8c serializeBlock:^bool (Secret45_DecryptedMessageMedia_decryptedMessageMediaPhoto *object, NSMutableData *data)
-        {
-            if (![Secret45__Environment serializeObject:object.thumb data:data addSignature:false])
-                return false;
-            if (![Secret45__Environment serializeObject:object.thumbW data:data addSignature:false])
-                return false;
-            if (![Secret45__Environment serializeObject:object.thumbH data:data addSignature:false])
-                return false;
-            if (![Secret45__Environment serializeObject:object.w data:data addSignature:false])
-                return false;
-            if (![Secret45__Environment serializeObject:object.h data:data addSignature:false])
-                return false;
-            if (![Secret45__Environment serializeObject:object.size data:data addSignature:false])
-                return false;
-            if (![Secret45__Environment serializeObject:object.key data:data addSignature:false])
-                return false;
-            if (![Secret45__Environment serializeObject:object.iv data:data addSignature:false])
-                return false;
-            return true;
-        }];
-    }
-    return self;
-}
-
-- (NSString *)description
-{
-    return [[NSString alloc] initWithFormat:@"(decryptedMessageMediaPhoto thumb:%d thumb_w:%@ thumb_h:%@ w:%@ h:%@ size:%@ key:%d iv:%d)", (int)[self.thumb length], self.thumbW, self.thumbH, self.w, self.h, self.size, (int)[self.key length], (int)[self.iv length]];
 }
 
 @end
@@ -3673,55 +3650,13 @@ id attributes_result = [Secret45__Serializer addSerializerToObject:attributes_co
     {
         [Secret45__Serializer addSerializerToObject:self withConstructorSignature:0x588a0a97 serializeBlock:^bool (Secret45_DecryptedMessageMedia_decryptedMessageMediaContact *object, NSMutableData *data)
         {
-            if (![Secret45__Environment serializeObject:object.phoneNumber data:data addSignature:false])
+            if (![Secret45__Environment serializeObject:object.phone_number data:data addSignature:false])
                 return false;
-            if (![Secret45__Environment serializeObject:object.firstName data:data addSignature:false])
+            if (![Secret45__Environment serializeObject:object.first_name data:data addSignature:false])
                 return false;
-            if (![Secret45__Environment serializeObject:object.lastName data:data addSignature:false])
+            if (![Secret45__Environment serializeObject:object.last_name data:data addSignature:false])
                 return false;
-            if (![Secret45__Environment serializeObject:object.userId data:data addSignature:false])
-                return false;
-            return true;
-        }];
-    }
-    return self;
-}
-
-- (NSString *)description
-{
-    return [[NSString alloc] initWithFormat:@"(decryptedMessageMediaContact phone_number:%d first_name:%d last_name:%d user_id:%@)", (int)[self.phoneNumber length], (int)[self.firstName length], (int)[self.lastName length], self.userId];
-}
-
-@end
-
-@implementation Secret45_DecryptedMessageMedia_decryptedMessageMediaVideo
-
-- (instancetype)init
-{
-    self = [super init];
-    if (self != nil)
-    {
-        [Secret45__Serializer addSerializerToObject:self withConstructorSignature:0x524a415d serializeBlock:^bool (Secret45_DecryptedMessageMedia_decryptedMessageMediaVideo *object, NSMutableData *data)
-        {
-            if (![Secret45__Environment serializeObject:object.thumb data:data addSignature:false])
-                return false;
-            if (![Secret45__Environment serializeObject:object.thumbW data:data addSignature:false])
-                return false;
-            if (![Secret45__Environment serializeObject:object.thumbH data:data addSignature:false])
-                return false;
-            if (![Secret45__Environment serializeObject:object.duration data:data addSignature:false])
-                return false;
-            if (![Secret45__Environment serializeObject:object.mimeType data:data addSignature:false])
-                return false;
-            if (![Secret45__Environment serializeObject:object.w data:data addSignature:false])
-                return false;
-            if (![Secret45__Environment serializeObject:object.h data:data addSignature:false])
-                return false;
-            if (![Secret45__Environment serializeObject:object.size data:data addSignature:false])
-                return false;
-            if (![Secret45__Environment serializeObject:object.key data:data addSignature:false])
-                return false;
-            if (![Secret45__Environment serializeObject:object.iv data:data addSignature:false])
+            if (![Secret45__Environment serializeObject:object.user_id data:data addSignature:false])
                 return false;
             return true;
         }];
@@ -3731,7 +3666,7 @@ id attributes_result = [Secret45__Serializer addSerializerToObject:attributes_co
 
 - (NSString *)description
 {
-    return [[NSString alloc] initWithFormat:@"(decryptedMessageMediaVideo thumb:%d thumb_w:%@ thumb_h:%@ duration:%@ mime_type:%d w:%@ h:%@ size:%@ key:%d iv:%d)", (int)[self.thumb length], self.thumbW, self.thumbH, self.duration, (int)[self.mimeType length], self.w, self.h, self.size, (int)[self.key length], (int)[self.iv length]];
+    return [[NSString alloc] initWithFormat:@"(decryptedMessageMediaContact phone_number:%d first_name:%d last_name:%d user_id:%@)", (int)[self.phone_number length], (int)[self.first_name length], (int)[self.last_name length], self.user_id];
 }
 
 @end
@@ -3747,7 +3682,7 @@ id attributes_result = [Secret45__Serializer addSerializerToObject:attributes_co
         {
             if (![Secret45__Environment serializeObject:object.duration data:data addSignature:false])
                 return false;
-            if (![Secret45__Environment serializeObject:object.mimeType data:data addSignature:false])
+            if (![Secret45__Environment serializeObject:object.mime_type data:data addSignature:false])
                 return false;
             if (![Secret45__Environment serializeObject:object.size data:data addSignature:false])
                 return false;
@@ -3763,7 +3698,7 @@ id attributes_result = [Secret45__Serializer addSerializerToObject:attributes_co
 
 - (NSString *)description
 {
-    return [[NSString alloc] initWithFormat:@"(decryptedMessageMediaAudio duration:%@ mime_type:%d size:%@ key:%d iv:%d)", self.duration, (int)[self.mimeType length], self.size, (int)[self.key length], (int)[self.iv length]];
+    return [[NSString alloc] initWithFormat:@"(decryptedMessageMediaAudio duration:%@ mime_type:%d size:%@ key:%d iv:%d)", self.duration, (int)[self.mime_type length], self.size, (int)[self.key length], (int)[self.iv length]];
 }
 
 @end
@@ -3779,17 +3714,17 @@ id attributes_result = [Secret45__Serializer addSerializerToObject:attributes_co
         {
             if (![Secret45__Environment serializeObject:object.pid data:data addSignature:false])
                 return false;
-            if (![Secret45__Environment serializeObject:object.accessHash data:data addSignature:false])
+            if (![Secret45__Environment serializeObject:object.access_hash data:data addSignature:false])
                 return false;
             if (![Secret45__Environment serializeObject:object.date data:data addSignature:false])
                 return false;
-            if (![Secret45__Environment serializeObject:object.mimeType data:data addSignature:false])
+            if (![Secret45__Environment serializeObject:object.mime_type data:data addSignature:false])
                 return false;
             if (![Secret45__Environment serializeObject:object.size data:data addSignature:false])
                 return false;
             if (![Secret45__Environment serializeObject:object.thumb data:data addSignature:true])
                 return false;
-            if (![Secret45__Environment serializeObject:object.dcId data:data addSignature:false])
+            if (![Secret45__Environment serializeObject:object.dc_id data:data addSignature:false])
                 return false;
             if (![Secret45__Environment serializeObject:object.attributes data:data addSignature:true])
                 return false;
@@ -3801,7 +3736,47 @@ id attributes_result = [Secret45__Serializer addSerializerToObject:attributes_co
 
 - (NSString *)description
 {
-    return [[NSString alloc] initWithFormat:@"(decryptedMessageMediaExternalDocument id:%@ access_hash:%@ date:%@ mime_type:%d size:%@ thumb:%@ dc_id:%@ attributes:%@)", self.pid, self.accessHash, self.date, (int)[self.mimeType length], self.size, self.thumb, self.dcId, self.attributes];
+    return [[NSString alloc] initWithFormat:@"(decryptedMessageMediaExternalDocument id:%@ access_hash:%@ date:%@ mime_type:%d size:%@ thumb:%@ dc_id:%@ attributes:%@)", self.pid, self.access_hash, self.date, (int)[self.mime_type length], self.size, self.thumb, self.dc_id, self.attributes];
+}
+
+@end
+
+@implementation Secret45_DecryptedMessageMedia_decryptedMessageMediaPhoto
+
+- (instancetype)init
+{
+    self = [super init];
+    if (self != nil)
+    {
+        [Secret45__Serializer addSerializerToObject:self withConstructorSignature:0xf1fa8d78 serializeBlock:^bool (Secret45_DecryptedMessageMedia_decryptedMessageMediaPhoto *object, NSMutableData *data)
+        {
+            if (![Secret45__Environment serializeObject:object.thumb data:data addSignature:false])
+                return false;
+            if (![Secret45__Environment serializeObject:object.thumb_w data:data addSignature:false])
+                return false;
+            if (![Secret45__Environment serializeObject:object.thumb_h data:data addSignature:false])
+                return false;
+            if (![Secret45__Environment serializeObject:object.w data:data addSignature:false])
+                return false;
+            if (![Secret45__Environment serializeObject:object.h data:data addSignature:false])
+                return false;
+            if (![Secret45__Environment serializeObject:object.size data:data addSignature:false])
+                return false;
+            if (![Secret45__Environment serializeObject:object.key data:data addSignature:false])
+                return false;
+            if (![Secret45__Environment serializeObject:object.iv data:data addSignature:false])
+                return false;
+            if (![Secret45__Environment serializeObject:object.caption data:data addSignature:false])
+                return false;
+            return true;
+        }];
+    }
+    return self;
+}
+
+- (NSString *)description
+{
+    return [[NSString alloc] initWithFormat:@"(decryptedMessageMediaPhoto thumb:%d thumb_w:%@ thumb_h:%@ w:%@ h:%@ size:%@ key:%d iv:%d caption:%d)", (int)[self.thumb length], self.thumb_w, self.thumb_h, self.w, self.h, self.size, (int)[self.key length], (int)[self.iv length], (int)[self.caption length]];
 }
 
 @end
@@ -3813,15 +3788,15 @@ id attributes_result = [Secret45__Serializer addSerializerToObject:attributes_co
     self = [super init];
     if (self != nil)
     {
-        [Secret45__Serializer addSerializerToObject:self withConstructorSignature:0xfee613da serializeBlock:^bool (Secret45_DecryptedMessageMedia_decryptedMessageMediaDocument *object, NSMutableData *data)
+        [Secret45__Serializer addSerializerToObject:self withConstructorSignature:0x7afe8ae2 serializeBlock:^bool (Secret45_DecryptedMessageMedia_decryptedMessageMediaDocument *object, NSMutableData *data)
         {
             if (![Secret45__Environment serializeObject:object.thumb data:data addSignature:false])
                 return false;
-            if (![Secret45__Environment serializeObject:object.thumbW data:data addSignature:false])
+            if (![Secret45__Environment serializeObject:object.thumb_w data:data addSignature:false])
                 return false;
-            if (![Secret45__Environment serializeObject:object.thumbH data:data addSignature:false])
+            if (![Secret45__Environment serializeObject:object.thumb_h data:data addSignature:false])
                 return false;
-            if (![Secret45__Environment serializeObject:object.mimeType data:data addSignature:false])
+            if (![Secret45__Environment serializeObject:object.mime_type data:data addSignature:false])
                 return false;
             if (![Secret45__Environment serializeObject:object.size data:data addSignature:false])
                 return false;
@@ -3831,6 +3806,8 @@ id attributes_result = [Secret45__Serializer addSerializerToObject:attributes_co
                 return false;
             if (![Secret45__Environment serializeObject:object.attributes data:data addSignature:true])
                 return false;
+            if (![Secret45__Environment serializeObject:object.caption data:data addSignature:false])
+                return false;
             return true;
         }];
     }
@@ -3839,7 +3816,51 @@ id attributes_result = [Secret45__Serializer addSerializerToObject:attributes_co
 
 - (NSString *)description
 {
-    return [[NSString alloc] initWithFormat:@"(decryptedMessageMediaDocument thumb:%d thumb_w:%@ thumb_h:%@ mime_type:%d size:%@ key:%d iv:%d attributes:%@)", (int)[self.thumb length], self.thumbW, self.thumbH, (int)[self.mimeType length], self.size, (int)[self.key length], (int)[self.iv length], self.attributes];
+    return [[NSString alloc] initWithFormat:@"(decryptedMessageMediaDocument thumb:%d thumb_w:%@ thumb_h:%@ mime_type:%d size:%@ key:%d iv:%d attributes:%@ caption:%d)", (int)[self.thumb length], self.thumb_w, self.thumb_h, (int)[self.mime_type length], self.size, (int)[self.key length], (int)[self.iv length], self.attributes, (int)[self.caption length]];
+}
+
+@end
+
+@implementation Secret45_DecryptedMessageMedia_decryptedMessageMediaVideo
+
+- (instancetype)init
+{
+    self = [super init];
+    if (self != nil)
+    {
+        [Secret45__Serializer addSerializerToObject:self withConstructorSignature:0x970c8c0e serializeBlock:^bool (Secret45_DecryptedMessageMedia_decryptedMessageMediaVideo *object, NSMutableData *data)
+        {
+            if (![Secret45__Environment serializeObject:object.thumb data:data addSignature:false])
+                return false;
+            if (![Secret45__Environment serializeObject:object.thumb_w data:data addSignature:false])
+                return false;
+            if (![Secret45__Environment serializeObject:object.thumb_h data:data addSignature:false])
+                return false;
+            if (![Secret45__Environment serializeObject:object.duration data:data addSignature:false])
+                return false;
+            if (![Secret45__Environment serializeObject:object.mime_type data:data addSignature:false])
+                return false;
+            if (![Secret45__Environment serializeObject:object.w data:data addSignature:false])
+                return false;
+            if (![Secret45__Environment serializeObject:object.h data:data addSignature:false])
+                return false;
+            if (![Secret45__Environment serializeObject:object.size data:data addSignature:false])
+                return false;
+            if (![Secret45__Environment serializeObject:object.key data:data addSignature:false])
+                return false;
+            if (![Secret45__Environment serializeObject:object.iv data:data addSignature:false])
+                return false;
+            if (![Secret45__Environment serializeObject:object.caption data:data addSignature:false])
+                return false;
+            return true;
+        }];
+    }
+    return self;
+}
+
+- (NSString *)description
+{
+    return [[NSString alloc] initWithFormat:@"(decryptedMessageMediaVideo thumb:%d thumb_w:%@ thumb_h:%@ duration:%@ mime_type:%d w:%@ h:%@ size:%@ key:%d iv:%d caption:%d)", (int)[self.thumb length], self.thumb_w, self.thumb_h, self.duration, (int)[self.mime_type length], self.w, self.h, self.size, (int)[self.key length], (int)[self.iv length], (int)[self.caption length]];
 }
 
 @end

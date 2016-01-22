@@ -83,7 +83,6 @@
 #import "TGContextBotsPanelView.h"
 #import "TGModalCompressingView.h"
 #import "CompressedDocumentSenderItem.h"
-#import "CompressedSecretFileSenderItem.h"
 #import "ContextBotSenderItem.h"
 #define HEADER_MESSAGES_GROUPING_TIME (10 * 60)
 
@@ -3209,16 +3208,25 @@ static NSTextAttachment *headerMediaIcon() {
 
 }
 
-- (void)sendContextBotResult:(TLBotInlineResult *)botContextResult via_bot_id:(int)via_bot_id queryId:(long)queryId forConversation:(TL_conversation *)conversation {
+- (void)sendContextBotResult:(TLBotInlineResult *)botContextResult via_bot_id:(int)via_bot_id via_bot_name:(NSString *)via_bot_name queryId:(long)queryId forConversation:(TL_conversation *)conversation {
    
     int additionFlags = [self senderFlags];
     
     [ASQueue dispatchOnStageQueue:^{
         SenderItem *sender;
+        if(conversation.type != DialogTypeSecretChat)
         sender = [[ContextBotSenderItem alloc] initWithBotContextResult:botContextResult via_bot_id:via_bot_id queryId:queryId additionFlags:additionFlags conversation:conversation];
+        else {
+            
+           sender = [[MessageSenderSecretItem alloc] initWithBotContextResult:botContextResult via_bot_name:via_bot_name queryId:queryId conversation:conversation];
+        }
         
-        sender.tableItem = [[self messageTableItemsFromMessages:@[sender.message]] lastObject];
-        [self.historyController addItem:sender.tableItem sentControllerCallback:nil];
+        if(sender != nil) {
+            sender.tableItem = [[self messageTableItemsFromMessages:@[sender.message]] lastObject];
+            [self.historyController addItem:sender.tableItem sentControllerCallback:nil];
+        }
+        
+        
         
     }];
 }
@@ -3574,7 +3582,7 @@ static NSTextAttachment *headerMediaIcon() {
 
 - (void)addReplayMessage:(TL_localMessage *)message animated:(BOOL)animated {
     
-    if((message.to_id.class == [TL_peerChannel class] || message.to_id.class == [TL_peerChat class] || message.to_id.class == [TL_peerUser class]) && message.peer_id == _conversation.peer_id)  {
+    if(message.peer_id == _conversation.peer_id)  {
         [[Storage yap] readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
             
             [transaction setObject:message forKey:self.conversation.cacheKey inCollection:REPLAY_COLLECTION];

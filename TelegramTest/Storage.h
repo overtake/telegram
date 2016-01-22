@@ -218,7 +218,6 @@ extern NSString *const RECENT_GIFS;
 -(void)selectSecretInActions:(int)chat_id completeHandler:(void (^)(NSArray *list))completeHandler;
 
 
--(NSArray *)selectSupportMessages:(NSArray *)ids;
 -(void)addSupportMessages:(NSArray *)messages;
 
 

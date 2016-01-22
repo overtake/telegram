@@ -68,7 +68,6 @@ static NSCache *cItems;
 
         if(object.peer.peer_id == [UsersManager currentUserId])
             object.flags&= ~TGUNREADMESSAGE;
-        //&& ![self.message.media isKindOfClass:[TL_messageMediaPhoto class]] && ![self.message.media isKindOfClass:[TL_messageMediaVideo class]]
         self.isForwadedMessage = (self.message.fwd_from_id != nil )  && ((![self.message.media isKindOfClass:[TL_messageMediaDocument class]] || ![self.message.media isKindOfClass:[TL_messageMediaDocument_old44 class]]) && ( ![self.message.media.document isSticker] && ![self.message.media.document.mime_type hasPrefix:@"audio/"]));
         
         self.isChat = [self.message.to_id isKindOfClass:[TL_peerChat class]] || [self.message.to_id isKindOfClass:[TL_peerChannel class]];
@@ -93,15 +92,23 @@ static NSCache *cItems;
                 [self buildHeaderAndSaveToCache];
             }
             
+             NSString *viaBotUserName;
             
             if(self.isViaBot) {
-                _via_bot_user = [[UsersManager sharedManager] find:self.message.via_bot_id];
+                
+                if([self.message isKindOfClass:[TL_destructMessage45 class]]) {
+                    viaBotUserName = ((TL_destructMessage45 *)self.message).via_bot_name;
+                } else {
+                     _via_bot_user = [[UsersManager sharedManager] find:self.message.via_bot_id];
+                    viaBotUserName = _via_bot_user.username;
+                }
+               
                 
                 if(!self.isForwadedMessage)
                 {
                     NSMutableAttributedString *bot = [[NSMutableAttributedString alloc] init];
                     [bot appendString: NSLocalizedString(@"ContextBot.Message.Via", nil) withColor:GRAY_TEXT_COLOR];
-                    [bot appendString:[NSString stringWithFormat:@" @%@",_via_bot_user.username] withColor:GRAY_TEXT_COLOR];
+                    [bot appendString:[NSString stringWithFormat:@" @%@",viaBotUserName] withColor:GRAY_TEXT_COLOR];
                     [bot detectAndAddLinks:URLFindTypeMentions];
                     _via_attr_string = bot;
                 }
@@ -122,7 +129,7 @@ static NSCache *cItems;
                 
                 
                 if(self.isViaBot) {
-                    [attr appendString:[NSString stringWithFormat:@" %@ @%@",NSLocalizedString(@"ContextBot.Message.Via", nil),_via_bot_user.username] withColor:GRAY_TEXT_COLOR];
+                    [attr appendString:[NSString stringWithFormat:@" %@ @%@",NSLocalizedString(@"ContextBot.Message.Via", nil),viaBotUserName] withColor:GRAY_TEXT_COLOR];
                 }
                 
                 [attr detectAndAddLinks:URLFindTypeMentions];
@@ -282,7 +289,7 @@ static NSTextAttachment *channelIconAttachment() {
             
             if(self.isViaBot && !self.isForwadedMessage) {
                 viewSize.height+=16;
-                if(self.message.media != nil && ![self.message.media isKindOfClass:[TL_messageMediaWebPage class]] && self.message.reply_to_msg_id == 0) {
+                if(self.message.media != nil && ![self.message.media isKindOfClass:[TL_messageMediaWebPage class]] && ![self isReplyMessage]) {
                     
                     if([self.message.media isKindOfClass:[TL_messageMediaBotResult class]] && ![self.message.media.bot_result.send_message isKindOfClass:[TL_botInlineMessageText class]])
                     viewSize.height+=6;
@@ -320,7 +327,7 @@ static NSTextAttachment *channelIconAttachment() {
 }
 
 -(BOOL)isViaBot {
-    return self.message.via_bot_id != 0;
+    return self.message.via_bot_id != 0 || ([self.message isKindOfClass:[TL_destructMessage45 class]] && ((TL_destructMessage45 *)self.message).via_bot_name.length > 0);
 }
 
 - (void) setBlockSize:(NSSize)blockSize {
@@ -348,7 +355,7 @@ static NSTextAttachment *channelIconAttachment() {
 
     
     @try {
-        if(message.class == [TL_localMessage class] || message.class == [TL_localMessage_old32 class] || message.class == [TL_localMessage_old34 class] || message.class == [TL_localMessage_old44 class] || message.class == [TL_destructMessage class]) {
+        if(message.class == [TL_localMessage class] || message.class == [TL_localMessage_old32 class] || message.class == [TL_localMessage_old34 class] || message.class == [TL_localMessage_old44 class] || message.class == [TL_destructMessage class] || message.class == [TL_destructMessage45 class]) {
             
             
             if((message.media == nil || [message.media isKindOfClass:[TL_messageMediaEmpty class]]) || [message.media isMemberOfClass:[TL_messageMediaWebPage class]]) {
@@ -597,7 +604,7 @@ static NSTextAttachment *channelIconAttachment() {
 
 
 -(BOOL)isReplyMessage {
-    return self.message.reply_to_msg_id != 0 && ![self.message.replyMessage isKindOfClass:[TL_localEmptyMessage class]];
+    return (self.message.reply_to_msg_id != 0 && ![self.message.replyMessage isKindOfClass:[TL_localEmptyMessage class]]) || ([self.message isKindOfClass:[TL_destructMessage45 class]] && ((TL_destructMessage45 *)self.message).reply_to_random_id != 0);
 }
 
 -(BOOL)isFwdMessage {

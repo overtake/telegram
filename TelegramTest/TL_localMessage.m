@@ -56,8 +56,6 @@
     
 }
 
-
-
 -(id)init {
     if(self = [super init]) {
         _dstate = DeliveryStateNormal;
@@ -65,27 +63,6 @@
     
     return self;
 }
-
-
-
--(TL_localMessage *)replyMessage {
-    
-    if(self.reply_to_msg_id != 0)
-    {
-        
-        if(!_replyMessage)
-        {
-            _replyMessage = [MessagesManager supportMessage:self.reply_to_msg_id peer_id:self.peer_id];
-            
-        }
-        
-        return _replyMessage;
-    }
-    
-    return nil;
-    
-}
-
 
 
 -(TLUser *)fromUser {

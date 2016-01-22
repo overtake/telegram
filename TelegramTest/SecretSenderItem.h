@@ -11,6 +11,7 @@
 #import "SecretLayer17.h"
 #import "SecretLayer20.h"
 #import "SecretLayer23.h"
+#import "SecretLayer45.h"
 #import "TGSecretAction.h"
 #import "NSMutableData+Extension.h"
 @interface SecretSenderItem : SenderItem
@@ -33,5 +34,8 @@
 
 -(BOOL)increaseSeq;
 
+-(NSArray *)convertLEntities:(NSArray *)entities layer:(int)layer;
+
+-(void)takeAndFillReplyMessage;
 
 @end

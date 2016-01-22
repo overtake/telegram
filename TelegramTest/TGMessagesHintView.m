@@ -414,8 +414,6 @@ DYNAMIC_PROPERTY(DUser);
     [_contextRequest cancelRequest];
     
     
-    if(conversation.type == DialogTypeSecretChat)
-        return;
     
     NSMutableArray *uids = [[NSMutableArray alloc] init];
     
@@ -451,6 +449,9 @@ DYNAMIC_PROPERTY(DUser);
     
     
     [users enumerateObjectsUsingBlock:^(TLUser *obj, NSUInteger idx, BOOL *stop) {
+        
+        if(conversation.type == DialogTypeSecretChat && !obj.isBotInlinePlaceholder)
+            return;
         
         TGMessagesHintRowItem *item = [[TGMessagesHintRowItem alloc] initWithImageObject:obj text:obj.bot_inline_placeholder.length > 0 ? obj.bot_inline_placeholder : obj.fullName desc:[NSString stringWithFormat:@"@%@",obj.username]];
         
@@ -491,11 +492,13 @@ static NSMutableDictionary *inlineBotsExceptions;
     if(inlineBotsExceptions[bot])
         return;
     
+    if(conversation.type == DialogTypeSecretChat && conversation.encryptedChat.encryptedParams.layer < 45)
+        return;
+    
     __block TLUser *user = [UsersManager findUserByName:bot];
     
     
-    if(conversation.type == DialogTypeSecretChat)
-        return;
+    
     if(user && (!user.isBot || !user.isBotInlinePlaceholder)) {
         return;
     }
@@ -591,7 +594,7 @@ static NSMutableDictionary *inlineBotsExceptions;
                     __strong TGMessagesHintView *strongSelf = weakSelf;
                     
                     if(strongSelf != nil) {
-                        [strongSelf.messagesViewController sendContextBotResult:botResult via_bot_id:user.n_id queryId:botResult.queryId forConversation:conversation];
+                        [strongSelf.messagesViewController sendContextBotResult:botResult via_bot_id:user.n_id via_bot_name:user.username queryId:botResult.queryId forConversation:conversation];
                         [strongSelf.messagesViewController.bottomView setInputMessageString:@"" disableAnimations:NO];
                     }
                     
@@ -765,7 +768,7 @@ static NSMutableDictionary *inlineBotsExceptions;
      } else if(_currentTableView == _contextTableView) {
         TGContextRowItem *item = (TGContextRowItem *)_contextTableView.selectedItem;
         
-        [self.messagesViewController sendContextBotResult:item.botResult via_bot_id:item.bot.n_id queryId:item.queryId forConversation:self.messagesViewController.conversation];
+         [self.messagesViewController sendContextBotResult:item.botResult via_bot_id:item.bot.n_id via_bot_name:item.bot.username queryId:item.queryId forConversation:self.messagesViewController.conversation];
         [self.messagesViewController.bottomView setInputMessageString:@"" disableAnimations:NO];
     }
     

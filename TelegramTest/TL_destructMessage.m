@@ -59,6 +59,7 @@
 }
 
 
+
 -(EncryptedParams *)params {
     return [EncryptedParams findAndCreate:self.peer_id];
 }

@@ -74,13 +74,13 @@
 
 @class Secret45_DecryptedMessageMedia;
 @class Secret45_DecryptedMessageMedia_decryptedMessageMediaEmpty;
-@class Secret45_DecryptedMessageMedia_decryptedMessageMediaPhoto;
 @class Secret45_DecryptedMessageMedia_decryptedMessageMediaGeoPoint;
 @class Secret45_DecryptedMessageMedia_decryptedMessageMediaContact;
-@class Secret45_DecryptedMessageMedia_decryptedMessageMediaVideo;
 @class Secret45_DecryptedMessageMedia_decryptedMessageMediaAudio;
 @class Secret45_DecryptedMessageMedia_decryptedMessageMediaExternalDocument;
+@class Secret45_DecryptedMessageMedia_decryptedMessageMediaPhoto;
 @class Secret45_DecryptedMessageMedia_decryptedMessageMediaDocument;
+@class Secret45_DecryptedMessageMedia_decryptedMessageMediaVideo;
 
 
 @interface Secret45__Environment : NSObject
@@ -106,43 +106,43 @@
 
 @interface Secret45_DecryptedMessageAction : NSObject
 
-+ (Secret45_DecryptedMessageAction_decryptedMessageActionSetMessageTTL *)decryptedMessageActionSetMessageTTLWithTtlSeconds:(NSNumber *)ttlSeconds;
-+ (Secret45_DecryptedMessageAction_decryptedMessageActionReadMessages *)decryptedMessageActionReadMessagesWithRandomIds:(NSArray *)randomIds;
-+ (Secret45_DecryptedMessageAction_decryptedMessageActionDeleteMessages *)decryptedMessageActionDeleteMessagesWithRandomIds:(NSArray *)randomIds;
-+ (Secret45_DecryptedMessageAction_decryptedMessageActionScreenshotMessages *)decryptedMessageActionScreenshotMessagesWithRandomIds:(NSArray *)randomIds;
++ (Secret45_DecryptedMessageAction_decryptedMessageActionSetMessageTTL *)decryptedMessageActionSetMessageTTLWithTtl_seconds:(NSNumber *)ttl_seconds;
++ (Secret45_DecryptedMessageAction_decryptedMessageActionReadMessages *)decryptedMessageActionReadMessagesWithRandom_ids:(NSArray *)random_ids;
++ (Secret45_DecryptedMessageAction_decryptedMessageActionDeleteMessages *)decryptedMessageActionDeleteMessagesWithRandom_ids:(NSArray *)random_ids;
++ (Secret45_DecryptedMessageAction_decryptedMessageActionScreenshotMessages *)decryptedMessageActionScreenshotMessagesWithRandom_ids:(NSArray *)random_ids;
 + (Secret45_DecryptedMessageAction_decryptedMessageActionFlushHistory *)decryptedMessageActionFlushHistory;
 + (Secret45_DecryptedMessageAction_decryptedMessageActionNotifyLayer *)decryptedMessageActionNotifyLayerWithLayer:(NSNumber *)layer;
 + (Secret45_DecryptedMessageAction_decryptedMessageActionTyping *)decryptedMessageActionTypingWithAction:(Secret45_SendMessageAction *)action;
-+ (Secret45_DecryptedMessageAction_decryptedMessageActionResend *)decryptedMessageActionResendWithStartSeqNo:(NSNumber *)startSeqNo endSeqNo:(NSNumber *)endSeqNo;
-+ (Secret45_DecryptedMessageAction_decryptedMessageActionRequestKey *)decryptedMessageActionRequestKeyWithExchangeId:(NSNumber *)exchangeId gA:(NSData *)gA;
-+ (Secret45_DecryptedMessageAction_decryptedMessageActionAcceptKey *)decryptedMessageActionAcceptKeyWithExchangeId:(NSNumber *)exchangeId gB:(NSData *)gB keyFingerprint:(NSNumber *)keyFingerprint;
-+ (Secret45_DecryptedMessageAction_decryptedMessageActionCommitKey *)decryptedMessageActionCommitKeyWithExchangeId:(NSNumber *)exchangeId keyFingerprint:(NSNumber *)keyFingerprint;
-+ (Secret45_DecryptedMessageAction_decryptedMessageActionAbortKey *)decryptedMessageActionAbortKeyWithExchangeId:(NSNumber *)exchangeId;
++ (Secret45_DecryptedMessageAction_decryptedMessageActionResend *)decryptedMessageActionResendWithStart_seq_no:(NSNumber *)start_seq_no end_seq_no:(NSNumber *)end_seq_no;
++ (Secret45_DecryptedMessageAction_decryptedMessageActionRequestKey *)decryptedMessageActionRequestKeyWithExchange_id:(NSNumber *)exchange_id g_a:(NSData *)g_a;
++ (Secret45_DecryptedMessageAction_decryptedMessageActionAcceptKey *)decryptedMessageActionAcceptKeyWithExchange_id:(NSNumber *)exchange_id g_b:(NSData *)g_b key_fingerprint:(NSNumber *)key_fingerprint;
++ (Secret45_DecryptedMessageAction_decryptedMessageActionCommitKey *)decryptedMessageActionCommitKeyWithExchange_id:(NSNumber *)exchange_id key_fingerprint:(NSNumber *)key_fingerprint;
++ (Secret45_DecryptedMessageAction_decryptedMessageActionAbortKey *)decryptedMessageActionAbortKeyWithExchange_id:(NSNumber *)exchange_id;
 + (Secret45_DecryptedMessageAction_decryptedMessageActionNoop *)decryptedMessageActionNoop;
 
 @end
 
 @interface Secret45_DecryptedMessageAction_decryptedMessageActionSetMessageTTL : Secret45_DecryptedMessageAction
 
-@property (nonatomic, strong, readonly) NSNumber * ttlSeconds;
+@property (nonatomic, strong, readonly) NSNumber * ttl_seconds;
 
 @end
 
 @interface Secret45_DecryptedMessageAction_decryptedMessageActionReadMessages : Secret45_DecryptedMessageAction
 
-@property (nonatomic, strong, readonly) NSArray * randomIds;
+@property (nonatomic, strong, readonly) NSArray * random_ids;
 
 @end
 
 @interface Secret45_DecryptedMessageAction_decryptedMessageActionDeleteMessages : Secret45_DecryptedMessageAction
 
-@property (nonatomic, strong, readonly) NSArray * randomIds;
+@property (nonatomic, strong, readonly) NSArray * random_ids;
 
 @end
 
 @interface Secret45_DecryptedMessageAction_decryptedMessageActionScreenshotMessages : Secret45_DecryptedMessageAction
 
-@property (nonatomic, strong, readonly) NSArray * randomIds;
+@property (nonatomic, strong, readonly) NSArray * random_ids;
 
 @end
 
@@ -164,36 +164,36 @@
 
 @interface Secret45_DecryptedMessageAction_decryptedMessageActionResend : Secret45_DecryptedMessageAction
 
-@property (nonatomic, strong, readonly) NSNumber * startSeqNo;
-@property (nonatomic, strong, readonly) NSNumber * endSeqNo;
+@property (nonatomic, strong, readonly) NSNumber * start_seq_no;
+@property (nonatomic, strong, readonly) NSNumber * end_seq_no;
 
 @end
 
 @interface Secret45_DecryptedMessageAction_decryptedMessageActionRequestKey : Secret45_DecryptedMessageAction
 
-@property (nonatomic, strong, readonly) NSNumber * exchangeId;
-@property (nonatomic, strong, readonly) NSData * gA;
+@property (nonatomic, strong, readonly) NSNumber * exchange_id;
+@property (nonatomic, strong, readonly) NSData * g_a;
 
 @end
 
 @interface Secret45_DecryptedMessageAction_decryptedMessageActionAcceptKey : Secret45_DecryptedMessageAction
 
-@property (nonatomic, strong, readonly) NSNumber * exchangeId;
-@property (nonatomic, strong, readonly) NSData * gB;
-@property (nonatomic, strong, readonly) NSNumber * keyFingerprint;
+@property (nonatomic, strong, readonly) NSNumber * exchange_id;
+@property (nonatomic, strong, readonly) NSData * g_b;
+@property (nonatomic, strong, readonly) NSNumber * key_fingerprint;
 
 @end
 
 @interface Secret45_DecryptedMessageAction_decryptedMessageActionCommitKey : Secret45_DecryptedMessageAction
 
-@property (nonatomic, strong, readonly) NSNumber * exchangeId;
-@property (nonatomic, strong, readonly) NSNumber * keyFingerprint;
+@property (nonatomic, strong, readonly) NSNumber * exchange_id;
+@property (nonatomic, strong, readonly) NSNumber * key_fingerprint;
 
 @end
 
 @interface Secret45_DecryptedMessageAction_decryptedMessageActionAbortKey : Secret45_DecryptedMessageAction
 
-@property (nonatomic, strong, readonly) NSNumber * exchangeId;
+@property (nonatomic, strong, readonly) NSNumber * exchange_id;
 
 @end
 
@@ -293,12 +293,12 @@
 
 @interface Secret45_FileLocation : NSObject
 
-@property (nonatomic, strong, readonly) NSNumber * volumeId;
-@property (nonatomic, strong, readonly) NSNumber * localId;
+@property (nonatomic, strong, readonly) NSNumber * volume_id;
+@property (nonatomic, strong, readonly) NSNumber * local_id;
 @property (nonatomic, strong, readonly) NSNumber * secret;
 
-+ (Secret45_FileLocation_fileLocationUnavailable *)fileLocationUnavailableWithVolumeId:(NSNumber *)volumeId localId:(NSNumber *)localId secret:(NSNumber *)secret;
-+ (Secret45_FileLocation_fileLocation *)fileLocationWithDcId:(NSNumber *)dcId volumeId:(NSNumber *)volumeId localId:(NSNumber *)localId secret:(NSNumber *)secret;
++ (Secret45_FileLocation_fileLocationUnavailable *)fileLocationUnavailableWithVolume_id:(NSNumber *)volume_id local_id:(NSNumber *)local_id secret:(NSNumber *)secret;
++ (Secret45_FileLocation_fileLocation *)fileLocationWithDc_id:(NSNumber *)dc_id volume_id:(NSNumber *)volume_id local_id:(NSNumber *)local_id secret:(NSNumber *)secret;
 
 @end
 
@@ -308,20 +308,20 @@
 
 @interface Secret45_FileLocation_fileLocation : Secret45_FileLocation
 
-@property (nonatomic, strong, readonly) NSNumber * dcId;
+@property (nonatomic, strong, readonly) NSNumber * dc_id;
 
 @end
 
 
 @interface Secret45_DecryptedMessageLayer : NSObject
 
-@property (nonatomic, strong, readonly) NSData * randomBytes;
+@property (nonatomic, strong, readonly) NSData * random_bytes;
 @property (nonatomic, strong, readonly) NSNumber * layer;
-@property (nonatomic, strong, readonly) NSNumber * inSeqNo;
-@property (nonatomic, strong, readonly) NSNumber * outSeqNo;
+@property (nonatomic, strong, readonly) NSNumber * in_seq_no;
+@property (nonatomic, strong, readonly) NSNumber * out_seq_no;
 @property (nonatomic, strong, readonly) Secret45_DecryptedMessage * message;
 
-+ (Secret45_DecryptedMessageLayer_decryptedMessageLayer *)decryptedMessageLayerWithRandomBytes:(NSData *)randomBytes layer:(NSNumber *)layer inSeqNo:(NSNumber *)inSeqNo outSeqNo:(NSNumber *)outSeqNo message:(Secret45_DecryptedMessage *)message;
++ (Secret45_DecryptedMessageLayer_decryptedMessageLayer *)decryptedMessageLayerWithRandom_bytes:(NSData *)random_bytes layer:(NSNumber *)layer in_seq_no:(NSNumber *)in_seq_no out_seq_no:(NSNumber *)out_seq_no message:(Secret45_DecryptedMessage *)message;
 
 @end
 
@@ -332,10 +332,10 @@
 
 @interface Secret45_DecryptedMessage : NSObject
 
-@property (nonatomic, strong, readonly) NSNumber * randomId;
+@property (nonatomic, strong, readonly) NSNumber * random_id;
 
-+ (Secret45_DecryptedMessage_decryptedMessageService *)decryptedMessageServiceWithRandomId:(NSNumber *)randomId action:(Secret45_DecryptedMessageAction *)action;
-+ (Secret45_DecryptedMessage_decryptedMessage *)decryptedMessageWithFlags:(NSNumber *)flags randomId:(NSNumber *)randomId ttl:(NSNumber *)ttl message:(NSString *)message media:(Secret45_DecryptedMessageMedia *)media entities:(NSArray *)entities viaBotName:(NSString *)viaBotName replyToRandomId:(NSNumber *)replyToRandomId;
++ (Secret45_DecryptedMessage_decryptedMessageService *)decryptedMessageServiceWithRandom_id:(NSNumber *)random_id action:(Secret45_DecryptedMessageAction *)action;
++ (Secret45_DecryptedMessage_decryptedMessage *)decryptedMessageWithFlags:(NSNumber *)flags random_id:(NSNumber *)random_id ttl:(NSNumber *)ttl message:(NSString *)message media:(Secret45_DecryptedMessageMedia *)media entities:(NSArray *)entities via_bot_name:(NSString *)via_bot_name reply_to_random_id:(NSNumber *)reply_to_random_id;
 
 @end
 
@@ -352,8 +352,8 @@
 @property (nonatomic, strong, readonly) NSString * message;
 @property (nonatomic, strong, readonly) Secret45_DecryptedMessageMedia * media;
 @property (nonatomic, strong, readonly) NSArray * entities;
-@property (nonatomic, strong, readonly) NSString * viaBotName;
-@property (nonatomic, strong, readonly) NSNumber * replyToRandomId;
+@property (nonatomic, strong, readonly) NSString * via_bot_name;
+@property (nonatomic, strong, readonly) NSNumber * reply_to_random_id;
 
 @end
 
@@ -363,7 +363,7 @@
 + (Secret45_DocumentAttribute_documentAttributeImageSize *)documentAttributeImageSizeWithW:(NSNumber *)w h:(NSNumber *)h;
 + (Secret45_DocumentAttribute_documentAttributeAnimated *)documentAttributeAnimated;
 + (Secret45_DocumentAttribute_documentAttributeVideo *)documentAttributeVideoWithDuration:(NSNumber *)duration w:(NSNumber *)w h:(NSNumber *)h;
-+ (Secret45_DocumentAttribute_documentAttributeFilename *)documentAttributeFilenameWithFileName:(NSString *)fileName;
++ (Secret45_DocumentAttribute_documentAttributeFilename *)documentAttributeFilenameWithFile_name:(NSString *)file_name;
 + (Secret45_DocumentAttribute_documentAttributeSticker *)documentAttributeStickerWithAlt:(NSString *)alt stickerset:(Secret45_InputStickerSet *)stickerset;
 + (Secret45_DocumentAttribute_documentAttributeAudio *)documentAttributeAudioWithDuration:(NSNumber *)duration title:(NSString *)title performer:(NSString *)performer;
 
@@ -390,7 +390,7 @@
 
 @interface Secret45_DocumentAttribute_documentAttributeFilename : Secret45_DocumentAttribute
 
-@property (nonatomic, strong, readonly) NSString * fileName;
+@property (nonatomic, strong, readonly) NSString * file_name;
 
 @end
 
@@ -412,14 +412,14 @@
 
 @interface Secret45_InputStickerSet : NSObject
 
-+ (Secret45_InputStickerSet_inputStickerSetShortName *)inputStickerSetShortNameWithShortName:(NSString *)shortName;
++ (Secret45_InputStickerSet_inputStickerSetShortName *)inputStickerSetShortNameWithShort_name:(NSString *)short_name;
 + (Secret45_InputStickerSet_inputStickerSetEmpty *)inputStickerSetEmpty;
 
 @end
 
 @interface Secret45_InputStickerSet_inputStickerSetShortName : Secret45_InputStickerSet
 
-@property (nonatomic, strong, readonly) NSString * shortName;
+@property (nonatomic, strong, readonly) NSString * short_name;
 
 @end
 
@@ -499,30 +499,17 @@
 @interface Secret45_DecryptedMessageMedia : NSObject
 
 + (Secret45_DecryptedMessageMedia_decryptedMessageMediaEmpty *)decryptedMessageMediaEmpty;
-+ (Secret45_DecryptedMessageMedia_decryptedMessageMediaPhoto *)decryptedMessageMediaPhotoWithThumb:(NSData *)thumb thumbW:(NSNumber *)thumbW thumbH:(NSNumber *)thumbH w:(NSNumber *)w h:(NSNumber *)h size:(NSNumber *)size key:(NSData *)key iv:(NSData *)iv;
 + (Secret45_DecryptedMessageMedia_decryptedMessageMediaGeoPoint *)decryptedMessageMediaGeoPointWithLat:(NSNumber *)lat plong:(NSNumber *)plong;
-+ (Secret45_DecryptedMessageMedia_decryptedMessageMediaContact *)decryptedMessageMediaContactWithPhoneNumber:(NSString *)phoneNumber firstName:(NSString *)firstName lastName:(NSString *)lastName userId:(NSNumber *)userId;
-+ (Secret45_DecryptedMessageMedia_decryptedMessageMediaVideo *)decryptedMessageMediaVideoWithThumb:(NSData *)thumb thumbW:(NSNumber *)thumbW thumbH:(NSNumber *)thumbH duration:(NSNumber *)duration mimeType:(NSString *)mimeType w:(NSNumber *)w h:(NSNumber *)h size:(NSNumber *)size key:(NSData *)key iv:(NSData *)iv;
-+ (Secret45_DecryptedMessageMedia_decryptedMessageMediaAudio *)decryptedMessageMediaAudioWithDuration:(NSNumber *)duration mimeType:(NSString *)mimeType size:(NSNumber *)size key:(NSData *)key iv:(NSData *)iv;
-+ (Secret45_DecryptedMessageMedia_decryptedMessageMediaExternalDocument *)decryptedMessageMediaExternalDocumentWithPid:(NSNumber *)pid accessHash:(NSNumber *)accessHash date:(NSNumber *)date mimeType:(NSString *)mimeType size:(NSNumber *)size thumb:(Secret45_PhotoSize *)thumb dcId:(NSNumber *)dcId attributes:(NSArray *)attributes;
-+ (Secret45_DecryptedMessageMedia_decryptedMessageMediaDocument *)decryptedMessageMediaDocumentWithThumb:(NSData *)thumb thumbW:(NSNumber *)thumbW thumbH:(NSNumber *)thumbH mimeType:(NSString *)mimeType size:(NSNumber *)size key:(NSData *)key iv:(NSData *)iv attributes:(NSArray *)attributes;
++ (Secret45_DecryptedMessageMedia_decryptedMessageMediaContact *)decryptedMessageMediaContactWithPhone_number:(NSString *)phone_number first_name:(NSString *)first_name last_name:(NSString *)last_name user_id:(NSNumber *)user_id;
++ (Secret45_DecryptedMessageMedia_decryptedMessageMediaAudio *)decryptedMessageMediaAudioWithDuration:(NSNumber *)duration mime_type:(NSString *)mime_type size:(NSNumber *)size key:(NSData *)key iv:(NSData *)iv;
++ (Secret45_DecryptedMessageMedia_decryptedMessageMediaExternalDocument *)decryptedMessageMediaExternalDocumentWithPid:(NSNumber *)pid access_hash:(NSNumber *)access_hash date:(NSNumber *)date mime_type:(NSString *)mime_type size:(NSNumber *)size thumb:(Secret45_PhotoSize *)thumb dc_id:(NSNumber *)dc_id attributes:(NSArray *)attributes;
++ (Secret45_DecryptedMessageMedia_decryptedMessageMediaPhoto *)decryptedMessageMediaPhotoWithThumb:(NSData *)thumb thumb_w:(NSNumber *)thumb_w thumb_h:(NSNumber *)thumb_h w:(NSNumber *)w h:(NSNumber *)h size:(NSNumber *)size key:(NSData *)key iv:(NSData *)iv caption:(NSString *)caption;
++ (Secret45_DecryptedMessageMedia_decryptedMessageMediaDocument *)decryptedMessageMediaDocumentWithThumb:(NSData *)thumb thumb_w:(NSNumber *)thumb_w thumb_h:(NSNumber *)thumb_h mime_type:(NSString *)mime_type size:(NSNumber *)size key:(NSData *)key iv:(NSData *)iv attributes:(NSArray *)attributes caption:(NSString *)caption;
++ (Secret45_DecryptedMessageMedia_decryptedMessageMediaVideo *)decryptedMessageMediaVideoWithThumb:(NSData *)thumb thumb_w:(NSNumber *)thumb_w thumb_h:(NSNumber *)thumb_h duration:(NSNumber *)duration mime_type:(NSString *)mime_type w:(NSNumber *)w h:(NSNumber *)h size:(NSNumber *)size key:(NSData *)key iv:(NSData *)iv caption:(NSString *)caption;
 
 @end
 
 @interface Secret45_DecryptedMessageMedia_decryptedMessageMediaEmpty : Secret45_DecryptedMessageMedia
-
-@end
-
-@interface Secret45_DecryptedMessageMedia_decryptedMessageMediaPhoto : Secret45_DecryptedMessageMedia
-
-@property (nonatomic, strong, readonly) NSData * thumb;
-@property (nonatomic, strong, readonly) NSNumber * thumbW;
-@property (nonatomic, strong, readonly) NSNumber * thumbH;
-@property (nonatomic, strong, readonly) NSNumber * w;
-@property (nonatomic, strong, readonly) NSNumber * h;
-@property (nonatomic, strong, readonly) NSNumber * size;
-@property (nonatomic, strong, readonly) NSData * key;
-@property (nonatomic, strong, readonly) NSData * iv;
 
 @end
 
@@ -535,32 +522,17 @@
 
 @interface Secret45_DecryptedMessageMedia_decryptedMessageMediaContact : Secret45_DecryptedMessageMedia
 
-@property (nonatomic, strong, readonly) NSString * phoneNumber;
-@property (nonatomic, strong, readonly) NSString * firstName;
-@property (nonatomic, strong, readonly) NSString * lastName;
-@property (nonatomic, strong, readonly) NSNumber * userId;
-
-@end
-
-@interface Secret45_DecryptedMessageMedia_decryptedMessageMediaVideo : Secret45_DecryptedMessageMedia
-
-@property (nonatomic, strong, readonly) NSData * thumb;
-@property (nonatomic, strong, readonly) NSNumber * thumbW;
-@property (nonatomic, strong, readonly) NSNumber * thumbH;
-@property (nonatomic, strong, readonly) NSNumber * duration;
-@property (nonatomic, strong, readonly) NSString * mimeType;
-@property (nonatomic, strong, readonly) NSNumber * w;
-@property (nonatomic, strong, readonly) NSNumber * h;
-@property (nonatomic, strong, readonly) NSNumber * size;
-@property (nonatomic, strong, readonly) NSData * key;
-@property (nonatomic, strong, readonly) NSData * iv;
+@property (nonatomic, strong, readonly) NSString * phone_number;
+@property (nonatomic, strong, readonly) NSString * first_name;
+@property (nonatomic, strong, readonly) NSString * last_name;
+@property (nonatomic, strong, readonly) NSNumber * user_id;
 
 @end
 
 @interface Secret45_DecryptedMessageMedia_decryptedMessageMediaAudio : Secret45_DecryptedMessageMedia
 
 @property (nonatomic, strong, readonly) NSNumber * duration;
-@property (nonatomic, strong, readonly) NSString * mimeType;
+@property (nonatomic, strong, readonly) NSString * mime_type;
 @property (nonatomic, strong, readonly) NSNumber * size;
 @property (nonatomic, strong, readonly) NSData * key;
 @property (nonatomic, strong, readonly) NSData * iv;
@@ -570,26 +542,57 @@
 @interface Secret45_DecryptedMessageMedia_decryptedMessageMediaExternalDocument : Secret45_DecryptedMessageMedia
 
 @property (nonatomic, strong, readonly) NSNumber * pid;
-@property (nonatomic, strong, readonly) NSNumber * accessHash;
+@property (nonatomic, strong, readonly) NSNumber * access_hash;
 @property (nonatomic, strong, readonly) NSNumber * date;
-@property (nonatomic, strong, readonly) NSString * mimeType;
+@property (nonatomic, strong, readonly) NSString * mime_type;
 @property (nonatomic, strong, readonly) NSNumber * size;
 @property (nonatomic, strong, readonly) Secret45_PhotoSize * thumb;
-@property (nonatomic, strong, readonly) NSNumber * dcId;
+@property (nonatomic, strong, readonly) NSNumber * dc_id;
 @property (nonatomic, strong, readonly) NSArray * attributes;
+
+@end
+
+@interface Secret45_DecryptedMessageMedia_decryptedMessageMediaPhoto : Secret45_DecryptedMessageMedia
+
+@property (nonatomic, strong, readonly) NSData * thumb;
+@property (nonatomic, strong, readonly) NSNumber * thumb_w;
+@property (nonatomic, strong, readonly) NSNumber * thumb_h;
+@property (nonatomic, strong, readonly) NSNumber * w;
+@property (nonatomic, strong, readonly) NSNumber * h;
+@property (nonatomic, strong, readonly) NSNumber * size;
+@property (nonatomic, strong, readonly) NSData * key;
+@property (nonatomic, strong, readonly) NSData * iv;
+@property (nonatomic, strong, readonly) NSString * caption;
 
 @end
 
 @interface Secret45_DecryptedMessageMedia_decryptedMessageMediaDocument : Secret45_DecryptedMessageMedia
 
 @property (nonatomic, strong, readonly) NSData * thumb;
-@property (nonatomic, strong, readonly) NSNumber * thumbW;
-@property (nonatomic, strong, readonly) NSNumber * thumbH;
-@property (nonatomic, strong, readonly) NSString * mimeType;
+@property (nonatomic, strong, readonly) NSNumber * thumb_w;
+@property (nonatomic, strong, readonly) NSNumber * thumb_h;
+@property (nonatomic, strong, readonly) NSString * mime_type;
 @property (nonatomic, strong, readonly) NSNumber * size;
 @property (nonatomic, strong, readonly) NSData * key;
 @property (nonatomic, strong, readonly) NSData * iv;
 @property (nonatomic, strong, readonly) NSArray * attributes;
+@property (nonatomic, strong, readonly) NSString * caption;
+
+@end
+
+@interface Secret45_DecryptedMessageMedia_decryptedMessageMediaVideo : Secret45_DecryptedMessageMedia
+
+@property (nonatomic, strong, readonly) NSData * thumb;
+@property (nonatomic, strong, readonly) NSNumber * thumb_w;
+@property (nonatomic, strong, readonly) NSNumber * thumb_h;
+@property (nonatomic, strong, readonly) NSNumber * duration;
+@property (nonatomic, strong, readonly) NSString * mime_type;
+@property (nonatomic, strong, readonly) NSNumber * w;
+@property (nonatomic, strong, readonly) NSNumber * h;
+@property (nonatomic, strong, readonly) NSNumber * size;
+@property (nonatomic, strong, readonly) NSData * key;
+@property (nonatomic, strong, readonly) NSData * iv;
+@property (nonatomic, strong, readonly) NSString * caption;
 
 @end
 
