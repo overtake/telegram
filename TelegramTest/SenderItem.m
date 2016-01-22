@@ -15,7 +15,7 @@
 #import "ExternalGifSenderItem.h"
 #import "CompressedDocumentSenderItem.h"
 #import "ContextBotSenderItem.h"
-#import "ExternalDocumentSecretSenderItem.h"
+#import "StickerSecretSenderItem.h"
 @interface SenderItem ()
 @property (nonatomic,strong) NSMutableArray *listeners;
 @end
@@ -135,7 +135,7 @@ static NSMutableDictionary *senders;
                         item = [[FileSecretSenderItem alloc] init];
                         
                         if([msg.media isKindOfClass:[TL_messageMediaDocument class]] && msg.media.document.access_hash != 0 && [msg.media.document isSticker]) {
-                            item = [[ExternalDocumentSecretSenderItem alloc] init];
+                            item = [[StickerSecretSenderItem alloc] init];
                         } else if([msg.media isKindOfClass:[TL_messageMediaPhoto class]]) {
                             [(FileSecretSenderItem *)item setUploaderType:UploadImageType];
                         } else if([msg.media isKindOfClass:[TL_messageMediaVideo class]]) {

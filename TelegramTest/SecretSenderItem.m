@@ -20,6 +20,7 @@
 -(id)initWithConversation:(TL_conversation *)conversation {
     if(self = [self init]) {
         self.conversation = conversation;
+        _params = [EncryptedParams findAndCreate:conversation.peer_id];
     }
     
     return self;
@@ -56,8 +57,9 @@
 
 -(void)setMessage:(TL_localMessage *)message {
     [super setMessage:message];
-    
-    _params = [EncryptedParams findAndCreate:message.peer_id];
+   
+    if(!_params)
+        _params = [EncryptedParams findAndCreate:message.peer_id];
 }
 
 

@@ -63,7 +63,7 @@
 #import "StickersPanelView.h"
 #import "StickerSenderItem.h"
 #import "RequestKeySecretSenderItem.h"
-#import "ExternalDocumentSecretSenderItem.h"
+#import "StickerSecretSenderItem.h"
 #import "TGPasslock.h"
 #import "NSString+FindURLs.h"
 #import "ImageAttachSenderItem.h"
@@ -84,6 +84,7 @@
 #import "TGModalCompressingView.h"
 #import "CompressedDocumentSenderItem.h"
 #import "ContextBotSenderItem.h"
+#import "InlineBotMediaSecretSenderItem.h"
 #define HEADER_MESSAGES_GROUPING_TIME (10 * 60)
 
 #define SCROLLDOWNBUTTON_OFFSET 1500
@@ -3218,7 +3219,11 @@ static NSTextAttachment *headerMediaIcon() {
         sender = [[ContextBotSenderItem alloc] initWithBotContextResult:botContextResult via_bot_id:via_bot_id queryId:queryId additionFlags:additionFlags conversation:conversation];
         else {
             
-           sender = [[MessageSenderSecretItem alloc] initWithBotContextResult:botContextResult via_bot_name:via_bot_name queryId:queryId conversation:conversation];
+            if([botContextResult isKindOfClass:[TL_botInlineMediaResultDocument class]] || [botContextResult isKindOfClass:[TL_botInlineMediaResultPhoto class]]) {
+                sender = [[InlineBotMediaSecretSenderItem alloc] initWithBotContextResult:botContextResult via_bot_name:via_bot_name conversation:conversation];
+            } else {
+                sender = [[MessageSenderSecretItem alloc] initWithBotContextResult:botContextResult via_bot_name:via_bot_name queryId:queryId conversation:conversation];
+            }
         }
         
         if(sender != nil) {
@@ -3309,7 +3314,7 @@ static NSTextAttachment *headerMediaIcon() {
         if(self.conversation.type != DialogTypeSecretChat) {
             sender = [[StickerSenderItem alloc] initWithDocument:sticker forConversation:conversation additionFlags:self.senderFlags];
         } else {
-            sender = [[ExternalDocumentSecretSenderItem alloc] initWithConversation:conversation document:sticker];
+            sender = [[StickerSecretSenderItem alloc] initWithConversation:conversation document:sticker];
         }
         
        

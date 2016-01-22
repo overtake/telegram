@@ -1815,6 +1815,9 @@
          contextName = "-[TMCollectionPageController imageObjectWithPreview:]:TMCollectionPageController.m">
       </ContextState>
       <ContextState
+         contextName = "__86-[Storage loadMessages:min_id:max_id:minDate:maxDate:limit:next:filterMask:isChannel:]_block_invoke621:Storage.m">
+      </ContextState>
+      <ContextState
          contextName = "__39-[ChatAvatarImageView updateChatPhoto:]_block_invoke198:ChatAvatarImageView.m">
       </ContextState>
       <ContextState
@@ -3265,6 +3268,11 @@
       </ContextState>
       <ContextState
          contextName = "mediaFilePath:FileUtils.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "message.media.bot_result">
+            </PersistentString>
+         </PersistentStrings>
       </ContextState>
       <ContextState
          contextName = "main:main.m">
@@ -5311,6 +5319,14 @@
       </ContextState>
       <ContextState
          contextName = "__16-[TGTimer start]_block_invoke:TGTimer.m">
+      </ContextState>
+      <ContextState
+         contextName = "-[InlineBotMediaSecretSenderItem initWithBotContextResult:via_bot_name:conversation:]:InlineBotMediaSecretSenderItem.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "result">
+            </PersistentString>
+         </PersistentStrings>
       </ContextState>
       <ContextState
          contextName = "-[TGGLVideoPlayer setPath:]:TGGLVideoPlayer.m">

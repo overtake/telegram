@@ -6,9 +6,9 @@
 //  Copyright (c) 2015 keepcoder. All rights reserved.
 //
 
-#import "ExternalDocumentSecretSenderItem.h"
+#import "StickerSecretSenderItem.h"
 
-@implementation ExternalDocumentSecretSenderItem
+@implementation StickerSecretSenderItem
 
 -(id)initWithConversation:(TL_conversation *)conversation document:(TLDocument *)document {
     

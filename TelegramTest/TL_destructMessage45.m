@@ -107,9 +107,7 @@
     if(super.reply_to_random_id == 0)  { super.flags&= ~ (1 << 3) ;} else { super.flags|= (1 << 3); }
 }
 
--(long)channelMsgId {
-    return self.randomId;
-}
+
 
 -(id)copy {
     return [TL_destructMessage45 createWithN_id:self.n_id flags:self.flags from_id:self.from_id to_id:self.to_id date:self.date message:self.message media:self.media destruction_time:self.destruction_time randomId:self.randomId fakeId:self.fakeId ttl_seconds:self.ttl_seconds entities:self.entities via_bot_name:self.via_bot_name reply_to_random_id:self.reply_to_random_id out_seq_no:self.out_seq_no dstate:self.dstate];

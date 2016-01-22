@@ -58,7 +58,9 @@
     self.dstate = [stream readInt];
 }
 
-
+-(long)channelMsgId {
+    return self.randomId;
+}
 
 -(EncryptedParams *)params {
     return [EncryptedParams findAndCreate:self.peer_id];

@@ -8,7 +8,7 @@
 
 #import "SecretSenderItem.h"
 #import "MessageSenderSecretItem.h"
-@interface ExternalDocumentSecretSenderItem : MessageSenderSecretItem
+@interface StickerSecretSenderItem : MessageSenderSecretItem
 
 -(id)initWithConversation:(TL_conversation *)conversation document:(TLDocument *)document;
 
