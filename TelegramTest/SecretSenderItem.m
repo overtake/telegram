@@ -275,7 +275,7 @@
     [ASQueue dispatchOnMainQueue:^{
         
         if(replyMessage) {
-            [self.tableItem.table.viewController removeReplayMessage:YES animated:YES];
+            [appWindow().navigationController.messagesViewController removeReplayMessage:YES animated:YES];
         }
         
     }];
