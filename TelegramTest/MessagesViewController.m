@@ -3219,7 +3219,7 @@ static NSTextAttachment *headerMediaIcon() {
         sender = [[ContextBotSenderItem alloc] initWithBotContextResult:botContextResult via_bot_id:via_bot_id queryId:queryId additionFlags:additionFlags conversation:conversation];
         else {
             
-            if([botContextResult isKindOfClass:[TL_botInlineMediaResultDocument class]] || [botContextResult isKindOfClass:[TL_botInlineMediaResultPhoto class]]) {
+            if([botContextResult isKindOfClass:[TL_botInlineMediaResultDocument class]] || [botContextResult isKindOfClass:[TL_botInlineMediaResultPhoto class]] || [botContextResult isKindOfClass:[TL_botInlineResult class]]) {
                 sender = [[InlineBotMediaSecretSenderItem alloc] initWithBotContextResult:botContextResult via_bot_name:via_bot_name conversation:conversation];
             } else {
                 sender = [[MessageSenderSecretItem alloc] initWithBotContextResult:botContextResult via_bot_name:via_bot_name queryId:queryId conversation:conversation];

@@ -179,7 +179,8 @@ NSString* mediaFilePath(TL_localMessage *message) {
             return [NSString stringWithFormat:@"%@/%ld.%@",path(),message.media.bot_result.document.n_id,ext];
         } else if([message.media.bot_result isKindOfClass:[TL_messageMediaBotResult class]]) {
             return [NSString stringWithFormat:@"%@/%ld.%@",path(),[message.media.bot_result.content_url hash],[message.media.bot_result.content_url pathExtension]];
-        }
+        } else
+            return path_for_external_link(message.media.bot_result.content_url);
     }
     
     if([message.media isKindOfClass:[TL_messageMediaPhoto class]]) {
@@ -1244,7 +1245,7 @@ NSString *first_domain_character(NSString *url) {
 }
 
 NSString *path_for_external_link(NSString *link) {
-    return [NSString stringWithFormat:@"%@/%ld.%@",[FileUtils path],[link hash],[link pathExtension]];
+    return [NSString stringWithFormat:@"%@/%ld.%@",[FileUtils path],[link hash],[link pathExtension].length == 0 ? @"file" : [link pathExtension]];
 }
 
 

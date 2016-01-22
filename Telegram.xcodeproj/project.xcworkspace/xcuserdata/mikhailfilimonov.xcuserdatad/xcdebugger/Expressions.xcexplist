@@ -2433,6 +2433,14 @@
          contextName = "-[UpgradeLayerSenderItem decryptedMessageLayer20]:UpgradeLayerSenderItem.m">
       </ContextState>
       <ContextState
+         contextName = "-[InlineBotMediaSecretSenderItem startSenderAfterDownload]:InlineBotMediaSecretSenderItem.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.filePath">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "-[PhotoTableItemView setFrameSize:]:PhotoTableItemView.m">
          <PersistentStrings>
             <PersistentString
@@ -2722,6 +2730,9 @@
                value = "self.action.object">
             </PersistentString>
          </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "__95-[MessagesViewController sendContextBotResult:via_bot_id:via_bot_name:queryId:forConversation:]_block_invoke:MessagesViewController.m">
       </ContextState>
       <ContextState
          contextName = "-[MessageTableCellPhotoView setItem:]:MessageTableCellPhotoView.m">
@@ -3269,6 +3280,9 @@
       <ContextState
          contextName = "mediaFilePath:FileUtils.m">
          <PersistentStrings>
+            <PersistentString
+               value = "message.media.bot_result.content_url">
+            </PersistentString>
             <PersistentString
                value = "message.media.bot_result">
             </PersistentString>
@@ -4525,6 +4539,14 @@
          <PersistentStrings>
             <PersistentString
                value = "self.image">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[InlineBotMediaSecretSenderItem performRequest]:InlineBotMediaSecretSenderItem.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.filePath">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
