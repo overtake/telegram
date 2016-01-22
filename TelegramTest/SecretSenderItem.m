@@ -10,7 +10,7 @@
 #import "Crypto.h"
 #import "NSMutableData+Extension.h"
 #import "UpgradeLayerSenderItem.h"
-
+#import "MessageTableItem.h"
 @interface SecretSenderItem ()<SenderListener>
 @property (nonatomic,strong,readonly) NSData *decryptedData;
 @end
@@ -271,6 +271,14 @@
         msg.replyMessage = replyMessage;
         msg.reply_to_random_id = replyMessage.randomId;
     }
+    
+    [ASQueue dispatchOnMainQueue:^{
+        
+        if(replyMessage) {
+            [self.tableItem.table.viewController removeReplayMessage:YES animated:YES];
+        }
+        
+    }];
 }
 
 @end
