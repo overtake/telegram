@@ -130,6 +130,7 @@
         strongWeak();
         
         if(strongSelf != nil) {
+            strongSelf.downloadItem = nil;
             [strongSelf updateProgress];
             [strongSelf startSenderAfterDownload];
         }
@@ -211,8 +212,12 @@
     [super performRequest];
 }
 
+-(void)setProgress:(float)progress {
+    [super setProgress:progress/2 + (self.downloadItem ? self.downloadItem.progress/2 : 50)];
+}
+
 -(void)updateProgress {
-    
+    self.progress = self.progress;
 }
 
 

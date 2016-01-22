@@ -474,7 +474,7 @@ Class convertClass(NSString *c, int layer) {
         media = [self media:[layerMessage.message valueForKey:@"media"] layer:45 file:encryptedMessage.file];
     }
     
-    TGSecretInAction *action = [[TGSecretInAction alloc] initWithActionId:arc4random() chat_id:params.n_id messageData:[Secret23__Environment serializeObject:layerMessage.message]  fileData:[TLClassStore serialize:media] date:encryptedMessage.date in_seq_no:[layerMessage.out_seq_no intValue] layer:23];
+    TGSecretInAction *action = [[TGSecretInAction alloc] initWithActionId:arc4random() chat_id:params.n_id messageData:[Secret45__Environment serializeObject:layerMessage.message]  fileData:[TLClassStore serialize:media] date:encryptedMessage.date in_seq_no:[layerMessage.out_seq_no intValue] layer:45];
     
     
     [[Storage manager] insertSecretInAction:action];
