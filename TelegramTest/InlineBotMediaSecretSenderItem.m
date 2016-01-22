@@ -44,12 +44,12 @@
     if([self.message.media.bot_result isKindOfClass:[TL_botInlineMediaResultDocument class]]) {
         if(self.message.media.document != nil) {
             if(checkFileSize(self.filePath, self.message.media.bot_result.document.size)) {
-                [super performRequest];
+                [self startSenderAfterDownload];
             } else
                 [self downloadBeforeSending];
         } else {
             if(fileSize(self.filePath) > 0) {
-                [super performRequest];
+                [self startSenderAfterDownload];
             }else
                 [self downloadBeforeSending];
         }
@@ -102,6 +102,38 @@
 }
 
 -(void)startSenderAfterDownload {
+    
+    if([self.message.media.bot_result isKindOfClass:[TL_botInlineMediaResultDocument class]]) {
+        
+        TLBotInlineResult *bot_result = self.message.media.bot_result;
+        
+        CGImageRef quickLookIcon = QLThumbnailImageCreate(NULL, (__bridge CFURLRef)[NSURL fileURLWithPath:self.filePath], CGSizeMake(90, 90), nil);
+        
+        NSData *thumbData;
+        NSImage *thumb;
+        if (quickLookIcon != NULL) {
+            thumb = [[NSImage alloc] initWithCGImage:quickLookIcon size:NSMakeSize(0, 0)];
+            CFRelease(quickLookIcon);
+            
+            thumbData = compressImage([ thumb TIFFRepresentation], 0.4);
+        }
+        
+        TLPhotoSize *size = [TL_photoCachedSize createWithType:@"x" location:[TL_fileLocation createWithDc_id:0 volume_id:0 local_id:0 secret:0] w:thumb.size.width h:thumb.size.height bytes:thumbData];
+        
+        if(!thumbData) {
+            size = [TL_photoSizeEmpty createWithType:@"x"];
+        }
+        
+        self.message.media = [TL_messageMediaDocument createWithDocument:[TL_outDocument createWithN_id:rand_long() access_hash:0 date:[[MTNetwork instance] getTime] mime_type:mimetypefromExtension([self.filePath pathExtension]) size:(int)fileSize(self.filePath) thumb:size dc_id:0 file_path:self.filePath attributes:[@[[TL_documentAttributeFilename createWithFile_name:[self.filePath lastPathComponent]]] mutableCopy]] caption:@""];
+        
+        if([bot_result.type isEqualToString:@"gif"]) {
+            [self.message.media.document.attributes addObjectsFromArray:@[[TL_documentAttributeAnimated create]]];
+        }
+        
+    }
+    
+    
+    
     [super performRequest];
 }
 

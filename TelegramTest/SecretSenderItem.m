@@ -204,6 +204,56 @@
     return convertedEntities;
 }
 
+-(NSArray *)convertLAttributes:(NSArray *)attributes layer:(int)layer {
+    
+    NSMutableArray *attrs = [[NSMutableArray alloc] init];
+    
+    
+    [attributes enumerateObjectsUsingBlock:^(TLDocumentAttribute *obj, NSUInteger idx, BOOL *stop) {
+        
+        @try {
+            Class baseClass = NSClassFromString([NSString stringWithFormat:@"Secret%d_DocumentAttribute", layer]);
+            
+            if([obj isKindOfClass:[TL_documentAttributeImageSize class]]) {
+                
+                [attrs addObject:[baseClass documentAttributeImageSizeWithW:[obj valueForKey:@"w"] h:[obj valueForKey:@"h"]]];
+                
+            } else if([obj isKindOfClass:[TL_documentAttributeSticker class]]) {
+                
+                if(layer >= 45) {
+                    [attrs addObject:[baseClass documentAttributeStickerWithAlt:obj.alt stickerset:[Secret45_InputStickerSet inputStickerSetShortNameWithShort_name:obj.stickerset.short_name]]];
+                } else {
+                    [attrs addObject:[baseClass documentAttributeSticker]];
+                }
+                
+            } else if([obj isKindOfClass:[TL_documentAttributeFilename class]]) {
+                
+                [attrs addObject:[baseClass documentAttributeFilenameWithFile_name:[obj valueForKey:@"file_name"]]];
+                
+            } else if([obj isKindOfClass:[TL_documentAttributeVideo class]]) {
+                
+                [attrs addObject:[baseClass documentAttributeVideoWithDuration:[obj valueForKey:@"duration"] w:[obj valueForKey:@"w"] h:[obj valueForKey:@"h"]]];
+                
+            } else if([obj isKindOfClass:[TL_documentAttributeAudio class]]) {
+                
+                [attrs addObject:[baseClass documentAttributeAudioWithDuration:[obj valueForKey:@"duration"]]];
+                
+            } else if([obj isKindOfClass:[TL_documentAttributeAnimated class]]) {
+                
+                [attrs addObject:[baseClass documentAttributeAnimated]];
+            }
+        }
+        @catch (NSException *exception) {
+            
+        }
+        
+    }];
+    
+    return attrs;
+    
+}
+
+
 -(void)takeAndFillReplyMessage {
     __block TL_localMessage *replyMessage;
     

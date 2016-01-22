@@ -35,7 +35,7 @@
 -(BOOL)increaseSeq;
 
 -(NSArray *)convertLEntities:(NSArray *)entities layer:(int)layer;
-
+-(NSArray *)convertLAttributes:(NSArray *)attributes layer:(int)layer;
 -(void)takeAndFillReplyMessage;
 
 @end
