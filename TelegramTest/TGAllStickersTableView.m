@@ -684,9 +684,14 @@ static NSImage *higlightedImage() {
 }
 
 -(void)hideStickerPreview {
+    
+    if(_previewModal) {
+        _notSendUpSticker = YES;
+    }
+    
     [_previewModal close:YES];
     _previewModal = nil;
-    _notSendUpSticker = YES;
+    
 }
 
 

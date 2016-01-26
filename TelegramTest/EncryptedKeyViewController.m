@@ -8,7 +8,9 @@
 
 #import "EncryptedKeyViewController.h"
 #import "Crypto.h"
+#import <MTProtoKit/MTEncryption.h>
 #import "NS(Attributed)String+Geometrics.h"
+#import "NSData+Extensions.h"
 @interface EncryptedKeyViewController ()<TMHyperlinkTextFieldDelegate>
 @property (nonatomic,strong) NSImageView *imageView;
 @property (nonatomic,strong) TMHyperlinkTextField *textField;
@@ -77,6 +79,11 @@
 
 }
 
+/*
+ в центре остается то, что было раньше, вокруг используются первые 20 байт из sha256(auth_key)
+ ниже в hex у меня выводится вот так: sha1(0, 16) + sha256(0, 16)
+ */
+
 - (void)showForChat:(TL_encryptedChat *)chat {
     
     [self view];
@@ -85,31 +92,46 @@
     
     NSData *hashData = [Crypto sha1:[params firstKey]];
     
-    
+    NSData *keyData = [MTSha1([params.firstKey subdataWithRange:NSMakeRange(0, 16)]) dataWithData:MTSha256([params.firstKey subdataWithRange:NSMakeRange(0, 16)])];
     
     self.imageView.image = TGIdenticonImage(hashData, CGSizeMake(200, 200));
     
     
-    NSString *_userName = chat.peerUser.first_name;
+    
+    NSString *hash = [keyData hexadecimalString];
+    
+    
+    
+     NSString *_userName = chat.peerUser.first_name;
     
     NSString *textFormat = NSLocalizedString(@"EncryptionKey.Description", nil);
     
     NSString *baseText = [[NSString alloc] initWithFormat:textFormat, _userName, _userName];
     
     
-     NSDictionary *attrs = [NSDictionary dictionaryWithObjectsAndKeys:TGSystemFont(14), NSFontAttributeName, nil];
+    NSDictionary *attrs = [NSDictionary dictionaryWithObjectsAndKeys:TGSystemFont(14), NSFontAttributeName, nil];
     
     NSDictionary *subAttrs = [NSDictionary dictionaryWithObjectsAndKeys:TGSystemMediumFont(14), NSFontAttributeName, nil];
     
     NSDictionary *linkAtts = @{NSForegroundColorAttributeName: BLUE_UI_COLOR, NSLinkAttributeName:@"telegram.org"};
     
-    NSMutableAttributedString *attributedText = [[NSMutableAttributedString alloc] initWithString:baseText attributes:attrs];
+    NSMutableAttributedString *attributedText = [[NSMutableAttributedString alloc] init];
     
-    [attributedText setAttributes:subAttrs range:NSMakeRange([textFormat rangeOfString:@"%1$@"].location, _userName.length)];
     
-    [attributedText setAttributes:subAttrs range:NSMakeRange([textFormat rangeOfString:@"%2$@"].location + (_userName.length - @"%1$@".length), _userName.length)];
+    NSRange range = [attributedText appendString:hash];
     
-    [attributedText setAttributes:linkAtts range:[baseText rangeOfString:@"telegram.org"]];
+    [attributedText setCTFont:[NSFont fontWithName:@"Courier" size:14] forRange:range];
+    [attributedText appendString:@"\n\n"];
+    
+    range = [attributedText appendString:baseText];
+    
+    [attributedText setAttributes:attrs range:range];
+    
+    [attributedText setAttributes:subAttrs range:NSMakeRange(hash.length + 2 + [textFormat rangeOfString:@"%1$@"].location, _userName.length)];
+    
+    [attributedText setAttributes:subAttrs range:NSMakeRange(hash.length + 2 + [textFormat rangeOfString:@"%2$@"].location + (_userName.length - @"%1$@".length), _userName.length)];
+    
+    [attributedText setAttributes:linkAtts range:NSMakeRange(hash.length + 2 + [baseText rangeOfString:@"telegram.org"].location, 12) ];
     
     [attributedText setAlignment:NSCenterTextAlignment range:NSMakeRange(0, attributedText.length)];
     
