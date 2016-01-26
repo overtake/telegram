@@ -14,24 +14,60 @@
 #import "TGDateUtils.h"
 @implementation MessagesUtils
 
-+(NSString *)serviceMessage:(TLMessage *)message forAction:(TLMessageAction *)action {
+
++(NSString *)joinUsersByUsers:(NSArray *)users {
+    __block NSString *resUsers;
+    
+    [users enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        TLUser *userAdd = [[UsersManager sharedManager] find:[obj intValue]];
+        
+        
+        resUsers = [NSString stringWithFormat:@"%@",[userAdd fullName]];
+        
+        if(idx != users.count -1 ) {
+            resUsers = [resUsers stringByAppendingString:@", "];
+        }
+        
+        
+    }];
+
+    return resUsers;
+    
+}
+
++(NSString *)serviceMessage:(TL_localMessage *)message forAction:(TLMessageAction *)action {
     
     TLUser *user = [[UsersManager sharedManager] find:message.from_id];
     NSString *text;
     if([action isKindOfClass:[TL_messageActionChatEditTitle class]]) {
-        text = [NSString stringWithFormat:NSLocalizedString(@"MessageAction.ServiceMessage.ChangedGroupName", nil), [user fullName], action.title];
+        text = [NSString stringWithFormat:NSLocalizedString(message.isChannelMessage && !message.chat.isMegagroup  ? @"MessageAction.Service.ChannelGroupName" : @"MessageAction.ServiceMessage.ChangedGroupName", nil), message.isChannelMessage && !message.chat.isMegagroup ? message.chat.title : [user fullName], action.title];
     } else if([action isKindOfClass:[TL_messageActionChatDeletePhoto class]]) {
-        text = [NSString stringWithFormat:NSLocalizedString(@"MessageAction.ServiceMessage.RemovedGroupPhoto", nil), [user fullName]];
+        text = [NSString stringWithFormat:NSLocalizedString(message.isChannelMessage && !message.chat.isMegagroup  ? @"MessageAction.ServiceMessage.RemovedChannelPhoto" : @"MessageAction.ServiceMessage.RemovedGroupPhoto", nil), message.isChannelMessage && !message.chat.isMegagroup  ? message.chat.title : [user fullName]];
     } else if([action isKindOfClass:[TL_messageActionChatEditPhoto class]]) {
-        text = [NSString stringWithFormat:NSLocalizedString(@"MessageAction.ServiceMessage.ChangedGroupPhoto", nil), [user fullName]];
+        text = [NSString stringWithFormat:NSLocalizedString(message.isChannelMessage && !message.chat.isMegagroup  ? @"MessageAction.ServiceMessage.ChangedChannelPhoto" : @"MessageAction.ServiceMessage.ChangedGroupPhoto", nil), message.isChannelMessage && !message.chat.isMegagroup  ? message.chat.title : [user fullName]];
     } else if([action isKindOfClass:[TL_messageActionChatAddUser class]]) {
-        TLUser *userAdd = [[UsersManager sharedManager] find:action.user_id];
-        if(action.user_id != message.from_id) {
-            text = [NSString stringWithFormat:NSLocalizedString(@"MessageAction.ServiceMessage.InvitedGroup", nil), [user fullName], [userAdd fullName]];
+        
+        if(message.isChannelMessage && !message.chat.isMegagroup ) {
+            
+            if(action.users.count == 1 && [action.users[0] intValue] == [UsersManager currentUserId]) {
+                text = NSLocalizedString(@"MessageAction.Service.InvitedYouToChannel",nil);
+            } else {
+                
+                text = [NSString stringWithFormat:NSLocalizedString(@"MessageAction.ServiceMessage.InvitedGroup", nil), [user fullName], [self joinUsersByUsers:action.users]];
+            }
+
+            if(message.from_id == [UsersManager currentUserId]) {
+                text = NSLocalizedString(@"MessageAction.Service.YouChoinedToChannel", nil);
+            }
+            
         } else {
-            text = [NSString stringWithFormat:NSLocalizedString(@"MessageAction.ServiceMessage.JoinedGroup", nil), [user fullName]];
+            
+            text = [NSString stringWithFormat:NSLocalizedString(@"MessageAction.ServiceMessage.InvitedGroup", nil), [user fullName], [self joinUsersByUsers:action.users]];
         }
-        text = [NSString stringWithFormat:NSLocalizedString(@"MessageAction.ServiceMessage.InvitedGroup", nil), [user fullName], [userAdd fullName]];
+        
+        
+        
+        
     }else if([action isKindOfClass:[TL_messageActionChatCreate class]]) {
         text = [NSString stringWithFormat:NSLocalizedString(@"MessageAction.ServiceMessage.CreatedChat", nil), [user fullName],action.title];
     } else if([action isKindOfClass:[TL_messageActionChatDeleteUser class]]) {
@@ -45,10 +81,17 @@
         text = action.title;
     } else if([action isKindOfClass:[TL_messageActionChatJoinedByLink class]]) {
         
+        NSString *fullName = message.from_id == 0 ? message.chat.title : [user fullName];
         
-        text = [NSString stringWithFormat:@"%@ %@", [user fullName],NSLocalizedString(@"MessageAction.Service.JoinedGroupByLink", nil)];
+        text = [NSString stringWithFormat:@"%@ %@", fullName,NSLocalizedString(@"MessageAction.Service.JoinedGroupByLink", nil)];
         
+    }else if([action isKindOfClass:[TL_messageActionChannelCreate class]]) {
+        text = message.isChannelMessage && !message.chat.isMegagroup ? NSLocalizedString(@"MessageAction.Service.ChannelCreated", nil) : NSLocalizedString(@"MessageAction.ServiceMessage.CreatedChat", nil);
+        
+    } else if([action isKindOfClass:[TL_messageActionChatMigrateTo class]] || [action isKindOfClass:[TL_messageActionChannelMigrateFrom class]]) {
+        text = NSLocalizedString(@"MessageAction.Service.ChatMigrated", nil);
     }
+   
     return text;
 }
 
@@ -149,16 +192,16 @@
     if(message) {
         
         NSString *msgText = @"";
-        TLUser *userSecond = nil;
+        NSMutableArray *users = [NSMutableArray array];
         TLUser *userLast;
         NSString *chatUserNameString;
         
         
         
-        if(message.conversation.type == DialogTypeChat && !message.action ) {
+        if(((message.conversation.type == DialogTypeChannel && message.from_id != 0) || message.conversation.type == DialogTypeChat) && !message.action ) {
             
             if(!message.n_out) {
-                userLast = [[UsersManager sharedManager] find:message.from_id];
+                userLast = message.fromUser;
                 chatUserNameString = [userLast ? userLast.fullName : @"" stringByAppendingString:@"\n"];
             } else {
                 chatUserNameString = [NSLocalizedString(@"Profile.You", nil) stringByAppendingString:@"\n"];
@@ -171,35 +214,55 @@
         
         if(message.action) {
             isAction = YES;
-            if(!userLast)
-                userLast = [[UsersManager sharedManager] find:message.from_id];
-            // if(userLast == [UsersManager currentUser])
-            //  chatUserNameString = NSLocalizedString(@"Profile.You", nil);
-            //  else
-            if(message.conversation.type != DialogTypeSecretChat)
+            if(!userLast && message.from_id != 0)
+                userLast = message.fromUser;
+             if(message.conversation.type != DialogTypeSecretChat && userLast)
                 chatUserNameString = userLast ? userLast.fullName : NSLocalizedString(@"MessageAction.Service.LeaveChat", nil);
+
+            
             
             TLMessageAction *action = message.action;
             if([action isKindOfClass:[TL_messageActionChatEditTitle class]]) {
-                msgText = NSLocalizedString(@"MessageAction.Service.ChangedGroupName", nil);
+                msgText =message.isChannelMessage && !message.chat.isMegagroup  ? NSLocalizedString(@"MessageAction.Service.ChannelGroupName", nil) : NSLocalizedString(@"MessageAction.Service.ChangedGroupName", nil);
             } else if([action isKindOfClass:[TL_messageActionChatDeletePhoto class]]) {
-                msgText = NSLocalizedString(@"MessageAction.Service.RemovedGroupPhoto", nil);
+                msgText =message.isChannelMessage && !message.chat.isMegagroup  ? NSLocalizedString(@"MessageAction.Service.RemovedChannelPhoto", nil) : NSLocalizedString(@"MessageAction.Service.RemovedGroupPhoto", nil);
             } else if([action isKindOfClass:[TL_messageActionChatEditPhoto class]]) {
-                msgText = NSLocalizedString(@"MessageAction.Service.ChangedGroupPhoto", nil);
+                 msgText =message.isChannelMessage && !message.chat.isMegagroup  ? NSLocalizedString(@"MessageAction.Service.ChangedChannelPhoto", nil) : NSLocalizedString(@"MessageAction.Service.ChangedGroupPhoto", nil);
             } else if([action isKindOfClass:[TL_messageActionChatAddUser class]]) {
-                userSecond = [[UsersManager sharedManager] find:action.user_id];
-                if(action.user_id == message.from_id) {
-                    userSecond = nil;
-                    msgText = NSLocalizedString(@"MessageAction.Service.JoinedGroup", nil);
+                
+                if(message.isChannelMessage && !message.chat.isMegagroup ) {
+                    
+                    if(action.users.count == 1 && [action.users[0] intValue] == [UsersManager currentUserId]) {
+                        msgText = NSLocalizedString(@"MessageAction.Service.InvitedYouToChannel",nil);
+                    } else {
+                        msgText = NSLocalizedString(@"MessageAction.Service.InvitedGroup", nil);
+                        [users addObjectsFromArray:action.users];
+                    }
+                    
+                    if(message.from_id  == [UsersManager currentUserId]) {
+                        msgText = NSLocalizedString(@"MessageAction.Service.YouChoinedToChannel", nil);
+                    }
                 } else {
-                    msgText = NSLocalizedString(@"MessageAction.Service.InvitedGroup", nil);
+                    
+                    if(action.users.count == 1 && [action.users[0] intValue] == message.from_id) {
+                        msgText = NSLocalizedString(@"MessageAction.Service.JoinedGroup", nil);
+                    } else {
+                        msgText = NSLocalizedString(@"MessageAction.Service.InvitedGroup", nil);
+                        [users addObjectsFromArray:action.users];
+                    }
+                    
                 }
+                
+                
+                
+                
             } else if([action isKindOfClass:[TL_messageActionChatCreate class]]) {
                 msgText = [NSString stringWithFormat:NSLocalizedString(@"MessageAction.Service.CreatedChat", nil),action.title];
             } else if([action isKindOfClass:[TL_messageActionChatDeleteUser class]]) {
                 
                 if(action.user_id != message.from_id) {
-                    userSecond = [[UsersManager sharedManager] find:action.user_id];
+                    
+                    [users addObject:@(action.user_id)];
                     
                     msgText = NSLocalizedString(@"MessageAction.Service.KickedGroup", nil);
                 } else {
@@ -214,15 +277,20 @@
                 
                 msgText = NSLocalizedString(@"MessageAction.Service.JoinedGroupByLink", nil);
                 
+            } else if([action isKindOfClass:[TL_messageActionChannelCreate class]]) {
+                
+                msgText = NSLocalizedString(@"MessageAction.Service.ChannelCreated", nil);
+                
+            } else if([action isKindOfClass:[TL_messageActionChannelMigrateFrom class]] || [action isKindOfClass:[TL_messageActionChatMigrateTo class]]) {
+                msgText = NSLocalizedString(@"MessageAction.Service.ChatMigrated", nil);
+                chatUserNameString = nil;
             }
-            
+
             
             if(chatUserNameString)
                 msgText = [NSString stringWithFormat:@" %@", msgText];
             
         }
-        
-        
         
         if(chatUserNameString)
             [messageText appendString:chatUserNameString withColor:DARK_BLACK];
@@ -248,15 +316,17 @@
             [messageText appendString:msgText withColor:GRAY_TEXT_COLOR];
         }
         
-        if(userSecond) {
-            [messageText appendString:[NSString stringWithFormat:@" %@", userSecond.fullName] withColor:GRAY_TEXT_COLOR];
+        NSString *joinUsers = [self joinUsersByUsers:users];
+        
+        if(joinUsers.length > 0) {
+            [messageText appendString:[NSString stringWithFormat:@" %@",joinUsers] withColor:GRAY_TEXT_COLOR];
         }
         
     } else {
         [messageText appendString:@"" withColor:LIGHT_GRAY];
     }
     
-    [messageText setFont:[NSFont fontWithName:@"HelveticaNeue" size:13] forRange:messageText.range];
+    [messageText setFont:TGSystemFont(13) forRange:messageText.range];
     
     
     static NSMutableParagraphStyle *paragraph;
@@ -280,37 +350,74 @@
     return messageText;
 }
 
-+ (NSAttributedString *) serviceAttributedMessage:(TLMessage *)message forAction:(TLMessageAction *)action {
++ (NSAttributedString *) serviceAttributedMessage:(TL_localMessage *)message forAction:(TLMessageAction *)action {
     
     TLUser *user = [[UsersManager sharedManager] find:message.from_id];
     
     NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] init];
-    TLUser *user2;
+    NSMutableArray *users = [NSMutableArray array];
     NSString *actionText;
     
     NSString *title;
     
     if([action isKindOfClass:[TL_messageActionChatEditTitle class]]) {
         
-        actionText = NSLocalizedString(@"MessageAction.Service.ChangedGroupName",nil);
+        actionText = NSLocalizedString(message.isChannelMessage && !message.chat.isMegagroup ? @"MessageAction.Service.ChannelGroupName" : @"MessageAction.Service.ChangedGroupName",nil);
         title = action.title;
         
     } else if([action isKindOfClass:[TL_messageActionChatDeletePhoto class]]) {
         
-        actionText = NSLocalizedString(@"MessageAction.Service.RemovedGroupPhoto",nil);;
+        actionText = NSLocalizedString(message.isChannelMessage && !message.chat.isMegagroup  ? @"MessageAction.Service.RemovedChannelPhoto" : @"MessageAction.Service.RemovedGroupPhoto",nil);
         
     } else if([action isKindOfClass:[TL_messageActionChatEditPhoto class]]) {
         
-        actionText = NSLocalizedString(@"MessageAction.Service.ChangedGroupPhoto",nil);
+        actionText = NSLocalizedString(message.isChannelMessage && !message.chat.isMegagroup  ? @"MessageAction.Service.ChangedChannelPhoto" : @"MessageAction.Service.ChangedGroupPhoto",nil);
         
     } else if([action isKindOfClass:[TL_messageActionChatAddUser class]]) {
         
-        if(action.user_id != message.from_id) {
-            user2 = [[UsersManager sharedManager] find:action.user_id];
-            actionText = NSLocalizedString(@"MessageAction.Service.InvitedGroup",nil);
+        if(message.isChannelMessage && !message.chat.isMegagroup ) {
+            
+            if(action.users.count == 1 && [action.users[0] intValue] == [UsersManager currentUserId]) {
+               actionText = NSLocalizedString(@"MessageAction.Service.InvitedYouToChannel",nil);
+            } else {
+                
+                [action.users enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                    TLUser *user = [[UsersManager sharedManager] find:[obj intValue]];
+                    
+                    if(user != nil) {
+                        [users addObject:user];
+                    }
+                }];
+                
+                actionText = NSLocalizedString(@"MessageAction.Service.Invited",nil);
+                
+            }
+            
+           
+            if(message.from_id  == [UsersManager currentUserId]) {
+                actionText = NSLocalizedString(@"MessageAction.Service.YouChoinedToChannel", nil);
+            }
         } else {
-            actionText = NSLocalizedString(@"MessageAction.Service.JoinedGroup", nil);
+            
+           
+            
+            if(action.users.count == 1 && [action.users[0] intValue] == message.from_id) {
+                actionText = NSLocalizedString(@"MessageAction.Service.JoinedGroup", nil);
+                
+            } else {
+                actionText = NSLocalizedString(@"MessageAction.Service.InvitedGroup",nil);
+                
+                [action.users enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                    TLUser *user = [[UsersManager sharedManager] find:[obj intValue]];
+                    
+                    if(user != nil) {
+                        [users addObject:user];
+                    }
+                }];
+            }
         }
+        
+        
         
     } else if([action isKindOfClass:[TL_messageActionChatCreate class]]) {
         
@@ -319,7 +426,13 @@
     } else if([action isKindOfClass:[TL_messageActionChatDeleteUser class]]) {
         
         if(action.user_id != message.from_id) {
-            user2  = [[UsersManager sharedManager] find:action.user_id];
+            
+            TLUser *user = [[UsersManager sharedManager] find:action.user_id];
+            
+            if(user != nil) {
+                [users addObject:user];
+            }
+            
             actionText = NSLocalizedString(@"MessageAction.Service.KickedGroup",nil);
         } else {
             actionText = NSLocalizedString(@"MessageAction.Service.LeftGroup",nil);
@@ -333,8 +446,12 @@
         
         actionText = NSLocalizedString(@"MessageAction.Service.JoinedGroupByLink", nil);
         
+    } else if([action isKindOfClass:[TL_messageActionChannelCreate class]]) {
+         actionText = NSLocalizedString(@"MessageAction.Service.ChannelCreated", nil);
+    }  else if([action isKindOfClass:[TL_messageActionChannelMigrateFrom class]] || [action isKindOfClass:[TL_messageActionChatMigrateTo class]]) {
+        actionText = NSLocalizedString(@"MessageAction.Service.ChatMigrated", nil);
+        user = nil;
     }
-    
     static float size = 11.5;
     
     if([action isKindOfClass:[TL_messageActionBotDescription class]]) {
@@ -359,32 +476,41 @@
     
     
     
-    NSRange start;
+    
+    NSRange start = NSMakeRange(NSNotFound, 0);
     //  if(user != [UsersManager currentUser]) {
-    start = [attributedString appendString:[user fullName] withColor:LINK_COLOR];
-    [attributedString setLink:[TMInAppLinks userProfile:user.n_id] forRange:start];
-    [attributedString setFont:[NSFont fontWithName:@"HelveticaNeue-Medium" size:size] forRange:start];
-    //    } else {
-    //        start = [attributedString appendString:NSLocalizedString(@"Profile.You", nil) withColor:NSColorFromRGB(0xaeaeae)];
-    //        [attributedString setLink:[TMInAppLinks userProfile:user.n_id] forRange:start];
-    //        [attributedString setFont:[NSFont fontWithName:@"HelveticaNeue-Bold" size:size] forRange:start];
-    //    }
+    if(user)
+        start = [attributedString appendString:[user fullName] withColor:LINK_COLOR];
     
-    
+    if(message.from_id > 0 && start.location != NSNotFound) {
+        [attributedString setLink:[TMInAppLinks userProfile:user.n_id] forRange:start];
+        [attributedString setFont:TGSystemMediumFont(size) forRange:start];
+    }
     
     
     start = [attributedString appendString:[NSString stringWithFormat:@" %@ ", actionText] withColor:NSColorFromRGB(0xaeaeae)];
-    [attributedString setFont:[NSFont fontWithName:@"HelveticaNeue" size:size] forRange:start];
+    [attributedString setFont:TGSystemFont(size) forRange:start];
     
-    if(user2) {
-        start = [attributedString appendString:[user2 fullName] withColor:LINK_COLOR];
-        [attributedString setLink:[TMInAppLinks userProfile:user2.n_id] forRange:start];
-        [attributedString setFont:[NSFont fontWithName:@"HelveticaNeue-Medium" size:size] forRange:start];
+    if(users.count > 0) {
+        
+        [users enumerateObjectsUsingBlock:^(TLUser *obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            
+            NSRange start = [attributedString appendString:[obj fullName] withColor:LINK_COLOR];
+            [attributedString setLink:[TMInAppLinks userProfile:obj.n_id] forRange:start];
+            [attributedString setFont:TGSystemMediumFont(size) forRange:start];
+            
+            if(idx != users.count -1) {
+                [attributedString appendString:@", " withColor:NSColorFromRGB(0xaeaeae)];
+            }
+            
+        }];
+        
     }
     
+
     if(title) {
         start = [attributedString appendString:[NSString stringWithFormat:@"\"%@\"", title] withColor:NSColorFromRGB(0xaeaeae)];
-        [attributedString setFont:[NSFont fontWithName:@"HelveticaNeue-Medium" size:size] forRange:start];
+        [attributedString setFont:TGSystemMediumFont(size) forRange:start];
     }
     
     //    [attributedString appendString:@"wqeqoeqwe wqkeqwoewkq keqwoei qoioiweiqwioeoqweiwqoi qoiweoiqwoiewqoieoiqweoiwqeoiwqoeiwqoieoiw oiqweoiqwoieqwoieoqwi"];
@@ -466,7 +592,7 @@
             return [self serviceMessage:message forAction:message.action];
         }
         
-        if([message.media isKindOfClass:[TL_messageMediaWebPage class]]) {
+        if([message.media isKindOfClass:[TL_messageMediaEmpty class]] || message.media == nil || [message.media isKindOfClass:[TL_messageMediaWebPage class]]) {
             return message.message;
         }
         
@@ -534,6 +660,7 @@
         [dateText appendString:@"" withColor:NSColorFromRGB(0xaeaeae)];
     }
     
+    [dateText setFont:TGSystemFont(12) forRange:dateText.range];
    
      data[@"dateText"] = dateText;
     
@@ -561,7 +688,7 @@
         
         NSDictionary *attributes =@{
                                     NSForegroundColorAttributeName: [NSColor whiteColor],
-                                    NSFontAttributeName: [NSFont fontWithName:@"HelveticaNeue-Bold" size:10]
+                                    NSFontAttributeName: TGSystemBoldFont(10)
                                     };
         unreadText = unreadTextCount;
         NSSize size = [unreadTextCount sizeWithAttributes:attributes];

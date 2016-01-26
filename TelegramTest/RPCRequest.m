@@ -71,6 +71,18 @@
     
 }
 
++ (id)sendRequest:(id)object successHandler:(RPCSuccessHandler)successHandler errorHandler:(RPCErrorHandler)errorHandler alwayContinueWithErrorContext:(BOOL)alwayContinueWithErrorContext {
+    RPCRequest *message = [[RPCRequest alloc] init];
+    message.object = object;
+    message.alwayContinueWithErrorContext = alwayContinueWithErrorContext;
+    message.successHandler = successHandler;
+    message.errorHandler = errorHandler;
+    
+    [[MTNetwork instance] sendRequest:message];
+    
+    return message;
+}
+
 
 +(id)sendRequest:(id)object forDc:(int)dc_id successHandler:(RPCSuccessHandler)successHandler errorHandler:(RPCErrorHandler)errorHandler {
         

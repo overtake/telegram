@@ -8,7 +8,6 @@
 
 #import "TGCache.h"
 #import "ASQueue.h"
-#import "EMInMemoryImageCache.h"
 @interface TGCacheRecord : NSObject
 
 @property (nonatomic) NSTimeInterval date;
@@ -49,8 +48,6 @@
 
 @property (nonatomic,strong) ASQueue *queue;
 
-@property (nonatomic,strong) EMInMemoryImageCache *emCache;
-
 
 @end
 
@@ -70,27 +67,22 @@ NSString *const AVACACHE = @"AVACACHE";
         
         _queue = [[ASQueue alloc] initWithName:"tgcachequeue"];
         
-        [_queue dispatchOnQueue:^{
-            
-            _groups = [[NSMutableDictionary alloc] init];
-            _groupMemoryTaken = [[NSMutableDictionary alloc] init];
-            _groupMemoryLimit = [[NSMutableDictionary alloc] init];
-            _groupCountLimit = [[NSMutableDictionary alloc] init];
-            NSArray *keys = @[IMGCACHE,THUMBCACHE,PVCACHE,PCCACHE,AVACACHE];
-            
-            [keys enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
-                
-                _groupMemoryLimit[obj] = @(defaultMemoryLimit);
-                _groupMemoryTaken[obj] = @(0);
-                _groups[obj] = [[NSMutableDictionary alloc] init];
-                _groupCountLimit[obj] = @(0);
-                
-            }];
-            
-            _emCache = [[EMInMemoryImageCache alloc] initWithMaxResidentSize:100*1024*1024];
-            
-        } synchronous:YES];
+        _groups = [[NSMutableDictionary alloc] init];
+        _groupMemoryTaken = [[NSMutableDictionary alloc] init];
+        _groupMemoryLimit = [[NSMutableDictionary alloc] init];
+        _groupCountLimit = [[NSMutableDictionary alloc] init];
+        NSArray *keys = @[IMGCACHE,THUMBCACHE,PVCACHE,PCCACHE,AVACACHE];
         
+        [keys enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+            
+            _groupMemoryLimit[obj] = @(defaultMemoryLimit);
+            _groupMemoryTaken[obj] = @(0);
+            _groups[obj] = [[NSMutableDictionary alloc] init];
+            _groupCountLimit[obj] = @(0);
+            
+        }];
+        
+
     }
     return self;
 }
@@ -221,10 +213,6 @@ NSString *const AVACACHE = @"AVACACHE";
         }
         
         
-        [_emCache setImageDataWithSize:image.size generator:^(uint8_t *memory, NSUInteger bytesPerRow) {
-            
-            
-        } forKey:[NSString stringWithFormat:@"%@_%@",key,obj]];
         
          _groupMemoryTaken[obj] = @([_groupMemoryTaken[obj] integerValue] + size);
         

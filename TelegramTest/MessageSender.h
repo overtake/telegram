@@ -12,7 +12,7 @@
 @interface MessageSender : NSObject
 
 
-+(TL_localMessage *)createOutMessage:(NSString *)message media:(TLMessageMedia *)media conversation:(TL_conversation *)conversation;
++(TL_localMessage *)createOutMessage:(NSString *)msg media:(TLMessageMedia *)media conversation:(TL_conversation *)conversation ;
 +(int)getFutureMessageId;
 +(int)getFakeMessageId;
 +(void)drop;

@@ -13,12 +13,11 @@
 #define TGUNREADMESSAGE 0x1
 #define TGOUTUNREADMESSAGE 0x3
 #define TGNOFLAGSMESSAGE 0x0
-
 #define TGFWDMESSAGE 0x4
 #define TGREPLYMESSAGE 0x8
 #define TGMENTIONMESSAGE 16
 #define TGREADEDCONTENT 32
-
+#define TGFROMIDMESSAGE 256
 #define TGSESSIONCURRENT 0x1
 #define TGSESSIONOFFICIAL 0x2
 
@@ -61,9 +60,23 @@
 
 #define NSColorFromRGBWithAlpha(rgbValue, alphaValue) [NSColor colorWithDeviceRed:((float)((rgbValue & 0xFF0000) >> 16))/255.0 green:((float)((rgbValue & 0xFF00) >> 8))/255.0 blue:((float)(rgbValue & 0xFF))/255.0 alpha:(alphaValue)]
 
-#define TGSystemFont(s) [NSFont fontWithName:@"HelveticaNeue" size:(s)]
-#define TGSystemMediumFont(s) [NSFont fontWithName:@"HelveticaNeue-Medium" size:(s)]
-#define TGSystemLightFont(s) [NSFont fontWithName:@"HelveticaNeue-Light" size:(s)]
+//#define TGSystemFont(s) [NSFont fontWithName:@"HelveticaNeue" size:(s)]
+//#define TGSystemMediumFont(s) [NSFont fontWithName:@"HelveticaNeue-Medium" size:(s)]
+//#define TGSystemLightFont(s) [NSFont fontWithName:@"HelveticaNeue-Light" size:(s)]
+//#define TGSystemItalicFont(s) [NSFont fontWithName:@"HelveticaNeue-Italic" size:(s)]
+//#define TGSystemBoldItalicFont(s) [NSFont fontWithName:@"HelveticaNeue-BoldItalic" size:(s)]
+//#define TGSystemBoldFont(s) [NSFont fontWithName:@"HelveticaNeue-Bold" size:(s)]
+
+//[NSFont fontWithName:@".SFNSDisplay-Regular" size:(s)]
+//[NSFont fontWithName:@".SFNSText-Medium" size:(s)]
+//[NSFont fontWithName:@".SFNSText-Regular" size:(s)]
+#define TGSystemFont(s) NSAppKitVersionNumber > NSAppKitVersionNumber10_10_Max ? [NSFont systemFontOfSize:(s)] : [NSFont fontWithName:@"HelveticaNeue" size:(s)]
+#define TGSystemMediumFont(s) NSAppKitVersionNumber > NSAppKitVersionNumber10_10_Max ? [NSFont fontWithName:@".SFNSDisplay-Semibold" size:(s)] : [NSFont fontWithName:@"HelveticaNeue-Medium" size:(s)]
+#define TGSystemLightFont(s) NSAppKitVersionNumber > NSAppKitVersionNumber10_10_Max ? [NSFont systemFontOfSize:(s)  weight:0] : [NSFont fontWithName:@"HelveticaNeue-Light" size:(s)]
+#define TGSystemItalicFont(s) NSAppKitVersionNumber > NSAppKitVersionNumber10_10_Max ? [NSFont fontWithName:@".SFNSText-Italic" size:(s)] : [NSFont fontWithName:@"HelveticaNeue-Italic" size:(s)]
+#define TGSystemBoldItalicFont(s) NSAppKitVersionNumber > NSAppKitVersionNumber10_10_Max ? [NSFont fontWithName:@".SFNSText-BoldItalic" size:(s)] : [NSFont fontWithName:@"HelveticaNeue-BoldItalic" size:(s)]
+#define TGSystemBoldFont(s) NSAppKitVersionNumber > NSAppKitVersionNumber10_10_Max ? [NSFont fontWithName:@".SFNSDisplay-Semibold" size:(s)] : [NSFont fontWithName:@"HelveticaNeue-Bold" size:(s)]
+
 
 #define VIDEO_COMPRESSED_PROGRESS 10.0f
 #define MAX_FILE_SIZE 1500000000
@@ -86,6 +99,7 @@
 #define GRAY_BORDER_COLOR NSColorFromRGB(0xe4e4e4)
 #define LIGHT_GRAY_BORDER_COLOR NSColorFromRGB(0xededed)
 #define LINK_COLOR BLUE_UI_COLOR
+#define BLUE_SEPARATOR_COLOR NSColorFromRGB(0x66A7DB)
 #define MIN_IMG_SIZE NSMakeSize(250,40)
 #define weakify() __block __typeof(&*self)strongSelf = self;
 

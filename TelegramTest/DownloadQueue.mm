@@ -103,7 +103,7 @@
         std::map< long, DownloadItem * >::iterator it = _loading->find(key);
         if(it != _loading->end())
             item = it->second;
-    }];
+    } synchronous:YES];
     
     
     return item;
@@ -190,6 +190,9 @@
         if(!item) {
             [operation start:manager selector:@selector(operationComplete:)];
             manager.loading->insert(std::pair< long, DownloadItem * >(operation.item.n_id,operation.item));
+        } else {
+            operation.item.downloadState = item.downloadState;
+            operation.item.progress = item.progress;
         }
     }];
     

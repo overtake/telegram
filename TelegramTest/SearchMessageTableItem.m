@@ -28,6 +28,19 @@
     if(self = [super init]) {
         
         _conversation = message.conversation;
+        
+        if(message.chat.migrated_to.channel_id != 0) {
+            
+            TLChat *chat = [[ChatsManager sharedManager] find:message.chat.migrated_to.channel_id];
+            
+            _conversation = [chat dialog];
+            
+            /*
+             27.04.15, 18:47:02: Dmitry Moskovsky: Оро
+             
+             */
+        }
+        
         _message = message;
         
         _selectText = selectedText;
@@ -64,6 +77,15 @@
     } else {
         [_dateText appendString:@"" withColor:NSColorFromRGB(0xaeaeae)];
     }
+    
+    if(self.conversation.type != DialogTypeSecretChat && self.conversation.chat)
+        self.nameTextSize = [self.conversation.chat dialogTitleSize];
+    else if(self.conversation.type == DialogTypeSecretChat)
+        self.nameTextSize = [self.conversation.user dialogEncryptedTitleSize];
+    else
+        self.nameTextSize = [self.conversation.user dialogTitleSize];
+    
+    self.nameTextSize = NSMakeSize(self.nameTextSize.width + (self.conversation.isMute ? 20 : 0), self.nameTextSize.height);
     
     _dateSize = [_dateText size];
     _dateSize.width+=5;

@@ -11,8 +11,8 @@
 #import "ImageUtils.h"
 #import "NSViewCategory.h"
 #import "TGLinearProgressView.h"
-
-
+#import "BTRButton.h"
+#import "ShareViewController.h"
 
 @interface TGSModalSenderView ()
 {
@@ -32,7 +32,7 @@
 @property (nonatomic,strong) NSTextField *sharingTextField;
 
 
-
+@property (nonatomic,strong) BTRButton *cancelButton;
 @end
 
 @implementation TGSModalSenderView
@@ -68,6 +68,38 @@
         [self addSubview:_containerView];
         
         
+        _cancelButton = [[BTRButton alloc] initWithFrame:NSMakeRect(0, 0, NSWidth(_containerView.frame), 50)];
+        
+        _cancelButton.layer.backgroundColor = [NSColor whiteColor].CGColor;
+        
+        [_cancelButton setTitleColor:LINK_COLOR forControlState:BTRControlStateNormal];
+        
+        [_cancelButton setTitle:NSLocalizedString(@"Cancel", nil) forControlState:BTRControlStateNormal];
+        
+        
+        weak();
+        
+        [_cancelButton addBlock:^(BTRControlEvents events) {
+            
+            [weakSelf cleanup];
+            
+            [ShareViewController close];
+            
+            
+        } forControlEvents:BTRControlEventClick];
+        
+        
+        TMView *topSeparator = [[TMView alloc] initWithFrame:NSMakeRect(0, 49, NSWidth(_containerView.frame), DIALOG_BORDER_WIDTH)];
+        
+        topSeparator.backgroundColor = DIALOG_BORDER_COLOR;
+        
+        
+        
+        [self.containerView addSubview:_cancelButton];
+        
+        [self.containerView addSubview:topSeparator];
+        
+        
         _sharingTextField = [[NSTextField alloc] initWithFrame:NSMakeRect(0, 0, NSWidth(_containerView.frame) - 20, 20)];
         
         [_sharingTextField setCenterByView:_containerView];
@@ -94,6 +126,9 @@
         [_containerView addSubview:_progressView];
         
         
+        
+        
+        
     }
     
     return self;
@@ -115,14 +150,13 @@
     _ts_count = (int) obj.attachments.count * (int) rowItems.count;
     
     
-    if(obj.attachments.count == 0 && obj.attributedContentText.length > 0) {
+    if(obj.attributedContentText.length > 0) {
         
-        _ts_count = 1 * (int) rowItems.count;
+        _ts_count+= 1 * (int) rowItems.count;
         
         [_rowItems enumerateObjectsUsingBlock:^(id rowItem, NSUInteger idx, BOOL *stop) {
             [self sendAsMessage:obj.attributedContentText.string rowItem:rowItem];
         }];
-         return;
     }
     
     
@@ -200,7 +234,7 @@
    
     _cs_count++;
     
-    id request = [TGS_RPCRequest sendRequest:[TLAPI_messages_sendMedia createWithFlags:0 peer:[self inputPeer:rowItem] reply_to_msg_id:0 media:media random_id:rand_long()] successHandler:^(id request, TLUpdates *response) {
+    id request = [TGS_RPCRequest sendRequest:[TLAPI_messages_sendMedia createWithFlags:0 peer:[self inputPeer:rowItem] reply_to_msg_id:0 media:media random_id:rand_long() reply_markup:nil] successHandler:^(id request, TLUpdates *response) {
         
         _sent_count++;
         
@@ -289,7 +323,7 @@
         [self updateProgress:30];
     }];
     
-    id request = [TGS_RPCRequest sendRequest:[TLAPI_messages_sendMessage createWithFlags:0 peer:[self inputPeer:rowItem] reply_to_msg_id:0 message:message random_id:rand_long()] successHandler:^(TGS_RPCRequest *request, id response) {
+    id request = [TGS_RPCRequest sendRequest:[TLAPI_messages_sendMessage createWithFlags:0 peer:[self inputPeer:rowItem] reply_to_msg_id:0 message:message random_id:rand_long() reply_markup:nil entities:nil] successHandler:^(TGS_RPCRequest *request, id response) {
         
         _cs_count++;
         
@@ -315,15 +349,8 @@
         input = [TL_inputPeerChat createWithChat_id:rowItem.chat.n_id];
     } else {
         
-        if([rowItem.user isKindOfClass:[TL_userContact class]]) {
-            input = [TL_inputPeerContact createWithUser_id:rowItem.user.n_id];
-        } else if([rowItem.user isKindOfClass:[TL_userDeleted class]] || [rowItem.user isKindOfClass:[TL_userEmpty class]]) {
-            input = [TL_inputPeerEmpty create];
-        } else if([rowItem.user isKindOfClass:[TL_userForeign class]] || [rowItem.user isKindOfClass:[TL_userRequest class]]) {
-            input = [TL_inputPeerForeign createWithUser_id:rowItem.user.n_id access_hash:rowItem.user.access_hash];
-        } else if([rowItem.user isKindOfClass:[TL_userSelf class]]) {
-            input = [TL_inputPeerSelf create];
-        }
+        return [TL_inputPeerUser createWithUser_id:rowItem.user.n_id access_hash:rowItem.user.access_hash];
+        
     }
     if(!input)
         return [TL_inputPeerEmpty create];

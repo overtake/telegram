@@ -33,7 +33,7 @@
         
         NSRange range = [attr appendString:[NSString stringWithFormat:@" - %lu/%lu",self.action.result.multiObjects.count,[self limit]] withColor:DARK_GRAY];
         
-        [attr setFont:[NSFont fontWithName:@"HelveticaNeue" size:12] forRange:range];
+        [attr setFont:TGSystemFont(12) forRange:range];
         
         
         
@@ -54,7 +54,13 @@
         [self createBroadcast];
 
     } else {
-        [[Telegram rightViewController] showComposeWithAction:self.action];
+        
+        ComposePickerViewController *viewController = [[ComposePickerViewController alloc] initWithFrame:self.action.currentViewController.navigationViewController.view.bounds];
+        
+        [viewController setAction:self.action];
+        
+        [self.action.currentViewController.navigationViewController pushViewController:viewController animated:YES];
+        
     }
 }
 
@@ -65,8 +71,8 @@
     
     NSMutableArray *array = [[NSMutableArray alloc] init];
     for(SelectUserItem* item in selected) {
-        if(!item.user.type != TLUserTypeSelf) {
-            TL_inputUserContact *_contact = [TL_inputUserContact createWithUser_id:item.user.n_id];
+        if(item.user.type != TLUserTypeSelf) {
+            TL_inputUser *_contact = [TL_inputUser createWithUser_id:item.user.n_id access_hash:item.user.access_hash];
             [array addObject:_contact];
         }
         
@@ -80,7 +86,7 @@
     
     TL_broadcast *broadcast = [TL_broadcast createWithN_id:arc4random() participants:participants title:@"" date:[[MTNetwork instance] getTime]];
     
-    TL_conversation *conversation = [TL_conversation createWithPeer:[TL_peerBroadcast createWithChat_id:broadcast.n_id] top_message:0 unread_count:0 last_message_date:[[MTNetwork instance] getTime] notify_settings:[TL_peerNotifySettingsEmpty create] last_marked_message:0 top_message_fake:0 last_marked_date:[[MTNetwork instance] getTime] sync_message_id:0];
+    TL_conversation *conversation = [TL_conversation createWithPeer:[TL_peerBroadcast createWithChat_id:broadcast.n_id] top_message:0 unread_count:0 last_message_date:[[MTNetwork instance] getTime] notify_settings:[TL_peerNotifySettingsEmpty create] last_marked_message:0 top_message_fake:0 last_marked_date:[[MTNetwork instance] getTime] sync_message_id:0 read_inbox_max_id:0 unread_important_count:0 lastMessage:nil];
     
     [[DialogsManager sharedManager] add:@[conversation]];
     [conversation save];
@@ -90,14 +96,14 @@
     int fakeId = [MessageSender getFakeMessageId];
     
     
-    TL_localMessageService *msg = [TL_localMessageService createWithN_id:fakeId flags:TGOUTMESSAGE from_id:[UsersManager currentUserId] to_id:conversation.peer date:[[MTNetwork instance] getTime] action:[TL_messageActionEncryptedChat createWithTitle:NSLocalizedString(@"MessageAction.ServiceMessage.CreatedBroadcast", nil)] fakeId:fakeId randomId:rand_long() dstate:DeliveryStateNormal];
+    TL_localMessageService *msg = [TL_localMessageService createWithFlags:TGOUTMESSAGE n_id:fakeId from_id:[UsersManager currentUserId] to_id:conversation.peer date:[[MTNetwork instance] getTime] action:[TL_messageActionEncryptedChat createWithTitle:NSLocalizedString(@"MessageAction.ServiceMessage.CreatedBroadcast", nil)] fakeId:fakeId randomId:rand_long() dstate:DeliveryStateNormal];
     
     [MessagesManager addAndUpdateMessage:msg];
     
      [self.delegate behaviorDidEndRequest:nil];
     
     
-    [[Telegram rightViewController] showByDialog:conversation sender:self];
+    [self.action.currentViewController.navigationViewController gotoViewController:self.action.currentViewController.messagesViewController];
     
 }
 

@@ -82,7 +82,7 @@
         
         _textView.minHeight = _textView.maxHeight = NSHeight(_textView.containerView.frame);
         _textView.limit = 140;
-        [_textView setFont:[NSFont fontWithName:@"HelveticaNeue" size:13]];
+        [_textView setFont:TGSystemFont(13)];
         
     }
     

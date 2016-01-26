@@ -3,6 +3,7 @@
 
 @implementation NSDictionary (YapDatabase)
 
+
 /**
  * Originally I named this method simply 'containsKey:'.
  * But then immediately got a stack overflow when using the category.

@@ -14,6 +14,7 @@
 @interface ShortUnread : NSView
 @property (nonatomic, strong) NSString *unreadCount;
 @property (nonatomic) NSSize undreadSize;
+@property (nonatomic,strong) NSColor *color;
 @end
 
 @implementation ShortUnread
@@ -23,7 +24,7 @@ static NSDictionary *attributes() {
     static NSDictionary *dictionary;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        dictionary = @{NSFontAttributeName: [NSFont fontWithName:@"HelveticaNeue-Bold" size:11], NSForegroundColorAttributeName:NSColorFromRGB(0xfafafa)};
+        dictionary = @{NSFontAttributeName: TGSystemBoldFont(11), NSForegroundColorAttributeName:NSColorFromRGB(0xfafafa)};
     });
     return dictionary;
 }
@@ -65,7 +66,8 @@ static NSDictionary *attributes() {
     [[NSColor whiteColor] setStroke];
     [path stroke];
     
-    [NSColorFromRGB(0x4ba3e2) setFill];
+    
+    [_color setFill];
     [path fill];
     
     [[NSColor whiteColor] set];
@@ -145,7 +147,7 @@ static NSDictionary *attributes() {
     
     TL_conversation *conversation = [(TGConversationTableItem *)self.rowItem conversation];
     
-    [[Telegram rightViewController] showByDialog:conversation sender:self];
+    [appWindow().navigationController showMessagesViewController:conversation];
     
     [MessageSender sendDraggedFiles:sender dialog:conversation asDocument:NO];
     
@@ -173,13 +175,16 @@ static NSDictionary *attributes() {
         _nameTextField = [[TMNameTextField alloc] init];
         
         
-        [_nameTextField setFrameOrigin:NSMakePoint(68, 40)];
+        [_nameTextField setFrameOrigin:NSMakePoint(68, 36)];
         
         [[_nameTextField cell] setLineBreakMode:NSLineBreakByTruncatingTail];
         [[_nameTextField cell] setTruncatesLastVisibleLine:YES];
         
         _nameTextField.wantsLayer = YES;
 
+        
+//        [_nameTextField setBackgroundColor:[NSColor redColor]];
+//        [_nameTextField setDrawsBackground:YES];
         
         _messageField = [TMTextField defaultTextField];
         
@@ -194,10 +199,10 @@ static NSDictionary *attributes() {
         
         
         _dateField = [TMTextField defaultTextField];
-        [_dateField setFrameOrigin:NSMakePoint(0, 46)];
+        [_dateField setFrameOrigin:NSMakePoint(0, 40)];
         
         _dateField.wantsLayer = YES;
-        [_dateField setFont:[NSFont fontWithName:@"HelveticaNeue" size:12]];
+        [_dateField setFont:TGSystemFont(12)];
         
       
         
@@ -238,12 +243,15 @@ static NSDictionary *attributes() {
                 NSRectFill(NSMakeRect(0, 0, self.bounds.size.width, self.bounds.size.height));
             }
             
+            
+            if(self.item.conversation.isVerified) {
+                [self.isSelected ? image_VerifyWhite() : image_Verify() drawInRect:NSMakeRect(NSMaxX(self.nameTextField.frame),NSMinY(self.nameTextField.frame) + 6, image_Verify().size.width, image_Verify().size.height) fromRect:NSZeroRect operation:NSCompositeHighlight fraction:1];
+            }
+            
          //
             
-            if(self.item.unreadText.length && self.style != ConversationTableCellShortStyle && self.item.conversation.unread_count > 0 && self.item.conversation.lastMessage.from_id != [UsersManager currentUserId])
-                [self drawUnreadCount];
-            
-            
+            if(self.item.unreadText.length && self.style != ConversationTableCellShortStyle && self.item.conversation.unread_count > 0)
+                [self drawUnreadCount]; 
         };
         
         
@@ -266,20 +274,25 @@ static NSDictionary *attributes() {
     
     [super setFrameSize:newSize];
     
+    [self updateFrames];
 }
 
+
 -(void)updateFrames {
+    
+    NSValue *point = [self stateImage][@"point"];
     
      [_swipe setFrameSize:self.frame.size];
     
     self.style = NSWidth(self.frame) == 70 ? ConversationTableCellShortStyle : ConversationTableCellFullStyle;
     
-    [_nameTextField setFrameSize:NSMakeSize(NSWidth(self.frame) - NSMinX(_nameTextField.frame) - NSWidth(_dateField.frame) - 10 - (self.item.message.n_out ? 18 : 0), 23)];
+    
+    [_nameTextField setFrameSize:NSMakeSize(MIN(NSWidth(self.frame) - NSMinX(_nameTextField.frame) - NSWidth(_dateField.frame) - 10 - (self.item.message.n_out ? 18 : 0), self.item.nameTextSize.width), 23)];
     [_messageField setFrameSize:NSMakeSize(NSWidth(self.frame) - NSMinX(_messageField.frame) -40, 36)];
     [_dateField setFrameOrigin:NSMakePoint(self.bounds.size.width - self.item.dateSize.width - 10, _dateField.frame.origin.y)];
 
     
-    NSValue *point = [self stateImage][@"point"];
+    point = [self stateImage][@"point"];
     
     if(point) {
         [_stateImageView setFrame:NSMakeRect([point pointValue].x, [point pointValue].y, NSWidth(_stateImageView.frame), NSHeight(_stateImageView.frame))];
@@ -294,6 +307,7 @@ static NSDictionary *attributes() {
             [self.layer addSublayer:_shortUnread.layer];
         }
         
+        _shortUnread.color = self.item.conversation.isMute && ![SettingsArchiver checkMaskedSetting:IncludeMutedUnreadCount] ? NSColorFromRGB(0xd7d7d7) : NSColorFromRGB(0x4ba3e2);
         [_shortUnread setUnreadCount:self.item.unreadText];
         
     } else {
@@ -307,7 +321,7 @@ static NSDictionary *attributes() {
 
 -(void)checkMessageState {
     
-    if(self.item.typing) {
+    if(self.item.typing.length > 0) {
         [self startAnimation];
     } else {
         [_messageField setAttributedStringValue:self.item.messageText];
@@ -332,10 +346,18 @@ static NSDictionary *attributes() {
         
         [attr appendString:[NSString stringWithFormat:@"%@%@",self.item.typing,_dots] withColor:GRAY_TEXT_COLOR];
         [attr setSelectionColor:[NSColor whiteColor] forColor:GRAY_TEXT_COLOR];
-        [attr setFont:[NSFont fontWithName:@"HelveticaNeue" size:13] forRange:attr.range];
+        [attr setFont:TGSystemFont(13) forRange:attr.range];
         [attr setSelected:self.isSelected];
         
+        
+        
         [_messageField setAttributedStringValue:attr];
+        
+        if(self.item.typing.length == 0) {
+            [_timer invalidate];
+            _timer = nil;
+            [self checkMessageState];
+        }
         
     } queue:[ASQueue mainQueue].nativeQueue];
     
@@ -392,7 +414,7 @@ static NSDictionary *attributes() {
     
     [self.dateField setAttributedStringValue:item.dateText];
     
-    [self.dateField setFrameSize:item.dateSize];
+    [self.dateField setFrameSize:NSMakeSize(item.dateSize.width, 18)];
     
     
     NSDictionary *stateImage = [self stateImage];
@@ -412,7 +434,7 @@ static NSDictionary *attributes() {
         _stateImageView = nil;
     }
     
-    
+
     
     [self updateFrames];
     
@@ -428,7 +450,6 @@ static NSDictionary *attributes() {
         
         NSPoint point;
         
-        if(self.style != ConversationTableCellShortStyle) {
             if(self.item.message.dstate == DeliveryStateNormal) {
                 
                 if(!self.item.message.unread) {
@@ -437,34 +458,30 @@ static NSDictionary *attributes() {
                     stateImage = self.isSelected ? image_MessageStateSentWhite() : image_MessageStateSent();
                 }
                 
-                point = NSMakePoint(NSMinX(self.dateField.frame) - stateImage.size.width , NSHeight(self.frame) - stateImage.size.height - 10);
+                point = NSMakePoint(NSMinX(self.dateField.frame) - stateImage.size.width , NSHeight(self.frame) - stateImage.size.height - 12);
                 
             } else if(self.item.message.dstate == DeliveryStateError) {
                 
                 stateImage = self.isSelected ? image_DialogSelectedSendError() : image_ChatMessageError() ;
                 
-                point = NSMakePoint(NSWidth(self.frame) - stateImage.size.width - 13, 6);
+                point = NSMakePoint(NSWidth(self.frame) - stateImage.size.width - 13, 10);
                 
             } else if(self.item.message.dstate == DeliveryStatePending) {
                 
                 stateImage = self.isSelected ? image_SendingClockWhite() : image_SendingClockGray();
                 
-                point = NSMakePoint(NSMinX(self.dateField.frame) - stateImage.size.width -2, NSHeight(self.frame) - stateImage.size.height - 9);
+                point = NSMakePoint(NSMinX(self.dateField.frame) - stateImage.size.width -2, NSHeight(self.frame) - stateImage.size.height - 11);
                 
             }
             
             return @{@"image":stateImage,@"point":[NSValue valueWithPoint:point]};
             
-        }
     }
     
     return nil;
 }
 
 -(void)setStyle:(ConversationTableCellStyle)style {
-    
-    if(_style == style)
-        return;
     
     _style = style;
     
@@ -477,7 +494,7 @@ static NSDictionary *attributes() {
 
 - (void)drawRect:(NSRect)dirtyRect {
     
-       
+    
 }
 
 
@@ -513,13 +530,16 @@ static int unreadOffsetRight = 13;
         [NSColorFromRGB(0xffffff) set];
         
     } else {
-        [NSColorFromRGB(0x4ba3e2) set];
+        if(!self.item.conversation.isMute || [SettingsArchiver checkMaskedSetting:IncludeMutedUnreadCount])
+            [NSColorFromRGB(0x4ba3e2) set];
+        else
+            [NSColorFromRGB(0xd7d7d7) set];
     }
     [path fill];
     [path closePath];
     
     int offsetX = (sizeWidth - self.item.unreadTextSize.width)/2;
-    [self.item.unreadText drawAtPoint:CGPointMake(offset1 - unreadCountRadius + offsetX, offsetY + 3) withAttributes:@{NSForegroundColorAttributeName: self.isSelected ? NSColorFromRGB(0x6896ba)  : [NSColor whiteColor], NSFontAttributeName: [NSFont fontWithName:@"HelveticaNeue-Bold" size:11]}];
+    [self.item.unreadText drawAtPoint:CGPointMake(offset1 - unreadCountRadius + offsetX, offsetY + 3) withAttributes:@{NSForegroundColorAttributeName: self.isSelected ? NSColorFromRGB(0x6896ba)  : [NSColor whiteColor], NSFontAttributeName: TGSystemBoldFont(11)}];
 }
 
 -(BOOL)isSelected {

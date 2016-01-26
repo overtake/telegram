@@ -35,12 +35,12 @@
         self.countryCodeTextField.drawsBackground = NO;
         self.countryCodeTextField.delegate = self;
         
-        NSAttributedString *placeHolder = [[NSAttributedString alloc] initWithString:@"+" attributes:@{NSFontAttributeName: [NSFont fontWithName:@"Helvetica-Light" size:15], NSForegroundColorAttributeName: NSColorFromRGB(0xaeaeae)}];
+        NSAttributedString *placeHolder = [[NSAttributedString alloc] initWithString:@"+" attributes:@{NSFontAttributeName: TGSystemLightFont(15), NSForegroundColorAttributeName: NSColorFromRGB(0xaeaeae)}];
         [self.countryCodeTextField.cell setPlaceholderAttributedString:placeHolder];
       //  [self.countryCodeTextField setPlaceholderAttributedString:placeHolder];
         [self.countryCodeTextField setPlaceholderPoint:NSMakePoint(2, 0)];
         
-        self.countryCodeTextField.font = [NSFont fontWithName:@"Helvetica-Light" size:15];
+        self.countryCodeTextField.font = TGSystemLightFont(15);
         self.countryCodeTextField.focusRingType = NSFocusRingTypeNone;
         [self.countryCodeTextField setBordered:NO];
         
@@ -53,13 +53,13 @@
         self.numberTextField.drawsBackground = NO;
         self.numberTextField.delegate = self;
         
-        placeHolder = [[NSAttributedString alloc] initWithString:NSLocalizedString(@"Login.phoneNumber", nil) attributes:@{NSFontAttributeName: [NSFont fontWithName:@"Helvetica-Light" size:15], NSForegroundColorAttributeName: NSColorFromRGB(0xaeaeae)}];
+        placeHolder = [[NSAttributedString alloc] initWithString:NSLocalizedString(@"Login.phoneNumber", nil) attributes:@{NSFontAttributeName: TGSystemLightFont(15), NSForegroundColorAttributeName: NSColorFromRGB(0xaeaeae)}];
         [self.numberTextField.cell setPlaceholderAttributedString:placeHolder];
         //        [self.numberTextField setPlaceholderAttributedString:placeHolder];
         [self.numberTextField.cell setUsesSingleLineMode:YES];
         //        [self.numberTextField setPlaceholderPoint:NSMakePoint(2, 1)];
         
-        [self.numberTextField setFont:[NSFont fontWithName:@"Helvetica-Light" size:15]];
+        [self.numberTextField setFont:TGSystemLightFont(15)];
         self.numberTextField.focusRingType = NSFocusRingTypeNone;
         [self.numberTextField setBordered:NO];
         [self.numberTextField setTarget:self];
@@ -78,7 +78,7 @@
         self.editTextButton = [[TMTextButton alloc] init];
         //        [self.editTextButton setDisable:YES];
         self.editTextButton.stringValue = NSLocalizedString(@"Profile.edit", nil);
-        [self.editTextButton setFont:[NSFont fontWithName:@"HelveticaNeue" size:14]];
+        [self.editTextButton setFont:TGSystemFont(14)];
         [self.editTextButton setWantsLayer:IS_RETINA];
         [self.editTextButton setTextColor:BLUE_UI_COLOR];
         [self.editTextButton sizeToFit];
@@ -111,7 +111,7 @@
         //        self.countryNameTextField = [CountrySelectTextField defaultTextField];
         //        [self.countryCodeTextField setEditable:NO];
         //        self.countryCodeTextField.frame = NSMakeRect(110, 60, 360, 16);
-        //        self.countryCodeTextField.font = [NSFont fontWithName:@"Helvetica-Light" size:15];
+        //        self.countryCodeTextField.font = TGSystemLightFont(15);
         //        self.countryCodeTextField.stringValue = NSLocalizedString(@"Choose coutry", nil);
         //        [self addSubview:self.countryCodeTextField];
         
@@ -434,7 +434,7 @@
         NSMutableAttributedString *attr = [[NSMutableAttributedString alloc] init];
         
         [attr appendString:format withColor:NSColorFromRGB(0x000000)];
-        [attr setFont:[NSFont fontWithName:@"Helvetica-Light" size:15] forRange:NSMakeRange(0, format.length)];
+        [attr setFont:TGSystemLightFont(15) forRange:NSMakeRange(0, format.length)];
         
         [attr addAttribute:NSForegroundColorAttributeName value:NSColorFromRGB(0xaeaeae) range:NSMakeRange(xpos, format.length-xpos)];
         
@@ -448,7 +448,7 @@
             NSMutableAttributedString *xCheck = [[NSMutableAttributedString alloc] init];
             
             [xCheck appendString:xFormat];
-            [xCheck setFont:[NSFont fontWithName:@"Helvetica-Light" size:15] forRange:NSMakeRange(0, format.length)];
+            [xCheck setFont:TGSystemLightFont(15) forRange:NSMakeRange(0, format.length)];
             [xCheck addAttribute:(NSString *) kCTKernAttributeName value:@(0) range:NSMakeRange(0, xFormat.length)];
             
             
@@ -503,9 +503,9 @@
     
     NSAttributedString *youCountryAttributedString;
     if(self.selectedCountry) {
-        youCountryAttributedString = [[NSAttributedString alloc] initWithString:self.selectedCountry.shortCountryName attributes:@{NSFontAttributeName: [NSFont fontWithName:@"Helvetica-Light" size:15], NSForegroundColorAttributeName: self.countryCodeTextField.isEnabled ? NSColorFromRGB(0x000000) : NSColorFromRGB(0xc3c3c3)}];
+        youCountryAttributedString = [[NSAttributedString alloc] initWithString:self.selectedCountry.shortCountryName attributes:@{NSFontAttributeName: TGSystemLightFont(15), NSForegroundColorAttributeName: self.countryCodeTextField.isEnabled ? NSColorFromRGB(0x000000) : NSColorFromRGB(0xc3c3c3)}];
     } else {
-        youCountryAttributedString = [[NSAttributedString alloc] initWithString:self.countryCodeTextField.stringValue.length ?   NSLocalizedString(@"Login.InvalidCountry", nil) : NSLocalizedString(@"Registration.ChooseCountry", nil) attributes:@{NSFontAttributeName: [NSFont fontWithName:@"Helvetica-Light" size:15], NSForegroundColorAttributeName: NSColorFromRGB(0xaeaeae)}];
+        youCountryAttributedString = [[NSAttributedString alloc] initWithString:self.countryCodeTextField.stringValue.length ?   NSLocalizedString(@"Login.InvalidCountry", nil) : NSLocalizedString(@"Registration.ChooseCountry", nil) attributes:@{NSFontAttributeName: TGSystemLightFont(15), NSForegroundColorAttributeName: NSColorFromRGB(0xaeaeae)}];
     }
     
     //    NSSize size = [youCountryAttributedString size];
@@ -612,7 +612,7 @@ static NSDictionary *defaultLeftStringsAttributes() {
     static NSDictionary *dictionary;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        dictionary = @{NSFontAttributeName: [NSFont fontWithName:@"HelveticaNeue" size:13], NSForegroundColorAttributeName: NSColorFromRGB(0xc8c8c8)};
+        dictionary = @{NSFontAttributeName: TGSystemFont(13), NSForegroundColorAttributeName: NSColorFromRGB(0xc8c8c8)};
     });
     return dictionary;
 }

@@ -28,9 +28,11 @@
 -(int)currentDatacenter;
 -(void)setDatacenter:(int)dc_id;
 -(void)cancelRequest:(RPCRequest *)request;
-
+-(void)cancelRequestWithInternalId:(id)internalId;
 -(void)setUserId:(int)userId;
 -(int)getUserId;
+
+-(void)addRequest:(MTRequest *)request;
 
 - (TGUpdateMessageService *)updateService;
 
@@ -39,6 +41,10 @@
 -(MTContext *)context;
 
 -(void)update;
+
++(void)pause;
++(void)resume;
+-(NSString *)updateEncryptionKey;
 
 -(MTQueue *)queue;
 

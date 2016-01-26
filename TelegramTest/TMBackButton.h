@@ -18,7 +18,7 @@ typedef enum {
 
 -(void)setTarget:(id)target selector:(SEL)selector;
 
-@property (nonatomic,strong) TMViewController *controller;
+@property (nonatomic,weak) TMViewController *controller;
 @property (nonatomic,strong) TMTextField *field;
 - (id)initWithFrame:(NSRect)frame string:(NSString *)string;
 

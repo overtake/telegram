@@ -14,4 +14,8 @@
     return -1;
 }
 
+-(Class)viewClass {
+    return NSClassFromString(@"TGGeneralSearchRowView");
+}
+
 @end

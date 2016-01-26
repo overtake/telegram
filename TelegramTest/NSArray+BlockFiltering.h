@@ -13,4 +13,5 @@
 - (NSArray *)filteredArrayUsingBlock:(BOOL (^)(id obj, NSUInteger idx, BOOL *stop))predicate;
 
 - (NSArray *)reversedArray;
+-(NSArray *)findElementsWithRecursion:(NSString *)q;
 @end

@@ -8,7 +8,6 @@
 
 #import "LeftViewController.h"
 #import "SearchViewController.h"
-#import "NewConversationViewController.h"
 #import "RBLPopover.h"
 #import "TMTabViewController.h"
 #import "AccountSettingsViewController.h"
@@ -232,9 +231,35 @@ static const int bottomOffset = 58;
     [self.tabController setUnreadCount:count];
 }
 
+static TMViewController *changedController;
+
 -(void)tabItemDidChanged:(TMTabItem *)item index:(NSUInteger)index {
+    
+    if([Telegram mainViewController].isMinimisze && index != 1)
+        return;
+    
     [self.tabViewController showControllerByIndex:index];
     
+    if(![Telegram isSingleLayout]) {
+        if([self.tabViewController.currentController isKindOfClass:[AccountSettingsViewController class]]) {
+            
+            changedController = [Telegram rightViewController].navigationViewController.currentController;
+            
+            [[Telegram rightViewController] showGeneralSettings];
+        } else if([[Telegram rightViewController].navigationViewController.viewControllerStack indexOfObject:changedController] != NSNotFound) {
+            
+            NSUInteger idx = [[Telegram rightViewController].navigationViewController.viewControllerStack indexOfObject:changedController];
+            
+            [[Telegram rightViewController].navigationViewController.viewControllerStack removeObjectsInRange:NSMakeRange(idx, [Telegram rightViewController].navigationViewController.viewControllerStack.count - idx)];
+            
+            [[Telegram rightViewController].navigationViewController pushViewController:changedController animated:changedController != [[Telegram rightViewController] currentEmptyController]];
+            changedController = nil;
+            
+        }
+    }
+    
+    
+   
     
     [self setCenterBarViewText:item.title];
 }
@@ -250,8 +275,10 @@ static const int bottomOffset = 58;
     
     [self.tabController setFrameSize:NSMakeSize(NSWidth(self.view.frame), NSHeight(self.tabController.frame))];
     
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self.conversationsViewController viewWillAppear:NO];
+    });
     
-    [self.conversationsViewController viewWillAppear:NO];
 //    
 //    self.tabController.selectedIndex = self.tabController.selectedIndex;
 }
@@ -271,6 +298,10 @@ static const int bottomOffset = 58;
 
 -(BOOL)becomeFirstResponder {
     return [[self currentTabController] becomeFirstResponder];
+}
+
+-(BOOL)resignFirstResponder {
+    return [[self currentTabController] resignFirstResponder];
 }
 
 - (NSResponder *)firstResponder {

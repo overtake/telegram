@@ -27,4 +27,6 @@
 
 -(void)onShow;
 
+-(void)close;
+
 @end

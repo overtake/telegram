@@ -38,7 +38,7 @@
         _stateField = [TMTextField defaultTextField];
         
         
-        [_titleField setFont:[NSFont fontWithName:@"HelveticaNeue" size:13]];
+        [_titleField setFont:TGSystemFont(13)];
         
         [_titleField setTextColor:LINK_COLOR];
         
@@ -46,7 +46,7 @@
         [_titleField setFrameOrigin:NSMakePoint(5, NSHeight(frameRect) - 13)];
         
         
-        [_stateField setFont:[NSFont fontWithName:@"HelveticaNeue" size:13]];
+        [_stateField setFont:TGSystemFont(13)];
         
         
         
@@ -135,7 +135,10 @@
             desc = _webpage.n_description;
         if(!desc)
             desc = _webpage.author;
-        
+        if(!desc && _webpage.document)
+            desc = NSLocalizedString(@"Document", nil);
+        if(!desc)
+            desc = _webpage.url;
         [_stateField setTextColor:GRAY_TEXT_COLOR];
     }
     
@@ -154,6 +157,7 @@
 }
 
 -(void)dealloc {
+    //assert([NSThread isMainThread]);
     remove_global_dispatcher(_internalId);
     [Notification removeObserver:self];
 }

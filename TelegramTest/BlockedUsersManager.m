@@ -49,11 +49,11 @@
         
         [SharedManager proccessGlobalResponse:response];
         
-        if([response isKindOfClass:[TL_contacts_blockedSlice class]]) {
-            [self _remoteLoadWithOffset:offset + limit limit:limit array:array];
-        } else {
+//        if([response isKindOfClass:[TL_contacts_blockedSlice class]]) {
+//            [self _remoteLoadWithOffset:offset + limit limit:limit array:array];
+//        } else {
             [self _compleRemoteLoad:array];
-        }
+      //  }
     } errorHandler:^(RPCRequest *request, RpcError *error) {
         MTLog(@"RpcError %@", error.error_msg);
     }];

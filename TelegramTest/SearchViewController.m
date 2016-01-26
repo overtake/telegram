@@ -27,7 +27,8 @@ typedef enum {
     SearchSectionContacts,
     SearchSectionUsers,
     SearchSectionMessages,
-    SearchSectionGlobalUsers
+    SearchSectionGlobalUsers,
+    SearchSectionChannels
 } SearchSection;
 
 @interface SearchParams : NSObject
@@ -101,6 +102,7 @@ typedef enum {
 @property (nonatomic, strong) SearchLoadMoreItem *usersLoadMoreItem;
 @property (nonatomic, strong) SearchLoadMoreItem *messagesLoadMoreItem;
 @property (nonatomic, strong) SearchLoadMoreItem *globalUsersLoadMoreItem;
+@property (nonatomic, strong) SearchLoadMoreItem *globalChannelsLoadMoreItem;
 @property (nonatomic, strong) SearchLoaderItem *messagesLoaderItem;
 
 
@@ -114,10 +116,8 @@ typedef enum {
     [super loadView];
     weakify();
     
-    
     [self.view setAutoresizingMask:NSViewWidthSizable | NSViewHeightSizable];
 
-    
     self.contactsSeparator = [[SearchSeparatorItem alloc] initWithOneName:NSLocalizedString(@"Search.Separator.Contacts", nil) pluralName:NSLocalizedString(@"Search.Separator.Contacts", nil)];
     self.usersSeparator = [[SearchSeparatorItem alloc] initWithOneName:NSLocalizedString(@"Search.Separator.User", nil) pluralName:NSLocalizedString(@"Search.Separator.Users", nil)];
     self.messagesSeparator = [[SearchSeparatorItem alloc] initWithOneName:NSLocalizedString(@"Search.Separator.Messages", nil) pluralName:NSLocalizedString(@"Search.Separator.Messages", nil)];
@@ -146,6 +146,12 @@ typedef enum {
     }];
     
     
+    self.globalChannelsLoadMoreItem = [[SearchLoadMoreItem alloc] init];
+    [self.globalChannelsLoadMoreItem setClickBlock:^{
+        [strongSelf showMore:SearchSectionChannels animation:YES];
+    }];
+    
+    
     self.messagesLoadMoreItem = [[SearchLoadMoreItem alloc] init];
     [self.messagesLoadMoreItem setClickBlock:^{
         [strongSelf showMore:SearchSectionMessages animation:YES];
@@ -167,8 +173,6 @@ typedef enum {
     [self.noResultsImageView setImage:image_noResults()];
     [self.noResultsImageView setAutoresizingMask:NSViewMaxXMargin | NSViewMaxYMargin | NSViewMinXMargin | NSViewMinYMargin | NSViewWidthSizable | NSViewHeightSizable];
    
-    
-    
     [self.noResultsView setCenterByView:self.view];
     [self.noResultsView addSubview:self.noResultsImageView];
     [self.noResultsView setAutoresizingMask:NSViewMaxXMargin | NSViewMaxYMargin | NSViewMinXMargin | NSViewMinYMargin | NSViewWidthSizable | NSViewHeightSizable];
@@ -181,8 +185,6 @@ typedef enum {
     [self.tableView addItem:[[SearchLoaderItem alloc] init] tableRedraw:NO];
     [self.tableView reloadData];
     [self.view addSubview:self.tableView.containerView];
-    
-    
     
     [Notification addObserver:self selector:@selector(notificationDialogSelectionChanged:) name:@"ChangeDialogSelection"];
     
@@ -209,13 +211,9 @@ typedef enum {
         if(self.searchParams.isStorageLoaded)
         {
             [self remoteSearch:self.searchParams];
-        } else {
-            [self localSearch:self.searchParams];
         }
     }
     
-    
-   // ;
 }
 
 
@@ -227,7 +225,7 @@ typedef enum {
         TL_conversation *dialog = [notify.userInfo objectForKey:KEY_DIALOG];
         [self.tableView cancelSelection];
 
-        if(![dialog isKindOfClass:NSNull.class] && dialog) {
+        if(![dialog isKindOfClass:NSNull.class] && dialog && self.searchParams.searchString.length > 0) {
             NSUInteger hash = [SearchItem hash:[[SearchItem alloc] initWithDialogItem:dialog searchString:self.searchParams.searchString]];
             [self.tableView setSelectedByHash:hash];
         }
@@ -282,16 +280,12 @@ typedef enum {
         return res;
     }
     
-    
-    
     if(item && (![item isKindOfClass:[SearchSeparatorItem class]])) {
         TGConversationTableItem *searchItem = (TGConversationTableItem *)item;
         
         if(searchItem.conversation) {
             [[Telegram rightViewController] modalViewSendAction:searchItem.conversation];
-        } //else if(searchItem.user) {
-           // [[Telegram rightViewController] modalViewSendAction:[[DialogsManager sharedManager] findByUserId:searchItem.user.n_id]];
-       // }
+        }
     }
 
     return NO;
@@ -314,19 +308,28 @@ typedef enum {
         if([item isKindOfClass:[SearchMessageTableItem class]]) {
             msg_id = [[(SearchMessageTableItem *)searchItem message] n_id];
         } else {
-            TMViewController *controller = [[Telegram leftViewController] currentTabController];
+            StandartViewController *controller = (StandartViewController *) [[Telegram leftViewController] currentTabController];
             
-            if([controller isKindOfClass:[StandartViewController class]]) {
-              //  [(StandartViewController *)controller searchByString:@""];
+            if([controller isKindOfClass:[StandartViewController class]] && dialog) {
+                [controller hideSearchViewControllerWithConversationUsed:dialog];
             }
+            
             
         }
         
         if(dialog){
-            BOOL success = [[Telegram rightViewController] showByDialog:dialog withJump:msg_id historyFilter:[HistoryFilter class] sender:self];
-            if(!success) {
-                [[Telegram rightViewController].messagesViewController setCurrentConversation:dialog withJump:msg_id historyFilter:[HistoryFilter class]];
-            }
+            
+            
+            [appWindow().navigationController showMessagesViewController:dialog withMessage:searchItem.message];
+            
+            
+          
+          //  [self searchByString:@""];
+            
+//            BOOL success = [[Telegram rightViewController] showByDialog:dialog withJump:msg_id historyFilter:[HistoryFilter class] sender:self];
+//            if(!success) {
+//                [[Telegram rightViewController].messagesViewController setCurrentConversation:dialog withJump:msg_id historyFilter:[HistoryFilter class]];
+//            }
             [self.tableView setSelectedByHash:item.hash];
         }
     } else if(item && [item isKindOfClass:[SearchHashtagItem class]]) {
@@ -484,7 +487,8 @@ static int insertCount = 3;
         }
         
         if(params.globalUsers.count > insertCount) {
-            [self.tableView insert:[params.globalUsers subarrayWithRange:NSMakeRange(0, insertCount-1)] startIndex:[self.tableView count] tableRedraw:NO];
+            for(int i = 0; i < insertCount; i++)
+                [self.tableView addItem:[params.globalUsers objectAtIndex:i] tableRedraw:NO];
             
             self.globalUsersLoadMoreItem.num = (int)params.globalUsers.count - insertCount;
             [self.tableView addItem:self.globalUsersLoadMoreItem tableRedraw:NO];
@@ -552,7 +556,13 @@ static int insertCount = 3;
     
     self.searchParams.isLoading = YES;
     
-    [RPCRequest sendRequest:[TLAPI_messages_search createWithPeer:[TL_inputPeerEmpty create] q:params.searchString filter:[TL_inputMessagesFilterEmpty create] min_date:0 max_date:0 offset:params.remote_offset max_id:0 limit:50] successHandler:^(RPCRequest *request, TL_messages_messagesSlice *response) {
+    
+    int offset_id = [[(SearchMessageTableItem *)[params.messages lastObject] message] n_id];
+    int offset_date = [[(SearchMessageTableItem *)[params.messages lastObject] message] date];
+    
+    id request = ACCEPT_FEATURE ? [TLAPI_messages_searchGlobal createWithQ:params.searchString offset_date:offset_date offset_peer:[TL_inputPeerEmpty create] offset_id:offset_id limit:50] : [TLAPI_messages_search createWithFlags:0 peer:[TL_inputPeerEmpty create] q:params.searchString filter:[TL_inputMessagesFilterEmpty create] min_date:0 max_date:0 offset:params.remote_offset max_id:0 limit:50];
+    
+    [RPCRequest sendRequest:request successHandler:^(RPCRequest *request, TL_messages_messagesSlice *response) {
 
         
         if(params != self.searchParams)
@@ -598,9 +608,7 @@ static int insertCount = 3;
         
         
         params.isRemoteLoaded = YES;
-        if(params.isStorageLoaded) {
-            [self showMessagesResults:params];
-        }
+        [self showMessagesResults:params];
         
     } errorHandler:^(RPCRequest *request, RpcError *error) {
         if(params != self.searchParams)
@@ -614,8 +622,13 @@ static int insertCount = 3;
     if(params != self.searchParams)
         return;
     
+    
+    
     [self.tableView setDefaultAnimation:NSTableViewAnimationEffectNone];
     [self.tableView removeItem:self.messagesLoaderItem];
+    
+    
+    self.messagesSeparator.itemCount = params.isLoading  ? -1 : (int)params.messages.count;
     
     if(!params.messages.count) {
         [self.tableView removeItem:self.messagesSeparator];
@@ -626,6 +639,8 @@ static int insertCount = 3;
         [self.tableView.containerView setHidden:self.tableView.count == 0];
         [CATransaction commit];
         return;
+    } else if(self.searchParams.dialogs.count > 0) {
+        [self.tableView addItem:self.messagesSeparator tableRedraw:YES];
     }
     
     [CATransaction begin];
@@ -635,7 +650,7 @@ static int insertCount = 3;
     
     if(params.messages_offset <= 50) {
         if([self.tableView isItemInList:self.messagesSeparator]) {
-            [self.messagesSeparator setItemCount:params.messages_count];
+          //  [self.messagesSeparator setItemCount:params.messages_count];
             [self.tableView reloadDataForRowIndexes:[NSIndexSet indexSetWithIndex:self.tableView.count - 1] columnIndexes:[NSIndexSet indexSetWithIndex:0]];
         }
     }
@@ -654,7 +669,12 @@ static int insertCount = 3;
     
 }
 
+-(int)selectedPeerId {
+    return ((SearchItem *)self.tableView.selectedItem).conversation.peer_id;
+}
+
 - (void)searchByString:(NSString *)searchString {
+    
     
     [self.tableView.containerView setHidden:NO];
     
@@ -693,9 +713,9 @@ static int insertCount = 3;
         
             for(TLChat *chat in searchChats) {
                 TL_conversation *dialog = chat.dialog;
-                if(dialog && !dialog.fake)
+                if(dialog && !dialog.fake && ([chat isKindOfClass:[TLChat class]] && !chat.isDeactivated))
                     [dialogs addObject:dialog];
-                else
+                else if ([chat isKindOfClass:[TLChat class]] && !chat.isDeactivated)
                     [dialogsNeedCheck addObject:@(-chat.n_id)];
             }
             
@@ -774,15 +794,9 @@ static int insertCount = 3;
                 _dontLoadHashtagsForOneRequest = NO;
                 
                 
-                
-                
-                
-                [[Storage manager] searchDialogsByPeers:dialogsNeedCheck needMessages:NO searchString:nil completeHandler:^(NSArray *dialogsDB, NSArray *messagesDB, NSArray *searchMessagesDB) {
-                    
+                [[Storage manager] searchDialogsByPeers:dialogsNeedCheck needMessages:NO searchString:nil completeHandler:^(NSArray *dialogsDB) {
                     
                     [[DialogsManager sharedManager] add:dialogsDB];
-                    [[MessagesManager sharedManager] add:messagesDB];
-                        
                     [dialogs addObjectsFromArray:dialogsDB];
                         
                     NSArray *insertedDialogs = [dialogs sortedArrayWithOptions:NSSortStable usingComparator:^NSComparisonResult(TL_conversation *dialog1, TL_conversation *dialog2) {
@@ -831,7 +845,7 @@ static int insertCount = 3;
                 
             }
             
-            if((self.type & SearchTypeGlobalUsers) == SearchTypeGlobalUsers && searchParams.searchString.length >= 5) {
+            if((self.type & SearchTypeGlobalUsers) == SearchTypeGlobalUsers) {
                 
                 searchParams.globalUsers = [[NSMutableArray alloc] init];
                 
@@ -839,10 +853,11 @@ static int insertCount = 3;
                 
                 [filtred enumerateObjectsUsingBlock:^(TLUser *obj, NSUInteger idx, BOOL *stop) {
                     
-                    SearchItem *item = [[SearchItem alloc] initWithGlobalItem:obj searchString:searchString];
-                    
-                    [searchParams.globalUsers addObject:item];
-                    
+                    if(searchParams.searchString.length >= 5 || obj.isContact) {
+                        SearchItem *item = [[SearchItem alloc] initWithGlobalItem:obj searchString:searchString];
+                        
+                        [searchParams.globalUsers addObject:item];
+                    }
                 }];
                 
                 
@@ -874,8 +889,7 @@ static int insertCount = 3;
                     self.searchParams.isFinishLoading = YES;
                 } else {
                     dispatch_after_seconds(0.1, ^{
-                        // [self remoteSearch:searchParams];
-                        [self localSearch:searchParams];
+                         [self remoteSearch:searchParams];
                     });
                 }
                 
@@ -916,23 +930,30 @@ static int insertCount = 3;
         params.isLoading = NO;
         params.isRemoteGlobalUsersLoaded = YES;
         
-        if(response.users.count > 0) {
+        if(response.users.count > 0 || response.chats > 0) {
             
+            NSMutableArray *chatIds = [[NSMutableArray alloc] init];
             
             NSMutableArray *ids = [[NSMutableArray alloc] init];
             
             [params.globalUsers enumerateObjectsUsingBlock:^(SearchItem *obj, NSUInteger idx, BOOL *stop) {
-                [ids addObject:@([obj.user n_id])];
+                if(obj.user)
+                    [ids addObject:@([obj.user n_id])];
+                else
+                    [chatIds addObject:@([obj.chat n_id])];
             }];
             
             
+
+            NSArray *acceptUsers = [response.users filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"NOT(self.n_id IN %@)",ids]];
             
+            NSArray *acceptChats = [response.chats filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"NOT(self.n_id IN %@)",ids]];
             
-            NSArray *filtred = [response.users filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"NOT(self.n_id IN %@)",ids]];
+            [[UsersManager sharedManager] add:acceptUsers withCustomKey:@"n_id" update:YES];
             
-            [[UsersManager sharedManager] add:filtred withCustomKey:@"n_id" update:YES];
+            [[ChatsManager sharedManager] add:acceptChats];
             
-            [filtred enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+            [[acceptChats arrayByAddingObjectsFromArray:acceptUsers] enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
                 [params.globalUsers addObject:[[SearchItem alloc] initWithGlobalItem:obj searchString:params.searchString]];
             }];
             
@@ -951,68 +972,6 @@ static int insertCount = 3;
 }
 
 
--(void)localSearch:(SearchParams *)params {
-    
-    
-    
-    //self.searchParams.isLoading = YES;
-    
-    params.isStorageLoaded = YES;
-    params.messages_count = 0;
-    [self remoteSearch:params];
-    
-    return;
-    
-    
-    [[Storage manager] searchMessagesBySearchString:params.searchString offset:params.local_offset completeHandler:^(NSInteger count, NSArray *messages) {
-        
-        
-        [ASQueue dispatchOnStageQueue:^{
-            if(self.searchParams != params)
-                return;
-            
-            [[MessagesManager sharedManager] add:messages];
-            
-            
-            self.searchParams.isLoading = NO;
-            
-            params.local_offset += (int) count;
-            
-            
-            params.messages_offset+= (int)count;
-            
-            params.messages_count+=(int)count;
-            
-            
-            if(!params.messages)
-                params.messages = [NSMutableArray array];
-            
-            for(TL_localMessage *message in messages)
-                [params.messages addObject:[[SearchMessageTableItem alloc] initWithMessage:message selectedText:params.searchString]];
-            
-            if(params.messages.count > 0) {
-                [[ASQueue mainQueue] dispatchOnQueue:^{
-                     [self showMessagesResults:params];
-                }];
-            }
-            
-            
-            
-            if(count < 50) {
-                params.isStorageLoaded = YES;
-                params.messages_count = 0;
-                [self remoteSearch:params];
-            }
-
-        }];
-        
-        
-    }];
-    
-  
-    
-  
-}
 
 -(void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];

@@ -15,6 +15,7 @@
 - (void) searchFieldFocus;
 - (void) searchFieldBlur;
 - (void) searchFieldDidEnter;
+- (void) searchFieldDidResign;
 
 @required
 - (void) searchFieldTextChange:(NSString*)searchString;
@@ -30,6 +31,8 @@
 - (NSString *)stringValue;
 
 - (bool)endEditing;
+
+-(BOOL)isFirstResponder;
 
 -(void)setSelectedRange:(NSRange)range;
 

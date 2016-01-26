@@ -178,7 +178,7 @@
         //        _backgroundLayer.borderWidth = (YES || self.isActive || self.isOn) ? NSHeight(_backgroundLayer.bounds) / 2 : kBorderLineWidth;
         
         // ------------------------------- Animate Colors
-        if ((self.hasDragged && self.isDraggingTowardsOn) || (!self.hasDragged && self.isOn)) {
+        if ((self.hasDragged && self.isDraggingTowardsOn && self.isEnabled) || (!self.hasDragged && self.isOn && self.isEnabled)) {
             _backgroundLayer.borderColor = self.tintColor.CGColor;
             _backgroundLayer.backgroundColor = self.tintColor.CGColor;
         } else {
@@ -235,6 +235,7 @@
 }
 
 - (void)mouseDown:(NSEvent *)theEvent {
+    
     self.isActive = YES;
     
     [self updateLayer];
@@ -250,6 +251,12 @@
 }
 
 - (void)mouseUp:(NSEvent *)theEvent {
+    
+    [super mouseUp:theEvent];
+    
+    if(!self.isEnabled)
+        return;
+    
     self.isActive = NO;
     
     BOOL isOn = (!self.hasDragged) ? !self.isOn : self.isDraggingTowardsOn;
@@ -286,6 +293,12 @@
     _action = aSelector;
 }
 
+-(void)setEnabled:(BOOL)enabled {
+    [super setEnabled:enabled];
+    
+    
+}
+
 
 
 // ----------------------------------------------------
@@ -318,6 +331,8 @@
 }
 
 - (void)setOn:(BOOL)on animated:(BOOL)animated {
+    
+    
     _animationDuration = animated ? kAnimationDuration : 0;
    
     [self setOn:on];

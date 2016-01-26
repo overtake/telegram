@@ -45,7 +45,12 @@
 }
 
 -(BOOL)resignFirstResponder {
-    return [super resignFirstResponder];
+    
+    BOOL res = [super resignFirstResponder];
+    
+    [self.searchDelegate searchFieldDidResign];
+                
+    return res;
 }
 
 - (BOOL)becomeFirstResponder {
@@ -165,18 +170,16 @@ const static int textFieldXOffset = 30;
         self.textField = [[_TMSearchTextField alloc] initWithFrame:NSZeroRect];
         [self.textField setDelegate:self];
         [self.textField setSearchDelegate:self];
-        NSAttributedString *placeholderAttributed = [[NSAttributedString alloc] initWithString:NSLocalizedString(@"Search", nil) attributes:@{NSForegroundColorAttributeName: NSColorFromRGB(0xaeaeae), NSFontAttributeName: [NSFont fontWithName:@"Helvetica-Light" size:12]}];
+        NSAttributedString *placeholderAttributed = [[NSAttributedString alloc] initWithString:NSLocalizedString(@"Search", nil) attributes:@{NSForegroundColorAttributeName: NSColorFromRGB(0xaeaeae), NSFontAttributeName: TGSystemLightFont(12)}];
         [[self.textField cell] setPlaceholderAttributedString:placeholderAttributed];
         
-     
-        
         [self.textField setBackgroundColor:[NSColor clearColor]];
-        [self.textField setFont:[NSFont fontWithName:@"Helvetica-Light" size:12]];
+        [self.textField setFont:TGSystemLightFont(12)];
         [self.textField setStringValue:NSLocalizedString(@"Search", nil)];
         [self.textField sizeToFit];
         [self.textField setStringValue:@""];
         
-        [self.textField setFrame:NSMakeRect(textFieldXOffset, roundf((self.bounds.size.height - self.textField.bounds.size.height) / 2) - 3, self.containerView.frame.size.width - 30 - textFieldXOffset, self.textField.bounds.size.height)];
+        [self.textField setFrame:NSMakeRect(textFieldXOffset, roundf((self.frame.size.height - self.textField.frame.size.height) / 2) - 1, self.containerView.frame.size.width - 30 - textFieldXOffset, self.textField.bounds.size.height)];
         
         
         [self.textField setBordered:NO];
@@ -205,9 +208,6 @@ const static int textFieldXOffset = 30;
         [self.cancelButton setTarget:self selector:@selector(cancelButtonClick)];
         [self addSubview:self.cancelButton];
         [self.containerView setWantsLayer:YES];
-      
-        
-        [self.textField becomeFirstResponder];
     }
     
     return self;
@@ -233,8 +233,15 @@ const static int textFieldXOffset = 30;
     
     success = [[NSApp mainWindow] makeFirstResponder:nil];
     
+    [self centerPosition:YES];
     
     return success;
+}
+
+-(BOOL)isFirstResponder {
+    id responder = [self.window firstResponder];
+    
+    return [responder isKindOfClass:[NSTextView class]] && [[responder superview] superview] == self.textField;
 }
 
 -(void)setSelectedRange:(NSRange)range {
@@ -246,7 +253,10 @@ const static int textFieldXOffset = 30;
     
     [super setFrameSize:newSize];
     
-    [self.textField setFrameOrigin:NSMakePoint(30, NSMinY(self.textField.frame))];
+    
+    [self.textField setFrame:NSMakeRect(textFieldXOffset, roundf((self.frame.size.height - self.textField.frame.size.height) / 2) - 2, self.containerView.frame.size.width - 30 - textFieldXOffset, self.textField.bounds.size.height)];
+    
+   // [self.textField setFrameOrigin:NSMakePoint(30, NSMinY(self.textField.frame))];
     
     [self.textField setFrameSize:NSMakeSize(self.containerView.frame.size.width - 30 - NSMinX(self.textField.frame), NSHeight(self.textField.frame))];
     
@@ -374,6 +384,8 @@ static float duration = 0.1;
     if(![self isTextFieldInFocus:self.textField]) {
         [self centerPosition:YES];
     }
+    
+    [self endEditing];
 }
 
 - (BOOL)isTextFieldInFocus:(NSTextField *)textField {
@@ -408,12 +420,26 @@ static float duration = 0.1;
 //    if(self.)
  //   [self centerPosition:YES];
 //    [self setNeedsDisplay:YES];
+    
+    [self.cancelButton setHidden:self.textField.stringValue.length == 0];
+    if([self.delegate respondsToSelector:@selector(searchFieldBlur)])
+        [self.delegate searchFieldBlur];
 }
 
 - (void) searchFieldFocus {
     self.isActive = YES;
     [self leftPosition:YES];
 //    [self setNeedsDisplay:YES];
+     [self.cancelButton setHidden:NO];
+    
+    if([self.delegate respondsToSelector:@selector(searchFieldFocus)])
+        [self.delegate searchFieldFocus];
+}
+
+- (void) searchFieldDidResign {
+    [self.cancelButton setHidden:self.textField.stringValue.length == 0];
+    if([self.delegate respondsToSelector:@selector(searchFieldFocus)])
+        [self.delegate searchFieldFocus];
 }
 
 - (void) mouseEntered:(NSEvent *)theEvent {

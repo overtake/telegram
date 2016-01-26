@@ -318,10 +318,10 @@
             
             
             if (shouldClose) {
-               // id mouseDownView = [((AppDelegate *)[NSApp delegate]).window.contentView hitTest:event.locationInWindow];
-              //  if(mouseDownView != self.positioningView) {
+                id mouseDownView = [appWindow().contentView hitTest:event.locationInWindow];
+                if(mouseDownView != self.positioningView) {
                     [strongSelf close];
-              //  }
+                }
             }
         };
         

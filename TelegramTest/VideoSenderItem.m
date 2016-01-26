@@ -24,7 +24,7 @@
 }
 
 
--(id)initWithPath:(NSString *)path_for_file forConversation:(TL_conversation *)conversation {
+-(id)initWithPath:(NSString *)path_for_file forConversation:(TL_conversation *)conversation additionFlags:(int)additionFlags {
     if(self = [super init]) {
         self.path_for_file = path_for_file;
         self.conversation = conversation;
@@ -53,13 +53,15 @@
         }
         
 
-        TL_messageMediaVideo *video = [TL_messageMediaVideo createWithVideo:[TL_video createWithN_id:0 access_hash:0 user_id:[UsersManager currentUserId] date:(int)[[MTNetwork instance] getTime] duration:duration size:0  thumb:cachedSize dc_id:0 w:size.width h:size.height] caption:@""];
+        TL_messageMediaVideo *video = [TL_messageMediaVideo createWithVideo:[TL_video createWithN_id:0 access_hash:0 date:(int)[[MTNetwork instance] getTime] duration:duration mime_type:mimetypefromExtension([path_for_file pathExtension]) size:0 thumb:cachedSize dc_id:0 w:size.width h:size.height] caption:@""];
 
         [[ImageCache sharedManager] setImage:thumbImage forLocation:[cachedSize location]];
 
         self.message = [MessageSender createOutMessage:@"" media:video conversation:conversation];
         
-        
+        if(additionFlags & (1 << 4))
+            self.message.from_id = 0;
+
 
     }
 
@@ -98,7 +100,7 @@
             if(strongSelf.conversation.type == DialogTypeBroadcast) {
                 request = [TLAPI_messages_sendBroadcast createWithContacts:[strongSelf.conversation.broadcast inputContacts] random_id:[strongSelf.conversation.broadcast generateRandomIds] message:@"" media:media];
             } else {
-                request = [TLAPI_messages_sendMedia createWithFlags:strongSelf.message.reply_to_msg_id != 0 ? 1 : 0 peer:strongSelf.conversation.inputPeer reply_to_msg_id:strongSelf.message.reply_to_msg_id media:media random_id:strongSelf.message.randomId  reply_markup:[TL_replyKeyboardMarkup createWithFlags:0 rows:[@[]mutableCopy]]];
+                request = [TLAPI_messages_sendMedia createWithFlags:[self senderFlags] peer:strongSelf.conversation.inputPeer reply_to_msg_id:strongSelf.message.reply_to_msg_id media:media random_id:strongSelf.message.randomId  reply_markup:[TL_replyKeyboardMarkup createWithFlags:0 rows:[@[]mutableCopy]]];
             }
             
             
@@ -107,6 +109,7 @@
                 
                 [SharedManager proccessGlobalResponse:response];
                
+                [strongSelf updateMessageId:response];
                 
                 if(response.updates.count < 2)
                 {
@@ -169,7 +172,7 @@
                 UploadOperation *thumbUpload = [[UploadOperation alloc] init];
                 [thumbUpload setUploadComplete:^(UploadOperation *thumb, TL_inputFile *inputThumbFile) {
                     
-                    media = [TL_inputMediaUploadedThumbVideo createWithFile:input  thumb:inputThumbFile duration:duration w:size.width h:size.height caption:@""];
+                    media = [TL_inputMediaUploadedThumbVideo createWithFile:input  thumb:inputThumbFile duration:duration w:size.width h:size.height mime_type:mimetypefromExtension(@"mp4") caption:@""];
                     
                     block();
                 }];
@@ -177,7 +180,7 @@
                 [thumbUpload setFileData:thumbData];
                 [thumbUpload ready:UploadImageType];
             } else {
-                media = [TL_inputMediaUploadedVideo createWithFile:input duration:duration w:size.width h:size.height caption:self.message.media.caption];
+                media = [TL_inputMediaUploadedVideo createWithFile:input duration:duration w:size.width h:size.height mime_type:mimetypefromExtension(@"mp4") caption:self.message.media.caption];
                 block();
             }
         }

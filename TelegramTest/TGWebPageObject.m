@@ -13,7 +13,11 @@
 #import "TGWebpageTWObject.h"
 #import "TGWebpageStandartObject.h"
 #import "TGWebpageArticle.h"
+#import "TGWebpageGifObject.h"
 #import "NSAttributedString+Hyperlink.h"
+
+#import "TGArticleImageObject.h"
+
 @implementation TGWebpageObject
 
 NSImage *placeholder() {
@@ -50,9 +54,9 @@ NSImage *placeholder() {
             
             [author appendString:webpage.author withColor:DARK_BLACK];
             
-            [author setFont:[NSFont fontWithName:@"HelveticaNeue-Medium" size:12.5] forRange:author.range];
+            [author setFont:TGSystemMediumFont(13) forRange:author.range];
             
-            [author addAttribute:NSParagraphStyleAttributeName value:style range:author.range];
+          //  [author addAttribute:NSParagraphStyleAttributeName value:style range:author.range];
             
             _author = author;
             
@@ -64,10 +68,8 @@ NSImage *placeholder() {
         if(webpage.title) {
             NSMutableAttributedString *title = [[NSMutableAttributedString alloc] init];
             
-            
-            
             [title appendString:webpage.title withColor:[NSColor blackColor]];
-            [title setFont:[NSFont fontWithName:@"HelveticaNeue-Medium" size:12.5] forRange:title.range];
+            [title setFont:TGSystemMediumFont(13) forRange:title.range];
             
             _title = title;
         }
@@ -76,7 +78,7 @@ NSImage *placeholder() {
 //            
 //            NSMutableAttributedString *copy = [_title mutableCopy];
 //            
-//            [copy setFont:[NSFont fontWithName:@"HelveticaNeue-Medium" size:12.5] forRange:copy.range];
+//            [copy setFont:TGSystemMediumFont(12.5) forRange:copy.range];
 //            [copy addAttribute:NSParagraphStyleAttributeName value:style range:copy.range];
 //            _author = copy;
 //            
@@ -85,10 +87,9 @@ NSImage *placeholder() {
         NSMutableAttributedString *siteName = [[NSMutableAttributedString alloc] init];
         
         [siteName appendString:webpage.site_name ? webpage.site_name : @"Link Preview" withColor:GRAY_TEXT_COLOR];
-        
-        [siteName setFont:[NSFont fontWithName:@"HelveticaNeue-Medium" size:12.5] forRange:siteName.range];
-        [siteName addAttribute:NSParagraphStyleAttributeName value:style range:siteName.range];
-        
+
+        [siteName setFont:TGSystemMediumFont(13) forRange:siteName.range];
+      //  [siteName addAttribute:NSParagraphStyleAttributeName value:style range:siteName.range];
         _siteName = siteName;
         
         
@@ -98,7 +99,7 @@ NSImage *placeholder() {
             NSMutableAttributedString *desc = [[NSMutableAttributedString alloc] init];
             
             [desc appendString:webpage.n_description withColor:[NSColor blackColor]];
-            [desc setFont:[NSFont fontWithName:@"HelveticaNeue" size:12.5] forRange:desc.range];
+            [desc setFont:TGSystemFont(13) forRange:desc.range];
             
             NSMutableParagraphStyle *style = [NSMutableParagraphStyle new];
             style.lineBreakMode = NSLineBreakByWordWrapping;
@@ -113,7 +114,7 @@ NSImage *placeholder() {
                 NSMutableAttributedString *title = [[NSMutableAttributedString alloc] init];
                 
                 [title appendString:[NSString stringWithFormat:@"%@\n",t] withColor:[NSColor blackColor]];
-                [title setFont:[NSFont fontWithName:@"HelveticaNeue-Medium" size:12.5] forRange:title.range];
+                [title setFont:TGSystemMediumFont(13) forRange:title.range];
                 
                 [desc insertAttributedString:title atIndex:0];
             }
@@ -146,6 +147,11 @@ NSImage *placeholder() {
             
             
             _imageObject.imageSize = imageSize;
+            
+            
+            _roundObject = [[TGArticleImageObject alloc] initWithLocation:photoSize.location placeHolder:placeholder() sourceId:0 size:photoSize.size];
+            
+            _roundObject.imageSize = NSMakeSize(60, 60);
         }
         
         
@@ -181,7 +187,9 @@ NSImage *placeholder() {
     
 }
 
-
+-(void)dealloc {
+    
+}
 
 -(Class)webpageContainer {
     return NSClassFromString(@"TGWebpageContainer");
@@ -218,9 +226,14 @@ NSImage *placeholder() {
     
     
     
-    if([webpage.type isEqualToString:@"article"] || [webpage.type isEqualToString:@"app"] || [webpage.type isEqualToString:@"document"])
+    if([webpage.type isEqualToString:@"article"] || [webpage.type isEqualToString:@"app"])
     {
         return [[TGWebpageArticle alloc] initWithWebPage:webpage];
+    }
+    
+    if([webpage.type isEqualToString:@"document"]) {
+        if([webpage.document.mime_type isEqualToString:@"image/gif"])
+            return [[TGWebpageGifObject alloc] initWithWebPage:webpage];
     }
     
     return [[TGWebpageStandartObject alloc] initWithWebPage:webpage];

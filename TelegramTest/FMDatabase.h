@@ -248,6 +248,10 @@
  @return `YES` if everything succeeds, `NO` on failure.
  */
 
+
+
+- (void)updatePath:(NSString *)path;
+
 - (BOOL)goodConnection;
 
 

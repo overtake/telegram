@@ -37,7 +37,7 @@
         
         TL_localMessage *msg = (TL_localMessage *)self.object;
         
-        NSSize size = NSMakeSize(250, msg.media.video.thumb.h + (250 - msg.media.video.thumb.w));
+        NSSize size = NSMakeSize(msg.media.video.thumb.w * 3, msg.media.video.thumb.h * 3);
         
         __block NSImage *thumbImg;
         
@@ -71,7 +71,7 @@
         
         msg.media.video.thumb = [TL_photoCachedSize createWithType:@"x" location:location w:size.width h:size.height bytes:jpegNormalizedData(thumbImg)];
         
-        [[Storage manager] updateMessages:@[msg]];
+       [msg save:NO];
         
         
     }

@@ -19,12 +19,14 @@
 @property (nonatomic,assign) NSSize textSize;
 
 @property (nonatomic,strong,readonly) TGWebpageObject *webpage;
-
+@property (nonatomic,strong,readonly) NSArray *links;
+@property (nonatomic,strong,readonly) NSAttributedString *allAttributedLinks;
+@property (nonatomic,assign,readonly) NSSize allAttributedLinksSize;
 
 -(void)updateMessageFont;
 
 -(void)updateWebPage;
-
+-(void)updateEntities;
 
 -(BOOL)isWebPage;
 

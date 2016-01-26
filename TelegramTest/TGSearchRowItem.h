@@ -7,9 +7,9 @@
 //
 
 #import "TMRowItem.h"
+#import "TGGeneralRowItem.h"
+@interface TGSearchRowItem : TGGeneralRowItem
 
-@interface TGSearchRowItem : TMRowItem
-
-
+@property (nonatomic,weak) id<TMSearchTextFieldDelegate> delegate;
 
 @end

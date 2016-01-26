@@ -23,6 +23,10 @@
 
 
 -(NSString *)prettyNumber {
+    
+    if([self unsignedLongValue] < 1000)
+        return [NSString stringWithFormat:@"%@",self];
+    
     return [self prettyFormatter:[self unsignedLongValue] iteration:0];
 }
 @end

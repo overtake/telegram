@@ -12,7 +12,7 @@
 {
     NSMutableDictionary *_proportions;
     NSMutableDictionary *_startSize;
-    TGView *_containerView;
+   // TGView *self;
     NSMutableArray *_controllers;
     BOOL _isSingleLayout;
     NSMutableDictionary *_layoutProportions;
@@ -32,8 +32,8 @@
         _startSize = [[NSMutableDictionary alloc] init];
         _layoutProportions = [[NSMutableDictionary alloc] init];
         _canChangeState = YES;
-        _containerView = [[TGView alloc] initWithFrame:self.bounds];
-        [self addSubview:_containerView];
+       // self = [[TGView alloc] initWithFrame:self.bounds];
+       // [self addSubview:self];
         
         _state = -1;
         
@@ -52,7 +52,7 @@
     assert([NSThread isMainThread] && controller.view.superview == nil);
     
     
-    [_containerView addSubview:controller.view];
+    [self addSubview:controller.view];
     
     [_controllers addObject:controller];
     
@@ -72,29 +72,28 @@
 -(void)setFrameSize:(NSSize)newSize {
     [super setFrameSize:newSize];
 
-    [_containerView setFrameSize:newSize];
     
-    struct TGSplitProportion singleLayout = {0,0};
-    struct TGSplitProportion dualLayout = {0,0};
+    struct TGSplitProportion singleLayout = {380,300+380};
+    struct TGSplitProportion dualLayout = {300+380,FLT_MAX};
     struct TGSplitProportion tripleLayout = {0,0};
     
-    [_layoutProportions[@(TGSplitViewStateSingleLayout)] getValue:&singleLayout];
-    [_layoutProportions[@(TGSplitViewStateDualLayout)] getValue:&dualLayout];
+   // [_layoutProportions[@(TGSplitViewStateSingleLayout)] getValue:&singleLayout];
+   // [_layoutProportions[@(TGSplitViewStateDualLayout)] getValue:&dualLayout];
     [_layoutProportions[@(TGSplitViewStateTripleLayout)] getValue:&tripleLayout];
     
     
     if(isAcceptLayout(singleLayout) && _canChangeState) {
-        if(_state != TGSplitViewStateSingleLayout && NSWidth(_containerView.frame) < singleLayout.max )
+        if(_state != TGSplitViewStateSingleLayout && NSWidth(self.frame) < singleLayout.max )
             self.state = TGSplitViewStateSingleLayout;
         
         if(isAcceptLayout(dualLayout)) {
             if(isAcceptLayout(tripleLayout)) {
-                if(_state != TGSplitViewStateDualLayout && NSWidth(_containerView.frame) > dualLayout.min && NSWidth(_containerView.frame) < tripleLayout.min)
+                if(_state != TGSplitViewStateDualLayout && NSWidth(self.frame) > dualLayout.min && NSWidth(self.frame) < tripleLayout.min)
                     self.state = TGSplitViewStateDualLayout;
                 else
                     self.state = TGSplitViewStateTripleLayout;
             } else
-                if(_state != TGSplitViewStateDualLayout && NSWidth(_containerView.frame) > dualLayout.min)
+                if(_state != TGSplitViewStateDualLayout && NSWidth(self.frame) > dualLayout.min)
                     self.state = TGSplitViewStateDualLayout;
         }
     }
@@ -110,7 +109,7 @@
         NSSize startSize = [_startSize[obj.internalId] sizeValue];
         
         
-        NSSize size = NSMakeSize(x, NSHeight(_containerView.frame));
+        NSSize size = NSMakeSize(x, NSHeight(self.frame));
         
         
         int min = startSize.width;
@@ -120,14 +119,14 @@
             min = proportion.min;
         } else if(startSize.width > proportion.max)
         {
-            min = NSWidth(_containerView.frame) - x;
+            min = NSWidth(self.frame) - x;
             
         }
         
         if(idx == _controllers.count - 1)
-            min = NSWidth(_containerView.frame) - x;
+            min = NSWidth(self.frame) - x;
         
-        size = NSMakeSize(x + min > NSWidth(_containerView.frame) ? (NSWidth(_containerView.frame) - x) : min, NSHeight(_containerView.frame));
+        size = NSMakeSize(x + min > NSWidth(self.frame) ? (NSWidth(self.frame) - x) : min, NSHeight(self.frame));
         
         NSRect rect = NSMakeRect(x, 0, size.width, size.height);
         
@@ -168,7 +167,7 @@ bool isAcceptLayout(struct TGSplitProportion prop) {
     assert([NSThread isMainThread]);
     
     if(idx != NSNotFound) {
-        [_containerView.subviews[idx] removeFromSuperview];
+        [self.subviews[idx] removeFromSuperview];
         [_controllers removeObjectAtIndex:idx];
         [_startSize removeObjectForKey:controller.internalId];
         [_proportions removeObjectForKey:controller.internalId];
@@ -177,7 +176,7 @@ bool isAcceptLayout(struct TGSplitProportion prop) {
 }
 
 -(void)removeAllControllers {
-    [_containerView removeAllSubviews];
+    [self removeAllSubviews];
     [_controllers removeAllObjects];
     [_startSize removeAllObjects];
     [_proportions removeAllObjects];
@@ -216,7 +215,7 @@ bool isAcceptLayout(struct TGSplitProportion prop) {
     _splitIdx = 0;
     _splitSuccess = NO;
     
-    [_containerView.subviews enumerateObjectsUsingBlock:^(TGView *obj, NSUInteger idx, BOOL *stop) {
+    [self.subviews enumerateObjectsUsingBlock:^(TGView *obj, NSUInteger idx, BOOL *stop) {
         
         if(fabs(_startPoint.x - NSMaxX(obj.frame)) <= 10)
         {

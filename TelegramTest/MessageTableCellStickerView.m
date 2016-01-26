@@ -10,6 +10,7 @@
 #import "TGImageView.h"
 #import "StickersPanelView.h"
 #import "EmojiViewController.h"
+#import "TGStickerPackModalView.h"
 @interface MessageTableCellStickerView ()
 @property (nonatomic,strong) TGImageView *imageView;
 @end
@@ -91,6 +92,7 @@
 }
 
 
+
 -(void)mouseUp:(NSEvent *)theEvent {
     [super mouseUp:theEvent];
     
@@ -102,11 +104,18 @@
             
             if(![attr.stickerset isKindOfClass:[TL_inputStickerSetEmpty class]]) {
                 
-                NSArray *check = [[EmojiViewController allSets] filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.n_id == %ld",attr.stickerset.n_id]];
-                
-                if(check.count == 0) {
+                TL_stickerSet *set = [EmojiViewController setWithId:attr.stickerset.n_id];
+                NSMutableArray *stickers = (NSMutableArray *) [EmojiViewController stickersWithId:attr.stickerset.n_id];
+                if(set && stickers.count > 0) {
+                    TGStickerPackModalView *modalView = [[TGStickerPackModalView alloc] init];
+                    
+                    [modalView setStickerPack:[TL_messages_stickerSet createWithSet:set packs:nil documents:stickers]];
+                    
+                    [modalView show:self.window animated:YES];
+                } else
                     add_sticker_pack_by_name(attr.stickerset);
-                }
+                
+                
                 
             }
             

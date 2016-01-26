@@ -14,6 +14,7 @@
 @property (nonatomic,strong,readonly) TLUser *user;
 @property (nonatomic,strong,readonly) TLChat *chat;
 
+@property (nonatomic,assign) int date;
 
 @property (nonatomic,strong,readonly) NSAttributedString *name;
 

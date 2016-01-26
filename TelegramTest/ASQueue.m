@@ -112,80 +112,80 @@
         if (_isMainQueue)
         {
             if ([NSThread isMainThread]) {
-                @try {
+            //    @try {
                      block();
-                }
-                @catch (NSException *exception) {
-                    MTLog(@"fatal error: %@",[exception callStackSymbols]);
+            //    }
+           //     @catch (NSException *exception) {
+                //    MTLog(@"fatal error: %@",[exception callStackSymbols]);
                     
 #ifdef TGDEBUG
-                    [self alertUserWithCrash:exception];
+                 //   [self alertUserWithCrash:exception];
 #endif
-                }
+           //     }
                 
             }
             
             else if (synchronous)
                 dispatch_sync(_queue, ^{
-                    @try {
+              //      @try {
                         block();
-                    }
-                    @catch (NSException *exception) {
-                         MTLog(@"fatal error: %@",[exception callStackSymbols]);
+              //      }
+                 //   @catch (NSException *exception) {
+                      //   MTLog(@"fatal error: %@",[exception callStackSymbols]);
 #ifdef TGDEBUG
-                        [self alertUserWithCrash:exception];
+                     //   [self alertUserWithCrash:exception];
 #endif
-                    }
+                 //   }
                     
                 });
             else
                 dispatch_async(_queue, ^{
-                    @try {
+                //    @try {
                         block();
-                    }
-                    @catch (NSException *exception) {
-                         MTLog(@"fatal error: %@",[exception callStackSymbols]);
+                 //   }
+                  //  @catch (NSException *exception) {
+                    //     MTLog(@"fatal error: %@",[exception callStackSymbols]);
 #ifdef TGDEBUG
-                        [self alertUserWithCrash:exception];
+                   //     [self alertUserWithCrash:exception];
 #endif
-                    }
+                 //   }
                 });
         }
         else
         {
             if (dispatch_get_current_queue() == self.nativeQueue)
-                @try {
+               // @try {
                     block();
-                }
-                @catch (NSException *exception) {
-                    MTLog(@"fatal error: %@",[exception callStackSymbols]);
+              //  }
+               // @catch (NSException *exception) {
+                 //   MTLog(@"fatal error: %@",[exception callStackSymbols]);
 #ifdef TGDEBUG
-                    [self alertUserWithCrash:exception];
+                  //  [self alertUserWithCrash:exception];
 #endif
-                }
+              //  }
             else if (synchronous)
                 dispatch_sync(_queue, ^{
-                    @try {
+                  //  @try {
                         block();
-                    }
-                    @catch (NSException *exception) {
-                         MTLog(@"fatal error: %@",[exception callStackSymbols]);
+                 //   }
+                   // @catch (NSException *exception) {
+                   //      MTLog(@"fatal error: %@",[exception callStackSymbols]);
 #ifdef TGDEBUG
-                        [self alertUserWithCrash:exception];
+                   //     [self alertUserWithCrash:exception];
 #endif
-                    }
+                  //  }
                 });
             else
                 dispatch_async(_queue, ^{
-                    @try {
+                   // @try {
                         block();
-                    }
-                    @catch (NSException *exception) {
-                         MTLog(@"fatal error: %@",[exception callStackSymbols]);
+                  //  }
+                  //  @catch (NSException *exception) {
+                    //     MTLog(@"fatal error: %@",[exception callStackSymbols]);
 #ifdef TGDEBUG
-                        [self alertUserWithCrash:exception];
+                     //   [self alertUserWithCrash:exception];
 #endif
-                    }
+                   // }
                 });
         }
     }
@@ -193,6 +193,8 @@
 }
 
 -(void)alertUserWithCrash:(NSException *)crash {
+    
+#ifdef TGDEBUG
     
     [ASQueue dispatchOnMainQueue:^{
         NSAlert *alert = [[NSAlert alloc] init];
@@ -206,10 +208,14 @@
         [alert addButtonWithTitle:@"Ignore ;("];
         [alert beginSheetModalForWindow:[[NSApp delegate] mainWindow] modalDelegate:self didEndSelector:@selector(alertDidEnd:returnCode:contextInfo:) contextInfo:(__bridge void *)(crash)];
     }];
+    
+#endif
    
 }
 
 - (void)alertDidEnd:(NSAlert *)alert returnCode:(int)returnCode contextInfo:(void *)contextInfo {
+    
+    #ifdef TGDEBUG
     
     if(returnCode == 1000) {
         NSException *crash = (__bridge NSException *)(contextInfo);
@@ -217,6 +223,8 @@
     } else if(returnCode == 1001) {
         [Telegram sendLogs];
     }
+    
+    #endif
     
 }
 

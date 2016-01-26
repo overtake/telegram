@@ -21,7 +21,6 @@
 @property (nonatomic,strong) NSMutableArray *stickers;
 @property (nonatomic,strong) NSMutableArray *sets;
 @property (nonatomic,assign) BOOL isCustomStickerPack;
-@property (nonatomic,strong) NSDictionary *topSets;
 @end
 
 
@@ -97,6 +96,7 @@
     
     return self;
 }
+ 
 
 -(NSUInteger)hash {
     
@@ -187,7 +187,7 @@ static NSImage *higlightedImage() {
         [imageView setTapBlock:^ {
             
             if(!_tableView.isCustomStickerPack)
-                [[Telegram rightViewController].messagesViewController sendSticker:item.stickers[idx] forConversation:[Telegram conversation] addCompletionHandler:nil];
+                [[EmojiViewController instance].messagesViewController sendSticker:item.stickers[idx] forConversation:[Telegram conversation] addCompletionHandler:nil];
             
         }];
         
@@ -218,9 +218,6 @@ static NSImage *higlightedImage() {
 
         }
         
-        
-       
-        
         [self addSubview:button];
         
         xOffset+=width;
@@ -243,11 +240,46 @@ static NSImage *higlightedImage() {
     if(self = [super initWithFrame:frameRect]) {
         _stickers = [[NSMutableArray alloc] init];
         self.tm_delegate = self;
+        
+        [Notification addObserver:self selector:@selector(stickersNeedFullReload:) name:STICKERS_ALL_CHANGED];
+        [Notification addObserver:self selector:@selector(stickersNeedReorder:) name:STICKERS_REORDER];
+        [Notification addObserver:self selector:@selector(stickersNewPackAdded:) name:STICKERS_NEW_PACK];
+        
     }
     
     return self;
 }
 
+
+-(void)stickersNeedFullReload:(NSNotification *)notification {
+    [self load:YES];
+}
+
+-(void)stickersNeedReorder:(NSNotification *)notification {
+    NSArray *order = notification.userInfo[KEY_ORDER];
+    
+    [_sets sortUsingComparator:^NSComparisonResult(TL_stickerSet *obj1, TL_stickerSet *obj2) {
+        
+        NSNumber *idx1 = @([order indexOfObject:@(obj1.n_id)]);
+        NSNumber *idx2 = @([order indexOfObject:@(obj2.n_id)]);
+        
+        return [idx1 compare:idx2];
+    }];
+    
+    [self reloadData];
+}
+
+-(void)stickersNewPackAdded:(NSNotification *)notification {
+    TL_messages_stickerSet *set = notification.userInfo[KEY_STICKERSET];
+    
+    [_sets insertObject:set.set atIndex:0];
+    
+    [_stickers addObjectsFromArray:set.documents];
+    
+    [self save:_sets stickers:_stickers n_hash:[self stickersHash:_sets] saveSets:YES];
+    
+    [self reloadData];
+}
 
 
 
@@ -271,7 +303,6 @@ static NSImage *higlightedImage() {
             
             NSDictionary *info  = [transaction objectForKey:@"allstickers" inCollection:STICKERS_COLLECTION];
             
-            hash = info[@"hash"];
             
             stickers = info[@"serialized"];
             
@@ -300,8 +331,7 @@ static NSImage *higlightedImage() {
         _stickers = [stickers mutableCopy];
         
         if(!isRemoteStickersLoaded() || force) {
-            [RPCRequest sendRequest:[TLAPI_messages_getAllStickers createWithN_hash:hash] successHandler:^(RPCRequest *request, TL_messages_allStickers *response) {
-                
+            [RPCRequest sendRequest:[TLAPI_messages_getAllStickers createWithN_hash:[self stickersHash:_sets]] successHandler:^(RPCRequest *request, TL_messages_allStickers *response) {
                 
                 if(![response isKindOfClass:[TL_messages_allStickersNotModified class]]) {
                     
@@ -328,7 +358,33 @@ static NSImage *higlightedImage() {
 }
 
 
--(void)loadSetsIfNeeded:(NSArray *)sets n_hash:(NSString *)n_hash {
+-(void)save:(NSArray *)sets stickers:(NSArray *)stickers n_hash:(int)n_hash saveSets:(BOOL)saveSets {
+    [[Storage yap] readWriteWithBlock:^(YapDatabaseReadWriteTransaction * __nonnull transaction) {
+        
+        NSMutableArray *serializedStickers = [_stickers mutableCopy];
+        
+        NSMutableDictionary *data = [[transaction objectForKey:@"allstickers" inCollection:STICKERS_COLLECTION] mutableCopy];
+        
+        if(!data)
+        {
+            data = [[NSMutableDictionary alloc] init];
+            data[@"sets"] = [[NSMutableArray alloc] init];
+        }
+        
+        data[@"serialized"] = serializedStickers;
+        
+        if(saveSets) {
+            
+            data[@"sets"] = sets;
+        }
+        
+        [transaction setObject:data forKey:@"allstickers" inCollection:STICKERS_COLLECTION];
+        
+    }];
+
+}
+
+-(void)loadSetsIfNeeded:(NSArray *)sets n_hash:(int)n_hash {
     
     
     NSMutableArray *removed = [[NSMutableArray alloc] init];
@@ -354,6 +410,8 @@ static NSImage *higlightedImage() {
         
     }];
     
+     _sets = [sets mutableCopy];
+    
     NSMutableArray *toremove = [[NSMutableArray alloc] init];
     
     [_stickers enumerateObjectsUsingBlock:^(TL_document *obj, NSUInteger idx, BOOL *stop) {
@@ -370,34 +428,8 @@ static NSImage *higlightedImage() {
     
     [_stickers removeObjectsInArray:toremove];
     
-    [[Storage yap] readWriteWithBlock:^(YapDatabaseReadWriteTransaction * __nonnull transaction) {
-        
-        NSMutableArray *serializedStickers = [_stickers mutableCopy];
-        
-        
-        
-        NSMutableDictionary *data = [[transaction objectForKey:@"allstickers" inCollection:STICKERS_COLLECTION] mutableCopy];
-        
-        if(!data)
-        {
-            data = [[NSMutableDictionary alloc] init];
-            data[@"sets"] = [[NSMutableArray alloc] init];
-            data[@"hash"] = @"";
-        }
-        
-        data[@"serialized"] = serializedStickers;
-        
-        if(changed.count == 0) {
-            
-            data[@"sets"] = sets;
-            data[@"hash"] = n_hash;
-        }
-        
-        [transaction setObject:data forKey:@"allstickers" inCollection:STICKERS_COLLECTION];
-        
-    }];
-    
-    _sets = [sets mutableCopy];
+    [self save:sets stickers:_stickers n_hash:n_hash saveSets:changed.count == 0];
+   
     
     [self reloadData];
     
@@ -420,7 +452,7 @@ static NSImage *higlightedImage() {
 }
 
 
--(void)performLoadSet:(TL_stickerSet *)set allSets:(NSArray *)allSets hash:(NSString *)n_hash save:(BOOL)save {
+-(void)performLoadSet:(TL_stickerSet *)set allSets:(NSArray *)allSets hash:(int)n_hash save:(BOOL)save {
     
     
     [RPCRequest sendRequest:[TLAPI_messages_getStickerSet createWithStickerset:[TL_inputStickerSetID createWithN_id:set.n_id access_hash:set.access_hash]] successHandler:^(id request, TL_messages_stickerSet *response) {
@@ -437,19 +469,20 @@ static NSImage *higlightedImage() {
             if(!data) {
                 data = [[NSMutableDictionary alloc] init];
                 data[@"serialized"] = [[NSMutableArray alloc] init];
-                data[@"hash"] = @"";
                 data[@"sets"] = [[NSMutableArray alloc] init];
             }
             
             [stickers addObjectsFromArray:response.documents];
             
             if(save) {
-                data[@"hash"] = n_hash;
-                
-                data[@"sets"] = allSets;
+                data[@"sets"] = allSets == nil ? [NSMutableArray array] : allSets;
             }
             
-            [transaction setObject:@{@"hash":data[@"hash"],@"serialized":stickers,@"sets":data[@"sets"]} forKey:@"allstickers" inCollection:STICKERS_COLLECTION];
+            if(!data[@"sets"]) {
+                data[@"sets"] = [[NSMutableArray alloc] init];
+            }
+            
+            [transaction setObject:@{@"serialized":stickers,@"sets":data[@"sets"]} forKey:@"allstickers" inCollection:STICKERS_COLLECTION];
             
         }];
         
@@ -473,21 +506,11 @@ static NSImage *higlightedImage() {
 
 
 -(NSArray *)sets {
-    
-    if(!_topSets)
-        return _sets;
-    
-    return [_sets sortedArrayUsingComparator:^NSComparisonResult(TL_stickerSet *obj1, TL_stickerSet *obj2) {
-        NSNumber *c1 = _topSets[@(obj1.n_id)];
-        NSNumber *c2 = _topSets[@(obj2.n_id)];
-        
-        if ([c1 longValue] > [c2 longValue])
-        return NSOrderedAscending;
-        else if ([c1 longValue] < [c2 longValue])
-        return NSOrderedDescending;
-        
-        return NSOrderedSame;
-    }];
+    return _sets;
+}
+
+-(void)updateSets:(NSArray *)sets {
+    _sets = [sets mutableCopy];
 }
 
 -(void)removeSticker:(TL_outDocument *)document {
@@ -543,21 +566,6 @@ static NSImage *higlightedImage() {
             return NSOrderedSame;
         }];
         
-        NSMutableDictionary *topSets = [[NSMutableDictionary alloc] init];
-        
-        [recent enumerateObjectsUsingBlock:^(TL_document *obj, NSUInteger idx, BOOL *stop) {
-            
-            TL_documentAttributeSticker *sticker = (TL_documentAttributeSticker *) [obj attributeWithClass:[TL_documentAttributeSticker class]];
-            
-            int count = [topSets[@(sticker.stickerset.n_id)] intValue];
-            
-            count+= [sort[@(obj.n_id)] intValue];
-            
-            topSets[@(sticker.stickerset.n_id)] = @(count);
-            
-        }];
-        
-        _topSets = topSets;
         
         if(!_isCustomStickerPack) {
             recent = [recent subarrayWithRange:NSMakeRange(0, MIN(20,recent.count))];
@@ -608,9 +616,6 @@ static NSImage *higlightedImage() {
         
         stickers = [stickers sortedArrayUsingComparator:^NSComparisonResult(TL_document *obj1, TL_document *obj2) {
             
-            
-            
-           
             NSNumber *sidx = @([sets indexOfObjectPassingTest:^BOOL(TL_stickerSet *obj, NSUInteger idx, BOOL *stop) {
                 
                 TL_documentAttributeSticker *sticker = (TL_documentAttributeSticker *) [obj1 attributeWithClass:[TL_documentAttributeSticker class]];
@@ -670,6 +675,10 @@ static NSImage *higlightedImage() {
     
     [super reloadData];
     
+    if(_didNeedReload) {
+        _didNeedReload();
+    }
+    
 }
 
 - (CGFloat)rowHeight:(NSUInteger)row item:(TMRowItem *) item
@@ -712,6 +721,19 @@ static NSImage *higlightedImage() {
     [self reloadData];
     
 }
+
+-(int)stickersHash:(NSArray *)stickersets {
+    
+    __block long acc = 0;
+    
+    [stickersets enumerateObjectsUsingBlock:^(TL_stickerSet *obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        acc = (acc + obj.n_hash) * 20261;
+    }];
+    
+    return (int)(acc % 0x7FFFFFFF);
+    
+}
+
 
 -(void)scrollToStickerPack:(long)packId {
     

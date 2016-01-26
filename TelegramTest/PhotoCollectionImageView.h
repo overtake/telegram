@@ -8,9 +8,13 @@
 
 #import "TGImageView.h"
 #import "PhotoCollectionImageObject.h"
+
+
+@class TMCollectionPageController;
+
 @interface PhotoCollectionImageView : TGImageView
 
-
+@property (nonatomic,weak) TMCollectionPageController *controller;
 
 
 @end

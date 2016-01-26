@@ -10,7 +10,7 @@
 #import "TMView.h"
 #import "TMTextField.h"
 
-
+@class MessagesViewController;
 @class TGAttachObject;
 @class TMPopover;
 @class TMNavigationController;
@@ -34,15 +34,18 @@
 
 
 
+
 - (void)setLeftNavigationBarView:(TMView *)leftNavigationBarView animated:(BOOL)animation;
 - (void)setRightNavigationBarView:(TMView *)rightNavigationBarView animated:(BOOL)animation;
 
 - (void)rightButtonAction;
 
-
++(void)showModalProgressWithDescription:(NSString *)description;
 +(void)showModalProgress;
 +(void)hideModalProgress;
 
+
+-(void)showModalProgressWithWindow:(NSWindow *)window;
 
 -(void)showModalProgress;
 -(void)hideModalProgress;
@@ -83,6 +86,7 @@
 -(void)_didStackRemoved;
 
 -(BOOL)becomeFirstResponder;
+-(BOOL)resignFirstResponder;
 - (void)loadViewIfNeeded;
 - (void)loadView;
 - (void)viewWillAppear:(BOOL)animated;
@@ -95,6 +99,8 @@
 
 -(void)setCenterBarViewText:(NSString *)text;
 -(void)setCenterBarViewTextAttributed:(NSAttributedString *)text;
+
+-(MessagesViewController *)messagesViewController;
 
 
 @end

@@ -103,8 +103,8 @@ CACHE_IMAGE(newConversationBroadcast)
 CACHE_IMAGE(PlayButtonBig)
 CACHE_IMAGE(ArrowWhite)
 CACHE_IMAGE(ArrowGrey)
-
-
+CACHE_IMAGE(Verify)
+CACHE_IMAGE(VerifyWhite)
 CACHE_IMAGE(DownloadIconGrey)
 CACHE_IMAGE(DownloadIconWhite)
 CACHE_IMAGE(DownloadPauseIconGrey)
@@ -201,6 +201,28 @@ CACHE_IMAGE(SearchUpDisabled);
 CACHE_IMAGE(SearchDownDisabled);
 CACHE_IMAGE(SearchUp);
 CACHE_IMAGE(SearchDown);
+
+CACHE_IMAGE(ZoomIn);
+CACHE_IMAGE(ZoomOut);
+CACHE_IMAGE(Camera);
+
+CACHE_IMAGE(ChannelMessageAsAdmin);
+CACHE_IMAGE(ChannelMessageAsAdminHighlighted);
+CACHE_IMAGE(ChannelViews);
+
+CACHE_IMAGE(PinConversation);
+CACHE_IMAGE(PinnedConversation);
+
+CACHE_IMAGE(ModernConversationSecretAccessoryTimer);
+
+CACHE_IMAGE(ChannelShare);
+
+CACHE_IMAGE(ModernMenuDeleteIcon);
+CACHE_IMAGE(EditPhotoCamera);
+CACHE_IMAGE(NoSharedLinks);
+
+CACHE_IMAGE(StickerSettings);
+
 @interface ImageUtils : NSObject
 
 

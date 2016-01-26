@@ -10,4 +10,7 @@
 
 @interface SelectChatItem : TMRowItem
 @property (nonatomic,strong,readonly) TLChat *chat;
+
+@property (nonatomic) BOOL isSelected;
+
 @end

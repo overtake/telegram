@@ -12,7 +12,12 @@
 
 @property (nonatomic) NSTimeInterval timeoutDate;
 
+@property (nonatomic,strong) id reservedObject;
+
 - (id)initWithTimeout:(NSTimeInterval)timeout repeat:(bool)repeat completion:(dispatch_block_t)completion queue:(dispatch_queue_t)queue;
+
+- (id)initWithTimeout:(NSTimeInterval)timeout repeat:(bool)repeat completion:(dispatch_block_t)completion queue:(dispatch_queue_t)queue reservedObject:(id)object;
+
 - (void)start;
 - (void)fireAndInvalidate;
 - (void)fire;

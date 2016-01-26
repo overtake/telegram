@@ -34,6 +34,8 @@
     
     id api;
     
+    
+    
     if(_conversation.type == DialogTypeSecretChat)
         api = [TLAPI_messages_setEncryptedTyping createWithPeer:(TLInputEncryptedChat *)[_conversation.encryptedChat inputPeer] typing:YES];
     else
@@ -107,8 +109,14 @@
     
     TGSendingAction *saction = [[TGSendingAction alloc] initWithAction:action time:[[NSDate date] timeIntervalSince1970]+3 conversation:conversation];
     
+    if(conversation.type == DialogTypeChannel) {
+        if(conversation.chat.isBroadcast)
+            return;
+    }
     
     NSMutableDictionary *actions = _conversations[@(conversation.peer_id)];
+    
+    
     
     if(!actions)
     {

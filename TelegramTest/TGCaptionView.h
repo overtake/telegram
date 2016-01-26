@@ -7,9 +7,14 @@
 //
 
 #import "TMView.h"
+#import "MessageTableItem.h"
+#import "TGCTextView.h"
+@interface TGCaptionTextView : TGCTextView
+@property (nonatomic,weak) MessageTableItem *item;
+@end
 
 @interface TGCaptionView : TMView
-@property (nonatomic,strong,readonly) TGCTextView *textView;
+@property (nonatomic,strong,readonly) TGCaptionTextView *textView;
 -(void)setAttributedString:(NSAttributedString *)string fieldSize:(NSSize)size;
-
+@property (nonatomic,weak) MessageTableItem *item;
 @end

@@ -10,11 +10,14 @@
 #import "ComposeActionGroupBehavior.h"
 #import "ComposeActionSecretChatBehavior.h"
 #import "ComposeActionBroadcastBehavior.h"
-
+#import "TGRecentSearchTableView.h"
+#import "ComposeActionCreateChannelBehavior.h"
+#import "ComposeActionCreateMegaGroupBehavior.h"
 @interface StandartViewController ()<TMSearchTextFieldDelegate>
 @property (nonatomic, strong) BTRButton *topButton;
 @property (nonatomic, strong) TMSearchTextField *searchTextField;
 @property (nonatomic,strong) TMMenuPopover *menuPopover;
+@property (nonatomic,strong) TGRecentSearchTableView *recentTableView;
 @end
 
 @interface ExtendView : TMView
@@ -28,6 +31,10 @@
     [super removeFromSuperview];
     
     
+}
+
+-(BOOL)becomeFirstResponder {
+    return [super becomeFirstResponder];
 }
 
 -(void)setFrameSize:(NSSize)newSize {
@@ -142,11 +149,12 @@
     
     self.searchView = _searchViewController.view;
     
+    
+    _recentTableView = [[TGRecentSearchTableView alloc] initWithFrame:self.view.bounds];
+    
+    
 }
 
--(BOOL)becomeFirstResponder {
-    return [self.searchTextField becomeFirstResponder];
-}
 
 -(void)showComposeMenu {
     
@@ -168,6 +176,10 @@
 +(NSMenu *)attachMenu {
     NSMenu *theMenu = [[NSMenu alloc] init];
     
+    
+   
+    
+    
     NSMenuItem *createGropup = [NSMenuItem menuItemWithTitle:NSLocalizedString(@"ComposeMenu.CreateGroup", nil) withBlock:^(id sender) {
         
     
@@ -186,25 +198,6 @@
     
     
     
-    NSMenuItem *broadcast = [NSMenuItem menuItemWithTitle:NSLocalizedString(@"ComposeMenu.Broadcast", nil) withBlock:^(id sender) {
-        ComposeAction *action = [[ComposeAction alloc] initWithBehaviorClass:[ComposeActionBroadcastBehavior class]];
-        
-        if([[BroadcastManager sharedManager] all].count == 0) {
-             [[Telegram rightViewController] showComposeWithAction:action];
-        } else {
-             [[Telegram rightViewController] showComposeBroadcastList:action];
-        }
-        
-       [[NSApplication sharedApplication] activateIgnoringOtherApps:YES];
-        
-    }];
-
-    [broadcast setImage:[NSImage imageNamed:@"ComposeMenuNewBroadcast"]];
-    [broadcast setHighlightedImage:[NSImage imageNamed:@"ComposeMenuNewBroadcastActive"]];
-    [theMenu addItem:broadcast];
-    
-   
-    
     NSMenuItem *secretChat = [NSMenuItem menuItemWithTitle:NSLocalizedString(@"ComposeMenu.SecretChat", nil) withBlock:^(id sender) {
         
         ComposeAction *action = [[ComposeAction alloc] initWithBehaviorClass:[ComposeActionSecretChatBehavior class]];
@@ -221,12 +214,52 @@
     
     [theMenu addItem:secretChat];
     
+    
+   // if(ACCEPT_FEATURE) {
+        NSMenuItem *createChannel = [NSMenuItem menuItemWithTitle:NSLocalizedString(@"ComposeMenu.CreateChannel", nil) withBlock:^(id sender) {
+            
+            
+            ComposeAction *action = [[ComposeAction alloc] initWithBehaviorClass:[ComposeActionCreateChannelBehavior class]];
+            
+            [[Telegram rightViewController] showComposeCreateChannel:action];
+            
+            [[NSApplication sharedApplication] activateIgnoringOtherApps:YES];
+            
+        }];
+        
+        [createChannel setImage:[NSImage imageNamed:@"ComposeMenuNewBroadcast"]];
+        [createChannel setHighlightedImage:[NSImage imageNamed:@"ComposeMenuNewBroadcastActive"]];
+        [theMenu addItem:createChannel];
+ //   }
+    
+    
+    
+    
+//    NSMenuItem *createMegagroup = [NSMenuItem menuItemWithTitle:NSLocalizedString(@"ComposeMenu.CreateMegaGroup", nil) withBlock:^(id sender) {
+//        
+//        
+//        ComposeAction *action = [[ComposeAction alloc] initWithBehaviorClass:[ComposeActionCreateMegaGroupBehavior class]];
+//        
+//        ComposeCreateChannelViewController *viewController = [[ComposeCreateChannelViewController alloc] initWithFrame:[Telegram rightViewController].view.bounds];
+//        
+//        [viewController setAction:action];
+//        
+//        
+//        [[Telegram rightViewController].navigationViewController pushViewController:viewController animated:YES];
+//        
+//       
+//        
+//        [[NSApplication sharedApplication] activateIgnoringOtherApps:YES];
+//        
+//    }];
+//    
+//    [createMegagroup setImage:[NSImage imageNamed:@"ComposeMenuNewBroadcast"]];
+//    [createMegagroup setHighlightedImage:[NSImage imageNamed:@"ComposeMenuNewBroadcastActive"]];
+//    [theMenu addItem:createMegagroup];
+    
+    
     return theMenu;
 }
-
-- (void) searchFieldBlur {}
-- (void) searchFieldFocus {}
-
 
 -(BOOL)isSearchActive {
     return self.searchView.superview != nil;
@@ -244,17 +277,111 @@
 }
 
 -(void)searchByString:(NSString *)searchString {
+    
     [self.searchTextField setStringValue:searchString];
+    
+    if(searchString.length > 0) {
+        [self.searchTextField becomeFirstResponder];
+    } else {
+        [self.searchTextField resignFirstResponder];
+    }
 }
 
+-(BOOL)becomeFirstResponder {
+    return [super becomeFirstResponder];
+}
+
+-(void)hideSearchViewControllerWithConversationUsed:(TL_conversation*)conversation {
+    
+    
+    
+    if(self.searchViewController.selectedPeerId != conversation.peer_id)
+        return;
+    
+    [self searchByString:@""];
+    
+    // add to recent
+    
+    
+    
+    [[Storage yap] asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction * __nonnull transaction) {
+        
+        NSMutableArray *peerIds = [transaction objectForKey:@"peerIds" inCollection:RECENT_SEARCH];
+        
+        if(!peerIds)
+        {
+            peerIds = [[NSMutableArray alloc] init];
+        }
+        
+        [peerIds removeObject:@(conversation.peer_id)];
+        
+        [peerIds insertObject:@(conversation.peer_id) atIndex:0];
+        
+        [transaction setObject:peerIds forKey:@"peerIds" inCollection:RECENT_SEARCH];
+        
+    }];
+    
+    
+}
+
+-(BOOL)showRecentSearchItems {
+    
+    
+    BOOL canShow = [self.recentTableView loadRecentSearchItems];
+    
+    if(canShow) {
+        [self.mainView removeFromSuperview];
+        [self.searchView removeFromSuperview];
+        
+        NSRect tableRect = NSMakeRect(0, 0, NSWidth(self.view.frame), NSHeight(self.view.frame) - 48);
+        
+        [self.recentTableView.containerView setFrame:tableRect];
+        
+        [self.view addSubview:self.recentTableView.containerView];
+        
+    }
+    
+    return canShow;
+}
+
+-(void)hideRecentSearchItems {
+    [self hideSearch:self.searchTextField.stringValue.length == 0];
+}
+
+-(void)searchFieldFocus {
+    if(self.searchTextField.stringValue.length == 0 && [self.searchTextField isFirstResponder])
+        [self showRecentSearchItems];
+}
+
+-(void)searchFieldBlur {
+    [self hideRecentSearchItems];
+}
+
+-(void)searchFieldDidResign {
+    [self hideRecentSearchItems];
+}
+
+-(BOOL)resignFirstResponder {
+    
+    [self.searchTextField endEditing];
+    
+    return YES;
+}
 
 -(void)hideSearch:(BOOL)hide {
+    
+    if(hide && [self.searchTextField isFirstResponder]) {
+        if([self showRecentSearchItems])
+            return;
+    }
    
     NSRect tableRect = NSMakeRect(0, 0, NSWidth(self.view.frame), NSHeight(self.view.frame) - 48);
     
     
     [self.searchView setFrame:tableRect];
     [self.mainView setFrame:tableRect];
+    
+    [self.recentTableView.containerView removeFromSuperview];
     
     if(hide) {
         [self.searchView removeFromSuperview];

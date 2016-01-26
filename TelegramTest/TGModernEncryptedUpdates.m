@@ -171,34 +171,7 @@
             
             NSArray *random_ids = [action valueForKey:@"random_ids"];
             
-            [[Storage manager] deleteMessagesWithRandomIds:random_ids completeHandler:^(BOOL result) {
-                
-                NSMutableDictionary *update = [[NSMutableDictionary alloc] init];
-                
-                NSMutableArray *ids = [[NSMutableArray alloc] init];
-                
-                
-                for (NSNumber *msgId in random_ids) {
-                    
-                    TL_destructMessage *message = [[MessagesManager sharedManager] findWithRandomId:[msgId longValue]];
-                    
-                    if(message) {
-                        [ids addObject:@(message.n_id)];
-                    }
-                    
-                    if(message && message.conversation) {
-                        [update setObject:message.conversation forKey:@(message.conversation.peer.peer_id)];
-                    }
-                    
-                }
-                
-                for (TL_conversation *dialog in update.allValues) {
-                    [[DialogsManager sharedManager] updateLastMessageForDialog:dialog];
-                }
-                
-                [Notification perform:MESSAGE_DELETE_EVENT data:@{KEY_MESSAGE_ID_LIST:ids}];
-                
-            }];
+            [[DialogsManager sharedManager] deleteMessagesWithRandomMessageIds:random_ids isChannelMessages:NO];
             
             return YES;
         }
@@ -220,30 +193,14 @@
             
             NSArray *items = [action valueForKey:@"random_ids"];
             
-            NSMutableArray *storageMessages = [[NSMutableArray alloc] init];
-            
-            [items enumerateObjectsUsingBlock:^(NSNumber *obj, NSUInteger idx, BOOL *stop) {
-                
-                
-                
-               TL_destructMessage *msg = (TL_destructMessage *) [[MessagesManager sharedManager] findWithRandomId:[obj longValue]];
-                if(msg) {
-                    [SelfDestructionController addMessage:msg force:YES];
-                } else {
-                    [storageMessages addObject:obj];
-                }
-                
-            }];
             
             [[Storage manager] messages:^(NSArray *result) {
-                
-                [[MessagesManager sharedManager] add:result];
                 
                 [result enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
                     [SelfDestructionController addMessage:obj force:YES];
                 }];
                 
-            } forIds:storageMessages random:YES sync:YES queue:_queue ? _queue : [ASQueue globalQueue]];
+            } forIds:items random:YES sync:NO queue:_queue ? _queue : [ASQueue globalQueue]];
             
             return YES;
         }
@@ -655,7 +612,7 @@ Class convertClass(NSString *c, int layer) {
         
         NSMutableArray *size =  [NSMutableArray arrayWithObjects:s0,s1,nil];
         
-        return [TL_messageMediaPhoto createWithPhoto:[TL_photo createWithN_id:[file n_id] access_hash:[file access_hash] user_id:0 date:[[MTNetwork instance] getTime] geo:[TL_geoPointEmpty create] sizes:size] caption:@""];
+        return [TL_messageMediaPhoto createWithPhoto:[TL_photo createWithN_id:[file n_id] access_hash:[file access_hash] date:[[MTNetwork instance] getTime] sizes:size] caption:@""];
         
     } else if([media isKindOfClass:convertClass(@"Secret%d_DecryptedMessageMedia_decryptedMessageMediaDocument", layer)]) {
         
@@ -672,13 +629,13 @@ Class convertClass(NSString *c, int layer) {
         
         NSString *mime_type = [media respondsToSelector:@selector(mime_type)] ? [media valueForKey:@"mime_type"] : @"mp4";
         
-        return [TL_messageMediaVideo createWithVideo:[TL_video createWithN_id:file.n_id access_hash:file.access_hash user_id:0 date:[[MTNetwork instance] getTime] duration:[[media valueForKey:@"duration"] intValue] size:file.size thumb:[TL_photoCachedSize createWithType:@"jpeg" location:location w:[[media valueForKey:@"thumb_w"] intValue] h:[[media valueForKey:@"thumb_h"] intValue] bytes:[media valueForKey:@"thumb"]] dc_id:[file dc_id] w:[[media valueForKey:@"w"] intValue] h:[[media valueForKey:@"h"] intValue]] caption:@""];
+        return [TL_messageMediaVideo createWithVideo:[TL_video createWithN_id:file.n_id access_hash:file.access_hash date:[[MTNetwork instance] getTime] duration:[[media valueForKey:@"duration"] intValue] mime_type:mime_type size:file.size thumb:[TL_photoCachedSize createWithType:@"jpeg" location:location w:[[media valueForKey:@"thumb_w"] intValue] h:[[media valueForKey:@"thumb_h"] intValue] bytes:[media valueForKey:@"thumb"]] dc_id:[file dc_id] w:[[media valueForKey:@"w"] intValue] h:[[media valueForKey:@"h"] intValue]] caption:@""];
         
     } else if([media isKindOfClass:convertClass(@"Secret%d_DecryptedMessageMedia_decryptedMessageMediaAudio", layer)]) {
         
         NSString *mime_type = [media respondsToSelector:@selector(mime_type)] ? [media valueForKey:@"mime_type"] : @"ogg";
         
-        return [TL_messageMediaAudio createWithAudio:[TL_audio createWithN_id:file.n_id access_hash:file.access_hash user_id:0 date:[[MTNetwork instance] getTime] duration:[[media valueForKey:@"duration"] intValue] mime_type:mime_type size:file.size dc_id:file.dc_id]];
+        return [TL_messageMediaAudio createWithAudio:[TL_audio createWithN_id:file.n_id access_hash:file.access_hash date:[[MTNetwork instance] getTime] duration:[[media valueForKey:@"duration"] intValue] mime_type:mime_type size:file.size dc_id:file.dc_id]];
         
     } else {
         alert(@"Unknown secret media", @"");

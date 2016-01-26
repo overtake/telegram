@@ -15,7 +15,6 @@
 #define INIT_HASH_CHEKER() __block NSUInteger hash = self.currentHash;
 #define HASH_CHECK() if(self.currentHash != hash) return;
 #import <CommonCrypto/CommonDigest.h>
-#import <openssl/md5.h>
 #import "ImageUtils.h"
 #import "TGCache.h"
 #import "TMAvaImageObject.h"
@@ -90,29 +89,44 @@ static const TGTwoColors colors[] = {
 + (instancetype)standartTableAvatar {
     TMAvatarImageView *avatarImageView = [[self alloc] initWithFrame:NSMakeRect(10, roundf((66 - 50) / 2.0), 50, 50)];
     avatarImageView.placeholder = [TMAvatarImageView placeholderImageBySize:avatarImageView.frame.size andColor:NSColorFromRGB(0xfafafa)];
-    [avatarImageView setFont:[NSFont fontWithName:@"HelveticaNeue-Light" size:18]];
+    [avatarImageView setFont:TGSystemLightFont(18)];
     return avatarImageView;
 }
 
 + (instancetype)standartNewConversationTableAvatar {
     TMAvatarImageView *avatarImageView = [[self alloc] initWithFrame:NSMakeRect(10, roundf((60 - 44) / 2.0), 44, 44)];
     avatarImageView.placeholder = [TMAvatarImageView placeholderImageBySize:avatarImageView.frame.size andColor:NSColorFromRGB(0xfafafa)];
-    [avatarImageView setFont:[NSFont fontWithName:@"HelveticaNeue-Light" size:18]];
+    [avatarImageView setFont:TGSystemLightFont(18)];
     return avatarImageView;
 }
 
 + (instancetype)standartMessageTableAvatar {
     TMAvatarImageView *avatarImageView = [[self alloc] initWithFrame:NSMakeRect(0, 0, 36, 36)];
     avatarImageView.placeholder = [TMAvatarImageView placeholderImageBySize:avatarImageView.frame.size andColor:NSColorFromRGB(0xfafafa)];
-    [avatarImageView setFont:[NSFont fontWithName:@"HelveticaNeue" size:14]];
-    [avatarImageView setOffsetTextY:2];
+    [avatarImageView setFont:TGSystemFont(14)];
+    [avatarImageView setOffsetTextY:0];
+    return avatarImageView;
+}
+
++ (instancetype)standartHintAvatar {
+    TMAvatarImageView *avatarImageView = [[self alloc] initWithFrame:NSMakeRect(0, 0, 30, 30)];
+    avatarImageView.placeholder = [TMAvatarImageView placeholderImageBySize:avatarImageView.frame.size andColor:NSColorFromRGB(0xfafafa)];
+    [avatarImageView setFont:TGSystemFont(14)];
+    [avatarImageView setOffsetTextY:0];
     return avatarImageView;
 }
 
 + (instancetype) standartUserInfoAvatar {
     TMAvatarImageView *avatarImageView = [[self alloc] initWithFrame:NSMakeRect(0, 0, 130, 130)];
     avatarImageView.placeholder = [TMAvatarImageView placeholderImageBySize:avatarImageView.frame.size andColor:NSColorFromRGB(0xfafafa)];
-    [avatarImageView setFont:[NSFont fontWithName:@"HelveticaNeue-Light" size:30]];
+    [avatarImageView setFont:TGSystemLightFont(30)];
+    return avatarImageView;
+}
+
++ (instancetype) standartInfoAvatar {
+    TMAvatarImageView *avatarImageView = [[self alloc] initWithFrame:NSMakeRect(0, 0, 70, 70)];
+    avatarImageView.placeholder = [TMAvatarImageView placeholderImageBySize:avatarImageView.frame.size andColor:NSColorFromRGB(0xfafafa)];
+    [avatarImageView setFont:TGSystemLightFont(18)];
     return avatarImageView;
 }
 
@@ -163,7 +177,7 @@ static const TGTwoColors colors[] = {
     [Notification addObserver:self selector:@selector(notificationChatChange:) name:CHAT_UPDATE_PHOTO];
     [Notification addObserver:self selector:@selector(notificationChatChange:) name:CHAT_UPDATE_TITLE];
 
-    self.font = [NSFont fontWithName:@"HelveticaNeue" size:12];
+    self.font = TGSystemFont(12);
     self.isNeedPlaceholder = YES;
     
     static dispatch_once_t onceToken;
@@ -239,8 +253,9 @@ static const TGTwoColors colors[] = {
 }
 
 - (void) setUser:(TLUser *)user animated:(BOOL)animated {
-    if(self.user.n_id == user.n_id)
+    if(self.user.n_id == user.n_id && [[self.fileLocation cacheKey] isEqualToString:user.photo.photo_small.cacheKey])
         return;
+    
     
     self->_chat = nil;
     self->_user = user;
@@ -298,7 +313,7 @@ static const TGTwoColors colors[] = {
         case DialogTypeBroadcast:
             [self setBroadcast:conversation.broadcast];
             break;
-        case DialogTypeChat:
+        case DialogTypeChat: case DialogTypeChannel:
             [self setChat:conversation.chat];
             break;
         case DialogTypeSecretChat: case DialogTypeUser:
@@ -347,7 +362,6 @@ static CAAnimation *ani2() {
     
     [self removeAnimationForKey:@"contents"];
     
-    
     if(self.type == TMAvatarTypeUser && self.user.n_id == 777000 && self.bounds.size.width == 50.0f) {
         self.image = image_TelegramNotifications();
         self.image.size = NSMakeSize(50.0f, 50.0f);
@@ -363,8 +377,6 @@ static CAAnimation *ani2() {
     
     __block NSString *key = [NSString stringWithFormat:@"%lu:%@",self.currentHash,NSStringFromSize(self.bounds.size)];
     
-    
-
     NSImage *image = [TGCache cachedImage:key group:@[AVACACHE]];
     if(image) {
         if(animated)
@@ -374,7 +386,6 @@ static CAAnimation *ani2() {
         return;
     }
 
-
     self.image = self.placeholder;
     
     if(self.fileLocation) {
@@ -383,10 +394,8 @@ static CAAnimation *ani2() {
         
     } else {
         
-        
         int colorMask = [TMAvatarImageView colorMask:self.type == TMAvatarTypeChat ? self.chat : (self.type == TMAvatarTypeBroadcast ? self.broadcast : self.user)];
 
-        
          __block NSString *text = self->_text;
         
         [ASQueue dispatchOnStageQueue:^{
@@ -434,7 +443,13 @@ static CAAnimation *ani2() {
                 lastName = [lastName stringByReplacingOccurrencesOfString:obj withString:@""];
             }];
             
-            text = [NSString stringWithFormat:@"%C%C", (unichar)([firstName length] ? [firstName characterAtIndex:0] : 0), (unichar)([lastName length] ? [lastName characterAtIndex:0] : 0)];
+            if(firstName.length == 0) {
+                text = [NSString stringWithFormat:@"%C",(unichar)([lastName length] ? [lastName characterAtIndex:0] : 0)];
+            } else {
+                text = [NSString stringWithFormat:@"%C%C", (unichar)([firstName length] ? [firstName characterAtIndex:0] : 0), (unichar)([lastName length] ? [lastName characterAtIndex:0] : 0)];
+            }
+            
+            
         }
         
     } else if([object isKindOfClass:[TLChat class]]) {
@@ -516,23 +531,13 @@ static CAAnimation *ani2() {
     NSImage *image = [[NSImage alloc] initWithSize:size];
     [image lockFocus];
     
-    
-   
-    
-    
-    
-    
-    
     TGTwoColors twoColors;
-    
     
     twoColors = colors[colorMask % (sizeof(colors) / sizeof(colors[0]))];
     
     
     if(colorMask != -1) {
         CGContextRef context = (CGContextRef)[[NSGraphicsContext currentContext] graphicsPort];
-        
-        
         
         CGColorRef colors[2] = {
             CGColorRetain(NSColorFromRGB(twoColors.bottom).CGColor),
@@ -560,6 +565,8 @@ static CAAnimation *ani2() {
         NSColor *color = [NSColor whiteColor];
         
          __block NSString *textResult = [text uppercaseString];
+        
+        
        
          NSArray *emoji = [textResult getEmojiFromString:NO];
         
@@ -584,7 +591,9 @@ static CAAnimation *ani2() {
         
         NSDictionary *attributes = @{NSFontAttributeName: font, NSForegroundColorAttributeName: color};
         NSSize textSize = [textResult sizeWithAttributes:attributes];
-        [textResult drawAtPoint: NSMakePoint(roundf( (size.width- textSize.width) * 0.5 ),roundf( (size.height - textSize.height) * 0.5 + offset) )withAttributes: attributes];
+        
+        textSize.height-=4;
+        [textResult drawAtPoint: NSMakePoint(roundf( (size.width- textSize.width) * 0.5 ),roundf( (size.height - textSize.height) * 0.5 + offset) ) withAttributes: attributes];
 
     } else {
         static NSImage *smallAvatar;

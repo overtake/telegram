@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 
 @interface NSArray (Reverse)
+-(NSArray *)findElementsWithRecursion:(NSString *)q;
 @end
 
 @interface NSMutableArray (Reverse)

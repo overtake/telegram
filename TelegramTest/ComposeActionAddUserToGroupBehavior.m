@@ -46,30 +46,61 @@
 
 -(void)addMemberToChat:(NSArray *)members user:(TLUser *)user {
     
-    SelectChatItem *item = members[0];
+    TLChat *chat = members[0];
     
-    [RPCRequest sendRequest:[TLAPI_messages_addChatUser createWithChat_id:item.chat.n_id user_id:user.inputUser fwd_limit:100] successHandler:^(RPCRequest *request, id response) {
-        
-        [item.chat.chatFull.participants.participants addObject:[TL_chatParticipant createWithUser_id:user.n_id inviter_id:[UsersManager currentUserId] date:[[MTNetwork instance] getTime]]];
-            [Notification perform:CHAT_STATUS data:@{KEY_CHAT_ID:@(item.chat.n_id)}];
-        
-        [self.delegate behaviorDidEndRequest:response];
+    id request = [TLAPI_messages_addChatUser createWithChat_id:chat.n_id user_id:user.inputUser fwd_limit:100];
+    
+    if(chat.isChannel) {
+        request = [TLAPI_channels_inviteToChannel createWithChannel:chat.inputPeer users:[@[user.inputUser] mutableCopy]];
+    }
+    
+    
+    dispatch_block_t addblock = ^{
+        [RPCRequest sendRequest:request successHandler:^(RPCRequest *request, id response) {
             
-        dispatch_after_seconds(0.2, ^{
-            [[Telegram rightViewController] showByDialog:item.chat.dialog sender:self];
+            [self.delegate behaviorDidEndRequest:response];
             
-            if(self.action.reservedObject1) {
-                [[Telegram rightViewController].messagesViewController showBotStartButton:self.action.reservedObject1[@"startgroup"] bot:user];
-            }
+            dispatch_after_seconds(0.2, ^{
+                
+                [self.action.currentViewController.navigationViewController showMessagesViewController:chat.dialog];
+                
+                if(self.action.reservedObject1) {
+                    [self.action.currentViewController.messagesViewController showBotStartButton:self.action.reservedObject1[@"startgroup"] bot:user];
+                }
+                
+            });
             
-        });
-
-        
-    } errorHandler:^(RPCRequest *request, RpcError *error) {
-        [self.delegate behaviorDidEndRequest:request.response];
-        
-        alert(appName(), NSLocalizedString([error.error_msg isEqualToString:@"USER_ALREADY_PARTICIPANT"] ? @"Bot.AlreadyInGroup" : error.error_msg, nil));
-    }];
+            
+        } errorHandler:^(RPCRequest *request, RpcError *error) {
+            [self.delegate behaviorDidEndRequest:request.response];
+            
+            alert(appName(), NSLocalizedString([error.error_msg isEqualToString:@"USER_ALREADY_PARTICIPANT"] ? @"Bot.AlreadyInGroup" : error.error_msg, nil));
+        }];
+    };
+    
+    
+    addblock();
+    
+//    if(chat.isChannel) {
+//        [RPCRequest sendRequest:[TLAPI_channels_getParticipant createWithChannel:chat.inputPeer user_id:user.inputUser] successHandler:^(id request, TL_channels_channelParticipant *participant) {
+//            
+//            
+//          //  TL_channelParticipant
+//            [self.delegate behaviorDidEndRequest:participant];
+//            
+//            alert(appName(), NSLocalizedString(@"Bot.AlreadyInGroup", nil));
+//            
+//        } errorHandler:^(id request, RpcError *error) {
+//            if([error.error_msg isEqualToString:@"USER_NOT_PARTICIPANT"])  {
+//                addblock();
+//            } else {
+//                [self.delegate behaviorDidEndRequest:nil];
+//                alert(appName(), NSLocalizedString(error.error_msg, nil));
+//            }
+//        }];
+//    } else {
+//        addblock();
+//    }
 }
 
 

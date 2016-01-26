@@ -20,4 +20,13 @@
 -(void)unserialize:(SerializedData*)stream {
 	self.title = [stream readString];
 }
+
+-(id)copy {
+    TL_messageActionEncryptedChat* obj = [[TL_messageActionEncryptedChat alloc] init];
+
+    obj.title = self.title;
+    
+    return obj;
+}
+
 @end

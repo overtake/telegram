@@ -24,7 +24,7 @@
     static NewContactsManager *instance;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        instance = [[NewContactsManager alloc] initWithQueue:[[ASQueue alloc] initWithName:[NSStringFromClass([self class]) UTF8String]]];
+        instance = [[NewContactsManager alloc] initWithQueue:[ASQueue globalQueue]];
     });
     return instance;
 }
@@ -60,18 +60,17 @@
         
         [[Storage manager] contacts:^(NSArray *contacts) {
             
-            [self add:contacts withCustomKey:@"user_id"];
-            
-           
-            
-            [Notification perform:CONTACTS_MODIFIED data:@{@"CONTACTS_RELOAD": self->list}];
-            
-            [self remoteCheckContacts:^{
+            [self.queue dispatchOnQueue:^{
+                [self add:contacts withCustomKey:@"user_id"];
                 
-                [self iCloudSync];
+                [Notification perform:CONTACTS_MODIFIED data:@{@"CONTACTS_RELOAD": self->list}];
                 
+                [self remoteCheckContacts:^{
+                    
+                    [self iCloudSync];
+                    
+                }];
             }];
-            
         }];
         
         
@@ -105,9 +104,11 @@
 
 -(void)sortAndNotify:(BOOL)notify
 {
+    
     NSSortDescriptor * descriptor = [[NSSortDescriptor alloc] initWithKey:@"self.user.lastSeenTime" ascending:NO];
     
     [self->list sortUsingDescriptors:@[descriptor]];
+    
     
     if(notify)
     {

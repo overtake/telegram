@@ -9,7 +9,6 @@
 #import "ReadHistroryTask.h"
 #import "TMTaskRequest.h"
 @interface ReadHistroryTask ()
-@property (nonatomic,strong) TLPeer *peer;
 @property (nonatomic,strong) TL_conversation *conversation;
 @end
 
@@ -30,7 +29,7 @@
 -(id)initWithParams:(NSDictionary *)params {
     if(self = [super init]) {
         _params = params;
-        _peer = [_params objectForKey:@"peer"];
+        _conversation = [_params objectForKey:@"conversation"];
         _taskId = [TMTaskRequest futureTaskId];
     }
     
@@ -39,9 +38,6 @@
 
 -(void)execute {
     
-    if(!_conversation) {
-        _conversation = [[Storage manager] selectConversation:_peer];
-    }
     
     if(_conversation) {
         
@@ -66,28 +62,33 @@
     if(_conversation.type == DialogTypeSecretChat) {
         
         request = [TLAPI_messages_readEncryptedHistory createWithPeer:[_conversation.encryptedChat inputPeer] max_date:[[MTNetwork instance] getTime]];
+    } else if(_conversation.type != DialogTypeChannel) {
+        request = [TLAPI_messages_readHistory createWithPeer:[_conversation inputPeer] max_id:_conversation.read_inbox_max_id];
     } else {
-        request = [TLAPI_messages_readHistory createWithPeer:[_conversation inputPeer] max_id:_conversation.top_message offset:offset];
+        request = [TLAPI_channels_readHistory createWithChannel:[_conversation inputPeer] max_id:_conversation.read_inbox_max_id]; //TODO
     }
     
     [RPCRequest sendRequest:request successHandler:^(RPCRequest *request, id response) {
        
         if(![response isKindOfClass:[TL_boolTrue class]] && ![response isKindOfClass:[TL_boolFalse class]])  {
-            TL_messages_affectedHistory *history = response;
-            if(history.offset > 0) {
-                [self loop:history.offset];
-            } else {
+            TL_messages_affectedMessages *history = response;
+           
+            [ASQueue dispatchOnMainQueue:^{
                 if([_delegate respondsToSelector:@selector(didCompleteTaskRequest:)]) {
                     [_delegate didCompleteTaskRequest:self];
                 }
-            }
+            }];
+            
         } else {
-            if([_delegate respondsToSelector:@selector(didCompleteTaskRequest:)]) {
-                [_delegate didCompleteTaskRequest:self];
-            }
+            
+            [ASQueue dispatchOnMainQueue:^{
+                if([_delegate respondsToSelector:@selector(didCompleteTaskRequest:)]) {
+                    [_delegate didCompleteTaskRequest:self];
+                }
+            }];
         }
         
-    } errorHandler:nil];
+    } errorHandler:nil timeout:0 queue:taskQueue().nativeQueue];
     
 
 }

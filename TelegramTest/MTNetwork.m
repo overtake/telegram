@@ -18,10 +18,12 @@
 #import "SSKeychain.h"
 #import "TGTLSerialization.h"
 #import "TGPasslock.h"
+#import <Security/SecRandom.h>
 @implementation MTRequest (LegacyTL)
 
 - (void)setBody:(TLApiObject *)body
 {
+    
     [self setPayload:[TGTLSerialization serializeMessage:body] metadata:body responseParser:^id(NSData *data)
      {
          return [TGTLSerialization parseResponse:data request:body];
@@ -143,23 +145,37 @@ static NSString *kDefaultDatacenter = @"default_dc";
                         } synchronous:YES];
                         
                         if(acceptHash) {
-                                                        
-                            [_queue dispatchOnQueue:^{
-                                
-                                [self startWithKeychain:_keychain];
-                                [self initConnectionWithId:_masterDatacenter];
-                                
-                                
-                            }];
                             
-                             [Telegram initializeDatabase];
                             
-                            if(![self isAuth]) {
-                                [[Telegram delegate] logoutWithForce:YES];
-                            } else {
-                                [TGPasslock appIncomeActive];
-                            }
-                        } 
+                                [_queue dispatchOnQueue:^{
+                                    
+                                    [self updateStorageEncryptionKey];
+                                    [Storage updateOldEncryptionKey:md5Hash];
+                                    
+                                    [Storage initManagerWithCallback:^{
+                                    
+                                        [self startWithKeychain:_keychain];
+                                        [self initConnectionWithId:_masterDatacenter];
+                                        
+                                        
+                                        [ASQueue dispatchOnMainQueue:^{
+                                            [Telegram initializeDatabase];
+                                            
+                                            if(![self isAuth]) {
+                                                [[Telegram delegate] logoutWithForce:YES];
+                                            } else {
+                                                [TGPasslock appIncomeActive];
+                                            }
+                                        }];
+                                        
+                                    }];
+                                }];
+                                
+                            
+
+                            
+                            
+                        }
                         
                         
                         return acceptHash;
@@ -176,6 +192,9 @@ static NSString *kDefaultDatacenter = @"default_dc";
                 
                 
             } else {
+                
+                [self updateStorageEncryptionKey];
+                
                 [self startWithKeychain:_keychain];
                 
                 if(![self isAuth]) {
@@ -201,7 +220,6 @@ static NSString *kDefaultDatacenter = @"default_dc";
     NSString *applicationSupportPath = NSSearchPathForDirectoriesInDomains(NSApplicationSupportDirectory, NSUserDomainMask, YES)[0];
     NSString *applicationName = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleName"];
     NSString * odirectory = [[applicationSupportPath stringByAppendingPathComponent:applicationName] stringByAppendingPathComponent:@"mtkeychain"];
-    
 
     BOOL isset = NO;
     
@@ -220,10 +238,10 @@ static NSString *kDefaultDatacenter = @"default_dc";
             [keychain updatePasscodeHash:[[NSData alloc] initWithEmptyBytes:32] save:YES];
             
             [[NSFileManager defaultManager] removeItemAtPath:odirectory error:nil];
-            
         }
         
     }
+    
 
 }
 
@@ -231,22 +249,35 @@ static NSString *kDefaultDatacenter = @"default_dc";
     return [_mtProto messageServiceQueue];
 }
 
+
+//        NSString * ndirectory = [[NSSearchPathForDirectoriesInDomains(NSApplicationSupportDirectory, NSUserDomainMask, YES)[0] stringByAppendingPathComponent:[[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleName"]] stringByAppendingPathComponent:@"encrypt-mtkeychain"];
+//
+//        if([[NSFileManager defaultManager] fileExistsAtPath:ndirectory]) {
+//
+//            TGKeychain *keychain = [TGKeychain unencryptedKeychainWithName:BUNDLE_IDENTIFIER];
+//
+//            keychain->_encrypted = YES;
+//
+//            [keychain storeAllKeychain];
+//
+//            [[NSFileManager defaultManager] removeItemAtPath:ndirectory error:nil];
+//
+//        }
+
+
 -(TGKeychain *)nKeychain {
     
-    
+
 
     
 #ifndef TGDEBUG
     
-   // if(NSAppKitVersionNumber >= NSAppKitVersionNumber10_9)
-    //    return [TGKeychain keychainWithName:BUNDLE_IDENTIFIER];
-   // else
-        return [TGKeychain unencryptedKeychainWithName:BUNDLE_IDENTIFIER];
-#else 
+    if(NSAppKitVersionNumber >= NSAppKitVersionNumber10_9)
+        return [TGKeychain keychainWithName:BUNDLE_IDENTIFIER];
     
-//    if([[UsersManager currentUser].username isEqualToString:@"vihor"] && !isTestServer()) {
-//        return [TGKeychain keychainWithName:BUNDLE_IDENTIFIER];
-//    }
+    return [TGKeychain unencryptedKeychainWithName:BUNDLE_IDENTIFIER];
+    
+#else
     
     if(isTestServer())  {
         return [TGKeychain unencryptedKeychainWithName:@"org.telegram.test"];
@@ -308,9 +339,20 @@ static NSString *kDefaultDatacenter = @"default_dc";
    
 }
 
+-(void)updateStorageEncryptionKey {
+    
+    NSString *key = [_keychain objectForKey:@"e_key" group:@"persistent"];
+    
+    if(!key)
+        [self updateEncryptionKey];
+     else
+        [Storage updateEncryptionKey:key];
+}
+
 -(void)startWithKeychain:(TGKeychain *)keychain {
     
     [_context setKeychain:keychain];
+    
     
     
     [_context addChangeListener:self];
@@ -362,22 +404,39 @@ static NSString *kDefaultDatacenter = @"default_dc";
 }
 
 - (TGUpdateMessageService *)updateService {
-    return _updateService;
+    __block TGUpdateMessageService *s;
+    
+    [_queue dispatchOnQueue:^{
+        
+        s =  _updateService;
+        
+    } synchronous:YES];
+    
+    return s;
 }
 
 -(void)startNetwork {
     
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-         [self initConnectionWithId:_masterDatacenter];
-        
-         [_datacenterWatchdog execute:nil];
+        [_queue dispatchOnQueue:^{
+            [self initConnectionWithId:_masterDatacenter];
+            
+            [_datacenterWatchdog execute:nil];
+        }];
     });
 }
 
 -(void)update {
     [_mtProto pause];
     [_mtProto resume];
+}
+
++(void)pause {
+    [[self instance]->_mtProto pause];
+}
++(void)resume {
+    [[self instance]->_mtProto resume];
 }
 
 static int MAX_WORKER_POLL = 5;
@@ -407,6 +466,7 @@ static int MAX_WORKER_POLL = 5;
 
 -(void)initConnectionWithId:(NSInteger)dc_id {
     
+    dc_id = dc_id == -1 ? _masterDatacenter : dc_id;
     
     [_queue dispatchOnQueue:^{
         
@@ -432,28 +492,54 @@ static int MAX_WORKER_POLL = 5;
 
 -(void)drop {
     
-    [_context removeAllAuthTokens];
-    [[NSUserDefaults standardUserDefaults] removeObjectForKey:kDefaultDatacenter];
-    NSString *appDomain = [[NSBundle mainBundle] bundleIdentifier];
-    [[NSUserDefaults standardUserDefaults] removePersistentDomainForName:appDomain];
+    [_queue dispatchOnQueue:^{
+        [_context removeAllAuthTokens];
+        [[NSUserDefaults standardUserDefaults] removeObjectForKey:kDefaultDatacenter];
+        NSString *appDomain = [[NSBundle mainBundle] bundleIdentifier];
+        [[NSUserDefaults standardUserDefaults] removePersistentDomainForName:appDomain];
+        
+        
+        NSString *applicationSupportPath = NSSearchPathForDirectoriesInDomains(NSApplicationSupportDirectory, NSUserDomainMask, YES)[0];
+        NSString *applicationName = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleName"];
+        
+        NSString * mtkeychain = [[applicationSupportPath stringByAppendingPathComponent:applicationName] stringByAppendingPathComponent:@"encrypt-mtkeychain"];
+        
+        [[NSFileManager defaultManager] removeItemAtPath:mtkeychain error:nil];
+        
+        [SSKeychain deletePasswordForService:appName() account:@"authkeys"];
+        
+        [_keychain cleanup];
+        [_keychain loadIfNeeded];
+        
+        [_keychain updatePasscodeHash:[[NSData alloc] initWithEmptyBytes:32] save:YES];
+        
+        [self.updateService drop];
+        [self setDatacenter:isTestServer() ? 1 : 2];
+        
+        
+        [self updateEncryptionKey];
+        
+        
+        
+    } synchronous:YES];
     
     
-    NSString *applicationSupportPath = NSSearchPathForDirectoriesInDomains(NSApplicationSupportDirectory, NSUserDomainMask, YES)[0];
-    NSString *applicationName = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleName"];
-    
-    NSString * mtkeychain = [[applicationSupportPath stringByAppendingPathComponent:applicationName] stringByAppendingPathComponent:@"encrypt-mtkeychain"];
-    
-    [[NSFileManager defaultManager] removeItemAtPath:mtkeychain error:nil];
-    
-    [SSKeychain deletePasswordForService:@"Telegram" account:@"authkeys"];
-    
-    [_keychain updatePasscodeHash:[[NSData alloc] initWithEmptyBytes:32] save:YES];
-    
-    [self.updateService drop];
-    [self setDatacenter:1];
-    
-    [self initConnectionWithId:_masterDatacenter];
 }
+
+-(NSString *)updateEncryptionKey {
+    uint8_t secKey[32];
+    SecRandomCopyBytes(kSecRandomDefault, 32, secKey);
+    
+    NSString *key = [[[NSString alloc] initWithData:[[NSData alloc] initWithBytes:secKey length:32] encoding:NSASCIIStringEncoding] md5];
+    
+    [_keychain setObject:key forKey:@"e_key" group:@"persistent"];
+    
+    [Storage updateEncryptionKey:key];
+    
+    return key;
+}
+
+
 
 -(int)getTime {
     
@@ -468,6 +554,7 @@ static int MAX_WORKER_POLL = 5;
     _masterDatacenter = dc_id;
     
     [_keychain setObject:@(dc_id) forKey:@"dc_id" group:@"persistent"];
+    
 }
 
 -(void)setUserId:(int)userId {
@@ -487,8 +574,12 @@ static int MAX_WORKER_POLL = 5;
     [_queue dispatchOnQueue:^{
          [_requestService removeRequestByInternalId:request.mtrequest.internalId];
     }];
-    
-   
+}
+
+-(void)cancelRequestWithInternalId:(id)internalId {
+    [_queue dispatchOnQueue:^{
+        [_requestService removeRequestByInternalId:internalId];
+    }];
 }
 
 -(void)sendRequest:(RPCRequest *)request forDatacenter:(int)datacenterId {
@@ -574,6 +665,13 @@ static int MAX_WORKER_POLL = 5;
          
     }];
     
+    
+    if(request.alwayContinueWithErrorContext) {
+        [mtrequest setShouldContinueExecutionWithErrorContext:^bool(MTRequestErrorContext *errorContext) {
+            return false;
+        }];
+    }
+    
     return mtrequest;
 }
 
@@ -590,6 +688,16 @@ static int MAX_WORKER_POLL = 5;
         if([self isAuth] || ([noAuthClasses containsObject:[request.object class]])) {
             [_requestService addRequest:[self constructRequest:request]];
         }
+    }];
+}
+
+-(void)addRequest:(MTRequest *)request {
+    [_queue dispatchOnQueue:^{
+        
+        if([self isAuth]) {
+             [_requestService addRequest:request];
+        }
+        
     }];
 }
 

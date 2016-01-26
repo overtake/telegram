@@ -76,6 +76,7 @@
 @property (nonatomic,strong) UserInfoShortButtonView *privacy;
 @property (nonatomic,strong) UserInfoShortButtonView *blockedUsers;
 @property (nonatomic,strong) UserInfoShortButtonView *generalSettings;
+@property (nonatomic,strong) UserInfoShortButtonView *notificationSettings;
 @property (nonatomic,strong) UserInfoShortButtonView *userName;
 @property (nonatomic,strong) UserInfoShortButtonView *phoneNumber;
 
@@ -161,7 +162,7 @@ typedef enum {
     
     [header setStringValue:NSLocalizedString(@"Settings", nil)];
     
-    [header setFont:[NSFont fontWithName:@"HelveticaNeue" size:15]];
+    [header setFont:TGSystemFont(15)];
     [header setTextColor:DARK_BLACK];
     
     [header sizeToFit];
@@ -356,7 +357,7 @@ typedef enum {
     self.userNameTextField.attributedStringValue = attr;
     
     
-    attr = [[NSMutableAttributedString alloc] initWithString:[UsersManager currentUser].phoneWithFormat attributes:@{NSFontAttributeName:[NSFont fontWithName:@"HelveticaNeue" size:14]}];
+    attr = [[NSMutableAttributedString alloc] initWithString:[UsersManager currentUser].phoneWithFormat attributes:@{NSFontAttributeName:TGSystemFont(14)}];
     
     [attr addAttribute:NSForegroundColorAttributeName value:self.selectedController == self.phoneNumber ? NSColorFromRGB(0xffffff) : GRAY_TEXT_COLOR range:attr.range];
     self.phoneNumberTextField.attributedStringValue = attr;
@@ -372,6 +373,11 @@ typedef enum {
     
     if([controller isKindOfClass:[GeneralSettingsViewController class]]) {
         [self selectController:self.generalSettings];
+        return;
+    }
+    
+    if([controller isKindOfClass:[NotificationSettingsViewController class]]) {
+        [self selectController:self.notificationSettings];
         return;
     }
     
@@ -496,7 +502,7 @@ typedef enum {
     [self.lastNameView.textView setStringValue:[UsersManager currentUser].last_name];
     
     
-    int height = defaultY + NSHeight(self.defaultView.frame);
+    int height = defaultY + NSHeight(self.defaultView.frame) + 43;
     
     
     [self.topContainer setFrame:NSMakeRect(0, 0, NSWidth(self.view.frame) - DIALOG_BORDER_WIDTH, NSHeight(self.topContainer.frame))];
@@ -560,8 +566,32 @@ typedef enum {
     [container addSubview:self.generalSettings];
     
     
+    currentY+=38;
     
- //   currentY+=38;
+    self.notificationSettings = [UserInfoShortButtonView buttonWithText:NSLocalizedString(@"Notifications",nil) tapBlock:^{
+        
+        if([Telegram rightViewController].navigationViewController.isLocked)
+        {
+            //NSBeep();
+            return;
+        }
+        
+        [[Telegram rightViewController] showNotificationSettingsViewController];
+        
+    }];
+    
+    [self.notificationSettings setFrame:NSMakeRect(0, currentY, NSWidth(self.view.frame) - 0, 38)];
+    
+    [self.notificationSettings.textButton setFrameSize:NSMakeSize(NSWidth(self.notificationSettings.frame), NSHeight(self.notificationSettings.textButton.frame))];
+    [self.notificationSettings.textButton setFrameOrigin:NSMakePoint(20, NSMinY(self.notificationSettings.textButton.frame))];
+    
+    
+    [container addSubview:self.notificationSettings];
+    
+    
+    
+    
+    
     
     self.blockedUsers = [UserInfoShortButtonView buttonWithText:NSLocalizedString(@"Account.BlockedUsers",nil) tapBlock:^{
         
@@ -746,7 +776,8 @@ typedef enum {
                 [dialog save];
             }
             
-            [[Telegram rightViewController] showByDialog:dialog sender:self];
+            [appWindow().navigationController showMessagesViewController:dialog];
+            
         };
         
         
@@ -785,10 +816,10 @@ typedef enum {
     [container addSubview:self.askQuestion];
     
     
-    self.phoneNumber.autoresizingMask = self.phoneNumber.textButton.autoresizingMask = self.privacy.autoresizingMask = self.privacy.textButton.autoresizingMask = self.askQuestion.autoresizingMask = self.faq.autoresizingMask = self.about.autoresizingMask = self.blockedUsers.autoresizingMask = self.blockedUsers.textButton.autoresizingMask = self.updatePhotoButton.autoresizingMask = self.updatePhotoButton.textButton.autoresizingMask = self.nameTextField.autoresizingMask = NSViewWidthSizable;
+    self.notificationSettings.autoresizingMask = self.phoneNumber.autoresizingMask = self.phoneNumber.textButton.autoresizingMask = self.privacy.autoresizingMask = self.privacy.textButton.autoresizingMask = self.askQuestion.autoresizingMask = self.faq.autoresizingMask = self.about.autoresizingMask = self.blockedUsers.autoresizingMask = self.blockedUsers.textButton.autoresizingMask = self.updatePhotoButton.autoresizingMask = self.updatePhotoButton.textButton.autoresizingMask = self.nameTextField.autoresizingMask = NSViewWidthSizable;
     
     
-    self.phoneNumber.textButton.textColor = self.privacy.textButton.textColor = self.askQuestion.textButton.textColor = self.faq.textButton.textColor = self.about.textButton.textColor = self.blockedUsers.textButton.textColor = self.userName.textButton.textColor = self.generalSettings.textButton.textColor = DARK_BLACK;
+    self.notificationSettings.textButton.textColor = self.phoneNumber.textButton.textColor = self.privacy.textButton.textColor = self.askQuestion.textButton.textColor = self.faq.textButton.textColor = self.about.textButton.textColor = self.blockedUsers.textButton.textColor = self.userName.textButton.textColor = self.generalSettings.textButton.textColor = DARK_BLACK;
     
     [container setAutoresizingMask:NSViewWidthSizable];
     
@@ -803,6 +834,8 @@ typedef enum {
     self.askQuestion.rightContainer = imageViewWithImage(image_ArrowGrey());
     self.privacy.rightContainer = imageViewWithImage(image_ArrowGrey());
     self.phoneNumber.rightContainer = imageViewWithImage(image_ArrowGrey());
+    self.notificationSettings.rightContainer = imageViewWithImage(image_ArrowGrey());
+    
     
     self.userName.rightContainerOffset = NSMakePoint(-10, 0);
     self.blockedUsers.rightContainerOffset = NSMakePoint(-10, 0);
@@ -812,6 +845,7 @@ typedef enum {
     self.askQuestion.rightContainerOffset = NSMakePoint(-10, 0);
     self.privacy.rightContainerOffset = NSMakePoint(-10, 0);
     self.phoneNumber.rightContainerOffset = NSMakePoint(-10, 0);
+    self.notificationSettings.rightContainerOffset = NSMakePoint(-10, 0);
     
     [self.userName setSelectedColor:BLUE_COLOR_SELECT];
     [self.blockedUsers setSelectedColor:BLUE_COLOR_SELECT];
@@ -821,7 +855,7 @@ typedef enum {
     [self.askQuestion setSelectedColor:BLUE_COLOR_SELECT];
     [self.privacy setSelectedColor:BLUE_COLOR_SELECT];
     [self.phoneNumber setSelectedColor:BLUE_COLOR_SELECT];
-    
+    [self.notificationSettings setSelectedColor:BLUE_COLOR_SELECT];
     return container;
 }
 
@@ -899,8 +933,8 @@ typedef enum {
     [self.lastNameView.textView setTarget:self];
     [self.lastNameView.textView setAction:@selector(enterClick)];
     
-    [self.firstNameView.textView setFont:[NSFont fontWithName:@"HelveticaNeue" size:14]];
-    [self.lastNameView.textView setFont:[NSFont fontWithName:@"HelveticaNeue" size:14]];
+    [self.firstNameView.textView setFont:TGSystemFont(14)];
+    [self.lastNameView.textView setFont:TGSystemFont(14)];
     
     [self.firstNameView.textView setAlignment:NSLeftTextAlignment];
     [self.lastNameView.textView setAlignment:NSLeftTextAlignment];

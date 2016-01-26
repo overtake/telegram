@@ -68,7 +68,7 @@
     
     TMTextField *applicationNameTextField = [TMTextField defaultTextField];
     applicationNameTextField.stringValue = NSLocalizedString(@"App.Name", nil);
-    applicationNameTextField.font = [NSFont fontWithName:@"HelveticaNeue-Light" size:28];
+    applicationNameTextField.font = TGSystemLightFont(28);
     applicationNameTextField.textColor = NSColorFromRGB(0x333333);
     [applicationNameTextField sizeToFit];
     applicationNameTextField.wantsLayer = IS_RETINA;
@@ -88,7 +88,7 @@
   //  [applicationInfoAttributedString appendString:@".\n"  withColor:NSColorFromRGB(0x9b9b9b)];
    // [applicationInfoAttributedString appendString:NSLocalizedString(@"Login.Description", nil) withColor:NSColorFromRGB(0x9b9b9b)];
     
-    [applicationInfoAttributedString setFont:[NSFont fontWithName:@"HelveticaNeue" size:13] forRange:applicationInfoAttributedString.range];
+    [applicationInfoAttributedString setFont:TGSystemFont(13) forRange:applicationInfoAttributedString.range];
     
     NSMutableParagraphStyle *applicationInfoParagraphStyle = [[NSMutableParagraphStyle alloc] init];
     [applicationInfoParagraphStyle setLineSpacing:2];
@@ -223,7 +223,6 @@
         
         if([error.error_msg isEqualToString:@"SESSION_PASSWORD_NEEDED"]) {
             
-            
             return;
         }
         
@@ -256,7 +255,7 @@
         r.phone_code_hash = self.phone_code_hash;
         r.phone_code = self.SMSCodeView.code;
         [self.navigationViewController pushViewController:r animated:YES];
-    }];
+    } alwayContinueWithErrorContext:YES];
 }
 
 - (void)setIsPhoneRegistered:(BOOL)isPhoneRegistered {
@@ -383,7 +382,7 @@
     self.isCodeExpired = NO;
     
     
-
+    [TMViewController showModalProgress];
     
     [RPCRequest sendRequest:[TLAPI_auth_sendCode createWithPhone_number:self.phoneNumber sms_type:5 api_id:API_ID api_hash:API_HASH lang_code:@"en"] successHandler:^(RPCRequest *request, TL_auth_sentCode *response) {
         
@@ -404,6 +403,8 @@
         
         [self performSMSCodeTextFieldShowAnimation];
         
+         [TMViewController hideModalProgressWithSuccess];
+        
     } errorHandler:^(RPCRequest *request, RpcError *error) {
         if(error.error_code == PHONE_MIGRATE_X) {
             [self getSMSCodeSendRequest];
@@ -412,11 +413,13 @@
                 error.error_msg = NSLocalizedString(@"Login.InvalidPhoneNumber", nil);
             }
             
+             [TMViewController hideModalProgress];
+            
             [self.getSMSCodeView loadingSuccess];
             [self.getSMSCodeView showErrorWithText:error.error_msg];
             [self.countrySelectorView performBlocking:NO];
         }
-    }];
+    } alwayContinueWithErrorContext:YES];
 }
 
 -(void)sendSmsCode {
@@ -433,7 +436,7 @@
        }
    } errorHandler:^(RPCRequest *request, RpcError *error) {
        
-   }];
+   } alwayContinueWithErrorContext:YES];
 }
 
 - (void)startTimer:(int)time {
@@ -545,7 +548,7 @@
     } errorHandler:^(RPCRequest *request, RpcError *error) {
         if([strongSelf.phone_code_hash isEqualToString:phone_code_hash])
             [self.SMSCodeView changeCallTextFieldString:NSLocalizedString(@"Login.Error", nil)];
-    }];
+    } alwayContinueWithErrorContext:YES];
 }
 
 - (void)textField:(id)textField handleURLClick:(NSString *)url {

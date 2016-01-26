@@ -12,6 +12,7 @@
 #import "UserInfoShortButtonView.h"
 #import "TMSharedMediaButton.h"
 #import "ChatInfoNotificationView.h"
+
 @class ChatInfoViewController;
 
 @interface LineView : NSView
@@ -22,7 +23,7 @@
 @property (nonatomic) ChatInfoViewControllerType type;
 @property (nonatomic, strong) TMSharedMediaButton *sharedMediaButton;
 @property (nonatomic, strong) TMSharedMediaButton *filesMediaButton;
-
+@property (nonatomic, strong) TMSharedMediaButton *sharedLinksButton;
 @property (nonatomic,strong) ProfileSharedMediaView *mediaView;
 @property (nonatomic, strong) TMNameTextField *nameTextField;
 
@@ -34,12 +35,14 @@
 @property (nonatomic, strong,readonly) UserInfoShortButtonView *addMembersButton;
 
 @property (nonatomic, strong, readonly) UserInfoShortButtonView *exportChatInvite;
+@property (nonatomic, strong, readonly) UserInfoShortButtonView *admins;
 
 @property (nonatomic, strong,readonly) UserInfoShortButtonView *notificationView;
 @property (nonatomic, strong,readonly) ITSwitch *notificationSwitcher;
 @property (nonatomic, strong,readonly) LineView *nameLiveView;
 
-
+-(void)save;
+-(void)buildNotificationsTitle;
 - (NSString *)title;
 - (void)reload;
 

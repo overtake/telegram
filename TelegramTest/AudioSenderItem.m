@@ -20,19 +20,23 @@
     [super setState:state];
 }
 
-- (id)initWithPath:(NSString *)filePath forConversation:(TL_conversation *)conversation {
+- (id)initWithPath:(NSString *)filePath forConversation:(TL_conversation *)conversation additionFlags:(int)additionFlags {
     if(self = [super init]) {
         self.filePath = filePath;
         self.conversation = conversation;
         
         NSTimeInterval duration = [TGOpusAudioPlayerAU durationFile:filePath];
 
-        TL_messageMediaAudio *audio = [TL_messageMediaAudio createWithAudio:[TL_audio createWithN_id:0 access_hash:0 user_id:[UsersManager currentUserId] date:(int)[[MTNetwork instance] getTime] duration:roundf(duration) mime_type:@"opus" size:(int)fileSize(filePath) dc_id:0]];
+        TL_messageMediaAudio *audio = [TL_messageMediaAudio createWithAudio:[TL_audio createWithN_id:0 access_hash:0 date:(int)[[MTNetwork instance] getTime] duration:roundf(duration) mime_type:@"opus" size:(int)fileSize(filePath) dc_id:0]];
         
         
         self.message = [MessageSender createOutMessage:@"" media:audio conversation:conversation];
         
         self.message.flags|=TGREADEDCONTENT;
+        
+        if(additionFlags & (1 << 4))
+            self.message.from_id = 0;
+
     }
     return self;
 }
@@ -73,18 +77,21 @@
         if(weakSelf.conversation.type == DialogTypeBroadcast) {
             request = [TLAPI_messages_sendBroadcast createWithContacts:[weakSelf.conversation.broadcast inputContacts] random_id:[weakSelf.conversation.broadcast generateRandomIds] message:@"" media:media];
         } else {
-            request = [TLAPI_messages_sendMedia createWithFlags:weakSelf.message.reply_to_msg_id != 0 ? 1 : 0 peer:weakSelf.conversation.inputPeer reply_to_msg_id:weakSelf.message.reply_to_msg_id media:media random_id:weakSelf.message.randomId  reply_markup:[TL_replyKeyboardMarkup createWithFlags:0 rows:[@[]mutableCopy]]];
+            request = [TLAPI_messages_sendMedia createWithFlags:[self senderFlags] peer:weakSelf.conversation.inputPeer reply_to_msg_id:weakSelf.message.reply_to_msg_id media:media random_id:weakSelf.message.randomId  reply_markup:[TL_replyKeyboardMarkup createWithFlags:0 rows:[@[]mutableCopy]]];
         }
         
         weakSelf.rpc_request = [RPCRequest sendRequest:request successHandler:^(RPCRequest *request, TLUpdates *response) {
             
-            if(response.updates.count < 2)
+            
+            [weakSelf updateMessageId:response];
+            
+            TL_localMessage *msg = [TL_localMessage convertReceivedMessage:[[weakSelf updateNewMessageWithUpdates:response] message]];
+            
+            if(msg == nil)
             {
                 [weakSelf cancel];
                 return;
             }
-            
-            TL_localMessage *msg = [TL_localMessage convertReceivedMessage:(TLMessage *) ( [response.updates[1] message])];
             
             
             if(weakSelf.conversation.type != DialogTypeBroadcast)  {
@@ -93,12 +100,6 @@
                 
             } else {
                 
-                
-              //  TL_messages_statedMessages *stated = (TL_messages_statedMessages *) response;
-              //  [Notification perform:MESSAGE_LIST_RECEIVE data:@{KEY_MESSAGE_LIST:stated.messages}];
-              //  [Notification perform:MESSAGE_LIST_UPDATE_TOP data:@{KEY_MESSAGE_LIST:stated.messages,@"update_real_date":@(YES)}];
-                
-              //  msg = stated.messages[0];
                 
             }
             

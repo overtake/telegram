@@ -100,7 +100,7 @@
     
     [self.tableView removeAllItems:YES];
     
-    GeneralSettingsRowItem *photos = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeNext callback:^(GeneralSettingsRowItem *item) {
+    GeneralSettingsRowItem *photos = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeNext callback:^(TGGeneralRowItem *item) {
         
         
         confirm(appName(), NSLocalizedString(@"Cache.ClearPhotoCache", nil), ^{
@@ -109,11 +109,11 @@
             
         }, nil);
         
-    } description:NSLocalizedString(@"Cache.Photos", nil) subdesc:[NSString sizeToTransformedValue:photoSize] height:82 stateback:^id(GeneralSettingsRowItem *item) {
+    } description:NSLocalizedString(@"Cache.Photos", nil) subdesc:[NSString sizeToTransformedValue:photoSize] height:82 stateback:^id(TGGeneralRowItem *item) {
         return @"";
     } ];
     
-    GeneralSettingsRowItem *videos = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeNext callback:^(GeneralSettingsRowItem *item) {
+    GeneralSettingsRowItem *videos = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeNext callback:^(TGGeneralRowItem *item) {
         
         confirm(appName(), NSLocalizedString(@"Cache.ClearVideoCache", nil), ^{
             
@@ -121,12 +121,12 @@
             
         }, nil);
         
-    } description:NSLocalizedString(@"Cache.Videos", nil) subdesc:[NSString sizeToTransformedValue:videoSize] height:42 stateback:^id(GeneralSettingsRowItem *item) {
+    } description:NSLocalizedString(@"Cache.Videos", nil) subdesc:[NSString sizeToTransformedValue:videoSize] height:42 stateback:^id(TGGeneralRowItem *item) {
         return @"";
     }];
     
     
-    GeneralSettingsRowItem *allCache = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeNext callback:^(GeneralSettingsRowItem *item) {
+    GeneralSettingsRowItem *allCache = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeNext callback:^(TGGeneralRowItem *item) {
         
         confirm(appName(), NSLocalizedString(@"Cache.ClearAllCache", nil), ^{
             
@@ -134,7 +134,7 @@
             
         }, nil);
         
-    } description:NSLocalizedString(@"Cache.AllCache", nil) subdesc:[NSString sizeToTransformedValue:fullSize] height:42 stateback:^id(GeneralSettingsRowItem *item) {
+    } description:NSLocalizedString(@"Cache.AllCache", nil) subdesc:[NSString sizeToTransformedValue:fullSize] height:42 stateback:^id(TGGeneralRowItem *item) {
         
         return @"";
     }];
@@ -149,10 +149,8 @@
     }
     
     
-    GeneralSettingsBlockHeaderItem *description = [[GeneralSettingsBlockHeaderItem alloc] initWithObject:NSLocalizedString(@"Cache.Description", nil)];
+    GeneralSettingsBlockHeaderItem *description = [[GeneralSettingsBlockHeaderItem alloc] initWithString:NSLocalizedString(@"Cache.Description", nil) height:100 flipped:YES];
     
-    description.height = 100;
-    description.isFlipped = YES;
     
     [self.tableView insert:description atIndex:self.tableView.count tableRedraw:NO];
     

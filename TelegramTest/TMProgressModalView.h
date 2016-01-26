@@ -13,4 +13,6 @@
 -(void)successAction;
 -(void)progressAction;
 
+-(void)setDescription:(NSString *)description;
+
 @end

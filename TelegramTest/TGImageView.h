@@ -13,7 +13,6 @@
 @interface TGImageView : BTRImageView<NSImageDelegate,TGImageObjectDelegate>
 
 
-
 @property (nonatomic,strong) ImageObject *object;
 
 

@@ -10,6 +10,9 @@
 #import "ITaskRequest.h"
 @interface TMTaskRequest : NSObject<TaskObserver>
 
+
+ASQueue *taskQueue();
+
 +(void)addTask:(id<ITaskRequest>)task;
 +(void)removeTask:(id<ITaskRequest>)task;
 

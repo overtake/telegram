@@ -41,17 +41,19 @@
 
 -(void)performRequest {
     
-    id request = [TLAPI_messages_startBot createWithBot:_bot.inputUser chat_id:self.conversation.peer.chat_id random_id:self.message.randomId start_param:_startParam];
+    id request = [TLAPI_messages_startBot createWithBot:_bot.inputUser peer:self.conversation.inputPeer random_id:self.message.randomId start_param:_startParam];
     
     self.rpc_request = [RPCRequest sendRequest:request successHandler:^(RPCRequest *request, TLUpdates * response) {
         
-        if(response.updates.count < 2)
+        [self updateMessageId:response];
+        
+        TL_localMessage *msg = [TL_localMessage convertReceivedMessage:[[self updateNewMessageWithUpdates:response] message]];
+        
+        if(msg == nil)
         {
             [self cancel];
             return;
         }
-        
-        TL_localMessage *msg = [TL_localMessage convertReceivedMessage:(TLMessage *) ( [response.updates[1] message])];
         
         self.message.n_id = msg.n_id;
         self.message.date = msg.date;

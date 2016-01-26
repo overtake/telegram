@@ -18,4 +18,8 @@
     return [[DialogsManager sharedManager] find:self.n_id];
 }
 
+-(NSString *)username {
+    return @"";
+}
+
 @end

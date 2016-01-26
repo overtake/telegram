@@ -76,7 +76,7 @@ NSImage *fireImage() {
             
             object.reservedObject = weakSelf.imageView.image;
             
-            [[TGPhotoViewer viewer] show:object conversation:weakSelf.messagesViewController.conversation];
+            [[TGPhotoViewer viewer] show:object conversation:weakSelf.messagesViewController.conversation isReversed:YES];
             
             if([weakSelf.item.message isKindOfClass:[TL_destructMessage class]]) {
                 
@@ -212,10 +212,10 @@ NSImage *fireImage() {
     
     [super setItem:item];
     
-    [self.imageView setFrameSize:item.imageSize];
-    
     
     self.imageView.object = item.imageObject;
+    
+    [self.imageView setFrameSize:item.imageSize];
 
     [self updateCellState];
 
@@ -248,6 +248,8 @@ NSImage *fireImage() {
         [_captionView setFrame:NSMakeRect(0, NSHeight(self.containerView.frame) - item.captionSize.height , item.imageSize.width, item.captionSize.height)];
         
         [_captionView setAttributedString:item.caption fieldSize:item.captionSize];
+        
+        [_captionView setItem:item];
         
     } else {
         [self deallocCaptionTextView];
@@ -366,6 +368,7 @@ NSImage *fireImage() {
     animation.toValue = anim.toValue;
     animation.fromValue = anim.fromValue;
     animation.duration = anim.duration;
+    animation.removedOnCompletion = YES;
     [_captionView.textView pop_addAnimation:animation forKey:@"background"];
     
     
@@ -388,6 +391,8 @@ NSImage *fireImage() {
 
 -(void)dealloc {
     MessageTableItemPhoto *item = (MessageTableItemPhoto *) self.item;
+    
+    [self.progressView pop_removeAllAnimations];
     
     [item.imageObject.supportDownloadListener setCompleteHandler:nil];
     [item.imageObject.supportDownloadListener setProgressHandler:nil];

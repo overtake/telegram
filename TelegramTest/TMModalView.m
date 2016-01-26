@@ -44,10 +44,10 @@
     NSMutableAttributedString *sharingContactAttributedString = [[NSMutableAttributedString alloc] init];
     [sharingContactAttributedString appendString:titleString withColor:NSColorFromRGB(0x222222)];
     [sharingContactAttributedString appendString:@"\n"];
-    [sharingContactAttributedString setFont:[NSFont fontWithName:@"HelveticaNeue-Light" size:22] forRange:sharingContactAttributedString.range];
+    [sharingContactAttributedString setFont:TGSystemLightFont(22) forRange:sharingContactAttributedString.range];
     
     NSRange range = [sharingContactAttributedString appendString:text withColor:NSColorFromRGB(0x9b9b9b)];
-    [sharingContactAttributedString setFont:[NSFont fontWithName:@"HelveticaNeue" size:13] forRange:range];
+    [sharingContactAttributedString setFont:TGSystemFont(13) forRange:range];
     
     NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
     [paragraphStyle setAlignment:NSCenterTextAlignment];

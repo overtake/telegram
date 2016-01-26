@@ -7,7 +7,7 @@
 //
 
 #import "HistoryFilter.h"
-
-@interface VideoHistoryFilter : HistoryFilter
+#import "CommonMediaHistoryFilter.h"
+@interface VideoHistoryFilter : CommonMediaHistoryFilter
 
 @end

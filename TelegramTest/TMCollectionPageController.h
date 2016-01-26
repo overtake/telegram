@@ -20,11 +20,14 @@
 
 -(void)showAllMedia;
 -(void)showFiles;
+-(void)showSharedLinks;
 -(void)checkCap;
 
-@property (nonatomic,assign) BOOL isEditable;
+-(void)setIsEditable:(BOOL)isEditable animated:(BOOL)animated;
 
-- (void)setSectedMessagesCount:(NSUInteger)count;
+@property (nonatomic,assign,readonly) BOOL isEditable;
+
+- (void)setSectedMessagesCount:(NSUInteger)count enable:(BOOL)enable;
 
 -(BOOL)isSelectedItem:(PhotoCollectionImageObject *)item;
 -(void)setSelected:(BOOL)selected forItem:(PhotoCollectionImageObject *)item;

@@ -11,7 +11,8 @@
 #import "TMTypingObject.h"
 @interface TGModernTypingManager : NSObject
 
-+ (TMTypingObject *) typingForConversation:(TL_conversation *)conversation;
++ (TMTypingObject *) typingWithConversation:(TL_conversation *)conversation;
++ (void) asyncTypingWithConversation:(TL_conversation *)conversation handler:(void (^)(TMTypingObject *typing))handler;
 + (void) drop;
 
 @end

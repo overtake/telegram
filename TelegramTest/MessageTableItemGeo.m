@@ -48,9 +48,13 @@
         width-=50;
     }
     
-    self.blockSize = NSMakeSize(width - ([self.message.media isKindOfClass:[TL_messageMediaVenue class]] ? 100 : 60), [self.message.media isKindOfClass:[TL_messageMediaVenue class]] ? 60 : 130);
+    NSSize size = NSMakeSize(width - ([self.message.media isKindOfClass:[TL_messageMediaVenue class]] ? 100 : 60), [self.message.media isKindOfClass:[TL_messageMediaVenue class]] ? 60 : 130);
     
-    return YES;
+    BOOL makeNew = self.blockSize.width != size.width || self.blockSize.height != size.height;
+    
+    self.blockSize = size;
+    
+    return makeNew;
 }
 
 @end

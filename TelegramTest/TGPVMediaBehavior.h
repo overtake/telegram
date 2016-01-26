@@ -8,9 +8,8 @@
 
 #import <Foundation/Foundation.h>
 #import "TGPVBehavior.h"
-@interface TGPVMediaBehavior : NSObject<TGPVBehavior>
+@interface TGPVMediaBehavior : TGPhotoViewerBehavior<TGPVBehavior>
 
-@property (nonatomic,strong) TL_conversation *conversation;
 
 
 @end

@@ -28,7 +28,7 @@
     [super setState:state];
 }
 
-- (id)initWithImage:(NSImage *)image jpegData:(NSData *)jpegData forConversation:(TL_conversation *)conversation {
+- (id)initWithImage:(NSImage *)image jpegData:(NSData *)jpegData forConversation:(TL_conversation *)conversation additionFlags:(int)additionFlags {
     if(self = [super initWithConversation:conversation]) {
         
         
@@ -64,12 +64,16 @@
         [sizes addObject:size];
         [sizes addObject:size1];
 
-        TL_messageMediaPhoto *photo = [TL_messageMediaPhoto createWithPhoto:[TL_photo createWithN_id:rand_long() access_hash:0 user_id:0 date:(int)[[MTNetwork instance] getTime] geo:[TL_geoPointEmpty create] sizes:sizes] caption:@""];
+        TL_messageMediaPhoto *photo = [TL_messageMediaPhoto createWithPhoto:[TL_photo createWithN_id:rand_long() access_hash:0 date:(int)[[MTNetwork instance] getTime] sizes:sizes] caption:@""];
         
         
         [TGCache cacheImage:renderedImage([[NSImage alloc] initWithData:jpegNormalizedData(image)], maxSize) forKey:size.location.cacheKey groups:@[IMGCACHE]];
       
         self.message = [MessageSender createOutMessage:@"" media:photo conversation:conversation];
+        
+        
+        if(additionFlags & (1 << 4))
+            self.message.from_id = 0;
         
         [jpegData writeToFile:mediaFilePath(self.message.media) atomically:YES];
         [self.message save:YES];
@@ -106,20 +110,20 @@
         if(strongSelf.conversation.type == DialogTypeBroadcast) {
             request = [TLAPI_messages_sendBroadcast createWithContacts:[strongSelf.conversation.broadcast inputContacts] random_id:[strongSelf.conversation.broadcast generateRandomIds] message:@"" media:media];
         } else {
-            request = [TLAPI_messages_sendMedia createWithFlags:strongSelf.message.reply_to_msg_id != 0 ? 1 : 0 peer:strongSelf.conversation.inputPeer reply_to_msg_id:strongSelf.message.reply_to_msg_id media:media random_id:strongSelf.message.randomId  reply_markup:[TL_replyKeyboardMarkup createWithFlags:0 rows:[@[]mutableCopy]]];
+            request = [TLAPI_messages_sendMedia createWithFlags:[strongSelf senderFlags] peer:strongSelf.conversation.inputPeer reply_to_msg_id:strongSelf.message.reply_to_msg_id media:media random_id:strongSelf.message.randomId  reply_markup:[TL_replyKeyboardMarkup createWithFlags:0 rows:[@[]mutableCopy]]];
         }
         
         strongSelf.rpc_request = [RPCRequest sendRequest:request successHandler:^(RPCRequest *request, TLUpdates *response) {
             
+            [strongSelf updateMessageId:response];
             
+            TL_localMessage *msg = [TL_localMessage convertReceivedMessage:[[strongSelf updateNewMessageWithUpdates:response] message]];
             
-            if(response.updates.count < 2)
+            if(msg == nil)
             {
                 [strongSelf cancel];
                 return;
             }
-            
-            TL_localMessage *msg = [TL_localMessage convertReceivedMessage:(TLMessage *) ( [response.updates[1] message])];
             
             [[Storage manager] setFileInfo:[TL_inputPhoto createWithN_id:msg.media.photo.n_id access_hash:msg.media.photo.access_hash] forPathHash:fileMD5(strongSelf.filePath)];
             
@@ -159,9 +163,7 @@
             strongSelf.message.dstate = DeliveryStateNormal;
             
             [strongSelf.message save:YES];
-            
-            [[Storage manager] insertMedia:strongSelf.message];
-            
+                        
             [[NSFileManager defaultManager] moveItemAtPath:strongSelf.filePath toPath:mediaFilePath(strongSelf.message.media) error:nil];
             
            

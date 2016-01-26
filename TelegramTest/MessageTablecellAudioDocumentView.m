@@ -46,10 +46,14 @@
         
         [self.playerButton addBlock:^(BTRControlEvents events) {
             
-            [TGAudioPlayerWindow show:weakSelf.item.message.conversation];
-            [TGAudioPlayerWindow setCurrentItem:(MessageTableItemAudioDocument *)weakSelf.item];
-            
-            
+            if(weakSelf.item.isset) {
+                [TGAudioPlayerWindow show:weakSelf.item.message.conversation];
+                [TGAudioPlayerWindow setCurrentItem:(MessageTableItemAudioDocument *)weakSelf.item];
+
+            } else {
+                [weakSelf checkOperation];
+            }
+              
         } forControlEvents:BTRControlEventClick];
         
         [self.containerView addSubview:self.playerButton];
@@ -62,7 +66,7 @@
         [self.durationView setStringValue:@"00:00 / 00:00"];
         
         [[self.durationView cell] setLineBreakMode:NSLineBreakByTruncatingTail];
-        [self.durationView setFont:[NSFont fontWithName:@"HelveticaNeue" size:12]];
+        [self.durationView setFont:TGSystemFont(13)];
         [self.durationView sizeToFit];
         [self.durationView setTextColor:DARK_BLACK];
         [self.containerView addSubview:self.durationView];
@@ -72,7 +76,7 @@
         [self.stateTextField setBordered:NO];
         [self.stateTextField setEditable:NO];
         [self.stateTextField setDrawsBackground:NO];
-        [self.stateTextField setFont:[NSFont fontWithName:@"HelveticaNeue" size:12]];
+        [self.stateTextField setFont:TGSystemFont(12)];
         [self.stateTextField setTextColor:NSColorFromRGB(0xbebebe)];
         
         
@@ -92,6 +96,8 @@
     }
     return self;
 }
+
+
 
 -(void)dealloc {
     [TGAudioPlayerWindow removeEventListener:self];
@@ -126,7 +132,10 @@
 
 -(void)setDurationTextFieldString:(NSString *)string {
     [self.durationView setStringValue:self.item.duration];
-    [self.durationView setFrameSize:NSMakeSize([self progressWidth] - self.stateTextField.frame.size.width , NSHeight(self.durationView.frame))];
+    [self.durationView sizeToFit];
+    [self.durationView setFrameSize:NSMakeSize(MIN(NSWidth(self.containerView.frame) - NSMinX(self.durationView.frame) - NSWidth(self.stateTextField.frame) - 15,NSWidth(self.durationView.frame)), NSHeight(self.durationView.frame))];
+    
+    [self.durationView setCenteredYByView:self.durationView.superview];
 }
 
 -(void)drawRect:(NSRect)dirtyRect {
@@ -161,7 +170,7 @@
             break;
     }
     
-    if(self.cellState == CellStateDownloading || self.cellState == CellStateNeedDownload || self.cellState == CellStateDownloading)
+    if(self.cellState == CellStateDownloading || self.cellState == CellStateNeedDownload || self.cellState == CellStateDownloading || self.item.messageSender != nil)
     {
         [self.playerButton setImage:nil forControlState:BTRControlStateNormal];
     }
@@ -244,12 +253,12 @@
     [self updateDownloadState];
     
     
-    [self setStateTextFieldString:[NSString sizeToTransformedValuePretty:self.item.size]];
+    [self setStateTextFieldString:item.fileSize];
     
     [self setDurationTextFieldString:item.duration];
     
-    [self.stateTextField setFrameOrigin:NSMakePoint(self.durationView.frame.origin.x + self.durationView.frame.size.width, self.durationView.frame.origin.y )];
-    
+    [self.stateTextField setFrameOrigin:NSMakePoint(NSMaxX(self.durationView.frame) + 2, self.durationView.frame.origin.y )];
+    [self.stateTextField setHidden:YES];
     if(item.state != AudioStatePlaying && item.state != AudioStatePaused)
         [self updateCellState];
     else {

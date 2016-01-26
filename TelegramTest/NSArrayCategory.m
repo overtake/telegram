@@ -19,6 +19,33 @@
     return array;
 }
 
+-(id)firstObject {
+    return self.count > 0 ? self[0] : nil;
+}
+
+-(NSArray *)findElementsWithRecursion:(NSString *)q {
+    return [self findElementsWithRecursion:[NSMutableArray array] inside:self q:q];
+}
+
+-(NSArray *)findElementsWithRecursion:(NSMutableArray *)result inside:(NSArray *)inside q:(NSString *)q {
+    
+    [inside enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        
+        if([obj class] == [NSString class]) {
+            if([obj rangeOfString:q].location != NSNotFound) {
+                [result addObject:obj];
+            }
+        } else if([obj isKindOfClass:[NSArray class]]) {
+            [result addObjectsFromArray:[self findElementsWithRecursion:[NSMutableArray array] inside:obj q:q]];
+        }
+        
+        
+    }];
+    
+    
+    return result;
+}
+
 @end
 
 @implementation NSMutableArray (Reverse)
@@ -36,5 +63,11 @@
         j--;
     }
 }
+
+-(id)firstObject {
+    return self.count > 0 ? self[0] : nil;
+}
+
+
 
 @end

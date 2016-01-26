@@ -40,15 +40,9 @@
     
     [main.submenu removeItem:[main.submenu itemWithTag:1000]];
     
-  
-    main = [menu itemAtIndex:1];
-    [main.submenu removeItemAtIndex:1];
     
 #endif
     
-    
-    
-
     
 }
 
@@ -78,8 +72,9 @@
 
 
 - (IBAction)openSettings:(id)sender {
-    [[Telegram rightViewController] showGeneralSettings];
     
+    [[Telegram leftViewController] showTabControllerAtIndex:2];
+        
 }
 
 - (IBAction)clearChatHistory:(NSMenuItem *)sender {
@@ -100,7 +95,7 @@
             [dialog save];
         }
         
-        [[Telegram rightViewController] showByDialog:dialog sender:self];
+        [appWindow().navigationController showMessagesViewController:dialog];
     };
     
     
@@ -132,8 +127,13 @@
     [[Telegram leftViewController] showUserSettings];
 }
 - (IBAction)showMedia:(id)sender {
-    [[Telegram rightViewController] showCollectionPage:[Telegram rightViewController].messagesViewController.conversation];
-  //  [[TGPhotoViewer viewer] show:nil conversation:[Telegram rightViewController].messagesViewController.conversation];
+    
+    TMCollectionPageController *collectionViewController = [[TMCollectionPageController alloc] initWithFrame:NSZeroRect];
+    
+    [collectionViewController setConversation:[Telegram conversation]];
+    
+    [appWindow().navigationController pushViewController:collectionViewController animated:YES];
+    
 }
 
 - (BOOL)validateMenuItem:(NSMenuItem *)menuItem {

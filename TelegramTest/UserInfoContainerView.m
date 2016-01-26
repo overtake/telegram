@@ -26,6 +26,7 @@
 #import "TMMenuPopover.h"
 #import "FullUsersManager.h"
 #import "ComposeActionAddUserToGroupBehavior.h"
+#import "TGShareContactModalView.h"
 @interface UserInfoContainerView()
 @property (nonatomic, strong) TMAvatarImageView *avatarImageView;
 @property (nonatomic, strong) NSTextView *nameTextView;
@@ -39,6 +40,7 @@
 
 @property (nonatomic, strong) TMSharedMediaButton *filesMediaButton;
 @property (nonatomic, strong) TMSharedMediaButton *sharedMediaButton;
+@property (nonatomic, strong) TMSharedMediaButton *sharedLinksButton;
 @property (nonatomic, strong) UserInfoShortButtonView *startSecretChatButton;
 @property (nonatomic, strong) UserInfoShortButtonView *setProfilePhotoButton;
 @property (nonatomic, strong) UserInfoShortButtonView *importContacts;
@@ -109,7 +111,7 @@
         __block UserInfoContainerView *weakSelf = self;
     
         self.sendMessageButton = [UserInfoShortButtonView buttonWithText:NSLocalizedString(@"Profile.SendMessage", nil) tapBlock:^{
-            [[Telegram sharedInstance] showMessagesWidthUser:weakSelf.user sender:weakSelf];
+            [appWindow().navigationController showMessagesViewController:weakSelf.user.dialog];
         }];
         [self.sendMessageButton setFrameSize:NSMakeSize(offsetRight, 42)];
         [self addSubview:self.sendMessageButton];
@@ -120,7 +122,7 @@
             if(weakSelf.user.isBot) {
                 
                 
-                [TMViewController showModalProgress];
+                [self.controller showModalProgress];
                 
                 NSPasteboard* cb = [NSPasteboard generalPasteboard];
                 
@@ -129,12 +131,20 @@
                 
                 dispatch_after_seconds(0.2, ^{
                     
-                    [TMViewController hideModalProgressWithSuccess];
+                    [self.controller hideModalProgressWithSuccess];
                     
                 });
                 
             } else {
-                [[Telegram rightViewController] showShareContactModalView:weakSelf.user];
+                
+                TGShareContactModalView *shareContactModalView = [[TGShareContactModalView alloc] initWithFrame:NSMakeRect(0, 0, NSWidth(weakSelf.window.frame), NSHeight(weakSelf.window.frame))];
+                
+                [shareContactModalView setMessagesViewController:weakSelf.controller.navigationViewController.messagesViewController];
+                [shareContactModalView setUser:weakSelf.user];
+                
+                [shareContactModalView show:weakSelf.window animated:YES];
+                
+               // [[Telegram rightViewController] showShareContactModalView:weakSelf.user];
             }
             
         }];
@@ -147,10 +157,10 @@
             BlockedHandler handlerBlock = ^(BOOL result) {
                 self.blockContact.locked = NO;
                 
-                if(!self.user.isBlocked)
+                if(!self.user.isBlocked && self.user.isBot)
                 {
-                    [[Telegram rightViewController] navigationGoBack];
-                    [[Telegram rightViewController].messagesViewController sendMessage:@"/start" forConversation:[Telegram conversation]];
+                    [self.controller.navigationViewController goBackWithAnimation:YES];
+                    [self.controller.navigationViewController.messagesViewController sendMessage:@"/start" forConversation:self.controller.conversation];
                 }
             };
             
@@ -166,36 +176,71 @@
         
         self.addToGroupButton =[UserInfoShortButtonView buttonWithText:NSLocalizedString(@"Profile.AddToGroup", nil) tapBlock:^{
             
-            [[Telegram rightViewController] showComposeAddUserToGroup:[[ComposeAction alloc] initWithBehaviorClass:[ComposeActionAddUserToGroupBehavior class] filter:nil object:self.user]];
             
+            ComposeChooseGroupViewController *viewController = [[ComposeChooseGroupViewController alloc] initWithFrame:self.controller.view.bounds];
+           
+            [viewController setAction:[[ComposeAction alloc] initWithBehaviorClass:[ComposeActionAddUserToGroupBehavior class] filter:nil object:self.user]];
+            
+            [self.controller.navigationViewController pushViewController:viewController animated:YES];
         }];
         
         self.helpBotButton = [UserInfoShortButtonView buttonWithText:NSLocalizedString(@"Bot.Help", nil) tapBlock:^{
             
-            [[Telegram rightViewController] showByDialog:self.user.dialog sender:self];
+            [self.controller.navigationViewController goBackWithAnimation:YES];
             
-            [[Telegram rightViewController].messagesViewController sendMessage:@"/help" forConversation:self.user.dialog];
+            [self.controller.navigationViewController.messagesViewController sendMessage:@"/help" forConversation:self.user.dialog];
             
         }];
 
         
         self.sharedMediaButton = [TMSharedMediaButton buttonWithText:NSLocalizedString(@"Profile.SharedMedia", nil) tapBlock:^{
             
-            [[Telegram rightViewController] showCollectionPage:weakSelf.controller.conversation];
-            [[Telegram rightViewController].collectionViewController showAllMedia];
+            TMCollectionPageController *viewController = [[TMCollectionPageController alloc] initWithFrame:self.controller.view.bounds];
             
+            [viewController loadViewIfNeeded];
+            
+            [viewController setConversation:self.controller.conversation];
+            
+            [self.controller.navigationViewController pushViewController:viewController animated:YES];
+            
+           
+            [viewController showAllMedia];
         }];
         
         
         self.filesMediaButton = [TMSharedMediaButton buttonWithText:NSLocalizedString(@"Profile.SharedMediaFiles", nil) tapBlock:^{
             
-            [[Telegram rightViewController] showCollectionPage:weakSelf.controller.conversation];
-            [[Telegram rightViewController].collectionViewController showFiles];
+            TMCollectionPageController *viewController = [[TMCollectionPageController alloc] initWithFrame:self.controller.view.bounds];
+            
+            [viewController loadViewIfNeeded];
+            
+            [viewController setConversation:self.controller.conversation];
+            
+            [self.controller.navigationViewController pushViewController:viewController animated:YES];
+            
+            [viewController showFiles];
         }];
         
         
-        self.filesMediaButton.isFiles = YES;
+        self.sharedLinksButton = [TMSharedMediaButton buttonWithText:NSLocalizedString(@"Conversation.Filter.SharedLinks", nil) tapBlock:^{
+            
+            TMCollectionPageController *viewController = [[TMCollectionPageController alloc] initWithFrame:self.controller.view.bounds];
+            
+            [viewController loadViewIfNeeded];
+            
+            [viewController setConversation:self.controller.conversation];
+            
+            [self.controller.navigationViewController pushViewController:viewController animated:YES];
+            
+            [viewController showSharedLinks];
+        }];
         
+        
+        
+        
+        self.sharedMediaButton.type = TMSharedMediaPhotoVideoType;
+        self.filesMediaButton.type = TMSharedMediaDocumentsType;
+        self.sharedLinksButton.type = TMSharedMediaSharedLinksType;
 //        self.importContacts = [UserInfoShortButtonView buttonWithText:NSLocalizedString(@"Account.ImportContacts", nil) tapBlock:^{
 //           
 //            [[NewContactsManager sharedManager] syncContacts:^{
@@ -224,6 +269,9 @@
         [self.sharedMediaButton setFrameSize:NSMakeSize(offsetRight, 42)];
         [self addSubview:self.sharedMediaButton];
         
+        [self.sharedLinksButton setFrameSize:NSMakeSize(offsetRight, 42)];
+        [self addSubview:self.sharedLinksButton];
+        
         [self.filesMediaButton setFrameSize:NSMakeSize(offsetRight, 42)];
         [self addSubview:self.filesMediaButton];
         
@@ -251,14 +299,18 @@
         
         self.deleteSecretChatButton = [UserInfoShortButtonView buttonWithText:NSLocalizedString(@"Conversation.DeleteSecretChat", nil) tapBlock:^{
             [weakSelf.deleteSecretChatButton setLocked:YES];
-            [[Telegram rightViewController].messagesViewController deleteDialog:[Telegram rightViewController].messagesViewController.conversation callback:^{
+            [[Telegram rightViewController].messagesViewController deleteDialog:self.controller.conversation callback:^{
                 [weakSelf.deleteSecretChatButton setLocked:NO];
             }];
         }];
         
         self.encryptedKeyButton = [UserInfoShortButtonView buttonWithText:NSLocalizedString(@"Profile.ShowEncryptedKey",nil) tapBlock:^{
-            [[Telegram rightViewController] showEncryptedKeyWindow:weakSelf.controller.conversation.encryptedChat];
-           // [EncryptedKeyWindow showForChat:weakSelf.controller.conversation.encryptedChat];
+            
+            EncryptedKeyViewController *viewController = [[EncryptedKeyViewController alloc] initWithFrame:self.controller.view.bounds];
+            
+            [viewController showForChat:weakSelf.controller.conversation.encryptedChat];
+            
+            [self.controller.navigationViewController pushViewController:viewController animated:YES];
         }];
         
         
@@ -387,7 +439,7 @@
         [Notification addObserver:self selector:@selector(userNameChangedNotification:) name:USER_UPDATE_NAME];
         
         
-        self.filesMediaButton.textButton.textColor = self.notificationView.textButton.textColor = self.sharedMediaButton.textButton.textColor = self.setTTLButton.textButton.textColor = self.encryptedKeyButton.textButton.textColor = DARK_BLACK;
+        self.sharedLinksButton.textButton.textColor = self.filesMediaButton.textButton.textColor = self.notificationView.textButton.textColor = self.sharedMediaButton.textButton.textColor = self.setTTLButton.textButton.textColor = self.encryptedKeyButton.textButton.textColor = DARK_BLACK;
         
         
         [Notification addObserver:self selector:@selector(didChangedBlockedUsers:) name:USER_BLOCK];
@@ -396,6 +448,8 @@
     }
     return self;
 }
+
+
 
 -(void)didChangedBlockedUsers:(NSNotification *)notification {
     TL_contactBlocked *user = [notification.userInfo objectForKey:KEY_USER];
@@ -434,7 +488,7 @@
     
     [string appendString:str withColor:NSColorFromRGB(0xa1a1a1)];
     
-    [string setFont:[NSFont fontWithName:@"HelveticaNeue-Light" size:15] forRange:NSMakeRange(0, string.length)];
+    [string setFont:TGSystemLightFont(15) forRange:NSMakeRange(0, string.length)];
    
     [string appendAttributedString:[NSAttributedString attributedStringWithAttachment:attach]];
     [self.ttlTitle setAttributedStringValue:string];
@@ -460,7 +514,7 @@
     
     [string appendString:str withColor:NSColorFromRGB(0xa1a1a1)];
     
-    [string setFont:[NSFont fontWithName:@"HelveticaNeue-Light" size:15] forRange:NSMakeRange(0, string.length)];
+    [string setFont:TGSystemLightFont(15) forRange:NSMakeRange(0, string.length)];
     
     [string appendAttributedString:[NSAttributedString attributedStringWithAttachment:attach]];
     [self.muteUntilTitle setAttributedStringValue:string];
@@ -586,9 +640,21 @@
         
         [self.filesMediaButton setHidden:NO];
         
+        
+        [self.sharedLinksButton setHidden:self.controller.isSecretProfile];
+        
+        if(!self.controller.isSecretProfile) {
+            offset-=NSHeight(self.sharedLinksButton.frame);
+            
+            [self.sharedLinksButton setFrameOrigin:NSMakePoint(100, offset)];
+            
+            [self.sharedLinksButton setHidden:NO];
+        }
+        
     } else {
         [self.sharedMediaButton setHidden:YES];
         [self.filesMediaButton setHidden:YES];
+        [self.sharedLinksButton setHidden:YES];
     }
     
     
@@ -661,7 +727,7 @@
     
 }
 
-#define DEFAULT_FONT [NSFont fontWithName:@"HelveticaNeue" size:13]
+#define DEFAULT_FONT TGSystemFont(13)
 #define DEFAULT_COLOR NSColorFromRGB(0xa1a1a1)
 
 - (void)setUser:(TLUser *)user {
@@ -673,6 +739,8 @@
     
     [self.filesMediaButton setConversation:self.controller.conversation];
     
+    [self.sharedLinksButton setConversation:self.controller.conversation];
+    
     [self.helpBotButton setHidden:YES];
     
     NSSize size;
@@ -680,7 +748,7 @@
     NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
     [paragraphStyle setLineBreakMode: NSLineBreakByTruncatingTail];
     
-    NSAttributedString *userNameAttributedString = [[NSAttributedString alloc] initWithString:user.fullName ? user.fullName : NSLocalizedString(@"User.Deleted", nil) attributes:@{NSForegroundColorAttributeName: NSColorFromRGB(0x333333), NSFontAttributeName: [NSFont fontWithName:@"HelveticaNeue" size:18], NSParagraphStyleAttributeName: paragraphStyle}];
+    NSAttributedString *userNameAttributedString = [[NSAttributedString alloc] initWithString:user.fullName ? user.fullName : NSLocalizedString(@"User.Deleted", nil) attributes:@{NSForegroundColorAttributeName: NSColorFromRGB(0x333333), NSFontAttributeName: TGSystemFont(18), NSParagraphStyleAttributeName: paragraphStyle}];
     size = [userNameAttributedString sizeForWidth:FLT_MAX height:FLT_MAX];
     
     [[self.nameTextView textStorage] setAttributedString:userNameAttributedString];

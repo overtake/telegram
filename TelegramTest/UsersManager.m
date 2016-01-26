@@ -187,10 +187,17 @@
                 newUser.first_name =  NSLocalizedString(@"User.Deleted", nil);
             }
             
+            
+           
+            
             BOOL needUpdateUserInDB = NO;
             if(currentUser) {
                 BOOL isNeedRebuildNames = NO;
                 BOOL isNeedChangeTypeNotify = NO;
+                
+                currentUser.flags = newUser.flags;
+                
+                
                 if(newUser.type != currentUser.type) {
                     [currentUser setType:newUser.type];
                     
@@ -239,6 +246,7 @@
                 }
                 
             } else {
+                
                 
                 if(newUser.type == TLUserTypeEmpty) {
                     newUser.first_name = @"Deleted";
@@ -290,12 +298,24 @@
     
     BOOL result = currentUser.status.expires != status.expires && currentUser.status.was_online != status.was_online && currentUser.status.class != status.class;
     
+    BOOL saveOnlyTime = currentUser.status.class == status.class || (([currentUser.status isKindOfClass:[TL_userStatusOnline class]] || [currentUser.status isKindOfClass:[TL_userStatusOffline class]])  && ([status isKindOfClass:[TL_userStatusOnline class]] || [status isKindOfClass:[TL_userStatusOffline class]]));
+    
     currentUser.status = status;
     currentUser.lastSeenUpdate = [[MTNetwork instance] getTime];
     currentUser.status.was_online = status.was_online;
     currentUser.status.expires = status.expires;
     
-    [Notification perform:USER_STATUS data:@{KEY_USER_ID: @(currentUser.n_id)}];
+    if(result)
+        [Notification perform:USER_STATUS data:@{KEY_USER_ID: @(currentUser.n_id)}];
+    
+    
+    if(result) {
+        if(saveOnlyTime) {
+            [[Storage manager] updateUsersStatus:@[currentUser]];
+        } else {
+             [[Storage manager] insertUser:currentUser completeHandler:nil];
+        }
+    }
     
     return result;
 }
@@ -305,9 +325,6 @@
         TLUser *currentUser = [keys objectForKey:@(uid)];
         if(currentUser) {
             BOOL result = [self setUserStatus:status forUser:currentUser];
-            if(result) {
-                [[Storage manager] insertUser:currentUser completeHandler:nil];
-            }
         }
     }];
 }
@@ -347,26 +364,29 @@
     
     [RPCRequest sendRequest:[TLAPI_account_updateUsername createWithUsername:userName] successHandler:^(RPCRequest *request, TLUser *response) {
         
-        [self.queue dispatchOnQueue:^{
-            if(response.type == TLUserTypeSelf) {
-                [self add:@[response]];
-            }
-            
-            [[Storage manager] insertUser:self.userSelf completeHandler:nil];
-            
-            [[ASQueue mainQueue] dispatchOnQueue:^{
-                completeHandler(self.userSelf);
-            }];
-            
-            [Notification perform:USER_UPDATE_NAME data:@{KEY_USER:self.userSelf}];
+        if(response.type == TLUserTypeSelf) {
+            [self add:@[response]];
+        }
+        
+        [self.userSelf rebuildNames];
+        
+        [[Storage manager] insertUser:self.userSelf completeHandler:nil];
+        
+        [[ASQueue mainQueue] dispatchOnQueue:^{
+            completeHandler(self.userSelf);
         }];
         
-       
+        [Notification perform:USER_UPDATE_NAME data:@{KEY_USER:self.userSelf}];
+
         
      } errorHandler:^(RPCRequest *request, RpcError *error) {
-         if(errorHandler)
-             errorHandler(NSLocalizedString(@"Profile.CantUpdate", nil));
-     } timeout:10];
+         
+         [ASQueue dispatchOnMainQueue:^{
+             if(errorHandler)
+                 errorHandler(NSLocalizedString(@"Profile.CantUpdate", nil));
+         }];
+         
+     } timeout:10 queue:self.queue.nativeQueue];
 }
 
 

@@ -24,7 +24,7 @@
 
 - (void)add:(NSArray *)all withCustomKey:(NSString*)key {
     
-    
+    int bp = 0;
     
     [self.queue dispatchOnQueue:^{
         
@@ -40,6 +40,9 @@
                 TLChat *currentChat = [self->keys objectForKey:[obj valueForKey:key]];
                 if(currentChat != nil) {
                     
+                    BOOL isNeedUpdateTypeNotification = NO;
+                    
+                    
                     
                     if([currentChat.photo.photo_small hashCacheKey] != [newChat.photo.photo_small hashCacheKey]) {
                         currentChat.photo = newChat.photo;
@@ -51,24 +54,48 @@
                         [Notification perform:CHAT_UPDATE_TITLE data:@{KEY_CHAT: currentChat}];
                     }
                     
+                    currentChat.username = newChat.username;
+                    
                     currentChat.participants_count = newChat.participants_count;
                     currentChat.date = newChat.date;
-                    currentChat.version = newChat.version;
+                    
                     currentChat.access_hash = newChat.access_hash;
                     
-                    BOOL isNeedUpdateTypeNotification = NO;
-                    if(currentChat.left != newChat.left) {
-                        currentChat.left = newChat.left;
-                        isNeedUpdateTypeNotification = YES;
+                    if(currentChat.version != newChat.version) {
+                         currentChat.version = newChat.version;
+                        
+                        [[FullChatManager sharedManager] loadIfNeed:currentChat.n_id force:YES]; // force load chat if changed version.
                     }
                     
-                    if(currentChat.type != newChat.type) {
+                    if(currentChat.flags != newChat.flags) {
+                        if(!(currentChat.type == TLChatTypeNormal && newChat.type == TLChatTypeForbidden)) {
+                            currentChat.flags = newChat.flags;
+                            isNeedUpdateTypeNotification = YES;
+                        }
+                    }
+                    
+                    if((currentChat.migrated_to || newChat.migrated_to) && (![currentChat.migrated_to isKindOfClass:newChat.migrated_to.class] || currentChat.migrated_to.channel_id !=  newChat.migrated_to.channel_id)) {
+                        currentChat.migrated_to = newChat.migrated_to;
+                        
+                        if(currentChat.isDeactivated && currentChat.migrated_to.channel_id != 0) {
+                            [Notification perform:DIALOG_DELETE data:@{KEY_DIALOG:currentChat.dialog}];
+                        }
+                    }
+                    
+                   
+                   
+                     if(currentChat.type != newChat.type) {
                         currentChat.type = newChat.type;
                         isNeedUpdateTypeNotification = YES;
                     }
                     
-                    if(isNeedUpdateTypeNotification)
-                        [Notification perform:CHAT_UPDATE_TYPE data:@{KEY_CHAT:currentChat}];
+                    
+                    
+                    if(isNeedUpdateTypeNotification) {
+                        [Notification perform:CHAT_FLAGS_UPDATED data:@{KEY_CHAT:currentChat}];
+                         [Notification perform:CHAT_UPDATE_TYPE data:@{KEY_CHAT:currentChat}];
+                    }
+                    
                     
                     
                 } else {
@@ -162,6 +189,53 @@
         
     }];
     
+    
+}
+
+
++(TLChat *)findChatByName:(NSString *)userName {
+    if([userName hasPrefix:@"@"])
+        userName = [userName substringFromIndex:1];
+    
+    NSArray *chats = [[[ChatsManager sharedManager] all] filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.username == %@",userName]];
+    
+    if(chats.count == 1)
+        return chats[0];
+    
+    return nil;
+}
+
++(NSArray *)findChatsByName:(NSString *)userName {
+    if([userName hasPrefix:@"@"])
+        userName = [userName substringFromIndex:1];
+    
+    NSArray *chats = [[[ChatsManager sharedManager] all] filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.username BEGINSWITH[c] %@",userName]];
+    
+    
+    return chats;
+}
+
+
+-(void)updateChannelUserName:(NSString *)userName channel:(TL_channel *)channel completeHandler:(void (^)(TL_channel *))completeHandler errorHandler:(void (^)(NSString *))errorHandler  {
+    
+    [RPCRequest sendRequest:[TLAPI_channels_updateUsername createWithChannel:channel.inputPeer username:userName] successHandler:^(id request, id response) {
+        
+        if([response isKindOfClass:[TL_boolTrue class]]) {
+            channel.username = userName;
+            [[Storage manager] insertChat:channel completeHandler:nil];
+            
+            if(completeHandler != nil) {
+                completeHandler(channel);
+            }
+        }
+        
+    } errorHandler:^(id request, RpcError *error) {
+        
+        if(errorHandler != nil) {
+            errorHandler(error.error_msg);
+        }
+        
+    }];
     
 }
 

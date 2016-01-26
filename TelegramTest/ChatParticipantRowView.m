@@ -118,10 +118,12 @@
 
 - (void) TMNameTextFieldDidChanged:(TMNameTextField *)textField {
     [self.nameTextField sizeToFit];
+    [self setFrameSize:self.frame.size];
 }
 
 - (void) TMStatusTextFieldDidChanged:(TMStatusTextField *)textField {
     [self.statusTextField sizeToFit];
+    [self setFrameSize:self.frame.size];
 }
 
 

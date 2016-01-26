@@ -21,6 +21,10 @@
     return self;
 }
 
+-(int)date {
+    return [self.media isKindOfClass:[TLMessage class]] ? [(TLMessage *)self.media date] : _date;
+}
+
 -(BOOL)isEqual:(PreviewObject *)object {
     return self.msg_id == object.msg_id;
 }

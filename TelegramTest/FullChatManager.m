@@ -160,34 +160,9 @@
         self.isLoad = YES;
         if(self.loadHandler)
             self.loadHandler();
-        
-        [self loadChatFull];
     }];
 }
 
-- (void)loadChatFull {
-//    [self.queue dispatchOnQueue:^{
-//        NSArray *array =[[ChatsManager sharedManager] all];
-//        NSMutableArray *needToLoad = [[NSMutableArray alloc] init];
-//        for(TLChat *chat in array) {
-//            if([chat isKindOfClass:[TL_chat class]]) {
-//                if(![self find:chat.n_id]) {
-//                    [needToLoad addObject:@(chat.n_id)];
-//                }
-//            }
-//        }
-//        
-//        MTLog(@"need to load full chats%@", needToLoad);
-//        [self loadFullChats:needToLoad];
-//    }];
-}
-
-- (void)loadFullChats:(NSArray *)array {
-    for(NSNumber *number in array) {
-        int chat_id = [number intValue];
-        [self loadFullChatByChatId:chat_id force:NO];
-    }
-}
 
 - (void) loadIfNeed:(int)chat_id force:(BOOL)force {
     if(!self.isLoad)
@@ -211,7 +186,7 @@
     TLChatFull *fullChat = [self find:chat_id];
     
     if(fullChat ) {
-        if(callback != nil)
+        if(callback != nil && !force)
             callback(fullChat);
         if( (fullChat.lastUpdateTime + 300 > [[MTNetwork instance] getTime]) && !force) {
                 return;
@@ -219,8 +194,24 @@
         
     }
     
+    
+    TLChat *chat = [[ChatsManager sharedManager] find:chat_id];
+    
+    if([chat isKindOfClass:[TL_channelForbidden class]] || [chat isKindOfClass:[TL_chatForbidden class]])
+        return;
+    
+    id request;
+    
+    if([chat isKindOfClass:[TL_channel class]]) {
+        request = [TLAPI_channels_getFullChannel createWithChannel:chat.inputPeer];
+    } else {
+        request = [TLAPI_messages_getFullChat createWithChat_id:chat.n_id];
+    }
+    
+    
+    [RPCRequest sendRequest:request successHandler:^(RPCRequest *request, TL_messages_chatFull *result) {
         
-    [RPCRequest sendRequest:[TLAPI_messages_getFullChat createWithChat_id:chat_id] successHandler:^(RPCRequest *request, TL_messages_chatFull *result) {
+         [SharedManager proccessGlobalResponse:result];
         
         if([result isKindOfClass:[TL_messages_chatFull class]]) {
             TL_conversation *conversation = [[DialogsManager sharedManager] findByChatId:chat_id];
@@ -230,33 +221,40 @@
             [conversation save];
         }
         
-        [SharedManager proccessGlobalResponse:result];
-        
-        [self.queue dispatchOnQueue:^{
-            
-            [self add:@[[result full_chat]]];
-            
-            TLChatFull *current = [self find:chat_id];
-            
-            
-            
-            [current setLastLayerUpdated:YES];
-            
-            [[Storage manager] insertFullChat:[result full_chat] completeHandler:nil];
-            
-            
+        if(![result full_chat]) {
             [ASQueue dispatchOnMainQueue:^{
                 if(callback)
                     callback([result full_chat]);
             }];
-
+            
+            return;
+        }
+        
+        
+       
+        [self add:@[[result full_chat]]];
+        
+        TLChatFull *current = [self find:chat_id];
+        
+        
+        
+        [current setLastLayerUpdated:YES];
+        
+        [[Storage manager] insertFullChat:[result full_chat] completeHandler:nil];
+        
+        
+        [ASQueue dispatchOnMainQueue:^{
+            if(callback)
+                callback([result full_chat]);
         }];
 
     } errorHandler:^(RPCRequest *request, RpcError *error) {
         ELog(@"fullchat loading error %@", error.error_msg);
-        if(callback)
-            callback(nil);
-    }];
+        [ASQueue dispatchOnMainQueue:^{
+            if(callback)
+                callback(fullChat);
+        }];
+    } timeout:0 queue:self.queue.nativeQueue];
     
 }
 
@@ -273,7 +271,7 @@
         FullChatMembersChecker *checker = [self.membersCheker objectForKey:@(chat_id)];
         if(!checker) {
             TLChatFull *chatFull = [[FullChatManager sharedManager] find:chat_id];
-            if(chatFull) {
+            if(chatFull && ![chatFull isKindOfClass:[TL_channelFull class]]) {
                 checker = [[FullChatMembersChecker alloc] initWithFullChat:chatFull queue:self.queue];
                 [self.membersCheker setObject:checker forKey:@(chat_id)];
             }
@@ -294,7 +292,7 @@
             
             TLChatFull *currentChat = [self->keys objectForKey:@(newChatFull.n_id)];
             if(currentChat) {
-                if(currentChat.participants.participants.count != newChatFull.participants.participants.count) {
+                if([currentChat isKindOfClass:[TL_chatFull class]] && currentChat.participants.participants.count != newChatFull.participants.participants.count) {
                     currentChat.participants = newChatFull.participants;
                     [Notification perform:CHAT_UPDATE_PARTICIPANTS data:@{KEY_CHAT_ID: @(currentChat.n_id), KEY_PARTICIPANTS: currentChat.participants}];
                 }
@@ -302,23 +300,53 @@
                 currentChat.lastUpdateTime = [[MTNetwork instance] getTime];
                 currentChat.exported_invite = newChatFull.exported_invite;
                 currentChat.bot_info = newChatFull.bot_info;
+                currentChat.migrated_from_chat_id = newChatFull.migrated_from_chat_id;
+                currentChat.migrated_from_max_id = newChatFull.migrated_from_max_id;
 
+                if([currentChat isKindOfClass:[TL_channelFull class]] && (currentChat.participants_count != newChatFull.participants_count || currentChat.admins_count != newChatFull.admins_count || currentChat.kicked_count != newChatFull.kicked_count)) {
+                    
+                    currentChat.participants_count = newChatFull.participants_count;
+                    currentChat.kicked_count = newChatFull.kicked_count;
+                    currentChat.admins_count = newChatFull.admins_count;
+                    
+                    [Notification perform:CHAT_STATUS data:@{KEY_CHAT_ID: @(currentChat.n_id)}];
+                    
+                    if(currentChat.chat)
+                        [Notification perform:CHAT_UPDATE_PARTICIPANTS data:@{KEY_CHAT:currentChat.chat}];
+                }
+                
+                
             } else {
                 [self->keys setObject:newChatFull forKey:@(newChatFull.n_id)];
+                [self->list addObject:newChatFull];
+                
+                
                 currentChat = newChatFull;
+                
+                if([currentChat isKindOfClass:[TL_channelFull class]]) {
+                    [Notification perform:CHAT_STATUS data:@{KEY_CHAT_ID: @(currentChat.n_id)}];
+                    
+                    if(currentChat.chat)
+                        [Notification perform:CHAT_UPDATE_PARTICIPANTS data:@{KEY_CHAT:currentChat.chat}];
+                }
+                
                 if(currentChat.lastUpdateTime == 0)
                     currentChat.lastUpdateTime = [[MTNetwork instance] getTime];
             }
             
-            NSArray *copy = [currentChat.participants.participants copy];
-            
-            for (TL_chatParticipant *user in copy) {
-                TLUser *find = [[UsersManager sharedManager] find:user.user_id];
+            if([currentChat isKindOfClass:[TL_chatFull class]]) {
+                NSArray *copy = [currentChat.participants.participants copy];
                 
-                if([find isKindOfClass:[TL_userEmpty class]] || !find) {
-                    [currentChat.participants.participants removeObject:user];
+                for (TL_chatParticipant *user in copy) {
+                    TLUser *find = [[UsersManager sharedManager] find:user.user_id];
+                    
+                    if([find isKindOfClass:[TL_userEmpty class]] || !find) {
+                        [currentChat.participants.participants removeObject:user];
+                    }
                 }
             }
+            
+            
             
             
             if([newChatFull.participants isKindOfClass:[TL_chatParticipantsForbidden class]]) {
@@ -327,6 +355,35 @@
         }
 
     }];
+    
+}
+
+-(void)loadParticipantsWithMegagroupId:(int)chat_id {
+    
+    
+    
+    TLChatFull *chatFull = [self find:chat_id];
+    
+    if(chatFull.chat.isMegagroup && chatFull.chat.type != TLChatTypeForbidden) {
+        if(!chatFull.participants)
+            chatFull.participants = [TL_chatParticipants createWithChat_id:chat_id participants:[NSMutableArray array] version:0];
+        
+        if(chatFull) {
+            int offset = (int) chatFull.participants.participants.count;
+            
+            [RPCRequest sendRequest:[TLAPI_channels_getParticipants createWithChannel:chatFull.chat.inputPeer filter:[TL_channelParticipantsRecent create] offset:offset limit:500] successHandler:^(id request, TL_channels_channelParticipants *response) {
+                
+                [SharedManager proccessGlobalResponse:response];
+                
+                [chatFull.participants.participants addObjectsFromArray:response.participants];
+                
+                
+            } errorHandler:^(id request, RpcError *error) {
+                
+            }];
+        }
+    }
+    
     
 }
 

@@ -54,10 +54,10 @@
     
     AVURLAsset *avAsset = [[AVURLAsset alloc] initWithURL:[NSURL fileURLWithPath:path] options:nil];
     
-    AVAssetExportSession *exportSession = [[AVAssetExportSession alloc] initWithAsset:avAsset presetName:AVAssetExportPreset640x480];
+    AVAssetExportSession *exportSession = [[AVAssetExportSession alloc] initWithAsset:avAsset presetName:NSAppKitVersionNumber > NSAppKitVersionNumber10_10_Max ? AVAssetExportPresetMediumQuality : AVAssetExportPreset640x480];
     
     
-    
+    exportSession.shouldOptimizeForNetworkUse = YES;
     exportSession.outputURL = [NSURL fileURLWithPath:compressedPath];
     exportSession.outputFileType = AVFileTypeMPEG4;
    // exportSession
@@ -102,8 +102,9 @@
              [progressTimer invalidate];
              progressTimer = nil;
              
-             if(!success)
+             if(!success || fileSize(path) < fileSize(compressedPath))
              {
+                 [[NSFileManager defaultManager] removeItemAtPath:compressedPath error:nil];
                  [[NSFileManager defaultManager] copyItemAtPath:path toPath:compressedPath error:nil];
              }
              
@@ -153,7 +154,7 @@
 
     
     
-    NSSize size = NSMakeSize(MIN(640, [asset naturalSize].width), MIN(480,[asset naturalSize].height));
+    NSSize size = strongsize([asset naturalSize], 640);
     return @{@"duration": @(duration), @"image":thumbImg, @"size":NSStringFromSize(size)};
 }
 
@@ -231,14 +232,22 @@
     
     int flags = TGOUTMESSAGE;
     
-    if(!conversation.user.isBot)
+    if(!conversation.user.isBot && conversation.type != DialogTypeChannel)
         flags|=TGUNREADMESSAGE;
     
     if(reply_to_msg_id > 0)
         flags|=TGREPLYMESSAGE;
     
+        
     
-    TL_localMessage *outMessage = [TL_localMessage createWithN_id:0 flags:flags from_id:UsersManager.currentUserId to_id:[conversation.peer peerOut]  fwd_from_id:0 fwd_date:0 reply_to_msg_id:reply_to_msg_id  date: (int) [[MTNetwork instance] getTime] message:message media:media fakeId:[MessageSender getFakeMessageId] randomId:rand_long() reply_markup:nil state:DeliveryStatePending];
+    // channel from_id check this after update server side
+    flags|=TGFROMIDMESSAGE;
+    
+    
+    TL_localMessage *outMessage = [TL_localMessage createWithN_id:0 flags:flags from_id:UsersManager.currentUserId to_id:[conversation.peer peerOut]  fwd_from_id:0 fwd_date:0 reply_to_msg_id:reply_to_msg_id  date: (int) [[MTNetwork instance] getTime] message:message media:media fakeId:[MessageSender getFakeMessageId] randomId:rand_long() reply_markup:nil entities:nil views:1 isViewed:NO state:DeliveryStatePending];
+    
+    
+    
     
     if(webpage)
     {
@@ -248,7 +257,7 @@
     if(reply_to_msg_id != 0)
     {
         [[Storage manager] addSupportMessages:@[replyMessage]];
-        [[MessagesManager sharedManager] addSupportMessages:@[replyMessage]];
+        [MessagesManager addSupportMessages:@[replyMessage]];
     }
     
     
@@ -299,7 +308,7 @@
 
 +(void)insertEncryptedServiceMessage:(NSString *)title chat:(TLEncryptedChat *)chat {
     
-    TL_localMessageService *msg = [TL_localMessageService createWithN_id:[MessageSender getFutureMessageId] flags:TGNOFLAGSMESSAGE from_id:chat.admin_id to_id:[TL_peerSecret createWithChat_id:chat.n_id] date:[[MTNetwork instance] getTime] action:[TL_messageActionEncryptedChat createWithTitle:title] fakeId:[MessageSender getFakeMessageId] randomId:rand_long() dstate:DeliveryStatePending];
+    TL_localMessageService *msg = [TL_localMessageService createWithFlags:TGNOFLAGSMESSAGE n_id:[MessageSender getFutureMessageId] from_id:chat.admin_id to_id:[TL_peerSecret createWithChat_id:chat.n_id] date:[[MTNetwork instance] getTime] action:[TL_messageActionEncryptedChat createWithTitle:title] fakeId:[MessageSender getFakeMessageId] randomId:rand_long() dstate:DeliveryStatePending];
     [MessagesManager addAndUpdateMessage:msg];
 }
 
@@ -368,7 +377,7 @@
             
             [params save];
             
-            TL_conversation *dialog = [TL_conversation createWithPeer:[TL_peerSecret createWithChat_id:params.n_id] top_message:-1 unread_count:0 last_message_date:[[MTNetwork instance] getTime] notify_settings:[TL_peerNotifySettingsEmpty create] last_marked_message:0 top_message_fake:-1 last_marked_date:[[MTNetwork instance] getTime] sync_message_id:0 ];
+            TL_conversation *dialog = [TL_conversation createWithPeer:[TL_peerSecret createWithChat_id:params.n_id] top_message:-1 unread_count:0 last_message_date:[[MTNetwork instance] getTime] notify_settings:[TL_peerNotifySettingsEmpty create] last_marked_message:0 top_message_fake:-1 last_marked_date:[[MTNetwork instance] getTime] sync_message_id:0 read_inbox_max_id:0 unread_important_count:0 lastMessage:nil];
             
             [[DialogsManager sharedManager] insertDialog:dialog];
             
@@ -378,7 +387,7 @@
          
             dispatch_async(dispatch_get_main_queue(), ^{
                 if(callback) callback();
-                [[Telegram sharedInstance] showMessagesFromDialog:dialog sender:self];
+                [appWindow().navigationController showMessagesViewController:dialog];
             });
             
         } errorHandler:^(RPCRequest *request, RpcError *error) {

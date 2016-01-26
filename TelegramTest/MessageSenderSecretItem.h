@@ -9,5 +9,5 @@
 #import <Cocoa/Cocoa.h>
 #import "SecretSenderItem.h"
 @interface MessageSenderSecretItem : SecretSenderItem
--(id)initWithMessage:(NSString *)message forConversation:(TL_conversation *)conversation noWebpage:(BOOL)noWebpage;
+-(id)initWithMessage:(NSString *)message forConversation:(TL_conversation *)conversation noWebpage:(BOOL)noWebpage additionFlags:(int)additionFlags;
 @end

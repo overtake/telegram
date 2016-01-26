@@ -28,10 +28,22 @@
     
     NSMutableArray *uids = [[NSMutableArray alloc] init];
     
-    [fullChat.participants.participants enumerateObjectsUsingBlock:^(TLChatParticipant * obj, NSUInteger idx, BOOL *stop) {
-        [uids addObject:@(obj.user_id)];
+    if([chat isKindOfClass:[TL_chat class]]) {
+        [fullChat.participants.participants enumerateObjectsUsingBlock:^(TLChatParticipant * obj, NSUInteger idx, BOOL *stop) {
+            [uids addObject:@(obj.user_id)];
+            
+        }];
+    } else {
         
-    }];
+        NSArray *contacts = [[NewContactsManager sharedManager] all];
+        
+        [contacts enumerateObjectsUsingBlock:^(TLContact *obj, NSUInteger idx, BOOL *stop) {
+            
+             [uids addObject:@(obj.user_id)];
+            
+        }];
+    }
+    
     
     
     NSArray *users = [UsersManager findUsersByMention:string withUids:uids];

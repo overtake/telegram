@@ -73,7 +73,7 @@
         
         [attrs appendString:NSLocalizedString(@"Passcode.EnterPlaceholder", nil) withColor:NSColorFromRGB(0xc8c8c8)];
         
-        [attrs setAttributes:@{NSFontAttributeName:[NSFont fontWithName:@"HelveticaNeue" size:12]} range:attrs.range];
+        [attrs setAttributes:@{NSFontAttributeName:TGSystemFont(12)} range:attrs.range];
         
         [[self.secureField cell] setPlaceholderAttributedString:attrs];
         
@@ -104,7 +104,7 @@
         [self.secureField setAction:@selector(checkPassword)];
         [self.secureField setTarget:self];
         
-        [self.secureField setFont:[NSFont fontWithName:@"HelveticaNeue" size:14]];
+        [self.secureField setFont:TGSystemFont(14)];
         [self.secureField setTextColor:DARK_BLACK];
         
         [self.secureField setFrameOrigin:NSMakePoint(NSMinX(self.secureField.frame), NSMinY(self.avatar.frame) - 100)];
@@ -119,7 +119,7 @@
         [self.descriptionField setSelector:@selector(profileTitle)];
         [self.descriptionField setUser:[UsersManager currentUser]];
         
-        [self.descriptionField setFont:[NSFont fontWithName:@"HelveticaNeue" size:14]];
+        [self.descriptionField setFont:TGSystemFont(14)];
         
         [self.descriptionField setTextColor:DARK_BLACK];
         

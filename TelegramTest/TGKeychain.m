@@ -38,7 +38,7 @@ static NSMutableDictionary *keychains()
 @interface TGKeychain ()
 {
     NSString *_name;
-    bool _encrypted;
+    
     NSData *_aesKey;
     NSData *_aesIv;
     NSData *_passcodeHash;
@@ -66,11 +66,20 @@ static NSMutableDictionary *keychains()
         keychain = [[TGKeychain alloc] initWithName:name encrypted:false];
         [keychains() setObject:keychain forKey:name];
     }
+    
+    keychain->_encrypted = false;
+    [keychain cleanup];
+    [keychain loadIfNeeded];
+    
     TG_SYNCHRONIZED_END(_keychains);
     
     return keychain;
 }
 
+
+NSString * serviceName() {
+    return [[NSProcessInfo processInfo].environment[@"test_server"] boolValue] || [[NSUserDefaults standardUserDefaults] boolForKey:@"test-backend"] ? @"telegram-test-server" : @"Telegram";
+}
 
 + (instancetype)keychainWithName:(NSString *)name
 {
@@ -84,6 +93,11 @@ static NSMutableDictionary *keychains()
         keychain = [[TGKeychain alloc] initWithName:name encrypted:true];
         [keychains() setObject:keychain forKey:name];
     }
+    
+    keychain->_encrypted = true;
+    [keychain cleanup];
+    [keychain loadIfNeeded];
+    
     TG_SYNCHRONIZED_END(_keychains);
     
     return keychain;
@@ -110,7 +124,7 @@ static NSMutableDictionary *keychains()
     static NSString *dataDirectory = nil;
                       
     NSString *applicationSupportPath = NSSearchPathForDirectoriesInDomains(NSApplicationSupportDirectory, NSUserDomainMask, YES)[0];
-                      NSString *applicationName = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleName"];
+    NSString *applicationName = serviceName();
     dataDirectory = [[applicationSupportPath stringByAppendingPathComponent:applicationName] stringByAppendingPathComponent:_notEncryptedKeychain ? @"mtkeychain" : @"encrypt-mtkeychain"];
     
     [[NSFileManager defaultManager] createDirectoryAtPath:dataDirectory withIntermediateDirectories:YES attributes:nil error:nil];
@@ -119,8 +133,6 @@ static NSMutableDictionary *keychains()
 }
 
 -(void)loadIfNeeded {
-    
-    NSArray *groups = @[@"persistent",@"primes",@"temp"];
     
     [groups enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
         
@@ -131,7 +143,6 @@ static NSMutableDictionary *keychains()
 
 -(void)cleanup {
     
-    NSArray *groups = @[@"persistent",@"primes",@"temp"];
     
     [groups enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
         
@@ -140,12 +151,17 @@ static NSMutableDictionary *keychains()
     }];
 }
 
++(void)initialize {
+    groups = @[@"persistent",@"primes",@"temp"];
+}
+
+static NSArray *groups;
+
 -(BOOL)updatePasscodeHash:(NSData *)md5Hash save:(BOOL)save {
     
     if(!md5Hash)
         md5Hash = [[NSData alloc] initWithEmptyBytes:32];
     
-    NSArray *groups = @[@"persistent",@"primes",@"temp"];
     
     NSData *part1 = [md5Hash subdataWithRange:NSMakeRange(0, 16)];
     
@@ -161,35 +177,12 @@ static NSMutableDictionary *keychains()
     
     
     if(save) {
-        [groups enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
-            
-            [self _storeKeychain:obj];
-            
-        }];
+        [self storeAllKeychain];
     }
-
+    
     [self cleanup];
     
     [self loadIfNeeded];
-    
-    if(!_isNeedPasscode) {
-        
-        NSString *pass = [NSString stringWithUTF8String:_passcodeHash.bytes];
-        
-        Class sc = NSClassFromString(@"Storage");
-        
-        if(sc) {
-            
-            [sc performSelector:@selector(dbSetKey:) withObject:pass];
-            
-            if(save) {
-                [sc performSelector:@selector(dbRekey:) withObject:pass];
-            }
-        }
-        
-      
-    }
-    
     
     
     return !_isNeedPasscode;
@@ -211,7 +204,7 @@ static NSMutableDictionary *keychains()
 {
     
     if(_encrypted) {
-        _readKeychainData = [NSKeyedUnarchiver unarchiveObjectWithData:[SSKeychain passwordDataForService:@"Telegram" account:@"authkeys"]];
+        _readKeychainData = [NSKeyedUnarchiver unarchiveObjectWithData:[SSKeychain passwordDataForService:serviceName() account:@"authkeys"]];
     }
     
     
@@ -332,6 +325,14 @@ static NSMutableDictionary *keychains()
     }
 }
 
+-(void)storeAllKeychain {
+    [groups enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+        
+        [self _storeKeychain:obj];
+        
+    }];
+}
+
 - (void)_storeKeychain:(NSString *)group
 {
     if (_dictByGroup[group] != nil && _name != nil)
@@ -378,7 +379,7 @@ static NSMutableDictionary *keychains()
 }
 
 -(void)saveKeychain {
-    [SSKeychain setPasswordData:[NSKeyedArchiver archivedDataWithRootObject:_saveKeychainData] forService:@"Telegram" account:@"authkeys"];
+    [SSKeychain setPasswordData:[NSKeyedArchiver archivedDataWithRootObject:_saveKeychainData] forService:serviceName() account:@"authkeys"];
 }
 
 - (void)setObject:(id)object forKey:(id<NSCopying>)aKey group:(NSString *)group

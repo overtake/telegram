@@ -8,8 +8,14 @@
 
 #import "UserInfoShortButtonView.h"
 
+typedef enum {
+    TMSharedMediaPhotoVideoType,
+    TMSharedMediaDocumentsType,
+    TMSharedMediaSharedLinksType
+} TMSharedMediaType;
+
 @interface TMSharedMediaButton : UserInfoShortButtonView
 @property (nonatomic,strong) TL_conversation *conversation;
 
-@property (nonatomic,assign) BOOL isFiles;
+@property (nonatomic,assign) TMSharedMediaType type;
 @end

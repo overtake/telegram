@@ -19,6 +19,8 @@
 
 @property (nonatomic,strong) NSAttributedString *defAttrString;
 
+@property (nonatomic,strong) TMAvatarImageView *avatarImageView;
+
 @end
 
 @implementation NoMessagesView
@@ -27,6 +29,12 @@
 {
     self = [super initWithFrame:frame];
     if (self) {
+        
+        _avatarImageView = [TMAvatarImageView standartUserInfoAvatar];
+        
+        [self addSubview:_avatarImageView];
+        
+        
         [self setBackgroundColor:NSColorFromRGB(0xffffff)];
         [self setAutoresizesSubviews:YES];
         [self setAutoresizingMask:NSViewHeightSizable | NSViewWidthSizable];
@@ -98,17 +106,17 @@
     
     [string appendString:[NSString stringWithFormat:descFormat,chat.peerUser.first_name] withColor:NSColorFromRGB(0x9b9b9b)];
     
-    [string setFont:[NSFont fontWithName:@"HelveticaNeue" size:13] forRange:NSMakeRange(0, string.length)];
+    [string setFont:TGSystemFont(13) forRange:NSMakeRange(0, string.length)];
     
     [string addAttribute:NSParagraphStyleAttributeName value:subParagraphStyle2 range:NSMakeRange(0, string.length)];
     
     
-    [string setFont:[NSFont fontWithName:@"HelveticaNeue-Medium" size:13] forRange:NSMakeRange([descFormat rangeOfString:@"%1$@"].location, self.conversation.encryptedChat.peerUser.first_name.length)];
+    [string setFont:TGSystemMediumFont(13) forRange:NSMakeRange([descFormat rangeOfString:@"%1$@"].location, self.conversation.encryptedChat.peerUser.first_name.length)];
     
 
     NSRange range = [string appendString:NSLocalizedString(@"Secret.join.secret_chats",nil) withColor:NSColorFromRGB(0x9b9b9b)];
     
-    [string setFont:[NSFont fontWithName:@"HelveticaNeue" size:13] forRange:range];
+    [string setFont:TGSystemFont(13) forRange:range];
     
     [string addAttribute:NSParagraphStyleAttributeName value:paragraphStyle range:range];
     
@@ -133,7 +141,7 @@
     
     [subString appendString:NSLocalizedString(@"Secret.join.desc4", nil) withColor:NSColorFromRGB(0x9b9b9b)];
 
-    [subString setFont:[NSFont fontWithName:@"HelveticaNeue" size:13] forRange:NSMakeRange(0, subString.length)];
+    [subString setFont:TGSystemFont(13) forRange:NSMakeRange(0, subString.length)];
     
     [subString addAttribute:NSParagraphStyleAttributeName value:subParagraphStyle range:NSMakeRange(0, subString.length)];
     
@@ -149,10 +157,21 @@
     
     assert([NSThread isMainThread]);
     
+    [_avatarImageView updateWithConversation:conversation];
+    
     _conversation = conversation;
     // && conversation.top_message == -1
     
     [self.field removeFromSuperview];
+    
+    dispatch_block_t updateSize = ^{
+        NSSize size = [self.field isKindOfClass:[TMTextField class]] ? [((TMTextField *)_field).attributedStringValue sizeForTextFieldForWidth:NSWidth(self.frame) - 100] : [self.field.attributedString coreTextSizeForTextFieldForWidth:NSWidth(self.frame) - 100];
+        
+        [self.field setFrameSize:size];
+        [self setFrameSize:self.frame.size];
+    };
+    
+    [_avatarImageView setHidden:conversation.type != DialogTypeUser || conversation.user.isBot];
     
     if(conversation.type == DialogTypeSecretChat) {
         
@@ -171,8 +190,8 @@
             [[FullUsersManager sharedManager] loadUserFull:conversation.user callback:^(TL_userFull *userFull) {
                 
                 if(userFull.bot_info.n_description.length > 0) {
-                    TL_localMessageService *service = [TL_localMessageService createWithN_id:0 flags:0 from_id:0 to_id:_conversation.peer date:0 action:[TL_messageActionBotDescription createWithTitle:userFull.bot_info.n_description] fakeId:0 randomId:rand_long() dstate:DeliveryStateNormal];
-                    
+                    TL_localMessageService *service = [TL_localMessageService createWithFlags:0 n_id:0 from_id:0 to_id:_conversation.peer date:0 action:[TL_messageActionBotDescription createWithTitle:userFull.bot_info.n_description] fakeId:0 randomId:rand_long() dstate:DeliveryStateNormal];
+                                        
                         NSMutableAttributedString *attr = [[MessagesUtils serviceAttributedMessage:service forAction:service.action] mutableCopy];
                     
                     [attr detectAndAddLinks:URLFindTypeAll];
@@ -183,6 +202,7 @@
                     [self.field setAttributedString:_defAttrString];
                 }
                
+                updateSize();
                 
             }];
             
@@ -196,17 +216,30 @@
     
     self.progress.usesThreadedAnimation = NO;
 
+    updateSize();
     
-    NSSize size = [self.field isKindOfClass:[TMTextField class]] ? [((TMTextField *)_field).attributedStringValue sizeForTextFieldForWidth:NSWidth(self.frame) - 100] : [self.field.attributedString coreTextSizeForTextFieldForWidth:NSWidth(self.frame) - 100];
-    
-    [self.field setFrameSize:size];
-    [self.field setCenterByView:self];
 }
 
 -(void)setFrameSize:(NSSize)newSize {
     [super setFrameSize:newSize];
     
-    [self.field setCenterByView:self];
+    
+    if(_avatarImageView.isHidden) {
+        [self.field setCenterByView:self];
+    } else {
+        [_avatarImageView setCenterByView:self];
+        
+        
+        [_avatarImageView setCenteredXByView:self];
+        [_field setCenteredXByView:self];
+        
+        int totalHeight = NSHeight(_avatarImageView.frame) + NSHeight(_field.frame) + 10;
+        
+        [_field setFrameOrigin:NSMakePoint(NSMinX(_field.frame), roundf((newSize.height - totalHeight)/2))];
+        [_avatarImageView setFrameOrigin:NSMakePoint(NSMinX(_avatarImageView.frame) , roundf((newSize.height - totalHeight)/2 + NSHeight(_field.frame) + 10))];
+    }
+    
+    
 }
 
 -(void)setHidden:(BOOL)flag {
@@ -215,7 +248,7 @@
     
     if(self.conversation)
         [self setConversation:self.conversation];
-   
+       
     [super setHidden:flag];
 }
 
@@ -233,9 +266,12 @@ static NSTextAttachment *secretImage() {
     assert([NSThread isMainThread]);
     
     [self.progress setHidden:!isLoading || self.conversation.type == DialogTypeSecretChat];
-    [self.field setHidden:isLoading];
+   
+    
+    [self.field setHidden:!self.progress.isHidden];
     
     
+    [_avatarImageView setHidden:_avatarImageView.isHidden || !self.progress.isHidden];
     
     if(isLoading) {
         [self.progress startAnimation:self];

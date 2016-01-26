@@ -10,4 +10,8 @@
 
 @interface UserNameViewController : TMViewController
 
+@property (nonatomic,strong) TL_channel *channel;
+
+@property (nonatomic,strong) dispatch_block_t completionHandler;
+
 @end

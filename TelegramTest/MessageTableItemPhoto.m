@@ -67,9 +67,9 @@
                 
                 [c appendString:[[self.message.media.caption trim] fixEmoji] withColor:TEXT_COLOR];
                 
-                [c setFont:[NSFont fontWithName:@"HelveticaNeue" size:13] forRange:c.range];
+                [c setFont:TGSystemFont(13) forRange:c.range];
                 
-                [c detectAndAddLinks:URLFindTypeHashtags | URLFindTypeLinks | URLFindTypeMentions];
+                [c detectAndAddLinks:URLFindTypeHashtags | URLFindTypeLinks | URLFindTypeMentions | (self.user.isBot || self.message.peer.isChat ? URLFindTypeBotCommands : 0)];
                 
                 _caption = c;
             }
@@ -108,13 +108,11 @@
 -(BOOL)makeSizeByWidth:(int)width {
     [super makeSizeByWidth:width];
     
-    if(self.isForwadedMessage)
-        width-=50;
     
     TLPhotoSize *photoSize = ((TLPhotoSize *)[self.message.media.photo.sizes lastObject]);
     
     _imageSize = strongsize(NSMakeSize(photoSize.w, photoSize.h), MIN(MIN_IMG_SIZE.width,width - 40));
-    
+        
     if(_caption) {
         _captionSize = [_caption coreTextSizeForTextFieldForWidth:_imageSize.width ];
         _captionSize.width = _imageSize.width ;
@@ -130,5 +128,8 @@
 -(BOOL)needUploader {
     return YES;
 }
+
+
+
 
 @end

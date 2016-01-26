@@ -47,7 +47,7 @@
         [self.textField setBordered:NO];
         [self.textField setDrawsBackground:NO];
         [self.textField setAutoresizingMask:NSViewMinXMargin | NSViewMaxXMargin];
-        [self.textField setFont:[NSFont fontWithName:@"HelveticaNeue" size:13]];
+        [self.textField setFont:TGSystemFont(13)];
         [self addSubview:self.textField];
     }
     return self;
@@ -57,6 +57,8 @@
     [super setFrame:frame];
     
     [self.textField setCenterByView:self];
+    
+    [self.textField setFrameOrigin:NSMakePoint(NSMinX(_textField.frame), 6)];
 }
 
 
@@ -69,7 +71,9 @@
     
     self.textField.stringValue =  item.itemCount == -1 ? NSLocalizedString(@"Search.LoadingMessages", nil) : (item.itemCount == 0 ? item.oneName : [NSString stringWithFormat:@"%d %@", item.itemCount, item.itemCount == 1 ? item.oneName : item.pluralName]);
     [self.textField sizeToFit];
-    [self.textField setCenterByView:self];
+    [self.textField setCenteredXByView:self];
+    
+    [self.textField setFrameOrigin:NSMakePoint(NSMinX(_textField.frame), 6)];
    
 }
 

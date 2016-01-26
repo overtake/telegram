@@ -31,29 +31,28 @@
         
         self.nameTextField = [[TMHyperlinkTextField alloc] initWithFrame:NSMakeRect(15, NSHeight(frameRect) - 13, 200, 20)];
         [self.nameTextField setBordered:NO];
-        [self.nameTextField setFont:[NSFont fontWithName:@"HelveticaNeue-Medium" size:13]];
+        [self.nameTextField setFont:TGSystemMediumFont(13)];
         [self.nameTextField setDrawsBackground:NO];
+        //[self.nameTextField setBackgroundColor:[NSColor redColor]];
         
         [self addSubview:self.nameTextField];
         
         self.dateField = [TMTextField defaultTextField];
         
         [self.dateField setTextColor:GRAY_TEXT_COLOR];
-        [self.dateField setFont:[NSFont fontWithName:@"HelveticaNeue" size:12]];
+        [self.dateField setFont:TGSystemFont(12)];
         
        // [self addSubview:self.dateField];
         
         _messageField = [[TGCTextView alloc] initWithFrame:NSZeroRect];
         
+        [_messageField setEditable:NO];
+        
         [self.messageField setBackgroundColor:[NSColor whiteColor]];
 
         [self.messageField setFrameOrigin:NSMakePoint(15, 0)];
         
-        
-        
         [self addSubview:self.messageField];
-        
-        
         
         self.thumbImageView = [[TGImageView alloc] initWithFrame:NSMakeRect(5, 1, NSHeight(self.frame) - 2, NSHeight(self.frame) - 2)];
         
@@ -92,7 +91,7 @@
     
     if(_replyObject.replyHeader.string.length == 0)
     {
-        return LINK_COLOR;
+        return BLUE_SEPARATOR_COLOR;
     }
     
     return [_replyObject.replyHeader attribute:NSForegroundColorAttributeName atIndex:0 effectiveRange:&range];
@@ -103,12 +102,13 @@
 -(void)update {
     
    
-    int xOffset = _replyObject.replyThumb || _replyObject.geoURL ? 40 : 5;
+    int xOffset = _replyObject.replyThumb || _replyObject.geoURL ? 40 : 6;
     
     
     if(_replyObject.replyThumb) {
         [self addSubview:self.thumbImageView];
         [self.thumbImageView setObject:_replyObject.replyThumb];
+        [self.thumbImageView setFrameSize:_replyObject.replyThumb.imageSize];
     } else {
         [self.thumbImageView removeFromSuperview];
     }
@@ -123,26 +123,21 @@
     }
   
     [self.nameTextField setAttributedStringValue:[_replyObject replyHeader]];
+    [self.nameTextField setFrameSize:NSMakeSize(NSWidth(self.frame) - NSMinX(self.messageField.frame),_replyObject.replyHeaderHeight)];
     
-    [self.nameTextField setFrameOrigin:NSMakePoint(xOffset, NSMinY(self.nameTextField.frame))];
     
-
+    [self.nameTextField setFrameOrigin:NSMakePoint(xOffset, NSHeight(self.frame))];
     
-    [self.messageField setFrameSize:NSMakeSize(NSWidth(self.frame) - NSMinX(self.messageField.frame), self.replyObject.replyHeight)];
-
     
     [self.messageField setAttributedString:_replyObject.replyText];
     
-    
+    [self.messageField setFrameSize:NSMakeSize(NSWidth(self.frame) - NSMinX(self.messageField.frame), self.replyObject.replyHeight)];
     [self.messageField setFrameOrigin:NSMakePoint(xOffset + 2, 0)];
     
-    [_messageField setEditable:_deleteHandler == nil];
+  //  [_messageField setEditable:_deleteHandler == nil];
     
     if(_deleteHandler != nil)
     {
-        
-        
-        
         _deleteImageView = [[NSImageView alloc] initWithFrame:NSMakeRect(NSWidth(self.frame) - image_CancelReply().size.width, NSHeight(self.frame) - image_CancelReply().size.height, image_CancelReply().size.width, image_CancelReply().size.height)];
         
         _deleteImageView.image = image_CancelReply();
@@ -165,6 +160,8 @@
     
     [self setNeedsDisplay:YES];
     
+    [self setFrame:self.frame];
+    
 }
 
 -(void)setFrame:(NSRect)frame {
@@ -172,7 +169,7 @@
     
     [self.messageField setFrameSize:NSMakeSize(NSWidth(self.frame) - NSMinX(self.messageField.frame), self.replyObject.replyHeight)];
     
-    [self.nameTextField setFrameOrigin:NSMakePoint(NSMinX(self.nameTextField.frame), NSHeight(frame) - 13)];
+    [self.nameTextField setFrameOrigin:NSMakePoint(NSMinX(self.nameTextField.frame), NSHeight(self.frame) - _replyObject.replyHeaderHeight + 6)];
 }
 
 -(void)setBackgroundColor:(NSColor *)backgroundColor {
@@ -184,15 +181,8 @@
 -(void)mouseUp:(NSEvent *)theEvent {
     
     if(!_deleteHandler) {
-        
-        // go to message
-        
-        if(_messageField.selectRange.location == NSNotFound) {
-            if([Telegram rightViewController].messagesViewController.state == MessagesViewControllerStateNone)
-                [[Telegram rightViewController].messagesViewController showMessage:_replyObject.replyMessage.n_id fromMsgId:_item.message.n_id];
-        }
-        
-        
+        if(_item.table.viewController.state == MessagesViewControllerStateNone)
+            [_item.table.viewController showMessage:_replyObject.replyMessage fromMsg:_item.message flags:ShowMessageTypeReply];
     }
     
 }

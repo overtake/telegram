@@ -16,5 +16,6 @@
 
 -(BOOL)isSearchActive;
 +(NSMenu *)attachMenu;
+-(void)hideSearchViewControllerWithConversationUsed:(TL_conversation*)conversation;
 -(void)searchByString:(NSString *)searchString;
 @end

@@ -16,6 +16,9 @@ typedef enum {
     TLChatTypeEmpty
 } TLChatType;
 
+
+- (NSSize)dialogTitleSize;
+
 - (NSAttributedString *)dialogTitle;
 - (NSAttributedString *)titleForMessage;
 - (NSAttributedString *)titleForChatInfo;
@@ -26,8 +29,18 @@ typedef enum {
 -(TL_conversation *)dialog;
 
 -(TLChatFull *)chatFull;
-
 - (NSAttributedString *)statusAttributedString;
 - (NSAttributedString *)statusForMessagesHeaderView;
 - (NSAttributedString *)statusForSearchTableView;
+
+-(BOOL)left;
+
+
+-(BOOL)isManager;
+-(BOOL)isChannel;
+-(id)inputPeer;
+-(NSString *)usernameLink;
+
+
+
 @end

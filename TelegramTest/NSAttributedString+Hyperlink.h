@@ -2,5 +2,6 @@
 #import "NSString+FindURLs.h"
 @interface NSMutableAttributedString (Hyperlink)
 +(id)hyperlinkFromString:(NSString*)inString withURL:(NSURL*)aURL;
--(void)detectAndAddLinks:(URLFindType)urlType;
+-(NSArray *)detectAndAddLinks:(URLFindType)urlType;
+-(void)detectBoldColorInStringWithFont:(NSFont *)font;
 @end

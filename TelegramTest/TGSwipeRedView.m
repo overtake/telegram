@@ -13,7 +13,7 @@
 - (id)initWithFrame:(NSRect)frameRect {
     self = [super initWithFrame:frameRect];
     if(self) {
-        self.attributedString = [[NSAttributedString alloc] initWithString:NSLocalizedString(@"Delete", nil) attributes:@{NSFontAttributeName: [NSFont fontWithName:@"HelveticaNeue" size:13], NSForegroundColorAttributeName: [NSColor whiteColor]}];
+        self.attributedString = [[NSAttributedString alloc] initWithString:NSLocalizedString(@"Delete", nil) attributes:@{NSFontAttributeName: TGSystemFont(13), NSForegroundColorAttributeName: [NSColor whiteColor]}];
         self.size = [self.attributedString size];
         
         [self setFrameSize:NSMakeSize(self.size.width + 36, self.bounds.size.height)];

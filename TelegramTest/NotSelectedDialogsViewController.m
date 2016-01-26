@@ -7,7 +7,6 @@
 //
 
 #import "NotSelectedDialogsViewController.h"
-#import "TMGifImageView.h"
 #import <AVFoundation/AVFoundation.h>
 #import "TGCTextView.h"
 @interface NotSelectedDialogsViewController()
@@ -44,7 +43,7 @@
     NSMutableParagraphStyle *mutParaStyle=[[NSMutableParagraphStyle alloc] init];
     [mutParaStyle setAlignment:NSCenterTextAlignment];
     [mutParaStyle setLineSpacing:3];
-    [textField setAttributedStringValue:[[NSAttributedString alloc] initWithString:NSLocalizedString(@"Conversation.SelectConversation", nil) attributes:@{NSForegroundColorAttributeName: DARK_GRAY, NSFontAttributeName: [NSFont fontWithName:@"HelveticaNeue" size:14]}]];
+    [textField setAttributedStringValue:[[NSAttributedString alloc] initWithString:NSLocalizedString(@"Conversation.SelectConversation", nil) attributes:@{NSForegroundColorAttributeName: DARK_GRAY, NSFontAttributeName: TGSystemFont(14)}]];
     [textField sizeToFit];
     
     [textField setDrawsBackground:NO];

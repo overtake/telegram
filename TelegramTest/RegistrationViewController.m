@@ -63,7 +63,7 @@
     
     
     TMBackButton *backButton = [[TMBackButton alloc] initWithFrame:NSZeroRect string:[NSString stringWithFormat:@"  %@",NSLocalizedString(@"Profile.Back", nil)]];
-    [backButton.field setFont:[NSFont fontWithName:@"Helvetica-Light" size:15]];
+    [backButton.field setFont:TGSystemLightFont(15)];
     [backButton.imageView setFrameOrigin:NSMakePoint(0, 4)];
     [backButton sizeToFit];
     [backButton setFrameOrigin:NSMakePoint(4, 260)];
@@ -81,7 +81,7 @@
     self.titleTextField.stringValue = NSLocalizedString(@"Registration", nil);
     [self.titleTextField setEditable:NO];
     [self.titleTextField setBordered:NO];
-    self.titleTextField.font = [NSFont fontWithName:@"Helvetica-Light" size:28];
+    self.titleTextField.font = TGSystemLightFont(28);
 //    self.titleTextField.wantsLayer = IS_RETINA;
     [self.titleTextField sizeToFit];
     
@@ -93,7 +93,7 @@
     self.firstNameTextField.drawsBackground = NO;
     self.firstNameTextField.delegate = self;
     
-    NSAttributedString *placeHolder = [[NSAttributedString alloc] initWithString:NSLocalizedString(@"Registartion.FirstName", nil) attributes:@{NSFontAttributeName: [NSFont fontWithName:@"Helvetica-Light" size:15], NSForegroundColorAttributeName: NSColorFromRGB(0xc8c8c8)}];
+    NSAttributedString *placeHolder = [[NSAttributedString alloc] initWithString:NSLocalizedString(@"Registartion.FirstName", nil) attributes:@{NSFontAttributeName: TGSystemLightFont(15), NSForegroundColorAttributeName: NSColorFromRGB(0xc8c8c8)}];
     [self.firstNameTextField.cell setPlaceholderAttributedString:placeHolder];
   //  [self.firstNameTextField setPlaceholderAttributedString:placeHolder];
     [self.firstNameTextField setPlaceholderPoint:NSMakePoint(2, 1)];
@@ -101,7 +101,7 @@
     [[self.firstNameTextField cell] setTruncatesLastVisibleLine:YES];
     [[self.firstNameTextField cell] setLineBreakMode:NSLineBreakByTruncatingTail];
 
-    self.firstNameTextField.font = [NSFont fontWithName:@"Helvetica-Light" size:15];
+    self.firstNameTextField.font = TGSystemLightFont(15);
     self.firstNameTextField.focusRingType = NSFocusRingTypeNone;
     [self.firstNameTextField setBordered:NO];
     [self.containerView addSubview:self.firstNameTextField];
@@ -111,14 +111,14 @@
     self.lastNameTextField.drawsBackground = NO;
    self.lastNameTextField.delegate = self;
     
-    placeHolder = [[NSAttributedString alloc] initWithString:NSLocalizedString(@"Registration.LastName", nil) attributes:@{NSFontAttributeName: [NSFont fontWithName:@"Helvetica-Light" size:15], NSForegroundColorAttributeName: NSColorFromRGB(0xc8c8c8)}];
+    placeHolder = [[NSAttributedString alloc] initWithString:NSLocalizedString(@"Registration.LastName", nil) attributes:@{NSFontAttributeName: TGSystemLightFont(15), NSForegroundColorAttributeName: NSColorFromRGB(0xc8c8c8)}];
     [self.lastNameTextField.cell setPlaceholderAttributedString:placeHolder];
 //    [self.lastNameTextField setPlaceholderAttributedString:placeHolder];
     [self.lastNameTextField setPlaceholderPoint:NSMakePoint(2, 1)];
     [[self.lastNameTextField cell] setTruncatesLastVisibleLine:YES];
     [[self.lastNameTextField cell] setLineBreakMode:NSLineBreakByTruncatingTail];
     
-    self.lastNameTextField.font = [NSFont fontWithName:@"Helvetica-Light" size:15];
+    self.lastNameTextField.font = TGSystemLightFont(15);
     self.lastNameTextField.focusRingType = NSFocusRingTypeNone;
     [self.lastNameTextField setBordered:NO];
     [self.containerView addSubview:self.lastNameTextField];

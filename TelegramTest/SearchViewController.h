@@ -27,6 +27,8 @@ typedef enum {
 
 - (void) searchByString:(NSString*)searchString;
 
+-(int)selectedPeerId;
+
 -(void)dontLoadHashTagsForOneRequest;
 
 @end

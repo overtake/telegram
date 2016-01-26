@@ -97,7 +97,7 @@
 - (void)textDidChange:(NSNotification *)notification {
 //    NSMutableAttributedString *attributesString = [[NSMutableAttributedString alloc] initWithAttributedString:self.attributedString];
     
-    [[self textStorage] addAttribute:NSFontAttributeName value:[NSFont fontWithName:@"HelveticaNeue-Light" size:13] range:NSMakeRange(0, self.attributedString.length)];
+    [[self textStorage] addAttribute:NSFontAttributeName value:TGSystemLightFont(13) range:NSMakeRange(0, self.attributedString.length)];
     
     NSMutableParagraphStyle *style = [[NSMutableParagraphStyle alloc] init];
     [style setLineSpacing:4];

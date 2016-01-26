@@ -323,7 +323,7 @@
             
             
             if (shouldClose) {
-                id mouseDownView = [((AppDelegate *)[NSApp delegate]).window.contentView hitTest:event.locationInWindow];
+                id mouseDownView = [self.popoverWindow.parentWindow.contentView hitTest:event.locationInWindow];
                 if(mouseDownView != self.positioningView) {
                     [strongSelf close];
                 }

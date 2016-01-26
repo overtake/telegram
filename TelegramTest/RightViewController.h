@@ -42,6 +42,13 @@
 #import "TGSplitViewController.h"
 #import "CacheSettingsViewController.h"
 #import "NotificationSettingsViewController.h"
+#import "ComposeCreateChannelViewController.h"
+#import "ChannelInfoViewController.h"
+#import "ComposeCreateChannelUserNameStepViewController.h"
+#import "ComposeConfirmModeratorViewController.h"
+#import "ComposeManagmentViewController.h"
+#import "ComposeChannelParticipantsViewController.h"
+#import "ComposeSettingupNewChannelViewController.h"
 @class MainViewController;
 @class LeftViewController;
 
@@ -75,19 +82,21 @@
 @property (nonatomic, strong) PhoneChangeConfirmController *phoneChangeConfirmController;
 @property (nonatomic, strong) TGOpacityViewController *opacityViewController;
 @property (nonatomic, strong) TGPasscodeSettingsViewController *passcodeViewController;
-
 @property (nonatomic, strong) TGSessionsViewController *sessionsViewContoller;
 @property (nonatomic, strong) TGPasswosdMainViewController *passwordMainViewController;
 @property (nonatomic, strong) TGPasswordSetViewController *passwordSetViewController;
-
-
 @property (nonatomic, strong) ChatExportLinkViewController *chatExportLinkViewController;
 @property (nonatomic, strong) TGStickersSettingsViewController *stickersSettingsViewController;
-
 @property (nonatomic, strong) ComposeChooseGroupViewController *composeChooseGroupViewController;
-
 @property (nonatomic, strong) CacheSettingsViewController *cacheSettingsViewController;
 @property (nonatomic, strong) NotificationSettingsViewController *notificationSettingsViewController;
+@property (nonatomic, strong) ComposeCreateChannelViewController *composeCreateChannelViewController;
+@property (nonatomic, strong) ChannelInfoViewController *channelInfoViewController;
+@property (nonatomic, strong) ComposeCreateChannelUserNameStepViewController *composeCreateChannelUserNameStepViewController;
+@property (nonatomic, strong) ComposeConfirmModeratorViewController *composeConfirmModeratorViewController;
+@property (nonatomic,strong) ComposeManagmentViewController *composeManagmentViewController;
+@property (nonatomic,strong) ComposeChannelParticipantsViewController *composeChannelParticipantsViewController;
+@property (nonatomic,strong) ComposeSettingupNewChannelViewController *composeSettingupNewChannelViewController;
 
 - (void)modalViewSendAction:(id)object;
 - (BOOL)isModalViewActive;
@@ -97,20 +106,13 @@
 
 - (void)showShareContactModalView:(TLUser *)user;
 - (void)showForwardMessagesModalView:(TL_conversation *)dialog messagesCount:(NSUInteger)messagesCount;
+- (void)showShareLinkModalView:(NSString *)url text:(NSString *)text;
 
-- (void)showByDialog:(TL_conversation *)dialog sender:(id)sender;
-
-- (BOOL)showByDialog:(TL_conversation *)dialog withJump:(int)messageId historyFilter:(Class)filter sender:(id)sender;
 
 - (void)showComposeWithAction:(ComposeAction *)composeAction;
 - (void)showComposeCreateChat:(ComposeAction *)composeAction;
 - (void)showComposeBroadcastList:(ComposeAction *)composeAction;
 - (void)showComposeAddUserToGroup:(ComposeAction *)composeAction;
-- (void)showUserInfoPage:(TLUser *)user conversation:(TL_conversation *)conversation;
-- (void)showUserInfoPage:(TLUser *)user;
-- (void)showCollectionPage:(TL_conversation *)conversation;
-- (void)showChatInfoPage:(TLChat *)chat;
-- (void)showBroadcastInfoPage:(TL_broadcast *)broadcast;
 - (void)showNotSelectedDialog;
 
 -(void)showEncryptedKeyWindow:(TL_encryptedChat *)chat;
@@ -120,6 +122,8 @@
 - (void)showSecuritySettings;
 - (void)showAbout;
 - (void)showUserNameController;
+- (void)showUserNameControllerWithChannel:(TL_channel *)channel completionHandler:(dispatch_block_t)completionHandler;
+
 
 - (void)showAddContactController;
 - (void)showPrivacyController;
@@ -150,4 +154,18 @@
 
 -(void)showCacheSettingsViewController;
 -(void)showNotificationSettingsViewController;
+
+-(void)showComposeCreateChannel:(ComposeAction *)action;
+
+-(void)showChannelInfoPage:(TLChat *)chat;
+
+-(void)showComposeChangeUserName:(ComposeAction *)action;
+
+-(void)showComposeAddModerator:(ComposeAction *)action;
+-(void)showComposeManagment:(ComposeAction *)action;
+
+
+-(void)showComposeChannelParticipants:(ComposeAction *)action;
+
+-(void)showComposeSettingsupNewChannel:(ComposeAction *)action;
 @end

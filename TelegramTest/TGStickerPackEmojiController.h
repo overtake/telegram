@@ -15,5 +15,6 @@
 @property (nonatomic,strong,readonly) TGAllStickersTableView *stickers;
 
 -(void)reload;
+-(void)removeAllItems;
 
 @end

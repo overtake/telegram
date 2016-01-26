@@ -36,7 +36,7 @@
         
         self.textField.url_delegate = self;
         
-        [self.textField setFont:[NSFont fontWithName:@"HelveticaNeue" size:14]];
+        [self.textField setFont:TGSystemFont(14)];
         
         [self.textField setEditable:NO];
         [self.textField setSelectable:NO];

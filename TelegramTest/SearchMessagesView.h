@@ -10,9 +10,9 @@
 
 @interface SearchMessagesView : TMView
 
-@property (nonatomic,strong) MessagesViewController *controller;
+@property (nonatomic,weak) MessagesViewController *controller;
 
--(void)showSearchBox:( void (^)(int msg_id, NSString *searchString))callback closeCallback:(dispatch_block_t) closeCallback;
+-(void)showSearchBox:( void (^)(TL_localMessage *msg, NSString *searchString))callback closeCallback:(dispatch_block_t) closeCallback;
 
 -(NSString *)currentString;
 

@@ -16,6 +16,8 @@
 #import "TGPVUserBehavior.h"
 #import "TGPVEmptyBehavior.h"
 #import "TGCache.h"
+#import "TGPVZoomControl.h"
+#import "TGPVDocumentsBehavior.h"
 @interface TGPhotoViewer ()
 @property (nonatomic,strong) TL_conversation *conversation;
 @property (nonatomic,strong) TLUser *user;
@@ -34,6 +36,10 @@
 @property (nonatomic,assign) BOOL waitRequest;
 @property (nonatomic,assign) int totalCount;
 
+@property (nonatomic,strong) TGPVZoomControl *zoomControl;
+
+@property (nonatomic,assign) BOOL isReversed;
+
 @end
 
 
@@ -44,10 +50,11 @@
 }
 
 
+
 -(void)orderOut:(id)sender {
     
-     [self runAnimation:NO];
-    
+    [self runAnimation:NO];
+    [Notification removeObserver:self];
     [super orderOut:sender];
    
     [_photoContainer setCurrentViewerItem:nil animated:NO];
@@ -61,11 +68,24 @@
     [TGCache removeAllCachedImages:@[PVCACHE]];
 
     [[NSApp mainWindow] makeFirstResponder:nil];
+    
+    viewer = nil;
 }
 
 
+-(void)dealloc {
+    [Notification removeObserver:self];
+}
+
 +(BOOL)isVisibility {
-    return [self viewer].isVisibility;
+    return viewer.isVisibility;
+}
+
++(void)increaseZoom {
+    [viewer.photoContainer increaseZoom];
+}
++(void)decreaseZoom {
+    [viewer.photoContainer decreaseZoom];
 }
 
 -(id)initWithContentRect:(NSRect)contentRect styleMask:(NSUInteger)aStyle backing:(NSBackingStoreType)bufferingType defer:(BOOL)flag screen:(NSScreen *)screen {
@@ -81,7 +101,6 @@ static const int controlsHeight = 75;
 
 - (void)initialize {
     
-    
     [TGCache setMemoryLimit:32*1024*1024 group:PVCACHE];
     [TGCache setCountLimit:25 group:PVCACHE];
 
@@ -96,15 +115,15 @@ static const int controlsHeight = 75;
     self.background.layer.backgroundColor = NSColorFromRGBWithAlpha(0x222222, 0.7).CGColor;
     
     
-    weakify();
     
-    [self.background setCallback:^ {
-        
+    weak();
+    
+    [self.background setCallback:^{
         NSEvent *currentEvent = [NSApp currentEvent];
         
         NSPoint location = [currentEvent locationInWindow];
         
-        NSPoint containerPoint = strongSelf.photoContainer.frame.origin;
+        NSPoint containerPoint = weakSelf.photoContainer.frame.origin;
         
         if(location.x > containerPoint.x)
             [[TGPhotoViewer viewer] hide];
@@ -133,6 +152,9 @@ static const int controlsHeight = 75;
     [self.contentView addSubview:self.controls];
     
     
+    self.zoomControl = [[TGPVZoomControl alloc] initWithFrame:NSMakeRect(50, 16, 200, controlsHeight)];
+    
+     [self.contentView addSubview:self.zoomControl];
 }
 
 
@@ -158,7 +180,7 @@ static const int controlsHeight = 75;
                 [self insertObjects:@[previewObject]];
                 
             } else {
-                TGPVUserBehavior *behavior = [[TGPVUserBehavior alloc] init];
+                TGPVUserBehavior *behavior = [[TGPVUserBehavior alloc] initWithConversation:_conversation commonItem:previewObject];
                 behavior.user = user;
                 
                 [behavior addItems:@[previewObject]];
@@ -180,8 +202,6 @@ static const int controlsHeight = 75;
     TGPVControlHighlightType highlight;
     
     if(![self.controls hitTest:point]) {
-        
-        
         
         if([self.photoContainer hitTest:point] && [self.photoContainer isInImageContainer:theEvent]) {
             highlight = TGPVControlHighLightNext;
@@ -209,20 +229,24 @@ static const int controlsHeight = 75;
     
     [ASQueue dispatchOnStageQueue:^{
         
-        NSArray *ids = notification.userInfo[KEY_MESSAGE_ID_LIST];
+        NSArray *peer_update_data = notification.userInfo[KEY_DATA];
         
-        [ids enumerateObjectsUsingBlock:^(NSNumber *msg_id, NSUInteger idx, BOOL *stop) {
+        [peer_update_data enumerateObjectsUsingBlock:^(NSDictionary *data, NSUInteger idx, BOOL *stop) {
             
-            [_list enumerateObjectsUsingBlock:^(TGPhotoViewerItem *obj, NSUInteger idx, BOOL *stop) {
-                
-                if(obj.previewObject.msg_id == [msg_id intValue]) {
+            if(self.conversation.peer_id == [data[KEY_PEER_ID] intValue]) {
+                [_list enumerateObjectsUsingBlock:^(TGPhotoViewerItem *obj, NSUInteger idx, BOOL *stop) {
                     
-                    [self deleteItem:obj];
+                    if(obj.previewObject.msg_id == [data[KEY_MESSAGE_ID] intValue]) {
+                        
+                        [self deleteItem:obj];
+                        
+                        *stop = YES;
+                    }
                     
-                    *stop = YES;
-                }
-                
-            }];
+                }];
+            }
+            
+            
             
         }];
         
@@ -248,18 +272,18 @@ static const int controlsHeight = 75;
 }
 
 +(id)behavior {
-    return [[self viewer] behavior];
+    return  [viewer behavior];
 }
 
 +(void)deleteItem:(TGPhotoViewerItem *)item {
-    [[self viewer] deleteItem:item];
+    [viewer deleteItem:item];
 }
 
 -(void)resort {
     
     [ASQueue dispatchOnStageQueue:^{
         
-        [_list sortUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"previewObject.msg_id" ascending:NO]]];
+        [_list sortUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"previewObject.date" ascending:NO],[NSSortDescriptor sortDescriptorWithKey:@"previewObject.msg_id" ascending:NO]]];
         
         _totalCount = MAX([_behavior totalCount],(int)[self listCount]);
         
@@ -295,8 +319,6 @@ static const int controlsHeight = 75;
                     
                     pos = MAX(index - 1, 0);
                     
-//                    if(index != 0)
-//                        pos--;
                     
                     if(pos >= ([self listCount] - 1)) {
                         pos = [self listCount] - 1;
@@ -319,21 +341,22 @@ static const int controlsHeight = 75;
 
 
 +(TGPhotoViewerItem *)currentItem {
-    return [[self viewer] currentItem];
+    return [viewer currentItem];
 }
 
 
+static TGPhotoViewer *viewer;
+
 +(TGPhotoViewer *)viewer {
-    static TGPhotoViewer *viewer;
-    
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
+   
+    if(!viewer)
+    {
         viewer = [[TGPhotoViewer alloc] initWithContentRect:[NSScreen mainScreen].frame styleMask:NSBorderlessWindowMask backing:NSBackingStoreBuffered defer:NO screen:[NSScreen mainScreen]];
         [viewer setLevel:NSScreenSaverWindowLevel];
         [viewer setOpaque:NO];
         viewer.backgroundColor = [NSColor clearColor];
-    });
-
+        
+    }
     return viewer;
     
 }
@@ -346,7 +369,7 @@ static const int controlsHeight = 75;
     [ASQueue dispatchOnStageQueue:^{
         [self.list enumerateObjectsUsingBlock:^(TGPhotoViewerItem *obj, NSUInteger index, BOOL *stop) {
             
-            if(obj.previewObject.msg_id == item.msg_id) {
+            if(obj.previewObject.msg_id == item.msg_id && obj.previewObject.peerId == item.peerId) {
                 idx = index;
                 *stop = YES;
             }
@@ -383,7 +406,7 @@ static const int controlsHeight = 75;
     
     [NSAnimationContext runAnimationGroup:^(NSAnimationContext *context) {
         
-        [context setDuration:0.2];
+        [context setDuration:0.1];
         
         [[self.background animator] setAlphaValue:nextAlpha];
         [[self.controls animator] setAlphaValue:nextAlpha];
@@ -394,16 +417,17 @@ static const int controlsHeight = 75;
     }];
 }
 
--(void)show:(PreviewObject *)item conversation:(TL_conversation *)conversation {
+
+-(void)showDocuments:(PreviewObject *)item conversation:(TL_conversation *)conversation {
     _conversation = conversation;
     
     
     _controls.convertsation = conversation;
     _photoContainer.conversation = conversation;
     
+    _isReversed = YES;
     
-    _behavior = [[TGPVMediaBehavior alloc] init];
-    [_behavior setConversation:_conversation];
+    _behavior = [[TGPVDocumentsBehavior alloc] initWithConversation:_conversation commonItem:item];
     
     [ASQueue dispatchOnStageQueue:^{
         
@@ -421,12 +445,68 @@ static const int controlsHeight = 75;
     _waitRequest = YES;
     
     
-    [self.behavior load:[[[self itemAtIndex:[self listCount]-1] previewObject] msg_id] next:NO limit:10000 callback:^(NSArray *previewObjects) {
+    self.currentItemId = 0;
+    
+    [self.behavior load:0 next:YES limit:100 callback:^(NSArray *nextObjects) {
         
-        [self insertObjects:previewObjects];
+        [self insertObjects:nextObjects];
         
-        _waitRequest = NO;
+        [self.behavior load:0 next:NO limit:100 callback:^(NSArray *prevObjects) {
+            
+            [self insertObjects:prevObjects];
+            
+            _waitRequest = NO;
+        }];
+        
     }];
+    
+}
+
+-(void)show:(PreviewObject *)item conversation:(TL_conversation *)conversation {
+    [self show:item conversation:conversation isReversed:NO];
+}
+
+-(void)show:(PreviewObject *)item conversation:(TL_conversation *)conversation isReversed:(BOOL)isReversed {
+    _conversation = conversation;
+    
+    _isReversed = isReversed;
+    
+    _controls.convertsation = conversation;
+    _photoContainer.conversation = conversation;
+    
+    _behavior = [[TGPVMediaBehavior alloc]  initWithConversation:_conversation commonItem:item];
+    [_behavior setConversation:_conversation];
+    
+    [ASQueue dispatchOnStageQueue:^{
+        
+        self.list = [[NSMutableArray alloc] init];
+        [self insertObjects:@[item]];
+        
+    } synchronous:YES];
+    
+    [self makeKeyAndOrderFront:self];
+    
+    [self mouseEntered:[NSApp currentEvent]];
+    
+    _waitRequest = YES;
+    
+    
+     self.currentItemId = 0;
+    
+    [self.behavior load:0 next:YES limit:100 callback:^(NSArray *nextObjects) {
+        
+        [self insertObjects:nextObjects];
+        
+        [self.behavior load:0 next:NO limit:100 callback:^(NSArray *prevObjects) {
+            
+            [self insertObjects:prevObjects];
+            
+            _waitRequest = NO;
+        }];
+        
+    }];
+    
+    
     
 }
 
@@ -434,9 +514,10 @@ static const int controlsHeight = 75;
 -(void)show:(PreviewObject *)item user:(TLUser *)user {
     
     
-    _behavior = [[TGPVUserBehavior alloc] init];
+    _behavior = [[TGPVUserBehavior alloc] initWithConversation:_conversation commonItem:item];
     [_behavior setUser:user];
     
+    _isReversed = YES;
     
     [ASQueue dispatchOnStageQueue:^{
         
@@ -448,6 +529,10 @@ static const int controlsHeight = 75;
     self.currentItemId = 0;
     
     [self makeKeyAndOrderFront:self];
+    
+    [self.behavior load:0 next:YES limit:100 callback:^(NSArray *result) {
+        [self insertObjects:result];
+    }];
     
 }
 
@@ -463,7 +548,7 @@ static const int controlsHeight = 75;
         
     }
     
-    _behavior = [[TGPVEmptyBehavior alloc] init];
+    _behavior = [[TGPVEmptyBehavior alloc] initWithConversation:_conversation commonItem:item];
     
     [ASQueue dispatchOnStageQueue:^{
         
@@ -479,6 +564,8 @@ static const int controlsHeight = 75;
 
 
 -(void)makeKeyAndOrderFront:(id)sender {
+    
+    self.invokeWindow = appWindow();
     
     
     [Notification addObserver:self selector:@selector(didReceivedMedia:) name:MEDIA_RECEIVE];
@@ -517,7 +604,7 @@ static const int controlsHeight = 75;
 
 -(void)nextItem {
     
-    if([self.behavior isReversedContentView]) {
+    if(_isReversed) {
         
         [self performPrevItem];
         
@@ -533,7 +620,7 @@ static const int controlsHeight = 75;
 -(void)prevItem {
     
     
-    if([self.behavior isReversedContentView]) {
+    if(_isReversed) {
         
         [self performNextItem];
         
@@ -565,43 +652,51 @@ static const int controlsHeight = 75;
 }
 
 +(void)prevItem {
-    [[self viewer] prevItem];
+    [viewer prevItem];
 }
 
 +(void)nextItem {
-    [[self viewer] nextItem];
+    [viewer nextItem];
 }
 
 -(void)setCurrentItemId:(NSInteger)currentItemId {
     
+    
     if(currentItemId == NSNotFound)
         return;
     
+    
+     BOOL next = _isReversed ? currentItemId > _currentItemId : currentItemId < _currentItemId;
+    
+    
     _currentItemId = currentItemId;
     
-    _currentItem = [self itemAtIndex:currentItemId];
     
+     _currentItem = [self itemAtIndex:currentItemId];
     
-    
-
-    [self.controls setCurrentPosition:[self.behavior isReversedContentView] ? _totalCount - _currentItemId : _currentItemId+1 ofCount:_totalCount];
+     [self.controls setCurrentPosition:_isReversed ? _totalCount - _currentItemId : _currentItemId+1 ofCount:_totalCount];
+        
     
     [[self photoContainer] setCurrentViewerItem:_currentItem animated:NO];
     
     
-    if( (_currentItemId + 15 ) >= [self listCount] && !_waitRequest) {
-        
-        _waitRequest = YES;
-        
-        
-        [self.behavior load:[[[self itemAtIndex:[self listCount]-1] previewObject] msg_id] next:YES limit:100 callback:^(NSArray *previewObjects) {
+     [_zoomControl setHidden:[_currentItem.previewObject.reservedObject isKindOfClass:[NSDictionary class]]];
+    
+    if(_list.count > 1 && !_waitRequest) {
+        int rcurrent = _isReversed ? _totalCount - (int)_currentItemId : (int)_currentItemId;
+        if((next && (rcurrent <= 15 )) || (!next && ( rcurrent >= (_totalCount - 15)))) {
+             _waitRequest = YES;
             
-            [self insertObjects:previewObjects];
-            
-            _waitRequest = NO;
-        }];
-        
+            [self.behavior load:0 next:next limit:100 callback:^(NSArray *previewObjects) {
+                
+                if(previewObjects.count > 0)
+                    [self insertObjects:previewObjects];
+                
+                _waitRequest = NO;
+            }];
+        }
     }
+    
     
     [ASQueue dispatchOnStageQueue:^{
         
@@ -615,7 +710,7 @@ static const int controlsHeight = 75;
         
         [_list enumerateObjectsAtIndexes:[NSIndexSet indexSetWithIndexesInRange:range] options:NSEnumerationReverse usingBlock:^(TGPhotoViewerItem *obj, NSUInteger idx, BOOL *stop) {
             
-            if(![TGCache cachedImage:obj.imageObject.location.cacheKey group:@[PVCACHE]]) {
+            if(![TGCache cachedImage:obj.imageObject.cacheKey group:@[PVCACHE]]) {
                  [obj.imageObject initDownloadItem];
             }
             
@@ -646,10 +741,8 @@ static const int controlsHeight = 75;
     
     if(!self.photoContainer.ifVideoFullScreenPlayingNeedToogle) {
         [self orderOut:self];
-        [Notification removeObserver:self];
     }
-    
-    
+
 }
 
 

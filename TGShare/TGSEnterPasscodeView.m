@@ -15,10 +15,12 @@
 #import "TGS_MTNetwork.h"
 #import "TGImageView.h"
 #import "TGSImageObject.h"
+#import "ShareViewController.h"
 @interface TGSEnterPasscodeView ()
 @property (nonatomic,strong) NSSecureTextField *secureField;
 @property (nonatomic,strong) BTRButton *enterButton;
 @property (nonatomic,strong) TGImageView *avatar;
+@property (nonatomic,strong) BTRButton *cancelButton;
 @end
 
 @implementation TGSEnterPasscodeView
@@ -34,24 +36,24 @@
         
         
         
-        _avatar = [[TGImageView alloc] initWithFrame:NSMakeRect(0, 0, 100, 100)];
-        
-        
-         [_avatar setCenterByView:self];
-        
-        [_avatar setFrameOrigin:NSMakePoint(NSMinX(_avatar.frame), NSMinY(_avatar.frame) + 50)];
-        
-        [self addSubview:_avatar];
-        
-        TLUser *user = [ClassStore deserialize:[[TGSAppManager standartUserDefaults] objectForKey:@"selfUser"]];
-        
-        TGSImageObject *imageObject = [[TGSImageObject alloc] initWithLocation:user.photo.photo_small];
-        
-        imageObject.imageSize = NSMakeSize(100, 100);
-        
-        _avatar.object = imageObject;
-        
-        
+//        _avatar = [[TGImageView alloc] initWithFrame:NSMakeRect(0, 0, 100, 100)];
+//        
+//        
+//         [_avatar setCenterByView:self];
+//        
+//        [_avatar setFrameOrigin:NSMakePoint(NSMinX(_avatar.frame), NSMinY(_avatar.frame) + 50)];
+//        
+//        [self addSubview:_avatar];
+//        
+//        TLUser *user = [ClassStore deserialize:[[TGSAppManager standartUserDefaults] objectForKey:@"selfUser"]];
+//        
+//        TGSImageObject *imageObject = [[TGSImageObject alloc] initWithLocation:user.photo.photo_small];
+//        
+//        imageObject.imageSize = NSMakeSize(100, 100);
+//        
+//        _avatar.object = imageObject;
+//        
+//        
         
         self.backgroundColor = [NSColor whiteColor];
         
@@ -62,7 +64,7 @@
         
         [attrs appendString:NSLocalizedString(@"Passcode.EnterPlaceholder", nil) withColor:NSColorFromRGB(0xc8c8c8)];
         
-        [attrs setAttributes:@{NSFontAttributeName:[NSFont fontWithName:@"HelveticaNeue" size:12]} range:attrs.range];
+        [attrs setAttributes:@{NSFontAttributeName:TGSystemFont(12)} range:attrs.range];
         
         [[self.secureField cell] setPlaceholderAttributedString:attrs];
         
@@ -93,12 +95,12 @@
         [self.secureField setAction:@selector(checkPassword)];
         [self.secureField setTarget:self];
         
-        [self.secureField setFont:[NSFont fontWithName:@"HelveticaNeue" size:14]];
+        [self.secureField setFont:TGSystemFont(14)];
         [self.secureField setTextColor:DARK_BLACK];
         
         [self.secureField setCenterByView:self];
         
-        [self.secureField setFrameOrigin:NSMakePoint(NSMinX(_secureField.frame), NSMinY(_secureField.frame) - 30)];
+//        [self.secureField setFrameOrigin:NSMakePoint(NSMinX(_secureField.frame), NSMinY(_secureField.frame) - 30)];
         
         
         [self addSubview:self.secureField];
@@ -121,6 +123,32 @@
         [self.enterButton setFrameOrigin:NSMakePoint(NSMaxX(self.secureField.frame) + 20, NSMinY(self.secureField.frame) + 3)];
         
         [self addSubview:self.enterButton];
+        
+        
+        
+        _cancelButton = [[BTRButton alloc] initWithFrame:NSMakeRect(NSWidth(_cancelButton.frame), 0, NSWidth(self.frame), 50)];
+        
+        _cancelButton.layer.backgroundColor = [NSColor whiteColor].CGColor;
+        
+        [_cancelButton setTitleColor:LINK_COLOR forControlState:BTRControlStateNormal];
+        
+        [_cancelButton setTitle:NSLocalizedString(@"Cancel", nil) forControlState:BTRControlStateNormal];
+        
+        [_cancelButton addBlock:^(BTRControlEvents events) {
+            
+            [ShareViewController close];
+            
+            
+        } forControlEvents:BTRControlEventClick];
+        
+        [self addSubview:_cancelButton];
+        
+        TMView *topSeparator = [[TMView alloc] initWithFrame:NSMakeRect(0, 49, NSWidth(self.frame), DIALOG_BORDER_WIDTH)];
+        
+        topSeparator.backgroundColor = DIALOG_BORDER_COLOR;
+        
+        [self addSubview:topSeparator];
+        
     }
     
     return self;

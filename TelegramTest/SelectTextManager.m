@@ -27,17 +27,18 @@
 }
 
 +(void)addRange:(NSRange)range forItem:(id<SelectTextDelegate>)item {
-            
-    [[[self instance] list] removeObject:item];
     
-    [[[self instance] keys] removeObjectForKey:[item identifier]];
-    
-    if(range.location != NSNotFound) {
-        [[[self instance] list] addObject:item];
+    if(item != nil) {
+        [[[self instance] list] removeObject:item];
         
-        [[self instance] keys][[item identifier]] = [NSValue valueWithRange:range];
+        [[[self instance] keys] removeObjectForKey:[item identifier]];
+        
+        if(range.location != NSNotFound) {
+            [[[self instance] list] addObject:item];
+            
+            [[self instance] keys][[item identifier]] = [NSValue valueWithRange:range];
+        }
     }
-    
     
 }
 

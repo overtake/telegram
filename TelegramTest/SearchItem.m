@@ -51,28 +51,47 @@
 }
 
 
-- (id)initWithGlobalItem:(TLUser*)user searchString:(NSString *)searchString {
+- (id)initWithGlobalItem:(id)object searchString:(NSString *)searchString {
     self = [super init];
     if(self) {
         [self initialize];
         
         self.type = SearchItemGlobalUser;
-        self.conversation = [[DialogsManager sharedManager] findByUserId:user.n_id];
-        if(!self.conversation) {
-            self.conversation = [[DialogsManager sharedManager] createDialogForUser:user];
+        
+        if([object isKindOfClass:[TLUser class]]) {
+            
+            TLUser *user = object;
+        
+            self.conversation = user.dialog;
+            
+            self.user = user;
+            
+            [self.title appendString:user.fullName withColor:DARK_BLACK];
+            
+            
+            
+            [self.status appendString:[NSString stringWithFormat:@"@%@",user.username] withColor:GRAY_TEXT_COLOR];
+            
+            [self.status setSelectionColor:NSColorFromRGB(0xfffffe) forColor:GRAY_TEXT_COLOR];
+            
+            [NSMutableAttributedString selectText:[NSString stringWithFormat:@"@%@",searchString] fromAttributedString:(NSMutableAttributedString *)self.status selectionColor:BLUE_UI_COLOR];
+            
+        } else if([object isKindOfClass:[TLChat class]]) {
+            TLChat *chat = object;
+            
+            self.conversation = chat.dialog;
+            
+            self.chat = chat;
+            
+            [self.title appendString:chat.title withColor:DARK_BLACK];
+            
+            
+            [self.status appendString:[NSString stringWithFormat:@"@%@",chat.username] withColor:GRAY_TEXT_COLOR];
+            
+            [self.status setSelectionColor:NSColorFromRGB(0xfffffe) forColor:GRAY_TEXT_COLOR];
+            
+            [NSMutableAttributedString selectText:[NSString stringWithFormat:@"@%@",searchString] fromAttributedString:(NSMutableAttributedString *)self.status selectionColor:BLUE_UI_COLOR];
         }
-        
-        self.user = user;
-                
-        [self.title appendString:user.fullName withColor:DARK_BLACK];
-        
-        
-        
-        [self.status appendString:[NSString stringWithFormat:@"@%@",user.username] withColor:GRAY_TEXT_COLOR];
-        
-        [self.status setSelectionColor:NSColorFromRGB(0xfffffe) forColor:GRAY_TEXT_COLOR];
-        
-        [NSMutableAttributedString selectText:[NSString stringWithFormat:@"@%@",searchString] fromAttributedString:(NSMutableAttributedString *)self.status selectionColor:BLUE_UI_COLOR];
         
     }
     return self;
@@ -85,11 +104,7 @@
 
         self.type = SearchItemChat;
         self.chat = [[ChatsManager sharedManager] find:chat.n_id];
-        self.conversation = [[DialogsManager sharedManager] findByChatId:chat.n_id];
-   
-        if(!self.conversation) {
-            self.conversation = [[DialogsManager sharedManager] createDialogForChat:chat];
-        }
+        self.conversation = chat.dialog;
         
         [self.title appendString:chat.title withColor:DARK_BLACK];
         [NSMutableAttributedString selectText:searchString fromAttributedString:(NSMutableAttributedString *)self.title selectionColor:BLUE_UI_COLOR];
@@ -108,7 +123,7 @@
         self.conversation = dialog;
         
         
-        if(self.conversation.type == DialogTypeChat) {
+        if(self.conversation.type == DialogTypeChat || self.conversation.type == DialogTypeChannel) {
             self.chat = self.conversation.chat;
         } else if(self.conversation.type == DialogTypeSecretChat) {
             self.user = self.conversation.encryptedChat.peerUser;
@@ -118,9 +133,7 @@
         
         
         
-        
-        
-        [self.title appendString:self.conversation.type == DialogTypeChat ? dialog.chat.title : dialog.user.fullName withColor:DARK_BLACK];
+        [self.title appendString:self.conversation.type == DialogTypeChat || self.conversation.type == DialogTypeChannel ? self.chat.title : dialog.user.fullName withColor:DARK_BLACK];
         
         [NSMutableAttributedString selectText:searchString fromAttributedString:(NSMutableAttributedString*)self.title selectionColor:BLUE_UI_COLOR];
         
@@ -147,7 +160,7 @@
             self.user =  self.conversation.encryptedChat.peerUser;
         }
 
-        if(self.conversation.type == DialogTypeChat) {
+        if(self.conversation.type == DialogTypeChat || self.conversation.type == DialogTypeChannel) {
             self.chat = self.conversation.chat;
             [self.title appendString:self.chat.title withColor:DARK_BLACK];
         } else {
@@ -172,7 +185,7 @@
             [[self.status mutableString] replaceCharactersInRange:NSMakeRange(0, range.location - 8 + offset) withString:@"..."];
         }
         
-        if(self.conversation.type == DialogTypeChat || self.user.n_id != self.message.from_id) {
+        if(self.conversation.type == DialogTypeChannel || self.conversation.type == DialogTypeChat || self.user.n_id != self.message.from_id) {
             
             TLUser *user = [[UsersManager sharedManager] find:self.message.from_id];
             
@@ -190,11 +203,11 @@
         [self.date setSelectionColor:NSColorFromRGB(0xcbe1f1) forColor:NSColorFromRGB(0x333333)];
         [self.date setSelectionColor:NSColorFromRGB(0xcbe1f2) forColor:DARK_BLUE];
         
-
-            NSString *dateStr = [TGDateUtils stringForMessageListDate:message.date];
-            [self.date appendString:dateStr withColor:NSColorFromRGB(0xaeaeae)];
-      
         
+        NSString *dateStr = [TGDateUtils stringForMessageListDate:message.date];
+        [self.date appendString:dateStr withColor:NSColorFromRGB(0xaeaeae)];
+      
+        self.dateSize = [self.date size];
         
     }
     return self;

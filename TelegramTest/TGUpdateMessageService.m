@@ -151,9 +151,8 @@
     
     
     
-    if([incomingMessage isKindOfClass:[TL_messages_sentMessage class]] ||
-           [incomingMessage isKindOfClass:[TL_gzip_packed class]] ||
-           [incomingMessage isKindOfClass:[TL_messages_affectedHistory class]])
+    if([incomingMessage isKindOfClass:[TL_gzip_packed class]] ||
+           [incomingMessage isKindOfClass:[TL_messages_affectedMessages class]])
             [self addMessageToQueueAndScheduleProcessing:incomingMessage];
 }
 
@@ -168,17 +167,15 @@
         _scheduledMessageProcessing = true;
         
         int currentSessionToken = _sessionToken;
-        dispatch_async(_queue.nativeQueue, ^
-        {
-            _scheduledMessageProcessing = false;
-            
-            if (currentSessionToken != _sessionToken)
-                return;
-            
-            NSArray *messages = [[NSArray alloc] initWithArray:_messagesToProcess];
-            [_messagesToProcess removeAllObjects];
-            [self processMessages:messages];
-        });
+        
+        _scheduledMessageProcessing = false;
+        
+        if (currentSessionToken != _sessionToken)
+            return;
+        
+        NSArray *messages = [[NSArray alloc] initWithArray:_messagesToProcess];
+        [_messagesToProcess removeAllObjects];
+        [self processMessages:messages];
     }
 }
 

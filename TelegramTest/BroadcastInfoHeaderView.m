@@ -25,11 +25,8 @@
         
         [self.sharedMediaButton.textButton setTapBlock:^ {
             
-            [[Telegram rightViewController].messagesViewController setHistoryFilter:[PhotoHistoryFilter class] force:NO];
             
             
-            [[Telegram rightViewController] showByDialog:strongSelf.controller.broadcast.conversation
-                                                withJump:0 historyFilter:[PhotoHistoryFilter class] sender:strongSelf];
         }];
         
         [self.addMembersButton.textButton setTapBlock:^ {

@@ -21,3 +21,4 @@
 #import "MessageTablecellAudioDocumentView.h"
 #import "MessageTableCellSocialView.h"
 #import "MessageTableCellStickerView.h"
+#import "MessageTableCellHoleView.h"

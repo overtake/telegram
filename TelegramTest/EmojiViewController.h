@@ -20,11 +20,15 @@
 
 + (EmojiViewController *)instance;
 
+@property (nonatomic,weak) MessagesViewController *messagesViewController;
+
 +(void)reloadStickers;
 +(void)loadStickersIfNeeded;
 
 +(NSArray *)allStickers;
 +(NSArray *)allSets;
++(TL_stickerSet *)setWithId:(long)n_id;
++(NSArray *)stickersWithId:(long)n_id;
 -(void)saveModifier:(NSString *)modifier forEmoji:(NSString *)emoji;
 
 -(NSString *)emojiModifier:(NSString *)emoji;

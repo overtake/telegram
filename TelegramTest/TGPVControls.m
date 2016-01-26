@@ -19,6 +19,9 @@
 @property (nonatomic,strong) BTRButton *moreButton;
 @property (nonatomic,strong) BTRButton *closeButton;
 @property (nonatomic, strong) TMMenuPopover *menuPopover;
+
+
+
 @end
 
 
@@ -51,7 +54,7 @@
             if([[TGPhotoViewer behavior] class] == [TGPVMediaBehavior class]) {
                 [[TGPhotoViewer viewer] hide];
                 
-                [[Telegram rightViewController] showCollectionPage:weakSelf.convertsation];
+                [appWindow().navigationController showInfoPage:weakSelf.convertsation];
             }
             
            
@@ -68,7 +71,7 @@
         
         self.backgroundColor = NSColorFromRGBWithAlpha(0x000000, 0.6);
         
-        [self.countTextField setFont:[NSFont fontWithName:@"HelveticaNeue-Bold" size:18]];
+        [self.countTextField setFont:TGSystemBoldFont(18)];
         
         [self.countTextField sizeToFit];
         
@@ -134,6 +137,7 @@
         [self addSubview:self.moreButton];
         [self addSubview:self.closeButton];
         
+      
     }
     
     return self;
@@ -328,31 +332,34 @@
     
     NSMenuItem *photoDelete = [NSMenuItem menuItemWithTitle:NSLocalizedString(@"PhotoViewer.Delete", nil) withBlock:^(id sender) {
         
-        
-        
-        [Notification perform:MESSAGE_DELETE_EVENT data:@{KEY_MESSAGE_ID_LIST:@[@(msg.n_id)]}];
+        [[DialogsManager sharedManager] deleteMessagesWithRandomMessageIds:@[@(msg.randomId)] isChannelMessages:msg.isChannelMessage];
         
         
     }];
    // [photoDelete setImage:image_AttachPhotoVideo()];
    // [photoDelete setHighlightedImage:image_AttachPhotoVideoHighlighted()];
-    [theMenu addItem:photoDelete];
+    
+    if([MessagesViewController canDeleteMessages:@[msg] inConversation:msg.conversation])
+        [theMenu addItem:photoDelete];
+    
+    
     
     
     if(msg.conversation.type != DialogTypeSecretChat) {
         NSMenuItem *photoForward = [NSMenuItem menuItemWithTitle:NSLocalizedString(@"PhotoViewer.Forward", nil) withBlock:^(id sender) {
             
             
-            [[Telegram rightViewController] showByDialog:msg.conversation sender:[TGPhotoViewer viewer]];
-            [[Telegram rightViewController].messagesViewController setState:MessagesViewControllerStateNone];
-            [[Telegram rightViewController].messagesViewController unSelectAll:NO];
+            [[TGPhotoViewer viewer].invokeWindow.navigationController showMessagesViewController:msg.conversation];
+            
+            
+            [[TGPhotoViewer viewer].invokeWindow.navigationController.messagesViewController setState:MessagesViewControllerStateNone];
+            [[TGPhotoViewer viewer].invokeWindow.navigationController.messagesViewController unSelectAll:NO];
             
             MessageTableItem *item  = [MessageTableItem messageItemFromObject:msg];
             
-            [[Telegram rightViewController].messagesViewController setSelectedMessage:item selected:YES];
+            [[TGPhotoViewer viewer].invokeWindow.navigationController.messagesViewController setSelectedMessage:item selected:YES];
             
-            
-            [[Telegram rightViewController] showForwardMessagesModalView:_convertsation messagesCount:1];
+            [[TGPhotoViewer viewer].invokeWindow.navigationController.messagesViewController showForwardMessagesModalView];
             
             [[TGPhotoViewer viewer] hide];
             
@@ -399,8 +406,10 @@
     
     NSMenuItem *photoGoto = [NSMenuItem menuItemWithTitle:NSLocalizedString(@"PhotoViewer.Goto", nil) withBlock:^(id sender) {
         
-        [[Telegram rightViewController] showByDialog:_convertsation withJump:(int)[TGPhotoViewer currentItem].previewObject.msg_id historyFilter:[HistoryFilter class] sender:[TGPhotoViewer viewer]];
+        TL_localMessage *msg = [TGPhotoViewer currentItem].previewObject.media;
         
+        [[TGPhotoViewer viewer].invokeWindow.navigationController showMessagesViewController:msg.conversation];
+
         [[TGPhotoViewer viewer] hide];
         
     }];

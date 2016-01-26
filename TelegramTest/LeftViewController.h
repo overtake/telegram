@@ -9,7 +9,6 @@
 #import <Cocoa/Cocoa.h>
 #import "RightViewController.h"
 #import "TelegramPopover.h"
-#import "NewConversationViewController.h"
 #import "TGWindowArchiver.h"
 
 #import "TGConversationsViewController.h"

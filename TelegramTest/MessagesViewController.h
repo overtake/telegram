@@ -15,7 +15,7 @@
 #import "ConnectionStatusViewControllerView.h"
 #import <CoreLocation/CoreLocation.h>
 #import "TGCTextMark.h"
-
+#import "TGMessagesHintView.h"
 @class MessagesBottomView;
 
 @interface SearchSelectItem : NSObject
@@ -40,7 +40,11 @@ typedef enum {
 @property (nonatomic, strong,readonly) MessagesTableView *table;
 @property (nonatomic, strong) MessagesBottomView *bottomView;
 
-
+typedef enum {
+    ShowMessageTypeReply = 1 << 0,
+    ShowMessageTypeSearch = 1 << 1,
+    ShowMessageTypeUnreadMark = 1 << 2
+} ShowMessageType;
 
 
 -(void)setConversation:(TL_conversation *)conversation;
@@ -60,27 +64,35 @@ typedef enum {
 - (void)bottomViewChangeSize:(int)height animated:(BOOL)animated;
 - (void)setStringValueToTextField:(NSString *)stringValue;
 - (NSString *)inputText;
+
+- (void)showForwardMessagesModalView;
+
 - (void)drop;
 
 //- (void)updateHeaderHeight:(BOOL)update animated:(BOOL)animated;
-- (void)jumpToLastMessages;
+- (void)jumpToLastMessages:(BOOL)force;
 - (void)saveInputText;
 
-- (void)setCurrentConversation:(TL_conversation *)dialog withJump:(int)messageId historyFilter:(Class)historyFilter;
-- (void)setCurrentConversation:(TL_conversation *)dialog withJump:(int)messageId historyFilter:(Class)historyFilter force:(BOOL)force;
+- (void)setCurrentConversation:(TL_conversation *)dialog withMessageJump:(TL_localMessage *)message;
+- (void)setCurrentConversation:(TL_conversation *)dialog withMessageJump:(TL_localMessage *)message force:(BOOL)force;
 - (void)setCurrentConversation:(TL_conversation *)dialog;
 
-- (void)showMessage:(int)messageId fromMsgId:(int)msgId;
-- (void)showMessage:(int)messageId fromMsgId:(int)msgId animated:(BOOL)animated selectText:(NSString *)text;
+
+
+- (void)showMessage:(TL_localMessage *)message fromMsg:(TL_localMessage *)fromMsg flags:(int)flags;
+- (void)showMessage:(TL_localMessage *)message fromMsg:(TL_localMessage *)fromMsg switchDiscussion:(BOOL)switchDiscussion;
+- (void)showMessage:(TL_localMessage *)message fromMsg:(TL_localMessage *)fromMsg animated:(BOOL)animated selectText:(NSString *)text switchDiscussion:(BOOL)switchDiscussion flags:(int)flags;
 
 - (void)setHistoryFilter:(Class)filter force:(BOOL)force;
 - (void)updateLoading;
 - (MessageTableItem *)objectAtIndex:(NSUInteger)position;
 - (NSUInteger)indexOfObject:(MessageTableItem *)item;
-- (MessageTableItem *)itemOfMsgId:(int)msg_id;
+- (MessageTableItem *)itemOfMsgId:(long)msg_id;
 
 +(NSMenu *)destructMenu:(dispatch_block_t)ttlCallback click:(dispatch_block_t)click;
 +(NSMenu *)notifications:(dispatch_block_t)callback conversation:(TL_conversation *)conversation click:(dispatch_block_t)click;
+
++(BOOL)canDeleteMessages:(NSArray *)messages inConversation:(TL_conversation *)conversation;
 
 - (NSUInteger)messagesCount;
 
@@ -122,7 +134,7 @@ typedef enum {
 - (void)sendAudio:(NSString *)file_path forConversation:(TL_conversation *)conversation;
 - (void)sendMessage:(NSString *)message forConversation:(TL_conversation *)conversation;
 - (void)sendLocation:(CLLocationCoordinate2D)coordinates forConversation:(TL_conversation *)conversation;
-- (void)forwardMessages:(NSArray *)messages forConversation:(TL_conversation *)conversation callback:(dispatch_block_t)callback;
+- (void)forwardMessages:(NSArray *)messages conversation:(TL_conversation *)conversation callback:(dispatch_block_t)callback;
 - (void)shareContact:(TLUser *)contact forConversation:(TL_conversation *)conversation callback:(dispatch_block_t)callback;
 - (void)sendSecretTTL:(int)ttl forConversation:(TL_conversation *)conversation;
 - (void)sendSecretTTL:(int)ttl forConversation:(TL_conversation *)conversation callback:(dispatch_block_t)callback;
@@ -156,4 +168,13 @@ typedef enum {
 
 -(void)markAsNoWebpage;
 -(BOOL)noWebpage:(NSString *)message;
+
+-(void)showOrHideChannelDiscussion;
+
+-(void)tryRead;
+
+-(void)selectInputTextByText:(NSString *)text;
+
+-(TGMessagesHintView *)hintView;
+
 @end

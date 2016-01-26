@@ -34,7 +34,7 @@
 }
 
 +(TL_conversation *)conversation {
-    return [Telegram rightViewController].messagesViewController.conversation;
+    return [Telegram delegate].mainWindow.navigationController.messagesViewController.conversation;
 }
 
 + (AppDelegate *)delegate {
@@ -108,14 +108,17 @@ Telegram *TelegramInstance() {
     [self.accountStatusTimer start];
 }
 
-static int max_chat_users = 200;
+static int max_chat_users = 199;
 static int max_broadcast_users = 100;
+static int megagroup_size_max = 1000;
 
 void setMaxChatUsers(int c) {
     max_chat_users = c;
 }
 
 int maxChatUsers() {
+    
+    
     return max_chat_users;
 }
 
@@ -127,12 +130,21 @@ int maxBroadcastUsers() {
     return max_broadcast_users;
 }
 
+
+void setMegagroupSizeMax(int b) {
+    megagroup_size_max = b;
+}
+
+int megagroupSizeMax() {
+    return megagroup_size_max;
+}
+
 - (BOOL)canBeOnline {
     return ([[NSApplication sharedApplication] isActive] && SystemIdleTime() < 30 );
 }
 
 - (void)setAccountOffline:(BOOL)force {
-    if([SettingsArchiver checkMaskedSetting:OnlineForever])
+    if([SettingsArchiver checkMaskedSetting:OnlineForever]  || ![Storage isInitialized])
         return;
     
     if(force) {
@@ -166,7 +178,7 @@ int maxBroadcastUsers() {
 - (void)setAccountOnline {
     
     
-    if(![self canBeOnline]) {
+    if(![self canBeOnline] || ![Storage isInitialized]) {
         [self setAccountOffline:YES];
         return;
     }
@@ -174,7 +186,7 @@ int maxBroadcastUsers() {
     [self.accountOfflineStatusTimer invalidate];
     self.accountOfflineStatusTimer = nil;
     
-    if([[UsersManager currentUser] isOnline])
+    if([[UsersManager currentUser] isOnline] )
         return;
     
     
@@ -202,7 +214,7 @@ int maxBroadcastUsers() {
 }
 
 - (void)showMessagesFromDialog:(TL_conversation *)d sender:(id)sender {
-    [[Telegram rightViewController] showByDialog:d sender:(id)sender];
+    [appWindow().navigationController showMessagesViewController:d];
 }
 
 - (void)showMessagesWidthUser:(TLUser *)user sender:(id)sender {
@@ -217,11 +229,6 @@ int maxBroadcastUsers() {
     [self showMessagesFromDialog:dn sender:sender];
 }
 
-- (void)showUserInfoWithUserId:(int)userID conversation:(TL_conversation *)conversation sender:(id)sender {
-    TLUser  *user = [[UsersManager sharedManager] find:userID];
-    
-    [self showUserInfoWithUser:user conversation:conversation sender:sender];
-}
 
 - (void)showNotSelectedDialog {
 
@@ -229,13 +236,6 @@ int maxBroadcastUsers() {
 }
 
 
-- (void)showUserInfoWithUser:(TLUser *)user conversation:(TL_conversation *)conversation sender:(id)sender {
-    if(user == nil)
-        return ELog(@"User nil");
-    
-    [[Telegram rightViewController] showUserInfoPage:user conversation:conversation];
-    [[[Telegram mainViewController].view window] makeFirstResponder:nil];
-}
 
 - (void)onAuthSuccess {
     [[MTNetwork instance] successAuthForDatacenter:[[MTNetwork instance] currentDatacenter]];
@@ -249,7 +249,7 @@ int maxBroadcastUsers() {
 
 BOOL isTestServer() {
     BOOL result = [[NSProcessInfo processInfo].environment[@"test_server"] boolValue];
-    return result;
+    return result || [[NSUserDefaults standardUserDefaults] boolForKey:@"test-backend"];
 }
 
 NSString * appName() {
@@ -350,12 +350,12 @@ static TGEnterPasswordPanel *panel;
     
     dispatch_block_t performBlock = ^ {
         
-        [[Telegram rightViewController] showByDialog:user.dialog sender:self];
+        [appWindow().navigationController showMessagesViewController:user.dialog];
         
         NSArray *files = TGGetLogFilePaths();
         
         [files enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
-            [[Telegram rightViewController].messagesViewController sendDocument:obj forConversation:user.dialog];
+            [appWindow().navigationController.messagesViewController sendDocument:obj forConversation:user.dialog];
         }];
         
     };
@@ -383,6 +383,17 @@ static TGEnterPasswordPanel *panel;
             [TMViewController hideModalProgress];
         }];
     }
+}
+
++(id)findObjectWithName:(NSString *)name {
+    
+    id obj = [UsersManager findUserByName:name];
+    
+    if(!obj)
+        obj = [ChatsManager findChatByName:name];
+    
+    return obj;
+    
 }
 
 +(void)initializeDatabase {

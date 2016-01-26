@@ -26,6 +26,8 @@
 - (void)add:(NSOperation *)operation {
     [self.queue addOperation:operation];
     
+    NSLog(@"operation count:%d",self.queue.operationCount);
+    
 }
 
 +(QueueManager *)sharedManager {

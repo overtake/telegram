@@ -11,10 +11,14 @@
 @implementation StickerSenderItem
 
 
--(id)initWithDocument:(TLDocument *)document forConversation:(TL_conversation*)conversation {
+-(id)initWithDocument:(TLDocument *)document forConversation:(TL_conversation*)conversation additionFlags:(int)additionFlags {
     if(self = [super initWithConversation:conversation]) {
         
         self.message = [MessageSender createOutMessage:@"" media:[TL_messageMediaDocument createWithDocument:document] conversation:conversation];
+        
+        if(additionFlags & (1 << 4))
+            self.message.from_id = 0;
+
         
         [self.message save:YES];
     }
@@ -29,7 +33,7 @@
     id media = [TL_inputMediaDocument createWithN_id:[TL_inputDocument createWithN_id:self.message.media.document.n_id access_hash:self.message.media.document.access_hash]];
     
     if(self.conversation.type != DialogTypeBroadcast) {
-        request = [TLAPI_messages_sendMedia createWithFlags:self.message.reply_to_msg_id != 0 ? 1 : 0 peer:self.conversation.inputPeer reply_to_msg_id:self.message.reply_to_msg_id media:media random_id:self.message.randomId reply_markup:[TL_replyKeyboardMarkup createWithFlags:0 rows:[@[]mutableCopy]]];
+        request = [TLAPI_messages_sendMedia createWithFlags:[self senderFlags] peer:self.conversation.inputPeer reply_to_msg_id:self.message.reply_to_msg_id media:media random_id:self.message.randomId reply_markup:[TL_replyKeyboardMarkup createWithFlags:0 rows:[@[]mutableCopy]]];
     } else {
         
         TL_broadcast *broadcast = self.conversation.broadcast;
@@ -38,15 +42,17 @@
     }
     
     [RPCRequest sendRequest:request successHandler:^(RPCRequest *request, TLUpdates * response) {
-                
         
-        if(response.updates.count < 2)
+        
+        [self updateMessageId:response];
+        
+        TL_localMessage *msg = [TL_localMessage convertReceivedMessage:[[self updateNewMessageWithUpdates:response] message]];
+        
+        if(msg == nil)
         {
             [self cancel];
             return;
         }
-        
-        TL_localMessage *msg = [TL_localMessage convertReceivedMessage:(TLMessage *) ( [response.updates[1] message])];
         
         if(self.conversation.type != DialogTypeBroadcast)  {
             

@@ -180,7 +180,7 @@ static NSImage *playImage() {
     
     [self.playImage setCenterByView:self.imageView];
     
-    BOOL needBlur = self.item.message.media.video.thumb.w != 250;
+    BOOL needBlur = self.item.message.media.video.thumb.w <= 90;
     
     if(self.imageView.isAlwaysBlur != needBlur)
         [self.imageView setIsAlwaysBlur:needBlur];
@@ -232,6 +232,7 @@ static NSImage *playImage() {
         [_captionView setFrame:NSMakeRect(0, NSHeight(self.containerView.frame) - item.captionSize.height , item.videoSize.width, item.captionSize.height)];
         
         [_captionView setAttributedString:item.caption fieldSize:item.captionSize];
+        [_captionView setItem:item];
         
     } else {
         [self deallocCaptionTextView];
@@ -298,6 +299,7 @@ static NSImage *playImage() {
     animation.toValue = anim.toValue;
     animation.fromValue = anim.fromValue;
     animation.duration = anim.duration;
+    animation.removedOnCompletion = YES;
     [_captionView.textView pop_addAnimation:animation forKey:@"background"];
     
     
@@ -323,10 +325,9 @@ static NSImage *playImage() {
     _startDragLocation = [self.containerView convertPoint:[theEvent locationInWindow] fromView:nil];
     
     if([_imageView mouse:_startDragLocation inRect:_imageView.frame])
-    return;
+        return;
     
-    if(self.isEditable)
-        [super mouseDown:theEvent];
+    [super mouseDown:theEvent];
 }
 
 -(void)mouseDragged:(NSEvent *)theEvent {

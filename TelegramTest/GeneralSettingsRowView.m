@@ -30,13 +30,13 @@
         self.subdescField = [[BTRButton alloc] initWithFrame:NSMakeRect(0, 0, 200, 20)];
         
         self.nextDesc = [TMTextField defaultTextField];
-        [self.nextDesc setFont:[NSFont fontWithName:@"HelveticaNeue-Light" size:14]];
+        [self.nextDesc setFont:TGSystemLightFont(14)];
         self.nextDesc.textColor = GRAY_TEXT_COLOR;
         
+        _nextDesc.alignment = NSRightTextAlignment;
         
-        
-        [self.descriptionField setFont:[NSFont fontWithName:@"HelveticaNeue-Light" size:14]];
-        [self.subdescField setTitleFont:[NSFont fontWithName:@"HelveticaNeue" size:14] forControlState:BTRControlStateNormal];
+        [self.descriptionField setFont:TGSystemLightFont(14)];
+        [self.subdescField setTitleFont:TGSystemFont(14) forControlState:BTRControlStateNormal];
         
         self.descriptionField.textColor = DARK_BLACK;
         
@@ -85,12 +85,18 @@
     return self;
 }
 
+-(void)mouseUp:(NSEvent *)theEvent {
+    [super mouseUp:theEvent];
+}
+
+
 -(void)mouseDown:(NSEvent *)theEvent {
-    GeneralSettingsRowItem *item = (GeneralSettingsRowItem *) [self rowItem];
+    TGGeneralRowItem *item = (GeneralSettingsRowItem *) [self rowItem];
     
-    if(item.type == SettingsRowItemTypeNext || item.type == SettingsRowItemTypeSelected) {
+    if(item.type == SettingsRowItemTypeNext || item.type == SettingsRowItemTypeSelected || item.type == SettingsRowItemTypeNone) {
         item.callback(item);
     }
+
 }
 
 
@@ -100,11 +106,13 @@
     
     [self.descriptionField setStringValue:item.description];
     
+    [self.descriptionField setTextColor:item.textColor ? item.textColor : TEXT_COLOR];
+    
     [self.nextDesc setStringValue:item.subdesc];
     
     [self.nextDesc sizeToFit];
     
-    
+    [self.switchControl setEnabled:item.isEnabled];
     
     [self.switchControl setDidChangeHandler:^(BOOL isOn) {
         item.callback(item);
@@ -140,7 +148,14 @@
            [self.switchControl setHidden:YES];
            [self.nextImage setHidden:YES];
            [self.selectedImageView setHidden:![item.stateback(item) boolValue] || item.locked];
-            [self.nextDesc setHidden:YES];
+           [self.nextDesc setHidden:YES];
+           break;
+        case SettingsRowItemTypeNone:
+           [self.subdescField setHidden:YES];
+           [self.switchControl setHidden:YES];
+           [self.nextImage setHidden:YES];
+           [self.selectedImageView setHidden:YES];
+           [self.nextDesc setHidden:YES];
         default:
             break;
     }
@@ -156,35 +171,57 @@
     [self.descriptionField sizeToFit];
     [self.subdescField.titleLabel sizeToFit];
     [self.subdescField setFrameSize:self.subdescField.titleLabel.frame.size];
-    
+    [_nextDesc sizeToFit];
 }
 
 
 -(void)setFrameSize:(NSSize)newSize {
     [super setFrameSize:newSize];
     
-    [self.subdescField setFrameOrigin:NSMakePoint(NSWidth(self.frame) - 100 - NSWidth(self.subdescField.frame), 10)];
     
-    [self.switchControl setFrameOrigin:NSMakePoint(NSWidth(self.frame) - 100 - NSWidth(self.switchControl.frame), 10)];
+    TGGeneralRowItem *item = (TGGeneralRowItem *) [self rowItem];
     
-    [self.selectedImageView setFrameOrigin:NSMakePoint(NSWidth(self.frame) - 100 - NSWidth(self.selectedImageView.frame), 10)];
+    [self.descriptionField setFrameOrigin:NSMakePoint( item.xOffset - 2, 12)];
     
-    [self.nextImage setFrameOrigin:NSMakePoint(NSWidth(self.frame) - 100 - image_ArrowGrey().size.width - 4, 14)];
+    [self.subdescField setFrameOrigin:NSMakePoint(NSWidth(self.frame) - item.xOffset - NSWidth(self.subdescField.frame), 13)];
     
-    [self.nextDesc setFrameOrigin:NSMakePoint(NSWidth(self.frame) - 100 - NSWidth(self.nextImage.frame) - NSWidth(self.nextDesc.frame) - 8, 13)];
+    [self.switchControl setFrameOrigin:NSMakePoint(NSWidth(self.frame) - item.xOffset - NSWidth(self.switchControl.frame), 10)];
     
-    [self.lockedIndicator setFrameOrigin:NSMakePoint(NSWidth(self.frame) - 100 - NSWidth(self.lockedIndicator.frame), 10)];
+    [self.selectedImageView setFrameOrigin:NSMakePoint(NSWidth(self.frame) - item.xOffset - NSWidth(self.selectedImageView.frame), 10)];
     
-    [self.descriptionField setFrameSize:NSMakeSize(NSWidth(self.frame) - 250, NSHeight(self.descriptionField.frame))];
+    [self.nextImage setFrameOrigin:NSMakePoint(NSWidth(self.frame) - item.xOffset - image_ArrowGrey().size.width - 4, 14)];
+    
+    [self.lockedIndicator setFrameOrigin:NSMakePoint(NSWidth(self.frame) - item.xOffset - NSWidth(self.lockedIndicator.frame), 10)];
+    
+    [self.descriptionField setFrameSize:NSMakeSize(MIN(NSWidth(self.descriptionField.frame), NSWidth(self.frame) - (item.xOffset * 2 + 100) ), NSHeight(self.descriptionField.frame))];
+    
+    
+    [self.nextDesc setFrameSize:NSMakeSize(NSWidth(self.frame) - (item.xOffset * 2 + 50 + NSWidth(_descriptionField.frame)), NSHeight(self.nextDesc.frame))];
+    [self.nextDesc setFrameOrigin:NSMakePoint(NSWidth(self.frame) - item.xOffset - NSWidth(self.nextImage.frame) - NSWidth(self.nextDesc.frame) - 8, 13)];
 }
 
 
 - (void)drawRect:(NSRect)dirtyRect {
     [super drawRect:dirtyRect];
     
-    [NSColorFromRGB(0xe0e0e0) setFill];
     
-    NSRectFill(NSMakeRect(100, 0, NSWidth(self.frame) - 200, 1));
+    
+    TGGeneralRowItem *item = (TGGeneralRowItem *) [self rowItem];
+    
+    if(item.drawsSeparator) {
+        [NSColorFromRGB(0xe0e0e0) setFill];
+        
+        NSRectFill(NSMakeRect(item.xOffset, 0, NSWidth(self.frame) - item.xOffset * 2, 1));
+    }
+    
+    if(item.type == SettingsRowItemTypeNext && item.stateback != nil) {
+        NSImage *image = item.stateback(item);
+        
+        if([image isKindOfClass:[NSImage class]]) {
+            [image drawInRect:NSMakeRect(NSWidth(self.frame) - item.xOffset - image_ArrowGrey().size.width - image.size.width - 8, 13 , image.size.width, image.size.height) fromRect:NSZeroRect operation:NSCompositeHighlight fraction:1];
+        }
+    }
+    
 }
 
 @end

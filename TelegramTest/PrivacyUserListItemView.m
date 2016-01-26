@@ -31,7 +31,7 @@
         
         self.avatarImageView = [TMAvatarImageView standartNewConversationTableAvatar];
         [self addSubview:self.avatarImageView];
-        [self.avatarImageView setFont:[NSFont fontWithName:@"HelveticaNeue-Light" size:15]];
+        [self.avatarImageView setFont:TGSystemLightFont(15)];
         [self.avatarImageView setFrameSize:NSMakeSize(36, 36)];
         
         
@@ -39,7 +39,7 @@
         [self.titleTextField setEditable:NO];
         [self.titleTextField setBordered:NO];
         [self.titleTextField setBackgroundColor:[NSColor clearColor]];
-        [self.titleTextField setFont:[NSFont fontWithName:@"HelveticaNeue" size:13]];
+        [self.titleTextField setFont:TGSystemFont(13)];
         [[self.titleTextField cell] setLineBreakMode:NSLineBreakByTruncatingTail];
         [[self.titleTextField cell] setTruncatesLastVisibleLine:YES];
         [self addSubview:self.titleTextField];
@@ -51,7 +51,7 @@
         [self.numberTextField setEditable:NO];
         [self.numberTextField setBordered:NO];
         [self.numberTextField setBackgroundColor:[NSColor clearColor]];
-        [self.numberTextField setFont:[NSFont fontWithName:@"HelveticaNeue" size:12]];
+        [self.numberTextField setFont:TGSystemFont(12)];
         [self.numberTextField setTextColor:GRAY_TEXT_COLOR];
         [[self.numberTextField cell] setLineBreakMode:NSLineBreakByTruncatingTail];
         [[self.numberTextField cell] setTruncatesLastVisibleLine:YES];
@@ -65,7 +65,7 @@
         
         self.removeButton = [TMTextButton standartUserProfileButtonWithTitle:NSLocalizedString(@"Remove", nil)];
         
-        [self.removeButton setFont:[NSFont fontWithName:@"HelveticaNeue" size:14]];
+        [self.removeButton setFont:TGSystemFont(14)];
         [self.removeButton setTextColor:BLUE_UI_COLOR];
         
         [self.removeButton sizeToFit];

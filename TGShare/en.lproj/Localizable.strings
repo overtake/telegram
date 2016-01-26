@@ -7,7 +7,7 @@
 */
 "Search" = "Search";
 "Passcode.EnterPlaceholder" = "Enter passcode";
-"NoAuthDescription" = "Sorry. You need login from main application to use share menu.";
+"NoAuthDescription" = "Sorry. Please login to the Telegram application to use the sharing menu.";
 
 "Time.at" = "at";
 "Time.last_seen" = "last seen";

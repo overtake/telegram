@@ -38,10 +38,16 @@ typedef enum {
 @property (nonatomic) DeliveryState dstate;
 @property (nonatomic) int sync_message_id;
 
+-(int)universalTopMessage;
+
+
+@property (nonatomic,assign,getter=isInvisibleChannel) BOOL invisibleChannel;
 
 @property (nonatomic,strong) TL_localMessage *lastMessage;
 
-+ (TL_conversation *)createWithPeer:(TLPeer *)peer top_message:(int)top_message unread_count:(int)unread_count last_message_date:(int)last_message_date notify_settings:(TLPeerNotifySettings *)notify_settings last_marked_message:(int)last_marked_message top_message_fake:(int)top_message_fake last_marked_date:(int)last_marked_date sync_message_id:(int)sync_message_id;
++ (TL_conversation *)createWithPeer:(TLPeer *)peer top_message:(int)top_message unread_count:(int)unread_count last_message_date:(int)last_message_date notify_settings:(TLPeerNotifySettings *)notify_settings last_marked_message:(int)last_marked_message top_message_fake:(int)top_message_fake last_marked_date:(int)last_marked_date sync_message_id:(int)sync_message_id read_inbox_max_id:(int)read_inbox_max_id unread_important_count:(int)unread_important_count lastMessage:(TL_localMessage *)lastMessage;
+
++ (TL_conversation *)createWithPeer:(TLPeer *)peer top_message:(int)top_message unread_count:(int)unread_count last_message_date:(int)last_message_date notify_settings:(TLPeerNotifySettings *)notify_settings last_marked_message:(int)last_marked_message top_message_fake:(int)top_message_fake last_marked_date:(int)last_marked_date sync_message_id:(int)sync_message_id read_inbox_max_id:(int)read_inbox_max_id unread_important_count:(int)unread_important_count lastMessage:(TL_localMessage *)lastMessage pts:(int)pts isInvisibleChannel:(BOOL)invisibleChannel top_important_message:(int)top_important_message;
 
 - (void)save;
 - (BOOL) isAddToList;
@@ -63,7 +69,8 @@ typedef enum {
     DialogTypeUser = 0,
     DialogTypeChat = 1,
     DialogTypeSecretChat = 2,
-    DialogTypeBroadcast = 3
+    DialogTypeBroadcast = 3,
+    DialogTypeChannel = 4
 } DialogType;
 
 -(id)inputPeer;
@@ -80,7 +87,15 @@ typedef enum {
 - (NSUInteger)cacheHash;
 - (NSString *)cacheKey;
 
+-(BOOL)canEditConversation;
 
+-(long)channel_top_message_id;
+-(long)channel_top_important_message_id;
 - (DialogType) type;
 
+-(BOOL)isVerified;
+
+//channel methods
+-(BOOL)canSendChannelMessageAsAdmin;
+-(BOOL)canSendChannelMessageAsUser;
 @end

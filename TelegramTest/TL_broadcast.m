@@ -128,7 +128,7 @@ DYNAMIC_PROPERTY(DIALOGTITLE);
     
     [dialogTitleAttributedString appendString:title withColor:NSColorFromRGB(0x333333)];
     [dialogTitleAttributedString setSelectionColor:NSColorFromRGB(0xffffff) forColor:NSColorFromRGB(0x333333)];
-    [dialogTitleAttributedString setFont:[NSFont fontWithName:@"HelveticaNeue" size:14] forRange:dialogTitleAttributedString.range];
+    [dialogTitleAttributedString setFont:TGSystemFont(14) forRange:dialogTitleAttributedString.range];
     
     [self setDIALOGTITLE:dialogTitleAttributedString];
     
@@ -149,7 +149,7 @@ DYNAMIC_PROPERTY(TITLEFORMESSAGE);
     NSMutableAttributedString *dialogTitleAttributedString = [[NSMutableAttributedString alloc] init];
     
     [dialogTitleAttributedString appendString:title withColor:NSColorFromRGB(0x222222)];
-    [dialogTitleAttributedString setFont:[NSFont fontWithName:@"HelveticaNeue" size:14] forRange:dialogTitleAttributedString.range];
+    [dialogTitleAttributedString setFont:TGSystemFont(14) forRange:dialogTitleAttributedString.range];
     
     NSMutableParagraphStyle *style = [[NSMutableParagraphStyle alloc] init];
     [style setAlignment:NSCenterTextAlignment];
@@ -235,7 +235,7 @@ static NSTextAttachment *chatIconSelectedAttachment() {
     
 
     
-    [attributedString setFont:[NSFont fontWithName:@"HelveticaNeue" size:12] forRange:attributedString.range];
+    [attributedString setFont:TGSystemFont(12) forRange:attributedString.range];
     
     NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
     [paragraphStyle setAlignment:2];

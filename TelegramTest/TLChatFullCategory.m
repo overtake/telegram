@@ -40,4 +40,13 @@ DYNAMIC_PROPERTY(Conversation);
     return [self getConversation];
 }
 
+DYNAMIC_PROPERTY(Chat);
+
+-(TLChat *)chat {
+    if(![self getChat]) {
+        [self setChat:[[ChatsManager sharedManager] find:self.n_id]];
+    }
+    return [self getChat];
+}
+
 @end

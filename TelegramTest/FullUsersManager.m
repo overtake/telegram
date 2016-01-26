@@ -26,35 +26,30 @@
     TL_userFull *userFull = [self find:user.n_id];
     
     if(userFull) {
-       // [ASQueue dispatchOnMainQueue:^{
-            callback(userFull);
-      //  }];
-        if(![user needFullUpdate])
+        if(user.bot_info_version == userFull.bot_info.version) {
+            if(callback != nil)
+                callback(userFull);
             return;
+        } else {
+            [self removeObjectWithKey:@(user.n_id)];
+        }
     }
     
-    [ASQueue dispatchOnStageQueue:^{
+    [RPCRequest sendRequest:[TLAPI_users_getFullUser createWithN_id:user.inputUser] successHandler:^(id request, id response) {
         
-          [RPCRequest sendRequest:[TLAPI_users_getFullUser createWithN_id:user.inputUser] successHandler:^(id request, id response) {
-                
-                
-              if(![response isKindOfClass:[TL_userEmpty class]]) {
-                  [self add:@[response] withCustomKey:@"n_id"];
-                  
-                  
-              }
-              
-                
-              [ASQueue dispatchOnMainQueue:^{
-                  [user fullUpdated];
-                  callback(response);
-              }];
-                
-        } errorHandler:^(id request, RpcError *error) {
-                
-        } timeout:10 queue:[ASQueue globalQueue].nativeQueue];
+        if(![response isKindOfClass:[TL_userEmpty class]]) {
+            [self add:@[response] withCustomKey:@"n_id"];
+        }
         
-    }];
+        [ASQueue dispatchOnMainQueue:^{
+            [user fullUpdated];
+            if(callback != nil)
+                callback(response);
+        }];
+        
+    } errorHandler:^(id request, RpcError *error) {
+        
+    } timeout:10 queue:[ASQueue globalQueue].nativeQueue];
     
 }
 

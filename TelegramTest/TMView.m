@@ -11,6 +11,9 @@
 
 @interface TMView ()
 @property (nonatomic,assign) NSPoint movableStartLocation;
+@property (nonatomic,assign) NSPoint startPoint;
+@property (nonatomic,assign) BOOL isDragged;
+
 @end
 
 @implementation TMView
@@ -77,12 +80,6 @@
 }
 
 
--(void)mouseUp:(NSEvent *)theEvent {
-  //  if(theEvent.clickCount == 2)
-    //    return;
-    
-    [super mouseUp:theEvent];
-}
 
 - (void) drawRect:(NSRect)dirtyRect {
     [super drawRect:dirtyRect];
@@ -146,30 +143,76 @@
     
 }
 
--(void)mouseDown:(NSEvent*)theEvent {
-    
+-(void)mouseDown:(NSEvent *)theEvent {
     
     if(_movableWindow)
         _movableStartLocation = [theEvent locationInWindow];
+    
+    if(_dragInSuperView) {
+        _startPoint = [self convertPoint:[theEvent locationInWindow] fromView:nil];
+        _isDragged = YES;
+    } else {
+        [super mouseDown:theEvent];
+    }
+    
+    
+    
+}
+
+-(void)mouseUp:(NSEvent*)theEvent {
     
     if(self.callback)
         self.callback();
     else {
        // if(theEvent.clickCount == 2)
          //   return;
-        [super mouseDown:theEvent];
+        [super mouseUp:theEvent];
     }
     
+}
+
+-(void)setDragInSuperView:(BOOL)dragInSuperView {
+    _dragInSuperView = dragInSuperView;
+    
+    if(_dragInSuperView) {
+        _startPoint = [self.superview convertPoint:[[self window] mouseLocationOutsideOfEventStream] fromView:nil];
+    } else
+        _startPoint =  NSMakePoint(0, 0);
+}
+
+- (BOOL)acceptsFirstMouse:(NSEvent *)theEvent {
+    return YES;
 }
 
 
 
 - (void)mouseDragged:(NSEvent *)theEvent
 {
-    [super mouseDragged:theEvent];
     
-    if(!_movableWindow)
+   
+    if(_dragInSuperView) {
+        
+        {
+            
+            NSPoint newDragLocation = [[self superview] convertPoint:[theEvent locationInWindow] fromView:nil];
+            NSPoint thisOrigin = [self frame].origin;
+            thisOrigin.x += (-self.startPoint.x + newDragLocation.x);
+            thisOrigin.y += (-self.startPoint.y + newDragLocation.y);
+            [self setFrameOrigin:thisOrigin];
+            self.startPoint = newDragLocation;
+         
+            [super mouseDragged:theEvent];
+            
+        }
+        
         return;
+    }
+    
+    if(!_movableWindow) {
+         [super mouseDragged:theEvent];
+         return;
+    }
+    
     
     NSRect screenVisibleFrame = [[NSScreen mainScreen] visibleFrame];
     NSRect windowFrame = [self.window frame];

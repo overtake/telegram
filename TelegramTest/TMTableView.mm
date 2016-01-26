@@ -50,7 +50,7 @@ static TMTableView *tableStatic;
 }
 
 - (id)initWithCoder:(NSCoder *)aDecoder {
-    self = [super init];
+    self = [super initWithCoder:aDecoder];
     if(self) {
         [self initialize];
     }
@@ -82,6 +82,8 @@ static TMTableView *tableStatic;
    
     
     self.scrollView.documentView = self;
+    
+    
     
    
     
@@ -120,6 +122,16 @@ static TMTableView *tableStatic;
     self.lastOverRow = -1;
     
     [self updateTrackingAreas];
+    
+    
+    
+    id document = self.scrollView.documentView;
+    BTRClipView *clipView = [[BTRClipView alloc] initWithFrame:self.scrollView.contentView.bounds];
+    [clipView setWantsLayer:YES];
+    [clipView setDrawsBackground:YES];
+    [self.scrollView setContentView:clipView];
+    self.scrollView.documentView = document;
+    
 }
 
 - (void)setHoverCells:(BOOL)hoverCells {
@@ -593,6 +605,12 @@ static TMTableView *tableStatic;
     
     if([self.className isEqualToString:@"TGConversationsTableView"] && !self.isHidden)
         [self.scrollView mouseDragged:theEvent];
+}
+
+-(BOOL)rowIsVisible:(NSUInteger)index {
+    NSRange range = [self rowsInRect:[self visibleRect]];
+    
+    return range.location <= index && range.location + range.length >= index;
 }
 
 @end

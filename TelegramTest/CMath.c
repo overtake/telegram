@@ -44,6 +44,10 @@ long rand_long() {
     return rand;
 }
 
+int rand_int() {
+    return abs(arc4random());
+}
+
 int rand_limit(int limit) {
     /* return a random number between 0 and limit inclusive.
      */

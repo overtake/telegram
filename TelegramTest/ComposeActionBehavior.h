@@ -36,4 +36,8 @@
 -(NSString *)doneTitle;
 
 -(NSAttributedString *)centerTitle;
+
+-(NSString *)leftEditTitle;
+-(NSString *)rightEditTitle;
+
 @end

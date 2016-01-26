@@ -54,7 +54,7 @@
     
 }
 
--(void)open_link:(NSString *)link {
+-(void)open_link:(NSString *)link itsReal:(BOOL)itsReal {
     MessageTableItemText *item = self.owner;
     
     if(item.message.peer_id < 0 && item.message.fromUser.isBot && [link hasPrefix:TLBotCommandPrefix]) {
@@ -62,8 +62,9 @@
     }
     
     
-    open_link(link);
+    [super open_link:link itsReal:itsReal];
 }
+
 
 -(void)rightMouseDown:(NSEvent *)theEvent {
     

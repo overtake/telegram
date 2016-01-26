@@ -14,7 +14,7 @@ static NSDictionary *attributes() {
     static NSDictionary *dictionary;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        dictionary = @{NSFontAttributeName: [NSFont fontWithName:@"HelveticaNeue-Bold" size:11], NSForegroundColorAttributeName:NSColorFromRGB(0xfafafa)};
+        dictionary = @{NSFontAttributeName: TGSystemBoldFont(11), NSForegroundColorAttributeName:NSColorFromRGB(0xfafafa)};
     });
     return dictionary;
 }

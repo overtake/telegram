@@ -60,7 +60,7 @@
     self.inputField = [[TMBlueInputTextField alloc] initWithFrame:NSMakeRect(18, 80, self.importView.frame.size.width-40, 35)];
     
 
-    self.inputField.font = self.inputField.placeholderFont = [NSFont fontWithName:@"HelveticaNeue" size:13];
+    self.inputField.font = self.inputField.placeholderFont = TGSystemFont(13);
     self.inputField.placeholderTitle = NSLocalizedString(@"UserCard.exportPlaceholder", nil);
     self.inputField.placeholderTextColor = NSColorFromRGB(0xc8c8c8);
     [self.inputField setPlaceholderAligment:NSCenterTextAlignment];
@@ -85,7 +85,7 @@
     [self.button setAutoresizingMask:NSViewMinXMargin];
     [self.button setTarget:self selector:@selector(actionExportCard)];
     [self.button setText:NSLocalizedString(@"UserCard.Export", nil)];
-    [self.button setTextFont:[NSFont fontWithName:@"HelveticaNeue" size:12]];
+    [self.button setTextFont:TGSystemFont(12)];
     
     [self.button setBackgroundColor:NSColorFromRGB(0xfdfdfd)];
     
@@ -102,7 +102,7 @@
     
     
     self.textField = [TMTextField defaultTextField];
-    [self.textField setFont:[NSFont fontWithName:@"HelveticaNeue" size:13]];
+    [self.textField setFont:TGSystemFont(13)];
     
  //   [self.textField setSelectable:YES];
     
