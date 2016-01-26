@@ -189,7 +189,7 @@
 }
 
 -(NSData *)decryptedMessageLayer45 {
-    return [Secret45__Environment serializeObject:[Secret45_DecryptedMessageLayer decryptedMessageLayerWithRandom_bytes:self.random_bytes layer:@(45) in_seq_no:@(2*self.params.in_seq_no + [self.params in_x]) out_seq_no:@(2*(self.params.out_seq_no++) + [self.params out_x]) message:[Secret45_DecryptedMessage decryptedMessageWithFlags:@(self.message.flags) random_id:@(self.message.randomId) ttl:@(((TL_destructMessage *)self.message).ttl_seconds) message:self.message.message media:self.media entities:[self convertLEntities:self.message.entities layer:45] via_bot_name:((TL_destructMessage45 *)self.message).via_bot_name reply_to_random_id:@(((TL_destructMessage45 *)self.message).reply_to_random_id)]]];
+    return [Secret45__Environment serializeObject:[Secret45_DecryptedMessageLayer decryptedMessageLayerWithRandom_bytes:self.random_bytes layer:@(45) in_seq_no:@(2*self.params.in_seq_no + [self.params in_x]) out_seq_no:@(2*(self.params.out_seq_no++) + [self.params out_x]) message:[Secret45_DecryptedMessage decryptedMessageWithFlags:@(self.message.flags) random_id:@(self.message.randomId) ttl:@(((TL_destructMessage *)self.message).ttl_seconds) message:self.message.message == nil ? @"" : self.message.message media:self.media entities:[self convertLEntities:self.message.entities layer:45] via_bot_name:((TL_destructMessage45 *)self.message).via_bot_name == nil ? @"" : ((TL_destructMessage45 *)self.message).via_bot_name reply_to_random_id:@(((TL_destructMessage45 *)self.message).reply_to_random_id)]]];
 }
 
 -(void)performRequest {
@@ -283,7 +283,7 @@
             } else if(strongSelf.params.layer == 23) {
                 strongSelf.media = [Secret23_DecryptedMessageMedia decryptedMessageMediaDocumentWithThumb:strongSelf.message.media.document.thumb.bytes == nil ? [[NSData alloc] initWithEmptyBytes:16] : strongSelf.message.media.document.thumb.bytes thumb_w:@(msg.media.document.thumb.w) thumb_h:@(msg.media.document.thumb.h) file_name:[strongSelf.filePath lastPathComponent] mime_type:strongSelf.mimeType size:@(uploader.total_size) key:strongSelf.key iv:strongSelf.iv];
             } else if(strongSelf.params.layer == 45) {
-                strongSelf.media = [Secret45_DecryptedMessageMedia decryptedMessageMediaDocumentWithThumb:strongSelf.message.media.document.thumb.bytes == nil ? [[NSData alloc] initWithEmptyBytes:16] : strongSelf.message.media.document.thumb.bytes thumb_w:@(msg.media.document.thumb.w) thumb_h:@(msg.media.document.thumb.h) mime_type:strongSelf.mimeType size:@(uploader.total_size) key:strongSelf.key iv:strongSelf.iv attributes:[strongSelf convertLAttributes:strongSelf.message.media.document.attributes layer:45] caption:@""];
+                strongSelf.media = [Secret45_DecryptedMessageMedia decryptedMessageMediaDocumentWithThumb:strongSelf.message.media.document.thumb.bytes == nil ? [[NSData alloc] initWithEmptyBytes:16] : strongSelf.message.media.document.thumb.bytes thumb_w:@(msg.media.document.thumb.w) thumb_h:@(msg.media.document.thumb.h) mime_type:strongSelf.message.media.document.mime_type size:@(uploader.total_size) key:strongSelf.key iv:strongSelf.iv attributes:[strongSelf convertLAttributes:strongSelf.message.media.document.attributes layer:45] caption:@""];
             }
         }
         
@@ -305,7 +305,6 @@
         
         
         TLAPI_messages_sendEncryptedFile *request = [TLAPI_messages_sendEncryptedFile createWithPeer:[TL_inputEncryptedChat createWithChat_id:strongSelf.action.chat_id access_hash:strongSelf.action.params.access_hash] random_id:((TL_destructMessage *)strongSelf.message).randomId data:[MessageSender getEncrypted:strongSelf.action.params  messageData:[strongSelf decryptedMessageLayer]] file:inputFile];
-        
         
         
         strongSelf.rpc_request = [RPCRequest sendRequest:request successHandler:^(RPCRequest *request, TL_messages_sentEncryptedFile *response) {

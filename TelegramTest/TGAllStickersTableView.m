@@ -22,6 +22,7 @@
 @property (nonatomic,strong) NSMutableArray *sets;
 @property (nonatomic,assign) BOOL isCustomStickerPack;
 @property (nonatomic,strong) TGStickerPreviewModalView *previewModal;
+@property (nonatomic,assign) BOOL notSendUpSticker;
 @end
 
 
@@ -154,6 +155,12 @@ static NSImage *higlightedImage() {
             if(self.tableView.previewModal != nil) {
                 [self.tableView.previewModal close:YES];
                 self.tableView.previewModal = nil;
+                return;
+            }
+            
+            if(self.tableView.notSendUpSticker)
+            {
+                self.tableView.notSendUpSticker = NO;
                 return;
             }
             
@@ -679,6 +686,7 @@ static NSImage *higlightedImage() {
 -(void)hideStickerPreview {
     [_previewModal close:YES];
     _previewModal = nil;
+    _notSendUpSticker = YES;
 }
 
 

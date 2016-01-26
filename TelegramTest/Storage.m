@@ -851,7 +851,7 @@ TL_localMessage *parseMessage(FMResultSet *result) {
     [messages enumerateObjectsUsingBlock:^(TL_localMessage *obj, NSUInteger idx, BOOL * _Nonnull stop) {
         
         if(obj.reply_to_msg_id != 0) {
-            obj.replyMessage = support[@(channelMsgId(obj.reply_to_msg_id, obj.peer_id))];
+            obj.replyMessage = support[obj.isChannelMessage ? @(channelMsgId(obj.reply_to_msg_id, obj.peer_id)) : @(obj.reply_to_msg_id)];
         } else if(([obj isKindOfClass:[TL_destructMessage45 class]] && ((TL_destructMessage45 *)obj).reply_to_random_id != 0)) {
             obj.replyMessage = support[@(((TL_destructMessage45 *)obj).reply_to_random_id)];
         }
@@ -992,23 +992,18 @@ TL_localMessage *parseMessage(FMResultSet *result) {
     [self messages:completeHandler forIds:ids random:random sync:NO queue:q];
 }
 
-
--(void)messages:(void (^)(NSArray *))completeHandler forIds:(NSArray *)ids random:(BOOL)random sync:(BOOL)sync queue:(ASQueue *)q {
-    
+-(void)messages:(void (^)(NSArray *))completeHandler forIds:(NSArray *)ids random:(BOOL)random sync:(BOOL)sync queue:(ASQueue *)q isChannel:(BOOL)isChannel {
     void (^block)(FMDatabase *db) = ^(FMDatabase *db) {
         NSString *strIds = [ids componentsJoinedByString:@","];
         
-        NSString *sql = [NSString stringWithFormat:@"select serialized,flags,message_text from %@ where %@ in (%@) order by date DESC",tableMessages,random ? @"random_id" : @"n_id",strIds];
+        NSString *sql = [NSString stringWithFormat:@"select * from %@ where %@ in (%@) order by date DESC",isChannel ? tableChannelMessages : tableMessages,random ? @"random_id" : @"n_id",strIds];
         
         FMResultSet *result = [db executeQueryWithFormat:sql,nil];
         __block NSMutableArray *messages = [[NSMutableArray alloc] init];
         while ([result next]) {
             
             @try {
-                TLMessage *msg = [TLClassStore deserialize:[result dataForColumn:@"serialized"]];
-                msg.flags = -1;
-                msg.flags = [result intForColumn:@"flags"];
-                msg.message = [result stringForColumn:@"message_text"];
+                TLMessage *msg = parseMessage(result);
                 [messages addObject:msg];
             }
             @catch (NSException *exception) {
@@ -1022,7 +1017,7 @@ TL_localMessage *parseMessage(FMResultSet *result) {
         {
             if(sync)
                 completeHandler(messages);
-             else 
+            else
                 [q dispatchOnQueue:^{
                     completeHandler(messages);
                 }];
@@ -1033,7 +1028,12 @@ TL_localMessage *parseMessage(FMResultSet *result) {
         [queue inDatabase:block];
     else
         [queue inDatabaseWithDealocing:block];
-  
+    
+
+}
+
+-(void)messages:(void (^)(NSArray *))completeHandler forIds:(NSArray *)ids random:(BOOL)random sync:(BOOL)sync queue:(ASQueue *)q {
+    [self messages:completeHandler forIds:ids random:random sync:sync queue:q isChannel:NO];
 }
 
 - (void)explainQuery:(NSString *)query

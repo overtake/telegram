@@ -458,9 +458,9 @@ Class convertClass(NSString *c, int layer) {
 }
 
 
--(void)proccess45Layer:(Secret23_DecryptedMessage *)message params:(EncryptedParams *)params conversation:(TL_conversation *)conversation  encryptedMessage:(TL_encryptedMessage *)encryptedMessage  {
+-(void)proccess45Layer:(Secret45_DecryptedMessage *)message params:(EncryptedParams *)params conversation:(TL_conversation *)conversation  encryptedMessage:(TL_encryptedMessage *)encryptedMessage  {
     
-    Secret23_DecryptedMessageLayer *layerMessage = (Secret23_DecryptedMessageLayer *)message;
+    Secret45_DecryptedMessageLayer *layerMessage = (Secret45_DecryptedMessageLayer *)message;
     
     if([layerMessage.out_seq_no intValue] != 0 && [layerMessage.out_seq_no intValue] < params.in_seq_no * 2 + [params in_x] )
         return;
@@ -470,7 +470,7 @@ Class convertClass(NSString *c, int layer) {
     
     
     
-    if([layerMessage.message isKindOfClass:[Secret23_DecryptedMessage_decryptedMessage class]]) {
+    if([layerMessage.message isKindOfClass:[Secret45_DecryptedMessage_decryptedMessage class]]) {
         media = [self media:[layerMessage.message valueForKey:@"media"] layer:45 file:encryptedMessage.file];
     }
     
@@ -576,7 +576,23 @@ Class convertClass(NSString *c, int layer) {
         if([obj isKindOfClass:imageSizeAttr]) {
             [attrs addObject:[TL_documentAttributeImageSize createWithW:[[obj valueForKey:@"w"] intValue] h:[[obj valueForKey:@"h"] intValue]]];
         } else if([obj isKindOfClass:stickerAttr]) {
-            [attrs addObject:[TL_documentAttributeSticker createWithAlt:@"" stickerset:[TL_inputStickerSetEmpty create]]];
+            
+            if(layer < 45)
+                [attrs addObject:[TL_documentAttributeSticker createWithAlt:@"" stickerset:[TL_inputStickerSetEmpty create]]];
+            else {
+                
+                Secret45_DocumentAttribute_documentAttributeSticker *attr = obj;
+                
+                TLInputStickerSet *stickerset = [TL_inputStickerSetEmpty create];
+                
+                if([attr.stickerset isKindOfClass:[Secret45_InputStickerSet_inputStickerSetShortName class]]) {
+                    stickerset = [TL_inputStickerSetShortName createWithShort_name:((Secret45_InputStickerSet_inputStickerSetShortName *)attr.stickerset).short_name];
+                }
+                
+                [attrs addObject:[TL_documentAttributeSticker createWithAlt:attr.alt stickerset:stickerset]];
+            }
+            
+            
         } else if([obj isKindOfClass:filenameAttr]) {
             [attrs addObject:[TL_documentAttributeFilename createWithFile_name:[obj valueForKey:@"file_name"]]];
         } else if([obj isKindOfClass:videoAttr]) {
@@ -710,8 +726,16 @@ Class convertClass(NSString *c, int layer) {
          if( ((NSData *)[media valueForKey:@"thumb"]).length > 0) {
             size = [TL_photoCachedSize createWithType:@"x" location:[TL_fileLocation createWithDc_id:0 volume_id:0 local_id:0 secret:0] w:[[media valueForKey:@"thumb_w"] intValue] h:[[media valueForKey:@"thumb_h"] intValue] bytes:[media valueForKey:@"thumb"]];
          }
-            
-        return [TL_messageMediaDocument createWithDocument:[TL_document createWithN_id:file.n_id access_hash:file.access_hash date:[[MTNetwork instance] getTime] mime_type:[media valueForKey:@"mime_type"] size:file.size thumb:size dc_id:[file dc_id] attributes:[@[[TL_documentAttributeFilename createWithFile_name:[media valueForKey:@"file_name"]]] mutableCopy]] caption:@""];
+        
+        NSMutableArray *attributes;
+        
+        if(layer < 45) {
+            attributes = [@[[TL_documentAttributeFilename createWithFile_name:[media valueForKey:@"file_name"]]] mutableCopy];
+        } else {
+            attributes = [self convertDocumentAttributes:[(Secret45_DecryptedMessageMedia_decryptedMessageMediaDocument *)media attributes] layer:45];
+        }
+        
+        return [TL_messageMediaDocument createWithDocument:[TL_document createWithN_id:file.n_id access_hash:file.access_hash date:[[MTNetwork instance] getTime] mime_type:[media valueForKey:@"mime_type"] size:file.size thumb:size dc_id:[file dc_id] attributes:attributes] caption:@""];
        
            
     } else if([media isKindOfClass:convertClass(@"Secret%d_DecryptedMessageMedia_decryptedMessageMediaVideo", layer)]) {

@@ -176,6 +176,27 @@
 
 -(void)loadReplyMessage {
     
+    
+    if([_fromMessage isKindOfClass:[TL_destructMessage class]]) {
+        
+        [[Storage manager] messages:^(NSArray *result) {
+            
+            if(result.count == 1) {
+                [[Storage manager] addSupportMessages:result];
+                _replyMessage = result[0];
+                _fromMessage.replyMessage = _replyMessage;
+                [self updateObject];
+                
+                if(_item != nil) {
+                    [Notification perform:UPDATE_MESSAGE_ITEM data:@{@"item":_item}];
+                }
+            }
+            
+        } forIds:@[@(((TL_destructMessage *)_fromMessage).reply_to_random_id)] random:YES sync:NO queue:[ASQueue globalQueue]];
+        
+        return;
+    }
+    
     id request = [TLAPI_messages_getMessages createWithN_id:[@[@(_fromMessage.reply_to_msg_id)] mutableCopy]];
     
     if([_fromMessage.to_id isKindOfClass:[TL_peerChannel class]]) {
@@ -205,7 +226,6 @@
             [SharedManager proccessGlobalResponse:response];
             
             [[Storage manager] addSupportMessages:messages];
-            //[MessagesManager addSupportMessages:messages];
             
             
             _replyMessage = messages[0];

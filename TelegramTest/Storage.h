@@ -58,6 +58,7 @@ extern NSString *const RECENT_GIFS;
 -(void)saveUpdateState:(TGUpdateState *)state;
 -(void)messages:(void (^)(NSArray *))completeHandler forIds:(NSArray *)ids random:(BOOL)random queue:(ASQueue *)q;
 -(void)messages:(void (^)(NSArray *))completeHandler forIds:(NSArray *)ids random:(BOOL)random sync:(BOOL)sync queue:(ASQueue *)q;
+-(void)messages:(void (^)(NSArray *))completeHandler forIds:(NSArray *)ids random:(BOOL)random sync:(BOOL)sync queue:(ASQueue *)q isChannel:(BOOL)isChannel;
 -(NSArray *)issetMessages:(NSArray *)ids;
 
 
