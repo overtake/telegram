@@ -14,6 +14,7 @@
 @interface EncryptedKeyViewController ()<TMHyperlinkTextFieldDelegate>
 @property (nonatomic,strong) NSImageView *imageView;
 @property (nonatomic,strong) TMHyperlinkTextField *textField;
+@property (nonatomic,strong) TMView *imageBorder;
 @end
 
 @implementation EncryptedKeyViewController
@@ -23,6 +24,11 @@
     [super loadView];
     
     
+    _imageBorder = [[TMView alloc] initWithFrame:NSMakeRect(0, 0, 164, 164)];
+    
+    _imageBorder.wantsLayer = YES;
+    _imageBorder.layer.borderColor = [NSColor redColor].CGColor;
+    _imageBorder.layer.borderWidth = 5;
     
     TMButton *center = [[TMButton alloc] initWithFrame:NSMakeRect(0, 0, 400, 200)];
     [center setTextFont:TGSystemFont(14)];
@@ -33,21 +39,26 @@
 
     
     
-    
-    
     self.view.isFlipped = YES;
     
     
     TMView *container = [[TMView alloc] initWithFrame:NSMakeRect(0, 0, 300, 464)];
     
     
-    self.imageView = [[NSImageView alloc] initWithFrame:NSMakeRect(0,0, 200, 200)];
+    self.imageView = [[NSImageView alloc] initWithFrame:NSMakeRect(0,0, 240, 240)];
     [container addSubview:self.imageView];
+    
+    
     
    
     [self.imageView setCenterByView:container];
     
-    [self.imageView setFrameOrigin:NSMakePoint(NSMinX(self.imageView.frame), NSHeight(container.frame) - 200)];
+    
+    
+    [self.imageView setFrameOrigin:NSMakePoint(NSMinX(self.imageView.frame), NSHeight(container.frame) - 240)];
+    
+    [_imageBorder setFrameOrigin:NSMakePoint(NSMinX(_imageView.frame) + 38, NSMinY(_imageView.frame) + 38)];
+    
     
     self.textField = [[TMHyperlinkTextField alloc] initWithFrame:NSMakeRect(0, 0, 300, 264)];
     
@@ -66,6 +77,8 @@
     self.textField.hardYOffset = 25.0f;
  
     [container addSubview:self.textField];
+    
+    [container addSubview:_imageBorder];
     
     [self.view addSubview:container];
     
@@ -94,7 +107,7 @@
     
     NSData *keyData = [MTSha1([params.firstKey subdataWithRange:NSMakeRange(0, 16)]) dataWithData:MTSha256([params.firstKey subdataWithRange:NSMakeRange(0, 16)])];
     
-    self.imageView.image = TGIdenticonImage(hashData, CGSizeMake(200, 200));
+    self.imageView.image = TGIdenticonImage(keyData, CGSizeMake(240, 240));
     
     
     

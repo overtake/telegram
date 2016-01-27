@@ -280,6 +280,9 @@
     
     GeneralSettingsRowItem *encryptionKeyItem = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeNext callback:^(TGGeneralRowItem *item) {
         
+        if(!ACCEPT_FEATURE)
+            return;
+        
         EncryptedKeyViewController *viewController = [[EncryptedKeyViewController alloc] initWithFrame:NSZeroRect];
         
         [viewController showForChat:weakSelf.conversation.encryptedChat];
