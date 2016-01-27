@@ -54,7 +54,7 @@
     
     AVURLAsset *avAsset = [[AVURLAsset alloc] initWithURL:[NSURL fileURLWithPath:path] options:nil];
     
-    AVAssetExportSession *exportSession = [[AVAssetExportSession alloc] initWithAsset:avAsset presetName:NSAppKitVersionNumber > NSAppKitVersionNumber10_10_Max ? AVAssetExportPresetMediumQuality : AVAssetExportPreset640x480];
+    AVAssetExportSession *exportSession = [[AVAssetExportSession alloc] initWithAsset:avAsset presetName:AVAssetExportPreset640x480];
     
     
     exportSession.shouldOptimizeForNetworkUse = YES;
