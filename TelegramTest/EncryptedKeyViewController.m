@@ -103,7 +103,7 @@
     
     EncryptedParams *params = [EncryptedParams findAndCreate:chat.n_id];
     
-    NSData *hashData = [Crypto sha1:[params firstKey]];
+   // NSData *hashData = [Crypto sha1:[params firstKey]];
     
     NSData *keyData = [MTSha1([params.firstKey subdataWithRange:NSMakeRange(0, 16)]) dataWithData:MTSha256([params.firstKey subdataWithRange:NSMakeRange(0, 16)])];
     

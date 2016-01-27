@@ -18,6 +18,7 @@
 #import "ComposeActionAddUserToGroupBehavior.h"
 #import "TGReportChannelModalView.h"
 #import "FullUsersManager.h"
+#import "NSData+Extensions.h"
 @interface TGModernUserViewController ()
 @property (nonatomic,strong) TLUser *user;
 @property (nonatomic,strong) TL_conversation *conversation;
@@ -293,9 +294,8 @@
         
         EncryptedParams *params = [EncryptedParams findAndCreate:weakSelf.conversation.encryptedChat.n_id];
         
-        NSData *hashData = MTSha1([params lastKey]);
-        
-        return TGIdenticonImage(hashData,NSMakeSize(20, 20));
+        NSData *keyData = [MTSha1([params.firstKey subdataWithRange:NSMakeRange(0, 16)]) dataWithData:MTSha256([params.firstKey subdataWithRange:NSMakeRange(0, 16)])];
+        return TGIdenticonImage(keyData,CGSizeMake(24, 24));
         
     }];
     
