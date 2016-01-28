@@ -84,6 +84,10 @@
 
 @property (nonatomic,strong) TGSecretChatInactiveCap *secretChatInactiveCap;
 
+@property (nonatomic,strong) MessageTableItem *topItem;
+@property (nonatomic,assign) NSRect topItemRect;
+@property (nonatomic,assign) int yTopOffset;
+
 @end
 
 
@@ -194,6 +198,14 @@
     self.oldSize = self.frame.size;
     
     if([self inLiveResize]) {
+        
+        if(!_topItem) {
+            NSRange visibleRows = [self rowsInRect:self.scrollView.contentView.bounds];
+            _topItem = (MessageTableItem *)[self itemByPosition:visibleRows.location + visibleRows.length];
+            _topItemRect = [self rectOfRow:visibleRows.location + visibleRows.length];
+            _yTopOffset =  self.scrollView.documentOffset.y + NSHeight(self.containerView.frame) - (_topItemRect.origin.y);
+        }
+        
         NSRange visibleRows = [self rowsInRect:self.scrollView.contentView.bounds];
         if(visibleRows.length > 0) {
             [NSAnimationContext beginGrouping];
@@ -220,7 +232,11 @@
                 [cell resizeAndRedraw];
             }
             
+            
+            
             [NSAnimationContext endGrouping];
+            
+            [self scrollToItemInLiveResize];
         }
         
         
@@ -229,6 +245,23 @@
     } else {
         [self fixedResize];
     }
+}
+
+-(void)scrollToItemInLiveResize {
+    __block NSRect drect = [self rectOfRow:[self indexOfItem:_topItem]];
+    
+    
+    dispatch_block_t block = ^{
+        
+        drect.origin.y -= (NSHeight(self.containerView.frame)  -_yTopOffset);
+        
+        drect.origin.y = MAX(0,drect.origin.y);
+        
+        [self.scrollView scrollToPoint:drect.origin animation:NO];
+        
+    };
+    
+    block();
 }
 
 - (void)fixedResize {
@@ -555,6 +588,12 @@
     }
     
     [self reloadData];
+    
+    [self scrollToItemInLiveResize];
+    
+    _topItem = nil;
+    _topItemRect = NSZeroRect;
+    _yTopOffset = 0;
 }
 
 

@@ -342,7 +342,6 @@ static NSTextAttachment *channelIconAttachment() {
     for(TLMessage *message in input) {
         MessageTableItem *item = [MessageTableItem messageItemFromObject:message];
         if(item) {
-            //[item makeSizeByWidth:self.table.containerSize.width];
             item.isSelected = NO;
             [array insertObject:item atIndex:0];
         }

@@ -193,7 +193,7 @@
 
 -(NSArray *)messageTableItemsFromMessages:(NSArray *)messages {
     
-   return [[Telegram rightViewController].messagesViewController messageTableItemsFromMessages:messages];
+   return [MessageTableItem messageTableItemsFromMessages:messages];
    
 }
 
@@ -377,7 +377,7 @@
         
         [TL_localMessage convertReceivedMessages:[response messages]];
         
-        NSArray *converted = [[Telegram rightViewController].messagesViewController messageTableItemsFromMessages:[response messages]];
+        NSArray *converted = [MessageTableItem messageTableItemsFromMessages:[response messages]];
         
         NSArray *filtred = [converted filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary *bindings) {
             

@@ -1026,7 +1026,7 @@
              if (substring.length > 1) {
                 unichar ls = [substring characterAtIndex:1];
                 int uc = ((hs - 0xd800) * 0x400) + (ls - 0xdc00) + 0x10000;
-                if (0x1d000 <= uc && uc <= 0x1f77f) {
+                if (0x1d000 <= uc && uc <= 129300) {
                     
                     [temp setObject:substring forKey:@(uc)];
                 }

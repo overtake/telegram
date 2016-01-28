@@ -213,6 +213,9 @@
 		C2002D0319990F10002A1915 /* BroadcastInfoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C2002D0219990F10002A1915 /* BroadcastInfoViewController.m */; };
 		C2002D0619994D7A002A1915 /* BroadcastInfoHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = C2002D0519994D7A002A1915 /* BroadcastInfoHeaderView.m */; };
 		C202D96718E9D67A0060238B /* TMClickTextFieldView.m in Sources */ = {isa = PBXBuildFile; fileRef = C202D96618E9D67A0060238B /* TMClickTextFieldView.m */; };
+		C2032C9E1C5A88CF00E23481 /* TGMessagesDateView.m in Sources */ = {isa = PBXBuildFile; fileRef = C2032C9D1C5A88CF00E23481 /* TGMessagesDateView.m */; };
+		C2032CAA1C5A8B6700E23481 /* MessageTableItemDate.m in Sources */ = {isa = PBXBuildFile; fileRef = C2032CA91C5A8B6700E23481 /* MessageTableItemDate.m */; };
+		C2032CAD1C5A8BAD00E23481 /* MessageTableCellDateView.m in Sources */ = {isa = PBXBuildFile; fileRef = C2032CAC1C5A8BAD00E23481 /* MessageTableCellDateView.m */; };
 		C2034BA51C2D692A0080D023 /* TGMediaContextTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = C2034BA41C2D692A0080D023 /* TGMediaContextTableView.m */; };
 		C2034BB11C2EB1A00080D023 /* TGVTVideoView.m in Sources */ = {isa = PBXBuildFile; fileRef = C2034BB01C2EB1A00080D023 /* TGVTVideoView.m */; };
 		C2034BB31C2EB1C70080D023 /* VideoToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2034BB21C2EB1C70080D023 /* VideoToolbox.framework */; };
@@ -1480,6 +1483,12 @@
 		C2002D14199E9ADA002A1915 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/Localizable.strings; sourceTree = "<group>"; };
 		C202D96518E9D67A0060238B /* TMClickTextFieldView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TMClickTextFieldView.h; sourceTree = "<group>"; };
 		C202D96618E9D67A0060238B /* TMClickTextFieldView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TMClickTextFieldView.m; sourceTree = "<group>"; };
+		C2032C9C1C5A88CF00E23481 /* TGMessagesDateView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGMessagesDateView.h; sourceTree = "<group>"; };
+		C2032C9D1C5A88CF00E23481 /* TGMessagesDateView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGMessagesDateView.m; sourceTree = "<group>"; };
+		C2032CA81C5A8B6700E23481 /* MessageTableItemDate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MessageTableItemDate.h; sourceTree = "<group>"; };
+		C2032CA91C5A8B6700E23481 /* MessageTableItemDate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MessageTableItemDate.m; sourceTree = "<group>"; };
+		C2032CAB1C5A8BAD00E23481 /* MessageTableCellDateView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MessageTableCellDateView.h; sourceTree = "<group>"; };
+		C2032CAC1C5A8BAD00E23481 /* MessageTableCellDateView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MessageTableCellDateView.m; sourceTree = "<group>"; };
 		C2034BA31C2D692A0080D023 /* TGMediaContextTableView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGMediaContextTableView.h; sourceTree = "<group>"; };
 		C2034BA41C2D692A0080D023 /* TGMediaContextTableView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGMediaContextTableView.m; sourceTree = "<group>"; };
 		C2034BAF1C2EB1A00080D023 /* TGVTVideoView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGVTVideoView.h; sourceTree = "<group>"; };
@@ -3078,6 +3087,8 @@
 				0A6758E918955FC900F4487D /* MessageTableCell.h */,
 				0A6758EA18955FC900F4487D /* MessageTableCell.m */,
 				0A6758EC1895608500F4487D /* MessageTableElements.h */,
+				C2032C9C1C5A88CF00E23481 /* TGMessagesDateView.h */,
+				C2032C9D1C5A88CF00E23481 /* TGMessagesDateView.m */,
 			);
 			name = new;
 			sourceTree = "<group>";
@@ -3119,6 +3130,8 @@
 				C20A5F521B8F6CC3007F4B49 /* MessageTableItemHole.m */,
 				C210688B1C19C07A00815859 /* MessageTableItemMpeg.h */,
 				C210688C1C19C07A00815859 /* MessageTableItemMpeg.m */,
+				C2032CA81C5A8B6700E23481 /* MessageTableItemDate.h */,
+				C2032CA91C5A8B6700E23481 /* MessageTableItemDate.m */,
 			);
 			name = items;
 			sourceTree = "<group>";
@@ -3160,6 +3173,8 @@
 				C20A5F551B8F6CDD007F4B49 /* MessageTableCellHoleView.m */,
 				C21068971C19C09D00815859 /* MessageTableCellMpegView.h */,
 				C21068981C19C09D00815859 /* MessageTableCellMpegView.m */,
+				C2032CAB1C5A8BAD00E23481 /* MessageTableCellDateView.h */,
+				C2032CAC1C5A8BAD00E23481 /* MessageTableCellDateView.m */,
 			);
 			name = cells;
 			sourceTree = "<group>";
@@ -7058,6 +7073,7 @@
 				C26F7EB21A56E5B0001D1AE2 /* RequestKeySecretSenderItem.m in Sources */,
 				0AB43BB018D84FA200FB805A /* TMImagesSearchController.m in Sources */,
 				C2531F541964412700F7D7A2 /* NSTextView+EmojiExtension.m in Sources */,
+				C2032CAA1C5A8B6700E23481 /* MessageTableItemDate.m in Sources */,
 				C2D4B86A1AFCE8F90035B4E4 /* YapDebugDictionary.m in Sources */,
 				C21D483219ACC436000F06E1 /* ContactsViewController.m in Sources */,
 				C2AA4F0A18A8ED5500E20C68 /* TGTimer.m in Sources */,
@@ -7241,6 +7257,7 @@
 				C20D18F81948D1FE0095A906 /* SecretChatAccepter.m in Sources */,
 				C2B325EE1A237A420012DE34 /* TLApiObject.m in Sources */,
 				C20F76ED1BBAC41A003A1E86 /* TGMessagesHintView.m in Sources */,
+				C2032C9E1C5A88CF00E23481 /* TGMessagesDateView.m in Sources */,
 				C274C44A1ACD9FF5000DFDE4 /* TGWebpageStandartObject.m in Sources */,
 				C248F3CF19BE046C00BF658E /* diag_range.c in Sources */,
 				0A59067818AA32C8002ED7BA /* BTRButton.m in Sources */,
@@ -7267,6 +7284,7 @@
 				C244358F1A1E1C6C00F9BB38 /* PrivacyUserListItem.m in Sources */,
 				C2C1DC0C1A43347800BBCC63 /* MessageTableCellStickerView.m in Sources */,
 				0A6D099C19535E8500A9AC64 /* TLUserCategory.m in Sources */,
+				C2032CAD1C5A8BAD00E23481 /* MessageTableCellDateView.m in Sources */,
 				C2CB5CEE1B467D5A00CD61DF /* TGInternalObject.m in Sources */,
 				C2CB5D5F1B4D871600CD61DF /* TGUpdater.m in Sources */,
 				CEB7ADE518128581005CB6A1 /* DownloadQueue.mm in Sources */,

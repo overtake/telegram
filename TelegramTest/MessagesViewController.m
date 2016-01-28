@@ -85,6 +85,7 @@
 #import "CompressedDocumentSenderItem.h"
 #import "ContextBotSenderItem.h"
 #import "InlineBotMediaSecretSenderItem.h"
+#import "MessageTableCellDateView.h"
 #define HEADER_MESSAGES_GROUPING_TIME (10 * 60)
 
 #define SCROLLDOWNBUTTON_OFFSET 1500
@@ -184,7 +185,6 @@
 
 @property (nonatomic,assign) BOOL needNextRequest;
 
-@property (nonatomic,strong) TGModalCompressingView *compressingView;
 
 @end
 
@@ -437,7 +437,6 @@
     [self.hintView setHidden:YES];
     
     [self.view addSubview:self.hintView];
-    
     
     
 }
@@ -2019,6 +2018,11 @@ static NSTextAttachment *headerMediaIcon() {
             [self.messages removeObjectAtIndex:1];
             [self.table removeRowsAtIndexes:[NSIndexSet indexSetWithIndex:1] withAnimation:NSTableViewAnimationEffectFade];
         }
+        
+        while (self.messages.count > 1 && [self.messages[1] isKindOfClass:[MessageTableItemDate class]]) {
+            [self.messages removeObjectAtIndex:1];
+            [self.table removeRowsAtIndexes:[NSIndexSet indexSetWithIndex:1] withAnimation:NSTableViewAnimationEffectFade];
+        }
 
         
         __block NSInteger row = self.messages.count - 1;
@@ -2808,18 +2812,21 @@ static NSTextAttachment *headerMediaIcon() {
 }
 
 
-- (NSArray *)messageTableItemsFromMessages:(NSArray *)input{
+- (NSArray *)messageTableItemsFromMessages:(NSArray *)input {
     NSMutableArray *array = [NSMutableArray array];
+    
+    
     for(TLMessage *message in input) {
         MessageTableItem *item = [MessageTableItem messageItemFromObject:message];
         if(item) {
-            //[item makeSizeByWidth:self.table.containerSize.width];
             item.isSelected = NO;
             [array addObject:item];
         }
     }
     return array;
 }
+
+
 
 
 - (NSRange)insertMessageTableItemsToList:(NSArray *)array startPosition:(NSInteger)pos needCheckLastMessage:(BOOL)needCheckLastMessage backItems:(NSArray **)back checkActive:(BOOL)checkActive {
@@ -2849,6 +2856,58 @@ static NSTextAttachment *headerMediaIcon() {
     
     if(pos == 0)
         pos++;
+    
+    
+    {
+        // fill date items
+        
+       
+        
+        NSMutableArray *items = [NSMutableArray array];
+        
+        __block NSDate *prevDate = [NSDate dateWithTimeIntervalSince1970:[[(MessageTableItem *)[array firstObject] message] date]];
+        
+        [items addObject:array[0]];
+        
+        [array enumerateObjectsAtIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(1, array.count - 1)] options:0 usingBlock:^(MessageTableItem *currentItem, NSUInteger idx, BOOL * _Nonnull stop) {
+            
+            NSDate *currentDate = [NSDate dateWithTimeIntervalSince1970:[[currentItem message] date]];
+            
+            if(currentItem.message != nil && ![prevDate isEqualToDateIgnoringTime:currentDate]) {
+                [items addObject:[[MessageTableItemDate alloc] initWithObject:prevDate]];
+            }
+            
+            [items addObject:currentItem];
+            
+           
+            
+            prevDate = currentDate;
+            
+        }];;
+        
+        
+        
+        
+        if(needCheckLastMessage) {
+            
+            NSDate *currentDate = [NSDate dateWithTimeIntervalSince1970:[[(MessageTableItem *)[array lastObject] message] date]];
+            
+            if(self.messages.count > 1) {
+                 NSDate *prevDate = [NSDate dateWithTimeIntervalSince1970:[[(MessageTableItem *)self.messages[pos] message] date]];
+                
+                if(![prevDate isEqualToDateIgnoringTime:currentDate]) {
+                    [items addObject:[[MessageTableItemDate alloc] initWithObject:currentDate]];
+                }
+                
+            } else {
+                [items addObject:[[MessageTableItemDate alloc] initWithObject:currentDate]];
+            }
+           
+        }
+        
+        
+        array = items;
+    }
     
     
     [self.messages insertObjects:array atIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(pos, array.count)]];
@@ -3717,15 +3776,6 @@ static NSTextAttachment *headerMediaIcon() {
 - (NSView *)tableView:(NSTableView *)tableView viewForTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)row {
     
     
-    
-//    NSDate *methodStart = [NSDate date];
-//    
-//    /* ... Do whatever you need to do ... */
-//    
-//    NSDate *methodFinish = [NSDate date];
-//    NSTimeInterval executionTime = [methodFinish timeIntervalSinceDate:methodStart];
-//    MTLog(@"executionTime = %f", executionTime);
-    
     MessageTableItem *item = [self.messages objectAtIndex:row];
     MessageTableCell *cell = nil;
     
@@ -3863,6 +3913,15 @@ static NSTextAttachment *headerMediaIcon() {
         
         if(!cell) {
             cell = [[MessageTableCellMpegView alloc] initWithFrame:self.view.bounds];
+            cell.identifier = kRowIdentifier;
+            cell.messagesViewController = self;
+        }
+    }else if(item.class == [MessageTableItemDate class]) {
+        static NSString *const kRowIdentifier = @"date_cell";
+        cell = [self.table makeViewWithIdentifier:kRowIdentifier owner:self];
+        
+        if(!cell) {
+            cell = [[MessageTableCellDateView alloc] initWithFrame:self.view.bounds];
             cell.identifier = kRowIdentifier;
             cell.messagesViewController = self;
         }

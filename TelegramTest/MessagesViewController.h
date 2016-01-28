@@ -144,7 +144,7 @@ typedef enum {
 - (void)sendContextBotResult:(TLBotInlineResult *)botContextResult via_bot_id:(int)via_bot_id via_bot_name:(NSString *)via_bot_name queryId:(long)queryId forConversation:(TL_conversation *)conversation;
 
 - (NSArray *)messageTableItemsFromMessages:(NSArray *)input;
-
++ (NSArray *)messageTableItemsFromMessages:(NSArray *)input;
 - (void)hideTopInfoView:(BOOL)animated;
 - (void)showTopInfoView:(BOOL)animated;
 
