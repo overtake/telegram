@@ -165,7 +165,7 @@
 -(void)setMessage:(TL_localMessage *)message {
     [super setMessage:message];
     
-    self.action = [[TGSecretAction alloc] initWithActionId:self.message.n_id chat_id:self.conversation.peer.peer_id decryptedData:[self deleteRandomMessageData] senderClass:[DeleteRandomMessagesSenderItem class] layer:self.params.layer];
+    self.action = [[TGSecretAction alloc] initWithActionId:self.message.n_id chat_id:message.peer_id decryptedData:[self deleteRandomMessageData] senderClass:[DeleteRandomMessagesSenderItem class] layer:self.params.layer];
     
     [self.action save];
 }

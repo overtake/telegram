@@ -16,6 +16,7 @@
 #import "CompressedDocumentSenderItem.h"
 #import "ContextBotSenderItem.h"
 #import "StickerSecretSenderItem.h"
+#import "InlineBotMediaSecretSenderItem.h"
 @interface SenderItem ()
 @property (nonatomic,strong) NSMutableArray *listeners;
 @end
@@ -127,12 +128,13 @@ static NSMutableDictionary *senders;
                 }
                 
             } else {
-                if(msg.class == [TL_destructMessage class]) {
+                if([msg isKindOfClass:[TL_destructMessage class]]) {
                     if([msg.media isKindOfClass:[TL_messageMediaEmpty class]] || msg.media == nil)
                         item = [[MessageSenderSecretItem alloc] init];
                     else {
                         
-                        item = [[FileSecretSenderItem alloc] init];
+                        
+                        item = [msg.media isKindOfClass:[TL_messageMediaBotResult class]] ? [[InlineBotMediaSecretSenderItem alloc] init] : [[FileSecretSenderItem alloc] init];
                         
                         if([msg.media isKindOfClass:[TL_messageMediaDocument class]] && msg.media.document.access_hash != 0 && [msg.media.document isSticker]) {
                             item = [[StickerSecretSenderItem alloc] init];
