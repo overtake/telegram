@@ -1249,4 +1249,30 @@ NSString *path_for_external_link(NSString *link) {
 }
 
 
+NSString *display_url(NSString *url) {
+    
+    static NSArray *protocols;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        protocols = @[@"ftp://",@"http://",@"https://"];
+    });
+    
+    __block NSString *displayUrl = [url copy];
+    
+    [protocols enumerateObjectsUsingBlock:^(NSString *obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        
+        if([displayUrl hasPrefix:obj]) {
+            displayUrl = [displayUrl substringFromIndex:obj.length];
+        }
+        
+    }];
+    
+    if([displayUrl hasSuffix:@"/"]) {
+        displayUrl = [displayUrl substringToIndex:displayUrl.length - 1];
+    }
+    
+    return displayUrl;
+    
+}
+
 @end

@@ -144,7 +144,6 @@ static NSImage *higlightedImage() {
         if(!_tableView.isCustomStickerPack) {
             [button setBackgroundImage:hoverImage() forControlState:BTRControlStateHover];
             [button setBackgroundImage:higlightedImage() forControlState:BTRControlStateHover];
-       
         }
         
         TGStickerImageView *imageView = [[TGStickerImageView alloc] initWithFrame:NSMakeRect(xOffset, 0, width, NSHeight(self.bounds))];
@@ -164,23 +163,28 @@ static NSImage *higlightedImage() {
                 return;
             }
             
-            if(!_tableView.isCustomStickerPack)
-                [[EmojiViewController instance].messagesViewController sendSticker:item.stickers[idx] forConversation:[Telegram conversation] addCompletionHandler:nil];
+            if(!_tableView.isCustomStickerPack || _tableView.canSendStickerAlways)
+                [appWindow().navigationController.messagesViewController sendSticker:item.stickers[idx] forConversation:appWindow().navigationController.messagesViewController.conversation addCompletionHandler:nil];
             
-        } forControlEvents:BTRControlEventMouseUpInside];
+            [TMViewController closeAllModals];
+            
+        } forControlEvents:_tableView.isCustomStickerPack ? BTRControlEventMouseUpOutside : BTRControlEventMouseUpInside];
 
+        if(!_tableView.isCustomStickerPack) {
+            [button addBlock:^(BTRControlEvents events) {
+                
+                TGStickerPreviewModalView *preview = [[TGStickerPreviewModalView alloc] init];
+                
+                [preview setSticker:item.stickers[idx]];
+                
+                [preview show:appWindow() animated:YES];
+                
+                self.tableView.previewModal = preview;
+                
+            } forControlEvents:BTRControlEventLongLeftClick];
+        }
         
-        [button addBlock:^(BTRControlEvents events) {
-            
-            TGStickerPreviewModalView *preview = [[TGStickerPreviewModalView alloc] init];
-            
-            [preview setSticker:item.stickers[idx]];
-            
-            [preview show:appWindow() animated:YES];
-            
-            self.tableView.previewModal = preview;
-            
-        } forControlEvents:BTRControlEventLongLeftClick];
+        
         
         [imageView setFrameSize:[item.objects[idx] imageSize]];
         

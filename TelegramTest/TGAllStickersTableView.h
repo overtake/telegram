@@ -13,6 +13,8 @@
 
 @property (nonatomic,assign,readonly) BOOL hasRecentStickers;
 
+@property (nonatomic,assign) BOOL canSendStickerAlways;
+
 -(void)removeSticker:(TL_outDocument *)document;
 -(void)load:(BOOL)force;
 

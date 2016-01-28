@@ -26,6 +26,7 @@
 #import "TL_destructMessage.h"
 #import "TL_destructMessage45.h"
 #import "TL_outDocument.h"
+#import "TL_secretWebpage.h"
 #import "TL_localMessageService.h"
 
 #import "TL_secretServiceMessage.h"

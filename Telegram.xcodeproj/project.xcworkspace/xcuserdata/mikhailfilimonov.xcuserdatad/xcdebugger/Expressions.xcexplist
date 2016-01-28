@@ -975,6 +975,14 @@
          contextName = "-[TGMultipleSelectTextView _checkClickCount:]:TGMultipleSelectTextView.m">
       </ContextState>
       <ContextState
+         contextName = "TGIdenticonImage:ImageUtils.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "data.length">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "+[TMViewController showModalProgress]:TMViewController.m">
          <PersistentStrings>
             <PersistentString
@@ -2057,6 +2065,9 @@
       </ContextState>
       <ContextState
          contextName = "-[TL_initConnection getData]:TLAPIAdd.m">
+      </ContextState>
+      <ContextState
+         contextName = "-[TGModernEncryptedUpdates proccess45Layer:params:conversation:encryptedMessage:]:TGModernEncryptedUpdates.m">
       </ContextState>
       <ContextState
          contextName = "__49-[TGModernChatInfoViewController checkSupergroup]_block_invoke_3:TGModernChatInfoViewController.m">
@@ -5579,6 +5590,14 @@
          contextName = "__31-[TGAllStickersTableView load:]_block_invoke:TGAllStickersTableView.m">
       </ContextState>
       <ContextState
+         contextName = "-[MessagesBottomView updateWebpage:]:MessagesBottomView.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "[self.inputMessageString webpageLink]">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "-[ChatAvatarImageView updateWithConversation:]:ChatAvatarImageView.m">
       </ContextState>
       <ContextState
@@ -5629,6 +5648,9 @@
                value = "mask">
             </PersistentString>
          </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "+[Storage findWebpage:]:Storage.m">
       </ContextState>
       <ContextState
          contextName = "-[PrivacyArchiver rules]:PrivacyArchiver.m">

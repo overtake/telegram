@@ -1560,7 +1560,7 @@ static RBLPopover *popover;
     }
     
     
-    TLWebPage *webpage = ![self.messagesViewController noWebpage:self.inputMessageString] ? [Storage findWebpage:[self.inputMessageString webpageLink]] : nil;
+    TLWebPage *webpage = ![self.messagesViewController noWebpage:self.inputMessageString] ? [Storage findWebpage:display_url([self.inputMessageString webpageLink])] : nil;
     
     if(!webpage && !self.webpageAttach)
         return;

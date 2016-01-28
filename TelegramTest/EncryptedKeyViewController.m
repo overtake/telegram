@@ -103,15 +103,13 @@
     
     EncryptedParams *params = [EncryptedParams findAndCreate:chat.n_id];
     
-   // NSData *hashData = [Crypto sha1:[params firstKey]];
-    
-    NSData *keyData = [MTSha1([params.firstKey subdataWithRange:NSMakeRange(0, 16)]) dataWithData:MTSha256([params.firstKey subdataWithRange:NSMakeRange(0, 16)])];
+    NSData *keyData = [[MTSha1(params.firstKey) subdataWithRange:NSMakeRange(0, 16)] dataWithData:[MTSha256(params.lastKey) subdataWithRange:NSMakeRange(0, 20)]];
     
     self.imageView.image = TGIdenticonImage(keyData, CGSizeMake(240, 240));
     
     
     
-    NSString *hash = [keyData hexadecimalString];
+    NSString *hash = [[keyData subdataWithRange:NSMakeRange(0, keyData.length - 4)] hexadecimalString];
     
     
     

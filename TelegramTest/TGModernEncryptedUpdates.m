@@ -689,6 +689,12 @@ Class convertClass(NSString *c, int layer) {
         
         return [TL_messageMediaDocument createWithDocument:[TL_document createWithN_id:[[media valueForKey:@"pid"] longValue] access_hash:[[media valueForKey:@"access_hash"] longValue] date:[[media valueForKey:@"date"] intValue] mime_type:[media valueForKey:@"mime_type"] size:[[media valueForKey:@"size"] intValue] thumb:pthumb dc_id:[[media valueForKey:@"dc_id"] intValue] attributes:attrs] caption:@""];
         
+    } else if([media isKindOfClass:convertClass(@"Secret%d_DecryptedMessageMedia_decryptedMessageMediaVenue", layer)]) {
+        
+        id m = [TL_messageMediaVenue createWithGeo:[TL_geoPoint createWithN_long:[[media valueForKey:@"plong"] doubleValue] lat:[[media valueForKey:@"lat"] doubleValue]] title:[media valueForKey:@"title"]  address:[media valueForKey:@"address"] provider:[media valueForKey:@"provider"] venue_id:[media valueForKey:@"venue_id"]];
+        return m;
+    } else if([media isKindOfClass:convertClass(@"Secret%d_DecryptedMessageMedia_decryptedMessageMediaVenue", layer)]) {
+        return [TL_messageMediaWebPage createWithWebpage:[TL_secretWebpage createWithUrl:[media valueForKey:@"url"] date:[[MTNetwork instance] getTime]+5]];
     }
     
     
@@ -750,8 +756,12 @@ Class convertClass(NSString *c, int layer) {
         
         return [TL_messageMediaAudio createWithAudio:[TL_audio createWithN_id:file.n_id access_hash:file.access_hash date:[[MTNetwork instance] getTime] duration:[[media valueForKey:@"duration"] intValue] mime_type:mime_type size:file.size dc_id:file.dc_id]];
         
-    } else {
-        alert(@"Unknown secret media", @"");
+    } else if([media isKindOfClass:convertClass(@"Secret%d_DecryptedMessageMedia_decryptedMessageMediaAudio", layer)]) {
+        
+        NSString *mime_type = [media respondsToSelector:@selector(mime_type)] ? [media valueForKey:@"mime_type"] : @"ogg";
+        
+        return [TL_messageMediaAudio createWithAudio:[TL_audio createWithN_id:file.n_id access_hash:file.access_hash date:[[MTNetwork instance] getTime] duration:[[media valueForKey:@"duration"] intValue] mime_type:mime_type size:file.size dc_id:file.dc_id]];
+        
     }
     
     return [TL_messageMediaEmpty create];

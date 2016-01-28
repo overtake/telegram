@@ -1015,6 +1015,35 @@ static const char *Secret45__Serializer_Key = "Secret45__Serializer";
                return nil;
             return [Secret45_DecryptedMessageMedia decryptedMessageMediaVideoWithThumb:thumb thumb_w:thumb_w thumb_h:thumb_h duration:duration mime_type:mime_type w:w h:h size:size key:key iv:iv caption:caption];
         } copy];
+        parsers[@((int32_t)0x8a0df56f)] = [^id (NSData *data, NSUInteger* _offset, __unused id metaInfo)
+        {
+            NSNumber * lat = nil;
+            if ((lat = [Secret45__Environment parseObject:data offset:_offset implicitSignature:(int32_t)0x2210c154 metaInfo:nil]) == nil)
+               return nil;
+            NSNumber * plong = nil;
+            if ((plong = [Secret45__Environment parseObject:data offset:_offset implicitSignature:(int32_t)0x2210c154 metaInfo:nil]) == nil)
+               return nil;
+            NSString * title = nil;
+            if ((title = [Secret45__Environment parseObject:data offset:_offset implicitSignature:(int32_t)0xb5286e24 metaInfo:nil]) == nil)
+               return nil;
+            NSString * address = nil;
+            if ((address = [Secret45__Environment parseObject:data offset:_offset implicitSignature:(int32_t)0xb5286e24 metaInfo:nil]) == nil)
+               return nil;
+            NSString * provider = nil;
+            if ((provider = [Secret45__Environment parseObject:data offset:_offset implicitSignature:(int32_t)0xb5286e24 metaInfo:nil]) == nil)
+               return nil;
+            NSString * venue_id = nil;
+            if ((venue_id = [Secret45__Environment parseObject:data offset:_offset implicitSignature:(int32_t)0xb5286e24 metaInfo:nil]) == nil)
+               return nil;
+            return [Secret45_DecryptedMessageMedia decryptedMessageMediaVenueWithLat:lat plong:plong title:title address:address provider:provider venue_id:venue_id];
+        } copy];
+        parsers[@((int32_t)0x82684ff4)] = [^id (NSData *data, NSUInteger* _offset, __unused id metaInfo)
+        {
+            NSString * url = nil;
+            if ((url = [Secret45__Environment parseObject:data offset:_offset implicitSignature:(int32_t)0xb5286e24 metaInfo:nil]) == nil)
+               return nil;
+            return [Secret45_DecryptedMessageMedia decryptedMessageMediaWebpageWithUrl:url];
+        } copy];
 });
 
     return parsers[@(constructorSignature)];
@@ -3458,6 +3487,23 @@ id entities_result = [Secret45__Serializer addSerializerToObject:entities_copy s
 
 @end
 
+@interface Secret45_DecryptedMessageMedia_decryptedMessageMediaVenue ()
+
+@property (nonatomic, strong) NSNumber * lat;
+@property (nonatomic, strong) NSNumber * plong;
+@property (nonatomic, strong) NSString * title;
+@property (nonatomic, strong) NSString * address;
+@property (nonatomic, strong) NSString * provider;
+@property (nonatomic, strong) NSString * venue_id;
+
+@end
+
+@interface Secret45_DecryptedMessageMedia_decryptedMessageMediaWebpage ()
+
+@property (nonatomic, strong) NSString * url;
+
+@end
+
 @implementation Secret45_DecryptedMessageMedia
 
 + (Secret45_DecryptedMessageMedia_decryptedMessageMediaEmpty *)decryptedMessageMediaEmpty
@@ -3587,6 +3633,25 @@ id attributes_result = [Secret45__Serializer addSerializerToObject:attributes_co
     _object.key = [Secret45__Serializer addSerializerToObject:[key copy] serializer:[[Secret45_BuiltinSerializer_Bytes alloc] init]];
     _object.iv = [Secret45__Serializer addSerializerToObject:[iv copy] serializer:[[Secret45_BuiltinSerializer_Bytes alloc] init]];
     _object.caption = [Secret45__Serializer addSerializerToObject:[caption copy] serializer:[[Secret45_BuiltinSerializer_String alloc] init]];
+    return _object;
+}
+
++ (Secret45_DecryptedMessageMedia_decryptedMessageMediaVenue *)decryptedMessageMediaVenueWithLat:(NSNumber *)lat plong:(NSNumber *)plong title:(NSString *)title address:(NSString *)address provider:(NSString *)provider venue_id:(NSString *)venue_id
+{
+    Secret45_DecryptedMessageMedia_decryptedMessageMediaVenue *_object = [[Secret45_DecryptedMessageMedia_decryptedMessageMediaVenue alloc] init];
+    _object.lat = [Secret45__Serializer addSerializerToObject:[[Secret45__Number alloc] initWithNumber:lat] serializer:[[Secret45_BuiltinSerializer_Double alloc] init]];
+    _object.plong = [Secret45__Serializer addSerializerToObject:[[Secret45__Number alloc] initWithNumber:plong] serializer:[[Secret45_BuiltinSerializer_Double alloc] init]];
+    _object.title = [Secret45__Serializer addSerializerToObject:[title copy] serializer:[[Secret45_BuiltinSerializer_String alloc] init]];
+    _object.address = [Secret45__Serializer addSerializerToObject:[address copy] serializer:[[Secret45_BuiltinSerializer_String alloc] init]];
+    _object.provider = [Secret45__Serializer addSerializerToObject:[provider copy] serializer:[[Secret45_BuiltinSerializer_String alloc] init]];
+    _object.venue_id = [Secret45__Serializer addSerializerToObject:[venue_id copy] serializer:[[Secret45_BuiltinSerializer_String alloc] init]];
+    return _object;
+}
+
++ (Secret45_DecryptedMessageMedia_decryptedMessageMediaWebpage *)decryptedMessageMediaWebpageWithUrl:(NSString *)url
+{
+    Secret45_DecryptedMessageMedia_decryptedMessageMediaWebpage *_object = [[Secret45_DecryptedMessageMedia_decryptedMessageMediaWebpage alloc] init];
+    _object.url = [Secret45__Serializer addSerializerToObject:[url copy] serializer:[[Secret45_BuiltinSerializer_String alloc] init]];
     return _object;
 }
 
@@ -3861,6 +3926,64 @@ id attributes_result = [Secret45__Serializer addSerializerToObject:attributes_co
 - (NSString *)description
 {
     return [[NSString alloc] initWithFormat:@"(decryptedMessageMediaVideo thumb:%d thumb_w:%@ thumb_h:%@ duration:%@ mime_type:%d w:%@ h:%@ size:%@ key:%d iv:%d caption:%d)", (int)[self.thumb length], self.thumb_w, self.thumb_h, self.duration, (int)[self.mime_type length], self.w, self.h, self.size, (int)[self.key length], (int)[self.iv length], (int)[self.caption length]];
+}
+
+@end
+
+@implementation Secret45_DecryptedMessageMedia_decryptedMessageMediaVenue
+
+- (instancetype)init
+{
+    self = [super init];
+    if (self != nil)
+    {
+        [Secret45__Serializer addSerializerToObject:self withConstructorSignature:0x8a0df56f serializeBlock:^bool (Secret45_DecryptedMessageMedia_decryptedMessageMediaVenue *object, NSMutableData *data)
+        {
+            if (![Secret45__Environment serializeObject:object.lat data:data addSignature:false])
+                return false;
+            if (![Secret45__Environment serializeObject:object.plong data:data addSignature:false])
+                return false;
+            if (![Secret45__Environment serializeObject:object.title data:data addSignature:false])
+                return false;
+            if (![Secret45__Environment serializeObject:object.address data:data addSignature:false])
+                return false;
+            if (![Secret45__Environment serializeObject:object.provider data:data addSignature:false])
+                return false;
+            if (![Secret45__Environment serializeObject:object.venue_id data:data addSignature:false])
+                return false;
+            return true;
+        }];
+    }
+    return self;
+}
+
+- (NSString *)description
+{
+    return [[NSString alloc] initWithFormat:@"(decryptedMessageMediaVenue lat:%@ long:%@ title:%d address:%d provider:%d venue_id:%d)", self.lat, self.plong, (int)[self.title length], (int)[self.address length], (int)[self.provider length], (int)[self.venue_id length]];
+}
+
+@end
+
+@implementation Secret45_DecryptedMessageMedia_decryptedMessageMediaWebpage
+
+- (instancetype)init
+{
+    self = [super init];
+    if (self != nil)
+    {
+        [Secret45__Serializer addSerializerToObject:self withConstructorSignature:0x82684ff4 serializeBlock:^bool (Secret45_DecryptedMessageMedia_decryptedMessageMediaWebpage *object, NSMutableData *data)
+        {
+            if (![Secret45__Environment serializeObject:object.url data:data addSignature:false])
+                return false;
+            return true;
+        }];
+    }
+    return self;
+}
+
+- (NSString *)description
+{
+    return [[NSString alloc] initWithFormat:@"(decryptedMessageMediaWebpage url:%d)", (int)[self.url length]];
 }
 
 @end

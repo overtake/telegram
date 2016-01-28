@@ -314,10 +314,20 @@ static TGModalSetCaptionView *setCaptionView;
     return res;
 }
 
++(void)closeAllModals {
+    NSArray *modals = [TMViewController modalsView];
+    
+    if(modals.count > 0) {
+        [modals enumerateObjectsUsingBlock:^(TGModalView *obj, NSUInteger idx, BOOL *stop) {
+            [obj close:modals.count == 1];
+        }];
+    }
+}
+
 
 +(NSArray *)modalsView {
     
-    NSView *view = [[Telegram delegate] window].contentView;
+    NSView *view = appWindow().contentView;
     
     NSMutableArray *modals = [[NSMutableArray alloc] init];
     

@@ -3652,9 +3652,6 @@ static NSTextAttachment *headerMediaIcon() {
 
 -(void)checkWebpage:(NSString *)link {
     
-    if(self.conversation.type == DialogTypeSecretChat || self.conversation.type == DialogTypeBroadcast)
-        return;
-    
     
     if([link isEqualToString:_noWebpageString] && _noWebpageString != nil)
     {
@@ -3673,15 +3670,13 @@ static NSTextAttachment *headerMediaIcon() {
             
             if([response isKindOfClass:[TL_messageMediaWebPage class]]) {
                 
-                [Storage addWebpage:response.webpage forLink:link];
+                [Storage addWebpage:response.webpage forLink:display_url(link)];
                 
                 if(![response.webpage isKindOfClass:[TL_webPageEmpty class]] && _webPageRequest) {
-                    
                     [self updateWebpage];
-                    
                 }
             } else if([response isKindOfClass:[TL_messageMediaEmpty class]]) {
-                [Storage addWebpage:[TL_webPageEmpty createWithN_id:0] forLink:link];
+                [Storage addWebpage:[TL_webPageEmpty createWithN_id:0] forLink:display_url(link)];
             }
             
             

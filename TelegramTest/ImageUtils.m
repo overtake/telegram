@@ -419,9 +419,9 @@ NSImage *TGIdenticonImage(NSData *data, CGSize size)
     
     int bitPointer = 0;
     
-    float rectSize = floorf(size.width / 12.0f);
+    float rectSize = floorf(size.width / 12);
     
-    for (int iy = 12; iy >= 0; iy--)
+    for (int iy = 11; iy >= 0; iy--)
     {
         for (int ix = 0; ix < 12; ix++)
         {

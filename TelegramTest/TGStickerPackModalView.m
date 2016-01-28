@@ -184,6 +184,11 @@ static NSImage * greenBackgroundImage(NSSize size) {
    
 }
 
+-(void)setCanSendSticker:(BOOL)canSendSticker {
+    _canSendSticker = canSendSticker;
+    _tableView.canSendStickerAlways = canSendSticker;
+}
+
 -(void)setStickerPack:(TL_messages_stickerSet *)stickerPack {
     
     _pack = stickerPack;

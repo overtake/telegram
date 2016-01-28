@@ -2739,7 +2739,7 @@ TL_localMessage *parseMessage(FMResultSet *result) {
     
     [[Storage yap] readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
         
-        [transaction setObject:[TLClassStore serialize:webpage] forKey:link inCollection:@"webpage"];
+        [transaction setObject:[TLClassStore serialize:webpage] forKey:display_url(link) inCollection:@"webpage"];
         
     }];
       
@@ -2779,6 +2779,7 @@ TL_localMessage *parseMessage(FMResultSet *result) {
         if(wp) {
             @try {
                 webpage = [TLClassStore deserialize:wp];
+                
             }
             @catch (NSException *exception) {
                 

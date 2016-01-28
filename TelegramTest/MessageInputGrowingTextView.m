@@ -266,7 +266,7 @@ typedef enum {
     
     NSString *link = [self.string webpageLink];
     
-    [[Telegram rightViewController].messagesViewController checkWebpage:link];
+    [appWindow().navigationController.messagesViewController checkWebpage:link];
     
 }
 

@@ -10,7 +10,7 @@
 #import "NSMutableData+Extension.h"
 #import "SelfDestructionController.h"
 #import "DeleteRandomMessagesSenderItem.h"
-
+#import "NSString+FindURLs.h"
 @implementation MessageSenderSecretItem
 
 -(void)setState:(MessageState)state {
@@ -18,7 +18,7 @@
 }
 
 
--(id)initWithMessage:(NSString *)message forConversation:(TL_conversation *)conversation  {
+-(id)initWithMessage:(NSString *)message forConversation:(TL_conversation *)conversation noWebpage:(BOOL)noWebpage additionFlags:(int)additionFlags  {
     if(self = [super initWithConversation:conversation]) {
         
         
@@ -32,6 +32,25 @@
             
             self.message = msg;
             
+            
+            NSString *url = [message webpageLink];
+            
+            
+            
+            if(url.length > 0 && !noWebpage) {
+                
+                TLWebPage *webpage = [Storage findWebpage:display_url(url)];
+                
+                self.message.media = [TL_messageMediaWebPage createWithWebpage:[TL_secretWebpage createWithUrl:url date:[[MTNetwork instance] getTime]+10]];
+                
+                if(webpage != nil) {
+                    self.message.media.webpage = webpage;
+                    
+                    if([webpage isKindOfClass:[TL_webPageEmpty class]]) {
+                        self.message.media = [TL_messageMediaEmpty create];
+                    }
+                }
+            }
             
             [self takeAndFillReplyMessage];
             
@@ -73,13 +92,7 @@
     return self;
 }
 
--(id)initWithMessage:(NSString *)message forConversation:(TL_conversation *)conversation noWebpage:(BOOL)noWebpage additionFlags:(int)additionFlags {
-    if(self = [self initWithMessage:message forConversation:conversation]) {
-        
-    }
-    
-    return self;
-}
+
 
 -(void)setMessage:(TL_localMessage *)message {
     [super setMessage:message];
@@ -112,7 +125,7 @@
     
     TL_destructMessage45 * message = (TL_destructMessage45 *) self.message;
     
-    return [Secret45__Environment serializeObject:[Secret45_DecryptedMessageLayer decryptedMessageLayerWithRandom_bytes:self.random_bytes layer:@(45) in_seq_no:@(2*self.params.in_seq_no + [self.params in_x]) out_seq_no:@(2*(self.params.out_seq_no++) + [self.params out_x]) message:[Secret45_DecryptedMessage decryptedMessageWithFlags:@(self.message.flags) random_id:@(self.message.randomId) ttl:@(((TL_destructMessage *)self.message).ttl_seconds) message:self.message.message media:[Secret45_DecryptedMessageMedia decryptedMessageMediaEmpty] entities:[self convertLEntities:self.message.entities layer:45] via_bot_name:message.via_bot_name reply_to_random_id:@(message.reply_to_random_id)]]];
+    return [Secret45__Environment serializeObject:[Secret45_DecryptedMessageLayer decryptedMessageLayerWithRandom_bytes:self.random_bytes layer:@(45) in_seq_no:@(2*self.params.in_seq_no + [self.params in_x]) out_seq_no:@(2*(self.params.out_seq_no++) + [self.params out_x]) message:[Secret45_DecryptedMessage decryptedMessageWithFlags:@(self.message.flags) random_id:@(self.message.randomId) ttl:@(((TL_destructMessage *)self.message).ttl_seconds) message:self.message.message media:self.message.media.webpage == nil || [self.message.media.webpage isKindOfClass:[TL_webPageEmpty class]] ? [Secret45_DecryptedMessageMedia decryptedMessageMediaEmpty] : [Secret45_DecryptedMessageMedia_decryptedMessageMediaWebpage decryptedMessageMediaWebpageWithUrl:self.message.media.webpage.url] entities:[self convertLEntities:self.message.entities layer:45] via_bot_name:message.via_bot_name reply_to_random_id:@(message.reply_to_random_id)]]];
 }
 
 

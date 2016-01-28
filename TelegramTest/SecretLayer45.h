@@ -81,6 +81,8 @@
 @class Secret45_DecryptedMessageMedia_decryptedMessageMediaPhoto;
 @class Secret45_DecryptedMessageMedia_decryptedMessageMediaDocument;
 @class Secret45_DecryptedMessageMedia_decryptedMessageMediaVideo;
+@class Secret45_DecryptedMessageMedia_decryptedMessageMediaVenue;
+@class Secret45_DecryptedMessageMedia_decryptedMessageMediaWebpage;
 
 
 @interface Secret45__Environment : NSObject
@@ -506,6 +508,8 @@
 + (Secret45_DecryptedMessageMedia_decryptedMessageMediaPhoto *)decryptedMessageMediaPhotoWithThumb:(NSData *)thumb thumb_w:(NSNumber *)thumb_w thumb_h:(NSNumber *)thumb_h w:(NSNumber *)w h:(NSNumber *)h size:(NSNumber *)size key:(NSData *)key iv:(NSData *)iv caption:(NSString *)caption;
 + (Secret45_DecryptedMessageMedia_decryptedMessageMediaDocument *)decryptedMessageMediaDocumentWithThumb:(NSData *)thumb thumb_w:(NSNumber *)thumb_w thumb_h:(NSNumber *)thumb_h mime_type:(NSString *)mime_type size:(NSNumber *)size key:(NSData *)key iv:(NSData *)iv attributes:(NSArray *)attributes caption:(NSString *)caption;
 + (Secret45_DecryptedMessageMedia_decryptedMessageMediaVideo *)decryptedMessageMediaVideoWithThumb:(NSData *)thumb thumb_w:(NSNumber *)thumb_w thumb_h:(NSNumber *)thumb_h duration:(NSNumber *)duration mime_type:(NSString *)mime_type w:(NSNumber *)w h:(NSNumber *)h size:(NSNumber *)size key:(NSData *)key iv:(NSData *)iv caption:(NSString *)caption;
++ (Secret45_DecryptedMessageMedia_decryptedMessageMediaVenue *)decryptedMessageMediaVenueWithLat:(NSNumber *)lat plong:(NSNumber *)plong title:(NSString *)title address:(NSString *)address provider:(NSString *)provider venue_id:(NSString *)venue_id;
++ (Secret45_DecryptedMessageMedia_decryptedMessageMediaWebpage *)decryptedMessageMediaWebpageWithUrl:(NSString *)url;
 
 @end
 
@@ -593,6 +597,23 @@
 @property (nonatomic, strong, readonly) NSData * key;
 @property (nonatomic, strong, readonly) NSData * iv;
 @property (nonatomic, strong, readonly) NSString * caption;
+
+@end
+
+@interface Secret45_DecryptedMessageMedia_decryptedMessageMediaVenue : Secret45_DecryptedMessageMedia
+
+@property (nonatomic, strong, readonly) NSNumber * lat;
+@property (nonatomic, strong, readonly) NSNumber * plong;
+@property (nonatomic, strong, readonly) NSString * title;
+@property (nonatomic, strong, readonly) NSString * address;
+@property (nonatomic, strong, readonly) NSString * provider;
+@property (nonatomic, strong, readonly) NSString * venue_id;
+
+@end
+
+@interface Secret45_DecryptedMessageMedia_decryptedMessageMediaWebpage : Secret45_DecryptedMessageMedia
+
+@property (nonatomic, strong, readonly) NSString * url;
 
 @end
 
