@@ -64,6 +64,7 @@
         _imageView = [[TGImageView alloc] initWithFrame:NSZeroRect];
         
         _imageView.cornerRadius = 4;
+        _imageView.layer.cornerRadius = 4;
         
         [_imageView setTapBlock:block];
         

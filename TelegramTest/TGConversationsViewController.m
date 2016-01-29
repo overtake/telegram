@@ -506,7 +506,7 @@
         if(dialog.type == DialogTypeSecretChat) {
             [menu addItem:[NSMenuItem separatorItem]];
             NSMenuItem *deleteMenuItem = [NSMenuItem menuItemWithTitle:NSLocalizedString(@"Conversation.DeleteSecretChat", nil) withBlock:^(id sender) {
-                [[Telegram rightViewController].messagesViewController deleteDialog:dialog];
+                [appWindow().navigationController.messagesViewController deleteDialog:dialog];
             }];
             [menu addItem:deleteMenuItem];
         }

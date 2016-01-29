@@ -638,6 +638,14 @@
          contextName = "-[ChatHistoryController addFilter:]:ChatHistoryController.m">
       </ContextState>
       <ContextState
+         contextName = "-[MessageTableCellContainerView acceptEvent:]:MessageTableCellContainerView.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.item.isSelected">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "__31-[TGGifSearchRowView redrawRow]_block_invoke361:TGMediaContextTableView.m">
          <PersistentStrings>
             <PersistentString

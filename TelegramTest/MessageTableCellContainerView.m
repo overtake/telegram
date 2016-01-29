@@ -537,8 +537,12 @@ static BOOL mouseIsDown = NO;
         
         MessageTableCellContainerView *container = [[rowView subviews] objectAtIndex:0];
         if(container && [container isKindOfClass:[MessageTableCellContainerView class]]) {
-            [container setSelected:dragAction animation:YES];
-            [self.messagesViewController setSelectedMessage:container.item selected:self.item.isSelected];
+            
+            if(container.item.isSelected != dragAction) {
+                [container setSelected:dragAction animation:YES];
+                [self.messagesViewController setSelectedMessage:container.item selected:self.item.isSelected];
+            }
+            
         }
         
     }
