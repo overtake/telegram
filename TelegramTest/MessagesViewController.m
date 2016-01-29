@@ -2871,6 +2871,8 @@ static NSTextAttachment *headerMediaIcon() {
         
         [array enumerateObjectsAtIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(1, array.count - 1)] options:0 usingBlock:^(MessageTableItem *currentItem, NSUInteger idx, BOOL * _Nonnull stop) {
             
+
+            
             NSDate *currentDate = [NSDate dateWithTimeIntervalSince1970:[[currentItem message] date]];
             
             if(currentItem.message != nil && ![prevDate isEqualToDateIgnoringTime:currentDate]) {
@@ -2880,8 +2882,8 @@ static NSTextAttachment *headerMediaIcon() {
             [items addObject:currentItem];
             
            
-            
-            prevDate = currentDate;
+            if(currentItem.message != nil)
+                prevDate = currentDate;
             
         }];;
         
@@ -2890,18 +2892,31 @@ static NSTextAttachment *headerMediaIcon() {
         
         if(needCheckLastMessage) {
             
-            NSDate *currentDate = [NSDate dateWithTimeIntervalSince1970:[[(MessageTableItem *)[array lastObject] message] date]];
+            __block MessageTableItem *currentItem;
             
-            if(self.messages.count > 1) {
-                 NSDate *prevDate = [NSDate dateWithTimeIntervalSince1970:[[(MessageTableItem *)self.messages[pos] message] date]];
+            [array enumerateObjectsUsingBlock:^(MessageTableItem *obj, NSUInteger idx, BOOL * _Nonnull stop) {
                 
-                if(![prevDate isEqualToDateIgnoringTime:currentDate]) {
-                    [items addObject:[[MessageTableItemDate alloc] initWithObject:currentDate]];
+                if(obj.message != nil) {
+                    currentItem = obj;
+                    *stop = YES;
                 }
                 
-            } else {
-                [items addObject:[[MessageTableItemDate alloc] initWithObject:currentDate]];
-            }
+            }];
+            
+            if(currentItem) {
+                NSDate *currentDate = [NSDate dateWithTimeIntervalSince1970:[[currentItem message] date]];
+                
+                if(self.messages.count > 1) {
+                    NSDate *prevDate = [NSDate dateWithTimeIntervalSince1970:[[(MessageTableItem *)self.messages[pos] message] date]];
+                    
+                    if(![prevDate isEqualToDateIgnoringTime:currentDate]) {
+                        [items addObject:[[MessageTableItemDate alloc] initWithObject:currentDate]];
+                    }
+                    
+                } else {
+                    [items addObject:[[MessageTableItemDate alloc] initWithObject:currentDate]];
+                }
+            }  
            
         }
         

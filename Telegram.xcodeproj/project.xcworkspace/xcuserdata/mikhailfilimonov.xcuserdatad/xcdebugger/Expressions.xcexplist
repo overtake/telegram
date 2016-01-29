@@ -1549,6 +1549,14 @@
          contextName = "-[DialogsManager add:]:DialogsManager.m">
       </ContextState>
       <ContextState
+         contextName = "__38-[TGAllStickerTableItemView redrawRow]_block_invoke_2:TGAllStickersTableView.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "_tableView.canSendStickerAlways">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "-[MessageInputGrowingTextView paste:]:MessageInputGrowingTextView.m">
          <PersistentStrings>
             <PersistentString

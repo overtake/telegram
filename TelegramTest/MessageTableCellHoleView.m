@@ -68,7 +68,7 @@
     
     [_textView setCenteredXByView:_textView.superview];
     
-    [_textView setFrameOrigin:NSMakePoint(NSMinX(_textView.frame), roundf((item.viewSize.height - NSHeight(_textView.frame))/2))];
+    [_textView setFrameOrigin:NSMakePoint(roundf((NSWidth(self.messagesViewController.view.frame) - item.textSize.width) / 2), roundf((item.viewSize.height - NSHeight(_textView.frame))/2))];
 }
 
 -(void)mouseDown:(NSEvent *)theEvent {
