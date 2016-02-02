@@ -108,7 +108,7 @@
         [self.backUnreadMarkView setHidden:YES];
     }
    
-    if(self.controller.isDisclosureController) {
+    if(self.controller.isDisclosureController && self.controller.navigationViewController.viewControllerStack.count <= 2) {
         [self.field setStringValue:@""];
         [self.imageView setHidden:YES];
         [self.backUnreadMarkView setHidden:YES];

@@ -300,6 +300,8 @@
                 
                 [viewController setAction:_composeActionManagment];
                 
+                
+                
                 [self.navigationViewController pushViewController:viewController animated:YES];
                 
             } description:NSLocalizedString(@"Channel.Managment", nil) subdesc:[NSString stringWithFormat:@"%d",_chat.chatFull.admins_count] height:42 stateback:nil];
@@ -308,7 +310,9 @@
                 
                 ComposeChannelParticipantsViewController *viewController = [[ComposeChannelParticipantsViewController alloc] initWithFrame:NSZeroRect];
                 
-                [viewController setAction:[[ComposeAction alloc] initWithBehaviorClass:[ComposeActionChannelMembersBehavior class] filter:@[] object:_chat reservedObjects:@[[TL_channelParticipantsRecent create],self.action.reservedObject1]]];
+                [viewController setAction:[[ComposeAction alloc] initWithBehaviorClass:[ComposeActionChannelMembersBehavior class] filter:@[] object:_chat reservedObjects:@[[TL_channelParticipantsRecent create]]]];
+                
+                viewController.isDisclosureController = YES;
                 
                 [self.navigationViewController pushViewController:viewController animated:YES];
                  
@@ -351,6 +355,8 @@
                     ComposeChannelParticipantsViewController *viewController = [[ComposeChannelParticipantsViewController alloc] initWithFrame:NSZeroRect];
                     
                     [viewController setAction:[[ComposeAction alloc] initWithBehaviorClass:[ComposeActionBlackListBehavior class] filter:@[] object:_chat reservedObjects:@[[TL_channelParticipantsKicked create]]]];
+                    
+                    viewController.isDisclosureController = YES;
                     
                     [self.navigationViewController pushViewController:viewController animated:YES];
                     

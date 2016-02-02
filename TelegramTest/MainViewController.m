@@ -82,15 +82,13 @@
     
     
     
-    if(dialog) {
+    if(self.rightNavigationController.messagesViewController.conversation) {
         [self.navigationViewController clear];
         [self.navigationViewController pushViewController:_noSelectedViewController animated:NO];
-        [self.navigationViewController showInfoPage:dialog animated:NO isDisclosureController:YES];
+        [self.navigationViewController showInfoPage:self.rightNavigationController.messagesViewController.conversation animated:NO isDisclosureController:YES];
     } else {
-        if(self.navigationViewController.viewControllerStack.count == 0)
-            [self.navigationViewController pushViewController:_noSelectedViewController animated:NO];
-        else
-            [self.navigationViewController goBackWithAnimation:NO];
+        [self.navigationViewController clear];
+        [self.navigationViewController pushViewController:_noSelectedViewController animated:NO];
     }
     
 }
