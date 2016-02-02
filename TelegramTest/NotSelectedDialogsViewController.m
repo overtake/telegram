@@ -27,6 +27,8 @@
     
     [self.view setWantsLayer:YES];
     
+    self.view.layer.backgroundColor = [NSColor whiteColor].CGColor;
+    
     NSView *containerView = [[NSView alloc] init];
     [self.view addSubview:containerView];
 
@@ -43,7 +45,7 @@
     NSMutableParagraphStyle *mutParaStyle=[[NSMutableParagraphStyle alloc] init];
     [mutParaStyle setAlignment:NSCenterTextAlignment];
     [mutParaStyle setLineSpacing:3];
-    [textField setAttributedStringValue:[[NSAttributedString alloc] initWithString:NSLocalizedString(@"Conversation.SelectConversation", nil) attributes:@{NSForegroundColorAttributeName: DARK_GRAY, NSFontAttributeName: TGSystemFont(14)}]];
+    [textField setAttributedStringValue:[[NSAttributedString alloc] initWithString:self.customTextCap.length > 0 ? self.customTextCap : NSLocalizedString(@"Conversation.SelectConversation", nil) attributes:@{NSForegroundColorAttributeName: DARK_GRAY, NSFontAttributeName: TGSystemFont(14)}]];
     [textField sizeToFit];
     
     [textField setDrawsBackground:NO];
@@ -80,7 +82,6 @@
     [super viewWillAppear:animated];
     [self.view.window makeFirstResponder:nil];
     
-    [Notification perform:@"ChangeDialogSelection" data:@{KEY_DIALOG:[NSNull null], @"sender":self}];
 }
 
 

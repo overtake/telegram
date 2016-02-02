@@ -23,7 +23,7 @@
 #import <Cocoa/Cocoa.h>
 #import "TMNavigationBar.h"
 #import "ConnectionStatusViewControllerView.h"
-
+#import "TGSplitViewController.h"
 @class MessagesViewController;
 
 @protocol TMNavagationDelegate <NSObject>
@@ -45,7 +45,7 @@ typedef enum {
 
 #endif
 
-@interface TMNavigationController : TMViewController
+@interface TMNavigationController : TGSplitViewController
 
 @property (nonatomic, strong) TMNavigationBar *nagivationBarView;
 
@@ -75,6 +75,8 @@ typedef enum {
 -(void)gotoEmptyController;
 
 -(void)showInfoPage:(TL_conversation *)conversation;
+-(void)showInfoPage:(TL_conversation *)conversation animated:(BOOL)animated;
+-(void)showInfoPage:(TL_conversation *)conversation animated:(BOOL)animated isDisclosureController:(BOOL)isDisclosureController;
 -(void)showMessagesViewController:(TL_conversation *)conversation;
 -(void)showMessagesViewController:(TL_conversation *)conversation withMessage:(TL_localMessage *)message;
 @end

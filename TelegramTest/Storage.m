@@ -1074,6 +1074,9 @@ TL_localMessage *parseMessage(FMResultSet *result) {
 
 -(void)lastMessageWithConversation:(TL_conversation *)conversation completeHandler:(void (^)(TL_localMessage *message, int importantMessage))completeHandler {
     
+    
+    dispatch_queue_t dqueue = dispatch_get_current_queue();
+    
     [queue inDatabase:^(FMDatabase *db) {
         
         TL_localMessage *message;
@@ -1143,7 +1146,7 @@ TL_localMessage *parseMessage(FMResultSet *result) {
         
         
         
-        dispatch_async(dispatch_get_main_queue(), ^{
+        dispatch_async(dqueue, ^{
             if(completeHandler != nil) completeHandler(message,importantMessage);
         });
     }];

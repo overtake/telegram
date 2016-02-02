@@ -168,7 +168,7 @@
     
     GeneralSettingsRowItem *sendMessage;
     
-    if(_conversation.type != DialogTypeSecretChat) {
+    if(_conversation.type != DialogTypeSecretChat && !self.isDisclosureController) {
         sendMessage = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeNone callback:^(TGGeneralRowItem *item) {
             
             [weakSelf.navigationViewController showMessagesViewController:weakSelf.conversation];

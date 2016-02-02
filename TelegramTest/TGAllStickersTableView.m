@@ -154,6 +154,7 @@ static NSImage *higlightedImage() {
             if(self.tableView.previewModal != nil) {
                 [self.tableView.previewModal close:YES];
                 self.tableView.previewModal = nil;
+                
                 return;
             }
             
@@ -166,7 +167,10 @@ static NSImage *higlightedImage() {
             if(!_tableView.isCustomStickerPack || _tableView.canSendStickerAlways)
                 [appWindow().navigationController.messagesViewController sendSticker:item.stickers[idx] forConversation:appWindow().navigationController.messagesViewController.conversation addCompletionHandler:nil];
             
-            [TMViewController closeAllModals];
+            if(_tableView.canSendStickerAlways) {
+                [TMViewController closeAllModals];
+            }
+            
             
         } forControlEvents:_tableView.isCustomStickerPack ? BTRControlEventMouseUpOutside : BTRControlEventMouseUpInside];
 
@@ -690,7 +694,12 @@ static NSImage *higlightedImage() {
 -(void)hideStickerPreview {
     
     if(_previewModal) {
-        _notSendUpSticker = YES;
+        
+        NSEvent *event = [NSApp currentEvent];
+        
+        if(![event.window isKindOfClass:[RBLPopoverWindow class]]) {
+            _notSendUpSticker = YES;
+        }
     }
     
     [_previewModal close:YES];

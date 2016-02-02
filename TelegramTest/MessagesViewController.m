@@ -392,12 +392,14 @@
     [self showNoMessages:NO];
     
     
-    self.jumpToBottomButton = [[TMBottomScrollView alloc] initWithFrame:NSMakeRect(0, 0, 44, 44)];
+    self.jumpToBottomButton = [[TMBottomScrollView alloc] initWithFrame:NSMakeRect(0, 0, 60, 44)];
     [self.jumpToBottomButton setAutoresizingMask:NSViewMinXMargin];
     [self.jumpToBottomButton setHidden:YES];
     [self.jumpToBottomButton setCallback:^{
         [weakSelf jumpToLastMessages:NO];
     }];
+    
+    self.jumpToBottomButton.messagesViewController = self;
     [self.view addSubview:self.jumpToBottomButton];
     
     
@@ -2906,7 +2908,7 @@ static NSTextAttachment *headerMediaIcon() {
             if(currentItem) {
                 NSDate *currentDate = [NSDate dateWithTimeIntervalSince1970:[[currentItem message] date]];
                 
-                if(self.messages.count > 1) {
+                if(self.messages.count > 1 && pos != self.messages.count) {
                     NSDate *prevDate = [NSDate dateWithTimeIntervalSince1970:[[(MessageTableItem *)self.messages[pos] message] date]];
                     
                     if(![prevDate isEqualToDateIgnoringTime:currentDate]) {

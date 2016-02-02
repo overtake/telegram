@@ -82,6 +82,8 @@
 //        return nil;
 //    }
     
+    
+    
     if(self.backButton)
     {
         [self.backButton updateBackButton];
@@ -250,6 +252,10 @@ static TGModalSetCaptionView *setCaptionView;
     anim.removedOnCompletion = YES;
     
     return anim;
+}
+
+-(TMNavigationController *)rightNavigationController {
+    return [Telegram rightViewController].navigationViewController;
 }
 
 

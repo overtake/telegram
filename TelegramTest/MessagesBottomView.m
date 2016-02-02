@@ -384,12 +384,15 @@
     
     [self.forwardButton setAutoresizingMask:NSViewMinXMargin];
     self.forwardButton.disableColor = NSColorFromRGB(0xa1a1a1);
+    
+    weak();
 
     [self.forwardButton setTapBlock:^{
-//        strongify();
+        
+        strongWeak();
     
         
-        [self.messagesViewController showForwardMessagesModalView];
+        [strongSelf.messagesViewController showForwardMessagesModalView];
         
         
     }];

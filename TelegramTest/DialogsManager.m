@@ -242,10 +242,9 @@
 
 -(void)updateLastMessageForDialog:(TL_conversation *)dialog {
     
-    [[Storage manager] lastMessageWithConversation:dialog completeHandler:^(TL_localMessage *lastMessage, int importantMessage) {
-        
-        [self.queue dispatchOnQueue:^{
-            
+    [self.queue dispatchOnQueue:^{
+        [[Storage manager] lastMessageWithConversation:dialog completeHandler:^(TL_localMessage *lastMessage, int importantMessage) {
+           
             if(lastMessage) {
                 
                 dialog.top_message = lastMessage.n_id;
@@ -271,9 +270,7 @@
             [self notifyAfterUpdateConversation:dialog];
             
         }];
-        
     }];
-    
 }
 
 

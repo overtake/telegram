@@ -108,6 +108,11 @@
         [self.backUnreadMarkView setHidden:YES];
     }
    
+    if(self.controller.isDisclosureController) {
+        [self.field setStringValue:@""];
+        [self.imageView setHidden:YES];
+        [self.backUnreadMarkView setHidden:YES];
+    }
     
    
     
@@ -132,6 +137,10 @@
     self->_drawUnreadView = drawUnreadView;
     
     [self draw];
+}
+
+-(void)dealloc {
+    
 }
 
 -(void)draw {

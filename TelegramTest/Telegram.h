@@ -67,7 +67,7 @@ int megagroupSizeMax();
 +(void)showEnterPasswordPanel;
 
 +(BOOL)isSingleLayout;
-
++(BOOL)isTripleLayout;
 +(TGEnterPasswordPanel *)enterPasswordPanel;
 
 +(void)initializeDatabase;

@@ -9,6 +9,12 @@
 #ifndef Telegram_TGHeader_h
 #define Telegram_TGHeader_h
 
+
+#import <Availability.h>
+#undef  __AVAILABILITY_INTERNAL_WEAK_IMPORT
+#define __AVAILABILITY_INTERNAL_WEAK_IMPORT \
+__attribute__((weak_import,deprecated("API newer than Deployment Target.")))
+
 #define TGOUTMESSAGE 0x2
 #define TGUNREADMESSAGE 0x1
 #define TGOUTUNREADMESSAGE 0x3

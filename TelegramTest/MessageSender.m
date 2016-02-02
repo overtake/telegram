@@ -220,7 +220,7 @@
     
     if([media isKindOfClass:[TL_messageMediaEmpty class]]) {
         
-        webpage = [Storage findWebpage:[message webpageLink]];
+        webpage = [Storage findWebpage:display_url([message webpageLink])];
     }
     
     if(!replyMessage && keyboardMessage.peer_id < 0 && !clear) {

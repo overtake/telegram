@@ -562,7 +562,7 @@ static TMTableView *tableStatic;
 
 - (NSView *)tableView:(NSTableView *)tableView
    viewForTableColumn:(NSTableColumn *)tableColumn
-                  row:(NSInteger)row {
+                  row:(NSInteger)row { 
     
     TMRowItem *item = [self.list objectAtIndex:row];
     

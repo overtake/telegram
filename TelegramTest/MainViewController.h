@@ -27,5 +27,5 @@
 // layout methods
 
 -(BOOL)isSingleLayout;
-
+-(BOOL)isTripleLayout;
 @end

@@ -3713,6 +3713,14 @@
          contextName = "-[MessageSenderItem initWithMessage:forConversation:]:MessageSenderItem.m">
       </ContextState>
       <ContextState
+         contextName = "-[TGDisclosureView setFrame:]:MainViewController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "[self.subviews[0] frame]">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "__36-[TGPVMediaBehavior convertObjects:]_block_invoke:TGPVMediaBehavior.m">
       </ContextState>
       <ContextState
@@ -3728,6 +3736,14 @@
       </ContextState>
       <ContextState
          contextName = "__38-[TGEnterPasswordPanel initWithFrame:]_block_invoke_8:TGEnterPasswordPanel.m">
+      </ContextState>
+      <ContextState
+         contextName = "-[TGDisclosureViewController loadView]:MainViewController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.view">
+            </PersistentString>
+         </PersistentStrings>
       </ContextState>
       <ContextState
          contextName = "+[SearchItem hash:]:SearchItem.m">
@@ -4296,6 +4312,9 @@
                value = "self.controller.navigationViewController.viewControllerStack">
             </PersistentString>
             <PersistentString
+               value = "self.field">
+            </PersistentString>
+            <PersistentString
                value = "((TelegramWindow *)[NSApp mainWindow]).navigationController">
             </PersistentString>
          </PersistentStrings>
@@ -4437,6 +4456,9 @@
          contextName = "__48-[TGModernTypingManager userTypingNotification:]_block_invoke:TGModernTypingManager.m">
       </ContextState>
       <ContextState
+         contextName = "-[TLUser(Category) lastSeenTime]:TLUserCategory.m">
+      </ContextState>
+      <ContextState
          contextName = "__103-[ChatHistoryController loadAroundMessagesWithSelectHandler:prevLimit:nextLimit:prevResult:nextResult:]_block_invoke:ChatHistoryController.m">
          <PersistentStrings>
             <PersistentString
@@ -4521,6 +4543,14 @@
       </ContextState>
       <ContextState
          contextName = "open_user_by_name:FileUtils.m">
+      </ContextState>
+      <ContextState
+         contextName = "-[TGDisclosureViewController notificationDialogSelectionChanged:]:MainViewController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "notification.object">
+            </PersistentString>
+         </PersistentStrings>
       </ContextState>
       <ContextState
          contextName = "-[TMTableView tableViewSelectionDidChange:]:TMTableView.mm">
@@ -4991,6 +5021,14 @@
          contextName = "__29-[Storage groupHole:min:max:]_block_invoke:Storage.m">
       </ContextState>
       <ContextState
+         contextName = "-[TGAllStickersTableView hideStickerPreview]:TGAllStickersTableView.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "[NSEvent mouseLocation]">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "-[TL_conversation inputPeer]:TL_conversation.m">
          <PersistentStrings>
             <PersistentString
@@ -5141,6 +5179,14 @@
       </ContextState>
       <ContextState
          contextName = "-[ComposeViewController viewWillAppear:]:ComposeViewController.m">
+      </ContextState>
+      <ContextState
+         contextName = "-[TGSplitView setFrameSize:]:TGSplitView.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.frame">
+            </PersistentString>
+         </PersistentStrings>
       </ContextState>
       <ContextState
          contextName = "-[MessagesBottomView TMGrowingTextViewTextDidChange:]:MessagesBottomView.m">
@@ -5582,6 +5628,9 @@
       <ContextState
          contextName = "-[MessagesViewController insertMessageTableItemsToList:startPosition:needCheckLastMessage:backItems:checkActive:]:MessagesViewController.m">
          <PersistentStrings>
+            <PersistentString
+               value = "self.messages">
+            </PersistentString>
             <PersistentString
                value = "needCheckLastMessage">
             </PersistentString>

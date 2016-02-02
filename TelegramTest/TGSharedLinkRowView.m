@@ -175,7 +175,7 @@ static NSImage *sharedLinkCapImage() {
     [super setItem:item];
     
     
-    [_linkField setHidden:item.webpage == nil];
+    [_linkField setHidden:item.webpage == nil || item.webpage.desc.length == 0];
     
     
     [_linkField setFrame:NSMakeRect(self.isEditable ? s_lox-2 + 60 : 60 , 5, NSWidth(_containerView.frame) - (self.isEditable ? s_lox + 60 : 65), 20)];

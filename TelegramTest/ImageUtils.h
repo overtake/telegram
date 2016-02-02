@@ -225,6 +225,8 @@ CACHE_IMAGE(StickerSettings);
 
 CACHE_IMAGE(emojiContainer8);
 CACHE_IMAGE(emojiContainer8Highlighted);
+
+CACHE_IMAGE(CalendarIcon);
 @interface ImageUtils : NSObject
 
 

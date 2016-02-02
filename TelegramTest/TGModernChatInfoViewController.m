@@ -317,7 +317,7 @@
                 
                 [viewController setUser:weakItem.user conversation:weakItem.user.dialog];
                 
-                [self.navigationViewController pushViewController:viewController animated:YES];
+                [self.isDisclosureController ? self.rightNavigationController : self.navigationViewController pushViewController:viewController animated:YES];
             }
             
         }];

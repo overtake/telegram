@@ -187,7 +187,7 @@
                 
                 [viewController setUser:weakItem.user conversation:weakItem.user.dialog];
                 
-                [self.navigationViewController pushViewController:viewController animated:YES];
+                [self.isDisclosureController ? self.rightNavigationController : self.navigationViewController pushViewController:viewController animated:YES];
             }
             
         }];
@@ -308,7 +308,7 @@
                 
                 ComposeChannelParticipantsViewController *viewController = [[ComposeChannelParticipantsViewController alloc] initWithFrame:NSZeroRect];
                 
-                [viewController setAction:[[ComposeAction alloc] initWithBehaviorClass:[ComposeActionChannelMembersBehavior class] filter:@[] object:_chat reservedObjects:@[[TL_channelParticipantsRecent create]]]];
+                [viewController setAction:[[ComposeAction alloc] initWithBehaviorClass:[ComposeActionChannelMembersBehavior class] filter:@[] object:_chat reservedObjects:@[[TL_channelParticipantsRecent create],self.action.reservedObject1]]];
                 
                 [self.navigationViewController pushViewController:viewController animated:YES];
                  

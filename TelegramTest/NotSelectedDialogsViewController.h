@@ -9,5 +9,5 @@
 #import <Cocoa/Cocoa.h>
 
 @interface NotSelectedDialogsViewController : TMViewController
-
+@property (nonatomic,strong) NSString *customTextCap;
 @end
