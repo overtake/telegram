@@ -177,7 +177,7 @@
     _disclosureController = [[TGDisclosureViewController alloc] initWithFrame:NSMakeRect(0, 0, 300, self.view.bounds.size.height)];
     
     [_splitView setProportion:(struct TGSplitProportion){MIN_SINGLE_LAYOUT_WIDTH,300+MIN_SINGLE_LAYOUT_WIDTH} forState:TGSplitViewStateSingleLayout];
-    [_splitView setProportion:(struct TGSplitProportion){MIN_SINGLE_LAYOUT_WIDTH,1200} forState:TGSplitViewStateDualLayout];
+    [_splitView setProportion:(struct TGSplitProportion){MIN_SINGLE_LAYOUT_WIDTH,MAX_SINGLE_LAYOUT_WIDTH} forState:TGSplitViewStateDualLayout];
     [_splitView setProportion:(struct TGSplitProportion){300,FLT_MAX} forState:TGSplitViewStateTripleLayout];
         
     _splitView.delegate = self;
@@ -227,21 +227,21 @@
         case TGSplitViewStateSingleLayout:
             
             
-            [_splitView addController:_rightViewController proportion:(struct TGSplitProportion){MIN_SINGLE_LAYOUT_WIDTH,FLT_MAX}];
+            [_splitView addController:_rightViewController proportion:(struct TGSplitProportion){MIN_SINGLE_LAYOUT_WIDTH,INT32_MAX}];
             break;
         case TGSplitViewStateDualLayout:
             [self.leftViewController.view setFrameSize:NSMakeSize(w, NSHeight(self.leftViewController.view.frame))];
             [_splitView addController:_leftViewController proportion:(struct TGSplitProportion){w,w}];
-            [_splitView addController:_rightViewController proportion:(struct TGSplitProportion){MIN_SINGLE_LAYOUT_WIDTH,FLT_MAX}];
+            [_splitView addController:_rightViewController proportion:(struct TGSplitProportion){MIN_SINGLE_LAYOUT_WIDTH,INT32_MAX}];
             break;
         case TGSplitViewStateTripleLayout:
             [self.leftViewController.view setFrameSize:NSMakeSize(w, NSHeight(self.leftViewController.view.frame))];
             [self.rightViewController.view setFrameSize:NSMakeSize(MAX_SINGLE_LAYOUT_WIDTH, NSHeight(self.rightViewController.view.frame))];
             
             [_splitView addController:_leftViewController proportion:(struct TGSplitProportion){w,w}];
-            [_splitView addController:_rightViewController proportion:(struct TGSplitProportion){1000,1000}];
+            [_splitView addController:_rightViewController proportion:(struct TGSplitProportion){MIN_SINGLE_LAYOUT_WIDTH,INT32_MAX}];
             
-            [_splitView addController:_disclosureController proportion:(struct TGSplitProportion){300,FLT_MAX}];
+            [_splitView addController:_disclosureController proportion:(struct TGSplitProportion){MIN_SINGLE_LAYOUT_WIDTH,MIN_SINGLE_LAYOUT_WIDTH}];
             [_disclosureController notificationDialogSelectionChanged:nil];
             
 

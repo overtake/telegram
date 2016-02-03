@@ -922,6 +922,9 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "-[TGSplitView addController:proportion:]:TGSplitView.m">
+      </ContextState>
+      <ContextState
          contextName = "__78-[ChannelHistoryController loadAroundMessagesWithMessage:limit:selectHandler:]_block_invoke:ChannelHistoryController.m">
       </ContextState>
       <ContextState
@@ -1491,6 +1494,17 @@
       </ContextState>
       <ContextState
          contextName = "__56-[TGModernConversationHistoryController performLoadNext]_block_invoke199:TGModernConversationHistoryController.m">
+      </ContextState>
+      <ContextState
+         contextName = "__28-[TGSplitView setFrameSize:]_block_invoke:TGSplitView.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "obj">
+            </PersistentString>
+            <PersistentString
+               value = "min">
+            </PersistentString>
+         </PersistentStrings>
       </ContextState>
       <ContextState
          contextName = "__67-[MessagesViewController sendImage:file_data:addCompletionHandler:]_block_invoke:MessagesViewController.m">
@@ -4445,6 +4459,14 @@
       </ContextState>
       <ContextState
          contextName = "__36-[DownloadOperation start:selector:]_block_invoke:DownloadOperation.m">
+      </ContextState>
+      <ContextState
+         contextName = "-[MainViewController splitViewDidNeedSwapToLayout:]:MainViewController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "FLT_MAX">
+            </PersistentString>
+         </PersistentStrings>
       </ContextState>
       <ContextState
          contextName = "-[MessageSenderItem parseEntities:entities:]:MessageSenderItem.m">

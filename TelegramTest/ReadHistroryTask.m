@@ -68,6 +68,7 @@
         request = [TLAPI_channels_readHistory createWithChannel:[_conversation inputPeer] max_id:_conversation.read_inbox_max_id]; //TODO
     }
     
+    
     [RPCRequest sendRequest:request successHandler:^(RPCRequest *request, id response) {
        
         if(![response isKindOfClass:[TL_boolTrue class]] && ![response isKindOfClass:[TL_boolFalse class]])  {
