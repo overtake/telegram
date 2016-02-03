@@ -576,6 +576,7 @@ static NSTextAttachment *channelIconAttachment() {
 
 
 
+
 -(id)identifier {
     return @(self.message.n_id);
 }
@@ -640,6 +641,7 @@ static NSTextAttachment *channelIconAttachment() {
     
     return item;
 }
+
 
 -(id)copyWithZone:(NSZone *)zone {
     return [self copy];

@@ -550,8 +550,7 @@
         if(chat.type != TLChatTypeNormal || chat.left)
             showСhatProfile.target = nil;
         
-        if(![Telegram isTripleLayout])
-            [menu addItem:showСhatProfile];
+        [menu addItem:showСhatProfile];
         
         BOOL isMuted = dialog.isMute;
         

@@ -192,13 +192,15 @@ static NSImage *playImage() {
 - (NSMenu *)contextMenu {
     NSMenu *menu = [[NSMenu alloc] initWithTitle:@"Video menu"];
     
+    weak();
+    
     if([self.item isset]) {
         [menu addItem:[NSMenuItem menuItemWithTitle:NSLocalizedString(@"Context.SaveAs", nil) withBlock:^(id sender) {
-            [self performSelector:@selector(saveAs:) withObject:self];
+            [weakSelf performSelector:@selector(saveAs:) withObject:weakSelf];
         }]];
         
         [menu addItem:[NSMenuItem menuItemWithTitle:NSLocalizedString(@"Context.CopyToClipBoard", nil) withBlock:^(id sender) {
-            [self performSelector:@selector(copy:) withObject:self];
+            [weakSelf performSelector:@selector(copy:) withObject:weakSelf];
         }]];
         
         

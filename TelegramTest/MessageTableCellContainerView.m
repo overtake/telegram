@@ -465,13 +465,16 @@ NSImage *selectCheckActiveImage() {
         scaleAnimation.fromValue  = [NSValue valueWithCGSize:CGSizeMake(1.0f, 1.0f)];
         scaleAnimation.toValue  = [NSValue valueWithCGSize:CGSizeMake(to, to)];
         scaleAnimation.duration = duration / 2;
+        
+        weak();
+        
         [scaleAnimation setCompletionBlock:^(POPAnimation *anim, BOOL result) {
             if(result) {
                 POPBasicAnimation *scaleAnimation = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerScaleXY];
                 scaleAnimation.fromValue  = [NSValue valueWithCGSize:CGSizeMake(to, to)];
                 scaleAnimation.toValue  = [NSValue valueWithCGSize:CGSizeMake(1.0f, 1.0f)];
                 scaleAnimation.duration = duration / 2;
-                [self.selectButton.layer pop_addAnimation:scaleAnimation forKey:@"scale"];
+                [weakSelf.selectButton.layer pop_addAnimation:scaleAnimation forKey:@"scale"];
             }
         }];
         
@@ -907,9 +910,12 @@ static int offsetEditable = 30;
     position.fromValue = @(from);
     position.toValue = @(to);
     position.duration = duration;
+    
+    weak();
+    
     [position setCompletionBlock:^(POPAnimation *anim, BOOL result) {
         if(result) {
-            [self setRightLayerToEditablePosition:editable];
+            [weakSelf setRightLayerToEditablePosition:editable];
         }
     }];
     [self.rightView.layer pop_addAnimation:position forKey:@"slide"];
@@ -924,7 +930,7 @@ static int offsetEditable = 30;
     opacityAnim.duration = duration;
     [opacityAnim setCompletionBlock:^(POPAnimation *anim, BOOL result) {
         if(result) {
-            [self.selectButton setHidden:!editable];
+            [weakSelf.selectButton setHidden:!editable];
         }
     }];
     [self.selectButton.layer pop_addAnimation:opacityAnim forKey:@"slide"];
@@ -967,7 +973,6 @@ static int offsetEditable = 30;
 }
 
 - (void)updateCellState {
-    
     
     MessageTableItem *item =(MessageTableItem *)self.item;
     
@@ -1048,17 +1053,25 @@ static int offsetEditable = 30;
         
         [_downloadEventListener setCompleteHandler:^(DownloadItem * item) {
             
+            strongWeak();
+            
+            
+            
             [[ASQueue mainQueue] dispatchOnQueue:^{
                 
-                [weakSelf downloadProgressHandler:item];
+                if(strongSelf == weakSelf) {
+                    [weakSelf downloadProgressHandler:item];
+                    
+                    dispatch_after_seconds(0.2, ^{
+                        [weakSelf.item doAfterDownload];
+                        [weakSelf updateCellState];
+                        [weakSelf doAfterDownload];
+                        [weakSelf.progressView setCurrentProgress:0];
+                        weakSelf.item.downloadItem = nil;
+                    });
+                }
                 
-                dispatch_after_seconds(0.2, ^{
-                    [weakSelf.item doAfterDownload];
-                    [weakSelf updateCellState];
-                    [weakSelf doAfterDownload];
-                    [weakSelf.progressView setCurrentProgress:0];
-                    weakSelf.item.downloadItem = nil;
-                });  
+                
             }];
             
         }];
@@ -1124,6 +1137,7 @@ static int offsetEditable = 30;
 }
 
 - (void)checkActionState:(BOOL)redraw {
+    
     
     MessageTableCellState state;
     if(self.item.messageSender) {

@@ -69,7 +69,7 @@
     
     [self.operation setUploadComplete:^(UploadOperation *uploader, id input) {
         
-        TL_inputMediaUploadedAudio *media = [TL_inputMediaUploadedAudio createWithFile:input duration:((TL_localMessage *)weakSelf.message).media.audio.duration mime_type:@"audio/mpeg"];
+        TL_inputMediaUploadedAudio *media = [TL_inputMediaUploadedAudio createWithFile:input duration:((TL_localMessage *)weakSelf.message).media.audio.duration mime_type:@"audio/ogg"];
         
         
         id request = nil;

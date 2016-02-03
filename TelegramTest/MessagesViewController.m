@@ -345,7 +345,8 @@
     [self.normalNavigationCenterView setController:self];
     
     [self.normalNavigationCenterView setTapBlock:^{
-        [weakSelf.navigationViewController showInfoPage:weakSelf.conversation];
+        if(![Telegram isTripleLayout])
+            [weakSelf.navigationViewController showInfoPage:weakSelf.conversation];
     }];
     self.centerNavigationBarView = self.normalNavigationCenterView;
     

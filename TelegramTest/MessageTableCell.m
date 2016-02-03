@@ -121,12 +121,15 @@
     
     NSMutableArray *items = [[NSMutableArray alloc] init];
     
+    
+    weak();
+    
     if(self.item.message.to_id.class == [TL_peerChannel class] || self.item.message.to_id.class == [TL_peerChat class] || self.item.message.to_id.class == [TL_peerUser class] )  {
         
         if([self.item.message.conversation canSendMessage]) {
             [items addObject:[NSMenuItem menuItemWithTitle:NSLocalizedString(@"Context.Reply", nil) withBlock:^(id sender) {
                 
-                [_messagesViewController addReplayMessage:self.item.message animated:YES];
+                [weakSelf.messagesViewController addReplayMessage:weakSelf.item.message animated:YES];
                 
             }]];
         }
@@ -162,15 +165,15 @@
     if(self.item.message.conversation.type != DialogTypeSecretChat) {
         [items addObject:[NSMenuItem menuItemWithTitle:NSLocalizedString(@"Context.Forward", nil) withBlock:^(id sender) {
             
-            [_messagesViewController setState:MessagesViewControllerStateNone];
-            [_messagesViewController unSelectAll:NO];
+            [weakSelf.messagesViewController setState:MessagesViewControllerStateNone];
+            [weakSelf.messagesViewController unSelectAll:NO];
             
             
             
-            [_messagesViewController setSelectedMessage:self.item selected:YES];
+            [weakSelf.messagesViewController setSelectedMessage:weakSelf.item selected:YES];
             
             
-            [[Telegram rightViewController] showForwardMessagesModalView:_messagesViewController.conversation messagesCount:1];
+            [weakSelf.messagesViewController showForwardMessagesModalView];
             
             
         }]];
@@ -179,12 +182,12 @@
     if([MessagesViewController canDeleteMessages:@[self.item.message] inConversation:self.item.message.conversation]) {
         [items addObject:[NSMenuItem menuItemWithTitle:NSLocalizedString(@"Context.Delete", nil) withBlock:^(id sender) {
             
-            [_messagesViewController setState:MessagesViewControllerStateNone];
-            [_messagesViewController unSelectAll:NO];
+            [weakSelf.messagesViewController setState:MessagesViewControllerStateNone];
+            [weakSelf.messagesViewController unSelectAll:NO];
             
-            [_messagesViewController setSelectedMessage:self.item selected:YES];
+            [weakSelf.messagesViewController setSelectedMessage:weakSelf.item selected:YES];
             
-            [_messagesViewController deleteSelectedMessages];
+            [weakSelf.messagesViewController deleteSelectedMessages];
             
             
         }]];

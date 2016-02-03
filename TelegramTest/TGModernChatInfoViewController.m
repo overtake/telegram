@@ -59,24 +59,24 @@
         
         ChatAdminsViewController *viewController = [[ChatAdminsViewController alloc] initWithFrame:NSZeroRect];
         
-        viewController.chat = self.chat;
+        viewController.chat = weakSelf.chat;
         
-        [self.navigationViewController pushViewController:viewController animated:YES];
+        [weakSelf.navigationViewController pushViewController:viewController animated:YES];
         
     } description:NSLocalizedString(@"Modern.Profile.SetAdmins", nil) height:42 stateback:nil];
     
     _notificationItem = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeSwitch callback:^(TGGeneralRowItem *item) {
         
-        [_conversation muteOrUnmute:nil until:0];
+        [weakSelf.conversation muteOrUnmute:nil until:0];
         
     } description:NSLocalizedString(@"Notifications", nil) height:42 stateback:^id(TGGeneralRowItem *item) {
-        return @(!_conversation.isMute);
+        return @(!weakSelf.conversation.isMute);
     }];
     
 
     _deleteAndExitItem = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeNone callback:^(TGGeneralRowItem *item) {
         
-        [self.messagesViewController deleteDialog:_conversation callback:^{
+        [weakSelf.messagesViewController deleteDialog:weakSelf.conversation callback:^{
             
         }];
         
@@ -155,6 +155,7 @@
     
     self.action.editable = NO;
     
+    
     [self updateActionNavigation];
     
     [self configure];
@@ -165,6 +166,7 @@
     
     [Notification addObserver:self selector:@selector(chatParticipantsUpdateNotification:) name:CHAT_UPDATE_PARTICIPANTS];
     [Notification addObserver:self selector:@selector(didChangeChatFlags:) name:CHAT_FLAGS_UPDATED];
+    
 }
 
 -(void)viewWillDisappear:(BOOL)animated {
@@ -213,15 +215,18 @@
 -(void)setChat:(TLChat *)chat {    
     _chat = chat;
     _conversation = chat.dialog;
-    
+
     [self setAction:[[ComposeAction alloc] initWithBehaviorClass:[ComposeActionInfoProfileBehavior class] filter:nil object:_conversation]];
     
     _tableView.defaultAnimation = NSTableViewAnimationEffectFade;
     
-   
+    
+
 }
 
 -(void)configure {
+    
+
     
     [self.doneButton setHidden:(_chat.isAdmins_enabled && (!_chat.isAdmin && !_chat.isCreator))];
     
@@ -270,7 +275,6 @@
     
     
     
-   
 }
 
 
@@ -284,6 +288,7 @@
         [_tableView removeItemsInRange:range tableRedraw:YES];
     }
     
+    weak();
     
     NSArray *participants = [_chat.chatFull.participants.participants copy];
     
@@ -299,7 +304,8 @@
         
         [user setStateback:^id(TGGeneralRowItem *item) {
             
-            BOOL canRemoveUser = _chat.isAdmins_enabled ? (obj.user_id != [UsersManager currentUserId] && (self.chat.isAdmin || self.chat.isCreator) && ![obj isKindOfClass:[TL_chatParticipantCreator class]]) : (obj.user_id != [UsersManager currentUserId] && obj.inviter_id == [UsersManager currentUserId]);
+            
+            BOOL canRemoveUser = weakSelf.chat.isAdmins_enabled ? (obj.user_id != [UsersManager currentUserId] && (weakSelf.chat.isAdmin || weakSelf.chat.isCreator) && ![obj isKindOfClass:[TL_chatParticipantCreator class]]) : (obj.user_id != [UsersManager currentUserId] && obj.inviter_id == [UsersManager currentUserId]);
             
             return @(canRemoveUser);
             
@@ -309,15 +315,15 @@
         
         [user setStateCallback:^{
             
-            if(self.action.isEditable) {
+            if(weakSelf.action.isEditable) {
                 if([weakItem.stateback(weakItem) boolValue])
-                    [self kickParticipant:weakItem];
+                    [weakSelf kickParticipant:weakItem];
             } else {
                 TGModernUserViewController *viewController = [[TGModernUserViewController alloc] initWithFrame:NSZeroRect];
                 
                 [viewController setUser:weakItem.user conversation:weakItem.user.dialog];
                 
-                [self.isDisclosureController ? self.rightNavigationController : self.navigationViewController pushViewController:viewController animated:YES];
+                [weakSelf.isDisclosureController ? weakSelf.rightNavigationController : weakSelf.navigationViewController pushViewController:viewController animated:YES];
             }
             
         }];
@@ -353,6 +359,7 @@
 
 -(void)checkSupergroup {
     
+    weak();
     
     NSUInteger startIdx = [_tableView indexOfItem:_headerItem];
     
@@ -382,9 +389,9 @@
             
             ComposePickerViewController *viewController = [[ComposePickerViewController alloc] initWithFrame:NSZeroRect];
             
-            [viewController setAction:[[ComposeAction alloc]initWithBehaviorClass:[ComposeActionAddGroupMembersBehavior class] filter:filter object:_chat.chatFull reservedObjects:@[_chat]]];
+            [viewController setAction:[[ComposeAction alloc]initWithBehaviorClass:[ComposeActionAddGroupMembersBehavior class] filter:filter object:weakSelf.chat.chatFull reservedObjects:@[weakSelf.chat]]];
             
-            [self.navigationViewController pushViewController:viewController animated:YES];
+            [weakSelf.navigationViewController pushViewController:viewController animated:YES];
             
             
         } description:NSLocalizedString(@"Group.AddMembers", nil) height:42 stateback:nil];
@@ -400,34 +407,34 @@
                 
                 ChatExportLinkViewController *viewController = [[ChatExportLinkViewController alloc] initWithFrame:NSZeroRect];
                 
-                [viewController setChat:self.chat.chatFull];
+                [viewController setChat:weakSelf.chat.chatFull];
                 
-                [self.navigationViewController pushViewController:viewController animated:YES];
+                [weakSelf.navigationViewController pushViewController:viewController animated:YES];
                 
             };
             
             
-            if([_chat.chatFull.exported_invite isKindOfClass:[TL_chatInviteExported class]]) {
+            if([weakSelf.chat.chatFull.exported_invite isKindOfClass:[TL_chatInviteExported class]]) {
                 
                 cblock();
                 
             } else {
                 
-                [self showModalProgress];
+                [weakSelf showModalProgress];
                 
-                [RPCRequest sendRequest:[TLAPI_messages_exportChatInvite createWithChat_id:self.chat.n_id] successHandler:^(RPCRequest *request, TL_chatInviteExported *response) {
+                [RPCRequest sendRequest:[TLAPI_messages_exportChatInvite createWithChat_id:weakSelf.chat.n_id] successHandler:^(RPCRequest *request, TL_chatInviteExported *response) {
                     
-                    [self hideModalProgressWithSuccess];
+                    [weakSelf hideModalProgressWithSuccess];
                     
-                    _chat.chatFull.exported_invite = response;
+                    weakSelf.chat.chatFull.exported_invite = response;
                     
-                    [[Storage manager] insertFullChat:self.chat.chatFull completeHandler:nil];
+                    [[Storage manager] insertFullChat:weakSelf.chat.chatFull completeHandler:nil];
                     
                     cblock();
                     
                     
                 } errorHandler:^(RPCRequest *request, RpcError *error) {
-                    [self hideModalProgress];
+                    [weakSelf hideModalProgress];
                 } timeout:10];
                 
             }
@@ -455,29 +462,36 @@
         
         GeneralSettingsRowItem *upgradeToMegagroup = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeNone callback:^(TGGeneralRowItem *item) {
             
+            strongWeak();
+            
             confirm(NSLocalizedString(@"Modern.Chat.UpgradeConfirmHeader", nil), NSLocalizedString(@"Modern.Chat.UpgradeConfirmDescription", nil), ^{
                 
-                [self showModalProgress];
+                [strongSelf showModalProgress];
                 
-                [RPCRequest sendRequest:[TLAPI_messages_migrateChat createWithChat_id:_chat.n_id] successHandler:^(id request, id response) {
+                
+                 [RPCRequest sendRequest:[TLAPI_messages_migrateChat createWithChat_id:weakSelf.chat.n_id] successHandler:^(id request, id response) {
                     
-                    TLChat *chat = [[ChatsManager sharedManager] find:_chat.migrated_to.channel_id];
-                    
-                    if(chat) {
+                    if(strongSelf == weakSelf) {
+                        TLChat *chat = [[ChatsManager sharedManager] find:weakSelf.chat.migrated_to.channel_id];
                         
-                        [[FullChatManager sharedManager] performLoad:chat.n_id callback:^(TLChatFull *fullChat) {
+                        if(chat) {
                             
-                            [self.navigationViewController showMessagesViewController:chat.dialog];
+                            [[FullChatManager sharedManager] performLoad:chat.n_id callback:^(TLChatFull *fullChat) {
+                                
+                                [weakSelf.navigationViewController showMessagesViewController:chat.dialog];
+                                
+                                [weakSelf hideModalProgressWithSuccess];
+                            }];
                             
-                            [self hideModalProgressWithSuccess];
-                        }];
-                        
-                        
+                            
+                        }
                     }
                     
                     
+                    
+                    
                 } errorHandler:^(id request, RpcError *error) {
-                    [self hideModalProgress];
+                    [weakSelf hideModalProgress];
                     
                     alert(appName(), NSLocalizedString(@"Alert.somethingIsWrong", nil));
                 } timeout:0 queue:[ASQueue globalQueue].nativeQueue];
@@ -567,6 +581,10 @@
         }];
 
     } timeout:0 queue:[ASQueue globalQueue].nativeQueue];
+}
+
+-(void)dealloc {
+    
 }
 
 @end

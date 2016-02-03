@@ -406,14 +406,14 @@ static NSImage *attachBackgroundThumb() {
 - (NSMenu *)contextMenu {
     NSMenu *menu = [[NSMenu alloc] initWithTitle:@"Documents menu"];
     
-   
+    weak();
     
     
     if([self.item isset]) {
         
         if([self.item.message.media.document.mime_type hasPrefix:@"image"]) {
             [menu addItem:[NSMenuItem menuItemWithTitle:NSLocalizedString(@"Context.OpenInQuickLook", nil) withBlock:^(id sender) {
-                [self performSelector:@selector(openInQuickLook:) withObject:self];
+                [weakSelf performSelector:@selector(openInQuickLook:) withObject:weakSelf];
             }]];
         }
         
@@ -422,17 +422,17 @@ static NSImage *attachBackgroundThumb() {
         
         if(![self.item.message isKindOfClass:[TL_destructMessage class]]) {
             [menu addItem:[NSMenuItem menuItemWithTitle:NSLocalizedString(@"Message.File.ShowInFinder", nil) withBlock:^(id sender) {
-                [[NSWorkspace sharedWorkspace] activateFileViewerSelectingURLs:@[[NSURL fileURLWithPath:self.item.path]]];
+                [[NSWorkspace sharedWorkspace] activateFileViewerSelectingURLs:@[[NSURL fileURLWithPath:weakSelf.item.path]]];
             }]];
         }
         
         
         [menu addItem:[NSMenuItem menuItemWithTitle:NSLocalizedString(@"Context.SaveAs", nil) withBlock:^(id sender) {
-            [self performSelector:@selector(saveAs:) withObject:self];
+            [weakSelf performSelector:@selector(saveAs:) withObject:weakSelf];
         }]];
         
         [menu addItem:[NSMenuItem menuItemWithTitle:NSLocalizedString(@"Context.CopyToClipBoard", nil) withBlock:^(id sender) {
-            [self performSelector:@selector(copy:) withObject:self];
+            [weakSelf performSelector:@selector(copy:) withObject:weakSelf];
         }]];
         
         
@@ -451,7 +451,7 @@ static NSImage *attachBackgroundThumb() {
             for (OpenWithObject *a in apps) {
                 NSMenuItem *item = [NSMenuItem menuItemWithTitle:[a fullname] withBlock:^(id sender) {
                     
-                    [[NSWorkspace sharedWorkspace] openFile:((MessageTableItemDocument *)self.item).path withApplication:[a.app path]];
+                    [[NSWorkspace sharedWorkspace] openFile:((MessageTableItemDocument *)weakSelf.item).path withApplication:[a.app path]];
                     
                     
                 }];
@@ -486,7 +486,7 @@ static NSImage *attachBackgroundThumb() {
                         NSURL *app = [[openPanel URLs] objectAtIndex:0];
                         NSString *path = [app path];
                         
-                        [[NSWorkspace sharedWorkspace] openFile:((MessageTableItemDocument *)self.item).path withApplication:path];
+                        [[NSWorkspace sharedWorkspace] openFile:((MessageTableItemDocument *)weakSelf.item).path withApplication:path];
                     }
                 }
             }];

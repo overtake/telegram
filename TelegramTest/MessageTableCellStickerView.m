@@ -45,13 +45,16 @@
 
 
 - (NSMenu *)contextMenu {
+    
     NSMenu *menu = [[NSMenu alloc] initWithTitle:@"Sticker menu"];
+    
+    weak();
     
     if(![StickersPanelView hasSticker:self.item.message.media.document])
     {
         
         [menu addItem:[NSMenuItem menuItemWithTitle:NSLocalizedString(@"Context.AddCustomSticker", nil) withBlock:^(id sender) {
-            [StickersPanelView addLocalSticker:[TL_outDocument createWithN_id:self.item.message.media.document.n_id access_hash:self.item.message.media.document.access_hash date:self.item.message.media.document.date mime_type:self.item.message.media.document.mime_type size:self.item.message.media.document.size thumb:self.item.message.media.document.thumb dc_id:self.item.message.media.document.dc_id file_path:@"" attributes:self.item.message.media.document.attributes]];
+            [StickersPanelView addLocalSticker:[TL_outDocument createWithN_id:weakSelf.item.message.media.document.n_id access_hash:weakSelf.item.message.media.document.access_hash date:weakSelf.item.message.media.document.date mime_type:weakSelf.item.message.media.document.mime_type size:weakSelf.item.message.media.document.size thumb:weakSelf.item.message.media.document.thumb dc_id:weakSelf.item.message.media.document.dc_id file_path:@"" attributes:weakSelf.item.message.media.document.attributes]];
         }]];
         
         
@@ -79,7 +82,7 @@
     }
     
     [menu addItem:[NSMenuItem menuItemWithTitle:NSLocalizedString(@"Context.SaveAs", nil) withBlock:^(id sender) {
-        [self performSelector:@selector(saveAs:) withObject:self];
+        [weakSelf performSelector:@selector(saveAs:) withObject:weakSelf];
     }]];
     
     [menu addItem:[NSMenuItem separatorItem]];
@@ -87,7 +90,6 @@
     [self.defaultMenuItems enumerateObjectsUsingBlock:^(NSMenuItem *item, NSUInteger idx, BOOL *stop) {
         [menu addItem:item];
     }];
-    
     
     return menu;
 }
@@ -148,6 +150,10 @@
 {
     [super setEditable:editable animation:animation];
     self.imageView.isNotNeedHackMouseUp = editable;
+}
+
+-(void)dealloc {
+    
 }
 
 

@@ -61,9 +61,6 @@ static NSMutableDictionary *senders;
     if(self = [super init]) {
         self.state = MessageStateWaitSend;
         self.listeners = [[NSMutableArray alloc] init];
-        
-        
-        
     }
     
     return self;
@@ -290,13 +287,16 @@ static NSMutableArray *waiting;
     
     assert([NSThread isMainThread]);
     
+    weak();
+    
     [_listeners enumerateObjectsUsingBlock:^(WeakReference *current, NSUInteger idx, BOOL * _Nonnull stop) {
         id<SenderListener>listener = current.nonretainedObjectValue;
         
         if([listener respondsToSelector:selector])
-            [listener performSelector:selector withObject:self];
+            [listener performSelector:selector withObject:weakSelf];
     }];
     
+
 }
 
 -(void)setTableItem:(MessageTableItem *)tableItem {
@@ -352,11 +352,13 @@ static NSMutableArray *waiting;
     
     [_listeners removeAllObjects];
     
+    weak();
+    
     [copy enumerateObjectsUsingBlock:^(WeakReference *current, NSUInteger idx, BOOL * _Nonnull stop) {
         id<SenderListener>listener = current.nonretainedObjectValue;
         
         if([listener respondsToSelector:@selector(onRemovedListener:)])
-            [listener performSelector:@selector(onRemovedListener:) withObject:self];
+            [listener performSelector:@selector(onRemovedListener:) withObject:weakSelf];
     }]; 
     
 }
@@ -555,11 +557,13 @@ static NSMutableArray *waiting;
             
         }
         
-        
-        
     }
     
     return message;
+    
+}
+
+-(void)dealloc {
     
 }
 

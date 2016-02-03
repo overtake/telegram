@@ -47,6 +47,7 @@
 
 @interface TGDisclosureViewController : TGSplitViewController
 @property (nonatomic,strong) NotSelectedDialogsViewController *noSelectedViewController;
+@property (nonatomic,strong) TL_conversation *conversation;
 @end
 
 @implementation TGDisclosureViewController
@@ -78,8 +79,10 @@
 
 -(void)notificationDialogSelectionChanged:(NSNotification *)notification {
     
-    TL_conversation *dialog = [notification.userInfo objectForKey:KEY_DIALOG];
+    if(self.rightNavigationController.messagesViewController.conversation == _conversation && self.rightNavigationController.messagesViewController.conversation != nil)
+        return;
     
+    _conversation = self.rightNavigationController.messagesViewController.conversation;
     
     
     if(self.rightNavigationController.messagesViewController.conversation) {
@@ -201,7 +204,7 @@
 
 -(void)splitViewDidNeedMinimisize:(TGViewController<TGSplitViewDelegate> *)controller {
     if(![self isMinimisze] && self.leftViewController.canMinimisize) {
-        self.splitView.canChangeState = NO;
+        self.splitView.canChangeState = [self isTripleLayout];
         [self.splitView updateStartSize:NSMakeSize(70, NSHeight(controller.view.frame)) forController:controller];
         [self.leftViewController updateSize];
         [self.rightViewController.navigationViewController.currentController viewWillAppear:NO];

@@ -103,22 +103,24 @@ static NSImage *playImage() {
 - (NSMenu *)contextMenu {
     NSMenu *menu = [[NSMenu alloc] initWithTitle:@"Documents menu"];
     
+    weak();
+    
     if([self.item isset]) {
         
         if(![self.item.message isKindOfClass:[TL_destructMessage class]]) {
             [menu addItem:[NSMenuItem menuItemWithTitle:NSLocalizedString(@"Message.File.ShowInFinder", nil) withBlock:^(id sender) {
-                [[NSWorkspace sharedWorkspace] activateFileViewerSelectingURLs:@[[NSURL fileURLWithPath:((MessageTableItemDocument *)self.item).path]]];
+                [[NSWorkspace sharedWorkspace] activateFileViewerSelectingURLs:@[[NSURL fileURLWithPath:((MessageTableItemDocument *)weakSelf.item).path]]];
             }]];
         }
         
         
         
         [menu addItem:[NSMenuItem menuItemWithTitle:NSLocalizedString(@"Context.SaveAs", nil) withBlock:^(id sender) {
-            [self performSelector:@selector(saveAs:) withObject:self];
+            [weakSelf performSelector:@selector(saveAs:) withObject:weakSelf];
         }]];
         
         [menu addItem:[NSMenuItem menuItemWithTitle:NSLocalizedString(@"Context.CopyToClipBoard", nil) withBlock:^(id sender) {
-            [self performSelector:@selector(copy:) withObject:self];
+            [weakSelf performSelector:@selector(copy:) withObject:weakSelf];
         }]];
         
         

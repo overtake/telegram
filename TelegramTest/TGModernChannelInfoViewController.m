@@ -159,6 +159,8 @@
     
     NSMutableArray *items = [NSMutableArray array];
     
+    weak();
+    
     [participants enumerateObjectsUsingBlock:^(TLChatParticipant *obj, NSUInteger idx, BOOL * _Nonnull stop) {
         
         TGUserContainerRowItem *user = [[TGUserContainerRowItem alloc] initWithUser:[[UsersManager sharedManager] find:obj.user_id]];
@@ -169,7 +171,7 @@
         
         [user setStateback:^id(TGGeneralRowItem *item) {
             
-            BOOL canRemoveUser = ((obj.user_id != [UsersManager currentUserId] && (self.chat.isCreator || self.chat.isManager)) && ![obj isKindOfClass:[TL_channelParticipantCreator class]]);
+            BOOL canRemoveUser = ((obj.user_id != [UsersManager currentUserId] && (weakSelf.chat.isCreator || weakSelf.chat.isManager)) && ![obj isKindOfClass:[TL_channelParticipantCreator class]]);
             
             return @(canRemoveUser);
             
@@ -179,15 +181,15 @@
         
         [user setStateCallback:^{
             
-            if(self.action.isEditable) {
+            if(weakSelf.action.isEditable) {
                 if([weakItem.stateback(weakItem) boolValue])
-                    [self kickParticipant:weakItem];
+                    [weakSelf kickParticipant:weakItem];
             } else {
                 TGModernUserViewController *viewController = [[TGModernUserViewController alloc] initWithFrame:NSZeroRect];
                 
                 [viewController setUser:weakItem.user conversation:weakItem.user.dialog];
                 
-                [self.isDisclosureController ? self.rightNavigationController : self.navigationViewController pushViewController:viewController animated:YES];
+                [weakSelf.isDisclosureController ? weakSelf.rightNavigationController : weakSelf.navigationViewController pushViewController:viewController animated:YES];
             }
             
         }];
@@ -264,6 +266,7 @@
     
     [_tableView addItem:_headerItem tableRedraw:YES];
     
+    weak();
     
     if(!self.action.isEditable) {
         GeneralSettingsRowItem *adminsItem;
@@ -298,11 +301,11 @@
                 
                 ComposeManagmentViewController *viewController = [[ComposeManagmentViewController alloc] initWithFrame:NSZeroRect];
                 
-                [viewController setAction:_composeActionManagment];
+                [viewController setAction:weakSelf.composeActionManagment];
                 
                 
                 
-                [self.navigationViewController pushViewController:viewController animated:YES];
+                [weakSelf.navigationViewController pushViewController:viewController animated:YES];
                 
             } description:NSLocalizedString(@"Channel.Managment", nil) subdesc:[NSString stringWithFormat:@"%d",_chat.chatFull.admins_count] height:42 stateback:nil];
             
@@ -310,11 +313,11 @@
                 
                 ComposeChannelParticipantsViewController *viewController = [[ComposeChannelParticipantsViewController alloc] initWithFrame:NSZeroRect];
                 
-                [viewController setAction:[[ComposeAction alloc] initWithBehaviorClass:[ComposeActionChannelMembersBehavior class] filter:@[] object:_chat reservedObjects:@[[TL_channelParticipantsRecent create]]]];
+                [viewController setAction:[[ComposeAction alloc] initWithBehaviorClass:[ComposeActionChannelMembersBehavior class] filter:@[] object:weakSelf.chat reservedObjects:@[[TL_channelParticipantsRecent create]]]];
                 
                 viewController.isDisclosureController = YES;
                 
-                [self.navigationViewController pushViewController:viewController animated:YES];
+                [weakSelf.navigationViewController pushViewController:viewController animated:YES];
                  
             } description:NSLocalizedString(@"Channel.Members", nil) subdesc:[NSString stringWithFormat:@"%d",_chat.chatFull.participants_count] height:42 stateback:nil];
             
@@ -323,15 +326,15 @@
                 
                 NSMutableArray *filter = [[NSMutableArray alloc] init];
                 
-                [_chat.chatFull.participants.participants enumerateObjectsUsingBlock:^(TLChatParticipant *obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                [weakSelf.chat.chatFull.participants.participants enumerateObjectsUsingBlock:^(TLChatParticipant *obj, NSUInteger idx, BOOL * _Nonnull stop) {
                     
                     [filter addObject:@(obj.user_id)];
                     
                     ComposePickerViewController *viewController = [[ComposePickerViewController alloc] initWithFrame:NSZeroRect];
                     
-                    [viewController setAction:[[ComposeAction alloc]initWithBehaviorClass:[ComposeActionAddGroupMembersBehavior class] filter:filter object:_chat.chatFull reservedObjects:@[_chat]]];
+                    [viewController setAction:[[ComposeAction alloc]initWithBehaviorClass:[ComposeActionAddGroupMembersBehavior class] filter:filter object:weakSelf.chat.chatFull reservedObjects:@[weakSelf.chat]]];
                     
-                    [self.navigationViewController pushViewController:viewController animated:YES];
+                    [weakSelf.navigationViewController pushViewController:viewController animated:YES];
                     
                 }];
                 
@@ -342,9 +345,9 @@
                 
                 ChatExportLinkViewController *export = [[ChatExportLinkViewController alloc] initWithFrame:NSZeroRect];
                 
-                [export setChat:_chat.chatFull];
+                [export setChat:weakSelf.chat.chatFull];
                 
-                [self.navigationViewController pushViewController:export animated:YES];
+                [weakSelf.navigationViewController pushViewController:export animated:YES];
                 
                 
             } description:NSLocalizedString(@"Modern.Channel.InviteViaLink", nil) height:42 stateback:nil];
@@ -354,13 +357,13 @@
                     
                     ComposeChannelParticipantsViewController *viewController = [[ComposeChannelParticipantsViewController alloc] initWithFrame:NSZeroRect];
                     
-                    [viewController setAction:[[ComposeAction alloc] initWithBehaviorClass:[ComposeActionBlackListBehavior class] filter:@[] object:_chat reservedObjects:@[[TL_channelParticipantsKicked create]]]];
+                    [viewController setAction:[[ComposeAction alloc] initWithBehaviorClass:[ComposeActionBlackListBehavior class] filter:@[] object:weakSelf.chat reservedObjects:@[[TL_channelParticipantsKicked create]]]];
                     
                     viewController.isDisclosureController = YES;
                     
-                    [self.navigationViewController pushViewController:viewController animated:YES];
+                    [weakSelf.navigationViewController pushViewController:viewController animated:YES];
                     
-                } description:NSLocalizedString(@"Settings.BlackList", nil) subdesc:[NSString stringWithFormat:@"%d",_chat.chatFull.kicked_count] height:42 stateback:nil];
+                } description:NSLocalizedString(@"Settings.BlackList", nil) subdesc:[NSString stringWithFormat:@"%d",weakSelf.chat.chatFull.kicked_count] height:42 stateback:nil];
             }
             
         } else {
@@ -368,7 +371,7 @@
             if(!_chat.isMegagroup) {
                 GeneralSettingsRowItem *openChannel = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeNone callback:^(TGGeneralRowItem *item) {
                     
-                    [self.navigationViewController showMessagesViewController:_conversation];
+                    [weakSelf.navigationViewController showMessagesViewController:weakSelf.conversation];
                     
                 } description:NSLocalizedString(@"Profile.OpenChannel", nil) height:42 stateback:nil];
                 
@@ -408,7 +411,6 @@
         
         _mediaItem.controller = self;
         
-        weak();
         [_mediaItem setCallback:^(TGGeneralRowItem *item) {
             
             TMCollectionPageController *viewController = [[TMCollectionPageController alloc] initWithFrame:NSZeroRect];
@@ -428,10 +430,10 @@
         
         _notificationItem = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeSwitch callback:^(TGGeneralRowItem *item) {
             
-            [_conversation muteOrUnmute:nil until:0];
+            [weakSelf.conversation muteOrUnmute:nil until:0];
             
         } description:NSLocalizedString(@"Notifications", nil) height:42 stateback:^id(TGGeneralRowItem *item) {
-            return @(!_conversation.isMute);
+            return @(!weakSelf.conversation.isMute);
         }];
         
         
@@ -442,9 +444,9 @@
             
             ComposeChangeChannelDescriptionViewController *viewController = [[ComposeChangeChannelDescriptionViewController alloc] init];
             
-            [viewController setAction:[[ComposeAction alloc] initWithBehaviorClass:[ComposeActionChangeChannelAboutBehavior class] filter:nil object:_chat reservedObjects:@[NSLocalizedString(@"Compose.ChannelAboutPlaceholder", nil),(_chat.isMegagroup ? NSLocalizedString(@"Compose.ChatAboutDescription", nil) : NSLocalizedString(@"Compose.ChannelAboutDescription", nil))]]];
+            [viewController setAction:[[ComposeAction alloc] initWithBehaviorClass:[ComposeActionChangeChannelAboutBehavior class] filter:nil object:weakSelf.chat reservedObjects:@[NSLocalizedString(@"Compose.ChannelAboutPlaceholder", nil),(weakSelf.chat.isMegagroup ? NSLocalizedString(@"Compose.ChatAboutDescription", nil) : NSLocalizedString(@"Compose.ChannelAboutDescription", nil))]]];
             
-            [self.navigationViewController pushViewController:viewController animated:YES];
+            [weakSelf.navigationViewController pushViewController:viewController animated:YES];
             
         } description:NSLocalizedString(@"Compose.ChannelAboutPlaceholder", nil) subdesc:[_chat.chatFull.about stringByReplacingOccurrencesOfString:@"\n" withString:@" "] height:42 stateback:nil];
         
@@ -456,12 +458,12 @@
                 
                 ComposeAction *action = [[ComposeAction alloc] initWithBehaviorClass:[ComposeActionBehavior class]];
                 action.result = [[ComposeResult alloc] init];
-                action.result.singleObject = _chat;
+                action.result.singleObject = weakSelf.chat;
                 ComposeCreateChannelUserNameStepViewController *viewController = [[ComposeCreateChannelUserNameStepViewController alloc] initWithFrame:NSZeroRect];
                 
                 [viewController setAction:action];
                 
-                [self.navigationViewController pushViewController:viewController animated:YES];
+                [weakSelf.navigationViewController pushViewController:viewController animated:YES];
                 
             } description:NSLocalizedString(@"Profile.EditLink", nil) subdesc:_chat.usernameLink height:42 stateback:nil];
             
@@ -476,7 +478,7 @@
         if(_chat.isCreator) {
             GeneralSettingsRowItem *deleteChannelItem = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeNone callback:^(TGGeneralRowItem *item) {
                 
-                [self.navigationViewController.messagesViewController deleteDialog:_conversation];
+                [weakSelf.navigationViewController.messagesViewController deleteDialog:weakSelf.conversation];
                 
                 
             } description:_chat.isMegagroup ? NSLocalizedString(@"Conversation.Confirm.DeleteGroup", nil) : NSLocalizedString(@"Profile.DeleteChannel", nil) height:42 stateback:nil];
@@ -495,11 +497,11 @@
         
         GeneralSettingsRowItem *reportItem = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeNone callback:^(TGGeneralRowItem *item) {
             
-            TGReportChannelModalView *reportModalView = [[TGReportChannelModalView alloc] initWithFrame:[self.view.window.contentView bounds]];
+            TGReportChannelModalView *reportModalView = [[TGReportChannelModalView alloc] initWithFrame:[weakSelf.view.window.contentView bounds]];
             
-            reportModalView.conversation = _conversation;
+            reportModalView.conversation = weakSelf.conversation;
             
-            [reportModalView show:self.view.window animated:YES];
+            [reportModalView show:weakSelf.view.window animated:YES];
             
             
         } description:NSLocalizedString(@"Profile.ReportChannel", nil) height:42 stateback:nil];
@@ -512,7 +514,7 @@
         if(!_conversation.invisibleChannel) {
             GeneralSettingsRowItem *deleteChannelItem = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeNone callback:^(TGGeneralRowItem *item) {
                 
-                [self.navigationViewController.messagesViewController deleteDialog:_conversation];
+                [weakSelf.navigationViewController.messagesViewController deleteDialog:weakSelf.conversation];
                 
                 
             } description:_chat.isMegagroup ? NSLocalizedString(@"Conversation.Actions.LeaveGroup", nil) : NSLocalizedString(@"Profile.LeaveChannel", nil) height:42 stateback:nil];
@@ -536,7 +538,9 @@
         [self loadNextParticipants];
     }
     
-    
+}
+
+-(void)dealloc {
     
 }
 

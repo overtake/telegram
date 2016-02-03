@@ -152,6 +152,8 @@
 
 -(void)configure {
     
+    
+    
     [self.doneButton setHidden:_conversation.type == DialogTypeSecretChat || [_user isSelf] || ![_user isContact]];
     
     [_tableView removeAllItems:YES];
@@ -176,6 +178,8 @@
         } description:NSLocalizedString(@"Profile.SendMessage", nil) height:42 stateback:nil];
     }
     
+
+    
     GeneralSettingsRowItem *startSecretChat;
     
     if(_user.type != TLUserTypeSelf && _conversation.type != DialogTypeSecretChat && !_user.isBot) {
@@ -191,6 +195,8 @@
             
         } description:NSLocalizedString(@"Conversation.StartSecretChat", nil) height:42 stateback:nil];
     }
+
+    
     
     GeneralSettingsRowItem *shareContact;
     if((_user.type == TLUserTypeContact || _user.type == TLUserTypeSelf || self.user.isBot) && _conversation.type != DialogTypeSecretChat) {
@@ -215,19 +221,20 @@
                 
             } else {
                 
-                TGShareContactModalView *shareContactModalView = [[TGShareContactModalView alloc] initWithFrame:NSMakeRect(0, 0, NSWidth(self.view.window.frame), NSHeight(self.view.window.frame))];
+                TGShareContactModalView *shareContactModalView = [[TGShareContactModalView alloc] initWithFrame:NSMakeRect(0, 0, NSWidth(weakSelf.view.window.frame), NSHeight(weakSelf.view.window.frame))];
                 
                 
-                [shareContactModalView setMessagesViewController:self.navigationViewController.messagesViewController];
-                [shareContactModalView setUser:self.user];
+                [shareContactModalView setMessagesViewController:weakSelf.navigationViewController.messagesViewController];
+                [shareContactModalView setUser:weakSelf.user];
                 
-                [shareContactModalView show:self.view.window animated:YES];
+                [shareContactModalView show:weakSelf.view.window animated:YES];
                 
             }
 
             
         } description:NSLocalizedString(_user.isBot ? @"Profile.ShareBot" : @"Profile.ShareContact", nil) height:42 stateback:nil];
     }
+
     
     GeneralSettingsRowItem *addToGroupItem;
     
@@ -244,6 +251,7 @@
         } description:NSLocalizedString(@"Profile.AddToGroup", nil) height:42 stateback:nil];
         
     }
+
     
     GeneralSettingsRowItem *helpItem;
     if(_user.isBot && _userFull) {
@@ -271,6 +279,8 @@
         } 
         
     }
+    
+
 
     helpItem.textColor = BLUE_UI_COLOR;
     addToGroupItem.textColor = BLUE_UI_COLOR;
@@ -299,13 +309,17 @@
         
     }];
     
+
+    
     GeneralSettingsRowItem *notificationItem = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeSwitch callback:^(TGGeneralRowItem *item) {
         
         [weakSelf.conversation muteOrUnmute:nil until:0];
         
     } description:NSLocalizedString(@"Notifications", nil) height:42 stateback:^id(TGGeneralRowItem *item) {
-        return @(!_conversation.isMute);
+        return @(!weakSelf.conversation.isMute);
     }];
+    
+
     
     GeneralSettingsRowItem *blockUserItem = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeNone callback:^(TGGeneralRowItem *item) {
         
@@ -322,7 +336,7 @@
             [weakSelf configure];
         };
         
-        [self showModalProgress];
+        [weakSelf showModalProgress];
         
         if(weakSelf.user.isBlocked) {
             [[BlockedUsersManager sharedManager] unblock:weakSelf.user.n_id completeHandler:handlerBlock];
@@ -330,22 +344,26 @@
             [[BlockedUsersManager sharedManager] block:weakSelf.user.n_id completeHandler:handlerBlock];
         }
         
-    } description:_user.isBlocked ? (_user.isBot ? NSLocalizedString(@"RestartBot", nil) : NSLocalizedString(@"Profile.UnblockContact", nil)) : (_user.isBot ? NSLocalizedString(@"StopBot", nil) : NSLocalizedString(@"Profile.BlockContact", nil)) height:42 stateback:nil];
+    } description:weakSelf.user.isBlocked ? (weakSelf.user.isBot ? NSLocalizedString(@"RestartBot", nil) : NSLocalizedString(@"Profile.UnblockContact", nil)) : (weakSelf.user.isBot ? NSLocalizedString(@"StopBot", nil) : NSLocalizedString(@"Profile.BlockContact", nil)) height:42 stateback:nil];
     blockUserItem.textColor = [NSColor redColor];
+    
+
     
     
     GeneralSettingsRowItem *reportItem = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeNone callback:^(TGGeneralRowItem *item) {
         
-        TGReportChannelModalView *reportModalView = [[TGReportChannelModalView alloc] initWithFrame:[self.view.window.contentView bounds]];
+        TGReportChannelModalView *reportModalView = [[TGReportChannelModalView alloc] initWithFrame:[weakSelf.view.window.contentView bounds]];
         
-        reportModalView.conversation = _conversation;
+        reportModalView.conversation = weakSelf.conversation;
         
-        [reportModalView show:self.view.window animated:YES];
+        [reportModalView show:weakSelf.view.window animated:YES];
         
         
     } description:NSLocalizedString(@"Profile.ReportChannel", nil) height:42 stateback:nil];
     
     reportItem.textColor = BLUE_UI_COLOR;
+    
+
     
     GeneralSettingsRowItem *deleteSecretChatItem = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeNone callback:^(TGGeneralRowItem *item) {
         
@@ -357,6 +375,8 @@
         
     } description:NSLocalizedString(@"Conversation.DeleteSecretChat", nil) height:42 stateback:nil];
     deleteSecretChatItem.textColor = [NSColor redColor];
+    
+
     
     TGSProfileMediaRowItem *profileMediaItem = [[TGSProfileMediaRowItem alloc] initWithObject:_conversation];
     
@@ -370,6 +390,8 @@
         [weakSelf.navigationViewController pushViewController:viewController animated:YES];
         
     }];
+    
+
     
     profileMediaItem.height = 50;
     profileMediaItem.xOffset = 30;
@@ -409,7 +431,7 @@
             [_tableView addItem:_phoneNumberItem tableRedraw:YES];
         }
         
-        
+
         
         if(sendMessage || startSecretChat || shareContact) {
             [_tableView addItem:[[TGGeneralRowItem alloc] initWithHeight:20] tableRedraw:YES];
@@ -471,6 +493,13 @@
         }
 
     }
+    
+
+}
+
+
+-(void)dealloc {
+    
 }
 
 

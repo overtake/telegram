@@ -286,25 +286,37 @@ NSImage *fireImage() {
     
     MessageTableItemPhoto *item = (MessageTableItemPhoto *)self.item;
     
+    weak();
+    
     [item.imageObject.supportDownloadListener setProgressHandler:^(DownloadItem *item) {
         
-        [ASQueue dispatchOnMainQueue:^{
-            
-            [self.progressView setProgress:5 + MAX(( item.progress - 5),0) animated:YES];
-            
-        }];
+        strongWeak();
+        
+        if(strongSelf == weakSelf) {
+            [ASQueue dispatchOnMainQueue:^{
+                
+                [strongSelf.progressView setProgress:5 + MAX(( item.progress - 5),0) animated:YES];
+                
+            }];
+        }
+        
+        
         
     }];
     
     [item.imageObject.supportDownloadListener setCompleteHandler:^(DownloadItem *item) {
+         strongWeak();
         
-        [ASQueue dispatchOnMainQueue:^{
-            [self.progressView setProgress:100 animated:YES];
+        if(strongSelf == weakSelf) {
+            
+        }[ASQueue dispatchOnMainQueue:^{
+            [strongSelf.progressView setProgress:100 animated:YES];
             
             dispatch_after_seconds(0.2, ^{
-                [self updateCellState];
+                [strongSelf updateCellState];
             });
         }];
+        
         
     }];
     

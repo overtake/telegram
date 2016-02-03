@@ -24,7 +24,7 @@ typedef enum {
 @property (nonatomic, strong) NSString *filePath;
 @property (nonatomic) TMAudioRecorderState state;
 @property (nonatomic, strong) TGTimer *timer;
-
+@property (nonatomic,strong) NSMutableArray *powers;
 @property (nonatomic, strong) NSString *opusEncoderPath;
 
 @end
@@ -68,10 +68,19 @@ double mappingRange(double x, double in_min, double in_max, double out_min, doub
         [self removeFile];
     }
     
+    _powers = [NSMutableArray array];
+    
     
     [self.timer invalidate];
-    self.timer = [[TGTimer alloc] initWithTimeout:1.f/10.f repeat:YES completion:^{
+    
+    __block int k = 0;
+    
+    
+    
+    self.timer = [[TGTimer alloc] initWithTimeout:1.f/100.f repeat:YES completion:^{
 
+        k++;
+        
         [self.recorder updateMeters];
         [self.recorder setMeteringEnabled:NO];
         [self.recorder setMeteringEnabled:YES];
@@ -87,6 +96,7 @@ double mappingRange(double x, double in_min, double in_max, double out_min, doub
         
         if(self.powerHandler)
             self.powerHandler(power);
+        
         
     } queue:dispatch_get_main_queue()];
     [self.timer start];
