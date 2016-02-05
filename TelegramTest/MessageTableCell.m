@@ -124,17 +124,12 @@
     
     weak();
     
-    if(self.item.message.to_id.class == [TL_peerChannel class] || self.item.message.to_id.class == [TL_peerChat class] || self.item.message.to_id.class == [TL_peerUser class] )  {
-        
-        if([self.item.message.conversation canSendMessage]) {
-            [items addObject:[NSMenuItem menuItemWithTitle:NSLocalizedString(@"Context.Reply", nil) withBlock:^(id sender) {
-                
-                [weakSelf.messagesViewController addReplayMessage:weakSelf.item.message animated:YES];
-                
-            }]];
-        }
-        
-        
+    if([self.item.message.conversation canSendMessage]) {
+        [items addObject:[NSMenuItem menuItemWithTitle:NSLocalizedString(@"Context.Reply", nil) withBlock:^(id sender) {
+            
+            [weakSelf.messagesViewController addReplayMessage:weakSelf.item.message animated:YES];
+            
+        }]];
     }
     
     if([self.item canShare]) {

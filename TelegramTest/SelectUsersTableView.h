@@ -30,7 +30,7 @@ typedef enum {
 
 @property (nonatomic,strong) NSArray *exceptions;
 
-@property (nonatomic,strong) id <SelectTableDelegate> selectDelegate;
+@property (nonatomic,weak) id <SelectTableDelegate> selectDelegate;
 
 @property (nonatomic,copy) void (^multipleCallback)(NSArray *contacts);
 

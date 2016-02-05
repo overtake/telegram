@@ -2,7 +2,7 @@
 //  MTProto.h
 //  Telegram
 //
-//  Auto created by Mikhail Filimonov on 01.01.16.
+//  Auto created by Mikhail Filimonov on 04.02.16.
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -150,9 +150,6 @@
 @interface TLContactBlocked : TLObject
 @end
 	
-@interface TLContactSuggested : TLObject
-@end
-	
 @interface TLContactStatus : TLObject
 @end
 	
@@ -166,9 +163,6 @@
 @end
 	
 @interface TLcontacts_Blocked : TLObject
-@end
-	
-@interface TLcontacts_Suggested : TLObject
 @end
 	
 @interface TLmessages_Dialogs : TLObject
@@ -246,13 +240,7 @@
 @interface TLmessages_SentEncryptedMessage : TLObject
 @end
 	
-@interface TLInputAudio : TLObject
-@end
-	
 @interface TLInputDocument : TLObject
-@end
-	
-@interface TLAudio : TLObject
 @end
 	
 @interface TLDocument : TLObject
@@ -430,6 +418,9 @@
 @end
 	
 @interface TLmessages_BotResults : TLObject
+@end
+	
+@interface TLAudio : TLObject
 @end
 	
 @interface TLProtoMessage : TLObject
@@ -637,12 +628,6 @@
 @interface TL_inputMediaVideo : TLInputMedia<NSCoding>
 +(TL_inputMediaVideo*)createWithN_id:(TLInputVideo*)n_id caption:(NSString*)caption;
 @end
-@interface TL_inputMediaUploadedAudio : TLInputMedia<NSCoding>
-+(TL_inputMediaUploadedAudio*)createWithFile:(TLInputFile*)file duration:(int)duration mime_type:(NSString*)mime_type;
-@end
-@interface TL_inputMediaAudio : TLInputMedia<NSCoding>
-+(TL_inputMediaAudio*)createWithN_id:(TLInputAudio*)n_id;
-@end
 @interface TL_inputMediaUploadedDocument : TLInputMedia<NSCoding>
 +(TL_inputMediaUploadedDocument*)createWithFile:(TLInputFile*)file mime_type:(NSString*)mime_type attributes:(NSMutableArray*)attributes caption:(NSString*)caption;
 @end
@@ -733,9 +718,6 @@
 @end
 @interface TL_inputEncryptedFileLocation : TLInputFileLocation<NSCoding>
 +(TL_inputEncryptedFileLocation*)createWithN_id:(long)n_id access_hash:(long)access_hash;
-@end
-@interface TL_inputAudioFileLocation : TLInputFileLocation<NSCoding>
-+(TL_inputAudioFileLocation*)createWithN_id:(long)n_id access_hash:(long)access_hash;
 @end
 @interface TL_inputDocumentFileLocation : TLInputFileLocation<NSCoding>
 +(TL_inputDocumentFileLocation*)createWithN_id:(long)n_id access_hash:(long)access_hash;
@@ -1100,7 +1082,6 @@
 @property (nonatomic, strong) NSString* last_name;
 @property int user_id;
 @property (nonatomic, strong) TLDocument* document;
-@property (nonatomic, strong) TLAudio* audio;
 @property (nonatomic, strong) TLWebPage* webpage;
 @property (nonatomic, strong) NSString* title;
 @property (nonatomic, strong) NSString* address;
@@ -1108,6 +1089,7 @@
 @property (nonatomic, strong) NSString* venue_id;
 @property (nonatomic, strong) TLBotInlineResult* bot_result;
 @property long query_id;
+@property (nonatomic, strong) TLAudio* audio;
 @end
 
 @interface TL_messageMediaEmpty : TLMessageMedia<NSCoding>
@@ -1131,9 +1113,6 @@
 @interface TL_messageMediaDocument : TLMessageMedia<NSCoding>
 +(TL_messageMediaDocument*)createWithDocument:(TLDocument*)document caption:(NSString*)caption;
 @end
-@interface TL_messageMediaAudio : TLMessageMedia<NSCoding>
-+(TL_messageMediaAudio*)createWithAudio:(TLAudio*)audio;
-@end
 @interface TL_messageMediaWebPage : TLMessageMedia<NSCoding>
 +(TL_messageMediaWebPage*)createWithWebpage:(TLWebPage*)webpage;
 @end
@@ -1145,6 +1124,9 @@
 @end
 @interface TL_messageMediaBotResult : TLMessageMedia<NSCoding>
 +(TL_messageMediaBotResult*)createWithBot_result:(TLBotInlineResult*)bot_result query_id:(long)query_id;
+@end
+@interface TL_messageMediaAudio : TLMessageMedia<NSCoding>
++(TL_messageMediaAudio*)createWithAudio:(TLAudio*)audio;
 @end
 	
 @interface TLMessageAction()
@@ -1461,15 +1443,6 @@
 +(TL_contactBlocked*)createWithUser_id:(int)user_id date:(int)date;
 @end
 	
-@interface TLContactSuggested()
-@property int user_id;
-@property int mutual_contacts;
-@end
-
-@interface TL_contactSuggested : TLContactSuggested<NSCoding>
-+(TL_contactSuggested*)createWithUser_id:(int)user_id mutual_contacts:(int)mutual_contacts;
-@end
-	
 @interface TLContactStatus()
 @property int user_id;
 @property (nonatomic, strong) TLUserStatus* status;
@@ -1522,15 +1495,6 @@
 @end
 @interface TL_contacts_blockedSlice : TLcontacts_Blocked<NSCoding>
 +(TL_contacts_blockedSlice*)createWithN_count:(int)n_count blocked:(NSMutableArray*)blocked users:(NSMutableArray*)users;
-@end
-	
-@interface TLcontacts_Suggested()
-@property (nonatomic, strong) NSMutableArray* results;
-@property (nonatomic, strong) NSMutableArray* users;
-@end
-
-@interface TL_contacts_suggested : TLcontacts_Suggested<NSCoding>
-+(TL_contacts_suggested*)createWithResults:(NSMutableArray*)results users:(NSMutableArray*)users;
 @end
 	
 @interface TLmessages_Dialogs()
@@ -1618,17 +1582,17 @@
 @interface TL_inputMessagesFilterDocument : TLMessagesFilter<NSCoding>
 +(TL_inputMessagesFilterDocument*)create;
 @end
-@interface TL_inputMessagesFilterAudio : TLMessagesFilter<NSCoding>
-+(TL_inputMessagesFilterAudio*)create;
-@end
-@interface TL_inputMessagesFilterAudioDocuments : TLMessagesFilter<NSCoding>
-+(TL_inputMessagesFilterAudioDocuments*)create;
-@end
 @interface TL_inputMessagesFilterUrl : TLMessagesFilter<NSCoding>
 +(TL_inputMessagesFilterUrl*)create;
 @end
 @interface TL_inputMessagesFilterGif : TLMessagesFilter<NSCoding>
 +(TL_inputMessagesFilterGif*)create;
+@end
+@interface TL_inputMessagesFilterVoice : TLMessagesFilter<NSCoding>
++(TL_inputMessagesFilterVoice*)create;
+@end
+@interface TL_inputMessagesFilterMusic : TLMessagesFilter<NSCoding>
++(TL_inputMessagesFilterMusic*)create;
 @end
 	
 @interface TLUpdate()
@@ -1681,6 +1645,7 @@
 @property long query_id;
 @property (nonatomic, strong) NSString* query;
 @property (nonatomic, strong) NSString* offset;
+@property (nonatomic, strong) NSString* bot_inline_id;
 @end
 
 @interface TL_updateNewMessage : TLUpdate<NSCoding>
@@ -1808,6 +1773,9 @@
 @end
 @interface TL_updateBotInlineQuery : TLUpdate<NSCoding>
 +(TL_updateBotInlineQuery*)createWithQuery_id:(long)query_id user_id:(int)user_id query:(NSString*)query offset:(NSString*)offset;
+@end
+@interface TL_updateBotInlineSend : TLUpdate<NSCoding>
++(TL_updateBotInlineSend*)createWithUser_id:(int)user_id query:(NSString*)query bot_inline_id:(NSString*)bot_inline_id;
 @end
 	
 @interface TLupdates_State()
@@ -2110,18 +2078,6 @@
 +(TL_messages_sentEncryptedFile*)createWithDate:(int)date file:(TLEncryptedFile*)file;
 @end
 	
-@interface TLInputAudio()
-@property long n_id;
-@property long access_hash;
-@end
-
-@interface TL_inputAudioEmpty : TLInputAudio<NSCoding>
-+(TL_inputAudioEmpty*)create;
-@end
-@interface TL_inputAudio : TLInputAudio<NSCoding>
-+(TL_inputAudio*)createWithN_id:(long)n_id access_hash:(long)access_hash;
-@end
-	
 @interface TLInputDocument()
 @property long n_id;
 @property long access_hash;
@@ -2132,27 +2088,6 @@
 @end
 @interface TL_inputDocument : TLInputDocument<NSCoding>
 +(TL_inputDocument*)createWithN_id:(long)n_id access_hash:(long)access_hash;
-@end
-	
-@interface TLAudio()
-@property long n_id;
-@property long access_hash;
-@property int date;
-@property int duration;
-@property (nonatomic, strong) NSString* mime_type;
-@property int size;
-@property int dc_id;
-@property int user_id;
-@end
-
-@interface TL_audioEmpty : TLAudio<NSCoding>
-+(TL_audioEmpty*)createWithN_id:(long)n_id;
-@end
-@interface TL_audio : TLAudio<NSCoding>
-+(TL_audio*)createWithN_id:(long)n_id access_hash:(long)access_hash date:(int)date duration:(int)duration mime_type:(NSString*)mime_type size:(int)size dc_id:(int)dc_id;
-@end
-@interface TL_audio_old29 : TLAudio<NSCoding>
-+(TL_audio_old29*)createWithN_id:(long)n_id access_hash:(long)access_hash user_id:(int)user_id date:(int)date duration:(int)duration mime_type:(NSString*)mime_type size:(int)size dc_id:(int)dc_id;
 @end
 	
 @interface TLDocument()
@@ -2349,8 +2284,11 @@
 @property (nonatomic, strong) NSString* alt;
 @property (nonatomic, strong) TLInputStickerSet* stickerset;
 @property int duration;
+@property int flags;
+@property (nonatomic,assign,readonly) BOOL isIs_voice;
 @property (nonatomic, strong) NSString* title;
 @property (nonatomic, strong) NSString* performer;
+@property (nonatomic, strong) NSData* waveform;
 @property (nonatomic, strong) NSString* file_name;
 @end
 
@@ -2367,7 +2305,7 @@
 +(TL_documentAttributeVideo*)createWithDuration:(int)duration w:(int)w h:(int)h;
 @end
 @interface TL_documentAttributeAudio : TLDocumentAttribute<NSCoding>
-+(TL_documentAttributeAudio*)createWithDuration:(int)duration title:(NSString*)title performer:(NSString*)performer;
++(TL_documentAttributeAudio*)createWithFlags:(int)flags  duration:(int)duration title:(NSString*)title performer:(NSString*)performer waveform:(NSData*)waveform;
 @end
 @interface TL_documentAttributeFilename : TLDocumentAttribute<NSCoding>
 +(TL_documentAttributeFilename*)createWithFile_name:(NSString*)file_name;
@@ -3035,6 +2973,24 @@
 
 @interface TL_messages_botResults : TLmessages_BotResults<NSCoding>
 +(TL_messages_botResults*)createWithFlags:(int)flags  query_id:(long)query_id next_offset:(NSString*)next_offset results:(NSMutableArray*)results;
+@end
+	
+@interface TLAudio()
+@property long n_id;
+@property long access_hash;
+@property int user_id;
+@property int date;
+@property int duration;
+@property (nonatomic, strong) NSString* mime_type;
+@property int size;
+@property int dc_id;
+@end
+
+@interface TL_audio_old29 : TLAudio<NSCoding>
++(TL_audio_old29*)createWithN_id:(long)n_id access_hash:(long)access_hash user_id:(int)user_id date:(int)date duration:(int)duration mime_type:(NSString*)mime_type size:(int)size dc_id:(int)dc_id;
+@end
+@interface TL_audio : TLAudio<NSCoding>
++(TL_audio*)createWithN_id:(long)n_id access_hash:(long)access_hash date:(int)date duration:(int)duration mime_type:(NSString*)mime_type size:(int)size dc_id:(int)dc_id;
 @end
 	
 @interface TLProtoMessage()

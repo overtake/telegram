@@ -382,28 +382,34 @@
     
     if(!_controller)
         return;
+    
+    weak();
 
-    self.request = [RPCRequest sendRequest:[TLAPI_messages_getHistory createWithPeer:[_peer inputPeer] offset_id:source_id add_offset:next ||  source_id == 0 ? 0 : -(int)self.selectLimit limit:(int)self.selectLimit max_id:next ? 0 : INT32_MAX min_id:0] successHandler:^(RPCRequest *request, TL_messages_channelMessages * response) {
+    self.request = [RPCRequest sendRequest:[TLAPI_messages_getHistory createWithPeer:[_peer inputPeer] offset_id:source_id offset_date:0 add_offset:next ||  source_id == 0 ? 0 : -(int)self.selectLimit limit:(int)self.selectLimit max_id:next ? 0 : INT32_MAX min_id:0] successHandler:^(RPCRequest *request, TL_messages_channelMessages * response) {
         
+        strongWeak();
         
-        [SharedManager proccessGlobalResponse:response];
-        
-        
-        NSArray *messages = [[response messages] copy];
-        
-        [self fillGroupHoles:messages bottom:!next];
-        
-        [self setHole:[self proccessAndGetHoleWithHole:hole next:next messages:messages] withNext:next];
-        
-        if(callback) {
-            ChatHistoryState state = hole && ![self holeWithNext:next] ? ChatHistoryStateLocal : messages.count < self.selectLimit && !hole && ![self holeWithNext:next] ? ChatHistoryStateFull : ChatHistoryStateRemote;
+        if(strongSelf != nil) {
+            [SharedManager proccessGlobalResponse:response];
             
-            callback(messages,state);
+            NSArray *messages = [[response messages] copy];
+            
+            [strongSelf fillGroupHoles:messages bottom:!next];
+            
+            [strongSelf setHole:[strongSelf proccessAndGetHoleWithHole:hole next:next messages:messages] withNext:next];
+            
+            if(callback) {
+                ChatHistoryState state = hole && ![strongSelf holeWithNext:next] ? ChatHistoryStateLocal : messages.count < strongSelf.selectLimit && !hole && ![strongSelf holeWithNext:next] ? ChatHistoryStateFull : ChatHistoryStateRemote;
+                
+                callback(messages,state);
+            }
         }
+        
+        
         
     } errorHandler:^(RPCRequest *request, RpcError *error) {
         
-        if(callback && self.controller) {
+        if(callback && weakSelf.controller) {
             callback(nil,ChatHistoryStateFull);
         }
         

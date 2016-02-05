@@ -44,7 +44,8 @@ typedef enum {
 typedef enum {
     ShowMessageTypeReply = 1 << 0,
     ShowMessageTypeSearch = 1 << 1,
-    ShowMessageTypeUnreadMark = 1 << 2
+    ShowMessageTypeUnreadMark = 1 << 2,
+    ShowMessageTypeDateJump = 1 << 3
 } ShowMessageType;
 
 
@@ -132,7 +133,7 @@ typedef enum {
 
 -(void)sendSticker:(TLDocument *)sticker forConversation:(TL_conversation *)conversation addCompletionHandler:(dispatch_block_t)completeHandler;
 
-- (void)sendAudio:(NSString *)file_path forConversation:(TL_conversation *)conversation;
+- (void)sendAudio:(NSString *)file_path forConversation:(TL_conversation *)conversation waveforms:(NSData *)waveforms;
 - (void)sendMessage:(NSString *)message forConversation:(TL_conversation *)conversation;
 - (void)sendLocation:(CLLocationCoordinate2D)coordinates forConversation:(TL_conversation *)conversation;
 - (void)forwardMessages:(NSArray *)messages conversation:(TL_conversation *)conversation callback:(dispatch_block_t)callback;

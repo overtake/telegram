@@ -90,4 +90,8 @@
     
 }
 
+-(void)dealloc {
+    [_tableView clear];
+}
+
 @end

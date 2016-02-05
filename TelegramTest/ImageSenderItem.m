@@ -96,6 +96,7 @@
         
         __strong ImageSenderItem *strongSelf = weakSelf;
         
+        
         if(strongSelf == nil || strongSelf != weakSelf)
             return;
         
@@ -117,6 +118,11 @@
         }
         
         strongSelf.rpc_request = [RPCRequest sendRequest:request successHandler:^(RPCRequest *request, TLUpdates *response) {
+            
+            strongWeak();
+            
+            if(strongSelf == nil || strongSelf != weakSelf)
+                return;
             
             [strongSelf updateMessageId:response];
             

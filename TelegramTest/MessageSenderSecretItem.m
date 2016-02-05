@@ -132,19 +132,28 @@
 -(void)performRequest {
     
     TLAPI_messages_sendEncrypted *request = [TLAPI_messages_sendEncrypted createWithPeer:[TL_inputEncryptedChat createWithChat_id:self.action.chat_id access_hash:self.params.access_hash] random_id:self.message.randomId data:[MessageSender getEncrypted:self.params messageData:[self decryptedMessageLayer]]];
-        
+    
+    weak();
+    
+    
     self.rpc_request = [RPCRequest sendRequest:request successHandler:^(RPCRequest *request, TL_messages_sentEncryptedMessage *response) {
         
-        ((TL_destructMessage *)self.message).date = [response date];
+        strongWeak();
         
-        self.message.dstate = DeliveryStateNormal;
+        if(strongSelf != nil) {
+            ((TL_destructMessage *)strongSelf.message).date = [response date];
+            
+            strongSelf.message.dstate = DeliveryStateNormal;
+            
+            [strongSelf.message save:YES];
+            strongSelf.state = MessageSendingStateSent;
+        }
         
-        [self.message save:YES];
-        self.state = MessageSendingStateSent;
+       
        
         
     } errorHandler:^(RPCRequest *request, RpcError *error) {
-        self.state = MessageSendingStateError;
+        weakSelf.state = MessageSendingStateError;
     }];
 
     

@@ -60,19 +60,19 @@
     
     TLChat *chat = self.action.object;
     
+    weak();
+    
     if(chat.isCreator) {
         GeneralSettingsRowItem *addModerator = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeNext callback:^(TGGeneralRowItem *item) {
             
             
-            ComposePickerViewController *viewController = [[ComposePickerViewController alloc] initWithFrame:self.view.bounds];
+            ComposePickerViewController *viewController = [[ComposePickerViewController alloc] initWithFrame:weakSelf.view.bounds];
             
             [viewController setAction:[[ComposeAction alloc] initWithBehaviorClass:[ComposeActionAddChannelModeratorBehavior class] filter:@[] object:chat]];
             
-            [self.navigationViewController pushViewController:viewController animated:YES];
+            [weakSelf.navigationViewController pushViewController:viewController animated:YES];
             
-        } description:chat.isBroadcast ? NSLocalizedString(@"Channel.AddEditor", nil) : NSLocalizedString(@"Channel.AddModerator", nil) height:62 stateback:^id(TGGeneralRowItem *item) {
-            return nil;
-        }];
+        } description:chat.isBroadcast ? NSLocalizedString(@"Channel.AddEditor", nil) : NSLocalizedString(@"Channel.AddModerator", nil) height:62 stateback:nil];
         
         [_tableView addItem:addModerator tableRedraw:NO];
         
@@ -121,9 +121,9 @@
                         [RPCRequest sendRequest:[TLAPI_channels_editAdmin createWithChannel:chat.inputPeer user_id:user.inputUser role:[TL_channelRoleEmpty create]] successHandler:^(id request, id response) {
                             
                             
-                            self.tableView.defaultAnimation = NSTableViewAnimationEffectFade;
-                            [self.tableView removeItem:weakItem tableRedraw:YES];
-                            self.tableView.defaultAnimation = NSTableViewAnimationEffectNone;
+                            weakSelf.tableView.defaultAnimation = NSTableViewAnimationEffectFade;
+                            [weakSelf.tableView removeItem:weakItem tableRedraw:YES];
+                            weakSelf.tableView.defaultAnimation = NSTableViewAnimationEffectNone;
                             
                         } errorHandler:^(id request, RpcError *error) {
                             
@@ -140,11 +140,11 @@
                     
                     action.result = [[ComposeResult alloc] initWithMultiObjects:@[user]];
                     
-                    ComposeConfirmModeratorViewController *viewController = [[ComposeConfirmModeratorViewController alloc] initWithFrame:self.view.bounds];
+                    ComposeConfirmModeratorViewController *viewController = [[ComposeConfirmModeratorViewController alloc] initWithFrame:weakSelf.view.bounds];
                     
                     [viewController setAction:action];
                     
-                    [self.navigationViewController pushViewController:viewController animated:YES];
+                    [weakSelf.navigationViewController pushViewController:viewController animated:YES];
                 }
 
             }
@@ -169,6 +169,10 @@
     [self.doneButton setStringValue:@""];
     
     self.action = self.action;
+}
+
+-(void)dealloc {
+    [_tableView clear];
 }
 
 @end

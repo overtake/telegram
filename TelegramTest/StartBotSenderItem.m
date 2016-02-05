@@ -43,31 +43,39 @@
     
     id request = [TLAPI_messages_startBot createWithBot:_bot.inputUser peer:self.conversation.inputPeer random_id:self.message.randomId start_param:_startParam];
     
+    weak();
+    
     self.rpc_request = [RPCRequest sendRequest:request successHandler:^(RPCRequest *request, TLUpdates * response) {
         
-        [self updateMessageId:response];
+        strongWeak();
         
-        TL_localMessage *msg = [TL_localMessage convertReceivedMessage:[[self updateNewMessageWithUpdates:response] message]];
-        
-        if(msg == nil)
-        {
-            [self cancel];
-            return;
+        if(strongSelf != nil) {
+            [strongSelf updateMessageId:response];
+            
+            TL_localMessage *msg = [TL_localMessage convertReceivedMessage:[[strongSelf updateNewMessageWithUpdates:response] message]];
+            
+            if(msg == nil)
+            {
+                [strongSelf cancel];
+                return;
+            }
+            
+            strongSelf.message.n_id = msg.n_id;
+            strongSelf.message.date = msg.date;
+            strongSelf.message.media = msg.media;
+            
+            strongSelf.message.dstate = DeliveryStateNormal;
+            
+            [strongSelf.message save:YES];
+            
+            strongSelf.state = MessageSendingStateSent;
         }
         
-        self.message.n_id = msg.n_id;
-        self.message.date = msg.date;
-        self.message.media = msg.media;
-            
-        self.message.dstate = DeliveryStateNormal;
         
-        [self.message save:YES];
-        
-        self.state = MessageSendingStateSent;
         
         
     } errorHandler:^(RPCRequest *request, RpcError *error) {
-        self.state = MessageSendingStateError;
+        weakSelf.state = MessageSendingStateError;
     }];
     
 }

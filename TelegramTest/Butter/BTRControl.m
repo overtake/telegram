@@ -450,21 +450,29 @@ static void BTRControlCommonInit(BTRControl *self) {
     
     cancel_delayed_block(_internalId);
     
+    weak();
+    
     _internalId = perform_block_after_delay(0.4,  ^{
         
-        if(self.mouseInside && self.mouseDown) {
-            
-            BTRControlEvents events = BTRControlEventLongLeftClick;
-            [self sendActionsForControlEvents:events];
-            
-            
-            for (BTRControlAction *action in self.actions) {
-                if (action.events & events) {
-                    _lastDownTime = 1;
-                    break;
+        strongWeak();
+        
+        if(strongSelf != nil) {
+            if(strongSelf.mouseInside && strongSelf.mouseDown) {
+                
+                BTRControlEvents events = BTRControlEventLongLeftClick;
+                [strongSelf sendActionsForControlEvents:events];
+                
+                
+                for (BTRControlAction *action in strongSelf.actions) {
+                    if (action.events & events) {
+                        _lastDownTime = 1;
+                        break;
+                    }
                 }
             }
         }
+        
+        
     });
     
 	[self sendActionsForControlEvents:events];

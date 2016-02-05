@@ -582,12 +582,14 @@
         return NSLocalizedString(@"ChatMedia.Video", nil);
     } else if([message.media isKindOfClass:[TL_messageMediaGeo class]] || [message.media isKindOfClass:[TL_messageMediaVenue class]]) {
         return NSLocalizedString(@"ChatMedia.Location", nil);
-    } else if([message.media isKindOfClass:[TL_messageMediaAudio class]]) {
-        return NSLocalizedString(@"ChatMedia.Audio", nil);
-    } else if([message.media isKindOfClass:[TL_messageMediaDocument class]] || [message.media isKindOfClass:[TL_messageMediaDocument_old44 class]]) {
+    }  else if([message.media isKindOfClass:[TL_messageMediaDocument class]] || [message.media isKindOfClass:[TL_messageMediaDocument_old44 class]]) {
         
         if([message.media.document.mime_type isEqualToString:@"video/mp4"] && [message.media.document attributeWithClass:[TL_documentAttributeAnimated class]] != nil) {
             return @"GIF";
+        }
+        
+        if(message.media.document.audioAttr.isIs_voice) {
+            return NSLocalizedString(@"ChatMedia.Audio", nil);
         }
         
         return [message.media.document isSticker] ? (((TL_documentAttributeSticker *)[message.media.document attributeWithClass:[TL_documentAttributeSticker class]]).alt.length > 0 ? [NSString stringWithFormat:@"%@ %@",((TL_documentAttributeSticker *)[message.media.document attributeWithClass:[TL_documentAttributeSticker class]]).alt,NSLocalizedString(@"Sticker", nil)] : NSLocalizedString(@"Sticker", nil)) : (message.media.document.file_name.length == 0 ? NSLocalizedString(@"ChatMedia.File", nil) : message.media.document.file_name);

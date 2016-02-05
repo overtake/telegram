@@ -11,7 +11,6 @@
 #import "TMMediaController.h"
 #import "TLPeer+Extensions.h"
 #import "TMPreviewDocumentItem.h"
-#import "DownloadAudioItem.h"
 #import "TMCircularProgress.h"
 #import "MessageTableItemAudio.h"
 

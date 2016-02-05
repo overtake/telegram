@@ -167,6 +167,7 @@ static int offsetEditable = 30;
    // animation = NO;
     static float duration = 0.1f;
     
+    weak();
     
     if((!self.visibleRect.size.width && !self.visibleRect.size.height) || !animation) {
         
@@ -194,7 +195,7 @@ static int offsetEditable = 30;
     position.toValue = @(editable ? 20 : 0);
     position.duration = duration;
     [position setCompletionBlock:^(POPAnimation *anim, BOOL result) {
-        [self.selectButton setFrameOrigin:[self selectOrigin]];
+        [weakSelf.selectButton setFrameOrigin:[self selectOrigin]];
     }];
     
     
@@ -207,7 +208,7 @@ static int offsetEditable = 30;
     opacityAnim.duration = duration;
     [opacityAnim setCompletionBlock:^(POPAnimation *anim, BOOL result) {
         if(result) {
-            [self.selectButton setHidden:!editable];
+            [weakSelf.selectButton setHidden:!editable];
         }
     }];
     [self.selectButton.layer pop_addAnimation:opacityAnim forKey:@"opacity"];
@@ -231,6 +232,7 @@ static int offsetEditable = 30;
 
 - (void)setSelected:(BOOL)isSelected animation:(BOOL)animation {
     
+    weak();
     
     [self.selectButton setSelected:isSelected];
     
@@ -268,7 +270,7 @@ static int offsetEditable = 30;
                 scaleAnimation.fromValue  = [NSValue valueWithCGSize:CGSizeMake(to, to)];
                 scaleAnimation.toValue  = [NSValue valueWithCGSize:CGSizeMake(1.0f, 1.0f)];
                 scaleAnimation.duration = duration / 2;
-                [self.selectButton.layer pop_addAnimation:scaleAnimation forKey:@"scale"];
+                [weakSelf.selectButton.layer pop_addAnimation:scaleAnimation forKey:@"scale"];
             }
         }];
         

@@ -130,8 +130,8 @@ NSString *const TLBotCommandPrefix = @"/";
 
 
 NSString* mediaFilePath(TL_localMessage *message) {
-    if([message.media isKindOfClass:[TL_messageMediaAudio class]]) {
-        return [NSString stringWithFormat:@"%@/%lu_%lu.ogg",path(),message.media.audio.n_id,message.media.audio.access_hash];
+    if(message.media.document.audioAttr.isIs_voice) {
+        return [NSString stringWithFormat:@"%@/%lu_%lu.ogg",path(),message.media.document.n_id,message.media.document.access_hash];
     }
     if([message.media isKindOfClass:[TL_messageMediaVideo class]]) {
         return [NSString stringWithFormat:@"%@/%lu_%lu.mp4",path(),message.media.video.n_id,message.media.video.access_hash];
@@ -1273,6 +1273,92 @@ NSString *display_url(NSString *url) {
     
     return displayUrl;
     
+}
+
+
++(NSArray*)arrayWaveform:(NSData *)waveform {
+    
+    NSMutableArray *decoded = [[NSMutableArray alloc] init];
+    
+    
+    
+    if(waveform.length > 0) {
+        
+        char bytes[63];
+        
+        
+        [waveform getBytes:bytes length:waveform.length];
+        
+        
+        int k = 0;
+        
+        for (int i = 0; i < waveform.length;) {
+            
+            int value = 0;
+            
+            NSString *binaryString = @"";
+            
+            [self convertBinaryStringToDecimalNumber:binaryString];
+            
+            for (int j = 0; j < 5; j++) {
+                
+                char byte = bytes[i];
+                
+                
+               // NSLog(@"k:%d i:%d",k,i);
+                
+                
+                
+                BOOL r = (byte >> k) & 1;
+                
+                value += r * pow(2, k);
+                
+                binaryString = [NSString stringWithFormat:@"%d%@",r,binaryString];
+                
+                k++;
+                
+                if(k == 8) {
+                    i++;
+                    k = 0;
+                }
+            }
+            
+            NSLog(@"binary:%@",binaryString);
+            
+            value = [self convertBinaryStringToDecimalNumber:binaryString];
+            
+            [decoded addObject:@(value)];
+            
+            if(decoded.count == 100) {
+                break;
+            }
+            
+        }
+        
+        NSLog(@"after decoding: %@",decoded);
+        
+        int bp = 0;
+        
+    }
+    
+    
+    
+    return decoded;
+}
+
++ (int)convertBinaryStringToDecimalNumber:(NSString *)binaryString {
+    unichar aChar;
+    int value = 0;
+    int index;
+    for (index = 0; index<[binaryString length]; index++)
+    {
+        aChar = [binaryString characterAtIndex: index];
+        if (aChar == '1')
+            value += 1;
+        if (index+1 < [binaryString length])
+            value = value<<1;
+    }
+    return value;
 }
 
 @end

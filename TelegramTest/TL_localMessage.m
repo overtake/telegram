@@ -327,17 +327,18 @@ DYNAMIC_PROPERTY(DDialog);
             mask|=HistoryFilterText;
         }
         
-        if([self.media isKindOfClass:[TL_messageMediaAudio class]]) {
-            mask|=HistoryFilterAudio;
-        }
+        
         
         if([self.media isKindOfClass:[TL_messageMediaDocument class]] || [self.media isKindOfClass:[TL_messageMediaDocument_old44 class]]) {
             TL_documentAttributeAudio *attr =  (TL_documentAttributeAudio *)[self.media.document attributeWithClass:[TL_documentAttributeAudio class]];
-            if(attr != nil || [self.media.document.mime_type hasPrefix:@"audio/"]) {
+           
+            if(attr.isIs_voice) {
+                mask|=HistoryFilterAudio;
+            } else if(attr != nil || [self.media.document.mime_type hasPrefix:@"audio/"]) {
                 mask|=HistoryFilterAudioDocument;
+            } else {
+                mask|=HistoryFilterDocuments;
             }
-            
-            mask|=HistoryFilterDocuments;
         }
         
         if([self.media isKindOfClass:[TL_messageMediaVideo class]]) {

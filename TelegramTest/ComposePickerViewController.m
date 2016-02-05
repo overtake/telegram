@@ -138,5 +138,9 @@
     [self.doneButton setDisable:self.action.result.multiObjects.count == 0 || self.action.behavior.doneTitle.length == 0];
 }
 
+-(void)dealloc {
+    [_tableView clear];
+}
+
 
 @end

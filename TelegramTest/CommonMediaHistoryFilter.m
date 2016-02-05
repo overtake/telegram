@@ -17,6 +17,7 @@
     int maxDate = next ? self.minDate : INT32_MAX;
     int minDate = next ? 0 : self.maxDate;
     
+    weak();
     
     self.request = [RPCRequest sendRequest:[TLAPI_messages_search createWithFlags:0 peer:[self.peer inputPeer] q:@"" filter:self.messagesFilter min_date:minDate max_date:maxDate offset:0  max_id:INT32_MAX limit:(int)self.controller.selectLimit] successHandler:^(RPCRequest *request, TL_messages_messages *response) {
         
@@ -30,7 +31,7 @@
         [SharedManager proccessGlobalResponse:response];
         
         if(callback) {
-            callback(messages,messages.count < self.controller.selectLimit ? ChatHistoryStateFull : ChatHistoryStateRemote);
+            callback(messages,messages.count < weakSelf.controller.selectLimit ? ChatHistoryStateFull : ChatHistoryStateRemote);
         }
         
     } errorHandler:^(RPCRequest *request, RpcError *error) {

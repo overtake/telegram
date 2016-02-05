@@ -2,7 +2,7 @@
 //  MTProto.m
 //  Telegram
 //
-//  Auto created by Mikhail Filimonov on 01.01.16.
+//  Auto created by Mikhail Filimonov on 04.02.16.
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -991,96 +991,6 @@
         
 @end
 
-@implementation TL_inputMediaUploadedAudio
-+(TL_inputMediaUploadedAudio*)createWithFile:(TLInputFile*)file duration:(int)duration mime_type:(NSString*)mime_type {
-	TL_inputMediaUploadedAudio* obj = [[TL_inputMediaUploadedAudio alloc] init];
-	obj.file = file;
-	obj.duration = duration;
-	obj.mime_type = mime_type;
-	return obj;
-}
--(void)serialize:(SerializedData*)stream {
-	[ClassStore TLSerialize:self.file stream:stream];
-	[stream writeInt:self.duration];
-	[stream writeString:self.mime_type];
-}
--(void)unserialize:(SerializedData*)stream {
-	self.file = [ClassStore TLDeserialize:stream];
-	super.duration = [stream readInt];
-	super.mime_type = [stream readString];
-}
-        
--(TL_inputMediaUploadedAudio *)copy {
-    
-    TL_inputMediaUploadedAudio *objc = [[TL_inputMediaUploadedAudio alloc] init];
-    
-    objc.file = [self.file copy];
-    objc.duration = self.duration;
-    objc.mime_type = self.mime_type;
-    
-    return objc;
-}
-        
-
-    
--(id)initWithCoder:(NSCoder *)aDecoder {
-
-    if((self = [ClassStore deserialize:[aDecoder decodeObjectForKey:@"data"]])) {
-        
-    }
-    
-    return self;
-}
-        
--(void)encodeWithCoder:(NSCoder *)aCoder {
-    [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
-}
-        
-
-        
-@end
-
-@implementation TL_inputMediaAudio
-+(TL_inputMediaAudio*)createWithN_id:(TLInputAudio*)n_id {
-	TL_inputMediaAudio* obj = [[TL_inputMediaAudio alloc] init];
-	obj.n_id = n_id;
-	return obj;
-}
--(void)serialize:(SerializedData*)stream {
-	[ClassStore TLSerialize:self.n_id stream:stream];
-}
--(void)unserialize:(SerializedData*)stream {
-	self.n_id = [ClassStore TLDeserialize:stream];
-}
-        
--(TL_inputMediaAudio *)copy {
-    
-    TL_inputMediaAudio *objc = [[TL_inputMediaAudio alloc] init];
-    
-    objc.n_id = [self.n_id copy];
-    
-    return objc;
-}
-        
-
-    
--(id)initWithCoder:(NSCoder *)aDecoder {
-
-    if((self = [ClassStore deserialize:[aDecoder decodeObjectForKey:@"data"]])) {
-        
-    }
-    
-    return self;
-}
-        
--(void)encodeWithCoder:(NSCoder *)aCoder {
-    [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
-}
-        
-
-        
-@end
-
 @implementation TL_inputMediaUploadedDocument
 +(TL_inputMediaUploadedDocument*)createWithFile:(TLInputFile*)file mime_type:(NSString*)mime_type attributes:(NSMutableArray*)attributes caption:(NSString*)caption {
 	TL_inputMediaUploadedDocument* obj = [[TL_inputMediaUploadedDocument alloc] init];
@@ -2022,51 +1932,6 @@
 -(TL_inputEncryptedFileLocation *)copy {
     
     TL_inputEncryptedFileLocation *objc = [[TL_inputEncryptedFileLocation alloc] init];
-    
-    objc.n_id = self.n_id;
-    objc.access_hash = self.access_hash;
-    
-    return objc;
-}
-        
-
-    
--(id)initWithCoder:(NSCoder *)aDecoder {
-
-    if((self = [ClassStore deserialize:[aDecoder decodeObjectForKey:@"data"]])) {
-        
-    }
-    
-    return self;
-}
-        
--(void)encodeWithCoder:(NSCoder *)aCoder {
-    [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
-}
-        
-
-        
-@end
-
-@implementation TL_inputAudioFileLocation
-+(TL_inputAudioFileLocation*)createWithN_id:(long)n_id access_hash:(long)access_hash {
-	TL_inputAudioFileLocation* obj = [[TL_inputAudioFileLocation alloc] init];
-	obj.n_id = n_id;
-	obj.access_hash = access_hash;
-	return obj;
-}
--(void)serialize:(SerializedData*)stream {
-	[stream writeLong:self.n_id];
-	[stream writeLong:self.access_hash];
-}
--(void)unserialize:(SerializedData*)stream {
-	super.n_id = [stream readLong];
-	super.access_hash = [stream readLong];
-}
-        
--(TL_inputAudioFileLocation *)copy {
-    
-    TL_inputAudioFileLocation *objc = [[TL_inputAudioFileLocation alloc] init];
     
     objc.n_id = self.n_id;
     objc.access_hash = self.access_hash;
@@ -6371,47 +6236,6 @@
         
 @end
 
-@implementation TL_messageMediaAudio
-+(TL_messageMediaAudio*)createWithAudio:(TLAudio*)audio {
-	TL_messageMediaAudio* obj = [[TL_messageMediaAudio alloc] init];
-	obj.audio = audio;
-	return obj;
-}
--(void)serialize:(SerializedData*)stream {
-	[ClassStore TLSerialize:self.audio stream:stream];
-}
--(void)unserialize:(SerializedData*)stream {
-	self.audio = [ClassStore TLDeserialize:stream];
-}
-        
--(TL_messageMediaAudio *)copy {
-    
-    TL_messageMediaAudio *objc = [[TL_messageMediaAudio alloc] init];
-    
-    objc.audio = [self.audio copy];
-    
-    return objc;
-}
-        
-
-    
--(id)initWithCoder:(NSCoder *)aDecoder {
-
-    if((self = [ClassStore deserialize:[aDecoder decodeObjectForKey:@"data"]])) {
-        
-    }
-    
-    return self;
-}
-        
--(void)encodeWithCoder:(NSCoder *)aCoder {
-    [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
-}
-        
-
-        
-@end
-
 @implementation TL_messageMediaWebPage
 +(TL_messageMediaWebPage*)createWithWebpage:(TLWebPage*)webpage {
 	TL_messageMediaWebPage* obj = [[TL_messageMediaWebPage alloc] init];
@@ -6573,6 +6397,47 @@
     
     objc.bot_result = [self.bot_result copy];
     objc.query_id = self.query_id;
+    
+    return objc;
+}
+        
+
+    
+-(id)initWithCoder:(NSCoder *)aDecoder {
+
+    if((self = [ClassStore deserialize:[aDecoder decodeObjectForKey:@"data"]])) {
+        
+    }
+    
+    return self;
+}
+        
+-(void)encodeWithCoder:(NSCoder *)aCoder {
+    [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
+}
+        
+
+        
+@end
+
+@implementation TL_messageMediaAudio
++(TL_messageMediaAudio*)createWithAudio:(TLAudio*)audio {
+	TL_messageMediaAudio* obj = [[TL_messageMediaAudio alloc] init];
+	obj.audio = audio;
+	return obj;
+}
+-(void)serialize:(SerializedData*)stream {
+	[ClassStore TLSerialize:self.audio stream:stream];
+}
+-(void)unserialize:(SerializedData*)stream {
+	self.audio = [ClassStore TLDeserialize:stream];
+}
+        
+-(TL_messageMediaAudio *)copy {
+    
+    TL_messageMediaAudio *objc = [[TL_messageMediaAudio alloc] init];
+    
+    objc.audio = [self.audio copy];
     
     return objc;
 }
@@ -9181,55 +9046,6 @@
         
 @end
 
-@implementation TLContactSuggested
-
-@end
-        
-@implementation TL_contactSuggested
-+(TL_contactSuggested*)createWithUser_id:(int)user_id mutual_contacts:(int)mutual_contacts {
-	TL_contactSuggested* obj = [[TL_contactSuggested alloc] init];
-	obj.user_id = user_id;
-	obj.mutual_contacts = mutual_contacts;
-	return obj;
-}
--(void)serialize:(SerializedData*)stream {
-	[stream writeInt:self.user_id];
-	[stream writeInt:self.mutual_contacts];
-}
--(void)unserialize:(SerializedData*)stream {
-	super.user_id = [stream readInt];
-	super.mutual_contacts = [stream readInt];
-}
-        
--(TL_contactSuggested *)copy {
-    
-    TL_contactSuggested *objc = [[TL_contactSuggested alloc] init];
-    
-    objc.user_id = self.user_id;
-    objc.mutual_contacts = self.mutual_contacts;
-    
-    return objc;
-}
-        
-
-    
--(id)initWithCoder:(NSCoder *)aDecoder {
-
-    if((self = [ClassStore deserialize:[aDecoder decodeObjectForKey:@"data"]])) {
-        
-    }
-    
-    return self;
-}
-        
--(void)encodeWithCoder:(NSCoder *)aCoder {
-    [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
-}
-        
-
-        
-@end
-
 @implementation TLContactStatus
 
 @end
@@ -9747,99 +9563,6 @@
     
     objc.n_count = self.n_count;
     objc.blocked = [self.blocked copy];
-    objc.users = [self.users copy];
-    
-    return objc;
-}
-        
-
-    
--(id)initWithCoder:(NSCoder *)aDecoder {
-
-    if((self = [ClassStore deserialize:[aDecoder decodeObjectForKey:@"data"]])) {
-        
-    }
-    
-    return self;
-}
-        
--(void)encodeWithCoder:(NSCoder *)aCoder {
-    [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
-}
-        
-
-        
-@end
-
-@implementation TLcontacts_Suggested
-
-@end
-        
-@implementation TL_contacts_suggested
-+(TL_contacts_suggested*)createWithResults:(NSMutableArray*)results users:(NSMutableArray*)users {
-	TL_contacts_suggested* obj = [[TL_contacts_suggested alloc] init];
-	obj.results = results;
-	obj.users = users;
-	return obj;
-}
--(void)serialize:(SerializedData*)stream {
-	//Serialize FullVector
-	[stream writeInt:0x1cb5c415];
-	{
-		NSInteger tl_count = [self.results count];
-		[stream writeInt:(int)tl_count];
-		for(int i = 0; i < (int)tl_count; i++) {
-            TLContactSuggested* obj = [self.results objectAtIndex:i];
-            [ClassStore TLSerialize:obj stream:stream];
-		}
-	}
-	//Serialize FullVector
-	[stream writeInt:0x1cb5c415];
-	{
-		NSInteger tl_count = [self.users count];
-		[stream writeInt:(int)tl_count];
-		for(int i = 0; i < (int)tl_count; i++) {
-            TLUser* obj = [self.users objectAtIndex:i];
-            [ClassStore TLSerialize:obj stream:stream];
-		}
-	}
-}
--(void)unserialize:(SerializedData*)stream {
-	//UNS FullVector
-	[stream readInt];
-	{
-		if(!self.results)
-			self.results = [[NSMutableArray alloc] init];
-		int count = [stream readInt];
-		for(int i = 0; i < count; i++) {
-			TLContactSuggested* obj = [ClassStore TLDeserialize:stream];
-            if(obj != nil && [obj isKindOfClass:[TLContactSuggested class]])
-                 [self.results addObject:obj];
-            else
-                break;
-		}
-	}
-	//UNS FullVector
-	[stream readInt];
-	{
-		if(!self.users)
-			self.users = [[NSMutableArray alloc] init];
-		int count = [stream readInt];
-		for(int i = 0; i < count; i++) {
-			TLUser* obj = [ClassStore TLDeserialize:stream];
-            if(obj != nil && [obj isKindOfClass:[TLUser class]])
-                 [self.users addObject:obj];
-            else
-                break;
-		}
-	}
-}
-        
--(TL_contacts_suggested *)copy {
-    
-    TL_contacts_suggested *objc = [[TL_contacts_suggested alloc] init];
-    
-    objc.results = [self.results copy];
     objc.users = [self.users copy];
     
     return objc;
@@ -11018,88 +10741,6 @@
         
 @end
 
-@implementation TL_inputMessagesFilterAudio
-+(TL_inputMessagesFilterAudio*)create {
-	TL_inputMessagesFilterAudio* obj = [[TL_inputMessagesFilterAudio alloc] init];
-	
-	return obj;
-}
--(void)serialize:(SerializedData*)stream {
-	
-}
--(void)unserialize:(SerializedData*)stream {
-	
-}
-        
--(TL_inputMessagesFilterAudio *)copy {
-    
-    TL_inputMessagesFilterAudio *objc = [[TL_inputMessagesFilterAudio alloc] init];
-    
-    
-    
-    return objc;
-}
-        
-
-    
--(id)initWithCoder:(NSCoder *)aDecoder {
-
-    if((self = [ClassStore deserialize:[aDecoder decodeObjectForKey:@"data"]])) {
-        
-    }
-    
-    return self;
-}
-        
--(void)encodeWithCoder:(NSCoder *)aCoder {
-    [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
-}
-        
-
-        
-@end
-
-@implementation TL_inputMessagesFilterAudioDocuments
-+(TL_inputMessagesFilterAudioDocuments*)create {
-	TL_inputMessagesFilterAudioDocuments* obj = [[TL_inputMessagesFilterAudioDocuments alloc] init];
-	
-	return obj;
-}
--(void)serialize:(SerializedData*)stream {
-	
-}
--(void)unserialize:(SerializedData*)stream {
-	
-}
-        
--(TL_inputMessagesFilterAudioDocuments *)copy {
-    
-    TL_inputMessagesFilterAudioDocuments *objc = [[TL_inputMessagesFilterAudioDocuments alloc] init];
-    
-    
-    
-    return objc;
-}
-        
-
-    
--(id)initWithCoder:(NSCoder *)aDecoder {
-
-    if((self = [ClassStore deserialize:[aDecoder decodeObjectForKey:@"data"]])) {
-        
-    }
-    
-    return self;
-}
-        
--(void)encodeWithCoder:(NSCoder *)aCoder {
-    [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
-}
-        
-
-        
-@end
-
 @implementation TL_inputMessagesFilterUrl
 +(TL_inputMessagesFilterUrl*)create {
 	TL_inputMessagesFilterUrl* obj = [[TL_inputMessagesFilterUrl alloc] init];
@@ -11157,6 +10798,88 @@
 -(TL_inputMessagesFilterGif *)copy {
     
     TL_inputMessagesFilterGif *objc = [[TL_inputMessagesFilterGif alloc] init];
+    
+    
+    
+    return objc;
+}
+        
+
+    
+-(id)initWithCoder:(NSCoder *)aDecoder {
+
+    if((self = [ClassStore deserialize:[aDecoder decodeObjectForKey:@"data"]])) {
+        
+    }
+    
+    return self;
+}
+        
+-(void)encodeWithCoder:(NSCoder *)aCoder {
+    [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
+}
+        
+
+        
+@end
+
+@implementation TL_inputMessagesFilterVoice
++(TL_inputMessagesFilterVoice*)create {
+	TL_inputMessagesFilterVoice* obj = [[TL_inputMessagesFilterVoice alloc] init];
+	
+	return obj;
+}
+-(void)serialize:(SerializedData*)stream {
+	
+}
+-(void)unserialize:(SerializedData*)stream {
+	
+}
+        
+-(TL_inputMessagesFilterVoice *)copy {
+    
+    TL_inputMessagesFilterVoice *objc = [[TL_inputMessagesFilterVoice alloc] init];
+    
+    
+    
+    return objc;
+}
+        
+
+    
+-(id)initWithCoder:(NSCoder *)aDecoder {
+
+    if((self = [ClassStore deserialize:[aDecoder decodeObjectForKey:@"data"]])) {
+        
+    }
+    
+    return self;
+}
+        
+-(void)encodeWithCoder:(NSCoder *)aCoder {
+    [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
+}
+        
+
+        
+@end
+
+@implementation TL_inputMessagesFilterMusic
++(TL_inputMessagesFilterMusic*)create {
+	TL_inputMessagesFilterMusic* obj = [[TL_inputMessagesFilterMusic alloc] init];
+	
+	return obj;
+}
+-(void)serialize:(SerializedData*)stream {
+	
+}
+-(void)unserialize:(SerializedData*)stream {
+	
+}
+        
+-(TL_inputMessagesFilterMusic *)copy {
+    
+    TL_inputMessagesFilterMusic *objc = [[TL_inputMessagesFilterMusic alloc] init];
     
     
     
@@ -13277,6 +13000,55 @@
     objc.user_id = self.user_id;
     objc.query = self.query;
     objc.offset = self.offset;
+    
+    return objc;
+}
+        
+
+    
+-(id)initWithCoder:(NSCoder *)aDecoder {
+
+    if((self = [ClassStore deserialize:[aDecoder decodeObjectForKey:@"data"]])) {
+        
+    }
+    
+    return self;
+}
+        
+-(void)encodeWithCoder:(NSCoder *)aCoder {
+    [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
+}
+        
+
+        
+@end
+
+@implementation TL_updateBotInlineSend
++(TL_updateBotInlineSend*)createWithUser_id:(int)user_id query:(NSString*)query bot_inline_id:(NSString*)bot_inline_id {
+	TL_updateBotInlineSend* obj = [[TL_updateBotInlineSend alloc] init];
+	obj.user_id = user_id;
+	obj.query = query;
+	obj.bot_inline_id = bot_inline_id;
+	return obj;
+}
+-(void)serialize:(SerializedData*)stream {
+	[stream writeInt:self.user_id];
+	[stream writeString:self.query];
+	[stream writeString:self.bot_inline_id];
+}
+-(void)unserialize:(SerializedData*)stream {
+	super.user_id = [stream readInt];
+	super.query = [stream readString];
+	super.bot_inline_id = [stream readString];
+}
+        
+-(TL_updateBotInlineSend *)copy {
+    
+    TL_updateBotInlineSend *objc = [[TL_updateBotInlineSend alloc] init];
+    
+    objc.user_id = self.user_id;
+    objc.query = self.query;
+    objc.bot_inline_id = self.bot_inline_id;
     
     return objc;
 }
@@ -16191,96 +15963,6 @@
         
 @end
 
-@implementation TLInputAudio
-
-@end
-        
-@implementation TL_inputAudioEmpty
-+(TL_inputAudioEmpty*)create {
-	TL_inputAudioEmpty* obj = [[TL_inputAudioEmpty alloc] init];
-	
-	return obj;
-}
--(void)serialize:(SerializedData*)stream {
-	
-}
--(void)unserialize:(SerializedData*)stream {
-	
-}
-        
--(TL_inputAudioEmpty *)copy {
-    
-    TL_inputAudioEmpty *objc = [[TL_inputAudioEmpty alloc] init];
-    
-    
-    
-    return objc;
-}
-        
-
-    
--(id)initWithCoder:(NSCoder *)aDecoder {
-
-    if((self = [ClassStore deserialize:[aDecoder decodeObjectForKey:@"data"]])) {
-        
-    }
-    
-    return self;
-}
-        
--(void)encodeWithCoder:(NSCoder *)aCoder {
-    [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
-}
-        
-
-        
-@end
-
-@implementation TL_inputAudio
-+(TL_inputAudio*)createWithN_id:(long)n_id access_hash:(long)access_hash {
-	TL_inputAudio* obj = [[TL_inputAudio alloc] init];
-	obj.n_id = n_id;
-	obj.access_hash = access_hash;
-	return obj;
-}
--(void)serialize:(SerializedData*)stream {
-	[stream writeLong:self.n_id];
-	[stream writeLong:self.access_hash];
-}
--(void)unserialize:(SerializedData*)stream {
-	super.n_id = [stream readLong];
-	super.access_hash = [stream readLong];
-}
-        
--(TL_inputAudio *)copy {
-    
-    TL_inputAudio *objc = [[TL_inputAudio alloc] init];
-    
-    objc.n_id = self.n_id;
-    objc.access_hash = self.access_hash;
-    
-    return objc;
-}
-        
-
-    
--(id)initWithCoder:(NSCoder *)aDecoder {
-
-    if((self = [ClassStore deserialize:[aDecoder decodeObjectForKey:@"data"]])) {
-        
-    }
-    
-    return self;
-}
-        
--(void)encodeWithCoder:(NSCoder *)aCoder {
-    [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
-}
-        
-
-        
-@end
-
 @implementation TLInputDocument
 
 @end
@@ -16348,185 +16030,6 @@
     
     objc.n_id = self.n_id;
     objc.access_hash = self.access_hash;
-    
-    return objc;
-}
-        
-
-    
--(id)initWithCoder:(NSCoder *)aDecoder {
-
-    if((self = [ClassStore deserialize:[aDecoder decodeObjectForKey:@"data"]])) {
-        
-    }
-    
-    return self;
-}
-        
--(void)encodeWithCoder:(NSCoder *)aCoder {
-    [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
-}
-        
-
-        
-@end
-
-@implementation TLAudio
-
-@end
-        
-@implementation TL_audioEmpty
-+(TL_audioEmpty*)createWithN_id:(long)n_id {
-	TL_audioEmpty* obj = [[TL_audioEmpty alloc] init];
-	obj.n_id = n_id;
-	return obj;
-}
--(void)serialize:(SerializedData*)stream {
-	[stream writeLong:self.n_id];
-}
--(void)unserialize:(SerializedData*)stream {
-	super.n_id = [stream readLong];
-}
-        
--(TL_audioEmpty *)copy {
-    
-    TL_audioEmpty *objc = [[TL_audioEmpty alloc] init];
-    
-    objc.n_id = self.n_id;
-    
-    return objc;
-}
-        
-
-    
--(id)initWithCoder:(NSCoder *)aDecoder {
-
-    if((self = [ClassStore deserialize:[aDecoder decodeObjectForKey:@"data"]])) {
-        
-    }
-    
-    return self;
-}
-        
--(void)encodeWithCoder:(NSCoder *)aCoder {
-    [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
-}
-        
-
-        
-@end
-
-@implementation TL_audio
-+(TL_audio*)createWithN_id:(long)n_id access_hash:(long)access_hash date:(int)date duration:(int)duration mime_type:(NSString*)mime_type size:(int)size dc_id:(int)dc_id {
-	TL_audio* obj = [[TL_audio alloc] init];
-	obj.n_id = n_id;
-	obj.access_hash = access_hash;
-	obj.date = date;
-	obj.duration = duration;
-	obj.mime_type = mime_type;
-	obj.size = size;
-	obj.dc_id = dc_id;
-	return obj;
-}
--(void)serialize:(SerializedData*)stream {
-	[stream writeLong:self.n_id];
-	[stream writeLong:self.access_hash];
-	[stream writeInt:self.date];
-	[stream writeInt:self.duration];
-	[stream writeString:self.mime_type];
-	[stream writeInt:self.size];
-	[stream writeInt:self.dc_id];
-}
--(void)unserialize:(SerializedData*)stream {
-	super.n_id = [stream readLong];
-	super.access_hash = [stream readLong];
-	super.date = [stream readInt];
-	super.duration = [stream readInt];
-	super.mime_type = [stream readString];
-	super.size = [stream readInt];
-	super.dc_id = [stream readInt];
-}
-        
--(TL_audio *)copy {
-    
-    TL_audio *objc = [[TL_audio alloc] init];
-    
-    objc.n_id = self.n_id;
-    objc.access_hash = self.access_hash;
-    objc.date = self.date;
-    objc.duration = self.duration;
-    objc.mime_type = self.mime_type;
-    objc.size = self.size;
-    objc.dc_id = self.dc_id;
-    
-    return objc;
-}
-        
-
-    
--(id)initWithCoder:(NSCoder *)aDecoder {
-
-    if((self = [ClassStore deserialize:[aDecoder decodeObjectForKey:@"data"]])) {
-        
-    }
-    
-    return self;
-}
-        
--(void)encodeWithCoder:(NSCoder *)aCoder {
-    [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
-}
-        
-
-        
-@end
-
-@implementation TL_audio_old29
-+(TL_audio_old29*)createWithN_id:(long)n_id access_hash:(long)access_hash user_id:(int)user_id date:(int)date duration:(int)duration mime_type:(NSString*)mime_type size:(int)size dc_id:(int)dc_id {
-	TL_audio_old29* obj = [[TL_audio_old29 alloc] init];
-	obj.n_id = n_id;
-	obj.access_hash = access_hash;
-	obj.user_id = user_id;
-	obj.date = date;
-	obj.duration = duration;
-	obj.mime_type = mime_type;
-	obj.size = size;
-	obj.dc_id = dc_id;
-	return obj;
-}
--(void)serialize:(SerializedData*)stream {
-	[stream writeLong:self.n_id];
-	[stream writeLong:self.access_hash];
-	[stream writeInt:self.user_id];
-	[stream writeInt:self.date];
-	[stream writeInt:self.duration];
-	[stream writeString:self.mime_type];
-	[stream writeInt:self.size];
-	[stream writeInt:self.dc_id];
-}
--(void)unserialize:(SerializedData*)stream {
-	super.n_id = [stream readLong];
-	super.access_hash = [stream readLong];
-	super.user_id = [stream readInt];
-	super.date = [stream readInt];
-	super.duration = [stream readInt];
-	super.mime_type = [stream readString];
-	super.size = [stream readInt];
-	super.dc_id = [stream readInt];
-}
-        
--(TL_audio_old29 *)copy {
-    
-    TL_audio_old29 *objc = [[TL_audio_old29 alloc] init];
-    
-    objc.n_id = self.n_id;
-    objc.access_hash = self.access_hash;
-    objc.user_id = self.user_id;
-    objc.date = self.date;
-    objc.duration = self.duration;
-    objc.mime_type = self.mime_type;
-    objc.size = self.size;
-    objc.dc_id = self.dc_id;
     
     return objc;
 }
@@ -18492,7 +17995,9 @@
 @end
 
 @implementation TLDocumentAttribute
-
+            
+-(BOOL)isIs_voice {return NO;}
+            
 @end
         
 @implementation TL_documentAttributeImageSize
@@ -18676,31 +18181,43 @@
 @end
 
 @implementation TL_documentAttributeAudio
-+(TL_documentAttributeAudio*)createWithDuration:(int)duration title:(NSString*)title performer:(NSString*)performer {
++(TL_documentAttributeAudio*)createWithFlags:(int)flags  duration:(int)duration title:(NSString*)title performer:(NSString*)performer waveform:(NSData*)waveform {
 	TL_documentAttributeAudio* obj = [[TL_documentAttributeAudio alloc] init];
+	obj.flags = flags;
+	
 	obj.duration = duration;
 	obj.title = title;
 	obj.performer = performer;
+	obj.waveform = waveform;
 	return obj;
 }
 -(void)serialize:(SerializedData*)stream {
+	[stream writeInt:self.flags];
+	
 	[stream writeInt:self.duration];
-	[stream writeString:self.title];
-	[stream writeString:self.performer];
+	if(self.flags & (1 << 0)) {[stream writeString:self.title];}
+	if(self.flags & (1 << 1)) {[stream writeString:self.performer];}
+	if(self.flags & (1 << 2)) {[stream writeByteArray:self.waveform];}
 }
 -(void)unserialize:(SerializedData*)stream {
+	super.flags = [stream readInt];
+	
 	super.duration = [stream readInt];
-	super.title = [stream readString];
-	super.performer = [stream readString];
+	if(self.flags & (1 << 0)) {super.title = [stream readString];}
+	if(self.flags & (1 << 1)) {super.performer = [stream readString];}
+	if(self.flags & (1 << 2)) {super.waveform = [stream readByteArray];}
 }
         
 -(TL_documentAttributeAudio *)copy {
     
     TL_documentAttributeAudio *objc = [[TL_documentAttributeAudio alloc] init];
     
+    objc.flags = self.flags;
+    
     objc.duration = self.duration;
     objc.title = self.title;
     objc.performer = self.performer;
+    objc.waveform = [self.waveform copy];
     
     return objc;
 }
@@ -18720,7 +18237,27 @@
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
         
-
+            
+-(BOOL)isIs_voice {return (self.flags & (1 << 10)) > 0;}
+                        
+-(void)setTitle:(NSString*)title
+{
+   super.title = title;
+                
+    if(super.title == nil)  { super.flags&= ~ (1 << 0) ;} else { super.flags|= (1 << 0); }
+}            
+-(void)setPerformer:(NSString*)performer
+{
+   super.performer = performer;
+                
+    if(super.performer == nil)  { super.flags&= ~ (1 << 1) ;} else { super.flags|= (1 << 1); }
+}            
+-(void)setWaveform:(NSData*)waveform
+{
+   super.waveform = waveform;
+                
+    if(super.waveform == nil)  { super.flags&= ~ (1 << 2) ;} else { super.flags|= (1 << 2); }
+}
         
 @end
 
@@ -24579,6 +24116,144 @@
                 
     if(super.next_offset == nil)  { super.flags&= ~ (1 << 1) ;} else { super.flags|= (1 << 1); }
 }
+        
+@end
+
+@implementation TLAudio
+
+@end
+        
+@implementation TL_audio_old29
++(TL_audio_old29*)createWithN_id:(long)n_id access_hash:(long)access_hash user_id:(int)user_id date:(int)date duration:(int)duration mime_type:(NSString*)mime_type size:(int)size dc_id:(int)dc_id {
+	TL_audio_old29* obj = [[TL_audio_old29 alloc] init];
+	obj.n_id = n_id;
+	obj.access_hash = access_hash;
+	obj.user_id = user_id;
+	obj.date = date;
+	obj.duration = duration;
+	obj.mime_type = mime_type;
+	obj.size = size;
+	obj.dc_id = dc_id;
+	return obj;
+}
+-(void)serialize:(SerializedData*)stream {
+	[stream writeLong:self.n_id];
+	[stream writeLong:self.access_hash];
+	[stream writeInt:self.user_id];
+	[stream writeInt:self.date];
+	[stream writeInt:self.duration];
+	[stream writeString:self.mime_type];
+	[stream writeInt:self.size];
+	[stream writeInt:self.dc_id];
+}
+-(void)unserialize:(SerializedData*)stream {
+	super.n_id = [stream readLong];
+	super.access_hash = [stream readLong];
+	super.user_id = [stream readInt];
+	super.date = [stream readInt];
+	super.duration = [stream readInt];
+	super.mime_type = [stream readString];
+	super.size = [stream readInt];
+	super.dc_id = [stream readInt];
+}
+        
+-(TL_audio_old29 *)copy {
+    
+    TL_audio_old29 *objc = [[TL_audio_old29 alloc] init];
+    
+    objc.n_id = self.n_id;
+    objc.access_hash = self.access_hash;
+    objc.user_id = self.user_id;
+    objc.date = self.date;
+    objc.duration = self.duration;
+    objc.mime_type = self.mime_type;
+    objc.size = self.size;
+    objc.dc_id = self.dc_id;
+    
+    return objc;
+}
+        
+
+    
+-(id)initWithCoder:(NSCoder *)aDecoder {
+
+    if((self = [ClassStore deserialize:[aDecoder decodeObjectForKey:@"data"]])) {
+        
+    }
+    
+    return self;
+}
+        
+-(void)encodeWithCoder:(NSCoder *)aCoder {
+    [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
+}
+        
+
+        
+@end
+
+@implementation TL_audio
++(TL_audio*)createWithN_id:(long)n_id access_hash:(long)access_hash date:(int)date duration:(int)duration mime_type:(NSString*)mime_type size:(int)size dc_id:(int)dc_id {
+	TL_audio* obj = [[TL_audio alloc] init];
+	obj.n_id = n_id;
+	obj.access_hash = access_hash;
+	obj.date = date;
+	obj.duration = duration;
+	obj.mime_type = mime_type;
+	obj.size = size;
+	obj.dc_id = dc_id;
+	return obj;
+}
+-(void)serialize:(SerializedData*)stream {
+	[stream writeLong:self.n_id];
+	[stream writeLong:self.access_hash];
+	[stream writeInt:self.date];
+	[stream writeInt:self.duration];
+	[stream writeString:self.mime_type];
+	[stream writeInt:self.size];
+	[stream writeInt:self.dc_id];
+}
+-(void)unserialize:(SerializedData*)stream {
+	super.n_id = [stream readLong];
+	super.access_hash = [stream readLong];
+	super.date = [stream readInt];
+	super.duration = [stream readInt];
+	super.mime_type = [stream readString];
+	super.size = [stream readInt];
+	super.dc_id = [stream readInt];
+}
+        
+-(TL_audio *)copy {
+    
+    TL_audio *objc = [[TL_audio alloc] init];
+    
+    objc.n_id = self.n_id;
+    objc.access_hash = self.access_hash;
+    objc.date = self.date;
+    objc.duration = self.duration;
+    objc.mime_type = self.mime_type;
+    objc.size = self.size;
+    objc.dc_id = self.dc_id;
+    
+    return objc;
+}
+        
+
+    
+-(id)initWithCoder:(NSCoder *)aDecoder {
+
+    if((self = [ClassStore deserialize:[aDecoder decodeObjectForKey:@"data"]])) {
+        
+    }
+    
+    return self;
+}
+        
+-(void)encodeWithCoder:(NSCoder *)aCoder {
+    [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
+}
+        
+
         
 @end
 

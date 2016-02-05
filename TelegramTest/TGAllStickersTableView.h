@@ -11,7 +11,7 @@
 
 @interface TGAllStickersTableView : TMTableView
 
-@property (nonatomic,assign,readonly) BOOL hasRecentStickers;
+@property (nonatomic,assign) BOOL hasRecentStickers;
 
 @property (nonatomic,assign) BOOL canSendStickerAlways;
 

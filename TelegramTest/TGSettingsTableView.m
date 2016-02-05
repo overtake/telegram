@@ -22,6 +22,8 @@
 }
 
 
+
+
 - (void)setFrameSize:(NSSize)newSize {
    
     
@@ -92,6 +94,8 @@
     return self;
 }
 
+
+
 - (CGFloat)rowHeight:(NSUInteger)row item:(TGGeneralRowItem *) item {
     return  item.height;
 }
@@ -106,8 +110,11 @@
 }
 
 -(BOOL)insert:(NSArray *)array startIndex:(NSUInteger)startIndex tableRedraw:(BOOL)tableRedraw {
+    
+    weak();
+    
     [array enumerateObjectsUsingBlock:^(TGGeneralRowItem *obj, NSUInteger idx, BOOL * _Nonnull stop) {
-        [obj updateItemHeightWithWidth:NSWidth(self.frame)];
+        [obj updateItemHeightWithWidth:NSWidth(weakSelf.frame)];
     }];
     return [super insert:array startIndex:startIndex tableRedraw:tableRedraw];
 }
@@ -119,6 +126,11 @@
 
 - (TMRowView *)viewForRow:(NSUInteger)row item:(TGGeneralRowItem *) item {
    return [self cacheViewForClass:[item viewClass] identifier:NSStringFromClass([item viewClass]) withSize:NSMakeSize(NSWidth(self.frame), [item height])];
+}
+
+
+-(void)dealloc {
+    
 }
 
 - (void)selectionDidChange:(NSInteger)row item:(TGGeneralRowItem *) item {

@@ -752,15 +752,13 @@ Class convertClass(NSString *c, int layer) {
         
     } else if([media isKindOfClass:convertClass(@"Secret%d_DecryptedMessageMedia_decryptedMessageMediaAudio", layer)]) {
         
-        NSString *mime_type = [media respondsToSelector:@selector(mime_type)] ? [media valueForKey:@"mime_type"] : @"ogg";
+        NSString *mime_type = [media respondsToSelector:@selector(mime_type)] ? [media valueForKey:@"mime_type"] : @"audio/ogg";
         
-        return [TL_messageMediaAudio createWithAudio:[TL_audio createWithN_id:file.n_id access_hash:file.access_hash date:[[MTNetwork instance] getTime] duration:[[media valueForKey:@"duration"] intValue] mime_type:mime_type size:file.size dc_id:file.dc_id]];
+        NSMutableArray *attrs = [NSMutableArray array];
         
-    } else if([media isKindOfClass:convertClass(@"Secret%d_DecryptedMessageMedia_decryptedMessageMediaAudio", layer)]) {
+        [attrs addObject:[TL_documentAttributeAudio createWithFlags:(1 << 10) duration:[[media valueForKey:@"duration"] intValue] title:nil performer:nil waveform:nil]];
         
-        NSString *mime_type = [media respondsToSelector:@selector(mime_type)] ? [media valueForKey:@"mime_type"] : @"ogg";
-        
-        return [TL_messageMediaAudio createWithAudio:[TL_audio createWithN_id:file.n_id access_hash:file.access_hash date:[[MTNetwork instance] getTime] duration:[[media valueForKey:@"duration"] intValue] mime_type:mime_type size:file.size dc_id:file.dc_id]];
+        return [TL_messageMediaDocument createWithDocument:[TL_document createWithN_id:file.n_id access_hash:file.access_hash date:[[MTNetwork instance] getTime] mime_type:mime_type size:file.size thumb:[TL_photoSizeEmpty createWithType:@"x"] dc_id:file.dc_id attributes:attrs] caption:@""];
         
     }
     

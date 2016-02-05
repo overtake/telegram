@@ -90,4 +90,8 @@ NSString *first_domain_character(NSString *url);
 
 NSString *path_for_external_link(NSString *link);
 NSString *display_url(NSString *url);
+
+
++(NSArray*)arrayWaveform:(NSData *)waveform;
++ (int)convertBinaryStringToDecimalNumber:(NSString *)binaryString;
 @end

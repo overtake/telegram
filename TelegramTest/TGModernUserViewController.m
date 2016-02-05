@@ -500,6 +500,8 @@
 
 -(void)dealloc {
     
+    [_tableView clear];
+    
 }
 
 

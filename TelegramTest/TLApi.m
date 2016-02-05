@@ -2,7 +2,7 @@
 //  TLApi.m
 //  Telegram
 //
-//  Auto created by Mikhail Filimonov on 01.01.16..
+//  Auto created by Mikhail Filimonov on 04.02.16..
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -418,19 +418,6 @@
 }
 @end
 
-@implementation TLAPI_contacts_getSuggested
-+(TLAPI_contacts_getSuggested*)createWithLimit:(int)limit {
-    TLAPI_contacts_getSuggested* obj = [[TLAPI_contacts_getSuggested alloc] init];
-    obj.limit = limit;
-    return obj;
-}
-- (NSData*)getData {
-	SerializedData* stream = [ClassStore streamWithConstuctor:-847825880];
-	[stream writeInt:self.limit];
-	return [stream getOutput];
-}
-@end
-
 @implementation TLAPI_contacts_deleteContact
 +(TLAPI_contacts_deleteContact*)createWithN_id:(TLInputUser*)n_id {
     TLAPI_contacts_deleteContact* obj = [[TLAPI_contacts_deleteContact alloc] init];
@@ -590,10 +577,11 @@
 @end
 
 @implementation TLAPI_messages_getHistory
-+(TLAPI_messages_getHistory*)createWithPeer:(TLInputPeer*)peer offset_id:(int)offset_id add_offset:(int)add_offset limit:(int)limit max_id:(int)max_id min_id:(int)min_id {
++(TLAPI_messages_getHistory*)createWithPeer:(TLInputPeer*)peer offset_id:(int)offset_id offset_date:(int)offset_date add_offset:(int)add_offset limit:(int)limit max_id:(int)max_id min_id:(int)min_id {
     TLAPI_messages_getHistory* obj = [[TLAPI_messages_getHistory alloc] init];
     obj.peer = peer;
 	obj.offset_id = offset_id;
+	obj.offset_date = offset_date;
 	obj.add_offset = add_offset;
 	obj.limit = limit;
 	obj.max_id = max_id;
@@ -601,9 +589,10 @@
     return obj;
 }
 - (NSData*)getData {
-	SerializedData* stream = [ClassStore streamWithConstuctor:-1970355494];
+	SerializedData* stream = [ClassStore streamWithConstuctor:-1347868602];
 	[ClassStore TLSerialize:self.peer stream:stream];
 	[stream writeInt:self.offset_id];
+	[stream writeInt:self.offset_date];
 	[stream writeInt:self.add_offset];
 	[stream writeInt:self.limit];
 	[stream writeInt:self.max_id];
@@ -1981,10 +1970,11 @@
 @end
 
 @implementation TLAPI_channels_getImportantHistory
-+(TLAPI_channels_getImportantHistory*)createWithChannel:(TLInputChannel*)channel offset_id:(int)offset_id add_offset:(int)add_offset limit:(int)limit max_id:(int)max_id min_id:(int)min_id {
++(TLAPI_channels_getImportantHistory*)createWithChannel:(TLInputChannel*)channel offset_id:(int)offset_id offset_date:(int)offset_date add_offset:(int)add_offset limit:(int)limit max_id:(int)max_id min_id:(int)min_id {
     TLAPI_channels_getImportantHistory* obj = [[TLAPI_channels_getImportantHistory alloc] init];
     obj.channel = channel;
 	obj.offset_id = offset_id;
+	obj.offset_date = offset_date;
 	obj.add_offset = add_offset;
 	obj.limit = limit;
 	obj.max_id = max_id;
@@ -1992,9 +1982,10 @@
     return obj;
 }
 - (NSData*)getData {
-	SerializedData* stream = [ClassStore streamWithConstuctor:-575067701];
+	SerializedData* stream = [ClassStore streamWithConstuctor:-1891021902];
 	[ClassStore TLSerialize:self.channel stream:stream];
 	[stream writeInt:self.offset_id];
+	[stream writeInt:self.offset_date];
 	[stream writeInt:self.add_offset];
 	[stream writeInt:self.limit];
 	[stream writeInt:self.max_id];

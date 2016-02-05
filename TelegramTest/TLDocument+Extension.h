@@ -18,5 +18,7 @@
 -(TLDocumentAttribute *)attributeWithClass:(Class)className;
 -(NSSize)imageSize;
 -(BOOL)isExist;
+-(TL_documentAttributeAudio *)audioAttr;
+
 
 @end

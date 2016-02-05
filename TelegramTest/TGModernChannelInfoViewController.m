@@ -49,7 +49,6 @@
     [super loadView];
     
     _tableView = [[TGSettingsTableView alloc] initWithFrame:self.view.bounds];
-    
     [self.view addSubview:_tableView.containerView];
 }
 
@@ -67,6 +66,8 @@
 }
 
 -(void)didUpdatedEditableState {
+
+    weak();
     
     if(!self.action.isEditable && ![self.headerItem.firstChangedValue isEqualToString:_chat.title] && self.headerItem.firstChangedValue.length > 0) {
         
@@ -80,9 +81,9 @@
         [RPCRequest sendRequest:[TLAPI_channels_editTitle createWithChannel:_chat.inputPeer title:self.headerItem.firstChangedValue] successHandler:^(RPCRequest *request, id response) {
             
         } errorHandler:^(RPCRequest *request, RpcError *error) {
-            _chat.title = prev;
+            weakSelf.chat.title = prev;
             
-            [Notification perform:CHAT_UPDATE_TITLE data:@{KEY_CHAT:_chat.title}];
+            [Notification perform:CHAT_UPDATE_TITLE data:@{KEY_CHAT:weakSelf.chat.title}];
         }];
     }
     
@@ -90,7 +91,7 @@
      [_tableView.list enumerateObjectsUsingBlock:^(TMRowItem *obj, NSUInteger idx, BOOL * _Nonnull stop) {
         
         if([obj isKindOfClass:[TMRowItem class]]) {
-            [obj setEditable:self.action.isEditable];
+            [obj setEditable:weakSelf.action.isEditable];
         }
         
     }];
@@ -131,7 +132,7 @@
     [self removeScrollEvent];
     
     int offset = (int) _chat.chatFull.participants.participants.count;
-    
+        
     [RPCRequest sendRequest:[TLAPI_channels_getParticipants createWithChannel:_chat.inputPeer filter:[TL_channelParticipantsRecent create] offset:offset limit:30] successHandler:^(id request, TL_channels_channelParticipants *response) {
         
         [SharedManager proccessGlobalResponse:response];
@@ -152,6 +153,7 @@
         
         
     }];
+    
 
 }
 
@@ -251,6 +253,7 @@
 }
 
 -(void)configure {
+    
     
     [self.doneButton setHidden:!_chat.isManager && !_chat.isCreator];
     
@@ -538,9 +541,13 @@
         [self loadNextParticipants];
     }
     
+
+    
 }
 
 -(void)dealloc {
+    
+    [_tableView clear];
     
 }
 

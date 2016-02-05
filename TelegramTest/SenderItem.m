@@ -109,7 +109,7 @@ static NSMutableDictionary *senders;
                         item = [[CompressedDocumentSenderItem alloc] init];
                     }
                     
-                } else if([msg.media isKindOfClass:[TL_messageMediaAudio class]]) {
+                } else if(msg.media.document.audioAttr.isIs_voice) {
                     item = [[AudioSenderItem alloc] init];
                 } else if([msg.media isKindOfClass:[TL_messageMediaContact class]]) {
                     item = [[ShareContactSenterItem alloc] init];
@@ -141,7 +141,7 @@ static NSMutableDictionary *senders;
                             [(FileSecretSenderItem *)item setUploaderType:UploadVideoType];
                         } else if([msg.media isKindOfClass:[TL_messageMediaDocument class]] || [msg.media isKindOfClass:[TL_messageMediaDocument_old44 class]]) {
                             [(FileSecretSenderItem *)item setUploaderType:UploadDocumentType];
-                        } else if([msg.media isKindOfClass:[TL_messageMediaAudio class]]) {
+                        } else if(msg.media.document.audioAttr.isIs_voice) {
                             [(FileSecretSenderItem *)item setUploaderType:UploadAudioType];
                         }
                     }

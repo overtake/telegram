@@ -2204,6 +2204,10 @@ static NSTextAttachment *headerMediaIcon() {
         [self scrollToItem:item animated:YES centered:YES highlight:YES];
         
         return;
+    } else if(item && (flags & ShowMessageTypeDateJump) > 0) {
+         [self scrollToRect:[self.table rectOfRow:[self indexOfObject:item]] isCenter:NO animated:NO yOffset:48];
+        
+        return;
     }
     
     TL_conversation *conversation = self.conversation;
@@ -2313,8 +2317,10 @@ static NSTextAttachment *headerMediaIcon() {
                     
                 } else if(rect.origin.y == 0 || ((flags & ShowMessageTypeReply) > 0 || (flags & ShowMessageTypeSearch) > 0)) {
                     [self scrollToItem:item animated:NO centered:YES highlight:fromMsg != nil];
+                } else if((flags & ShowMessageTypeDateJump) > 0) {
+                    [self scrollToRect:[self.table rectOfRow:[self indexOfObject:item]] isCenter:NO animated:NO yOffset:48];
                 } else {
-                    
+                
                     __block NSRect drect = [self.table rectOfRow:[self indexOfObject:item]];
                     
                     
@@ -2739,7 +2745,7 @@ static NSTextAttachment *headerMediaIcon() {
     }];
 }
 
--(void)scrollToRect:(NSRect)rect isCenter:(BOOL)isCenter animated:(BOOL)animated {
+-(void)scrollToRect:(NSRect)rect isCenter:(BOOL)isCenter animated:(BOOL)animated yOffset:(int)yOffset {
     
     if(isCenter) {
         rect.origin.y += roundf((self.table.containerView.frame.size.height - rect.size.height) / 2) ;
@@ -2750,6 +2756,8 @@ static NSTextAttachment *headerMediaIcon() {
     
     if(rect.origin.y < 0)
         rect.origin.y = 0;
+    
+    rect.origin.y+=yOffset;
     
     [self.table.scrollView scrollToPoint:rect.origin animation:animated];
     
@@ -2772,10 +2780,6 @@ static NSTextAttachment *headerMediaIcon() {
         NSUInteger index = [self indexOfObject:item];
         
         NSRect rect = [self.table rectOfRow:index];
-        
-        
-        
-    //
         
         if(centered) {
             if(self.table.scrollView.documentOffset.y > rect.origin.y)
@@ -2808,7 +2812,7 @@ static NSTextAttachment *headerMediaIcon() {
             }];
 
         } else {
-            [self scrollToRect:rect isCenter:centered animated:animated];
+            [self scrollToRect:rect isCenter:centered animated:animated yOffset:0];
         }
         
     }
@@ -3403,7 +3407,7 @@ static NSTextAttachment *headerMediaIcon() {
 }
 
 
-- (void)sendAudio:(NSString *)file_path forConversation:(TL_conversation *)conversation {
+- (void)sendAudio:(NSString *)file_path forConversation:(TL_conversation *)conversation waveforms:(NSData *)waveforms {
     
     if(!conversation.canSendMessage) return;
     
@@ -3420,7 +3424,7 @@ static NSTextAttachment *headerMediaIcon() {
         if(self.conversation.type == DialogTypeSecretChat) {
             sender = [[FileSecretSenderItem alloc] initWithPath:file_path uploadType:UploadAudioType forConversation:conversation];
         } else {
-            sender = [[AudioSenderItem alloc] initWithPath:file_path forConversation:conversation additionFlags:self.senderFlags];
+            sender = [[AudioSenderItem alloc] initWithPath:file_path forConversation:conversation additionFlags:self.senderFlags waveforms:waveforms];
         }
         
         sender.tableItem = [[self messageTableItemsFromMessages:@[sender.message]] lastObject];
@@ -3743,19 +3747,24 @@ static NSTextAttachment *headerMediaIcon() {
         
         [_webPageRequest cancelRequest];
         
+        weak();
+        
         _webPageRequest = [RPCRequest sendRequest:[TLAPI_messages_getWebPagePreview createWithMessage:link] successHandler:^(RPCRequest *request, TL_messageMediaWebPage *response) {
             
-            if([response isKindOfClass:[TL_messageMediaWebPage class]]) {
-                
-                [Storage addWebpage:response.webpage forLink:display_url(link)];
-                
-                if(![response.webpage isKindOfClass:[TL_webPageEmpty class]] && _webPageRequest) {
-                    [self updateWebpage];
-                }
-            } else if([response isKindOfClass:[TL_messageMediaEmpty class]]) {
-                [Storage addWebpage:[TL_webPageEmpty createWithN_id:0] forLink:display_url(link)];
-            }
+            strongWeak();
             
+            if(strongSelf != nil) {
+                if([response isKindOfClass:[TL_messageMediaWebPage class]]) {
+                    
+                    [Storage addWebpage:response.webpage forLink:display_url(link)];
+                    
+                    if(![response.webpage isKindOfClass:[TL_webPageEmpty class]] && _webPageRequest) {
+                        [strongSelf updateWebpage];
+                    }
+                } else if([response isKindOfClass:[TL_messageMediaEmpty class]]) {
+                    [Storage addWebpage:[TL_webPageEmpty createWithN_id:0] forLink:display_url(link)];
+                }
+            }
             
             
         } errorHandler:^(RPCRequest *request, RpcError *error) {

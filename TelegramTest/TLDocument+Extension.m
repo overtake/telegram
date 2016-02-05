@@ -79,6 +79,12 @@
     
     return isSticker;
 }
+
+
+-(TL_documentAttributeAudio *)audioAttr {
+    return (TL_documentAttributeAudio *) [self attributeWithClass:[TL_documentAttributeAudio class]];
+}
+
 -(NSSize)imageSize {
     __block NSSize size = NSZeroSize;
     

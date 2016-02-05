@@ -108,47 +108,55 @@
     
     TLAPI_messages_forwardMessages *request = [TLAPI_messages_forwardMessages createWithFlags:[self senderFlags] from_peer:from_peer n_id:[self.msg_ids mutableCopy] random_id:random_ids to_peer:self.conversation.inputPeer];
     
+    weak();
+    
     self.rpc_request = [RPCRequest sendRequest:request successHandler:^(RPCRequest *request, TLUpdates *response) {
         
         
-        if(response.updates.count < 2)
-        {
-            [self cancel];
-            return;
-        }
+        strongWeak();
         
-        NSMutableArray *messages = [[NSMutableArray alloc] init];
-        
-        [response.updates enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
-            
-            if([obj isKindOfClass:[TL_updateNewMessage class]] || [obj isKindOfClass:[TL_updateNewChannelMessage class]]) {
-                [messages addObject:[TL_localMessage convertReceivedMessage:(TL_localMessage *)[obj message]]];
+        if(strongSelf != nil) {
+            if(response.updates.count < 2)
+            {
+                [strongSelf cancel];
+                return;
             }
             
-        }];
-        
-        int k = (int) messages.count;
-        
-        for(int i = 0; i < messages.count; i++) {
+            NSMutableArray *messages = [[NSMutableArray alloc] init];
             
-            --k;
+            [response.updates enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+                
+                if([obj isKindOfClass:[TL_updateNewMessage class]] || [obj isKindOfClass:[TL_updateNewChannelMessage class]]) {
+                    [messages addObject:[TL_localMessage convertReceivedMessage:(TL_localMessage *)[obj message]]];
+                }
+                
+            }];
             
-            TL_localMessage *fake = self.fakes[i];
-            TL_localMessage *stated = messages[k];
+            int k = (int) messages.count;
             
-            fake.date = stated.date;
-            fake.n_id = stated.n_id;
-            fake.dstate = DeliveryStateNormal;
+            for(int i = 0; i < messages.count; i++) {
+                
+                --k;
+                
+                TL_localMessage *fake = self.fakes[i];
+                TL_localMessage *stated = messages[k];
+                
+                fake.date = stated.date;
+                fake.n_id = stated.n_id;
+                fake.dstate = DeliveryStateNormal;
+                
+                [fake save:i == 0];
+            }
             
-            [fake save:i == 0];
+            strongSelf.state = MessageSendingStateSent;
         }
         
-        self.state = MessageSendingStateSent;
+      
         
           
         
     } errorHandler:^(RPCRequest *request, RpcError *error) {
-        self.state = MessageSendingStateError;
+        weakSelf.state = MessageSendingStateError;
     } timeout:0 queue:[ASQueue globalQueue].nativeQueue];
 
 }

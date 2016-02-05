@@ -121,11 +121,12 @@
     
     [_headerItem setEditable:self.action.isEditable];
     
+    weak();
     
     [_tableView.list enumerateObjectsUsingBlock:^(TMRowItem *obj, NSUInteger idx, BOOL * _Nonnull stop) {
         
         if([obj isKindOfClass:[TMRowItem class]]) {
-            [obj setEditable:self.action.isEditable];
+            [obj setEditable:weakSelf.action.isEditable];
         }
         
     }];
@@ -155,14 +156,12 @@
     
     self.action.editable = NO;
     
-    
     [self updateActionNavigation];
-    
     [self configure];
-    
     [self drawParticipants];
-    
     [self checkSupergroup];
+    
+
     
     [Notification addObserver:self selector:@selector(chatParticipantsUpdateNotification:) name:CHAT_UPDATE_PARTICIPANTS];
     [Notification addObserver:self selector:@selector(didChangeChatFlags:) name:CHAT_FLAGS_UPDATED];
@@ -226,21 +225,19 @@
 
 -(void)configure {
     
-
+   
+    
     
     [self.doneButton setHidden:(_chat.isAdmins_enabled && (!_chat.isAdmin && !_chat.isCreator))];
     
     [_tableView removeAllItems:YES];
-    
     _headerItem = [[TGProfileHeaderRowItem alloc] initWithObject:_conversation];
     
     _headerItem.height = 142;
     [_headerItem setEditable:self.action.isEditable];
     
     [_tableView addItem:_headerItem tableRedraw:YES];
-    
-    
-    
+        
     
     _mediaItem = [[TGSProfileMediaRowItem alloc] initWithObject:_conversation];
     _mediaItem.height = 50;
@@ -264,21 +261,22 @@
     
     [_tableView addItem:[[TGGeneralRowItem alloc] initWithHeight:20] tableRedraw:YES];
     
-    
     [_tableView addItem:_notificationItem tableRedraw:YES];
-    
     
     
     _participantsHeaderItem = [[GeneralSettingsBlockHeaderItem alloc] initWithString:[NSString stringWithFormat:NSLocalizedString(@"Modern.Chat.Members", nil),_chat.chatFull.participants.participants.count] height:42 flipped:NO];
     
     [_tableView addItem:_participantsHeaderItem tableRedraw:YES];
     
-    
+   
     
 }
 
 
 -(void)drawParticipants {
+    
+    
+    
     
     [_participantsHeaderItem redrawRow];
     
@@ -299,7 +297,7 @@
         TGUserContainerRowItem *user = [[TGUserContainerRowItem alloc] initWithUser:[[UsersManager sharedManager] find:obj.user_id]];
         user.height = 50;
         user.type = SettingsRowItemTypeNone;
-        user.editable = self.action.isEditable;
+        user.editable = weakSelf.action.isEditable;
         
         
         [user setStateback:^id(TGGeneralRowItem *item) {
@@ -354,6 +352,7 @@
     
     [_tableView addItem:_deleteAndExitItem tableRedraw:YES];
     
+
 }
 
 
@@ -382,7 +381,7 @@
             
             NSMutableArray *filter = [[NSMutableArray alloc] init];
             
-            for (TL_chatParticipant *participant in _chat.chatFull.participants.participants) {
+            for (TL_chatParticipant *participant in weakSelf.chat.chatFull.participants.participants) {
                 [filter addObject:@(participant.user_id)];
             }
             
@@ -452,9 +451,6 @@
     
     int upgradeCount = maxChatUsers()+1;
     
-//#ifdef TGDEBUG 
-//    upgradeCount = ACCEPT_FEATURE ? 4 : upgradeCount;
-//#endif
     
     if(self.participantsRange.length >= upgradeCount && _chat.isCreator && ACCEPT_FEATURE) {
         
@@ -584,6 +580,8 @@
 }
 
 -(void)dealloc {
+    
+    [_tableView clear];
     
 }
 

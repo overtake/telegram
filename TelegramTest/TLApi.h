@@ -2,7 +2,7 @@
 //  TLApi.h
 //  Telegram
 //
-//  Auto created by Mikhail Filimonov on 01.01.16.
+//  Auto created by Mikhail Filimonov on 04.02.16.
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -187,12 +187,6 @@
 +(TLAPI_contacts_importContacts*)createWithContacts:(NSMutableArray*)contacts replace:(Boolean)replace;
 @end
 
-@interface TLAPI_contacts_getSuggested : TLApiObject
-@property int limit;
-
-+(TLAPI_contacts_getSuggested*)createWithLimit:(int)limit;
-@end
-
 @interface TLAPI_contacts_deleteContact : TLApiObject
 @property (nonatomic, strong) TLInputUser* n_id;
 
@@ -254,12 +248,13 @@
 @interface TLAPI_messages_getHistory : TLApiObject
 @property (nonatomic, strong) TLInputPeer* peer;
 @property int offset_id;
+@property int offset_date;
 @property int add_offset;
 @property int limit;
 @property int max_id;
 @property int min_id;
 
-+(TLAPI_messages_getHistory*)createWithPeer:(TLInputPeer*)peer offset_id:(int)offset_id add_offset:(int)add_offset limit:(int)limit max_id:(int)max_id min_id:(int)min_id;
++(TLAPI_messages_getHistory*)createWithPeer:(TLInputPeer*)peer offset_id:(int)offset_id offset_date:(int)offset_date add_offset:(int)add_offset limit:(int)limit max_id:(int)max_id min_id:(int)min_id;
 @end
 
 @interface TLAPI_messages_search : TLApiObject
@@ -840,12 +835,13 @@
 @interface TLAPI_channels_getImportantHistory : TLApiObject
 @property (nonatomic, strong) TLInputChannel* channel;
 @property int offset_id;
+@property int offset_date;
 @property int add_offset;
 @property int limit;
 @property int max_id;
 @property int min_id;
 
-+(TLAPI_channels_getImportantHistory*)createWithChannel:(TLInputChannel*)channel offset_id:(int)offset_id add_offset:(int)add_offset limit:(int)limit max_id:(int)max_id min_id:(int)min_id;
++(TLAPI_channels_getImportantHistory*)createWithChannel:(TLInputChannel*)channel offset_id:(int)offset_id offset_date:(int)offset_date add_offset:(int)add_offset limit:(int)limit max_id:(int)max_id min_id:(int)min_id;
 @end
 
 @interface TLAPI_channels_readHistory : TLApiObject

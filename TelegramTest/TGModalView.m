@@ -103,14 +103,13 @@
 
 -(void)initializeModalView {
     
-    
     self.wantsLayer = YES;
     
     self.layer.backgroundColor = [NSColor clearColor].CGColor;
     
     _backgroundView = [[TMView alloc] initWithFrame:self.bounds];
     
-    self.autoresizingMask =  _backgroundView.autoresizingMask = NSViewWidthSizable | NSViewHeightSizable;
+    self.autoresizingMask = _backgroundView.autoresizingMask = NSViewWidthSizable | NSViewHeightSizable;
     
     _backgroundView.wantsLayer = YES;
     
@@ -137,6 +136,7 @@
     [_animationContainerView addSubview:_containerView];
     
     [super addSubview:_animationContainerView];
+
 }
 
 -(void)mouseDown:(NSEvent *)theEvent {
@@ -157,6 +157,7 @@
 
 -(void)show:(NSWindow *)window animated:(BOOL)animated {
     
+
     [self setFrameSize:window.frame.size];
     
     [window.contentView addSubview:self];
@@ -170,10 +171,7 @@
 
     if(animated) {
         
-        [window makeFirstResponder:self];
-        
         self.containerView.layer.opacity = 0;
-        //[_containerView.layer setFrameOrigin:];
 
         
         POPBasicAnimation *anim = [TMViewController popAnimationForProgress:self.containerView.layer.opacity to:1];
@@ -194,7 +192,6 @@
         sizeAnim.fromValue = [NSValue valueWithSize:NSMakeSize(0, 0)];
         sizeAnim.toValue = [NSValue valueWithSize:self.containerSize];
         sizeAnim.duration = 0.15;
-      //  [_animationContainerView.layer pop_addAnimation:sizeAnim forKey:@"size"];
         
         
         
@@ -204,13 +201,14 @@
         originContainerAnim.toValue = [NSValue valueWithPoint:NSMakePoint(0, 0)];
         originContainerAnim.duration = 0.15;
         
-       // [_containerView.layer pop_addAnimation:originContainerAnim forKey:@"origin"];
-        
         
     }
 
     
     [self modalViewDidShow];
+    
+    
+    int bp = 0;
     
 }
 
@@ -304,8 +302,10 @@
     if(animated) {
         POPBasicAnimation *anim = [TMViewController popAnimationForProgress:self.layer.opacity to:0];
         
+        weak();
+        
         [anim setCompletionBlock:^(POPAnimation *anim, BOOL success) {
-            [self removeFromSuperview];
+            [weakSelf removeFromSuperview];
         }];
         
         [self.layer pop_addAnimation:anim forKey:@"fade"];
@@ -313,8 +313,11 @@
     } else {
         [self removeFromSuperview];
     }
+    [self resignFirstResponder];
     
     [self modalViewDidHide];
+    
+    
 }
 
 -(void)setOpaqueContent:(BOOL)opaqueContent {

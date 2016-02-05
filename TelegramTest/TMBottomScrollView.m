@@ -148,16 +148,58 @@
     
     [self.messagesViewController showModalProgress];
     
-    [RPCRequest sendRequest:[TLAPI_messages_search createWithFlags:0 peer:_messagesViewController.conversation.inputPeer q:@"" filter:[TL_inputMessagesFilterEmpty create] min_date:selectedDate.timeIntervalSince1970 max_date:0 offset:0 max_id:0 limit:1] successHandler:^(id request, TL_messages_messages *response) {
+    
+    NSDate *jumpDate = selectedDate;
+    
+    selectedDate = [NSDate dateWithTimeIntervalSince1970:selectedDate.timeIntervalSince1970 + 60*60*24];
+    
+    id request;
+    
+   
+    
+    if(_messagesViewController.conversation.type == DialogTypeChannel) {
+        request = [TLAPI_channels_getImportantHistory createWithChannel:_messagesViewController.conversation.chat.inputPeer offset_id:0 offset_date:selectedDate.timeIntervalSince1970 add_offset:0 limit:100 max_id:INT32_MAX min_id:0];
+    } else {
+        request = [TLAPI_messages_getHistory createWithPeer:_messagesViewController.conversation.inputPeer offset_id:0 offset_date:selectedDate.timeIntervalSince1970 add_offset:0 limit:100 max_id:INT32_MAX min_id:0];
+    }
+    
+    
+    
+    NSLog(@"selected date: %@",selectedDate);
+    
+    [RPCRequest sendRequest:request successHandler:^(id request, TL_messages_messages *response) {
         
         [TL_localMessage convertReceivedMessages:response.messages];
         
         if(response.messages.count > 0) {
-            [self.messagesViewController showMessage:response.messages[0] fromMsg:nil flags:0];
+            [[Storage manager] addHolesAroundMessage:[response.messages firstObject]];
+            [[Storage manager] addHolesAroundMessage:[response.messages lastObject]];
+            [[Storage manager] insertMessages:response.messages];
+            
+            
+            NSLog(@"first date: %@",[NSDate dateWithTimeIntervalSince1970:[(TL_localMessage *)[response.messages firstObject] date]]);
+            NSLog(@"last date: %@",[NSDate dateWithTimeIntervalSince1970:[(TL_localMessage *)[response.messages lastObject] date]]);
+            
+            __block TL_localMessage *jumpMessage = [response.messages firstObject];
+            
+            [response.messages enumerateObjectsWithOptions:NSEnumerationReverse usingBlock:^(TL_localMessage *obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                
+                if(obj.date >= jumpDate.timeIntervalSince1970) {
+                    jumpMessage = obj;
+                    NSLog(@"jump date: %@",[NSDate dateWithTimeIntervalSince1970:[obj date]]);
+                    *stop = YES;
+                }
+                
+            }];
+            
+            [self.messagesViewController showMessage:jumpMessage fromMsg:nil flags:ShowMessageTypeDateJump];
             [self.messagesViewController hideModalProgressWithSuccess];
+
         } else {
             [self.messagesViewController hideModalProgress];
         }
+        
+       
         
     } errorHandler:^(id request, RpcError *error) {
         [self.messagesViewController hideModalProgress];

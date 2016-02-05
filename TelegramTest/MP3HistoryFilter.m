@@ -20,7 +20,7 @@
 }
 
 -(TLMessagesFilter *)messagesFilter {
-    return [TL_inputMessagesFilterAudioDocuments create];
+    return [TL_inputMessagesFilterMusic create];
 }
 
 -(NSString *)description {

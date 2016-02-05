@@ -81,10 +81,12 @@
 
 -(void)didUpdatedEditableState {
     
+    weak();
+    
     [_tableView.list enumerateObjectsUsingBlock:^(TMRowItem *obj, NSUInteger idx, BOOL * _Nonnull stop) {
         
         if([obj isKindOfClass:[TMRowItem class]]) {
-            [obj setEditable:self.action.isEditable];
+            [obj setEditable:weakSelf.action.isEditable];
         }
         
     }];
@@ -93,7 +95,7 @@
         
         TMRowView *view = [rowView.subviews firstObject];
         
-        TMRowItem *item = _tableView.list[row];
+        TMRowItem *item = weakSelf.tableView.list[row];
         
         if([view isKindOfClass:[TGUserContainerView class]]) {
             
@@ -130,19 +132,23 @@
 -(void)loadNext {
     TLChat *channel = self.action.object;
     
+    
+    
+    weak();
+    
     _request = [RPCRequest sendRequest:[TLAPI_channels_getParticipants createWithChannel:channel.inputPeer filter:self.action.reservedObject1 offset:_offset limit:100] successHandler:^(id request, TL_channels_channelParticipants *response) {
         
-        if(request != _request) {
+        if(request != weakSelf.request) {
             
             [ASQueue dispatchOnMainQueue:^{
-                [self setLoading:NO];
+                [weakSelf setLoading:NO];
             }];
-            [self updateText];
+            [weakSelf updateText];
             return;
         }
         
         
-        _request = nil;
+        weakSelf.request = nil;
         
         NSMutableArray *items = [[NSMutableArray alloc] init];
         
@@ -152,12 +158,13 @@
             users[@(obj.n_id)] = obj;
         }];
         
+        
         [response.participants enumerateObjectsUsingBlock:^(TLChannelParticipant *obj, NSUInteger idx, BOOL *stop) {
             TLUser *user = users[@(obj.user_id)];
             
             TGUserContainerRowItem *item = [[TGUserContainerRowItem alloc] initWithUser:user];
             item.type = SettingsRowItemTypeNone;
-            item.editable = self.action.isEditable;
+            item.editable = weakSelf.action.isEditable;
             [item setStateback:^id(TGGeneralRowItem *item) {
                 
                 TGUserContainerRowItem *userItem = (TGUserContainerRowItem *) item;
@@ -170,15 +177,15 @@
             
             [item setStateCallback:^ {
                 
-                if(self.action.isEditable) {
+                if(weakSelf.action.isEditable) {
                     if([weakItem.stateback(weakItem) boolValue])
-                        [self kickParticipant:weakItem];
+                        [weakSelf kickParticipant:weakItem];
                 } else {
                     TGModernUserViewController *viewController = [[TGModernUserViewController alloc] initWithFrame:NSZeroRect];
                     
                     [viewController setUser:weakItem.user conversation:weakItem.user.dialog];
                     
-                    [self.isDisclosureController ? self.rightNavigationController : self.navigationViewController pushViewController:viewController animated:YES];
+                    [weakSelf.isDisclosureController ? weakSelf.rightNavigationController : weakSelf.navigationViewController pushViewController:viewController animated:YES];
                 }
 
             }];
@@ -191,23 +198,23 @@
         
         [ASQueue dispatchOnMainQueue:^{
             
-            [_tableView insert:items startIndex:_tableView.count tableRedraw:NO];
-            [_tableView reloadData];
+            [weakSelf.tableView insert:items startIndex:weakSelf.tableView.count tableRedraw:NO];
+            [weakSelf.tableView reloadData];
             
-            [self setLoading:NO];
+            [weakSelf setLoading:NO];
             
-            [self updateText];
+            [weakSelf updateText];
         }];
         
         
     } errorHandler:^(id request, RpcError *error) {
         [ASQueue dispatchOnMainQueue:^{
-             [self setLoading:NO];
+             [weakSelf setLoading:NO];
         }];
         
     } timeout:0 queue:[ASQueue globalQueue].nativeQueue];
     
-    
+
 }
 
 -(void)updateText {
@@ -220,8 +227,7 @@
 }
 
 -(void)kickParticipant:(TGUserContainerRowItem *)participant {
-    
-    
+        
     _tableView.defaultAnimation = NSTableViewAnimationEffectFade;
     
     [_tableView removeItem:participant];
@@ -234,6 +240,7 @@
     [self updateText];
     
     BOOL kick = [self.action.behavior isKindOfClass:[ComposeActionChannelMembersBehavior class]];
+    
     
     
     [RPCRequest sendRequest:[TLAPI_channels_kickFromChannel createWithChannel:chat.inputPeer user_id:participant.user.inputUser kicked:kick] successHandler:^(id request, id response) {
@@ -250,12 +257,16 @@
         
     }];
     
+  
+    
 }
 
 -(void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     
     TLChat *chat = self.action.object;
+    
+    weak();
     
     [[FullChatManager sharedManager] loadIfNeed:[chat n_id] force:YES];
     
@@ -275,7 +286,7 @@
                 
                 NSMutableArray *filter = [[NSMutableArray alloc] init];
                 
-                [_tableView.list enumerateObjectsUsingBlock:^(TGUserContainerRowItem *obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                [weakSelf.tableView.list enumerateObjectsUsingBlock:^(TGUserContainerRowItem *obj, NSUInteger idx, BOOL * _Nonnull stop) {
                     
                     if([obj isKindOfClass:[TGUserContainerRowItem class]]) {
                         [filter addObject:@(obj.user.n_id)];
@@ -285,13 +296,14 @@
                     
                     [viewController setAction:[[ComposeAction alloc]initWithBehaviorClass:[ComposeActionAddGroupMembersBehavior class] filter:filter object:chat.chatFull reservedObjects:@[chat]]];
                     
-                    [self.navigationViewController pushViewController:viewController animated:YES];
+                    [weakSelf.navigationViewController pushViewController:viewController animated:YES];
                     
                 }];
                 
             } description:NSLocalizedString(@"Group.AddMembers", nil) height:42 stateback:nil];
             addMembersItem.textColor = BLUE_UI_COLOR;
             [_tableView addItem:addMembersItem tableRedraw:YES];
+            
         }
         
         
@@ -302,12 +314,13 @@
                 
                 [export setChat:chat.chatFull];
                 
-                [self.navigationViewController pushViewController:export animated:YES];
+                [weakSelf.navigationViewController pushViewController:export animated:YES];
                 
                 
             } description:NSLocalizedString(@"Modern.Channel.InviteViaLink", nil) height:42 stateback:nil];
             inviteViaLink.textColor = BLUE_UI_COLOR;
             [_tableView addItem:inviteViaLink tableRedraw:YES];
+            
         }
         
         if(!chat.isMegagroup) {
@@ -322,6 +335,8 @@
         
     }
     
+
+    
     [self setLoading:YES];
     
     _offset = 0;
@@ -334,6 +349,10 @@
     [_request cancelRequest];
     _request = nil;
     
+}
+
+-(void)dealloc {
+    [_tableView clear];
 }
 
 @end

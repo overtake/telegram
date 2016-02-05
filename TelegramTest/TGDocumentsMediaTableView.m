@@ -17,7 +17,7 @@
 #import "ChannelHistoryController.h"
 @interface TGDocumentsController : NSObject<MessagesDelegate>
 @property (nonatomic,strong) TL_conversation *conversation;
-@property (nonatomic,strong) TGDocumentsMediaTableView *tableView;
+@property (nonatomic,weak) TGDocumentsMediaTableView *tableView;
 @property (nonatomic,strong) ChatHistoryController *loader;
 @property (nonatomic,strong) NSMutableArray *items;
 @property (nonatomic,strong) NSMutableArray *defaultItems;
@@ -31,12 +31,11 @@
 
 
 @interface TGDocumentsMediaTableView ()
-{
-    __block SMDelayedBlockHandle _remoteBlock;
-}
+
 @property (nonatomic,strong) TGDocumentsController *controller;
 @property (nonatomic,assign,getter=isEditable) BOOL editable;
 @property (nonatomic,strong) NSMutableArray *selectedItems;
+@property (nonatomic,strong) SMDelayedBlockHandle remoteBlock;
 
 
 @property (nonatomic,weak) RPCRequest *request;
@@ -97,34 +96,42 @@
     
     _loader.selectLimit = _loader.nextState != ChatHistoryStateRemote ? 50 : 50;
     
+    weak();
+    
     [_loader request:YES anotherSource:YES sync:isFirst selectHandler:^(NSArray *result, NSRange range,id controller) {
         
-        self.tableView.isProgress = NO;
+        strongWeak();
         
-        
-        NSArray *filtred = [result filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary *bindings) {
+        if(strongSelf != nil) {
+            strongSelf.tableView.isProgress = NO;
             
-            return [self.tableView acceptMessageItem:evaluatedObject];
             
-        }]];
-        
-        [filtred enumerateObjectsUsingBlock:^(MessageTableItem *obj, NSUInteger idx, BOOL *stop) {
-            [obj makeSizeByWidth:NSWidth(self.tableView.frame) - 60];
-        }];
-        
-        [self.items addObjectsFromArray:filtred];
-        
-        [self.defaultItems addObjectsFromArray:filtred];
-        
-        [self.tableView insertRowsAtIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(self.items.count - filtred.count, filtred.count)] withAnimation:NSTableViewAnimationEffectNone];
-        
-        
-        [self.tableView checkCap];
-        
-        
-        if(self.items.count < 30 && [_loader filterWithNext:YES].nextState != ChatHistoryStateFull) {
-            [self loadNext:NO];
+            NSArray *filtred = [result filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary *bindings) {
+                
+                return [strongSelf.tableView acceptMessageItem:evaluatedObject];
+                
+            }]];
+            
+            [filtred enumerateObjectsUsingBlock:^(MessageTableItem *obj, NSUInteger idx, BOOL *stop) {
+                [obj makeSizeByWidth:NSWidth(strongSelf.tableView.frame) - 60];
+            }];
+            
+            [strongSelf.items addObjectsFromArray:filtred];
+            
+            [strongSelf.defaultItems addObjectsFromArray:filtred];
+            
+            [strongSelf.tableView insertRowsAtIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(strongSelf.items.count - filtred.count, filtred.count)] withAnimation:NSTableViewAnimationEffectNone];
+            
+            
+            [strongSelf.tableView checkCap];
+            
+            
+            if(strongSelf.items.count < 30 && [_loader filterWithNext:YES].nextState != ChatHistoryStateFull) {
+                [strongSelf loadNext:NO];
+            }
         }
+        
+        
         
     }];
     
@@ -273,16 +280,14 @@
         self.delegate = self;
         self.controller = [[TGDocumentsController alloc] initWithTableView:self];
         
-        
         id document = self.scrollView.documentView;
         TGDocumentsClipView *clipView = [[TGDocumentsClipView alloc] initWithFrame:self.scrollView.contentView.bounds];
         clipView.tableView = document;
         [clipView setWantsLayer:YES];
         [clipView setDrawsBackground:YES];
-        //        [clipView setBackgroundColor:[NSColor redColor]];
         [self.scrollView setContentView:clipView];
         self.scrollView.documentView = document;
-
+        
         
         [self.containerView setHidden:YES];
         
@@ -352,10 +357,19 @@
     if(_request)
         [_request cancelRequest];
     
+    weak();
+    
     _remoteBlock = perform_block_after_delay(0.4, ^{
-        _remoteBlock = nil;
         
-        [self remoteSearch:string];
+        strongWeak();
+        
+        if(strongSelf != nil) {
+            strongSelf.remoteBlock = nil;
+            
+            [strongSelf remoteSearch:string];
+        }
+        
+        
         
     });
     
@@ -373,28 +387,32 @@
     if(![item isKindOfClass:[MessageTableItem class]])
         item = nil;
     
+    weak();
+    
     _request = [RPCRequest sendRequest:[TLAPI_messages_search createWithFlags:0 peer:self.controller.conversation.inputPeer q:search filter:[self remoteFilter] min_date:0 max_date:0 offset:0 max_id:item.message.n_id limit:100] successHandler:^(id request, id response) {
         
-        [TL_localMessage convertReceivedMessages:[response messages]];
+        strongWeak();
         
-        NSArray *converted = [MessageTableItem messageTableItemsFromMessages:[response messages]];
-        
-        NSArray *filtred = [converted filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary *bindings) {
+        if(strongSelf != nil) {
+            [TL_localMessage convertReceivedMessages:[response messages]];
             
-            return [self acceptMessageItem:evaluatedObject];
+            NSArray *converted = [MessageTableItem messageTableItemsFromMessages:[response messages]];
             
-        }]];
-        
-        [filtred enumerateObjectsUsingBlock:^(MessageTableItem *obj, NSUInteger idx, BOOL *stop) {
-            [obj makeSizeByWidth:NSWidth(self.frame) - 60];
-        }];
-        
-        [self.controller.items addObjectsFromArray:filtred];
-        
-        
-        [self insertRowsAtIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(self.controller.items.count - filtred.count, filtred.count)] withAnimation:NSTableViewAnimationEffectNone];
-        
-        
+            NSArray *filtred = [converted filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary *bindings) {
+                
+                return [strongSelf acceptMessageItem:evaluatedObject];
+                
+            }]];
+            
+            [filtred enumerateObjectsUsingBlock:^(MessageTableItem *obj, NSUInteger idx, BOOL *stop) {
+                [obj makeSizeByWidth:NSWidth(strongSelf.frame) - 60];
+            }];
+            
+            [strongSelf.controller.items addObjectsFromArray:filtred];
+            
+            
+            [strongSelf insertRowsAtIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(strongSelf.controller.items.count - filtred.count, filtred.count)] withAnimation:NSTableViewAnimationEffectNone];
+        }
         
     } errorHandler:^(id request, RpcError *error) {
         
@@ -566,6 +584,15 @@
                                              selector:@selector(scrollViewDocumentOffsetChangingNotificationHandler:)
                                                  name:NSViewBoundsDidChangeNotification
                                                object:clipView];
+}
+
+-(void)clear {
+    [super clear];
+    
+}
+
+-(void)dealloc {
+    
 }
 
 @end

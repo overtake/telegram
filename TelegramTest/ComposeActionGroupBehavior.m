@@ -79,15 +79,17 @@
         
     }
     
+    weak();
+    
     self.request = [RPCRequest sendRequest:[TLAPI_messages_createChat createWithUsers:array title:self.action.result.singleObject] successHandler:^(RPCRequest *request, TLUpdates * response) {
         
         if(response.updates.count > 1) {
             TL_localMessage *msg = [TL_localMessage convertReceivedMessage:(TLMessage *) ( [response.updates[2] message])];
             
             [[FullChatManager sharedManager] performLoad:msg.conversation.chat.n_id callback:^(TLChatFull *fullChat) {
-                [self.delegate behaviorDidEndRequest:response];
+                [weakSelf.delegate behaviorDidEndRequest:response];
                 
-                [self.action.currentViewController.navigationViewController showMessagesViewController:msg.conversation];
+                [weakSelf.action.currentViewController.navigationViewController showMessagesViewController:msg.conversation];
             }];
         }
         
@@ -95,7 +97,7 @@
         
         
     } errorHandler:^(RPCRequest *request, RpcError *error) {
-        [self.delegate behaviorDidEndRequest:nil];
+        [weakSelf.delegate behaviorDidEndRequest:nil];
     } timeout:10 queue:[ASQueue globalQueue].nativeQueue];
     
     

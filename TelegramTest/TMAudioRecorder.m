@@ -12,6 +12,7 @@
 #import "TGTimer.h"
 #import "HackUtils.h"
 #include "opusenc.h"
+#import "NSData+Extensions.h"
 typedef enum {
     TMAudioRecorderDefault,
     TMAudioRecorderRecord,
@@ -61,7 +62,9 @@ double mappingRange(double x, double in_min, double in_max, double out_min, doub
     return out_min + slope * (x - in_min);
 }
 
-- (void)startRecord {
+- (void)startRecordWithController:(MessagesViewController *)messagesViewController {
+    
+    _messagesViewController = messagesViewController;
     
     if(self.recorder.isRecording) {
         [self.recorder stop];
@@ -76,26 +79,27 @@ double mappingRange(double x, double in_min, double in_max, double out_min, doub
     __block int k = 0;
     
     
+    weak();
     
-    self.timer = [[TGTimer alloc] initWithTimeout:1.f/100.f repeat:YES completion:^{
+    self.timer = [[TGTimer alloc] initWithTimeout:1.f/50 repeat:YES completion:^{
 
         k++;
         
-        [self.recorder updateMeters];
-        [self.recorder setMeteringEnabled:NO];
-        [self.recorder setMeteringEnabled:YES];
+        [weakSelf.recorder updateMeters];
+        [weakSelf.recorder setMeteringEnabled:NO];
+        [weakSelf.recorder setMeteringEnabled:YES];
 
-        float power = 0;
-        float average = [self.recorder averagePowerForChannel:0];
+        int power = 0;
+        float average = [weakSelf.recorder averagePowerForChannel:0];
         
         if(average > -57) {
-            power = mappingRange(average, -60, 0, 0, 1);
+            power = floor(mappingRange(average, -60, 0, 0, 31));
         }
-        if(power > 1)
-            power = 1;
         
-        if(self.powerHandler)
-            self.powerHandler(power);
+        [weakSelf.powers addObject:@(power)];
+        
+        if(weakSelf.powerHandler)
+            weakSelf.powerHandler(power);
         
         
     } queue:dispatch_get_main_queue()];
@@ -147,10 +151,127 @@ double mappingRange(double x, double in_min, double in_max, double out_min, doub
         
         [self removeFile];
         
+        NSData *wafeform = [self prepareWafeForm];
+        
         [[ASQueue mainQueue] dispatchOnQueue:^{
-            [[Telegram rightViewController].messagesViewController sendAudio:opusPath forConversation:[Telegram rightViewController].messagesViewController.conversation];
+            [self.messagesViewController sendAudio:opusPath forConversation:self.messagesViewController.conversation waveforms:wafeform];
         }];
     }];
+}
+
+static int powerCount = 100;
+
+-(NSData *)prepareWafeForm {
+    __block float average = 0;
+    
+    __block char bytes[63];
+    
+    NSMutableArray *nPowers = [NSMutableArray array];
+    
+    //make only 100 waves
+    {
+        if(_powers.count < powerCount) {
+            
+            float res = (float)_powers.count/(float)powerCount;
+            
+            int interval = ceil(1.0f/res);
+            
+            
+            [_powers enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                
+                [nPowers addObject:obj];
+                
+                if(idx % interval == 0) {
+                    [nPowers addObject:obj];
+                }
+                
+            }];
+
+            
+        } else if(_powers.count > powerCount) {
+            
+            int excess = ceil((float)_powers.count/(float)powerCount);
+            
+            [_powers enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            
+                if((idx % excess) == 0) {
+                    [nPowers addObject:obj];
+                }
+                
+            }];
+            
+        }
+        
+    }
+    
+    if(nPowers.count < powerCount) {
+        
+        int count = (int)nPowers.count;
+        
+        for (int i = count; i < powerCount; i++) {
+            [nPowers addObject:_powers[_powers.count - 1 - (i - count)]];
+        }
+        
+        assert(nPowers.count == powerCount);
+        
+    } else {
+        nPowers = [[nPowers subarrayWithRange:NSMakeRange(0, powerCount)] mutableCopy];
+    }
+    
+    _powers = nPowers;
+    
+    int k = 0;
+    
+    
+    for (int j = 0; j < powerCount; j++) {
+       
+        int val = [_powers[j] intValue];
+        
+       // NSLog(@"originalVal:%d",val);
+        
+        NSString *binaryString = @"";
+        
+        
+        
+        for (int i = 0; i < 5; i++) {
+            
+            BOOL value = val % 2;
+            
+            val = val >> 1;
+            
+          //  NSLog(@"val:%d res:%d",val,value);
+            
+            int index = k++;
+            
+            binaryString = [NSString stringWithFormat:@"%d%@",value,binaryString];
+            
+            int byteIndex = index / 8;
+            int bitIndex = 7- (index % 8);
+            char mask = (1 << bitIndex);
+                        
+            bytes[byteIndex] = (value ? (bytes[byteIndex] | mask) : (bytes[byteIndex] & ~mask));
+            
+            // SetBit(bytes,,res);
+        }
+        
+        
+        average+=val;
+    }
+    
+
+    average = average/(float)_powers.count;
+    
+
+    
+    NSData *data = [NSData dataWithBytes:bytes length:63];
+    
+    return data;
+}
+
+char* SetBit(char bytes[], int index, bool value)
+{
+    
+    return bytes;
 }
 
 @end

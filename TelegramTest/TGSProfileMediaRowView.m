@@ -52,7 +52,7 @@
     }
     
     
-    NSArray *filters = @[[TL_inputMessagesFilterPhotoVideo create],[TL_inputMessagesFilterDocument create],[TL_inputMessagesFilterAudioDocuments create],[TL_inputMessagesFilterUrl create]];
+    NSArray *filters = @[[TL_inputMessagesFilterPhotoVideo create],[TL_inputMessagesFilterDocument create],[TL_inputMessagesFilterMusic create],[TL_inputMessagesFilterUrl create]];
     
     
     

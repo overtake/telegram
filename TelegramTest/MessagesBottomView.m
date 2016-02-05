@@ -851,7 +851,7 @@ static RBLPopover *popover;
         POPLayerSetScaleXY(weakSelf.recordCircleLayer, CGPointMake(power, power));
     }];
     
-    [recorder startRecord];
+    [recorder startRecordWithController:self.messagesViewController];
 }
 
 - (void)stopRecord:(BTRButton *)button {

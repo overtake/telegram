@@ -35,30 +35,39 @@
     
     TLAPI_messages_sendMedia *request = [TLAPI_messages_sendMedia createWithFlags:[self senderFlags] peer:[self.conversation inputPeer] reply_to_msg_id:self.message.reply_to_msg_id media:[TL_inputMediaGeoPoint createWithGeo_point:[TL_inputGeoPoint createWithLat:self.message.media.geo.lat n_long:self.message.media.geo.n_long]] random_id:self.message.randomId reply_markup:[TL_replyKeyboardMarkup createWithFlags:0 rows:[@[]mutableCopy]]];
     
+    
+    weak();
+    
     self.rpc_request = [RPCRequest sendRequest:request successHandler:^(RPCRequest *request, TLUpdates * response) {
         
-        [self updateMessageId:response];
+        strongWeak();
         
-        
-        TL_localMessage *msg = [TL_localMessage convertReceivedMessage:[[self updateNewMessageWithUpdates:response] message]];
-        
-        if(msg == nil)
-        {
-            [self cancel];
-            return;
+        if(strongSelf != nil) {
+            [strongSelf updateMessageId:response];
+            
+            
+            TL_localMessage *msg = [TL_localMessage convertReceivedMessage:[[strongSelf updateNewMessageWithUpdates:response] message]];
+            
+            if(msg == nil)
+            {
+                [strongSelf cancel];
+                return;
+            }
+            
+            ((TL_localMessage *)strongSelf.message).n_id = msg.n_id;
+            ((TL_localMessage *)strongSelf.message).date = msg.date;
+            ((TL_localMessage *)strongSelf.message).dstate = DeliveryStateNormal;
+            
+            [strongSelf.message save:YES];
+            
+            strongSelf.state = MessageSendingStateSent;
         }
         
-        ((TL_localMessage *)self.message).n_id = msg.n_id;
-        ((TL_localMessage *)self.message).date = msg.date;
-        ((TL_localMessage *)self.message).dstate = DeliveryStateNormal;
         
-        [self.message save:YES];
-        
-        self.state = MessageSendingStateSent;
         
         
     } errorHandler:^(RPCRequest *request, RpcError *error) {
-        self.state = MessageSendingStateError;
+        weakSelf.state = MessageSendingStateError;
     } timeout:0 queue:[ASQueue globalQueue].nativeQueue];
     
 }

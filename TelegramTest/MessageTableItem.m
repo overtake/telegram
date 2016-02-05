@@ -380,14 +380,18 @@ static NSTextAttachment *channelIconAttachment() {
             
                 TL_documentAttributeAnimated *attr = (TL_documentAttributeAnimated *) [document attributeWithClass:[TL_documentAttributeAnimated class]];
                 
+                TL_documentAttributeAudio *audioAttr = (TL_documentAttributeAudio *) [document attributeWithClass:[TL_documentAttributeAudio class]];
+                
                 if([document.mime_type hasPrefix:@"video"] && attr != nil) {
                     objectReturn = [[MessageTableItemMpeg alloc] initWithObject:message];
                 } else if([document.mime_type isEqualToString:@"image/gif"] && ![document.thumb isKindOfClass:[TL_photoSizeEmpty class]]) {
                     objectReturn = [[MessageTableItemGif alloc] initWithObject:message];
-                } else if([document.mime_type hasPrefix:@"audio/"]) {
+                } else if(audioAttr && !audioAttr.isIs_voice) {
                     objectReturn = [[MessageTableItemAudioDocument alloc] initWithObject:message];
                 } else if([document isSticker]) {
                     objectReturn = [[MessageTableItemSticker alloc] initWithObject:message];
+                } else if(audioAttr.isIs_voice) {
+                    objectReturn = [[MessageTableItemAudio alloc] initWithObject:message];
                 } else {
                     objectReturn = [[MessageTableItemDocument alloc] initWithObject:message];
                 }
@@ -400,11 +404,7 @@ static NSTextAttachment *channelIconAttachment() {
                 
                 objectReturn = [[MessageTableItemGeo alloc] initWithObject:message];
                 
-            } else if([message.media isKindOfClass:[TL_messageMediaAudio class]]) {
-                
-                objectReturn = [[MessageTableItemAudio alloc] initWithObject:message];
-                
-            } else if([message.media isKindOfClass:[TL_messageMediaBotResult class]]) {
+            }  else if([message.media isKindOfClass:[TL_messageMediaBotResult class]]) {
                 
                 if([message.media.bot_result.send_message isKindOfClass:[TL_botInlineMessageText class]]) {
                     objectReturn = [[MessageTableItemText alloc] initWithObject:message];

@@ -16,8 +16,10 @@ typedef void (^TMAudioRecorderPowerHandler)(float power);
 double mappingRange(double x, double in_min, double in_max, double out_min, double out_max);
 
 
+@property (nonatomic,weak) MessagesViewController *messagesViewController;
+
 + (TMAudioRecorder *)sharedInstance;
-- (void)startRecord;
+- (void)startRecordWithController:(MessagesViewController *)messagesViewController;
 - (void)stopRecord:(BOOL)send;
 
 - (BOOL)isRecording;

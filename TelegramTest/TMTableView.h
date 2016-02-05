@@ -92,4 +92,6 @@
 
 -(BOOL)rowIsVisible:(NSUInteger)index;
 
+-(void)clear;
+
 @end

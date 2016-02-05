@@ -362,6 +362,7 @@
 		C240B1B81B627B3700912248 /* SharedLinksHistoryFilter.m in Sources */ = {isa = PBXBuildFile; fileRef = C240B1B71B627B3700912248 /* SharedLinksHistoryFilter.m */; };
 		C240B1BB1B627E6F00912248 /* TGSharedLinkRowView.m in Sources */ = {isa = PBXBuildFile; fileRef = C240B1BA1B627E6F00912248 /* TGSharedLinkRowView.m */; };
 		C240B1BE1B6294F300912248 /* TGSharedLinkRowItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C240B1BD1B6294F300912248 /* TGSharedLinkRowItem.m */; };
+		C24136381C64BFED00130D2E /* TL_documentAttributeAudio+Extension.m in Sources */ = {isa = PBXBuildFile; fileRef = C24136371C64BFED00130D2E /* TL_documentAttributeAudio+Extension.m */; };
 		C24435811A1D1B9900F9BB38 /* PrivacyArchiver.m in Sources */ = {isa = PBXBuildFile; fileRef = C24435801A1D1B9900F9BB38 /* PrivacyArchiver.m */; };
 		C24435881A1E018100F9BB38 /* ComposeActionCustomBehavior.m in Sources */ = {isa = PBXBuildFile; fileRef = C24435871A1E018100F9BB38 /* ComposeActionCustomBehavior.m */; };
 		C244358B1A1E159900F9BB38 /* PrivacyUserListController.m in Sources */ = {isa = PBXBuildFile; fileRef = C244358A1A1E159900F9BB38 /* PrivacyUserListController.m */; };
@@ -405,7 +406,6 @@
 		C256E91118D20BA8008FFA04 /* DownloadItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C256E91018D20BA8008FFA04 /* DownloadItem.m */; };
 		C256E91418D21A96008FFA04 /* DownloadPhotoItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C256E91318D21A96008FFA04 /* DownloadPhotoItem.m */; };
 		C256E91718D22622008FFA04 /* DownloadDocumentItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C256E91618D22622008FFA04 /* DownloadDocumentItem.m */; };
-		C256E91A18D24C4C008FFA04 /* DownloadAudioItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C256E91918D24C4C008FFA04 /* DownloadAudioItem.m */; };
 		C256E91D18D25324008FFA04 /* TMPreviewAudioItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C256E91C18D25324008FFA04 /* TMPreviewAudioItem.m */; };
 		C25A57E01C072D1D0038169F /* ComposeActionStickersBehavior.m in Sources */ = {isa = PBXBuildFile; fileRef = C25A57DF1C072D1D0038169F /* ComposeActionStickersBehavior.m */; };
 		C25A57EC1C0736D70038169F /* TGMovableTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = C25A57EB1C0736D70038169F /* TGMovableTableView.m */; };
@@ -1784,6 +1784,8 @@
 		C240B1BA1B627E6F00912248 /* TGSharedLinkRowView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGSharedLinkRowView.m; sourceTree = "<group>"; };
 		C240B1BC1B6294F300912248 /* TGSharedLinkRowItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGSharedLinkRowItem.h; sourceTree = "<group>"; };
 		C240B1BD1B6294F300912248 /* TGSharedLinkRowItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGSharedLinkRowItem.m; sourceTree = "<group>"; };
+		C24136361C64BFED00130D2E /* TL_documentAttributeAudio+Extension.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "TL_documentAttributeAudio+Extension.h"; sourceTree = "<group>"; };
+		C24136371C64BFED00130D2E /* TL_documentAttributeAudio+Extension.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "TL_documentAttributeAudio+Extension.m"; sourceTree = "<group>"; };
 		C244357F1A1D1B9900F9BB38 /* PrivacyArchiver.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PrivacyArchiver.h; sourceTree = "<group>"; };
 		C24435801A1D1B9900F9BB38 /* PrivacyArchiver.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PrivacyArchiver.m; sourceTree = "<group>"; };
 		C24435861A1E018100F9BB38 /* ComposeActionCustomBehavior.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ComposeActionCustomBehavior.h; sourceTree = "<group>"; };
@@ -1875,8 +1877,6 @@
 		C256E91318D21A96008FFA04 /* DownloadPhotoItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DownloadPhotoItem.m; sourceTree = "<group>"; };
 		C256E91518D22622008FFA04 /* DownloadDocumentItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DownloadDocumentItem.h; sourceTree = "<group>"; };
 		C256E91618D22622008FFA04 /* DownloadDocumentItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DownloadDocumentItem.m; sourceTree = "<group>"; };
-		C256E91818D24C4C008FFA04 /* DownloadAudioItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DownloadAudioItem.h; sourceTree = "<group>"; };
-		C256E91918D24C4C008FFA04 /* DownloadAudioItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DownloadAudioItem.m; sourceTree = "<group>"; };
 		C256E91B18D25324008FFA04 /* TMPreviewAudioItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TMPreviewAudioItem.h; sourceTree = "<group>"; };
 		C256E91C18D25324008FFA04 /* TMPreviewAudioItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TMPreviewAudioItem.m; sourceTree = "<group>"; };
 		C25A57DE1C072D1D0038169F /* ComposeActionStickersBehavior.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ComposeActionStickersBehavior.h; sourceTree = "<group>"; };
@@ -4277,8 +4277,6 @@
 				C256E91318D21A96008FFA04 /* DownloadPhotoItem.m */,
 				C256E91518D22622008FFA04 /* DownloadDocumentItem.h */,
 				C256E91618D22622008FFA04 /* DownloadDocumentItem.m */,
-				C256E91818D24C4C008FFA04 /* DownloadAudioItem.h */,
-				C256E91918D24C4C008FFA04 /* DownloadAudioItem.m */,
 				C2CBF6AB1AFB84DB006BF90A /* TGDownloadItem.h */,
 				C2CBF6AC1AFB84DB006BF90A /* TGDownloadItem.m */,
 				C20A5E8D1B86404D007F4B49 /* DownloadCacheDocumentItem.h */,
@@ -5825,6 +5823,8 @@
 				C2C8AB0F1A3F508300C857D6 /* TLDocument+Extension.m */,
 				C2034BE11C3560530080D023 /* TLBotInlineResult+Extension.h */,
 				C2034BE21C3560530080D023 /* TLBotInlineResult+Extension.m */,
+				C24136361C64BFED00130D2E /* TL_documentAttributeAudio+Extension.h */,
+				C24136371C64BFED00130D2E /* TL_documentAttributeAudio+Extension.m */,
 			);
 			name = extensions;
 			sourceTree = "<group>";
@@ -7343,7 +7343,6 @@
 				C20A5EA71B86625F007F4B49 /* TGUpdateChannels.m in Sources */,
 				C26E802D1B7E00C3003CC483 /* TGRecentSearchRowView.m in Sources */,
 				C2CE53CD1BE8D96600BBEF5F /* TGSProfileMediaRowItem.m in Sources */,
-				C256E91A18D24C4C008FFA04 /* DownloadAudioItem.m in Sources */,
 				CEAE5CD0181B0D7600C17645 /* ImageUtils.m in Sources */,
 				CEA589431815704E00462DF0 /* SharedManager.m in Sources */,
 				0AA7E1D318CD392A0064EFC7 /* UIImageView+AFNetworking.m in Sources */,
@@ -7408,6 +7407,7 @@
 				0A62CC8A181EFC1C0098720C /* Telegram.m in Sources */,
 				C2CE53C01BE2892E00BBEF5F /* ChatAdminsViewController.m in Sources */,
 				C2753DDC19E5A44300752BAF /* FLAnimatedImage.m in Sources */,
+				C24136381C64BFED00130D2E /* TL_documentAttributeAudio+Extension.m in Sources */,
 				C2CB5CF21B467D5A00CD61DF /* TGViewController.m in Sources */,
 				C2233DA91A07EF060056594F /* MessageTableItemSocial.m in Sources */,
 				CEA5894D181673E500462DF0 /* NSView+GreenArrows.m in Sources */,

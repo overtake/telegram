@@ -215,6 +215,7 @@ static TMTableView *tableStatic;
 	}
 }
 
+
 - (void)mouseMoved:(NSEvent*)theEvent
 {
     [super mouseMoved:theEvent];
@@ -353,6 +354,8 @@ static TMTableView *tableStatic;
     }
     return NO;
 }
+
+
 
 
 - (BOOL)removeAllItems:(BOOL)tableRedraw {
@@ -591,7 +594,7 @@ static TMTableView *tableStatic;
     
     [super mouseDown:theEvent];
     
-    if(![self.className isEqualToString:@"TGRecentSearchTableView"])
+    if(![self.className isEqualToString:@"TGRecentSearchTableView"] && ![self.className isEqualToString:@"TGSettingsTableView"])
         [TMTableView setCurrent:self];
     
     if([self.className isEqualToString:@"TGConversationsTableView"] && !self.isHidden )
@@ -613,5 +616,12 @@ static TMTableView *tableStatic;
     
     return range.location <= index && range.location + range.length >= index;
 }
+
+-(void)clear {
+    _scrollView.documentView = nil;
+ 
+}
+
+
 
 @end

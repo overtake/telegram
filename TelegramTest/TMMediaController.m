@@ -672,7 +672,7 @@ static TMMediaController* currentController;
         item = [[TMPreviewVideoItem alloc] initWithItem:from];
     }
     
-    if([[(TL_localMessage *)from.media media] isKindOfClass:[TL_messageMediaAudio class]]) {
+    if([(TL_localMessage *)from.media media].document.audioAttr.isIs_voice) {
         item = [[TMPreviewAudioItem alloc] initWithItem:from];
     }
 

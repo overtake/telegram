@@ -503,9 +503,11 @@ static NSCache *cacheItems;
     
     if(userName.length > 4) {
         
+        weak();
+        
         _request = [RPCRequest sendRequest:[TLAPI_contacts_search createWithQ:userName limit:100] successHandler:^(RPCRequest *request, TL_contacts_found *response) {
             
-            [self filterAndAddGlobalUsers:response.users checkContact:NO];
+            [weakSelf filterAndAddGlobalUsers:response.users checkContact:NO];
   
         } errorHandler:^(RPCRequest *request, RpcError *error) {
             
@@ -520,6 +522,9 @@ static NSCache *cacheItems;
     return NO;
 }
 
+-(void)dealloc {
+    
+}
 
 - (void)drawRect:(NSRect)dirtyRect
 {

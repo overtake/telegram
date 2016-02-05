@@ -32,44 +32,48 @@
 -(void)configure {
     [self.tableView removeAllItems:YES];
     
+    weak();
     
-    [_tableView addItem:[[TGGeneralRowItem alloc] initWithHeight:10] tableRedraw:YES];
+    [weakSelf.tableView addItem:[[TGGeneralRowItem alloc] initWithHeight:10] tableRedraw:YES];
     
     GeneralSettingsRowItem *spam = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeSelected callback:^(TGGeneralRowItem *item) {
         
-        _reason = [TL_inputReportReasonSpam create];
-        [self configure];
+        weakSelf.reason = [TL_inputReportReasonSpam create];
+        [weakSelf configure];
         
     } description:NSLocalizedString(@"Report.ReportSpam", nil) height:42 stateback:^id(TGGeneralRowItem *item) {
-        return @([_reason isKindOfClass:[TL_inputReportReasonSpam class]]);
+        return @([weakSelf.reason isKindOfClass:[TL_inputReportReasonSpam class]]);
     }];
     
     GeneralSettingsRowItem *violence = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeSelected callback:^(TGGeneralRowItem *item) {
         
-        _reason = [TL_inputReportReasonViolence create];
-        [self configure];
+        weakSelf.reason = [TL_inputReportReasonViolence create];
+        [weakSelf configure];
         
     } description:NSLocalizedString(@"Report.ReportViolence", nil) height:42 stateback:^id(TGGeneralRowItem *item) {
-        return @([_reason isKindOfClass:[TL_inputReportReasonViolence class]]);
+        return @([weakSelf.reason isKindOfClass:[TL_inputReportReasonViolence class]]);
     }];
     
     GeneralSettingsRowItem *porno = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeSelected callback:^(TGGeneralRowItem *item) {
         
-        _reason = [TL_inputReportReasonPornography create];
-        [self configure];
+        weakSelf.reason = [TL_inputReportReasonPornography create];
+        [weakSelf configure];
         
     } description:NSLocalizedString(@"Report.ReportPorno", nil) height:42 stateback:^id(TGGeneralRowItem *item) {
-        return @([_reason isKindOfClass:[TL_inputReportReasonPornography class]]);
+        return @([weakSelf.reason isKindOfClass:[TL_inputReportReasonPornography class]]);
     }];
     
     TGGeneralInputRowItem *other = [[TGGeneralInputRowItem alloc] initWithHeight:42];
     other.placeholder = NSLocalizedString(@"Report.ReportOther", nil);
     
+    __weak TGGeneralInputRowItem *otherWeak = other;
+    
+    
     [other setCallback:^(TGGeneralRowItem *item) {
-        BOOL needConfigure = ![_reason isKindOfClass:[TL_inputReportReasonOther class]];
-        _reason = [TL_inputReportReasonOther createWithText:other.result.string];
+        BOOL needConfigure = ![weakSelf.reason isKindOfClass:[TL_inputReportReasonOther class]];
+        weakSelf.reason = [TL_inputReportReasonOther createWithText:otherWeak.result.string];
         if(needConfigure)
-            [_tableView reloadDataForRowIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, 3)] columnIndexes:[NSIndexSet indexSetWithIndex:0]];
+            [weakSelf.tableView reloadDataForRowIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, 3)] columnIndexes:[NSIndexSet indexSetWithIndex:0]];
     }];
     
     spam.xOffset = violence.xOffset = porno.xOffset = other.xOffset = 0;
@@ -117,6 +121,10 @@
     [self configure];
     
     [self enableCancelAndOkButton];
+}
+
+-(void)dealloc {
+    [_tableView clear];
 }
 
 @end

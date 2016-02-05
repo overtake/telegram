@@ -34,46 +34,58 @@
 
 -(void)performRequest {
     
+    weak();
+    
     self.rpc_request = [RPCRequest sendRequest:[TLAPI_messages_sendInlineBotResult createWithFlags:[self senderFlags] peer:self.conversation.inputPeer reply_to_msg_id:self.message.reply_to_msg_id random_id:self.message.randomId query_id:self.message.media.query_id n_id:self.message.media.bot_result.n_id] successHandler:^(id request, id response) {
         
-        [self updateMessageId:response];
+        strongWeak();
         
-        TL_localMessage *msg = [TL_localMessage convertReceivedMessage:[[self updateNewMessageWithUpdates:response] message]];
-        
-        if(msg == nil)
-        {
-            [self cancel];
-            return;
+        if(strongSelf != nil) {
+            [weakSelf updateMessageId:response];
+            
+            TL_localMessage *msg = [TL_localMessage convertReceivedMessage:[[weakSelf updateNewMessageWithUpdates:response] message]];
+            
+            if(msg == nil)
+            {
+                [weakSelf cancel];
+                return;
+            }
+            
+            weakSelf.message.n_id = msg.n_id;
+            weakSelf.message.date = msg.date;
+            weakSelf.message.media = msg.media;
+            weakSelf.message.entities = msg.entities;
+            
+            weakSelf.message.dstate = DeliveryStateNormal;
+            
+            [weakSelf.message save:YES];
+            
+            weakSelf.state = MessageSendingStateSent;
+            
+            
+            if([weakSelf.message.media isKindOfClass:[TL_messageMediaWebPage class]])
+            {
+                [Notification perform:UPDATE_WEB_PAGE_ITEMS data:@{KEY_DATA:@{@(weakSelf.message.peer_id):@[@(weakSelf.message.n_id)]},KEY_WEBPAGE:weakSelf.message.media.webpage}];
+            }
+
         }
         
-        self.message.n_id = msg.n_id;
-        self.message.date = msg.date;
-        self.message.media = msg.media;
-        self.message.entities = msg.entities;
-        
-        self.message.dstate = DeliveryStateNormal;
-        
-        [self.message save:YES];
-        
-        self.state = MessageSendingStateSent;
-        
-        
-        if([self.message.media isKindOfClass:[TL_messageMediaWebPage class]])
-        {
-            [Notification perform:UPDATE_WEB_PAGE_ITEMS data:@{KEY_DATA:@{@(self.message.peer_id):@[@(self.message.n_id)]},KEY_WEBPAGE:self.message.media.webpage}];
-        }
         
     } errorHandler:^(id request, RpcError *error) {
         
-        if(error.error_code == 400) {
-            [self cancel];
-        } else {
-            self.message.dstate = DeliveryStateError;
-            [self.message save:YES];
-            
-            self.state = MessageSendingStateError;
-        }
+        strongWeak();
         
+        if(strongSelf != nil) {
+            if(error.error_code == 400) {
+                [self cancel];
+            } else {
+                self.message.dstate = DeliveryStateError;
+                [self.message save:YES];
+                
+                self.state = MessageSendingStateError;
+            }
+        }
+
     } timeout:0 queue:[ASQueue globalQueue].nativeQueue];
     
 }
