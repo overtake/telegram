@@ -171,7 +171,6 @@
 
 - (void)downloadProgressHandler:(DownloadItem *)item {
     [super downloadProgressHandler:item];
-    
      _waveformView.progress = item.progress;
 }
 
@@ -289,7 +288,6 @@
 
 - (void)changeTime:(NSPoint)pos rect:(NSRect)rect {
     
-    
     float x0 = pos.x -rect.origin.x;
     float percent = x0/rect.size.width;
     
@@ -318,7 +316,6 @@
     return menu;
 }
 
-
 - (void)setItem:(MessageTableItemAudio *)item {
     [super setItem:item];
     
@@ -330,11 +327,10 @@
     [self.durationView setStringValue:item.duration];
     [self.durationView setFrameSize:NSMakeSize(80, NSHeight(self.durationView.frame))];
     [_waveformView setFrameSize:NSMakeSize(item.blockSize.width - (NSMaxX(self.playerButton.frame) + 8), 20)];
-     int c = roundf((NSHeight(self.containerView.frame) - NSHeight(self.durationView.frame))/2);
+    int c = roundf((NSHeight(self.containerView.frame) - NSHeight(self.durationView.frame))/2);
     [_waveformView setFrameOrigin:NSMakePoint(NSMaxX(self.playerButton.frame) + 8, roundf((NSHeight(self.containerView.frame) - NSHeight(_waveformView.frame))/2) + 6)];
     [self.durationView setFrameOrigin:NSMakePoint(NSMaxX(self.playerButton.frame) + 6, c - NSHeight(self.durationView.frame) + 2)];
  
-    
     if(item.state != AudioStatePlaying && item.state != AudioStatePaused)
         [self updateCellState];
     else {
