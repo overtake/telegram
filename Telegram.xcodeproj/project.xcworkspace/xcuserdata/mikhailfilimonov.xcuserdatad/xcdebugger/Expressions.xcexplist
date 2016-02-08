@@ -2065,6 +2065,17 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "-[MessageTableCellAudioView setItem:]:MessageTableCellAudioView.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.containerView.frame">
+            </PersistentString>
+            <PersistentString
+               value = "item.blockSize.width">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "-[TGModernEncryptedUpdates proccess17Layer:params:conversation:encryptedMessage:]:TGModernEncryptedUpdates.m">
       </ContextState>
       <ContextState
@@ -3277,6 +3288,22 @@
          contextName = "__42-[NewContactsManager importCloudContacts:]_block_invoke123:NewContactsManager.m">
       </ContextState>
       <ContextState
+         contextName = "-[MessageTableItemAudio makeSizeByWidth:]:MessageTableItemAudio.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.blockSize">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[TGConversationTableCell updateFrames]:TGConversationTableCell.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "width">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "+[MessageTableItem messageItemFromObject:]:MessageTableItem.m">
          <PersistentStrings>
             <PersistentString
@@ -3284,6 +3311,14 @@
             </PersistentString>
             <PersistentString
                value = "message.media.bot_result">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[MessageTableItemAudio initWithObject:]:MessageTableItemAudio.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "audio.waveform">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -4547,6 +4582,14 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "-[TGWaveformView drawRect:]:TGWaveformView.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "itemWidth">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "-[TGCTextView drawRect:]:TGCTextView.m">
          <PersistentStrings>
             <PersistentString
@@ -4991,6 +5034,17 @@
       </ContextState>
       <ContextState
          contextName = "-[TGWebpageIGContainer setWebpage:]:TGWebpageIGContainer.m">
+      </ContextState>
+      <ContextState
+         contextName = "-[NSView(Category) setCenteredYByView:]:NSViewCategory.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "view.bounds.size.height">
+            </PersistentString>
+            <PersistentString
+               value = "self.bounds.size.height">
+            </PersistentString>
+         </PersistentStrings>
       </ContextState>
       <ContextState
          contextName = "-[TGCTextView setSelectionRange:]:TGCTextView.m">

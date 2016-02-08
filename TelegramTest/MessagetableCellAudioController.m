@@ -22,8 +22,6 @@
     return MAX(150, MIN(self.item.blockSize.width, self.item.message.media.document.audioAttr.duration * 30));
 }
 
-
-
 NSImage *blueBackground() {
     static NSImage *image = nil;
     static dispatch_once_t onceToken;
@@ -66,8 +64,6 @@ NSImage *playImage() {
         
         [image_PlayIconWhite() drawInRect:NSMakeRect(5, 0, image_PlayIconWhite().size.width, image_PlayIconWhite().size.height) fromRect:NSZeroRect operation:NSCompositeHighlight fraction:1];
         
-     //   [image_PlayIconWhite() drawInRect:NSMakeRect(5, 0, image_PlayIconWhite().size.width, image_PlayIconWhite().size.height)];
-        
         [image unlockFocus];
     });
     return image;
@@ -107,9 +103,6 @@ NSImage *voicePlay() {
         duration = 0.01f;
     }
     
-    //   if(!duration)
-    //     duration = 1;
-    
     if((self.item.state == AudioStatePlaying || self.item.state == AudioStatePaused) && globalAudioPlayer()) {
         float progress = MAX( MIN(self.currentTime / duration * [self progressWidth], [self progressWidth]), 0);
         
@@ -120,17 +113,6 @@ NSImage *voicePlay() {
         [NSColorFromRGB(0x44a2d6) set];
         NSRectFill( progressRect );
         [NSBezierPath fillRect:progressRect];
-        
-        
-//        NSBezierPath *path = [NSBezierPath bezierPath];
-//        
-//        [path appendBezierPathWithArcWithCenter: NSMakePoint(rect.origin.x+progress, rect.origin.y+1)
-//                                         radius: 3
-//                                     startAngle: 0
-//                                       endAngle: 360 clockwise:NO];
-//        
-//        [path fill];
-        
     }
     
 }
@@ -148,8 +130,6 @@ NSImage *voicePlay() {
     [[TGAudioPlayer _playerQueue] dispatchOnQueue:^{
         duration = [globalAudioPlayer() duration];
     } synchronous:YES];
-    
-    
     
     self->_currentTime = MAX(MIN(currentTime, duration), 0);
 }
@@ -178,9 +158,7 @@ NSImage *voicePlay() {
     
     float percent = x0/rect.size.width;
     
-    
-    
-    __block int duration;
+     __block int duration;
     
     [[TGAudioPlayer _playerQueue] dispatchOnQueue:^{
         duration = (float)[globalAudioPlayer() duration];
@@ -196,7 +174,6 @@ NSImage *voicePlay() {
 
 
 -(void)mouseUp:(NSEvent *)theEvent {
-    
     
     [super mouseUp:theEvent];
     NSPoint pos = [self convertPoint:[theEvent locationInWindow] fromView:nil];
@@ -224,7 +201,6 @@ NSImage *voicePlay() {
     rect.size.height = 6;
     rect.origin.y-=3;
     
-    
     self.acceptTimeChanger = NSPointInRect(pos, rect) && [globalAudioPlayer() isEqualToPath:self.item.path] && !globalAudioPlayer().isPaused;
     
     if(self.acceptTimeChanger) {
@@ -241,7 +217,6 @@ NSImage *voicePlay() {
     [self.stateTextField sizeToFit];
     [self.stateTextField setFrameOrigin:NSMakePoint(NSMaxX(self.durationView.frame) + 10, self.durationView.frame.origin.y - 2)];
 }
-
 
 
 -(void)play:(NSTimeInterval)fromPosition {
@@ -280,11 +255,9 @@ NSImage *voicePlay() {
             
             self.currentTime = [globalAudioPlayer() currentPositionSync:YES];
             
-            
-            if(self.currentTime > 0.0f) {
+             if(self.currentTime > 0.0f) {
                 [self setNeedsDisplay:YES];
             }
-            
             
         } queue:dispatch_get_current_queue()];
         

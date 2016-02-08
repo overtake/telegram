@@ -588,7 +588,7 @@
             return @"GIF";
         }
         
-        if(message.media.document.audioAttr.isIs_voice) {
+        if(message.media.document.audioAttr.isVoice) {
             return NSLocalizedString(@"ChatMedia.Audio", nil);
         }
         

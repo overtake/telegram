@@ -2,7 +2,7 @@
 //  TLApi.h
 //  Telegram
 //
-//  Auto created by Mikhail Filimonov on 04.02.16.
+//  Auto created by Mikhail Filimonov on 07.02.16.
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -1117,5 +1117,12 @@
 @property (nonatomic, strong) NSString* n_id;
 
 +(TLAPI_messages_sendInlineBotResult*)createWithFlags:(int)flags  peer:(TLInputPeer*)peer reply_to_msg_id:(int)reply_to_msg_id random_id:(long)random_id query_id:(long)query_id n_id:(NSString*)n_id;
+@end
+
+@interface TLAPI_channels_toggleInvites : TLApiObject
+@property (nonatomic, strong) TLInputChannel* channel;
+@property Boolean enabled;
+
++(TLAPI_channels_toggleInvites*)createWithChannel:(TLInputChannel*)channel enabled:(Boolean)enabled;
 @end
 

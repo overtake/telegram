@@ -545,7 +545,7 @@
     self.recordDurationLayer.contentsScale = self.normalView.layer.contentsScale;
     [self.recordDurationLayer setTextColor:[NSColor blackColor]];
     [self.recordDurationLayer setTextFont:TGSystemFont(14)];
-    [self.recordDurationLayer setString:@"00:34"];
+    [self.recordDurationLayer setString:@"00:34,45"];
     [self.recordDurationLayer sizeToFit];
     [self.recordDurationLayer setFrameOrigin:CGPointMake(52, roundf( (self.bounds.size.height - self.recordDurationLayer.bounds.size.height) / 2.f) - 1)];
     [self.normalView.layer addSublayer:self.recordDurationLayer];

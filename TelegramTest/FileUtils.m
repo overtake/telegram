@@ -19,6 +19,9 @@
 #import "TGStickerPackModalView.h"
 #import "ComposeActionAddUserToGroupBehavior.h"
 #import "TGHeadChatPanel.h"
+#include "opus.h"
+#include "opusfile.h"
+#import "TGAudioWaveform.h"
 @implementation OpenWithObject
 
 -(id)initWithFullname:(NSString *)fullname app:(NSURL *)app icon:(NSImage *)icon {
@@ -130,7 +133,7 @@ NSString *const TLBotCommandPrefix = @"/";
 
 
 NSString* mediaFilePath(TL_localMessage *message) {
-    if(message.media.document.audioAttr.isIs_voice) {
+    if(message.media.document.audioAttr.isVoice) {
         return [NSString stringWithFormat:@"%@/%lu_%lu.ogg",path(),message.media.document.n_id,message.media.document.access_hash];
     }
     if([message.media isKindOfClass:[TL_messageMediaVideo class]]) {
@@ -1276,75 +1279,6 @@ NSString *display_url(NSString *url) {
 }
 
 
-+(NSArray*)arrayWaveform:(NSData *)waveform {
-    
-    NSMutableArray *decoded = [[NSMutableArray alloc] init];
-    
-    
-    
-    if(waveform.length > 0) {
-        
-        char bytes[63];
-        
-        
-        [waveform getBytes:bytes length:waveform.length];
-        
-        
-        int k = 0;
-        
-        for (int i = 0; i < waveform.length;) {
-            
-            int value = 0;
-            
-            NSString *binaryString = @"";
-            
-            [self convertBinaryStringToDecimalNumber:binaryString];
-            
-            for (int j = 0; j < 5; j++) {
-                
-                char byte = bytes[i];
-                
-                
-               // NSLog(@"k:%d i:%d",k,i);
-                
-                
-                
-                BOOL r = (byte >> k) & 1;
-                
-                value += r * pow(2, k);
-                
-                binaryString = [NSString stringWithFormat:@"%d%@",r,binaryString];
-                
-                k++;
-                
-                if(k == 8) {
-                    i++;
-                    k = 0;
-                }
-            }
-            
-            NSLog(@"binary:%@",binaryString);
-            
-            value = [self convertBinaryStringToDecimalNumber:binaryString];
-            
-            [decoded addObject:@(value)];
-            
-            if(decoded.count == 100) {
-                break;
-            }
-            
-        }
-        
-        NSLog(@"after decoding: %@",decoded);
-        
-        int bp = 0;
-        
-    }
-    
-    
-    
-    return decoded;
-}
 
 + (int)convertBinaryStringToDecimalNumber:(NSString *)binaryString {
     unichar aChar;
@@ -1359,6 +1293,84 @@ NSString *display_url(NSString *url) {
             value = value<<1;
     }
     return value;
+}
+
++ (TGAudioWaveform *)waveformForPath:(NSString *)path {
+    if (![[NSFileManager defaultManager] fileExistsAtPath:path]) {
+        return nil;
+    }
+    
+    int openError = OPUS_OK;
+    OggOpusFile *opusFile = op_open_file([path UTF8String], &openError);
+    if (opusFile == NULL || openError != OPUS_OK)
+    {
+        MTLog(@"[waveformForPath op_open_file failed: %d]", openError);
+        return nil;
+    } else {
+        //_isSeekable = op_seekable(_opusFile);
+        int64_t totalSamples = op_pcm_total(opusFile, -1);
+        int32_t resultSamples = 100;
+        int32_t sampleRate = (int32_t)(MAX(1, totalSamples / resultSamples));
+        
+        NSMutableData *samplesData = [[NSMutableData alloc] initWithLength:100 * 2];
+        uint16_t *samples = samplesData.mutableBytes;
+        
+        int bufferSize = 1024 * 128;
+        int16_t *sampleBuffer = malloc(bufferSize);
+        uint64_t sampleIndex = 0;
+        uint16_t peakSample = 0;
+        
+        int index = 0;
+        
+        while (true) {
+            int readSamples = op_read(opusFile, sampleBuffer, bufferSize / 2, NULL);
+            for (int i = 0; i < readSamples; i++) {
+                uint16_t sample = (uint16_t)ABS(sampleBuffer[i]);
+                if (sample > peakSample) {
+                    peakSample = sample;
+                }
+                if (sampleIndex++ % sampleRate == 0) {
+                    if (index < resultSamples) {
+                        samples[index++] = peakSample;
+                    }
+                    peakSample = 0;
+                }
+            }
+            if (readSamples == 0) {
+                break;
+            }
+        }
+        
+        int64_t sumSamples = 0;
+        for (int i = 0; i < resultSamples; i++) {
+            sumSamples += samples[i];
+        }
+        uint16_t peak = (uint16_t)(sumSamples * 1.8f / resultSamples);
+        if (peak < 2500) {
+            peak = 2500;
+        }
+        
+        for (int i = 0; i < resultSamples; i++) {
+            uint16_t sample = (uint16_t)((int64_t)samples[i]);
+            if (sample > peak) {
+                samples[i] = peak;
+            }
+        }
+        
+        free(sampleBuffer);
+        op_free(opusFile);
+        
+        TGAudioWaveform *waveform = [[TGAudioWaveform alloc] initWithSamples:samplesData peak:peak];
+        
+        NSData *bitstream = [waveform bitstream];
+        waveform = [[TGAudioWaveform alloc] initWithBitstream:bitstream bitsPerSample:5];
+        NSData *convertedBitstream = [waveform bitstream];
+        if (![convertedBitstream isEqualToData:bitstream]) {
+            MTLog(@"Bitstreams before and after don't match");
+        }
+        
+        return waveform;
+    }
 }
 
 @end

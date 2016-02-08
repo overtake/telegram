@@ -2,7 +2,7 @@
 //  MTProto.h
 //  Telegram
 //
-//  Auto created by Mikhail Filimonov on 04.02.16.
+//  Auto created by Mikhail Filimonov on 07.02.16.
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -920,6 +920,7 @@
 @property (nonatomic,assign,readonly) BOOL isVerified;
 @property (nonatomic,assign,readonly) BOOL isMegagroup;
 @property (nonatomic,assign,readonly) BOOL isRestricted;
+@property (nonatomic,assign,readonly) BOOL isInvites_enabled;
 @property long access_hash;
 @property (nonatomic, strong) NSString* username;
 @property (nonatomic, strong) NSString* restriction_reason;
@@ -936,7 +937,7 @@
 +(TL_chatForbidden*)createWithN_id:(int)n_id title:(NSString*)title;
 @end
 @interface TL_channel : TLChat<NSCoding>
-+(TL_channel*)createWithFlags:(int)flags          n_id:(int)n_id access_hash:(long)access_hash title:(NSString*)title username:(NSString*)username photo:(TLChatPhoto*)photo date:(int)date version:(int)version restriction_reason:(NSString*)restriction_reason;
++(TL_channel*)createWithFlags:(int)flags           n_id:(int)n_id access_hash:(long)access_hash title:(NSString*)title username:(NSString*)username photo:(TLChatPhoto*)photo date:(int)date version:(int)version restriction_reason:(NSString*)restriction_reason;
 @end
 @interface TL_channelForbidden : TLChat<NSCoding>
 +(TL_channelForbidden*)createWithN_id:(int)n_id access_hash:(long)access_hash title:(NSString*)title;
@@ -2197,6 +2198,9 @@
 @interface TL_inputPrivacyKeyStatusTimestamp : TLInputPrivacyKey<NSCoding>
 +(TL_inputPrivacyKeyStatusTimestamp*)create;
 @end
+@interface TL_inputPrivacyKeyChatInvite : TLInputPrivacyKey<NSCoding>
++(TL_inputPrivacyKeyChatInvite*)create;
+@end
 	
 @interface TLPrivacyKey()
 
@@ -2204,6 +2208,9 @@
 
 @interface TL_privacyKeyStatusTimestamp : TLPrivacyKey<NSCoding>
 +(TL_privacyKeyStatusTimestamp*)create;
+@end
+@interface TL_privacyKeyChatInvite : TLPrivacyKey<NSCoding>
++(TL_privacyKeyChatInvite*)create;
 @end
 	
 @interface TLInputPrivacyRule()
@@ -2285,7 +2292,7 @@
 @property (nonatomic, strong) TLInputStickerSet* stickerset;
 @property int duration;
 @property int flags;
-@property (nonatomic,assign,readonly) BOOL isIs_voice;
+@property (nonatomic,assign,readonly) BOOL isVoice;
 @property (nonatomic, strong) NSString* title;
 @property (nonatomic, strong) NSString* performer;
 @property (nonatomic, strong) NSData* waveform;

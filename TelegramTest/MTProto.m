@@ -2,7 +2,7 @@
 //  MTProto.m
 //  Telegram
 //
-//  Auto created by Mikhail Filimonov on 04.02.16.
+//  Auto created by Mikhail Filimonov on 07.02.16.
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -3935,6 +3935,8 @@
                         
 -(BOOL)isRestricted {return NO;}
                         
+-(BOOL)isInvites_enabled {return NO;}
+                        
 -(BOOL)isExplicit_content {return NO;}
             
 @end
@@ -4137,9 +4139,10 @@
 @end
 
 @implementation TL_channel
-+(TL_channel*)createWithFlags:(int)flags          n_id:(int)n_id access_hash:(long)access_hash title:(NSString*)title username:(NSString*)username photo:(TLChatPhoto*)photo date:(int)date version:(int)version restriction_reason:(NSString*)restriction_reason {
++(TL_channel*)createWithFlags:(int)flags           n_id:(int)n_id access_hash:(long)access_hash title:(NSString*)title username:(NSString*)username photo:(TLChatPhoto*)photo date:(int)date version:(int)version restriction_reason:(NSString*)restriction_reason {
 	TL_channel* obj = [[TL_channel alloc] init];
 	obj.flags = flags;
+	
 	
 	
 	
@@ -4170,6 +4173,7 @@
 	
 	
 	
+	
 	[stream writeInt:self.n_id];
 	[stream writeLong:self.access_hash];
 	[stream writeString:self.title];
@@ -4181,6 +4185,7 @@
 }
 -(void)unserialize:(SerializedData*)stream {
 	super.flags = [stream readInt];
+	
 	
 	
 	
@@ -4205,6 +4210,7 @@
     TL_channel *objc = [[TL_channel alloc] init];
     
     objc.flags = self.flags;
+    
     
     
     
@@ -4259,6 +4265,8 @@
 -(BOOL)isMegagroup {return (self.flags & (1 << 8)) > 0;}
                         
 -(BOOL)isRestricted {return (self.flags & (1 << 9)) > 0;}
+                        
+-(BOOL)isInvites_enabled {return (self.flags & (1 << 10)) > 0;}
                         
 -(void)setUsername:(NSString*)username
 {
@@ -17174,6 +17182,47 @@
         
 @end
 
+@implementation TL_inputPrivacyKeyChatInvite
++(TL_inputPrivacyKeyChatInvite*)create {
+	TL_inputPrivacyKeyChatInvite* obj = [[TL_inputPrivacyKeyChatInvite alloc] init];
+	
+	return obj;
+}
+-(void)serialize:(SerializedData*)stream {
+	
+}
+-(void)unserialize:(SerializedData*)stream {
+	
+}
+        
+-(TL_inputPrivacyKeyChatInvite *)copy {
+    
+    TL_inputPrivacyKeyChatInvite *objc = [[TL_inputPrivacyKeyChatInvite alloc] init];
+    
+    
+    
+    return objc;
+}
+        
+
+    
+-(id)initWithCoder:(NSCoder *)aDecoder {
+
+    if((self = [ClassStore deserialize:[aDecoder decodeObjectForKey:@"data"]])) {
+        
+    }
+    
+    return self;
+}
+        
+-(void)encodeWithCoder:(NSCoder *)aCoder {
+    [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
+}
+        
+
+        
+@end
+
 @implementation TLPrivacyKey
 
 @end
@@ -17194,6 +17243,47 @@
 -(TL_privacyKeyStatusTimestamp *)copy {
     
     TL_privacyKeyStatusTimestamp *objc = [[TL_privacyKeyStatusTimestamp alloc] init];
+    
+    
+    
+    return objc;
+}
+        
+
+    
+-(id)initWithCoder:(NSCoder *)aDecoder {
+
+    if((self = [ClassStore deserialize:[aDecoder decodeObjectForKey:@"data"]])) {
+        
+    }
+    
+    return self;
+}
+        
+-(void)encodeWithCoder:(NSCoder *)aCoder {
+    [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
+}
+        
+
+        
+@end
+
+@implementation TL_privacyKeyChatInvite
++(TL_privacyKeyChatInvite*)create {
+	TL_privacyKeyChatInvite* obj = [[TL_privacyKeyChatInvite alloc] init];
+	
+	return obj;
+}
+-(void)serialize:(SerializedData*)stream {
+	
+}
+-(void)unserialize:(SerializedData*)stream {
+	
+}
+        
+-(TL_privacyKeyChatInvite *)copy {
+    
+    TL_privacyKeyChatInvite *objc = [[TL_privacyKeyChatInvite alloc] init];
     
     
     
@@ -17996,7 +18086,7 @@
 
 @implementation TLDocumentAttribute
             
--(BOOL)isIs_voice {return NO;}
+-(BOOL)isVoice {return NO;}
             
 @end
         
@@ -18238,7 +18328,7 @@
 }
         
             
--(BOOL)isIs_voice {return (self.flags & (1 << 10)) > 0;}
+-(BOOL)isVoice {return (self.flags & (1 << 10)) > 0;}
                         
 -(void)setTitle:(NSString*)title
 {

@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 #import <AVFoundation/AVFoundation.h>
 #import "TelegramWindow.h"
+#import "TGAudioWaveform.h"
 @interface OpenWithObject : NSObject
 @property (nonatomic, strong,readonly) NSString *fullname;
 @property (nonatomic, strong,readonly) NSURL *app;
@@ -92,6 +93,6 @@ NSString *path_for_external_link(NSString *link);
 NSString *display_url(NSString *url);
 
 
-+(NSArray*)arrayWaveform:(NSData *)waveform;
++ (TGAudioWaveform *)waveformForPath:(NSString *)path;
 + (int)convertBinaryStringToDecimalNumber:(NSString *)binaryString;
 @end

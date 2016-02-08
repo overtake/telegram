@@ -27,10 +27,13 @@ typedef enum {
 @property (nonatomic, strong) TGAudioPlayer *player;
 @property (nonatomic) AudioState state;
 @property (nonatomic, weak) MessagetableCellAudioController *cellView;
+@property (nonatomic,strong,readonly) NSArray *waveform;
 
 - (BOOL)isset;
 - (NSString *)path;
 - (int)size;
 - (BOOL)canDownload;
+
+-(NSArray *)emptyWaveform;
 
 @end

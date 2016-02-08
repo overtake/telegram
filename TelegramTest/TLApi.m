@@ -2,7 +2,7 @@
 //  TLApi.m
 //  Telegram
 //
-//  Auto created by Mikhail Filimonov on 04.02.16..
+//  Auto created by Mikhail Filimonov on 07.02.16..
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -2652,6 +2652,21 @@
 	[stream writeLong:self.random_id];
 	[stream writeLong:self.query_id];
 	[stream writeString:self.n_id];
+	return [stream getOutput];
+}
+@end
+
+@implementation TLAPI_channels_toggleInvites
++(TLAPI_channels_toggleInvites*)createWithChannel:(TLInputChannel*)channel enabled:(Boolean)enabled {
+    TLAPI_channels_toggleInvites* obj = [[TLAPI_channels_toggleInvites alloc] init];
+    obj.channel = channel;
+	obj.enabled = enabled;
+    return obj;
+}
+- (NSData*)getData {
+	SerializedData* stream = [ClassStore streamWithConstuctor:1231065863];
+	[ClassStore TLSerialize:self.channel stream:stream];
+	[stream writeBool:self.enabled];
 	return [stream getOutput];
 }
 @end

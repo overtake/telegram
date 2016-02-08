@@ -83,20 +83,18 @@ double mappingRange(double x, double in_min, double in_max, double out_min, doub
     
     self.timer = [[TGTimer alloc] initWithTimeout:1.f/50 repeat:YES completion:^{
 
-        k++;
-        
         [weakSelf.recorder updateMeters];
         [weakSelf.recorder setMeteringEnabled:NO];
         [weakSelf.recorder setMeteringEnabled:YES];
-
-        int power = 0;
+        
+        float power = 0;
         float average = [weakSelf.recorder averagePowerForChannel:0];
         
         if(average > -57) {
-            power = floor(mappingRange(average, -60, 0, 0, 31));
+            power = mappingRange(average, -60, 0, 0, 1);
         }
-        
-        [weakSelf.powers addObject:@(power)];
+        if(power > 1)
+            power = 1;
         
         if(weakSelf.powerHandler)
             weakSelf.powerHandler(power);
@@ -151,10 +149,10 @@ double mappingRange(double x, double in_min, double in_max, double out_min, doub
         
         [self removeFile];
         
-        NSData *wafeform = [self prepareWafeForm];
+        TGAudioWaveform *waveform = [FileUtils waveformForPath:opusPath];
         
         [[ASQueue mainQueue] dispatchOnQueue:^{
-            [self.messagesViewController sendAudio:opusPath forConversation:self.messagesViewController.conversation waveforms:wafeform];
+            [self.messagesViewController sendAudio:opusPath forConversation:self.messagesViewController.conversation waveforms:[waveform bitstream]];
         }];
     }];
 }
@@ -246,13 +244,17 @@ static int powerCount = 100;
             binaryString = [NSString stringWithFormat:@"%d%@",value,binaryString];
             
             int byteIndex = index / 8;
-            int bitIndex = 7- (index % 8);
+            int bitIndex = index % 8;
             char mask = (1 << bitIndex);
-                        
+            
+        //    NSLog(@"byteIndex:%d index:%d bitIndex:%d === %d",byteIndex,index,bitIndex,value);
+            
             bytes[byteIndex] = (value ? (bytes[byteIndex] | mask) : (bytes[byteIndex] & ~mask));
             
             // SetBit(bytes,,res);
         }
+        
+        NSLog(@"%@",binaryString);
         
         
         average+=val;
@@ -261,7 +263,11 @@ static int powerCount = 100;
 
     average = average/(float)_powers.count;
     
-
+    
+    int count = _powers.count;
+    
+    NSLog(@"beform encoding:%@",_powers);
+    
     
     NSData *data = [NSData dataWithBytes:bytes length:63];
     

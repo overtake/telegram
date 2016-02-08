@@ -23,22 +23,31 @@
         
         TL_documentAttributeAudio *audio = (TL_documentAttributeAudio *) [object.media.document attributeWithClass:[TL_documentAttributeAudio class]];
 
-        
-        self.blockSize = NSMakeSize(200, 45);
+        self.blockSize = NSMakeSize(300, 45);
         self.duration = [NSString durationTransformedValue:audio.duration];
 
-        NSArray *waveform = [FileUtils arrayWaveform:audio.waveform];
+        _waveform = audio.arrayWaveform;
+        
+        [self doAfterDownload];
         
         if([self isset])
             self.state = AudioStateWaitPlaying;
         else
             self.state = AudioStateWaitDownloading;
         
-        
-        [self checkStartDownload:[self.message.to_id isKindOfClass:[TL_peerChat class]] ? AutoGroupAudio : AutoPrivateAudio size:self.message.media.document.size];
+      //  [self checkStartDownload:[self.message.to_id isKindOfClass:[TL_peerChat class]] ? AutoGroupAudio : AutoPrivateAudio size:self.message.media.document.size];
         
     }
     return self;
+}
+
+
+-(BOOL)makeSizeByWidth:(int)width {
+    [super makeSizeByWidth:width];
+    
+    self.blockSize = NSMakeSize(MIN(width - 80 ,200), 45);
+    
+    return YES;
 }
 
 -(BOOL)canShare {
@@ -75,14 +84,10 @@
     if(!self.message.n_out && !self.message.readedContent) {
         [ASQueue dispatchOnMainQueue:^{
             
-           
-            
             self.message.flags&= ~TGREADEDCONTENT;
-            
             [self.cellView setNeedsDisplay:YES];
             
         }];
-        
         
         NSMutableArray *msgs = [@[@(self.message.n_id)] mutableCopy];
         
@@ -111,6 +116,37 @@
 
 - (BOOL)isset {
      return isPathExists([self path]) && [FileUtils checkNormalizedSize:self.path checksize:[self size]];
+}
+
+
+
+-(void)doAfterDownload {
+    [super doAfterDownload];
+    
+    if(_waveform.count == 0 && self.isset) {
+        TGAudioWaveform *waveform = [FileUtils waveformForPath:self.path];
+        
+        self.message.media.document.audioAttr.waveform = [waveform bitstream];
+        
+        [self.message save:NO];
+        
+        _waveform = self.message.media.document.audioAttr.arrayWaveform;
+    }
+}
+
+-(NSArray *)emptyWaveform {
+    static NSMutableArray *c;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        
+        c = [NSMutableArray array];
+        
+        for (int i = 0; i < 100; i++) {
+            [c addObject:@(4)];
+        }
+    });
+    
+    return c;
 }
 
 @end

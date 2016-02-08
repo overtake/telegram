@@ -13,11 +13,16 @@
 #import "TMPreviewDocumentItem.h"
 #import "TMCircularProgress.h"
 #import "MessageTableItemAudio.h"
-
+#import "TGWaveformView.h"
 #import "TGTimer.h"
 #import "NSStringCategory.h"
 
 #define OFFSET 75.0f
+
+
+@interface MessageTableCellAudioView ()
+@property (nonatomic,strong) TGWaveformView *waveformView;
+@end
 
 @implementation MessageTableCellAudioView
 
@@ -31,9 +36,7 @@
         weak();
         
         self.playerButton = [[BTRButton alloc] initWithFrame:NSMakeRect(0, 3, 37, 37)];
-     //   [self.playerButton setOpacityHover:YES];
         [self.playerButton setBackgroundImage:image_VoicePlay() forControlState:BTRControlStateNormal];
-    //    [self.playerButton setCursor:[NSCursor pointingHandCursor] forControlState:BTRControlStateNormal];
         [self.playerButton addBlock:^(BTRControlEvents events) {
             
             if(weakSelf.item.state == AudioStateWaitPlaying) {
@@ -71,31 +74,27 @@
         
         [self.containerView addSubview:self.playerButton];
         
-        self.durationView = [[TMTextField alloc] initWithFrame:NSMakeRect(self.playerButton.frame.size.width + 8, 20, 100, 20)];
+        self.durationView = [[TMTextField alloc] initWithFrame:NSMakeRect(self.playerButton.frame.size.width + 8, 0, 100, 20)];
         [self.durationView setEnabled:NO];
         [self.durationView setBordered:NO];
         [self.durationView setEditable:NO];
         [self.durationView setDrawsBackground:NO];
         [self.durationView setStringValue:@"00:00 / 00:00"];
-        [self.durationView sizeToFit];
+       
         [self.durationView setFont:TGSystemFont(12)];
         [self.durationView setTextColor:NSColorFromRGB(0xbebebe)];
         [self.containerView addSubview:self.durationView];
+        [self.durationView sizeToFit];
         
-        
-        self.stateTextField = [[TMTextField alloc] initWithFrame:NSZeroRect];
-        [self.stateTextField setEnabled:NO];
-        [self.stateTextField setBordered:NO];
-        [self.stateTextField setEditable:NO];
-        [self.stateTextField setDrawsBackground:NO];
-        [self.stateTextField setFont:TGSystemFont(12)];
-        [self.stateTextField setTextColor:NSColorFromRGB(0xbebebe)];
-
-        
-        [self.containerView addSubview:self.stateTextField];
-        
-        
-        
+//        self.stateTextField = [[TMTextField alloc] initWithFrame:NSZeroRect];
+//        [self.stateTextField setEnabled:NO];
+//        [self.stateTextField setBordered:NO];
+//        [self.stateTextField setEditable:NO];
+//        [self.stateTextField setDrawsBackground:NO];
+//        [self.stateTextField setFont:TGSystemFont(12)];
+//        [self.stateTextField setTextColor:NSColorFromRGB(0xbebebe)];
+//
+//        [self.containerView addSubview:self.stateTextField];
         
         [self.progressView setImage:image_DownloadIconGrey() forState:TMLoaderViewStateNeedDownload];
         [self.progressView setImage:image_LoadCancelGrayIcon() forState:TMLoaderViewStateDownloading];
@@ -107,12 +106,33 @@
         
         [self setProgressToView:self.playerButton];
         
+        _waveformView = [[TGWaveformView alloc] initWithFrame:NSMakeRect(0, 0, 200, 32)];
+        
+        [self.containerView addSubview:_waveformView];
+        
+        
         
         
     }
     return self;
 }
 
+
+-(void)setCurrentTime:(NSTimeInterval)currentTime {
+    [super setCurrentTime:currentTime];
+    
+    __block float duration;
+    
+    [[TGAudioPlayer _playerQueue] dispatchOnQueue:^{
+        duration = [globalAudioPlayer() duration];
+    } synchronous:YES];
+    
+    if(duration == 0.0f) {
+        duration = 0.01f;
+    }
+    
+    _waveformView.progress = ceil((self.currentTime / duration) * 100.0f);
+}
 
 - (NSRect)progressRect {
     return NSMakeRect(self.containerView.frame.origin.x + self.playerButton.frame.size.width + 10, NSMinY(self.playerButton.frame) + NSHeight(self.playerButton.frame) - 22, [self progressWidth], 3);
@@ -127,8 +147,12 @@
 }
 
 - (void)updateCellState {
+    
+    
+    
     MessageTableItemAudio *item = (MessageTableItemAudio *)self.item;
     
+    [_waveformView setWaveform:item.waveform.count > 0 ? item.waveform : item.emptyWaveform];
     
     if(item.messageSender) {
         self.item.state = AudioStateUploading;
@@ -157,9 +181,21 @@
     
 }
 
--(void)drawRect:(NSRect)dirtyRect {
-    [super drawRect:dirtyRect];
+- (void)uploadProgressHandler:(SenderItem *)item animated:(BOOL)animation {
+    [super uploadProgressHandler:item animated:animation];
     
+    _waveformView.progress = item.progress;
+}
+
+- (void)downloadProgressHandler:(DownloadItem *)item {
+    [super downloadProgressHandler:item];
+    
+     _waveformView.progress = item.progress;
+}
+
+
+
+-(void)drawRect:(NSRect)dirtyRect {
     
     if(!self.item.message.readedContent && !self.item.messageSender && (!self.item.downloadItem || self.item.downloadItem.downloadState == DownloadStateCompleted) && globalAudioPlayer().delegate != self.item) {
         [NSColorFromRGB(0x4ba3e2) setFill];
@@ -181,23 +217,19 @@
         
     }
     
-    if(cellState == CellStateDownloading) {
-        [self.stateTextField setHidden:NO]; 
+    [self.stateTextField setHidden:YES];
+    
+    if(cellState == CellStateDownloading || cellState == CellStateSending || cellState == CellStateNeedDownload) {
+        _waveformView.defaultColor = DIALOG_BORDER_COLOR;
+        _waveformView.progressColor = BLUE_UI_COLOR;
     }
     
     if(cellState == CellStateNormal) {
-       [self.stateTextField setHidden:YES];
+        _waveformView.defaultColor = BLUE_UI_COLOR;
+        _waveformView.progressColor = NSColorFromRGB(0x3dd16e);
     }
     
-    if(cellState == CellStateSending) {
-        [self.stateTextField setHidden:self.item.message.fwd_from_id == nil];
-    }
-    
-    if(cellState == CellStateNeedDownload) {
-        [self setStateTextFieldString:[NSString sizeToTransformedValuePretty:self.item.size]];
-        [self.stateTextField setHidden:NO];
-    }
-    
+
     [self.progressView setState:cellState];
     
     if(self.item.state == AudioStateWaitPlaying || self.item.state == AudioStatePaused || self.item.state == AudioStatePlaying) {
@@ -206,12 +238,10 @@
         [self.playerButton setBackgroundImage:grayBackground() forControlState:BTRControlStateNormal];
     }
     
-    
-    
-    
     switch (self.item.state) {
         case AudioStateWaitPlaying:
             [self.playerButton setImage:voicePlay() forControlState:BTRControlStateNormal];
+            [_waveformView setProgress:0];
             break;
             
         case AudioStatePaused:
@@ -233,10 +263,10 @@
 }
 
 - (void)setStateTextFieldString:(NSString *)string {
-    [self.stateTextField setHidden:NO];
-    [self.stateTextField setStringValue:string];
-    [self.stateTextField sizeToFit];
-    [self.stateTextField setFrameOrigin:NSMakePoint(self.playerButton.frame.size.width + 10 + self.progressRect.size.width - self.stateTextField.frame.size.width, self.durationView.frame.origin.y - 2)];
+//    [self.stateTextField setHidden:NO];
+//    [self.stateTextField setStringValue:string];
+//    [self.stateTextField sizeToFit];
+//    [self.stateTextField setFrameOrigin:NSMakePoint(self.playerButton.frame.size.width + 10 + self.progressRect.size.width - self.stateTextField.frame.size.width, self.durationView.frame.origin.y - 2)];
 }
 
 
@@ -249,8 +279,6 @@
     
     return menu;
 }
-
-
 
 
 - (void)setItem:(MessageTableItemAudio *)item {
@@ -266,6 +294,17 @@
     
     [self.durationView setFrameSize:NSMakeSize(80, NSHeight(self.durationView.frame))];
     
+    [_waveformView setFrameSize:NSMakeSize(item.blockSize.width - (NSMaxX(self.playerButton.frame) + 8), 20)];
+    
+    int c = roundf((NSHeight(self.containerView.frame) - NSHeight(self.durationView.frame))/2);
+    
+    [_waveformView setFrameOrigin:NSMakePoint(NSMaxX(self.playerButton.frame) + 8, roundf((NSHeight(self.containerView.frame) - NSHeight(_waveformView.frame))/2) + 6)];
+    [self.durationView setFrameOrigin:NSMakePoint(NSMaxX(self.playerButton.frame) + 6, c - NSHeight(self.durationView.frame) + 2)];
+ 
+    
+    
+    
+    
     if(item.state != AudioStatePlaying && item.state != AudioStatePaused)
         [self updateCellState];
     else {
@@ -274,7 +313,6 @@
             [self startTimer];
     }
     
-
 }
 
 @end

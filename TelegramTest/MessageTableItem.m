@@ -235,7 +235,6 @@ static NSCache *cItems;
             
     }
     
-    
     if(self.isForwadedMessage) {
         self.forwardMessageAttributedString = [[NSMutableAttributedString alloc] init];
 //        [self.forwardMessageAttributedString appendString:NSLocalizedString(@"Message.ForwardedFrom", nil) withColor:NSColorFromRGB(0x909090)];
@@ -386,11 +385,11 @@ static NSTextAttachment *channelIconAttachment() {
                     objectReturn = [[MessageTableItemMpeg alloc] initWithObject:message];
                 } else if([document.mime_type isEqualToString:@"image/gif"] && ![document.thumb isKindOfClass:[TL_photoSizeEmpty class]]) {
                     objectReturn = [[MessageTableItemGif alloc] initWithObject:message];
-                } else if(audioAttr && !audioAttr.isIs_voice) {
+                } else if(audioAttr && !audioAttr.isVoice) {
                     objectReturn = [[MessageTableItemAudioDocument alloc] initWithObject:message];
                 } else if([document isSticker]) {
                     objectReturn = [[MessageTableItemSticker alloc] initWithObject:message];
-                } else if(audioAttr.isIs_voice) {
+                } else if(audioAttr.isVoice) {
                     objectReturn = [[MessageTableItemAudio alloc] initWithObject:message];
                 } else {
                     objectReturn = [[MessageTableItemDocument alloc] initWithObject:message];

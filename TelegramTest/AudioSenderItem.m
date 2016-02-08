@@ -29,7 +29,6 @@
         
         NSMutableArray *attrs = [NSMutableArray array];
         
-        NSArray *res = [FileUtils arrayWaveform:waveforms];
         
         [attrs addObject:[TL_documentAttributeAudio createWithFlags:(1 << 10) duration:roundf(duration) title:nil performer:nil waveform:waveforms]];
 
