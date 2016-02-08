@@ -202,7 +202,7 @@
     
     id request;
     
-    if([chat isKindOfClass:[TL_channel class]] || [chat isKindOfClass:[TL_channel_old43 class]]) {
+    if([chat isKindOfClass:[TL_channel class]] || [chat isKindOfClass:[TL_channel_old43 class]] || [chat isKindOfClass:[TL_channel_old45 class]]) {
         request = [TLAPI_channels_getFullChannel createWithChannel:chat.inputPeer];
     } else {
         request = [TLAPI_messages_getFullChat createWithChat_id:chat.n_id];
@@ -235,9 +235,6 @@
         [self add:@[[result full_chat]]];
         
         TLChatFull *current = [self find:chat_id];
-        
-        
-        
         [current setLastLayerUpdated:YES];
         
         [[Storage manager] insertFullChat:[result full_chat] completeHandler:nil];

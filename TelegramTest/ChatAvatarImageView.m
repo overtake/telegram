@@ -182,7 +182,7 @@
     NSMenu *menu = [[NSMenu alloc] init];
     
 
-    if(([self.chat isKindOfClass:[TL_channel class]] || [self.chat isKindOfClass:[TL_channel_old43 class]]) && !self.chat.isManager)
+    if(([self.chat isKindOfClass:[TL_channel class]] || [self.chat isKindOfClass:[TL_channel_old43 class]] || [self.chat isKindOfClass:[TL_channel_old45 class]]) && !self.chat.isManager)
         return;
     else
         if([self.chat isKindOfClass:[TL_chat class]] && !(!self.chat.isAdmins_enabled || self.chat.isAdmin))

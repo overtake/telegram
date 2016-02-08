@@ -189,17 +189,6 @@ static NSTextAttachment *channelVerifySelectedAttachment() {
             
             [str appendString:self.isMegagroup ? NSLocalizedString(@"Conversation.GroupTitle", nil) : NSLocalizedString(@"Conversation.ChannelTitle", nil) withColor:NSColorFromRGB(0xa9a9a9)];
             
-//            TLChatFull *fullChat = [[FullChatManager sharedManager] find:self.n_id];
-//            
-//            if(fullChat.participants_count > 0) {
-//                
-//                NSString *count = fullChat.participants_count > 10000 ? [NSString stringWithFormat:@"%@ %@",[@(fullChat.participants_count) prettyNumber],NSLocalizedString(@"Conversation.Members", nil)] : [NSString stringWithFormat:@"%d %@", fullChat.participants_count, fullChat.participants_count > 1 ?  NSLocalizedString(@"Conversation.Members", nil) : NSLocalizedString(@"Conversation.Member", nil)];
-//                
-//                [str appendString:count withColor:NSColorFromRGB(0xa9a9a9)];
-//            } else {
-//                [str appendString:NSLocalizedString(@"Conversation.ChannelTitle", nil) withColor:NSColorFromRGB(0xa9a9a9)];
-//            }
-//            
             [str setSelectionColor:NSColorFromRGB(0xffffff) forColor:BLUE_UI_COLOR];
             [str setSelectionColor:NSColorFromRGB(0xfffffe) forColor:NSColorFromRGB(0xa9a9a9)];
             [str setFont:TGSystemFont(13) forRange:str.range];
@@ -207,9 +196,6 @@ static NSTextAttachment *channelVerifySelectedAttachment() {
             return str;
         }
 
-        
-        
-        
         [str appendString:[NSString stringWithFormat:@"%d %@", self.participants_count, self.participants_count > 1 ?  NSLocalizedString(@"Conversation.Members", nil) : NSLocalizedString(@"Conversation.Member", nil)] withColor:NSColorFromRGB(0x9b9b9b)];
 
         
@@ -229,9 +215,6 @@ static NSTextAttachment *channelVerifySelectedAttachment() {
 
 
 - (NSAttributedString *)statusForMessagesHeaderView {
-    
-    
-
     
     NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] init];
     
@@ -269,17 +252,12 @@ static NSTextAttachment *channelVerifySelectedAttachment() {
 }
 
 -(id)inputPeer {
-    return [self isKindOfClass:[TL_channel_old43 class]]|| [self isKindOfClass:[TL_channel class]] || [self isKindOfClass:[TL_channelForbidden class]] ? [TL_inputChannel createWithChannel_id:self.n_id access_hash:self.access_hash] : ([self isKindOfClass:[TL_peerSecret class]] ? [TL_inputEncryptedChat createWithChat_id:self.n_id access_hash:self.access_hash] : nil);
+    return [self isKindOfClass:[TL_channel_old45 class]] || [self isKindOfClass:[TL_channel_old43 class]]|| [self isKindOfClass:[TL_channel class]] || [self isKindOfClass:[TL_channelForbidden class]] ? [TL_inputChannel createWithChannel_id:self.n_id access_hash:self.access_hash] : ([self isKindOfClass:[TL_peerSecret class]] ? [TL_inputEncryptedChat createWithChat_id:self.n_id access_hash:self.access_hash] : nil);
 }
-
-
 
 -(TLPeer *)peer {
-    return [self isKindOfClass:[TL_channel class]] || [self isKindOfClass:[TL_channel_old43 class]] ? [TL_peerChannel createWithChannel_id:self.n_id] : [TL_peerChat createWithChat_id:self.n_id];
+    return [self isKindOfClass:[TL_channel class]] || [self isKindOfClass:[TL_channel_old43 class]] || [self isKindOfClass:[TL_channel_old45 class]] ? [TL_peerChannel createWithChannel_id:self.n_id] : [TL_peerChat createWithChat_id:self.n_id];
 }
-
-
-
 
 
 -(BOOL)left {
@@ -301,7 +279,7 @@ static NSTextAttachment *channelVerifySelectedAttachment() {
 
         
 -(BOOL)isChannel {
-    return [self isKindOfClass:[TL_channel_old43 class]] || [self isKindOfClass:[TL_channel class]] || [self isKindOfClass:[TL_channelForbidden class]];
+    return [self isKindOfClass:[TL_channel_old45 class]] || [self isKindOfClass:[TL_channel_old43 class]] || [self isKindOfClass:[TL_channel class]] || [self isKindOfClass:[TL_channelForbidden class]];
 }
 
 -(BOOL)isManager {

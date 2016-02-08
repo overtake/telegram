@@ -29,18 +29,13 @@
     __block int k = 0;
     
     [waveform enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-        
         if(idx % 2 == 0) {
             [arr removeObjectAtIndex:idx-k];
             k++;
         }
-        
     }];
     
     _waveform = arr;
-    
-    
-    
     [_currentWaveform removeAllObjects];
     [self setNeedsDisplay:YES];
 }
@@ -50,6 +45,9 @@
     
     [self setNeedsDisplay:YES];
 }
+
+
+
 
 
 - (void)drawRect:(NSRect)dirtyRect {
@@ -99,7 +97,7 @@
         
          NSBezierPath *itemPath = [NSBezierPath bezierPath];
         
-        [itemPath appendBezierPathWithRoundedRect:NSMakeRect(x, 0, itemWidth, waveHeight) xRadius:3 yRadius:3];
+        [itemPath appendBezierPathWithRoundedRect:NSMakeRect(x, 0, itemWidth, waveHeight) xRadius:0 yRadius:0];
         
         if(x >= progressWidth)
             [defColor setFill];

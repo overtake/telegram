@@ -50,7 +50,6 @@
                 }
                 return;
             }
-            
             if(weakSelf.item.state == AudioStatePaused) {
                 weakSelf.item.state = AudioStatePlaying;
                 weakSelf.cellState = weakSelf.cellState;
@@ -58,7 +57,6 @@
                 [weakSelf startTimer];
                 return;
             }
-            
             if(weakSelf.item.state == AudioStatePlaying) {
                 weakSelf.item.state = AudioStatePaused;
                 weakSelf.cellState = weakSelf.cellState;
@@ -67,11 +65,8 @@
                 [weakSelf pause];
                 return;
             }
-
-            
         } forControlEvents:BTRControlEventClick];
 
-        
         [self.containerView addSubview:self.playerButton];
         
         self.durationView = [[TMTextField alloc] initWithFrame:NSMakeRect(self.playerButton.frame.size.width + 8, 0, 100, 20)];
@@ -86,16 +81,6 @@
         [self.containerView addSubview:self.durationView];
         [self.durationView sizeToFit];
         
-//        self.stateTextField = [[TMTextField alloc] initWithFrame:NSZeroRect];
-//        [self.stateTextField setEnabled:NO];
-//        [self.stateTextField setBordered:NO];
-//        [self.stateTextField setEditable:NO];
-//        [self.stateTextField setDrawsBackground:NO];
-//        [self.stateTextField setFont:TGSystemFont(12)];
-//        [self.stateTextField setTextColor:NSColorFromRGB(0xbebebe)];
-//
-//        [self.containerView addSubview:self.stateTextField];
-        
         [self.progressView setImage:image_DownloadIconGrey() forState:TMLoaderViewStateNeedDownload];
         [self.progressView setImage:image_LoadCancelGrayIcon() forState:TMLoaderViewStateDownloading];
         [self.progressView setImage:image_LoadCancelGrayIcon() forState:TMLoaderViewStateUploading];
@@ -109,9 +94,6 @@
         _waveformView = [[TGWaveformView alloc] initWithFrame:NSMakeRect(0, 0, 200, 32)];
         
         [self.containerView addSubview:_waveformView];
-        
-        
-        
         
     }
     return self;
@@ -131,6 +113,8 @@
         duration = 0.01f;
     }
     
+    [self setDurationTextFieldString:[NSString stringWithFormat:@"%@ / %@", [NSString durationTransformedValue:floor(self.currentTime)], self.item.duration]];
+    
     _waveformView.progress = ceil((self.currentTime / duration) * 100.0f);
 }
 
@@ -147,8 +131,6 @@
 }
 
 - (void)updateCellState {
-    
-    
     
     MessageTableItemAudio *item = (MessageTableItemAudio *)self.item;
     
@@ -209,14 +191,8 @@
 }
 
 - (void)setCellState:(CellState)cellState {
-//    if(self.cellState == cellState)
-//        return;
     [super setCellState:cellState];
-    
-    if(cellState == CellStateCancelled) {
-        
-    }
-    
+
     [self.stateTextField setHidden:YES];
     
     if(cellState == CellStateDownloading || cellState == CellStateSending || cellState == CellStateNeedDownload) {
@@ -229,7 +205,6 @@
         _waveformView.progressColor = NSColorFromRGB(0x3dd16e);
     }
     
-
     [self.progressView setState:cellState];
     
     if(self.item.state == AudioStateWaitPlaying || self.item.state == AudioStatePaused || self.item.state == AudioStatePlaying) {
@@ -257,17 +232,80 @@
             break;
     }
     
-    
     [self setNeedsDisplay:YES];
     
 }
 
-- (void)setStateTextFieldString:(NSString *)string {
-//    [self.stateTextField setHidden:NO];
-//    [self.stateTextField setStringValue:string];
-//    [self.stateTextField sizeToFit];
-//    [self.stateTextField setFrameOrigin:NSMakePoint(self.playerButton.frame.size.width + 10 + self.progressRect.size.width - self.stateTextField.frame.size.width, self.durationView.frame.origin.y - 2)];
+-(void)mouseUp:(NSEvent *)theEvent {
+    
+    [super mouseUp:theEvent];
+    NSPoint pos = [self.containerView convertPoint:[theEvent locationInWindow] fromView:nil];
+    
+    NSRect rect = _waveformView.frame;
+    
+    rect.size.height+=6;
+    rect.origin.y-=3;
+    
+    if(self.acceptTimeChanger) {
+        self.acceptTimeChanger = NO;
+        [self changeTime:pos rect:rect];
+    }
+    
 }
+
+
+-(void)mouseDown:(NSEvent *)theEvent {
+    [super mouseDown:theEvent];
+    NSPoint pos = [self.containerView convertPoint:[theEvent locationInWindow] fromView:nil];
+    
+    NSRect rect = _waveformView.frame;
+    
+    rect.size.height = 6;
+    rect.origin.y-=3;
+    
+    self.acceptTimeChanger = NSPointInRect(pos, rect) && [globalAudioPlayer() isEqualToPath:self.item.path] && !globalAudioPlayer().isPaused;
+    
+    if(self.acceptTimeChanger) {
+        [self changeTime:pos rect:rect];
+        [self pause];
+    }
+}
+
+-(void)mouseDragged:(NSEvent *)theEvent {
+    [super mouseDragged:theEvent];
+    NSPoint pos = [self.containerView convertPoint:[theEvent locationInWindow] fromView:nil];
+    
+    NSRect rect = _waveformView.frame;
+    
+    rect.size.height = 6;
+    rect.origin.y-=3;
+    
+    if(self.acceptTimeChanger) {
+        [self changeTime:pos rect:rect];
+        
+        [self pause];
+    }
+}
+
+- (void)changeTime:(NSPoint)pos rect:(NSRect)rect {
+    
+    
+    float x0 = pos.x -rect.origin.x;
+    float percent = x0/rect.size.width;
+    
+    __block int duration;
+    
+    [[TGAudioPlayer _playerQueue] dispatchOnQueue:^{
+        duration = (float)[globalAudioPlayer() duration];
+    } synchronous:YES];
+    
+    self.currentTime =  percent * [globalAudioPlayer() duration];
+    
+    [self play:self.currentTime];
+    
+    [self setNeedsDisplay:YES];
+}
+
 
 
 - (NSMenu *)contextMenu {
@@ -289,21 +327,13 @@
     self.acceptTimeChanger = NO;
     
     [self updateDownloadState];
-    
     [self.durationView setStringValue:item.duration];
-    
     [self.durationView setFrameSize:NSMakeSize(80, NSHeight(self.durationView.frame))];
-    
     [_waveformView setFrameSize:NSMakeSize(item.blockSize.width - (NSMaxX(self.playerButton.frame) + 8), 20)];
-    
-    int c = roundf((NSHeight(self.containerView.frame) - NSHeight(self.durationView.frame))/2);
-    
+     int c = roundf((NSHeight(self.containerView.frame) - NSHeight(self.durationView.frame))/2);
     [_waveformView setFrameOrigin:NSMakePoint(NSMaxX(self.playerButton.frame) + 8, roundf((NSHeight(self.containerView.frame) - NSHeight(_waveformView.frame))/2) + 6)];
     [self.durationView setFrameOrigin:NSMakePoint(NSMaxX(self.playerButton.frame) + 6, c - NSHeight(self.durationView.frame) + 2)];
  
-    
-    
-    
     
     if(item.state != AudioStatePlaying && item.state != AudioStatePaused)
         [self updateCellState];

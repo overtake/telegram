@@ -134,22 +134,7 @@ NSImage *voicePlay() {
     self->_currentTime = MAX(MIN(currentTime, duration), 0);
 }
 
--(void)mouseDragged:(NSEvent *)theEvent {
-    [super mouseDragged:theEvent];
-    NSPoint pos = [self convertPoint:[theEvent locationInWindow] fromView:nil];
-    
-    NSRect rect = [self progressRect];
-    
-    rect.size.height = 6;
-    rect.origin.y-=3;
-    
-    if(self.acceptTimeChanger) {
-        [self changeTime:pos rect:rect];
-        
-        [self pause];
-    }
-    
-}
+
 
 - (void)changeTime:(NSPoint)pos rect:(NSRect)rect {
     
@@ -170,44 +155,6 @@ NSImage *voicePlay() {
     
     
     [self setNeedsDisplay:YES];
-}
-
-
--(void)mouseUp:(NSEvent *)theEvent {
-    
-    [super mouseUp:theEvent];
-    NSPoint pos = [self convertPoint:[theEvent locationInWindow] fromView:nil];
-    
-    NSRect rect = [self progressRect];
-    
-    rect.size.height+=6;
-    rect.origin.y-=3;
-    
-    
-    if(self.acceptTimeChanger) {
-        self.acceptTimeChanger = NO;
-        [self changeTime:pos rect:rect];
-    }
-    
-}
-
-
--(void)mouseDown:(NSEvent *)theEvent {
-    [super mouseDown:theEvent];
-    NSPoint pos = [self convertPoint:[theEvent locationInWindow] fromView:nil];
-    
-    NSRect rect = [self progressRect];
-    
-    rect.size.height = 6;
-    rect.origin.y-=3;
-    
-    self.acceptTimeChanger = NSPointInRect(pos, rect) && [globalAudioPlayer() isEqualToPath:self.item.path] && !globalAudioPlayer().isPaused;
-    
-    if(self.acceptTimeChanger) {
-        [self changeTime:pos rect:rect];
-        
-        [self pause];
-    }
 }
 
 

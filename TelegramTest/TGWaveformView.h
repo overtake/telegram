@@ -17,4 +17,8 @@
 @property (nonatomic,strong) NSColor *defaultColor;
 @property (nonatomic,strong) NSColor *progressColor;
 
+@property (nonatomic,strong) void (^startChangeProgress)(int progress);
+@property (nonatomic,strong) void (^endChangeProgress)(int progress);
+@property (nonatomic,assign) BOOL enableCut;
+
 @end

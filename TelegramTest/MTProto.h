@@ -2,7 +2,7 @@
 //  MTProto.h
 //  Telegram
 //
-//  Auto created by Mikhail Filimonov on 07.02.16.
+//  Auto created by Mikhail Filimonov on 08.02.16.
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -953,6 +953,9 @@
 @end
 @interface TL_channel_old43 : TLChat<NSCoding>
 +(TL_channel_old43*)createWithFlags:(int)flags        n_id:(int)n_id access_hash:(long)access_hash title:(NSString*)title username:(NSString*)username photo:(TLChatPhoto*)photo date:(int)date version:(int)version;
+@end
+@interface TL_channel_old45 : TLChat<NSCoding>
++(TL_channel_old45*)createWithFlags:(int)flags         n_id:(int)n_id access_hash:(long)access_hash title:(NSString*)title username:(NSString*)username photo:(TLChatPhoto*)photo date:(int)date version:(int)version restriction_reason:(NSString*)restriction_reason;
 @end
 	
 @interface TLChatFull()

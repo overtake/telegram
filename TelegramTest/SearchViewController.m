@@ -108,6 +108,8 @@ typedef enum {
 
 @property (nonatomic,assign) BOOL dontLoadHashtagsForOneRequest;
 
+@property (nonatomic,strong) ASQueue *queue;
+
 @end
 
 @implementation SearchViewController
@@ -115,6 +117,8 @@ typedef enum {
 - (void)loadView {
     [super loadView];
     weakify();
+    
+    _queue = [[ASQueue alloc] initWithName:"SearchQueue"];
     
     [self.view setAutoresizingMask:NSViewWidthSizable | NSViewHeightSizable];
 
@@ -686,7 +690,6 @@ static int insertCount = 3;
         return;
     }
 
-    double duration = 0.1;
     
     __block SearchParams *searchParams = [[SearchParams alloc] init];
     searchParams.searchString = searchString;
@@ -695,214 +698,218 @@ static int insertCount = 3;
     self.searchParams = searchParams;
     
     
-        if(self.searchParams != searchParams) {
-            return;
+    if(self.searchParams != searchParams) {
+        return;
+    }
+    
+    
+    
+    NSMutableArray *dialogs = [NSMutableArray array];
+    NSMutableArray *dialogsNeedCheck = [NSMutableArray array];
+    
+    
+    //Chats
+    NSArray *searchChats = [[ChatsManager sharedManager] searchWithString:searchString selector:@"title"];
+    
+    for(TLChat *chat in searchChats) {
+        TL_conversation *dialog = chat.dialog;
+        if(dialog && !dialog.fake && ([chat isKindOfClass:[TLChat class]] && !chat.isDeactivated))
+            [dialogs addObject:dialog];
+        else if ([chat isKindOfClass:[TLChat class]] && !chat.isDeactivated)
+            [dialogsNeedCheck addObject:@(-chat.n_id)];
+    }
+    
+    //Users
+    NSArray *searchUsers = [[UsersManager sharedManager] searchWithString:searchString selector:@"fullName" checker:^BOOL(id object) {
+       
+        TLUser *user = object;
+        
+        return user.isContact;
+    }];
+    
+    searchUsers = [searchUsers sortedArrayWithOptions:NSSortStable usingComparator:^NSComparisonResult(TLUser *obj1, TLUser *obj2) {
+        if(obj1.lastSeenTime > obj2.lastSeenTime) {
+            return NSOrderedAscending;
+        } else {
+            return NSOrderedDescending;
         }
-        
+    }];
     
-            
-            NSMutableArray *dialogs = [NSMutableArray array];
-            NSMutableArray *dialogsNeedCheck = [NSMutableArray array];
-
-            
+    for(TLUser *user in searchUsers) {
+        TL_conversation *dialog = user.dialog;
+        if(dialog && !dialog.fake)
+            [dialogs addObject:dialog];
+        else
+            [dialogsNeedCheck addObject:@(user.n_id)];
+    }
     
-            //Chats
-            NSArray *searchChats = [[ChatsManager sharedManager] searchWithString:searchString selector:@"title"];
+    
+    NSMutableArray *cachePeers = [NSMutableArray array];
+    
+    
+    if((self.type & SearchTypeDialogs) == SearchTypeDialogs) {
         
-            for(TLChat *chat in searchChats) {
-                TL_conversation *dialog = chat.dialog;
-                if(dialog && !dialog.fake && ([chat isKindOfClass:[TLChat class]] && !chat.isDeactivated))
-                    [dialogs addObject:dialog];
-                else if ([chat isKindOfClass:[TLChat class]] && !chat.isDeactivated)
-                    [dialogsNeedCheck addObject:@(-chat.n_id)];
+        
+        if([searchString hasPrefix:@"#"] && !_dontLoadHashtagsForOneRequest) {
+            
+            NSString *hs = [searchString substringFromIndex:1];
+            
+            
+            __block NSMutableDictionary *tags;
+            
+            [[Storage yap] readWithBlock:^(YapDatabaseReadTransaction *transaction) {
+                
+                tags = [transaction objectForKey:@"htags" inCollection:@"hashtags"];
+                
+            }];
+            
+            
+            NSArray *list = [[tags allValues] sortedArrayUsingComparator:^NSComparisonResult(id obj1, id obj2) {
+                
+                return obj1[@"count"] < obj2[@"count"];
+                
+            }];
+            
+            
+            if(hs.length > 0)
+            {
+                list = [list filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.tag BEGINSWITH[c] %@",hs]];
             }
             
-            //Users
-            NSArray *searchUsers = [[UsersManager sharedManager] searchWithString:searchString selector:@"fullName"];
-    
-            searchUsers = [searchUsers sortedArrayWithOptions:NSSortStable usingComparator:^NSComparisonResult(TLUser *obj1, TLUser *obj2) {
-                if(obj1.lastSeenTime > obj2.lastSeenTime) {
+            
+            if(list.count > 0)
+            {
+                
+                NSMutableArray *items = [[NSMutableArray alloc] init];
+                
+                [list enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+                    [items addObject:[[SearchHashtagItem alloc] initWithObject:obj[@"tag"]]];
+                }];
+                
+                searchParams.suggested_hashtags = items;
+            }
+            
+            [ASQueue dispatchOnMainQueue:^{
+                [self showSearchResults:searchParams];
+            }];
+            
+        }
+        
+        
+        _dontLoadHashtagsForOneRequest = NO;
+        
+        
+        [[Storage manager] searchDialogsByPeers:dialogsNeedCheck needMessages:NO searchString:nil completeHandler:^(NSArray *dialogsDB) {
+            
+            [[DialogsManager sharedManager] add:dialogsDB];
+            [dialogs addObjectsFromArray:dialogsDB];
+            
+            NSArray *insertedDialogs = [dialogs sortedArrayWithOptions:NSSortStable usingComparator:^NSComparisonResult(TL_conversation *dialog1, TL_conversation *dialog2) {
+                if(dialog1.last_message_date > dialog2.last_message_date) {
                     return NSOrderedAscending;
                 } else {
                     return NSOrderedDescending;
                 }
             }];
             
-            for(TLUser *user in searchUsers) {
-                TL_conversation *dialog = user.dialog;
-                if(dialog && !dialog.fake)
-                    [dialogs addObject:dialog];
-                else
-                    [dialogsNeedCheck addObject:@(user.n_id)];
+            
+            searchParams.dialogs = [NSMutableArray array];
+            for(TL_conversation *conversation in insertedDialogs) {
+                
+                [cachePeers addObject:@(conversation.peer.peer_id)];
+                
+                [searchParams.dialogs addObject:[[SearchItem alloc] initWithDialogItem:conversation searchString:searchString]];
             }
             
             
-            NSMutableArray *cachePeers = [NSMutableArray array];
+        }];
+        
+        
+    }
+    
+    
+    if((self.type & SearchTypeContacts) == SearchTypeContacts) {
+        
+        searchParams.users = [NSMutableArray array];
+        searchParams.contacts = [NSMutableArray array];
+        
+        for(TLUser *user in searchUsers) {
             
-            
-            if((self.type & SearchTypeDialogs) == SearchTypeDialogs) {
+            if([cachePeers indexOfObject:@(user.n_id)] == NSNotFound) {
+                id item = [[SearchItem alloc] initWithUserItem:user searchString:searchParams.searchString];
                 
-                
-                if([searchString hasPrefix:@"#"] && !_dontLoadHashtagsForOneRequest) {
-                    
-                    NSString *hs = [searchString substringFromIndex:1];
-                    
-                    
-                    __block NSMutableDictionary *tags;
-                    
-                    [[Storage yap] readWithBlock:^(YapDatabaseReadTransaction *transaction) {
-                        
-                        tags = [transaction objectForKey:@"htags" inCollection:@"hashtags"];
-                        
-                    }];
-                    
-                    
-                    NSArray *list = [[tags allValues] sortedArrayUsingComparator:^NSComparisonResult(id obj1, id obj2) {
-                        
-                        return obj1[@"count"] < obj2[@"count"];
-                        
-                    }];
-                    
-                    
-                    if(hs.length > 0)
-                    {
-                        list = [list filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.tag BEGINSWITH[c] %@",hs]];
-                    }
-                    
-                    
-                    if(list.count > 0)
-                    {
-                        
-                        NSMutableArray *items = [[NSMutableArray alloc] init];
-                        
-                        [list enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
-                            [items addObject:[[SearchHashtagItem alloc] initWithObject:obj[@"tag"]]];
-                        }];
-                        
-                        searchParams.suggested_hashtags = items;
-                    }
-                    
-                    [ASQueue dispatchOnMainQueue:^{
-                         [self showSearchResults:searchParams];
-                    }];
-                    
-               }
-                
-                
-                _dontLoadHashtagsForOneRequest = NO;
-                
-                
-                [[Storage manager] searchDialogsByPeers:dialogsNeedCheck needMessages:NO searchString:nil completeHandler:^(NSArray *dialogsDB) {
-                    
-                    [[DialogsManager sharedManager] add:dialogsDB];
-                    [dialogs addObjectsFromArray:dialogsDB];
-                        
-                    NSArray *insertedDialogs = [dialogs sortedArrayWithOptions:NSSortStable usingComparator:^NSComparisonResult(TL_conversation *dialog1, TL_conversation *dialog2) {
-                        if(dialog1.last_message_date > dialog2.last_message_date) {
-                            return NSOrderedAscending;
-                        } else {
-                            return NSOrderedDescending;
-                        }
-                    }];
-                        
-                        
-                    searchParams.dialogs = [NSMutableArray array];
-                    for(TL_conversation *conversation in insertedDialogs) {
-                            
-                        [cachePeers addObject:@(conversation.peer.peer_id)];
-                            
-                        [searchParams.dialogs addObject:[[SearchItem alloc] initWithDialogItem:conversation searchString:searchString]];
-                    }
-                    
-                    
-                }];
-                
-                
-            }
-            
-            
-            if((self.type & SearchTypeContacts) == SearchTypeContacts) {
-                
-                searchParams.users = [NSMutableArray array];
-                searchParams.contacts = [NSMutableArray array];
-                
-                for(TLUser *user in searchUsers) {
-                    
-                    if([cachePeers indexOfObject:@(user.n_id)] == NSNotFound) {
-                        id item = [[SearchItem alloc] initWithUserItem:user searchString:searchParams.searchString];
-                        
-                        if(user.type == TLUserTypeContact) {
-                            [searchParams.dialogs addObject:item];
-                        }
-                        
-                        [cachePeers addObject:@(user.n_id)];
-                        
-                    }
-                    
+                if(user.type == TLUserTypeContact) {
+                    [searchParams.dialogs addObject:item];
                 }
                 
-            }
-            
-            if((self.type & SearchTypeGlobalUsers) == SearchTypeGlobalUsers) {
-                
-                searchParams.globalUsers = [[NSMutableArray alloc] init];
-                
-                NSArray *filtred = [UsersManager findUsersByName:searchString];
-                
-                [filtred enumerateObjectsUsingBlock:^(TLUser *obj, NSUInteger idx, BOOL *stop) {
-                    
-                    if(searchParams.searchString.length >= 5 || obj.isContact) {
-                        SearchItem *item = [[SearchItem alloc] initWithGlobalItem:obj searchString:searchString];
-                        
-                        [searchParams.globalUsers addObject:item];
-                    }
-                }];
-                
+                [cachePeers addObject:@(user.n_id)];
                 
             }
             
+        }
+        
+    }
+    
+    if((self.type & SearchTypeGlobalUsers) == SearchTypeGlobalUsers) {
+        
+        searchParams.globalUsers = [[NSMutableArray alloc] init];
+        
+        NSArray *filtred = [UsersManager findUsersByName:searchString];
+        
+        [filtred enumerateObjectsUsingBlock:^(TLUser *obj, NSUInteger idx, BOOL *stop) {
             
-            [[ASQueue mainQueue] dispatchOnQueue:^{
-                [self showSearchResults:searchParams];
-            }];
-            
-            searchParams.isNeedRemoteLoad = (self.type & SearchTypeMessages) == SearchTypeMessages;
-            
-            if((self.type & SearchTypeMessages) == SearchTypeMessages) {
+            if(searchParams.searchString.length >= 5 || obj.isContact) {
+                SearchItem *item = [[SearchItem alloc] initWithGlobalItem:obj searchString:searchString];
                 
-                
-                NSString *string = searchParams.searchString;
-                
-                NSString *specialCharacterString = @"!~`@#$%^&*-+();:={}[],.<>?\\/\"\'";
-                NSCharacterSet *specialCharacterSet = [NSCharacterSet
-                                                       characterSetWithCharactersInString:specialCharacterString];
-                
-                
-                while ([string.lowercaseString rangeOfCharacterFromSet:specialCharacterSet].location != NSNotFound) {
-                    string = [string substringFromIndex:1];
-                }
-                
-                if(string.length == 0) {
-                    self.searchParams.isNeedRemoteLoad = NO;
-                    self.searchParams.isFinishLoading = YES;
-                } else {
-                    dispatch_after_seconds(0.1, ^{
-                         [self remoteSearch:searchParams];
-                    });
-                }
-                
-                
+                [searchParams.globalUsers addObject:item];
             }
-            
-            searchParams.isNeedGlobalUsersLoad = ((self.type & SearchTypeGlobalUsers) == SearchTypeGlobalUsers && searchParams.searchString.length >= 5);
-            
-            if((self.type & SearchTypeGlobalUsers) == SearchTypeGlobalUsers && searchParams.searchString.length >= 5) {
-                dispatch_after_seconds(0.1, ^{
-                    [self remoteGlobalSearch:searchParams];
-                });
-            }
-            
-            
+        }];
+        
+        
+    }
+    
+    
+    [[ASQueue mainQueue] dispatchOnQueue:^{
+        [self showSearchResults:searchParams];
+    }];
+    
+    searchParams.isNeedRemoteLoad = (self.type & SearchTypeMessages) == SearchTypeMessages;
+    
+    if((self.type & SearchTypeMessages) == SearchTypeMessages) {
+        
+        
+        NSString *string = searchParams.searchString;
+        
+        NSString *specialCharacterString = @"!~`@#$%^&*-+();:={}[],.<>?\\/\"\'";
+        NSCharacterSet *specialCharacterSet = [NSCharacterSet
+                                               characterSetWithCharactersInString:specialCharacterString];
+        
+        
+        while ([string.lowercaseString rangeOfCharacterFromSet:specialCharacterSet].location != NSNotFound) {
+            string = [string substringFromIndex:1];
+        }
+        
+        if(string.length == 0) {
+            self.searchParams.isNeedRemoteLoad = NO;
+            self.searchParams.isFinishLoading = YES;
+        } else {
+            dispatch_after_seconds(0.1, ^{
+                [self remoteSearch:searchParams];
+            });
+        }
+        
+        
+    }
+    
+    searchParams.isNeedGlobalUsersLoad = ((self.type & SearchTypeGlobalUsers) == SearchTypeGlobalUsers && searchParams.searchString.length >= 5);
+    
+    if((self.type & SearchTypeGlobalUsers) == SearchTypeGlobalUsers && searchParams.searchString.length >= 5) {
+        dispatch_after_seconds(0.1, ^{
+            [self remoteGlobalSearch:searchParams];
+        });
+    }
+    
+    
       //  }];
     
     

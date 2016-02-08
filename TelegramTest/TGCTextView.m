@@ -626,8 +626,6 @@
                  range.length++;
             }
             
-            
-           
             if(!prevValid && !nextValid)
                 break;
             
