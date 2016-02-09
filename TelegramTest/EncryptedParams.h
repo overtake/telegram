@@ -20,7 +20,7 @@ typedef enum  {
 
 
 #define MIN_ENCRYPTED_LAYER 1
-#define MAX_ENCRYPTED_LAYER 45
+#define MAX_ENCRYPTED_LAYER 23
 
 
 @property (atomic,assign) long original_key_fingerprint;

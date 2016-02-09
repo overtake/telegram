@@ -23,7 +23,13 @@
                value = "responder">
             </PersistentString>
             <PersistentString
+               value = "result.modifierFlags">
+            </PersistentString>
+            <PersistentString
                value = "result.window">
+            </PersistentString>
+            <PersistentString
+               value = "result.keyCode">
             </PersistentString>
             <PersistentString
                value = "result.responder">
@@ -5897,6 +5903,14 @@
       </ContextState>
       <ContextState
          contextName = "-[TL_localMessage unserialize:]:TL_localMessage.m">
+      </ContextState>
+      <ContextState
+         contextName = "__34-[MessagesBottomView startRecord:]_block_invoke:MessagesBottomView.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "[[TMAudioRecorder sharedInstance] timeRecorded]">
+            </PersistentString>
+         </PersistentStrings>
       </ContextState>
       <ContextState
          contextName = "+[MessagesManager defaultMessage:]:MessagesManager.m">

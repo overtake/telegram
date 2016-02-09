@@ -35,7 +35,7 @@
         else
             self.state = AudioStateWaitDownloading;
         
-      //  [self checkStartDownload:[self.message.to_id isKindOfClass:[TL_peerChat class]] ? AutoGroupAudio : AutoPrivateAudio size:self.message.media.document.size];
+        [self checkStartDownload:[self.message.to_id isKindOfClass:[TL_peerChat class]] ? AutoGroupAudio : AutoPrivateAudio size:self.message.media.document.size];
         
     }
     return self;

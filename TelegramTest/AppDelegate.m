@@ -648,7 +648,7 @@ void exceptionHandler(NSException * exception)
         if(result.keyCode == 48) {
           //  NSTextView *textView = responder;
             if([responder isKindOfClass:[MessageInputGrowingTextView class]] ) {
-                [[Telegram rightViewController].messagesViewController.bottomView smileButtonClick:nil];
+                [appWindow().navigationController.messagesViewController.bottomView smileButtonClick:nil];
                 
             }
             
@@ -663,6 +663,10 @@ void exceptionHandler(NSException * exception)
                 
                 
                  return [[NSEvent alloc]init];
+            } else if(result.keyCode == 15) { // cmd+r for audio record
+                [appWindow().navigationController.messagesViewController.bottomView startQuickRecord];
+                
+                return [[NSEvent alloc]init];
             }
             
             
@@ -670,6 +674,15 @@ void exceptionHandler(NSException * exception)
         
         return result;
     };
+    
+    id upBlock = ^(NSEvent *incomingEvent) {
+        
+         [appWindow().navigationController.messagesViewController.bottomView stopQuickRecord];
+        
+        return incomingEvent;
+    };
+    
+    [NSEvent addLocalMonitorForEventsMatchingMask:(NSKeyUpMask) handler:upBlock];
     
     [NSEvent addLocalMonitorForEventsMatchingMask:(NSKeyDownMask) handler:block];
     

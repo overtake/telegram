@@ -28,6 +28,8 @@ typedef enum {
 @property (nonatomic,strong) NSMutableArray *powers;
 @property (nonatomic, strong) NSString *opusEncoderPath;
 
+@property (nonatomic,strong) ASQueue *audioQueue;
+
 @end
 
 @implementation TMAudioRecorder
@@ -45,6 +47,7 @@ typedef enum {
     self = [super init];
     if(self) {
         self.opusEncoderPath = [[NSBundle mainBundle] pathForResource:@"opusenc_telegram" ofType:@""];
+        self.audioQueue = [[ASQueue alloc] initWithName:"AudioRecorderQueue"];
     }
     return self;
 }
@@ -75,8 +78,6 @@ double mappingRange(double x, double in_min, double in_max, double out_min, doub
     
     
     [self.timer invalidate];
-    
-    __block int k = 0;
     
     
     weak();
@@ -120,7 +121,15 @@ double mappingRange(double x, double in_min, double in_max, double out_min, doub
     }
 }
 
+-(NSTimeInterval)timeRecorded {
+    return self.recorder.currentTime;
+}
+
 - (void)stopRecord:(BOOL)send {
+    [self stopRecord:send askConfirm:NO];
+}
+
+- (void)stopRecord:(BOOL)send askConfirm:(BOOL)askConfirm {
     [self.timer invalidate];
 
     if(!self.recorder.isRecording)
@@ -136,25 +145,31 @@ double mappingRange(double x, double in_min, double in_max, double out_min, doub
         return;
     }
     
-    [ASQueue dispatchOnStageQueue:^{
-        
-       	NSString *opusPath = [self.filePath stringByAppendingString:@".opus"];
+    dispatch_block_t send_block = ^{
+        NSString *opusPath = [self.filePath stringByAppendingString:@".opus"];
         
         char *c_op = strdup([opusPath UTF8String]);
         char *c_fp = strdup([self.filePath UTF8String]);
         
         char *argv[] = {"opusenc",c_fp,c_op,"--downmix-mono"};
-
+        
         opusEncoder(3, argv);
         
         [self removeFile];
         
         TGAudioWaveform *waveform = [FileUtils waveformForPath:opusPath];
         
-        [[ASQueue mainQueue] dispatchOnQueue:^{
+        [ASQueue dispatchOnMainQueue:^{
             [self.messagesViewController sendAudio:opusPath forConversation:self.messagesViewController.conversation waveforms:[waveform bitstream]];
         }];
-    }];
+    };
+    
+    if(askConfirm) {
+        confirm(appName(), NSLocalizedString(@"AudioQuickSend.ConfirmDescription", nil), ^{
+            [_audioQueue dispatchOnQueue:send_block];
+        }, nil);
+    } else
+        [_audioQueue dispatchOnQueue:send_block];
 }
 
 static int powerCount = 100;

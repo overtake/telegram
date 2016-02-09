@@ -1540,11 +1540,7 @@ static NSTextAttachment *headerMediaIcon() {
                 [self loadhistory:0 toEnd:NO prev:NO isFirst:NO];
             }
         }];
-        
-        
     }
-    
-    
 }
 
 - (void) dealloc {
@@ -1553,7 +1549,6 @@ static NSTextAttachment *headerMediaIcon() {
 
 - (void) drop {
     self.conversation = nil;
-    // [self.historyController setDialog:nil];
     [self.historyController drop:YES];
     self.historyController = nil;
     [self.messages removeAllObjects];
@@ -1622,7 +1617,6 @@ static NSTextAttachment *headerMediaIcon() {
 
 
 - (void)receivedMessage:(MessageTableItem *)message position:(int)position itsSelf:(BOOL)force  {
-    
     
     NSArray *items;
     
@@ -2420,7 +2414,7 @@ static NSTextAttachment *headerMediaIcon() {
     }
     
     
-    if(!self.locked &&  (((message != nil && message.channelMsgId != _jumpMessage.channelMsgId) || force) || [self.conversation.peer peer_id] != [dialog.peer peer_id] )) {
+     if(!self.locked &&  (((message != nil && message.channelMsgId != _jumpMessage.channelMsgId) || force) || [self.conversation.peer peer_id] != [dialog.peer peer_id] )) {
         
         self.jumpMessage = message;
         self.conversation = dialog;
@@ -2669,16 +2663,16 @@ static NSTextAttachment *headerMediaIcon() {
     [self.table display];
     
     
-    if(self.conversation.type == DialogTypeUser && (self.conversation.user.type == TLUserTypeRequest)) {
+    if(self.conversation.type == DialogTypeUser && !self.conversation.user.isContact) {
         
         __block BOOL showReport = [[NSUserDefaults standardUserDefaults] boolForKey:[NSString stringWithFormat:@"showreport_%d",self.conversation.user.n_id]];
         
         __block BOOL alwaysShowReport = [[NSUserDefaults standardUserDefaults] boolForKey:[NSString stringWithFormat:@"always_showreport1_%d",self.conversation.user.n_id]];
         
-        if(self.messages.count > 1 && (!showReport && !alwaysShowReport)) {
+        if(self.messages.count > 1 && (showReport || !alwaysShowReport)) {
             if(self.messages.count > 2 || self.historyController.nextState == ChatHistoryStateFull) {
                 
-                showReport = YES;
+                showReport = showReport;
                 
                 [self.messages enumerateObjectsAtIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(1, self.messages.count - 1)] options:0 usingBlock:^(MessageTableItem*  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
                     
@@ -3668,21 +3662,26 @@ static NSTextAttachment *headerMediaIcon() {
 
 - (void)addReplayMessage:(TL_localMessage *)message animated:(BOOL)animated {
     
-    if(message.peer_id == _conversation.peer_id)  {
-        [[Storage yap] readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
+    
+    if(!message.conversation.type == DialogTypeChat || message.conversation.encryptedChat.encryptedParams.layer >= 45) {
+        if(message.peer_id == _conversation.peer_id)  {
+            [[Storage yap] readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
+                
+                [transaction setObject:message forKey:self.conversation.cacheKey inCollection:REPLAY_COLLECTION];
+                
+            }];
             
-            [transaction setObject:message forKey:self.conversation.cacheKey inCollection:REPLAY_COLLECTION];
+            [self.bottomView updateReplayMessage:YES animated:animated];
             
-        }];
-        
-        [self.bottomView updateReplayMessage:YES animated:animated];
-        
-        if(self.navigationViewController.currentController != self)
-        {
-            [self setCurrentConversation:message.conversation];
-            [self.navigationViewController gotoViewController:self];
+            if(self.navigationViewController.currentController != self)
+            {
+                [self setCurrentConversation:message.conversation];
+                [self.navigationViewController gotoViewController:self];
+            }
         }
     }
+    
+    
 }
 
 -(void)removeReplayMessage:(BOOL)update animated:(BOOL)animated {
@@ -3739,6 +3738,8 @@ static NSTextAttachment *headerMediaIcon() {
         [self updateWebpage];
         return;
     }
+    
+
     
     
     __block TLWebPage *localWebpage =  [Storage findWebpage:link];

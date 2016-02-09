@@ -536,7 +536,7 @@
     self.recordCircleLayer.contentsScale = self.normalView.layer.contentsScale;
     [self.recordCircleLayer setFillColor:NSColorFromRGB(0xf36f75)];
     [self.recordCircleLayer setRadius:17];
-    [self.recordCircleLayer setFrameOrigin:CGPointMake(28, roundf((self.bounds.size.height - self.recordCircleLayer.bounds.size.height) / 2))];
+    [self.recordCircleLayer setFrameOrigin:CGPointMake(18, roundf((self.bounds.size.height - self.recordCircleLayer.bounds.size.height) / 2))];
     [self.recordCircleLayer setNeedsDisplay];
     [self.normalView.layer addSublayer:self.recordCircleLayer];
     
@@ -547,7 +547,7 @@
     [self.recordDurationLayer setTextFont:TGSystemFont(14)];
     [self.recordDurationLayer setString:@"00:34,45"];
     [self.recordDurationLayer sizeToFit];
-    [self.recordDurationLayer setFrameOrigin:CGPointMake(52, roundf( (self.bounds.size.height - self.recordDurationLayer.bounds.size.height) / 2.f) - 1)];
+    [self.recordDurationLayer setFrameOrigin:CGPointMake(42, roundf( (self.bounds.size.height - self.recordDurationLayer.bounds.size.height) / 2.f) - 1)];
     [self.normalView.layer addSublayer:self.recordDurationLayer];
     
     self.recordHelpLayer = [TMTextLayer layer];
@@ -556,13 +556,6 @@
     [self.recordHelpLayer setTextFont:TGSystemFont(14)];
     [self.normalView.layer addSublayer:self.recordHelpLayer];
 
-
-    
-
-    
- //   self.attachMenu = theMenu;
-
-    
     int offsetX = self.attachButton.frame.origin.x + self.attachButton.frame.size.width + 21;
     
     self.inputMessageTextField.containerView.autoresizesSubviews = YES;
@@ -810,13 +803,13 @@ static RBLPopover *popover;
     self.recordHelpLayer.string = string;
     [self.recordHelpLayer sizeToFit];
     
-    [self.recordHelpLayer setFrameOrigin:CGPointMake( roundf( (self.bounds.size.width - self.recordHelpLayer.bounds.size.width) / 2.f ), 18)];
+    
+    [self.recordHelpLayer setFrameOrigin:CGPointMake( roundf( (self.bounds.size.width - self.recordHelpLayer.bounds.size.width) / 2.f ), roundf((self.bounds.size.height-self.recordHelpLayer.bounds.size.height)/2))];
 }
 
 - (void)startRecord:(BTRButton *)button {
     weak();
 
-    self.recordTime = 0;
     [self.recordDurationLayer setString:@"00:00"];
     [self.recordDurationLayer setHidden:NO];
     [self.inputMessageTextField.containerView removeFromSuperview];
@@ -828,19 +821,22 @@ static RBLPopover *popover;
     
     [self setRecordHelperStringValue:NSLocalizedString(@"Audio.ReleaseOut", nil)];
     [self.recordHelpLayer setHidden:NO];
+    self.recordHelpLayer.alignmentMode = @"center";
     [self recordAudioMouseEntered:button];
     
     [self.recordTimer invalidate];
     
     
-    self.recordTimer = [[TGTimer alloc] initWithTimeout:1.0 repeat:YES completion:^{
+    self.recordTimer = [[TGTimer alloc] initWithTimeout:0.01 repeat:YES completion:^{
         
         
         [TGSendTypingManager addAction:[TL_sendMessageRecordAudioAction create] forConversation:self.dialog];
         
+        NSTimeInterval time = [[TMAudioRecorder sharedInstance] timeRecorded];
         
-        weakSelf.recordTime++;
-        [weakSelf.recordDurationLayer setString:[NSString durationTransformedValue:weakSelf.recordTime]];
+        float ms = time - ((int)time);
+        
+        [weakSelf.recordDurationLayer setString:[NSString stringWithFormat:@"%@,%d",[NSString durationTransformedValue:time],(int)(ms*100)]];
     } queue:dispatch_get_main_queue()];
     [self.recordTimer start];
     
@@ -854,6 +850,29 @@ static RBLPopover *popover;
     [recorder startRecordWithController:self.messagesViewController];
 }
 
+
+-(void)startQuickRecord {
+    if(![[TMAudioRecorder sharedInstance] isRecording]) {
+        [self startRecord:self.recordAudioButton];
+        [self setRecordHelperStringValue:NSLocalizedString(@"Audio.QuickRecordRelease", nil)];
+    }
+    
+}
+
+-(void)stopQuickRecord {
+    if([[TMAudioRecorder sharedInstance] isRecording]) {
+        [[TMAudioRecorder sharedInstance] stopRecord:YES askConfirm:YES];
+    
+        [self updateStopRecordControls];
+        
+    }
+}
+
+
+-(void)keyUp:(NSEvent *)theEvent {
+    [super keyUp:theEvent];
+}
+
 - (void)stopRecord:(BTRButton *)button {
     
     
@@ -862,8 +881,10 @@ static RBLPopover *popover;
     BOOL isInside = NSPointInRect(pos, self.bounds);
     [[TMAudioRecorder sharedInstance] stopRecord:isInside];
 
-    
-    
+    [self updateStopRecordControls];
+}
+
+-(void)updateStopRecordControls {
     [self.recordAudioButton setSelected:NO];
     [self.recordTimer invalidate];
     
@@ -1562,6 +1583,8 @@ static RBLPopover *popover;
         return;
     }
     
+    if(self.dialog.type == DialogTypeSecretChat && self.dialog.encryptedChat.encryptedParams.layer < 45)
+        return;
     
     TLWebPage *webpage = ![self.messagesViewController noWebpage:self.inputMessageString] ? [Storage findWebpage:display_url([self.inputMessageString webpageLink])] : nil;
     

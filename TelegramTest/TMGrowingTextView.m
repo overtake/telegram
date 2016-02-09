@@ -291,7 +291,7 @@
 -(void)setGrammarCheckingEnabled:(BOOL)flag {
     
     [[NSUserDefaults standardUserDefaults] setBool: flag forKey:[NSString stringWithFormat:@"GrammarCheckingEnabled%@",NSStringFromClass([self class])]];
-    [super setContinuousSpellCheckingEnabled: flag];
+    [super setGrammarCheckingEnabled: flag];
 }
 
 -(BOOL)isGrammarCheckingEnabled {

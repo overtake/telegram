@@ -414,6 +414,8 @@ DYNAMIC_PROPERTY(DUser);
     [_contextRequest cancelRequest];
     
     
+    if(conversation.type == DialogTypeSecretChat && conversation.encryptedChat.encryptedParams.layer < 45)
+        return;
     
     NSMutableArray *uids = [[NSMutableArray alloc] init];
     

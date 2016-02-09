@@ -108,7 +108,6 @@
     self.imageView.image = TGIdenticonImage(keyData, CGSizeMake(240, 240));
     
     
-    
     NSString *hash = [[keyData subdataWithRange:NSMakeRange(0, keyData.length - 4)] hexadecimalString];
     
     

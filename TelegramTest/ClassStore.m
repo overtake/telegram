@@ -3,7 +3,7 @@
 //  ClassStore.m
 //  Telegram
 //
-    //  Created by keepcoder on 08.02.16.
+    //  Created by keepcoder on 09.02.16.
 //  Copyright (c) 2015 keepcoder. All rights reserved.
 //
 
@@ -394,7 +394,7 @@ static NSMutableDictionary *cs_constuctors;
    [cs_classes setObject:[TL_documentAttributeAnimated class] forKey:[NSNumber numberWithInt:297109817]];
    [cs_classes setObject:[TL_documentAttributeSticker class] forKey:[NSNumber numberWithInt:978674434]];
    [cs_classes setObject:[TL_documentAttributeVideo class] forKey:[NSNumber numberWithInt:1494273227]];
-   [cs_classes setObject:[TL_documentAttributeAudio class] forKey:[NSNumber numberWithInt:919194239]];
+   [cs_classes setObject:[TL_documentAttributeAudio class] forKey:[NSNumber numberWithInt:-1739392570]];
    [cs_classes setObject:[TL_documentAttributeFilename class] forKey:[NSNumber numberWithInt:358154344]];
    [cs_classes setObject:[TL_messages_stickersNotModified class] forKey:[NSNumber numberWithInt:-244016606]];
    [cs_classes setObject:[TL_messages_stickers class] forKey:[NSNumber numberWithInt:-1970352846]];
@@ -419,7 +419,7 @@ static NSMutableDictionary *cs_constuctors;
    [cs_classes setObject:[TL_account_noPassword class] forKey:[NSNumber numberWithInt:-1764049896]];
    [cs_classes setObject:[TL_account_password class] forKey:[NSNumber numberWithInt:2081952796]];
    [cs_classes setObject:[TL_account_passwordSettings class] forKey:[NSNumber numberWithInt:-1212732749]];
-   [cs_classes setObject:[TL_account_passwordInputSettings class] forKey:[NSNumber numberWithInt:-1124314324]];
+   [cs_classes setObject:[TL_account_passwordInputSettings class] forKey:[NSNumber numberWithInt:-2037289493]];
    [cs_classes setObject:[TL_auth_passwordRecovery class] forKey:[NSNumber numberWithInt:326715557]];
    [cs_classes setObject:[TL_inputMediaVenue class] forKey:[NSNumber numberWithInt:673687578]];
    [cs_classes setObject:[TL_messageMediaVenue class] forKey:[NSNumber numberWithInt:2031269663]];

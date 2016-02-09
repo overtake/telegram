@@ -57,5 +57,7 @@ typedef enum {
 
 -(void)selectInputTextByText:(NSString *)text;
 
+-(void)startQuickRecord;
+-(void)stopQuickRecord;
 
 @end

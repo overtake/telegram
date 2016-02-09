@@ -196,18 +196,14 @@ static NSMutableDictionary *cache;
     if(user.type == TLUserTypeForeign) {
         newAction = MessagesTopInfoActionNone;//MessagesTopInfoActionShareContact;
     }
-    
-   // if(user.isBlocked) {
-     //    newAction = MessagesTopInfoActionUnblockUser;
-   // }
-    
+
     if(user.isBot) {
         newAction = MessagesTopInfoActionNone;
     }
     
     BOOL showReport = [[NSUserDefaults standardUserDefaults] boolForKey:[NSString stringWithFormat:@"showreport_%d",self.conversation.user.n_id]];
         
-    if(showReport && newAction == MessagesTopInfoActionAddContact) {
+    if(showReport) {
         newAction = MessagesTopInfoActionReportSpam;
     }
     

@@ -125,11 +125,14 @@
     weak();
     
     if([self.item.message.conversation canSendMessage]) {
-        [items addObject:[NSMenuItem menuItemWithTitle:NSLocalizedString(@"Context.Reply", nil) withBlock:^(id sender) {
-            
-            [weakSelf.messagesViewController addReplayMessage:weakSelf.item.message animated:YES];
-            
-        }]];
+        
+        if(!self.item.message.conversation.type == DialogTypeChat || self.item.message.conversation.encryptedChat.encryptedParams.layer >= 45) {
+            [items addObject:[NSMenuItem menuItemWithTitle:NSLocalizedString(@"Context.Reply", nil) withBlock:^(id sender) {
+                
+                [weakSelf.messagesViewController addReplayMessage:weakSelf.item.message animated:YES];
+                
+            }]];
+        }
     }
     
     if([self.item canShare]) {

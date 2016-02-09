@@ -27,15 +27,13 @@
 @implementation MessageTableCellAudioView
 
 
-
-
 - (id)initWithFrame:(NSRect)frame {
     self = [super initWithFrame:frame];
     if (self) {
         
         weak();
         
-        self.playerButton = [[BTRButton alloc] initWithFrame:NSMakeRect(0, 3, 37, 37)];
+        self.playerButton = [[BTRButton alloc] initWithFrame:NSMakeRect(0, 3, 38, 38)];
         [self.playerButton setBackgroundImage:image_VoicePlay() forControlState:BTRControlStateNormal];
         [self.playerButton addBlock:^(BTRControlEvents events) {
             
@@ -81,15 +79,17 @@
         [self.containerView addSubview:self.durationView];
         [self.durationView sizeToFit];
         
-        [self.progressView setImage:image_DownloadIconGrey() forState:TMLoaderViewStateNeedDownload];
-        [self.progressView setImage:image_LoadCancelGrayIcon() forState:TMLoaderViewStateDownloading];
-        [self.progressView setImage:image_LoadCancelGrayIcon() forState:TMLoaderViewStateUploading];
+        [self.progressView setImage:image_DownloadIconWhite() forState:TMLoaderViewStateNeedDownload];
+        [self.progressView setImage:image_LoadCancelWhiteIcon() forState:TMLoaderViewStateDownloading];
+        [self.progressView setImage:image_LoadCancelWhiteIcon() forState:TMLoaderViewStateUploading];
         
         [self setProgressStyle:TMCircularProgressLightStyle];
-        
+        [self.progressView setProgressColor:[NSColor whiteColor]];
         [self setProgressFrameSize:NSMakeSize(34, 34)];
         
         [self setProgressToView:self.playerButton];
+        
+       
         
         _waveformView = [[TGWaveformView alloc] initWithFrame:NSMakeRect(0, 0, 200, 32)];
         
@@ -160,33 +160,31 @@
         self.cellState = CellStateNormal;
     }
     
-    
 }
 
 - (void)uploadProgressHandler:(SenderItem *)item animated:(BOOL)animation {
     [super uploadProgressHandler:item animated:animation];
-    
     _waveformView.progress = item.progress;
 }
 
 - (void)downloadProgressHandler:(DownloadItem *)item {
     [super downloadProgressHandler:item];
-     _waveformView.progress = item.progress;
+    _waveformView.progress = item.progress;
 }
 
 
 
 -(void)drawRect:(NSRect)dirtyRect {
     
-    if(!self.item.message.readedContent && !self.item.messageSender && (!self.item.downloadItem || self.item.downloadItem.downloadState == DownloadStateCompleted) && globalAudioPlayer().delegate != self.item) {
-        [NSColorFromRGB(0x4ba3e2) setFill];
-        
-        NSBezierPath *path = [NSBezierPath bezierPath];
-        
-        [path appendBezierPathWithRoundedRect:NSMakeRect(NSMinX(self.containerView.frame) + NSWidth(self.playerButton.frame) + 45, NSMinY(self.containerView.frame) +  NSMinY(self.durationView.frame) + 4, 6, 6) xRadius:3 yRadius:3];
-        
-        [path fill];
-    }
+//    if(!self.item.message.readedContent && !self.item.messageSender && (!self.item.downloadItem || self.item.downloadItem.downloadState == DownloadStateCompleted) && globalAudioPlayer().delegate != self.item) {
+//        [NSColorFromRGB(0x4ba3e2) setFill];
+//        
+//        NSBezierPath *path = [NSBezierPath bezierPath];
+//        
+//        [path appendBezierPathWithRoundedRect:NSMakeRect(NSMinX(self.containerView.frame) + NSWidth(self.playerButton.frame) + 45, NSMinY(self.containerView.frame) +  NSMinY(self.durationView.frame) + 4, 6, 6) xRadius:3 yRadius:3];
+//        
+//        [path fill];
+//    }
 }
 
 - (void)setCellState:(CellState)cellState {
@@ -196,12 +194,19 @@
     
     if(cellState == CellStateDownloading || cellState == CellStateSending || cellState == CellStateNeedDownload) {
         _waveformView.defaultColor = DIALOG_BORDER_COLOR;
-        _waveformView.progressColor = BLUE_UI_COLOR;
+        _waveformView.progressColor = NSColorFromRGB(0x4ca2e0);
     }
     
-    if(cellState == CellStateNormal) {
-        _waveformView.defaultColor = BLUE_UI_COLOR;
+    
+    
+    if(self.item.state == AudioStateWaitPlaying) {
+        _waveformView.defaultColor = !self.item.message.readedContent ? NSColorFromRGB(0x4ca2e0) : DIALOG_BORDER_COLOR;
         _waveformView.progressColor = NSColorFromRGB(0x3dd16e);
+    }
+    
+    if(self.item.state == AudioStatePaused || self.item.state == AudioStatePlaying) {
+        _waveformView.defaultColor = DIALOG_BORDER_COLOR;
+        _waveformView.progressColor = NSColorFromRGB(0x4ca2e0);
     }
     
     [self.progressView setState:cellState];
@@ -338,6 +343,7 @@
         if(item.state != AudioStatePaused)
             [self startTimer];
     }
+    
     
 }
 

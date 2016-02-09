@@ -20,6 +20,8 @@
 #import "MessagesUtils.h"
 #import "TGModernConversationHistoryController.h"
 #import "TGHeadChatPanel.h"
+#import "TMAudioRecorder.h"
+#import "MessagesBottomView.h"
 @interface TestView : TMView
 
 @end
@@ -410,6 +412,11 @@
 
 - (BOOL) selectionWillChange:(NSInteger)row item:(TGConversationTableItem *) item {
     
+    if([[TMAudioRecorder sharedInstance] isRecording]) {
+        [[Telegram delegate].mainWindow.navigationController.messagesViewController.bottomView stopQuickRecord];
+        return NO;
+    }
+    
     if([[Telegram rightViewController] isModalViewActive]) {
         [[Telegram rightViewController] modalViewSendAction:item.conversation];
         return NO;
@@ -420,6 +427,9 @@
 }
 
 - (void) selectionDidChange:(NSInteger)row item:(TGConversationTableItem *) item {
+    
+  
+    
     [[Telegram delegate].mainWindow.navigationController showMessagesViewController:item.conversation];
     
     [self.tableView setSelectedByHash:[item hash]];

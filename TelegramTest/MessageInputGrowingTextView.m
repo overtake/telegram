@@ -326,6 +326,7 @@ typedef enum {
     
     if(![[NSUserDefaults standardUserDefaults] boolForKey:@"enableSpelling"]) {
         [self setAutomaticSpellingCorrectionEnabled:YES];
+        [self setGrammarCheckingEnabled:YES];
         [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"enableSpelling"];
     }
     

@@ -45,7 +45,7 @@ NSImage *blueBackground() {
         NSRect rect = NSMakeRect(0, 0, 48, 48);
         image = [[NSImage alloc] initWithSize:rect.size];
         [image lockFocus];
-        [NSColorFromRGB(0xf2f2f2) set];
+        [NSColorFromRGB(0x4ba3e2) set];
         NSBezierPath *path = [NSBezierPath bezierPath];
         [path appendBezierPathWithRoundedRect:NSMakeRect(0, 0, rect.size.width, rect.size.height) xRadius:rect.size.width/2 yRadius:rect.size.height/2];
         [path fill];
