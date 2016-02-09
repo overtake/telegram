@@ -305,7 +305,7 @@
         EncryptedParams *params = [EncryptedParams findAndCreate:weakSelf.conversation.encryptedChat.n_id];
         
         NSData *keyData = [MTSha1([params.firstKey subdataWithRange:NSMakeRange(0, 16)]) dataWithData:MTSha256([params.firstKey subdataWithRange:NSMakeRange(0, 16)])];
-        return TGIdenticonImage(keyData,CGSizeMake(24, 24));
+        return TGIdenticonImage(keyData,CGSizeMake(16, 16));
         
     }];
     
