@@ -380,7 +380,7 @@ static NSTextAttachment *channelIconAttachment() {
                     objectReturn = [[MessageTableItemMpeg alloc] initWithObject:message];
                 } else if([document.mime_type isEqualToString:@"image/gif"] && ![document.thumb isKindOfClass:[TL_photoSizeEmpty class]]) {
                     objectReturn = [[MessageTableItemGif alloc] initWithObject:message];
-                } else if(audioAttr && !audioAttr.isVoice) {
+                } else if((audioAttr && !audioAttr.isVoice) || ([document.mime_type isEqualToString:@"audio/mpeg"])) {
                     objectReturn = [[MessageTableItemAudioDocument alloc] initWithObject:message];
                 } else if([document isSticker]) {
                     objectReturn = [[MessageTableItemSticker alloc] initWithObject:message];
@@ -577,6 +577,7 @@ static NSTextAttachment *channelIconAttachment() {
 }
 
 - (void)startDownload:(BOOL)cancel force:(BOOL)force {
+
 
     DownloadItem *downloadItem = self.downloadItem;
     

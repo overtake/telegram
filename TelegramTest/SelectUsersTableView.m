@@ -29,6 +29,7 @@
     if (self) {
         _selectLimit = 1;
         _type = SelectTableTypeUser;
+        _searchHeight = 50;
     }
     return self;
 }
@@ -54,9 +55,6 @@ static NSCache *cacheItems;
     
     contacts = [contacts filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"NOT(self.user_id IN (%@)) || (self.user.flags & 1 << 16) == 0",self.exceptions]];
     
-    
-    
-    
     [contacts enumerateObjectsUsingBlock:^(TLContact *obj, NSUInteger idx, BOOL *stop) {
         
         SelectUserItem *item = [[SelectUserItem alloc] initWithObject:obj.user];
@@ -69,7 +67,6 @@ static NSCache *cacheItems;
     
     
     [items filterUsingPredicate:[NSPredicate predicateWithFormat:@"self.user.n_id != %d",[UsersManager currentUserId]]];
-    
     
     [self readyItems:items];
     
@@ -105,7 +102,6 @@ static NSCache *cacheItems;
 
 
 -(void)readyChats {
-    
     
     _type = SelectTableTypeChats;
     
@@ -170,7 +166,7 @@ static NSCache *cacheItems;
     
     self.searchItem = [[TGSearchRowItem alloc] init];
     
-    self.searchView = [[TGSearchRowView alloc] initWithFrame:NSMakeRect(0, 0, NSWidth(self.bounds), 50)];
+    self.searchView = [[TGSearchRowView alloc] initWithFrame:NSMakeRect(0, 0, NSWidth(self.bounds), self.searchHeight)];
     
     [self insert:self.searchItem atIndex:0 tableRedraw:NO];
     
@@ -359,7 +355,6 @@ static NSCache *cacheItems;
         }]];
     }
     
-    
     NSRange range = NSMakeRange(1, self.list.count-1);
     
     NSArray *list = [self.list subarrayWithRange:range];
@@ -382,12 +377,9 @@ static NSCache *cacheItems;
     
     if(searchString.length > 0) {
         sorted = [self.items filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(SelectChatItem *evaluatedObject, NSDictionary *bindings) {
-            
             return [evaluatedObject.chat.title searchInStringByWordsSeparated:searchString];
-            
         }]];
     }
-    
     
     NSRange range = NSMakeRange(1, self.list.count-1);
     
@@ -431,7 +423,6 @@ static NSCache *cacheItems;
     [self removeRowsAtIndexes:[NSIndexSet indexSetWithIndexesInRange:range] withAnimation:self.defaultAnimation];
     
     [self insert:sorted startIndex:1 tableRedraw:YES];
-    
     
     if(_type == SelectTableTypeUser) {
         [_request cancelRequest];

@@ -32,11 +32,11 @@
     TMView *rightView = [[TMView alloc] init];
     
     
-    weakify();
+    weak();
     
     _logoutButton = [TMTextButton standartUserProfileNavigationButtonWithTitle:NSLocalizedString(@"Settings.log_out_button",nil)];
     [self.logoutButton setTapBlock:^{
-        [strongSelf logOut];
+        [weakSelf logOut];
     }];
     
     [rightView setFrameSize:self.logoutButton.frame.size];
@@ -85,7 +85,7 @@
     
     
     self.terminate = [UserInfoShortButtonView buttonWithText:NSLocalizedString(@"Settings.TerminateOtherSessions", nil) tapBlock:^{
-        [self terminateSessions];
+        [weakSelf terminateSessions];
     }];
     
     [self.terminate.textButton setFrameOrigin:NSMakePoint(0, NSMinY(self.terminate.textButton.frame))];

@@ -53,13 +53,13 @@
         
         self.cancelButton = [TMTextButton standartUserProfileButtonWithTitle:NSLocalizedString(@"Search.Cancel", nil)];
         
-        weakify();
+        weak();
         
         [self.cancelButton setTapBlock:^ {
-            strongSelf.closeCallback();
-            [strongSelf.controller jumpToLastMessages:YES];
-            [strongSelf.request cancelRequest];
-            strongSelf.request = nil;
+            weakSelf.closeCallback();
+            [weakSelf.controller jumpToLastMessages:YES];
+            [weakSelf.request cancelRequest];
+            weakSelf.request = nil;
         }];
         
         [self.cancelButton setCenterByView:self];
@@ -77,11 +77,11 @@
         [self.nextButton setBackgroundImage:image_SearchDown() forControlState:BTRControlStateNormal];
         
         [self.prevButton addBlock:^(BTRControlEvents events) {
-           [strongSelf prev];
+           [weakSelf prev];
         } forControlEvents:BTRControlEventClick];
         
         [self.nextButton addBlock:^(BTRControlEvents events) {
-           [strongSelf next];
+           [weakSelf next];
         } forControlEvents:BTRControlEventClick];
         
         

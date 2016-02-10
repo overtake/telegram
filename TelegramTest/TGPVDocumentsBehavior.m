@@ -146,7 +146,7 @@
             
             TL_messageMediaDocument *media = (TL_messageMediaDocument *) [(TL_localMessage *)obj.media media];
             
-            if([media.document.mime_type hasPrefix:@"image"] && ![media.document.mime_type hasSuffix:@"gif"]) {
+            if([document_preview_mime_types() indexOfObject:media.document.mime_type] != NSNotFound && !media.document.isSticker) {
                 TL_documentAttributeImageSize *size = (TL_documentAttributeImageSize *) [[media document] attributeWithClass:[TL_documentAttributeImageSize class]];
                 
                 TGPVDocumentObject *imgObj = [[TGPVDocumentObject alloc] initWithMessage:obj.media placeholder:nil];

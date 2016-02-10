@@ -230,13 +230,13 @@
     
     
     if(self.dialog.type == DialogTypeSecretChat) {
-        weakify();
+        weak();
         ;
         
         __block NSUInteger dialogHash = self.dialog.cacheHash;
         __block EncryptedParams *params = self.dialog.encryptedChat.encryptedParams;
         __block stateHandler handler = ^(EncryptedState state) {
-            if(dialogHash != strongSelf.dialog.cacheHash)
+            if(dialogHash != weakSelf.dialog.cacheHash)
                 return;
             
             [self setState:MessagesBottomViewNormalState animated:NO];
@@ -354,7 +354,7 @@
     if(self->_actionsView)
         return self->_actionsView;
     
-    weakify();
+    weak();
     
     self->_actionsView = [[TMView alloc] initWithFrame:NSMakeRect(0, 0, self.bounds.size.width, self.bounds.size.height - 1)];
     [self.actionsView setWantsLayer:YES];
@@ -368,7 +368,7 @@
     
     [self.deleteButton setAutoresizingMask:NSViewMaxXMargin ];
     [self.deleteButton setTapBlock:^{
-        [strongSelf.messagesViewController deleteSelectedMessages];
+        [weakSelf.messagesViewController deleteSelectedMessages];
     }];
     self.deleteButton.disableColor = NSColorFromRGB(0xa1a1a1);
     [self.actionsView addSubview:self.deleteButton];
@@ -385,22 +385,15 @@
     [self.forwardButton setAutoresizingMask:NSViewMinXMargin];
     self.forwardButton.disableColor = NSColorFromRGB(0xa1a1a1);
     
-    weak();
 
     [self.forwardButton setTapBlock:^{
-        
-        strongWeak();
-    
-        
-        [strongSelf.messagesViewController showForwardMessagesModalView];
-        
-        
+        [weakSelf.messagesViewController showForwardMessagesModalView];
     }];
      
      [self.actionsView setDrawBlock:^{
-        [strongSelf.forwardButton setFrameOrigin:NSMakePoint(strongSelf.bounds.size.width - strongSelf.forwardButton.bounds.size.width - 22, roundf((strongSelf.bounds.size.height - strongSelf.deleteButton.bounds.size.height) / 2))];
-        [strongSelf.deleteButton setFrameOrigin:NSMakePoint(30, roundf((strongSelf.bounds.size.height - strongSelf.deleteButton.bounds.size.height) / 2) )];
-        [strongSelf.messagesSelectedCount setCenterByView:strongSelf.actionsView];
+        [weakSelf.forwardButton setFrameOrigin:NSMakePoint(weakSelf.bounds.size.width - weakSelf.forwardButton.bounds.size.width - 22, roundf((weakSelf.bounds.size.height - weakSelf.deleteButton.bounds.size.height) / 2))];
+        [weakSelf.deleteButton setFrameOrigin:NSMakePoint(30, roundf((weakSelf.bounds.size.height - weakSelf.deleteButton.bounds.size.height) / 2) )];
+        [weakSelf.messagesSelectedCount setCenterByView:weakSelf.actionsView];
     }];
      
 

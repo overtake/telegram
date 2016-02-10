@@ -74,7 +74,7 @@
         
         
         
-        weakify();
+        weak();
         self.editTextButton = [[TMTextButton alloc] init];
         //        [self.editTextButton setDisable:YES];
         self.editTextButton.stringValue = NSLocalizedString(@"Profile.edit", nil);
@@ -85,8 +85,7 @@
         [self.editTextButton setFrameOrigin:NSMakePoint(self.bounds.size.width - self.editTextButton.bounds.size.width - 10, 16)];
         [self.editTextButton setHidden:YES];
         [self.editTextButton setTapBlock:^{
-            if(strongSelf.backCallback) strongSelf.backCallback();
-           // [strongSelf.loginController performBackEditAnimation:0.08];
+            if(weakSelf.backCallback) weakSelf.backCallback();
         }];
         [self addSubview:self.editTextButton];
         

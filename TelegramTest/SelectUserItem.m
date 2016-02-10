@@ -21,7 +21,6 @@
         
         self.avatarPoint = NSMakePoint(50, (50 - 36) / 2);
         
-        
         self.rightBorderMargin = 23;
         
         self.titlePoint = NSMakePoint(97, 25);

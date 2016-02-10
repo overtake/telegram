@@ -1223,6 +1223,14 @@
          contextName = "__25-[ReadHistroryTask loop:]_block_invoke:ReadHistroryTask.m">
       </ContextState>
       <ContextState
+         contextName = "-[MessageTableCellDocumentView open]:MessageTableCellDocumentView.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.item.message.media.document.mime_type">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "-[MessagesBottomView initWithFrame:]:MessagesBottomView.m">
       </ContextState>
       <ContextState
@@ -1270,6 +1278,14 @@
             </PersistentString>
             <PersistentString
                value = "_nextState">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[TGPVContainer setCurrentViewerItem:animated:]:TGPVContainer.m">
+         <PersistentStrings>
+            <PersistentString
+               value = " currentViewerItem.imageObject;">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -1699,6 +1715,11 @@
       </ContextState>
       <ContextState
          contextName = "-[TGWebpageDocumentObject initWithWebPage:]:TGWebpageDocumentObject.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "webpage">
+            </PersistentString>
+         </PersistentStrings>
       </ContextState>
       <ContextState
          contextName = "__join_group_by_hash_block_invoke:FileUtils.m">
@@ -2063,6 +2084,11 @@
       </ContextState>
       <ContextState
          contextName = "-[MessageTableItemAudioDocument doAfterDownload]:MessageTableItemAudioDocument.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.message.media.document">
+            </PersistentString>
+         </PersistentStrings>
       </ContextState>
       <ContextState
          contextName = "-[MTContext transportSchemeForDatacenterWithid:]:MTContext.m">
@@ -2559,6 +2585,9 @@
                value = "[self path]">
             </PersistentString>
          </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[HistoryFilter remoteRequest:hole:callback:]:HistoryFilter.m">
       </ContextState>
       <ContextState
          contextName = "-[TMMediaController media:]:TMMediaController.mm">
@@ -5979,6 +6008,9 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "__33-[AudioSenderItem performRequest]_block_invoke_2:AudioSenderItem.m">
+      </ContextState>
+      <ContextState
          contextName = "__60-[ComposeChannelParticipantsViewController kickParticipant:]_block_invoke:ComposeChannelParticipantsViewController.m">
       </ContextState>
       <ContextState
@@ -6044,9 +6076,6 @@
                value = "anItem.action">
             </PersistentString>
          </PersistentStrings>
-      </ContextState>
-      <ContextState
-         contextName = "-[HistoryFilter proccessAndGetHoleWithHole:next:messages:]:HistoryFilter.m">
       </ContextState>
       <ContextState
          contextName = "__41-[TMSharedMediaButton loadCount:peer_id:]_block_invoke:TMSharedMediaButton.m">

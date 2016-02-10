@@ -9,6 +9,7 @@
 #import "TGModalForwardView.h"
 #import "SelectUsersTableView.h"
 #import "MessageTableItem.h"
+#import "TGSettingsTableView.h"
 @interface TGModalForwardView ()<SelectTableDelegate>
 @property (nonatomic,strong) SelectUsersTableView *tableView;
 @end
@@ -18,7 +19,7 @@
 
 -(instancetype)initWithFrame:(NSRect)frameRect {
     if(self = [super initWithFrame:frameRect]) {
-        [self setContainerFrameSize:NSMakeSize(MIN(NSWidth(frameRect) - 60,400), MIN(NSHeight(frameRect) - 60,400))];
+        [self setContainerFrameSize:NSMakeSize(300, 370)];
         
         
         [self initialize];
@@ -30,7 +31,7 @@
 -(void)setFrameSize:(NSSize)newSize {
     [super setFrameSize:newSize];
     
-    [self setContainerFrameSize:NSMakeSize(MIN(NSWidth(self.frame) - 60,400), MIN(NSHeight(self.frame) - 60,400))];
+    [self setContainerFrameSize:NSMakeSize(300, 370)];
     
 }
 

@@ -1373,4 +1373,14 @@ NSString *display_url(NSString *url) {
     }
 }
 
+NSArray *document_preview_mime_types() {
+    static NSArray *types;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        types = @[@"image/bmp",@"image/jpeg",@"image/jpg",@"image/png",@"image/tiff",@"image/webp"];
+    });
+    
+    return types;
+}
+
 @end

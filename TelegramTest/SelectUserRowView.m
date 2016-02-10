@@ -35,7 +35,6 @@ static int offsetEditable = 30;
         
         [self addSubview:self.avatarImageView];
 
-        
         _titleTextField = [[TMNameTextField alloc] init];
         [self.titleTextField setEditable:NO];
         [self.titleTextField setBordered:NO];
@@ -46,8 +45,6 @@ static int offsetEditable = 30;
         
         [self.titleTextField setSelector:@selector(chatInfoTitle)];
         [self addSubview:self.titleTextField];
-        
-        
         
         _lastSeenTextField = [[TMStatusTextField alloc] init];
         [self.lastSeenTextField setEditable:NO];
@@ -60,21 +57,17 @@ static int offsetEditable = 30;
         [self.lastSeenTextField setTextColor:GRAY_TEXT_COLOR];
         [self addSubview:self.lastSeenTextField];
         
-        
-        
         self.selectButton = [[BTRButton alloc] initWithFrame:NSMakeRect(20, roundf((50 - image_ComposeCheckActive().size.height )/ 2), image_ComposeCheckActive().size.width, image_ComposeCheckActive().size.height)];
-       // [self.selectButton setAutoresizingMask:NSViewMinXMargin];
 
-        weakify();
+        weak();
         
         [self.selectButton setBackgroundImage:image_ComposeCheck() forControlState:BTRControlStateNormal];
         [self.selectButton setBackgroundImage:image_ComposeCheck() forControlState:BTRControlStateHover];
         [self.selectButton setBackgroundImage:image_ComposeCheck() forControlState:BTRControlStateHighlighted];
         [self.selectButton setBackgroundImage:image_ComposeCheckActive() forControlState:BTRControlStateSelected];
         [self.selectButton addBlock:^(BTRControlEvents events) {
-            [strongSelf mouseDown:[NSApp currentEvent]];
+            [weakSelf mouseDown:[NSApp currentEvent]];
         } forControlEvents:BTRControlEventLeftClick];
-        
         
         [self addSubview:self.selectButton];
 

@@ -136,7 +136,7 @@
     
     [self.contentView addSubview:_windowContainerView];
     
-    weakify();
+    weak();
     
     _containerView = [[TGAudioPlayerContainerView alloc] initWithFrame:NSMakeRect(0, 0, NSWidth(_windowContainerView.frame), MINI_PHEIGHT)];
     _containerView.controller = self;
@@ -174,16 +174,16 @@
     
     
     [_prevButton addBlock:^(BTRControlEvents events) {
-        [strongSelf prevTrack];
+        [weakSelf prevTrack];
     } forControlEvents:BTRControlEventMouseDownInside];
     
     [_nextButton addBlock:^(BTRControlEvents events) {
-        [strongSelf nextTrack];
+        [weakSelf nextTrack];
     } forControlEvents:BTRControlEventMouseDownInside];
     
     [_playButton addBlock:^(BTRControlEvents events) {
         
-        [strongSelf playOrPause];
+        [weakSelf playOrPause];
         
     } forControlEvents:BTRControlEventMouseDownInside];
     
@@ -226,14 +226,14 @@
     
     [_progressView setProgressCallback:^(float progress) {
         
-        if(!strongSelf.currentItem)
+        if(!weakSelf.currentItem)
             return;
         
         if(globalAudioPlayer() && globalAudioPlayer().delegate == self && (self.currentItem.downloadItem == nil || self.currentItem.downloadItem.downloadState == DownloadStateCompleted)) {
-            strongSelf.currentTime = globalAudioPlayer().duration * (progress/100);
+            weakSelf.currentTime = globalAudioPlayer().duration * (progress/100);
             
-            if(strongSelf.playerState == TGAudioPlayerStatePlaying) {
-                [globalAudioPlayer() playFromPosition:strongSelf.currentTime];
+            if(weakSelf.playerState == TGAudioPlayerStatePlaying) {
+                [globalAudioPlayer() playFromPosition:weakSelf.currentTime];
             }
         }
 
@@ -311,9 +311,9 @@
     
     [_pinButton addBlock:^(BTRControlEvents events) {
         
-        [strongSelf setLevel:self.level == NSNormalWindowLevel ? NSScreenSaverWindowLevel : NSNormalWindowLevel];
+        [weakSelf setLevel:self.level == NSNormalWindowLevel ? NSScreenSaverWindowLevel : NSNormalWindowLevel];
         
-        [strongSelf.pinButton setImage:self.level == NSNormalWindowLevel ? image_AudioPlayerPin() : image_AudioPlayerPinActive() forControlState:BTRControlStateNormal];
+        [weakSelf.pinButton setImage:self.level == NSNormalWindowLevel ? image_AudioPlayerPin() : image_AudioPlayerPinActive() forControlState:BTRControlStateNormal];
         
     } forControlEvents:BTRControlEventMouseDownInside];
     
@@ -325,7 +325,7 @@
     
     [_showPlayListButton addBlock:^(BTRControlEvents events) {
         
-        [strongSelf showOrHidePlayList];
+        [weakSelf showOrHidePlayList];
         
     } forControlEvents:BTRControlEventMouseDownInside];
     

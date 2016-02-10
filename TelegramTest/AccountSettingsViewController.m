@@ -167,7 +167,7 @@ typedef enum {
     
     [header sizeToFit];
     
-    weakify();
+    weak();
     
     [self.view setDrawBlock:^{
         [header setCenterByView:topContainer];
@@ -179,7 +179,7 @@ typedef enum {
     
     
     [self.editButton setTapBlock:^{
-        [strongSelf enterClick];
+        [weakSelf enterClick];
     }];
 
     [self.editButton setCenterByView:topContainer];
@@ -195,7 +195,7 @@ typedef enum {
     
     
     [self.cancelEditButton setTapBlock:^{
-        [strongSelf cancel];
+        [weakSelf cancel];
     }];
     
     [self.cancelEditButton setCenterByView:topContainer];

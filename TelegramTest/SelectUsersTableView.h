@@ -27,6 +27,14 @@ typedef enum {
 
 @interface SelectUsersTableView : TMTableView<TMTableViewDelegate>
 
+typedef enum {
+    SelectTableViewSelectAlignmentLeft,
+    SelectTableViewSelectAlignmentRight
+} SelectTableViewSelectAlignment;
+
+//content
+@property (nonatomic,assign) int searchHeight; // default = 50;
+@property (nonatomic,assign) SelectTableViewSelectAlignment selectTableViewSelectAlignment;
 
 @property (nonatomic,strong) NSArray *exceptions;
 

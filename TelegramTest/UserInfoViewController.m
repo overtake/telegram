@@ -110,15 +110,15 @@
     [_avatarImageView setFrameOrigin:NSMakePoint(100, self.containerView.bounds.size.height - self.avatarImageView.bounds.size.height - 36)];
     [_containerView addSubview:_avatarImageView];
     
-    weakify();
+    weak();
     [_avatarImageView setTapBlock:^{
         
-        if(![strongSelf.user.photo isKindOfClass:[TL_userProfilePhotoEmpty class]]) {
-            PreviewObject *previewObject = [[PreviewObject alloc] initWithMsdId:NSIntegerMax media:[TL_photoSize createWithType:@"x" location:strongSelf.user.photo.photo_big w:640 h:640 size:0] peer_id:strongSelf.user.n_id];
+        if(![weakSelf.user.photo isKindOfClass:[TL_userProfilePhotoEmpty class]]) {
+            PreviewObject *previewObject = [[PreviewObject alloc] initWithMsdId:NSIntegerMax media:[TL_photoSize createWithType:@"x" location:weakSelf.user.photo.photo_big w:640 h:640 size:0] peer_id:weakSelf.user.n_id];
                         
-            previewObject.reservedObject = [TGCache cachedImage:strongSelf.user.photo.photo_small.cacheKey];
+            previewObject.reservedObject = [TGCache cachedImage:weakSelf.user.photo.photo_small.cacheKey];
             
-            [[TGPhotoViewer viewer] show:previewObject user:strongSelf.user];
+            [[TGPhotoViewer viewer] show:previewObject user:weakSelf.user];
         }
     }];
     
@@ -143,13 +143,13 @@
 - (TMView *) generateRightHeaderButtons {
     TMView *view = [[TMView alloc] init];
     
-    weakify();
+    weak();
     
     if(self.user.type == TLUserTypeSelf) {
         if(self.state == UserInfoViewControllerNormal) {
             TMTextButton *editButton = [TMTextButton standartUserProfileNavigationButtonWithTitle:NSLocalizedString(@"Profile.Edit", nil)];
             [editButton setTapBlock:^{
-                strongSelf.state = UserInfoViewControllerEdit;
+                weakSelf.state = UserInfoViewControllerEdit;
             }];
             [view addSubview:editButton];
             [view setFrameSize:editButton.bounds.size];
@@ -157,16 +157,16 @@
         } else {
             TMTextButton *saveButton = [TMTextButton standartUserProfileNavigationButtonWithTitle:NSLocalizedString(@"Profile.Save", nil)];
             [saveButton setTapBlock:^{
-                TL_inputPhoneContact *contact = [self.editContainer newContact];
+                TL_inputPhoneContact *contact = [weakSelf.editContainer newContact];
                 
                 dispatch_block_t block = ^{
                     
                     [[UsersManager sharedManager] updateAccount:contact.first_name lastName:contact.last_name completeHandler:^(TLUser *user) {
                         
-                        [self.normalContainer buildPage];
+                        [weakSelf.normalContainer buildPage];
                         
                         
-                        strongSelf.state = UserInfoViewControllerNormal;
+                        weakSelf.state = UserInfoViewControllerNormal;
                         
                         
                     } errorHandler:^(NSString *description) {
@@ -175,7 +175,7 @@
                 };
                 
                 if([self.user.first_name isEqualToString:contact.first_name] && [self.user.last_name isEqualToString:contact.last_name])
-                    strongSelf.state = UserInfoViewControllerNormal;
+                    weakSelf.state = UserInfoViewControllerNormal;
                 else block();
                 
             }];
@@ -185,7 +185,7 @@
             TMTextButton *cancelButton = [TMTextButton standartUserProfileNavigationButtonWithTitle:NSLocalizedString(@"Profile.Cancel", nil)];
             [cancelButton setFrameOrigin:NSMakePoint(saveButton.bounds.size.width + 10, cancelButton.frame.origin.y)];
             [cancelButton setTapBlock:^{
-                strongSelf.state = UserInfoViewControllerNormal;
+                weakSelf.state = UserInfoViewControllerNormal;
             }];
             [view addSubview:cancelButton];
             
@@ -204,7 +204,7 @@
             TMTextButton *editButton = [TMTextButton standartUserProfileNavigationButtonWithTitle:NSLocalizedString(@"Profile.Edit", nil)];
             [editButton setTapBlock:^{
 //                strongify();
-                strongSelf.state = UserInfoViewControllerEdit;
+                weakSelf.state = UserInfoViewControllerEdit;
             }];
             [view addSubview:editButton];
             [view setFrameSize:editButton.bounds.size];
@@ -217,7 +217,7 @@
                 
                 dispatch_block_t block = ^{
 //                    strongify();
-                    strongSelf.state = UserInfoViewControllerNormal;
+                    weakSelf.state = UserInfoViewControllerNormal;
                 };
                 
                 if(!contact) {
@@ -281,7 +281,7 @@
 //        TLContactBlocked *blocked = [[BlockedUsersManager sharedManager] find:self.user.n_id];
 //        
 //        TMTextButton *blockButton = [TMTextButton standartUserProfileNavigationButtonWithTitle:blocked ? NSLocalizedString(@"User.Unlock", nil) : NSLocalizedString(@"User.Block", nil)];
-//        weakify();
+//        weak();
 //        [blockButton setTapBlock:^{
 //            int user_id = strongSelf.user.n_id;
 //            TLContactBlocked *blocked = [[BlockedUsersManager sharedManager] find:user_id];

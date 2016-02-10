@@ -33,10 +33,10 @@
     [self.view addSubview:containerView];
 
     
-    weakify();
+    weak();
     
     [self.view setDrawBlock:^{
-       [containerView setCenterByView:strongSelf.view];
+       [containerView setCenterByView:weakSelf.view];
     }];
     
     TMTextField *textField = [TMTextField defaultTextField];

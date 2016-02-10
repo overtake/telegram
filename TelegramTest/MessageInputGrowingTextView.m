@@ -348,10 +348,12 @@ typedef enum {
     //    [self setBackgroundColor:[NSColor redColor]];
     [self setDrawsBackground:YES];
     
-    weakify();
+    //TODO
+    __strong MessageInputGrowingTextView *weakSelf = self;
+    
     self.containerView = [[TMView alloc] initWithFrame:self.bounds];
     [self.containerView setDrawBlock:^{
-        NSRect rect = NSMakeRect(1, 1, strongSelf.containerView.bounds.size.width - 2, strongSelf.containerView.bounds.size.height - 2);
+        NSRect rect = NSMakeRect(1, 1, weakSelf.containerView.bounds.size.width - 2, weakSelf.containerView.bounds.size.height - 2);
         NSBezierPath *circlePath = [NSBezierPath bezierPath];
         [circlePath appendBezierPathWithRoundedRect:rect xRadius:3 yRadius:3];
         [NSColorFromRGB(0xdedede) setStroke];
@@ -359,7 +361,7 @@ typedef enum {
         [circlePath stroke];
         [[NSColor whiteColor] setFill];
         [circlePath fill];
-        [strongSelf.scrollView setFrameSize:NSMakeSize(NSWidth(rect) - 40, NSHeight(strongSelf.scrollView.frame))];
+        [weakSelf.scrollView setFrameSize:NSMakeSize(NSWidth(rect) - 40, NSHeight(weakSelf.scrollView.frame))];
     }];
     
     // [self.containerView setBackgroundColor:NSColorFromRGB(0x000000)];

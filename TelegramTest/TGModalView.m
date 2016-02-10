@@ -80,15 +80,6 @@
     
     separator.autoresizingMask = NSViewWidthSizable;
     [self addSubview:separator];
-    
-    separator = [[TMView alloc] initWithFrame:NSMakeRect(self.containerSize.width/2, 0, 1, 50)];
-    separator.autoresizingMask = NSViewMaxXMargin | NSViewMinXMargin;
-    [separator setBackgroundColor:DIALOG_BORDER_COLOR];
-    [self addSubview:separator];
-    
-    
-    
-    
 
 }
 

@@ -207,11 +207,6 @@
         
     }
     
-    
-   
-    
-    
-    
     [self setNeedsDisplay:YES];
     
     [self setSelectedRange:NSMakeRange(self.selectedRange.location, self.selectedRange.length)];
@@ -220,6 +215,8 @@
     
    
 }
+
+
 
 - (void)initialize {
 
@@ -235,18 +232,15 @@
     self.font = TGSystemFont(15);
     self.insertionPointColor = NSColorFromRGB(0x0f92dd);
     
-    
-    
-  
-//    [self setBackgroundColor:[NSColor redColor]];
     [self setDrawsBackground:YES];
+    //TODO
+    __strong TMGrowingTextView *weakSelf = self;
     
-    weakify();
     self.containerView = [[TMView alloc] initWithFrame:self.bounds];
     [self.containerView setDrawBlock:^{
         
-        if(!strongSelf.disabledBorder) {
-            NSRect rect = NSMakeRect(1, 1, strongSelf.containerView.bounds.size.width - 2, strongSelf.containerView.bounds.size.height - 2);
+        if(!weakSelf.disabledBorder) {
+            NSRect rect = NSMakeRect(1, 1, weakSelf.containerView.bounds.size.width - 2, weakSelf.containerView.bounds.size.height - 2);
             NSBezierPath *circlePath = [NSBezierPath bezierPath];
             [circlePath appendBezierPathWithRoundedRect:rect xRadius:3 yRadius:3];
             [NSColorFromRGB(0xdedede) setStroke];
@@ -254,15 +248,11 @@
             [circlePath stroke];
             [[NSColor whiteColor] setFill];
             [circlePath fill];
-
         }
-        
-        
-        [strongSelf.scrollView setFrame:NSMakeRect(2, 2, strongSelf.containerView.bounds.size.width - 4, strongSelf.containerView.bounds.size.height - 4)];
+
+        [weakSelf.scrollView setFrame:NSMakeRect(2, 2, weakSelf.containerView.bounds.size.width - 4, weakSelf.containerView.bounds.size.height - 4)];
         
     }];
-    
-   // [self.containerView setBackgroundColor:NSColorFromRGB(0x000000)];
     
     self.containerView.autoresizingMask = NSViewWidthSizable | NSViewHeightSizable;
     
@@ -271,11 +261,12 @@
     self.scrollView.autoresizingMask = NSViewWidthSizable | NSViewHeightSizable;
     self.scrollView.documentView = self;
     [self.scrollView setDrawsBackground:YES];
-//    [self.scrollView setBackgroundColor:[NSColor redColor]];
     [self.scrollView setFrame:NSMakeRect(9, 0, self.bounds.size.width - 9, self.bounds.size.height - 2)];
     [self.containerView addSubview:self.scrollView];
     
 }
+
+
 
 - (void)setContinuousSpellCheckingEnabled:(BOOL)flag
 {

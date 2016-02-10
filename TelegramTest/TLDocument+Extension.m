@@ -12,7 +12,7 @@
 
 -(NSString *)file_name {
     
-    __block NSString *fileName = @"";
+    __block NSString *fileName = @"Unknown";
     
     [self.attributes enumerateObjectsUsingBlock:^(TLDocumentAttribute *obj, NSUInteger idx, BOOL *stop) {
         

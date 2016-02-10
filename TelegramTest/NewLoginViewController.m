@@ -111,17 +111,17 @@
     [SMSCodeViewContainer addSubview:self.SMSCodeView];
     [self.containerView addSubview:SMSCodeViewContainer];
     
-     weakify();
+     weak();
     
     //COUTRYVIew
     self.countrySelectorView = [[LoginCountrySelectorView alloc] initWithFrame:NSMakeRect(0, offsetY, self.containerView.bounds.size.width, 90)];
     
     [self.countrySelectorView setNextCallback:^{
-        [strongSelf getSMSCode];
+        [weakSelf getSMSCode];
     }];
     
     [self.countrySelectorView setBackCallback:^{
-        [strongSelf performBackEditAnimation:0.08];
+        [weakSelf performBackEditAnimation:0.08];
     }];
     
     [self.containerView addSubview:self.countrySelectorView];
@@ -134,7 +134,7 @@
 //    [self.startMessagingView setBackgroundColor:[NSColor redColor]];
     [self.containerView addSubview:self.startMessagingView];
     [self.startMessagingView.textButton setTapBlock:^{
-        [strongSelf signIn];
+        [weakSelf signIn];
     }];
     
     [self.startMessagingView setHasImage:YES];
@@ -148,7 +148,7 @@
     //    [self.getSMSCodeView setBackgroundColor:[NSColor redColor]];
     [self.getSMSCodeView setButtonText:NSLocalizedString(@"Login.GetCode", nil)];
     [self.getSMSCodeView.textButton setTapBlock:^{
-        [strongSelf getSMSCode];
+        [weakSelf getSMSCode];
     }];
     
     [self.containerView addSubview:self.getSMSCodeView];
@@ -541,12 +541,12 @@
 - (void)sendCallRequest {
     
     __block NSString *phone_code_hash = self.phone_code_hash;
-    weakify();
+    weak();
     [RPCRequest sendRequest:[TLAPI_auth_sendCall createWithPhone_number:self.phoneNumber phone_code_hash:self.phone_code_hash] successHandler:^(RPCRequest *request, id response) {
-        if([strongSelf.phone_code_hash isEqualToString:phone_code_hash])
+        if([weakSelf.phone_code_hash isEqualToString:phone_code_hash])
             [self.SMSCodeView changeCallTextFieldString:NSLocalizedString(@"Registration.PhoneDialed", nil)];
     } errorHandler:^(RPCRequest *request, RpcError *error) {
-        if([strongSelf.phone_code_hash isEqualToString:phone_code_hash])
+        if([weakSelf.phone_code_hash isEqualToString:phone_code_hash])
             [self.SMSCodeView changeCallTextFieldString:NSLocalizedString(@"Login.Error", nil)];
     } alwayContinueWithErrorContext:YES];
 }

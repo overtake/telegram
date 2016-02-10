@@ -48,10 +48,10 @@
         [self.lastNameView.textView setTarget:self];
         [self.lastNameView.textView setAction:@selector(enterClick)];
         
-        weakify();
+        weak();
 
         self.clearChatHistoryButton = [UserInfoShortButtonView buttonWithText:NSLocalizedString(@"Conversation.Delete", nil) tapBlock:^{
-            [[Telegram rightViewController].messagesViewController deleteDialog:strongSelf.user.dialog];
+            [[Telegram rightViewController].messagesViewController deleteDialog:weakSelf.user.dialog];
         }];
         self.clearChatHistoryButton.textButton.textColor = NSColorFromRGB(0xe07676);
         [self addSubview:self.clearChatHistoryButton];
@@ -60,14 +60,12 @@
 
         self.deleteContactButton = [UserInfoShortButtonView buttonWithText:NSLocalizedString(@"Profile.DeleteContact", nil) tapBlock:^{
             [[NewContactsManager sharedManager] deleteContact:self.user completeHandler:^(BOOL result) {
-                [strongSelf.controller successDeleteContact];
+                [weakSelf.controller successDeleteContact];
             }];
         }];
         self.deleteContactButton.textButton.textColor = NSColorFromRGB(0xe07676);
         [self addSubview:self.deleteContactButton];
         [self.deleteContactButton setFrameSize:NSMakeSize(offsetRight, 42)];
-
-
 
         [self buildPage];
         

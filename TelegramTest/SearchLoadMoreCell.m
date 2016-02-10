@@ -17,7 +17,7 @@
 - (id)initWithFrame:(NSRect)frameRect {
     self = [super initWithFrame:frameRect];
     
-    weakify();
+    weak();
     
     
     self.loadMore = [[TMTextButton alloc] init];
@@ -25,7 +25,7 @@
     [self.loadMore setAutoresizingMask:NSViewMinXMargin | NSViewMaxXMargin];
     [self.loadMore setFont:TGSystemFont(13)];
     [self.loadMore setTapBlock:^{
-        SearchLoadMoreItem *item = (SearchLoadMoreItem *)[strongSelf rowItem];
+        SearchLoadMoreItem *item = (SearchLoadMoreItem *)[weakSelf rowItem];
         if(item.clickBlock)
             item.clickBlock();
     }];

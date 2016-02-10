@@ -116,7 +116,7 @@ typedef enum {
 
 - (void)loadView {
     [super loadView];
-    weakify();
+    weak();
     
     _queue = [[ASQueue alloc] initWithName:"SearchQueue"];
     
@@ -130,35 +130,35 @@ typedef enum {
     
     self.dialogsLoadMoreItem = [[SearchLoadMoreItem alloc] init];
     [self.dialogsLoadMoreItem setClickBlock:^{
-        [strongSelf showMore:SearchSectionDialogs animation:YES];
+        [weakSelf showMore:SearchSectionDialogs animation:YES];
     }];
     
     self.contactsLoadMoreItem = [[SearchLoadMoreItem alloc] init];
     [self.contactsLoadMoreItem setClickBlock:^{
-        [strongSelf showMore:SearchSectionContacts animation:YES];
+        [weakSelf showMore:SearchSectionContacts animation:YES];
     }];
     
     self.usersLoadMoreItem = [[SearchLoadMoreItem alloc] init];
     [self.usersLoadMoreItem setClickBlock:^{
-        [strongSelf showMore:SearchSectionUsers animation:YES];
+        [weakSelf showMore:SearchSectionUsers animation:YES];
     }];
     
     
     self.globalUsersLoadMoreItem = [[SearchLoadMoreItem alloc] init];
     [self.globalUsersLoadMoreItem setClickBlock:^{
-        [strongSelf showMore:SearchSectionGlobalUsers animation:YES];
+        [weakSelf showMore:SearchSectionGlobalUsers animation:YES];
     }];
     
     
     self.globalChannelsLoadMoreItem = [[SearchLoadMoreItem alloc] init];
     [self.globalChannelsLoadMoreItem setClickBlock:^{
-        [strongSelf showMore:SearchSectionChannels animation:YES];
+        [weakSelf showMore:SearchSectionChannels animation:YES];
     }];
     
     
     self.messagesLoadMoreItem = [[SearchLoadMoreItem alloc] init];
     [self.messagesLoadMoreItem setClickBlock:^{
-        [strongSelf showMore:SearchSectionMessages animation:YES];
+        [weakSelf showMore:SearchSectionMessages animation:YES];
     }];
     
     self.messagesLoaderItem = [[SearchLoaderItem alloc] init];
@@ -168,7 +168,7 @@ typedef enum {
     self.noResultsView = [[TMView alloc] initWithFrame:self.view.bounds];
     [self.noResultsView setDrawBlock:^{
         [DIALOG_BORDER_COLOR set];
-        NSRectFill(NSMakeRect(strongSelf.view.bounds.size.width - DIALOG_BORDER_WIDTH, 0, DIALOG_BORDER_WIDTH, strongSelf.view.bounds.size.height));
+        NSRectFill(NSMakeRect(weakSelf.view.bounds.size.width - DIALOG_BORDER_WIDTH, 0, DIALOG_BORDER_WIDTH, weakSelf.view.bounds.size.height));
     }];
     
     [self.noResultsView setAutoresizesSubviews:YES];

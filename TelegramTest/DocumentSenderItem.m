@@ -216,23 +216,23 @@
     
     
     
-    weakify();
+    weak();
     self.uploader = [[UploadOperation alloc] init];
     [self.uploader setUploadComplete:^(UploadOperation *uploader, id input) {
-        strongSelf.inputFile = input;
-        strongSelf.isFileUploaded = YES;
-        [strongSelf sendMessage];
+        weakSelf.inputFile = input;
+        weakSelf.isFileUploaded = YES;
+        [weakSelf sendMessage];
     }];
     [self.uploader setUploadProgress:^(UploadOperation *operation, NSUInteger current, NSUInteger total) {
-        strongSelf.progress = (float)current/ (float)total * 100.0f;
+        weakSelf.progress = (float)current/ (float)total * 100.0f;
     }];
     
     [self.uploader setUploadTypingNeed:^(UploadOperation *operation) {
-        [TGSendTypingManager addAction:[TL_sendMessageUploadDocumentAction createWithProgress:strongSelf.progress] forConversation:strongSelf.conversation];
+        [TGSendTypingManager addAction:[TL_sendMessageUploadDocumentAction createWithProgress:weakSelf.progress] forConversation:weakSelf.conversation];
     }];
     
     [self.uploader setUploadStarted:^(UploadOperation *operation, NSData *data) {
-        [TGSendTypingManager addAction:[TL_sendMessageUploadDocumentAction createWithProgress:strongSelf.progress] forConversation:strongSelf.conversation];
+        [TGSendTypingManager addAction:[TL_sendMessageUploadDocumentAction createWithProgress:weakSelf.progress] forConversation:weakSelf.conversation];
     }];
     
     
@@ -247,9 +247,9 @@
         
         [self.uploaderThumb setFileData:size.bytes];
         [self.uploaderThumb setUploadComplete:^(UploadOperation *tu, id inputThumb) {
-            strongSelf.thumbFile = inputThumb;
-            strongSelf.isThumbUploaded = YES;
-            [strongSelf sendMessage];
+            weakSelf.thumbFile = inputThumb;
+            weakSelf.isThumbUploaded = YES;
+            [weakSelf sendMessage];
         }];
         [self.uploaderThumb ready:UploadImageType];
         

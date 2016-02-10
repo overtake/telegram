@@ -86,8 +86,10 @@
     
     self.uploader = [[UploadOperation alloc] init];
     
-    weakify();
+    weak();
     [self.uploader setUploadComplete:^(UploadOperation *video, id input) {
+        
+        strongWeak();
         
         __block BOOL isFirstSend = [input isKindOfClass:[TLInputFile class]];
         __block id media = nil;
@@ -192,15 +194,15 @@
     
     
     [self.uploader setUploadProgress:^(UploadOperation *operation, NSUInteger current, NSUInteger total) {
-        strongSelf.progress =VIDEO_COMPRESSED_PROGRESS + (((float)current/(float)total) * (100.0f - VIDEO_COMPRESSED_PROGRESS));
+        weakSelf.progress =VIDEO_COMPRESSED_PROGRESS + (((float)current/(float)total) * (100.0f - VIDEO_COMPRESSED_PROGRESS));
     }];
     
     [self.uploader setUploadTypingNeed:^(UploadOperation *operation) {
-        [TGSendTypingManager addAction:[TL_sendMessageUploadVideoAction createWithProgress:strongSelf.progress] forConversation:strongSelf.conversation];
+        [TGSendTypingManager addAction:[TL_sendMessageUploadVideoAction createWithProgress:weakSelf.progress] forConversation:weakSelf.conversation];
     }];
     
     [self.uploader setUploadStarted:^(UploadOperation *operation, NSData *data) {
-        [TGSendTypingManager addAction:[TL_sendMessageUploadVideoAction createWithProgress:strongSelf.progress] forConversation:strongSelf.conversation];
+        [TGSendTypingManager addAction:[TL_sendMessageUploadVideoAction createWithProgress:weakSelf.progress] forConversation:weakSelf.conversation];
     }];
     
     

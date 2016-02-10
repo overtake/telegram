@@ -129,11 +129,11 @@
     
     [topView addSubview:self.topButton];
     
-    weakify();
+    weak();
     
     
     [self.topButton addBlock:^(BTRControlEvents events) {
-        [strongSelf showComposeMenu];
+        [weakSelf showComposeMenu];
         
     } forControlEvents:BTRControlEventClick];
     
@@ -162,11 +162,11 @@
    
     if(!self.menuPopover.isShown) {
         NSRect rect = self.topButton.bounds;
-        weakify();
+        weak();
         
         
         [self.menuPopover setDidCloseBlock:^(TMMenuPopover *popover) {
-            [strongSelf.topButton setSelected:NO];
+            [weakSelf.topButton setSelected:NO];
         }];
         [self.menuPopover showRelativeToRect:rect ofView:self.topButton preferredEdge:CGRectMinYEdge];
     }

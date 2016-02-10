@@ -748,15 +748,8 @@ static BOOL dragAction = NO;
         [self deallocHeader];
     }
 
-    
-  //  [self.containerView setBackgroundColor:[NSColor redColor]];
-    
     [self.containerView setFrame:NSMakeRect(item.isForwadedMessage ? item.containerOffsetForward : item.containerOffset, item.isHeaderMessage ? item.isForwadedMessage ? 4 : 4 : item.isForwadedMessage ? 4 : roundf((item.viewSize.height - item.blockSize.height)/2), NSWidth(self.frame) - 160, item.blockSize.height)];
-    
-  //  [self.containerView removeAllSubviews];
-    
-  //  [self.layer setBackgroundColor:NSColorFromRGB(arc4random() % 16000000).CGColor];
-        
+
     
     if([item isReplyMessage])
     {
@@ -829,7 +822,7 @@ static BOOL dragAction = NO;
         
         [self addSubview:_shareImageView];
         [_shareImageView setAutoresizingMask:NSViewMinXMargin];
-       // [_shareImageView setFrameOrigin:NSMakePoint(NSMinX(_rightView.frame) + NSWidth(_shareImageView.frame) + NSMaxX(_dateLayer.frame), NSMinY(_rightView.frame) - NSHeight(_shareImageView.frame))];
+
         
     } else {
         [_shareImageView removeFromSuperview];
@@ -869,8 +862,6 @@ static int offsetEditable = 30;
          [self deallocSelectButton];
     }
     
-    
-    
      [_shareImageView setHidden:editable];
     
     if(self.isEditable == editable && animation)
@@ -891,8 +882,6 @@ static int offsetEditable = 30;
         
         return;
     }
-    
-    
     
     [self setRightLayerToEditablePosition:!editable];
     
@@ -973,6 +962,8 @@ static int offsetEditable = 30;
 }
 
 - (void)updateCellState {
+    
+    [self.progressView setAlphaValue:1.0];
     
     MessageTableItem *item =(MessageTableItem *)self.item;
     
@@ -1055,12 +1046,13 @@ static int offsetEditable = 30;
             
             strongWeak();
             
-            
-            
             [[ASQueue mainQueue] dispatchOnQueue:^{
                 
                 if(strongSelf == weakSelf) {
                     [weakSelf downloadProgressHandler:item];
+                    
+                    [[NSAnimationContext currentContext] setDuration:0.1];
+                    [[weakSelf.progressView animator] setAlphaValue:0.0];
                     
                     dispatch_after_seconds(0.2, ^{
                         [weakSelf.item doAfterDownload];
