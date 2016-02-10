@@ -3663,7 +3663,7 @@ static NSTextAttachment *headerMediaIcon() {
 - (void)addReplayMessage:(TL_localMessage *)message animated:(BOOL)animated {
     
     
-    if(!message.conversation.type == DialogTypeChat || message.conversation.encryptedChat.encryptedParams.layer >= 45) {
+    if(message.conversation.type != DialogTypeSecretChat || message.conversation.encryptedChat.encryptedParams.layer >= 45) {
         if(message.peer_id == _conversation.peer_id)  {
             [[Storage yap] readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
                 

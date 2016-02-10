@@ -204,11 +204,7 @@ static NSCache *cItems;
     NSMutableAttributedString *header = [[NSMutableAttributedString alloc] init];
     
     [header appendString:name withColor:nameColor];
-    
-    //    if(self.message.from_id == 0) {
-    //        [header appendAttributedString:[NSAttributedString attributedStringWithAttachment:channelIconAttachment()]];
-    //    }
-    
+
     [header setFont:TGSystemMediumFont(13) forRange:header.range];
     
     [header addAttribute:NSLinkAttributeName value:[TMInAppLinks peerProfile:self.message.from_id == 0 ? self.message.peer : [TL_peerUser createWithUser_id:self.message.from_id]] range:header.range];
@@ -355,7 +351,6 @@ static NSTextAttachment *channelIconAttachment() {
     @try {
         if(message.class == [TL_localMessage class] || message.class == [TL_localMessage_old32 class] || message.class == [TL_localMessage_old34 class] || message.class == [TL_localMessage_old44 class] || message.class == [TL_destructMessage class] || message.class == [TL_destructMessage45 class]) {
             
-            
             if((message.media == nil || [message.media isKindOfClass:[TL_messageMediaEmpty class]]) || [message.media isMemberOfClass:[TL_messageMediaWebPage class]]) {
                 
                 objectReturn = [[MessageTableItemText alloc] initWithObject:message];
@@ -389,7 +384,7 @@ static NSTextAttachment *channelIconAttachment() {
                     objectReturn = [[MessageTableItemAudioDocument alloc] initWithObject:message];
                 } else if([document isSticker]) {
                     objectReturn = [[MessageTableItemSticker alloc] initWithObject:message];
-                } else if(audioAttr.isVoice) {
+                } else if((audioAttr && audioAttr.isVoice) || [message.media.document.mime_type isEqualToString:@"audio/ogg"]) {
                     objectReturn = [[MessageTableItemAudio alloc] initWithObject:message];
                 } else {
                     objectReturn = [[MessageTableItemDocument alloc] initWithObject:message];
@@ -427,7 +422,6 @@ static NSTextAttachment *channelIconAttachment() {
                     }
                     
                 }
-                
                 
                 if(!objectReturn) {
                     message.message = @"This message is not supported on your version of Telegram. Update the app to view: https://telegram.org/dl/osx";
@@ -573,9 +567,6 @@ static NSTextAttachment *channelIconAttachment() {
     
 }
 
-
-
-
 -(id)identifier {
     return @(self.message.n_id);
 }
@@ -587,7 +578,6 @@ static NSTextAttachment *channelIconAttachment() {
 
 - (void)startDownload:(BOOL)cancel force:(BOOL)force {
 
-    
     DownloadItem *downloadItem = self.downloadItem;
     
     if(!downloadItem) {
@@ -597,7 +587,6 @@ static NSTextAttachment *channelIconAttachment() {
     if((downloadItem.downloadState == DownloadStateCanceled || downloadItem.downloadState == DownloadStateWaitingStart) && (force || self.autoStart)) {
         [downloadItem start];
     }
-    
     
 }
 

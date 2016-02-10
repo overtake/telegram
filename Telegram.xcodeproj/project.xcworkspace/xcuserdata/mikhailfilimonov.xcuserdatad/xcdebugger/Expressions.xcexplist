@@ -3340,6 +3340,14 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "-[MessageTableCell defaultMenuItems]:MessageTableCell.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.item.message">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "__33-[PhoneChangeController loadView]_block_invoke_2:PhoneChangeController.m">
       </ContextState>
       <ContextState
