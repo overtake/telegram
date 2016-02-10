@@ -200,7 +200,7 @@ NSDictionary *non_documents_mime_types() {
     
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        res = @{@"video/mp4":[TL_documentAttributeAnimated create],@"image/gif":@(0),@"webp:image/webp":@(0)};
+        res = @{@"video/mp4":[TL_documentAttributeAnimated create],@"image/gif":@(0),@"webp:image/webp":@(0),@"audio/ogg":[TL_documentAttributeAudio class]};
     });
     
     return res;
