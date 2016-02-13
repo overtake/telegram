@@ -103,11 +103,6 @@
 -(id)initWithObject:(id)object {
     if(self = [super initWithObject:object]) {
         
-        self.noSelectTitlePoint = NSMakePoint(55, 26);
-        self.noSelectLastSeenPoint = NSMakePoint(55, 8);
-        self.noSelectAvatarPoint = NSMakePoint(11, roundf( (50 - 36) / 2));
-        
-        self.rightBorderMargin = 16;
         
     }
     
@@ -173,15 +168,12 @@
 
 -(void)drawRect:(NSRect)dirtyRect {
     
-    NSPoint point = [self rowItem].noSelectTitlePoint;
-    
+
     if(self.isSelected) {
         [BLUE_COLOR_SELECT setFill];
         NSRectFill(NSMakeRect(0, 0, self.bounds.size.width, self.bounds.size.height));
     } else {
-        [LIGHT_GRAY_BORDER_COLOR setFill];
-        
-        NSRectFill(NSMakeRect(point.x+2, 0, NSWidth(self.frame) - point.x, 1));
+        [super drawRect:dirtyRect];
     }
 	
    

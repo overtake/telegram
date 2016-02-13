@@ -84,6 +84,7 @@
         [self.progressView setImage:image_LoadCancelWhiteIcon() forState:TMLoaderViewStateDownloading];
         [self.progressView setImage:image_LoadCancelWhiteIcon() forState:TMLoaderViewStateUploading];
         
+        [self.progressView setFrameSize:NSMakeSize(NSWidth(self.playerButton.frame) - 4, NSWidth(self.playerButton.frame) - 4)];
         
         [self setProgressStyle:TMCircularProgressLightStyle];
         [self.progressView setProgressColor:[NSColor whiteColor]];

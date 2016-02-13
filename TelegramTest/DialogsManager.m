@@ -104,7 +104,7 @@
     
     [ASQueue dispatchOnStageQueue:^{
         
-        if([chat isKindOfClass:[TL_channel class]] || [chat isKindOfClass:[TL_channel_old43 class]] || [chat isKindOfClass:[TL_channel_old45 class]]) {
+        if([chat isKindOfClass:[TL_channel class]] || [chat isKindOfClass:[TL_channel_old43 class]]) {
             dialog = [self createDialogForChannel:chat];
         } else
             dialog = [TL_conversation createWithPeer:[TL_peerChat createWithChat_id:chat.n_id] top_message:0 unread_count:0 last_message_date:0 notify_settings:nil last_marked_message:0 top_message_fake:0 last_marked_date:0 sync_message_id:0 read_inbox_max_id:0 unread_important_count:0 lastMessage:nil];

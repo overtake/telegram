@@ -252,11 +252,11 @@ static NSTextAttachment *channelVerifySelectedAttachment() {
 }
 
 -(id)inputPeer {
-    return [self isKindOfClass:[TL_channel_old45 class]] || [self isKindOfClass:[TL_channel_old43 class]]|| [self isKindOfClass:[TL_channel class]] || [self isKindOfClass:[TL_channelForbidden class]] ? [TL_inputChannel createWithChannel_id:self.n_id access_hash:self.access_hash] : ([self isKindOfClass:[TL_peerSecret class]] ? [TL_inputEncryptedChat createWithChat_id:self.n_id access_hash:self.access_hash] : nil);
+    return [self isKindOfClass:[TL_channel_old43 class]]|| [self isKindOfClass:[TL_channel class]] || [self isKindOfClass:[TL_channelForbidden class]] ? [TL_inputChannel createWithChannel_id:self.n_id access_hash:self.access_hash] : ([self isKindOfClass:[TL_peerSecret class]] ? [TL_inputEncryptedChat createWithChat_id:self.n_id access_hash:self.access_hash] : nil);
 }
 
 -(TLPeer *)peer {
-    return [self isKindOfClass:[TL_channel class]] || [self isKindOfClass:[TL_channel_old43 class]] || [self isKindOfClass:[TL_channel_old45 class]] ? [TL_peerChannel createWithChannel_id:self.n_id] : [TL_peerChat createWithChat_id:self.n_id];
+    return [self isKindOfClass:[TL_channel class]] || [self isKindOfClass:[TL_channel_old43 class]] ? [TL_peerChannel createWithChannel_id:self.n_id] : [TL_peerChat createWithChat_id:self.n_id];
 }
 
 
@@ -279,7 +279,7 @@ static NSTextAttachment *channelVerifySelectedAttachment() {
 
         
 -(BOOL)isChannel {
-    return [self isKindOfClass:[TL_channel_old45 class]] || [self isKindOfClass:[TL_channel_old43 class]] || [self isKindOfClass:[TL_channel class]] || [self isKindOfClass:[TL_channelForbidden class]];
+    return [self isKindOfClass:[TL_channel_old43 class]] || [self isKindOfClass:[TL_channel class]] || [self isKindOfClass:[TL_channelForbidden class]];
 }
 
 -(BOOL)isManager {

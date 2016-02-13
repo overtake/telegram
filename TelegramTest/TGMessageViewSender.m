@@ -92,7 +92,7 @@
                 
                 strongWeak();
                 
-                if(strongSelf != weakSelf) {
+                if(strongSelf == weakSelf) {
                     [ASQueue dispatchOnMainQueue:^{
                         
                         [items enumerateObjectsUsingBlock:^(MessageTableItem *obj, NSUInteger idx, BOOL *stop) {

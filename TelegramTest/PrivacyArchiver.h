@@ -17,7 +17,7 @@ typedef enum {
 } PrivacyAllowType;
 
 extern NSString *const kStatusTimestamp;
-
+extern NSString *const kStatusGroups;
 
 @property (nonatomic,strong) NSArray *allowUsers;
 @property (nonatomic,strong) NSArray *disallowUsers;

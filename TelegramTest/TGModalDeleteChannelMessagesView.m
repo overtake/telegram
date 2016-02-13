@@ -12,14 +12,14 @@
 @property (nonatomic,strong) TGSettingsTableView *tableView;
 @property (nonatomic,strong) ComposeAction *action;
 
-@property (nonatomic,strong) BTRButton *ok;
-@property (nonatomic,strong) BTRButton *cancel;
 
 
 @end
 
 @implementation TGModalDeleteChannelMessagesView
 
+@synthesize ok = _ok;
+@synthesize cancel = _cancel;
 
 -(instancetype)initWithFrame:(NSRect)frameRect {
     if(self = [super initWithFrame:frameRect]) {

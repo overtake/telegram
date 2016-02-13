@@ -44,7 +44,7 @@
 @property (nonatomic,strong) DownloadEventListener *downloadEventListener;
 
 
-@property (nonatomic,strong) NSImageView *shareImageView;
+@property (nonatomic,strong) BTRButton *shareButton;
 
 @property (nonatomic,strong) TGModalForwardView *forwardModalView;
 
@@ -96,9 +96,7 @@
         
         
     
-        
-        
-        if(![self isKindOfClass:[MessageTableCellTextView class]] && ![self isKindOfClass:[MessageTableCellGeoView class]]) {
+         if(![self isKindOfClass:[MessageTableCellTextView class]] && ![self isKindOfClass:[MessageTableCellGeoView class]]) {
             _progressView = [[TMLoaderView alloc] initWithFrame:NSMakeRect(0, 0, 48, 48)];
             [self.progressView setAutoresizingMask:NSViewMaxXMargin | NSViewMaxYMargin | NSViewMinXMargin | NSViewMinYMargin];
             [self.progressView addTarget:self selector:@selector(checkOperation)];
@@ -797,13 +795,13 @@ static BOOL dragAction = NO;
     
     if(item.message.isChannelMessage && item.message.from_id == 0) {
         
-        if(!_shareImageView) {
-            _shareImageView = imageViewWithImage(image_ChannelShare());
-            
+        if(!_shareButton) {
+            _shareButton = [[BTRButton alloc] initWithFrame:NSMakeRect(0, 0, image_ChannelShare().size.width , image_ChannelShare().size.height )];
+            [_shareButton setCursor:[NSCursor pointingHandCursor] forControlState:BTRControlStateHover];
+            [_shareButton setImage:image_ChannelShare() forControlState:BTRControlStateNormal];
             weak();
             
-            [_shareImageView setCallback:^{
-                
+            [_shareButton addBlock:^(BTRControlEvents events) {
                 [weakSelf.forwardModalView close:NO];
                 weakSelf.forwardModalView = nil;
                 
@@ -811,22 +809,21 @@ static BOOL dragAction = NO;
                 
                 [weakSelf.messagesViewController setSelectedMessage:weakSelf.item selected:YES];
                 
-                 weakSelf.forwardModalView.messagesViewController = weakSelf.messagesViewController;
+                weakSelf.forwardModalView.messagesViewController = weakSelf.messagesViewController;
                 
                 [weakSelf.forwardModalView show:weakSelf.window animated:YES];
-                
-                
-            }];
+
+            } forControlEvents:BTRControlEventClick ];
         }
         
         
-        [self addSubview:_shareImageView];
-        [_shareImageView setAutoresizingMask:NSViewMinXMargin];
+        [self addSubview:_shareButton];
+        [_shareButton setAutoresizingMask:NSViewMinXMargin];
 
         
     } else {
-        [_shareImageView removeFromSuperview];
-        _shareImageView = nil;
+        [_shareButton removeFromSuperview];
+        _shareButton = nil;
     }
     
 
@@ -849,9 +846,10 @@ static int offsetEditable = 30;
     [self.rightView setFrameOrigin:position];
     
     if(!editable)
-        [_shareImageView setFrameOrigin:NSMakePoint(NSMinX(_rightView.frame) + NSWidth(_shareImageView.frame) + NSWidth(_dateLayer.frame) + 35, NSMinY(_rightView.frame) - NSHeight(_shareImageView.frame) - 5)];
+        [_shareButton setFrameOrigin:NSMakePoint(NSMinX(_rightView.frame) + NSWidth(_shareButton.frame) + NSWidth(_dateLayer.frame) + 35, NSMinY(_rightView.frame) - NSHeight(_shareButton.frame) - 5)];
     
-    [_shareImageView setHidden:editable];
+
+    [_shareButton setHidden:editable];
 }
 
 - (void)setEditable:(BOOL)editable animation:(BOOL)animation {
@@ -862,7 +860,11 @@ static int offsetEditable = 30;
          [self deallocSelectButton];
     }
     
-     [_shareImageView setHidden:editable];
+    [[NSAnimationContext currentContext] setTimingFunction:[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut]];
+    [[NSAnimationContext currentContext] setDuration:0.2];
+    [animation ? [_shareButton animator] : _shareButton setAlphaValue:editable ? 0.0f : 1.0f];
+    
+    
     
     if(self.isEditable == editable && animation)
         return;
@@ -1046,16 +1048,15 @@ static int offsetEditable = 30;
             
             strongWeak();
             
+            [strongSelf.item doAfterDownload];
+            
             [[ASQueue mainQueue] dispatchOnQueue:^{
                 
                 if(strongSelf == weakSelf) {
                     [weakSelf downloadProgressHandler:item];
                     
-                    [[NSAnimationContext currentContext] setDuration:0.1];
-                    [[weakSelf.progressView animator] setAlphaValue:0.0];
-                    
                     dispatch_after_seconds(0.2, ^{
-                        [weakSelf.item doAfterDownload];
+                     
                         [weakSelf updateCellState];
                         [weakSelf doAfterDownload];
                         [weakSelf.progressView setCurrentProgress:0];

@@ -11,13 +11,14 @@
 @implementation PrivacyArchiver
 
 NSString *const kStatusTimestamp = @"TL_privacyKeyStatusTimestamp";
-
+NSString *const kStatusGroups = @"TL_privacyKeyChatInvite";
 -(id)initWithType:(PrivacyAllowType)type allowUsers:(NSArray *)allowUsers disallowUsers:(NSArray *)disallowUsers privacyType:(NSString *)privacyType {
     if(self = [super init]) {
         _allowUsers = allowUsers;
         _disallowUsers = disallowUsers;
         _allowType = type;
         _privacyType = privacyType;
+        
     }
     
     return self;

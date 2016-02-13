@@ -14,8 +14,7 @@
 
 @property (nonatomic,strong) TMView *animationContainerView;
 
-@property (nonatomic,strong) BTRButton *ok;
-@property (nonatomic,strong) BTRButton *cancel;
+
 @end
 
 @implementation TGModalView
@@ -43,7 +42,7 @@
     _ok.layer.backgroundColor = [NSColor whiteColor].CGColor;
     
     [_ok setTitleColor:LINK_COLOR forControlState:BTRControlStateNormal];
-    
+    [_ok setTitleFont:TGSystemFont(15) forControlState:BTRControlStateNormal];
     [_ok setTitle:NSLocalizedString(@"OK", nil) forControlState:BTRControlStateNormal];
     
     [_ok addBlock:^(BTRControlEvents events) {
@@ -62,7 +61,7 @@
     _cancel.layer.backgroundColor = [NSColor whiteColor].CGColor;
     
     [_cancel setTitleColor:LINK_COLOR forControlState:BTRControlStateNormal];
-    
+    [_cancel setTitleFont:TGSystemFont(15) forControlState:BTRControlStateNormal];
     [_cancel setTitle:NSLocalizedString(@"Cancel", nil) forControlState:BTRControlStateNormal];
     
     [_cancel addBlock:^(BTRControlEvents events) {

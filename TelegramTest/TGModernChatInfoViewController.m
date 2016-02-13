@@ -14,7 +14,7 @@
 #import "ComposeActionInfoProfileBehavior.h"
 #import "MessagesUtils.h"
 #import "TGUserContainerRowItem.h"
-#import "TGUserContainerView.h"
+#import "TGObjectContainerView.h"
 #import "TGProfileHeaderRowView.h"
 #import "TGModernUserViewController.h"
 #import "ComposeActionAddGroupMembersBehavior.h"
@@ -140,9 +140,9 @@
         TMRowView *view = [rowView.subviews firstObject];
         
         TMRowItem *item = _tableView.list[row];
-        if([view isKindOfClass:[TGUserContainerView class]]) {
+        if([view isKindOfClass:[TGObjectContainerView class]]) {
             
-            TGUserContainerView *v = (TGUserContainerView *) view;
+            TGObjectContainerView *v = (TGObjectContainerView *) view;
             
             [v setEditable:item.isEditable animated:YES];
             
@@ -303,7 +303,7 @@
         [user setStateback:^id(TGGeneralRowItem *item) {
             
             
-            BOOL canRemoveUser = weakSelf.chat.isAdmins_enabled ? (obj.user_id != [UsersManager currentUserId] && (weakSelf.chat.isAdmin || weakSelf.chat.isCreator) && ![obj isKindOfClass:[TL_chatParticipantCreator class]]) : (obj.user_id != [UsersManager currentUserId] && obj.inviter_id == [UsersManager currentUserId]);
+            BOOL canRemoveUser = weakSelf.chat.isAdmins_enabled ? (obj.user_id != [UsersManager currentUserId] && ((weakSelf.chat.isAdmin && ![obj isKindOfClass:[TL_chatParticipantAdmin class]]) || weakSelf.chat.isCreator) && ![obj isKindOfClass:[TL_chatParticipantCreator class]]) : (obj.user_id != [UsersManager currentUserId] && obj.inviter_id == [UsersManager currentUserId]);
             
             return @(canRemoveUser);
             
@@ -452,7 +452,7 @@
     int upgradeCount = maxChatUsers()+1;
     
     
-    if(self.participantsRange.length >= upgradeCount && _chat.isCreator && ACCEPT_FEATURE) {
+    if(self.participantsRange.length >= upgradeCount && _chat.isCreator) {
         
        [_tableView addItem:[[TGGeneralRowItem alloc] initWithHeight:20] tableRedraw:YES];
         

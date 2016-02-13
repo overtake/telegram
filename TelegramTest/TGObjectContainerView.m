@@ -6,10 +6,10 @@
 //  Copyright (c) 2015 keepcoder. All rights reserved.
 //
 
-#import "TGUserContainerView.h"
+#import "TGObjectContainerView.h"
 #import "TGUserContainerRowItem.h"
 #import "ITSwitch.h"
-@interface TGUserContainerView ()
+@interface TGObjectContainerView ()
 
 @property (nonatomic,strong) TMView *avatarContainerView;
 
@@ -24,17 +24,17 @@
 
 @property (nonatomic,strong) NSImageView *deleteMenuImageView;
 
+@property (nonatomic,strong) BTRButton *selectView;
+
 @end
 
-@implementation TGUserContainerView
+@implementation TGObjectContainerView
 
 - (id)initWithFrame:(NSRect)frame {
     self = [super initWithFrame:frame];
     if (self) {
         
-        self.avatarImageView = [TMAvatarImageView standartMessageTableAvatar];
-        
-        
+        _avatarImageView = [TMAvatarImageView standartMessageTableAvatar];
         _avatarContainerView = [[TMView alloc] initWithFrame:NSMakeRect(30, 0, NSWidth(_avatarImageView.frame), NSHeight(_avatarImageView.frame))];
         
         [_avatarContainerView addSubview:_avatarImageView];
@@ -44,7 +44,6 @@
         self.nameTextField = [[TMNameTextField alloc] init];
         [self.nameTextField setSelector:@selector(chatInfoTitle)];
         
-        
         self.statusTextField = [[TMStatusTextField alloc] init];
         [self.statusTextField setSelector:@selector(statusForGroupInfo)];
         [self addSubview:self.statusTextField];
@@ -52,10 +51,8 @@
         [_statusTextField setFont:TGSystemFont(12)];
         [_statusTextField setTextColor:GRAY_TEXT_COLOR];
         
-        
         _selectImageView = imageViewWithImage(image_UsernameCheck());
         _switchView = [[ITSwitch alloc] initWithFrame:NSMakeRect(0, 0, 36, 20)];
-        
         
         [self addSubview:_selectImageView];
         [self addSubview:_switchView];
@@ -67,6 +64,20 @@
         _deleteMenuImageView = imageViewWithImage(image_ModernMenuDeleteIcon());
         
         [self addSubview:_deleteMenuImageView];
+        
+//        weak();
+//        
+//        [self.selectView setBackgroundImage:image_ComposeCheck() forControlState:BTRControlStateNormal];
+//        [self.selectView setBackgroundImage:image_ComposeCheck() forControlState:BTRControlStateHover];
+//        [self.selectView setBackgroundImage:image_ComposeCheck() forControlState:BTRControlStateHighlighted];
+//        [self.selectView setBackgroundImage:image_ComposeCheckActive() forControlState:BTRControlStateSelected];
+//        [self.selectView addBlock:^(BTRControlEvents events) {
+//            [weakSelf mouseDown:[NSApp currentEvent]];
+//        } forControlEvents:BTRControlEventLeftClick];
+//        
+//        [self addSubview:self.selectView];
+//        
+//        [self.selectView setHidden:YES];
     }
     return self;
 }
@@ -99,9 +110,7 @@
     
     if(item.stateback) {
         [_switchView setOn:[item.stateback(item) boolValue]];
-        
         [_switchView setHidden:item.type != SettingsRowItemTypeSwitch];
-        
         [_selectImageView setHidden:item.type != SettingsRowItemTypeSelected || ![item.stateback(item) boolValue]];
     }
     
@@ -120,13 +129,9 @@
     } else {
         [super mouseDown:theEvent];
     }
-
 }
 
-
 -(void)updateFramesWithAnimation:(BOOL)animated {
-    
-    
     
     id statusF = animated ? [_statusTextField animator] : _statusTextField;
     id nameF = animated ? [_nameTextField animator] : _nameTextField;
@@ -138,7 +143,6 @@
     
     [statusF setFrameOrigin:NSMakePoint(self.xOffset + NSWidth(_avatarContainerView.frame) + 10, NSHeight(self.frame)/2 - NSHeight(self.statusTextField.frame) )];
     [nameF setFrameOrigin:NSMakePoint(self.xOffset + NSWidth(_avatarContainerView.frame) + 10, NSHeight(self.frame)/2 )];
-    
     
     [avatarF setFrameOrigin:NSMakePoint(self.xOffset, NSMinY(_avatarContainerView.frame))];
     

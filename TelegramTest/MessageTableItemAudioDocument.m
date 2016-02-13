@@ -19,7 +19,6 @@
     if(self) {
         self.blockSize = NSMakeSize(200, 60);
        
-        
        _fileSize = [[NSString sizeToTransformedValuePretty:self.message.media.document.size] trim];
        
         if([self isset])

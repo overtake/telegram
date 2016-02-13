@@ -197,8 +197,6 @@
         _waveformView.progressColor = NSColorFromRGB(0x4ca2e0);
     }
     
-    
-    
     if(self.item.state == AudioStateWaitPlaying) {
         _waveformView.defaultColor = !self.item.message.readedContent ? NSColorFromRGB(0x4ca2e0) : DIALOG_BORDER_COLOR;
         _waveformView.progressColor = NSColorFromRGB(0x3dd16e);

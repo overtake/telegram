@@ -12,7 +12,7 @@
 #import "TGSettingsTableView.h"
 #import "TGUserContainerRowItem.h"
 #import "ComposeActionAddGroupMembersBehavior.h"
-#import "TGUserContainerView.h"
+#import "TGObjectContainerView.h"
 #import "TGModernUserViewController.h"
 
 @interface ComposeChannelParticipantsViewControllerView : TMView
@@ -97,9 +97,9 @@
         
         TMRowItem *item = weakSelf.tableView.list[row];
         
-        if([view isKindOfClass:[TGUserContainerView class]]) {
+        if([view isKindOfClass:[TGObjectContainerView class]]) {
             
-            TGUserContainerView *v = (TGUserContainerView *) view;
+            TGObjectContainerView *v = (TGObjectContainerView *) view;
             
             [v setEditable:item.isEditable animated:YES];
             

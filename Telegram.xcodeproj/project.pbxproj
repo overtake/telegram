@@ -365,6 +365,7 @@
 		C24136381C64BFED00130D2E /* TL_documentAttributeAudio+Extension.m in Sources */ = {isa = PBXBuildFile; fileRef = C24136371C64BFED00130D2E /* TL_documentAttributeAudio+Extension.m */; };
 		C24136441C679DCC00130D2E /* TGWaveformView.m in Sources */ = {isa = PBXBuildFile; fileRef = C24136431C679DCC00130D2E /* TGWaveformView.m */; };
 		C24136471C68A3A600130D2E /* TGAudioWaveform.m in Sources */ = {isa = PBXBuildFile; fileRef = C24136461C68A3A600130D2E /* TGAudioWaveform.m */; };
+		C241364A1C6DEA2900130D2E /* TGCirclularCounter.m in Sources */ = {isa = PBXBuildFile; fileRef = C24136491C6DEA2900130D2E /* TGCirclularCounter.m */; };
 		C24435811A1D1B9900F9BB38 /* PrivacyArchiver.m in Sources */ = {isa = PBXBuildFile; fileRef = C24435801A1D1B9900F9BB38 /* PrivacyArchiver.m */; };
 		C24435881A1E018100F9BB38 /* ComposeActionCustomBehavior.m in Sources */ = {isa = PBXBuildFile; fileRef = C24435871A1E018100F9BB38 /* ComposeActionCustomBehavior.m */; };
 		C244358B1A1E159900F9BB38 /* PrivacyUserListController.m in Sources */ = {isa = PBXBuildFile; fileRef = C244358A1A1E159900F9BB38 /* PrivacyUserListController.m */; };
@@ -614,7 +615,7 @@
 		C2B0DF771BA98E7C0023982C /* TL_localEmptyMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = C2B0DF761BA98E7C0023982C /* TL_localEmptyMessage.m */; };
 		C2B0DF831BA9B7840023982C /* ComposeActionAddChannelModeratorBehavior.m in Sources */ = {isa = PBXBuildFile; fileRef = C2B0DF821BA9B7840023982C /* ComposeActionAddChannelModeratorBehavior.m */; };
 		C2B0DF861BA9C59B0023982C /* ComposeConfirmModeratorViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C2B0DF851BA9C59B0023982C /* ComposeConfirmModeratorViewController.m */; };
-		C2B0DF891BA9C6EC0023982C /* TGUserContainerView.m in Sources */ = {isa = PBXBuildFile; fileRef = C2B0DF881BA9C6EC0023982C /* TGUserContainerView.m */; };
+		C2B0DF891BA9C6EC0023982C /* TGObjectContainerView.m in Sources */ = {isa = PBXBuildFile; fileRef = C2B0DF881BA9C6EC0023982C /* TGObjectContainerView.m */; };
 		C2B0DF8C1BA9CE290023982C /* TGUserContainerRowItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C2B0DF8B1BA9CE290023982C /* TGUserContainerRowItem.m */; };
 		C2B0DF8F1BAAD9330023982C /* ComposeManagmentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C2B0DF8E1BAAD9330023982C /* ComposeManagmentViewController.m */; };
 		C2B0DF921BAAFD2E0023982C /* ComposeChannelParticipantsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C2B0DF911BAAFD2E0023982C /* ComposeChannelParticipantsViewController.m */; };
@@ -1792,6 +1793,8 @@
 		C24136431C679DCC00130D2E /* TGWaveformView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGWaveformView.m; sourceTree = "<group>"; };
 		C24136451C68A3A600130D2E /* TGAudioWaveform.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGAudioWaveform.h; sourceTree = "<group>"; };
 		C24136461C68A3A600130D2E /* TGAudioWaveform.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGAudioWaveform.m; sourceTree = "<group>"; };
+		C24136481C6DEA2900130D2E /* TGCirclularCounter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGCirclularCounter.h; sourceTree = "<group>"; };
+		C24136491C6DEA2900130D2E /* TGCirclularCounter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGCirclularCounter.m; sourceTree = "<group>"; };
 		C244357F1A1D1B9900F9BB38 /* PrivacyArchiver.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PrivacyArchiver.h; sourceTree = "<group>"; };
 		C24435801A1D1B9900F9BB38 /* PrivacyArchiver.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PrivacyArchiver.m; sourceTree = "<group>"; };
 		C24435861A1E018100F9BB38 /* ComposeActionCustomBehavior.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ComposeActionCustomBehavior.h; sourceTree = "<group>"; };
@@ -2303,8 +2306,8 @@
 		C2B0DF821BA9B7840023982C /* ComposeActionAddChannelModeratorBehavior.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ComposeActionAddChannelModeratorBehavior.m; sourceTree = "<group>"; };
 		C2B0DF841BA9C59B0023982C /* ComposeConfirmModeratorViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ComposeConfirmModeratorViewController.h; sourceTree = "<group>"; };
 		C2B0DF851BA9C59B0023982C /* ComposeConfirmModeratorViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ComposeConfirmModeratorViewController.m; sourceTree = "<group>"; };
-		C2B0DF871BA9C6EC0023982C /* TGUserContainerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGUserContainerView.h; sourceTree = "<group>"; };
-		C2B0DF881BA9C6EC0023982C /* TGUserContainerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGUserContainerView.m; sourceTree = "<group>"; };
+		C2B0DF871BA9C6EC0023982C /* TGObjectContainerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGObjectContainerView.h; sourceTree = "<group>"; };
+		C2B0DF881BA9C6EC0023982C /* TGObjectContainerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGObjectContainerView.m; sourceTree = "<group>"; };
 		C2B0DF8A1BA9CE290023982C /* TGUserContainerRowItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGUserContainerRowItem.h; sourceTree = "<group>"; };
 		C2B0DF8B1BA9CE290023982C /* TGUserContainerRowItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGUserContainerRowItem.m; sourceTree = "<group>"; };
 		C2B0DF8D1BAAD9330023982C /* ComposeManagmentViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ComposeManagmentViewController.h; sourceTree = "<group>"; };
@@ -3622,6 +3625,8 @@
 				C2CBF6D61AFBDB6F006BF90A /* TGLinearProgressView.m */,
 				C2CE53C11BE295A000BBEF5F /* TGGeneralSearchRowView.h */,
 				C2CE53C21BE295A000BBEF5F /* TGGeneralSearchRowView.m */,
+				C24136481C6DEA2900130D2E /* TGCirclularCounter.h */,
+				C24136491C6DEA2900130D2E /* TGCirclularCounter.m */,
 			);
 			name = elements;
 			sourceTree = "<group>";
@@ -4565,8 +4570,8 @@
 			children = (
 				C271524F19B5C8AC00841C8A /* TMProgressModalView.h */,
 				C271525019B5C8AC00841C8A /* TMProgressModalView.m */,
-				C2B0DF871BA9C6EC0023982C /* TGUserContainerView.h */,
-				C2B0DF881BA9C6EC0023982C /* TGUserContainerView.m */,
+				C2B0DF871BA9C6EC0023982C /* TGObjectContainerView.h */,
+				C2B0DF881BA9C6EC0023982C /* TGObjectContainerView.m */,
 				C2B0DF8A1BA9CE290023982C /* TGUserContainerRowItem.h */,
 				C2B0DF8B1BA9CE290023982C /* TGUserContainerRowItem.m */,
 			);
@@ -6894,6 +6899,7 @@
 				C2FF82E81B9F28DA00DE2455 /* ChannelHistoryController.m in Sources */,
 				C2531F721965DE5F00F7D7A2 /* ConnectionStatusViewControllerView.m in Sources */,
 				C2C2491F19EBC699006BB1AB /* BlockedUsersViewController.m in Sources */,
+				C241364A1C6DEA2900130D2E /* TGCirclularCounter.m in Sources */,
 				C24136471C68A3A600130D2E /* TGAudioWaveform.m in Sources */,
 				C2D51C381B25F5A8009327C0 /* TGStickerPackEmojiController.m in Sources */,
 				C2D8263F1B7110AB00434D37 /* TGConversation.m in Sources */,
@@ -6972,7 +6978,7 @@
 				C2A2B4261BD01FC20083DA8A /* TGHeadChatPanel.m in Sources */,
 				C2CE53FB1BF0AE3800BBEF5F /* CommonMediaHistoryFilter.m in Sources */,
 				C26E80301B7E106B003CC483 /* TGRecentSearchTableView.m in Sources */,
-				C2B0DF891BA9C6EC0023982C /* TGUserContainerView.m in Sources */,
+				C2B0DF891BA9C6EC0023982C /* TGObjectContainerView.m in Sources */,
 				0AB43BB518D89C5700FB805A /* TMSearchImage.m in Sources */,
 				CEC8B88A1832108A00283E53 /* Reachability.m in Sources */,
 				C2ED75321C2A8AF200002ACF /* TGContextRowItem.m in Sources */,

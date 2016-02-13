@@ -156,7 +156,7 @@
     self.total_size = (int) (self.fileData ? self.fileData.length : fileSize(self.filePath));
     
     
-    if(self.filePath) {
+    if(self.filePath && self.total_size < 10*1024*1024) {
         self.fileMD5Hash = fileMD5(self.filePath);
     }
     

@@ -14,7 +14,7 @@
 #import "ComposeActionInfoProfileBehavior.h"
 #import "MessagesUtils.h"
 #import "TGUserContainerRowItem.h"
-#import "TGUserContainerView.h"
+#import "TGObjectContainerView.h"
 #import "TGProfileHeaderRowView.h"
 #import "TGModernUserViewController.h"
 #import "ComposeActionAddGroupMembersBehavior.h"
@@ -116,7 +116,6 @@
     if(_chat.isMegagroup) {
         _chat.chatFull.participants = [TL_chatParticipants createWithChat_id:_chat.n_id participants:[NSMutableArray array] version:0];
     }
-    
     _composeActionManagment = [[ComposeAction alloc] initWithBehaviorClass:[ComposeActionBehavior class] filter:@[] object:chat];;
     
     [self setAction:[[ComposeAction alloc] initWithBehaviorClass:[ComposeActionInfoProfileBehavior class] filter:nil object:_conversation]];
@@ -137,11 +136,9 @@
         
         [SharedManager proccessGlobalResponse:response];
         
-        
         [_chat.chatFull.participants.participants addObjectsFromArray:response.participants];
         
         [self drawParticipants:response.participants];
-        
         
         if(response.participants.count > 0)
             [self addScrollEvent];
@@ -298,6 +295,27 @@
             [_tableView addItem:[[TGGeneralRowItem alloc] initWithHeight:20] tableRedraw:YES];
         }
         
+        if(_chat.isManager || _chat.isCreator || _chat.isInvites_enabled) {
+            addMembersItem = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeNone callback:^(TGGeneralRowItem *item) {
+                
+                NSMutableArray *filter = [[NSMutableArray alloc] init];
+                
+                [weakSelf.chat.chatFull.participants.participants enumerateObjectsUsingBlock:^(TLChatParticipant *obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                    
+                    [filter addObject:@(obj.user_id)];
+                    
+                    ComposePickerViewController *viewController = [[ComposePickerViewController alloc] initWithFrame:NSZeroRect];
+                    
+                    [viewController setAction:[[ComposeAction alloc]initWithBehaviorClass:[ComposeActionAddGroupMembersBehavior class] filter:filter object:weakSelf.chat.chatFull reservedObjects:@[weakSelf.chat]]];
+                    
+                    [weakSelf.navigationViewController pushViewController:viewController animated:YES];
+                    
+                }];
+                
+            } description:NSLocalizedString(@"Group.AddMembers", nil) height:42 stateback:nil];
+        }
+       
+        
         
         if(_chat.isManager || _chat.isCreator) {
             adminsItem = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeNext callback:^(TGGeneralRowItem *item) {
@@ -325,23 +343,7 @@
             } description:NSLocalizedString(@"Channel.Members", nil) subdesc:[NSString stringWithFormat:@"%d",_chat.chatFull.participants_count] height:42 stateback:nil];
             
             
-            addMembersItem = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeNone callback:^(TGGeneralRowItem *item) {
-                
-                NSMutableArray *filter = [[NSMutableArray alloc] init];
-                
-                [weakSelf.chat.chatFull.participants.participants enumerateObjectsUsingBlock:^(TLChatParticipant *obj, NSUInteger idx, BOOL * _Nonnull stop) {
-                    
-                    [filter addObject:@(obj.user_id)];
-                    
-                    ComposePickerViewController *viewController = [[ComposePickerViewController alloc] initWithFrame:NSZeroRect];
-                    
-                    [viewController setAction:[[ComposeAction alloc]initWithBehaviorClass:[ComposeActionAddGroupMembersBehavior class] filter:filter object:weakSelf.chat.chatFull reservedObjects:@[weakSelf.chat]]];
-                    
-                    [weakSelf.navigationViewController pushViewController:viewController animated:YES];
-                    
-                }];
-                
-            } description:NSLocalizedString(@"Group.AddMembers", nil) height:42 stateback:nil];
+           
             
             
             inviteViaLink = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeNone callback:^(TGGeneralRowItem *item) {
@@ -406,6 +408,10 @@
             [_tableView addItem:blacklistItem tableRedraw:YES];
         
         if(adminsItem || membersItem || blacklistItem) {
+            [_tableView addItem:[[TGGeneralRowItem alloc] initWithHeight:20] tableRedraw:YES];
+        }
+        
+        if(_chat.isInvites_enabled && !_chat.isManager) {
             [_tableView addItem:[[TGGeneralRowItem alloc] initWithHeight:20] tableRedraw:YES];
         }
         

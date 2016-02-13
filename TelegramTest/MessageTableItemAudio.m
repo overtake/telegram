@@ -118,19 +118,18 @@
      return isPathExists([self path]) && [FileUtils checkNormalizedSize:self.path checksize:[self size]];
 }
 
-
-
 -(void)doAfterDownload {
     [super doAfterDownload];
     
     if(_waveform.count == 0 && self.isset) {
         TGAudioWaveform *waveform = [FileUtils waveformForPath:self.path];
         
-        self.message.media.document.audioAttr.waveform = [waveform bitstream];
+        @synchronized(self) {
+           self.message.media.document.audioAttr.waveform = [waveform bitstream];
+            _waveform = self.message.media.document.audioAttr.arrayWaveform;
+            [self.message save:NO];
+        }
         
-        [self.message save:NO];
-        
-        _waveform = self.message.media.document.audioAttr.arrayWaveform;
     }
 }
 

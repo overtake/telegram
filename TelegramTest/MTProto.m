@@ -2,7 +2,7 @@
 //  MTProto.m
 //  Telegram
 //
-//  Auto created by Mikhail Filimonov on 09.02.16.
+//  Auto created by Mikhail Filimonov on 13.02.16.
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -4624,139 +4624,6 @@
    super.username = username;
                 
     if(super.username == nil)  { super.flags&= ~ (1 << 6) ;} else { super.flags|= (1 << 6); }
-}
-        
-@end
-
-@implementation TL_channel_old45
-+(TL_channel_old45*)createWithFlags:(int)flags         n_id:(int)n_id access_hash:(long)access_hash title:(NSString*)title username:(NSString*)username photo:(TLChatPhoto*)photo date:(int)date version:(int)version restriction_reason:(NSString*)restriction_reason {
-	TL_channel_old45* obj = [[TL_channel_old45 alloc] init];
-	obj.flags = flags;
-	
-	
-	
-	
-	
-	
-	
-	
-	obj.n_id = n_id;
-	obj.access_hash = access_hash;
-	obj.title = title;
-	obj.username = username;
-	obj.photo = photo;
-	obj.date = date;
-	obj.version = version;
-	obj.restriction_reason = restriction_reason;
-	return obj;
-}
--(void)serialize:(SerializedData*)stream {
-	[stream writeInt:self.flags];
-	
-	
-	
-	
-	
-	
-	
-	
-	[stream writeInt:self.n_id];
-	[stream writeLong:self.access_hash];
-	[stream writeString:self.title];
-	if(self.flags & (1 << 6)) {[stream writeString:self.username];}
-	[ClassStore TLSerialize:self.photo stream:stream];
-	[stream writeInt:self.date];
-	[stream writeInt:self.version];
-	if(self.flags & (1 << 9)) {[stream writeString:self.restriction_reason];}
-}
--(void)unserialize:(SerializedData*)stream {
-	super.flags = [stream readInt];
-	
-	
-	
-	
-	
-	
-	
-	
-	super.n_id = [stream readInt];
-	super.access_hash = [stream readLong];
-	super.title = [stream readString];
-	if(self.flags & (1 << 6)) {super.username = [stream readString];}
-	self.photo = [ClassStore TLDeserialize:stream];
-	super.date = [stream readInt];
-	super.version = [stream readInt];
-	if(self.flags & (1 << 9)) {super.restriction_reason = [stream readString];}
-}
-        
--(TL_channel_old45 *)copy {
-    
-    TL_channel_old45 *objc = [[TL_channel_old45 alloc] init];
-    
-    objc.flags = self.flags;
-    
-    
-    
-    
-    
-    
-    
-    
-    objc.n_id = self.n_id;
-    objc.access_hash = self.access_hash;
-    objc.title = self.title;
-    objc.username = self.username;
-    objc.photo = [self.photo copy];
-    objc.date = self.date;
-    objc.version = self.version;
-    objc.restriction_reason = self.restriction_reason;
-    
-    return objc;
-}
-        
-
-    
--(id)initWithCoder:(NSCoder *)aDecoder {
-
-    if((self = [ClassStore deserialize:[aDecoder decodeObjectForKey:@"data"]])) {
-        
-    }
-    
-    return self;
-}
-        
--(void)encodeWithCoder:(NSCoder *)aCoder {
-    [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
-}
-        
-            
--(BOOL)isCreator {return (self.flags & (1 << 0)) > 0;}
-                        
--(BOOL)isKicked {return (self.flags & (1 << 1)) > 0;}
-                        
--(BOOL)isEditor {return (self.flags & (1 << 3)) > 0;}
-                        
--(BOOL)isModerator {return (self.flags & (1 << 4)) > 0;}
-                        
--(BOOL)isBroadcast {return (self.flags & (1 << 5)) > 0;}
-                        
--(BOOL)isVerified {return (self.flags & (1 << 7)) > 0;}
-                        
--(BOOL)isMegagroup {return (self.flags & (1 << 8)) > 0;}
-                        
--(BOOL)isRestricted {return (self.flags & (1 << 9)) > 0;}
-                        
--(void)setUsername:(NSString*)username
-{
-   super.username = username;
-                
-    if(super.username == nil)  { super.flags&= ~ (1 << 6) ;} else { super.flags|= (1 << 6); }
-}            
--(void)setRestriction_reason:(NSString*)restriction_reason
-{
-   super.restriction_reason = restriction_reason;
-                
-    if(super.restriction_reason == nil)  { super.flags&= ~ (1 << 9) ;} else { super.flags|= (1 << 9); }
 }
         
 @end
@@ -18543,6 +18410,55 @@
     TL_documentAttributeAudio_old31 *objc = [[TL_documentAttributeAudio_old31 alloc] init];
     
     objc.duration = self.duration;
+    
+    return objc;
+}
+        
+
+    
+-(id)initWithCoder:(NSCoder *)aDecoder {
+
+    if((self = [ClassStore deserialize:[aDecoder decodeObjectForKey:@"data"]])) {
+        
+    }
+    
+    return self;
+}
+        
+-(void)encodeWithCoder:(NSCoder *)aCoder {
+    [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
+}
+        
+
+        
+@end
+
+@implementation TL_documentAttributeAudio_old45
++(TL_documentAttributeAudio_old45*)createWithDuration:(int)duration title:(NSString*)title performer:(NSString*)performer {
+	TL_documentAttributeAudio_old45* obj = [[TL_documentAttributeAudio_old45 alloc] init];
+	obj.duration = duration;
+	obj.title = title;
+	obj.performer = performer;
+	return obj;
+}
+-(void)serialize:(SerializedData*)stream {
+	[stream writeInt:self.duration];
+	[stream writeString:self.title];
+	[stream writeString:self.performer];
+}
+-(void)unserialize:(SerializedData*)stream {
+	super.duration = [stream readInt];
+	super.title = [stream readString];
+	super.performer = [stream readString];
+}
+        
+-(TL_documentAttributeAudio_old45 *)copy {
+    
+    TL_documentAttributeAudio_old45 *objc = [[TL_documentAttributeAudio_old45 alloc] init];
+    
+    objc.duration = self.duration;
+    objc.title = self.title;
+    objc.performer = self.performer;
     
     return objc;
 }

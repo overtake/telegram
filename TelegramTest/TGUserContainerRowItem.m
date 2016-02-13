@@ -19,7 +19,7 @@
 }
 
 -(Class)viewClass {
-    return NSClassFromString(@"TGUserContainerView");
+    return NSClassFromString(@"TGObjectContainerView");
 }
 
 @end

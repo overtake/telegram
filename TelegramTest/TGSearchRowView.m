@@ -13,7 +13,7 @@
 -(id)initWithFrame:(NSRect)frameRect {
     if(self = [super initWithFrame:frameRect]) {
         
-        _searchField = [[TMSearchTextField alloc] initWithFrame:NSMakeRect(10, 10, NSWidth(frameRect) - 20, 30)];
+        _searchField = [[TMSearchTextField alloc] initWithFrame:NSMakeRect(18, 10, NSWidth(frameRect) - 20, 30)];
         
         
         [self addSubview:_searchField];

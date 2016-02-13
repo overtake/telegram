@@ -7,7 +7,14 @@
 //
 
 #import "TMView.h"
-@interface TGUserContainerView : TMRowView
+@interface TGObjectContainerView : TMRowView
+
+
+typedef enum {
+    TGObjectContainerViewTypeEditable,
+    TGObjectContainerViewSelectable
+} TGObjectContainerViewType;
+
 
 -(void)setEditable:(BOOL)editable animated:(BOOL)animated;
 

@@ -10,8 +10,6 @@
 #import "NSString+Extended.h"
 #import "TMSearchTextField.h"
 #import "TGSearchRowView.h"
-#import "SelectChatItem.h"
-#import "SelectChatRowView.h"
 
 @interface SelectUsersTableView ()<TMSearchTextFieldDelegate>
 @property (nonatomic,strong) NSMutableArray *items;
@@ -116,7 +114,7 @@ static NSCache *cacheItems;
     
     [chats enumerateObjectsUsingBlock:^(TL_conversation * obj, NSUInteger idx, BOOL *stop) {
         
-        [items addObject:[[SelectChatItem alloc] initWithObject:obj.chat]];
+        [items addObject:[[SelectUserItem alloc] initWithObject:obj.chat]];
         
     }];
     
@@ -144,12 +142,10 @@ static NSCache *cacheItems;
     
     [accepted enumerateObjectsUsingBlock:^(TL_conversation * obj, NSUInteger idx, BOOL *stop) {
         
-        if(obj.chat) {
-            [items addObject:[[SelectChatItem alloc] initWithObject:obj.chat]];
-        } else {
-            [items addObject:[[SelectUserItem alloc] initWithObject:obj.user]];
+        if(obj.chat || obj.user) {
+            [items addObject:[[SelectUserItem alloc] initWithObject:obj.chat ? obj.chat : obj.user]];
         }
-        
+
         
     }];
     
@@ -167,7 +163,7 @@ static NSCache *cacheItems;
     self.searchItem = [[TGSearchRowItem alloc] init];
     
     self.searchView = [[TGSearchRowView alloc] initWithFrame:NSMakeRect(0, 0, NSWidth(self.bounds), self.searchHeight)];
-    
+    self.searchView.xOffset = 18;
     [self insert:self.searchItem atIndex:0 tableRedraw:NO];
     
     [self insert:self.items startIndex:1 tableRedraw:NO];
@@ -277,7 +273,7 @@ static NSCache *cacheItems;
         [self.selectDelegate selectTableDidChangedItem:item];
         
         if(self.multipleCallback != nil) {
-            self.multipleCallback(@[item.user]);
+            self.multipleCallback(@[item.object]);
         }
     }
 }
@@ -321,7 +317,7 @@ static NSCache *cacheItems;
 
 - (TMRowView *)viewForRow:(NSUInteger)row item:(TMRowItem *)item {
     
-    Class itemClass = [item isKindOfClass:[SelectUserItem class]] ? [SelectUserRowView class] : [SelectChatRowView class] ;
+    Class itemClass = [SelectUserRowView class];
     
     return row == 0 ? self.searchView : [self cacheViewForClass:itemClass identifier:NSStringFromClass(itemClass) withSize:NSMakeSize(NSWidth(self.frame), 50)];
 }
@@ -347,11 +343,7 @@ static NSCache *cacheItems;
     
     if(searchString.length > 0) {
         sorted = [self.items filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(SelectUserItem *evaluatedObject, NSDictionary *bindings) {
-            if([evaluatedObject isKindOfClass:[SelectChatItem class]]) {
-                return [((SelectChatItem *)evaluatedObject).chat.title searchInStringByWordsSeparated:searchString];
-            } else {
-                return [[evaluatedObject.user fullName] searchInStringByWordsSeparated:searchString];
-            }
+            return [evaluatedObject acceptSearchWithString:searchString];
         }]];
     }
     
@@ -376,8 +368,8 @@ static NSCache *cacheItems;
     
     
     if(searchString.length > 0) {
-        sorted = [self.items filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(SelectChatItem *evaluatedObject, NSDictionary *bindings) {
-            return [evaluatedObject.chat.title searchInStringByWordsSeparated:searchString];
+        sorted = [self.items filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(SelectUserItem *evaluatedObject, NSDictionary *bindings) {
+            return [evaluatedObject acceptSearchWithString:searchString];
         }]];
     }
     

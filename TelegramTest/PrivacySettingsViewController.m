@@ -26,6 +26,9 @@
 @property (nonatomic,strong) ComposeAction *allowUsersAction;
 @property (nonatomic,strong) ComposeAction *disallowUsersAction;
 
+@property (nonatomic,strong) GeneralSettingsBlockHeaderItem *firstDescription;
+@property (nonatomic,strong) GeneralSettingsBlockHeaderItem *lastDescription;
+
 @end
 
 @implementation PrivacySettingsViewController
@@ -83,19 +86,19 @@
         [weakSelf.navigationViewController goBackWithAnimation:YES];
     };
     
-    ((ComposeActionCustomBehavior *)self.allowUsersAction.behavior).customDoneTitle = @"Done";
+    ((ComposeActionCustomBehavior *)self.allowUsersAction.behavior).customDoneTitle = NSLocalizedString(@"Done", nil);
     ((ComposeActionCustomBehavior *)self.allowUsersAction.behavior).customCenterTitle = NSLocalizedString(@"PrivacySettingsController.AlwaysShare", nil);
     
-    ((ComposeActionCustomBehavior *)self.disallowUsersAction.behavior).customDoneTitle = @"Done";
+    ((ComposeActionCustomBehavior *)self.disallowUsersAction.behavior).customDoneTitle = NSLocalizedString(@"Done", nil);
     ((ComposeActionCustomBehavior *)self.disallowUsersAction.behavior).customCenterTitle = NSLocalizedString(@"PrivacySettingsController.NeverShare", nil);
     
-    [self setCenterBarViewText:NSLocalizedString(@"PrivacySettingsController.Header", nil)];
+    
     
     
     TMView *rightView = [[TMView alloc] init];
     
     
-    self.doneButton = [TMTextButton standartUserProfileNavigationButtonWithTitle:@"Done"];
+    self.doneButton = [TMTextButton standartUserProfileNavigationButtonWithTitle:NSLocalizedString(@"Done", nil)];
     
     [self.doneButton setDisableColor:GRAY_BORDER_COLOR];
     
@@ -118,6 +121,29 @@
     
     
     [self.view addSubview:self.tableView.containerView];
+    
+}
+
+
+
+-(void)setPrivacy:(PrivacyArchiver *)privacy {
+    _privacy = privacy;
+    
+    [self setCenterBarViewText:NSLocalizedString(privacy.privacyType, nil)];
+    
+    [self view];
+    
+    [self reload];
+    
+    self.changedPrivacy = [_privacy copy];
+}
+
+
+-(void)reload {
+    
+    [self.tableView removeAllItems:YES];
+    
+    weak();
     
     GeneralSettingsRowItem *everbody = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeSelected callback:^(TGGeneralRowItem *item) {
         
@@ -155,6 +181,13 @@
     [self.tableView insert:nobody atIndex:self.tableView.list.count tableRedraw:NO];
     
     
+    NSString *first_desc = [NSString stringWithFormat:@"PRIVACY_FIRST_%@",self.privacy.privacyType];
+    
+    _firstDescription = [[GeneralSettingsBlockHeaderItem alloc] initWithString:NSLocalizedString(first_desc, nil) height:50 flipped:YES];
+    
+    [self.tableView addItem:_firstDescription tableRedraw:NO];
+    
+    
     self.allowSelector = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeNext callback:^(TGGeneralRowItem *item) {
         
         if(weakSelf.changedPrivacy.allowUsers.count == 0) {
@@ -180,24 +213,16 @@
             } title:NSLocalizedString(@"PrivacySettingsController.NeverShare", nil)];
         }
         
-       
+        
         
     } description:NSLocalizedString(@"PrivacySettingsController.NeverShareWith", nil) subdesc:@"2 users" height:42 stateback:nil];
     
     [self.tableView insert:nobody atIndex:self.tableView.list.count tableRedraw:NO];
     
+    
+    
+    
     [self.tableView reloadData];
-    
-}
-
-
-
--(void)setPrivacy:(PrivacyArchiver *)privacy {
-    _privacy = privacy;
-    
-    [self view];
-    
-    self.changedPrivacy = [_privacy copy];
 }
 
 -(void)savePrivacy {
@@ -206,8 +231,6 @@
     
     if([self.changedPrivacy.privacyType isEqualToString:kStatusTimestamp])
         pk = [TL_inputPrivacyKeyStatusTimestamp create];
-    
-    
     
     [self showModalProgress];
     
@@ -256,6 +279,15 @@
         default:
             break;
     }
+    
+    [self.tableView removeItem:_lastDescription tableRedraw:NO];
+    
+    NSString *last_desc = [NSString stringWithFormat:@"PRIVACY_LAST_%@",self.privacy.privacyType];
+    
+    _lastDescription = [[GeneralSettingsBlockHeaderItem alloc] initWithString:NSLocalizedString(last_desc, nil) height:50 flipped:YES];
+    
+    [self.tableView addItem:_lastDescription tableRedraw:NO];
+
     
     [self.allowSelector setSubdesc:self.changedPrivacy.allowUsers.count == 0 ? NSLocalizedString(@"PrivacySettingsController.AddUsers", nil) : [NSString stringWithFormat:self.changedPrivacy.allowUsers.count == 1 ? NSLocalizedString(@"PrivacySettingsController.UserCount", nil) : NSLocalizedString(@"PrivacySettingsController.UsersCount", nil),self.changedPrivacy.allowUsers.count]];
     

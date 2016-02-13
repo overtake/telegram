@@ -16,4 +16,7 @@
 - (NSSize)size;
 - (void)sizeToFit;
 
+
++ (NSSize)sizeWithString:(NSString *)string font:(NSFont *)font;
+
 @end

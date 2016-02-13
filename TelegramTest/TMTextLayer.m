@@ -32,16 +32,18 @@
 }
 
 - (NSSize)size {
-    if(!self->_textFont) {
+    return [TMTextLayer sizeWithString:self.string font:self->_textFont];
+}
+
++ (NSSize)sizeWithString:(NSString *)string font:(NSFont *)font {
+    if(!font) {
         ELog(@"set text font");
         return NSZeroSize;
     }
     
-    NSAttributedString *attributedString = [[NSAttributedString alloc] initWithString:self.string attributes:@{NSFontAttributeName: self->_textFont}];
+    NSAttributedString *attributedString = [[NSAttributedString alloc] initWithString:string attributes:@{NSFontAttributeName: font}];
     
-    
-    
-    NSSize size = [attributedString size];
+     NSSize size = [attributedString size];
     
     size.width = ceil(size.width);
     size.height = ceil(size.height);

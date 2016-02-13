@@ -32,10 +32,7 @@
        
         
         self.progress = [[TGProgressIndicator alloc] initWithFrame:NSMakeRect(0, 0, 20, 20)];
-        
         [self.progress setAutoresizingMask:NSViewMaxXMargin | NSViewMinXMargin];
-        
-       
         
         [self.progress setStyle:NSProgressIndicatorSpinningStyle];
         
@@ -114,7 +111,6 @@ static NSMutableDictionary *cache;
     
     return;
     
-    
     TL_contactBlocked *contact = notification.userInfo[KEY_USER];
     
     if(_conversation.user.n_id != contact.user_id || _conversation.user.isBot)
@@ -184,17 +180,14 @@ static NSMutableDictionary *cache;
     [Notification addObserver:self selector:@selector(didChangeUserType:) name:[Notification notificationForUser:conversation.user action:USER_CHANGE_TYPE]];
     
     
-    
-    
     TLUser *user = conversation.user;
     
     MessagesTopInfoAction newAction = MessagesTopInfoActionNone;
     
-    if(user.type == TLUserTypeRequest)
+    if(!user.isContact && user.phone.length > 0)
         newAction = MessagesTopInfoActionAddContact;
-    
-    if(user.type == TLUserTypeForeign) {
-        newAction = MessagesTopInfoActionNone;//MessagesTopInfoActionShareContact;
+   else if(!user.isContact && user.phone.length == 0) {
+        newAction = MessagesTopInfoActionNone;;
     }
 
     if(user.isBot) {
@@ -232,7 +225,6 @@ static NSMutableDictionary *cache;
     if(action == MessagesTopInfoActionNone) {
         return;
     }
-    
     
     NSMutableAttributedString *string = [[NSMutableAttributedString alloc] init];
     

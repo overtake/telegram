@@ -63,8 +63,51 @@
     weak();
     
     if(chat.isCreator) {
-        GeneralSettingsRowItem *addModerator = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeNext callback:^(TGGeneralRowItem *item) {
+        
+        
+        if(chat.isMegagroup) {
+            GeneralSettingsBlockHeaderItem *changePrivacyDescription = [[GeneralSettingsBlockHeaderItem alloc] initWithString:NSLocalizedString(@"SuperGroup.WhocanAddNewMembers", nil) height:42 flipped:NO];
+            [_tableView addItem:changePrivacyDescription tableRedraw:NO];
             
+            void (^request)(BOOL enabled) = ^(BOOL enabled) {
+              
+                [weakSelf showModalProgress];
+                
+                [RPCRequest sendRequest:[TLAPI_channels_toggleInvites createWithChannel:chat.inputPeer enabled:enabled] successHandler:^(id request, id response) {
+                    
+                    [weakSelf hideModalProgressWithSuccess];
+                    
+                    [weakSelf.tableView reloadData];
+                    
+                } errorHandler:^(id request, RpcError *error) {
+                    [weakSelf hideModalProgress];
+                }];
+                
+            };
+            
+            GeneralSettingsRowItem *allMembers = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeSelected callback:^(TGGeneralRowItem *item) {
+                
+                request(YES);
+                
+                
+            } description:NSLocalizedString(@"SuperGroup.InviteSettings.AllMembers", nil) height:42 stateback:^id(TGGeneralRowItem *item) {
+                return @(chat.isInvites_enabled);
+            }];
+            
+            GeneralSettingsRowItem *onlyAdmins = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeSelected callback:^(TGGeneralRowItem *item) {
+                
+                request(NO);
+                
+            } description:NSLocalizedString(@"SuperGroup.InviteSettings.OnlyAdmins", nil) height:42 stateback:^id(TGGeneralRowItem *item) {
+                return @(!chat.isInvites_enabled);
+            }];
+            
+            
+            [_tableView addItem:allMembers tableRedraw:NO];
+            [_tableView addItem:onlyAdmins tableRedraw:NO];
+        }
+        
+        GeneralSettingsRowItem *addModerator = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeNext callback:^(TGGeneralRowItem *item) {
             
             ComposePickerViewController *viewController = [[ComposePickerViewController alloc] initWithFrame:weakSelf.view.bounds];
             
@@ -77,6 +120,7 @@
         [_tableView addItem:addModerator tableRedraw:NO];
         
         GeneralSettingsBlockHeaderItem *description = [[GeneralSettingsBlockHeaderItem alloc] initWithString:chat.isMegagroup ? NSLocalizedString(@"Group.AddModeratorDescription", nil) : NSLocalizedString(@"Channel.AddModeratorDescription", nil) height:62 flipped:YES];
+        
         
         [_tableView addItem:description tableRedraw:NO];
 
@@ -134,7 +178,7 @@
                         
                     });
                     
-                } else {
+                } else if(chat.isCreator) {
                     
                     ComposeAction *action = [[ComposeAction alloc] initWithBehaviorClass:[ComposeActionAddChannelModeratorBehavior class] filter:@[] object:chat reservedObjects:@[@(YES),obj]];
                     

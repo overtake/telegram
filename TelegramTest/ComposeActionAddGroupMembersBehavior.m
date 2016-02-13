@@ -61,7 +61,7 @@
     
     TLChat *chat = [[ChatsManager sharedManager] find:self.chat.n_id];
     
-    if([chat isKindOfClass:[TL_channel class]] || [self.chat isKindOfClass:[TL_channel_old43 class]] || [self.chat isKindOfClass:[TL_channel_old45 class]]) {
+    if([chat isKindOfClass:[TL_channel class]] || [self.chat isKindOfClass:[TL_channel_old43 class]]) {
         
         NSMutableArray *array = [[NSMutableArray alloc] init];
         for(TLUser* item in self.action.result.multiObjects) {
@@ -72,7 +72,6 @@
         }
         
         [RPCRequest sendRequest:[TLAPI_channels_inviteToChannel createWithChannel:chat.inputPeer users:array] successHandler:^(id request, id response) {
-            
             
             [self.action.currentViewController.navigationViewController goBackWithAnimation:YES];
             

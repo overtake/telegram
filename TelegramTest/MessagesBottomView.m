@@ -545,6 +545,7 @@
     
     self.recordHelpLayer = [TMTextLayer layer];
     [self.recordHelpLayer disableActions];
+    self.recordHelpLayer.wrapped = YES;
     self.recordHelpLayer.contentsScale = self.normalView.layer.contentsScale;
     [self.recordHelpLayer setTextFont:TGSystemFont(14)];
     [self.normalView.layer addSublayer:self.recordHelpLayer];
@@ -559,7 +560,6 @@
     [self.inputMessageTextField textDidChange:nil];
     
     [self.normalView addSubview:self.inputMessageTextField.containerView];
-    
     
     self.smileButton = [[BTRButton alloc] initWithFrame:NSMakeRect(self.inputMessageTextField.containerView.frame.size.width - 30, 7, image_smile().size.width, image_smile().size.height)];
     [self.smileButton setAutoresizingMask:NSViewMinXMargin | NSViewMinYMargin];
@@ -581,8 +581,6 @@
 
     [self.inputMessageTextField.containerView addSubview:self.botKeyboardButton];
     
-    
-    
     self.botCommandButton = [[BTRButton alloc] initWithFrame:NSMakeRect(self.inputMessageTextField.containerView.frame.size.width - 90, 7, image_botCommand().size.width, image_botCommand().size.height)];
     [self.botCommandButton setAutoresizingMask:NSViewMinXMargin | NSViewMinYMargin];
     [self.botCommandButton.layer disableActions];
@@ -592,10 +590,6 @@
 
     
     [self.inputMessageTextField.containerView addSubview:self.botCommandButton];
-    
-    
-    
-    
     
     self.channelAdminButton = [[BTRButton alloc] initWithFrame:NSMakeRect(self.inputMessageTextField.containerView.frame.size.width - 90, 7, image_ChannelMessageAsAdmin().size.width, image_ChannelMessageAsAdmin().size.height)];
     [self.channelAdminButton setAutoresizingMask:NSViewMinXMargin | NSViewMinYMargin];
@@ -794,14 +788,23 @@ static RBLPopover *popover;
 
 - (void)setRecordHelperStringValue:(NSString *)string {
     self.recordHelpLayer.string = string;
-    [self.recordHelpLayer sizeToFit];
+   
+    int minX = NSMaxX(self.recordDurationLayer.frame);
+    int maxX = NSMinX(self.recordAudioButton.frame);
     
+    NSSize size = self.recordHelpLayer.size;
     
-    [self.recordHelpLayer setFrameOrigin:CGPointMake( roundf( (self.bounds.size.width - self.recordHelpLayer.bounds.size.width) / 2.f ), roundf((self.bounds.size.height-self.recordHelpLayer.bounds.size.height)/2))];
+    int dif = maxX - minX;
+    
+    [self.recordHelpLayer setFrameSize:NSMakeSize(dif - 20,size.width > dif-20 ? size.height + 18 : size.height)];
+    [self.recordHelpLayer setFrameOrigin:CGPointMake( minX + 10 , roundf((60-self.recordHelpLayer.bounds.size.height)/2))];
 }
 
 - (void)startRecord:(BTRButton *)button {
     weak();
+    
+    if(!self.dialog.canSendMessage)
+        return;
 
     [self.recordDurationLayer setString:@"00:00"];
     [self.recordDurationLayer setHidden:NO];

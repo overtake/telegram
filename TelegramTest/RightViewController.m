@@ -709,7 +709,7 @@
 - (void)showChatInfoPage:(TLChat *)chat {
     
     
-    if([chat isKindOfClass:[TL_channel class]] || [chat isKindOfClass:[TL_channel_old43 class]] || [chat isKindOfClass:[TL_channel_old45 class]]) {
+    if([chat isKindOfClass:[TL_channel class]] || [chat isKindOfClass:[TL_channel_old43 class]]) {
         [self showChannelInfoPage:chat];
         return;
     }
@@ -840,6 +840,18 @@
     [self.navigationViewController pushViewController:self.lastSeenViewController animated:self.navigationViewController.currentController != [self noDialogsSelectedViewController]];
     
    
+    
+}
+
+- (void)showChatInviteController {
+    if(self.navigationViewController.currentController == self.lastSeenViewController)
+        return;
+    
+    [self hideModalView:YES animation:NO];
+    
+    [self.lastSeenViewController setPrivacy:[PrivacyArchiver privacyForType:kStatusGroups]];
+    
+    [self.navigationViewController pushViewController:self.lastSeenViewController animated:self.navigationViewController.currentController != [self noDialogsSelectedViewController]];
     
 }
 

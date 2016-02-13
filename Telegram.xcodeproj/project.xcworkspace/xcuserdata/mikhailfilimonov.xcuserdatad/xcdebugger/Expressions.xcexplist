@@ -1506,6 +1506,17 @@
          contextName = "__42-[TGModalGifSearch searchFieldTextChange:]_block_invoke_2:TGModalGifSearch.m">
       </ContextState>
       <ContextState
+         contextName = "__40-[ComposeManagmentViewController reload]_block_invoke_2:ComposeManagmentViewController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "chat.isCreator">
+            </PersistentString>
+            <PersistentString
+               value = "chat.isMegagroup">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "__39-[ExternalGifSenderItem performRequest]_block_invoke_2:ExternalGifSenderItem.m">
          <PersistentStrings>
             <PersistentString
@@ -1969,6 +1980,9 @@
                value = "">
             </PersistentString>
          </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[TGWaveformView setWaveform:]:TGWaveformView.m">
       </ContextState>
       <ContextState
          contextName = "-[ChannelInfoHeaderView setFrameSize:]:ChannelInfoHeaderView.m">
@@ -3150,6 +3164,9 @@
          contextName = "__46-[TMCollectionPageController setConversation:]_block_invoke:TMCollectionPageController.m">
       </ContextState>
       <ContextState
+         contextName = "-[DownloadDocumentItem setDownloadState:]:DownloadDocumentItem.m">
+      </ContextState>
+      <ContextState
          contextName = "-[ChatHistoryController pollingDidSaidTooLongWithTopMessage:minMsg:]:ChatHistoryController.m">
          <PersistentStrings>
             <PersistentString
@@ -3489,6 +3506,9 @@
             <PersistentString
                value = "user.n_id">
             </PersistentString>
+            <PersistentString
+               value = "user.type">
+            </PersistentString>
          </PersistentStrings>
       </ContextState>
       <ContextState
@@ -3609,6 +3629,20 @@
       </ContextState>
       <ContextState
          contextName = "__40-[ImageAttachSenderItem didEndUploading]_block_invoke156:ImageAttachSenderItem.m">
+      </ContextState>
+      <ContextState
+         contextName = "-[MessagesBottomView setRecordHelperStringValue:]:MessagesBottomView.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.recordHelpLayer.frame">
+            </PersistentString>
+            <PersistentString
+               value = "string">
+            </PersistentString>
+            <PersistentString
+               value = "maxX - minX">
+            </PersistentString>
+         </PersistentStrings>
       </ContextState>
       <ContextState
          contextName = "__42-[NewContactsManager importCloudContacts:]_block_invoke122:NewContactsManager.m">
@@ -3751,6 +3785,14 @@
          <PersistentStrings>
             <PersistentString
                value = "hole">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "__42-[SelectUsersTableView readyConversations]_block_invoke99:SelectUsersTableView.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "obj.user">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -4540,6 +4582,9 @@
       </ContextState>
       <ContextState
          contextName = "__67-[TGMessagesHintView showContextPopupWithQuery:query:conversation:]_block_invoke354:TGMessagesHintView.m">
+      </ContextState>
+      <ContextState
+         contextName = "-[MessageTableItemAudioDocument initWithObject:]:MessageTableItemAudioDocument.m">
       </ContextState>
       <ContextState
          contextName = "-[MessageTableItem viewSize]:MessageTableItem.m">
@@ -5449,6 +5494,14 @@
       </ContextState>
       <ContextState
          contextName = "__52-[ChatHistoryController notificationReceiveMessage:]_block_invoke_3:ChatHistoryController.m">
+      </ContextState>
+      <ContextState
+         contextName = "-[TGModalForwardView initialize]:TGModalForwardView.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.ok.titleLabel.frame">
+            </PersistentString>
+         </PersistentStrings>
       </ContextState>
       <ContextState
          contextName = "__69-[ChannelHistoryController request:anotherSource:sync:selectHandler:]_block_invoke_2:ChannelHistoryController.m">
