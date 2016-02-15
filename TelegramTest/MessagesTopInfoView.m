@@ -302,18 +302,25 @@ static NSMutableDictionary *cache;
             
             self.locked = YES;
             
-            [RPCRequest sendRequest:[TLAPI_messages_reportSpam createWithPeer:self.conversation.user.inputPeer] successHandler:^(id request, id response) {
+            weak();
+            
+            [RPCRequest sendRequest:[TLAPI_messages_reportSpam createWithPeer:weakSelf.conversation.user.inputPeer] successHandler:^(id request, id response) {
                 
-                [[NSUserDefaults standardUserDefaults] setBool:YES forKey:[NSString stringWithFormat:@"always_showreport1_%d",self.conversation.user.n_id]];
+                [[NSUserDefaults standardUserDefaults] setBool:YES forKey:[NSString stringWithFormat:@"always_showreport1_%d",weakSelf.conversation.user.n_id]];
                 
-                self.locked = NO;
-                self.conversation = self.conversation;
-                
+                [[BlockedUsersManager sharedManager] block:weakSelf.conversation.user.n_id completeHandler:^(BOOL response) {
+                    
+                    [[DialogsManager sharedManager] deleteDialog:weakSelf.conversation completeHandler:^{
+                        weakSelf.locked = NO;
+                        weakSelf.conversation = weakSelf.conversation;
+                    }];
+                    
+                }];
                 
                 
             } errorHandler:^(id request, RpcError *error) {
-                self.locked = NO;
-                self.conversation = self.conversation;
+                weakSelf.locked = NO;
+                weakSelf.conversation = weakSelf.conversation;
             }];
             
         }, ^{
