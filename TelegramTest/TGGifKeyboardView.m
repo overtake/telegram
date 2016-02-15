@@ -53,8 +53,14 @@
         __strong TGGifKeyboardView *strongSelf = weakSelf;
         
         if(strongSelf != nil) {
-            [strongSelf.messagesViewController sendFoundGif:[TL_messageMediaDocument createWithDocument:result.document caption:@""] forConversation:strongSelf.messagesViewController.conversation];
-           // [strongSelf.messagesViewController.bottomView closeEmoji];
+            
+            [strongSelf.messagesViewController.bottomView closeEmoji];
+            
+            dispatch_after_seconds(0.1, ^{
+                [strongSelf.messagesViewController sendFoundGif:[TL_messageMediaDocument createWithDocument:result.document caption:@""] forConversation:strongSelf.messagesViewController.conversation];
+            });
+            
+            
         }
     }];
     

@@ -141,6 +141,8 @@
     
     [self.lastSeenTextField setFrameSize:NSMakeSize(newSize.width - self.lastSeenTextField.frame.origin.x - self.xOffset - NSWidth(self.selectButton.frame) - 5, self.lastSeenTextField.frame.size.height)];
     
+    [self.selectButton setFrameOrigin:[self selectOrigin]];
+    
     [_animatedBackground setFrameSize:newSize];
 }
 

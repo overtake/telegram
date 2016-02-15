@@ -1924,6 +1924,14 @@
          contextName = "__39-[ChatAvatarImageView updateChatPhoto:]_block_invoke198:ChatAvatarImageView.m">
       </ContextState>
       <ContextState
+         contextName = "-[SelectUsersTableView filterAndAddGlobalUsers:checkContact:]:SelectUsersTableView.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.items">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "-[TMTextField placeholderView:]:TMTextField.m">
       </ContextState>
       <ContextState

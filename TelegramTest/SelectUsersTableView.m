@@ -443,7 +443,7 @@ static NSCache *cacheItems;
     [self.list enumerateObjectsUsingBlock:^(SelectUserItem *obj, NSUInteger idx, BOOL * _Nonnull stop) {
         
         if([obj isKindOfClass:[SelectUserItem class]]) {
-            if(obj.isSearchUser && !obj.isSelected) {
+            if(obj.isSearchUser && !obj.isSelected && !obj.user.isContact) {
                 [rmrf addObject:obj];
             }
         }

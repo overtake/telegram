@@ -88,7 +88,7 @@
             NSString *localizedString = NSLocalizedString(error.error_msg, nil);
             
             if([error.error_msg isEqualToString:@"USER_PRIVACY_RESTRICTED"]) {
-                localizedString = [NSString stringWithFormat:localizedString, user.first_name,NSLocalizedString(@"channels", nil), user.first_name];
+                localizedString = [NSString stringWithFormat:localizedString, user.first_name,NSLocalizedString(chat.isMegagroup ? @"groups" : @"channels", nil), user.first_name];
             }
             
             alert(appName(), localizedString);

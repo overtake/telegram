@@ -221,7 +221,7 @@
     switch (self.item.state) {
         case AudioStateWaitPlaying:
             [self.playerButton setImage:voicePlay() forControlState:BTRControlStateNormal];
-            
+            [self.waveformView setProgress:0];
             break;
             
         case AudioStatePaused:
