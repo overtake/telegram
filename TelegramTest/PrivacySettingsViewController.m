@@ -86,11 +86,7 @@
         [weakSelf.navigationViewController goBackWithAnimation:YES];
     };
     
-    ((ComposeActionCustomBehavior *)self.allowUsersAction.behavior).customDoneTitle = NSLocalizedString(@"Done", nil);
-    ((ComposeActionCustomBehavior *)self.allowUsersAction.behavior).customCenterTitle = NSLocalizedString(@"PrivacySettingsController.AlwaysShare", nil);
-    
-    ((ComposeActionCustomBehavior *)self.disallowUsersAction.behavior).customDoneTitle = NSLocalizedString(@"Done", nil);
-    ((ComposeActionCustomBehavior *)self.disallowUsersAction.behavior).customCenterTitle = NSLocalizedString(@"PrivacySettingsController.NeverShare", nil);
+   
     
     
     
@@ -131,11 +127,25 @@
     
     [self setCenterBarViewText:NSLocalizedString(privacy.privacyType, nil)];
     
-    [self view];
+    [self loadViewIfNeeded];
+    
+    NSString *allowDesc = [NSString stringWithFormat:@"PrivacySettingsController.AlwaysShare_%@",self.privacy.privacyType];
+    NSString *disallowDesc = [NSString stringWithFormat:@"PrivacySettingsController.NeverShare_%@",self.privacy.privacyType];
+    
+    
+    
+    ((ComposeActionCustomBehavior *)self.allowUsersAction.behavior).customDoneTitle = NSLocalizedString(@"Done", nil);
+    ((ComposeActionCustomBehavior *)self.allowUsersAction.behavior).customCenterTitle = NSLocalizedString(allowDesc, nil);
+    
+    ((ComposeActionCustomBehavior *)self.disallowUsersAction.behavior).customDoneTitle = NSLocalizedString(@"Done", nil);
+    ((ComposeActionCustomBehavior *)self.disallowUsersAction.behavior).customCenterTitle = NSLocalizedString(disallowDesc, nil);
     
     [self reload];
     
     self.changedPrivacy = [_privacy copy];
+    
+    
+    
 }
 
 
