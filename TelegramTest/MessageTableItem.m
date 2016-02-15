@@ -33,7 +33,7 @@
 #import "MessageTableItemMpeg.h"
 #import "NSAttributedString+Hyperlink.h"
 @interface TGItemCache : NSObject
-@property (nonatomic,strong) NSAttributedString *header;
+@property (nonatomic,strong) NSMutableAttributedString *header;
 @property (nonatomic,strong) TLUser *user;
 @end
 
@@ -106,12 +106,17 @@ static NSCache *cItems;
                 
                 if(!self.isForwadedMessage)
                 {
-                    NSMutableAttributedString *bot = [[NSMutableAttributedString alloc] init];
-                    [bot appendString: NSLocalizedString(@"ContextBot.Message.Via", nil) withColor:GRAY_TEXT_COLOR];
-                    [bot appendString:[NSString stringWithFormat:@" @%@",viaBotUserName] withColor:GRAY_TEXT_COLOR];
-                    [bot detectAndAddLinks:URLFindTypeMentions];
-                    _via_attr_string = bot;
+                    [_headerName appendString:@" "];
+                     NSRange range = [_headerName appendString:NSLocalizedString(@"ContextBot.Message.Via", nil) withColor:GRAY_TEXT_COLOR];
+                    
+                    [_headerName setFont:TGSystemFont(13) forRange:range];
+                    
+                    [_headerName appendString:[NSString stringWithFormat:@" @%@",viaBotUserName] withColor:GRAY_TEXT_COLOR];
+                    [_headerName detectAndAddLinks:URLFindTypeMentions];
+
                 }
+                
+                
                 
             }
             
@@ -128,9 +133,9 @@ static NSCache *cItems;
                 [attr setFont:TGSystemFont(13) forRange:attr.range];
                 
                 
-                if(self.isViaBot) {
-                    [attr appendString:[NSString stringWithFormat:@" %@ @%@",NSLocalizedString(@"ContextBot.Message.Via", nil),viaBotUserName] withColor:GRAY_TEXT_COLOR];
-                }
+//                if(self.isViaBot) {
+//                    [attr appendString:[NSString stringWithFormat:@" %@ @%@",NSLocalizedString(@"ContextBot.Message.Via", nil),viaBotUserName] withColor:GRAY_TEXT_COLOR];
+//                }
                 
                 [attr detectAndAddLinks:URLFindTypeMentions];
                 
@@ -185,8 +190,6 @@ static NSCache *cItems;
         cacheColorIds = [[NSMutableDictionary alloc] init];
     });
     
-    
-    
     NSColor *nameColor = LINK_COLOR;
     
     
@@ -198,8 +201,6 @@ static NSCache *cItems;
         nameColor = colors[colorMask % (sizeof(colors) / sizeof(colors[0]))];
         
     }
-    
-    
     
     NSMutableAttributedString *header = [[NSMutableAttributedString alloc] init];
     
@@ -221,10 +222,6 @@ static NSCache *cItems;
 - (void) headerStringBuilder {
     
     
-    
-    [self buildHeaderAndSaveToCache];
-    
-    
     if([self isReplyMessage])
     {
         _replyObject = [[TGReplyObject alloc] initWithReplyMessage:self.message.replyMessage fromMessage:self.message tableItem:self];
@@ -243,11 +240,23 @@ static NSCache *cItems;
             [self.forwardMessageAttributedString setLink:[TMInAppLinks peerProfile:self.message.fwd_from_id] forRange:rangeUser];
             
         }
-        [self.forwardMessageAttributedString appendString:@"  " withColor:NSColorFromRGB(0x909090)];
+        
+        [self.forwardMessageAttributedString setFont:TGSystemFont(12) forRange:self.forwardMessageAttributedString.range];
+        
+        if([self isViaBot]) {
+            [self.forwardMessageAttributedString appendString:@" "];
+            NSRange range = [self.forwardMessageAttributedString appendString:NSLocalizedString(@"ContextBot.Message.Via", nil) withColor:GRAY_TEXT_COLOR];
+            [self.forwardMessageAttributedString setFont:TGSystemFont(13) forRange:range];
+            range = [self.forwardMessageAttributedString appendString:[NSString stringWithFormat:@" @%@",_via_bot_user.username] withColor:GRAY_TEXT_COLOR];
+            [self.forwardMessageAttributedString setFont:TGSystemBoldFont(13) forRange:range];
+            [self.forwardMessageAttributedString detectAndAddLinks:URLFindTypeMentions];
+        }
+        
+         [self.forwardMessageAttributedString appendString:@"  " withColor:NSColorFromRGB(0x909090)];
     
         [self.forwardMessageAttributedString appendString:[TGDateUtils stringForLastSeen:self.message.fwd_date] withColor:NSColorFromRGB(0xbebebe)];
         
-        [self.forwardMessageAttributedString setFont:TGSystemFont(12) forRange:self.forwardMessageAttributedString.range];
+        
         [self.forwardMessageAttributedString setFont:TGSystemMediumFont(13) forRange:rangeUser];
         
         NSMutableParagraphStyle *style = [[NSMutableParagraphStyle alloc] init];
@@ -282,14 +291,14 @@ static NSTextAttachment *channelIconAttachment() {
             if(self.isForwadedMessage)
                 viewSize.height += 20;
             
-            if(self.isViaBot && !self.isForwadedMessage) {
-                viewSize.height+=16;
-                if(self.message.media != nil && ![self.message.media isKindOfClass:[TL_messageMediaWebPage class]] && ![self isReplyMessage]) {
-                    
-                    if([self.message.media isKindOfClass:[TL_messageMediaBotResult class]] && ![self.message.media.bot_result.send_message isKindOfClass:[TL_botInlineMessageText class]])
-                    viewSize.height+=6;
-                }
-            }
+//            if(self.isViaBot && !self.isForwadedMessage) {
+//                viewSize.height+=16;
+//                if(self.message.media != nil && ![self.message.media isKindOfClass:[TL_messageMediaWebPage class]] && ![self isReplyMessage]) {
+//                    
+//                    if([self.message.media isKindOfClass:[TL_messageMediaBotResult class]] && ![self.message.media.bot_result.send_message isKindOfClass:[TL_botInlineMessageText class]])
+//                    viewSize.height+=6;
+//                }
+//            }
             
             
             if(viewSize.height < 44)
@@ -438,12 +447,10 @@ static NSTextAttachment *channelIconAttachment() {
 
     }
     @catch (NSException *exception) {
-        int bp = 0;
+       
     }
     
-    if(objectReturn == nil) {
-        int bp = 0;
-    }
+
     
     return objectReturn;
 }

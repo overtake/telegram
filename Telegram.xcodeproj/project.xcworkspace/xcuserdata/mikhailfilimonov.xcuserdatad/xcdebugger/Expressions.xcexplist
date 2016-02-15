@@ -2209,6 +2209,14 @@
          contextName = "-[TMCollectionPageController loadRemote]:TMCollectionPageController.m">
       </ContextState>
       <ContextState
+         contextName = "-[StickersPanelView show:stickers:]:StickersPanelView.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "-[TGModernChatInfoViewController drawParticipants]:TGModernChatInfoViewController.m">
          <PersistentStrings>
             <PersistentString
