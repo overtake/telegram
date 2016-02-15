@@ -13,7 +13,7 @@
     SMDelayedBlockHandle handle;
 }
 @property (nonatomic,strong) CALayer *circluarLayer;
-@property (nonatomic,strong) TMTextLayer *textLayer;
+@property (nonatomic,strong) TMTextField *textLayer;
 @end
 
 @implementation TGCirclularCounter
@@ -22,11 +22,10 @@
 -(instancetype)initWithFrame:(NSRect)frameRect {
     if(self = [super initWithFrame:frameRect]) {
         _circluarLayer = [CALayer layer];
-        _textLayer = [[TMTextLayer alloc] init];
+        _textLayer = [TMTextField defaultTextField];
         _stringValue = @"0";
-        _textLayer.textFont = _textFont = TGSystemFont(15);
+        _textLayer.font = _textFont = TGSystemFont(15);
         _textLayer.textColor = _textColor = [NSColor whiteColor];
-
         _animated = YES;
         
         [self updateWithoutAnimation];
@@ -35,7 +34,7 @@
         self.wantsLayer = YES;
         
         [self.layer addSublayer:_circluarLayer];
-        [self.layer addSublayer:_textLayer];
+        [self addSubview:_textLayer];
     }
     
     return self;
@@ -59,7 +58,7 @@
 
 -(void)setTextFont:(NSFont *)textFont {
     _textFont = textFont;
-    _textLayer.textFont = textFont;
+    _textLayer.font = textFont;
     [self updateWithoutAnimation];
 }
 
@@ -74,15 +73,19 @@
 }
 
 -(void)updateWithoutAnimation {
-    [_textLayer setString:self.stringValue];
+    [_textLayer setStringValue:self.stringValue];
     [_textLayer sizeToFit];
     
-    [_circluarLayer setFrameOrigin:NSMakePoint(roundf((NSWidth(self.frame) - NSWidth(_circluarLayer.frame))/2), roundf((NSHeight(self.frame) - NSHeight(_circluarLayer.frame))/2))];
+    
     
     int max = MAX(NSWidth(_textLayer.frame),NSHeight(_textLayer.frame));
     
-    [_circluarLayer setFrameSize:NSMakeSize(max + 6, max + 6)];
+    int add = max % 2 == 0 ? 6 : 7;
+    
+    [_circluarLayer setFrameSize:NSMakeSize(max + add, max + add)];
     _circluarLayer.cornerRadius = roundf(NSWidth(_circluarLayer.frame)/2);
+    
+    [_circluarLayer setFrameOrigin:NSMakePoint(roundf((NSWidth(self.frame) - NSWidth(_circluarLayer.frame))/2), roundf((NSHeight(self.frame) - NSHeight(_circluarLayer.frame))/2))];
     
     [_textLayer setFrameOrigin:NSMakePoint(roundf((NSWidth(self.frame) - NSWidth(_textLayer.frame))/2), roundf((NSHeight(self.frame) - NSHeight(_textLayer.frame))/2))];
 }

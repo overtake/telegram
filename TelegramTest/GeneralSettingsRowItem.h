@@ -20,7 +20,7 @@
 
 @property (nonatomic,assign, getter=isEnabled) BOOL enabled;
 
-@property (nonatomic,strong,readonly,getter=description) NSString *desc;
+@property (nonatomic,strong,getter=description) NSString *desc;
 @property (nonatomic,strong) NSString *subdesc;
 
 

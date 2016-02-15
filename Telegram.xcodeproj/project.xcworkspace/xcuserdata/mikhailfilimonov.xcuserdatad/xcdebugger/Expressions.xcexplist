@@ -4949,6 +4949,14 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "-[TGCirclularCounter updateWithoutAnimation]:TGCirclularCounter.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "_textLayer.frame">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "__40-[TMCollectionPageController reloadData]_block_invoke:TMCollectionPageController.m">
       </ContextState>
       <ContextState

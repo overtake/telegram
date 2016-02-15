@@ -46,7 +46,7 @@ static NSImage *playImage() {
         [image_PlayIconWhite() drawInRect:NSMakeRect(roundf((48 - image_PlayIconWhite().size.width)/2) + 2, roundf((48 - image_PlayIconWhite().size.height)/2) , image_PlayIconWhite().size.width, image_PlayIconWhite().size.height) fromRect:NSZeroRect operation:NSCompositeHighlight fraction:1];
         [image unlockFocus];
     });
-    return image;//image_VideoPlay();
+    return image;
 }
 
 - (id)initWithFrame:(NSRect)frame

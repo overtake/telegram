@@ -37,6 +37,7 @@
 #import "FullChatManager.h"
 #import "BlockedUsersManager.h"
 #import "TGModalGifSearch.h"
+#import "TGRecordedAudioPreview.h"
 @interface MessagesBottomView()<TGImageAttachmentsControllerDelegate>
 
 @property (nonatomic, strong) TMView *actionsView;
@@ -93,6 +94,10 @@
 @property (nonatomic,strong) TLUserFull *userFull;
 @property (nonatomic,strong) TLChatFull *chatFull;
 
+
+@property (nonatomic,strong) TGRecordedAudioPreview *recordedAudioPreview;
+
+@property (nonatomic,strong) BTRButton *removeAudioRecordButton;
 
 @end
 
@@ -211,7 +216,7 @@
 - (void)setDialog:(TL_conversation *)dialog {
     self->_dialog = dialog;
     
-
+    
     
     self.botStartParam = nil;
     
@@ -260,14 +265,14 @@
     
     [self updateBotButtons];
     
-    
+   
     
     [self checkReplayMessage:YES animated:NO];
     
     [self checkFwdMessages:YES animated:NO];
     
     
-    
+    [self updateStopRecordControls];
     
     if(self.dialog.type == DialogTypeUser && self.dialog.user.isBot) {
         
@@ -614,6 +619,15 @@
     [self.inputMessageTextField.containerView addSubview:self.secretTimerButton];
     
     
+    self.removeAudioRecordButton = [[BTRButton alloc] initWithFrame:NSMakeRect(18, roundf((58-image_MessageActionDeleteActive().size.height)/2), image_MessageActionDeleteActive().size.width, image_MessageActionDeleteActive().size.height)];
+    
+    [self.removeAudioRecordButton addTarget:self action:@selector(removeAudioRecordAction:) forControlEvents:BTRControlEventMouseDownInside];
+    [self.removeAudioRecordButton setImage: image_MessageActionDeleteActive() forControlState:BTRControlStateNormal];
+    
+    
+    [self.normalView addSubview:self.removeAudioRecordButton];
+    
+    
     
     self.progressView = [[NSProgressIndicator alloc] initWithFrame:NSMakeRect(self.inputMessageTextField.containerView.frame.size.width - 30, 10,16,16)];
     [self.progressView setAutoresizingMask:NSViewMinXMargin | NSViewMinYMargin];
@@ -675,6 +689,10 @@ static RBLPopover *popover;
     
     [popover showRelativeToRect:button.bounds ofView:button preferredEdge:CGRectMinYEdge];
 
+}
+
+-(void)removeAudioRecordAction:(BTRButton *)button {
+    [self updateStopRecordControls];
 }
 
 -(void)botCommandButtonAction:(BTRButton *)button {
@@ -803,8 +821,14 @@ static RBLPopover *popover;
 - (void)startRecord:(BTRButton *)button {
     weak();
     
-    if(!self.dialog.canSendMessage)
+    if(!self.dialog.canSendMessage || [[TMAudioRecorder sharedInstance] isRecording])
         return;
+    
+    [_recordedAudioPreview removeFromSuperview];
+    _recordedAudioPreview = nil;
+    
+    [self.recordDurationLayer setFrameOrigin:CGPointMake(42, roundf( (58 - self.recordDurationLayer.bounds.size.height) / 2.f) - 1)];
+
 
     [self.recordDurationLayer setString:@"00:00"];
     [self.recordDurationLayer setHidden:NO];
@@ -859,9 +883,30 @@ static RBLPopover *popover;
     if([[TMAudioRecorder sharedInstance] isRecording]) {
         [[TMAudioRecorder sharedInstance] stopRecord:YES askConfirm:YES];
     
-        [self updateStopRecordControls];
+       // [self updateStopRecordControls];
         
     }
+}
+
+-(void)showQuickRecordedPreview:(NSString *)file audioAttr:(TL_documentAttributeAudio *)audioAttr {
+    
+    if(!_recordedAudioPreview)
+    {
+        _recordedAudioPreview = [[TGRecordedAudioPreview alloc] initWithFrame:NSMakeRect(roundf((NSWidth(self.normalView.frame) - 230) /2 ), roundf ((58 - 30)/2), 230, 30)];
+        
+        _recordedAudioPreview.autoresizingMask = NSViewMinXMargin | NSViewMaxXMargin;
+        [self.normalView addSubview:_recordedAudioPreview];
+    }
+    
+    [_removeAudioRecordButton setHidden:NO];
+    
+    [self.recordCircleLayer setHidden:YES];
+    [self.recordDurationLayer setHidden:YES];
+    [self.recordHelpLayer setHidden:YES];
+    
+    [self TMGrowingTextViewTextDidChange:nil];
+    
+    [_recordedAudioPreview setAudio_file:file audioAttr:audioAttr];
 }
 
 
@@ -883,6 +928,11 @@ static RBLPopover *popover;
 -(void)updateStopRecordControls {
     [self.recordAudioButton setSelected:NO];
     [self.recordTimer invalidate];
+    
+    [_removeAudioRecordButton setHidden:YES];
+    
+    [_recordedAudioPreview removeFromSuperview];
+    _recordedAudioPreview = nil;
     
     [self.inputMessageTextField.containerView removeFromSuperview];
     NSMutableArray *subviews = [[self.normalView subviews] mutableCopy];
@@ -1172,7 +1222,12 @@ static RBLPopover *popover;
 
 - (void)sendButtonAction {
     
-    [self.messagesViewController sendMessage];
+    if(_recordedAudioPreview == nil)
+        [self.messagesViewController sendMessage];
+    else {
+        [self.messagesViewController sendAudio:_recordedAudioPreview.audio_file forConversation:self.dialog waveforms:_recordedAudioPreview.audioAttr.waveform];
+        [self updateStopRecordControls];
+    }
     
     
     
@@ -1183,6 +1238,8 @@ static RBLPopover *popover;
         [self updateBottomHeight:YES];
         [self TMGrowingTextViewTextDidChange:nil];
     }
+    
+    
     
     
     [self.messagesViewController performForward:self.dialog];
@@ -1213,7 +1270,7 @@ static RBLPopover *popover;
     [self.messagesViewController saveInputText];
     
     
-    if([self.inputMessageTextField.stringValue trim].length > 0 || self.fwdContainer || _imageAttachmentsController.isShown) {
+    if([self.inputMessageTextField.stringValue trim].length > 0 || self.fwdContainer || _imageAttachmentsController.isShown || _recordedAudioPreview != nil) {
         
         
         if([self.inputMessageTextField.stringValue trim].length > 0 && textView)
@@ -1230,7 +1287,7 @@ static RBLPopover *popover;
         [self.sendButton setDisabled:YES];
     }
     
-    if(self.inputMessageTextField.stringValue.length || self.fwdContainer || _imageAttachmentsController.isShown) {
+    if(self.inputMessageTextField.stringValue.length || self.fwdContainer || _imageAttachmentsController.isShown || _recordedAudioPreview != nil) {
         [self.sendButton setHidden:NO];
         [self.recordAudioButton setHidden:YES];
     } else {

@@ -736,16 +736,28 @@ void exceptionHandler(NSException * exception)
         
         if([appWindow().firstResponder class] == [SelectTextManager class]) { // hard fix for osx events bug
             
-            NSPoint mouseLoc = [appWindow().navigationController.messagesViewController.table.scrollView convertPoint:[incomingEvent locationInWindow] fromView:nil];
+            MessagesViewController *viewController = appWindow().navigationController.messagesViewController;
             
             
-            BOOL isInside = [appWindow().navigationController.messagesViewController.table.scrollView mouse:mouseLoc inRect:appWindow().navigationController.messagesViewController.table.scrollView.bounds];
+            NSPoint mouseLoc = [viewController.table.scrollView convertPoint:[incomingEvent locationInWindow] fromView:nil];
+            
+            
+            BOOL isInside = [viewController.table.scrollView mouse:mouseLoc inRect:viewController.table.scrollView.bounds];
             
             
             if(isInside) {
-                [appWindow().navigationController.messagesViewController.table mouseDragged:incomingEvent];
                 
-                return [[NSEvent alloc] init];
+                NSUInteger rowId = [viewController.table rowAtPoint:[viewController.table convertPoint:[incomingEvent locationInWindow] fromView:nil]];
+                
+                MessageTableItem *item = [viewController objectAtIndex:rowId];
+                
+                if([item isKindOfClass:NSClassFromString(@"MessageTableItemText")]) {
+                    [viewController.table mouseDragged:incomingEvent];
+                    
+                    return [[NSEvent alloc] init];
+                }
+                
+                
             }
             
             

@@ -98,6 +98,11 @@
         
     } errorHandler:^(RPCRequest *request, RpcError *error) {
         [weakSelf.delegate behaviorDidEndRequest:nil];
+        
+        if(error.error_code == 400) {
+            alert(appName(), NSLocalizedString(error.error_msg, nil));
+        }
+        
     } timeout:10 queue:[ASQueue globalQueue].nativeQueue];
     
     

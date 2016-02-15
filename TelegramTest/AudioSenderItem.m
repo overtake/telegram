@@ -50,13 +50,13 @@
     self.operation = [[UploadOperation alloc] init];
     
     
-    NSString *export = exportPath(self.message.randomId,@"mp3");
+    NSString *export = exportPath(self.message.randomId,@"ogg");
     
     if(!self.filePath)
         self.filePath = export;
     
     if(![self.filePath isEqualToString:export]) {
-        [[NSFileManager defaultManager] copyItemAtPath:self.filePath toPath:export error:nil];
+        [[NSFileManager defaultManager] moveItemAtPath:self.filePath toPath:export error:nil];
         self.filePath = export;
         [self.message save:YES];
     }

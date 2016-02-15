@@ -170,6 +170,7 @@ NSImage *voicePlay() {
     
     [TGAudioPlayerWindow pause];
     
+
     [globalAudioPlayer() stop];
     [globalAudioPlayer().delegate audioPlayerDidFinishPlaying:globalAudioPlayer()];
     setGlobalAudioPlayer([TGAudioPlayer audioPlayerForPath:[self.item path]]);

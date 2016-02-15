@@ -2663,16 +2663,16 @@ static NSTextAttachment *headerMediaIcon() {
     [self.table display];
     
     
-    if(self.conversation.type == DialogTypeUser && !self.conversation.user.isContact) {
+    if(self.conversation.type == DialogTypeUser && !self.conversation.user.isContact && !self.conversation.user.isBot) {
         
         __block BOOL showReport = [[NSUserDefaults standardUserDefaults] boolForKey:[NSString stringWithFormat:@"showreport_%d",self.conversation.user.n_id]];
         
         __block BOOL alwaysShowReport = [[NSUserDefaults standardUserDefaults] boolForKey:[NSString stringWithFormat:@"always_showreport1_%d",self.conversation.user.n_id]];
         
         if(self.messages.count > 1 && (showReport || !alwaysShowReport)) {
-            if(self.messages.count > 2 || self.historyController.nextState == ChatHistoryStateFull) {
+            if(self.historyController.nextState == ChatHistoryStateFull) {
                 
-                showReport = showReport;
+                showReport = YES;
                 
                 [self.messages enumerateObjectsAtIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(1, self.messages.count - 1)] options:0 usingBlock:^(MessageTableItem*  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
                     

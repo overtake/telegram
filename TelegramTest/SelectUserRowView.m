@@ -102,7 +102,8 @@
     
     if([self rowItem].isSearchUser) {
         [self.lastSeenTextField setUser:nil];
-        [self.lastSeenTextField setStringValue:[NSString stringWithFormat:@"@%@",[self rowItem].user.username]];
+        [self.lastSeenTextField setChat:nil];
+        [self.lastSeenTextField setStringValue:[NSString stringWithFormat:@"@%@",[self rowItem].user ? [self rowItem].user.username : [self rowItem].chat.username]];
     }
     
     [self setSelected:[[self rowItem] isSelected]];
@@ -152,11 +153,11 @@
             return;
         }
         
-        if([self rowItem].user.n_id != [UsersManager currentUserId]) {
-            [self setSelected:[self rowItem].isSelected animation:YES];
+
+        [self setSelected:[self rowItem].isSelected animation:YES];
             
-            [((SelectUsersTableView *)[self rowItem].table).selectDelegate selectTableDidChangedItem:[self rowItem]];
-        }
+        [((SelectUsersTableView *)[self rowItem].table).selectDelegate selectTableDidChangedItem:[self rowItem]];
+        
     }
     
 }

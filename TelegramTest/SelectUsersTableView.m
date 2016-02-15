@@ -10,12 +10,13 @@
 #import "NSString+Extended.h"
 #import "TMSearchTextField.h"
 #import "TGSearchRowView.h"
-
+#import "TGModernConversationHistoryController.h"
 @interface SelectUsersTableView ()<TMSearchTextFieldDelegate>
 @property (nonatomic,strong) NSMutableArray *items;
 @property (nonatomic,strong) TGSearchRowView *searchView;
 @property (nonatomic,strong) TGSearchRowItem *searchItem;
 @property (nonatomic,strong) RPCRequest *request;
+
 
 @end
 
@@ -357,8 +358,11 @@ static NSCache *cacheItems;
     
     [self removeRowsAtIndexes:[NSIndexSet indexSetWithIndexesInRange:range] withAnimation:self.defaultAnimation];
     
-    
     [self insert:sorted startIndex:1 tableRedraw:YES];
+    
+    NSArray *users = [UsersManager findUsersByName:searchString];
+    
+    [self filterAndAddGlobalUsers:users checkContact:YES];
 
 }
 

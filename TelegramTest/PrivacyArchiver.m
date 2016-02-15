@@ -162,6 +162,16 @@ NSString *const kStatusGroups = @"TL_privacyKeyChatInvite";
     return rules;
 }
 
+-(BOOL)acceptNobodySetting {
+    static NSArray *nobodyItems;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        nobodyItems = @[kStatusTimestamp];
+    });
+    
+    return [nobodyItems indexOfObject:self.privacyType] != NSNotFound;
+}
+
 -(id)copy {
     return [[PrivacyArchiver alloc] initWithType:self.allowType allowUsers:self.allowUsers disallowUsers:self.disallowUsers privacyType:self.privacyType];
 }

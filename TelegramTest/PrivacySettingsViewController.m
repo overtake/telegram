@@ -169,16 +169,22 @@
     [self.tableView insert:myContacts atIndex:self.tableView.list.count tableRedraw:NO];
     
     
-    GeneralSettingsRowItem *nobody = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeSelected callback:^(TGGeneralRowItem *item) {
+    if(self.changedPrivacy.acceptNobodySetting) {
+        GeneralSettingsRowItem *nobody = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeSelected callback:^(TGGeneralRowItem *item) {
+            
+            weakSelf.changedPrivacy.allowType = PrivacyAllowTypeNobody;
+            weakSelf.changedPrivacy = weakSelf.changedPrivacy;
+            
+        } description:NSLocalizedString(@"PrivacySettingsController.Nobody", nil) height:42 stateback:^id(TGGeneralRowItem *item) {
+            return @(weakSelf.changedPrivacy.allowType == PrivacyAllowTypeNobody);
+        }];
         
-        weakSelf.changedPrivacy.allowType = PrivacyAllowTypeNobody;
-        weakSelf.changedPrivacy = weakSelf.changedPrivacy;
         
-    } description:NSLocalizedString(@"PrivacySettingsController.Nobody", nil) height:42 stateback:^id(TGGeneralRowItem *item) {
-        return @(weakSelf.changedPrivacy.allowType == PrivacyAllowTypeNobody);
-    }];
+        
+        [self.tableView insert:nobody atIndex:self.tableView.list.count tableRedraw:NO];
+    }
     
-    [self.tableView insert:nobody atIndex:self.tableView.list.count tableRedraw:NO];
+   
     
     
     NSString *first_desc = [NSString stringWithFormat:@"PRIVACY_FIRST_%@",self.privacy.privacyType];
@@ -217,7 +223,6 @@
         
     } description:NSLocalizedString(@"PrivacySettingsController.NeverShareWith", nil) subdesc:@"2 users" height:42 stateback:nil];
     
-    [self.tableView insert:nobody atIndex:self.tableView.list.count tableRedraw:NO];
     
     
     
@@ -261,6 +266,12 @@
     
     [self.tableView removeItem:self.allowSelector tableRedraw:NO];
     [self.tableView removeItem:self.disallowSelector tableRedraw:NO];
+    
+    NSString *allowDesc = [NSString stringWithFormat:@"PrivacySettingsController.AlwaysShare_%@",self.privacy.privacyType];
+    NSString *disallowDesc = [NSString stringWithFormat:@"PrivacySettingsController.NeverShare_%@",self.privacy.privacyType];
+    
+    _disallowSelector.desc = NSLocalizedString(disallowDesc, nil);
+    _allowSelector.desc = NSLocalizedString(allowDesc, nil);;
     
     switch (_changedPrivacy.allowType) {
         case PrivacyAllowTypeContacts:

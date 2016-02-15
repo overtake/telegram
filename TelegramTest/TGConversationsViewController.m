@@ -413,7 +413,6 @@
 - (BOOL) selectionWillChange:(NSInteger)row item:(TGConversationTableItem *) item {
     
     if([[TMAudioRecorder sharedInstance] isRecording]) {
-        [[Telegram delegate].mainWindow.navigationController.messagesViewController.bottomView stopQuickRecord];
         return NO;
     }
     

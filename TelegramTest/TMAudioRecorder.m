@@ -13,6 +13,7 @@
 #import "HackUtils.h"
 #include "opusenc.h"
 #import "NSData+Extensions.h"
+#import "MessagesBottomView.h"
 typedef enum {
     TMAudioRecorderDefault,
     TMAudioRecorderRecord,
@@ -135,6 +136,8 @@ double mappingRange(double x, double in_min, double in_max, double out_min, doub
     if(!self.recorder.isRecording)
         return;
     
+    int duration = self.recorder.currentTime;
+    
     if(self.recorder.currentTime < 0.5)
         send = NO;
     
@@ -159,17 +162,19 @@ double mappingRange(double x, double in_min, double in_max, double out_min, doub
         
         TGAudioWaveform *waveform = [FileUtils waveformForPath:opusPath];
         
+
         [ASQueue dispatchOnMainQueue:^{
-            [self.messagesViewController sendAudio:opusPath forConversation:self.messagesViewController.conversation waveforms:[waveform bitstream]];
+            
+            if(askConfirm) {
+                TL_documentAttributeAudio *audioAttr = [TL_documentAttributeAudio createWithFlags:0 duration:duration title:nil performer:nil waveform:[waveform bitstream]];
+                [self.messagesViewController.bottomView showQuickRecordedPreview:opusPath audioAttr:audioAttr];
+            } else
+                [self.messagesViewController sendAudio:opusPath forConversation:self.messagesViewController.conversation waveforms:[waveform bitstream]];
         }];
     };
     
-    if(askConfirm) {
-        confirm(appName(), NSLocalizedString(@"AudioQuickSend.ConfirmDescription", nil), ^{
-            [_audioQueue dispatchOnQueue:send_block];
-        }, nil);
-    } else
-        [_audioQueue dispatchOnQueue:send_block];
+   
+    [_audioQueue dispatchOnQueue:send_block];
 }
 
 static int powerCount = 100;

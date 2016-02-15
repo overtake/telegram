@@ -366,6 +366,7 @@
 		C24136441C679DCC00130D2E /* TGWaveformView.m in Sources */ = {isa = PBXBuildFile; fileRef = C24136431C679DCC00130D2E /* TGWaveformView.m */; };
 		C24136471C68A3A600130D2E /* TGAudioWaveform.m in Sources */ = {isa = PBXBuildFile; fileRef = C24136461C68A3A600130D2E /* TGAudioWaveform.m */; };
 		C241364A1C6DEA2900130D2E /* TGCirclularCounter.m in Sources */ = {isa = PBXBuildFile; fileRef = C24136491C6DEA2900130D2E /* TGCirclularCounter.m */; };
+		C241364E1C70AF7100130D2E /* TGRecordedAudioPreview.m in Sources */ = {isa = PBXBuildFile; fileRef = C241364D1C70AF7100130D2E /* TGRecordedAudioPreview.m */; };
 		C24435811A1D1B9900F9BB38 /* PrivacyArchiver.m in Sources */ = {isa = PBXBuildFile; fileRef = C24435801A1D1B9900F9BB38 /* PrivacyArchiver.m */; };
 		C24435881A1E018100F9BB38 /* ComposeActionCustomBehavior.m in Sources */ = {isa = PBXBuildFile; fileRef = C24435871A1E018100F9BB38 /* ComposeActionCustomBehavior.m */; };
 		C244358B1A1E159900F9BB38 /* PrivacyUserListController.m in Sources */ = {isa = PBXBuildFile; fileRef = C244358A1A1E159900F9BB38 /* PrivacyUserListController.m */; };
@@ -1795,6 +1796,8 @@
 		C24136461C68A3A600130D2E /* TGAudioWaveform.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGAudioWaveform.m; sourceTree = "<group>"; };
 		C24136481C6DEA2900130D2E /* TGCirclularCounter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGCirclularCounter.h; sourceTree = "<group>"; };
 		C24136491C6DEA2900130D2E /* TGCirclularCounter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGCirclularCounter.m; sourceTree = "<group>"; };
+		C241364C1C70AF7100130D2E /* TGRecordedAudioPreview.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGRecordedAudioPreview.h; sourceTree = "<group>"; };
+		C241364D1C70AF7100130D2E /* TGRecordedAudioPreview.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGRecordedAudioPreview.m; sourceTree = "<group>"; };
 		C244357F1A1D1B9900F9BB38 /* PrivacyArchiver.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PrivacyArchiver.h; sourceTree = "<group>"; };
 		C24435801A1D1B9900F9BB38 /* PrivacyArchiver.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PrivacyArchiver.m; sourceTree = "<group>"; };
 		C24435861A1E018100F9BB38 /* ComposeActionCustomBehavior.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ComposeActionCustomBehavior.h; sourceTree = "<group>"; };
@@ -3653,6 +3656,7 @@
 		0AEE20821821340200F348F2 /* messages */ = {
 			isa = PBXGroup;
 			children = (
+				C241364B1C70AF5900130D2E /* audio */,
 				C2A2B4271BD01FC70083DA8A /* head-chats */,
 				C20F76EA1BBAC191003A1E86 /* hint-view */,
 				C2D51C091B21FA44009327C0 /* botcommands */,
@@ -4197,6 +4201,15 @@
 				C240B1BD1B6294F300912248 /* TGSharedLinkRowItem.m */,
 			);
 			name = "shared-links";
+			sourceTree = "<group>";
+		};
+		C241364B1C70AF5900130D2E /* audio */ = {
+			isa = PBXGroup;
+			children = (
+				C241364C1C70AF7100130D2E /* TGRecordedAudioPreview.h */,
+				C241364D1C70AF7100130D2E /* TGRecordedAudioPreview.m */,
+			);
+			name = audio;
 			sourceTree = "<group>";
 		};
 		C244358C1A1E1B8F00F9BB38 /* privacyuserlist */ = {
@@ -6817,6 +6830,7 @@
 				C2F3996F190FD1FC006B36F7 /* SGraphNode.m in Sources */,
 				0ABACDAE181AFE4B00EF43DB /* TLObject.m in Sources */,
 				C297FBA618329F3500714B3C /* TGDcAuth.m in Sources */,
+				C241364E1C70AF7100130D2E /* TGRecordedAudioPreview.m in Sources */,
 				C2AC8DB11A7BF0A600655B9D /* TGSearchRowView.m in Sources */,
 				C2753DD219E4282000752BAF /* SearchMessagesView.m in Sources */,
 				0A7517D2193A053A0088C806 /* TGSwipeRedView.m in Sources */,

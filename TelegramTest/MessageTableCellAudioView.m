@@ -115,7 +115,10 @@
     
     [self setDurationTextFieldString:[NSString stringWithFormat:@"%@ / %@", [NSString durationTransformedValue:floor(self.currentTime)], self.item.duration]];
     
+    
+    
     _waveformView.progress = ceil((self.currentTime / duration) * 100.0f);
+    
 }
 
 - (NSRect)progressRect {
@@ -176,15 +179,15 @@
 
 -(void)drawRect:(NSRect)dirtyRect {
     
-//    if(!self.item.message.readedContent && !self.item.messageSender && (!self.item.downloadItem || self.item.downloadItem.downloadState == DownloadStateCompleted) && globalAudioPlayer().delegate != self.item) {
-//        [NSColorFromRGB(0x4ba3e2) setFill];
-//        
-//        NSBezierPath *path = [NSBezierPath bezierPath];
-//        
-//        [path appendBezierPathWithRoundedRect:NSMakeRect(NSMinX(self.containerView.frame) + NSWidth(self.playerButton.frame) + 45, NSMinY(self.containerView.frame) +  NSMinY(self.durationView.frame) + 4, 6, 6) xRadius:3 yRadius:3];
-//        
-//        [path fill];
-//    }
+    if(!self.item.message.readedContent && !self.item.messageSender && (!self.item.downloadItem || self.item.downloadItem.downloadState == DownloadStateCompleted) && globalAudioPlayer().delegate != self.item && !self.item.message.chat.isChannel) {
+        [NSColorFromRGB(0x4ba3e2) setFill];
+        
+        NSBezierPath *path = [NSBezierPath bezierPath];
+        
+        [path appendBezierPathWithRoundedRect:NSMakeRect(NSMinX(self.containerView.frame) + NSWidth(self.playerButton.frame) + 45, NSMinY(self.containerView.frame) +  NSMinY(self.durationView.frame) + 4, 6, 6) xRadius:3 yRadius:3];
+        
+        [path fill];
+    }
 }
 
 - (void)setCellState:(CellState)cellState {
@@ -193,17 +196,17 @@
     [self.stateTextField setHidden:YES];
     
     if(cellState == CellStateDownloading || cellState == CellStateSending || cellState == CellStateNeedDownload) {
-        _waveformView.defaultColor = DIALOG_BORDER_COLOR;
+        _waveformView.defaultColor = NSColorFromRGB(0xced9e0);
         _waveformView.progressColor = NSColorFromRGB(0x4ca2e0);
     }
     
     if(self.item.state == AudioStateWaitPlaying) {
-        _waveformView.defaultColor = !self.item.message.readedContent ? NSColorFromRGB(0x4ca2e0) : DIALOG_BORDER_COLOR;
-        _waveformView.progressColor = NSColorFromRGB(0x3dd16e);
+        _waveformView.defaultColor = !self.item.message.readedContent && !self.item.message.chat.isChannel ? NSColorFromRGB(0x4ca2e0) : NSColorFromRGB(0xced9e0);
+        _waveformView.progressColor = NSColorFromRGB(0x4ca2e0);
     }
     
     if(self.item.state == AudioStatePaused || self.item.state == AudioStatePlaying) {
-        _waveformView.defaultColor = DIALOG_BORDER_COLOR;
+        _waveformView.defaultColor = NSColorFromRGB(0xced9e0);;
         _waveformView.progressColor = NSColorFromRGB(0x4ca2e0);
     }
     
@@ -218,7 +221,7 @@
     switch (self.item.state) {
         case AudioStateWaitPlaying:
             [self.playerButton setImage:voicePlay() forControlState:BTRControlStateNormal];
-            [_waveformView setProgress:0];
+            
             break;
             
         case AudioStatePaused:
@@ -245,12 +248,11 @@
     
     NSRect rect = _waveformView.frame;
     
-    rect.size.height+=6;
-    rect.origin.y-=3;
     
     if(self.acceptTimeChanger) {
         self.acceptTimeChanger = NO;
         [self changeTime:pos rect:rect];
+        [self play:self.currentTime];
     }
     
 }
@@ -262,9 +264,6 @@
     
     NSRect rect = _waveformView.frame;
     
-    rect.size.height = 6;
-    rect.origin.y-=3;
-    
     self.acceptTimeChanger = NSPointInRect(pos, rect) && [globalAudioPlayer() isEqualToPath:self.item.path] && !globalAudioPlayer().isPaused;
     
     if(self.acceptTimeChanger) {
@@ -275,17 +274,15 @@
 
 -(void)mouseDragged:(NSEvent *)theEvent {
     [super mouseDragged:theEvent];
+    
     NSPoint pos = [self.containerView convertPoint:[theEvent locationInWindow] fromView:nil];
     
     NSRect rect = _waveformView.frame;
-    
-    rect.size.height = 6;
-    rect.origin.y-=3;
-    
+
     if(self.acceptTimeChanger) {
-        [self changeTime:pos rect:rect];
         
-        [self pause];
+        [self changeTime:pos rect:rect];
+
     }
 }
 
@@ -302,7 +299,7 @@
     
     self.currentTime =  percent * [globalAudioPlayer() duration];
     
-    [self play:self.currentTime];
+   
     
     [self setNeedsDisplay:YES];
 }

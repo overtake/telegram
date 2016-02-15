@@ -84,23 +84,13 @@ DYNAMIC_PROPERTY(DIALOGTITLE);
 
 - (NSAttributedString *) dialogTitle {
     NSMutableAttributedString *dialogTitleAttributedString = [[NSMutableAttributedString alloc] init];
-    
-//    if([self isChannel]) {
-//        [dialogTitleAttributedString appendAttributedString:[NSAttributedString attributedStringWithAttachment:chatIconAttachment()]];
-//        [dialogTitleAttributedString setSelectionAttachment:chatIconSelectedAttachment() forAttachment:chatIconAttachment()];
-//    }
-//    
+
     
     [dialogTitleAttributedString appendString:self.cropTitle withColor:NSColorFromRGB(0x333333)];
     [dialogTitleAttributedString setSelectionColor:NSColorFromRGB(0xffffff) forColor:NSColorFromRGB(0x333333)];
     [dialogTitleAttributedString setFont:TGSystemFont(14) forRange:dialogTitleAttributedString.range];
     
-    
-//    if([self isChannel] && [self isVerify]) {
-//        [dialogTitleAttributedString appendAttributedString:[NSAttributedString attributedStringWithAttachment:channelVerifyAttachment()]];
-//        [dialogTitleAttributedString setSelectionAttachment:channelVerifySelectedAttachment() forAttachment:channelVerifyAttachment()];
-//    }
-//
+
     [self setDIALOGTITLE:dialogTitleAttributedString];
     
     return [self getDIALOGTITLE];
@@ -141,23 +131,6 @@ DYNAMIC_PROPERTY(TITLEFORMESSAGE);
     return [[NSMutableAttributedString alloc] initWithString:@"string"];
 }
 
-static NSTextAttachment *chatIconAttachment() {
-    static NSTextAttachment *instance;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        instance = [NSMutableAttributedString textAttachmentByImage:[image_chat() imageWithInsets:NSEdgeInsetsMake(0, 1, 0, 4)]];
-    });
-    return instance;
-}
-
-static NSTextAttachment *chatIconSelectedAttachment() {
-    static NSTextAttachment *instance;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        instance = [NSMutableAttributedString textAttachmentByImage:[image_chatHighlighted() imageWithInsets:NSEdgeInsetsMake(0, 1, 0, 4)]];
-    });
-    return instance;
-}
 
 static NSTextAttachment *channelVerifyAttachment() {
     static NSTextAttachment *instance;

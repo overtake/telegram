@@ -84,14 +84,14 @@
     
     __block int x = 0;
     
-    NSColor *defColor = _defaultColor ? _defaultColor : BLUE_UI_COLOR;
-    NSColor *progressColor = _progressColor ? _progressColor : [NSColor greenColor];
+    NSColor *defColor = _defaultColor ? _defaultColor : GRAY_BORDER_COLOR;
+    NSColor *progressColor = _progressColor ? _progressColor : BLUE_UI_COLOR;
     
     int progressWidth = (self.progress * NSWidth(dirtyRect))/100.0f;
     
     [_currentWaveform enumerateObjectsUsingBlock:^(NSNumber *obj, NSUInteger idx, BOOL * _Nonnull stop) {
         
-        int waveHeight = floor(([obj intValue] * max)/32.0f);
+        int waveHeight = floor(([obj intValue] * max)/31.0f);
         
         waveHeight = [obj intValue] <= 2 ? [obj intValue] + 2 : MAX(waveHeight,2);
         

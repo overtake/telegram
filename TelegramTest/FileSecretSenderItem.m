@@ -145,7 +145,9 @@
         
         NSMutableArray *attrs = [NSMutableArray array];
         
-        [attrs addObject:[TL_documentAttributeAudio createWithFlags:(1 << 10) duration:duration title:nil performer:nil waveform:nil]];
+        TGAudioWaveform *waveform = [FileUtils waveformForPath:filePath];
+        
+        [attrs addObject:[TL_documentAttributeAudio createWithFlags:(1 << 10) duration:duration title:nil performer:nil waveform:[waveform bitstream]]];
         
         media = [TL_messageMediaDocument createWithDocument:[TL_document createWithN_id:0 access_hash:0 date:(int)[[MTNetwork instance] getTime] mime_type:@"audio/ogg" size:(int)fileSize(filePath) thumb:[TL_photoSizeEmpty createWithType:@"x"] dc_id:0 attributes:attrs] caption:@""];
         
@@ -353,17 +355,15 @@
                     
                 }
                 
-                if(strongSelf.uploadType == UploadDocumentType) {
+                if(strongSelf.uploadType == UploadDocumentType | strongSelf.uploadType == UploadAudioType) {
                     [strongSelf.message media].document.access_hash = newLocation.secret;
                     [strongSelf.message media].document.dc_id = newLocation.dc_id;
                     [strongSelf.message media].document.n_id = newLocation.volume_id;
                     [strongSelf.message media].document.size = uploader.total_size;
                     
-                    [[NSFileManager defaultManager] removeItemAtPath:exportPath(strongSelf.message.randomId,[strongSelf.message.media.document.file_name pathExtension]) error:nil];
+                    [[NSFileManager defaultManager] moveItemAtPath:exportPath(strongSelf.message.randomId,[strongSelf.message.media.document.file_name pathExtension]) toPath:mediaFilePath(strongSelf.message) error:nil];
+
                 }
-                
-                
-                
                 
                 strongSelf.uploader = nil;
                 

@@ -60,4 +60,6 @@ typedef enum {
 -(void)startQuickRecord;
 -(void)stopQuickRecord;
 
+-(void)showQuickRecordedPreview:(NSString *)file audioAttr:(TL_documentAttributeAudio *)audioAttr;
+
 @end

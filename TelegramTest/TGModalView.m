@@ -141,7 +141,8 @@
     [super setFrameSize:newSize];
     
     [_backgroundView setFrameSize:newSize];
-    [_animationContainerView setCenterByView:self];
+    
+    [self setContainerFrameSize:self.containerSize];
     
 }
 
@@ -149,6 +150,8 @@
     
 
     [self setFrameSize:window.frame.size];
+    
+    [self setContainerFrameSize:self.containerSize];
     
     [window.contentView addSubview:self];
     
@@ -169,33 +172,42 @@
         anim.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseIn];
         [self.containerView.layer pop_addAnimation:anim forKey:@"fade"];
         
+        weak();
+        
+        [anim setCompletionBlock:^(POPAnimation *pop, BOOL anim) {
+            [weakSelf modalViewDidShow];
+        }];
         
         
-        _animationContainerView.layer.anchorPoint = CGPointMake(0.5, 0.5);
+//        _animationContainerView.layer.anchorPoint = CGPointMake(0.5, 0.5);
+//        
+//        _animationContainerView.layer.position = CGPointMake(roundf(NSWidth(self.frame) / 2), roundf(NSHeight(self.frame) / 2));
+//        
+//        POPBasicAnimation *sizeAnim = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerSize];
+//        
+//        sizeAnim.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut];
+//        
+//        sizeAnim.fromValue = [NSValue valueWithSize:NSMakeSize(0, 0)];
+//        sizeAnim.toValue = [NSValue valueWithSize:self.containerSize];
+//        sizeAnim.duration = 0.15;
+//        
+//        
+//        
+//        POPBasicAnimation *originContainerAnim = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerPosition];
+//        originContainerAnim.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut];
+//        originContainerAnim.fromValue = [NSValue valueWithPoint:NSMakePoint(- roundf(NSWidth(_animationContainerView.frame)/2), - roundf(NSHeight(_animationContainerView.frame)/2))];
+//        originContainerAnim.toValue = [NSValue valueWithPoint:NSMakePoint(0, 0)];
+//        originContainerAnim.duration = 0.15;
         
-        _animationContainerView.layer.position = CGPointMake(roundf(NSWidth(self.frame) / 2), roundf(NSHeight(self.frame) / 2));
-        
-        POPBasicAnimation *sizeAnim = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerSize];
-        
-        sizeAnim.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut];
-        
-        sizeAnim.fromValue = [NSValue valueWithSize:NSMakeSize(0, 0)];
-        sizeAnim.toValue = [NSValue valueWithSize:self.containerSize];
-        sizeAnim.duration = 0.15;
         
         
         
-        POPBasicAnimation *originContainerAnim = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerPosition];
-        originContainerAnim.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut];
-        originContainerAnim.fromValue = [NSValue valueWithPoint:NSMakePoint(- roundf(NSWidth(_animationContainerView.frame)/2), - roundf(NSHeight(_animationContainerView.frame)/2))];
-        originContainerAnim.toValue = [NSValue valueWithPoint:NSMakePoint(0, 0)];
-        originContainerAnim.duration = 0.15;
-        
-        
+    } else {
+         [self modalViewDidShow];
     }
 
     
-    [self modalViewDidShow];
+   
     
     
     int bp = 0;
@@ -317,7 +329,7 @@
 }
 
 -(void)modalViewDidShow {
-    
+    [self setContainerFrameSize:self.containerSize];
 }
 -(void)modalViewDidHide {
     
@@ -363,7 +375,11 @@
     
     [_containerView setFrameSize:size];
     [_animationContainerView setFrameSize:size];
-    [_animationContainerView setCenterByView:self];
+    
+    float x = roundf((NSWidth(self.frame) - NSWidth(_animationContainerView.frame)) / 2);
+    float y = roundf((NSHeight(self.frame) - NSHeight(_animationContainerView.frame) - 20) / 2);
+    
+    [_animationContainerView setFrameOrigin:NSMakePoint(x,y)];
     
     
     [_ok setFrame:NSMakeRect(self.containerSize.width/2, 0, self.containerSize.width/2, 49)];

@@ -581,7 +581,7 @@ void add_sticker_pack_by_name(TLInputStickerSet *set) {
             
             [stickerModalView setStickerPack:response];
             stickerModalView.canSendSticker = YES;
-            [stickerModalView show:[Telegram delegate].mainWindow animated:YES];
+            [stickerModalView show:appWindow() animated:YES];
 
         });
         

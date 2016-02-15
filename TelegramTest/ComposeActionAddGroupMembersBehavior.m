@@ -61,7 +61,7 @@
     
     TLChat *chat = [[ChatsManager sharedManager] find:self.chat.n_id];
     
-    if([chat isKindOfClass:[TL_channel class]] || [self.chat isKindOfClass:[TL_channel_old43 class]]) {
+    if(chat.isChannel) {
         
         NSMutableArray *array = [[NSMutableArray alloc] init];
         for(TLUser* item in self.action.result.multiObjects) {
@@ -83,7 +83,15 @@
         } errorHandler:^(id request, RpcError *error) {
             [self.delegate behaviorDidEndRequest:nil];
             
-            alert(appName(), NSLocalizedString(error.error_msg, nil));
+            TLUser *user = [self.action.result.multiObjects firstObject];
+            
+            NSString *localizedString = NSLocalizedString(error.error_msg, nil);
+            
+            if([error.error_msg isEqualToString:@"USER_PRIVACY_RESTRICTED"]) {
+                localizedString = [NSString stringWithFormat:localizedString, user.first_name,NSLocalizedString(@"channels", nil), user.first_name];
+            }
+            
+            alert(appName(), localizedString);
         }];
         
         
@@ -100,7 +108,6 @@
     
     [RPCRequest sendRequest:[TLAPI_messages_addChatUser createWithChat_id:chatId user_id:user.inputUser fwd_limit:100] successHandler:^(RPCRequest *request, id response) {
         
-        
         if(members.count > 0) {
             [self addMembersToChat:members toChatId:chatId];
         } else {
@@ -109,13 +116,31 @@
                 [self.delegate behaviorDidEndRequest:response];
                 [self.action.currentViewController.navigationViewController goBackWithAnimation:YES];
             }];
-            
-            
+
         }
         
     } errorHandler:^(RPCRequest *request, RpcError *error) {
-        [self.delegate behaviorDidEndRequest:request.response];
-        alert(appName(), NSLocalizedString(error.error_msg, nil));
+        
+        if(self.action.result.multiObjects.count == 1) {
+            [self.delegate behaviorDidEndRequest:request.response];
+            
+            NSString *localizedString = NSLocalizedString(error.error_msg, nil);
+            
+            if([error.error_msg isEqualToString:@"USER_PRIVACY_RESTRICTED"]) {
+                localizedString = [NSString stringWithFormat:localizedString, user.first_name, NSLocalizedString(@"groups", nil), user.first_name];
+            }
+            
+            alert(appName(), localizedString);
+        } else if(members.count == 0) {
+            [ASQueue dispatchOnMainQueue:^{
+                [self.delegate behaviorDidEndRequest:nil];
+                [self.action.currentViewController.navigationViewController goBackWithAnimation:YES];
+            }];
+            
+        }
+        
+        
+
     } timeout:0 queue:[ASQueue globalQueue].nativeQueue];
 }
 

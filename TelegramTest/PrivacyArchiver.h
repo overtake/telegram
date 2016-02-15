@@ -34,5 +34,7 @@ extern NSString *const kStatusGroups;
 
 -(NSArray *)rules;
 
+-(BOOL)acceptNobodySetting;
+
 - (void)_save;
 @end

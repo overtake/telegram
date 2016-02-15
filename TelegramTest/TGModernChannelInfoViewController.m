@@ -125,7 +125,6 @@
 }
 
 
-
 -(void)loadNextParticipants {
     
     [self removeScrollEvent];

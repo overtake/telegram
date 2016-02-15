@@ -18,21 +18,24 @@
 #import "NSAttributedString+Hyperlink.h"
 
 #import "TGArticleImageObject.h"
+#import "NSImage+RHResizableImageAdditions.h"
 
 @implementation TGWebpageObject
 
 NSImage *placeholder() {
-    static NSImage *image = nil;
+    static RHResizableImage *image = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
+        NSRect rect = NSMakeRect(0, 0, 50, 50);
+        NSImage *img = [[NSImage alloc] initWithSize:rect.size];
+        [img lockFocus];
+        [GRAY_BORDER_COLOR set];
+        NSBezierPath *path = [NSBezierPath bezierPath];
+        [path appendBezierPathWithRoundedRect:NSMakeRect(0, 0, rect.size.width, rect.size.height) xRadius:4 yRadius:4];
+        [path fill];
+        [img unlockFocus];
         
-        NSRect rect = NSMakeRect(0, 0, 1, 1);
-        image = [[NSImage alloc] initWithSize:rect.size];
-        [image lockFocus];
-        
-        [GRAY_BORDER_COLOR setFill];
-        NSRectFill(rect);
-        [image unlockFocus];
+        image = [[RHResizableImage alloc] initWithImage:img capInsets:RHEdgeInsetsMake(5, 5, 5, 5)];
         
     });
     return image;
@@ -244,7 +247,7 @@ NSImage *placeholder() {
             return [[TGWebpageGifObject alloc] initWithWebPage:webpage];
     }
     
-    if([webpage.type isEqualToString:@"document"]) {
+    if([webpage.type isEqualToString:@"document"] && webpage.document != nil) {
         return [[TGWebpageDocumentObject alloc] initWithWebPage:webpage];
     }
     
