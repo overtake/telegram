@@ -117,7 +117,7 @@ static NSCache *cItems;
                     [_headerName appendString:@" "];
                     range = [_headerName appendString:[NSString stringWithFormat:@"@%@",viaBotUserName] withColor:GRAY_TEXT_COLOR];
                     [_headerName addAttribute:NSForegroundColorAttributeName value:LINK_COLOR range:range];
-                    [_headerName setLink:[NSString stringWithFormat:@"viabot:@%@",viaBotUserName] forRange:range];
+                    [_headerName setLink:[NSString stringWithFormat:@"viabot:@%@ ",viaBotUserName] forRange:range];
                     
                 }
                 
@@ -251,7 +251,7 @@ static NSCache *cItems;
             [self.forwardMessageAttributedString appendString:@" "];
             range = [self.forwardMessageAttributedString appendString:[NSString stringWithFormat:@"@%@",_via_bot_user.username] withColor:GRAY_TEXT_COLOR];
             [self.forwardMessageAttributedString setFont:TGSystemBoldFont(13) forRange:range];
-            [self.forwardMessageAttributedString setLink:[NSString stringWithFormat:@"viabot:@%@",_via_bot_user.username] forRange:range];
+            [self.forwardMessageAttributedString setLink:[NSString stringWithFormat:@"viabot:@%@ ",_via_bot_user.username] forRange:range];
             [self.forwardMessageAttributedString addAttribute:NSForegroundColorAttributeName value:LINK_COLOR range:range];
         }
         

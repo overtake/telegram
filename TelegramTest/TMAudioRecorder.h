@@ -20,7 +20,7 @@ double mappingRange(double x, double in_min, double in_max, double out_min, doub
 
 + (TMAudioRecorder *)sharedInstance;
 - (void)startRecordWithController:(MessagesViewController *)messagesViewController;
-- (void)stopRecord:(BOOL)send askConfirm:(BOOL)askConfirm;
+- (BOOL)stopRecord:(BOOL)send askConfirm:(BOOL)askConfirm;
 - (void)stopRecord:(BOOL)send;
 - (BOOL)isRecording;
 

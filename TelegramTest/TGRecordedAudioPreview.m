@@ -37,7 +37,7 @@
 
 -(instancetype)initWithFrame:(NSRect)frameRect {
     if(self = [super initWithFrame:frameRect]) {
-        _waveformView = [[TGWaveformView alloc] initWithFrame:NSMakeRect(30, 10, 150, 20)];
+        _waveformView = [[TGWaveformView alloc] initWithFrame:NSMakeRect(30, 10, NSWidth(frameRect) - 20, 16)];
         
         _waveformView.defaultColor = [NSColor whiteColor];
         
@@ -65,6 +65,8 @@
         
         [_durationField setFont:TGSystemFont(13)];
         [_durationField setTextColor:[NSColor whiteColor]];
+        
+        _durationField.autoresizingMask = NSViewMinXMargin;
         
         [self addSubview:_durationField];
         
@@ -212,6 +214,7 @@
     _audioState = AudioStateWaitPlaying;
     _audio_file = audio_file;
     _audioAttr = audioAttr;
+    
     _waveformView.waveform = audioAttr.arrayWaveform;
     
     [self updateDurationField];

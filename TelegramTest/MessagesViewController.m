@@ -489,7 +489,7 @@
         [items enumerateObjectsUsingBlock:^(TL_localMessage *obj, NSUInteger idx, BOOL *stop) {
             
             MessageTableItem *item = [self itemOfMsgId:obj.channelMsgId];
-            
+            item.message.flags&=~TGREADEDCONTENT;
             NSUInteger index = [self indexOfObject:item];
             
             if(index != NSNotFound) {
@@ -1449,7 +1449,7 @@ static NSTextAttachment *headerMediaIcon() {
 
 
 - (void)updateScrollBtn {
-    static int min_go_size = 5000;
+    static int min_go_size = 2000;
     static int max_go_size = 1000;
     
     float offset = self.table.scrollView.documentOffset.y;

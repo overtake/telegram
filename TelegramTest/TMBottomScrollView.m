@@ -151,7 +151,7 @@
     
     NSDate *jumpDate = selectedDate;
     
-    selectedDate = [NSDate dateWithTimeIntervalSince1970:selectedDate.timeIntervalSince1970 + 60*60*24];
+    selectedDate = [NSDate dateWithTimeIntervalSince1970:selectedDate.timeIntervalSince1970];
     
     id request;
     

@@ -130,11 +130,11 @@ double mappingRange(double x, double in_min, double in_max, double out_min, doub
     [self stopRecord:send askConfirm:NO];
 }
 
-- (void)stopRecord:(BOOL)send askConfirm:(BOOL)askConfirm {
+- (BOOL)stopRecord:(BOOL)send askConfirm:(BOOL)askConfirm {
     [self.timer invalidate];
 
     if(!self.recorder.isRecording)
-        return;
+        return NO;
     
     int duration = self.recorder.currentTime;
     
@@ -145,7 +145,7 @@ double mappingRange(double x, double in_min, double in_max, double out_min, doub
     
     if(!send) {
         [self removeFile];
-        return;
+        return NO;
     }
     
     dispatch_block_t send_block = ^{
@@ -175,6 +175,8 @@ double mappingRange(double x, double in_min, double in_max, double out_min, doub
     
    
     [_audioQueue dispatchOnQueue:send_block];
+    
+    return YES;
 }
 
 static int powerCount = 100;

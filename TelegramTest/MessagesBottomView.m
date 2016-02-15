@@ -826,6 +826,7 @@ static RBLPopover *popover;
     
     [_recordedAudioPreview removeFromSuperview];
     _recordedAudioPreview = nil;
+    [_removeAudioRecordButton setHidden:YES];
     
     [self.recordDurationLayer setFrameOrigin:CGPointMake(42, roundf( (58 - self.recordDurationLayer.bounds.size.height) / 2.f) - 1)];
 
@@ -881,10 +882,11 @@ static RBLPopover *popover;
 
 -(void)stopQuickRecord {
     if([[TMAudioRecorder sharedInstance] isRecording]) {
-        [[TMAudioRecorder sharedInstance] stopRecord:YES askConfirm:YES];
+        BOOL res =[[TMAudioRecorder sharedInstance] stopRecord:YES askConfirm:YES];
     
-       // [self updateStopRecordControls];
-        
+        if(!res) {
+            [self updateStopRecordControls];
+        }
     }
 }
 
@@ -892,9 +894,9 @@ static RBLPopover *popover;
     
     if(!_recordedAudioPreview)
     {
-        _recordedAudioPreview = [[TGRecordedAudioPreview alloc] initWithFrame:NSMakeRect(roundf((NSWidth(self.normalView.frame) - 230) /2 ), roundf ((58 - 30)/2), 230, 30)];
+        _recordedAudioPreview = [[TGRecordedAudioPreview alloc] initWithFrame:NSMakeRect(NSMinX(self.inputMessageTextField.containerView.frame), roundf ((58 - 30)/2), NSWidth(self.inputMessageTextField.containerView.frame), 30)];
         
-        _recordedAudioPreview.autoresizingMask = NSViewMinXMargin | NSViewMaxXMargin;
+        _recordedAudioPreview.autoresizingMask = NSViewWidthSizable;
         [self.normalView addSubview:_recordedAudioPreview];
     }
     
