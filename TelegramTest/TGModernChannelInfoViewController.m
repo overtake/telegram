@@ -372,7 +372,7 @@
             
         } else {
             
-            if(!_chat.isMegagroup) {
+            if(!_chat.isMegagroup && !self.isDisclosureController) {
                 GeneralSettingsRowItem *openChannel = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeNone callback:^(TGGeneralRowItem *item) {
                     
                     [weakSelf.navigationViewController showMessagesViewController:weakSelf.conversation];
