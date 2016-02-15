@@ -200,7 +200,14 @@
 
 -(NSArray *)messageTableItemsFromMessages:(NSArray *)messages {
     
-   return [MessageTableItem messageTableItemsFromMessages:messages];
+    NSMutableArray *array = [NSMutableArray array];
+    for(TLMessage *message in messages) {
+        MessageTableItem *item = [MessageTableItem messageItemFromObject:message];
+        if(item) {
+            [array addObject:item];
+        }
+    }
+    return array;
    
 }
 

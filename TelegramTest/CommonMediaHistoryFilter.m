@@ -11,7 +11,6 @@
 @implementation CommonMediaHistoryFilter
 
 
-
 -(void)remoteRequest:(BOOL)next max_id:(int)max_id hole:(TGMessageHole *)hole callback:(void (^)(id response,ChatHistoryState state))callback {
     
     int maxDate = next ? self.minDate : INT32_MAX;
@@ -19,8 +18,7 @@
     
     weak();
     
-    self.request = [RPCRequest sendRequest:[TLAPI_messages_search createWithFlags:0 peer:[self.peer inputPeer] q:@"" filter:self.messagesFilter min_date:minDate max_date:maxDate offset:0  max_id:INT32_MAX limit:(int)self.controller.selectLimit] successHandler:^(RPCRequest *request, TL_messages_messages *response) {
-        
+    self.request = [RPCRequest sendRequest:[TLAPI_messages_search createWithFlags:0 peer:[self.peer inputPeer] q:@"" filter:self.messagesFilter min_date:minDate max_date:maxDate offset:0 max_id:INT32_MAX limit:(int)self.controller.selectLimit] successHandler:^(RPCRequest *request, TL_messages_messages *response) {
         
         NSMutableArray *messages = [response.messages mutableCopy];
         
