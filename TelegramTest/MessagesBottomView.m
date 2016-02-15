@@ -943,6 +943,8 @@ static RBLPopover *popover;
     [self.inputMessageTextField.window makeFirstResponder:self.inputMessageTextField];
     
     [self setHiddenRecoderControllers];
+    
+    [self TMGrowingTextViewTextDidChange:nil];
 }
 
 -(void)setHiddenRecoderControllers {
