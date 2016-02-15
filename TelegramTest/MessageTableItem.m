@@ -106,14 +106,19 @@ static NSCache *cItems;
                 
                 if(!self.isForwadedMessage)
                 {
+                    _headerName = [_headerName mutableCopy];
+                    
                     [_headerName appendString:@" "];
                      NSRange range = [_headerName appendString:NSLocalizedString(@"ContextBot.Message.Via", nil) withColor:GRAY_TEXT_COLOR];
                     
                     [_headerName setFont:TGSystemFont(13) forRange:range];
                     
-                    [_headerName appendString:[NSString stringWithFormat:@" @%@",viaBotUserName] withColor:GRAY_TEXT_COLOR];
-                    [_headerName detectAndAddLinks:URLFindTypeMentions];
-
+                    
+                    [_headerName appendString:@" "];
+                    range = [_headerName appendString:[NSString stringWithFormat:@"@%@",viaBotUserName] withColor:GRAY_TEXT_COLOR];
+                    [_headerName addAttribute:NSForegroundColorAttributeName value:LINK_COLOR range:range];
+                    [_headerName setLink:[NSString stringWithFormat:@"viabot:@%@",viaBotUserName] forRange:range];
+                    
                 }
                 
                 
@@ -132,10 +137,6 @@ static NSCache *cItems;
                 [attr appendString:NSLocalizedString(@"Messages.ForwardedMessages", nil) withColor:GRAY_TEXT_COLOR];
                 [attr setFont:TGSystemFont(13) forRange:attr.range];
                 
-                
-//                if(self.isViaBot) {
-//                    [attr appendString:[NSString stringWithFormat:@" %@ @%@",NSLocalizedString(@"ContextBot.Message.Via", nil),viaBotUserName] withColor:GRAY_TEXT_COLOR];
-//                }
                 
                 [attr detectAndAddLinks:URLFindTypeMentions];
                 
@@ -247,9 +248,11 @@ static NSCache *cItems;
             [self.forwardMessageAttributedString appendString:@" "];
             NSRange range = [self.forwardMessageAttributedString appendString:NSLocalizedString(@"ContextBot.Message.Via", nil) withColor:GRAY_TEXT_COLOR];
             [self.forwardMessageAttributedString setFont:TGSystemFont(13) forRange:range];
-            range = [self.forwardMessageAttributedString appendString:[NSString stringWithFormat:@" @%@",_via_bot_user.username] withColor:GRAY_TEXT_COLOR];
+            [self.forwardMessageAttributedString appendString:@" "];
+            range = [self.forwardMessageAttributedString appendString:[NSString stringWithFormat:@"@%@",_via_bot_user.username] withColor:GRAY_TEXT_COLOR];
             [self.forwardMessageAttributedString setFont:TGSystemBoldFont(13) forRange:range];
-            [self.forwardMessageAttributedString detectAndAddLinks:URLFindTypeMentions];
+            [self.forwardMessageAttributedString setLink:[NSString stringWithFormat:@"viabot:@%@",_via_bot_user.username] forRange:range];
+            [self.forwardMessageAttributedString addAttribute:NSForegroundColorAttributeName value:LINK_COLOR range:range];
         }
         
          [self.forwardMessageAttributedString appendString:@"  " withColor:NSColorFromRGB(0x909090)];

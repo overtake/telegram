@@ -48,7 +48,6 @@
 
 @property (nonatomic,strong) TGModalForwardView *forwardModalView;
 
-@property (nonatomic,strong) TGCTextView *viaBotTextField;
 
 @end
 
@@ -201,29 +200,7 @@
 }
 
 
--(void)initViaBotContainer {
-    if(!_viaBotTextField)
-    {
-        _viaBotTextField = [[TGCTextView alloc] initWithFrame:NSZeroRect];
-        
-        weak();
-        
-        [_viaBotTextField setLinkCallback:^(NSString *link) {
-            __strong MessageTableCellContainerView *strongSelf = weakSelf;
-            
-            [strongSelf.messagesViewController.bottomView setContextBotString:[NSString stringWithFormat:@"%@ ",link]];
-            
-            
-        }];
-        
-        [self addSubview:_viaBotTextField];
-    }
-}
 
--(void)deallocViaBotContainer {
-    [_viaBotTextField removeFromSuperview];
-    _viaBotTextField = nil;
-}
 
 -(void)initSelectButton {
     
@@ -265,7 +242,6 @@
             
             [appWindow().navigationController showInfoPage:weakSelf.item.message.from_id == 0 ? weakSelf.item.message.conversation : weakSelf.item.user.dialog];
             
-         //
         }];
         [self addSubview:self.avatarImageView];
     }
@@ -275,7 +251,6 @@
         [self.nameTextField setBordered:NO];
         [self.nameTextField setFont:TGSystemMediumFont(13)];
         [self.nameTextField setDrawsBackground:NO];
-        
         
         [self addSubview:self.nameTextField];
     }
@@ -720,16 +695,7 @@ static BOOL dragAction = NO;
         
     }
     
-    if(item.isViaBot) {
-        [self initViaBotContainer];
-        
-        [_viaBotTextField setFrame:NSMakeRect(item.containerOffset, item.viewSize.height - 44, NSWidth(self.frame) - 160, 17)];
-        
-        [_viaBotTextField setAttributedString:item.via_attr_string];
-        
-    } else {
-        [self deallocViaBotContainer];
-    }
+    
 
     if(item.isHeaderMessage) {
         [self initHeader];
@@ -1175,12 +1141,11 @@ static int offsetEditable = 30;
 
 -(void)_didChangeBackgroundColorWithAnimation:(POPBasicAnimation *)anim toColor:(NSColor *)color {
     
-    if(!_replyContainer && !_viaBotTextField && !_forwardMessagesTextLayer)
+    if(!_replyContainer && !_forwardMessagesTextLayer)
         return;
     
     if(!anim) {
         _replyContainer.messageField.backgroundColor = color;
-        _viaBotTextField.backgroundColor = color;
         _forwardMessagesTextLayer.backgroundColor = color;
         return;
     }
@@ -1207,8 +1172,6 @@ static int offsetEditable = 30;
     
     if(_replyContainer)
         [_replyContainer.messageField pop_addAnimation:animation forKey:@"background"];
-    if(_viaBotTextField)
-        [_viaBotTextField pop_addAnimation:animation forKey:@"background"];
     if(_forwardMessagesTextLayer)
         [_forwardMessagesTextLayer pop_addAnimation:animation forKey:@"background"];
 }

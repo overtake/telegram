@@ -237,7 +237,7 @@
     NSMutableArray *items = [[NSMutableArray alloc] init];
     
     for(TL_conversation *conversation in all) {
-        if(!conversation.isAddToList)
+        if(!conversation.isAddToList || conversation.chat.isDeactivated)
             continue;
         
         TGConversationTableItem *item = [[TGConversationTableItem alloc] initWithConversation:conversation];
@@ -319,7 +319,7 @@
         
         [current enumerateObjectsUsingBlock:^(TL_conversation *obj, NSUInteger idx, BOOL *stop) {
             
-            if(!obj.isAddToList)
+            if(!obj.isAddToList || obj.chat.isDeactivated)
                 return;
             
             
@@ -370,7 +370,7 @@
 
 -(void)move:(int)position conversation:(TL_conversation *)conversation {
     
-    if(!conversation.isAddToList)
+    if(!conversation.isAddToList || conversation.chat.isDeactivated)
         return;
     
     if(position == 0 && conversation.top_message > TGMINFAKEID) {
