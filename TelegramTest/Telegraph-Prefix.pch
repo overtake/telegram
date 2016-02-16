@@ -34,6 +34,7 @@
 #import "TL_peerSecret.h"
 #import "TL_peerBroadcast.h"
 #import "TL_localMessage.h"
+#import "TL_localMessage_old46.h"
 #import "TL_localEmptyMessage.h"
 #import "TL_broadcast.h"
 #import "TL_messageActionEncryptedChat.h"

@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import "TGDownloadItem.h"
+#import "DownloadDocumentItem.h"
 @interface DownloadVideoItem : TGDownloadItem
 
 @end

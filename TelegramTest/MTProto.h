@@ -2,7 +2,7 @@
 //  MTProto.h
 //  Telegram
 //
-//  Auto created by Mikhail Filimonov on 13.02.16.
+//  Auto created by Mikhail Filimonov on 16.02.16.
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -34,9 +34,6 @@
 @end
 	
 @interface TLInputPhoto : TLObject
-@end
-	
-@interface TLInputVideo : TLObject
 @end
 	
 @interface TLInputFileLocation : TLObject
@@ -97,9 +94,6 @@
 @end
 	
 @interface TLPhotoSize : TLObject
-@end
-	
-@interface TLVideo : TLObject
 @end
 	
 @interface TLGeoPoint : TLObject
@@ -420,7 +414,13 @@
 @interface TLmessages_BotResults : TLObject
 @end
 	
+@interface TLExportedMessageLink : TLObject
+@end
+	
 @interface TLAudio : TLObject
+@end
+	
+@interface TLVideo : TLObject
 @end
 	
 @interface TLProtoMessage : TLObject
@@ -590,18 +590,18 @@
 @property (nonatomic, strong) NSString* phone_number;
 @property (nonatomic, strong) NSString* first_name;
 @property (nonatomic, strong) NSString* last_name;
-@property int duration;
-@property int w;
-@property int h;
 @property (nonatomic, strong) NSString* mime_type;
-@property (nonatomic, strong) TLInputFile* thumb;
 @property (nonatomic, strong) NSMutableArray* attributes;
+@property (nonatomic, strong) TLInputFile* thumb;
 @property (nonatomic, strong) NSString* title;
 @property (nonatomic, strong) NSString* address;
 @property (nonatomic, strong) NSString* provider;
 @property (nonatomic, strong) NSString* venue_id;
 @property (nonatomic, strong) NSString* url;
 @property (nonatomic, strong) NSString* q;
+@property int duration;
+@property int w;
+@property int h;
 @end
 
 @interface TL_inputMediaEmpty : TLInputMedia<NSCoding>
@@ -618,15 +618,6 @@
 @end
 @interface TL_inputMediaContact : TLInputMedia<NSCoding>
 +(TL_inputMediaContact*)createWithPhone_number:(NSString*)phone_number first_name:(NSString*)first_name last_name:(NSString*)last_name;
-@end
-@interface TL_inputMediaUploadedVideo : TLInputMedia<NSCoding>
-+(TL_inputMediaUploadedVideo*)createWithFile:(TLInputFile*)file duration:(int)duration w:(int)w h:(int)h mime_type:(NSString*)mime_type caption:(NSString*)caption;
-@end
-@interface TL_inputMediaUploadedThumbVideo : TLInputMedia<NSCoding>
-+(TL_inputMediaUploadedThumbVideo*)createWithFile:(TLInputFile*)file thumb:(TLInputFile*)thumb duration:(int)duration w:(int)w h:(int)h mime_type:(NSString*)mime_type caption:(NSString*)caption;
-@end
-@interface TL_inputMediaVideo : TLInputMedia<NSCoding>
-+(TL_inputMediaVideo*)createWithN_id:(TLInputVideo*)n_id caption:(NSString*)caption;
 @end
 @interface TL_inputMediaUploadedDocument : TLInputMedia<NSCoding>
 +(TL_inputMediaUploadedDocument*)createWithFile:(TLInputFile*)file mime_type:(NSString*)mime_type attributes:(NSMutableArray*)attributes caption:(NSString*)caption;
@@ -690,18 +681,6 @@
 +(TL_inputPhoto*)createWithN_id:(long)n_id access_hash:(long)access_hash;
 @end
 	
-@interface TLInputVideo()
-@property long n_id;
-@property long access_hash;
-@end
-
-@interface TL_inputVideoEmpty : TLInputVideo<NSCoding>
-+(TL_inputVideoEmpty*)create;
-@end
-@interface TL_inputVideo : TLInputVideo<NSCoding>
-+(TL_inputVideo*)createWithN_id:(long)n_id access_hash:(long)access_hash;
-@end
-	
 @interface TLInputFileLocation()
 @property long volume_id;
 @property int local_id;
@@ -712,9 +691,6 @@
 
 @interface TL_inputFileLocation : TLInputFileLocation<NSCoding>
 +(TL_inputFileLocation*)createWithVolume_id:(long)volume_id local_id:(int)local_id secret:(long)secret;
-@end
-@interface TL_inputVideoFileLocation : TLInputFileLocation<NSCoding>
-+(TL_inputVideoFileLocation*)createWithN_id:(long)n_id access_hash:(long)access_hash;
 @end
 @interface TL_inputEncryptedFileLocation : TLInputFileLocation<NSCoding>
 +(TL_inputEncryptedFileLocation*)createWithN_id:(long)n_id access_hash:(long)access_hash;
@@ -920,7 +896,8 @@
 @property (nonatomic,assign,readonly) BOOL isVerified;
 @property (nonatomic,assign,readonly) BOOL isMegagroup;
 @property (nonatomic,assign,readonly) BOOL isRestricted;
-@property (nonatomic,assign,readonly) BOOL isInvites_enabled;
+@property (nonatomic,assign,readonly) BOOL isAdmin_invites;
+@property (nonatomic,assign,readonly) BOOL isSignatures;
 @property long access_hash;
 @property (nonatomic, strong) NSString* username;
 @property (nonatomic, strong) NSString* restriction_reason;
@@ -937,7 +914,7 @@
 +(TL_chatForbidden*)createWithN_id:(int)n_id title:(NSString*)title;
 @end
 @interface TL_channel : TLChat<NSCoding>
-+(TL_channel*)createWithFlags:(int)flags           n_id:(int)n_id access_hash:(long)access_hash title:(NSString*)title username:(NSString*)username photo:(TLChatPhoto*)photo date:(int)date version:(int)version restriction_reason:(NSString*)restriction_reason;
++(TL_channel*)createWithFlags:(int)flags            n_id:(int)n_id access_hash:(long)access_hash title:(NSString*)title username:(NSString*)username photo:(TLChatPhoto*)photo date:(int)date version:(int)version restriction_reason:(NSString*)restriction_reason;
 @end
 @interface TL_channelForbidden : TLChat<NSCoding>
 +(TL_channelForbidden*)createWithN_id:(int)n_id access_hash:(long)access_hash title:(NSString*)title;
@@ -1048,10 +1025,13 @@
 @property (nonatomic,assign,readonly) BOOL isN_out;
 @property (nonatomic,assign,readonly) BOOL isMentioned;
 @property (nonatomic,assign,readonly) BOOL isMedia_unread;
+@property (nonatomic,assign,readonly) BOOL isSilent;
+@property (nonatomic,assign,readonly) BOOL isPost;
 @property int from_id;
 @property (nonatomic, strong) TLPeer* to_id;
 @property (nonatomic, strong) TLPeer* fwd_from_id;
 @property int fwd_date;
+@property int fwd_post;
 @property int via_bot_id;
 @property int reply_to_msg_id;
 @property int date;
@@ -1067,7 +1047,7 @@
 +(TL_messageEmpty*)createWithN_id:(int)n_id;
 @end
 @interface TL_message : TLMessage<NSCoding>
-+(TL_message*)createWithFlags:(int)flags     n_id:(int)n_id from_id:(int)from_id to_id:(TLPeer*)to_id fwd_from_id:(TLPeer*)fwd_from_id fwd_date:(int)fwd_date via_bot_id:(int)via_bot_id reply_to_msg_id:(int)reply_to_msg_id date:(int)date message:(NSString*)message media:(TLMessageMedia*)media reply_markup:(TLReplyMarkup*)reply_markup entities:(NSMutableArray*)entities views:(int)views;
++(TL_message*)createWithFlags:(int)flags       n_id:(int)n_id from_id:(int)from_id to_id:(TLPeer*)to_id fwd_from_id:(TLPeer*)fwd_from_id fwd_date:(int)fwd_date fwd_post:(int)fwd_post via_bot_id:(int)via_bot_id reply_to_msg_id:(int)reply_to_msg_id date:(int)date message:(NSString*)message media:(TLMessageMedia*)media reply_markup:(TLReplyMarkup*)reply_markup entities:(NSMutableArray*)entities views:(int)views;
 @end
 @interface TL_messageService : TLMessage<NSCoding>
 +(TL_messageService*)createWithFlags:(int)flags     n_id:(int)n_id from_id:(int)from_id to_id:(TLPeer*)to_id date:(int)date action:(TLMessageAction*)action;
@@ -1076,7 +1056,6 @@
 @interface TLMessageMedia()
 @property (nonatomic, strong) TLPhoto* photo;
 @property (nonatomic, strong) NSString* caption;
-@property (nonatomic, strong) TLVideo* video;
 @property (nonatomic, strong) TLGeoPoint* geo;
 @property (nonatomic, strong) NSString* phone_number;
 @property (nonatomic, strong) NSString* first_name;
@@ -1091,6 +1070,7 @@
 @property (nonatomic, strong) TLBotInlineResult* bot_result;
 @property long query_id;
 @property (nonatomic, strong) TLAudio* audio;
+@property (nonatomic, strong) TLVideo* video;
 @end
 
 @interface TL_messageMediaEmpty : TLMessageMedia<NSCoding>
@@ -1098,9 +1078,6 @@
 @end
 @interface TL_messageMediaPhoto : TLMessageMedia<NSCoding>
 +(TL_messageMediaPhoto*)createWithPhoto:(TLPhoto*)photo caption:(NSString*)caption;
-@end
-@interface TL_messageMediaVideo : TLMessageMedia<NSCoding>
-+(TL_messageMediaVideo*)createWithVideo:(TLVideo*)video caption:(NSString*)caption;
 @end
 @interface TL_messageMediaGeo : TLMessageMedia<NSCoding>
 +(TL_messageMediaGeo*)createWithGeo:(TLGeoPoint*)geo;
@@ -1128,6 +1105,9 @@
 @end
 @interface TL_messageMediaAudio : TLMessageMedia<NSCoding>
 +(TL_messageMediaAudio*)createWithAudio:(TLAudio*)audio;
+@end
+@interface TL_messageMediaVideo : TLMessageMedia<NSCoding>
++(TL_messageMediaVideo*)createWithVideo:(TLVideo*)video caption:(NSString*)caption;
 @end
 	
 @interface TLMessageAction()
@@ -1231,30 +1211,6 @@
 @end
 @interface TL_photoCachedSize : TLPhotoSize<NSCoding>
 +(TL_photoCachedSize*)createWithType:(NSString*)type location:(TLFileLocation*)location w:(int)w h:(int)h bytes:(NSData*)bytes;
-@end
-	
-@interface TLVideo()
-@property long n_id;
-@property long access_hash;
-@property int date;
-@property int duration;
-@property (nonatomic, strong) NSString* mime_type;
-@property int size;
-@property (nonatomic, strong) TLPhotoSize* thumb;
-@property int dc_id;
-@property int w;
-@property int h;
-@property int user_id;
-@end
-
-@interface TL_videoEmpty : TLVideo<NSCoding>
-+(TL_videoEmpty*)createWithN_id:(long)n_id;
-@end
-@interface TL_video : TLVideo<NSCoding>
-+(TL_video*)createWithN_id:(long)n_id access_hash:(long)access_hash date:(int)date duration:(int)duration mime_type:(NSString*)mime_type size:(int)size thumb:(TLPhotoSize*)thumb dc_id:(int)dc_id w:(int)w h:(int)h;
-@end
-@interface TL_video_old29 : TLVideo<NSCoding>
-+(TL_video_old29*)createWithN_id:(long)n_id access_hash:(long)access_hash user_id:(int)user_id date:(int)date duration:(int)duration size:(int)size thumb:(TLPhotoSize*)thumb dc_id:(int)dc_id w:(int)w h:(int)h;
 @end
 	
 @interface TLGeoPoint()
@@ -1819,6 +1775,7 @@
 @property (nonatomic,assign,readonly) BOOL isN_out;
 @property (nonatomic,assign,readonly) BOOL isMentioned;
 @property (nonatomic,assign,readonly) BOOL isMedia_unread;
+@property (nonatomic,assign,readonly) BOOL isSilent;
 @property int n_id;
 @property int user_id;
 @property (nonatomic, strong) NSString* message;
@@ -1827,6 +1784,7 @@
 @property int date;
 @property (nonatomic, strong) TLPeer* fwd_from_id;
 @property int fwd_date;
+@property int fwd_post;
 @property int via_bot_id;
 @property int reply_to_msg_id;
 @property (nonatomic, strong) NSMutableArray* entities;
@@ -1845,10 +1803,10 @@
 +(TL_updatesTooLong*)create;
 @end
 @interface TL_updateShortMessage : TLUpdates<NSCoding>
-+(TL_updateShortMessage*)createWithFlags:(int)flags     n_id:(int)n_id user_id:(int)user_id message:(NSString*)message pts:(int)pts pts_count:(int)pts_count date:(int)date fwd_from_id:(TLPeer*)fwd_from_id fwd_date:(int)fwd_date via_bot_id:(int)via_bot_id reply_to_msg_id:(int)reply_to_msg_id entities:(NSMutableArray*)entities;
++(TL_updateShortMessage*)createWithFlags:(int)flags      n_id:(int)n_id user_id:(int)user_id message:(NSString*)message pts:(int)pts pts_count:(int)pts_count date:(int)date fwd_from_id:(TLPeer*)fwd_from_id fwd_date:(int)fwd_date fwd_post:(int)fwd_post via_bot_id:(int)via_bot_id reply_to_msg_id:(int)reply_to_msg_id entities:(NSMutableArray*)entities;
 @end
 @interface TL_updateShortChatMessage : TLUpdates<NSCoding>
-+(TL_updateShortChatMessage*)createWithFlags:(int)flags     n_id:(int)n_id from_id:(int)from_id chat_id:(int)chat_id message:(NSString*)message pts:(int)pts pts_count:(int)pts_count date:(int)date fwd_from_id:(TLPeer*)fwd_from_id fwd_date:(int)fwd_date via_bot_id:(int)via_bot_id reply_to_msg_id:(int)reply_to_msg_id entities:(NSMutableArray*)entities;
++(TL_updateShortChatMessage*)createWithFlags:(int)flags      n_id:(int)n_id from_id:(int)from_id chat_id:(int)chat_id message:(NSString*)message pts:(int)pts pts_count:(int)pts_count date:(int)date fwd_from_id:(TLPeer*)fwd_from_id fwd_date:(int)fwd_date fwd_post:(int)fwd_post via_bot_id:(int)via_bot_id reply_to_msg_id:(int)reply_to_msg_id entities:(NSMutableArray*)entities;
 @end
 @interface TL_updateShort : TLUpdates<NSCoding>
 +(TL_updateShort*)createWithUpdate:(TLUpdate*)update date:(int)date;
@@ -1899,13 +1857,14 @@
 @property int flags;
 @property (nonatomic,assign,readonly) BOOL isIpv6;
 @property (nonatomic,assign,readonly) BOOL isMedia_only;
+@property (nonatomic,assign,readonly) BOOL isTcpo_only;
 @property int n_id;
 @property (nonatomic, strong) NSString* ip_address;
 @property int port;
 @end
 
 @interface TL_dcOption : TLDcOption<NSCoding>
-+(TL_dcOption*)createWithFlags:(int)flags   n_id:(int)n_id ip_address:(NSString*)ip_address port:(int)port;
++(TL_dcOption*)createWithFlags:(int)flags    n_id:(int)n_id ip_address:(NSString*)ip_address port:(int)port;
 @end
 	
 @interface TLConfig()
@@ -2985,6 +2944,14 @@
 +(TL_messages_botResults*)createWithFlags:(int)flags  query_id:(long)query_id next_offset:(NSString*)next_offset results:(NSMutableArray*)results;
 @end
 	
+@interface TLExportedMessageLink()
+@property (nonatomic, strong) NSString* link;
+@end
+
+@interface TL_exportedMessageLink : TLExportedMessageLink<NSCoding>
++(TL_exportedMessageLink*)createWithLink:(NSString*)link;
+@end
+	
 @interface TLAudio()
 @property long n_id;
 @property long access_hash;
@@ -3001,6 +2968,27 @@
 @end
 @interface TL_audio : TLAudio<NSCoding>
 +(TL_audio*)createWithN_id:(long)n_id access_hash:(long)access_hash date:(int)date duration:(int)duration mime_type:(NSString*)mime_type size:(int)size dc_id:(int)dc_id;
+@end
+	
+@interface TLVideo()
+@property long n_id;
+@property long access_hash;
+@property int user_id;
+@property int date;
+@property int duration;
+@property int size;
+@property (nonatomic, strong) TLPhotoSize* thumb;
+@property int dc_id;
+@property int w;
+@property int h;
+@property (nonatomic, strong) NSString* mime_type;
+@end
+
+@interface TL_video_old29 : TLVideo<NSCoding>
++(TL_video_old29*)createWithN_id:(long)n_id access_hash:(long)access_hash user_id:(int)user_id date:(int)date duration:(int)duration size:(int)size thumb:(TLPhotoSize*)thumb dc_id:(int)dc_id w:(int)w h:(int)h;
+@end
+@interface TL_video : TLVideo<NSCoding>
++(TL_video*)createWithN_id:(long)n_id access_hash:(long)access_hash date:(int)date duration:(int)duration mime_type:(NSString*)mime_type size:(int)size thumb:(TLPhotoSize*)thumb dc_id:(int)dc_id w:(int)w h:(int)h;
 @end
 	
 @interface TLProtoMessage()

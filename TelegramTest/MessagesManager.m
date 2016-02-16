@@ -203,8 +203,6 @@ static const int seconds_to_notify = 120;
         }
         
         
-        
-        
         if(message.peer_id < 0 && message.from_id != 0) {
             subTitle = title;
             title = [chat title];
@@ -212,7 +210,7 @@ static const int seconds_to_notify = 120;
         
         
         
-        if ([NSUserNotification class] && [NSUserNotificationCenter class] && [SettingsArchiver checkMaskedSetting:PushNotifications]) {
+        if ([NSUserNotification class] && [NSUserNotificationCenter class] && [SettingsArchiver checkMaskedSetting:PushNotifications] && !message.isSilent) {
             
             if([TGPasslock isVisibility] || [message.to_id isSecret] || ![SettingsArchiver checkMaskedSetting:MessagesNotificationPreview])
             {

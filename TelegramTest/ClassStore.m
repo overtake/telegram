@@ -3,7 +3,7 @@
 //  ClassStore.m
 //  Telegram
 //
-    //  Created by keepcoder on 13.02.16.
+    //  Created by keepcoder on 16.02.16.
 //  Copyright (c) 2015 keepcoder. All rights reserved.
 //
 
@@ -161,9 +161,6 @@ static NSMutableDictionary *cs_constuctors;
    [cs_classes setObject:[TL_inputMediaPhoto class] forKey:[NSNumber numberWithInt:-373312269]];
    [cs_classes setObject:[TL_inputMediaGeoPoint class] forKey:[NSNumber numberWithInt:-104578748]];
    [cs_classes setObject:[TL_inputMediaContact class] forKey:[NSNumber numberWithInt:-1494984313]];
-   [cs_classes setObject:[TL_inputMediaUploadedVideo class] forKey:[NSNumber numberWithInt:-2106507297]];
-   [cs_classes setObject:[TL_inputMediaUploadedThumbVideo class] forKey:[NSNumber numberWithInt:2004934137]];
-   [cs_classes setObject:[TL_inputMediaVideo class] forKey:[NSNumber numberWithInt:-1821749571]];
    [cs_classes setObject:[TL_inputChatPhotoEmpty class] forKey:[NSNumber numberWithInt:480546647]];
    [cs_classes setObject:[TL_inputChatUploadedPhoto class] forKey:[NSNumber numberWithInt:-1809496270]];
    [cs_classes setObject:[TL_inputChatPhoto class] forKey:[NSNumber numberWithInt:-1293828344]];
@@ -171,10 +168,7 @@ static NSMutableDictionary *cs_constuctors;
    [cs_classes setObject:[TL_inputGeoPoint class] forKey:[NSNumber numberWithInt:-206066487]];
    [cs_classes setObject:[TL_inputPhotoEmpty class] forKey:[NSNumber numberWithInt:483901197]];
    [cs_classes setObject:[TL_inputPhoto class] forKey:[NSNumber numberWithInt:-74070332]];
-   [cs_classes setObject:[TL_inputVideoEmpty class] forKey:[NSNumber numberWithInt:1426648181]];
-   [cs_classes setObject:[TL_inputVideo class] forKey:[NSNumber numberWithInt:-296249774]];
    [cs_classes setObject:[TL_inputFileLocation class] forKey:[NSNumber numberWithInt:342061462]];
-   [cs_classes setObject:[TL_inputVideoFileLocation class] forKey:[NSNumber numberWithInt:1023632620]];
    [cs_classes setObject:[TL_inputPhotoCropAuto class] forKey:[NSNumber numberWithInt:-1377390588]];
    [cs_classes setObject:[TL_inputPhotoCrop class] forKey:[NSNumber numberWithInt:-644787419]];
    [cs_classes setObject:[TL_inputAppEvent class] forKey:[NSNumber numberWithInt:1996904104]];
@@ -208,11 +202,10 @@ static NSMutableDictionary *cs_constuctors;
    [cs_classes setObject:[TL_chatPhotoEmpty class] forKey:[NSNumber numberWithInt:935395612]];
    [cs_classes setObject:[TL_chatPhoto class] forKey:[NSNumber numberWithInt:1632839530]];
    [cs_classes setObject:[TL_messageEmpty class] forKey:[NSNumber numberWithInt:-2082087340]];
-   [cs_classes setObject:[TL_message class] forKey:[NSNumber numberWithInt:-913120932]];
+   [cs_classes setObject:[TL_message class] forKey:[NSNumber numberWithInt:-284045578]];
    [cs_classes setObject:[TL_messageService class] forKey:[NSNumber numberWithInt:-1066691065]];
    [cs_classes setObject:[TL_messageMediaEmpty class] forKey:[NSNumber numberWithInt:1038967584]];
    [cs_classes setObject:[TL_messageMediaPhoto class] forKey:[NSNumber numberWithInt:1032643901]];
-   [cs_classes setObject:[TL_messageMediaVideo class] forKey:[NSNumber numberWithInt:1540298357]];
    [cs_classes setObject:[TL_messageMediaGeo class] forKey:[NSNumber numberWithInt:1457575028]];
    [cs_classes setObject:[TL_messageMediaContact class] forKey:[NSNumber numberWithInt:1585262393]];
    [cs_classes setObject:[TL_messageMediaUnsupported class] forKey:[NSNumber numberWithInt:-1618676578]];
@@ -229,8 +222,6 @@ static NSMutableDictionary *cs_constuctors;
    [cs_classes setObject:[TL_photoSizeEmpty class] forKey:[NSNumber numberWithInt:236446268]];
    [cs_classes setObject:[TL_photoSize class] forKey:[NSNumber numberWithInt:2009052699]];
    [cs_classes setObject:[TL_photoCachedSize class] forKey:[NSNumber numberWithInt:-374917894]];
-   [cs_classes setObject:[TL_videoEmpty class] forKey:[NSNumber numberWithInt:-1056548696]];
-   [cs_classes setObject:[TL_video class] forKey:[NSNumber numberWithInt:-148338733]];
    [cs_classes setObject:[TL_geoPointEmpty class] forKey:[NSNumber numberWithInt:286776671]];
    [cs_classes setObject:[TL_geoPoint class] forKey:[NSNumber numberWithInt:541710092]];
    [cs_classes setObject:[TL_auth_checkedPhone class] forKey:[NSNumber numberWithInt:-2128698738]];
@@ -296,8 +287,8 @@ static NSMutableDictionary *cs_constuctors;
    [cs_classes setObject:[TL_updates_difference class] forKey:[NSNumber numberWithInt:16030880]];
    [cs_classes setObject:[TL_updates_differenceSlice class] forKey:[NSNumber numberWithInt:-1459938943]];
    [cs_classes setObject:[TL_updatesTooLong class] forKey:[NSNumber numberWithInt:-484987010]];
-   [cs_classes setObject:[TL_updateShortMessage class] forKey:[NSNumber numberWithInt:333766314]];
-   [cs_classes setObject:[TL_updateShortChatMessage class] forKey:[NSNumber numberWithInt:613087842]];
+   [cs_classes setObject:[TL_updateShortMessage class] forKey:[NSNumber numberWithInt:989587921]];
+   [cs_classes setObject:[TL_updateShortChatMessage class] forKey:[NSNumber numberWithInt:-902893163]];
    [cs_classes setObject:[TL_updateShort class] forKey:[NSNumber numberWithInt:2027216577]];
    [cs_classes setObject:[TL_updatesCombined class] forKey:[NSNumber numberWithInt:1918567619]];
    [cs_classes setObject:[TL_updates class] forKey:[NSNumber numberWithInt:1957577280]];
@@ -533,6 +524,7 @@ static NSMutableDictionary *cs_constuctors;
    [cs_classes setObject:[TL_inputMessagesFilterMusic class] forKey:[NSNumber numberWithInt:928101534]];
    [cs_classes setObject:[TL_inputPrivacyKeyChatInvite class] forKey:[NSNumber numberWithInt:-1107622874]];
    [cs_classes setObject:[TL_privacyKeyChatInvite class] forKey:[NSNumber numberWithInt:1343122938]];
+   [cs_classes setObject:[TL_exportedMessageLink class] forKey:[NSNumber numberWithInt:524838915]];
    [cs_classes setObject:[TL_userSelf class] forKey:[NSNumber numberWithInt:476112392]];
    [cs_classes setObject:[TL_userContact class] forKey:[NSNumber numberWithInt:-894214632]];
    [cs_classes setObject:[TL_userRequest class] forKey:[NSNumber numberWithInt:-640891665]];
@@ -563,6 +555,8 @@ static NSMutableDictionary *cs_constuctors;
    [cs_classes setObject:[TL_messageMediaAudio class] forKey:[NSNumber numberWithInt:-961117440]];
    [cs_classes setObject:[TL_audio class] forKey:[NSNumber numberWithInt:-102543275]];
    [cs_classes setObject:[TL_documentAttributeAudio_old45 class] forKey:[NSNumber numberWithInt:-556656416]];
+   [cs_classes setObject:[TL_messageMediaVideo class] forKey:[NSNumber numberWithInt:1540298357]];
+   [cs_classes setObject:[TL_video class] forKey:[NSNumber numberWithInt:-148338733]];
    [cs_classes setObject:[TL_proto_message class] forKey:[NSNumber numberWithInt:1538843921]];
    [cs_classes setObject:[TL_msg_container class] forKey:[NSNumber numberWithInt:1945237724]];
    [cs_classes setObject:[TL_req_pq class] forKey:[NSNumber numberWithInt:1615239032]];

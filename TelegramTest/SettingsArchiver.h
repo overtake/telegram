@@ -45,6 +45,10 @@ typedef enum {
 
 
 typedef enum {
+    PushEventMaskDisableChannelMessageNotification = 1 << 31
+} PushEventMask;
+
+typedef enum {
     DownloadLimitSize10 = 10*1024*1024,
     DownloadLimitSize50 = 50*1024*1024,
     DownloadLimitSize100 = 100*1024*1024,

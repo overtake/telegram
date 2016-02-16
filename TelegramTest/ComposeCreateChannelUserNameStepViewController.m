@@ -24,15 +24,11 @@
     [super loadView];
     
     
-    NSMutableAttributedString *attr = [[NSMutableAttributedString alloc] init];
+   
     
-    [attr appendString:NSLocalizedString(@"Channel.SetChannelLinkDescription", nil)  withColor:TEXT_COLOR];
+    _observer = [[TGChangeUserObserver alloc] initWithDescription:nil placeholder:nil defaultUserName:nil];
     
-    [attr setFont:TGSystemFont(12) forRange:attr.range];
-    
-    [attr detectBoldColorInStringWithFont:TGSystemMediumFont(12)];
-    
-    _observer = [[TGChangeUserObserver alloc] initWithDescription:attr placeholder:nil defaultUserName:nil];
+    weak();
     
     [_observer setNeedDescriptionWithError:^NSString *(NSString *error) {
         
@@ -46,13 +42,17 @@
             return NSLocalizedString(@"Channel.Username.InvalidCharacters", nil);
         } else if([error isEqualToString:@"UserName.avaiable"]) {
             return NSLocalizedString(@"Channel.Username.UsernameIsAvailable", nil);
+        } else if([error isEqualToString:@"CHANNELS_ADMIN_PUBLIC_TOO_MUCH"]) {
+            TL_channel *channel = weakSelf.action.result.singleObject;
+            
+            if(channel.isMegagroup) {
+                return NSLocalizedString(@"MEGAGROUPS_ADMIN_PUBLIC_TOO_MUCH", nil);
+            }
         }
         
         return NSLocalizedString(error, nil);
         
     }];
-    
-    weak();
     
     [_observer setWillNeedSaveUserName:^(NSString *userName) {
         
@@ -126,6 +126,16 @@
     
     [self setCenterBarViewTextAttributed:self.action.behavior.centerTitle];
     
+    
+    NSMutableAttributedString *attr = [[NSMutableAttributedString alloc] init];
+    
+    [attr appendString:channel.isMegagroup ? NSLocalizedString(@"Channel.SetMegagroupLinkDescription", nil) : NSLocalizedString(@"Channel.SetChannelLinkDescription", nil)  withColor:TEXT_COLOR];
+    
+    [attr setFont:TGSystemFont(12) forRange:attr.range];
+    
+    [attr detectBoldColorInStringWithFont:TGSystemMediumFont(12)];
+    
+    _observer.desc = attr;
     
     [_changeUserNameContainerView setOberser:_observer];
     

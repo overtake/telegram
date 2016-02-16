@@ -670,6 +670,12 @@ TL_localMessage *parseMessage(FMResultSet *result) {
             [attrs addObject:[TL_documentAttributeAudio createWithFlags:(1 << 10) duration:msg.media.audio.duration title:nil performer:nil waveform:nil]];
             
             msg.media = [TL_messageMediaDocument createWithDocument:[TL_document createWithN_id:msg.media.audio.n_id access_hash:msg.media.audio.access_hash date:msg.media.audio.date mime_type:msg.media.audio.mime_type size:msg.media.audio.size thumb:[TL_photoSizeEmpty createWithType:@"x"] dc_id:msg.media.audio.dc_id attributes:attrs] caption:@""];
+        } else if([msg.media isKindOfClass:[TL_messageMediaVideo class]]) {
+            NSMutableArray *attrs = [NSMutableArray array];
+            
+            [attrs addObject:[TL_documentAttributeVideo createWithDuration:msg.media.video.duration w:msg.media.video.w h:msg.media.video.h]];
+            
+            msg.media = [TL_messageMediaDocument createWithDocument:[TL_document createWithN_id:msg.media.video.n_id access_hash:msg.media.video.access_hash date:msg.media.video.date mime_type:msg.media.video.mime_type size:msg.media.video.size thumb:msg.media.video.thumb dc_id:msg.media.video.dc_id attributes:attrs] caption:msg.media.caption];
         }
         
         if(![msg isKindOfClass:[TL_messageEmpty class]])
@@ -2849,8 +2855,6 @@ TL_localMessage *parseMessage(FMResultSet *result) {
         while ([result next]) {
             [holes addObject:[[TGMessageGroupHole alloc] initWithUniqueId:[result intForColumn:@"unique_id"] peer_id:[result intForColumn:@"peer_id"] min_id:[result intForColumn:@"min_id"] max_id:[result intForColumn:@"max_id"] date:[result intForColumn:@"date"] count:[result intForColumn:@"count"] isImploded:[result boolForColumn:@"imploded"]]];
         }
-        
-    
         
         [result close];
         

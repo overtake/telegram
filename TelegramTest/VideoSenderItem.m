@@ -52,12 +52,16 @@
             cachedSize = [TL_photoSizeEmpty createWithType:@"x"];
         }
         
-
-        TL_messageMediaVideo *video = [TL_messageMediaVideo createWithVideo:[TL_video createWithN_id:0 access_hash:0 date:(int)[[MTNetwork instance] getTime] duration:duration mime_type:mimetypefromExtension([path_for_file pathExtension]) size:0 thumb:cachedSize dc_id:0 w:size.width h:size.height] caption:@""];
+        NSMutableArray *attributes = [NSMutableArray array];
+        
+        [attributes addObject:[TL_documentAttributeFilename createWithFile_name:[path_for_file lastPathComponent]]];
+        [attributes addObject:[TL_documentAttributeVideo createWithDuration:duration w:size.width h:size.height]];
+        
+        TL_messageMediaDocument *media = [TL_messageMediaDocument createWithDocument:[TL_document createWithN_id:0 access_hash:0 date:[[MTNetwork instance] getTime] mime_type:@"video/mp4" size:0 thumb:cachedSize dc_id:0 attributes:attributes] caption:nil];
 
         [[ImageCache sharedManager] setImage:thumbImage forLocation:[cachedSize location]];
 
-        self.message = [MessageSender createOutMessage:@"" media:video conversation:conversation];
+        self.message = [MessageSender createOutMessage:@"" media:media conversation:conversation];
         
         if(additionFlags & (1 << 4))
             self.message.from_id = 0;
@@ -72,10 +76,8 @@
     
     
     
-    NSData *thumbData = self.message.media.video.thumb.bytes;
-    int duration = self.message.media.video.duration;
-    NSSize size = NSMakeSize(self.message.media.video.w, self.message.media.video.h);
-    
+    NSData *thumbData = self.message.media.document.thumb.bytes;
+
     
     NSString *export = exportPath(self.message.randomId,@"mp4");
     
@@ -122,19 +124,14 @@
                 
                 TLMessage *msg = [TL_localMessage convertReceivedMessage:(TLMessage *) ( [response.updates[1] message])];
                 
-                
-                if(strongSelf.conversation.type != DialogTypeBroadcast)  {
+                 strongSelf.message.n_id = msg.n_id;
+                strongSelf.message.date = msg.date;
                     
-                    strongSelf.message.n_id = msg.n_id;
-                    strongSelf.message.date = msg.date;
-                    
-                } 
-                
-                
-                strongSelf.message.media.video.dc_id = [msg media].video.dc_id;
-                strongSelf.message.media.video.size = [msg media].video.size;
-                strongSelf.message.media.video.access_hash = [msg media].video.access_hash;
-                strongSelf.message.media.video.n_id = [msg media].video.n_id;
+
+                strongSelf.message.media.document.dc_id = [msg media].document.dc_id;
+                strongSelf.message.media.document.size = [msg media].document.size;
+                strongSelf.message.media.document.access_hash = [msg media].document.access_hash;
+                strongSelf.message.media.document.n_id = [msg media].document.n_id;
                 
                 
                 
@@ -143,7 +140,7 @@
                 NSImage *thumb = [MessageSender videoParams:mediaFilePath(strongSelf.message) thumbSize:strongsize(NSMakeSize(640, 480), 250)][@"image"];
                 
                 
-                strongSelf.message.media.video.thumb = [TL_photoCachedSize createWithType:@"x" location:msg.media.video.thumb.location w:thumb.size.width h:thumb.size.height bytes:jpegNormalizedData(thumb)];
+                strongSelf.message.media.document.thumb = [TL_photoCachedSize createWithType:@"x" location:msg.media.video.thumb.location w:thumb.size.width h:thumb.size.height bytes:jpegNormalizedData(thumb)];
                 
                 strongSelf.uploader = nil;
                 
@@ -166,7 +163,7 @@
 
         if(!isFirstSend) {
             TLVideo *video = input;
-            media = [TL_inputMediaVideo createWithN_id:[TL_inputVideo createWithN_id:video.n_id access_hash:video.access_hash] caption:@""];
+            media = [TL_inputMediaDocument createWithN_id:[TL_inputDocument createWithN_id:video.n_id access_hash:video.access_hash] caption:@""];
             block();
         } else {
             
@@ -174,7 +171,7 @@
                 UploadOperation *thumbUpload = [[UploadOperation alloc] init];
                 [thumbUpload setUploadComplete:^(UploadOperation *thumb, TL_inputFile *inputThumbFile) {
                     
-                    media = [TL_inputMediaUploadedThumbVideo createWithFile:input  thumb:inputThumbFile duration:duration w:size.width h:size.height mime_type:mimetypefromExtension(@"mp4") caption:@""];
+                    media = [TL_inputMediaUploadedThumbDocument createWithFile:input thumb:inputThumbFile mime_type:@"image/jpeg" attributes:nil caption:self.message.media.caption];
                     
                     block();
                 }];
@@ -182,7 +179,7 @@
                 [thumbUpload setFileData:thumbData];
                 [thumbUpload ready:UploadImageType];
             } else {
-                media = [TL_inputMediaUploadedVideo createWithFile:input duration:duration w:size.width h:size.height mime_type:mimetypefromExtension(@"mp4") caption:self.message.media.caption];
+                media = [TL_inputMediaUploadedDocument createWithFile:input mime_type:mimetypefromExtension(@"mp4") attributes:self.message.media.document.attributes caption:self.message.media.caption];
                 block();
             }
         }

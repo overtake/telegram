@@ -2,7 +2,7 @@
 //  TLApi.m
 //  Telegram
 //
-//  Auto created by Mikhail Filimonov on 13.02.16..
+//  Auto created by Mikhail Filimonov on 16.02.16..
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -716,9 +716,10 @@
 @end
 
 @implementation TLAPI_messages_sendMessage
-+(TLAPI_messages_sendMessage*)createWithFlags:(int)flags   peer:(TLInputPeer*)peer reply_to_msg_id:(int)reply_to_msg_id message:(NSString*)message random_id:(long)random_id reply_markup:(TLReplyMarkup*)reply_markup entities:(NSMutableArray*)entities {
++(TLAPI_messages_sendMessage*)createWithFlags:(int)flags    peer:(TLInputPeer*)peer reply_to_msg_id:(int)reply_to_msg_id message:(NSString*)message random_id:(long)random_id reply_markup:(TLReplyMarkup*)reply_markup entities:(NSMutableArray*)entities {
     TLAPI_messages_sendMessage* obj = [[TLAPI_messages_sendMessage alloc] init];
     obj.flags = flags;
+	
 	
 	
 	obj.peer = peer;
@@ -732,6 +733,7 @@
 - (NSData*)getData {
 	SerializedData* stream = [ClassStore streamWithConstuctor:-91733382];
 	[stream writeInt:self.flags];
+	
 	
 	
 	[ClassStore TLSerialize:self.peer stream:stream];
@@ -754,9 +756,10 @@
 @end
 
 @implementation TLAPI_messages_sendMedia
-+(TLAPI_messages_sendMedia*)createWithFlags:(int)flags  peer:(TLInputPeer*)peer reply_to_msg_id:(int)reply_to_msg_id media:(TLInputMedia*)media random_id:(long)random_id reply_markup:(TLReplyMarkup*)reply_markup {
++(TLAPI_messages_sendMedia*)createWithFlags:(int)flags   peer:(TLInputPeer*)peer reply_to_msg_id:(int)reply_to_msg_id media:(TLInputMedia*)media random_id:(long)random_id reply_markup:(TLReplyMarkup*)reply_markup {
     TLAPI_messages_sendMedia* obj = [[TLAPI_messages_sendMedia alloc] init];
     obj.flags = flags;
+	
 	
 	obj.peer = peer;
 	obj.reply_to_msg_id = reply_to_msg_id;
@@ -769,6 +772,7 @@
 	SerializedData* stream = [ClassStore streamWithConstuctor:-923703407];
 	[stream writeInt:self.flags];
 	
+	
 	[ClassStore TLSerialize:self.peer stream:stream];
 	if(self.flags & (1 << 0)) {[stream writeInt:self.reply_to_msg_id];}
 	[ClassStore TLSerialize:self.media stream:stream];
@@ -779,9 +783,10 @@
 @end
 
 @implementation TLAPI_messages_forwardMessages
-+(TLAPI_messages_forwardMessages*)createWithFlags:(int)flags  from_peer:(TLInputPeer*)from_peer n_id:(NSMutableArray*)n_id random_id:(NSMutableArray*)random_id to_peer:(TLInputPeer*)to_peer {
++(TLAPI_messages_forwardMessages*)createWithFlags:(int)flags   from_peer:(TLInputPeer*)from_peer n_id:(NSMutableArray*)n_id random_id:(NSMutableArray*)random_id to_peer:(TLInputPeer*)to_peer {
     TLAPI_messages_forwardMessages* obj = [[TLAPI_messages_forwardMessages alloc] init];
     obj.flags = flags;
+	
 	
 	obj.from_peer = from_peer;
 	obj.n_id = n_id;
@@ -792,6 +797,7 @@
 - (NSData*)getData {
 	SerializedData* stream = [ClassStore streamWithConstuctor:1888354709];
 	[stream writeInt:self.flags];
+	
 	
 	[ClassStore TLSerialize:self.from_peer stream:stream];
 	//Serialize ShortVector
@@ -2632,9 +2638,10 @@
 @end
 
 @implementation TLAPI_messages_sendInlineBotResult
-+(TLAPI_messages_sendInlineBotResult*)createWithFlags:(int)flags  peer:(TLInputPeer*)peer reply_to_msg_id:(int)reply_to_msg_id random_id:(long)random_id query_id:(long)query_id n_id:(NSString*)n_id {
++(TLAPI_messages_sendInlineBotResult*)createWithFlags:(int)flags   peer:(TLInputPeer*)peer reply_to_msg_id:(int)reply_to_msg_id random_id:(long)random_id query_id:(long)query_id n_id:(NSString*)n_id {
     TLAPI_messages_sendInlineBotResult* obj = [[TLAPI_messages_sendInlineBotResult alloc] init];
     obj.flags = flags;
+	
 	
 	obj.peer = peer;
 	obj.reply_to_msg_id = reply_to_msg_id;
@@ -2646,6 +2653,7 @@
 - (NSData*)getData {
 	SerializedData* stream = [ClassStore streamWithConstuctor:-1318189314];
 	[stream writeInt:self.flags];
+	
 	
 	[ClassStore TLSerialize:self.peer stream:stream];
 	if(self.flags & (1 << 0)) {[stream writeInt:self.reply_to_msg_id];}
@@ -2665,6 +2673,36 @@
 }
 - (NSData*)getData {
 	SerializedData* stream = [ClassStore streamWithConstuctor:1231065863];
+	[ClassStore TLSerialize:self.channel stream:stream];
+	[stream writeBool:self.enabled];
+	return [stream getOutput];
+}
+@end
+
+@implementation TLAPI_channels_exportMessageLink
++(TLAPI_channels_exportMessageLink*)createWithChannel:(TLInputChannel*)channel n_id:(int)n_id {
+    TLAPI_channels_exportMessageLink* obj = [[TLAPI_channels_exportMessageLink alloc] init];
+    obj.channel = channel;
+	obj.n_id = n_id;
+    return obj;
+}
+- (NSData*)getData {
+	SerializedData* stream = [ClassStore streamWithConstuctor:-934882771];
+	[ClassStore TLSerialize:self.channel stream:stream];
+	[stream writeInt:self.n_id];
+	return [stream getOutput];
+}
+@end
+
+@implementation TLAPI_channels_toggleSignatures
++(TLAPI_channels_toggleSignatures*)createWithChannel:(TLInputChannel*)channel enabled:(Boolean)enabled {
+    TLAPI_channels_toggleSignatures* obj = [[TLAPI_channels_toggleSignatures alloc] init];
+    obj.channel = channel;
+	obj.enabled = enabled;
+    return obj;
+}
+- (NSData*)getData {
+	SerializedData* stream = [ClassStore streamWithConstuctor:527021574];
 	[ClassStore TLSerialize:self.channel stream:stream];
 	[stream writeBool:self.enabled];
 	return [stream getOutput];

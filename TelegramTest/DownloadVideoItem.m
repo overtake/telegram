@@ -13,14 +13,14 @@
 
 
 
--(id)initWithObject:(TLMessage *)object {
+-(id)initWithObject:(TL_localMessage *)object {
     if(self = [super initWithObject:object]) {
         self.isEncrypted = [object isKindOfClass:[TL_destructMessage class]];
-        self.n_id = object.media.video.n_id;
+        self.n_id = object.media.document.n_id;
         self.path = mediaFilePath(object);
         self.fileType = DownloadFileVideo;
-        self.dc_id = object.media.video.dc_id;
-        self.size = object.media.video.size;
+        self.dc_id = object.media.document.dc_id;
+        self.size = object.media.document.size;
     }
     return self;
 }
@@ -37,7 +37,9 @@
         
         TL_localMessage *msg = (TL_localMessage *)self.object;
         
-        NSSize size = NSMakeSize(msg.media.video.thumb.w * 3, msg.media.video.thumb.h * 3);
+        TL_documentAttributeVideo *video = (TL_documentAttributeVideo *) [msg.media.document attributeWithClass:[TL_documentAttributeVideo class]];
+        
+        NSSize size = NSMakeSize(video.w, video.h);
         
         __block NSImage *thumbImg;
         
@@ -62,18 +64,18 @@
         dispatch_semaphore_wait(sema, DISPATCH_TIME_FOREVER);
         //dispatch_release(sema);
         
-        TLFileLocation *location = msg.media.video.thumb.location;
+        TLFileLocation *location = msg.media.document.thumb.location;
         
         if(!location)
         {
             location = [TL_fileLocation createWithDc_id:0 volume_id:rand_long() local_id:0 secret:0];
         }
         
-        msg.media.video.thumb = [TL_photoCachedSize createWithType:@"x" location:location w:size.width h:size.height bytes:jpegNormalizedData(thumbImg)];
+        msg.media.document.thumb = [TL_photoCachedSize createWithType:@"hd" location:location w:size.width h:size.height bytes:jpegNormalizedData(thumbImg)];
         
-       [msg save:NO];
+        [msg save:NO];
         
-        
+        [[Storage manager] addHolesAroundMessage:msg];
     }
     [super setDownloadState:downloadState];
 }
@@ -82,8 +84,8 @@
 -(TLInputFileLocation *)input {
     TLMessage *message = [self object];
     if(self.isEncrypted)
-        return [TL_inputEncryptedFileLocation createWithN_id:self.n_id access_hash:message.media.video.access_hash];
-    return [TL_inputVideoFileLocation createWithN_id:self.n_id access_hash:message.media.video.access_hash];
+        return [TL_inputEncryptedFileLocation createWithN_id:self.n_id access_hash:message.media.document.access_hash];
+    return [TL_inputDocumentFileLocation createWithN_id:self.n_id access_hash:message.media.document.access_hash];
 }
 
 

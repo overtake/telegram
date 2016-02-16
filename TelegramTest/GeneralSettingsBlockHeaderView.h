@@ -18,7 +18,7 @@
 -(void)setAligment:(NSTextAlignment)aligment;
 
 -(id)initWithString:(NSString *)header height:(int)height flipped:(BOOL)flipped;
-
+-(id)initWithString:(NSString *)header flipped:(BOOL)flipped;
 @end
 
 

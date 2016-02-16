@@ -367,6 +367,7 @@
 		C24136471C68A3A600130D2E /* TGAudioWaveform.m in Sources */ = {isa = PBXBuildFile; fileRef = C24136461C68A3A600130D2E /* TGAudioWaveform.m */; };
 		C241364A1C6DEA2900130D2E /* TGCirclularCounter.m in Sources */ = {isa = PBXBuildFile; fileRef = C24136491C6DEA2900130D2E /* TGCirclularCounter.m */; };
 		C241364E1C70AF7100130D2E /* TGRecordedAudioPreview.m in Sources */ = {isa = PBXBuildFile; fileRef = C241364D1C70AF7100130D2E /* TGRecordedAudioPreview.m */; };
+		C24136511C735A2100130D2E /* TL_localMessage_old46.m in Sources */ = {isa = PBXBuildFile; fileRef = C24136501C735A2100130D2E /* TL_localMessage_old46.m */; };
 		C24435811A1D1B9900F9BB38 /* PrivacyArchiver.m in Sources */ = {isa = PBXBuildFile; fileRef = C24435801A1D1B9900F9BB38 /* PrivacyArchiver.m */; };
 		C24435881A1E018100F9BB38 /* ComposeActionCustomBehavior.m in Sources */ = {isa = PBXBuildFile; fileRef = C24435871A1E018100F9BB38 /* ComposeActionCustomBehavior.m */; };
 		C244358B1A1E159900F9BB38 /* PrivacyUserListController.m in Sources */ = {isa = PBXBuildFile; fileRef = C244358A1A1E159900F9BB38 /* PrivacyUserListController.m */; };
@@ -975,19 +976,26 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		C24136541C735A2700130D2E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = C26E80101B7B748A003CC483 /* SSignalKit.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = D0085B221B282B9800EAF753;
+			remoteInfo = SwiftSignalKit;
+		};
+		C24136561C735A2700130D2E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = C26E80101B7B748A003CC483 /* SSignalKit.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = D0085B2C1B282B9800EAF753;
+			remoteInfo = SwiftSignalKitTests;
+		};
 		C26E80161B7B748A003CC483 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = C26E80101B7B748A003CC483 /* SSignalKit.xcodeproj */;
 			proxyType = 2;
 			remoteGlobalIDString = D0445DD81A7C2CA500267924;
 			remoteInfo = SSignalKit;
-		};
-		C26E80181B7B748A003CC483 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = C26E80101B7B748A003CC483 /* SSignalKit.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = D0445E5C1A7C446000267924;
-			remoteInfo = SSignalKitStatic;
 		};
 		C26E801A1B7B748A003CC483 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -1798,6 +1806,8 @@
 		C24136491C6DEA2900130D2E /* TGCirclularCounter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGCirclularCounter.m; sourceTree = "<group>"; };
 		C241364C1C70AF7100130D2E /* TGRecordedAudioPreview.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGRecordedAudioPreview.h; sourceTree = "<group>"; };
 		C241364D1C70AF7100130D2E /* TGRecordedAudioPreview.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGRecordedAudioPreview.m; sourceTree = "<group>"; };
+		C241364F1C735A2100130D2E /* TL_localMessage_old46.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TL_localMessage_old46.h; sourceTree = "<group>"; };
+		C24136501C735A2100130D2E /* TL_localMessage_old46.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TL_localMessage_old46.m; sourceTree = "<group>"; };
 		C244357F1A1D1B9900F9BB38 /* PrivacyArchiver.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PrivacyArchiver.h; sourceTree = "<group>"; };
 		C24435801A1D1B9900F9BB38 /* PrivacyArchiver.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PrivacyArchiver.m; sourceTree = "<group>"; };
 		C24435861A1E018100F9BB38 /* ComposeActionCustomBehavior.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ComposeActionCustomBehavior.h; sourceTree = "<group>"; };
@@ -4475,8 +4485,9 @@
 			isa = PBXGroup;
 			children = (
 				C26E80171B7B748A003CC483 /* SSignalKit.framework */,
-				C26E80191B7B748A003CC483 /* libSSignalKitStatic.a */,
 				C26E801B1B7B748A003CC483 /* SSignalKitTests.xctest */,
+				C24136551C735A2700130D2E /* SwiftSignalKit.framework */,
+				C24136571C735A2700130D2E /* SwiftSignalKitTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -4547,6 +4558,8 @@
 				C29A40331C5127F700AE4B71 /* TL_destructMessage45.m */,
 				C29A40381C592B5100AE4B71 /* TL_secretWebpage.h */,
 				C29A40391C592B5100AE4B71 /* TL_secretWebpage.m */,
+				C241364F1C735A2100130D2E /* TL_localMessage_old46.h */,
+				C24136501C735A2100130D2E /* TL_localMessage_old46.m */,
 			);
 			name = constructors;
 			sourceTree = "<group>";
@@ -6422,18 +6435,25 @@
 /* End PBXProject section */
 
 /* Begin PBXReferenceProxy section */
+		C24136551C735A2700130D2E /* SwiftSignalKit.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = SwiftSignalKit.framework;
+			remoteRef = C24136541C735A2700130D2E /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		C24136571C735A2700130D2E /* SwiftSignalKitTests.xctest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = SwiftSignalKitTests.xctest;
+			remoteRef = C24136561C735A2700130D2E /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
 		C26E80171B7B748A003CC483 /* SSignalKit.framework */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.framework;
 			path = SSignalKit.framework;
 			remoteRef = C26E80161B7B748A003CC483 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		C26E80191B7B748A003CC483 /* libSSignalKitStatic.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = libSSignalKitStatic.a;
-			remoteRef = C26E80181B7B748A003CC483 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		C26E801B1B7B748A003CC483 /* SSignalKitTests.xctest */ = {
@@ -6832,6 +6852,7 @@
 				C297FBA618329F3500714B3C /* TGDcAuth.m in Sources */,
 				C241364E1C70AF7100130D2E /* TGRecordedAudioPreview.m in Sources */,
 				C2AC8DB11A7BF0A600655B9D /* TGSearchRowView.m in Sources */,
+				C24136511C735A2100130D2E /* TL_localMessage_old46.m in Sources */,
 				C2753DD219E4282000752BAF /* SearchMessagesView.m in Sources */,
 				0A7517D2193A053A0088C806 /* TGSwipeRedView.m in Sources */,
 				C2B0DF831BA9B7840023982C /* ComposeActionAddChannelModeratorBehavior.m in Sources */,

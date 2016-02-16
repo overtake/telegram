@@ -294,7 +294,7 @@
             [_tableView addItem:[[TGGeneralRowItem alloc] initWithHeight:20] tableRedraw:YES];
         }
         
-        if(_chat.isManager || _chat.isCreator || _chat.isInvites_enabled) {
+        if(_chat.isManager || _chat.isCreator || !_chat.isAdmin_invites) {
             addMembersItem = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeNone callback:^(TGGeneralRowItem *item) {
                 
                 NSMutableArray *filter = [[NSMutableArray alloc] init];
@@ -410,7 +410,7 @@
             [_tableView addItem:[[TGGeneralRowItem alloc] initWithHeight:20] tableRedraw:YES];
         }
         
-        if(_chat.isInvites_enabled && !_chat.isManager) {
+        if(!_chat.isAdmin_invites && !_chat.isManager) {
             [_tableView addItem:[[TGGeneralRowItem alloc] initWithHeight:20] tableRedraw:YES];
         }
         
@@ -461,21 +461,72 @@
         [_tableView addItem:descriptionItem tableRedraw:YES];
         
         
-        if(!_chat.isMegagroup) {
-            GeneralSettingsRowItem *linkItem = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeNext callback:^(TGGeneralRowItem *item) {
+       // if(!_chat.isMegagroup) {
+        GeneralSettingsRowItem *linkItem = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeNext callback:^(TGGeneralRowItem *item) {
                 
-                ComposeAction *action = [[ComposeAction alloc] initWithBehaviorClass:[ComposeActionBehavior class]];
-                action.result = [[ComposeResult alloc] init];
-                action.result.singleObject = weakSelf.chat;
-                ComposeCreateChannelUserNameStepViewController *viewController = [[ComposeCreateChannelUserNameStepViewController alloc] initWithFrame:NSZeroRect];
-                
-                [viewController setAction:action];
-                
-                [weakSelf.navigationViewController pushViewController:viewController animated:YES];
-                
-            } description:NSLocalizedString(@"Profile.EditLink", nil) subdesc:_chat.usernameLink height:42 stateback:nil];
+            ComposeAction *action = [[ComposeAction alloc] initWithBehaviorClass:[ComposeActionBehavior class]];
+            action.result = [[ComposeResult alloc] init];
+            action.result.singleObject = weakSelf.chat;
+            ComposeCreateChannelUserNameStepViewController *viewController = [[ComposeCreateChannelUserNameStepViewController alloc] initWithFrame:NSZeroRect];
             
-            [_tableView addItem:linkItem tableRedraw:YES];
+            [viewController setAction:action];
+            
+            [weakSelf.navigationViewController pushViewController:viewController animated:YES];
+            
+        } description:NSLocalizedString(@"Profile.EditLink", nil) subdesc:_chat.usernameLink height:42 stateback:nil];
+            
+        [_tableView addItem:linkItem tableRedraw:YES];
+            
+      //  }
+        
+        if(!_chat.isMegagroup && _chat.isCreator) {
+            
+            [_tableView addItem:[[TGGeneralRowItem alloc] initWithHeight:20] tableRedraw:YES];
+            
+            
+            GeneralSettingsRowItem *notifyMembers = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeSwitch callback:^(TGGeneralRowItem *item) {
+                
+                if(weakSelf.chat.dialog.notify_settings.events_mask & PushEventMaskDisableChannelMessageNotification)
+                    weakSelf.chat.dialog.notify_settings.events_mask &= ~PushEventMaskDisableChannelMessageNotification;
+                else
+                    weakSelf.chat.dialog.notify_settings.events_mask |= PushEventMaskDisableChannelMessageNotification;
+            
+                [weakSelf.chat.dialog save];
+                
+
+            } description:NSLocalizedString(@"Channel.NotifyMembers", nil) subdesc:_chat.usernameLink height:42 stateback:^id(TGGeneralRowItem *item) {
+                return @(!(weakSelf.chat.dialog.notify_settings.events_mask & PushEventMaskDisableChannelMessageNotification));
+            }];
+            
+            [_tableView addItem:notifyMembers tableRedraw:YES];
+            [_tableView addItem:[[GeneralSettingsBlockHeaderItem alloc] initWithString:NSLocalizedString(@"Channel.NotifyMembersDescription", nil) flipped:YES] tableRedraw:YES];
+            
+            
+            [_tableView addItem:[[TGGeneralRowItem alloc] initWithHeight:20] tableRedraw:YES];
+            
+            
+            GeneralSettingsRowItem *signMessagesItem = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeSwitch callback:^(TGGeneralRowItem *item) {
+                
+                [weakSelf showModalProgress];
+                
+                [RPCRequest sendRequest:[TLAPI_channels_toggleSignatures createWithChannel:weakSelf.chat.inputPeer enabled:!weakSelf.chat.isSignatures] successHandler:^(id request, id response) {
+                
+                    [weakSelf hideModalProgressWithSuccess];
+                    
+                    [weakSelf.tableView reloadDataForRowIndexes:[NSIndexSet indexSetWithIndex:[weakSelf.tableView indexOfItem:item]] columnIndexes:[NSIndexSet indexSetWithIndex:0]];
+                    
+                } errorHandler:^(id request, RpcError *error) {
+                    [weakSelf hideModalProgress];
+                }];
+                
+                
+                
+            } description:NSLocalizedString(@"Channel.SignMessages", nil) subdesc:_chat.usernameLink height:42 stateback:^id(TGGeneralRowItem *item) {
+                return @(weakSelf.chat.isSignatures);
+            }];
+            
+            [_tableView addItem:signMessagesItem tableRedraw:YES];
+            [_tableView addItem:[[GeneralSettingsBlockHeaderItem alloc] initWithString:NSLocalizedString(@"Channel.SignMessagesDescription", nil) flipped:YES] tableRedraw:YES];
             
         }
         

@@ -153,10 +153,14 @@ NSString* mediaFilePath(TL_localMessage *message) {
             hasAttr = [document attributeWithClass:[nondocValue class]] != nil;
         }
         
-        if(nondocValue != nil && hasAttr) {
+        if((nondocValue != nil && hasAttr )) {
             
             return [NSString stringWithFormat:@"%@/%ld.%@",path(),document.n_id,[document.mime_type substringFromIndex:[document.mime_type rangeOfString:@"/"].location + 1]];
             
+        }
+        
+        if([document attributeWithClass:[TL_documentAttributeVideo class]] != nil && [document.mime_type hasPrefix:@"video"]) {
+            return [NSString stringWithFormat:@"%@/%ld.%@",path(),document.n_id,[document.mime_type substringFromIndex:[document.mime_type rangeOfString:@"/"].location + 1]];
         }
         
         if([message isKindOfClass:[TL_destructMessage class]] || [message.media.document.mime_type hasPrefix:@"image/gif"] || [message.media.document.mime_type hasPrefix:@"audio"]) {

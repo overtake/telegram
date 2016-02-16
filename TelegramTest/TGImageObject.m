@@ -65,15 +65,20 @@
     
     
     if(image != nil) {
-        if(NSSizeNotZero(self.realSize) && NSSizeNotZero(self.imageSize) && self.realSize.width > MIN_IMG_SIZE.width && self.realSize.width > MIN_IMG_SIZE.height && self.imageSize.width == MIN_IMG_SIZE.width && self.imageSize.height == MIN_IMG_SIZE.height) {
-            
-            int difference = roundf( (self.realSize.width - self.imageSize.width) /2);
-            
-            image = cropImage(image,self.imageSize, NSMakePoint(difference, 0));
-            
-        }
         
-        image = renderedImage(image, self.imageSize);
+        if(self.imageProcessor != nil) {
+            image = self.imageProcessor(image,self.imageSize);
+        } else {
+            if(NSSizeNotZero(self.realSize) && NSSizeNotZero(self.imageSize) && self.realSize.width > MIN_IMG_SIZE.width && self.realSize.width > MIN_IMG_SIZE.height && self.imageSize.width == MIN_IMG_SIZE.width && self.imageSize.height == MIN_IMG_SIZE.height) {
+                
+                int difference = roundf( (self.realSize.width - self.imageSize.width) /2);
+                
+                image = cropImage(image,self.imageSize, NSMakePoint(difference, 0));
+                
+            }
+            
+            image = renderedImage(image, self.imageSize);
+        }
         
         [TGCache cacheImage:image forKey:[self cacheKey] groups:@[IMGCACHE]];
     }

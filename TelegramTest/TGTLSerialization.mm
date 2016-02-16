@@ -137,7 +137,7 @@
 
 - (NSUInteger)currentLayer
 {
-    return 46;
+    return 48;
 }
 
 @end

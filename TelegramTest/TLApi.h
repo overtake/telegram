@@ -2,7 +2,7 @@
 //  TLApi.h
 //  Telegram
 //
-//  Auto created by Mikhail Filimonov on 13.02.16.
+//  Auto created by Mikhail Filimonov on 16.02.16.
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -309,6 +309,7 @@
 @property int flags;
 @property (nonatomic,assign,readonly) BOOL isNo_webpage;
 @property (nonatomic,assign,readonly) BOOL isBroadcast;
+@property (nonatomic,assign,readonly) BOOL isSilent;
 @property (nonatomic, strong) TLInputPeer* peer;
 @property int reply_to_msg_id;
 @property (nonatomic, strong) NSString* message;
@@ -316,30 +317,32 @@
 @property (nonatomic, strong) TLReplyMarkup* reply_markup;
 @property (nonatomic, strong) NSMutableArray* entities;
 
-+(TLAPI_messages_sendMessage*)createWithFlags:(int)flags   peer:(TLInputPeer*)peer reply_to_msg_id:(int)reply_to_msg_id message:(NSString*)message random_id:(long)random_id reply_markup:(TLReplyMarkup*)reply_markup entities:(NSMutableArray*)entities;
++(TLAPI_messages_sendMessage*)createWithFlags:(int)flags    peer:(TLInputPeer*)peer reply_to_msg_id:(int)reply_to_msg_id message:(NSString*)message random_id:(long)random_id reply_markup:(TLReplyMarkup*)reply_markup entities:(NSMutableArray*)entities;
 @end
 
 @interface TLAPI_messages_sendMedia : TLApiObject
 @property int flags;
 @property (nonatomic,assign,readonly) BOOL isBroadcast;
+@property (nonatomic,assign,readonly) BOOL isSilent;
 @property (nonatomic, strong) TLInputPeer* peer;
 @property int reply_to_msg_id;
 @property (nonatomic, strong) TLInputMedia* media;
 @property long random_id;
 @property (nonatomic, strong) TLReplyMarkup* reply_markup;
 
-+(TLAPI_messages_sendMedia*)createWithFlags:(int)flags  peer:(TLInputPeer*)peer reply_to_msg_id:(int)reply_to_msg_id media:(TLInputMedia*)media random_id:(long)random_id reply_markup:(TLReplyMarkup*)reply_markup;
++(TLAPI_messages_sendMedia*)createWithFlags:(int)flags   peer:(TLInputPeer*)peer reply_to_msg_id:(int)reply_to_msg_id media:(TLInputMedia*)media random_id:(long)random_id reply_markup:(TLReplyMarkup*)reply_markup;
 @end
 
 @interface TLAPI_messages_forwardMessages : TLApiObject
 @property int flags;
 @property (nonatomic,assign,readonly) BOOL isBroadcast;
+@property (nonatomic,assign,readonly) BOOL isSilent;
 @property (nonatomic, strong) TLInputPeer* from_peer;
 @property (nonatomic, strong) NSMutableArray* n_id;
 @property (nonatomic, strong) NSMutableArray* random_id;
 @property (nonatomic, strong) TLInputPeer* to_peer;
 
-+(TLAPI_messages_forwardMessages*)createWithFlags:(int)flags  from_peer:(TLInputPeer*)from_peer n_id:(NSMutableArray*)n_id random_id:(NSMutableArray*)random_id to_peer:(TLInputPeer*)to_peer;
++(TLAPI_messages_forwardMessages*)createWithFlags:(int)flags   from_peer:(TLInputPeer*)from_peer n_id:(NSMutableArray*)n_id random_id:(NSMutableArray*)random_id to_peer:(TLInputPeer*)to_peer;
 @end
 
 @interface TLAPI_messages_reportSpam : TLApiObject
@@ -1110,13 +1113,14 @@
 @interface TLAPI_messages_sendInlineBotResult : TLApiObject
 @property int flags;
 @property (nonatomic,assign,readonly) BOOL isBroadcast;
+@property (nonatomic,assign,readonly) BOOL isSilent;
 @property (nonatomic, strong) TLInputPeer* peer;
 @property int reply_to_msg_id;
 @property long random_id;
 @property long query_id;
 @property (nonatomic, strong) NSString* n_id;
 
-+(TLAPI_messages_sendInlineBotResult*)createWithFlags:(int)flags  peer:(TLInputPeer*)peer reply_to_msg_id:(int)reply_to_msg_id random_id:(long)random_id query_id:(long)query_id n_id:(NSString*)n_id;
++(TLAPI_messages_sendInlineBotResult*)createWithFlags:(int)flags   peer:(TLInputPeer*)peer reply_to_msg_id:(int)reply_to_msg_id random_id:(long)random_id query_id:(long)query_id n_id:(NSString*)n_id;
 @end
 
 @interface TLAPI_channels_toggleInvites : TLApiObject
@@ -1124,5 +1128,19 @@
 @property Boolean enabled;
 
 +(TLAPI_channels_toggleInvites*)createWithChannel:(TLInputChannel*)channel enabled:(Boolean)enabled;
+@end
+
+@interface TLAPI_channels_exportMessageLink : TLApiObject
+@property (nonatomic, strong) TLInputChannel* channel;
+@property int n_id;
+
++(TLAPI_channels_exportMessageLink*)createWithChannel:(TLInputChannel*)channel n_id:(int)n_id;
+@end
+
+@interface TLAPI_channels_toggleSignatures : TLApiObject
+@property (nonatomic, strong) TLInputChannel* channel;
+@property Boolean enabled;
+
++(TLAPI_channels_toggleSignatures*)createWithChannel:(TLInputChannel*)channel enabled:(Boolean)enabled;
 @end
 

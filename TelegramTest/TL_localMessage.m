@@ -136,6 +136,7 @@
     [TLClassStore TLSerialize:self.to_id stream:stream];
     if(self.flags & (1 << 2)) {[ClassStore TLSerialize:self.fwd_from_id stream:stream];}
     if(self.flags & (1 << 2)) [stream writeInt:self.fwd_date];
+    if(self.flags & (1 << 12)) {[stream writeInt:self.fwd_post];}
     if(self.flags & (1 << 11)) {[stream writeInt:self.via_bot_id];}
     if(self.flags & (1 << 3)) [stream writeInt:self.reply_to_msg_id];
     [stream writeInt:self.date];
@@ -169,6 +170,7 @@
     self.to_id = [TLClassStore TLDeserialize:stream];
     if(self.flags & (1 << 2)) {self.fwd_from_id = [ClassStore TLDeserialize:stream];}
     if(self.flags & (1 << 2)) self.fwd_date = [stream readInt];
+    if(self.flags & (1 << 12)) {super.fwd_post = [stream readInt];}
     if(self.flags & (1 << 11)) {self.via_bot_id = [stream readInt];}
     if(self.flags & (1 << 3)) self.reply_to_msg_id = [stream readInt];
     self.date = [stream readInt];
@@ -202,9 +204,8 @@
 
 
 -(TLPeer *)fwd_from_id {
-    if(self.class != [TL_localMessage class]) {
-        return self.fwd_from_id_old != 0 ? [TL_peerUser createWithUser_id:self.fwd_from_id_old] : nil;
-    }
+    if(self.fwd_from_id_old != 0)
+        return [TL_peerUser createWithUser_id:self.fwd_from_id_old];
     
     return [super fwd_from_id];
 }

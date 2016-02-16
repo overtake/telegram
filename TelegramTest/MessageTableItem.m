@@ -68,7 +68,13 @@ static NSCache *cItems;
 
         if(object.peer.peer_id == [UsersManager currentUserId])
             object.flags&= ~TGUNREADMESSAGE;
-        self.isForwadedMessage = (self.message.fwd_from_id != nil )  && ((![self.message.media isKindOfClass:[TL_messageMediaDocument class]] || ![self.message.media isKindOfClass:[TL_messageMediaDocument_old44 class]]) && ( ![self.message.media.document isSticker] && !(self.message.media.document.audioAttr && ![self.message.media.document.audioAttr isVoice])));
+
+        
+        self.isForwadedMessage = self.message.fwd_from_id != nil;
+        
+        if(self.isForwadedMessage && [self.message.media isKindOfClass:[TL_messageMediaDocument class]] && ([self.message.media.document isSticker] || (self.message.media.document.audioAttr && !self.message.media.document.audioAttr.isVoice))) {
+            self.isForwadedMessage = NO;
+        }
         
         self.isChat = [self.message.to_id isKindOfClass:[TL_peerChat class]] || [self.message.to_id isKindOfClass:[TL_peerChannel class]];
         
@@ -361,7 +367,7 @@ static NSTextAttachment *channelIconAttachment() {
 
     
     @try {
-        if(message.class == [TL_localMessage class] || message.class == [TL_localMessage_old32 class] || message.class == [TL_localMessage_old34 class] || message.class == [TL_localMessage_old44 class] || message.class == [TL_destructMessage class] || message.class == [TL_destructMessage45 class]) {
+        if(message.class == [TL_localMessage_old46 class] || message.class == [TL_localMessage class] || message.class == [TL_localMessage_old32 class] || message.class == [TL_localMessage_old34 class] || message.class == [TL_localMessage_old44 class] || message.class == [TL_destructMessage class] || message.class == [TL_destructMessage45 class]) {
             
             if((message.media == nil || [message.media isKindOfClass:[TL_messageMediaEmpty class]]) || [message.media isMemberOfClass:[TL_messageMediaWebPage class]]) {
                 
@@ -390,6 +396,8 @@ static NSTextAttachment *channelIconAttachment() {
                 
                 if([document.mime_type hasPrefix:@"video"] && attr != nil) {
                     objectReturn = [[MessageTableItemMpeg alloc] initWithObject:message];
+                } else if([document.mime_type hasPrefix:@"video"] && [document attributeWithClass:[TL_documentAttributeVideo class]] != nil) {
+                    objectReturn = [[MessageTableItemVideo alloc] initWithObject:message];
                 } else if([document.mime_type isEqualToString:@"image/gif"] && ![document.thumb isKindOfClass:[TL_photoSizeEmpty class]]) {
                     objectReturn = [[MessageTableItemGif alloc] initWithObject:message];
                 } else if((audioAttr && !audioAttr.isVoice) || ([document.mime_type isEqualToString:@"audio/mpeg"])) {
@@ -450,7 +458,7 @@ static NSTextAttachment *channelIconAttachment() {
 
     }
     @catch (NSException *exception) {
-       
+        int bp = 0;
     }
     
 

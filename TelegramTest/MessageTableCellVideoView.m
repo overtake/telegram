@@ -124,13 +124,15 @@ static NSImage *playImage() {
 
 - (void)open {
     
-    PreviewObject *previewObject = [[PreviewObject alloc] initWithMsdId:self.item.message.n_id media:self.item.message.media.video.thumb peer_id:self.item.message.peer_id];
+    PreviewObject *previewObject = [[PreviewObject alloc] initWithMsdId:self.item.message.n_id media:self.item.message.media.document.thumb peer_id:self.item.message.peer_id];
     
     if (floor(NSAppKitVersionNumber) > 1187)  {
         
         NSURL *url = [NSURL fileURLWithPath:mediaFilePath(self.item.message)];
         
-        NSSize size = NSMakeSize(self.item.message.media.video.w, self.item.message.media.video.h);
+        TL_documentAttributeVideo *video = (TL_documentAttributeVideo *) [self.item.message.media.document attributeWithClass:[TL_documentAttributeVideo class]];
+        
+        NSSize size = NSMakeSize(video.w, video.h);
         
         previewObject.reservedObject = @{@"url":url,@"size":[NSValue valueWithSize:size]};
         [[TGPhotoViewer viewer] show:previewObject];
@@ -141,11 +143,7 @@ static NSImage *playImage() {
             [[TMMediaController controller] show:item];
         }
     }
-    
-    
-    
-    
-//    
+      
 
 }
 
@@ -180,10 +178,6 @@ static NSImage *playImage() {
     
     [self.playImage setCenterByView:self.imageView];
     
-    BOOL needBlur = self.item.message.media.video.thumb.w <= 90;
-    
-    if(self.imageView.isAlwaysBlur != needBlur)
-        [self.imageView setIsAlwaysBlur:needBlur];
     
     self.imageView.object = ((MessageTableItemVideo *)self.item).imageObject;
 
