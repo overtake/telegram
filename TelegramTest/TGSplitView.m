@@ -87,7 +87,7 @@
                 self.state = TGSplitViewStateSingleLayout;
         } else if(isAcceptLayout(dualLayout)) {
             if(isAcceptLayout(tripleLayout)) {
-                if(NSWidth(self.frame) > dualLayout.min && NSWidth(self.frame) < dualLayout.max) {
+                if(NSWidth(self.frame) >= dualLayout.min && NSWidth(self.frame) <= dualLayout.max) {
                     if(_state != TGSplitViewStateDualLayout)
                         self.state = TGSplitViewStateDualLayout;
                 } else if(_state != TGSplitViewStateTripleLayout)

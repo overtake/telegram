@@ -2351,6 +2351,9 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "-[MessageTableItemVideo makeSizeByWidth:]:MessageTableItemVideo.m">
+      </ContextState>
+      <ContextState
          contextName = "__60-[ComposeActionAddUserToGroupBehavior addMemberToChat:user:]_block_invoke119:ComposeActionAddUserToGroupBehavior.m">
       </ContextState>
       <ContextState
@@ -2832,6 +2835,14 @@
       </ContextState>
       <ContextState
          contextName = "-[DownloadVideoItem setDownloadState:]:DownloadVideoItem.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "msg">
+            </PersistentString>
+            <PersistentString
+               value = "msg.media.document.thumb">
+            </PersistentString>
+         </PersistentStrings>
       </ContextState>
       <ContextState
          contextName = "-[TMNavigationController pushViewController:animated:]:TMNavigationController.m">
@@ -2930,6 +2941,9 @@
             </PersistentString>
             <PersistentString
                value = "object.from_id">
+            </PersistentString>
+            <PersistentString
+               value = "self.message.fwd_from_id">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -4313,6 +4327,17 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "-[MessageTableCellVideoView setCellState:]:MessageTableCellVideoView.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.item.message.media.video.thumb.type">
+            </PersistentString>
+            <PersistentString
+               value = "self.item.message.media">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "-[MessagesViewController loadView]:MessagesViewController.m">
          <PersistentStrings>
             <PersistentString
@@ -5297,6 +5322,14 @@
          contextName = "__50-[TGAllStickersTableView loadSetsIfNeeded:n_hash:]_block_invoke266:TGAllStickersTableView.m">
       </ContextState>
       <ContextState
+         contextName = "-[MessagesTableView setFrameSize:]:MessagesTableView.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.viewController">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "-[ChatHistoryController removeAllItems]:ChatHistoryController.m">
          <PersistentStrings>
             <PersistentString
@@ -5593,6 +5626,9 @@
       </ContextState>
       <ContextState
          contextName = "__79-[TGPasswosdMainViewController setPassword:current_pswd_hash:email:hint:flags:]_block_invoke237:TGPasswosdMainViewController.m">
+      </ContextState>
+      <ContextState
+         contextName = "-[MessagesBottomView checkReplayMessage:animated:]:MessagesBottomView.m">
       </ContextState>
       <ContextState
          contextName = "-[TGPVImageObject _didDownloadImage:]:TGPVImageObject.m">

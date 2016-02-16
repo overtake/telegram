@@ -539,10 +539,12 @@ void exceptionHandler(NSException * exception)
             
             if(![TMViewController isModalActive]) {
                 
-                if([Telegram rightViewController].messagesViewController.inputText.length > 0) {
+                if(appWindow().navigationController.messagesViewController.inputText.length > 0) {
                     return incomingEvent;
                 } else {
-                     [[[Telegram sharedInstance] firstController] backOrClose:[[NSMenuItem alloc] initWithTitle:@"Profile.Back" action:@selector(backOrClose:) keyEquivalent:@""]];
+                    BOOL res = [appWindow().navigationController.messagesViewController.bottomView removeQuickRecord];
+                    if(!res)
+                        [[[Telegram sharedInstance] firstController] backOrClose:[[NSMenuItem alloc] initWithTitle:@"Profile.Back" action:@selector(backOrClose:) keyEquivalent:@""]];
                 }
             
             } else {
@@ -664,9 +666,10 @@ void exceptionHandler(NSException * exception)
                 
                  return [[NSEvent alloc]init];
             } else if(result.keyCode == 15) { // cmd+r for audio record
-                [appWindow().navigationController.messagesViewController.bottomView startQuickRecord];
-                
-                return [[NSEvent alloc]init];
+                if(![[TMAudioRecorder sharedInstance] isRecording]) {
+                    [appWindow().navigationController.messagesViewController.bottomView startOrStopQuickRecord];
+                    return [[NSEvent alloc]init];
+                }
             }
             
             
@@ -675,14 +678,7 @@ void exceptionHandler(NSException * exception)
         return result;
     };
     
-    id upBlock = ^(NSEvent *incomingEvent) {
-        
-         [appWindow().navigationController.messagesViewController.bottomView stopQuickRecord];
-        
-        return incomingEvent;
-    };
-    
-    [NSEvent addLocalMonitorForEventsMatchingMask:(NSKeyUpMask) handler:upBlock];
+
     
     [NSEvent addLocalMonitorForEventsMatchingMask:(NSKeyDownMask) handler:block];
     

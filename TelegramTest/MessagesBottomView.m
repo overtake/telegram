@@ -872,23 +872,29 @@ static RBLPopover *popover;
 }
 
 
--(void)startQuickRecord {
+-(void)startOrStopQuickRecord {
     if(![[TMAudioRecorder sharedInstance] isRecording]) {
         [self startRecord:self.recordAudioButton];
         [self setRecordHelperStringValue:NSLocalizedString(@"Audio.QuickRecordRelease", nil)];
-    }
-    
-}
-
--(void)stopQuickRecord {
-    if([[TMAudioRecorder sharedInstance] isRecording]) {
-        BOOL res =[[TMAudioRecorder sharedInstance] stopRecord:YES askConfirm:YES];
-    
+    } else {
+        BOOL res = [[TMAudioRecorder sharedInstance] stopRecord:YES askConfirm:YES];
+        
         if(!res) {
             [self updateStopRecordControls];
         }
     }
+    
 }
+
+-(BOOL)removeQuickRecord {
+    if(_recordedAudioPreview != nil) {
+        [self updateStopRecordControls];
+        return YES;
+    }
+    
+    return NO;
+}
+
 
 -(void)showQuickRecordedPreview:(NSString *)file audioAttr:(TL_documentAttributeAudio *)audioAttr {
     

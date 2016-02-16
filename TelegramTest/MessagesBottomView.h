@@ -57,9 +57,9 @@ typedef enum {
 
 -(void)selectInputTextByText:(NSString *)text;
 
--(void)startQuickRecord;
--(void)stopQuickRecord;
+-(void)startOrStopQuickRecord;
 
+-(BOOL)removeQuickRecord;
 -(void)showQuickRecordedPreview:(NSString *)file audioAttr:(TL_documentAttributeAudio *)audioAttr;
 
 @end

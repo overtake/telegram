@@ -784,9 +784,6 @@
 
 - (BOOL)executeUpdate:(NSString*)sql error:(NSError**)outErr withArgumentsInArray:(NSArray*)arrayArgs orDictionary:(NSDictionary *)dictionaryArgs orVAList:(va_list)args {
     
-    
-   
-    
     if (![self databaseExists]) {
         return NO;
     }
