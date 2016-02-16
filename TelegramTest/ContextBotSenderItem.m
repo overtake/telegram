@@ -27,6 +27,22 @@
         
         [self.message save:YES];
         
+       
+        
+        [[Storage yap] readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
+            
+            NSMutableDictionary *bots = [[transaction objectForKey:@"bots" inCollection:@"inlinebots"] mutableCopy];
+            
+            if(!bots) {
+                bots = [[NSMutableDictionary alloc] init];
+            }
+            
+            bots[@(via_bot_id)] = @{@"id":@(via_bot_id),@"date":@([[MTNetwork instance] getTime])};
+            
+            [transaction setObject:bots forKey:@"bots" inCollection:@"inlinebots"];
+            
+        }];
+        
     }
     
     return self;

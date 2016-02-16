@@ -369,6 +369,8 @@ DYNAMIC_PROPERTY(DUser);
     }];
     
     
+    
+    
     NSArray *list = [[tags allValues] sortedArrayUsingComparator:^NSComparisonResult(id obj1, id obj2) {
         
         return obj1[@"count"] < obj2[@"count"];
@@ -443,7 +445,37 @@ DYNAMIC_PROPERTY(DUser);
     
     
     
-    NSArray *users = [UsersManager findUsersByMention:query withUids:uids acceptContextBots:allowInlineBot];
+    NSArray *users = [UsersManager findUsersByMention:query withUids:uids acceptContextBots:NO];
+    
+    
+    __block NSMutableArray *botUsers = [[NSMutableArray alloc] init];
+    
+    if(allowInlineBot) {
+        __block NSMutableDictionary *bots;
+        
+        [[Storage yap] readWithBlock:^(YapDatabaseReadTransaction *transaction) {
+            
+            bots = [[transaction objectForKey:@"bots" inCollection:@"inlinebots"] mutableCopy];
+            
+        }];
+        
+        [bots enumerateKeysAndObjectsUsingBlock:^(id  _Nonnull key, NSDictionary *bot, BOOL * _Nonnull stop) {
+            
+            int dateUsed = [bot[@"date"] intValue];
+            int botId = [bot[@"id"] intValue];
+            
+            TLUser *user = [[UsersManager sharedManager] find:botId];
+                                  //two weeks
+            if(user && dateUsed + 14*60*60*24 > [[MTNetwork instance] getTime]) {
+                [botUsers addObject:user];
+            }
+            
+        }];
+        
+        
+        users = [botUsers arrayByAddingObjectsFromArray:users];
+
+    }
     
     
     NSMutableArray *items = [[NSMutableArray alloc] init];
