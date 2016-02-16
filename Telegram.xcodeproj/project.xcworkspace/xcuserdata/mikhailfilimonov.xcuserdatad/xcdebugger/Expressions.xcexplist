@@ -5496,7 +5496,16 @@
          contextName = "__39-[AppDelegate initializeKeyDownHandler]_block_invoke378:AppDelegate.m">
          <PersistentStrings>
             <PersistentString
+               value = "incomingEvent.keyCode">
+            </PersistentString>
+            <PersistentString
                value = "result.responder">
+            </PersistentString>
+            <PersistentString
+               value = "incomingEvent.modifierFlags &amp; 1048840">
+            </PersistentString>
+            <PersistentString
+               value = "incomingEvent.modifierFlags">
             </PersistentString>
          </PersistentStrings>
       </ContextState>

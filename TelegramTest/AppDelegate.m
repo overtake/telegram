@@ -396,7 +396,12 @@ void exceptionHandler(NSException * exception)
 }
 
 - (void)initializeKeyDownHandler {
+    
+    static BOOL buttonRecordIsUp = YES;
+    
     id block = ^(NSEvent *incomingEvent) {
+
+        
         NSEvent *result = incomingEvent;
         
         if(result.window != self.mainWindow) {
@@ -666,10 +671,12 @@ void exceptionHandler(NSException * exception)
                 
                  return [[NSEvent alloc]init];
             } else if(result.keyCode == 15) { // cmd+r for audio record
-                if(![[TMAudioRecorder sharedInstance] isRecording]) {
+                if(buttonRecordIsUp) {
+                    buttonRecordIsUp = NO;
                     [appWindow().navigationController.messagesViewController.bottomView startOrStopQuickRecord];
-                    return [[NSEvent alloc]init];
                 }
+                return [[NSEvent alloc]init];
+                
             }
             
             
@@ -678,7 +685,13 @@ void exceptionHandler(NSException * exception)
         return result;
     };
     
-
+     id keyUpblock = ^(NSEvent *incomingEvent) {
+         buttonRecordIsUp = YES;
+         
+         return incomingEvent;
+     };
+    
+    [NSEvent addLocalMonitorForEventsMatchingMask:(NSKeyUpMask) handler:keyUpblock];
     
     [NSEvent addLocalMonitorForEventsMatchingMask:(NSKeyDownMask) handler:block];
     
