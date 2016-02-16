@@ -27,8 +27,6 @@
         
         [self.message save:YES];
         
-       
-        
         [[Storage yap] readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
             
             NSMutableDictionary *bots = [[transaction objectForKey:@"bots" inCollection:@"inlinebots"] mutableCopy];
