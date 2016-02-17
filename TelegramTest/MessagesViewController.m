@@ -2310,7 +2310,7 @@ static NSTextAttachment *headerMediaIcon() {
                     [self scrollToUnreadItem:NO];
                     
                 } else if(rect.origin.y == 0 || ((flags & ShowMessageTypeReply) > 0 || (flags & ShowMessageTypeSearch) > 0)) {
-                    [self scrollToItem:item animated:NO centered:YES highlight:fromMsg != nil];
+                    [self scrollToItem:item animated:NO centered:YES highlight:YES];
                 } else if((flags & ShowMessageTypeDateJump) > 0) {
                     [self scrollToRect:[self.table rectOfRow:[self indexOfObject:item]] isCenter:NO animated:NO yOffset:48];
                 } else {

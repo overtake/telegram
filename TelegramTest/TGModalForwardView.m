@@ -14,6 +14,10 @@
 @interface TGModalForwardView ()<SelectTableDelegate>
 @property (nonatomic,strong) SelectUsersTableView *tableView;
 @property (nonatomic,strong) TGCirclularCounter *counter;
+
+
+@property (nonatomic,strong) BTRButton *cpyLinkPost;
+
 @end
 
 @implementation TGModalForwardView
@@ -75,6 +79,12 @@
     
 }
 
+-(void)setMessageCaller:(TL_localMessage *)messageCaller {
+    _messageCaller = messageCaller;
+    
+    [self selectTableDidChangedItem:nil];
+}
+
 -(void)updateCounterOrigin {
     int w = [self.ok.titleLabel.attributedStringValue size].width;
     
@@ -83,8 +93,54 @@
     [_counter setFrameOrigin:NSMakePoint(x - 5 , 0)];
 }
 
+-(BOOL)isShareModalType {
+    return _messageCaller.chat.isChannel && !_messageCaller.chat.isMegagroup && _messageCaller.chat.username > 0;
+}
 
 -(void)okAction {
+    
+    if(_tableView.selectedItems.count == 0 && self.isShareModalType) {
+        
+        TLChat *chat = _messageCaller.chat;
+        
+        
+        __block NSString *link = @"";
+        
+        weak();
+        
+        dispatch_block_t copy_block = ^{
+            dispatch_after_seconds(0.1, ^{
+                NSPasteboard* cb = [NSPasteboard generalPasteboard];
+                
+                [cb declareTypes:[NSArray arrayWithObjects:NSStringPboardType, nil] owner:weakSelf];
+                [cb setString:link forType:NSStringPboardType];
+                
+                [self close:YES];
+                [TMViewController hideModalProgressWithSuccess];
+            });
+            
+        };
+        
+        [TMViewController showModalProgress];
+        
+      //  if(chat.username.length > 0) {
+       //     link = [NSString stringWithFormat:@"https://telegram.me/%@/%d",chat.username,_messageCaller.n_id];
+       //     copy_block();
+      //  } else {
+            [RPCRequest sendRequest:[TLAPI_channels_exportMessageLink createWithChannel:chat.inputPeer n_id:_messageCaller.n_id] successHandler:^(id request, TL_exportedMessageLink *response) {
+                
+                link = response.link;
+                
+                copy_block();
+                
+            } errorHandler:^(id request, RpcError *error) {
+                alert(appName(), NSLocalizedString(error.error_msg, nil));
+                [TMViewController hideModalProgress];
+            }];
+      //  }
+        
+    }
+    
     
     NSMutableArray *ids = [[NSMutableArray alloc] init];
     for(MessageTableItem *item in _messagesViewController.selectedMessages)
@@ -103,7 +159,6 @@
         
     }];
     
-    [_messagesViewController cancelSelectionAndScrollToBottom:NO];
     
     [self close:YES];
     
@@ -112,11 +167,15 @@
 -(void)selectTableDidChangedItem:(id)item {
     
     
-    [self.ok setEnabled:_tableView.selectedItems.count > 0];
+    [self.ok setTitle:_tableView.selectedItems.count == 0 && self.isShareModalType ? NSLocalizedString(@"Conversation.Action.CopyShareLink", nil) : NSLocalizedString(@"Conversation.Action.Share", nil) forControlState:BTRControlStateNormal];
     
+
+    [self.ok setEnabled:_tableView.selectedItems.count > 0 || self.isShareModalType];
+    [self.ok setTitleColor:_tableView.selectedItems.count > 0 || self.isShareModalType ? LINK_COLOR : GRAY_TEXT_COLOR forControlState:BTRControlStateNormal];
+
+  
     [[_counter animator] setAlphaValue:_tableView.selectedItems.count == 0 ? 0.0f : 1.0f];
     
-    [self.ok setTitleColor:_tableView.selectedItems.count > 0 ? LINK_COLOR : GRAY_TEXT_COLOR forControlState:BTRControlStateNormal];
     
     _counter.backgroundColor = _tableView.selectedItems.count > 0 ? NSColorFromRGB(0x5098d3) : DIALOG_BORDER_COLOR;
     

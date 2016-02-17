@@ -456,6 +456,49 @@ TelegramWindow *appWindow() {
     return window;
 }
 
+void open_post(NSString *username,int postId) {
+    if(username.length > 0 && postId > 0) {
+        
+        __block TLChat *chat = [ChatsManager findChatByName:username];
+        
+        dispatch_block_t performExport = ^{
+            
+            TL_localMessage *message = [[TL_localMessage alloc] init];
+            message.to_id = [TL_peerChannel createWithChannel_id:chat.n_id];
+            message.n_id = postId;
+            
+            [appWindow().navigationController showMessagesViewController:chat.dialog withMessage:message];
+            
+        };
+        
+        if(chat)
+            performExport();
+        else {
+        
+            [TMViewController showModalProgress];
+            
+            [RPCRequest sendRequest:[TLAPI_contacts_resolveUsername createWithUsername:username] successHandler:^(RPCRequest *request, TL_contacts_resolvedPeer *response) {
+                
+                [TMViewController hideModalProgress];
+                
+                [SharedManager proccessGlobalResponse:response];
+                
+                if([response.peer isKindOfClass:[TL_peerChannel class]]) {
+                    chat = [response.chats firstObject];
+                }
+                
+                if(chat)
+                    performExport();
+                
+            } errorHandler:^(RPCRequest *request, RpcError *error) {
+                [TMViewController hideModalProgress];
+            } timeout:4];
+
+        
+        }
+    }
+}
+
 void open_card(NSString *link) {
     
     
@@ -698,7 +741,15 @@ void determinateURLLink(NSString *link) {
     
     
     if([link hasPrefix:TGImportCardPrefix]) {
-        open_user_by_name(getUrlVars(link));
+        
+        NSDictionary *vars = getUrlVars(link);
+        
+        if(vars[@"post"] && [vars[@"post"] intValue] > 0) {
+            open_post(vars[@"domain"], [vars[@"post"] intValue]);
+        } else {
+            open_user_by_name(vars);
+        }
+        
         [[NSApplication sharedApplication]  activateIgnoringOtherApps:YES];
         [[[Telegram delegate] mainWindow] deminiaturize:[Telegram delegate]];
         return;
@@ -829,6 +880,7 @@ void open_link(NSString *link) {
             NSString *joinPrefix = @"joinchat/";
             NSString *stickerPrefix = @"addstickers/";
             
+            
             if([name hasPrefix:joinPrefix]) {
                 join_group_by_hash([name substringFromIndex:joinPrefix.length]);
                 return;
@@ -849,6 +901,17 @@ void open_link(NSString *link) {
                 
                 open_user_by_name(user);
                 return;
+            } else {
+                NSArray *userAndPost = [name componentsSeparatedByString:@"/"];
+                
+                if(userAndPost.count == 2) {
+                    NSString *username = userAndPost[0];
+                    int postId = [userAndPost[1] intValue];
+                    
+                    open_post(username,postId);
+                    
+                    return;
+                }
             }
             
             

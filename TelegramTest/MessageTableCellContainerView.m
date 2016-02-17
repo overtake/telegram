@@ -776,6 +776,7 @@ static BOOL dragAction = NO;
                 [weakSelf.messagesViewController setSelectedMessage:weakSelf.item selected:YES];
                 
                 weakSelf.forwardModalView.messagesViewController = weakSelf.messagesViewController;
+                weakSelf.forwardModalView.messageCaller = weakSelf.item.message;
                 
                 [weakSelf.forwardModalView show:weakSelf.window animated:YES];
 

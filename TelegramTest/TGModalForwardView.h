@@ -12,4 +12,7 @@
 
 @property (nonatomic,weak) MessagesViewController *messagesViewController;
 
+@property (nonatomic,strong) TL_localMessage *messageCaller;
+
+
 @end
