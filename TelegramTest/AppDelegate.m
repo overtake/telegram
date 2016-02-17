@@ -544,13 +544,17 @@ void exceptionHandler(NSException * exception)
             
             if(![TMViewController isModalActive]) {
                 
-                if(appWindow().navigationController.messagesViewController.inputText.length > 0) {
-                    return incomingEvent;
-                } else {
-                    BOOL res = [appWindow().navigationController.messagesViewController.bottomView removeQuickRecord];
-                    if(!res)
-                        [[[Telegram sharedInstance] firstController] backOrClose:[[NSMenuItem alloc] initWithTitle:@"Profile.Back" action:@selector(backOrClose:) keyEquivalent:@""]];
+                BOOL res = [appWindow().navigationController.messagesViewController.bottomView removeQuickRecord];
+                
+                if(!res) {
+                    if(appWindow().navigationController.messagesViewController.inputText.length > 0) {
+                        return incomingEvent;
+                    } else {
+                       [[[Telegram sharedInstance] firstController] backOrClose:[[NSMenuItem alloc] initWithTitle:@"Profile.Back" action:@selector(backOrClose:) keyEquivalent:@""]];
+                    }
                 }
+                
+                
             
             } else {
                 
