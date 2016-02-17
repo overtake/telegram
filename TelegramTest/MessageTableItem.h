@@ -16,18 +16,25 @@
 
 @property (nonatomic,weak) MessagesTableView *table;
 
+@property (nonatomic,assign) NSUInteger rowId;
+
 @property (nonatomic, strong) TL_localMessage *message;
 
 @property (nonatomic, strong) SenderItem *messageSender;
 @property (nonatomic, strong) NSDate *date;
 @property (nonatomic, strong) NSString *fullDate;
 @property (nonatomic, strong) TLUser *user;
-@property (nonatomic, strong) NSAttributedString *headerName;
+@property (nonatomic, strong) NSMutableAttributedString *headerName;
 @property (nonatomic, strong) NSMutableAttributedString *forwardMessageAttributedString;
+@property (nonatomic,strong) NSAttributedString *forwardHeaderAttr;
 @property (nonatomic, strong) NSString *dateStr;
 
 @property (nonatomic, strong) TLUser *fwd_user;
 @property (nonatomic, strong) TLChat *fwd_chat;
+
+@property (nonatomic,strong) TLUser *via_bot_user;
+@property (nonatomic,strong) NSAttributedString *via_attr_string;
+
 
 @property (nonatomic) BOOL isForwadedMessage;
 @property (nonatomic) BOOL isSelected;
@@ -86,5 +93,7 @@
 
 -(int)fontSize;
 
+
+-(BOOL)isViaBot;
 
 @end

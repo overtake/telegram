@@ -28,6 +28,11 @@
         NSAttributedString *attrString = [[NSAttributedString alloc]
                                           initWithString:self.title attributes:attrsDictionary];
         [self setAttributedTitle:attrString];
+        
+        self.wantsLayer = YES;
+        self.layer.backgroundColor = [NSColor whiteColor].CGColor;
+        self.layer.opacity = 1.0;
+        self.layer.opaque = NO;
     }
     return self;
 }
@@ -35,6 +40,9 @@
 - (void)drawRect:(NSRect)dirtyRect
 {
 	[super drawRect:dirtyRect];
+    
+   // [[NSColor whiteColor] setFill];
+  //  NSRectFill(dirtyRect);
   
 }
 

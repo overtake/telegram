@@ -20,7 +20,7 @@
         _previewObject = previewObject;
         
         
-        _url = [NSURL fileURLWithPath:mediaFilePath(((TL_messageMediaDocument *)[(TL_localMessage *)_previewObject.media media]))];
+        _url = [NSURL fileURLWithPath:mediaFilePath(_previewObject.media)];
         
         
         if(!isPathExists(_url.path) || ![FileUtils checkNormalizedSize:_url.path checksize:((TL_messageMediaDocument *)[(TL_localMessage *)_previewObject.media media]).document.size]) {

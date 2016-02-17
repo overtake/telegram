@@ -8,6 +8,7 @@
 
 #import "TGWebpageArticle.h"
 #import "TGArticleImageObject.h"
+#import "TGExternalImageObject.h"
 @implementation TGWebpageArticle
 
 @synthesize size = _size;
@@ -27,10 +28,14 @@
             
             TLPhotoSize *size = [webpage.photo.sizes lastObject];
             
-            _imageObject = [[TGArticleImageObject alloc] initWithLocation:size.location placeHolder:[super imageObject].placeholder sourceId:0 size:size.size];
+            {
+                _imageObject = [[TGArticleImageObject alloc] initWithLocation:size.location placeHolder:[super imageObject].placeholder sourceId:0 size:size.size];
+                
+                _imageObject.imageSize = NSMakeSize(60, 60);
+            }
             
-            _imageObject.imageSize = NSMakeSize(60, 60);
-        }
+            
+        } 
         
     }
     

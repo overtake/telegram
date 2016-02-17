@@ -22,3 +22,4 @@
 #import "MessageTableCellSocialView.h"
 #import "MessageTableCellStickerView.h"
 #import "MessageTableCellHoleView.h"
+#import "MessageTableCellMpegView.h"

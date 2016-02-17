@@ -13,6 +13,7 @@
 #import "TGPVMediaBehavior.h"
 #import "PhotoHistoryFilter.h"
 #import "VideoHistoryFilter.h"
+#import "PhotoVideoHistoryFilter.h"
 #import "DocumentHistoryFilter.h"
 #import "AudioHistoryFilter.h"
 #import "TGDocumentsMediaTableView.h"
@@ -54,7 +55,7 @@
 @end
 
 @interface TMCollectionPageView : TMView
-@property (nonatomic,strong) TMCollectionPageController *controller;
+@property (nonatomic,weak) TMCollectionPageController *controller;
 
 @end
 
@@ -86,7 +87,6 @@
 -(void)loadView {
     
      weak();
-   // [super loadView];
     
     [TGCache setMemoryLimit:100*1024*1024 group:PCCACHE];
     
@@ -107,7 +107,6 @@
     
     self.items = [[NSMutableArray alloc] init];
     
-    self.behavior = [[TGPVMediaBehavior alloc] init];
     
     _photoCollection = [[PhotoCollectionTableView alloc] initWithFrame:self.view.bounds];
     
@@ -164,16 +163,8 @@
     
     [self.view addSubview:self.mediaCap];
     
-   // [self.mediaCap setHidden:YES];
-    
-    
     [self.view addSubview:self.actionsView];
     
-  //  [self.actionsView setHidden:YES];
-    
-    
-    
-   
     
 }
 
@@ -413,7 +404,6 @@ static const int maxWidth = 120;
 -(void)setConversation:(TL_conversation *)conversation {
     
     
-    
     self->_conversation = conversation;
     
     self.isProgress = YES;
@@ -438,38 +428,42 @@ static const int maxWidth = 120;
     self.locked = NO;
     
     
-    self.behavior = [[TGPVMediaBehavior alloc] initWithConversation:_conversation commonItem:nil];
-    self.behavior.conversation = conversation;
+    self.behavior = [[TGPVMediaBehavior alloc] initWithConversation:_conversation commonItem:nil filter:[PhotoVideoHistoryFilter class]];
     
-    
+    weak();
     
     [self.behavior load:INT32_MAX next:YES limit:100 callback:^(NSArray *previewObjects) {
         
-        [[ASQueue mainQueue] dispatchOnQueue:^{
-            
-            self.isProgress = NO;
-            
-            int limit = [self visibilityCount];
-            
-            self.waitItems = [[self convertItems:previewObjects] mutableCopy];
-            
-            if(self.waitItems.count > limit) {
+        strongWeak();
+        
+        if(strongSelf != nil) {
+            [[ASQueue mainQueue] dispatchOnQueue:^{
                 
-                self.items = [[self.waitItems subarrayWithRange:NSMakeRange(0, limit)] mutableCopy];
+                strongSelf.isProgress = NO;
                 
-            } else {
-                self.items = [self.waitItems mutableCopy];
-            }
-            
-            
-            [self.waitItems removeObjectsInArray:self.items];
-            
-            [self reloadData];
-            
-            if(self.items.count < 50) {
-                [self loadRemote];
-            }
-        }];
+                int limit = [strongSelf visibilityCount];
+                
+                strongSelf.waitItems = [[strongSelf convertItems:previewObjects] mutableCopy];
+                
+                if(strongSelf.waitItems.count > limit) {
+                    
+                    strongSelf.items = [[strongSelf.waitItems subarrayWithRange:NSMakeRange(0, limit)] mutableCopy];
+                    
+                } else {
+                    strongSelf.items = [strongSelf.waitItems mutableCopy];
+                }
+                
+                
+                [strongSelf.waitItems removeObjectsInArray:strongSelf.items];
+                
+                [strongSelf reloadData];
+                
+                if(strongSelf.items.count < 50) {
+                    [strongSelf loadRemote];
+                }
+            }];
+        }
+        
     }];
     
 }
@@ -551,26 +545,31 @@ static const int maxWidth = 120;
     } else {
         self.locked = YES;
         
+        weak();
+        
         [self.behavior load:[[[self.items lastObject] previewObject] msg_id] next:YES limit:100 callback:^(NSArray *previewObjects) {
            
-            [ASQueue dispatchOnMainQueue:^{
-                if(previewObjects.count > 0) {
-                    
-                    NSArray *converted = [self convertItems:previewObjects];
-                    
-                    [self addNextItems:converted];
-                    
-                }
-                
-                self.locked = NO;
-                
-                if(self.items.count < 20 && [self.behavior.controller filterWithNext:YES].nextState != ChatHistoryStateFull) {
-                    [self loadRemote];
-                }
-                
-                
-            }];
+            strongWeak();
             
+            if(strongSelf != nil) {
+                [ASQueue dispatchOnMainQueue:^{
+                    if(previewObjects.count > 0) {
+                        
+                        NSArray *converted = [strongSelf convertItems:previewObjects];
+                        
+                        [strongSelf addNextItems:converted];
+                        
+                    }
+                    
+                    strongSelf.locked = NO;
+                    
+                    if(strongSelf.items.count < 20 && [strongSelf.behavior.controller filterWithNext:YES].nextState != ChatHistoryStateFull) {
+                        [strongSelf loadRemote];
+                    }
+                    
+                    
+                }];
+            }
             
         }];
     }
@@ -745,7 +744,8 @@ static const int maxWidth = 120;
         
         TLVideo *video = media.video;
         
-        imageObject = [[PhotoCollectionImageObject alloc] initWithLocation:[video.thumb isKindOfClass:[TL_photoCachedSize class]] ? nil : video.thumb.location placeHolder:[video.thumb isKindOfClass:[TL_photoCachedSize class]] ? [[NSImage alloc] initWithData:video.thumb.bytes] : nil sourceId:arc4random()];
+        imageObject = [[PhotoCollectionImageObject alloc] initWithLocation:video.thumb.location placeHolder:[video.thumb isKindOfClass:[TL_photoCachedSize class]] ? [[NSImage alloc] initWithData:video.thumb.bytes] : nil sourceId:arc4random()];
+        imageObject.imageProcessor = [ImageUtils b_processor];
         imageObject.previewObject = previewObject;
         
         previewObject.reservedObject = [[DownloadVideoItem alloc] initWithObject:previewObject.media];
@@ -881,7 +881,7 @@ static const int maxWidth = 120;
             
         }
         
-       [[Telegram rightViewController].messagesViewController deleteSelectedMessages];
+       [weakSelf.navigationViewController.messagesViewController deleteSelectedMessages];
         
         [weakSelf setIsEditable:NO animated:YES];
         
@@ -983,6 +983,14 @@ static const int maxWidth = 120;
     [self.messagesSelectedCount sizeToFit];
     [self.messagesSelectedCount setFrameOrigin:NSMakePoint(roundf((self.actionsView.bounds.size.width - self.messagesSelectedCount.bounds.size.width) /2), roundf((self.actionsView.bounds.size.height - self.messagesSelectedCount.bounds.size.height)/2))];
     
+}
+
+
+
+-(void)dealloc {
+    [_documentsTableView clear];
+    [_photoCollection clear];
+    [_sharedLinksTableView clear];
 }
 
 

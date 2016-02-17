@@ -142,6 +142,8 @@
         return;
     
     BOOL discussion = [self.action.result.stepResult[1] intValue];
+    
+    weak();
    
     self.request = [RPCRequest sendRequest:[TLAPI_channels_createChannel createWithFlags:discussion ? 0 : 1 << 0 title:self.action.result.stepResult.firstObject[0] about:[self.action.result.stepResult.firstObject count] > 1 ? self.action.result.stepResult.firstObject[1] : nil] successHandler:^(RPCRequest *request, TLUpdates * response) {
         
@@ -150,25 +152,25 @@
             
             TL_channel *channel = [[ChatsManager sharedManager] find:[(TL_channel *)response.chats[0] n_id]];
             
-            self.action.object = channel;
+            weakSelf.action.object = channel;
                 
             dispatch_block_t block = ^{
-                [self.delegate behaviorDidEndRequest:response];
+                [weakSelf.delegate behaviorDidEndRequest:response];
                 
                 [[FullChatManager sharedManager] loadIfNeed:channel.n_id force:YES];
                 
                 
-                [self.action.currentViewController.messagesViewController setCurrentConversation:channel.dialog];
+                [weakSelf.action.currentViewController.messagesViewController setCurrentConversation:channel.dialog];
                 
-                [self.action.currentViewController.navigationViewController gotoViewController:self.action.currentViewController.messagesViewController animated:NO];
+                [weakSelf.action.currentViewController.navigationViewController gotoViewController:weakSelf.action.currentViewController.messagesViewController animated:NO];
                 
-                ComposeSettingupNewChannelViewController *viewController = [[ComposeSettingupNewChannelViewController alloc] initWithFrame:self.action.currentViewController.view.bounds];;
+                ComposeSettingupNewChannelViewController *viewController = [[ComposeSettingupNewChannelViewController alloc] initWithFrame:weakSelf.action.currentViewController.view.bounds];;
                 
-                [viewController setAction:self.action];
+                [viewController setAction:weakSelf.action];
                 
-                [self.action.currentViewController.navigationViewController pushViewController:viewController animated:YES];
+                [weakSelf.action.currentViewController.navigationViewController pushViewController:viewController animated:YES];
                 
-                [self.delegate behaviorDidEndRequest:self];
+                [weakSelf.delegate behaviorDidEndRequest:weakSelf];
             };
             
             block();
@@ -176,9 +178,9 @@
             [RPCRequest sendRequest:[TLAPI_channels_exportInvite createWithChannel:channel.inputPeer] successHandler:^(id request, id response) {
                 
                 
-                self.action.reservedObject1 = response;
+                weakSelf.action.reservedObject1 = response;
                 
-                [self.action.currentViewController setAction:self.action];
+                [weakSelf.action.currentViewController setAction:self.action];
                 
                 
             } errorHandler:^(id request, RpcError *error) {
@@ -190,7 +192,7 @@
         
         
     } errorHandler:^(RPCRequest *request, RpcError *error) {
-        [self.delegate behaviorDidEndRequest:nil];
+        [weakSelf.delegate behaviorDidEndRequest:nil];
     }];
     
     

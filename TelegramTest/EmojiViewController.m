@@ -13,6 +13,7 @@
 #import "NSString+Extended.h"
 #import "MessagesBottomView.h"
 #import "TGStickerPackEmojiController.h"
+#import "TGGifKeyboardView.h"
 #define EMOJI_IMAGE(img) image_test#img
 #define EMOJI_COUNT_PER_ROW 10
 
@@ -82,7 +83,7 @@
         race_popover = [[RBLPopover alloc] initWithContentViewController:(NSViewController *) e_race_controller];
        
         [race_popover setDidCloseBlock:^(RBLPopover *popover){
-            [[Telegram rightViewController].messagesViewController.bottomView.smilePopover setLockHoverClose:NO];
+            [self.controller.messagesViewController.bottomView.smilePopover setLockHoverClose:NO];
         }];
         
         [e_race_controller loadView];
@@ -98,7 +99,7 @@
         
         
         
-        [[Telegram rightViewController].messagesViewController.bottomView.smilePopover setLockHoverClose:YES];
+        [self.controller.messagesViewController.bottomView.smilePopover setLockHoverClose:YES];
         
         NSRect frame = button.bounds;
         frame.origin.y += 4;
@@ -154,6 +155,7 @@
 @property (nonatomic, strong) NSArray *segments;
 @property (nonatomic, strong) NSMutableArray *userEmoji;
 @property (nonatomic, strong) TGStickerPackEmojiController *stickersTableView;
+@property (nonatomic, strong) TGGifKeyboardView *gifContainer;
 
 @end
 
@@ -291,6 +293,10 @@
    [[self instance].stickersTableView.stickers load:NO];
 }
 
++(void)hideStickerPreviewIfNeeded {
+    [[self instance].stickersTableView.stickers hideStickerPreview];
+}
+
 -(void)saveModifier:(NSString *)modifier forEmoji:(NSString *)emoji {
     
     NSUserDefaults *s = [NSUserDefaults standardUserDefaults];
@@ -332,14 +338,15 @@
     [super loadView];
     
    
-    
-
     self.bottomView = [[TMView alloc] initWithFrame:NSMakeRect(0, 0, self.view.bounds.size.width, 42)];
-    for(int i = 1; i <= 7; i++) {
+    for(int i = 1; i <= 8; i++) {
         BTRButton *button = [self createButtonForIndex:i];//20
-        [button setFrameOrigin:NSMakePoint(i * 18 + 30 * (i - 1), 12)];
+        [button setFrameOrigin:NSMakePoint(i * 12 + 30 * (i - 1), 12)];
         [self.bottomView addSubview:button];
     }
+
+    
+    
     
     self.currentButton = [self.bottomView.subviews objectAtIndex:self.userEmoji.count ? 0 : 1];
     [self.currentButton setSelected:YES];
@@ -352,6 +359,13 @@
     [self.view addSubview:self.stickersTableView];
     
     [self.stickersTableView setHidden:YES];
+    
+    
+    _gifContainer = [[TGGifKeyboardView alloc] initWithFrame:NSMakeRect(6, self.bottomView.bounds.size.height, self.view.bounds.size.width - 12, self.view.bounds.size.height - self.bottomView.bounds.size.height - 4)];
+    
+    [self.view addSubview:_gifContainer];
+    
+    [_gifContainer setHidden:YES];
 
     
     self.tableView = [[TMTableView alloc] initWithFrame:NSMakeRect(6, self.bottomView.bounds.size.height, self.view.bounds.size.width - 12, self.view.bounds.size.height - self.bottomView.bounds.size.height - 4)];
@@ -417,7 +431,10 @@
             image = image_emojiContainer7();
             imageSelected = image_emojiContainer7Highlighted();
             break;
-            
+        case 8:
+            image = image_emojiContainer8();
+            imageSelected = image_emojiContainer8Highlighted();
+            break;
         default:
             break;
     }
@@ -437,12 +454,22 @@
     [self bottomButtonClick:[self.bottomView.subviews objectAtIndex:self.userEmoji.count ? 0 : 1]];
 }
 
+-(void)setMessagesViewController:(MessagesViewController *)messagesViewController {
+    _messagesViewController = messagesViewController;
+    _gifContainer.messagesViewController = messagesViewController;
+}
+
 - (void)close {
-    [[Telegram rightViewController].messagesViewController.bottomView.smilePopover close];
+    [self.messagesViewController.bottomView.smilePopover close];
     [self.stickersTableView removeAllItems];
+    [_gifContainer clear];
 }
 
 - (void)bottomButtonClick:(EmojiBottomButton *)button {
+    
+    if(self.messagesViewController.conversation.type == DialogTypeSecretChat && button.index == 8)
+        return;
+    
     
     for(EmojiBottomButton *btn in self.bottomView.subviews) {
         [btn setSelected:btn == button];
@@ -471,9 +498,16 @@
         [self.stickersTableView removeAllItems];
     }
     
+    if(self.currentButton.index == 8) {
+        [_gifContainer prepareSavedGifvs];
+    } else {
+        [_gifContainer clear];
+    }
     
-    [self.tableView.containerView setHidden:self.currentButton.index == 7];
+    
+    [self.tableView.containerView setHidden:self.currentButton.index == 7 || self.currentButton.index == 8];
     [self.stickersTableView setHidden:self.currentButton.index != 7];
+    [self.gifContainer setHidden:self.currentButton.index != 8];
     
 }
 

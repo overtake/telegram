@@ -30,40 +30,21 @@
 - (id) initWithObject:(TL_localMessage *)object {
     self = [super initWithObject:object];
     
+    
     self.textAttributed = [[NSMutableAttributedString alloc] init];
     
     NSString *message = [[object.message trim] fixEmoji];
-    
-//    NSArray *emoji = [message getEmojiFromString:NO];
-//    
-//    if(emoji.count <= 5) {
-//        NSMutableString *c = [message mutableCopy];
-//        
-//        [emoji enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
-//            
-//            [c replaceOccurrencesOfString:obj withString:@"" options:0 range:NSMakeRange(0, c.length)];
-//            
-//        }];
-//        
-//        _isEmojiMessage = [c trim].length == 0;
-//    }
-//    
+        
     
     [self.textAttributed appendString:message withColor:TEXT_COLOR];
     
     [self.textAttributed setAlignment:NSLeftTextAlignment range:self.textAttributed.range];
     
     [self updateEntities];
-    
-   // [SettingsArchiver addEventListener:self];
-    
-    
+
     
     
     [self updateWebPage];
-    
-    
-  //  [self makeSizeByWidth:280];
     
     return self;
 }
@@ -162,6 +143,8 @@
             
             NSRange range = [attr appendString:obj];
             
+            
+            
             [attr addAttribute:NSLinkAttributeName value:obj range:range];
             [attr addAttribute:NSForegroundColorAttributeName value:LINK_COLOR range:range];
             [attr addAttribute:NSCursorAttributeName value:[NSCursor pointingHandCursor] range:range];
@@ -180,6 +163,10 @@
         
     }];
     
+    NSMutableParagraphStyle *style = [[NSMutableParagraphStyle alloc] init];
+    style.lineBreakMode = NSLineBreakByTruncatingTail;
+
+    [attr addAttribute:NSParagraphStyleAttributeName value:style range:attr.range];
     
     
     _allAttributedLinks = [attr copy];
@@ -304,33 +291,65 @@
         
         _requestKey = dispatch_in_time(self.message.media.webpage.date, ^{
             
-            
-            [RPCRequest sendRequest:[TLAPI_messages_getMessages createWithN_id:[@[@(self.message.n_id)] mutableCopy]] successHandler:^(RPCRequest *request, TL_messages_messages *response) {
-                
-                if(response.messages.count == 1) {
+            if([self.message.media.webpage isKindOfClass:[TL_secretWebpage class]]) {
+                [RPCRequest sendRequest:[TLAPI_messages_getWebPagePreview createWithMessage:self.message.media.webpage.url] successHandler:^(RPCRequest *request, TL_messageMediaWebPage *response) {
                     
-                    TLMessage *msg = response.messages[0];
-                    
-                    if(![msg isKindOfClass:[TL_messageEmpty class]]) {
-                        self.message.media = msg.media;
+                    if([response isKindOfClass:[TL_messageMediaWebPage class]]) {
+                        
+                        
+                        
+                        if(![response.webpage isKindOfClass:[TL_webPagePending class]]) {
+                            [Storage addWebpage:response.webpage forLink:display_url(response.webpage.url)];
+                            
+                            self.message.media = response;
+                            
+                            [self.message save:NO];
+                            
+                            if([self.message.media.webpage isKindOfClass:[TL_webPage class]]) {
+                                [Notification perform:UPDATE_WEB_PAGE_ITEMS data:@{KEY_DATA:@{@(self.message.peer_id):@[@(self.message.n_id)]},KEY_WEBPAGE:self.message.media.webpage}];
+                            }
+                            
+                        } else {
+                            self.message.media.webpage.date = response.webpage.date;
+                            
+                            [self updateWebPage];
+                        }
+                        
+                    } else if([response isKindOfClass:[TL_messageMediaEmpty class]]) {
+                        [Storage addWebpage:[TL_webPageEmpty createWithN_id:0] forLink:display_url(self.message.media.webpage.url)];
                     }
                     
                     
-                    [self.message save:NO];
                     
-                    if([self.message.media.webpage isKindOfClass:[TL_webPage class]]) {
-                        [Notification perform:UPDATE_WEB_PAGE_ITEMS data:@{KEY_DATA:@{@(self.message.peer_id):@[@(self.message.n_id)]},KEY_WEBPAGE:self.message.media.webpage}];
+                } errorHandler:^(RPCRequest *request, RpcError *error) {
+                    
+                }];
+            } else {
+                [RPCRequest sendRequest:[TLAPI_messages_getMessages createWithN_id:[@[@(self.message.n_id)] mutableCopy]] successHandler:^(RPCRequest *request, TL_messages_messages *response) {
+                    
+                    if(response.messages.count == 1) {
+                        
+                        TLMessage *msg = response.messages[0];
+                        
+                        if(![msg isKindOfClass:[TL_messageEmpty class]]) {
+                            self.message.media = msg.media;
+                        }
+                        
+                        
+                        [self.message save:NO];
+                        
+                        if([self.message.media.webpage isKindOfClass:[TL_webPage class]]) {
+                            [Notification perform:UPDATE_WEB_PAGE_ITEMS data:@{KEY_DATA:@{@(self.message.peer_id):@[@(self.message.n_id)]},KEY_WEBPAGE:self.message.media.webpage}];
+                        }
+                        
                     }
                     
-                }
-                
-                
-            } errorHandler:^(RPCRequest *request, RpcError *error) {
-                
-                
-            }];
-            
-            
+                    
+                } errorHandler:^(RPCRequest *request, RpcError *error) {
+                    
+                    
+                }];
+            }
             
         });
         
@@ -343,7 +362,7 @@
 }
 
 -(BOOL)isWebPagePending {
-    return [self.message.media.webpage isKindOfClass:[TL_webPagePending class]];
+    return [self.message.media.webpage isKindOfClass:[TL_webPagePending class]] || [self.message.media.webpage isKindOfClass:[TL_secretWebpage class]];
 }
 
 

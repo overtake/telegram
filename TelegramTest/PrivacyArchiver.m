@@ -11,13 +11,14 @@
 @implementation PrivacyArchiver
 
 NSString *const kStatusTimestamp = @"TL_privacyKeyStatusTimestamp";
-
+NSString *const kStatusGroups = @"TL_privacyKeyChatInvite";
 -(id)initWithType:(PrivacyAllowType)type allowUsers:(NSArray *)allowUsers disallowUsers:(NSArray *)disallowUsers privacyType:(NSString *)privacyType {
     if(self = [super init]) {
         _allowUsers = allowUsers;
         _disallowUsers = disallowUsers;
         _allowType = type;
         _privacyType = privacyType;
+        
     }
     
     return self;
@@ -159,6 +160,16 @@ NSString *const kStatusTimestamp = @"TL_privacyKeyStatusTimestamp";
     }
     
     return rules;
+}
+
+-(BOOL)acceptNobodySetting {
+    static NSArray *nobodyItems;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        nobodyItems = @[kStatusTimestamp];
+    });
+    
+    return [nobodyItems indexOfObject:self.privacyType] != NSNotFound;
 }
 
 -(id)copy {

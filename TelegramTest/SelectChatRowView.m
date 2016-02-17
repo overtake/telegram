@@ -39,8 +39,6 @@
         _avatarImageView = [TMAvatarImageView standartMessageTableAvatar];
         [self addSubview:_avatarImageView];
 
-        
-        
         _titleTextField = [[TMNameTextField alloc] init];
         [_titleTextField setEditable:NO];
         [_titleTextField setBordered:NO];
@@ -51,8 +49,6 @@
         
         [_titleTextField setSelector:@selector(dialogTitle)];
         [self addSubview:_titleTextField];
-        
-        
         
         _statusTextField = [[TMStatusTextField alloc] init];
         [_statusTextField setEditable:NO];
@@ -66,18 +62,16 @@
         [self addSubview:_statusTextField];
         
         
-        
         self.selectButton = [[BTRButton alloc] initWithFrame:NSMakeRect(20, roundf((50 - image_ComposeCheckActive().size.height )/ 2), image_ComposeCheckActive().size.width, image_ComposeCheckActive().size.height)];
-        // [self.selectButton setAutoresizingMask:NSViewMinXMargin];
         
-        weakify();
+        weak();
         
         [self.selectButton setBackgroundImage:image_ComposeCheck() forControlState:BTRControlStateNormal];
         [self.selectButton setBackgroundImage:image_ComposeCheck() forControlState:BTRControlStateHover];
         [self.selectButton setBackgroundImage:image_ComposeCheck() forControlState:BTRControlStateHighlighted];
         [self.selectButton setBackgroundImage:image_ComposeCheckActive() forControlState:BTRControlStateSelected];
         [self.selectButton addBlock:^(BTRControlEvents events) {
-            [strongSelf mouseDown:[NSApp currentEvent]];
+            [weakSelf mouseDown:[NSApp currentEvent]];
         } forControlEvents:BTRControlEventLeftClick];
         
         
@@ -113,8 +107,6 @@
     [self.avatarImageView setFrameOrigin:NSMakePoint(self.isEditable ? 30 + 20 : 10, (50 - 36) / 2)];
 
 
-    
-    
     [_avatarImageView setChat:[self rowItem].chat];
     [self setNeedsDisplay:YES];
     
@@ -182,14 +174,14 @@
     
     [self.selectButton setHidden:oldOpacity == 0 && !editable];
     
-    
+    weak();
     
     POPBasicAnimation *position = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerPositionX];
     position.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut];
     position.toValue = @(editable ? 20 : 0);
     position.duration = duration;
     [position setCompletionBlock:^(POPAnimation *anim, BOOL result) {
-        [self.selectButton setFrameOrigin:[self selectOrigin]];
+        [weakSelf.selectButton setFrameOrigin:[weakSelf selectOrigin]];
     }];
     
     
@@ -202,7 +194,7 @@
     opacityAnim.duration = duration;
     [opacityAnim setCompletionBlock:^(POPAnimation *anim, BOOL result) {
         if(result) {
-            [self.selectButton setHidden:!editable];
+            [weakSelf.selectButton setHidden:!editable];
         }
     }];
     [self.selectButton.layer pop_addAnimation:opacityAnim forKey:@"opacity"];
@@ -218,8 +210,7 @@
 }
 
 -(void)checkSelected:(BOOL)isSelected {
-    //   [self.lastSeenTextField setSelected:isSelected];
-    //  [self.titleTextField setSelected:isSelected];
+    
 }
 
 
@@ -248,6 +239,8 @@
         [self.selectButton setBackgroundImage:image_ComposeCheck() forControlState:BTRControlStateHighlighted];
     }
     
+    weak();
+    
     if(animation) {
         float duration = 1 / 18.f;
         float to = 0.9;
@@ -262,16 +255,13 @@
                 scaleAnimation.fromValue  = [NSValue valueWithCGSize:CGSizeMake(to, to)];
                 scaleAnimation.toValue  = [NSValue valueWithCGSize:CGSizeMake(1.0f, 1.0f)];
                 scaleAnimation.duration = duration / 2;
-                [self.selectButton.layer pop_addAnimation:scaleAnimation forKey:@"scale"];
+                [weakSelf.selectButton.layer pop_addAnimation:scaleAnimation forKey:@"scale"];
             }
         }];
         
         [self.selectButton.layer pop_addAnimation:scaleAnimation forKey:@"scale"];
-        
-        
     }
 }
-
 
 -(SelectChatItem *)rowItem {
     return (SelectChatItem *) [super rowItem];
@@ -280,14 +270,10 @@
 - (void)drawRect:(NSRect)dirtyRect
 {
     [super drawRect:dirtyRect];
-    
-    
     [LIGHT_GRAY_BORDER_COLOR setFill];
-    
-    NSRectFill(NSMakeRect(NSMinX(self.titleTextField.frame), 0, NSWidth(self.frame) - 60 , 1));
+    NSRectFill(NSMakeRect(NSMinX(self.titleTextField.frame), 0, NSWidth(self.frame) - NSMinX(self.titleTextField.frame) - 10 , 1));
 
 }
-
 
 
 @end

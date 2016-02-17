@@ -18,6 +18,9 @@
 #import "MessagesBottomView.h"
 #import "TGHeadChatPanel.h"
 #import "TGModalForwardView.h"
+
+
+
 @interface MessageTableCellContainerView() <TMHyperlinkTextFieldDelegate>
 @property (nonatomic, strong) TMHyperlinkTextField *nameTextField;
 @property (nonatomic, strong) BTRImageView *sendImageView;
@@ -29,7 +32,7 @@
 @property (nonatomic, strong) TMAvatarImageView *fwdAvatar;
 
 @property (nonatomic, strong) NSView *rightView;
-@property (nonatomic, strong) TMTextLayer *forwardMessagesTextLayer;
+@property (nonatomic, strong) TGCTextView *forwardMessagesTextLayer;
 @property (nonatomic, strong) TMTextField *dateLayer;
 @property (nonatomic, strong) BTRButton *selectButton;
 
@@ -41,9 +44,10 @@
 @property (nonatomic,strong) DownloadEventListener *downloadEventListener;
 
 
-@property (nonatomic,strong) NSImageView *shareImageView;
+@property (nonatomic,strong) BTRButton *shareButton;
 
 @property (nonatomic,strong) TGModalForwardView *forwardModalView;
+
 
 @end
 
@@ -91,9 +95,7 @@
         
         
     
-        
-        
-        if(![self isKindOfClass:[MessageTableCellTextView class]] && ![self isKindOfClass:[MessageTableCellGeoView class]]) {
+         if(![self isKindOfClass:[MessageTableCellTextView class]] && ![self isKindOfClass:[MessageTableCellGeoView class]]) {
             _progressView = [[TMLoaderView alloc] initWithFrame:NSMakeRect(0, 0, 48, 48)];
             [self.progressView setAutoresizingMask:NSViewMaxXMargin | NSViewMaxYMargin | NSViewMinXMargin | NSViewMinYMargin];
             [self.progressView addTarget:self selector:@selector(checkOperation)];
@@ -113,14 +115,20 @@
     
     
     if(!self.forwardMessagesTextLayer) {
-        self.forwardMessagesTextLayer = [TMTextLayer layer];
-        [self.forwardMessagesTextLayer disableActions];
-        [self.forwardMessagesTextLayer setFrameSize:NSMakeSize(180, 20)];
-        [self.forwardMessagesTextLayer setContentsScale:self.layer.contentsScale];
-        [self.forwardMessagesTextLayer setTextColor:NSColorFromRGB(0x9b9b9b)];
-        [self.forwardMessagesTextLayer setTextFont:TGSystemFont(13)];
-        [self.forwardMessagesTextLayer setString:NSLocalizedString(@"Messages.ForwardedMessages",nil)];
-        [self.layer addSublayer:self.forwardMessagesTextLayer];
+        self.forwardMessagesTextLayer = [[TGCTextView alloc] initWithFrame:NSZeroRect];
+        [self.forwardMessagesTextLayer setFrameSize:NSMakeSize(self.item.blockSize.width, 20)];
+        [self.forwardMessagesTextLayer setAttributedString:self.item.forwardHeaderAttr];
+        [self addSubview:self.forwardMessagesTextLayer];
+        
+        
+        [_forwardMessagesTextLayer setLinkCallback:^(NSString *link) {
+            __strong MessageTableCellContainerView *strongSelf = weakSelf;
+            
+            [strongSelf.messagesViewController.bottomView setContextBotString:[NSString stringWithFormat:@"%@ ",link]];
+            
+            
+        }];
+
     }
     
     if(!self.fwdContainer) {
@@ -147,6 +155,7 @@
         [self.fwdName setBordered:NO];
         [self.fwdName setDrawsBackground:NO];
         [self.fwdName setAutoresizingMask:NSViewWidthSizable];
+        [[self.fwdName cell] setTruncatesLastVisibleLine:YES];
         [[self.fwdName cell] setLineBreakMode:NSLineBreakByTruncatingTail];
         [self.fwdContainer addSubview:self.fwdName];
     }
@@ -158,7 +167,7 @@
     [self.fwdAvatar removeFromSuperview];
     self.fwdAvatar = nil;
     
-    [self.forwardMessagesTextLayer removeFromSuperlayer];
+    [self.forwardMessagesTextLayer removeFromSuperview];
     self.forwardMessagesTextLayer = nil;
     
     [self.fwdContainer removeFromSuperview];
@@ -190,6 +199,9 @@
     [_replyContainer setReplyObject:nil];
     _replyContainer = nil;
 }
+
+
+
 
 -(void)initSelectButton {
     
@@ -231,7 +243,6 @@
             
             [appWindow().navigationController showInfoPage:weakSelf.item.message.from_id == 0 ? weakSelf.item.message.conversation : weakSelf.item.user.dialog];
             
-         //
         }];
         [self addSubview:self.avatarImageView];
     }
@@ -239,9 +250,10 @@
     if(!self.nameTextField) {
         self.nameTextField = [[TMHyperlinkTextField alloc] initWithFrame:NSMakeRect(0, 0, 200, 20)];
         [self.nameTextField setBordered:NO];
+        [[self.nameTextField cell] setTruncatesLastVisibleLine:YES];
+        [[self.nameTextField cell] setLineBreakMode:NSLineBreakByTruncatingTail];
         [self.nameTextField setFont:TGSystemMediumFont(13)];
         [self.nameTextField setDrawsBackground:NO];
-        
         
         [self addSubview:self.nameTextField];
     }
@@ -429,13 +441,16 @@ NSImage *selectCheckActiveImage() {
         scaleAnimation.fromValue  = [NSValue valueWithCGSize:CGSizeMake(1.0f, 1.0f)];
         scaleAnimation.toValue  = [NSValue valueWithCGSize:CGSizeMake(to, to)];
         scaleAnimation.duration = duration / 2;
+        
+        weak();
+        
         [scaleAnimation setCompletionBlock:^(POPAnimation *anim, BOOL result) {
             if(result) {
                 POPBasicAnimation *scaleAnimation = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerScaleXY];
                 scaleAnimation.fromValue  = [NSValue valueWithCGSize:CGSizeMake(to, to)];
                 scaleAnimation.toValue  = [NSValue valueWithCGSize:CGSizeMake(1.0f, 1.0f)];
                 scaleAnimation.duration = duration / 2;
-                [self.selectButton.layer pop_addAnimation:scaleAnimation forKey:@"scale"];
+                [weakSelf.selectButton.layer pop_addAnimation:scaleAnimation forKey:@"scale"];
             }
         }];
         
@@ -489,9 +504,7 @@ static BOOL mouseIsDown = NO;
     
     if(!self.isEditable)
         return false;
-    
-    [self.messagesViewController.table checkAndScroll:[self.messagesViewController.table.scrollView convertPoint:[theEvent locationInWindow] fromView:nil]];
-    
+        
     NSPoint pos = [self.messagesViewController.table convertPoint:[theEvent locationInWindow] fromView:nil];
     
     
@@ -503,8 +516,12 @@ static BOOL mouseIsDown = NO;
         
         MessageTableCellContainerView *container = [[rowView subviews] objectAtIndex:0];
         if(container && [container isKindOfClass:[MessageTableCellContainerView class]]) {
-            [container setSelected:dragAction animation:YES];
-            [self.messagesViewController setSelectedMessage:container.item selected:self.item.isSelected];
+            
+            if(container.item.isSelected != dragAction) {
+                [container setSelected:dragAction animation:YES];
+                [self.messagesViewController setSelectedMessage:container.item selected:self.item.isSelected];
+            }
+            
         }
         
     }
@@ -522,9 +539,9 @@ static BOOL dragAction = NO;
     if(self.item.messageSender)
         return;
     
-    NSPoint pos = [self convertPoint:[theEvent locationInWindow] fromView:nil];
+    NSPoint pos = [self.rightView convertPoint:[theEvent locationInWindow] fromView:nil];
     
-    if(NSPointInRect(pos, self.rightView.frame)) {
+    if(NSPointInRect(pos, self.dateLayer.frame)) {
         if(self.messagesViewController.state == MessagesViewControllerStateNone) {
             [self.messagesViewController setCellsEditButtonShow:self.messagesViewController.state != MessagesViewControllerStateEditable animated:YES];
             [self mouseDown:theEvent];
@@ -588,7 +605,7 @@ static BOOL dragAction = NO;
     if(![self.item.message.media isKindOfClass:[TL_messageMediaEmpty class]]) {
         NSPasteboard *pasteboard = [NSPasteboard generalPasteboard];
         [pasteboard clearContents];
-        [pasteboard writeObjects:[NSArray arrayWithObject:[NSURL fileURLWithPath:mediaFilePath(self.item.message.media)]]];
+        [pasteboard writeObjects:[NSArray arrayWithObject:[NSURL fileURLWithPath:mediaFilePath(self.item.message)]]];
     }
 }
 
@@ -599,9 +616,9 @@ static BOOL dragAction = NO;
         
         NSSavePanel *panel = [NSSavePanel savePanel];
         
-        NSString *path = mediaFilePath(self.item.message.media);
+        NSString *path = mediaFilePath(self.item.message);
         
-        NSString *fileName = [self.item.message.media isKindOfClass:[TL_messageMediaDocument class]] ? [self.item.message.media.document file_name] : [path lastPathComponent];
+        NSString *fileName = [self.item.message.media isKindOfClass:[TL_messageMediaDocument class]]  || [self.item.message.media isKindOfClass:[TL_messageMediaDocument_old44 class]] ? [self.item.message.media.document file_name] : [path lastPathComponent];
         
         [panel setNameFieldStringValue:fileName];
         
@@ -634,8 +651,18 @@ static BOOL dragAction = NO;
     [super setItem:item];
     
     [self.progressView setCurrentProgress:0];
-        
+    
     self.stateLayer.container = self;
+    
+    [self checkActionState:YES];
+    
+    //  Layers ;)
+    
+    [self.dateLayer setStringValue:item.dateStr];
+    [self.dateLayer setFrameSize:CGSizeMake(item.dateSize.width, item.dateSize.height)];
+    [self.dateLayer setFrameOrigin:CGPointMake(NSMaxX(_stateLayer.frame), NSMinY(self.dateLayer.frame))];
+    [self.rightView setFrameSize:CGSizeMake(item.dateSize.width + offserUnreadMark + NSWidth(self.stateLayer.frame) + 15 , 18)];
+    [self.rightView setToolTip:self.item.fullDate];
     
     if(item.isForwadedMessage) {
         
@@ -680,11 +707,18 @@ static BOOL dragAction = NO;
         [self deallocForwardContainer];
         
     }
+    
+    
 
     if(item.isHeaderMessage) {
         [self initHeader];
+//        [self.nameTextField setBackgroundColor:[NSColor redColor]];
+//        [self.nameTextField setDrawsBackground:YES];
         [self.nameTextField setAttributedStringValue:item.headerName];
         [self.nameTextField setFrameOrigin:NSMakePoint(item.containerOffset - 2, item.viewSize.height - 24)];
+        
+        [self.nameTextField setFrameSize:NSMakeSize(NSWidth(self.messagesViewController.table.frame) - NSWidth(self.rightView.frame) - NSMinX(self.nameTextField.frame) , NSHeight(self.nameTextField.frame))];
+        
         if(item.message.from_id != 0)
             [self.avatarImageView setUser:item.user];
         else
@@ -696,15 +730,8 @@ static BOOL dragAction = NO;
         [self deallocHeader];
     }
 
-    
-  //  [self.containerView setBackgroundColor:[NSColor redColor]];
-    
     [self.containerView setFrame:NSMakeRect(item.isForwadedMessage ? item.containerOffsetForward : item.containerOffset, item.isHeaderMessage ? item.isForwadedMessage ? 4 : 4 : item.isForwadedMessage ? 4 : roundf((item.viewSize.height - item.blockSize.height)/2), NSWidth(self.frame) - 160, item.blockSize.height)];
-    
-  //  [self.containerView removeAllSubviews];
-    
-  //  [self.layer setBackgroundColor:NSColorFromRGB(arc4random() % 16000000).CGColor];
-        
+
     
     if([item isReplyMessage])
     {
@@ -737,28 +764,20 @@ static BOOL dragAction = NO;
     
     
 
-    [self checkActionState:YES];
-    
-  //  Layers ;)
-    
-    [self.dateLayer setStringValue:item.dateStr];
-    [self.dateLayer setFrameSize:CGSizeMake(item.dateSize.width, item.dateSize.height)];
-    [self.dateLayer setFrameOrigin:CGPointMake(NSMaxX(_stateLayer.frame), NSMinY(self.dateLayer.frame))];
-    [self.rightView setFrameSize:CGSizeMake(item.dateSize.width + offserUnreadMark + NSWidth(self.stateLayer.frame) + 15 , 18)];
-    [self.rightView setToolTip:self.item.fullDate];
+ 
     
     [self setNeedsDisplay:YES];
     
     
     if(item.message.isChannelMessage && item.message.from_id == 0) {
         
-        if(!_shareImageView) {
-            _shareImageView = imageViewWithImage(image_ChannelShare());
-            
+        if(!_shareButton) {
+            _shareButton = [[BTRButton alloc] initWithFrame:NSMakeRect(0, 0, image_ChannelShare().size.width , image_ChannelShare().size.height )];
+            [_shareButton setCursor:[NSCursor pointingHandCursor] forControlState:BTRControlStateHover];
+            [_shareButton setImage:image_ChannelShare() forControlState:BTRControlStateNormal];
             weak();
             
-            [_shareImageView setCallback:^{
-                
+            [_shareButton addBlock:^(BTRControlEvents events) {
                 [weakSelf.forwardModalView close:NO];
                 weakSelf.forwardModalView = nil;
                 
@@ -766,22 +785,21 @@ static BOOL dragAction = NO;
                 
                 [weakSelf.messagesViewController setSelectedMessage:weakSelf.item selected:YES];
                 
-                 weakSelf.forwardModalView.messagesViewController = weakSelf.messagesViewController;
+                weakSelf.forwardModalView.messagesViewController = weakSelf.messagesViewController;
                 
                 [weakSelf.forwardModalView show:weakSelf.window animated:YES];
-                
-                
-            }];
+
+            } forControlEvents:BTRControlEventClick ];
         }
         
         
-        [self addSubview:_shareImageView];
-        [_shareImageView setAutoresizingMask:NSViewMinXMargin];
-       // [_shareImageView setFrameOrigin:NSMakePoint(NSMinX(_rightView.frame) + NSWidth(_shareImageView.frame) + NSMaxX(_dateLayer.frame), NSMinY(_rightView.frame) - NSHeight(_shareImageView.frame))];
+        [self addSubview:_shareButton];
+        [_shareButton setAutoresizingMask:NSViewMinXMargin];
+
         
     } else {
-        [_shareImageView removeFromSuperview];
-        _shareImageView = nil;
+        [_shareButton removeFromSuperview];
+        _shareButton = nil;
     }
     
 
@@ -804,20 +822,25 @@ static int offsetEditable = 30;
     [self.rightView setFrameOrigin:position];
     
     if(!editable)
-        [_shareImageView setFrameOrigin:NSMakePoint(NSMinX(_rightView.frame) + NSWidth(_shareImageView.frame) + NSWidth(_dateLayer.frame) + 35, NSMinY(_rightView.frame) - NSHeight(_shareImageView.frame) - 5)];
+        [_shareButton setFrameOrigin:NSMakePoint(NSMinX(_rightView.frame) + NSWidth(_shareButton.frame) + NSWidth(_dateLayer.frame) + 35, NSMinY(_rightView.frame) - NSHeight(_shareButton.frame) - 5)];
     
-    [_shareImageView setHidden:editable];
+
+    [_shareButton setHidden:editable];
 }
 
 - (void)setEditable:(BOOL)editable animation:(BOOL)animation {
     
     if(editable)
         [self initSelectButton];
-    else
-        [self deallocSelectButton];
+    else {
+         [self deallocSelectButton];
+    }
+    
+    [[NSAnimationContext currentContext] setTimingFunction:[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut]];
+    [[NSAnimationContext currentContext] setDuration:0.2];
+    [animation ? [_shareButton animator] : _shareButton setAlphaValue:editable ? 0.0f : 1.0f];
     
     
-     [_shareImageView setHidden:editable];
     
     if(self.isEditable == editable && animation)
         return;
@@ -838,8 +861,6 @@ static int offsetEditable = 30;
         return;
     }
     
-    
-    
     [self setRightLayerToEditablePosition:!editable];
     
     float from = self.rightView.layer.frame.origin.x;
@@ -856,9 +877,12 @@ static int offsetEditable = 30;
     position.fromValue = @(from);
     position.toValue = @(to);
     position.duration = duration;
+    
+    weak();
+    
     [position setCompletionBlock:^(POPAnimation *anim, BOOL result) {
         if(result) {
-            [self setRightLayerToEditablePosition:editable];
+            [weakSelf setRightLayerToEditablePosition:editable];
         }
     }];
     [self.rightView.layer pop_addAnimation:position forKey:@"slide"];
@@ -873,7 +897,7 @@ static int offsetEditable = 30;
     opacityAnim.duration = duration;
     [opacityAnim setCompletionBlock:^(POPAnimation *anim, BOOL result) {
         if(result) {
-            [self.selectButton setHidden:!editable];
+            [weakSelf.selectButton setHidden:!editable];
         }
     }];
     [self.selectButton.layer pop_addAnimation:opacityAnim forKey:@"slide"];
@@ -917,6 +941,7 @@ static int offsetEditable = 30;
 
 - (void)updateCellState {
     
+    [self.progressView setAlphaValue:1.0];
     
     MessageTableItem *item =(MessageTableItem *)self.item;
     
@@ -965,7 +990,6 @@ static int offsetEditable = 30;
 
 
 - (void)downloadProgressHandler:(DownloadItem *)item {
-        
     [self.progressView setProgress:item.progress animated:YES];
 }
 
@@ -998,17 +1022,25 @@ static int offsetEditable = 30;
         
         [_downloadEventListener setCompleteHandler:^(DownloadItem * item) {
             
+            strongWeak();
+            
+            [strongSelf.item doAfterDownload];
+            
             [[ASQueue mainQueue] dispatchOnQueue:^{
                 
-                [weakSelf downloadProgressHandler:item];
+                if(strongSelf == weakSelf) {
+                    [weakSelf downloadProgressHandler:item];
+                    
+                    dispatch_after_seconds(0.2, ^{
+                     
+                        [weakSelf updateCellState];
+                        [weakSelf doAfterDownload];
+                        [weakSelf.progressView setCurrentProgress:0];
+                        weakSelf.item.downloadItem = nil;
+                    });
+                }
                 
-                dispatch_after_seconds(0.2, ^{
-                    [weakSelf.item doAfterDownload];
-                    [weakSelf updateCellState];
-                    [weakSelf doAfterDownload];
-                    [weakSelf.progressView setCurrentProgress:0];
-                    weakSelf.item.downloadItem = nil;
-                });  
+                
             }];
             
         }];
@@ -1062,7 +1094,7 @@ static int offsetEditable = 30;
     
     if(item == self.item.messageSender) {
         [self checkState:item];
-        [self uploadProgressHandler:item animated:NO];
+        [self uploadProgressHandler:item animated:YES];
         [self updateCellState];
         
         if(item.state == MessageSendingStateCancelled) {
@@ -1075,6 +1107,7 @@ static int offsetEditable = 30;
 
 - (void)checkActionState:(BOOL)redraw {
     
+    
     MessageTableCellState state;
     if(self.item.messageSender) {
         
@@ -1082,6 +1115,10 @@ static int offsetEditable = 30;
             state = MessageTableCellSendingError;
         } else if(self.item.messageSender.state == MessageStateSending)  {
             state = MessageTableCellSending;
+            
+            [self uploadProgressHandler:self.item.messageSender animated:NO];
+            [self uploadProgressHandler:self.item.messageSender animated:YES];
+            
         } else {
             state = self.item.message.unread ? MessageTableCellUnread : MessageTableCellRead;
         }
@@ -1114,11 +1151,12 @@ static int offsetEditable = 30;
 
 -(void)_didChangeBackgroundColorWithAnimation:(POPBasicAnimation *)anim toColor:(NSColor *)color {
     
-    if(!_replyContainer)
+    if(!_replyContainer && !_forwardMessagesTextLayer)
         return;
     
     if(!anim) {
         _replyContainer.messageField.backgroundColor = color;
+        _forwardMessagesTextLayer.backgroundColor = color;
         return;
     }
     
@@ -1141,8 +1179,11 @@ static int offsetEditable = 30;
     animation.fromValue = anim.fromValue;
     animation.duration = anim.duration;
     animation.removedOnCompletion = YES;
-    [_replyContainer.messageField pop_addAnimation:animation forKey:@"background"];
     
+    if(_replyContainer)
+        [_replyContainer.messageField pop_addAnimation:animation forKey:@"background"];
+    if(_forwardMessagesTextLayer)
+        [_forwardMessagesTextLayer pop_addAnimation:animation forKey:@"background"];
 }
 
 

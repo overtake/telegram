@@ -158,7 +158,6 @@ static NSImage * greenBackgroundImage(NSSize size) {
         
         [_headerView addSubview:_closeButton];
 
-
     }
     
     return self;
@@ -184,8 +183,12 @@ static NSImage * greenBackgroundImage(NSSize size) {
    
 }
 
+-(void)setCanSendSticker:(BOOL)canSendSticker {
+    _canSendSticker = canSendSticker;
+    _tableView.canSendStickerAlways = canSendSticker;
+}
+
 -(void)setStickerPack:(TL_messages_stickerSet *)stickerPack {
-    
     _pack = stickerPack;
     
     
@@ -263,8 +266,19 @@ static NSImage * greenBackgroundImage(NSSize size) {
     
     
     [_headerView setFrameOrigin:NSMakePoint(0, self.containerSize.height - 80)];
-        
+    
 }
+
+-(void)modalViewDidHide {
+    
+    int bp = 0;
+}
+
+-(void)dealloc {
+    [_tableView clear];
+}
+
+
 
 
 @end

@@ -76,7 +76,7 @@
             
             TLChat *chat = [[ChatsManager sharedManager] find:self.chat.n_id];
             
-            if([chat isKindOfClass:[TL_channel class]]) {
+            if([chat isKindOfClass:[TL_channel class]] || [self.chat isKindOfClass:[TL_channel_old43 class]]) {
                 request = [TLAPI_channels_exportInvite createWithChannel:chat.inputPeer];
             }
             
@@ -114,7 +114,7 @@
             
             TLChat *chat = [[ChatsManager sharedManager] find:self.chat.n_id];
             
-            if([chat isKindOfClass:[TL_channel class]]) {
+            if([chat isKindOfClass:[TL_channel class]] || [self.chat isKindOfClass:[TL_channel_old43 class]]) {
                 request = [TLAPI_channels_exportInvite createWithChannel:chat.inputPeer];
             }
             

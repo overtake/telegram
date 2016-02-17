@@ -64,6 +64,8 @@
     if(self.action.result.stepResult.count < 1)
         return;
     
+    weak();
+    
     self.request = [RPCRequest sendRequest:[TLAPI_channels_createChannel createWithFlags:1 << 1 title:self.action.result.stepResult.firstObject[0] about:[self.action.result.stepResult.firstObject count] > 1 ? self.action.result.stepResult.firstObject[1] : nil] successHandler:^(RPCRequest *request, TLUpdates * response) {
         
         
@@ -72,16 +74,16 @@
             
             TLChat *chat = response.chats[0];
             
-            [self.delegate behaviorDidEndRequest:response];
+            [weakSelf.delegate behaviorDidEndRequest:response];
             
-            [self.action.currentViewController.messagesViewController setCurrentConversation:chat.dialog];
+            [weakSelf.action.currentViewController.messagesViewController setCurrentConversation:chat.dialog];
             
-            [self.action.currentViewController.navigationViewController gotoViewController:self.action.currentViewController.messagesViewController animated:NO];
+            [weakSelf.action.currentViewController.navigationViewController gotoViewController:weakSelf.action.currentViewController.messagesViewController animated:NO];
             
         }
         
     } errorHandler:^(RPCRequest *request, RpcError *error) {
-        [self.delegate behaviorDidEndRequest:nil];
+        [weakSelf.delegate behaviorDidEndRequest:nil];
     }];
     
 }

@@ -45,7 +45,7 @@
 - (id)initWithFrame:(NSRect)frame {
     self = [super initWithFrame:frame];
     if (self) {
-        weakify();
+        weak();
         
         
         float offsetRight = self.bounds.size.width - 200;
@@ -63,23 +63,18 @@
         
         [self.avatarImageView setTapBlock:^{
             
-            if(strongSelf.avatarImageView.sourceType != ChatAvatarSourceBroadcast) {
+            if(weakSelf.avatarImageView.sourceType != ChatAvatarSourceBroadcast) {
                 
-                if(![strongSelf.fullChat.chat_photo isKindOfClass:[TL_photoEmpty class]] && strongSelf.fullChat.chat_photo) {
+                if(![weakSelf.fullChat.chat_photo isKindOfClass:[TL_photoEmpty class]] && weakSelf.fullChat.chat_photo) {
                     
-                    TL_photoSize *size = [strongSelf.fullChat.chat_photo.sizes lastObject];
+                    TL_photoSize *size = [weakSelf.fullChat.chat_photo.sizes lastObject];
                     
-                    PreviewObject *previewObject = [[PreviewObject alloc] initWithMsdId:strongSelf.fullChat.chat_photo.n_id media:size peer_id:strongSelf.fullChat.n_id];
+                    PreviewObject *previewObject = [[PreviewObject alloc] initWithMsdId:weakSelf.fullChat.chat_photo.n_id media:size peer_id:weakSelf.fullChat.n_id];
                     
-                    previewObject.reservedObject = [TGCache cachedImage:strongSelf.controller.chat.photo.photo_small.cacheKey];
+                    previewObject.reservedObject = [TGCache cachedImage:weakSelf.controller.chat.photo.photo_small.cacheKey];
                     
                     [[TGPhotoViewer viewer] show:previewObject];
                 }
-               
-//                
-//                TMPreviewChatPicture *picture = [[TMPreviewChatPicture alloc] initWithItem:previewObject];
-//                if(picture)
-//                    [[TMMediaUserPictureController controller] show:picture];
             }
             
         }];
@@ -287,7 +282,7 @@
             
             TMMenuPopover *menuPopover = [[TMMenuPopover alloc] initWithMenu:menu];
             
-            [menuPopover showRelativeToRect:strongSelf.muteUntilTitle.bounds ofView:strongSelf.muteUntilTitle preferredEdge:CGRectMinYEdge];
+            [menuPopover showRelativeToRect:weakSelf.muteUntilTitle.bounds ofView:weakSelf.muteUntilTitle preferredEdge:CGRectMinYEdge];
             
         }];
         

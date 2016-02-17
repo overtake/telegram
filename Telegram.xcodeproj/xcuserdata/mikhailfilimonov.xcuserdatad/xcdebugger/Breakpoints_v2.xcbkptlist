@@ -57,22 +57,6 @@
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "TelegramTest/MessagesViewController.m"
-            timestampString = "471566626.134466"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "2326"
-            endingLineNumber = "2326"
-            landmarkName = "-showMessage:fromMsg:animated:selectText:switchDiscussion:flags:"
-            landmarkType = "5">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
             filePath = "MtProtoKit/MTProtoKit/MTProto.m"
             timestampString = "471356296.354995"
             startingColumnNumber = "9223372036854775807"
@@ -153,13 +137,29 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "TelegramTest/TGVTAcceleratedVideoView.m"
-            timestampString = "471535343.016577"
+            filePath = "TelegramTest/TGModalCompressingView.m"
+            timestampString = "472052997.311055"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "505"
-            endingLineNumber = "505"
-            landmarkName = "-setupBuffers"
+            startingLineNumber = "28"
+            endingLineNumber = "28"
+            landmarkName = "-initWithObject:"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "TelegramTest/SecretLayer45.m"
+            timestampString = "475173624.403625"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "1026"
+            endingLineNumber = "1026"
+            landmarkName = "+serializeObject:"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -169,77 +169,29 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "TelegramTest/TGVTAcceleratedVideoView.m"
-            timestampString = "471535343.016577"
+            filePath = "TelegramTest/TGDocumentsMediaTableView.m"
+            timestampString = "477251796.599116"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "571"
-            endingLineNumber = "571"
-            landmarkName = "-displayPixelBuffer:"
+            startingLineNumber = "602"
+            endingLineNumber = "602"
+            landmarkName = "-dealloc"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            shouldBeEnabled = "Yes"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "TelegramTest/TGVTAcceleratedVideoView.m"
-            timestampString = "471535454.561605"
+            filePath = "TelegramTest/TGPVDocumentObject.m"
+            timestampString = "476804290.361875"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "664"
-            endingLineNumber = "664"
-            landmarkName = "-setPath:"
-            landmarkType = "5">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "TelegramTest/TGVTAcceleratedVideoView.m"
-            timestampString = "471535557.80185"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "514"
-            endingLineNumber = "514"
-            landmarkName = "-cleanupTextures"
-            landmarkType = "5">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "TelegramTest/TGVTAcceleratedVideoView.m"
-            timestampString = "471535558.499442"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "519"
-            endingLineNumber = "519"
-            landmarkName = "-cleanupTextures"
-            landmarkType = "5">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "TelegramTest/TGVTAcceleratedVideoView.m"
-            timestampString = "471535633.019629"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "585"
-            endingLineNumber = "585"
-            landmarkName = "-displayPixelBuffer:"
+            startingLineNumber = "38"
+            endingLineNumber = "38"
+            landmarkName = "-initDownloadItem"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>

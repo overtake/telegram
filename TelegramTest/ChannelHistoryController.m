@@ -77,9 +77,6 @@ static TGChannelsPolling *channelPolling;
             
             [channelPolling checkInvalidatedMessages:result important:[self.filter isKindOfClass:[ChannelImportantFilter class]]];
             
-            
-            
-            
         }];
         
     } synchronous:sync];

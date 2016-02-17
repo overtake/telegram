@@ -17,27 +17,22 @@
 {
     self = [super initWithFrame:frame];
     if (self) {
-        // Initialization code here.
         
-        
-        
-        weakify();
+        weak();
         
         [self.sharedMediaButton.textButton setTapBlock:^ {
-            
-            
             
         }];
         
         [self.addMembersButton.textButton setTapBlock:^ {
             NSMutableArray *filter = [[NSMutableArray alloc] init];
             
-            for (NSNumber *participant in strongSelf.controller.broadcast.participants) {
+            for (NSNumber *participant in weakSelf.controller.broadcast.participants) {
                 [filter addObject:participant];
             }
             
-            if(strongSelf.controller.broadcast.participants.count < maxBroadcastUsers()) {
-                [[Telegram rightViewController] showComposeWithAction:[[ComposeAction alloc]initWithBehaviorClass:[ComposeActionAddBroadcastMembersBehavior class] filter:filter object:strongSelf.controller.broadcast]];
+            if(weakSelf.controller.broadcast.participants.count < maxBroadcastUsers()) {
+                [[Telegram rightViewController] showComposeWithAction:[[ComposeAction alloc]initWithBehaviorClass:[ComposeActionAddBroadcastMembersBehavior class] filter:filter object:weakSelf.controller.broadcast]];
             }
         }];
         

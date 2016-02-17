@@ -75,7 +75,7 @@
         if(additionFlags & (1 << 4))
             self.message.from_id = 0;
         
-        [jpegData writeToFile:mediaFilePath(self.message.media) atomically:YES];
+        [jpegData writeToFile:mediaFilePath(self.message) atomically:YES];
         [self.message save:YES];
         
         
@@ -88,13 +88,17 @@
     
     self.uploadOperation = [[UploadOperation alloc] init];
     
-    self.filePath = mediaFilePath(self.message.media);
+    self.filePath = mediaFilePath(self.message);
     
-    weakify();
+    weak();
     
     [self.uploadOperation setUploadComplete:^(UploadOperation *operation, id input) {
         
-    
+        __strong ImageSenderItem *strongSelf = weakSelf;
+        
+        
+        if(strongSelf == nil || strongSelf != weakSelf)
+            return;
         
         TLInputMedia *media;
         
@@ -114,6 +118,11 @@
         }
         
         strongSelf.rpc_request = [RPCRequest sendRequest:request successHandler:^(RPCRequest *request, TLUpdates *response) {
+            
+            strongWeak();
+            
+            if(strongSelf == nil || strongSelf != weakSelf)
+                return;
             
             [strongSelf updateMessageId:response];
             
@@ -156,7 +165,7 @@
                 item.imageObject.location = newSize.location;
             }
             
-             [[NSFileManager defaultManager] moveItemAtPath:strongSelf.filePath toPath:mediaFilePath(strongSelf.message.media) error:nil];
+             [[NSFileManager defaultManager] moveItemAtPath:strongSelf.filePath toPath:mediaFilePath(strongSelf.message) error:nil];
             
            
             strongSelf.uploadOperation = nil;
@@ -188,15 +197,28 @@
     
     
     [self.uploadOperation setUploadProgress:^(UploadOperation *operation, NSUInteger current, NSUInteger total) {
-        strongSelf.progress = ((float)current/(float)total) * 100.0f;
+        __strong ImageSenderItem *strongSelf = weakSelf;
+ 
+        if(strongSelf != nil && strongSelf == weakSelf) {
+            strongSelf.progress = ((float)current/(float)total) * 100.0f;
+        }
     }];
     
     [self.uploadOperation setUploadTypingNeed:^(UploadOperation *operation) {
-        [TGSendTypingManager addAction:[TL_sendMessageUploadPhotoAction createWithProgress:strongSelf.progress] forConversation:strongSelf.conversation];
+        __strong ImageSenderItem *strongSelf = weakSelf;
+        if(strongSelf != nil && strongSelf == weakSelf) {
+            [TGSendTypingManager addAction:[TL_sendMessageUploadPhotoAction createWithProgress:strongSelf.progress] forConversation:strongSelf.conversation];
+        }
+        
     }];
     
     [self.uploadOperation setUploadStarted:^(UploadOperation *operation, NSData *data) {
-        [TGSendTypingManager addAction:[TL_sendMessageUploadPhotoAction createWithProgress:strongSelf.progress] forConversation:strongSelf.conversation];
+        __strong ImageSenderItem *strongSelf = weakSelf;
+        if(strongSelf != nil && strongSelf == weakSelf) {
+            [TGSendTypingManager addAction:[TL_sendMessageUploadPhotoAction createWithProgress:strongSelf.progress] forConversation:strongSelf.conversation];
+        }
+
+        
     }];
     
     

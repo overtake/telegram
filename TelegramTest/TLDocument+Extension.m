@@ -12,7 +12,7 @@
 
 -(NSString *)file_name {
     
-    __block NSString *fileName = @"";
+    __block NSString *fileName = @"Unknown";
     
     [self.attributes enumerateObjectsUsingBlock:^(TLDocumentAttribute *obj, NSUInteger idx, BOOL *stop) {
         
@@ -39,7 +39,13 @@
 }
 
 -(NSString *)path_with_cache {
-    return [NSString stringWithFormat:@"%@/%ld.doc",[FileUtils path],self.n_id];
+    TL_localMessage *fake = [[TL_localMessage alloc] init];
+    fake.media = [TL_messageMediaDocument createWithDocument:self caption:@""];
+    return mediaFilePath(fake);
+}
+
+- (BOOL)isset {
+    return isPathExists(self.path_with_cache) && [FileUtils checkNormalizedSize:self.path_with_cache checksize:[self size]];
 }
 
 -(TLDocumentAttribute *)attributeWithClass:(Class)className {
@@ -73,6 +79,12 @@
     
     return isSticker;
 }
+
+
+-(TL_documentAttributeAudio *)audioAttr {
+    return (TL_documentAttributeAudio *) [self attributeWithClass:[TL_documentAttributeAudio class]];
+}
+
 -(NSSize)imageSize {
     __block NSSize size = NSZeroSize;
     

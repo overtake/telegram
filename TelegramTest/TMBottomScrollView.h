@@ -13,6 +13,8 @@
 @property (nonatomic, copy) dispatch_block_t callback;
 @property (nonatomic) int messagesCount;
 
+@property (nonatomic,weak) MessagesViewController *messagesViewController;
+
 - (void)sizeToFit;
 
 @end

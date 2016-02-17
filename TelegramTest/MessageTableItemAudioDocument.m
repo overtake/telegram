@@ -19,7 +19,6 @@
     if(self) {
         self.blockSize = NSMakeSize(200, 60);
        
-        
        _fileSize = [[NSString sizeToTransformedValuePretty:self.message.media.document.size] trim];
        
         if([self isset])
@@ -128,7 +127,10 @@
 }
 
 -(DownloadItem *)downloadItem {
-    return [DownloadQueue find:self.message.media.document.n_id];
+    if(super.downloadItem == nil)
+        [super setDownloadItem:[DownloadQueue find:self.message.media.document.n_id]];
+    
+    return [super downloadItem];
 }
 
 -(void)dealloc {

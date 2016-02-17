@@ -44,6 +44,15 @@
     return self;
 }
 
+-(id)initWithLocation:(TLFileLocation *)location thumbData:(NSData *)thumbData size:(int)size  {
+    if(self = [super init]) {
+        _location = location;
+        _thumbData = thumbData;
+        _size = size;
+    }
+    return self;
+}
+
 -(void)initDownloadItem {
     
 }

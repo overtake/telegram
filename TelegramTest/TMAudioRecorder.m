@@ -12,6 +12,8 @@
 #import "TGTimer.h"
 #import "HackUtils.h"
 #include "opusenc.h"
+#import "NSData+Extensions.h"
+#import "MessagesBottomView.h"
 typedef enum {
     TMAudioRecorderDefault,
     TMAudioRecorderRecord,
@@ -24,8 +26,10 @@ typedef enum {
 @property (nonatomic, strong) NSString *filePath;
 @property (nonatomic) TMAudioRecorderState state;
 @property (nonatomic, strong) TGTimer *timer;
-
+@property (nonatomic,strong) NSMutableArray *powers;
 @property (nonatomic, strong) NSString *opusEncoderPath;
+
+@property (nonatomic,strong) ASQueue *audioQueue;
 
 @end
 
@@ -44,6 +48,7 @@ typedef enum {
     self = [super init];
     if(self) {
         self.opusEncoderPath = [[NSBundle mainBundle] pathForResource:@"opusenc_telegram" ofType:@""];
+        self.audioQueue = [[ASQueue alloc] initWithName:"AudioRecorderQueue"];
     }
     return self;
 }
@@ -61,23 +66,31 @@ double mappingRange(double x, double in_min, double in_max, double out_min, doub
     return out_min + slope * (x - in_min);
 }
 
-- (void)startRecord {
+- (void)startRecordWithController:(MessagesViewController *)messagesViewController {
+    
+    _messagesViewController = messagesViewController;
     
     if(self.recorder.isRecording) {
         [self.recorder stop];
         [self removeFile];
     }
     
+    _powers = [NSMutableArray array];
+    
     
     [self.timer invalidate];
-    self.timer = [[TGTimer alloc] initWithTimeout:1.f/10.f repeat:YES completion:^{
+    
+    
+    weak();
+    
+    self.timer = [[TGTimer alloc] initWithTimeout:1.f/50 repeat:YES completion:^{
 
-        [self.recorder updateMeters];
-        [self.recorder setMeteringEnabled:NO];
-        [self.recorder setMeteringEnabled:YES];
-
+        [weakSelf.recorder updateMeters];
+        [weakSelf.recorder setMeteringEnabled:NO];
+        [weakSelf.recorder setMeteringEnabled:YES];
+        
         float power = 0;
-        float average = [self.recorder averagePowerForChannel:0];
+        float average = [weakSelf.recorder averagePowerForChannel:0];
         
         if(average > -57) {
             power = mappingRange(average, -60, 0, 0, 1);
@@ -85,8 +98,9 @@ double mappingRange(double x, double in_min, double in_max, double out_min, doub
         if(power > 1)
             power = 1;
         
-        if(self.powerHandler)
-            self.powerHandler(power);
+        if(weakSelf.powerHandler)
+            weakSelf.powerHandler(power);
+        
         
     } queue:dispatch_get_main_queue()];
     [self.timer start];
@@ -108,11 +122,21 @@ double mappingRange(double x, double in_min, double in_max, double out_min, doub
     }
 }
 
+-(NSTimeInterval)timeRecorded {
+    return self.recorder.currentTime;
+}
+
 - (void)stopRecord:(BOOL)send {
+    [self stopRecord:send askConfirm:NO];
+}
+
+- (BOOL)stopRecord:(BOOL)send askConfirm:(BOOL)askConfirm {
     [self.timer invalidate];
 
     if(!self.recorder.isRecording)
-        return;
+        return NO;
+    
+    int duration = self.recorder.currentTime;
     
     if(self.recorder.currentTime < 0.5)
         send = NO;
@@ -121,26 +145,161 @@ double mappingRange(double x, double in_min, double in_max, double out_min, doub
     
     if(!send) {
         [self removeFile];
-        return;
+        return NO;
     }
     
-    [ASQueue dispatchOnStageQueue:^{
-        
-       	NSString *opusPath = [self.filePath stringByAppendingString:@".opus"];
+    dispatch_block_t send_block = ^{
+        NSString *opusPath = [self.filePath stringByAppendingString:@".opus"];
         
         char *c_op = strdup([opusPath UTF8String]);
         char *c_fp = strdup([self.filePath UTF8String]);
         
         char *argv[] = {"opusenc",c_fp,c_op,"--downmix-mono"};
-
+        
         opusEncoder(3, argv);
         
         [self removeFile];
         
-        [[ASQueue mainQueue] dispatchOnQueue:^{
-            [[Telegram rightViewController].messagesViewController sendAudio:opusPath forConversation:[Telegram rightViewController].messagesViewController.conversation];
+        TGAudioWaveform *waveform = [FileUtils waveformForPath:opusPath];
+        
+
+        [ASQueue dispatchOnMainQueue:^{
+            
+            if(askConfirm) {
+                TL_documentAttributeAudio *audioAttr = [TL_documentAttributeAudio createWithFlags:0 duration:duration title:nil performer:nil waveform:[waveform bitstream]];
+                [self.messagesViewController.bottomView showQuickRecordedPreview:opusPath audioAttr:audioAttr];
+            } else
+                [self.messagesViewController sendAudio:opusPath forConversation:self.messagesViewController.conversation waveforms:[waveform bitstream]];
         }];
-    }];
+    };
+    
+   
+    [_audioQueue dispatchOnQueue:send_block];
+    
+    return YES;
+}
+
+static int powerCount = 100;
+
+-(NSData *)prepareWafeForm {
+    __block float average = 0;
+    
+    __block char bytes[63];
+    
+    NSMutableArray *nPowers = [NSMutableArray array];
+    
+    //make only 100 waves
+    {
+        if(_powers.count < powerCount) {
+            
+            float res = (float)_powers.count/(float)powerCount;
+            
+            int interval = ceil(1.0f/res);
+            
+            
+            [_powers enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                
+                [nPowers addObject:obj];
+                
+                if(idx % interval == 0) {
+                    [nPowers addObject:obj];
+                }
+                
+            }];
+
+            
+        } else if(_powers.count > powerCount) {
+            
+            int excess = ceil((float)_powers.count/(float)powerCount);
+            
+            [_powers enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            
+                if((idx % excess) == 0) {
+                    [nPowers addObject:obj];
+                }
+                
+            }];
+            
+        }
+        
+    }
+    
+    if(nPowers.count < powerCount) {
+        
+        int count = (int)nPowers.count;
+        
+        for (int i = count; i < powerCount; i++) {
+            [nPowers addObject:_powers[_powers.count - 1 - (i - count)]];
+        }
+        
+        assert(nPowers.count == powerCount);
+        
+    } else {
+        nPowers = [[nPowers subarrayWithRange:NSMakeRange(0, powerCount)] mutableCopy];
+    }
+    
+    _powers = nPowers;
+    
+    int k = 0;
+    
+    
+    for (int j = 0; j < powerCount; j++) {
+       
+        int val = [_powers[j] intValue];
+        
+       // NSLog(@"originalVal:%d",val);
+        
+        NSString *binaryString = @"";
+        
+        
+        
+        for (int i = 0; i < 5; i++) {
+            
+            BOOL value = val % 2;
+            
+            val = val >> 1;
+            
+          //  NSLog(@"val:%d res:%d",val,value);
+            
+            int index = k++;
+            
+            binaryString = [NSString stringWithFormat:@"%d%@",value,binaryString];
+            
+            int byteIndex = index / 8;
+            int bitIndex = index % 8;
+            char mask = (1 << bitIndex);
+            
+        //    NSLog(@"byteIndex:%d index:%d bitIndex:%d === %d",byteIndex,index,bitIndex,value);
+            
+            bytes[byteIndex] = (value ? (bytes[byteIndex] | mask) : (bytes[byteIndex] & ~mask));
+            
+            // SetBit(bytes,,res);
+        }
+        
+        NSLog(@"%@",binaryString);
+        
+        
+        average+=val;
+    }
+    
+
+    average = average/(float)_powers.count;
+    
+    
+    int count = _powers.count;
+    
+    NSLog(@"beform encoding:%@",_powers);
+    
+    
+    NSData *data = [NSData dataWithBytes:bytes length:63];
+    
+    return data;
+}
+
+char* SetBit(char bytes[], int index, bool value)
+{
+    
+    return bytes;
 }
 
 @end

@@ -64,6 +64,8 @@
         _imageView = [[TGImageView alloc] initWithFrame:NSZeroRect];
         
         _imageView.cornerRadius = 4;
+        _imageView.layer.backgroundColor = GRAY_BORDER_COLOR.CGColor;
+        _imageView.layer.cornerRadius = 4;
         
         [_imageView setTapBlock:block];
         
@@ -111,27 +113,31 @@
     [self.siteName setAttributedStringValue:webpage.siteName];
 
     
-    [_imageView setObject:webpage.imageObject];
-    
-    [webpage.imageObject.supportDownloadListener setProgressHandler:^(DownloadItem *item) {
+    if(!_imageView.isHidden) {
+        [_imageView setObject:webpage.imageObject];
         
-        [ASQueue dispatchOnMainQueue:^{
+        [webpage.imageObject.supportDownloadListener setProgressHandler:^(DownloadItem *item) {
             
-             [self.loaderView setProgress:item.progress animated:YES];
-            
-        }];
-        
-    }];
-    
-    [webpage.imageObject.supportDownloadListener setCompleteHandler:^(DownloadItem *item) {
-        
-        [ASQueue dispatchOnMainQueue:^{
-            
-            [self updateState:0];
+            [ASQueue dispatchOnMainQueue:^{
+                
+                [self.loaderView setProgress:item.progress animated:YES];
+                
+            }];
             
         }];
         
-    }];
+        [webpage.imageObject.supportDownloadListener setCompleteHandler:^(DownloadItem *item) {
+            
+            [ASQueue dispatchOnMainQueue:^{
+                
+                [self updateState:0];
+                
+            }];
+            
+        }];
+
+    }
+    
     
 }
 
@@ -207,6 +213,7 @@
         if([self.webpage.webpage.type isEqualToString:@"video"] && [self.webpage.webpage.embed_type isEqualToString:@"video/mp4"]) {
             
             previewObject.reservedObject = @{@"url":[NSURL URLWithString:self.webpage.webpage.embed_url],@"size":[NSValue valueWithSize:NSMakeSize(self.webpage.webpage.embed_width, self.webpage.webpage.embed_height)]};
+            
             
         } else if([self.webpage.webpage.embed_type isEqualToString:@"iframe"]) {
             

@@ -74,23 +74,23 @@
 
     
     struct TGSplitProportion singleLayout = {380,300+380};
-    struct TGSplitProportion dualLayout = {300+380,FLT_MAX};
-    struct TGSplitProportion tripleLayout = {0,0};
+    struct TGSplitProportion dualLayout = {300+380,300+380+600};
+    struct TGSplitProportion tripleLayout = {300+380+600,FLT_MAX};
     
    // [_layoutProportions[@(TGSplitViewStateSingleLayout)] getValue:&singleLayout];
    // [_layoutProportions[@(TGSplitViewStateDualLayout)] getValue:&dualLayout];
-    [_layoutProportions[@(TGSplitViewStateTripleLayout)] getValue:&tripleLayout];
-    
+ //   [_layoutProportions[@(TGSplitViewStateTripleLayout)] getValue:&tripleLayout];
     
     if(isAcceptLayout(singleLayout) && _canChangeState) {
-        if(_state != TGSplitViewStateSingleLayout && NSWidth(self.frame) < singleLayout.max )
-            self.state = TGSplitViewStateSingleLayout;
-        
-        if(isAcceptLayout(dualLayout)) {
+        if(NSWidth(self.frame) < singleLayout.max ) {
+            if(_state != TGSplitViewStateSingleLayout)
+                self.state = TGSplitViewStateSingleLayout;
+        } else if(isAcceptLayout(dualLayout)) {
             if(isAcceptLayout(tripleLayout)) {
-                if(_state != TGSplitViewStateDualLayout && NSWidth(self.frame) > dualLayout.min && NSWidth(self.frame) < tripleLayout.min)
-                    self.state = TGSplitViewStateDualLayout;
-                else
+                if(NSWidth(self.frame) >= dualLayout.min && NSWidth(self.frame) <= dualLayout.max) {
+                    if(_state != TGSplitViewStateDualLayout)
+                        self.state = TGSplitViewStateDualLayout;
+                } else if(_state != TGSplitViewStateTripleLayout)
                     self.state = TGSplitViewStateTripleLayout;
             } else
                 if(_state != TGSplitViewStateDualLayout && NSWidth(self.frame) > dualLayout.min)
@@ -120,8 +120,27 @@
         } else if(startSize.width > proportion.max)
         {
             min = NSWidth(self.frame) - x;
-            
         }
+        
+        
+        if(proportion.max == INT32_MAX && idx != _controllers.count -1) {
+            
+            __block int m2 = 0;
+            [_controllers enumerateObjectsAtIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(idx+1, _controllers.count - idx-1)] options:0 usingBlock:^(TGViewController<TGSplitViewDelegate> *split, NSUInteger idx, BOOL * _Nonnull stop) {
+                
+                struct TGSplitProportion proportion;
+                
+                [_proportions[split.internalId] getValue:&proportion];
+                
+                m2+=proportion.min;
+                
+            }];
+            
+            min = NSWidth(self.frame) - x - m2;
+            
+            //min=m2;
+        }
+        
         
         if(idx == _controllers.count - 1)
             min = NSWidth(self.frame) - x;

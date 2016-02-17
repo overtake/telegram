@@ -10,30 +10,44 @@
 #import "FileUtils.h"
 #import "Telegram.h"
 #import "NSStringCategory.h"
-#import "DownloadAudioItem.h"
 #import "MessagetableCellAudioController.h"
 #import "TGAudioPlayerWindow.h"
 #import "DownloadQueue.h"
+#import "DownloadDocumentItem.h"
+#import "TL_documentAttributeAudio+Extension.h"
 @implementation MessageTableItemAudio
 
 - (id)initWithObject:(TLMessage *)object {
     self = [super initWithObject:object];
     if(self) {
-        self.blockSize = NSMakeSize(200, 45);
-        self.duration = [NSString durationTransformedValue:object.media.audio.duration];
-        self.message.media.audio.duration = self.message.media.audio.duration == 0 ? 1 : self.message.media.audio.duration;
         
+        TL_documentAttributeAudio *audio = (TL_documentAttributeAudio *) [object.media.document attributeWithClass:[TL_documentAttributeAudio class]];
+
+        self.blockSize = NSMakeSize(300, 45);
+        self.duration = [NSString durationTransformedValue:audio.duration];
+
+        _waveform = audio.arrayWaveform;
+        
+        [self doAfterDownload];
         
         if([self isset])
             self.state = AudioStateWaitPlaying;
         else
             self.state = AudioStateWaitDownloading;
         
-        
-        [self checkStartDownload:[self.message.to_id isKindOfClass:[TL_peerChat class]] ? AutoGroupAudio : AutoPrivateAudio size:self.message.media.audio.size];
+        [self checkStartDownload:[self.message.to_id isKindOfClass:[TL_peerChat class]] ? AutoGroupAudio : AutoPrivateAudio size:self.message.media.document.size];
         
     }
     return self;
+}
+
+
+-(BOOL)makeSizeByWidth:(int)width {
+    [super makeSizeByWidth:width];
+    
+    self.blockSize = NSMakeSize(MIN(width - 80 ,200), 45);
+    
+    return YES;
 }
 
 -(BOOL)canShare {
@@ -43,15 +57,15 @@
 
 
 - (Class)downloadClass {
-    return [DownloadAudioItem class];
+    return [DownloadDocumentItem class];
 }
 
 - (NSString *)path {
-    return mediaFilePath(self.message.media);
+    return mediaFilePath(self.message);
 }
 
 - (BOOL)canDownload {
-    return self.message.media.audio.dc_id != 0;
+    return self.message.media.document.dc_id != 0;
 }
 
 - (void)audioPlayerDidFinishPlaying:(TGAudioPlayer *)audioPlayer {
@@ -70,14 +84,10 @@
     if(!self.message.n_out && !self.message.readedContent) {
         [ASQueue dispatchOnMainQueue:^{
             
-           
-            
             self.message.flags&= ~TGREADEDCONTENT;
-            
             [self.cellView setNeedsDisplay:YES];
             
         }];
-        
         
         NSMutableArray *msgs = [@[@(self.message.n_id)] mutableCopy];
         
@@ -93,15 +103,49 @@
 }
 
 -(DownloadItem *)downloadItem {
-    return [DownloadQueue find:self.message.media.audio.n_id];
+    
+    if(super.downloadItem == nil)
+        [super setDownloadItem:[DownloadQueue find:self.message.media.document.n_id]];
+    
+    return [super downloadItem];
 }
 
 - (int)size {
-    return self.message.media.audio.size;
+    return self.message.media.document.size;
 }
 
 - (BOOL)isset {
      return isPathExists([self path]) && [FileUtils checkNormalizedSize:self.path checksize:[self size]];
+}
+
+-(void)doAfterDownload {
+    [super doAfterDownload];
+    
+    if(_waveform.count == 0 && self.isset) {
+        TGAudioWaveform *waveform = [FileUtils waveformForPath:self.path];
+        
+        @synchronized(self) {
+           self.message.media.document.audioAttr.waveform = [waveform bitstream];
+            _waveform = self.message.media.document.audioAttr.arrayWaveform;
+            [self.message save:NO];
+        }
+        
+    }
+}
+
+-(NSArray *)emptyWaveform {
+    static NSMutableArray *c;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        
+        c = [NSMutableArray array];
+        
+        for (int i = 0; i < 100; i++) {
+            [c addObject:@(4)];
+        }
+    });
+    
+    return c;
 }
 
 @end

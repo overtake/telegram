@@ -43,6 +43,10 @@
     return [Secret23__Environment serializeObject:[Secret23_DecryptedMessageLayer decryptedMessageLayerWithRandom_bytes:self.random_bytes layer:@(23) in_seq_no:@(2*self.params.in_seq_no + [self.params in_x]) out_seq_no:@(2*(self.params.out_seq_no++) + [self.params out_x]) message:[Secret23_DecryptedMessage decryptedMessageServiceWithRandom_id:@(self.random_id) action:[Secret23_DecryptedMessageAction decryptedMessageActionResendWithStart_seq_no:_start_seq end_seq_no:_end_seq]]]];
 }
 
+-(NSData *)decryptedMessageLayer45 {
+    return [Secret45__Environment serializeObject:[Secret45_DecryptedMessageLayer decryptedMessageLayerWithRandom_bytes:self.random_bytes layer:@(45) in_seq_no:@(2*self.params.in_seq_no + [self.params in_x]) out_seq_no:@(2*(self.params.out_seq_no++) + [self.params out_x]) message:[Secret45_DecryptedMessage decryptedMessageServiceWithRandom_id:@(self.random_id) action:[Secret45_DecryptedMessageAction decryptedMessageActionResendWithStart_seq_no:_start_seq end_seq_no:_end_seq]]]];
+}
+
 
 
 - (void)performRequest {

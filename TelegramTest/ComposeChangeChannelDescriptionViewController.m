@@ -63,4 +63,8 @@
     [_tableView addItem:description tableRedraw:YES];
 }
 
+-(void)dealloc {
+    [_tableView clear];
+}
+
 @end

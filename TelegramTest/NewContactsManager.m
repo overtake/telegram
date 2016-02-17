@@ -12,6 +12,7 @@
 #import <zlib.h>
 
 #import "TGHashContact.h"
+#import "ContactsViewController.h"
 #define INIT_HASH_CHEKER() __block NSUInteger hash = self.contactsHash;
 #define HASH_CHECK() if(self.contactsHash != hash) return;
 
@@ -41,10 +42,11 @@
 
 -(void)userStatusChanged:(NSNotification *)notification
 {
-    [self.queue dispatchOnQueue:^{
-        [self sortAndNotify:YES];
-    }];
-    
+    if([[Telegram leftViewController].currentTabController isKindOfClass:[ContactsViewController class]]) {
+        [self.queue dispatchOnQueue:^{
+            [self sortAndNotify:YES];
+        }];
+    } 
 }
 
 - (void)protocolUpdated:(NSNotification *)notify {
@@ -104,6 +106,9 @@
 
 -(void)sortAndNotify:(BOOL)notify
 {
+    
+    
+    
     
     NSSortDescriptor * descriptor = [[NSSortDescriptor alloc] initWithKey:@"self.user.lastSeenTime" ascending:NO];
     

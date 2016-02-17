@@ -2,7 +2,7 @@
 //  TLApi.h
 //  Telegram
 //
-//  Auto created by Mikhail Filimonov on 27.11.15.
+//  Auto created by Mikhail Filimonov on 13.02.16.
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -187,12 +187,6 @@
 +(TLAPI_contacts_importContacts*)createWithContacts:(NSMutableArray*)contacts replace:(Boolean)replace;
 @end
 
-@interface TLAPI_contacts_getSuggested : TLApiObject
-@property int limit;
-
-+(TLAPI_contacts_getSuggested*)createWithLimit:(int)limit;
-@end
-
 @interface TLAPI_contacts_deleteContact : TLApiObject
 @property (nonatomic, strong) TLInputUser* n_id;
 
@@ -254,12 +248,13 @@
 @interface TLAPI_messages_getHistory : TLApiObject
 @property (nonatomic, strong) TLInputPeer* peer;
 @property int offset_id;
+@property int offset_date;
 @property int add_offset;
 @property int limit;
 @property int max_id;
 @property int min_id;
 
-+(TLAPI_messages_getHistory*)createWithPeer:(TLInputPeer*)peer offset_id:(int)offset_id add_offset:(int)add_offset limit:(int)limit max_id:(int)max_id min_id:(int)min_id;
++(TLAPI_messages_getHistory*)createWithPeer:(TLInputPeer*)peer offset_id:(int)offset_id offset_date:(int)offset_date add_offset:(int)add_offset limit:(int)limit max_id:(int)max_id min_id:(int)min_id;
 @end
 
 @interface TLAPI_messages_search : TLApiObject
@@ -840,12 +835,13 @@
 @interface TLAPI_channels_getImportantHistory : TLApiObject
 @property (nonatomic, strong) TLInputChannel* channel;
 @property int offset_id;
+@property int offset_date;
 @property int add_offset;
 @property int limit;
 @property int max_id;
 @property int min_id;
 
-+(TLAPI_channels_getImportantHistory*)createWithChannel:(TLInputChannel*)channel offset_id:(int)offset_id add_offset:(int)add_offset limit:(int)limit max_id:(int)max_id min_id:(int)min_id;
++(TLAPI_channels_getImportantHistory*)createWithChannel:(TLInputChannel*)channel offset_id:(int)offset_id offset_date:(int)offset_date add_offset:(int)add_offset limit:(int)limit max_id:(int)max_id min_id:(int)min_id;
 @end
 
 @interface TLAPI_channels_readHistory : TLApiObject
@@ -1061,5 +1057,72 @@
 @property (nonatomic, strong) NSMutableArray* order;
 
 +(TLAPI_messages_reorderStickerSets*)createWithOrder:(NSMutableArray*)order;
+@end
+
+@interface TLAPI_messages_getDocumentByHash : TLApiObject
+@property (nonatomic, strong) NSData* sha256;
+@property int size;
+@property (nonatomic, strong) NSString* mime_type;
+
++(TLAPI_messages_getDocumentByHash*)createWithSha256:(NSData*)sha256 size:(int)size mime_type:(NSString*)mime_type;
+@end
+
+@interface TLAPI_messages_searchGifs : TLApiObject
+@property (nonatomic, strong) NSString* q;
+@property int offset;
+
++(TLAPI_messages_searchGifs*)createWithQ:(NSString*)q offset:(int)offset;
+@end
+
+@interface TLAPI_messages_getSavedGifs : TLApiObject
+@property int n_hash;
+
++(TLAPI_messages_getSavedGifs*)createWithN_hash:(int)n_hash;
+@end
+
+@interface TLAPI_messages_saveGif : TLApiObject
+@property (nonatomic, strong) TLInputDocument* n_id;
+@property Boolean unsave;
+
++(TLAPI_messages_saveGif*)createWithN_id:(TLInputDocument*)n_id unsave:(Boolean)unsave;
+@end
+
+@interface TLAPI_messages_getInlineBotResults : TLApiObject
+@property (nonatomic, strong) TLInputUser* bot;
+@property (nonatomic, strong) NSString* query;
+@property (nonatomic, strong) NSString* offset;
+
++(TLAPI_messages_getInlineBotResults*)createWithBot:(TLInputUser*)bot query:(NSString*)query offset:(NSString*)offset;
+@end
+
+@interface TLAPI_messages_setInlineBotResults : TLApiObject
+@property int flags;
+@property (nonatomic,assign,readonly) BOOL isGallery;
+@property (nonatomic,assign,readonly) BOOL isPrivate;
+@property long query_id;
+@property (nonatomic, strong) NSMutableArray* results;
+@property int cache_time;
+@property (nonatomic, strong) NSString* next_offset;
+
++(TLAPI_messages_setInlineBotResults*)createWithFlags:(int)flags   query_id:(long)query_id results:(NSMutableArray*)results cache_time:(int)cache_time next_offset:(NSString*)next_offset;
+@end
+
+@interface TLAPI_messages_sendInlineBotResult : TLApiObject
+@property int flags;
+@property (nonatomic,assign,readonly) BOOL isBroadcast;
+@property (nonatomic, strong) TLInputPeer* peer;
+@property int reply_to_msg_id;
+@property long random_id;
+@property long query_id;
+@property (nonatomic, strong) NSString* n_id;
+
++(TLAPI_messages_sendInlineBotResult*)createWithFlags:(int)flags  peer:(TLInputPeer*)peer reply_to_msg_id:(int)reply_to_msg_id random_id:(long)random_id query_id:(long)query_id n_id:(NSString*)n_id;
+@end
+
+@interface TLAPI_channels_toggleInvites : TLApiObject
+@property (nonatomic, strong) TLInputChannel* channel;
+@property Boolean enabled;
+
++(TLAPI_channels_toggleInvites*)createWithChannel:(TLInputChannel*)channel enabled:(Boolean)enabled;
 @end
 

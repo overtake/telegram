@@ -82,6 +82,8 @@
 //        return nil;
 //    }
     
+    
+    
     if(self.backButton)
     {
         [self.backButton updateBackButton];
@@ -252,6 +254,10 @@ static TGModalSetCaptionView *setCaptionView;
     return anim;
 }
 
+-(TMNavigationController *)rightNavigationController {
+    return [Telegram rightViewController].navigationViewController;
+}
+
 
 +(void)showAttachmentCaption:(NSArray *)attachments onClose:(dispatch_block_t)onClose {
     
@@ -314,10 +320,20 @@ static TGModalSetCaptionView *setCaptionView;
     return res;
 }
 
++(void)closeAllModals {
+    NSArray *modals = [TMViewController modalsView];
+    
+    if(modals.count > 0) {
+        [modals enumerateObjectsUsingBlock:^(TGModalView *obj, NSUInteger idx, BOOL *stop) {
+            [obj close:modals.count == 1];
+        }];
+    }
+}
+
 
 +(NSArray *)modalsView {
     
-    NSView *view = [[Telegram delegate] window].contentView;
+    NSView *view = appWindow().contentView;
     
     NSMutableArray *modals = [[NSMutableArray alloc] init];
     

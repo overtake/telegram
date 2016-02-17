@@ -26,7 +26,7 @@
 - (void)add:(NSOperation *)operation {
     [self.queue addOperation:operation];
     
-    NSLog(@"operation count:%d",self.queue.operationCount);
+    NSLog(@"operation count:%ld",self.queue.operationCount);
     
 }
 

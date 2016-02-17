@@ -17,6 +17,98 @@
 
 #define MAX_LEFT_WIDTH 300
 
+
+@interface TGDisclosureView : TMView
+
+@end
+
+@implementation TGDisclosureView
+
+-(void)setFrameSize:(NSSize)newSize {
+    [super setFrameSize:newSize];
+}
+
+-(instancetype)initWithFrame:(NSRect)frameRect {
+    if(self = [super initWithFrame:frameRect]) {
+        
+    }
+    
+    return self;
+}
+
+-(void)setFrame:(NSRect)frame {
+    [super setFrame:frame];
+    
+    [self.subviews[1] setFrame:NSMakeRect(0, 0, DIALOG_BORDER_WIDTH, NSHeight(frame))];
+}
+
+@end
+
+
+@interface TGDisclosureViewController : TGSplitViewController
+@property (nonatomic,strong) NotSelectedDialogsViewController *noSelectedViewController;
+@property (nonatomic,strong) TL_conversation *conversation;
+@end
+
+@implementation TGDisclosureViewController
+
+@synthesize view = _view;
+
+-(void)loadView {
+    
+    _view = [[TGDisclosureView alloc] initWithFrame:self.frameInit];
+    
+    self.navigationViewController = [[TMNavigationController alloc] initWithFrame:self.view.bounds];
+    
+    _noSelectedViewController = [[NotSelectedDialogsViewController alloc] initWithFrame:self.view.bounds];
+    _noSelectedViewController.customTextCap = NSLocalizedString(@"Conversation.SelectConversationToViewChatInfo", nil);
+    [self.view addSubview:self.navigationViewController.view];
+    
+    [self.view setAutoresizingMask:NSViewHeightSizable | NSViewWidthSizable];
+    [self.view setAutoresizesSubviews:YES];
+    
+    
+    TMView *separator = [[TMView alloc] initWithFrame:self.view.bounds];
+    separator.backgroundColor = DIALOG_BORDER_COLOR;
+    
+    [self.view addSubview:separator];
+    
+    
+    [Notification addObserver:self selector:@selector(notificationDialogSelectionChanged:) name:@"ChangeDialogSelection"];
+}
+
+-(void)notificationDialogSelectionChanged:(NSNotification *)notification {
+    
+    if(self.rightNavigationController.messagesViewController.conversation == _conversation && self.rightNavigationController.messagesViewController.conversation != nil)
+        return;
+    
+    _conversation = self.rightNavigationController.messagesViewController.conversation;
+    
+    
+    if(self.rightNavigationController.messagesViewController.conversation) {
+        [self.navigationViewController clear];
+        [self.navigationViewController pushViewController:_noSelectedViewController animated:NO];
+        [self.navigationViewController showInfoPage:self.rightNavigationController.messagesViewController.conversation animated:NO isDisclosureController:YES];
+    } else {
+        [self.navigationViewController clear];
+        [self.navigationViewController pushViewController:_noSelectedViewController animated:NO];
+    }
+    
+}
+
+-(void)dealloc {
+    [Notification removeObserver:self];
+}
+
+- (TMView *)view {
+    if(!_view)
+        [self loadView];
+    return _view;
+}
+
+@end
+
+
 @interface MainViewController ()
 -(void)checkLeftView;
 @end
@@ -28,6 +120,8 @@
 @property (nonatomic,strong) TGSplitView *splitView;
 
 @property (nonatomic,strong) TMView *leftViewContainer;
+
+@property (nonatomic,strong) TGDisclosureViewController *disclosureController;
 
 @end
 
@@ -80,16 +174,20 @@
     
     [self.rightViewController.navigationViewController addDelegate:self.leftViewController];
     
-    [_splitView setProportion:(struct TGSplitProportion){MIN_SINGLE_LAYOUT_WIDTH,300+MIN_SINGLE_LAYOUT_WIDTH} forState:TGSplitViewStateSingleLayout];
-    [_splitView setProportion:(struct TGSplitProportion){300+MIN_SINGLE_LAYOUT_WIDTH,FLT_MAX} forState:TGSplitViewStateDualLayout];
     
+    
+    
+    _disclosureController = [[TGDisclosureViewController alloc] initWithFrame:NSMakeRect(0, 0, 300, self.view.bounds.size.height)];
+    
+    [_splitView setProportion:(struct TGSplitProportion){MIN_SINGLE_LAYOUT_WIDTH,300+MIN_SINGLE_LAYOUT_WIDTH} forState:TGSplitViewStateSingleLayout];
+    [_splitView setProportion:(struct TGSplitProportion){MIN_SINGLE_LAYOUT_WIDTH,MAX_SINGLE_LAYOUT_WIDTH} forState:TGSplitViewStateDualLayout];
+    [_splitView setProportion:(struct TGSplitProportion){300,FLT_MAX} forState:TGSplitViewStateTripleLayout];
         
     _splitView.delegate = self;
  
     [_splitView update];
     
    // [self layout];
-    
    
     
 }
@@ -106,7 +204,7 @@
 
 -(void)splitViewDidNeedMinimisize:(TGViewController<TGSplitViewDelegate> *)controller {
     if(![self isMinimisze] && self.leftViewController.canMinimisize) {
-        self.splitView.canChangeState = NO;
+        self.splitView.canChangeState = [self isTripleLayout];
         [self.splitView updateStartSize:NSMakeSize(70, NSHeight(controller.view.frame)) forController:controller];
         [self.leftViewController updateSize];
         [self.rightViewController.navigationViewController.currentController viewWillAppear:NO];
@@ -132,13 +230,24 @@
         case TGSplitViewStateSingleLayout:
             
             
-            [_splitView addController:_rightViewController proportion:(struct TGSplitProportion){MIN_SINGLE_LAYOUT_WIDTH,FLT_MAX}];
+            [_splitView addController:_rightViewController proportion:(struct TGSplitProportion){MIN_SINGLE_LAYOUT_WIDTH,INT32_MAX}];
             break;
         case TGSplitViewStateDualLayout:
             [self.leftViewController.view setFrameSize:NSMakeSize(w, NSHeight(self.leftViewController.view.frame))];
             [_splitView addController:_leftViewController proportion:(struct TGSplitProportion){w,w}];
-            [_splitView addController:_rightViewController proportion:(struct TGSplitProportion){MIN_SINGLE_LAYOUT_WIDTH,FLT_MAX}];
+            [_splitView addController:_rightViewController proportion:(struct TGSplitProportion){MIN_SINGLE_LAYOUT_WIDTH,INT32_MAX}];
             break;
+        case TGSplitViewStateTripleLayout:
+            [self.leftViewController.view setFrameSize:NSMakeSize(w, NSHeight(self.leftViewController.view.frame))];
+            [self.rightViewController.view setFrameSize:NSMakeSize(MAX_SINGLE_LAYOUT_WIDTH, NSHeight(self.rightViewController.view.frame))];
+            
+            [_splitView addController:_leftViewController proportion:(struct TGSplitProportion){w,w}];
+            [_splitView addController:_rightViewController proportion:(struct TGSplitProportion){MIN_SINGLE_LAYOUT_WIDTH,INT32_MAX}];
+            
+            [_splitView addController:_disclosureController proportion:(struct TGSplitProportion){MIN_SINGLE_LAYOUT_WIDTH,MIN_SINGLE_LAYOUT_WIDTH}];
+            [_disclosureController notificationDialogSelectionChanged:nil];
+            
+
         default:
             break;
     }
@@ -189,6 +298,10 @@
 
 -(BOOL)isSingleLayout {
     return self.splitView.state == TGSplitViewStateSingleLayout;
+}
+
+-(BOOL)isTripleLayout {
+    return self.splitView.state == TGSplitViewStateTripleLayout;
 }
 
 

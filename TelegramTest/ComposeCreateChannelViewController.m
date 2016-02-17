@@ -250,34 +250,6 @@
     [self.tableView addItem:_headerItem tableRedraw:NO];
     
     
-    
-//    
-//    GeneralSettingsRowItem *discussionItem = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeSwitch callback:^(TGGeneralRowItem *item) {
-//        
-//        _headerItem.discussion = !_headerItem.discussion;
-//        
-//        [self updateCompose];
-//        
-//    } description:NSLocalizedString(@"Channel.Discussion", nil) height:60 stateback:^id(TGGeneralRowItem *item) {
-//        
-//        return @(_headerItem.discussion);
-//        
-//    }];
-//    
-//    
-//    discussionItem.xOffset = 30;
-//    
-//    [self.tableView addItem:discussionItem tableRedraw:NO];
-//    
-//    
-//    GeneralSettingsBlockHeaderItem *discussionDescription = [[GeneralSettingsBlockHeaderItem alloc] initWithString:NSLocalizedString(@"Channel.DiscussionEnableDescription", nil) height:62 flipped:YES];
-//    
-//    discussionDescription.xOffset = 30;
-//    
-//    
-//    [self.tableView addItem:discussionDescription tableRedraw:NO];
-    
-    
     [self.tableView reloadData];
     
     
@@ -385,6 +357,8 @@
     return YES;
 }
 
-
+-(void)dealloc {
+    [_tableView clear];
+}
 
 @end

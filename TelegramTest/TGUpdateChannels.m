@@ -266,7 +266,7 @@
             
             TGMessageGroupHole *hole = [self proccessUnimportantGroup:@[msg]];
             
-            [Notification perform:UPDATE_MESSAGE_GROUP_HOLE data:@{KEY_GROUP_HOLE:hole}];
+            [Notification performOnStageQueue:UPDATE_MESSAGE_GROUP_HOLE data:@{KEY_GROUP_HOLE:hole}];
             
         }
         
@@ -403,7 +403,7 @@
                                 channel.invisibleChannel = NO;
                                 
                                 [channel save];
-                                [MessagesManager addAndUpdateMessage:msg];
+                                [msg save:participant.participant.date > channel.last_message_date];
                                 
                             }
                             

@@ -74,7 +74,15 @@
         } errorHandler:^(RPCRequest *request, RpcError *error) {
             [self.delegate behaviorDidEndRequest:request.response];
             
-            alert(appName(), NSLocalizedString([error.error_msg isEqualToString:@"USER_ALREADY_PARTICIPANT"] ? @"Bot.AlreadyInGroup" : error.error_msg, nil));
+            NSString *localizedString = NSLocalizedString(error.error_msg, nil);
+            
+            if([error.error_msg isEqualToString:@"USER_ALREADY_PARTICIPANT"] && user.isBot) {
+                localizedString = NSLocalizedString(@"Bot.AlreadyInGroup", nil);
+            } else if([error.error_msg isEqualToString:@"USER_PRIVACY_RESTRICTED"]) {
+                localizedString = [NSString stringWithFormat:localizedString, user.first_name,NSLocalizedString(@"groups", nil), user.first_name];
+            }
+            
+            alert(appName(), localizedString);
         }];
     };
     

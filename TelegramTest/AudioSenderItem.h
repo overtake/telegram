@@ -9,5 +9,5 @@
 #import "SenderItem.h"
 
 @interface AudioSenderItem : SenderItem
-
+- (id)initWithPath:(NSString *)filePath forConversation:(TL_conversation *)conversation additionFlags:(int)additionFlags waveforms:(NSData *)waveforms;
 @end

@@ -239,8 +239,10 @@
 - (BOOL) isAddToList {
     if(self.type == DialogTypeSecretChat)
         return YES;
+    
+    // && (!self.chat.isDeactivated)
         
-    return !self.isInvisibleChannel && self.last_message_date > 0  && !self.fake && (!self.chat.isDeactivated);
+    return !self.isInvisibleChannel && self.last_message_date > 0  && !self.fake;
 }
 
 //-(BOOL)isInvisibleChannel {

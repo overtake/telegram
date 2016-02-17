@@ -86,33 +86,37 @@
                 
             }];
             
-            weakify();
+            weak();
             
             [request setCompleted:^(NSArray *result, NSTimeInterval t, id error) {
                 
+                strongWeak();
                 
-                [ASQueue dispatchOnMainQueue:^{
-                                        
-                    [items enumerateObjectsUsingBlock:^(MessageTableItem *obj, NSUInteger idx, BOOL *stop) {
-                        BOOL needUpdate = obj.message.views != [result[idx] intValue];
+                if(strongSelf == weakSelf) {
+                    [ASQueue dispatchOnMainQueue:^{
                         
-                        if([result[idx] intValue] != 0) {
-                            obj.message.views = [result[idx] intValue];
+                        [items enumerateObjectsUsingBlock:^(MessageTableItem *obj, NSUInteger idx, BOOL *stop) {
+                            BOOL needUpdate = obj.message.views != [result[idx] intValue];
                             
-                            if(needUpdate) {
-                                [obj.message saveViews];
-                                [Notification perform:UPDATE_MESSAGE_ITEM data:@{@"item":obj}];
+                            if([result[idx] intValue] != 0) {
+                                obj.message.views = [result[idx] intValue];
+                                
+                                if(needUpdate) {
+                                    [obj.message saveViews];
+                                    [obj updateViews];
+                                    [Notification perform:UPDATE_MESSAGE_ITEM data:@{@"item":obj}];
+                                }
                             }
-                        }
+                            
+                            
+                            
+                        }];
                         
-                       
-
+                        [strongSelf->waitingItems removeObjectsInArray:items];
+                        
                     }];
-                    
-                    [strongSelf->waitingItems removeObjectsInArray:items];
-                    
-                }];
-                
+                }
+
             }];
             
             [[MTNetwork instance] addRequest:request];

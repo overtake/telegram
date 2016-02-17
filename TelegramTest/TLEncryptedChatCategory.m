@@ -22,4 +22,8 @@
     return @"";
 }
 
+-(BOOL)isDeactivated {
+    return NO;
+}
+
 @end

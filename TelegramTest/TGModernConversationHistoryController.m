@@ -160,11 +160,11 @@
                         
                     }
                     
-                    int top_important_message = chat.isMegagroup ? topMsg.n_id : minMsg.n_id;
+                    int top_important_message = chat.isMegagroup ? topMsg.n_id : topMsg.n_id;
                     
-                    int date = chat.isMegagroup ? topMsg.date : minMsg.date;
+                    int date = chat.isMegagroup ? topMsg.date : topMsg.date;
                     
-                    lastMessage = chat.isMegagroup ? topMsg : minMsg;
+                    lastMessage = chat.isMegagroup ? topMsg : topMsg;
                     
                     int unread_count = dialog.unread_important_count;
                     
@@ -216,8 +216,6 @@
             
         } errorHandler:^(id request, RpcError *error) {
             
-            
-            int bp = 0;
             
         } timeout:0 queue:_queue.nativeQueue];
         

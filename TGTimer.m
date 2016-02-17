@@ -82,6 +82,7 @@
     
     dispatch_source_set_event_handler(_timer, ^
     {
+        
         if (self.completion)
             self.completion();
         if (!_repeat)

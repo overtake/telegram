@@ -11,7 +11,6 @@
 #import "TMMediaController.h"
 #import "TLPeer+Extensions.h"
 #import "TMPreviewDocumentItem.h"
-#import "DownloadAudioItem.h"
 #import "TMCircularProgress.h"
 #import "MessageTableItemAudio.h"
 
@@ -79,16 +78,16 @@
         [self.stateTextField setFont:TGSystemFont(12)];
         [self.stateTextField setTextColor:NSColorFromRGB(0xbebebe)];
         
+         [self.containerView addSubview:self.stateTextField];
         
-        [self.containerView addSubview:self.stateTextField];
+        [self.progressView setImage:image_DownloadIconWhite() forState:TMLoaderViewStateNeedDownload];
+        [self.progressView setImage:image_LoadCancelWhiteIcon() forState:TMLoaderViewStateDownloading];
+        [self.progressView setImage:image_LoadCancelWhiteIcon() forState:TMLoaderViewStateUploading];
         
-        
-        [self.progressView setImage:image_DownloadIconGrey() forState:TMLoaderViewStateNeedDownload];
-        [self.progressView setImage:image_LoadCancelGrayIcon() forState:TMLoaderViewStateDownloading];
-        [self.progressView setImage:image_LoadCancelGrayIcon() forState:TMLoaderViewStateUploading];
+        [self.progressView setFrameSize:NSMakeSize(NSWidth(self.playerButton.frame) - 4, NSWidth(self.playerButton.frame) - 4)];
         
         [self setProgressStyle:TMCircularProgressLightStyle];
-        
+        [self.progressView setProgressColor:[NSColor whiteColor]];
         [self setProgressToView:self.playerButton];
         
         [TGAudioPlayerWindow addEventListener:self];
@@ -96,8 +95,6 @@
     }
     return self;
 }
-
-
 
 -(void)dealloc {
     [TGAudioPlayerWindow removeEventListener:self];
@@ -111,9 +108,7 @@
     } else {
         self.audioState = state;
     }
-    
-    
-    
+
 }
 
 -(void)setAudioState:(TGAudioPlayerState)audioState {
@@ -143,11 +138,7 @@
 }
 
 - (void)setCellState:(CellState)cellState {
-    //    if(self.cellState == cellState)
-    //        return;
     [super setCellState:cellState];
-    
-
     
     [self.progressView setState:cellState];
     
@@ -183,7 +174,6 @@
 - (void)updateCellState {
     MessageTableItemAudio *item = (MessageTableItemAudio *)self.item;
     
-    
     if(item.messageSender) {
         self.item.state = AudioStateUploading;
         self.cellState = CellStateSending;
@@ -193,35 +183,35 @@
     if(item.downloadItem && item.downloadItem.downloadState != DownloadStateCompleted && item.downloadItem.downloadState != DownloadStateWaitingStart) {
         self.item.state = item.downloadItem.downloadState == DownloadStateCanceled ? AudioStateWaitDownloading : AudioStateDownloading;
         self.cellState = item.downloadItem.downloadState == DownloadStateCanceled ? CellStateCancelled : CellStateDownloading;
-
-        
     } else  if(![self.item isset]) {
         self.item.state = AudioStateWaitDownloading;
         self.cellState = CellStateNeedDownload;
-        
     } else {
         self.item.state = AudioStateWaitPlaying;
         self.cellState = CellStateNormal;
     }
-    
-    
 }
 
 
 - (NSMenu *)contextMenu {
     NSMenu *menu = [[NSMenu alloc] initWithTitle:@"Documents menu"];
     
+    weak();
+    
     if([self.item isset]) {
-        [menu addItem:[NSMenuItem menuItemWithTitle:NSLocalizedString(@"Message.File.ShowInFinder", nil) withBlock:^(id sender) {
-            [[NSWorkspace sharedWorkspace] activateFileViewerSelectingURLs:@[[NSURL fileURLWithPath:self.item.path]]];
-        }]];
+        
+        if(![self.item.message isKindOfClass:[TL_destructMessage class]]) {
+            [menu addItem:[NSMenuItem menuItemWithTitle:NSLocalizedString(@"Message.File.ShowInFinder", nil) withBlock:^(id sender) {
+                [[NSWorkspace sharedWorkspace] activateFileViewerSelectingURLs:@[[NSURL fileURLWithPath:weakSelf.item.path]]];
+            }]];
+        }
         
         [menu addItem:[NSMenuItem menuItemWithTitle:NSLocalizedString(@"Context.SaveAs", nil) withBlock:^(id sender) {
-            [self performSelector:@selector(saveAs:) withObject:self];
+            [weakSelf performSelector:@selector(saveAs:) withObject:weakSelf];
         }]];
         
         [menu addItem:[NSMenuItem menuItemWithTitle:NSLocalizedString(@"Context.CopyToClipBoard", nil) withBlock:^(id sender) {
-            [self performSelector:@selector(copy:) withObject:self];
+            [weakSelf performSelector:@selector(copy:) withObject:weakSelf];
         }]];
         
         

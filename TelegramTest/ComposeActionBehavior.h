@@ -22,7 +22,7 @@
 
 @property (nonatomic,strong,readonly) ComposeAction *action;
 
-@property (nonatomic,strong) id <ComposeBehaviorDelegate> delegate;
+@property (nonatomic,weak) id <ComposeBehaviorDelegate> delegate;
 
 -(void)composeDidChangeSelected;
 -(void)composeDidCancel;

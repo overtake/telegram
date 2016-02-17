@@ -11,6 +11,7 @@
 #import "TLFileLocation+Extensions.h"
 #import "PhotoCollectionImageView.h"
 #import "TGCache.h"
+#import "DownloadQueue.h"
 @implementation PhotoCollectionImageObject
 
 @synthesize supportDownloadListener = _supportDownloadListener;
@@ -48,7 +49,7 @@ static const int width = 180;
     
     [self.downloadListener setCompleteHandler:^(DownloadItem * item) {
         
-        [ASQueue dispatchOnStageQueue:^{
+        [DownloadQueue dispatchOnDownloadQueue:^{
             
             weakSelf.isLoaded = YES;
             
@@ -102,6 +103,10 @@ static const int width = 180;
         
         [jpegNormalizedData(image) writeToFile:item.path atomically:YES];
         
+    }
+    
+    if(self.imageProcessor) {
+        image = self.imageProcessor(image,image.size);
     }
     
     image = decompressedImage(image);

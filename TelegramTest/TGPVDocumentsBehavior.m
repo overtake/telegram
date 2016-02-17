@@ -27,9 +27,17 @@
 
 -(id)initWithConversation:(TL_conversation *)conversation commonItem:(PreviewObject *)object {
     
+    if(self = [self initWithConversation:conversation commonItem:object filter:[DocumentHistoryFilter class]]) {
+        
+    }
+    
+    return self;
+}
+
+-(id)initWithConversation:(TL_conversation *)conversation commonItem:(PreviewObject *)object filter:(Class)filter {
     if(self = [super init]) {
         _conversation = conversation;
-        _controller = [[ChatHistoryController alloc] initWithController:self historyFilter:[DocumentHistoryFilter class]];
+        _controller = [[ChatHistoryController alloc] initWithController:self historyFilter:filter];
         
         if(object != nil)
             [_controller addMessageWithoutSavingState:object.media];
@@ -134,11 +142,11 @@
             TGPhotoViewerItem *item = [[TGPhotoViewerItem alloc] initWithImageObject:imgObj previewObject:obj];
             
             [converted addObject:item];
-        } else if([[(TL_localMessage *)obj.media media] isKindOfClass:[TL_messageMediaDocument class]]) {
+        } else if([[(TL_localMessage *)obj.media media] isKindOfClass:[TL_messageMediaDocument class]]  || [[(TL_localMessage *)obj.media media] isKindOfClass:[TL_messageMediaDocument_old44 class]]) {
             
             TL_messageMediaDocument *media = (TL_messageMediaDocument *) [(TL_localMessage *)obj.media media];
             
-            if([media.document.mime_type hasPrefix:@"image"] && ![media.document.mime_type hasSuffix:@"gif"]) {
+            if([document_preview_mime_types() indexOfObject:media.document.mime_type] != NSNotFound && !media.document.isSticker) {
                 TL_documentAttributeImageSize *size = (TL_documentAttributeImageSize *) [[media document] attributeWithClass:[TL_documentAttributeImageSize class]];
                 
                 TGPVDocumentObject *imgObj = [[TGPVDocumentObject alloc] initWithMessage:obj.media placeholder:nil];

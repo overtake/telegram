@@ -282,38 +282,44 @@
                 
                 NSString *userNameToCheck = self.lastUserName;
                 
-                
+                weak();
                 
                 self.request = [RPCRequest sendRequest:self.oberser.needApiObjectWithUserName(userNameToCheck) successHandler:^(RPCRequest *request, id response) {
                     
-                    self.isSuccessChecked = [response isKindOfClass:[TL_boolTrue class]];
-                    self.isRemoteChecked = YES;
-                    self.checkedUserName = userNameToCheck;
+                    strongWeak();
                     
-                    
-                    if(self.isSuccessChecked) {
-                        [self setState:self.checkedUserName.length > 0 ? [NSString stringWithFormat:[self errorWithKey:@"UserName.avaiable"],self.checkedUserName] : nil color:GC];
-                    } else {
-                        [self setState:[self errorWithKey:@"USERNAME_IS_ALREADY_TAKEN"] color:[NSColor redColor]];
+                    if(strongSelf != nil) {
+                        strongSelf.isSuccessChecked = [response isKindOfClass:[TL_boolTrue class]];
+                        strongSelf.isRemoteChecked = YES;
+                        strongSelf.checkedUserName = userNameToCheck;
+                        
+                        
+                        if(strongSelf.isSuccessChecked) {
+                            [strongSelf setState:strongSelf.checkedUserName.length > 0 ? [NSString stringWithFormat:[strongSelf errorWithKey:@"UserName.avaiable"],self.checkedUserName] : nil color:GC];
+                        } else {
+                            [strongSelf setState:[strongSelf errorWithKey:@"USERNAME_IS_ALREADY_TAKEN"] color:[NSColor redColor]];
+                        }
+                        
+                        
+                        
+                        [strongSelf updateSaveButton];
+                        
+                        [strongSelf.progressView setHidden:YES];
+                        [strongSelf.progressView stopAnimation:self];
+                        
+                        [strongSelf.successView setHidden:!strongSelf.isSuccessChecked];
                     }
                     
                     
                     
-                    [self updateSaveButton];
-                    
-                    [self.progressView setHidden:YES];
-                    [self.progressView stopAnimation:self];
-                    
-                    [self.successView setHidden:!self.isSuccessChecked];
-                    
                 } errorHandler:^(RPCRequest *request, RpcError *error) {
                     
-                    [self.progressView setHidden:YES];
-                    [self.progressView stopAnimation:self];
+                    [weakSelf.progressView setHidden:YES];
+                    [weakSelf.progressView stopAnimation:weakSelf];
                     
-                    [self.successView setHidden:YES];
+                    [weakSelf.successView setHidden:YES];
                     
-                    [self setState:[self errorWithKey:error.error_msg] color:[NSColor redColor]];
+                    [weakSelf setState:[weakSelf errorWithKey:error.error_msg] color:[NSColor redColor]];
                     
                 }];
                 

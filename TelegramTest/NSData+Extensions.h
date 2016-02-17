@@ -15,5 +15,5 @@
 -(NSData *)dataWithData:(NSData *)data;
 
 -(id)initWithEmptyBytes:(int)bytes;
-
+-(NSString *)binaryString;
 @end

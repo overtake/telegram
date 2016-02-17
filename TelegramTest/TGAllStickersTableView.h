@@ -11,7 +11,9 @@
 
 @interface TGAllStickersTableView : TMTableView
 
-@property (nonatomic,assign,readonly) BOOL hasRecentStickers;
+@property (nonatomic,assign) BOOL hasRecentStickers;
+
+@property (nonatomic,assign) BOOL canSendStickerAlways;
 
 -(void)removeSticker:(TL_outDocument *)document;
 -(void)load:(BOOL)force;
@@ -22,6 +24,8 @@
 
 -(NSDictionary *)allStickers;
 -(NSArray *)sets;
+
+-(void)hideStickerPreview;
 
 -(void)updateSets:(NSArray *)sets;
 

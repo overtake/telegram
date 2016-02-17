@@ -56,20 +56,22 @@ DYNAMIC_PROPERTY(DType);
     int type;
     
     
-    if(self.class == [TL_user class])
+    if(self.class == [TL_user class] || self.class == [TL_user_old43 class])
     {
-        if(self.flags & TGUSERFLAGSELF) {
+        
+        if(self.isSelf) {
             type = TLUserTypeSelf;
-        } else if(self.flags & TGUSERFLAGCONTACT) {
+        } else if(self.isContact) {
             type = TLUserTypeContact;
-        } else if(self.flags & TGUSERFLAGMUTUAL) {
+        } else if(self.isMutual_contact) {
             type = TLUserTypeContact;
-        } else if(self.flags & TGUSERFLAGDELETED) {
+        } else if(self.isDeleted) {
             type = TLUserTypeDeleted;
-        } else if(self.flags & (1 << 4)) {
-            type = TLUserTypeRequest;
-        } else
+        } else {
+            
+            
             type = TLUserTypeForeign;
+        }
         
         
     } else {
@@ -457,6 +459,10 @@ DYNAMIC_PROPERTY(DFullName);
 }
 
 
+
+-(BOOL)isBotInlinePlaceholder {
+    return (self.flags & (1 << 19)) > 0;
+}
 
 /*
 Statuses

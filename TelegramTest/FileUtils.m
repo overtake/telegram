@@ -19,6 +19,9 @@
 #import "TGStickerPackModalView.h"
 #import "ComposeActionAddUserToGroupBehavior.h"
 #import "TGHeadChatPanel.h"
+#include "opus.h"
+#include "opusfile.h"
+#import "TGAudioWaveform.h"
 @implementation OpenWithObject
 
 -(id)initWithFullname:(NSString *)fullname app:(NSURL *)app icon:(NSImage *)icon {
@@ -129,25 +132,93 @@ NSString *const TLBotCommandPrefix = @"/";
 
 
 
-NSString* mediaFilePath(TLMessageMedia *media) {
-    if([media isKindOfClass:[TL_messageMediaAudio class]]) {
-        return [NSString stringWithFormat:@"%@/%lu_%lu.ogg",path(),media.audio.n_id,media.audio.access_hash];
+NSString* mediaFilePath(TL_localMessage *message) {
+    if(message.media.document.audioAttr.isVoice) {
+        return [NSString stringWithFormat:@"%@/%lu_%lu.ogg",path(),message.media.document.n_id,message.media.document.access_hash];
     }
-    if([media isKindOfClass:[TL_messageMediaVideo class]]) {
-        return [NSString stringWithFormat:@"%@/%lu_%lu.mp4",path(),media.video.n_id,media.video.access_hash];
-    }
-    
-    if([media isKindOfClass:[TL_messageMediaDocument class]]) {
-        return [media.document isSticker] ? [NSString stringWithFormat:@"%@/%ld.webp",path(),media.document.n_id] : [FileUtils documentName:media.document];
+    if([message.media isKindOfClass:[TL_messageMediaVideo class]]) {
+        return [NSString stringWithFormat:@"%@/%lu_%lu.mp4",path(),message.media.video.n_id,message.media.video.access_hash];
     }
     
-    if([media isKindOfClass:[TL_messageMediaPhoto class]]) {
-        TL_photoSize *size = [media.photo.sizes lastObject];
+    if([message.media isKindOfClass:[TL_messageMediaDocument class]] || [message.media isKindOfClass:[TL_messageMediaDocument_old44 class]] || message.media.bot_result.document) {
+        
+        TLDocument *document = [message.media isKindOfClass:[TL_messageMediaBotResult class]] ? message.media.bot_result.document : message.media.document;
+        
+        
+        id nondocValue = non_documents_mime_types()[document.mime_type];
+        
+        BOOL hasAttr = YES;
+        
+        if([nondocValue isKindOfClass:[TLDocumentAttribute class]]) {
+            hasAttr = [document attributeWithClass:[nondocValue class]] != nil;
+        }
+        
+        if(nondocValue != nil && hasAttr) {
+            
+            return [NSString stringWithFormat:@"%@/%ld.%@",path(),document.n_id,[document.mime_type substringFromIndex:[document.mime_type rangeOfString:@"/"].location + 1]];
+            
+        }
+        
+        if([message isKindOfClass:[TL_destructMessage class]] || [message.media.document.mime_type hasPrefix:@"image/gif"] || [message.media.document.mime_type hasPrefix:@"audio"]) {
+            
+            TL_documentAttributeFilename *name = (TL_documentAttributeFilename *) [message.media.document attributeWithClass:[TL_documentAttributeFilename class]];
+            
+            return [NSString stringWithFormat:@"%@/%ld_%@",path(),message.media.document.n_id,name.file_name];
+        }
+        
+        return [FileUtils documentName:document];
+    }
+    
+    if([message.media isKindOfClass:[TL_messageMediaBotResult class]]) {
+        if([message.media.bot_result isKindOfClass:[TL_botInlineMediaResultPhoto class]]) {
+            TL_photoSize *size = [message.media.bot_result.photo.sizes lastObject];
+            return locationFilePath(size.location, @"jpg");
+        } else if([message.media.bot_result isKindOfClass:[TL_botInlineMediaResultDocument class]]) {
+            
+            NSRange srange = [message.media.bot_result.document.mime_type rangeOfString:@"/"];
+            
+            NSString *ext = srange.location == NSNotFound ? @"file" : [message.media.bot_result.document.mime_type substringFromIndex:srange.location + 1];
+            
+            return [NSString stringWithFormat:@"%@/%ld.%@",path(),message.media.bot_result.document.n_id,ext];
+        } else if([message.media.bot_result isKindOfClass:[TL_messageMediaBotResult class]]) {
+            return [NSString stringWithFormat:@"%@/%ld.%@",path(),[message.media.bot_result.content_url hash],[message.media.bot_result.content_url pathExtension]];
+        } else
+            return path_for_external_link(message.media.bot_result.content_url);
+    }
+    
+    if([message.media isKindOfClass:[TL_messageMediaPhoto class]]) {
+        TL_photoSize *size = [message.media.photo.sizes lastObject];
         return locationFilePath(size.location, @"jpg");
     }
     
     return nil;
 }
+
+NSDictionary *non_documents_mime_types() {
+    
+    static NSDictionary *res;
+    
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        res = @{@"video/mp4":[TL_documentAttributeAnimated create],@"image/gif":@(0),@"webp:image/webp":@(0),@"audio/ogg":[TL_documentAttributeAudio class]};
+    });
+    
+    return res;
+};
+
+void removeMessageMedia(TL_localMessage *message) {
+    if(message) {
+        NSString *path = mediaFilePath(message);
+        
+        if(path != nil &&![message.media.document isKindOfClass:[TL_outDocument class]]) {
+            [[NSFileManager defaultManager] removeItemAtPath:path error:nil];
+        }
+        
+        
+    }
+    
+}
+
 
 NSString* documentPath(TLDocument *document) {
     NSString *fileName = document.file_name;
@@ -509,8 +580,8 @@ void add_sticker_pack_by_name(TLInputStickerSet *set) {
             TGStickerPackModalView *stickerModalView = [[TGStickerPackModalView alloc] init];
             
             [stickerModalView setStickerPack:response];
-            
-            [stickerModalView show:[Telegram delegate].mainWindow animated:YES];
+            stickerModalView.canSendSticker = YES;
+            [stickerModalView show:appWindow() animated:YES];
 
         });
         
@@ -568,7 +639,7 @@ void open_user_by_name(NSDictionary *params) {
         
     };
     
-    if(obj) {
+    if(false) {
         
         perform();
         
@@ -1160,5 +1231,156 @@ NSDictionary *audioTags(AVURLAsset *asset) {
     return @{@"artist":[artistName trim],@"songName":[songName trim]};
 }
 
+
+NSString *first_domain_character(NSString *url) {
+    if(url != nil)
+    {
+        
+        if(![url hasPrefix:@"http://"] && ![url hasPrefix:@"https://"] && ![url hasPrefix:@"ftp://"])
+            return [[url substringToIndex:1] uppercaseString];
+        
+        NSURLComponents *components = [[NSURLComponents alloc] initWithString:url];
+        
+        return [[components.host substringToIndex:1] uppercaseString];
+    }
+    
+    return @"L";
+}
+
+NSString *path_for_external_link(NSString *link) {
+    return [NSString stringWithFormat:@"%@/%ld.%@",[FileUtils path],[link hash],[link pathExtension].length == 0 ? @"file" : [link pathExtension]];
+}
+
+
+NSString *display_url(NSString *url) {
+    
+    static NSArray *protocols;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        protocols = @[@"ftp://",@"http://",@"https://"];
+    });
+    
+    __block NSString *displayUrl = [url copy];
+    
+    [protocols enumerateObjectsUsingBlock:^(NSString *obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        
+        if([displayUrl hasPrefix:obj]) {
+            displayUrl = [displayUrl substringFromIndex:obj.length];
+        }
+        
+    }];
+    
+    if([displayUrl hasSuffix:@"/"]) {
+        displayUrl = [displayUrl substringToIndex:displayUrl.length - 1];
+    }
+    
+    return displayUrl;
+    
+}
+
+
+
++ (int)convertBinaryStringToDecimalNumber:(NSString *)binaryString {
+    unichar aChar;
+    int value = 0;
+    int index;
+    for (index = 0; index<[binaryString length]; index++)
+    {
+        aChar = [binaryString characterAtIndex: index];
+        if (aChar == '1')
+            value += 1;
+        if (index+1 < [binaryString length])
+            value = value<<1;
+    }
+    return value;
+}
+
++ (TGAudioWaveform *)waveformForPath:(NSString *)path {
+    if (![[NSFileManager defaultManager] fileExistsAtPath:path]) {
+        return nil;
+    }
+    
+    int openError = OPUS_OK;
+    OggOpusFile *opusFile = op_open_file([path UTF8String], &openError);
+    if (opusFile == NULL || openError != OPUS_OK)
+    {
+        MTLog(@"[waveformForPath op_open_file failed: %d]", openError);
+        return nil;
+    } else {
+        //_isSeekable = op_seekable(_opusFile);
+        int64_t totalSamples = op_pcm_total(opusFile, -1);
+        int32_t resultSamples = 100;
+        int32_t sampleRate = (int32_t)(MAX(1, totalSamples / resultSamples));
+        
+        NSMutableData *samplesData = [[NSMutableData alloc] initWithLength:100 * 2];
+        uint16_t *samples = samplesData.mutableBytes;
+        
+        int bufferSize = 1024 * 128;
+        int16_t *sampleBuffer = malloc(bufferSize);
+        uint64_t sampleIndex = 0;
+        uint16_t peakSample = 0;
+        
+        int index = 0;
+        
+        while (true) {
+            int readSamples = op_read(opusFile, sampleBuffer, bufferSize / 2, NULL);
+            for (int i = 0; i < readSamples; i++) {
+                uint16_t sample = (uint16_t)ABS(sampleBuffer[i]);
+                if (sample > peakSample) {
+                    peakSample = sample;
+                }
+                if (sampleIndex++ % sampleRate == 0) {
+                    if (index < resultSamples) {
+                        samples[index++] = peakSample;
+                    }
+                    peakSample = 0;
+                }
+            }
+            if (readSamples == 0) {
+                break;
+            }
+        }
+        
+        int64_t sumSamples = 0;
+        for (int i = 0; i < resultSamples; i++) {
+            sumSamples += samples[i];
+        }
+        uint16_t peak = (uint16_t)(sumSamples * 1.8f / resultSamples);
+        if (peak < 2500) {
+            peak = 2500;
+        }
+        
+        for (int i = 0; i < resultSamples; i++) {
+            uint16_t sample = (uint16_t)((int64_t)samples[i]);
+            if (sample > peak) {
+                samples[i] = peak;
+            }
+        }
+        
+        free(sampleBuffer);
+        op_free(opusFile);
+        
+        TGAudioWaveform *waveform = [[TGAudioWaveform alloc] initWithSamples:samplesData peak:peak];
+        
+        NSData *bitstream = [waveform bitstream];
+        waveform = [[TGAudioWaveform alloc] initWithBitstream:bitstream bitsPerSample:5];
+        NSData *convertedBitstream = [waveform bitstream];
+        if (![convertedBitstream isEqualToData:bitstream]) {
+            MTLog(@"Bitstreams before and after don't match");
+        }
+        
+        return waveform;
+    }
+}
+
+NSArray *document_preview_mime_types() {
+    static NSArray *types;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        types = @[@"image/bmp",@"image/jpeg",@"image/jpg",@"image/png",@"image/tiff",@"image/webp"];
+    });
+    
+    return types;
+}
 
 @end

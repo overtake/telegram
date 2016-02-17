@@ -31,7 +31,6 @@
     if(item.message && ( item.message.dstate != DeliveryStateNormal && item.messageSender == nil )) {
         item.messageSender = [SenderItem senderForMessage:item.message];
         item.messageSender.tableItem = item;
-        
         if(item.messageSender.state == MessageStateWaitSend) {
             [item.messageSender send];
         }
@@ -51,6 +50,27 @@
     [self setItem:self.item];
 }
 
+
+-(void)addScrollEvent {
+    id clipView = [[self.item.table enclosingScrollView] contentView];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(_didScrolledTableView:)
+                                                 name:NSViewBoundsDidChangeNotification
+                                               object:clipView];
+
+}
+
+-(void)removeScrollEvent {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
+-(void)_didScrolledTableView:(NSNotification *)notification {
+    
+}
+
+-(void)dealloc {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
 
 
 -(void)rightMouseDown:(NSEvent *)theEvent {
@@ -101,17 +121,18 @@
     
     NSMutableArray *items = [[NSMutableArray alloc] init];
     
-    if(self.item.message.to_id.class == [TL_peerChannel class] || self.item.message.to_id.class == [TL_peerChat class] || self.item.message.to_id.class == [TL_peerUser class] )  {
+    
+    weak();
+    
+    if([self.item.message.conversation canSendMessage]) {
         
-        if([self.item.message.conversation canSendMessage]) {
+        if(self.item.message.conversation.type != DialogTypeSecretChat || self.item.message.conversation.encryptedChat.encryptedParams.layer >= 45) {
             [items addObject:[NSMenuItem menuItemWithTitle:NSLocalizedString(@"Context.Reply", nil) withBlock:^(id sender) {
                 
-                [_messagesViewController addReplayMessage:self.item.message animated:YES];
+                [weakSelf.messagesViewController addReplayMessage:weakSelf.item.message animated:YES];
                 
             }]];
         }
-        
-        
     }
     
     if([self.item canShare]) {
@@ -142,15 +163,15 @@
     if(self.item.message.conversation.type != DialogTypeSecretChat) {
         [items addObject:[NSMenuItem menuItemWithTitle:NSLocalizedString(@"Context.Forward", nil) withBlock:^(id sender) {
             
-            [_messagesViewController setState:MessagesViewControllerStateNone];
-            [_messagesViewController unSelectAll:NO];
+            [weakSelf.messagesViewController setState:MessagesViewControllerStateNone];
+            [weakSelf.messagesViewController unSelectAll:NO];
             
             
             
-            [_messagesViewController setSelectedMessage:self.item selected:YES];
+            [weakSelf.messagesViewController setSelectedMessage:weakSelf.item selected:YES];
             
             
-            [[Telegram rightViewController] showForwardMessagesModalView:_messagesViewController.conversation messagesCount:1];
+            [weakSelf.messagesViewController showForwardMessagesModalView];
             
             
         }]];
@@ -159,12 +180,12 @@
     if([MessagesViewController canDeleteMessages:@[self.item.message] inConversation:self.item.message.conversation]) {
         [items addObject:[NSMenuItem menuItemWithTitle:NSLocalizedString(@"Context.Delete", nil) withBlock:^(id sender) {
             
-            [_messagesViewController setState:MessagesViewControllerStateNone];
-            [_messagesViewController unSelectAll:NO];
+            [weakSelf.messagesViewController setState:MessagesViewControllerStateNone];
+            [weakSelf.messagesViewController unSelectAll:NO];
             
-            [_messagesViewController setSelectedMessage:self.item selected:YES];
+            [weakSelf.messagesViewController setSelectedMessage:weakSelf.item selected:YES];
             
-            [_messagesViewController deleteSelectedMessages];
+            [weakSelf.messagesViewController deleteSelectedMessages];
             
             
         }]];
@@ -204,12 +225,14 @@
     if(![self.item.message.media isKindOfClass:[TL_messageMediaEmpty class]]) {
         NSPasteboard *pasteboard = [NSPasteboard generalPasteboard];
         [pasteboard clearContents];
-        [pasteboard writeObjects:[NSArray arrayWithObject:[NSURL fileURLWithPath:mediaFilePath(self.item.message.media)]]];
+        [pasteboard writeObjects:[NSArray arrayWithObject:[NSURL fileURLWithPath:mediaFilePath(self.item.message)]]];
     }
 }
 
 -(void)_didChangeBackgroundColorWithAnimation:(POPBasicAnimation *)anim toColor:(NSColor *)toColor {
     
 }
+
+
 
 @end

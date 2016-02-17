@@ -42,6 +42,7 @@
 @property (nonatomic,strong) id reservedObject3;
 
 
+
 @property (nonatomic,weak) ComposeViewController *currentViewController;
 
 -(id)initWithBehaviorClass:(Class)behavior;

@@ -10,26 +10,17 @@
 #import "TLUserCategory.h"
 @implementation SelectUserItem
 
-- (id)initWithObject:(TLUser *)object {
+- (id)initWithObject:(id)object {
     if(self = [super initWithObject:object]) {
-        self.title = [[NSMutableAttributedString alloc] init];
-        self.lastSeen = [[NSMutableAttributedString alloc] init];
+
+      
+        if([object isKindOfClass:[TLUser class]]) {
+            _user = object;
+        } else if([object isKindOfClass:[TLChat class]]) {
+            _chat = object;
+        }
         
-        self.user = object;
-        self.titleSize = NSZeroSize;
-        self.lastSeenSize = NSMakeSize(200, 20);
-        
-        self.avatarPoint = NSMakePoint(50, (50 - 36) / 2);
-        
-        
-        self.rightBorderMargin = 23;
-        
-        self.titlePoint = NSMakePoint(97, 25);
-        self.lastSeenPoint = NSMakePoint(97, 8);
-        
-        self.noSelectTitlePoint = NSMakePoint(67, 26);
-        self.noSelectLastSeenPoint = NSMakePoint(67, 8);
-        self.noSelectAvatarPoint = NSMakePoint(23, (50 - 36) / 2);
+        assert(_user != nil || _chat != nil);
         
     }
     return self;
@@ -37,15 +28,23 @@
 
 
 -(id)copy {
-    return [[SelectUserItem alloc] initWithObject:self.user];
+    return [[SelectUserItem alloc] initWithObject:self.object];
 }
 
-- (NSObject *)itemForHash {
-    return self.user;
+-(id)object {
+    return _user ? _user : _chat;
 }
 
-+ (NSUInteger) hash:(TLUser *)object {
-    return object.n_id;
+-(BOOL)acceptSearchWithString:(NSString *)searchString {
+    if(self.chat != nil) {
+        return [self.chat.title searchInStringByWordsSeparated:searchString];
+    } else {
+        return [[self.user fullName] searchInStringByWordsSeparated:searchString];
+    }
+}
+
+-(NSUInteger)hash {
+    return _user ? _user.n_id : -_chat.n_id;
 }
 
 @end

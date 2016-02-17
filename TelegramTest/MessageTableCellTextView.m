@@ -14,7 +14,9 @@
 #import "TGImageView.h"
 #import "XCDYouTubeKit.h"
 #import "TGWebpageContainer.h"
-
+#import "TMMediaController.h"
+#import "TMPreviewPhotoItem.h"
+#import "TMPreviewDocumentItem.h"
 @interface TestTextView : NSTextView
 @property (nonatomic, strong) NSString *rand;
 @property (nonatomic) BOOL isSelecedRange;
@@ -114,9 +116,11 @@
         
         [_webpageContainerView setFrame:NSMakeRect(0, item.textSize.height + 5, item.webpage.size.width, item.webpage.blockHeight)];
         
+        [_webpageContainerView setItem:item];
+        
         [_webpageContainerView setWebpage:item.webpage];
         
-        [_webpageContainerView setItem:item];
+        
         
         
     } else {
@@ -143,15 +147,15 @@
 -(void)setCellState:(CellState)cellState {
     [super setCellState:cellState];
     
-    MessageTableItemText *item = (MessageTableItemText *)[self item];
     
     [self.webpageContainerView updateState:cellState];
     
 }
 
+
 - (NSMenu *)contextMenu {
     NSMenu *menu = [[NSMenu alloc] initWithTitle:@"Text menu"];
-   
+
     
     [self.defaultMenuItems enumerateObjectsUsingBlock:^(NSMenuItem *item, NSUInteger idx, BOOL *stop) {
         [menu addItem:item];
@@ -191,6 +195,7 @@
     
     if(!anim) {
         self.textView.backgroundColor = color;
+        self.webpageContainerView.descriptionField.backgroundColor = color;
         return;
     }
 
@@ -241,5 +246,8 @@
         [self.textView setBackgroundColor:selected ? NSColorFromRGB(0xf7f7f7) : NSColorFromRGB(0xffffff)];
     }
 }
+
+
+
 
 @end

@@ -86,8 +86,10 @@
     
     self.uploader = [[UploadOperation alloc] init];
     
-    weakify();
+    weak();
     [self.uploader setUploadComplete:^(UploadOperation *video, id input) {
+        
+        strongWeak();
         
         __block BOOL isFirstSend = [input isKindOfClass:[TLInputFile class]];
         __block id media = nil;
@@ -136,9 +138,9 @@
                 
                 
                 
-                [[NSFileManager defaultManager] moveItemAtPath:strongSelf.path_for_file toPath:mediaFilePath(strongSelf.message.media) error:nil];
+                [[NSFileManager defaultManager] moveItemAtPath:strongSelf.path_for_file toPath:mediaFilePath(strongSelf.message) error:nil];
             
-                NSImage *thumb = [MessageSender videoParams:mediaFilePath(strongSelf.message.media) thumbSize:strongsize(NSMakeSize(640, 480), 250)][@"image"];
+                NSImage *thumb = [MessageSender videoParams:mediaFilePath(strongSelf.message) thumbSize:strongsize(NSMakeSize(640, 480), 250)][@"image"];
                 
                 
                 strongSelf.message.media.video.thumb = [TL_photoCachedSize createWithType:@"x" location:msg.media.video.thumb.location w:thumb.size.width h:thumb.size.height bytes:jpegNormalizedData(thumb)];
@@ -192,15 +194,15 @@
     
     
     [self.uploader setUploadProgress:^(UploadOperation *operation, NSUInteger current, NSUInteger total) {
-        strongSelf.progress =VIDEO_COMPRESSED_PROGRESS + (((float)current/(float)total) * (100.0f - VIDEO_COMPRESSED_PROGRESS));
+        weakSelf.progress =VIDEO_COMPRESSED_PROGRESS + (((float)current/(float)total) * (100.0f - VIDEO_COMPRESSED_PROGRESS));
     }];
     
     [self.uploader setUploadTypingNeed:^(UploadOperation *operation) {
-        [TGSendTypingManager addAction:[TL_sendMessageUploadVideoAction createWithProgress:strongSelf.progress] forConversation:strongSelf.conversation];
+        [TGSendTypingManager addAction:[TL_sendMessageUploadVideoAction createWithProgress:weakSelf.progress] forConversation:weakSelf.conversation];
     }];
     
     [self.uploader setUploadStarted:^(UploadOperation *operation, NSData *data) {
-        [TGSendTypingManager addAction:[TL_sendMessageUploadVideoAction createWithProgress:strongSelf.progress] forConversation:strongSelf.conversation];
+        [TGSendTypingManager addAction:[TL_sendMessageUploadVideoAction createWithProgress:weakSelf.progress] forConversation:weakSelf.conversation];
     }];
     
     

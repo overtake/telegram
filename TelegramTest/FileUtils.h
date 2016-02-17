@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 #import <AVFoundation/AVFoundation.h>
 #import "TelegramWindow.h"
+#import "TGAudioWaveform.h"
 @interface OpenWithObject : NSObject
 @property (nonatomic, strong,readonly) NSString *fullname;
 @property (nonatomic, strong,readonly) NSURL *app;
@@ -46,8 +47,10 @@ void confirm(NSString *text, NSString *info, void (^block)(void), void (^cancelB
 NSString* md5sum(NSString *fp);
 
 NSDictionary *getUrlVars(NSString *url);
-NSString *mediaFilePath(TLMessageMedia *media);
+NSString *mediaFilePath(TL_localMessage *message);
+void removeMessageMedia(TL_localMessage *message);
 NSString *documentPath(TLDocument *document);
+NSDictionary *non_documents_mime_types();
 NSString* dp();
 +(BOOL)checkNormalizedSize:(NSString *)path checksize:(int)checksize;
 +(NSString *)documentName:(TLDocument *)document;
@@ -84,4 +87,14 @@ NSData *passwordHash(NSString *password, NSData *salt);
 
 NSDictionary *audioTags(AVURLAsset *asset);
 
+NSString *first_domain_character(NSString *url);
+
+NSString *path_for_external_link(NSString *link);
+NSString *display_url(NSString *url);
+
+NSArray *document_preview_mime_types();
+
+
++ (TGAudioWaveform *)waveformForPath:(NSString *)path;
++ (int)convertBinaryStringToDecimalNumber:(NSString *)binaryString;
 @end

@@ -173,8 +173,6 @@ static NSArray *channelUpdates;
                 
             }];
             
-            [_updateState setDate:[(TL_updates *)update date]];
-            [self saveUpdateState];
             
         }
         
@@ -427,9 +425,9 @@ static NSArray *channelUpdates;
         
         
         
-        TL_localMessage *message = [TL_localMessage createWithN_id:shortMessage.n_id flags:shortMessage.flags from_id:[shortMessage from_id] to_id:[TL_peerChat createWithChat_id:shortMessage.chat_id] fwd_from_id:shortMessage.fwd_from_id fwd_date:shortMessage.fwd_date reply_to_msg_id:shortMessage.reply_to_msg_id date:shortMessage.date message:shortMessage.message media:[TL_messageMediaEmpty create] fakeId:[MessageSender getFakeMessageId] randomId:rand_long() reply_markup:nil entities:shortMessage.entities views:0 isViewed:YES state:DeliveryStateNormal];
+        TL_localMessage *message = [TL_localMessage createWithN_id:shortMessage.n_id flags:shortMessage.flags from_id:[shortMessage from_id] to_id:[TL_peerChat createWithChat_id:shortMessage.chat_id] fwd_from_id:shortMessage.fwd_from_id fwd_date:shortMessage.fwd_date reply_to_msg_id:shortMessage.reply_to_msg_id date:shortMessage.date message:shortMessage.message media:[TL_messageMediaEmpty create] fakeId:[MessageSender getFakeMessageId] randomId:rand_long() reply_markup:nil entities:shortMessage.entities views:0 via_bot_id:shortMessage.via_bot_id isViewed:YES state:DeliveryStateNormal];
         
-        if(![[UsersManager sharedManager] find:shortMessage.from_id] || ![[ChatsManager sharedManager] find:shortMessage.chat_id] || (message.fwd_from_id != nil && !message.fwdObject)) {
+        if(![[UsersManager sharedManager] find:shortMessage.from_id] || ![[ChatsManager sharedManager] find:shortMessage.chat_id] || (message.fwd_from_id != nil && !message.fwdObject) || (message.via_bot_id != 0 && ![[UsersManager sharedManager] find:message.via_bot_id])) {
             
             if(![[ChatsManager sharedManager] find:shortMessage.chat_id]) {
                 [[FullChatManager sharedManager] loadIfNeed:shortMessage.chat_id force:YES];
@@ -445,10 +443,10 @@ static NSArray *channelUpdates;
     if([container.update isKindOfClass:[TL_updateShortMessage class]]) {
         TL_updateShortMessage *shortMessage = (TL_updateShortMessage *) container.update;
         
-        TL_localMessage *message = [TL_localMessage createWithN_id:shortMessage.n_id flags:shortMessage.flags from_id:[shortMessage user_id] to_id:[TL_peerUser createWithUser_id:[shortMessage user_id]] fwd_from_id:shortMessage.fwd_from_id fwd_date:shortMessage.fwd_date reply_to_msg_id:shortMessage.reply_to_msg_id date:shortMessage.date message:shortMessage.message media:[TL_messageMediaEmpty create] fakeId:[MessageSender getFakeMessageId] randomId:rand_long() reply_markup:nil entities:shortMessage.entities views:0 isViewed:YES state:DeliveryStateNormal];
+        TL_localMessage *message = [TL_localMessage createWithN_id:shortMessage.n_id flags:shortMessage.flags from_id:[shortMessage user_id] to_id:[TL_peerUser createWithUser_id:[shortMessage user_id]] fwd_from_id:shortMessage.fwd_from_id fwd_date:shortMessage.fwd_date reply_to_msg_id:shortMessage.reply_to_msg_id date:shortMessage.date message:shortMessage.message media:[TL_messageMediaEmpty create] fakeId:[MessageSender getFakeMessageId] randomId:rand_long() reply_markup:nil entities:shortMessage.entities views:0 via_bot_id:shortMessage.via_bot_id isViewed:YES state:DeliveryStateNormal];
         
         
-        if(![[UsersManager sharedManager] find:shortMessage.user_id] || (message.fwd_from_id != nil && !message.fwdObject)) {
+        if(![[UsersManager sharedManager] find:shortMessage.user_id] || (message.fwd_from_id != nil && !message.fwdObject) || (message.via_bot_id != 0 && ![[UsersManager sharedManager] find:message.via_bot_id])) {
             [self failSequence];
             return NO;
         }
@@ -502,6 +500,24 @@ static NSArray *channelUpdates;
             return;
         }
         
+        
+        if([update isKindOfClass:[TL_updateSavedGifs class]]) {
+            
+            //TODO
+            
+            int bp = 0;
+            
+            return;
+        }
+        
+        if([update isKindOfClass:[TL_updateBotInlineQuery class]]) {
+            
+            //TODO
+            
+            int bp = 0;
+            
+            return;
+        }
         
         if([update isKindOfClass:[TL_updateStickerSets class]]) {
         
@@ -605,7 +621,7 @@ static NSArray *channelUpdates;
                 [conversation save];
             }
             
-            TL_localMessage *msg = [TL_localMessage createWithN_id:0 flags:TGUNREADMESSAGE from_id:777000 to_id:[TL_peerUser createWithUser_id:[UsersManager currentUserId]] fwd_from_id:0 fwd_date:0 reply_to_msg_id:0  date:[[MTNetwork instance] getTime] message:(NSString *)updateNotification.message media:updateNotification.media fakeId:[MessageSender getFakeMessageId] randomId:rand_long() reply_markup:nil entities:nil views:0 isViewed:YES state:DeliveryStateNormal];
+            TL_localMessage *msg = [TL_localMessage createWithN_id:0 flags:TGUNREADMESSAGE from_id:777000 to_id:[TL_peerUser createWithUser_id:[UsersManager currentUserId]] fwd_from_id:0 fwd_date:0 reply_to_msg_id:0  date:[[MTNetwork instance] getTime] message:(NSString *)updateNotification.message media:updateNotification.media fakeId:[MessageSender getFakeMessageId] randomId:rand_long() reply_markup:nil entities:nil views:0 via_bot_id:0 isViewed:YES state:DeliveryStateNormal];
             
             [MessagesManager addAndUpdateMessage:msg];
             
@@ -859,7 +875,7 @@ static NSArray *channelUpdates;
             
             NSString *messageText = [[NSString alloc] initWithFormat:NSLocalizedString(@"Notification.NewAuthDetected",nil), [UsersManager currentUser].first_name, displayDate, update.device, update.location];;
             
-            TL_localMessage *msg = [TL_localMessage createWithN_id:0 flags:TGUNREADMESSAGE from_id:777000 to_id:[TL_peerUser createWithUser_id:[UsersManager currentUserId]] fwd_from_id:0 fwd_date:0 reply_to_msg_id:0 date:[[MTNetwork instance] getTime] message:messageText media:[TL_messageMediaEmpty create] fakeId:[MessageSender getFakeMessageId] randomId:rand_long() reply_markup:nil entities:nil views:0 isViewed:YES state:DeliveryStateNormal];
+            TL_localMessage *msg = [TL_localMessage createWithN_id:0 flags:TGUNREADMESSAGE from_id:777000 to_id:[TL_peerUser createWithUser_id:[UsersManager currentUserId]] fwd_from_id:0 fwd_date:0 reply_to_msg_id:0 date:[[MTNetwork instance] getTime] message:messageText media:[TL_messageMediaEmpty create] fakeId:[MessageSender getFakeMessageId] randomId:rand_long() reply_markup:nil entities:nil views:0 via_bot_id:0 isViewed:YES state:DeliveryStateNormal];
             
             [MessagesManager addAndUpdateMessage:msg];
             

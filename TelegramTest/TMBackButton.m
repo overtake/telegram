@@ -89,7 +89,7 @@
 -(void)updateBackButton {
     
     
-    if(self.controller.navigationViewController == ((TelegramWindow *)[NSApp mainWindow]).navigationController) {
+    if(self.controller.navigationViewController == ((TelegramWindow *)[[Telegram delegate] mainWindow]).navigationController) {
         if((self.controller.navigationViewController.viewControllerStack.count > 2 || [[Telegram mainViewController] isSingleLayout]) && ![[Telegram rightViewController] isModalViewActive]) {
             [self.field setStringValue:[NSString stringWithFormat:@"   %@", NSLocalizedString(@"Compose.Back",nil)]];
         } else if([[Telegram rightViewController] isModalViewActive] && [Telegram isSingleLayout]) {
@@ -108,6 +108,11 @@
         [self.backUnreadMarkView setHidden:YES];
     }
    
+    if(self.controller.isDisclosureController && self.controller.navigationViewController.viewControllerStack.count <= 2) {
+        [self.field setStringValue:@""];
+        [self.imageView setHidden:YES];
+        [self.backUnreadMarkView setHidden:YES];
+    }
     
    
     
@@ -132,6 +137,10 @@
     self->_drawUnreadView = drawUnreadView;
     
     [self draw];
+}
+
+-(void)dealloc {
+    
 }
 
 -(void)draw {

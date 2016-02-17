@@ -116,7 +116,7 @@
     return nil;
 }
 
-+(NSArray *)findUsersByMention:(NSString *)userName withUids:(NSArray *)uids {
++(NSArray *)findUsersByMention:(NSString *)userName withUids:(NSArray *)uids acceptContextBots:(BOOL)acceptContextBots {
     if([userName hasPrefix:@"@"])
         userName = [userName substringFromIndex:1];
     
@@ -125,7 +125,7 @@
     NSArray *fullName;
     
     if(userName.length > 0) {
-        userNames = [[[UsersManager sharedManager] all] filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.username BEGINSWITH[c] %@ AND self.n_id IN %@",userName,uids]];
+        userNames = [[[UsersManager sharedManager] all] filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.username BEGINSWITH[c] %@ AND (self.n_id IN %@ OR (self.isBotInlinePlaceholder == 1) and %d == 1)",userName,uids,acceptContextBots]];
         
         
         fullName = [[[UsersManager sharedManager] all] filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(TLUser *evaluatedObject, NSDictionary *bindings) {
@@ -133,19 +133,27 @@
             return evaluatedObject.username.length > 0 && [evaluatedObject.fullName searchInStringByWordsSeparated:userName] && [uids indexOfObject:@(evaluatedObject.n_id)] != NSNotFound;
             
         }]];
-    } else {
-        
+    }  else {
         userNames = [[[UsersManager sharedManager] all] filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(TLUser *evaluatedObject, NSDictionary *bindings) {
             
-            return evaluatedObject.username.length > 0 && [uids indexOfObject:@(evaluatedObject.n_id)] != NSNotFound;
+            return (evaluatedObject.username.length > 0 && [uids indexOfObject:@(evaluatedObject.n_id)] != NSNotFound) || (evaluatedObject.isBotInlinePlaceholder && acceptContextBots);
             
         }]];
         
-        fullName = @[];
         
+        
+        fullName = @[];
     }
     
-    
+    userNames = [userNames sortedArrayUsingComparator:^NSComparisonResult(TLUser *obj1, TLUser *obj2) {
+        
+        if(obj1.isBotInlinePlaceholder && !obj2.isBotInlinePlaceholder)
+            return NSOrderedAscending;
+        else if(obj2.isBotInlinePlaceholder && !obj1.isBotInlinePlaceholder)
+            return NSOrderedDescending;
+        else
+            return NSOrderedSame;
+    }];
     
     
     
@@ -162,7 +170,11 @@
     [result removeObject:[self currentUser]];
     
     return result;
+}
 
++(NSArray *)findUsersByMention:(NSString *)userName withUids:(NSArray *)uids {
+   
+    return [self findUsersByMention:userName withUids:uids acceptContextBots:NO];
 }
 
 - (void)addFromDB:(NSArray *)array {

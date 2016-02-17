@@ -626,8 +626,6 @@
                  range.length++;
             }
             
-            
-           
             if(!prevValid && !nextValid)
                 break;
             
@@ -679,13 +677,15 @@
 
 -(NSString *)linkAtPoint:(NSPoint)location hitTest:(BOOL *)hitTest itsReal:(BOOL *)itsReal {
     
-   if(_disableLinks)
+   if(_disableLinks || CTFrame == NULL)
        return nil;
     
     if([self mouse:location inRect:self.bounds]) {
         
         
         @try {
+            
+            
             CFArrayRef lines = CTFrameGetLines(CTFrame);
             
             
@@ -799,11 +799,17 @@
     itsReal = itsReal || [link rangeOfString:@"USER_PROFILE:"].location != NSNotFound || [link rangeOfString:@"openWithPeer"].location != NSNotFound;
     
     if(itsReal) {
-        open_link(link);
+        if(_linkCallback == nil)
+            open_link(link);
+        else
+            _linkCallback(link);
     } else {
         confirm(appName(), [NSString stringWithFormat:@"Open this link: %@?",link], ^{
             
-            open_link(link);
+            if(_linkCallback == nil)
+                open_link(link);
+            else
+                _linkCallback(link);
             
         }, nil);
     }

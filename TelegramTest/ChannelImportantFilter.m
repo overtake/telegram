@@ -44,23 +44,30 @@
     TLChat *chat = [[ChatsManager sharedManager] find:self.peer.channel_id];
     
     
-    
-    self.request = [RPCRequest sendRequest:[TLAPI_channels_getImportantHistory createWithChannel:[TL_inputChannel createWithChannel_id:self.peer.channel_id access_hash:chat.access_hash] offset_id:max_id add_offset:next? 0 : -(int)self.controller.selectLimit limit:(int)self.controller.selectLimit max_id:hole ? hole.max_id : INT32_MAX min_id:hole ? hole.min_id : next ? 0 : max_id] successHandler:^(RPCRequest *request, TL_messages_channelMessages * response) {
+    weak();
+    self.request = [RPCRequest sendRequest:[TLAPI_channels_getImportantHistory createWithChannel:[TL_inputChannel createWithChannel_id:self.peer.channel_id access_hash:chat.access_hash] offset_id:max_id offset_date:0 add_offset:next? 0 : -(int)self.controller.selectLimit limit:(int)self.controller.selectLimit max_id:hole ? hole.max_id : INT32_MAX min_id:hole ? hole.min_id : next ? 0 : max_id] successHandler:^(RPCRequest *request, TL_messages_channelMessages * response) {
         
-        [SharedManager proccessGlobalResponse:response];
+        strongWeak();
         
-        
-        NSArray *messages = [[response messages] arrayByAddingObjectsFromArray:[self fillGroupHoles:[response collapsed] peer_id:self.peer_id bottom:next]];
-         
-         [self setHole:[self proccessAndGetHoleWithHole:hole next:next messages:[response messages]] withNext:next];
-        
-        if(callback) {
-            callback(messages,hole && ![self holeWithNext:next] ? ChatHistoryStateLocal : messages.count < self.controller.selectLimit && !hole && ![self holeWithNext:next] ? ChatHistoryStateFull : ChatHistoryStateRemote);
+        if(strongSelf == weakSelf) {
+            [SharedManager proccessGlobalResponse:response];
+            
+            NSArray *messages = [[response messages] arrayByAddingObjectsFromArray:[strongSelf fillGroupHoles:[response collapsed] peer_id:strongSelf.peer_id bottom:next]];
+            
+            [strongSelf setHole:[strongSelf proccessAndGetHoleWithHole:hole next:next messages:[response messages]] withNext:next];
+            
+            if(callback) {
+                callback(messages,hole && ![strongSelf holeWithNext:next] ? ChatHistoryStateLocal : messages.count < strongSelf.controller.selectLimit && !hole && ![strongSelf holeWithNext:next] ? ChatHistoryStateFull : ChatHistoryStateRemote);
+            }
         }
+        
+        
         
     } errorHandler:^(RPCRequest *request, RpcError *error) {
         
-        if(callback && self.controller) {
+        strongWeak();
+        
+  if(callback && strongSelf.controller) {
             callback(nil,ChatHistoryStateRemote);
         }
         

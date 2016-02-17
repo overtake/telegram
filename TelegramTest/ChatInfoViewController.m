@@ -167,13 +167,13 @@
             
             TMTextButton *cancelButton = [TMTextButton standartUserProfileNavigationButtonWithTitle:NSLocalizedString(@"Profile.Cancel", nil)];
             [cancelButton setFrameOrigin:NSMakePoint(button.bounds.size.width + 10, button.frame.origin.y)];
-            weakify();
+            weak();
             
             [cancelButton setTapBlock:^{
                 
-                [strongSelf.headerView.nameTextField setChat:nil];
-                [strongSelf.headerView.nameTextField setChat:self.chat];
-                strongSelf.type = ChatInfoViewControllerNormal;
+                [weakSelf.headerView.nameTextField setChat:nil];
+                [weakSelf.headerView.nameTextField setChat:self.chat];
+                weakSelf.type = ChatInfoViewControllerNormal;
                 [self buildRightView];
             }];
             [view addSubview:cancelButton];
@@ -303,11 +303,11 @@
 - (void)kickParticipantByItem:(ChatParticipantItem *)item {
     item.isBlocking = YES;
     
-    weakify();
+    weak();
     
     [RPCRequest sendRequest:[TLAPI_messages_deleteChatUser createWithChat_id:self.chat.n_id user_id:item.user.inputUser] successHandler:^(RPCRequest *request, id response) {
         
-         TLChatParticipants *participants = strongSelf.fullChat.participants;
+         TLChatParticipants *participants = weakSelf.fullChat.participants;
         
         
         NSArray *participant = [participants.participants filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.user_id == %d",item.user.n_id]];
@@ -319,20 +319,20 @@
             if(object)
                 [participants.participants removeObject:object];
             
-            [[Storage manager] insertFullChat:strongSelf.fullChat completeHandler:nil];
+            [[Storage manager] insertFullChat:weakSelf.fullChat completeHandler:nil];
             
-            strongSelf.tableView.defaultAnimation = NSTableViewAnimationEffectFade;
+            weakSelf.tableView.defaultAnimation = NSTableViewAnimationEffectFade;
             
-            [strongSelf.tableView removeItem:item];
+            [weakSelf.tableView removeItem:item];
             
-            strongSelf.tableView.defaultAnimation = NSTableViewAnimationEffectNone;
+            weakSelf.tableView.defaultAnimation = NSTableViewAnimationEffectNone;
             
             self.notNeedToUpdate = YES;
 
         }
         
     } errorHandler:^(RPCRequest *request, RpcError *error) {
-        [[FullChatManager sharedManager] performLoad:strongSelf.chat.n_id callback:^(TLChatFull *fullChat) {
+        [[FullChatManager sharedManager] performLoad:weakSelf.chat.n_id callback:^(TLChatFull *fullChat) {
             item.isBlocking = NO;
             [item redrawRow];
         }];

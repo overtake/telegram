@@ -10,6 +10,8 @@
 
 @interface TGStickerPackModalView : TGModalView
 
+@property (nonatomic,assign) BOOL canSendSticker;
+
 -(void)setStickerPack:(TL_messages_stickerSet *)stickerPack;
 
 @end

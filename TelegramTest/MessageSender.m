@@ -54,7 +54,7 @@
     
     AVURLAsset *avAsset = [[AVURLAsset alloc] initWithURL:[NSURL fileURLWithPath:path] options:nil];
     
-    AVAssetExportSession *exportSession = [[AVAssetExportSession alloc] initWithAsset:avAsset presetName:NSAppKitVersionNumber > NSAppKitVersionNumber10_10_Max ? AVAssetExportPresetMediumQuality : AVAssetExportPreset640x480];
+    AVAssetExportSession *exportSession = [[AVAssetExportSession alloc] initWithAsset:avAsset presetName:AVAssetExportPreset640x480];
     
     
     exportSession.shouldOptimizeForNetworkUse = YES;
@@ -220,7 +220,7 @@
     
     if([media isKindOfClass:[TL_messageMediaEmpty class]]) {
         
-        webpage = [Storage findWebpage:[message webpageLink]];
+        webpage = [Storage findWebpage:display_url([message webpageLink])];
     }
     
     if(!replyMessage && keyboardMessage.peer_id < 0 && !clear) {
@@ -244,7 +244,7 @@
     flags|=TGFROMIDMESSAGE;
     
     
-    TL_localMessage *outMessage = [TL_localMessage createWithN_id:0 flags:flags from_id:UsersManager.currentUserId to_id:[conversation.peer peerOut]  fwd_from_id:0 fwd_date:0 reply_to_msg_id:reply_to_msg_id  date: (int) [[MTNetwork instance] getTime] message:message media:media fakeId:[MessageSender getFakeMessageId] randomId:rand_long() reply_markup:nil entities:nil views:1 isViewed:NO state:DeliveryStatePending];
+    TL_localMessage *outMessage = [TL_localMessage createWithN_id:0 flags:flags from_id:UsersManager.currentUserId to_id:[conversation.peer peerOut]  fwd_from_id:0 fwd_date:0 reply_to_msg_id:reply_to_msg_id  date: (int) [[MTNetwork instance] getTime] message:message media:media fakeId:[MessageSender getFakeMessageId] randomId:rand_long() reply_markup:nil entities:nil views:1 via_bot_id:0 isViewed:NO state:DeliveryStatePending];
     
     
     
@@ -257,7 +257,8 @@
     if(reply_to_msg_id != 0)
     {
         [[Storage manager] addSupportMessages:@[replyMessage]];
-        [MessagesManager addSupportMessages:@[replyMessage]];
+        outMessage.replyMessage = replyMessage;
+       // [MessagesManager addSupportMessages:@[replyMessage]];
     }
     
     

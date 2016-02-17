@@ -128,6 +128,9 @@ static const int navigationOffset = 48;
     
     [self.viewControllerStack removeObject:oc];
     
+    if([oc isKindOfClass:[MessagesViewController class]] && [self.viewControllerStack[0] isKindOfClass:[NotSelectedDialogsViewController class]]) {
+        animated = NO;
+    }
     
     self.animationStyle = animated ? TMNavigationControllerStylePop : TMNavigationControllerStyleNone;
     self.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut];
@@ -625,12 +628,10 @@ static const int navigationOffset = 48;
     
 }
 
-
-
-
--(void)showInfoPage:(TL_conversation *)conversation {
+-(void)showInfoPage:(TL_conversation *)conversation animated:(BOOL)animated isDisclosureController:(BOOL)isDisclosureController {
     
-    TMViewController *infoViewController;
+    ComposeViewController *infoViewController;
+
     
     switch (conversation.type) {
         case DialogTypeChat:
@@ -639,7 +640,7 @@ static const int navigationOffset = 48;
                 infoViewController = [[TGModernChatInfoViewController alloc] initWithFrame:NSZeroRect];
                 
                 [(TGModernChatInfoViewController *)infoViewController setChat:conversation.chat];
-
+                
             }
             
             break;
@@ -665,10 +666,6 @@ static const int navigationOffset = 48;
             break;
         }
             
-        case DialogTypeBroadcast:
-            infoViewController = [[BroadcastInfoViewController alloc] initWithFrame:NSZeroRect];
-            
-            [(BroadcastInfoViewController *)infoViewController setBroadcast:conversation.broadcast];
         case DialogTypeChannel:
             
             
@@ -683,12 +680,21 @@ static const int navigationOffset = 48;
             break;
     }
     
+    
+    infoViewController.isDisclosureController = isDisclosureController;
+    
     if(infoViewController) {
-        [self pushViewController:infoViewController animated:YES];
+        [self pushViewController:infoViewController animated:animated];
     }
-    
-    
-    
+
+}
+
+-(void)showInfoPage:(TL_conversation *)conversation animated:(BOOL)animated {
+    [self showInfoPage:conversation animated:animated isDisclosureController:NO];
+}
+
+-(void)showInfoPage:(TL_conversation *)conversation {
+    [self showInfoPage:conversation animated:YES];
 }
 
 -(void)gotoEmptyController {
@@ -708,6 +714,7 @@ static const int navigationOffset = 48;
      [self.messagesViewController setCurrentConversation:conversation withMessageJump:message];
     
     [self gotoViewController:self.messagesViewController];
+    
 }
 
 @end

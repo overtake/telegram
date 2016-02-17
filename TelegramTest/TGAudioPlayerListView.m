@@ -452,14 +452,7 @@ static long h_r_l;
 
 
 -(NSArray *)messageTableItemsFromMessages:(NSArray *)messages {
-    NSMutableArray *array = [NSMutableArray array];
-    for(TLMessage *message in messages) {
-        MessageTableItem *item = [MessageTableItem messageItemFromObject:message];
-        if(item) {
-            [array insertObject:item atIndex:0];
-        }
-    }
-    return array;
+    return [MessageTableItem messageTableItemsFromMessages:messages];
 }
 
 

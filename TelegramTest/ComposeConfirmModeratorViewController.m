@@ -37,6 +37,7 @@
     
     [super setAction:action];
     
+    weak();
     
     _participantRole = [self.action.object isBroadcast] ? [TL_channelRoleEditor create] : [TL_channelRoleModerator create];
     
@@ -50,21 +51,21 @@
     
     GeneralSettingsRowItem *moderatorItem = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeSelected callback:^(TGGeneralRowItem *item) {
         
-        self.participantRole = [TL_channelRoleModerator create];
-        [_tableView reloadData];
+        weakSelf.participantRole = [TL_channelRoleModerator create];
+        [weakSelf.tableView reloadData];
         
     } description:NSLocalizedString(@"Channel.Comments.Moderator", nil) height:42 stateback:^id(TGGeneralRowItem *item) {
-        return @([self.participantRole isKindOfClass:[TL_channelRoleModerator class]]);
+        return @([weakSelf.participantRole isKindOfClass:[TL_channelRoleModerator class]]);
     }];
     
    
     GeneralSettingsRowItem *editorItem = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeSelected callback:^(TGGeneralRowItem *item) {
         
-        self.participantRole = [TL_channelRoleEditor create];
-        [_tableView reloadData];
+        weakSelf.participantRole = [TL_channelRoleEditor create];
+        [weakSelf.tableView reloadData];
         
     } description:NSLocalizedString(@"Channel.Comments.Editor", nil) height:42 stateback:^id(TGGeneralRowItem *item) {
-        return @(![self.participantRole isKindOfClass:[TL_channelRoleModerator class]]);
+        return @(![weakSelf.participantRole isKindOfClass:[TL_channelRoleModerator class]]);
     }];
     
      moderatorItem.xOffset = 30;
@@ -98,9 +99,9 @@
         GeneralSettingsRowItem *dismissModerator = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeNext callback:^(TGGeneralRowItem *item) {
             
             confirm(appName(), NSLocalizedString(@"Channel.DismissModeratorConfirm", nil), ^{
-                self.participantRole = [TL_channelRoleEmpty create];
+                weakSelf.participantRole = [TL_channelRoleEmpty create];
                 
-                [self.action.behavior composeDidDone];
+                [weakSelf.action.behavior composeDidDone];
                 
             }, nil);
             
@@ -126,5 +127,8 @@
     self.action.result.singleObject = participantRole;
 }
 
+-(void)dealloc {
+    [_tableView clear];
+}
 
 @end

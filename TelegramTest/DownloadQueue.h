@@ -15,12 +15,8 @@
 +(dispatch_queue_t)nativeQueue;
 
 + (void)dispatchOnStageQueue:(dispatch_block_t)block;
-
 + (void)dispatchOnStageQueue:(dispatch_block_t)block synchronous:(BOOL)synchronous;
-
-
 + (void)dispatchOnDownloadQueue:(dispatch_block_t)block;
-
 + (void)dispatchOnDownloadQueue:(dispatch_block_t)block synchronous:(BOOL)synchronous;
 
 +(void)addAndStartItem:(DownloadItem *)item;

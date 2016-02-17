@@ -20,22 +20,32 @@
 
 -(SelectUserItem *)rowItem;
 
+@property (nonatomic,strong) TMView *animatedBackground;
+
 
 @end
 
 @implementation SelectUserRowView
-static int offsetEditable = 30;
+
 - (id)initWithFrame:(NSRect)frame
 {
     self = [super initWithFrame:frame];
     if (self) {
+        
+        _animatedBackground = [[TMView alloc] initWithFrame:self.bounds];
+        _animatedBackground.backgroundColor = LIGHT_GRAY_BORDER_COLOR;
+        [_animatedBackground setHidden:YES];
+        [self addSubview:_animatedBackground];
+        
+        
         [self setSelectedBackgroundColor: NSColorFromRGB(0xfafafa)];
         [self setNormalBackgroundColor:NSColorFromRGB(0xffffff)];
         self.avatarImageView = [TMAvatarImageView standartMessageTableAvatar];
         
         [self addSubview:self.avatarImageView];
-
         
+       
+
         _titleTextField = [[TMNameTextField alloc] init];
         [self.titleTextField setEditable:NO];
         [self.titleTextField setBordered:NO];
@@ -44,10 +54,8 @@ static int offsetEditable = 30;
         [[self.titleTextField cell] setLineBreakMode:NSLineBreakByTruncatingTail];
         [[self.titleTextField cell] setTruncatesLastVisibleLine:YES];
         
-        [self.titleTextField setSelector:@selector(chatInfoTitle)];
+        [_titleTextField setSelector:@selector(dialogTitle)];
         [self addSubview:self.titleTextField];
-        
-        
         
         _lastSeenTextField = [[TMStatusTextField alloc] init];
         [self.lastSeenTextField setEditable:NO];
@@ -56,30 +64,24 @@ static int offsetEditable = 30;
         [self.lastSeenTextField setFont:TGSystemFont(12)];
         [[self.lastSeenTextField cell] setLineBreakMode:NSLineBreakByTruncatingTail];
         [[self.lastSeenTextField cell] setTruncatesLastVisibleLine:YES];
-        [self.lastSeenTextField setSelector:@selector(statusForGroupInfo)];
+        [self.lastSeenTextField setSelector:@selector(statusForSearchTableView)];
         [self.lastSeenTextField setTextColor:GRAY_TEXT_COLOR];
         [self addSubview:self.lastSeenTextField];
         
-        
-        
         self.selectButton = [[BTRButton alloc] initWithFrame:NSMakeRect(20, roundf((50 - image_ComposeCheckActive().size.height )/ 2), image_ComposeCheckActive().size.width, image_ComposeCheckActive().size.height)];
-       // [self.selectButton setAutoresizingMask:NSViewMinXMargin];
 
-        weakify();
+        weak();
         
         [self.selectButton setBackgroundImage:image_ComposeCheck() forControlState:BTRControlStateNormal];
         [self.selectButton setBackgroundImage:image_ComposeCheck() forControlState:BTRControlStateHover];
         [self.selectButton setBackgroundImage:image_ComposeCheck() forControlState:BTRControlStateHighlighted];
         [self.selectButton setBackgroundImage:image_ComposeCheckActive() forControlState:BTRControlStateSelected];
         [self.selectButton addBlock:^(BTRControlEvents events) {
-            [strongSelf mouseDown:[NSApp currentEvent]];
+            [weakSelf mouseDown:[NSApp currentEvent]];
         } forControlEvents:BTRControlEventLeftClick];
-        
         
         [self addSubview:self.selectButton];
 
-        
-        
     }
     return self;
 }
@@ -88,17 +90,21 @@ static int offsetEditable = 30;
     
     [super redrawRow];
     
-    [self.titleTextField setUser:[self rowItem].user];
-    
-   // [self.titleTextField setAttributedStringValue:[self rowItem].title];
-    
-    [self.lastSeenTextField setUser:[self rowItem].user];
+    if([self rowItem].user) {
+        [self.titleTextField setUser:[self rowItem].user];
+        [self.lastSeenTextField setUser:[self rowItem].user];
+        [self.avatarImageView setUser:[self rowItem].user];
+    } else {
+        [self.titleTextField setChat:[self rowItem].chat];
+        [self.lastSeenTextField setChat:[self rowItem].chat];
+        [self.avatarImageView setChat:[self rowItem].chat];
+    }
     
     if([self rowItem].isSearchUser) {
         [self.lastSeenTextField setUser:nil];
-        [self.lastSeenTextField setStringValue:[NSString stringWithFormat:@"@%@",[self rowItem].user.username]];
+        [self.lastSeenTextField setChat:nil];
+        [self.lastSeenTextField setStringValue:[NSString stringWithFormat:@"@%@",[self rowItem].user ? [self rowItem].user.username : [self rowItem].chat.username]];
     }
-
     
     [self setSelected:[[self rowItem] isSelected]];
     [self.selectButton setHidden:![self isEditable]];
@@ -107,35 +113,37 @@ static int offsetEditable = 30;
     
     [self.lastSeenTextField sizeToFit];
     
-   
-    
-  //  [self.titleTextField setFrameSize:[self rowItem].titleSize];
-    //[self.lastSeenTextField setFrameSize:[self rowItem].lastSeenSize];
-    
     [self.selectButton setFrameOrigin:[self selectOrigin]];
     
+    [self.avatarImageView setFrameOrigin:NSMakePoint(self.xOffset, 0)];
+    [self.avatarImageView setCenteredYByView:self.avatarImageView.superview];
     
-    [self.titleTextField setFrameOrigin:self.isEditable ? [self rowItem].titlePoint : [self rowItem].noSelectTitlePoint];
-    [self.lastSeenTextField setFrameOrigin:self.isEditable ? [self rowItem].lastSeenPoint : [self rowItem].noSelectLastSeenPoint];
-        
-    [self.avatarImageView setFrameOrigin:self.isEditable ? [self rowItem].avatarPoint : [self rowItem].noSelectAvatarPoint];
+    [self.lastSeenTextField setFrameOrigin:NSMakePoint(self.xOffset + NSWidth(self.avatarImageView.frame) + 10, NSHeight(self.frame)/2 - NSHeight(self.titleTextField.frame) )];
+    [self.titleTextField setFrameOrigin:NSMakePoint(self.xOffset + NSWidth(self.avatarImageView.frame) + 10, NSHeight(self.frame)/2 )];
+  
     
-    
-    [self.avatarImageView setUser:[self rowItem].user];
     [self setNeedsDisplay:YES];
     
 }
 
+-(int)xOffset {
+    return 12;
+}
+
 -(NSPoint)selectOrigin {
-    return NSMakePoint([self isEditable] ? 20 : 0, NSMinY(self.selectButton.frame));
+    return NSMakePoint(NSWidth(self.frame) - self.xOffset - NSWidth(self.selectButton.frame), NSMinY(self.selectButton.frame));
 }
 
 -(void)setFrameSize:(NSSize)newSize {
     [super setFrameSize:newSize];
     
-    [self.titleTextField setFrameSize:NSMakeSize(newSize.width - self.titleTextField.frame.origin.x - 14, self.titleTextField.frame.size.height)];
+    [self.titleTextField setFrameSize:NSMakeSize(newSize.width - self.titleTextField.frame.origin.x - self.xOffset - NSWidth(self.selectButton.frame) - 5, self.titleTextField.frame.size.height)];
     
-     [self.lastSeenTextField setFrameSize:NSMakeSize(newSize.width - self.lastSeenTextField.frame.origin.x - 14, self.lastSeenTextField.frame.size.height)];
+    [self.lastSeenTextField setFrameSize:NSMakeSize(newSize.width - self.lastSeenTextField.frame.origin.x - self.xOffset - NSWidth(self.selectButton.frame) - 5, self.lastSeenTextField.frame.size.height)];
+    
+    [self.selectButton setFrameOrigin:[self selectOrigin]];
+    
+    [_animatedBackground setFrameSize:newSize];
 }
 
 
@@ -147,16 +155,14 @@ static int offsetEditable = 30;
             return;
         }
         
-        if([self rowItem].user.n_id != [UsersManager currentUserId]) {
-            [self setSelected:[self rowItem].isSelected animation:YES];
+
+        [self setSelected:[self rowItem].isSelected animation:YES];
             
-            [((SelectUsersTableView *)[self rowItem].table).selectDelegate selectTableDidChangedItem:[self rowItem]];
-        }
+        [((SelectUsersTableView *)[self rowItem].table).selectDelegate selectTableDidChangedItem:[self rowItem]];
         
     }
     
 }
-
 
 - (BOOL)isEditable {
     return [(SelectUsersTableView *)[self rowItem].table selectLimit] > 0;
@@ -164,9 +170,9 @@ static int offsetEditable = 30;
 
 - (void)setEditable:(BOOL)editable animation:(BOOL)animation {
     
-   // animation = NO;
     static float duration = 0.1f;
     
+    weak();
     
     if((!self.visibleRect.size.width && !self.visibleRect.size.height) || !animation) {
         
@@ -180,7 +186,6 @@ static int offsetEditable = 30;
         return;
     }
     
-    
     int oldOpacity = self.selectButton.layer.opacity;
     
     [self.selectButton.layer setOpacity:editable ? 0 : 1];
@@ -188,13 +193,12 @@ static int offsetEditable = 30;
     [self.selectButton setHidden:oldOpacity == 0 && !editable];
     
     
-    
     POPBasicAnimation *position = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerPositionX];
     position.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut];
     position.toValue = @(editable ? 20 : 0);
     position.duration = duration;
     [position setCompletionBlock:^(POPAnimation *anim, BOOL result) {
-        [self.selectButton setFrameOrigin:[self selectOrigin]];
+        [weakSelf.selectButton setFrameOrigin:[weakSelf selectOrigin]];
     }];
     
     
@@ -207,7 +211,7 @@ static int offsetEditable = 30;
     opacityAnim.duration = duration;
     [opacityAnim setCompletionBlock:^(POPAnimation *anim, BOOL result) {
         if(result) {
-            [self.selectButton setHidden:!editable];
+            [weakSelf.selectButton setHidden:!editable];
         }
     }];
     [self.selectButton.layer pop_addAnimation:opacityAnim forKey:@"opacity"];
@@ -224,13 +228,12 @@ static int offsetEditable = 30;
 }
 
 -(void)checkSelected:(BOOL)isSelected {
- //   [self.lastSeenTextField setSelected:isSelected];
-  //  [self.titleTextField setSelected:isSelected];
-}
 
+}
 
 - (void)setSelected:(BOOL)isSelected animation:(BOOL)animation {
     
+    weak();
     
     [self.selectButton setSelected:isSelected];
     
@@ -255,7 +258,30 @@ static int offsetEditable = 30;
     }
     
     if(animation) {
-        float duration = 1 / 18.f;
+        
+        [self.animatedBackground setHidden:NO];
+        
+        [self.animatedBackground setAlphaValue:0];
+        
+        [NSAnimationContext runAnimationGroup:^(NSAnimationContext * _Nonnull context) {
+            
+            [context setDuration:0.1];
+            [[_animatedBackground animator] setAlphaValue:1.0];
+            
+        } completionHandler:^{
+            
+            [NSAnimationContext runAnimationGroup:^(NSAnimationContext * _Nonnull context) {
+                
+                [[_animatedBackground animator] setAlphaValue:0];
+                
+            } completionHandler:^{
+                [[_animatedBackground animator] setAlphaValue:0];
+                [_animatedBackground setHidden:YES];
+            }];
+            
+        }];
+        
+        float duration = 0.2;
         float to = 0.9;
         
         POPBasicAnimation *scaleAnimation = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerScaleXY];
@@ -268,12 +294,11 @@ static int offsetEditable = 30;
                 scaleAnimation.fromValue  = [NSValue valueWithCGSize:CGSizeMake(to, to)];
                 scaleAnimation.toValue  = [NSValue valueWithCGSize:CGSizeMake(1.0f, 1.0f)];
                 scaleAnimation.duration = duration / 2;
-                [self.selectButton.layer pop_addAnimation:scaleAnimation forKey:@"scale"];
+                [weakSelf.selectButton.layer pop_addAnimation:scaleAnimation forKey:@"scale"];
             }
         }];
         
         [self.selectButton.layer pop_addAnimation:scaleAnimation forKey:@"scale"];
-        
         
     }
 }
@@ -285,16 +310,10 @@ static int offsetEditable = 30;
 - (void)drawRect:(NSRect)dirtyRect
 {
 	[super drawRect:dirtyRect];
+    [DIALOG_BORDER_COLOR setFill];
     
-    NSPoint point = self.isEditable ? [self rowItem].titlePoint : [self rowItem].noSelectTitlePoint;
-	
-    [LIGHT_GRAY_BORDER_COLOR setFill];
-    
-    NSRectFill(NSMakeRect(point.x+2, 0, NSWidth(self.frame) - point.x - 10, 1));
-//    
-//    [NSColorFromRGB(arc4random() % 16000000) setFill];
-//    
-//    NSRectFill(self.frame);
+    NSRectFill(NSMakeRect(NSMinX(self.titleTextField.frame), 0, NSWidth(self.frame) -  NSMinX(self.titleTextField.frame), 1));
+
 }
 
 

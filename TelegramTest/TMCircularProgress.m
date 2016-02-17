@@ -63,10 +63,10 @@
         
        // [self.cancelView setCenterByView:self];
 
-        weakify();
+        weak();
         [self.cancelView addBlock:^(BTRControlEvents events) {
-            if(strongSelf.cancelCallback) {
-                strongSelf.cancelCallback();
+            if(weakSelf.cancelCallback) {
+                weakSelf.cancelCallback();
             }
         } forControlEvents:BTRControlEventMouseDownInside];
         

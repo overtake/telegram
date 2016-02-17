@@ -8,6 +8,7 @@
 
 #import "TGMessagesStickerImageObject.h"
 #import "DownloadPhotoItem.h"
+#import "DownloadQueue.h"
 @implementation TGMessagesStickerImageObject
 
 @synthesize supportDownloadListener = _supportDownloadListener;
@@ -33,11 +34,13 @@
     weak();
     
     [self.downloadListener setCompleteHandler:^(DownloadItem * item) {
-        weakSelf.isLoaded = YES;
-        
-        [weakSelf _didDownloadImage:item];
-        weakSelf.downloadItem = nil;
-        weakSelf.downloadListener = nil;
+        [DownloadQueue dispatchOnDownloadQueue:^{
+            weakSelf.isLoaded = YES;
+            
+            [weakSelf _didDownloadImage:item];
+            weakSelf.downloadItem = nil;
+            weakSelf.downloadListener = nil;
+        }];
     }];
     
     

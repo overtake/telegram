@@ -18,7 +18,51 @@
 #import "MessageTableHeaderItem.h"
 #import "TGTimer.h"
 
+@interface TGSecretChatInactiveCap : TMView
+@property (nonatomic,strong) TMTextField *textField;
+@end
 
+@implementation TGSecretChatInactiveCap
+
+-(instancetype)initWithFrame:(NSRect)frameRect {
+    if(self = [super initWithFrame:frameRect]) {
+        
+        self.wantsLayer = YES;
+        self.layer.cornerRadius = 4;
+        self.layer.borderWidth = 2;
+        self.layer.borderColor = GRAY_BORDER_COLOR.CGColor;
+        self.layer.backgroundColor = [NSColor whiteColor].CGColor;
+        
+        _textField = [TMTextField defaultTextField];
+        [[_textField cell] setLineBreakMode:NSLineBreakByWordWrapping];
+        [_textField setFont:TGSystemFont(15)];
+        [_textField setAlignment:NSCenterTextAlignment];
+        [_textField setTextColor:GRAY_TEXT_COLOR];
+        
+        [_textField setStringValue:NSLocalizedString(@"Secret.InactiveCap", nil)];
+        
+       
+        
+        [self addSubview:_textField];
+        
+        
+        
+    }
+    return self;
+}
+
+-(void)setFrame:(NSRect)frame {
+    [super setFrame:frame];
+    
+    NSSize size = [_textField.attributedStringValue sizeForTextFieldForWidth:NSWidth(frame) - 60];
+    
+    [_textField setFrameSize:size];
+    
+    [_textField setCenterByView:self];
+    
+}
+
+@end
 
 
 
@@ -38,6 +82,12 @@
 
 @property (nonatomic,strong) TGTimer *timer;
 
+@property (nonatomic,strong) TGSecretChatInactiveCap *secretChatInactiveCap;
+
+@property (nonatomic,strong) MessageTableItem *topItem;
+@property (nonatomic,assign) NSRect topItemRect;
+@property (nonatomic,assign) int yTopOffset;
+
 @end
 
 
@@ -48,6 +98,9 @@
 - (id)initWithFrame:(NSRect)frame{
     self = [super initWithFrame:frame];
     if (self) {
+        
+        _secretChatInactiveCap = [[TGSecretChatInactiveCap alloc] initWithFrame:self.bounds];
+        
         
         
 //        self.wantsLayer = YES;
@@ -63,6 +116,38 @@
         [SelectTextManager addSelectManagerDelegate:self];
     }
     return self;
+}
+
+-(void)viewDidMoveToWindow {
+    
+    [super viewDidMoveToWindow];
+    
+    
+    if(self.window) {
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_didChangedWindowKey:) name:NSWindowDidBecomeKeyNotification object:self.window];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_didChangedWindowKey:) name:NSWindowDidResignKeyNotification object:self.window];
+        
+    }
+}
+
+
+-(void)_didChangedWindowKey:(NSNotification *)notification {
+    if(self.viewController.conversation.type == DialogTypeSecretChat) {
+        
+        if(self.viewController.conversation.encryptedChat.encryptedParams.ttl > 0) {
+            
+            NSWindow *window = notification.object;
+            
+            if(window.isKeyWindow) {
+                [_secretChatInactiveCap removeFromSuperview];
+            } else {
+                [_secretChatInactiveCap setFrame:NSMakeRect(2, 2, NSWidth(self.frame) - 4, NSHeight(self.frame) - 4)];
+                [self addSubview:_secretChatInactiveCap];
+            }
+            
+        }
+        
+    }
 }
 
 -(void)scrollDidChangeFrameSize:(NSSize)size {
@@ -113,6 +198,14 @@
     self.oldSize = self.frame.size;
     
     if([self inLiveResize]) {
+        
+        if(!_topItem) {
+            NSRange visibleRows = [self rowsInRect:self.scrollView.contentView.bounds];
+            _topItem = (MessageTableItem *)[self itemByPosition:visibleRows.location + visibleRows.length -1];
+            _topItemRect = [self rectOfRow:visibleRows.location + visibleRows.length -1 ];
+            _yTopOffset =  self.scrollView.documentOffset.y + NSHeight(self.containerView.frame) - (_topItemRect.origin.y);
+        }
+        
         NSRange visibleRows = [self rowsInRect:self.scrollView.contentView.bounds];
         if(visibleRows.length > 0) {
             [NSAnimationContext beginGrouping];
@@ -139,7 +232,11 @@
                 [cell resizeAndRedraw];
             }
             
+            
+            
             [NSAnimationContext endGrouping];
+            
+            [self scrollToItemInLiveResize];
         }
         
         
@@ -148,6 +245,23 @@
     } else {
         [self fixedResize];
     }
+}
+
+-(void)scrollToItemInLiveResize {
+    __block NSRect drect = [self rectOfRow:[self indexOfItem:_topItem]];
+    
+    
+    dispatch_block_t block = ^{
+        
+        drect.origin.y -= (NSHeight(self.containerView.frame)  -_yTopOffset);
+        
+        drect.origin.y = MAX(0,drect.origin.y);
+        
+        [self.scrollView scrollToPoint:drect.origin animation:NO];
+        
+    };
+    
+    block();
 }
 
 - (void)fixedResize {
@@ -206,46 +320,114 @@
     }];
 }
 
+-(void)checkStartScroll {
+    if(!_timer) {
+         [self checkAndScroll:[self.scrollView convertPoint:[self.window mouseLocationOutsideOfEventStream] fromView:nil]];
+    }
+}
+
 -(NSUInteger)indexOfItem:(NSObject *)item {
     return [[self.viewController messageList] indexOfObject:item];
 }
 
 
+//-(void)checkAndScroll:(NSPoint)point {
+//    
+//    //
+//    //    NSPoint topCorner = NSMakePoint(0, roundf(NSHeight(self.scrollView.frame) - 70));
+//    //
+//    //
+//    //    NSPoint botCorner = NSMakePoint(0, 70);
+//    //
+//    //    int counter = 0;
+//    //
+//    //    BOOL next = YES;
+//    //
+//    //    if(point.y > topCorner.y) {
+//    //
+//    //        counter = abs(point.y - topCorner.y - 20);
+//    //
+//    //        [self.scrollView scrollToPoint:NSMakePoint(self.scrollView.documentOffset.x, self.scrollView.documentOffset.y - counter) animation:NO];
+//    //
+//    //    } else if(point.y < botCorner.y) {
+//    //
+//    //        counter = abs(point.y - botCorner.y - 20);
+//    //
+//    //       [self.scrollView scrollToPoint:NSMakePoint(self.scrollView.documentOffset.x, self.scrollView.documentOffset.y + counter) animation:NO];
+//    //    } else
+//    //        next = NO;
+//    
+//}
+
 -(void)checkAndScroll:(NSPoint)point {
     
-//    
-//    NSPoint topCorner = NSMakePoint(0, roundf(NSHeight(self.scrollView.frame) - 70));
-//    
-//    
-//    NSPoint botCorner = NSMakePoint(0, 70);
-//    
-//    int counter = 0;
-//    
-//    BOOL next = YES;
-//    
-//    if(point.y > topCorner.y) {
-//        
-//        counter = abs(point.y - topCorner.y - 20);
-//        
-//        [self.scrollView scrollToPoint:NSMakePoint(self.scrollView.documentOffset.x, self.scrollView.documentOffset.y - counter) animation:NO];
-//        
-//    } else if(point.y < botCorner.y) {
-//        
-//        counter = abs(point.y - botCorner.y - 20);
-//        
-//       [self.scrollView scrollToPoint:NSMakePoint(self.scrollView.documentOffset.x, self.scrollView.documentOffset.y + counter) animation:NO];
-//    } else
-//        next = NO;
+    NSPoint topCorner = NSMakePoint(0, roundf(NSHeight(self.scrollView.frame) - 100));
     
+    NSPoint botCorner = NSMakePoint(0, 100);
+    
+    int counter = 0;
+    
+    BOOL next = YES;
+    
+    BOOL prev = NO;
+    
+    if(point.y > topCorner.y) {
+        
+        counter = fabs(point.y - topCorner.y  )/ 10;
+
+       [self.scrollView scrollToPoint:NSMakePoint(self.scrollView.documentOffset.x, self.scrollView.documentOffset.y - counter) animation:NO];
+        
+    } else if(point.y < botCorner.y) {
+        
+        prev = YES;
+        
+        counter = fabs(point.y - botCorner.y  ) / 10;
+        
+        [self.scrollView scrollToPoint:NSMakePoint(self.scrollView.documentOffset.x, self.scrollView.documentOffset.y + counter) animation:NO];
+    } else
+        next = NO;
+    
+    
+    if(next) {
+        if(_timer == nil)
+            [self startUpdateScrollTimerIfNeeded];
+    } else
+        [self stopUpdateScrollTimer];
+    
+    
+}
+
+
+-(void)startUpdateScrollTimerIfNeeded {
+    if(!_timer) {
+        
+        _timer = [[TGTimer alloc] initWithTimeout:0.016 repeat:YES completion:^{
+            
+            [self checkAndScroll:[self.scrollView convertPoint:[self.window mouseLocationOutsideOfEventStream] fromView:nil]];
+            
+        } queue:dispatch_get_current_queue()];
+        
+        
+        [_timer start];
+    }
+}
+
+-(void)stopUpdateScrollTimer {
+    [_timer invalidate];
+    _timer = nil;
 }
 
 -(void)mouseUp:(NSEvent *)theEvent {
     _startSelectPosition = NSMakePoint(INT32_MIN, INT32_MIN);
+    [self stopUpdateScrollTimer];
     [super mouseUp:theEvent];
 }
 
 -(void)mouseDragged:(NSEvent *)theEvent {
     [super mouseDragged:theEvent];
+    
+    if(_timer == nil)
+        [self checkAndScroll:[self.scrollView convertPoint:[theEvent locationInWindow] fromView:nil]];
     
     
     if(_startSelectPosition.x == INT32_MIN && _startSelectPosition.y == INT32_MIN)
@@ -406,6 +588,12 @@
     }
     
     [self reloadData];
+    
+    [self scrollToItemInLiveResize];
+    
+    _topItem = nil;
+    _topItemRect = NSZeroRect;
+    _yTopOffset = 0;
 }
 
 

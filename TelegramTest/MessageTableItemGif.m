@@ -41,9 +41,7 @@
         self.previewLocation = thumb.location;
         
         
-       
-        
-        if(thumb.bytes.length > 0) {
+       if(thumb.bytes.length > 0) {
             self.cachedThumb = [ImageUtils blurImage:[[NSImage alloc] initWithData:thumb.bytes] blurRadius:60 frameSize:self.blockSize];
             
             self.cachedThumb = [ImageUtils roundCorners:self.cachedThumb size:NSMakeSize(3, 3)];
@@ -53,7 +51,7 @@
         
          [self makeSizeByWidth:310];
         
-        [self checkStartDownload:[self.message.to_id isKindOfClass:[TL_peerChat class]] ? AutoGroupDocuments : AutoPrivateDocuments size:self.message.media.document.size];
+        [self checkStartDownload:[self.message.to_id isKindOfClass:[TL_peerChat class]] || [self.message.to_id isKindOfClass:[TL_peerChannel class]] ? AutoGroupDocuments : AutoPrivateDocuments size:self.message.media.document.size];
         
         
 
@@ -61,6 +59,15 @@
     return self;
 }
 
+
+
+- (void)checkStartDownload:(SettingsMask)setting size:(int)size {
+    
+    if(([self size] <= 10*1024*1024 && !self.downloadItem && !self.isset) || (self.downloadItem && self.downloadItem.downloadState != DownloadStateCanceled)) {
+        [self startDownload:NO force:YES];
+    }
+    
+}
 
 -(BOOL)makeSizeByWidth:(int)width {
     
@@ -94,7 +101,10 @@
 }
 
 -(DownloadItem *)downloadItem {
-    return [DownloadQueue find:self.message.media.document.n_id];
+    if(super.downloadItem == nil)
+        [super setDownloadItem:[DownloadQueue find:self.message.media.document.n_id]];
+    
+    return [super downloadItem];
 }
 
 -(Class)downloadClass {

@@ -46,7 +46,7 @@ static NSImage *playImage() {
         [image_PlayIconWhite() drawInRect:NSMakeRect(roundf((48 - image_PlayIconWhite().size.width)/2) + 2, roundf((48 - image_PlayIconWhite().size.height)/2) , image_PlayIconWhite().size.width, image_PlayIconWhite().size.height) fromRect:NSZeroRect operation:NSCompositeHighlight fraction:1];
         [image unlockFocus];
     });
-    return image;//image_VideoPlay();
+    return image;
 }
 
 - (id)initWithFrame:(NSRect)frame
@@ -103,17 +103,24 @@ static NSImage *playImage() {
 - (NSMenu *)contextMenu {
     NSMenu *menu = [[NSMenu alloc] initWithTitle:@"Documents menu"];
     
+    weak();
+    
     if([self.item isset]) {
-        [menu addItem:[NSMenuItem menuItemWithTitle:NSLocalizedString(@"Message.File.ShowInFinder", nil) withBlock:^(id sender) {
-            [[NSWorkspace sharedWorkspace] activateFileViewerSelectingURLs:@[[NSURL fileURLWithPath:((MessageTableItemDocument *)self.item).path]]];
-        }]];
+        
+        if(![self.item.message isKindOfClass:[TL_destructMessage class]]) {
+            [menu addItem:[NSMenuItem menuItemWithTitle:NSLocalizedString(@"Message.File.ShowInFinder", nil) withBlock:^(id sender) {
+                [[NSWorkspace sharedWorkspace] activateFileViewerSelectingURLs:@[[NSURL fileURLWithPath:((MessageTableItemDocument *)weakSelf.item).path]]];
+            }]];
+        }
+        
+        
         
         [menu addItem:[NSMenuItem menuItemWithTitle:NSLocalizedString(@"Context.SaveAs", nil) withBlock:^(id sender) {
-            [self performSelector:@selector(saveAs:) withObject:self];
+            [weakSelf performSelector:@selector(saveAs:) withObject:weakSelf];
         }]];
         
         [menu addItem:[NSMenuItem menuItemWithTitle:NSLocalizedString(@"Context.CopyToClipBoard", nil) withBlock:^(id sender) {
-            [self performSelector:@selector(copy:) withObject:self];
+            [weakSelf performSelector:@selector(copy:) withObject:weakSelf];
         }]];
         
         
@@ -256,11 +263,13 @@ static NSImage *playImage() {
 }
 
 - (void)setCellState:(CellState)cellState {
+    
     [super setCellState:cellState];
     
     [self.playImage setHidden:YES];
     
     [self.progressView setState:cellState];
+    
 }
 
 - (void) setItem:(MessageTableItemGif *)item {
@@ -290,8 +299,6 @@ static NSImage *playImage() {
      [self.imageView setFrameSize:item.blockSize];
     
     [self.progressView setCenterByView:self.imageView];
-    
-    
     
     
 }

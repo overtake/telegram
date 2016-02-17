@@ -26,11 +26,32 @@
     
     NSString *string = self;
     
-//    string = [string stringByReplacingOccurrencesOfString:@" -- " withString:@" — "];
-//    string = [string stringByReplacingOccurrencesOfString:@"<<" withString:@"«"];
-//    string = [string stringByReplacingOccurrencesOfString:@">>" withString:@"»"];
+    while ([string rangeOfCharacterFromSet:[NSCharacterSet whitespaceCharacterSet]].location == 0 || [string rangeOfString:@"\n"].location == 0) {
+        string = [string substringFromIndex:1];
+    }
     
-    return string;
+
+    NSMutableString *replaceSlowCoreTextCharacters = [[NSMutableString alloc] init];
+    
+    [string enumerateSubstringsInRange: NSMakeRange(0, [string length]) options:NSStringEnumerationByComposedCharacterSequences usingBlock:
+     ^(NSString *substring, NSRange substringRange, NSRange enclosingRange, BOOL *stop){
+         
+        
+         if(substring.length == 2) {
+             NSString *special = [substring substringFromIndex:1];
+             
+             if([special isEqualToString:@"\u0335"] || [special isEqualToString:@"\u0336"] || [special isEqualToString:@"\u0337"] || [special isEqualToString:@"\u0338"]) {
+                 [replaceSlowCoreTextCharacters appendString:[NSString stringWithFormat:@"-%@",[substring substringToIndex:1]]];
+                 return;
+             }
+         }
+         
+         [replaceSlowCoreTextCharacters appendString:substring];
+         
+     }];
+
+    
+    return replaceSlowCoreTextCharacters;
 }
 
 -(NSString *)fixEmoji {
@@ -1005,7 +1026,7 @@
              if (substring.length > 1) {
                 unichar ls = [substring characterAtIndex:1];
                 int uc = ((hs - 0xd800) * 0x400) + (ls - 0xdc00) + 0x10000;
-                if (0x1d000 <= uc && uc <= 0x1f77f) {
+                if (0x1d000 <= uc && uc <= 129300) {
                     
                     [temp setObject:substring forKey:@(uc)];
                 }

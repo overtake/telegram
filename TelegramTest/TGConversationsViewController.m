@@ -20,6 +20,8 @@
 #import "MessagesUtils.h"
 #import "TGModernConversationHistoryController.h"
 #import "TGHeadChatPanel.h"
+#import "TMAudioRecorder.h"
+#import "MessagesBottomView.h"
 @interface TestView : TMView
 
 @end
@@ -235,7 +237,7 @@
     NSMutableArray *items = [[NSMutableArray alloc] init];
     
     for(TL_conversation *conversation in all) {
-        if(!conversation.isAddToList)
+        if(!conversation.isAddToList || conversation.chat.isDeactivated)
             continue;
         
         TGConversationTableItem *item = [[TGConversationTableItem alloc] initWithConversation:conversation];
@@ -317,7 +319,7 @@
         
         [current enumerateObjectsUsingBlock:^(TL_conversation *obj, NSUInteger idx, BOOL *stop) {
             
-            if(!obj.isAddToList)
+            if(!obj.isAddToList || obj.chat.isDeactivated)
                 return;
             
             
@@ -368,7 +370,7 @@
 
 -(void)move:(int)position conversation:(TL_conversation *)conversation {
     
-    if(!conversation.isAddToList)
+    if(!conversation.isAddToList || conversation.chat.isDeactivated)
         return;
     
     if(position == 0 && conversation.top_message > TGMINFAKEID) {
@@ -410,6 +412,10 @@
 
 - (BOOL) selectionWillChange:(NSInteger)row item:(TGConversationTableItem *) item {
     
+    if([[TMAudioRecorder sharedInstance] isRecording]) {
+        return NO;
+    }
+    
     if([[Telegram rightViewController] isModalViewActive]) {
         [[Telegram rightViewController] modalViewSendAction:item.conversation];
         return NO;
@@ -420,6 +426,9 @@
 }
 
 - (void) selectionDidChange:(NSInteger)row item:(TGConversationTableItem *) item {
+    
+  
+    
     [[Telegram delegate].mainWindow.navigationController showMessagesViewController:item.conversation];
     
     [self.tableView setSelectedByHash:[item hash]];
@@ -506,7 +515,7 @@
         if(dialog.type == DialogTypeSecretChat) {
             [menu addItem:[NSMenuItem separatorItem]];
             NSMenuItem *deleteMenuItem = [NSMenuItem menuItemWithTitle:NSLocalizedString(@"Conversation.DeleteSecretChat", nil) withBlock:^(id sender) {
-                [[Telegram rightViewController].messagesViewController deleteDialog:dialog];
+                [appWindow().navigationController.messagesViewController deleteDialog:dialog];
             }];
             [menu addItem:deleteMenuItem];
         }

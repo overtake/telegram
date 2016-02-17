@@ -182,7 +182,7 @@
     NSMenu *menu = [[NSMenu alloc] init];
     
 
-    if([self.chat isKindOfClass:[TL_channel class]] && !self.chat.isManager)
+    if(([self.chat isKindOfClass:[TL_channel class]] || [self.chat isKindOfClass:[TL_channel_old43 class]]) && !self.chat.isManager)
         return;
     else
         if([self.chat isKindOfClass:[TL_chat class]] && !(!self.chat.isAdmins_enabled || self.chat.isAdmin))
@@ -337,37 +337,37 @@
     __block int lockId = [self lockId];
     __block AvatarUpdaterItem *updaterItem = nil;
     
-    weakify();
+    weak();
     
     dispatch_block_t groupBlock = ^{
-        [strongSelf calcProgress];
+        [weakSelf calcProgress];
         
         updaterItem.request = [RPCRequest sendRequest:request successHandler:^(RPCRequest *request, id response) {
-            if([self lockId] == lockId) {
-                [strongSelf calcProgress];
+            if([weakSelf lockId] == lockId) {
+                [weakSelf calcProgress];
             }
         } errorHandler:^(RPCRequest *request, RpcError *error) {
-            if([self lockId] == lockId) {
-                [strongSelf cancelUploading];
+            if([weakSelf lockId] == lockId) {
+                [weakSelf cancelUploading];
             }
         }];
     };
     
     dispatch_block_t userBlock = ^{
-        [strongSelf calcProgress];
+        [weakSelf calcProgress];
         
         updaterItem.request = [RPCRequest sendRequest:request successHandler:^(RPCRequest *request, id response) {
             
             [SharedManager proccessGlobalResponse:response];
             
-            if([self lockId] == lockId) {
-                [strongSelf calcProgress];
+            if([weakSelf lockId] == lockId) {
+                [weakSelf calcProgress];
             }
             
         } errorHandler:^(RPCRequest *request, RpcError *error) {
            
-            if([self lockId] == lockId) {
-                [strongSelf cancelUploading];
+            if([weakSelf lockId] == lockId) {
+                [weakSelf cancelUploading];
             }
         
         } timeout:10];

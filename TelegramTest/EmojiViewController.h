@@ -25,6 +25,8 @@
 +(void)reloadStickers;
 +(void)loadStickersIfNeeded;
 
++(void)hideStickerPreviewIfNeeded;
+
 +(NSDictionary *)allStickers;
 +(NSArray *)allSets;
 +(TL_stickerSet *)setWithId:(long)n_id;

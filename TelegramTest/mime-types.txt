@@ -196,3 +196,4 @@ webp:image/webp
 zip:application/zip
 7z:application/zip
 dmg:application/zip
+mp4:video/mp4

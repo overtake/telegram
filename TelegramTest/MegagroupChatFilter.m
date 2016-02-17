@@ -18,4 +18,9 @@
     return HistoryFilterChannelMessage | HistoryFilterNone;
 }
 
+-(void)setState:(ChatHistoryState)state next:(BOOL)next {
+    [super setState:state next:next];
+    
+}
+
 @end

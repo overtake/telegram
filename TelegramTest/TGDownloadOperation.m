@@ -175,6 +175,7 @@
     
     TLAPI_upload_getFile *upload = [TLAPI_upload_getFile createWithLocation:part.item.input offset:part.offset limit:self.partSize];
     
+
     part.request = [RPCRequest sendRequest:upload forDc:part.dcId successHandler:^(RPCRequest *request, id response) {
         
             TLupload_File *obj = response;
@@ -312,6 +313,8 @@
     
 }
 
-
+-(void)dealloc {
+    
+}
 
 @end

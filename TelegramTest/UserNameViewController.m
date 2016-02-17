@@ -303,38 +303,36 @@
     [self setCenterBarViewText:NSLocalizedString(@"Profile.ChangeUserName", nil)];
     
     
-    weakify();
+    weak();
     self.doneButton = [TMTextButton standartUserProfileNavigationButtonWithTitle:NSLocalizedString(@"Username.setName", nil)];
     [self.doneButton setTapBlock:^{
         
+        [weakSelf showModalProgress];
         
-        [strongSelf showModalProgress];
-        
-        if(self.channel != nil) {
-            [[ChatsManager sharedManager] updateChannelUserName:((UserNameViewContainer *)strongSelf.view).checkedUserName channel:strongSelf.channel completeHandler:^(TL_channel *channel) {
-                [strongSelf hideModalProgress];
+        if(weakSelf.channel != nil) {
+            [[ChatsManager sharedManager] updateChannelUserName:((UserNameViewContainer *)weakSelf.view).checkedUserName channel:weakSelf.channel completeHandler:^(TL_channel *channel) {
+                [weakSelf hideModalProgress];
                 
                 
-                [((UserNameViewContainer *)strongSelf.view) controlTextDidChange:nil];
+                [((UserNameViewContainer *)weakSelf.view) controlTextDidChange:nil];
                 
-                if(strongSelf.completionHandler != nil) {
-                    strongSelf.completionHandler();
+                if(weakSelf.completionHandler != nil) {
+                    weakSelf.completionHandler();
                 }
 
             } errorHandler:^(NSString *error) {
                 alert(error, error);
-                [strongSelf hideModalProgress];
+                [weakSelf hideModalProgress];
             }];
         } else {
-            [[UsersManager sharedManager] updateUserName:((UserNameViewContainer *)strongSelf.view).checkedUserName completeHandler:^(TLUser *user) {
+            [[UsersManager sharedManager] updateUserName:((UserNameViewContainer *)weakSelf.view).checkedUserName completeHandler:^(TLUser *user) {
                 
-                [strongSelf hideModalProgress];
+                [weakSelf hideModalProgress];
+                [((UserNameViewContainer *)weakSelf.view) controlTextDidChange:nil];
                 
-                
-                [((UserNameViewContainer *)strongSelf.view) controlTextDidChange:nil];
             } errorHandler:^(NSString *error) {
                 alert(error, error);
-                [strongSelf hideModalProgress];
+                [weakSelf hideModalProgress];
             }];
 
         }

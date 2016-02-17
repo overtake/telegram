@@ -300,6 +300,10 @@ static TGEnterPasswordPanel *panel;
     return [[Telegram mainViewController] isSingleLayout];
 }
 
++(BOOL)isTripleLayout {
+    return [[Telegram mainViewController] isTripleLayout];
+}
+
 
 +(void)saveHashTags:(NSString *)message peer_id:(int)peer_id {
     

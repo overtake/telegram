@@ -188,8 +188,12 @@
     [self.switchControl setFrameOrigin:NSMakePoint(NSWidth(self.frame) - item.xOffset - NSWidth(self.switchControl.frame), 10)];
     
     [self.selectedImageView setFrameOrigin:NSMakePoint(NSWidth(self.frame) - item.xOffset - NSWidth(self.selectedImageView.frame), 10)];
+        
+   // [_selectedImageView setCenteredYByView:_selectedImageView.superview];
     
     [self.nextImage setFrameOrigin:NSMakePoint(NSWidth(self.frame) - item.xOffset - image_ArrowGrey().size.width - 4, 14)];
+    
+    
     
     [self.lockedIndicator setFrameOrigin:NSMakePoint(NSWidth(self.frame) - item.xOffset - NSWidth(self.lockedIndicator.frame), 10)];
     
@@ -218,7 +222,10 @@
         NSImage *image = item.stateback(item);
         
         if([image isKindOfClass:[NSImage class]]) {
-            [image drawInRect:NSMakeRect(NSWidth(self.frame) - item.xOffset - image_ArrowGrey().size.width - image.size.width - 8, 13 , image.size.width, image.size.height) fromRect:NSZeroRect operation:NSCompositeHighlight fraction:1];
+            
+            int y = roundf(NSHeight(self.frame)/2 - image.size.height/2);
+            
+            [image drawInRect:NSMakeRect(NSWidth(self.frame) - item.xOffset - image_ArrowGrey().size.width - image.size.width - 8, y , image.size.width, image.size.height) fromRect:NSZeroRect operation:NSCompositeHighlight fraction:1];
         }
     }
     

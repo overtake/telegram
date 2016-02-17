@@ -2,7 +2,7 @@
 //  TLApi.m
 //  Telegram
 //
-//  Auto created by Mikhail Filimonov on 27.11.15..
+//  Auto created by Mikhail Filimonov on 13.02.16..
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -418,19 +418,6 @@
 }
 @end
 
-@implementation TLAPI_contacts_getSuggested
-+(TLAPI_contacts_getSuggested*)createWithLimit:(int)limit {
-    TLAPI_contacts_getSuggested* obj = [[TLAPI_contacts_getSuggested alloc] init];
-    obj.limit = limit;
-    return obj;
-}
-- (NSData*)getData {
-	SerializedData* stream = [ClassStore streamWithConstuctor:-847825880];
-	[stream writeInt:self.limit];
-	return [stream getOutput];
-}
-@end
-
 @implementation TLAPI_contacts_deleteContact
 +(TLAPI_contacts_deleteContact*)createWithN_id:(TLInputUser*)n_id {
     TLAPI_contacts_deleteContact* obj = [[TLAPI_contacts_deleteContact alloc] init];
@@ -590,10 +577,11 @@
 @end
 
 @implementation TLAPI_messages_getHistory
-+(TLAPI_messages_getHistory*)createWithPeer:(TLInputPeer*)peer offset_id:(int)offset_id add_offset:(int)add_offset limit:(int)limit max_id:(int)max_id min_id:(int)min_id {
++(TLAPI_messages_getHistory*)createWithPeer:(TLInputPeer*)peer offset_id:(int)offset_id offset_date:(int)offset_date add_offset:(int)add_offset limit:(int)limit max_id:(int)max_id min_id:(int)min_id {
     TLAPI_messages_getHistory* obj = [[TLAPI_messages_getHistory alloc] init];
     obj.peer = peer;
 	obj.offset_id = offset_id;
+	obj.offset_date = offset_date;
 	obj.add_offset = add_offset;
 	obj.limit = limit;
 	obj.max_id = max_id;
@@ -601,9 +589,10 @@
     return obj;
 }
 - (NSData*)getData {
-	SerializedData* stream = [ClassStore streamWithConstuctor:-1970355494];
+	SerializedData* stream = [ClassStore streamWithConstuctor:-1347868602];
 	[ClassStore TLSerialize:self.peer stream:stream];
 	[stream writeInt:self.offset_id];
+	[stream writeInt:self.offset_date];
 	[stream writeInt:self.add_offset];
 	[stream writeInt:self.limit];
 	[stream writeInt:self.max_id];
@@ -1981,10 +1970,11 @@
 @end
 
 @implementation TLAPI_channels_getImportantHistory
-+(TLAPI_channels_getImportantHistory*)createWithChannel:(TLInputChannel*)channel offset_id:(int)offset_id add_offset:(int)add_offset limit:(int)limit max_id:(int)max_id min_id:(int)min_id {
++(TLAPI_channels_getImportantHistory*)createWithChannel:(TLInputChannel*)channel offset_id:(int)offset_id offset_date:(int)offset_date add_offset:(int)add_offset limit:(int)limit max_id:(int)max_id min_id:(int)min_id {
     TLAPI_channels_getImportantHistory* obj = [[TLAPI_channels_getImportantHistory alloc] init];
     obj.channel = channel;
 	obj.offset_id = offset_id;
+	obj.offset_date = offset_date;
 	obj.add_offset = add_offset;
 	obj.limit = limit;
 	obj.max_id = max_id;
@@ -1992,9 +1982,10 @@
     return obj;
 }
 - (NSData*)getData {
-	SerializedData* stream = [ClassStore streamWithConstuctor:-575067701];
+	SerializedData* stream = [ClassStore streamWithConstuctor:-1891021902];
 	[ClassStore TLSerialize:self.channel stream:stream];
 	[stream writeInt:self.offset_id];
+	[stream writeInt:self.offset_date];
 	[stream writeInt:self.add_offset];
 	[stream writeInt:self.limit];
 	[stream writeInt:self.max_id];
@@ -2525,6 +2516,157 @@
                 break;
 		}
 	}
+	return [stream getOutput];
+}
+@end
+
+@implementation TLAPI_messages_getDocumentByHash
++(TLAPI_messages_getDocumentByHash*)createWithSha256:(NSData*)sha256 size:(int)size mime_type:(NSString*)mime_type {
+    TLAPI_messages_getDocumentByHash* obj = [[TLAPI_messages_getDocumentByHash alloc] init];
+    obj.sha256 = sha256;
+	obj.size = size;
+	obj.mime_type = mime_type;
+    return obj;
+}
+- (NSData*)getData {
+	SerializedData* stream = [ClassStore streamWithConstuctor:864953444];
+	[stream writeByteArray:self.sha256];
+	[stream writeInt:self.size];
+	[stream writeString:self.mime_type];
+	return [stream getOutput];
+}
+@end
+
+@implementation TLAPI_messages_searchGifs
++(TLAPI_messages_searchGifs*)createWithQ:(NSString*)q offset:(int)offset {
+    TLAPI_messages_searchGifs* obj = [[TLAPI_messages_searchGifs alloc] init];
+    obj.q = q;
+	obj.offset = offset;
+    return obj;
+}
+- (NSData*)getData {
+	SerializedData* stream = [ClassStore streamWithConstuctor:-1080395925];
+	[stream writeString:self.q];
+	[stream writeInt:self.offset];
+	return [stream getOutput];
+}
+@end
+
+@implementation TLAPI_messages_getSavedGifs
++(TLAPI_messages_getSavedGifs*)createWithN_hash:(int)n_hash {
+    TLAPI_messages_getSavedGifs* obj = [[TLAPI_messages_getSavedGifs alloc] init];
+    obj.n_hash = n_hash;
+    return obj;
+}
+- (NSData*)getData {
+	SerializedData* stream = [ClassStore streamWithConstuctor:-2084618926];
+	[stream writeInt:self.n_hash];
+	return [stream getOutput];
+}
+@end
+
+@implementation TLAPI_messages_saveGif
++(TLAPI_messages_saveGif*)createWithN_id:(TLInputDocument*)n_id unsave:(Boolean)unsave {
+    TLAPI_messages_saveGif* obj = [[TLAPI_messages_saveGif alloc] init];
+    obj.n_id = n_id;
+	obj.unsave = unsave;
+    return obj;
+}
+- (NSData*)getData {
+	SerializedData* stream = [ClassStore streamWithConstuctor:846868683];
+	[ClassStore TLSerialize:self.n_id stream:stream];
+	[stream writeBool:self.unsave];
+	return [stream getOutput];
+}
+@end
+
+@implementation TLAPI_messages_getInlineBotResults
++(TLAPI_messages_getInlineBotResults*)createWithBot:(TLInputUser*)bot query:(NSString*)query offset:(NSString*)offset {
+    TLAPI_messages_getInlineBotResults* obj = [[TLAPI_messages_getInlineBotResults alloc] init];
+    obj.bot = bot;
+	obj.query = query;
+	obj.offset = offset;
+    return obj;
+}
+- (NSData*)getData {
+	SerializedData* stream = [ClassStore streamWithConstuctor:-1826332659];
+	[ClassStore TLSerialize:self.bot stream:stream];
+	[stream writeString:self.query];
+	[stream writeString:self.offset];
+	return [stream getOutput];
+}
+@end
+
+@implementation TLAPI_messages_setInlineBotResults
++(TLAPI_messages_setInlineBotResults*)createWithFlags:(int)flags   query_id:(long)query_id results:(NSMutableArray*)results cache_time:(int)cache_time next_offset:(NSString*)next_offset {
+    TLAPI_messages_setInlineBotResults* obj = [[TLAPI_messages_setInlineBotResults alloc] init];
+    obj.flags = flags;
+	
+	
+	obj.query_id = query_id;
+	obj.results = results;
+	obj.cache_time = cache_time;
+	obj.next_offset = next_offset;
+    return obj;
+}
+- (NSData*)getData {
+	SerializedData* stream = [ClassStore streamWithConstuctor:1059318802];
+	[stream writeInt:self.flags];
+	
+	
+	[stream writeLong:self.query_id];
+	//Serialize FullVector
+	[stream writeInt:0x1cb5c415];
+	{
+		NSInteger tl_count = [self.results count];
+		[stream writeInt:(int)tl_count];
+		for(int i = 0; i < (int)tl_count; i++) {
+            TLInputBotInlineResult* obj = [self.results objectAtIndex:i];
+            [ClassStore TLSerialize:obj stream:stream];
+		}
+	}
+	[stream writeInt:self.cache_time];
+	if(self.flags & (1 << 2)) {[stream writeString:self.next_offset];}
+	return [stream getOutput];
+}
+@end
+
+@implementation TLAPI_messages_sendInlineBotResult
++(TLAPI_messages_sendInlineBotResult*)createWithFlags:(int)flags  peer:(TLInputPeer*)peer reply_to_msg_id:(int)reply_to_msg_id random_id:(long)random_id query_id:(long)query_id n_id:(NSString*)n_id {
+    TLAPI_messages_sendInlineBotResult* obj = [[TLAPI_messages_sendInlineBotResult alloc] init];
+    obj.flags = flags;
+	
+	obj.peer = peer;
+	obj.reply_to_msg_id = reply_to_msg_id;
+	obj.random_id = random_id;
+	obj.query_id = query_id;
+	obj.n_id = n_id;
+    return obj;
+}
+- (NSData*)getData {
+	SerializedData* stream = [ClassStore streamWithConstuctor:-1318189314];
+	[stream writeInt:self.flags];
+	
+	[ClassStore TLSerialize:self.peer stream:stream];
+	if(self.flags & (1 << 0)) {[stream writeInt:self.reply_to_msg_id];}
+	[stream writeLong:self.random_id];
+	[stream writeLong:self.query_id];
+	[stream writeString:self.n_id];
+	return [stream getOutput];
+}
+@end
+
+@implementation TLAPI_channels_toggleInvites
++(TLAPI_channels_toggleInvites*)createWithChannel:(TLInputChannel*)channel enabled:(Boolean)enabled {
+    TLAPI_channels_toggleInvites* obj = [[TLAPI_channels_toggleInvites alloc] init];
+    obj.channel = channel;
+	obj.enabled = enabled;
+    return obj;
+}
+- (NSData*)getData {
+	SerializedData* stream = [ClassStore streamWithConstuctor:1231065863];
+	[ClassStore TLSerialize:self.channel stream:stream];
+	[stream writeBool:self.enabled];
 	return [stream getOutput];
 }
 @end

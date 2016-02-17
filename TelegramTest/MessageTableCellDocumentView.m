@@ -12,7 +12,6 @@
 #import "TMMediaController.h"
 #import "TLPeer+Extensions.h"
 #import "TMPreviewDocumentItem.h"
-#import "DownloadAudioItem.h"
 #import "TMCircularProgress.h"
 #import "MessageTableItemAudio.h"
 #import "TGOpusAudioPlayerAU.h"
@@ -318,11 +317,14 @@ static NSImage *attachBackgroundThumb() {
     [super setCellState:cellState];
     
     if(cellState == CellStateNormal) {
-        [self.actionsTextField setAttributedStringValue:docStateLoaded()];
+        if([self.item.message isKindOfClass:[TL_destructMessage class]])
+            [self.actionsTextField setAttributedStringValue:[[NSAttributedString alloc] init]];
+         else
+            [self.actionsTextField setAttributedStringValue:docStateLoaded()];
     }
     
     if(cellState == CellStateSending) {
-        [self.actionsTextField setAttributedStringValue:nil];
+        [self.actionsTextField setAttributedStringValue:[[NSAttributedString alloc] init]];
     }
     
     if(cellState == CellStateNeedDownload) {
@@ -392,24 +394,44 @@ static NSImage *attachBackgroundThumb() {
     }
 }
 
+
+-(void)openInQuickLook:(id)sender {
+    PreviewObject *previewObject = [[PreviewObject alloc] initWithMsdId:self.item.message.n_id media:self.item.message peer_id:self.item.message.peer_id];
+    TMPreviewDocumentItem *item = [[TMPreviewDocumentItem alloc] initWithItem:previewObject];
+    [[TMMediaController controller] show:item];
+
+}
+
 - (NSMenu *)contextMenu {
     NSMenu *menu = [[NSMenu alloc] initWithTitle:@"Documents menu"];
     
-   
+    weak();
     
     
     if([self.item isset]) {
         
-        [menu addItem:[NSMenuItem menuItemWithTitle:NSLocalizedString(@"Message.File.ShowInFinder", nil) withBlock:^(id sender) {
-            [[NSWorkspace sharedWorkspace] activateFileViewerSelectingURLs:@[[NSURL fileURLWithPath:self.item.path]]];
-        }]];
+        if([self.item.message.media.document.mime_type hasPrefix:@"image"]) {
+            [menu addItem:[NSMenuItem menuItemWithTitle:NSLocalizedString(@"Context.OpenInQuickLook", nil) withBlock:^(id sender) {
+                [weakSelf performSelector:@selector(openInQuickLook:) withObject:weakSelf];
+            }]];
+        }
+        
+        
+        [menu addItem:[NSMenuItem separatorItem]];
+        
+        if(![self.item.message isKindOfClass:[TL_destructMessage class]]) {
+            [menu addItem:[NSMenuItem menuItemWithTitle:NSLocalizedString(@"Message.File.ShowInFinder", nil) withBlock:^(id sender) {
+                [[NSWorkspace sharedWorkspace] activateFileViewerSelectingURLs:@[[NSURL fileURLWithPath:weakSelf.item.path]]];
+            }]];
+        }
+        
         
         [menu addItem:[NSMenuItem menuItemWithTitle:NSLocalizedString(@"Context.SaveAs", nil) withBlock:^(id sender) {
-            [self performSelector:@selector(saveAs:) withObject:self];
+            [weakSelf performSelector:@selector(saveAs:) withObject:weakSelf];
         }]];
         
         [menu addItem:[NSMenuItem menuItemWithTitle:NSLocalizedString(@"Context.CopyToClipBoard", nil) withBlock:^(id sender) {
-            [self performSelector:@selector(copy:) withObject:self];
+            [weakSelf performSelector:@selector(copy:) withObject:weakSelf];
         }]];
         
         
@@ -428,7 +450,7 @@ static NSImage *attachBackgroundThumb() {
             for (OpenWithObject *a in apps) {
                 NSMenuItem *item = [NSMenuItem menuItemWithTitle:[a fullname] withBlock:^(id sender) {
                     
-                    [[NSWorkspace sharedWorkspace] openFile:((MessageTableItemDocument *)self.item).path withApplication:[a.app path]];
+                    [[NSWorkspace sharedWorkspace] openFile:((MessageTableItemDocument *)weakSelf.item).path withApplication:[a.app path]];
                     
                     
                 }];
@@ -463,7 +485,7 @@ static NSImage *attachBackgroundThumb() {
                         NSURL *app = [[openPanel URLs] objectAtIndex:0];
                         NSString *path = [app path];
                         
-                        [[NSWorkspace sharedWorkspace] openFile:((MessageTableItemDocument *)self.item).path withApplication:path];
+                        [[NSWorkspace sharedWorkspace] openFile:((MessageTableItemDocument *)weakSelf.item).path withApplication:path];
                     }
                 }
             }];
@@ -629,7 +651,7 @@ static NSImage *attachBackgroundThumb() {
     
     PreviewObject *previewObject = [[PreviewObject alloc] initWithMsdId:self.item.message.n_id media:self.item.message peer_id:self.item.message.peer_id];
     
-    if([self.item.message.media.document.mime_type hasPrefix:@"image"]) {
+    if([document_preview_mime_types() indexOfObject:self.item.message.media.document.mime_type] != NSNotFound) {
         [[TGPhotoViewer viewer] showDocuments:previewObject conversation:self.item.message.conversation];
     } else {
         TMPreviewDocumentItem *item = [[TMPreviewDocumentItem alloc] initWithItem:previewObject];
@@ -660,7 +682,7 @@ static NSImage *attachBackgroundThumb() {
     if([_attachButton hitTest:eventLocation]) {
         NSPoint dragPosition = NSMakePoint(80, 8);
         
-        NSString *path = mediaFilePath(self.item.message.media);
+        NSString *path = mediaFilePath(self.item.message);
         
         
         NSPasteboard *pasteBrd=[NSPasteboard pasteboardWithName:TGImagePType];

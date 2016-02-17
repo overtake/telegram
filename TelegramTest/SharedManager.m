@@ -188,17 +188,24 @@ static NSMutableArray *managers;
 }
 
 -(NSArray *)searchWithString:(NSString *)search selector:(NSString *)selector {
+    return [self searchWithString:search selector:selector checker:nil];
+}
+
+-(NSArray *)searchWithString:(NSString *)search selector:(NSString *)selector checker:(BOOL (^)(id object))checker {
     
    return [self->list filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary *bindings) {
        
        if([evaluatedObject respondsToSelector:NSSelectorFromString(selector)]) {
-           id value = [evaluatedObject valueForKey:selector];
-           
-           if([value isKindOfClass:NSString.class]) {
+           if(!checker || checker(evaluatedObject)) {
+               id value = [evaluatedObject valueForKey:selector];
                
-               return [value searchInStringByWordsSeparated:search];
-               
+               if([value isKindOfClass:NSString.class]) {
+                   
+                   return [value searchInStringByWordsSeparated:search];
+                   
+               }
            }
+           
        }
        
        return NO;

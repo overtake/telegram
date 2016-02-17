@@ -13,6 +13,7 @@
 #import "SenderHeader.h"
 #import "MessagesBottomView.h"
 #import "MessagesUtils.h"
+#import "FullUsersManager.h"
 @interface DialogsManager ()
 @property (nonatomic,strong) NSMutableArray *dialogs;
 @property (nonatomic,assign) NSInteger maxCount;
@@ -40,8 +41,18 @@
         
         TL_conversation *conversation = [self find:obj.peer_id];
         
-        if(!conversation)
+        if(!conversation) {
             unloaded[@(obj.peer_id)] = @(1);
+            
+            if([obj.to_id isKindOfClass:[TL_peerUser class]]) {
+                TLUserFull *full = [[FullUsersManager sharedManager] find:obj.from_id];
+                
+                if(!full) {
+                    [[FullUsersManager sharedManager] loadUserFull:obj.fromUser callback:nil];
+                }
+            }
+        }
+        
         
     }];
     
@@ -93,7 +104,7 @@
     
     [ASQueue dispatchOnStageQueue:^{
         
-        if([chat isKindOfClass:[TL_channel class]]) {
+        if([chat isKindOfClass:[TL_channel class]] || [chat isKindOfClass:[TL_channel_old43 class]]) {
             dialog = [self createDialogForChannel:chat];
         } else
             dialog = [TL_conversation createWithPeer:[TL_peerChat createWithChat_id:chat.n_id] top_message:0 unread_count:0 last_message_date:0 notify_settings:nil last_marked_message:0 top_message_fake:0 last_marked_date:0 sync_message_id:0 read_inbox_max_id:0 unread_important_count:0 lastMessage:nil];
@@ -231,10 +242,9 @@
 
 -(void)updateLastMessageForDialog:(TL_conversation *)dialog {
     
-    [[Storage manager] lastMessageWithConversation:dialog completeHandler:^(TL_localMessage *lastMessage, int importantMessage) {
-        
-        [self.queue dispatchOnQueue:^{
-            
+    [self.queue dispatchOnQueue:^{
+        [[Storage manager] lastMessageWithConversation:dialog completeHandler:^(TL_localMessage *lastMessage, int importantMessage) {
+           
             if(lastMessage) {
                 
                 dialog.top_message = lastMessage.n_id;
@@ -260,9 +270,7 @@
             [self notifyAfterUpdateConversation:dialog];
             
         }];
-        
     }];
-    
 }
 
 
@@ -480,10 +488,7 @@
         dialog.top_message = 0;
         
         dialog.top_important_message = 0;
-        
-        
         dialog.unread_count = 0;
-        
         dialog.lastMessage = nil;
         
         
@@ -511,7 +516,7 @@
 
 - (void)resort {
     [self->list sortUsingComparator:^NSComparisonResult(TL_conversation * obj1, TL_conversation * obj2) {
-        return (obj1.last_real_message_date < obj2.last_real_message_date ? NSOrderedDescending : (obj1.last_real_message_date > obj2.last_real_message_date ? NSOrderedAscending : (obj1.top_message < obj2.top_message ? NSOrderedDescending : NSOrderedAscending)));
+        return (obj1.last_message_date < obj2.last_message_date ? NSOrderedDescending : (obj1.last_message_date > obj2.last_message_date ? NSOrderedAscending : (obj1.top_message < obj2.top_message ? NSOrderedDescending : NSOrderedAscending)));
     }];
     
 }
@@ -530,11 +535,45 @@
             [Notification perform:MEDIA_RECEIVE data:@{KEY_PREVIEW_OBJECT:previewObject}];
         }
         
+        [self checkAndProccessGifMessage:message];
+        
         
         [self updateTop:message needUpdate:YES update_real_date:update_real_date];
         [Notification performOnStageQueue:MESSAGE_RECEIVE_EVENT data:@{KEY_MESSAGE:message}];
     }];
 }
+
+
+-(BOOL)checkAndProccessGifMessage:(TL_localMessage *)message {
+    
+    if(message.isN_out && [message.media.document.mime_type isEqualToString:@"video/mp4"] && [message.media.document attributeWithClass:[TL_documentAttributeVideo class]] != nil) {
+        
+        [[Storage yap] asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
+            
+            NSMutableArray *items = [transaction objectForKey:@"gifs" inCollection:RECENT_GIFS];
+            
+            TL_document *item = [[items filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.n_id == %ld",message.media.document.n_id]] firstObject];
+            
+            if(item) {
+                [items removeObjectAtIndex:[items indexOfObject:item]];
+            } else {
+                
+            }
+            [items insertObject:message.media.document atIndex:0];
+
+            
+            [transaction setObject:items forKey:@"gifs" inCollection:RECENT_GIFS];
+        }];
+        
+        
+        
+        return YES;
+    }
+    
+    return NO;
+    
+}
+
 
 - (void)updateTop:(TL_localMessage *)message needUpdate:(BOOL)needUpdate update_real_date:(BOOL)update_real_date {
     
@@ -556,7 +595,6 @@
             [MessagesManager updateUnreadBadge];
             
             [self add:@[dialog]];
-            
             
             [self checkBotKeyboard:dialog forMessage:message notify:YES];
             
@@ -586,30 +624,25 @@
 
 - (void) markAllMessagesAsRead:(TLPeer *)peer max_id:(int)max_id out:(BOOL)n_out {
     
-    
-    [[Storage manager] markAllInConversation:peer.peer_id max_id:max_id out:n_out completeHandler:^(NSArray *ids,NSArray *messages) {
-        [self.queue dispatchOnQueue:^{
+    [self.queue dispatchOnQueue:^{
+        [[Storage manager] markAllInConversation:peer.peer_id max_id:max_id out:n_out completeHandler:^(NSArray *ids,NSArray *messages) {
+            
             
             if(messages.count > 0) {
                 
                 NSArray *unloaded = [self unloadedConversationsWithMessages:@[[messages firstObject]]];
                 
                 [[Storage manager] conversationsWithPeerIds:unloaded completeHandler:^(NSArray *result) {
-                   
+                    
                     [self add:result];
                     
                     TL_conversation *conversation = [(TL_localMessage *)[messages firstObject] conversation];
                     
-                    if(!n_out) {
-                        
-                        conversation.read_inbox_max_id = max_id;
-                    }
-                    
                     conversation.last_marked_message = max_id;
                     
-                   
+                    
                     [messages enumerateObjectsUsingBlock:^(TL_localMessage *message, NSUInteger idx, BOOL * _Nonnull stop) {
-                        if(!message.n_out) {
+                        if(!message.n_out && message.unread) {
                             conversation.unread_count--;
                         }
                         
@@ -618,6 +651,11 @@
                         }
                         
                     }];
+                    
+                    if(!n_out && conversation.read_inbox_max_id < max_id) {
+                        
+                        conversation.read_inbox_max_id = max_id;
+                    }
                     
                     [Notification perform:[Notification notificationNameByDialog:conversation action:@"unread_count"] data:@{KEY_DIALOG:conversation,KEY_LAST_CONVRESATION_DATA:[MessagesUtils conversationLastData:conversation]}];
                     [Notification perform:MESSAGE_READ_EVENT data:@{KEY_MESSAGE_ID_LIST:ids}];
@@ -704,8 +742,12 @@
     if(message.n_id > TGMINFAKEID && dialog.last_message_date > message.date)
         return NO;
     
+    
+    
     if(message.unread && !message.n_out) {
         dialog.unread_count++;
+    } else if(!message.unread && !message.n_out) {
+        dialog.unread_count = 0;
     }
     
     if([message.action isKindOfClass:[TL_messageActionChatMigrateTo class]]) {
@@ -741,6 +783,8 @@
         dialog.last_real_message_date = last_real_date;
     }
     
+    dialog.fake = NO;
+    
     return YES;
     
 }
@@ -759,6 +803,8 @@
             [self add:conversations];
             
             [messages enumerateObjectsUsingBlock:^(TL_localMessage *message, NSUInteger idx, BOOL * _Nonnull stop) {
+                
+                [self checkAndProccessGifMessage:message];
              
                 TL_conversation *dialog = message.conversation;
                 

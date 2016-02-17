@@ -106,8 +106,7 @@
         [self.textField setFrameSize:item.textSize];
         [self.textField setAttributedString:item.messageAttributedString];
        
-        [self.textField setFrameOrigin:NSMakePoint(78, 0)];
-        [_textField setFrameOrigin:NSMakePoint(NSMinX(_textField.frame), roundf((item.viewSize.height - NSHeight(_textField.frame))/2))];
+        [_textField setFrameOrigin:NSMakePoint(roundf((NSWidth(self.messagesViewController.view.frame) - item.textSize.width) / 2), roundf((item.viewSize.height - NSHeight(_textField.frame))/2))];
         
     } else  {
         [self.photoImageView setHidden:YES];

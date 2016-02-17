@@ -273,7 +273,7 @@ static ChatHistoryController *observer;
     
     [ASQueue dispatchOnStageQueue:^{
         
-        ChatHistoryState state = self.prevState;
+        ChatHistoryState state = [self filterWithNext:NO].prevState;
         
         [ASQueue dispatchOnMainQueue:^{
             
@@ -287,7 +287,7 @@ static ChatHistoryController *observer;
 -(void)nextStateAsync:(void (^)(ChatHistoryState state))block {
     [ASQueue dispatchOnStageQueue:^{
         
-        ChatHistoryState state = self.nextState;
+        ChatHistoryState state = [self filterWithNext:YES].nextState;
         
         [ASQueue dispatchOnMainQueue:^{
             

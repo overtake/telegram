@@ -34,7 +34,7 @@
 
 +(void)proccessGlobalResponse:(id)response;
 
-
 -(NSArray *)searchWithString:(NSString *)search selector:(NSString *)selector;
+-(NSArray *)searchWithString:(NSString *)search selector:(NSString *)selector checker:(BOOL (^)(id object))checker;
 
 @end

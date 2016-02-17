@@ -12,6 +12,11 @@
 #import "StickerSenderItem.h"
 #import "WeakReference.h"
 #import "MessageTableCell.h"
+#import "ExternalGifSenderItem.h"
+#import "CompressedDocumentSenderItem.h"
+#import "ContextBotSenderItem.h"
+#import "StickerSecretSenderItem.h"
+#import "InlineBotMediaSecretSenderItem.h"
 @interface SenderItem ()
 @property (nonatomic,strong) NSMutableArray *listeners;
 @end
@@ -56,9 +61,6 @@ static NSMutableDictionary *senders;
     if(self = [super init]) {
         self.state = MessageStateWaitSend;
         self.listeners = [[NSMutableArray alloc] init];
-        
-        
-        
     }
     
     return self;
@@ -82,6 +84,7 @@ static NSMutableDictionary *senders;
         
         item = senders[@(msg.randomId)];
         
+        
         if(!item) {
             if(![msg isKindOfClass:[TL_destructMessage class]]) {
                 if([msg.media isKindOfClass:[TL_messageMediaEmpty class]] || msg.media == nil) {
@@ -90,7 +93,7 @@ static NSMutableDictionary *senders;
                     item = [[ImageSenderItem alloc] init];
                 } else if([msg.media isKindOfClass:[TL_messageMediaVideo class]]) {
                     item = [[VideoSenderItem alloc] init];
-                } else if([msg.media isKindOfClass:[TL_messageMediaDocument class]]) {
+                } else if([msg.media isKindOfClass:[TL_messageMediaDocument class]] || [msg.media isKindOfClass:[TL_messageMediaDocument_old44 class]]) {
                     
                     item = [[DocumentSenderItem alloc] init];
                     
@@ -98,12 +101,20 @@ static NSMutableDictionary *senders;
                         item = [[StickerSenderItem alloc] init];
                     }
                     
+                    if(msg.media.document.access_hash != 0) {
+                        item = [[ExternalGifSenderItem alloc] init];
+                    }
                     
+                    if([msg.media.document isKindOfClass:[TL_compressDocument class]]) {
+                        item = [[CompressedDocumentSenderItem alloc] init];
+                    }
                     
-                } else if([msg.media isKindOfClass:[TL_messageMediaAudio class]]) {
+                } else if(msg.media.document.audioAttr.isVoice) {
                     item = [[AudioSenderItem alloc] init];
                 } else if([msg.media isKindOfClass:[TL_messageMediaContact class]]) {
                     item = [[ShareContactSenterItem alloc] init];
+                } else if([msg.media isKindOfClass:[TL_messageMediaBotResult class]]) {
+                    item = [[ContextBotSenderItem alloc] init];
                 }
                 
                 if(msg.fwd_from_id != 0) {
@@ -114,20 +125,23 @@ static NSMutableDictionary *senders;
                 }
                 
             } else {
-                if(msg.class == [TL_destructMessage class]) {
+                if([msg isKindOfClass:[TL_destructMessage class]]) {
                     if([msg.media isKindOfClass:[TL_messageMediaEmpty class]] || msg.media == nil)
                         item = [[MessageSenderSecretItem alloc] init];
                     else {
                         
-                        item = [[FileSecretSenderItem alloc] init];
                         
-                        if([msg.media isKindOfClass:[TL_messageMediaPhoto class]]) {
+                        item = [msg.media isKindOfClass:[TL_messageMediaBotResult class]] ? [[InlineBotMediaSecretSenderItem alloc] init] : [[FileSecretSenderItem alloc] init];
+                        
+                        if([msg.media isKindOfClass:[TL_messageMediaDocument class]] && msg.media.document.access_hash != 0 && [msg.media.document isSticker]) {
+                            item = [[StickerSecretSenderItem alloc] init];
+                        } else if([msg.media isKindOfClass:[TL_messageMediaPhoto class]]) {
                             [(FileSecretSenderItem *)item setUploaderType:UploadImageType];
                         } else if([msg.media isKindOfClass:[TL_messageMediaVideo class]]) {
                             [(FileSecretSenderItem *)item setUploaderType:UploadVideoType];
-                        } else if([msg.media isKindOfClass:[TL_messageMediaDocument class]]) {
+                        } else if([msg.media isKindOfClass:[TL_messageMediaDocument class]] || [msg.media isKindOfClass:[TL_messageMediaDocument_old44 class]]) {
                             [(FileSecretSenderItem *)item setUploaderType:UploadDocumentType];
-                        } else if([msg.media isKindOfClass:[TL_messageMediaAudio class]]) {
+                        } else if(msg.media.document.audioAttr.isVoice) {
                             [(FileSecretSenderItem *)item setUploaderType:UploadAudioType];
                         }
                     }
@@ -136,16 +150,12 @@ static NSMutableDictionary *senders;
                 
             }
             
-            
-            item.conversation = msg.conversation;
             item.message = msg;
-            
+            item.conversation = msg.conversation;
             item.state = msg.dstate == DeliveryStateError ? MessageSendingStateError : MessageStateWaitSend;
         }
         
     } synchronous:YES];
-    
-    
     
     return item;
 }
@@ -277,13 +287,16 @@ static NSMutableArray *waiting;
     
     assert([NSThread isMainThread]);
     
+    weak();
+    
     [_listeners enumerateObjectsUsingBlock:^(WeakReference *current, NSUInteger idx, BOOL * _Nonnull stop) {
         id<SenderListener>listener = current.nonretainedObjectValue;
         
         if([listener respondsToSelector:selector])
-            [listener performSelector:selector withObject:self];
+            [listener performSelector:selector withObject:weakSelf];
     }];
     
+
 }
 
 -(void)setTableItem:(MessageTableItem *)tableItem {
@@ -339,11 +352,13 @@ static NSMutableArray *waiting;
     
     [_listeners removeAllObjects];
     
+    weak();
+    
     [copy enumerateObjectsUsingBlock:^(WeakReference *current, NSUInteger idx, BOOL * _Nonnull stop) {
         id<SenderListener>listener = current.nonretainedObjectValue;
         
         if([listener respondsToSelector:@selector(onRemovedListener:)])
-            [listener performSelector:@selector(onRemovedListener:) withObject:self];
+            [listener performSelector:@selector(onRemovedListener:) withObject:weakSelf];
     }]; 
     
 }
@@ -476,5 +491,81 @@ static NSMutableArray *waiting;
     
     return c;
 }
+
+
+
+-(NSString *)parseEntities:(NSString *)message entities:(NSMutableArray *)entities backstrips:(NSString *)backstrips startIndex:(NSUInteger)startIndex {
+    
+    NSRange startRange = [message rangeOfString:backstrips options:0 range:NSMakeRange(startIndex, message.length - startIndex)];
+    
+    
+    if(startRange.location != NSNotFound) {
+        
+        NSRange stopRange = [message rangeOfString:backstrips options:0 range:NSMakeRange(startRange.location + startRange.length, message.length - (startRange.location + startRange.length ))];
+        
+        if(stopRange.location != NSNotFound) {
+            
+            TLMessageEntity *entity;
+            
+            NSString *innerMessage = [message substringWithRange:NSMakeRange(startRange.location + 1,stopRange.location - (startRange.location + 1))];
+            
+            
+            if(innerMessage.trim.length > 0)  {
+                message = [message stringByReplacingOccurrencesOfString:backstrips withString:@"" options:0 range:NSMakeRange(startRange.location, stopRange.location + stopRange.length  - startRange.location)];
+                
+                
+                
+                if(backstrips.length == 3) {
+                    entity = [TL_messageEntityPre createWithOffset:(int)startRange.location length:(int)(stopRange.location - startRange.location - startRange.length) language:@""];
+                } else
+                    entity = [TL_messageEntityCode createWithOffset:(int)startRange.location length:(int)(stopRange.location - startRange.location - startRange.length)];
+                
+                [entities addObject:entity];
+            } else {
+                startIndex = stopRange.location + 1;
+            }
+            
+            
+            if(message.length > 0) {
+                
+                
+                int others = 0;
+                if([[message substringToIndex:1] isEqualToString:@"\n"]) {
+                    message = [message substringFromIndex:1];
+                    others = 1;
+                }
+                
+                
+                [entities enumerateObjectsUsingBlock:^(TLMessageEntity *obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                    
+                    if(obj.offset > stopRange.location + stopRange.length) {
+                        obj.offset-=((int)stopRange.length*2);
+                    }
+                    
+                    if(obj.offset > 0) {
+                        obj.offset-=others;
+                    }
+                    
+                }];
+                
+                if([message rangeOfString:backstrips].location != NSNotFound) {
+                    return [self parseEntities:message entities:entities backstrips:backstrips startIndex:startIndex];
+                }
+            }
+            
+            
+            
+        }
+        
+    }
+    
+    return message;
+    
+}
+
+-(void)dealloc {
+    
+}
+
 
 @end

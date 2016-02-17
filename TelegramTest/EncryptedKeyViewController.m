@@ -28,7 +28,7 @@
     [center setTarget:self selector:@selector(navigationGoBack)];
     self.centerNavigationBarView = center;
     center.acceptCursor = NO;
-
+    
     
     
     
@@ -42,7 +42,7 @@
     self.imageView = [[NSImageView alloc] initWithFrame:NSMakeRect(0,0, 200, 200)];
     [container addSubview:self.imageView];
     
-   
+    
     [self.imageView setCenterByView:container];
     
     [self.imageView setFrameOrigin:NSMakePoint(NSMinX(self.imageView.frame), NSHeight(container.frame) - 200)];
@@ -62,7 +62,7 @@
     [self.textField setSelectable:NO];
     [self.textField setBordered:NO];
     self.textField.hardYOffset = 25.0f;
- 
+    
     [container addSubview:self.textField];
     
     [self.view addSubview:container];
@@ -73,8 +73,8 @@
     [container setFrameOrigin:NSMakePoint(NSMinX(container.frame), 32)];
     
     container.autoresizingMask = NSViewMinXMargin | NSViewMaxXMargin;
-
-
+    
+    
 }
 
 - (void)showForChat:(TL_encryptedChat *)chat {
@@ -97,7 +97,7 @@
     NSString *baseText = [[NSString alloc] initWithFormat:textFormat, _userName, _userName];
     
     
-     NSDictionary *attrs = [NSDictionary dictionaryWithObjectsAndKeys:TGSystemFont(14), NSFontAttributeName, nil];
+    NSDictionary *attrs = [NSDictionary dictionaryWithObjectsAndKeys:TGSystemFont(14), NSFontAttributeName, nil];
     
     NSDictionary *subAttrs = [NSDictionary dictionaryWithObjectsAndKeys:TGSystemMediumFont(14), NSFontAttributeName, nil];
     
@@ -124,9 +124,9 @@
     
     frame.size.height = size.height+40;
     
-   // frame.origin.y = roundf((self.view.frame.size.height-frame.size.height)/2);
+    // frame.origin.y = roundf((self.view.frame.size.height-frame.size.height)/2);
     
-   // self.textField.frame = frame;
+    // self.textField.frame = frame;
     
     
 }

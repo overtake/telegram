@@ -66,9 +66,7 @@
             self.state = DocumentStateWaitingDownload;
         }
 
-        
-        
-        [self checkStartDownload:[self.message.to_id isKindOfClass:[TL_peerChat class]] ? AutoGroupDocuments : AutoPrivateDocuments size:self.message.media.document.size];
+         [self checkStartDownload:[self.message.to_id isKindOfClass:[TL_peerChat class]] ? AutoGroupDocuments : AutoPrivateDocuments size:self.message.media.document.size];
         
     }
     return self;
@@ -96,7 +94,7 @@
     if([self.message.media.document isKindOfClass:[TL_outDocument class]])
         return ((TL_outDocument *)self.message.media.document).file_path;
     else
-        return mediaFilePath(self.message.media);
+        return mediaFilePath(self.message);
 }
 
 - (void)doAfterDownload {
@@ -106,7 +104,11 @@
 }
 
 -(DownloadItem *)downloadItem {
-    return [DownloadQueue find:self.message.media.document.n_id];
+    
+    if(super.downloadItem == nil)
+        [super setDownloadItem:[DownloadQueue find:self.message.media.document.n_id]];
+    
+    return [super downloadItem];
 }
 
 - (BOOL)canDownload {

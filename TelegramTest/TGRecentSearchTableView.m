@@ -162,7 +162,13 @@
     TL_conversation *conv = [[DialogsManager sharedManager] find:item.conversation.peer_id];
     
     if(!conv)
+    {
         conv = item.conversation;
+        conv.top_message = 0;
+        conv.fake = YES;
+        [[DialogsManager sharedManager] add:@[conv]];
+    }
+    
     
     [appWindow().navigationController showMessagesViewController:conv];
     

@@ -17,11 +17,9 @@
     if(self = [super init]) {
         _previewObject = previewObject;
         
-        _url = [NSURL fileURLWithPath:mediaFilePath(((TL_messageMediaAudio *)[(TL_localMessage *)_previewObject.media media]))];
+        _url = [NSURL fileURLWithPath:mediaFilePath(_previewObject.media)];
         
-        if(!isPathExists(_url.path) || ![FileUtils checkNormalizedSize:_url.path checksize:((TL_messageMediaAudio *)[(TL_localMessage *)_previewObject.media media]).audio.size]) {
-            return nil;
-        }
+        
         
     }
     return self;

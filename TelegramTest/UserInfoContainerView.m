@@ -372,7 +372,6 @@
         
         
         
-         weakify();
         
         
         self.notificationView = [UserInfoShortButtonView buttonWithText:NSLocalizedString(@"Notifications", nil) tapBlock:^{
@@ -404,12 +403,12 @@
         [self.notificationsSwitcher setDidChangeHandler:^(BOOL isOn) {
             
             
-            TL_conversation *dialog = [[DialogsManager sharedManager] findByUserId:strongSelf.user.n_id];
+            TL_conversation *dialog = [[DialogsManager sharedManager] findByUserId:weakSelf.user.n_id];
             
             BOOL isMute = dialog.isMute;
             if(isMute == isOn) {
                 
-                [strongSelf.notificationView setLocked:YES];
+                [weakSelf.notificationView setLocked:YES];
                 
 //                [dialog muteOrUnmute:^{
 //                    

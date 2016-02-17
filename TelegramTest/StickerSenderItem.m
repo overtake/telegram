@@ -14,7 +14,7 @@
 -(id)initWithDocument:(TLDocument *)document forConversation:(TL_conversation*)conversation additionFlags:(int)additionFlags {
     if(self = [super initWithConversation:conversation]) {
         
-        self.message = [MessageSender createOutMessage:@"" media:[TL_messageMediaDocument createWithDocument:document] conversation:conversation];
+        self.message = [MessageSender createOutMessage:@"" media:[TL_messageMediaDocument createWithDocument:document caption:@""] conversation:conversation];
         
         if(additionFlags & (1 << 4))
             self.message.from_id = 0;
@@ -30,7 +30,7 @@
     
     id request;
     
-    id media = [TL_inputMediaDocument createWithN_id:[TL_inputDocument createWithN_id:self.message.media.document.n_id access_hash:self.message.media.document.access_hash]];
+    id media = [TL_inputMediaDocument createWithN_id:[TL_inputDocument createWithN_id:self.message.media.document.n_id access_hash:self.message.media.document.access_hash] caption:@""];
     
     if(self.conversation.type != DialogTypeBroadcast) {
         request = [TLAPI_messages_sendMedia createWithFlags:[self senderFlags] peer:self.conversation.inputPeer reply_to_msg_id:self.message.reply_to_msg_id media:media random_id:self.message.randomId reply_markup:[TL_replyKeyboardMarkup createWithFlags:0 rows:[@[]mutableCopy]]];
@@ -54,12 +54,8 @@
             return;
         }
         
-        if(self.conversation.type != DialogTypeBroadcast)  {
-            
-            self.message.n_id = msg.n_id;
-            self.message.date = msg.date;
-            
-        }
+        self.message.n_id = msg.n_id;
+        self.message.date = msg.date;
         
         self.message.dstate = DeliveryStateNormal;
         

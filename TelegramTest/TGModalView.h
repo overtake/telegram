@@ -14,6 +14,9 @@
 -(void)close:(BOOL)animated;
 
 
+@property (nonatomic,strong,readonly) BTRButton *ok;
+@property (nonatomic,strong,readonly) BTRButton *cancel;
+
 -(void)enableCancelAndOkButton;
 -(void)okAction;
 -(void)cancelAction;
@@ -23,6 +26,7 @@
 -(void)modalViewDidHide;
 
 @property (assign) BOOL acceptEvents;
+@property (assign,nonatomic) BOOL opaqueContent;
 
 -(void)setContainerFrameSize:(NSSize)size;
 -(NSSize)containerSize;

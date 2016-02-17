@@ -28,10 +28,12 @@
 #import "MessageTableItemSocial.h"
 #import "TL_localMessage_old32.h"
 #import "TL_localMessage_old34.h"
+#import "TL_localMessage_old44.h"
 #import "NSNumber+NumberFormatter.h"
-
+#import "MessageTableItemMpeg.h"
+#import "NSAttributedString+Hyperlink.h"
 @interface TGItemCache : NSObject
-@property (nonatomic,strong) NSAttributedString *header;
+@property (nonatomic,strong) NSMutableAttributedString *header;
 @property (nonatomic,strong) TLUser *user;
 @end
 
@@ -66,9 +68,7 @@ static NSCache *cItems;
 
         if(object.peer.peer_id == [UsersManager currentUserId])
             object.flags&= ~TGUNREADMESSAGE;
-        //&& ![self.message.media isKindOfClass:[TL_messageMediaPhoto class]] && ![self.message.media isKindOfClass:[TL_messageMediaVideo class]]
-        self.isForwadedMessage = (self.message.fwd_from_id != nil )  && (![self.message.media isKindOfClass:[TL_messageMediaDocument class]] || (![self.message.media.document isSticker]));
-        
+        self.isForwadedMessage = (self.message.fwd_from_id != nil )  && ((![self.message.media isKindOfClass:[TL_messageMediaDocument class]] || ![self.message.media isKindOfClass:[TL_messageMediaDocument_old44 class]]) && ( ![self.message.media.document isSticker] && !(self.message.media.document.audioAttr && ![self.message.media.document.audioAttr isVoice])));
         
         self.isChat = [self.message.to_id isKindOfClass:[TL_peerChat class]] || [self.message.to_id isKindOfClass:[TL_peerChannel class]];
         
@@ -92,7 +92,38 @@ static NSCache *cItems;
                 [self buildHeaderAndSaveToCache];
             }
             
+             NSString *viaBotUserName;
             
+            if(self.isViaBot) {
+                
+                if([self.message isKindOfClass:[TL_destructMessage45 class]]) {
+                    viaBotUserName = ((TL_destructMessage45 *)self.message).via_bot_name;
+                } else {
+                     _via_bot_user = [[UsersManager sharedManager] find:self.message.via_bot_id];
+                    viaBotUserName = _via_bot_user.username;
+                }
+               
+                
+                if(!self.isForwadedMessage)
+                {
+                    _headerName = [_headerName mutableCopy];
+                    
+                    [_headerName appendString:@" "];
+                     NSRange range = [_headerName appendString:NSLocalizedString(@"ContextBot.Message.Via", nil) withColor:GRAY_TEXT_COLOR];
+                    
+                    [_headerName setFont:TGSystemFont(13) forRange:range];
+                    
+                    
+                    [_headerName appendString:@" "];
+                    range = [_headerName appendString:[NSString stringWithFormat:@"@%@",viaBotUserName] withColor:GRAY_TEXT_COLOR];
+                    [_headerName addAttribute:NSForegroundColorAttributeName value:LINK_COLOR range:range];
+                    [_headerName setLink:[NSString stringWithFormat:@"viabot:@%@",viaBotUserName] forRange:range];
+                    
+                }
+                
+                
+                
+            }
             
             if(self.isForwadedMessage) {
                 if([object.fwd_from_id isKindOfClass:[TL_peerUser class]]) {
@@ -101,6 +132,16 @@ static NSCache *cItems;
                     self.fwd_chat = [[ChatsManager sharedManager] find:object.fwd_from_id.chat_id == 0 ? object.fwd_from_id.channel_id : object.fwd_from_id.chat_id];
                 }
                 
+                NSMutableAttributedString *attr = [[NSMutableAttributedString alloc] init];
+                
+                [attr appendString:NSLocalizedString(@"Messages.ForwardedMessages", nil) withColor:GRAY_TEXT_COLOR];
+                [attr setFont:TGSystemFont(13) forRange:attr.range];
+                
+                
+                [attr detectAndAddLinks:URLFindTypeMentions];
+                
+                _forwardHeaderAttr = attr;
+                
             }
             
             [self headerStringBuilder];
@@ -108,10 +149,14 @@ static NSCache *cItems;
             [self rebuildDate];
             
             
+            
+            
+            
         }
     }
     return self;
 }
+
 
 -(int)makeSize {
     return MAX(NSWidth(((MessagesTableView *)self.table).viewController.view.frame) - 150,100);
@@ -146,8 +191,6 @@ static NSCache *cItems;
         cacheColorIds = [[NSMutableDictionary alloc] init];
     });
     
-    
-    
     NSColor *nameColor = LINK_COLOR;
     
     
@@ -160,16 +203,10 @@ static NSCache *cItems;
         
     }
     
-    
-    
     NSMutableAttributedString *header = [[NSMutableAttributedString alloc] init];
     
     [header appendString:name withColor:nameColor];
-    
-    //    if(self.message.from_id == 0) {
-    //        [header appendAttributedString:[NSAttributedString attributedStringWithAttachment:channelIconAttachment()]];
-    //    }
-    
+
     [header setFont:TGSystemMediumFont(13) forRange:header.range];
     
     [header addAttribute:NSLinkAttributeName value:[TMInAppLinks peerProfile:self.message.from_id == 0 ? self.message.peer : [TL_peerUser createWithUser_id:self.message.from_id]] range:header.range];
@@ -186,16 +223,11 @@ static NSCache *cItems;
 - (void) headerStringBuilder {
     
     
-    
-    [self buildHeaderAndSaveToCache];
-    
-    
     if([self isReplyMessage])
     {
         _replyObject = [[TGReplyObject alloc] initWithReplyMessage:self.message.replyMessage fromMessage:self.message tableItem:self];
             
     }
-    
     
     if(self.isForwadedMessage) {
         self.forwardMessageAttributedString = [[NSMutableAttributedString alloc] init];
@@ -209,11 +241,25 @@ static NSCache *cItems;
             [self.forwardMessageAttributedString setLink:[TMInAppLinks peerProfile:self.message.fwd_from_id] forRange:rangeUser];
             
         }
-        [self.forwardMessageAttributedString appendString:@"  " withColor:NSColorFromRGB(0x909090)];
+        
+        [self.forwardMessageAttributedString setFont:TGSystemFont(12) forRange:self.forwardMessageAttributedString.range];
+        
+        if([self isViaBot]) {
+            [self.forwardMessageAttributedString appendString:@" "];
+            NSRange range = [self.forwardMessageAttributedString appendString:NSLocalizedString(@"ContextBot.Message.Via", nil) withColor:GRAY_TEXT_COLOR];
+            [self.forwardMessageAttributedString setFont:TGSystemFont(13) forRange:range];
+            [self.forwardMessageAttributedString appendString:@" "];
+            range = [self.forwardMessageAttributedString appendString:[NSString stringWithFormat:@"@%@",_via_bot_user.username] withColor:GRAY_TEXT_COLOR];
+            [self.forwardMessageAttributedString setFont:TGSystemBoldFont(13) forRange:range];
+            [self.forwardMessageAttributedString setLink:[NSString stringWithFormat:@"viabot:@%@",_via_bot_user.username] forRange:range];
+            [self.forwardMessageAttributedString addAttribute:NSForegroundColorAttributeName value:LINK_COLOR range:range];
+        }
+        
+         [self.forwardMessageAttributedString appendString:@"  " withColor:NSColorFromRGB(0x909090)];
     
         [self.forwardMessageAttributedString appendString:[TGDateUtils stringForLastSeen:self.message.fwd_date] withColor:NSColorFromRGB(0xbebebe)];
         
-        [self.forwardMessageAttributedString setFont:TGSystemFont(12) forRange:self.forwardMessageAttributedString.range];
+        
         [self.forwardMessageAttributedString setFont:TGSystemMediumFont(13) forRange:rangeUser];
         
         NSMutableParagraphStyle *style = [[NSMutableParagraphStyle alloc] init];
@@ -248,6 +294,16 @@ static NSTextAttachment *channelIconAttachment() {
             if(self.isForwadedMessage)
                 viewSize.height += 20;
             
+//            if(self.isViaBot && !self.isForwadedMessage) {
+//                viewSize.height+=16;
+//                if(self.message.media != nil && ![self.message.media isKindOfClass:[TL_messageMediaWebPage class]] && ![self isReplyMessage]) {
+//                    
+//                    if([self.message.media isKindOfClass:[TL_messageMediaBotResult class]] && ![self.message.media.bot_result.send_message isKindOfClass:[TL_botInlineMessageText class]])
+//                    viewSize.height+=6;
+//                }
+//            }
+            
+            
             if(viewSize.height < 44)
                 viewSize.height = 44;
         } else {
@@ -277,6 +333,10 @@ static NSTextAttachment *channelIconAttachment() {
     return viewSize;
 }
 
+-(BOOL)isViaBot {
+    return self.message.via_bot_id != 0 || ([self.message isKindOfClass:[TL_destructMessage45 class]] && ((TL_destructMessage45 *)self.message).via_bot_name.length > 0);
+}
+
 - (void) setBlockSize:(NSSize)blockSize {
     self->_blockSize = blockSize;
     
@@ -289,7 +349,6 @@ static NSTextAttachment *channelIconAttachment() {
     for(TLMessage *message in input) {
         MessageTableItem *item = [MessageTableItem messageItemFromObject:message];
         if(item) {
-            //[item makeSizeByWidth:self.table.containerSize.width];
             item.isSelected = NO;
             [array insertObject:item atIndex:0];
         }
@@ -300,9 +359,9 @@ static NSTextAttachment *channelIconAttachment() {
 + (id) messageItemFromObject:(TL_localMessage *)message {
     id objectReturn = nil;
 
+    
     @try {
-        if(message.class == [TL_localMessage_old34 class] || message.class == [TL_localMessage_old32 class] || message.class == [TL_localMessage class] || message.class == [TL_destructMessage class]) {
-            
+        if(message.class == [TL_localMessage class] || message.class == [TL_localMessage_old32 class] || message.class == [TL_localMessage_old34 class] || message.class == [TL_localMessage_old44 class] || message.class == [TL_destructMessage class] || message.class == [TL_destructMessage45 class]) {
             
             if((message.media == nil || [message.media isKindOfClass:[TL_messageMediaEmpty class]]) || [message.media isMemberOfClass:[TL_messageMediaWebPage class]]) {
                 
@@ -321,16 +380,24 @@ static NSTextAttachment *channelIconAttachment() {
                 
                 objectReturn = [[MessageTableItemVideo alloc] initWithObject:message ];
                 
-            } else if([message.media isKindOfClass:[TL_messageMediaDocument class]]) {
+            } else if([message.media isKindOfClass:[TL_messageMediaDocument class]] || [message.media isKindOfClass:[TL_messageMediaDocument_old44 class]]) {
                 
                 TLDocument *document = message.media.document;
+            
+                TL_documentAttributeAnimated *attr = (TL_documentAttributeAnimated *) [document attributeWithClass:[TL_documentAttributeAnimated class]];
                 
-                if([document.mime_type isEqualToString:@"image/gif"] && ![document.thumb isKindOfClass:[TL_photoSizeEmpty class]]) {
+                TL_documentAttributeAudio *audioAttr = (TL_documentAttributeAudio *) [document attributeWithClass:[TL_documentAttributeAudio class]];
+                
+                if([document.mime_type hasPrefix:@"video"] && attr != nil) {
+                    objectReturn = [[MessageTableItemMpeg alloc] initWithObject:message];
+                } else if([document.mime_type isEqualToString:@"image/gif"] && ![document.thumb isKindOfClass:[TL_photoSizeEmpty class]]) {
                     objectReturn = [[MessageTableItemGif alloc] initWithObject:message];
-                } else if([document.mime_type hasPrefix:@"audio/"]) {
+                } else if((audioAttr && !audioAttr.isVoice) || ([document.mime_type isEqualToString:@"audio/mpeg"])) {
                     objectReturn = [[MessageTableItemAudioDocument alloc] initWithObject:message];
                 } else if([document isSticker]) {
                     objectReturn = [[MessageTableItemSticker alloc] initWithObject:message];
+                } else if((audioAttr && audioAttr.isVoice) || [message.media.document.mime_type isEqualToString:@"audio/ogg"]) {
+                    objectReturn = [[MessageTableItemAudio alloc] initWithObject:message];
                 } else {
                     objectReturn = [[MessageTableItemDocument alloc] initWithObject:message];
                 }
@@ -343,9 +410,35 @@ static NSTextAttachment *channelIconAttachment() {
                 
                 objectReturn = [[MessageTableItemGeo alloc] initWithObject:message];
                 
-            } else if([message.media isKindOfClass:[TL_messageMediaAudio class]]) {
+            }  else if([message.media isKindOfClass:[TL_messageMediaBotResult class]]) {
                 
-                objectReturn = [[MessageTableItemAudio alloc] initWithObject:message];
+                if([message.media.bot_result.send_message isKindOfClass:[TL_botInlineMessageText class]]) {
+                    objectReturn = [[MessageTableItemText alloc] initWithObject:message];
+                }
+                
+                if([message.media.bot_result.send_message isKindOfClass:[TL_botInlineMessageMediaAuto class]]) {
+                    
+                    if([message.media.bot_result isKindOfClass:[TL_botInlineMediaResultDocument class]]) {
+                        if(([message.media.bot_result.document.mime_type isEqualToString:@"video/mp4"] && [message.media.bot_result.document attributeWithClass:[TL_documentAttributeAnimated class]]))
+                            objectReturn = [[MessageTableItemMpeg alloc] initWithObject:message];
+                    } else if([message.media.bot_result isKindOfClass:[TL_botInlineMediaResultPhoto class]])
+                        objectReturn = [[MessageTableItemPhoto alloc] initWithObject:message];
+                    else if([message.media.bot_result isKindOfClass:[TL_botInlineResult class]]) {
+                        
+                        if(([message.media.bot_result.content_type isEqualToString:@"video/mp4"] && [message.media.bot_result.type isEqualToString:@"gif"])) {
+                            objectReturn = [[MessageTableItemMpeg alloc] initWithObject:message];
+                        } else if([message.media.bot_result.type isEqualToString:@"photo"]) {
+                            objectReturn = [[MessageTableItemPhoto alloc] initWithObject:message];
+                        }
+ 
+                    }
+                    
+                }
+                
+                if(!objectReturn) {
+                    message.message = @"This message is not supported on your version of Telegram. Update the app to view: https://telegram.org/dl/osx";
+                    objectReturn = [[MessageTableItemText alloc] initWithObject:message];
+                }
                 
             }
         } else if(message.hole != nil) {
@@ -357,12 +450,10 @@ static NSTextAttachment *channelIconAttachment() {
 
     }
     @catch (NSException *exception) {
-        int bp = 0;
+       
     }
     
-    if(objectReturn == nil) {
-        int bp = 0;
-    }
+
     
     return objectReturn;
 }
@@ -413,7 +504,11 @@ static NSTextAttachment *channelIconAttachment() {
 }
 
 -(DownloadItem *)downloadItem {
-    return [DownloadQueue find:self.message.n_id];
+    if(_downloadItem == nil)
+        _downloadItem = [DownloadQueue find:self.message.n_id];
+    
+    return _downloadItem;
+
 }
 
 -(void)rebuildDate {
@@ -457,7 +552,7 @@ static NSTextAttachment *channelIconAttachment() {
 }
 
 -(NSURL *)shareObject {
-    return [NSURL fileURLWithPath:mediaFilePath(self.message.media)];;
+    return [NSURL fileURLWithPath:mediaFilePath(self.message)];
 }
 
 - (BOOL)needUploader {
@@ -465,7 +560,7 @@ static NSTextAttachment *channelIconAttachment() {
 }
 
 - (void)doAfterDownload {
- 
+    _downloadItem = nil;
 }
 
 
@@ -482,8 +577,6 @@ static NSTextAttachment *channelIconAttachment() {
     
 }
 
-
-
 -(id)identifier {
     return @(self.message.n_id);
 }
@@ -494,7 +587,8 @@ static NSTextAttachment *channelIconAttachment() {
 }
 
 - (void)startDownload:(BOOL)cancel force:(BOOL)force {
-    
+
+
     DownloadItem *downloadItem = self.downloadItem;
     
     if(!downloadItem) {
@@ -505,12 +599,11 @@ static NSTextAttachment *channelIconAttachment() {
         [downloadItem start];
     }
     
-    
 }
 
 
 -(BOOL)isReplyMessage {
-    return self.message.reply_to_msg_id != 0 && ![self.message.replyMessage isKindOfClass:[TL_localEmptyMessage class]];
+    return (self.message.reply_to_msg_id != 0 && ![self.message.replyMessage isKindOfClass:[TL_localEmptyMessage class]]) || ([self.message isKindOfClass:[TL_destructMessage45 class]] && ((TL_destructMessage45 *)self.message).reply_to_random_id != 0);
 }
 
 -(BOOL)isFwdMessage {
@@ -519,6 +612,9 @@ static NSTextAttachment *channelIconAttachment() {
 
 - (BOOL)makeSizeByWidth:(int)width {
     _blockWidth = width;
+    
+    
+    
     return NO;
 }
 
@@ -544,6 +640,7 @@ static NSTextAttachment *channelIconAttachment() {
     
     return item;
 }
+
 
 -(id)copyWithZone:(NSZone *)zone {
     return [self copy];

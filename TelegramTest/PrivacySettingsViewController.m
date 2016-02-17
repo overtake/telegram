@@ -26,6 +26,9 @@
 @property (nonatomic,strong) ComposeAction *allowUsersAction;
 @property (nonatomic,strong) ComposeAction *disallowUsersAction;
 
+@property (nonatomic,strong) GeneralSettingsBlockHeaderItem *firstDescription;
+@property (nonatomic,strong) GeneralSettingsBlockHeaderItem *lastDescription;
+
 @end
 
 @implementation PrivacySettingsViewController
@@ -34,7 +37,7 @@
     [super loadView];
     
     
-    weakify();
+    weak();
     
     self.allowUsersAction = [[ComposeAction alloc] initWithBehaviorClass:[ComposeActionCustomBehavior class]];
     
@@ -45,63 +48,59 @@
         
         NSMutableArray *added = [[NSMutableArray alloc] init];
         
-        [strongSelf.allowUsersAction.result.multiObjects enumerateObjectsUsingBlock:^(TLUser *obj, NSUInteger idx, BOOL *stop) {
+        [weakSelf.allowUsersAction.result.multiObjects enumerateObjectsUsingBlock:^(TLUser *obj, NSUInteger idx, BOOL *stop) {
             [added addObject:@(obj.n_id)];
         }];
         
-        strongSelf.changedPrivacy.allowUsers = [strongSelf.changedPrivacy.allowUsers arrayByAddingObjectsFromArray:added];
+        weakSelf.changedPrivacy.allowUsers = [weakSelf.changedPrivacy.allowUsers arrayByAddingObjectsFromArray:added];
         
-        NSMutableArray *cleared = [strongSelf.changedPrivacy.disallowUsers mutableCopy];
+        NSMutableArray *cleared = [weakSelf.changedPrivacy.disallowUsers mutableCopy];
         
         [cleared removeObjectsInArray:added];
         
-        strongSelf.changedPrivacy.disallowUsers = cleared;
+        weakSelf.changedPrivacy.disallowUsers = cleared;
         
-         strongSelf.changedPrivacy = strongSelf.changedPrivacy;
+         weakSelf.changedPrivacy = weakSelf.changedPrivacy;
         
-        [strongSelf.navigationViewController goBackWithAnimation:YES];
+        [weakSelf.navigationViewController goBackWithAnimation:YES];
         
     };
     
     ((ComposeActionCustomBehavior *)self.disallowUsersAction.behavior).composeDone = ^ {
         NSMutableArray *added = [[NSMutableArray alloc] init];
         
-        [strongSelf.disallowUsersAction.result.multiObjects enumerateObjectsUsingBlock:^(TLUser *obj, NSUInteger idx, BOOL *stop) {
+        [weakSelf.disallowUsersAction.result.multiObjects enumerateObjectsUsingBlock:^(TLUser *obj, NSUInteger idx, BOOL *stop) {
             [added addObject:@(obj.n_id)];
         }];
         
-        strongSelf.changedPrivacy.disallowUsers = [strongSelf.changedPrivacy.disallowUsers arrayByAddingObjectsFromArray:added];
+        weakSelf.changedPrivacy.disallowUsers = [weakSelf.changedPrivacy.disallowUsers arrayByAddingObjectsFromArray:added];
         
-        NSMutableArray *cleared = [strongSelf.changedPrivacy.allowUsers mutableCopy];
+        NSMutableArray *cleared = [weakSelf.changedPrivacy.allowUsers mutableCopy];
         
         [cleared removeObjectsInArray:added];
         
-        strongSelf.changedPrivacy.allowUsers = cleared;
+        weakSelf.changedPrivacy.allowUsers = cleared;
         
-        strongSelf.changedPrivacy = strongSelf.changedPrivacy;
+        weakSelf.changedPrivacy = weakSelf.changedPrivacy;
         
-        [strongSelf.navigationViewController goBackWithAnimation:YES];
+        [weakSelf.navigationViewController goBackWithAnimation:YES];
     };
     
-    ((ComposeActionCustomBehavior *)self.allowUsersAction.behavior).customDoneTitle = @"Done";
-    ((ComposeActionCustomBehavior *)self.allowUsersAction.behavior).customCenterTitle = NSLocalizedString(@"PrivacySettingsController.AlwaysShare", nil);
+   
     
-    ((ComposeActionCustomBehavior *)self.disallowUsersAction.behavior).customDoneTitle = @"Done";
-    ((ComposeActionCustomBehavior *)self.disallowUsersAction.behavior).customCenterTitle = NSLocalizedString(@"PrivacySettingsController.NeverShare", nil);
     
-    [self setCenterBarViewText:NSLocalizedString(@"PrivacySettingsController.Header", nil)];
     
     
     TMView *rightView = [[TMView alloc] init];
     
     
-    self.doneButton = [TMTextButton standartUserProfileNavigationButtonWithTitle:@"Done"];
+    self.doneButton = [TMTextButton standartUserProfileNavigationButtonWithTitle:NSLocalizedString(@"Done", nil)];
     
     [self.doneButton setDisableColor:GRAY_BORDER_COLOR];
     
     
     [self.doneButton setTapBlock:^{
-        [strongSelf savePrivacy];
+        [weakSelf savePrivacy];
     }];
     
     [rightView setFrameSize:self.doneButton.frame.size];
@@ -119,13 +118,50 @@
     
     [self.view addSubview:self.tableView.containerView];
     
+}
+
+
+
+-(void)setPrivacy:(PrivacyArchiver *)privacy {
+    _privacy = privacy;
+    
+    [self setCenterBarViewText:NSLocalizedString(privacy.privacyType, nil)];
+    
+    [self loadViewIfNeeded];
+    
+    NSString *allowDesc = [NSString stringWithFormat:@"PrivacySettingsController.AlwaysShare_%@",self.privacy.privacyType];
+    NSString *disallowDesc = [NSString stringWithFormat:@"PrivacySettingsController.NeverShare_%@",self.privacy.privacyType];
+    
+    
+    
+    ((ComposeActionCustomBehavior *)self.allowUsersAction.behavior).customDoneTitle = NSLocalizedString(@"Done", nil);
+    ((ComposeActionCustomBehavior *)self.allowUsersAction.behavior).customCenterTitle = NSLocalizedString(allowDesc, nil);
+    
+    ((ComposeActionCustomBehavior *)self.disallowUsersAction.behavior).customDoneTitle = NSLocalizedString(@"Done", nil);
+    ((ComposeActionCustomBehavior *)self.disallowUsersAction.behavior).customCenterTitle = NSLocalizedString(disallowDesc, nil);
+    
+    [self reload];
+    
+    self.changedPrivacy = [_privacy copy];
+    
+    
+    
+}
+
+
+-(void)reload {
+    
+    [self.tableView removeAllItems:YES];
+    
+    weak();
+    
     GeneralSettingsRowItem *everbody = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeSelected callback:^(TGGeneralRowItem *item) {
         
-        self.changedPrivacy.allowType = PrivacyAllowTypeEverbody;
-        self.changedPrivacy = self.changedPrivacy;
+        weakSelf.changedPrivacy.allowType = PrivacyAllowTypeEverbody;
+        weakSelf.changedPrivacy = weakSelf.changedPrivacy;
         
     } description:NSLocalizedString(@"PrivacySettingsController.Everbody", nil) height:70 stateback:^id(TGGeneralRowItem *item) {
-        return @(self.changedPrivacy.allowType == PrivacyAllowTypeEverbody);
+        return @(weakSelf.changedPrivacy.allowType == PrivacyAllowTypeEverbody);
     }];
     
     [self.tableView insert:everbody atIndex:self.tableView.list.count tableRedraw:NO];
@@ -133,36 +169,49 @@
     
     GeneralSettingsRowItem *myContacts = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeSelected callback:^(TGGeneralRowItem *item) {
         
-        self.changedPrivacy.allowType = PrivacyAllowTypeContacts;
-        self.changedPrivacy = self.changedPrivacy;
+        weakSelf.changedPrivacy.allowType = PrivacyAllowTypeContacts;
+        weakSelf.changedPrivacy = weakSelf.changedPrivacy;
         
     } description:NSLocalizedString(@"PrivacySettingsController.MyContacts", nil) height:42 stateback:^id(TGGeneralRowItem *item) {
-        return @(self.changedPrivacy.allowType == PrivacyAllowTypeContacts);
+        return @(weakSelf.changedPrivacy.allowType == PrivacyAllowTypeContacts);
     }];
     
     [self.tableView insert:myContacts atIndex:self.tableView.list.count tableRedraw:NO];
     
     
-    GeneralSettingsRowItem *nobody = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeSelected callback:^(TGGeneralRowItem *item) {
+    if(self.changedPrivacy.acceptNobodySetting) {
+        GeneralSettingsRowItem *nobody = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeSelected callback:^(TGGeneralRowItem *item) {
+            
+            weakSelf.changedPrivacy.allowType = PrivacyAllowTypeNobody;
+            weakSelf.changedPrivacy = weakSelf.changedPrivacy;
+            
+        } description:NSLocalizedString(@"PrivacySettingsController.Nobody", nil) height:42 stateback:^id(TGGeneralRowItem *item) {
+            return @(weakSelf.changedPrivacy.allowType == PrivacyAllowTypeNobody);
+        }];
         
-        self.changedPrivacy.allowType = PrivacyAllowTypeNobody;
-        self.changedPrivacy = self.changedPrivacy;
         
-    } description:NSLocalizedString(@"PrivacySettingsController.Nobody", nil) height:42 stateback:^id(TGGeneralRowItem *item) {
-        return @(self.changedPrivacy.allowType == PrivacyAllowTypeNobody);
-    }];
+        
+        [self.tableView insert:nobody atIndex:self.tableView.list.count tableRedraw:NO];
+    }
     
-    [self.tableView insert:nobody atIndex:self.tableView.list.count tableRedraw:NO];
+   
+    
+    
+    NSString *first_desc = [NSString stringWithFormat:@"PRIVACY_FIRST_%@",self.privacy.privacyType];
+    
+    _firstDescription = [[GeneralSettingsBlockHeaderItem alloc] initWithString:NSLocalizedString(first_desc, nil) height:50 flipped:YES];
+    
+    [self.tableView addItem:_firstDescription tableRedraw:NO];
     
     
     self.allowSelector = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeNext callback:^(TGGeneralRowItem *item) {
         
-        if(self.changedPrivacy.allowUsers.count == 0) {
-            [[Telegram rightViewController] showComposeWithAction:self.allowUsersAction];
+        if(weakSelf.changedPrivacy.allowUsers.count == 0) {
+            [[Telegram rightViewController] showComposeWithAction:weakSelf.allowUsersAction];
         } else {
-            [[Telegram rightViewController] showPrivacyUserListController:self.changedPrivacy arrayKey:@"allowUsers" addCallback:^{
+            [[Telegram rightViewController] showPrivacyUserListController:weakSelf.changedPrivacy arrayKey:@"allowUsers" addCallback:^{
                 
-                [[Telegram rightViewController] showComposeWithAction:self.allowUsersAction];
+                [[Telegram rightViewController] showComposeWithAction:weakSelf.allowUsersAction];
                 
             } title:NSLocalizedString(@"PrivacySettingsController.AlwaysShare", nil)];
         }
@@ -172,32 +221,23 @@
     
     self.disallowSelector = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeNext callback:^(TGGeneralRowItem *item) {
         
-        if(self.changedPrivacy.disallowUsers.count == 0) {
-            [[Telegram rightViewController] showComposeWithAction:self.disallowUsersAction];
+        if(weakSelf.changedPrivacy.disallowUsers.count == 0) {
+            [[Telegram rightViewController] showComposeWithAction:weakSelf.disallowUsersAction];
         } else {
-            [[Telegram rightViewController] showPrivacyUserListController:self.changedPrivacy arrayKey:@"disallowUsers" addCallback:^{
-                [[Telegram rightViewController] showComposeWithAction:self.disallowUsersAction];
+            [[Telegram rightViewController] showPrivacyUserListController:weakSelf.changedPrivacy arrayKey:@"disallowUsers" addCallback:^{
+                [[Telegram rightViewController] showComposeWithAction:weakSelf.disallowUsersAction];
             } title:NSLocalizedString(@"PrivacySettingsController.NeverShare", nil)];
         }
         
-       
+        
         
     } description:NSLocalizedString(@"PrivacySettingsController.NeverShareWith", nil) subdesc:@"2 users" height:42 stateback:nil];
     
-    [self.tableView insert:nobody atIndex:self.tableView.list.count tableRedraw:NO];
+    
+    
+    
     
     [self.tableView reloadData];
-    
-}
-
-
-
--(void)setPrivacy:(PrivacyArchiver *)privacy {
-    _privacy = privacy;
-    
-    [self view];
-    
-    self.changedPrivacy = [_privacy copy];
 }
 
 -(void)savePrivacy {
@@ -206,8 +246,6 @@
     
     if([self.changedPrivacy.privacyType isEqualToString:kStatusTimestamp])
         pk = [TL_inputPrivacyKeyStatusTimestamp create];
-    
-    
     
     [self showModalProgress];
     
@@ -239,6 +277,12 @@
     [self.tableView removeItem:self.allowSelector tableRedraw:NO];
     [self.tableView removeItem:self.disallowSelector tableRedraw:NO];
     
+    NSString *allowDesc = [NSString stringWithFormat:@"PrivacySettingsController.AlwaysShare_%@",self.privacy.privacyType];
+    NSString *disallowDesc = [NSString stringWithFormat:@"PrivacySettingsController.NeverShare_%@",self.privacy.privacyType];
+    
+    _disallowSelector.desc = NSLocalizedString(disallowDesc, nil);
+    _allowSelector.desc = NSLocalizedString(allowDesc, nil);;
+    
     switch (_changedPrivacy.allowType) {
         case PrivacyAllowTypeContacts:
             self.disallowSelector.height = 80;
@@ -256,6 +300,15 @@
         default:
             break;
     }
+    
+    [self.tableView removeItem:_lastDescription tableRedraw:NO];
+    
+    NSString *last_desc = [NSString stringWithFormat:@"PRIVACY_LAST_%@",self.privacy.privacyType];
+    
+    _lastDescription = [[GeneralSettingsBlockHeaderItem alloc] initWithString:NSLocalizedString(last_desc, nil) height:50 flipped:YES];
+    
+    [self.tableView addItem:_lastDescription tableRedraw:NO];
+
     
     [self.allowSelector setSubdesc:self.changedPrivacy.allowUsers.count == 0 ? NSLocalizedString(@"PrivacySettingsController.AddUsers", nil) : [NSString stringWithFormat:self.changedPrivacy.allowUsers.count == 1 ? NSLocalizedString(@"PrivacySettingsController.UserCount", nil) : NSLocalizedString(@"PrivacySettingsController.UsersCount", nil),self.changedPrivacy.allowUsers.count]];
     

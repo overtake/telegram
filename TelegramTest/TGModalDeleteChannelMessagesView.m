@@ -12,14 +12,14 @@
 @property (nonatomic,strong) TGSettingsTableView *tableView;
 @property (nonatomic,strong) ComposeAction *action;
 
-@property (nonatomic,strong) BTRButton *ok;
-@property (nonatomic,strong) BTRButton *cancel;
 
 
 @end
 
 @implementation TGModalDeleteChannelMessagesView
 
+@synthesize ok = _ok;
+@synthesize cancel = _cancel;
 
 -(instancetype)initWithFrame:(NSRect)frameRect {
     if(self = [super initWithFrame:frameRect]) {
@@ -102,6 +102,8 @@
     
     assert(action.result.multiObjects.count == 4);
     
+    weak();
+    
     [super show:[[NSApp delegate] mainWindow] animated:YES];
     
     
@@ -117,43 +119,43 @@
     [_tableView addItem:header tableRedraw:NO];
     
     GeneralSettingsRowItem *deleteItem = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeSelected callback:^(TGGeneralRowItem *item) {} description:NSLocalizedString(@"Channel.DeleteMessageModal", nil) height:42 stateback:^id(TGGeneralRowItem *item) {
-        return _action.result.multiObjects[0];
+        return weakSelf.action.result.multiObjects[0];
     }];
     
     GeneralSettingsRowItem *banUser = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeSelected callback:^(TGGeneralRowItem *item) {
         
-        BOOL currentValue = [self.action.result.multiObjects[1] boolValue];
+        BOOL currentValue = [weakSelf.action.result.multiObjects[1] boolValue];
         
-        _action.result = [[ComposeResult alloc] initWithMultiObjects:@[@(YES),@(!currentValue),_action.result.multiObjects[2],_action.result.multiObjects[3]]];
+        weakSelf.action.result = [[ComposeResult alloc] initWithMultiObjects:@[@(YES),@(!currentValue),weakSelf.action.result.multiObjects[2],weakSelf.action.result.multiObjects[3]]];
         
-        [_tableView reloadData];
+        [weakSelf.tableView reloadData];
         
     } description:NSLocalizedString(@"Channel.BanUserModal", nil) height:42 stateback:^id(TGGeneralRowItem *item) {
-        return _action.result.multiObjects[1];
+        return weakSelf.action.result.multiObjects[1];
     }];
     
     GeneralSettingsRowItem *reportSpam = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeSelected callback:^(TGGeneralRowItem *item) {
         
-        BOOL currentValue = [self.action.result.multiObjects[2] boolValue];
+        BOOL currentValue = [weakSelf.action.result.multiObjects[2] boolValue];
         
-        _action.result = [[ComposeResult alloc] initWithMultiObjects:@[@(YES),_action.result.multiObjects[1],@(!currentValue),_action.result.multiObjects[3]]];
+        weakSelf.action.result = [[ComposeResult alloc] initWithMultiObjects:@[@(YES),weakSelf.action.result.multiObjects[1],@(!currentValue),weakSelf.action.result.multiObjects[3]]];
         
-        [_tableView reloadData];
+        [weakSelf.tableView reloadData];
         
     } description:NSLocalizedString(@"Channel.ReportSpamModal", nil) height:42 stateback:^id(TGGeneralRowItem *item) {
-        return _action.result.multiObjects[2];
+        return weakSelf.action.result.multiObjects[2];
     }];
     
     GeneralSettingsRowItem *deleteAllMesages = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeSelected callback:^(TGGeneralRowItem *item) {
         
-        BOOL currentValue = [self.action.result.multiObjects[3] boolValue];
+        BOOL currentValue = [weakSelf.action.result.multiObjects[3] boolValue];
         
-        _action.result = [[ComposeResult alloc] initWithMultiObjects:@[@(YES),_action.result.multiObjects[1],_action.result.multiObjects[2],@(!currentValue)]];
+        weakSelf.action.result = [[ComposeResult alloc] initWithMultiObjects:@[@(YES),weakSelf.action.result.multiObjects[1],weakSelf.action.result.multiObjects[2],@(!currentValue)]];
         
-        [_tableView reloadData];
+        [weakSelf.tableView reloadData];
         
     } description:NSLocalizedString(@"Channel.DeleteAllMessagesModal", nil) height:42 stateback:^id(TGGeneralRowItem *item) {
-        return _action.result.multiObjects[3];
+        return weakSelf.action.result.multiObjects[3];
     }];
     
     deleteAllMesages.drawsSeparator = NO;
@@ -168,6 +170,10 @@
     
     [_tableView reloadData];
     
+}
+
+-(void)dealloc {
+    [_tableView clear];
 }
 
 @end

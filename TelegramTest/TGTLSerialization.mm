@@ -60,15 +60,25 @@
 + (id)parseResponse:(NSData *)data request:(id)request
 {
     
-    NSInputStream *is = [[NSInputStream alloc] initWithData:data];
-    [is open];
-    
-    id obj = [ClassStore constructObject:is];
-    if([obj isKindOfClass:[TL_gzip_packed class]]) {
-        obj = [ClassStore deserialize:[[obj packed_data] gzipInflate]];
+    @try {
+        NSInputStream *is = [[NSInputStream alloc] initWithData:data];
+        [is open];
+        
+        id obj = [ClassStore constructObject:is];
+        if([obj isKindOfClass:[TL_gzip_packed class]]) {
+            obj = [ClassStore deserialize:[[obj packed_data] gzipInflate]];
+        }
+        
+        return obj;
     }
-    
-    return obj;
+   
+    @catch (NSException *exception) {
+        RpcError *error = [[RpcError alloc] init];
+        error.error_code = 500;
+        error.error_msg = exception.description;
+        return error;
+    }
+
 }
 
 - (MTExportAuthorizationResponseParser)exportAuthorization:(int32_t)datacenterId data:(__autoreleasing NSData **)data
@@ -127,7 +137,7 @@
 
 - (NSUInteger)currentLayer
 {
-    return 43;
+    return 46;
 }
 
 @end

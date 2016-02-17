@@ -264,7 +264,7 @@
             if(operation.uploadType == UploadImageType)
                 media = [TL_inputMediaUploadedPhoto createWithFile:file caption:@""];
             else
-                media = [TL_inputMediaUploadedDocument createWithFile:file mime_type:mimetypefromExtension([path pathExtension]) attributes:[@[[TL_documentAttributeFilename createWithFile_name:[path lastPathComponent]]] mutableCopy]];
+                media = [TL_inputMediaUploadedDocument createWithFile:file mime_type:mimetypefromExtension([path pathExtension]) attributes:[@[[TL_documentAttributeFilename createWithFile_name:[path lastPathComponent]]] mutableCopy] caption:@""];
             
             [self performMediaRequest:media rowItem:rowItem path:path];
             

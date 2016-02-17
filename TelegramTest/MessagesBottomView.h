@@ -36,12 +36,14 @@ typedef enum {
 
 - (void)setState:(MessagesBottomViewState)state animated:(BOOL)animated;
 
+- (void)setContextBotString:(NSString *)bot;
+
 - (void)setInputMessageString:(NSString *)message disableAnimations:(BOOL)disableAnimations;
 - (NSString *)inputMessageString;
 - (void)setSectedMessagesCount:(NSUInteger)count enable:(BOOL)enable;
 
 -(void)closeEmoji;
-
+-(void)setProgress:(BOOL)progress;
 -(void)updateReplayMessage:(BOOL)updateHeight animated:(BOOL)animated;
 -(void)updateFwdMessage:(BOOL)updateHeight animated:(BOOL)animated;
 
@@ -55,5 +57,9 @@ typedef enum {
 
 -(void)selectInputTextByText:(NSString *)text;
 
+-(void)startOrStopQuickRecord;
+
+-(BOOL)removeQuickRecord;
+-(void)showQuickRecordedPreview:(NSString *)file audioAttr:(TL_documentAttributeAudio *)audioAttr;
 
 @end

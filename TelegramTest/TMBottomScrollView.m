@@ -7,9 +7,16 @@
 //
 
 #import "TMBottomScrollView.h"
-
-@interface TMBottomScrollView ()
+#import "MLCalendarView.h"
+#import "MessageTableItem.h"
+@interface TMBottomScrollView ()<MLCalendarViewDelegate>
 @property (nonatomic, strong) NSAttributedString *messagesCountAttributedString;
+
+@property (strong) NSPopover* calendarPopover;
+@property (strong) MLCalendarView*calendarView;
+@property (weak) IBOutlet NSDateFormatter *dateFormatter;
+
+@property (nonatomic,strong) BTRButton *calendarButton;
 @end
 
 @implementation TMBottomScrollView
@@ -26,11 +33,184 @@
       //  [self setCursor:[NSCursor pointingHandCursor] forControlState:BTRControlStateNormal];
         
         [self setMessagesCount:32];
+        
+        _calendarButton = [[BTRButton alloc] initWithFrame:NSMakeRect(NSWidth(frame) - 25, 0, 20, 20)];
+        
+        [_calendarButton setCenteredYByView:self];
+        
+        [_calendarButton setImage:image_CalendarIcon() forControlState:BTRControlStateNormal];
+        
+//        _calendarButton.wantsLayer = YES;
+//        _calendarButton.layer.cornerRadius = 4;
+//        _calendarButton.layer.borderColor = DIALOG_BORDER_COLOR.CGColor;
+//        _calendarButton.layer.borderWidth = 2;
+        
+        [_calendarButton setHidden:!ACCEPT_FEATURE];
+        
+        weak();
+        
+        [_calendarButton addBlock:^(BTRControlEvents events) {
+            [weakSelf showCalendar];
+        } forControlEvents:BTRControlEventClick];
+        
+        [self addSubview:_calendarButton];
     }
     return self;
 }
 
+-(void)addScrollEvent {
+    id clipView = [[self.messagesViewController.table enclosingScrollView] contentView];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(_didScrolledTableView:)
+                                                 name:NSViewBoundsDidChangeNotification
+                                               object:clipView];
+    
+}
+
+-(void)setMessagesViewController:(MessagesViewController *)messagesViewController {
+    _messagesViewController = messagesViewController;
+    [self addScrollEvent];
+}
+
+-(void)dealloc {
+    [Notification removeObserver:self];
+}
+
+-(void)removeScrollEvent {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
+-(void)_didScrolledTableView:(NSNotification *)notification {
+    
+    if(self.calendarPopover.isShown) {
+        NSRange range = [_messagesViewController.table rowsInRect:[_messagesViewController.table visibleRect]];
+        
+        __block MessageTableItem *item;
+        
+        [_messagesViewController.messageList enumerateObjectsAtIndexes:[NSIndexSet indexSetWithIndexesInRange:range] options:NSEnumerationReverse usingBlock:^(MessageTableItem *obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            
+            if(obj.message != nil) {
+                item = obj;
+                *stop = YES;
+            }
+            
+        }];
+        
+        NSDate* date = [NSDate dateWithTimeIntervalSince1970:item.message.date];
+        self.calendarView.date = date;
+        self.calendarView.selectedDate = date;
+
+    }
+}
+
+-(void)setHidden:(BOOL)flag {
+    [super setHidden:flag];
+    
+    if(self.isHidden) {
+        [self.calendarPopover close];
+    }
+    
+    if(flag) {
+        [self setMessagesCount:0];
+        [self sizeToFit];
+    }
+    
+    
+}
+
+- (void) createCalendarPopover {
+    NSPopover* myPopover = self.calendarPopover;
+    if(!myPopover) {
+        myPopover = [[NSPopover alloc] init];
+        self.calendarView = [[MLCalendarView alloc] init];
+        self.calendarView.delegate = self;
+        myPopover.contentViewController = self.calendarView;
+     //   myPopover.appearance = [NSAppearance appearanceNamed:NSAppearanceNameAqua];
+     //   myPopover.animates = YES;
+        myPopover.behavior = NSPopoverBehaviorTransient;
+    }
+    self.calendarPopover = myPopover;
+}
+
+- (void)showCalendar {
+    [self createCalendarPopover];
+    
+   NSRect cellRect = [_calendarButton bounds];
+    [self.calendarPopover showRelativeToRect:cellRect ofView:_calendarButton preferredEdge:NSMaxYEdge];
+    
+    [self _didScrolledTableView:nil];
+}
+
+- (void) didSelectDate:(NSDate *)selectedDate {
+    [self.calendarPopover close];
+    
+    assert(_messagesViewController != nil);
+    
+    [self.messagesViewController showModalProgress];
+    
+    
+    NSDate *jumpDate = selectedDate;
+    
+    selectedDate = [NSDate dateWithTimeIntervalSince1970:selectedDate.timeIntervalSince1970];
+    
+    id request;
+    
+   
+    
+    if(_messagesViewController.conversation.type == DialogTypeChannel) {
+        request = [TLAPI_channels_getImportantHistory createWithChannel:_messagesViewController.conversation.chat.inputPeer offset_id:0 offset_date:selectedDate.timeIntervalSince1970 add_offset:0 limit:100 max_id:INT32_MAX min_id:0];
+    } else {
+        request = [TLAPI_messages_getHistory createWithPeer:_messagesViewController.conversation.inputPeer offset_id:0 offset_date:selectedDate.timeIntervalSince1970 add_offset:0 limit:100 max_id:INT32_MAX min_id:0];
+    }
+    
+    
+    
+    NSLog(@"selected date: %@",selectedDate);
+    
+    [RPCRequest sendRequest:request successHandler:^(id request, TL_messages_messages *response) {
+        
+        [TL_localMessage convertReceivedMessages:response.messages];
+        
+        if(response.messages.count > 0) {
+            [[Storage manager] addHolesAroundMessage:[response.messages firstObject]];
+            [[Storage manager] addHolesAroundMessage:[response.messages lastObject]];
+            [[Storage manager] insertMessages:response.messages];
+            
+            
+            NSLog(@"first date: %@",[NSDate dateWithTimeIntervalSince1970:[(TL_localMessage *)[response.messages firstObject] date]]);
+            NSLog(@"last date: %@",[NSDate dateWithTimeIntervalSince1970:[(TL_localMessage *)[response.messages lastObject] date]]);
+            
+            __block TL_localMessage *jumpMessage = [response.messages firstObject];
+            
+            [response.messages enumerateObjectsWithOptions:NSEnumerationReverse usingBlock:^(TL_localMessage *obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                
+                if(obj.date >= jumpDate.timeIntervalSince1970) {
+                    jumpMessage = obj;
+                    NSLog(@"jump date: %@",[NSDate dateWithTimeIntervalSince1970:[obj date]]);
+                    *stop = YES;
+                }
+                
+            }];
+            
+            [self.messagesViewController showMessage:jumpMessage fromMsg:nil flags:ShowMessageTypeDateJump];
+            [self.messagesViewController hideModalProgressWithSuccess];
+
+        } else {
+            [self.messagesViewController hideModalProgress];
+        }
+        
+       
+        
+    } errorHandler:^(id request, RpcError *error) {
+        [self.messagesViewController hideModalProgress];
+    } timeout:10];
+    
+}
+
 - (void)clickHandler {
+    
+
+    
     if(_callback) {
         [self setHidden:YES];
         _callback();
@@ -62,15 +242,6 @@
     [NSGraphicsContext saveGraphicsState];
     CGContextSetShouldSmoothFonts(context, TRUE);
 
-    
-//    NSBezierPath *path = [NSBezierPath bezierPathWithRoundedRect:NSMakeRect(1, 1, self.bounds.size.width - 2, self.bounds.size.height - 2) xRadius:3 yRadius:3];
-//    
-//    [NSColorFromRGB(0xfefefe) setFill];
-//    [path fill];
-//    
-//    [path setLineWidth:1];
-//    [NSColorFromRGB(0xe5e5e5) setStroke];
-//    [path stroke];
     
     
     //ROMANOV BUGFIX
@@ -108,8 +279,9 @@
 
     
     NSPoint point;
-    point.x = self.bounds.size.width - 44 +  roundf((44 - image_ScrollDownArrow().size.width) * 0.5);
-    point.y = roundf((44 - image_ScrollDownArrow().size.height) * 0.5);
+    if(ACCEPT_FEATURE)
+        point.x = -5;
+    point.y = roundf((NSHeight(dirtyRect) - image_ScrollDownArrow().size.height) * 0.5);
 
     [image_ScrollDownArrow() drawAtPoint:point fromRect:NSZeroRect operation:NSCompositeSourceOver fraction:1];
     
@@ -123,14 +295,7 @@
     [NSGraphicsContext restoreGraphicsState];
 }
 
-- (void)setHidden:(BOOL)flag {
-    [super setHidden:flag];
-        
-    if(flag) {
-        [self setMessagesCount:0];
-        [self sizeToFit];
-    }
-}
+
 
 - (void)sizeToFit {
     
@@ -141,7 +306,13 @@
         size.width += 16;
     }
     
-    size.width += 44;
+    if(ACCEPT_FEATURE) {
+         size.width += 60;
+    } else {
+        size.width+=40;
+    }
+    
+   
     size.height = 44;
     
     

@@ -127,11 +127,11 @@
     [self.firstNameTextField setNextKeyView:self.lastNameTextField];
     [self.lastNameTextField setNextKeyView:self.firstNameTextField];
     
-    weakify();
+    weak();
     self.registerButtonAndErrorView = [[LoginButtonAndErrorView alloc] initWithFrame:NSMakeRect(140, 40, self.containerView.bounds.size.width - 100, 40)];
     [self.registerButtonAndErrorView setButtonText:NSLocalizedString(@"Registration.StartMessaging", nil)];
     [self.registerButtonAndErrorView.textButton setTapBlock:^{
-        [strongSelf signUp];
+        [weakSelf signUp];
     }];
     [self.containerView addSubview:self.registerButtonAndErrorView];
 }

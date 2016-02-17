@@ -49,34 +49,42 @@
         request = [TLAPI_messages_sendBroadcast createWithContacts:[self.conversation.broadcast inputContacts] random_id:[self.conversation.broadcast generateRandomIds] message:self.message.message media:media];
     }
     
+    weak();
+    
     self.rpc_request = [RPCRequest sendRequest:request successHandler:^(RPCRequest *request, TLUpdates * response) {
         
-        [self updateMessageId:response];
+        strongWeak();
         
-        TL_localMessage *msg = [TL_localMessage convertReceivedMessage:[[self updateNewMessageWithUpdates:response] message]];
-        
-        if(msg == nil)
-        {
-            [self cancel];
-            return;
+        if(strongSelf != nil) {
+            [strongSelf updateMessageId:response];
+            
+            TL_localMessage *msg = [TL_localMessage convertReceivedMessage:[[strongSelf updateNewMessageWithUpdates:response] message]];
+            
+            if(msg == nil)
+            {
+                [strongSelf cancel];
+                return;
+            }
+            
+            if(strongSelf.conversation.type != DialogTypeBroadcast)  {
+                strongSelf.message.n_id = msg.n_id;
+                strongSelf.message.date = msg.date;
+                
+            }
+            
+            
+            strongSelf.message.dstate = DeliveryStateNormal;
+            
+            [SharedManager proccessGlobalResponse:response];
+            
+            [strongSelf.message save:YES];
+            
+            strongSelf.state = MessageSendingStateSent;
         }
         
-        if(self.conversation.type != DialogTypeBroadcast)  {
-            self.message.n_id = msg.n_id;
-            self.message.date = msg.date;
-            
-        } 
-        
-        
-        self.message.dstate = DeliveryStateNormal;
-        
-        [SharedManager proccessGlobalResponse:response];
-        
-        [self.message save:YES];
-        
-        self.state = MessageSendingStateSent;
+       
     } errorHandler:^(RPCRequest *request, RpcError *error) {
-        self.state = MessageSendingStateError;
+        weakSelf.state = MessageSendingStateError;
     } timeout:0 queue:[ASQueue globalQueue].nativeQueue];
 
 }

@@ -14,24 +14,28 @@
 #import "TGWebpageStandartObject.h"
 #import "TGWebpageArticle.h"
 #import "TGWebpageGifObject.h"
+#import "TGWebpageDocumentObject.h"
 #import "NSAttributedString+Hyperlink.h"
 
 #import "TGArticleImageObject.h"
+#import "NSImage+RHResizableImageAdditions.h"
 
 @implementation TGWebpageObject
 
 NSImage *placeholder() {
-    static NSImage *image = nil;
+    static RHResizableImage *image = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
+        NSRect rect = NSMakeRect(0, 0, 50, 50);
+        NSImage *img = [[NSImage alloc] initWithSize:rect.size];
+        [img lockFocus];
+        [GRAY_BORDER_COLOR set];
+        NSBezierPath *path = [NSBezierPath bezierPath];
+        [path appendBezierPathWithRoundedRect:NSMakeRect(0, 0, rect.size.width, rect.size.height) xRadius:4 yRadius:4];
+        [path fill];
+        [img unlockFocus];
         
-        NSRect rect = NSMakeRect(0, 0, 1, 1);
-        image = [[NSImage alloc] initWithSize:rect.size];
-        [image lockFocus];
-        
-        [GRAY_BORDER_COLOR setFill];
-        NSRectFill(rect);
-        [image unlockFocus];
+        image = [[RHResizableImage alloc] initWithImage:img capInsets:RHEdgeInsetsMake(5, 5, 5, 5)];
         
     });
     return image;
@@ -86,7 +90,7 @@ NSImage *placeholder() {
         
         NSMutableAttributedString *siteName = [[NSMutableAttributedString alloc] init];
         
-        [siteName appendString:webpage.site_name ? webpage.site_name : @"Link Preview" withColor:GRAY_TEXT_COLOR];
+        [siteName appendString:webpage.site_name ? webpage.site_name : webpage.document ? NSLocalizedString(webpage.type, nil) : @"Link Preview" withColor:GRAY_TEXT_COLOR];
 
         [siteName setFont:TGSystemMediumFont(13) forRange:siteName.range];
       //  [siteName addAttribute:NSParagraphStyleAttributeName value:style range:siteName.range];
@@ -98,8 +102,9 @@ NSImage *placeholder() {
             
             NSMutableAttributedString *desc = [[NSMutableAttributedString alloc] init];
             
-            [desc appendString:webpage.n_description withColor:[NSColor blackColor]];
+            [desc appendString:webpage.n_description withColor:NSColorFromRGB(0x000000)];
             [desc setFont:TGSystemFont(13) forRange:desc.range];
+            
             
             NSMutableParagraphStyle *style = [NSMutableParagraphStyle new];
             style.lineBreakMode = NSLineBreakByWordWrapping;
@@ -113,16 +118,19 @@ NSImage *placeholder() {
             if(t.length > 0 && _author == nil)  {
                 NSMutableAttributedString *title = [[NSMutableAttributedString alloc] init];
                 
-                [title appendString:[NSString stringWithFormat:@"%@\n",t] withColor:[NSColor blackColor]];
+                [title appendString:[NSString stringWithFormat:@"%@\n",t] withColor:NSColorFromRGB(0x000000)];
                 [title setFont:TGSystemMediumFont(13) forRange:title.range];
+                
                 
                 [desc insertAttributedString:title atIndex:0];
             }
             
-            
             _desc = desc;
             
             [desc detectAndAddLinks:URLFindTypeLinks];
+            
+            [desc setSelectionColor:NSColorFromRGB(0xffffff) forColor:NSColorFromRGB(0x000000)];
+            
         } else {
             _desc = [[NSAttributedString alloc] init];
         }
@@ -231,18 +239,28 @@ NSImage *placeholder() {
         return [[TGWebpageArticle alloc] initWithWebPage:webpage];
     }
     
-    if([webpage.type isEqualToString:@"document"]) {
-        if([webpage.document.mime_type isEqualToString:@"image/gif"])
+    if([webpage.type isEqualToString:@"document"] || [webpage.type isEqualToString:@"gif"]) {
+        
+        id animated = [webpage.document attributeWithClass:[TL_documentAttributeAnimated class]];
+        
+        if([webpage.document.mime_type isEqualToString:@"video/mp4"] && animated)
             return [[TGWebpageGifObject alloc] initWithWebPage:webpage];
+    }
+    
+    if([webpage.type isEqualToString:@"document"] && webpage.document != nil) {
+        return [[TGWebpageDocumentObject alloc] initWithWebPage:webpage];
     }
     
     return [[TGWebpageStandartObject alloc] initWithWebPage:webpage];
     
-    return nil;
 }
 
 -(NSImage *)siteIcon  {
     return nil;
+}
+
+-(void)doAfterDownload {
+    
 }
 
 -(int)blockHeight {

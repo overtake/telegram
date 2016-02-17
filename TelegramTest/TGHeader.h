@@ -9,6 +9,12 @@
 #ifndef Telegram_TGHeader_h
 #define Telegram_TGHeader_h
 
+
+#import <Availability.h>
+#undef  __AVAILABILITY_INTERNAL_WEAK_IMPORT
+#define __AVAILABILITY_INTERNAL_WEAK_IMPORT \
+__attribute__((weak_import,deprecated("API newer than Deployment Target.")))
+
 #define TGOUTMESSAGE 0x2
 #define TGUNREADMESSAGE 0x1
 #define TGOUTUNREADMESSAGE 0x3
@@ -101,10 +107,9 @@
 #define LINK_COLOR BLUE_UI_COLOR
 #define BLUE_SEPARATOR_COLOR NSColorFromRGB(0x66A7DB)
 #define MIN_IMG_SIZE NSMakeSize(250,40)
-#define weakify() __block __typeof(&*self)strongSelf = self;
 
 #define weak() __weak typeof(self) weakSelf = self;
-
+#define strongWeak() __block __typeof(&*self)strongSelf = weakSelf;
 #define APP_VERSION [[[[[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleShortVersionString"] componentsSeparatedByCharactersInSet:[[NSCharacterSet decimalDigitCharacterSet] invertedSet]] componentsJoinedByString:@""] intValue]
 
 #import "CFunctions.h"

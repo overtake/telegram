@@ -39,7 +39,8 @@ typedef enum {
     SmartNotifications = 1 << 22,
     MarkedInputText = 1 << 23,
     MessagesNotificationPreview = 1 << 24,
-    IncludeMutedUnreadCount = 1 << 25
+    IncludeMutedUnreadCount = 1 << 25,
+    DisableAutoplayGifSetting = 1 << 26
 } SettingsMask;
 
 

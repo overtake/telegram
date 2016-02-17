@@ -128,7 +128,7 @@ static NSImage *playImage() {
     
     if (floor(NSAppKitVersionNumber) > 1187)  {
         
-        NSURL *url = [NSURL fileURLWithPath:mediaFilePath(self.item.message.media)];
+        NSURL *url = [NSURL fileURLWithPath:mediaFilePath(self.item.message)];
         
         NSSize size = NSMakeSize(self.item.message.media.video.w, self.item.message.media.video.h);
         
@@ -192,13 +192,15 @@ static NSImage *playImage() {
 - (NSMenu *)contextMenu {
     NSMenu *menu = [[NSMenu alloc] initWithTitle:@"Video menu"];
     
+    weak();
+    
     if([self.item isset]) {
         [menu addItem:[NSMenuItem menuItemWithTitle:NSLocalizedString(@"Context.SaveAs", nil) withBlock:^(id sender) {
-            [self performSelector:@selector(saveAs:) withObject:self];
+            [weakSelf performSelector:@selector(saveAs:) withObject:weakSelf];
         }]];
         
         [menu addItem:[NSMenuItem menuItemWithTitle:NSLocalizedString(@"Context.CopyToClipBoard", nil) withBlock:^(id sender) {
-            [self performSelector:@selector(copy:) withObject:self];
+            [weakSelf performSelector:@selector(copy:) withObject:weakSelf];
         }]];
         
         
@@ -341,7 +343,7 @@ static NSImage *playImage() {
     if([_imageView hitTest:eventLocation]) {
         NSPoint dragPosition = NSMakePoint(80, 8);
         
-        NSString *path = mediaFilePath(self.item.message.media);
+        NSString *path = mediaFilePath(self.item.message);
         
         
         NSPasteboard *pasteBrd=[NSPasteboard pasteboardWithName:TGImagePType];

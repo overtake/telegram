@@ -74,14 +74,14 @@
             
             [self.downloadItem addEvent:self.downloadListener];
             
-            weakify();
+            weak();
             
             [self.downloadListener setCompleteHandler:^(DownloadItem * item) {
                 
                 [[ASQueue mainQueue] dispatchOnQueue:^{
-                    if([[TMMediaController getCurrentController] currentItem] == strongSelf)
+                    if([[TMMediaController getCurrentController] currentItem] == weakSelf)
                         [[TMMediaController getCurrentController] refreshCurrentPreviewItem];
-                    strongSelf.downloadItem = nil;
+                    weakSelf.downloadItem = nil;
                 }];
                 
             }];

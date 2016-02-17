@@ -52,13 +52,7 @@
     return self;
 }
 
-- (BOOL)isConcurrent {
-    return YES;
-}
 
-- (BOOL)isFinished {
-    return self.uploadState == UploadFinished || self.uploadState == UploadError || self.uploadState == UploadCancelled;
-}
 
 -(void)setUploadCancelled:(void (^)(UploadOperation *))uploadCancelled {
     
@@ -85,6 +79,13 @@
     }];
 }
 
+- (BOOL)isConcurrent {
+    return YES;
+}
+
+- (BOOL)isFinished {
+    return self.uploadState == UploadFinished || self.uploadState == UploadError || self.uploadState == UploadCancelled;
+}
 
 - (BOOL)isExecuting {
     return self.uploadState == UploadExecuting;
@@ -155,7 +156,7 @@
     self.total_size = (int) (self.fileData ? self.fileData.length : fileSize(self.filePath));
     
     
-    if(self.filePath) {
+    if(self.filePath && self.total_size < 10*1024*1024) {
         self.fileMD5Hash = fileMD5(self.filePath);
     }
     
@@ -312,8 +313,13 @@
 }
 
 - (void)startUploadPart:(int)partNumber {
-    if(partNumber >= self.total_parts)
+    if(partNumber >= self.total_parts) {
+        if(self.total_parts == 0) {
+            [self cancel];
+        }
         return;
+    }
+    
     
     __block int readFromBufferSize = [self lengthOfReadBytesForPart:partNumber];
 

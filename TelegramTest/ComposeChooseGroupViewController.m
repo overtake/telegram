@@ -73,7 +73,7 @@
 
 
 
--(void)selectTableDidChangedItem:(SelectChatItem *)item {
+-(void)selectTableDidChangedItem:(SelectUserItem *)item {
     
     [self.tableView cancelSelection];
     
@@ -88,6 +88,10 @@
         
     }, nil);
     
+}
+
+-(void)dealloc {
+    [_tableView clear];
 }
 
 @end

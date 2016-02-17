@@ -20,15 +20,19 @@
     [super setState:state];
 }
 
-- (id)initWithPath:(NSString *)filePath forConversation:(TL_conversation *)conversation additionFlags:(int)additionFlags {
+- (id)initWithPath:(NSString *)filePath forConversation:(TL_conversation *)conversation additionFlags:(int)additionFlags waveforms:(NSData *)waveforms {
     if(self = [super init]) {
         self.filePath = filePath;
         self.conversation = conversation;
         
         NSTimeInterval duration = [TGOpusAudioPlayerAU durationFile:filePath];
-
-        TL_messageMediaAudio *audio = [TL_messageMediaAudio createWithAudio:[TL_audio createWithN_id:0 access_hash:0 date:(int)[[MTNetwork instance] getTime] duration:roundf(duration) mime_type:@"opus" size:(int)fileSize(filePath) dc_id:0]];
         
+        NSMutableArray *attrs = [NSMutableArray array];
+        
+        
+        [attrs addObject:[TL_documentAttributeAudio createWithFlags:(1 << 10) duration:roundf(duration) title:nil performer:nil waveform:waveforms]];
+
+        TL_messageMediaDocument *audio = [TL_messageMediaDocument createWithDocument:[TL_document createWithN_id:0 access_hash:0 date:[[MTNetwork instance] getTime] mime_type:@"audio/ogg" size:(int)fileSize(filePath) thumb:[TL_photoSizeEmpty createWithType:@"x"] dc_id:0 attributes:attrs] caption:@""];
         
         self.message = [MessageSender createOutMessage:@"" media:audio conversation:conversation];
         
@@ -46,13 +50,13 @@
     self.operation = [[UploadOperation alloc] init];
     
     
-    NSString *export = exportPath(self.message.randomId,@"mp3");
+    NSString *export = exportPath(self.message.randomId,@"ogg");
     
     if(!self.filePath)
         self.filePath = export;
     
     if(![self.filePath isEqualToString:export]) {
-        [[NSFileManager defaultManager] copyItemAtPath:self.filePath toPath:export error:nil];
+        [[NSFileManager defaultManager] moveItemAtPath:self.filePath toPath:export error:nil];
         self.filePath = export;
         [self.message save:YES];
     }
@@ -69,10 +73,9 @@
     
     [self.operation setUploadComplete:^(UploadOperation *uploader, id input) {
         
-        TL_inputMediaUploadedAudio *media = [TL_inputMediaUploadedAudio createWithFile:input duration:((TL_localMessage *)weakSelf.message).media.audio.duration mime_type:@"audio/mpeg"];
+        TL_inputMediaUploadedDocument *media = [TL_inputMediaUploadedDocument createWithFile:input mime_type:@"audio/ogg" attributes:weakSelf.message.media.document.attributes caption:weakSelf.message.media.caption];
         
-        
-        id request = nil;
+         id request = nil;
         
         if(weakSelf.conversation.type == DialogTypeBroadcast) {
             request = [TLAPI_messages_sendBroadcast createWithContacts:[weakSelf.conversation.broadcast inputContacts] random_id:[weakSelf.conversation.broadcast generateRandomIds] message:@"" media:media];
@@ -93,18 +96,9 @@
                 return;
             }
             
-            
-            if(weakSelf.conversation.type != DialogTypeBroadcast)  {
-                weakSelf.message.n_id = msg.n_id;
-                weakSelf.message.date = msg.date;
-                
-            } else {
-                
-                
-            }
-            
-            
-            
+            weakSelf.message.n_id = msg.n_id;
+            weakSelf.message.date = msg.date;
+          
             TLPhotoSize *newSize = [[msg media].photo.sizes lastObject];
             
             if(weakSelf.message.media.photo.sizes.count > 1) {
@@ -115,7 +109,7 @@
             }
             
             
-            NSString *filePath = mediaFilePath(msg.media);
+            NSString *filePath = mediaFilePath(msg);
             
             
             if ([[NSFileManager defaultManager] isReadableFileAtPath:weakSelf.filePath]) {

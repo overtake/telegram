@@ -215,6 +215,7 @@ static TMTableView *tableStatic;
 	}
 }
 
+
 - (void)mouseMoved:(NSEvent*)theEvent
 {
     [super mouseMoved:theEvent];
@@ -286,7 +287,7 @@ static TMTableView *tableStatic;
     [self.list insertObject:item atIndex:atIndex];
     TMRowItem *rowItem = (TMRowItem *)(item);
     rowItem.table = self;
-    
+    rowItem.rowId = atIndex;
     if(tableRedraw) {
         [self beginUpdates];
         [self insertRowsAtIndexes:[NSIndexSet indexSetWithIndex:atIndex] withAnimation:self.defaultAnimation];
@@ -323,7 +324,7 @@ static TMTableView *tableStatic;
     
 }
 
-- (NSObject *) itemAtPosition:(NSUInteger)positionOfItem {
+- (id) itemAtPosition:(NSUInteger)positionOfItem {
     return [self.list objectAtIndex:positionOfItem];
 }
 
@@ -353,6 +354,8 @@ static TMTableView *tableStatic;
     }
     return NO;
 }
+
+
 
 
 - (BOOL)removeAllItems:(BOOL)tableRedraw {
@@ -562,7 +565,7 @@ static TMTableView *tableStatic;
 
 - (NSView *)tableView:(NSTableView *)tableView
    viewForTableColumn:(NSTableColumn *)tableColumn
-                  row:(NSInteger)row {
+                  row:(NSInteger)row { 
     
     TMRowItem *item = [self.list objectAtIndex:row];
     
@@ -591,7 +594,7 @@ static TMTableView *tableStatic;
     
     [super mouseDown:theEvent];
     
-    if(![self.className isEqualToString:@"TGRecentSearchTableView"])
+    if(![self.className isEqualToString:@"TGRecentSearchTableView"] && ![self.className isEqualToString:@"TGSettingsTableView"])
         [TMTableView setCurrent:self];
     
     if([self.className isEqualToString:@"TGConversationsTableView"] && !self.isHidden )
@@ -613,5 +616,12 @@ static TMTableView *tableStatic;
     
     return range.location <= index && range.location + range.length >= index;
 }
+
+-(void)clear {
+    _scrollView.documentView = nil;
+ 
+}
+
+
 
 @end

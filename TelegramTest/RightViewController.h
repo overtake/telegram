@@ -168,4 +168,6 @@
 -(void)showComposeChannelParticipants:(ComposeAction *)action;
 
 -(void)showComposeSettingsupNewChannel:(ComposeAction *)action;
+
+- (void)showChatInviteController;
 @end

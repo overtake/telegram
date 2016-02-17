@@ -2,7 +2,7 @@
 //  MTProto.h
 //  Telegram
 //
-//  Auto created by Mikhail Filimonov on 27.11.15.
+//  Auto created by Mikhail Filimonov on 13.02.16.
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -150,9 +150,6 @@
 @interface TLContactBlocked : TLObject
 @end
 	
-@interface TLContactSuggested : TLObject
-@end
-	
 @interface TLContactStatus : TLObject
 @end
 	
@@ -166,9 +163,6 @@
 @end
 	
 @interface TLcontacts_Blocked : TLObject
-@end
-	
-@interface TLcontacts_Suggested : TLObject
 @end
 	
 @interface TLmessages_Dialogs : TLObject
@@ -246,13 +240,7 @@
 @interface TLmessages_SentEncryptedMessage : TLObject
 @end
 	
-@interface TLInputAudio : TLObject
-@end
-	
 @interface TLInputDocument : TLObject
-@end
-	
-@interface TLAudio : TLObject
 @end
 	
 @interface TLDocument : TLObject
@@ -406,6 +394,33 @@
 @end
 	
 @interface TLhelp_TermsOfService : TLObject
+@end
+	
+@interface TLFoundGif : TLObject
+@end
+	
+@interface TLmessages_FoundGifs : TLObject
+@end
+	
+@interface TLmessages_SavedGifs : TLObject
+@end
+	
+@interface TLInputBotInlineMessage : TLObject
+@end
+	
+@interface TLInputBotInlineResult : TLObject
+@end
+	
+@interface TLBotInlineMessage : TLObject
+@end
+	
+@interface TLBotInlineResult : TLObject
+@end
+	
+@interface TLmessages_BotResults : TLObject
+@end
+	
+@interface TLAudio : TLObject
 @end
 	
 @interface TLProtoMessage : TLObject
@@ -585,6 +600,8 @@
 @property (nonatomic, strong) NSString* address;
 @property (nonatomic, strong) NSString* provider;
 @property (nonatomic, strong) NSString* venue_id;
+@property (nonatomic, strong) NSString* url;
+@property (nonatomic, strong) NSString* q;
 @end
 
 @interface TL_inputMediaEmpty : TLInputMedia<NSCoding>
@@ -611,23 +628,20 @@
 @interface TL_inputMediaVideo : TLInputMedia<NSCoding>
 +(TL_inputMediaVideo*)createWithN_id:(TLInputVideo*)n_id caption:(NSString*)caption;
 @end
-@interface TL_inputMediaUploadedAudio : TLInputMedia<NSCoding>
-+(TL_inputMediaUploadedAudio*)createWithFile:(TLInputFile*)file duration:(int)duration mime_type:(NSString*)mime_type;
-@end
-@interface TL_inputMediaAudio : TLInputMedia<NSCoding>
-+(TL_inputMediaAudio*)createWithN_id:(TLInputAudio*)n_id;
-@end
 @interface TL_inputMediaUploadedDocument : TLInputMedia<NSCoding>
-+(TL_inputMediaUploadedDocument*)createWithFile:(TLInputFile*)file mime_type:(NSString*)mime_type attributes:(NSMutableArray*)attributes;
++(TL_inputMediaUploadedDocument*)createWithFile:(TLInputFile*)file mime_type:(NSString*)mime_type attributes:(NSMutableArray*)attributes caption:(NSString*)caption;
 @end
 @interface TL_inputMediaUploadedThumbDocument : TLInputMedia<NSCoding>
-+(TL_inputMediaUploadedThumbDocument*)createWithFile:(TLInputFile*)file thumb:(TLInputFile*)thumb mime_type:(NSString*)mime_type attributes:(NSMutableArray*)attributes;
++(TL_inputMediaUploadedThumbDocument*)createWithFile:(TLInputFile*)file thumb:(TLInputFile*)thumb mime_type:(NSString*)mime_type attributes:(NSMutableArray*)attributes caption:(NSString*)caption;
 @end
 @interface TL_inputMediaDocument : TLInputMedia<NSCoding>
-+(TL_inputMediaDocument*)createWithN_id:(TLInputDocument*)n_id;
++(TL_inputMediaDocument*)createWithN_id:(TLInputDocument*)n_id caption:(NSString*)caption;
 @end
 @interface TL_inputMediaVenue : TLInputMedia<NSCoding>
 +(TL_inputMediaVenue*)createWithGeo_point:(TLInputGeoPoint*)geo_point title:(NSString*)title address:(NSString*)address provider:(NSString*)provider venue_id:(NSString*)venue_id;
+@end
+@interface TL_inputMediaGifExternal : TLInputMedia<NSCoding>
++(TL_inputMediaGifExternal*)createWithUrl:(NSString*)url q:(NSString*)q;
 @end
 @interface TL_inputMediaUploadedVideo_old34 : TLInputMedia<NSCoding>
 +(TL_inputMediaUploadedVideo_old34*)createWithFile:(TLInputFile*)file duration:(int)duration w:(int)w h:(int)h caption:(NSString*)caption;
@@ -704,9 +718,6 @@
 @end
 @interface TL_inputEncryptedFileLocation : TLInputFileLocation<NSCoding>
 +(TL_inputEncryptedFileLocation*)createWithN_id:(long)n_id access_hash:(long)access_hash;
-@end
-@interface TL_inputAudioFileLocation : TLInputFileLocation<NSCoding>
-+(TL_inputAudioFileLocation*)createWithN_id:(long)n_id access_hash:(long)access_hash;
 @end
 @interface TL_inputDocumentFileLocation : TLInputFileLocation<NSCoding>
 +(TL_inputDocumentFileLocation*)createWithN_id:(long)n_id access_hash:(long)access_hash;
@@ -812,6 +823,7 @@
 @property (nonatomic,assign,readonly) BOOL isBot_chat_history;
 @property (nonatomic,assign,readonly) BOOL isBot_nochats;
 @property (nonatomic,assign,readonly) BOOL isVerified;
+@property (nonatomic,assign,readonly) BOOL isRestricted;
 @property long access_hash;
 @property (nonatomic, strong) NSString* first_name;
 @property (nonatomic, strong) NSString* last_name;
@@ -820,13 +832,16 @@
 @property (nonatomic, strong) TLUserProfilePhoto* photo;
 @property (nonatomic, strong) TLUserStatus* status;
 @property int bot_info_version;
+@property (nonatomic, strong) NSString* restriction_reason;
+@property (nonatomic, strong) NSString* bot_inline_placeholder;
+@property (nonatomic,assign,readonly) BOOL isExplicit_content;
 @end
 
 @interface TL_userEmpty : TLUser<NSCoding>
 +(TL_userEmpty*)createWithN_id:(int)n_id;
 @end
 @interface TL_user : TLUser<NSCoding>
-+(TL_user*)createWithFlags:(int)flags         n_id:(int)n_id access_hash:(long)access_hash first_name:(NSString*)first_name last_name:(NSString*)last_name username:(NSString*)username phone:(NSString*)phone photo:(TLUserProfilePhoto*)photo status:(TLUserStatus*)status bot_info_version:(int)bot_info_version;
++(TL_user*)createWithFlags:(int)flags          n_id:(int)n_id access_hash:(long)access_hash first_name:(NSString*)first_name last_name:(NSString*)last_name username:(NSString*)username phone:(NSString*)phone photo:(TLUserProfilePhoto*)photo status:(TLUserStatus*)status bot_info_version:(int)bot_info_version restriction_reason:(NSString*)restriction_reason bot_inline_placeholder:(NSString*)bot_inline_placeholder;
 @end
 @interface TL_userSelf : TLUser<NSCoding>
 +(TL_userSelf*)createWithN_id:(int)n_id first_name:(NSString*)first_name last_name:(NSString*)last_name username:(NSString*)username phone:(NSString*)phone photo:(TLUserProfilePhoto*)photo status:(TLUserStatus*)status;
@@ -842,6 +857,9 @@
 @end
 @interface TL_userDeleted : TLUser<NSCoding>
 +(TL_userDeleted*)createWithN_id:(int)n_id first_name:(NSString*)first_name last_name:(NSString*)last_name username:(NSString*)username;
+@end
+@interface TL_user_old43 : TLUser<NSCoding>
++(TL_user_old43*)createWithFlags:(int)flags          n_id:(int)n_id access_hash:(long)access_hash first_name:(NSString*)first_name last_name:(NSString*)last_name username:(NSString*)username phone:(NSString*)phone photo:(TLUserProfilePhoto*)photo status:(TLUserStatus*)status bot_info_version:(int)bot_info_version;
 @end
 	
 @interface TLUserProfilePhoto()
@@ -901,8 +919,12 @@
 @property (nonatomic,assign,readonly) BOOL isBroadcast;
 @property (nonatomic,assign,readonly) BOOL isVerified;
 @property (nonatomic,assign,readonly) BOOL isMegagroup;
+@property (nonatomic,assign,readonly) BOOL isRestricted;
+@property (nonatomic,assign,readonly) BOOL isInvites_enabled;
 @property long access_hash;
 @property (nonatomic, strong) NSString* username;
+@property (nonatomic, strong) NSString* restriction_reason;
+@property (nonatomic,assign,readonly) BOOL isExplicit_content;
 @end
 
 @interface TL_chatEmpty : TLChat<NSCoding>
@@ -915,7 +937,7 @@
 +(TL_chatForbidden*)createWithN_id:(int)n_id title:(NSString*)title;
 @end
 @interface TL_channel : TLChat<NSCoding>
-+(TL_channel*)createWithFlags:(int)flags         n_id:(int)n_id access_hash:(long)access_hash title:(NSString*)title username:(NSString*)username photo:(TLChatPhoto*)photo date:(int)date version:(int)version;
++(TL_channel*)createWithFlags:(int)flags           n_id:(int)n_id access_hash:(long)access_hash title:(NSString*)title username:(NSString*)username photo:(TLChatPhoto*)photo date:(int)date version:(int)version restriction_reason:(NSString*)restriction_reason;
 @end
 @interface TL_channelForbidden : TLChat<NSCoding>
 +(TL_channelForbidden*)createWithN_id:(int)n_id access_hash:(long)access_hash title:(NSString*)title;
@@ -928,6 +950,9 @@
 @end
 @interface TL_chat_old38 : TLChat<NSCoding>
 +(TL_chat_old38*)createWithFlags:(int)flags n_id:(int)n_id title:(NSString*)title photo:(TLChatPhoto*)photo participants_count:(int)participants_count date:(int)date version:(int)version;
+@end
+@interface TL_channel_old43 : TLChat<NSCoding>
++(TL_channel_old43*)createWithFlags:(int)flags        n_id:(int)n_id access_hash:(long)access_hash title:(NSString*)title username:(NSString*)username photo:(TLChatPhoto*)photo date:(int)date version:(int)version;
 @end
 	
 @interface TLChatFull()
@@ -1027,6 +1052,7 @@
 @property (nonatomic, strong) TLPeer* to_id;
 @property (nonatomic, strong) TLPeer* fwd_from_id;
 @property int fwd_date;
+@property int via_bot_id;
 @property int reply_to_msg_id;
 @property int date;
 @property (nonatomic, strong) NSString* message;
@@ -1041,7 +1067,7 @@
 +(TL_messageEmpty*)createWithN_id:(int)n_id;
 @end
 @interface TL_message : TLMessage<NSCoding>
-+(TL_message*)createWithFlags:(int)flags     n_id:(int)n_id from_id:(int)from_id to_id:(TLPeer*)to_id fwd_from_id:(TLPeer*)fwd_from_id fwd_date:(int)fwd_date reply_to_msg_id:(int)reply_to_msg_id date:(int)date message:(NSString*)message media:(TLMessageMedia*)media reply_markup:(TLReplyMarkup*)reply_markup entities:(NSMutableArray*)entities views:(int)views;
++(TL_message*)createWithFlags:(int)flags     n_id:(int)n_id from_id:(int)from_id to_id:(TLPeer*)to_id fwd_from_id:(TLPeer*)fwd_from_id fwd_date:(int)fwd_date via_bot_id:(int)via_bot_id reply_to_msg_id:(int)reply_to_msg_id date:(int)date message:(NSString*)message media:(TLMessageMedia*)media reply_markup:(TLReplyMarkup*)reply_markup entities:(NSMutableArray*)entities views:(int)views;
 @end
 @interface TL_messageService : TLMessage<NSCoding>
 +(TL_messageService*)createWithFlags:(int)flags     n_id:(int)n_id from_id:(int)from_id to_id:(TLPeer*)to_id date:(int)date action:(TLMessageAction*)action;
@@ -1057,12 +1083,14 @@
 @property (nonatomic, strong) NSString* last_name;
 @property int user_id;
 @property (nonatomic, strong) TLDocument* document;
-@property (nonatomic, strong) TLAudio* audio;
 @property (nonatomic, strong) TLWebPage* webpage;
 @property (nonatomic, strong) NSString* title;
 @property (nonatomic, strong) NSString* address;
 @property (nonatomic, strong) NSString* provider;
 @property (nonatomic, strong) NSString* venue_id;
+@property (nonatomic, strong) TLBotInlineResult* bot_result;
+@property long query_id;
+@property (nonatomic, strong) TLAudio* audio;
 @end
 
 @interface TL_messageMediaEmpty : TLMessageMedia<NSCoding>
@@ -1084,16 +1112,22 @@
 +(TL_messageMediaUnsupported*)create;
 @end
 @interface TL_messageMediaDocument : TLMessageMedia<NSCoding>
-+(TL_messageMediaDocument*)createWithDocument:(TLDocument*)document;
-@end
-@interface TL_messageMediaAudio : TLMessageMedia<NSCoding>
-+(TL_messageMediaAudio*)createWithAudio:(TLAudio*)audio;
++(TL_messageMediaDocument*)createWithDocument:(TLDocument*)document caption:(NSString*)caption;
 @end
 @interface TL_messageMediaWebPage : TLMessageMedia<NSCoding>
 +(TL_messageMediaWebPage*)createWithWebpage:(TLWebPage*)webpage;
 @end
 @interface TL_messageMediaVenue : TLMessageMedia<NSCoding>
 +(TL_messageMediaVenue*)createWithGeo:(TLGeoPoint*)geo title:(NSString*)title address:(NSString*)address provider:(NSString*)provider venue_id:(NSString*)venue_id;
+@end
+@interface TL_messageMediaDocument_old44 : TLMessageMedia<NSCoding>
++(TL_messageMediaDocument_old44*)createWithDocument:(TLDocument*)document;
+@end
+@interface TL_messageMediaBotResult : TLMessageMedia<NSCoding>
++(TL_messageMediaBotResult*)createWithBot_result:(TLBotInlineResult*)bot_result query_id:(long)query_id;
+@end
+@interface TL_messageMediaAudio : TLMessageMedia<NSCoding>
++(TL_messageMediaAudio*)createWithAudio:(TLAudio*)audio;
 @end
 	
 @interface TLMessageAction()
@@ -1410,15 +1444,6 @@
 +(TL_contactBlocked*)createWithUser_id:(int)user_id date:(int)date;
 @end
 	
-@interface TLContactSuggested()
-@property int user_id;
-@property int mutual_contacts;
-@end
-
-@interface TL_contactSuggested : TLContactSuggested<NSCoding>
-+(TL_contactSuggested*)createWithUser_id:(int)user_id mutual_contacts:(int)mutual_contacts;
-@end
-	
 @interface TLContactStatus()
 @property int user_id;
 @property (nonatomic, strong) TLUserStatus* status;
@@ -1471,15 +1496,6 @@
 @end
 @interface TL_contacts_blockedSlice : TLcontacts_Blocked<NSCoding>
 +(TL_contacts_blockedSlice*)createWithN_count:(int)n_count blocked:(NSMutableArray*)blocked users:(NSMutableArray*)users;
-@end
-	
-@interface TLcontacts_Suggested()
-@property (nonatomic, strong) NSMutableArray* results;
-@property (nonatomic, strong) NSMutableArray* users;
-@end
-
-@interface TL_contacts_suggested : TLcontacts_Suggested<NSCoding>
-+(TL_contacts_suggested*)createWithResults:(NSMutableArray*)results users:(NSMutableArray*)users;
 @end
 	
 @interface TLmessages_Dialogs()
@@ -1567,14 +1583,17 @@
 @interface TL_inputMessagesFilterDocument : TLMessagesFilter<NSCoding>
 +(TL_inputMessagesFilterDocument*)create;
 @end
-@interface TL_inputMessagesFilterAudio : TLMessagesFilter<NSCoding>
-+(TL_inputMessagesFilterAudio*)create;
-@end
-@interface TL_inputMessagesFilterAudioDocuments : TLMessagesFilter<NSCoding>
-+(TL_inputMessagesFilterAudioDocuments*)create;
-@end
 @interface TL_inputMessagesFilterUrl : TLMessagesFilter<NSCoding>
 +(TL_inputMessagesFilterUrl*)create;
+@end
+@interface TL_inputMessagesFilterGif : TLMessagesFilter<NSCoding>
++(TL_inputMessagesFilterGif*)create;
+@end
+@interface TL_inputMessagesFilterVoice : TLMessagesFilter<NSCoding>
++(TL_inputMessagesFilterVoice*)create;
+@end
+@interface TL_inputMessagesFilterMusic : TLMessagesFilter<NSCoding>
++(TL_inputMessagesFilterMusic*)create;
 @end
 	
 @interface TLUpdate()
@@ -1624,6 +1643,10 @@
 @property Boolean is_admin;
 @property (nonatomic, strong) TLmessages_StickerSet* stickerset;
 @property (nonatomic, strong) NSMutableArray* order;
+@property long query_id;
+@property (nonatomic, strong) NSString* query;
+@property (nonatomic, strong) NSString* offset;
+@property (nonatomic, strong) NSString* bot_inline_id;
 @end
 
 @interface TL_updateNewMessage : TLUpdate<NSCoding>
@@ -1746,6 +1769,15 @@
 @interface TL_updateStickerSets : TLUpdate<NSCoding>
 +(TL_updateStickerSets*)create;
 @end
+@interface TL_updateSavedGifs : TLUpdate<NSCoding>
++(TL_updateSavedGifs*)create;
+@end
+@interface TL_updateBotInlineQuery : TLUpdate<NSCoding>
++(TL_updateBotInlineQuery*)createWithQuery_id:(long)query_id user_id:(int)user_id query:(NSString*)query offset:(NSString*)offset;
+@end
+@interface TL_updateBotInlineSend : TLUpdate<NSCoding>
++(TL_updateBotInlineSend*)createWithUser_id:(int)user_id query:(NSString*)query bot_inline_id:(NSString*)bot_inline_id;
+@end
 	
 @interface TLupdates_State()
 @property int pts;
@@ -1795,6 +1827,7 @@
 @property int date;
 @property (nonatomic, strong) TLPeer* fwd_from_id;
 @property int fwd_date;
+@property int via_bot_id;
 @property int reply_to_msg_id;
 @property (nonatomic, strong) NSMutableArray* entities;
 @property int from_id;
@@ -1812,10 +1845,10 @@
 +(TL_updatesTooLong*)create;
 @end
 @interface TL_updateShortMessage : TLUpdates<NSCoding>
-+(TL_updateShortMessage*)createWithFlags:(int)flags     n_id:(int)n_id user_id:(int)user_id message:(NSString*)message pts:(int)pts pts_count:(int)pts_count date:(int)date fwd_from_id:(TLPeer*)fwd_from_id fwd_date:(int)fwd_date reply_to_msg_id:(int)reply_to_msg_id entities:(NSMutableArray*)entities;
++(TL_updateShortMessage*)createWithFlags:(int)flags     n_id:(int)n_id user_id:(int)user_id message:(NSString*)message pts:(int)pts pts_count:(int)pts_count date:(int)date fwd_from_id:(TLPeer*)fwd_from_id fwd_date:(int)fwd_date via_bot_id:(int)via_bot_id reply_to_msg_id:(int)reply_to_msg_id entities:(NSMutableArray*)entities;
 @end
 @interface TL_updateShortChatMessage : TLUpdates<NSCoding>
-+(TL_updateShortChatMessage*)createWithFlags:(int)flags     n_id:(int)n_id from_id:(int)from_id chat_id:(int)chat_id message:(NSString*)message pts:(int)pts pts_count:(int)pts_count date:(int)date fwd_from_id:(TLPeer*)fwd_from_id fwd_date:(int)fwd_date reply_to_msg_id:(int)reply_to_msg_id entities:(NSMutableArray*)entities;
++(TL_updateShortChatMessage*)createWithFlags:(int)flags     n_id:(int)n_id from_id:(int)from_id chat_id:(int)chat_id message:(NSString*)message pts:(int)pts pts_count:(int)pts_count date:(int)date fwd_from_id:(TLPeer*)fwd_from_id fwd_date:(int)fwd_date via_bot_id:(int)via_bot_id reply_to_msg_id:(int)reply_to_msg_id entities:(NSMutableArray*)entities;
 @end
 @interface TL_updateShort : TLUpdates<NSCoding>
 +(TL_updateShort*)createWithUpdate:(TLUpdate*)update date:(int)date;
@@ -1893,11 +1926,12 @@
 @property int chat_big_size;
 @property int push_chat_period_ms;
 @property int push_chat_limit;
+@property int saved_gifs_limit;
 @property (nonatomic, strong) NSMutableArray* disabled_features;
 @end
 
 @interface TL_config : TLConfig<NSCoding>
-+(TL_config*)createWithDate:(int)date expires:(int)expires test_mode:(Boolean)test_mode this_dc:(int)this_dc dc_options:(NSMutableArray*)dc_options chat_size_max:(int)chat_size_max megagroup_size_max:(int)megagroup_size_max forwarded_count_max:(int)forwarded_count_max online_update_period_ms:(int)online_update_period_ms offline_blur_timeout_ms:(int)offline_blur_timeout_ms offline_idle_timeout_ms:(int)offline_idle_timeout_ms online_cloud_timeout_ms:(int)online_cloud_timeout_ms notify_cloud_delay_ms:(int)notify_cloud_delay_ms notify_default_delay_ms:(int)notify_default_delay_ms chat_big_size:(int)chat_big_size push_chat_period_ms:(int)push_chat_period_ms push_chat_limit:(int)push_chat_limit disabled_features:(NSMutableArray*)disabled_features;
++(TL_config*)createWithDate:(int)date expires:(int)expires test_mode:(Boolean)test_mode this_dc:(int)this_dc dc_options:(NSMutableArray*)dc_options chat_size_max:(int)chat_size_max megagroup_size_max:(int)megagroup_size_max forwarded_count_max:(int)forwarded_count_max online_update_period_ms:(int)online_update_period_ms offline_blur_timeout_ms:(int)offline_blur_timeout_ms offline_idle_timeout_ms:(int)offline_idle_timeout_ms online_cloud_timeout_ms:(int)online_cloud_timeout_ms notify_cloud_delay_ms:(int)notify_cloud_delay_ms notify_default_delay_ms:(int)notify_default_delay_ms chat_big_size:(int)chat_big_size push_chat_period_ms:(int)push_chat_period_ms push_chat_limit:(int)push_chat_limit saved_gifs_limit:(int)saved_gifs_limit disabled_features:(NSMutableArray*)disabled_features;
 @end
 	
 @interface TLNearestDc()
@@ -2045,18 +2079,6 @@
 +(TL_messages_sentEncryptedFile*)createWithDate:(int)date file:(TLEncryptedFile*)file;
 @end
 	
-@interface TLInputAudio()
-@property long n_id;
-@property long access_hash;
-@end
-
-@interface TL_inputAudioEmpty : TLInputAudio<NSCoding>
-+(TL_inputAudioEmpty*)create;
-@end
-@interface TL_inputAudio : TLInputAudio<NSCoding>
-+(TL_inputAudio*)createWithN_id:(long)n_id access_hash:(long)access_hash;
-@end
-	
 @interface TLInputDocument()
 @property long n_id;
 @property long access_hash;
@@ -2069,27 +2091,6 @@
 +(TL_inputDocument*)createWithN_id:(long)n_id access_hash:(long)access_hash;
 @end
 	
-@interface TLAudio()
-@property long n_id;
-@property long access_hash;
-@property int date;
-@property int duration;
-@property (nonatomic, strong) NSString* mime_type;
-@property int size;
-@property int dc_id;
-@property int user_id;
-@end
-
-@interface TL_audioEmpty : TLAudio<NSCoding>
-+(TL_audioEmpty*)createWithN_id:(long)n_id;
-@end
-@interface TL_audio : TLAudio<NSCoding>
-+(TL_audio*)createWithN_id:(long)n_id access_hash:(long)access_hash date:(int)date duration:(int)duration mime_type:(NSString*)mime_type size:(int)size dc_id:(int)dc_id;
-@end
-@interface TL_audio_old29 : TLAudio<NSCoding>
-+(TL_audio_old29*)createWithN_id:(long)n_id access_hash:(long)access_hash user_id:(int)user_id date:(int)date duration:(int)duration mime_type:(NSString*)mime_type size:(int)size dc_id:(int)dc_id;
-@end
-	
 @interface TLDocument()
 @property long n_id;
 @property long access_hash;
@@ -2099,6 +2100,11 @@
 @property (nonatomic, strong) TLPhotoSize* thumb;
 @property int dc_id;
 @property (nonatomic, strong) NSMutableArray* attributes;
+@property (nonatomic, strong) NSString* external_url;
+@property (nonatomic, strong) NSString* search_q;
+@property int perform_date;
+@property (nonatomic, strong) TLWebPage* external_webpage;
+@property (nonatomic, strong) NSData* compressor;
 @end
 
 @interface TL_documentEmpty : TLDocument<NSCoding>
@@ -2106,6 +2112,12 @@
 @end
 @interface TL_document : TLDocument<NSCoding>
 +(TL_document*)createWithN_id:(long)n_id access_hash:(long)access_hash date:(int)date mime_type:(NSString*)mime_type size:(int)size thumb:(TLPhotoSize*)thumb dc_id:(int)dc_id attributes:(NSMutableArray*)attributes;
+@end
+@interface TL_contextBotSender : TLDocument<NSCoding>
++(TL_contextBotSender*)createWithN_id:(long)n_id date:(int)date mime_type:(NSString*)mime_type thumb:(TLPhotoSize*)thumb external_url:(NSString*)external_url search_q:(NSString*)search_q perform_date:(int)perform_date external_webpage:(TLWebPage*)external_webpage attributes:(NSMutableArray*)attributes;
+@end
+@interface TL_compressDocument : TLDocument<NSCoding>
++(TL_compressDocument*)createWithN_id:(long)n_id access_hash:(long)access_hash date:(int)date mime_type:(NSString*)mime_type size:(int)size thumb:(TLPhotoSize*)thumb dc_id:(int)dc_id attributes:(NSMutableArray*)attributes compressor:(NSData*)compressor;
 @end
 	
 @interface TLhelp_Support()
@@ -2186,6 +2198,9 @@
 @interface TL_inputPrivacyKeyStatusTimestamp : TLInputPrivacyKey<NSCoding>
 +(TL_inputPrivacyKeyStatusTimestamp*)create;
 @end
+@interface TL_inputPrivacyKeyChatInvite : TLInputPrivacyKey<NSCoding>
++(TL_inputPrivacyKeyChatInvite*)create;
+@end
 	
 @interface TLPrivacyKey()
 
@@ -2193,6 +2208,9 @@
 
 @interface TL_privacyKeyStatusTimestamp : TLPrivacyKey<NSCoding>
 +(TL_privacyKeyStatusTimestamp*)create;
+@end
+@interface TL_privacyKeyChatInvite : TLPrivacyKey<NSCoding>
++(TL_privacyKeyChatInvite*)create;
 @end
 	
 @interface TLInputPrivacyRule()
@@ -2273,8 +2291,11 @@
 @property (nonatomic, strong) NSString* alt;
 @property (nonatomic, strong) TLInputStickerSet* stickerset;
 @property int duration;
+@property int flags;
+@property (nonatomic,assign,readonly) BOOL isVoice;
 @property (nonatomic, strong) NSString* title;
 @property (nonatomic, strong) NSString* performer;
+@property (nonatomic, strong) NSData* waveform;
 @property (nonatomic, strong) NSString* file_name;
 @end
 
@@ -2291,13 +2312,16 @@
 +(TL_documentAttributeVideo*)createWithDuration:(int)duration w:(int)w h:(int)h;
 @end
 @interface TL_documentAttributeAudio : TLDocumentAttribute<NSCoding>
-+(TL_documentAttributeAudio*)createWithDuration:(int)duration title:(NSString*)title performer:(NSString*)performer;
++(TL_documentAttributeAudio*)createWithFlags:(int)flags  duration:(int)duration title:(NSString*)title performer:(NSString*)performer waveform:(NSData*)waveform;
 @end
 @interface TL_documentAttributeFilename : TLDocumentAttribute<NSCoding>
 +(TL_documentAttributeFilename*)createWithFile_name:(NSString*)file_name;
 @end
 @interface TL_documentAttributeAudio_old31 : TLDocumentAttribute<NSCoding>
 +(TL_documentAttributeAudio_old31*)createWithDuration:(int)duration;
+@end
+@interface TL_documentAttributeAudio_old45 : TLDocumentAttribute<NSCoding>
++(TL_documentAttributeAudio_old45*)createWithDuration:(int)duration title:(NSString*)title performer:(NSString*)performer;
 @end
 	
 @interface TLmessages_Stickers()
@@ -2830,6 +2854,153 @@
 
 @interface TL_help_termsOfService : TLhelp_TermsOfService<NSCoding>
 +(TL_help_termsOfService*)createWithText:(NSString*)text;
+@end
+	
+@interface TLFoundGif()
+@property (nonatomic, strong) NSString* url;
+@property (nonatomic, strong) NSString* thumb_url;
+@property (nonatomic, strong) NSString* content_url;
+@property (nonatomic, strong) NSString* content_type;
+@property int w;
+@property int h;
+@property (nonatomic, strong) TLPhoto* photo;
+@property (nonatomic, strong) TLDocument* document;
+@end
+
+@interface TL_foundGif : TLFoundGif<NSCoding>
++(TL_foundGif*)createWithUrl:(NSString*)url thumb_url:(NSString*)thumb_url content_url:(NSString*)content_url content_type:(NSString*)content_type w:(int)w h:(int)h;
+@end
+@interface TL_foundGifCached : TLFoundGif<NSCoding>
++(TL_foundGifCached*)createWithUrl:(NSString*)url photo:(TLPhoto*)photo document:(TLDocument*)document;
+@end
+	
+@interface TLmessages_FoundGifs()
+@property int next_offset;
+@property (nonatomic, strong) NSMutableArray* results;
+@end
+
+@interface TL_messages_foundGifs : TLmessages_FoundGifs<NSCoding>
++(TL_messages_foundGifs*)createWithNext_offset:(int)next_offset results:(NSMutableArray*)results;
+@end
+	
+@interface TLmessages_SavedGifs()
+@property int n_hash;
+@property (nonatomic, strong) NSMutableArray* gifs;
+@end
+
+@interface TL_messages_savedGifsNotModified : TLmessages_SavedGifs<NSCoding>
++(TL_messages_savedGifsNotModified*)create;
+@end
+@interface TL_messages_savedGifs : TLmessages_SavedGifs<NSCoding>
++(TL_messages_savedGifs*)createWithN_hash:(int)n_hash gifs:(NSMutableArray*)gifs;
+@end
+	
+@interface TLInputBotInlineMessage()
+@property (nonatomic, strong) NSString* caption;
+@property int flags;
+@property (nonatomic,assign,readonly) BOOL isNo_webpage;
+@property (nonatomic, strong) NSString* message;
+@property (nonatomic, strong) NSMutableArray* entities;
+@end
+
+@interface TL_inputBotInlineMessageMediaAuto : TLInputBotInlineMessage<NSCoding>
++(TL_inputBotInlineMessageMediaAuto*)createWithCaption:(NSString*)caption;
+@end
+@interface TL_inputBotInlineMessageText : TLInputBotInlineMessage<NSCoding>
++(TL_inputBotInlineMessageText*)createWithFlags:(int)flags  message:(NSString*)message entities:(NSMutableArray*)entities;
+@end
+	
+@interface TLInputBotInlineResult()
+@property int flags;
+@property (nonatomic, strong) NSString* n_id;
+@property (nonatomic, strong) NSString* type;
+@property (nonatomic, strong) NSString* title;
+@property (nonatomic, strong) NSString* n_description;
+@property (nonatomic, strong) NSString* url;
+@property (nonatomic, strong) NSString* thumb_url;
+@property (nonatomic, strong) NSString* content_url;
+@property (nonatomic, strong) NSString* content_type;
+@property int w;
+@property int h;
+@property int duration;
+@property (nonatomic, strong) TLInputBotInlineMessage* send_message;
+@end
+
+@interface TL_inputBotInlineResult : TLInputBotInlineResult<NSCoding>
++(TL_inputBotInlineResult*)createWithFlags:(int)flags n_id:(NSString*)n_id type:(NSString*)type title:(NSString*)title n_description:(NSString*)n_description url:(NSString*)url thumb_url:(NSString*)thumb_url content_url:(NSString*)content_url content_type:(NSString*)content_type w:(int)w h:(int)h duration:(int)duration send_message:(TLInputBotInlineMessage*)send_message;
+@end
+	
+@interface TLBotInlineMessage()
+@property (nonatomic, strong) NSString* caption;
+@property int flags;
+@property (nonatomic,assign,readonly) BOOL isNo_webpage;
+@property (nonatomic, strong) NSString* message;
+@property (nonatomic, strong) NSMutableArray* entities;
+@end
+
+@interface TL_botInlineMessageMediaAuto : TLBotInlineMessage<NSCoding>
++(TL_botInlineMessageMediaAuto*)createWithCaption:(NSString*)caption;
+@end
+@interface TL_botInlineMessageText : TLBotInlineMessage<NSCoding>
++(TL_botInlineMessageText*)createWithFlags:(int)flags  message:(NSString*)message entities:(NSMutableArray*)entities;
+@end
+	
+@interface TLBotInlineResult()
+@property (nonatomic, strong) NSString* n_id;
+@property (nonatomic, strong) NSString* type;
+@property (nonatomic, strong) TLDocument* document;
+@property (nonatomic, strong) TLBotInlineMessage* send_message;
+@property (nonatomic, strong) TLPhoto* photo;
+@property int flags;
+@property (nonatomic, strong) NSString* title;
+@property (nonatomic, strong) NSString* n_description;
+@property (nonatomic, strong) NSString* url;
+@property (nonatomic, strong) NSString* thumb_url;
+@property (nonatomic, strong) NSString* content_url;
+@property (nonatomic, strong) NSString* content_type;
+@property int w;
+@property int h;
+@property int duration;
+@end
+
+@interface TL_botInlineMediaResultDocument : TLBotInlineResult<NSCoding>
++(TL_botInlineMediaResultDocument*)createWithN_id:(NSString*)n_id type:(NSString*)type document:(TLDocument*)document send_message:(TLBotInlineMessage*)send_message;
+@end
+@interface TL_botInlineMediaResultPhoto : TLBotInlineResult<NSCoding>
++(TL_botInlineMediaResultPhoto*)createWithN_id:(NSString*)n_id type:(NSString*)type photo:(TLPhoto*)photo send_message:(TLBotInlineMessage*)send_message;
+@end
+@interface TL_botInlineResult : TLBotInlineResult<NSCoding>
++(TL_botInlineResult*)createWithFlags:(int)flags n_id:(NSString*)n_id type:(NSString*)type title:(NSString*)title n_description:(NSString*)n_description url:(NSString*)url thumb_url:(NSString*)thumb_url content_url:(NSString*)content_url content_type:(NSString*)content_type w:(int)w h:(int)h duration:(int)duration send_message:(TLBotInlineMessage*)send_message;
+@end
+	
+@interface TLmessages_BotResults()
+@property int flags;
+@property (nonatomic,assign,readonly) BOOL isGallery;
+@property long query_id;
+@property (nonatomic, strong) NSString* next_offset;
+@property (nonatomic, strong) NSMutableArray* results;
+@end
+
+@interface TL_messages_botResults : TLmessages_BotResults<NSCoding>
++(TL_messages_botResults*)createWithFlags:(int)flags  query_id:(long)query_id next_offset:(NSString*)next_offset results:(NSMutableArray*)results;
+@end
+	
+@interface TLAudio()
+@property long n_id;
+@property long access_hash;
+@property int user_id;
+@property int date;
+@property int duration;
+@property (nonatomic, strong) NSString* mime_type;
+@property int size;
+@property int dc_id;
+@end
+
+@interface TL_audio_old29 : TLAudio<NSCoding>
++(TL_audio_old29*)createWithN_id:(long)n_id access_hash:(long)access_hash user_id:(int)user_id date:(int)date duration:(int)duration mime_type:(NSString*)mime_type size:(int)size dc_id:(int)dc_id;
+@end
+@interface TL_audio : TLAudio<NSCoding>
++(TL_audio*)createWithN_id:(long)n_id access_hash:(long)access_hash date:(int)date duration:(int)duration mime_type:(NSString*)mime_type size:(int)size dc_id:(int)dc_id;
 @end
 	
 @interface TLProtoMessage()

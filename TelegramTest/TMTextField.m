@@ -10,6 +10,14 @@
 #import "EmojiViewController.h"
 #import "RBLPopover.h"
 
+@implementation NSTextField (Extension)
+
+-(void)setAttributedString:(NSAttributedString *)attributedString {
+    [super setAttributedStringValue:attributedString];
+}
+
+@end
+
 @interface TMTextField ()
 @property (nonatomic,assign) BOOL isf;
 @end

@@ -33,6 +33,12 @@
             
             
             return;
+        } else if([action isEqualToString:@"viabot"]) {
+            NSString *botname = [params objectAtIndex:1];
+            
+            [appWindow().navigationController.messagesViewController setStringValueToTextField:[NSString stringWithFormat:@"%@ ",botname]];
+            
+            return;
         }
     }
     

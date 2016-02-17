@@ -83,25 +83,22 @@
     [request setHTTPShouldHandleCookies:NO];
     [request addValue:@"image/*" forHTTPHeaderField:@"Accept"];
     
-    weakify();
+    weak();
     
     [_containerImageView setImageWithURLRequest:request placeholderImage:nil success:^(NSURLRequest *request, NSHTTPURLResponse *response, NSImage *image) {
         
-        [strongSelf.progress setHidden:YES];
-        [strongSelf.progress stopAnimation:strongSelf];
-        [strongSelf.containerImageView setHidden:NO];
+        [weakSelf.progress setHidden:YES];
+        [weakSelf.progress stopAnimation:weakSelf];
+        [weakSelf.containerImageView setHidden:NO];
         
-        strongSelf.containerImageView.image = image;
+        weakSelf.containerImageView.image = image;
         
-        strongSelf = nil;
         
     } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error) {
         
-        if(strongSelf.deleteCallback)
-            strongSelf.deleteCallback();
-        
-        strongSelf = nil;
-        
+        if(weakSelf.deleteCallback)
+            weakSelf.deleteCallback();
+  
     }];
 }
 

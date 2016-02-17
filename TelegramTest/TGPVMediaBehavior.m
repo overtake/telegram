@@ -11,6 +11,7 @@
 #import "ChatHistoryController.h"
 #import "PhotoHistoryFilter.h"
 #import "MessageTableItem.h"
+#import "PhotoVideoHistoryFilter.h"
 @interface TGPVMediaBehavior () <MessagesDelegate>
 
 @end
@@ -28,9 +29,17 @@
 
 -(id)initWithConversation:(TL_conversation *)conversation commonItem:(PreviewObject *)object {
     
+    if(self = [self initWithConversation:conversation commonItem:object filter:[PhotoHistoryFilter class]]) {
+        
+    }
+    
+    return self;
+}
+
+-(id)initWithConversation:(TL_conversation *)conversation commonItem:(PreviewObject *)object filter:(Class)filter {
     if(self = [super init]) {
         _conversation = conversation;
-        _controller = [[ChatHistoryController alloc] initWithController:self historyFilter:[PhotoHistoryFilter class]];
+        _controller = [[ChatHistoryController alloc] initWithController:self historyFilter:filter];
         
         if(object != nil)
             [_controller addMessageWithoutSavingState:object.media];

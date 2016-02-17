@@ -16,6 +16,8 @@
 #import "TGCTextView.h"
 #import "POPCGUtils.h"
 #import "TGCaptionView.h"
+#import "TGExternalImageObject.h"
+
 @interface MessageTableCellPhotoView()<TGImageObjectDelegate>
 @property (nonatomic,strong) NSImageView *fireImageView;
 @property (nonatomic,strong) TGCaptionView *captionView;
@@ -108,12 +110,35 @@ NSImage *fireImage() {
 }
 
 
+-(void)openInQuickLook:(id)sender {
+    PreviewObject *previewObject = [[PreviewObject alloc] initWithMsdId:self.item.message.n_id media:self.item.message peer_id:self.item.message.peer_id];
+    
+    
+    if(!self.item.isset)
+        return;
+    
+    TMPreviewPhotoItem *item = [[TMPreviewPhotoItem alloc] initWithItem:previewObject];
+    if(item) {
+        [[TMMediaController controller] show:item];
+    }
+
+}
+
 - (NSMenu *)contextMenu {
     NSMenu *menu = [[NSMenu alloc] initWithTitle:@"Photo menu"];
+    
+    [menu addItem:[NSMenuItem menuItemWithTitle:NSLocalizedString(@"Context.OpenInQuickLook", nil) withBlock:^(id sender) {
+        [self performSelector:@selector(openInQuickLook:) withObject:self];
+    }]];
+    
+    [menu addItem:[NSMenuItem separatorItem]];
     
     [menu addItem:[NSMenuItem menuItemWithTitle:NSLocalizedString(@"Context.SaveAs", nil) withBlock:^(id sender) {
         [self performSelector:@selector(saveAs:) withObject:self];
     }]];
+    
+    
+   
     
     [menu addItem:[NSMenuItem menuItemWithTitle:NSLocalizedString(@"Context.CopyToClipBoard", nil) withBlock:^(id sender) {
         [self performSelector:@selector(copy:) withObject:self];
@@ -164,10 +189,26 @@ NSImage *fireImage() {
 
 
 -(void)setCellState:(CellState)cellState {
+    
+    
+     MessageTableItemPhoto *item = (MessageTableItemPhoto *)self.item;
+    
+    if(self.cellState == CellStateSending && cellState == CellStateNormal) {
+        [super setCellState:cellState];
+        
+        if([item.imageObject isKindOfClass:[TGExternalImageObject class]]) {
+            [self.item doAfterDownload];
+            [self.imageView setObject:item.imageObject];
+            [self updateDownloadListeners];
+        }
+        
+    }
+    
+    
     [super setCellState:cellState];
     
     
-    MessageTableItemPhoto *item = (MessageTableItemPhoto *)self.item;
+   
     
     [self.progressView setImage:cellState == CellStateSending ? image_DownloadIconWhite() : nil forState:TMLoaderViewStateNeedDownload];
     [self.progressView setImage:cellState == CellStateSending ? image_LoadCancelWhiteIcon() : nil forState:TMLoaderViewStateDownloading];
@@ -189,9 +230,12 @@ NSImage *fireImage() {
         [self.fireImageView setHidden:!isNeedSecretBlur];
         [self.fireImageView setCenterByView:self.imageView];
     }
-        
     
-    [self.progressView setHidden:self.item.isset];
+    
+    
+    
+    
+    [self.progressView setHidden:self.item.isset && cellState != CellStateSending];
     
     
     if(!self.progressView.isHidden)
@@ -218,28 +262,9 @@ NSImage *fireImage() {
     [self.imageView setFrameSize:item.imageSize];
 
     [self updateCellState];
-
-    [item.imageObject.supportDownloadListener setProgressHandler:^(DownloadItem *item) {
-       
-        [ASQueue dispatchOnMainQueue:^{
-            
-            [self.progressView setProgress:5 + MAX(( item.progress - 5),0) animated:YES];
-            
-        }];
-        
-    }];
     
-    [item.imageObject.supportDownloadListener setCompleteHandler:^(DownloadItem *item) {
-        
-        [ASQueue dispatchOnMainQueue:^{
-            [self.progressView setProgress:100 animated:YES];
-            
-            dispatch_after_seconds(0.2, ^{
-                [self updateCellState];
-            });
-        }];
-        
-    }];
+    
+    [self updateDownloadListeners];
     
     
     if(item.caption) {
@@ -256,6 +281,48 @@ NSImage *fireImage() {
     }
         
 }
+
+-(void)updateDownloadListeners {
+    
+    MessageTableItemPhoto *item = (MessageTableItemPhoto *)self.item;
+    
+    weak();
+    
+    [item.imageObject.supportDownloadListener setProgressHandler:^(DownloadItem *item) {
+        
+        strongWeak();
+        
+        if(strongSelf == weakSelf) {
+            [ASQueue dispatchOnMainQueue:^{
+                
+                [strongSelf.progressView setProgress:5 + MAX(( item.progress - 5),0) animated:YES];
+                
+            }];
+        }
+        
+        
+        
+    }];
+    
+    [item.imageObject.supportDownloadListener setCompleteHandler:^(DownloadItem *item) {
+         strongWeak();
+        
+        if(strongSelf == weakSelf) {
+            
+        }[ASQueue dispatchOnMainQueue:^{
+            [strongSelf.progressView setProgress:100 animated:YES];
+            
+            dispatch_after_seconds(0.2, ^{
+                [strongSelf updateCellState];
+            });
+        }];
+        
+        
+    }];
+    
+}
+
+
 
 -(void)clearSelection {
     [super clearSelection];
@@ -310,7 +377,7 @@ NSImage *fireImage() {
     if([self.imageView hitTest:eventLocation]) {
         NSPoint dragPosition = NSMakePoint(80, 8);
         
-        NSString *path = locationFilePath(((MessageTableItemPhoto *)self.item).photoLocation,@"jpg");
+        NSString *path = locationFilePath(((MessageTableItemPhoto *)self.item).imageObject.location,@"jpg");
         
         
         NSPasteboard *pasteBrd=[NSPasteboard pasteboardWithName:TGImagePType];

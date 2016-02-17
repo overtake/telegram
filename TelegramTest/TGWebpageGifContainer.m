@@ -9,10 +9,15 @@
 #import "TGWebpageGifContainer.h"
 #import "TGWebpageGifObject.h"
 #import "TGModernAnimatedImagePlayer.h"
-
-@interface TGWebpageGifContainer ()
-@property (nonatomic,strong) TGModernAnimatedImagePlayer *animatedPlayer;
-@property (nonatomic,strong) NSImageView *playImage;
+#import "TGVTVideoView.h"
+#import "SpacemanBlocks.h"
+@interface TGWebpageGifContainer () {
+    BOOL _prevState;
+    SMDelayedBlockHandle _handle;
+}
+@property (nonatomic,strong) TGVTVideoView *player;
+@property (nonatomic,strong) TMView *playerContainer;
+@property (nonatomic,strong) NSImageView *playImageView;
 @end
 
 @implementation TGWebpageGifContainer
@@ -20,32 +25,23 @@
 @synthesize loaderView = _loaderView;
 
 
-static NSImage *gifPlayImage() {
-    static NSImage *image = nil;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        NSRect rect = NSMakeRect(0, 0, 48, 48);
-        image = [[NSImage alloc] initWithSize:rect.size];
-        [image lockFocus];
-        [NSColorFromRGBWithAlpha(0x000000, 0.5) set];
-        NSBezierPath *path = [NSBezierPath bezierPath];
-        [path appendBezierPathWithRoundedRect:NSMakeRect(0, 0, rect.size.width, rect.size.height) xRadius:rect.size.width/2 yRadius:rect.size.height/2];
-        [path fill];
-        
-        [image_PlayIconWhite() drawInRect:NSMakeRect(roundf((48 - image_PlayIconWhite().size.width)/2) + 2, roundf((48 - image_PlayIconWhite().size.height)/2) , image_PlayIconWhite().size.width, image_PlayIconWhite().size.height) fromRect:NSZeroRect operation:NSCompositeHighlight fraction:1];
-        [image unlockFocus];
-    });
-    return image;//image_VideoPlay();
-}
-
 -(instancetype)initWithFrame:(NSRect)frameRect {
     if(self = [super initWithFrame:frameRect]) {
         
-        self.playImage = imageViewWithImage(gifPlayImage());
+        _playImageView = imageViewWithImage(image_PlayButtonBig());
+        _playerContainer = [[TMView alloc] initWithFrame:NSZeroRect];
+        [_playerContainer addSubview:_playImageView];
         
-        [self.imageView addSubview:self.playImage];
+        _playerContainer = [[TMView alloc] initWithFrame:NSZeroRect];
+        [_playerContainer setWantsLayer:YES];
         
-        [self.playImage setCenterByView:self.imageView];
+        _playerContainer.layer.cornerRadius = 4;
+        
+        _player = [[TGVTVideoView alloc] initWithFrame:NSZeroRect];
+        
+        [_playerContainer addSubview:_player];
+        
+        [self addSubview:_playerContainer];
         
     }
     
@@ -53,6 +49,11 @@ static NSImage *gifPlayImage() {
 }
 
 -(void)setWebpage:(TGWebpageGifObject *)webpage {
+    
+    _prevState = NO;
+    [self.imageView setHidden:YES];
+    
+    [self.player setPath:nil];
     
     [super setWebpage:webpage];
     
@@ -64,57 +65,32 @@ static NSImage *gifPlayImage() {
     
     [self.imageView setFrame:NSMakeRect(0, webpage.size.height - webpage.imageSize.height, webpage.imageSize.width, webpage.imageSize.height)];
     
-    [self.playImage setCenterByView:self.imageView];
-    
-}
-
-
--(void)showPhoto {
-    [self playAnimation];
-}
-
-
-- (void)playAnimation {
-    
-    TGWebpageGifObject *item = (TGWebpageGifObject *)self.webpage;
-    
-    if([item isset]) {
+    [self.playerContainer setFrame:NSMakeRect(0, webpage.size.height - webpage.imageSize.height, webpage.imageSize.width, webpage.imageSize.height)];
+    [self.player setFrameSize:self.playerContainer.frame.size];
         
-        weak();
-        
-        if(!self.animatedPlayer) {
-            self.animatedPlayer = [[TGModernAnimatedImagePlayer alloc] initWithSize:self.imageView.frame.size path:item.path];
-            [self.animatedPlayer setFrameReady:^(NSImage *image) {
-                weakSelf.imageView.image = image;
-            }];
-            
-            [self.playImage setHidden:YES];
-            
-            [self.animatedPlayer play];
-            
-        } else {
-            [self animationDidStop:nil finished:YES];
-        }
-    } else {
-        [self startDownload:YES];
+    [self.player setImageObject:webpage.imageObject];
+    
+    [self.imageView removeFromSuperview];
+    
+    [self.player addSubview:self.imageView];
+    
+    
+    [self.imageView setHidden:NO];
+    
+    [_playImageView removeFromSuperview];
+    [_playerContainer addSubview:_playImageView];
+    
+    [_playImageView setHidden:![SettingsArchiver checkMaskedSetting:DisableAutoplayGifSetting]];
+    if(!_playImageView.isHidden)
+        [_playImageView setCenterByView:_playImageView.superview];
+    
+    [self updateDownloadState];
+    
+    if(![webpage isset]) {
+        [self startDownload:NO];
     }
     
-}
-
-- (void)animationDidStart:(CAAnimation *)theAnimation {
-    
-}
-
-- (void)animationDidStop:(CAAnimation *)anim finished:(BOOL)flag {
-    
-    [self.animatedPlayer stop];
-    self.animatedPlayer = nil;
-    
-    TGWebpageGifObject *item = (TGWebpageGifObject *)self.webpage;
-    
-    self.imageView.object = item.imageObject;
-    [self.playImage setHidden:NO];
-    
+    [self _didScrolledTableView:nil];
 }
 
 
@@ -127,6 +103,20 @@ static NSImage *gifPlayImage() {
     [self updateDownloadState];
 }
 
+-(void)showPhoto {
+    TGWebpageGifObject *item = (TGWebpageGifObject *)self.webpage;
+    
+    if(item.isset && [SettingsArchiver checkMaskedSetting:DisableAutoplayGifSetting]) {
+        
+        [_player setPath:_playImageView.isHidden ? nil : item.path];
+        [_playImageView setHidden:!_playImageView.isHidden];
+    } else {
+        [super showPhoto];
+    }
+}
+
+
+
 
 -(void)updateDownloadState {
     
@@ -134,17 +124,22 @@ static NSImage *gifPlayImage() {
     
     TGWebpageGifObject *item = (TGWebpageGifObject *)self.webpage;
     
+    [self.playImageView setHidden:![SettingsArchiver checkMaskedSetting:DisableAutoplayGifSetting] || item.downloadItem != nil];
+    
     if(item.downloadItem) {
-        
         
         [item.downloadListener setCompleteHandler:^(DownloadItem * item) {
             
+            __strong TGWebpageGifContainer *strongSelf = weakSelf;
+            
             [[ASQueue mainQueue] dispatchOnQueue:^{
                 
-                [weakSelf downloadProgressHandler:item];
+                [strongSelf downloadProgressHandler:item];
                 
                 dispatch_after_seconds(0.2, ^{
-                    weakSelf.item.downloadItem = nil;
+                    strongSelf.item.downloadItem = nil;
+                    strongSelf->_prevState = NO;
+                    
                     [self updateState:0];
                 });
             }];
@@ -169,8 +164,6 @@ static NSImage *gifPlayImage() {
     TGWebpageGifObject *item = (TGWebpageGifObject *)self.webpage;
     
     
-    [self.playImage setHidden:item.downloadItem != nil && item.downloadItem.downloadState != DownloadStateCompleted];
-    
     if(!item.isset && item.downloadItem && item.downloadItem.downloadState != DownloadStateCompleted) {
         [self.loaderView removeFromSuperview];
         
@@ -194,6 +187,12 @@ static NSImage *gifPlayImage() {
         
     } else  {
         [self.loaderView removeFromSuperview];
+        
+        if(self.loaderView.state != 0 && state == 0) {
+            
+            [self.webpage doAfterDownload];
+            [self _didScrolledTableView:nil];
+        }
     }
     
 }
@@ -201,5 +200,59 @@ static NSImage *gifPlayImage() {
 -(void)downloadProgressHandler:(DownloadItem *)item {
     [self.loaderView setProgress:item.progress animated:YES];
 }
+
+-(void)_didScrolledTableView:(NSNotification *)notification {
+    
+     TGWebpageGifObject *webpage = (TGWebpageGifObject *)self.webpage;
+
+    
+    BOOL (^check_block)() = ^BOOL() {
+        
+        BOOL completelyVisible = self.visibleRect.size.width > 0 && self.visibleRect.size.height > 0 && ![TMViewController isModalActive];
+        
+        return  ![SettingsArchiver checkMaskedSetting:DisableAutoplayGifSetting] && completelyVisible && ((self.window != nil && self.window.isKeyWindow) || notification == nil) && webpage.isset && ![self inLiveResize];
+        
+    };
+    
+    cancel_delayed_block(_handle);
+    
+    dispatch_block_t block = ^{
+        BOOL nextState = check_block();
+        
+        if(_prevState != nextState) {
+            [_player setPath:nextState ? webpage.path : nil];
+        }
+        
+        _prevState = nextState;
+    };
+    
+    if(!check_block())
+        block();
+    else
+        _handle = perform_block_after_delay(0.03, block);
+
+    
+}
+
+
+-(void)dealloc {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
+-(void)viewDidMoveToWindow {
+    if(self.window == nil) {
+        [[NSNotificationCenter defaultCenter] removeObserver:self];
+        [_player setPath:nil];
+        
+    } else {
+        id clipView = [[self.item.table enclosingScrollView] contentView];
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(_didScrolledTableView:)
+                                                     name:NSViewBoundsDidChangeNotification
+                                                   object:clipView];        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_didScrolledTableView:) name:NSWindowDidBecomeKeyNotification object:self.window];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_didScrolledTableView:) name:NSWindowDidResignKeyNotification object:self.window];
+    }
+}
+
 
 @end

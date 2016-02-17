@@ -123,9 +123,6 @@ DYNAMIC_PROPERTY(DIALOGTITLE);
     
     NSMutableAttributedString *dialogTitleAttributedString = [[NSMutableAttributedString alloc] init];
     
-    [dialogTitleAttributedString appendAttributedString:[NSAttributedString attributedStringWithAttachment:chatIconAttachment()]];
-    [dialogTitleAttributedString setSelectionAttachment:chatIconSelectedAttachment() forAttachment:chatIconAttachment()];
-    
     [dialogTitleAttributedString appendString:title withColor:NSColorFromRGB(0x333333)];
     [dialogTitleAttributedString setSelectionColor:NSColorFromRGB(0xffffff) forColor:NSColorFromRGB(0x333333)];
     [dialogTitleAttributedString setFont:TGSystemFont(14) forRange:dialogTitleAttributedString.range];
@@ -174,25 +171,6 @@ DYNAMIC_PROPERTY(TITLEFORMESSAGE);
 
 - (NSAttributedString *)statusAttributedString {
     return [[NSMutableAttributedString alloc] initWithString:@"string"];
-}
-
-
-static NSTextAttachment *chatIconAttachment() {
-    static NSTextAttachment *instance;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        instance = [NSMutableAttributedString textAttachmentByImage:[image_chat() imageWithInsets:NSEdgeInsetsMake(0, 1, 0, 4)]];
-    });
-    return instance;
-}
-
-static NSTextAttachment *chatIconSelectedAttachment() {
-    static NSTextAttachment *instance;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        instance = [NSMutableAttributedString textAttachmentByImage:[image_chatHighlighted() imageWithInsets:NSEdgeInsetsMake(0, 1, 0, 4)]];
-    });
-    return instance;
 }
 
 -(void)setTitle:(NSString *)title {

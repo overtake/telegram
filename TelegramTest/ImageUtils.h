@@ -29,7 +29,6 @@ CACHE_IMAGE(AttachTakePhoto)
 CACHE_IMAGE(AttachTakePhotoHighlighted)
 CACHE_IMAGE(BottomAttach)
 CACHE_IMAGE(boxBack)
-CACHE_IMAGE(CancelDownload)
 CACHE_IMAGE(chat)
 CACHE_IMAGE(chatHighlighted)
 CACHE_IMAGE(ChatMessageError)
@@ -64,9 +63,7 @@ CACHE_IMAGE(iconCancelDownload)
 CACHE_IMAGE(kick)
 CACHE_IMAGE(logo)
 CACHE_IMAGE(logoAbout)
-CACHE_IMAGE(MessageFile)
-CACHE_IMAGE(MessageFileCancel)
-CACHE_IMAGE(MessageFileDownload)
+
 CACHE_IMAGE(MessageMapPin)
 CACHE_IMAGE(muted)
 CACHE_IMAGE(mutedSld)
@@ -86,13 +83,7 @@ CACHE_IMAGE(typingGIF)
 CACHE_IMAGE(unchecked)
 CACHE_IMAGE(uncheckedHover)
 CACHE_IMAGE(UnpinPhoto)
-CACHE_IMAGE(VideoPlay)
-CACHE_IMAGE(VoiceMessageCancel)
-CACHE_IMAGE(VoiceMessageDownload)
 CACHE_IMAGE(ScrollDownArrow)
-CACHE_IMAGE(VoiceMessagePause)
-CACHE_IMAGE(VoiceMessagePlay)
-CACHE_IMAGE(VoiceMessageUpload)
 CACHE_IMAGE(VoiceMic)
 CACHE_IMAGE(VoiceMicHighlighted)
 CACHE_IMAGE(VoiceMicHighlighted2)
@@ -184,7 +175,6 @@ CACHE_IMAGE(AudioPlayerNext);
 CACHE_IMAGE(AudioPlayerPause);
 CACHE_IMAGE(AudioPlayerClose);
 CACHE_IMAGE(AudioPlayerStop);
-CACHE_IMAGE(MiniPlayerDefaultCover);
 CACHE_IMAGE(AudioPlayerList);
 CACHE_IMAGE(AudioPlayerListActive);
 CACHE_IMAGE(MusicStandartCover);
@@ -223,6 +213,13 @@ CACHE_IMAGE(NoSharedLinks);
 
 CACHE_IMAGE(StickerSettings);
 
+CACHE_IMAGE(emojiContainer8);
+CACHE_IMAGE(emojiContainer8Highlighted);
+
+CACHE_IMAGE(CalendarIcon);
+
+CACHE_IMAGE(TempAudioPreviewPlay);
+CACHE_IMAGE(TempAudioPreviewPause);
 @interface ImageUtils : NSObject
 
 
@@ -257,4 +254,9 @@ NSImage *decompressedImage(NSImage *image);
 NSImage *renderedImage(NSImage * oldImage, NSSize size);
 NSImage *cropImage(NSImage *image,NSSize backSize, NSPoint difference);
 
+
+typedef NSImage * (^ImageProcessor)(NSImage *image, NSSize size);
+
++(ImageProcessor)c_processor;
++(ImageProcessor)b_processor;
 @end

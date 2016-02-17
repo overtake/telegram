@@ -82,7 +82,7 @@
 
 -(void)setAction:(ComposeAction *)action {
     [super setAction:action];
-    
+        
     self.action.result = [[ComposeResult alloc] init];
     
     self.action.result.singleObject = @(YES);
@@ -185,6 +185,7 @@
     
     [self.tableView removeAllItems:NO];
     
+    weak();
     
     GeneralSettingsBlockHeaderItem *headerItem = [[GeneralSettingsBlockHeaderItem alloc] initWithString:NSLocalizedString(@"Channel.TypeHeader", nil) height:60 flipped:NO];
     headerItem.xOffset = 30;
@@ -192,34 +193,29 @@
     
     GeneralSettingsRowItem *publicSelector = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeSelected callback:^(TGGeneralRowItem *item) {
         
-
-        self.action.result.singleObject = @(YES);
+        weakSelf.action.result.singleObject = @(YES);
         
-        [self reload];
+        [weakSelf reload];
         
     } description:NSLocalizedString(@"Channel.Public", nil) height:42 stateback:^id(TGGeneralRowItem *item) {
-        return self.action.result.singleObject;
+        return weakSelf.action.result.singleObject;
     }];
     
     GeneralSettingsRowItem *privateSelector = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeSelected callback:^(TGGeneralRowItem *item) {
         
-         self.action.result.singleObject = @(NO);
+         weakSelf.action.result.singleObject = @(NO);
         
-         [self reload];
+         [weakSelf reload];
         
     } description:NSLocalizedString(@"Channel.Private", nil) height:42 stateback:^id(TGGeneralRowItem *item) {
-        return @(![self.action.result.singleObject boolValue]);
+        return @(![weakSelf.action.result.singleObject boolValue]);
     }];
 
     
-    
-
     GeneralSettingsBlockHeaderItem *selectorDesc = [[GeneralSettingsBlockHeaderItem alloc] initWithString:[self.action.result.singleObject boolValue] ? NSLocalizedString(@"Channel.ChoiceTypeDescriptionPublic", nil) : NSLocalizedString(@"Channel.ChoiceTypeDescriptionPrivate", nil) height:42 flipped:YES];
     
     
     selectorDesc.xOffset = privateSelector.xOffset = publicSelector.xOffset = 30;
-    
-    
     
     
     [self.tableView addItem:headerItem tableRedraw:NO];
@@ -233,8 +229,6 @@
     } else {
         [self.tableView addItem:_joinLinkItem tableRedraw:NO];
         
-
-        
         GeneralSettingsBlockHeaderItem *joinDescription = [[GeneralSettingsBlockHeaderItem alloc] initWithString:NSLocalizedString(@"Channel.NewChannelSettingUpJoinLinkDescription", nil) height:42 flipped:YES];
         
         [self.tableView addItem:joinDescription tableRedraw:NO];
@@ -242,15 +236,16 @@
         joinDescription.xOffset = 30;
     }
    
-    
-    
-    
-    
     [self.tableView reloadData];
+    
 }
 
 -(void)performEnter {
     
+}
+
+-(void)dealloc {
+    [_tableView clear];
 }
 
 @end

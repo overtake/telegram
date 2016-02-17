@@ -52,7 +52,7 @@
     }
     
     
-    NSArray *filters = @[[TL_inputMessagesFilterPhotoVideo create],[TL_inputMessagesFilterDocument create],[TL_inputMessagesFilterAudioDocuments create],[TL_inputMessagesFilterUrl create]];
+    NSArray *filters = @[[TL_inputMessagesFilterPhotoVideo create],[TL_inputMessagesFilterDocument create],[TL_inputMessagesFilterMusic create],[TL_inputMessagesFilterUrl create]];
     
     
     
@@ -413,7 +413,7 @@ static NSMutableDictionary *loaders;
         
         if((message.media || entities.count > 0)) {
             
-            if([message.media isKindOfClass:[TL_messageMediaDocument class]]) {
+            if([message.media isKindOfClass:[TL_messageMediaDocument class]] || [message.media isKindOfClass:[TL_messageMediaDocument_old44 class]]) {
                 
                 TL_documentAttributeAudio *attr =  (TL_documentAttributeAudio *)[message.media.document attributeWithClass:[TL_documentAttributeAudio class]];
                 

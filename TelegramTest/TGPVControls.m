@@ -384,7 +384,7 @@
             if (result == NSFileHandlingPanelOKButton) {
                 NSURL *file = [savePanel URL];
                 
-                NSString *itemUrl = mediaFilePath([(TL_localMessage *)[TGPhotoViewer currentItem].previewObject.media media]);
+                NSString *itemUrl = mediaFilePath([TGPhotoViewer currentItem].previewObject.media);
                 
                 if ( [[NSFileManager defaultManager] isReadableFileAtPath:itemUrl] ) {
                     [[NSFileManager defaultManager] copyItemAtURL:[NSURL fileURLWithPath:itemUrl] toURL:file error:nil];
@@ -408,7 +408,8 @@
         
         TL_localMessage *msg = [TGPhotoViewer currentItem].previewObject.media;
         
-        [[TGPhotoViewer viewer].invokeWindow.navigationController showMessagesViewController:msg.conversation];
+        [[TGPhotoViewer viewer].invokeWindow.navigationController showMessagesViewController:msg.conversation withMessage:msg];
+        
 
         [[TGPhotoViewer viewer] hide];
         

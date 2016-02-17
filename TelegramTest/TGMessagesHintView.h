@@ -11,11 +11,13 @@
 @interface TGMessagesHintView : TGView
 
 
-
+@property (nonatomic,weak) MessagesViewController *messagesViewController;
 
 -(void)showCommandsHintsWithQuery:(NSString *)query conversation:(TL_conversation *)conversation botInfo:(NSArray *)botInfo choiceHandler:(void (^)(NSString *result))choiceHandler;
 -(void)showHashtagHintsWithQuery:(NSString *)query conversation:(TL_conversation *)conversation peer_id:(int)peer_id choiceHandler:(void (^)(NSString *result))choiceHandler;
--(void)showMentionPopupWithQuery:(NSString *)query conversation:(TL_conversation *)conversation chat:(TLChat *)chat choiceHandler:(void (^)(NSString *result))choiceHandler;
+-(void)showMentionPopupWithQuery:(NSString *)query conversation:(TL_conversation *)conversation chat:(TLChat *)chat allowInlineBot:(BOOL)allowInlineBot choiceHandler:(void (^)(NSString *result))choiceHandler;
+
+-(void)showContextPopupWithQuery:(NSString *)bot query:(NSString *)query conversation:(TL_conversation *)conversation;
 
 -(void)selectNext;
 -(void)selectPrev;

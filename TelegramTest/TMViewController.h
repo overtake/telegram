@@ -21,6 +21,8 @@
 @property (nonatomic, strong) TMView *centerNavigationBarView;
 @property (nonatomic, strong) TMView *rightNavigationBarView;
 
+@property (nonatomic,assign) BOOL isDisclosureController;
+
 @property (nonatomic, strong) TMPopover *popover;
 
 @property (nonatomic,strong,readonly) TMTextField *centerTextField;
@@ -32,6 +34,7 @@
 - (TMView *)view;
 - (void)setHidden:(BOOL)isHidden;
 
+-(TMNavigationController *)rightNavigationController;
 
 
 
@@ -70,6 +73,8 @@
 
 +(void)showBlockPasslock:(passlockCallback)callback;
 -(void)showBlockPasslock:(passlockCallback)callback;
+
++(void)closeAllModals;
 
 +(POPBasicAnimation *)popAnimationForProgress:(float)from to:(float)to;
 

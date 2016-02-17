@@ -164,9 +164,9 @@ static void TGTelegramLoggingFunction(NSString *format, va_list args)
         return;
     }
     
+     [self.mainWindow deminiaturize:self];
+    
     [self.mainWindow.navigationController showMessagesViewController:dialog];
-    
-    
     
     
     if (floor(NSAppKitVersionNumber) > 1187 && notification.activationType == 3) { //NSUserNotificationActivationTypeReplied)
@@ -188,7 +188,7 @@ static void TGTelegramLoggingFunction(NSString *format, va_list args)
         return;
     }
     
-    [self.mainWindow deminiaturize:self];
+   
     
     
 }
@@ -396,7 +396,12 @@ void exceptionHandler(NSException * exception)
 }
 
 - (void)initializeKeyDownHandler {
+    
+    static BOOL buttonRecordIsUp = YES;
+    
     id block = ^(NSEvent *incomingEvent) {
+
+        
         NSEvent *result = incomingEvent;
         
         if(result.window != self.mainWindow) {
@@ -539,10 +544,12 @@ void exceptionHandler(NSException * exception)
             
             if(![TMViewController isModalActive]) {
                 
-                if([Telegram rightViewController].messagesViewController.inputText.length > 0) {
+                if(appWindow().navigationController.messagesViewController.inputText.length > 0) {
                     return incomingEvent;
                 } else {
-                     [[[Telegram sharedInstance] firstController] backOrClose:[[NSMenuItem alloc] initWithTitle:@"Profile.Back" action:@selector(backOrClose:) keyEquivalent:@""]];
+                    BOOL res = [appWindow().navigationController.messagesViewController.bottomView removeQuickRecord];
+                    if(!res)
+                        [[[Telegram sharedInstance] firstController] backOrClose:[[NSMenuItem alloc] initWithTitle:@"Profile.Back" action:@selector(backOrClose:) keyEquivalent:@""]];
                 }
             
             } else {
@@ -648,7 +655,7 @@ void exceptionHandler(NSException * exception)
         if(result.keyCode == 48) {
           //  NSTextView *textView = responder;
             if([responder isKindOfClass:[MessageInputGrowingTextView class]] ) {
-                [[Telegram rightViewController].messagesViewController.bottomView smileButtonClick:nil];
+                [appWindow().navigationController.messagesViewController.bottomView smileButtonClick:nil];
                 
             }
             
@@ -663,6 +670,13 @@ void exceptionHandler(NSException * exception)
                 
                 
                  return [[NSEvent alloc]init];
+            } else if(result.keyCode == 15) { // cmd+r for audio record
+                if(buttonRecordIsUp) {
+                    buttonRecordIsUp = NO;
+                    [appWindow().navigationController.messagesViewController.bottomView startOrStopQuickRecord];
+                }
+                return [[NSEvent alloc]init];
+                
             }
             
             
@@ -670,6 +684,14 @@ void exceptionHandler(NSException * exception)
         
         return result;
     };
+    
+     id keyUpblock = ^(NSEvent *incomingEvent) {
+         buttonRecordIsUp = YES;
+         
+         return incomingEvent;
+     };
+    
+    [NSEvent addLocalMonitorForEventsMatchingMask:(NSKeyUpMask) handler:keyUpblock];
     
     [NSEvent addLocalMonitorForEventsMatchingMask:(NSKeyDownMask) handler:block];
     
@@ -699,9 +721,16 @@ void exceptionHandler(NSException * exception)
                 }
                 
             }
+            
+            
+            if(result.type == NSLeftMouseUp && [TMViewController isModalActive]) {
+                [EmojiViewController hideStickerPreviewIfNeeded];
+            }
+            
             return result;
             
         }
+        
         
         if(( result.type == NSLeftMouseDown || result.type == NSLeftMouseUp) && result.clickCount > 1)
             return [NSEvent mouseEventWithType:result.type location:result.locationInWindow modifierFlags:result.modifierFlags timestamp:result.timestamp windowNumber:result.windowNumber context:result.context eventNumber:result.eventNumber clickCount:1 pressure:result.pressure];
@@ -716,16 +745,28 @@ void exceptionHandler(NSException * exception)
         
         if([appWindow().firstResponder class] == [SelectTextManager class]) { // hard fix for osx events bug
             
-            NSPoint mouseLoc = [appWindow().navigationController.messagesViewController.table.scrollView convertPoint:[incomingEvent locationInWindow] fromView:nil];
+            MessagesViewController *viewController = appWindow().navigationController.messagesViewController;
             
             
-            BOOL isInside = [appWindow().navigationController.messagesViewController.table.scrollView mouse:mouseLoc inRect:appWindow().navigationController.messagesViewController.table.scrollView.bounds];
+            NSPoint mouseLoc = [viewController.table.scrollView convertPoint:[incomingEvent locationInWindow] fromView:nil];
+            
+            
+            BOOL isInside = [viewController.table.scrollView mouse:mouseLoc inRect:viewController.table.scrollView.bounds];
             
             
             if(isInside) {
-                [appWindow().navigationController.messagesViewController.table mouseDragged:incomingEvent];
                 
-                return [[NSEvent alloc] init];
+                NSUInteger rowId = [viewController.table rowAtPoint:[viewController.table convertPoint:[incomingEvent locationInWindow] fromView:nil]];
+                
+                MessageTableItem *item = [viewController objectAtIndex:rowId];
+                
+                if([item isKindOfClass:NSClassFromString(@"MessageTableItemText")]) {
+                    [viewController.table mouseDragged:incomingEvent];
+                    
+                    return [[NSEvent alloc] init];
+                }
+                
+                
             }
             
             
@@ -887,6 +928,8 @@ void exceptionHandler(NSException * exception)
             [[MTNetwork instance] drop];
             
             [Storage drop];
+            
+            [[NSUserNotificationCenter defaultUserNotificationCenter] removeAllDeliveredNotifications];
             
             [Storage open:^{
                 
@@ -1115,7 +1158,7 @@ continueUserActivity: (id)userActivity
 }
 
 - (void)application:(NSApplication *)application didUpdateUserActivity:(id)userActivity  {
-    
+    [TMViewController hideModalProgress];
 }
 
 -(void)application:(NSApplication *)application

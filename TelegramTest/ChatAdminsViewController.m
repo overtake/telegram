@@ -75,28 +75,30 @@
     
     [_tableView removeAllItems:YES];
     
+    weak();
+    
     GeneralSettingsRowItem *header = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeSwitch callback:^(TGGeneralRowItem *item) {
         
-        [self showModalProgress];
+        [weakSelf showModalProgress];
         
-        [RPCRequest sendRequest:[TLAPI_messages_toggleChatAdmins createWithChat_id:_chat.n_id enabled:!self.chat.isAdmins_enabled] successHandler:^(id request, id response) {
+        [RPCRequest sendRequest:[TLAPI_messages_toggleChatAdmins createWithChat_id:weakSelf.chat.n_id enabled:!weakSelf.chat.isAdmins_enabled] successHandler:^(id request, id response) {
             
-             [self hideModalProgressWithSuccess];
+             [weakSelf hideModalProgressWithSuccess];
             
             [SharedManager proccessGlobalResponse:response];
             
             
-            [self reloadData];
+            [weakSelf reloadData];
             
             
         } errorHandler:^(id request, RpcError *error) {
             
-            [self hideModalProgress];
+            [weakSelf hideModalProgress];
         }];
         
     } description:NSLocalizedString(@"Chat.SwitchAllAdmins", nil) height:62 stateback:^id(TGGeneralRowItem *item) {
         
-        return @(!self.chat.isAdmins_enabled);
+        return @(!weakSelf.chat.isAdmins_enabled);
         
     }];
     
@@ -129,6 +131,8 @@
     
     NSArray *participants = [_chat.chatFull.participants.participants copy];
     
+    weak();
+    
     [participants enumerateObjectsUsingBlock:^(TLChatParticipant *obj, NSUInteger idx, BOOL * _Nonnull stop) {
         
         TLUser *user = [[UsersManager sharedManager] find:obj.user_id];
@@ -154,16 +158,16 @@
                     
                     confirm(appName(), !isAdmin ?  NSLocalizedString(@"Chat.ToggleUserToAdminConfirm", nil) : NSLocalizedString(@"Chat.ToggleAdminToUserConfirm", nil), ^{
                         
-                        [self showModalProgress];
+                        [weakSelf showModalProgress];
                         
-                        [RPCRequest sendRequest:[TLAPI_messages_editChatAdmin createWithChat_id:self.chat.n_id user_id:user.inputUser is_admin:!isAdmin] successHandler:^(id request, id response) {
+                        [RPCRequest sendRequest:[TLAPI_messages_editChatAdmin createWithChat_id:weakSelf.chat.n_id user_id:user.inputUser is_admin:!isAdmin] successHandler:^(id request, id response) {
                             
                             if([response isKindOfClass:[TL_boolTrue class]]) {
                                 
-                                [[FullChatManager sharedManager] loadIfNeed:self.chat.n_id force:YES];
+                                [[FullChatManager sharedManager] loadIfNeed:weakSelf.chat.n_id force:YES];
                                 
                                 
-                                NSArray *f = [_chat.chatFull.participants.participants filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.user_id == %d",user.n_id]];
+                                NSArray *f = [weakSelf.chat.chatFull.participants.participants filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.user_id == %d",user.n_id]];
                                 
                                 if(f.count == 1)
                                 {
@@ -171,20 +175,20 @@
                                     
                                     TLChatParticipant *newParticipant = !isAdmin ? [TL_chatParticipantAdmin createWithUser_id:participant.user_id inviter_id:participant.inviter_id date:participant.date] : [TL_chatParticipant createWithUser_id:participant.user_id inviter_id:participant.inviter_id date:participant.date];
                                     
-                                    [_chat.chatFull.participants.participants replaceObjectAtIndex:[_chat.chatFull.participants.participants indexOfObject:participant] withObject:newParticipant];
+                                    [weakSelf.chat.chatFull.participants.participants replaceObjectAtIndex:[weakSelf.chat.chatFull.participants.participants indexOfObject:participant] withObject:newParticipant];
                                     
                                     [ASQueue dispatchOnMainQueue:^{
-                                        [self reloadData];
+                                        [weakSelf reloadData];
                                     }];
                                     
                                 }
                                 
                             }
                             
-                            [self hideModalProgressWithSuccess];
+                            [weakSelf hideModalProgressWithSuccess];
                             
                         } errorHandler:^(id request, RpcError *error) {
-                            [self hideModalProgress];
+                            [weakSelf hideModalProgress];
                         } timeout:0 queue:[ASQueue globalQueue].nativeQueue];
                         
                     }, nil);
@@ -200,6 +204,10 @@
         
     }];
     
+}
+
+-(void)dealloc {
+    [_tableView clear];
 }
 
 @end

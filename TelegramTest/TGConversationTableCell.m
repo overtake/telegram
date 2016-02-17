@@ -80,8 +80,6 @@ static NSDictionary *attributes() {
 @interface TGConversationTableCell ()
 
 
-// views
-
 @property (nonatomic,strong) TMTextField *dateField;
 @property (nonatomic,strong) TMTextField *messageField;
 @property (nonatomic,strong) TMNameTextField *nameTextField;
@@ -99,9 +97,6 @@ static NSDictionary *attributes() {
 @property (nonatomic,assign) BOOL isActiveDragging;
 
 @end
-
-
-
 
 
 @implementation TGConversationTableCell
@@ -158,10 +153,7 @@ static NSDictionary *attributes() {
 -(instancetype)initWithFrame:(NSRect)frameRect {
     if(self = [super initWithFrame:frameRect]) {
         
-        
         [self registerForDraggedTypes:[NSArray arrayWithObjects:NSFilenamesPboardType,NSStringPboardType,NSTIFFPboardType, nil]];
-        
-       // self.wantsLayer = YES;
         
         _swipe = [[TGSwipeTableControll alloc] initWithFrame:frameRect itemView:self];
         
@@ -182,10 +174,7 @@ static NSDictionary *attributes() {
         
         _nameTextField.wantsLayer = YES;
 
-        
-//        [_nameTextField setBackgroundColor:[NSColor redColor]];
-//        [_nameTextField setDrawsBackground:YES];
-        
+
         _messageField = [TMTextField defaultTextField];
         
         [_messageField setFrameOrigin:NSMakePoint(68, 3)];
@@ -193,7 +182,6 @@ static NSDictionary *attributes() {
         _messageField.wantsLayer = YES;
         
         [_messageField setDrawsBackground:NO];
-     //   [_messageField setBackgroundColor:[NSColor blueColor]];
         [[_messageField cell] setLineBreakMode:NSLineBreakByTruncatingTail];
         [[_messageField cell] setTruncatesLastVisibleLine:YES];
         
@@ -203,8 +191,6 @@ static NSDictionary *attributes() {
         
         _dateField.wantsLayer = YES;
         [_dateField setFont:TGSystemFont(12)];
-        
-      
         
         [_swipe addSubview:_dateField];
         [_swipe addSubview:_photoImageView];
@@ -247,14 +233,9 @@ static NSDictionary *attributes() {
             if(self.item.conversation.isVerified) {
                 [self.isSelected ? image_VerifyWhite() : image_Verify() drawInRect:NSMakeRect(NSMaxX(self.nameTextField.frame),NSMinY(self.nameTextField.frame) + 6, image_Verify().size.width, image_Verify().size.height) fromRect:NSZeroRect operation:NSCompositeHighlight fraction:1];
             }
-            
-         //
-            
             if(self.item.unreadText.length && self.style != ConversationTableCellShortStyle && self.item.conversation.unread_count > 0)
                 [self drawUnreadCount]; 
         };
-        
-        
         
         
         [_swipe.containerView setDrawBlock:block];
@@ -286,8 +267,9 @@ static NSDictionary *attributes() {
     
     self.style = NSWidth(self.frame) == 70 ? ConversationTableCellShortStyle : ConversationTableCellFullStyle;
     
+    int width = MIN(NSWidth(self.frame) - NSMinX(_nameTextField.frame) - NSWidth(_dateField.frame) - 10 - (self.item.message.n_out ? 18 : 0) - (self.item.conversation.isVerified ? 10 : 0), self.item.nameTextSize.width);
     
-    [_nameTextField setFrameSize:NSMakeSize(MIN(NSWidth(self.frame) - NSMinX(_nameTextField.frame) - NSWidth(_dateField.frame) - 10 - (self.item.message.n_out ? 18 : 0), self.item.nameTextSize.width), 23)];
+    [_nameTextField setFrameSize:NSMakeSize(width, 23)];
     [_messageField setFrameSize:NSMakeSize(NSWidth(self.frame) - NSMinX(_messageField.frame) -40, 36)];
     [_dateField setFrameOrigin:NSMakePoint(self.bounds.size.width - self.item.dateSize.width - 10, _dateField.frame.origin.y)];
 
@@ -329,7 +311,6 @@ static NSDictionary *attributes() {
         _timer = nil;
         _dots = @"";
     }
-    
 }
 
 
@@ -348,8 +329,6 @@ static NSDictionary *attributes() {
         [attr setSelectionColor:[NSColor whiteColor] forColor:GRAY_TEXT_COLOR];
         [attr setFont:TGSystemFont(13) forRange:attr.range];
         [attr setSelected:self.isSelected];
-        
-        
         
         [_messageField setAttributedStringValue:attr];
         
@@ -381,10 +360,8 @@ static NSDictionary *attributes() {
     _nameTextField.attach = nil;
     _nameTextField.selectedAttach = nil;
     
-    
     [_nameTextField clear];
     [_nameTextField setSelected:self.isSelected];
-    
     
     [item.messageText setSelected:self.isSelected];
     [item.dateText setSelected:self.isSelected];
@@ -403,7 +380,6 @@ static NSDictionary *attributes() {
         _nameTextField.attach = attach;
         _nameTextField.selectedAttach = selectedAttach;
     }
-    
     
     
     [_nameTextField updateWithConversation:item.conversation];
@@ -433,8 +409,6 @@ static NSDictionary *attributes() {
         [_stateImageView removeFromSuperview];
         _stateImageView = nil;
     }
-    
-
     
     [self updateFrames];
     
@@ -473,8 +447,11 @@ static NSDictionary *attributes() {
                 point = NSMakePoint(NSMinX(self.dateField.frame) - stateImage.size.width -2, NSHeight(self.frame) - stateImage.size.height - 11);
                 
             }
-            
+        
+        if(stateImage != nil) {
             return @{@"image":stateImage,@"point":[NSValue valueWithPoint:point]};
+        }
+        
             
     }
     
@@ -548,9 +525,7 @@ static int unreadOffsetRight = 13;
 
 -(void)rightMouseDown:(NSEvent *)theEvent {
     [super rightMouseDown:theEvent];
-    
     [TGConversationsViewController showPopupMenuForDialog:self.item.conversation withEvent:theEvent forView:self];
-
 }
 
 -(void)dealloc {

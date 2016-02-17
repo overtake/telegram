@@ -38,6 +38,7 @@ extern NSString *const FILE_NAMES;
 extern NSString *const ATTACHMENTS;
 extern NSString *const BOT_COMMANDS;
 extern NSString *const RECENT_SEARCH;
+extern NSString *const RECENT_GIFS;
 -(void)drop:(void (^)())completeHandler;
 +(void)drop;
 +(void)open:(void (^)())completeHandler;
@@ -57,6 +58,7 @@ extern NSString *const RECENT_SEARCH;
 -(void)saveUpdateState:(TGUpdateState *)state;
 -(void)messages:(void (^)(NSArray *))completeHandler forIds:(NSArray *)ids random:(BOOL)random queue:(ASQueue *)q;
 -(void)messages:(void (^)(NSArray *))completeHandler forIds:(NSArray *)ids random:(BOOL)random sync:(BOOL)sync queue:(ASQueue *)q;
+-(void)messages:(void (^)(NSArray *))completeHandler forIds:(NSArray *)ids random:(BOOL)random sync:(BOOL)sync queue:(ASQueue *)q isChannel:(BOOL)isChannel;
 -(NSArray *)issetMessages:(NSArray *)ids;
 
 
@@ -128,7 +130,6 @@ extern NSString *const RECENT_SEARCH;
 
 -(void)fullChats:(void (^)(NSArray *chats))completeHandler;
 -(void)insertFullChat:(TLChatFull *)fullChat completeHandler:(void (^)(void))completeHandler;
--(void)chatFull:(int)n_id completeHandler:(void (^)(TLChatFull *chat))completeHandler;
 
 
 
@@ -218,7 +219,6 @@ extern NSString *const RECENT_SEARCH;
 -(void)selectSecretInActions:(int)chat_id completeHandler:(void (^)(NSArray *list))completeHandler;
 
 
--(NSArray *)selectSupportMessages:(NSArray *)ids;
 -(void)addSupportMessages:(NSArray *)messages;
 
 

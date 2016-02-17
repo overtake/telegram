@@ -30,7 +30,7 @@
 
 -(void)fillGroupHoles:(NSArray *)messages bottom:(BOOL)bottom {
     
-    if(messages.count == 0)
+    if(messages.count == 0 || self.controller.conversation.chat.isMegagroup)
         return;
     
     // max to min
@@ -40,8 +40,6 @@
         if(![obj isImportantMessage]) {
             
             TL_localMessage *lastImportantMessage = [[Storage manager] lastMessageAroundMinId:obj.channelMsgId important:YES isTop:!bottom];
-            
-            
             
             int lastImportantMessageId = [lastImportantMessage n_id] == 0 ? (bottom ? 1 : self.controller.conversation.top_message) : [lastImportantMessage n_id];
                         

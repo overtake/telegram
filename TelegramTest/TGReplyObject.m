@@ -24,15 +24,15 @@
         _fromMessage = fromMessage;
         _replyMessage = replyMessage;
         
-        assert(_fromMessage != nil || _replyMessage != nil);
+      //  assert(_fromMessage != nil || _replyMessage != nil);
         
-        _containerHeight = 15+18;
+        _containerHeight = 31;
         
         if(_replyMessage != nil)
             [self updateObject];
         else
             [self loadReplyMessage];
-        
+//
         
         
     }
@@ -141,11 +141,12 @@
         
         _replyThumb = [[TGImageObject alloc] initWithLocation:!thumb ? photoSize.location : nil placeHolder:thumb];
         
-        _replyThumb.imageSize = strongsize(NSMakeSize(photoSize.w, photoSize.h), _containerHeight-2);
+        
+        _replyThumb.imageSize = NSMakeSize(_containerHeight-2, _containerHeight-2);
         
     }
     
-    if([_replyMessage.media isKindOfClass:[TL_messageMediaDocument class]]) {
+    if([_replyMessage.media isKindOfClass:[TL_messageMediaDocument class]] || [_replyMessage.media isKindOfClass:[TL_messageMediaDocument_old44 class]]) {
         
         if(![_replyMessage.media.document isSticker]) {
             
@@ -174,6 +175,27 @@
 
 
 -(void)loadReplyMessage {
+    
+    
+    if([_fromMessage isKindOfClass:[TL_destructMessage class]]) {
+        
+        [[Storage manager] messages:^(NSArray *result) {
+            
+            if(result.count == 1) {
+                [[Storage manager] addSupportMessages:result];
+                _replyMessage = result[0];
+                _fromMessage.replyMessage = _replyMessage;
+                [self updateObject];
+                
+                if(_item != nil) {
+                    [Notification perform:UPDATE_MESSAGE_ITEM data:@{@"item":_item}];
+                }
+            }
+            
+        } forIds:@[@(((TL_destructMessage *)_fromMessage).reply_to_random_id)] random:YES sync:NO queue:[ASQueue globalQueue]];
+        
+        return;
+    }
     
     id request = [TLAPI_messages_getMessages createWithN_id:[@[@(_fromMessage.reply_to_msg_id)] mutableCopy]];
     
@@ -204,7 +226,6 @@
             [SharedManager proccessGlobalResponse:response];
             
             [[Storage manager] addSupportMessages:messages];
-            [MessagesManager addSupportMessages:messages];
             
             
             _replyMessage = messages[0];
@@ -221,7 +242,7 @@
     } errorHandler:^(id request, RpcError *error) {
         
         
-    }];
+    } timeout:0 queue:[ASQueue globalQueue].nativeQueue];
 }
 
 -(void)dealloc {

@@ -36,6 +36,8 @@
 #import "TGBotCommandsKeyboard.h"
 #import "FullChatManager.h"
 #import "BlockedUsersManager.h"
+#import "TGModalGifSearch.h"
+#import "TGRecordedAudioPreview.h"
 @interface MessagesBottomView()<TGImageAttachmentsControllerDelegate>
 
 @property (nonatomic, strong) TMView *actionsView;
@@ -50,6 +52,10 @@
 @property (nonatomic, strong) BTRButton *botCommandButton;
 @property (nonatomic, strong) BTRButton *channelAdminButton;
 @property (nonatomic, strong) BTRButton *secretTimerButton;
+
+@property (nonatomic, strong) NSProgressIndicator *progressView;
+@property (nonatomic,assign,setter=setProgress:) BOOL isProgress;
+
 @property (nonatomic, strong) TMButton *sendButton;
 
 
@@ -87,6 +93,11 @@
 
 @property (nonatomic,strong) TLUserFull *userFull;
 @property (nonatomic,strong) TLChatFull *chatFull;
+
+
+@property (nonatomic,strong) TGRecordedAudioPreview *recordedAudioPreview;
+
+@property (nonatomic,strong) BTRButton *removeAudioRecordButton;
 
 @end
 
@@ -141,6 +152,21 @@
     }
 }
 
+-(void)setProgress:(BOOL)progress {
+    _isProgress = progress;
+    
+    [self.progressView setHidden:!progress];
+    
+    if(progress) {
+        [self.progressView startAnimation:self];
+    } else {
+        [self.progressView stopAnimation:self];
+    }
+    
+    [self updateBotButtons];
+    
+}
+
 -(void)didChangeAttachmentsCount:(int)futureCount {
     
     if(futureCount == 0 && _imageAttachmentsController.isShown) {
@@ -190,6 +216,8 @@
 - (void)setDialog:(TL_conversation *)dialog {
     self->_dialog = dialog;
     
+    
+    
     self.botStartParam = nil;
     
     [self setOnClickToLockedView:nil];
@@ -207,13 +235,13 @@
     
     
     if(self.dialog.type == DialogTypeSecretChat) {
-        weakify();
+        weak();
         ;
         
         __block NSUInteger dialogHash = self.dialog.cacheHash;
         __block EncryptedParams *params = self.dialog.encryptedChat.encryptedParams;
         __block stateHandler handler = ^(EncryptedState state) {
-            if(dialogHash != strongSelf.dialog.cacheHash)
+            if(dialogHash != weakSelf.dialog.cacheHash)
                 return;
             
             [self setState:MessagesBottomViewNormalState animated:NO];
@@ -237,14 +265,14 @@
     
     [self updateBotButtons];
     
-    
+   
     
     [self checkReplayMessage:YES animated:NO];
     
     [self checkFwdMessages:YES animated:NO];
     
     
-    
+    [self updateStopRecordControls];
     
     if(self.dialog.type == DialogTypeUser && self.dialog.user.isBot) {
         
@@ -263,7 +291,10 @@
             
             _chatFull = chatFull;
             
-            [[FullChatManager sharedManager] loadParticipantsWithMegagroupId:chatFull.n_id];
+            if(_chatFull.chat.isMegagroup) {
+                [[FullChatManager sharedManager] loadParticipantsWithMegagroupId:chatFull.n_id];
+            }
+            
             
             [self updateBotButtons];
             
@@ -287,6 +318,9 @@
 }
 
 -(void)updateBotButtons {
+    
+    
+    
     if(self.dialog.type == DialogTypeUser) {
         [self.botCommandButton setHidden:!self.dialog.user.isBot];
     } else if(self.dialog.type == DialogTypeChat || self.dialog.type == DialogTypeChannel) {
@@ -314,13 +348,18 @@
     
     [_secretTimerButton setHidden:self.dialog.type != DialogTypeSecretChat];
     
+    
+    [_botCommandButton setHidden:_botCommandButton.isHidden || self.isProgress];
+    [_channelAdminButton setHidden:_channelAdminButton.isHidden || self.isProgress];
+    [_secretTimerButton setHidden:_secretTimerButton.isHidden || self.isProgress];
+    [_smileButton setHidden:self.isProgress];
 }
 
 - (TMView *)actionsView {
     if(self->_actionsView)
         return self->_actionsView;
     
-    weakify();
+    weak();
     
     self->_actionsView = [[TMView alloc] initWithFrame:NSMakeRect(0, 0, self.bounds.size.width, self.bounds.size.height - 1)];
     [self.actionsView setWantsLayer:YES];
@@ -334,7 +373,7 @@
     
     [self.deleteButton setAutoresizingMask:NSViewMaxXMargin ];
     [self.deleteButton setTapBlock:^{
-        [strongSelf.messagesViewController deleteSelectedMessages];
+        [weakSelf.messagesViewController deleteSelectedMessages];
     }];
     self.deleteButton.disableColor = NSColorFromRGB(0xa1a1a1);
     [self.actionsView addSubview:self.deleteButton];
@@ -350,20 +389,16 @@
     
     [self.forwardButton setAutoresizingMask:NSViewMinXMargin];
     self.forwardButton.disableColor = NSColorFromRGB(0xa1a1a1);
+    
 
     [self.forwardButton setTapBlock:^{
-//        strongify();
-    
-        
-        [self.messagesViewController showForwardMessagesModalView];
-        
-        
+        [weakSelf.messagesViewController showForwardMessagesModalView];
     }];
      
      [self.actionsView setDrawBlock:^{
-        [strongSelf.forwardButton setFrameOrigin:NSMakePoint(strongSelf.bounds.size.width - strongSelf.forwardButton.bounds.size.width - 22, roundf((strongSelf.bounds.size.height - strongSelf.deleteButton.bounds.size.height) / 2))];
-        [strongSelf.deleteButton setFrameOrigin:NSMakePoint(30, roundf((strongSelf.bounds.size.height - strongSelf.deleteButton.bounds.size.height) / 2) )];
-        [strongSelf.messagesSelectedCount setCenterByView:strongSelf.actionsView];
+        [weakSelf.forwardButton setFrameOrigin:NSMakePoint(weakSelf.bounds.size.width - weakSelf.forwardButton.bounds.size.width - 22, roundf((weakSelf.bounds.size.height - weakSelf.deleteButton.bounds.size.height) / 2))];
+        [weakSelf.deleteButton setFrameOrigin:NSMakePoint(30, roundf((weakSelf.bounds.size.height - weakSelf.deleteButton.bounds.size.height) / 2) )];
+        [weakSelf.messagesSelectedCount setCenterByView:weakSelf.actionsView];
     }];
      
 
@@ -499,7 +534,7 @@
     self.recordCircleLayer.contentsScale = self.normalView.layer.contentsScale;
     [self.recordCircleLayer setFillColor:NSColorFromRGB(0xf36f75)];
     [self.recordCircleLayer setRadius:17];
-    [self.recordCircleLayer setFrameOrigin:CGPointMake(28, roundf((self.bounds.size.height - self.recordCircleLayer.bounds.size.height) / 2))];
+    [self.recordCircleLayer setFrameOrigin:CGPointMake(18, roundf((self.bounds.size.height - self.recordCircleLayer.bounds.size.height) / 2))];
     [self.recordCircleLayer setNeedsDisplay];
     [self.normalView.layer addSublayer:self.recordCircleLayer];
     
@@ -508,24 +543,18 @@
     self.recordDurationLayer.contentsScale = self.normalView.layer.contentsScale;
     [self.recordDurationLayer setTextColor:[NSColor blackColor]];
     [self.recordDurationLayer setTextFont:TGSystemFont(14)];
-    [self.recordDurationLayer setString:@"00:34"];
+    [self.recordDurationLayer setString:@"00:34,45"];
     [self.recordDurationLayer sizeToFit];
-    [self.recordDurationLayer setFrameOrigin:CGPointMake(52, roundf( (self.bounds.size.height - self.recordDurationLayer.bounds.size.height) / 2.f) - 1)];
+    [self.recordDurationLayer setFrameOrigin:CGPointMake(42, roundf( (self.bounds.size.height - self.recordDurationLayer.bounds.size.height) / 2.f) - 1)];
     [self.normalView.layer addSublayer:self.recordDurationLayer];
     
     self.recordHelpLayer = [TMTextLayer layer];
     [self.recordHelpLayer disableActions];
+    self.recordHelpLayer.wrapped = YES;
     self.recordHelpLayer.contentsScale = self.normalView.layer.contentsScale;
     [self.recordHelpLayer setTextFont:TGSystemFont(14)];
     [self.normalView.layer addSublayer:self.recordHelpLayer];
 
-
-    
-
-    
- //   self.attachMenu = theMenu;
-
-    
     int offsetX = self.attachButton.frame.origin.x + self.attachButton.frame.size.width + 21;
     
     self.inputMessageTextField.containerView.autoresizesSubviews = YES;
@@ -536,7 +565,6 @@
     [self.inputMessageTextField textDidChange:nil];
     
     [self.normalView addSubview:self.inputMessageTextField.containerView];
-    
     
     self.smileButton = [[BTRButton alloc] initWithFrame:NSMakeRect(self.inputMessageTextField.containerView.frame.size.width - 30, 7, image_smile().size.width, image_smile().size.height)];
     [self.smileButton setAutoresizingMask:NSViewMinXMargin | NSViewMinYMargin];
@@ -558,8 +586,6 @@
 
     [self.inputMessageTextField.containerView addSubview:self.botKeyboardButton];
     
-    
-    
     self.botCommandButton = [[BTRButton alloc] initWithFrame:NSMakeRect(self.inputMessageTextField.containerView.frame.size.width - 90, 7, image_botCommand().size.width, image_botCommand().size.height)];
     [self.botCommandButton setAutoresizingMask:NSViewMinXMargin | NSViewMinYMargin];
     [self.botCommandButton.layer disableActions];
@@ -569,10 +595,6 @@
 
     
     [self.inputMessageTextField.containerView addSubview:self.botCommandButton];
-    
-    
-    
-    
     
     self.channelAdminButton = [[BTRButton alloc] initWithFrame:NSMakeRect(self.inputMessageTextField.containerView.frame.size.width - 90, 7, image_ChannelMessageAsAdmin().size.width, image_ChannelMessageAsAdmin().size.height)];
     [self.channelAdminButton setAutoresizingMask:NSViewMinXMargin | NSViewMinYMargin];
@@ -597,6 +619,21 @@
     [self.inputMessageTextField.containerView addSubview:self.secretTimerButton];
     
     
+    self.removeAudioRecordButton = [[BTRButton alloc] initWithFrame:NSMakeRect(18, roundf((58-image_MessageActionDeleteActive().size.height)/2), image_MessageActionDeleteActive().size.width, image_MessageActionDeleteActive().size.height)];
+    
+    [self.removeAudioRecordButton addTarget:self action:@selector(removeAudioRecordAction:) forControlEvents:BTRControlEventMouseDownInside];
+    [self.removeAudioRecordButton setImage: image_MessageActionDeleteActive() forControlState:BTRControlStateNormal];
+    
+    
+    [self.normalView addSubview:self.removeAudioRecordButton];
+    
+    
+    
+    self.progressView = [[NSProgressIndicator alloc] initWithFrame:NSMakeRect(self.inputMessageTextField.containerView.frame.size.width - 30, 10,16,16)];
+    [self.progressView setAutoresizingMask:NSViewMinXMargin | NSViewMinYMargin];
+    [self.progressView setControlSize:NSSmallControlSize];
+    [self.progressView setStyle:NSProgressIndicatorSpinningStyle];
+    [self.inputMessageTextField.containerView addSubview:self.progressView];
     
     
     [self.smileButton addTarget:self action:@selector(smileButtonClick:) forControlEvents:BTRControlEventMouseEntered];
@@ -652,6 +689,10 @@ static RBLPopover *popover;
     
     [popover showRelativeToRect:button.bounds ofView:button preferredEdge:CGRectMinYEdge];
 
+}
+
+-(void)removeAudioRecordAction:(BTRButton *)button {
+    [self updateStopRecordControls];
 }
 
 -(void)botCommandButtonAction:(BTRButton *)button {
@@ -713,14 +754,6 @@ static RBLPopover *popover;
             
         }];
         
-        
-        
-        //        [FileUtils showPanelWithTypes:[NSArray arrayWithObjects:@"png", @"tiff", @"jpeg", @"jpg", @"mp4",@"mov",@"avi", nil] completionHandler:^(NSString *result) {
-        //
-        //            MTLog(@"result %@", result);
-        //
-        //            [self.messagesViewController sendImage:result file_data:nil toDialog:self.messagesViewController.conversation];
-        //        }];
     }];
     
     
@@ -729,19 +762,9 @@ static RBLPopover *popover;
     [attachLocationItem setHighlightedImage:image_AttachLocationHighlighted()];
     
     
-#ifndef TGDEBUG
-    
-    if(self.messagesViewController.conversation.type != DialogTypeSecretChat && floor(NSAppKitVersionNumber) > 1187)
-        [theMenu addItem:attachLocationItem];
-    
-#else
-    
-    if(ACCEPT_FEATURE) {
+    if(ACCEPT_FEATURE && self.dialog.type != DialogTypeSecretChat && floor(NSAppKitVersionNumber) > 1187) {
         [theMenu addItem:attachLocationItem];
     }
-    
-    
-#endif
     
     NSMenuItem *attachFileItem = [NSMenuItem menuItemWithTitle:NSLocalizedString(@"Attach.File", nil) withBlock:^(id sender) {
         [FileUtils showPanelWithTypes:nil completionHandler:^(NSArray *paths) {
@@ -762,6 +785,8 @@ static RBLPopover *popover;
     
     [theMenu addItem:attachFileItem];
     
+   
+    
     return theMenu;
 }
 
@@ -781,15 +806,31 @@ static RBLPopover *popover;
 
 - (void)setRecordHelperStringValue:(NSString *)string {
     self.recordHelpLayer.string = string;
-    [self.recordHelpLayer sizeToFit];
+   
+    int minX = NSMaxX(self.recordDurationLayer.frame);
+    int maxX = NSMinX(self.recordAudioButton.frame);
     
-    [self.recordHelpLayer setFrameOrigin:CGPointMake( roundf( (self.bounds.size.width - self.recordHelpLayer.bounds.size.width) / 2.f ), 18)];
+    NSSize size = self.recordHelpLayer.size;
+    
+    int dif = maxX - minX;
+    
+    [self.recordHelpLayer setFrameSize:NSMakeSize(dif - 20,size.width > dif-20 ? size.height + 18 : size.height)];
+    [self.recordHelpLayer setFrameOrigin:CGPointMake( minX + 10 , roundf((60-self.recordHelpLayer.bounds.size.height)/2))];
 }
 
 - (void)startRecord:(BTRButton *)button {
     weak();
+    
+    if(!self.dialog.canSendMessage || [[TMAudioRecorder sharedInstance] isRecording])
+        return;
+    
+    [_recordedAudioPreview removeFromSuperview];
+    _recordedAudioPreview = nil;
+    [_removeAudioRecordButton setHidden:YES];
+    
+    [self.recordDurationLayer setFrameOrigin:CGPointMake(42, roundf( (58 - self.recordDurationLayer.bounds.size.height) / 2.f) - 1)];
 
-    self.recordTime = 0;
+
     [self.recordDurationLayer setString:@"00:00"];
     [self.recordDurationLayer setHidden:NO];
     [self.inputMessageTextField.containerView removeFromSuperview];
@@ -801,19 +842,22 @@ static RBLPopover *popover;
     
     [self setRecordHelperStringValue:NSLocalizedString(@"Audio.ReleaseOut", nil)];
     [self.recordHelpLayer setHidden:NO];
+    self.recordHelpLayer.alignmentMode = @"center";
     [self recordAudioMouseEntered:button];
     
     [self.recordTimer invalidate];
     
     
-    self.recordTimer = [[TGTimer alloc] initWithTimeout:1.0 repeat:YES completion:^{
+    self.recordTimer = [[TGTimer alloc] initWithTimeout:0.01 repeat:YES completion:^{
         
         
         [TGSendTypingManager addAction:[TL_sendMessageRecordAudioAction create] forConversation:self.dialog];
         
+        NSTimeInterval time = [[TMAudioRecorder sharedInstance] timeRecorded];
         
-        weakSelf.recordTime++;
-        [weakSelf.recordDurationLayer setString:[NSString durationTransformedValue:weakSelf.recordTime]];
+        float ms = time - ((int)time);
+        
+        [weakSelf.recordDurationLayer setString:[NSString stringWithFormat:@"%@,%d",[NSString durationTransformedValue:time],(int)(ms*100)]];
     } queue:dispatch_get_main_queue()];
     [self.recordTimer start];
     
@@ -824,7 +868,58 @@ static RBLPopover *popover;
         POPLayerSetScaleXY(weakSelf.recordCircleLayer, CGPointMake(power, power));
     }];
     
-    [recorder startRecord];
+    [recorder startRecordWithController:self.messagesViewController];
+}
+
+
+-(void)startOrStopQuickRecord {
+    if(![[TMAudioRecorder sharedInstance] isRecording]) {
+        [self startRecord:self.recordAudioButton];
+        [self setRecordHelperStringValue:NSLocalizedString(@"Audio.QuickRecordRelease", nil)];
+    } else {
+        BOOL res = [[TMAudioRecorder sharedInstance] stopRecord:YES askConfirm:YES];
+        
+        if(!res) {
+            [self updateStopRecordControls];
+        }
+    }
+    
+}
+
+-(BOOL)removeQuickRecord {
+    if(_recordedAudioPreview != nil) {
+        [self updateStopRecordControls];
+        return YES;
+    }
+    
+    return NO;
+}
+
+
+-(void)showQuickRecordedPreview:(NSString *)file audioAttr:(TL_documentAttributeAudio *)audioAttr {
+    
+    if(!_recordedAudioPreview)
+    {
+        _recordedAudioPreview = [[TGRecordedAudioPreview alloc] initWithFrame:NSMakeRect(NSMinX(self.inputMessageTextField.containerView.frame), roundf ((58 - 30)/2), NSWidth(self.inputMessageTextField.containerView.frame), 30)];
+        
+        _recordedAudioPreview.autoresizingMask = NSViewWidthSizable;
+        [self.normalView addSubview:_recordedAudioPreview];
+    }
+    
+    [_removeAudioRecordButton setHidden:NO];
+    
+    [self.recordCircleLayer setHidden:YES];
+    [self.recordDurationLayer setHidden:YES];
+    [self.recordHelpLayer setHidden:YES];
+    
+    [self TMGrowingTextViewTextDidChange:nil];
+    
+    [_recordedAudioPreview setAudio_file:file audioAttr:audioAttr];
+}
+
+
+-(void)keyUp:(NSEvent *)theEvent {
+    [super keyUp:theEvent];
 }
 
 - (void)stopRecord:(BTRButton *)button {
@@ -835,10 +930,17 @@ static RBLPopover *popover;
     BOOL isInside = NSPointInRect(pos, self.bounds);
     [[TMAudioRecorder sharedInstance] stopRecord:isInside];
 
-    
-    
+    [self updateStopRecordControls];
+}
+
+-(void)updateStopRecordControls {
     [self.recordAudioButton setSelected:NO];
     [self.recordTimer invalidate];
+    
+    [_removeAudioRecordButton setHidden:YES];
+    
+    [_recordedAudioPreview removeFromSuperview];
+    _recordedAudioPreview = nil;
     
     [self.inputMessageTextField.containerView removeFromSuperview];
     NSMutableArray *subviews = [[self.normalView subviews] mutableCopy];
@@ -847,6 +949,8 @@ static RBLPopover *popover;
     [self.inputMessageTextField.window makeFirstResponder:self.inputMessageTextField];
     
     [self setHiddenRecoderControllers];
+    
+    [self TMGrowingTextViewTextDidChange:nil];
 }
 
 -(void)setHiddenRecoderControllers {
@@ -871,7 +975,7 @@ static RBLPopover *popover;
 }
 
 -(void)closeEmoji {
-    [self.smilePopover close];
+    [[EmojiViewController instance] close];
 }
 
 - (void)smileButtonClick:(BTRButton *)button {
@@ -883,6 +987,7 @@ static RBLPopover *popover;
        
        self.smilePopover = [[RBLPopover alloc] initWithContentViewController:(NSViewController *)emojiViewController];
         [self.smilePopover setHoverView:self.smileButton];
+//        [self.smilePopover setCanBecomeKey:YES];
         [self.smilePopover setDidCloseBlock:^(RBLPopover *popover){
             [weakSelf.smileButton setSelected:NO];
             [[EmojiViewController instance] close];
@@ -1127,7 +1232,12 @@ static RBLPopover *popover;
 
 - (void)sendButtonAction {
     
-    [self.messagesViewController sendMessage];
+    if(_recordedAudioPreview == nil)
+        [self.messagesViewController sendMessage];
+    else {
+        [self.messagesViewController sendAudio:_recordedAudioPreview.audio_file forConversation:self.dialog waveforms:_recordedAudioPreview.audioAttr.waveform];
+        [self updateStopRecordControls];
+    }
     
     
     
@@ -1138,6 +1248,8 @@ static RBLPopover *popover;
         [self updateBottomHeight:YES];
         [self TMGrowingTextViewTextDidChange:nil];
     }
+    
+    
     
     
     [self.messagesViewController performForward:self.dialog];
@@ -1168,7 +1280,7 @@ static RBLPopover *popover;
     [self.messagesViewController saveInputText];
     
     
-    if([self.inputMessageTextField.stringValue trim].length > 0 || self.fwdContainer || _imageAttachmentsController.isShown) {
+    if([self.inputMessageTextField.stringValue trim].length > 0 || self.fwdContainer || _imageAttachmentsController.isShown || _recordedAudioPreview != nil) {
         
         
         if([self.inputMessageTextField.stringValue trim].length > 0 && textView)
@@ -1185,7 +1297,7 @@ static RBLPopover *popover;
         [self.sendButton setDisabled:YES];
     }
     
-    if(self.inputMessageTextField.stringValue.length || self.fwdContainer || _imageAttachmentsController.isShown) {
+    if(self.inputMessageTextField.stringValue.length || self.fwdContainer || _imageAttachmentsController.isShown || _recordedAudioPreview != nil) {
         [self.sendButton setHidden:NO];
         [self.recordAudioButton setHidden:YES];
     } else {
@@ -1195,7 +1307,7 @@ static RBLPopover *popover;
     
     
     [self updateWebpage:YES];
-    
+   
     [self checkMentionsOrTags];
     
     [self updateBotButtons];
@@ -1279,15 +1391,8 @@ static RBLPopover *popover;
             
         };
         
-
-        
-        
         if(type == 1) {
-            if(self.dialog.type == DialogTypeChat || self.dialog.type == DialogTypeChannel) {
-                
-                [self.messagesViewController.hintView showMentionPopupWithQuery:search conversation:self.dialog chat:self.dialog.chat choiceHandler:callback];
-                
-            }
+            [self.messagesViewController.hintView showMentionPopupWithQuery:search conversation:self.dialog chat:self.dialog.chat allowInlineBot:[self.inputMessageTextField.string rangeOfString:@"@"].location == 0 choiceHandler:callback];
             
         } else if(type == 2) {
             
@@ -1304,8 +1409,23 @@ static RBLPopover *popover;
             }
         }
         
+    } else if(self.inputMessageTextField.stringValue.length > 1 && [[self.inputMessageTextField.stringValue substringToIndex:1] isEqualToString:@"@"]) {
+        
+        NSString *value = self.inputMessageTextField.stringValue;
+        
+        NSRange split = [value rangeOfString:@" "];
+        
+        if(split.location != NSNotFound && split.location != 1) {
+            NSString *bot = [value substringWithRange:NSMakeRange(1,split.location-1)];
+            NSString *query = [value substringFromIndex:split.location];
+            
+            [self.messagesViewController.hintView showContextPopupWithQuery:bot query:[query trim] conversation:self.dialog];
+        }
+        
+        
     } else {
         [self.messagesViewController.hintView hide];
+        [self setProgress:NO];
     }
     
 
@@ -1526,11 +1646,10 @@ static RBLPopover *popover;
         return;
     }
     
+    if(self.dialog.type == DialogTypeSecretChat && self.dialog.encryptedChat.encryptedParams.layer < 45)
+        return;
     
-    
-    
-        
-    TLWebPage *webpage = ![self.messagesViewController noWebpage:self.inputMessageString] ? [Storage findWebpage:[self.inputMessageString webpageLink]] : nil;
+    TLWebPage *webpage = ![self.messagesViewController noWebpage:self.inputMessageString] ? [Storage findWebpage:display_url([self.inputMessageString webpageLink])] : nil;
     
     if(!webpage && !self.webpageAttach)
         return;
@@ -1690,7 +1809,7 @@ static RBLPopover *popover;
     
     self.inputMessageTextField.containerView.frame = NSMakeRect(offsetX, 11, self.bounds.size.width - offsetX - self.sendButton.frame.size.width - 33, NSHeight(self.inputMessageTextField.containerView.frame));
     
-    [self.inputMessageTextField setFrameSize:NSMakeSize(NSWidth(self.inputMessageTextField.containerView.frame) - 40 - (_botKeyboardButton.isHidden ? 0 : 30) - (_botCommandButton.isHidden ? 0 : 30) - (_channelAdminButton.isHidden ? 0 : 30) - (_secretTimerButton.isHidden ? 0 : 30),NSHeight(self.inputMessageTextField.frame))];
+    [self.inputMessageTextField setFrameSize:NSMakeSize(NSWidth(self.inputMessageTextField.containerView.frame) - 40 - (_botKeyboardButton.isHidden ? 0 : 30) - (_botCommandButton.isHidden ? 0 : 30) - (_channelAdminButton.isHidden ? 0 : 30) - (_secretTimerButton.isHidden ? 0 : 30) - (_progressView.isHidden ? 0 : 30),NSHeight(self.inputMessageTextField.frame))];
     
     
 }
@@ -1730,6 +1849,13 @@ static RBLPopover *popover;
 
     }
 }
+
+- (void)setContextBotString:(NSString *)bot {
+    [self.inputMessageTextField insertText:bot replacementRange:NSMakeRange(0,self.inputMessageTextField.stringValue.length)];
+    [self.window makeFirstResponder:self.inputMessageTextField];
+    [self.inputMessageTextField setSelectedRange:NSMakeRange(bot.length,0)];
+}
+
 
 - (void)setInputMessageString:(NSString *)message disableAnimations:(BOOL)disableAnimations {
     [self.inputMessageTextField setString:message];

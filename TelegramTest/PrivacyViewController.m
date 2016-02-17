@@ -16,7 +16,7 @@
 @property (nonatomic,strong) GeneralSettingsRowItem *lastSeenRowItem;
 @property (nonatomic,strong) GeneralSettingsRowItem *blockedUsersRowIten;
 @property (nonatomic,strong) GeneralSettingsRowItem *accountDaysItem;
-
+@property (nonatomic,strong) GeneralSettingsRowItem *groupsSettingsItem;
 @property (nonatomic,assign) int accountDaysTTL;
 
 
@@ -60,6 +60,15 @@
     
     [self.tableView insert:self.lastSeenRowItem atIndex:self.tableView.list.count tableRedraw:NO];
     
+    
+    self.groupsSettingsItem = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeNext callback:^(TGGeneralRowItem *item) {
+        
+        if(!self.groupsSettingsItem.locked)
+            [[Telegram rightViewController] showChatInviteController];
+        
+    } description:NSLocalizedString(@"PrivacyAndSecurity.Groups", nil) subdesc:@"" height:42 stateback:nil];
+    
+    [self.tableView insert:self.groupsSettingsItem atIndex:self.tableView.list.count tableRedraw:NO];
 
     
     GeneralSettingsBlockHeaderItem *security = [[GeneralSettingsBlockHeaderItem alloc] initWithString:NSLocalizedString(@"PrivacyAndSecurity.SecurityHeader", nil) height:51 flipped:NO];
@@ -281,41 +290,49 @@
     
     
     PrivacyArchiver *lsPrivacy = [PrivacyArchiver privacyForType:kStatusTimestamp];
+    PrivacyArchiver *gPrivacy = [PrivacyArchiver privacyForType:kStatusGroups];
     
     
-    NSString * subdesc = @"";
-    
-    NSString *adc = @"";
-    
-    if(lsPrivacy.disallowUsers.count > 0) {
-        adc = [adc stringByAppendingFormat:@" (-%lu",lsPrivacy.disallowUsers.count];
-    }
-    
-    if(lsPrivacy.allowUsers.count > 0) {
-        adc = [adc stringByAppendingFormat:@"%@+%lu",adc.length > 0 ? @", " : @" (", lsPrivacy.allowUsers.count];
-    }
-    
-    if(adc.length > 0)
-        adc = [adc stringByAppendingString:@")"];
-    
-    switch (lsPrivacy.allowType) {
-        case PrivacyAllowTypeContacts:
-            
-            subdesc = [NSString stringWithFormat:@"%@%@",NSLocalizedString(@"PrivacySettingsController.MyContacts", nil),adc];
-            break;
-        case PrivacyAllowTypeEverbody:
-            subdesc = [NSString stringWithFormat:@"%@%@",NSLocalizedString(@"PrivacySettingsController.Everbody", nil),adc];
-            break;
-        case PrivacyAllowTypeNobody:
-            subdesc = [NSString stringWithFormat:@"%@%@",NSLocalizedString(@"PrivacySettingsController.Nobody", nil),adc];
-            break;
-            
-        default:
-            break;
-    }
-    
-    self.lastSeenRowItem.subdesc = subdesc;
+    void (^block)(PrivacyArchiver *privacy, GeneralSettingsRowItem *item) = ^(PrivacyArchiver *privacy, GeneralSettingsRowItem *item) {
+        NSString * subdesc = @"";
+        
+        NSString *adc = @"";
+        
+        if(privacy.disallowUsers.count > 0) {
+            adc = [adc stringByAppendingFormat:@" (-%lu",privacy.disallowUsers.count];
+        }
+        
+        if(privacy.allowUsers.count > 0) {
+            adc = [adc stringByAppendingFormat:@"%@+%lu",adc.length > 0 ? @", " : @" (", privacy.allowUsers.count];
+        }
+        
+        if(adc.length > 0)
+            adc = [adc stringByAppendingString:@")"];
+        
+        switch (privacy.allowType) {
+            case PrivacyAllowTypeContacts:
+                
+                subdesc = [NSString stringWithFormat:@"%@%@",NSLocalizedString(@"PrivacySettingsController.MyContacts", nil),adc];
+                break;
+            case PrivacyAllowTypeEverbody:
+                subdesc = [NSString stringWithFormat:@"%@%@",NSLocalizedString(@"PrivacySettingsController.Everbody", nil),adc];
+                break;
+            case PrivacyAllowTypeNobody:
+                subdesc = [NSString stringWithFormat:@"%@%@",NSLocalizedString(@"PrivacySettingsController.Nobody", nil),adc];
+                break;
+                
+            default:
+                break;
+        }
+        
+        item.subdesc = subdesc;
 
+    };
+    
+    block(lsPrivacy,self.lastSeenRowItem);
+    block(gPrivacy,self.groupsSettingsItem);
+    
+   
     [self.tableView reloadData];
     
 }
@@ -328,30 +345,36 @@
     
     [Notification addObserver:self selector:@selector(updatePrivacyDescription:) name:PRIVACY_UPDATE];
     
-    
-    
-    if([PrivacyArchiver privacyForType:kStatusTimestamp] == nil && !self.lastSeenRowItem.locked) {
+    void (^block)(NSString *privacyKey,GeneralSettingsRowItem *item, id request) = ^(NSString *privacyKey,GeneralSettingsRowItem *item, id request) {
         
-        [self.lastSeenRowItem setLocked:YES];
-        
-        [self.tableView reloadData];
-        
-        [RPCRequest sendRequest:[TLAPI_account_getPrivacy createWithN_key:[TL_inputPrivacyKeyStatusTimestamp create]] successHandler:^(RPCRequest *request, TL_account_privacyRules *response) {
+        if([PrivacyArchiver privacyForType:privacyKey] == nil && !item.locked) {
             
-            [SharedManager proccessGlobalResponse:response];
+            [item setLocked:YES];
             
-            PrivacyArchiver *privacy = [PrivacyArchiver privacyFromRules:[response rules] forKey:kStatusTimestamp];
-            
-            [privacy _save];
-            
-            [self.lastSeenRowItem setLocked:NO];
             [self.tableView reloadData];
             
-        } errorHandler:^(RPCRequest *request, RpcError *error) {
+            [RPCRequest sendRequest:request successHandler:^(RPCRequest *request, TL_account_privacyRules *response) {
+                
+                [SharedManager proccessGlobalResponse:response];
+                
+                PrivacyArchiver *privacy = [PrivacyArchiver privacyFromRules:[response rules] forKey:privacyKey];
+                
+                [privacy _save];
+                
+                [item setLocked:NO];
+                [self.tableView reloadData];
+                
+            } errorHandler:^(RPCRequest *request, RpcError *error) {
+                
+            }];
             
-        }];
-        
-    }
+        }
+
+    };
+    
+    block(kStatusTimestamp,self.lastSeenRowItem,[TLAPI_account_getPrivacy createWithN_key:[TL_inputPrivacyKeyStatusTimestamp create]]);
+    block(kStatusGroups,self.groupsSettingsItem,[TLAPI_account_getPrivacy createWithN_key:[TL_inputPrivacyKeyChatInvite create]]);
+    
 }
 
 -(void)viewWillDisappear:(BOOL)animated {

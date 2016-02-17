@@ -88,9 +88,10 @@
         
         [TGCache cacheImage:renderedImage(image, maxSize) forKey:photoSize.location.cacheKey groups:@[IMGCACHE]];
         
-        [jpegNormalizedData(image) writeToFile:mediaFilePath(media) atomically:YES];
         
         self.message.media = media;
+        
+        [jpegNormalizedData(image) writeToFile:mediaFilePath(self.message) atomically:YES];
         
         [self.message save:YES];
         
@@ -137,12 +138,19 @@
         
         
         
-        media = [TL_messageMediaDocument createWithDocument:[TL_outDocument createWithN_id:rand_long() access_hash:0 date:[[MTNetwork instance] getTime] mime_type:self.mimeType size:(int)fileSize(self.filePath) thumb:size dc_id:0 file_path:self.filePath attributes:[@[[TL_documentAttributeFilename createWithFile_name:[filePath lastPathComponent]]] mutableCopy]]];
+        media = [TL_messageMediaDocument createWithDocument:[TL_outDocument createWithN_id:rand_long() access_hash:0 date:[[MTNetwork instance] getTime] mime_type:self.mimeType size:(int)fileSize(self.filePath) thumb:size dc_id:0 file_path:self.filePath attributes:[@[[TL_documentAttributeFilename createWithFile_name:[filePath lastPathComponent]]] mutableCopy]] caption:@""];
     } else if(self.uploadType == UploadAudioType) {
         
         NSTimeInterval duration = [TGOpusAudioPlayerAU durationFile:filePath];
         
-        media = [TL_messageMediaAudio createWithAudio:[TL_audio createWithN_id:0 access_hash:0 date:(int)[[MTNetwork instance] getTime] duration:roundf(duration) mime_type:@"opus" size:(int)fileSize(filePath) dc_id:0]];
+        NSMutableArray *attrs = [NSMutableArray array];
+        
+        TGAudioWaveform *waveform = [FileUtils waveformForPath:filePath];
+        
+        [attrs addObject:[TL_documentAttributeAudio createWithFlags:(1 << 10) duration:duration title:nil performer:nil waveform:[waveform bitstream]]];
+        
+        media = [TL_messageMediaDocument createWithDocument:[TL_document createWithN_id:0 access_hash:0 date:(int)[[MTNetwork instance] getTime] mime_type:@"audio/ogg" size:(int)fileSize(filePath) thumb:[TL_photoSizeEmpty createWithType:@"x"] dc_id:0 attributes:attrs] caption:@""];
+        
     }
     
     
@@ -164,7 +172,7 @@
 -(void)setMessage:(TL_localMessage *)message {
     [super setMessage:message];
     
-    self.action = [[TGSecretAction alloc] initWithActionId:self.message.n_id chat_id:self.conversation.peer.peer_id decryptedData:[self deleteRandomMessageData] senderClass:[DeleteRandomMessagesSenderItem class] layer:self.params.layer];
+    self.action = [[TGSecretAction alloc] initWithActionId:self.message.n_id chat_id:message.peer_id decryptedData:[self deleteRandomMessageData] senderClass:[DeleteRandomMessagesSenderItem class] layer:self.params.layer];
     
     [self.action save];
 }
@@ -187,6 +195,10 @@
     return [Secret23__Environment serializeObject:[Secret23_DecryptedMessageLayer decryptedMessageLayerWithRandom_bytes:self.random_bytes layer:@(23) in_seq_no:@(2*self.params.in_seq_no + [self.params in_x]) out_seq_no:@(2*(self.params.out_seq_no++) + [self.params out_x]) message:[Secret23_DecryptedMessage decryptedMessageWithRandom_id:@(self.message.randomId) ttl:@(((TL_destructMessage *)self.message).ttl_seconds) message:self.message.message media:self.media]]];
 }
 
+-(NSData *)decryptedMessageLayer45 {
+    return [Secret45__Environment serializeObject:[Secret45_DecryptedMessageLayer decryptedMessageLayerWithRandom_bytes:self.random_bytes layer:@(45) in_seq_no:@(2*self.params.in_seq_no + [self.params in_x]) out_seq_no:@(2*(self.params.out_seq_no++) + [self.params out_x]) message:[Secret45_DecryptedMessage decryptedMessageWithFlags:@(self.message.flags) random_id:@(self.message.randomId) ttl:@(((TL_destructMessage *)self.message).ttl_seconds) message:self.message.message == nil ? @"" : self.message.message media:self.media entities:[self convertLEntities:self.message.entities layer:45] via_bot_name:((TL_destructMessage45 *)self.message).via_bot_name == nil ? @"" : ((TL_destructMessage45 *)self.message).via_bot_name reply_to_random_id:@(((TL_destructMessage45 *)self.message).reply_to_random_id)]]];
+}
+
 -(void)performRequest {
     
     self.uploader = [[UploadOperation alloc] init];
@@ -200,12 +212,10 @@
     
     NSString *export;
     
-    if([self.message.media isKindOfClass:[TL_messageMediaDocument class]]) {
+    if([self.message.media isKindOfClass:[TL_messageMediaDocument class]] || [self.message.media isKindOfClass:[TL_messageMediaDocument_old44 class]]) {
         export = exportPath(self.message.randomId,[self.message.media.document.file_name pathExtension]);
-    } else if([self.message.media isKindOfClass:[TL_messageMediaAudio class]]) {
-        export = exportPath(self.message.randomId,@"mp3");
-    } else if([self.message.media isKindOfClass:[TL_messageMediaPhoto class]]) {
-        export = mediaFilePath(self.message.media);
+    }  else if([self.message.media isKindOfClass:[TL_messageMediaPhoto class]]) {
+        export = mediaFilePath(self.message);
     }
     
     
@@ -219,10 +229,12 @@
         [self.message save:YES];
     }
     
-    
-    
-    weakify();
+    __weak FileSecretSenderItem *weakSelf = self;
     [self.uploader setUploadComplete:^(UploadOperation *uploader,TL_inputEncryptedFile *inputFile) {
+        __strong FileSecretSenderItem *strongSelf = weakSelf;
+        
+        if(strongSelf == nil || strongSelf != weakSelf)
+            return;
         
         
         if(strongSelf.uploadType == UploadImageType) {
@@ -241,6 +253,8 @@
                 strongSelf.media = [Secret20_DecryptedMessageMedia decryptedMessageMediaPhotoWithThumb:size.bytes thumb_w:@(size.w) thumb_h:@(size.h) w:@(origin.w) h:@(origin.h) size:@(uploader.total_size) key:strongSelf.key iv:strongSelf.iv];
             } else if(strongSelf.params.layer == 23) {
                 strongSelf.media = [Secret23_DecryptedMessageMedia decryptedMessageMediaPhotoWithThumb:size.bytes thumb_w:@(size.w) thumb_h:@(size.h) w:@(origin.w) h:@(origin.h) size:@(uploader.total_size) key:strongSelf.key iv:strongSelf.iv];
+            }else if(strongSelf.params.layer == 45) {
+                strongSelf.media = [Secret45_DecryptedMessageMedia decryptedMessageMediaPhotoWithThumb:size.bytes thumb_w:@(size.w) thumb_h:@(size.h) w:@(origin.w) h:@(origin.h) size:@(uploader.total_size) key:strongSelf.key iv:strongSelf.iv caption:@""];
             }
         }
     
@@ -257,6 +271,8 @@
                 strongSelf.media = [Secret20_DecryptedMessageMedia decryptedMessageMediaVideoWithThumb:msg.media.video.thumb.bytes thumb_w:@(msg.media.video.thumb.w) thumb_h:@(msg.media.video.thumb.h) duration:@(msg.media.video.duration) mime_type:@"mp4" w:@(msg.media.video.w) h:@(msg.media.video.h) size:@(uploader.total_size) key:strongSelf.key iv:strongSelf.iv];
             } else if(strongSelf.params.layer == 23) {
                 strongSelf.media = [Secret23_DecryptedMessageMedia decryptedMessageMediaVideoWithThumb:msg.media.video.thumb.bytes thumb_w:@(msg.media.video.thumb.w) thumb_h:@(msg.media.video.thumb.h) duration:@(msg.media.video.duration) mime_type:@"mp4" w:@(msg.media.video.w) h:@(msg.media.video.h) size:@(uploader.total_size) key:strongSelf.key iv:strongSelf.iv];
+            } else if(strongSelf.params.layer == 45) {
+                strongSelf.media = [Secret45_DecryptedMessageMedia decryptedMessageMediaVideoWithThumb:msg.media.video.thumb.bytes thumb_w:@(msg.media.video.thumb.w) thumb_h:@(msg.media.video.thumb.h) duration:@(msg.media.video.duration) mime_type:@"mp4" w:@(msg.media.video.w) h:@(msg.media.video.h) size:@(uploader.total_size) key:strongSelf.key iv:strongSelf.iv caption:@""];
             }
             
         }
@@ -271,20 +287,27 @@
                 strongSelf.media = [Secret20_DecryptedMessageMedia decryptedMessageMediaDocumentWithThumb:strongSelf.message.media.document.thumb.bytes thumb_w:@(msg.media.document.thumb.w) thumb_h:@(msg.media.document.thumb.h) file_name:[strongSelf.filePath lastPathComponent] mime_type:strongSelf.mimeType size:@(uploader.total_size) key:strongSelf.key iv:strongSelf.iv];
             } else if(strongSelf.params.layer == 23) {
                 strongSelf.media = [Secret23_DecryptedMessageMedia decryptedMessageMediaDocumentWithThumb:strongSelf.message.media.document.thumb.bytes == nil ? [[NSData alloc] initWithEmptyBytes:16] : strongSelf.message.media.document.thumb.bytes thumb_w:@(msg.media.document.thumb.w) thumb_h:@(msg.media.document.thumb.h) file_name:[strongSelf.filePath lastPathComponent] mime_type:strongSelf.mimeType size:@(uploader.total_size) key:strongSelf.key iv:strongSelf.iv];
+            } else if(strongSelf.params.layer == 45) {
+                strongSelf.media = [Secret45_DecryptedMessageMedia decryptedMessageMediaDocumentWithThumb:strongSelf.message.media.document.thumb.bytes == nil ? [[NSData alloc] initWithEmptyBytes:16] : strongSelf.message.media.document.thumb.bytes thumb_w:@(msg.media.document.thumb.w) thumb_h:@(msg.media.document.thumb.h) mime_type:strongSelf.message.media.document.mime_type size:@(uploader.total_size) key:strongSelf.key iv:strongSelf.iv attributes:[strongSelf convertLAttributes:strongSelf.message.media.document.attributes layer:45] caption:@""];
             }
         }
         
         
         if(strongSelf.uploadType == UploadAudioType) {
+            
+            TL_documentAttributeAudio *audio = (TL_documentAttributeAudio *) [msg.media.document attributeWithClass:[TL_documentAttributeAudio class]];
+            
             if(strongSelf.params.layer == 1) {
-                strongSelf.media = [Secret1_DecryptedMessageMedia decryptedMessageMediaAudioWithDuration:@(msg.media.audio.duration) size:@(uploader.total_size) key:strongSelf.key iv:strongSelf.iv];
+                strongSelf.media = [Secret1_DecryptedMessageMedia decryptedMessageMediaAudioWithDuration:@(audio.duration) size:@(uploader.total_size) key:strongSelf.key iv:strongSelf.iv];
                 
             } else if(strongSelf.params.layer == 17) {
-                strongSelf.media = [Secret17_DecryptedMessageMedia decryptedMessageMediaAudioWithDuration:@(msg.media.audio.duration) mime_type:@"opus" size:@(uploader.total_size) key:strongSelf.key iv:strongSelf.iv];
+                strongSelf.media = [Secret17_DecryptedMessageMedia decryptedMessageMediaAudioWithDuration:@(audio.duration) mime_type:@"opus" size:@(uploader.total_size) key:strongSelf.key iv:strongSelf.iv];
             } else if(strongSelf.params.layer == 20) {
-                strongSelf.media = [Secret20_DecryptedMessageMedia decryptedMessageMediaAudioWithDuration:@(msg.media.audio.duration) mime_type:@"opus" size:@(uploader.total_size) key:strongSelf.key iv:strongSelf.iv];
+                strongSelf.media = [Secret20_DecryptedMessageMedia decryptedMessageMediaAudioWithDuration:@(audio.duration) mime_type:@"opus" size:@(uploader.total_size) key:strongSelf.key iv:strongSelf.iv];
             } else if(strongSelf.params.layer == 23) {
-                strongSelf.media = [Secret23_DecryptedMessageMedia decryptedMessageMediaAudioWithDuration:@(msg.media.audio.duration) mime_type:@"opus" size:@(uploader.total_size) key:strongSelf.key iv:strongSelf.iv];
+                strongSelf.media = [Secret23_DecryptedMessageMedia decryptedMessageMediaAudioWithDuration:@(audio.duration) mime_type:@"opus" size:@(uploader.total_size) key:strongSelf.key iv:strongSelf.iv];
+            } else if(strongSelf.params.layer == 45) {
+                strongSelf.media = [Secret45_DecryptedMessageMedia decryptedMessageMediaAudioWithDuration:@(audio.duration) mime_type:@"opus" size:@(uploader.total_size) key:strongSelf.key iv:strongSelf.iv];
             }
         }
         
@@ -292,87 +315,80 @@
         TLAPI_messages_sendEncryptedFile *request = [TLAPI_messages_sendEncryptedFile createWithPeer:[TL_inputEncryptedChat createWithChat_id:strongSelf.action.chat_id access_hash:strongSelf.action.params.access_hash] random_id:((TL_destructMessage *)strongSelf.message).randomId data:[MessageSender getEncrypted:strongSelf.action.params  messageData:[strongSelf decryptedMessageLayer]] file:inputFile];
         
         
-        
         strongSelf.rpc_request = [RPCRequest sendRequest:request successHandler:^(RPCRequest *request, TL_messages_sentEncryptedFile *response) {
             
+            strongWeak();
             
-            ((TL_destructMessage *)strongSelf.message).date = [response date];
-            
-            ((TL_destructMessage *)strongSelf.message).n_id = [MessageSender getFutureMessageId];
-            
-            
-            TLPhotoSize *size = strongSelf.uploadType == UploadImageType ? [((TL_destructMessage *)strongSelf.message).media.photo.sizes objectAtIndex:0] : ((TL_destructMessage *)strongSelf.message).media.video.thumb;
-            
-            TLFileLocation *newLocation = [TL_fileLocation createWithDc_id:[response.file dc_id] volume_id:[response.file n_id] local_id:size.location.local_id secret:response.file.access_hash];
-            
-            
-            [TGCache changeKey:size.location.cacheKey withKey:newLocation.cacheKey];
-            
-            [[Storage yap] readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
-                [transaction setObject:@{@"key":strongSelf.key,@"iv":strongSelf.iv} forKey:[NSString stringWithFormat:@"%lu",[response.file n_id]] inCollection:ENCRYPTED_IMAGE_COLLECTION];
-            }];
-            
-            
-            
-            if(strongSelf.uploadType == UploadImageType) {
-                [[((TL_destructMessage *)strongSelf.message).media.photo.sizes objectAtIndex:0] setLocation:newLocation];
-                [[((TL_destructMessage *)strongSelf.message).media.photo.sizes objectAtIndex:1] setLocation:newLocation];
+            if(strongSelf != nil) {
                 
-            }
-            
-            if(strongSelf.uploadType == UploadVideoType ) {
-                [strongSelf.message media].video.access_hash = newLocation.secret;
-                [strongSelf.message media].video.dc_id = newLocation.dc_id;
-                [strongSelf.message media].video.n_id = newLocation.volume_id;
-                [strongSelf.message media].video.size = uploader.total_size;
+                ((TL_destructMessage *)strongSelf.message).date = [response date];
                 
-                [[NSFileManager defaultManager] moveItemAtPath:strongSelf.filePath toPath:mediaFilePath([strongSelf.message media]) error:nil];
-                
-            }
-            
-            if(strongSelf.uploadType == UploadDocumentType) {
-                [strongSelf.message media].document.access_hash = newLocation.secret;
-                [strongSelf.message media].document.dc_id = newLocation.dc_id;
-                [strongSelf.message media].document.n_id = newLocation.volume_id;
-                [strongSelf.message media].document.size = uploader.total_size;
-                
-                [[NSFileManager defaultManager] removeItemAtPath:exportPath(strongSelf.message.randomId,[strongSelf.message.media.document.file_name pathExtension]) error:nil];
-            }
-            
-            if(strongSelf.uploadType == UploadAudioType) {
-                [strongSelf.message media].audio.access_hash = newLocation.secret;
-                [strongSelf.message media].audio.dc_id = newLocation.dc_id;
-                [strongSelf.message media].audio.n_id = newLocation.volume_id;
-                [strongSelf.message media].audio.size = uploader.total_size;
-                
-                [[NSFileManager defaultManager] moveItemAtPath:strongSelf.filePath toPath:mediaFilePath([strongSelf.message media]) error:nil];
-                
-            }
-            
-            
-            
-            strongSelf.uploader = nil;
-            
-            strongSelf.message.dstate = DeliveryStateNormal;
-            [strongSelf.message save:YES];
-            
-            
-            if(strongSelf.uploadType == UploadImageType) {
-                NSImage *image  = imageFromFile(strongSelf.filePath);
-                
-                [[NSFileManager defaultManager] moveItemAtPath:strongSelf.filePath toPath:mediaFilePath(strongSelf.message.media) error:nil];
-                
-                [TGCache cacheImage:renderedImage(image, strongsizeWithMinMax(image.size, MIN_IMG_SIZE.height, MIN_IMG_SIZE.width)) forKey:newLocation.cacheKey groups:@[IMGCACHE]];
+                ((TL_destructMessage *)strongSelf.message).n_id = [MessageSender getFutureMessageId];
                 
                 
-                PreviewObject *previewObject = [[PreviewObject alloc] initWithMsdId:strongSelf.message.n_id media:strongSelf.message peer_id:strongSelf.message.peer_id];
+                TLPhotoSize *size = strongSelf.uploadType == UploadImageType ? [((TL_destructMessage *)strongSelf.message).media.photo.sizes objectAtIndex:0] : ((TL_destructMessage *)strongSelf.message).media.video.thumb;
                 
-                [Notification perform:MEDIA_RECEIVE data:@{KEY_PREVIEW_OBJECT:previewObject}];
+                TLFileLocation *newLocation = [TL_fileLocation createWithDc_id:[response.file dc_id] volume_id:[response.file n_id] local_id:size.location.local_id secret:response.file.access_hash];
+                
+                
+                [TGCache changeKey:size.location.cacheKey withKey:newLocation.cacheKey];
+                
+                [[Storage yap] readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
+                    [transaction setObject:@{@"key":strongSelf.key,@"iv":strongSelf.iv} forKey:[NSString stringWithFormat:@"%lu",[response.file n_id]] inCollection:ENCRYPTED_IMAGE_COLLECTION];
+                }];
+                
+                
+                
+                if(strongSelf.uploadType == UploadImageType) {
+                    [[((TL_destructMessage *)strongSelf.message).media.photo.sizes objectAtIndex:0] setLocation:newLocation];
+                    [[((TL_destructMessage *)strongSelf.message).media.photo.sizes objectAtIndex:1] setLocation:newLocation];
+                    
+                }
+                
+                if(strongSelf.uploadType == UploadVideoType ) {
+                    [strongSelf.message media].video.access_hash = newLocation.secret;
+                    [strongSelf.message media].video.dc_id = newLocation.dc_id;
+                    [strongSelf.message media].video.n_id = newLocation.volume_id;
+                    [strongSelf.message media].video.size = uploader.total_size;
+                    
+                    [[NSFileManager defaultManager] moveItemAtPath:strongSelf.filePath toPath:mediaFilePath(strongSelf.message) error:nil];
+                    
+                }
+                
+                if(strongSelf.uploadType == UploadDocumentType | strongSelf.uploadType == UploadAudioType) {
+                    [strongSelf.message media].document.access_hash = newLocation.secret;
+                    [strongSelf.message media].document.dc_id = newLocation.dc_id;
+                    [strongSelf.message media].document.n_id = newLocation.volume_id;
+                    [strongSelf.message media].document.size = uploader.total_size;
+                    
+                    [[NSFileManager defaultManager] moveItemAtPath:exportPath(strongSelf.message.randomId,[strongSelf.message.media.document.file_name pathExtension]) toPath:mediaFilePath(strongSelf.message) error:nil];
 
+                }
+                
+                strongSelf.uploader = nil;
+                
+                strongSelf.message.dstate = DeliveryStateNormal;
+                [strongSelf.message save:YES];
+                
+                
+                if(strongSelf.uploadType == UploadImageType) {
+                    NSImage *image  = imageFromFile(strongSelf.filePath);
+                    
+                    [[NSFileManager defaultManager] moveItemAtPath:strongSelf.filePath toPath:mediaFilePath(strongSelf.message) error:nil];
+                    
+                    [TGCache cacheImage:renderedImage(image, strongsizeWithMinMax(image.size, MIN_IMG_SIZE.height, MIN_IMG_SIZE.width)) forKey:newLocation.cacheKey groups:@[IMGCACHE]];
+                    
+                    
+                    PreviewObject *previewObject = [[PreviewObject alloc] initWithMsdId:strongSelf.message.n_id media:strongSelf.message peer_id:strongSelf.message.peer_id];
+                    
+                    [Notification perform:MEDIA_RECEIVE data:@{KEY_PREVIEW_OBJECT:previewObject}];
+                    
+                }
+                
+                
+                strongSelf.state = MessageSendingStateSent;
             }
-            
-            
-            strongSelf.state = MessageSendingStateSent;
+           
             
  
         } errorHandler:^(RPCRequest *request, RpcError *error) {
@@ -381,6 +397,9 @@
     }];
     
     [self.uploader setUploadProgress:^(UploadOperation *operation, NSUInteger current, NSUInteger total) {
+        
+        __strong FileSecretSenderItem *strongSelf = weakSelf;
+
         if(strongSelf.uploadType == UploadVideoType) {
             strongSelf.progress =VIDEO_COMPRESSED_PROGRESS + (((float)current/(float)total) * (100.0f - VIDEO_COMPRESSED_PROGRESS));
         } else {
