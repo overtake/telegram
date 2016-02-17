@@ -284,6 +284,10 @@
 		C21068BA1C19F4B500815859 /* GLKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A7C78FC1947E147001617DB /* GLKit.framework */; };
 		C21068BE1C1B04A100815859 /* QuickTime.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C21068A91C19DBCB00815859 /* QuickTime.framework */; };
 		C21068C61C1B417200815859 /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C21068C51C1B417200815859 /* CoreVideo.framework */; };
+		C215BD831C74835800B4BF16 /* Sparkle.framework in Copy Files (6 items) */ = {isa = PBXBuildFile; fileRef = C235364C19C88D620044978E /* Sparkle.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		C215BD841C74835800B4BF16 /* HockeySDK.framework in Copy Files (6 items) */ = {isa = PBXBuildFile; fileRef = C2082B7219C1E1C4000005E2 /* HockeySDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		C215BD851C74835E00B4BF16 /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C235364C19C88D620044978E /* Sparkle.framework */; };
+		C215BD861C74835E00B4BF16 /* HockeySDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2082B7219C1E1C4000005E2 /* HockeySDK.framework */; };
 		C2182BBE19589246002469CA /* TL_localMessageService.m in Sources */ = {isa = PBXBuildFile; fileRef = C2182BBD19589246002469CA /* TL_localMessageService.m */; };
 		C21C7B2C18D7044600253A7A /* MessageSenderItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C21C7B2B18D7044600253A7A /* MessageSenderItem.m */; };
 		C21C7B2F18D7334D00253A7A /* MessageSenderSecretItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C21C7B2E18D7334D00253A7A /* MessageSenderSecretItem.m */; };
@@ -560,10 +564,6 @@
 		C297955F19EC587900BE893E /* SettingsSecurityViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C297955E19EC587900BE893E /* SettingsSecurityViewController.m */; };
 		C297FBA31832997B00714B3C /* SSKeychain.m in Sources */ = {isa = PBXBuildFile; fileRef = C297FBA21832997B00714B3C /* SSKeychain.m */; };
 		C297FBA618329F3500714B3C /* TGDcAuth.m in Sources */ = {isa = PBXBuildFile; fileRef = C297FBA518329F3500714B3C /* TGDcAuth.m */; };
-		C29A40141C3D2E6600AE4B71 /* Sparkle.framework in Copy Files (6 items) */ = {isa = PBXBuildFile; fileRef = C235364C19C88D620044978E /* Sparkle.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		C29A40151C3D2E6600AE4B71 /* HockeySDK.framework in Copy Files (6 items) */ = {isa = PBXBuildFile; fileRef = C2082B7219C1E1C4000005E2 /* HockeySDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		C29A40161C3D2E6B00AE4B71 /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C235364C19C88D620044978E /* Sparkle.framework */; };
-		C29A40171C3D2E6B00AE4B71 /* HockeySDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2082B7219C1E1C4000005E2 /* HockeySDK.framework */; };
 		C29A401A1C40192C00AE4B71 /* VideoLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = C29A40191C40192B00AE4B71 /* VideoLayer.m */; };
 		C29A40201C45588C00AE4B71 /* TGWebpageDocumentContainer.m in Sources */ = {isa = PBXBuildFile; fileRef = C29A401F1C45588C00AE4B71 /* TGWebpageDocumentContainer.m */; };
 		C29A40231C45589E00AE4B71 /* TGWebpageDocumentObject.m in Sources */ = {isa = PBXBuildFile; fileRef = C29A40221C45589E00AE4B71 /* TGWebpageDocumentObject.m */; };
@@ -975,19 +975,26 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		C24136651C73C7B700130D2E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = C26E80101B7B748A003CC483 /* SSignalKit.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = D0085B221B282B9800EAF753;
+			remoteInfo = SwiftSignalKit;
+		};
+		C24136671C73C7B700130D2E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = C26E80101B7B748A003CC483 /* SSignalKit.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = D0085B2C1B282B9800EAF753;
+			remoteInfo = SwiftSignalKitTests;
+		};
 		C26E80161B7B748A003CC483 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = C26E80101B7B748A003CC483 /* SSignalKit.xcodeproj */;
 			proxyType = 2;
 			remoteGlobalIDString = D0445DD81A7C2CA500267924;
 			remoteInfo = SSignalKit;
-		};
-		C26E80181B7B748A003CC483 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = C26E80101B7B748A003CC483 /* SSignalKit.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = D0445E5C1A7C446000267924;
-			remoteInfo = SSignalKitStatic;
 		};
 		C26E801A1B7B748A003CC483 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -1040,8 +1047,8 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				C29A40141C3D2E6600AE4B71 /* Sparkle.framework in Copy Files (6 items) */,
-				C29A40151C3D2E6600AE4B71 /* HockeySDK.framework in Copy Files (6 items) */,
+				C215BD831C74835800B4BF16 /* Sparkle.framework in Copy Files (6 items) */,
+				C215BD841C74835800B4BF16 /* HockeySDK.framework in Copy Files (6 items) */,
 			);
 			name = "Copy Files (6 items)";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2888,8 +2895,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C29A40161C3D2E6B00AE4B71 /* Sparkle.framework in Frameworks */,
-				C29A40171C3D2E6B00AE4B71 /* HockeySDK.framework in Frameworks */,
+				C215BD851C74835E00B4BF16 /* Sparkle.framework in Frameworks */,
+				C215BD861C74835E00B4BF16 /* HockeySDK.framework in Frameworks */,
 				C2034BB31C2EB1C70080D023 /* VideoToolbox.framework in Frameworks */,
 				C21068C61C1B417200815859 /* CoreVideo.framework in Frameworks */,
 				C21068BE1C1B04A100815859 /* QuickTime.framework in Frameworks */,
@@ -4475,8 +4482,9 @@
 			isa = PBXGroup;
 			children = (
 				C26E80171B7B748A003CC483 /* SSignalKit.framework */,
-				C26E80191B7B748A003CC483 /* libSSignalKitStatic.a */,
 				C26E801B1B7B748A003CC483 /* SSignalKitTests.xctest */,
+				C24136661C73C7B700130D2E /* SwiftSignalKit.framework */,
+				C24136681C73C7B700130D2E /* SwiftSignalKitTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -6422,18 +6430,25 @@
 /* End PBXProject section */
 
 /* Begin PBXReferenceProxy section */
+		C24136661C73C7B700130D2E /* SwiftSignalKit.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = SwiftSignalKit.framework;
+			remoteRef = C24136651C73C7B700130D2E /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		C24136681C73C7B700130D2E /* SwiftSignalKitTests.xctest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = SwiftSignalKitTests.xctest;
+			remoteRef = C24136671C73C7B700130D2E /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
 		C26E80171B7B748A003CC483 /* SSignalKit.framework */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.framework;
 			path = SSignalKit.framework;
 			remoteRef = C26E80161B7B748A003CC483 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		C26E80191B7B748A003CC483 /* libSSignalKitStatic.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = libSSignalKitStatic.a;
-			remoteRef = C26E80181B7B748A003CC483 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		C26E801B1B7B748A003CC483 /* SSignalKitTests.xctest */ = {
@@ -7597,7 +7612,7 @@
 				"OTHER_CODE_SIGN_FLAGS[sdk=*]" = "--deep";
 				PRODUCT_BUNDLE_IDENTIFIER = "ru.keepcoder.Telegram.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "19668b0a-3925-4226-86de-70f5fd6b95ab";
 				SDKROOT = macosx;
 				SKIP_INSTALL = YES;
 				USER_HEADER_SEARCH_PATHS = "./MtProtoKit/**";
@@ -7641,7 +7656,7 @@
 				"OTHER_CODE_SIGN_FLAGS[sdk=*]" = "--deep";
 				PRODUCT_BUNDLE_IDENTIFIER = "ru.keepcoder.Telegram.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "19668b0a-3925-4226-86de-70f5fd6b95ab";
 				SDKROOT = macosx;
 				SKIP_INSTALL = YES;
 				USER_HEADER_SEARCH_PATHS = "./MtProtoKit/**";
