@@ -2,7 +2,7 @@
 //  MTProto.m
 //  Telegram
 //
-//  Auto created by Mikhail Filimonov on 16.02.16.
+//  Auto created by Mikhail Filimonov on 18.02.16.
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -2515,6 +2515,8 @@
                         
 -(BOOL)isRestricted {return NO;}
                         
+-(BOOL)isMin {return NO;}
+                        
 -(BOOL)isExplicit_content {return NO;}
             
 @end
@@ -2561,9 +2563,10 @@
 @end
 
 @implementation TL_user
-+(TL_user*)createWithFlags:(int)flags          n_id:(int)n_id access_hash:(long)access_hash first_name:(NSString*)first_name last_name:(NSString*)last_name username:(NSString*)username phone:(NSString*)phone photo:(TLUserProfilePhoto*)photo status:(TLUserStatus*)status bot_info_version:(int)bot_info_version restriction_reason:(NSString*)restriction_reason bot_inline_placeholder:(NSString*)bot_inline_placeholder {
++(TL_user*)createWithFlags:(int)flags           n_id:(int)n_id access_hash:(long)access_hash first_name:(NSString*)first_name last_name:(NSString*)last_name username:(NSString*)username phone:(NSString*)phone photo:(TLUserProfilePhoto*)photo status:(TLUserStatus*)status bot_info_version:(int)bot_info_version restriction_reason:(NSString*)restriction_reason bot_inline_placeholder:(NSString*)bot_inline_placeholder {
 	TL_user* obj = [[TL_user alloc] init];
 	obj.flags = flags;
+	
 	
 	
 	
@@ -2597,6 +2600,7 @@
 	
 	
 	
+	
 	[stream writeInt:self.n_id];
 	if(self.flags & (1 << 0)) {[stream writeLong:self.access_hash];}
 	if(self.flags & (1 << 1)) {[stream writeString:self.first_name];}
@@ -2611,6 +2615,7 @@
 }
 -(void)unserialize:(SerializedData*)stream {
 	super.flags = [stream readInt];
+	
 	
 	
 	
@@ -2638,6 +2643,7 @@
     TL_user *objc = [[TL_user alloc] init];
     
     objc.flags = self.flags;
+    
     
     
     
@@ -2695,6 +2701,8 @@
 -(BOOL)isVerified {return (self.flags & (1 << 17)) > 0;}
                         
 -(BOOL)isRestricted {return (self.flags & (1 << 18)) > 0;}
+                        
+-(BOOL)isMin {return (self.flags & (1 << 20)) > 0;}
                         
 -(void)setAccess_hash:(long)access_hash
 {
@@ -5352,7 +5360,7 @@
 @end
 
 @implementation TL_message
-+(TL_message*)createWithFlags:(int)flags       n_id:(int)n_id from_id:(int)from_id to_id:(TLPeer*)to_id fwd_from_id:(TLPeer*)fwd_from_id fwd_date:(int)fwd_date fwd_post:(int)fwd_post via_bot_id:(int)via_bot_id reply_to_msg_id:(int)reply_to_msg_id date:(int)date message:(NSString*)message media:(TLMessageMedia*)media reply_markup:(TLReplyMarkup*)reply_markup entities:(NSMutableArray*)entities views:(int)views {
++(TL_message*)createWithFlags:(int)flags       n_id:(int)n_id from_id:(int)from_id to_id:(TLPeer*)to_id fwd_from:(TLMessageFwdHeader*)fwd_from via_bot_id:(int)via_bot_id reply_to_msg_id:(int)reply_to_msg_id date:(int)date message:(NSString*)message media:(TLMessageMedia*)media reply_markup:(TLReplyMarkup*)reply_markup entities:(NSMutableArray*)entities views:(int)views edit_date:(int)edit_date {
 	TL_message* obj = [[TL_message alloc] init];
 	obj.flags = flags;
 	
@@ -5364,9 +5372,7 @@
 	obj.n_id = n_id;
 	obj.from_id = from_id;
 	obj.to_id = to_id;
-	obj.fwd_from_id = fwd_from_id;
-	obj.fwd_date = fwd_date;
-	obj.fwd_post = fwd_post;
+	obj.fwd_from = fwd_from;
 	obj.via_bot_id = via_bot_id;
 	obj.reply_to_msg_id = reply_to_msg_id;
 	obj.date = date;
@@ -5375,6 +5381,7 @@
 	obj.reply_markup = reply_markup;
 	obj.entities = entities;
 	obj.views = views;
+	obj.edit_date = edit_date;
 	return obj;
 }
 -(void)serialize:(SerializedData*)stream {
@@ -5388,9 +5395,7 @@
 	[stream writeInt:self.n_id];
 	if(self.flags & (1 << 8)) {[stream writeInt:self.from_id];}
 	[ClassStore TLSerialize:self.to_id stream:stream];
-	if(self.flags & (1 << 2)) {[ClassStore TLSerialize:self.fwd_from_id stream:stream];}
-	if(self.flags & (1 << 2)) {[stream writeInt:self.fwd_date];}
-	if(self.flags & (1 << 12)) {[stream writeInt:self.fwd_post];}
+	if(self.flags & (1 << 2)) {[ClassStore TLSerialize:self.fwd_from stream:stream];}
 	if(self.flags & (1 << 11)) {[stream writeInt:self.via_bot_id];}
 	if(self.flags & (1 << 3)) {[stream writeInt:self.reply_to_msg_id];}
 	[stream writeInt:self.date];
@@ -5408,6 +5413,7 @@
 		}
 	}}
 	if(self.flags & (1 << 10)) {[stream writeInt:self.views];}
+	if(self.flags & (1 << 15)) {[stream writeInt:self.edit_date];}
 }
 -(void)unserialize:(SerializedData*)stream {
 	super.flags = [stream readInt];
@@ -5420,9 +5426,7 @@
 	super.n_id = [stream readInt];
 	if(self.flags & (1 << 8)) {super.from_id = [stream readInt];}
 	self.to_id = [ClassStore TLDeserialize:stream];
-	if(self.flags & (1 << 2)) {self.fwd_from_id = [ClassStore TLDeserialize:stream];}
-	if(self.flags & (1 << 2)) {super.fwd_date = [stream readInt];}
-	if(self.flags & (1 << 12)) {super.fwd_post = [stream readInt];}
+	if(self.flags & (1 << 2)) {self.fwd_from = [ClassStore TLDeserialize:stream];}
 	if(self.flags & (1 << 11)) {super.via_bot_id = [stream readInt];}
 	if(self.flags & (1 << 3)) {super.reply_to_msg_id = [stream readInt];}
 	super.date = [stream readInt];
@@ -5444,6 +5448,7 @@
 		}
 	}}
 	if(self.flags & (1 << 10)) {super.views = [stream readInt];}
+	if(self.flags & (1 << 15)) {super.edit_date = [stream readInt];}
 }
         
 -(TL_message *)copy {
@@ -5460,9 +5465,7 @@
     objc.n_id = self.n_id;
     objc.from_id = self.from_id;
     objc.to_id = [self.to_id copy];
-    objc.fwd_from_id = [self.fwd_from_id copy];
-    objc.fwd_date = self.fwd_date;
-    objc.fwd_post = self.fwd_post;
+    objc.fwd_from = [self.fwd_from copy];
     objc.via_bot_id = self.via_bot_id;
     objc.reply_to_msg_id = self.reply_to_msg_id;
     objc.date = self.date;
@@ -5471,6 +5474,7 @@
     objc.reply_markup = [self.reply_markup copy];
     objc.entities = [self.entities copy];
     objc.views = self.views;
+    objc.edit_date = self.edit_date;
     
     return objc;
 }
@@ -5509,23 +5513,11 @@
                 
     if(super.from_id == 0)  { super.flags&= ~ (1 << 8) ;} else { super.flags|= (1 << 8); }
 }            
--(void)setFwd_from_id:(TLPeer*)fwd_from_id
+-(void)setFwd_from:(TLMessageFwdHeader*)fwd_from
 {
-   super.fwd_from_id = fwd_from_id;
+   super.fwd_from = fwd_from;
                 
-    if(super.fwd_from_id == nil)  { super.flags&= ~ (1 << 2) ;} else { super.flags|= (1 << 2); }
-}            
--(void)setFwd_date:(int)fwd_date
-{
-   super.fwd_date = fwd_date;
-                
-    if(super.fwd_date == 0)  { super.flags&= ~ (1 << 2) ;} else { super.flags|= (1 << 2); }
-}            
--(void)setFwd_post:(int)fwd_post
-{
-   super.fwd_post = fwd_post;
-                
-    if(super.fwd_post == 0)  { super.flags&= ~ (1 << 12) ;} else { super.flags|= (1 << 12); }
+    if(super.fwd_from == nil)  { super.flags&= ~ (1 << 2) ;} else { super.flags|= (1 << 2); }
 }            
 -(void)setVia_bot_id:(int)via_bot_id
 {
@@ -5562,14 +5554,22 @@
    super.views = views;
                 
     if(super.views == 0)  { super.flags&= ~ (1 << 10) ;} else { super.flags|= (1 << 10); }
+}            
+-(void)setEdit_date:(int)edit_date
+{
+   super.edit_date = edit_date;
+                
+    if(super.edit_date == 0)  { super.flags&= ~ (1 << 15) ;} else { super.flags|= (1 << 15); }
 }
         
 @end
 
 @implementation TL_messageService
-+(TL_messageService*)createWithFlags:(int)flags     n_id:(int)n_id from_id:(int)from_id to_id:(TLPeer*)to_id date:(int)date action:(TLMessageAction*)action {
++(TL_messageService*)createWithFlags:(int)flags       n_id:(int)n_id from_id:(int)from_id to_id:(TLPeer*)to_id date:(int)date action:(TLMessageAction*)action {
 	TL_messageService* obj = [[TL_messageService alloc] init];
 	obj.flags = flags;
+	
+	
 	
 	
 	
@@ -5587,6 +5587,8 @@
 	
 	
 	
+	
+	
 	[stream writeInt:self.n_id];
 	if(self.flags & (1 << 8)) {[stream writeInt:self.from_id];}
 	[ClassStore TLSerialize:self.to_id stream:stream];
@@ -5595,6 +5597,8 @@
 }
 -(void)unserialize:(SerializedData*)stream {
 	super.flags = [stream readInt];
+	
+	
 	
 	
 	
@@ -5611,6 +5615,8 @@
     TL_messageService *objc = [[TL_messageService alloc] init];
     
     objc.flags = self.flags;
+    
+    
     
     
     
@@ -5647,6 +5653,10 @@
 -(BOOL)isMentioned {return (self.flags & (1 << 4)) > 0;}
                         
 -(BOOL)isMedia_unread {return (self.flags & (1 << 5)) > 0;}
+                        
+-(BOOL)isSilent {return (self.flags & (1 << 13)) > 0;}
+                        
+-(BOOL)isPost {return (self.flags & (1 << 14)) > 0;}
                         
 -(void)setFrom_id:(int)from_id
 {
@@ -12561,22 +12571,22 @@
 @end
 
 @implementation TL_updateBotInlineSend
-+(TL_updateBotInlineSend*)createWithUser_id:(int)user_id query:(NSString*)query bot_inline_id:(NSString*)bot_inline_id {
++(TL_updateBotInlineSend*)createWithUser_id:(int)user_id query:(NSString*)query update_bot_inline_id:(NSString*)update_bot_inline_id {
 	TL_updateBotInlineSend* obj = [[TL_updateBotInlineSend alloc] init];
 	obj.user_id = user_id;
 	obj.query = query;
-	obj.bot_inline_id = bot_inline_id;
+	obj.update_bot_inline_id = update_bot_inline_id;
 	return obj;
 }
 -(void)serialize:(SerializedData*)stream {
 	[stream writeInt:self.user_id];
 	[stream writeString:self.query];
-	[stream writeString:self.bot_inline_id];
+	[stream writeString:self.update_bot_inline_id];
 }
 -(void)unserialize:(SerializedData*)stream {
 	super.user_id = [stream readInt];
 	super.query = [stream readString];
-	super.bot_inline_id = [stream readString];
+	super.update_bot_inline_id = [stream readString];
 }
         
 -(TL_updateBotInlineSend *)copy {
@@ -12585,7 +12595,56 @@
     
     objc.user_id = self.user_id;
     objc.query = self.query;
-    objc.bot_inline_id = self.bot_inline_id;
+    objc.update_bot_inline_id = self.update_bot_inline_id;
+    
+    return objc;
+}
+        
+
+    
+-(id)initWithCoder:(NSCoder *)aDecoder {
+
+    if((self = [ClassStore deserialize:[aDecoder decodeObjectForKey:@"data"]])) {
+        
+    }
+    
+    return self;
+}
+        
+-(void)encodeWithCoder:(NSCoder *)aCoder {
+    [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
+}
+        
+
+        
+@end
+
+@implementation TL_updateEditChannelMessage
++(TL_updateEditChannelMessage*)createWithMessage:(TLMessage*)message pts:(int)pts pts_count:(int)pts_count {
+	TL_updateEditChannelMessage* obj = [[TL_updateEditChannelMessage alloc] init];
+	obj.message = message;
+	obj.pts = pts;
+	obj.pts_count = pts_count;
+	return obj;
+}
+-(void)serialize:(SerializedData*)stream {
+	[ClassStore TLSerialize:self.message stream:stream];
+	[stream writeInt:self.pts];
+	[stream writeInt:self.pts_count];
+}
+-(void)unserialize:(SerializedData*)stream {
+	self.message = [ClassStore TLDeserialize:stream];
+	super.pts = [stream readInt];
+	super.pts_count = [stream readInt];
+}
+        
+-(TL_updateEditChannelMessage *)copy {
+    
+    TL_updateEditChannelMessage *objc = [[TL_updateEditChannelMessage alloc] init];
+    
+    objc.message = [self.message copy];
+    objc.pts = self.pts;
+    objc.pts_count = self.pts_count;
     
     return objc;
 }
@@ -13117,7 +13176,7 @@
 @end
 
 @implementation TL_updateShortMessage
-+(TL_updateShortMessage*)createWithFlags:(int)flags      n_id:(int)n_id user_id:(int)user_id message:(NSString*)message pts:(int)pts pts_count:(int)pts_count date:(int)date fwd_from_id:(TLPeer*)fwd_from_id fwd_date:(int)fwd_date fwd_post:(int)fwd_post via_bot_id:(int)via_bot_id reply_to_msg_id:(int)reply_to_msg_id entities:(NSMutableArray*)entities {
++(TL_updateShortMessage*)createWithFlags:(int)flags      n_id:(int)n_id user_id:(int)user_id message:(NSString*)message pts:(int)pts pts_count:(int)pts_count date:(int)date fwd_from:(TLMessageFwdHeader*)fwd_from via_bot_id:(int)via_bot_id reply_to_msg_id:(int)reply_to_msg_id entities:(NSMutableArray*)entities {
 	TL_updateShortMessage* obj = [[TL_updateShortMessage alloc] init];
 	obj.flags = flags;
 	
@@ -13131,9 +13190,7 @@
 	obj.pts = pts;
 	obj.pts_count = pts_count;
 	obj.date = date;
-	obj.fwd_from_id = fwd_from_id;
-	obj.fwd_date = fwd_date;
-	obj.fwd_post = fwd_post;
+	obj.fwd_from = fwd_from;
 	obj.via_bot_id = via_bot_id;
 	obj.reply_to_msg_id = reply_to_msg_id;
 	obj.entities = entities;
@@ -13152,9 +13209,7 @@
 	[stream writeInt:self.pts];
 	[stream writeInt:self.pts_count];
 	[stream writeInt:self.date];
-	if(self.flags & (1 << 2)) {[ClassStore TLSerialize:self.fwd_from_id stream:stream];}
-	if(self.flags & (1 << 2)) {[stream writeInt:self.fwd_date];}
-	if(self.flags & (1 << 12)) {[stream writeInt:self.fwd_post];}
+	if(self.flags & (1 << 2)) {[ClassStore TLSerialize:self.fwd_from stream:stream];}
 	if(self.flags & (1 << 11)) {[stream writeInt:self.via_bot_id];}
 	if(self.flags & (1 << 3)) {[stream writeInt:self.reply_to_msg_id];}
 	if(self.flags & (1 << 7)) {//Serialize FullVector
@@ -13181,9 +13236,7 @@
 	super.pts = [stream readInt];
 	super.pts_count = [stream readInt];
 	super.date = [stream readInt];
-	if(self.flags & (1 << 2)) {self.fwd_from_id = [ClassStore TLDeserialize:stream];}
-	if(self.flags & (1 << 2)) {super.fwd_date = [stream readInt];}
-	if(self.flags & (1 << 12)) {super.fwd_post = [stream readInt];}
+	if(self.flags & (1 << 2)) {self.fwd_from = [ClassStore TLDeserialize:stream];}
 	if(self.flags & (1 << 11)) {super.via_bot_id = [stream readInt];}
 	if(self.flags & (1 << 3)) {super.reply_to_msg_id = [stream readInt];}
 	if(self.flags & (1 << 7)) {//UNS FullVector
@@ -13218,9 +13271,7 @@
     objc.pts = self.pts;
     objc.pts_count = self.pts_count;
     objc.date = self.date;
-    objc.fwd_from_id = [self.fwd_from_id copy];
-    objc.fwd_date = self.fwd_date;
-    objc.fwd_post = self.fwd_post;
+    objc.fwd_from = [self.fwd_from copy];
     objc.via_bot_id = self.via_bot_id;
     objc.reply_to_msg_id = self.reply_to_msg_id;
     objc.entities = [self.entities copy];
@@ -13254,23 +13305,11 @@
                         
 -(BOOL)isSilent {return (self.flags & (1 << 13)) > 0;}
                         
--(void)setFwd_from_id:(TLPeer*)fwd_from_id
+-(void)setFwd_from:(TLMessageFwdHeader*)fwd_from
 {
-   super.fwd_from_id = fwd_from_id;
+   super.fwd_from = fwd_from;
                 
-    if(super.fwd_from_id == nil)  { super.flags&= ~ (1 << 2) ;} else { super.flags|= (1 << 2); }
-}            
--(void)setFwd_date:(int)fwd_date
-{
-   super.fwd_date = fwd_date;
-                
-    if(super.fwd_date == 0)  { super.flags&= ~ (1 << 2) ;} else { super.flags|= (1 << 2); }
-}            
--(void)setFwd_post:(int)fwd_post
-{
-   super.fwd_post = fwd_post;
-                
-    if(super.fwd_post == 0)  { super.flags&= ~ (1 << 12) ;} else { super.flags|= (1 << 12); }
+    if(super.fwd_from == nil)  { super.flags&= ~ (1 << 2) ;} else { super.flags|= (1 << 2); }
 }            
 -(void)setVia_bot_id:(int)via_bot_id
 {
@@ -13294,7 +13333,7 @@
 @end
 
 @implementation TL_updateShortChatMessage
-+(TL_updateShortChatMessage*)createWithFlags:(int)flags      n_id:(int)n_id from_id:(int)from_id chat_id:(int)chat_id message:(NSString*)message pts:(int)pts pts_count:(int)pts_count date:(int)date fwd_from_id:(TLPeer*)fwd_from_id fwd_date:(int)fwd_date fwd_post:(int)fwd_post via_bot_id:(int)via_bot_id reply_to_msg_id:(int)reply_to_msg_id entities:(NSMutableArray*)entities {
++(TL_updateShortChatMessage*)createWithFlags:(int)flags      n_id:(int)n_id from_id:(int)from_id chat_id:(int)chat_id message:(NSString*)message pts:(int)pts pts_count:(int)pts_count date:(int)date fwd_from:(TLMessageFwdHeader*)fwd_from via_bot_id:(int)via_bot_id reply_to_msg_id:(int)reply_to_msg_id entities:(NSMutableArray*)entities {
 	TL_updateShortChatMessage* obj = [[TL_updateShortChatMessage alloc] init];
 	obj.flags = flags;
 	
@@ -13309,9 +13348,7 @@
 	obj.pts = pts;
 	obj.pts_count = pts_count;
 	obj.date = date;
-	obj.fwd_from_id = fwd_from_id;
-	obj.fwd_date = fwd_date;
-	obj.fwd_post = fwd_post;
+	obj.fwd_from = fwd_from;
 	obj.via_bot_id = via_bot_id;
 	obj.reply_to_msg_id = reply_to_msg_id;
 	obj.entities = entities;
@@ -13331,9 +13368,7 @@
 	[stream writeInt:self.pts];
 	[stream writeInt:self.pts_count];
 	[stream writeInt:self.date];
-	if(self.flags & (1 << 2)) {[ClassStore TLSerialize:self.fwd_from_id stream:stream];}
-	if(self.flags & (1 << 2)) {[stream writeInt:self.fwd_date];}
-	if(self.flags & (1 << 12)) {[stream writeInt:self.fwd_post];}
+	if(self.flags & (1 << 2)) {[ClassStore TLSerialize:self.fwd_from stream:stream];}
 	if(self.flags & (1 << 11)) {[stream writeInt:self.via_bot_id];}
 	if(self.flags & (1 << 3)) {[stream writeInt:self.reply_to_msg_id];}
 	if(self.flags & (1 << 7)) {//Serialize FullVector
@@ -13361,9 +13396,7 @@
 	super.pts = [stream readInt];
 	super.pts_count = [stream readInt];
 	super.date = [stream readInt];
-	if(self.flags & (1 << 2)) {self.fwd_from_id = [ClassStore TLDeserialize:stream];}
-	if(self.flags & (1 << 2)) {super.fwd_date = [stream readInt];}
-	if(self.flags & (1 << 12)) {super.fwd_post = [stream readInt];}
+	if(self.flags & (1 << 2)) {self.fwd_from = [ClassStore TLDeserialize:stream];}
 	if(self.flags & (1 << 11)) {super.via_bot_id = [stream readInt];}
 	if(self.flags & (1 << 3)) {super.reply_to_msg_id = [stream readInt];}
 	if(self.flags & (1 << 7)) {//UNS FullVector
@@ -13399,9 +13432,7 @@
     objc.pts = self.pts;
     objc.pts_count = self.pts_count;
     objc.date = self.date;
-    objc.fwd_from_id = [self.fwd_from_id copy];
-    objc.fwd_date = self.fwd_date;
-    objc.fwd_post = self.fwd_post;
+    objc.fwd_from = [self.fwd_from copy];
     objc.via_bot_id = self.via_bot_id;
     objc.reply_to_msg_id = self.reply_to_msg_id;
     objc.entities = [self.entities copy];
@@ -13435,23 +13466,11 @@
                         
 -(BOOL)isSilent {return (self.flags & (1 << 13)) > 0;}
                         
--(void)setFwd_from_id:(TLPeer*)fwd_from_id
+-(void)setFwd_from:(TLMessageFwdHeader*)fwd_from
 {
-   super.fwd_from_id = fwd_from_id;
+   super.fwd_from = fwd_from;
                 
-    if(super.fwd_from_id == nil)  { super.flags&= ~ (1 << 2) ;} else { super.flags|= (1 << 2); }
-}            
--(void)setFwd_date:(int)fwd_date
-{
-   super.fwd_date = fwd_date;
-                
-    if(super.fwd_date == 0)  { super.flags&= ~ (1 << 2) ;} else { super.flags|= (1 << 2); }
-}            
--(void)setFwd_post:(int)fwd_post
-{
-   super.fwd_post = fwd_post;
-                
-    if(super.fwd_post == 0)  { super.flags&= ~ (1 << 12) ;} else { super.flags|= (1 << 12); }
+    if(super.fwd_from == nil)  { super.flags&= ~ (1 << 2) ;} else { super.flags|= (1 << 2); }
 }            
 -(void)setVia_bot_id:(int)via_bot_id
 {
@@ -14276,7 +14295,7 @@
 @end
         
 @implementation TL_config
-+(TL_config*)createWithDate:(int)date expires:(int)expires test_mode:(Boolean)test_mode this_dc:(int)this_dc dc_options:(NSMutableArray*)dc_options chat_size_max:(int)chat_size_max megagroup_size_max:(int)megagroup_size_max forwarded_count_max:(int)forwarded_count_max online_update_period_ms:(int)online_update_period_ms offline_blur_timeout_ms:(int)offline_blur_timeout_ms offline_idle_timeout_ms:(int)offline_idle_timeout_ms online_cloud_timeout_ms:(int)online_cloud_timeout_ms notify_cloud_delay_ms:(int)notify_cloud_delay_ms notify_default_delay_ms:(int)notify_default_delay_ms chat_big_size:(int)chat_big_size push_chat_period_ms:(int)push_chat_period_ms push_chat_limit:(int)push_chat_limit saved_gifs_limit:(int)saved_gifs_limit disabled_features:(NSMutableArray*)disabled_features {
++(TL_config*)createWithDate:(int)date expires:(int)expires test_mode:(Boolean)test_mode this_dc:(int)this_dc dc_options:(NSMutableArray*)dc_options chat_size_max:(int)chat_size_max megagroup_size_max:(int)megagroup_size_max forwarded_count_max:(int)forwarded_count_max online_update_period_ms:(int)online_update_period_ms offline_blur_timeout_ms:(int)offline_blur_timeout_ms offline_idle_timeout_ms:(int)offline_idle_timeout_ms online_cloud_timeout_ms:(int)online_cloud_timeout_ms notify_cloud_delay_ms:(int)notify_cloud_delay_ms notify_default_delay_ms:(int)notify_default_delay_ms chat_big_size:(int)chat_big_size push_chat_period_ms:(int)push_chat_period_ms push_chat_limit:(int)push_chat_limit saved_gifs_limit:(int)saved_gifs_limit edit_time_limit:(int)edit_time_limit disabled_features:(NSMutableArray*)disabled_features {
 	TL_config* obj = [[TL_config alloc] init];
 	obj.date = date;
 	obj.expires = expires;
@@ -14296,6 +14315,7 @@
 	obj.push_chat_period_ms = push_chat_period_ms;
 	obj.push_chat_limit = push_chat_limit;
 	obj.saved_gifs_limit = saved_gifs_limit;
+	obj.edit_time_limit = edit_time_limit;
 	obj.disabled_features = disabled_features;
 	return obj;
 }
@@ -14327,6 +14347,7 @@
 	[stream writeInt:self.push_chat_period_ms];
 	[stream writeInt:self.push_chat_limit];
 	[stream writeInt:self.saved_gifs_limit];
+	[stream writeInt:self.edit_time_limit];
 	//Serialize FullVector
 	[stream writeInt:0x1cb5c415];
 	{
@@ -14370,6 +14391,7 @@
 	super.push_chat_period_ms = [stream readInt];
 	super.push_chat_limit = [stream readInt];
 	super.saved_gifs_limit = [stream readInt];
+	super.edit_time_limit = [stream readInt];
 	//UNS FullVector
 	[stream readInt];
 	{
@@ -14408,6 +14430,7 @@
     objc.push_chat_period_ms = self.push_chat_period_ms;
     objc.push_chat_limit = self.push_chat_limit;
     objc.saved_gifs_limit = self.saved_gifs_limit;
+    objc.edit_time_limit = self.edit_time_limit;
     objc.disabled_features = [self.disabled_features copy];
     
     return objc;
@@ -23871,6 +23894,188 @@
 }
         
 
+        
+@end
+
+@implementation TLMessageFwdHeader
+
+@end
+        
+@implementation TL_messageFwdHeader
++(TL_messageFwdHeader*)createWithFlags:(int)flags from_id:(int)from_id date:(int)date channel_id:(int)channel_id channel_post:(int)channel_post {
+	TL_messageFwdHeader* obj = [[TL_messageFwdHeader alloc] init];
+	obj.flags = flags;
+	obj.from_id = from_id;
+	obj.date = date;
+	obj.channel_id = channel_id;
+	obj.channel_post = channel_post;
+	return obj;
+}
+-(void)serialize:(SerializedData*)stream {
+	[stream writeInt:self.flags];
+	if(self.flags & (1 << 0)) {[stream writeInt:self.from_id];}
+	[stream writeInt:self.date];
+	if(self.flags & (1 << 1)) {[stream writeInt:self.channel_id];}
+	if(self.flags & (1 << 2)) {[stream writeInt:self.channel_post];}
+}
+-(void)unserialize:(SerializedData*)stream {
+	super.flags = [stream readInt];
+	if(self.flags & (1 << 0)) {super.from_id = [stream readInt];}
+	super.date = [stream readInt];
+	if(self.flags & (1 << 1)) {super.channel_id = [stream readInt];}
+	if(self.flags & (1 << 2)) {super.channel_post = [stream readInt];}
+}
+        
+-(TL_messageFwdHeader *)copy {
+    
+    TL_messageFwdHeader *objc = [[TL_messageFwdHeader alloc] init];
+    
+    objc.flags = self.flags;
+    objc.from_id = self.from_id;
+    objc.date = self.date;
+    objc.channel_id = self.channel_id;
+    objc.channel_post = self.channel_post;
+    
+    return objc;
+}
+        
+
+    
+-(id)initWithCoder:(NSCoder *)aDecoder {
+
+    if((self = [ClassStore deserialize:[aDecoder decodeObjectForKey:@"data"]])) {
+        
+    }
+    
+    return self;
+}
+        
+-(void)encodeWithCoder:(NSCoder *)aCoder {
+    [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
+}
+        
+            
+-(void)setFrom_id:(int)from_id
+{
+   super.from_id = from_id;
+                
+    if(super.from_id == 0)  { super.flags&= ~ (1 << 0) ;} else { super.flags|= (1 << 0); }
+}            
+-(void)setChannel_id:(int)channel_id
+{
+   super.channel_id = channel_id;
+                
+    if(super.channel_id == 0)  { super.flags&= ~ (1 << 1) ;} else { super.flags|= (1 << 1); }
+}            
+-(void)setChannel_post:(int)channel_post
+{
+   super.channel_post = channel_post;
+                
+    if(super.channel_post == 0)  { super.flags&= ~ (1 << 2) ;} else { super.flags|= (1 << 2); }
+}
+        
+@end
+
+@implementation TLchannels_MessageEditData
+            
+-(BOOL)isCaption {return NO;}
+            
+@end
+        
+@implementation TL_channels_messageEditData
++(TL_channels_messageEditData*)createWithFlags:(int)flags  from_id:(int)from_id edit_by:(int)edit_by edit_date:(int)edit_date users:(NSMutableArray*)users {
+	TL_channels_messageEditData* obj = [[TL_channels_messageEditData alloc] init];
+	obj.flags = flags;
+	
+	obj.from_id = from_id;
+	obj.edit_by = edit_by;
+	obj.edit_date = edit_date;
+	obj.users = users;
+	return obj;
+}
+-(void)serialize:(SerializedData*)stream {
+	[stream writeInt:self.flags];
+	
+	[stream writeInt:self.from_id];
+	if(self.flags & (1 << 0)) {[stream writeInt:self.edit_by];}
+	if(self.flags & (1 << 0)) {[stream writeInt:self.edit_date];}
+	//Serialize FullVector
+	[stream writeInt:0x1cb5c415];
+	{
+		NSInteger tl_count = [self.users count];
+		[stream writeInt:(int)tl_count];
+		for(int i = 0; i < (int)tl_count; i++) {
+            TLUser* obj = [self.users objectAtIndex:i];
+            [ClassStore TLSerialize:obj stream:stream];
+		}
+	}
+}
+-(void)unserialize:(SerializedData*)stream {
+	super.flags = [stream readInt];
+	
+	super.from_id = [stream readInt];
+	if(self.flags & (1 << 0)) {super.edit_by = [stream readInt];}
+	if(self.flags & (1 << 0)) {super.edit_date = [stream readInt];}
+	//UNS FullVector
+	[stream readInt];
+	{
+		if(!self.users)
+			self.users = [[NSMutableArray alloc] init];
+		int count = [stream readInt];
+		for(int i = 0; i < count; i++) {
+			TLUser* obj = [ClassStore TLDeserialize:stream];
+            if(obj != nil && [obj isKindOfClass:[TLUser class]])
+                 [self.users addObject:obj];
+            else
+                break;
+		}
+	}
+}
+        
+-(TL_channels_messageEditData *)copy {
+    
+    TL_channels_messageEditData *objc = [[TL_channels_messageEditData alloc] init];
+    
+    objc.flags = self.flags;
+    
+    objc.from_id = self.from_id;
+    objc.edit_by = self.edit_by;
+    objc.edit_date = self.edit_date;
+    objc.users = [self.users copy];
+    
+    return objc;
+}
+        
+
+    
+-(id)initWithCoder:(NSCoder *)aDecoder {
+
+    if((self = [ClassStore deserialize:[aDecoder decodeObjectForKey:@"data"]])) {
+        
+    }
+    
+    return self;
+}
+        
+-(void)encodeWithCoder:(NSCoder *)aCoder {
+    [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
+}
+        
+            
+-(BOOL)isCaption {return (self.flags & (1 << 1)) > 0;}
+                        
+-(void)setEdit_by:(int)edit_by
+{
+   super.edit_by = edit_by;
+                
+    if(super.edit_by == 0)  { super.flags&= ~ (1 << 0) ;} else { super.flags|= (1 << 0); }
+}            
+-(void)setEdit_date:(int)edit_date
+{
+   super.edit_date = edit_date;
+                
+    if(super.edit_date == 0)  { super.flags&= ~ (1 << 0) ;} else { super.flags|= (1 << 0); }
+}
         
 @end
 

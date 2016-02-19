@@ -91,7 +91,7 @@
         dispatch_once(&onceToken, ^{
             
             statefullUpdates = @[NSStringFromClass([TL_updateNewChannelMessage class]),NSStringFromClass([TL_updateDeleteChannelMessages class])];
-            statelessUpdates = @[NSStringFromClass([TL_updateReadChannelInbox class]),NSStringFromClass([TL_updateChannelTooLong class]),NSStringFromClass([TL_updateChannelGroup class]),NSStringFromClass([TL_updateChannelMessageViews class]),NSStringFromClass([TL_updateChannel class])];
+            statelessUpdates = @[NSStringFromClass([TL_updateReadChannelInbox class]),NSStringFromClass([TL_updateChannelTooLong class]),NSStringFromClass([TL_updateChannelGroup class]),NSStringFromClass([TL_updateChannelMessageViews class]),NSStringFromClass([TL_updateChannel class]),NSStringFromClass([TL_updateEditChannelMessage class])];
         });
         
         if([statefullUpdates indexOfObject:[update className]] != NSNotFound)
@@ -272,6 +272,22 @@
         
         
         [MessagesManager addAndUpdateMessage:msg];
+        
+    } else if([update isKindOfClass:[TL_updateEditChannelMessage class]]) {
+      
+        
+        TL_localMessage *msg = [TL_localMessage convertReceivedMessage:[(TL_updateEditChannelMessage *)update message]];
+        
+        if(![self conversationWithChannelId:abs(msg.peer_id)]) {
+            [self proccessUpdate:[TL_updateChannel createWithChannel_id:abs(msg.peer_id)]];
+            return;
+        }
+        
+        [[Storage manager] addHolesAroundMessage:msg];
+        
+        [[Storage manager] insertMessages:@[msg]];
+        
+        [Notification perform:UPDATE_EDITED_MESSAGE data:@{KEY_MESSAGE:msg}];
         
     } else if( [update isKindOfClass:[TL_updateDeleteChannelMessages class]]) {
         

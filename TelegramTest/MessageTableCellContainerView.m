@@ -240,7 +240,7 @@
        
         [self.avatarImageView setTapBlock:^{
             
-            [appWindow().navigationController showInfoPage:weakSelf.item.message.from_id == 0 ? weakSelf.item.message.conversation : weakSelf.item.user.dialog];
+            [appWindow().navigationController showInfoPage:weakSelf.item.message.isChannelPostMessage ? weakSelf.item.message.conversation : weakSelf.item.user.dialog];
             
         }];
         [self addSubview:self.avatarImageView];
@@ -701,7 +701,7 @@ static BOOL dragAction = NO;
         [self initHeader];
         [self.nameTextField setAttributedStringValue:item.headerName];
         [self.nameTextField setFrameOrigin:NSMakePoint(item.containerOffset - 2, item.viewSize.height - 24)];
-        if(item.message.from_id != 0)
+        if(!item.message.isChannelPostMessage)
             [self.avatarImageView setUser:item.user];
         else
             [self.avatarImageView setChat:item.message.chat];
@@ -744,6 +744,9 @@ static BOOL dragAction = NO;
     
     [self setSelected:item.isSelected];
     
+    NSSize stateLayerSize = NSMakeSize(MIN(item.message.isChannelPostMessage ? item.viewsCountAndSignSize.width + 20 : 30,NSWidth(item.table.frame) - NSMaxX(self.nameTextField.frame)), NSHeight(_stateLayer.frame));
+    
+    [self.stateLayer setFrameSize:stateLayerSize];
     
 
     [self checkActionState:YES];
@@ -759,7 +762,7 @@ static BOOL dragAction = NO;
     [self setNeedsDisplay:YES];
     
     
-    if(item.message.isChannelMessage && item.message.from_id == 0) {
+    if(item.message.isChannelMessage && item.message.isChannelPostMessage) {
         
         if(!_shareButton) {
             _shareButton = [[BTRButton alloc] initWithFrame:NSMakeRect(0, 0, image_ChannelShare().size.width , image_ChannelShare().size.height )];
@@ -793,6 +796,7 @@ static BOOL dragAction = NO;
         _shareButton = nil;
     }
     
+   
 
 }
 
@@ -1126,7 +1130,7 @@ static int offsetEditable = 30;
     }
     
     
-    [self.stateLayer setHidden:!self.item.message.n_out && self.item.message.from_id != 0];
+    [self.stateLayer setHidden:!self.item.message.n_out && !self.item.message.isChannelPostMessage];
     
     if(!self.stateLayer.isHidden)
         [self.stateLayer setState:state];

@@ -20,6 +20,10 @@
 
 @property (nonatomic,strong) NSImageView *channelImageView;
 
+@property (nonatomic,strong) TMTextField *signTextField;
+
+
+
 @end
 
 @implementation MessageStateLayer
@@ -78,29 +82,35 @@
     [_viewsCountText removeFromSuperview];
     _viewsCountText = nil;
     [_channelImageView removeFromSuperview];
+    [_signTextField removeFromSuperview];
+    _signTextField = nil;
+    
     
     if((state == MessageTableCellUnread || state == MessageTableCellRead)) {
         
-        if(self.container.item.message.from_id == 0 ) {
+        if(self.container.item.message.isChannelPostMessage) {
+            
+            _channelImageView = imageViewWithImage(image_ChannelViews());
             
             self.readOrSentView.image = nil;
             [self.readOrSentView.layer removeFromSuperlayer];
             self.readOrSentView = nil;
             
-            _viewsCountText = [TMTextField defaultTextField];
-            [_viewsCountText setFont:TGSystemFont(12)];
-            [_viewsCountText setTextColor:GRAY_TEXT_COLOR];
-            [_viewsCountText setStringValue:self.container.item.viewsCount];
-            [_viewsCountText sizeToFit];
+            _viewsCountText = [TMHyperlinkTextField defaultTextField];
+            [[_viewsCountText cell] setTruncatesLastVisibleLine:YES];
+            [_viewsCountText setAttributedStringValue:self.container.item.viewsCountAndSign];
+            [_viewsCountText setFrameSize:NSMakeSize(MIN(NSWidth(self.frame) - NSWidth(_channelImageView.frame) - 4,self.container.item.viewsCountAndSignSize.width), 17)];
             [_viewsCountText setFrameOrigin:CGPointMake(NSWidth(self.frame) - NSWidth(_viewsCountText.frame) - 2,2)];
             [self addSubview:_viewsCountText];
             
             
-            _channelImageView = imageViewWithImage(image_ChannelViews());
             
             [_channelImageView setFrameOrigin:NSMakePoint(NSMinX(_viewsCountText.frame) - NSWidth(_channelImageView.frame), 5)];
             
             [self addSubview:_channelImageView];
+            
+            
+            
         } else {
             if(!self.readOrSentView) {
                 self.readOrSentView = [[NSImageView alloc] initWithFrame:NSMakeRect(11, 5, 0, 0)];

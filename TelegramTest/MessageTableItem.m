@@ -66,11 +66,13 @@ static NSCache *cItems;
             [cItems setCountLimit:100];
         });
 
-        if(object.peer.peer_id == [UsersManager currentUserId])
+        if(object.peer_id == [UsersManager currentUserId])
             object.flags&= ~TGUNREADMESSAGE;
 
+
         
-        self.isForwadedMessage = self.message.fwd_from_id != nil;
+        
+        self.isForwadedMessage = self.message.fwd_from != nil;
         
         if(self.isForwadedMessage && [self.message.media isKindOfClass:[TL_messageMediaDocument class]] && ([self.message.media.document isSticker] || (self.message.media.document.audioAttr && !self.message.media.document.audioAttr.isVoice))) {
             self.isForwadedMessage = NO;
@@ -85,9 +87,7 @@ static NSCache *cItems;
         
         if(self.message) {
             
-            if(self.message.from_id == 0) {
-                [self updateViews];
-            }
+            
             
             TGItemCache *cache = [cItems objectForKey:@(channelMsgId(_isChat ? 1 : 0, object.from_id == 0 ? object.peer_id : object.from_id))];
            
@@ -132,10 +132,10 @@ static NSCache *cItems;
             }
             
             if(self.isForwadedMessage) {
-                if([object.fwd_from_id isKindOfClass:[TL_peerUser class]]) {
-                    self.fwd_user = [[UsersManager sharedManager] find:object.fwd_from_id.user_id];
+                if(object.fwd_from.from_id != 0) {
+                    self.fwd_user = [[UsersManager sharedManager] find:object.fwd_from.from_id];
                 } else  {
-                    self.fwd_chat = [[ChatsManager sharedManager] find:object.fwd_from_id.chat_id == 0 ? object.fwd_from_id.channel_id : object.fwd_from_id.chat_id];
+                    self.fwd_chat = [[ChatsManager sharedManager] find:object.fwd_from.channel_id];
                 }
                 
                 NSMutableAttributedString *attr = [[NSMutableAttributedString alloc] init];
@@ -156,12 +156,24 @@ static NSCache *cItems;
             
             
             
-            
+//            if(object.isPost) {
+//
+
+//                
+//                
+//            }
+
+            if(self.message.isChannelPostMessage) {
+                [self updateViews];
+            }
             
         }
     }
     return self;
 }
+
+
+
 
 
 -(int)makeSize {
@@ -174,7 +186,7 @@ static NSCache *cItems;
     NSString *name = self.isChat ? self.user.fullName : self.user.dialogFullName;
     
     
-    if(self.message.from_id == 0)
+    if(self.message.isChannelPostMessage)
     {
         name = self.message.conversation.chat.title;
     }
@@ -215,7 +227,7 @@ static NSCache *cItems;
 
     [header setFont:TGSystemMediumFont(13) forRange:header.range];
     
-    [header addAttribute:NSLinkAttributeName value:[TMInAppLinks peerProfile:self.message.from_id == 0 ? self.message.peer : [TL_peerUser createWithUser_id:self.message.from_id]] range:header.range];
+    [header addAttribute:NSLinkAttributeName value:[TMInAppLinks peerProfile:self.message.isChannelPostMessage ? self.message.peer : [TL_peerUser createWithUser_id:self.message.from_id]] range:header.range];
     
     self.headerName = header;
     
@@ -223,7 +235,7 @@ static NSCache *cItems;
     item.user = _user;
     item.header = header;
     
-    [cItems setObject:item forKey:@(channelMsgId(_isChat ? 1 : 0, _message.from_id == 0 ? _message.peer_id : _message.from_id))];
+    [cItems setObject:item forKey:@(channelMsgId(_isChat ? 1 : 0, _message.isChannelPostMessage ? _message.peer_id : _message.from_id))];
 }
 
 - (void) headerStringBuilder {
@@ -244,7 +256,7 @@ static NSCache *cItems;
         NSRange rangeUser = NSMakeRange(0, 0);
         if(title) {
             rangeUser = [self.forwardMessageAttributedString appendString:title withColor:LINK_COLOR];
-            [self.forwardMessageAttributedString setLink:[TMInAppLinks peerProfile:self.message.fwd_from_id] forRange:rangeUser];
+            [self.forwardMessageAttributedString setLink:[TMInAppLinks peerProfile:self.message.fwd_from.fwdPeer] forRange:rangeUser];
             
         }
         
@@ -263,7 +275,7 @@ static NSCache *cItems;
         
          [self.forwardMessageAttributedString appendString:@"  " withColor:NSColorFromRGB(0x909090)];
     
-        [self.forwardMessageAttributedString appendString:[TGDateUtils stringForLastSeen:self.message.fwd_date] withColor:NSColorFromRGB(0xbebebe)];
+        [self.forwardMessageAttributedString appendString:[TGDateUtils stringForLastSeen:self.message.fwd_from.date] withColor:NSColorFromRGB(0xbebebe)];
         
         
         [self.forwardMessageAttributedString setFont:TGSystemMediumFont(13) forRange:rangeUser];
@@ -615,14 +627,12 @@ static NSTextAttachment *channelIconAttachment() {
 }
 
 -(BOOL)isFwdMessage {
-    return self.message.fwd_from_id != 0;
+    return self.message.fwd_from != nil;
 }
 
 - (BOOL)makeSizeByWidth:(int)width {
     _blockWidth = width;
-    
-    
-    
+        
     return NO;
 }
 
@@ -633,11 +643,27 @@ static NSTextAttachment *channelIconAttachment() {
 
 -(BOOL)updateViews {
     
-    NSString *o = _viewsCount;
+    NSAttributedString *o = _viewsCountAndSign;
     
-    _viewsCount = [@(MAX(1,self.message.views)) prettyNumber];
+    NSMutableAttributedString *signString = [[NSMutableAttributedString alloc] init];
     
-    return ![_viewsCount isEqualToString:o];
+    NSRange range = [signString appendString:[@(MAX(1,self.message.views)) prettyNumber] withColor:GRAY_TEXT_COLOR];
+    
+    if(self.message.isPost) {
+        [signString appendString:@" "];
+        range = [signString appendString:_user.fullName withColor:GRAY_TEXT_COLOR];
+        [signString setLink:[TMInAppLinks peerProfile:[TL_peerUser createWithUser_id:_user.n_id]] forRange:range];
+    }
+    
+    _viewsCountAndSignSize = [signString sizeForTextFieldForWidth:INT32_MAX];
+    _viewsCountAndSignSize.width = MIN(140,_viewsCountAndSignSize.width);
+    _viewsCountAndSignSize.height = 17;
+    
+    [signString setFont:TGSystemFont(12) forRange:signString.range];
+    
+    _viewsCountAndSign = signString;
+    
+    return ![_viewsCountAndSign.string isEqualToString:o.string];
     
 }
 

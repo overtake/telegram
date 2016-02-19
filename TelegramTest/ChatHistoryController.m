@@ -724,6 +724,12 @@ static ChatHistoryController *observer;
     }];
 }
 
+
+
+-(void)updateMessage:(TL_localMessage *)message {
+    [self updateMessageIds:@[message]];
+}
+
 -(int)itemsCount {
     __block int count = 0;
     

@@ -112,14 +112,22 @@ static int max_chat_users = 199;
 static int max_broadcast_users = 100;
 static int megagroup_size_max = 1000;
 
+static int edit_time_limit_default = 5*60;
+
 void setMaxChatUsers(int c) {
     max_chat_users = c;
 }
 
 int maxChatUsers() {
-    
-    
     return max_chat_users;
+}
+
+int edit_time_limit() {
+    return edit_time_limit_default;
+}
+
+void set_edit_time_limit(int limit) {
+    edit_time_limit_default = limit;
 }
 
 void setMaxBroadcastUsers(int b) {

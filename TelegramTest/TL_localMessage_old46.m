@@ -17,8 +17,8 @@
     [stream writeInt:self.n_id];
     if(self.flags & (1 << 8)) {[stream writeInt:self.from_id];}
     [TLClassStore TLSerialize:self.to_id stream:stream];
-    if(self.flags & (1 << 2)) {[ClassStore TLSerialize:self.fwd_from_id stream:stream];}
-    if(self.flags & (1 << 2)) [stream writeInt:self.fwd_date];
+    if(self.flags & (1 << 2)) {[ClassStore TLSerialize:self.fwd_from_id_old_object stream:stream];}
+    if(self.flags & (1 << 2)) [stream writeInt:self.fwd_date_old];
     if(self.flags & (1 << 11)) {[stream writeInt:self.via_bot_id];}
     if(self.flags & (1 << 3)) [stream writeInt:self.reply_to_msg_id];
     [stream writeInt:self.date];
@@ -50,8 +50,8 @@
     self.n_id = [stream readInt];
     if(self.flags & (1 << 8)) {self.from_id = [stream readInt];}
     self.to_id = [TLClassStore TLDeserialize:stream];
-    if(self.flags & (1 << 2)) {self.fwd_from_id = [ClassStore TLDeserialize:stream];}
-    if(self.flags & (1 << 2)) self.fwd_date = [stream readInt];
+    if(self.flags & (1 << 2)) {self.fwd_from_id_old_object = [ClassStore TLDeserialize:stream];}
+    if(self.flags & (1 << 2)) self.fwd_date_old = [stream readInt];
     if(self.flags & (1 << 11)) {self.via_bot_id = [stream readInt];}
     if(self.flags & (1 << 3)) self.reply_to_msg_id = [stream readInt];
     self.date = [stream readInt];

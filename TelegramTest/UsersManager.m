@@ -225,8 +225,12 @@
             
                         currentUser.first_name = newUser.first_name;
                         currentUser.last_name = newUser.last_name;
-                        currentUser.username = newUser.username;
-                        currentUser.phone = newUser.phone;
+                        
+                        if(!newUser.isMin) {
+                            currentUser.username = newUser.username;
+                            currentUser.phone = newUser.phone;
+                        }
+                       
                         
                         isNeedRebuildNames = YES;
                         
@@ -243,10 +247,11 @@
                     needUpdateUserInDB = YES;
                 }
                 
-                currentUser.access_hash = newUser.access_hash;
+                if(!newUser.isMin) {
+                    currentUser.access_hash = newUser.access_hash;
+                }
                 
-                if(!currentUser.phone || !currentUser.phone.length)
-                    currentUser.phone = newUser.phone;
+                
                 
                 if(isNeedRebuildNames) {
                     [currentUser rebuildNames];

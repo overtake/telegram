@@ -117,7 +117,7 @@ static NSMutableDictionary *senders;
                     item = [[ContextBotSenderItem alloc] init];
                 }
                 
-                if(msg.fwd_from_id != 0) {
+                if(msg.fwd_from != 0) {
                     item = [[ForwardSenterItem alloc] init];
                     
                     ((ForwardSenterItem *)item).fakes = @[msg];

@@ -81,7 +81,7 @@
         text = action.title;
     } else if([action isKindOfClass:[TL_messageActionChatJoinedByLink class]]) {
         
-        NSString *fullName = message.from_id == 0 ? message.chat.title : [user fullName];
+        NSString *fullName = message.isChannelPostMessage ? message.chat.title : [user fullName];
         
         text = [NSString stringWithFormat:@"%@ %@", fullName,NSLocalizedString(@"MessageAction.Service.JoinedGroupByLink", nil)];
         

@@ -86,6 +86,9 @@
 #import "ContextBotSenderItem.h"
 #import "InlineBotMediaSecretSenderItem.h"
 #import "MessageTableCellDateView.h"
+
+#import "TGInputMessageTemplate.h"
+#import "TGMessageEditSender.h"
 #define HEADER_MESSAGES_GROUPING_TIME (10 * 60)
 
 #define SCROLLDOWNBUTTON_OFFSET 1500
@@ -118,7 +121,6 @@
 }
 
 @property (nonatomic, strong) NSMutableArray *messages;
-@property (nonatomic, strong) NSMutableDictionary *cacheTextForPeer;
 @property (nonatomic, assign) BOOL locked;
 
 @property (nonatomic,strong) NSMutableDictionary *typingReservation;
@@ -150,6 +152,9 @@
 
 @property (nonatomic, strong) TMTextButton *editableNavigationRightView;
 @property (nonatomic, strong) TMTextButton *editableNavigationLeftView;
+
+@property (nonatomic, strong) TMTextButton *editableMessageNavigationLeftView;
+
 
 @property (nonatomic, strong) TMTextButton *filtredNavigationLeftView;
 @property (nonatomic, strong) TMTextButton *filtredNavigationCenterView;
@@ -184,6 +189,9 @@
 @property (nonatomic, strong) TGMessagesHintView *hintView;
 
 @property (nonatomic,assign) BOOL needNextRequest;
+
+
+@property (nonatomic,strong) TGInputMessageTemplate *template;
 
 
 @end
@@ -285,7 +293,6 @@
     self.typingReservation = [[NSMutableDictionary alloc] init];
     
     self.locked = NO;
-    self.cacheTextForPeer = [Storage inputTextForPeers];
     
     [Notification addObserver:self selector:@selector(messageReadNotification:) name:MESSAGE_READ_EVENT];
     [Notification addObserver:self selector:@selector(messageTableItemUpdate:) name:UPDATE_MESSAGE_ITEM];
@@ -293,6 +300,7 @@
     [Notification addObserver:self selector:@selector(messageTableItemsReadContents:) name:UPDATE_READ_CONTENTS];
     [Notification addObserver:self selector:@selector(messageTableItemsEntitiesUpdate:) name:UPDATE_MESSAGE_ENTITIES];
     [Notification addObserver:self selector:@selector(messageTableItemsHoleUpdate:) name:UPDATE_MESSAGE_GROUP_HOLE];
+    [Notification addObserver:self selector:@selector(messagTableEditedMessageUpdate:) name:UPDATE_EDITED_MESSAGE];
     
     [Notification addObserver:self selector:@selector(didChangeDeleteDialog:) name:DIALOG_DELETE];
     
@@ -319,9 +327,6 @@
     }];
     [self.normalNavigationRightView setDisableColor:NSColorFromRGB(0xa0a0a0)];
     
-    
-    
-    
     self.filtredNavigationCenterView = [TMTextButton standartUserProfileButtonWithTitle:@"nil"];
     
     [self.filtredNavigationCenterView setFont:TGSystemFont(14)];
@@ -330,8 +335,6 @@
     [self.filtredNavigationCenterView setTextColor:BLUE_UI_COLOR];
     
     [self.filtredNavigationCenterView setFrameOrigin:NSMakePoint(0, -13)];
-    
-    
     
     
     self.filtredNavigationLeftView = [TMTextButton standartMessageNavigationButtonWithTitle:NSLocalizedString(@"Profile.Cancel", nil)];
@@ -364,6 +367,12 @@
         [weakSelf unSelectAll];
     }];
     
+    
+    self.editableMessageNavigationLeftView = [TMTextButton standartMessageNavigationButtonWithTitle:NSLocalizedString(@"Profile.Cancel", nil)];
+    
+    [self.editableMessageNavigationLeftView setTapBlock:^{
+        [weakSelf setEditableMessage:nil];
+    }];
     
     
     //Center
@@ -454,15 +463,45 @@
 }
 
 -(void)_didStackRemoved {
-    
     self.conversation = nil;
     [self.historyController stopChannelPolling];
     [self flushMessages];
-    
-   
-    
 }
 
+-(void)messagTableEditedMessageUpdate:(NSNotification *)notification {
+    TL_localMessage *message = notification.userInfo[KEY_MESSAGE];
+    
+    if(message.peer_id == _conversation.peer_id) {
+        
+        [self.historyController updateMessage:message];
+        
+        [self.historyController items:@[@(message.n_id)] complete:^(NSArray *items) {
+            
+            [items enumerateObjectsUsingBlock:^(TL_localMessage *obj, NSUInteger idx, BOOL *stop) {
+                
+               MessageTableItem *item = [self itemOfMsgId:obj.channelMsgId];
+                NSUInteger index = [self indexOfObject:item];
+                
+                item = [MessageTableItem messageItemFromObject:obj];
+                item.table = self.table;
+                [item makeSizeByWidth:item.makeSize];
+                
+                [self.messages replaceObjectAtIndex:index withObject:item];
+                
+                if(index != NSNotFound) {
+                    [[NSAnimationContext currentContext] setDuration:0];
+                    [self.table reloadDataForRowIndexes:[NSIndexSet indexSetWithIndex:index] columnIndexes:[NSIndexSet indexSetWithIndex:0]];
+                    [self.table noteHeightOfRowsWithIndexesChanged:[NSIndexSet indexSetWithIndex:index]];
+                    
+                    MessageTableCellContainerView *cell = (MessageTableCellContainerView *)[self cellForRow:index];
+                    [cell searchSelection];
+                }
+            }];
+            
+        }];
+    }
+    
+}
 
 -(void)messageTableItemUpdate:(NSNotification *)notification {
     
@@ -729,6 +768,10 @@
     if(![self acceptState: show ? MessagesViewControllerStateEditable : MessagesViewControllerStateNone])
         return;
     
+    if(show) {
+        [self setEditableMessage:nil];
+    }
+    
    // if(self.bottomView.stateBottom == MessagesBottomViewNormalState || self.bottomView.stateBottom == MessagesBottomViewActionsState)
   //  {
         [self setState: show ? MessagesViewControllerStateEditable : MessagesViewControllerStateNone animated:animated];
@@ -903,10 +946,13 @@ static NSTextAttachment *headerMediaIcon() {
         self.filtredNavigationCenterView.attributedStringValue = [self stringForSharedMedia:[self.historyController.filter description]];
         // [self.filtredNavigationCenterView sizeToFit];
         
-    } else {
+    } else if(state == MessagesViewControllerStateEditable) {
         rightView = self.editableNavigationRightView;
         leftView = self.conversation.type == DialogTypeChannel ? [self standartLeftBarView]  : self.editableNavigationLeftView;
         [self.bottomView setState:MessagesBottomViewActionsState animated:animated];
+    } else if(state == MessagesViewControllerStateEditMessage) {
+        leftView = self.editableMessageNavigationLeftView;
+        rightView = self.normalNavigationRightView;
     }
     
     if(!self.conversation.canEditConversation)
@@ -2152,8 +2198,8 @@ static NSTextAttachment *headerMediaIcon() {
     if(!self.conversation || !self.conversation.cacheKey)
         return;
     
-    [self.cacheTextForPeer setObject:self.bottomView.inputMessageString forKey:self.conversation.cacheKey];
-    [Storage saveInputTextForPeers:self.cacheTextForPeer];
+    
+    [_template updateTextAndSave:self.bottomView.inputMessageString];
     
     
     if(self.conversation.type == DialogTypeSecretChat && self.conversation.encryptedChat.encryptedParams.layer < 23)
@@ -2426,8 +2472,11 @@ static NSTextAttachment *headerMediaIcon() {
         [self.normalNavigationCenterView enableDiscussion:NO force:NO];
         
         [_replyMsgsStack removeAllObjects];
+         
+         
         
-        NSString *cachedText = [self.cacheTextForPeer objectForKey:dialog.cacheKey];
+         
+         
         [self becomeFirstResponder];
         
         [self.noMessagesView setConversation:dialog];
@@ -2456,7 +2505,13 @@ static NSTextAttachment *headerMediaIcon() {
         self.state = MessagesViewControllerStateNone;
         
         
-        [self.bottomView setInputMessageString:cachedText ? cachedText : @"" disableAnimations:YES];
+         _template = [TGInputMessageTemplate templateWithType:TGInputMessageTemplateTypeSimpleText ofPeerId:dialog.peer_id];
+         
+         if(!_template) {
+             _template = [[TGInputMessageTemplate alloc] initWithType:TGInputMessageTemplateTypeSimpleText text:@"" peer_id:dialog.peer_id];
+         }
+         
+        [self.bottomView setTemplate:_template];
         
         [self unSelectAll:NO];
         
@@ -2512,6 +2567,25 @@ static NSTextAttachment *headerMediaIcon() {
     [self unSelectAll:NO];
     self.state = MessagesViewControllerStateNone;
     [self.table.scrollView scrollToEndWithAnimation:scrollToBottom];
+}
+
+-(void)setEditableMessage:(TL_localMessage *)message {
+    
+    if(message) {
+        [self setState:MessagesViewControllerStateEditMessage];
+        
+        _template = [[TGInputMessageTemplate alloc] initWithType:TGInputMessageTemplateTypeEditMessage text:message.message.length > 0 ? message.message : message.media.caption peer_id:message.peer_id postId:message.n_id];
+        
+        [_template setAutoSave:NO];
+    } else {
+        [self setState:MessagesViewControllerStateNone];
+        
+        _template = [TGInputMessageTemplate templateWithType:TGInputMessageTemplateTypeSimpleText ofPeerId:_conversation.peer_id];
+    }
+    
+    
+    [self.bottomView setTemplate:_template];
+    
 }
 
 - (void)tryRead {
@@ -3011,7 +3085,7 @@ static NSTextAttachment *headerMediaIcon() {
     item.isHeaderMessage = YES;
     item.isHeaderForwardedMessage = YES;
     
-    if((item.message.isChannelMessage && item.message.from_id == 0) || item.isViaBot) {
+    if((item.message.isChannelMessage && item.message.isChannelPostMessage) || item.isViaBot) {
         return;
     }
     
@@ -3021,7 +3095,7 @@ static NSTextAttachment *headerMediaIcon() {
                 item.isHeaderMessage = NO;
             }
             
-            if(!item.isHeaderMessage && prevItem.isForwadedMessage && ABS(prevItem.message.fwd_date - item.message.fwd_date) < HEADER_MESSAGES_GROUPING_TIME) {
+            if(!item.isHeaderMessage && prevItem.isForwadedMessage && ABS(prevItem.message.fwd_from.date - item.message.fwd_from.date) < HEADER_MESSAGES_GROUPING_TIME) {
                 item.isHeaderForwardedMessage = NO;
             }
         }
@@ -3119,34 +3193,33 @@ static NSTextAttachment *headerMediaIcon() {
         return;
     }
     
-    
-#ifdef  TGDEBUG
-    if([message isEqualToString:@"send100messages"]) {
-        
-        TL_conversation *conversation = _conversation;
-        for (int i = 1; i <= 100; i++) {
-            [self sendMessage:[NSString stringWithFormat:@"messageId:%d",i] forConversation:conversation];
-        }
-        
-        return;
-    }
-    
-#endif
-    
     if(!self.conversation.canSendMessage)  {
         NSBeep();
         return;
     }
     
-    if(message.length > 0) {
+    if(_template.type == TGInputMessageTemplateTypeEditMessage) {
         
+        TGMessageEditSender *editSender = [[TGMessageEditSender alloc] initWithTemplate:_template conversation:_conversation];
         
-        [self.bottomView setInputMessageString:@"" disableAnimations:NO];
-        [self sendMessage:message forConversation:self.conversation callback:^{
-            [_typingReservation removeAllObjects];
-        }];
+        [editSender performEdit];
         
+        [self setEditableMessage:nil];
+        
+    } else {
+       
+        if(message.length > 0) {
+            
+            
+            [self.bottomView setInputMessageString:@"" disableAnimations:NO];
+            [self sendMessage:message forConversation:self.conversation callback:^{
+                [_typingReservation removeAllObjects];
+            }];
+            
+        }
     }
+    
+    
 }
 
 -(void)sendMessage:(NSString *)message forConversation:(TL_conversation *)conversation {

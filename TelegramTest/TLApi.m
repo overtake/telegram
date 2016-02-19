@@ -2,7 +2,7 @@
 //  TLApi.m
 //  Telegram
 //
-//  Auto created by Mikhail Filimonov on 16.02.16..
+//  Auto created by Mikhail Filimonov on 18.02.16..
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -2705,6 +2705,53 @@
 	SerializedData* stream = [ClassStore streamWithConstuctor:527021574];
 	[ClassStore TLSerialize:self.channel stream:stream];
 	[stream writeBool:self.enabled];
+	return [stream getOutput];
+}
+@end
+
+@implementation TLAPI_channels_getMessageEditData
++(TLAPI_channels_getMessageEditData*)createWithChannel:(TLInputChannel*)channel n_id:(int)n_id {
+    TLAPI_channels_getMessageEditData* obj = [[TLAPI_channels_getMessageEditData alloc] init];
+    obj.channel = channel;
+	obj.n_id = n_id;
+    return obj;
+}
+- (NSData*)getData {
+	SerializedData* stream = [ClassStore streamWithConstuctor:669661736];
+	[ClassStore TLSerialize:self.channel stream:stream];
+	[stream writeInt:self.n_id];
+	return [stream getOutput];
+}
+@end
+
+@implementation TLAPI_channels_editMessage
++(TLAPI_channels_editMessage*)createWithFlags:(int)flags  channel:(TLInputChannel*)channel n_id:(int)n_id message:(NSString*)message entities:(NSMutableArray*)entities {
+    TLAPI_channels_editMessage* obj = [[TLAPI_channels_editMessage alloc] init];
+    obj.flags = flags;
+	
+	obj.channel = channel;
+	obj.n_id = n_id;
+	obj.message = message;
+	obj.entities = entities;
+    return obj;
+}
+- (NSData*)getData {
+	SerializedData* stream = [ClassStore streamWithConstuctor:-589659923];
+	[stream writeInt:self.flags];
+	
+	[ClassStore TLSerialize:self.channel stream:stream];
+	[stream writeInt:self.n_id];
+	[stream writeString:self.message];
+	if(self.flags & (1 << 3)) {//Serialize FullVector
+	[stream writeInt:0x1cb5c415];
+	{
+		NSInteger tl_count = [self.entities count];
+		[stream writeInt:(int)tl_count];
+		for(int i = 0; i < (int)tl_count; i++) {
+            TLMessageEntity* obj = [self.entities objectAtIndex:i];
+            [ClassStore TLSerialize:obj stream:stream];
+		}
+	}}
 	return [stream getOutput];
 }
 @end

@@ -284,6 +284,9 @@
 		C21068BA1C19F4B500815859 /* GLKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A7C78FC1947E147001617DB /* GLKit.framework */; };
 		C21068BE1C1B04A100815859 /* QuickTime.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C21068A91C19DBCB00815859 /* QuickTime.framework */; };
 		C21068C61C1B417200815859 /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C21068C51C1B417200815859 /* CoreVideo.framework */; };
+		C215BDDC1C75E46E00B4BF16 /* TGInputMessageTemplate.m in Sources */ = {isa = PBXBuildFile; fileRef = C215BDDB1C75E46E00B4BF16 /* TGInputMessageTemplate.m */; };
+		C215BDDF1C76273B00B4BF16 /* TLMessageFwdHeader+Extension.m in Sources */ = {isa = PBXBuildFile; fileRef = C215BDDE1C76273B00B4BF16 /* TLMessageFwdHeader+Extension.m */; };
+		C215BDE31C76422500B4BF16 /* TGMessageEditSender.m in Sources */ = {isa = PBXBuildFile; fileRef = C215BDE21C76422500B4BF16 /* TGMessageEditSender.m */; };
 		C2182BBE19589246002469CA /* TL_localMessageService.m in Sources */ = {isa = PBXBuildFile; fileRef = C2182BBD19589246002469CA /* TL_localMessageService.m */; };
 		C21C7B2C18D7044600253A7A /* MessageSenderItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C21C7B2B18D7044600253A7A /* MessageSenderItem.m */; };
 		C21C7B2F18D7334D00253A7A /* MessageSenderSecretItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C21C7B2E18D7334D00253A7A /* MessageSenderSecretItem.m */; };
@@ -1635,6 +1638,12 @@
 		C210689A1C19D1B700815859 /* QTKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QTKit.framework; path = System/Library/Frameworks/QTKit.framework; sourceTree = SDKROOT; };
 		C21068A91C19DBCB00815859 /* QuickTime.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuickTime.framework; path = System/Library/Frameworks/QuickTime.framework; sourceTree = SDKROOT; };
 		C21068C51C1B417200815859 /* CoreVideo.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreVideo.framework; path = System/Library/Frameworks/CoreVideo.framework; sourceTree = SDKROOT; };
+		C215BDDA1C75E46E00B4BF16 /* TGInputMessageTemplate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGInputMessageTemplate.h; sourceTree = "<group>"; };
+		C215BDDB1C75E46E00B4BF16 /* TGInputMessageTemplate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGInputMessageTemplate.m; sourceTree = "<group>"; };
+		C215BDDD1C76273B00B4BF16 /* TLMessageFwdHeader+Extension.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "TLMessageFwdHeader+Extension.h"; sourceTree = "<group>"; };
+		C215BDDE1C76273B00B4BF16 /* TLMessageFwdHeader+Extension.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "TLMessageFwdHeader+Extension.m"; sourceTree = "<group>"; };
+		C215BDE11C76422500B4BF16 /* TGMessageEditSender.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGMessageEditSender.h; sourceTree = "<group>"; };
+		C215BDE21C76422500B4BF16 /* TGMessageEditSender.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGMessageEditSender.m; sourceTree = "<group>"; };
 		C2182BBC19589246002469CA /* TL_localMessageService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TL_localMessageService.h; sourceTree = "<group>"; };
 		C2182BBD19589246002469CA /* TL_localMessageService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TL_localMessageService.m; sourceTree = "<group>"; };
 		C21C7B2A18D7044600253A7A /* MessageSenderItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MessageSenderItem.h; sourceTree = "<group>"; };
@@ -3666,6 +3675,7 @@
 		0AEE20821821340200F348F2 /* messages */ = {
 			isa = PBXGroup;
 			children = (
+				C215BDCF1C75E1D100B4BF16 /* input-templates */,
 				C241364B1C70AF5900130D2E /* audio */,
 				C2A2B4271BD01FC70083DA8A /* head-chats */,
 				C20F76EA1BBAC191003A1E86 /* hint-view */,
@@ -3873,9 +3883,28 @@
 			name = video;
 			sourceTree = "<group>";
 		};
+		C215BDCF1C75E1D100B4BF16 /* input-templates */ = {
+			isa = PBXGroup;
+			children = (
+				C215BDDA1C75E46E00B4BF16 /* TGInputMessageTemplate.h */,
+				C215BDDB1C75E46E00B4BF16 /* TGInputMessageTemplate.m */,
+			);
+			name = "input-templates";
+			sourceTree = "<group>";
+		};
+		C215BDE01C7641C700B4BF16 /* editor */ = {
+			isa = PBXGroup;
+			children = (
+				C215BDE11C76422500B4BF16 /* TGMessageEditSender.h */,
+				C215BDE21C76422500B4BF16 /* TGMessageEditSender.m */,
+			);
+			name = editor;
+			sourceTree = "<group>";
+		};
 		C21C7B2518D7041700253A7A /* sender */ = {
 			isa = PBXGroup;
 			children = (
+				C215BDE01C7641C700B4BF16 /* editor */,
 				C21C7B3318D737EC00253A7A /* secret */,
 				C21C7B2A18D7044600253A7A /* MessageSenderItem.h */,
 				C21C7B2B18D7044600253A7A /* MessageSenderItem.m */,
@@ -5864,6 +5893,8 @@
 				C2034BE21C3560530080D023 /* TLBotInlineResult+Extension.m */,
 				C24136361C64BFED00130D2E /* TL_documentAttributeAudio+Extension.h */,
 				C24136371C64BFED00130D2E /* TL_documentAttributeAudio+Extension.m */,
+				C215BDDD1C76273B00B4BF16 /* TLMessageFwdHeader+Extension.h */,
+				C215BDDE1C76273B00B4BF16 /* TLMessageFwdHeader+Extension.m */,
 			);
 			name = extensions;
 			sourceTree = "<group>";
@@ -6821,6 +6852,7 @@
 				C2233DA51A07EE4B0056594F /* MessageTableCellSocialView.m in Sources */,
 				C2FA78E91923CB76001A9D1B /* DocumentHistoryFilter.m in Sources */,
 				C24435881A1E018100F9BB38 /* ComposeActionCustomBehavior.m in Sources */,
+				C215BDDC1C75E46E00B4BF16 /* TGInputMessageTemplate.m in Sources */,
 				C21C7B5318D8991D00253A7A /* SecretSenderItem.m in Sources */,
 				C274C3D01AC57201000DFDE4 /* TGPasswosdMainViewController.m in Sources */,
 				C21D482219ABC891000F06E1 /* TMTabViewController.m in Sources */,
@@ -7288,6 +7320,7 @@
 				C222774E19093C8C002AA0F6 /* TMBottomScrollView.m in Sources */,
 				C2034BC81C31C8000080D023 /* ContextBotSenderItem.m in Sources */,
 				C25F91F0197D374F006868F3 /* TimeObserver.m in Sources */,
+				C215BDDF1C76273B00B4BF16 /* TLMessageFwdHeader+Extension.m in Sources */,
 				0ACF9E3C19235F42001F9E1E /* SearchLoadMoreItem.m in Sources */,
 				C2CE53D91BE9060500BBEF5F /* TGProfileHeaderRowItem.m in Sources */,
 				0AF4061E18192B7E00160DB4 /* NSString+MD5.m in Sources */,
@@ -7359,6 +7392,7 @@
 				0ACF9E361921F2EE001F9E1E /* SearchLoaderItem.m in Sources */,
 				0A9EDC4C1897BA0E0037E1BC /* NSApplication+RBLBlockAdditions.m in Sources */,
 				C22A29FF1C209FEE00678172 /* TGModalCompressingView.m in Sources */,
+				C215BDE31C76422500B4BF16 /* TGMessageEditSender.m in Sources */,
 				C2ACCE561ADD2A0600ABEE78 /* TGConversationsViewController.m in Sources */,
 				C2FA78EC1923CBA1001A9D1B /* PhotoHistoryFilter.m in Sources */,
 				C2FF82A31B99C7CE00DE2455 /* TGForceChannelUpdate.m in Sources */,

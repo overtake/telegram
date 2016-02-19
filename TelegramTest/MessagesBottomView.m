@@ -99,6 +99,9 @@
 
 @property (nonatomic,strong) BTRButton *removeAudioRecordButton;
 
+
+@property (nonatomic,strong) TGInputMessageTemplate *template;
+
 @end
 
 @implementation MessagesBottomView
@@ -1848,6 +1851,14 @@ static RBLPopover *popover;
     [self.inputMessageTextField insertText:bot replacementRange:NSMakeRange(0,self.inputMessageTextField.stringValue.length)];
     [self.window makeFirstResponder:self.inputMessageTextField];
     [self.inputMessageTextField setSelectedRange:NSMakeRange(bot.length,0)];
+}
+
+-(void)setTemplate:(TGInputMessageTemplate *)inputTemplate {
+    _template = inputTemplate;
+    
+    [self.sendButton setText:_template.type == TGInputMessageTemplateTypeSimpleText ? NSLocalizedString(@"Message.Send", nil) : NSLocalizedString(@"Message.Save",nil)];
+    
+    [self setInputMessageString:_template.text ? _template.text : @"" disableAnimations:NO];
 }
 
 

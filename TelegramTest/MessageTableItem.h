@@ -36,6 +36,7 @@
 @property (nonatomic,strong) NSAttributedString *via_attr_string;
 
 
+
 @property (nonatomic) BOOL isForwadedMessage;
 @property (nonatomic) BOOL isSelected;
 @property (nonatomic) BOOL isHeaderMessage;
@@ -58,7 +59,8 @@
 
 @property (nonatomic,strong) TGReplyObject *replyObject;
 
-@property (nonatomic,strong,readonly) NSString *viewsCount;
+@property (nonatomic,strong,readonly) NSAttributedString *viewsCountAndSign;
+@property (nonatomic,assign,readonly) NSSize viewsCountAndSignSize;
 
 -(BOOL)updateViews;
 

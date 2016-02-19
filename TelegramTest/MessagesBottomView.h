@@ -8,6 +8,7 @@
 
 #import "TMView.h"
 #import "TGImageAttachmentsController.h"
+#import "TGInputMessageTemplate.h"
 typedef enum {
     MessagesBottomViewNormalState,
     MessagesBottomViewActionsState,
@@ -38,6 +39,7 @@ typedef enum {
 
 - (void)setContextBotString:(NSString *)bot;
 
+-(void)setTemplate:(TGInputMessageTemplate *)inputTemplate;
 - (void)setInputMessageString:(NSString *)message disableAnimations:(BOOL)disableAnimations;
 - (NSString *)inputMessageString;
 - (void)setSectedMessagesCount:(NSUInteger)count enable:(BOOL)enable;

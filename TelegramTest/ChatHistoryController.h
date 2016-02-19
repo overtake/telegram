@@ -78,6 +78,8 @@ typedef void (^selectHandler)(NSArray *result, NSRange range, id controller);
 
 -(int)itemsCount;
 
+-(void)updateMessage:(TL_localMessage *)message;
+
 // protected methods
 
 -(ASQueue *)queue;

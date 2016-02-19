@@ -20,7 +20,7 @@
 
 @implementation TL_localMessage
 
-+(TL_localMessage *)createWithN_id:(int)n_id flags:(int)flags from_id:(int)from_id to_id:(TLPeer *)to_id fwd_from_id:(TLPeer *)fwd_from_id fwd_date:(int)fwd_date reply_to_msg_id:(int)reply_to_msg_id date:(int)date message:(NSString *)message media:(TLMessageMedia *)media fakeId:(int)fakeId randomId:(long)randomId reply_markup:(TLReplyMarkup *)reply_markup  entities:(NSMutableArray *)entities views:(int)views via_bot_id:(int)via_bot_id isViewed:(BOOL)isViewed state:(DeliveryState)state  {
++(TL_localMessage *)createWithN_id:(int)n_id flags:(int)flags from_id:(int)from_id to_id:(TLPeer *)to_id fwd_from:(TLMessageFwdHeader *)fwd_from reply_to_msg_id:(int)reply_to_msg_id date:(int)date message:(NSString *)message media:(TLMessageMedia *)media fakeId:(int)fakeId randomId:(long)randomId reply_markup:(TLReplyMarkup *)reply_markup  entities:(NSMutableArray *)entities views:(int)views via_bot_id:(int)via_bot_id edit_date:(int)edit_date isViewed:(BOOL)isViewed state:(DeliveryState)state  {
     
     TL_localMessage *msg = [[TL_localMessage alloc] init];
     msg.flags = flags;
@@ -28,8 +28,7 @@
     msg.from_id = from_id;
     msg.to_id = to_id;
     msg.date = date;
-    msg.fwd_from_id = fwd_from_id;
-    msg.fwd_date = fwd_date;
+    msg.fwd_from = fwd_from;
     msg.reply_to_msg_id = reply_to_msg_id;
     msg.message = message;
     msg.media = media;
@@ -41,13 +40,14 @@
     msg.views = views;
     msg.viewed = isViewed;
     msg.via_bot_id = via_bot_id;
+    msg.edit_date = edit_date;
     return msg;
 }
 
 
-+(TL_localMessage *)createWithN_id:(int)n_id flags:(int)flags from_id:(int)from_id to_id:(TLPeer *)to_id fwd_from_id:(TLPeer *)fwd_from_id fwd_date:(int)fwd_date reply_to_msg_id:(int)reply_to_msg_id date:(int)date message:(NSString *)message media:(TLMessageMedia *)media fakeId:(int)fakeId randomId:(long)randomId reply_markup:(TLReplyMarkup *)reply_markup entities:(NSMutableArray *)entities views:(int)views via_bot_id:(int)via_bot_id state:(DeliveryState)state pts:(int)pts isViewed:(BOOL)isViewed {
++(TL_localMessage *)createWithN_id:(int)n_id flags:(int)flags from_id:(int)from_id to_id:(TLPeer *)to_id fwd_from:(TLMessageFwdHeader *)fwd_from reply_to_msg_id:(int)reply_to_msg_id date:(int)date message:(NSString *)message media:(TLMessageMedia *)media fakeId:(int)fakeId randomId:(long)randomId reply_markup:(TLReplyMarkup *)reply_markup entities:(NSMutableArray *)entities views:(int)views via_bot_id:(int)via_bot_id edit_date:(int)edit_date state:(DeliveryState)state pts:(int)pts isViewed:(BOOL)isViewed {
     
-    TL_localMessage *msg = [self createWithN_id:n_id flags:flags from_id:from_id to_id:to_id fwd_from_id:fwd_from_id fwd_date:fwd_date reply_to_msg_id:reply_to_msg_id date:date message:message media:media fakeId:fakeId randomId:randomId reply_markup:reply_markup entities:entities views:views via_bot_id:via_bot_id isViewed:isViewed state:state];
+    TL_localMessage *msg = [self createWithN_id:n_id flags:flags from_id:from_id to_id:to_id fwd_from:fwd_from reply_to_msg_id:reply_to_msg_id date:date message:message media:media fakeId:fakeId randomId:randomId reply_markup:reply_markup entities:entities views:views via_bot_id:via_bot_id edit_date:edit_date isViewed:isViewed state:state];
     
     msg.pts = pts;
     
@@ -77,9 +77,7 @@
     return _fUser;
 }
 
--(TLUser *)fromFwdUser {
-    return [[UsersManager sharedManager] find:self.fwd_from_id.user_id];
-}
+
 
 -(void)setDstate:(DeliveryState)dstate {
     BOOL needUpdate = dstate != self.dstate;
@@ -97,7 +95,7 @@
     if([message isKindOfClass:[TL_messageService class]]) {
         msg = [TL_localMessageService createWithFlags:message.flags n_id:message.n_id from_id:message.from_id to_id:message.to_id date:message.date action:message.action fakeId:[MessageSender getFakeMessageId] randomId:rand_long() dstate:DeliveryStateNormal];
     }  else if(![message isKindOfClass:[TL_messageEmpty class]]) {
-        msg = [TL_localMessage createWithN_id:message.n_id flags:message.flags from_id:message.from_id to_id:message.to_id fwd_from_id:message.fwd_from_id fwd_date:message.fwd_date reply_to_msg_id:message.reply_to_msg_id date:message.date message:message.message media:message.media fakeId:[MessageSender getFakeMessageId] randomId:rand_long() reply_markup:message.reply_markup entities:message.entities views:message.views via_bot_id:message.via_bot_id isViewed:NO state:DeliveryStateNormal];
+        msg = [TL_localMessage createWithN_id:message.n_id flags:message.flags from_id:message.from_id to_id:message.to_id fwd_from:message.fwd_from reply_to_msg_id:message.reply_to_msg_id date:message.date message:message.message media:message.media fakeId:[MessageSender getFakeMessageId] randomId:rand_long() reply_markup:message.reply_markup entities:message.entities views:message.views via_bot_id:message.via_bot_id edit_date:message.edit_date isViewed:NO state:DeliveryStateNormal];
         
     } else {
         return (TL_localMessage *) message;
@@ -134,9 +132,7 @@
     [stream writeInt:self.n_id];
     if(self.flags & (1 << 8)) {[stream writeInt:self.from_id];}
     [TLClassStore TLSerialize:self.to_id stream:stream];
-    if(self.flags & (1 << 2)) {[ClassStore TLSerialize:self.fwd_from_id stream:stream];}
-    if(self.flags & (1 << 2)) [stream writeInt:self.fwd_date];
-    if(self.flags & (1 << 12)) {[stream writeInt:self.fwd_post];}
+    if(self.flags & (1 << 2)) {[ClassStore TLSerialize:self.fwd_from stream:stream];}
     if(self.flags & (1 << 11)) {[stream writeInt:self.via_bot_id];}
     if(self.flags & (1 << 3)) [stream writeInt:self.reply_to_msg_id];
     [stream writeInt:self.date];
@@ -159,18 +155,15 @@
         }}
     
     if(self.flags & (1 << 10)) {[stream writeInt:self.views];}
+    if(self.flags & (1 << 15)) {[stream writeInt:self.edit_date];}
     
-    
-
 }
 -(void)unserialize:(SerializedData*)stream {
     self.flags = [stream readInt];
     self.n_id = [stream readInt];
     if(self.flags & (1 << 8)) {self.from_id = [stream readInt];}
     self.to_id = [TLClassStore TLDeserialize:stream];
-    if(self.flags & (1 << 2)) {self.fwd_from_id = [ClassStore TLDeserialize:stream];}
-    if(self.flags & (1 << 2)) self.fwd_date = [stream readInt];
-    if(self.flags & (1 << 12)) {super.fwd_post = [stream readInt];}
+    if(self.flags & (1 << 2)) {self.fwd_from = [ClassStore TLDeserialize:stream];}
     if(self.flags & (1 << 11)) {self.via_bot_id = [stream readInt];}
     if(self.flags & (1 << 3)) self.reply_to_msg_id = [stream readInt];
     self.date = [stream readInt];
@@ -198,17 +191,27 @@
     
    
     if(self.flags & (1 << 10)) {self.views = [stream readInt];}
-
+    if(self.flags & (1 << 15)) {self.edit_date = [stream readInt];}
 }
 
 
 
--(TLPeer *)fwd_from_id {
-    if(self.fwd_from_id_old != 0)
-        return [TL_peerUser createWithUser_id:self.fwd_from_id_old];
+-(TLMessageFwdHeader *)fwd_from {
     
-    return [super fwd_from_id];
+    TLMessageFwdHeader *header = [super fwd_from];
+    
+    if(header == nil && self.fwd_date_old != 0) {
+    
+        int from_id = self.fwd_from_id_old != 0 ? self.fwd_from_id_old : self.fwd_from_id_old_object ? [self.fwd_from_id_old_object isKindOfClass:[TL_peerUser class]] ? self.fwd_from_id_old_object.user_id : 0 : 0;
+        
+        header = [TL_messageFwdHeader createWithFlags:0 from_id:from_id date:self.fwd_date_old channel_id:self.fwd_from_id_old_object.channel_id channel_post:0];
+        
+        super.fwd_from = header;
+    }
+    
+    return header;
 }
+
 
 
 -(int)peer_id {
@@ -274,6 +277,10 @@
 
 -(BOOL)isChannelMessage {
     return [self.to_id isKindOfClass:[TL_peerChannel class]];
+}
+
+-(BOOL)isChannelPostMessage {
+    return self.from_id == 0 || self.isPost;
 }
 
 -(BOOL)unread {
@@ -390,28 +397,6 @@ DYNAMIC_PROPERTY(DDialog);
     
 }
 
--(void)setMedia:(TLMessageMedia*)media
-{
-    [super setMedia:media];
-    
-    if(self.media == nil)  { self.flags&= ~ (1 << 9) ;} else { self.flags|= (1 << 9); }
-}
-
--(void)setFrom_id:(int)from_id
-{
-    [super setFrom_id:from_id];
-    
-    if(self.from_id == 0)  { self.flags&= ~ (1 << 8) ;} else { self.flags|= (1 << 8); }
-}
-
-
--(void)setEntities:(NSMutableArray*)entities
-{
-    [super setEntities:entities];
-    
-    if(self.entities == nil)  { self.flags&= ~ (1 << 7) ;} else { self.flags|= (1 << 7); }
-}
-
 -(long)channelMsgId {
     return self.isChannelMessage ? channelMsgId(self.n_id,self.peer_id) : self.n_id;
 }
@@ -438,14 +423,14 @@ long channelMsgId(int msg_id, int peer_id) {
 }
 
 -(id)fwdObject {
-    if([self.fwd_from_id isKindOfClass:[TL_peerUser class]]) {
-        return [[UsersManager sharedManager] find:self.fwd_from_id.user_id];
+    if(self.fwd_from.from_id != 0) {
+        return [[UsersManager sharedManager] find:self.fwd_from.from_id];
     } else
-        return [[ChatsManager sharedManager] find:self.fwd_from_id.chat_id != 0 ? self.fwd_from_id.chat_id : self.fwd_from_id.channel_id];
+        return [[ChatsManager sharedManager] find:self.fwd_from.channel_id];
 }
 
 -(id)copy {
-    return [TL_localMessage createWithN_id:self.n_id flags:self.flags from_id:self.from_id to_id:self.to_id fwd_from_id:self.fwd_from_id fwd_date:self.fwd_date reply_to_msg_id:self.reply_to_msg_id date:self.date message:self.message media:self.media fakeId:self.fakeId randomId:self.randomId reply_markup:self.reply_markup entities:self.entities views:self.views via_bot_id:self.via_bot_id state:self.dstate pts:self.pts isViewed:self.isViewed];
+    return [TL_localMessage createWithN_id:self.n_id flags:self.flags from_id:self.from_id to_id:self.to_id fwd_from:self.fwd_from reply_to_msg_id:self.reply_to_msg_id date:self.date message:self.message media:self.media fakeId:self.fakeId randomId:self.randomId reply_markup:self.reply_markup entities:self.entities views:self.views via_bot_id:self.via_bot_id edit_date:self.edit_date state:self.dstate pts:self.pts isViewed:self.isViewed];
 }
 
 -(void)dealloc {

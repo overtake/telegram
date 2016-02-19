@@ -2,7 +2,7 @@
 //  MTProto.h
 //  Telegram
 //
-//  Auto created by Mikhail Filimonov on 16.02.16.
+//  Auto created by Mikhail Filimonov on 18.02.16.
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -417,6 +417,12 @@
 @interface TLExportedMessageLink : TLObject
 @end
 	
+@interface TLMessageFwdHeader : TLObject
+@end
+	
+@interface TLchannels_MessageEditData : TLObject
+@end
+	
 @interface TLAudio : TLObject
 @end
 	
@@ -800,6 +806,7 @@
 @property (nonatomic,assign,readonly) BOOL isBot_nochats;
 @property (nonatomic,assign,readonly) BOOL isVerified;
 @property (nonatomic,assign,readonly) BOOL isRestricted;
+@property (nonatomic,assign,readonly) BOOL isMin;
 @property long access_hash;
 @property (nonatomic, strong) NSString* first_name;
 @property (nonatomic, strong) NSString* last_name;
@@ -817,7 +824,7 @@
 +(TL_userEmpty*)createWithN_id:(int)n_id;
 @end
 @interface TL_user : TLUser<NSCoding>
-+(TL_user*)createWithFlags:(int)flags          n_id:(int)n_id access_hash:(long)access_hash first_name:(NSString*)first_name last_name:(NSString*)last_name username:(NSString*)username phone:(NSString*)phone photo:(TLUserProfilePhoto*)photo status:(TLUserStatus*)status bot_info_version:(int)bot_info_version restriction_reason:(NSString*)restriction_reason bot_inline_placeholder:(NSString*)bot_inline_placeholder;
++(TL_user*)createWithFlags:(int)flags           n_id:(int)n_id access_hash:(long)access_hash first_name:(NSString*)first_name last_name:(NSString*)last_name username:(NSString*)username phone:(NSString*)phone photo:(TLUserProfilePhoto*)photo status:(TLUserStatus*)status bot_info_version:(int)bot_info_version restriction_reason:(NSString*)restriction_reason bot_inline_placeholder:(NSString*)bot_inline_placeholder;
 @end
 @interface TL_userSelf : TLUser<NSCoding>
 +(TL_userSelf*)createWithN_id:(int)n_id first_name:(NSString*)first_name last_name:(NSString*)last_name username:(NSString*)username phone:(NSString*)phone photo:(TLUserProfilePhoto*)photo status:(TLUserStatus*)status;
@@ -1029,9 +1036,7 @@
 @property (nonatomic,assign,readonly) BOOL isPost;
 @property int from_id;
 @property (nonatomic, strong) TLPeer* to_id;
-@property (nonatomic, strong) TLPeer* fwd_from_id;
-@property int fwd_date;
-@property int fwd_post;
+@property (nonatomic, strong) TLMessageFwdHeader* fwd_from;
 @property int via_bot_id;
 @property int reply_to_msg_id;
 @property int date;
@@ -1040,6 +1045,7 @@
 @property (nonatomic, strong) TLReplyMarkup* reply_markup;
 @property (nonatomic, strong) NSMutableArray* entities;
 @property int views;
+@property int edit_date;
 @property (nonatomic, strong) TLMessageAction* action;
 @end
 
@@ -1047,10 +1053,10 @@
 +(TL_messageEmpty*)createWithN_id:(int)n_id;
 @end
 @interface TL_message : TLMessage<NSCoding>
-+(TL_message*)createWithFlags:(int)flags       n_id:(int)n_id from_id:(int)from_id to_id:(TLPeer*)to_id fwd_from_id:(TLPeer*)fwd_from_id fwd_date:(int)fwd_date fwd_post:(int)fwd_post via_bot_id:(int)via_bot_id reply_to_msg_id:(int)reply_to_msg_id date:(int)date message:(NSString*)message media:(TLMessageMedia*)media reply_markup:(TLReplyMarkup*)reply_markup entities:(NSMutableArray*)entities views:(int)views;
++(TL_message*)createWithFlags:(int)flags       n_id:(int)n_id from_id:(int)from_id to_id:(TLPeer*)to_id fwd_from:(TLMessageFwdHeader*)fwd_from via_bot_id:(int)via_bot_id reply_to_msg_id:(int)reply_to_msg_id date:(int)date message:(NSString*)message media:(TLMessageMedia*)media reply_markup:(TLReplyMarkup*)reply_markup entities:(NSMutableArray*)entities views:(int)views edit_date:(int)edit_date;
 @end
 @interface TL_messageService : TLMessage<NSCoding>
-+(TL_messageService*)createWithFlags:(int)flags     n_id:(int)n_id from_id:(int)from_id to_id:(TLPeer*)to_id date:(int)date action:(TLMessageAction*)action;
++(TL_messageService*)createWithFlags:(int)flags       n_id:(int)n_id from_id:(int)from_id to_id:(TLPeer*)to_id date:(int)date action:(TLMessageAction*)action;
 @end
 	
 @interface TLMessageMedia()
@@ -1602,7 +1608,7 @@
 @property long query_id;
 @property (nonatomic, strong) NSString* query;
 @property (nonatomic, strong) NSString* offset;
-@property (nonatomic, strong) NSString* bot_inline_id;
+@property (nonatomic, strong) NSString* update_bot_inline_id;
 @end
 
 @interface TL_updateNewMessage : TLUpdate<NSCoding>
@@ -1732,7 +1738,10 @@
 +(TL_updateBotInlineQuery*)createWithQuery_id:(long)query_id user_id:(int)user_id query:(NSString*)query offset:(NSString*)offset;
 @end
 @interface TL_updateBotInlineSend : TLUpdate<NSCoding>
-+(TL_updateBotInlineSend*)createWithUser_id:(int)user_id query:(NSString*)query bot_inline_id:(NSString*)bot_inline_id;
++(TL_updateBotInlineSend*)createWithUser_id:(int)user_id query:(NSString*)query update_bot_inline_id:(NSString*)update_bot_inline_id;
+@end
+@interface TL_updateEditChannelMessage : TLUpdate<NSCoding>
++(TL_updateEditChannelMessage*)createWithMessage:(TLMessage*)message pts:(int)pts pts_count:(int)pts_count;
 @end
 	
 @interface TLupdates_State()
@@ -1782,9 +1791,7 @@
 @property int pts;
 @property int pts_count;
 @property int date;
-@property (nonatomic, strong) TLPeer* fwd_from_id;
-@property int fwd_date;
-@property int fwd_post;
+@property (nonatomic, strong) TLMessageFwdHeader* fwd_from;
 @property int via_bot_id;
 @property int reply_to_msg_id;
 @property (nonatomic, strong) NSMutableArray* entities;
@@ -1803,10 +1810,10 @@
 +(TL_updatesTooLong*)create;
 @end
 @interface TL_updateShortMessage : TLUpdates<NSCoding>
-+(TL_updateShortMessage*)createWithFlags:(int)flags      n_id:(int)n_id user_id:(int)user_id message:(NSString*)message pts:(int)pts pts_count:(int)pts_count date:(int)date fwd_from_id:(TLPeer*)fwd_from_id fwd_date:(int)fwd_date fwd_post:(int)fwd_post via_bot_id:(int)via_bot_id reply_to_msg_id:(int)reply_to_msg_id entities:(NSMutableArray*)entities;
++(TL_updateShortMessage*)createWithFlags:(int)flags      n_id:(int)n_id user_id:(int)user_id message:(NSString*)message pts:(int)pts pts_count:(int)pts_count date:(int)date fwd_from:(TLMessageFwdHeader*)fwd_from via_bot_id:(int)via_bot_id reply_to_msg_id:(int)reply_to_msg_id entities:(NSMutableArray*)entities;
 @end
 @interface TL_updateShortChatMessage : TLUpdates<NSCoding>
-+(TL_updateShortChatMessage*)createWithFlags:(int)flags      n_id:(int)n_id from_id:(int)from_id chat_id:(int)chat_id message:(NSString*)message pts:(int)pts pts_count:(int)pts_count date:(int)date fwd_from_id:(TLPeer*)fwd_from_id fwd_date:(int)fwd_date fwd_post:(int)fwd_post via_bot_id:(int)via_bot_id reply_to_msg_id:(int)reply_to_msg_id entities:(NSMutableArray*)entities;
++(TL_updateShortChatMessage*)createWithFlags:(int)flags      n_id:(int)n_id from_id:(int)from_id chat_id:(int)chat_id message:(NSString*)message pts:(int)pts pts_count:(int)pts_count date:(int)date fwd_from:(TLMessageFwdHeader*)fwd_from via_bot_id:(int)via_bot_id reply_to_msg_id:(int)reply_to_msg_id entities:(NSMutableArray*)entities;
 @end
 @interface TL_updateShort : TLUpdates<NSCoding>
 +(TL_updateShort*)createWithUpdate:(TLUpdate*)update date:(int)date;
@@ -1886,11 +1893,12 @@
 @property int push_chat_period_ms;
 @property int push_chat_limit;
 @property int saved_gifs_limit;
+@property int edit_time_limit;
 @property (nonatomic, strong) NSMutableArray* disabled_features;
 @end
 
 @interface TL_config : TLConfig<NSCoding>
-+(TL_config*)createWithDate:(int)date expires:(int)expires test_mode:(Boolean)test_mode this_dc:(int)this_dc dc_options:(NSMutableArray*)dc_options chat_size_max:(int)chat_size_max megagroup_size_max:(int)megagroup_size_max forwarded_count_max:(int)forwarded_count_max online_update_period_ms:(int)online_update_period_ms offline_blur_timeout_ms:(int)offline_blur_timeout_ms offline_idle_timeout_ms:(int)offline_idle_timeout_ms online_cloud_timeout_ms:(int)online_cloud_timeout_ms notify_cloud_delay_ms:(int)notify_cloud_delay_ms notify_default_delay_ms:(int)notify_default_delay_ms chat_big_size:(int)chat_big_size push_chat_period_ms:(int)push_chat_period_ms push_chat_limit:(int)push_chat_limit saved_gifs_limit:(int)saved_gifs_limit disabled_features:(NSMutableArray*)disabled_features;
++(TL_config*)createWithDate:(int)date expires:(int)expires test_mode:(Boolean)test_mode this_dc:(int)this_dc dc_options:(NSMutableArray*)dc_options chat_size_max:(int)chat_size_max megagroup_size_max:(int)megagroup_size_max forwarded_count_max:(int)forwarded_count_max online_update_period_ms:(int)online_update_period_ms offline_blur_timeout_ms:(int)offline_blur_timeout_ms offline_idle_timeout_ms:(int)offline_idle_timeout_ms online_cloud_timeout_ms:(int)online_cloud_timeout_ms notify_cloud_delay_ms:(int)notify_cloud_delay_ms notify_default_delay_ms:(int)notify_default_delay_ms chat_big_size:(int)chat_big_size push_chat_period_ms:(int)push_chat_period_ms push_chat_limit:(int)push_chat_limit saved_gifs_limit:(int)saved_gifs_limit edit_time_limit:(int)edit_time_limit disabled_features:(NSMutableArray*)disabled_features;
 @end
 	
 @interface TLNearestDc()
@@ -2950,6 +2958,31 @@
 
 @interface TL_exportedMessageLink : TLExportedMessageLink<NSCoding>
 +(TL_exportedMessageLink*)createWithLink:(NSString*)link;
+@end
+	
+@interface TLMessageFwdHeader()
+@property int flags;
+@property int from_id;
+@property int date;
+@property int channel_id;
+@property int channel_post;
+@end
+
+@interface TL_messageFwdHeader : TLMessageFwdHeader<NSCoding>
++(TL_messageFwdHeader*)createWithFlags:(int)flags from_id:(int)from_id date:(int)date channel_id:(int)channel_id channel_post:(int)channel_post;
+@end
+	
+@interface TLchannels_MessageEditData()
+@property int flags;
+@property (nonatomic,assign,readonly) BOOL isCaption;
+@property int from_id;
+@property int edit_by;
+@property int edit_date;
+@property (nonatomic, strong) NSMutableArray* users;
+@end
+
+@interface TL_channels_messageEditData : TLchannels_MessageEditData<NSCoding>
++(TL_channels_messageEditData*)createWithFlags:(int)flags  from_id:(int)from_id edit_by:(int)edit_by edit_date:(int)edit_date users:(NSMutableArray*)users;
 @end
 	
 @interface TLAudio()

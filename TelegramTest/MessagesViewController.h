@@ -34,7 +34,8 @@
 typedef enum {
     MessagesViewControllerStateNone,
     MessagesViewControllerStateEditable,
-    MessagesViewControllerStateFiltred
+    MessagesViewControllerStateFiltred,
+    MessagesViewControllerStateEditMessage
 } MessagesViewControllerState;
 
 @property (nonatomic, strong) NSMutableArray *selectedMessages;
@@ -181,5 +182,7 @@ typedef enum {
 -(void)selectInputTextByText:(NSString *)text;
 
 -(TGMessagesHintView *)hintView;
+
+-(void)setEditableMessage:(TL_localMessage *)message;
 
 @end

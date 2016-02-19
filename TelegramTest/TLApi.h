@@ -2,7 +2,7 @@
 //  TLApi.h
 //  Telegram
 //
-//  Auto created by Mikhail Filimonov on 16.02.16.
+//  Auto created by Mikhail Filimonov on 18.02.16.
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -1142,5 +1142,23 @@
 @property Boolean enabled;
 
 +(TLAPI_channels_toggleSignatures*)createWithChannel:(TLInputChannel*)channel enabled:(Boolean)enabled;
+@end
+
+@interface TLAPI_channels_getMessageEditData : TLApiObject
+@property (nonatomic, strong) TLInputChannel* channel;
+@property int n_id;
+
++(TLAPI_channels_getMessageEditData*)createWithChannel:(TLInputChannel*)channel n_id:(int)n_id;
+@end
+
+@interface TLAPI_channels_editMessage : TLApiObject
+@property int flags;
+@property (nonatomic,assign,readonly) BOOL isNo_webpage;
+@property (nonatomic, strong) TLInputChannel* channel;
+@property int n_id;
+@property (nonatomic, strong) NSString* message;
+@property (nonatomic, strong) NSMutableArray* entities;
+
++(TLAPI_channels_editMessage*)createWithFlags:(int)flags  channel:(TLInputChannel*)channel n_id:(int)n_id message:(NSString*)message entities:(NSMutableArray*)entities;
 @end
 

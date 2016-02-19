@@ -54,6 +54,9 @@ int maxChatUsers();
 void setMegagroupSizeMax(int b);
 int megagroupSizeMax();
 
+void set_edit_time_limit(int limit);
+int edit_time_limit();
+
 @property (nonatomic) BOOL isWindowActive;
 @property (nonatomic, assign) BOOL isOnline;
 

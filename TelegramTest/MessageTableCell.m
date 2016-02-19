@@ -36,7 +36,7 @@
         }
     }
     
-    if(item.message.isChannelMessage && item.message.from_id == 0 && !item.message.isViewed) {
+    if(item.message.isChannelMessage && item.message.isChannelPostMessage && !item.message.isViewed) {
         if(![item.message isKindOfClass:[TL_localMessageService class]]) {
             item.message.viewed = YES;
             [TGMessageViewSender addItem:item];
@@ -124,6 +124,35 @@
     
     weak();
     
+    
+    if(self.item.message.chat.isChannel) {
+        BOOL canEdit = self.item.message.isPost ?  self.item.message.chat.isCreator || (self.item.message.chat.isEditor && self.item.message.from_id == [UsersManager currentUserId]) : self.item.message.from_id == [UsersManager currentUserId];
+        
+        canEdit = canEdit && ([self.item isKindOfClass:[MessageTableItemText class]] || self.item.message.media.caption.length > 0);
+        
+        if(canEdit && self.item.message.date + edit_time_limit() > [[MTNetwork instance] getTime]) {
+            [items addObject:[NSMenuItem menuItemWithTitle:NSLocalizedString(@"Context.Edit", nil) withBlock:^(id sender) {
+                
+                [weakSelf.messagesViewController showModalProgress];
+                
+                [RPCRequest sendRequest:[TLAPI_channels_getMessageEditData createWithChannel:weakSelf.item.message.chat.inputPeer n_id:weakSelf.item.message.n_id] successHandler:^(id request, id response) {
+                    
+                    [SharedManager proccessGlobalResponse:response];
+                    
+                    [weakSelf.messagesViewController setEditableMessage:weakSelf.item.message];
+                    
+                    [weakSelf.messagesViewController hideModalProgress];
+                    
+                } errorHandler:^(id request, RpcError *error) {
+                    [weakSelf.messagesViewController hideModalProgress];
+                }];
+
+            }]];
+            
+        }
+    }
+    
+    
     if([self.item.message.conversation canSendMessage]) {
         
         if(self.item.message.conversation.type != DialogTypeSecretChat || self.item.message.conversation.encryptedChat.encryptedParams.layer >= 45) {
@@ -134,6 +163,8 @@
             }]];
         }
     }
+    
+
     
     if([self.item canShare]) {
         

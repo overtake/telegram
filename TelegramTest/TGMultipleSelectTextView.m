@@ -90,7 +90,7 @@
                 
                 NSString *userName = @"";
                 
-                if(obj.message.fwd_from_id != 0) {
+                if(obj.message.fwd_from != nil) {
                     if(obj.fwd_user.username.length > 0) {
                         userName = [NSString stringWithFormat:@"@%@",obj.fwd_user.username];
                     } else {

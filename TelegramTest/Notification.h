@@ -75,6 +75,7 @@ extern NSString *const BROADCAST_STATUS;
 extern NSString *const PUSHNOTIFICATION_UPDATE;
 
 extern NSString *const UPDATE_MESSAGE_ITEM;
+extern NSString *const UPDATE_EDITED_MESSAGE;
 
 extern NSString *const UPDATE_WEB_PAGE_ITEMS;
 extern NSString *const UPDATE_NEW_AUTH;

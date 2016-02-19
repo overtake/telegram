@@ -18,19 +18,23 @@ typedef enum {
     MessageOutStateError = 2
 } MessageOutState;
 
-+(TL_localMessage *)createWithN_id:(int)n_id flags:(int)flags from_id:(int)from_id to_id:(TLPeer *)to_id fwd_from_id:(TLPeer *)fwd_from_id fwd_date:(int)fwd_date reply_to_msg_id:(int)reply_to_msg_id date:(int)date message:(NSString *)message media:(TLMessageMedia *)media fakeId:(int)fakeId randomId:(long)randomId reply_markup:(TLReplyMarkup *)reply_markup entities:(NSMutableArray *)entities views:(int)views via_bot_id:(int)via_bot_id isViewed:(BOOL)isViewed state:(DeliveryState)state;
++(TL_localMessage *)createWithN_id:(int)n_id flags:(int)flags from_id:(int)from_id to_id:(TLPeer *)to_id fwd_from:(TLMessageFwdHeader *)fwd_from reply_to_msg_id:(int)reply_to_msg_id date:(int)date message:(NSString *)message media:(TLMessageMedia *)media fakeId:(int)fakeId randomId:(long)randomId reply_markup:(TLReplyMarkup *)reply_markup entities:(NSMutableArray *)entities views:(int)views via_bot_id:(int)via_bot_id edit_date:(int)edit_date isViewed:(BOOL)isViewed state:(DeliveryState)state;
 
-+(TL_localMessage *)createWithN_id:(int)n_id flags:(int)flags from_id:(int)from_id to_id:(TLPeer *)to_id fwd_from_id:(TLPeer *)fwd_from_id fwd_date:(int)fwd_date reply_to_msg_id:(int)reply_to_msg_id date:(int)date message:(NSString *)message media:(TLMessageMedia *)media fakeId:(int)fakeId randomId:(long)randomId reply_markup:(TLReplyMarkup *)reply_markup entities:(NSMutableArray *)entities views:(int)views via_bot_id:(int)via_bot_id state:(DeliveryState)state pts:(int)pts isViewed:(BOOL)isViewed;
++(TL_localMessage *)createWithN_id:(int)n_id flags:(int)flags from_id:(int)from_id to_id:(TLPeer *)to_id fwd_from:(TLMessageFwdHeader *)fwd_from reply_to_msg_id:(int)reply_to_msg_id date:(int)date message:(NSString *)message media:(TLMessageMedia *)media fakeId:(int)fakeId randomId:(long)randomId reply_markup:(TLReplyMarkup *)reply_markup entities:(NSMutableArray *)entities views:(int)views via_bot_id:(int)via_bot_id edit_date:(int)edit_date state:(DeliveryState)state pts:(int)pts isViewed:(BOOL)isViewed;
 
 
 @property (nonatomic,assign) int fakeId;
 @property (nonatomic,assign) long randomId;
 @property (nonatomic,assign) int pts;
 @property (nonatomic,assign) DeliveryState dstate;
-@property (nonatomic,assign) int fwd_from_id_old;
+
 @property (nonatomic,assign,getter=isViewed) BOOL viewed;
 @property (nonatomic,copy) dispatch_block_t didChangedDeliveryState;
 
+
+@property (nonatomic,assign) int fwd_from_id_old;
+@property (nonatomic,strong) TLPeer *fwd_from_id_old_object;
+@property (nonatomic,assign) int fwd_date_old;
 
 @property (nonatomic,assign,getter=isInvalidate) BOOL invalidate;
 
@@ -63,5 +67,7 @@ long channelMsgId(int msg_id, int peer_id);
 -(int)filterType;
 
 -(TLUser *)fromUser;
--(TLUser *)fromFwdUser;
+
+-(BOOL)isChannelPostMessage;
+
 @end

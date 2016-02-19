@@ -28,7 +28,7 @@
 #import "TL_outDocument.h"
 #import "TL_secretWebpage.h"
 #import "TL_localMessageService.h"
-
+#import "TLMessageFwdHeader+Extension.h"
 #import "TL_secretServiceMessage.h"
 #import "TL_messageActionSetMessageTTL.h"
 #import "TL_peerSecret.h"
