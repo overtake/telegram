@@ -744,9 +744,6 @@ static BOOL dragAction = NO;
     
     [self setSelected:item.isSelected];
     
-    NSSize stateLayerSize = NSMakeSize(MIN(item.message.isChannelPostMessage ? item.viewsCountAndSignSize.width + 20 : 30,NSWidth(item.table.frame) - NSMaxX(self.nameTextField.frame)), NSHeight(_stateLayer.frame));
-    
-    [self.stateLayer setFrameSize:stateLayerSize];
     
 
     [self checkActionState:YES];
@@ -796,7 +793,9 @@ static BOOL dragAction = NO;
         _shareButton = nil;
     }
     
-   
+    NSSize stateLayerSize = NSMakeSize(MIN(item.message.isChannelPostMessage ? item.viewsCountAndSignSize.width + 20 : 30,NSWidth(item.table.frame) - NSMaxX(self.nameTextField.frame)), NSHeight(_stateLayer.frame));
+    
+    [self.stateLayer setFrameSize:stateLayerSize];
 
 }
 
