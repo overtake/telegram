@@ -396,7 +396,12 @@ void exceptionHandler(NSException * exception)
 }
 
 - (void)initializeKeyDownHandler {
+    
+    static BOOL buttonRecordIsUp = YES;
+    
     id block = ^(NSEvent *incomingEvent) {
+
+        
         NSEvent *result = incomingEvent;
         
         if(result.window != self.mainWindow) {
@@ -539,11 +544,17 @@ void exceptionHandler(NSException * exception)
             
             if(![TMViewController isModalActive]) {
                 
-                if([Telegram rightViewController].messagesViewController.inputText.length > 0) {
-                    return incomingEvent;
-                } else {
-                     [[[Telegram sharedInstance] firstController] backOrClose:[[NSMenuItem alloc] initWithTitle:@"Profile.Back" action:@selector(backOrClose:) keyEquivalent:@""]];
+                BOOL res = [appWindow().navigationController.messagesViewController.bottomView removeQuickRecord];
+                
+                if(!res) {
+                    if(appWindow().navigationController.messagesViewController.inputText.length > 0) {
+                        return incomingEvent;
+                    } else {
+                       [[[Telegram sharedInstance] firstController] backOrClose:[[NSMenuItem alloc] initWithTitle:@"Profile.Back" action:@selector(backOrClose:) keyEquivalent:@""]];
+                    }
                 }
+                
+                
             
             } else {
                 
@@ -664,9 +675,12 @@ void exceptionHandler(NSException * exception)
                 
                  return [[NSEvent alloc]init];
             } else if(result.keyCode == 15) { // cmd+r for audio record
-                [appWindow().navigationController.messagesViewController.bottomView startQuickRecord];
-                
+                if(buttonRecordIsUp) {
+                    buttonRecordIsUp = NO;
+                    [appWindow().navigationController.messagesViewController.bottomView startOrStopQuickRecord];
+                }
                 return [[NSEvent alloc]init];
+                
             }
             
             
@@ -675,14 +689,13 @@ void exceptionHandler(NSException * exception)
         return result;
     };
     
-    id upBlock = ^(NSEvent *incomingEvent) {
-        
-         [appWindow().navigationController.messagesViewController.bottomView stopQuickRecord];
-        
-        return incomingEvent;
-    };
+     id keyUpblock = ^(NSEvent *incomingEvent) {
+         buttonRecordIsUp = YES;
+         
+         return incomingEvent;
+     };
     
-    [NSEvent addLocalMonitorForEventsMatchingMask:(NSKeyUpMask) handler:upBlock];
+    [NSEvent addLocalMonitorForEventsMatchingMask:(NSKeyUpMask) handler:keyUpblock];
     
     [NSEvent addLocalMonitorForEventsMatchingMask:(NSKeyDownMask) handler:block];
     

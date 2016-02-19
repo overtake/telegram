@@ -201,8 +201,8 @@
         
         if(!_topItem) {
             NSRange visibleRows = [self rowsInRect:self.scrollView.contentView.bounds];
-            _topItem = (MessageTableItem *)[self itemByPosition:visibleRows.location + visibleRows.length];
-            _topItemRect = [self rectOfRow:visibleRows.location + visibleRows.length];
+            _topItem = (MessageTableItem *)[self itemByPosition:visibleRows.location + visibleRows.length -1];
+            _topItemRect = [self rectOfRow:visibleRows.location + visibleRows.length -1 ];
             _yTopOffset =  self.scrollView.documentOffset.y + NSHeight(self.containerView.frame) - (_topItemRect.origin.y);
         }
         

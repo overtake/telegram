@@ -155,6 +155,7 @@
         [self.fwdName setBordered:NO];
         [self.fwdName setDrawsBackground:NO];
         [self.fwdName setAutoresizingMask:NSViewWidthSizable];
+        [[self.fwdName cell] setTruncatesLastVisibleLine:YES];
         [[self.fwdName cell] setLineBreakMode:NSLineBreakByTruncatingTail];
         [self.fwdContainer addSubview:self.fwdName];
     }
@@ -249,6 +250,8 @@
     if(!self.nameTextField) {
         self.nameTextField = [[TMHyperlinkTextField alloc] initWithFrame:NSMakeRect(0, 0, 200, 20)];
         [self.nameTextField setBordered:NO];
+        [[self.nameTextField cell] setTruncatesLastVisibleLine:YES];
+        [[self.nameTextField cell] setLineBreakMode:NSLineBreakByTruncatingTail];
         [self.nameTextField setFont:TGSystemMediumFont(13)];
         [self.nameTextField setDrawsBackground:NO];
         
@@ -648,8 +651,18 @@ static BOOL dragAction = NO;
     [super setItem:item];
     
     [self.progressView setCurrentProgress:0];
-        
+    
     self.stateLayer.container = self;
+    
+    [self checkActionState:YES];
+    
+    //  Layers ;)
+    
+    [self.dateLayer setStringValue:item.dateStr];
+    [self.dateLayer setFrameSize:CGSizeMake(item.dateSize.width, item.dateSize.height)];
+    [self.dateLayer setFrameOrigin:CGPointMake(NSMaxX(_stateLayer.frame), NSMinY(self.dateLayer.frame))];
+    [self.rightView setFrameSize:CGSizeMake(item.dateSize.width + offserUnreadMark + NSWidth(self.stateLayer.frame) + 15 , 18)];
+    [self.rightView setToolTip:self.item.fullDate];
     
     if(item.isForwadedMessage) {
         
@@ -699,6 +712,8 @@ static BOOL dragAction = NO;
 
     if(item.isHeaderMessage) {
         [self initHeader];
+//        [self.nameTextField setBackgroundColor:[NSColor redColor]];
+//        [self.nameTextField setDrawsBackground:YES];
         [self.nameTextField setAttributedStringValue:item.headerName];
         [self.nameTextField setFrameOrigin:NSMakePoint(item.containerOffset - 2, item.viewSize.height - 24)];
         if(!item.message.isChannelPostMessage)
@@ -746,15 +761,7 @@ static BOOL dragAction = NO;
     
     
 
-    [self checkActionState:YES];
-    
-  //  Layers ;)
-    
-    [self.dateLayer setStringValue:item.dateStr];
-    [self.dateLayer setFrameSize:CGSizeMake(item.dateSize.width, item.dateSize.height)];
-    [self.dateLayer setFrameOrigin:CGPointMake(NSMaxX(_stateLayer.frame), NSMinY(self.dateLayer.frame))];
-    [self.rightView setFrameSize:CGSizeMake(item.dateSize.width + offserUnreadMark + NSWidth(self.stateLayer.frame) + 15 , 18)];
-    [self.rightView setToolTip:self.item.fullDate];
+ 
     
     [self setNeedsDisplay:YES];
     

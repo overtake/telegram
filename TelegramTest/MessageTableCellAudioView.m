@@ -197,7 +197,7 @@
     
     if(cellState == CellStateDownloading || cellState == CellStateSending || cellState == CellStateNeedDownload) {
         _waveformView.defaultColor = NSColorFromRGB(0xced9e0);
-        _waveformView.progressColor = NSColorFromRGB(0x4ca2e0);
+        _waveformView.progressColor = !self.item.message.chat.isChannel ? NSColorFromRGB(0x4ca2e0) : NSColorFromRGB(0xced9e0);
     }
     
     if(self.item.state == AudioStateWaitPlaying) {
