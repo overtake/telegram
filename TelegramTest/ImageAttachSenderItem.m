@@ -43,11 +43,8 @@
         
         [TGCache cacheImage:attach.image forKey:size.location.cacheKey groups:@[IMGCACHE]];
         
-        self.message = [MessageSender createOutMessage:@"" media:photo conversation:conversation];
+        self.message = [MessageSender createOutMessage:@"" media:photo conversation:conversation additionFlags:additionFlags];
         
-        if(additionFlags & (1 << 4))
-            self.message.from_id = 0;
-
          [[NSFileManager defaultManager] copyItemAtPath:path toPath:mediaFilePath(self.message) error:nil];
         
         [self.message save:YES];

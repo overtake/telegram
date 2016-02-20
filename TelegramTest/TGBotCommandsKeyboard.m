@@ -156,6 +156,8 @@
 -(void)load {
     
     _rows = nil;
+    
+    
 
     __block TL_localMessage *keyboard;
     

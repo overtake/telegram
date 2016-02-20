@@ -50,16 +50,17 @@
             
             [ids addObject:@([f n_id])];
             
-            TL_messageFwdHeader *fwdHeader = [TL_messageFwdHeader createWithFlags:0 from_id:0 date:0 channel_id:0 channel_post:0];
+            TL_messageFwdHeader *fwdHeader = [TL_messageFwdHeader createWithFlags:0 from_id:f.from_id date:[[MTNetwork instance] getTime] channel_id:[f.to_id isKindOfClass:[TL_peerChannel class]] ? f.to_id.channel_id : 0 channel_post:[f.to_id isKindOfClass:[TL_peerChannel class]] && !f.chat.isMegagroup ? f.n_id : 0];
             
-            //fwd_from_id:[f.to_id isKindOfClass:[TL_peerChannel class]] && !f.chat.isMegagroup ? f.to_id : [f.fwd_from_id isKindOfClass:[TL_peerChannel class]] && !f.chat.isMegagroup ? f.fwd_from_id : [TL_peerUser createWithUser_id:f.fwd_from_id.user_id != 0 ? f.fwd_from_id.user_id : f.from_id]
             TL_localMessage *fake = [TL_localMessage createWithN_id:0 flags:TGOUTUNREADMESSAGE | TGFWDMESSAGE | TGREADEDCONTENT from_id:[UsersManager currentUserId] to_id:conversation.peer fwd_from:fwdHeader reply_to_msg_id:0 date:[[MTNetwork instance] getTime] message:f.message media:f.media fakeId:[MessageSender getFakeMessageId] randomId:random reply_markup:nil entities:f.entities views:f.views via_bot_id:f.via_bot_id edit_date:0 isViewed:NO state:DeliveryStatePending];
             
-            
-
-            
             if(additionFlags & (1 << 4))
+                fake.flags|= (1 << 14);
+            
+            if(conversation.needRemoveFromIdBeforeSend) {
                 fake.from_id = 0;
+            }
+
              
             [fake save:i == copy.count-1];
             
@@ -95,10 +96,18 @@
     
     NSMutableArray *random_ids = [[NSMutableArray alloc] init];
     
-    __block TLInputPeer *from_peer = _from_peer;
+    [self.fakes enumerateObjectsUsingBlock:^(TL_localMessage *obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        [random_ids addObject:@(obj.randomId)];
+    }];
     
+    TL_localMessage*msg = [self.fakes firstObject];
     
-    TLAPI_messages_forwardMessages *request = [TLAPI_messages_forwardMessages createWithFlags:[self senderFlags] from_peer:from_peer n_id:[self.msg_ids mutableCopy] random_id:random_ids to_peer:self.conversation.inputPeer];
+    TLUser *user = msg.fwd_from.from_id != 0 ? [[UsersManager sharedManager] find:msg.fwd_from.from_id] : nil;
+    TLChat *chat = msg.fwd_from.channel_id != 0 ? [[ChatsManager sharedManager] find:msg.fwd_from.channel_id] : nil;
+    
+    __block TLInputPeer *peer = msg.fwd_from.channel_id == 0 ? [TL_inputPeerUser createWithUser_id:user.n_id access_hash:user.access_hash] : [TL_inputPeerChannel createWithChannel_id:chat.n_id access_hash:chat.access_hash];
+    
+    TLAPI_messages_forwardMessages *request = [TLAPI_messages_forwardMessages createWithFlags:[self senderFlags] from_peer:peer n_id:[self.msg_ids mutableCopy] random_id:random_ids to_peer:self.conversation.inputPeer];
     
     weak();
     
@@ -161,7 +170,7 @@
         
         int flags = 0;
         
-        flags|=msg.from_id == 0 ? 1 << 4 : 0;
+        flags|=msg.isPost ? 1 << 4 : 0;
         
         return flags;
         

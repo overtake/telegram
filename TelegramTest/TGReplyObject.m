@@ -49,7 +49,7 @@
     
     NSColor *nameColor = LINK_COLOR;
     
-    NSString *name = _replyMessage.isChannelPostMessage ? _replyMessage.chat.title : _replyMessage.fromUser.fullName;
+    NSString *name = _replyMessage.isPost ? _replyMessage.chat.title : _replyMessage.fromUser.fullName;
     
     
     NSMutableAttributedString *replyHeader = [[NSMutableAttributedString alloc] init];

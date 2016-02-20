@@ -140,6 +140,8 @@
             
         }];
     }
+    
+    _conversation = nil;
 
 }
 

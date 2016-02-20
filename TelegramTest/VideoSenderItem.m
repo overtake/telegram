@@ -61,12 +61,8 @@
 
         [[ImageCache sharedManager] setImage:thumbImage forLocation:[cachedSize location]];
 
-        self.message = [MessageSender createOutMessage:@"" media:media conversation:conversation];
+        self.message = [MessageSender createOutMessage:@"" media:media conversation:conversation additionFlags:additionFlags];
         
-        if(additionFlags & (1 << 4))
-            self.message.from_id = 0;
-
-
     }
 
     return self;

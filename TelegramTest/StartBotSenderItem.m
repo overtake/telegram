@@ -24,7 +24,7 @@
         _startParam = startParam;
         _bot = bot;
         
-        self.message = [MessageSender createOutMessage:message media:[TL_messageMediaEmpty create] conversation:conversation];
+        self.message = [MessageSender createOutMessage:message media:[TL_messageMediaEmpty create] conversation:conversation additionFlags:0];
         
         [self.message save:YES];
         

@@ -39,7 +39,7 @@
 
 -(int)ptsWithChannelId:(int)channel_id {
     
-    return MAX([[[DialogsManager sharedManager] find:-channel_id] pts],1);
+    return MAX([[self conversationWithChannelId:channel_id] pts],1);
 }
 
 -(TL_conversation *)conversationWithChannelId:(int)channel_id {
@@ -65,7 +65,7 @@
 
 -(int)channelIdWithUpdate:(id)update {
     
-    if([update isKindOfClass:[TL_updateNewChannelMessage class]]) {
+    if([update isKindOfClass:[TL_updateNewChannelMessage class]] || [update isKindOfClass:[TL_updateEditChannelMessage class]]) {
         return ((TL_updateNewChannelMessage *)update).message.to_id.channel_id;
     }  else if([update isKindOfClass:[TL_updateDeleteChannelMessages class]]) {
         return [(TL_updateDeleteChannelMessages *)update channel_id];
@@ -90,8 +90,8 @@
         static dispatch_once_t onceToken;
         dispatch_once(&onceToken, ^{
             
-            statefullUpdates = @[NSStringFromClass([TL_updateNewChannelMessage class]),NSStringFromClass([TL_updateDeleteChannelMessages class])];
-            statelessUpdates = @[NSStringFromClass([TL_updateReadChannelInbox class]),NSStringFromClass([TL_updateChannelTooLong class]),NSStringFromClass([TL_updateChannelGroup class]),NSStringFromClass([TL_updateChannelMessageViews class]),NSStringFromClass([TL_updateChannel class]),NSStringFromClass([TL_updateEditChannelMessage class])];
+            statefullUpdates = @[NSStringFromClass([TL_updateNewChannelMessage class]),NSStringFromClass([TL_updateDeleteChannelMessages class]),NSStringFromClass([TL_updateEditChannelMessage class])];
+            statelessUpdates = @[NSStringFromClass([TL_updateReadChannelInbox class]),NSStringFromClass([TL_updateChannelTooLong class]),NSStringFromClass([TL_updateChannelGroup class]),NSStringFromClass([TL_updateChannelMessageViews class]),NSStringFromClass([TL_updateChannel class])];
         });
         
         if([statefullUpdates indexOfObject:[update className]] != NSNotFound)

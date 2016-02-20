@@ -22,7 +22,7 @@
         
         [message trim];
         
-        self.message = [MessageSender createOutMessage:message media:[TL_messageMediaEmpty create] conversation:conversation];
+        self.message = [MessageSender createOutMessage:message media:[TL_messageMediaEmpty create] conversation:conversation additionFlags:additionFlags];
         
         NSMutableArray *entities = [NSMutableArray array];
         
@@ -32,10 +32,7 @@
         
         self.message.entities = entities;
         
-        
-        if(additionFlags & (1 << 4))
-            self.message.from_id = 0;
-            
+
         
         if(noWebpage)
             self.message.media = [TL_messageMediaWebPage createWithWebpage:[TL_webPageEmpty createWithN_id:0]];

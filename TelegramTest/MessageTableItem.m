@@ -70,8 +70,6 @@ static NSCache *cItems;
             object.flags&= ~TGUNREADMESSAGE;
 
 
-        
-        
         self.isForwadedMessage = self.message.fwd_from != nil;
         
         if(self.isForwadedMessage && [self.message.media isKindOfClass:[TL_messageMediaDocument class]] && ([self.message.media.document isSticker] || (self.message.media.document.audioAttr && !self.message.media.document.audioAttr.isVoice))) {
@@ -89,11 +87,15 @@ static NSCache *cItems;
             
             
             
-            TGItemCache *cache = [cItems objectForKey:@(channelMsgId(_isChat ? 1 : 0, object.from_id == 0 ? object.peer_id : object.from_id))];
+            TGItemCache *cache = [cItems objectForKey:@(channelMsgId(_isChat ? 1 : 0, object.isPost ? object.peer_id : object.from_id))];
            
             if(cache) {
                 _user = cache.user;
-                _headerName = cache.header;
+                if(_message.isPost) {
+                    _user = _message.fromUser;
+                }
+                
+                self.headerName = cache.header;
             } else {
                 [self buildHeaderAndSaveToCache];
             }
@@ -125,6 +127,8 @@ static NSCache *cItems;
                     [_headerName addAttribute:NSForegroundColorAttributeName value:LINK_COLOR range:range];
                     [_headerName setLink:[NSString stringWithFormat:@"viabot:@%@",viaBotUserName] forRange:range];
                     
+                    self.headerName = self.headerName;
+                    
                 }
                 
                 
@@ -132,9 +136,12 @@ static NSCache *cItems;
             }
             
             if(self.isForwadedMessage) {
+                
                 if(object.fwd_from.from_id != 0) {
                     self.fwd_user = [[UsersManager sharedManager] find:object.fwd_from.from_id];
-                } else  {
+                }
+                
+                if(object.fwd_from.channel_id != 0) {
                     self.fwd_chat = [[ChatsManager sharedManager] find:object.fwd_from.channel_id];
                 }
                 
@@ -156,14 +163,9 @@ static NSCache *cItems;
             
             
             
-//            if(object.isPost) {
-//
 
-//                
-//                
-//            }
 
-            if(self.message.isChannelPostMessage) {
+            if(self.message.isPost) {
                 [self updateViews];
             }
             
@@ -185,8 +187,7 @@ static NSCache *cItems;
     
     NSString *name = self.isChat ? self.user.fullName : self.user.dialogFullName;
     
-    
-    if(self.message.isChannelPostMessage)
+    if(self.message.isPost)
     {
         name = self.message.conversation.chat.title;
     }
@@ -212,8 +213,7 @@ static NSCache *cItems;
     NSColor *nameColor = LINK_COLOR;
     
     
-    if(self.isChat && self.user.n_id != [UsersManager currentUserId]) {
-        
+    if(self.isChat && !self.message.isPost && self.user.n_id != [UsersManager currentUserId]) {
         
         int colorMask = [TMAvatarImageView colorMask:self.user];
         
@@ -227,15 +227,25 @@ static NSCache *cItems;
 
     [header setFont:TGSystemMediumFont(13) forRange:header.range];
     
-    [header addAttribute:NSLinkAttributeName value:[TMInAppLinks peerProfile:self.message.isChannelPostMessage ? self.message.peer : [TL_peerUser createWithUser_id:self.message.from_id]] range:header.range];
+    [header addAttribute:NSLinkAttributeName value:[TMInAppLinks peerProfile:self.message.isPost ? self.message.peer : [TL_peerUser createWithUser_id:self.message.from_id]] range:header.range];
     
     self.headerName = header;
+    
     
     TGItemCache *item = [[TGItemCache alloc] init];
     item.user = _user;
     item.header = header;
     
-    [cItems setObject:item forKey:@(channelMsgId(_isChat ? 1 : 0, _message.isChannelPostMessage ? _message.peer_id : _message.from_id))];
+    long cacheId = channelMsgId(_isChat ? 1 : 0, _message.isPost ? _message.peer_id : _message.from_id);
+    
+    
+    [cItems setObject:item forKey:@(cacheId)];
+}
+
+-(void)setHeaderName:(NSMutableAttributedString *)headerName {
+    _headerName = headerName;
+    
+    self.headerSize = [self.headerName sizeForTextFieldForWidth:INT32_MAX];
 }
 
 - (void) headerStringBuilder {
@@ -251,16 +261,27 @@ static NSCache *cItems;
         self.forwardMessageAttributedString = [[NSMutableAttributedString alloc] init];
 //        [self.forwardMessageAttributedString appendString:NSLocalizedString(@"Message.ForwardedFrom", nil) withColor:NSColorFromRGB(0x909090)];
         
-        NSString *title = self.fwd_user ? self.fwd_user.fullName : self.fwd_chat.title;
+        NSString *title = self.message.fwd_from.channel_id != 0 && !self.fwd_chat.isMegagroup ? self.fwd_chat.title : self.fwd_user.fullName ;
         
         NSRange rangeUser = NSMakeRange(0, 0);
         if(title) {
             rangeUser = [self.forwardMessageAttributedString appendString:title withColor:LINK_COLOR];
-            [self.forwardMessageAttributedString setLink:[TMInAppLinks peerProfile:self.message.fwd_from.fwdPeer] forRange:rangeUser];
+            [self.forwardMessageAttributedString setLink:[TMInAppLinks peerProfile:self.message.fwd_from.fwdPeer jumpId:self.message.fwd_from.channel_post] forRange:rangeUser];
             
         }
         
         [self.forwardMessageAttributedString setFont:TGSystemFont(12) forRange:self.forwardMessageAttributedString.range];
+        
+        
+        if(self.message.fwd_from.channel_id != 0 && !self.message.chat.isMegagroup && self.message.fwd_from.from_id != 0) {
+            [self.forwardMessageAttributedString appendString:@" (" withColor:LINK_COLOR];
+            NSRange r = [self.forwardMessageAttributedString appendString:[NSString stringWithFormat:@"%@",self.fwd_user.first_name] withColor:LINK_COLOR];
+            [self.forwardMessageAttributedString appendString:@")" withColor:LINK_COLOR];
+            
+            [self.forwardMessageAttributedString setLink:[TMInAppLinks peerProfile:self.message.fwd_from.fwdPeer] forRange:r];
+            
+            [self.forwardMessageAttributedString setFont:TGSystemMediumFont(13) forRange:r];
+        }
         
         if([self isViaBot]) {
             [self.forwardMessageAttributedString appendString:@" "];
@@ -280,11 +301,7 @@ static NSCache *cItems;
         
         [self.forwardMessageAttributedString setFont:TGSystemMediumFont(13) forRange:rangeUser];
         
-        NSMutableParagraphStyle *style = [[NSMutableParagraphStyle alloc] init];
-        style.lineBreakMode = NSLineBreakByTruncatingTail;
-       // style.hyphenationFactor = 0;
-        
-        [self.forwardMessageAttributedString addAttribute:NSParagraphStyleAttributeName value:style range:self.forwardMessageAttributedString.range];
+
 
     }
 }
@@ -649,14 +666,14 @@ static NSTextAttachment *channelIconAttachment() {
     
     NSRange range = [signString appendString:[@(MAX(1,self.message.views)) prettyNumber] withColor:GRAY_TEXT_COLOR];
     
-    if(self.message.isPost) {
+    if(self.message.isPost && self.message.from_id != 0) {
         [signString appendString:@" "];
         range = [signString appendString:_user.fullName withColor:GRAY_TEXT_COLOR];
         [signString setLink:[TMInAppLinks peerProfile:[TL_peerUser createWithUser_id:_user.n_id]] forRange:range];
     }
     
     _viewsCountAndSignSize = [signString sizeForTextFieldForWidth:INT32_MAX];
-    _viewsCountAndSignSize.width = MIN(140,_viewsCountAndSignSize.width);
+    _viewsCountAndSignSize.width =_viewsCountAndSignSize.width;
     _viewsCountAndSignSize.height = 17;
     
     [signString setFont:TGSystemFont(12) forRange:signString.range];

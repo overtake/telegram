@@ -33,8 +33,7 @@
 
 -(id)initWithFrame:(NSRect)frameRect {
     if(self = [super initWithFrame:frameRect]) {
-    
-        
+            
     }
     
     return self;
@@ -88,7 +87,7 @@
     
     if((state == MessageTableCellUnread || state == MessageTableCellRead)) {
         
-        if(self.container.item.message.isChannelPostMessage) {
+        if(self.container.item.message.isPost) {
             
             _channelImageView = imageViewWithImage(image_ChannelViews());
             
@@ -100,7 +99,7 @@
             [[_viewsCountText cell] setTruncatesLastVisibleLine:YES];
             [_viewsCountText setAttributedStringValue:self.container.item.viewsCountAndSign];
             [_viewsCountText setFrameSize:NSMakeSize(MIN(NSWidth(self.frame) - NSWidth(_channelImageView.frame) - 4,self.container.item.viewsCountAndSignSize.width), 17)];
-            [_viewsCountText setFrameOrigin:CGPointMake(NSWidth(self.frame) - NSWidth(_viewsCountText.frame) - 2,2)];
+            [_viewsCountText setFrameOrigin:CGPointMake(NSWidth(self.frame) - NSWidth(_viewsCountText.frame) - 2,1)];
             [self addSubview:_viewsCountText];
             
             

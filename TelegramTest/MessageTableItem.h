@@ -25,6 +25,7 @@
 @property (nonatomic, strong) NSString *fullDate;
 @property (nonatomic, strong) TLUser *user;
 @property (nonatomic, strong) NSMutableAttributedString *headerName;
+@property (nonatomic, assign) NSSize headerSize;
 @property (nonatomic, strong) NSMutableAttributedString *forwardMessageAttributedString;
 @property (nonatomic,strong) NSAttributedString *forwardHeaderAttr;
 @property (nonatomic, strong) NSString *dateStr;

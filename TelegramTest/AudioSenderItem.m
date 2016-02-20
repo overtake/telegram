@@ -34,12 +34,10 @@
 
         TL_messageMediaDocument *audio = [TL_messageMediaDocument createWithDocument:[TL_document createWithN_id:0 access_hash:0 date:[[MTNetwork instance] getTime] mime_type:@"audio/ogg" size:(int)fileSize(filePath) thumb:[TL_photoSizeEmpty createWithType:@"x"] dc_id:0 attributes:attrs] caption:@""];
         
-        self.message = [MessageSender createOutMessage:@"" media:audio conversation:conversation];
+        self.message = [MessageSender createOutMessage:@"" media:audio conversation:conversation additionFlags:additionFlags];
         
         self.message.flags|=TGREADEDCONTENT;
         
-        if(additionFlags & (1 << 4))
-            self.message.from_id = 0;
 
     }
     return self;

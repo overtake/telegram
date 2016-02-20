@@ -16,14 +16,12 @@
         
         TLMessageMedia *media = [TL_messageMediaBotResult createWithBot_result:result query_id:queryId];
         
-        self.message = [MessageSender createOutMessage:result.send_message.message media:media conversation:conversation];
+        self.message = [MessageSender createOutMessage:result.send_message.message media:media conversation:conversation additionFlags:additionFlags];
         
         self.message.entities = result.send_message.entities;
         
         [self.message setVia_bot_id:via_bot_id];
         
-        if(additionFlags & (1 << 4))
-            self.message.from_id = 0;
         
         [self.message save:YES];
         

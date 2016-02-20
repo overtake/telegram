@@ -448,7 +448,7 @@ static NSMutableArray *waiting;
     
     flags|=[self.message.media.webpage isKindOfClass:[TL_webPageEmpty class]] ? 2 : 0;
     
-    flags|=self.message.from_id == 0 ? 1 << 4 : 0;
+    flags|=self.message.isPost ? 1 << 4 : 0;
     
     if(self.conversation.notify_settings.events_mask & PushEventMaskDisableChannelMessageNotification) {
         flags|= 1 << 13;

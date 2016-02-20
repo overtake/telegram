@@ -50,13 +50,10 @@
         }
         
         
-        super.message = [MessageSender createOutMessage:nil media:[TL_messageMediaDocument createWithDocument:document caption:@""] conversation:compressItem.conversation];
+        super.message = [MessageSender createOutMessage:nil media:[TL_messageMediaDocument createWithDocument:document caption:@""] conversation:compressItem.conversation additionFlags:additionFlags];
         
         [self.message save:YES];
-        
-        if(additionFlags & (1 << 4))
-            self.message.from_id = 0;
-        
+
 
     }
     

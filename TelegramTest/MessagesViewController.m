@@ -2584,7 +2584,7 @@ static NSTextAttachment *headerMediaIcon() {
     }
     
     
-    [self.bottomView setTemplate:_template];
+    [self.bottomView setTemplate:_template checkElements:YES];
     
 }
 
@@ -3085,7 +3085,7 @@ static NSTextAttachment *headerMediaIcon() {
     item.isHeaderMessage = YES;
     item.isHeaderForwardedMessage = YES;
     
-    if((item.message.isChannelMessage && item.message.isChannelPostMessage) || item.isViaBot) {
+    if((item.message.isChannelMessage && item.message.isPost) || item.isViaBot) {
         return;
     }
     

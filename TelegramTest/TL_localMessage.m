@@ -279,9 +279,7 @@
     return [self.to_id isKindOfClass:[TL_peerChannel class]];
 }
 
--(BOOL)isChannelPostMessage {
-    return self.from_id == 0 || self.isPost;
-}
+
 
 -(BOOL)unread {
     return self.isChannelMessage ? self.n_out || self.n_id > TGMINFAKEID ? NO : (self.conversation.read_inbox_max_id < self.n_id || self.conversation.read_inbox_max_id > TGMINFAKEID) :  self.isUnread;

@@ -284,9 +284,14 @@
 		C21068BA1C19F4B500815859 /* GLKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A7C78FC1947E147001617DB /* GLKit.framework */; };
 		C21068BE1C1B04A100815859 /* QuickTime.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C21068A91C19DBCB00815859 /* QuickTime.framework */; };
 		C21068C61C1B417200815859 /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C21068C51C1B417200815859 /* CoreVideo.framework */; };
-		C215BDDC1C75E46E00B4BF16 /* TGInputMessageTemplate.m in Sources */ = {isa = PBXBuildFile; fileRef = C215BDDB1C75E46E00B4BF16 /* TGInputMessageTemplate.m */; };
-		C215BDDF1C76273B00B4BF16 /* TLMessageFwdHeader+Extension.m in Sources */ = {isa = PBXBuildFile; fileRef = C215BDDE1C76273B00B4BF16 /* TLMessageFwdHeader+Extension.m */; };
-		C215BDE31C76422500B4BF16 /* TGMessageEditSender.m in Sources */ = {isa = PBXBuildFile; fileRef = C215BDE21C76422500B4BF16 /* TGMessageEditSender.m */; };
+		C215BD831C74835800B4BF16 /* Sparkle.framework in Copy Files (6 items) */ = {isa = PBXBuildFile; fileRef = C235364C19C88D620044978E /* Sparkle.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		C215BD841C74835800B4BF16 /* HockeySDK.framework in Copy Files (6 items) */ = {isa = PBXBuildFile; fileRef = C2082B7219C1E1C4000005E2 /* HockeySDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		C215BD851C74835E00B4BF16 /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C235364C19C88D620044978E /* Sparkle.framework */; };
+		C215BD861C74835E00B4BF16 /* HockeySDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2082B7219C1E1C4000005E2 /* HockeySDK.framework */; };
+		C215BDE71C77255C00B4BF16 /* TGMessageEditSender.m in Sources */ = {isa = PBXBuildFile; fileRef = C215BDE21C76422500B4BF16 /* TGMessageEditSender.m */; };
+		C215BDF21C77256700B4BF16 /* TGInputMessageTemplate.m in Sources */ = {isa = PBXBuildFile; fileRef = C215BDDB1C75E46E00B4BF16 /* TGInputMessageTemplate.m */; };
+		C215BDF51C77354700B4BF16 /* MessageRightView.m in Sources */ = {isa = PBXBuildFile; fileRef = C215BDF41C77354700B4BF16 /* MessageRightView.m */; };
+		C215BDF61C7741ED00B4BF16 /* TLMessageFwdHeader+Extension.m in Sources */ = {isa = PBXBuildFile; fileRef = C215BDDE1C76273B00B4BF16 /* TLMessageFwdHeader+Extension.m */; };
 		C2182BBE19589246002469CA /* TL_localMessageService.m in Sources */ = {isa = PBXBuildFile; fileRef = C2182BBD19589246002469CA /* TL_localMessageService.m */; };
 		C21C7B2C18D7044600253A7A /* MessageSenderItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C21C7B2B18D7044600253A7A /* MessageSenderItem.m */; };
 		C21C7B2F18D7334D00253A7A /* MessageSenderSecretItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C21C7B2E18D7334D00253A7A /* MessageSenderSecretItem.m */; };
@@ -1640,6 +1645,8 @@
 		C215BDDE1C76273B00B4BF16 /* TLMessageFwdHeader+Extension.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "TLMessageFwdHeader+Extension.m"; sourceTree = "<group>"; };
 		C215BDE11C76422500B4BF16 /* TGMessageEditSender.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGMessageEditSender.h; sourceTree = "<group>"; };
 		C215BDE21C76422500B4BF16 /* TGMessageEditSender.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGMessageEditSender.m; sourceTree = "<group>"; };
+		C215BDF31C77354700B4BF16 /* MessageRightView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MessageRightView.h; sourceTree = "<group>"; };
+		C215BDF41C77354700B4BF16 /* MessageRightView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MessageRightView.m; sourceTree = "<group>"; };
 		C2182BBC19589246002469CA /* TL_localMessageService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TL_localMessageService.h; sourceTree = "<group>"; };
 		C2182BBD19589246002469CA /* TL_localMessageService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TL_localMessageService.m; sourceTree = "<group>"; };
 		C21C7B2A18D7044600253A7A /* MessageSenderItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MessageSenderItem.h; sourceTree = "<group>"; };
@@ -3831,6 +3838,8 @@
 				C2C85BA61AF10B6500FBEABD /* TGCaptionView.m */,
 				C24136421C679DCC00130D2E /* TGWaveformView.h */,
 				C24136431C679DCC00130D2E /* TGWaveformView.m */,
+				C215BDF31C77354700B4BF16 /* MessageRightView.h */,
+				C215BDF41C77354700B4BF16 /* MessageRightView.m */,
 			);
 			name = help;
 			sourceTree = "<group>";
@@ -6692,6 +6701,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C215BDF61C7741ED00B4BF16 /* TLMessageFwdHeader+Extension.m in Sources */,
+				C215BDF21C77256700B4BF16 /* TGInputMessageTemplate.m in Sources */,
+				C215BDE71C77255C00B4BF16 /* TGMessageEditSender.m in Sources */,
 				0A6758E31895505C00F4487D /* MessageTableItem.m in Sources */,
 				0A59067C18AA32C8002ED7BA /* BTRImageView.m in Sources */,
 				CEB09E6817DAFC250055F150 /* main.m in Sources */,
@@ -6848,7 +6860,6 @@
 				C2233DA51A07EE4B0056594F /* MessageTableCellSocialView.m in Sources */,
 				C2FA78E91923CB76001A9D1B /* DocumentHistoryFilter.m in Sources */,
 				C24435881A1E018100F9BB38 /* ComposeActionCustomBehavior.m in Sources */,
-				C215BDDC1C75E46E00B4BF16 /* TGInputMessageTemplate.m in Sources */,
 				C21C7B5318D8991D00253A7A /* SecretSenderItem.m in Sources */,
 				C274C3D01AC57201000DFDE4 /* TGPasswosdMainViewController.m in Sources */,
 				C21D482219ABC891000F06E1 /* TMTabViewController.m in Sources */,
@@ -7223,6 +7234,7 @@
 				C2C1DC131A433C3900BBCC63 /* DownloadStickerItem.m in Sources */,
 				CE7E5658189AC5E30058C532 /* QueueManager.m in Sources */,
 				C2D4B86E1AFCE8FA0035B4E4 /* YapTouch.m in Sources */,
+				C215BDF51C77354700B4BF16 /* MessageRightView.m in Sources */,
 				C2201A03192CCB6C00C0E441 /* SelectUserRowView.m in Sources */,
 				C2CE53C61BE7688900BBEF5F /* ComposeActionCreateMegaGroupBehavior.m in Sources */,
 				C2A5BFC118DC80620021BE68 /* stream.c in Sources */,
@@ -7316,7 +7328,6 @@
 				C222774E19093C8C002AA0F6 /* TMBottomScrollView.m in Sources */,
 				C2034BC81C31C8000080D023 /* ContextBotSenderItem.m in Sources */,
 				C25F91F0197D374F006868F3 /* TimeObserver.m in Sources */,
-				C215BDDF1C76273B00B4BF16 /* TLMessageFwdHeader+Extension.m in Sources */,
 				0ACF9E3C19235F42001F9E1E /* SearchLoadMoreItem.m in Sources */,
 				C2CE53D91BE9060500BBEF5F /* TGProfileHeaderRowItem.m in Sources */,
 				0AF4061E18192B7E00160DB4 /* NSString+MD5.m in Sources */,
@@ -7388,7 +7399,6 @@
 				0ACF9E361921F2EE001F9E1E /* SearchLoaderItem.m in Sources */,
 				0A9EDC4C1897BA0E0037E1BC /* NSApplication+RBLBlockAdditions.m in Sources */,
 				C22A29FF1C209FEE00678172 /* TGModalCompressingView.m in Sources */,
-				C215BDE31C76422500B4BF16 /* TGMessageEditSender.m in Sources */,
 				C2ACCE561ADD2A0600ABEE78 /* TGConversationsViewController.m in Sources */,
 				C2FA78EC1923CBA1001A9D1B /* PhotoHistoryFilter.m in Sources */,
 				C2FF82A31B99C7CE00DE2455 /* TGForceChannelUpdate.m in Sources */,

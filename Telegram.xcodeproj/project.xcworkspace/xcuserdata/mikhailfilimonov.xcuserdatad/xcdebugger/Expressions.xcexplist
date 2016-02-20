@@ -1923,6 +1923,14 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "-[MessageTableItem headerStringBuilder]:MessageTableItem.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.message.fwd_from">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "-[TMCollectionPageController imageObjectWithPreview:]:TMCollectionPageController.m">
       </ContextState>
       <ContextState
@@ -2083,6 +2091,14 @@
       </ContextState>
       <ContextState
          contextName = "-[TGModernEncryptedUpdates proccess1Layer:]:TGModernEncryptedUpdates.m">
+      </ContextState>
+      <ContextState
+         contextName = "-[MessageTableItem setHeaderName:]:MessageTableItem.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.headerSize">
+            </PersistentString>
+         </PersistentStrings>
       </ContextState>
       <ContextState
          contextName = "__93-[Storage loadChannelMessages:min_id:max_id:minDate:maxDate:limit:filterMask:important:next:]_block_invoke:Storage.m">
@@ -2313,7 +2329,13 @@
          contextName = "-[MessageTableCellContainerView setItem:]:MessageTableCellContainerView.m">
          <PersistentStrings>
             <PersistentString
+               value = "item.headerSize.width">
+            </PersistentString>
+            <PersistentString
                value = "self.rightView">
+            </PersistentString>
+            <PersistentString
+               value = "self.rightView.frame">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -2753,6 +2775,12 @@
       <ContextState
          contextName = "-[TGUpdateChannels addStatefullUpdate:]:TGUpdateChannels.m">
          <PersistentStrings>
+            <PersistentString
+               value = "[self ptsWithChannelId:statefulMessage.channel_id]">
+            </PersistentString>
+            <PersistentString
+               value = "statefulMessage.channel_id">
+            </PersistentString>
             <PersistentString
                value = "self.pts">
             </PersistentString>
@@ -5453,6 +5481,9 @@
          <PersistentStrings>
             <PersistentString
                value = "textView">
+            </PersistentString>
+            <PersistentString
+               value = "self.template">
             </PersistentString>
          </PersistentStrings>
       </ContextState>

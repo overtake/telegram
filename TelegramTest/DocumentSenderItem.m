@@ -188,10 +188,8 @@
         
         TL_messageMediaDocument *document = [TL_messageMediaDocument createWithDocument:[TL_outDocument createWithN_id:randomId access_hash:0 date:[[MTNetwork instance] getTime] mime_type:self.mimeType size:(int)fileSize(self.filePath) thumb:size dc_id:0 file_path:self.filePath attributes:attrs] caption:@""];
         
-        self.message = [MessageSender createOutMessage:@"" media:document conversation:conversation];
+        self.message = [MessageSender createOutMessage:@"" media:document conversation:conversation additionFlags:additionFlags];
        
-        if(additionFlags & (1 << 4))
-            self.message.from_id = 0;
     }
     
     return self;

@@ -1235,6 +1235,11 @@ static RBLPopover *popover;
 
 - (void)sendButtonAction {
     
+    if(self.template.type == TGInputMessageTemplateTypeEditMessage) {
+        [self.messagesViewController sendMessage];
+        return;
+    }
+    
     if(_recordedAudioPreview == nil)
         [self.messagesViewController sendMessage];
     else {
@@ -1283,7 +1288,7 @@ static RBLPopover *popover;
     [self.messagesViewController saveInputText];
     
     
-    if([self.inputMessageTextField.stringValue trim].length > 0 || self.fwdContainer || _imageAttachmentsController.isShown || _recordedAudioPreview != nil) {
+    if((self.template.type == TGInputMessageTemplateTypeSimpleText || ![self.template.originalText isEqualToString:self.inputMessageTextField.stringValue]) && ([self.inputMessageTextField.stringValue trim].length > 0 || self.fwdContainer || _imageAttachmentsController.isShown || _recordedAudioPreview != nil)) {
         
         
         if([self.inputMessageTextField.stringValue trim].length > 0 && textView)
@@ -1300,7 +1305,7 @@ static RBLPopover *popover;
         [self.sendButton setDisabled:YES];
     }
     
-    if(self.inputMessageTextField.stringValue.length || self.fwdContainer || _imageAttachmentsController.isShown || _recordedAudioPreview != nil) {
+    if(self.template.type == TGInputMessageTemplateTypeEditMessage || self.inputMessageTextField.stringValue.length || self.fwdContainer || _imageAttachmentsController.isShown || _recordedAudioPreview != nil) {
         [self.sendButton setHidden:NO];
         [self.recordAudioButton setHidden:YES];
     } else {
@@ -1447,7 +1452,6 @@ static RBLPopover *popover;
         
         [self.normalView addSubview:_botKeyboard];
     }
-    
    
     [_botKeyboard setConversation:self.dialog botUser:self.dialog.user];
     
@@ -1465,7 +1469,7 @@ static RBLPopover *popover;
     }
     
     [_botKeyboardButton setSelected:forceShow];
-    [_botKeyboardButton setHidden:!_botKeyboard.isCanShow || self.replyContainer != nil];
+    [_botKeyboardButton setHidden:!_botKeyboard.isCanShow || self.replyContainer != nil || _template.type == TGInputMessageTemplateTypeEditMessage];
     
     [self updateBotButtons];
     
@@ -1491,12 +1495,13 @@ static RBLPopover *popover;
     [_fwdContainer removeFromSuperview];
     
     _fwdContainer = nil;
+
     
     
     NSArray *fwdMessages = [self.messagesViewController fwdMessages:self.dialog];
     
     
-    if(fwdMessages.count > 0) {
+    if(fwdMessages.count > 0 && _template.type != TGInputMessageTemplateTypeEditMessage) {
         
         _fwdContainer = [[TGForwardContainer alloc] initWithFrame:NSMakeRect(self.attachButton.frame.origin.x + self.attachButton.frame.size.width + 21, NSHeight(self.inputMessageTextField.containerView.frame) + NSMinX(self.inputMessageTextField.frame) + 20 + (self.replyContainer ? 45 : 0), NSWidth(self.inputMessageTextField.containerView.frame), 30)];
         
@@ -1576,6 +1581,8 @@ static RBLPopover *popover;
     self.replyContainer = nil;
     
     
+    
+    
     __block TL_localMessage *replyMessage;
     
     [[Storage yap] readWithBlock:^(YapDatabaseReadTransaction *transaction) {
@@ -1584,8 +1591,7 @@ static RBLPopover *popover;
         
     }];
     
-    
-    if(replyMessage) {
+    if(replyMessage && _template.type != TGInputMessageTemplateTypeEditMessage) {
         int startX = self.attachButton.frame.origin.x + self.attachButton.frame.size.width + 21;
         
         TGReplyObject *replyObject = [[TGReplyObject alloc] initWithReplyMessage:replyMessage fromMessage:nil tableItem:nil];
@@ -1859,12 +1865,38 @@ static RBLPopover *popover;
     [self.inputMessageTextField setSelectedRange:NSMakeRange(bot.length,0)];
 }
 
--(void)setTemplate:(TGInputMessageTemplate *)inputTemplate {
+-(void)setTemplate:(TGInputMessageTemplate *)inputTemplate checkElements:(BOOL)checkElements {
     _template = inputTemplate;
     
     [self.sendButton setText:_template.type == TGInputMessageTemplateTypeSimpleText ? NSLocalizedString(@"Message.Send", nil) : NSLocalizedString(@"Message.Save",nil)];
     
-    [self setInputMessageString:_template.text ? _template.text : @"" disableAnimations:NO];
+    if(checkElements) {
+        [self removeQuickRecord];
+        
+        
+        
+        [self setInputMessageString:_template.text ? _template.text : @"" disableAnimations:NO];
+        
+        if(_template.type == TGInputMessageTemplateTypeSimpleText) {
+            [_imageAttachmentsController show:_dialog animated:YES];
+        } else {
+            [_imageAttachmentsController hide:YES deleteItems:NO];
+        }
+        
+        [self checkReplayMessage:YES animated:YES];
+        
+        [self checkFwdMessages:YES animated:YES];
+        
+        
+        
+    } else {
+        [self setInputMessageString:_template.text ? _template.text : @"" disableAnimations:NO];
+    }
+    
+}
+
+-(void)setTemplate:(TGInputMessageTemplate *)inputTemplate {
+    [self setTemplate:inputTemplate checkElements:NO];
 }
 
 

@@ -20,6 +20,7 @@ static NSString *kYapTemplateCollection = @"kYapTemplateCollection";
 -(instancetype)initWithCoder:(NSCoder *)aDecoder {
     if(self = [super init]) {
         _text = [aDecoder decodeObjectForKey:@"text"];
+        _originalText = [aDecoder decodeObjectForKey:@"originalText"];
         _postId = [aDecoder decodeInt32ForKey:@"postId"];
         _type = [aDecoder  decodeInt32ForKey:@"type"];
         _peer_id = [aDecoder decodeInt32ForKey:@"peerId"];
@@ -30,6 +31,7 @@ static NSString *kYapTemplateCollection = @"kYapTemplateCollection";
 
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:_text forKey:@"text"];
+    [aCoder encodeObject:_originalText forKey:@"originalText"];
     [aCoder encodeInt32:_type forKey:@"type"];
     [aCoder encodeInt32:_postId forKey:@"postId"];
     [aCoder encodeInt32:_peer_id forKey:@"peerId"];
@@ -43,6 +45,7 @@ static NSString *kYapTemplateCollection = @"kYapTemplateCollection";
         _type = type;
         _peer_id = peer_id;
         _autoSave = YES;
+        _originalText = text;
     }
     
     return self;
@@ -67,8 +70,6 @@ static NSString *kYapTemplateCollection = @"kYapTemplateCollection";
             [self saveForce];
         });
     }
-    
-    
     
 }
 

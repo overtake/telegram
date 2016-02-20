@@ -14,11 +14,8 @@
 -(id)initWithDocument:(TLDocument *)document forConversation:(TL_conversation*)conversation additionFlags:(int)additionFlags {
     if(self = [super initWithConversation:conversation]) {
         
-        self.message = [MessageSender createOutMessage:@"" media:[TL_messageMediaDocument createWithDocument:document caption:@""] conversation:conversation];
+        self.message = [MessageSender createOutMessage:@"" media:[TL_messageMediaDocument createWithDocument:document caption:@""] conversation:conversation additionFlags:additionFlags];
         
-        if(additionFlags & (1 << 4))
-            self.message.from_id = 0;
-
         
         [self.message save:YES];
     }

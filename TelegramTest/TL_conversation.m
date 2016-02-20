@@ -456,6 +456,8 @@ static void *kType;
     return self.type == DialogTypeChannel && (self.chat.isMegagroup || ((self.chat.isAdmin && !self.chat.isBroadcast) || !self.chat.isBroadcast));
 }
 
-
+-(BOOL)needRemoveFromIdBeforeSend {
+    return self.type == DialogTypeChannel && !self.chat.isMegagroup && !self.chat.isSignatures;
+}
 
 @end

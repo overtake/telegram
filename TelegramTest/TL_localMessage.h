@@ -68,6 +68,5 @@ long channelMsgId(int msg_id, int peer_id);
 
 -(TLUser *)fromUser;
 
--(BOOL)isChannelPostMessage;
 
 @end

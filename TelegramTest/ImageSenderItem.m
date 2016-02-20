@@ -69,11 +69,8 @@
         
         [TGCache cacheImage:renderedImage([[NSImage alloc] initWithData:jpegNormalizedData(image)], maxSize) forKey:size.location.cacheKey groups:@[IMGCACHE]];
       
-        self.message = [MessageSender createOutMessage:@"" media:photo conversation:conversation];
+        self.message = [MessageSender createOutMessage:@"" media:photo conversation:conversation additionFlags:additionFlags];
         
-        
-        if(additionFlags & (1 << 4))
-            self.message.from_id = 0;
         
         [jpegData writeToFile:mediaFilePath(self.message) atomically:YES];
         [self.message save:YES];

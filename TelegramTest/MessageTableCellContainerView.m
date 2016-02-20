@@ -151,15 +151,10 @@
     }
     
     if(!self.fwdName) {
-        self.fwdName = [[TMHyperlinkTextField alloc] initWithFrame:NSMakeRect(0, 0, NSWidth(self.fwdContainer.frame) - 100, 25)];
-        [self.fwdName setBordered:NO];
-        [self.fwdName setDrawsBackground:NO];
-        [self.fwdName setAutoresizingMask:NSViewWidthSizable];
+        self.fwdName = [TMHyperlinkTextField defaultTextField];
         [[self.fwdName cell] setTruncatesLastVisibleLine:YES];
-        [[self.fwdName cell] setLineBreakMode:NSLineBreakByTruncatingTail];
         [self.fwdContainer addSubview:self.fwdName];
     }
-    
     
 }
 
@@ -241,7 +236,7 @@
        
         [self.avatarImageView setTapBlock:^{
             
-            [appWindow().navigationController showInfoPage:weakSelf.item.message.isChannelPostMessage ? weakSelf.item.message.conversation : weakSelf.item.user.dialog];
+            [appWindow().navigationController showInfoPage:weakSelf.item.message.isPost ? weakSelf.item.message.conversation : weakSelf.item.user.dialog];
             
         }];
         [self addSubview:self.avatarImageView];
@@ -654,15 +649,20 @@ static BOOL dragAction = NO;
     
     self.stateLayer.container = self;
     
-    [self checkActionState:YES];
-    
-    //  Layers ;)
     
     [self.dateLayer setStringValue:item.dateStr];
     [self.dateLayer setFrameSize:CGSizeMake(item.dateSize.width, item.dateSize.height)];
+    
+    NSSize stateLayerSize = NSMakeSize(MIN(item.message.isPost ? item.viewsCountAndSignSize.width + 30 : 30,NSWidth(item.table.frame) - item.containerOffset - 2 - 200 - NSWidth(self.dateLayer.frame)), NSHeight(_stateLayer.frame));
+    
+    [self.stateLayer setFrameSize:stateLayerSize];
     [self.dateLayer setFrameOrigin:CGPointMake(NSMaxX(_stateLayer.frame), NSMinY(self.dateLayer.frame))];
     [self.rightView setFrameSize:CGSizeMake(item.dateSize.width + offserUnreadMark + NSWidth(self.stateLayer.frame) + 15 , 18)];
     [self.rightView setToolTip:self.item.fullDate];
+    
+    [self checkActionState:YES];
+    
+    [self setSelected:item.isSelected];
     
     if(item.isForwadedMessage) {
         
@@ -694,9 +694,9 @@ static BOOL dragAction = NO;
         } else {
             [self.fwdName setFrameOrigin:NSMakePoint(6, item.viewSize.height - 24 - minus)];
         }
-        
-        [self.fwdName setFrameSize:NSMakeSize(NSWidth(self.containerView.frame) -40, NSHeight(self.fwdName.frame))];
         [self.fwdName setAttributedStringValue:item.forwardMessageAttributedString];
+        [self.fwdName setFrameSize:NSMakeSize(NSWidth(self.containerView.frame) -40, 25)];
+        
         
     } else {
         [CATransaction begin];
@@ -712,11 +712,12 @@ static BOOL dragAction = NO;
 
     if(item.isHeaderMessage) {
         [self initHeader];
-//        [self.nameTextField setBackgroundColor:[NSColor redColor]];
-//        [self.nameTextField setDrawsBackground:YES];
         [self.nameTextField setAttributedStringValue:item.headerName];
         [self.nameTextField setFrameOrigin:NSMakePoint(item.containerOffset - 2, item.viewSize.height - 24)];
-        if(!item.message.isChannelPostMessage)
+        
+        [self.nameTextField setFrameSize:NSMakeSize(MIN(NSWidth(item.table.frame) - NSWidth(self.rightView.frame) - NSMinX(self.nameTextField.frame) - 30,item.headerSize.width) , NSHeight(self.nameTextField.frame))];
+        
+        if(!item.message.isPost)
             [self.avatarImageView setUser:item.user];
         else
             [self.avatarImageView setChat:item.message.chat];
@@ -757,16 +758,14 @@ static BOOL dragAction = NO;
     }
     
     
-    [self setSelected:item.isSelected];
     
     
-
- 
+    
     
     [self setNeedsDisplay:YES];
     
     
-    if(item.message.isChannelMessage && item.message.isChannelPostMessage) {
+    if(item.message.isChannelMessage && item.message.isPost) {
         
         if(!_shareButton) {
             _shareButton = [[BTRButton alloc] initWithFrame:NSMakeRect(0, 0, image_ChannelShare().size.width , image_ChannelShare().size.height )];
@@ -800,9 +799,7 @@ static BOOL dragAction = NO;
         _shareButton = nil;
     }
     
-    NSSize stateLayerSize = NSMakeSize(MIN(item.message.isChannelPostMessage ? item.viewsCountAndSignSize.width + 20 : 30,NSWidth(item.table.frame) - NSMaxX(self.nameTextField.frame)), NSHeight(_stateLayer.frame));
-    
-    [self.stateLayer setFrameSize:stateLayerSize];
+   
 
 }
 
@@ -823,7 +820,7 @@ static int offsetEditable = 30;
     [self.rightView setFrameOrigin:position];
     
     if(!editable)
-        [_shareButton setFrameOrigin:NSMakePoint(NSMinX(_rightView.frame) + NSWidth(_shareButton.frame) + NSWidth(_dateLayer.frame) + 35, NSMinY(_rightView.frame) - NSHeight(_shareButton.frame) - 5)];
+        [_shareButton setFrameOrigin:NSMakePoint(NSMinX(_rightView.frame) + NSWidth(_dateLayer.frame) + NSWidth(_stateLayer.frame) - NSWidth(_shareButton.frame), NSMinY(_rightView.frame) - NSHeight(_shareButton.frame) - 5)];
     
 
     [_shareButton setHidden:editable];
@@ -1136,7 +1133,7 @@ static int offsetEditable = 30;
     }
     
     
-    [self.stateLayer setHidden:!self.item.message.n_out && !self.item.message.isChannelPostMessage];
+    [self.stateLayer setHidden:!self.item.message.n_out && !self.item.message.isPost];
     
     if(!self.stateLayer.isHidden)
         [self.stateLayer setState:state];

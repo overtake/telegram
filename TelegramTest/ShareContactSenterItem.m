@@ -23,10 +23,8 @@
         self.conversation = conversation;
         TL_messageMediaContact *media = [TL_messageMediaContact createWithPhone_number:contact.phone  first_name:contact.first_name last_name:contact.last_name user_id:contact.n_id];
         
-        self.message = [MessageSender createOutMessage:@"" media:media conversation:conversation];
+        self.message = [MessageSender createOutMessage:@"" media:media conversation:conversation additionFlags:additionFlags];
         
-        if(additionFlags & (1 << 4))
-            self.message.from_id = 0;
 
         
         [self.message save:YES];

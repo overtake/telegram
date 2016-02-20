@@ -17,11 +17,8 @@
         
         self.conversation = conversation;
         
-        self.message = [MessageSender createOutMessage:@"" media:[TL_messageMediaGeo createWithGeo:[TL_geoPoint createWithN_long:coordinates.longitude lat:coordinates.latitude]] conversation:conversation];
+        self.message = [MessageSender createOutMessage:@"" media:[TL_messageMediaGeo createWithGeo:[TL_geoPoint createWithN_long:coordinates.longitude lat:coordinates.latitude]] conversation:conversation additionFlags:additionFlags];
         
-        if(additionFlags & (1 << 4))
-            self.message.from_id = 0;
-
         
         [self.message save:YES];
     }

@@ -98,4 +98,6 @@ typedef enum {
 //channel methods
 -(BOOL)canSendChannelMessageAsAdmin;
 -(BOOL)canSendChannelMessageAsUser;
+
+-(BOOL)needRemoveFromIdBeforeSend;
 @end

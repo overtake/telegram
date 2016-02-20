@@ -795,31 +795,46 @@ void open_link(NSString *link) {
     
     if([link hasPrefix:@"openWithPeer:"]) {
         
-        NSString *peer_str = [link substringFromIndex:@"openWithPeer:".length];
-        int peer_id = [[peer_str substringFromIndex:[peer_str rangeOfString:@":"].location+1] intValue];
-        Class peer = NSClassFromString([peer_str substringToIndex:[peer_str rangeOfString:@":"].location]);
-        if(peer == [TL_peerUser class]) {
+        NSArray *components = [link componentsSeparatedByString:@":"];
+        if(components.count > 2) {
+            int peer_id = [components[2] intValue];
             
-            TLUser *user = [[UsersManager sharedManager] find:peer_id];
+            Class peer = NSClassFromString(components[1]);
             
-            TL_conversation *conversation = user.dialog;
+            int msgId = components.count == 4 ? [components[3] intValue] : 0;
             
-            [appWindow().navigationController showInfoPage:conversation];
-            
-        } else if(peer == [TL_peerChat class] || peer == [TL_peerChannel class]) {
-            
-            TLChat *chat = [[ChatsManager sharedManager] find:abs(peer_id)];
-            
-            if(chat.username.length == 0 && chat.isBroadcast && chat.dialog.isInvisibleChannel)
-                return;
-            
-            if(appWindow().navigationController.messagesViewController.conversation.peer_id == peer_id) {
-                 [appWindow().navigationController showInfoPage:chat.dialog];
-            } else {
-                [appWindow().navigationController showMessagesViewController:chat.dialog];
+            if(peer == [TL_peerUser class]) {
+                
+                TLUser *user = [[UsersManager sharedManager] find:peer_id];
+                
+                TL_conversation *conversation = user.dialog;
+                
+                [appWindow().navigationController showInfoPage:conversation];
+                
+            } else if(peer == [TL_peerChat class] || peer == [TL_peerChannel class]) {
+                
+                TLChat *chat = [[ChatsManager sharedManager] find:abs(peer_id)];
+                
+                if(chat.username.length == 0 && chat.isBroadcast && chat.dialog.isInvisibleChannel)
+                    return;
+                
+                if(appWindow().navigationController.messagesViewController.conversation.peer_id == peer_id) {
+                    [appWindow().navigationController showInfoPage:chat.dialog];
+                } else {
+                    
+                    TL_localMessage *message;
+                    if(msgId != 0) {
+                        message = [[TL_localMessage alloc] init];
+                        message.n_id = msgId;
+                        message.to_id = [peer isKindOfClass:[TL_peerChat class]] ? [TL_peerChat createWithChat_id:abs(peer_id)] : [TL_peerChannel createWithChannel_id:abs(peer_id)];
+                    }
+                    
+                    [appWindow().navigationController showMessagesViewController:chat.dialog withMessage:message];
+                }
+                
             }
-            
         }
+        
         
         return;
     }

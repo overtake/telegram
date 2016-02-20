@@ -80,4 +80,8 @@
 }
 
 
+-(BOOL)isPost {
+    return self.from_id == 0;
+}
+
 @end

@@ -16,6 +16,15 @@
     return [NSString stringWithFormat:@"USER_PROFILE:%d", user_id];
 }
 
++ (NSString *)peerProfile:(TLPeer*)peer jumpId:(int)jump_id {
+    if(jump_id > 0) {
+        return [NSString stringWithFormat:@"openWithPeer:%@:%d:%d",peer.className,peer.peer_id,jump_id];
+    } else {
+        return [self peerProfile:peer];
+    }
+    
+}
+
 + (NSString *)peerProfile:(TLPeer*)peer {
     return [NSString stringWithFormat:@"openWithPeer:%@:%d",peer.className,peer.peer_id];
 }
