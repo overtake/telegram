@@ -135,6 +135,9 @@ float ease(float t, float b, float c, float d) {
     
 	[super drawRect:dirtyRect];
     
+    if(self.currentProgress == 0.0f)
+        return;
+    
     
     const int topPadding = 1;
     
