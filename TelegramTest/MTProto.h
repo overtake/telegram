@@ -2,7 +2,7 @@
 //  MTProto.h
 //  Telegram
 //
-//  Auto created by Mikhail Filimonov on 18.02.16.
+//  Auto created by Mikhail Filimonov on 21.02.16.
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -903,7 +903,7 @@
 @property (nonatomic,assign,readonly) BOOL isVerified;
 @property (nonatomic,assign,readonly) BOOL isMegagroup;
 @property (nonatomic,assign,readonly) BOOL isRestricted;
-@property (nonatomic,assign,readonly) BOOL isAdmin_invites;
+@property (nonatomic,assign,readonly) BOOL isDemocracy;
 @property (nonatomic,assign,readonly) BOOL isSignatures;
 @property long access_hash;
 @property (nonatomic, strong) NSString* username;
@@ -1299,14 +1299,15 @@
 @end
 	
 @interface TLInputPeerNotifySettings()
+@property int flags;
+@property (nonatomic,assign,readonly) BOOL isShow_previews;
+@property (nonatomic,assign,readonly) BOOL isSilent;
 @property int mute_until;
 @property (nonatomic, strong) NSString* sound;
-@property Boolean show_previews;
-@property int events_mask;
 @end
 
 @interface TL_inputPeerNotifySettings : TLInputPeerNotifySettings<NSCoding>
-+(TL_inputPeerNotifySettings*)createWithMute_until:(int)mute_until sound:(NSString*)sound show_previews:(Boolean)show_previews events_mask:(int)events_mask;
++(TL_inputPeerNotifySettings*)createWithFlags:(int)flags   mute_until:(int)mute_until sound:(NSString*)sound;
 @end
 	
 @interface TLPeerNotifyEvents()
@@ -1321,9 +1322,11 @@
 @end
 	
 @interface TLPeerNotifySettings()
+@property int flags;
+@property Boolean show_previews;
+@property (nonatomic,assign,readonly) BOOL isSilent;
 @property int mute_until;
 @property (nonatomic, strong) NSString* sound;
-@property Boolean show_previews;
 @property int events_mask;
 @end
 
@@ -1331,7 +1334,10 @@
 +(TL_peerNotifySettingsEmpty*)create;
 @end
 @interface TL_peerNotifySettings : TLPeerNotifySettings<NSCoding>
-+(TL_peerNotifySettings*)createWithMute_until:(int)mute_until sound:(NSString*)sound show_previews:(Boolean)show_previews events_mask:(int)events_mask;
++(TL_peerNotifySettings*)createWithFlags:(int)flags   mute_until:(int)mute_until sound:(NSString*)sound;
+@end
+@interface TL_peerNotifySettings_old47 : TLPeerNotifySettings<NSCoding>
++(TL_peerNotifySettings_old47*)createWithMute_until:(int)mute_until sound:(NSString*)sound show_previews:(Boolean)show_previews events_mask:(int)events_mask;
 @end
 	
 @interface TLWallPaper()

@@ -425,7 +425,7 @@ static NSTextAttachment *channelIconAttachment() {
                 
                 if([document.mime_type hasPrefix:@"video"] && attr != nil) {
                     objectReturn = [[MessageTableItemMpeg alloc] initWithObject:message];
-                } else if([document.mime_type hasPrefix:@"video"] && [document attributeWithClass:[TL_documentAttributeVideo class]] != nil) {
+                } else if([document attributeWithClass:[TL_documentAttributeVideo class]] != nil) {
                     objectReturn = [[MessageTableItemVideo alloc] initWithObject:message];
                 } else if([document.mime_type isEqualToString:@"image/gif"] && ![document.thumb isKindOfClass:[TL_photoSizeEmpty class]]) {
                     objectReturn = [[MessageTableItemGif alloc] initWithObject:message];
@@ -559,7 +559,7 @@ static NSTextAttachment *channelIconAttachment() {
     dateSize.width = roundf(dateSize.width)+5;
     dateSize.height = roundf(dateSize.height);
     self.dateSize = dateSize;
-    
+     
     NSDateFormatter *formatter = [NSDateFormatter new];
     
     [formatter setDateStyle:NSDateFormatterMediumStyle];

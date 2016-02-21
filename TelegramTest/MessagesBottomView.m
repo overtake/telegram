@@ -1874,14 +1874,9 @@ static RBLPopover *popover;
         [self removeQuickRecord];
         
         
-        
         [self setInputMessageString:_template.text ? _template.text : @"" disableAnimations:NO];
         
-        if(_template.type == TGInputMessageTemplateTypeSimpleText) {
-            [_imageAttachmentsController show:_dialog animated:YES];
-        } else {
-            [_imageAttachmentsController hide:YES deleteItems:NO];
-        }
+        [_imageAttachmentsController hide:YES deleteItems:NO];
         
         [self checkReplayMessage:YES animated:YES];
         

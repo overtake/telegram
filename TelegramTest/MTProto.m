@@ -2,7 +2,7 @@
 //  MTProto.m
 //  Telegram
 //
-//  Auto created by Mikhail Filimonov on 18.02.16.
+//  Auto created by Mikhail Filimonov on 21.02.16.
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -3637,7 +3637,7 @@
                         
 -(BOOL)isRestricted {return NO;}
                         
--(BOOL)isAdmin_invites {return NO;}
+-(BOOL)isDemocracy {return NO;}
                         
 -(BOOL)isSignatures {return NO;}
                         
@@ -3974,7 +3974,7 @@
                         
 -(BOOL)isRestricted {return (self.flags & (1 << 9)) > 0;}
                         
--(BOOL)isAdmin_invites {return (self.flags & (1 << 10)) > 0;}
+-(BOOL)isDemocracy {return (self.flags & (1 << 10)) > 0;}
                         
 -(BOOL)isSignatures {return (self.flags & (1 << 11)) > 0;}
                         
@@ -7841,39 +7841,47 @@
 @end
 
 @implementation TLInputPeerNotifySettings
-
+            
+-(BOOL)isShow_previews {return NO;}
+                        
+-(BOOL)isSilent {return NO;}
+            
 @end
         
 @implementation TL_inputPeerNotifySettings
-+(TL_inputPeerNotifySettings*)createWithMute_until:(int)mute_until sound:(NSString*)sound show_previews:(Boolean)show_previews events_mask:(int)events_mask {
++(TL_inputPeerNotifySettings*)createWithFlags:(int)flags   mute_until:(int)mute_until sound:(NSString*)sound {
 	TL_inputPeerNotifySettings* obj = [[TL_inputPeerNotifySettings alloc] init];
+	obj.flags = flags;
+	
+	
 	obj.mute_until = mute_until;
 	obj.sound = sound;
-	obj.show_previews = show_previews;
-	obj.events_mask = events_mask;
 	return obj;
 }
 -(void)serialize:(SerializedData*)stream {
+	[stream writeInt:self.flags];
+	
+	
 	[stream writeInt:self.mute_until];
 	[stream writeString:self.sound];
-	[stream writeBool:self.show_previews];
-	[stream writeInt:self.events_mask];
 }
 -(void)unserialize:(SerializedData*)stream {
+	super.flags = [stream readInt];
+	
+	
 	super.mute_until = [stream readInt];
 	super.sound = [stream readString];
-	super.show_previews = [stream readBool];
-	super.events_mask = [stream readInt];
 }
         
 -(TL_inputPeerNotifySettings *)copy {
     
     TL_inputPeerNotifySettings *objc = [[TL_inputPeerNotifySettings alloc] init];
     
+    objc.flags = self.flags;
+    
+    
     objc.mute_until = self.mute_until;
     objc.sound = self.sound;
-    objc.show_previews = self.show_previews;
-    objc.events_mask = self.events_mask;
     
     return objc;
 }
@@ -7893,7 +7901,11 @@
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
         
-
+            
+-(BOOL)isShow_previews {return (self.flags & (1 << 0)) > 0;}
+                        
+-(BOOL)isSilent {return (self.flags & (1 << 1)) > 0;}
+            
         
 @end
 
@@ -7984,7 +7996,11 @@
 @end
 
 @implementation TLPeerNotifySettings
-
+            
+-(BOOL)isShow_previews {return NO;}
+                        
+-(BOOL)isSilent {return NO;}
+            
 @end
         
 @implementation TL_peerNotifySettingsEmpty
@@ -8029,8 +8045,69 @@
 @end
 
 @implementation TL_peerNotifySettings
-+(TL_peerNotifySettings*)createWithMute_until:(int)mute_until sound:(NSString*)sound show_previews:(Boolean)show_previews events_mask:(int)events_mask {
++(TL_peerNotifySettings*)createWithFlags:(int)flags   mute_until:(int)mute_until sound:(NSString*)sound {
 	TL_peerNotifySettings* obj = [[TL_peerNotifySettings alloc] init];
+	obj.flags = flags;
+	
+	
+	obj.mute_until = mute_until;
+	obj.sound = sound;
+	return obj;
+}
+-(void)serialize:(SerializedData*)stream {
+	[stream writeInt:self.flags];
+	
+	
+	[stream writeInt:self.mute_until];
+	[stream writeString:self.sound];
+}
+-(void)unserialize:(SerializedData*)stream {
+	super.flags = [stream readInt];
+	
+	
+	super.mute_until = [stream readInt];
+	super.sound = [stream readString];
+}
+        
+-(TL_peerNotifySettings *)copy {
+    
+    TL_peerNotifySettings *objc = [[TL_peerNotifySettings alloc] init];
+    
+    objc.flags = self.flags;
+    
+    
+    objc.mute_until = self.mute_until;
+    objc.sound = self.sound;
+    
+    return objc;
+}
+        
+
+    
+-(id)initWithCoder:(NSCoder *)aDecoder {
+
+    if((self = [ClassStore deserialize:[aDecoder decodeObjectForKey:@"data"]])) {
+        
+    }
+    
+    return self;
+}
+        
+-(void)encodeWithCoder:(NSCoder *)aCoder {
+    [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
+}
+        
+            
+-(BOOL)isShow_previews {return (self.flags & (1 << 0)) > 0;}
+                        
+-(BOOL)isSilent {return (self.flags & (1 << 1)) > 0;}
+            
+        
+@end
+
+@implementation TL_peerNotifySettings_old47
++(TL_peerNotifySettings_old47*)createWithMute_until:(int)mute_until sound:(NSString*)sound show_previews:(Boolean)show_previews events_mask:(int)events_mask {
+	TL_peerNotifySettings_old47* obj = [[TL_peerNotifySettings_old47 alloc] init];
 	obj.mute_until = mute_until;
 	obj.sound = sound;
 	obj.show_previews = show_previews;
@@ -8050,9 +8127,9 @@
 	super.events_mask = [stream readInt];
 }
         
--(TL_peerNotifySettings *)copy {
+-(TL_peerNotifySettings_old47 *)copy {
     
-    TL_peerNotifySettings *objc = [[TL_peerNotifySettings alloc] init];
+    TL_peerNotifySettings_old47 *objc = [[TL_peerNotifySettings_old47 alloc] init];
     
     objc.mute_until = self.mute_until;
     objc.sound = self.sound;

@@ -588,6 +588,10 @@
             return @"GIF";
         }
         
+        if([message.media.document attributeWithClass:[TL_documentAttributeVideo class]]) {
+            return NSLocalizedString(@"ChatMedia.Video", nil);
+        }
+        
         if(message.media.document.audioAttr.isVoice) {
             return NSLocalizedString(@"ChatMedia.Audio", nil);
         }

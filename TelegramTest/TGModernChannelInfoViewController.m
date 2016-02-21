@@ -294,7 +294,7 @@
             [_tableView addItem:[[TGGeneralRowItem alloc] initWithHeight:20] tableRedraw:YES];
         }
         
-        if(_chat.isManager || _chat.isCreator || !_chat.isAdmin_invites) {
+        if(_chat.isManager || _chat.isCreator || _chat.isDemocracy) {
             addMembersItem = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeNone callback:^(TGGeneralRowItem *item) {
                 
                 NSMutableArray *filter = [[NSMutableArray alloc] init];
@@ -410,7 +410,7 @@
             [_tableView addItem:[[TGGeneralRowItem alloc] initWithHeight:20] tableRedraw:YES];
         }
         
-        if(!_chat.isAdmin_invites && !_chat.isManager) {
+        if(_chat.isDemocracy && !_chat.isManager) {
             [_tableView addItem:[[TGGeneralRowItem alloc] initWithHeight:20] tableRedraw:YES];
         }
         

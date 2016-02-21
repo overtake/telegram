@@ -5834,7 +5834,7 @@
                value = "self.thumbObject.imageSize">
             </PersistentString>
             <PersistentString
-               value = "self.message.media.document.thumb">
+               value = "self.message.media.document">
             </PersistentString>
          </PersistentStrings>
       </ContextState>

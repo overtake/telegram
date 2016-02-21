@@ -3,7 +3,7 @@
 //  ClassStore.m
 //  Telegram
 //
-    //  Created by keepcoder on 18.02.16.
+    //  Created by keepcoder on 21.02.16.
 //  Copyright (c) 2015 keepcoder. All rights reserved.
 //
 
@@ -234,11 +234,11 @@ static NSMutableDictionary *cs_constuctors;
    [cs_classes setObject:[TL_inputNotifyAll class] forKey:[NSNumber numberWithInt:-1540769658]];
    [cs_classes setObject:[TL_inputPeerNotifyEventsEmpty class] forKey:[NSNumber numberWithInt:-265263912]];
    [cs_classes setObject:[TL_inputPeerNotifyEventsAll class] forKey:[NSNumber numberWithInt:-395694988]];
-   [cs_classes setObject:[TL_inputPeerNotifySettings class] forKey:[NSNumber numberWithInt:1185074840]];
+   [cs_classes setObject:[TL_inputPeerNotifySettings class] forKey:[NSNumber numberWithInt:949182130]];
    [cs_classes setObject:[TL_peerNotifyEventsEmpty class] forKey:[NSNumber numberWithInt:-1378534221]];
    [cs_classes setObject:[TL_peerNotifyEventsAll class] forKey:[NSNumber numberWithInt:1830677896]];
    [cs_classes setObject:[TL_peerNotifySettingsEmpty class] forKey:[NSNumber numberWithInt:1889961234]];
-   [cs_classes setObject:[TL_peerNotifySettings class] forKey:[NSNumber numberWithInt:-1923214866]];
+   [cs_classes setObject:[TL_peerNotifySettings class] forKey:[NSNumber numberWithInt:-1697798976]];
    [cs_classes setObject:[TL_wallPaper class] forKey:[NSNumber numberWithInt:-860866985]];
    [cs_classes setObject:[TL_inputReportReasonSpam class] forKey:[NSNumber numberWithInt:1490799288]];
    [cs_classes setObject:[TL_inputReportReasonViolence class] forKey:[NSNumber numberWithInt:505595789]];
@@ -560,6 +560,7 @@ static NSMutableDictionary *cs_constuctors;
    [cs_classes setObject:[TL_documentAttributeAudio_old45 class] forKey:[NSNumber numberWithInt:-556656416]];
    [cs_classes setObject:[TL_messageMediaVideo class] forKey:[NSNumber numberWithInt:1540298357]];
    [cs_classes setObject:[TL_video class] forKey:[NSNumber numberWithInt:-148338733]];
+   [cs_classes setObject:[TL_peerNotifySettings_old47 class] forKey:[NSNumber numberWithInt:-1923214866]];
    [cs_classes setObject:[TL_proto_message class] forKey:[NSNumber numberWithInt:1538843921]];
    [cs_classes setObject:[TL_msg_container class] forKey:[NSNumber numberWithInt:1945237724]];
    [cs_classes setObject:[TL_req_pq class] forKey:[NSNumber numberWithInt:1615239032]];

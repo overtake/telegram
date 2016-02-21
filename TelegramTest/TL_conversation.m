@@ -270,11 +270,12 @@
 - (void)_changeMute:(int)until completeHandler:(dispatch_block_t)completeHandler {
     __block int mute_until = until == 0 ? 0 : [[MTNetwork instance] getTime] + until;
     
-    id request = [TLAPI_account_updateNotifySettings createWithPeer:[TL_inputNotifyPeer createWithPeer:[self inputPeer]] settings:[TL_inputPeerNotifySettings createWithMute_until:mute_until sound:self.notify_settings.sound ? self.notify_settings.sound : @"" show_previews:self.notify_settings.show_previews events_mask:self.notify_settings.events_mask]];
+    id request = [TLAPI_account_updateNotifySettings createWithPeer:[TL_inputNotifyPeer createWithPeer:[self inputPeer]] settings:[TL_inputPeerNotifySettings createWithFlags:self.notify_settings.flags mute_until:mute_until sound:self.notify_settings.sound]];
+    
     
     
     dispatch_block_t successBlock = ^{
-        self.notify_settings = [TL_peerNotifySettings createWithMute_until:mute_until sound:self.notify_settings.sound show_previews:self.notify_settings.show_previews events_mask:self.notify_settings.events_mask];
+        self.notify_settings = [TL_peerNotifySettings createWithFlags:self.notify_settings.flags mute_until:mute_until sound:self.notify_settings.sound];
         [self updateNotifySettings:self.notify_settings];
         
         if(completeHandler)

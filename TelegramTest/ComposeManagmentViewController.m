@@ -91,7 +91,7 @@
                 
                 
             } description:NSLocalizedString(@"SuperGroup.InviteSettings.AllMembers", nil) height:42 stateback:^id(TGGeneralRowItem *item) {
-                return @(!chat.isAdmin_invites);
+                return @(chat.isDemocracy);
             }];
             
             GeneralSettingsRowItem *onlyAdmins = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeSelected callback:^(TGGeneralRowItem *item) {
@@ -99,7 +99,7 @@
                 request(NO);
                 
             } description:NSLocalizedString(@"SuperGroup.InviteSettings.OnlyAdmins", nil) height:42 stateback:^id(TGGeneralRowItem *item) {
-                return @(chat.isAdmin_invites);
+                return @(chat.isDemocracy);
             }];
             
             
