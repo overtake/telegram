@@ -159,9 +159,7 @@ NSString* mediaFilePath(TL_localMessage *message) {
             
         }
         
-        if([document attributeWithClass:[TL_documentAttributeVideo class]] != nil && [document.mime_type hasPrefix:@"video"]) {
-            return [NSString stringWithFormat:@"%@/%ld.%@",path(),document.n_id,[document.mime_type substringFromIndex:[document.mime_type rangeOfString:@"/"].location + 1]];
-        } else if([document attributeWithClass:[TL_documentAttributeVideo class]]) {
+        if([document attributeWithClass:[TL_documentAttributeVideo class]]) {
             return [NSString stringWithFormat:@"%@/%lu_%lu.mp4",path(),message.media.document.n_id,message.media.document.access_hash];
         }
         

@@ -62,7 +62,7 @@ typedef enum {
 - (void)mute:(dispatch_block_t)completeHandler;
 
 - (void)updateNotifySettings:(TLPeerNotifySettings *)notify_settings;
-
+- (void)updateNotifySettings:(TLPeerNotifySettings *)notify_settings serverSave:(BOOL)serverSave;
 -(int)peer_id;
 
 typedef enum {

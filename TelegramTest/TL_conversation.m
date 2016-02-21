@@ -310,11 +310,23 @@
 }
 
 - (void)updateNotifySettings:(TLPeerNotifySettings *)notify_settings {
+    [self updateNotifySettings:notify_settings serverSave:NO];
+}
+
+- (void)updateNotifySettings:(TLPeerNotifySettings *)notify_settings serverSave:(BOOL)serverSave {
     self.notify_settings = notify_settings;
     
     [self save];
     
     [Notification perform:[Notification notificationNameByDialog:self action:@"notification"] data:@{@"notify_settings":self.notify_settings}];
+
+    
+    if(serverSave) {
+        
+        id request = [TLAPI_account_updateNotifySettings createWithPeer:[TL_inputNotifyPeer createWithPeer:[self inputPeer]] settings:[TL_inputPeerNotifySettings createWithFlags:self.notify_settings.flags mute_until:self.notify_settings.mute_until sound:self.notify_settings.sound]];
+        
+        [RPCRequest sendRequest:request successHandler:nil errorHandler:nil];
+    }
 }
 
 

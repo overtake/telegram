@@ -45,7 +45,7 @@ typedef enum {
 
 
 typedef enum {
-    PushEventMaskDisableChannelMessageNotification = 1 << 31
+    PushEventMaskDisableChannelMessageNotification = 1 << 1
 } PushEventMask;
 
 typedef enum {

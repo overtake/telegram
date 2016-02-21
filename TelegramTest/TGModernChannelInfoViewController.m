@@ -486,16 +486,20 @@
             
             GeneralSettingsRowItem *notifyMembers = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeSwitch callback:^(TGGeneralRowItem *item) {
                 
-                if(weakSelf.chat.dialog.notify_settings.events_mask & PushEventMaskDisableChannelMessageNotification)
-                    weakSelf.chat.dialog.notify_settings.events_mask &= ~PushEventMaskDisableChannelMessageNotification;
+                int flags = weakSelf.chat.dialog.notify_settings.flags;
+                
+                if(flags & PushEventMaskDisableChannelMessageNotification)
+                    flags &= ~PushEventMaskDisableChannelMessageNotification;
                 else
-                    weakSelf.chat.dialog.notify_settings.events_mask |= PushEventMaskDisableChannelMessageNotification;
-            
-                [weakSelf.chat.dialog save];
+                    flags |= PushEventMaskDisableChannelMessageNotification;
+                
+                
+                
+                [weakSelf.chat.dialog updateNotifySettings:[TL_peerNotifySettings createWithFlags:flags mute_until:weakSelf.chat.dialog.notify_settings.mute_until sound:weakSelf.chat.dialog.notify_settings.sound]];
                 
 
             } description:NSLocalizedString(@"Channel.NotifyMembers", nil) subdesc:_chat.usernameLink height:42 stateback:^id(TGGeneralRowItem *item) {
-                return @(!(weakSelf.chat.dialog.notify_settings.events_mask & PushEventMaskDisableChannelMessageNotification));
+                return @(!(weakSelf.chat.dialog.notify_settings.flags & PushEventMaskDisableChannelMessageNotification));
             }];
             
             [_tableView addItem:notifyMembers tableRedraw:YES];

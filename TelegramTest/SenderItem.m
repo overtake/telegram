@@ -450,7 +450,7 @@ static NSMutableArray *waiting;
     
     flags|=self.message.isPost ? 1 << 4 : 0;
     
-    if(self.conversation.notify_settings.events_mask & PushEventMaskDisableChannelMessageNotification) {
+    if(self.conversation.notify_settings.flags & PushEventMaskDisableChannelMessageNotification) {
         flags|= 1 << 13;
     }
     
