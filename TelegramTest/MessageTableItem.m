@@ -6,6 +6,8 @@
 //  Copyright (c) 2014 keepcoder. All rights reserved.
 //
 
+#import "MessageTableElements.h"
+
 #import "MessageTableItem.h"
 #import "MessageTableItemServiceMessage.h"
 #import "MessageTableItemText.h"
@@ -319,24 +321,21 @@ static NSTextAttachment *channelIconAttachment() {
     self._viewSize = viewSize;
 }
 
+-(BOOL)isHeaderMessage {
+    return YES;//test
+}
+
 - (NSSize)viewSize {
     NSSize viewSize = self._viewSize;
     
     if(!self.message.hole && ![self isKindOfClass:[MessageTableItemServiceMessage class]] && ![self isKindOfClass:[MessageTableItemUnreadMark class]] && ![self isKindOfClass:[MessageTableHeaderItem class]]) {
+        
         if(self.isHeaderMessage) {
-            viewSize.height += 32;
+            
+            viewSize.height += 30;
             
             if(self.isForwadedMessage)
                 viewSize.height += 20;
-            
-//            if(self.isViaBot && !self.isForwadedMessage) {
-//                viewSize.height+=16;
-//                if(self.message.media != nil && ![self.message.media isKindOfClass:[TL_messageMediaWebPage class]] && ![self isReplyMessage]) {
-//                    
-//                    if([self.message.media isKindOfClass:[TL_messageMediaBotResult class]] && ![self.message.media.bot_result.send_message isKindOfClass:[TL_botInlineMessageText class]])
-//                    viewSize.height+=6;
-//                }
-//            }
             
             
             if(viewSize.height < 44)
@@ -705,5 +704,10 @@ static NSTextAttachment *channelIconAttachment() {
     });
     return dateF;
 }
+
+-(Class)viewClass {
+    return [TGModernMessageCellContainerView class];
+}
+
 
 @end

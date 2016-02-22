@@ -99,4 +99,7 @@
 
 -(BOOL)isViaBot;
 
+
+-(Class)viewClass;
+
 @end

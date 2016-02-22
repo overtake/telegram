@@ -645,159 +645,159 @@ static BOOL dragAction = NO;
     
     [super setItem:item];
     
-    [self.progressView setCurrentProgress:0];
-    
-    self.stateLayer.container = self;
-    
-    
-    [self.dateLayer setStringValue:item.dateStr];
-    [self.dateLayer setFrameSize:CGSizeMake(item.dateSize.width, item.dateSize.height)];
-    
-    NSSize stateLayerSize = NSMakeSize(MIN(item.message.isPost ? item.viewsCountAndSignSize.width + 30 : 30,NSWidth(item.table.frame) - item.containerOffset - 2 - 200 - NSWidth(self.dateLayer.frame)), NSHeight(_stateLayer.frame));
-    
-    [self.stateLayer setFrameSize:stateLayerSize];
-    [self.dateLayer setFrameOrigin:CGPointMake(NSMaxX(_stateLayer.frame), NSMinY(self.dateLayer.frame))];
-    [self.rightView setFrameSize:CGSizeMake(item.dateSize.width + offserUnreadMark + NSWidth(self.stateLayer.frame) + 15 , 18)];
-    [self.rightView setToolTip:self.item.fullDate];
-    
-    [self checkActionState:YES];
-    
-    [self setSelected:item.isSelected];
-    
-    if(item.isForwadedMessage) {
-        
-        [self initForwardContainer];
-        
-        [_fwdContainer setFrame:NSMakeRect(self.item.containerOffset, 0, self.bounds.size.width - 130, self.bounds.size.height )];
-        
-        float minus = 0;
-        
-        if(self.item.isHeaderForwardedMessage) {
-            minus = FORWARMESSAGE_TITLE_HEIGHT;
-            
-            float minus = item.isHeaderMessage ? 30 : 5;
-            [self.forwardMessagesTextLayer setFrameOrigin:CGPointMake(item.containerOffset+1, item.viewSize.height - self.forwardMessagesTextLayer.frame.size.height - minus)];
-            
-            [CATransaction begin];
-            [CATransaction setDisableActions:YES];
-            [self.forwardMessagesTextLayer setHidden:NO];
-            [CATransaction commit];
-        } else {
-            [CATransaction begin];
-            [CATransaction setDisableActions:YES];
-            [self.forwardMessagesTextLayer setHidden:YES];
-            [CATransaction commit];
-        }
-        
-        if(self.item.isHeaderMessage) {
-            [self.fwdName setFrameOrigin:NSMakePoint(6, item.viewSize.height - 50 - minus)];
-        } else {
-            [self.fwdName setFrameOrigin:NSMakePoint(6, item.viewSize.height - 24 - minus)];
-        }
-        [self.fwdName setAttributedStringValue:item.forwardMessageAttributedString];
-        [self.fwdName setFrameSize:NSMakeSize(NSWidth(self.containerView.frame) -40, 25)];
-        
-        
-    } else {
-        [CATransaction begin];
-        [CATransaction setDisableActions:YES];
-        [self.forwardMessagesTextLayer setHidden:YES];
-        [CATransaction commit];
-        
-        [self deallocForwardContainer];
-        
-    }
-    
-    
-
-    if(item.isHeaderMessage) {
-        [self initHeader];
-        [self.nameTextField setAttributedStringValue:item.headerName];
-        [self.nameTextField setFrameOrigin:NSMakePoint(item.containerOffset - 2, item.viewSize.height - 24)];
-        
-        [self.nameTextField setFrameSize:NSMakeSize(MIN(NSWidth(item.table.frame) - NSWidth(self.rightView.frame) - NSMinX(self.nameTextField.frame) - 30,item.headerSize.width) , NSHeight(self.nameTextField.frame))];
-        
-        if(!item.message.isPost)
-            [self.avatarImageView setUser:item.user];
-        else
-            [self.avatarImageView setChat:item.message.chat];
-        [self.avatarImageView setFrameOrigin:NSMakePoint(29, item.viewSize.height - 43)];
-        
-        
-    } else {
-        [self deallocHeader];
-    }
-
-    [self.containerView setFrame:NSMakeRect(item.isForwadedMessage ? item.containerOffsetForward : item.containerOffset, item.isHeaderMessage ? item.isForwadedMessage ? 4 : 4 : item.isForwadedMessage ? 4 : roundf((item.viewSize.height - item.blockSize.height)/2), NSWidth(self.frame) - 160, item.blockSize.height)];
-
-    
-    if([item isReplyMessage])
-    {
-        
-        [self initReplyContainer];
-        
-        [_replyContainer setItem:item];
-        
-        [_replyContainer setReplyObject:item.replyObject];
-        
-        [_replyContainer setFrame:NSMakeRect(item.containerOffset + 1, NSHeight(_containerView.frame) + 10, item.blockWidth  , item.replyObject.containerHeight)];
-        
-        
-    } else {
-        [self deallocReplyContainer];
-    }
-    
-    if(item.messageSender)  {
-        
-        [item.messageSender addEventListener:self];
-        
-        if(item.messageSender.state == MessageStateWaitSend)
-            [item.messageSender send];
-        else
-            [self checkState:item.messageSender];
-    }
-    
-    
-    
-    
-    
-    
-    [self setNeedsDisplay:YES];
-    
-    
-    if(item.message.isChannelMessage && item.message.isPost) {
-        
-        if(!_shareButton) {
-            _shareButton = [[BTRButton alloc] initWithFrame:NSMakeRect(0, 0, image_ChannelShare().size.width , image_ChannelShare().size.height )];
-            [_shareButton setCursor:[NSCursor pointingHandCursor] forControlState:BTRControlStateHover];
-            [_shareButton setImage:image_ChannelShare() forControlState:BTRControlStateNormal];
-            weak();
-            
-            [_shareButton addBlock:^(BTRControlEvents events) {
-                [weakSelf.forwardModalView close:NO];
-                weakSelf.forwardModalView = nil;
-                
-                weakSelf.forwardModalView = [[TGModalForwardView alloc] initWithFrame:weakSelf.window.contentView.bounds];
-                
-                [weakSelf.messagesViewController setSelectedMessage:weakSelf.item selected:YES];
-                
-                weakSelf.forwardModalView.messagesViewController = weakSelf.messagesViewController;
-                weakSelf.forwardModalView.messageCaller = weakSelf.item.message;
-                
-                [weakSelf.forwardModalView show:weakSelf.window animated:YES];
-
-            } forControlEvents:BTRControlEventClick ];
-        }
-        
-        
-        [self addSubview:_shareButton];
-        [_shareButton setAutoresizingMask:NSViewMinXMargin];
-
-        
-    } else {
-        [_shareButton removeFromSuperview];
-        _shareButton = nil;
-    }
+//    [self.progressView setCurrentProgress:0];
+//    
+//    self.stateLayer.container = self;
+//    
+//    
+//    [self.dateLayer setStringValue:item.dateStr];
+//    [self.dateLayer setFrameSize:CGSizeMake(item.dateSize.width, item.dateSize.height)];
+//    
+//    NSSize stateLayerSize = NSMakeSize(MIN(item.message.isPost ? item.viewsCountAndSignSize.width + 30 : 30,NSWidth(item.table.frame) - item.containerOffset - 2 - 200 - NSWidth(self.dateLayer.frame)), NSHeight(_stateLayer.frame));
+//    
+//    [self.stateLayer setFrameSize:stateLayerSize];
+//    [self.dateLayer setFrameOrigin:CGPointMake(NSMaxX(_stateLayer.frame), NSMinY(self.dateLayer.frame))];
+//    [self.rightView setFrameSize:CGSizeMake(item.dateSize.width + offserUnreadMark + NSWidth(self.stateLayer.frame) + 15 , 18)];
+//    [self.rightView setToolTip:self.item.fullDate];
+//    
+//    [self checkActionState:YES];
+//    
+//    [self setSelected:item.isSelected];
+//    
+//    if(item.isForwadedMessage) {
+//        
+//        [self initForwardContainer];
+//        
+//        [_fwdContainer setFrame:NSMakeRect(self.item.containerOffset, 0, self.bounds.size.width - 130, self.bounds.size.height )];
+//        
+//        float minus = 0;
+//        
+//        if(self.item.isHeaderForwardedMessage) {
+//            minus = FORWARMESSAGE_TITLE_HEIGHT;
+//            
+//            float minus = item.isHeaderMessage ? 30 : 5;
+//            [self.forwardMessagesTextLayer setFrameOrigin:CGPointMake(item.containerOffset+1, item.viewSize.height - self.forwardMessagesTextLayer.frame.size.height - minus)];
+//            
+//            [CATransaction begin];
+//            [CATransaction setDisableActions:YES];
+//            [self.forwardMessagesTextLayer setHidden:NO];
+//            [CATransaction commit];
+//        } else {
+//            [CATransaction begin];
+//            [CATransaction setDisableActions:YES];
+//            [self.forwardMessagesTextLayer setHidden:YES];
+//            [CATransaction commit];
+//        }
+//        
+//        if(self.item.isHeaderMessage) {
+//            [self.fwdName setFrameOrigin:NSMakePoint(6, item.viewSize.height - 50 - minus)];
+//        } else {
+//            [self.fwdName setFrameOrigin:NSMakePoint(6, item.viewSize.height - 24 - minus)];
+//        }
+//        [self.fwdName setAttributedStringValue:item.forwardMessageAttributedString];
+//        [self.fwdName setFrameSize:NSMakeSize(NSWidth(self.containerView.frame) -40, 25)];
+//        
+//        
+//    } else {
+//        [CATransaction begin];
+//        [CATransaction setDisableActions:YES];
+//        [self.forwardMessagesTextLayer setHidden:YES];
+//        [CATransaction commit];
+//        
+//        [self deallocForwardContainer];
+//        
+//    }
+//    
+//    
+//
+//    if(item.isHeaderMessage) {
+//        [self initHeader];
+//        [self.nameTextField setAttributedStringValue:item.headerName];
+//        [self.nameTextField setFrameOrigin:NSMakePoint(item.containerOffset - 2, item.viewSize.height - 24)];
+//        
+//        [self.nameTextField setFrameSize:NSMakeSize(MIN(NSWidth(item.table.frame) - NSWidth(self.rightView.frame) - NSMinX(self.nameTextField.frame) - 30,item.headerSize.width) , NSHeight(self.nameTextField.frame))];
+//        
+//        if(!item.message.isPost)
+//            [self.avatarImageView setUser:item.user];
+//        else
+//            [self.avatarImageView setChat:item.message.chat];
+//        [self.avatarImageView setFrameOrigin:NSMakePoint(29, item.viewSize.height - 43)];
+//        
+//        
+//    } else {
+//        [self deallocHeader];
+//    }
+//
+//    [self.containerView setFrame:NSMakeRect(item.isForwadedMessage ? item.containerOffsetForward : item.containerOffset, item.isHeaderMessage ? item.isForwadedMessage ? 4 : 4 : item.isForwadedMessage ? 4 : roundf((item.viewSize.height - item.blockSize.height)/2), NSWidth(self.frame) - 160, item.blockSize.height)];
+//
+//    
+//    if([item isReplyMessage])
+//    {
+//        
+//        [self initReplyContainer];
+//        
+//        [_replyContainer setItem:item];
+//        
+//        [_replyContainer setReplyObject:item.replyObject];
+//        
+//        [_replyContainer setFrame:NSMakeRect(item.containerOffset + 1, NSHeight(_containerView.frame) + 10, item.blockWidth  , item.replyObject.containerHeight)];
+//        
+//        
+//    } else {
+//        [self deallocReplyContainer];
+//    }
+//    
+//    if(item.messageSender)  {
+//        
+//        [item.messageSender addEventListener:self];
+//        
+//        if(item.messageSender.state == MessageStateWaitSend)
+//            [item.messageSender send];
+//        else
+//            [self checkState:item.messageSender];
+//    }
+//    
+//    
+//    
+//    
+//    
+//    
+//    [self setNeedsDisplay:YES];
+//    
+//    
+//    if(item.message.isChannelMessage && item.message.isPost) {
+//        
+//        if(!_shareButton) {
+//            _shareButton = [[BTRButton alloc] initWithFrame:NSMakeRect(0, 0, image_ChannelShare().size.width , image_ChannelShare().size.height )];
+//            [_shareButton setCursor:[NSCursor pointingHandCursor] forControlState:BTRControlStateHover];
+//            [_shareButton setImage:image_ChannelShare() forControlState:BTRControlStateNormal];
+//            weak();
+//            
+//            [_shareButton addBlock:^(BTRControlEvents events) {
+//                [weakSelf.forwardModalView close:NO];
+//                weakSelf.forwardModalView = nil;
+//                
+//                weakSelf.forwardModalView = [[TGModalForwardView alloc] initWithFrame:weakSelf.window.contentView.bounds];
+//                
+//                [weakSelf.messagesViewController setSelectedMessage:weakSelf.item selected:YES];
+//                
+//                weakSelf.forwardModalView.messagesViewController = weakSelf.messagesViewController;
+//                weakSelf.forwardModalView.messageCaller = weakSelf.item.message;
+//                
+//                [weakSelf.forwardModalView show:weakSelf.window animated:YES];
+//
+//            } forControlEvents:BTRControlEventClick ];
+//        }
+//        
+//        
+//        [self addSubview:_shareButton];
+//        [_shareButton setAutoresizingMask:NSViewMinXMargin];
+//
+//        
+//    } else {
+//        [_shareButton removeFromSuperview];
+//        _shareButton = nil;
+//    }
     
    
 

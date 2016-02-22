@@ -292,6 +292,7 @@
 		C215BDF21C77256700B4BF16 /* TGInputMessageTemplate.m in Sources */ = {isa = PBXBuildFile; fileRef = C215BDDB1C75E46E00B4BF16 /* TGInputMessageTemplate.m */; };
 		C215BDF51C77354700B4BF16 /* MessageRightView.m in Sources */ = {isa = PBXBuildFile; fileRef = C215BDF41C77354700B4BF16 /* MessageRightView.m */; };
 		C215BDF61C7741ED00B4BF16 /* TLMessageFwdHeader+Extension.m in Sources */ = {isa = PBXBuildFile; fileRef = C215BDDE1C76273B00B4BF16 /* TLMessageFwdHeader+Extension.m */; };
+		C215BE171C7A0F6D00B4BF16 /* TGModernMessageCellContainerView.m in Sources */ = {isa = PBXBuildFile; fileRef = C215BE161C7A0F6D00B4BF16 /* TGModernMessageCellContainerView.m */; };
 		C2182BBE19589246002469CA /* TL_localMessageService.m in Sources */ = {isa = PBXBuildFile; fileRef = C2182BBD19589246002469CA /* TL_localMessageService.m */; };
 		C21C7B2C18D7044600253A7A /* MessageSenderItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C21C7B2B18D7044600253A7A /* MessageSenderItem.m */; };
 		C21C7B2F18D7334D00253A7A /* MessageSenderSecretItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C21C7B2E18D7334D00253A7A /* MessageSenderSecretItem.m */; };
@@ -1647,6 +1648,8 @@
 		C215BDE21C76422500B4BF16 /* TGMessageEditSender.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGMessageEditSender.m; sourceTree = "<group>"; };
 		C215BDF31C77354700B4BF16 /* MessageRightView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MessageRightView.h; sourceTree = "<group>"; };
 		C215BDF41C77354700B4BF16 /* MessageRightView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MessageRightView.m; sourceTree = "<group>"; };
+		C215BE151C7A0F6D00B4BF16 /* TGModernMessageCellContainerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGModernMessageCellContainerView.h; sourceTree = "<group>"; };
+		C215BE161C7A0F6D00B4BF16 /* TGModernMessageCellContainerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGModernMessageCellContainerView.m; sourceTree = "<group>"; };
 		C2182BBC19589246002469CA /* TL_localMessageService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TL_localMessageService.h; sourceTree = "<group>"; };
 		C2182BBD19589246002469CA /* TL_localMessageService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TL_localMessageService.m; sourceTree = "<group>"; };
 		C21C7B2A18D7044600253A7A /* MessageSenderItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MessageSenderItem.h; sourceTree = "<group>"; };
@@ -3678,6 +3681,7 @@
 		0AEE20821821340200F348F2 /* messages */ = {
 			isa = PBXGroup;
 			children = (
+				C215BE0A1C7A0F4F00B4BF16 /* modern */,
 				C215BDCF1C75E1D100B4BF16 /* input-templates */,
 				C241364B1C70AF5900130D2E /* audio */,
 				C2A2B4271BD01FC70083DA8A /* head-chats */,
@@ -3904,6 +3908,23 @@
 				C215BDE21C76422500B4BF16 /* TGMessageEditSender.m */,
 			);
 			name = editor;
+			sourceTree = "<group>";
+		};
+		C215BE0A1C7A0F4F00B4BF16 /* modern */ = {
+			isa = PBXGroup;
+			children = (
+				C215BE181C7A0FB900B4BF16 /* containers */,
+				C215BE151C7A0F6D00B4BF16 /* TGModernMessageCellContainerView.h */,
+				C215BE161C7A0F6D00B4BF16 /* TGModernMessageCellContainerView.m */,
+			);
+			name = modern;
+			sourceTree = "<group>";
+		};
+		C215BE181C7A0FB900B4BF16 /* containers */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = containers;
 			sourceTree = "<group>";
 		};
 		C21C7B2518D7041700253A7A /* sender */ = {
@@ -6842,6 +6863,7 @@
 				C2D51BA31B17AA14009327C0 /* TGBotCommandsPopup.m in Sources */,
 				0A6D099719535E8500A9AC64 /* TLContactCategory.m in Sources */,
 				0A6D098C19535E8500A9AC64 /* NSColorCategory.m in Sources */,
+				C215BE171C7A0F6D00B4BF16 /* TGModernMessageCellContainerView.m in Sources */,
 				0AAAE56118C5F3FB00A2F9F1 /* TMModalView.m in Sources */,
 				C274C4401ACD8223000DFDE4 /* TGWebpageIGObject.m in Sources */,
 				C21D485619B07A21000F06E1 /* ComposeActionSecretChatBehavior.m in Sources */,

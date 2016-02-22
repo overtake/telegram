@@ -3878,7 +3878,30 @@ static NSTextAttachment *headerMediaIcon() {
     
     
     MessageTableItem *item = [self.messages objectAtIndex:row];
-    MessageTableCell *cell = nil;
+    
+    NSString *identifier = NSStringFromClass(item.viewClass);
+    
+    MessageTableCell *cell = [self.table makeViewWithIdentifier:identifier owner:self];
+    
+    if(!cell)
+    {
+        cell = [[item.viewClass alloc] initWithFrame:self.view.bounds];
+        cell.identifier = identifier;
+        cell.messagesViewController = self;
+    }
+    
+    item.table = self.table;
+    item.rowId = row;
+    [cell setItem:item];
+    
+    
+    if([cell isKindOfClass:[TGModernMessageCellContainerView class]]) {
+        // TGModernMessageCellContainerView *containerView = (TGModernMessageCellContainerView *)cell;
+        //   [containerView setEditable:self.state == MessagesViewControllerStateEditable animation:NO];
+    }
+
+    return cell;
+    
     
     if(item.message.hole != nil) {
         

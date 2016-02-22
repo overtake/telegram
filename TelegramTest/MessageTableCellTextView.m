@@ -44,11 +44,8 @@
         [self.containerView addSubview:self.textView];
         
         [self.containerView setIsFlipped:YES];
-        
-        
-        [self.progressView removeFromSuperview];
 
-        
+
         _textView.wantsLayer = YES;
         
         

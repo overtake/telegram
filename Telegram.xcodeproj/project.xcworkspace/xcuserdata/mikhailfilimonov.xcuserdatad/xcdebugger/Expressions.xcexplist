@@ -5710,6 +5710,20 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "-[TGModernMessageCellContainerView setItem:]:TGModernMessageCellContainerView.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "_nameView.frame">
+            </PersistentString>
+            <PersistentString
+               value = "item.viewSize.height">
+            </PersistentString>
+            <PersistentString
+               value = "NSMinY(_nameView.frame)">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "__51-[NewContactsManager importCloudContacts:callback:]_block_invoke:NewContactsManager.m">
          <PersistentStrings>
             <PersistentString

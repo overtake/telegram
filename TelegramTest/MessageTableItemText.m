@@ -13,6 +13,7 @@
 #import "NSAttributedString+Hyperlink.h"
 #import "NSString+Extended.h"
 #import "TGWebpageYTObject.h"
+#import "MessageTableCellTextView.h"
 #define MAX_WIDTH 400
 
 @interface MessageTableItemText()<SettingsListener>
@@ -378,7 +379,9 @@
     return YES;
 }
 
-
+-(Class)viewClass {
+    return [MessageTableCellTextView class];
+}
 
 
 -(int)fontSize {
