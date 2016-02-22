@@ -2,7 +2,7 @@
 //  MTProto.m
 //  Telegram
 //
-//  Auto created by Mikhail Filimonov on 21.02.16.
+//  Auto created by Mikhail Filimonov on 22.02.16.
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -24060,53 +24060,19 @@
 @end
         
 @implementation TL_channels_messageEditData
-+(TL_channels_messageEditData*)createWithFlags:(int)flags  from_id:(int)from_id edit_by:(int)edit_by edit_date:(int)edit_date users:(NSMutableArray*)users {
++(TL_channels_messageEditData*)createWithFlags:(int)flags  {
 	TL_channels_messageEditData* obj = [[TL_channels_messageEditData alloc] init];
 	obj.flags = flags;
 	
-	obj.from_id = from_id;
-	obj.edit_by = edit_by;
-	obj.edit_date = edit_date;
-	obj.users = users;
 	return obj;
 }
 -(void)serialize:(SerializedData*)stream {
 	[stream writeInt:self.flags];
 	
-	[stream writeInt:self.from_id];
-	if(self.flags & (1 << 0)) {[stream writeInt:self.edit_by];}
-	if(self.flags & (1 << 0)) {[stream writeInt:self.edit_date];}
-	//Serialize FullVector
-	[stream writeInt:0x1cb5c415];
-	{
-		NSInteger tl_count = [self.users count];
-		[stream writeInt:(int)tl_count];
-		for(int i = 0; i < (int)tl_count; i++) {
-            TLUser* obj = [self.users objectAtIndex:i];
-            [ClassStore TLSerialize:obj stream:stream];
-		}
-	}
 }
 -(void)unserialize:(SerializedData*)stream {
 	super.flags = [stream readInt];
 	
-	super.from_id = [stream readInt];
-	if(self.flags & (1 << 0)) {super.edit_by = [stream readInt];}
-	if(self.flags & (1 << 0)) {super.edit_date = [stream readInt];}
-	//UNS FullVector
-	[stream readInt];
-	{
-		if(!self.users)
-			self.users = [[NSMutableArray alloc] init];
-		int count = [stream readInt];
-		for(int i = 0; i < count; i++) {
-			TLUser* obj = [ClassStore TLDeserialize:stream];
-            if(obj != nil && [obj isKindOfClass:[TLUser class]])
-                 [self.users addObject:obj];
-            else
-                break;
-		}
-	}
 }
         
 -(TL_channels_messageEditData *)copy {
@@ -24115,10 +24081,6 @@
     
     objc.flags = self.flags;
     
-    objc.from_id = self.from_id;
-    objc.edit_by = self.edit_by;
-    objc.edit_date = self.edit_date;
-    objc.users = [self.users copy];
     
     return objc;
 }
@@ -24139,20 +24101,8 @@
 }
         
             
--(BOOL)isCaption {return (self.flags & (1 << 1)) > 0;}
-                        
--(void)setEdit_by:(int)edit_by
-{
-   super.edit_by = edit_by;
-                
-    if(super.edit_by == 0)  { super.flags&= ~ (1 << 0) ;} else { super.flags|= (1 << 0); }
-}            
--(void)setEdit_date:(int)edit_date
-{
-   super.edit_date = edit_date;
-                
-    if(super.edit_date == 0)  { super.flags&= ~ (1 << 0) ;} else { super.flags|= (1 << 0); }
-}
+-(BOOL)isCaption {return (self.flags & (1 << 0)) > 0;}
+            
         
 @end
 

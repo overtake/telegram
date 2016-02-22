@@ -170,7 +170,10 @@ static NSImage *higlightedImage() {
                 [appWindow().navigationController.messagesViewController sendSticker:item.stickers[idx] forConversation:appWindow().navigationController.messagesViewController.conversation addCompletionHandler:nil];
             
             if(weakSelf.tableView.canSendStickerAlways) {
-                [TMViewController closeAllModals];
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [TMViewController closeAllModals];
+                });
+                
             }
             
             

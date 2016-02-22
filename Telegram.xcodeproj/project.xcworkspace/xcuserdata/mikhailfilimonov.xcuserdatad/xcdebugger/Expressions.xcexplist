@@ -4383,6 +4383,14 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "-[TMView mouseDown:]:TMView.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "theEvent.">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "-[MessagesViewController loadView]:MessagesViewController.m">
          <PersistentStrings>
             <PersistentString
@@ -5602,6 +5610,9 @@
          contextName = "-[TGConversationTableItem needUpdateMessage:]:TGConversationTableItem.m">
          <PersistentStrings>
             <PersistentString
+               value = "_messageText">
+            </PersistentString>
+            <PersistentString
                value = "self.conversation">
             </PersistentString>
          </PersistentStrings>
@@ -5706,6 +5717,20 @@
          <PersistentStrings>
             <PersistentString
                value = "object.media.document.thumb">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[TGModernMessageCellContainerView setItem:]:TGModernMessageCellContainerView.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "_nameView.frame">
+            </PersistentString>
+            <PersistentString
+               value = "item.viewSize.height">
+            </PersistentString>
+            <PersistentString
+               value = "NSMinY(_nameView.frame)">
             </PersistentString>
          </PersistentStrings>
       </ContextState>

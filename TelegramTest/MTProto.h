@@ -2,7 +2,7 @@
 //  MTProto.h
 //  Telegram
 //
-//  Auto created by Mikhail Filimonov on 21.02.16.
+//  Auto created by Mikhail Filimonov on 22.02.16.
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -2981,14 +2981,10 @@
 @interface TLchannels_MessageEditData()
 @property int flags;
 @property (nonatomic,assign,readonly) BOOL isCaption;
-@property int from_id;
-@property int edit_by;
-@property int edit_date;
-@property (nonatomic, strong) NSMutableArray* users;
 @end
 
 @interface TL_channels_messageEditData : TLchannels_MessageEditData<NSCoding>
-+(TL_channels_messageEditData*)createWithFlags:(int)flags  from_id:(int)from_id edit_by:(int)edit_by edit_date:(int)edit_date users:(NSMutableArray*)users;
++(TL_channels_messageEditData*)createWithFlags:(int)flags ;
 @end
 	
 @interface TLAudio()

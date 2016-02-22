@@ -344,7 +344,7 @@
     
     
     if(!_channelAdminButton.isHidden) {
-        [_channelAdminButton setFrameOrigin:NSMakePoint(self.inputMessageTextField.containerView.frame.size.width - (_botCommandButton.isHidden ? 60 : 120), NSMinY(_channelAdminButton.frame))];
+        [_channelAdminButton setFrameOrigin:NSMakePoint(self.inputMessageTextField.containerView.frame.size.width - (_botCommandButton.isHidden ? 60 : 90), NSMinY(_channelAdminButton.frame))];
 
     }
     
@@ -1873,10 +1873,13 @@ static RBLPopover *popover;
     if(checkElements) {
         [self removeQuickRecord];
         
-        
         [self setInputMessageString:_template.text ? _template.text : @"" disableAnimations:NO];
         
-        [_imageAttachmentsController hide:YES deleteItems:NO];
+        if(_template.type == TGInputMessageTemplateTypeSimpleText) {
+            [_imageAttachmentsController show:_dialog animated:YES];
+        } else {
+            [_imageAttachmentsController hide:YES deleteItems:NO];
+        }
         
         [self checkReplayMessage:YES animated:YES];
         

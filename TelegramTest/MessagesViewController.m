@@ -3451,7 +3451,10 @@ static NSTextAttachment *headerMediaIcon() {
     
     [self setHistoryFilter:self.defHFClass force:self.historyController.prevState != ChatHistoryStateFull];
     
-    [self.bottomView closeEmoji];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self.bottomView closeEmoji];
+    });
+    
     
     
     [ASQueue dispatchOnStageQueue:^{
