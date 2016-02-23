@@ -155,10 +155,6 @@
    CGContextRef context = (CGContextRef)[[NSGraphicsContext currentContext]
                                           graphicsPort];
     
-//    CGContextSetAllowsFontSubpixelQuantization(context, false);
-//    CGContextSetShouldSubpixelQuantizeFonts(context, false);
-//    CGContextSetAllowsFontSubpixelPositioning(context, false);
-//    CGContextSetShouldSubpixelPositionFonts(context, false);
     CGContextSetAllowsAntialiasing(context,true);
     CGContextSetShouldSmoothFonts(context, !IS_RETINA);
     CGContextSetAllowsFontSmoothing(context,!IS_RETINA);

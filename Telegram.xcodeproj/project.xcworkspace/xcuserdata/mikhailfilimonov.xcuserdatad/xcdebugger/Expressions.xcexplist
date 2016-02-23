@@ -1909,6 +1909,14 @@
          contextName = "-[DownloadPhotoItem initWithObject:size:]:DownloadPhotoItem.m">
       </ContextState>
       <ContextState
+         contextName = "-[TGModernForwardCellContainer layoutContainer]:TGModernForwardCellContainer.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "_forwardHeader.frame">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "__49-[TGPasswosdMainViewController rebuildController]_block_invoke131:TGPasswosdMainViewController.m">
       </ContextState>
       <ContextState
@@ -4383,6 +4391,14 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "-[TMView mouseDown:]:TMView.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "theEvent.">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "-[MessagesViewController loadView]:MessagesViewController.m">
          <PersistentStrings>
             <PersistentString
@@ -5375,6 +5391,20 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "-[TGTextLabel setText:maxWidth:needsContentUpdate:]:TGTextLabel.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "_textLayer">
+            </PersistentString>
+            <PersistentString
+               value = "">
+            </PersistentString>
+            <PersistentString
+               value = "_textLayer.frame">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "-[ChatHistoryController removeAllItems]:ChatHistoryController.m">
          <PersistentStrings>
             <PersistentString
@@ -5601,6 +5631,9 @@
       <ContextState
          contextName = "-[TGConversationTableItem needUpdateMessage:]:TGConversationTableItem.m">
          <PersistentStrings>
+            <PersistentString
+               value = "_messageText">
+            </PersistentString>
             <PersistentString
                value = "self.conversation">
             </PersistentString>

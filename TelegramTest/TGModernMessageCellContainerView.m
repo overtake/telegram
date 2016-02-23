@@ -7,7 +7,7 @@
 //
 
 #import "TGModernMessageCellContainerView.h"
-
+#import "TGModernForwardCellContainer.h"
 
 @interface TGModernMessageCellContainerView ()
 
@@ -19,7 +19,7 @@
 //containers
 
 @property (nonatomic,strong) TMView *contentContainerView;
-@property (nonatomic,strong) TMView *forwardContainerView;
+@property (nonatomic,strong) TGModernForwardCellContainer *forwardContainerView;
 
 @end
 
@@ -87,14 +87,17 @@ static const int defaultOffset = 10;
     if(item.isForwadedMessage) {
         
         if(!_forwardContainerView) {
-            _forwardContainerView = [[TMView alloc] initWithFrame:NSZeroRect];
-            _forwardContainerView.backgroundColor = [NSColor grayColor];
+            _forwardContainerView = [[TGModernForwardCellContainer alloc] initWithFrame:NSZeroRect];
+            _forwardContainerView.backgroundColor = [NSColor whiteColor];
             [_contentContainerView addSubview:_forwardContainerView];
             [_contentView removeFromSuperview];
             [_forwardContainerView addSubview:_contentView];
         }
         
         [_forwardContainerView setFrameSize:_contentContainerView.frame.size];
+        
+        [_forwardContainerView setTableItem:item contentView:_contentView containerView:self];
+        
         
     } else {
         if(_forwardContainerView) {
@@ -124,11 +127,10 @@ static const int defaultOffset = 10;
     
     [_contentContainerView setFrame:NSMakeRect(NSMinX(_nameView.frame),NSMaxY(_nameView.frame) + defaultContentOffset, item.blockSize.width, item.viewSize.height - NSMaxY(_nameView.frame) - defaultContentOffset)];
     
-    if(item.isForwadedMessage) {
-        
-    }
-    
     [_contentView setFrame:NSMakeRect(0, 0, item.blockSize.width, item.blockSize.height)];
+    
+    
+    [self chekAndMakeForwardContainer:item];
 }
 
 

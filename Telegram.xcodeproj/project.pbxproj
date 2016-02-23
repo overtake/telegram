@@ -293,6 +293,9 @@
 		C215BDF51C77354700B4BF16 /* MessageRightView.m in Sources */ = {isa = PBXBuildFile; fileRef = C215BDF41C77354700B4BF16 /* MessageRightView.m */; };
 		C215BDF61C7741ED00B4BF16 /* TLMessageFwdHeader+Extension.m in Sources */ = {isa = PBXBuildFile; fileRef = C215BDDE1C76273B00B4BF16 /* TLMessageFwdHeader+Extension.m */; };
 		C215BE171C7A0F6D00B4BF16 /* TGModernMessageCellContainerView.m in Sources */ = {isa = PBXBuildFile; fileRef = C215BE161C7A0F6D00B4BF16 /* TGModernMessageCellContainerView.m */; };
+		C215BE211C7B71C800B4BF16 /* TGModernForwardCellContainer.m in Sources */ = {isa = PBXBuildFile; fileRef = C215BE201C7B71C800B4BF16 /* TGModernForwardCellContainer.m */; };
+		C215BE2E1C7B917B00B4BF16 /* TGTextLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = C215BE2D1C7B917B00B4BF16 /* TGTextLabel.m */; };
+		C215BE311C7B979100B4BF16 /* TGFont.mm in Sources */ = {isa = PBXBuildFile; fileRef = C215BE301C7B979100B4BF16 /* TGFont.mm */; };
 		C2182BBE19589246002469CA /* TL_localMessageService.m in Sources */ = {isa = PBXBuildFile; fileRef = C2182BBD19589246002469CA /* TL_localMessageService.m */; };
 		C21C7B2C18D7044600253A7A /* MessageSenderItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C21C7B2B18D7044600253A7A /* MessageSenderItem.m */; };
 		C21C7B2F18D7334D00253A7A /* MessageSenderSecretItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C21C7B2E18D7334D00253A7A /* MessageSenderSecretItem.m */; };
@@ -1650,6 +1653,12 @@
 		C215BDF41C77354700B4BF16 /* MessageRightView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MessageRightView.m; sourceTree = "<group>"; };
 		C215BE151C7A0F6D00B4BF16 /* TGModernMessageCellContainerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGModernMessageCellContainerView.h; sourceTree = "<group>"; };
 		C215BE161C7A0F6D00B4BF16 /* TGModernMessageCellContainerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGModernMessageCellContainerView.m; sourceTree = "<group>"; };
+		C215BE1F1C7B71C800B4BF16 /* TGModernForwardCellContainer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGModernForwardCellContainer.h; sourceTree = "<group>"; };
+		C215BE201C7B71C800B4BF16 /* TGModernForwardCellContainer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGModernForwardCellContainer.m; sourceTree = "<group>"; };
+		C215BE2C1C7B917B00B4BF16 /* TGTextLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGTextLabel.h; sourceTree = "<group>"; };
+		C215BE2D1C7B917B00B4BF16 /* TGTextLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGTextLabel.m; sourceTree = "<group>"; };
+		C215BE2F1C7B979100B4BF16 /* TGFont.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGFont.h; sourceTree = "<group>"; };
+		C215BE301C7B979100B4BF16 /* TGFont.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = TGFont.mm; sourceTree = "<group>"; };
 		C2182BBC19589246002469CA /* TL_localMessageService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TL_localMessageService.h; sourceTree = "<group>"; };
 		C2182BBD19589246002469CA /* TL_localMessageService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TL_localMessageService.m; sourceTree = "<group>"; };
 		C21C7B2A18D7044600253A7A /* MessageSenderItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MessageSenderItem.h; sourceTree = "<group>"; };
@@ -3655,6 +3664,10 @@
 				C2CE53C21BE295A000BBEF5F /* TGGeneralSearchRowView.m */,
 				C24136481C6DEA2900130D2E /* TGCirclularCounter.h */,
 				C24136491C6DEA2900130D2E /* TGCirclularCounter.m */,
+				C215BE2C1C7B917B00B4BF16 /* TGTextLabel.h */,
+				C215BE2D1C7B917B00B4BF16 /* TGTextLabel.m */,
+				C215BE2F1C7B979100B4BF16 /* TGFont.h */,
+				C215BE301C7B979100B4BF16 /* TGFont.mm */,
 			);
 			name = elements;
 			sourceTree = "<group>";
@@ -3923,6 +3936,8 @@
 		C215BE181C7A0FB900B4BF16 /* containers */ = {
 			isa = PBXGroup;
 			children = (
+				C215BE1F1C7B71C800B4BF16 /* TGModernForwardCellContainer.h */,
+				C215BE201C7B71C800B4BF16 /* TGModernForwardCellContainer.m */,
 			);
 			name = containers;
 			sourceTree = "<group>";
@@ -6873,6 +6888,7 @@
 				C2967B461AA8684E003759B2 /* TGReplayMessage.m in Sources */,
 				0AF4F497189A696A004BA4DF /* TMScrollAnimation.m in Sources */,
 				C291C7BC1836C39900ABBB50 /* Background.m in Sources */,
+				C215BE311C7B979100B4BF16 /* TGFont.mm in Sources */,
 				C2936945197E6B5700DD9680 /* MessageTableHeaderItem.m in Sources */,
 				C29A403A1C592B5100AE4B71 /* TL_secretWebpage.m in Sources */,
 				C291C7C0183759EE00ABBB50 /* SSKeychainQuery.m in Sources */,
@@ -7257,6 +7273,7 @@
 				CE7E5658189AC5E30058C532 /* QueueManager.m in Sources */,
 				C2D4B86E1AFCE8FA0035B4E4 /* YapTouch.m in Sources */,
 				C215BDF51C77354700B4BF16 /* MessageRightView.m in Sources */,
+				C215BE2E1C7B917B00B4BF16 /* TGTextLabel.m in Sources */,
 				C2201A03192CCB6C00C0E441 /* SelectUserRowView.m in Sources */,
 				C2CE53C61BE7688900BBEF5F /* ComposeActionCreateMegaGroupBehavior.m in Sources */,
 				C2A5BFC118DC80620021BE68 /* stream.c in Sources */,
@@ -7331,6 +7348,7 @@
 				C26752811A1CA7CC00152D9A /* TMAvaImageObject.m in Sources */,
 				C274C3C91AC48F6B000DFDE4 /* TGSessionRowitem.m in Sources */,
 				C2034BE31C3560530080D023 /* TLBotInlineResult+Extension.m in Sources */,
+				C215BE211C7B71C800B4BF16 /* TGModernForwardCellContainer.m in Sources */,
 				C2DE4FB11AD2E5D6001EC26C /* TGWebpageAttach.m in Sources */,
 				C2CE53C31BE295A000BBEF5F /* TGGeneralSearchRowView.m in Sources */,
 				0A9EDC501897BA0E0037E1BC /* NSImage+RBLResizableImageAdditions.m in Sources */,
