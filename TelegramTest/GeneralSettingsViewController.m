@@ -241,6 +241,17 @@
     
     [self.tableView insert:autoplayGifs atIndex:self.tableView.list.count tableRedraw:NO];
     
+    GeneralSettingsRowItem *tripleLayout = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeSwitch callback:^(TGGeneralRowItem *item) {
+        
+        [SettingsArchiver addOrRemoveSetting:TripleLayoutSettings];
+
+        
+    } description:NSLocalizedString(@"Settings.TripleLayout", nil) height:42 stateback:^id(TGGeneralRowItem *item) {
+        return @([SettingsArchiver checkMaskedSetting:TripleLayoutSettings]);
+    }];
+    
+    [self.tableView insert:tripleLayout atIndex:self.tableView.list.count tableRedraw:NO];
+    
     
     
     

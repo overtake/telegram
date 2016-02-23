@@ -495,7 +495,7 @@
                 
                 
                 
-                [weakSelf.chat.dialog updateNotifySettings:[TL_peerNotifySettings createWithFlags:flags mute_until:weakSelf.chat.dialog.notify_settings.mute_until sound:weakSelf.chat.dialog.notify_settings.sound]];
+                [weakSelf.chat.dialog updateNotifySettings:[TL_peerNotifySettings createWithFlags:flags mute_until:weakSelf.chat.dialog.notify_settings.mute_until sound:weakSelf.chat.dialog.notify_settings.sound] serverSave:YES];
                 
 
             } description:NSLocalizedString(@"Channel.NotifyMembers", nil) subdesc:_chat.usernameLink height:42 stateback:^id(TGGeneralRowItem *item) {
