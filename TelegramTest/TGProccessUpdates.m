@@ -140,108 +140,109 @@ static NSArray *channelUpdates;
     
     [queue dispatchOnQueue:^{
         
-       
-        
-        
-        if([channelUpdates indexOfObject:[update className]] != NSNotFound)
-        {
-            [_channelsUpdater addUpdate:update];
-            
-            return;
-        } else if([update respondsToSelector:@selector(update)] && [channelUpdates indexOfObject:[[(TL_updateShort *)update update] className]] != NSNotFound) {
-            [_channelsUpdater addUpdate:[(TL_updateShort *)update update]];
-            
-            [_updateState setDate:[(TL_updateShort *)update date]];
-            [self saveUpdateState];
-            return;
-        }
-        
-        if([update isKindOfClass:[TL_updates class]]) {
-            
-            [SharedManager proccessGlobalResponse:update];
-            
-            [[update updates] enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+        @try {
+            if([channelUpdates indexOfObject:[update className]] != NSNotFound)
+            {
+                [_channelsUpdater addUpdate:update];
                 
-                if([obj isKindOfClass:[TL_updateMessageID class]]) {
-                    [self proccessUpdate:obj];
-                }
+                return;
+            } else if([update respondsToSelector:@selector(update)] && [channelUpdates indexOfObject:[[(TL_updateShort *)update update] className]] != NSNotFound) {
+                [_channelsUpdater addUpdate:[(TL_updateShort *)update update]];
                 
-                if([channelUpdates indexOfObject:[obj className]] != NSNotFound)
-                {
-                    [_channelsUpdater addUpdate:obj];
-                }
-                
-            }];
+                [_updateState setDate:[(TL_updateShort *)update date]];
+                [self saveUpdateState];
+                return;
+            }
             
-            
-        }
-        
-        if([update isKindOfClass:[TL_messages_affectedMessages class]]) {
-            
-            [self addStatefullUpdate:update seq:0 pts:[update pts] date:0 qts:0 pts_count:[update pts_count]];
-            
-            return;
-        }
-        
-        if([update isKindOfClass:[TL_updateShort class]]) {
-            [self updateShort:update];
-        }
-        if([update isKindOfClass:[TL_updatesCombined class]]) {
-            TL_updatesCombined *combined = update;
-            
-            if(_updateState.seq+1 == combined.seq_start) {
+            if([update isKindOfClass:[TL_updates class]]) {
                 
                 [SharedManager proccessGlobalResponse:update];
                 
-                for (TLUpdate *one in combined.updates) {
-                    [self proccessUpdate:one];
-                }
+                [[update updates] enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+                    
+                    if([obj isKindOfClass:[TL_updateMessageID class]]) {
+                        [self proccessUpdate:obj];
+                    }
+                    
+                    if([channelUpdates indexOfObject:[obj className]] != NSNotFound)
+                    {
+                        [_channelsUpdater addUpdate:obj];
+                    }
+                    
+                }];
                 
-                _updateState.seq = combined.seq;
-                [self saveUpdateState];
                 
-            } else {
-                [self failSequence];
             }
-        }
-        
-        if([update isKindOfClass:[TL_updates class]]) {
             
-            NSArray *updates = [[[update updates] copy] filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary *bindings) {
+            if([update isKindOfClass:[TL_messages_affectedMessages class]]) {
                 
-                return [channelUpdates indexOfObject:[evaluatedObject className]] == NSNotFound;
+                [self addStatefullUpdate:update seq:0 pts:[update pts] date:0 qts:0 pts_count:[update pts_count]];
                 
-            }]];
+                return;
+            }
             
-            if(updates.count > 0)
-                [self processUpdates:updates stateSeq:[update seq]];
-        }
-        
-        
-        if([update isKindOfClass:[TL_updateShortChatMessage class]]) {
-            TL_updateShortChatMessage *shortMessage = update;
+            if([update isKindOfClass:[TL_updateShort class]]) {
+                [self updateShort:update];
+            }
+            if([update isKindOfClass:[TL_updatesCombined class]]) {
+                TL_updatesCombined *combined = update;
+                
+                if(_updateState.seq+1 == combined.seq_start) {
+                    
+                    [SharedManager proccessGlobalResponse:update];
+                    
+                    for (TLUpdate *one in combined.updates) {
+                        [self proccessUpdate:one];
+                    }
+                    
+                    _updateState.seq = combined.seq;
+                    [self saveUpdateState];
+                    
+                } else {
+                    [self failSequence];
+                }
+            }
             
-            [self addStatefullUpdate:update seq:[shortMessage seq] pts:[shortMessage pts] date:[shortMessage date] qts:0 pts_count:[shortMessage pts_count]];
+            if([update isKindOfClass:[TL_updates class]]) {
+                
+                NSArray *updates = [[[update updates] copy] filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary *bindings) {
+                    
+                    return [channelUpdates indexOfObject:[evaluatedObject className]] == NSNotFound;
+                    
+                }]];
+                
+                if(updates.count > 0)
+                    [self processUpdates:updates stateSeq:[update seq]];
+            }
+            
+            
+            if([update isKindOfClass:[TL_updateShortChatMessage class]]) {
+                TL_updateShortChatMessage *shortMessage = update;
+                
+                [self addStatefullUpdate:update seq:[shortMessage seq] pts:[shortMessage pts] date:[shortMessage date] qts:0 pts_count:[shortMessage pts_count]];
+                
+            }
+            
+            if([update isKindOfClass:[TL_updateShortMessage class]] || [update isKindOfClass:[TL_updateShortSentMessage class]]) {
+                TL_updateShortMessage *shortMessage = update;
+                
+                [self addStatefullUpdate:update seq:[shortMessage seq] pts:[shortMessage pts] date:[shortMessage date] qts:0 pts_count:[shortMessage pts_count]];
+                
+            }
+            
+            
+            if([update isKindOfClass:[TL_updatesTooLong class]]) {
+                [self updateDifference];
+            }
+            
+            if([update isKindOfClass:[TL_updateServiceNotification class]]) { // for debug
+                [self proccessUpdate:update];
+            }
+            
+        } @catch (NSException *exception) {
             
         }
-        
-        if([update isKindOfClass:[TL_updateShortMessage class]] || [update isKindOfClass:[TL_updateShortSentMessage class]]) {
-            TL_updateShortMessage *shortMessage = update;
-            
-            [self addStatefullUpdate:update seq:[shortMessage seq] pts:[shortMessage pts] date:[shortMessage date] qts:0 pts_count:[shortMessage pts_count]];
-            
-        }
-        
-        
-        if([update isKindOfClass:[TL_updatesTooLong class]]) {
-            [self updateDifference];
-        }
-        
-        if([update isKindOfClass:[TL_updateServiceNotification class]]) { // for debug
-            [self proccessUpdate:update];
-        }
-    }];
-    
+     }];
     
 }
 
