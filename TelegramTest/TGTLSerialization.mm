@@ -124,7 +124,7 @@
             {
                 if (dcOption.n_id == datacenterId)
                 {
-                    MTDatacenterAddress *address = [[MTDatacenterAddress alloc] initWithIp:dcOption.ip_address port:(uint16_t)dcOption.port preferForMedia:(dcOption.flags & 1 << 1) == 1 << 1];
+                    MTDatacenterAddress *address = [[MTDatacenterAddress alloc] initWithIp:dcOption.ip_address port:(uint16_t)dcOption.port preferForMedia:dcOption.isMedia_only restrictToTcp:dcOption.isTcpo_only];
                     [addressList addObject:address];
                 }
             }

@@ -483,6 +483,15 @@
                 NSUInteger index = [self indexOfObject:item];
                 
                 item = [MessageTableItem messageItemFromObject:obj];
+                
+                MessageTableItem *prevItem;
+                
+                if(index+1 < self.messages.count-1) {
+                    prevItem = self.messages[index+1];
+                }
+                
+                [self isHeaderMessage:item prevItem:prevItem];
+                
                 item.table = self.table;
                 [item makeSizeByWidth:item.makeSize];
                 
@@ -2041,6 +2050,12 @@ static NSTextAttachment *headerMediaIcon() {
         
         [messages enumerateObjectsUsingBlock:^(TL_localMessage *obj, NSUInteger idx, BOOL * _Nonnull stop) {
             
+            if(_template.type == TGInputMessageTemplateTypeEditMessage) {
+                if(obj.n_id == _template.postId) {
+                    [self setEditableMessage:nil];
+                }
+            }
+            
             MessageTableItem *item = [self itemOfMsgId:obj.channelMsgId];
             
             NSUInteger row = [self.messages indexOfObject:item];
@@ -2586,6 +2601,10 @@ static NSTextAttachment *headerMediaIcon() {
     
     [self.bottomView setTemplate:_template checkElements:YES];
     
+}
+
+-(TGInputMessageTemplateType)templateType {
+    return _template.type;
 }
 
 - (void)tryRead {

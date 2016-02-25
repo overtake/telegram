@@ -467,6 +467,9 @@
 
 - (void)bottomButtonClick:(EmojiBottomButton *)button {
     
+    if(self.messagesViewController.templateType == TGInputMessageTemplateTypeEditMessage && ( button.index == 8 ||  button.index == 7))
+        return;
+    
     if(self.messagesViewController.conversation.type == DialogTypeSecretChat && button.index == 8)
         return;
     

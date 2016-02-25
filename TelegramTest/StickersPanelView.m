@@ -181,7 +181,8 @@ bool isRemoteStickersLoaded() {
 
 -(void)showAndSearch:(NSString *)emotion animated:(BOOL)animated {
     
-    
+    if(self.messagesViewController.templateType == TGInputMessageTemplateTypeEditMessage)
+        return;
     
     [[Storage yap] asyncReadWithBlock:^(YapDatabaseReadTransaction *transaction) {
         

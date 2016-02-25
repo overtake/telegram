@@ -233,7 +233,7 @@
     
     [Notification addObserver:self selector:@selector(hideBotKeyboard:) name:[Notification notificationNameByDialog:dialog action:@"hideBotKeyboard"]];
 
-    
+    [Notification addObserver:self selector:@selector(updateNotifySettings:) name:[Notification notificationNameByDialog:dialog action:@"notification"]];
     [Notification addObserver:self selector:@selector(didChangeBlockedUser:) name:USER_BLOCK];
     [Notification addObserver:self selector:@selector(didChannelUpdatedFlags:) name:CHAT_FLAGS_UPDATED];
     //botKeyboard
@@ -738,6 +738,15 @@ static RBLPopover *popover;
     [_channelAdminButton setBackgroundImage:!_channelAdminButton.isSelected ? image_ChannelMessageAsAdmin() : image_ChannelMessageAsAdminHighlighted() forControlState:BTRControlStateNormal];
 }
 
+-(void)updateNotifySettings:(NSNotification *)notification {
+    
+    NSImage *image = self.dialog.notify_settings.isSilent ? image_ConversationInputFieldBroadcastIconInactive() : image_ConversationInputFieldBroadcastIconActive();
+    [self.silentModeButton setBackgroundImage:image forControlState:BTRControlStateNormal];
+    [self.silentModeButton setFrameSize:image.size];
+    
+    [self.silentModeButton setToolTip:self.dialog.notify_settings.isSilent ? NSLocalizedString(@"Channel.SilentModeOn",nil) : NSLocalizedString(@"Channel.SilentModeOff",nil)];
+}
+
 -(void)silentModeButtonActtion:(BTRButton *)button {
     
     if(button) {
@@ -753,11 +762,7 @@ static RBLPopover *popover;
 
     }
     
-    NSImage *image = self.dialog.notify_settings.isSilent ? image_ConversationInputFieldBroadcastIconInactive() : image_ConversationInputFieldBroadcastIconActive();
-    [self.silentModeButton setBackgroundImage:image forControlState:BTRControlStateNormal];
-    [self.silentModeButton setFrameSize:image.size];
-    
-    [self.silentModeButton setToolTip:self.dialog.notify_settings.isSilent ? NSLocalizedString(@"Channel.SilentModeOn",nil) : NSLocalizedString(@"Channel.SilentModeOff",nil)];
+    [self updateNotifySettings:nil];
 
 }
 
@@ -1356,7 +1361,7 @@ static RBLPopover *popover;
         [self.sendButton setDisabled:YES];
     }
     
-    if(self.template.type == TGInputMessageTemplateTypeEditMessage || self.fwdContainer || _imageAttachmentsController.isShown || _recordedAudioPreview != nil) {
+    if(self.template.type == TGInputMessageTemplateTypeEditMessage || self.inputMessageTextField.stringValue.length > 0 || self.fwdContainer || _imageAttachmentsController.isShown || _recordedAudioPreview != nil) {
         [self.sendButton setHidden:NO];
         [self.recordAudioButton setHidden:YES];
     } else {

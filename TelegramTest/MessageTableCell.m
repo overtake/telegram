@@ -127,8 +127,9 @@
     
     if(self.item.message.chat.isChannel && self.item.message.fwd_from == nil) {
         BOOL canEdit = self.item.message.isPost ?  self.item.message.chat.isCreator || (self.item.message.chat.isEditor && self.item.message.from_id == [UsersManager currentUserId]) : self.item.message.from_id == [UsersManager currentUserId];
+
         
-        canEdit = canEdit && ([self.item isKindOfClass:[MessageTableItemText class]] || [self.item.message.media isKindOfClass:[TL_messageMediaPhoto class]] || [self.item.message.media isKindOfClass:[TL_messageMediaVideo class]]);
+        canEdit = canEdit && ([self.item isKindOfClass:[MessageTableItemText class]] || [self.item.message.media isKindOfClass:[TL_messageMediaPhoto class]] || ([self.item.message.media.document attributeWithClass:[TL_documentAttributeVideo class]] && ![self.item.message.media.document attributeWithClass:[TL_documentAttributeAnimated class]]));
         
         if(canEdit && self.item.message.date + edit_time_limit() > [[MTNetwork instance] getTime]) {
             [items addObject:[NSMenuItem menuItemWithTitle:NSLocalizedString(@"Context.Edit", nil) withBlock:^(id sender) {

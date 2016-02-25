@@ -159,7 +159,7 @@
             }
             
             if(self.chat.isBroadcast) {
-                return self.isMute ? NSLocalizedString(@"Unmute", nil) : NSLocalizedString(@"Mute", nil);
+                return self.isMute ? NSLocalizedString(@"Conversation.Unmute", nil) : NSLocalizedString(@"Conversation.Mute", nil);
             }
             
             
