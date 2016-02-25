@@ -335,7 +335,7 @@
     } else
         [self.botCommandButton setHidden:YES];
     
-    [_silentModeButton setHidden:self.dialog.type != DialogTypeChannel || self.dialog.chat.isMegagroup];
+    [_silentModeButton setHidden:self.dialog.type != DialogTypeChannel || self.dialog.chat.isMegagroup || self.inputMessageString.length > 0];
     
     
     if(!_botCommandButton.isHidden)
@@ -1339,7 +1339,7 @@ static RBLPopover *popover;
     [self.messagesViewController saveInputText];
     
     
-    if((self.template.type == TGInputMessageTemplateTypeSimpleText || ![self.template.originalText isEqualToString:self.inputMessageTextField.stringValue]) && ([self.inputMessageTextField.stringValue trim].length > 0 || self.fwdContainer || _imageAttachmentsController.isShown || _recordedAudioPreview != nil)) {
+    if((self.template.type == TGInputMessageTemplateTypeSimpleText || ![self.template.originalText isEqualToString:self.inputMessageTextField.stringValue]) && (([self.inputMessageTextField.stringValue trim].length > 0 || self.template.type == TGInputMessageTemplateTypeEditMessage) || self.fwdContainer || _imageAttachmentsController.isShown || _recordedAudioPreview != nil)) {
         
         
         if([self.inputMessageTextField.stringValue trim].length > 0 && textView)
