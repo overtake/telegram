@@ -223,7 +223,7 @@
     if(item.type == SearchItemMessage) {
         hashStr = [NSString stringWithFormat:@"message_%d", item.message.n_id];
     } else if(item.type ==SearchItemGlobalUser) {
-        hashStr = [NSString stringWithFormat:@"global_user_%d", item.user.n_id];
+        hashStr = [NSString stringWithFormat:@"global_user_%d", item.user ? item.user.n_id : item.chat.n_id];
     } else {
         if(item.type == SearchItemConversation ) {
             hashStr = [Notification notificationNameByDialog:item.conversation action:@"hash"];
