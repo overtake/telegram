@@ -450,7 +450,7 @@ DYNAMIC_PROPERTY(DUser);
     
     __block NSMutableArray *botUsers = [[NSMutableArray alloc] init];
     
-    if(allowInlineBot) {
+    if(allowInlineBot && self.messagesViewController.templateType != TGInputMessageTemplateTypeEditMessage) {
         __block NSMutableDictionary *bots;
         
         [[Storage yap] readWithBlock:^(YapDatabaseReadTransaction *transaction) {
@@ -526,7 +526,7 @@ static NSMutableDictionary *inlineBotsExceptions;
     if(inlineBotsExceptions[bot])
         return;
     
-    if(conversation.type == DialogTypeSecretChat && conversation.encryptedChat.encryptedParams.layer < 45)
+    if(self.messagesViewController.templateType == TGInputMessageTemplateTypeEditMessage || (conversation.type == DialogTypeSecretChat && conversation.encryptedChat.encryptedParams.layer < 45))
         return;
     
     __block TLUser *user = [UsersManager findUserByName:bot];

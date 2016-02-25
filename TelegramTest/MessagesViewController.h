@@ -17,6 +17,7 @@
 #import "TGCTextMark.h"
 #import "TGMessagesHintView.h"
 #import "TGCompressItem.h"
+#import "TGInputMessageTemplate.h"
 @class MessagesBottomView;
 
 @interface SearchSelectItem : NSObject
@@ -184,5 +185,7 @@ typedef enum {
 -(TGMessagesHintView *)hintView;
 
 -(void)setEditableMessage:(TL_localMessage *)message;
+
+-(TGInputMessageTemplateType)templateType;
 
 @end
