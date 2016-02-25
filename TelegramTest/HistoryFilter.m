@@ -294,32 +294,38 @@
     
     [items enumerateObjectsUsingBlock:^(TL_localMessage *obj, NSUInteger idx, BOOL *stop) {
         
-        NSMutableArray *filterItems = [self messageItems];
-        NSMutableDictionary *filterKeys = [self messageKeys];
-        
-        BOOL needAdd = [filterItems indexOfObject:obj] == NSNotFound;
-        
-        if((obj.peer_id == self.peer_id) && ((obj.filterType & [self type]) > 0 && (_prevState == ChatHistoryStateFull || !latest))) {
+        @try {
+            NSMutableArray *filterItems = [self messageItems];
+            NSMutableDictionary *filterKeys = [self messageKeys];
             
-            if(obj.n_id != 0) {
-                id saved = filterKeys[@(obj.n_id)];
-                if(!saved) {
-                    filterKeys[@(obj.n_id)] = obj;
+            BOOL needAdd = [filterItems indexOfObject:obj] == NSNotFound;
+            
+            if((obj.peer_id == self.peer_id) && ((obj.filterType & [self type]) > 0 && (_prevState == ChatHistoryStateFull || !latest))) {
+                
+                if(obj.n_id != 0) {
+                    id saved = filterKeys[@(obj.n_id)];
+                    if(!saved) {
+                        filterKeys[@(obj.n_id)] = obj;
+                    } else {
+                        needAdd = NO;
+                    }
+                }
+                
+                if(needAdd) {
+                    [filterItems addObject:obj];
                     
-                } else {
-                    needAdd = NO;
+                    [filtred addObject:obj];
                 }
             }
-            
-            if(needAdd) {
-                [filterItems addObject:obj];
-                
-                [filtred addObject:obj];
-            }
         }
+        @catch (NSException *exception) {
+            
+        }
+        
+       
     }];
 
-     return filtred;
+    return filtred;
     
 }
 

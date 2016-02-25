@@ -180,20 +180,18 @@ static NSImage *higlightedImage() {
         } forControlEvents:weakSelf.tableView.isCustomStickerPack ? BTRControlEventMouseUpOutside : BTRControlEventMouseUpInside];
 
         if(!weakSelf.tableView.isCustomStickerPack) {
-//            
-//            
-//            
-//            [button addBlock:^(BTRControlEvents events) {
-//                
-//                TGStickerPreviewModalView *preview = [[TGStickerPreviewModalView alloc] init];
-//                
-//                [preview setSticker:item.stickers[idx]];
-//                
-//                [preview show:appWindow() animated:YES];
-//                
-//                weakSelf.tableView.previewModal = preview;
-//                
-//            } forControlEvents:BTRControlEventLongLeftClick];
+            
+            [button addBlock:^(BTRControlEvents events) {
+                
+                TGStickerPreviewModalView *preview = [[TGStickerPreviewModalView alloc] init];
+                
+                [preview setSticker:item.stickers[idx]];
+                
+                [preview show:appWindow() animated:YES];
+                
+                weakSelf.tableView.previewModal = preview;
+                
+            } forControlEvents:BTRControlEventLongLeftClick];
         }
         
         

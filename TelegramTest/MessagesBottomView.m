@@ -1305,7 +1305,7 @@ static RBLPopover *popover;
         [self.sendButton setDisabled:YES];
     }
     
-    if(self.template.type == TGInputMessageTemplateTypeEditMessage || self.inputMessageTextField.stringValue.length || self.fwdContainer || _imageAttachmentsController.isShown || _recordedAudioPreview != nil) {
+    if(self.template.type == TGInputMessageTemplateTypeEditMessage || self.fwdContainer || _imageAttachmentsController.isShown || _recordedAudioPreview != nil) {
         [self.sendButton setHidden:NO];
         [self.recordAudioButton setHidden:YES];
     } else {
