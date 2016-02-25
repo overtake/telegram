@@ -669,7 +669,7 @@ static NSTextAttachment *channelIconAttachment() {
     if(self.message.isPost && self.message.from_id != 0) {
         [signString appendString:@" "];
         range = [signString appendString:_user.fullName withColor:GRAY_TEXT_COLOR];
-        [signString setLink:[TMInAppLinks peerProfile:[TL_peerUser createWithUser_id:_user.n_id]] forRange:range];
+      //  [signString setLink:[TMInAppLinks peerProfile:[TL_peerUser createWithUser_id:_user.n_id]] forRange:range];
     }
     
     _viewsCountAndSignSize = [signString sizeForTextFieldForWidth:INT32_MAX];
