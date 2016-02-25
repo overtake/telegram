@@ -272,7 +272,7 @@
 
 
 -(BOOL)isImportantMessage {
-    return self.isChannelMessage &&  ((self.flags & 2) || (self.flags & 16) || (self.flags & 256) == 0);
+    return self.isChannelMessage &&  (self.isPost);
 }
 
 -(BOOL)isChannelMessage {
