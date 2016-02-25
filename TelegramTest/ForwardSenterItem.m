@@ -50,7 +50,7 @@
             
             [ids addObject:@([f n_id])];
             
-            TL_messageFwdHeader *fwdHeader = [TL_messageFwdHeader createWithFlags:0 from_id:f.from_id date:[[MTNetwork instance] getTime] channel_id:[f.to_id isKindOfClass:[TL_peerChannel class]] ? f.to_id.channel_id : 0 channel_post:[f.to_id isKindOfClass:[TL_peerChannel class]] && !f.chat.isMegagroup ? f.n_id : 0];
+            TL_messageFwdHeader *fwdHeader = [TL_messageFwdHeader createWithFlags:0 from_id:f.fwd_from ? f.fwd_from.from_id : f.from_id date:f.date channel_id:[f.to_id isKindOfClass:[TL_peerChannel class]] ? f.to_id.channel_id : 0 channel_post:[f.to_id isKindOfClass:[TL_peerChannel class]] && !f.chat.isMegagroup ? f.n_id : 0];
             
             TL_localMessage *fake = [TL_localMessage createWithN_id:0 flags:TGOUTUNREADMESSAGE | TGFWDMESSAGE | TGREADEDCONTENT from_id:[UsersManager currentUserId] to_id:conversation.peer fwd_from:fwdHeader reply_to_msg_id:0 date:[[MTNetwork instance] getTime] message:f.message media:f.media fakeId:[MessageSender getFakeMessageId] randomId:random reply_markup:nil entities:f.entities views:f.views via_bot_id:f.via_bot_id edit_date:0 isViewed:NO state:DeliveryStatePending];
             

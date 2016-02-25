@@ -28,7 +28,7 @@
 - (void)drawRect:(NSRect)dirtyRect {
     [super drawRect:dirtyRect];
     
-    if(self.item.conversation.isVerified) {
+    if(self.item.conversation.isVerified && !self.item.isEditable) {
         [image_Verify() drawInRect:NSMakeRect(NSMaxX(_nameTextField.frame),NSMinY(_nameTextField.frame) , image_Verify().size.width, image_Verify().size.height) fromRect:NSZeroRect operation:NSCompositeHighlight fraction:1];
     }
 }

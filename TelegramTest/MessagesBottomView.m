@@ -1218,19 +1218,11 @@ static RBLPopover *popover;
       //  if((self.dialog && !self.dialog.canSendMessage) || self.dialog.user.isBot) {
             animated = NO;
  
-            
-        
-            
-        [self.encryptedStateTextField setStringValue:[self.dialog blockedText]];
+         [self.encryptedStateTextField setStringValue:[self.dialog blockedText]];
         
         [self.encryptedStateTextField setTextColor:[self.encryptedStateTextField.stringValue isEqualToString:[self.dialog blockedText]] ? LINK_COLOR : GRAY_TEXT_COLOR];
         
        
-//        if(self.dialog.type == DialogTypeUser && !self.dialog.user.isBot)
-//        {
-//            [self.encryptedStateTextField setTextColor:[NSColor redColor]];
-//        }
-        
         
         [self.encryptedStateTextField sizeToFit];
         [self.encryptedStateTextField setCenterByView:self.encryptedStateTextField.superview];
@@ -1344,7 +1336,7 @@ static RBLPopover *popover;
     [self.messagesViewController saveInputText];
     
     
-    if((self.template.type == TGInputMessageTemplateTypeSimpleText || ![self.template.originalText isEqualToString:self.inputMessageTextField.stringValue]) && (([self.inputMessageTextField.stringValue trim].length > 0 || self.template.type == TGInputMessageTemplateTypeEditMessage) || self.fwdContainer || _imageAttachmentsController.isShown || _recordedAudioPreview != nil)) {
+    if( (([self.inputMessageTextField.stringValue trim].length > 0 || self.template.type == TGInputMessageTemplateTypeEditMessage) || self.fwdContainer || _imageAttachmentsController.isShown || _recordedAudioPreview != nil)) {
         
         
         if([self.inputMessageTextField.stringValue trim].length > 0 && textView)
@@ -1368,6 +1360,7 @@ static RBLPopover *popover;
         [self.sendButton setHidden:YES];
         [self.recordAudioButton setHidden:NO];
     }
+
     
     
     [self updateWebpage:YES];

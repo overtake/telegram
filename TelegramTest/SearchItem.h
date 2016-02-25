@@ -36,7 +36,7 @@ typedef enum {
 
 
 - (id)initWithUserItem:(TLUser *)user searchString:(NSString *)searchString;
-- (id)initWithGlobalItem:(TLUser*)user searchString:(NSString *)searchString;
+- (id)initWithGlobalItem:(id)user searchString:(NSString *)searchString;
 - (id)initWithChatItem:(TLChat *)chat searchString:(NSString *)searchString;
 - (id)initWithMessageItem:(TLMessage *)message searchString:(NSString *)searchString;
 - (id)initWithDialogItem:(TL_conversation *)dialog searchString:(NSString *)searchString;

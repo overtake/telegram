@@ -866,6 +866,16 @@ static int insertCount = 3;
         }];
         
         
+        filtred = [ChatsManager findChatsByName:searchString];
+        
+        [filtred enumerateObjectsUsingBlock:^(TLChat *obj, NSUInteger idx, BOOL *stop) {
+            
+            SearchItem *item = [[SearchItem alloc] initWithGlobalItem:obj searchString:searchString];
+            
+            [searchParams.globalUsers addObject:item];
+        }];
+        
+        
     }
     
     
@@ -952,7 +962,7 @@ static int insertCount = 3;
 
             NSArray *acceptUsers = [response.users filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"NOT(self.n_id IN %@)",ids]];
             
-            NSArray *acceptChats = [response.chats filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"NOT(self.n_id IN %@)",ids]];
+            NSArray *acceptChats = [response.chats filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"NOT(self.n_id IN %@)",chatIds]];
             
             [[UsersManager sharedManager] add:acceptUsers withCustomKey:@"n_id" update:YES];
             
