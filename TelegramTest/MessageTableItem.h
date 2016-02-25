@@ -101,7 +101,6 @@
 -(NSURL *)shareObject;
 
 -(BOOL)isReplyMessage;
--(BOOL)isFwdMessage;
 
 -(int)fontSize;
 

@@ -332,9 +332,7 @@ static NSTextAttachment *channelIconAttachment() {
     self._viewSize = viewSize;
 }
 
--(BOOL)isHeaderMessage {
-    return YES;//test
-}
+
 
 - (NSSize)viewSize {
     NSSize viewSize = self._viewSize;
@@ -590,7 +588,15 @@ static NSTextAttachment *channelIconAttachment() {
     const int sendingUnreadReadSize = 16;
     const int sendingUnreadReadOffset = self.defaultOffset;
     
-    _rightSize = NSMakeSize(_dateSize.width +selectSize + selectOffset + sendingUnreadReadSize + sendingUnreadReadOffset,_dateSize.height);
+    
+    int w = _dateSize.width +selectSize + selectOffset + sendingUnreadReadSize + sendingUnreadReadOffset;
+    
+    if(!self.message.n_out && !self.message.isPost) {
+        w = _dateSize.width + selectSize + selectOffset;
+    }
+    
+
+    _rightSize = NSMakeSize(w,_dateSize.height);
 }
 
 
@@ -660,14 +666,10 @@ static NSTextAttachment *channelIconAttachment() {
     
 }
 
-
 -(BOOL)isReplyMessage {
     return (self.message.reply_to_msg_id != 0 && ![self.message.replyMessage isKindOfClass:[TL_localEmptyMessage class]]) || ([self.message isKindOfClass:[TL_destructMessage45 class]] && ((TL_destructMessage45 *)self.message).reply_to_random_id != 0);
 }
 
--(BOOL)isFwdMessage {
-    return self.message.fwd_from != nil;
-}
 
 - (BOOL)makeSizeByWidth:(int)width {
     _blockWidth = width;

@@ -50,22 +50,13 @@
         
 
         
-        //tests main container
-        {
-            _photoView = [TMAvatarImageView standartMessageTableAvatar];
-            _nameView = [[TGTextLabel alloc] initWithText:nil maxWidth:0];
-            
-            _nameView.backgroundColor = [NSColor blackColor];
-            
-            [self addSubview:_photoView];
-            [self addSubview:_nameView];
-        }
+        
         
         
         //container
         {
             _contentContainerView = [[TMView alloc] initWithFrame:NSZeroRect];
-           // _contentContainerView.backgroundColor = [NSColor redColor];
+            _contentContainerView.backgroundColor = [NSColor redColor];
             _contentContainerView.isFlipped = YES;
             
             _contentView = [[TMView alloc] initWithFrame:NSZeroRect];
@@ -77,6 +68,39 @@
         
     }
     return self;
+}
+
+
+-(void)checkAndMakeHeaderContainer:(MessageTableItem *)item {
+
+    if(item.isHeaderMessage)
+    {
+        if(!_photoView) {
+            _photoView = [TMAvatarImageView standartMessageTableAvatar];
+            [self addSubview:_photoView];
+        }
+        
+        if(!_nameView) {
+            _nameView = [[TGTextLabel alloc] initWithText:nil maxWidth:0];
+          //  _nameView.backgroundColor = [NSColor blackColor];
+            [self addSubview:_nameView];
+        }
+        
+        [_photoView setUser:item.user];
+        
+        [_nameView setText:item.headerName maxWidth:item.headerSize.width height:item.headerSize.height];
+        
+        [_photoView setFrameOrigin:NSMakePoint(item.defaultContainerOffset, item.defaultContentOffset)];
+        [_nameView setFrameOrigin:NSMakePoint(item.startContentOffset, item.defaultContentOffset)];
+        
+    } else {
+        [_photoView removeFromSuperview];
+        _photoView = nil;
+        [_nameView removeFromSuperview];
+        _nameView = nil;
+        
+      //  [_contentView setFrameOrigin:NSMakePoint(<#CGFloat x#>, <#CGFloat y#>)];
+    }
 }
 
 -(void)chekAndMakeForwardContainer:(MessageTableItem *)item {
@@ -152,12 +176,12 @@
     if(item.messageSender)  {
     
         [item.messageSender addEventListener:self];
-    
         if(item.messageSender.state == MessageStateWaitSend)
                 [item.messageSender send];
-        else
-            [self checkActionState:NO];
     }
+    
+    [self checkActionState:NO];
+    
 }
 
 
@@ -190,7 +214,7 @@
         }
         
     }
-    
+    self.actionState = state;
     
     [self.rightView setState:state animated:animated];
 }
@@ -214,20 +238,16 @@
 -(void)setItem:(MessageTableItem *)item {
     [super setItem:item];
     
-    [_photoView setUser:item.user];
     
-    [_nameView setText:item.headerName maxWidth:item.headerSize.width height:item.headerSize.height];
+   // self.layer.backgroundColor = item.rowId % 2 == 0 ? [NSColor blueColor].CGColor : [NSColor greenColor].CGColor;
     
-    [_photoView setFrameOrigin:NSMakePoint(item.defaultContainerOffset, item.defaultContentOffset)];
-    [_nameView setFrameOrigin:NSMakePoint(item.startContentOffset, item.defaultContentOffset)];
-
-  //  self.layer.backgroundColor = item.rowId % 2 == 0 ? [NSColor blueColor].CGColor : [NSColor greenColor].CGColor;
+    int xStartContentOffset = item.isHeaderMessage ? item.headerSize.height + item.defaultContentOffset + item.defaultContentOffset : item.defaultContentOffset;
     
-    [_contentContainerView setFrame:NSMakeRect(item.startContentOffset,NSMaxY(_nameView.frame) + item.defaultContentOffset, item.viewSize.width, item.viewSize.height - NSMaxY(_nameView.frame) - item.defaultContentOffset)];
+    [_contentContainerView setFrame:NSMakeRect(item.startContentOffset,xStartContentOffset, item.viewSize.width, item.viewSize.height - xStartContentOffset - item.defaultContentOffset)];
     
     [_contentView setFrame:NSMakeRect(0, 0, item.blockSize.width, item.blockSize.height)];
     
-    
+    [self checkAndMakeHeaderContainer:item];
     [self chekAndMakeForwardContainer:item];
     [self checkAndMakeReplyContainer:item];
     [self checkAndMakeRightView:item];

@@ -11,6 +11,7 @@
 #import "NSStringCategory.h"
 #import "NSString+Extended.h"
 #import "NSAttributedString+Hyperlink.h"
+#import "MessageTableCellVideoView.h"
 @implementation MessageTableItemVideo
 
 - (id) initWithObject:(TLMessage *)object {
@@ -135,8 +136,12 @@
     
 }
 
+-(Class)viewClass {
+    return [MessageTableCellVideoView class];
+}
+
 -(BOOL)canDownload {
-    return self.message.media.video.dc_id != 0;
+    return self.message.media.document.dc_id != 0;
 }
 
 @end

@@ -120,7 +120,7 @@
                 
                 TLMessage *msg = [TL_localMessage convertReceivedMessage:(TLMessage *) ( [response.updates[1] message])];
                 
-                 strongSelf.message.n_id = msg.n_id;
+                strongSelf.message.n_id = msg.n_id;
                 strongSelf.message.date = msg.date;
                     
 
@@ -128,7 +128,7 @@
                 strongSelf.message.media.document.size = [msg media].document.size;
                 strongSelf.message.media.document.access_hash = [msg media].document.access_hash;
                 strongSelf.message.media.document.n_id = [msg media].document.n_id;
-                
+                strongSelf.message.media.document.mime_type = msg.media.document.mime_type;
                 
                 
                 [[NSFileManager defaultManager] moveItemAtPath:strongSelf.path_for_file toPath:mediaFilePath(strongSelf.message) error:nil];
@@ -167,7 +167,7 @@
                 UploadOperation *thumbUpload = [[UploadOperation alloc] init];
                 [thumbUpload setUploadComplete:^(UploadOperation *thumb, TL_inputFile *inputThumbFile) {
                     
-                    media = [TL_inputMediaUploadedThumbDocument createWithFile:input thumb:inputThumbFile mime_type:@"image/jpeg" attributes:nil caption:self.message.media.caption];
+                    media = [TL_inputMediaUploadedThumbDocument createWithFile:input thumb:inputThumbFile mime_type:@"video/mp4" attributes:nil caption:self.message.media.caption];
                     
                     block();
                 }];
@@ -175,7 +175,7 @@
                 [thumbUpload setFileData:thumbData];
                 [thumbUpload ready:UploadImageType];
             } else {
-                media = [TL_inputMediaUploadedDocument createWithFile:input mime_type:mimetypefromExtension(@"mp4") attributes:self.message.media.document.attributes caption:self.message.media.caption];
+                media = [TL_inputMediaUploadedDocument createWithFile:input mime_type:@"video/mp4" attributes:self.message.media.document.attributes caption:self.message.media.caption];
                 block();
             }
         }
@@ -213,8 +213,9 @@
         [self.uploader ready:UploadVideoType];
         
         [self.message save:YES];
+        
             
-        ((TL_localMessage *)self.message).media.video.size = self.uploader.total_size;
+        ((TL_localMessage *)self.message).media.document.size = self.uploader.total_size;
         self.state = self.state;
     } progressHandler:^(float progress) {
         self.progress = (progress/1.0f) * VIDEO_COMPRESSED_PROGRESS;
