@@ -22,24 +22,7 @@
 
 @implementation TGWebpageObject
 
-NSImage *placeholder() {
-    static RHResizableImage *image = nil;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        NSRect rect = NSMakeRect(0, 0, 50, 50);
-        NSImage *img = [[NSImage alloc] initWithSize:rect.size];
-        [img lockFocus];
-        [GRAY_BORDER_COLOR set];
-        NSBezierPath *path = [NSBezierPath bezierPath];
-        [path appendBezierPathWithRoundedRect:NSMakeRect(0, 0, rect.size.width, rect.size.height) xRadius:4 yRadius:4];
-        [path fill];
-        [img unlockFocus];
-        
-        image = [[RHResizableImage alloc] initWithImage:img capInsets:RHEdgeInsetsMake(5, 5, 5, 5)];
-        
-    });
-    return image;
-}
+
 
 -(id)initWithWebPage:(TLWebPage *)webpage {
     if(self = [super init]) {
@@ -148,7 +131,7 @@ NSImage *placeholder() {
             TLPhotoSize *photoSize = [photo lastObject];
             
             
-            _imageObject = [[TGImageObject alloc] initWithLocation:photoSize.location placeHolder:placeholder() sourceId:0 size:photoSize.size];
+            _imageObject = [[TGImageObject alloc] initWithLocation:photoSize.location placeHolder:gray_resizable_placeholder() sourceId:0 size:photoSize.size];
             
             
             NSSize imageSize = strongsize(NSMakeSize(photoSize.w, photoSize.h), 320);
@@ -157,7 +140,7 @@ NSImage *placeholder() {
             _imageObject.imageSize = imageSize;
             
             
-            _roundObject = [[TGArticleImageObject alloc] initWithLocation:photoSize.location placeHolder:placeholder() sourceId:0 size:photoSize.size];
+            _roundObject = [[TGArticleImageObject alloc] initWithLocation:photoSize.location placeHolder:gray_resizable_placeholder() sourceId:0 size:photoSize.size];
             
             _roundObject.imageSize = NSMakeSize(60, 60);
         }

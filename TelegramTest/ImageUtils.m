@@ -9,7 +9,7 @@
 #import "ImageUtils.h"
 #import <Accelerate/Accelerate.h>
 #import <QuickLook/QuickLook.h>
-
+#import "NSImage+RHResizableImageAdditions.h"
 #define CACHE_IMAGE(Name) NSImage* image_##Name () { \
 static NSImage *image;\
 static dispatch_once_t onceToken;\
@@ -920,6 +920,26 @@ NSImage *imageWithRoundCorners(NSImage *oldImage, int cornerRadius, NSSize size)
         }
     }
     
+    return image;
+}
+
+
+NSImage *gray_resizable_placeholder() {
+    static RHResizableImage *image = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        NSRect rect = NSMakeRect(0, 0, 50, 50);
+        NSImage *img = [[NSImage alloc] initWithSize:rect.size];
+        [img lockFocus];
+        [GRAY_BORDER_COLOR set];
+        NSBezierPath *path = [NSBezierPath bezierPath];
+        [path appendBezierPathWithRoundedRect:NSMakeRect(0, 0, rect.size.width, rect.size.height) xRadius:4 yRadius:4];
+        [path fill];
+        [img unlockFocus];
+        
+        image = [[RHResizableImage alloc] initWithImage:img capInsets:RHEdgeInsetsMake(5, 5, 5, 5)];
+        
+    });
     return image;
 }
 

@@ -314,21 +314,6 @@ NSImage *fireImage() {
     self.imageView.isNotNeedHackMouseUp = editable;
 }
 
-//-(void)drawRect:(NSRect)dirtyRect {
-//    [super drawRect:dirtyRect];
-//    
-//    const int borderOffset = self.imageView.borderWidth;
-//    const int borderSize = borderOffset*2;
-//    
-//    NSRect rect = NSMakeRect(self.containerView.frame.origin.x-borderOffset, NSMinY(self.containerView.frame) + NSHeight(self.containerView.frame) - NSHeight(self.imageView.frame) - borderOffset, NSWidth(self.imageView.frame)+borderSize, NSHeight(self.imageView.frame)+borderSize);
-//    
-//    NSBezierPath *path = [NSBezierPath bezierPathWithRoundedRect:rect xRadius:self.imageView.cornerRadius yRadius:self.imageView.cornerRadius];
-//    [path addClip];
-//    
-//    
-//    [self.imageView.borderColor set];
-//    NSRectFill(rect);
-//}
 
 -(void)mouseDown:(NSEvent *)theEvent {
     
@@ -350,7 +335,7 @@ NSImage *fireImage() {
     NSPoint eventLocation = [self.imageView convertPoint: [theEvent locationInWindow] fromView: nil];
    
     if([self.imageView hitTest:eventLocation]) {
-        NSPoint dragPosition = NSMakePoint(80, 8);
+        NSPoint dragPosition = [self convertPoint:self.imageView.frame.origin fromView:self.imageView];
         
         NSString *path = locationFilePath(((MessageTableItemPhoto *)self.item).imageObject.location,@"jpg");
         
@@ -364,7 +349,6 @@ NSImage *fireImage() {
         NSImage *dragImage = [self.imageView.image copy];
         
         dragImage = [ImageUtils imageResize:dragImage newSize:self.imageView.frame.size];
-        
         
         [pasteBrd setData:[self.imageView.image TIFFRepresentation] forType:NSTIFFPboardType];
         

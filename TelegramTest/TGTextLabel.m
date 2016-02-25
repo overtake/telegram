@@ -146,6 +146,8 @@
                     CGRect frame = self.frame;
                     frame.size = bounds.size;
                     self.frame = frame;
+                } else {
+                    [self setNeedsDisplay:YES];
                 }
                 
                 if (needsContentUpdate)

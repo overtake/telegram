@@ -262,4 +262,7 @@ typedef NSImage * (^ImageProcessor)(NSImage *image, NSSize size);
 
 +(ImageProcessor)c_processor;
 +(ImageProcessor)b_processor;
+
+NSImage *gray_resizable_placeholder();
+
 @end

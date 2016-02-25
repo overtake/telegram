@@ -109,7 +109,10 @@
         
         if(cachePhoto) {
             cachePhoto = [ImageUtils blurImage:renderedImage(cachePhoto, cachePhoto.size) blurRadius:80 frameSize:cachePhoto.size];
+        } else {
+            cachePhoto = gray_resizable_placeholder();
         }
+        
         
         
         self.imageObject = [[TGImageObject alloc] initWithLocation:photoSize.location placeHolder:cachePhoto sourceId:self.message.n_id size:photoSize.size];
