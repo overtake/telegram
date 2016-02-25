@@ -231,6 +231,9 @@ CACHE_IMAGE(CalendarIcon);
 CACHE_IMAGE(TempAudioPreviewPlay);
 CACHE_IMAGE(TempAudioPreviewPause);
 
+CACHE_IMAGE(ConversationInputFieldBroadcastIconActive);
+CACHE_IMAGE(ConversationInputFieldBroadcastIconInactive);
+
 @implementation ImageUtils
 
 NSImage *previewImageForDocument(NSString *path) {

@@ -52,6 +52,8 @@
 @property (nonatomic, strong) BTRButton *botCommandButton;
 @property (nonatomic, strong) BTRButton *channelAdminButton;
 @property (nonatomic, strong) BTRButton *secretTimerButton;
+@property (nonatomic, strong) BTRButton *silentModeButton;
+
 
 @property (nonatomic, strong) NSProgressIndicator *progressView;
 @property (nonatomic,assign,setter=setProgress:) BOOL isProgress;
@@ -277,6 +279,8 @@
     
     [self updateStopRecordControls];
     
+    [self silentModeButtonActtion:nil];
+    
     if(self.dialog.type == DialogTypeUser && self.dialog.user.isBot) {
         
         
@@ -331,6 +335,8 @@
     } else
         [self.botCommandButton setHidden:YES];
     
+    [_silentModeButton setHidden:self.dialog.type != DialogTypeChannel || self.dialog.chat.isMegagroup || self.inputMessageString.length > 0];
+    
     
     if(!_botCommandButton.isHidden)
     {
@@ -344,8 +350,15 @@
     
     
     if(!_channelAdminButton.isHidden) {
-        [_channelAdminButton setFrameOrigin:NSMakePoint(self.inputMessageTextField.containerView.frame.size.width - (_botCommandButton.isHidden ? 60 : 120), NSMinY(_channelAdminButton.frame))];
+        [_channelAdminButton setFrameOrigin:NSMakePoint(self.inputMessageTextField.containerView.frame.size.width - (_botCommandButton.isHidden ? 60 : 90), NSMinY(_channelAdminButton.frame))];
 
+    }
+    
+    if(!_silentModeButton.isHidden) {
+        
+        int defadd = _channelAdminButton.isHidden ? 0 : 30;
+        
+        [_silentModeButton setFrameOrigin:NSMakePoint(self.inputMessageTextField.containerView.frame.size.width - (_botCommandButton.isHidden ? 60+defadd : 90+defadd), NSMinY(_channelAdminButton.frame))];
     }
     
     
@@ -611,6 +624,21 @@
     
     
     
+    self.silentModeButton = [[BTRButton alloc] initWithFrame:NSMakeRect(self.inputMessageTextField.containerView.frame.size.width - 90, 7, image_ConversationInputFieldBroadcastIconInactive().size.width, image_ConversationInputFieldBroadcastIconInactive().size.height)];
+    [self.silentModeButton setAutoresizingMask:NSViewMinXMargin | NSViewMinYMargin];
+    [self.silentModeButton.layer disableActions];
+    
+    [self.silentModeButton addTarget:self action:@selector(silentModeButtonActtion:) forControlEvents:BTRControlEventMouseDownInside];
+    [self.silentModeButton setBackgroundImage:image_ConversationInputFieldBroadcastIconInactive() forControlState:BTRControlStateNormal];
+    
+    [self.silentModeButton setCursor:[NSCursor arrowCursor] forControlState:BTRControlStateHover];
+    
+    
+    
+    
+    [self.inputMessageTextField.containerView addSubview:self.silentModeButton];
+    
+    
     self.secretTimerButton = [[BTRButton alloc] initWithFrame:NSMakeRect(self.inputMessageTextField.containerView.frame.size.width - 60, 2, 30, 30)];
     [self.secretTimerButton setAutoresizingMask:NSViewMinXMargin | NSViewMinYMargin];
     [self.secretTimerButton.layer disableActions];
@@ -708,6 +736,29 @@ static RBLPopover *popover;
     [_channelAdminButton setSelected:!_channelAdminButton.isSelected];
     
     [_channelAdminButton setBackgroundImage:!_channelAdminButton.isSelected ? image_ChannelMessageAsAdmin() : image_ChannelMessageAsAdminHighlighted() forControlState:BTRControlStateNormal];
+}
+
+-(void)silentModeButtonActtion:(BTRButton *)button {
+    
+    if(button) {
+        int flags = self.dialog.notify_settings.flags;
+        
+        if(flags & PushEventMaskDisableChannelMessageNotification)
+        flags &= ~PushEventMaskDisableChannelMessageNotification;
+        else
+        flags |= PushEventMaskDisableChannelMessageNotification;
+        
+        
+        [self.dialog updateNotifySettings:[TL_peerNotifySettings createWithFlags:flags mute_until:self.dialog.notify_settings.mute_until sound:self.dialog.notify_settings.sound] serverSave:YES];
+
+    }
+    
+    NSImage *image = self.dialog.notify_settings.isSilent ? image_ConversationInputFieldBroadcastIconInactive() : image_ConversationInputFieldBroadcastIconActive();
+    [self.silentModeButton setBackgroundImage:image forControlState:BTRControlStateNormal];
+    [self.silentModeButton setFrameSize:image.size];
+    
+    [self.silentModeButton setToolTip:self.dialog.notify_settings.isSilent ? NSLocalizedString(@"Channel.SilentModeOn",nil) : NSLocalizedString(@"Channel.SilentModeOff",nil)];
+
 }
 
 -(NSMenu *)attachMenu {
@@ -1288,7 +1339,7 @@ static RBLPopover *popover;
     [self.messagesViewController saveInputText];
     
     
-    if((self.template.type == TGInputMessageTemplateTypeSimpleText || ![self.template.originalText isEqualToString:self.inputMessageTextField.stringValue]) && ([self.inputMessageTextField.stringValue trim].length > 0 || self.fwdContainer || _imageAttachmentsController.isShown || _recordedAudioPreview != nil)) {
+    if((self.template.type == TGInputMessageTemplateTypeSimpleText || ![self.template.originalText isEqualToString:self.inputMessageTextField.stringValue]) && (([self.inputMessageTextField.stringValue trim].length > 0 || self.template.type == TGInputMessageTemplateTypeEditMessage) || self.fwdContainer || _imageAttachmentsController.isShown || _recordedAudioPreview != nil)) {
         
         
         if([self.inputMessageTextField.stringValue trim].length > 0 && textView)
@@ -1305,7 +1356,7 @@ static RBLPopover *popover;
         [self.sendButton setDisabled:YES];
     }
     
-    if(self.template.type == TGInputMessageTemplateTypeEditMessage || self.inputMessageTextField.stringValue.length || self.fwdContainer || _imageAttachmentsController.isShown || _recordedAudioPreview != nil) {
+    if(self.template.type == TGInputMessageTemplateTypeEditMessage || self.fwdContainer || _imageAttachmentsController.isShown || _recordedAudioPreview != nil) {
         [self.sendButton setHidden:NO];
         [self.recordAudioButton setHidden:YES];
     } else {
@@ -1818,7 +1869,7 @@ static RBLPopover *popover;
     
     self.inputMessageTextField.containerView.frame = NSMakeRect(offsetX, 11, self.bounds.size.width - offsetX - self.sendButton.frame.size.width - 33, NSHeight(self.inputMessageTextField.containerView.frame));
     
-    [self.inputMessageTextField setFrameSize:NSMakeSize(NSWidth(self.inputMessageTextField.containerView.frame) - 40 - (_botKeyboardButton.isHidden ? 0 : 30) - (_botCommandButton.isHidden ? 0 : 30) - (_channelAdminButton.isHidden ? 0 : 30) - (_secretTimerButton.isHidden ? 0 : 30) - (_progressView.isHidden ? 0 : 30),NSHeight(self.inputMessageTextField.frame))];
+    [self.inputMessageTextField setFrameSize:NSMakeSize(NSWidth(self.inputMessageTextField.containerView.frame) - 40 - (_botKeyboardButton.isHidden ? 0 : 30) - (_botCommandButton.isHidden ? 0 : 30) - (_channelAdminButton.isHidden ? 0 : 30) - (_secretTimerButton.isHidden ? 0 : 30) - (_progressView.isHidden ? 0 : 30) - (_silentModeButton.isHidden ? 0 : 30),NSHeight(self.inputMessageTextField.frame))];
     
     
 }
@@ -1873,10 +1924,13 @@ static RBLPopover *popover;
     if(checkElements) {
         [self removeQuickRecord];
         
-        
         [self setInputMessageString:_template.text ? _template.text : @"" disableAnimations:NO];
         
-        [_imageAttachmentsController hide:YES deleteItems:NO];
+        if(_template.type == TGInputMessageTemplateTypeSimpleText) {
+            [_imageAttachmentsController show:_dialog animated:YES];
+        } else {
+            [_imageAttachmentsController hide:YES deleteItems:NO];
+        }
         
         [self checkReplayMessage:YES animated:YES];
         

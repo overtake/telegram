@@ -76,6 +76,4 @@ typedef enum {
 -(void)updateMessageId:(TLUpdates *)updates;
 -(TL_updateNewMessage *)updateNewMessageWithUpdates:(TLUpdates *)updates;
 
--(NSString *)parseEntities:(NSString *)message entities:(NSMutableArray *)entities backstrips:(NSString *)backstrips startIndex:(NSUInteger)startIndex;
-
 @end

@@ -139,9 +139,11 @@
             [transaction setObject:attachments forKey:_conversation.cacheKey inCollection:ATTACHMENTS];
             
         }];
+    } else {
+         _conversation = nil;
     }
     
-    _conversation = nil;
+   
 
 }
 

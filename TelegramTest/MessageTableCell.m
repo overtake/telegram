@@ -130,24 +130,16 @@
         
         canEdit = canEdit && ([self.item isKindOfClass:[MessageTableItemText class]] || [self.item.message.media isKindOfClass:[TL_messageMediaPhoto class]] || [self.item.message.media isKindOfClass:[TL_messageMediaVideo class]]);
         
-        
-        
         if(canEdit && self.item.message.date + edit_time_limit() > [[MTNetwork instance] getTime]) {
             [items addObject:[NSMenuItem menuItemWithTitle:NSLocalizedString(@"Context.Edit", nil) withBlock:^(id sender) {
                 
-                [weakSelf.messagesViewController showModalProgress];
+                [weakSelf.messagesViewController setEditableMessage:weakSelf.item.message];
                 
                 [RPCRequest sendRequest:[TLAPI_channels_getMessageEditData createWithChannel:weakSelf.item.message.chat.inputPeer n_id:weakSelf.item.message.n_id] successHandler:^(id request, id response) {
                     
                     [SharedManager proccessGlobalResponse:response];
                     
-                    [weakSelf.messagesViewController setEditableMessage:weakSelf.item.message];
-                    
-                    [weakSelf.messagesViewController hideModalProgress];
-                    
-                } errorHandler:^(id request, RpcError *error) {
-                    [weakSelf.messagesViewController hideModalProgress];
-                }];
+                } errorHandler:nil];
 
             }]];
             
@@ -215,11 +207,8 @@
             
             [weakSelf.messagesViewController setState:MessagesViewControllerStateNone];
             [weakSelf.messagesViewController unSelectAll:NO];
-            
             [weakSelf.messagesViewController setSelectedMessage:weakSelf.item selected:YES];
-            
             [weakSelf.messagesViewController deleteSelectedMessages];
-            
             
         }]];
     }
@@ -229,11 +218,9 @@
 }
 
 -(void)mouseDown:(NSEvent *)theEvent {
-    if(theEvent.clickCount == 2 && self.messagesViewController.state == MessagesViewControllerStateNone) {
+    if((theEvent.clickCount == 2) && self.messagesViewController.state == MessagesViewControllerStateNone) {
         
         BOOL accept = ![self mouseInText:theEvent];;
-        
-        MTLog(@"message_id:%d",self.item.message.n_id);
         
         if(accept && self.item.message.n_id < TGMINFAKEID && self.item.message.n_id > 0)
             [_messagesViewController addReplayMessage:self.item.message animated:YES];

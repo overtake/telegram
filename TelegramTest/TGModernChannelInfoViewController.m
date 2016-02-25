@@ -484,31 +484,6 @@
             [_tableView addItem:[[TGGeneralRowItem alloc] initWithHeight:20] tableRedraw:YES];
             
             
-            GeneralSettingsRowItem *notifyMembers = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeSwitch callback:^(TGGeneralRowItem *item) {
-                
-                int flags = weakSelf.chat.dialog.notify_settings.flags;
-                
-                if(flags & PushEventMaskDisableChannelMessageNotification)
-                    flags &= ~PushEventMaskDisableChannelMessageNotification;
-                else
-                    flags |= PushEventMaskDisableChannelMessageNotification;
-                
-                
-                
-                [weakSelf.chat.dialog updateNotifySettings:[TL_peerNotifySettings createWithFlags:flags mute_until:weakSelf.chat.dialog.notify_settings.mute_until sound:weakSelf.chat.dialog.notify_settings.sound]];
-                
-
-            } description:NSLocalizedString(@"Channel.NotifyMembers", nil) subdesc:_chat.usernameLink height:42 stateback:^id(TGGeneralRowItem *item) {
-                return @(!(weakSelf.chat.dialog.notify_settings.flags & PushEventMaskDisableChannelMessageNotification));
-            }];
-            
-            [_tableView addItem:notifyMembers tableRedraw:YES];
-            [_tableView addItem:[[GeneralSettingsBlockHeaderItem alloc] initWithString:NSLocalizedString(@"Channel.NotifyMembersDescription", nil) flipped:YES] tableRedraw:YES];
-            
-            
-            [_tableView addItem:[[TGGeneralRowItem alloc] initWithHeight:20] tableRedraw:YES];
-            
-            
             GeneralSettingsRowItem *signMessagesItem = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeSwitch callback:^(TGGeneralRowItem *item) {
                 
                 [weakSelf showModalProgress];

@@ -144,6 +144,11 @@
 
 -(void)mouseDown:(NSEvent *)theEvent {
     
+    if((theEvent.modifierFlags & 262401) == 262401) {
+        [self rightMouseDown:theEvent];
+        return;
+    }
+    
     if(_movableWindow)
         _movableStartLocation = [theEvent locationInWindow];
     

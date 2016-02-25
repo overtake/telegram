@@ -170,27 +170,28 @@ static NSImage *higlightedImage() {
                 [appWindow().navigationController.messagesViewController sendSticker:item.stickers[idx] forConversation:appWindow().navigationController.messagesViewController.conversation addCompletionHandler:nil];
             
             if(weakSelf.tableView.canSendStickerAlways) {
-                [TMViewController closeAllModals];
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [TMViewController closeAllModals];
+                });
+                
             }
             
             
         } forControlEvents:weakSelf.tableView.isCustomStickerPack ? BTRControlEventMouseUpOutside : BTRControlEventMouseUpInside];
 
         if(!weakSelf.tableView.isCustomStickerPack) {
-//            
-//            
-//            
-//            [button addBlock:^(BTRControlEvents events) {
-//                
-//                TGStickerPreviewModalView *preview = [[TGStickerPreviewModalView alloc] init];
-//                
-//                [preview setSticker:item.stickers[idx]];
-//                
-//                [preview show:appWindow() animated:YES];
-//                
-//                weakSelf.tableView.previewModal = preview;
-//                
-//            } forControlEvents:BTRControlEventLongLeftClick];
+            
+            [button addBlock:^(BTRControlEvents events) {
+                
+                TGStickerPreviewModalView *preview = [[TGStickerPreviewModalView alloc] init];
+                
+                [preview setSticker:item.stickers[idx]];
+                
+                [preview show:appWindow() animated:YES];
+                
+                weakSelf.tableView.previewModal = preview;
+                
+            } forControlEvents:BTRControlEventLongLeftClick];
         }
         
         

@@ -73,13 +73,16 @@
     [super setFrameSize:newSize];
 
     
-    struct TGSplitProportion singleLayout = {380,300+380};
-    struct TGSplitProportion dualLayout = {300+380,300+380+600};
-    struct TGSplitProportion tripleLayout = {300+380+600,FLT_MAX};
+    struct TGSplitProportion singleLayout = {0,0};// = {380,300+380};
+    struct TGSplitProportion dualLayout = {0,0};// = {300+380,300+380+600};
+    struct TGSplitProportion tripleLayout = {0,0};// = {300+380+600,FLT_MAX};
     
-   // [_layoutProportions[@(TGSplitViewStateSingleLayout)] getValue:&singleLayout];
-   // [_layoutProportions[@(TGSplitViewStateDualLayout)] getValue:&dualLayout];
- //   [_layoutProportions[@(TGSplitViewStateTripleLayout)] getValue:&tripleLayout];
+    if(_layoutProportions[@(TGSplitViewStateSingleLayout)])
+        [_layoutProportions[@(TGSplitViewStateSingleLayout)] getValue:&singleLayout];
+    if(_layoutProportions[@(TGSplitViewStateDualLayout)])
+        [_layoutProportions[@(TGSplitViewStateDualLayout)] getValue:&dualLayout];
+    if(_layoutProportions[@(TGSplitViewStateTripleLayout)])
+        [_layoutProportions[@(TGSplitViewStateTripleLayout)] getValue:&tripleLayout];
     
     if(isAcceptLayout(singleLayout) && _canChangeState) {
         if(NSWidth(self.frame) < singleLayout.max ) {
@@ -203,6 +206,12 @@ bool isAcceptLayout(struct TGSplitProportion prop) {
 
 -(void)setProportion:(struct TGSplitProportion)proportion forState:(TGSplitViewState)state {
     _layoutProportions[@(state)] = [NSValue valueWithBytes:&proportion objCType:@encode(struct TGSplitProportion)];
+    
+}
+
+-(void)removeProportion:(TGSplitViewState)state {
+    [_layoutProportions removeObjectForKey:@(state)];
+    [_controllers removeObjectAtIndex:state];
 }
 
 

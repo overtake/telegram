@@ -308,7 +308,9 @@ static ChatHistoryController *observer;
     
     [queue dispatchOnQueue:^{
         
-        [[self filterWithPeerId:message.peer_id] filterAndAdd:@[message] latest:NO];
+        HistoryFilter *filter = [self filterWithPeerId:message.peer_id];
+        
+        [filter filterAndAdd:@[message] latest:NO];
         
         if(message.peer_id != self.filter.peer_id) {
             [self swapFiltersBeforePrevLoaded];

@@ -2,11 +2,12 @@
   "images" : [
     {
       "idiom" : "universal",
+      "filename" : "ModernConversationSecretAccessoryTimer.png",
       "scale" : "1x"
     },
     {
       "idiom" : "universal",
-      "filename" : "ModernConversationSecretAccessoryTimer@2x.png",
+      "filename" : "ModernConversationSecretAccessoryTimer@2x-1.png",
       "scale" : "2x"
     },
     {

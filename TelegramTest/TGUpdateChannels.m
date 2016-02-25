@@ -12,7 +12,7 @@
 #import "TGForceChannelUpdate.h"
 #import "TLPeer+Extensions.h"
 #import "ChannelFilter.h"
-
+#import "MessagesUtils.h"
 
 @interface TGUpdateChannels ()
 @property (nonatomic,strong) ASQueue *queue;
@@ -278,7 +278,9 @@
         
         TL_localMessage *msg = [TL_localMessage convertReceivedMessage:[(TL_updateEditChannelMessage *)update message]];
         
-        if(![self conversationWithChannelId:abs(msg.peer_id)]) {
+        TL_conversation *conversation = [self conversationWithChannelId:abs(msg.peer_id)];
+        
+        if(!conversation) {
             [self proccessUpdate:[TL_updateChannel createWithChannel_id:abs(msg.peer_id)]];
             return;
         }
@@ -286,6 +288,13 @@
         [[Storage manager] addHolesAroundMessage:msg];
         
         [[Storage manager] insertMessages:@[msg]];
+        
+        if(conversation.lastMessage.n_id == msg.n_id) {
+            conversation.lastMessage = msg;
+            [Notification perform:[Notification notificationNameByDialog:conversation action:@"message"] data:@{KEY_DIALOG:conversation,KEY_LAST_CONVRESATION_DATA:[MessagesUtils conversationLastData:conversation]}];
+        }
+        
+        
         
         [Notification perform:UPDATE_EDITED_MESSAGE data:@{KEY_MESSAGE:msg}];
         

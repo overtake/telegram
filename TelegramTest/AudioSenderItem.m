@@ -64,67 +64,85 @@
     
     [self.operation setUploadProgress:^(UploadOperation *uploader, NSUInteger current, NSUInteger total) {
         
-        weakSelf.progress =  ((float)current/(float)total) * 100.0f;
+        strongWeak();
+        
+        if(strongSelf != nil) {
+            weakSelf.progress =  ((float)current/(float)total) * 100.0f;
+        }
+        
+        
         
     }];
     
     
     [self.operation setUploadComplete:^(UploadOperation *uploader, id input) {
         
-        TL_inputMediaUploadedDocument *media = [TL_inputMediaUploadedDocument createWithFile:input mime_type:@"audio/ogg" attributes:weakSelf.message.media.document.attributes caption:weakSelf.message.media.caption];
+        strongWeak();
         
-         id request = nil;
-        
-        if(weakSelf.conversation.type == DialogTypeBroadcast) {
-            request = [TLAPI_messages_sendBroadcast createWithContacts:[weakSelf.conversation.broadcast inputContacts] random_id:[weakSelf.conversation.broadcast generateRandomIds] message:@"" media:media];
-        } else {
-            request = [TLAPI_messages_sendMedia createWithFlags:[self senderFlags] peer:weakSelf.conversation.inputPeer reply_to_msg_id:weakSelf.message.reply_to_msg_id media:media random_id:weakSelf.message.randomId  reply_markup:[TL_replyKeyboardMarkup createWithFlags:0 rows:[@[]mutableCopy]]];
-        }
-        
-        weakSelf.rpc_request = [RPCRequest sendRequest:request successHandler:^(RPCRequest *request, TLUpdates *response) {
+        if(strongSelf != nil) {
+            TL_inputMediaUploadedDocument *media = [TL_inputMediaUploadedDocument createWithFile:input mime_type:@"audio/ogg" attributes:weakSelf.message.media.document.attributes caption:weakSelf.message.media.caption];
             
+            id request = nil;
             
-            [weakSelf updateMessageId:response];
-            
-            TL_localMessage *msg = [TL_localMessage convertReceivedMessage:[[weakSelf updateNewMessageWithUpdates:response] message]];
-            
-            if(msg == nil)
-            {
-                [weakSelf cancel];
-                return;
-            }
-            
-            weakSelf.message.n_id = msg.n_id;
-            weakSelf.message.date = msg.date;
-          
-            TLPhotoSize *newSize = [[msg media].photo.sizes lastObject];
-            
-            if(weakSelf.message.media.photo.sizes.count > 1) {
-                TL_photoSize *size = weakSelf.message.media.photo.sizes[1];
-                size.location = newSize.location;
+            if(weakSelf.conversation.type == DialogTypeBroadcast) {
+                request = [TLAPI_messages_sendBroadcast createWithContacts:[weakSelf.conversation.broadcast inputContacts] random_id:[weakSelf.conversation.broadcast generateRandomIds] message:@"" media:media];
             } else {
-                weakSelf.message.media = msg.media;
+                request = [TLAPI_messages_sendMedia createWithFlags:[self senderFlags] peer:weakSelf.conversation.inputPeer reply_to_msg_id:weakSelf.message.reply_to_msg_id media:media random_id:weakSelf.message.randomId  reply_markup:[TL_replyKeyboardMarkup createWithFlags:0 rows:[@[]mutableCopy]]];
             }
             
-            
-            NSString *filePath = mediaFilePath(msg);
-            
-            
-            if ([[NSFileManager defaultManager] isReadableFileAtPath:weakSelf.filePath]) {
-                [[NSFileManager defaultManager] copyItemAtURL:[NSURL fileURLWithPath:weakSelf.filePath] toURL:[NSURL fileURLWithPath:filePath] error:nil];
-            }
-            
-            weakSelf.operation = nil;
-            
-            weakSelf.message.dstate = DeliveryStateNormal;
-            
-           [weakSelf.message save:YES];
-            weakSelf.state = MessageSendingStateSent;
-  
-        } errorHandler:^(RPCRequest *request, RpcError *error) {
-            weakSelf.state = MessageSendingStateError;
-        } timeout:0 queue:[ASQueue globalQueue].nativeQueue];
-        
+            weakSelf.rpc_request = [RPCRequest sendRequest:request successHandler:^(RPCRequest *request, TLUpdates *response) {
+                
+                strongWeak();
+                
+                if(strongSelf != nil) {
+                    [weakSelf updateMessageId:response];
+                    
+                    TL_localMessage *msg = [TL_localMessage convertReceivedMessage:[[weakSelf updateNewMessageWithUpdates:response] message]];
+                    
+                    if(msg == nil)
+                    {
+                        [weakSelf cancel];
+                        return;
+                    }
+                    
+                    weakSelf.message.n_id = msg.n_id;
+                    weakSelf.message.date = msg.date;
+                    
+                    TLPhotoSize *newSize = [[msg media].photo.sizes lastObject];
+                    
+                    if(weakSelf.message.media.photo.sizes.count > 1) {
+                        TL_photoSize *size = weakSelf.message.media.photo.sizes[1];
+                        size.location = newSize.location;
+                    } else {
+                        weakSelf.message.media = msg.media;
+                    }
+                    
+                    
+                    NSString *filePath = mediaFilePath(msg);
+                    
+                    
+                    if ([[NSFileManager defaultManager] isReadableFileAtPath:weakSelf.filePath]) {
+                        [[NSFileManager defaultManager] copyItemAtURL:[NSURL fileURLWithPath:weakSelf.filePath] toURL:[NSURL fileURLWithPath:filePath] error:nil];
+                    }
+                    
+                    weakSelf.operation = nil;
+                    
+                    weakSelf.message.dstate = DeliveryStateNormal;
+                    
+                    [weakSelf.message save:YES];
+                    weakSelf.state = MessageSendingStateSent;
+                }
+                
+                
+                
+            } errorHandler:^(RPCRequest *request, RpcError *error) {
+                strongWeak();
+                if(strongSelf != nil) {
+                    weakSelf.state = MessageSendingStateError;
+                }
+                
+            } timeout:0 queue:[ASQueue globalQueue].nativeQueue];
+        }
         
     }];
     

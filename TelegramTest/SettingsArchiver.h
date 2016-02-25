@@ -40,7 +40,8 @@ typedef enum {
     MarkedInputText = 1 << 23,
     MessagesNotificationPreview = 1 << 24,
     IncludeMutedUnreadCount = 1 << 25,
-    DisableAutoplayGifSetting = 1 << 26
+    DisableAutoplayGifSetting = 1 << 26,
+    TripleLayoutSettings = 1 << 27
 } SettingsMask;
 
 

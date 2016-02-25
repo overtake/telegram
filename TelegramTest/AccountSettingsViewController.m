@@ -179,7 +179,11 @@ typedef enum {
     
     
     [self.editButton setTapBlock:^{
-        [weakSelf enterClick];
+        strongWeak();
+        if(strongSelf == weakSelf) {
+            [strongSelf enterClick];
+        }
+        
     }];
 
     [self.editButton setCenterByView:topContainer];
@@ -195,7 +199,11 @@ typedef enum {
     
     
     [self.cancelEditButton setTapBlock:^{
-        [weakSelf cancel];
+        strongWeak();
+        if(strongSelf != nil) {
+            [strongSelf cancel];
+        }
+        
     }];
     
     [self.cancelEditButton setCenterByView:topContainer];
@@ -279,6 +287,7 @@ typedef enum {
      
     [_avatarImageView setTapBlock:^{
         
+
         if(![[UsersManager currentUser].photo isKindOfClass:[TL_userProfilePhotoEmpty class]]) {
             PreviewObject *previewObject = [[PreviewObject alloc] initWithMsdId:[UsersManager currentUser].photo.photo_id media:[TL_photoSize createWithType:@"x" location:[UsersManager currentUser].photo.photo_big w:640 h:640 size:0] peer_id:[UsersManager currentUserId]];
             

@@ -17,9 +17,9 @@ struct TGSplitProportion
 };
 
 typedef enum {
-    TGSplitViewStateSingleLayout,
-    TGSplitViewStateDualLayout,
-    TGSplitViewStateTripleLayout
+    TGSplitViewStateSingleLayout = 0,
+    TGSplitViewStateDualLayout = 1,
+    TGSplitViewStateTripleLayout = 2
 } TGSplitViewState;
 
 @protocol TGSplitViewDelegate <NSObject>
@@ -51,6 +51,8 @@ typedef enum {
 -(void)removeAllControllers;
 
 -(void)setProportion:(struct TGSplitProportion)proportion forState:(TGSplitViewState)state;
+
+-(void)removeProportion:(TGSplitViewState)state;
 
 -(void)updateStartSize:(NSSize)size forController:(TGViewController<TGSplitViewDelegate> *)controller;
 

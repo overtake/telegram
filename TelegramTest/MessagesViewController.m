@@ -3186,13 +3186,6 @@ static NSTextAttachment *headerMediaIcon() {
     NSString *message = [self.bottomView.inputMessageString trim];
     
     
-    NSCharacterSet *set = [NSCharacterSet whitespaceCharacterSet];
-    if ([[message stringByTrimmingCharactersInSet: set] length] == 0) {
-        return;
-    } else if([message stringByReplacingOccurrencesOfString:@"\n" withString:@""].length == 0) {
-        return;
-    }
-    
     if(!self.conversation.canSendMessage)  {
         NSBeep();
         return;
@@ -3207,6 +3200,13 @@ static NSTextAttachment *headerMediaIcon() {
         [self setEditableMessage:nil];
         
     } else {
+        
+        NSCharacterSet *set = [NSCharacterSet whitespaceCharacterSet];
+        if ([[message stringByTrimmingCharactersInSet: set] length] == 0) {
+            return;
+        } else if([message stringByReplacingOccurrencesOfString:@"\n" withString:@""].length == 0) {
+            return;
+        }
        
         if(message.length > 0) {
             
@@ -3451,7 +3451,10 @@ static NSTextAttachment *headerMediaIcon() {
     
     [self setHistoryFilter:self.defHFClass force:self.historyController.prevState != ChatHistoryStateFull];
     
-    [self.bottomView closeEmoji];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self.bottomView closeEmoji];
+    });
+    
     
     
     [ASQueue dispatchOnStageQueue:^{

@@ -466,7 +466,7 @@ DYNAMIC_PROPERTY(DUser);
             
             TLUser *user = [[UsersManager sharedManager] find:botId];
                                   //two weeks
-            if(user && dateUsed + 14*60*60*24 > [[MTNetwork instance] getTime]) {
+            if(user && dateUsed + 14*60*60*24 > [[MTNetwork instance] getTime] && ([[user.username lowercaseString] hasPrefix:[query lowercaseString]] || query.length == 0)) {
                 [botUsers addObject:user];
             }
             

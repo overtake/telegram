@@ -147,7 +147,7 @@
 
 -(void)initConversations {
     
-    [SecretChatAccepter instance];
+    
     
    
     _initedNext = NO;
@@ -168,6 +168,7 @@
     
     [TMTaskRequest executeAll];
     
+    [SecretChatAccepter instance];
     
     [Notification perform:APP_RUN object:nil];
     

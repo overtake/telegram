@@ -11,7 +11,7 @@
 #import "TMElements.h"
 #import "MessagesViewController.h"
 
-@interface MessageTableCell : NSView
+@interface MessageTableCell : TMView
 
 @property (nonatomic, weak) MessageTableItem *item;
 @property (nonatomic, weak) MessagesViewController *messagesViewController;

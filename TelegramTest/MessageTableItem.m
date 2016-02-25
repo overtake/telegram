@@ -436,7 +436,7 @@ static NSTextAttachment *channelIconAttachment() {
                     objectReturn = [[MessageTableItemVideo alloc] initWithObject:message];
                 } else if([document.mime_type isEqualToString:@"image/gif"] && ![document.thumb isKindOfClass:[TL_photoSizeEmpty class]]) {
                     objectReturn = [[MessageTableItemGif alloc] initWithObject:message];
-                } else if((audioAttr && !audioAttr.isVoice) || ([document.mime_type isEqualToString:@"audio/mpeg"])) {
+                } else if((audioAttr && !audioAttr.isVoice) || ([document.mime_type isEqualToString:@"audio/mpeg"] && (!audioAttr || !audioAttr.isVoice))) {
                     objectReturn = [[MessageTableItemAudioDocument alloc] initWithObject:message];
                 } else if([document isSticker]) {
                     objectReturn = [[MessageTableItemSticker alloc] initWithObject:message];
@@ -693,7 +693,7 @@ static NSTextAttachment *channelIconAttachment() {
     if(self.message.isPost && self.message.from_id != 0) {
         [signString appendString:@" "];
         range = [signString appendString:_user.fullName withColor:GRAY_TEXT_COLOR];
-        [signString setLink:[TMInAppLinks peerProfile:[TL_peerUser createWithUser_id:_user.n_id]] forRange:range];
+      //  [signString setLink:[TMInAppLinks peerProfile:[TL_peerUser createWithUser_id:_user.n_id]] forRange:range];
     }
     
     _viewsCountAndSignSize = [signString sizeForTextFieldForWidth:INT32_MAX];
