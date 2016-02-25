@@ -123,7 +123,6 @@ static NSCache *cItems;
                     
                     [_headerName setFont:TGSystemFont(13) forRange:range];
                     
-                    
                     [_headerName appendString:@" "];
                     range = [_headerName appendString:[NSString stringWithFormat:@"@%@",viaBotUserName] withColor:GRAY_TEXT_COLOR];
                     [_headerName addAttribute:NSForegroundColorAttributeName value:LINK_COLOR range:range];
@@ -153,9 +152,8 @@ static NSCache *cItems;
                 [attr setFont:TGSystemFont(13) forRange:attr.range];
                 
                 
-                [attr detectAndAddLinks:URLFindTypeMentions];
-                
                 _forwardHeaderAttr = attr;
+                _forwardHeaderSize = [attr coreTextSizeForTextFieldForWidth:INT32_MAX];
                 
             }
             
@@ -172,6 +170,9 @@ static NSCache *cItems;
             }
             
         }
+        
+        
+        [self buildRightSize];
     }
     return self;
 }
@@ -181,7 +182,7 @@ static NSCache *cItems;
 
 
 -(int)makeSize {
-    return MAX(NSWidth(((MessagesTableView *)self.table).viewController.view.frame) - 150,100);
+    return MAX(NSWidth(self.table.frame) - self.startContentOffset - _rightSize.width - self.defaultContainerOffset - (self.isForwadedMessage ?  self.defaultOffset : 0),100);
 }
 
 -(void)buildHeaderAndSaveToCache {
@@ -247,7 +248,13 @@ static NSCache *cItems;
 -(void)setHeaderName:(NSMutableAttributedString *)headerName {
     _headerName = headerName;
     
-    self.headerSize = [self.headerName sizeForTextFieldForWidth:INT32_MAX];
+    NSSize headerSize = [self.headerName coreTextSizeForTextFieldForWidth:INT32_MAX];
+    
+    if(_headerName.string.emojiString.length > 0) {
+        headerSize.height-=6;
+    }
+    
+    _headerSize = headerSize;
 }
 
 - (void) headerStringBuilder {
@@ -260,50 +267,54 @@ static NSCache *cItems;
     }
     
     if(self.isForwadedMessage) {
-        self.forwardMessageAttributedString = [[NSMutableAttributedString alloc] init];
-//        [self.forwardMessageAttributedString appendString:NSLocalizedString(@"Message.ForwardedFrom", nil) withColor:NSColorFromRGB(0x909090)];
+        self.forwardName = [[NSMutableAttributedString alloc] init];
+//        [self.forwardName appendString:NSLocalizedString(@"Message.ForwardedFrom", nil) withColor:NSColorFromRGB(0x909090)];
         
         NSString *title = self.message.fwd_from.channel_id != 0 && !self.fwd_chat.isMegagroup ? self.fwd_chat.title : self.fwd_user.fullName ;
         
         NSRange rangeUser = NSMakeRange(0, 0);
         if(title) {
-            rangeUser = [self.forwardMessageAttributedString appendString:title withColor:LINK_COLOR];
-            [self.forwardMessageAttributedString setLink:[TMInAppLinks peerProfile:self.message.fwd_from.fwdPeer jumpId:self.message.fwd_from.channel_post] forRange:rangeUser];
+            rangeUser = [self.forwardName appendString:title withColor:LINK_COLOR];
+            [self.forwardName setLink:[TMInAppLinks peerProfile:self.message.fwd_from.fwdPeer jumpId:self.message.fwd_from.channel_post] forRange:rangeUser];
             
         }
         
-        [self.forwardMessageAttributedString setFont:TGSystemFont(12) forRange:self.forwardMessageAttributedString.range];
+        [self.forwardName setFont:TGSystemFont(12) forRange:self.forwardName.range];
         
         
         if(self.message.fwd_from.channel_id != 0 && !self.message.chat.isMegagroup && self.message.fwd_from.from_id != 0) {
-            [self.forwardMessageAttributedString appendString:@" (" withColor:LINK_COLOR];
-            NSRange r = [self.forwardMessageAttributedString appendString:[NSString stringWithFormat:@"%@",self.fwd_user.first_name] withColor:LINK_COLOR];
-            [self.forwardMessageAttributedString appendString:@")" withColor:LINK_COLOR];
+            [self.forwardName appendString:@" (" withColor:LINK_COLOR];
+            NSRange r = [self.forwardName appendString:[NSString stringWithFormat:@"%@",self.fwd_user.first_name] withColor:LINK_COLOR];
+            [self.forwardName appendString:@")" withColor:LINK_COLOR];
             
-            [self.forwardMessageAttributedString setLink:[TMInAppLinks peerProfile:self.message.fwd_from.fwdPeer] forRange:r];
+            [self.forwardName setLink:[TMInAppLinks peerProfile:self.message.fwd_from.fwdPeer] forRange:r];
             
-            [self.forwardMessageAttributedString setFont:TGSystemMediumFont(13) forRange:r];
+            [self.forwardName setFont:TGSystemMediumFont(13) forRange:r];
         }
         
         if([self isViaBot]) {
-            [self.forwardMessageAttributedString appendString:@" "];
-            NSRange range = [self.forwardMessageAttributedString appendString:NSLocalizedString(@"ContextBot.Message.Via", nil) withColor:GRAY_TEXT_COLOR];
-            [self.forwardMessageAttributedString setFont:TGSystemFont(13) forRange:range];
-            [self.forwardMessageAttributedString appendString:@" "];
-            range = [self.forwardMessageAttributedString appendString:[NSString stringWithFormat:@"@%@",_via_bot_user.username] withColor:GRAY_TEXT_COLOR];
-            [self.forwardMessageAttributedString setFont:TGSystemBoldFont(13) forRange:range];
-            [self.forwardMessageAttributedString setLink:[NSString stringWithFormat:@"viabot:@%@",_via_bot_user.username] forRange:range];
-            [self.forwardMessageAttributedString addAttribute:NSForegroundColorAttributeName value:LINK_COLOR range:range];
+            [self.forwardName appendString:@" "];
+            NSRange range = [self.forwardName appendString:NSLocalizedString(@"ContextBot.Message.Via", nil) withColor:GRAY_TEXT_COLOR];
+            [self.forwardName setFont:TGSystemFont(13) forRange:range];
+            [self.forwardName appendString:@" "];
+            range = [self.forwardName appendString:[NSString stringWithFormat:@"@%@",_via_bot_user.username] withColor:GRAY_TEXT_COLOR];
+            [self.forwardName setFont:TGSystemBoldFont(13) forRange:range];
+            [self.forwardName setLink:[NSString stringWithFormat:@"viabot:@%@",_via_bot_user.username] forRange:range];
+            [self.forwardName addAttribute:NSForegroundColorAttributeName value:LINK_COLOR range:range];
         }
         
-         [self.forwardMessageAttributedString appendString:@"  " withColor:NSColorFromRGB(0x909090)];
+         [self.forwardName appendString:@"  " withColor:NSColorFromRGB(0x909090)];
     
-        [self.forwardMessageAttributedString appendString:[TGDateUtils stringForLastSeen:self.message.fwd_from.date] withColor:NSColorFromRGB(0xbebebe)];
+        [self.forwardName appendString:[TGDateUtils stringForLastSeen:self.message.fwd_from.date] withColor:NSColorFromRGB(0xbebebe)];
         
         
-        [self.forwardMessageAttributedString setFont:TGSystemMediumFont(13) forRange:rangeUser];
+        [self.forwardName setFont:TGSystemMediumFont(13) forRange:rangeUser];
         
-
+        _forwardNameSize = [self.forwardName coreTextSizeForTextFieldForWidth:INT32_MAX];
+        
+        if([_forwardName.string emojiString].length > 0) {
+            _forwardNameSize.height-=6;
+        }
 
     }
 }
@@ -332,37 +343,36 @@ static NSTextAttachment *channelIconAttachment() {
         
         if(self.isHeaderMessage) {
             
-            viewSize.height += 30;
+            viewSize.height += _headerSize.height + self.defaultContentOffset + (self.defaultContentOffset * 2);
             
             if(self.isForwadedMessage)
-                viewSize.height += 20;
+                viewSize.height += self.defaultContentOffset + _forwardNameSize.height + self.defaultContentOffset;
             
-            
-            if(viewSize.height < 44)
-                viewSize.height = 44;
+
         } else {
-            viewSize.height += 10;
+            viewSize.height += self.defaultContentOffset*2;
             
             if(self.isForwadedMessage)
-                viewSize.height += 18;
+                viewSize.height += _forwardNameSize.height;
 
         }
         
         if([self isReplyMessage]) {
-            viewSize.height +=self.replyObject.containerHeight+10;
+            viewSize.height +=self.replyObject.containerHeight+self.defaultContentOffset;
         }
         
         if(self.isForwadedMessage && self.isHeaderForwardedMessage)
-            viewSize.height += FORWARMESSAGE_TITLE_HEIGHT;
+            viewSize.height += _forwardHeaderSize.height;
     }
     
-    if(viewSize.height < 0)
-        viewSize.height = 32;
+    assert(viewSize.height > 0);
     
     
     if([self.message.action isKindOfClass:[TL_messageActionChatMigrateTo class]]) {
         viewSize.height = 1;
     }
+    
+    viewSize.width = self.makeSize;
     
     return viewSize;
 }
@@ -553,11 +563,14 @@ static NSTextAttachment *channelIconAttachment() {
     int time = self.message.date;
     time -= [[MTNetwork instance] getTime] - [[NSDate date] timeIntervalSince1970];
     
-    self.dateStr = [TGDateUtils stringForMessageListDate:time];
-    NSSize dateSize = [self.dateStr sizeWithAttributes:@{NSFontAttributeName: TGSystemFont(12)}];
-    dateSize.width = roundf(dateSize.width)+5;
-    dateSize.height = roundf(dateSize.height);
-    self.dateSize = dateSize;
+    NSMutableAttributedString *dString = [[NSMutableAttributedString alloc] init];
+    
+    [dString appendString:[TGDateUtils stringForMessageListDate:time] withColor:GRAY_TEXT_COLOR];
+    [dString setFont:TGSystemFont(12) forRange:dString.range];
+    
+    _dateAttributedString = dString;
+
+    _dateSize = [dString coreTextSizeOneLineForWidth:INT32_MAX];
      
     NSDateFormatter *formatter = [NSDateFormatter new];
     
@@ -568,6 +581,16 @@ static NSTextAttachment *channelIconAttachment() {
     NSDate *date = [NSDate dateWithTimeIntervalSince1970:self.message.date];
     
     self.fullDate = [formatter stringFromDate:date];
+}
+
+-(void)buildRightSize {
+    
+    const int selectSize = 18;
+    const int selectOffset = self.defaultOffset;
+    const int sendingUnreadReadSize = 16;
+    const int sendingUnreadReadOffset = self.defaultOffset;
+    
+    _rightSize = NSMakeSize(_dateSize.width +selectSize + selectOffset + sendingUnreadReadSize + sendingUnreadReadOffset,_dateSize.height);
 }
 
 
@@ -709,5 +732,32 @@ static NSTextAttachment *channelIconAttachment() {
     return [TGModernMessageCellContainerView class];
 }
 
+-(int)cellWidth {
+    return NSWidth(self.table.frame);
+}
+
+-(BOOL)hasRightView {
+    return YES;
+}
+
+
+-(int)defaultContentOffset {
+    return 6;
+}
+-(int)defaultOffset {
+    return 10;
+}
+
+-(int)defaultContainerOffset {
+    return 20;
+}
+
+-(int)startContentOffset {
+    return self.defaultContainerOffset + self.defaultPhotoWidth + self.defaultOffset;
+}
+
+-(int)defaultPhotoWidth {
+    return 36;
+}
 
 @end

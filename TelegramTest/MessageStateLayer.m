@@ -9,6 +9,7 @@
 #import "MessageStateLayer.h"
 #import "TMClockProgressView.h"
 #import "NSNumber+NumberFormatter.h"
+#import "TGTextLabel.h"
 @interface MessageStateLayer ()
 @property (nonatomic,strong) TMClockProgressView *progressView;
 @property (nonatomic,strong) NSImageView *readOrSentView;
@@ -16,13 +17,9 @@
 
 @property (nonatomic,assign) MessageTableCellState state;
 
-@property (nonatomic,strong) TMTextField *viewsCountText;
+@property (nonatomic,strong) TGTextLabel *viewsCountText;
 
 @property (nonatomic,strong) NSImageView *channelImageView;
-
-@property (nonatomic,strong) TMTextField *signTextField;
-
-
 
 @end
 
@@ -33,20 +30,19 @@
 
 -(id)initWithFrame:(NSRect)frameRect {
     if(self = [super initWithFrame:frameRect]) {
-            
+        self.wantsLayer = YES;
     }
     
     return self;
 }
 
-
--(void)setState:(MessageTableCellState)state {
+-(void)setState:(MessageTableCellState)state animated:(BOOL)animated {
     _state = state;
     
     
     if(state == MessageTableCellSending) {
         if(!self.progressView) {
-            self.progressView = [[TMClockProgressView alloc] initWithFrame:NSMakeRect(NSWidth(self.frame) - 15- 3, 4, 15, 15)];
+            self.progressView = [[TMClockProgressView alloc] initWithFrame:NSMakeRect(NSWidth(self.frame) - image_ClockFrame().size.width, 4, 15, 15)];
             [self.layer addSublayer:self.progressView.layer];
         }
         [self.progressView startAnimating];
@@ -60,11 +56,10 @@
     if(state == MessageTableCellSendingError) {
         
         if(!self.errorView) {
-            self.errorView = [[BTRButton alloc] initWithFrame:NSMakeRect(NSWidth(self.frame) - image_ChatMessageError().size.width - 3, 2, image_ChatMessageError().size.width , image_ChatMessageError().size.height)];
+            self.errorView = [[BTRButton alloc] initWithFrame:NSMakeRect(NSWidth(self.frame) - image_ChatMessageError().size.width, 2, image_ChatMessageError().size.width , image_ChatMessageError().size.height)];
             [self.errorView setBackgroundImage:image_ChatMessageError() forControlState:BTRControlStateNormal];
             [self addSubview:self.errorView];
         }
-        
         
         weak();
         
@@ -81,9 +76,6 @@
     [_viewsCountText removeFromSuperview];
     _viewsCountText = nil;
     [_channelImageView removeFromSuperview];
-    [_signTextField removeFromSuperview];
-    _signTextField = nil;
-    
     
     if((state == MessageTableCellUnread || state == MessageTableCellRead)) {
         
@@ -95,33 +87,31 @@
             [self.readOrSentView.layer removeFromSuperlayer];
             self.readOrSentView = nil;
             
-            _viewsCountText = [TMHyperlinkTextField defaultTextField];
-            [[_viewsCountText cell] setTruncatesLastVisibleLine:YES];
-            [_viewsCountText setAttributedStringValue:self.container.item.viewsCountAndSign];
+            _viewsCountText = [[TGTextLabel alloc] init];
+            
+            [_viewsCountText setText:self.container.item.viewsCountAndSign maxWidth:50];
+            
             [_viewsCountText setFrameSize:NSMakeSize(MIN(NSWidth(self.frame) - NSWidth(_channelImageView.frame) - 4,self.container.item.viewsCountAndSignSize.width), 17)];
             [_viewsCountText setFrameOrigin:CGPointMake(NSWidth(self.frame) - NSWidth(_viewsCountText.frame) - 2,1)];
             [self addSubview:_viewsCountText];
-            
-            
             
             [_channelImageView setFrameOrigin:NSMakePoint(NSMinX(_viewsCountText.frame) - NSWidth(_channelImageView.frame), 5)];
             
             [self addSubview:_channelImageView];
             
             
-            
         } else {
             if(!self.readOrSentView) {
-                self.readOrSentView = [[NSImageView alloc] initWithFrame:NSMakeRect(11, 5, 0, 0)];
+                self.readOrSentView = [[NSImageView alloc] initWithFrame:NSMakeRect(11, 2, 0, 0)];
                 self.readOrSentView.wantsLayer = YES;
             }
             
             self.readOrSentView.image = state == MessageTableCellUnread ? image_MessageStateSent() : image_MessageStateRead();
             [self.readOrSentView setFrameSize:self.readOrSentView.image.size];
-            [self.readOrSentView setFrameOrigin:NSMakePoint(NSWidth(self.frame) - NSWidth(_readOrSentView.frame) - 3, NSMinY(self.readOrSentView.frame))];
+            [self.readOrSentView setFrameOrigin:NSMakePoint(NSWidth(self.frame) - NSWidth(_readOrSentView.frame), NSMinY(self.readOrSentView.frame))];
             [self.layer addSublayer:self.readOrSentView.layer];
         }
-
+        
     } else {
         self.readOrSentView.image = nil;
         [self.readOrSentView.layer removeFromSuperlayer];
@@ -132,12 +122,12 @@
     
     
     [self setNeedsDisplay:YES];
-    
+
 }
 
-
-
-
+-(void)setState:(MessageTableCellState)state {
+    [self setState:state animated:NO];
+}
 
 
 @end

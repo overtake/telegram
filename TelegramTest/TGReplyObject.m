@@ -24,16 +24,13 @@
         _fromMessage = fromMessage;
         _replyMessage = replyMessage;
         
-      //  assert(_fromMessage != nil || _replyMessage != nil);
         
-        _containerHeight = 31;
+        _containerHeight = 36;
         
         if(_replyMessage != nil)
             [self updateObject];
         else
             [self loadReplyMessage];
-//
-        
         
     }
     
@@ -90,12 +87,14 @@
     
     _replyText = replyText;
     
-    _replyHeight = [_replyText coreTextSizeForTextFieldForWidth:INT32_MAX].height;
+    _replyHeight = [_replyText coreTextSizeOneLineForWidth:INT32_MAX].height;
+    
+
     
     
-    _replyHeaderHeight = [replyHeader sizeForTextFieldForWidth:INT32_MAX].height;
+    _replyHeaderHeight = [replyHeader coreTextSizeOneLineForWidth:INT32_MAX].height;
     
-    _containerHeight = 15 + _replyHeight;
+    _containerHeight = _replyHeaderHeight + _replyHeight + _item.defaultContentOffset;
     
     
     

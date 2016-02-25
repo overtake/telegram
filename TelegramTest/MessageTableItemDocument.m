@@ -58,7 +58,6 @@
         self.thumbObject.imageSize = size;
         
         self.blockSize = NSMakeSize(200, self.thumbSize.height + 6);
-        self.previewSize = self.thumbSize;
     
         if(self.isset) {
             self.state = DocumentStateDownloaded;

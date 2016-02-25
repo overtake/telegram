@@ -10,10 +10,10 @@
 #import "MessageTableItem.h"
 #import "MessageTableElements.h"
 #import "UIImageView+AFNetworking.h"
+#import "TGTextLabel.h"
 @interface MessageReplyContainer ()
-@property (nonatomic,strong) TMHyperlinkTextField *nameTextField;
+@property (nonatomic,strong) TGTextLabel *nameView;
 
-@property (nonatomic,strong) TMTextField *dateField;
 @property (nonatomic,strong) TGImageView *thumbImageView;
 @property (nonatomic,strong) NSImageView *locationImageView;
 
@@ -36,24 +36,15 @@
         [_loadingTextField sizeToFit];
         [_loadingTextField setFrameOrigin:NSMakePoint(6, 0)];
         
-        self.nameTextField = [[TMHyperlinkTextField alloc] initWithFrame:NSMakeRect(15, NSHeight(frameRect) - 13, 200, 20)];
-        [self.nameTextField setBordered:NO];
-        [self.nameTextField setFont:TGSystemMediumFont(13)];
-        [self.nameTextField setDrawsBackground:NO];
-        //[self.nameTextField setBackgroundColor:[NSColor redColor]];
+        self.nameView = [[TGTextLabel alloc] initWithFrame:NSMakeRect(15, NSHeight(frameRect) - 13, 200, 20)];
         
-        [self addSubview:self.nameTextField];
+        [self addSubview:self.nameView];
         
-        self.dateField = [TMTextField defaultTextField];
-        
-        [self.dateField setTextColor:GRAY_TEXT_COLOR];
-        [self.dateField setFont:TGSystemFont(12)];
         
        // [self addSubview:self.dateField];
         
-        _messageField = [[TGCTextView alloc] initWithFrame:NSZeroRect];
+        _messageField = [[TGTextLabel alloc] initWithFrame:NSZeroRect];
         
-        [_messageField setEditable:NO];
         
         [self.messageField setBackgroundColor:[NSColor whiteColor]];
 
@@ -63,13 +54,13 @@
         
         self.thumbImageView = [[TGImageView alloc] initWithFrame:NSMakeRect(5, 1, NSHeight(self.frame) - 2, NSHeight(self.frame) - 2)];
         
-        self.thumbImageView.cornerRadius = 3;
+        self.thumbImageView.cornerRadius = 4;
         
         self.locationImageView = [[NSImageView alloc] initWithFrame:NSMakeRect(5, 1, NSHeight(self.frame) - 2, NSHeight(self.frame) - 2)];
         
         [self.thumbImageView setContentMode:BTRViewContentModeCenter];
         
-        self.locationImageView.layer.cornerRadius = 3;
+        self.locationImageView.layer.cornerRadius = 4;
         
         [self update];
         
@@ -105,6 +96,9 @@
 }
 
 
+-(int)xOffset {
+    return _replyObject.replyThumb || _replyObject.geoURL ? _replyObject.replyThumb.imageSize.width + _item.defaultOffset *2 : _item.defaultOffset;
+}
 
 -(void)update {
     
@@ -116,9 +110,6 @@
         [_loadingTextField removeFromSuperview];
     }
    
-    
-    int xOffset = _replyObject.replyThumb || _replyObject.geoURL ? 40 : 6;
-    
     
     if(_replyObject.replyThumb) {
         [self addSubview:self.thumbImageView];
@@ -136,20 +127,18 @@
     } else {
         [self.locationImageView removeFromSuperview];
     }
-  
-    [self.nameTextField setAttributedStringValue:[_replyObject replyHeader]];
-    [self.nameTextField setFrameSize:NSMakeSize(NSWidth(self.frame) - NSMinX(self.messageField.frame),_replyObject.replyHeaderHeight)];
+    
+    [_thumbImageView setFrameOrigin:NSMakePoint(_item.defaultOffset, 1)];
+    [_locationImageView setFrameOrigin:NSMakePoint(_item.defaultOffset, 1)];
+    
+    [self.nameView setText:[_replyObject replyHeader] maxWidth:NSWidth(self.frame) - self.xOffset height:_replyObject.replyHeaderHeight];
     
     
-    [self.nameTextField setFrameOrigin:NSMakePoint(xOffset, NSHeight(self.frame))];
-    
-    
-    [self.messageField setAttributedString:_replyObject.replyText];
+    [self.messageField setText:_replyObject.replyText maxWidth:NSWidth(self.frame) - self.xOffset height:_replyObject.replyHeight];
     
     [self.messageField setFrameSize:NSMakeSize(NSWidth(self.frame) - NSMinX(self.messageField.frame), self.replyObject.replyHeight)];
-    [self.messageField setFrameOrigin:NSMakePoint(xOffset + 2, 0)];
-    
-  //  [_messageField setEditable:_deleteHandler == nil];
+    [self.messageField setFrameOrigin:NSMakePoint(self.xOffset, 0)];
+
     
     if(_deleteHandler != nil)
     {
@@ -184,7 +173,7 @@
     
     [self.messageField setFrameSize:NSMakeSize(NSWidth(self.frame) - NSMinX(self.messageField.frame), self.replyObject.replyHeight)];
     
-    [self.nameTextField setFrameOrigin:NSMakePoint(NSMinX(self.nameTextField.frame), NSHeight(self.frame) - _replyObject.replyHeaderHeight + 6)];
+    [self.nameView setFrameOrigin:NSMakePoint(self.xOffset, NSHeight(self.frame) - NSHeight(_nameView.frame))];
     
     [_loadingTextField setCenteredYByView:self];
 }

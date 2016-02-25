@@ -8,9 +8,10 @@
 
 #import "TMView.h"
 #import "TGReplyObject.h"
+#import "TGTextLabel.h"
 @interface MessageReplyContainer : TMView
 
-@property (nonatomic,strong,readonly) TGCTextView *messageField;
+@property (nonatomic,strong,readonly) TGTextLabel *messageField;
 
 @property (nonatomic,copy) dispatch_block_t deleteHandler;
 

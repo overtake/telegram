@@ -59,49 +59,49 @@
     self = [super initWithFrame:frame];
     if (self) {
         
-        [self setWantsLayer:YES];
-        [self.layer disableActions];
-        
-        assert(self.layer != nil);
-        
-        
-        self.containerView = [[TMView alloc] initWithFrame:NSZeroRect];
-        [self.containerView setWantsLayer:YES];
-        [self.containerView setAutoresizingMask:NSViewWidthSizable];
-        [self.containerView setFrameSize:NSMakeSize(self.bounds.size.width - 160, self.bounds.size.height)];
-        [self addSubview:self.containerView];
-        
-        self.rightView = [[NSView alloc] initWithFrame:NSMakeRect(0, 0, 100, 20)];
-        [self.rightView setLayer:[CALayer layer]];
-        [self.rightView.layer disableActions];
-        [self.rightView setWantsLayer:YES];
-        [self.rightView setAutoresizingMask:NSViewMinXMargin];
-        [self addSubview:self.rightView];
-        
-       
-        
-        self.dateLayer = [TMTextField defaultTextField];
-
-        [self.dateLayer setFrameOrigin:CGPointMake(offserUnreadMark, 2)];
-        [self.dateLayer setTextColor:GRAY_TEXT_COLOR];
-        [self.dateLayer setFont:TGSystemFont(12)];
-        [self.rightView addSubview:self.dateLayer];
-        
-        
-        self.stateLayer = [[MessageStateLayer alloc] initWithFrame:NSMakeRect(0, 0, 60, NSHeight(self.rightView.frame))];
-                
-        
-        [self.rightView addSubview:self.stateLayer];
-        
-        
-    
-         if(![self isKindOfClass:[MessageTableCellTextView class]] && ![self isKindOfClass:[MessageTableCellGeoView class]]) {
-            _progressView = [[TMLoaderView alloc] initWithFrame:NSMakeRect(0, 0, 48, 48)];
-            [self.progressView setAutoresizingMask:NSViewMaxXMargin | NSViewMaxYMargin | NSViewMinXMargin | NSViewMinYMargin];
-            [self.progressView addTarget:self selector:@selector(checkOperation)];
-        }
-        
-        
+//        [self setWantsLayer:YES];
+//        [self.layer disableActions];
+//        
+//        assert(self.layer != nil);
+//        
+//        
+//        self.containerView = [[TMView alloc] initWithFrame:NSZeroRect];
+//        [self.containerView setWantsLayer:YES];
+//        [self.containerView setAutoresizingMask:NSViewWidthSizable];
+//        [self.containerView setFrameSize:NSMakeSize(self.bounds.size.width - 160, self.bounds.size.height)];
+//        [self addSubview:self.containerView];
+//        
+//        self.rightView = [[NSView alloc] initWithFrame:NSMakeRect(0, 0, 100, 20)];
+//        [self.rightView setLayer:[CALayer layer]];
+//        [self.rightView.layer disableActions];
+//        [self.rightView setWantsLayer:YES];
+//        [self.rightView setAutoresizingMask:NSViewMinXMargin];
+//        [self addSubview:self.rightView];
+//        
+//       
+//        
+//        self.dateLayer = [TMTextField defaultTextField];
+//
+//        [self.dateLayer setFrameOrigin:CGPointMake(offserUnreadMark, 2)];
+//        [self.dateLayer setTextColor:GRAY_TEXT_COLOR];
+//        [self.dateLayer setFont:TGSystemFont(12)];
+//        [self.rightView addSubview:self.dateLayer];
+//        
+//        
+//        self.stateLayer = [[MessageStateLayer alloc] initWithFrame:NSMakeRect(0, 0, 60, NSHeight(self.rightView.frame))];
+//                
+//        
+//        [self.rightView addSubview:self.stateLayer];
+//        
+//        
+//    
+//         if(![self isKindOfClass:[MessageTableCellTextView class]] && ![self isKindOfClass:[MessageTableCellGeoView class]]) {
+//            _progressView = [[TMLoaderView alloc] initWithFrame:NSMakeRect(0, 0, 48, 48)];
+//            [self.progressView setAutoresizingMask:NSViewMaxXMargin | NSViewMaxYMargin | NSViewMinXMargin | NSViewMinYMargin];
+//            [self.progressView addTarget:self selector:@selector(checkOperation)];
+//        }
+//        
+//        
         
         
     }
@@ -1072,6 +1072,21 @@ static int offsetEditable = 30;
     }
 }
 
+- (void)onStateChanged:(SenderItem *)item {
+    
+    if(item == self.item.messageSender) {
+        [self checkState:item];
+        [self uploadProgressHandler:item animated:YES];
+        [self updateCellState];
+        
+        if(item.state == MessageSendingStateCancelled) {
+            [self deleteAndCancel];
+        }
+    } else
+    [item removeEventListener:self];
+    
+}
+
 - (void)uploadProgressHandler:(SenderItem *)item animated:(BOOL)animation {
     [self.progressView setProgress:item.progress animated:animation];
 }
@@ -1088,20 +1103,7 @@ static int offsetEditable = 30;
     } 
 }
 
-- (void)onStateChanged:(SenderItem *)item {
-    
-    if(item == self.item.messageSender) {
-        [self checkState:item];
-        [self uploadProgressHandler:item animated:YES];
-        [self updateCellState];
-        
-        if(item.state == MessageSendingStateCancelled) {
-            [self deleteAndCancel];
-        }
-    } else
-        [item removeEventListener:self];
-    
-}
+
 
 - (void)checkActionState:(BOOL)redraw {
     
@@ -1140,11 +1142,11 @@ static int offsetEditable = 30;
 }
 
 -(void)clearSelection {
-    [_replyContainer.messageField setSelectionRange:NSMakeRange(NSNotFound, 0)];
+    
 }
 
 -(BOOL)mouseInText:(NSEvent *)theEvent {
-    return [_replyContainer.superview mouse:[_replyContainer.superview convertPoint:[theEvent locationInWindow] fromView:nil] inRect:_replyContainer.frame] && [_replyContainer.messageField mouseInText:theEvent];
+    return [_replyContainer.superview mouse:[_replyContainer.superview convertPoint:[theEvent locationInWindow] fromView:nil] inRect:_replyContainer.frame] ;
 }
 
 -(void)_didChangeBackgroundColorWithAnimation:(POPBasicAnimation *)anim toColor:(NSColor *)color {

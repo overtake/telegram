@@ -37,9 +37,7 @@ static NSTextField *testTextField() {
 
 -(NSSize)coreTextSizeForTextFieldForWidth:(int)width {
     
-    
-    CTLineCreateWithAttributedString((CFAttributedStringRef) self);
-    
+
     CTFramesetterRef framesetter = CTFramesetterCreateWithAttributedString((CFAttributedStringRef) self);
    
     CGSize textSize = CTFramesetterSuggestFrameSizeWithConstraints(framesetter, CFRangeMake(0,self.length), NULL, CGSizeMake(width, CGFLOAT_MAX), NULL);
@@ -53,6 +51,33 @@ static NSTextField *testTextField() {
     
     return textSize;
 }
+
+- (NSSize)coreTextSizeOneLineForWidth:(int)width {
+    return [self coreTextSizeOneLineForWidth:width expectType:CoreTextSizeExpectEmojiType];
+}
+
+- (NSSize)coreTextSizeOneLineForWidth:(int)width expectType:(CoreTextSizeExpectType)expectType {
+    
+    
+    CTLineRef line = CTLineCreateWithAttributedString((CFAttributedStringRef) self);
+    
+    CGRect bounds = CTLineGetBoundsWithOptions(line, 0);
+    bounds.origin = CGPointZero;
+    bounds.size.width = MIN(ceil(bounds.size.width),width);
+    bounds.size.height = floor(bounds.size.height);
+    
+    if(expectType & CoreTextSizeExpectEmojiType) {
+        if([self.string emojiString].length > 0) {
+            bounds.size.height-=6;
+        }
+    }
+    
+    CFRelease(line);
+    
+    return bounds.size;
+}
+
+
 
 - (NSSize)coreTextSizeForTextFieldForWidth:(int)width withPaths:(NSArray *)paths {
     

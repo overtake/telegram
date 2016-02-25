@@ -66,12 +66,9 @@ NSImage *fireImage() {
         self.imageView.cornerRadius = 4;
         [self.imageView setBorderColor:NSColorFromRGB(0xf3f3f3)];
         [self.imageView setBorderWidth:1];
-
-      //  [self.imageView setContentMode:BTRViewContentModeCenter];
         
         [self.imageView setTapBlock:^{
             PreviewObject *object = [[PreviewObject alloc] initWithMsdId:weakSelf.item.message.n_id media:weakSelf.item.message peer_id:weakSelf.item.message.peer_id];
-            
             
             if(!weakSelf.item.isset)
                 return;
@@ -93,17 +90,9 @@ NSImage *fireImage() {
         }];
         
 
-        
         [self setProgressToView:self.imageView];
-
-        
         [self.containerView addSubview:self.imageView];
-        
         [self setProgressStyle:TMCircularProgressDarkStyle];
-        
-      //  [self.imageView setContentMode:BTRViewContentModeCenter];
-        
-        
         
     }
     return self;
@@ -136,9 +125,6 @@ NSImage *fireImage() {
     [menu addItem:[NSMenuItem menuItemWithTitle:NSLocalizedString(@"Context.SaveAs", nil) withBlock:^(id sender) {
         [self performSelector:@selector(saveAs:) withObject:self];
     }]];
-    
-    
-   
     
     [menu addItem:[NSMenuItem menuItemWithTitle:NSLocalizedString(@"Context.CopyToClipBoard", nil) withBlock:^(id sender) {
         [self performSelector:@selector(copy:) withObject:self];
@@ -204,18 +190,12 @@ NSImage *fireImage() {
         
     }
     
-    
     [super setCellState:cellState];
-    
-    
-   
     
     [self.progressView setImage:cellState == CellStateSending ? image_DownloadIconWhite() : nil forState:TMLoaderViewStateNeedDownload];
     [self.progressView setImage:cellState == CellStateSending ? image_LoadCancelWhiteIcon() : nil forState:TMLoaderViewStateDownloading];
     [self.progressView setImage:cellState == CellStateSending ? image_LoadCancelWhiteIcon() : nil forState:TMLoaderViewStateUploading];
 
-    
-    
     BOOL isNeedSecretBlur = ([self.item.message isKindOfClass:[TL_destructMessage class]] && ((TL_destructMessage *)self.item.message).ttl_seconds < 60*60 && ((TL_destructMessage *)self.item.message).ttl_seconds > 0);
 
     
@@ -230,9 +210,6 @@ NSImage *fireImage() {
         [self.fireImageView setHidden:!isNeedSecretBlur];
         [self.fireImageView setCenterByView:self.imageView];
     }
-    
-    
-    
     
     
     [self.progressView setHidden:self.item.isset && cellState != CellStateSending];
@@ -299,9 +276,7 @@ NSImage *fireImage() {
                 
             }];
         }
-        
-        
-        
+
     }];
     
     [item.imageObject.supportDownloadListener setCompleteHandler:^(DownloadItem *item) {
@@ -339,21 +314,21 @@ NSImage *fireImage() {
     self.imageView.isNotNeedHackMouseUp = editable;
 }
 
--(void)drawRect:(NSRect)dirtyRect {
-    [super drawRect:dirtyRect];
-    
-    const int borderOffset = self.imageView.borderWidth;
-    const int borderSize = borderOffset*2;
-    
-    NSRect rect = NSMakeRect(self.containerView.frame.origin.x-borderOffset, NSMinY(self.containerView.frame) + NSHeight(self.containerView.frame) - NSHeight(self.imageView.frame) - borderOffset, NSWidth(self.imageView.frame)+borderSize, NSHeight(self.imageView.frame)+borderSize);
-    
-    NSBezierPath *path = [NSBezierPath bezierPathWithRoundedRect:rect xRadius:self.imageView.cornerRadius yRadius:self.imageView.cornerRadius];
-    [path addClip];
-    
-    
-    [self.imageView.borderColor set];
-    NSRectFill(rect);
-}
+//-(void)drawRect:(NSRect)dirtyRect {
+//    [super drawRect:dirtyRect];
+//    
+//    const int borderOffset = self.imageView.borderWidth;
+//    const int borderSize = borderOffset*2;
+//    
+//    NSRect rect = NSMakeRect(self.containerView.frame.origin.x-borderOffset, NSMinY(self.containerView.frame) + NSHeight(self.containerView.frame) - NSHeight(self.imageView.frame) - borderOffset, NSWidth(self.imageView.frame)+borderSize, NSHeight(self.imageView.frame)+borderSize);
+//    
+//    NSBezierPath *path = [NSBezierPath bezierPathWithRoundedRect:rect xRadius:self.imageView.cornerRadius yRadius:self.imageView.cornerRadius];
+//    [path addClip];
+//    
+//    
+//    [self.imageView.borderColor set];
+//    NSRectFill(rect);
+//}
 
 -(void)mouseDown:(NSEvent *)theEvent {
     

@@ -11,6 +11,7 @@
 #import "NSString+Extended.h"
 #import "NSAttributedString+Hyperlink.h"
 #import "TGExternalImageObject.h"
+#import "MessageTableCellPhotoView.h"
 @implementation MessageTableItemPhoto
 
 - (id) initWithObject:(TL_localMessage *)object {
@@ -19,7 +20,6 @@
         
         [self doAfterDownload];
         
-        [self makeSizeByWidth:310];
     }
     return self;
 }
@@ -56,9 +56,7 @@
     [super makeSizeByWidth:width];
     
     
-    
-    
-    _imageSize = strongsize(self.imageObject.realSize, MIN(MIN_IMG_SIZE.width,width - (self.message.n_out ?  60 : 40)));
+    _imageSize = strongsize(self.imageObject.realSize, MIN(MIN_IMG_SIZE.width,width));
         
     if(_caption) {
         _captionSize = [_caption coreTextSizeForTextFieldForWidth:_imageSize.width ];
@@ -141,8 +139,11 @@
     
     self.imageObject.imageSize = imageSize;
     
-    self.previewSize = imageSize;
 }
 
+
+-(Class)viewClass {
+    return [MessageTableCellPhotoView class];
+}
 
 @end

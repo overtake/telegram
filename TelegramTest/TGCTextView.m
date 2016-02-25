@@ -457,51 +457,6 @@
     [self _mouseDown:theEvent];
 }
 
-
-
-
-/*
- -(int)lineIndexOnLocation:(NSPoint)position {
- 
- CFArrayRef lines = CTFrameGetLines(CTFrame);
- 
- NSPoint location;
- 
- int count = (int) CFArrayGetCount(lines);
- 
- 
- for (int i = 0 ; i < count; i++) {
- 
- CTLineRef line = CFArrayGetValueAtIndex(lines, i);
- 
- CGFloat ascent, descent, leading;
- 
- CGFloat width = CTLineGetTypographicBounds(line, &ascent, &descent, &leading);
- 
- float height = floor(ascent + ceil(descent) + leading);
- 
- if((position.y > location.y) && position.y < (location.y + height)) {
- 
- MTLog(@"index:%d",i);
- 
- return i - (count -1);
- }
- 
- location.y+=height;
- 
- }
- 
- 
- 
- return position.y < 0 ? 0 : count-1;
- 
- 
- //
- }
- */
-
-
-
 -(int)currentIndexInLocation:(NSPoint)location {
     
     CFArrayRef lines = CTFrameGetLines(CTFrame);

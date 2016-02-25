@@ -10,7 +10,6 @@
 #import "SenderHeader.h"
 #import "DownloadItem.h"
 #import "TGReplyObject.h"
-#define FORWARMESSAGE_TITLE_HEIGHT 20
 
 @interface MessageTableItem : NSObject<SelectTextDelegate>
 
@@ -24,18 +23,29 @@
 @property (nonatomic, strong) NSDate *date;
 @property (nonatomic, strong) NSString *fullDate;
 @property (nonatomic, strong) TLUser *user;
+
 @property (nonatomic, strong) NSMutableAttributedString *headerName;
 @property (nonatomic, assign) NSSize headerSize;
-@property (nonatomic, strong) NSMutableAttributedString *forwardMessageAttributedString;
+
+@property (nonatomic, strong) NSMutableAttributedString *forwardName;
+@property (nonatomic, assign) NSSize forwardNameSize;
+
 @property (nonatomic,strong) NSAttributedString *forwardHeaderAttr;
-@property (nonatomic, strong) NSString *dateStr;
+@property (nonatomic,assign) NSSize forwardHeaderSize;
+
+
+@property (nonatomic, strong) NSAttributedString *dateAttributedString;
+@property (nonatomic) NSSize dateSize;
+
+@property (nonatomic,assign) NSSize rightSize;
+
+
+
 
 @property (nonatomic, strong) TLUser *fwd_user;
 @property (nonatomic, strong) TLChat *fwd_chat;
 
 @property (nonatomic,strong) TLUser *via_bot_user;
-@property (nonatomic,strong) NSAttributedString *via_attr_string;
-
 
 
 @property (nonatomic) BOOL isForwadedMessage;
@@ -49,8 +59,7 @@
 @property (nonatomic,assign,readonly) int makeSize;
 
 @property (nonatomic) NSSize blockSize;
-@property (nonatomic) NSSize previewSize;
-@property (nonatomic) NSSize dateSize;
+
 @property (nonatomic, strong) DownloadItem *downloadItem;
 
 
@@ -101,5 +110,15 @@
 
 
 -(Class)viewClass;
+-(int)cellWidth;
+
+
+-(int)defaultPhotoWidth;
+-(int)startContentOffset;
+-(int)defaultContainerOffset;
+-(int)defaultContentOffset;
+-(int)defaultOffset;
+
+-(BOOL)hasRightView;
 
 @end

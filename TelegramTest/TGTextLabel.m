@@ -11,34 +11,28 @@
 
 @interface TGTextLabel ()
 {
-    @public NSString *_text;
+    @public NSAttributedString *_text;
     @public CTLineRef _line;
-    @public CTFontRef _font;
     @public CGFloat _maxWidth;
     @public bool _truncateInTheMiddle;
     @public CGSize _lastSize;
+    int _height;
 }
 
 @end
 
 @implementation TGTextLabel
 
-- (instancetype)initWithText:(NSString *)text textColor:(NSColor *)textColor font:(CTFontRef)font maxWidth:(CGFloat)maxWidth
+- (instancetype)initWithText:(NSAttributedString *)text maxWidth:(CGFloat)maxWidth
 {
-    return [self initWithText:text textColor:textColor font:font maxWidth:maxWidth truncateInTheMiddle:false];
+    return [self initWithText:text maxWidth:maxWidth truncateInTheMiddle:false];
 }
 
-- (instancetype)initWithText:(NSString *)text textColor:(NSColor *)textColor font:(CTFontRef)font maxWidth:(CGFloat)maxWidth truncateInTheMiddle:(bool)truncateInTheMiddle
+- (instancetype)initWithText:(NSAttributedString *)text maxWidth:(CGFloat)maxWidth truncateInTheMiddle:(bool)truncateInTheMiddle
 {
     self = [super init];
     if (self != nil)
     {
-        
-        _textColor = textColor;
-        
-        if (font != NULL)
-            _font = CFRetain(font);
-        
         _truncateInTheMiddle = truncateInTheMiddle;
         
         [self setText:text maxWidth:maxWidth];
@@ -54,21 +48,22 @@
         _line = NULL;
     }
     
-    if (_font != NULL)
-    {
-        CFRelease(_font);
-        _font = nil;
-    }
 }
 
-- (void)setText:(NSString *)text maxWidth:(CGFloat)maxWidth
+- (void)setText:(NSAttributedString *)text maxWidth:(CGFloat)maxWidth
 {
+    _height = 0;
     [self setText:text maxWidth:maxWidth needsContentUpdate:NULL];
 }
 
-- (void)setText:(NSString *)text maxWidth:(CGFloat)maxWidth needsContentUpdate:(bool *)needsContentUpdate
+- (void)setText:(NSAttributedString *)text maxWidth:(CGFloat)maxWidth height:(int)height {
+    _height = height;
+    [self setText:text maxWidth:maxWidth needsContentUpdate:NULL];
+}
+
+- (void)setText:(NSAttributedString *)text maxWidth:(CGFloat)maxWidth needsContentUpdate:(bool *)needsContentUpdate
 {
-    text = text ? : @"";
+    text = text;
     
     _text = text;
     _maxWidth = maxWidth;
@@ -79,14 +74,17 @@
         _line = nil;
     }
     
-    if (_font != NULL)
+    if (_text != NULL)
     {
-        _line = CTLineCreateWithAttributedString((__bridge CFAttributedStringRef)[[NSAttributedString alloc] initWithString:text attributes:[[NSDictionary alloc] initWithObjectsAndKeys:(__bridge id)_font, (__bridge id)kCTFontAttributeName, kCFBooleanTrue, (__bridge id)kCTForegroundColorFromContextAttributeName, nil]]);
+        _line = CTLineCreateWithAttributedString((__bridge CFAttributedStringRef)_text);
         if (_line != NULL)
         {
             if (maxWidth < FLT_MAX - FLT_EPSILON)
             {
-                if (CTLineGetTypographicBounds(_line, NULL, NULL, NULL) - (float)CTLineGetTrailingWhitespaceWidth(_line) > maxWidth)
+                
+                float w = CTLineGetTypographicBounds(_line, NULL, NULL, NULL) - (float)CTLineGetTrailingWhitespaceWidth(_line);
+                
+                if (w > maxWidth)
                 {
                     static NSString *tokenString = nil;
                     if (tokenString == nil)
@@ -95,7 +93,33 @@
                         tokenString = [[NSString alloc] initWithCharacters:&tokenChar length:1];
                     }
                     
-                    NSMutableDictionary *truncationTokenAttributes = [[NSMutableDictionary alloc] initWithObjectsAndKeys:(__bridge id)_font, (NSString *)kCTFontAttributeName, (__bridge id)_textColor.CGColor, (NSString *)kCTForegroundColorAttributeName, nil];
+                    NSRange range;
+                    
+                    
+                    
+                    int position = (int) CTLineGetStringIndexForPosition(_line, NSMakePoint(maxWidth - 22, 0));
+                    
+
+                    
+                    if(position < 0)
+                        position = 0;
+                    if(position >= _text.length)
+                        position = (int)_text.length - 1;
+                    
+                    
+                    NSDictionary *attrs = [_text attributesAtIndex:position effectiveRange:&range];
+                    
+                    NSFont *font = [attrs objectForKey:NSFontAttributeName];
+                    
+                    if(!font)
+                        font = TGSystemFont(13);
+                    
+                    NSColor *color = [attrs objectForKey:NSForegroundColorAttributeName];
+
+                    if(!color)
+                        color = TEXT_COLOR;
+                    
+                    NSDictionary *truncationTokenAttributes = @{NSFontAttributeName:font,NSForegroundColorAttributeName:color};
                     
                     NSAttributedString *truncationTokenString = [[NSAttributedString alloc] initWithString:tokenString attributes:truncationTokenAttributes];
                     CTLineRef truncationToken = CTLineCreateWithAttributedString((__bridge CFAttributedStringRef)truncationTokenString);
@@ -110,10 +134,13 @@
             
             if (_line != NULL)
             {
+                
+                
                 CGRect bounds = CTLineGetBoundsWithOptions(_line, 0);
                 bounds.origin = CGPointZero;
-                bounds.size.width = floor(bounds.size.width);
-                bounds.size.height = floor(bounds.size.height);
+                bounds.size.width = ceil(bounds.size.width);
+                bounds.size.height = _height == 0 ? floor(bounds.size.height) : _height;
+                
                 if (!CGRectIsNull(bounds))
                 {
                     CGRect frame = self.frame;
@@ -131,7 +158,8 @@
     //[self setNeedsDisplay:YES];
 }
 
-- (NSString *)text
+
+- (NSAttributedString *)text
 {
     return _text;
 }
@@ -148,12 +176,13 @@
 -(void)drawRect:(NSRect)dirtyRect
 {
 
-    [self.backgroundColor setFill];
+   
     
     if(self.backgroundColor == nil) {
         self.backgroundColor = [NSColor whiteColor];
     }
     
+    [self.backgroundColor setFill];
     
     CGContextRef context = (CGContextRef)[[NSGraphicsContext currentContext]
                                           graphicsPort];
@@ -162,78 +191,26 @@
     CGContextSetShouldSmoothFonts(context, !IS_RETINA);
     CGContextSetAllowsFontSmoothing(context,!IS_RETINA);
     
-    
-    CGContextSetTextPosition(context, 0.0f, 2);
-    
     NSRectFill(self.bounds);
-
     
-    if (_textColor == nil)
-        CGContextSetFillColorWithColor(context, [NSColor blackColor].CGColor);
-    else
-        CGContextSetFillColorWithColor(context, _textColor.CGColor);
-    
-    if (_line != NULL)
+    if (_line != NULL) {
+        CGFloat ascent;
+        CGFloat descent;
+        // Calculate the line height
+     //   CTLineGetTypographicBounds(_line, &ascent, &descent, nil);
+        
+        CGContextSetTextPosition(context, 0.0f, 3);
+        
+        
+        
+        
         CTLineDraw(_line, context);
+    }
+    
+   
     
 
 }
 
 @end
 
-
-//@implementation TGTextLabel
-//{
-//    _TGTextLLayer *_textLayer;
-//}
-//
-//- (instancetype)initWithText:(NSString *)text textColor:(NSColor *)textColor font:(CTFontRef)font maxWidth:(CGFloat)maxWidth {
-//    return [self initWithText:text textColor:textColor font:font maxWidth:maxWidth truncateInTheMiddle:false];
-//}
-//- (instancetype)initWithText:(NSString *)text textColor:(NSColor *)textColor font:(CTFontRef)font maxWidth:(CGFloat)maxWidth truncateInTheMiddle:(bool)truncateInTheMiddle {
-//    if(self = [super init]) {
-//        _textLayer = [[_TGTextLLayer alloc] initWithText:text textColor:textColor font:font maxWidth:maxWidth truncateInTheMiddle:truncateInTheMiddle];
-//        
-//        self.wantsLayer = YES;
-//        [self setLayer:_textLayer];
-//    }
-//    
-//    return self;
-//}
-//
-//
-//
-//- (void)setText:(NSString *)text maxWidth:(CGFloat)maxWidth {
-//    
-//    bool update = YES;
-//    
-//    [self setText:text maxWidth:maxWidth needsContentUpdate:&update];
-//}
-//- (void)setText:(NSString *)text maxWidth:(CGFloat)maxWidth needsContentUpdate:(bool *)needsContentUpdate {
-//
-//
-//    [_textLayer setText:text maxWidth:maxWidth needsContentUpdate:needsContentUpdate];
-//    
-//    if(needsContentUpdate)
-//    {
-//         [self setFrameSize:_textLayer.frame.size];
-//    }
-//   
-//}
-//- (NSString *)text {
-//    return _textLayer->_text;
-//}
-//
-//-(void)setTextColor:(NSColor *)textColor {
-//    _textLayer->_textColor = textColor;
-//}
-//
-//-(NSColor *)textColor {
-//    return _textLayer->_textColor;
-//}
-//
-//- (void)setMaxWidth:(CGFloat)maxWidth {
-//    [_textLayer setMaxWidth:maxWidth];
-//}
-
-//@end

@@ -42,13 +42,8 @@
         _textView = [[TGMultipleSelectTextView alloc] initWithFrame:self.bounds];
         
         [self.containerView addSubview:self.textView];
-        
-        [self.containerView setIsFlipped:YES];
-
-
-        _textView.wantsLayer = YES;
-        
-        
+    
+ 
     }
     return self;
 }

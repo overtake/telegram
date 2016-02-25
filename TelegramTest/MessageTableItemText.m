@@ -248,22 +248,14 @@
     
     [super makeSizeByWidth:width];
     
-    [_webpage makeSize:width - 30];
+    [_webpage makeSize:width];
     
-    width -= self.dateSize.width+10;
-    
-    
-    if(self.isForwadedMessage) {
-        width -= 6;
-    }
-
-
     _allAttributedLinksSize = [_allAttributedLinks coreTextSizeForTextFieldForWidth:width];
     _textSize = [_textAttributed coreTextSizeForTextFieldForWidth:width];
     
     _textSize.width = width;
     
-    self.blockSize = NSMakeSize(width, _textSize.height + ([self isWebPage] ? [_webpage blockHeight] + 5 : 0));
+    self.blockSize = NSMakeSize(width, _textSize.height + ([self isWebPage] ? [_webpage blockHeight] + self.defaultContentOffset : 0));
     
     return YES;
 }

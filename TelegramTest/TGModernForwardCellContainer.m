@@ -18,10 +18,10 @@
 
 -(instancetype)initWithFrame:(NSRect)frameRect {
     if(self = [super initWithFrame:frameRect]) {
-        _forwardName = [[TGTextLabel alloc] initWithText:@"" textColor:[NSColor redColor] font:TGCoreTextSystemFontOfSize(13) maxWidth:100];
-        [self addSubview:_forwardName];
         
-        _forwardName.backgroundColor = [NSColor blueColor];
+        _forwardName = [[TGTextLabel alloc] initWithText:nil maxWidth:100];
+      //  _forwardName.backgroundColor = [NSColor redColor];
+        [self addSubview:_forwardName];
     }
     
     return self;
@@ -29,7 +29,7 @@
 
 
 -(int)yContentOffset {
-    return _tableItem.isHeaderForwardedMessage ? 16 : 0;
+    return _tableItem.isHeaderForwardedMessage ? NSMaxY(_forwardHeader.frame) + _tableItem.defaultContentOffset : 0;
 }
 
 - (void)drawRect:(NSRect)dirtyRect {
@@ -38,7 +38,7 @@
     [BLUE_SEPARATOR_COLOR set];
 
     
-    NSRectFill(NSMakeRect(0, self.yContentOffset , 2, NSHeight(dirtyRect) - self.yContentOffset));
+    NSRectFill(NSMakeRect(0, self.yContentOffset , 2, NSHeight(dirtyRect) - self.yContentOffset - _tableItem.defaultContentOffset));
     
 }
 
@@ -59,26 +59,28 @@
     
     if(_tableItem.isHeaderForwardedMessage) {
         if(!_forwardHeader) {
-            _forwardHeader = [[TGTextLabel alloc] initWithText:@"" textColor:LINK_COLOR font:TGCoreTextSystemFontOfSize(13) maxWidth:100];
-            _forwardHeader.backgroundColor = [NSColor redColor];
+            
+            _forwardHeader = [[TGTextLabel alloc] initWithText:nil maxWidth:100];
             [self addSubview:_forwardHeader];
         }
-        
-        [_forwardHeader setText:_tableItem.forwardHeaderAttr.string maxWidth:100];
+        [_forwardHeader setText:_tableItem.forwardHeaderAttr maxWidth:self.containerWidth  height:_tableItem.forwardHeaderSize.height];
 
     } else {
         [_forwardHeader removeFromSuperview];
         _forwardHeader = nil;
     }
     
-    [_forwardName setFrameOrigin:NSMakePoint(_containerView.defaultOffset, self.yContentOffset)];
+    [_forwardName setText:_tableItem.forwardName maxWidth:self.containerWidth  height:_tableItem.forwardNameSize.height];
     
-   // [_forwardName setAttributedString:_tableItem.forwardMessageAttributedString];
-    [_forwardName sizeToFit];//need fix them
     
-    [_contentView setFrameOrigin:NSMakePoint(_containerView.defaultOffset, NSMaxY(_forwardName.frame) + _containerView.defaultContentOffset)];
+    [_forwardName setFrameOrigin:NSMakePoint(_tableItem.defaultOffset, self.yContentOffset)];
+    [_contentView setFrameOrigin:NSMakePoint(_tableItem.defaultOffset, NSMaxY(_forwardName.frame) + _tableItem.defaultContentOffset)];
     
     [self setNeedsDisplay:YES];
+}
+
+-(int)containerWidth {
+    return NSWidth(self.frame) - _tableItem.defaultOffset;
 }
 
 

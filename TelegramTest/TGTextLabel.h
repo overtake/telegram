@@ -10,13 +10,15 @@
 #import "TGFont.h"
 @interface TGTextLabel : TMView
 
-@property (nonatomic, strong) NSColor *textColor;
 
-- (instancetype)initWithText:(NSString *)text textColor:(NSColor *)textColor font:(CTFontRef)font maxWidth:(CGFloat)maxWidth;
-- (instancetype)initWithText:(NSString *)text textColor:(NSColor *)textColor font:(CTFontRef)font maxWidth:(CGFloat)maxWidth truncateInTheMiddle:(bool)truncateInTheMiddle;
+- (instancetype)initWithText:(NSAttributedString *)text maxWidth:(CGFloat)maxWidth;
+- (instancetype)initWithText:(NSAttributedString *)text maxWidth:(CGFloat)maxWidth truncateInTheMiddle:(bool)truncateInTheMiddle;
 
-- (void)setText:(NSString *)text maxWidth:(CGFloat)maxWidth;
-- (void)setText:(NSString *)text maxWidth:(CGFloat)maxWidth needsContentUpdate:(bool *)needsContentUpdate;
-- (NSString *)text;
+
+
+- (void)setText:(NSAttributedString *)text maxWidth:(CGFloat)maxWidth;
+- (void)setText:(NSAttributedString *)text maxWidth:(CGFloat)maxWidth needsContentUpdate:(bool *)needsContentUpdate;
+- (void)setText:(NSAttributedString *)text maxWidth:(CGFloat)maxWidth height:(int)height;
+- (NSAttributedString *)text;
 - (void)setMaxWidth:(CGFloat)maxWidth;
 @end

@@ -61,7 +61,6 @@
     if(![self.message.media.document.thumb.type isEqualToString:@"hd"])
         self.imageObject.imageProcessor = [ImageUtils b_processor];
     
-    self.previewSize = blockSize;
     
     [self makeSizeByWidth:310];
 }

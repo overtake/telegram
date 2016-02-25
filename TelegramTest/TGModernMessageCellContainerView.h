@@ -11,10 +11,6 @@
 @interface TGModernMessageCellContainerView : MessageTableCellContainerView
 
 
-//start view layout methods
--(int)defaultContentOffset;
--(int)defaultOffset;
-
 
 -(TMView *)containerView;
 
