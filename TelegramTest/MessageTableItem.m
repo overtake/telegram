@@ -259,7 +259,6 @@ static NSCache *cItems;
     
     if(self.isForwadedMessage) {
         self.forwardMessageAttributedString = [[NSMutableAttributedString alloc] init];
-//        [self.forwardMessageAttributedString appendString:NSLocalizedString(@"Message.ForwardedFrom", nil) withColor:NSColorFromRGB(0x909090)];
         
         NSString *title = self.message.fwd_from.channel_id != 0 && !self.fwd_chat.isMegagroup ? self.fwd_chat.title : self.fwd_user.fullName ;
         
