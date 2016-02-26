@@ -179,6 +179,12 @@ static int futureUniqueKey = 0;
     return self.size == 0 ? 0 : (self.size < PART_32MB_SIZE ? PART_32KB_SIZE : PART_128KB_SIZE);
 }
 
+-(BOOL)instantlySave {
+    return YES;
+}
+-(BOOL)checkSize {
+    return YES;
+}
 
 -(void)removeAllEvents {
     [DownloadQueue dispatchOnStageQueue:^{   

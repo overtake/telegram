@@ -113,4 +113,6 @@ typedef enum {
 
 -(DownloadOperation *)nOperation;
 
+-(BOOL)instantlySave;
+-(BOOL)checkSize;
 @end

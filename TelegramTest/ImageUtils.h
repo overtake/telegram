@@ -223,6 +223,10 @@ CACHE_IMAGE(TempAudioPreviewPause);
 
 CACHE_IMAGE(ConversationInputFieldBroadcastIconActive);
 CACHE_IMAGE(ConversationInputFieldBroadcastIconInactive);
+
+CACHE_IMAGE(ModernMessageCheckmark1);
+CACHE_IMAGE(ModernMessageCheckmark2);
+
 @interface ImageUtils : NSObject
 
 

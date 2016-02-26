@@ -3120,6 +3120,10 @@ static NSTextAttachment *headerMediaIcon() {
         }
     }
     
+    if(!item.isHeaderMessage && item.isHeaderForwardedMessage && item.isForwadedMessage) {
+        item.isHeaderMessage = YES;
+    }
+    
 }
 
 - (void)deleteItem:(MessageTableItem *)item {

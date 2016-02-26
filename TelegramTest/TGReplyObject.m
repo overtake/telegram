@@ -25,7 +25,7 @@
         _replyMessage = replyMessage;
         
         
-        _containerHeight = 36;
+        _containerHeight = 33;
         
         if(_replyMessage != nil)
             [self updateObject];
@@ -94,7 +94,7 @@
     
     _replyHeaderHeight = [replyHeader coreTextSizeOneLineForWidth:INT32_MAX].height;
     
-    _containerHeight = _replyHeaderHeight + _replyHeight + _item.defaultContentOffset;
+    _containerHeight = _replyHeaderHeight + _replyHeight + 3;
     
     
     

@@ -82,7 +82,6 @@
     if(photo.sizes.count) {
         
         NSImage *cachePhoto;
-        
         for(TLPhotoSize *photoSize in photo.sizes) {
             if([photoSize isKindOfClass:[TL_photoCachedSize class]]) {
                 cachePhoto = [[NSImage alloc] initWithData:photoSize.bytes];
@@ -98,7 +97,6 @@
         
         cachePhoto.size = imageSize;
         
-        
         if(cachePhoto && imageSize.width == MIN_IMG_SIZE.width && imageSize.height == MIN_IMG_SIZE.height && photoSize.w > MIN_IMG_SIZE.width && photoSize.h > MIN_IMG_SIZE.height) {
             
             cachePhoto = [ImageUtils imageResize:cachePhoto newSize:NSMakeSize(photoSize.w, photoSize.h)];
@@ -107,15 +105,9 @@
             
         }
         
-        if(cachePhoto) {
-            cachePhoto = [ImageUtils blurImage:renderedImage(cachePhoto, cachePhoto.size) blurRadius:80 frameSize:cachePhoto.size];
-        } else {
-            cachePhoto = gray_resizable_placeholder();
-        }
-        
-        
-        
         self.imageObject = [[TGImageObject alloc] initWithLocation:photoSize.location placeHolder:cachePhoto sourceId:self.message.n_id size:photoSize.size];
+        
+        self.imageObject.thumbProcessor = [ImageUtils b_processor];
         
         self.imageObject.realSize = NSMakeSize(photoSize.w, photoSize.h);
         

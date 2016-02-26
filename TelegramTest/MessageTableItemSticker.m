@@ -7,7 +7,7 @@
 //
 
 #import "MessageTableItemSticker.h"
-
+#import "MessageTableCellStickerView.h"
 @implementation MessageTableItemSticker
 
 -(id)initWithObject:(TL_localMessage *)object {
@@ -45,6 +45,10 @@
     return self;
 }
 
+
+-(Class)viewClass {
+    return [MessageTableCellStickerView class];
+}
 
 
 @end

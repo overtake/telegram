@@ -7,7 +7,7 @@
 //
 
 #import "TMLoaderView.h"
-
+#import "POPLayerExtras.h"
 @interface TMLoaderView ()
 @property (nonatomic,weak) id target;
 @property (nonatomic,assign) SEL selector;
@@ -54,6 +54,44 @@
     return self;
 }
 
+-(void)setHidden:(BOOL)hidden animated:(BOOL)animated {
+    
+    if(!hidden && [self.layer pop_animationForKey:@"opacity"]) {
+        [self.layer pop_removeAllAnimations];
+    }
+    
+    if(animated && hidden && !self.isHidden && ![self.layer pop_animationForKey:@"opacity"]) {
+        
+        float from = hidden ? 1.0f : 0.0f;
+        float to = hidden ? 0.0f : 1.0f;
+        
+        POPBasicAnimation *animation = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerOpacity];
+        
+        animation.duration = 0.3f;
+        animation.fromValue = @(from);
+        animation.toValue = @(to);
+        animation.removedOnCompletion = YES;
+        [self.layer pop_addAnimation:animation forKey:@"opacity"];
+        
+        [animation setCompletionBlock:^(POPAnimation *animation, BOOL complete) {
+            if(complete) {
+                [super setHidden:hidden];
+                [self setNeedsDisplay:YES];
+            }
+        }];
+        
+    } else {
+        [super setHidden:hidden];
+        if(!self.isHidden)
+            [self setNeedsDisplay:YES];
+    }
+}
+
+-(void)setHidden:(BOOL)hidden {
+    [self setHidden:hidden animated:YES];
+    
+    
+}
 
 -(void)setImage:(NSImage *)image forState:(TMLoaderViewState)state {
     
@@ -111,11 +149,5 @@
 }
 
 
--(void)setHidden:(BOOL)flag {
-    [super setHidden:flag];
-    
-    if(!self.isHidden)
-        [self setNeedsDisplay:YES];
-}
 
 @end

@@ -102,6 +102,8 @@ static NSImage *playVideoImage() {
         [self.loaderView setImage:image_LoadCancelWhiteIcon() forState:TMLoaderViewStateDownloading];
         [self.loaderView setImage:image_LoadCancelWhiteIcon() forState:TMLoaderViewStateUploading];
         
+        [self.loaderView setHidden:YES animated:NO];
+        
         [self addSubview:self.loaderView];
         
         [self.loaderView setAutoresizingMask:NSViewMinXMargin | NSViewMaxXMargin | NSViewMinYMargin | NSViewMaxYMargin];

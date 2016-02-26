@@ -16,11 +16,18 @@
     if(self.thumbData == nil) {
         [super initDownloadItem];
     } else {
-        [DownloadQueue dispatchOnDownloadQueue:^{
+        
+        weak();
+        
+        [TGImageObject.threadPool addTask:[[SThreadPoolTask alloc] initWithBlock:^(bool (^canceled)()) {
             
-            [self proccessAndDispatchData:self.thumbData];
+            strongWeak();
             
-        }];
+            if(strongSelf == weakSelf) {
+                [strongSelf proccessAndDispatchData:strongSelf.thumbData];
+            }
+
+        }]];
     }
     
 }

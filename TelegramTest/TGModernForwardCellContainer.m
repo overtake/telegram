@@ -29,7 +29,7 @@
 
 
 -(int)yContentOffset {
-    return _tableItem.isHeaderForwardedMessage ? NSMaxY(_forwardHeader.frame) + _tableItem.defaultContentOffset : 0;
+    return _tableItem.isHeaderForwardedMessage ? NSMaxY(_forwardHeader.frame) + _tableItem.contentHeaderOffset : 0;
 }
 
 - (void)drawRect:(NSRect)dirtyRect {
@@ -74,7 +74,7 @@
     
     
     [_forwardName setFrameOrigin:NSMakePoint(_tableItem.defaultOffset, self.yContentOffset)];
-    [_contentView setFrameOrigin:NSMakePoint(_tableItem.defaultOffset, NSMaxY(_forwardName.frame) + _tableItem.defaultContentOffset)];
+    [_contentView setFrameOrigin:NSMakePoint(_tableItem.defaultOffset, NSMaxY(_forwardName.frame) + _tableItem.contentHeaderOffset)];
     
     [self setNeedsDisplay:YES];
 }

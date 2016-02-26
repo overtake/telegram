@@ -22,20 +22,28 @@
     if(!_inited) {
         _inited = YES;
         
-        [DownloadQueue dispatchOnDownloadQueue:^{
+        weak();
+        
+        [TGImageObject.threadPool addTask:[[SThreadPoolTask alloc] initWithBlock:^(bool (^canceled)()) {
             
-            NSImage *image = previewImageForDocument(self.path);
+            strongWeak();
             
-            image = cropCenterWithSize(image,self.imageSize);
+            if(strongSelf == weakSelf) {
+                NSImage *image = previewImageForDocument(strongSelf.path);
+                
+                image = cropCenterWithSize(image,strongSelf.imageSize);
+                
+                [TGCache cacheImage:image forKey:strongSelf.cacheKey groups:@[IMGCACHE]];
+                
+                [ASQueue dispatchOnMainQueue:^{
+                    _inited = NO;
+                    [strongSelf.delegate didDownloadImage:image object:strongSelf];
+                }];
+            }
             
-            [TGCache cacheImage:image forKey:self.cacheKey groups:@[IMGCACHE]];
             
-            [ASQueue dispatchOnMainQueue:^{
-                _inited = NO;
-                [self.delegate didDownloadImage:image object:self];
-            }];
             
-        }];
+        }]];
     }
     
 }

@@ -270,6 +270,9 @@
     return self.flags & TGOUTMESSAGE;
 }
 
+-(void)setFlags:(int)flags {
+    [super setFlags:flags];
+}
 
 -(BOOL)isImportantMessage {
     return self.isChannelMessage &&  ((self.flags & 2) || (self.flags & 16) || (self.flags & 256) == 0);

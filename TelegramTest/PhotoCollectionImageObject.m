@@ -49,15 +49,19 @@ static const int width = 180;
     
     [self.downloadListener setCompleteHandler:^(DownloadItem * item) {
         
-        [DownloadQueue dispatchOnDownloadQueue:^{
+        [TGImageObject.threadPool addTask:[[SThreadPoolTask alloc] initWithBlock:^(bool (^canceled)()) {
             
-            weakSelf.isLoaded = YES;
+            strongWeak();
             
-            [weakSelf _didDownloadImage:item];
-            weakSelf.downloadItem = nil;
-            weakSelf.downloadListener = nil;
+            if(strongSelf == weakSelf) {
+                weakSelf.isLoaded = YES;
+                
+                [weakSelf _didDownloadImage:item];
+                weakSelf.downloadItem = nil;
+                weakSelf.downloadListener = nil;
+            }
             
-        }];
+        }]];
        
     }];
     

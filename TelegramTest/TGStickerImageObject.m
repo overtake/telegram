@@ -51,12 +51,20 @@
     weak();
     
     [self.downloadListener setCompleteHandler:^(DownloadItem * item) {
-        [DownloadQueue dispatchOnDownloadQueue:^{
-            weakSelf.isLoaded = YES;
-            [weakSelf _didDownloadImage:item];
-            weakSelf.downloadItem = nil;
-            weakSelf.downloadListener = nil;
-        }];  
+        
+        [TGImageObject.threadPool addTask:[[SThreadPoolTask alloc] initWithBlock:^(bool (^canceled)()) {
+            
+            strongWeak();
+            
+            if(strongSelf == weakSelf) {
+                weakSelf.isLoaded = YES;
+                [weakSelf _didDownloadImage:item];
+                weakSelf.downloadItem = nil;
+                weakSelf.downloadListener = nil;
+            }
+            
+        }]];
+          
     }];
     
     

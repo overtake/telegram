@@ -1211,6 +1211,9 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "__39-[SearchViewController searchByString:]_block_invoke691:SearchViewController.m">
+      </ContextState>
+      <ContextState
          contextName = "-[TGImageObject cacheKey]:TGImageObject.m">
       </ContextState>
       <ContextState
@@ -1866,6 +1869,17 @@
          <PersistentStrings>
             <PersistentString
                value = "self.scrollView.clipView">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[MessageStateLayer setState:animated:]:MessageStateLayer.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "state">
+            </PersistentString>
+            <PersistentString
+               value = "self.checkMark1.frame">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -3494,6 +3508,9 @@
                value = "self.queue.operations">
             </PersistentString>
          </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "__39-[SearchViewController searchByString:]_block_invoke700:SearchViewController.m">
       </ContextState>
       <ContextState
          contextName = "-[TGCTextView open_link:itsReal:]:TGCTextView.m">
@@ -5391,6 +5408,17 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "-[TGModernMessageCellContainerView checkActionState:]:TGModernMessageCellContainerView.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.item.message.unread">
+            </PersistentString>
+            <PersistentString
+               value = "self.item.message">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "__29-[TMAvatarImageView rebuild:]_block_invoke:TMAvatarImageView.m">
          <PersistentStrings>
             <PersistentString
@@ -6130,6 +6158,9 @@
       <ContextState
          contextName = "__38-[TGDownloadOperation start:selector:]_block_invoke:TGDownloadOperation.m">
          <PersistentStrings>
+            <PersistentString
+               value = "self.item.size">
+            </PersistentString>
             <PersistentString
                value = "self.key">
             </PersistentString>

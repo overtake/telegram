@@ -65,7 +65,7 @@
         
         _imageView.cornerRadius = 4;
         _imageView.layer.backgroundColor = GRAY_BORDER_COLOR.CGColor;
-        _imageView.layer.cornerRadius = 4;
+        [_imageView setContentMode:BTRViewContentModeScaleAspectFill];
         
         [_imageView setTapBlock:block];
         

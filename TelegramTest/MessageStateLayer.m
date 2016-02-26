@@ -12,7 +12,10 @@
 #import "TGTextLabel.h"
 @interface MessageStateLayer ()
 @property (nonatomic,strong) TMClockProgressView *progressView;
-@property (nonatomic,strong) NSImageView *readOrSentView;
+@property (nonatomic,strong) NSImageView *checkMark1;
+@property (nonatomic,strong) NSImageView *checkMark2;
+
+
 @property (nonatomic,strong) BTRButton *errorView;
 
 @property (nonatomic,assign) MessageTableCellState state;
@@ -37,12 +40,10 @@
 }
 
 -(void)setState:(MessageTableCellState)state animated:(BOOL)animated {
-    _state = state;
-    
     
     if(state == MessageTableCellSending) {
         if(!self.progressView) {
-            self.progressView = [[TMClockProgressView alloc] initWithFrame:NSMakeRect(NSWidth(self.frame) - image_ClockFrame().size.width, 4, 15, 15)];
+            self.progressView = [[TMClockProgressView alloc] initWithFrame:NSMakeRect(NSWidth(self.frame) - image_ClockFrame().size.width, 2, 15, 15)];
             [self.layer addSublayer:self.progressView.layer];
         }
         [self.progressView startAnimating];
@@ -83,9 +84,10 @@
             
             _channelImageView = imageViewWithImage(image_ChannelViews());
             
-            self.readOrSentView.image = nil;
-            [self.readOrSentView.layer removeFromSuperlayer];
-            self.readOrSentView = nil;
+            [self.checkMark1 removeFromSuperview];
+            [self.checkMark2 removeFromSuperview];
+            self.checkMark1 = nil;
+            self.checkMark2 = nil;
             
             _viewsCountText = [[TGTextLabel alloc] init];
             
@@ -101,25 +103,64 @@
             
             
         } else {
-            if(!self.readOrSentView) {
-                self.readOrSentView = [[NSImageView alloc] initWithFrame:NSMakeRect(11, 2, 0, 0)];
-                self.readOrSentView.wantsLayer = YES;
+            
+            if(!_checkMark1) {
+                _checkMark1 = [[NSImageView alloc] initWithFrame:NSMakeRect(0, 2, 0, 0)];
+                _checkMark1.wantsLayer = YES;
+                _checkMark1.image = image_ModernMessageCheckmark1();
+                [_checkMark1 setFrameSize:image_ModernMessageCheckmark1().size];
+                
             }
             
-            self.readOrSentView.image = state == MessageTableCellUnread ? image_MessageStateSent() : image_MessageStateRead();
-            [self.readOrSentView setFrameSize:self.readOrSentView.image.size];
-            [self.readOrSentView setFrameOrigin:NSMakePoint(NSWidth(self.frame) - NSWidth(_readOrSentView.frame), NSMinY(self.readOrSentView.frame))];
-            [self.layer addSublayer:self.readOrSentView.layer];
+            [self.layer addSublayer:_checkMark1.layer];
+            
+            if(state == MessageTableCellRead) {
+                if(!_checkMark2) {
+                    _checkMark2 = [[NSImageView alloc] initWithFrame:NSMakeRect(0, 2, 0, 0)];
+                    _checkMark2.wantsLayer = YES;
+                    _checkMark2.image = image_ModernMessageCheckmark2();
+                    [_checkMark2 setFrameSize:image_ModernMessageCheckmark2().size];
+                }
+                
+                [self addSubview:_checkMark2];
+
+            } else {
+                [_checkMark2 removeFromSuperview];
+                _checkMark2= nil;
+            }
+            
+            [self.checkMark1 setFrameOrigin:NSMakePoint(NSWidth(self.frame) - 15, NSMinY(self.checkMark1.frame))];
+            [self.checkMark2 setFrameOrigin:NSMakePoint(NSWidth(self.frame) - (15 - 4), NSMinY(self.checkMark2.frame))];
+            
+            
+            if(_state == MessageTableCellSending && state == MessageTableCellUnread) {
+                CABasicAnimation *animation = [CABasicAnimation animationWithKeyPath:@"transform.scale"];
+                animation.fromValue = @(1.2f);
+                animation.toValue = @(1.0f);
+                animation.duration = 0.14;
+                animation.removedOnCompletion = true;
+                [_checkMark1.layer addAnimation:animation forKey:@"transform.scale"];
+            }
+            
+            if(_state == MessageTableCellUnread && state == MessageTableCellRead) {
+                CABasicAnimation *animation = [CABasicAnimation animationWithKeyPath:@"transform.scale"];
+                animation.fromValue = @(1.2f);
+                animation.toValue = @(1.0f);
+                animation.duration = 0.14;
+                animation.removedOnCompletion = true;
+                [_checkMark2.layer addAnimation:animation forKey:@"transform.scale"];
+            }
+            
         }
         
     } else {
-        self.readOrSentView.image = nil;
-        [self.readOrSentView.layer removeFromSuperlayer];
-        self.readOrSentView = nil;
-        
-        
+        [self.checkMark1 removeFromSuperview];
+        [self.checkMark2 removeFromSuperview];
+        self.checkMark1 = nil;
+        self.checkMark2 = nil;
     }
     
+    _state = state;
     
     [self setNeedsDisplay:YES];
 

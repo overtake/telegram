@@ -383,6 +383,10 @@
         return [super fontSize];
 }
 
+-(int)contentHeaderOffset {
+    return 3;
+}
+
 -(void)dealloc {
     //[SettingsArchiver removeEventListener:self];
 }

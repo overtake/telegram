@@ -117,6 +117,7 @@
 -(int)defaultContainerOffset;
 -(int)defaultContentOffset;
 -(int)defaultOffset;
+-(int)contentHeaderOffset;
 
 -(BOOL)hasRightView;
 

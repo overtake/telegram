@@ -31,6 +31,8 @@
 
 @implementation TGModernMessageCellContainerView
 
+@synthesize progressView = _progressView;
+
 - (void)drawRect:(NSRect)dirtyRect {
     [super drawRect:dirtyRect];
     
@@ -41,6 +43,8 @@
     return YES;
 }
 
+
+
 -(instancetype)initWithFrame:(NSRect)frameRect {
     if(self = [super initWithFrame:frameRect]) {
         
@@ -48,15 +52,10 @@
         self.wantsLayer = YES;
         
         
-
-        
-        
-        
-        
         //container
         {
             _contentContainerView = [[TMView alloc] initWithFrame:NSZeroRect];
-            _contentContainerView.backgroundColor = [NSColor redColor];
+           // _contentContainerView.backgroundColor = [NSColor redColor];
             _contentContainerView.isFlipped = YES;
             
             _contentView = [[TMView alloc] initWithFrame:NSZeroRect];
@@ -64,6 +63,16 @@
             [_contentView setIsFlipped:YES];
             [_contentContainerView addSubview:_contentView];
             [self addSubview:_contentContainerView];
+        }
+        
+        if(![self isKindOfClass:NSClassFromString(@"MessageTableCellTextView")] && ![self isKindOfClass:NSClassFromString(@"MessageTableCellGeoView")]) {
+            _progressView = [[TMLoaderView alloc] initWithFrame:NSMakeRect(0, 0, 48, 48)];
+            [_progressView setAutoresizingMask:NSViewMaxXMargin | NSViewMaxYMargin | NSViewMinXMargin | NSViewMinYMargin];
+            [_progressView addTarget:self selector:@selector(checkOperation)];
+            _progressView.wantsLayer = YES;
+            [_progressView setHidden:YES animated:NO];
+           // [_progressView.layer setac]
+            
         }
         
     }
@@ -99,7 +108,6 @@
         [_nameView removeFromSuperview];
         _nameView = nil;
         
-      //  [_contentView setFrameOrigin:NSMakePoint(<#CGFloat x#>, <#CGFloat y#>)];
     }
 }
 
@@ -144,7 +152,7 @@
         [_replyContainer setItem:item];
         [_replyContainer setReplyObject:item.replyObject];
         
-        [_contentContainerView setFrameOrigin:NSMakePoint(NSMinX(_contentContainerView.frame), NSMaxY(_replyContainer.frame) + item.defaultContentOffset)];
+        [_contentContainerView setFrameOrigin:NSMakePoint(NSMinX(_contentContainerView.frame), NSMaxY(_replyContainer.frame) + item.contentHeaderOffset)];
     } else {
         if(_replyContainer) {
             [_replyContainer removeFromSuperview];
@@ -222,36 +230,54 @@
 - (void)onStateChanged:(SenderItem *)item {
     
     if(item == self.item.messageSender) {
-        [self checkActionState:YES];
+        
         [self uploadProgressHandler:item animated:YES];
+        
+        if(item.state == MessageSendingStateSent) {
+            self.item.messageSender = nil;
+        }
+        
+        [self checkActionState:YES];
         [self updateCellState];
         
         if(item.state == MessageSendingStateCancelled) {
             [self deleteAndCancel];
         }
+ 
     } else
-    [item removeEventListener:self];
+        [item removeEventListener:self];
     
 }
+
 
 
 -(void)setItem:(MessageTableItem *)item {
     [super setItem:item];
     
+//    static NSMutableDictionary *d;
+//    static dispatch_once_t onceToken;
+//    dispatch_once(&onceToken, ^{
+//        d = [NSMutableDictionary dictionary];
+//    });
+//    
+//    
+//   // assert(d[@(item.message.n_id)] == nil);
+//    d[@(item.message.n_id)] = item.message;
+//    
+//    
+  //  self.layer.backgroundColor = item.rowId % 2 == 0 ? [NSColor blueColor].CGColor : [NSColor greenColor].CGColor;
     
-   // self.layer.backgroundColor = item.rowId % 2 == 0 ? [NSColor blueColor].CGColor : [NSColor greenColor].CGColor;
+    int xStartContentOffset = item.isHeaderMessage ? item.headerSize.height + item.contentHeaderOffset + item.defaultContentOffset : item.defaultContentOffset;
     
-    int xStartContentOffset = item.isHeaderMessage ? item.headerSize.height + item.defaultContentOffset + item.defaultContentOffset : item.defaultContentOffset;
-    
-    [_contentContainerView setFrame:NSMakeRect(item.startContentOffset,xStartContentOffset, item.viewSize.width, item.viewSize.height - xStartContentOffset - item.defaultContentOffset)];
+    [_contentContainerView setFrame:NSMakeRect(item.startContentOffset,xStartContentOffset, item.viewSize.width, item.viewSize.height - xStartContentOffset)];
     
     [_contentView setFrame:NSMakeRect(0, 0, item.blockSize.width, item.blockSize.height)];
     
     [self checkAndMakeHeaderContainer:item];
     [self chekAndMakeForwardContainer:item];
     [self checkAndMakeReplyContainer:item];
-    [self checkAndMakeRightView:item];
     [self checkAndMakeSenderItem:item];
+    [self checkAndMakeRightView:item];
 }
 
 -(TMView *)containerView {

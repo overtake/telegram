@@ -211,7 +211,8 @@ bool isAcceptLayout(struct TGSplitProportion prop) {
 
 -(void)removeProportion:(TGSplitViewState)state {
     [_layoutProportions removeObjectForKey:@(state)];
-    [_controllers removeObjectAtIndex:state];
+    if(_controllers.count > state)
+        [_controllers removeObjectAtIndex:state];
 }
 
 

@@ -341,10 +341,10 @@ static NSTextAttachment *channelIconAttachment() {
         
         if(self.isHeaderMessage) {
             
-            viewSize.height += _headerSize.height + self.defaultContentOffset + (self.defaultContentOffset * 2);
+            viewSize.height += _headerSize.height + self.contentHeaderOffset + (self.defaultContentOffset * 2);
             
             if(self.isForwadedMessage)
-                viewSize.height += self.defaultContentOffset + _forwardNameSize.height + self.defaultContentOffset;
+                viewSize.height += self.contentHeaderOffset + _forwardNameSize.height + self.contentHeaderOffset;
             
 
         } else {
@@ -748,6 +748,10 @@ static NSTextAttachment *channelIconAttachment() {
 }
 -(int)defaultOffset {
     return 10;
+}
+
+-(int)contentHeaderOffset {
+    return 6;
 }
 
 -(int)defaultContainerOffset {

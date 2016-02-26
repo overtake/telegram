@@ -59,14 +59,9 @@ NSImage *fireImage() {
     if (self) {
         weak();
         
-        self.containerView.isFlipped = YES;
-        
-        self.imageView = [[BluredPhotoImageView alloc] initWithFrame:NSMakeRect(0, 0, 20, 20)];
-        [self.imageView setWantsLayer:YES];
+        self.imageView = [[TGImageView alloc] initWithFrame:NSMakeRect(0, 0, 20, 20)];
         self.imageView.cornerRadius = 4;
-        [self.imageView setBorderColor:NSColorFromRGB(0xf3f3f3)];
-        [self.imageView setBorderWidth:1];
-        
+        [self.imageView setContentMode:BTRViewContentModeScaleAspectFill];
         [self.imageView setTapBlock:^{
             PreviewObject *object = [[PreviewObject alloc] initWithMsdId:weakSelf.item.message.n_id media:weakSelf.item.message peer_id:weakSelf.item.message.peer_id];
             
@@ -101,7 +96,6 @@ NSImage *fireImage() {
 
 -(void)openInQuickLook:(id)sender {
     PreviewObject *previewObject = [[PreviewObject alloc] initWithMsdId:self.item.message.n_id media:self.item.message peer_id:self.item.message.peer_id];
-    
     
     if(!self.item.isset)
         return;
@@ -176,10 +170,9 @@ NSImage *fireImage() {
 
 -(void)setCellState:(CellState)cellState {
     
+    MessageTableItemPhoto *item = (MessageTableItemPhoto *)self.item;
     
-     MessageTableItemPhoto *item = (MessageTableItemPhoto *)self.item;
-    
-    if(self.cellState == CellStateSending && cellState == CellStateNormal) {
+     if(self.cellState == CellStateSending && cellState == CellStateNormal) {
         [super setCellState:cellState];
         
         if([item.imageObject isKindOfClass:[TGExternalImageObject class]]) {
@@ -188,9 +181,9 @@ NSImage *fireImage() {
             [self updateDownloadListeners];
         }
         
-    }
+     }
     
-    [super setCellState:cellState];
+    
     
     [self.progressView setImage:cellState == CellStateSending ? image_DownloadIconWhite() : nil forState:TMLoaderViewStateNeedDownload];
     [self.progressView setImage:cellState == CellStateSending ? image_LoadCancelWhiteIcon() : nil forState:TMLoaderViewStateDownloading];
@@ -203,12 +196,12 @@ NSImage *fireImage() {
     
     if(cellState == CellStateNormal) {
         
-        if(isNeedSecretBlur)
-            [self initFireImage];
-        
-        [self.imageView setIsAlwaysBlur:isNeedSecretBlur];
-        [self.fireImageView setHidden:!isNeedSecretBlur];
-        [self.fireImageView setCenterByView:self.imageView];
+//        if(isNeedSecretBlur)
+//            [self initFireImage];
+//        
+//        [self.imageView setIsAlwaysBlur:isNeedSecretBlur];
+//        [self.fireImageView setHidden:!isNeedSecretBlur];
+//        [self.fireImageView setCenterByView:self.imageView];
     }
     
     
@@ -227,6 +220,9 @@ NSImage *fireImage() {
     [self.progressView setState:cellState];
     
     [self.progressView setCenterByView:self.imageView];
+    
+    
+    [super setCellState:cellState];
 }
 
 - (void) setItem:(MessageTableItemPhoto *)item {
@@ -283,16 +279,12 @@ NSImage *fireImage() {
          strongWeak();
         
         if(strongSelf == weakSelf) {
-            
-        }[ASQueue dispatchOnMainQueue:^{
-            [strongSelf.progressView setProgress:100 animated:YES];
-            
-            dispatch_after_seconds(0.2, ^{
+            [ASQueue dispatchOnMainQueue:^{
+                [strongSelf.progressView setProgress:100 animated:YES];
+                
                 [strongSelf updateCellState];
-            });
-        }];
-        
-        
+            }];
+        }
     }];
     
 }

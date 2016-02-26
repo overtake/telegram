@@ -40,10 +40,8 @@
     if (self) {
         
         _textView = [[TGMultipleSelectTextView alloc] initWithFrame:self.bounds];
-        
         [self.containerView addSubview:self.textView];
     
- 
     }
     return self;
 }
@@ -86,8 +84,7 @@
 
 -(void)mouseDown:(NSEvent *)theEvent {
     [super mouseDown:theEvent];
-    
-    
+ 
 }
 
 - (void) setItem:(MessageTableItemText *)item {
@@ -111,9 +108,6 @@
         [_webpageContainerView setItem:item];
         
         [_webpageContainerView setWebpage:item.webpage];
-        
-        
-        
         
     } else {
         [_webpageContainerView removeFromSuperview];
@@ -215,8 +209,6 @@
     [self.webpageContainerView.descriptionField pop_addAnimation:animation forKey:@"background"];
     
 }
-
-
 
 -(void)_colorAnimationEvent {
     

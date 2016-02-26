@@ -60,8 +60,6 @@
 -(void)_didDownloadImage:(DownloadItem *)item {
     NSImage *image = [[NSImage alloc] initWithData:item.result];
     
-    
-    
     [[ASQueue mainQueue] dispatchOnQueue:^{
         [self.delegate didDownloadImage:image object:self];
     }];

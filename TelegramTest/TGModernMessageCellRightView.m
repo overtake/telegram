@@ -24,7 +24,6 @@
 
 -(instancetype)initWithFrame:(NSRect)frameRect {
     if(self = [super initWithFrame:frameRect]) {
-        self.backgroundColor = [NSColor redColor];
         _dateLabel = [[TGTextLabel alloc] init];
         
         [self addSubview:_dateLabel];
