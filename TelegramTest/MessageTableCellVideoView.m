@@ -100,22 +100,6 @@ static NSImage *playImage() {
 }
 
 
--(void)drawRect:(NSRect)dirtyRect {
-    [super drawRect:dirtyRect];
-    
-    const int borderOffset = self.imageView.borderWidth;
-    const int borderSize = borderOffset*2;
-    
-    NSRect rect = NSMakeRect(self.containerView.frame.origin.x-borderOffset, NSMinY(self.containerView.frame) + NSHeight(self.containerView.frame) - NSHeight(self.imageView.frame) - borderOffset, NSWidth(self.imageView.frame)+borderSize, NSHeight(self.imageView.frame)+borderSize);
-    
-    NSBezierPath *path = [NSBezierPath bezierPathWithRoundedRect:rect xRadius:self.imageView.cornerRadius yRadius:self.imageView.cornerRadius];
-    [path addClip];
-    
-    
-    [self.imageView.borderColor set];
-    NSRectFill(rect);
-}
-
 -(void)setEditable:(BOOL)editable animation:(BOOL)animation
 {
     [super setEditable:editable animation:animation];
