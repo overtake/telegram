@@ -273,7 +273,7 @@ static NSCache *cItems;
         [self.forwardMessageAttributedString setFont:TGSystemFont(12) forRange:self.forwardMessageAttributedString.range];
         
         
-        if(self.message.fwd_from.channel_id != 0 && !self.message.chat.isMegagroup && self.message.fwd_from.from_id != 0) {
+        if(self.message.fwd_from.channel_id != 0 && !self.fwd_chat.isMegagroup && self.message.fwd_from.from_id != 0) {
             [self.forwardMessageAttributedString appendString:@" (" withColor:LINK_COLOR];
             NSRange r = [self.forwardMessageAttributedString appendString:[NSString stringWithFormat:@"%@",self.fwd_user.first_name] withColor:LINK_COLOR];
             [self.forwardMessageAttributedString appendString:@")" withColor:LINK_COLOR];

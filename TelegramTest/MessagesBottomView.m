@@ -358,7 +358,7 @@
         
         int defadd = _channelAdminButton.isHidden ? 0 : 30;
         
-        [_silentModeButton setFrameOrigin:NSMakePoint(self.inputMessageTextField.containerView.frame.size.width - (_botCommandButton.isHidden ? 60+defadd : 90+defadd), NSMinY(_channelAdminButton.frame))];
+        [_silentModeButton setFrameOrigin:NSMakePoint(self.inputMessageTextField.containerView.frame.size.width - (_botCommandButton.isHidden ? 60+defadd : 90+defadd), NSMinY(_silentModeButton.frame))];
     }
     
     
@@ -623,8 +623,7 @@
     [self.inputMessageTextField.containerView addSubview:self.channelAdminButton];
     
     
-    
-    self.silentModeButton = [[BTRButton alloc] initWithFrame:NSMakeRect(self.inputMessageTextField.containerView.frame.size.width - 90, 7, image_ConversationInputFieldBroadcastIconInactive().size.width, image_ConversationInputFieldBroadcastIconInactive().size.height)];
+    self.silentModeButton = [[BTRButton alloc] initWithFrame:NSMakeRect(self.inputMessageTextField.containerView.frame.size.width - 90, 4, image_ConversationInputFieldBroadcastIconInactive().size.width, image_ConversationInputFieldBroadcastIconInactive().size.height)];
     [self.silentModeButton setAutoresizingMask:NSViewMinXMargin | NSViewMinYMargin];
     [self.silentModeButton.layer disableActions];
     
