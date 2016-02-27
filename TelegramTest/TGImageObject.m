@@ -135,7 +135,7 @@
     
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        pool = [[SThreadPool alloc] initWithThreadCount:10 threadPriority:1];
+        pool = [[SThreadPool alloc] initWithThreadCount:3 threadPriority:0.5];
     });
     
     

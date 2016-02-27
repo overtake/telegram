@@ -125,7 +125,6 @@
         }
         
         [_forwardContainerView setFrameSize:_contentContainerView.frame.size];
-        
         [_forwardContainerView setTableItem:item contentView:_contentView containerView:self];
         
         
@@ -193,8 +192,6 @@
 }
 
 
-
-
 - (void)checkActionState:(BOOL)animated {
     
     MessageTableCellState state;
@@ -254,18 +251,7 @@
 -(void)setItem:(MessageTableItem *)item {
     [super setItem:item];
     
-//    static NSMutableDictionary *d;
-//    static dispatch_once_t onceToken;
-//    dispatch_once(&onceToken, ^{
-//        d = [NSMutableDictionary dictionary];
-//    });
-//    
-//    
-//   // assert(d[@(item.message.n_id)] == nil);
-//    d[@(item.message.n_id)] = item.message;
-//    
-//    
-  //  self.layer.backgroundColor = item.rowId % 2 == 0 ? [NSColor blueColor].CGColor : [NSColor greenColor].CGColor;
+    self.layer.backgroundColor = item.rowId % 2 == 0 ? [NSColor blueColor].CGColor : [NSColor greenColor].CGColor;
     
     int xStartContentOffset = item.isHeaderMessage ? item.headerSize.height + item.contentHeaderOffset + item.defaultContentOffset : item.defaultContentOffset;
     

@@ -827,13 +827,15 @@ NSImage *renderedImage(NSImage * oldImage, NSSize size) {
         layer = [CALayer layer];
     }
     
-    
+    [[NSGraphicsContext currentContext] saveGraphicsState];
     
     NSImage *image = nil;
     CGFloat displayScale = [[NSScreen mainScreen] backingScaleFactor];
     
     size.width *= displayScale;
     size.height *= displayScale;
+    
+    
     
     CGImageSourceRef source = CGImageSourceCreateWithData((__bridge CFDataRef)[oldImage TIFFRepresentation], NULL);
     
@@ -866,6 +868,7 @@ NSImage *renderedImage(NSImage * oldImage, NSSize size) {
     }
 
     
+    [[NSGraphicsContext currentContext] restoreGraphicsState];
     
     
     return image;

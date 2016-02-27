@@ -64,12 +64,15 @@ static NSTextField *testTextField() {
     CGRect bounds = CTLineGetBoundsWithOptions(line, 0);
     bounds.origin = CGPointZero;
     bounds.size.width = MIN(ceil(bounds.size.width),width);
-    bounds.size.height = floor(bounds.size.height);
+    bounds.size.height = ceil(bounds.size.height);
     
     if(expectType & CoreTextSizeExpectEmojiType) {
-        if([self.string emojiString].length > 0) {
-            bounds.size.height-=6;
-        }
+        
+        CGFloat ascent;
+        CGFloat descent;
+        CGFloat leading;
+        CTLineGetTypographicBounds(line, &ascent, &descent, &leading);
+        
     }
     
     CFRelease(line);

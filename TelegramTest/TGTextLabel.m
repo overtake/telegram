@@ -95,8 +95,6 @@
                     
                     NSRange range;
                     
-                    
-                    
                     int position = (int) CTLineGetStringIndexForPosition(_line, NSMakePoint(maxWidth - 22, 0));
                     
 
@@ -146,8 +144,6 @@
                     CGRect frame = self.frame;
                     frame.size = bounds.size;
                     self.frame = frame;
-                } else {
-                    [self setNeedsDisplay:YES];
                 }
                 
                 if (needsContentUpdate)
@@ -157,7 +153,7 @@
         }
     }
     
-    //[self setNeedsDisplay:YES];
+    [self setNeedsDisplay:YES];
 }
 
 
@@ -186,6 +182,8 @@
     
     [self.backgroundColor setFill];
     
+    [[NSGraphicsContext currentContext] saveGraphicsState];
+    
     CGContextRef context = (CGContextRef)[[NSGraphicsContext currentContext]
                                           graphicsPort];
     
@@ -196,21 +194,19 @@
     NSRectFill(self.bounds);
     
     if (_line != NULL) {
+        
+        
         CGFloat ascent;
         CGFloat descent;
-        // Calculate the line height
-     //   CTLineGetTypographicBounds(_line, &ascent, &descent, nil);
+        CTLineGetTypographicBounds(_line, &ascent, &descent, NULL);
+      //  CGContextSetTextPosition(context, 0.0, (ascent + descent)-ascent);
         
-        CGContextSetTextPosition(context, 0.0f, 3);
-        
-        
-        
-        
+        CGContextSetTextPosition(context, 0.0f, 2);
         CTLineDraw(_line, context);
     }
     
    
-    
+    [[NSGraphicsContext currentContext] restoreGraphicsState];
 
 }
 
