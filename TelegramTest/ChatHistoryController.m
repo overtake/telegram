@@ -400,7 +400,6 @@ static ChatHistoryController *observer;
                     
                 }];
                 
-                
 
                 
             }];
@@ -596,18 +595,25 @@ static ChatHistoryController *observer;
     
     [self.queue dispatchOnQueue:^{
         
-        [self addMessageWithoutSavingState:message];
+        @try {
+            [self addMessageWithoutSavingState:message];
+            
+            [[Storage manager] addHolesAroundMessage:message];
+            
+            [[Storage manager] insertMessages:@[message]];
+            
+            
+            NSMutableArray *prevResult = [NSMutableArray array];
+            NSMutableArray *nextResult = [NSMutableArray array];
+            
+            self.proccessing = YES;
+            [self loadAroundMessagesWithSelectHandler:selectHandler prevLimit:(int)prevLimit nextLimit:(int)nextLimit prevResult:prevResult nextResult:nextResult];
+
+        }
+        @catch (NSException *exception) {
+            
+        }
         
-        [[Storage manager] addHolesAroundMessage:message];
-        
-        [[Storage manager] insertMessages:@[message]];
-        
-        
-        NSMutableArray *prevResult = [NSMutableArray array];
-        NSMutableArray *nextResult = [NSMutableArray array];
-        
-        self.proccessing = YES;
-        [self loadAroundMessagesWithSelectHandler:selectHandler prevLimit:(int)prevLimit nextLimit:(int)nextLimit prevResult:prevResult nextResult:nextResult];
         
         
     } synchronous:YES];
