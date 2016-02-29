@@ -6,10 +6,10 @@
 //  Copyright (c) 2014 keepcoder. All rights reserved.
 //
 
-#import "MessageTableCellContainerView.h"
+#import "TGModernMessageCellContainerView.h"
 #import "MessageTableItemGif.h"
 
-@interface MessageTableCellGifView : MessageTableCellContainerView
+@interface MessageTableCellGifView : TGModernMessageCellContainerView
 
 - (void)resumeAnimation;
 - (void)pauseAnimation;

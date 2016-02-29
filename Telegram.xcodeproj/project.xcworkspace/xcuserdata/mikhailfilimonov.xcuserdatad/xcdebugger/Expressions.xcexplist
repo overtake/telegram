@@ -3628,6 +3628,9 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "-[TGWebpageContainer showPhoto]:TGWebpageContainer.m">
+      </ContextState>
+      <ContextState
          contextName = "-[DialogTableView initWithFrame:]:DialogTableView.m">
          <PersistentStrings>
             <PersistentString
@@ -3849,6 +3852,17 @@
             </PersistentString>
             <PersistentString
                value = "self.listSelectedElementHash">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[TGModernMessageCellContainerView checkAndMakeHeaderContainer:]:TGModernMessageCellContainerView.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "item.headerSize.height">
+            </PersistentString>
+            <PersistentString
+               value = "item.headerName">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -5789,6 +5803,17 @@
          <PersistentStrings>
             <PersistentString
                value = "self.frame">
+            </PersistentString>
+            <PersistentString
+               value = "_rightView.frame">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[TGModernMessageCellRightView setItem:container:]:TGModernMessageCellRightView.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "item.dateSize.height">
             </PersistentString>
          </PersistentStrings>
       </ContextState>

@@ -12,5 +12,5 @@
 #import "BluredPhotoImageView.h"
 
 @interface MessageTableCellVideoView : TGModernMessageCellContainerView
-@property (nonatomic, strong) BluredPhotoImageView *imageView;
+@property (nonatomic, strong) TGImageView *imageView;
 @end

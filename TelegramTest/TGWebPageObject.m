@@ -24,10 +24,11 @@
 
 
 
--(id)initWithWebPage:(TLWebPage *)webpage {
+-(id)initWithWebPage:(TLWebPage *)webpage tableItem:(MessageTableItem *)item {
     if(self = [super init]) {
         
         _webpage = webpage;
+        _tableItem = item;
         
         
         NSMutableParagraphStyle *style = [NSMutableParagraphStyle new];
@@ -186,40 +187,28 @@
     return NSClassFromString(@"TGWebpageContainer");
 }
 
-+(id)objectForWebpage:(TLWebPage *)webpage {
++(id)objectForWebpage:(TLWebPage *)webpage tableItem:(MessageTableItem *)item {
     
-    
-#ifdef TGDEBUG
-    
-   // if(!ACCEPT_FEATURE)
-     //   return nil;
-    
-#endif
-    
-    
-
     
     if([webpage.site_name isEqualToString:@"YouTube"] && [webpage.type isEqualToString:@"video"])
     {
-        return [[TGWebpageYTObject alloc] initWithWebPage:webpage];
+        return [[TGWebpageYTObject alloc] initWithWebPage:webpage tableItem:item];
     }
     
     if([webpage.site_name isEqualToString:@"Instagram"])
     {
-        return [[TGWebpageIGObject alloc] initWithWebPage:webpage];
+        return [[TGWebpageIGObject alloc] initWithWebPage:webpage tableItem:item];
     }
     
     if([webpage.site_name isEqualToString:@"Twitter"])
     {
-        return [[TGWebpageTWObject alloc] initWithWebPage:webpage];
+        return [[TGWebpageTWObject alloc] initWithWebPage:webpage tableItem:item];
     }
-    
-    
     
     
     if([webpage.type isEqualToString:@"article"] || [webpage.type isEqualToString:@"app"])
     {
-        return [[TGWebpageArticle alloc] initWithWebPage:webpage];
+        return [[TGWebpageArticle alloc] initWithWebPage:webpage tableItem:item];
     }
     
     if([webpage.type isEqualToString:@"document"] || [webpage.type isEqualToString:@"gif"]) {
@@ -227,14 +216,14 @@
         id animated = [webpage.document attributeWithClass:[TL_documentAttributeAnimated class]];
         
         if([webpage.document.mime_type isEqualToString:@"video/mp4"] && animated)
-            return [[TGWebpageGifObject alloc] initWithWebPage:webpage];
+            return [[TGWebpageGifObject alloc] initWithWebPage:webpage tableItem:item];
     }
     
     if([webpage.type isEqualToString:@"document"] && webpage.document != nil) {
-        return [[TGWebpageDocumentObject alloc] initWithWebPage:webpage];
+        return [[TGWebpageDocumentObject alloc] initWithWebPage:webpage tableItem:item];
     }
     
-    return [[TGWebpageStandartObject alloc] initWithWebPage:webpage];
+    return [[TGWebpageStandartObject alloc] initWithWebPage:webpage tableItem:item];
     
 }
 

@@ -26,8 +26,9 @@
         
         dispatch_block_t block = ^{
             MessageTableItemContact *contactItem = (MessageTableItemContact *)weakSelf.item;
-            if(contactItem.contactUser)
-                [TMInAppLinks parseUrlAndDo:[TMInAppLinks userProfile:contactItem.user_id]];
+            if(contactItem.contactUser) {
+                open_link([TMInAppLinks userProfile:contactItem.user_id]);
+            }
         };
         
         self.contactImageView = [TMAvatarImageView standartMessageTableAvatar];
@@ -57,7 +58,7 @@
 }
 
 - (void) textField:(id)textField handleURLClick:(NSString *)url {
-    [TMInAppLinks parseUrlAndDo:url];
+    open_link(url);
 }
 
 - (void)setItem:(MessageTableItemContact *)item {

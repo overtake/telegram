@@ -32,6 +32,7 @@
 @implementation TGModernMessageCellContainerView
 
 @synthesize progressView = _progressView;
+@synthesize isEditable = _isEditable;
 
 - (void)drawRect:(NSRect)dirtyRect {
     [super drawRect:dirtyRect];
@@ -55,7 +56,7 @@
         //container
         {
             _contentContainerView = [[TMView alloc] initWithFrame:NSZeroRect];
-           // _contentContainerView.backgroundColor = [NSColor redColor];
+          //  _contentContainerView.backgroundColor = [NSColor redColor];
             _contentContainerView.isFlipped = YES;
             
             _contentView = [[TMView alloc] initWithFrame:NSZeroRect];
@@ -91,7 +92,6 @@
         
         if(!_nameView) {
             _nameView = [[TGTextLabel alloc] initWithText:nil maxWidth:0];
-          //  _nameView.backgroundColor = [NSColor blackColor];
             [self addSubview:_nameView];
         }
         
@@ -112,7 +112,6 @@
 }
 
 -(void)chekAndMakeForwardContainer:(MessageTableItem *)item {
-    
     
     if(item.isForwadedMessage) {
         
@@ -168,7 +167,7 @@
             [self addSubview:_rightView];
         }
         
-        [_rightView setFrame:NSMakeRect(item.cellWidth - item.defaultContainerOffset - item.rightSize.width, item.defaultContentOffset, item.rightSize.width, item.rightSize.height)];
+        [_rightView setFrame:NSMakeRect(item.cellWidth - item.defaultContainerOffset - item.rightSize.width, item.defaultContentOffset, item.rightSize.width, image_checked().size.height)];
         [_rightView setItem:item container:self];
         
     } else {
@@ -176,6 +175,8 @@
         _rightView = nil;
     }
     
+    [self setEditable:self.messagesViewController.state == MessagesViewControllerStateEditable animated:NO];
+    [self setSelected:self.item.isSelected animated:NO];
 }
 
 
@@ -251,11 +252,11 @@
 -(void)setItem:(MessageTableItem *)item {
     [super setItem:item];
     
-    self.layer.backgroundColor = item.rowId % 2 == 0 ? [NSColor blueColor].CGColor : [NSColor greenColor].CGColor;
+  //  self.layer.backgroundColor = item.rowId % 2 == 0 ? [NSColor blueColor].CGColor : [NSColor greenColor].CGColor;
     
-    int xStartContentOffset = item.isHeaderMessage ? item.headerSize.height + item.contentHeaderOffset + item.defaultContentOffset : item.defaultContentOffset;
+    int yStartContentOffset = item.isHeaderMessage ? item.headerSize.height + item.contentHeaderOffset + item.defaultContentOffset : item.defaultContentOffset;
     
-    [_contentContainerView setFrame:NSMakeRect(item.startContentOffset,xStartContentOffset, item.viewSize.width, item.viewSize.height - xStartContentOffset)];
+    [_contentContainerView setFrame:NSMakeRect(item.startContentOffset,yStartContentOffset, item.viewSize.width, item.viewSize.height - yStartContentOffset)];
     
     [_contentView setFrame:NSMakeRect(0, 0, item.blockSize.width, item.blockSize.height)];
     
@@ -273,5 +274,141 @@
 - (void)setRightLayerToEditablePosition:(BOOL)editable {
     
 }
+
+
+static MessageTableItem *dateEditItem;
+static BOOL mouseIsDown = NO;
+static bool dragAction = NO;
+
+
+-(void)mouseUp:(NSEvent *)theEvent {
+    [super mouseUp:theEvent];
+    
+    mouseIsDown = NO;
+}
+
+
+-(void)scrollWheel:(NSEvent *)theEvent {
+    [super scrollWheel:theEvent];
+    
+    if(self.messagesViewController.state != MessagesViewControllerStateEditable)
+    return;
+    if([NSEvent pressedMouseButtons] == 1)
+    [self acceptEvent:theEvent];
+}
+
+
+-(BOOL)acceptEvent:(NSEvent *)theEvent {
+    
+    if(!self.isEditable)
+    return false;
+    
+    NSPoint pos = [self.messagesViewController.table convertPoint:[theEvent locationInWindow] fromView:nil];
+    
+    
+    NSUInteger row = [self.messagesViewController.table rowAtPoint:pos];
+    
+    if(row != NSUIntegerMax) {
+        
+        NSTableRowView *rowView = [self.messagesViewController.table rowViewAtRow:row makeIfNecessary:NO];
+        
+        TGModernMessageCellContainerView *container = [[rowView subviews] objectAtIndex:0];
+        if(container && [container isKindOfClass:[TGModernMessageCellContainerView class]]) {
+            
+            if(container.item.isSelected != dragAction) {
+                [container setSelected:dragAction animated:YES];
+                [self.messagesViewController setSelectedMessage:container.item selected:self.item.isSelected];
+            }
+            
+        }
+        
+    }
+    
+    return true;
+    
+}
+
+-(void)mouseDown:(NSEvent *)theEvent {
+    
+    
+    if(self.item.messageSender)
+        return;
+    
+    if(self.messagesViewController.state == MessagesViewControllerStateNone && theEvent == nil) {
+        [self.messagesViewController setCellsEditButtonShow:self.messagesViewController.state != MessagesViewControllerStateEditable animated:YES];
+        [self mouseDown:nil];
+        
+        dateEditItem = self.item;
+        
+        return;
+    }
+   
+    if(!self.isEditable) {
+        [super mouseDown:[NSApp currentEvent]];
+        
+        return;
+    }
+    
+    [self checkDateEditItem];
+    
+    mouseIsDown = YES;
+    
+    [self setSelected:!self.item.isSelected animated:theEvent != nil];
+    [self.messagesViewController setSelectedMessage:self.item selected:self.item.isSelected];
+    
+    dragAction = self.item.isSelected;
+
+}
+
+-(void)mouseDragged:(NSEvent *)theEvent {
+    
+    if(![self acceptEvent:theEvent]) {
+        [super mouseDragged:theEvent];
+    }
+}
+
+-(void)setSelected:(BOOL)selected animated:(BOOL)animated {
+    
+    animated = animated && self.item.isSelected != selected;
+    
+    [self.rightView setSelected:selected animated:animated];
+    
+    if(animated && NSHeight(self.visibleRect) > 0) {
+        
+        NSColor *color = selected ? NSColorFromRGB(0xf7f7f7) : NSColorFromRGB(0xffffff);
+        NSColor *oldColor = !selected ? NSColorFromRGB(0xf7f7f7) : NSColorFromRGB(0xffffff);
+        
+        POPBasicAnimation *animation = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerBackgroundColor];
+        animation.fromValue = (__bridge id)(oldColor.CGColor);
+        animation.toValue = (__bridge id)(color.CGColor);
+        animation.duration = 0.2;
+        animation.removedOnCompletion = YES;
+        [self _didChangeBackgroundColorWithAnimation:animation toColor:color];
+        
+        [self.layer pop_addAnimation:animation forKey:@"background"];
+        
+    } else {
+        NSColor *color = selected ? NSColorFromRGB(0xf7f7f7) : NSColorFromRGB(0xffffff);
+        [self.layer setBackgroundColor:color.CGColor];
+        [self _didChangeBackgroundColorWithAnimation:nil toColor:color];
+    }
+    
+    
+}
+
+-(void)checkDateEditItem {
+    if(dateEditItem == self.item && self.messagesViewController.selectedMessages.count == 1) {
+        [self.messagesViewController setCellsEditButtonShow:NO animated:YES];
+        dateEditItem = nil;
+    }
+}
+
+-(void)setEditable:(BOOL)editable animated:(BOOL)animated {
+    
+    _isEditable = editable;
+    
+    [_rightView setEditable:editable animated:animated];
+}
+
 
 @end

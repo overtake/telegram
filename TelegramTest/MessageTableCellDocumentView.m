@@ -643,9 +643,6 @@ static NSImage *attachBackgroundThumb() {
     }
 }
 
-- (void)redrawThumb:(NSImage *)image {
-    [self.thumbView setImage:image];
-}
 
 - (void)open {
     

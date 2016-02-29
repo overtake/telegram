@@ -254,7 +254,7 @@
         if(self.url_delegate) {
             [self.url_delegate textField:self handleURLClick:[urlAtMouse absoluteString]];
         } else {
-            [TMInAppLinks parseUrlAndDo:[urlAtMouse absoluteString]];
+            open_link([urlAtMouse absoluteString]);
         }
 	}
 

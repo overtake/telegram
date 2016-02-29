@@ -14,6 +14,5 @@
 
 + (NSString *)peerProfile:(TLPeer*)peer;
 + (NSString *)peerProfile:(TLPeer*)peer jumpId:(int)jump_id;
-+ (void) parseUrlAndDo:(NSString *)url;
 
 @end

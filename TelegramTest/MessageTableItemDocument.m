@@ -18,7 +18,7 @@
 
 #import "MessageTableCellDocumentView.h"
 #import "NSString+Extended.h"
-
+#import "MessageTableCellDocumentView.h"
 @implementation MessageTableItemDocument
 
 - (BOOL)isHasThumb {
@@ -29,9 +29,6 @@
     self = [super initWithObject:object];
     if(self) {
         self.fileName = self.message.media.document.file_name;
-        if(!self.fileName)
-            self.fileName = @"undefined.file";
-        
         
         self.fileSize = [[NSString sizeToTransformedValuePretty:self.message.media.document.size] trim];
         
@@ -50,7 +47,7 @@
             self.thumbSize = NSMakeSize(70, 70);
             
         } else {
-            self.thumbSize = NSMakeSize(48, 48);
+            self.thumbSize = NSMakeSize(50, 50);
         }
         
         self.thumbObject = [[TGImageObject alloc] initWithLocation:self.message.media.document.thumb.location placeHolder:self.cachedThumb];
@@ -69,6 +66,14 @@
         
     }
     return self;
+}
+
+-(BOOL)makeSizeByWidth:(int)width {
+    [super makeSizeByWidth:width];
+    
+    self.blockSize = NSMakeSize(width, self.thumbSize.height);
+    
+    return YES;
 }
 
 -(NSString *)fileName {
@@ -120,6 +125,10 @@
 
 - (BOOL)needUploader {
     return YES;
+}
+
+-(Class)viewClass {
+    return [MessageTableCellDocumentView class];
 }
 
 @end

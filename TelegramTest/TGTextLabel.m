@@ -171,11 +171,9 @@
     }
 }
 
+
 -(void)drawRect:(NSRect)dirtyRect
 {
-
-   
-    
     if(self.backgroundColor == nil) {
         self.backgroundColor = [NSColor whiteColor];
     }
@@ -201,13 +199,104 @@
         CTLineGetTypographicBounds(_line, &ascent, &descent, NULL);
       //  CGContextSetTextPosition(context, 0.0, (ascent + descent)-ascent);
         
-        CGContextSetTextPosition(context, 0.0f, 2);
+        CGContextSetTextPosition(context, 0.0f, 3);
         CTLineDraw(_line, context);
     }
     
    
     [[NSGraphicsContext currentContext] restoreGraphicsState];
 
+}
+
+
+-(NSString *)linkAtPoint:(NSPoint)location hitTest:(BOOL *)hitTest itsReal:(BOOL *)itsReal {
+    
+    if(!_line)
+        return nil;
+    
+    if([self mouse:location inRect:self.bounds]) {
+        
+        
+        @try {
+            
+            CGFloat ascent,descent,leading;
+            
+            int width = CTLineGetTypographicBounds(_line, &ascent, &descent, &leading);
+            
+            if( (NSMinX(self.frame) + width) > location.x) { // && location.x > NSMinX(self.frame)
+                NSRange range;
+                
+                int position = (int) CTLineGetStringIndexForPosition(_line, location);
+                
+                NSString *link;
+                
+                if(position < 0)
+                    position = 0;
+                if(position >= self.text.length)
+                    position = (int)self.text.length - 1;
+                
+                
+                NSDictionary *attrs = [self.text attributesAtIndex:position effectiveRange:&range];
+                link = [attrs objectForKey:NSLinkAttributeName];
+                
+                if(link.length > 0) {
+                    NSString *real = [self.text.string substringWithRange:range];
+                    
+                    *itsReal = [link isEqualToString:real];
+                }
+                
+                *hitTest = YES;
+                
+                return link;
+            }
+        }
+        @catch (NSException *exception) {
+            return nil;
+        }
+        
+    }
+    
+    return nil;
+}
+
+-(void)mouseUp:(NSEvent *)theEvent {
+    
+    
+     if(_line) {
+        NSPoint location = [self convertPoint:[theEvent locationInWindow] fromView:nil];
+        
+        BOOL hitTest,itsReal;
+        NSString *link = [self linkAtPoint:location hitTest:&hitTest itsReal:&itsReal];
+        
+        if(link) {
+            [self open_link:link itsReal:itsReal];
+        }
+    }
+    
+    [[NSCursor arrowCursor] set];
+}
+
+
+-(void)open_link:(NSString *)link  itsReal:(BOOL)itsReal {
+    
+    itsReal = itsReal || [link rangeOfString:@"chat://"].location != NSNotFound;
+    
+    if(itsReal) {
+        if(_linkCallback == nil)
+            open_link(link);
+        else
+        _linkCallback(link);
+    } else {
+        confirm(appName(), [NSString stringWithFormat:@"Open this link: %@?",link], ^{
+            
+            if(_linkCallback == nil)
+            open_link(link);
+            else
+            _linkCallback(link);
+            
+        }, nil);
+    }
+    
 }
 
 @end

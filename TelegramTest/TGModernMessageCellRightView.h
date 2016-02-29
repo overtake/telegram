@@ -18,4 +18,6 @@
 -(void)setEditable:(BOOL)editable animated:(BOOL)animated;
 -(void)setState:(MessageTableCellState)actionState animated:(BOOL)animated;
 
+- (void)setSelected:(BOOL)isSelected animated:(BOOL)animated;
+
 @end

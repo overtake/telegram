@@ -355,9 +355,7 @@ NSImage *selectCheckActiveImage() {
     [self setRightLayerToEditablePosition:self.isEditable];
 }
 
-- (void)setSelected:(BOOL)isSelected {
-    [self setSelected:isSelected animation:NO];
-}
+
 
 - (void)searchSelection {
     NSColor *color = NSColorFromRGB(0xffffff);
@@ -390,187 +388,14 @@ NSImage *selectCheckActiveImage() {
     return self.item.isSelected;
 }
 
-- (void)setSelected:(BOOL)isSelected animation:(BOOL)animation {
-    
-    
-    if([self isEditable])
-        [self initSelectButton];
-    else {
-        [self deallocSelectButton];
-    }
-    
-    animation = animation && self.item.isSelected != isSelected;
-    
-    self.item.isSelected = isSelected;
-    
-    
-
-    [self.selectButton setSelected:isSelected];
-    
-    if(self.selectButton.layer.anchorPoint.x != 0.5) {
-        CGPoint point = self.selectButton.layer.position;
-        
-        point.x += roundf(image_checked().size.width / 2);
-        point.y += roundf(image_checked().size.height / 2);
-        
-        self.selectButton.layer.position = point;
-        self.selectButton.layer.anchorPoint = CGPointMake(0.5, 0.5);
-    }
-    
-    if(self.selectButton.isSelected) {
-        [self.selectButton setBackgroundImage:selectCheckActiveImage() forControlState:BTRControlStateNormal];
-        [self.selectButton setBackgroundImage:selectCheckActiveImage() forControlState:BTRControlStateHover];
-        [self.selectButton setBackgroundImage:selectCheckActiveImage() forControlState:BTRControlStateHighlighted];
-    } else {
-        [self.selectButton setBackgroundImage:selectCheckImage() forControlState:BTRControlStateNormal];
-        [self.selectButton setBackgroundImage:selectCheckImage() forControlState:BTRControlStateHover];
-        [self.selectButton setBackgroundImage:selectCheckImage() forControlState:BTRControlStateHighlighted];
-    }
-    
-    NSColor *color;
-    if(animation) {
-        float duration = 1 / 18.f;
-        float to = 0.9;
-        
-        POPBasicAnimation *scaleAnimation = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerScaleXY];
-        scaleAnimation.fromValue  = [NSValue valueWithCGSize:CGSizeMake(1.0f, 1.0f)];
-        scaleAnimation.toValue  = [NSValue valueWithCGSize:CGSizeMake(to, to)];
-        scaleAnimation.duration = duration / 2;
-        
-        weak();
-        
-        [scaleAnimation setCompletionBlock:^(POPAnimation *anim, BOOL result) {
-            if(result) {
-                POPBasicAnimation *scaleAnimation = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerScaleXY];
-                scaleAnimation.fromValue  = [NSValue valueWithCGSize:CGSizeMake(to, to)];
-                scaleAnimation.toValue  = [NSValue valueWithCGSize:CGSizeMake(1.0f, 1.0f)];
-                scaleAnimation.duration = duration / 2;
-                [weakSelf.selectButton.layer pop_addAnimation:scaleAnimation forKey:@"scale"];
-            }
-        }];
-        
-        [self.selectButton.layer pop_addAnimation:scaleAnimation forKey:@"scale"];
-        
-        color = isSelected ? NSColorFromRGB(0xf7f7f7) : NSColorFromRGB(0xffffff);
-        NSColor *oldColor = !isSelected ? NSColorFromRGB(0xf7f7f7) : NSColorFromRGB(0xffffff);
-        
-        [self.layer pop_animationForKey:@"background"];
-        
-        POPBasicAnimation *animation = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerBackgroundColor];
-        animation.fromValue = (__bridge id)(oldColor.CGColor);
-        animation.toValue = (__bridge id)(color.CGColor);
-        animation.duration = 0.2;
-        animation.removedOnCompletion = YES;
-        [self _didChangeBackgroundColorWithAnimation:animation toColor:color];
-        
-        [self.layer pop_addAnimation:animation forKey:@"background"];
-        
-    } else {
-        color = isSelected ? NSColorFromRGB(0xf7f7f7) : NSColorFromRGB(0xffffff);
-        [self.layer setBackgroundColor:color.CGColor];
-        [self _didChangeBackgroundColorWithAnimation:nil toColor:color];
-    }
-    
-}
 
 
 static MessageTableItem *dateEditItem;
-
 static BOOL mouseIsDown = NO;
 
--(void)mouseUp:(NSEvent *)theEvent {
-    [super mouseUp:theEvent];
-    
-    mouseIsDown = NO;
-}
 
 
--(void)scrollWheel:(NSEvent *)theEvent {
-    [super scrollWheel:theEvent];
-    
-    if(self.messagesViewController.state != MessagesViewControllerStateEditable)
-        return;
-    if([NSEvent pressedMouseButtons] == 1)
-        [self acceptEvent:theEvent];
-}
 
-
--(BOOL)acceptEvent:(NSEvent *)theEvent {
-    
-    if(!self.isEditable)
-        return false;
-        
-    NSPoint pos = [self.messagesViewController.table convertPoint:[theEvent locationInWindow] fromView:nil];
-    
-    
-    NSUInteger row = [self.messagesViewController.table rowAtPoint:pos];
-    
-    if(row != NSUIntegerMax) {
-        
-        NSTableRowView *rowView = [self.messagesViewController.table rowViewAtRow:row makeIfNecessary:NO];
-        
-        MessageTableCellContainerView *container = [[rowView subviews] objectAtIndex:0];
-        if(container && [container isKindOfClass:[MessageTableCellContainerView class]]) {
-            
-            if(container.item.isSelected != dragAction) {
-                [container setSelected:dragAction animation:YES];
-                [self.messagesViewController setSelectedMessage:container.item selected:self.item.isSelected];
-            }
-            
-        }
-        
-    }
-    
-    return true;
-
-}
-
-static BOOL dragAction = NO;
-
-- (void)mouseDown:(NSEvent *)theEvent {
-    
-    
-    
-    if(self.item.messageSender)
-        return;
-    
-    NSPoint pos = [self.rightView convertPoint:[theEvent locationInWindow] fromView:nil];
-    
-    if(NSPointInRect(pos, self.dateLayer.frame)) {
-        if(self.messagesViewController.state == MessagesViewControllerStateNone) {
-            [self.messagesViewController setCellsEditButtonShow:self.messagesViewController.state != MessagesViewControllerStateEditable animated:YES];
-            [self mouseDown:theEvent];
-            
-            dateEditItem = self.item;
-            
-            
-            return;
-        }
-    }
-    
-    
-    
-    if(!self.isEditable) {
-        [super mouseDown:theEvent];
-        
-        return;
-    }
-    
-    [self checkDateEditItem];
-    
-    
-    [self.window makeFirstResponder:self];
-    
-    
-    mouseIsDown = YES;
-    
-    self.item.isSelected = !self.item.isSelected;
-    [self setSelected:self.item.isSelected animation:YES];
-    [self.messagesViewController setSelectedMessage:self.item selected:self.item.isSelected];
-    
-    dragAction = self.item.isSelected;
-    
-}
 
 -(void)checkDateEditItem {
     //dateEditItem == self.item
@@ -634,12 +459,7 @@ static BOOL dragAction = NO;
     
 }
 
--(void)mouseDragged:(NSEvent *)theEvent {
-    
-    if(![self acceptEvent:theEvent]) {
-        [super mouseDragged:theEvent];
-    }
-}
+
 
 - (void)setItem:(MessageTableItem *)item {
     
@@ -899,10 +719,6 @@ static int offsetEditable = 30;
         }
     }];
     [self.selectButton.layer pop_addAnimation:opacityAnim forKey:@"slide"];
-    
-    
-    
-    
     
 }
 

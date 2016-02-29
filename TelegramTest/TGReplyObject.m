@@ -77,7 +77,6 @@
     }
     
     
-    
     NSMutableParagraphStyle *style = [[NSMutableParagraphStyle alloc] init];
     style.lineBreakMode = NSLineBreakByTruncatingTail;
     
@@ -89,14 +88,9 @@
     
     _replyHeight = [_replyText coreTextSizeOneLineForWidth:INT32_MAX].height;
     
-
-    
-    
     _replyHeaderHeight = [replyHeader coreTextSizeOneLineForWidth:INT32_MAX].height;
     
     _containerHeight = _replyHeaderHeight + _replyHeight + 3;
-    
-    
     
     if([_replyMessage.media isKindOfClass:[TL_messageMediaPhoto class]]) {
         
@@ -113,8 +107,6 @@
         }
         
         TLPhotoSize *photoSize = photo.sizes[0];
-        
-        
         
         _replyThumb = [[TGArticleImageObject alloc] initWithLocation:!thumb ? photoSize.location : nil placeHolder:thumb];
         
@@ -166,9 +158,7 @@
             
         }
     }
-    
-    
-    
+
   
 }
 
@@ -208,8 +198,6 @@
         
         
         if(response.messages.count == 1 ) {
-            
-            
             
             NSMutableArray *messages = [response.messages mutableCopy];
             [[response messages] removeAllObjects];

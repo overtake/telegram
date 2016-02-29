@@ -14,4 +14,8 @@
 
 -(TMView *)containerView;
 
+
+-(void)setSelected:(BOOL)selected animated:(BOOL)animated;
+-(void)setEditable:(BOOL)editable animated:(BOOL)animated;
+
 @end

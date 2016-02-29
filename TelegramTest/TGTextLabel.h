@@ -21,4 +21,8 @@
 - (void)setText:(NSAttributedString *)text maxWidth:(CGFloat)maxWidth height:(int)height;
 - (NSAttributedString *)text;
 - (void)setMaxWidth:(CGFloat)maxWidth;
+
+
+@property (nonatomic,copy) void (^linkCallback)(NSString *link);
+
 @end

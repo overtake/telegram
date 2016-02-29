@@ -23,8 +23,9 @@
 @synthesize imageObject = _imageObject;
 @synthesize desc = _desc;
 @synthesize descSize = _descSize;
--(id)initWithWebPage:(TLWebPage *)webpage {
-    if(self = [super initWithWebPage:webpage]) {
+
+-(id)initWithWebPage:(TLWebPage *)webpage tableItem:(MessageTableItem *)item {
+    if(self = [super initWithWebPage:webpage tableItem:item]) {
         
         TL_localMessage *fake = [[TL_localMessage alloc] init];
         fake.media = [TL_messageMediaDocument createWithDocument:self.webpage.document caption:@""];

@@ -14,7 +14,6 @@
 #import "NSString+Extended.h"
 #import "TGWebpageYTObject.h"
 #import "MessageTableCellTextView.h"
-#define MAX_WIDTH 400
 
 @interface MessageTableItemText()<SettingsListener>
 @property (nonatomic, strong) NSMutableAttributedString *nameAttritutedString;
@@ -34,7 +33,7 @@
     
     self.textAttributed = [[NSMutableAttributedString alloc] init];
     
-    NSString *message = [[object.message trim] fixEmoji];
+    NSString *message = [object.message fixEmoji];
         
     
     [self.textAttributed appendString:message withColor:TEXT_COLOR];
@@ -44,7 +43,6 @@
     [self updateEntities];
 
     
-    
     [self updateWebPage];
     
     return self;
@@ -53,126 +51,126 @@
 
 -(void)updateLinkAttributesByMessageEntities {
     
-  
-    
-    [self.textAttributed removeAttribute:NSLinkAttributeName range:self.textAttributed.range];
-    
-    _links = [[NSArray alloc] init];
-    
-    NSMutableArray *links = [NSMutableArray array];
-    
-    if(self.message.entities.count > 0)
-    {
+    @try {
+        [self.textAttributed removeAttribute:NSLinkAttributeName range:self.textAttributed.range];
         
-        __block NSRange nextRange = NSMakeRange(0, self.textAttributed.string.length);
-                
-        [self.message.entities enumerateObjectsUsingBlock:^(TLMessageEntity *obj, NSUInteger idx, BOOL *stop) {
+        _links = [[NSArray alloc] init];
+        
+        NSMutableArray *links = [NSMutableArray array];
+        
+        if(self.message.entities.count > 0)
+        {
             
-            if([obj isKindOfClass:[TL_messageEntityUrl class]] ||[obj isKindOfClass:[TL_messageEntityTextUrl class]] || [obj isKindOfClass:[TL_messageEntityMention class]] || [obj isKindOfClass:[TL_messageEntityBotCommand class]] || [obj isKindOfClass:[TL_messageEntityHashtag class]] || [obj isKindOfClass:[TL_messageEntityEmail class]] || [obj isKindOfClass:[TL_messageEntityPre class]] || [obj isKindOfClass:[TL_messageEntityCode class]]) {
+            __block NSRange nextRange = NSMakeRange(0, self.textAttributed.string.length);
+            
+            [self.message.entities enumerateObjectsUsingBlock:^(TLMessageEntity *obj, NSUInteger idx, BOOL *stop) {
                 
-                if([obj isKindOfClass:[TL_messageEntityBotCommand class]] && (!self.message.conversation.user.isBot && self.message.conversation.type != DialogTypeChat  && (self.message.conversation.type != DialogTypeChannel && !self.message.chat.isMegagroup)) )
+                if([obj isKindOfClass:[TL_messageEntityUrl class]] ||[obj isKindOfClass:[TL_messageEntityTextUrl class]] || [obj isKindOfClass:[TL_messageEntityMention class]] || [obj isKindOfClass:[TL_messageEntityBotCommand class]] || [obj isKindOfClass:[TL_messageEntityHashtag class]] || [obj isKindOfClass:[TL_messageEntityEmail class]] || [obj isKindOfClass:[TL_messageEntityPre class]] || [obj isKindOfClass:[TL_messageEntityCode class]]) {
+                    
+                    if([obj isKindOfClass:[TL_messageEntityBotCommand class]] && (!self.message.conversation.user.isBot && self.message.conversation.type != DialogTypeChat  && (self.message.conversation.type != DialogTypeChannel && !self.message.chat.isMegagroup)) )
                     return;
-                
-                if([obj isKindOfClass:[TL_messageEntityBotCommand class]] && self.message.conversation.type == DialogTypeChat) {
-                    if(self.message.chat.chatFull && self.message.chat.chatFull.bot_info.count == 0)
+                    
+                    if([obj isKindOfClass:[TL_messageEntityBotCommand class]] && self.message.conversation.type == DialogTypeChat) {
+                        if(self.message.chat.chatFull && self.message.chat.chatFull.bot_info.count == 0)
                         return;
-                }
-                
-                NSRange range = [self checkAndReturnEntityRange:obj];
-                
-                NSString *link = [self.message.message substringWithRange:range];
-                
-        
-                //range = [self.textAttributed.string rangeOfString:link options:NSCaseInsensitiveSearch range:nextRange];
-                
-                
-                nextRange = NSMakeRange(range.location + range.length, self.textAttributed.length - (range.location + range.length));
-                
-                if(range.location != NSNotFound) {
-                    
-                    if([obj isKindOfClass:[TL_messageEntityTextUrl class]]) {
-                        link = obj.url;
                     }
-                    if([obj isKindOfClass:[TL_messageEntityTextUrl class]] || [obj isKindOfClass:[TL_messageEntityUrl class]])
-                        [links addObject:link];
+                    
+                    NSRange range = [self checkAndReturnEntityRange:obj];
+                    
+                    NSString *link = [self.message.message substringWithRange:range];
                     
                     
-                    if([obj isKindOfClass:[TL_messageEntityCode class]]) {
-                        [self.textAttributed addAttribute:NSForegroundColorAttributeName value:[NSColor redColor] range:range];
+                    nextRange = NSMakeRange(range.location + range.length, self.textAttributed.length - (range.location + range.length));
+                    
+                    if(range.location != NSNotFound) {
                         
-                    } else if([obj isKindOfClass:[TL_messageEntityPre class]]) {
-                         [self.textAttributed addAttribute:NSForegroundColorAttributeName value:DARK_GREEN range:range];
-                    } else {
-                        [self.textAttributed addAttribute:NSLinkAttributeName value:link range:range];
-                        [self.textAttributed addAttribute:NSForegroundColorAttributeName value:LINK_COLOR range:range];
+                        if([obj isKindOfClass:[TL_messageEntityTextUrl class]]) {
+                            link = obj.url;
+                        }
+                        if([obj isKindOfClass:[TL_messageEntityTextUrl class]] || [obj isKindOfClass:[TL_messageEntityUrl class]])
+                        [links addObject:link];
+                        
+                        
+                        if([obj isKindOfClass:[TL_messageEntityCode class]]) {
+                            [self.textAttributed addAttribute:NSForegroundColorAttributeName value:[NSColor redColor] range:range];
+                            
+                        } else if([obj isKindOfClass:[TL_messageEntityPre class]]) {
+                            [self.textAttributed addAttribute:NSForegroundColorAttributeName value:DARK_GREEN range:range];
+                        } else {
+                            [self.textAttributed addAttribute:NSLinkAttributeName value:link range:range];
+                            [self.textAttributed addAttribute:NSForegroundColorAttributeName value:LINK_COLOR range:range];
+                        }
+                        
                     }
                     
                 }
                 
-            }
-
-        }];
-        
-    } else {
-        links = (NSMutableArray *) [self.textAttributed detectAndAddLinks:URLFindTypeLinks | URLFindTypeMentions | URLFindTypeHashtags | (self.message.conversation.user.isBot || (self.message.conversation.type == DialogTypeChat || (self.message.conversation.type == DialogTypeChannel && self.message.chat.isMegagroup)) ? URLFindTypeBotCommands : 0)];
-    }
-    
-    
-    _links = links;
-    
-    NSMutableAttributedString *attr = [[NSMutableAttributedString alloc] init];
-    
-    
-    
-    [_links enumerateObjectsUsingBlock:^(NSString *obj, NSUInteger idx, BOOL *stop) {
-        
-        if(idx == 0) {
+            }];
             
-            NSString *header = obj;
-            
-            if(![obj hasPrefix:@"http://"] && ![obj hasPrefix:@"https://"] && ![obj hasPrefix:@"ftp://"])
-                header = obj;
-            else  {
-                NSURLComponents *components = [[NSURLComponents alloc] initWithString:obj];
-                header = components.host;
-            }
-            
-            
-            
-            NSRange r = [attr appendString:[header stringByAppendingString:@"\n\n"] withColor:TEXT_COLOR];
-            [attr setCTFont:TGSystemMediumFont(13) forRange:r];
-            
-            NSRange range = [attr appendString:obj];
-            
-            
-            
-            [attr addAttribute:NSLinkAttributeName value:obj range:range];
-            [attr addAttribute:NSForegroundColorAttributeName value:LINK_COLOR range:range];
-            [attr addAttribute:NSCursorAttributeName value:[NSCursor pointingHandCursor] range:range];
-            [attr addAttribute:NSUnderlineStyleAttributeName value:[NSNumber numberWithInt:NSUnderlineStyleNone] range:range];
-            
-            
-            [attr addAttribute:NSFontAttributeName value:TGSystemFont(12.5) range:range];
-            
-            if(idx != _links.count - 1)
-                [attr appendString:@"\n"];
         } else {
-            *stop = YES;
+            links = (NSMutableArray *) [self.textAttributed detectAndAddLinks:URLFindTypeLinks | URLFindTypeMentions | URLFindTypeHashtags | (self.message.conversation.user.isBot || (self.message.conversation.type == DialogTypeChat || (self.message.conversation.type == DialogTypeChannel && self.message.chat.isMegagroup)) ? URLFindTypeBotCommands : 0)];
         }
         
         
+        _links = links;
         
-    }];
+        NSMutableAttributedString *attr = [[NSMutableAttributedString alloc] init];
+        
+        
+        
+        [_links enumerateObjectsUsingBlock:^(NSString *obj, NSUInteger idx, BOOL *stop) {
+            
+            if(idx == 0) {
+                
+                NSString *header = obj;
+                
+                if(![obj hasPrefix:@"http://"] && ![obj hasPrefix:@"https://"] && ![obj hasPrefix:@"ftp://"])
+                header = obj;
+                else  {
+                    NSURLComponents *components = [[NSURLComponents alloc] initWithString:obj];
+                    header = components.host;
+                }
+                
+                
+                
+                NSRange r = [attr appendString:[header stringByAppendingString:@"\n\n"] withColor:TEXT_COLOR];
+                [attr setCTFont:TGSystemMediumFont(13) forRange:r];
+                
+                NSRange range = [attr appendString:obj];
+                
+                
+                
+                [attr addAttribute:NSLinkAttributeName value:obj range:range];
+                [attr addAttribute:NSForegroundColorAttributeName value:LINK_COLOR range:range];
+                [attr addAttribute:NSCursorAttributeName value:[NSCursor pointingHandCursor] range:range];
+                [attr addAttribute:NSUnderlineStyleAttributeName value:[NSNumber numberWithInt:NSUnderlineStyleNone] range:range];
+                
+                
+                [attr addAttribute:NSFontAttributeName value:TGSystemFont(12.5) range:range];
+                
+                if(idx != _links.count - 1)
+                [attr appendString:@"\n"];
+            } else {
+                *stop = YES;
+            }
+            
+            
+            
+        }];
+        
+        NSMutableParagraphStyle *style = [[NSMutableParagraphStyle alloc] init];
+        style.lineBreakMode = NSLineBreakByTruncatingTail;
+        
+        [attr addAttribute:NSParagraphStyleAttributeName value:style range:attr.range];
+        
+        
+        _allAttributedLinks = [attr copy];
+    }
+    @catch (NSException *exception) {
+        
+    }
     
-    NSMutableParagraphStyle *style = [[NSMutableParagraphStyle alloc] init];
-    style.lineBreakMode = NSLineBreakByTruncatingTail;
 
-    [attr addAttribute:NSParagraphStyleAttributeName value:style range:attr.range];
-    
-    
-    _allAttributedLinks = [attr copy];
-    
-    
     
 }
 
@@ -182,42 +180,50 @@
 }
 
 -(void)updateFontAttributesByEntities {
-    [self.textAttributed removeAttribute: (NSString *)kCTFontAttributeName range:self.textAttributed.range];
     
-    
-    [self.textAttributed setCTFont:TGSystemFont([self fontSize]) forRange:self.textAttributed.range];
-    
-    
-    NSMutableParagraphStyle *style = [NSMutableParagraphStyle new];
-    style.lineSpacing = 0;
-    style.alignment = NSLeftTextAlignment;
-    
-    [self.textAttributed addAttribute:NSParagraphStyleAttributeName value:style range:self.textAttributed.range];
-    
-    [self.message.entities enumerateObjectsUsingBlock:^(TLMessageEntity *obj, NSUInteger idx, BOOL *stop) {
+    @try {
+        [self.textAttributed removeAttribute: (NSString *)kCTFontAttributeName range:self.textAttributed.range];
         
-        NSRange range = [self checkAndReturnEntityRange:obj];
         
-        if([obj isKindOfClass:[TL_messageEntityBold class]]) {
+        [self.textAttributed setCTFont:TGSystemFont([self fontSize]) forRange:self.textAttributed.range];
+        
+        
+        NSMutableParagraphStyle *style = [NSMutableParagraphStyle new];
+        style.lineSpacing = 0;
+        style.alignment = NSLeftTextAlignment;
+        
+        [self.textAttributed addAttribute:NSParagraphStyleAttributeName value:style range:self.textAttributed.range];
+        
+        [self.message.entities enumerateObjectsUsingBlock:^(TLMessageEntity *obj, NSUInteger idx, BOOL *stop) {
             
-            NSString *link = [self.message.message substringWithRange:range];
+            NSRange range = [self checkAndReturnEntityRange:obj];
             
-            range = [self.textAttributed.string rangeOfString:link];
+            if([obj isKindOfClass:[TL_messageEntityBold class]]) {
+                
+                NSString *link = [self.message.message substringWithRange:range];
+                
+                range = [self.textAttributed.string rangeOfString:link];
+                
+                [self.textAttributed addAttribute:NSFontAttributeName value:TGSystemMediumFont([self fontSize]) range:range];
+            } else if([obj isKindOfClass:[TL_messageEntityItalic class]]) {
+                
+                NSString *link = [self.message.message substringWithRange:range];
+                
+                range = [self.textAttributed.string rangeOfString:link];
+                
+                
+                [self.textAttributed addAttribute:NSFontAttributeName value:TGSystemItalicFont([self fontSize]) range:range];
+            } else if([obj isKindOfClass:[TL_messageEntityCode class]] || [obj isKindOfClass:[TL_messageEntityPre class]]) {
+                [self.textAttributed setCTFont:[NSFont fontWithName:@"Courier" size:[self fontSize]] forRange:range];
+            }
             
-            [self.textAttributed addAttribute:NSFontAttributeName value:TGSystemMediumFont([self fontSize]) range:range];
-        } else if([obj isKindOfClass:[TL_messageEntityItalic class]]) {
-            
-            NSString *link = [self.message.message substringWithRange:range];
-            
-            range = [self.textAttributed.string rangeOfString:link];
+        }];
 
-            
-            [self.textAttributed addAttribute:NSFontAttributeName value:TGSystemItalicFont([self fontSize]) range:range];
-        } else if([obj isKindOfClass:[TL_messageEntityCode class]] || [obj isKindOfClass:[TL_messageEntityPre class]]) {
-            [self.textAttributed setCTFont:[NSFont fontWithName:@"Courier" size:[self fontSize]] forRange:range];
-        }
+    }
+    @catch (NSException *exception) {
         
-    }];
+    }
+    
 }
 
 
@@ -269,9 +275,7 @@
         remove_global_dispatcher(_requestKey);
         
 
-        
-        
-        _webpage = [TGWebpageObject objectForWebpage:self.message.media.webpage]; // its only youtube.
+         _webpage = [TGWebpageObject objectForWebpage:self.message.media.webpage tableItem:self]; // its only youtube.
         
         if(self.blockWidth != 0)
             [self makeSizeByWidth:self.blockWidth];

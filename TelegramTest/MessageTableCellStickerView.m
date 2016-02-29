@@ -125,9 +125,9 @@
 }
 
 
--(void)setEditable:(BOOL)editable animation:(BOOL)animation
+-(void)setEditable:(BOOL)editable animated:(BOOL)animated
 {
-    [super setEditable:editable animation:animation];
+    [super setEditable:editable animated:animated];
     self.imageView.isNotNeedHackMouseUp = editable;
 }
 

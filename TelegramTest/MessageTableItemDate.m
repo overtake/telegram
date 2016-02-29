@@ -7,7 +7,7 @@
 //
 
 #import "MessageTableItemDate.h"
-
+#import "MessageTableCellDateView.h"
 @implementation MessageTableItemDate
 
 -(id)initWithObject:(id)object {
@@ -39,6 +39,10 @@
     
     return YES;
     
+}
+
+-(Class)viewClass {
+    return [MessageTableCellDateView class];
 }
 
 @end

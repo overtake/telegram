@@ -168,7 +168,7 @@
     CGMutablePathRef path = CGPathCreateMutable();
     
     if(self.drawRects.count == 0) {
-        CGPathAddRect(path, NULL, self.bounds);
+        CGPathAddRect(path, NULL, NSMakeRect(0.0f, 1.5f, NSWidth(self.bounds), NSHeight(self.bounds)));
     } else {
         [self.drawRects enumerateObjectsUsingBlock:^(NSValue *obj, NSUInteger idx, BOOL *stop) {
             
@@ -190,7 +190,7 @@
     
     
     CGContextSaveGState(context);
-    
+
     CTFrameDraw(CTFrame, context);
     
     CFRelease(path);
@@ -638,7 +638,6 @@
             
             
             CFArrayRef lines = CTFrameGetLines(CTFrame);
-            
             
             CGPoint origins[CFArrayGetCount(lines)];
             CTFrameGetLineOrigins(CTFrame, CFRangeMake(0, 0), origins);

@@ -74,8 +74,8 @@
         _siteName = [TMTextField defaultTextField];
         [[_siteName cell] setTruncatesLastVisibleLine:YES];
         [[_author cell] setTruncatesLastVisibleLine:YES];
-        [self.siteName setFrameOrigin:NSMakePoint(5, -6)];
-        [self.author setFrameOrigin:NSMakePoint(5, 10)];
+        [self.siteName setFrameOrigin:NSMakePoint(8, -6)];
+        [self.author setFrameOrigin:NSMakePoint(8, 10)];
         
         [super addSubview:_siteName];
     }
@@ -84,13 +84,13 @@
 }
 
 
--(void)setFrame:(NSRect)frame {
-    
-    
-    [super setFrame:frame];
-    
-    [_containerView setFrame:NSMakeRect(7, self.webpage.author ? 30 : 14,NSWidth(frame) - 7,self.webpage.size.height )];
-}
+//-(void)setFrame:(NSRect)frame {
+//    
+//    
+//    [super setFrame:frame];
+//    
+//    [_containerView setFrame:NSMakeRect([MessageTableItem defaultOffset], self.webpage.author ? 30 : 14,NSWidth(frame) - [MessageTableItem defaultOffset],self.webpage.size.height )];
+//}
 
 -(void)addSubview:(NSView *)aView {
     [_containerView addSubview:aView];
@@ -100,7 +100,7 @@
     _webpage = webpage;
     
     
-    [_containerView setFrame:NSMakeRect(7, self.webpage.author ? 30 : 14,NSWidth(self.frame) - 7,self.webpage.size.height )];
+    [_containerView setFrame:NSMakeRect([MessageTableItem defaultOffset], self.webpage.author ? 30 : 14,NSWidth(self.frame) - [MessageTableItem defaultOffset],self.webpage.size.height )];
     
     [self.author setHidden:!webpage.author];
     
@@ -228,7 +228,11 @@
             return;
         }
         
-        [[TGPhotoViewer viewer] show:previewObject];
+        if(![self.webpage.webpage.type isEqualToString:@"gif"]) {
+            [[TGPhotoViewer viewer] show:previewObject];
+        }
+        
+        
         
     } else {
         if([self.webpage.webpage.type isEqualToString:@"profile"]) {

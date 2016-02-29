@@ -786,22 +786,21 @@ void determinateURLLink(NSString *link) {
 void open_link(NSString *link) {
     
     
-    if([link hasPrefix:@"USER_PROFILE:"]) {
-        
-        [TMInAppLinks parseUrlAndDo:link];
-        
-        return;
-    }
     
-    if([link hasPrefix:@"openWithPeer:"]) {
+    if([link hasPrefix:@"chat://"]) {
         
-        NSArray *components = [link componentsSeparatedByString:@":"];
-        if(components.count > 2) {
-            int peer_id = [components[2] intValue];
+        NSArray *components = [link componentsSeparatedByString:@"/"];
+        if(components.count > 3) {
+            int peer_id = [components[3] intValue];
             
-            Class peer = NSClassFromString(components[1]);
+            if([components[2] isEqualToString:@"viabot"]) {
+                [appWindow().navigationController.messagesViewController setStringValueToTextField:[NSString stringWithFormat:@"%@ ",components[3]]];
+                return;
+            }
             
-            int msgId = components.count == 4 ? [components[3] intValue] : 0;
+            Class peer = NSClassFromString(components[2]);
+            
+            int msgId = components.count == 5 ? [components[4] intValue] : 0;
             
             if(peer == [TL_peerUser class]) {
                 

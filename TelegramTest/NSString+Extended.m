@@ -29,7 +29,7 @@
     while ([string rangeOfCharacterFromSet:[NSCharacterSet whitespaceCharacterSet]].location == 0 || [string rangeOfString:@"\n"].location == 0) {
         string = [string substringFromIndex:1];
     }
-    
+
 
     NSMutableString *replaceSlowCoreTextCharacters = [[NSMutableString alloc] init];
     

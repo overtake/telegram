@@ -43,7 +43,7 @@
     
     if(state == MessageTableCellSending) {
         if(!self.progressView) {
-            self.progressView = [[TMClockProgressView alloc] initWithFrame:NSMakeRect(NSWidth(self.frame) - image_ClockFrame().size.width, 2, 15, 15)];
+            self.progressView = [[TMClockProgressView alloc] initWithFrame:NSMakeRect(NSWidth(self.frame) - image_ClockFrame().size.width, 1, 15, 15)];
             [self.layer addSublayer:self.progressView.layer];
         }
         [self.progressView startAnimating];
@@ -57,7 +57,7 @@
     if(state == MessageTableCellSendingError) {
         
         if(!self.errorView) {
-            self.errorView = [[BTRButton alloc] initWithFrame:NSMakeRect(NSWidth(self.frame) - image_ChatMessageError().size.width, 2, image_ChatMessageError().size.width , image_ChatMessageError().size.height)];
+            self.errorView = [[BTRButton alloc] initWithFrame:NSMakeRect(NSWidth(self.frame) - image_ChatMessageError().size.width, 1, image_ChatMessageError().size.width , image_ChatMessageError().size.height)];
             [self.errorView setBackgroundImage:image_ChatMessageError() forControlState:BTRControlStateNormal];
             [self addSubview:self.errorView];
         }
@@ -105,7 +105,7 @@
         } else {
             
             if(!_checkMark1) {
-                _checkMark1 = [[NSImageView alloc] initWithFrame:NSMakeRect(0, 2, 0, 0)];
+                _checkMark1 = [[NSImageView alloc] initWithFrame:NSMakeRect(0, 1, 0, 0)];
                 _checkMark1.wantsLayer = YES;
                 _checkMark1.image = image_ModernMessageCheckmark1();
                 [_checkMark1 setFrameSize:image_ModernMessageCheckmark1().size];
@@ -116,7 +116,7 @@
             
             if(state == MessageTableCellRead) {
                 if(!_checkMark2) {
-                    _checkMark2 = [[NSImageView alloc] initWithFrame:NSMakeRect(0, 2, 0, 0)];
+                    _checkMark2 = [[NSImageView alloc] initWithFrame:NSMakeRect(0, 1, 0, 0)];
                     _checkMark2.wantsLayer = YES;
                     _checkMark2.image = image_ModernMessageCheckmark2();
                     [_checkMark2 setFrameSize:image_ModernMessageCheckmark2().size];

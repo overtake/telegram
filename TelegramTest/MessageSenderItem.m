@@ -20,7 +20,7 @@
     
     if(self = [super initWithConversation:conversation]) {
         
-        [message trim];
+        message = [message trim];
         
         self.message = [MessageSender createOutMessage:message media:[TL_messageMediaEmpty create] conversation:conversation additionFlags:additionFlags];
         

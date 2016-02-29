@@ -50,6 +50,7 @@
 @property (nonatomic) BOOL isChat;
 @property (nonatomic) NSSize _viewSize;
 @property (nonatomic,assign) BOOL autoStart;
+@property (nonatomic, assign) NSSize headerOriginalSize;
 @end
 
 @implementation MessageTableItem
@@ -126,7 +127,7 @@ static NSCache *cItems;
                     [_headerName appendString:@" "];
                     range = [_headerName appendString:[NSString stringWithFormat:@"@%@",viaBotUserName] withColor:GRAY_TEXT_COLOR];
                     [_headerName addAttribute:NSForegroundColorAttributeName value:LINK_COLOR range:range];
-                    [_headerName setLink:[NSString stringWithFormat:@"viabot:@%@",viaBotUserName] forRange:range];
+                    [_headerName setLink:[NSString stringWithFormat:@"chat://viabot/@%@",viaBotUserName] forRange:range];
                     
                     self.headerName = self.headerName;
                     
@@ -153,7 +154,7 @@ static NSCache *cItems;
                 
                 
                 _forwardHeaderAttr = attr;
-                _forwardHeaderSize = [attr coreTextSizeForTextFieldForWidth:INT32_MAX];
+                _forwardHeaderSize = [attr coreTextSizeOneLineForWidth:INT32_MAX];
                 
             }
             
@@ -245,15 +246,14 @@ static NSCache *cItems;
     [cItems setObject:item forKey:@(cacheId)];
 }
 
+
+
 -(void)setHeaderName:(NSMutableAttributedString *)headerName {
     _headerName = headerName;
     
-    NSSize headerSize = [self.headerName coreTextSizeForTextFieldForWidth:INT32_MAX];
+    NSSize headerSize = [self.headerName coreTextSizeOneLineForWidth:INT32_MAX];
     
-    if(_headerName.string.emojiString.length > 0) {
-        headerSize.height-=6;
-    }
-    
+    _headerOriginalSize = headerSize;
     _headerSize = headerSize;
 }
 
@@ -299,7 +299,7 @@ static NSCache *cItems;
             [self.forwardName appendString:@" "];
             range = [self.forwardName appendString:[NSString stringWithFormat:@"@%@",_via_bot_user.username] withColor:GRAY_TEXT_COLOR];
             [self.forwardName setFont:TGSystemBoldFont(13) forRange:range];
-            [self.forwardName setLink:[NSString stringWithFormat:@"viabot:@%@",_via_bot_user.username] forRange:range];
+            [self.forwardName setLink:[NSString stringWithFormat:@"chat://viabot/@%@",_via_bot_user.username] forRange:range];
             [self.forwardName addAttribute:NSForegroundColorAttributeName value:LINK_COLOR range:range];
         }
         
@@ -310,11 +310,9 @@ static NSCache *cItems;
         
         [self.forwardName setFont:TGSystemMediumFont(13) forRange:rangeUser];
         
-        _forwardNameSize = [self.forwardName coreTextSizeForTextFieldForWidth:INT32_MAX];
+        _forwardNameSize = [self.forwardName coreTextSizeOneLineForWidth:INT32_MAX];
         
-        if([_forwardName.string emojiString].length > 0) {
-            _forwardNameSize.height-=6;
-        }
+     
 
     }
 }
@@ -370,7 +368,7 @@ static NSTextAttachment *channelIconAttachment() {
         viewSize.height = 1;
     }
     
-    viewSize.width = self.makeSize;
+    viewSize.width = self.makeSize + (self.isForwadedMessage ? self.defaultOffset : 0);
     
     return viewSize;
 }
@@ -565,7 +563,6 @@ static NSTextAttachment *channelIconAttachment() {
     
     [dString appendString:[TGDateUtils stringForMessageListDate:time] withColor:GRAY_TEXT_COLOR];
     [dString setFont:TGSystemFont(12) forRange:dString.range];
-    
     _dateAttributedString = dString;
 
     _dateSize = [dString coreTextSizeOneLineForWidth:INT32_MAX];
@@ -673,8 +670,10 @@ static NSTextAttachment *channelIconAttachment() {
 
 - (BOOL)makeSizeByWidth:(int)width {
     _blockWidth = width;
+    
+    self.headerSize = NSMakeSize(MIN(_headerOriginalSize.width, width - self.defaultOffset), self.headerSize.height);
         
-    return NO;
+    return self.isHeaderMessage;
 }
 
 -(int)fontSize {
@@ -747,6 +746,10 @@ static NSTextAttachment *channelIconAttachment() {
     return 6;
 }
 -(int)defaultOffset {
+    return 10;
+}
+
++(int)defaultOffset {
     return 10;
 }
 

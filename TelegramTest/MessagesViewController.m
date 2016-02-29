@@ -785,9 +785,9 @@
   //  {
         [self setState: show ? MessagesViewControllerStateEditable : MessagesViewControllerStateNone animated:animated];
         for(int i = 0; i < self.messages.count; i++) {
-            MessageTableCellContainerView *cell = (MessageTableCellContainerView *)[self cellForRow:i];
-            if([cell isKindOfClass:[MessageTableCellContainerView class]] && [cell canEdit]) {
-                [cell setEditable:show animation:animated];
+            TGModernMessageCellContainerView *cell = (TGModernMessageCellContainerView *)[self cellForRow:i];
+            if([cell isKindOfClass:[TGModernMessageCellContainerView class]] && [cell canEdit]) {
+                [cell setEditable:show animated:animated];
             }
         }
   //  }
@@ -2177,8 +2177,6 @@ static NSTextAttachment *headerMediaIcon() {
 
 - (void)unSelectAll:(BOOL)animated {
     [self setCellsEditButtonShow:NO animated:animated];
-    for(MessageTableItem *item in self.selectedMessages)
-        item.isSelected = NO;
     
     [self.selectedMessages removeAllObjects];
     
@@ -2187,11 +2185,14 @@ static NSTextAttachment *headerMediaIcon() {
         if(!rowView)
             continue;
         
-        MessageTableCellContainerView *view = [[rowView subviews] objectAtIndex:0];
-        if(view && [view isKindOfClass:[MessageTableCellContainerView class]]) {
-            [view setSelected:NO animation:animated];
+        TGModernMessageCellContainerView *view = [[rowView subviews] objectAtIndex:0];
+        if(view && [view isKindOfClass:[TGModernMessageCellContainerView class]]) {
+            [view setSelected:NO animated:animated];
         }
     }
+    
+    for(MessageTableItem *item in self.selectedMessages)
+        item.isSelected = NO;
 }
 
 
@@ -3919,12 +3920,6 @@ static NSTextAttachment *headerMediaIcon() {
     item.table = self.table;
     item.rowId = row;
     [cell setItem:item];
-    
-    
-    if([cell isKindOfClass:[TGModernMessageCellContainerView class]]) {
-        // TGModernMessageCellContainerView *containerView = (TGModernMessageCellContainerView *)cell;
-        //   [containerView setEditable:self.state == MessagesViewControllerStateEditable animation:NO];
-    }
 
     return cell;
     
@@ -4097,9 +4092,9 @@ static NSTextAttachment *headerMediaIcon() {
     [cell setItem:item];
    
     
-    if([cell isKindOfClass:[MessageTableCellContainerView class]]) {
-        MessageTableCellContainerView *containerView = (MessageTableCellContainerView *)cell;
-        [containerView setEditable:self.state == MessagesViewControllerStateEditable animation:NO];
+    if([cell isKindOfClass:[TGModernMessageCellContainerView class]]) {
+        TGModernMessageCellContainerView *containerView = (TGModernMessageCellContainerView *)cell;
+        [containerView setEditable:self.state == MessagesViewControllerStateEditable animated:NO];
     }
     
     double time = ABS([start timeIntervalSinceNow]);

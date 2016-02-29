@@ -300,19 +300,22 @@ NSImage *fireImage() {
     return [_captionView.textView mouseInText:theEvent] || [super mouseInText:theEvent];
 }
 
--(void)setEditable:(BOOL)editable animation:(BOOL)animation
+-(void)setEditable:(BOOL)editable animated:(BOOL)animated
 {
-    [super setEditable:editable animation:animation];
+    [super setEditable:editable animated:animated];
     self.imageView.isNotNeedHackMouseUp = editable;
 }
 
 
 -(void)mouseDown:(NSEvent *)theEvent {
     
-    _startDragLocation = [self.containerView convertPoint:[theEvent locationInWindow] fromView:nil];
-    
-    if([_imageView mouse:_startDragLocation inRect:_imageView.frame])
-        return;
+    if(!self.isEditable) {
+        _startDragLocation = [self.containerView convertPoint:[theEvent locationInWindow] fromView:nil];
+        
+        if([_imageView mouse:_startDragLocation inRect:_imageView.frame])
+            return;
+
+    }
     
     [super mouseDown:theEvent];
 }

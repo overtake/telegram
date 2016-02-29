@@ -60,8 +60,8 @@
 }
 
 
-- (void)setEditable:(BOOL)editable animation:(BOOL)animation {
-    [super setEditable:editable animation:animation];
+- (void)setEditable:(BOOL)editable animated:(BOOL)animated {
+    [super setEditable:editable animated:animated];
     [self.textView setEditable:!editable];
 }
 
@@ -103,7 +103,7 @@
             [self.containerView addSubview:_webpageContainerView];
         }
         
-        [_webpageContainerView setFrame:NSMakeRect(0, item.textSize.height + 5, item.webpage.size.width, item.webpage.blockHeight)];
+        [_webpageContainerView setFrame:NSMakeRect(0, item.textSize.height + item.defaultContentOffset, item.webpage.size.width, item.webpage.blockHeight)];
         
         [_webpageContainerView setItem:item];
         
@@ -222,11 +222,11 @@
 }
 
 
--(void)setSelected:(BOOL)selected animation:(BOOL)animation {
+-(void)setSelected:(BOOL)selected animated:(BOOL)animated {
     
-    [super setSelected:selected animation:animation];
+    [super setSelected:selected animated:animated];
     
-    if(!animation) {
+    if(!animated) {
         [self.textView setBackgroundColor:selected ? NSColorFromRGB(0xf7f7f7) : NSColorFromRGB(0xffffff)];
     }
 }

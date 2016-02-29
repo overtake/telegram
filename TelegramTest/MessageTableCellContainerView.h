@@ -60,8 +60,8 @@ typedef enum {
 - (void)stopSearchSelection;
 
 
-- (void)setSelected:(BOOL)selected animation:(BOOL)animation;
-- (void)setEditable:(BOOL)editable animation:(BOOL)animation;
+//- (void)setSelected:(BOOL)selected animation:(BOOL)animation;
+//- (void)setEditable:(BOOL)editable animation:(BOOL)animation;
 
 - (void)setProgressToView:(NSView *)view;
 - (void)setProgressStyle:(TMCircularProgressStyle)style;

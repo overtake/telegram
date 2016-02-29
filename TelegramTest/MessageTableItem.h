@@ -27,6 +27,7 @@
 @property (nonatomic, strong) NSMutableAttributedString *headerName;
 @property (nonatomic, assign) NSSize headerSize;
 
+
 @property (nonatomic, strong) NSMutableAttributedString *forwardName;
 @property (nonatomic, assign) NSSize forwardNameSize;
 
@@ -118,6 +119,8 @@
 -(int)defaultContentOffset;
 -(int)defaultOffset;
 -(int)contentHeaderOffset;
+
++(int)defaultOffset;
 
 -(BOOL)hasRightView;
 

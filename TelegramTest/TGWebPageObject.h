@@ -7,7 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
-
+@class MessageTableItem;
 @interface TGWebpageObject : NSObject
 
 @property (nonatomic,strong,readonly) NSAttributedString *title;
@@ -33,14 +33,16 @@
 @property (nonatomic,strong) NSAttributedString *siteName;
 
 
--(id)initWithWebPage:(TLWebPage *)webpage;
+@property (nonatomic,weak,readonly) MessageTableItem *tableItem;
+
+-(id)initWithWebPage:(TLWebPage *)webpage tableItem:(MessageTableItem *)item;
 
 
 -(void)makeSize:(int)width;
 -(int)blockHeight;
 -(Class)webpageContainer;
 
-+(id)objectForWebpage:(TLWebPage *)webpage;
++(id)objectForWebpage:(TLWebPage *)webpage tableItem:(MessageTableItem *)item;
 
 -(void)doAfterDownload;
 

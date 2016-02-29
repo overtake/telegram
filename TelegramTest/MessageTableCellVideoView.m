@@ -58,8 +58,7 @@ static NSImage *playImage() {
         
         weak();
         
-        self.imageView = [[BluredPhotoImageView alloc] initWithFrame:NSMakeRect(0, 0, 100, 100)];
-       // [self.imageView setIsAlwaysBlur:YES];
+        self.imageView = [[TGImageView alloc] initWithFrame:NSMakeRect(0, 0, 100, 100)];
         [self.imageView setCornerRadius:4];
         
         [self.imageView setTapBlock:^{
@@ -100,9 +99,9 @@ static NSImage *playImage() {
 }
 
 
--(void)setEditable:(BOOL)editable animation:(BOOL)animation
+-(void)setEditable:(BOOL)editable animated:(BOOL)animated
 {
-    [super setEditable:editable animation:animation];
+    [super setEditable:editable animated:animated];
     self.imageView.isNotNeedHackMouseUp = editable;
 }
 

@@ -11,6 +11,7 @@
 #import "TGVTVideoView.h"
 #import "TGBlurImageObject.h"
 #import "TGThumbnailObject.h"
+#import "MessageTableItem.h"
 @interface TGWebpageGifObject ()
 @property (nonatomic,strong) TL_documentAttributeVideo *imagesize;
 @end
@@ -22,8 +23,8 @@
 @synthesize imageSize = _imageSize;
 
 
--(id)initWithWebPage:(TLWebPage *)webpage {
-    if(self = [super initWithWebPage:webpage]) {
+-(id)initWithWebPage:(TLWebPage *)webpage tableItem:(MessageTableItem *)item {
+    if(self = [super initWithWebPage:webpage tableItem:item]) {
         
         
         _imagesize = (TL_documentAttributeVideo *) [webpage.document attributeWithClass:[TL_documentAttributeVideo class]];
@@ -94,7 +95,7 @@
     _size.width = MAX(_imageSize.width,self.descSize.width);
     
     _size.width+=20;
-    _size.height +=self.descSize.height;
+    _size.height +=self.descSize.height+self.tableItem.defaultContentOffset;
     
 }
 

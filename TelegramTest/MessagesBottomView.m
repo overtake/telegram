@@ -821,7 +821,7 @@ static RBLPopover *popover;
     [attachLocationItem setHighlightedImage:image_AttachLocationHighlighted()];
     
     
-    if(ACCEPT_FEATURE && self.dialog.type != DialogTypeSecretChat && floor(NSAppKitVersionNumber) > 1187) {
+    if(ACCEPT_FEATURE && self.dialog.type != DialogTypeSecretChat && floor(NSAppKitVersionNumber) >= NSAppKitVersionNumber10_9) {
         [theMenu addItem:attachLocationItem];
     }
     
