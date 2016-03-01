@@ -8,7 +8,6 @@
 //
 #import "TGSendTypingManager.h"
 #import "MessagesViewController.h"
-#import "MessageTableCellGifView.h"
 #import "NSString+Size.h"
 #import "MessageSender.h"
 #import "TLPeer+Extensions.h"
@@ -3906,6 +3905,11 @@ static NSTextAttachment *headerMediaIcon() {
     
     MessageTableItem *item = [self.messages objectAtIndex:row];
     
+    
+    if([item isKindOfClass:[MessageTableItemTyping class]]) {
+        return _typingView;
+    }
+    
     NSString *identifier = NSStringFromClass(item.viewClass);
     
     MessageTableCell *cell = [self.table makeViewWithIdentifier:identifier owner:self];
@@ -3992,14 +3996,6 @@ static NSTextAttachment *headerMediaIcon() {
         cell = [self.table makeViewWithIdentifier:kRowIdentifier owner:self];
         if(!cell) {
             cell = [[MessageTableCellAudioView alloc] initWithFrame:self.view.bounds];
-            cell.identifier = kRowIdentifier;
-            cell.messagesViewController = self;
-        }
-    } else if(item.class == [MessageTableItemGif class]) {
-        static NSString *const kRowIdentifier = @"gif";
-        cell = [self.table makeViewWithIdentifier:kRowIdentifier owner:self];
-        if(!cell) {
-            cell = [[MessageTableCellGifView alloc] initWithFrame:self.view.bounds];
             cell.identifier = kRowIdentifier;
             cell.messagesViewController = self;
         }

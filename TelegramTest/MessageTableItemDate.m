@@ -34,7 +34,7 @@
     _textSize = [_text coreTextSizeForTextFieldForWidth:width];
     
     
-    self.blockSize = NSMakeSize(width, _textSize.height);
+    self.blockSize = NSMakeSize(width, _textSize.height + self.defaultContentOffset * 2);
     
     
     return YES;

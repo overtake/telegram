@@ -114,7 +114,7 @@
 -(void)setAudioState:(TGAudioPlayerState)audioState {
     _audioState = audioState;
     
-    [self updateCellState];
+    [self updateCellState:NO];
 }
 
 -(float)progressWidth {
@@ -137,10 +137,9 @@
     
 }
 
-- (void)setCellState:(CellState)cellState {
-    [super setCellState:cellState];
+- (void)setCellState:(CellState)cellState animated:(BOOL)animated  {
+    [super setCellState:cellState animated:animated];
     
-    [self.progressView setState:cellState];
     
     if(self.item.state == AudioStateWaitPlaying || self.item.state == AudioStatePaused || self.item.state == AudioStatePlaying) {
         [self.playerButton setBackgroundImage:blueBackground() forControlState:BTRControlStateNormal];
@@ -171,24 +170,24 @@
 }
 
 
-- (void)updateCellState {
+- (void)updateCellState:(BOOL)animated {
     MessageTableItemAudio *item = (MessageTableItemAudio *)self.item;
     
     if(item.messageSender) {
         self.item.state = AudioStateUploading;
-        self.cellState = CellStateSending;
+        [self setCellState:CellStateSending animated:animated];
         return;
     }
     
     if(item.downloadItem && item.downloadItem.downloadState != DownloadStateCompleted && item.downloadItem.downloadState != DownloadStateWaitingStart) {
         self.item.state = item.downloadItem.downloadState == DownloadStateCanceled ? AudioStateWaitDownloading : AudioStateDownloading;
-        self.cellState = item.downloadItem.downloadState == DownloadStateCanceled ? CellStateCancelled : CellStateDownloading;
+        [self setCellState:item.downloadItem.downloadState == DownloadStateCanceled ? CellStateCancelled : CellStateDownloading animated:YES];
     } else  if(![self.item isset]) {
         self.item.state = AudioStateWaitDownloading;
-        self.cellState = CellStateNeedDownload;
+        [self setCellState:CellStateNeedDownload animated:animated];
     } else {
         self.item.state = AudioStateWaitPlaying;
-        self.cellState = CellStateNormal;
+        [self setCellState:CellStateNormal animated:animated];
     }
 }
 
@@ -250,7 +249,7 @@
     [self.stateTextField setFrameOrigin:NSMakePoint(NSMaxX(self.durationView.frame) + 2, self.durationView.frame.origin.y )];
     [self.stateTextField setHidden:YES];
     if(item.state != AudioStatePlaying && item.state != AudioStatePaused)
-        [self updateCellState];
+        [self updateCellState:NO];
     else {
         self.cellState = self.cellState;
         if(item.state != AudioStatePaused)

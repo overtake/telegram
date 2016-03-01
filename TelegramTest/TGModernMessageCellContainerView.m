@@ -236,7 +236,7 @@
         }
         
         [self checkActionState:YES];
-        [self updateCellState];
+        [self updateCellState:YES];
         
         if(item.state == MessageSendingStateCancelled) {
             [self deleteAndCancel];

@@ -14,7 +14,7 @@
 #import "NSAttributedString+Hyperlink.h"
 #import "TGImageObject.h"
 #import "TMImageUtils.h"
-
+#import "MessageTableCellServiceMessage.h"
 
 @interface TGImageGroupPhotoObject : TGImageObject
 
@@ -37,6 +37,16 @@
     [ASQueue dispatchOnMainQueue:^{
         [self.delegate didDownloadImage:image object:self];
     }];
+}
+
+
+
+-(NSImage *)placeholder {
+    if(super.placeholder) {
+        return super.placeholder;
+    }
+    
+    return gray_circle_resizable_placeholder();
 }
 
 -(NSString *)cacheKey {
@@ -130,11 +140,15 @@
     _textSize = size;
     
     size.width = width;
-    size.height += 10;
-    size.height += self.photoSize.height ? self.photoSize.height  : 0;
+    size.height += self.defaultContentOffset*2;
+    size.height += self.photoSize.height ? self.photoSize.height + self.defaultContentOffset  : 0;
     self.blockSize = size;
     
     return YES;
+}
+
+-(Class)viewClass {
+    return [MessageTableCellServiceMessage class];
 }
 
 

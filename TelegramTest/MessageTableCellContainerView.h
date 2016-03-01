@@ -36,6 +36,9 @@ typedef enum {
 
 @property (nonatomic, strong,readonly) TMLoaderView *progressView;
 
+
+-(void)setCellState:(CellState)cellState animated:(BOOL)animated;
+
 -(void)checkOperation;
 
 - (void)alertError;
@@ -47,7 +50,7 @@ typedef enum {
 - (void)deleteAndCancel;
 - (void)doAfterDownload;
 - (void)startDownload:(BOOL)cancel;
-- (void)updateCellState;
+- (void)updateCellState:(BOOL)animated;
 //- (void)checkStartDownload:(SettingsMask)setting size:(int)size downloadItemClass:(Class)itemClass;
 - (void)setProgressFrameSize:(NSSize)newsize;
 -(void)updateDownloadState;

@@ -59,7 +59,7 @@
     // Drawing code here.
 }
 
-- (void)setCellState:(CellState)cellState {
+- (void)setCellState:(CellState)cellState animated:(BOOL)animated {
     
     if(self.cellState == CellStateSending && cellState == CellStateNormal) {
         [super setCellState:cellState];
@@ -77,8 +77,7 @@
         }
     }
     
-    [super setCellState:cellState];
-    [self.progressView setState:cellState];
+    [super setCellState:cellState animated:animated];
     
     [_playImageView setHidden:![SettingsArchiver checkMaskedSetting:DisableAutoplayGifSetting] || cellState != CellStateNormal];
     

@@ -168,12 +168,12 @@ NSImage *fireImage() {
 }
 
 
--(void)setCellState:(CellState)cellState {
+-(void)setCellState:(CellState)cellState animated:(BOOL)animated {
     
     MessageTableItemPhoto *item = (MessageTableItemPhoto *)self.item;
     
      if(self.cellState == CellStateSending && cellState == CellStateNormal) {
-        [super setCellState:cellState];
+        [super setCellState:cellState animated:animated];
         
         if([item.imageObject isKindOfClass:[TGExternalImageObject class]]) {
             [self.item doAfterDownload];
@@ -182,8 +182,6 @@ NSImage *fireImage() {
         }
         
      }
-    
-    
     
     [self.progressView setImage:cellState == CellStateSending ? image_DownloadIconWhite() : nil forState:TMLoaderViewStateNeedDownload];
     [self.progressView setImage:cellState == CellStateSending ? image_LoadCancelWhiteIcon() : nil forState:TMLoaderViewStateDownloading];
@@ -217,12 +215,9 @@ NSImage *fireImage() {
         
     }
     
-    [self.progressView setState:cellState];
-    
     [self.progressView setCenterByView:self.imageView];
     
-    
-    [super setCellState:cellState];
+    [super setCellState:cellState animated:animated];
 }
 
 - (void) setItem:(MessageTableItemPhoto *)item {
@@ -234,7 +229,7 @@ NSImage *fireImage() {
     
     [self.imageView setFrameSize:item.imageSize];
 
-    [self updateCellState];
+    [self updateCellState:NO];
     
     
     [self updateDownloadListeners];
@@ -282,7 +277,7 @@ NSImage *fireImage() {
             [ASQueue dispatchOnMainQueue:^{
                 [strongSelf.progressView setProgress:100 animated:YES];
                 
-                [strongSelf updateCellState];
+                [strongSelf updateCellState:YES];
             }];
         }
     }];

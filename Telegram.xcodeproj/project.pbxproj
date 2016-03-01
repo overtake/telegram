@@ -180,7 +180,6 @@
 		0AB8F65818635E53000E6FF3 /* TMImageManager.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0AB8F65718635E53000E6FF3 /* TMImageManager.mm */; };
 		0ABACDA8181ADB1E00EF43DB /* SerializedData.m in Sources */ = {isa = PBXBuildFile; fileRef = 0ABACDA7181ADB1E00EF43DB /* SerializedData.m */; };
 		0ABACDAE181AFE4B00EF43DB /* TLObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 0ABACDAD181AFE4B00EF43DB /* TLObject.m */; };
-		0ABC223118EE88DA00243F82 /* MessageTableCellGifView.m in Sources */ = {isa = PBXBuildFile; fileRef = 0ABC223018EE88DA00243F82 /* MessageTableCellGifView.m */; };
 		0ABC223918F2D65900243F82 /* TLAPIAdd.m in Sources */ = {isa = PBXBuildFile; fileRef = 0ABC223818F2D65900243F82 /* TLAPIAdd.m */; };
 		0AC7F475185DA87A00F90558 /* TMTableView.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0AC7F474185DA87A00F90558 /* TMTableView.mm */; };
 		0AC7F479185DBA0800F90558 /* TMView.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AC7F478185DBA0800F90558 /* TMView.m */; };
@@ -209,7 +208,6 @@
 		0AF4F4A2189ABDCC004BA4DF /* MessageTypingView.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AF4F4A1189ABDCC004BA4DF /* MessageTypingView.m */; };
 		0AF4F4AA189D5C72004BA4DF /* MessageTableItemServiceMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AF4F4A9189D5C72004BA4DF /* MessageTableItemServiceMessage.m */; };
 		0AF4F4AD189D5CD5004BA4DF /* MessageTableCellServiceMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AF4F4AC189D5CD5004BA4DF /* MessageTableCellServiceMessage.m */; };
-		0AFE39FD18ED752D0014B525 /* MessageTableItemGif.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AFE39FC18ED752D0014B525 /* MessageTableItemGif.m */; };
 		C2002D0319990F10002A1915 /* BroadcastInfoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C2002D0219990F10002A1915 /* BroadcastInfoViewController.m */; };
 		C2002D0619994D7A002A1915 /* BroadcastInfoHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = C2002D0519994D7A002A1915 /* BroadcastInfoHeaderView.m */; };
 		C202D96718E9D67A0060238B /* TMClickTextFieldView.m in Sources */ = {isa = PBXBuildFile; fileRef = C202D96618E9D67A0060238B /* TMClickTextFieldView.m */; };
@@ -1438,8 +1436,6 @@
 		0ABACDAC181AFE4B00EF43DB /* TLObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLObject.h; sourceTree = "<group>"; };
 		0ABACDAD181AFE4B00EF43DB /* TLObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLObject.m; sourceTree = "<group>"; };
 		0ABB7095181D988E00D1F12D /* ContactsDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ContactsDelegate.h; sourceTree = "<group>"; };
-		0ABC222F18EE88DA00243F82 /* MessageTableCellGifView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MessageTableCellGifView.h; sourceTree = "<group>"; };
-		0ABC223018EE88DA00243F82 /* MessageTableCellGifView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MessageTableCellGifView.m; sourceTree = "<group>"; };
 		0ABC223718F2D65900243F82 /* TLAPIAdd.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLAPIAdd.h; sourceTree = "<group>"; };
 		0ABC223818F2D65900243F82 /* TLAPIAdd.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLAPIAdd.m; sourceTree = "<group>"; };
 		0AC7F473185DA87A00F90558 /* TMTableView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TMTableView.h; sourceTree = "<group>"; };
@@ -1497,8 +1493,6 @@
 		0AF4F4A9189D5C72004BA4DF /* MessageTableItemServiceMessage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MessageTableItemServiceMessage.m; sourceTree = "<group>"; };
 		0AF4F4AB189D5CD5004BA4DF /* MessageTableCellServiceMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MessageTableCellServiceMessage.h; sourceTree = "<group>"; };
 		0AF4F4AC189D5CD5004BA4DF /* MessageTableCellServiceMessage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MessageTableCellServiceMessage.m; sourceTree = "<group>"; };
-		0AFE39FB18ED752D0014B525 /* MessageTableItemGif.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MessageTableItemGif.h; sourceTree = "<group>"; };
-		0AFE39FC18ED752D0014B525 /* MessageTableItemGif.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MessageTableItemGif.m; sourceTree = "<group>"; };
 		C2002D0119990F10002A1915 /* BroadcastInfoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BroadcastInfoViewController.h; sourceTree = "<group>"; };
 		C2002D0219990F10002A1915 /* BroadcastInfoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BroadcastInfoViewController.m; sourceTree = "<group>"; };
 		C2002D0419994D7A002A1915 /* BroadcastInfoHeaderView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BroadcastInfoHeaderView.h; sourceTree = "<group>"; };
@@ -3176,8 +3170,6 @@
 				0A241AB018ACD46700C32F45 /* MessageTableItemVideo.m */,
 				CE23C38018C717D200AA6C78 /* MessageTableItemAudio.h */,
 				CE23C38118C717D200AA6C78 /* MessageTableItemAudio.m */,
-				0AFE39FB18ED752D0014B525 /* MessageTableItemGif.h */,
-				0AFE39FC18ED752D0014B525 /* MessageTableItemGif.m */,
 				C222773018FC2CA4002AA0F6 /* MessageTableItemUnreadMark.h */,
 				C222773118FC2CA4002AA0F6 /* MessageTableItemUnreadMark.m */,
 				C2936943197E6B5700DD9680 /* MessageTableHeaderItem.h */,
@@ -3215,8 +3207,6 @@
 				0A241A9C18AB176B00C32F45 /* MessageTableCellTextView.m */,
 				0A241AAC18ACD39700C32F45 /* MessageTableCellVideoView.h */,
 				0A241AAD18ACD39700C32F45 /* MessageTableCellVideoView.m */,
-				0ABC222F18EE88DA00243F82 /* MessageTableCellGifView.h */,
-				0ABC223018EE88DA00243F82 /* MessageTableCellGifView.m */,
 				C222773318FC2DDA002AA0F6 /* MessageTableCellUnreadMarkView.h */,
 				C222773418FC2DDA002AA0F6 /* MessageTableCellUnreadMarkView.m */,
 				C2A5BFFB18E03D150021BE68 /* MessageTableCellAudioView.h */,
@@ -6879,7 +6869,6 @@
 				C248F3D119BE046C00BF658E /* picture.c in Sources */,
 				0A6758F2189672F600F4487D /* TMFastQueue.mm in Sources */,
 				C274C3731AB83182000DFDE4 /* TGForwardContainer.m in Sources */,
-				0ABC223118EE88DA00243F82 /* MessageTableCellGifView.m in Sources */,
 				C2D51BA31B17AA14009327C0 /* TGBotCommandsPopup.m in Sources */,
 				0A6D099719535E8500A9AC64 /* TLContactCategory.m in Sources */,
 				0A6D098C19535E8500A9AC64 /* NSColorCategory.m in Sources */,
@@ -7412,7 +7401,6 @@
 				C2D4B8771AFCE8FA0035B4E4 /* YapDatabaseConnection.m in Sources */,
 				C21DD98618D0786700F6B822 /* TMPreviewDocumentItem.m in Sources */,
 				C22A2A091C218AF000678172 /* TGCompressVideoItem.m in Sources */,
-				0AFE39FD18ED752D0014B525 /* MessageTableItemGif.m in Sources */,
 				0AB8501818757E31001A796C /* SearchItem.m in Sources */,
 				0A9EDC5A1897BA0E0037E1BC /* RBLResizableImage.m in Sources */,
 				C21D483519ADD1E3000F06E1 /* StandartViewController.m in Sources */,

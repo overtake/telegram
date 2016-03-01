@@ -8,12 +8,12 @@
 
 #import "MessageTableCellGeoView.h"
 #import "UIImageView+AFNetworking.h"
-
-
+#import "TGImageView.h"
+#import "TGCTextView.h"
 @interface MessageTableCellGeoView()
-@property (nonatomic, strong) NSImageView *geoImageView;
-@property (nonatomic,strong) BTRButton *pinButton;
-@property (nonatomic,strong) TMTextField *venueField;
+@property (nonatomic, strong) TGImageView *imageView;
+@property (nonatomic,strong) NSImageView *pinView;
+@property (nonatomic,strong) TGCTextView *venueField;
 
 @end
 
@@ -38,7 +38,9 @@
     if (self) {
         weak();
         
-        self.geoImageView = [[NSImageView alloc] initWithFrame:NSMakeRect(0, 0, 250, 130)];
+        _imageView = [[TGImageView alloc] initWithFrame:NSMakeRect(0, 0, 250, 130)];
+        [_imageView setContentMode:BTRViewContentModeScaleAspectFill];
+        
         __block dispatch_block_t block = ^{
             MessageTableItemGeo *geoItem = (MessageTableItemGeo *)weakSelf.item;
             
@@ -51,32 +53,22 @@
             
             open_link(path);
         };
-        [self.geoImageView setWantsLayer:YES];
-        [self.geoImageView.layer setCornerRadius:3];
-        [self.geoImageView.layer setBorderWidth:0.5];
-        [self.geoImageView.layer setBorderColor:NSColorFromRGB(0xcecece).CGColor];
-        [self.geoImageView setCallback:block];
-        [self.containerView addSubview:self.geoImageView];
         
-        _pinButton = [[BTRButton alloc] initWithFrame:CGRectZero];
-        [_pinButton setFrameSize:image_MessageMapPin().size];
-        [_pinButton setCenterByView:self.geoImageView];
-        [_pinButton setBackgroundImage:image_MessageMapPin() forControlState:BTRControlStateNormal];
-        //[button setCursor:[NSCursor pointingHandCursor] forControlState:BTRControlStateNormal];
-        [_pinButton addBlock:^(BTRControlEvents events) {
-            block();
-        } forControlEvents:BTRControlEventClick];
-        [self.containerView addSubview:_pinButton];
+        [_imageView setTapBlock:block];
         
+        [_imageView setCornerRadius:4];
+
+        [self.containerView addSubview:_imageView];
         
-        _venueField = [TMTextField defaultTextField];
-    
+        _pinView = imageViewWithImage(image_MessageMapPin());
+        [_pinView setCenterByView:_imageView];
+        
+        [_imageView addSubview:_pinView];
+        
+        _venueField = [[TGCTextView alloc] initWithFrame:NSMakeRect(70, 0, 0, 0)];
         
         [self.containerView addSubview:_venueField];
-    
-        [_venueField setFrameOrigin:NSMakePoint(70, 3)];
         
-        [[_venueField cell] setTruncatesLastVisibleLine:YES];
     }
     return self;
 }
@@ -84,19 +76,20 @@
 - (void) setItem:(MessageTableItemGeo *)item {
     [super setItem:item];
     
-    [_geoImageView setFrameSize:item.imageSize];
+    [_imageView setFrameSize:item.imageSize];
     
-    [_pinButton setCenterByView:_geoImageView];
+    [_pinView setCenterByView:_pinView.superview];
     
-    [_geoImageView setImageWithURL:item.geoUrl];
-    
-    [_pinButton setHidden:[item.message.media isKindOfClass:[TL_messageMediaVenue class]]];
+    [_imageView setObject:item.imageObject];
     
     [_venueField setHidden:![item.message.media isKindOfClass:[TL_messageMediaVenue class]]];
     
-    [_venueField setAttributedStringValue:item.venue];
+    [_venueField setAttributedString:item.venue];
     
-    [_venueField setFrameSize:item.blockSize];
+    [_venueField setFrameSize:item.venueSize];
+    [_venueField setFrameOrigin:NSMakePoint(item.imageSize.width + item.defaultOffset, 0)];
+    [_venueField setCenteredYByView:_venueField.superview];
+    
 }
 
 

@@ -949,4 +949,23 @@ NSImage *gray_resizable_placeholder() {
     return image;
 }
 
+NSImage *gray_circle_resizable_placeholder() {
+    static RHResizableImage *image = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        NSRect rect = NSMakeRect(0, 0, 50, 50);
+        NSImage *img = [[NSImage alloc] initWithSize:rect.size];
+        [img lockFocus];
+        [GRAY_BORDER_COLOR set];
+        NSBezierPath *path = [NSBezierPath bezierPath];
+        [path appendBezierPathWithRoundedRect:NSMakeRect(0, 0, rect.size.width, rect.size.height) xRadius:25 yRadius:25];
+        [path fill];
+        [img unlockFocus];
+        
+        image = [[RHResizableImage alloc] initWithImage:img capInsets:RHEdgeInsetsMake(5, 5, 5, 5)];
+        
+    });
+    return image;
+}
+
 @end

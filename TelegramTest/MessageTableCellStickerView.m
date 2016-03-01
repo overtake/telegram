@@ -108,8 +108,8 @@
     }
 }
 
--(void)setCellState:(CellState)cellState {
-    [super setCellState:cellState];
+-(void)setCellState:(CellState)cellState animated:(BOOL)animated {
+    [super setCellState:cellState animated:animated];
     
 }
 
@@ -118,7 +118,7 @@
     [super setItem:item];
     [self.imageView setFrameSize:item.blockSize];
     
-    [self updateCellState];
+    [self updateCellState:NO];
     
     self.imageView.object = item.imageObject;
   

@@ -66,17 +66,17 @@
 }
 
 
-- (void)updateCellState {
+- (void)updateCellState:(BOOL)animated {
     
     
     MessageTableItem *item =(MessageTableItem *)self.item;
     
     if(item.downloadItem && (item.downloadItem.downloadState != DownloadStateWaitingStart && item.downloadItem.downloadState != DownloadStateCompleted)) {
-        self.cellState = item.downloadItem.downloadState == DownloadStateCanceled ? CellStateCancelled : CellStateDownloading;
+        [self setCellState:item.downloadItem.downloadState == DownloadStateCanceled ? CellStateCancelled : CellStateDownloading animated:animated];
     } else if(item.messageSender && item.messageSender.state != MessageSendingStateSent ) {
-        self.cellState = item.messageSender.state == MessageSendingStateCancelled ? CellStateCancelled : CellStateSending;
+        [self setCellState:item.messageSender.state == MessageSendingStateCancelled ? CellStateCancelled : CellStateSending animated:animated];
     } else {
-        self.cellState = CellStateNormal;
+        [self setCellState:CellStateNormal animated:animated];
     }
     
 }
@@ -114,7 +114,7 @@
         _webpageContainerView = nil;
     }
     
-    [self updateCellState];
+    [self updateCellState:NO];
     
     [self.textView setFrameSize:NSMakeSize(item.textSize.width , item.textSize.height)];
     
@@ -130,8 +130,8 @@
 }
 
 
--(void)setCellState:(CellState)cellState {
-    [super setCellState:cellState];
+-(void)setCellState:(CellState)cellState animated:(BOOL)animated {
+    [super setCellState:cellState animated:animated];
     
     
     [self.webpageContainerView updateState:cellState];

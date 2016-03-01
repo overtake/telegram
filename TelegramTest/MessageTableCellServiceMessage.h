@@ -8,7 +8,6 @@
 
 #import "MessageTableCell.h"
 #import "MessageTableItemServiceMessage.h"
-
 @interface MessageTableCellServiceMessage : MessageTableCell
 
 @end

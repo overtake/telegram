@@ -7,7 +7,7 @@
 //
 
 #import "MessageTableItemHole.h"
-
+#import "MessageTableCellHoleView.h"
 @interface MessageTableItemHole ()
 @end
 
@@ -53,11 +53,13 @@
     _textSize = [_text coreTextSizeForTextFieldForWidth:width];
     
     
-    self.blockSize = NSMakeSize(width, _textSize.height);
-    
+    self.blockSize = NSMakeSize(width, _textSize.height + self.defaultContentOffset * 2);
     
     return YES;
-    
+}
+
+-(Class)viewClass {
+    return [MessageTableCellHoleView class];
 }
 
 @end

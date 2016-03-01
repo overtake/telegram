@@ -133,7 +133,7 @@
     self.cellState = CellStateNeedDownload;
 }
 
-- (void)updateCellState {
+- (void)updateCellState:(BOOL)animated {
     
     MessageTableItemAudio *item = (MessageTableItemAudio *)self.item;
     
@@ -142,13 +142,13 @@
     if(item.messageSender) {
         self.item.state = AudioStateUploading;
         [self setStateTextFieldString:[NSString stringWithFormat:NSLocalizedString(@"Audio.Uploading", nil), [NSString sizeToTransformedValuePretty:self.item.size]]];
-        self.cellState = CellStateSending;
+        [self setCellState:CellStateSending animated:animated];
         return;
     }
     
     if(item.downloadItem && item.downloadItem.downloadState != DownloadStateCompleted && item.downloadItem.downloadState != DownloadStateWaitingStart) {
         self.item.state = item.downloadItem.downloadState == DownloadStateCanceled ? AudioStateWaitDownloading : AudioStateDownloading;
-        self.cellState = item.downloadItem.downloadState == DownloadStateCanceled ? CellStateCancelled : CellStateDownloading;
+        [self setCellState:item.downloadItem.downloadState == DownloadStateCanceled ? CellStateCancelled : CellStateDownloading animated:animated];
         
         if(self.item.state == AudioStateDownloading) {
             [self setStateTextFieldString:[NSString stringWithFormat:NSLocalizedString(@"Audio.Downloading", nil), [NSString sizeToTransformedValuePretty:self.item.size]]];
@@ -156,11 +156,11 @@
        
     } else  if(![self.item isset]) {
         self.item.state = AudioStateWaitDownloading;
-        self.cellState = CellStateNeedDownload;
-        
+        [self setCellState:CellStateNeedDownload animated:animated];
     } else {
         self.item.state = globalAudioPlayer().delegate == self.item ? (globalAudioPlayer().isPaused ? AudioStatePaused : AudioStatePlaying) : AudioStateWaitPlaying;
         self.cellState = CellStateNormal;
+        [self setCellState:CellStateNormal animated:animated];
     }
     
 }
@@ -190,8 +190,8 @@
     }
 }
 
-- (void)setCellState:(CellState)cellState {
-    [super setCellState:cellState];
+- (void)setCellState:(CellState)cellState animated:(BOOL)animated  {
+    [super setCellState:cellState animated:animated];
 
     [self.stateTextField setHidden:YES];
     
@@ -209,9 +209,7 @@
         _waveformView.defaultColor = NSColorFromRGB(0xced9e0);;
         _waveformView.progressColor = NSColorFromRGB(0x4ca2e0);
     }
-    
-    [self.progressView setState:cellState];
-    
+        
     if(self.item.state == AudioStateWaitPlaying || self.item.state == AudioStatePaused || self.item.state == AudioStatePlaying) {
         [self.playerButton setBackgroundImage:blueBackground() forControlState:BTRControlStateNormal];
     } else {
@@ -332,7 +330,7 @@
     [self.durationView setFrameOrigin:NSMakePoint(NSMaxX(self.playerButton.frame) + 6, c - NSHeight(self.durationView.frame) + 2)];
  
     if(item.state != AudioStatePlaying && item.state != AudioStatePaused)
-        [self updateCellState];
+        [self updateCellState:NO];
     else {
         self.cellState = self.cellState;
         if(item.state != AudioStatePaused)

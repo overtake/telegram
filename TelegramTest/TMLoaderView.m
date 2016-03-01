@@ -67,7 +67,7 @@
         
         POPBasicAnimation *animation = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerOpacity];
         
-        animation.duration = 0.3f;
+        animation.duration = 0.2;
         animation.fromValue = @(from);
         animation.toValue = @(to);
         animation.removedOnCompletion = YES;
@@ -81,7 +81,9 @@
         }];
         
     } else {
+        self.layer.opacity = 1.0f;
         [super setHidden:hidden];
+        
         if(!self.isHidden)
             [self setNeedsDisplay:YES];
     }

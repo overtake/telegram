@@ -152,12 +152,11 @@ static NSImage *playImage() {
     _captionView = nil;
 }
 
-- (void)setCellState:(CellState)cellState {
-    [super setCellState:cellState];
+- (void)setCellState:(CellState)cellState animated:(BOOL)animated  {
+    [super setCellState:cellState animated:animated];
     
     [self.playImage setHidden:!(cellState == CellStateNormal)];
     
-    [self.progressView setState:cellState];
     
     [self.playImage setCenterByView:self.imageView];
     

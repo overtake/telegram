@@ -17,12 +17,12 @@
 #import "MessageTableItemGeo.h"
 #import "MessageTableItemContact.h"
 #import "MessageTableItemAudio.h"
-#import "MessageTableItemGif.h"
 #import "MessagetableitemUnreadMark.h"
 #import "MessageTableItemAudioDocument.h"
 #import "MessageTableItemServiceMessage.h"
 #import "MessageTableItemSticker.h"
 #import "MessageTableItemHole.h"
+#import "MessageTableItemDate.h"
 #import "TGDateUtils.h"
 #import "PreviewObject.h"
 #import "NSString+Extended.h"
@@ -335,7 +335,7 @@ static NSTextAttachment *channelIconAttachment() {
 - (NSSize)viewSize {
     NSSize viewSize = self._viewSize;
     
-    if(!self.message.hole && ![self isKindOfClass:[MessageTableItemServiceMessage class]] && ![self isKindOfClass:[MessageTableItemUnreadMark class]] && ![self isKindOfClass:[MessageTableHeaderItem class]]) {
+    if(![self isKindOfClass:[MessageTableItemHole class]] && ![self isKindOfClass:[MessageTableItemDate class]] && ![self isKindOfClass:[MessageTableItemServiceMessage class]] && ![self isKindOfClass:[MessageTableItemUnreadMark class]] && ![self isKindOfClass:[MessageTableHeaderItem class]]) {
         
         if(self.isHeaderMessage) {
             
@@ -433,7 +433,7 @@ static NSTextAttachment *channelIconAttachment() {
                 } else if([document attributeWithClass:[TL_documentAttributeVideo class]] != nil) {
                     objectReturn = [[MessageTableItemVideo alloc] initWithObject:message];
                 } else if([document.mime_type isEqualToString:@"image/gif"] && ![document.thumb isKindOfClass:[TL_photoSizeEmpty class]]) {
-                    objectReturn = [[MessageTableItemGif alloc] initWithObject:message];
+                    objectReturn = [[MessageTableItemDocument alloc] initWithObject:message];
                 } else if((audioAttr && !audioAttr.isVoice) || ([document.mime_type isEqualToString:@"audio/mpeg"] && (!audioAttr || !audioAttr.isVoice))) {
                     objectReturn = [[MessageTableItemAudioDocument alloc] initWithObject:message];
                 } else if([document isSticker]) {

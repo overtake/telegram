@@ -206,9 +206,9 @@ static NSDictionary *colors;
     
     [super setItem:item];
     
-    [self.nameField setStringValue:item.fileName];
+    [self.nameField setStringValue:item.message.media.document.file_name];
     
-    NSString *ext = [item.fileName pathExtension];
+    NSString *ext = [item.message.media.document.file_name pathExtension];
     
     NSArray *c = colors[ext];
     

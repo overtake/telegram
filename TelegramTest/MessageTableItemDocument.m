@@ -15,22 +15,39 @@
 #import "NSAttributedString+Hyperlink.h"
 #import "ImageCache.h"
 #import "ImageUtils.h"
-
 #import "MessageTableCellDocumentView.h"
 #import "NSString+Extended.h"
-#import "MessageTableCellDocumentView.h"
 @implementation MessageTableItemDocument
 
 - (BOOL)isHasThumb {
     return self.message.media.document.thumb && ![self.message.media.document.thumb isKindOfClass:[TL_photoSizeEmpty class]];
 }
 
-- (id)initWithObject:(TLMessage *)object {
+- (id)initWithObject:(TL_localMessage *)object {
     self = [super initWithObject:object];
     if(self) {
-        self.fileName = self.message.media.document.file_name;
         
-        self.fileSize = [[NSString sizeToTransformedValuePretty:self.message.media.document.size] trim];
+        _fileSize = [[NSString sizeToTransformedValuePretty:self.message.media.document.size] trim];
+        
+        NSMutableAttributedString *attr = [[NSMutableAttributedString alloc] init];
+        
+        [attr appendString:self.message.media.document.file_name withColor:TEXT_COLOR];
+        
+        [attr setFont:TGSystemMediumFont(13) forRange:attr.range];
+        
+        [attr appendString:@" "];
+        NSRange range = [attr appendString:_fileSize withColor:GRAY_TEXT_COLOR];
+        
+        [attr setFont:TGSystemFont(13) forRange:range];
+        
+        NSMutableParagraphStyle *style = [[NSMutableParagraphStyle alloc] init];
+        style.lineBreakMode = NSLineBreakByTruncatingMiddle;
+        
+        [attr addAttribute:NSParagraphStyleAttributeName value:style range:attr.range];
+        
+        _fileNameAttrubutedString = attr;
+        
+        _fileNameSize = [attr coreTextSizeForTextFieldForWidth:INT32_MAX];
         
         NSSize size;
         
@@ -50,17 +67,12 @@
             self.thumbSize = NSMakeSize(50, 50);
         }
         
-        self.thumbObject = [[TGImageObject alloc] initWithLocation:self.message.media.document.thumb.location placeHolder:self.cachedThumb];
+        self.thumbObject = [[TGImageObject alloc] initWithLocation:self.message.media.document.thumb.location placeHolder:nil];
         
         self.thumbObject.imageSize = size;
         
         self.blockSize = NSMakeSize(200, self.thumbSize.height + 6);
     
-        if(self.isset) {
-            self.state = DocumentStateDownloaded;
-        } else {
-            self.state = DocumentStateWaitingDownload;
-        }
 
          [self checkStartDownload:[self.message.to_id isKindOfClass:[TL_peerChat class]] ? AutoGroupDocuments : AutoPrivateDocuments size:self.message.media.document.size];
         
@@ -76,9 +88,6 @@
     return YES;
 }
 
--(NSString *)fileName {
-    return _fileName.length > 0 ? _fileName : @"File";
-}
 
 -(BOOL)canShare {
     return [self isset];
@@ -104,7 +113,6 @@
 - (void)doAfterDownload {
     [super doAfterDownload];
     
-    self.state = DocumentStateDownloaded;
 }
 
 -(DownloadItem *)downloadItem {

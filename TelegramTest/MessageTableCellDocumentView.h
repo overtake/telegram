@@ -12,13 +12,10 @@
 
 #import "DownloadQueue.h"
 
-@interface DocumentThumbImageView : TGImageView
-
-@end
 
 @interface MessageTableCellDocumentView : TGModernMessageCellContainerView
 
-@property (nonatomic, strong) DocumentThumbImageView *thumbView;
+@property (nonatomic, strong) TGImageView *thumbView;
 
 
 @end

@@ -2390,10 +2390,16 @@
          contextName = "-[MessageTableCellDocumentView setCellState:]:MessageTableCellDocumentView.m">
          <PersistentStrings>
             <PersistentString
+               value = "item.isHasThumb">
+            </PersistentString>
+            <PersistentString
+               value = "self.progressView.isHidden">
+            </PersistentString>
+            <PersistentString
                value = "self.item.state">
             </PersistentString>
             <PersistentString
-               value = "self.item.isHasThumb">
+               value = "self.progressView">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -3871,6 +3877,14 @@
          <PersistentStrings>
             <PersistentString
                value = "result">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[MessageTableCellContainerView setCellState:]:MessageTableCellContainerView.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.progressView.superview">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
