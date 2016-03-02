@@ -360,34 +360,12 @@ NSImage *fireImage() {
         return;
     }
     
-    
-    if(!anim) {
+    if(!anim)
         _captionView.textView.backgroundColor = color;
-        return;
-    }
+     else
+        [_captionView.textView pop_addAnimation:anim forKey:@"background"];
     
-    POPBasicAnimation *animation = [POPBasicAnimation animation];
-    
-    animation.property = [POPAnimatableProperty propertyWithName:@"background" initializer:^(POPMutableAnimatableProperty *prop) {
-        
-        [prop setReadBlock:^(TGCTextView *textView, CGFloat values[]) {
-            POPCGColorGetRGBAComponents(textView.backgroundColor.CGColor, values);
-        }];
-        
-        [prop setWriteBlock:^(TGCTextView *textView, const CGFloat values[]) {
-            CGColorRef color = POPCGColorRGBACreate(values);
-            textView.backgroundColor = [NSColor colorWithCGColor:color];
-        }];
-        
-    }];
-    
-    animation.toValue = anim.toValue;
-    animation.fromValue = anim.fromValue;
-    animation.duration = anim.duration;
-    animation.removedOnCompletion = YES;
-    [_captionView.textView pop_addAnimation:animation forKey:@"background"];
-    
-    
+  
 }
 
 

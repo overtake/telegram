@@ -20,4 +20,6 @@
 
 - (void)setSelected:(BOOL)isSelected animated:(BOOL)animated;
 
+-(void)_didChangeBackgroundColorWithAnimation:(POPBasicAnimation *)anim toColor:(NSColor *)color;
+
 @end

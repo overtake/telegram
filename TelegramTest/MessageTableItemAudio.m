@@ -15,6 +15,7 @@
 #import "DownloadQueue.h"
 #import "DownloadDocumentItem.h"
 #import "TL_documentAttributeAudio+Extension.h"
+#import "MessageTableCellAudioView.h"
 @implementation MessageTableItemAudio
 
 - (id)initWithObject:(TLMessage *)object {
@@ -24,7 +25,12 @@
         TL_documentAttributeAudio *audio = (TL_documentAttributeAudio *) [object.media.document attributeWithClass:[TL_documentAttributeAudio class]];
 
         self.blockSize = NSMakeSize(300, 45);
-        self.duration = [NSString durationTransformedValue:audio.duration];
+        
+        NSMutableAttributedString *attr = [[NSMutableAttributedString alloc] init];
+        
+        [attr appendString:[NSString durationTransformedValue:audio.duration] withColor:GRAY_TEXT_COLOR];
+        [attr setFont:TGSystemFont(12) forRange:attr.range];
+        _duration = attr;
 
         _waveform = audio.arrayWaveform;
         
@@ -45,7 +51,7 @@
 -(BOOL)makeSizeByWidth:(int)width {
     [super makeSizeByWidth:width];
     
-    self.blockSize = NSMakeSize(MIN(width - 80 ,200), 45);
+    self.blockSize = NSMakeSize(MIN(width,210), 40);
     
     return YES;
 }
@@ -146,6 +152,10 @@
     });
     
     return c;
+}
+
+-(Class)viewClass {
+    return [MessageTableCellAudioView class];
 }
 
 @end

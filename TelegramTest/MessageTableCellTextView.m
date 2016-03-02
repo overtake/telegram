@@ -103,7 +103,7 @@
             [self.containerView addSubview:_webpageContainerView];
         }
         
-        [_webpageContainerView setFrame:NSMakeRect(0, item.textSize.height + item.defaultContentOffset, item.webpage.size.width, item.webpage.blockHeight)];
+        [_webpageContainerView setFrame:NSMakeRect(0, item.textSize.height + item.defaultContentOffset, item.webpage.size.width + item.defaultOffset, item.webpage.blockHeight)];
         
         [_webpageContainerView setItem:item];
         
@@ -182,32 +182,10 @@
     if(!anim) {
         self.textView.backgroundColor = color;
         self.webpageContainerView.descriptionField.backgroundColor = color;
-        return;
+    } else {
+        [self.textView pop_addAnimation:anim forKey:@"background"];
+        [self.webpageContainerView.descriptionField pop_addAnimation:anim forKey:@"background"];
     }
-
-    POPBasicAnimation *animation = [POPBasicAnimation animation];
-    
-    animation.property = [POPAnimatableProperty propertyWithName:@"background" initializer:^(POPMutableAnimatableProperty *prop) {
-        
-        [prop setReadBlock:^(TGCTextView *textView, CGFloat values[]) {
-            POPCGColorGetRGBAComponents(textView.backgroundColor.CGColor, values);
-        }];
-        
-        [prop setWriteBlock:^(TGCTextView *textView, const CGFloat values[]) {
-            CGColorRef color = POPCGColorRGBACreate(values);
-            textView.backgroundColor = [NSColor colorWithCGColor:color];
-        }];
-        
-    }];
-    
-    animation.toValue = anim.toValue;
-    animation.fromValue = anim.fromValue;
-    animation.duration = anim.duration;
-    animation.removedOnCompletion = YES;
-    [self.textView pop_addAnimation:animation forKey:@"background"];
-    
-    [self.webpageContainerView.descriptionField pop_addAnimation:animation forKey:@"background"];
-    
 }
 
 -(void)_colorAnimationEvent {

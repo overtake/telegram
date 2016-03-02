@@ -58,10 +58,8 @@
     [super setWebpage:webpage];
     
     
-    [self.descriptionField setFrame:NSMakeRect([self textX], 0, webpage.descSize.width , webpage.descSize.height )];
     
-    [self.descriptionField setAttributedString:webpage.desc];
-    
+    [self.siteName setHidden:YES];
     
     [self.imageView setFrame:NSMakeRect(0, webpage.size.height - webpage.imageSize.height, webpage.imageSize.width, webpage.imageSize.height)];
     
@@ -73,7 +71,6 @@
     [self.imageView removeFromSuperview];
     
     [self.player addSubview:self.imageView];
-    
     
     [self.imageView setHidden:NO];
     

@@ -16,8 +16,13 @@
 
 -(NSString *)fileName;
 
+@property (nonatomic,strong) NSAttributedString *nameAttributedString;
+@property (nonatomic,assign) NSSize nameSize;
+
 @property (nonatomic,strong,readonly) NSMutableAttributedString *id3AttributedString;
 @property (nonatomic,strong,readonly) NSMutableAttributedString *id3AttributedStringHeader;
 @property (nonatomic,strong,readonly) DownloadEventListener *secondDownloadListener;
+
+
 
 @end

@@ -354,5 +354,11 @@
     [[NSCursor arrowCursor] set];
 }
 
+-(void)setBackgroundColor:(NSColor *)backgroundColor {
+    [super setBackgroundColor:backgroundColor];
+    
+    [self setNeedsDisplay:YES];
+}
+
 @end
 

@@ -22,10 +22,6 @@
        
        _fileSize = [[NSString sizeToTransformedValuePretty:self.message.media.document.size] trim];
        
-        if([self isset])
-            self.state = AudioStateWaitPlaying;
-        else
-            self.state = AudioStateWaitDownloading;
        
         [self doAfterDownload];
     
@@ -49,13 +45,30 @@
     
     TL_documentAttributeAudio *audio = (TL_documentAttributeAudio *) [self.message.media.document attributeWithClass:[TL_documentAttributeAudio class]];
     
+    NSMutableAttributedString *attr = [[NSMutableAttributedString alloc] init];
+    
     if(audio && ([audio.title trim].length > 0 && [audio.performer trim].length > 0)) {
-        self.duration = [NSString stringWithFormat:@"%@\n%@",audio.performer,audio.title];
+        NSRange range = [attr appendString:audio.performer withColor:TEXT_COLOR];
+        [attr setFont:TGSystemMediumFont(13) forRange:range];
+        
+        [attr appendString:@"\n"];
+        
+        range = [attr appendString:audio.title withColor:GRAY_TEXT_COLOR];
+        [attr setFont:TGSystemFont(13) forRange:range];
+        
     } else {
-        self.duration = self.message.media.document.file_name;
+        
+        [attr appendString:self.message.media.document.file_name withColor:TEXT_COLOR];
+        [attr setFont:TGSystemMediumFont(13) forRange:attr.range];
     }
     
+    NSMutableParagraphStyle *style = [[NSMutableParagraphStyle alloc] init];
+    style.lineBreakMode = NSLineBreakByTruncatingMiddle;
     
+    [attr addAttribute:NSParagraphStyleAttributeName value:style range:attr.range];
+
+    
+    _nameAttributedString = attr;
     
     [self regenerate];
 }
@@ -149,8 +162,8 @@
 -(BOOL)makeSizeByWidth:(int)width {
     [super makeSizeByWidth:width];
     
-    self.blockSize = NSMakeSize(width - self.dateSize.width - 20, 50);
-    
+    self.blockSize = NSMakeSize(width, 50);
+    _nameSize = [_nameAttributedString coreTextSizeForTextFieldForWidth:width - 60];
     return NO;
 }
 

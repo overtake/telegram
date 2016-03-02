@@ -12,4 +12,6 @@
 
 @interface MessageTableCellAudioView : MessagetableCellAudioController
 
+- (void)stopPlayer;
+
 @end

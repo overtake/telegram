@@ -11,6 +11,7 @@
 #import "TGTextLabel.h"
 #import "MessageReplyContainer.h"
 #import "TGModernMessageCellRightView.h"
+#import "POPCGUtils.h"
 @interface TGModernMessageCellContainerView ()
 
 @property (nonatomic,strong) TMAvatarImageView *photoView;
@@ -87,6 +88,17 @@
     {
         if(!_photoView) {
             _photoView = [TMAvatarImageView standartMessageTableAvatar];
+            
+            weak();
+            
+            [_photoView setTapBlock:^{
+                strongWeak();
+                
+                if(strongSelf == weakSelf) {
+                    [strongSelf.messagesViewController.navigationViewController showInfoPage:strongSelf.item.message.conversation];
+                }
+                
+            }];
             [self addSubview:_photoView];
         }
         
@@ -149,7 +161,7 @@
             [self addSubview:_replyContainer];
         }
         
-        [_replyContainer setFrameSize:NSMakeSize(item.blockSize.width, item.replyObject.containerHeight)];
+        [_replyContainer setFrameSize:NSMakeSize(item.viewSize.width, item.replyObject.containerHeight)];
         [_replyContainer setItem:item];
         [_replyContainer setReplyObject:item.replyObject];
         
@@ -386,9 +398,35 @@ static bool dragAction = NO;
         animation.toValue = (__bridge id)(color.CGColor);
         animation.duration = 0.2;
         animation.removedOnCompletion = YES;
-        [self _didChangeBackgroundColorWithAnimation:animation toColor:color];
         
-        [self.layer pop_addAnimation:animation forKey:@"background"];
+        
+        
+        
+         [self.layer pop_addAnimation:animation forKey:@"background"];
+        
+        
+        POPBasicAnimation *fieldsAnimation = [POPBasicAnimation animation];
+        
+        fieldsAnimation.property = [POPAnimatableProperty propertyWithName:@"background" initializer:^(POPMutableAnimatableProperty *prop) {
+            
+            [prop setReadBlock:^(TMView *textView, CGFloat values[]) {
+                POPCGColorGetRGBAComponents(textView.backgroundColor.CGColor, values);
+            }];
+            
+            [prop setWriteBlock:^(TMView *textView, const CGFloat values[]) {
+                CGColorRef color = POPCGColorRGBACreate(values);
+                textView.backgroundColor = [NSColor colorWithCGColor:color];
+            }];
+            
+        }];
+        
+        fieldsAnimation.toValue = animation.toValue;
+        fieldsAnimation.fromValue = animation.fromValue;
+        fieldsAnimation.duration = animation.duration;
+        fieldsAnimation.removedOnCompletion = YES;
+        
+        [self _didChangeBackgroundColorWithAnimation:fieldsAnimation toColor:color];
+        
         
     } else {
         NSColor *color = selected ? NSColorFromRGB(0xf7f7f7) : NSColorFromRGB(0xffffff);
@@ -396,8 +434,23 @@ static bool dragAction = NO;
         [self _didChangeBackgroundColorWithAnimation:nil toColor:color];
     }
     
-    
 }
+
+-(void)_didChangeBackgroundColorWithAnimation:(POPBasicAnimation *)anim toColor:(NSColor *)color {
+    
+    if(!anim)
+        _nameView.backgroundColor = color;
+     else
+        [_nameView pop_addAnimation:anim forKey:@"background"];
+    
+    
+    [_replyContainer _didChangeBackgroundColorWithAnimation:anim toColor:color];
+    
+    [_rightView _didChangeBackgroundColorWithAnimation:anim toColor:color];
+
+    [_forwardContainerView _didChangeBackgroundColorWithAnimation:anim toColor:color];
+}
+
 
 -(void)checkDateEditItem {
     if(dateEditItem == self.item && self.messagesViewController.selectedMessages.count == 1) {

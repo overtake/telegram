@@ -657,43 +657,6 @@ static BOOL mouseIsDown = NO;
     return [_replyContainer.superview mouse:[_replyContainer.superview convertPoint:[theEvent locationInWindow] fromView:nil] inRect:_replyContainer.frame] ;
 }
 
--(void)_didChangeBackgroundColorWithAnimation:(POPBasicAnimation *)anim toColor:(NSColor *)color {
-    
-    if(!_replyContainer && !_forwardMessagesTextLayer)
-        return;
-    
-    if(!anim) {
-        _replyContainer.messageField.backgroundColor = color;
-        _forwardMessagesTextLayer.backgroundColor = color;
-        return;
-    }
-    
-    POPBasicAnimation *animation = [POPBasicAnimation animation];
-    
-    animation.property = [POPAnimatableProperty propertyWithName:@"background" initializer:^(POPMutableAnimatableProperty *prop) {
-        
-        [prop setReadBlock:^(TGCTextView *textView, CGFloat values[]) {
-            POPCGColorGetRGBAComponents(textView.backgroundColor.CGColor, values);
-        }];
-        
-        [prop setWriteBlock:^(TGCTextView *textView, const CGFloat values[]) {
-            CGColorRef color = POPCGColorRGBACreate(values);
-            textView.backgroundColor = [NSColor colorWithCGColor:color];
-        }];
-        
-    }];
-    
-    animation.toValue = anim.toValue;
-    animation.fromValue = anim.fromValue;
-    animation.duration = anim.duration;
-    animation.removedOnCompletion = YES;
-    
-    if(_replyContainer)
-        [_replyContainer.messageField pop_addAnimation:animation forKey:@"background"];
-    if(_forwardMessagesTextLayer)
-        [_forwardMessagesTextLayer pop_addAnimation:animation forKey:@"background"];
-}
-
 
 
 -(void)_colorAnimationEvent {

@@ -227,4 +227,12 @@
     
 }
 
+-(void)_didChangeBackgroundColorWithAnimation:(POPBasicAnimation *)anim toColor:(NSColor *)color {
+    if(!anim)
+        _dateLabel.backgroundColor = color;
+     else
+         [_dateLabel pop_addAnimation:anim forKey:@"background"];
+        
+}
+
 @end

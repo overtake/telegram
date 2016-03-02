@@ -19,4 +19,6 @@
 
 -(void)setTableItem:(MessageTableItem *)tableItem contentView:(TMView *)contentView containerView:(TGModernMessageCellContainerView *)containerView;
 
+-(void)_didChangeBackgroundColorWithAnimation:(POPBasicAnimation *)anim toColor:(NSColor *)color;
+
 @end

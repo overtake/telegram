@@ -90,13 +90,10 @@
 -(void)makeSize:(int)width {
     [super makeSize:width];
     
-    _imageSize = strongsize(NSMakeSize(self.imagesize.w, self.imagesize.h), MIN(320, width - 67));
+    _imageSize = strongsize(NSMakeSize(self.imagesize.w, self.imagesize.h), MIN(320, width));
     _size = _imageSize;
-    _size.width = MAX(_imageSize.width,self.descSize.width);
-    
-    _size.width+=20;
-    _size.height +=self.descSize.height+self.tableItem.defaultContentOffset;
-    
+    _size.width = _imageSize.width;
+        
 }
 
 - (BOOL)isset {
@@ -122,6 +119,9 @@
     
 }
 
+-(int)blockHeight {
+    return self.size.height;
+}
 
 -(Class)webpageContainer {
     return NSClassFromString(@"TGWebpageGifContainer");

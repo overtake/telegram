@@ -738,6 +738,10 @@ static NSTextAttachment *channelIconAttachment() {
     return YES;
 }
 
+-(NSString *)path {
+    return mediaFilePath(self.message);
+}
+
 
 -(int)defaultContentOffset {
     return 6;

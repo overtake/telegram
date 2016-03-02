@@ -269,4 +269,10 @@ typedef NSImage * (^ImageProcessor)(NSImage *image, NSSize size);
 
 NSImage *gray_resizable_placeholder();
 NSImage *gray_circle_resizable_placeholder();
+
+NSImage *voice_play_image();
+NSImage *play_image();
+NSImage *gray_circle_background_image();
+NSImage *blue_circle_background_image();
+
 @end

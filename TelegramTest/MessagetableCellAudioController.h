@@ -12,32 +12,5 @@
 @interface MessagetableCellAudioController : TGModernMessageCellContainerView
 
 
-@property (nonatomic, strong) TMTextField *stateTextField;
-@property (nonatomic, strong) MessageTableItemAudio *item;
 
-@property (nonatomic, strong) BTRButton *playerButton;
-@property (nonatomic, strong) TMTextField *durationView;
-@property (nonatomic, assign) BOOL needPlayAfterDownload;
-@property (nonatomic, strong) TGTimer *progressTimer;
-@property (nonatomic, assign) float progress;
-
-@property (nonatomic, assign) NSTimeInterval currentTime;
-@property (nonatomic, assign) BOOL acceptTimeChanger;
-
-- (void)setDurationTextFieldString:(NSString *)string;
-- (void)setStateTextFieldString:(NSString *)string;
-- (void)play:(NSTimeInterval)pos;
-- (void)pause;
-- (void)stopPlayer;
-- (void)startTimer;
-
--(float)progressWidth;
--(NSRect)progressRect;
-
-
-
-NSImage *blueBackground();
-NSImage *grayBackground();
-NSImage *playImage();
-NSImage *voicePlay();
 @end

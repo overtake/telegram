@@ -2261,6 +2261,9 @@
          contextName = "-[TGWebpageGifContainer setWebpage:]:TGWebpageGifContainer.m">
          <PersistentStrings>
             <PersistentString
+               value = "webpage.size.height - webpage.imageSize.height">
+            </PersistentString>
+            <PersistentString
                value = "self.path">
             </PersistentString>
             <PersistentString

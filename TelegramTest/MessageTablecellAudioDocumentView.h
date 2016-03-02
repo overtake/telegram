@@ -6,8 +6,8 @@
 //  Copyright (c) 2014 keepcoder. All rights reserved.
 //
 
-#import "MessagetableCellAudioController.h"
+#import "TGModernMessageCellContainerView.h"
 #import "MessageTableItemAudioDocument.h"
-@interface MessageTablecellAudioDocumentView : MessagetableCellAudioController
+@interface MessageTablecellAudioDocumentView : TGModernMessageCellContainerView
 
 @end

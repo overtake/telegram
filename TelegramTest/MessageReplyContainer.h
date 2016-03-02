@@ -19,4 +19,7 @@
 
 @property (nonatomic,weak) MessageTableItem *item;
 
+
+-(void)_didChangeBackgroundColorWithAnimation:(POPBasicAnimation *)anim toColor:(NSColor *)color;
+
 @end

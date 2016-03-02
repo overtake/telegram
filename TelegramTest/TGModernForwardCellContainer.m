@@ -79,6 +79,18 @@
     [self setNeedsDisplay:YES];
 }
 
+-(void)_didChangeBackgroundColorWithAnimation:(POPBasicAnimation *)anim toColor:(NSColor *)color {
+    if(!anim) {
+        _forwardHeader.backgroundColor = color;
+        _forwardName.backgroundColor = color;
+    } else {
+        [_forwardHeader pop_addAnimation:anim forKey:@"background"];
+        [_forwardName pop_addAnimation:anim forKey:@"background"];
+    }
+    
+    
+}
+
 -(int)containerWidth {
     return NSWidth(self.frame) - _tableItem.defaultOffset;
 }

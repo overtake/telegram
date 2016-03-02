@@ -124,4 +124,6 @@
 
 -(BOOL)hasRightView;
 
+-(NSString *)path;
+
 @end

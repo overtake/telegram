@@ -10,6 +10,7 @@
 #import "TGCTextView.h"
 #import "TGPhotoViewer.h"
 #import "TGEmbedModalView.h"
+#import "TGWebpageGifContainer.h"
 @interface TGWebpageContainer ()
 @property (nonatomic,strong,readonly) TMView *containerView;
 @end
@@ -84,13 +85,6 @@
 }
 
 
-//-(void)setFrame:(NSRect)frame {
-//    
-//    
-//    [super setFrame:frame];
-//    
-//    [_containerView setFrame:NSMakeRect([MessageTableItem defaultOffset], self.webpage.author ? 30 : 14,NSWidth(frame) - [MessageTableItem defaultOffset],self.webpage.size.height )];
-//}
 
 -(void)addSubview:(NSView *)aView {
     [_containerView addSubview:aView];
@@ -100,7 +94,7 @@
     _webpage = webpage;
     
     
-    [_containerView setFrame:NSMakeRect([MessageTableItem defaultOffset], self.webpage.author ? 30 : 14,NSWidth(self.frame) - [MessageTableItem defaultOffset],self.webpage.size.height )];
+    [_containerView setFrame:NSMakeRect([MessageTableItem defaultOffset], self.webpage.blockHeight - self.webpage.size.height , webpage.size.width,self.webpage.size.height )];
     
     [self.author setHidden:!webpage.author];
     

@@ -193,6 +193,17 @@
     
 }
 
+-(void)_didChangeBackgroundColorWithAnimation:(POPBasicAnimation *)anim toColor:(NSColor *)color {
+    if(!anim) {
+        _messageField.backgroundColor = color;
+        _nameView.backgroundColor = color;
+    } else {
+        [_messageField pop_addAnimation:anim forKey:@"background"];
+        [_nameView pop_addAnimation:anim forKey:@"background"];
+    }
+    
+}
+
 -(void)mouseDragged:(NSEvent *)theEvent {
     
 }

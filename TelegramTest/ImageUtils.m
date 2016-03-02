@@ -969,4 +969,67 @@ NSImage *gray_circle_resizable_placeholder() {
     return image;
 }
 
+
+
+NSImage *blue_circle_background_image() {
+    static NSImage *image = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        NSRect rect = NSMakeRect(0, 0, 50, 50);
+        image = [[NSImage alloc] initWithSize:rect.size];
+        [image lockFocus];
+        [NSColorFromRGB(0x4ba3e2) set];
+        NSBezierPath *path = [NSBezierPath bezierPath];
+        [path appendBezierPathWithRoundedRect:NSMakeRect(0, 0, rect.size.width, rect.size.height) xRadius:rect.size.width/2 yRadius:rect.size.height/2];
+        [path fill];
+        [image unlockFocus];
+    });
+    return image;
+}
+
+NSImage *gray_circle_background_image() {
+    static NSImage *image = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        NSRect rect = NSMakeRect(0, 0, 50, 50);
+        image = [[NSImage alloc] initWithSize:rect.size];
+        [image lockFocus];
+        [NSColorFromRGB(0x4ba3e2) set];
+        NSBezierPath *path = [NSBezierPath bezierPath];
+        [path appendBezierPathWithRoundedRect:NSMakeRect(0, 0, rect.size.width, rect.size.height) xRadius:rect.size.width/2 yRadius:rect.size.height/2];
+        [path fill];
+        [image unlockFocus];
+    });
+    return image;
+}
+NSImage *play_image() {
+    static NSImage *image = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        NSRect rect = NSMakeRect(0, 0, image_PlayIconWhite().size.width + 5, image_PlayIconWhite().size.height+1);
+        image = [[NSImage alloc] initWithSize:rect.size];
+        [image lockFocus];
+        
+        [image_PlayIconWhite() drawInRect:NSMakeRect(5, 0, image_PlayIconWhite().size.width, image_PlayIconWhite().size.height) fromRect:NSZeroRect operation:NSCompositeHighlight fraction:1];
+        
+        [image unlockFocus];
+    });
+    return image;
+}
+
+NSImage *voice_play_image() {
+    static NSImage *image = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        NSRect rect = NSMakeRect(0, 0, image_VoicePlay().size.width + 5, image_VoicePlay().size.height+1);
+        image = [[NSImage alloc] initWithSize:rect.size];
+        [image lockFocus];
+        
+        [image_VoicePlay() drawInRect:NSMakeRect(5, 0, image_VoicePlay().size.width, image_VoicePlay().size.height) fromRect:NSZeroRect operation:NSCompositeHighlight fraction:1];
+        
+        [image unlockFocus];
+    });
+    return image;
+}
+
 @end
