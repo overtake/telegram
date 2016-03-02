@@ -20,7 +20,7 @@
     [super setWebpage:webpage];
         
     
-    [self.imageView setFrame:NSMakeRect(webpage.descSize.height > 60 ? (webpage.descSize.width + 5) : [self textX], webpage.descSize.height > 60 ? 0 : webpage.descSize.height + 5, webpage.imageSize.width, webpage.imageSize.height)];
+    [self.imageView setFrame:NSMakeRect(webpage.descSize.height > 60 ? (webpage.descSize.width + webpage.tableItem.defaultOffset) : [self textX], webpage.descSize.height > 60 ? 0 : webpage.descSize.height +  webpage.tableItem.defaultContentOffset, webpage.imageSize.width, webpage.imageSize.height)];
     
     if(webpage.imageObject) {
         

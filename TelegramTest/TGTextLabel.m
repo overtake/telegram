@@ -17,6 +17,7 @@
     @public bool _truncateInTheMiddle;
     @public CGSize _lastSize;
     int _height;
+    NSTrackingArea *_trackingArea;
 }
 
 @end
@@ -193,12 +194,11 @@
     
     if (_line != NULL) {
         
-        
-        CGFloat ascent;
-        CGFloat descent;
-        CTLineGetTypographicBounds(_line, &ascent, &descent, NULL);
-      //  CGContextSetTextPosition(context, 0.0, (ascent + descent)-ascent);
-        
+//        
+//        CGFloat ascent;
+//        CGFloat descent;
+//        CTLineGetTypographicBounds(_line, &ascent, &descent, NULL);
+//        
         CGContextSetTextPosition(context, 0.0f, 3);
         CTLineDraw(_line, context);
     }
@@ -270,8 +270,12 @@
         
         if(link) {
             [self open_link:link itsReal:itsReal];
+        } else {
+            [super mouseUp:theEvent];
         }
-    }
+     } else {
+         [super mouseUp:theEvent];
+     }
     
     [[NSCursor arrowCursor] set];
 }
@@ -297,6 +301,57 @@
         }, nil);
     }
     
+}
+
+
+-(void)updateTrackingAreas
+{
+    if(_trackingArea != nil) {
+        [self removeTrackingArea:_trackingArea];
+    }
+    
+    if( self.text.length == 0)
+        return;
+    
+    int opts = (NSTrackingMouseEnteredAndExited | NSTrackingMouseMoved | NSTrackingActiveAlways | NSTrackingInVisibleRect);
+    _trackingArea = [ [NSTrackingArea alloc] initWithRect:[self bounds]
+                                                  options:opts
+                                                    owner:self
+                                                 userInfo:nil];
+    [self addTrackingArea:_trackingArea];
+}
+
+-(void)mouseEntered:(NSEvent *)theEvent {
+    [super mouseEntered:theEvent];
+    [self checkCursor:theEvent];
+}
+-(void)mouseMoved:(NSEvent *)theEvent {
+    [self checkCursor:theEvent];
+}
+
+-(void)mouseExited:(NSEvent *)theEvent {
+    [super mouseExited:theEvent];
+    [[NSCursor arrowCursor] set];
+}
+
+-(void)checkCursor:(NSEvent *)theEvent {
+    NSPoint location = [self convertPoint:[theEvent locationInWindow] fromView:nil];
+    
+    if([self mouse:location inRect:self.bounds]) {
+        
+        BOOL hitTest,itsReal;
+        
+        NSString *link = [self linkAtPoint:location hitTest:&hitTest itsReal:&itsReal];
+        
+        if(hitTest) {
+            if(link) {
+                [[NSCursor pointingHandCursor] set];
+            } 
+            return;
+        }
+    }
+    
+    [[NSCursor arrowCursor] set];
 }
 
 @end

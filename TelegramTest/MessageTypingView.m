@@ -44,14 +44,14 @@ const NSTimeInterval typingIntervalSecond = 0.14;
     self = [super initWithFrame:frame];
     if (self) {
         
-        self.typingView = [[TMView alloc] initWithFrame:NSMakeRect(63-30, 10, 30, 16)];
+        self.typingView = [[TMView alloc] initWithFrame:NSMakeRect(20+3, 10, 30, 16)];
         
         self.typingView.wantsLayer = YES;
         
         [self addSubview:self.typingView];
         
         self.attributedString = [[NSMutableAttributedString alloc] init];
-        self.textField = [[TMTextField alloc] initWithFrame:NSMakeRect(77, 10, 0,20)];
+        self.textField = [[TMTextField alloc] initWithFrame:NSMakeRect(20+36+8, 10, 0,20)];
         [self.textField setBordered:NO];
         [self.textField setEditable:NO];
         [self.textField setEnabled:NO];

@@ -95,7 +95,10 @@
             [self addSubview:_nameView];
         }
         
-        [_photoView setUser:item.user];
+        if(!item.message.isPost)
+            [_photoView setUser:item.user];
+        else
+            [_photoView setChat:item.message.chat];
         
         [_nameView setText:item.headerName maxWidth:item.headerSize.width height:item.headerSize.height];
         

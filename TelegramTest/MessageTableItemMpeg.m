@@ -14,6 +14,7 @@
 #import "DownloadDocumentItem.h"
 #import "DownloadExternalItem.h"
 #import "TGExternalImageObject.h"
+#import "MessageTableCellMpegView.h"
 @interface MessageTableItemMpeg () {
     NSString *_path;
 }
@@ -84,15 +85,26 @@
 -(void)doAfterDownload {
     [super doAfterDownload];
     
-    if(self.document && ![self.document.thumb isKindOfClass:[TL_photoSizeEmpty class]]) {
-        _thumbObject = [[TGBlurImageObject alloc] initWithLocation:self.document.thumb.location thumbData:self.document.thumb.bytes size:self.document.thumb.size];
-        _thumbObject.imageSize = NSMakeSize(self.imagesize.w, self.imagesize.h);
+    if(self.document) {
+        if(![self.document.thumb isKindOfClass:[TL_photoSizeEmpty class]]) {
+            
+            _thumbObject = [[TGImageObject alloc] initWithLocation:self.document.thumb.location placeHolder:[[NSImage alloc] initWithData:self.document.thumb.bytes] sourceId:self.message.peer_id size:self.document.thumb.size];
+            
+            _thumbObject.imageProcessor = [ImageUtils b_processor];
+            _thumbObject.thumbProcessor = [ImageUtils b_processor];
+        } else {
+            if(self.isset) {
+                _thumbObject = [[TGThumbnailObject alloc] initWithFilepath:self.path];
+                _thumbObject.imageProcessor = [ImageUtils b_processor];
+            }
+            
+        }
     } else {
         if(self.message.media.bot_result.thumb_url.length > 0) {
             _thumbObject = [[TGExternalImageObject alloc] initWithURL:self.message.media.bot_result.thumb_url];
-            _thumbObject.imageSize = NSMakeSize(self.imagesize.w, self.imagesize.h);
         }
     }
+     _thumbObject.imageSize = NSMakeSize(self.imagesize.w, self.imagesize.h);
     
 }
 
@@ -163,6 +175,10 @@
 
 -(NSString *)path {
     return  mediaFilePath(self.message);
+}
+
+-(Class)viewClass {
+    return [MessageTableCellMpegView class];
 }
 
 @end

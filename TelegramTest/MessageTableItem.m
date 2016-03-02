@@ -128,7 +128,7 @@ static NSCache *cItems;
                     range = [_headerName appendString:[NSString stringWithFormat:@"@%@",viaBotUserName] withColor:GRAY_TEXT_COLOR];
                     [_headerName addAttribute:NSForegroundColorAttributeName value:LINK_COLOR range:range];
                     [_headerName setLink:[NSString stringWithFormat:@"chat://viabot/@%@",viaBotUserName] forRange:range];
-                    
+                    [_headerName setFont:TGSystemMediumFont(13) forRange:range];
                     self.headerName = self.headerName;
                     
                 }
@@ -550,7 +550,6 @@ static NSTextAttachment *channelIconAttachment() {
         _downloadItem = [DownloadQueue find:self.message.n_id];
     
     return _downloadItem;
-
 }
 
 -(void)rebuildDate {
@@ -585,14 +584,14 @@ static NSTextAttachment *channelIconAttachment() {
     const int sendingUnreadReadSize = 16;
     const int sendingUnreadReadOffset = self.defaultOffset;
     
-    
     int w = _dateSize.width +selectSize + selectOffset + sendingUnreadReadSize + sendingUnreadReadOffset;
     
     if(!self.message.n_out && !self.message.isPost) {
         w = _dateSize.width + selectSize + selectOffset;
     }
     
-
+    w+= _viewsCountAndSignSize.width;
+    
     _rightSize = NSMakeSize(w,_dateSize.height);
 }
 
@@ -695,11 +694,9 @@ static NSTextAttachment *channelIconAttachment() {
       //  [signString setLink:[TMInAppLinks peerProfile:[TL_peerUser createWithUser_id:_user.n_id]] forRange:range];
     }
     
-    _viewsCountAndSignSize = [signString sizeForTextFieldForWidth:INT32_MAX];
-    _viewsCountAndSignSize.width =_viewsCountAndSignSize.width;
-    _viewsCountAndSignSize.height = 17;
-    
     [signString setFont:TGSystemFont(12) forRange:signString.range];
+    
+     _viewsCountAndSignSize = [signString coreTextSizeOneLineForWidth:INT32_MAX];
     
     _viewsCountAndSign = signString;
     

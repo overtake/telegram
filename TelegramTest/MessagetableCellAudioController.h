@@ -6,10 +6,10 @@
 //  Copyright (c) 2014 keepcoder. All rights reserved.
 //
 
-#import "MessageTableCellContainerView.h"
+#import "TGModernMessageCellContainerView.h"
 #import "MessageTableItemAudio.h"
 #import "TGTimer.h"
-@interface MessagetableCellAudioController : MessageTableCellContainerView
+@interface MessagetableCellAudioController : TGModernMessageCellContainerView
 
 
 @property (nonatomic, strong) TMTextField *stateTextField;

@@ -30,7 +30,7 @@
         
         _playImageView = imageViewWithImage(image_PlayButtonBig());
         _playerContainer = [[TMView alloc] initWithFrame:NSZeroRect];
-        [_playerContainer addSubview:_playImageView];
+        
         
         _playerContainer.wantsLayer = YES;
         _playerContainer.layer.cornerRadius = 4;
@@ -40,13 +40,13 @@
         _player = [[TGVTVideoView alloc] initWithFrame:NSMakeRect(0, 0, 500, 280)];
         
         [_playerContainer addSubview:_player];
+        [_playerContainer addSubview:_playImageView];
+        
         
         [self setProgressStyle:TMCircularProgressDarkStyle];
         [self.progressView setImage:image_DownloadIconWhite() forState:TMLoaderViewStateNeedDownload];
         [self.progressView setImage:image_LoadCancelWhiteIcon() forState:TMLoaderViewStateDownloading];
         [self.progressView setImage:image_LoadCancelWhiteIcon() forState:TMLoaderViewStateUploading];
-        
-        
         
     }
     
@@ -112,7 +112,8 @@
     [self setProgressToView:_playerContainer];
     
     [_playImageView removeFromSuperview];
-    [_playerContainer addSubview:_playImageView];
+    [self.playerContainer addSubview:_playImageView];
+    
     
     [_playImageView setCenterByView:_playImageView.superview];
 
@@ -188,7 +189,6 @@
 
 -(void)_didScrolledTableView:(NSNotification *)notification {
 
-    
     MessageTableItemMpeg *item = (MessageTableItemMpeg *) self.item;
     
     BOOL (^check_block)() = ^BOOL() {
@@ -204,11 +204,13 @@
     dispatch_block_t block = ^{
         BOOL nextState = check_block();
         
-        if(_prevState != nextState) {
+        if(_prevState != nextState || [SettingsArchiver checkMaskedSetting:DisableAutoplayGifSetting]) {
             [_player setPath:nextState ? item.path : nil];
+            
+            [_playImageView removeFromSuperview];
+            [self.playerContainer addSubview:_playImageView];
+            [_playImageView setHidden:nextState];
         }
-        
-        
         
         _prevState = nextState;
     };
@@ -218,10 +220,7 @@
     else
         _handle = perform_block_after_delay(0.03, block);
 
-
-    
 }
-
 
 
 -(void)mouseUp:(NSEvent *)theEvent {
@@ -230,6 +229,9 @@
     if(item.isset && [SettingsArchiver checkMaskedSetting:DisableAutoplayGifSetting]) {
         
         [_player setPath:_playImageView.isHidden ? nil : item.path];
+        
+        [_playImageView removeFromSuperview];
+        [self.playerContainer addSubview:_playImageView];
         [_playImageView setHidden:!_playImageView.isHidden];
     } else {
         [super mouseUp:theEvent];

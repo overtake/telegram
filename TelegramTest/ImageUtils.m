@@ -498,6 +498,7 @@ NSImage *imageFromFile(NSString *filePath) {
 NSImage *decompressedImage(NSImage *image) {
     
     
+    
     CGContextRef context = CGBitmapContextCreate(NULL/*data - pass NULL to let CG allocate the memory*/,
                                                  image.size.width,
                                                  image.size.height,

@@ -674,10 +674,13 @@ static NSImage *TGVTThumbCap() {
 
 -(void)reconfigLayer:(BOOL)allocNew {
     
-    [_videoLayer flush];
-    [_videoLayer removeFromSuperlayer];
-    [self setLayer:nil];
+    
     if(allocNew) {
+        
+        [_videoLayer flush];
+        [_videoLayer removeFromSuperlayer];
+        [self setLayer:nil];
+        
         _videoLayer = [[TGSampleBufferDiplayLayer alloc] init];
         _videoLayer.bounds = self.bounds;
         _videoLayer.backgroundColor = NSColorFromRGB(0xb6b6b6).CGColor;
@@ -701,7 +704,7 @@ static NSImage *TGVTThumbCap() {
     
     [_thumbView setHidden:NO];
     
-    [self reconfigLayer:[[NSFileManager defaultManager] fileExistsAtPath:path]];
+    [self reconfigLayer:[[NSFileManager defaultManager] fileExistsAtPath:path] || path == nil];
     
     
     [[TGVTAcceleratedVideoFrameQueueGuard controlQueue] dispatch:^{

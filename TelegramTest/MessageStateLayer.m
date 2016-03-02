@@ -91,17 +91,16 @@
             
             _viewsCountText = [[TGTextLabel alloc] init];
             
-            [_viewsCountText setText:self.container.item.viewsCountAndSign maxWidth:50];
+            [_viewsCountText setText:self.container.item.viewsCountAndSign maxWidth:self.container.item.viewsCountAndSignSize.width];
             
-            [_viewsCountText setFrameSize:NSMakeSize(MIN(NSWidth(self.frame) - NSWidth(_channelImageView.frame) - 4,self.container.item.viewsCountAndSignSize.width), 17)];
-            [_viewsCountText setFrameOrigin:CGPointMake(NSWidth(self.frame) - NSWidth(_viewsCountText.frame) - 2,1)];
+            [_viewsCountText setFrameSize:NSMakeSize(MIN(NSWidth(self.frame) - NSWidth(_channelImageView.frame) - 4,self.container.item.viewsCountAndSignSize.width), NSHeight(_viewsCountText.frame))];
+            [_viewsCountText setFrameOrigin:CGPointMake(NSWidth(self.frame) - NSWidth(_viewsCountText.frame) - 2,0)];
             [self addSubview:_viewsCountText];
             
-            [_channelImageView setFrameOrigin:NSMakePoint(NSMinX(_viewsCountText.frame) - NSWidth(_channelImageView.frame), 5)];
+            [_channelImageView setFrameOrigin:NSMakePoint(NSMinX(_viewsCountText.frame) - NSWidth(_channelImageView.frame) - 2, 3)];
             
             [self addSubview:_channelImageView];
-            
-            
+
         } else {
             
             if(!_checkMark1) {

@@ -75,8 +75,8 @@
             _stateLayer = [[MessageStateLayer alloc] initWithFrame:NSZeroRect];
             [_containerView addSubview:_stateLayer];
         }
-        [_stateLayer setFrameSize:NSMakeSize(NSWidth(self.frame) - item.dateSize.width - item.defaultContentOffset, item.rightSize.height)];
-      
+        [_stateLayer setFrameSize:NSMakeSize(NSWidth(self.frame) - item.dateSize.width - item.defaultContentOffset, MAX(item.rightSize.height,item.viewsCountAndSignSize.height))];
+        [_stateLayer setContainer:_container];
         [_stateLayer setState:container.actionState];
         
     } else {

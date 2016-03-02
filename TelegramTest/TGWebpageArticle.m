@@ -57,10 +57,10 @@
         
         _imageSize = strongsize(self.imageObject.imageSize,60);
     
-    _descSize = [self.desc coreTextSizeForTextFieldForWidth: width - (self.tableItem.isForwadedMessage ? self.tableItem.defaultOffset * 2 : self.tableItem.defaultOffset)  - _imageSize.width];
+    _descSize = [self.desc coreTextSizeForTextFieldForWidth: width - (self.tableItem.isForwadedMessage ? self.tableItem.defaultOffset * 3 : self.tableItem.defaultOffset*2)  - _imageSize.width];
     
         _size.width = _descSize.width + _imageSize.width + 100;
-        _size.height = _descSize.height > 60 ? _descSize.height : _descSize.height + _imageSize.height + 10;
+        _size.height = _descSize.height > 60 ? _descSize.height : _descSize.height + _imageSize.height + self.tableItem.defaultContentOffset;
     
     
         _size.height = MAX(_size.height, _imageSize.height);

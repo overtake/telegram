@@ -12,6 +12,7 @@
 #import "NSString+Extended.h"
 #import <AVFoundation/AVFoundation.h>
 #import "DownloadQueue.h"
+#import "MessageTablecellAudioDocumentView.h"
 @implementation MessageTableItemAudioDocument
 
 - (id)initWithObject:(TLMessage *)object {
@@ -148,11 +149,13 @@
 -(BOOL)makeSizeByWidth:(int)width {
     [super makeSizeByWidth:width];
     
-    
-    
     self.blockSize = NSMakeSize(width - self.dateSize.width - 20, 50);
     
     return NO;
+}
+
+-(Class)viewClass {
+    return [MessageTablecellAudioDocumentView class];
 }
 
 @end
