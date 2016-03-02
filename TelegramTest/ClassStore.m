@@ -76,7 +76,8 @@ static NSMutableDictionary *cs_constuctors;
     Class class = [obj class];
     NSNumber *constructor = [cs_constuctors objectForKey:class];
     if(constructor == nil) {
-        @throw [NSException exceptionWithName:@"TLSerialization Error" reason:[NSString stringWithFormat:@"Error. Not found constructor for class %@", class] userInfo:nil];
+        
+        
         //  [NSException raise:@"Error" format:@"Not implemented class %@", NSStringFromClass(class)];
     } else {
         int constructorInt = [constructor intValue];
@@ -98,7 +99,6 @@ static NSMutableDictionary *cs_constuctors;
             return [self deserializeVector:stream];
         }
         @throw [NSException exceptionWithName:@"TLSerialization Error" reason:[NSString stringWithFormat:@"Error, constructor %d not found, return nil", constructor] userInfo:nil];
-        return nil;
     } else {
         //TLog("@ create class %@ with constructor %d", class, constructor);
     }

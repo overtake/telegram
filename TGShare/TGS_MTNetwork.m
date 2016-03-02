@@ -298,7 +298,7 @@ static NSString *kDefaultDatacenter = @"default_dc";
     
     NSString *address =  @"149.154.167.51";
     
-    [_context setSeedAddressSetForDatacenterWithId:2 seedAddressSet:[[MTDatacenterAddressSet alloc] initWithAddressList:@[[[MTDatacenterAddress alloc] initWithIp:address port:443 preferForMedia:NO]]]];
+    [_context setSeedAddressSetForDatacenterWithId:2 seedAddressSet:[[MTDatacenterAddressSet alloc] initWithAddressList:@[[[MTDatacenterAddress alloc] initWithIp:address port:443 preferForMedia:NO restrictToTcp:NO]]]];
     
 }
 

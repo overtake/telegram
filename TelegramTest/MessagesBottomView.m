@@ -358,7 +358,7 @@
         
         int defadd = _channelAdminButton.isHidden ? 0 : 30;
         
-        [_silentModeButton setFrameOrigin:NSMakePoint(self.inputMessageTextField.containerView.frame.size.width - (_botCommandButton.isHidden ? 60+defadd : 90+defadd), NSMinY(_channelAdminButton.frame))];
+        [_silentModeButton setFrameOrigin:NSMakePoint(self.inputMessageTextField.containerView.frame.size.width - (_botCommandButton.isHidden ? 60+defadd : 90+defadd), NSMinY(_silentModeButton.frame))];
     }
     
     
@@ -623,8 +623,7 @@
     [self.inputMessageTextField.containerView addSubview:self.channelAdminButton];
     
     
-    
-    self.silentModeButton = [[BTRButton alloc] initWithFrame:NSMakeRect(self.inputMessageTextField.containerView.frame.size.width - 90, 7, image_ConversationInputFieldBroadcastIconInactive().size.width, image_ConversationInputFieldBroadcastIconInactive().size.height)];
+    self.silentModeButton = [[BTRButton alloc] initWithFrame:NSMakeRect(self.inputMessageTextField.containerView.frame.size.width - 90, 4, image_ConversationInputFieldBroadcastIconInactive().size.width, image_ConversationInputFieldBroadcastIconInactive().size.height)];
     [self.silentModeButton setAutoresizingMask:NSViewMinXMargin | NSViewMinYMargin];
     [self.silentModeButton.layer disableActions];
     
@@ -1218,19 +1217,11 @@ static RBLPopover *popover;
       //  if((self.dialog && !self.dialog.canSendMessage) || self.dialog.user.isBot) {
             animated = NO;
  
-            
-        
-            
-        [self.encryptedStateTextField setStringValue:[self.dialog blockedText]];
+         [self.encryptedStateTextField setStringValue:[self.dialog blockedText]];
         
         [self.encryptedStateTextField setTextColor:[self.encryptedStateTextField.stringValue isEqualToString:[self.dialog blockedText]] ? LINK_COLOR : GRAY_TEXT_COLOR];
         
        
-//        if(self.dialog.type == DialogTypeUser && !self.dialog.user.isBot)
-//        {
-//            [self.encryptedStateTextField setTextColor:[NSColor redColor]];
-//        }
-        
         
         [self.encryptedStateTextField sizeToFit];
         [self.encryptedStateTextField setCenterByView:self.encryptedStateTextField.superview];
@@ -1344,7 +1335,7 @@ static RBLPopover *popover;
     [self.messagesViewController saveInputText];
     
     
-    if((self.template.type == TGInputMessageTemplateTypeSimpleText || ![self.template.originalText isEqualToString:self.inputMessageTextField.stringValue]) && (([self.inputMessageTextField.stringValue trim].length > 0 || self.template.type == TGInputMessageTemplateTypeEditMessage) || self.fwdContainer || _imageAttachmentsController.isShown || _recordedAudioPreview != nil)) {
+    if( (([self.inputMessageTextField.stringValue trim].length > 0 || self.template.type == TGInputMessageTemplateTypeEditMessage) || self.fwdContainer || _imageAttachmentsController.isShown || _recordedAudioPreview != nil)) {
         
         
         if([self.inputMessageTextField.stringValue trim].length > 0 && textView)
@@ -1368,6 +1359,7 @@ static RBLPopover *popover;
         [self.sendButton setHidden:YES];
         [self.recordAudioButton setHidden:NO];
     }
+
     
     
     [self updateWebpage:YES];
