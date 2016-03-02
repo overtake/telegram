@@ -97,7 +97,7 @@
 
 
 -(int)xOffset {
-    return _replyObject.replyThumb || _replyObject.geoURL ? _replyObject.replyThumb.imageSize.width + _item.defaultOffset *2 : _item.defaultOffset;
+    return _replyObject.replyThumb || _replyObject.geoURL ? _replyObject.replyThumb.imageSize.width + [MessageTableItem defaultOffset] *2 : [MessageTableItem defaultOffset];
 }
 
 -(void)update {
@@ -128,8 +128,8 @@
         [self.locationImageView removeFromSuperview];
     }
     
-    [_thumbImageView setFrameOrigin:NSMakePoint(_item.defaultOffset, 1)];
-    [_locationImageView setFrameOrigin:NSMakePoint(_item.defaultOffset, 1)];
+    [_thumbImageView setFrameOrigin:NSMakePoint([MessageTableItem defaultOffset], 1)];
+    [_locationImageView setFrameOrigin:NSMakePoint([MessageTableItem defaultOffset], 1)];
     
     [self.nameView setText:[_replyObject replyHeader] maxWidth:NSWidth(self.frame) - self.xOffset height:_replyObject.replyHeaderHeight];
     

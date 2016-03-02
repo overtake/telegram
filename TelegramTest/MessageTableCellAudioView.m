@@ -327,11 +327,11 @@
     [self.durationView setText:item.duration maxWidth:self.maxContentWidth];
     
     
-    [_waveformView setFrameSize:NSMakeSize(self.maxContentWidth, 20)];
+    [_waveformView setFrameSize:NSMakeSize(self.maxContentWidth, 16)];
     
     int c = roundf((NSHeight(self.containerView.frame) - NSHeight(self.durationView.frame))/2);
     
-    [_waveformView setFrameOrigin:NSMakePoint(NSMaxX(_playView.frame) + item.defaultOffset, roundf((NSHeight(self.containerView.frame) - NSHeight(_waveformView.frame))/2) + 6)];
+    [_waveformView setFrameOrigin:NSMakePoint(NSMaxX(_playView.frame) + item.defaultOffset, roundf((NSHeight(self.containerView.frame) - NSHeight(_waveformView.frame))/2) + item.defaultContentOffset + 4)];
     [self.durationView setFrameOrigin:NSMakePoint(NSMaxX(_playView.frame) + item.defaultOffset, c - NSHeight(self.durationView.frame) + 2)];
  
     if(item.state != AudioStatePlaying && item.state != AudioStatePaused)
@@ -343,6 +343,13 @@
     }
     
     
+}
+
+-(void)_didChangeBackgroundColorWithAnimation:(POPBasicAnimation *)anim toColor:(NSColor *)color {
+    if(!anim)
+        _durationView.backgroundColor = color;
+    else
+        [_durationView pop_addAnimation:anim forKey:@"background"];
 }
 
 

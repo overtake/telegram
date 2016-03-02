@@ -201,10 +201,16 @@
     
     [self updateDownloadState];
     
-    
     [self updateCellState:NO];
     
     
+}
+
+-(void)_didChangeBackgroundColorWithAnimation:(POPBasicAnimation *)anim toColor:(NSColor *)color {
+    if(!anim)
+        _nameView.backgroundColor = color;
+    else
+        [_nameView pop_addAnimation:anim forKey:@"background"];
 }
 
 

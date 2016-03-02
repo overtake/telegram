@@ -463,7 +463,6 @@
 		C268C19619F0519C007F836A /* TransformationMatrix.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C268C18219F0519C007F836A /* TransformationMatrix.cpp */; };
 		C268C19919F12B66007F836A /* MessageTablecellAudioDocumentView.m in Sources */ = {isa = PBXBuildFile; fileRef = C268C19819F12B66007F836A /* MessageTablecellAudioDocumentView.m */; };
 		C268C19C19F12EFA007F836A /* MessageTableItemAudioDocument.m in Sources */ = {isa = PBXBuildFile; fileRef = C268C19B19F12EFA007F836A /* MessageTableItemAudioDocument.m */; };
-		C268C19F19F13721007F836A /* MessagetableCellAudioController.m in Sources */ = {isa = PBXBuildFile; fileRef = C268C19E19F13721007F836A /* MessagetableCellAudioController.m */; };
 		C268C1A719F3F6C3007F836A /* TMClockProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = C268C1A619F3F6C3007F836A /* TMClockProgressView.m */; };
 		C268C1AA19F43575007F836A /* MessageStateLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = C268C1A919F43575007F836A /* MessageStateLayer.m */; };
 		C268C1AD19F6B0A3007F836A /* SearchMessageCellView.m in Sources */ = {isa = PBXBuildFile; fileRef = C268C1AC19F6B0A3007F836A /* SearchMessageCellView.m */; };
@@ -2015,8 +2014,6 @@
 		C268C19819F12B66007F836A /* MessageTablecellAudioDocumentView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MessageTablecellAudioDocumentView.m; sourceTree = "<group>"; };
 		C268C19A19F12EFA007F836A /* MessageTableItemAudioDocument.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MessageTableItemAudioDocument.h; sourceTree = "<group>"; };
 		C268C19B19F12EFA007F836A /* MessageTableItemAudioDocument.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MessageTableItemAudioDocument.m; sourceTree = "<group>"; };
-		C268C19D19F13721007F836A /* MessagetableCellAudioController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MessagetableCellAudioController.h; sourceTree = "<group>"; };
-		C268C19E19F13721007F836A /* MessagetableCellAudioController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MessagetableCellAudioController.m; sourceTree = "<group>"; };
 		C268C1A519F3F6C3007F836A /* TMClockProgressView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TMClockProgressView.h; sourceTree = "<group>"; };
 		C268C1A619F3F6C3007F836A /* TMClockProgressView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TMClockProgressView.m; sourceTree = "<group>"; };
 		C268C1A819F43575007F836A /* MessageStateLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MessageStateLayer.h; sourceTree = "<group>"; };
@@ -3213,8 +3210,6 @@
 				C2A5BFFC18E03D150021BE68 /* MessageTableCellAudioView.m */,
 				C268C19719F12B66007F836A /* MessageTablecellAudioDocumentView.h */,
 				C268C19819F12B66007F836A /* MessageTablecellAudioDocumentView.m */,
-				C268C19D19F13721007F836A /* MessagetableCellAudioController.h */,
-				C268C19E19F13721007F836A /* MessagetableCellAudioController.m */,
 				C2233DA31A07EE4B0056594F /* MessageTableCellSocialView.h */,
 				C2233DA41A07EE4B0056594F /* MessageTableCellSocialView.m */,
 				C2C1DC0A1A43347800BBCC63 /* MessageTableCellStickerView.h */,
@@ -6950,7 +6945,6 @@
 				C2967B4F1AAF0830003759B2 /* MessageReplyContainer.m in Sources */,
 				C240B1BE1B6294F300912248 /* TGSharedLinkRowItem.m in Sources */,
 				0A9EDC4E1897BA0E0037E1BC /* NSColor+RBLCGColorAdditions.m in Sources */,
-				C268C19F19F13721007F836A /* MessagetableCellAudioController.m in Sources */,
 				C274C3AC1AC083AA000DFDE4 /* SearchHashtagItem.m in Sources */,
 				C25A57EF1C105AA50038169F /* TGModalGifSearch.m in Sources */,
 				C2ED752E1C29DACC00002ACF /* TGContextBotTableView.m in Sources */,
