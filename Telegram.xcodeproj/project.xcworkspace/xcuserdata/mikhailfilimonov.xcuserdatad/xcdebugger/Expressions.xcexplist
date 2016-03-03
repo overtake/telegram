@@ -1959,6 +1959,9 @@
             <PersistentString
                value = "self.message.fwd_from">
             </PersistentString>
+            <PersistentString
+               value = "self.fwd_chat">
+            </PersistentString>
          </PersistentStrings>
       </ContextState>
       <ContextState
@@ -3031,6 +3034,9 @@
       <ContextState
          contextName = "-[MessageTableItem initWithObject:]:MessageTableItem.m">
          <PersistentStrings>
+            <PersistentString
+               value = "object.fwd_from">
+            </PersistentString>
             <PersistentString
                value = "self.isForwadedMessage">
             </PersistentString>

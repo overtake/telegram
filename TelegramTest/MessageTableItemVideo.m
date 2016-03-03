@@ -78,7 +78,7 @@
         _captionSize.width = _videoSize.width - 4;
     }
     
-    int captionHeight = _captionSize.height ? _captionSize.height + 5 : 0;
+    int captionHeight = _captionSize.height ? _captionSize.height + self.defaultContentOffset : 0;
     
      self.blockSize = NSMakeSize(_videoSize.width, _videoSize.height + captionHeight);
     

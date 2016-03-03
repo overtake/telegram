@@ -136,7 +136,6 @@
         
         if(!_forwardContainerView) {
             _forwardContainerView = [[TGModernForwardCellContainer alloc] initWithFrame:NSZeroRect];
-            _forwardContainerView.backgroundColor = [NSColor whiteColor];
             [_contentContainerView addSubview:_forwardContainerView];
             [_contentView removeFromSuperview];
             [_forwardContainerView addSubview:_contentView];
@@ -169,7 +168,7 @@
         [_replyContainer setItem:item];
         [_replyContainer setReplyObject:item.replyObject];
         
-        [_contentContainerView setFrameOrigin:NSMakePoint(NSMinX(_contentContainerView.frame), NSMaxY(_replyContainer.frame) + item.contentHeaderOffset)];
+        [_contentContainerView setFrameOrigin:NSMakePoint(NSMinX(_contentContainerView.frame), NSMaxY(_replyContainer.frame) + item.defaultContentOffset)];
     } else {
         if(_replyContainer) {
             [_replyContainer removeFromSuperview];

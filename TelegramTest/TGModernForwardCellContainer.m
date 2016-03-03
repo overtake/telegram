@@ -33,7 +33,7 @@
 }
 
 - (void)drawRect:(NSRect)dirtyRect {
-    [super drawRect:dirtyRect];
+  //  [super drawRect:dirtyRect];
     
     [BLUE_SEPARATOR_COLOR set];
 
@@ -80,6 +80,8 @@
 }
 
 -(void)_didChangeBackgroundColorWithAnimation:(POPBasicAnimation *)anim toColor:(NSColor *)color {
+    
+   
     if(!anim) {
         _forwardHeader.backgroundColor = color;
         _forwardName.backgroundColor = color;

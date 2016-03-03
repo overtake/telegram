@@ -11,6 +11,7 @@
 #import "DownloadQueue.h"
 #import "NSNumber+NumberFormatter.h"
 #import "MessageTableItem.h"
+#import "NSStringCategory.h"
 @interface TGWebpageDocumentObject ()
 @property (nonatomic,strong) DownloadItem *downloadItem;
 @property (nonatomic,strong) TL_localMessage *fakeMessage;
@@ -35,15 +36,14 @@
         
         NSMutableAttributedString *attr = [[NSMutableAttributedString alloc] init];
         
-        TL_documentAttributeFilename *fileName = (TL_documentAttributeFilename *) [self.webpage.document attributeWithClass:[TL_documentAttributeFilename class]];
         
-        NSRange range = [attr appendString:fileName.file_name withColor:DARK_BLACK];
+        NSRange range = [attr appendString:webpage.document.file_name withColor:DARK_BLACK];
         
         [attr setFont:TGSystemMediumFont(13) forRange:range];
         
         [attr appendString:@" " withColor:DARK_BLACK];
         
-        range = [attr appendString:[@(self.webpage.document.size) prettyNumber] withColor:GRAY_TEXT_COLOR];
+        range = [attr appendString:[NSString sizeToTransformedValuePretty:self.webpage.document.size] withColor:GRAY_TEXT_COLOR];
         
         [attr setFont:TGSystemFont(13) forRange:range];
         

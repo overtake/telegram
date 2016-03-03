@@ -182,6 +182,7 @@
     [super setBackgroundColor:backgroundColor];
     
     [self.messageField setBackgroundColor:backgroundColor];
+    [self.nameView setBackgroundColor:backgroundColor];
 }
 
 -(void)mouseUp:(NSEvent *)theEvent {
@@ -216,9 +217,9 @@
     NSRectFill(NSMakeRect(0, 0, 2, NSHeight(self.frame)));
     
     if(_replyObject.replyThumb) {
-        [NSColorFromRGB(0xf3f3f3) set];
+        //[NSColorFromRGB(0xf3f3f3) set];
         
-        NSRectFill(NSMakeRect(NSMinX(self.thumbImageView.frame) - 1, 0, NSWidth(self.thumbImageView.frame) + 2, NSHeight(self.thumbImageView.frame) + 2));
+       // NSRectFill(NSMakeRect(NSMinX(self.thumbImageView.frame) - 1, 0, NSWidth(self.thumbImageView.frame) + 2, NSHeight(self.thumbImageView.frame) + 2));
     }
 
    

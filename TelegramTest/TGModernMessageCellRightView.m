@@ -108,6 +108,7 @@
         return;
     }
     
+    [_selectCheckView setFrameOrigin:NSMakePoint( NSWidth(self.frame) - NSWidth(_selectCheckView.frame), 0)];
     
     float from = _containerView.layer.frame.origin.x;
     float to =  (editable ? -(NSWidth(_selectCheckView.frame) + self.item.defaultOffset) : 0);
@@ -131,7 +132,7 @@
     
     
     POPBasicAnimation *opacityAnim = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerOpacity];
-    opacityAnim.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut];
+    opacityAnim.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionLinear];
     opacityAnim.fromValue = @(editable ? 0 : 1);
     opacityAnim.toValue = @(editable ? 1 : 0);
     opacityAnim.duration = duration;
@@ -142,17 +143,40 @@
     [_selectCheckView.layer pop_addAnimation:opacityAnim forKey:@"opacity"];
     
     
-    from = NSWidth(self.frame) + NSWidth(_selectCheckView.frame);
-    to = NSWidth(self.frame) - NSWidth(_selectCheckView.frame);
+//    from = NSWidth(self.frame) + NSWidth(_selectCheckView.frame);
+//    to = NSWidth(self.frame) - NSWidth(_selectCheckView.frame);
+//    
+//
+    if(_selectCheckView.layer.anchorPoint.x != 0.5) {
+        CGPoint point = _selectCheckView.layer.position;
+        
+        point.x += roundf(image_checked().size.width / 2);
+        point.y += roundf(image_checked().size.height / 2);
+        
+        _selectCheckView.layer.position = point;
+        
+        _selectCheckView.layer.anchorPoint = CGPointMake(0.5, 0.5);
+    }
     
+    from = editable ? 0.1 : 1.0;
+    to = editable ? 1.0 : 0.1;
+
     
-    POPBasicAnimation *slideAnim = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerPositionX];
-    slideAnim.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut];
-    slideAnim.fromValue = @(from);
-    slideAnim.toValue = @(to);
-    slideAnim.duration = duration;
+    POPBasicAnimation *slideAnim = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerScaleXY];
+    slideAnim.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseIn];
+    slideAnim.fromValue = [NSValue valueWithSize:NSMakeSize(0.1, 0.1)];
+    slideAnim.toValue = [NSValue valueWithSize:NSMakeSize(1.0, 1.0)];
+    slideAnim.duration = duration/2;
     slideAnim.removedOnCompletion = YES;
+    
     [slideAnim setCompletionBlock:^(POPAnimation *anim, BOOL result) {
+        
+        strongWeak();
+        
+        if(strongSelf != nil && !editable) {
+            [strongSelf.selectCheckView removeFromSuperview];
+            strongSelf.selectCheckView = nil;
+        }
         
     }];
     [_selectCheckView.layer pop_addAnimation:slideAnim forKey:@"slide"];
@@ -221,8 +245,10 @@
             [self addSubview:_selectCheckView];
         }
     } else {
-        [_selectCheckView removeFromSuperview];
-        _selectCheckView = nil;
+        if(!animated) {
+            [_selectCheckView removeFromSuperview];
+            _selectCheckView = nil;
+        }
     }
     
 }

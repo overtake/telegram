@@ -27,7 +27,7 @@
     self = [super initWithObject:object];
     if(self) {
         
-        _fileSize = [[NSString sizeToTransformedValuePretty:self.message.media.document.size] trim];
+        _fileSize = [NSString sizeToTransformedValuePretty:self.message.media.document.size] ;
         
         NSMutableAttributedString *attr = [[NSMutableAttributedString alloc] init];
         
