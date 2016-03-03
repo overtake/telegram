@@ -170,4 +170,12 @@
 }
 
 
+-(void)_didChangeBackgroundColorWithAnimation:(POPBasicAnimation *)anim toColor:(NSColor *)color {
+    if(!anim)
+        _viewsCountText.backgroundColor = color;
+    else
+        [_viewsCountText pop_addAnimation:anim forKey:@"background"];
+    
+}
+
 @end

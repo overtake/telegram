@@ -10,6 +10,7 @@
 #import "DownloadDocumentItem.h"
 #import "DownloadQueue.h"
 #import "NSNumber+NumberFormatter.h"
+#import "MessageTableItem.h"
 @interface TGWebpageDocumentObject ()
 @property (nonatomic,strong) DownloadItem *downloadItem;
 @property (nonatomic,strong) TL_localMessage *fakeMessage;
@@ -38,7 +39,7 @@
         
         NSRange range = [attr appendString:fileName.file_name withColor:DARK_BLACK];
         
-        [attr setFont:TGSystemFont(15) forRange:range];
+        [attr setFont:TGSystemMediumFont(13) forRange:range];
         
         [attr appendString:@" " withColor:DARK_BLACK];
         
@@ -46,6 +47,7 @@
         
         [attr setFont:TGSystemFont(13) forRange:range];
         
+       
         
         [attr appendString:@"\n" withColor:GRAY_TEXT_COLOR];
         
@@ -57,6 +59,8 @@
         [attr setLink:NSLocalizedString(@"Message.File.Download", nil) forRange:range];
         
         [attr setFont:TGSystemFont(13) forRange:range];
+        
+        
 
         
         range = [downloadedStr appendString:NSLocalizedString(@"Message.File.ShowInFinder", nil) withColor:LINK_COLOR];
@@ -68,7 +72,7 @@
         
         
         NSMutableParagraphStyle *style = [[NSMutableParagraphStyle alloc] init];
-        style.lineBreakMode = NSLineBreakByTruncatingTail;
+        style.lineBreakMode = NSLineBreakByTruncatingMiddle;
         style.lineSpacing = 4;
         
         [attr addAttribute:NSParagraphStyleAttributeName value:style range:attr.range];
@@ -123,9 +127,13 @@
 
 -(void)makeSize:(int)width {
     [super makeSize:width];
-    _descSize = [_desc coreTextSizeForTextFieldForWidth:width - 60];
+    _descSize = [_desc coreTextSizeForTextFieldForWidth:width - 50 - self.tableItem.defaultOffset];
     _size = NSMakeSize(width , 50 );
         
+}
+
+-(int)blockHeight {
+    return 50;
 }
 
 @end

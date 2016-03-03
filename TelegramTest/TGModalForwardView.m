@@ -94,7 +94,7 @@
 }
 
 -(BOOL)isShareModalType {
-    return _messageCaller.chat.isChannel && !_messageCaller.chat.isMegagroup && _messageCaller.chat.username > 0;
+    return _messageCaller.isPost && _messageCaller.chat.username > 0;
 }
 
 -(void)okAction {

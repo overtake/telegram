@@ -6066,6 +6066,9 @@
             <PersistentString
                value = "_viewsCountAndSignSize">
             </PersistentString>
+            <PersistentString
+               value = "_headerSize">
+            </PersistentString>
          </PersistentStrings>
       </ContextState>
       <ContextState

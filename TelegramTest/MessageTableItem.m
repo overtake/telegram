@@ -51,6 +51,7 @@
 @property (nonatomic) NSSize _viewSize;
 @property (nonatomic,assign) BOOL autoStart;
 @property (nonatomic, assign) NSSize headerOriginalSize;
+@property (nonatomic, assign) NSSize viewsCountAndSignOriginalSize;
 @end
 
 @implementation MessageTableItem
@@ -183,7 +184,7 @@ static NSCache *cItems;
 
 
 -(int)makeSize {
-    return MAX(NSWidth(self.table.frame) - self.startContentOffset - _rightSize.width - self.defaultContainerOffset - (self.isForwadedMessage ?  self.defaultOffset : 0),100);
+    return MAX(NSWidth(self.table.frame) - self.startContentOffset - (self.isHeaderMessage ? _rightSize.width : self.rightSize.width) - self.defaultContainerOffset - (self.isForwadedMessage ?  self.defaultOffset : 0),100);
 }
 
 -(void)buildHeaderAndSaveToCache {
@@ -268,7 +269,6 @@ static NSCache *cItems;
     
     if(self.isForwadedMessage) {
         self.forwardName = [[NSMutableAttributedString alloc] init];
-//        [self.forwardName appendString:NSLocalizedString(@"Message.ForwardedFrom", nil) withColor:NSColorFromRGB(0x909090)];
         
         NSString *title = self.message.fwd_from.channel_id != 0 && !self.fwd_chat.isMegagroup ? self.fwd_chat.title : self.fwd_user.fullName ;
         
@@ -280,7 +280,6 @@ static NSCache *cItems;
         }
         
         [self.forwardName setFont:TGSystemFont(12) forRange:self.forwardName.range];
-        
         
         if(self.message.fwd_from.channel_id != 0 && !self.message.chat.isMegagroup && self.message.fwd_from.from_id != 0) {
             [self.forwardName appendString:@" (" withColor:LINK_COLOR];
@@ -308,6 +307,18 @@ static NSCache *cItems;
         [self.forwardName appendString:[TGDateUtils stringForLastSeen:self.message.fwd_from.date] withColor:NSColorFromRGB(0xbebebe)];
         
         
+        
+//        if(self.message.fwd_from.channel_id != 0) {
+//            TLChat *fwdChat = [[ChatsManager sharedManager] find:self.message.fwd_from.channel_id];
+//            
+//            if(fwdChat.isBroadcast) {
+//                NSRange range = [self.forwardName appendString:@" "];
+//                [self.forwardName appendAttributedString:[NSAttributedString attributedStringWithAttachment:channelViewsCountAttachment()]];
+//                [self.forwardName appendString:[NSString stringWithFormat:@" %d",self.message.views] withColor:NSColorFromRGB(0xbebebe)];
+//            }
+//        }
+        
+        
         [self.forwardName setFont:TGSystemMediumFont(13) forRange:rangeUser];
         
         _forwardNameSize = [self.forwardName coreTextSizeOneLineForWidth:INT32_MAX];
@@ -317,14 +328,15 @@ static NSCache *cItems;
     }
 }
 
-static NSTextAttachment *channelIconAttachment() {
+static NSTextAttachment *channelViewsCountAttachment() {
     static NSTextAttachment *instance;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        instance = [NSMutableAttributedString textAttachmentByImage:[image_newConversationBroadcast() imageWithInsets:NSEdgeInsetsMake(0, 1, 0, 4)]];
+        instance = [NSMutableAttributedString textAttachmentByImage:image_ChannelViews()];
     });
     return instance;
 }
+
 
 - (void)setViewSize:(NSSize)viewSize {
     self._viewSize = viewSize;
@@ -590,9 +602,11 @@ static NSTextAttachment *channelIconAttachment() {
         w = _dateSize.width + selectSize + selectOffset;
     }
     
-    w+= _viewsCountAndSignSize.width;
-    
     _rightSize = NSMakeSize(w,_dateSize.height);
+}
+
+-(NSSize)rightSize {
+    return NSMakeSize(_rightSize.width + _viewsCountAndSignSize.width, _dateSize.height);
 }
 
 
@@ -670,8 +684,10 @@ static NSTextAttachment *channelIconAttachment() {
 - (BOOL)makeSizeByWidth:(int)width {
     _blockWidth = width;
     
-    self.headerSize = NSMakeSize(MIN(_headerOriginalSize.width, width - self.defaultOffset), self.headerSize.height);
-        
+    _viewsCountAndSignSize = NSMakeSize(MIN(width - _rightSize.width - _headerOriginalSize.width,_viewsCountAndSignOriginalSize.width), self.viewsCountAndSignSize.height);
+    
+    self.headerSize = NSMakeSize(MIN(_headerOriginalSize.width, width - self.rightSize.width), self.headerSize.height);
+    
     return self.isHeaderMessage;
 }
 
@@ -696,7 +712,7 @@ static NSTextAttachment *channelIconAttachment() {
     
     [signString setFont:TGSystemFont(12) forRange:signString.range];
     
-     _viewsCountAndSignSize = [signString coreTextSizeOneLineForWidth:INT32_MAX];
+     _viewsCountAndSignOriginalSize = _viewsCountAndSignSize = [signString coreTextSizeOneLineForWidth:INT32_MAX];
     
     _viewsCountAndSign = signString;
     

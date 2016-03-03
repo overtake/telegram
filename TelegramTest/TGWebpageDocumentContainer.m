@@ -31,16 +31,16 @@
         
         
         
-        _loaderView = [[TMLoaderView alloc] initWithFrame:NSMakeRect(0, 0, 48, 48)];
+        _loaderView = [[TMLoaderView alloc] initWithFrame:NSMakeRect(0, 0, 50, 50)];
         
         [self.imageView addSubview:_loaderView];
         
-        [_loaderView setImage:image_DownloadIconGrey() forState:TMLoaderViewStateNeedDownload];
-        [_loaderView setImage:image_LoadCancelGrayIcon() forState:TMLoaderViewStateDownloading];
-        [_loaderView setImage:image_LoadCancelGrayIcon() forState:TMLoaderViewStateUploading];
+        [_loaderView setImage:image_DownloadIconWhite() forState:TMLoaderViewStateNeedDownload];
+        [_loaderView setImage:image_LoadCancelWhiteIcon() forState:TMLoaderViewStateDownloading];
+        [_loaderView setImage:image_LoadCancelWhiteIcon() forState:TMLoaderViewStateUploading];
         
         [_loaderView setStyle:TMCircularProgressLightStyle];
-        
+        [_loaderView setProgressColor:[NSColor whiteColor]];
         [_loaderView addTarget:self selector:@selector(checkOperation)];
         
         
@@ -88,68 +88,24 @@
     }
 }
 
-static NSImage *webpage_background() {
-    static NSImage *image = nil;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        NSRect rect = NSMakeRect(0, 0, 48, 48);
-        image = [[NSImage alloc] initWithSize:rect.size];
-        [image lockFocus];
-        [NSColorFromRGB(0xf2f2f2) set];
-        NSBezierPath *path = [NSBezierPath bezierPath];
-        [path appendBezierPathWithRoundedRect:NSMakeRect(0, 0, rect.size.width, rect.size.height) xRadius:rect.size.width/2 yRadius:rect.size.height/2];
-        [path fill];
-        [image unlockFocus];
-    });
-    return image;
-}
 
-
-static NSImage *webpage_thumb_downloaded_background() {
-    static NSImage *image = nil;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        NSRect rect = NSMakeRect(0, 0, 48, 48);
-        image = [[NSImage alloc] initWithSize:rect.size];
-        [image lockFocus];
-        [NSColorFromRGB(0x4ba3e2) set];
-        NSBezierPath *path = [NSBezierPath bezierPath];
-        [path appendBezierPathWithRoundedRect:NSMakeRect(0, 0, rect.size.width, rect.size.height) xRadius:rect.size.width/2 yRadius:rect.size.height/2];
-        [path fill];
-        
-        [image_DocumentThumbIcon() drawInRect:NSMakeRect(roundf((48 - image_DocumentThumbIcon().size.width)/2), roundf((48 - image_DocumentThumbIcon().size.height)/2), image_DocumentThumbIcon().size.width, image_DocumentThumbIcon().size.height) fromRect:NSZeroRect operation:NSCompositeHighlight fraction:1];
-        [image unlockFocus];
-    });
-    return image;
-}
-
-static NSImage *webpage_background_thumb() {
-    static NSImage *image = nil;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        NSRect rect = NSMakeRect(0, 0, 100, 100);
-        image = [[NSImage alloc] initWithSize:rect.size];
-        [image lockFocus];
-        [NSColorFromRGB(0xf4f4f4) set];
-        NSBezierPath *path = [NSBezierPath bezierPath];
-        [path appendBezierPathWithRoundedRect:NSMakeRect(0, 0, rect.size.width, rect.size.height) xRadius:4 yRadius:4];
-        [path fill];
-        [image unlockFocus];
-    });
-    return image;
-}
 
 -(void)setWebpage:(TGWebpageObject *)webpage {
     [super setWebpage:webpage];
     
     
+    [self.siteName setHidden:YES];
+    [self.author setHidden:YES];
+    
     [self.imageView setFrameOrigin:NSMakePoint(self.textX, 0)];
-    [self.imageView setFrameSize:webpage_thumb_downloaded_background().size];
-    self.imageView.image = webpage_background();
+    [self.imageView setFrameSize:attach_downloaded_background().size];
+    self.imageView.image = blue_circle_background_image();
     
     [self.descriptionField setAttributedString:webpage.desc];
     [self.descriptionField setFrameSize:webpage.descSize];
-    [self.descriptionField setFrameOrigin:NSMakePoint(self.textX + self.imageView.image.size.width + 5, 4)];
+    [self.descriptionField setFrameOrigin:NSMakePoint(self.textX + self.imageView.image.size.width + self.item.defaultOffset, 0)];
+    
+    [self.descriptionField setCenteredYByView:self.descriptionField.superview];
     
     [self updateDownloadState];
 }
@@ -175,7 +131,7 @@ static NSImage *webpage_background_thumb() {
         
         if(webpage.isset) {
             [_loaderView setProgress:0 animated:NO];
-            self.imageView.image = webpage_thumb_downloaded_background();
+            self.imageView.image = attach_downloaded_background();
         } else {
             [_loaderView setState:TMLoaderViewStateNeedDownload];
         }
@@ -229,5 +185,6 @@ static NSImage *webpage_background_thumb() {
     }
     
 }
+
 
 @end

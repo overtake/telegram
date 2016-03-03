@@ -36,40 +36,7 @@
 
 @implementation MessageTableCellDocumentView
 
-static NSImage *attachBackground() {
-    static NSImage *image = nil;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        NSRect rect = NSMakeRect(0, 0, 50, 50);
-        image = [[NSImage alloc] initWithSize:rect.size];
-        [image lockFocus];
-        [NSColorFromRGB(0x4ba3e2) set];
-        NSBezierPath *path = [NSBezierPath bezierPath];
-        [path appendBezierPathWithRoundedRect:NSMakeRect(0, 0, rect.size.width, rect.size.height) xRadius:rect.size.width/2 yRadius:rect.size.height/2];
-        [path fill];
-        [image unlockFocus];
-    });
-    return image;
-}
 
-
-static NSImage *attachDownloadedBackground() {
-    static NSImage *image = nil;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        NSRect rect = NSMakeRect(0, 0, 50, 50);
-        image = [[NSImage alloc] initWithSize:rect.size];
-        [image lockFocus];
-        [NSColorFromRGB(0x4ba3e2) set];
-        NSBezierPath *path = [NSBezierPath bezierPath];
-        [path appendBezierPathWithRoundedRect:NSMakeRect(0, 0, rect.size.width, rect.size.height) xRadius:rect.size.width/2 yRadius:rect.size.height/2];
-        [path fill];
-        
-        [image_DocumentThumbIcon() drawInRect:NSMakeRect(roundf((50 - image_DocumentThumbIcon().size.width)/2), roundf((50 - image_DocumentThumbIcon().size.height)/2), image_DocumentThumbIcon().size.width, image_DocumentThumbIcon().size.height) fromRect:NSZeroRect operation:NSCompositeHighlight fraction:1];
-        [image unlockFocus];
-    });
-    return image;
-}
 
 
 - (id)initWithFrame:(NSRect)frame {
@@ -233,12 +200,12 @@ static NSImage *attachDownloadedBackground() {
         [self.attachButton.layer pop_addAnimation:opacity forKey:@"opacity"];
     }
     
-    [self.attachButton setBackgroundImage:item.isHasThumb ? gray_resizable_placeholder() : attachBackground() forControlState:BTRControlStateNormal];
+    [self.attachButton setBackgroundImage:item.isHasThumb ? gray_resizable_placeholder() : blue_circle_background_image() forControlState:BTRControlStateNormal];
    
     switch (self.cellState) {
         case CellStateNormal:
             self.thumbView.object = item.thumbObject;
-            [self.attachButton setBackgroundImage:item.isHasThumb ? gray_resizable_placeholder() : attachDownloadedBackground() forControlState:BTRControlStateNormal];
+            [self.attachButton setBackgroundImage:item.isHasThumb ? gray_resizable_placeholder() : attach_downloaded_background() forControlState:BTRControlStateNormal];
             break;
             
         case CellStateSending:

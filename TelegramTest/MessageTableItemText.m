@@ -254,7 +254,7 @@
     
     [super makeSizeByWidth:width];
     
-    [_webpage makeSize:width];
+    [_webpage makeSize:width - self.defaultOffset];
     
     _allAttributedLinksSize = [_allAttributedLinks coreTextSizeForTextFieldForWidth:width];
     _textSize = [_textAttributed coreTextSizeForTextFieldForWidth:width];

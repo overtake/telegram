@@ -12,6 +12,7 @@
 #import "MessageReplyContainer.h"
 #import "TGModernMessageCellRightView.h"
 #import "POPCGUtils.h"
+#import "TGModalForwardView.h"
 @interface TGModernMessageCellContainerView ()
 
 @property (nonatomic,strong) TMAvatarImageView *photoView;
@@ -26,6 +27,9 @@
 @property (nonatomic,strong) TMView *contentContainerView;
 @property (nonatomic,strong) TGModernForwardCellContainer *forwardContainerView;
 @property (nonatomic,strong) MessageReplyContainer *replyContainer;
+
+
+@property (nonatomic,strong) BTRButton *shareView;
 
 
 @end
@@ -95,7 +99,7 @@
                 strongWeak();
                 
                 if(strongSelf == weakSelf) {
-                    [strongSelf.messagesViewController.navigationViewController showInfoPage:strongSelf.item.message.conversation];
+                    [strongSelf.messagesViewController.navigationViewController showInfoPage:weakSelf.item.message.from_id == 0 ? weakSelf.item.message.conversation : weakSelf.item.user.dialog];
                 }
                 
             }];
@@ -195,6 +199,49 @@
 }
 
 
+-(void)checkAndMakeShareView:(MessageTableItem *)item {
+    if(item.message.isChannelMessage && item.message.isPost) {
+        
+        if(!_shareView) {
+            _shareView = [[BTRButton alloc] initWithFrame:NSMakeRect(0, 0, image_ChannelShare().size.width , image_ChannelShare().size.height )];
+            [_shareView setCursor:[NSCursor pointingHandCursor] forControlState:BTRControlStateHover];
+            [_shareView setImage:image_ChannelShare() forControlState:BTRControlStateNormal];
+            weak();
+            
+            [_shareView addBlock:^(BTRControlEvents events) {
+                
+                strongWeak();
+                
+                if(strongSelf == weakSelf) {
+                    TGModalForwardView *forwardModalView;
+                    
+                    forwardModalView = [[TGModalForwardView alloc] initWithFrame:weakSelf.window.contentView.bounds];
+                    
+                    [weakSelf.messagesViewController setSelectedMessage:weakSelf.item selected:YES];
+                    
+                    forwardModalView.messagesViewController = weakSelf.messagesViewController;
+                    forwardModalView.messageCaller = weakSelf.item.message;
+                    [forwardModalView show:weakSelf.window animated:YES];
+                }
+                
+                
+                
+            } forControlEvents:BTRControlEventClick ];
+            
+            [self addSubview:_shareView];
+            
+        }
+        
+        [_shareView setFrameOrigin:NSMakePoint(NSMaxX(self.rightView.frame) - NSWidth(_shareView.frame), NSMaxY(_rightView.frame) + item.defaultContentOffset)];
+        
+    } else {
+        [_shareView removeFromSuperview];
+        _shareView = nil;
+    }
+    
+}
+
+
 -(void)checkAndMakeSenderItem:(MessageTableItem *)item {
     if(item.messageSender)  {
     
@@ -280,6 +327,7 @@
     [self checkAndMakeReplyContainer:item];
     [self checkAndMakeSenderItem:item];
     [self checkAndMakeRightView:item];
+    [self checkAndMakeShareView:item];
 }
 
 -(TMView *)containerView {

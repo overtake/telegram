@@ -274,5 +274,5 @@ NSImage *voice_play_image();
 NSImage *play_image();
 NSImage *gray_circle_background_image();
 NSImage *blue_circle_background_image();
-
+NSImage *attach_downloaded_background();
 @end

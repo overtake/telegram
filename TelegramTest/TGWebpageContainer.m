@@ -39,7 +39,8 @@
         [_containerView setIsFlipped:YES];
         
         _containerView.wantsLayer = YES;
-                
+        
+        
         [super addSubview:_containerView];
         
         
@@ -65,7 +66,6 @@
         _imageView = [[TGImageView alloc] initWithFrame:NSZeroRect];
         
         _imageView.cornerRadius = 4;
-        _imageView.layer.backgroundColor = GRAY_BORDER_COLOR.CGColor;
         [_imageView setContentMode:BTRViewContentModeScaleAspectFill];
         
         [_imageView setTapBlock:block];
@@ -140,8 +140,6 @@
 }
 
 -(void)updateState:(TMLoaderViewState)state {
-    
-    
     
     if(!self.item.isset) {
         [_loaderView removeFromSuperview];

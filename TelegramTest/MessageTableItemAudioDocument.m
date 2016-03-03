@@ -164,7 +164,7 @@
     
     self.blockSize = NSMakeSize(width, 50);
     _nameSize = [_nameAttributedString coreTextSizeForTextFieldForWidth:width - 60];
-    return NO;
+    return YES;
 }
 
 -(Class)viewClass {

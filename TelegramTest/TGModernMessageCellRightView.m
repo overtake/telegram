@@ -232,6 +232,8 @@
         _dateLabel.backgroundColor = color;
      else
          [_dateLabel pop_addAnimation:anim forKey:@"background"];
+    
+    [_stateLayer _didChangeBackgroundColorWithAnimation:anim toColor:color];
         
 }
 

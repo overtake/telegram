@@ -1032,4 +1032,22 @@ NSImage *voice_play_image() {
     return image;
 }
 
+NSImage *attach_downloaded_background() {
+    static NSImage *image = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        NSRect rect = NSMakeRect(0, 0, 50, 50);
+        image = [[NSImage alloc] initWithSize:rect.size];
+        [image lockFocus];
+        [NSColorFromRGB(0x4ba3e2) set];
+        NSBezierPath *path = [NSBezierPath bezierPath];
+        [path appendBezierPathWithRoundedRect:NSMakeRect(0, 0, rect.size.width, rect.size.height) xRadius:rect.size.width/2 yRadius:rect.size.height/2];
+        [path fill];
+        
+        [image_DocumentThumbIcon() drawInRect:NSMakeRect(roundf((50 - image_DocumentThumbIcon().size.width)/2), roundf((50 - image_DocumentThumbIcon().size.height)/2), image_DocumentThumbIcon().size.width, image_DocumentThumbIcon().size.height) fromRect:NSZeroRect operation:NSCompositeHighlight fraction:1];
+        [image unlockFocus];
+    });
+    return image;
+}
+
 @end
