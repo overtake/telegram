@@ -49,12 +49,19 @@
     NSInputStream *is = [[NSInputStream alloc] initWithData:data];
     [is open];
     
-    id obj = [ClassStore constructObject:is];
-    if([obj isKindOfClass:[TL_gzip_packed class]]) {
-        obj = [ClassStore deserialize:[[obj packed_data] gzipInflate]];
+    @try {
+        id obj = [ClassStore constructObject:is];
+        if([obj isKindOfClass:[TL_gzip_packed class]]) {
+            obj = [ClassStore deserialize:[[obj packed_data] gzipInflate]];
+        }
+        
+        return obj;
+    }
+    @catch (NSException *exception) {
+        return nil;
     }
     
-    return obj;
+    
 }
 
 + (id)parseResponse:(NSData *)data request:(id)request
