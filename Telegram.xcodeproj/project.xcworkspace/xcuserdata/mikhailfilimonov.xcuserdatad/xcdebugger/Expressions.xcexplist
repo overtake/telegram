@@ -1954,6 +1954,9 @@
          contextName = "-[MessageTableItem headerStringBuilder]:MessageTableItem.m">
          <PersistentStrings>
             <PersistentString
+               value = "self.message.fwd_from.fwdPeer">
+            </PersistentString>
+            <PersistentString
                value = "self.message.fwd_from">
             </PersistentString>
          </PersistentStrings>

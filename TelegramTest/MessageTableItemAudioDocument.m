@@ -48,12 +48,12 @@
     NSMutableAttributedString *attr = [[NSMutableAttributedString alloc] init];
     
     if(audio && ([audio.title trim].length > 0 && [audio.performer trim].length > 0)) {
-        NSRange range = [attr appendString:audio.performer withColor:TEXT_COLOR];
+        NSRange range = [attr appendString:[audio.performer trim] withColor:TEXT_COLOR];
         [attr setFont:TGSystemMediumFont(13) forRange:range];
         
         [attr appendString:@"\n"];
         
-        range = [attr appendString:audio.title withColor:GRAY_TEXT_COLOR];
+        range = [attr appendString:[audio.title trim] withColor:GRAY_TEXT_COLOR];
         [attr setFont:TGSystemFont(13) forRange:range];
         
     } else {
