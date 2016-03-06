@@ -484,5 +484,17 @@ static NSAttributedString *docStateLoaded() {
     return instance;
 }
 
+-(void)_didChangeBackgroundColorWithAnimation:(POPBasicAnimation *)anim toColor:(NSColor *)color {
+    if(!anim) {
+        _fileNameTextField.backgroundColor = color;
+        _actionsTextField.backgroundColor = color;
+    } else {
+        [_fileNameTextField pop_addAnimation:anim forKey:@"background"];
+        [_actionsTextField pop_addAnimation:anim forKey:@"background"];
+    }
+    
+    
+}
+
 
 @end

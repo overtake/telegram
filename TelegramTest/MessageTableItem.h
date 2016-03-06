@@ -121,7 +121,7 @@
 -(int)contentHeaderOffset;
 
 +(int)defaultOffset;
-
++(int)defaultContainerOffset;
 -(BOOL)hasRightView;
 
 -(NSString *)path;

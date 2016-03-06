@@ -184,20 +184,22 @@
 - (void)loadFullChatByChatId:(int)chat_id force:(BOOL)force callback:(void (^)(TLChatFull *fullChat))callback {
     
     TLChatFull *fullChat = [self find:chat_id];
+    TLChat *chat = [[ChatsManager sharedManager] find:chat_id];
+    
     
     if(fullChat ) {
-        if(callback != nil && !force)
+        if(callback != nil && !force) {
             [ASQueue dispatchOnMainQueue:^{
                 callback(fullChat);
             }];
-        if( (fullChat.lastUpdateTime + 300 > [[MTNetwork instance] getTime]) && !force) {
+            
+            return;
+        } if( (fullChat.lastUpdateTime + 300 > [[MTNetwork instance] getTime]) && !force) {
                 return;
         }
         
     }
     
-    
-    TLChat *chat = [[ChatsManager sharedManager] find:chat_id];
     
     if([chat isKindOfClass:[TL_channelForbidden class]] || [chat isKindOfClass:[TL_chatForbidden class]])
         return;

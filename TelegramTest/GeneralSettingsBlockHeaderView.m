@@ -7,7 +7,7 @@
 //
 
 #import "GeneralSettingsBlockHeaderView.h"
-
+#import "NSAttributedString+Hyperlink.h"
 @interface GeneralSettingsBlockHeaderItem ()
 
 @end
@@ -29,7 +29,7 @@
         
         [attr appendString:header withColor:GRAY_TEXT_COLOR];
         [attr setFont:TGSystemFont(12) forRange:attr.range];
-        
+        [attr detectBoldColorInStringWithFont:TGSystemMediumFont(12)];
         _header = attr;
         self.height = height;
         _isFlipped = flipped;

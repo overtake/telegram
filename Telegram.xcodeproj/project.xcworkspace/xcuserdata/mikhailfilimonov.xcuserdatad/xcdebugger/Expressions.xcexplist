@@ -4790,6 +4790,9 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "__39-[MessagesTopInfoView setConversation:]_block_invoke:MessagesTopInfoView.m">
+      </ContextState>
+      <ContextState
          contextName = "__36-[DownloadOperation start:selector:]_block_invoke:DownloadOperation.m">
       </ContextState>
       <ContextState
@@ -5006,6 +5009,14 @@
          <PersistentStrings>
             <PersistentString
                value = "self.filePath">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[MessagesTopInfoView initWithFrame:]:MessagesTopInfoView.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "frame">
             </PersistentString>
          </PersistentStrings>
       </ContextState>

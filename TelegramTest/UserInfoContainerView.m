@@ -761,7 +761,7 @@
     if(user.isBot) {
         [[FullUsersManager sharedManager] loadUserFull:user callback:^(TL_userFull *userFull) {
             
-            int h = [_botInfoView setString:userFull.bot_info.share_text];
+            int h =0; //[_botInfoView setString:userFull.bot_info.share_text];
             
             [_botInfoView setFrameSize:NSMakeSize(NSWidth(_botInfoView.frame), h+30)];
             

@@ -8,6 +8,9 @@
 
 #import "MessagesTopInfoView.h"
 #import "TLPeer+Extensions.h"
+#import "MessageReplyContainer.h"
+#import "TGReplyObject.h"
+#import "MessageTableItem.h"
 @interface MessagesTopInfoView () <TMHyperlinkTextFieldDelegate>
 @property (nonatomic,strong) TMHyperlinkTextField *field;
 @property (nonatomic,strong) NSProgressIndicator *progress;
@@ -15,6 +18,11 @@
 @property (nonatomic,assign) BOOL locked;
 
 @property (nonatomic,strong) BTRButton *cancel;
+
+@property (nonatomic,strong) RPCRequest *request;
+
+@property (nonatomic,strong) MessageReplyContainer *pinnedContainer;
+
 @end
 
 @implementation MessagesTopInfoView
@@ -170,6 +178,8 @@ static NSMutableDictionary *cache;
 -(void)setConversation:(TL_conversation *)conversation {
     self->_conversation = conversation;
     
+    [_pinnedContainer removeFromSuperview];
+    _pinnedContainer = nil;
     
     self.locked = NO;
     
@@ -178,7 +188,7 @@ static NSMutableDictionary *cache;
     [Notification addObserver:self selector:@selector(didChangeUserBlock:) name:USER_BLOCK];
     
     [Notification addObserver:self selector:@selector(didChangeUserType:) name:[Notification notificationForUser:conversation.user action:USER_CHANGE_TYPE]];
-    
+    [Notification addObserver:self selector:@selector(didUpdatePinnedMessage:) name:UPDATE_PINNED_MESSAGE];
     
     TLUser *user = conversation.user;
     
@@ -215,6 +225,156 @@ static NSMutableDictionary *cache;
         self.action = newAction;
     }
     
+    [_request cancelRequest];
+    _request = nil;
+    
+    
+    
+    if(self.conversation.type == DialogTypeChannel && self.conversation.chat.isMegagroup) {
+        
+        TLChatFull *fullChat = [[FullChatManager sharedManager] find:self.conversation.chat.n_id];
+        
+        if(fullChat.pinned_msg_id > 0) {
+            [self loadAndShowPinnedMessage:fullChat.pinned_msg_id chat_id:fullChat.n_id animated:NO];
+        } else {
+            [[FullChatManager sharedManager] performLoad:self.conversation.chat.n_id callback:^(TLChatFull *fullChat) {
+                
+                if(fullChat.pinned_msg_id > 0) {
+                    [self loadAndShowPinnedMessage:fullChat.pinned_msg_id chat_id:fullChat.n_id animated:YES];
+                }
+                
+            }];
+        }
+        
+    }
+    
+}
+
+-(void)didUpdatePinnedMessage:(NSNotification *)notification {
+    int peer_id = [notification.userInfo[KEY_PEER_ID] intValue];
+    int msg_id = [notification.userInfo[KEY_MESSAGE_ID] intValue];
+                  
+                  
+    if(_conversation.peer_id == peer_id) {
+        if(msg_id != 0) {
+            [self loadAndShowPinnedMessage:msg_id chat_id:abs(peer_id) animated:YES];
+        }else if(self.action == MessagesTopInfoActionPinnedMessage) {
+            [self hide:YES];
+        }
+    }
+}
+
+-(void)loadAndShowPinnedMessage:(int)msg_id chat_id:(int)chat_id animated:(BOOL)animated {
+    
+    __block TL_localMessage *msg = [[Storage manager] messageById:msg_id inChannel:-chat_id];
+    
+    
+    dispatch_block_t block = ^{
+        TGReplyObject *replyObject = [[TGReplyObject alloc] initWithReplyMessage:msg fromMessage:nil tableItem:nil];
+        
+        [_pinnedContainer removeFromSuperview];
+        _pinnedContainer = nil;
+        
+        _pinnedContainer = [[MessageReplyContainer alloc] initWithFrame:NSMakeRect([MessageTableItem defaultContainerOffset], 0, NSWidth(self.frame) - [MessageTableItem defaultContainerOffset] * 2, replyObject.containerHeight)];
+        _pinnedContainer.autoresizingMask = NSViewWidthSizable;
+        
+        _pinnedContainer.pinnedMessage = YES;
+        
+        weak();
+        
+        _pinnedContainer.deleteHandler = ^{
+            strongWeak();
+            if(strongSelf == weakSelf) {
+                
+                dispatch_block_t block = ^{
+                    strongSelf.pinnedContainer.pinnedMessage = NO;
+                    [strongSelf deletePinnedMessage:msg chat_id:chat_id];
+                };
+                
+                if(strongSelf.pinnedContainer.doublePinScrolled) {
+                    confirm(appName(), NSLocalizedString(@"Channel.ConfirmUnpin", nil), block, nil);
+                }
+                
+            }
+        };
+        
+        
+        [_pinnedContainer setCenteredYByView:self];
+        _pinnedContainer.replyObject = replyObject;
+        
+        
+        
+        [self addSubview:_pinnedContainer];
+        
+        self.action = MessagesTopInfoActionPinnedMessage;
+        
+        [self show:animated];
+    };
+    
+    if(!msg) {
+        _request = [RPCRequest sendRequest:[TLAPI_channels_getMessages createWithChannel:self.conversation.chat.inputPeer n_id:[@[@(msg_id)] mutableCopy]] successHandler:^(id request, TL_messages_messages *response) {
+            
+            if(response.messages.count > 0 && ![response.messages[0] isKindOfClass:[TL_messageEmpty class]]) {
+                msg = [TL_localMessage convertReceivedMessage:response.messages[0]];
+                if(msg.peer_id == self.conversation.peer_id) {
+                    [response.messages removeAllObjects];
+                    [SharedManager proccessGlobalResponse:response];
+                    
+                    
+                    [[Storage manager] addHolesAroundMessage:msg];
+                    [[Storage manager] insertMessages:@[msg]];
+                    
+                    
+                    if(![msg isKindOfClass:[TL_messageEmpty class]]) {
+                        block();
+                    }
+                }
+                
+            }
+            
+        } errorHandler:^(id request, RpcError *error) {
+            
+        }];
+    } else {
+        block();
+    }
+    
+}
+
+-(void)deletePinnedMessage:(TL_localMessage *)msg chat_id:(int)chat_id {
+   
+    
+    
+    dispatch_block_t block = ^{
+        TLChatFull *chat = [[FullChatManager sharedManager] find:chat_id];
+        
+        chat.pinned_msg_id = 0;
+        
+        [[Storage manager] insertFullChat:chat completeHandler:nil];
+        
+        [self hide:YES];
+
+    };
+    
+    if(_conversation.chat.isManager) {
+        
+        [self.controller showModalProgress];
+        
+        [RPCRequest sendRequest:[TLAPI_channels_updatePinnedMessage createWithFlags: 0 channel:msg.conversation.inputPeer n_id:0] successHandler:^(id request, id response) {
+            
+            block();
+            
+            [self.controller hideModalProgressWithSuccess];
+            
+        } errorHandler:^(id request, RpcError *error) {
+            [self.controller hideModalProgress];
+        }];
+
+    } else {
+        block();
+    }
+    
+    
     
 }
 
@@ -232,14 +392,16 @@ static NSMutableDictionary *cache;
         [MessagesTopInfoActionAddContact] = @"Messages.MessagesTopInfoActionAddContact",
         [MessagesTopInfoActionShareContact] = @"Messages.MessagesTopInfoActionShareContact",
         [MessagesTopInfoActionUnblockUser] = @"Messages.MessagesTopInfoActionUnblockUser",
-        [MessagesTopInfoActionReportSpam] = @""
+        [MessagesTopInfoActionReportSpam] = @"",
+        [MessagesTopInfoActionPinnedMessage] = @""
     };
     
     static NSString * const buttonLocalization[] = {
         [MessagesTopInfoActionAddContact] = @"Messages.MessagesTopInfoActionAddContact.Button",
         [MessagesTopInfoActionShareContact] = @"Messages.MessagesTopInfoActionShareContact.Button",
         [MessagesTopInfoActionUnblockUser] = @"Messages.MessagesTopInfoActionUnblockUser.Button",
-        [MessagesTopInfoActionReportSpam] = @"Messages.MessagesTopInfoActionReportSpam.Button"
+        [MessagesTopInfoActionReportSpam] = @"Messages.MessagesTopInfoActionReportSpam.Button",
+        [MessagesTopInfoActionPinnedMessage] = @""
     };
     
     [string appendString:NSLocalizedString(localizations[action], nil) withColor:NSColorFromRGB(0xa9a9a9)];

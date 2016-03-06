@@ -91,7 +91,7 @@
         dispatch_once(&onceToken, ^{
             
             statefullUpdates = @[NSStringFromClass([TL_updateNewChannelMessage class]),NSStringFromClass([TL_updateDeleteChannelMessages class]),NSStringFromClass([TL_updateEditChannelMessage class])];
-            statelessUpdates = @[NSStringFromClass([TL_updateReadChannelInbox class]),NSStringFromClass([TL_updateChannelTooLong class]),NSStringFromClass([TL_updateChannelGroup class]),NSStringFromClass([TL_updateChannelMessageViews class]),NSStringFromClass([TL_updateChannel class])];
+            statelessUpdates = @[NSStringFromClass([TL_updateReadChannelInbox class]),NSStringFromClass([TL_updateChannelTooLong class]),NSStringFromClass([TL_updateChannelGroup class]),NSStringFromClass([TL_updateChannelMessageViews class]),NSStringFromClass([TL_updateChannel class]),NSStringFromClass([TL_updateChannelPinnedMessage class])];
         });
         
         if([statefullUpdates indexOfObject:[update className]] != NSNotFound)
@@ -483,6 +483,12 @@
             }];
         }
     
+    } else if([update isKindOfClass:[TL_updateChannelPinnedMessage class]]) {
+        TLChatFull *chat = [[FullChatManager sharedManager] find:[update channel_id]];
+        
+        chat.pinned_msg_id = [(TL_updateChannelPinnedMessage *)update n_id];
+        
+        [Notification perform:UPDATE_PINNED_MESSAGE data:@{KEY_PEER_ID:@(-[update channel_id]),KEY_MESSAGE_ID:@(chat.pinned_msg_id)}];
     }
 
 }

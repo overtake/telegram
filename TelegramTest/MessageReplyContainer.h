@@ -19,6 +19,8 @@
 
 @property (nonatomic,weak) MessageTableItem *item;
 
+@property (nonatomic,assign,getter=isPinnedMessage) BOOL pinnedMessage;
+@property (nonatomic,assign,readonly) BOOL doublePinScrolled;
 
 -(void)_didChangeBackgroundColorWithAnimation:(POPBasicAnimation *)anim toColor:(NSColor *)color;
 

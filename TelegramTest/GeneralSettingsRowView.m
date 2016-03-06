@@ -197,7 +197,7 @@
     
     [self.lockedIndicator setFrameOrigin:NSMakePoint(NSWidth(self.frame) - item.xOffset - NSWidth(self.lockedIndicator.frame), 10)];
     
-    [self.descriptionField setFrameSize:NSMakeSize(MIN(NSWidth(self.descriptionField.frame), NSWidth(self.frame) - (item.xOffset * 2 + 100) ), NSHeight(self.descriptionField.frame))];
+    [self.descriptionField setFrameSize:NSMakeSize(MIN(NSWidth(self.descriptionField.frame), NSWidth(self.frame) - (item.xOffset * 2 + 50) ), NSHeight(self.descriptionField.frame))];
     
     
     [self.nextDesc setFrameSize:NSMakeSize(NSWidth(self.frame) - (item.xOffset * 2 + 50 + NSWidth(_descriptionField.frame)), NSHeight(self.nextDesc.frame))];

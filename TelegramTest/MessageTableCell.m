@@ -147,6 +147,22 @@
         }
     }
     
+    if(self.item.message.isChannelMessage && self.item.message.chat.isMegagroup && self.item.message.chat.isManager) {
+        
+        TLChatFull *chat = [[FullChatManager sharedManager] find:abs(self.item.message.peer_id)];
+        
+        BOOL unpin = chat.pinned_msg_id == self.item.message.n_id;
+        
+        [items addObject:[NSMenuItem menuItemWithTitle:!unpin ? NSLocalizedString(@"Context.Pin", nil) : NSLocalizedString(@"Context.Unpin", nil) withBlock:^(id sender) {
+            
+            [RPCRequest sendRequest:[TLAPI_channels_updatePinnedMessage createWithFlags:0 channel:weakSelf.item.message.chat.inputPeer n_id:unpin ? 0 : weakSelf.item.message.n_id] successHandler:^(id request, id response) {
+                
+                
+            } errorHandler:nil];
+            
+        }]];
+    }
+    
     
     if([self.item.message.conversation canSendMessage]) {
         
@@ -191,12 +207,7 @@
             
             [weakSelf.messagesViewController setState:MessagesViewControllerStateNone];
             [weakSelf.messagesViewController unSelectAll:NO];
-            
-            
-            
             [weakSelf.messagesViewController setSelectedMessage:weakSelf.item selected:YES];
-            
-            
             [weakSelf.messagesViewController showForwardMessagesModalView];
             
             

@@ -166,7 +166,7 @@
     [_tableView addItem:deleteItem tableRedraw:NO];
     [_tableView addItem:banUser tableRedraw:NO];
     [_tableView addItem:reportSpam tableRedraw:NO];
- //   [_tableView addItem:deleteAllMesages tableRedraw:NO];
+    [_tableView addItem:deleteAllMesages tableRedraw:NO];
     
     [_tableView reloadData];
     

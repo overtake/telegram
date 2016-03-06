@@ -166,7 +166,16 @@
         user.type = SettingsRowItemTypeNone;
         user.editable = self.action.isEditable;
         
-        
+        if([obj isKindOfClass:[TL_channelParticipantEditor class]] || [obj isKindOfClass:[TL_channelParticipantCreator class]]) {
+            NSMutableAttributedString *attr = [[NSMutableAttributedString alloc] init];
+            
+            [attr appendString:NSLocalizedString(@"Channel.admin", nil) withColor:GRAY_TEXT_COLOR];
+            
+            [attr setFont:TGSystemFont(13) forRange:attr.range];
+            
+            user.badge = attr;
+        }
+                
         [user setStateback:^id(TGGeneralRowItem *item) {
             
             BOOL canRemoveUser = ((obj.user_id != [UsersManager currentUserId] && (weakSelf.chat.isCreator || weakSelf.chat.isManager)) && ![obj isKindOfClass:[TL_channelParticipantCreator class]]);

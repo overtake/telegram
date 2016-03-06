@@ -261,6 +261,7 @@
 		C20B228818E971D0007BCCD6 /* bitwise.c in Sources */ = {isa = PBXBuildFile; fileRef = C20B228418E971D0007BCCD6 /* bitwise.c */; };
 		C20B228918E971D0007BCCD6 /* framing.c in Sources */ = {isa = PBXBuildFile; fileRef = C20B228518E971D0007BCCD6 /* framing.c */; };
 		C20B228D18E98A2C007BCCD6 /* SettingsArchiver.m in Sources */ = {isa = PBXBuildFile; fileRef = C20B228C18E98A2C007BCCD6 /* SettingsArchiver.m */; };
+		C20B312E1C89E44C00A6BCF5 /* TGModernUpgradeChatViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C20B312D1C89E44C00A6BCF5 /* TGModernUpgradeChatViewController.m */; };
 		C20B82A11BD98EC700EF01AD /* TGPVDocumentsBehavior.m in Sources */ = {isa = PBXBuildFile; fileRef = C20B82A01BD98EC700EF01AD /* TGPVDocumentsBehavior.m */; };
 		C20B82AD1BDA550600EF01AD /* TGChatHeadLockView.m in Sources */ = {isa = PBXBuildFile; fileRef = C20B82AC1BDA550600EF01AD /* TGChatHeadLockView.m */; };
 		C20B82B01BDA975500EF01AD /* TGShareContactModalView.m in Sources */ = {isa = PBXBuildFile; fileRef = C20B82AF1BDA975500EF01AD /* TGShareContactModalView.m */; };
@@ -1598,6 +1599,8 @@
 		C20B228718E971D0007BCCD6 /* os_types.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = os_types.h; sourceTree = "<group>"; };
 		C20B228B18E98A2C007BCCD6 /* SettingsArchiver.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SettingsArchiver.h; sourceTree = "<group>"; };
 		C20B228C18E98A2C007BCCD6 /* SettingsArchiver.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SettingsArchiver.m; sourceTree = "<group>"; };
+		C20B312C1C89E44C00A6BCF5 /* TGModernUpgradeChatViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGModernUpgradeChatViewController.h; sourceTree = "<group>"; };
+		C20B312D1C89E44C00A6BCF5 /* TGModernUpgradeChatViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGModernUpgradeChatViewController.m; sourceTree = "<group>"; };
 		C20B829F1BD98EC700EF01AD /* TGPVDocumentsBehavior.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGPVDocumentsBehavior.h; sourceTree = "<group>"; };
 		C20B82A01BD98EC700EF01AD /* TGPVDocumentsBehavior.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGPVDocumentsBehavior.m; sourceTree = "<group>"; };
 		C20B82AB1BDA550600EF01AD /* TGChatHeadLockView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGChatHeadLockView.h; sourceTree = "<group>"; };
@@ -5520,6 +5523,8 @@
 				C2CE53E51BEB4FAD00BBEF5F /* ComposeChangeChannelDescriptionViewController.m */,
 				C2CE53ED1BEB748900BBEF5F /* ComposeActionChangeChannelAboutBehavior.h */,
 				C2CE53EE1BEB748900BBEF5F /* ComposeActionChangeChannelAboutBehavior.m */,
+				C20B312C1C89E44C00A6BCF5 /* TGModernUpgradeChatViewController.h */,
+				C20B312D1C89E44C00A6BCF5 /* TGModernUpgradeChatViewController.m */,
 			);
 			name = compose;
 			sourceTree = "<group>";
@@ -7384,6 +7389,7 @@
 				C256E91118D20BA8008FFA04 /* DownloadItem.m in Sources */,
 				0A613C1718AD7A6B004096DD /* MessageTableItemGeo.m in Sources */,
 				C26F7EC61A602837001D1AE2 /* ResendSecretSenderItem.m in Sources */,
+				C20B312E1C89E44C00A6BCF5 /* TGModernUpgradeChatViewController.m in Sources */,
 				C297955519EC29DE00BE893E /* GeneralSettingsRowItem.m in Sources */,
 				0A59067E18AA32C8002ED7BA /* BTRPopUpButton.m in Sources */,
 				0AF4F4A2189ABDCC004BA4DF /* MessageTypingView.m in Sources */,

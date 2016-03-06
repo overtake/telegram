@@ -22,9 +22,6 @@
     
     if(self = [super initWithWebPage:webpage tableItem:item]) {
         
-        
-       
-        
         if([webpage.photo isKindOfClass:[TL_photo class]]) {
             
             TLPhotoSize *size = [webpage.photo.sizes lastObject];
@@ -54,16 +51,18 @@
     _size = [super size];
 
    // if(self.imageObject) {
-        
+    if(_imageObject) {
         _imageSize = strongsize(self.imageObject.imageSize,60);
-    
-        _descSize = [self.desc coreTextSizeForTextFieldForWidth: width - self.tableItem.defaultOffset - _imageSize.width];
-    
-        _size.width = _descSize.width + _imageSize.width + self.tableItem.defaultOffset;
-        _size.height = _descSize.height > 60 ? _descSize.height : _descSize.height + _imageSize.height + self.tableItem.defaultContentOffset;
+    }
     
     
-        _size.height = MAX(_size.height, _imageSize.height);
+    _descSize = [self.desc coreTextSizeForTextFieldForWidth: width - self.tableItem.defaultOffset - _imageSize.width];
+    
+    _size.width = _descSize.width + _imageSize.width + self.tableItem.defaultOffset;
+    _size.height = _descSize.height > 60 ? _descSize.height : _descSize.height + _imageSize.height + (_imageObject ? self.tableItem.defaultContentOffset : 0);
+    
+    
+    _size.height = MAX(_size.height, _imageSize.height);
  //   }
     
 }

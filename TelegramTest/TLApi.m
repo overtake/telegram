@@ -2,7 +2,7 @@
 //  TLApi.m
 //  Telegram
 //
-//  Auto created by Mikhail Filimonov on 22.02.16..
+//  Auto created by Mikhail Filimonov on 06.03.16..
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -278,16 +278,20 @@
 @end
 
 @implementation TLAPI_account_updateProfile
-+(TLAPI_account_updateProfile*)createWithFirst_name:(NSString*)first_name last_name:(NSString*)last_name {
++(TLAPI_account_updateProfile*)createWithFlags:(int)flags first_name:(NSString*)first_name last_name:(NSString*)last_name about:(NSString*)about {
     TLAPI_account_updateProfile* obj = [[TLAPI_account_updateProfile alloc] init];
-    obj.first_name = first_name;
+    obj.flags = flags;
+	obj.first_name = first_name;
 	obj.last_name = last_name;
+	obj.about = about;
     return obj;
 }
 - (NSData*)getData {
-	SerializedData* stream = [ClassStore streamWithConstuctor:-259486360];
-	[stream writeString:self.first_name];
-	[stream writeString:self.last_name];
+	SerializedData* stream = [ClassStore streamWithConstuctor:2018596725];
+	[stream writeInt:self.flags];
+	if(self.flags & (1 << 0)) {[stream writeString:self.first_name];}
+	if(self.flags & (1 << 1)) {[stream writeString:self.last_name];}
+	if(self.flags & (1 << 2)) {[stream writeString:self.about];}
 	return [stream getOutput];
 }
 @end
@@ -2760,6 +2764,25 @@
             [ClassStore TLSerialize:obj stream:stream];
 		}
 	}}
+	return [stream getOutput];
+}
+@end
+
+@implementation TLAPI_channels_updatePinnedMessage
++(TLAPI_channels_updatePinnedMessage*)createWithFlags:(int)flags  channel:(TLInputChannel*)channel n_id:(int)n_id {
+    TLAPI_channels_updatePinnedMessage* obj = [[TLAPI_channels_updatePinnedMessage alloc] init];
+    obj.flags = flags;
+	
+	obj.channel = channel;
+	obj.n_id = n_id;
+    return obj;
+}
+- (NSData*)getData {
+	SerializedData* stream = [ClassStore streamWithConstuctor:-1490162350];
+	[stream writeInt:self.flags];
+	
+	[ClassStore TLSerialize:self.channel stream:stream];
+	[stream writeInt:self.n_id];
 	return [stream getOutput];
 }
 @end

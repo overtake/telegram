@@ -86,6 +86,8 @@ extern NSString *const UPDATE_AUDIO_PLAYER_STATE;
 extern NSString *const UPDATE_MESSAGE_ENTITIES;
 extern NSString *const UPDATE_MESSAGE_GROUP_HOLE;
 extern NSString *const UPDATE_MESSAGE_VIEWS;
+extern NSString *const UPDATE_PINNED_MESSAGE;
+
 
 extern NSString *const CHAT_FLAGS_UPDATED;
 

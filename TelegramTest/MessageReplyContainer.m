@@ -21,6 +21,7 @@
 @property (nonatomic,strong) TMTextField *loadingTextField;
 
 
+
 @end
 
 @implementation MessageReplyContainer
@@ -39,9 +40,6 @@
         self.nameView = [[TGTextLabel alloc] initWithFrame:NSMakeRect(15, NSHeight(frameRect) - 13, 200, 20)];
         
         [self addSubview:self.nameView];
-        
-        
-       // [self addSubview:self.dateField];
         
         _messageField = [[TGTextLabel alloc] initWithFrame:NSZeroRect];
         
@@ -78,7 +76,7 @@
 
 -(void)setReplyObject:(TGReplyObject *)replyObject {
     _replyObject = replyObject;
-    
+    _doublePinScrolled = NO;
     [self update];
 }
 
@@ -134,9 +132,8 @@
     [self.nameView setText:[_replyObject replyHeader] maxWidth:NSWidth(self.frame) - self.xOffset height:_replyObject.replyHeaderHeight];
     
     
-    [self.messageField setText:_replyObject.replyText maxWidth:NSWidth(self.frame) - self.xOffset height:_replyObject.replyHeight];
+    [self.messageField setText:_replyObject.replyText maxWidth:NSWidth(self.frame) - self.xOffset- (_deleteHandler ?  NSWidth(_deleteImageView.frame) +10 : 0) height:_replyObject.replyHeight];
     
-    [self.messageField setFrameSize:NSMakeSize(NSWidth(self.frame) - NSMinX(self.messageField.frame), self.replyObject.replyHeight)];
     [self.messageField setFrameOrigin:NSMakePoint(self.xOffset, 0)];
 
     
@@ -146,15 +143,13 @@
         
         _deleteImageView.image = image_CancelReply();
         
-        weak();
-        
-        [_deleteImageView setCallback:^{
-            
-            weakSelf.deleteHandler();
-            
-        }];
+        [_deleteImageView setCallback:_deleteHandler];
         
         [_deleteImageView setAutoresizingMask:NSViewMinXMargin | NSViewMaxXMargin];
+        
+        if(self.isPinnedMessage) {
+            [_deleteImageView setCenteredYByView:self];
+        }
         
         [self addSubview:_deleteImageView];
     } else {
@@ -171,7 +166,6 @@
 -(void)setFrame:(NSRect)frame {
     [super setFrame:frame];
     
-    [self.messageField setFrameSize:NSMakeSize(NSWidth(self.frame) - NSMinX(self.messageField.frame), self.replyObject.replyHeight)];
     
     [self.nameView setFrameOrigin:NSMakePoint(self.xOffset, NSHeight(self.frame) - NSHeight(_nameView.frame))];
     
@@ -190,9 +184,37 @@
     if(!_deleteHandler) {
         if(_item.table.viewController.state == MessagesViewControllerStateNone)
             [_item.table.viewController showMessage:_replyObject.replyMessage fromMsg:_item.message flags:ShowMessageTypeReply];
+    } else if(self.isPinnedMessage) {
+       // if(!_doublePinScrolled) {
+       //     _doublePinScrolled = YES;
+            [appWindow().navigationController.messagesViewController showMessage:_replyObject.replyMessage fromMsg:nil flags:ShowMessageTypeReply];
+         //   [self addScrollEvent];
+       // } else {
+       //     if(_deleteHandler) _deleteHandler();
+      //  }
     }
     
 }
+
+-(void)_didScrolledTableView:(NSNotification *)notification {
+    _doublePinScrolled = NO;
+    [self removeScrollEvent];
+}
+
+
+-(void)addScrollEvent {
+    id clipView = [[appWindow().navigationController.messagesViewController.table enclosingScrollView] contentView];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(_didScrolledTableView:)
+                                                 name:NSViewBoundsDidChangeNotification
+                                               object:clipView];
+    
+}
+
+-(void)removeScrollEvent {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
 
 -(void)_didChangeBackgroundColorWithAnimation:(POPBasicAnimation *)anim toColor:(NSColor *)color {
     if(!anim) {

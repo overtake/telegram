@@ -2,7 +2,7 @@
 //  TLApi.h
 //  Telegram
 //
-//  Auto created by Mikhail Filimonov on 22.02.16.
+//  Auto created by Mikhail Filimonov on 06.03.16.
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -131,10 +131,12 @@
 @end
 
 @interface TLAPI_account_updateProfile : TLApiObject
+@property int flags;
 @property (nonatomic, strong) NSString* first_name;
 @property (nonatomic, strong) NSString* last_name;
+@property (nonatomic, strong) NSString* about;
 
-+(TLAPI_account_updateProfile*)createWithFirst_name:(NSString*)first_name last_name:(NSString*)last_name;
++(TLAPI_account_updateProfile*)createWithFlags:(int)flags first_name:(NSString*)first_name last_name:(NSString*)last_name about:(NSString*)about;
 @end
 
 @interface TLAPI_account_updateStatus : TLApiObject
@@ -1164,5 +1166,14 @@
 @property (nonatomic, strong) NSMutableArray* entities;
 
 +(TLAPI_channels_editMessage*)createWithFlags:(int)flags  channel:(TLInputChannel*)channel n_id:(int)n_id message:(NSString*)message entities:(NSMutableArray*)entities;
+@end
+
+@interface TLAPI_channels_updatePinnedMessage : TLApiObject
+@property int flags;
+@property (nonatomic,assign,readonly) BOOL isSilent;
+@property (nonatomic, strong) TLInputChannel* channel;
+@property int n_id;
+
++(TLAPI_channels_updatePinnedMessage*)createWithFlags:(int)flags  channel:(TLInputChannel*)channel n_id:(int)n_id;
 @end
 

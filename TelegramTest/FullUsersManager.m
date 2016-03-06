@@ -26,7 +26,7 @@
     TL_userFull *userFull = [self find:user.n_id];
     
     if(userFull) {
-        if(user.bot_info_version == userFull.bot_info.version) {
+        if(user.bot_info_version == userFull.user.bot_info_version) {
             if(callback != nil)
                 callback(userFull);
             return;

@@ -778,6 +778,10 @@ static NSTextAttachment *channelViewsCountAttachment() {
     return 20;
 }
 
++(int)defaultContainerOffset {
+    return 20;
+}
+
 -(int)startContentOffset {
     return self.defaultContainerOffset + self.defaultPhotoWidth + self.defaultOffset;
 }

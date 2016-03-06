@@ -141,6 +141,11 @@
     
     
     dispatch_block_t block = ^{
+        if([self.response isKindOfClass:[RpcError class]]) {
+            self.error = self.response;
+            self.response = nil;
+        }
+        
         if(self.response) {
             if(self.successHandler != nil) {
                 self.successHandler(self, self.response);

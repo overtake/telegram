@@ -13,6 +13,7 @@
 #import "TGTimer.h"
 #import <AddressBook/AddressBook.h>
 #import "TLUserCategory.h"
+#import "FullUsersManager.h"
 @interface UsersManager ()
 @property (nonatomic, strong) TGTimer *lastSeenUpdater;
 @property (nonatomic, strong) RPCRequest *lastSeenRequest;
@@ -432,20 +433,24 @@
     [Notification perform:USER_UPDATE_NAME data:@{KEY_USER:self.userSelf}];
     
     
-    [RPCRequest sendRequest:[TLAPI_account_updateProfile createWithFirst_name:firstName last_name:lastName] successHandler:^(RPCRequest *request, TLUser *response) {
-        
-        if(response.type == TLUserTypeSelf) {
-            [self add:@[response]];
-        }
-        
-        [[Storage manager] insertUser:self.userSelf completeHandler:nil];
-        
-        completeHandler(self.userSelf);
-        [Notification perform:USER_UPDATE_NAME data:@{KEY_USER:self.userSelf}];
-    } errorHandler:^(RPCRequest *request, RpcError *error) {
-        if(errorHandler)
-            errorHandler(NSLocalizedString(@"Profile.CantUpdate", nil));
-    } timeout:10];
+    [[FullUsersManager sharedManager] loadUserFull:self.userSelf callback:^(TL_userFull *userFull) {
+        [RPCRequest sendRequest:[TLAPI_account_updateProfile createWithFlags:0 first_name:firstName last_name:lastName about:userFull.about] successHandler:^(RPCRequest *request, TLUser *response) {
+            
+            if(response.type == TLUserTypeSelf) {
+                [self add:@[response]];
+            }
+            
+            [[Storage manager] insertUser:self.userSelf completeHandler:nil];
+            
+            completeHandler(self.userSelf);
+            [Notification perform:USER_UPDATE_NAME data:@{KEY_USER:self.userSelf}];
+        } errorHandler:^(RPCRequest *request, RpcError *error) {
+            if(errorHandler)
+                errorHandler(NSLocalizedString(@"Profile.CantUpdate", nil));
+        } timeout:10];
+    }];
+
+    
 }
 
 -(void)updateAccountPhoto:(NSString *)path completeHandler:(void (^)(TLUser *user))completeHandler progressHandler:(void (^)(float))progressHandler errorHandler:(void (^)(NSString *description))errorHandler {
