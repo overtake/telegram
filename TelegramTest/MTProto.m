@@ -2,7 +2,7 @@
 //  MTProto.m
 //  Telegram
 //
-//  Auto created by Mikhail Filimonov on 06.03.16.
+//  Auto created by Mikhail Filimonov on 08.03.16.
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -4494,6 +4494,8 @@
 @implementation TLChatFull
             
 -(BOOL)isCan_view_participants {return NO;}
+                        
+-(BOOL)isCan_set_username {return NO;}
             
 @end
         
@@ -4581,9 +4583,10 @@
 @end
 
 @implementation TL_channelFull
-+(TL_channelFull*)createWithFlags:(int)flags  n_id:(int)n_id about:(NSString*)about participants_count:(int)participants_count admins_count:(int)admins_count kicked_count:(int)kicked_count read_inbox_max_id:(int)read_inbox_max_id unread_count:(int)unread_count unread_important_count:(int)unread_important_count chat_photo:(TLPhoto*)chat_photo notify_settings:(TLPeerNotifySettings*)notify_settings exported_invite:(TLExportedChatInvite*)exported_invite bot_info:(NSMutableArray*)bot_info migrated_from_chat_id:(int)migrated_from_chat_id migrated_from_max_id:(int)migrated_from_max_id pinned_msg_id:(int)pinned_msg_id {
++(TL_channelFull*)createWithFlags:(int)flags   n_id:(int)n_id about:(NSString*)about participants_count:(int)participants_count admins_count:(int)admins_count kicked_count:(int)kicked_count read_inbox_max_id:(int)read_inbox_max_id unread_count:(int)unread_count unread_important_count:(int)unread_important_count chat_photo:(TLPhoto*)chat_photo notify_settings:(TLPeerNotifySettings*)notify_settings exported_invite:(TLExportedChatInvite*)exported_invite bot_info:(NSMutableArray*)bot_info migrated_from_chat_id:(int)migrated_from_chat_id migrated_from_max_id:(int)migrated_from_max_id pinned_msg_id:(int)pinned_msg_id {
 	TL_channelFull* obj = [[TL_channelFull alloc] init];
 	obj.flags = flags;
+	
 	
 	obj.n_id = n_id;
 	obj.about = about;
@@ -4604,6 +4607,7 @@
 }
 -(void)serialize:(SerializedData*)stream {
 	[stream writeInt:self.flags];
+	
 	
 	[stream writeInt:self.n_id];
 	[stream writeString:self.about];
@@ -4632,6 +4636,7 @@
 }
 -(void)unserialize:(SerializedData*)stream {
 	super.flags = [stream readInt];
+	
 	
 	super.n_id = [stream readInt];
 	super.about = [stream readString];
@@ -4669,6 +4674,7 @@
     
     objc.flags = self.flags;
     
+    
     objc.n_id = self.n_id;
     objc.about = self.about;
     objc.participants_count = self.participants_count;
@@ -4705,6 +4711,8 @@
         
             
 -(BOOL)isCan_view_participants {return (self.flags & (1 << 3)) > 0;}
+                        
+-(BOOL)isCan_set_username {return (self.flags & (1 << 6)) > 0;}
                         
 -(void)setParticipants_count:(int)participants_count
 {
@@ -8524,6 +8532,59 @@
 }
         
 
+        
+@end
+
+@implementation TLPeerSettings
+            
+-(BOOL)isReport_spam {return NO;}
+            
+@end
+        
+@implementation TL_peerSettings
++(TL_peerSettings*)createWithFlags:(int)flags  {
+	TL_peerSettings* obj = [[TL_peerSettings alloc] init];
+	obj.flags = flags;
+	
+	return obj;
+}
+-(void)serialize:(SerializedData*)stream {
+	[stream writeInt:self.flags];
+	
+}
+-(void)unserialize:(SerializedData*)stream {
+	super.flags = [stream readInt];
+	
+}
+        
+-(TL_peerSettings *)copy {
+    
+    TL_peerSettings *objc = [[TL_peerSettings alloc] init];
+    
+    objc.flags = self.flags;
+    
+    
+    return objc;
+}
+        
+
+    
+-(id)initWithCoder:(NSCoder *)aDecoder {
+
+    if((self = [ClassStore deserialize:[aDecoder decodeObjectForKey:@"data"]])) {
+        
+    }
+    
+    return self;
+}
+        
+-(void)encodeWithCoder:(NSCoder *)aCoder {
+    [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
+}
+        
+            
+-(BOOL)isReport_spam {return (self.flags & (1 << 0)) > 0;}
+            
         
 @end
 

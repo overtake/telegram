@@ -2,7 +2,7 @@
 //  TLApi.h
 //  Telegram
 //
-//  Auto created by Mikhail Filimonov on 06.03.16.
+//  Auto created by Mikhail Filimonov on 08.03.16.
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -354,6 +354,18 @@
 @property (nonatomic, strong) TLInputPeer* peer;
 
 +(TLAPI_messages_reportSpam*)createWithPeer:(TLInputPeer*)peer;
+@end
+
+@interface TLAPI_messages_hideReportSpam : TLApiObject
+@property (nonatomic, strong) TLInputPeer* peer;
+
++(TLAPI_messages_hideReportSpam*)createWithPeer:(TLInputPeer*)peer;
+@end
+
+@interface TLAPI_messages_getPeerSettings : TLApiObject
+@property (nonatomic, strong) TLInputPeer* peer;
+
++(TLAPI_messages_getPeerSettings*)createWithPeer:(TLInputPeer*)peer;
 @end
 
 @interface TLAPI_messages_getChats : TLApiObject

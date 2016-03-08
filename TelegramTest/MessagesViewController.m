@@ -2757,37 +2757,37 @@ static NSTextAttachment *headerMediaIcon() {
     [self.table display];
     
     
-    if(self.conversation.type == DialogTypeUser && !self.conversation.user.isContact && !self.conversation.user.isBot) {
-        
-        __block BOOL showReport = [[NSUserDefaults standardUserDefaults] boolForKey:[NSString stringWithFormat:@"showreport_%d",self.conversation.user.n_id]];
-        
-        __block BOOL alwaysShowReport = [[NSUserDefaults standardUserDefaults] boolForKey:[NSString stringWithFormat:@"always_showreport1_%d",self.conversation.user.n_id]];
-        
-        if(self.messages.count > 1 && (showReport || !alwaysShowReport)) {
-            if(self.historyController.nextState == ChatHistoryStateFull) {
-                
-                showReport = YES;
-                
-                [self.messages enumerateObjectsAtIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(1, self.messages.count - 1)] options:0 usingBlock:^(MessageTableItem*  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-                    
-                    if(obj.message.n_out) {
-                        showReport = NO;
-                        *stop = YES;
-                    }
-                    
-                }];
-                
-                alwaysShowReport = showReport;
-                
-                [[NSUserDefaults standardUserDefaults] setBool:showReport forKey:[NSString stringWithFormat:@"showreport_%d",self.conversation.user.n_id]];
-            }
-        }
-        
-        if(showReport) {
-            [_topInfoView setConversation:self.conversation];
-        }
-        
-    }
+//    if(self.conversation.type != DialogTypeSecretChat) {
+//        
+//        __block BOOL showReport = [[NSUserDefaults standardUserDefaults] boolForKey:[NSString stringWithFormat:@"showreport_%d",self.conversation.user.n_id]];
+//        
+//        __block BOOL alwaysShowReport = [[NSUserDefaults standardUserDefaults] boolForKey:[NSString stringWithFormat:@"always_showreport1_%d",self.conversation.user.n_id]];
+//        
+//        if(self.messages.count > 1 && (showReport || !alwaysShowReport)) {
+//            if(self.historyController.nextState == ChatHistoryStateFull) {
+//                
+//                showReport = YES;
+//                
+//                [self.messages enumerateObjectsAtIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(1, self.messages.count - 1)] options:0 usingBlock:^(MessageTableItem*  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+//                    
+//                    if(obj.message.n_out) {
+//                        showReport = NO;
+//                        *stop = YES;
+//                    }
+//                    
+//                }];
+//                
+//                alwaysShowReport = showReport;
+//                
+//                [[NSUserDefaults standardUserDefaults] setBool:showReport forKey:[NSString stringWithFormat:@"showreport_%d",self.conversation.user.n_id]];
+//            }
+//        }
+//        
+//        if(showReport) {
+//            [_topInfoView setConversation:self.conversation];
+//        }
+//        
+//    }
     
 }
 

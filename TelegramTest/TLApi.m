@@ -2,7 +2,7 @@
 //  TLApi.m
 //  Telegram
 //
-//  Auto created by Mikhail Filimonov on 06.03.16..
+//  Auto created by Mikhail Filimonov on 08.03.16..
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -849,6 +849,32 @@
 }
 - (NSData*)getData {
 	SerializedData* stream = [ClassStore streamWithConstuctor:-820669733];
+	[ClassStore TLSerialize:self.peer stream:stream];
+	return [stream getOutput];
+}
+@end
+
+@implementation TLAPI_messages_hideReportSpam
++(TLAPI_messages_hideReportSpam*)createWithPeer:(TLInputPeer*)peer {
+    TLAPI_messages_hideReportSpam* obj = [[TLAPI_messages_hideReportSpam alloc] init];
+    obj.peer = peer;
+    return obj;
+}
+- (NSData*)getData {
+	SerializedData* stream = [ClassStore streamWithConstuctor:-1460572005];
+	[ClassStore TLSerialize:self.peer stream:stream];
+	return [stream getOutput];
+}
+@end
+
+@implementation TLAPI_messages_getPeerSettings
++(TLAPI_messages_getPeerSettings*)createWithPeer:(TLInputPeer*)peer {
+    TLAPI_messages_getPeerSettings* obj = [[TLAPI_messages_getPeerSettings alloc] init];
+    obj.peer = peer;
+    return obj;
+}
+- (NSData*)getData {
+	SerializedData* stream = [ClassStore streamWithConstuctor:913498268];
 	[ClassStore TLSerialize:self.peer stream:stream];
 	return [stream getOutput];
 }

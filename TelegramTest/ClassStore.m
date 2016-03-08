@@ -3,7 +3,7 @@
 //  ClassStore.m
 //  Telegram
 //
-    //  Created by keepcoder on 06.03.16.
+    //  Created by keepcoder on 08.03.16.
 //  Copyright (c) 2015 keepcoder. All rights reserved.
 //
 
@@ -97,7 +97,7 @@ static NSMutableDictionary *cs_constuctors;
         if(constructor == 481674261) {
             return [self deserializeVector:stream];
         }
-        [NSException raise:@"TLError" format:@"constructor not found %d", constructor];
+        MTLog(@"Error, constructor %d not found, return nil", constructor);
         return nil;
     } else {
         //TLog("@ create class %@ with constructor %d", class, constructor);
@@ -239,6 +239,7 @@ static NSMutableDictionary *cs_constuctors;
    [cs_classes setObject:[TL_peerNotifyEventsAll class] forKey:[NSNumber numberWithInt:1830677896]];
    [cs_classes setObject:[TL_peerNotifySettingsEmpty class] forKey:[NSNumber numberWithInt:1889961234]];
    [cs_classes setObject:[TL_peerNotifySettings class] forKey:[NSNumber numberWithInt:-1697798976]];
+   [cs_classes setObject:[TL_peerSettings class] forKey:[NSNumber numberWithInt:-2122045747]];
    [cs_classes setObject:[TL_wallPaper class] forKey:[NSNumber numberWithInt:-860866985]];
    [cs_classes setObject:[TL_inputReportReasonSpam class] forKey:[NSNumber numberWithInt:1490799288]];
    [cs_classes setObject:[TL_inputReportReasonViolence class] forKey:[NSNumber numberWithInt:505595789]];

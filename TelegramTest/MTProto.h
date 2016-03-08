@@ -2,7 +2,7 @@
 //  MTProto.h
 //  Telegram
 //
-//  Auto created by Mikhail Filimonov on 06.03.16.
+//  Auto created by Mikhail Filimonov on 08.03.16.
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -124,6 +124,9 @@
 @end
 	
 @interface TLPeerNotifySettings : TLObject
+@end
+	
+@interface TLPeerSettings : TLObject
 @end
 	
 @interface TLWallPaper : TLObject
@@ -952,6 +955,7 @@
 @property (nonatomic, strong) NSMutableArray* bot_info;
 @property int flags;
 @property (nonatomic,assign,readonly) BOOL isCan_view_participants;
+@property (nonatomic,assign,readonly) BOOL isCan_set_username;
 @property (nonatomic, strong) NSString* about;
 @property int participants_count;
 @property int admins_count;
@@ -968,7 +972,7 @@
 +(TL_chatFull*)createWithN_id:(int)n_id participants:(TLChatParticipants*)participants chat_photo:(TLPhoto*)chat_photo notify_settings:(TLPeerNotifySettings*)notify_settings exported_invite:(TLExportedChatInvite*)exported_invite bot_info:(NSMutableArray*)bot_info;
 @end
 @interface TL_channelFull : TLChatFull<NSCoding>
-+(TL_channelFull*)createWithFlags:(int)flags  n_id:(int)n_id about:(NSString*)about participants_count:(int)participants_count admins_count:(int)admins_count kicked_count:(int)kicked_count read_inbox_max_id:(int)read_inbox_max_id unread_count:(int)unread_count unread_important_count:(int)unread_important_count chat_photo:(TLPhoto*)chat_photo notify_settings:(TLPeerNotifySettings*)notify_settings exported_invite:(TLExportedChatInvite*)exported_invite bot_info:(NSMutableArray*)bot_info migrated_from_chat_id:(int)migrated_from_chat_id migrated_from_max_id:(int)migrated_from_max_id pinned_msg_id:(int)pinned_msg_id;
++(TL_channelFull*)createWithFlags:(int)flags   n_id:(int)n_id about:(NSString*)about participants_count:(int)participants_count admins_count:(int)admins_count kicked_count:(int)kicked_count read_inbox_max_id:(int)read_inbox_max_id unread_count:(int)unread_count unread_important_count:(int)unread_important_count chat_photo:(TLPhoto*)chat_photo notify_settings:(TLPeerNotifySettings*)notify_settings exported_invite:(TLExportedChatInvite*)exported_invite bot_info:(NSMutableArray*)bot_info migrated_from_chat_id:(int)migrated_from_chat_id migrated_from_max_id:(int)migrated_from_max_id pinned_msg_id:(int)pinned_msg_id;
 @end
 @interface TL_chatFull_old29 : TLChatFull<NSCoding>
 +(TL_chatFull_old29*)createWithN_id:(int)n_id participants:(TLChatParticipants*)participants chat_photo:(TLPhoto*)chat_photo notify_settings:(TLPeerNotifySettings*)notify_settings exported_invite:(TLExportedChatInvite*)exported_invite;
@@ -1349,6 +1353,15 @@
 @end
 @interface TL_peerNotifySettings_old47 : TLPeerNotifySettings<NSCoding>
 +(TL_peerNotifySettings_old47*)createWithMute_until:(int)mute_until sound:(NSString*)sound show_previews:(Boolean)show_previews events_mask:(int)events_mask;
+@end
+	
+@interface TLPeerSettings()
+@property int flags;
+@property (nonatomic,assign,readonly) BOOL isReport_spam;
+@end
+
+@interface TL_peerSettings : TLPeerSettings<NSCoding>
++(TL_peerSettings*)createWithFlags:(int)flags ;
 @end
 	
 @interface TLWallPaper()
