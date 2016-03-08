@@ -168,6 +168,7 @@ static NSMutableDictionary *cache;
         [self.controller hideTopInfoView:animated];
         _isShown = NO;
     }
+    
 }
 
 -(void)dealloc {
@@ -204,11 +205,15 @@ static NSMutableDictionary *cache;
         newAction = MessagesTopInfoActionNone;
     }
     
-    BOOL showReport = [[NSUserDefaults standardUserDefaults] boolForKey:[NSString stringWithFormat:@"showreport_%d",self.conversation.user.n_id]];
+    if(self.conversation.type == DialogTypeUser) {
         
-    if(showReport) {
-        newAction = MessagesTopInfoActionReportSpam;
+        BOOL showReport = [[NSUserDefaults standardUserDefaults] boolForKey:[NSString stringWithFormat:@"showreport_%d",self.conversation.user.n_id]];
+        
+        if(showReport) {
+            newAction = MessagesTopInfoActionReportSpam;
+        }
     }
+    
     
     
     if(cache[@(newAction)] && cache[@(newAction)][@(conversation.peer.peer_id)]) {
@@ -291,9 +296,7 @@ static NSMutableDictionary *cache;
                     [strongSelf deletePinnedMessage:msg chat_id:chat_id];
                 };
                 
-                if(strongSelf.pinnedContainer.doublePinScrolled) {
-                    confirm(appName(), NSLocalizedString(@"Channel.ConfirmUnpin", nil), block, nil);
-                }
+                confirm(appName(), NSLocalizedString(@"Channel.ConfirmUnpin", nil), block, nil);
                 
             }
         };

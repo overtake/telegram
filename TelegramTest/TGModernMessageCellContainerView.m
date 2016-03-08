@@ -490,9 +490,7 @@ static bool dragAction = NO;
         animation.removedOnCompletion = YES;
         
         
-        
-        
-         [self.layer pop_addAnimation:animation forKey:@"background"];
+        [self.layer pop_addAnimation:animation forKey:@"background"];
         
         
         POPBasicAnimation *fieldsAnimation = [POPBasicAnimation animation];

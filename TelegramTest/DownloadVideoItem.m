@@ -32,7 +32,7 @@
         
         AVAssetImageGenerator *generator = [[AVAssetImageGenerator alloc] initWithAsset:asset];
         generator.appliesPreferredTrackTransform = TRUE;
-        CMTime thumbTime = CMTimeMakeWithSeconds(0, 30);
+        CMTime thumbTime = CMTimeMakeWithSeconds(0, 0);
         
         
         TL_localMessage *msg = (TL_localMessage *)self.object;

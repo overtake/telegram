@@ -28,4 +28,7 @@
 
 -(id)initWithReplyMessage:(TL_localMessage *)replyMessage fromMessage:(TL_localMessage *)fromMessage tableItem:(MessageTableItem *)item;
 
+
++(void)loadReplyMessage:(TL_localMessage *)fromMessage completionHandler:(void (^)(TL_localMessage *message))completionHandler;
+
 @end

@@ -1220,9 +1220,6 @@
          contextName = "-[TGImageObject cacheKey]:TGImageObject.m">
       </ContextState>
       <ContextState
-         contextName = "-[TGWebpageArticle makeSize:]:TGWebpageArticle.m">
-      </ContextState>
-      <ContextState
          contextName = "-[TMTableView insert:atIndex:tableRedraw:]:TMTableView.mm">
          <PersistentStrings>
             <PersistentString
@@ -3567,6 +3564,9 @@
          contextName = "-[TGDownloadOperation load:]:TGDownloadOperation.m">
       </ContextState>
       <ContextState
+         contextName = "+[TL_localMessage convertReceivedMessage:]:TL_localMessage.m">
+      </ContextState>
+      <ContextState
          contextName = "-[MessageTableCell setItem:]:MessageTableCell.m">
          <PersistentStrings>
             <PersistentString
@@ -3831,6 +3831,9 @@
                value = "[NSThread currentThread]">
             </PersistentString>
          </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "__36-[MessageTableCell defaultMenuItems]_block_invoke_2163:MessageTableCell.m">
       </ContextState>
       <ContextState
          contextName = "__42-[Storage insertMessages:completeHandler:]_block_invoke:Storage.m">
@@ -4763,6 +4766,9 @@
       </ContextState>
       <ContextState
          contextName = "__54-[ComposeActionAddGroupMembersBehavior composeDidDone]_block_invoke:ComposeActionAddGroupMembersBehavior.m">
+      </ContextState>
+      <ContextState
+         contextName = "-[TGWebpageArticle initWithWebPage:tableItem:]:TGWebpageArticle.m">
       </ContextState>
       <ContextState
          contextName = "__67-[TGMessagesHintView showContextPopupWithQuery:query:conversation:]_block_invoke354:TGMessagesHintView.m">
@@ -6278,6 +6284,12 @@
          <PersistentStrings>
             <PersistentString
                value = "action.users">
+            </PersistentString>
+            <PersistentString
+               value = "message">
+            </PersistentString>
+            <PersistentString
+               value = "message.replyMessage.media">
             </PersistentString>
             <PersistentString
                value = "message.isChannelMessage">

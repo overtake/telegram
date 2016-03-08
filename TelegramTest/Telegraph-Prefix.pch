@@ -39,6 +39,7 @@
 #import "TL_broadcast.h"
 #import "TL_messageActionEncryptedChat.h"
 #import "TL_messageActionBotDescription.h"
+#import "TL_localMessageService_old48.h"
 #import "TLUserStatusCategory.h"
 #import "TLClassStore.h"
 #import "UsersManager.h"

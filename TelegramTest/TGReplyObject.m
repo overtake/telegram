@@ -30,7 +30,15 @@
         if(_replyMessage != nil)
             [self updateObject];
         else
-            [self loadReplyMessage];
+            [TGReplyObject loadReplyMessage:_fromMessage completionHandler:^(TL_localMessage *message) {
+                _replyMessage = message;
+                _fromMessage.replyMessage = _replyMessage;
+                [self updateObject];
+                
+                if(_item != nil) {
+                    [Notification perform:UPDATE_MESSAGE_ITEM data:@{@"item":_item}];
+                }
+            }];
         
     }
     
@@ -163,73 +171,58 @@
 }
 
 
--(void)loadReplyMessage {
++(void)loadReplyMessage:(TL_localMessage *)fromMessage completionHandler:(void (^)(TL_localMessage *message))completionHandler {
     
     
-    if([_fromMessage isKindOfClass:[TL_destructMessage class]]) {
+    [[Storage manager] messages:^(NSArray *result) {
         
-        [[Storage manager] messages:^(NSArray *result) {
+        if(result.count == 1) {
+            [[Storage manager] addSupportMessages:result];
             
-            if(result.count == 1) {
-                [[Storage manager] addSupportMessages:result];
-                _replyMessage = result[0];
-                _fromMessage.replyMessage = _replyMessage;
-                [self updateObject];
+            if(completionHandler)
+                completionHandler(result[0]);
+            
+        } else if (![fromMessage isKindOfClass:[TL_destructMessage class]]) {
+            id request = [TLAPI_messages_getMessages createWithN_id:[@[@(fromMessage.reply_to_msg_id)] mutableCopy]];
+            
+            if([fromMessage.to_id isKindOfClass:[TL_peerChannel class]]) {
                 
-                if(_item != nil) {
-                    [Notification perform:UPDATE_MESSAGE_ITEM data:@{@"item":_item}];
+                
+                request = [TLAPI_channels_getMessages createWithChannel:[TL_inputChannel createWithChannel_id:fromMessage.chat.n_id access_hash:fromMessage.chat.access_hash] n_id:[@[@(fromMessage.reply_to_msg_id)] mutableCopy]];
+            }
+            
+            [RPCRequest sendRequest:request successHandler:^(id request, TL_messages_messages *response) {
+                
+                
+                if(response.messages.count == 1 ) {
+                    
+                    NSMutableArray *messages = [response.messages mutableCopy];
+                    [[response messages] removeAllObjects];
+                    
+                    
+                    [TL_localMessage convertReceivedMessages:messages];
+                    
+                    if([messages[0] isKindOfClass:[TL_messageEmpty class]]) {
+                        messages[0] = [TL_localEmptyMessage createWithN_Id:[(TL_messageEmpty *)messages[0] n_id] to_id:fromMessage.to_id];
+                    }
+                    
+                    [SharedManager proccessGlobalResponse:response];
+                    
+                    [[Storage manager] addSupportMessages:messages];
+                    
+                    if(completionHandler)
+                        completionHandler(messages[0]);
                 }
-            }
-            
-        } forIds:@[@(((TL_destructMessage *)_fromMessage).reply_to_random_id)] random:YES sync:NO queue:[ASQueue globalQueue]];
-        
-        return;
-    }
-    
-    id request = [TLAPI_messages_getMessages createWithN_id:[@[@(_fromMessage.reply_to_msg_id)] mutableCopy]];
-    
-    if([_fromMessage.to_id isKindOfClass:[TL_peerChannel class]]) {
-        
-        
-        request = [TLAPI_channels_getMessages createWithChannel:[TL_inputChannel createWithChannel_id:_fromMessage.chat.n_id access_hash:_fromMessage.chat.access_hash] n_id:[@[@(_fromMessage.reply_to_msg_id)] mutableCopy]];
-    }
-    
-    [RPCRequest sendRequest:request successHandler:^(id request, TL_messages_messages *response) {
-        
-        
-        if(response.messages.count == 1 ) {
-            
-            NSMutableArray *messages = [response.messages mutableCopy];
-            [[response messages] removeAllObjects];
-            
-            
-            [TL_localMessage convertReceivedMessages:messages];
-            
-            
-            if([messages[0] isKindOfClass:[TL_messageEmpty class]]) {
-                messages[0] = [TL_localEmptyMessage createWithN_Id:[(TL_messageEmpty *)messages[0] n_id] to_id:_fromMessage.to_id];
-            }
-            
-            [SharedManager proccessGlobalResponse:response];
-            
-            [[Storage manager] addSupportMessages:messages];
-            
-            
-            _replyMessage = messages[0];
-            _fromMessage.replyMessage = _replyMessage;
-            [self updateObject];
-            
-            if(_item != nil) {
-                [Notification perform:UPDATE_MESSAGE_ITEM data:@{@"item":_item}];
-            }
-
+                
+                
+            } errorHandler:^(id request, RpcError *error) {
+                
+                
+            } timeout:0 queue:[ASQueue globalQueue].nativeQueue];
         }
         
-        
-    } errorHandler:^(id request, RpcError *error) {
-        
-        
-    } timeout:0 queue:[ASQueue globalQueue].nativeQueue];
+    } forIds:@[@([fromMessage isKindOfClass:[TL_destructMessage class]] ? ((TL_destructMessage *)fromMessage).reply_to_random_id : fromMessage.reply_to_msg_id)] random:[fromMessage isKindOfClass:[TL_destructMessage class]] sync:NO queue:[ASQueue globalQueue] isChannel:[fromMessage.to_id isKindOfClass:[TL_peerChannel class]]];
+    
 }
 
 -(void)dealloc {

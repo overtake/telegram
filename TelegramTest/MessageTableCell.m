@@ -153,12 +153,34 @@
         
         BOOL unpin = chat.pinned_msg_id == self.item.message.n_id;
         
+        
         [items addObject:[NSMenuItem menuItemWithTitle:!unpin ? NSLocalizedString(@"Context.Pin", nil) : NSLocalizedString(@"Context.Unpin", nil) withBlock:^(id sender) {
+        
+            BOOL unpin = chat.pinned_msg_id == weakSelf.item.message.n_id;
+            __block int flags = 0;
+            dispatch_block_t block = ^{
+                [RPCRequest sendRequest:[TLAPI_channels_updatePinnedMessage createWithFlags:flags channel:weakSelf.item.message.chat.inputPeer n_id:unpin ? 0 : weakSelf.item.message.n_id] successHandler:^(id request, id response) {
+                    
+                    
+                } errorHandler:nil];
+            };
             
-            [RPCRequest sendRequest:[TLAPI_channels_updatePinnedMessage createWithFlags:0 channel:weakSelf.item.message.chat.inputPeer n_id:unpin ? 0 : weakSelf.item.message.n_id] successHandler:^(id request, id response) {
+            if(!unpin) {
                 
-                
-            } errorHandler:nil];
+                NSAlert *alert = [NSAlert alertWithMessageText:appName() informativeText:NSLocalizedString(@"Pin.PinMessageAndNotifyDesc", nil) block:^(id result) {
+                    if([result intValue] == 1000)
+                        flags&= (1 << 0);
+                    block();
+                    
+                }];
+                [alert addButtonWithTitle:NSLocalizedString(@"Pin.Ok", nil)];
+                [alert addButtonWithTitle:NSLocalizedString(@"Pin.OnlyPin", nil)];
+                [alert show];
+            } else {
+                block();
+            }
+            
+            
             
         }]];
     }

@@ -96,7 +96,7 @@
     int fakeId = [MessageSender getFakeMessageId];
     
     
-    TL_localMessageService *msg = [TL_localMessageService createWithFlags:TGOUTMESSAGE n_id:fakeId from_id:[UsersManager currentUserId] to_id:conversation.peer date:[[MTNetwork instance] getTime] action:[TL_messageActionEncryptedChat createWithTitle:NSLocalizedString(@"MessageAction.ServiceMessage.CreatedBroadcast", nil)] fakeId:fakeId randomId:rand_long() dstate:DeliveryStateNormal];
+    TL_localMessageService *msg = [TL_localMessageService createWithFlags:TGOUTMESSAGE n_id:fakeId from_id:[UsersManager currentUserId] to_id:conversation.peer  reply_to_msg_id:0 date:[[MTNetwork instance] getTime] action:[TL_messageActionEncryptedChat createWithTitle:NSLocalizedString(@"MessageAction.ServiceMessage.CreatedBroadcast", nil)] fakeId:fakeId randomId:rand_long() dstate:DeliveryStateNormal];
     
     [MessagesManager addAndUpdateMessage:msg];
     

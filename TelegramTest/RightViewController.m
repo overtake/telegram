@@ -709,7 +709,7 @@
 - (void)showChatInfoPage:(TLChat *)chat {
     
     
-    if([chat isKindOfClass:[TL_channel class]] || [chat isKindOfClass:[TL_channel_old43 class]]) {
+    if(chat.isChannel) {
         [self showChannelInfoPage:chat];
         return;
     }

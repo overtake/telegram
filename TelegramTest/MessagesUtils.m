@@ -284,6 +284,9 @@
             } else if([action isKindOfClass:[TL_messageActionChannelMigrateFrom class]] || [action isKindOfClass:[TL_messageActionChatMigrateTo class]]) {
                 msgText = NSLocalizedString(@"MessageAction.Service.ChatMigrated", nil);
                 chatUserNameString = nil;
+            } else if([action isKindOfClass:[TL_messageActionPinMessage class]]) {
+                msgText = NSLocalizedString(@"MessageAction.Service.PinnedMessage", nil);
+
             }
 
             
@@ -390,20 +393,13 @@
                 }];
                 
                 actionText = NSLocalizedString(@"MessageAction.Service.Invited",nil);
-                
             }
-            
-           
             if(message.from_id  == [UsersManager currentUserId]) {
                 actionText = NSLocalizedString(@"MessageAction.Service.YouChoinedToChannel", nil);
             }
         } else {
-            
-           
-            
             if(action.users.count == 1 && [action.users[0] intValue] == message.from_id) {
                 actionText = NSLocalizedString(@"MessageAction.Service.JoinedGroup", nil);
-                
             } else {
                 actionText = NSLocalizedString(@"MessageAction.Service.InvitedGroup",nil);
                 
@@ -417,8 +413,6 @@
             }
         }
         
-        
-        
     } else if([action isKindOfClass:[TL_messageActionChatCreate class]]) {
         
         actionText = [NSString stringWithFormat:NSLocalizedString(@"MessageAction.Service.CreatedChat",nil), action.title];
@@ -426,13 +420,10 @@
     } else if([action isKindOfClass:[TL_messageActionChatDeleteUser class]]) {
         
         if(action.user_id != message.from_id) {
-            
             TLUser *user = [[UsersManager sharedManager] find:action.user_id];
-            
             if(user != nil) {
                 [users addObject:user];
             }
-            
             actionText = NSLocalizedString(@"MessageAction.Service.KickedGroup",nil);
         } else {
             actionText = NSLocalizedString(@"MessageAction.Service.LeftGroup",nil);
@@ -442,15 +433,15 @@
     } else if([action isKindOfClass:[TL_messageActionSetMessageTTL class]]) {
         actionText = [MessagesUtils selfDestructTimer:[(TL_messageActionSetMessageTTL *)action ttl]];
     } else if([action isKindOfClass:[TL_messageActionChatJoinedByLink class]]) {
-        
-        
         actionText = NSLocalizedString(@"MessageAction.Service.JoinedGroupByLink", nil);
-        
     } else if([action isKindOfClass:[TL_messageActionChannelCreate class]]) {
          actionText = NSLocalizedString(@"MessageAction.Service.ChannelCreated", nil);
     }  else if([action isKindOfClass:[TL_messageActionChannelMigrateFrom class]] || [action isKindOfClass:[TL_messageActionChatMigrateTo class]]) {
         actionText = NSLocalizedString(@"MessageAction.Service.ChatMigrated", nil);
         user = nil;
+    } else if([action isKindOfClass:[TL_messageActionPinMessage class]]) {
+        actionText = NSLocalizedString(@"MessageAction.Service.PinMessage", nil);
+        actionText = [NSString stringWithFormat:actionText, message.replyMessage.media == nil ? message.replyMessage.message : [[self mediaMessage:message.replyMessage] lowercaseString]];
     }
     static float size = 11.5;
     
@@ -460,25 +451,16 @@
         
         NSRange range = [attributedString appendString:NSLocalizedString(@"Bot.WhatBotCanDo", nil) withColor:TEXT_COLOR];
         [attributedString setFont:TGSystemMediumFont(13) forRange:range];
-        
         [attributedString setAlignment:NSCenterTextAlignment range:range];
-        
         [attributedString appendString:@"\n\n"];
-        
         range = [attributedString appendString:actionText withColor:TEXT_COLOR];
-        
         [attributedString setFont:TGSystemFont(13) forRange:range];
-        
         [attributedString setAlignment:NSLeftTextAlignment range:range];
         
         return attributedString;
     }
     
-    
-    
-    
     NSRange start = NSMakeRange(NSNotFound, 0);
-    //  if(user != [UsersManager currentUser]) {
     if(user)
         start = [attributedString appendString:[user fullName] withColor:LINK_COLOR];
     
@@ -486,7 +468,6 @@
         [attributedString setLink:[TMInAppLinks userProfile:user.n_id] forRange:start];
         [attributedString setFont:TGSystemMediumFont(size) forRange:start];
     }
-    
     
     start = [attributedString appendString:[NSString stringWithFormat:@" %@ ", actionText] withColor:NSColorFromRGB(0xaeaeae)];
     [attributedString setFont:TGSystemFont(size) forRange:start];
@@ -507,13 +488,10 @@
         
     }
     
-
     if(title) {
         start = [attributedString appendString:[NSString stringWithFormat:@"\"%@\"", title] withColor:NSColorFromRGB(0xaeaeae)];
         [attributedString setFont:TGSystemMediumFont(size) forRange:start];
     }
-    
-    //    [attributedString appendString:@"wqeqoeqwe wqkeqwoewkq keqwoei qoioiweiqwioeoqweiwqoi qoiweoiqwoiewqoieoiqweoiwqeoiwqoeiwqoieoiw oiqweoiqwoieqwoieoqwi"];
     
     return attributedString;
 }

@@ -187,6 +187,7 @@
     } else if(self.isPinnedMessage) {
        // if(!_doublePinScrolled) {
        //     _doublePinScrolled = YES;
+        if(![self mouse:[self convertPoint:theEvent.locationInWindow fromView:nil] inRect:_deleteImageView.frame])
             [appWindow().navigationController.messagesViewController showMessage:_replyObject.replyMessage fromMsg:nil flags:ShowMessageTypeReply];
          //   [self addScrollEvent];
        // } else {

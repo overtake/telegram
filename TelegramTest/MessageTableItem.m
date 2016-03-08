@@ -23,6 +23,7 @@
 #import "MessageTableItemSticker.h"
 #import "MessageTableItemHole.h"
 #import "MessageTableItemDate.h"
+#import "MessageTableItemPinned.h"
 #import "TGDateUtils.h"
 #import "PreviewObject.h"
 #import "NSString+Extended.h"
@@ -361,7 +362,11 @@ static NSTextAttachment *channelViewsCountAttachment() {
             viewSize.height += self.defaultContentOffset*2;
             
             if(self.isForwadedMessage)
+            {
                 viewSize.height += _forwardNameSize.height;
+                viewSize.height+=self.defaultContentOffset;
+            }
+            
 
         }
         
@@ -497,9 +502,12 @@ static NSTextAttachment *channelViewsCountAttachment() {
             }
         } else if(message.hole != nil) {
             objectReturn = [[MessageTableItemHole alloc] initWithObject:message];
-        } else if([message isKindOfClass:[TL_localMessageService class]] || [message isKindOfClass:[TL_secretServiceMessage class]]) {
+        } else if([message isKindOfClass:[TL_localMessageService class]] || [message isKindOfClass:[TL_secretServiceMessage class]] || [message isKindOfClass:[TL_localMessageService_old48 class]]) {
             
-             objectReturn = [[MessageTableItemServiceMessage alloc] initWithObject:message ];
+            if([message.action isKindOfClass:[TL_messageActionPinMessage class]]) {
+                objectReturn = [[MessageTableItemPinned alloc] initWithObject:message];
+            } else
+                objectReturn = [[MessageTableItemServiceMessage alloc] initWithObject:message];
         }
 
     }

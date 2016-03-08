@@ -381,7 +381,7 @@
 
 +(void)insertEncryptedServiceMessage:(NSString *)title chat:(TLEncryptedChat *)chat {
     
-    TL_localMessageService *msg = [TL_localMessageService createWithFlags:TGNOFLAGSMESSAGE n_id:[MessageSender getFutureMessageId] from_id:chat.admin_id to_id:[TL_peerSecret createWithChat_id:chat.n_id] date:[[MTNetwork instance] getTime] action:[TL_messageActionEncryptedChat createWithTitle:title] fakeId:[MessageSender getFakeMessageId] randomId:rand_long() dstate:DeliveryStatePending];
+    TL_localMessageService *msg = [TL_localMessageService createWithFlags:TGNOFLAGSMESSAGE n_id:[MessageSender getFutureMessageId] from_id:chat.admin_id to_id:[TL_peerSecret createWithChat_id:chat.n_id] reply_to_msg_id:0 date:[[MTNetwork instance] getTime] action:[TL_messageActionEncryptedChat createWithTitle:title] fakeId:[MessageSender getFakeMessageId] randomId:rand_long() dstate:DeliveryStatePending];
     [MessagesManager addAndUpdateMessage:msg];
 }
 

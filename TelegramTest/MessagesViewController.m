@@ -455,8 +455,9 @@
 -(void)didChangeDeleteDialog:(NSNotification *)notification {
     TL_conversation *conversation = notification.userInfo[KEY_DIALOG];
     
-    if(conversation.peer_id == _conversation.peer_id) {
-        [self.navigationViewController goBackWithAnimation:YES];
+    if(conversation.peer_id == _conversation.peer_id && self.navigationViewController.currentController == self) {
+        [self.navigationViewController goBackWithAnimation:NO];
+        
     }
     
 }
@@ -2707,7 +2708,7 @@ static NSTextAttachment *headerMediaIcon() {
         [[FullUsersManager sharedManager] loadUserFull:_conversation.user callback:^(TL_userFull *userFull) {
             
             if(userFull.bot_info.n_description.length > 0) {
-                TL_localMessageService *service = [TL_localMessageService createWithFlags:0 n_id:0 from_id:0 to_id:_conversation.peer date:0 action:[TL_messageActionBotDescription createWithTitle:userFull.bot_info.n_description] fakeId:0 randomId:rand_long() dstate:DeliveryStateNormal];
+                TL_localMessageService *service = [TL_localMessageService createWithFlags:0 n_id:0 from_id:0 to_id:_conversation.peer reply_to_msg_id:0 date:0 action:[TL_messageActionBotDescription createWithTitle:userFull.bot_info.n_description] fakeId:0 randomId:rand_long() dstate:DeliveryStateNormal];
                 
                 NSArray *items;
                 
@@ -2809,8 +2810,7 @@ static NSTextAttachment *headerMediaIcon() {
     
     _needNextRequest = NO;
     
-    
-    
+
     [self.historyController request:!prev anotherSource:YES sync:isFirst selectHandler:^(NSArray *prevResult, NSRange range1, id controller) {
         
         NSUInteger pos = prev ? 0 : self.messages.count;
@@ -2823,6 +2823,8 @@ static NSTextAttachment *headerMediaIcon() {
             }
             
             if(prevResult.count+1 < 10 && prevResult.count > 0) {
+                [self loadhistory:0 toEnd:YES prev:prev isFirst:NO];
+            } else if(NSHeight(self.table.frame) < NSHeight(self.table.scrollView.frame)) {
                 [self loadhistory:0 toEnd:YES prev:prev isFirst:NO];
             }
             
@@ -2955,67 +2957,69 @@ static NSTextAttachment *headerMediaIcon() {
     {
         // fill date items
         
-       
-        
-        NSMutableArray *items = [NSMutableArray array];
-        
-        __block NSDate *prevDate = [NSDate dateWithTimeIntervalSince1970:[[(MessageTableItem *)[array firstObject] message] date]];
-        
-        [items addObject:array[0]];
-        
-        [array enumerateObjectsAtIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(1, array.count - 1)] options:0 usingBlock:^(MessageTableItem *currentItem, NSUInteger idx, BOOL * _Nonnull stop) {
+        if(array.count > 0) {
+            NSMutableArray *items = [NSMutableArray array];
             
-
+            __block NSDate *prevDate = [NSDate dateWithTimeIntervalSince1970:[[(MessageTableItem *)[array firstObject] message] date]];
             
-            NSDate *currentDate = [NSDate dateWithTimeIntervalSince1970:[[currentItem message] date]];
+            [items addObject:array[0]];
             
-            if(currentItem.message != nil && ![prevDate isEqualToDateIgnoringTime:currentDate]) {
-                [items addObject:[[MessageTableItemDate alloc] initWithObject:prevDate]];
-            }
-            
-            [items addObject:currentItem];
-            
-           
-            if(currentItem.message != nil)
-                prevDate = currentDate;
-            
-        }];;
-        
-        
-        
-        
-        if(needCheckLastMessage) {
-            
-            __block MessageTableItem *currentItem;
-            
-            [array enumerateObjectsUsingBlock:^(MessageTableItem *obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            [array enumerateObjectsAtIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(1, array.count - 1)] options:0 usingBlock:^(MessageTableItem *currentItem, NSUInteger idx, BOOL * _Nonnull stop) {
                 
-                if(obj.message != nil) {
-                    currentItem = obj;
-                    *stop = YES;
-                }
                 
-            }];
-            
-            if(currentItem) {
+                
                 NSDate *currentDate = [NSDate dateWithTimeIntervalSince1970:[[currentItem message] date]];
                 
-                if(self.messages.count > 1 && pos != self.messages.count) {
-                    NSDate *prevDate = [NSDate dateWithTimeIntervalSince1970:[[(MessageTableItem *)self.messages[pos] message] date]];
+                if(currentItem.message != nil && ![prevDate isEqualToDateIgnoringTime:currentDate]) {
+                    [items addObject:[[MessageTableItemDate alloc] initWithObject:prevDate]];
+                }
+                
+                [items addObject:currentItem];
+                
+                
+                if(currentItem.message != nil)
+                    prevDate = currentDate;
+                
+            }];;
+            
+            
+            
+            
+            if(needCheckLastMessage) {
+                
+                __block MessageTableItem *currentItem;
+                
+                [array enumerateObjectsUsingBlock:^(MessageTableItem *obj, NSUInteger idx, BOOL * _Nonnull stop) {
                     
-                    if(![prevDate isEqualToDateIgnoringTime:currentDate]) {
-                        [items addObject:[[MessageTableItemDate alloc] initWithObject:currentDate]];
+                    if(obj.message != nil) {
+                        currentItem = obj;
+                        *stop = YES;
                     }
                     
-                } else {
-                    [items addObject:[[MessageTableItemDate alloc] initWithObject:currentDate]];
-                }
-            }  
-           
+                }];
+                
+                if(currentItem) {
+                    NSDate *currentDate = [NSDate dateWithTimeIntervalSince1970:[[currentItem message] date]];
+                    
+                    if(self.messages.count > 1 && pos != self.messages.count) {
+                        NSDate *prevDate = [NSDate dateWithTimeIntervalSince1970:[[(MessageTableItem *)self.messages[pos] message] date]];
+                        
+                        if(![prevDate isEqualToDateIgnoringTime:currentDate]) {
+                            [items addObject:[[MessageTableItemDate alloc] initWithObject:currentDate]];
+                        }
+                        
+                    } else {
+                        [items addObject:[[MessageTableItemDate alloc] initWithObject:currentDate]];
+                    }
+                }  
+                
+            }
+            
+            
+            array = items;
         }
         
         
-        array = items;
     }
     
     

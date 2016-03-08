@@ -190,7 +190,7 @@
             [[FullUsersManager sharedManager] loadUserFull:conversation.user callback:^(TL_userFull *userFull) {
                 
                 if(userFull.bot_info.n_description.length > 0) {
-                    TL_localMessageService *service = [TL_localMessageService createWithFlags:0 n_id:0 from_id:0 to_id:_conversation.peer date:0 action:[TL_messageActionBotDescription createWithTitle:userFull.bot_info.n_description] fakeId:0 randomId:rand_long() dstate:DeliveryStateNormal];
+                    TL_localMessageService *service = [TL_localMessageService createWithFlags:0 n_id:0 from_id:0 to_id:_conversation.peer reply_to_msg_id:0 date:0 action:[TL_messageActionBotDescription createWithTitle:userFull.bot_info.n_description] fakeId:0 randomId:rand_long() dstate:DeliveryStateNormal];
                                         
                         NSMutableAttributedString *attr = [[MessagesUtils serviceAttributedMessage:service forAction:service.action] mutableCopy];
                     

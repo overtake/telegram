@@ -62,7 +62,7 @@
 - (void)setCellState:(CellState)cellState animated:(BOOL)animated {
     
     if(self.cellState == CellStateSending && cellState == CellStateNormal) {
-        [super setCellState:cellState];
+        [super setCellState:cellState animated:animated];
         
         if(!self.item.isset) {
             [self.item checkStartDownload:0 size:0];
