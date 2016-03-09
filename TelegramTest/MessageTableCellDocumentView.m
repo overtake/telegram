@@ -48,7 +48,7 @@
         [self.progressView setImage:image_LoadCancelWhiteIcon() forState:TMLoaderViewStateDownloading];
         [self.progressView setImage:image_LoadCancelWhiteIcon() forState:TMLoaderViewStateUploading];
         
-        self.attachButton = [[BTRButton alloc] initWithFrame:NSMakeRect(0, 0, 50, 50)];
+        self.attachButton = [[BTRButton alloc] initWithFrame:NSMakeRect(0, 0, 40, 40)];
         self.attachButton.wantsLayer = YES;
         [self.attachButton addBlock:^(BTRControlEvents events) {
             
@@ -83,7 +83,7 @@
         
         self.actionsTextField = [[TGTextLabel alloc] initWithFrame:NSZeroRect];
        
-        [self.actionsTextField setLinkCallback:^(NSString *link) {
+        self.fileNameTextField.linkCallback = self.actionsTextField.linkCallback = ^(NSString *link) {
             MessageTableItemDocument *item = (MessageTableItemDocument *)weakSelf.item;
             
             if(weakSelf.isEditable)
@@ -109,11 +109,11 @@
                 }
             }
 
-        }];
+        };
         
         [self.containerView addSubview:self.actionsTextField];
         
-        self.thumbView = [[TGImageView alloc] initWithFrame:NSMakeRect(0, 0, 50, 50)];
+        self.thumbView = [[TGImageView alloc] initWithFrame:NSMakeRect(0, 0, 40, 40)];
         [self.thumbView setCornerRadius:4];
         
         
@@ -125,6 +125,9 @@
         [self.attachButton setSubviews:subviews];
         
         [self setProgressToView:self.attachButton];
+        
+        [self setProgressFrameSize:NSMakeSize(40,40)];
+
     }
     return self;
 }
@@ -148,9 +151,27 @@
 - (void)setProgressStringValue:(float)progress format:(NSString *)format {
     
     if(self.cellState == CellStateSending || self.cellState == CellStateDownloading) {
-        NSString *downloadString = [NSString stringWithFormat:format, progress];
         
-        [self.actionsTextField setText:[[NSAttributedString alloc] initWithString:downloadString attributes:@{NSFontAttributeName: TGSystemFont(14), NSForegroundColorAttributeName: NSColorFromRGB(0x9b9b9b)}] maxWidth:self.maxFieldWidth];
+        MessageTableItemDocument *item = (MessageTableItemDocument *)self.item;
+        
+        
+        NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] init];
+        
+        NSRange range = [attributedString appendString:item.message.media.document.file_name withColor:TEXT_COLOR];
+        
+        [attributedString setFont:TGSystemMediumFont(13) forRange:range];
+        
+        [attributedString appendString:@"\n"];
+        
+        range = [attributedString appendString:[NSString stringWithFormat:format,progress] withColor:GRAY_TEXT_COLOR];
+        
+        [attributedString setFont:TGSystemFont(13) forRange:range];
+        
+        [attributedString addAttribute:NSParagraphStyleAttributeName value:[item.fileNameAttrubutedString attribute:NSParagraphStyleAttributeName atIndex:0 effectiveRange:NULL] range:attributedString.range];
+        
+
+        
+        [self.fileNameTextField setAttributedString:attributedString];
     }
     
 }
@@ -185,9 +206,6 @@
         [self.actionsTextField setText:nil maxWidth:0];
     }
     
-    if(cellState == CellStateNeedDownload) {
-         [self.actionsTextField setText:docStateDownload() maxWidth:self.maxFieldWidth];
-    }
     
     [self.attachButton.layer pop_removeAllAnimations];
     
@@ -206,6 +224,7 @@
         case CellStateNormal:
             self.thumbView.object = item.thumbObject;
             [self.attachButton setBackgroundImage:item.isHasThumb ? gray_resizable_placeholder() : attach_downloaded_background() forControlState:BTRControlStateNormal];
+            [self.fileNameTextField setAttributedString:item.fileNameAttrubutedString];
             break;
             
         case CellStateSending:
@@ -216,11 +235,16 @@
             [self setProgressStringValue:self.item.downloadItem.progress format:NSLocalizedString(@"Document.Downloading", nil)];
         
             break;
+        case CellStateNeedDownload:
+            [self.fileNameTextField setAttributedString:item.fileNameAttrubutedString];
+            
+            break;
 
         default:
             break;
     }
-
+    
+    [self.actionsTextField setHidden:self.cellState != CellStateNormal];
 }
 
 
@@ -327,7 +351,6 @@
         
         [menu addItem:openWithItem];
         
-        
         [menu addItem:[NSMenuItem separatorItem]];
         
     }
@@ -342,16 +365,12 @@
 
 
 
-
-
 - (void)setItem:(MessageTableItemDocument *)item {
     [super setItem:item];
         
     [self.attachButton setFrameSize:item.thumbSize];
     
     [self.thumbView setFrameSize:item.thumbSize];
-    
-    [self setProgressFrameSize:NSMakeSize(item.isHasThumb ? 50 : 46, item.isHasThumb ? 50 : 46)];
     
     if(item.isHasThumb) {
         [self.attachButton setBackgroundImage:gray_resizable_placeholder() forControlState:BTRControlStateNormal];
@@ -375,7 +394,7 @@
     
     [self updateDownloadState];
     
-    [self.fileNameTextField setAttributedString:item.fileNameAttrubutedString];
+    
     
     [self.fileNameTextField setFrameSize:NSMakeSize(self.maxFieldWidth, item.fileNameSize.height)];
     
@@ -387,10 +406,9 @@
     
     MessageTableItemDocument *item = (MessageTableItemDocument *)self.item;
     
-    int center = roundf(item.blockSize.height/2);
     
-    [self.fileNameTextField setFrameOrigin:NSMakePoint(item.isHasThumb ? NSMaxX(self.thumbView.frame) + self.item.defaultOffset : NSMaxX(self.attachButton.frame) + self.item.defaultOffset, center-NSHeight(self.fileNameTextField.frame)-item.defaultContentOffset/2)];
-    [self.actionsTextField setFrameOrigin:NSMakePoint(item.isHasThumb ? NSMaxX(self.thumbView.frame) + self.item.defaultOffset : NSMaxX(self.attachButton.frame) + self.item.defaultOffset, center+item.defaultContentOffset/2)];
+    [self.fileNameTextField setFrameOrigin:NSMakePoint(item.isHasThumb ? NSMaxX(self.thumbView.frame) + self.item.defaultOffset : NSMaxX(self.attachButton.frame) + self.item.defaultOffset, item.isHasThumb ? item.defaultContentOffset : roundf((item.blockSize.height - NSHeight(self.fileNameTextField.frame))/2))];
+    [self.actionsTextField setFrameOrigin:NSMakePoint(item.isHasThumb ? NSMaxX(self.thumbView.frame) + self.item.defaultOffset : NSMaxX(self.attachButton.frame) + self.item.defaultOffset, NSMaxY(self.fileNameTextField.frame) + 4)];
 }
 
 
@@ -457,14 +475,6 @@
 }
 
 
-static NSAttributedString *docStateDownload() {
-    static NSAttributedString *instance;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        instance = [[NSAttributedString alloc] initWithString:NSLocalizedString(@"Message.File.Download", nil) attributes:@{NSForegroundColorAttributeName:LINK_COLOR, NSLinkAttributeName: @"chat://download", NSFontAttributeName: TGSystemFont(13)}];
-    });
-    return instance;
-}
 
 static NSAttributedString *docStateLoaded() {
     static NSAttributedString *instance;
@@ -485,6 +495,9 @@ static NSAttributedString *docStateLoaded() {
 }
 
 -(void)_didChangeBackgroundColorWithAnimation:(POPBasicAnimation *)anim toColor:(NSColor *)color {
+    
+    [super _didChangeBackgroundColorWithAnimation:anim toColor:color];
+    
     if(!anim) {
         _fileNameTextField.backgroundColor = color;
         _actionsTextField.backgroundColor = color;

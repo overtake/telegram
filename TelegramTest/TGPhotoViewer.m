@@ -538,15 +538,7 @@ static TGPhotoViewer *viewer;
 
 -(void)show:(PreviewObject *)item {
     
-    if([item.reservedObject isKindOfClass:[NSDictionary class]]) {
-        
-        if (floor(NSAppKitVersionNumber) <= 1187)  { // video avaiable only on 10.9 +
-            
-            return;
-           
-        }
-        
-    }
+
     
     _behavior = [[TGPVEmptyBehavior alloc] initWithConversation:_conversation commonItem:item];
     
@@ -677,7 +669,8 @@ static TGPhotoViewer *viewer;
      [self.controls setCurrentPosition:_isReversed ? _totalCount - _currentItemId : _currentItemId+1 ofCount:_totalCount];
         
     
-    [[self photoContainer] setCurrentViewerItem:_currentItem animated:NO];
+    if(self.photoContainer.currentViewerItem != _currentItem)
+        [[self photoContainer] setCurrentViewerItem:_currentItem animated:NO];
     
     
      [_zoomControl setHidden:[_currentItem.previewObject.reservedObject isKindOfClass:[NSDictionary class]]];

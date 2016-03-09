@@ -771,7 +771,7 @@
     
     [self _checkClickCount:theEvent];
     
-    if(self.selectRange.location != NSNotFound) {
+    if(self.selectRange.location != NSNotFound && self.isEditable) {
         NSTextView *view = (NSTextView *) [self.window fieldEditor:YES forObject:self];
         [view setEditable:NO];
         

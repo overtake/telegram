@@ -975,7 +975,7 @@ NSImage *blue_circle_background_image() {
     static NSImage *image = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        NSRect rect = NSMakeRect(0, 0, 50, 50);
+        NSRect rect = NSMakeRect(0, 0, 40, 40);
         image = [[NSImage alloc] initWithSize:rect.size];
         [image lockFocus];
         [NSColorFromRGB(0x4ba3e2) set];
@@ -991,7 +991,7 @@ NSImage *gray_circle_background_image() {
     static NSImage *image = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        NSRect rect = NSMakeRect(0, 0, 50, 50);
+        NSRect rect = NSMakeRect(0, 0, 40, 40);
         image = [[NSImage alloc] initWithSize:rect.size];
         [image lockFocus];
         [NSColorFromRGB(0x4ba3e2) set];
@@ -1006,11 +1006,11 @@ NSImage *play_image() {
     static NSImage *image = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        NSRect rect = NSMakeRect(0, 0, image_PlayIconWhite().size.width + 5, image_PlayIconWhite().size.height+1);
+        NSRect rect = NSMakeRect(0, 0, image_VoicePlay().size.width + 5, image_PlayIconWhite().size.height+1);
         image = [[NSImage alloc] initWithSize:rect.size];
         [image lockFocus];
         
-        [image_PlayIconWhite() drawInRect:NSMakeRect(5, 0, image_PlayIconWhite().size.width, image_PlayIconWhite().size.height) fromRect:NSZeroRect operation:NSCompositeHighlight fraction:1];
+        [image_VoicePlay() drawInRect:NSMakeRect(5, 0, image_VoicePlay().size.width, image_VoicePlay().size.height) fromRect:NSZeroRect operation:NSCompositeHighlight fraction:1];
         
         [image unlockFocus];
     });
@@ -1036,7 +1036,7 @@ NSImage *attach_downloaded_background() {
     static NSImage *image = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        NSRect rect = NSMakeRect(0, 0, 50, 50);
+        NSRect rect = NSMakeRect(0, 0, 40, 40);
         image = [[NSImage alloc] initWithSize:rect.size];
         [image lockFocus];
         [NSColorFromRGB(0x4ba3e2) set];
@@ -1044,7 +1044,7 @@ NSImage *attach_downloaded_background() {
         [path appendBezierPathWithRoundedRect:NSMakeRect(0, 0, rect.size.width, rect.size.height) xRadius:rect.size.width/2 yRadius:rect.size.height/2];
         [path fill];
         
-        [image_DocumentThumbIcon() drawInRect:NSMakeRect(roundf((50 - image_DocumentThumbIcon().size.width)/2), roundf((50 - image_DocumentThumbIcon().size.height)/2), image_DocumentThumbIcon().size.width, image_DocumentThumbIcon().size.height) fromRect:NSZeroRect operation:NSCompositeHighlight fraction:1];
+        [image_DocumentThumbIcon() drawInRect:NSMakeRect(roundf((40 - image_DocumentThumbIcon().size.width)/2), roundf((40 - image_DocumentThumbIcon().size.height)/2), image_DocumentThumbIcon().size.width, image_DocumentThumbIcon().size.height) fromRect:NSZeroRect operation:NSCompositeHighlight fraction:1];
         [image unlockFocus];
     });
     return image;

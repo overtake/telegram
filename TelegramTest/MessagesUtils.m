@@ -90,6 +90,8 @@
         
     } else if([action isKindOfClass:[TL_messageActionChatMigrateTo class]] || [action isKindOfClass:[TL_messageActionChannelMigrateFrom class]]) {
         text = NSLocalizedString(@"MessageAction.Service.ChatMigrated", nil);
+    } else if([action isKindOfClass:[TL_messageActionPinMessage class]]) {
+        text = NSLocalizedString(@"MessageAction.Service.PinnedMessage", nil);
     }
    
     return text;

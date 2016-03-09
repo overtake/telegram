@@ -14,7 +14,7 @@
 #import <AVKit/AVKit.h>
 #import <AVFoundation/AVFoundation.h>
 #import "MessageCellDescriptionView.h"
-
+#import "TGVideoViewerItem.h"
 
 
 @interface TGZoomableImage : TGPVImageView
@@ -115,14 +115,14 @@
 
 @property (nonatomic,strong) MessageCellDescriptionView *photoCaptionView;
 
-
-
 @property (nonatomic,assign) int currentIncrease;
 
-
-
-
 @property (nonatomic,strong) TMView *imageContainerView;
+
+
+@property (nonatomic,strong) TMLoaderView *loaderView;
+@property (nonatomic,strong) DownloadEventListener *eventListener;
+
 @end
 
 
@@ -162,8 +162,17 @@
     self.layer.backgroundColor = [NSColor clearColor].CGColor;
    
  //   self.layer.cornerRadius = 6;
+    
+    self.loaderView = [[TMLoaderView alloc] initWithFrame:NSMakeRect(0, 0, 40, 40)];
+    
+    self.loaderView.style = TMCircularProgressDarkStyle;
+    
+    
+    self.eventListener = [[DownloadEventListener alloc] init];
 
     self.imageView = [[TGZoomableImage alloc] initWithFrame:NSMakeRect(0, bottomHeight, 0, 0)];
+    
+    
     
     
     _photoCaptionView = [[MessageCellDescriptionView alloc] initWithFrame:NSZeroRect];
@@ -171,7 +180,11 @@
     
     
     _imageContainerView = [[TMView alloc] initWithFrame:NSZeroRect];
+    
     [_imageContainerView addSubview:self.imageView];
+    [_imageContainerView addSubview:self.loaderView];
+    
+    [self.loaderView setCurrentProgress:30];
     
     [self addSubview:_imageContainerView];
     
@@ -456,14 +469,56 @@ static const int bottomHeight = 60;
     [self setFrameOrigin:NSMakePoint(roundf(x),roundf(y))];
 }
 
+
+-(void)updateDownloadListeners:(DownloadItem *)downloadItem {
+    
+    [self.loaderView setCurrentProgress:MAX(downloadItem.progress,3)];
+    [self.loaderView setProgress:self.loaderView.currentProgress animated:YES];
+
+    
+    [downloadItem addEvent:self.eventListener];
+    
+    weak();
+    
+    [self.eventListener setProgressHandler:^(DownloadItem *item) {
+        
+        strongWeak();
+        
+        if(strongSelf == weakSelf) {
+            [ASQueue dispatchOnMainQueue:^{
+                
+                [strongSelf.loaderView setProgress:5 + MAX(( item.progress - 5),0) animated:YES];
+                
+            }];
+        }
+        
+    }];
+    
+    [self.eventListener setCompleteHandler:^(DownloadItem *item) {
+        strongWeak();
+        
+        if(strongSelf == weakSelf) {
+            [ASQueue dispatchOnMainQueue:^{
+                [strongSelf.loaderView setProgress:100 animated:YES];
+                [strongSelf setCurrentViewerItem:strongSelf.currentViewerItem animated:YES];
+            }];
+        }
+    }];
+    
+}
+
 -(void)setCurrentViewerItem:(TGPhotoViewerItem *)currentViewerItem animated:(BOOL)animated {
+    
+    [_currentViewerItem.downloadItem removeEvent:_eventListener];
+    [self.loaderView setHidden:currentViewerItem.isset animated:animated];
+    [self updateDownloadListeners:currentViewerItem.downloadItem];
+
     
     _currentViewerItem = currentViewerItem;
     
     _currentIncrease = 0;
     
     self.imageView.object = currentViewerItem.imageObject;
-    
     
     if([currentViewerItem.previewObject.media isKindOfClass:[TL_destructMessage class]]) {
         
@@ -488,7 +543,6 @@ static const int bottomHeight = 60;
     containerSize = NSMakeSize(MAX(min.width,size.width), MAX(min.height, size.height));
     
     
-        
     [self setFrameSize:NSMakeSize(containerSize.width, [self maxSize].height)];
     
     [self updateContainerOrigin];
@@ -506,7 +560,6 @@ static const int bottomHeight = 60;
         c_s.width = ceil(c_s.width + 6);
         c_s.height = ceil(c_s.height + 5);
         
-        
         [_photoCaptionView setString:caption];
         
         [self addSubview:_photoCaptionView];
@@ -519,7 +572,7 @@ static const int bottomHeight = 60;
     [self.imageView setFrameOrigin:NSZeroPoint];
     
     [self.imageContainerView setFrameSize:self.imageView.frame.size];
-    
+    [self.loaderView setCenterByView:self.imageContainerView];
     
     [self.imageContainerView setFrameOrigin:NSMakePoint(roundf((self.bounds.size.width - NSWidth(self.imageView.frame)) / 2) , roundf((self.bounds.size.height - NSHeight(self.imageView.frame) + c_s.height + 10 ) / 2) )];
     
@@ -529,42 +582,42 @@ static const int bottomHeight = 60;
     }
   
     
-    [self.imageContainerView setHidden:[currentViewerItem.previewObject.reservedObject isKindOfClass:[NSDictionary class]]];
+    [self.imageContainerView setHidden:NO];
     
     
-    if([currentViewerItem.previewObject.reservedObject isKindOfClass:[NSDictionary class]]) {
+    TGVideoViewerItem *item = (TGVideoViewerItem *) currentViewerItem;
+    
+    if([currentViewerItem isKindOfClass:[TGVideoViewerItem class]] && item.isset) {
         
-        NSDictionary *video = currentViewerItem.previewObject.reservedObject;
+        [self.imageContainerView setHidden:YES];
         
-        NSURL *url = video[@"url"];
-        
-        
+        NSURL *url = [NSURL fileURLWithPath:item.path];
+            
+        AVPlayer *player = [AVPlayer playerWithURL:url];
+            
         if(!_videoPlayerView) {
             
-            _videoPlayerView = [[TGVideoPlayer alloc] initWithFrame:NSMakeRect(0, roundf((self.frame.size.height - size.height) / 2), size.width, size.height)];
+            _videoPlayerView = [[TGVideoPlayer alloc] initWithFrame:NSZeroRect];
             _videoPlayerView.showsFullScreenToggleButton = YES;
             [_videoPlayerView setControlsStyle:AVPlayerViewControlsStyleFloating];
             [self addSubview:_videoPlayerView];
             
-            AVPlayer *player = [AVPlayer playerWithURL:url];
-            _videoPlayerView.player = player;
-            
-            dispatch_async(dispatch_get_current_queue(), ^{
-                if(player.status == AVPlayerStatusReadyToPlay &&
-                   player.currentItem.status == AVPlayerItemStatusReadyToPlay) {
-                    [player play];
-                }
-            });
-            
-            
-            
         }
         
+        [_videoPlayerView setFrame:NSMakeRect(0, roundf((self.frame.size.height - size.height) / 2), size.width, size.height)];
+        
+        _videoPlayerView.player = player;
+        
+        [_videoPlayerView.player play];
         
     } else {
+        if([currentViewerItem isKindOfClass:[TGVideoViewerItem class]]) {
+            [currentViewerItem startDownload];
+            [self updateDownloadListeners:currentViewerItem.downloadItem];
+            [Notification perform:UPDATE_MESSAGE_ITEM data:@{KEY_MESSAGE_ID:@(((TL_localMessage *)currentViewerItem.previewObject.media).n_id),KEY_PEER_ID:@(((TL_localMessage *)currentViewerItem.previewObject.media).peer_id)}];
+        }
         
         [_videoPlayerView.player pause];
-        
         
         _videoPlayerView.player = nil;
         [_videoPlayerView removeFromSuperview];

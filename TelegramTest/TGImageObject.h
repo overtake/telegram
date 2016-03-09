@@ -34,4 +34,7 @@
 
 +(SThreadPool *)threadPool;
 
+
+-(BOOL)isset;
+
 @end

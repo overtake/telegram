@@ -48,7 +48,6 @@
 #import "ComposeConfirmModeratorViewController.h"
 #import "ComposeManagmentViewController.h"
 #import "ComposeChannelParticipantsViewController.h"
-#import "ComposeSettingupNewChannelViewController.h"
 @class MainViewController;
 @class LeftViewController;
 
@@ -96,7 +95,6 @@
 @property (nonatomic, strong) ComposeConfirmModeratorViewController *composeConfirmModeratorViewController;
 @property (nonatomic,strong) ComposeManagmentViewController *composeManagmentViewController;
 @property (nonatomic,strong) ComposeChannelParticipantsViewController *composeChannelParticipantsViewController;
-@property (nonatomic,strong) ComposeSettingupNewChannelViewController *composeSettingupNewChannelViewController;
 
 - (void)modalViewSendAction:(id)object;
 - (BOOL)isModalViewActive;
@@ -167,7 +165,6 @@
 
 -(void)showComposeChannelParticipants:(ComposeAction *)action;
 
--(void)showComposeSettingsupNewChannel:(ComposeAction *)action;
 
 - (void)showChatInviteController;
 @end

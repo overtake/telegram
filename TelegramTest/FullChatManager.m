@@ -296,13 +296,15 @@
                     currentChat.participants = newChatFull.participants;
                     [Notification perform:CHAT_UPDATE_PARTICIPANTS data:@{KEY_CHAT_ID: @(currentChat.n_id), KEY_PARTICIPANTS: currentChat.participants}];
                 }
+                
+                currentChat.flags = newChatFull.flags;
                 currentChat.chat_photo = newChatFull.chat_photo;
                 currentChat.lastUpdateTime = [[MTNetwork instance] getTime];
                 currentChat.exported_invite = newChatFull.exported_invite;
                 currentChat.bot_info = newChatFull.bot_info;
                 currentChat.migrated_from_chat_id = newChatFull.migrated_from_chat_id;
                 currentChat.migrated_from_max_id = newChatFull.migrated_from_max_id;
-
+                
                 if([currentChat isKindOfClass:[TL_channelFull class]] && (currentChat.participants_count != newChatFull.participants_count || currentChat.admins_count != newChatFull.admins_count || currentChat.kicked_count != newChatFull.kicked_count)) {
                     
                     currentChat.participants_count = newChatFull.participants_count;

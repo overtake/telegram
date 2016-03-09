@@ -6,7 +6,7 @@
 //  Copyright (c) 2015 keepcoder. All rights reserved.
 //
 
-#import "ComposeSettingupNewChannelViewController.h"
+#import "TGChannelTypeSettingViewController.h"
 #import "TGSettingsTableView.h"
 #import "TGChangeUserNameContainerView.h"
 #import "NSAttributedString+Hyperlink.h"
@@ -59,13 +59,13 @@
 @end
 
 
-@interface ComposeSettingupNewChannelViewController ()
+@interface TGChannelTypeSettingViewController ()
 @property (nonatomic,strong) TGSettingsTableView *tableView;
 @property (nonatomic,strong) TGUserNameContainerRowItem *userNameContainerItem;
 @property (nonatomic,strong) GeneralSettingsBlockHeaderItem *joinLinkItem;
 @end
 
-@implementation ComposeSettingupNewChannelViewController
+@implementation TGChannelTypeSettingViewController
 
 
 -(void)loadView {

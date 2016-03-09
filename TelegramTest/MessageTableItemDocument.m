@@ -27,7 +27,7 @@
     self = [super initWithObject:object];
     if(self) {
         
-        _fileSize = [NSString sizeToTransformedValuePretty:self.message.media.document.size] ;
+        _fileSize = [[NSString sizeToTransformedValuePretty:self.message.media.document.size] trim];
         
         NSMutableAttributedString *attr = [[NSMutableAttributedString alloc] init];
         
@@ -35,13 +35,22 @@
         
         [attr setFont:TGSystemMediumFont(13) forRange:attr.range];
         
-        [attr appendString:@" "];
+        [attr appendString:@"\n"];
         NSRange range = [attr appendString:_fileSize withColor:GRAY_TEXT_COLOR];
         
         [attr setFont:TGSystemFont(13) forRange:range];
         
+        if(![self isHasThumb]) {
+            range = [attr appendString:@" - " withColor:GRAY_TEXT_COLOR];
+            [attr setFont:TGSystemFont(13) forRange:range];
+            range = [attr appendString:NSLocalizedString(@"Message.File.ShowInFinder", nil) withColor:LINK_COLOR];
+            [attr setFont:TGSystemFont(13) forRange:range];
+            [attr setLink:@"chat://finder" forRange:range];
+        }
+        
         NSMutableParagraphStyle *style = [[NSMutableParagraphStyle alloc] init];
         style.lineBreakMode = NSLineBreakByTruncatingMiddle;
+        style.lineSpacing = 4;
         
         [attr addAttribute:NSParagraphStyleAttributeName value:style range:attr.range];
         
@@ -53,18 +62,20 @@
         
         if([self isHasThumb]) {
             
-            size = strongsizeWithMinMax(NSMakeSize(self.message.media.document.thumb.w, self.message.media.document.thumb.h), 70, 70);
-            
-           if(self.message.media.document.thumb.bytes) {
-                NSImage *thumb = [[NSImage alloc] initWithData:self.message.media.document.thumb.bytes];
-                thumb = renderedImage(thumb, size);
-                [TGCache cacheImage:thumb forKey:self.message.media.document.thumb.location.cacheKey groups:@[IMGCACHE]];
+            if(![TGCache cachedImage:self.message.media.document.thumb.location.cacheKey]) {
+                size = strongsizeWithMinMax(NSMakeSize(self.message.media.document.thumb.w, self.message.media.document.thumb.h), 70, 70);
+                
+                if(self.message.media.document.thumb.bytes) {
+                    NSImage *thumb = [[NSImage alloc] initWithData:self.message.media.document.thumb.bytes];
+                    thumb = renderedImage(thumb, size);
+                    [TGCache cacheImage:thumb forKey:self.message.media.document.thumb.location.cacheKey groups:@[IMGCACHE]];
+                }
             }
             
             self.thumbSize = NSMakeSize(70, 70);
             
         } else {
-            self.thumbSize = NSMakeSize(50, 50);
+            self.thumbSize = NSMakeSize(40, 40);
         }
         
         self.thumbObject = [[TGImageObject alloc] initWithLocation:self.message.media.document.thumb.location placeHolder:nil];
@@ -72,9 +83,7 @@
         self.thumbObject.imageSize = size;
         
         self.blockSize = NSMakeSize(200, self.thumbSize.height + 6);
-    
-
-         [self checkStartDownload:[self.message.to_id isKindOfClass:[TL_peerChat class]] ? AutoGroupDocuments : AutoPrivateDocuments size:self.message.media.document.size];
+        [self checkStartDownload:[self.message.to_id isKindOfClass:[TL_peerChat class]] ? AutoGroupDocuments : AutoPrivateDocuments size:self.message.media.document.size];
         
     }
     return self;
@@ -92,8 +101,6 @@
 -(BOOL)canShare {
     return [self isset];
 }
-
-
 
 - (int)size {
     return self.message.media.document.size;

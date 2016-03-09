@@ -72,7 +72,7 @@
         }
         
         if(![self isKindOfClass:NSClassFromString(@"MessageTableCellTextView")] && ![self isKindOfClass:NSClassFromString(@"MessageTableCellGeoView")]) {
-            _progressView = [[TMLoaderView alloc] initWithFrame:NSMakeRect(0, 0, 48, 48)];
+            _progressView = [[TMLoaderView alloc] initWithFrame:NSMakeRect(0, 0, 40, 40)];
             [_progressView setAutoresizingMask:NSViewMaxXMargin | NSViewMaxYMargin | NSViewMinXMargin | NSViewMinYMargin];
             [_progressView addTarget:self selector:@selector(checkOperation)];
             _progressView.wantsLayer = YES;

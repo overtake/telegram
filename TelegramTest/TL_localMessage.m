@@ -340,14 +340,17 @@ DYNAMIC_PROPERTY(DDialog);
         
         if([self.media isKindOfClass:[TL_messageMediaDocument class]] || [self.media isKindOfClass:[TL_messageMediaDocument_old44 class]]) {
             TL_documentAttributeAudio *attr =  (TL_documentAttributeAudio *)[self.media.document attributeWithClass:[TL_documentAttributeAudio class]];
+            
+            TL_documentAttributeVideo *videoAttr =  (TL_documentAttributeVideo *)[self.media.document attributeWithClass:[TL_documentAttributeVideo class]];
            
             if(attr.isVoice) {
                 mask|=HistoryFilterAudio;
             } else if(attr != nil || [self.media.document.mime_type hasPrefix:@"audio/"]) {
                 mask|=HistoryFilterAudioDocument;
-            } else {
+            } else if(videoAttr != nil && [self.media.document attributeWithClass:[TL_documentAttributeAnimated class]] == nil) {
+                mask|=HistoryFilterVideo;
+            } else
                 mask|=HistoryFilterDocuments;
-            }
         }
         
         if([self.media isKindOfClass:[TL_messageMediaVideo class]]) {

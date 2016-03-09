@@ -360,6 +360,9 @@
     [self setNeedsDisplay:YES];
 }
 
+-(void)rightMouseDown:(NSEvent *)theEvent {
+    [super rightMouseDown:theEvent];
+}
 
 @end
 

@@ -798,6 +798,15 @@ void open_link(NSString *link) {
                 return;
             }
             
+            if([components[2] isEqualToString:@"showreplymessage"]) {
+                
+                TL_localMessage *msg = [[TL_localMessage alloc] init];
+                msg.to_id = appWindow().navigationController.messagesViewController.conversation.peer;
+                msg.n_id = [components[3] intValue];
+                [appWindow().navigationController.messagesViewController showMessage:msg fromMsg:nil flags:ShowMessageTypeReply];
+                return;
+            }
+            
             Class peer = NSClassFromString(components[2]);
             
             int msgId = components.count == 5 ? [components[4] intValue] : 0;

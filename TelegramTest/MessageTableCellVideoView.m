@@ -36,7 +36,7 @@ static NSImage *playImage() {
     static NSImage *image = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        NSRect rect = NSMakeRect(0, 0, 48, 48);
+        NSRect rect = NSMakeRect(0, 0, 40, 40);
         image = [[NSImage alloc] initWithSize:rect.size];
         [image lockFocus];
         [NSColorFromRGBWithAlpha(0x000000, 0.5) set];
@@ -44,7 +44,7 @@ static NSImage *playImage() {
         [path appendBezierPathWithRoundedRect:NSMakeRect(0, 0, rect.size.width, rect.size.height) xRadius:rect.size.width/2 yRadius:rect.size.height/2];
         [path fill];
         
-        [image_PlayIconWhite() drawInRect:NSMakeRect(roundf((48 - image_PlayIconWhite().size.width)/2) + 2, roundf((48 - image_PlayIconWhite().size.height)/2) , image_PlayIconWhite().size.width, image_PlayIconWhite().size.height) fromRect:NSZeroRect operation:NSCompositeHighlight fraction:1];
+        [image_PlayIconWhite() drawInRect:NSMakeRect(roundf((40 - image_PlayIconWhite().size.width)/2) + 2, roundf((40 - image_PlayIconWhite().size.height)/2) , image_PlayIconWhite().size.width, image_PlayIconWhite().size.height) fromRect:NSZeroRect operation:NSCompositeHighlight fraction:1];
         [image unlockFocus];
     });
     return image;//image_VideoPlay();
@@ -107,18 +107,12 @@ static NSImage *playImage() {
 
 - (void)open {
     
-    PreviewObject *previewObject = [[PreviewObject alloc] initWithMsdId:self.item.message.n_id media:self.item.message.media.document.thumb peer_id:self.item.message.peer_id];
+    PreviewObject *previewObject = [[PreviewObject alloc] initWithMsdId:self.item.message.n_id media:self.item.message peer_id:self.item.message.peer_id];
     
     if (floor(NSAppKitVersionNumber) > 1187)  {
+    
+        [[TGPhotoViewer viewer] show:previewObject conversation:self.item.message.conversation isReversed:YES];
         
-        NSURL *url = [NSURL fileURLWithPath:mediaFilePath(self.item.message)];
-        
-        TL_documentAttributeVideo *video = (TL_documentAttributeVideo *) [self.item.message.media.document attributeWithClass:[TL_documentAttributeVideo class]];
-        
-        NSSize size = NSMakeSize(video.w, video.h);
-        
-        previewObject.reservedObject = @{@"url":url,@"size":[NSValue valueWithSize:size]};
-        [[TGPhotoViewer viewer] show:previewObject];
     } else {
         
         TMPreviewVideoItem *item = [[TMPreviewVideoItem alloc] initWithItem:previewObject];

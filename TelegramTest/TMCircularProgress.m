@@ -139,7 +139,7 @@ float ease(float t, float b, float c, float d) {
         return;
     
     
-    const int topPadding = 1;
+    const int topPadding = 4;
     
     int radius = roundf(self.frame.size.width / 2 - topPadding);
     
@@ -170,7 +170,7 @@ float ease(float t, float b, float c, float d) {
     
     [self.progressColor setStroke];
     
-    [path setLineWidth:2];
+    [path setLineWidth:3];
     [path setLineCapStyle:NSRoundLineCapStyle];
     
     NSAffineTransform * transform = [NSAffineTransform transform];

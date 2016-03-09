@@ -33,7 +33,15 @@
     [NSColorFromRGBWithAlpha(0x00000, 0.4) set];
     [path fill];
     
-    [self.string drawInRect:NSMakeRect(5, 5, NSWidth(dirtyRect) - 6, NSHeight(dirtyRect) - 6)];
+    CTLineRef line = CTLineCreateWithAttributedString((__bridge CFAttributedStringRef)self.string);
+    
+    CGContextSetTextPosition(context, 5, 6);
+    
+    CTLineDraw(line, context);
+    
+    CFRelease(line);
+    
+    //[self.string drawInRect:NSMakeRect(5, 5, NSWidth(dirtyRect) - 6, NSHeight(dirtyRect) - 6)];
     
 }
 

@@ -264,6 +264,7 @@
 		C20B312E1C89E44C00A6BCF5 /* TGModernUpgradeChatViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C20B312D1C89E44C00A6BCF5 /* TGModernUpgradeChatViewController.m */; };
 		C20B31311C8DB5CC00A6BCF5 /* TL_localMessageService_old48.m in Sources */ = {isa = PBXBuildFile; fileRef = C20B31301C8DB5CC00A6BCF5 /* TL_localMessageService_old48.m */; };
 		C20B31341C8DCCBC00A6BCF5 /* MessageTableItemPinned.m in Sources */ = {isa = PBXBuildFile; fileRef = C20B31331C8DCCBC00A6BCF5 /* MessageTableItemPinned.m */; };
+		C20B31371C90866800A6BCF5 /* TGVideoViewerItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C20B31361C90866800A6BCF5 /* TGVideoViewerItem.m */; };
 		C20B82A11BD98EC700EF01AD /* TGPVDocumentsBehavior.m in Sources */ = {isa = PBXBuildFile; fileRef = C20B82A01BD98EC700EF01AD /* TGPVDocumentsBehavior.m */; };
 		C20B82AD1BDA550600EF01AD /* TGChatHeadLockView.m in Sources */ = {isa = PBXBuildFile; fileRef = C20B82AC1BDA550600EF01AD /* TGChatHeadLockView.m */; };
 		C20B82B01BDA975500EF01AD /* TGShareContactModalView.m in Sources */ = {isa = PBXBuildFile; fileRef = C20B82AF1BDA975500EF01AD /* TGShareContactModalView.m */; };
@@ -848,7 +849,7 @@
 		C2D51C381B25F5A8009327C0 /* TGStickerPackEmojiController.m in Sources */ = {isa = PBXBuildFile; fileRef = C2D51C371B25F5A8009327C0 /* TGStickerPackEmojiController.m */; };
 		C2D51C3E1B2618DE009327C0 /* TGTransformScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = C2D51C3D1B2618DE009327C0 /* TGTransformScrollView.m */; };
 		C2D5CE841B0B938B009F6419 /* SpacemanBlocks.h in Sources */ = {isa = PBXBuildFile; fileRef = CEA589441815827500462DF0 /* SpacemanBlocks.h */; };
-		C2D777301BAEA30B00D451FD /* ComposeSettingupNewChannelViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C2D7772F1BAEA30B00D451FD /* ComposeSettingupNewChannelViewController.m */; };
+		C2D777301BAEA30B00D451FD /* TGChannelTypeSettingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C2D7772F1BAEA30B00D451FD /* TGChannelTypeSettingViewController.m */; };
 		C2D7C5B11B2B4FAF0042DC01 /* TGMenuItemPhoto.m in Sources */ = {isa = PBXBuildFile; fileRef = C2D7C5B01B2B4FAF0042DC01 /* TGMenuItemPhoto.m */; };
 		C2D7C5BE1B3091400042DC01 /* StartBotSenderItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C2D7C5BD1B3091400042DC01 /* StartBotSenderItem.m */; };
 		C2D825D61B67B22E00434D37 /* CacheSettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C2D825D51B67B22E00434D37 /* CacheSettingsViewController.m */; };
@@ -1607,6 +1608,8 @@
 		C20B31301C8DB5CC00A6BCF5 /* TL_localMessageService_old48.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TL_localMessageService_old48.m; sourceTree = "<group>"; };
 		C20B31321C8DCCBC00A6BCF5 /* MessageTableItemPinned.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MessageTableItemPinned.h; sourceTree = "<group>"; };
 		C20B31331C8DCCBC00A6BCF5 /* MessageTableItemPinned.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MessageTableItemPinned.m; sourceTree = "<group>"; };
+		C20B31351C90866800A6BCF5 /* TGVideoViewerItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGVideoViewerItem.h; sourceTree = "<group>"; };
+		C20B31361C90866800A6BCF5 /* TGVideoViewerItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGVideoViewerItem.m; sourceTree = "<group>"; };
 		C20B829F1BD98EC700EF01AD /* TGPVDocumentsBehavior.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGPVDocumentsBehavior.h; sourceTree = "<group>"; };
 		C20B82A01BD98EC700EF01AD /* TGPVDocumentsBehavior.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGPVDocumentsBehavior.m; sourceTree = "<group>"; };
 		C20B82AB1BDA550600EF01AD /* TGChatHeadLockView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGChatHeadLockView.h; sourceTree = "<group>"; };
@@ -2654,8 +2657,8 @@
 		C2D51C371B25F5A8009327C0 /* TGStickerPackEmojiController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGStickerPackEmojiController.m; sourceTree = "<group>"; };
 		C2D51C3C1B2618DE009327C0 /* TGTransformScrollView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGTransformScrollView.h; sourceTree = "<group>"; };
 		C2D51C3D1B2618DE009327C0 /* TGTransformScrollView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGTransformScrollView.m; sourceTree = "<group>"; };
-		C2D7772E1BAEA30B00D451FD /* ComposeSettingupNewChannelViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ComposeSettingupNewChannelViewController.h; sourceTree = "<group>"; };
-		C2D7772F1BAEA30B00D451FD /* ComposeSettingupNewChannelViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ComposeSettingupNewChannelViewController.m; sourceTree = "<group>"; };
+		C2D7772E1BAEA30B00D451FD /* TGChannelTypeSettingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGChannelTypeSettingViewController.h; sourceTree = "<group>"; };
+		C2D7772F1BAEA30B00D451FD /* TGChannelTypeSettingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGChannelTypeSettingViewController.m; sourceTree = "<group>"; };
 		C2D7C5AF1B2B4FAF0042DC01 /* TGMenuItemPhoto.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGMenuItemPhoto.h; sourceTree = "<group>"; };
 		C2D7C5B01B2B4FAF0042DC01 /* TGMenuItemPhoto.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGMenuItemPhoto.m; sourceTree = "<group>"; };
 		C2D7C5BC1B3091400042DC01 /* StartBotSenderItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StartBotSenderItem.h; sourceTree = "<group>"; };
@@ -5271,6 +5274,8 @@
 			children = (
 				C2C6D9641A111B3E001EF8A2 /* TGPhotoViewerItem.h */,
 				C2C6D9651A111B3E001EF8A2 /* TGPhotoViewerItem.m */,
+				C20B31351C90866800A6BCF5 /* TGVideoViewerItem.h */,
+				C20B31361C90866800A6BCF5 /* TGVideoViewerItem.m */,
 			);
 			name = objects;
 			sourceTree = "<group>";
@@ -5781,8 +5786,8 @@
 				C2B0DF8E1BAAD9330023982C /* ComposeManagmentViewController.m */,
 				C2B0DF901BAAFD2E0023982C /* ComposeChannelParticipantsViewController.h */,
 				C2B0DF911BAAFD2E0023982C /* ComposeChannelParticipantsViewController.m */,
-				C2D7772E1BAEA30B00D451FD /* ComposeSettingupNewChannelViewController.h */,
-				C2D7772F1BAEA30B00D451FD /* ComposeSettingupNewChannelViewController.m */,
+				C2D7772E1BAEA30B00D451FD /* TGChannelTypeSettingViewController.h */,
+				C2D7772F1BAEA30B00D451FD /* TGChannelTypeSettingViewController.m */,
 			);
 			name = channels;
 			sourceTree = "<group>";
@@ -6851,7 +6856,7 @@
 				C222AB321A08FF2B00BEF907 /* PhotoCollectionTableView.m in Sources */,
 				C2CE53D31BE8EC7B00BBEF5F /* TGProfileParamItem.m in Sources */,
 				C248F3E319BE08A800BF658E /* flac.c in Sources */,
-				C2D777301BAEA30B00D451FD /* ComposeSettingupNewChannelViewController.m in Sources */,
+				C2D777301BAEA30B00D451FD /* TGChannelTypeSettingViewController.m in Sources */,
 				0AB8501E1875AC38001A796C /* TMRowItem.m in Sources */,
 				C21D482E19ACB7CD000F06E1 /* AccountSettingsViewController.m in Sources */,
 				C2C1DC1D1A443CCB00BBCC63 /* StickersPanelView.m in Sources */,
@@ -7031,6 +7036,7 @@
 				C2753DD519E43EA500752BAF /* TGCTextMark.m in Sources */,
 				C256E91718D22622008FFA04 /* DownloadDocumentItem.m in Sources */,
 				C2032CF31C5B805500E23481 /* MLCalendarView.m in Sources */,
+				C20B31371C90866800A6BCF5 /* TGVideoViewerItem.m in Sources */,
 				C2ACCE6E1AE122A400ABEE78 /* EmojiButton.m in Sources */,
 				C297FBA31832997B00714B3C /* SSKeychain.m in Sources */,
 				C2531F4C1962FAE000F7D7A2 /* BluredPhotoImageView.m in Sources */,

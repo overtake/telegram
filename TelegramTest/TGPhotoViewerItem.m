@@ -19,26 +19,19 @@
     return self;
 }
 
+-(void)startDownload {
+    
+}
+
 -(BOOL)isEqualTo:(TGPhotoViewerItem *)object {
     return self.previewObject.msg_id == object.previewObject.msg_id;
 }
 
-
-//
-//-(void)rebuildDate:(int)date {
-//    _date = [NSDate dateWithTimeIntervalSince1970:date];
-//    
-//    int time = date;
-//    time -= [[MTNetwork instance] getTime] - [[NSDate date] timeIntervalSince1970];
-//    
-//    
-//    NSDateFormatter *formatter = [NSDateFormatter new];
-//    
-//    [formatter setDateStyle:NSDateFormatterMediumStyle];
-//    [formatter setTimeStyle:NSDateFormatterShortStyle];
-//    
-//
-//    _stringDate = [formatter stringFromDate:[NSDate dateWithTimeIntervalSince1970:time]];
-//}
+-(DownloadItem *)downloadItem {
+    return self.imageObject.downloadItem;
+}
+-(BOOL)isset {
+    return self.imageObject.isset;
+}
 
 @end

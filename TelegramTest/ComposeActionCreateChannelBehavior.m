@@ -9,6 +9,7 @@
 #import "ComposeActionCreateChannelBehavior.h"
 #import "SelectUserItem.h"
 #import "ComposeActionAddGroupMembersBehavior.h"
+#import "TGChannelTypeSettingViewController.h"
 @interface ComposeActionCreateChannelBehavior ()
 @property (nonatomic,strong) RPCRequest *request;
 @end
@@ -55,7 +56,7 @@
         
         [self createChannel];
         
-    } else if([self.action.currentViewController isKindOfClass:[ComposeSettingupNewChannelViewController class]]) {
+    } else if([self.action.currentViewController isKindOfClass:[TGChannelTypeSettingViewController class]]) {
         
         
         [self updateChannel];
@@ -164,7 +165,7 @@
                 
                 [weakSelf.action.currentViewController.navigationViewController gotoViewController:weakSelf.action.currentViewController.messagesViewController animated:NO];
                 
-                ComposeSettingupNewChannelViewController *viewController = [[ComposeSettingupNewChannelViewController alloc] initWithFrame:weakSelf.action.currentViewController.view.bounds];;
+                TGChannelTypeSettingViewController *viewController = [[TGChannelTypeSettingViewController alloc] initWithFrame:weakSelf.action.currentViewController.view.bounds];;
                 
                 [viewController setAction:weakSelf.action];
                 

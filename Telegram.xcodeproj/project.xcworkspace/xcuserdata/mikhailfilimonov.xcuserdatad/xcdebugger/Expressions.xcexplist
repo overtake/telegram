@@ -1173,6 +1173,9 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "-[TGPhotoViewer itemAtIndex:]:TGPhotoViewer.m">
+      </ContextState>
+      <ContextState
          contextName = "-[TGCompressGifItem initWithPath:conversation:]:TGCompressGifItem.m">
          <PersistentStrings>
             <PersistentString
@@ -1263,6 +1266,9 @@
          <PersistentStrings>
             <PersistentString
                value = " currentViewerItem.imageObject;">
+            </PersistentString>
+            <PersistentString
+               value = "currentViewerItem.imageObject">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -4992,6 +4998,11 @@
       </ContextState>
       <ContextState
          contextName = "-[MessageTableItemVideo rebuildImageObject]:MessageTableItemVideo.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.message.media.document">
+            </PersistentString>
+         </PersistentStrings>
       </ContextState>
       <ContextState
          contextName = "__34-[TGWebpageYTContainer mouseDown:]_block_invoke:TGWebpageYTContainer.m">
@@ -5883,6 +5894,9 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "-[TGPVMediaBehavior initWithConversation:commonItem:filter:]:TGPVMediaBehavior.m">
+      </ContextState>
+      <ContextState
          contextName = "-[TGModernMessageCellContainerView setItem:]:TGModernMessageCellContainerView.m">
          <PersistentStrings>
             <PersistentString
@@ -6060,6 +6074,9 @@
                value = "self.chat.isKicked">
             </PersistentString>
          </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "__46-[TGPVMediaBehavior load:next:limit:callback:]_block_invoke_2:TGPVMediaBehavior.m">
       </ContextState>
       <ContextState
          contextName = "__35-[TGUpdateChannels proccessUpdate:]_block_invoke_5:TGUpdateChannels.m">

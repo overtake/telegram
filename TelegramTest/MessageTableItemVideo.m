@@ -100,8 +100,10 @@
     
     NSString *sizeInfo = self.message.media.document.size == 0 ? NSLocalizedString(@"Message.Send.Compressing", nil) : [NSString sizeToTransformedValue:self.message.media.document.size];
     
+    TL_documentAttributeVideo *video = (TL_documentAttributeVideo *) [self.message.media.document attributeWithClass:[TL_documentAttributeVideo class]];
     
-    NSMutableAttributedString *attr = [[NSMutableAttributedString alloc] initWithString:[[NSString durationTransformedValue:self.message.media.document.duration] stringByAppendingString:@", "] attributes:@{NSForegroundColorAttributeName: [NSColor whiteColor] }];
+    
+    NSMutableAttributedString *attr = [[NSMutableAttributedString alloc] initWithString:[[NSString durationTransformedValue:video.duration] stringByAppendingString:@", "] attributes:@{NSForegroundColorAttributeName: [NSColor whiteColor] }];
     
     
     [attr appendString:sizeInfo withColor:NSColorFromRGB(0xffffff)];

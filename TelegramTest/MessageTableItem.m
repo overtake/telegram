@@ -282,14 +282,22 @@ static NSCache *cItems;
         
         [self.forwardName setFont:TGSystemFont(12) forRange:self.forwardName.range];
         
-        if(self.message.fwd_from.channel_id != 0 && !self.message.chat.isMegagroup && self.message.fwd_from.from_id != 0) {
-            [self.forwardName appendString:@" (" withColor:LINK_COLOR];
-            NSRange r = [self.forwardName appendString:[NSString stringWithFormat:@"%@",self.fwd_user.first_name] withColor:LINK_COLOR];
-            [self.forwardName appendString:@")" withColor:LINK_COLOR];
+        
+        
+        if(self.message.fwd_from.channel_id != 0 && self.message.fwd_from.from_id != 0) {
             
-            [self.forwardName setLink:[TMInAppLinks peerProfile:self.message.fwd_from.fwdPeer] forRange:r];
+            TLChat *chat = [[ChatsManager sharedManager] find:self.message.fwd_from.channel_id];
             
-            [self.forwardName setFont:TGSystemMediumFont(13) forRange:r];
+            if(!chat.isMegagroup) {
+                [self.forwardName appendString:@" (" withColor:LINK_COLOR];
+                NSRange r = [self.forwardName appendString:[NSString stringWithFormat:@"%@",self.fwd_user.first_name] withColor:LINK_COLOR];
+                [self.forwardName appendString:@")" withColor:LINK_COLOR];
+                
+                [self.forwardName setLink:[TMInAppLinks peerProfile:self.message.fwd_from.fwdPeer] forRange:r];
+                
+                [self.forwardName setFont:TGSystemMediumFont(13) forRange:r];
+            }
+            
         }
         
         if([self isViaBot]) {
@@ -307,19 +315,7 @@ static NSCache *cItems;
     
         [self.forwardName appendString:[TGDateUtils stringForLastSeen:self.message.fwd_from.date] withColor:NSColorFromRGB(0xbebebe)];
         
-        
-        
-//        if(self.message.fwd_from.channel_id != 0) {
-//            TLChat *fwdChat = [[ChatsManager sharedManager] find:self.message.fwd_from.channel_id];
-//            
-//            if(fwdChat.isBroadcast) {
-//                NSRange range = [self.forwardName appendString:@" "];
-//                [self.forwardName appendAttributedString:[NSAttributedString attributedStringWithAttachment:channelViewsCountAttachment()]];
-//                [self.forwardName appendString:[NSString stringWithFormat:@" %d",self.message.views] withColor:NSColorFromRGB(0xbebebe)];
-//            }
-//        }
-        
-        
+
         [self.forwardName setFont:TGSystemMediumFont(13) forRange:rangeUser];
         
         _forwardNameSize = [self.forwardName coreTextSizeOneLineForWidth:INT32_MAX];
@@ -364,7 +360,7 @@ static NSTextAttachment *channelViewsCountAttachment() {
             if(self.isForwadedMessage)
             {
                 viewSize.height += _forwardNameSize.height;
-                viewSize.height+=self.defaultContentOffset;
+                viewSize.height+=self.contentHeaderOffset;
             }
             
 

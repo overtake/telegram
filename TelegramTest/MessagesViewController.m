@@ -293,6 +293,7 @@
     
     self.locked = NO;
     
+    [Notification addObserver:self selector:@selector(messageNeedUpdate:) name:UPDATE_MESSAGE];
     [Notification addObserver:self selector:@selector(messageReadNotification:) name:MESSAGE_READ_EVENT];
     [Notification addObserver:self selector:@selector(messageTableItemUpdate:) name:UPDATE_MESSAGE_ITEM];
     [Notification addObserver:self selector:@selector(messageTableItemsWebPageUpdate:) name:UPDATE_WEB_PAGE_ITEMS];
@@ -512,18 +513,67 @@
     
 }
 
+
+-(void)messageNeedUpdate:(NSNotification *)notification {
+    
+    TL_localMessage *message = notification.userInfo[KEY_MESSAGE];
+    
+    
+    if(self.conversation.peer_id == message.peer_id) {
+        
+        [self.historyController updateMessage:message];
+        
+        [self.historyController items:@[@(message.n_id)] complete:^(NSArray *items) {
+            
+            if(items.count == 1) {
+                MessageTableItem * item = [self itemOfMsgId:((TL_localMessage *)items[0]).channelMsgId];
+                item.message = items[0];
+                
+                NSUInteger index = [self indexOfObject:item];
+               
+                [self.table reloadDataForRowIndexes:[NSIndexSet indexSetWithIndex:index] columnIndexes:[NSIndexSet indexSetWithIndex:0]];
+                [self.table noteHeightOfRowsWithIndexesChanged:[NSIndexSet indexSetWithIndex:index]];
+            }
+            
+            
+        }];
+    }
+}
+
 -(void)messageTableItemUpdate:(NSNotification *)notification {
     
-    MessageTableItem *item = notification.userInfo[@"item"];
+    __block MessageTableItem *item = notification.userInfo[@"item"];
     
-    [item makeSizeByWidth:item.makeSize];
     
-    NSUInteger index = [self indexOfObject:item];
+    dispatch_block_t block = ^{
+        [item makeSizeByWidth:item.makeSize];
+        
+        NSUInteger index = [self indexOfObject:item];
+        
+        if(index != NSNotFound) {
+            [self.table reloadDataForRowIndexes:[NSIndexSet indexSetWithIndex:index] columnIndexes:[NSIndexSet indexSetWithIndex:0]];
+            [self.table noteHeightOfRowsWithIndexesChanged:[NSIndexSet indexSetWithIndex:index]];
+        }
+    };
     
-    if(index != NSNotFound) {
-        [self.table reloadDataForRowIndexes:[NSIndexSet indexSetWithIndex:index] columnIndexes:[NSIndexSet indexSetWithIndex:0]];
-        [self.table noteHeightOfRowsWithIndexesChanged:[NSIndexSet indexSetWithIndex:index]];
+    if(!item) {
+        if(self.conversation.peer_id == [notification.userInfo[KEY_PEER_ID] intValue]) {
+            [self.historyController items:@[notification.userInfo[KEY_MESSAGE_ID]] complete:^(NSArray *items) {
+                
+                if(items.count == 1) {
+                    item = [self itemOfMsgId:((TL_localMessage *)items[0]).channelMsgId];
+                    block();
+                }
+               
+                
+            }];
+        }
+        
+    } else {
+        block();
     }
+    
+    
     
     
     

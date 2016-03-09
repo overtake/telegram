@@ -66,7 +66,7 @@
         [self.progressView setImage:image_LoadCancelWhiteIcon() forState:TMLoaderViewStateDownloading];
         [self.progressView setImage:image_LoadCancelWhiteIcon() forState:TMLoaderViewStateUploading];
         
-        [self.progressView setFrameSize:NSMakeSize(NSWidth(_playView.frame) - 4, NSWidth(_playView.frame) - 4)];
+        [self setProgressFrameSize:_playView.frame.size];
         
         [self setProgressStyle:TMCircularProgressLightStyle];
         [self.progressView setProgressColor:[NSColor whiteColor]];
@@ -107,19 +107,16 @@
 - (void)setCellState:(CellState)cellState animated:(BOOL)animated  {
     [super setCellState:cellState animated:animated];
     
-    
-
-    
     switch (self.audioState) {
         case TGAudioPlayerStatePaused:
-            [_playView setImage:play_image() forControlState:BTRControlStateNormal];
+            [_playView setImage:voice_play_image() forControlState:BTRControlStateNormal];
             break;
             
         case TGAudioPlayerStatePlaying:
-            [_playView setImage:image_DownloadPauseIconWhite() forControlState:BTRControlStateNormal];
+            [_playView setImage:image_VoicePause() forControlState:BTRControlStateNormal];
             break;
         case TGAudioPlayerStateForcePaused: default :
-            [_playView setImage:play_image() forControlState:BTRControlStateNormal];
+            [_playView setImage:voice_play_image() forControlState:BTRControlStateNormal];
             break;
     }
     
@@ -207,6 +204,9 @@
 }
 
 -(void)_didChangeBackgroundColorWithAnimation:(POPBasicAnimation *)anim toColor:(NSColor *)color {
+    
+    [super _didChangeBackgroundColorWithAnimation:anim toColor:color];
+    
     if(!anim)
         _nameView.backgroundColor = color;
     else

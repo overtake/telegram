@@ -47,6 +47,9 @@
 -(void)update
 {
     self.messageAttributedString = [[MessagesUtils serviceAttributedMessage:self.message forAction:self.message.action] mutableCopy];
+    [self.messageAttributedString addAttribute:NSForegroundColorAttributeName value:LINK_COLOR range:self.messageAttributedString.range];
+    [self.messageAttributedString setFont:TGSystemFont(12) forRange:self.messageAttributedString.range];
+    [self.messageAttributedString setLink:[NSString stringWithFormat:@"chat://showreplymessage/%d",self.message.reply_to_msg_id] forRange:self.messageAttributedString.range];
 }
 
 -(Class)viewClass {

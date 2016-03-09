@@ -32,7 +32,7 @@
         
         AVAssetImageGenerator *generator = [[AVAssetImageGenerator alloc] initWithAsset:asset];
         generator.appliesPreferredTrackTransform = TRUE;
-        CMTime thumbTime = CMTimeMakeWithSeconds(0, 0);
+        CMTime thumbTime = CMTimeMakeWithSeconds(0, 1);
         
         
         TL_localMessage *msg = (TL_localMessage *)self.object;
@@ -74,6 +74,8 @@
         msg.media.document.thumb = [TL_photoCachedSize createWithType:@"hd" location:location w:size.width h:size.height bytes:jpegNormalizedData(thumbImg)];
         
         [msg save:NO];
+        
+        [Notification perform:UPDATE_MESSAGE data:@{KEY_MESSAGE:msg}];
         
         [[Storage manager] addHolesAroundMessage:msg];
     }

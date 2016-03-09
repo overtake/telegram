@@ -8,6 +8,6 @@
 
 #import "ComposeViewController.h"
 
-@interface ComposeSettingupNewChannelViewController : ComposeViewController
+@interface TGChannelTypeSettingViewController : ComposeViewController
 
 @end

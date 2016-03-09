@@ -1119,20 +1119,5 @@
     [self.navigationViewController pushViewController:_composeChannelParticipantsViewController animated:self.navigationViewController.currentController != [self noDialogsSelectedViewController]];
 }
 
--(void)showComposeSettingsupNewChannel:(ComposeAction *)action {
-    if(self.navigationViewController.currentController == _composeSettingupNewChannelViewController && _composeSettingupNewChannelViewController.action == action)
-        return;
-    
-    if(_composeSettingupNewChannelViewController == nil) {
-        _composeSettingupNewChannelViewController = [[ComposeSettingupNewChannelViewController alloc] initWithFrame:self.view.bounds];
-    }
-    
-    [self hideModalView:YES animation:NO];
-    
-    [_composeSettingupNewChannelViewController setAction:action];
-    [self.navigationViewController pushViewController:_composeSettingupNewChannelViewController animated:self.navigationViewController.currentController != [self noDialogsSelectedViewController]];
-
-}
-
 
 @end

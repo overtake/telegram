@@ -13,8 +13,11 @@
 
 -(void)_didDownloadImage:(DownloadItem *)item {
     NSImage *image = [[NSImage alloc] initWithData:item.result];
-    
-    image = renderedImage(image,self.imageSize);
+   
+    if(self.imageProcessor != nil)
+        image = self.imageProcessor(image,self.imageSize);
+     else
+        image = renderedImage(image,self.imageSize);
     
     [TGCache cacheImage:image forKey:self.location.cacheKey groups:@[PVCACHE]];
     
@@ -22,5 +25,7 @@
         [self.delegate didDownloadImage:image object:self];
     }];
 }
+
+
 
 @end

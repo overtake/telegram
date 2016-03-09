@@ -143,5 +143,10 @@
 }
 
 
+-(BOOL)isset {
+    
+    return [TGCache cachedImage:self.cacheKey] || ((fileSize(self.location.path) >= self.size || (self.size == 0 && isPathExists(self.location.path))) && self.downloadItem == nil);
+}
+
 
 @end

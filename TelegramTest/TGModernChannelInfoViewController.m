@@ -25,6 +25,7 @@
 #import "ComposeChangeChannelDescriptionViewController.h"
 #import "ComposeActionChangeChannelAboutBehavior.h"
 #import "TGReportChannelModalView.h"
+#import "TGChannelTypeSettingViewController.h"
 @interface TGModernChannelInfoViewController ()
 @property (nonatomic,strong) TGSettingsTableView *tableView;
 
@@ -281,7 +282,7 @@
         GeneralSettingsRowItem *membersItem;
         GeneralSettingsRowItem *blacklistItem;
         GeneralSettingsRowItem *addMembersItem;
-        GeneralSettingsRowItem *inviteViaLink;
+        GeneralSettingsRowItem *groupType;
         if(_chat.username.length > 0) {
             TGProfileParamItem *linkItem = [[TGProfileParamItem alloc] initWithHeight:30];
             
@@ -354,16 +355,23 @@
            
             
             
-            inviteViaLink = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeNone callback:^(TGGeneralRowItem *item) {
-                
-                ChatExportLinkViewController *export = [[ChatExportLinkViewController alloc] initWithFrame:NSZeroRect];
-                
-                [export setChat:weakSelf.chat.chatFull];
-                
-                [weakSelf.navigationViewController pushViewController:export animated:YES];
+            groupType = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeNone callback:^(TGGeneralRowItem *item) {
                 
                 
-            } description:NSLocalizedString(@"Modern.Channel.InviteViaLink", nil) height:42 stateback:nil];
+                TGChannelTypeSettingViewController *viewController = [[TGChannelTypeSettingViewController alloc] initWithFrame:weakSelf.action.currentViewController.view.bounds];;
+                
+                [viewController setAction:weakSelf.action];
+                
+                [weakSelf.action.currentViewController.navigationViewController pushViewController:viewController animated:YES];
+               
+//                ChatExportLinkViewController *export = [[ChatExportLinkViewController alloc] initWithFrame:NSZeroRect];
+//                
+//                [export setChat:weakSelf.chat.chatFull];
+//                
+//                [weakSelf.navigationViewController pushViewController:export animated:YES];
+                
+                
+            } description:NSLocalizedString(@"Modern.Channel.GroupType", nil) height:42 stateback:nil];
             
             if(_chat.chatFull.kicked_count > 0) {
                 blacklistItem = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeNext callback:^(TGGeneralRowItem *item) {
@@ -404,7 +412,7 @@
             if(addMembersItem)
                 [_tableView addItem:addMembersItem tableRedraw:YES];
             if(_chat.isCreator)
-                [_tableView addItem:inviteViaLink tableRedraw:YES];
+                [_tableView addItem:groupType tableRedraw:YES];
         } else {
             if(membersItem)
                 [_tableView addItem:membersItem tableRedraw:YES];
@@ -470,7 +478,7 @@
         [_tableView addItem:descriptionItem tableRedraw:YES];
         
         
-       // if(!_chat.isMegagroup) {
+        if(!_chat.isMegagroup) {
         GeneralSettingsRowItem *linkItem = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeNext callback:^(TGGeneralRowItem *item) {
                 
             ComposeAction *action = [[ComposeAction alloc] initWithBehaviorClass:[ComposeActionBehavior class]];
@@ -486,7 +494,7 @@
             
         [_tableView addItem:linkItem tableRedraw:YES];
             
-      //  }
+        }
         
         if(!_chat.isMegagroup && _chat.isCreator) {
             
