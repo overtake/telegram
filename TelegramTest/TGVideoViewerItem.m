@@ -61,6 +61,9 @@
     if((downloadItem.downloadState == DownloadStateCanceled || downloadItem.downloadState == DownloadStateWaitingStart)) {
         [downloadItem start];
     }
+    
+    [Notification perform:UPDATE_MESSAGE_ITEM data:@{KEY_MESSAGE_ID:@(self.message.n_id),KEY_PEER_ID:@(self.message.peer_id)}];
+    
     _item = downloadItem;
 }
 

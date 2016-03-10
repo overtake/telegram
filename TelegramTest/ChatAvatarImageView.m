@@ -154,10 +154,10 @@
     if(self.sourceType == ChatAvatarSourceUser) {
         if(![self.user.photo isKindOfClass:[TL_userProfilePhotoEmpty class]] && self.user.photo != nil) {
             
-            previewObject = [[PreviewObject alloc] initWithMsdId:NSIntegerMax media:[TL_photoSize createWithType:@"x" location:self.user.photo.photo_big w:640 h:640 size:0] peer_id:self.user.n_id];
+            previewObject = [[PreviewObject alloc] initWithMsdId:self.user.photo.photo_id media:[TL_photoSize createWithType:@"x" location:self.user.photo.photo_big w:640 h:640 size:0] peer_id:self.user.n_id];
             
             previewObject.reservedObject = [TGCache cachedImage:self.user.photo.photo_small.cacheKey];
-            
+
             
             [[TGPhotoViewer viewer] show:previewObject user:self.user];
         }

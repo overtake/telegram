@@ -443,7 +443,7 @@
         user = nil;
     } else if([action isKindOfClass:[TL_messageActionPinMessage class]]) {
         actionText = NSLocalizedString(@"MessageAction.Service.PinMessage", nil);
-        actionText = [NSString stringWithFormat:actionText, message.replyMessage.media == nil ? message.replyMessage.message : [[self mediaMessage:message.replyMessage] lowercaseString]];
+        actionText = [NSString stringWithFormat:actionText, message.replyMessage.media == nil ? ( message.replyMessage.message.length == 0 ? NSLocalizedString(@"DeletedMessage", nil) :  message.replyMessage.message) : [[self mediaMessage:message.replyMessage] lowercaseString]];
     }
     static float size = 11.5;
     

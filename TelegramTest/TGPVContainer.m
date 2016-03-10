@@ -614,7 +614,7 @@ static const int bottomHeight = 60;
         if([currentViewerItem isKindOfClass:[TGVideoViewerItem class]]) {
             [currentViewerItem startDownload];
             [self updateDownloadListeners:currentViewerItem.downloadItem];
-            [Notification perform:UPDATE_MESSAGE_ITEM data:@{KEY_MESSAGE_ID:@(((TL_localMessage *)currentViewerItem.previewObject.media).n_id),KEY_PEER_ID:@(((TL_localMessage *)currentViewerItem.previewObject.media).peer_id)}];
+            
         }
         
         [_videoPlayerView.player pause];

@@ -236,7 +236,13 @@
         NSMenuItem *photoDelete = [NSMenuItem menuItemWithTitle:NSLocalizedString(@"PhotoViewer.Delete", nil) withBlock:^(id sender) {
             
             if([UsersManager currentUser].photo.photo_id != [TGPhotoViewer currentItem].previewObject.msg_id) {
-                [RPCRequest sendRequest:[TLAPI_photos_deletePhotos createWithN_id:@[[TL_inputPhoto createWithN_id:[TGPhotoViewer currentItem].previewObject.msg_id access_hash:[TGPhotoViewer currentItem].previewObject.access_hash]]] successHandler:^(RPCRequest *request, id response) {
+                
+                PreviewObject *previewObject = [TGPhotoViewer currentItem].previewObject;
+                
+                TL_inputPhoto *inputPhoto = [TL_inputPhoto createWithN_id:previewObject.msg_id access_hash:previewObject.access_hash];
+
+                
+                [RPCRequest sendRequest:[TLAPI_photos_deletePhotos createWithN_id:[@[inputPhoto] mutableCopy]] successHandler:^(RPCRequest *request, id response) {
                     
                     [TGPhotoViewer deleteItem:[TGPhotoViewer currentItem]];
                     
@@ -365,8 +371,7 @@
             
             
         }];
-        //[photoForward setImage:image_AttachTakePhoto()];
-        //[photoForward setHighlightedImage:image_AttachTakePhotoHighlighted()];
+
         [theMenu addItem:photoForward];
     }
     

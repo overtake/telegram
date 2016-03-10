@@ -16,8 +16,6 @@
 @property (nonatomic, strong) NSAttributedString *videoTimeAttributedString;
 @property (nonatomic) NSSize videoTimeSize;
 
-@property (nonatomic, strong) TLFileLocation *videoPhotoLocation;
-
 
 @property (nonatomic,strong) TGImageObject *imageObject;
 

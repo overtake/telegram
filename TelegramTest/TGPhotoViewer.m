@@ -179,13 +179,7 @@ static const int controlsHeight = 75;
                 
                 [self insertObjects:@[previewObject]];
                 
-            } else {
-                TGPVUserBehavior *behavior = [[TGPVUserBehavior alloc] initWithConversation:_conversation commonItem:previewObject];
-                behavior.user = user;
-                
-                [behavior addItems:@[previewObject]];
             }
-            
         }
         
     }];
@@ -564,7 +558,7 @@ static TGPhotoViewer *viewer;
     [Notification addObserver:self selector:@selector(didDeleteMessages:) name:MESSAGE_DELETE_EVENT];
     [Notification addObserver:self selector:@selector(didAddedPhoto:) name:USER_UPDATE_PHOTO];
     
-     [self runAnimation:YES];
+    [self runAnimation:YES];
     
     [self setFrame:[NSScreen mainScreen].frame display:NO];
     
@@ -705,6 +699,10 @@ static TGPhotoViewer *viewer;
             
             if(![TGCache cachedImage:obj.imageObject.cacheKey group:@[PVCACHE]]) {
                  [obj.imageObject initDownloadItem];
+            }
+            
+            if(!obj.isset) {
+                [obj startDownload];
             }
             
         }];

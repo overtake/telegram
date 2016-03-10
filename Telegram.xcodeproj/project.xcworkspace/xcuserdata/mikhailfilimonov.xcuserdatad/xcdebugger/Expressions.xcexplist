@@ -1874,6 +1874,14 @@
          contextName = "__33-[ImageSenderItem performRequest]_block_invoke:ImageSenderItem.m">
       </ContextState>
       <ContextState
+         contextName = "__36-[TGPVControls TGPVUserBehaviorMenu]_block_invoke_2:TGPVControls.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "[TGPhotoViewer currentItem].previewObject.msg_id">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "-[UserInfoViewController viewWillAppear:]:UserInfoViewController.m">
          <PersistentStrings>
             <PersistentString

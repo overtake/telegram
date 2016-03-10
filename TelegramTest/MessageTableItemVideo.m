@@ -47,23 +47,26 @@
     TLDocument *document = self.message.media.document;
     TLPhotoSize *photoSize = document.thumb;
     NSImage *placeholder;
+    
+    
     if([photoSize isKindOfClass:[TL_photoCachedSize class]]) {
         placeholder = [[NSImage alloc] initWithData:photoSize.bytes];
     }
     
-    self.videoPhotoLocation = photoSize.location;
+    NSImage *image = [TGCache cachedImage:document.thumb.location.cacheKey];
+    
+    if(!image) {
+        image = fileSize(document.thumb.location.path) > photoSize.size ? imageFromFile(document.thumb.location.path) : nil;
+    }
     
     
     NSSize blockSize = NSMakeSize(photoSize.w , photoSize.h );
     
-    self.imageObject = [[TGImageObject alloc] initWithLocation:[photoSize isKindOfClass:[TL_photoCachedSize class]] ? nil : photoSize.location placeHolder:placeholder sourceId:self.message.n_id];
+    self.imageObject = [[TGImageObject alloc] initWithLocation:image == nil && !placeholder ? photoSize.location : nil placeHolder:image == nil ? placeholder : image];
     
     self.imageObject.imageSize = blockSize;
-    if(![self.message.media.document.thumb.type isEqualToString:@"hd"])
-        self.imageObject.imageProcessor = [ImageUtils b_processor];
-    
-    
-    [self makeSizeByWidth:310];
+    self.imageObject.thumbProcessor = image == nil ? [ImageUtils b_processor] : nil;
+    self.imageObject.imageProcessor = [ImageUtils b_processor];
 }
 
 -(BOOL)makeSizeByWidth:(int)width {

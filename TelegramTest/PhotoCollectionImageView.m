@@ -64,7 +64,7 @@
         obj.previewObject.reservedObject = imageFromFile(locationFilePath(self.object.location, @"jpg"));
         
         [[TGPhotoViewer viewer] show:obj.previewObject conversation:self.controller.conversation];
-    } else if([[(TL_localMessage *)obj.previewObject.media media] isKindOfClass:[TL_messageMediaVideo class]]) {
+    } else if([[(TL_localMessage *)obj.previewObject.media media] isKindOfClass:[TL_messageMediaDocument class]]) {
         [self checkAction];
     }
     
@@ -151,7 +151,7 @@ static NSImage *playVideoImage() {
     [self.loaderView setHidden:YES];
     [self.playImage setHidden:YES];
     
-    if([msg.media isKindOfClass:[TL_messageMediaVideo class]]) {
+    if([msg.media isKindOfClass:[TL_messageMediaDocument class]]) {
         
         [self.loaderView setCenterByView:self];
         
@@ -222,14 +222,7 @@ static NSImage *playVideoImage() {
     PhotoCollectionImageObject *object = (PhotoCollectionImageObject *)self.object;
 
     if([self isset:object]) {
-        TMPreviewVideoItem *item = [[TMPreviewVideoItem alloc] initWithItem:object.previewObject];
-        
-        object.previewObject.reservedObject = self;
-        
-        if(item) {
-            [[TMMediaController controller] show:item];
-        }
-        return;
+        [[TGPhotoViewer viewer] show:object.previewObject conversation:self.controller.conversation];
     } else {
         DownloadVideoItem *downloadItem = object.previewObject.reservedObject;
         
@@ -248,7 +241,7 @@ static NSImage *playVideoImage() {
 
 -(BOOL)isset:(PhotoCollectionImageObject *)object {
     NSString *path = mediaFilePath(object.previewObject.media);
-    return isPathExists(path) && [FileUtils checkNormalizedSize:path checksize:[(TL_localMessage *)object.previewObject.media media].video.size];
+    return isPathExists(path) && [FileUtils checkNormalizedSize:path checksize:[(TL_localMessage *)object.previewObject.media media].document.size];
 }
 
 -(NSImage *)cachedImage:(NSString *)key {

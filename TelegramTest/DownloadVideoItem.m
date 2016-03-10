@@ -62,22 +62,15 @@
         [generator generateCGImagesAsynchronouslyForTimes:[NSArray arrayWithObject:[NSValue valueWithCMTime:thumbTime]] completionHandler:handler];
         
         dispatch_semaphore_wait(sema, DISPATCH_TIME_FOREVER);
-        //dispatch_release(sema);
         
         TLFileLocation *location = msg.media.document.thumb.location;
         
-        if(!location)
-        {
-            location = [TL_fileLocation createWithDc_id:0 volume_id:rand_long() local_id:0 secret:0];
-        }
+        [TGCache removeCachedImage:msg.media.document.thumb.location.cacheKey];
         
-        msg.media.document.thumb = [TL_photoCachedSize createWithType:@"hd" location:location w:size.width h:size.height bytes:jpegNormalizedData(thumbImg)];
-        
-        [msg save:NO];
+        [jpegNormalizedData(thumbImg) writeToFile:locationFilePath(location, @"jpg") atomically:YES];
         
         [Notification perform:UPDATE_MESSAGE data:@{KEY_MESSAGE:msg}];
-        
-        [[Storage manager] addHolesAroundMessage:msg];
+
     }
     [super setDownloadState:downloadState];
 }

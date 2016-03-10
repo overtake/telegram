@@ -69,6 +69,8 @@
         return ((TL_updateNewChannelMessage *)update).message.to_id.channel_id;
     }  else if([update isKindOfClass:[TL_updateDeleteChannelMessages class]]) {
         return [(TL_updateDeleteChannelMessages *)update channel_id];
+    } else if([update isKindOfClass:[TL_updateChannelTooLong class]]) {
+        return [(TL_updateChannelTooLong *)update channel_id];
     }
     
     return 0;
@@ -371,7 +373,13 @@
         
     } else if([update isKindOfClass:[TL_updateChannelTooLong class]]) {
         
-        [self failUpdateWithChannelId:[update channel_id] limit:1 withCallback:nil errorCallback:nil];
+        TL_conversation *channel = [self conversationWithChannelId:[self channelIdWithUpdate:update]];
+        
+        if(channel && channel.pts < [update pts]) {
+             [self failUpdateWithChannelId:[update channel_id] limit:10 withCallback:nil errorCallback:nil];
+        } else {
+            [[MTNetwork instance].updateService update];
+        }
         
         
     } else if([update isKindOfClass:[TL_updateChannelMessageViews class]]) {
