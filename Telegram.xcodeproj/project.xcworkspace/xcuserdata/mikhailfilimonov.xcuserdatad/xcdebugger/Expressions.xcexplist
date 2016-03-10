@@ -190,6 +190,9 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "-[TGPVUserBehavior load:next:limit:callback:]:TGPVUserBehavior.m">
+      </ContextState>
+      <ContextState
          contextName = "__86-[Storage loadMessages:min_id:max_id:minDate:maxDate:limit:next:filterMask:isChannel:]_block_invoke:Storage.m">
          <PersistentStrings>
             <PersistentString
@@ -693,6 +696,9 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "-[TGModalDeleteChannelMessagesView showWithAction:]:TGModalDeleteChannelMessagesView.m">
+      </ContextState>
+      <ContextState
          contextName = "-[TGBlurImageObject proccessAndDispatchData:]:TGBlurImageObject.m">
          <PersistentStrings>
             <PersistentString
@@ -912,6 +918,9 @@
       </ContextState>
       <ContextState
          contextName = "__35-[TGUpdateChannels proccessUpdate:]_block_invoke:TGUpdateChannels.m">
+      </ContextState>
+      <ContextState
+         contextName = "-[TGPVUserBehavior didAddedPhoto:]:TGPVUserBehavior.m">
       </ContextState>
       <ContextState
          contextName = "-[ImageSenderItem initWithImage:forDialog:]:ImageSenderItem.m">
@@ -2027,6 +2036,11 @@
       </ContextState>
       <ContextState
          contextName = "__36-[TGPVEmptyBehavior convertObjects:]_block_invoke:TGPVEmptyBehavior.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "obj.reservedObject">
+            </PersistentString>
+         </PersistentStrings>
       </ContextState>
       <ContextState
          contextName = "__65-[FullChatManager loadFullChatByChatId:force:isChannel:callback:]_block_invoke:FullChatManager.m">
@@ -6037,6 +6051,9 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "__39-[ChatAvatarImageView updateChatPhoto:]_block_invoke_2274:ChatAvatarImageView.m">
+      </ContextState>
+      <ContextState
          contextName = "__34-[TGMessageEditSender performEdit]_block_invoke:TGMessageEditSender.m">
       </ContextState>
       <ContextState
@@ -6503,6 +6520,9 @@
                value = "offset">
             </PersistentString>
          </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "__36-[TGPVControls TGPVUserBehaviorMenu]_block_invoke:TGPVControls.m">
       </ContextState>
       <ContextState
          contextName = "__40-[TGStickerPackModalView initWithFrame:]_block_invoke56:TGStickerPackModalView.m">

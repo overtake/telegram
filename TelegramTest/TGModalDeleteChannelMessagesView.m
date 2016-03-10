@@ -26,56 +26,8 @@
          [self setContainerFrameSize:NSMakeSize(280, 260)];
         
         
-        weak();
-        
-        _ok = [[BTRButton alloc] initWithFrame:NSMakeRect(self.containerSize.width/2, 0, self.containerSize.width/2, 49)];
-        
-        _ok.layer.backgroundColor = [NSColor whiteColor].CGColor;
-        
-        [_ok setTitleColor:LINK_COLOR forControlState:BTRControlStateNormal];
-        
-        [_ok setTitle:NSLocalizedString(@"OK", nil) forControlState:BTRControlStateNormal];
-        
-        [_ok addBlock:^(BTRControlEvents events) {
-            
-            [weakSelf.action.behavior composeDidDone];
-            
-        } forControlEvents:BTRControlEventMouseDownInside];
-        
-        
-        [self addSubview:_ok];
-        
-        
-        
-        _cancel = [[BTRButton alloc] initWithFrame:NSMakeRect(0, 0, self.containerSize.width/2, 50)];
-        
-        _cancel.layer.backgroundColor = [NSColor whiteColor].CGColor;
-        
-        [_cancel setTitleColor:LINK_COLOR forControlState:BTRControlStateNormal];
-        
-        [_cancel setTitle:NSLocalizedString(@"Cancel", nil) forControlState:BTRControlStateNormal];
-        
-        [_cancel addBlock:^(BTRControlEvents events) {
-            
-            [weakSelf.action.behavior composeDidCancel];
-            
-            weakSelf.action = nil;
-            [weakSelf close:YES];
-            
-            
-        } forControlEvents:BTRControlEventMouseDownInside];
-        
-        [self addSubview:_cancel];
-        
-        
-        TMView *separator = [[TMView alloc] initWithFrame:NSMakeRect(0, 49, self.containerSize.width, 1)];
-        [separator setBackgroundColor:DIALOG_BORDER_COLOR];
-        [self addSubview:separator];
-        
-        separator = [[TMView alloc] initWithFrame:NSMakeRect(self.containerSize.width/2, 0, 1, 50)];
-        [separator setBackgroundColor:DIALOG_BORDER_COLOR];
-        [self addSubview:separator];
-        
+
+        [self enableCancelAndOkButton];
         
         _tableView = [[TGSettingsTableView alloc] initWithFrame:NSMakeRect(0, 50, self.containerSize.width, self.containerSize.height - 49)];
         
@@ -83,6 +35,18 @@
     }
     
     return self;
+}
+
+
+-(void)okAction {
+     [self.action.behavior composeDidDone];
+}
+
+-(void)cancelAction {
+    [self.action.behavior composeDidCancel];
+    
+    self.action = nil;
+    [self close:YES];
 }
 
 -(void)behaviorDidEndRequest:(id)response {

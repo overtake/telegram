@@ -13,7 +13,7 @@
 @property (nonatomic,strong) DownloadItem *downloadItem;
 
 -(NSString *)path;
-
+-(NSURL *)url;
 -(BOOL)isset;
 
 -(NSSize)videoSize;

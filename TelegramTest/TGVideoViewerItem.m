@@ -25,8 +25,13 @@
     return self;
 }
 
+
+-(NSURL *)url {
+    return [self.previewObject.reservedObject isKindOfClass:[NSDictionary class]] ? self.previewObject.reservedObject[@"url"] : [NSURL fileURLWithPath:mediaFilePath(self.previewObject.media)];
+}
+
 -(NSString *)path {
-    return mediaFilePath(self.previewObject.media);
+    return [self.previewObject.reservedObject isKindOfClass:[NSDictionary class]] ? nil : mediaFilePath(self.previewObject.media);
 }
 
 -(TL_localMessage *)message {
@@ -34,21 +39,28 @@
 }
 
 -(BOOL)isset {
-   return isPathExists(self.path) && [FileUtils checkNormalizedSize:self.path checksize:self.message.media.document.size];
+   return [self.previewObject.reservedObject isKindOfClass:[NSDictionary class]] || ( isPathExists(self.path) && [FileUtils checkNormalizedSize:self.path checksize:self.message.media.document.size]);
 }
 
 -(DownloadItem *)downloadItem {
     
-    if(_item == nil)
+    if(_item == nil && ![self.previewObject.reservedObject isKindOfClass:[NSDictionary class]])
         _item = [DownloadQueue find:self.message.media.document.n_id];
     
     return _item;
 }
 
 -(NSSize)videoSize {
-    TL_documentAttributeVideo *video = (TL_documentAttributeVideo *) [self.message.media.document attributeWithClass:[TL_documentAttributeVideo class]];
     
-    return NSMakeSize(video.w, video.h);
+    if([self.previewObject.reservedObject isKindOfClass:[NSDictionary class]]) {
+        return [self.previewObject.reservedObject[@"size"] sizeValue];
+    } else {
+        TL_documentAttributeVideo *video = (TL_documentAttributeVideo *) [self.message.media.document attributeWithClass:[TL_documentAttributeVideo class]];
+        
+        return NSMakeSize(video.w, video.h);
+    }
+    
+    
 }
 
 -(void)startDownload {

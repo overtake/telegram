@@ -9,7 +9,7 @@
 #import "TGPVEmptyBehavior.h"
 #import "TGPhotoViewer.h"
 #import "TGPVDocumentObject.h"
-
+#import "TGVideoViewerItem.h"
 @implementation TGPVEmptyBehavior
 @synthesize conversation = _conversation;
 @synthesize user = _user;
@@ -41,7 +41,9 @@
             
             imgObj.imageSize = NSMakeSize([(TL_photoSize *)obj.media w], [(TL_photoSize *)obj.media h]);
             
-            TGPhotoViewerItem *item = [[TGPhotoViewerItem alloc] initWithImageObject:imgObj previewObject:obj];
+            TGPhotoViewerItem *item = [[[obj.reservedObject isKindOfClass:[NSDictionary class]] ? TGVideoViewerItem.class : TGPhotoViewerItem.class alloc] initWithImageObject:imgObj previewObject:obj];
+            
+            
             
             [converted addObject:item];
         } else if([[(TL_localMessage *)obj.media media] isKindOfClass:[TL_messageMediaDocument class]] || [[(TL_localMessage *)obj.media media] isKindOfClass:[TL_messageMediaDocument_old44 class]]) {

@@ -44,6 +44,7 @@
         
         BOOL banUser = [self.action.result.multiObjects[1] boolValue];
         BOOL reportSpam = [self.action.result.multiObjects[2] boolValue];
+        BOOL deleteMessages = [self.action.result.multiObjects[3] boolValue];
         
         
         dispatch_block_t report_spam_block = ^{
@@ -76,14 +77,40 @@
             
         };
         
+        dispatch_block_t delete_messages_block = ^{
+            
+            [RPCRequest sendRequest:[TLAPI_channels_deleteUserHistory createWithChannel:self.channel.inputPeer user_id:self.user.inputUser] successHandler:^(id request, id response) {
+                
+                if(reportSpam)
+                    report_spam_block();
+                else if(banUser)
+                    ban_block();
+                else
+                    success();
+                
+            } errorHandler:^(id request, RpcError *error) {
+                
+                if(reportSpam)
+                    report_spam_block();
+                else if(banUser)
+                    ban_block();
+                else
+                    success();
+                
+            }];
+            
+        };
+        
       
-        if(banUser) {
+        if(deleteMessages)
+            delete_messages_block();
+        else if(banUser)
             ban_block();
-        } else if(reportSpam) {
+        else if(reportSpam)
             report_spam_block();
-        } else {
+        else
             success();
-        }
+        
         
         
     } errorHandler:^(id request, RpcError *error) {

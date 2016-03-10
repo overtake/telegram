@@ -591,7 +591,7 @@ static const int bottomHeight = 60;
         
         [self.imageContainerView setHidden:YES];
         
-        NSURL *url = [NSURL fileURLWithPath:item.path];
+        NSURL *url = item.url;
             
         AVPlayer *player = [AVPlayer playerWithURL:url];
             

@@ -155,30 +155,32 @@ static const int seconds_to_notify = 120;
         if(![message.to_id isSecret] && ![TGPasslock isVisibility]) {
             NSString *cacheKey = [fromUser.photo.photo_small cacheKey];
             
-            if(chat != nil) {
-                cacheKey = [chat.photo.photo_small cacheKey];
-            }
-            
-            NSString *p = [NSString stringWithFormat:@"%@/%@.jpg", path(), cacheKey];
-            
-            
-            image = [TGCache cachedImage:p group:@[AVACACHE]];
-            
-            
-            
-            if(!image) {
-                
-                NSData *data = [[NSFileManager defaultManager] fileExistsAtPath:p] ? [NSData dataWithContentsOfFile:p] : nil;
-                
-                
-                if(data.length > 0) {
-                    image = [[NSImage alloc] initWithData:data];
-                    
-                    image = [ImageUtils roundCorners:image size:NSMakeSize(image.size.width/2, image.size.height/2)];
-                    
-                    [TGCache cacheImage:image forKey:p groups:@[AVACACHE]];
+            NSString *p;
+            if(cacheKey) {
+                if(chat != nil) {
+                    cacheKey = [chat.photo.photo_small cacheKey];
                 }
                 
+                p = [NSString stringWithFormat:@"%@/%@.jpg", path(), cacheKey];
+                
+                
+                image = [TGCache cachedImage:p group:@[AVACACHE]];
+                
+                if(!image) {
+                    
+                    NSData *data = [[NSFileManager defaultManager] fileExistsAtPath:p] ? [NSData dataWithContentsOfFile:p] : nil;
+                    
+                    
+                    if(data.length > 0) {
+                        image = [[NSImage alloc] initWithData:data];
+                        
+                        image = [ImageUtils roundCorners:image size:NSMakeSize(image.size.width/2, image.size.height/2)];
+                        
+                        [TGCache cacheImage:image forKey:p groups:@[AVACACHE]];
+                    }
+                    
+                }
+
             }
             
             

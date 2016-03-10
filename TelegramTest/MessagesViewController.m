@@ -1993,8 +1993,7 @@ static NSTextAttachment *headerMediaIcon() {
         
     }];
     
-    
-    
+   
     [peers enumerateKeysAndObjectsUsingBlock:^(id  _Nonnull key, NSDictionary  *obj, BOOL * _Nonnull stop) {
         
         TL_conversation *conversation = obj[@"conversation"];
@@ -2008,19 +2007,35 @@ static NSTextAttachment *headerMediaIcon() {
             
             request = [TLAPI_channels_deleteMessages createWithChannel:[TL_inputChannel createWithChannel_id:conversation.peer.channel_id access_hash:conversation.chat.access_hash] n_id:array];
             
-            if(array.count > 0 && ![[(MessageTableItem *)messages[0] message] n_out] && [[(MessageTableItem *)messages[0] message] from_id] != 0) {
-                TGModalDeleteChannelMessagesView *modalDeleteView = [[TGModalDeleteChannelMessagesView alloc] initWithFrame:[[[NSApp delegate] mainWindow].contentView bounds]];
+            
+            if(array.count > 0 && ![[(MessageTableItem *)messages[0] message] n_out] && ![[(MessageTableItem *)messages[0] message] isPost]) {
                 
-                ComposeAction *action = [[ComposeAction alloc] initWithBehaviorClass:[ComposeActionDeleteChannelMessagesBehavior class] filter:@[] object:conversation.chat reservedObjects:@[array]];
+                __block BOOL canMultiEdit = YES;
                 
-                action.result = [[ComposeResult alloc] initWithMultiObjects:@[@(YES),@(YES),@(NO),@(NO)]];
+                int from_id = [[(MessageTableItem *)messages[0] message] from_id];
                 
+                [messages enumerateObjectsUsingBlock:^(MessageTableItem *obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                    if(obj.message.from_id != from_id || obj.message.isPost)
+                    {
+                        canMultiEdit = NO;
+                        *stop = YES;
+                    }
+                }];
                 
-                action.result.singleObject = [[(MessageTableItem *)messages[0] message] fromUser];
-                
-                [modalDeleteView showWithAction:action];
-                
-                return;
+                if(canMultiEdit) {
+                    TGModalDeleteChannelMessagesView *modalDeleteView = [[TGModalDeleteChannelMessagesView alloc] initWithFrame:[[[NSApp delegate] mainWindow].contentView bounds]];
+                    
+                    ComposeAction *action = [[ComposeAction alloc] initWithBehaviorClass:[ComposeActionDeleteChannelMessagesBehavior class] filter:@[] object:conversation.chat reservedObjects:@[array]];
+                    
+                    action.result = [[ComposeResult alloc] initWithMultiObjects:@[@(YES),@(YES),@(NO),@(NO)]];
+                    
+                    
+                    action.result.singleObject = [[(MessageTableItem *)messages[0] message] fromUser];
+                    
+                    [modalDeleteView showWithAction:action];
+                    
+                    return;
+                }
                 
             }
             
