@@ -170,7 +170,7 @@ float ease(float t, float b, float c, float d) {
     
     [self.progressColor setStroke];
     
-    [path setLineWidth:3];
+    [path setLineWidth:2.5];
     [path setLineCapStyle:NSRoundLineCapStyle];
     
     NSAffineTransform * transform = [NSAffineTransform transform];

@@ -938,7 +938,7 @@ NSImage *gray_resizable_placeholder() {
         NSRect rect = NSMakeRect(0, 0, 50, 50);
         NSImage *img = [[NSImage alloc] initWithSize:rect.size];
         [img lockFocus];
-        [[NSColor whiteColor] set];
+        [GRAY_BORDER_COLOR set];
         NSBezierPath *path = [NSBezierPath bezierPath];
         [path appendBezierPathWithRoundedRect:NSMakeRect(0, 0, rect.size.width, rect.size.height) xRadius:4 yRadius:4];
         [path fill];

@@ -75,18 +75,16 @@
     
     [self.view addSubview:_tableView.containerView];
     
-    
-    
 }
-
 
 -(void)setAction:(ComposeAction *)action {
     [super setAction:action];
+    
+    if(!self.action.result) {
+        self.action.result = [[ComposeResult alloc] init];
+        self.action.result.singleObject = @(YES);
+    }
         
-    self.action.result = [[ComposeResult alloc] init];
-    
-    self.action.result.singleObject = @(YES);
-    
     _userNameContainerItem = [[TGUserNameContainerRowItem alloc] initWithHeight:120];
     
     NSMutableAttributedString *attr = [[NSMutableAttributedString alloc] init];
@@ -97,9 +95,9 @@
     
     [attr detectBoldColorInStringWithFont:TGSystemMediumFont(12)];
     
-    
     _userNameContainerItem.observer = [[TGChangeUserObserver alloc] initWithDescription:attr placeholder:@"" defaultUserName:@""];
     
+    weak();
     
     [_userNameContainerItem.observer setNeedDescriptionWithError:^NSString *(NSString *error) {
         
@@ -113,6 +111,12 @@
             return NSLocalizedString(@"Channel.Username.InvalidCharacters", nil);
         } else if([error isEqualToString:@"UserName.avaiable"]) {
             return NSLocalizedString(@"Channel.Username.UsernameIsAvailable", nil);
+        } else if([error isEqualToString:@"CHANNELS_ADMIN_PUBLIC_TOO_MUCH"]) {
+            TL_channel *channel = weakSelf.action.object;
+            
+            if(channel.isMegagroup) {
+                return NSLocalizedString(@"MEGAGROUPS_ADMIN_PUBLIC_TOO_MUCH", nil);
+            }
         }
         
         return NSLocalizedString(error, nil);
@@ -146,13 +150,11 @@
         
     }];
     
-    weak();
-    
+
     [_userNameContainerItem.observer setWillNeedSaveUserName:^(NSString *username) {
         if(username.length >= 5) {
             
             weakSelf.action.reservedObject2 = username;
-           
             [weakSelf.action.behavior composeDidDone];
             
         }
@@ -187,7 +189,9 @@
     
     weak();
     
-    GeneralSettingsBlockHeaderItem *headerItem = [[GeneralSettingsBlockHeaderItem alloc] initWithString:NSLocalizedString(@"Channel.TypeHeader", nil) height:60 flipped:NO];
+    TLChat *chat = self.action.object;
+    
+    GeneralSettingsBlockHeaderItem *headerItem = [[GeneralSettingsBlockHeaderItem alloc] initWithString:NSLocalizedString(!chat.isMegagroup ? @"Channel.TypeHeader" : @"Group.TypeHeader", nil) height:60 flipped:NO];
     headerItem.xOffset = 30;
     
     
@@ -212,7 +216,7 @@
     }];
 
     
-    GeneralSettingsBlockHeaderItem *selectorDesc = [[GeneralSettingsBlockHeaderItem alloc] initWithString:[self.action.result.singleObject boolValue] ? NSLocalizedString(@"Channel.ChoiceTypeDescriptionPublic", nil) : NSLocalizedString(@"Channel.ChoiceTypeDescriptionPrivate", nil) height:42 flipped:YES];
+    GeneralSettingsBlockHeaderItem *selectorDesc = [[GeneralSettingsBlockHeaderItem alloc] initWithString:[self.action.result.singleObject boolValue] ? NSLocalizedString(!chat.isMegagroup ? @"Channel.ChoiceTypeDescriptionPublic" : @"Group.ChoiceTypeDescriptionPublic", nil) : NSLocalizedString(!chat.isMegagroup ?  @"Channel.ChoiceTypeDescriptionPrivate" : @"Group.ChoiceTypeDescriptionPrivate", nil) height:42 flipped:YES];
     
     
     selectorDesc.xOffset = privateSelector.xOffset = publicSelector.xOffset = 30;
@@ -229,7 +233,7 @@
     } else {
         [self.tableView addItem:_joinLinkItem tableRedraw:NO];
         
-        GeneralSettingsBlockHeaderItem *joinDescription = [[GeneralSettingsBlockHeaderItem alloc] initWithString:NSLocalizedString(@"Channel.NewChannelSettingUpJoinLinkDescription", nil) height:42 flipped:YES];
+        GeneralSettingsBlockHeaderItem *joinDescription = [[GeneralSettingsBlockHeaderItem alloc] initWithString:NSLocalizedString(!chat.isMegagroup ? @"Channel.NewChannelSettingUpJoinLinkDescription" : @"Group.NewChannelSettingUpJoinLinkDescription", nil) height:42 flipped:YES];
         
         [self.tableView addItem:joinDescription tableRedraw:NO];
         

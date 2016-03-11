@@ -50,7 +50,7 @@
         
         NSMutableParagraphStyle *style = [[NSMutableParagraphStyle alloc] init];
         style.lineBreakMode = NSLineBreakByTruncatingMiddle;
-        style.lineSpacing = 4;
+        style.lineSpacing = 2;
         
         [attr addAttribute:NSParagraphStyleAttributeName value:style range:attr.range];
         
