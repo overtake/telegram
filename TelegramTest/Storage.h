@@ -69,6 +69,7 @@ extern NSString *const RECENT_GIFS;
 -(void)deleteMessages:(NSArray *)messages completeHandler:(void (^)(NSArray *peer_update_data))completeHandler;
 -(void)deleteMessagesWithRandomIds:(NSArray *)messages isChannelMessages:(BOOL)isChannelMessages completeHandler:(void (^)(NSArray *peer_update_data))completeHandler;
 -(void)deleteChannelMessages:(NSArray *)messages completeHandler:(void (^)(NSArray *peer_update_data, NSDictionary *readCount))completeHandler;
+-(void)deleteUserChannelMessages:(int)channelId from_id:(int)from_id completeHandler:(void (^)(NSArray *peer_updates, NSDictionary *readCount))completeHandler;
 -(void)markMessagesAsRead:(NSArray *)messages useRandomIds:(NSArray *)randomIds;
 -(void)lastMessageWithConversation:(TL_conversation *)conversation completeHandler:(void (^)(TL_localMessage *message, int importantMessage))completeHandler;
 

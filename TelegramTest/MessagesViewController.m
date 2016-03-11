@@ -2023,11 +2023,13 @@ static NSTextAttachment *headerMediaIcon() {
                 }];
                 
                 if(canMultiEdit) {
+                    
+                    
                     TGModalDeleteChannelMessagesView *modalDeleteView = [[TGModalDeleteChannelMessagesView alloc] initWithFrame:[[[NSApp delegate] mainWindow].contentView bounds]];
                     
                     ComposeAction *action = [[ComposeAction alloc] initWithBehaviorClass:[ComposeActionDeleteChannelMessagesBehavior class] filter:@[] object:conversation.chat reservedObjects:@[array]];
                     
-                    action.result = [[ComposeResult alloc] initWithMultiObjects:@[@(YES),@(YES),@(NO),@(NO)]];
+                    action.result = [[ComposeResult alloc] initWithMultiObjects:@[@(YES),@(NO),@(NO),@(NO)]];
                     
                     
                     action.result.singleObject = [[(MessageTableItem *)messages[0] message] fromUser];

@@ -29,7 +29,7 @@
 
 -(void)composeDidDone {
     [self.delegate behaviorDidStartRequest];
-    
+    [TMViewController showModalProgress];
     id request = [TLAPI_channels_deleteMessages createWithChannel:self.channel.inputPeer n_id:self.msgIds];
     
     [RPCRequest sendRequest:request successHandler:^(id request, id response) {
@@ -39,6 +39,7 @@
         
         dispatch_block_t success = ^{
             [self.delegate behaviorDidEndRequest:nil];
+            [TMViewController hideModalProgressWithSuccess];
         };
         
         
@@ -81,12 +82,29 @@
             
             [RPCRequest sendRequest:[TLAPI_channels_deleteUserHistory createWithChannel:self.channel.inputPeer user_id:self.user.inputUser] successHandler:^(id request, id response) {
                 
-                if(reportSpam)
-                    report_spam_block();
-                else if(banUser)
-                    ban_block();
-                else
-                    success();
+                [[Storage manager] deleteUserChannelMessages:self.channel.n_id from_id:self.user.n_id completeHandler:^(NSArray *peer_updates, NSDictionary *readCount) {
+                    
+                    [peer_updates enumerateObjectsUsingBlock:^(NSDictionary *obj, NSUInteger idx, BOOL *stop) {
+                        
+                        TL_conversation *conversation = [[DialogsManager sharedManager] find:[obj[KEY_PEER_ID] intValue]];
+                        
+                        [[DialogsManager sharedManager] updateLastMessageForDialog:conversation];
+                        
+                    }];
+                    
+                    [Notification perform:MESSAGE_DELETE_EVENT data:@{KEY_DATA:peer_updates}];
+                    
+                    
+                    if(reportSpam)
+                        report_spam_block();
+                    else if(banUser)
+                        ban_block();
+                    else
+                        success();
+                    
+                }];
+                
+                
                 
             } errorHandler:^(id request, RpcError *error) {
                 

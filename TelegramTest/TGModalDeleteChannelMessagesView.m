@@ -50,12 +50,11 @@
 }
 
 -(void)behaviorDidEndRequest:(id)response {
-    [TMViewController hideModalProgressWithSuccess];
+    
 }
 
 -(void)behaviorDidStartRequest {
     [self close:NO];
-    [TMViewController showModalProgress];
 }
 
 
@@ -90,7 +89,7 @@
         
         BOOL currentValue = [weakSelf.action.result.multiObjects[1] boolValue];
         
-        weakSelf.action.result = [[ComposeResult alloc] initWithMultiObjects:@[@(YES),@(!currentValue),weakSelf.action.result.multiObjects[2],weakSelf.action.result.multiObjects[3]]];
+        weakSelf.action.result.multiObjects = @[@(YES),@(!currentValue),weakSelf.action.result.multiObjects[2],weakSelf.action.result.multiObjects[3]];
         
         [weakSelf.tableView reloadData];
         
@@ -102,7 +101,8 @@
         
         BOOL currentValue = [weakSelf.action.result.multiObjects[2] boolValue];
         
-        weakSelf.action.result = [[ComposeResult alloc] initWithMultiObjects:@[@(YES),weakSelf.action.result.multiObjects[1],@(!currentValue),weakSelf.action.result.multiObjects[3]]];
+        weakSelf.action.result.multiObjects = @[@(YES),weakSelf.action.result.multiObjects[1],@(!currentValue),weakSelf.action.result.multiObjects[3]];
+        
         
         [weakSelf.tableView reloadData];
         
@@ -114,7 +114,7 @@
         
         BOOL currentValue = [weakSelf.action.result.multiObjects[3] boolValue];
         
-        weakSelf.action.result = [[ComposeResult alloc] initWithMultiObjects:@[@(YES),weakSelf.action.result.multiObjects[1],weakSelf.action.result.multiObjects[2],@(!currentValue)]];
+        weakSelf.action.result.multiObjects = @[@(YES),weakSelf.action.result.multiObjects[1],weakSelf.action.result.multiObjects[2],@(!currentValue)];
         
         [weakSelf.tableView reloadData];
         

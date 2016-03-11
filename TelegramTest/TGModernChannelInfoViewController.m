@@ -507,8 +507,6 @@
                     [weakSelf hideModalProgressWithSuccess];
                     
                     chatfull.exported_invite = response;
-                   
-                    
                     [[Storage manager] insertFullChat:chatfull completeHandler:nil];
                     
                     block();

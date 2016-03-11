@@ -10,7 +10,7 @@
 
 
 #import "NSMenuItemCategory.h"
-
+#import "TGTextLabel.h"
 @class TMMenuController;
 
 @interface TMMenuItemView : BTRControl

@@ -1505,6 +1505,71 @@ TL_localMessage *parseMessage(FMResultSet *result) {
     }];
 }
 
+
+-(void)deleteUserChannelMessages:(int)channelId from_id:(int)from_id completeHandler:(void (^)(NSArray *peer_updates, NSDictionary *readCount))completeHandler {
+    
+    dispatch_queue_t dqueue = dispatch_get_current_queue();
+    
+    [queue inDatabase:^(FMDatabase *db) {
+        
+        NSMutableArray *peer_updates = [[NSMutableArray alloc] init];
+        
+        NSString *sql = [NSString stringWithFormat:@"SELECT n_id,random_id FROM %@ WHERE from_id = %d and peer_id = %d",tableChannelMessages,from_id,-channelId];
+        
+        FMResultSet *result = [db executeQueryWithFormat:sql,nil];
+        
+        NSMutableDictionary *unreadCount = [NSMutableDictionary dictionary];
+        
+        NSMutableArray *randomIds = [NSMutableArray array];
+        
+        while ([result next]) {
+            
+            [randomIds addObject:@([result longForColumn:@"random_id"])];
+            
+            long n_id = [result longForColumn:@"n_id"];
+            
+            NSData *nData = [[NSData alloc] initWithBytes:&n_id length:8];
+            
+            int msgId;
+            int peerId;
+            
+            [nData getBytes:&msgId range:NSMakeRange(0, 4)];
+            [nData getBytes:&peerId range:NSMakeRange(4, 4)];
+            
+            int read_max_id = [db intForQuery:[NSString stringWithFormat:@"select read_inbox_max_id from %@ where peer_id = ?",tableModernDialogs],@(peerId)];
+            
+            if(msgId > read_max_id) {
+                unreadCount[@(peerId)] = @([unreadCount[@(peerId)] intValue] + 1);
+            }
+            
+            
+            [peer_updates addObject:@{KEY_MESSAGE_ID:@(msgId),KEY_PEER_ID:@(peerId)}];
+        }
+        
+        [result close];
+        
+        
+        [unreadCount enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
+            
+            [db executeUpdate:[NSString stringWithFormat:@"update %@ set unread_count = unread_count - ? where peer_id = ?",tableModernDialogs],key,obj];
+        }];
+        
+        
+        sql = [NSString stringWithFormat:@"delete from %@ WHERE from_id = %d and peer_id = %d",tableChannelMessages, from_id, -channelId];
+        
+        [db executeUpdateWithFormat:sql,nil];
+        
+        
+        dispatch_async(dqueue, ^{
+            if(completeHandler) completeHandler(peer_updates,unreadCount);
+        });
+
+        
+    }];
+}
+
+
+
 -(void)deleteMessagesInDialog:(TL_conversation *)dialog completeHandler:(dispatch_block_t)completeHandler {
     [queue inDatabase:^(FMDatabase *db) {
         [db beginTransaction];

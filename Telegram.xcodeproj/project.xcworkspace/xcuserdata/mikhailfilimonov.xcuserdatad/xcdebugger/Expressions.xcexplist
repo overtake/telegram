@@ -2306,6 +2306,14 @@
          contextName = "-[TMCollectionPageController loadRemote]:TMCollectionPageController.m">
       </ContextState>
       <ContextState
+         contextName = "__48-[MessagesViewController deleteSelectedMessages]_block_invoke1178:MessagesViewController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "action.result">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "-[StickersPanelView show:stickers:]:StickersPanelView.m">
          <PersistentStrings>
             <PersistentString
@@ -3146,6 +3154,9 @@
       </ContextState>
       <ContextState
          contextName = "__44-[TGChannelsPolling setCurrentConversation:]_block_invoke:TGChannelsPolling.m">
+      </ContextState>
+      <ContextState
+         contextName = "__60-[ComposeActionDeleteChannelMessagesBehavior composeDidDone]_block_invoke124:ComposeActionDeleteChannelMessagesBehavior.m">
       </ContextState>
       <ContextState
          contextName = "__44-[TMCollectionPageController convertedRows:]_block_invoke:TMCollectionPageController.m">
@@ -4099,6 +4110,14 @@
       </ContextState>
       <ContextState
          contextName = "+[SearchItem hash:]:SearchItem.m">
+      </ContextState>
+      <ContextState
+         contextName = "-[ComposeActionDeleteChannelMessagesBehavior composeDidDone]:ComposeActionDeleteChannelMessagesBehavior.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.action.result">
+            </PersistentString>
+         </PersistentStrings>
       </ContextState>
       <ContextState
          contextName = "-[TGCTextView calcSelectedRange]:TGCTextView.m">
