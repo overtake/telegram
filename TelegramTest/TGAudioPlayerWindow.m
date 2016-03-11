@@ -351,7 +351,8 @@
 }
 
 -(void)showOrHidePlayList {
-    self.windowState = _windowState == TGAudioPlayerWindowStateMini ? TGAudioPlayerWindowStatePlayList : TGAudioPlayerWindowStateMini;
+    
+    self.windowState = _windowState == TGAudioPlayerWindowStateMini && !self.currentItem.message.isFake ? TGAudioPlayerWindowStatePlayList : TGAudioPlayerWindowStateMini;
 }
 
 -(void)setWindowState:(TGAudioPlayerWindowState)windowState {
