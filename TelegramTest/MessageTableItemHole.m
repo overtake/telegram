@@ -47,15 +47,12 @@
 
 
 -(BOOL)makeSizeByWidth:(int)width {
-    [super makeSizeByWidth:width];
-    
-    
     _textSize = [_text coreTextSizeForTextFieldForWidth:width];
     
     
     self.blockSize = NSMakeSize(width, _textSize.height + self.defaultContentOffset * 2);
     
-    return YES;
+    [super makeSizeByWidth:width];
 }
 
 -(Class)viewClass {

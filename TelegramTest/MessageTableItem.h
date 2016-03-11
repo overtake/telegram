@@ -41,7 +41,8 @@
 @property (nonatomic,assign) NSSize rightSize;
 
 
-
+@property (nonatomic,strong) NSAttributedString *caption;
+@property (nonatomic,assign) NSSize captionSize;
 
 @property (nonatomic, strong) TLUser *fwd_user;
 @property (nonatomic, strong) TLChat *fwd_chat;

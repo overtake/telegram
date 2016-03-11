@@ -48,11 +48,9 @@
 
 
 -(BOOL)makeSizeByWidth:(int)width {
-    [super makeSizeByWidth:width];
-    
     self.blockSize = NSMakeSize(MIN(width,210), 40);
     
-    return YES;
+    return [super makeSizeByWidth:width];
 }
 
 -(BOOL)canShare {

@@ -23,19 +23,6 @@
         
         [self rebuildImageObject];
                 
-        if(self.message.media.caption.length > 0) {
-            NSMutableAttributedString *c = [[NSMutableAttributedString alloc] init];
-            
-            [c appendString:[[self.message.media.caption trim] fixEmoji] withColor:TEXT_COLOR];
-            
-            [c setFont:TGSystemFont(13) forRange:c.range];
-            
-            [c detectAndAddLinks:URLFindTypeHashtags | URLFindTypeLinks | URLFindTypeMentions];
-            
-            _caption = c;
-        }
-        
-        
         [self checkStartDownload:[self.message.to_id isKindOfClass:[TL_peerChat class]] ? AutoGroupVideo : AutoPrivateVideo size:self.message.media.document.size];
     }
     return self;
@@ -70,22 +57,17 @@
 }
 
 -(BOOL)makeSizeByWidth:(int)width {
-    [super makeSizeByWidth:width];
     
     TL_documentAttributeVideo *video = (TL_documentAttributeVideo *) [self.message.media.document attributeWithClass:[TL_documentAttributeVideo class]];
     
     _videoSize = strongsize(NSMakeSize(video.w, video.h), MIN(320,width));
     
-    if(_caption) {
-        _captionSize = [_caption coreTextSizeForTextFieldForWidth:_videoSize.width - 4];
-        _captionSize.width = _videoSize.width - 4;
-    }
+
     
-    int captionHeight = _captionSize.height ? _captionSize.height + self.defaultContentOffset : 0;
     
-     self.blockSize = NSMakeSize(_videoSize.width, _videoSize.height + captionHeight);
+     self.blockSize = NSMakeSize(_videoSize.width, _videoSize.height);
     
-    return YES;
+    return [super makeSizeByWidth:width];
 }
 
 -(DownloadItem *)downloadItem {

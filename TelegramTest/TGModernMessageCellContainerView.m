@@ -13,6 +13,7 @@
 #import "TGModernMessageCellRightView.h"
 #import "POPCGUtils.h"
 #import "TGModalForwardView.h"
+#import "TGCaptionView.h"
 @interface TGModernMessageCellContainerView ()
 
 @property (nonatomic,strong) TMAvatarImageView *photoView;
@@ -27,9 +28,11 @@
 @property (nonatomic,strong) TMView *contentContainerView;
 @property (nonatomic,strong) TGModernForwardCellContainer *forwardContainerView;
 @property (nonatomic,strong) MessageReplyContainer *replyContainer;
-
+@property (nonatomic,strong) TGCaptionView *captionView;
 
 @property (nonatomic,strong) BTRButton *shareView;
+
+
 
 
 @end
@@ -240,6 +243,26 @@
     
 }
 
+-(void)checkAndMakeCaptionView:(MessageTableItem *)item {
+    if(item.caption) {
+        
+        if(!_captionView) {
+            _captionView = [[TGCaptionView alloc] initWithFrame:NSZeroRect];
+            [self.contentContainerView addSubview:_captionView];
+        }
+        
+        [_captionView setFrame:NSMakeRect(0, item.blockSize.height + item.defaultContentOffset , item.blockSize.width, item.captionSize.height)];
+        
+        [_captionView setAttributedString:item.caption fieldSize:item.captionSize];
+        
+        [_captionView setItem:item];
+        
+    } else {
+        [_captionView removeFromSuperview];
+        _captionView = nil;
+    }
+}
+
 
 -(void)checkAndMakeSenderItem:(MessageTableItem *)item {
     if(item.messageSender)  {
@@ -327,15 +350,13 @@
     [self checkAndMakeSenderItem:item];
     [self checkAndMakeRightView:item];
     [self checkAndMakeShareView:item];
+    [self checkAndMakeCaptionView:item];
 }
 
 -(TMView *)containerView {
     return _contentView;
 }
 
-- (void)setRightLayerToEditablePosition:(BOOL)editable {
-    
-}
 
 
 static MessageTableItem *dateEditItem;
@@ -526,10 +547,13 @@ static bool dragAction = NO;
 
 -(void)_didChangeBackgroundColorWithAnimation:(POPBasicAnimation *)anim toColor:(NSColor *)color {
     
-    if(!anim)
+    if(!anim) {
         _nameView.backgroundColor = color;
-     else
+        [_captionView.textView setBackgroundColor:color];
+    }else {
+        [_captionView.textView pop_addAnimation:anim forKey:@"background"];
         [_nameView pop_addAnimation:anim forKey:@"background"];
+    }
     
     
     [_replyContainer _didChangeBackgroundColorWithAnimation:anim toColor:color];
@@ -545,6 +569,15 @@ static bool dragAction = NO;
         [self.messagesViewController setCellsEditButtonShow:NO animated:YES];
         dateEditItem = nil;
     }
+}
+
+-(void)clearSelection {
+    [super clearSelection];
+    [_captionView.textView setSelectionRange:NSMakeRange(NSNotFound, 0)];
+}
+
+-(BOOL)mouseInText:(NSEvent *)theEvent {
+    return [_replyContainer.superview mouse:[_replyContainer.superview convertPoint:[theEvent locationInWindow] fromView:nil] inRect:_replyContainer.frame] || [_captionView.textView mouseInText:theEvent];
 }
 
 -(void)setEditable:(BOOL)editable animated:(BOOL)animated {

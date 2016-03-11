@@ -322,15 +322,4 @@ static NSImage *sharedLinkCapImage() {
 
 
 
--(void)_colorAnimationEvent {
-    
-    CALayer *currentLayer = (CALayer *)[self.textField.layer presentationLayer];
-    
-    id value = [currentLayer valueForKeyPath:@"backgroundColor"];
-    
-    self.textField.layer.backgroundColor = (__bridge CGColorRef)(value);
-    [self.textField setNeedsDisplay:YES];
-    
-}
-
 @end

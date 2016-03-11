@@ -51,7 +51,6 @@ typedef enum {
 - (void)doAfterDownload;
 - (void)startDownload:(BOOL)cancel;
 - (void)updateCellState:(BOOL)animated;
-//- (void)checkStartDownload:(SettingsMask)setting size:(int)size downloadItemClass:(Class)itemClass;
 - (void)setProgressFrameSize:(NSSize)newsize;
 -(void)updateDownloadState;
 - (BOOL)canEdit;
@@ -61,10 +60,6 @@ typedef enum {
 
 - (void)searchSelection;
 - (void)stopSearchSelection;
-
-
-//- (void)setSelected:(BOOL)selected animation:(BOOL)animation;
-//- (void)setEditable:(BOOL)editable animation:(BOOL)animation;
 
 - (void)setProgressToView:(NSView *)view;
 - (void)setProgressStyle:(TMCircularProgressStyle)style;

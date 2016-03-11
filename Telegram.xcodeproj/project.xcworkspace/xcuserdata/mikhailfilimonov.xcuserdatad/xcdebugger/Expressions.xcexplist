@@ -4971,6 +4971,14 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "-[MessageTableItemContact initWithObject:]:MessageTableItemContact.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.contactText">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "-[TMTableView tableViewSelectionDidChange:]:TMTableView.mm">
          <PersistentStrings>
             <PersistentString
@@ -5456,6 +5464,14 @@
       </ContextState>
       <ContextState
          contextName = "__33-[TGModalGifSearch drawResponse:]_block_invoke:TGModalGifSearch.m">
+      </ContextState>
+      <ContextState
+         contextName = "-[MessageTableCellContactView setItem:]:MessageTableCellContactView.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "item.textSize.height">
+            </PersistentString>
+         </PersistentStrings>
       </ContextState>
       <ContextState
          contextName = "-[TLDocument(Extensions) imageSize]:TLDocument+Extension.m">

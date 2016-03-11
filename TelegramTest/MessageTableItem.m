@@ -90,6 +90,18 @@ static NSCache *cItems;
         
         if(self.message) {
             
+            if(self.message.media.caption.length > 0) {
+                NSMutableAttributedString *c = [[NSMutableAttributedString alloc] init];
+                
+                [c appendString:[[self.message.media.caption trim] fixEmoji] withColor:TEXT_COLOR];
+                
+                [c setFont:TGSystemFont(13) forRange:c.range];
+                
+                [c detectAndAddLinks:URLFindTypeHashtags | URLFindTypeLinks | URLFindTypeMentions | (self.user.isBot || self.message.peer.isChat ? URLFindTypeBotCommands : 0)];
+                
+                _caption = c;
+            }
+            
             
             
             TGItemCache *cache = [cItems objectForKey:@(channelMsgId(_isChat ? 1 : 0, object.isPost ? object.peer_id : object.from_id))];
@@ -379,6 +391,10 @@ static NSTextAttachment *channelViewsCountAttachment() {
     
     if([self.message.action isKindOfClass:[TL_messageActionChatMigrateTo class]]) {
         viewSize.height = 1;
+    }
+    
+    if(_caption) {
+        viewSize.height+=_captionSize.height+self.defaultContentOffset;
     }
     
     viewSize.width = self.makeSize + (self.isForwadedMessage ? self.defaultOffset : 0);
@@ -688,11 +704,15 @@ static NSTextAttachment *channelViewsCountAttachment() {
 - (BOOL)makeSizeByWidth:(int)width {
     _blockWidth = width;
     
+    if(_caption) {
+        _captionSize = [_caption coreTextSizeForTextFieldForWidth:self.blockSize.width];
+    }
+    
     _viewsCountAndSignSize = NSMakeSize(MIN(width - _rightSize.width - _headerOriginalSize.width,_viewsCountAndSignOriginalSize.width), self.viewsCountAndSignSize.height);
     
     self.headerSize = NSMakeSize(MIN(_headerOriginalSize.width, width - self.rightSize.width), self.headerSize.height);
     
-    return self.isHeaderMessage;
+    return YES;
 }
 
 -(int)fontSize {

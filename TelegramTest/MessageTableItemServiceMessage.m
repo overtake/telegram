@@ -132,10 +132,8 @@
 }
 
 -(BOOL)makeSizeByWidth:(int)width {
-    [super makeSizeByWidth:width];
     
-    
-    NSSize size = [self.messageAttributedString coreTextSizeForTextFieldForWidth:width];
+     NSSize size = [self.messageAttributedString coreTextSizeForTextFieldForWidth:width];
     
     _textSize = size;
     
@@ -144,7 +142,7 @@
     size.height += self.photoSize.height ? self.photoSize.height + self.defaultContentOffset  : 0;
     self.blockSize = size;
     
-    return YES;
+    return [super makeSizeByWidth:width];
 }
 
 -(Class)viewClass {

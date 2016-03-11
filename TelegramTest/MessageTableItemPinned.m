@@ -43,6 +43,18 @@
     return self;
 }
 
+-(BOOL)makeSizeByWidth:(int)width {
+    
+    NSSize size = [self.messageAttributedString coreTextSizeForTextFieldForWidth:width];
+    
+    self.textSize = size;
+    
+    size.width = width;
+    size.height += self.defaultContentOffset*2;
+    self.blockSize = size;
+    
+    return [super makeSizeByWidth:width];
+}
 
 -(void)update
 {

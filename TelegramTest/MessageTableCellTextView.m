@@ -188,16 +188,6 @@
     }
 }
 
--(void)_colorAnimationEvent {
-    
-    CALayer *currentLayer = (CALayer *)[self.textView.layer presentationLayer];
-    
-    id value = [currentLayer valueForKeyPath:@"backgroundColor"];
-    
-    self.textView.layer.backgroundColor = (__bridge CGColorRef)(value);
-    [self.textView setNeedsDisplay:YES];
-    
-}
 
 
 -(void)setSelected:(BOOL)selected animated:(BOOL)animated {

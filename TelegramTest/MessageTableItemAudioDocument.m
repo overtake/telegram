@@ -64,7 +64,7 @@
     
     NSMutableParagraphStyle *style = [[NSMutableParagraphStyle alloc] init];
     style.lineBreakMode = NSLineBreakByTruncatingMiddle;
-    
+    style.lineSpacing = 2;
     [attr addAttribute:NSParagraphStyleAttributeName value:style range:attr.range];
 
     
@@ -160,11 +160,10 @@
 }
 
 -(BOOL)makeSizeByWidth:(int)width {
-    [super makeSizeByWidth:width];
     
     self.blockSize = NSMakeSize(width, 40);
     _nameSize = [_nameAttributedString coreTextSizeForTextFieldForWidth:width - 60];
-    return YES;
+    return [super makeSizeByWidth:width];
 }
 
 -(Class)viewClass {

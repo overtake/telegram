@@ -53,21 +53,11 @@
 
 
 -(BOOL)makeSizeByWidth:(int)width {
-    [super makeSizeByWidth:width];
-    
-    
     _imageSize = strongsize(self.imageObject.realSize, MIN(MIN_IMG_SIZE.width,width));
         
-    if(_caption) {
-        _captionSize = [_caption coreTextSizeForTextFieldForWidth:_imageSize.width ];
-        _captionSize.width = _imageSize.width ;
-    }
+    self.blockSize = NSMakeSize(_imageSize.width, _imageSize.height);
     
-    int captionHeight = _captionSize.height ? _captionSize.height + 5 : 0;
-    
-    self.blockSize = NSMakeSize(_imageSize.width, MAX(_imageSize.height + captionHeight,30 + captionHeight));
-    
-    return YES;
+    return [super makeSizeByWidth:width];
 }
 
 -(BOOL)needUploader {
@@ -120,17 +110,7 @@
         imageSize.height = MAX(MIN_IMG_SIZE.height,imageSize.height);
     }
     
-    if(self.message.media.caption.length > 0) {
-        NSMutableAttributedString *c = [[NSMutableAttributedString alloc] init];
-        
-        [c appendString:[[self.message.media.caption trim] fixEmoji] withColor:TEXT_COLOR];
-        
-        [c setFont:TGSystemFont(13) forRange:c.range];
-        
-        [c detectAndAddLinks:URLFindTypeHashtags | URLFindTypeLinks | URLFindTypeMentions | (self.user.isBot || self.message.peer.isChat ? URLFindTypeBotCommands : 0)];
-        
-        _caption = c;
-    }
+
     
     self.imageObject.imageSize = imageSize;
     

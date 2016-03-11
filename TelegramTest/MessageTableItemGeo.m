@@ -45,10 +45,8 @@
 }
 
 -(BOOL)makeSizeByWidth:(int)width {
-    [super makeSizeByWidth:width];
     
-    
-    NSSize size = NSMakeSize(width, [self.message.media isKindOfClass:[TL_messageMediaVenue class]] ? 60 : 130);
+   NSSize size = NSMakeSize(width, [self.message.media isKindOfClass:[TL_messageMediaVenue class]] ? 60 : 130);
     
     self.blockSize = size;
     self.venueSize = [_venue coreTextSizeForTextFieldForWidth:width - 60 - self.defaultOffset];
@@ -57,7 +55,7 @@
         
     _imageSize = imageSize;
     
-    return YES;
+    return [super makeSizeByWidth:width];
 }
 
 -(Class)viewClass {

@@ -90,11 +90,9 @@
 }
 
 -(BOOL)makeSizeByWidth:(int)width {
-    [super makeSizeByWidth:width];
-    
     self.blockSize = NSMakeSize(width, self.thumbSize.height);
     
-    return YES;
+    return [super makeSizeByWidth:width];
 }
 
 

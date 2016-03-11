@@ -23,7 +23,6 @@
 @property (nonatomic, strong) NSImageView *playImage;
 @property (nonatomic,strong) BTRButton *downloadButton;
 @property (nonatomic, strong) MessageCellDescriptionView *videoTimeView;
-@property (nonatomic,strong) TGCaptionView *captionView;
 
 @property (nonatomic,assign) NSPoint startDragLocation;
 @end
@@ -124,28 +123,6 @@ static NSImage *playImage() {
 
 }
 
--(void)clearSelection {
-    [super clearSelection];
-    [_captionView.textView setSelectionRange:NSMakeRange(NSNotFound, 0)];
-}
-
--(BOOL)mouseInText:(NSEvent *)theEvent {
-    return [_captionView.textView mouseInText:theEvent] || [super mouseInText:theEvent];
-}
-
--(void)initCaptionTextView {
-    if(!_captionView) {
-        _captionView = [[TGCaptionView alloc] initWithFrame:NSZeroRect];
-        [self.containerView addSubview:_captionView];
-    }
-}
-
-
-- (void)deallocCaptionTextView {
-    [_captionView removeFromSuperview];
-    _captionView = nil;
-}
-
 - (void)setCellState:(CellState)cellState animated:(BOOL)animated  {
     [super setCellState:cellState animated:animated];
     
@@ -197,20 +174,6 @@ static NSImage *playImage() {
     
     [self updateVideoTimeView];
     
-    
-    if(item.caption) {
-        [self initCaptionTextView];
-        
-        [_captionView setFrame:NSMakeRect(0, NSHeight(self.containerView.frame) - item.captionSize.height , item.videoSize.width, item.captionSize.height)];
-        
-        [_captionView setAttributedString:item.caption fieldSize:item.captionSize];
-        [_captionView setItem:item];
-        
-    } else {
-        [self deallocCaptionTextView];
-    }
-
-
 }
 
 
@@ -239,35 +202,6 @@ static NSImage *playImage() {
     [super onStateChanged:item];
 }
 
--(void)_didChangeBackgroundColorWithAnimation:(POPBasicAnimation *)anim toColor:(NSColor *)color {
-    
-    [super _didChangeBackgroundColorWithAnimation:anim toColor:color];
-    
-    if(!_captionView.textView) {
-        return;
-    }
-    
-    if(!anim)
-        _captionView.backgroundColor = color;
-     else
-        [_captionView.textView pop_addAnimation:anim forKey:@"background"];
-
-}
-
-
-
--(void)_colorAnimationEvent {
-    
-    if(!_captionView.textView)
-        return;
-    
-    CALayer *currentLayer = (CALayer *)[_captionView.textView.layer presentationLayer];
-    
-    id value = [currentLayer valueForKeyPath:@"backgroundColor"];
-    
-    _captionView.textView.layer.backgroundColor = (__bridge CGColorRef)(value);
-    [_captionView.textView setNeedsDisplay:YES];
-}
 
 -(void)mouseDown:(NSEvent *)theEvent {
     

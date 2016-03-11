@@ -20,7 +20,6 @@
 
 @interface MessageTableCellPhotoView()<TGImageObjectDelegate>
 @property (nonatomic,strong) NSImageView *fireImageView;
-@property (nonatomic,strong) TGCaptionView *captionView;
 
 @property (nonatomic,assign) NSPoint startDragLocation;
 
@@ -154,19 +153,6 @@ NSImage *fireImage() {
 
 
 
--(void)initCaptionTextView {
-    if(!_captionView) {
-        _captionView = [[TGCaptionView alloc] initWithFrame:NSZeroRect];
-        [self.containerView addSubview:_captionView];
-    }
-}
-
-
-- (void)deallocCaptionTextView {
-    [_captionView removeFromSuperview];
-    _captionView = nil;
-}
-
 
 -(void)setCellState:(CellState)cellState animated:(BOOL)animated {
     
@@ -234,19 +220,6 @@ NSImage *fireImage() {
     
     [self updateDownloadListeners];
     
-    
-    if(item.caption) {
-        [self initCaptionTextView];
-        
-        [_captionView setFrame:NSMakeRect(0, NSHeight(self.containerView.frame) - item.captionSize.height , item.imageSize.width, item.captionSize.height)];
-        
-        [_captionView setAttributedString:item.caption fieldSize:item.captionSize];
-        
-        [_captionView setItem:item];
-        
-    } else {
-        [self deallocCaptionTextView];
-    }
         
 }
 
@@ -286,14 +259,9 @@ NSImage *fireImage() {
 
 
 
--(void)clearSelection {
-    [super clearSelection];
-    [_captionView.textView setSelectionRange:NSMakeRange(NSNotFound, 0)];
-}
 
--(BOOL)mouseInText:(NSEvent *)theEvent {
-    return [_captionView.textView mouseInText:theEvent] || [super mouseInText:theEvent];
-}
+
+
 
 -(void)setEditable:(BOOL)editable animated:(BOOL)animated
 {
@@ -352,36 +320,8 @@ NSImage *fireImage() {
 }
 
 
--(void)_didChangeBackgroundColorWithAnimation:(POPBasicAnimation *)anim toColor:(NSColor *)color {
-    
-    [super _didChangeBackgroundColorWithAnimation:anim toColor:color];
-    
-    if(!_captionView.textView) {
-        return;
-    }
-    
-    if(!anim)
-        _captionView.textView.backgroundColor = color;
-     else
-        [_captionView.textView pop_addAnimation:anim forKey:@"background"];
-    
-  
-}
 
 
-
--(void)_colorAnimationEvent {
-    
-    if(!_captionView.textView)
-        return;
-    
-    CALayer *currentLayer = (CALayer *)[_captionView.textView.layer presentationLayer];
-    
-    id value = [currentLayer valueForKeyPath:@"backgroundColor"];
-    
-    _captionView.textView.layer.backgroundColor = (__bridge CGColorRef)(value);
-    [_captionView.textView setNeedsDisplay:YES];
-}
 
 -(void)dealloc {
     MessageTableItemPhoto *item = (MessageTableItemPhoto *) self.item;

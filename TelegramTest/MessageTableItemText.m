@@ -250,10 +250,6 @@
 }
 
 - (BOOL)makeSizeByWidth:(int)width {
-    
-    
-    [super makeSizeByWidth:width];
-    
     [_webpage makeSize:width - self.defaultOffset];
     
     _allAttributedLinksSize = [_allAttributedLinks coreTextSizeForTextFieldForWidth:width];
@@ -263,7 +259,7 @@
     
     self.blockSize = NSMakeSize(width, _textSize.height + ([self isWebPage] ? [_webpage blockHeight] + self.defaultContentOffset : 0));
     
-    return YES;
+    return [super makeSizeByWidth:width];
 }
 
 

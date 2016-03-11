@@ -9,12 +9,11 @@
 #import "MessageTableCellContactView.h"
 #import "TMAvatarImageView.h"
 #import "TMBlueAddButtonView.h"
+#import "TGCTextView.h"
 @interface MessageTableCellContactView()
 
-@property (nonatomic, strong) TMAvatarImageView *contactImageView;
-@property (nonatomic, strong) TMTextButton *titleTextButton;
-@property (nonatomic, strong) NSTextView *phoneNumberTextView;
-@property (nonatomic, strong) TMBlueAddButtonView *addButton;
+@property (nonatomic, strong) TMAvatarImageView *photoView;
+@property (nonatomic, strong) TGCTextView *textView;
 @end
 
 @implementation MessageTableCellContactView
@@ -31,28 +30,46 @@
             }
         };
         
-        self.contactImageView = [TMAvatarImageView standartMessageTableAvatar];
-        [self.contactImageView setFrameOrigin:NSMakePoint(0, 0)];
-        [self.contactImageView setTapBlock:block];
-        [self.containerView addSubview:self.contactImageView];
+        self.photoView = [TMAvatarImageView standartTableAvatar];
+        [self.photoView setFrameOrigin:NSMakePoint(0, 0)];
+        [self.photoView setTapBlock:block];
+        [self.containerView addSubview:self.photoView];
         
-        self.titleTextButton = [[TMTextButton alloc] init];
-        [[self.titleTextButton cell] setTruncatesLastVisibleLine:YES];
-        [[self.titleTextButton cell] setLineBreakMode:NSLineBreakByTruncatingTail];
-        [self.titleTextButton setFont:TGSystemFont(12)];
-        [self.titleTextButton setTextColor:LINK_COLOR];
-        [self.titleTextButton setTapBlock:block];
-        [self.titleTextButton setFrameOrigin:NSMakePoint(self.contactImageView.bounds.size.width + 10, 20)];
-        [self.containerView addSubview:self.titleTextButton];
+        self.textView = [[TGCTextView alloc] initWithFrame:NSZeroRect];
         
-        self.phoneNumberTextView = [[NSTextView alloc] initWithFrame:NSMakeRect(0, 0, 100, 20)];
-        [self.phoneNumberTextView setDrawsBackground:NO];
-        [self.phoneNumberTextView setEditable:NO];
-        [self.phoneNumberTextView setFrameOrigin:NSMakePoint(self.contactImageView.bounds.size.width + 8, -3)];
-        [self.phoneNumberTextView setFont:TGSystemFont(12)];
-        [self.containerView addSubview:self.phoneNumberTextView];
+        [self.textView setLinkCallback:^(NSString *link) {
+            
+            MessageTableItemContact *item = (MessageTableItemContact *) weakSelf.item;
+            
+            if([link isEqualToString:@"chat://addcontact"]) {
+                [weakSelf.messagesViewController showModalProgress];
+                
+                [[NewContactsManager sharedManager] importContact:[TL_inputPhoneContact createWithClient_id:rand_long() phone:item.message.media.phone_number first_name:item.message.media.first_name last_name:item.message.media.last_name] callback:^(BOOL isAdd, TL_importedContact *contact, TLUser *user) {
+                    
+                    [item doAfterDownload];
+                    
+                    [NSAnimationContext runAnimationGroup:^(NSAnimationContext * _Nonnull context) {
+                        
+                        [[weakSelf.textView animator] setFrameSize:item.textSize];
+                        [[weakSelf.textView animator] setFrameOrigin:NSMakePoint(NSMinX(weakSelf.textView.frame), roundf((item.blockSize.height - item.textSize.height)/2))];
+                        
+                    } completionHandler:^{
+                        
+                    }];
+                    
+                    [weakSelf.messagesViewController hideModalProgress];
+                    
+                }];
+                
+            } else {
+                open_link(link);
+            }
+            
+        }];
         
-        self.addButton = [[TMBlueAddButtonView alloc] initWithFrame:NSMakeRect(0, 0, 60, 25)];
+        [self.containerView addSubview:_textView];
+        
+    
     }
     return self;
 }
@@ -64,43 +81,37 @@
 - (void)setItem:(MessageTableItemContact *)item {
     [super setItem:item];
     
-    self.titleTextButton.stringValue = item.contactName;
-    [self.titleTextButton setFrameSize:item.contactNameSize];
+    if(item.contactUser)
+        [self.photoView setUser:item.contactUser];
+     else
+         [self.photoView setText:item.contactText];
     
-    NSPoint point = self.phoneNumberTextView.frame.origin;
+    [self.textView setEditable:item.contactUser == nil];
+    
+    [_textView setAttributedString:item.attributedText];
+    [_textView setFrame:NSMakeRect(NSMaxX(self.photoView.frame) + item.defaultOffset, 0, item.textSize.width, item.textSize.height)];
+    [_textView setCenteredYByView:_textView.superview];
+    
+}
 
 
-    [self.phoneNumberTextView setString:item.contactNumberString];
-    [self.phoneNumberTextView setFrameSize:item.contactNumberSize];
-    [self.phoneNumberTextView setNeedsDisplay:YES];
+-(void)clearSelection {
+    [super clearSelection];
+    [_textView setSelectionRange:NSMakeRange(NSNotFound, 0)];
+}
+
+-(BOOL)mouseInText:(NSEvent *)theEvent {
+    return [_textView mouseInText:theEvent] || [super mouseInText:theEvent];
+}
+
+-(void)_didChangeBackgroundColorWithAnimation:(POPBasicAnimation *)anim toColor:(NSColor *)color {
     
-    [self.phoneNumberTextView setFrameOrigin:point];
+    [super _didChangeBackgroundColorWithAnimation:anim toColor:color];
     
-    
-    
-    if(item.contactUser) {
-        [self.contactImageView setUser:item.contactUser];
-    } else {
-        [self.contactImageView setText:item.contactText];
-    }
-    
-    [self.titleTextButton setTextColor:item.contactUser ? LINK_COLOR : NSColorFromRGB(0x222222)];
-    [self.titleTextButton setDisable:!item.contactUser];
-    
-    [self.addButton setHidden:item.contactUser.type != TLUserTypeForeign && item.contactUser.type != TLUserTypeRequest];
-    
-    if(item.contactUser.type == TLUserTypeForeign || item.contactUser.type == TLUserTypeRequest) {
-        
-        self.addButton.phoneNumber = item.contactNumberString;
-        self.addButton.contact = item.contactUser;
-        
-        if(!self.addButton.superview) {
-            [self.addButton setString:NSLocalizedString(@"Messages.AddContact", nil)];
-            [self.containerView addSubview:self.addButton];
-            [self.addButton setFrameOrigin:NSMakePoint(MAX(NSMaxX(self.phoneNumberTextView.frame),NSMaxX(_titleTextButton.frame)) + 0, 4)];
-        }
-    }
-    
+    if(!anim)
+        _textView.backgroundColor = color;
+    else
+        [_textView pop_addAnimation:anim forKey:@"background"];
 }
 
 
