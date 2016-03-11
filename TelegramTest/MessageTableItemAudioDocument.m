@@ -161,8 +161,10 @@
 
 -(BOOL)makeSizeByWidth:(int)width {
     
-    self.blockSize = NSMakeSize(width, 40);
-    _nameSize = [_nameAttributedString coreTextSizeForTextFieldForWidth:width - 60];
+    _nameSize = [_nameAttributedString coreTextSizeForTextFieldForWidth:width - 40 - self.defaultOffset];
+    
+    self.blockSize = NSMakeSize(_nameSize.width + 40 + self.defaultOffset, 40);
+    
     return [super makeSizeByWidth:width];
 }
 

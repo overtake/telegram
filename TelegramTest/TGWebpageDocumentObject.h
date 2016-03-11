@@ -11,8 +11,6 @@
 @interface TGWebpageDocumentObject : TGWebpageObject
 
 -(TL_localMessage *)fakeMessage;
+@property (nonatomic,strong,readonly) MessageTableItem *documentItem;
 
--(DownloadItem *)downloadItem;
--(BOOL)isset;
--(void)startDownload:(BOOL)cancel force:(BOOL)force;
 @end

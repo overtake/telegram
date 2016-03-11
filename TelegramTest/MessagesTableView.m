@@ -229,7 +229,7 @@
             [self noteHeightOfRowsWithIndexesChanged:[NSIndexSet indexSetWithIndexesInRange:visibleRows]];
             
             for(MessageTableCell *cell in array) {
-                [cell resizeAndRedraw];
+                [cell setItem:cell.item];
             }
             
             

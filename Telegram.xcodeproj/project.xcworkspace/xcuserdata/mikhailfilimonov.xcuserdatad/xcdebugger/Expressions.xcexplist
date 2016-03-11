@@ -1565,6 +1565,17 @@
          contextName = "__42-[NewContactsManager remoteCheckContacts:]_block_invoke_3:NewContactsManager.m">
       </ContextState>
       <ContextState
+         contextName = "-[MessageTableCellDocumentView setCellState:animated:]:MessageTableCellDocumentView.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.actionsTextField.text">
+            </PersistentString>
+            <PersistentString
+               value = "self.cellState">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "__56-[TGModernConversationHistoryController performLoadNext]_block_invoke180:TGModernConversationHistoryController.m">
       </ContextState>
       <ContextState

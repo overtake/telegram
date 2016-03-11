@@ -211,6 +211,10 @@
         return [[TGWebpageArticle alloc] initWithWebPage:webpage tableItem:item];
     }
     
+    if(webpage.document) {
+        return [[TGWebpageDocumentObject alloc] initWithWebPage:webpage tableItem:item];
+    }
+    
     if([webpage.type isEqualToString:@"document"] || [webpage.type isEqualToString:@"gif"]) {
         
         id animated = [webpage.document attributeWithClass:[TL_documentAttributeAnimated class]];

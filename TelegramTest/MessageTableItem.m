@@ -65,6 +65,9 @@ static NSCache *cItems;
     if(self) {
         self.message = object;
         
+        if(object.isFake)
+            return self; // fake message;
+        
         static dispatch_once_t onceToken;
         dispatch_once(&onceToken, ^{
             cItems = [[NSCache alloc] init];
@@ -393,9 +396,6 @@ static NSTextAttachment *channelViewsCountAttachment() {
         viewSize.height = 1;
     }
     
-    if(_caption) {
-        viewSize.height+=_captionSize.height+self.defaultContentOffset;
-    }
     
     viewSize.width = self.makeSize + (self.isForwadedMessage ? self.defaultOffset : 0);
     
@@ -706,7 +706,9 @@ static NSTextAttachment *channelViewsCountAttachment() {
     
     if(_caption) {
         _captionSize = [_caption coreTextSizeForTextFieldForWidth:self.blockSize.width];
+        self.blockSize = NSMakeSize(self.blockSize.width, self.blockSize.height + _captionSize.height + self.defaultContentOffset);
     }
+    
     
     _viewsCountAndSignSize = NSMakeSize(MIN(width - _rightSize.width - _headerOriginalSize.width,_viewsCountAndSignOriginalSize.width), self.viewsCountAndSignSize.height);
     

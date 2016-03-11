@@ -331,8 +331,8 @@
     
     int c = roundf((NSHeight(self.containerView.frame) - NSHeight(self.durationView.frame))/2);
     
-    [_waveformView setFrameOrigin:NSMakePoint(NSMaxX(_playView.frame) + item.defaultOffset, roundf((NSHeight(self.containerView.frame) - NSHeight(_waveformView.frame))/2) + item.defaultContentOffset + 4)];
-    [self.durationView setFrameOrigin:NSMakePoint(NSMaxX(_playView.frame) + item.defaultOffset, c - NSHeight(self.durationView.frame) + 2)];
+    [_waveformView setFrameOrigin:NSMakePoint(NSMaxX(_playView.frame) + item.defaultOffset, roundf((NSHeight(self.containerView.frame) - NSHeight(_waveformView.frame))/2) + item.defaultContentOffset )];
+    [self.durationView setFrameOrigin:NSMakePoint(NSMaxX(_playView.frame) + item.defaultOffset, c - NSHeight(self.durationView.frame) - 2)];
  
     if(item.state != AudioStatePlaying && item.state != AudioStatePaused)
         [self updateCellState:NO];

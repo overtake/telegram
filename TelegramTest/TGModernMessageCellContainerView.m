@@ -248,10 +248,10 @@
         
         if(!_captionView) {
             _captionView = [[TGCaptionView alloc] initWithFrame:NSZeroRect];
-            [self.contentContainerView addSubview:_captionView];
+            [self.containerView addSubview:_captionView];
         }
         
-        [_captionView setFrame:NSMakeRect(0, item.blockSize.height + item.defaultContentOffset , item.blockSize.width, item.captionSize.height)];
+        [_captionView setFrame:NSMakeRect(0, item.blockSize.height - item.captionSize.height, item.blockSize.width, item.captionSize.height)];
         
         [_captionView setAttributedString:item.caption fieldSize:item.captionSize];
         
@@ -275,7 +275,6 @@
     [self checkActionState:NO];
     
 }
-
 
 - (void)checkActionState:(BOOL)animated {
     
@@ -336,7 +335,6 @@
 -(void)setItem:(MessageTableItem *)item {
     [super setItem:item];
     
-  //  self.layer.backgroundColor = item.rowId % 2 == 0 ? [NSColor blueColor].CGColor : [NSColor greenColor].CGColor;
     
     int yStartContentOffset = item.isHeaderMessage ? item.headerSize.height + item.contentHeaderOffset + item.defaultContentOffset : item.defaultContentOffset;
     

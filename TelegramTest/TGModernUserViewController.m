@@ -19,6 +19,7 @@
 #import "TGReportChannelModalView.h"
 #import "FullUsersManager.h"
 #import "NSData+Extensions.h"
+#import "Crypto.h"
 @interface TGModernUserViewController ()
 @property (nonatomic,strong) TLUser *user;
 @property (nonatomic,strong) TL_conversation *conversation;
@@ -290,9 +291,7 @@
     
     
     GeneralSettingsRowItem *encryptionKeyItem = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeNext callback:^(TGGeneralRowItem *item) {
-        
-        if(!ACCEPT_FEATURE)
-            return;
+
         
         EncryptedKeyViewController *viewController = [[EncryptedKeyViewController alloc] initWithFrame:NSZeroRect];
         
@@ -304,7 +303,7 @@
         
         EncryptedParams *params = [EncryptedParams findAndCreate:weakSelf.conversation.encryptedChat.n_id];
         
-        NSData *keyData = [MTSha1([params.firstKey subdataWithRange:NSMakeRange(0, 16)]) dataWithData:MTSha256([params.firstKey subdataWithRange:NSMakeRange(0, 16)])];
+        NSData *keyData = [Crypto sha1:[params firstKey]];
         return TGIdenticonImage(keyData,CGSizeMake(16, 16));
         
     }];

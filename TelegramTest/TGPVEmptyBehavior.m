@@ -34,6 +34,7 @@
     
     [list enumerateObjectsUsingBlock:^(PreviewObject *obj, NSUInteger idx, BOOL *stop) {
         
+        TL_localMessage *message = obj.media;
         
         if([obj.media isKindOfClass:[TLPhotoSize class]]) {
             
@@ -46,14 +47,32 @@
             
             
             [converted addObject:item];
-        } else if([[(TL_localMessage *)obj.media media] isKindOfClass:[TL_messageMediaDocument class]] || [[(TL_localMessage *)obj.media media] isKindOfClass:[TL_messageMediaDocument_old44 class]]) {
+        } else if([message.media isKindOfClass:[TL_messageMediaDocument class]] || [message.media isKindOfClass:[TL_messageMediaDocument_old44 class]]) {
+            
+            TL_documentAttributeVideo *video = (TL_documentAttributeVideo *) [message.media.document attributeWithClass:[TL_documentAttributeVideo class]];
+            
+            id item;
+            
+            if(video) {
+                TGPVImageObject *imgObj = [[TGPVImageObject alloc] initWithLocation:message.media.document.thumb.location thumbData:nil size:message.media.document.thumb.size];
+                
+                imgObj.imageSize = NSMakeSize(video.w, video.h);
+                
+                imgObj.imageProcessor = [ImageUtils b_processor];
+                
+                item = [[TGVideoViewerItem alloc] initWithImageObject:imgObj previewObject:obj];
+
+            } else {
+                TGPVDocumentObject *imgObj = [[TGPVDocumentObject alloc] initWithMessage:obj.media placeholder:[[NSImage alloc] initWithContentsOfFile:mediaFilePath(obj.media)]];
+                
+                item = [[TGPhotoViewerItem alloc] initWithImageObject:imgObj previewObject:obj];
+                
+            }
+            
+            if(item)
+                [converted addObject:item];
             
             
-            TGPVDocumentObject *imgObj = [[TGPVDocumentObject alloc] initWithMessage:obj.media placeholder:[[NSImage alloc] initWithContentsOfFile:mediaFilePath(obj.media)]];
-            
-            
-            TGPhotoViewerItem *item = [[TGPhotoViewerItem alloc] initWithImageObject:imgObj previewObject:obj];
-            [converted addObject:item];
         }
         
     }];

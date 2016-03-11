@@ -167,9 +167,13 @@
 -(void)selectTableDidChangedItem:(id)item {
     
     
+    
+    
     [self.ok setTitle:_tableView.selectedItems.count == 0 && self.isShareModalType ? NSLocalizedString(@"Conversation.Action.CopyShareLink", nil) : NSLocalizedString(@"Conversation.Action.Share", nil) forControlState:BTRControlStateNormal];
     
-
+    [self updateCounterOrigin];
+    
+    
     [self.ok setEnabled:_tableView.selectedItems.count > 0 || self.isShareModalType];
     [self.ok setTitleColor:_tableView.selectedItems.count > 0 || self.isShareModalType ? LINK_COLOR : GRAY_TEXT_COLOR forControlState:BTRControlStateNormal];
 

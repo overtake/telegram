@@ -449,16 +449,22 @@ static const int bottomHeight = 60;
 
 -(NSAttributedString *)caption {
     
-    if([_currentViewerItem.previewObject.media isKindOfClass:[TL_localMessage class]] && [[(TL_localMessage *)_currentViewerItem.previewObject.media media] isKindOfClass:[TL_messageMediaPhoto class]]) {
-        NSMutableAttributedString *attr = [[NSMutableAttributedString alloc] init];
+    if([_currentViewerItem.previewObject.media isKindOfClass:[TL_localMessage class]]) {
+        TL_localMessage *message = _currentViewerItem.previewObject.media;
         
-        [attr appendString:[(TL_messageMediaPhoto *)[(TL_localMessage *)_currentViewerItem.previewObject.media media] caption] withColor:[NSColor whiteColor]];
-        
-        [attr setFont:TGSystemFont(13) forRange:attr.range];
-        
-        return attr;
+        if(message.media.caption.length > 0) {
+            NSMutableAttributedString *attr = [[NSMutableAttributedString alloc] init];
+            
+            [attr appendString:message.media.caption withColor:[NSColor whiteColor]];
+            
+            [attr setFont:TGSystemFont(13) forRange:attr.range];
+            
+            return attr;
+        }
     }
+    
     return nil;
+
 }
 
 

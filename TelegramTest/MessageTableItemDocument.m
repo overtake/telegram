@@ -29,34 +29,7 @@
         
         _fileSize = [[NSString sizeToTransformedValuePretty:self.message.media.document.size] trim];
         
-        NSMutableAttributedString *attr = [[NSMutableAttributedString alloc] init];
-        
-        [attr appendString:self.message.media.document.file_name withColor:TEXT_COLOR];
-        
-        [attr setFont:TGSystemMediumFont(13) forRange:attr.range];
-        
-        [attr appendString:@"\n"];
-        NSRange range = [attr appendString:_fileSize withColor:GRAY_TEXT_COLOR];
-        
-        [attr setFont:TGSystemFont(13) forRange:range];
-        
-        if(![self isHasThumb]) {
-            range = [attr appendString:@" - " withColor:GRAY_TEXT_COLOR];
-            [attr setFont:TGSystemFont(13) forRange:range];
-            range = [attr appendString:NSLocalizedString(@"Message.File.ShowInFinder", nil) withColor:LINK_COLOR];
-            [attr setFont:TGSystemFont(13) forRange:range];
-            [attr setLink:@"chat://finder" forRange:range];
-        }
-        
-        NSMutableParagraphStyle *style = [[NSMutableParagraphStyle alloc] init];
-        style.lineBreakMode = NSLineBreakByTruncatingMiddle;
-        style.lineSpacing = 2;
-        
-        [attr addAttribute:NSParagraphStyleAttributeName value:style range:attr.range];
-        
-        _fileNameAttrubutedString = attr;
-        
-        _fileNameSize = [attr coreTextSizeForTextFieldForWidth:INT32_MAX];
+        [self doAfterDownload];
         
         NSSize size;
         
@@ -90,7 +63,10 @@
 }
 
 -(BOOL)makeSizeByWidth:(int)width {
-    self.blockSize = NSMakeSize(width, self.thumbSize.height);
+    
+    _fileNameSize = [_fileNameAttrubutedString coreTextSizeForTextFieldForWidth:width - self.thumbSize.width - self.defaultOffset];
+    
+    self.blockSize = NSMakeSize(MAX(_fileNameSize.width,120) + self.thumbSize.width + self.defaultOffset, self.thumbSize.height);
     
     return [super makeSizeByWidth:width];
 }
@@ -117,6 +93,34 @@
 
 - (void)doAfterDownload {
     [super doAfterDownload];
+    
+    NSMutableAttributedString *attr = [[NSMutableAttributedString alloc] init];
+    
+    [attr appendString:self.message.media.document.file_name withColor:TEXT_COLOR];
+    
+    [attr setFont:TGSystemMediumFont(13) forRange:attr.range];
+    
+    [attr appendString:@"\n"];
+    NSRange range = [attr appendString:_fileSize withColor:GRAY_TEXT_COLOR];
+    
+    [attr setFont:TGSystemFont(13) forRange:range];
+    
+    if(![self isHasThumb] && self.isset) {
+        range = [attr appendString:@" - " withColor:GRAY_TEXT_COLOR];
+        [attr setFont:TGSystemFont(13) forRange:range];
+        range = [attr appendString:NSLocalizedString(@"Message.File.ShowInFinder", nil) withColor:LINK_COLOR];
+        [attr setFont:TGSystemFont(13) forRange:range];
+        [attr setLink:@"chat://finder" forRange:range];
+    }
+    
+    NSMutableParagraphStyle *style = [[NSMutableParagraphStyle alloc] init];
+    style.lineBreakMode = NSLineBreakByTruncatingMiddle;
+    style.lineSpacing = 2;
+    
+    [attr addAttribute:NSParagraphStyleAttributeName value:style range:attr.range];
+    
+    _fileNameAttrubutedString = attr;
+    
     
 }
 

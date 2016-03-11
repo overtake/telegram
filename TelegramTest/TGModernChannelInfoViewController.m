@@ -283,7 +283,7 @@
         GeneralSettingsRowItem *membersItem;
         GeneralSettingsRowItem *blacklistItem;
         GeneralSettingsRowItem *addMembersItem;
-        
+        GeneralSettingsRowItem *inviteViaLink;
         if(_chat.username.length > 0) {
             TGProfileParamItem *linkItem = [[TGProfileParamItem alloc] initWithHeight:30];
             
@@ -366,6 +366,17 @@
                 } description:NSLocalizedString(@"Settings.BlackList", nil) subdesc:[NSString stringWithFormat:@"%d",weakSelf.chat.chatFull.kicked_count] height:42 stateback:nil];
             }
             
+            inviteViaLink = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeNone callback:^(TGGeneralRowItem *item) {
+                
+                ChatExportLinkViewController *export = [[ChatExportLinkViewController alloc] initWithFrame:NSZeroRect];
+                
+                [export setChat:weakSelf.chat.chatFull];
+                
+                [weakSelf.navigationViewController pushViewController:export animated:YES];
+                
+                
+            } description:NSLocalizedString(@"Modern.Channel.InviteViaLink", nil) height:42 stateback:nil];
+            
         } else {
             
             if(!_chat.isMegagroup && !self.isDisclosureController) {
@@ -390,6 +401,8 @@
         if(_chat.isMegagroup) {
             if(addMembersItem)
                 [_tableView addItem:addMembersItem tableRedraw:YES];
+            if(_chat.isCreator)
+                [_tableView addItem:inviteViaLink tableRedraw:YES];
          } else {
             if(membersItem)
                 [_tableView addItem:membersItem tableRedraw:YES];

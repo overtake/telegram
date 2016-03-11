@@ -14,7 +14,6 @@
 #import "PhotoVideoHistoryFilter.h"
 #import "TGVideoViewerItem.h"
 @interface TGPVMediaBehavior () <MessagesDelegate>
-
 @end
 
 @implementation TGPVMediaBehavior

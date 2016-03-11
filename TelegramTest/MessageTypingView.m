@@ -307,6 +307,8 @@ const NSTimeInterval typingIntervalSecond = 0.14;
     }
 }
 
+
+
 - (void)_typingAnimationEvent
 {
     if (_typingDots.count == 0)

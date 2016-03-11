@@ -86,6 +86,9 @@
         [Notification perform:MESSAGE_CHANGED_DSTATE data:@{KEY_MESSAGE:self}];
 }
 
+-(BOOL)isFake {
+    return self.to_id == nil;
+}
 
 +(TL_localMessage *)convertReceivedMessage:(TLMessage *)message {
     

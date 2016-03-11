@@ -177,7 +177,7 @@
 }
 
 -(int)maxFieldWidth {
-    return self.item.viewSize.width - (NSMaxX(self.thumbView.frame) + self.item.defaultOffset*2);
+    return self.item.blockSize.width - NSWidth(self.attachButton.frame) - self.item.defaultOffset;
 }
 
 - (void)startDownload:(BOOL)cancel {
@@ -395,8 +395,7 @@
     [self updateDownloadState];
     
     
-    
-    [self.fileNameTextField setFrameSize:NSMakeSize(self.maxFieldWidth, item.fileNameSize.height)];
+    [self.fileNameTextField setFrameSize:item.fileNameSize];
     
     [self updateFrames];
 
@@ -418,10 +417,12 @@
     PreviewObject *previewObject = [[PreviewObject alloc] initWithMsdId:self.item.message.n_id media:self.item.message peer_id:self.item.message.peer_id];
     
     if([document_preview_mime_types() indexOfObject:self.item.message.media.document.mime_type] != NSNotFound) {
-        [[TGPhotoViewer viewer] showDocuments:previewObject conversation:self.item.message.conversation];
+        if(!self.item.message.isFake)
+            [[TGPhotoViewer viewer] showDocuments:previewObject conversation:self.item.message.conversation];
+        else
+            [[TGPhotoViewer viewer] show:previewObject];
     } else {
-        TMPreviewDocumentItem *item = [[TMPreviewDocumentItem alloc] initWithItem:previewObject];
-        [[TMMediaController controller] show:item];
+        [self openInQuickLook:nil];
     }
     
 }

@@ -110,7 +110,12 @@ static NSImage *playImage() {
     
     if (floor(NSAppKitVersionNumber) > 1187)  {
     
-        [[TGPhotoViewer viewer] show:previewObject conversation:self.item.message.conversation isReversed:YES];
+        if(!self.item.message.isFake) {
+            [[TGPhotoViewer viewer] show:previewObject conversation:self.item.message.conversation isReversed:YES];
+        } else {
+            [[TGPhotoViewer viewer] show:previewObject];
+        }
+        
         
     } else {
         

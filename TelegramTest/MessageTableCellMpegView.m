@@ -193,9 +193,9 @@
     
     BOOL (^check_block)() = ^BOOL() {
         
-        BOOL completelyVisible = self.visibleRect.size.width > 0 && self.visibleRect.size.height > 0 && ![TMViewController isModalActive];
+        BOOL completelyVisible = self.containerView.visibleRect.size.width > 0 && self.containerView.visibleRect.size.height > 0 && ![TMViewController isModalActive];
         
-        return ![SettingsArchiver checkMaskedSetting:DisableAutoplayGifSetting] && completelyVisible && ((self.window != nil && self.window.isKeyWindow) || notification == nil) && item.isset && ![self inLiveResize];
+        return ![SettingsArchiver checkMaskedSetting:DisableAutoplayGifSetting] && completelyVisible && ((self.containerView.window != nil && self.containerView.window.isKeyWindow) || notification == nil) && item.isset && ![self.containerView inLiveResize];
         
     };
         
@@ -240,15 +240,15 @@
 
 
 -(void)viewDidMoveToWindow {
-    if(self.window == nil) {
+    if(self.containerView.window == nil) {
         
         [self removeScrollEvent];
         [_player setPath:nil];
         
     } else {
         [self addScrollEvent];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_didScrolledTableView:) name:NSWindowDidBecomeKeyNotification object:self.window];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_didScrolledTableView:) name:NSWindowDidResignKeyNotification object:self.window];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_didScrolledTableView:) name:NSWindowDidBecomeKeyNotification object:self.containerView.window];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_didScrolledTableView:) name:NSWindowDidResignKeyNotification object:self.containerView.window];
     }
 }
 

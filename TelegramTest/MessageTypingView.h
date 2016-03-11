@@ -6,9 +6,9 @@
 //  Copyright (c) 2014 keepcoder. All rights reserved.
 //
 
-#import "TMView.h"
+#import "MessageTableCell.h"
 
-@interface MessageTypingView : TMView
+@interface MessageTypingView : MessageTableCell
 
 - (void) setDialog:(TL_conversation *) dialog;
 

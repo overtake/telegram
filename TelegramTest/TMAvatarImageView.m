@@ -546,7 +546,10 @@ static CAAnimation *ani2() {
     
     
     if(colorMask != -1) {
+        
         CGContextRef context = (CGContextRef)[[NSGraphicsContext currentContext] graphicsPort];
+        
+        CGContextSaveGState(context);
         
         CGColorRef colors[2] = {
             CGColorRetain(NSColorFromRGB(twoColors.bottom).CGColor),
@@ -568,6 +571,8 @@ static CAAnimation *ani2() {
         CGContextDrawLinearGradient(context, gradient, CGPointMake(0.0f, 0.0f), CGPointMake(0.0f, size.height), 0);
         
         CFRelease(gradient);
+        
+        CGContextRestoreGState(context);
     }
 
     if(type != TMAvatarTypeBroadcast) {
@@ -625,6 +630,9 @@ static CAAnimation *ani2() {
     [image unlockFocus];
     
     image = [TMImageUtils roundedImageNew:image size:size];
+    
+    
+    
     return image;
 }
 
