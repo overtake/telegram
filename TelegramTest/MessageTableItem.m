@@ -65,6 +65,19 @@ static NSCache *cItems;
     if(self) {
         self.message = object;
         
+        if(self.message.media.caption.length > 0) {
+            NSMutableAttributedString *c = [[NSMutableAttributedString alloc] init];
+            
+            [c appendString:[[self.message.media.caption trim] fixEmoji] withColor:TEXT_COLOR];
+            
+            [c setFont:TGSystemFont(13) forRange:c.range];
+            
+            [c detectAndAddLinks:URLFindTypeHashtags | URLFindTypeLinks | URLFindTypeMentions | (self.user.isBot || self.message.peer.isChat ? URLFindTypeBotCommands : 0)];
+            
+            _caption = c;
+        }
+        
+        
         if(object.isFake)
             return self; // fake message;
         
@@ -93,17 +106,7 @@ static NSCache *cItems;
         
         if(self.message) {
             
-            if(self.message.media.caption.length > 0) {
-                NSMutableAttributedString *c = [[NSMutableAttributedString alloc] init];
-                
-                [c appendString:[[self.message.media.caption trim] fixEmoji] withColor:TEXT_COLOR];
-                
-                [c setFont:TGSystemFont(13) forRange:c.range];
-                
-                [c detectAndAddLinks:URLFindTypeHashtags | URLFindTypeLinks | URLFindTypeMentions | (self.user.isBot || self.message.peer.isChat ? URLFindTypeBotCommands : 0)];
-                
-                _caption = c;
-            }
+            
             
             
             

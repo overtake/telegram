@@ -395,7 +395,7 @@
     [self updateDownloadState];
     
     
-    [self.fileNameTextField setFrameSize:item.fileNameSize];
+    [self.fileNameTextField setFrameSize:NSMakeSize(self.maxFieldWidth, item.fileNameSize.height)];
     
     [self updateFrames];
 

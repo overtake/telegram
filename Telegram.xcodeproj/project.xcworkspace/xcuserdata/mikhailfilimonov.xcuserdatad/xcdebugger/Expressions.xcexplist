@@ -3012,6 +3012,12 @@
             <PersistentString
                value = "message.chat.isMegagroup">
             </PersistentString>
+            <PersistentString
+               value = "image">
+            </PersistentString>
+            <PersistentString
+               value = "cacheKey">
+            </PersistentString>
          </PersistentStrings>
       </ContextState>
       <ContextState
@@ -6291,6 +6297,9 @@
                value = "searchUsers">
             </PersistentString>
          </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[TGWebpageDocumentObject initWithWebPage:tableItem:]:TGWebpageDocumentObject.m">
       </ContextState>
       <ContextState
          contextName = "__31-[TGAllStickersTableView load:]_block_invoke:TGAllStickersTableView.m">

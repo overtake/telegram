@@ -155,11 +155,13 @@ static const int seconds_to_notify = 120;
         if(![message.to_id isSecret] && ![TGPasslock isVisibility]) {
             NSString *cacheKey = [fromUser.photo.photo_small cacheKey];
             
+            if(chat != nil) {
+                cacheKey = [chat.photo.photo_small cacheKey];
+            }
+
             NSString *p;
+            
             if(cacheKey) {
-                if(chat != nil) {
-                    cacheKey = [chat.photo.photo_small cacheKey];
-                }
                 
                 p = [NSString stringWithFormat:@"%@/%@.jpg", path(), cacheKey];
                 
@@ -180,9 +182,8 @@ static const int seconds_to_notify = 120;
                     }
                     
                 }
-
+                
             }
-            
             
             if(!image) {
                 
@@ -201,6 +202,7 @@ static const int seconds_to_notify = 120;
                 }
                 
             }
+            
             
         }
         

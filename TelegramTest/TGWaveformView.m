@@ -89,6 +89,7 @@
     
     int progressWidth = (self.progress * NSWidth(dirtyRect))/100.0f;
     
+    
     [_currentWaveform enumerateObjectsUsingBlock:^(NSNumber *obj, NSUInteger idx, BOOL * _Nonnull stop) {
         
         int waveHeight = floor(([obj intValue] * max)/31.0f);
@@ -107,6 +108,7 @@
         
         x+=itemWidth+1;
     }];
+    
 }
 
 

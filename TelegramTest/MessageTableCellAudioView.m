@@ -119,6 +119,7 @@
     
     MessageTableItemAudio *item = (MessageTableItemAudio *)self.item;
     
+    ;
     
     NSMutableAttributedString *attr = [[NSMutableAttributedString alloc] init];
     
@@ -126,6 +127,7 @@
     [attr setFont:TGSystemFont(12) forRange:attr.range];
     
     [self setDurationTextFieldString:attr];
+    
     
     _waveformView.progress = ceil((self.currentTime / duration) * 100.0f);
     
@@ -327,7 +329,7 @@
     [self.durationView setText:item.duration maxWidth:self.maxContentWidth];
     
     
-    [_waveformView setFrameSize:NSMakeSize(self.maxContentWidth, 16)];
+    [_waveformView setFrameSize:NSMakeSize(150, 16)];
     
     int c = roundf((NSHeight(self.containerView.frame) - NSHeight(self.durationView.frame))/2);
     
