@@ -116,7 +116,6 @@
         self.thumbView = [[TGImageView alloc] initWithFrame:NSMakeRect(0, 0, 40, 40)];
         [self.thumbView setCornerRadius:4];
         
-        
 
         [self.thumbView setContentMode:BTRViewContentModeScaleAspectFill];
         

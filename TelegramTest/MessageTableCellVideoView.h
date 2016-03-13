@@ -9,7 +9,6 @@
 #import "TGModernMessageCellContainerView.h"
 #import "MessageTableItemVideo.h"
 #import "TGImageView.h"
-#import "BluredPhotoImageView.h"
 
 @interface MessageTableCellVideoView : TGModernMessageCellContainerView
 @property (nonatomic, strong) TGImageView *imageView;

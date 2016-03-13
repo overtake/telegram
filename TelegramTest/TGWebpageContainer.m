@@ -21,7 +21,7 @@
     [super drawRect:dirtyRect];
     
     
-    [LINK_COLOR setFill];
+    [BLUE_SEPARATOR_COLOR setFill];
     
     NSRectFill(NSMakeRect(0, 0, 2, NSHeight(self.frame)));
 }

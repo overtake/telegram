@@ -412,7 +412,7 @@ static bool dragAction = NO;
 -(void)mouseDown:(NSEvent *)theEvent {
     
     
-    if(self.item.messageSender)
+    if(self.item.messageSender && !(self.item.messageSender.state == MessageSendingStateSent))
         return;
     
     if(self.messagesViewController.state == MessagesViewControllerStateNone && theEvent == nil) {
@@ -497,7 +497,7 @@ static bool dragAction = NO;
     
     [self.rightView setSelected:selected animated:animated];
     
-    if(animated && NSHeight(self.visibleRect) > 0) {
+    if(false) {
         
         NSColor *color = selected ? NSColorFromRGB(0xf7f7f7) : NSColorFromRGB(0xffffff);
         NSColor *oldColor = !selected ? NSColorFromRGB(0xf7f7f7) : NSColorFromRGB(0xffffff);

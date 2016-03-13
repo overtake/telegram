@@ -533,7 +533,8 @@
             
         } description:NSLocalizedString(@"Modern.Channel.GroupType", nil) subdesc:NSLocalizedString(self.chat.username.length > 0 ? @"Channel.Public" : @"Channel.Private", nil) height:42 stateback:nil];
         
-        if(_chat.isMegagroup && _chat.isCreator) {
+        
+        if(_chat.isMegagroup && _chat.isCreator && (!self.chat.chatFull || self.chat.chatFull.isCan_set_username)) {
             [_tableView addItem:groupType tableRedraw:YES];
         }
         

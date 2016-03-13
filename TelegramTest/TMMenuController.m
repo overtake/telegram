@@ -84,19 +84,6 @@
     return self.item.title;
 }
 
--(void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
-    
-    
-    [self handleStateChange];
-
-    
-    
-}
-
--(void)dealloc {
-    [_item removeObserver:self forKeyPath:@"image"];
-}
-
 
 - (void)click {
   

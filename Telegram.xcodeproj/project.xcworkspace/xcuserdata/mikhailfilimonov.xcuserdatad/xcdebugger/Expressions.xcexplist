@@ -4238,6 +4238,9 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "-[TGWebpageObject initWithWebPage:tableItem:]:TGWebpageObject.m">
+      </ContextState>
+      <ContextState
          contextName = "__25-[TGGLVideoPlayer resume]_block_invoke:TGGLVideoPlayer.m">
       </ContextState>
       <ContextState
@@ -5000,6 +5003,14 @@
          <PersistentStrings>
             <PersistentString
                value = "self.selectedRow">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[TMLoaderView setState:]:TMLoaderView.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "image.size">
             </PersistentString>
          </PersistentStrings>
       </ContextState>

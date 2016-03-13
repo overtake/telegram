@@ -744,7 +744,7 @@
     
     
     
-    if(message.unread && !message.n_out) {
+    if(message.unread && !message.n_out && message.conversation.read_inbox_max_id < message.n_id) {
         dialog.unread_count++;
     } else if(!message.unread && !message.n_out) {
         dialog.unread_count = 0;

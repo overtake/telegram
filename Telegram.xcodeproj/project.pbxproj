@@ -12,7 +12,6 @@
 		0A073FDA18C0D01100BAA928 /* NotSelectedDialogsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A073FD918C0D01100BAA928 /* NotSelectedDialogsViewController.m */; };
 		0A073FE318C392B200BAA928 /* MessageTableNavigationTitleView.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A073FE218C392B200BAA928 /* MessageTableNavigationTitleView.m */; };
 		0A08D1D4181B1F8C005F7C13 /* TLClassStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A08D1D3181B1F8C005F7C13 /* TLClassStore.m */; };
-		0A0B09BC18B1823700F3FE1B /* TMImageUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A0B09BB18B1823700F3FE1B /* TMImageUtils.m */; };
 		0A13B82A18199C1A00E06702 /* AddressBook.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A13B82918199C1A00E06702 /* AddressBook.framework */; };
 		0A13B82D1819C27500E06702 /* NSArray+BlockFiltering.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A13B82C1819C27500E06702 /* NSArray+BlockFiltering.m */; };
 		0A235AD41823238900D2247B /* NSImage+RHResizableImageAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A235AD31823238900D2247B /* NSImage+RHResizableImageAdditions.m */; };
@@ -410,7 +409,6 @@
 		C24F878E1A00048C00EC962E /* TL_messageActionSetMessageTTL.m in Sources */ = {isa = PBXBuildFile; fileRef = C24F878D1A00048C00EC962E /* TL_messageActionSetMessageTTL.m */; };
 		C24F87941A0015BD00EC962E /* TGSecretAction.m in Sources */ = {isa = PBXBuildFile; fileRef = C24F87931A0015BD00EC962E /* TGSecretAction.m */; };
 		C24F87971A002F7E00EC962E /* TL_secretServiceMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = C24F87961A002F7E00EC962E /* TL_secretServiceMessage.m */; };
-		C2531F4C1962FAE000F7D7A2 /* BluredPhotoImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = C2531F4B1962FAE000F7D7A2 /* BluredPhotoImageView.m */; };
 		C2531F541964412700F7D7A2 /* NSTextView+EmojiExtension.m in Sources */ = {isa = PBXBuildFile; fileRef = C2531F531964412700F7D7A2 /* NSTextView+EmojiExtension.m */; };
 		C2531F5A1964548100F7D7A2 /* MessagesTopInfoView.m in Sources */ = {isa = PBXBuildFile; fileRef = C2531F591964548100F7D7A2 /* MessagesTopInfoView.m */; };
 		C2531F5D196572BA00F7D7A2 /* TMSharedMediaButton.m in Sources */ = {isa = PBXBuildFile; fileRef = C2531F5C196572BA00F7D7A2 /* TMSharedMediaButton.m */; };
@@ -752,7 +750,6 @@
 		C2CBF6981AFB7EFE006BF90A /* CFunctions.m in Sources */ = {isa = PBXBuildFile; fileRef = C2CBF6971AFB7EFE006BF90A /* CFunctions.m */; };
 		C2CBF6991AFB7EFE006BF90A /* CFunctions.m in Sources */ = {isa = PBXBuildFile; fileRef = C2CBF6971AFB7EFE006BF90A /* CFunctions.m */; };
 		C2CBF69E1AFB8141006BF90A /* DownloadItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C256E91018D20BA8008FFA04 /* DownloadItem.m */; };
-		C2CBF69F1AFB817C006BF90A /* TMImageUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A0B09BB18B1823700F3FE1B /* TMImageUtils.m */; };
 		C2CBF6A01AFB817C006BF90A /* ImageUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = CEAE5CCF181B0D7600C17645 /* ImageUtils.m */; };
 		C2CBF6A41AFB8247006BF90A /* TGImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = C25F91B21977E115006868F3 /* TGImageView.m */; };
 		C2CBF6A61AFB835D006BF90A /* DownloadQueue.mm in Sources */ = {isa = PBXBuildFile; fileRef = CEB7ADE418128581005CB6A1 /* DownloadQueue.mm */; };
@@ -1096,8 +1093,6 @@
 		0A073FE218C392B200BAA928 /* MessageTableNavigationTitleView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MessageTableNavigationTitleView.m; sourceTree = "<group>"; };
 		0A08D1D2181B1F8C005F7C13 /* TLClassStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLClassStore.h; sourceTree = "<group>"; };
 		0A08D1D3181B1F8C005F7C13 /* TLClassStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLClassStore.m; sourceTree = "<group>"; };
-		0A0B09BA18B1823700F3FE1B /* TMImageUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TMImageUtils.h; sourceTree = "<group>"; };
-		0A0B09BB18B1823700F3FE1B /* TMImageUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TMImageUtils.m; sourceTree = "<group>"; };
 		0A13B82918199C1A00E06702 /* AddressBook.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AddressBook.framework; path = System/Library/Frameworks/AddressBook.framework; sourceTree = SDKROOT; };
 		0A13B82B1819C27500E06702 /* NSArray+BlockFiltering.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSArray+BlockFiltering.h"; sourceTree = "<group>"; };
 		0A13B82C1819C27500E06702 /* NSArray+BlockFiltering.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSArray+BlockFiltering.m"; sourceTree = "<group>"; };
@@ -1898,8 +1893,6 @@
 		C24F87931A0015BD00EC962E /* TGSecretAction.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGSecretAction.m; sourceTree = "<group>"; };
 		C24F87951A002F7E00EC962E /* TL_secretServiceMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TL_secretServiceMessage.h; sourceTree = "<group>"; };
 		C24F87961A002F7E00EC962E /* TL_secretServiceMessage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TL_secretServiceMessage.m; sourceTree = "<group>"; };
-		C2531F4A1962FAE000F7D7A2 /* BluredPhotoImageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BluredPhotoImageView.h; sourceTree = "<group>"; };
-		C2531F4B1962FAE000F7D7A2 /* BluredPhotoImageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BluredPhotoImageView.m; sourceTree = "<group>"; };
 		C2531F521964412700F7D7A2 /* NSTextView+EmojiExtension.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSTextView+EmojiExtension.h"; sourceTree = "<group>"; };
 		C2531F531964412700F7D7A2 /* NSTextView+EmojiExtension.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSTextView+EmojiExtension.m"; sourceTree = "<group>"; };
 		C2531F581964548100F7D7A2 /* MessagesTopInfoView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MessagesTopInfoView.h; sourceTree = "<group>"; };
@@ -3595,8 +3588,6 @@
 				0AB8F65718635E53000E6FF3 /* TMImageManager.mm */,
 				0AB43BA918D4F1FF00FB805A /* TMImagePicker.h */,
 				0AB43BAA18D4F1FF00FB805A /* TMImagePicker.m */,
-				0A0B09BA18B1823700F3FE1B /* TMImageUtils.h */,
-				0A0B09BB18B1823700F3FE1B /* TMImageUtils.m */,
 				0AB8F6531862DD87000E6FF3 /* TMImageView.h */,
 				0AB8F6541862DD87000E6FF3 /* TMImageView.m */,
 				0A4A1A2918A295F100D756CD /* TMInAppLinks.h */,
@@ -3847,8 +3838,6 @@
 				C274C3781AB83185000DFDE4 /* fwd */,
 				C20D1891193E09C00095A906 /* TMBlueAddButtonView.h */,
 				C20D1892193E09C00095A906 /* TMBlueAddButtonView.m */,
-				C2531F4A1962FAE000F7D7A2 /* BluredPhotoImageView.h */,
-				C2531F4B1962FAE000F7D7A2 /* BluredPhotoImageView.m */,
 				C268C1A819F43575007F836A /* MessageStateLayer.h */,
 				C268C1A919F43575007F836A /* MessageStateLayer.m */,
 				C2233DB01A0818910056594F /* MessageCellDescriptionView.h */,
@@ -6664,7 +6653,6 @@
 				C2CBF6BC1AFB8B1E006BF90A /* DownloadPart.m in Sources */,
 				C2CBF6A61AFB835D006BF90A /* DownloadQueue.mm in Sources */,
 				C2CBF6A41AFB8247006BF90A /* TGImageView.m in Sources */,
-				C2CBF69F1AFB817C006BF90A /* TMImageUtils.m in Sources */,
 				C2CBF6A01AFB817C006BF90A /* ImageUtils.m in Sources */,
 				C20BA5E21B0BCC04001ECE22 /* TGSEnterPasscodeView.m in Sources */,
 				C2CBF69E1AFB8141006BF90A /* DownloadItem.m in Sources */,
@@ -7039,7 +7027,6 @@
 				C20B31371C90866800A6BCF5 /* TGVideoViewerItem.m in Sources */,
 				C2ACCE6E1AE122A400ABEE78 /* EmojiButton.m in Sources */,
 				C297FBA31832997B00714B3C /* SSKeychain.m in Sources */,
-				C2531F4C1962FAE000F7D7A2 /* BluredPhotoImageView.m in Sources */,
 				C20AEF411C1F347D001BAAA0 /* TGThumbnailObject.m in Sources */,
 				C2200B6918F2BCFC00F28803 /* BlockedTableController.m in Sources */,
 				0A6D099519535E8500A9AC64 /* TLChatCategory.m in Sources */,
@@ -7304,7 +7291,6 @@
 				C2ACCE5F1ADD66A600ABEE78 /* TGConversationsTableView.m in Sources */,
 				C2CB5CF91B4AB41700CD61DF /* TGPVVideoContainer.m in Sources */,
 				C248F3D719BE070D00BF658E /* audio-in.c in Sources */,
-				0A0B09BC18B1823700F3FE1B /* TMImageUtils.m in Sources */,
 				C2ED357D18D9FECB00D0027C /* CAProgressLayer.m in Sources */,
 				C26E80201B7B91A9003CC483 /* TGDatabaseRequest.m in Sources */,
 				0A241AA018AB2F5900C32F45 /* MessageTableCellPhotoView.m in Sources */,

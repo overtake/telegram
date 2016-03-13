@@ -69,6 +69,7 @@
         [self addSubview:self.lastSeenTextField];
         
         self.selectButton = [[BTRButton alloc] initWithFrame:NSMakeRect(20, roundf((50 - image_ComposeCheckActive().size.height )/ 2), image_ComposeCheckActive().size.width, image_ComposeCheckActive().size.height)];
+        [self.selectButton setUserInteractionEnabled:NO];
 
         weak();
         

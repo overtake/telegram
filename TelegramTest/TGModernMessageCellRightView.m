@@ -143,10 +143,6 @@
     [_selectCheckView.layer pop_addAnimation:opacityAnim forKey:@"opacity"];
     
     
-//    from = NSWidth(self.frame) + NSWidth(_selectCheckView.frame);
-//    to = NSWidth(self.frame) - NSWidth(_selectCheckView.frame);
-//    
-//
     if(_selectCheckView.layer.anchorPoint.x != 0.5) {
         CGPoint point = _selectCheckView.layer.position;
         
@@ -245,10 +241,8 @@
             [self addSubview:_selectCheckView];
         }
     } else {
-        if(!animated) {
-            [_selectCheckView removeFromSuperview];
-            _selectCheckView = nil;
-        }
+        [_selectCheckView removeFromSuperview];
+        _selectCheckView = nil;
     }
     
 }

@@ -3537,7 +3537,22 @@ static NSTextAttachment *headerMediaIcon() {
             sc[@(attr.stickerset.n_id)] = [NSMutableDictionary dictionary];
         }
         
-        sc[@(attr.stickerset.n_id)][@(sticker.n_id)] = @([sc[@(attr.stickerset.n_id)][@(sticker.n_id)] intValue]+1);
+        __block int max = 1;
+        
+        [sc enumerateKeysAndObjectsUsingBlock:^(id  _Nonnull key, NSMutableDictionary *obj, BOOL * _Nonnull stop) {
+            
+            [obj enumerateKeysAndObjectsUsingBlock:^(id  _Nonnull key, NSNumber *value, BOOL * _Nonnull stop) {
+                
+                max = MAX(max,[value intValue]);
+                
+            }];
+            
+        }];
+        
+        max++;
+        
+        
+        sc[@(attr.stickerset.n_id)][@(sticker.n_id)] = @(max);
         
         [transaction setObject:sc forKey:@"recentStickers" inCollection:STICKERS_COLLECTION];
         

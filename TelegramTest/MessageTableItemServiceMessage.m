@@ -13,7 +13,7 @@
 #import "TGDateUtils.h"
 #import "NSAttributedString+Hyperlink.h"
 #import "TGImageObject.h"
-#import "TMImageUtils.h"
+#import "ImageUtils.h"
 #import "MessageTableCellServiceMessage.h"
 
 @interface TGImageGroupPhotoObject : TGImageObject
@@ -30,7 +30,7 @@
     
     [TGCache cacheImage:image forKey:self.location.cacheKey groups:@[IMGCACHE]];
     
-    image = [TMImageUtils roundedImageNew:image size:self.imageSize];
+    image = [ImageUtils roundedImageNew:image size:self.imageSize];
     
     [TGCache cacheImage:image forKey:[self cacheKey] groups:@[IMGCACHE]];
     

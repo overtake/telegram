@@ -92,5 +92,18 @@
     
 }
 
+-(void)_didChangeBackgroundColorWithAnimation:(POPBasicAnimation *)anim toColor:(NSColor *)color {
+    
+    [super _didChangeBackgroundColorWithAnimation:anim toColor:color];
+    
+    if(!anim) {
+        _venueField.backgroundColor = color;
+    } else {
+        [_venueField pop_addAnimation:anim forKey:@"background"];
+    }
+    
+    
+}
+
 
 @end

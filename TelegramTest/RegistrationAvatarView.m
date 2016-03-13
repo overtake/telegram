@@ -8,7 +8,7 @@
 
 #import "RegistrationAvatarView.h"
 #import <Quartz/Quartz.h>
-#import "TMImageUtils.h"
+#import "ImageUtils.h"
 
 @interface RegistrationAvatarView()
 @property (nonatomic, strong) TMTextField *placeholderTextField;
@@ -77,7 +77,7 @@
         NSImage *outputImage = [pictureTaker outputImage];
         if(outputImage.size.width >= 100 && outputImage.size.height >= 100) {
             self.photo = outputImage;
-            NSImage *image = [TMImageUtils roundedImageNew:outputImage size:self.bounds.size];
+            NSImage *image = [ImageUtils roundedImageNew:outputImage size:self.bounds.size];
             [self.placeholderTextField setHidden:YES];
             [self addAnimation:ani3() forKey:@"contents"];
             self.image = image;

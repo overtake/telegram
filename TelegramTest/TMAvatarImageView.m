@@ -7,7 +7,7 @@
 //
 
 #import "TMAvatarImageView.h"
-#import "TMImageUtils.h"
+#import "ImageUtils.h"
 
 #import "TLFileLocation+Extensions.h"
 #import "DownloadQueue.h"
@@ -78,7 +78,7 @@ static const TGTwoColors colors[] = {
         NSRectFill(NSMakeRect(0, 0, size.width, size.height));
         [image unlockFocus];
         
-        image = [TMImageUtils roundedImage:image size:size];
+        image = [ImageUtils roundedImage:image size:size];
         
         [placeHolderCache setObject:image forKey:NSStringFromSize(size)];
     }
@@ -629,7 +629,7 @@ static CAAnimation *ani2() {
     
     [image unlockFocus];
     
-    image = [TMImageUtils roundedImageNew:image size:size];
+    image = [ImageUtils roundedImageNew:image size:size];
     
     
     

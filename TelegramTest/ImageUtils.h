@@ -262,6 +262,9 @@ NSImage *renderedImage(NSImage * oldImage, NSSize size);
 NSImage *cropImage(NSImage *image,NSSize backSize, NSPoint difference);
 
 
++ (NSImage *) roundedImage:(NSImage *)oldImage size:(NSSize)size;
++ (NSImage *) roundedImageNew:(NSImage *)oldImage size:(NSSize)size;
+
 typedef NSImage * (^ImageProcessor)(NSImage *image, NSSize size);
 
 +(ImageProcessor)c_processor;

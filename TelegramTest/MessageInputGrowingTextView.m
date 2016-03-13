@@ -7,7 +7,7 @@
 //
 
 #import "MessageInputGrowingTextView.h"
-#import "TMImageUtils.h"
+#import "ImageUtils.h"
 #import "MessageSender.h"
 #import "ImageUtils.h"
 #import "TGMentionPopup.h"

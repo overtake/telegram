@@ -281,7 +281,7 @@ typedef enum {
         return res;
     }
     
-    if(item && (![item isKindOfClass:[SearchSeparatorItem class]])) {
+    if(item && (![item isKindOfClass:[SearchSeparatorItem class]] && ![item isKindOfClass:[SearchLoadMoreItem class]])) {
         TGConversationTableItem *searchItem = (TGConversationTableItem *)item;
         
         if(searchItem.conversation) {
