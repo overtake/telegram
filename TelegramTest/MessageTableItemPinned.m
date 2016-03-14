@@ -15,7 +15,7 @@
 -(id)initWithObject:(TL_localMessageService *)object {
     if(self = [super initWithObject:object]) {
         
-        
+        [Notification addObserver:self selector:@selector(messagTableEditedMessageUpdate:) name:UPDATE_EDITED_MESSAGE];
         
         if(object.replyMessage || object.reply_to_msg_id == 0) {
             [self update];
@@ -41,6 +41,23 @@
     }
     
     return self;
+}
+
+
+-(void)messagTableEditedMessageUpdate:(NSNotification *)notification {
+    TL_localMessage *message = notification.userInfo[KEY_MESSAGE];
+    
+    if(message.n_id == self.message.replyMessage.n_id) {
+        self.message.replyMessage = message;
+        
+        [self update];
+        
+        [Notification perform:UPDATE_MESSAGE_ITEM data:@{@"item":self}];
+    }
+}
+
+-(void)dealloc {
+    [Notification removeObserver:self];
 }
 
 -(BOOL)makeSizeByWidth:(int)width {

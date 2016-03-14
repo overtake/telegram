@@ -266,7 +266,9 @@
 
 
 -(void)stickersNeedFullReload:(NSNotification *)notification {
-    [self reload];
+    
+     [self reload];
+   
 }
 
 -(void)stickersNeedReorder:(NSNotification *)notification {

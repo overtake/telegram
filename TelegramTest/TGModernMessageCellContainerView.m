@@ -335,6 +335,7 @@
 -(void)setItem:(MessageTableItem *)item {
     [super setItem:item];
     
+    [self.progressView setCurrentProgress:0];
     
     int yStartContentOffset = item.isHeaderMessage ? item.headerSize.height + item.contentHeaderOffset + item.defaultContentOffset : item.defaultContentOffset;
     

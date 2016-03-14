@@ -305,6 +305,13 @@
                 currentChat.migrated_from_chat_id = newChatFull.migrated_from_chat_id;
                 currentChat.migrated_from_max_id = newChatFull.migrated_from_max_id;
                 
+                
+                if(currentChat.pinned_msg_id != newChatFull.pinned_msg_id) {
+                    currentChat.pinned_msg_id = newChatFull.pinned_msg_id;
+                    
+                   [Notification perform:UPDATE_PINNED_MESSAGE data:@{KEY_PEER_ID:@(-[currentChat n_id]),KEY_MESSAGE_ID:@(currentChat.pinned_msg_id)}];
+                }
+                
                 if([currentChat isKindOfClass:[TL_channelFull class]] && (currentChat.participants_count != newChatFull.participants_count || currentChat.admins_count != newChatFull.admins_count || currentChat.kicked_count != newChatFull.kicked_count)) {
                     
                     currentChat.participants_count = newChatFull.participants_count;

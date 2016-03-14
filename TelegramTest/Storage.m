@@ -2790,7 +2790,7 @@ TL_localMessage *parseMessage(FMResultSet *result) {
             BOOL isset = [db boolForQuery:[NSString stringWithFormat:@"select count(*) from %@ where n_id = ?",tableSupportMessages],@(obj.channelMsgId)];
             
             if(isset) {
-                [db executeUpdate:[NSString stringWithFormat:@"update %@ set serialized = ? where n_id = ?",tableSupportMessages],@(obj.channelMsgId),[TLClassStore serialize:obj],@(obj.channelMsgId)];
+                [db executeUpdate:[NSString stringWithFormat:@"update %@ set serialized = ? where n_id = ?",tableSupportMessages],[TLClassStore serialize:obj],@(obj.channelMsgId)];
             } else {
                 [db executeUpdate:[NSString stringWithFormat:@"insert or replace into %@ (n_id,serialized) values (?,?)",tableSupportMessages],@(obj.channelMsgId),[TLClassStore serialize:obj]];
             }

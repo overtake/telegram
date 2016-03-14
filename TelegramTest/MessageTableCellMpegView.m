@@ -104,8 +104,8 @@
     _prevState = NO;
     [_player setPath:nil];
     
-    [_playerContainer setFrameSize:item.blockSize];
-    [_player setFrameSize:item.blockSize];
+    [_playerContainer setFrameSize:item.imageSize];
+    [_player setFrameSize:item.imageSize];
     
     [_player setImageObject:item.thumbObject];
     

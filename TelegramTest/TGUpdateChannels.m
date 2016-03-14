@@ -277,8 +277,10 @@
         
     } else if([update isKindOfClass:[TL_updateEditChannelMessage class]]) {
       
-        
         TL_localMessage *msg = [TL_localMessage convertReceivedMessage:[(TL_updateEditChannelMessage *)update message]];
+        
+        if(msg)
+            [[Storage manager] addSupportMessages:@[msg]];
         
         TL_conversation *conversation = [self conversationWithChannelId:abs(msg.peer_id)];
         

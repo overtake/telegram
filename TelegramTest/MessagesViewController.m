@@ -1254,7 +1254,7 @@ static NSTextAttachment *headerMediaIcon() {
     [super viewWillAppear:animated];
     
     if(self.conversation.type == DialogTypeChannel) {
-        [[FullChatManager sharedManager] performLoad:self.conversation.chat.n_id force:YES callback:nil];
+        [[FullChatManager sharedManager] loadIfNeed:self.conversation.chat.n_id force:YES];
     }
     
 //
@@ -1412,8 +1412,8 @@ static NSTextAttachment *headerMediaIcon() {
     
     
     
-    NSRect topRect = NSMakeRect(0,self.view.frame.size.height-40, self.view.frame.size.width, 40);
-    NSRect tableRect = NSMakeRect(0, self.table.scrollView.frame.origin.y, self.table.scrollView.frame.size.width, self.view.frame.size.height - _lastBottomOffsetY - 40);
+    NSRect topRect = NSMakeRect(0,self.view.frame.size.height-NSHeight(self.topInfoView.frame), self.view.frame.size.width, NSHeight(self.topInfoView.frame));
+    NSRect tableRect = NSMakeRect(0, self.table.scrollView.frame.origin.y, self.table.scrollView.frame.size.width, self.view.frame.size.height - _lastBottomOffsetY - NSHeight(self.topInfoView.frame));
     
     if(animated) {
         [NSAnimationContext runAnimationGroup: ^(NSAnimationContext *context) {

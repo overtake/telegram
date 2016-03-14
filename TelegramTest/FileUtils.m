@@ -927,7 +927,7 @@ void open_link(NSString *link) {
             } else {
                 NSArray *userAndPost = [name componentsSeparatedByString:@"/"];
                 
-                if(userAndPost.count == 2) {
+                if(userAndPost.count >= 2) {
                     NSString *username = userAndPost[0];
                     int postId = [userAndPost[1] intValue];
                     

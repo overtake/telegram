@@ -4955,6 +4955,14 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "__65-[MessagesTopInfoView loadAndShowPinnedMessage:chat_id:animated:]_block_invoke:MessagesTopInfoView.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "_pinnedContainer.frame">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "-[TGWaveformView drawRect:]:TGWaveformView.m">
          <PersistentStrings>
             <PersistentString

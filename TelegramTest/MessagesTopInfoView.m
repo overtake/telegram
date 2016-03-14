@@ -126,7 +126,7 @@ static NSMutableDictionary *cache;
 }
 
 -(void)setFrame:(NSRect)frameRect {
-    [super setFrame:NSMakeRect(0, NSMinY(frameRect), NSWidth([Telegram rightViewController].view.frame), frameRect.size.height)];
+    [super setFrame:NSMakeRect(0, NSMinY(frameRect), NSWidth(self.controller.view.frame), frameRect.size.height)];
     
     [self.progress setCenterByView:self];
     [self.field setCenterByView:self];
@@ -209,6 +209,8 @@ static NSMutableDictionary *cache;
     [Notification addObserver:self selector:@selector(didChangeUserType:) name:[Notification notificationForUser:conversation.user action:USER_CHANGE_TYPE]];
     [Notification addObserver:self selector:@selector(didUpdatePinnedMessage:) name:UPDATE_PINNED_MESSAGE];
     
+    [Notification addObserver:self selector:@selector(messagTableEditedMessageUpdate:) name:UPDATE_EDITED_MESSAGE];
+    
     TLUser *user = conversation.user;
     
     MessagesTopInfoAction newAction = MessagesTopInfoActionNone;
@@ -271,6 +273,15 @@ static NSMutableDictionary *cache;
 }
 
 
+-(void)messagTableEditedMessageUpdate:(NSNotification *)notification {
+    TL_localMessage *message = notification.userInfo[KEY_MESSAGE];
+    
+    if(self.action == MessagesTopInfoActionPinnedMessage && self.pinnedContainer.replyObject.replyMessage.n_id == message.n_id) {
+        self.pinnedContainer.replyObject = [[TGReplyObject alloc] initWithReplyMessage:message fromMessage:nil tableItem:nil pinnedMessage:YES];
+    }
+}
+
+
 -(void)checkReportSpam {
     
     BOOL alwaysHide = [[NSUserDefaults standardUserDefaults] boolForKey:[NSString stringWithFormat:@"alwaysHideReportSpam_%d",_conversation.peer_id]];
@@ -320,6 +331,9 @@ static NSMutableDictionary *cache;
     
     
     dispatch_block_t block = ^{
+        
+        self.action = MessagesTopInfoActionPinnedMessage;
+        
         TGReplyObject *replyObject = [[TGReplyObject alloc] initWithReplyMessage:msg fromMessage:nil tableItem:nil pinnedMessage:YES];
         
         [_pinnedContainer removeFromSuperview];
@@ -354,7 +368,7 @@ static NSMutableDictionary *cache;
         
         [self addSubview:_pinnedContainer];
         
-        self.action = MessagesTopInfoActionPinnedMessage;
+        
         
         [self show:animated];
     };
@@ -431,6 +445,8 @@ static NSMutableDictionary *cache;
     if(action == MessagesTopInfoActionNone) {
         return;
     }
+    
+    [self setFrame:NSMakeRect(NSMinX(self.frame), NSMinY(self.frame), NSWidth(self.frame), action == MessagesTopInfoActionPinnedMessage ? 46 : 40)];
     
     NSMutableAttributedString *string = [[NSMutableAttributedString alloc] init];
     
