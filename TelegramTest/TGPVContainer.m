@@ -478,6 +478,8 @@ static const int bottomHeight = 60;
 
 -(void)updateDownloadListeners:(DownloadItem *)downloadItem {
     
+    [self.loaderView setHidden:self.loaderView.isHidden || downloadItem == nil];
+    
     [self.loaderView setCurrentProgress:MAX(downloadItem.progress,3)];
     [self.loaderView setProgress:self.loaderView.currentProgress animated:YES];
 
