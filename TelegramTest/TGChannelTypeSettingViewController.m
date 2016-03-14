@@ -84,12 +84,14 @@
         self.action.result = [[ComposeResult alloc] init];
         self.action.result.singleObject = @(YES);
     }
+    
+    TLChat *chat = self.action.object;
         
     _userNameContainerItem = [[TGUserNameContainerRowItem alloc] initWithHeight:120];
     
     NSMutableAttributedString *attr = [[NSMutableAttributedString alloc] init];
     
-    [attr appendString:NSLocalizedString(@"Channel.NewChannelSettingUpUserNameDescription", nil)  withColor:GRAY_TEXT_COLOR];
+    [attr appendString:NSLocalizedString(!chat.isMegagroup ?  @"Channel.NewChannelSettingUpUserNameDescription" : @"Group.PublicTypeUpJoinLinkDescription", nil)  withColor:GRAY_TEXT_COLOR];
     
     [attr setFont:TGSystemFont(12) forRange:attr.range];
     
@@ -233,7 +235,7 @@
     } else {
         [self.tableView addItem:_joinLinkItem tableRedraw:NO];
         
-        GeneralSettingsBlockHeaderItem *joinDescription = [[GeneralSettingsBlockHeaderItem alloc] initWithString:NSLocalizedString(!chat.isMegagroup ? @"Channel.NewChannelSettingUpJoinLinkDescription" : @"Group.NewChannelSettingUpJoinLinkDescription", nil) height:42 flipped:YES];
+        GeneralSettingsBlockHeaderItem *joinDescription = [[GeneralSettingsBlockHeaderItem alloc] initWithString:NSLocalizedString(!chat.isMegagroup ? @"Channel.NewChannelSettingUpJoinLinkDescription" : @"Group.PrivateTypeUpJoinLinkDescription", nil) height:42 flipped:YES];
         
         [self.tableView addItem:joinDescription tableRedraw:NO];
         

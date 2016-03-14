@@ -519,7 +519,13 @@ static NSImage *higlightedImage() {
             
         }];
         
-        [s sortUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"self.count" ascending:NO]]];
+        [s sortUsingComparator:^NSComparisonResult(NSDictionary * _Nonnull obj1, NSDictionary *  _Nonnull obj2) {
+            
+            NSComparisonResult result = [obj1[@"count"] compare:obj2[@"count"]];
+            
+            return result == NSOrderedAscending ? NSOrderedDescending : result == NSOrderedDescending ? NSOrderedAscending : NSOrderedSame;
+            
+        }];;
         
         
         

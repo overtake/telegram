@@ -443,7 +443,39 @@
         user = nil;
     } else if([action isKindOfClass:[TL_messageActionPinMessage class]]) {
         actionText = NSLocalizedString(@"MessageAction.Service.PinMessage", nil);
-        actionText = [NSString stringWithFormat:actionText, message.replyMessage.media == nil ? ( message.replyMessage.message.length == 0 ? NSLocalizedString(@"DeletedMessage", nil) :  message.replyMessage.message) : [[self mediaMessage:message.replyMessage] lowercaseString]];
+        
+        /*
+         
+         "Message.PinnedTextMessage" = "pinned \"%@\"";
+         "Message.PinnedPhotoMessage" = "pinned photo";
+         "Message.PinnedVideoMessage" = "pinned video";
+         "Message.PinnedAudioMessage" = "pinned voice message";
+         "Message.PinnedDocumentMessage" = "pinned file";
+         "Message.PinnedAnimationMessage" = "pinned GIF";
+         "Message.PinnedStickerMessage" = "pinned sticker";
+         "Message.PinnedLocationMessage" = "pinned location";
+         "Message.PinnedContactMessage" = "pinned contact";
+         "Message.PinnedDeletedMessage" = "pinned deleted message";
+         */
+        
+        if(!message.replyMessage || (message.replyMessage.media == nil && message.replyMessage.message.length == 0)) {
+            actionText = NSLocalizedString(@"Message.PinnedDeletedMessage", nil);
+        } else if(message.replyMessage.media == nil) {
+            actionText = [NSString stringWithFormat:actionText, message.replyMessage.message];
+        } else {
+            
+            NSString *caption = message.replyMessage.media.caption;
+            message.replyMessage.media.caption = @"";
+            NSString *media = [self mediaMessage:message.replyMessage];
+            message.replyMessage.media.caption = caption;
+            if(![media isEqualToString:@"GIF"]) {
+                media = [media lowercaseString];
+            }
+            
+            actionText = [NSString stringWithFormat:NSLocalizedString(@"Message.PinnedMediaHeader", nil),media];
+        }
+        
+        
     }
     static float size = 11.5;
     

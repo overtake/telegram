@@ -20,6 +20,8 @@
 @property (nonatomic,assign,readonly) int replyHeaderHeight;
 @property (nonatomic,assign,readonly) int containerHeight;
 
+@property (nonatomic,assign,readonly,getter=isPinnedMessage) BOOL pinnedMessage;
+
 @property (nonatomic,strong,readonly) TL_localMessage *replyMessage;
 
 @property (nonatomic,strong,readonly) TL_localMessage *fromMessage;
@@ -27,7 +29,7 @@
 @property (nonatomic,weak,readonly) MessageTableItem *item;
 
 -(id)initWithReplyMessage:(TL_localMessage *)replyMessage fromMessage:(TL_localMessage *)fromMessage tableItem:(MessageTableItem *)item;
-
+-(id)initWithReplyMessage:(TL_localMessage *)replyMessage fromMessage:(TL_localMessage *)fromMessage tableItem:(MessageTableItem *)item pinnedMessage:(BOOL)pinnedMessage;
 
 +(void)loadReplyMessage:(TL_localMessage *)fromMessage completionHandler:(void (^)(TL_localMessage *message))completionHandler;
 

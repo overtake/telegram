@@ -403,7 +403,7 @@
         if(strongSelf != nil) {
             [TL_localMessage convertReceivedMessages:[response messages]];
             
-            NSArray *converted = [MessageTableItem messageTableItemsFromMessages:[response messages]];
+            NSArray *converted = [self.controller messageTableItemsFromMessages:[response messages]];
             
             NSArray *filtred = [converted filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary *bindings) {
                 

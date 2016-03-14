@@ -320,7 +320,7 @@ static NSMutableDictionary *cache;
     
     
     dispatch_block_t block = ^{
-        TGReplyObject *replyObject = [[TGReplyObject alloc] initWithReplyMessage:msg fromMessage:nil tableItem:nil];
+        TGReplyObject *replyObject = [[TGReplyObject alloc] initWithReplyMessage:msg fromMessage:nil tableItem:nil pinnedMessage:YES];
         
         [_pinnedContainer removeFromSuperview];
         _pinnedContainer = nil;

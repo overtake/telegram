@@ -18,14 +18,18 @@
 @implementation TGReplyObject
 
 -(id)initWithReplyMessage:(TL_localMessage *)replyMessage fromMessage:(TL_localMessage *)fromMessage tableItem:(MessageTableItem *)item {
+    return [self initWithReplyMessage:replyMessage fromMessage:fromMessage tableItem:item pinnedMessage:NO];
+}
+
+-(id)initWithReplyMessage:(TL_localMessage *)replyMessage fromMessage:(TL_localMessage *)fromMessage tableItem:(MessageTableItem *)item pinnedMessage:(BOOL)pinnedMessage {
     if(self = [super init]) {
         
         _item = item;
         _fromMessage = fromMessage;
         _replyMessage = replyMessage;
+        _pinnedMessage = pinnedMessage;
         
-        
-        _containerHeight = 33;
+        _containerHeight = 30;
         
         if(_replyMessage != nil)
             [self updateObject];
@@ -54,14 +58,14 @@
     
     NSColor *nameColor = LINK_COLOR;
     
-    NSString *name = _replyMessage.isPost ? _replyMessage.chat.title : _replyMessage.fromUser.fullName;
+    NSString *name = self.isPinnedMessage ? NSLocalizedString(@"PinnedHeaderMessage", nil) : (_replyMessage.isPost ? _replyMessage.chat.title : _replyMessage.fromUser.fullName);
     
     
     NSMutableAttributedString *replyHeader = [[NSMutableAttributedString alloc] init];
     
     [replyHeader appendString:name withColor:nameColor];
     
-    [replyHeader setFont:TGSystemMediumFont(13) forRange:replyHeader.range];
+    [replyHeader setFont:TGSystemMediumFont(12.5) forRange:replyHeader.range];
     
   //  [replyHeader addAttribute:NSLinkAttributeName value:[TMInAppLinks peerProfile:_replyMessage.fwd_from_id != nil ? _replyMessage.fwd_from_id : [TL_peerUser createWithUser_id:_replyMessage.from_id]] range:replyHeader.range];
     
@@ -78,10 +82,14 @@
             [replyText appendString:[MessagesUtils serviceMessage:_replyMessage forAction:_replyMessage.action] withColor:GRAY_TEXT_COLOR];
         }
         
-        
-        
     } else {
-        [replyText appendString:[[[MessagesUtils mediaMessage:_replyMessage] stringByReplacingOccurrencesOfString:@"\n" withString:@" "] fixEmoji] withColor:GRAY_TEXT_COLOR];
+        if(self.isPinnedMessage) {
+            NSString *caption = _replyMessage.media.caption;
+            _replyMessage.media.caption = @"";
+            [replyText appendString:[[[MessagesUtils mediaMessage:_replyMessage] stringByReplacingOccurrencesOfString:@"\n" withString:@" "] fixEmoji] withColor:GRAY_TEXT_COLOR];
+            _replyMessage.media.caption = caption;
+        } else
+            [replyText appendString:[[[MessagesUtils mediaMessage:_replyMessage] stringByReplacingOccurrencesOfString:@"\n" withString:@" "] fixEmoji] withColor:GRAY_TEXT_COLOR];
     }
     
     
@@ -90,7 +98,7 @@
     
     [replyText addAttribute:NSParagraphStyleAttributeName value:style range:replyText.range];
     
-    [replyText setFont:TGSystemFont(13) forRange:replyText.range];
+    [replyText setFont:TGSystemFont(12.5) forRange:replyText.range];
     
     _replyText = replyText;
     
@@ -98,7 +106,7 @@
     
     _replyHeaderHeight = [replyHeader coreTextSizeOneLineForWidth:INT32_MAX].height;
     
-    _containerHeight = _replyHeaderHeight + _replyHeight + 3;
+    _containerHeight = _replyHeaderHeight + _replyHeight + 2;
     
     if([_replyMessage.media isKindOfClass:[TL_messageMediaPhoto class]]) {
         

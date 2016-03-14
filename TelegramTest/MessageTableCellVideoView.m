@@ -177,6 +177,8 @@ static NSImage *playImage() {
     
     [self.imageView setFrameSize:item.videoSize];
     
+    [self.progressView setCenterByView:self.progressView.superview];
+    
     [self updateVideoTimeView];
     
 }

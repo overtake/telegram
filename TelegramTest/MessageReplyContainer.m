@@ -85,17 +85,17 @@
     
     NSRange range = NSMakeRange(0, 1);
     
-    if(_replyObject.replyHeader.string.length == 0)
-    {
+   // if(_replyObject.replyHeader.string.length == 0)
+   // {
         return BLUE_SEPARATOR_COLOR;
-    }
+   // }
     
-    return [_replyObject.replyHeader attribute:NSForegroundColorAttributeName atIndex:0 effectiveRange:&range];
+   // return [_replyObject.replyHeader attribute:NSForegroundColorAttributeName atIndex:0 effectiveRange:&range];
 }
 
 
 -(int)xOffset {
-    return _replyObject.replyThumb || _replyObject.geoURL ? _replyObject.replyThumb.imageSize.width + [MessageTableItem defaultOffset] *2 : [MessageTableItem defaultOffset];
+    return _replyObject.replyThumb || _replyObject.geoURL ? _replyObject.replyThumb.imageSize.width + ([MessageTableItem defaultOffset] - 1) *2 : [MessageTableItem defaultOffset]-1;
 }
 
 -(void)update {
@@ -126,8 +126,8 @@
         [self.locationImageView removeFromSuperview];
     }
     
-    [_thumbImageView setFrameOrigin:NSMakePoint([MessageTableItem defaultOffset], 1)];
-    [_locationImageView setFrameOrigin:NSMakePoint([MessageTableItem defaultOffset], 1)];
+    [_thumbImageView setFrameOrigin:NSMakePoint([MessageTableItem defaultOffset]-1, 1)];
+    [_locationImageView setFrameOrigin:NSMakePoint([MessageTableItem defaultOffset]-1, 1)];
     
     [self.nameView setText:[_replyObject replyHeader] maxWidth:NSWidth(self.frame) - self.xOffset height:_replyObject.replyHeaderHeight];
     

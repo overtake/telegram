@@ -104,7 +104,7 @@
                 strongWeak();
                 
                 if(strongSelf == weakSelf) {
-                   [strongSelf upgradeToSuperGroup];
+                    [strongSelf upgradeToSuperGroup:YES];
                 }
                 
             }];
@@ -142,6 +142,16 @@
         }];
     }
     
+    
+    NSUInteger deleteIndex = [self.tableView indexOfItem:_deleteAndExitItem];
+    
+    if(deleteIndex != NSNotFound) {
+        if(_chat.isCreator && editable) {
+            [_tableView insert:_convertToSuperGroup atIndex:deleteIndex tableRedraw:YES];
+        }
+    }
+    
+   
     
     
     [self.action setEditable:editable];
@@ -184,6 +194,9 @@
         }
         
     }];
+    
+    if(!editable)
+        [_tableView removeItem:_convertToSuperGroup tableRedraw:YES];
 }
 
 -(void)viewWillAppear:(BOOL)animated {
@@ -394,10 +407,9 @@
     
     [_tableView addItem:[[TGGeneralRowItem alloc] initWithHeight:20] tableRedraw:YES];
     
+    
     [_tableView addItem:_deleteAndExitItem tableRedraw:YES];
-    if(_chat.isCreator) {
-        [_tableView addItem:_convertToSuperGroup tableRedraw:YES];
-    }
+    
     
 
 }
@@ -507,7 +519,7 @@
             
             strongWeak();
             
-            [strongSelf upgradeToSuperGroup];
+            [strongSelf upgradeToSuperGroup:NO];
             
         } description:NSLocalizedString(@"Modern.Chat.UpgrateToMegagroup", nil) height:42 stateback:nil];
         upgradeToMegagroup.textColor = BLUE_UI_COLOR;
@@ -538,7 +550,7 @@
 
 -(NSRange)participantsRange {
     NSUInteger startIdx = [_tableView indexOfItem:_participantsHeaderItem]+1;
-    NSUInteger stopIdx = [_tableView indexOfItem:_deleteAndExitItem];
+    NSUInteger stopIdx = MIN([_tableView indexOfItem:_deleteAndExitItem],[_tableView indexOfItem:_convertToSuperGroup]);
     
     if(stopIdx != NSNotFound)
         stopIdx--;
@@ -597,9 +609,9 @@
     
 }
 
--(void)upgradeToSuperGroup {
+-(void)upgradeToSuperGroup:(BOOL)force {
     
-    confirm(NSLocalizedString(@"Modern.Chat.UpgradeConfirmHeader", nil), NSLocalizedString(@"Modern.Chat.UpgradeConfirmDescription", nil), ^{
+    confirm(NSLocalizedString(force ? @"ConvertGroupAlertWarning" : @"Modern.Chat.UpgradeConfirmHeader", nil), NSLocalizedString(force ? @"ConvertGroupAlert" : @"Modern.Chat.UpgradeConfirmDescription", nil), ^{
         
         [self showModalProgress];
         
