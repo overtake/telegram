@@ -110,7 +110,7 @@ Telegram *TelegramInstance() {
 
 static int max_chat_users = 199;
 static int max_broadcast_users = 100;
-static int megagroup_size_max = 1000;
+static int megagroup_size_max = 5000;
 
 static int edit_time_limit_default = 2*24*60*60;
 

@@ -17,7 +17,7 @@
 @implementation ComposeActionGroupBehavior
 
 -(NSUInteger)limit {
-    return maxChatUsers()-1;
+    return megagroupSizeMax();
 }
 
 -(NSString *)doneTitle {
@@ -32,7 +32,7 @@
         
         [attr appendString:NSLocalizedString(@"Compose.GroupTitle", nil) withColor:NSColorFromRGB(0x333333)];
         
-        NSRange range = [attr appendString:[NSString stringWithFormat:@" - %lu/%lu",self.action.result.multiObjects.count,[self limit]] withColor:DARK_GRAY];
+        NSRange range = [attr appendString:[NSString stringWithFormat:@" - %lu/%lu",(self.action.result.multiObjects.count + 1),[self limit]] withColor:DARK_GRAY];
         
         [attr setFont:TGSystemFont(12) forRange:range];
         
@@ -81,36 +81,80 @@
     
     weak();
     
-    self.request = [RPCRequest sendRequest:[TLAPI_messages_createChat createWithUsers:array title:self.action.result.singleObject] successHandler:^(RPCRequest *request, TLUpdates * response) {
+    id request = array.count >= maxChatUsers() ? [TLAPI_messages_createChat createWithUsers:array title:self.action.result.singleObject] : [TLAPI_channels_createChannel createWithFlags:1 << 1 title:self.action.result.singleObject about:nil];
+    
+    
+    __block TLUpdates *reqResponse;
+    __block RpcError *rpcError;
+    dispatch_block_t process_error = ^{
+        [weakSelf.delegate behaviorDidEndRequest:nil];
         
-        if(response.updates.count > 1) {
-            TL_localMessage *msg = [TL_localMessage convertReceivedMessage:(TLMessage *) ( [response.updates[2] message])];
+        if(rpcError.error_code == 400) {
+            alert(appName(), NSLocalizedString(rpcError.error_msg, nil));
+        } else if(rpcError.error_code == 420) {
+            alert(appName(), [NSString stringWithFormat:NSLocalizedString(@"FLOOD_WAIT", nil),MAX(1,roundf((float)rpcError.resultId/60.0f))]);
+        }
+    };
+    
+    dispatch_block_t group_block = ^{
+        if(reqResponse.updates.count > 1) {
+            TL_localMessage *msg = [TL_localMessage convertReceivedMessage:(TLMessage *) ( [reqResponse.updates[2] message])];
             
             [[FullChatManager sharedManager] performLoad:msg.conversation.chat.n_id callback:^(TLChatFull *fullChat) {
-                [weakSelf.delegate behaviorDidEndRequest:response];
+                [weakSelf.delegate behaviorDidEndRequest:reqResponse];
                 
                 [weakSelf.action.currentViewController.navigationViewController showMessagesViewController:msg.conversation];
             }];
+        }
+    };
+    
+    
+    
+    dispatch_block_t supergroup_block = ^{
+        if(reqResponse.chats.count > 0) {
+            
+             TL_channel *channel = [[ChatsManager sharedManager] find:[(TL_channel *)reqResponse.chats[0] n_id]];
+            
+            [RPCRequest sendRequest:[TLAPI_channels_inviteToChannel createWithChannel:channel.inputPeer users:array] successHandler:^(id request, id response) {
+                
+                weakSelf.action.object = channel;
+                [weakSelf.delegate behaviorDidEndRequest:reqResponse];
+                [[FullChatManager sharedManager] loadIfNeed:channel.n_id force:YES];
+                [weakSelf.action.currentViewController.messagesViewController setCurrentConversation:channel.dialog];
+                [weakSelf.action.currentViewController.navigationViewController gotoViewController:weakSelf.action.currentViewController.messagesViewController animated:NO];
+                
+                [weakSelf.delegate behaviorDidEndRequest:weakSelf];
+                
+            } errorHandler:^(id request, RpcError *error) {
+                rpcError = error;
+                
+                process_error();
+            }];
+               
+        }
+
+    };
+    
+    
+    self.request = [RPCRequest sendRequest:request successHandler:^(RPCRequest *request, TLUpdates * response) {
+        
+        reqResponse = response;
+        
+        if(array.count >= maxChatUsers()) {
+            supergroup_block();
+        } else {
+            group_block();
         }
         
         
         
         
     } errorHandler:^(RPCRequest *request, RpcError *error) {
-        [ASQueue dispatchOnMainQueue:^{
-            [weakSelf.delegate behaviorDidEndRequest:nil];
-            
-            if(error.error_code == 400) {
-                alert(appName(), NSLocalizedString(error.error_msg, nil));
-            } else if(error.error_code == 420) {
-                alert(appName(), [NSString stringWithFormat:NSLocalizedString(@"FLOOD_WAIT", nil),MAX(1,roundf((float)error.resultId/60.0f))]);
-            }
-        }];
         
+        rpcError = error;
         
-        
-        
-    } timeout:10 queue:[ASQueue globalQueue].nativeQueue alwayContinueWithErrorContext:YES];
+        [ASQueue dispatchOnMainQueue:process_error];
+     } timeout:10 queue:[ASQueue globalQueue].nativeQueue alwayContinueWithErrorContext:YES];
     
     
     
