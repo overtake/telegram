@@ -444,24 +444,10 @@
     } else if([action isKindOfClass:[TL_messageActionPinMessage class]]) {
         actionText = NSLocalizedString(@"MessageAction.Service.PinMessage", nil);
         
-        /*
-         
-         "Message.PinnedTextMessage" = "pinned \"%@\"";
-         "Message.PinnedPhotoMessage" = "pinned photo";
-         "Message.PinnedVideoMessage" = "pinned video";
-         "Message.PinnedAudioMessage" = "pinned voice message";
-         "Message.PinnedDocumentMessage" = "pinned file";
-         "Message.PinnedAnimationMessage" = "pinned GIF";
-         "Message.PinnedStickerMessage" = "pinned sticker";
-         "Message.PinnedLocationMessage" = "pinned location";
-         "Message.PinnedContactMessage" = "pinned contact";
-         "Message.PinnedDeletedMessage" = "pinned deleted message";
-         */
-        
         if(!message.replyMessage || (message.replyMessage.media == nil && message.replyMessage.message.length == 0)) {
             actionText = NSLocalizedString(@"Message.PinnedDeletedMessage", nil);
-        } else if(message.replyMessage.media == nil) {
-            actionText = [NSString stringWithFormat:actionText, message.replyMessage.message];
+        } else if(message.replyMessage.media == nil || [message.replyMessage.media isKindOfClass:[TL_messageMediaWebPage class]]) {
+            actionText = [NSString stringWithFormat:actionText, [[message.replyMessage.message stringByReplacingOccurrencesOfString:@"\n" withString:@" "] substringWithRange:NSMakeRange(0, MIN(30,message.replyMessage.message.length))]];
         } else {
             
             NSString *caption = message.replyMessage.media.caption;

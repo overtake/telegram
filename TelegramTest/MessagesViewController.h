@@ -173,6 +173,8 @@ typedef enum {
 -(void)removeWebpage;
 -(void)updateWebpage;
 
+
+-(void)clearNoWebpage;
 -(void)markAsNoWebpage;
 -(BOOL)noWebpage:(NSString *)message;
 
@@ -187,5 +189,7 @@ typedef enum {
 -(void)setEditableMessage:(TL_localMessage *)message;
 
 -(TGInputMessageTemplateType)templateType;
+
+
 
 @end

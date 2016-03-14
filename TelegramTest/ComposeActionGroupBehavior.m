@@ -97,13 +97,21 @@
         
         
     } errorHandler:^(RPCRequest *request, RpcError *error) {
-        [weakSelf.delegate behaviorDidEndRequest:nil];
+        [ASQueue dispatchOnMainQueue:^{
+            [weakSelf.delegate behaviorDidEndRequest:nil];
+            
+            if(error.error_code == 400) {
+                alert(appName(), NSLocalizedString(error.error_msg, nil));
+            } else if(error.error_code == 420) {
+                alert(appName(), [NSString stringWithFormat:NSLocalizedString(@"FLOOD_WAIT", nil),MAX(1,roundf((float)error.resultId/60.0f))]);
+            }
+        }];
         
-        if(error.error_code == 400) {
-            alert(appName(), NSLocalizedString(error.error_msg, nil));
-        }
         
-    } timeout:10 queue:[ASQueue globalQueue].nativeQueue];
+        
+        
+    } timeout:10 queue:[ASQueue globalQueue].nativeQueue alwayContinueWithErrorContext:YES];
+    
     
     
 }

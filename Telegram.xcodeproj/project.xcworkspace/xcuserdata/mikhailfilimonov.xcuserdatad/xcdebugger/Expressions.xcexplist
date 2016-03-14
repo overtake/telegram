@@ -1363,6 +1363,14 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "-[TGWebpageObject blockHeight]:TGWebpageObject.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.author">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "__38-[TGEnterPasswordPanel initWithFrame:]_block_invoke_3:TGEnterPasswordPanel.m">
       </ContextState>
       <ContextState
@@ -3728,6 +3736,9 @@
       </ContextState>
       <ContextState
          contextName = "__41-[NewContactsManager remoteCheckContacts]_block_invoke:NewContactsManager.m">
+      </ContextState>
+      <ContextState
+         contextName = "__45-[ComposeActionGroupBehavior createGroupChat]_block_invoke_2115:ComposeActionGroupBehavior.m">
       </ContextState>
       <ContextState
          contextName = "-[MessageTableItemPhoto initWithObject:]:MessageTableItemPhoto.m">

@@ -92,7 +92,7 @@
             }
             
             alert(appName(), localizedString);
-        }];
+        } alwayContinueWithErrorContext:YES];
         
         
     } else
@@ -120,28 +120,28 @@
         }
         
     } errorHandler:^(RPCRequest *request, RpcError *error) {
-        
-        if(self.action.result.multiObjects.count == 1) {
-            [self.delegate behaviorDidEndRequest:request.response];
-            
-            NSString *localizedString = NSLocalizedString(error.error_msg, nil);
-            
-            if([error.error_msg isEqualToString:@"USER_PRIVACY_RESTRICTED"]) {
-                localizedString = [NSString stringWithFormat:localizedString, user.first_name, NSLocalizedString(@"groups", nil), user.first_name];
-            }
-            
-            alert(appName(), localizedString);
-        } else if(members.count == 0) {
-            [ASQueue dispatchOnMainQueue:^{
+        [ASQueue dispatchOnMainQueue:^{
+            if(self.action.result.multiObjects.count == 1) {
+                [self.delegate behaviorDidEndRequest:request.response];
+                
+                NSString *localizedString = NSLocalizedString(error.error_msg, nil);
+                
+                if([error.error_msg isEqualToString:@"USER_PRIVACY_RESTRICTED"]) {
+                    localizedString = [NSString stringWithFormat:localizedString, user.first_name, NSLocalizedString(@"groups", nil), user.first_name];
+                }
+                
+                alert(appName(), localizedString);
+            } else if(members.count == 0) {
+                
                 [self.delegate behaviorDidEndRequest:nil];
                 [self.action.currentViewController.navigationViewController goBackWithAnimation:YES];
-            }];
-            
-        }
-        
+                
+                
+            }
+        }];
         
 
-    } timeout:0 queue:[ASQueue globalQueue].nativeQueue];
+    } timeout:0 queue:[ASQueue globalQueue].nativeQueue  alwayContinueWithErrorContext:YES];
 }
 
 

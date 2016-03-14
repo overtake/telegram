@@ -14,7 +14,6 @@
 
 @synthesize size = _size;
 @synthesize imageSize = _imageSize;
-@synthesize author = _author;
 @synthesize imageObject = _imageObject;
 @synthesize descSize = _descSize;
 

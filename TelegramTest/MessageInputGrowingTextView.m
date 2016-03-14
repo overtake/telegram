@@ -265,7 +265,7 @@ typedef enum {
 -(void)checkWebpages {
     
     NSString *link = [self.string webpageLink];
-    
+    [appWindow().navigationController.messagesViewController clearNoWebpage];
     [appWindow().navigationController.messagesViewController checkWebpage:link];
     
 }

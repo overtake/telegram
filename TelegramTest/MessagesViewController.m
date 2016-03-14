@@ -3911,6 +3911,10 @@ static NSTextAttachment *headerMediaIcon() {
     
 }
 
+-(void)clearNoWebpage {
+    _noWebpageString = @"";
+}
+
 -(BOOL)noWebpage:(NSString *)message {
     return [_noWebpageString isEqualToString:[message webpageLink]];
 }

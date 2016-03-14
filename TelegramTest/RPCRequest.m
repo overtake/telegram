@@ -40,6 +40,13 @@
     return request;
 }
 
++ (id)sendRequest:(id)object successHandler:(RPCSuccessHandler)successHandler errorHandler:(RPCErrorHandler)errorHandler timeout:(int)timeout queue:(dispatch_queue_t)queue alwayContinueWithErrorContext:(BOOL)alwayContinueWithErrorContext {
+    RPCRequest *request = [self sendRequest:object successHandler:successHandler errorHandler:errorHandler timeout:timeout];
+    request.queue = queue;
+    request.alwayContinueWithErrorContext = alwayContinueWithErrorContext;
+    return request;
+}
+
 - (void)timeoutInterval:(NSTimer *)timer {
     RPCRequest *request = [timer userInfo];
     request.error = [[RpcError alloc] init];
