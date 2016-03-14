@@ -595,6 +595,8 @@ static const int bottomHeight = 60;
     
     TGVideoViewerItem *item = (TGVideoViewerItem *) currentViewerItem;
     
+    [_photoCaptionView setHidden:[currentViewerItem isKindOfClass:[TGVideoViewerItem class]]];
+    
     if([currentViewerItem isKindOfClass:[TGVideoViewerItem class]] && item.isset) {
         
         [self.imageContainerView setHidden:YES];
