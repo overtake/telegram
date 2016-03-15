@@ -240,8 +240,9 @@ static NSMutableDictionary *cache;
     if(newAction == MessagesTopInfoActionNone) {
         [self hide:NO];
     } else {
-        [self show:NO];
         self.action = newAction;
+        [self show:NO];
+        
     }
     
     [_request cancelRequest];
