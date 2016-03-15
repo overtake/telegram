@@ -360,7 +360,6 @@
             
             [[TGPhotoViewer viewer].invokeWindow.navigationController showMessagesViewController:msg.conversation];
             
-            
             [[TGPhotoViewer viewer].invokeWindow.navigationController.messagesViewController setState:MessagesViewControllerStateNone];
             [[TGPhotoViewer viewer].invokeWindow.navigationController.messagesViewController unSelectAll:NO];
             

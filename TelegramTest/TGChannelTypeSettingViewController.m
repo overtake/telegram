@@ -218,7 +218,7 @@
     }];
 
     
-    GeneralSettingsBlockHeaderItem *selectorDesc = [[GeneralSettingsBlockHeaderItem alloc] initWithString:[self.action.result.singleObject boolValue] ? NSLocalizedString(!chat.isMegagroup ? @"Channel.ChoiceTypeDescriptionPublic" : @"Group.ChoiceTypeDescriptionPublic", nil) : NSLocalizedString(!chat.isMegagroup ?  @"Channel.ChoiceTypeDescriptionPrivate" : @"Group.ChoiceTypeDescriptionPrivate", nil) height:42 flipped:YES];
+    GeneralSettingsBlockHeaderItem *selectorDesc = [[GeneralSettingsBlockHeaderItem alloc] initWithString:[self.action.result.singleObject boolValue] ? NSLocalizedString(!chat.isMegagroup ? @"Channel.ChoiceTypeDescriptionPublic" : @"Group.ChoiceTypeDescriptionPublic", nil) : NSLocalizedString(!chat.isMegagroup ?  @"Channel.ChoiceTypeDescriptionPrivate" : @"Group.ChoiceTypeDescriptionPrivate", nil) flipped:YES];
     
     
     selectorDesc.xOffset = privateSelector.xOffset = publicSelector.xOffset = 30;
@@ -235,7 +235,7 @@
     } else {
         [self.tableView addItem:_joinLinkItem tableRedraw:NO];
         
-        GeneralSettingsBlockHeaderItem *joinDescription = [[GeneralSettingsBlockHeaderItem alloc] initWithString:NSLocalizedString(!chat.isMegagroup ? @"Channel.NewChannelSettingUpJoinLinkDescription" : @"Group.PrivateTypeUpJoinLinkDescription", nil) height:42 flipped:YES];
+        GeneralSettingsBlockHeaderItem *joinDescription = [[GeneralSettingsBlockHeaderItem alloc] initWithString:NSLocalizedString(!chat.isMegagroup ? @"Channel.NewChannelSettingUpJoinLinkDescription" : @"Group.PrivateTypeUpJoinLinkDescription", nil) flipped:YES];
         
         [self.tableView addItem:joinDescription tableRedraw:NO];
         

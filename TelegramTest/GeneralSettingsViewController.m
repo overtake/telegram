@@ -250,7 +250,7 @@
         return @([SettingsArchiver checkMaskedSetting:TripleLayoutSettings]);
     }];
     
-    [self.tableView insert:tripleLayout atIndex:self.tableView.list.count tableRedraw:NO];
+  //  [self.tableView insert:tripleLayout atIndex:self.tableView.list.count tableRedraw:NO];
     
     
     
