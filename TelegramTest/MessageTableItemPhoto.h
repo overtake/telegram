@@ -15,7 +15,7 @@
 
 @property (nonatomic,assign) NSSize imageSize;
 
-
+-(BOOL)isSecretPhoto;
 
 
 @end

@@ -19,7 +19,7 @@
 #import "TGExternalImageObject.h"
 
 @interface MessageTableCellPhotoView()<TGImageObjectDelegate>
-@property (nonatomic,strong) NSImageView *fireImageView;
+@property (nonatomic,strong) NSImageView *secretImageView;
 
 @property (nonatomic,assign) NSPoint startDragLocation;
 
@@ -107,6 +107,10 @@ NSImage *fireImage() {
 }
 
 - (NSMenu *)contextMenu {
+    
+    if([self.item.message isKindOfClass:[TL_destructMessage class]])
+        return [super contextMenu];
+    
     NSMenu *menu = [[NSMenu alloc] initWithTitle:@"Photo menu"];
     
     [menu addItem:[NSMenuItem menuItemWithTitle:NSLocalizedString(@"Context.OpenInQuickLook", nil) withBlock:^(id sender) {
@@ -135,20 +139,20 @@ NSImage *fireImage() {
 }
 
 
-- (void)initFireImage {
-    if(!self.fireImageView) {
-        self.fireImageView = imageViewWithImage(fireImage());
+- (void)initSecretImage {
+    if(!_secretImageView) {
+        _secretImageView = imageViewWithImage(fireImage());
         
-        [self.fireImageView setHidden:YES];
+        [_secretImageView setHidden:YES];
         
-        [self.imageView addSubview:self.fireImageView];
+        [self.imageView addSubview:_secretImageView];
 
     }
 }
 
-- (void)deallocFireImage {
-    [self.fireImageView removeFromSuperview];
-    self.fireImageView = nil;
+- (void)deallocSecretImage {
+    [_secretImageView removeFromSuperview];
+    _secretImageView = nil;
 }
 
 
@@ -173,19 +177,17 @@ NSImage *fireImage() {
     [self.progressView setImage:cellState == CellStateSending ? image_LoadCancelWhiteIcon() : nil forState:TMLoaderViewStateDownloading];
     [self.progressView setImage:cellState == CellStateSending ? image_LoadCancelWhiteIcon() : nil forState:TMLoaderViewStateUploading];
 
-    BOOL isNeedSecretBlur = ([self.item.message isKindOfClass:[TL_destructMessage class]] && ((TL_destructMessage *)self.item.message).ttl_seconds < 60*60 && ((TL_destructMessage *)self.item.message).ttl_seconds > 0);
 
     
-    [self deallocFireImage];
+    [self deallocSecretImage];
     
     if(cellState == CellStateNormal) {
         
-//        if(isNeedSecretBlur)
-//            [self initFireImage];
-//        
-//        [self.imageView setIsAlwaysBlur:isNeedSecretBlur];
-//        [self.fireImageView setHidden:!isNeedSecretBlur];
-//        [self.fireImageView setCenterByView:self.imageView];
+        if(item.isSecretPhoto)
+            [self initSecretImage];
+        
+        [_secretImageView setHidden:!item.isSecretPhoto];
+        [_secretImageView setCenterByView:self.imageView];
     }
     
     

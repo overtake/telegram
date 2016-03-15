@@ -125,7 +125,7 @@
     weak();
     
     
-    if(self.item.message.chat.isChannel && self.item.message.fwd_from == nil) {
+    if([self.item.message.chat isKindOfClass:[TLChat class]] && self.item.message.chat.isChannel && self.item.message.fwd_from == nil) {
         BOOL canEdit = self.item.message.isPost ?  self.item.message.chat.isCreator || (self.item.message.chat.isEditor && self.item.message.from_id == [UsersManager currentUserId]) : self.item.message.from_id == [UsersManager currentUserId];
         
         canEdit = canEdit && self.item.message.via_bot_id == 0;

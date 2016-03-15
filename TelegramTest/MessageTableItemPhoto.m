@@ -97,6 +97,10 @@
         
         self.imageObject = [[TGImageObject alloc] initWithLocation:photoSize.location placeHolder:cachePhoto sourceId:self.message.n_id size:photoSize.size];
         
+        if(self.isSecretPhoto) {
+            self.imageObject.imageProcessor = [ImageUtils b_processor];
+        }
+        
         self.imageObject.thumbProcessor = [ImageUtils b_processor];
         
         self.imageObject.realSize = NSMakeSize(photoSize.w, photoSize.h);
@@ -114,6 +118,10 @@
     
     self.imageObject.imageSize = imageSize;
     
+}
+
+-(BOOL)isSecretPhoto {
+    return ([self.message isKindOfClass:[TL_destructMessage class]] && ((TL_destructMessage *)self.message).ttl_seconds < 60 && ((TL_destructMessage *)self.message).ttl_seconds > 0);
 }
 
 

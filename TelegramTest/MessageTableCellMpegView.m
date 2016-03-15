@@ -123,6 +123,10 @@
 
 -(NSMenu *)contextMenu {
     
+    
+    if([self.item.message isKindOfClass:[TL_destructMessage class]])
+        return [super contextMenu];
+    
      MessageTableItemMpeg *item = (MessageTableItemMpeg *) self.item;
     NSMenu *menu = [[NSMenu alloc] initWithTitle:@"Gifs"];
     

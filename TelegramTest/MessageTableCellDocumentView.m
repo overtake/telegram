@@ -255,6 +255,9 @@
 }
 
 - (NSMenu *)contextMenu {
+    
+    
+    
     NSMenu *menu = [[NSMenu alloc] initWithTitle:@"Documents menu"];
     
     weak();
@@ -270,6 +273,8 @@
         
         MessageTableItemDocument *item = (MessageTableItemDocument *)self.item;
         
+        if([self.item.message isKindOfClass:[TL_destructMessage class]])
+            return menu;
         
         [menu addItem:[NSMenuItem separatorItem]];
         

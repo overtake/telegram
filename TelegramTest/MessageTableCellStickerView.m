@@ -35,6 +35,7 @@
 
 - (NSMenu *)contextMenu {
     
+    
     NSMenu *menu = [[NSMenu alloc] initWithTitle:@"Sticker menu"];
     
     weak();

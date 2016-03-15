@@ -142,6 +142,11 @@ static NSImage *playImage() {
 }
 
 - (NSMenu *)contextMenu {
+    
+    
+    if([self.item.message isKindOfClass:[TL_destructMessage class]])
+        return [super contextMenu];
+    
     NSMenu *menu = [[NSMenu alloc] initWithTitle:@"Video menu"];
     
     weak();

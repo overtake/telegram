@@ -140,6 +140,7 @@
 
 
 - (NSMenu *)contextMenu {
+    
     NSMenu *menu = [[NSMenu alloc] initWithTitle:@"Text menu"];
 
     
