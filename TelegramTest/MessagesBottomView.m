@@ -1402,6 +1402,7 @@ static RBLPopover *popover;
     // hashtag = 2
     // botCommand = 3
     
+    NSUInteger originalLength = string.length;
 
     while ((range = [string rangeOfString:@"@"]).location != NSNotFound || (range = [string rangeOfString:@"#"]).location != NSNotFound || (range = [string rangeOfString:@"/"]).location != NSNotFound) {
         
@@ -1421,7 +1422,7 @@ static RBLPopover *popover;
         
         if(search.length > 0) {
             
-            if(selectedRange.location == range.location + search.length + 1)
+            if((selectedRange.location - (originalLength - string.length)) == range.location + search.length + 1)
                 break;
             else
                 search = nil;
@@ -1439,11 +1440,11 @@ static RBLPopover *popover;
         void (^callback)(NSString *fullUserName) = ^(NSString *fullUserName) {
             NSMutableString *insert = [[self.inputMessageTextField string] mutableCopy];
             
-            [insert insertString:[fullUserName substringFromIndex:search.length] atIndex:selectedRange.location];
+            [insert insertString:fullUserName atIndex:selectedRange.location - search.length];
             
             
             
-            [self.inputMessageTextField insertText:[fullUserName stringByAppendingString:@" "] replacementRange:NSMakeRange(range.location + 1, search.length)];
+            [self.inputMessageTextField insertText:[fullUserName stringByAppendingString:@" "] replacementRange:NSMakeRange(selectedRange.location - search.length, search.length)];
             
         };
         
@@ -1466,6 +1467,10 @@ static RBLPopover *popover;
         }
         
     } else if(self.inputMessageTextField.stringValue.length > 1 && [[self.inputMessageTextField.stringValue substringToIndex:1] isEqualToString:@"@"]) {
+        
+        [self.messagesViewController.hintView hide];
+        [self setProgress:NO];
+
         
         NSString *value = self.inputMessageTextField.stringValue;
         

@@ -642,7 +642,7 @@
                     
                     
                     [messages enumerateObjectsUsingBlock:^(TL_localMessage *message, NSUInteger idx, BOOL * _Nonnull stop) {
-                        if(!message.n_out && message.unread) {
+                        if(!message.n_out) {
                             conversation.unread_count--;
                         }
                         
@@ -652,10 +652,8 @@
                         
                     }];
                     
-                    if(!n_out && conversation.read_inbox_max_id < max_id) {
-                        
+                    if(!n_out)
                         conversation.read_inbox_max_id = max_id;
-                    }
                     
                     [Notification perform:[Notification notificationNameByDialog:conversation action:@"unread_count"] data:@{KEY_DIALOG:conversation,KEY_LAST_CONVRESATION_DATA:[MessagesUtils conversationLastData:conversation]}];
                     [Notification perform:MESSAGE_READ_EVENT data:@{KEY_MESSAGE_ID_LIST:ids}];
@@ -746,9 +744,7 @@
     
     if(message.unread && !message.n_out && message.conversation.read_inbox_max_id < message.n_id) {
         dialog.unread_count++;
-    } else if(!message.unread && !message.n_out) {
-        dialog.unread_count = 0;
-    }
+    } 
     
     if([message.action isKindOfClass:[TL_messageActionChatMigrateTo class]]) {
         dialog.unread_count = 0;

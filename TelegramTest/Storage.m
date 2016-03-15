@@ -1330,7 +1330,7 @@ TL_localMessage *parseMessage(FMResultSet *result) {
         
         if(ids.count > 0)
         {
-            NSString *sql = [NSString stringWithFormat:@"update messages set flags= flags & ~1 where n_id in (%@)",[ids componentsJoinedByString:@","]];
+            NSString *sql = [NSString stringWithFormat:@"update %@ set flags= flags & ~1 where n_id in (%@)",tableMessages,[ids componentsJoinedByString:@","]];
             
             [db executeUpdateWithFormat:sql,nil];
         }
