@@ -539,6 +539,9 @@
         
         
         [self updateTop:message needUpdate:YES update_real_date:update_real_date];
+        
+        
+        
         [Notification performOnStageQueue:MESSAGE_RECEIVE_EVENT data:@{KEY_MESSAGE:message}];
     }];
 }
@@ -579,6 +582,10 @@
     
     [self.queue dispatchOnQueue:^{
         
+        
+        if([message.to_id isKindOfClass:[TL_peerChannel class]] && message.chat.left) {
+            return;
+        }
         
         NSArray *unloaded = [self unloadedConversationsWithMessages:@[message]];
         

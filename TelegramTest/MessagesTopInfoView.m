@@ -210,6 +210,7 @@ static NSMutableDictionary *cache;
     [Notification addObserver:self selector:@selector(didUpdatePinnedMessage:) name:UPDATE_PINNED_MESSAGE];
     
     [Notification addObserver:self selector:@selector(messagTableEditedMessageUpdate:) name:UPDATE_EDITED_MESSAGE];
+    [Notification addObserver:self selector:@selector(messageTableDeleteMessage:) name:MESSAGE_DELETE_EVENT];
     
     TLUser *user = conversation.user;
     
@@ -272,6 +273,38 @@ static NSMutableDictionary *cache;
     
 }
 
+
+-(void)messageTableDeleteMessage:(NSNotification *)notification {
+    
+    
+    
+    
+    [ASQueue dispatchOnMainQueue:^{
+        
+        NSArray *updateData = [notification.userInfo objectForKey:KEY_DATA];
+        
+        if(updateData.count == 0)
+            return;
+
+        
+        
+        [updateData enumerateObjectsUsingBlock:^(NSDictionary *obj, NSUInteger idx, BOOL *stop) {
+            
+            
+            int peer_id = [obj[KEY_PEER_ID] intValue];
+            
+            int message_id = [obj[KEY_MESSAGE_ID] intValue];
+            
+            if(self.conversation.peer_id == peer_id && _pinnedContainer.replyObject.replyMessage.n_id == message_id) {
+                [self deletePinnedMessage:_pinnedContainer.replyObject.replyMessage chat_id:abs(peer_id) withRequest:NO];
+                *stop = YES;
+            }
+            
+        }];
+
+        
+    }];
+}
 
 -(void)messagTableEditedMessageUpdate:(NSNotification *)notification {
     TL_localMessage *message = notification.userInfo[KEY_MESSAGE];
@@ -352,7 +385,7 @@ static NSMutableDictionary *cache;
                 
                 dispatch_block_t block = ^{
                     strongSelf.pinnedContainer.pinnedMessage = NO;
-                    [strongSelf deletePinnedMessage:msg chat_id:chat_id];
+                    [strongSelf deletePinnedMessage:msg chat_id:chat_id withRequest:YES];
                 };
                 
                 confirm(appName(), NSLocalizedString(@"Channel.ConfirmUnpin", nil), block, nil);
@@ -403,7 +436,7 @@ static NSMutableDictionary *cache;
     
 }
 
--(void)deletePinnedMessage:(TL_localMessage *)msg chat_id:(int)chat_id {
+-(void)deletePinnedMessage:(TL_localMessage *)msg chat_id:(int)chat_id withRequest:(BOOL)withRequest {
    
      dispatch_block_t block = ^{
         TLChatFull *chat = [[FullChatManager sharedManager] find:chat_id];
@@ -416,7 +449,7 @@ static NSMutableDictionary *cache;
 
     };
     
-    if(_conversation.chat.isManager) {
+    if(_conversation.chat.isManager && withRequest) {
         
         [self.controller showModalProgress];
         

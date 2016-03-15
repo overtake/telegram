@@ -1094,9 +1094,12 @@ static RBLPopover *popover;
             [RPCRequest sendRequest:[TLAPI_channels_joinChannel createWithChannel:weakSelf.dialog.chat.inputPeer] successHandler:^(RPCRequest *request, id response) {
                 
                 
-                TL_localMessage *msg = [TL_localMessageService createWithFlags:TGMENTIONMESSAGE n_id:0 from_id:[UsersManager currentUserId] to_id:weakSelf.dialog.peer reply_to_msg_id:0 date:[[MTNetwork instance] getTime] action:([TL_messageActionChatAddUser createWithUsers:[@[@([UsersManager currentUserId])] mutableCopy]]) fakeId:[MessageSender getFakeMessageId] randomId:rand_long() dstate:DeliveryStateNormal];
+                if(!weakSelf.dialog.chat.isMegagroup) {
+                    TL_localMessage *msg = [TL_localMessageService createWithFlags:TGMENTIONMESSAGE n_id:0 from_id:[UsersManager currentUserId] to_id:weakSelf.dialog.peer reply_to_msg_id:0 date:[[MTNetwork instance] getTime] action:([TL_messageActionChatAddUser createWithUsers:[@[@([UsersManager currentUserId])] mutableCopy]]) fakeId:[MessageSender getFakeMessageId] randomId:rand_long() dstate:DeliveryStateNormal];
+                    
+                    [MessagesManager addAndUpdateMessage:msg];
+                }
                 
-                [MessagesManager addAndUpdateMessage:msg];
                 
                 weakSelf.dialog.invisibleChannel = NO;
                 

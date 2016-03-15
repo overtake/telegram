@@ -102,7 +102,6 @@ static NSMutableArray *managers;
         [self->list removeObject:current];
         [self->keys removeObjectForKey:key];
     }
-
 }
 
 

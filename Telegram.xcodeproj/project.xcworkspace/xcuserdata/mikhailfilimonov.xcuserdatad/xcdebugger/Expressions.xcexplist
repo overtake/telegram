@@ -1958,6 +1958,9 @@
                value = "dialog.top_important_message">
             </PersistentString>
             <PersistentString
+               value = "message.to_id">
+            </PersistentString>
+            <PersistentString
                value = "message.n_id">
             </PersistentString>
          </PersistentStrings>
@@ -3388,6 +3391,14 @@
          contextName = "__46-[TMCollectionPageController setConversation:]_block_invoke:TMCollectionPageController.m">
       </ContextState>
       <ContextState
+         contextName = "-[MessageTableItem makeSize]:MessageTableItem.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.rightSize">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "__53-[ComposeActionAddChannelModeratorBehavior addAccess]_block_invoke_4:ComposeActionAddChannelModeratorBehavior.m">
       </ContextState>
       <ContextState
@@ -3979,7 +3990,7 @@
          contextName = "-[TGModernMessageCellContainerView checkAndMakeHeaderContainer:]:TGModernMessageCellContainerView.m">
          <PersistentStrings>
             <PersistentString
-               value = "item.headerSize.height">
+               value = "item.headerSize">
             </PersistentString>
             <PersistentString
                value = "item.headerName">
@@ -5064,6 +5075,14 @@
       </ContextState>
       <ContextState
          contextName = "-[TGMessagesHintRowItem initWithImageObject:text:desc:]:TGMessagesHintView.m">
+      </ContextState>
+      <ContextState
+         contextName = "__37-[TGUpdateChannels addWaitingUpdate:]_block_invoke103:TGUpdateChannels.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "updates">
+            </PersistentString>
+         </PersistentStrings>
       </ContextState>
       <ContextState
          contextName = "-[TGModernForwardCellContainer drawRect:]:TGModernForwardCellContainer.m">
