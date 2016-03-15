@@ -35,67 +35,99 @@
             if([obj isKindOfClass:[TLChat class]]) {
                 TLChat *newChat = (TLChat *)obj;
                 
-            //    [[FullChatManager sharedManager] loadIfNeed:newChat.n_id force:NO];
                 
                 TLChat *currentChat = [self->keys objectForKey:[obj valueForKey:key]];
                 if(currentChat != nil) {
                     
                     BOOL isNeedUpdateTypeNotification = NO;
                     
-                    
-                    
-                    if([currentChat.photo.photo_small hashCacheKey] != [newChat.photo.photo_small hashCacheKey]) {
-                        currentChat.photo = newChat.photo;
-                        [Notification perform:CHAT_UPDATE_PHOTO data:@{KEY_CHAT: currentChat}];
-                    }
-                    
-                    if(![currentChat.title isEqualToString:newChat.title]) {
-                        currentChat.title = newChat.title;
-                        [Notification perform:CHAT_UPDATE_TITLE data:@{KEY_CHAT: currentChat}];
-                    }
-                    
-                    currentChat.username = newChat.username;
-                    
-                    currentChat.participants_count = newChat.participants_count;
-                    currentChat.date = newChat.date;
-                    
-                    currentChat.access_hash = newChat.access_hash;
-                    
-                    if(currentChat.version != newChat.version) {
-                         currentChat.version = newChat.version;
+                    if(!currentChat.isMin) {
                         
-                        [[FullChatManager sharedManager] loadIfNeed:currentChat.n_id force:YES]; // force load chat if changed version.
-                    }
-                    
-                    if(currentChat.flags != newChat.flags) {
-                        if(!(currentChat.type == TLChatTypeNormal && newChat.type == TLChatTypeForbidden)) {
-                            currentChat.flags = newChat.flags;
+                        if([currentChat.photo.photo_small hashCacheKey] != [newChat.photo.photo_small hashCacheKey]) {
+                            currentChat.photo = newChat.photo;
+                            [Notification perform:CHAT_UPDATE_PHOTO data:@{KEY_CHAT: currentChat}];
+                        }
+                        
+                        if(![currentChat.title isEqualToString:newChat.title]) {
+                            currentChat.title = newChat.title;
+                            [Notification perform:CHAT_UPDATE_TITLE data:@{KEY_CHAT: currentChat}];
+                        }
+                        
+                        currentChat.username = newChat.username;
+                        
+                        currentChat.participants_count = newChat.participants_count;
+                        currentChat.date = newChat.date;
+                        
+                        currentChat.access_hash = newChat.access_hash;
+                        
+                        if(currentChat.version != newChat.version) {
+                            currentChat.version = newChat.version;
+                            
+                            [[FullChatManager sharedManager] loadIfNeed:currentChat.n_id force:YES]; // force load chat if changed version.
+                        }
+                        
+                        if(currentChat.flags != newChat.flags) {
+                            if(!(currentChat.type == TLChatTypeNormal && newChat.type == TLChatTypeForbidden)) {
+                                currentChat.flags = newChat.flags;
+                                isNeedUpdateTypeNotification = YES;
+                            }
+                        }
+                        
+                        if((currentChat.migrated_to || newChat.migrated_to) && (![currentChat.migrated_to isKindOfClass:newChat.migrated_to.class] || currentChat.migrated_to.channel_id !=  newChat.migrated_to.channel_id)) {
+                            currentChat.migrated_to = newChat.migrated_to;
+                            
+                            if(currentChat.isDeactivated && currentChat.migrated_to.channel_id != 0) {
+                                [Notification perform:DIALOG_DELETE data:@{KEY_DIALOG:currentChat.dialog}];
+                            }
+                        }
+                        
+                        
+                        
+                        if(currentChat.type != newChat.type) {
+                            currentChat.type = newChat.type;
                             isNeedUpdateTypeNotification = YES;
                         }
-                    }
-                    
-                    if((currentChat.migrated_to || newChat.migrated_to) && (![currentChat.migrated_to isKindOfClass:newChat.migrated_to.class] || currentChat.migrated_to.channel_id !=  newChat.migrated_to.channel_id)) {
-                        currentChat.migrated_to = newChat.migrated_to;
                         
-                        if(currentChat.isDeactivated && currentChat.migrated_to.channel_id != 0) {
-                            [Notification perform:DIALOG_DELETE data:@{KEY_DIALOG:currentChat.dialog}];
+                    } else {
+                        if(newChat.isBroadcast)
+                            currentChat.flags|= (1 << 5);
+                        else
+                            currentChat.flags&= ~(1 << 5);
+                        
+                        if(newChat.isVerified)
+                            currentChat.flags|= (1 << 7);
+                        else
+                            currentChat.flags&= ~(1 << 7);
+
+                        if(newChat.isMegagroup)
+                            currentChat.flags|= (1 << 8);
+                        else
+                            currentChat.flags&= ~(1 << 8);
+
+                        if(newChat.isDemocracy)
+                            currentChat.flags|= (1 << 10);
+                        else
+                            currentChat.flags&= ~(1 << 10);
+                        
+                        if(![currentChat.title isEqualToString:newChat.title])
+                            currentChat.title = newChat.title;
+                        
+                        if(![currentChat.username isEqualToString:newChat.username])
+                            currentChat.username = newChat.username;
+                        
+                        if([currentChat.photo.photo_small hashCacheKey] != [newChat.photo.photo_small hashCacheKey]) {
+                            currentChat.photo = newChat.photo;
+                            [Notification perform:CHAT_UPDATE_PHOTO data:@{KEY_CHAT: currentChat}];
                         }
-                    }
-                    
-                   
-                   
-                     if(currentChat.type != newChat.type) {
-                        currentChat.type = newChat.type;
+                        
                         isNeedUpdateTypeNotification = YES;
+                        
                     }
-                    
-                    
                     
                     if(isNeedUpdateTypeNotification) {
                         [Notification perform:CHAT_FLAGS_UPDATED data:@{KEY_CHAT:currentChat}];
-                         [Notification perform:CHAT_UPDATE_TYPE data:@{KEY_CHAT:currentChat}];
+                        [Notification perform:CHAT_UPDATE_TYPE data:@{KEY_CHAT:currentChat}];
                     }
-                    
                     
                     
                 } else {

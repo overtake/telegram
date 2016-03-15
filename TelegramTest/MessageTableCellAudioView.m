@@ -188,7 +188,7 @@
         
         NSBezierPath *path = [NSBezierPath bezierPath];
         
-        [path appendBezierPathWithRoundedRect:NSMakeRect(NSMinX(self.containerView.superview.frame) + NSWidth(_playView.frame) + NSWidth(self.durationView.frame) + self.item.defaultOffset + 3, NSMaxY(self.containerView.superview.frame) - self.item.defaultContentOffset - (NSHeight(self.durationView.frame)/2) - 3, 6, 6) xRadius:3 yRadius:3];
+        [path appendBezierPathWithRoundedRect:NSMakeRect(NSMinX(self.containerView.superview.frame) + NSWidth(_playView.frame) + NSWidth(self.durationView.frame) + self.item.defaultOffset + 3, NSMaxY(self.containerView.superview.frame) - self.item.defaultContentOffset - (NSHeight(self.durationView.frame)/2) , 6, 6) xRadius:3 yRadius:3];
         
         [path fill];
     }

@@ -478,7 +478,7 @@ static const int bottomHeight = 60;
 
 -(void)updateDownloadListeners:(DownloadItem *)downloadItem {
     
-    [self.loaderView setHidden:self.loaderView.isHidden || downloadItem == nil];
+    [self.loaderView setHidden:self.loaderView.isHidden || downloadItem == nil || downloadItem.downloadState == DownloadStateCompleted];
     
     [self.loaderView setCurrentProgress:MAX(downloadItem.progress,3)];
     [self.loaderView setProgress:self.loaderView.currentProgress animated:YES];
@@ -505,7 +505,7 @@ static const int bottomHeight = 60;
     [self.eventListener setCompleteHandler:^(DownloadItem *item) {
         strongWeak();
         
-        if(strongSelf == weakSelf) {
+        if(strongSelf.currentViewerItem == weakSelf.currentViewerItem) {
             [ASQueue dispatchOnMainQueue:^{
                 [strongSelf.loaderView setProgress:100 animated:YES];
                 [strongSelf setCurrentViewerItem:strongSelf.currentViewerItem animated:YES];

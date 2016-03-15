@@ -144,6 +144,8 @@
             [_forwardContainerView addSubview:_contentView];
         }
         
+        NSLog(@"%@",NSStringFromRect(_contentContainerView.frame));
+        
         [_forwardContainerView setFrameSize:_contentContainerView.frame.size];
         [_forwardContainerView setTableItem:item contentView:_contentView containerView:self];
         

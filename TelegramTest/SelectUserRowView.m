@@ -149,18 +149,22 @@
 
 
 - (void)mouseDown:(NSEvent *)theEvent {
+    
+    if(!self.isEditable) {
+        [super mouseDown:theEvent];
+        return;
+    }
+    
     if(((SelectUsersTableView *)[self rowItem].table).canSelectItem || [self rowItem].isSelected) {
         [self rowItem].isSelected = ![self rowItem].isSelected;
-        if(!self.isEditable) {
-            [super mouseDown:theEvent];
-            return;
-        }
         
-
-        [self setSelected:[self rowItem].isSelected animation:YES];
+         [self setSelected:[self rowItem].isSelected animation:YES];
             
         [((SelectUsersTableView *)[self rowItem].table).selectDelegate selectTableDidChangedItem:[self rowItem]];
         
+    } else {
+        [self setSelected:[self rowItem].isSelected animation:YES];
+        [((SelectUsersTableView *)[self rowItem].table).selectDelegate selectTableDidChangedItem:[self rowItem]];
     }
     
 }

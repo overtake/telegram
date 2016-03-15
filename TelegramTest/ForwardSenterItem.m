@@ -48,8 +48,6 @@ static const int fwdUserFlag = 1 << 31;
             
             TL_localMessage *f = copy[i];
             
-            
-            
             [ids addObject:@([f n_id])];
             
             TLChat *fwdChannel = f.fwd_from.channel_id != 0 ? [[ChatsManager sharedManager] find:f.fwd_from.channel_id] : nil;
@@ -58,7 +56,8 @@ static const int fwdUserFlag = 1 << 31;
                 fwdChannel = nil;
             
             
-            TL_messageFwdHeader *fwdHeader = [TL_messageFwdHeader createWithFlags:![f.to_id isKindOfClass:[TL_peerChannel class]] && fwdChannel ? fwdUserFlag : 0 from_id:f.fwd_from ? f.fwd_from.from_id : f.from_id date:f.date channel_id:fwdChannel ? fwdChannel.n_id  : [f.to_id isKindOfClass:[TL_peerChannel class]] ? f.to_id.channel_id : 0 channel_post:[f.to_id isKindOfClass:[TL_peerChannel class]] && !f.chat.isMegagroup ? f.n_id : 0];
+            TL_localMessageFwdHeader *fwdHeader = [TL_localMessageFwdHeader createWithFlags:![f.to_id isKindOfClass:[TL_peerChannel class]] && fwdChannel ? fwdUserFlag : 0 from_id:f.fwd_from ? f.fwd_from.from_id : f.from_id date:f.date channel_id:fwdChannel ? fwdChannel.n_id  : [f.to_id isKindOfClass:[TL_peerChannel class]] ? f.to_id.channel_id : 0 channel_post:[f.to_id isKindOfClass:[TL_peerChannel class]] && !f.chat.isMegagroup ? f.n_id : 0 channel_original_id:fwdChannel && [f.to_id isKindOfClass:[TL_peerChannel class]] ? f.to_id.channel_id : 0];
+            
             
             TL_localMessage *fake = [TL_localMessage createWithN_id:0 flags:TGOUTUNREADMESSAGE | TGFWDMESSAGE | TGREADEDCONTENT from_id:[UsersManager currentUserId] to_id:conversation.peer fwd_from:fwdHeader reply_to_msg_id:0 date:[[MTNetwork instance] getTime] message:f.message media:f.media fakeId:[MessageSender getFakeMessageId] randomId:random reply_markup:nil entities:f.entities views:f.views via_bot_id:f.via_bot_id edit_date:0 isViewed:NO state:DeliveryStatePending];
             
@@ -111,7 +110,7 @@ static const int fwdUserFlag = 1 << 31;
     TL_localMessage*msg = [self.fakes firstObject];
     
     TLUser *user = msg.fwd_from.from_id != 0 ? [[UsersManager sharedManager] find:msg.fwd_from.from_id] : nil;
-    TLChat *chat = msg.fwd_from.channel_id != 0 ? [[ChatsManager sharedManager] find:msg.fwd_from.channel_id] : nil;
+    TLChat *chat =msg.fwd_from.channel_original_id != 0 ? [[ChatsManager sharedManager] find:msg.fwd_from.channel_original_id] :  msg.fwd_from.channel_id != 0 ? [[ChatsManager sharedManager] find:msg.fwd_from.channel_id] : nil;
     
     __block TLInputPeer *peer = msg.fwd_from.channel_id == 0 || msg.fwd_from.flags & fwdUserFlag ? [TL_inputPeerUser createWithUser_id:user.n_id access_hash:user.access_hash] : [TL_inputPeerChannel createWithChannel_id:chat.n_id access_hash:chat.access_hash];
     

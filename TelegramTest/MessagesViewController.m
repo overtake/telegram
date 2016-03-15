@@ -2069,27 +2069,35 @@ static NSTextAttachment *headerMediaIcon() {
             
             completeBlock();
             
+             [self unSelectAll];
+            
         } else {
-            [RPCRequest sendRequest:request successHandler:^(RPCRequest *request, id response) {
+            
+            confirm(appName(), [NSString stringWithFormat:NSLocalizedString(array.count == 1 ? @"Messages.ConfirmDeleteMessage" : @"Messages.ConfirmDeleteMessages", nil), array.count], ^{
+                [RPCRequest sendRequest:request successHandler:^(RPCRequest *request, id response) {
+                    
+                    if(conversation.type == DialogTypeChannel)
+                    {
+                        [[MTNetwork instance].updateService.proccessor addUpdate:[TL_updateDeleteChannelMessages createWithChannel_id:conversation.peer.channel_id messages:array pts:[response pts] pts_count:[response pts_count]]];
+                    }
+                    
+                    completeBlock();
+                    
+                } errorHandler:^(RPCRequest *request, RpcError *error) {
+                    completeBlock();
+                }];
                 
-                if(conversation.type == DialogTypeChannel)
-                {
-                    [[MTNetwork instance].updateService.proccessor addUpdate:[TL_updateDeleteChannelMessages createWithChannel_id:conversation.peer.channel_id messages:array pts:[response pts] pts_count:[response pts_count]]];
-                }
+                [self unSelectAll];
                 
-                completeBlock();
-                
-                
-                
-            } errorHandler:^(RPCRequest *request, RpcError *error) {
-                completeBlock();
-            }];
+            }, nil);
+            
+            
         }
         
     }];
     
     
-    [self unSelectAll];
+   
     
 }
 

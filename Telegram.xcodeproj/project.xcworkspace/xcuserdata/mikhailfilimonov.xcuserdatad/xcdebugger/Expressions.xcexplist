@@ -439,6 +439,11 @@
       </ContextState>
       <ContextState
          contextName = "__45-[ComposeActionGroupBehavior createGroupChat]_block_invoke_2:ComposeActionGroupBehavior.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "msg.conversation">
+            </PersistentString>
+         </PersistentStrings>
       </ContextState>
       <ContextState
          contextName = "-[TGWebpageGifContainer _didScrolledTableView:]:TGWebpageGifContainer.m">
@@ -1033,9 +1038,6 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
-         contextName = "__30-[TGUpdateChannels addUpdate:]_block_invoke:TGUpdateChannels.m">
-      </ContextState>
-      <ContextState
          contextName = "-[TGDocumentsMediaTableView reloadWithString:]:TGDocumentsMediaTableView.m">
       </ContextState>
       <ContextState
@@ -1369,6 +1371,9 @@
                value = "self.author">
             </PersistentString>
          </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "__49-[TGProccessUpdates uptodateWithConnectionState:]_block_invoke_2:TGProccessUpdates.m">
       </ContextState>
       <ContextState
          contextName = "__38-[TGEnterPasswordPanel initWithFrame:]_block_invoke_3:TGEnterPasswordPanel.m">
@@ -1865,6 +1870,12 @@
             <PersistentString
                value = "self.conversation.inputPeer">
             </PersistentString>
+            <PersistentString
+               value = "msg.fwd_from.channel_id">
+            </PersistentString>
+            <PersistentString
+               value = "msg.fwd_from.channel_original_id">
+            </PersistentString>
          </PersistentStrings>
       </ContextState>
       <ContextState
@@ -1916,6 +1927,9 @@
                value = "self.scrollView.clipView">
             </PersistentString>
          </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "__36-[MessageTableCell defaultMenuItems]_block_invoke_3:MessageTableCell.m">
       </ContextState>
       <ContextState
          contextName = "-[MessageStateLayer setState:animated:]:MessageStateLayer.m">
@@ -2033,6 +2047,9 @@
       </ContextState>
       <ContextState
          contextName = "-[TMTextField placeholderView:]:TMTextField.m">
+      </ContextState>
+      <ContextState
+         contextName = "__56-[TGAllStickersTableView save:stickers:n_hash:saveSets:]_block_invoke:TGAllStickersTableView.m">
       </ContextState>
       <ContextState
          contextName = "__60-[UsersManager updateUserName:completeHandler:errorHandler:]_block_invoke:UsersManager.m">
@@ -2343,6 +2360,9 @@
       <ContextState
          contextName = "-[TGModernChatInfoViewController drawParticipants]:TGModernChatInfoViewController.m">
          <PersistentStrings>
+            <PersistentString
+               value = "_chat.chatFull">
+            </PersistentString>
             <PersistentString
                value = "_chat.chatFull.participants.participants">
             </PersistentString>
@@ -3365,6 +3385,9 @@
          contextName = "__46-[TMCollectionPageController setConversation:]_block_invoke:TMCollectionPageController.m">
       </ContextState>
       <ContextState
+         contextName = "__53-[ComposeActionAddChannelModeratorBehavior addAccess]_block_invoke_4:ComposeActionAddChannelModeratorBehavior.m">
+      </ContextState>
+      <ContextState
          contextName = "-[ChatHistoryController pollingDidSaidTooLongWithTopMessage:minMsg:]:ChatHistoryController.m">
          <PersistentStrings>
             <PersistentString
@@ -3786,6 +3809,9 @@
                value = "self.imagesize.h">
             </PersistentString>
          </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "__45-[ComposeActionGroupBehavior createGroupChat]_block_invoke166:ComposeActionGroupBehavior.m">
       </ContextState>
       <ContextState
          contextName = "-[TGAudioPlayerListView setSelectedId:]:TGAudioPlayerListView.m">
@@ -5282,6 +5308,9 @@
          contextName = "__37-[SearchViewController remoteSearch:]_block_invoke546:SearchViewController.m">
       </ContextState>
       <ContextState
+         contextName = "-[ForwardSenterItem initWithMessages:forConversation:additionFlags:]:ForwardSenterItem.m">
+      </ContextState>
+      <ContextState
          contextName = "-[TGModernChatInfoViewController setChat:]:TGModernChatInfoViewController.m">
          <PersistentStrings>
             <PersistentString
@@ -5531,6 +5560,14 @@
       </ContextState>
       <ContextState
          contextName = "__41-[NewContactsManager remoteCheckContacts]_block_invoke_3:NewContactsManager.m">
+      </ContextState>
+      <ContextState
+         contextName = "-[TGModernMessageCellContainerView chekAndMakeForwardContainer:]:TGModernMessageCellContainerView.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "_contentContainerView.frame">
+            </PersistentString>
+         </PersistentStrings>
       </ContextState>
       <ContextState
          contextName = "__56+[TGBotCommandsPopup show:botInfo:view:ofRect:callback:]_block_invoke42:TGBotCommandsPopup.m">
@@ -6092,6 +6129,11 @@
       </ContextState>
       <ContextState
          contextName = "-[ComposePickerViewController selectTableDidChangedItem:]:ComposePickerViewController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "item">
+            </PersistentString>
+         </PersistentStrings>
       </ContextState>
       <ContextState
          contextName = "-[UploadOperation startUploadPart:]:UploadOperation.m">
@@ -6697,6 +6739,14 @@
             </PersistentString>
             <PersistentString
                value = "jumpDate.timeIntervalSince1970">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[NSAlert(Category) testDatabaseConnectionDidEnd:returnCode:contextInfo:]:NSAlertCategory.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.action.result">
             </PersistentString>
          </PersistentStrings>
       </ContextState>

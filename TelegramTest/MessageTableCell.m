@@ -127,6 +127,8 @@
     
     if(self.item.message.chat.isChannel && self.item.message.fwd_from == nil) {
         BOOL canEdit = self.item.message.isPost ?  self.item.message.chat.isCreator || (self.item.message.chat.isEditor && self.item.message.from_id == [UsersManager currentUserId]) : self.item.message.from_id == [UsersManager currentUserId];
+        
+        canEdit = canEdit && self.item.message.via_bot_id == 0;
 
         
         canEdit = canEdit && ([self.item isKindOfClass:[MessageTableItemText class]] || [self.item.message.media isKindOfClass:[TL_messageMediaPhoto class]] || ([self.item.message.media.document attributeWithClass:[TL_documentAttributeVideo class]] && ![self.item.message.media.document attributeWithClass:[TL_documentAttributeAnimated class]]));
@@ -161,6 +163,7 @@
             dispatch_block_t block = ^{
                 [RPCRequest sendRequest:[TLAPI_channels_updatePinnedMessage createWithFlags:flags channel:weakSelf.item.message.chat.inputPeer n_id:unpin ? 0 : weakSelf.item.message.n_id] successHandler:^(id request, id response) {
                     
+                    int bp = 0;
                     
                 } errorHandler:nil];
             };
@@ -168,8 +171,8 @@
             if(!unpin) {
                 
                 NSAlert *alert = [NSAlert alertWithMessageText:appName() informativeText:NSLocalizedString(@"Pin.PinMessageAndNotifyDesc", nil) block:^(id result) {
-                    if([result intValue] == 1000)
-                        flags&= (1 << 0);
+                    if([result intValue] != 1000)
+                        flags|= (1 << 0);
                     block();
                     
                 }];

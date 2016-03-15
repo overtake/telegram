@@ -65,6 +65,7 @@
     
     [self drawParticipants:_chat.chatFull.participants.participants];
     
+    
 }
 
 -(void)didUpdatedEditableState {

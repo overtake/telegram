@@ -57,7 +57,7 @@
     if(state == MessageTableCellSendingError) {
         
         if(!self.errorView) {
-            self.errorView = [[BTRButton alloc] initWithFrame:NSMakeRect(NSWidth(self.frame) - image_ChatMessageError().size.width, 1, image_ChatMessageError().size.width , image_ChatMessageError().size.height)];
+            self.errorView = [[BTRButton alloc] initWithFrame:NSMakeRect(NSWidth(self.frame) - image_ChatMessageError().size.width, 0, 13 , 13)];
             [self.errorView setBackgroundImage:image_ChatMessageError() forControlState:BTRControlStateNormal];
             [self addSubview:self.errorView];
         }

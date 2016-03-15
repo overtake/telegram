@@ -2,7 +2,7 @@
 //  MTProto.m
 //  Telegram
 //
-//  Auto created by Mikhail Filimonov on 08.03.16.
+//  Auto created by Mikhail Filimonov on 15.03.16.
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -24519,6 +24519,91 @@
    super.channel_post = channel_post;
                 
     if(super.channel_post == 0)  { super.flags&= ~ (1 << 2) ;} else { super.flags|= (1 << 2); }
+}
+        
+@end
+
+@implementation TL_localMessageFwdHeader
++(TL_localMessageFwdHeader*)createWithFlags:(int)flags from_id:(int)from_id date:(int)date channel_id:(int)channel_id channel_post:(int)channel_post channel_original_id:(int)channel_original_id {
+	TL_localMessageFwdHeader* obj = [[TL_localMessageFwdHeader alloc] init];
+	obj.flags = flags;
+	obj.from_id = from_id;
+	obj.date = date;
+	obj.channel_id = channel_id;
+	obj.channel_post = channel_post;
+	obj.channel_original_id = channel_original_id;
+	return obj;
+}
+-(void)serialize:(SerializedData*)stream {
+	[stream writeInt:self.flags];
+	if(self.flags & (1 << 0)) {[stream writeInt:self.from_id];}
+	[stream writeInt:self.date];
+	if(self.flags & (1 << 1)) {[stream writeInt:self.channel_id];}
+	if(self.flags & (1 << 2)) {[stream writeInt:self.channel_post];}
+	if(self.flags & (1 << 30)) {[stream writeInt:self.channel_original_id];}
+}
+-(void)unserialize:(SerializedData*)stream {
+	super.flags = [stream readInt];
+	if(self.flags & (1 << 0)) {super.from_id = [stream readInt];}
+	super.date = [stream readInt];
+	if(self.flags & (1 << 1)) {super.channel_id = [stream readInt];}
+	if(self.flags & (1 << 2)) {super.channel_post = [stream readInt];}
+	if(self.flags & (1 << 30)) {super.channel_original_id = [stream readInt];}
+}
+        
+-(TL_localMessageFwdHeader *)copy {
+    
+    TL_localMessageFwdHeader *objc = [[TL_localMessageFwdHeader alloc] init];
+    
+    objc.flags = self.flags;
+    objc.from_id = self.from_id;
+    objc.date = self.date;
+    objc.channel_id = self.channel_id;
+    objc.channel_post = self.channel_post;
+    objc.channel_original_id = self.channel_original_id;
+    
+    return objc;
+}
+        
+
+    
+-(id)initWithCoder:(NSCoder *)aDecoder {
+
+    if((self = [ClassStore deserialize:[aDecoder decodeObjectForKey:@"data"]])) {
+        
+    }
+    
+    return self;
+}
+        
+-(void)encodeWithCoder:(NSCoder *)aCoder {
+    [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
+}
+        
+            
+-(void)setFrom_id:(int)from_id
+{
+   super.from_id = from_id;
+                
+    if(super.from_id == 0)  { super.flags&= ~ (1 << 0) ;} else { super.flags|= (1 << 0); }
+}            
+-(void)setChannel_id:(int)channel_id
+{
+   super.channel_id = channel_id;
+                
+    if(super.channel_id == 0)  { super.flags&= ~ (1 << 1) ;} else { super.flags|= (1 << 1); }
+}            
+-(void)setChannel_post:(int)channel_post
+{
+   super.channel_post = channel_post;
+                
+    if(super.channel_post == 0)  { super.flags&= ~ (1 << 2) ;} else { super.flags|= (1 << 2); }
+}            
+-(void)setChannel_original_id:(int)channel_original_id
+{
+   super.channel_original_id = channel_original_id;
+                
+    if(super.channel_original_id == 0)  { super.flags&= ~ (1 << 30) ;} else { super.flags|= (1 << 30); }
 }
         
 @end

@@ -209,7 +209,7 @@
             
             [_playImageView removeFromSuperview];
             [self.playerContainer addSubview:_playImageView];
-            [_playImageView setHidden:nextState];
+            [_playImageView setHidden:nextState || ![SettingsArchiver checkMaskedSetting:DisableAutoplayGifSetting]];
         }
         
         _prevState = nextState;
@@ -249,6 +249,8 @@
         [self addScrollEvent];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_didScrolledTableView:) name:NSWindowDidBecomeKeyNotification object:self.containerView.window];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_didScrolledTableView:) name:NSWindowDidResignKeyNotification object:self.containerView.window];
+        
+        [self _didScrolledTableView:nil];
     }
 }
 

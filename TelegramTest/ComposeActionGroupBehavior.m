@@ -17,7 +17,7 @@
 @implementation ComposeActionGroupBehavior
 
 -(NSUInteger)limit {
-    return megagroupSizeMax();
+    return maxChatUsers()-1;
 }
 
 -(NSString *)doneTitle {
@@ -32,7 +32,7 @@
         
         [attr appendString:NSLocalizedString(@"Compose.GroupTitle", nil) withColor:NSColorFromRGB(0x333333)];
         
-        NSRange range = [attr appendString:[NSString stringWithFormat:@" - %lu/%lu",(self.action.result.multiObjects.count + 1),[self limit]] withColor:DARK_GRAY];
+        NSRange range = [attr appendString:[NSString stringWithFormat:@" - %lu/%d",(self.action.result.multiObjects.count + 1),megagroupSizeMax()] withColor:DARK_GRAY];
         
         [attr setFont:TGSystemFont(12) forRange:range];
         
@@ -66,6 +66,17 @@
     }
 }
 
+-(void)composeDidChangeSelected {
+    
+    static NSUInteger prev = 0;
+    
+    
+    if(self.action.result.multiObjects.count == self.limit && prev == self.action.result.multiObjects.count) {
+        alert(appName(), NSLocalizedString(@"Compose.MaxSelectChatUsers", nil));
+    }
+    
+    prev = self.action.result.multiObjects.count;
+}
 
 -(void)createGroupChat {
     NSArray *selected = self.action.result.multiObjects;
@@ -81,7 +92,7 @@
     
     weak();
     
-    id request = array.count >= maxChatUsers() ? [TLAPI_messages_createChat createWithUsers:array title:self.action.result.singleObject] : [TLAPI_channels_createChannel createWithFlags:1 << 1 title:self.action.result.singleObject about:nil];
+    id request = [TLAPI_messages_createChat createWithUsers:array title:self.action.result.singleObject];
     
     
     __block TLUpdates *reqResponse;
@@ -100,7 +111,7 @@
         if(reqResponse.updates.count > 1) {
             TL_localMessage *msg = [TL_localMessage convertReceivedMessage:(TLMessage *) ( [reqResponse.updates[2] message])];
             
-            [[FullChatManager sharedManager] performLoad:msg.conversation.chat.n_id callback:^(TLChatFull *fullChat) {
+            [[FullChatManager sharedManager] performLoad:msg.chat.n_id callback:^(TLChatFull *fullChat) {
                 [weakSelf.delegate behaviorDidEndRequest:reqResponse];
                 
                 [weakSelf.action.currentViewController.navigationViewController showMessagesViewController:msg.conversation];
@@ -140,11 +151,8 @@
         
         reqResponse = response;
         
-        if(array.count >= maxChatUsers()) {
-            supergroup_block();
-        } else {
-            group_block();
-        }
+        group_block();
+   
         
         
         

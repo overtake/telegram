@@ -201,7 +201,7 @@
     }
     
     
-    if([chat isKindOfClass:[TL_channelForbidden class]] || [chat isKindOfClass:[TL_chatForbidden class]])
+    if([chat isKindOfClass:[TL_channelForbidden class]] || [chat isKindOfClass:[TL_chatForbidden class]] || (chat.isChannel && chat.access_hash == 0))
         return;
     
     id request;
@@ -246,7 +246,7 @@
         
         [ASQueue dispatchOnMainQueue:^{
             if(callback)
-                callback([result full_chat]);
+                callback(current);
         }];
 
     } errorHandler:^(RPCRequest *request, RpcError *error) {

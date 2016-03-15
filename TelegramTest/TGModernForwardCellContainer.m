@@ -38,7 +38,7 @@
     [BLUE_SEPARATOR_COLOR set];
 
     
-    NSRectFill(NSMakeRect(0, self.yContentOffset , 2, NSHeight(dirtyRect) - self.yContentOffset - _tableItem.defaultContentOffset));
+    NSRectFill(NSMakeRect(0, self.yContentOffset , 2, NSHeight(self.frame) - self.yContentOffset - _tableItem.defaultContentOffset));
     
 }
 

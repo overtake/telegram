@@ -2,13 +2,13 @@
   "images" : [
     {
       "idiom" : "universal",
-      "scale" : "1x",
-      "filename" : "AttachLocation.png"
+      "filename" : "location_1x.png",
+      "scale" : "1x"
     },
     {
       "idiom" : "universal",
-      "scale" : "2x",
-      "filename" : "AttachLocation@2x.png"
+      "filename" : "location_2x.png",
+      "scale" : "2x"
     },
     {
       "idiom" : "universal",

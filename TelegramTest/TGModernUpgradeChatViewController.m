@@ -52,7 +52,7 @@
                 behavior.composeDone();
         }
         
-    } description:NSLocalizedString(@"Modern.Chat.UpgrateToMegagroup", nil) height:42 stateback:nil] tableRedraw:YES];
+    } description:NSLocalizedString(@"Conversation.ConvertToSuperGroup", nil) height:42 stateback:nil] tableRedraw:YES];
     
     [_tableView addItem:[[GeneralSettingsBlockHeaderItem alloc] initWithString:NSLocalizedString(@"Channel.ForceConvertChatAbilityNote", nil) flipped:YES] tableRedraw:YES];
     

@@ -99,7 +99,7 @@
                 request(NO);
                 
             } description:NSLocalizedString(@"SuperGroup.InviteSettings.OnlyAdmins", nil) height:42 stateback:^id(TGGeneralRowItem *item) {
-                return @(chat.isDemocracy);
+                return @(!chat.isDemocracy);
             }];
             
             
@@ -168,6 +168,9 @@
                             weakSelf.tableView.defaultAnimation = NSTableViewAnimationEffectFade;
                             [weakSelf.tableView removeItem:weakItem tableRedraw:YES];
                             weakSelf.tableView.defaultAnimation = NSTableViewAnimationEffectNone;
+                            
+                            chat.chatFull.participants = nil;
+                            [[FullChatManager sharedManager] loadParticipantsWithMegagroupId:chat.n_id];
                             
                         } errorHandler:^(id request, RpcError *error) {
                             

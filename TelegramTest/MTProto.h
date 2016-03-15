@@ -2,7 +2,7 @@
 //  MTProto.h
 //  Telegram
 //
-//  Auto created by Mikhail Filimonov on 08.03.16.
+//  Auto created by Mikhail Filimonov on 15.03.16.
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -2997,10 +2997,14 @@
 @property int date;
 @property int channel_id;
 @property int channel_post;
+@property int channel_original_id;
 @end
 
 @interface TL_messageFwdHeader : TLMessageFwdHeader<NSCoding>
 +(TL_messageFwdHeader*)createWithFlags:(int)flags from_id:(int)from_id date:(int)date channel_id:(int)channel_id channel_post:(int)channel_post;
+@end
+@interface TL_localMessageFwdHeader : TLMessageFwdHeader<NSCoding>
++(TL_localMessageFwdHeader*)createWithFlags:(int)flags from_id:(int)from_id date:(int)date channel_id:(int)channel_id channel_post:(int)channel_post channel_original_id:(int)channel_original_id;
 @end
 	
 @interface TLchannels_MessageEditData()

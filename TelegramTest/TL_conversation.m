@@ -151,7 +151,7 @@
         if(self.type == DialogTypeChannel) {
             
             if(self.isInvisibleChannel) {
-                return NSLocalizedString(@"Conversation.Action.JoinToChannel", nil);
+                return self.chat.isMegagroup ? NSLocalizedString(@"Conversation.Action.JoinToSuperGroup", nil) : NSLocalizedString(@"Conversation.Action.JoinToChannel", nil);
             }
             
             if(self.chat.isKicked || self.chat.left || self.chat.type == TLChatTypeForbidden) {

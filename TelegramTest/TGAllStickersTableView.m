@@ -399,8 +399,14 @@ static NSImage *higlightedImage() {
         
     }];
     
+    
+
      _sets = [sets mutableCopy];
     
+    
+    [removed enumerateObjectsUsingBlock:^(TL_stickerSet *set, NSUInteger idx, BOOL * _Nonnull stop) {
+        [_stickers[@(set.n_id)] removeAllObjects];
+    }];
     
     [changed enumerateObjectsUsingBlock:^(TL_stickerSet *set, NSUInteger idx, BOOL * _Nonnull stop) {
         
