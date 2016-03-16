@@ -1288,7 +1288,7 @@ TL_localMessage *parseMessage(FMResultSet *result) {
     }];
 }
 
--(void)markAllInConversation:(int)peer_id max_id:(int)max_id out:(BOOL)n_out completeHandler:(void (^)(NSArray * ids,NSArray *messages))completeHandler {
+-(void)markAllInConversation:(int)peer_id max_id:(int)max_id out:(BOOL)n_out completeHandler:(void (^)(NSArray * ids,NSArray *messages, int unread_count))completeHandler {
     
     NSMutableArray *ids = [[NSMutableArray alloc] init];
     NSMutableArray *messages = [NSMutableArray array];
@@ -1303,10 +1303,11 @@ TL_localMessage *parseMessage(FMResultSet *result) {
         
         FMResultSet *result;
         
+        
+        
         if(!n_out) {
-            int read_inbox_max_id = [db intForQuery:[NSString stringWithFormat:@"select read_inbox_max_id from %@ where peer_id = ?",tableModernDialogs],@(peer_id)];
             
-            result = [db executeQuery:[NSString stringWithFormat:@"select * from %@ where ((n_id <= ? and n_id > ?) OR dstate=?) and peer_id = ? and (flags & ?) = ? and (flags & ?) = 0",tableMessages],@(max_id),@(read_inbox_max_id),@(DeliveryStatePending),@(peer_id),@(flags),@(flags),@(TGOUTMESSAGE)];
+            result = [db executeQuery:[NSString stringWithFormat:@"select * from %@ where ((n_id <= ?) OR dstate=?) and peer_id = ? and (flags & ?) = ? and (flags & ?) = 0",tableMessages],@(max_id),@(DeliveryStatePending),@(peer_id),@(flags),@(flags),@(TGOUTMESSAGE)];
             
             
             [db executeUpdate:[NSString stringWithFormat:@"update %@ set read_inbox_max_id = ? where peer_id = ?",tableModernDialogs],@(max_id),@(peer_id)];
@@ -1335,10 +1336,17 @@ TL_localMessage *parseMessage(FMResultSet *result) {
             [db executeUpdateWithFormat:sql,nil];
         }
         
+        int unread_count = -1;
+        
+        if(!n_out) {
+            unread_count = [db intForQuery:[NSString stringWithFormat:@"select count(*) from %@ where peer_id = ? and (flags & ?) = ? and (flags & ?) = 0",tableMessages],@(peer_id),@(flags),@(flags),@(TGOUTMESSAGE)];
+        }
+        
+        
         [db commit];
         
         dispatch_async(q,^{
-            completeHandler(ids,messages);
+            completeHandler(ids,messages,unread_count);
         });
         
     }];

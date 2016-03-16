@@ -624,7 +624,7 @@
 
 - (void)markAllMessagesAsRead:(TL_conversation *)dialog {
     
-    [[Storage manager] markAllInConversation:dialog.peer_id max_id:dialog.top_message out:NO completeHandler:^(NSArray *ids,NSArray *messages) {
+    [[Storage manager] markAllInConversation:dialog.peer_id max_id:dialog.top_message out:NO completeHandler:^(NSArray *ids,NSArray *messages, int unread_count) {
         
     }];
 }
@@ -632,7 +632,7 @@
 - (void) markAllMessagesAsRead:(TLPeer *)peer max_id:(int)max_id out:(BOOL)n_out {
     
     [self.queue dispatchOnQueue:^{
-        [[Storage manager] markAllInConversation:peer.peer_id max_id:max_id out:n_out completeHandler:^(NSArray *ids,NSArray *messages) {
+        [[Storage manager] markAllInConversation:peer.peer_id max_id:max_id out:n_out completeHandler:^(NSArray *ids,NSArray *messages, int unread_count) {
             
             
             if(messages.count > 0) {
@@ -649,18 +649,16 @@
                     
                     
                     [messages enumerateObjectsUsingBlock:^(TL_localMessage *message, NSUInteger idx, BOOL * _Nonnull stop) {
-                        if(!message.n_out) {
-                            conversation.unread_count--;
-                        }
-                        
                         if(conversation.lastMessage.n_id == message.n_id) {
                             conversation.lastMessage.flags&= ~TGUNREADMESSAGE;
                         }
-                        
                     }];
                     
-                    if(!n_out)
+                    if(!n_out) {
                         conversation.read_inbox_max_id = max_id;
+                        conversation.unread_count = unread_count;
+                    }
+                    
                     
                     [Notification perform:[Notification notificationNameByDialog:conversation action:@"unread_count"] data:@{KEY_DIALOG:conversation,KEY_LAST_CONVRESATION_DATA:[MessagesUtils conversationLastData:conversation]}];
                     [Notification perform:MESSAGE_READ_EVENT data:@{KEY_MESSAGE_ID_LIST:ids}];

@@ -143,8 +143,7 @@ extern NSString *const RECENT_GIFS;
 
 -(void)markAllInConversation:(int)peer_id;
 
--(void)markAllInConversation:(int)peer_id max_id:(int)max_id out:(BOOL)n_out completeHandler:(void (^)(NSArray * ids,NSArray *messages))completeHandler;
-
+-(void)markAllInConversation:(int)peer_id max_id:(int)max_id out:(BOOL)n_out completeHandler:(void (^)(NSArray * ids,NSArray *messages, int unread_count))completeHandler;
 -(void)insertEncryptedChat:(TLEncryptedChat *)chat;
 
 

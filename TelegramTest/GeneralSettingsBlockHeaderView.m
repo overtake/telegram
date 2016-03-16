@@ -47,6 +47,14 @@
     _header = attr;
 }
 
+-(void)setParagraph:(NSParagraphStyle *)paragraph {
+    NSMutableAttributedString *attr = [_header mutableCopy];
+    
+    [attr addAttribute:NSParagraphStyleAttributeName value:paragraph range:attr.range];
+    
+    _header = attr;
+}
+
 -(void)setTextColor:(NSColor *)textColor {
     NSMutableAttributedString *attr = [_header mutableCopy];
     

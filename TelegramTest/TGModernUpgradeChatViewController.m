@@ -35,13 +35,19 @@
     
     GeneralSettingsBlockHeaderItem *header = [[GeneralSettingsBlockHeaderItem alloc] initWithString:NSLocalizedString(@"Channel.ForceConvertChatAbilityDescription", nil) flipped:NO];
     
+    NSMutableParagraphStyle *paragraph = [[NSMutableParagraphStyle alloc] init];
+    
+    paragraph.lineSpacing = 4;
+    
+    [header setParagraph:paragraph];
+    
     [_tableView addItem:header tableRedraw:YES];
     
     [_tableView addItem:[[TGGeneralRowItem alloc] initWithHeight:20] tableRedraw:YES];
     
     weak();
     
-    [_tableView addItem:[[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeNone callback:^(TGGeneralRowItem *item) {
+    GeneralSettingsRowItem *convertItem = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeNone callback:^(TGGeneralRowItem *item) {
         
         strongWeak();
         
@@ -52,7 +58,12 @@
                 behavior.composeDone();
         }
         
-    } description:NSLocalizedString(@"Conversation.ConvertToSuperGroup", nil) height:42 stateback:nil] tableRedraw:YES];
+    } description:NSLocalizedString(@"Conversation.ConvertToSuperGroup", nil) height:42 stateback:nil];
+    
+    
+    convertItem.textColor = BLUE_UI_COLOR;
+    
+    [_tableView addItem:convertItem tableRedraw:YES];
     
     [_tableView addItem:[[GeneralSettingsBlockHeaderItem alloc] initWithString:NSLocalizedString(@"Channel.ForceConvertChatAbilityNote", nil) flipped:YES] tableRedraw:YES];
     
