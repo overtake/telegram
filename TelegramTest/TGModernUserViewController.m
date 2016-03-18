@@ -133,15 +133,13 @@
         
     _userFull = nil;
     
-    if(user.isBot) {
-        [[FullUsersManager sharedManager] loadUserFull:_user callback:^(TL_userFull *userFull) {
-            
-            _userFull = userFull;
-            
-            [self configure];
-            
-        }];
-    }
+    [[FullUsersManager sharedManager] requestUserFull:_user withCallback:^(TLUserFull *userFull) {
+        
+        _userFull = userFull;
+        
+        [self configure];
+        
+    }];
     
     [self configure];
    
@@ -398,10 +396,18 @@
     if(!self.action.isEditable) {
         
         
-        if(_userFull && _userFull.bot_info.n_description.length > 0) {
+        if(_userFull && (_userFull.bot_info.n_description.length > 0)) {
             TGProfileParamItem *botInfo = [[TGProfileParamItem alloc] init];
             
             [botInfo setHeader:NSLocalizedString(@"Profile.About", nil) withValue:_userFull.bot_info.n_description detectUrls:NO];
+            [_tableView addItem:botInfo tableRedraw:YES];
+            [_tableView addItem:[[TGGeneralRowItem alloc] initWithHeight:20] tableRedraw:YES];
+        }
+        
+        if(_userFull && (_userFull.about.length > 0)) {
+            TGProfileParamItem *botInfo = [[TGProfileParamItem alloc] init];
+            
+            [botInfo setHeader:NSLocalizedString(@"Profile.bio", nil) withValue:_userFull.about detectUrls:NO];
             [_tableView addItem:botInfo tableRedraw:YES];
             [_tableView addItem:[[TGGeneralRowItem alloc] initWithHeight:20] tableRedraw:YES];
         }

@@ -87,7 +87,7 @@
 }
 
 -(BOOL)isFake {
-    return self.to_id == nil;
+    return self.to_id == nil || (self.flags & (1 << 30)) > 0;
 }
 
 +(TL_localMessage *)convertReceivedMessage:(TLMessage *)message {

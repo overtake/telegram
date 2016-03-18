@@ -46,7 +46,7 @@
         [[self.field cell] setLineBreakMode:NSLineBreakByCharWrapping];
         [[self.field cell] setTruncatesLastVisibleLine:YES];
         
-        [self.field setStringValue:NSLocalizedString(@"User.AddToContacts", nil)];
+        [self.field setStringValue:NSLocalizedString(@"NewConversation.AddContact", nil)];
         
         [self.field sizeToFit];
         

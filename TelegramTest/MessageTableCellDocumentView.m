@@ -243,7 +243,7 @@
             break;
     }
     
-    [self.actionsTextField setHidden:self.cellState != CellStateNormal];
+    [self.actionsTextField setHidden:self.cellState != CellStateNormal || !item.isHasThumb];
 }
 
 
@@ -410,7 +410,7 @@
     MessageTableItemDocument *item = (MessageTableItemDocument *)self.item;
     
     
-    [self.fileNameTextField setFrameOrigin:NSMakePoint(item.isHasThumb ? NSMaxX(self.thumbView.frame) + self.item.defaultOffset : NSMaxX(self.attachButton.frame) + self.item.defaultOffset, item.isHasThumb ? item.defaultContentOffset : roundf((item.blockSize.height - NSHeight(self.fileNameTextField.frame))/2))];
+    [self.fileNameTextField setFrameOrigin:NSMakePoint(item.isHasThumb ? NSMaxX(self.thumbView.frame) + self.item.defaultOffset : NSMaxX(self.attachButton.frame) + self.item.defaultOffset, item.isHasThumb ? item.defaultContentOffset : roundf(((item.blockSize.height - item.captionSize.height) - NSHeight(self.fileNameTextField.frame))/2))];
     [self.actionsTextField setFrameOrigin:NSMakePoint(item.isHasThumb ? NSMaxX(self.thumbView.frame) + self.item.defaultOffset : NSMaxX(self.attachButton.frame) + self.item.defaultOffset, NSMaxY(self.fileNameTextField.frame) + 2)];
 }
 

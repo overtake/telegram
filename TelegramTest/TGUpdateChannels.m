@@ -125,7 +125,7 @@
         return;
     }
     
-    TL_conversation *channel = [self conversationWithChannelId:statefulMessage.channel_id];
+    TL_conversation *channel = [[ChatsManager sharedManager] find:statefulMessage.channel_id];
     
     if(channel) {
         [self addWaitingUpdate:statefulMessage];
@@ -268,15 +268,25 @@
 -(void)proccessUpdate:(id)update {
     
     
+    if(![update isKindOfClass:[TL_updateChannel class]]) {
+        
+        TL_conversation *conversation = [self conversationWithChannelId:[self channelIdWithUpdate:update]];
+        
+        if(conversation && conversation.isInvisibleChannel) {
+            
+            [self proccessUpdate:[TL_updateChannel createWithChannel_id:[self channelIdWithUpdate:update]]];
+            
+            return;
+            
+        }
+        
+    }
+    
     if([update isKindOfClass:[TL_updateNewChannelMessage class]])
     {
         
         TL_localMessage *msg = [TL_localMessage convertReceivedMessage:[(TL_updateNewChannelMessage *)update message]];
         
-        if(![self conversationWithChannelId:abs(msg.peer_id)]) {
-            [self proccessUpdate:[TL_updateChannel createWithChannel_id:abs(msg.peer_id)]];
-            return;
-        }
         
 
         if(![msg isImportantMessage]) {
@@ -299,10 +309,6 @@
         
         TL_conversation *conversation = [self conversationWithChannelId:abs(msg.peer_id)];
         
-        if(!conversation) {
-            [self proccessUpdate:[TL_updateChannel createWithChannel_id:abs(msg.peer_id)]];
-            return;
-        }
         
         [[Storage manager] addHolesAroundMessage:msg];
         

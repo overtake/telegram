@@ -159,7 +159,6 @@
     CGContextSetShouldSmoothFonts(context, !IS_RETINA);
     CGContextSetAllowsFontSmoothing(context,!IS_RETINA);
     
-   
     
    NSRectFill(self.bounds);
     

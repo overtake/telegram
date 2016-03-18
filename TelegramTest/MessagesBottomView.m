@@ -284,7 +284,7 @@
     if(self.dialog.type == DialogTypeUser && self.dialog.user.isBot) {
         
         
-        [[FullUsersManager sharedManager] loadUserFull:self.dialog.user callback:^(TL_userFull *userFull) {
+        [[FullUsersManager sharedManager] requestUserFull:self.dialog.user withCallback:^(TLUserFull *userFull) {
             
             _userFull = userFull;
             
@@ -511,7 +511,7 @@
     [self.attachButton setBackgroundImage:image_AttachHighlighted() forControlState:BTRControlStateSelected | BTRControlStateHover];
     [self.attachButton setBackgroundImage:image_AttachHighlighted() forControlState:BTRControlStateHighlighted];
     [self.attachButton addTarget:self action:@selector(attachButtonPressed) forControlEvents:BTRControlEventMouseEntered];
-[self.attachButton addTarget:self action:@selector(attachButtonPressed) forControlEvents:BTRControlEventMouseDownInside];
+    [self.attachButton addTarget:self action:@selector(showMediaAttachPanel) forControlEvents:BTRControlEventMouseDownInside];
     
     [self.normalView addSubview:self.attachButton];
     
@@ -659,7 +659,7 @@
     
     
     
-    self.progressView = [[NSProgressIndicator alloc] initWithFrame:NSMakeRect(self.inputMessageTextField.containerView.frame.size.width - 30, 10,16,16)];
+    self.progressView = [[NSProgressIndicator alloc] initWithFrame:NSMakeRect(self.inputMessageTextField.containerView.frame.size.width - 30, 8,16,16)];
     [self.progressView setAutoresizingMask:NSViewMinXMargin | NSViewMinYMargin];
     [self.progressView setControlSize:NSSmallControlSize];
     [self.progressView setStyle:NSProgressIndicatorSpinningStyle];
@@ -765,11 +765,18 @@ static RBLPopover *popover;
 
 }
 
--(NSMenu *)attachMenu {
-    NSMenu *theMenu = [[NSMenu alloc] init];
+-(void)showMediaAttachPanel {
     
-    NSMenuItem *attachPhotoOrVideoItem = [NSMenuItem menuItemWithTitle:NSLocalizedString(@"Attach.PictureOrVideo", nil) withBlock:^(id sender) {
+    self.menuPopover.animates = NO;
+    
+    [self.menuPopover setDidCloseBlock:^(TMMenuPopover *popover) {}];
+    [self.menuPopover close];
+    
+    dispatch_async(dispatch_get_main_queue(),^{
         [FileUtils showPanelWithTypes:mediaTypes() completionHandler:^(NSArray *paths) {
+            
+            self.menuPopover = nil;
+            [self.attachButton setSelected:NO];
             
             BOOL isMultiple = [paths filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.pathExtension.lowercaseString IN (%@)",imageTypes()]].count > 1;
             
@@ -785,6 +792,16 @@ static RBLPopover *popover;
                 
             }];
         }];
+    });
+    
+    
+}
+
+-(NSMenu *)attachMenu {
+    NSMenu *theMenu = [[NSMenu alloc] init];
+    
+    NSMenuItem *attachPhotoOrVideoItem = [NSMenuItem menuItemWithTitle:NSLocalizedString(@"Attach.PictureOrVideo", nil) withBlock:^(id sender) {
+        [self showMediaAttachPanel];
     }];
     [attachPhotoOrVideoItem setImage:image_AttachPhotoVideo()];
     [attachPhotoOrVideoItem setHighlightedImage:image_AttachPhotoVideoHighlighted()];
@@ -830,9 +847,6 @@ static RBLPopover *popover;
             [paths enumerateObjectsUsingBlock:^(NSString *obj, NSUInteger idx, BOOL *stop) {
                 [self.messagesViewController sendDocument:obj forConversation:self.dialog];
             }];
-            
-            
-            
             
         }];
     }];
@@ -1091,10 +1105,12 @@ static RBLPopover *popover;
             
             [weakSelf.messagesViewController showModalProgress];
             
-            [RPCRequest sendRequest:[TLAPI_channels_joinChannel createWithChannel:weakSelf.dialog.chat.inputPeer] successHandler:^(RPCRequest *request, id response) {
+            [RPCRequest sendRequest:[TLAPI_channels_joinChannel createWithChannel:weakSelf.dialog.chat.inputPeer] successHandler:^(RPCRequest *request, TLUpdates *response) {
                 
                 
-                if(!weakSelf.dialog.chat.isMegagroup) {
+                
+                
+                if(!response.updates.count == 0) {
                     TL_localMessage *msg = [TL_localMessageService createWithFlags:TGMENTIONMESSAGE n_id:0 from_id:[UsersManager currentUserId] to_id:weakSelf.dialog.peer reply_to_msg_id:0 date:[[MTNetwork instance] getTime] action:([TL_messageActionChatAddUser createWithUsers:[@[@([UsersManager currentUserId])] mutableCopy]]) fakeId:[MessageSender getFakeMessageId] randomId:rand_long() dstate:DeliveryStateNormal];
                     
                     [MessagesManager addAndUpdateMessage:msg];
@@ -1436,7 +1452,7 @@ static RBLPopover *popover;
     }
     
     
-   
+   [self.inputMessageTextField setInline_placeholder:nil];
     
     if(search != nil && ![string hasPrefix:@" "]) {
         
@@ -1475,6 +1491,8 @@ static RBLPopover *popover;
         [self setProgress:NO];
 
         
+        
+        
         NSString *value = self.inputMessageTextField.stringValue;
         
         NSRange split = [value rangeOfString:@" "];
@@ -1482,6 +1500,9 @@ static RBLPopover *popover;
         if(split.location != NSNotFound && split.location != 1) {
             NSString *bot = [value substringWithRange:NSMakeRange(1,split.location-1)];
             NSString *query = [value substringFromIndex:split.location];
+            
+            TLUser *user = [UsersManager findUserByName:bot];
+            [self.inputMessageTextField setInline_placeholder:![query isEqualToString:@" "] ? nil : [self inline_placeholder:user]];
             
             [self.messagesViewController.hintView showContextPopupWithQuery:bot query:[query trim] conversation:self.dialog];
         }
@@ -1493,6 +1514,16 @@ static RBLPopover *popover;
     }
     
 
+}
+
+-(NSAttributedString *)inline_placeholder:(TLUser *)bot {
+    NSMutableAttributedString *attr = [[NSMutableAttributedString alloc] init];
+    
+    [attr appendString:bot.bot_inline_placeholder withColor:GRAY_TEXT_COLOR];
+    
+    [attr setFont:TGSystemFont(13) forRange:attr.range];
+    
+    return attr;
 }
 
 
@@ -1880,24 +1911,29 @@ static RBLPopover *popover;
 }
 
 
+
+
 - (void) attachButtonPressed {
     [self.attachButton setSelected:YES];
 
     if(!self.menuPopover) {
         self.menuPopover = [[TMMenuPopover alloc] initWithMenu:self.attachMenu];
         [self.menuPopover setHoverView:self.attachButton];
-    }
     
-    if(!self.menuPopover.isShown) {
-        NSRect rect = self.attachButton.bounds;
-        rect.origin.x += 80;
-        rect.origin.y += 10;
-        weak();
-        [self.menuPopover setDidCloseBlock:^(TMMenuPopover *popover) {
-            [weakSelf.attachButton setSelected:NO];
-        }];
-        [self.menuPopover showRelativeToRect:rect ofView:self.attachButton preferredEdge:CGRectMaxYEdge];
-    }
+    
+        if(!self.menuPopover.isShown) {
+            NSRect rect = self.attachButton.bounds;
+            rect.origin.x += 80;
+            rect.origin.y += 10;
+            weak();
+            [self.menuPopover setDidCloseBlock:^(TMMenuPopover *popover) {
+                [weakSelf.attachButton setSelected:NO];
+                weakSelf.menuPopover = nil;
+            }];
+            [self.menuPopover showRelativeToRect:rect ofView:self.attachButton preferredEdge:CGRectMaxYEdge];
+        }
+        
+        }
     
 //    [self.attachMenu popUpForView:self.attachButton];
 }

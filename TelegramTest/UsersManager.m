@@ -433,7 +433,7 @@
     [Notification perform:USER_UPDATE_NAME data:@{KEY_USER:self.userSelf}];
     
     
-    [[FullUsersManager sharedManager] loadUserFull:self.userSelf callback:^(TL_userFull *userFull) {
+    [[FullUsersManager sharedManager] requestUserFull:self.userSelf withCallback:^(TLUserFull *userFull) {
         [RPCRequest sendRequest:[TLAPI_account_updateProfile createWithFlags:0 first_name:firstName last_name:lastName about:userFull.about] successHandler:^(RPCRequest *request, TLUser *response) {
             
             if(response.type == TLUserTypeSelf) {

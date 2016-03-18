@@ -177,9 +177,9 @@ static NSImage *higlightedImage() {
             }
             
             
-        } forControlEvents:weakSelf.tableView.isCustomStickerPack ? BTRControlEventMouseUpOutside : BTRControlEventMouseUpInside];
+        } forControlEvents:weakSelf.tableView.isCustomStickerPack ? BTRControlEventMouseUpOutside | BTRControlEventMouseUpInside : BTRControlEventMouseUpInside];
 
-        if(!weakSelf.tableView.isCustomStickerPack) {
+       // if(!weakSelf.tableView.isCustomStickerPack) {
             
             [button addBlock:^(BTRControlEvents events) {
                 
@@ -192,7 +192,7 @@ static NSImage *higlightedImage() {
                 weakSelf.tableView.previewModal = preview;
                 
             } forControlEvents:BTRControlEventLongLeftClick];
-        }
+      //  }
         
         
         
@@ -697,20 +697,23 @@ static NSImage *higlightedImage() {
     if(_previewModal != nil) {
         NSUInteger index = [self rowAtPoint:[self convertPoint:[theEvent locationInWindow] fromView:nil]];
         
-        TGAllStickerTableItemView *view = [self viewAtColumn:0 row:index makeIfNecessary:NO];
-        
-        TGAllStickersTableItem *item = [self itemAtPosition:index];
-        
-        NSPoint point = [view convertPoint:[theEvent locationInWindow] fromView:nil];
-        
-        [view.subviews enumerateObjectsUsingBlock:^(__kindof NSView * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        if(index != NSNotFound && (int)index >= 0 && index < self.count) {
+            TGAllStickerTableItemView *view = [self viewAtColumn:0 row:index makeIfNecessary:NO];
             
-            if(NSMinX(obj.frame) < point.x && NSMaxX(obj.frame) > point.x) {
+            TGAllStickersTableItem *item = [self itemAtPosition:index];
+            
+            NSPoint point = [view convertPoint:[theEvent locationInWindow] fromView:nil];
+            
+            [view.subviews enumerateObjectsUsingBlock:^(__kindof NSView * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
                 
-                [_previewModal setSticker:item.stickers[idx]];
-            }
-            
-        }];
+                if(NSMinX(obj.frame) < point.x && NSMaxX(obj.frame) > point.x) {
+                    
+                    [_previewModal setSticker:item.stickers[idx]];
+                }
+                
+            }];
+        }
+        
         
     } else {
         [super mouseDragged:theEvent];
@@ -742,6 +745,12 @@ static NSImage *higlightedImage() {
 
 }
 
+-(void)mouseUp:(NSEvent *)theEvent {
+    if(_previewModal)
+        [self hideStickerPreview];
+    else
+        [super mouseUp:theEvent];
+}
 
 
 @end

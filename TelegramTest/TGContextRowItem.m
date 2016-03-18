@@ -24,7 +24,7 @@
             
             NSMutableAttributedString *desc = [[NSMutableAttributedString alloc] init];
             
-            [desc appendString:botResult.n_description withColor:NSColorFromRGB(0x000000)];
+            [desc appendString:botResult.n_description withColor:NSColorFromRGB(0x808080)];
             [desc setFont:TGSystemFont(13) forRange:desc.range];
             
             
@@ -51,7 +51,7 @@
             
             
             [desc setSelectionColor:NSColorFromRGB(0xffffff) forColor:NSColorFromRGB(0x000000)];
-            
+            [desc setSelectionColor:NSColorFromRGB(0xffffff) forColor:NSColorFromRGB(0x808080)];
         } else {
             _desc = [[NSMutableAttributedString alloc] init];
         }

@@ -14,7 +14,6 @@
 #import "NSAttributedStringCategory.h"
 #import "CMath.h"
 #import "ImageUtils.h"
-#import "TMImageUtils.h"
 #import "TMView.h"
 #import "ASQueue.h"
 #import "MTProto.h"

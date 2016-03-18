@@ -285,10 +285,6 @@
 		C21068BA1C19F4B500815859 /* GLKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A7C78FC1947E147001617DB /* GLKit.framework */; };
 		C21068BE1C1B04A100815859 /* QuickTime.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C21068A91C19DBCB00815859 /* QuickTime.framework */; };
 		C21068C61C1B417200815859 /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C21068C51C1B417200815859 /* CoreVideo.framework */; };
-		C215BD831C74835800B4BF16 /* Sparkle.framework in Copy Files (6 items) */ = {isa = PBXBuildFile; fileRef = C235364C19C88D620044978E /* Sparkle.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		C215BD841C74835800B4BF16 /* HockeySDK.framework in Copy Files (6 items) */ = {isa = PBXBuildFile; fileRef = C2082B7219C1E1C4000005E2 /* HockeySDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		C215BD851C74835E00B4BF16 /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C235364C19C88D620044978E /* Sparkle.framework */; };
-		C215BD861C74835E00B4BF16 /* HockeySDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2082B7219C1E1C4000005E2 /* HockeySDK.framework */; };
 		C215BDE71C77255C00B4BF16 /* TGMessageEditSender.m in Sources */ = {isa = PBXBuildFile; fileRef = C215BDE21C76422500B4BF16 /* TGMessageEditSender.m */; };
 		C215BDF21C77256700B4BF16 /* TGInputMessageTemplate.m in Sources */ = {isa = PBXBuildFile; fileRef = C215BDDB1C75E46E00B4BF16 /* TGInputMessageTemplate.m */; };
 		C215BDF51C77354700B4BF16 /* MessageRightView.m in Sources */ = {isa = PBXBuildFile; fileRef = C215BDF41C77354700B4BF16 /* MessageRightView.m */; };
@@ -475,6 +471,11 @@
 		C26976AC1A0C03610047E2C3 /* InstagramServiceDescription.m in Sources */ = {isa = PBXBuildFile; fileRef = C26976AB1A0C03610047E2C3 /* InstagramServiceDescription.m */; };
 		C26976B01A10CDED0047E2C3 /* TGPhotoViewer.m in Sources */ = {isa = PBXBuildFile; fileRef = C26976AF1A10CDED0047E2C3 /* TGPhotoViewer.m */; };
 		C26976B41A10E2110047E2C3 /* TGPVContainer.m in Sources */ = {isa = PBXBuildFile; fileRef = C26976B31A10E2110047E2C3 /* TGPVContainer.m */; };
+		C26B51DB1C9BFD6300077DEA /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C235364C19C88D620044978E /* Sparkle.framework */; };
+		C26B51DC1C9BFD6300077DEA /* HockeySDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2082B7219C1E1C4000005E2 /* HockeySDK.framework */; };
+		C26B51DD1C9BFD6B00077DEA /* Sparkle.framework in Copy Files (6 items) */ = {isa = PBXBuildFile; fileRef = C235364C19C88D620044978E /* Sparkle.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		C26B51DE1C9BFD6B00077DEA /* HockeySDK.framework in Copy Files (6 items) */ = {isa = PBXBuildFile; fileRef = C2082B7219C1E1C4000005E2 /* HockeySDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		C26B51E11C9C305200077DEA /* TGMultipleRequestCallback.m in Sources */ = {isa = PBXBuildFile; fileRef = C26B51E01C9C305200077DEA /* TGMultipleRequestCallback.m */; };
 		C26E80201B7B91A9003CC483 /* TGDatabaseRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = C26E801F1B7B91A9003CC483 /* TGDatabaseRequest.m */; };
 		C26E80271B7D14E2003CC483 /* TL_localMessage_old32.m in Sources */ = {isa = PBXBuildFile; fileRef = C26E80261B7D14E2003CC483 /* TL_localMessage_old32.m */; };
 		C26E802A1B7E00A1003CC483 /* TGRecentSearchRowItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C26E80291B7E00A1003CC483 /* TGRecentSearchRowItem.m */; };
@@ -874,6 +875,7 @@
 		C2E561041AF3729600B4CAF0 /* libsqlcipher.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C2E561031AF3726300B4CAF0 /* libsqlcipher.a */; };
 		C2E5A0611BABF33C00C1BCA1 /* TL_localMessageService_old34.m in Sources */ = {isa = PBXBuildFile; fileRef = C2E5A0601BABF33C00C1BCA1 /* TL_localMessageService_old34.m */; };
 		C2E5A0731BAC75C200C1BCA1 /* TGMessageViewSender.m in Sources */ = {isa = PBXBuildFile; fileRef = C2E5A0721BAC75C100C1BCA1 /* TGMessageViewSender.m */; };
+		C2EA57971C9B209E0085F72F /* NSImage+RHResizableImageAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A235AD31823238900D2247B /* NSImage+RHResizableImageAdditions.m */; };
 		C2ED28041BFF7F0E00F19531 /* TGReportChannelModalView.m in Sources */ = {isa = PBXBuildFile; fileRef = C2ED28031BFF7F0E00F19531 /* TGReportChannelModalView.m */; };
 		C2ED357D18D9FECB00D0027C /* CAProgressLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = C2ED357C18D9FECB00D0027C /* CAProgressLayer.m */; };
 		C2ED75141C25BB0900002ACF /* TGVideoContainerView.m in Sources */ = {isa = PBXBuildFile; fileRef = C2ED75131C25BB0900002ACF /* TGVideoContainerView.m */; };
@@ -1055,8 +1057,8 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				C215BD831C74835800B4BF16 /* Sparkle.framework in Copy Files (6 items) */,
-				C215BD841C74835800B4BF16 /* HockeySDK.framework in Copy Files (6 items) */,
+				C26B51DD1C9BFD6B00077DEA /* Sparkle.framework in Copy Files (6 items) */,
+				C26B51DE1C9BFD6B00077DEA /* HockeySDK.framework in Copy Files (6 items) */,
 			);
 			name = "Copy Files (6 items)";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2039,6 +2041,8 @@
 		C26976AF1A10CDED0047E2C3 /* TGPhotoViewer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGPhotoViewer.m; sourceTree = "<group>"; };
 		C26976B21A10E2110047E2C3 /* TGPVContainer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGPVContainer.h; sourceTree = "<group>"; };
 		C26976B31A10E2110047E2C3 /* TGPVContainer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGPVContainer.m; sourceTree = "<group>"; };
+		C26B51DF1C9C305200077DEA /* TGMultipleRequestCallback.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGMultipleRequestCallback.h; sourceTree = "<group>"; };
+		C26B51E01C9C305200077DEA /* TGMultipleRequestCallback.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGMultipleRequestCallback.m; sourceTree = "<group>"; };
 		C26E80101B7B748A003CC483 /* SSignalKit.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = SSignalKit.xcodeproj; path = Signals/SSignalKit.xcodeproj; sourceTree = "<group>"; };
 		C26E801E1B7B91A9003CC483 /* TGDatabaseRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGDatabaseRequest.h; sourceTree = "<group>"; };
 		C26E801F1B7B91A9003CC483 /* TGDatabaseRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGDatabaseRequest.m; sourceTree = "<group>"; };
@@ -2921,8 +2925,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C215BD851C74835E00B4BF16 /* Sparkle.framework in Frameworks */,
-				C215BD861C74835E00B4BF16 /* HockeySDK.framework in Frameworks */,
+				C26B51DB1C9BFD6300077DEA /* Sparkle.framework in Frameworks */,
+				C26B51DC1C9BFD6300077DEA /* HockeySDK.framework in Frameworks */,
 				C2034BB31C2EB1C70080D023 /* VideoToolbox.framework in Frameworks */,
 				C21068C61C1B417200815859 /* CoreVideo.framework in Frameworks */,
 				C21068BE1C1B04A100815859 /* QuickTime.framework in Frameworks */,
@@ -6128,6 +6132,8 @@
 				C2967B481AA9BF90003759B2 /* TGKeychain.m */,
 				C2CBF6CC1AFBC5C0006BF90A /* RPC.h */,
 				C2CBF6CD1AFBC5C0006BF90A /* RPC.m */,
+				C26B51DF1C9C305200077DEA /* TGMultipleRequestCallback.h */,
+				C26B51E01C9C305200077DEA /* TGMultipleRequestCallback.m */,
 			);
 			name = protocol;
 			sourceTree = "<group>";
@@ -6640,6 +6646,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C2EA57971C9B209E0085F72F /* NSImage+RHResizableImageAdditions.m in Sources */,
 				C20BA6301B0E5E76001ECE22 /* TGDateUtils.mm in Sources */,
 				C2D5CE841B0B938B009F6419 /* SpacemanBlocks.h in Sources */,
 				C2CBF6DC1AFBE691006BF90A /* TMButton.m in Sources */,
@@ -7345,6 +7352,7 @@
 				C274C3C91AC48F6B000DFDE4 /* TGSessionRowitem.m in Sources */,
 				C2034BE31C3560530080D023 /* TLBotInlineResult+Extension.m in Sources */,
 				C215BE211C7B71C800B4BF16 /* TGModernForwardCellContainer.m in Sources */,
+				C26B51E11C9C305200077DEA /* TGMultipleRequestCallback.m in Sources */,
 				C2DE4FB11AD2E5D6001EC26C /* TGWebpageAttach.m in Sources */,
 				C2CE53C31BE295A000BBEF5F /* TGGeneralSearchRowView.m in Sources */,
 				0A9EDC501897BA0E0037E1BC /* NSImage+RBLResizableImageAdditions.m in Sources */,

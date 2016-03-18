@@ -202,6 +202,7 @@
     
     NSMutableArray *array = [NSMutableArray array];
     for(TLMessage *message in messages) {
+        message.flags|= (1 << 30);
         MessageTableItem *item = [MessageTableItem messageItemFromObject:message];
         if(item) {
             [array addObject:item];
@@ -514,7 +515,7 @@
     item.table = self;
     
     [cell setFrameSize:NSMakeSize(NSWidth(self.bounds),[self heightWithItem:item])];
-    
+    cell.messagesViewController = self.collectionViewController.messagesViewController;
     [cell setItem:item];
     
     

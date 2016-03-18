@@ -107,8 +107,8 @@
     
     _containerView = [[TMView alloc] initWithFrame:NSMakeRect(0, 0, 300, 300)];
     
-    _containerView.wantsLayer = YES;
-    _containerView.layer.cornerRadius = 4;
+//    _containerView.wantsLayer = YES;
+//    _containerView.layer.cornerRadius = 4;
     
     _containerView.layer.backgroundColor = [NSColor whiteColor].CGColor;
     

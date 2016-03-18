@@ -697,10 +697,6 @@ static TGPhotoViewer *viewer;
         
         [_list enumerateObjectsAtIndexes:[NSIndexSet indexSetWithIndexesInRange:range] options:NSEnumerationReverse usingBlock:^(TGPhotoViewerItem *obj, NSUInteger idx, BOOL *stop) {
             
-            if(![TGCache cachedImage:obj.imageObject.cacheKey group:@[PVCACHE]]) {
-                 [obj.imageObject initDownloadItem];
-            }
-            
             if(!obj.isset) {
                 [obj startDownload];
             }

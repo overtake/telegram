@@ -49,7 +49,7 @@ __attribute__((weak_import,deprecated("API newer than Deployment Target.")))
 
 #define API_VERSION  [NSString stringWithFormat:@"%@.%@", [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleShortVersionString"], [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleVersion"]]
 
-#define IS_RETINA scaleFactor()
+#define IS_RETINA (scaleFactor() == 2.0)
 
 #import <objc/runtime.h>
 #define DYNAMIC_PROPERTY(Name) static char k##Name; - (id) get##Name { return objc_getAssociatedObject(self, &k##Name);}; - (void) set##Name:(id)object { objc_setAssociatedObject(self, &k##Name, object, OBJC_ASSOCIATION_RETAIN); }

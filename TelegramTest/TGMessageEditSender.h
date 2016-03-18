@@ -15,6 +15,6 @@
 @property (nonatomic,strong) TL_conversation *conversation;
 -(id)initWithTemplate:(TGInputMessageTemplate *)inputTemplate conversation:(TL_conversation *)conversation;
 
--(void)performEdit;
+-(void)performEdit:(int)flags;
 
 @end

@@ -84,7 +84,7 @@ NSString *const TLBotCommandPrefix = @"/";
     
     [openDlg setAllowsMultipleSelection:YES];
     [openDlg beginSheetModalForWindow:window completionHandler:^(NSInteger result) {
-        if (result == NSFileHandlingPanelOKButton) {
+      //  if (result == NSFileHandlingPanelOKButton) {
             NSArray* urls = [openDlg URLs];
             
             NSMutableArray *paths = [[NSMutableArray alloc] init];
@@ -102,7 +102,7 @@ NSString *const TLBotCommandPrefix = @"/";
             }
             
             handler(paths);
-        }
+   //     }
     }];
 }
 
@@ -686,7 +686,7 @@ void open_user_by_name(NSDictionary *params) {
         
     };
     
-    if(false) {
+    if(obj) {
         
         perform();
         

@@ -20,8 +20,8 @@
     return self;
 }
 
--(void)performEdit {
-    [RPCRequest sendRequest:[TLAPI_channels_editMessage createWithFlags:0 channel:_conversation.inputPeer n_id:_inputTemplate.postId message:_inputTemplate.text entities:nil] successHandler:^(id request, id response) {
+-(void)performEdit:(int)flags {
+    [RPCRequest sendRequest:[TLAPI_channels_editMessage createWithFlags:flags channel:_conversation.inputPeer n_id:_inputTemplate.postId message:_inputTemplate.text entities:nil] successHandler:^(id request, id response) {
         
         
     } errorHandler:^(id request, RpcError *error) {

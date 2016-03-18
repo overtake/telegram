@@ -40,7 +40,6 @@
         
         _containerView.wantsLayer = YES;
         
-        
         [super addSubview:_containerView];
         
         
@@ -100,10 +99,10 @@
     
     if(webpage.author ) {
         [self.author setAttributedStringValue:webpage.author];
-        [self.author setFrameSize:NSMakeSize([self maxTextWidth], 20)];
+        [self.author setFrameSize:NSMakeSize(NSWidth(self.frame) - NSMinX(self.author.frame), 20)];
     }
 
-    [self.siteName setFrameSize:NSMakeSize([self maxTextWidth], 20)];
+    [self.siteName setFrameSize:NSMakeSize(NSWidth(self.frame) - NSMinX(self.author.frame), 20)];
     [self.siteName setAttributedStringValue:webpage.siteName];
 
     
@@ -175,11 +174,8 @@
 
 -(int)maxTextWidth {
     
-    int width = self.containerSize.width - 60;
+    int width = self.containerSize.width;
     
-    if([self.webpage.webpage.type isEqualToString:@"profile"]) {
-        width = width - 75;
-    }
     
     return width;
 }
@@ -196,7 +192,7 @@
 
 -(void)showPhoto {
     
-    if(![self.webpage.webpage.type isEqualToString:@"profile"] && self.webpage.imageObject) {
+    if(![self.webpage.webpage.type isEqualToString:@"profile"]) {
         
         PreviewObject *previewObject =[[PreviewObject alloc] initWithMsdId:self.webpage.webpage.photo.n_id media:[self.webpage.webpage.photo.sizes lastObject] peer_id:0];
         

@@ -21,4 +21,6 @@
 
 @property (nonatomic,assign) BOOL needCheckKeyWindow;
 
+@property (nonatomic,copy) void (^deleteLocalGif)(TLBotInlineResult *result);
+
 @end

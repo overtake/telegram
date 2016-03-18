@@ -174,6 +174,7 @@ static NSImage *sharedLinkCapImage() {
     
     [super setItem:item];
     
+   
     
     [_linkField setHidden:item.webpage == nil || item.webpage.desc.length == 0];
     

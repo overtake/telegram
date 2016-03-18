@@ -10,20 +10,40 @@
 #import "DownloadPhotoItem.h"
 @implementation TGPVImageObject
 
+-(void)initDownloadItem {
+    [super initDownloadItem];
+    
+    [self.downloadItem setDeliveryQueue:[ASQueue mainQueue]];
+    
+    weak();
+    
+    [self.downloadListener setCompleteHandler:^(DownloadItem * item) {
+        
+        strongWeak();
+        
+        if(strongSelf == weakSelf) {
+            
+            strongSelf.isLoaded = YES;
+            [strongSelf _didDownloadImage:item];
+            strongSelf.downloadItem = nil;
+            strongSelf.downloadListener = nil;
+
+        }
+        
+        
+        
+    }];
+    
+}
 
 -(void)_didDownloadImage:(DownloadItem *)item {
+    
     NSImage *image = [[NSImage alloc] initWithData:item.result];
-   
-    if(self.imageProcessor != nil)
-        image = self.imageProcessor(image,self.imageSize);
-     else
-        image = renderedImage(image,self.imageSize);
     
     [TGCache cacheImage:image forKey:self.location.cacheKey groups:@[PVCACHE]];
+
     
-    [[ASQueue mainQueue] dispatchOnQueue:^{
-        [self.delegate didDownloadImage:image object:self];
-    }];
+    [self.delegate didDownloadImage:image object:self];
 }
 
 

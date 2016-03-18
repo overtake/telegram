@@ -216,7 +216,7 @@ static NSMutableDictionary *cache;
     
     MessagesTopInfoAction newAction = MessagesTopInfoActionNone;
     
-    if(!user.isContact && user.phone.length > 0)
+    if(!user.isContact && user.phone.length > 0 && !user.isServiceUser)
         newAction = MessagesTopInfoActionAddContact;
    else if(!user.isContact && user.phone.length == 0) {
         newAction = MessagesTopInfoActionNone;;

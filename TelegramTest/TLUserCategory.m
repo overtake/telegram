@@ -46,7 +46,9 @@ DYNAMIC_PROPERTY(DType);
 }
 
 
-
+-(BOOL)isServiceUser {
+    return [serviceNumbers indexOfObject:self.phone] != NSNotFound;
+}
 
 - (void)setType:(TLUserType)type {
     [self setDType:[NSNumber numberWithInt:type]];

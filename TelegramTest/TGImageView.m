@@ -60,8 +60,7 @@
 
 -(void)didDownloadImage:(NSImage *)newImage object:(ImageObject *)object {
     if([[object cacheKey] isEqualToString:[self.object cacheKey]]) {
-        if(object.class != NSClassFromString(@"TGPVImageObject"))
-            [self addAnimation:contentAnimation() forKey:@"contents"];
+        [self addAnimation:contentAnimation() forKey:@"contents"];
         [self setImage:newImage];
         
     }

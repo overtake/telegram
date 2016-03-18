@@ -43,14 +43,6 @@
         
         if(!conversation) {
             unloaded[@(obj.peer_id)] = @(1);
-            
-            if([obj.to_id isKindOfClass:[TL_peerUser class]]) {
-                TLUserFull *full = [[FullUsersManager sharedManager] find:obj.from_id];
-                
-                if(!full) {
-                    [[FullUsersManager sharedManager] loadUserFull:obj.fromUser callback:nil];
-                }
-            }
         }
         
         

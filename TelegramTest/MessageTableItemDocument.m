@@ -54,7 +54,7 @@
         self.thumbObject = [[TGImageObject alloc] initWithLocation:self.message.media.document.thumb.location placeHolder:nil];
         
         self.thumbObject.imageSize = size;
-        
+        self.thumbObject.imageProcessor = [ImageUtils c_processor];
         self.blockSize = NSMakeSize(200, self.thumbSize.height + 6);
         [self checkStartDownload:[self.message.to_id isKindOfClass:[TL_peerChat class]] ? AutoGroupDocuments : AutoPrivateDocuments size:self.message.media.document.size];
         

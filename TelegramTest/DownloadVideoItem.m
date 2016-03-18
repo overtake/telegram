@@ -67,6 +67,8 @@
         
         [TGCache removeCachedImage:msg.media.document.thumb.location.cacheKey];
         
+        thumbImg = prettysize(thumbImg);
+        
         [jpegNormalizedData(thumbImg) writeToFile:locationFilePath(location, @"jpg") atomically:YES];
         
         [Notification perform:UPDATE_MESSAGE data:@{KEY_MESSAGE:msg}];

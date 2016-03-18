@@ -202,7 +202,7 @@
     [super loadView];
     
     
-    _scrollView = [[BTRScrollView alloc] initWithFrame:NSMakeRect(2, 2, NSWidth(self.view.frame) - 4, NSHeight(self.view.frame) - 4)];
+    _scrollView = [[BTRScrollView alloc] initWithFrame:NSMakeRect(0, 0, NSWidth(self.view.frame) , NSHeight(self.view.frame) )];
     _documentView = [[TMView alloc] initWithFrame:_scrollView.bounds];
     
     [self.view addSubview:_scrollView];

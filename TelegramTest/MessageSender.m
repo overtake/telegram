@@ -123,11 +123,9 @@
     int duration = ceil(time.value / time.timescale);
     
     
-    
-    
     AVAssetImageGenerator *generator = [[AVAssetImageGenerator alloc] initWithAsset:asset];
     generator.appliesPreferredTrackTransform = TRUE;
-    CMTime thumbTime = CMTimeMakeWithSeconds(0, 30);
+    CMTime thumbTime = CMTimeMakeWithSeconds(0, 1);
     
     __block NSImage *thumbImg;
     

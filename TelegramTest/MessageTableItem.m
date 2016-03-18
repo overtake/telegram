@@ -77,6 +77,7 @@ static NSCache *cItems;
             _caption = c;
         }
         
+        [self rebuildDate];
         
         if(object.isFake)
             return self; // fake message;
@@ -180,12 +181,6 @@ static NSCache *cItems;
             
             [self headerStringBuilder];
             
-            [self rebuildDate];
-            
-            
-            
-
-
             if(self.message.isPost) {
                 [self updateViews];
             }

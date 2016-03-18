@@ -129,14 +129,23 @@
                 strongSelf.message.media.document.access_hash = [msg media].document.access_hash;
                 strongSelf.message.media.document.n_id = [msg media].document.n_id;
                 strongSelf.message.media.document.mime_type = msg.media.document.mime_type;
+                strongSelf.message.media.document.attributes = msg.media.document.attributes;
+                strongSelf.message.media.document.thumb = msg.media.document.thumb;
                 
+                TL_documentAttributeVideo *video = (TL_documentAttributeVideo *) [strongSelf.message.media.document attributeWithClass:[TL_documentAttributeVideo class]];
                 
                 [[NSFileManager defaultManager] moveItemAtPath:strongSelf.path_for_file toPath:mediaFilePath(strongSelf.message) error:nil];
             
-                NSImage *thumb = [MessageSender videoParams:mediaFilePath(strongSelf.message) thumbSize:strongsize(NSMakeSize(640, 480), 250)][@"image"];
+                NSImage *thumb = [MessageSender videoParams:mediaFilePath(strongSelf.message) thumbSize:strongsize(NSMakeSize(video.w, video.h), 320)][@"image"];
                 
                 
-                strongSelf.message.media.document.thumb = [TL_photoCachedSize createWithType:@"x" location:msg.media.video.thumb.location w:thumb.size.width h:thumb.size.height bytes:jpegNormalizedData(thumb)];
+                TLFileLocation *location = msg.media.document.thumb.location;
+                
+                [TGCache cacheImage:thumb forKey:msg.media.document.thumb.location.cacheKey groups:@[IMGCACHE]];
+                
+                [jpegNormalizedData(thumb) writeToFile:locationFilePath(location, @"jpg") atomically:YES];
+
+
                 
                 strongSelf.uploader = nil;
                 
@@ -167,7 +176,7 @@
                 UploadOperation *thumbUpload = [[UploadOperation alloc] init];
                 [thumbUpload setUploadComplete:^(UploadOperation *thumb, TL_inputFile *inputThumbFile) {
                     
-                    media = [TL_inputMediaUploadedThumbDocument createWithFile:input thumb:inputThumbFile mime_type:@"video/mp4" attributes:nil caption:self.message.media.caption];
+                    media = [TL_inputMediaUploadedThumbDocument createWithFile:input thumb:inputThumbFile mime_type:@"video/mp4" attributes:self.message.media.document.attributes caption:self.message.media.caption];
                     
                     block();
                 }];

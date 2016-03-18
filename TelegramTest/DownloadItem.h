@@ -107,6 +107,8 @@ typedef enum {
 -(TLInputFileLocation *)input;
 
 
+@property (nonatomic,strong) ASQueue *deliveryQueue;
+
 -(int)partSize;
 
 -(id)initWithObject:(id)object size:(int)size;

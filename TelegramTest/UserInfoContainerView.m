@@ -759,7 +759,7 @@
     [self.phoneView setString:self.user.phoneWithFormat ? self.user.phoneWithFormat : NSLocalizedString(@"User.Hidden", nil)];
     
     if(user.isBot) {
-        [[FullUsersManager sharedManager] loadUserFull:user callback:^(TL_userFull *userFull) {
+        [[FullUsersManager sharedManager] requestUserFull:user withCallback:^(TLUserFull *userFull) {
             
             int h =0; //[_botInfoView setString:userFull.bot_info.share_text];
             

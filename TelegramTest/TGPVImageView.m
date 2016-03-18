@@ -38,7 +38,8 @@
 
 -(void)didDownloadImage:(NSImage *)image object:(TGImageObject *)object {
     if([[object cacheKey] isEqualToString:[self.object cacheKey]]) {
-        [self setObject:object];
+        
+        self.image = image;
     }
 }
 

@@ -89,10 +89,8 @@ static NSImage *tgContextPicCap() {
 @property (nonatomic,strong) TL_localMessage *fakeMessage;
 
 
-@property (nonatomic,weak) TMTableView *table;
+@property (nonatomic,weak) TGMediaContextTableView *table;
 @property (nonatomic,weak) TGGifSearchRowItem *item;
-
-
 
 @end
 
@@ -162,20 +160,47 @@ static NSImage *tgContextPicCap() {
         }];
         
         
+        
     }
     
     return self;
 }
 
+
+-(void)deleteLocalGifAction:(BTRButton *)button {
+    if(self.table.deleteLocalGif) {
+        self.table.deleteLocalGif(self.botResult);
+    }
+}
+
 -(void)setSize:(NSSize)size {
     _size = size;
     [_player setFrame:NSMakeRect(MIN(- roundf((size.width - NSWidth(self.frame))/2),0), MIN(- roundf((size.height - NSHeight(self.frame))/2),0), MAX(size.width,NSWidth(self.frame)), MAX(size.height,NSHeight(self.frame)))];
+
 }
 
 -(void)setFrameSize:(NSSize)newSize {
     [super setFrameSize:newSize];
     
     [_player setFrame:NSMakeRect(MIN(- roundf((_size.width - NSWidth(self.frame))/2),0), MIN(- roundf((_size.height - NSHeight(self.frame))/2),0), MAX(_size.width,NSWidth(self.frame)), MAX(_size.height,NSHeight(self.frame)))];
+    
+}
+
+-(void)rightMouseDown:(NSEvent *)theEvent {
+    
+    if(_table.deleteLocalGif) {
+        
+        weak();
+        
+        NSMenu *menu = [[NSMenu alloc] initWithTitle:@"remove"];
+        [menu addItem:[NSMenuItem menuItemWithTitle:NSLocalizedString(@"Messages.Selected.Delete", nil) withBlock:^(id sender) {
+            
+            weakSelf.table.deleteLocalGif(weakSelf.botResult);
+            
+        }]];
+        
+        [NSMenu popUpContextMenu:menu withEvent:theEvent forView:self];
+    }
 }
 
 -(void)setBotResult:(TLBotInlineResult *)botResult {
@@ -215,6 +240,7 @@ static NSImage *tgContextPicCap() {
     }
     
     [_player setImageObject:_imageObject];
+    
     
     [self _didScrolledTableView:nil];
 }

@@ -704,9 +704,6 @@ static NSImage *TGVTThumbCap() {
     
     [_thumbView setHidden:NO];
     
-    [self reconfigLayer:[[NSFileManager defaultManager] fileExistsAtPath:path] || path == nil];
-    
-    
     [[TGVTAcceleratedVideoFrameQueueGuard controlQueue] dispatch:^{
         NSString *realPath = path;
         if (path != nil && [path pathExtension].length == 0 && [[NSFileManager defaultManager] fileExistsAtPath:path]) {
@@ -722,6 +719,11 @@ static NSImage *TGVTThumbCap() {
         }
     
         if (![realPath isEqualToString:_path]) {
+            
+            [ASQueue dispatchOnMainQueue:^{
+                [self reconfigLayer:[[NSFileManager defaultManager] fileExistsAtPath:path] || path == nil];
+            }];
+            
             _path = realPath;
             _frameQueueGuard = nil;
             

@@ -142,7 +142,7 @@
             
             
             _roundObject = [[TGArticleImageObject alloc] initWithLocation:photoSize.location placeHolder:gray_resizable_placeholder() sourceId:0 size:photoSize.size];
-            
+            _roundObject.imageProcessor = [ImageUtils c_processor];
             _roundObject.imageSize = NSMakeSize(60, 60);
         }
         

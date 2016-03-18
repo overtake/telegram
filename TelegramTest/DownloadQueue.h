@@ -13,7 +13,7 @@
 
 
 +(dispatch_queue_t)nativeQueue;
-
++(ASQueue *)dispatcher;
 + (void)dispatchOnStageQueue:(dispatch_block_t)block;
 + (void)dispatchOnStageQueue:(dispatch_block_t)block synchronous:(BOOL)synchronous;
 + (void)dispatchOnDownloadQueue:(dispatch_block_t)block;

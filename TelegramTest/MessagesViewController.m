@@ -1253,9 +1253,7 @@ static NSTextAttachment *headerMediaIcon() {
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     
-    if(self.conversation.type == DialogTypeChannel) {
-        [[FullChatManager sharedManager] loadIfNeed:self.conversation.chat.n_id force:YES];
-    }
+    
     
 //
     [self.table reloadData];
@@ -1673,6 +1671,12 @@ static NSTextAttachment *headerMediaIcon() {
 - (void)windowBecomeNotification:(NSNotification *)notify {
     [self becomeFirstResponder];
     [self tryRead];
+    
+    if(_conversation.type == DialogTypeUser) {
+        [[FullUsersManager sharedManager] requestUserFull:_conversation.user withCallback:nil];
+    }
+    
+    
     [self.normalNavigationCenterView setDialog:self.conversation];
     
     
@@ -2553,6 +2557,14 @@ static NSTextAttachment *headerMediaIcon() {
     
      if(!self.locked &&  (((message != nil && message.channelMsgId != _jumpMessage.channelMsgId) || force) || [self.conversation.peer peer_id] != [dialog.peer peer_id] )) {
         
+         if(dialog.type == DialogTypeChannel) {
+             [[FullChatManager sharedManager] loadIfNeed:dialog.chat.n_id force:YES];
+         } else if(dialog.type == DialogTypeUser) {
+             [[FullUsersManager sharedManager] requestUserFull:dialog.user withCallback:nil];
+         }
+         
+         
+         
         self.jumpMessage = message;
         self.conversation = dialog;
         
@@ -2780,7 +2792,7 @@ static NSTextAttachment *headerMediaIcon() {
     
     if(_conversation.user.isBot && _historyController.nextState == ChatHistoryStateFull) {
         
-        [[FullUsersManager sharedManager] loadUserFull:_conversation.user callback:^(TL_userFull *userFull) {
+        [[FullUsersManager sharedManager] requestUserFull:_conversation.user withCallback:^(TLUserFull *userFull) {
             
             if(userFull.bot_info.n_description.length > 0) {
                 TL_localMessageService *service = [TL_localMessageService createWithFlags:0 n_id:0 from_id:0 to_id:_conversation.peer reply_to_msg_id:0 date:0 action:[TL_messageActionBotDescription createWithTitle:userFull.bot_info.n_description] fakeId:0 randomId:rand_long() dstate:DeliveryStateNormal];
@@ -3297,7 +3309,9 @@ static NSTextAttachment *headerMediaIcon() {
         
         TGMessageEditSender *editSender = [[TGMessageEditSender alloc] initWithTemplate:_template conversation:_conversation];
         
-        [editSender performEdit];
+        BOOL noWebpage = [self noWebpage:message];
+        
+        [editSender performEdit:noWebpage ? 2 : 0];
         
         [self setEditableMessage:nil];
         

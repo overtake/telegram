@@ -35,12 +35,7 @@ typedef enum {
 }
 
 
-- (void)drawRect:(NSRect)dirtyRect
-{
-    [super drawRect:dirtyRect];
-    
-    // Drawing code here.
-}
+
 
 
 -(BOOL)performDragOperation:(id<NSDraggingInfo>)sender {
@@ -283,9 +278,45 @@ typedef enum {
     [self setPlaceholderString:NSLocalizedString(@"Messages.SendPlaceholder", nil)];
 }
 
+-(void)setInline_placeholder:(NSAttributedString *)inline_placeholder {
+    
+    if(![_inline_placeholder isEqualToAttributedString:inline_placeholder]) {
+        _inline_placeholder = inline_placeholder;
+        
+        if(self.inline_placeholder != nil) {
+//            NSMutableAttributedString *str = [self.attributedString mutableCopy];
+//            
+//            [str appendAttributedString:self.inline_placeholder];
+//            
+//            [self setString:@""];
+//            [super insertText:str];
+        }
+        
+        [self setNeedsDisplay:YES];
+    }
+    
+}
+
+
+- (void)drawRect:(NSRect)dirtyRect
+{
+    [super drawRect:dirtyRect];
+    
+    if(self.inline_placeholder) {
+        
+        NSSize size = [self.attributedString sizeForTextFieldForWidth:NSWidth(self.frame)];
+        
+        [self.inline_placeholder drawAtPoint:NSMakePoint(size.width, NSAppKitVersionNumber > NSAppKitVersionNumber10_10_Max ? 6 : 4)];
+    }
+}
+
+
+
 -(void)textDidChange:(NSNotification *)notification {
     
     [super textDidChange:notification];
+    
+    
     
 }
 

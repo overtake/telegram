@@ -11,7 +11,7 @@
 #import "TGWebpageDocumentObject.h"
 #import "TMMediaController.h"
 #import "TMPreviewDocumentItem.h"
-
+#import "MessageTableCellMpegView.h"
 #import "TGModernMessageCellContainerView.h"
 @interface TGWebpageDocumentContainer ()
 @property (nonatomic,strong) DownloadEventListener *downloadEventListener;
@@ -60,15 +60,18 @@
 }
 
 -(void)mouseDown:(NSEvent *)theEvent {
-    
+    if([self mouse:[self convertPoint:[theEvent locationInWindow] fromView:nil] inRect:_cellView.containerView.frame]) {
+        if([self.webpage.webpage.embed_type isEqualToString:@"iframe"]) {
+            [self showPhoto];
+        }
+        
+    }
 }
 
 -(void)updateState:(TMLoaderViewState)state {
     
     
-    
 }
-
 
 -(void)viewDidMoveToWindow {
     [super viewDidMoveToWindow];

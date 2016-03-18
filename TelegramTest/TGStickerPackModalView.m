@@ -191,9 +191,7 @@ static NSImage * greenBackgroundImage(NSSize size) {
 -(void)setStickerPack:(TL_messages_stickerSet *)stickerPack {
     _pack = stickerPack;
     
-    
     NSMutableAttributedString *title = [[NSMutableAttributedString alloc] init];
-    
     
     NSRange range = [title appendString:_pack.set.title withColor:TEXT_COLOR];
     
@@ -272,6 +270,12 @@ static NSImage * greenBackgroundImage(NSSize size) {
 -(void)modalViewDidHide {
     
     int bp = 0;
+}
+
+-(void)modalViewDidShow {
+    [super modalViewDidShow];
+    [self.window makeFirstResponder:self.tableView];
+    [self.tableView becomeFirstResponder];
 }
 
 -(void)dealloc {

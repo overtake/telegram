@@ -52,6 +52,7 @@
 #import "TGUpdater.h"
 #import "TGHeadChatPanel.h"
 #import "NSArrayCategory.h"
+#import "FullUsersManager.h"
 @interface NSUserNotification(For107)
 
 @property (nonatomic, strong) NSAttributedString *response;
@@ -839,6 +840,8 @@ void exceptionHandler(NSException * exception)
 - (void) receiveWakeNote: (NSNotification*) note
 {
     [[MTNetwork instance] update];
+    
+    [[FullUsersManager sharedManager] drop];
     MTLog(@"receiveSleepNote: %@", [note name]);
 }
 

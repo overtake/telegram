@@ -13,4 +13,6 @@
 
 @property (nonatomic,weak) MessagesViewController *controller;
 
+@property (nonatomic,strong) NSAttributedString *inline_placeholder;
+
 @end

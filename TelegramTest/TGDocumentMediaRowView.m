@@ -106,7 +106,7 @@ static NSDictionary *colors;
         
         [self addSubview:_downloadImageView];
         
-        _thumbView = [[TGSharedMediaFileThumbnailView alloc] initWithFrame:NSMakeRect(s_dox, 10, 40, 40)];
+        _thumbView = [[TGSharedMediaFileThumbnailView alloc] initWithFrame:NSMakeRect(s_dox, 9, 40, 40)];
         
         [self addSubview:_thumbView];
         

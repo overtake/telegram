@@ -163,8 +163,6 @@
         
         NSMutableArray *result = [transaction objectForKey:@"gifs" inCollection:RECENT_GIFS];
         
-        int bp = 0;
-        
         [ASQueue dispatchOnMainQueue:^{
             [self proccessAndSendToDraw:result];
             
@@ -174,6 +172,20 @@
     }];
     
     
+}
+
+-(void)updateSavedGifs:(NSArray *)docs {
+    [[Storage yap] asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
+        
+        
+        [transaction setObject:docs forKey:@"gifs" inCollection:RECENT_GIFS];
+        
+        [ASQueue dispatchOnMainQueue:^{
+            [self proccessAndSendToDraw:docs];
+            
+        }];
+        
+    }];
 }
 
 -(void)checkRemoteWithHash {
@@ -207,6 +219,36 @@
     _items = [items mutableCopy];
     
     [_tableView clear];
+    
+    weak();
+    
+    [_tableView setDeleteLocalGif:^(TLBotInlineResult *gif) {
+        
+        [result removeObject:gif];
+        
+        NSMutableArray *docs = [[NSMutableArray alloc] init];
+        
+        [result enumerateObjectsUsingBlock:^(TLBotInlineResult * obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            
+            [docs addObject:obj.document];
+            
+        }];
+        
+        [weakSelf updateSavedGifs:docs];
+        
+        [RPCRequest sendRequest:[TLAPI_messages_saveGif createWithN_id:[TL_inputDocument createWithN_id:gif.document.n_id access_hash:gif.document.access_hash] unsave:YES] successHandler:^(id request, id response) {
+            
+            if([response isKindOfClass:[TL_boolTrue class]]) {
+                [weakSelf checkRemoteWithHash];
+            }
+            
+        } errorHandler:^(id request, RpcError *error) {
+            
+        }];
+
+        
+    }];
+    
     
     [_tableView drawResponse:result];
     

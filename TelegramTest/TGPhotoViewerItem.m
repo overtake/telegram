@@ -20,7 +20,9 @@
 }
 
 -(void)startDownload {
-    
+    if(![TGCache cachedImage:self.imageObject.cacheKey group:@[PVCACHE]]) {
+        [self.imageObject initDownloadItem];
+    }
 }
 
 -(BOOL)isEqualTo:(TGPhotoViewerItem *)object {

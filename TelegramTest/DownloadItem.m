@@ -83,7 +83,7 @@ static int futureUniqueKey = 0;
 }
 
 -(void)dealloc {
-    [self removeAllEvents];
+    
 }
 
 
@@ -125,9 +125,15 @@ static int futureUniqueKey = 0;
     [self notify:DownloadItemHandlerTypeProgress];
 }
 
+-(ASQueue *)deliveryQueue {
+    if(_deliveryQueue != nil)
+        return _deliveryQueue;
+    
+    return [DownloadQueue dispatcher];
+}
 
 -(void)notify:(DownloadItemHandlerType)type {
-    [DownloadQueue dispatchOnStageQueue:^{
+    [self.deliveryQueue dispatchOnQueue:^{
         
         [self.events enumerateObjectsUsingBlock:^(DownloadEventListener *obj, NSUInteger idx, BOOL *stop) {
             
@@ -154,14 +160,14 @@ static int futureUniqueKey = 0;
 
 
 -(void)addEvent:(DownloadEventListener *)event {
-    [DownloadQueue dispatchOnStageQueue:^{
+    [self.deliveryQueue dispatchOnQueue:^{
         if([self.events indexOfObject:event] == NSNotFound)
             [self.events addObject:event];
     }];
    
 }
 -(void)removeEvent:(DownloadEventListener *)event {
-    [DownloadQueue dispatchOnStageQueue:^{
+    [self.deliveryQueue dispatchOnQueue:^{
         [self.events removeObject:event];
     }];
     
@@ -187,10 +193,9 @@ static int futureUniqueKey = 0;
 }
 
 -(void)removeAllEvents {
-    [DownloadQueue dispatchOnStageQueue:^{   
+    [self.deliveryQueue dispatchOnQueue:^{
         [self.events removeAllObjects];
-    } synchronous:YES];
-    
+    }];
 }
 
 

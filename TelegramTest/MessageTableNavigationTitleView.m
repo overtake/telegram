@@ -1,4 +1,4 @@
-//
+ //
 //  MessageTableNavigationTitleView.m
 //  Messenger for Telegram
 //
@@ -187,7 +187,8 @@
     
     [self.statusTextField setFrameOrigin:NSMakePoint(NSMinX(self.statusTextField.frame), 7)];
     
-    [_searchButton setFrameOrigin:NSMakePoint(NSWidth(self.container.frame) - NSWidth(_searchButton.frame) +5, 10)];
+    
+    [_searchButton setFrameOrigin:NSMakePoint(NSWidth(self.container.frame) - NSWidth(_searchButton.frame) + 5 - (self.controller.state == MessagesViewControllerStateEditable ?  0 :  5), 10)];
     
     
     [_discussionSwitch setCenteredXByView:_discussionSwitch.superview];

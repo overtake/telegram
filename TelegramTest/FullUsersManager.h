@@ -11,6 +11,9 @@
 @interface FullUsersManager : SharedManager
 
 
--(void)loadUserFull:(TLUser *)user callback:(void (^)(TL_userFull *userFull))callback;
+
+-(void)requestUserFull:(TLUser *)user withCallback:(void (^) (TLUserFull *userFull))callback;
+
+
 
 @end
