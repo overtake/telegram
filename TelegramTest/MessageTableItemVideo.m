@@ -60,7 +60,7 @@
     
     TL_documentAttributeVideo *video = (TL_documentAttributeVideo *) [self.message.media.document attributeWithClass:[TL_documentAttributeVideo class]];
     
-    _videoSize = strongsize(NSMakeSize(video.w, video.h), MIN(320,width));
+    _videoSize = strongsize(NSMakeSize(MAX(150,video.w), MAX(150,video.h)), MIN(320,width));
     
 
     

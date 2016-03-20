@@ -70,6 +70,9 @@
             }
             
             [ASQueue dispatchOnMainQueue:^{
+                
+                TGMultipleRequestCallback *multiRequest = _requests[@(user.n_id)];
+                
                 [multiRequest.callbacks enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
                     void (^callback) (TLUserFull *userFull) = obj;
                     callback(response);

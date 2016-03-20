@@ -68,6 +68,16 @@
     }
 }
 
+-(void)_didChangeBackgroundColorWithAnimation:(POPBasicAnimation *)anim toColor:(NSColor *)color {
+    
+    [super _didChangeBackgroundColorWithAnimation:anim toColor:color];
+    
+    [_cellView _didChangeBackgroundColorWithAnimation:anim toColor:color];
+    
+    
+}
+
+
 -(void)updateState:(TMLoaderViewState)state {
     
     

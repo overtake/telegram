@@ -99,7 +99,7 @@ static NSDictionary *colors;
         
     
         
-        _downloadImageView = [[TMView alloc] initWithFrame:NSMakeRect(s_dox + 50, 15, image_SharedMediaDocumentStatusDownload().size.width, image_SharedMediaDocumentStatusDownload().size.height)];
+        _downloadImageView = [[TMView alloc] initWithFrame:NSMakeRect(s_dox + 50, 11, image_SharedMediaDocumentStatusDownload().size.width, image_SharedMediaDocumentStatusDownload().size.height)];
         
         
         [_downloadImageView addSubview:imageViewWithImage(image_SharedMediaDocumentStatusDownload())];

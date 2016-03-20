@@ -460,6 +460,7 @@
 }
 
 - (void)close {
+    [TGCache removeAllCachedImages:@[STICKERSCACHE]];
     [self.messagesViewController.bottomView.smilePopover close];
     [self.stickersTableView removeAllItems];
     [_gifContainer clear];

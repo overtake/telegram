@@ -92,6 +92,7 @@ static NSImage *tgContextPicCap() {
 @property (nonatomic,weak) TGMediaContextTableView *table;
 @property (nonatomic,weak) TGGifSearchRowItem *item;
 
+
 @end
 
 
@@ -159,7 +160,7 @@ static NSImage *tgContextPicCap() {
             }];
         }];
         
-        
+       
         
     }
     
@@ -186,20 +187,32 @@ static NSImage *tgContextPicCap() {
     
 }
 
+static NSMenu *deleteMenu;
+
 -(void)rightMouseDown:(NSEvent *)theEvent {
     
     if(_table.deleteLocalGif) {
         
         weak();
         
-        NSMenu *menu = [[NSMenu alloc] initWithTitle:@"remove"];
-        [menu addItem:[NSMenuItem menuItemWithTitle:NSLocalizedString(@"Messages.Selected.Delete", nil) withBlock:^(id sender) {
+        deleteMenu = [[NSMenu alloc] initWithTitle:@"remove"];
+        [deleteMenu addItem:[NSMenuItem menuItemWithTitle:NSLocalizedString(@"Messages.Selected.Delete", nil) withBlock:^(id sender) {
             
             weakSelf.table.deleteLocalGif(weakSelf.botResult);
             
         }]];
         
-        [NSMenu popUpContextMenu:menu withEvent:theEvent forView:self];
+        [NSMenu popUpContextMenu:deleteMenu withEvent:theEvent forView:self];
+    }
+}
+
+-(void)mouseUp:(NSEvent *)theEvent {
+    if(deleteMenu) {
+        [deleteMenu cancelTrackingWithoutAnimation];
+        if(deleteMenu.itemArray.count > 0)
+            [deleteMenu removeItemAtIndex:0];
+    } else {
+        [super mouseUp:theEvent];
     }
 }
 
@@ -223,6 +236,9 @@ static NSImage *tgContextPicCap() {
 
 -(void)dealloc {
     [self.downloadItem removeEvent:_downloadEventListener];
+    [deleteMenu cancelTrackingWithoutAnimation];
+    if(deleteMenu.itemArray.count > 0)
+        [deleteMenu removeItemAtIndex:0];
 }
 
 -(void)updateContainer {

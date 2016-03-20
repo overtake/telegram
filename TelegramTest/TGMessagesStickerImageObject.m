@@ -73,7 +73,7 @@
         
         image = renderedImage(image, self.imageSize);
         
-        [TGCache cacheImage:image forKey:[self cacheKey] groups:@[IMGCACHE]];
+        [TGCache cacheImage:image forKey:[self cacheKey] groups:@[STICKERSCACHE]];
     }
     
     

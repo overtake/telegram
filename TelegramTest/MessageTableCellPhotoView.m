@@ -18,7 +18,7 @@
 #import "TGCaptionView.h"
 #import "TGExternalImageObject.h"
 
-@interface MessageTableCellPhotoView()<TGImageObjectDelegate>
+@interface MessageTableCellPhotoView()
 @property (nonatomic,strong) NSImageView *secretImageView;
 
 @property (nonatomic,assign) NSPoint startDragLocation;
@@ -260,15 +260,10 @@ NSImage *fireImage() {
 }
 
 
-
-
-
-
-
 -(void)setEditable:(BOOL)editable animated:(BOOL)animated
 {
-    [super setEditable:editable animated:animated];
     self.imageView.isNotNeedHackMouseUp = editable;
+    [super setEditable:editable animated:animated];
 }
 
 

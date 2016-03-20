@@ -187,7 +187,7 @@ static NSDictionary *attributes() {
         
         
         _dateField = [TMTextField defaultTextField];
-        [_dateField setFrameOrigin:NSMakePoint(0, 40)];
+        [_dateField setFrameOrigin:NSMakePoint(0, 42)];
         
         _dateField.wantsLayer = YES;
         [_dateField setFont:TGSystemFont(12)];
@@ -270,7 +270,8 @@ static NSDictionary *attributes() {
     int width = MIN(NSWidth(self.frame) - NSMinX(_nameTextField.frame) - NSWidth(_dateField.frame) - 10 - (self.item.message.n_out ? 18 : 0) - (self.item.conversation.isVerified ? 10 : 0), self.item.nameTextSize.width);
     
     [_nameTextField setFrameSize:NSMakeSize(width, 23)];
-    [_messageField setFrameSize:NSMakeSize(NSWidth(self.frame) - NSMinX(_messageField.frame) -40, 36)];
+    [_messageField setFrame:NSMakeRect(NSMinX(_messageField.frame), self.item.typing.length > 0 ? 21 : 3, NSWidth(self.frame) - NSMinX(_messageField.frame) -40, self.item.typing.length > 0 ? 18 : 36)];
+    
     [_dateField setFrameOrigin:NSMakePoint(self.bounds.size.width - self.item.dateSize.width - 10, _dateField.frame.origin.y)];
 
     
@@ -307,6 +308,9 @@ static NSDictionary *attributes() {
         [self startAnimation];
     } else {
         [_messageField setAttributedStringValue:self.item.messageText];
+        
+        [_messageField setFrame:NSMakeRect(NSMinX(_messageField.frame), 3, NSWidth(_messageField.frame), 36)];
+
         [_timer invalidate];
         _timer = nil;
         _dots = @"";
@@ -330,9 +334,16 @@ static NSDictionary *attributes() {
         [attr setFont:TGSystemFont(13) forRange:attr.range];
         [attr setSelected:self.isSelected];
         
+        
+        
+        [_messageField setFrame:NSMakeRect(NSMinX(_messageField.frame), 21, NSWidth(_messageField.frame), 18)];
+        
         [_messageField setAttributedStringValue:attr];
         
+      //  [_messageField setFrameOrigin:NSMakePoint(NSMinX(_messageField.frame), 21)];
+        
         if(self.item.typing.length == 0) {
+            [self updateFrames];
             [_timer invalidate];
             _timer = nil;
             [self checkMessageState];

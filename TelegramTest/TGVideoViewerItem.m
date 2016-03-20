@@ -42,6 +42,10 @@
    return [self.previewObject.reservedObject isKindOfClass:[NSDictionary class]] || ( isPathExists(self.path) && [FileUtils checkNormalizedSize:self.path checksize:self.message.media.document.size]);
 }
 
+-(NSSize)size {
+    return self.videoSize;
+}
+
 -(DownloadItem *)downloadItem {
     
     if(_item == nil && ![self.previewObject.reservedObject isKindOfClass:[NSDictionary class]])
@@ -57,9 +61,8 @@
     } else {
         TL_documentAttributeVideo *video = (TL_documentAttributeVideo *) [self.message.media.document attributeWithClass:[TL_documentAttributeVideo class]];
         
-        return NSMakeSize(video.w, video.h);
+        return NSMakeSize(MAX(640,video.w), MAX(480,video.h));
     }
-    
     
 }
 

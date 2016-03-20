@@ -624,6 +624,7 @@ static int MAX_WORKER_POLL = 3;
             [TLAPI_messages_sendMessage class],
             [TLAPI_messages_sendMedia class],
             [TLAPI_messages_forwardMessage class],
+            [TLAPI_messages_forwardMessages class],
             [TLAPI_messages_sendEncrypted class],
             [TLAPI_messages_sendEncryptedFile class],
             [TLAPI_messages_sendEncryptedService class]

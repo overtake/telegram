@@ -3139,7 +3139,6 @@ static NSTextAttachment *headerMediaIcon() {
         
         [self isHeaderMessage:current prevItem:backItem];
         
-        
         if(pos != 1 && idx < pos) {
             if(isCHdr != current.isHeaderMessage ||
                isCFwdHdr != current.isHeaderForwardedMessage)
@@ -3152,7 +3151,6 @@ static NSTextAttachment *headerMediaIcon() {
                 [rld addIndex:idx-1];
             }
         }
-        
         
         [current makeSizeByWidth:current.makeSize];
         [backItem makeSizeByWidth:backItem.makeSize];
@@ -3176,11 +3174,8 @@ static NSTextAttachment *headerMediaIcon() {
         [self.table reloadDataForRowIndexes:set columnIndexes:[NSIndexSet indexSetWithIndex:0]];
     }
     
-   // [self.table endUpdates];
-    
     
     [self tryRead];
-    
     
     return NSMakeRange(pos, array.count);
 }
@@ -3649,24 +3644,40 @@ static NSTextAttachment *headerMediaIcon() {
             [self.historyController addItems:sender.tableItems conversation:conversation callback:callback sentControllerCallback:nil];
         };
         
+        void (^custom_blck) (TL_localMessage *msg) = ^(TL_localMessage *msg) {
+            MessageSenderItem *sender = [[MessageSenderItem alloc] initWithMessage:msg.message forConversation:conversation additionFlags:conversation != _conversation ? 0 : self.senderFlags];
+            sender.tableItem = [[self messageTableItemsFromMessages:@[sender.message]] firstObject];
+            [self.historyController addItem:sender.tableItem conversation:conversation callback:callback sentControllerCallback:nil];
+        };
         
-        if(messages.count < 50) {
-            fwd_blck(messages);
-        } else {
+                    
+        NSMutableArray *copy = [messages mutableCopy];
+        
+        NSMutableArray *fwdMax = [NSMutableArray array];
+        
+        [copy enumerateObjectsUsingBlock:^(TL_localMessage *obj, NSUInteger idx, BOOL * _Nonnull stop) {
             
-            NSMutableArray *copy = [messages mutableCopy];
-            
-            while (copy.count > 0) {
+            if(obj.n_id < TGMINFAKEID) {
+                [fwdMax addObject:obj];
                 
-                NSArray *fwd = [copy subarrayWithRange:NSMakeRange(0, MIN(copy.count,50))];
-                
-                [copy removeObjectsInArray:fwd];
-                
-                fwd_blck(fwd);
-                
-                
+                if(fwdMax.count == 50) {
+                    fwd_blck([fwdMax copy]);
+                    [fwdMax removeAllObjects];
+                }
+            } else {
+                if(fwdMax.count > 0) {
+                    fwd_blck([fwdMax copy]);
+                    [fwdMax removeAllObjects];
+                }
+                custom_blck(obj);
             }
+            
+        }];
+        
+        if(fwdMax.count > 0) {
+            fwd_blck(fwdMax);
         }
+        
         
         
         
@@ -4316,7 +4327,7 @@ static NSTextAttachment *headerMediaIcon() {
         return;
     }
     
-    NSAlert *alert = [NSAlert alertWithMessageText:dialog.type == DialogTypeChannel && dialog.chat.isCreator ? (NSLocalizedString(dialog.chat.isMegagroup ? @"Conversation.Confirm.DeleteGroup" : @"Conversation.Confirm.DeleteChannel", nil)) : (dialog.type == DialogTypeChat && dialog.chat.type == TLChatTypeNormal ? NSLocalizedString(@"Conversation.Confirm.LeaveAndClear", nil) :  NSLocalizedString(@"Conversation.Confirm.DeleteAndClear", nil)) informativeText:dialog.type == DialogTypeChannel && dialog.chat.isCreator ? NSLocalizedString(dialog.chat.isMegagroup ? @"Conversation.Confirm.DeleteSupergroupInfo" : @"Conversation.Confirm.DeleteChannelInfo", nil) : NSLocalizedString(@"Conversation.Confirm.UndoneAction", nil) block:^(NSNumber *result) {
+    NSAlert *alert = [NSAlert alertWithMessageText:dialog.type == DialogTypeChannel && dialog.chat.isCreator ? (NSLocalizedString(dialog.chat.isMegagroup ? @"Conversation.Confirm.DeleteGroup" : @"Conversation.Confirm.DeleteChannel", nil)) : (dialog.type == DialogTypeChat && dialog.chat.type == TLChatTypeNormal ? NSLocalizedString(@"Conversation.Confirm.LeaveAndClear", nil) :  NSLocalizedString(dialog.type == DialogTypeChannel && dialog.chat.isMegagroup ? appName() : @"Conversation.Confirm.DeleteAndClear", nil)) informativeText:dialog.type == DialogTypeChannel && dialog.chat.isCreator ? NSLocalizedString(dialog.chat.isMegagroup ? @"Conversation.Confirm.DeleteSupergroupInfo" : @"Conversation.Confirm.DeleteChannelInfo", nil) : NSLocalizedString(dialog.type == DialogTypeChannel && dialog.chat.isMegagroup ? @"Conversation.Delete.ConfirmLeaveSupergroup" : @"Conversation.Confirm.UndoneAction", nil) block:^(NSNumber *result) {
         if([result intValue] == 1000) {
             if(startDeleting != nil)
                 startDeleting();

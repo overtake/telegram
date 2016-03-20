@@ -471,11 +471,11 @@
 		C26976AC1A0C03610047E2C3 /* InstagramServiceDescription.m in Sources */ = {isa = PBXBuildFile; fileRef = C26976AB1A0C03610047E2C3 /* InstagramServiceDescription.m */; };
 		C26976B01A10CDED0047E2C3 /* TGPhotoViewer.m in Sources */ = {isa = PBXBuildFile; fileRef = C26976AF1A10CDED0047E2C3 /* TGPhotoViewer.m */; };
 		C26976B41A10E2110047E2C3 /* TGPVContainer.m in Sources */ = {isa = PBXBuildFile; fileRef = C26976B31A10E2110047E2C3 /* TGPVContainer.m */; };
-		C26B51DB1C9BFD6300077DEA /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C235364C19C88D620044978E /* Sparkle.framework */; };
-		C26B51DC1C9BFD6300077DEA /* HockeySDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2082B7219C1E1C4000005E2 /* HockeySDK.framework */; };
-		C26B51DD1C9BFD6B00077DEA /* Sparkle.framework in Copy Files (6 items) */ = {isa = PBXBuildFile; fileRef = C235364C19C88D620044978E /* Sparkle.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		C26B51DE1C9BFD6B00077DEA /* HockeySDK.framework in Copy Files (6 items) */ = {isa = PBXBuildFile; fileRef = C2082B7219C1E1C4000005E2 /* HockeySDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		C26B51E11C9C305200077DEA /* TGMultipleRequestCallback.m in Sources */ = {isa = PBXBuildFile; fileRef = C26B51E01C9C305200077DEA /* TGMultipleRequestCallback.m */; };
+		C26B51E21C9D68C700077DEA /* Sparkle.framework in Copy Files (6 items) */ = {isa = PBXBuildFile; fileRef = C235364C19C88D620044978E /* Sparkle.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		C26B51E31C9D68C700077DEA /* HockeySDK.framework in Copy Files (6 items) */ = {isa = PBXBuildFile; fileRef = C2082B7219C1E1C4000005E2 /* HockeySDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		C26B51E41C9D68CD00077DEA /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C235364C19C88D620044978E /* Sparkle.framework */; };
+		C26B51E51C9D68CD00077DEA /* HockeySDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2082B7219C1E1C4000005E2 /* HockeySDK.framework */; };
 		C26E80201B7B91A9003CC483 /* TGDatabaseRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = C26E801F1B7B91A9003CC483 /* TGDatabaseRequest.m */; };
 		C26E80271B7D14E2003CC483 /* TL_localMessage_old32.m in Sources */ = {isa = PBXBuildFile; fileRef = C26E80261B7D14E2003CC483 /* TL_localMessage_old32.m */; };
 		C26E802A1B7E00A1003CC483 /* TGRecentSearchRowItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C26E80291B7E00A1003CC483 /* TGRecentSearchRowItem.m */; };
@@ -1057,8 +1057,8 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				C26B51DD1C9BFD6B00077DEA /* Sparkle.framework in Copy Files (6 items) */,
-				C26B51DE1C9BFD6B00077DEA /* HockeySDK.framework in Copy Files (6 items) */,
+				C26B51E21C9D68C700077DEA /* Sparkle.framework in Copy Files (6 items) */,
+				C26B51E31C9D68C700077DEA /* HockeySDK.framework in Copy Files (6 items) */,
 			);
 			name = "Copy Files (6 items)";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2925,8 +2925,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C26B51DB1C9BFD6300077DEA /* Sparkle.framework in Frameworks */,
-				C26B51DC1C9BFD6300077DEA /* HockeySDK.framework in Frameworks */,
+				C26B51E41C9D68CD00077DEA /* Sparkle.framework in Frameworks */,
+				C26B51E51C9D68CD00077DEA /* HockeySDK.framework in Frameworks */,
 				C2034BB31C2EB1C70080D023 /* VideoToolbox.framework in Frameworks */,
 				C21068C61C1B417200815859 /* CoreVideo.framework in Frameworks */,
 				C21068BE1C1B04A100815859 /* QuickTime.framework in Frameworks */,

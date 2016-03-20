@@ -808,10 +808,6 @@ static ChatHistoryController *observer;
                 
             }];
             
-            item.messageSender.conversation.last_marked_message = item.message.n_id;
-            item.messageSender.conversation.last_marked_date = item.message.date+1;
-            
-            [item.messageSender.conversation save];
             
             [item.messageSender send];
             

@@ -408,18 +408,19 @@
         for(MessageTableItem *item in messages)
             [ids addObject:item.message];
         
-        [ids sortUsingComparator:^NSComparisonResult(TLMessage * a, TLMessage * b) {
-            return a.n_id > b.n_id ? NSOrderedDescending : NSOrderedAscending;
+        [ids sortUsingComparator:^NSComparisonResult(TL_localMessage *obj1, TL_localMessage *obj2) {
+            
+            return (obj1.date > obj2.date ? NSOrderedDescending : (obj1.date < obj2.date ? NSOrderedAscending : (obj1.n_id > obj2.n_id ? NSOrderedDescending : NSOrderedAscending)));
         }];
         
         [self.messagesViewController cancelSelectionAndScrollToBottom:YES];
         
-        
-        dialog.last_marked_date = [[MTNetwork instance] getTime]+1;
-        dialog.last_marked_message = dialog.top_message;
-        
-        [dialog save];
-        
+//        
+//        dialog.last_marked_date = [[MTNetwork instance] getTime]+1;
+//        dialog.last_marked_message = dialog.top_message;
+//        
+//        [dialog save];
+//        
         [self.messagesViewController setFwdMessages:ids forConversation:dialog];
         
 

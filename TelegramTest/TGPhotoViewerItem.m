@@ -36,4 +36,8 @@
     return self.imageObject.isset;
 }
 
+-(NSSize)size {
+    return self.imageObject.imageSize;
+}
+
 @end

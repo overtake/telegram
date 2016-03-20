@@ -280,7 +280,7 @@ static BOOL mouseIsDown = NO;
 
 
 -(BOOL)canEdit {
-    return (self.item.messageSender == nil || self.item.messageSender.state == MessageSendingStateSent) && self.item.message.n_id < TGMINFAKEID;
+    return (self.item.messageSender == nil || self.item.messageSender.state == MessageSendingStateSent) && (self.item.message.n_id < TGMINFAKEID || [self.item isKindOfClass:[MessageTableItemText class]]);
 }
 
 - (void)setProgressStyle:(TMCircularProgressStyle)style {

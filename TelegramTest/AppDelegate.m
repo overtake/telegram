@@ -266,11 +266,13 @@ void exceptionHandler(NSException * exception)
         [[NSUserNotificationCenter defaultUserNotificationCenter] setDelegate:self];
     }
     
+    CFStringRef bundleID = (__bridge CFStringRef)[[NSBundle mainBundle] bundleIdentifier];
+    LSSetDefaultHandlerForURLScheme(CFSTR("tg"), bundleID);
+    
 #ifdef TGDEBUG
     
-//    CFStringRef bundleID = (__bridge CFStringRef)[[NSBundle mainBundle] bundleIdentifier];
-//    LSSetDefaultHandlerForURLScheme(CFSTR("tg"), bundleID);
-//    
+
+//
 //    NSString *updater_path =  [NSString stringWithFormat:@"%@/Updater",[[NSBundle mainBundle] privateFrameworksPath]];
 //    
 //    if([[NSFileManager defaultManager] fileExistsAtPath:updater_path]) {

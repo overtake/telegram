@@ -1798,7 +1798,7 @@ static RBLPopover *popover;
         }
         
         if(self.replyContainer != nil || self.fwdContainer != nil || (self.webpageAttach != nil && self.inputMessageString.length > 0)) {
-            height+= 40;
+            height+= self.replyContainer.replyObject.containerHeight + 5;
         }
         
         [_webpageAttach setHidden:_fwdContainer != nil];

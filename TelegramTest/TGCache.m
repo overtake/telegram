@@ -61,7 +61,7 @@ NSString *const THUMBCACHE = @"THUMBCACHE";
 NSString *const PVCACHE = @"PVCACHE";
 NSString *const PCCACHE = @"PCCACHE";
 NSString *const AVACACHE = @"AVACACHE";
-
+NSString *const STICKERSCACHE = @"STICKERS_CACHE";
 -(id)init {
     if(self = [super init]) {
         
@@ -71,7 +71,7 @@ NSString *const AVACACHE = @"AVACACHE";
         _groupMemoryTaken = [[NSMutableDictionary alloc] init];
         _groupMemoryLimit = [[NSMutableDictionary alloc] init];
         _groupCountLimit = [[NSMutableDictionary alloc] init];
-        NSArray *keys = @[IMGCACHE,THUMBCACHE,PVCACHE,PCCACHE,AVACACHE];
+        NSArray *keys = @[IMGCACHE,THUMBCACHE,PVCACHE,PCCACHE,AVACACHE,STICKERSCACHE];
         
         [keys enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
             

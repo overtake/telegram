@@ -135,7 +135,7 @@
     
     [[FullUsersManager sharedManager] requestUserFull:_user withCallback:^(TLUserFull *userFull) {
         
-        _userFull = userFull;
+        _userFull = (TL_userFull *) userFull;
         
         [self configure];
         

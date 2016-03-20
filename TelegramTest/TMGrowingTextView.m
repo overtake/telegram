@@ -244,7 +244,7 @@
             NSBezierPath *circlePath = [NSBezierPath bezierPath];
             [circlePath appendBezierPathWithRoundedRect:rect xRadius:3 yRadius:3];
             [NSColorFromRGB(0xdedede) setStroke];
-            [circlePath setLineWidth:IS_RETINA ? 2 : 1];
+            [circlePath setLineWidth:2];
             [circlePath stroke];
             [[NSColor whiteColor] setFill];
             [circlePath fill];

@@ -7,7 +7,7 @@
 //
 
 #import "SelectTextManager.h"
-
+#import "MessageTableItem.h"
 
 @interface SelectTextManager ()
 @property (nonatomic,strong) NSMutableDictionary *keys;
@@ -94,13 +94,56 @@
     
     __block NSString *result = @"";
     
+    __block int sliceCount = 1;
+    
+    __block BOOL needSelectMessages = YES;
+    
     [self enumerateItems:^(id obj, NSRange range) {
+        
+        if(needSelectMessages)
+            needSelectMessages = [obj isKindOfClass:[MessageTableItem class]];
+        
         result = [result stringByAppendingFormat:@"%@\n",[[obj string] substringWithRange:range]];
     }];
     
-    result = [result substringToIndex:result.length -1];
+    if(needSelectMessages)
+        return [self selectMessagesText];
+    
+    result = [result substringToIndex:result.length - sliceCount];
     
     return result;
+}
+
++(NSString *)selectMessagesText {
+    
+    __block NSString *result = @"";
+    
+    __block MessageTableItem *lastItem;
+    
+    __block int lastUserId = 0;
+    __block BOOL header = YES;
+    
+    [self enumerateItems:^(MessageTableItem *item, NSRange range) {
+        
+        if(!lastItem)
+            lastItem = item;
+        
+        header = item.user.n_id != lastUserId || item.isHeaderMessage;
+        
+        if(header)
+            result = [result stringByAppendingFormat:@"%@, [%@]: \n",item.user.fullName,item.fullDate];
+        
+        lastUserId = item.user.n_id;
+        
+        
+        result = [result stringByAppendingFormat:@"%@\n\n",[[item string] substringWithRange:range]];
+    }];
+    
+    result = [result substringToIndex:result.length - 2];
+    
+    
+    return result;
+
 }
 
 

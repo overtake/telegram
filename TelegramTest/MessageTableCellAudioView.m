@@ -89,7 +89,6 @@
         
         [self setProgressStyle:TMCircularProgressLightStyle];
         [self.progressView setProgressColor:[NSColor whiteColor]];
-        [self setProgressFrameSize:NSMakeSize(36, 36)];
         
         [self setProgressToView:_playView];
         

@@ -180,6 +180,8 @@
     
      [super _didChangeBackgroundColorWithAnimation:anim toColor:color];
     
+    [_webpageContainerView _didChangeBackgroundColorWithAnimation:anim toColor:color];
+    
     if(!anim) {
         self.textView.backgroundColor = color;
         self.webpageContainerView.descriptionField.backgroundColor = color;

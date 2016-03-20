@@ -626,10 +626,9 @@ void add_sticker_pack_by_name(TLInputStickerSet *set) {
         dispatch_after_seconds(0.2, ^{
             TGStickerPackModalView *stickerModalView = [[TGStickerPackModalView alloc] init];
             
-            [stickerModalView setStickerPack:response];
             stickerModalView.canSendSticker = YES;
             [stickerModalView show:appWindow() animated:YES];
-
+            [stickerModalView setStickerPack:response];
         });
         
         

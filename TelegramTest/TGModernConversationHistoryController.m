@@ -73,8 +73,8 @@
                     
                 }
                  
-                
-                [self dispatchWithFullList:[self mixChannelsWithConversations:d] offset:(int)d.count];
+                if(d.count > 0)
+                    [self dispatchWithFullList:[self mixChannelsWithConversations:d] offset:(int)d.count];
                 
             }];
             

@@ -18,6 +18,8 @@
 -(DownloadItem *)downloadItem;
 -(BOOL)isset;
 
+-(NSSize)size;
+
 -(void)startDownload;
 
 @end

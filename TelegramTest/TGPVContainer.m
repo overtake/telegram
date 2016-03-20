@@ -400,17 +400,8 @@
 - (NSSize)contentFullSize:(TGPhotoViewerItem *)item {
     
     
-    NSSize size = item.imageObject.imageSize;
+    NSSize size = item.size;
     
-    if([item.previewObject.reservedObject isKindOfClass:[NSDictionary class]]) {
-        
-        size = [item.previewObject.reservedObject[@"size"] sizeValue];
-        
-        if(size.width == 0 || size.height == 0) {
-            size = NSMakeSize(1024, 720);
-        }
-        
-    }
     
     NSSize maxSize = [self maxSize];
     
