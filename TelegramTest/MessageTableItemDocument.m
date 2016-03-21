@@ -85,9 +85,6 @@
 }
 
 - (NSString *)path {
-    if([self.message.media.document isKindOfClass:[TL_outDocument class]])
-        return ((TL_outDocument *)self.message.media.document).file_path;
-    else
         return mediaFilePath(self.message);
 }
 

@@ -163,7 +163,6 @@
             dispatch_block_t block = ^{
                 [RPCRequest sendRequest:[TLAPI_channels_updatePinnedMessage createWithFlags:flags channel:weakSelf.item.message.chat.inputPeer n_id:unpin ? 0 : weakSelf.item.message.n_id] successHandler:^(id request, id response) {
                     
-                    int bp = 0;
                     
                 } errorHandler:nil];
             };
@@ -171,13 +170,18 @@
             if(!unpin) {
                 
                 NSAlert *alert = [NSAlert alertWithMessageText:appName() informativeText:NSLocalizedString(@"Pin.PinMessageAndNotifyDesc", nil) block:^(id result) {
-                    if([result intValue] != 1000)
-                        flags|= (1 << 0);
-                    block();
+                    
+                    if([result intValue] != 1002) {
+                        if([result intValue] != 1000)
+                            flags|= (1 << 0);
+                        block();
+                    }
+                    
                     
                 }];
                 [alert addButtonWithTitle:NSLocalizedString(@"Pin.Ok", nil)];
                 [alert addButtonWithTitle:NSLocalizedString(@"Pin.OnlyPin", nil)];
+                [alert addButtonWithTitle:NSLocalizedString(@"Cancel", nil)];
                 [alert show];
             } else {
                 block();

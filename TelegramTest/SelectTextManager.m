@@ -96,7 +96,8 @@
     
     __block int sliceCount = 1;
     
-    __block BOOL needSelectMessages = YES;
+    __block BOOL needSelectMessages = [[self instance] list].count > 1;
+    
     
     [self enumerateItems:^(id obj, NSRange range) {
         
@@ -136,7 +137,7 @@
         lastUserId = item.user.n_id;
         
         
-        result = [result stringByAppendingFormat:@"%@\n\n",[[item string] substringWithRange:range]];
+        result = [result stringByAppendingFormat:@"%@%@%@\n\n",range.location != 0 ? @"..." : @"", [[item string] substringWithRange:range],range.location + range.length != item.string.length ? @"..." : @""];
     }];
     
     result = [result substringToIndex:result.length - 2];

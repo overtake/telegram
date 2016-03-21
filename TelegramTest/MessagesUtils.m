@@ -200,7 +200,7 @@
         
         
         
-        if(((message.conversation.type == DialogTypeChannel && message.from_id != 0) || message.conversation.type == DialogTypeChat) && !message.action ) {
+        if(((message.conversation.type == DialogTypeChannel && message.from_id != 0 && !message.isPost) || message.conversation.type == DialogTypeChat) && !message.action ) {
             
             if(!message.n_out) {
                 userLast = message.fromUser;
@@ -216,7 +216,7 @@
         
         if(message.action) {
             isAction = YES;
-            if(!userLast && message.from_id != 0)
+            if(!userLast && message.from_id != 0 )
                 userLast = message.fromUser;
              if(message.conversation.type != DialogTypeSecretChat && userLast)
                 chatUserNameString = userLast ? userLast.fullName : NSLocalizedString(@"MessageAction.Service.LeaveChat", nil);
@@ -447,7 +447,14 @@
         if(!message.replyMessage || (message.replyMessage.media == nil && message.replyMessage.message.length == 0)) {
             actionText = NSLocalizedString(@"Message.PinnedDeletedMessage", nil);
         } else if(message.replyMessage.media == nil || [message.replyMessage.media isKindOfClass:[TL_messageMediaWebPage class]]) {
+            
+            BOOL addDot = message.replyMessage.message.length > 30;
+            
             actionText = [NSString stringWithFormat:actionText, [[message.replyMessage.message stringByReplacingOccurrencesOfString:@"\n" withString:@" "] substringWithRange:NSMakeRange(0, MIN(30,message.replyMessage.message.length))]];
+            
+            if(addDot) {
+                actionText = [actionText stringByAppendingString:@"..."];
+            }
         } else {
             
             NSString *caption = message.replyMessage.media.caption;
