@@ -153,23 +153,25 @@ static NSImage *higlightedImage() {
         
         [button addBlock:^(BTRControlEvents events) {
             
-            if(weakSelf.tableView.previewModal != nil) {
-                [weakSelf.tableView.previewModal close:YES];
-                weakSelf.tableView.previewModal = nil;
+            strongWeak();
+            
+            if(strongSelf.tableView.previewModal != nil) {
+                [strongSelf.tableView.previewModal close:YES];
+                strongSelf.tableView.previewModal = nil;
                 
                 return;
             }
             
-            if(weakSelf.tableView.notSendUpSticker)
+            if(strongSelf.tableView.notSendUpSticker)
             {
-                weakSelf.tableView.notSendUpSticker = NO;
+                strongSelf.tableView.notSendUpSticker = NO;
                 return;
             }
             
-            if(!weakSelf.tableView.isCustomStickerPack || weakSelf.tableView.canSendStickerAlways)
+            if(!strongSelf.tableView.isCustomStickerPack || strongSelf.tableView.canSendStickerAlways)
                 [appWindow().navigationController.messagesViewController sendSticker:item.stickers[idx] forConversation:appWindow().navigationController.messagesViewController.conversation addCompletionHandler:nil];
             
-            if(weakSelf.tableView.canSendStickerAlways) {
+            if(strongSelf.tableView.canSendStickerAlways) {
                 dispatch_async(dispatch_get_main_queue(), ^{
                     [TMViewController closeAllModals];
                 });
@@ -205,23 +207,6 @@ static NSImage *higlightedImage() {
         [button addSubview:imageView];
             
         
-        
-        if([obj isKindOfClass:[TL_outDocument class]]) {
-            BTRButton *removeButton = [[BTRButton alloc] initWithFrame:NSMakeRect(width - image_RemoveSticker().size.width - 3, NSHeight(self.bounds) - image_RemoveSticker().size.height - 3, image_RemoveSticker().size.width, image_RemoveSticker().size.height)];
-            
-            [removeButton setBackgroundImage:image_RemoveSticker() forControlState:BTRControlStateNormal];
-            [removeButton setBackgroundImage:image_RemoveStickerActive() forControlState:BTRControlStateHighlighted];
-            
-            
-            [removeButton addBlock:^(BTRControlEvents events) {
-                
-                [weakSelf.tableView removeSticker:obj];
-                
-            } forControlEvents:BTRControlEventClick];
-            
-             [button addSubview:removeButton];
-
-        }
         
         [self addSubview:button];
         
@@ -364,7 +349,7 @@ static NSImage *higlightedImage() {
     
     [[Storage yap] readWriteWithBlock:^(YapDatabaseReadWriteTransaction * __nonnull transaction) {
         
-        NSMutableDictionary *serializedStickers = [_stickers mutableCopy];
+        NSMutableDictionary *serializedStickers = [stickers mutableCopy];
         
         NSMutableDictionary *data = [[transaction objectForKey:@"modern_stickers" inCollection:STICKERS_COLLECTION] mutableCopy];
         
@@ -442,7 +427,7 @@ static NSImage *higlightedImage() {
     
     [RPCRequest sendRequest:[TLAPI_messages_getStickerSet createWithStickerset:[TL_inputStickerSetID createWithN_id:set.n_id access_hash:set.access_hash]] successHandler:^(id request, TL_messages_stickerSet *response) {
         
-        [[Storage yap] readWriteWithBlock:^(YapDatabaseReadWriteTransaction * __nonnull transaction) {
+        [[Storage yap] asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction * __nonnull transaction) {
             
             NSMutableDictionary *data = [[transaction objectForKey:@"modern_stickers" inCollection:STICKERS_COLLECTION] mutableCopy];
             
@@ -453,11 +438,17 @@ static NSImage *higlightedImage() {
                 data[@"sets"] = [[NSMutableArray alloc] init];
             }
             
-            _stickers[@(response.set.n_id)] = response.documents;
+            
+            [ASQueue dispatchOnMainQueue:^{
+                _stickers[@(response.set.n_id)] = response.documents;
+                
+            }];
+            
+            [self save:_sets stickers:_stickers n_hash:n_hash saveSets:YES];
             
         }];
         
-        [self save:_sets stickers:_stickers n_hash:n_hash saveSets:YES];
+        
         
         
         [ASQueue dispatchOnMainQueue:^{
@@ -484,7 +475,7 @@ static NSImage *higlightedImage() {
     _sets = [sets mutableCopy];
 }
 
--(void)removeSticker:(TL_outDocument *)document {
+-(void)removeSticker:(TL_document *)document {
     
     [[Storage yap] readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
         
@@ -492,7 +483,7 @@ static NSImage *higlightedImage() {
         
         __block id toDelete;
         
-        [localStickers enumerateObjectsUsingBlock:^(TL_outDocument *obj, NSUInteger idx, BOOL *stop) {
+        [localStickers enumerateObjectsUsingBlock:^(TL_document *obj, NSUInteger idx, BOOL *stop) {
             
             
             if(obj.n_id == document.n_id) {
@@ -516,7 +507,6 @@ static NSImage *higlightedImage() {
 
 -(void)reloadData {
     
-
     if(self.window) {
         NSMutableArray *items = [[NSMutableArray alloc] init];
         

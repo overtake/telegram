@@ -252,7 +252,7 @@
                     currentUser.access_hash = newUser.access_hash;
                 }
                 
-                
+                [self setUserStatus:newUser.status forUser:currentUser];
                 
                 if(isNeedRebuildNames) {
                     [currentUser rebuildNames];
@@ -277,9 +277,6 @@
                 [self->keys setObject:newUser forKey:[newUser valueForKey:key]];
                 
                 [newUser rebuildNames];
-                
-                
-                
                 [newUser rebuildType];
                 
                  currentUser = newUser;

@@ -44,7 +44,7 @@
     {
         
         [menu addItem:[NSMenuItem menuItemWithTitle:NSLocalizedString(@"Context.AddCustomSticker", nil) withBlock:^(id sender) {
-            [StickersPanelView addLocalSticker:[TL_outDocument createWithN_id:weakSelf.item.message.media.document.n_id access_hash:weakSelf.item.message.media.document.access_hash date:weakSelf.item.message.media.document.date mime_type:weakSelf.item.message.media.document.mime_type size:weakSelf.item.message.media.document.size thumb:weakSelf.item.message.media.document.thumb dc_id:weakSelf.item.message.media.document.dc_id file_path:@"" attributes:weakSelf.item.message.media.document.attributes]];
+            [StickersPanelView addLocalSticker:[TL_document createWithN_id:weakSelf.item.message.media.document.n_id access_hash:weakSelf.item.message.media.document.access_hash date:weakSelf.item.message.media.document.date mime_type:weakSelf.item.message.media.document.mime_type size:weakSelf.item.message.media.document.size thumb:weakSelf.item.message.media.document.thumb dc_id:weakSelf.item.message.media.document.dc_id attributes:weakSelf.item.message.media.document.attributes]];
         }]];
         
         

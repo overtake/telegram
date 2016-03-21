@@ -18,6 +18,7 @@
 -(id)initWithString:(NSString *)header flipped:(BOOL)flipped {
     if(self = [self initWithString:header height:0 flipped:flipped]) {
         _autoHeight = YES;
+        
     }
     return self;
 }

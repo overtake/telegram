@@ -2,7 +2,7 @@
 //  MTProto.m
 //  Telegram
 //
-//  Auto created by Mikhail Filimonov on 15.03.16.
+//  Auto created by Mikhail Filimonov on 21.03.16.
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -18649,6 +18649,47 @@
     objc.duration = self.duration;
     objc.title = self.title;
     objc.performer = self.performer;
+    
+    return objc;
+}
+        
+
+    
+-(id)initWithCoder:(NSCoder *)aDecoder {
+
+    if((self = [ClassStore deserialize:[aDecoder decodeObjectForKey:@"data"]])) {
+        
+    }
+    
+    return self;
+}
+        
+-(void)encodeWithCoder:(NSCoder *)aCoder {
+    [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
+}
+        
+
+        
+@end
+
+@implementation TL_documentAttributeLocalFile
++(TL_documentAttributeLocalFile*)createWithFile_path:(NSString*)file_path {
+	TL_documentAttributeLocalFile* obj = [[TL_documentAttributeLocalFile alloc] init];
+	obj.file_path = file_path;
+	return obj;
+}
+-(void)serialize:(SerializedData*)stream {
+	[stream writeString:self.file_path];
+}
+-(void)unserialize:(SerializedData*)stream {
+	super.file_path = [stream readString];
+}
+        
+-(TL_documentAttributeLocalFile *)copy {
+    
+    TL_documentAttributeLocalFile *objc = [[TL_documentAttributeLocalFile alloc] init];
+    
+    objc.file_path = self.file_path;
     
     return objc;
 }

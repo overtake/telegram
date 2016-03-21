@@ -214,11 +214,6 @@ void removeMessageMedia(TL_localMessage *message) {
     if(message) {
         NSString *path = mediaFilePath(message);
         
-        if(path != nil &&![message.media.document isKindOfClass:[TL_outDocument class]]) {
-            [[NSFileManager defaultManager] removeItemAtPath:path error:nil];
-        }
-        
-        
     }
     
 }
@@ -227,13 +222,14 @@ void removeMessageMedia(TL_localMessage *message) {
 NSString* documentPath(TLDocument *document) {
     NSString *fileName = document.file_name;
     
-    if([document isKindOfClass:[TL_outDocument class]]) {
-        NSString *path_for_file = ((TL_outDocument *)document).file_path;
+    TL_documentAttributeLocalFile *localPath = (TL_documentAttributeLocalFile *) [document attributeWithClass:[TL_documentAttributeLocalFile class]];
+    
+    if(localPath) {
+        NSString *path_for_file = localPath.file_path;
         if(isPathExists(path_for_file)) {
             return path_for_file;
         }
     }
-    
     
     
     NSArray *item = [fileName componentsSeparatedByCharactersInSet:

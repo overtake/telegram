@@ -550,8 +550,6 @@ static NSMenu *deleteMenu;
         
     }];
     
-    
-    assert(self.subviews.count == item.gifs.count);
 }
 
 -(void)mouseUp:(NSEvent *)theEvent {

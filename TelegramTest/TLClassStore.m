@@ -15,6 +15,7 @@
 #import "TL_localMessage_old44.h"
 #import "TL_destructMessage45.h"
 #import "TL_secretWebpage.h"
+#import "TL_outDocument.h"
 @implementation TLClassStore
 
 

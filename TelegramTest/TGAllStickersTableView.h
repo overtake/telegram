@@ -15,7 +15,7 @@
 
 @property (nonatomic,assign) BOOL canSendStickerAlways;
 
--(void)removeSticker:(TL_outDocument *)document;
+-(void)removeSticker:(TL_document *)document;
 -(void)load:(BOOL)force;
 
 @property (nonatomic,strong) dispatch_block_t didNeedReload;

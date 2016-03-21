@@ -199,7 +199,11 @@
             size = [TL_photoSizeEmpty createWithType:@"x"];
         }
         
-        self.message.media = [TL_messageMediaDocument createWithDocument:[TL_outDocument createWithN_id:rand_long() access_hash:0 date:[[MTNetwork instance] getTime] mime_type:mimetypefromExtension([self.filePath pathExtension]) size:(int)fileSize(self.filePath) thumb:size dc_id:0 file_path:self.filePath attributes:[@[[TL_documentAttributeFilename createWithFile_name:[self.filePath lastPathComponent]]] mutableCopy]] caption:@""];
+        NSMutableArray *attrs = [NSMutableArray array];
+        [attrs addObject:[TL_documentAttributeLocalFile createWithFile_path:self.filePath]];
+        [attrs addObject:[TL_documentAttributeFilename createWithFile_name:[self.filePath lastPathComponent]]];
+        
+        self.message.media = [TL_messageMediaDocument createWithDocument:[TL_document createWithN_id:rand_long() access_hash:0 date:[[MTNetwork instance] getTime] mime_type:mimetypefromExtension([self.filePath pathExtension]) size:(int)fileSize(self.filePath) thumb:size dc_id:0 attributes:attrs] caption:@""];
         
         if([bot_result.type isEqualToString:@"gif"]) {
             [self.message.media.document.attributes addObjectsFromArray:@[[TL_documentAttributeAnimated create]]];

@@ -20,5 +20,7 @@
 -(BOOL)isExist;
 -(TL_documentAttributeAudio *)audioAttr;
 
+-(NSArray *)serverAttributes;
+
 
 @end

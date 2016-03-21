@@ -65,6 +65,21 @@
     
 }
 
+-(NSArray *)serverAttributes {
+    
+    static NSArray *localAttributes;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        localAttributes = @[NSStringFromClass([TL_documentAttributeLocalFile class])];
+    });
+    
+    return [self.attributes filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(id  _Nonnull evaluatedObject, NSDictionary<NSString *,id> * _Nullable bindings) {
+        
+        return [localAttributes indexOfObject:NSStringFromClass([evaluatedObject class])] == NSNotFound;
+        
+    }]];
+}
+
 -(BOOL)isSticker {
     __block BOOL isSticker = NO;
     
