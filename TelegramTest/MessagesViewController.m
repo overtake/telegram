@@ -551,7 +551,9 @@
         NSUInteger index = [self indexOfObject:item];
         
         if(index != NSNotFound) {
-            [self.table reloadDataForRowIndexes:[NSIndexSet indexSetWithIndex:index] columnIndexes:[NSIndexSet indexSetWithIndex:0]];
+            TGModernMessageCellContainerView *cell = (TGModernMessageCellContainerView *)[self cellForRow:index];
+            
+            [cell setItem:item];
             [self.table noteHeightOfRowsWithIndexesChanged:[NSIndexSet indexSetWithIndex:index]];
         }
     };

@@ -102,7 +102,6 @@
     [super setItem:item];
     
     _prevState = NO;
-    [_player setPath:nil];
     
     [_playerContainer setFrameSize:item.imageSize];
     [_player setFrameSize:item.imageSize];

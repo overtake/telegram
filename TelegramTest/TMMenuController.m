@@ -183,7 +183,7 @@
 @implementation TMMenuController
 
 - (id)initWithMenu:(NSMenu *)menu {
-    self = [super initWithFrame:NSMakeRect(0, 0, 250, MIN(menu.itemArray.count * 36 + 8,372))];
+    self = [super initWithFrame:NSMakeRect(0, 0, 250, MIN(menu.itemArray.count * 36 + 16,372))];
     if(self) {
         self.menuController = menu;
         _selectedIndex = -1;

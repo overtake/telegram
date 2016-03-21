@@ -190,9 +190,17 @@
 
 
 - (void)setCellState:(CellState)cellState animated:(BOOL)animated {
+    
+    CellState oldState = self.cellState;
+    
     [super setCellState:cellState animated:animated];
     
     MessageTableItemDocument *item = (MessageTableItemDocument *) self.item;
+    
+    if(oldState != CellStateNormal && cellState == CellStateNormal) {
+        [item makeSizeByWidth:item.makeSize];
+        [super setItem:item];
+    }
     
     if(cellState == CellStateNormal) {
         if([self.item.message isKindOfClass:[TL_destructMessage class]])
@@ -200,6 +208,8 @@
          else
             [self.actionsTextField setText:docStateLoaded() maxWidth:self.maxFieldWidth];
     }
+    
+    
     
     if(cellState == CellStateSending) {
         [self.actionsTextField setText:nil maxWidth:0];
@@ -242,6 +252,8 @@
         default:
             break;
     }
+    
+    [self.fileNameTextField setFrameSize:NSMakeSize(self.maxFieldWidth, item.fileNameSize.height)];
     
     [self.actionsTextField setHidden:self.cellState != CellStateNormal || !item.isHasThumb];
 }
@@ -399,7 +411,7 @@
     [self updateDownloadState];
     
     
-    [self.fileNameTextField setFrameSize:NSMakeSize(self.maxFieldWidth, item.fileNameSize.height)];
+    
     
     [self updateFrames];
 

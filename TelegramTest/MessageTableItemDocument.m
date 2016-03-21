@@ -117,7 +117,7 @@
     [attr addAttribute:NSParagraphStyleAttributeName value:style range:attr.range];
     
     _fileNameAttrubutedString = attr;
-    
+    _fileNameSize = [_fileNameAttrubutedString coreTextSizeForTextFieldForWidth:self.makeSize - self.thumbSize.width - self.defaultOffset];
     
 }
 
