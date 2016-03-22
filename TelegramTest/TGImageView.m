@@ -48,8 +48,10 @@
         self.image = image;
         return;
     }
+    
+    image = [self cachedThumb:[object cacheKey]];
         
-    self.image = [self cachedThumb:[object cacheKey]];
+    self.image = image;
   
     object.delegate = self;
     
@@ -61,7 +63,7 @@
 -(void)didDownloadImage:(NSImage *)newImage object:(ImageObject *)object {
     if([[object cacheKey] isEqualToString:[self.object cacheKey]]) {
         [self addAnimation:contentAnimation() forKey:@"contents"];
-        [self setImage:newImage];
+        [self setObject:object];
         
     }
 }

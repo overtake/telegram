@@ -142,11 +142,13 @@
                 [_secretChatInactiveCap removeFromSuperview];
             } else {
                 [_secretChatInactiveCap setFrame:NSMakeRect(2, 2, NSWidth(self.frame) - 4, NSHeight(self.frame) - 4)];
-                [self addSubview:_secretChatInactiveCap];
+                [self.scrollView addSubview:_secretChatInactiveCap];
             }
             
         }
         
+    } else {
+        [_secretChatInactiveCap removeFromSuperview];
     }
 }
 

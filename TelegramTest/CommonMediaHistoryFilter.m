@@ -28,6 +28,8 @@
         
         [SharedManager proccessGlobalResponse:response];
         
+        [messages filterUsingPredicate:[NSPredicate predicateWithFormat:@"self.class != %@",[TL_messageEmpty class]]];
+        
         if(callback) {
             callback(messages,messages.count < weakSelf.controller.selectLimit ? ChatHistoryStateFull : ChatHistoryStateRemote);
         }

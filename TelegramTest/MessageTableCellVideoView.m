@@ -75,7 +75,7 @@ static NSImage *playImage() {
         
         self.imageView.borderWidth = 1;
         self.imageView.borderColor = NSColorFromRGB(0xf3f3f3);
-        
+        [self.imageView setContentMode:BTRViewContentModeScaleAspectFill];
         
         [self.playImage setCenterByView:self.imageView];
         [self.playImage setAutoresizingMask:NSViewMaxXMargin | NSViewMaxYMargin | NSViewMinXMargin | NSViewMinYMargin];

@@ -748,7 +748,12 @@ Class convertClass(NSString *c, int layer) {
         
         NSString *mime_type = [media respondsToSelector:@selector(mime_type)] ? [media valueForKey:@"mime_type"] : @"mp4";
         
-        return [TL_messageMediaVideo createWithVideo:[TL_video createWithN_id:file.n_id access_hash:file.access_hash date:[[MTNetwork instance] getTime] duration:[[media valueForKey:@"duration"] intValue] mime_type:mime_type size:file.size thumb:[TL_photoCachedSize createWithType:@"jpeg" location:location w:[[media valueForKey:@"thumb_w"] intValue] h:[[media valueForKey:@"thumb_h"] intValue] bytes:[media valueForKey:@"thumb"]] dc_id:[file dc_id] w:[[media valueForKey:@"w"] intValue] h:[[media valueForKey:@"h"] intValue]] caption:@""];
+        NSMutableArray *attrs = [NSMutableArray array];
+        
+        [attrs addObject:[TL_documentAttributeVideo createWithDuration:[[media valueForKey:@"duration"] intValue] w:[[media valueForKey:@"w"] intValue] h:[[media valueForKey:@"h"] intValue]]];
+        
+        return [TL_messageMediaDocument createWithDocument:[TL_document createWithN_id:file.n_id access_hash:file.access_hash date:[[MTNetwork instance] getTime] mime_type:mime_type size:file.size thumb:[TL_photoCachedSize createWithType:@"jpeg" location:location w:[[media valueForKey:@"thumb_w"] intValue] h:[[media valueForKey:@"thumb_h"] intValue] bytes:[media valueForKey:@"thumb"]] dc_id:file.dc_id attributes:attrs] caption:@""];
+
         
     } else if([media isKindOfClass:convertClass(@"Secret%d_DecryptedMessageMedia_decryptedMessageMediaAudio", layer)]) {
         

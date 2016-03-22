@@ -398,6 +398,17 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "-[TGImageView didDownloadImage:object:]:TGImageView.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "[object cacheKey]">
+            </PersistentString>
+            <PersistentString
+               value = "[self.object cacheKey]">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "-[TGUpdateChannels proccessStatelessUpdate:]:TGUpdateChannels.m">
       </ContextState>
       <ContextState
@@ -4221,6 +4232,9 @@
             <PersistentString
                value = "dialog.unread_count">
             </PersistentString>
+            <PersistentString
+               value = "message.date">
+            </PersistentString>
          </PersistentStrings>
       </ContextState>
       <ContextState
@@ -6974,6 +6988,14 @@
       </ContextState>
       <ContextState
          contextName = "-[TGStickerPackModalView setStickerPack:]:TGStickerPackModalView.m">
+      </ContextState>
+      <ContextState
+         contextName = "-[MessageTableCellVideoView setCellState:animated:]:MessageTableCellVideoView.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "((MessageTableItemVideo *)self.item).imageObject">
+            </PersistentString>
+         </PersistentStrings>
       </ContextState>
       <ContextState
          contextName = "__89-[MessagesViewController showMessage:fromMsg:animated:selectText:switchDiscussion:flags:]_block_invoke1320:MessagesViewController.m">
