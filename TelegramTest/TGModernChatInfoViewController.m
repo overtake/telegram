@@ -351,8 +351,10 @@
         user.height = 50;
         user.type = SettingsRowItemTypeNone;
         user.editable = weakSelf.action.isEditable;
+        
+        NSLog(@"%d",weakSelf.chat.isDemocracy);
        
-        if([obj isKindOfClass:[TL_chatParticipantAdmin class]] || [obj isKindOfClass:[TL_chatParticipantCreator class]]) {
+        if(([obj isKindOfClass:[TL_chatParticipantAdmin class]] && weakSelf.chat.isAdmins_enabled ) || [obj isKindOfClass:[TL_chatParticipantCreator class]]) {
             NSMutableAttributedString *attr = [[NSMutableAttributedString alloc] init];
             
             [attr appendString:NSLocalizedString(@"Channel.admin", nil) withColor:GRAY_TEXT_COLOR];

@@ -248,7 +248,18 @@
     
     };
     
-    [self.queue dispatchOnQueue:block];
+    
+    if(self.isLoaded)
+        [self.queue dispatchOnQueue:block];
+    else
+        [[Storage manager] fullChats:^(NSArray *chats) {
+            
+            [self add:chats];
+            
+            self.loaded = YES;
+            
+            [self.queue dispatchOnQueue:block];
+        }];
 }
 
 

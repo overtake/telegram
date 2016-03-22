@@ -547,7 +547,7 @@ void join_group_by_hash(NSString * hash) {
     
         [TMViewController showModalProgress];
         
-        [RPCRequest sendRequest:[TLAPI_messages_checkChatInvite createWithN_hash:hash] successHandler:^(RPCRequest *request, id response) {
+        [RPCRequest sendRequest:[TLAPI_messages_checkChatInvite createWithN_hash:hash] successHandler:^(RPCRequest *request, TL_chatInvite *response) {
             
             if([response isKindOfClass:[TL_chatInviteAlready class]] && ![(TLChat *)[response chat] left]) {
                 
@@ -560,7 +560,9 @@ void join_group_by_hash(NSString * hash) {
                 
                 [TMViewController hideModalProgress];
                 
-                confirm(appName(), [NSString stringWithFormat:NSLocalizedString(@"Confirm.ConfrimToJoinGroup", nil),[response title]], ^{
+                
+                
+                confirm(appName(), [NSString stringWithFormat:NSLocalizedString(response.isChannel ? response.isMegagroup ? @"Confirm.ConfrimToJoinSupergroup" : @"Confirm.ConfrimToJoinChannel" : @"Confirm.ConfrimToJoinGroup", nil),[response title]], ^{
                     
                     [TMViewController showModalProgress];
                     

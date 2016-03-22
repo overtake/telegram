@@ -184,11 +184,15 @@
                                 }
                                 
                             }
+                            [ASQueue dispatchOnMainQueue:^{
+                                [weakSelf hideModalProgressWithSuccess];
+                            }];
                             
-                            [weakSelf hideModalProgressWithSuccess];
                             
                         } errorHandler:^(id request, RpcError *error) {
-                            [weakSelf hideModalProgress];
+                            [ASQueue dispatchOnMainQueue:^{
+                                [weakSelf hideModalProgress];
+                            }];
                         } timeout:0 queue:[ASQueue globalQueue].nativeQueue];
                         
                     }, nil);
