@@ -1965,6 +1965,10 @@ static NSTextAttachment *headerMediaIcon() {
 }
 
 - (void) deleteSelectedMessages {
+    [self deleteSelectedMessages:nil];
+}
+
+- (void) deleteSelectedMessages:(dispatch_block_t)deleteAcceptBlock {
     
     if(![self canDeleteMessages])
         return;
@@ -2093,7 +2097,12 @@ static NSTextAttachment *headerMediaIcon() {
                     completeBlock();
                 }];
                 
+                if(deleteAcceptBlock)
+                    deleteAcceptBlock();
+                
                 [self unSelectAll];
+                
+                
                 
             }, nil);
             
@@ -2559,12 +2568,11 @@ static NSTextAttachment *headerMediaIcon() {
     
      if(!self.locked &&  (((message != nil && message.channelMsgId != _jumpMessage.channelMsgId) || force) || [self.conversation.peer peer_id] != [dialog.peer peer_id] )) {
         
-         if(dialog.type == DialogTypeChannel) {
-             [[FullChatManager sharedManager] loadIfNeed:dialog.chat.n_id force:YES];
+         if(dialog.type == DialogTypeChannel || dialog.type == DialogTypeChat) {
+             [[ChatFullManager sharedManager] requestChatFull:dialog.chat.n_id force:dialog.type == DialogTypeChannel];
          } else if(dialog.type == DialogTypeUser) {
              [[FullUsersManager sharedManager] requestUserFull:dialog.user withCallback:nil];
          }
-         
          
          
         self.jumpMessage = message;
@@ -4278,7 +4286,7 @@ static NSTextAttachment *headerMediaIcon() {
     if(dialog.chat.left) {
         [RPCRequest sendRequest:request successHandler:^(RPCRequest *request, id response) {
             
-            [[FullChatManager sharedManager] performLoad:dialog.chat.n_id callback:nil];
+            [[ChatFullManager sharedManager] requestChatFull:dialog.chat.n_id];
             
         } errorHandler:^(RPCRequest *request, RpcError *error) {
             

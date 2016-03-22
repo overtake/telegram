@@ -100,7 +100,7 @@
     
     int chatId = [(TLChat *)self.action.object n_id];
     
-    __block TLChatFull *chatFull = [[FullChatManager sharedManager] find:chatId];
+    __block TLChatFull *chatFull = [[ChatFullManager sharedManager] find:chatId];
     
     
     dispatch_block_t block = ^{
@@ -118,7 +118,7 @@
         
         [self.action.currentViewController showModalProgress];
         
-        [[FullChatManager sharedManager] performLoad:chatId force:YES callback:^(TLChatFull *fullChat) {
+        [[ChatFullManager sharedManager] requestChatFull:chatId force:YES withCallback:^(TLChatFull *fullChat) {
             
             chatFull = fullChat;
             
@@ -158,7 +158,7 @@
             dispatch_block_t block = ^{
                 [weakSelf.delegate behaviorDidEndRequest:response];
                 
-                [[FullChatManager sharedManager] loadIfNeed:channel.n_id force:YES];
+                [[ChatFullManager sharedManager] requestChatFull:channel.n_id force:YES];
                 
                 
                 [weakSelf.action.currentViewController.messagesViewController setCurrentConversation:channel.dialog];

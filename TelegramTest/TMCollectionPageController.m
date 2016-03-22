@@ -872,9 +872,20 @@ static const int maxWidth = 120;
             
         }
         
-       [weakSelf.navigationViewController.messagesViewController deleteSelectedMessages];
+        [weakSelf.navigationViewController.messagesViewController deleteSelectedMessages:^{
+            
+            NSMutableArray *array = [NSMutableArray array];
+            
+            [weakSelf.navigationViewController.messagesViewController.selectedMessages enumerateObjectsUsingBlock:^(MessageTableItem *obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                [array addObject:@{KEY_PEER_ID:@(obj.message.peer_id),KEY_MESSAGE_ID:@(obj.message.n_id)}];
+            }];
+            
+            [Notification perform:MESSAGE_DELETE_EVENT data:@{KEY_DATA:array}];
+            
+            [weakSelf setIsEditable:NO animated:YES];
+        }];
         
-        [weakSelf setIsEditable:NO animated:YES];
+        
         
     }];
     self.deleteButton.disableColor = NSColorFromRGB(0xa1a1a1);

@@ -170,7 +170,7 @@
                             weakSelf.tableView.defaultAnimation = NSTableViewAnimationEffectNone;
                             
                             chat.chatFull.participants = nil;
-                            [[FullChatManager sharedManager] loadParticipantsWithMegagroupId:chat.n_id];
+                            [[ChatFullManager sharedManager] loadParticipantsWithMegagroupId:chat.n_id];
                             
                         } errorHandler:^(id request, RpcError *error) {
                             

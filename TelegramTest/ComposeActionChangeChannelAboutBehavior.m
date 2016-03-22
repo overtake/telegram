@@ -28,7 +28,7 @@
             
             [[Storage manager] insertFullChat:chat.chatFull completeHandler:nil];
         } else {
-            [[FullChatManager sharedManager] loadIfNeed:chat.n_id force:YES];
+            [[ChatFullManager sharedManager] requestChatFull:chat.n_id force:YES];
         }
         
         [self.action.currentViewController hideModalProgressWithSuccess];

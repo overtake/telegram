@@ -385,7 +385,7 @@
             [MessagesManager updateUnreadBadge];
             
             if(dialog.chat != nil) {
-                [[FullChatManager sharedManager] removeObjectWithKey:@(dialog.chat.n_id)];
+                [[ChatFullManager sharedManager] removeObjectWithKey:@(dialog.chat.n_id)];
                 [[ChatsManager sharedManager] removeObjectWithKey:@(dialog.chat.n_id)];
             }
             

@@ -151,7 +151,7 @@
     
     if(self.item.message.isChannelMessage && self.item.message.chat.isMegagroup && self.item.message.chat.isManager) {
         
-        TLChatFull *chat = [[FullChatManager sharedManager] find:abs(self.item.message.peer_id)];
+        TLChatFull *chat = [[ChatFullManager sharedManager] find:abs(self.item.message.peer_id)];
         
         BOOL unpin = chat.pinned_msg_id == self.item.message.n_id;
         

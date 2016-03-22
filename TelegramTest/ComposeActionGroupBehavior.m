@@ -111,7 +111,7 @@
         if(reqResponse.updates.count > 1) {
             TL_localMessage *msg = [TL_localMessage convertReceivedMessage:(TLMessage *) ( [reqResponse.updates[2] message])];
             
-            [[FullChatManager sharedManager] performLoad:msg.chat.n_id callback:^(TLChatFull *fullChat) {
+            [[ChatFullManager sharedManager] requestChatFull:msg.chat.n_id withCallback:^(TLChatFull *fullChat) {
                 [weakSelf.delegate behaviorDidEndRequest:reqResponse];
                 
                 [weakSelf.action.currentViewController.navigationViewController showMessagesViewController:msg.conversation];
@@ -130,7 +130,7 @@
                 
                 weakSelf.action.object = channel;
                 [weakSelf.delegate behaviorDidEndRequest:reqResponse];
-                [[FullChatManager sharedManager] loadIfNeed:channel.n_id force:YES];
+                [[ChatFullManager sharedManager] requestChatFull:channel.n_id force:YES];
                 [weakSelf.action.currentViewController.messagesViewController setCurrentConversation:channel.dialog];
                 [weakSelf.action.currentViewController.navigationViewController gotoViewController:weakSelf.action.currentViewController.messagesViewController animated:NO];
                 

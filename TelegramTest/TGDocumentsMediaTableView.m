@@ -153,9 +153,18 @@
     
     if(self.items.count > 1) {
         
-        [items enumerateObjectsUsingBlock:^(MessageTableItem *obj, NSUInteger idx, BOOL *stop) {
+        [items enumerateObjectsUsingBlock:^(TL_localMessage *message, NSUInteger idx, BOOL *stop) {
             
-            NSUInteger itemIndex = [self.items indexOfObject:obj];
+            __block NSUInteger itemIndex = NSNotFound;
+            
+            [self.items enumerateObjectsUsingBlock:^(MessageTableItem *item, NSUInteger idx, BOOL * _Nonnull stop) {
+                if([item isKindOfClass:[MessageTableItem class]] && item.message.n_id == message.n_id) {
+                    
+                    itemIndex = idx;
+                    *stop = YES;
+                }
+            }];
+            
             if(itemIndex != NSNotFound) {
                 [self.tableView removeRowsAtIndexes:[NSIndexSet indexSetWithIndex:itemIndex] withAnimation:NSTableViewAnimationEffectFade];
             }

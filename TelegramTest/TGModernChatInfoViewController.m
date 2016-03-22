@@ -209,7 +209,7 @@
     [self drawParticipants];
     [self checkSupergroup];
     
-
+    [_tableView addItem:_deleteAndExitItem tableRedraw:YES];
     
     [Notification addObserver:self selector:@selector(chatParticipantsUpdateNotification:) name:CHAT_UPDATE_PARTICIPANTS];
     [Notification addObserver:self selector:@selector(didChangeChatFlags:) name:CHAT_FLAGS_UPDATED];
@@ -240,22 +240,27 @@
 
 - (void)chatParticipantsUpdateNotification:(NSNotification *)notification {
     
-    TLChat *chat = notification.userInfo[KEY_CHAT];
+    TLChat *chat = [[ChatsManager sharedManager] find:[notification.userInfo[KEY_CHAT_ID] intValue]];
     
-    if(_chat == chat) {
+    [ASQueue dispatchOnMainQueue:^{
         
-        NSRange range = [self participantsRange];
+        if(_chat == chat) {
+        
+            NSRange range = [self participantsRange];
        
-        if(range.length > 0) {
+            if(range.length > 0) {
             
-            if(range.length != _chat.chatFull.participants_count && (range.length >= maxChatUsers()+1 || _chat.chatFull.participants_count >= maxChatUsers()+1) ) {
-                [self checkSupergroup];
+                if(range.length != _chat.chatFull.participants_count && (range.length >= maxChatUsers()+1 || _chat.chatFull.participants_count >= maxChatUsers()+1) ) {
+                    [self checkSupergroup];
+                }
             }
+        
+            [self drawParticipants];
+        
         }
-        
-        [self drawParticipants];
-        
-    }
+    }];
+    
+    
 }
 
 
@@ -324,7 +329,7 @@
 -(void)drawParticipants {
     
     
-    
+    [_participantsHeaderItem updateWithString:[NSString stringWithFormat:NSLocalizedString(@"Modern.Chat.Members", nil),_chat.participants_count]];
     
     [_participantsHeaderItem redrawRow];
     
@@ -402,13 +407,12 @@
         return online1 > online2 ?  NSOrderedAscending : NSOrderedDescending;
     }];
     
-    [_tableView insert:items startIndex:_tableView.list.count tableRedraw:YES];
+    NSUInteger idx = MIN([_tableView indexOfItem:_deleteAndExitItem],[_tableView indexOfItem:_convertToSuperGroup]);
+    
+    [_tableView insert:items startIndex:idx == NSNotFound ? _tableView.count : idx-1 tableRedraw:YES];
     
     
-    [_tableView addItem:[[TGGeneralRowItem alloc] initWithHeight:20] tableRedraw:YES];
     
-    
-    [_tableView addItem:_deleteAndExitItem tableRedraw:YES];
     
     
 
@@ -596,7 +600,7 @@
         
     } errorHandler:^(RPCRequest *request, RpcError *error) {
         
-        [[FullChatManager sharedManager] performLoad:_chat.n_id callback:^(TLChatFull *fullChat) {
+        [[ChatFullManager sharedManager] requestChatFull:_chat.n_id withCallback:^(TLChatFull *fullChat) {
             [self drawParticipants];
         }];
 
@@ -622,7 +626,7 @@
             
             if(chat) {
                 
-                [[FullChatManager sharedManager] performLoad:chat.n_id callback:^(TLChatFull *fullChat) {
+                [[ChatFullManager sharedManager] requestChatFull:chat.n_id withCallback:^(TLChatFull *fullChat) {
                     
                     [self.navigationViewController showMessagesViewController:chat.dialog];
                     

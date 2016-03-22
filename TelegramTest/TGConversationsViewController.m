@@ -177,7 +177,6 @@
     [TGModernTypingManager initialize];
     
     [[NewContactsManager sharedManager] fullReload];
-    [[FullChatManager sharedManager] loadStored];
     
     [TGSecretAction dequeAllStorageActions];
     

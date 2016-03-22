@@ -119,7 +119,7 @@ static ChatHistoryController *observer;
             if(_conversation.chat.chatFull != nil) {
                 block();
             } else {
-                [[FullChatManager sharedManager] performLoad:_conversation.chat.n_id callback:^(TLChatFull *fullChat) {
+                [[ChatFullManager sharedManager] requestChatFull:_conversation.chat.n_id withCallback:^(TLChatFull *fullChat) {
                     
                     requestNext = YES;
                     block();
@@ -862,7 +862,7 @@ static ChatHistoryController *observer;
             conversation.last_marked_message = item.message.n_id;
             conversation.last_marked_date = item.message.date+1;
             
-            [LoopingUtils runOnMainQueueAsync:^{
+            [ASQueue dispatchOnMainQueue:^{
                 if(callback != nil)
                     callback();
             }];

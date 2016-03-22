@@ -34,7 +34,6 @@
 #import "FullUsersManager.h"
 #import "TGBotCommandsPopup.h"
 #import "TGBotCommandsKeyboard.h"
-#import "FullChatManager.h"
 #import "BlockedUsersManager.h"
 #import "TGModalGifSearch.h"
 #import "TGRecordedAudioPreview.h"
@@ -294,15 +293,10 @@
         
         
     } else if(self.dialog.type == DialogTypeChat || self.dialog.type == DialogTypeChannel) {
-        [[FullChatManager sharedManager] performLoad:self.dialog.chat.n_id force:(self.dialog.fullChat.class == [TL_chatFull_old29 class] && !self.dialog.fullChat.isLastLayerUpdated) || dialog.type == DialogTypeChannel callback:^(TLChatFull * chatFull) {
+        [[ChatFullManager sharedManager] requestChatFull:self.dialog.chat.n_id force:(self.dialog.fullChat.class == [TL_chatFull_old29 class] && !self.dialog.fullChat.isLastLayerUpdated) || dialog.type == DialogTypeChannel withCallback:^(TLChatFull * chatFull) {
             
             _chatFull = chatFull;
-            
-            if(_chatFull.chat.isMegagroup) {
-                [[FullChatManager sharedManager] loadParticipantsWithMegagroupId:chatFull.n_id];
-            }
-            
-            
+
             [self updateBotButtons];
             
         }];

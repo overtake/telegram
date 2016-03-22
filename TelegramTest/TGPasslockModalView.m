@@ -166,7 +166,12 @@
         
         [self.enterButton addBlock:^(BTRControlEvents events) {
             
-            [weakSelf checkPassword];
+            strongWeak();
+            
+            if(strongSelf == weakSelf) {
+                [weakSelf checkPassword];
+            }
+            
             
         } forControlEvents:BTRControlEventClick];
         
@@ -214,6 +219,7 @@
 }
 
 -(void)checkPassword {
+    
     
     NSString *hash = [self.secureField.stringValue md5];
     

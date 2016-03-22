@@ -172,7 +172,7 @@ static NSMutableDictionary *cached;
 
 -(void)setState:(EncryptedState)state {
     self->_state = state;
-    [LoopingUtils runOnMainQueueAsync:^{
+    [ASQueue dispatchOnMainQueue:^{
         if(self.stateHandler)
             self.stateHandler(state);
     }];

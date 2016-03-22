@@ -446,7 +446,7 @@
         dispatch_block_t dispatch = ^{
             if(!chat.left && chat.type != TLChatTypeForbidden) {
                 
-                [[FullChatManager sharedManager] performLoad:chat.n_id callback:^(TLChatFull *fullChat) {
+                [[ChatFullManager sharedManager] requestChatFull:chat.n_id withCallback:^(TLChatFull *fullChat) {
                    
                     if(fullChat.migrated_from_chat_id == 0) {
                         [RPCRequest sendRequest:[TLAPI_channels_getParticipant createWithChannel:chat.inputPeer user_id:[[UsersManager currentUser] inputUser]] successHandler:^(id request, TL_channels_channelParticipant *participant) {
@@ -515,7 +515,7 @@
         }
     
     } else if([update isKindOfClass:[TL_updateChannelPinnedMessage class]]) {
-        TLChatFull *chat = [[FullChatManager sharedManager] find:[update channel_id]];
+        TLChatFull *chat = [[ChatFullManager sharedManager] find:[update channel_id]];
         
         chat.pinned_msg_id = [(TL_updateChannelPinnedMessage *)update n_id];
         

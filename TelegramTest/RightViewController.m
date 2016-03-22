@@ -117,12 +117,8 @@
     NSRect rect = NSMakeRect(0, 0, NSWidth([NSScreen mainScreen].frame), NSHeight([NSScreen mainScreen].frame));
     
     self.messagesViewController = [[MessagesViewController alloc] initWithFrame:self.view.bounds];
-    self.userInfoViewController = [[UserInfoViewController alloc] initWithFrame:rect];
-    self.chatInfoViewController = [[ChatInfoViewController alloc] initWithFrame:rect];
     self.collectionViewController = [[TMCollectionPageController alloc] initWithFrame:rect];
     self.noDialogsSelectedViewController = [[NotSelectedDialogsViewController alloc] initWithFrame:rect];
-    self.broadcastInfoViewController = [[BroadcastInfoViewController alloc] initWithFrame:rect];
-    self.channelInfoViewController = [[ChannelInfoViewController alloc] initWithFrame:rect];
     
     
     self.composePickerViewController = [[ComposePickerViewController alloc] initWithFrame:rect];
@@ -593,24 +589,7 @@
     return ![_mainViewController isSingleLayout] ? [self conversationsController] : self.noDialogsSelectedViewController;
 }
 
-- (void)showUserInfoPage:(TLUser *)user conversation:(TL_conversation *)conversation {
-    if(self.navigationViewController.currentController == self.userInfoViewController && self.userInfoViewController.user.n_id == user.n_id)
-        return;
-    
-    
-    [self hideModalView:YES animation:NO];
-    
-    [self.userInfoViewController setUser:user conversation:conversation];
-    
-    [self.navigationViewController pushViewController:self.userInfoViewController animated:self.navigationViewController.currentController != self.noDialogsSelectedViewController];
-    
-}
 
-
-
-- (void)showUserInfoPage:(TLUser *)user  {
-    [self showUserInfoPage:user conversation:user.dialog];
-}
 
 - (void)showCollectionPage:(TL_conversation *)conversation {
     if(self.navigationViewController.currentController == self.collectionViewController && self.collectionViewController.conversation.peer.peer_id == conversation.peer.peer_id)
@@ -627,17 +606,6 @@
     
 }
 
-- (void)showBroadcastInfoPage:(TL_broadcast *)broadcast {
-    if(self.navigationViewController.currentController == self.chatInfoViewController && self.chatInfoViewController.chat.n_id == broadcast.n_id)
-        return;
-    
-    [self hideModalView:YES animation:NO];
-    
-    
-    [self.broadcastInfoViewController setBroadcast:broadcast];
-    [self.navigationViewController pushViewController:self.broadcastInfoViewController animated:self.navigationViewController.currentController != [self noDialogsSelectedViewController]];
-    
-}
 
 - (void)showComposeWithAction:(ComposeAction *)composeAction {
     
@@ -707,24 +675,6 @@
 
 }
 
-- (void)showChatInfoPage:(TLChat *)chat {
-    
-    
-    if(chat.isChannel) {
-        [self showChannelInfoPage:chat];
-        return;
-    }
-    
-    if(self.navigationViewController.currentController == self.chatInfoViewController && self.chatInfoViewController.chat.n_id == chat.n_id)
-        return;
-    
-    
-    [self hideModalView:YES animation:NO];
-    
-    [self.chatInfoViewController setChat:chat];
-    [self.navigationViewController pushViewController:self.chatInfoViewController animated:self.navigationViewController.currentController != [self noDialogsSelectedViewController]];
-    
-}
 
 - (void)showEncryptedKeyWindow:(TL_encryptedChat *)chat {
     if(self.navigationViewController.currentController == self.encryptedKeyViewController)
@@ -1046,17 +996,6 @@
 }
 
 
--(void)showChannelInfoPage:(TLChat *)chat {
-    if((self.navigationViewController.currentController == self.channelInfoViewController && self.channelInfoViewController.chat.n_id == chat.n_id) || chat.type == TLChatTypeForbidden )
-        return;
-    
-    
-    [self hideModalView:YES animation:NO];
-    
-    [self.channelInfoViewController setChat:chat];
-    
-    [self.navigationViewController pushViewController:self.channelInfoViewController animated:self.navigationViewController.currentController != self.noDialogsSelectedViewController];
-}
 
 -(void)showComposeChangeUserName:(ComposeAction *)action {
     if(self.navigationViewController.currentController == self.composeCreateChannelUserNameStepViewController && self.composeCreateChannelUserNameStepViewController.action == action)

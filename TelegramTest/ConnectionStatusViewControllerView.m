@@ -85,7 +85,7 @@ static NSColor *stateColor[5];
     
 
     
-    [LoopingUtils runOnMainQueueAsync:^{
+    [ASQueue dispatchOnMainQueue:^{
         
         ConnectingStatusType oldState = _state;
         if(state == _state)

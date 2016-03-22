@@ -21,6 +21,9 @@
 
 -(id)initWithString:(NSString *)header height:(int)height flipped:(BOOL)flipped;
 -(id)initWithString:(NSString *)header flipped:(BOOL)flipped;
+
+-(void)updateWithString:(NSString *)string;
+
 @end
 
 

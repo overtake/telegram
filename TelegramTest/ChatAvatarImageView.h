@@ -7,7 +7,6 @@
 //
 
 #import "TMAvatarImageView.h"
-#import "TL_broadcast.h"
 @class ChatInfoViewController;
 
 @interface ChatAvatarImageView : TMAvatarImageView
@@ -25,7 +24,6 @@ typedef enum {
 
 @property (nonatomic,assign,getter=isEditable) BOOL editable;
 
-@property (nonatomic, strong) ChatInfoViewController *controller;
 - (void)rebuild;
 - (void)showUpdateChatPhotoBox;
 @end

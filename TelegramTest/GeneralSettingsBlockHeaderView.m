@@ -26,18 +26,24 @@
 
 -(id)initWithString:(NSString *)header height:(int)height flipped:(BOOL)flipped {
     if(self = [super init]) {
-        NSMutableAttributedString *attr = [[NSMutableAttributedString alloc] init];
-        
-        [attr appendString:header withColor:GRAY_TEXT_COLOR];
-        [attr setFont:TGSystemFont(12) forRange:attr.range];
-        [attr detectBoldColorInStringWithFont:TGSystemMediumFont(12)];
-        _header = attr;
+       
+        [self updateWithString:header];
         self.height = height;
         _isFlipped = flipped;
         self.drawsSeparator = NO;
     }
     
     return self;
+}
+
+-(void)updateWithString:(NSString *)string {
+    NSMutableAttributedString *attr = [[NSMutableAttributedString alloc] init];
+    
+    [attr appendString:string withColor:GRAY_TEXT_COLOR];
+    [attr setFont:TGSystemFont(12) forRange:attr.range];
+    [attr detectBoldColorInStringWithFont:TGSystemMediumFont(12)];
+    
+    _header = attr;
 }
 
 -(void)setAligment:(NSTextAlignment)aligment {

@@ -431,7 +431,7 @@ static NSArray *channelUpdates;
         if(![[UsersManager sharedManager] find:shortMessage.from_id] || ![[ChatsManager sharedManager] find:shortMessage.chat_id] || (message.fwd_from != nil && !message.fwdObject) || (message.via_bot_id != 0 && ![[UsersManager sharedManager] find:message.via_bot_id])) {
             
             if(![[ChatsManager sharedManager] find:shortMessage.chat_id]) {
-                [[FullChatManager sharedManager] loadIfNeed:shortMessage.chat_id force:YES];
+                [[ChatFullManager sharedManager] requestChatFull:shortMessage.chat_id force:YES];
             }
             
             [self failSequence];
@@ -659,15 +659,15 @@ static NSArray *channelUpdates;
         if([update isKindOfClass:[TL_updateChatParticipants class]]) {
             TLChatParticipants *chatParticipants = ((TL_updateChatParticipants *)update).participants;
             
-            TLChatFull *fullChat = [[FullChatManager sharedManager] find:chatParticipants.chat_id];
+            TLChatFull *fullChat = [[ChatFullManager sharedManager] find:chatParticipants.chat_id];
             
-            [[FullChatManager sharedManager] performLoad:chatParticipants.chat_id force:YES callback:nil];
+            [[ChatFullManager sharedManager] requestChatFull:chatParticipants.chat_id force:YES];
             
             if(fullChat) {
                 fullChat.participants = chatParticipants;
                 [[Storage manager] insertFullChat:fullChat completeHandler:nil];
                 
-                [Notification perform:CHAT_UPDATE_PARTICIPANTS data:@{KEY_CHAT_ID: @(fullChat.n_id), @"participants": fullChat.participants}];
+                [Notification performOnStageQueue:CHAT_UPDATE_PARTICIPANTS data:@{KEY_CHAT_ID: @(fullChat.n_id), @"participants": fullChat.participants}];
             }
             
             return;
@@ -821,7 +821,7 @@ static NSArray *channelUpdates;
         
         if([update isKindOfClass:[TL_updateChatParticipantAdmin class]]) {
             
-            TLChatFull *chatFull = [[FullChatManager sharedManager] find:[update chat_id]];
+            TLChatFull *chatFull = [[ChatFullManager sharedManager] find:[update chat_id]];
             
             NSArray *f = [chatFull.participants.participants filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.user_id == %d",update.user_id]];
             
@@ -835,7 +835,7 @@ static NSArray *channelUpdates;
                 
              }
             
-            [Notification perform:CHAT_UPDATE_PARTICIPANTS data:@{KEY_CHAT_ID:@([update chat_id]),@"participants":chatFull.participants}];
+            [Notification performOnStageQueue:CHAT_UPDATE_PARTICIPANTS data:@{KEY_CHAT_ID:@([update chat_id]),@"participants":chatFull.participants}];
             
         }
         
@@ -844,7 +844,7 @@ static NSArray *channelUpdates;
             TLChat *chat = [[ChatsManager sharedManager] find:[update chat_id]];
             
             if(chat.version != update.version) {
-                [[FullChatManager sharedManager] loadIfNeed:[update chat_id] force:YES];
+                [[ChatFullManager sharedManager] requestChatFull:[update chat_id] force:YES];
             }
             
             

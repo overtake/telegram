@@ -416,7 +416,7 @@ static void *kType;
 }
 
 - (TLChatFull *)fullChat {
-    return [[FullChatManager sharedManager] find:[self chat].n_id];
+    return self.chat.chatFull;
 }
 
 -(long)channel_top_message_id {

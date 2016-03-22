@@ -240,7 +240,7 @@
 }
 
 - (void)rebuild {
-    AvatarUpdaterItem *operation = [lockDictionary() objectForKey:@(self.controller.chat.n_id)];
+    AvatarUpdaterItem *operation = [lockDictionary() objectForKey:@(self.chat.n_id)];
     if(operation) {
         [self startUploading:operation withAnimation:NO];
     } else {

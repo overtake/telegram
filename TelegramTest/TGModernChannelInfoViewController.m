@@ -460,7 +460,7 @@
         
         groupType = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeNext callback:^(TGGeneralRowItem *item) {
             
-            TLChatFull *chatfull = [[FullChatManager sharedManager] find:weakSelf.chat.n_id];
+            TLChatFull *chatfull = [[ChatFullManager sharedManager] find:weakSelf.chat.n_id];
             
             ComposeAction *action = [[ComposeAction alloc] initWithBehaviorClass:[ComposeActionCustomBehavior class] filter:nil object:weakSelf.chat];
             

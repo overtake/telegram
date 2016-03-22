@@ -24,7 +24,7 @@
 +(void)show:(NSString *)string chat:(TLChat *)chat view:(NSView *)view ofRect:(NSRect)rect callback:(void (^)(NSString *userName))callback {
     
     
-    TLChatFull *fullChat = [[FullChatManager sharedManager] find:chat.n_id];
+    TLChatFull *fullChat = [[ChatFullManager sharedManager] find:chat.n_id];
     
     NSMutableArray *uids = [[NSMutableArray alloc] init];
     

@@ -7,7 +7,6 @@
 //
 
 #import "NSNotificationCenter+MainThread.h"
-#import "LoopingUtils.h"
 
 @implementation NSNotificationCenter (MainThread)
 

@@ -211,6 +211,7 @@ static NSMenu *deleteMenu;
         [deleteMenu cancelTrackingWithoutAnimation];
         if(deleteMenu.itemArray.count > 0)
             [deleteMenu removeItemAtIndex:0];
+        deleteMenu = nil;
     } else {
         [super mouseUp:theEvent];
     }

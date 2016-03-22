@@ -75,7 +75,7 @@
             
             [self.action.currentViewController.navigationViewController goBackWithAnimation:YES];
             
-            [[FullChatManager sharedManager] loadIfNeed:chat.n_id force:YES];
+            [[ChatFullManager sharedManager] requestChatFull:chat.n_id force:YES];
             
             [self.delegate behaviorDidEndRequest:nil];
             
@@ -112,7 +112,7 @@
             [self addMembersToChat:members toChatId:chatId];
         } else {
             
-            [[FullChatManager sharedManager] performLoad:chatId force:YES callback:^(TLChatFull *fullChat) {
+            [[ChatFullManager sharedManager] requestChatFull:chatId force:YES withCallback:^(TLChatFull *fullChat) {
                 [self.delegate behaviorDidEndRequest:response];
                 [self.action.currentViewController.navigationViewController goBackWithAnimation:YES];
             }];

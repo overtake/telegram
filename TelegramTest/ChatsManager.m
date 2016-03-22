@@ -63,7 +63,7 @@
                         if(currentChat.version != newChat.version) {
                             currentChat.version = newChat.version;
                             
-                            [[FullChatManager sharedManager] loadIfNeed:currentChat.n_id force:YES]; // force load chat if changed version.
+                            [[ChatFullManager sharedManager] requestChatFull:currentChat.n_id force:YES];
                         }
                         
                         if(currentChat.flags != newChat.flags) {

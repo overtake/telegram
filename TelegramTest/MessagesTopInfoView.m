@@ -252,12 +252,12 @@ static NSMutableDictionary *cache;
     
     if(self.conversation.type == DialogTypeChannel && self.conversation.chat.isMegagroup) {
         
-        TLChatFull *fullChat = [[FullChatManager sharedManager] find:self.conversation.chat.n_id];
+        TLChatFull *fullChat = [[ChatFullManager sharedManager] find:self.conversation.chat.n_id];
         
         if(fullChat.pinned_msg_id > 0) {
             [self loadAndShowPinnedMessage:fullChat.pinned_msg_id chat_id:fullChat.n_id animated:NO];
         } else {
-            [[FullChatManager sharedManager] performLoad:self.conversation.chat.n_id callback:^(TLChatFull *fullChat) {
+            [[ChatFullManager sharedManager] requestChatFull:self.conversation.chat.n_id withCallback:^(TLChatFull *fullChat) {
                 
                 if(fullChat.pinned_msg_id > 0) {
                     [self loadAndShowPinnedMessage:fullChat.pinned_msg_id chat_id:fullChat.n_id animated:YES];
@@ -440,7 +440,7 @@ static NSMutableDictionary *cache;
 -(void)deletePinnedMessage:(TL_localMessage *)msg chat_id:(int)chat_id withRequest:(BOOL)withRequest {
    
      dispatch_block_t block = ^{
-        TLChatFull *chat = [[FullChatManager sharedManager] find:chat_id];
+        TLChatFull *chat = [[ChatFullManager sharedManager] find:chat_id];
         
         chat.pinned_msg_id = 0;
         

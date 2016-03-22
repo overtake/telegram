@@ -459,9 +459,8 @@
     if([item isKindOfClass:[TGStickerPackRowItem class]]) {
         TGStickerPackModalView *modalView = [[TGStickerPackModalView alloc] init];
        
-        [modalView setStickerPack:[TL_messages_stickerSet createWithSet:item.pack[@"set"] packs:nil documents:[item.pack[@"stickers"] mutableCopy]]];
-        
         [modalView show:self.view.window animated:YES];
+        [modalView setStickerPack:[TL_messages_stickerSet createWithSet:item.pack[@"set"] packs:nil documents:[item.pack[@"stickers"] mutableCopy]]];
     }
     
 }

@@ -12,7 +12,6 @@
 #import "SSKeychain.h"
 #import "SSKeychainQuery.h"
 #import "Crypto.h"
-#import "LoopingUtils.h"
 #import "PreviewObject.h"
 #import "HistoryFilter.h"
 #import "FMDatabaseAdditions.h"
@@ -2143,7 +2142,7 @@ TL_localMessage *parseMessage(FMResultSet *result) {
         if(![db executeUpdate:@"insert or replace into contacts (user_id, mutual) values (?,?)", [NSNumber numberWithInt:contact.user_id],[NSNumber numberWithBool:contact.mutual]]) {
             ELog(@"DB insert contact error: %d", contact.user_id);
         }
-        [LoopingUtils runOnMainQueueAsync:^{
+        [ASQueue dispatchOnMainQueue:^{
             if(completeHandler)
                 completeHandler();
         }];
@@ -2372,7 +2371,7 @@ TL_localMessage *parseMessage(FMResultSet *result) {
              
          }
          
-         [LoopingUtils  runOnMainQueueAsync:^{
+         [ASQueue  dispatchOnMainQueue:^{
             if(completeHandler)
                 completeHandler(list);
         }];
@@ -2406,7 +2405,7 @@ TL_localMessage *parseMessage(FMResultSet *result) {
             
         }
         
-        [LoopingUtils  runOnMainQueueAsync:^{
+        [ASQueue  dispatchOnMainQueue:^{
             if(completeHandler)
                 completeHandler(list);
         }];

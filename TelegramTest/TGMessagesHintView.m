@@ -422,7 +422,7 @@ DYNAMIC_PROPERTY(DUser);
     NSMutableArray *uids = [[NSMutableArray alloc] init];
     
     if(chat) {
-        TLChatFull *fullChat = [[FullChatManager sharedManager] find:chat.n_id];
+        TLChatFull *fullChat = [[ChatFullManager sharedManager] find:chat.n_id];
         
          if(fullChat.participants.participants) {
             [fullChat.participants.participants enumerateObjectsUsingBlock:^(TLChatParticipant * obj, NSUInteger idx, BOOL *stop) {

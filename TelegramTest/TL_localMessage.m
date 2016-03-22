@@ -111,11 +111,20 @@
 }
 
 +(void)convertReceivedMessages:(NSMutableArray *)messages {
+    
+    NSMutableArray *array = [NSMutableArray array];
+    
     for (int i = 0; i < messages.count; i++) {
-        if(![messages[i] isKindOfClass:[TL_localMessage class]]) {
-            messages[i] = [TL_localMessage convertReceivedMessage:messages[i]];
+        if(![messages[i] isKindOfClass:[TL_messageEmpty class]]) {
+            if([messages[i] isKindOfClass:[TL_localMessage class]])
+                [array addObject:messages[i]];
+             else
+                 [array addObject:[TL_localMessage convertReceivedMessage:messages[i]]];
         }
     }
+    
+    [messages removeAllObjects];
+    [messages addObjectsFromArray:array];
 }
 
 
