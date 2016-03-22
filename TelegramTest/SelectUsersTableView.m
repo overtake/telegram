@@ -126,31 +126,48 @@ static NSCache *cacheItems;
 -(void)readyConversations {
     _type = SelectTableConversations;
     
-    NSArray *chats = [[DialogsManager sharedManager] all];
     
-    NSMutableArray *accepted = [[NSMutableArray alloc] init];
-    
-    [chats enumerateObjectsUsingBlock:^(TL_conversation *obj, NSUInteger idx, BOOL * _Nonnull stop) {
+    void (^proccessResult) (NSArray *chats) = ^(NSArray *chats) {
+        NSMutableArray *accepted = [[NSMutableArray alloc] init];
         
-        if(obj.type == DialogTypeUser || (obj.type == DialogTypeChat && obj.chat.type == TLChatTypeNormal && !obj.chat.isDeactivated) || (obj.type == DialogTypeChannel && obj.chat.isMegagroup)) {
-            [accepted addObject:obj];
-        }
+        [chats enumerateObjectsUsingBlock:^(TL_conversation *obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            
+            if(obj.type == DialogTypeUser || (obj.type == DialogTypeChat && obj.chat.type == TLChatTypeNormal && !obj.chat.isDeactivated) || (obj.type == DialogTypeChannel && obj.chat.isMegagroup)) {
+                [accepted addObject:obj];
+            }
+            
+        }];
+        
+        
+        NSMutableArray *items = [[NSMutableArray alloc] init];
+        
+        [accepted enumerateObjectsUsingBlock:^(TL_conversation * obj, NSUInteger idx, BOOL *stop) {
+            
+            if(obj.chat || obj.user) {
+                [items addObject:[[SelectUserItem alloc] initWithObject:obj.chat ? obj.chat : obj.user]];
+            }
+            
+            
+        }];
+        
+        
+        
+        [ASQueue dispatchOnMainQueue:^{
+            [self readyItems:items];
+        }];
+    };
+    
+    [[Storage manager] dialogsWithOffset:0 limit:30 completeHandler:^(NSArray *chats) {
+        
+        proccessResult(chats);
+        
+        [[Storage manager] dialogsWithOffset:30 limit:1000 completeHandler:^(NSArray *d) {
+            proccessResult([chats arrayByAddingObjectsFromArray:d]);
+        }];
         
     }];
     
     
-    NSMutableArray *items = [[NSMutableArray alloc] init];
-    
-    [accepted enumerateObjectsUsingBlock:^(TL_conversation * obj, NSUInteger idx, BOOL *stop) {
-        
-        if(obj.chat || obj.user) {
-            [items addObject:[[SelectUserItem alloc] initWithObject:obj.chat ? obj.chat : obj.user]];
-        }
-
-        
-    }];
-    
-    [self readyItems:items];
 }
 
 
