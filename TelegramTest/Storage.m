@@ -2013,7 +2013,14 @@ TL_localMessage *parseMessage(FMResultSet *result) {
         __block BOOL result;
         //[db beginTransaction];
         for (TLChat *chat in chats) {
-            result = [db executeUpdate:@"insert or replace into chats (n_id,serialized) values (?,?)",[NSNumber numberWithInt:chat.n_id], [TLClassStore serialize:chat]];
+            
+            dispatch_block_t insert_blck = ^{
+                result = [db executeUpdate:@"insert or replace into chats (n_id,serialized) values (?,?)",[NSNumber numberWithInt:chat.n_id], [TLClassStore serialize:chat]];
+            };
+            
+            if(!chat.isMin || [db intForQuery:[NSString stringWithFormat:@"select n_id from %@ where n_id = ?",tableUsers],@(chat.n_id)] == 0)
+                insert_blck();
+            
         }
         //[db commit];
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -2118,7 +2125,12 @@ TL_localMessage *parseMessage(FMResultSet *result) {
                     [[MTNetwork instance] setUserId:user.n_id];
                 }
                 
-                [db executeUpdate:@"insert or replace into users (n_id, serialized,lastseen_update,last_seen) values (?,?,?,?)", @(user.n_id), [TLClassStore serialize:user],@(user.lastSeenUpdate),@(user.status.lastSeenTime)];
+                dispatch_block_t insert_blck = ^{
+                    [db executeUpdate:@"insert or replace into users (n_id, serialized,lastseen_update,last_seen) values (?,?,?,?)", @(user.n_id), [TLClassStore serialize:user],@(user.lastSeenUpdate),@(user.status.lastSeenTime)];
+                };
+                
+                if(!user.isMin || [db intForQuery:[NSString stringWithFormat:@"select n_id from %@ where n_id = ?",tableUsers],@(user.n_id)] == 0)
+                    insert_blck();
 
             }
             

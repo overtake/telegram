@@ -62,6 +62,12 @@
     
 }
 
+-(void)setFrameSize:(NSSize)newSize {
+    [super setFrameSize:newSize];
+    
+     [_textField setCenterByView:self];
+}
+
 @end
 
 

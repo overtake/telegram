@@ -357,7 +357,7 @@
 
 + (NSAttributedString *) serviceAttributedMessage:(TL_localMessage *)message forAction:(TLMessageAction *)action {
     
-    TLUser *user = [[UsersManager sharedManager] find:message.from_id];
+    TLUser *user = [message.chat isKindOfClass:[TLChat class]] && message.chat.isChannel && !message.chat.isMegagroup ? nil : [[UsersManager sharedManager] find:message.from_id];
     
     NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] init];
     NSMutableArray *users = [NSMutableArray array];

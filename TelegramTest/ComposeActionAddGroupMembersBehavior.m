@@ -113,8 +113,11 @@
         } else {
             
             [[ChatFullManager sharedManager] requestChatFull:chatId force:YES withCallback:^(TLChatFull *fullChat) {
-                [self.delegate behaviorDidEndRequest:response];
-                [self.action.currentViewController.navigationViewController goBackWithAnimation:YES];
+                [ASQueue dispatchOnMainQueue:^{
+                    [self.delegate behaviorDidEndRequest:response];
+                    [self.action.currentViewController.navigationViewController goBackWithAnimation:YES];
+                }];
+                
             }];
 
         }
