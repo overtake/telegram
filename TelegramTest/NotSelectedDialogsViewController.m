@@ -72,16 +72,35 @@
 
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
-    [self.view.window makeFirstResponder:nil];
-    dispatch_async(dispatch_get_main_queue(), ^{
-        [self.view.window makeFirstResponder:nil];
-    });
+  //  [self.view.window makeFirstResponder:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(windowBecomeNotification:) name:NSWindowDidBecomeKeyNotification object:self.view.window];
+    
+//    dispatch_async(dispatch_get_main_queue(), ^{
+//        [self.view.window makeFirstResponder:nil];
+//    });
+}
+
+-(void)viewDidDisappear:(BOOL)animated {
+    [super viewDidDisappear:animated];
+    
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
+-(void)dealloc {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
+-(void)windowBecomeNotification:(NSNotification *)notification {
+    [self.view.window makeFirstResponder:self.view];
+    [[Telegram leftViewController].conversationsViewController.searchView resignFirstResponder];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     [self.view.window makeFirstResponder:nil];
     
+
 }
 
 

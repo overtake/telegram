@@ -200,7 +200,7 @@
         
         
         
-        if(((message.conversation.type == DialogTypeChannel && message.from_id != 0 && !message.isPost && message.chat.isMegagroup) || message.conversation.type == DialogTypeChat) && !message.action ) {
+        if(((message.conversation.type == DialogTypeChannel && message.from_id != 0 && !message.isPost && message.chat.isMegagroup) || message.conversation.type == DialogTypeChat) ) {
             
             if(!message.n_out) {
                 userLast = message.fromUser;
@@ -208,6 +208,10 @@
             } else {
                 chatUserNameString = [NSLocalizedString(@"Profile.You", nil) stringByAppendingString:@"\n"];
             }
+            
+            if(message.action)
+                userLast = message.fromUser;
+            
         }
         
         
@@ -296,8 +300,7 @@
         }
         
         if(chatUserNameString)
-            [messageText appendString:chatUserNameString withColor:DARK_BLACK];
-        
+            [messageText appendString:chatUserNameString withColor:!message.action ? DARK_BLACK : GRAY_TEXT_COLOR];
         
         if(!message.action) {
             if(message.media && ![message.media isKindOfClass:[TL_messageMediaEmpty class]] && ![message.media isKindOfClass:[TL_messageMediaWebPage class]]) {

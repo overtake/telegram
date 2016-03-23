@@ -41,7 +41,7 @@
                     
                     BOOL isNeedUpdateTypeNotification = NO;
                     
-                    if(!currentChat.isMin) {
+                    if(!newChat.isMin) {
                         
                         if([currentChat.photo.photo_small hashCacheKey] != [newChat.photo.photo_small hashCacheKey]) {
                             currentChat.photo = newChat.photo;

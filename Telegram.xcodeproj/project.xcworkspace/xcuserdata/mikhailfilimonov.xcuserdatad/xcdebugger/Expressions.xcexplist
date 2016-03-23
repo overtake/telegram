@@ -5519,6 +5519,14 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "-[NotSelectedDialogsViewController viewWillAppear:]:NotSelectedDialogsViewController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.view">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "__42-[NewContactsManager importCloudContacts:]_block_invoke:NewContactsManager.m">
          <PersistentStrings>
             <PersistentString
