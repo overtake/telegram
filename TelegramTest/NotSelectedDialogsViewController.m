@@ -93,7 +93,7 @@
 
 -(void)windowBecomeNotification:(NSNotification *)notification {
     [self.view.window makeFirstResponder:self.view];
-    [[Telegram leftViewController].conversationsViewController.searchView resignFirstResponder];
+    [[Telegram leftViewController].conversationsViewController resignFirstResponder];
 }
 
 - (void)viewWillAppear:(BOOL)animated {

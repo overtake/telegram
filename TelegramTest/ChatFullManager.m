@@ -137,6 +137,8 @@
     [self requestChatFull:chat_id force:force withCallback:nil];
 }
 
+// сделать запросы на fullchat 30 секунд
+
 -(void)requestChatFull:(int)chat_id force:(BOOL)force withCallback:(void (^) (TLChatFull *chatFull))callback {
     
     dispatch_queue_t dqueue = dispatch_get_current_queue();
