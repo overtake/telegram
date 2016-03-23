@@ -33,7 +33,7 @@
     return self.imageObject.downloadItem;
 }
 -(BOOL)isset {
-    return self.imageObject.isset;
+    return [TGCache cachedImage:self.imageObject.cacheKey group:@[PVCACHE]] != nil;
 }
 
 -(NSSize)size {

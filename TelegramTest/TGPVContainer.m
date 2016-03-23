@@ -469,7 +469,7 @@ static const int bottomHeight = 60;
 
 -(void)updateDownloadListeners:(DownloadItem *)downloadItem {
     
-    [self.loaderView setHidden:self.loaderView.isHidden || downloadItem == nil || downloadItem.downloadState == DownloadStateCompleted];
+    
     
     [self.loaderView setCurrentProgress:MAX(downloadItem.progress,3)];
     [self.loaderView setProgress:self.loaderView.currentProgress animated:YES];
@@ -509,7 +509,7 @@ static const int bottomHeight = 60;
 -(void)setCurrentViewerItem:(TGPhotoViewerItem *)currentViewerItem animated:(BOOL)animated {
     
     [_currentViewerItem.downloadItem removeEvent:_eventListener];
-    [self.loaderView setHidden:currentViewerItem.isset animated:animated];
+    [self.loaderView setHidden:currentViewerItem.isset || currentViewerItem.downloadItem == nil || currentViewerItem.downloadItem.downloadState == DownloadStateCompleted animated:animated];
     [self updateDownloadListeners:currentViewerItem.downloadItem];
 
     
