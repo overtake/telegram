@@ -1344,6 +1344,9 @@
          contextName = "__46-[TGPVMediaBehavior load:next:limit:callback:]_block_invoke_2:TGPVMediaBehavior.m">
       </ContextState>
       <ContextState
+         contextName = "__54-[ChatFullManager requestChatFull:force:withCallback:]_block_invoke:ChatFullManager.m">
+      </ContextState>
+      <ContextState
          contextName = "-[TMMediaController media:]:TMMediaController.mm">
       </ContextState>
       <ContextState
@@ -5392,6 +5395,14 @@
       </ContextState>
       <ContextState
          contextName = "__69-[MTDiscoverDatacenterAddressAction askForAnAddressDatacenterWithId:]_block_invoke:MTDiscoverDatacenterAddressAction.m">
+      </ContextState>
+      <ContextState
+         contextName = "__38-[TGAllStickerTableItemView redrawRow]_block_invoke119:TGAllStickersTableView.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "weakSelf.tableView">
+            </PersistentString>
+         </PersistentStrings>
       </ContextState>
       <ContextState
          contextName = "-[MessagesTableView setFrameSize:]:MessagesTableView.m">

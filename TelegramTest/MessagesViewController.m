@@ -2711,18 +2711,11 @@ static NSTextAttachment *headerMediaIcon() {
     
     
     if(!self.view.isHidden && self.view.window.isKeyWindow && ![TGPasslock isVisibility]) {
-        if(_delayedBlockHandle)
-            _delayedBlockHandle(YES);
         
-        [ASQueue dispatchOnStageQueue:^{
-            if(self.conversation.last_marked_message != self.conversation.top_message) {
-                self.conversation.last_marked_message = self.conversation.top_message;
-                self.conversation.last_marked_date = [[MTNetwork instance] getTime];
-                [self.conversation save];
-            }
-        }];
+        [MessagesManager clearNotifies:_conversation max_id:_conversation.top_message];
         
-       
+        cancel_delayed_block(_delayedBlockHandle);
+        
         _delayedBlockHandle = perform_block_after_delay(0.2f, ^{
             _delayedBlockHandle = nil;
             if(self.conversation.unread_count > 0 || (self.conversation.unread_important_count > 0) || self.conversation.peer.user_id == [UsersManager currentUserId]) {
@@ -2741,13 +2734,15 @@ static NSTextAttachment *headerMediaIcon() {
     
     [[DialogsManager sharedManager] markAllMessagesAsRead:self.conversation];
     
-    
+    self.conversation.last_marked_message = self.conversation.top_message;
+    self.conversation.last_marked_date = [[MTNetwork instance] getTime];
     
     self.conversation.unread_count = 0;
     self.conversation.unread_important_count = 0;
     _conversation.read_inbox_max_id = self.conversation.type == DialogTypeChannel ? self.conversation.top_important_message : self.conversation.top_message;
     
     [self.conversation save];
+    
     
     [Notification perform:[Notification notificationNameByDialog:self.conversation action:@"unread_count"] data:@{KEY_LAST_CONVRESATION_DATA:[MessagesUtils conversationLastData:self.conversation],KEY_DIALOG:self.conversation}];
     
@@ -2759,6 +2754,8 @@ static NSTextAttachment *headerMediaIcon() {
     
     
 }
+
+
 
 - (void)messagesLoadedTryToInsert:(NSArray *) array pos:(NSUInteger)pos next:(BOOL)next {
     

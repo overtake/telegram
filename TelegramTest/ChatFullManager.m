@@ -193,6 +193,8 @@
                     
                     [self add:@[[response full_chat]]];
                     
+                    [[Storage manager] insertFullChat:response.full_chat completeHandler:nil];
+                    
                     TLChatFull *current = [self find:chat_id];
                     
                     [ASQueue dispatchOnMainQueue:^{

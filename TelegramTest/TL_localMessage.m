@@ -386,6 +386,8 @@ DYNAMIC_PROPERTY(DDialog);
 
 -(NSUserNotification *)userNotification {
     
+    
+    
 //    if(!_notification) {
 //        NSArray *notifications = [[NSUserNotificationCenter defaultUserNotificationCenter] deliveredNotifications];
 //        

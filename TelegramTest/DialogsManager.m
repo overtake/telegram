@@ -665,6 +665,8 @@
                     
                     [MessagesManager updateUnreadBadge];
                     
+                    [MessagesManager clearNotifies:conversation max_id:max_id];
+                    
                 }];
             }
             

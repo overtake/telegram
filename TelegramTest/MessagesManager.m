@@ -224,10 +224,6 @@ static const int seconds_to_notify = 120;
             }
             
           
-            
-            
-            
-            
             NSUserNotification *notification = [[NSUserNotification alloc] init];
             notification.title = title;
             notification.informativeText = [msg fixEmoji];
@@ -253,8 +249,10 @@ static const int seconds_to_notify = 120;
                 
             }
             
-            [notification setUserInfo:@{@"peer_id":@(message.peer_id),@"msg_id":@(message.n_id)}];
+            [notification setUserInfo:@{KEY_PEER_ID:@(message.peer_id),KEY_MESSAGE_ID:@(message.n_id)}];
             [[NSUserNotificationCenter defaultUserNotificationCenter] deliverNotification:notification];
+            
+            
             
             //[NSApp requestUserAttention:NSInformationalRequest];
         }
@@ -264,6 +262,19 @@ static const int seconds_to_notify = 120;
     }];
 }
 
+
++(void)clearNotifies:(TL_conversation *)conversation max_id:(int)max_id
+{
+    NSArray *deliveredNotifications = [[NSUserNotificationCenter defaultUserNotificationCenter] deliveredNotifications];
+    
+    [deliveredNotifications enumerateObjectsUsingBlock:^(NSUserNotification *notify, NSUInteger idx, BOOL * _Nonnull stop) {
+        
+        if([notify.userInfo[KEY_PEER_ID] intValue] == conversation.peer_id && [notify.userInfo[KEY_MESSAGE_ID] intValue] <= max_id) {
+            [[NSUserNotificationCenter defaultUserNotificationCenter] removeDeliveredNotification:notify];
+        }
+        
+    }];
+}
 
 +(void)notifyMessage:(TL_localMessage *)message update_real_date:(BOOL)update_real_date {
      [self notifyMessage:message update_real_date:update_real_date notify:YES];

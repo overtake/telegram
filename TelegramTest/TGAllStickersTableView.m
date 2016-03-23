@@ -722,11 +722,7 @@ static NSImage *higlightedImage() {
     
     if(_previewModal) {
         
-        NSEvent *event = [NSApp currentEvent];
-        
-        if(![event.window isKindOfClass:[RBLPopoverWindow class]]) {
-            _notSendUpSticker = YES;
-        }
+        _notSendUpSticker = YES;
     }
     
     [_previewModal close:YES];

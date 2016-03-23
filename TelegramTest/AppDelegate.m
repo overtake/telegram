@@ -158,7 +158,7 @@ static void TGTelegramLoggingFunction(NSString *format, va_list args)
     
     NSDictionary *userInfo = notification.userInfo;
     
-    TL_conversation *dialog = [[DialogsManager sharedManager] find:[[userInfo objectForKey:@"peer_id"] intValue]];
+    TL_conversation *dialog = [[DialogsManager sharedManager] find:[userInfo[KEY_PEER_ID] intValue]];
     
     if(dialog == nil) {
         ELog(@"nil dialog here, check it");
@@ -175,7 +175,7 @@ static void TGTelegramLoggingFunction(NSString *format, va_list args)
         
         dispatch_async(dispatch_get_main_queue(), ^{
             
-            TL_localMessage *msg = [[Storage manager] messageById:[[userInfo objectForKey:@"msg_id"] intValue] inChannel:dialog.type == DialogTypeChannel ? dialog.peer_id : 0];
+            TL_localMessage *msg = [[Storage manager] messageById:[userInfo[KEY_MESSAGE_ID] intValue] inChannel:dialog.type == DialogTypeChannel ? dialog.peer_id : 0];
             
             if(dialog.type == DialogTypeChat) {
                 if(msg)
@@ -796,6 +796,8 @@ void exceptionHandler(NSException * exception)
 
 
 -(NSApplicationTerminateReply)applicationShouldTerminate:(NSApplication *)sender {
+    
+    [[NSUserNotificationCenter defaultUserNotificationCenter] removeAllDeliveredNotifications];
     
     if([SenderItem allSendersSaved])
         return NSTerminateNow;
