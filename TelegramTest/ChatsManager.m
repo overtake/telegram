@@ -89,6 +89,9 @@
                         }
                         
                     } else {
+                        
+                         isNeedUpdateTypeNotification = newChat.flags != currentChat.flags;
+                        
                         if(newChat.isBroadcast)
                             currentChat.flags|= (1 << 5);
                         else
@@ -120,7 +123,7 @@
                             [Notification perform:CHAT_UPDATE_PHOTO data:@{KEY_CHAT: currentChat}];
                         }
                         
-                        isNeedUpdateTypeNotification = YES;
+                       
                         
                     }
                     

@@ -63,8 +63,7 @@
 -(void)didDownloadImage:(NSImage *)newImage object:(ImageObject *)object {
     if([[object cacheKey] isEqualToString:[self.object cacheKey]]) {
         [self addAnimation:contentAnimation() forKey:@"contents"];
-        [self setObject:object];
-        
+        self.image = newImage;
     }
 }
 

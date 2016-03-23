@@ -28,6 +28,7 @@
     
     [self.downloadItem addEvent:_supportDownloadListener];
     
+    
     [self.downloadItem addEvent:self.downloadListener];
     
     

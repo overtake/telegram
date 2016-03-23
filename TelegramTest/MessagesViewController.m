@@ -1702,7 +1702,7 @@ static NSTextAttachment *headerMediaIcon() {
     [ASQueue dispatchOnMainQueue:^{
         [self.historyController items:readed complete:^(NSArray * filtred) {
             
-            [SelfDestructionController addMessages:filtred];
+            
             
             [filtred enumerateObjectsUsingBlock:^(TL_localMessage *obj, NSUInteger idx, BOOL * _Nonnull stop) {
                 

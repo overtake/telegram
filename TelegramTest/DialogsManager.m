@@ -14,6 +14,7 @@
 #import "MessagesBottomView.h"
 #import "MessagesUtils.h"
 #import "FullUsersManager.h"
+#import "SelfDestructionController.h"
 @interface DialogsManager ()
 @property (nonatomic,strong) NSMutableArray *dialogs;
 @property (nonatomic,assign) NSInteger maxCount;
@@ -641,6 +642,9 @@
                     
                     
                     [messages enumerateObjectsUsingBlock:^(TL_localMessage *message, NSUInteger idx, BOOL * _Nonnull stop) {
+                        
+                        message.flags&=~TGUNREADMESSAGE;
+                        
                         if(conversation.lastMessage.n_id == message.n_id) {
                             conversation.lastMessage.flags&= ~TGUNREADMESSAGE;
                         }
@@ -650,6 +654,8 @@
                         conversation.read_inbox_max_id = max_id;
                         conversation.unread_count = unread_count;
                     }
+                    
+                    [SelfDestructionController addMessages:messages];
                     
                     
                     [Notification perform:[Notification notificationNameByDialog:conversation action:@"unread_count"] data:@{KEY_DIALOG:conversation,KEY_LAST_CONVRESATION_DATA:[MessagesUtils conversationLastData:conversation]}];

@@ -300,7 +300,7 @@ static NSImage *higlightedImage() {
         
         weak();
         
-        [[Storage yap] asyncReadWithBlock:^(YapDatabaseReadTransaction *transaction) {
+        [[Storage yap] readWithBlock:^(YapDatabaseReadTransaction *transaction) {
             
             NSDictionary *info  = [transaction objectForKey:@"modern_stickers" inCollection:STICKERS_COLLECTION];
             
@@ -311,29 +311,27 @@ static NSImage *higlightedImage() {
             
             weakSelf.sets = info[@"sets"];
             
-            [ASQueue dispatchOnMainQueue:^{
-                if(!isRemoteStickersLoaded() || force) {
-                    [RPCRequest sendRequest:[TLAPI_messages_getAllStickers createWithN_hash:[self stickersHash:_sets]] successHandler:^(RPCRequest *request, TL_messages_allStickers *response) {
-                        
-                        if(![response isKindOfClass:[TL_messages_allStickersNotModified class]]) {
-                            
-                            [self loadSetsIfNeeded:response.sets n_hash:response.n_hash];
-                            
-                        } else {
-                            [self reloadData];
-                        }
-                        
-                        setRemoteStickersLoaded(YES);
-                        
-                    } errorHandler:^(RPCRequest *request, RpcError *error) {
-                        
-                    }];
+            if(!isRemoteStickersLoaded() || force) {
+                [RPCRequest sendRequest:[TLAPI_messages_getAllStickers createWithN_hash:[self stickersHash:_sets]] successHandler:^(RPCRequest *request, TL_messages_allStickers *response) {
                     
+                    if(![response isKindOfClass:[TL_messages_allStickersNotModified class]]) {
+                        
+                        [self loadSetsIfNeeded:response.sets n_hash:response.n_hash];
+                        
+                    } else {
+                        [self reloadData];
+                    }
                     
-                } else {
-                    [self reloadData];
-                }
-            }];
+                    setRemoteStickersLoaded(YES);
+                    
+                } errorHandler:^(RPCRequest *request, RpcError *error) {
+                    
+                }];
+                
+                
+            } else {
+                [self reloadData];
+            }
             
         }];
         
@@ -347,7 +345,7 @@ static NSImage *higlightedImage() {
 
 -(void)save:(NSArray *)sets stickers:(NSDictionary *)stickers n_hash:(int)n_hash saveSets:(BOOL)saveSets {
     
-    [[Storage yap] readWriteWithBlock:^(YapDatabaseReadWriteTransaction * __nonnull transaction) {
+    [[Storage yap] asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction * __nonnull transaction) {
         
         NSMutableDictionary *serializedStickers = [stickers mutableCopy];
         
@@ -427,7 +425,7 @@ static NSImage *higlightedImage() {
     
     [RPCRequest sendRequest:[TLAPI_messages_getStickerSet createWithStickerset:[TL_inputStickerSetID createWithN_id:set.n_id access_hash:set.access_hash]] successHandler:^(id request, TL_messages_stickerSet *response) {
         
-        [[Storage yap] asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction * __nonnull transaction) {
+        [[Storage yap] readWriteWithBlock:^(YapDatabaseReadWriteTransaction * __nonnull transaction) {
             
             NSMutableDictionary *data = [[transaction objectForKey:@"modern_stickers" inCollection:STICKERS_COLLECTION] mutableCopy];
             
@@ -439,16 +437,11 @@ static NSImage *higlightedImage() {
             }
             
             
-            [ASQueue dispatchOnMainQueue:^{
-                _stickers[@(response.set.n_id)] = response.documents;
-                
-            }];
-            
-            [self save:_sets stickers:_stickers n_hash:n_hash saveSets:YES];
-            
+            _stickers[@(response.set.n_id)] = response.documents;
+
         }];
         
-        
+        [self save:_sets stickers:_stickers n_hash:n_hash saveSets:YES];
         
         
         [ASQueue dispatchOnMainQueue:^{
@@ -457,7 +450,7 @@ static NSImage *higlightedImage() {
         
     } errorHandler:^(id request, RpcError *error) {
         
-    } timeout:60 queue:self.queue.nativeQueue];
+    }];
     
     
 }
@@ -512,7 +505,7 @@ static NSImage *higlightedImage() {
         
         weak();
         
-        [[Storage yap] asyncReadWithBlock:^(YapDatabaseReadTransaction *transaction) {
+        [[Storage yap] readWithBlock:^(YapDatabaseReadTransaction *transaction) {
             
             NSMutableDictionary *sort = [transaction objectForKey:@"recentStickers" inCollection:STICKERS_COLLECTION];
             

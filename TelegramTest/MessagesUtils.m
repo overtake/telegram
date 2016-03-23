@@ -200,7 +200,7 @@
         
         
         
-        if(((message.conversation.type == DialogTypeChannel && message.from_id != 0 && !message.isPost) || message.conversation.type == DialogTypeChat) && !message.action ) {
+        if(((message.conversation.type == DialogTypeChannel && message.from_id != 0 && !message.isPost && message.chat.isMegagroup) || message.conversation.type == DialogTypeChat) && !message.action ) {
             
             if(!message.n_out) {
                 userLast = message.fromUser;
@@ -216,8 +216,6 @@
         
         if(message.action) {
             isAction = YES;
-            if(!userLast && message.from_id != 0 )
-                userLast = message.fromUser;
              if(message.conversation.type != DialogTypeSecretChat && userLast)
                 chatUserNameString = userLast ? userLast.fullName : NSLocalizedString(@"MessageAction.Service.LeaveChat", nil);
 
