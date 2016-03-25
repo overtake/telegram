@@ -61,17 +61,6 @@
             
             _title = title;
         }
-//        
-//        if(!_author) {
-//            
-//            NSMutableAttributedString *copy = [_title mutableCopy];
-//            
-//            [copy setFont:TGSystemMediumFont(12.5) forRange:copy.range];
-//            [copy addAttribute:NSParagraphStyleAttributeName value:style range:copy.range];
-//            _author = copy;
-//            
-//        }
-        
         NSMutableAttributedString *siteName = [[NSMutableAttributedString alloc] init];
         
         [siteName appendString:webpage.site_name ? webpage.site_name : webpage.document ? NSLocalizedString(webpage.type, nil) : @"Link Preview" withColor:LINK_COLOR];
@@ -187,47 +176,47 @@
     return NSClassFromString(@"TGWebpageContainer");
 }
 
+static NSCache *webpages;
+
+
+
 +(id)objectForWebpage:(TLWebPage *)webpage tableItem:(MessageTableItem *)item {
     
     
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        webpages = [[NSCache alloc] init];
+        [webpages setCountLimit:150];
+    });
+    
+    Class webpageClass = [NSNull class];
+    
     if([webpage.site_name isEqualToString:@"YouTube"] && [webpage.type isEqualToString:@"video"])
+        webpageClass = [TGWebpageYTObject class];
+     else if([webpage.site_name isEqualToString:@"Instagram"])
+         webpageClass = [TGWebpageIGObject class];
+    else if([webpage.site_name isEqualToString:@"Twitter"])
+        webpageClass = [TGWebpageTWObject class];
+    else if([webpage.type isEqualToString:@"article"] || [webpage.type isEqualToString:@"app"])
+        webpageClass = [TGWebpageArticle class];
+    else if(webpage.document)
+        webpageClass = [TGWebpageDocumentObject class];
+    else
+        webpageClass = [TGWebpageStandartObject class];
+    
+    
+    NSString *key = [NSString stringWithFormat:@"%@_%ld",NSStringFromClass(webpageClass),webpage.n_id];
+    
+    TGWebpageObject *object = [webpages objectForKey:key];
+    
+    if(!object && webpageClass != [NSNull class])
     {
-        return [[TGWebpageYTObject alloc] initWithWebPage:webpage tableItem:item];
-    }
+        object = [[webpageClass alloc] initWithWebPage:webpage tableItem:item];
+        [webpages setObject:object forKey:key];
+    } else if (object)
+        object.tableItem = item;
     
-    if([webpage.site_name isEqualToString:@"Instagram"])
-    {
-        return [[TGWebpageIGObject alloc] initWithWebPage:webpage tableItem:item];
-    }
-    
-    if([webpage.site_name isEqualToString:@"Twitter"])
-    {
-        return [[TGWebpageTWObject alloc] initWithWebPage:webpage tableItem:item];
-    }
-    
-    
-    if([webpage.type isEqualToString:@"article"] || [webpage.type isEqualToString:@"app"])
-    {
-        return [[TGWebpageArticle alloc] initWithWebPage:webpage tableItem:item];
-    }
-    
-    if(webpage.document) {
-        return [[TGWebpageDocumentObject alloc] initWithWebPage:webpage tableItem:item];
-    }
-    
-    if([webpage.type isEqualToString:@"document"] || [webpage.type isEqualToString:@"gif"]) {
-        
-        id animated = [webpage.document attributeWithClass:[TL_documentAttributeAnimated class]];
-        
-        if([webpage.document.mime_type isEqualToString:@"video/mp4"] && animated)
-            return [[TGWebpageGifObject alloc] initWithWebPage:webpage tableItem:item];
-    }
-    
-    if([webpage.type isEqualToString:@"document"] && webpage.document != nil) {
-        return [[TGWebpageDocumentObject alloc] initWithWebPage:webpage tableItem:item];
-    }
-    
-    return [[TGWebpageStandartObject alloc] initWithWebPage:webpage tableItem:item];
+    return object;
     
 }
 

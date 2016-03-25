@@ -79,7 +79,7 @@
     self.messageAttributedString = [[MessagesUtils serviceAttributedMessage:self.message forAction:self.message.action] mutableCopy];
     [self.messageAttributedString addAttribute:NSForegroundColorAttributeName value:LINK_COLOR range:self.messageAttributedString.range];
     [self.messageAttributedString setFont:TGSystemFont(12) forRange:self.messageAttributedString.range];
-    [self.messageAttributedString setLink:[NSString stringWithFormat:@"chat://showreplymessage/%d",self.message.reply_to_msg_id] forRange:self.messageAttributedString.range];
+    [self.messageAttributedString setLink:[NSString stringWithFormat:@"chat://showreplymessage/?peer_class=%@&peer_id=%d&msg_id=%d&from_msg_id=%d",NSStringFromClass(self.message.to_id.class),self.message.peer_id,self.message.reply_to_msg_id,self.message.n_id] forRange:self.messageAttributedString.range];
 }
 
 -(Class)viewClass {

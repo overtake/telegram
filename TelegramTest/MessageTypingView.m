@@ -96,11 +96,11 @@ const NSTimeInterval typingIntervalSecond = 0.14;
     [[self.attributedString mutableString] setString:@""];
     
     NSString *string = nil;
+    
+    [_activity setNone];
+    
     if(actions.count) {
 
-        
-        
-        
         if(actions.count == 1) {
             
             TGActionTyping *action = actions[0];
@@ -131,7 +131,7 @@ const NSTimeInterval typingIntervalSecond = 0.14;
             
         }
         
-        [self.attributedString appendString:string withColor:[NSColor grayColor]];
+        [self.attributedString appendString:string withColor:GRAY_TEXT_COLOR];
     } else {
         [_activity setNone];
         

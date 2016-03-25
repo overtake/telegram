@@ -21,8 +21,24 @@
     return [self initWithReplyMessage:replyMessage fromMessage:fromMessage tableItem:item pinnedMessage:NO];
 }
 
+static NSCache *replyCache;
+
+
 -(id)initWithReplyMessage:(TL_localMessage *)replyMessage fromMessage:(TL_localMessage *)fromMessage tableItem:(MessageTableItem *)item pinnedMessage:(BOOL)pinnedMessage {
     if(self = [super init]) {
+        
+        static dispatch_once_t onceToken;
+        dispatch_once(&onceToken, ^{
+            replyCache = [[NSCache alloc] init];
+            [replyCache setCountLimit:150];
+        });
+        
+        if(replyMessage != nil) {
+            TGReplyObject *cObj = [replyCache objectForKey:@(replyMessage.channelMsgId)];
+            if(cObj)
+                return cObj;
+        }
+        
         
         _item = item;
         _fromMessage = fromMessage;
@@ -31,9 +47,9 @@
         
         _containerHeight = 30;
         
-        if(_replyMessage != nil)
+        if(_replyMessage != nil) {
             [self updateObject];
-        else
+        }  else
             [TGReplyObject loadReplyMessage:_fromMessage completionHandler:^(TL_localMessage *message) {
                 _replyMessage = message;
                 _fromMessage.replyMessage = _replyMessage;
@@ -175,6 +191,7 @@
         }
     }
 
+     [replyCache setObject:self forKey:@(_replyMessage.channelMsgId)];
   
 }
 
@@ -232,6 +249,7 @@
     } forIds:@[@([fromMessage isKindOfClass:[TL_destructMessage class]] ? ((TL_destructMessage *)fromMessage).reply_to_random_id : fromMessage.reply_to_msg_id)] random:[fromMessage isKindOfClass:[TL_destructMessage class]] sync:NO queue:[ASQueue globalQueue] isChannel:[fromMessage.to_id isKindOfClass:[TL_peerChannel class]]];
     
 }
+
 
 -(void)dealloc {
     [_request cancelRequest];

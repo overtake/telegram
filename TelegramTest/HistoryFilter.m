@@ -20,6 +20,7 @@
 #import "ChannelFilter.h"
 #import "ChannelCommonFilter.h"
 #import "SelfDestructionController.h"
+#import "MessageTableItem.h"
 @interface HistoryFilter ()
 @property (nonatomic,strong,readonly) TGMessageHole *botHole;
 @property (nonatomic,strong,readonly) TGMessageHole *topHole;
@@ -29,6 +30,9 @@
 
 @property (nonatomic,strong) NSMutableArray *messageItems;
 @property (nonatomic,strong) NSMutableDictionary *messageKeys;
+
+
+
 @end
 
 @implementation HistoryFilter

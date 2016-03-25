@@ -140,7 +140,7 @@
 -(void)setFrameSize:(NSSize)newSize {
     
     
-    if(!CGRectIsEmpty(self.frame)) {
+    if(!CGRectIsEmpty(self.frame) && ![self inLiveResize]) {
         int dif = (NSWidth(self.frame) - newSize.width)/2.0f;
         
         [_searchButton setFrameOrigin:NSMakePoint(NSMinX(_searchButton.frame) - dif, 10)];

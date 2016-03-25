@@ -124,7 +124,8 @@
         
         [TGCache cacheImage:image forKey:[self cacheKey] groups:@[IMGCACHE]];
     }
-        
+    
+
     [[ASQueue mainQueue] dispatchOnQueue:^{
         [self.delegate didDownloadImage:image object:self];
     }];

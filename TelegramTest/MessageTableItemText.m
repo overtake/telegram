@@ -33,7 +33,7 @@
     
     self.textAttributed = [[NSMutableAttributedString alloc] init];
     
-    NSString *message = [object.message fixEmoji];
+    NSString *message = [[object.message fixEmoji] trim];
         
     
     [self.textAttributed appendString:message withColor:TEXT_COLOR];

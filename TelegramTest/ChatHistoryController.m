@@ -218,8 +218,6 @@ static ChatHistoryController *observer;
     } synchronous:YES];
     
     
-    
-    
     return filter;
 
 }
@@ -535,6 +533,56 @@ static ChatHistoryController *observer;
     
 }
 
+static NSMutableDictionary *lastMessageItems;
+static const int maxCacheCount = 30;
++(void)initialize {
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        lastMessageItems = [NSMutableDictionary dictionary];
+    });
+}
+
+
+
++(void)addLatestMessageItems:(NSArray *)items position:(int)position {
+    [ASQueue dispatchOnStageQueue:^{
+        
+        [items enumerateObjectsUsingBlock:^(MessageTableItem *  _Nonnull item, NSUInteger idx, BOOL * _Nonnull stop) {
+            
+            if([item isKindOfClass:[MessageTableItem class]]) {
+                NSMutableArray *items = lastMessageItems[@(item.message.peer_id)];
+                
+                if(!items)
+                {
+                    items = [NSMutableArray array];
+                    lastMessageItems[@(item.message.peer_id)] = items;
+                }
+                
+                TGAssert(position <= items.count);
+                
+                if(position > items.count) {
+                    [items insertObject:item atIndex:position];
+                }
+                
+                if(items.count > maxCacheCount) {
+                    [items removeObjectsInRange:NSMakeRange(maxCacheCount, items.count - maxCacheCount)];
+                }
+            }
+
+        }];
+        
+        
+    }];
+}
+
++(void)clearLatestMessageItemsWithPeer:(TLPeer *)peer {
+    
+    [ASQueue dispatchOnStageQueue:^{
+        [lastMessageItems removeObjectForKey:@(peer.peer_id)];
+    }];
+    
+}
+
 
 -(void)performCallback:(selectHandler)selectHandler result:(NSArray *)result range:(NSRange )range controller:(id)controller {
    
@@ -579,6 +627,7 @@ static ChatHistoryController *observer;
             }
             
             NSArray *converted = [self.controller messageTableItemsFromMessages:[filter proccessResponse:result state:state next:next]];
+            
             
             [self performCallback:selectHandler result:converted range:NSMakeRange(0, converted.count) controller:self];
             

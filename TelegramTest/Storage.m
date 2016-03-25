@@ -2018,7 +2018,7 @@ TL_localMessage *parseMessage(FMResultSet *result) {
                 result = [db executeUpdate:@"insert or replace into chats (n_id,serialized) values (?,?)",[NSNumber numberWithInt:chat.n_id], [TLClassStore serialize:chat]];
             };
             
-            if(!chat.isMin || [db intForQuery:[NSString stringWithFormat:@"select n_id from %@ where n_id = ?",tableUsers],@(chat.n_id)] == 0)
+            if(!chat.isMin || [db intForQuery:[NSString stringWithFormat:@"select n_id from %@ where n_id = ?",tableChats],@(chat.n_id)] == 0)
                 insert_blck();
             
         }

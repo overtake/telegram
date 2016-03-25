@@ -20,6 +20,7 @@
 #import "FullUsersManager.h"
 #import "NSData+Extensions.h"
 #import "Crypto.h"
+#import "TGModalForwardView.h"
 @interface TGModernUserViewController ()
 @property (nonatomic,strong) TLUser *user;
 @property (nonatomic,strong) TL_conversation *conversation;
@@ -220,7 +221,7 @@
                 
             } else {
                 
-                TGShareContactModalView *shareContactModalView = [[TGShareContactModalView alloc] initWithFrame:NSMakeRect(0, 0, NSWidth(weakSelf.view.window.frame), NSHeight(weakSelf.view.window.frame))];
+                TGModalForwardView *shareContactModalView = [[TGModalForwardView alloc] initWithFrame:NSZeroRect];
                 
                 
                 [shareContactModalView setMessagesViewController:weakSelf.navigationViewController.messagesViewController];

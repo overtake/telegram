@@ -114,8 +114,8 @@ typedef enum {
     [self setNeedsDisplay:YES];
 }
 
-const CGFloat minDiameter = 6.0f;
-const CGFloat maxDiameter = 12.f;
+const CGFloat minDiameter = 4.0f;
+const CGFloat maxDiameter = 8.f;
 
 - (CGFloat)interpolateFrom:(CGFloat)from to:(CGFloat)to value:(CGFloat)value
 {
@@ -150,9 +150,9 @@ const CGFloat maxDiameter = 12.f;
     {
         case TGModernConversationTitleActivityIndicatorTypeTyping:
         {
-            CGFloat leftPadding = 6.0f;
+            CGFloat leftPadding = 7.0f;
             CGFloat topPadding = 7.0f;
-            CGFloat distance = 16.0f / 2.0f;
+            CGFloat distance = 12.0f / 2.0f;
             
             CGFloat minAlpha = 0.75f;
             CGFloat deltaAlpha = 1.0f - minAlpha;
@@ -165,7 +165,7 @@ const CGFloat maxDiameter = 12.f;
             
             NSColor *dotsColor = nil;
             
-            dotsColor = NSColorFromRGBWithAlpha(0xcccccc, (radius * deltaAlpha + minAlpha));
+            dotsColor = NSColorFromRGBWithAlpha(0x999999, (radius * deltaAlpha + minAlpha));
             CGContextSetFillColorWithColor(context, dotsColor.CGColor);
             CGContextFillEllipseInRect(context, CGRectMake(leftPadding-minDiameter / 2.0f - radius / 2.0f, topPadding -minDiameter / 2.0f - radius / 2.0f, minDiameter + radius, minDiameter + radius));
             
@@ -173,7 +173,7 @@ const CGFloat maxDiameter = 12.f;
             radius = (MAX(minDiameter, radius) - minDiameter) / (maxDiameter - minDiameter);
             radius = radius * 1.5f;
             
-            dotsColor = NSColorFromRGBWithAlpha(0xcccccc, (radius * deltaAlpha + minAlpha));
+            dotsColor = NSColorFromRGBWithAlpha(0x999999, (radius * deltaAlpha + minAlpha));
             CGContextSetFillColorWithColor(context, dotsColor.CGColor);
             CGContextFillEllipseInRect(context, CGRectMake(leftPadding + distance - minDiameter / 2.0f - radius / 2.0f, topPadding - minDiameter / 2.0f - radius / 2.0f, minDiameter + radius, minDiameter + radius));
             
@@ -181,7 +181,7 @@ const CGFloat maxDiameter = 12.f;
             radius = (MAX(minDiameter, radius) - minDiameter)/(maxDiameter-minDiameter);
             radius = radius * 1.5f;
             
-            dotsColor = NSColorFromRGBWithAlpha(0xcccccc, (radius * deltaAlpha + minAlpha));
+            dotsColor = NSColorFromRGBWithAlpha(0x999999, (radius * deltaAlpha + minAlpha));
             CGContextSetFillColorWithColor(context, dotsColor.CGColor);
             CGContextFillEllipseInRect(context, CGRectMake(leftPadding + distance * 2.0f - minDiameter / 2.0f - radius / 2.0f, topPadding - minDiameter / 2.0f - radius / 2.0f, minDiameter + radius, minDiameter + radius));
             
@@ -191,11 +191,13 @@ const CGFloat maxDiameter = 12.f;
         {
             CGContextRef context = [[NSGraphicsContext currentContext] CGContext];
             
-            CGFloat color[4] = {0.0f, 123.0f / 255.0f, 1.0f, 1.0f};
+            int rgbValue = 0x999999;
+            
+            CGFloat color[4] =  {((float)((rgbValue & 0xFF0000) >> 16))/255.0, ((float)((rgbValue & 0xFF00) >> 8))/255.0, ((float)(rgbValue & 0xFF))/255.0, 1.0f};
             CGContextSetStrokeColor(context, color);
             CGContextSetLineCap(context, kCGLineCapRound);
             
-            CGContextSetLineWidth(context, 2);
+            CGContextSetLineWidth(context, 3);
             
             CGFloat delta = 5.0f;
             CGFloat x = 8.0f;
@@ -261,7 +263,7 @@ const CGFloat maxDiameter = 12.f;
             [path fill];
             
             
-            dotsColor = NSColorFromRGBWithAlpha(0xcccccc,0.3);
+            dotsColor = NSColorFromRGBWithAlpha(0x999999,0.3);
             CGContextSetFillColorWithColor(context, dotsColor.CGColor);
             
             path = [NSBezierPath bezierPathWithRoundedRect:CGRectMake(leftPadding, topPadding, progressWidth, progressHeight) xRadius:round yRadius:round];
@@ -270,7 +272,7 @@ const CGFloat maxDiameter = 12.f;
             
             progress = [self interpolateFrom:0.0f to:progressWidth * 2.0f value:_animationValue];
             
-            dotsColor = NSColorFromRGBWithAlpha(0xcccccc,1.0f);
+            dotsColor = NSColorFromRGBWithAlpha(0x999999,1.0f);
             CGContextSetFillColorWithColor(context, dotsColor.CGColor);
             
             path = [NSBezierPath bezierPathWithRoundedRect:CGRectMake(leftPadding - progressWidth + progress, topPadding, progressWidth, progressHeight) xRadius:round yRadius:round];

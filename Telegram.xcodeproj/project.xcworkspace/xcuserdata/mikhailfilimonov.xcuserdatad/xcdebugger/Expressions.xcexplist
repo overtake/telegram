@@ -677,6 +677,9 @@
          contextName = "__66-[ChatHistoryController request:anotherSource:sync:selectHandler:]_block_invoke_2:ChatHistoryController.m">
          <PersistentStrings>
             <PersistentString
+               value = "">
+            </PersistentString>
+            <PersistentString
                value = "obj.message.date">
             </PersistentString>
          </PersistentStrings>

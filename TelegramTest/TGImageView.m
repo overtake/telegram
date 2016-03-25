@@ -133,7 +133,7 @@
     }
 }
 
-static CAAnimation *contentAnimation() {
+CAAnimation *contentAnimation() {
     static CAAnimation *animation;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{

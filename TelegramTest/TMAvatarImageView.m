@@ -19,7 +19,7 @@
 #import "TGCache.h"
 #import "TMAvaImageObject.h"
 #import "NSString+Extended.h"
-
+#import "TGImageView.h"
 
 typedef struct
 {
@@ -189,6 +189,7 @@ static const TGTwoColors colors[] = {
 -(void)didDownloadImage:(NSImage *)image object:(TMAvaImageObject *)object {
     
     if([_imageObject.location isEqualTo:object.location]) {
+        [self addAnimation:contentAnimation() forKey:@"contents"];
         self.image = image;
     }
     

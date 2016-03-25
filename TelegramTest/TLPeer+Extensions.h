@@ -16,4 +16,8 @@
 -(TLInputPeer *)inputPeer;
 -(BOOL)isSecret;
 -(BOOL)isBroadcast;
+
+
++(TLPeer *)peerWithClassName:(NSString *)className peer_id:(int)peer_id;
+
 @end

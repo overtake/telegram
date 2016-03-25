@@ -32,6 +32,6 @@
 -(NSImage *)cachedThumb:(NSString *)key;
 
 
-static CAAnimation *contentAnimation();
+CAAnimation *contentAnimation();
 
 @end

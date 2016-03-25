@@ -149,8 +149,8 @@ static NSArray *channelUpdates;
             } else if([update respondsToSelector:@selector(update)] && [channelUpdates indexOfObject:[[(TL_updateShort *)update update] className]] != NSNotFound) {
                 [_channelsUpdater addUpdate:[(TL_updateShort *)update update]];
                 
-                [_updateState setDate:[(TL_updateShort *)update date]];
-                [self saveUpdateState];
+               // [_updateState setDate:[(TL_updateShort *)update date]];
+              //  [self saveUpdateState];
                 return;
             }
             

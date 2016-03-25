@@ -27,7 +27,23 @@
     return [self isKindOfClass:[TL_peerBroadcast class]];
 }
 
-
++(TLPeer *)peerWithClassName:(NSString *)className peer_id:(int)peer_id {
+    
+    Class c = NSClassFromString(className);
+    
+    TLPeer *peer = [[c alloc] init];
+    
+    if([peer isKindOfClass:[TL_peerChannel class]])
+        peer.channel_id = abs(peer_id);
+    else if([peer isKindOfClass:[TL_peerChat class]] || [peer isKindOfClass:[TL_peerSecret class]])
+        peer.chat_id = abs(peer_id);
+    else
+        peer.user_id = abs(peer_id);
+    
+    return peer;
+        
+    
+}
 
 -(TLPeer *)peerOut {
     if(self.chat_id == 0 && self.channel_id == 0)

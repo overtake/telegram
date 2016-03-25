@@ -33,7 +33,7 @@
 @property (nonatomic,strong) NSAttributedString *siteName;
 
 
-@property (nonatomic,weak,readonly) MessageTableItem *tableItem;
+@property (nonatomic,weak) MessageTableItem *tableItem;
 
 -(id)initWithWebPage:(TLWebPage *)webpage tableItem:(MessageTableItem *)item;
 

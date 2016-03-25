@@ -13,12 +13,12 @@
 @implementation TMInAppLinks
 
 + (NSString *) userProfile:(int)user_id {
-    return [NSString stringWithFormat:@"chat://TL_peerUser/%d", user_id];
+    return [self peerProfile:[TL_peerUser createWithUser_id:user_id]];
 }
 
 + (NSString *)peerProfile:(TLPeer*)peer jumpId:(int)jump_id {
     if(jump_id > 0) {
-        return [NSString stringWithFormat:@"chat://%@/%d/%d",peer.className,peer.peer_id,jump_id];
+        return [NSString stringWithFormat:@"chat://openprofile/?peer_class=%@&peer_id=%d&jump_msg_id=%d",peer.className,peer.peer_id,jump_id];
     } else {
         return [self peerProfile:peer];
     }
@@ -26,7 +26,7 @@
 }
 
 + (NSString *)peerProfile:(TLPeer*)peer {
-    return [NSString stringWithFormat:@"chat://%@/%d",peer.className,peer.peer_id];
+    return [NSString stringWithFormat:@"chat://openprofile/?peer_class=%@&peer_id=%d",peer.className,peer.peer_id];
 }
 
 

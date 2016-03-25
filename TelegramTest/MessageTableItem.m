@@ -65,6 +65,7 @@ static NSCache *cItems;
     if(self) {
         self.message = object;
         
+        
         if(self.message.media.caption.length > 0) {
             NSMutableAttributedString *c = [[NSMutableAttributedString alloc] init];
             
@@ -100,16 +101,8 @@ static NSCache *cItems;
         
         self.isChat = [self.message.to_id isKindOfClass:[TL_peerChat class]] || [self.message.to_id isKindOfClass:[TL_peerChannel class]];
         
-        _containerOffset = 79;
-        
-        _containerOffsetForward = 87;
-        
         
         if(self.message) {
-            
-            
-            
-            
             
             TGItemCache *cache = [cItems objectForKey:@(channelMsgId(_isChat ? 1 : 0, object.isPost ? object.peer_id : object.from_id))];
            
@@ -148,7 +141,7 @@ static NSCache *cItems;
                     [_headerName appendString:@" "];
                     range = [_headerName appendString:[NSString stringWithFormat:@"@%@",viaBotUserName] withColor:GRAY_TEXT_COLOR];
                     [_headerName addAttribute:NSForegroundColorAttributeName value:LINK_COLOR range:range];
-                    [_headerName setLink:[NSString stringWithFormat:@"chat://viabot/@%@",viaBotUserName] forRange:range];
+                    [_headerName setLink:[NSString stringWithFormat:@"chat://viabot/?username=@%@",viaBotUserName] forRange:range];
                     [_headerName setFont:TGSystemMediumFont(13) forRange:range];
                     self.headerName = self.headerName;
                     
@@ -277,6 +270,7 @@ static NSCache *cItems;
     
     if([self isReplyMessage])
     {
+        
         _replyObject = [[TGReplyObject alloc] initWithReplyMessage:self.message.replyMessage fromMessage:self.message tableItem:self];
             
     }
@@ -320,7 +314,7 @@ static NSCache *cItems;
             [self.forwardName appendString:@" "];
             range = [self.forwardName appendString:[NSString stringWithFormat:@"@%@",_via_bot_user.username] withColor:GRAY_TEXT_COLOR];
             [self.forwardName setFont:TGSystemBoldFont(13) forRange:range];
-            [self.forwardName setLink:[NSString stringWithFormat:@"chat://viabot/@%@",_via_bot_user.username] forRange:range];
+            [self.forwardName setLink:[NSString stringWithFormat:@"chat://viabot/?username=@%@",_via_bot_user.username] forRange:range];
             [self.forwardName addAttribute:NSForegroundColorAttributeName value:LINK_COLOR range:range];
         }
         

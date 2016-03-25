@@ -81,5 +81,10 @@
 #define ACCEPT_FEATURE YES
 #endif
 
+#ifdef TGDEBUG
+#define	TGAssert(e) assert(e)
+#else
+#define TGAssert(e)
+#endif
 
 #endif

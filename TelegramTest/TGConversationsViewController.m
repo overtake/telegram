@@ -588,6 +588,14 @@
                     leaveFromGroupItem.target = nil;
                 
                 [menu addItem:leaveFromGroupItem];
+                
+                
+                NSMenuItem *clearHistory = [NSMenuItem menuItemWithTitle:NSLocalizedString(@"Confirm.ClearHistory", nil) withBlock:^(id sender) {
+                    [[Telegram rightViewController].messagesViewController clearHistory:dialog];
+                }];
+
+                
+                [menu addItem:clearHistory];
             }
             
             

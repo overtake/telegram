@@ -24,9 +24,9 @@
 
 @property (nonatomic,strong,readonly) TL_localMessage *replyMessage;
 
-@property (nonatomic,strong,readonly) TL_localMessage *fromMessage;
+@property (nonatomic,strong) TL_localMessage *fromMessage;
 
-@property (nonatomic,weak,readonly) MessageTableItem *item;
+@property (nonatomic,weak) MessageTableItem *item;
 
 -(id)initWithReplyMessage:(TL_localMessage *)replyMessage fromMessage:(TL_localMessage *)fromMessage tableItem:(MessageTableItem *)item;
 -(id)initWithReplyMessage:(TL_localMessage *)replyMessage fromMessage:(TL_localMessage *)fromMessage tableItem:(MessageTableItem *)item pinnedMessage:(BOOL)pinnedMessage;

@@ -1248,6 +1248,7 @@ static NSTextAttachment *headerMediaIcon() {
     [self becomeFirstResponder];
     [TMMediaController setCurrentController:[TMMediaController controller]];
 
+    [self.typingView setDialog:_conversation];
     
     [self tryRead];
 }
@@ -3007,14 +3008,16 @@ static NSTextAttachment *headerMediaIcon() {
 - (NSArray *)messageTableItemsFromMessages:(NSArray *)input {
     NSMutableArray *array = [NSMutableArray array];
     
-    
+
     for(TLMessage *message in input) {
-        MessageTableItem *item = [MessageTableItem messageItemFromObject:message];
+        MessageTableItem *item = [MessageTableItem messageItemFromObject:message];        
+
         if(item) {
             item.isSelected = NO;
             [array addObject:item];
         }
     }
+
     return array;
 }
 
@@ -4268,7 +4271,7 @@ static NSTextAttachment *headerMediaIcon() {
             }];
         }
     }];
-    [alert addButtonWithTitle:NSLocalizedString(@"Confirm.ClearHistory", nil)];
+    [alert addButtonWithTitle:NSLocalizedString(@"OK", nil)];
     [alert addButtonWithTitle:NSLocalizedString(@"Profile.Cancel", nil)];
     [alert show];
 }
@@ -4282,21 +4285,24 @@ static NSTextAttachment *headerMediaIcon() {
     id request = dialog.chat.left ? [TLAPI_messages_addChatUser createWithChat_id:dialog.chat.n_id user_id:input fwd_limit:50] : [TLAPI_messages_deleteChatUser createWithChat_id:dialog.chat.n_id user_id:input];
     
     
-    if(dialog.chat.left) {
-        [RPCRequest sendRequest:request successHandler:^(RPCRequest *request, id response) {
-            
-            [[ChatFullManager sharedManager] requestChatFull:dialog.chat.n_id];
-            
-        } errorHandler:^(RPCRequest *request, RpcError *error) {
-            
-        }];
-    } else {
-        [RPCRequest sendRequest:request successHandler:^(RPCRequest *request, id response) {
-            
-        } errorHandler:^(RPCRequest *request, RpcError *error) {
-            
-        }];
-    }
+    confirm(appName(), dialog.chat.left ? NSLocalizedString(@"Confirm.ReturnToGroup", nil) : NSLocalizedString(@"Confirm.LeaveFromGroup", nil), ^{
+        if(dialog.chat.left) {
+            [RPCRequest sendRequest:request successHandler:^(RPCRequest *request, id response) {
+                
+                [[ChatFullManager sharedManager] requestChatFull:dialog.chat.n_id force:YES];
+                
+            } errorHandler:^(RPCRequest *request, RpcError *error) {
+                
+            }];
+        } else {
+            [RPCRequest sendRequest:request successHandler:^(RPCRequest *request, id response) {
+                
+            } errorHandler:^(RPCRequest *request, RpcError *error) {
+                
+            }];
+        }
+    }, nil);
+    
 
 }
 
