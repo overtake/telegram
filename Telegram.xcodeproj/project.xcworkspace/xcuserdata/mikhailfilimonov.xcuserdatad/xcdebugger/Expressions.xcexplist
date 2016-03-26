@@ -3489,6 +3489,14 @@
          contextName = "-[GeneralSettingsViewController loadView]:GeneralSettingsViewController.m">
       </ContextState>
       <ContextState
+         contextName = "-[TGBotKeyboardItemView setKeyboardButton:]:TGBotCommandsKeyboard.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "_textField.frame">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "__45-[NewContactsManager importContact:callback:]_block_invoke:NewContactsManager.m">
       </ContextState>
       <ContextState
@@ -3754,6 +3762,9 @@
             <PersistentString
                value = "f">
             </PersistentString>
+            <PersistentString
+               value = "keyboard.reply_markup.rows">
+            </PersistentString>
          </PersistentStrings>
       </ContextState>
       <ContextState
@@ -3801,6 +3812,14 @@
          <PersistentStrings>
             <PersistentString
                value = "artworkImage">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[MessageTableItem makeSizeByWidth:]:MessageTableItem.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "_inlineKeyboardSize">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -3872,6 +3891,9 @@
       </ContextState>
       <ContextState
          contextName = "__39-[ChannelFilter fillGroupHoles:bottom:]_block_invoke168:ChannelFilter.m">
+      </ContextState>
+      <ContextState
+         contextName = "__36-[MessagesBottomView secretInfoView]_block_invoke_2:MessagesBottomView.m">
       </ContextState>
       <ContextState
          contextName = "-[DialogsViewController loadView]:DialogsViewController.mm">
@@ -4178,6 +4200,9 @@
       </ContextState>
       <ContextState
          contextName = "-[TGPasswosdMainViewController viewWillAppear:]:TGPasswosdMainViewController.m">
+      </ContextState>
+      <ContextState
+         contextName = "-[MessagesViewController messageTableItemsFromMessages:]:MessagesViewController.m">
       </ContextState>
       <ContextState
          contextName = "__45-[ComposeActionGroupBehavior createGroupChat]_block_invoke_2115:ComposeActionGroupBehavior.m">
@@ -6693,6 +6718,14 @@
       </ContextState>
       <ContextState
          contextName = "+[TL_localMessage convertReceivedMessage:]:TL_localMessage.m">
+      </ContextState>
+      <ContextState
+         contextName = "__53-[DialogsManager checkBotKeyboard:forMessage:notify:]_block_invoke:DialogsManager.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "message.reply_markup.isInline">
+            </PersistentString>
+         </PersistentStrings>
       </ContextState>
       <ContextState
          contextName = "__42-[NewContactsManager remoteCheckContacts:]_block_invoke_2207:NewContactsManager.m">

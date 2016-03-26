@@ -66,7 +66,8 @@ typedef enum {
 
 @interface SettingsArchiver : NSObject<NSCoding>
 
-
+extern NSString *const kPermissionInlineBotGeo;
+extern NSString *const kPermissionInlineBotContact;
 /*
  binary settings mask
 */
@@ -103,4 +104,9 @@ typedef enum {
 + (void)notifyOfLaunch;
 + (BOOL)isLaunchAtStartup;
 + (void)toggleLaunchAtStartup;
+
+
+
++(void)requestPermissionWithKey:(NSString *)permissionKey peer_id:(int)peer_id handler:(void (^)(bool success))handler;
+
 @end

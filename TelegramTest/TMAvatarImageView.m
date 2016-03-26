@@ -90,6 +90,7 @@ static const TGTwoColors colors[] = {
     TMAvatarImageView *avatarImageView = [[self alloc] initWithFrame:NSMakeRect(10, roundf((66 - 50) / 2.0), 50, 50)];
     avatarImageView.placeholder = [TMAvatarImageView placeholderImageBySize:avatarImageView.frame.size andColor:NSColorFromRGB(0xfafafa)];
     [avatarImageView setFont:TGSystemLightFont(18)];
+    [avatarImageView setOffsetTextY:-1];
     return avatarImageView;
 }
 
@@ -104,7 +105,7 @@ static const TGTwoColors colors[] = {
     TMAvatarImageView *avatarImageView = [[self alloc] initWithFrame:NSMakeRect(0, 0, 36, 36)];
     avatarImageView.placeholder = [TMAvatarImageView placeholderImageBySize:avatarImageView.frame.size andColor:NSColorFromRGB(0xfafafa)];
     [avatarImageView setFont:TGSystemFont(14)];
-    [avatarImageView setOffsetTextY:0];
+    [avatarImageView setOffsetTextY:-1];
     return avatarImageView;
 }
 
@@ -173,13 +174,12 @@ static const TGTwoColors colors[] = {
 - (void) initialize {
     [Notification addObserver:self selector:@selector(notificationUserChange:) name:USER_UPDATE_PHOTO];
     [Notification addObserver:self selector:@selector(notificationUserChange:) name:USER_UPDATE_NAME];
-
     [Notification addObserver:self selector:@selector(notificationChatChange:) name:CHAT_UPDATE_PHOTO];
     [Notification addObserver:self selector:@selector(notificationChatChange:) name:CHAT_UPDATE_TITLE];
 
     self.font = TGSystemFont(12);
     self.isNeedPlaceholder = YES;
-    
+    self.offsetTextY = -1;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         [TGCache setMemoryLimit:50*1024*1024 group:AVACACHE];

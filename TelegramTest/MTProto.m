@@ -2,7 +2,7 @@
 //  MTProto.m
 //  Telegram
 //
-//  Auto created by Mikhail Filimonov on 21.03.16.
+//  Auto created by Mikhail Filimonov on 25.03.16.
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -7760,39 +7760,49 @@
 @end
 
 @implementation TLauth_SentCode
-
+            
+-(BOOL)isPhone_registered {return NO;}
+            
 @end
         
 @implementation TL_auth_sentCode
-+(TL_auth_sentCode*)createWithPhone_registered:(Boolean)phone_registered phone_code_hash:(NSString*)phone_code_hash send_call_timeout:(int)send_call_timeout is_password:(Boolean)is_password {
++(TL_auth_sentCode*)createWithFlags:(int)flags  type:(TLauth_SentCodeType*)type phone_code_hash:(NSString*)phone_code_hash next_type:(TLauth_CodeType*)next_type timeout:(int)timeout {
 	TL_auth_sentCode* obj = [[TL_auth_sentCode alloc] init];
-	obj.phone_registered = phone_registered;
+	obj.flags = flags;
+	
+	obj.type = type;
 	obj.phone_code_hash = phone_code_hash;
-	obj.send_call_timeout = send_call_timeout;
-	obj.is_password = is_password;
+	obj.next_type = next_type;
+	obj.timeout = timeout;
 	return obj;
 }
 -(void)serialize:(SerializedData*)stream {
-	[stream writeBool:self.phone_registered];
+	[stream writeInt:self.flags];
+	
+	[ClassStore TLSerialize:self.type stream:stream];
 	[stream writeString:self.phone_code_hash];
-	[stream writeInt:self.send_call_timeout];
-	[stream writeBool:self.is_password];
+	if(self.flags & (1 << 1)) {[ClassStore TLSerialize:self.next_type stream:stream];}
+	if(self.flags & (1 << 2)) {[stream writeInt:self.timeout];}
 }
 -(void)unserialize:(SerializedData*)stream {
-	super.phone_registered = [stream readBool];
+	super.flags = [stream readInt];
+	
+	self.type = [ClassStore TLDeserialize:stream];
 	super.phone_code_hash = [stream readString];
-	super.send_call_timeout = [stream readInt];
-	super.is_password = [stream readBool];
+	if(self.flags & (1 << 1)) {self.next_type = [ClassStore TLDeserialize:stream];}
+	if(self.flags & (1 << 2)) {super.timeout = [stream readInt];}
 }
         
 -(TL_auth_sentCode *)copy {
     
     TL_auth_sentCode *objc = [[TL_auth_sentCode alloc] init];
     
-    objc.phone_registered = self.phone_registered;
+    objc.flags = self.flags;
+    
+    objc.type = [self.type copy];
     objc.phone_code_hash = self.phone_code_hash;
-    objc.send_call_timeout = self.send_call_timeout;
-    objc.is_password = self.is_password;
+    objc.next_type = [self.next_type copy];
+    objc.timeout = self.timeout;
     
     return objc;
 }
@@ -7812,60 +7822,21 @@
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
         
-
-        
-@end
-
-@implementation TL_auth_sentAppCode
-+(TL_auth_sentAppCode*)createWithPhone_registered:(Boolean)phone_registered phone_code_hash:(NSString*)phone_code_hash send_call_timeout:(int)send_call_timeout is_password:(Boolean)is_password {
-	TL_auth_sentAppCode* obj = [[TL_auth_sentAppCode alloc] init];
-	obj.phone_registered = phone_registered;
-	obj.phone_code_hash = phone_code_hash;
-	obj.send_call_timeout = send_call_timeout;
-	obj.is_password = is_password;
-	return obj;
+            
+-(BOOL)isPhone_registered {return (self.flags & (1 << 0)) > 0;}
+                        
+-(void)setNext_type:(TLauth_CodeType*)next_type
+{
+   super.next_type = next_type;
+                
+    if(super.next_type == nil)  { super.flags&= ~ (1 << 1) ;} else { super.flags|= (1 << 1); }
+}            
+-(void)setTimeout:(int)timeout
+{
+   super.timeout = timeout;
+                
+    if(super.timeout == 0)  { super.flags&= ~ (1 << 2) ;} else { super.flags|= (1 << 2); }
 }
--(void)serialize:(SerializedData*)stream {
-	[stream writeBool:self.phone_registered];
-	[stream writeString:self.phone_code_hash];
-	[stream writeInt:self.send_call_timeout];
-	[stream writeBool:self.is_password];
-}
--(void)unserialize:(SerializedData*)stream {
-	super.phone_registered = [stream readBool];
-	super.phone_code_hash = [stream readString];
-	super.send_call_timeout = [stream readInt];
-	super.is_password = [stream readBool];
-}
-        
--(TL_auth_sentAppCode *)copy {
-    
-    TL_auth_sentAppCode *objc = [[TL_auth_sentAppCode alloc] init];
-    
-    objc.phone_registered = self.phone_registered;
-    objc.phone_code_hash = self.phone_code_hash;
-    objc.send_call_timeout = self.send_call_timeout;
-    objc.is_password = self.is_password;
-    
-    return objc;
-}
-        
-
-    
--(id)initWithCoder:(NSCoder *)aDecoder {
-
-    if((self = [ClassStore deserialize:[aDecoder decodeObjectForKey:@"data"]])) {
-        
-    }
-    
-    return self;
-}
-        
--(void)encodeWithCoder:(NSCoder *)aCoder {
-    [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
-}
-        
-
         
 @end
 
@@ -13122,22 +13093,22 @@
 @end
 
 @implementation TL_updateBotInlineSend
-+(TL_updateBotInlineSend*)createWithUser_id:(int)user_id query:(NSString*)query update_bot_inline_id:(NSString*)update_bot_inline_id {
++(TL_updateBotInlineSend*)createWithUser_id:(int)user_id query:(NSString*)query id_update_bot_inline_send:(NSString*)id_update_bot_inline_send {
 	TL_updateBotInlineSend* obj = [[TL_updateBotInlineSend alloc] init];
 	obj.user_id = user_id;
 	obj.query = query;
-	obj.update_bot_inline_id = update_bot_inline_id;
+	obj.id_update_bot_inline_send = id_update_bot_inline_send;
 	return obj;
 }
 -(void)serialize:(SerializedData*)stream {
 	[stream writeInt:self.user_id];
 	[stream writeString:self.query];
-	[stream writeString:self.update_bot_inline_id];
+	[stream writeString:self.id_update_bot_inline_send];
 }
 -(void)unserialize:(SerializedData*)stream {
 	super.user_id = [stream readInt];
 	super.query = [stream readString];
-	super.update_bot_inline_id = [stream readString];
+	super.id_update_bot_inline_send = [stream readString];
 }
         
 -(TL_updateBotInlineSend *)copy {
@@ -13146,7 +13117,7 @@
     
     objc.user_id = self.user_id;
     objc.query = self.query;
-    objc.update_bot_inline_id = self.update_bot_inline_id;
+    objc.id_update_bot_inline_send = self.id_update_bot_inline_send;
     
     return objc;
 }
@@ -13241,6 +13212,63 @@
     
     objc.channel_id = self.channel_id;
     objc.n_id = self.n_id;
+    
+    return objc;
+}
+        
+
+    
+-(id)initWithCoder:(NSCoder *)aDecoder {
+
+    if((self = [ClassStore deserialize:[aDecoder decodeObjectForKey:@"data"]])) {
+        
+    }
+    
+    return self;
+}
+        
+-(void)encodeWithCoder:(NSCoder *)aCoder {
+    [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
+}
+        
+
+        
+@end
+
+@implementation TL_updateBotCallbackQuery
++(TL_updateBotCallbackQuery*)createWithQuery_id:(long)query_id user_id:(int)user_id peer:(TLInputPeer*)peer msg_id:(int)msg_id text:(NSString*)text {
+	TL_updateBotCallbackQuery* obj = [[TL_updateBotCallbackQuery alloc] init];
+	obj.query_id = query_id;
+	obj.user_id = user_id;
+	obj.peer = peer;
+	obj.msg_id = msg_id;
+	obj.text = text;
+	return obj;
+}
+-(void)serialize:(SerializedData*)stream {
+	[stream writeLong:self.query_id];
+	[stream writeInt:self.user_id];
+	[ClassStore TLSerialize:self.peer stream:stream];
+	[stream writeInt:self.msg_id];
+	[stream writeString:self.text];
+}
+-(void)unserialize:(SerializedData*)stream {
+	super.query_id = [stream readLong];
+	super.user_id = [stream readInt];
+	self.peer = [ClassStore TLDeserialize:stream];
+	super.msg_id = [stream readInt];
+	super.text = [stream readString];
+}
+        
+-(TL_updateBotCallbackQuery *)copy {
+    
+    TL_updateBotCallbackQuery *objc = [[TL_updateBotCallbackQuery alloc] init];
+    
+    objc.query_id = self.query_id;
+    objc.user_id = self.user_id;
+    objc.peer = [self.peer copy];
+    objc.msg_id = self.msg_id;
+    objc.text = self.text;
     
     return objc;
 }
@@ -18225,55 +18253,6 @@
         
 @end
 
-@implementation TLaccount_SentChangePhoneCode
-
-@end
-        
-@implementation TL_account_sentChangePhoneCode
-+(TL_account_sentChangePhoneCode*)createWithPhone_code_hash:(NSString*)phone_code_hash send_call_timeout:(int)send_call_timeout {
-	TL_account_sentChangePhoneCode* obj = [[TL_account_sentChangePhoneCode alloc] init];
-	obj.phone_code_hash = phone_code_hash;
-	obj.send_call_timeout = send_call_timeout;
-	return obj;
-}
--(void)serialize:(SerializedData*)stream {
-	[stream writeString:self.phone_code_hash];
-	[stream writeInt:self.send_call_timeout];
-}
--(void)unserialize:(SerializedData*)stream {
-	super.phone_code_hash = [stream readString];
-	super.send_call_timeout = [stream readInt];
-}
-        
--(TL_account_sentChangePhoneCode *)copy {
-    
-    TL_account_sentChangePhoneCode *objc = [[TL_account_sentChangePhoneCode alloc] init];
-    
-    objc.phone_code_hash = self.phone_code_hash;
-    objc.send_call_timeout = self.send_call_timeout;
-    
-    return objc;
-}
-        
-
-    
--(id)initWithCoder:(NSCoder *)aDecoder {
-
-    if((self = [ClassStore deserialize:[aDecoder decodeObjectForKey:@"data"]])) {
-        
-    }
-    
-    return self;
-}
-        
--(void)encodeWithCoder:(NSCoder *)aCoder {
-    [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
-}
-        
-
-        
-@end
-
 @implementation TLDocumentAttribute
             
 -(BOOL)isVoice {return NO;}
@@ -20888,6 +20867,174 @@
         
 @end
 
+@implementation TL_keyboardButtonUrl
++(TL_keyboardButtonUrl*)createWithText:(NSString*)text url:(NSString*)url {
+	TL_keyboardButtonUrl* obj = [[TL_keyboardButtonUrl alloc] init];
+	obj.text = text;
+	obj.url = url;
+	return obj;
+}
+-(void)serialize:(SerializedData*)stream {
+	[stream writeString:self.text];
+	[stream writeString:self.url];
+}
+-(void)unserialize:(SerializedData*)stream {
+	super.text = [stream readString];
+	super.url = [stream readString];
+}
+        
+-(TL_keyboardButtonUrl *)copy {
+    
+    TL_keyboardButtonUrl *objc = [[TL_keyboardButtonUrl alloc] init];
+    
+    objc.text = self.text;
+    objc.url = self.url;
+    
+    return objc;
+}
+        
+
+    
+-(id)initWithCoder:(NSCoder *)aDecoder {
+
+    if((self = [ClassStore deserialize:[aDecoder decodeObjectForKey:@"data"]])) {
+        
+    }
+    
+    return self;
+}
+        
+-(void)encodeWithCoder:(NSCoder *)aCoder {
+    [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
+}
+        
+
+        
+@end
+
+@implementation TL_keyboardButtonCallback
++(TL_keyboardButtonCallback*)createWithText:(NSString*)text {
+	TL_keyboardButtonCallback* obj = [[TL_keyboardButtonCallback alloc] init];
+	obj.text = text;
+	return obj;
+}
+-(void)serialize:(SerializedData*)stream {
+	[stream writeString:self.text];
+}
+-(void)unserialize:(SerializedData*)stream {
+	super.text = [stream readString];
+}
+        
+-(TL_keyboardButtonCallback *)copy {
+    
+    TL_keyboardButtonCallback *objc = [[TL_keyboardButtonCallback alloc] init];
+    
+    objc.text = self.text;
+    
+    return objc;
+}
+        
+
+    
+-(id)initWithCoder:(NSCoder *)aDecoder {
+
+    if((self = [ClassStore deserialize:[aDecoder decodeObjectForKey:@"data"]])) {
+        
+    }
+    
+    return self;
+}
+        
+-(void)encodeWithCoder:(NSCoder *)aCoder {
+    [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
+}
+        
+
+        
+@end
+
+@implementation TL_keyboardButtonRequestPhone
++(TL_keyboardButtonRequestPhone*)createWithText:(NSString*)text {
+	TL_keyboardButtonRequestPhone* obj = [[TL_keyboardButtonRequestPhone alloc] init];
+	obj.text = text;
+	return obj;
+}
+-(void)serialize:(SerializedData*)stream {
+	[stream writeString:self.text];
+}
+-(void)unserialize:(SerializedData*)stream {
+	super.text = [stream readString];
+}
+        
+-(TL_keyboardButtonRequestPhone *)copy {
+    
+    TL_keyboardButtonRequestPhone *objc = [[TL_keyboardButtonRequestPhone alloc] init];
+    
+    objc.text = self.text;
+    
+    return objc;
+}
+        
+
+    
+-(id)initWithCoder:(NSCoder *)aDecoder {
+
+    if((self = [ClassStore deserialize:[aDecoder decodeObjectForKey:@"data"]])) {
+        
+    }
+    
+    return self;
+}
+        
+-(void)encodeWithCoder:(NSCoder *)aCoder {
+    [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
+}
+        
+
+        
+@end
+
+@implementation TL_keyboardButtonRequestGeoLocation
++(TL_keyboardButtonRequestGeoLocation*)createWithText:(NSString*)text {
+	TL_keyboardButtonRequestGeoLocation* obj = [[TL_keyboardButtonRequestGeoLocation alloc] init];
+	obj.text = text;
+	return obj;
+}
+-(void)serialize:(SerializedData*)stream {
+	[stream writeString:self.text];
+}
+-(void)unserialize:(SerializedData*)stream {
+	super.text = [stream readString];
+}
+        
+-(TL_keyboardButtonRequestGeoLocation *)copy {
+    
+    TL_keyboardButtonRequestGeoLocation *objc = [[TL_keyboardButtonRequestGeoLocation alloc] init];
+    
+    objc.text = self.text;
+    
+    return objc;
+}
+        
+
+    
+-(id)initWithCoder:(NSCoder *)aDecoder {
+
+    if((self = [ClassStore deserialize:[aDecoder decodeObjectForKey:@"data"]])) {
+        
+    }
+    
+    return self;
+}
+        
+-(void)encodeWithCoder:(NSCoder *)aCoder {
+    [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
+}
+        
+
+        
+@end
+
 @implementation TLKeyboardButtonRow
 
 @end
@@ -20962,6 +21109,8 @@
 -(BOOL)isSingle_use {return NO;}
                         
 -(BOOL)isResize {return NO;}
+                        
+-(BOOL)isInline {return NO;}
             
 @end
         
@@ -21066,9 +21215,10 @@
 @end
 
 @implementation TL_replyKeyboardMarkup
-+(TL_replyKeyboardMarkup*)createWithFlags:(int)flags    rows:(NSMutableArray*)rows {
++(TL_replyKeyboardMarkup*)createWithFlags:(int)flags     rows:(NSMutableArray*)rows {
 	TL_replyKeyboardMarkup* obj = [[TL_replyKeyboardMarkup alloc] init];
 	obj.flags = flags;
+	
 	
 	
 	
@@ -21077,6 +21227,7 @@
 }
 -(void)serialize:(SerializedData*)stream {
 	[stream writeInt:self.flags];
+	
 	
 	
 	
@@ -21093,6 +21244,7 @@
 }
 -(void)unserialize:(SerializedData*)stream {
 	super.flags = [stream readInt];
+	
 	
 	
 	
@@ -21117,6 +21269,7 @@
     TL_replyKeyboardMarkup *objc = [[TL_replyKeyboardMarkup alloc] init];
     
     objc.flags = self.flags;
+    
     
     
     
@@ -21146,6 +21299,8 @@
 -(BOOL)isSingle_use {return (self.flags & (1 << 1)) > 0;}
                         
 -(BOOL)isSelective {return (self.flags & (1 << 2)) > 0;}
+                        
+-(BOOL)isInline {return (self.flags & (1 << 3)) > 0;}
             
         
 @end
@@ -24699,6 +24854,346 @@
             
 -(BOOL)isCaption {return (self.flags & (1 << 0)) > 0;}
             
+        
+@end
+
+@implementation TLauth_CodeType
+
+@end
+        
+@implementation TL_auth_codeTypeSms
++(TL_auth_codeTypeSms*)create {
+	TL_auth_codeTypeSms* obj = [[TL_auth_codeTypeSms alloc] init];
+	
+	return obj;
+}
+-(void)serialize:(SerializedData*)stream {
+	
+}
+-(void)unserialize:(SerializedData*)stream {
+	
+}
+        
+-(TL_auth_codeTypeSms *)copy {
+    
+    TL_auth_codeTypeSms *objc = [[TL_auth_codeTypeSms alloc] init];
+    
+    
+    
+    return objc;
+}
+        
+
+    
+-(id)initWithCoder:(NSCoder *)aDecoder {
+
+    if((self = [ClassStore deserialize:[aDecoder decodeObjectForKey:@"data"]])) {
+        
+    }
+    
+    return self;
+}
+        
+-(void)encodeWithCoder:(NSCoder *)aCoder {
+    [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
+}
+        
+
+        
+@end
+
+@implementation TL_auth_codeTypeCall
++(TL_auth_codeTypeCall*)create {
+	TL_auth_codeTypeCall* obj = [[TL_auth_codeTypeCall alloc] init];
+	
+	return obj;
+}
+-(void)serialize:(SerializedData*)stream {
+	
+}
+-(void)unserialize:(SerializedData*)stream {
+	
+}
+        
+-(TL_auth_codeTypeCall *)copy {
+    
+    TL_auth_codeTypeCall *objc = [[TL_auth_codeTypeCall alloc] init];
+    
+    
+    
+    return objc;
+}
+        
+
+    
+-(id)initWithCoder:(NSCoder *)aDecoder {
+
+    if((self = [ClassStore deserialize:[aDecoder decodeObjectForKey:@"data"]])) {
+        
+    }
+    
+    return self;
+}
+        
+-(void)encodeWithCoder:(NSCoder *)aCoder {
+    [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
+}
+        
+
+        
+@end
+
+@implementation TL_auth_codeTypeFlashCall
++(TL_auth_codeTypeFlashCall*)create {
+	TL_auth_codeTypeFlashCall* obj = [[TL_auth_codeTypeFlashCall alloc] init];
+	
+	return obj;
+}
+-(void)serialize:(SerializedData*)stream {
+	
+}
+-(void)unserialize:(SerializedData*)stream {
+	
+}
+        
+-(TL_auth_codeTypeFlashCall *)copy {
+    
+    TL_auth_codeTypeFlashCall *objc = [[TL_auth_codeTypeFlashCall alloc] init];
+    
+    
+    
+    return objc;
+}
+        
+
+    
+-(id)initWithCoder:(NSCoder *)aDecoder {
+
+    if((self = [ClassStore deserialize:[aDecoder decodeObjectForKey:@"data"]])) {
+        
+    }
+    
+    return self;
+}
+        
+-(void)encodeWithCoder:(NSCoder *)aCoder {
+    [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
+}
+        
+
+        
+@end
+
+@implementation TLauth_SentCodeType
+
+@end
+        
+@implementation TL_auth_sentCodeTypeApp
++(TL_auth_sentCodeTypeApp*)createWithLength:(int)length {
+	TL_auth_sentCodeTypeApp* obj = [[TL_auth_sentCodeTypeApp alloc] init];
+	obj.length = length;
+	return obj;
+}
+-(void)serialize:(SerializedData*)stream {
+	[stream writeInt:self.length];
+}
+-(void)unserialize:(SerializedData*)stream {
+	super.length = [stream readInt];
+}
+        
+-(TL_auth_sentCodeTypeApp *)copy {
+    
+    TL_auth_sentCodeTypeApp *objc = [[TL_auth_sentCodeTypeApp alloc] init];
+    
+    objc.length = self.length;
+    
+    return objc;
+}
+        
+
+    
+-(id)initWithCoder:(NSCoder *)aDecoder {
+
+    if((self = [ClassStore deserialize:[aDecoder decodeObjectForKey:@"data"]])) {
+        
+    }
+    
+    return self;
+}
+        
+-(void)encodeWithCoder:(NSCoder *)aCoder {
+    [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
+}
+        
+
+        
+@end
+
+@implementation TL_auth_sentCodeTypeSms
++(TL_auth_sentCodeTypeSms*)createWithLength:(int)length {
+	TL_auth_sentCodeTypeSms* obj = [[TL_auth_sentCodeTypeSms alloc] init];
+	obj.length = length;
+	return obj;
+}
+-(void)serialize:(SerializedData*)stream {
+	[stream writeInt:self.length];
+}
+-(void)unserialize:(SerializedData*)stream {
+	super.length = [stream readInt];
+}
+        
+-(TL_auth_sentCodeTypeSms *)copy {
+    
+    TL_auth_sentCodeTypeSms *objc = [[TL_auth_sentCodeTypeSms alloc] init];
+    
+    objc.length = self.length;
+    
+    return objc;
+}
+        
+
+    
+-(id)initWithCoder:(NSCoder *)aDecoder {
+
+    if((self = [ClassStore deserialize:[aDecoder decodeObjectForKey:@"data"]])) {
+        
+    }
+    
+    return self;
+}
+        
+-(void)encodeWithCoder:(NSCoder *)aCoder {
+    [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
+}
+        
+
+        
+@end
+
+@implementation TL_auth_sentCodeTypeCall
++(TL_auth_sentCodeTypeCall*)createWithLength:(int)length {
+	TL_auth_sentCodeTypeCall* obj = [[TL_auth_sentCodeTypeCall alloc] init];
+	obj.length = length;
+	return obj;
+}
+-(void)serialize:(SerializedData*)stream {
+	[stream writeInt:self.length];
+}
+-(void)unserialize:(SerializedData*)stream {
+	super.length = [stream readInt];
+}
+        
+-(TL_auth_sentCodeTypeCall *)copy {
+    
+    TL_auth_sentCodeTypeCall *objc = [[TL_auth_sentCodeTypeCall alloc] init];
+    
+    objc.length = self.length;
+    
+    return objc;
+}
+        
+
+    
+-(id)initWithCoder:(NSCoder *)aDecoder {
+
+    if((self = [ClassStore deserialize:[aDecoder decodeObjectForKey:@"data"]])) {
+        
+    }
+    
+    return self;
+}
+        
+-(void)encodeWithCoder:(NSCoder *)aCoder {
+    [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
+}
+        
+
+        
+@end
+
+@implementation TL_auth_sentCodeTypeFlashCall
++(TL_auth_sentCodeTypeFlashCall*)createWithPattern:(NSString*)pattern {
+	TL_auth_sentCodeTypeFlashCall* obj = [[TL_auth_sentCodeTypeFlashCall alloc] init];
+	obj.pattern = pattern;
+	return obj;
+}
+-(void)serialize:(SerializedData*)stream {
+	[stream writeString:self.pattern];
+}
+-(void)unserialize:(SerializedData*)stream {
+	super.pattern = [stream readString];
+}
+        
+-(TL_auth_sentCodeTypeFlashCall *)copy {
+    
+    TL_auth_sentCodeTypeFlashCall *objc = [[TL_auth_sentCodeTypeFlashCall alloc] init];
+    
+    objc.pattern = self.pattern;
+    
+    return objc;
+}
+        
+
+    
+-(id)initWithCoder:(NSCoder *)aDecoder {
+
+    if((self = [ClassStore deserialize:[aDecoder decodeObjectForKey:@"data"]])) {
+        
+    }
+    
+    return self;
+}
+        
+-(void)encodeWithCoder:(NSCoder *)aCoder {
+    [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
+}
+        
+
+        
+@end
+
+@implementation TLmessages_BotCallbackAnswer
+
+@end
+        
+@implementation TL_messages_botCallbackAnswer
++(TL_messages_botCallbackAnswer*)createWithMessage:(NSString*)message {
+	TL_messages_botCallbackAnswer* obj = [[TL_messages_botCallbackAnswer alloc] init];
+	obj.message = message;
+	return obj;
+}
+-(void)serialize:(SerializedData*)stream {
+	[stream writeString:self.message];
+}
+-(void)unserialize:(SerializedData*)stream {
+	super.message = [stream readString];
+}
+        
+-(TL_messages_botCallbackAnswer *)copy {
+    
+    TL_messages_botCallbackAnswer *objc = [[TL_messages_botCallbackAnswer alloc] init];
+    
+    objc.message = self.message;
+    
+    return objc;
+}
+        
+
+    
+-(id)initWithCoder:(NSCoder *)aDecoder {
+
+    if((self = [ClassStore deserialize:[aDecoder decodeObjectForKey:@"data"]])) {
+        
+    }
+    
+    return self;
+}
+        
+-(void)encodeWithCoder:(NSCoder *)aCoder {
+    [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
+}
+        
+
         
 @end
 

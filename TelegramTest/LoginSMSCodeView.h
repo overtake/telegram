@@ -21,6 +21,8 @@
 
 - (void)performBlocking:(BOOL)isBlocking;
 
+@property (nonatomic,assign) int code_length;
+
 @property (nonatomic, strong) NewLoginViewController *loginController;
 
 @end

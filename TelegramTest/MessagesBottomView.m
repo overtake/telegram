@@ -231,7 +231,7 @@
     [Notification addObserver:self selector:@selector(botKeyboardNotification:) name:[Notification notificationNameByDialog:dialog action:@"botKeyboard"]];
     
     [Notification addObserver:self selector:@selector(hideBotKeyboard:) name:[Notification notificationNameByDialog:dialog action:@"hideBotKeyboard"]];
-
+    [Notification addObserver:self selector:@selector(updateReplyMessage:) name:[Notification notificationNameByDialog:dialog action:@"reply"]];
     [Notification addObserver:self selector:@selector(updateNotifySettings:) name:[Notification notificationNameByDialog:dialog action:@"notification"]];
     [Notification addObserver:self selector:@selector(didChangeBlockedUser:) name:USER_BLOCK];
     [Notification addObserver:self selector:@selector(didChannelUpdatedFlags:) name:CHAT_FLAGS_UPDATED];
@@ -421,6 +421,10 @@
 - (void)setForwardEnabled:(BOOL)forwardEnabled {
     self->_forwardEnabled = forwardEnabled;
     [self.forwardButton setDisable:!forwardEnabled];
+}
+
+-(void)updateReplyMessage:(NSNotification *)notification {
+    [self updateReplayMessage:YES animated:YES];
 }
 
 -(void)updateReplayMessage:(BOOL)updateHeight animated:(BOOL)animated {
@@ -1533,8 +1537,42 @@ static RBLPopover *popover;
         
         [self.normalView addSubview:_botKeyboard];
     }
+    
+    __block TL_localMessage *keyboard;
+    
+    [[Storage yap] readWithBlock:^(YapDatabaseReadTransaction * __nonnull transaction) {
+        
+        keyboard = [transaction objectForKey:self.dialog.cacheKey inCollection:BOT_COMMANDS];
+        
+    }];
+
    
-    [_botKeyboard setConversation:self.dialog botUser:self.dialog.user];
+    weak();
+    
+    [_botKeyboard setKeyboard:keyboard fillToSize:NO keyboadrdCallback:^(TLKeyboardButton *botCommand) {
+        
+        strongWeak();
+        
+        if(strongSelf == weakSelf) {
+            NSString *command = botCommand.text;
+            
+            [strongSelf.messagesViewController sendMessage:command forConversation:keyboard.conversation];
+            
+            if(keyboard.reply_markup.isSingle_use ) {
+                
+                
+                //ФЛАГ SINGLE_USE (1 << 5) ЗАНЯТ. Предупредить.
+                keyboard.reply_markup.flags|= (1 << 5);
+                
+                [[Storage yap] readWriteWithBlock:^(YapDatabaseReadWriteTransaction * __nonnull transaction) {
+                    [transaction setObject:keyboard forKey:keyboard.conversation.cacheKey inCollection:BOT_COMMANDS];
+                }];
+                
+                [Notification perform:[Notification notificationNameByDialog:keyboard.conversation action:@"hideBotKeyboard"] data:@{KEY_DIALOG:keyboard.conversation}];
+            }
+        }
+        
+    }];
     
     if(!forceShow) {
         

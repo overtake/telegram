@@ -2,7 +2,7 @@
 //  TLApi.h
 //  Telegram
 //
-//  Auto created by Mikhail Filimonov on 21.03.16.
+//  Auto created by Mikhail Filimonov on 25.03.16.
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -17,20 +17,15 @@
 @end
 
 @interface TLAPI_auth_sendCode : TLApiObject
+@property int flags;
+@property (nonatomic,assign,readonly) BOOL isAllow_flashcall;
 @property (nonatomic, strong) NSString* phone_number;
-@property int sms_type;
+@property Boolean current_number;
 @property int api_id;
 @property (nonatomic, strong) NSString* api_hash;
 @property (nonatomic, strong) NSString* lang_code;
 
-+(TLAPI_auth_sendCode*)createWithPhone_number:(NSString*)phone_number sms_type:(int)sms_type api_id:(int)api_id api_hash:(NSString*)api_hash lang_code:(NSString*)lang_code;
-@end
-
-@interface TLAPI_auth_sendCall : TLApiObject
-@property (nonatomic, strong) NSString* phone_number;
-@property (nonatomic, strong) NSString* phone_code_hash;
-
-+(TLAPI_auth_sendCall*)createWithPhone_number:(NSString*)phone_number phone_code_hash:(NSString*)phone_code_hash;
++(TLAPI_auth_sendCode*)createWithFlags:(int)flags  phone_number:(NSString*)phone_number current_number:(Boolean)current_number api_id:(int)api_id api_hash:(NSString*)api_hash lang_code:(NSString*)lang_code;
 @end
 
 @interface TLAPI_auth_signUp : TLApiObject
@@ -616,13 +611,6 @@
 +(TLAPI_help_getSupport*)create;
 @end
 
-@interface TLAPI_auth_sendSms : TLApiObject
-@property (nonatomic, strong) NSString* phone_number;
-@property (nonatomic, strong) NSString* phone_code_hash;
-
-+(TLAPI_auth_sendSms*)createWithPhone_number:(NSString*)phone_number phone_code_hash:(NSString*)phone_code_hash;
-@end
-
 @interface TLAPI_messages_readMessageContents : TLApiObject
 @property (nonatomic, strong) NSMutableArray* n_id;
 
@@ -686,9 +674,12 @@
 @end
 
 @interface TLAPI_account_sendChangePhoneCode : TLApiObject
+@property int flags;
+@property (nonatomic,assign,readonly) BOOL isAllow_flashcall;
 @property (nonatomic, strong) NSString* phone_number;
+@property Boolean current_number;
 
-+(TLAPI_account_sendChangePhoneCode*)createWithPhone_number:(NSString*)phone_number;
++(TLAPI_account_sendChangePhoneCode*)createWithFlags:(int)flags  phone_number:(NSString*)phone_number current_number:(Boolean)current_number;
 @end
 
 @interface TLAPI_account_changePhone : TLApiObject
@@ -1187,5 +1178,34 @@
 @property int n_id;
 
 +(TLAPI_channels_updatePinnedMessage*)createWithFlags:(int)flags  channel:(TLInputChannel*)channel n_id:(int)n_id;
+@end
+
+@interface TLAPI_auth_resendCode : TLApiObject
+@property (nonatomic, strong) NSString* phone_number;
+@property (nonatomic, strong) NSString* phone_code_hash;
+
++(TLAPI_auth_resendCode*)createWithPhone_number:(NSString*)phone_number phone_code_hash:(NSString*)phone_code_hash;
+@end
+
+@interface TLAPI_auth_cancelCode : TLApiObject
+@property (nonatomic, strong) NSString* phone_number;
+@property (nonatomic, strong) NSString* phone_code_hash;
+
++(TLAPI_auth_cancelCode*)createWithPhone_number:(NSString*)phone_number phone_code_hash:(NSString*)phone_code_hash;
+@end
+
+@interface TLAPI_messages_getBotCallbackAnswer : TLApiObject
+@property (nonatomic, strong) TLInputPeer* peer;
+@property int msg_id;
+@property (nonatomic, strong) NSString* text;
+
++(TLAPI_messages_getBotCallbackAnswer*)createWithPeer:(TLInputPeer*)peer msg_id:(int)msg_id text:(NSString*)text;
+@end
+
+@interface TLAPI_messages_setBotCallbackAnswer : TLApiObject
+@property long query_id;
+@property (nonatomic, strong) NSString* message;
+
++(TLAPI_messages_setBotCallbackAnswer*)createWithQuery_id:(long)query_id message:(NSString*)message;
 @end
 

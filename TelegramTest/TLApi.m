@@ -2,7 +2,7 @@
 //  TLApi.m
 //  Telegram
 //
-//  Auto created by Mikhail Filimonov on 21.03.16..
+//  Auto created by Mikhail Filimonov on 25.03.16..
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -23,37 +23,26 @@
 @end
 
 @implementation TLAPI_auth_sendCode
-+(TLAPI_auth_sendCode*)createWithPhone_number:(NSString*)phone_number sms_type:(int)sms_type api_id:(int)api_id api_hash:(NSString*)api_hash lang_code:(NSString*)lang_code {
++(TLAPI_auth_sendCode*)createWithFlags:(int)flags  phone_number:(NSString*)phone_number current_number:(Boolean)current_number api_id:(int)api_id api_hash:(NSString*)api_hash lang_code:(NSString*)lang_code {
     TLAPI_auth_sendCode* obj = [[TLAPI_auth_sendCode alloc] init];
-    obj.phone_number = phone_number;
-	obj.sms_type = sms_type;
+    obj.flags = flags;
+	
+	obj.phone_number = phone_number;
+	obj.current_number = current_number;
 	obj.api_id = api_id;
 	obj.api_hash = api_hash;
 	obj.lang_code = lang_code;
     return obj;
 }
 - (NSData*)getData {
-	SerializedData* stream = [ClassStore streamWithConstuctor:1988976461];
+	SerializedData* stream = [ClassStore streamWithConstuctor:-855805745];
+	[stream writeInt:self.flags];
+	
 	[stream writeString:self.phone_number];
-	[stream writeInt:self.sms_type];
+	if(self.flags & (1 << 0)) {[stream writeBool:self.current_number];}
 	[stream writeInt:self.api_id];
 	[stream writeString:self.api_hash];
 	[stream writeString:self.lang_code];
-	return [stream getOutput];
-}
-@end
-
-@implementation TLAPI_auth_sendCall
-+(TLAPI_auth_sendCall*)createWithPhone_number:(NSString*)phone_number phone_code_hash:(NSString*)phone_code_hash {
-    TLAPI_auth_sendCall* obj = [[TLAPI_auth_sendCall alloc] init];
-    obj.phone_number = phone_number;
-	obj.phone_code_hash = phone_code_hash;
-    return obj;
-}
-- (NSData*)getData {
-	SerializedData* stream = [ClassStore streamWithConstuctor:63247716];
-	[stream writeString:self.phone_number];
-	[stream writeString:self.phone_code_hash];
 	return [stream getOutput];
 }
 @end
@@ -1470,21 +1459,6 @@
 }
 @end
 
-@implementation TLAPI_auth_sendSms
-+(TLAPI_auth_sendSms*)createWithPhone_number:(NSString*)phone_number phone_code_hash:(NSString*)phone_code_hash {
-    TLAPI_auth_sendSms* obj = [[TLAPI_auth_sendSms alloc] init];
-    obj.phone_number = phone_number;
-	obj.phone_code_hash = phone_code_hash;
-    return obj;
-}
-- (NSData*)getData {
-	SerializedData* stream = [ClassStore streamWithConstuctor:229241832];
-	[stream writeString:self.phone_number];
-	[stream writeString:self.phone_code_hash];
-	return [stream getOutput];
-}
-@end
-
 @implementation TLAPI_messages_readMessageContents
 +(TLAPI_messages_readMessageContents*)createWithN_id:(NSMutableArray*)n_id {
     TLAPI_messages_readMessageContents* obj = [[TLAPI_messages_readMessageContents alloc] init];
@@ -1641,14 +1615,20 @@
 @end
 
 @implementation TLAPI_account_sendChangePhoneCode
-+(TLAPI_account_sendChangePhoneCode*)createWithPhone_number:(NSString*)phone_number {
++(TLAPI_account_sendChangePhoneCode*)createWithFlags:(int)flags  phone_number:(NSString*)phone_number current_number:(Boolean)current_number {
     TLAPI_account_sendChangePhoneCode* obj = [[TLAPI_account_sendChangePhoneCode alloc] init];
-    obj.phone_number = phone_number;
+    obj.flags = flags;
+	
+	obj.phone_number = phone_number;
+	obj.current_number = current_number;
     return obj;
 }
 - (NSData*)getData {
-	SerializedData* stream = [ClassStore streamWithConstuctor:-1543001868];
+	SerializedData* stream = [ClassStore streamWithConstuctor:149257707];
+	[stream writeInt:self.flags];
+	
 	[stream writeString:self.phone_number];
+	if(self.flags & (1 << 0)) {[stream writeBool:self.current_number];}
 	return [stream getOutput];
 }
 @end
@@ -2809,6 +2789,68 @@
 	
 	[ClassStore TLSerialize:self.channel stream:stream];
 	[stream writeInt:self.n_id];
+	return [stream getOutput];
+}
+@end
+
+@implementation TLAPI_auth_resendCode
++(TLAPI_auth_resendCode*)createWithPhone_number:(NSString*)phone_number phone_code_hash:(NSString*)phone_code_hash {
+    TLAPI_auth_resendCode* obj = [[TLAPI_auth_resendCode alloc] init];
+    obj.phone_number = phone_number;
+	obj.phone_code_hash = phone_code_hash;
+    return obj;
+}
+- (NSData*)getData {
+	SerializedData* stream = [ClassStore streamWithConstuctor:1056025023];
+	[stream writeString:self.phone_number];
+	[stream writeString:self.phone_code_hash];
+	return [stream getOutput];
+}
+@end
+
+@implementation TLAPI_auth_cancelCode
++(TLAPI_auth_cancelCode*)createWithPhone_number:(NSString*)phone_number phone_code_hash:(NSString*)phone_code_hash {
+    TLAPI_auth_cancelCode* obj = [[TLAPI_auth_cancelCode alloc] init];
+    obj.phone_number = phone_number;
+	obj.phone_code_hash = phone_code_hash;
+    return obj;
+}
+- (NSData*)getData {
+	SerializedData* stream = [ClassStore streamWithConstuctor:520357240];
+	[stream writeString:self.phone_number];
+	[stream writeString:self.phone_code_hash];
+	return [stream getOutput];
+}
+@end
+
+@implementation TLAPI_messages_getBotCallbackAnswer
++(TLAPI_messages_getBotCallbackAnswer*)createWithPeer:(TLInputPeer*)peer msg_id:(int)msg_id text:(NSString*)text {
+    TLAPI_messages_getBotCallbackAnswer* obj = [[TLAPI_messages_getBotCallbackAnswer alloc] init];
+    obj.peer = peer;
+	obj.msg_id = msg_id;
+	obj.text = text;
+    return obj;
+}
+- (NSData*)getData {
+	SerializedData* stream = [ClassStore streamWithConstuctor:-753565985];
+	[ClassStore TLSerialize:self.peer stream:stream];
+	[stream writeInt:self.msg_id];
+	[stream writeString:self.text];
+	return [stream getOutput];
+}
+@end
+
+@implementation TLAPI_messages_setBotCallbackAnswer
++(TLAPI_messages_setBotCallbackAnswer*)createWithQuery_id:(long)query_id message:(NSString*)message {
+    TLAPI_messages_setBotCallbackAnswer* obj = [[TLAPI_messages_setBotCallbackAnswer alloc] init];
+    obj.query_id = query_id;
+	obj.message = message;
+    return obj;
+}
+- (NSData*)getData {
+	SerializedData* stream = [ClassStore streamWithConstuctor:-1589996972];
+	[stream writeLong:self.query_id];
+	[stream writeString:self.message];
 	return [stream getOutput];
 }
 @end

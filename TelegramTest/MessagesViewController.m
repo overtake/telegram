@@ -2715,6 +2715,9 @@ static NSTextAttachment *headerMediaIcon() {
         
         [MessagesManager clearNotifies:_conversation max_id:_conversation.top_message];
         
+        self.conversation.last_marked_message = self.conversation.top_message;
+        self.conversation.last_marked_date = [[MTNetwork instance] getTime];
+        
         cancel_delayed_block(_delayedBlockHandle);
         
         _delayedBlockHandle = perform_block_after_delay(0.2f, ^{
@@ -2735,8 +2738,7 @@ static NSTextAttachment *headerMediaIcon() {
     
     [[DialogsManager sharedManager] markAllMessagesAsRead:self.conversation];
     
-    self.conversation.last_marked_message = self.conversation.top_message;
-    self.conversation.last_marked_date = [[MTNetwork instance] getTime];
+    
     
     self.conversation.unread_count = 0;
     self.conversation.unread_important_count = 0;

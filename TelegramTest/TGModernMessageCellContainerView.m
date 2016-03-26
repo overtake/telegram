@@ -14,6 +14,7 @@
 #import "POPCGUtils.h"
 #import "TGModalForwardView.h"
 #import "TGCaptionView.h"
+#import "TGBotCommandsKeyboard.h"
 @interface TGModernMessageCellContainerView ()
 
 @property (nonatomic,strong) TMAvatarImageView *photoView;
@@ -29,11 +30,9 @@
 @property (nonatomic,strong) TGModernForwardCellContainer *forwardContainerView;
 @property (nonatomic,strong) MessageReplyContainer *replyContainer;
 @property (nonatomic,strong) TGCaptionView *captionView;
+@property (nonatomic,strong) TGBotCommandsKeyboard *keyboard;
 
 @property (nonatomic,strong) BTRButton *shareView;
-
-
-
 
 @end
 
@@ -264,6 +263,40 @@
 }
 
 
+-(void)checkAndMakeBotKeyboard:(MessageTableItem *)item {
+    
+    if([item.message.reply_markup isKindOfClass:[TL_replyKeyboardMarkup class]] && item.message.reply_markup.isInline) {
+        
+        if(!_keyboard) {
+            _keyboard = [[TGBotCommandsKeyboard alloc] initWithFrame:NSZeroRect];
+            
+            [self.contentContainerView addSubview:_keyboard];
+        }
+        
+        [_keyboard setFrame:NSMakeRect(0, item.blockSize.height + item.defaultContentOffset, item.inlineKeyboardSize.width, item.inlineKeyboardSize.height)];
+        
+        weak();
+        
+        [_keyboard setKeyboard:item.message fillToSize:YES keyboadrdCallback:^(TLKeyboardButton *command) {
+            
+            strongWeak();
+            
+            if(strongSelf == weakSelf) {
+                
+                [item proccessInlineKeyboardButton:command];
+                
+            }
+            
+        }];
+        
+    } else {
+        [_keyboard removeFromSuperview];
+        _keyboard = nil;
+    }
+    
+}
+
+
 -(void)checkAndMakeSenderItem:(MessageTableItem *)item {
     if(item.messageSender)  {
     
@@ -350,6 +383,7 @@
     [self checkAndMakeRightView:item];
     [self checkAndMakeShareView:item];
     [self checkAndMakeCaptionView:item];
+    [self checkAndMakeBotKeyboard:item];
 }
 
 -(TMView *)containerView {
@@ -576,7 +610,7 @@ static bool dragAction = NO;
 }
 
 -(BOOL)mouseInText:(NSEvent *)theEvent {
-    return [_replyContainer.superview mouse:[_replyContainer.superview convertPoint:[theEvent locationInWindow] fromView:nil] inRect:_replyContainer.frame] || [_captionView.textView mouseInText:theEvent];
+    return [_replyContainer.superview mouse:[_replyContainer.superview convertPoint:[theEvent locationInWindow] fromView:nil] inRect:_replyContainer.frame] || [_captionView.textView mouseInText:theEvent] || [_keyboard.superview mouse:[_keyboard.superview convertPoint:[theEvent locationInWindow] fromView:nil] inRect:_keyboard.frame];
 }
 
 -(void)setEditable:(BOOL)editable animated:(BOOL)animated {

@@ -512,14 +512,25 @@
                 
             }
             
+            
+            
+            
             TGCTextView *textView = ((MessageTableCellTextView *)view).textView;
             
             NSPoint startConverted = NSMakePoint(_startSelectPosition.x - rect.origin.x - (item.isForwadedMessage ? item.startContentOffset + item.defaultOffset : item.startContentOffset), _startSelectPosition.y - rect.origin.y - NSMinY(item.isForwadedMessage ? view.containerView.superview.frame : view.containerView.frame));
             
             NSPoint currentConverted = NSMakePoint(startTablePoint.x - rect.origin.x - (item.isForwadedMessage ? item.startContentOffset + item.defaultOffset : item.startContentOffset), startTablePoint.y - rect.origin.y - NSMinY(item.isForwadedMessage ? view.containerView.superview.frame : view.containerView.frame));
+//            
+//            
+//            if(startRow == endRow) {
+//                
+//                if([view.textView.superview mouse:startConverted inRect:view.textView.frame]) {
+//                    int bp = 0;
+//                }
+//        
+//            }
+//            
             
-            
-
             
             if(i > startRow && i < endRow) {
                 

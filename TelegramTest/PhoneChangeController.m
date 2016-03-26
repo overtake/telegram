@@ -90,7 +90,7 @@
         
         [self showModalProgress];
         
-        [RPCRequest sendRequest:[TLAPI_account_sendChangePhoneCode createWithPhone_number:view.changerView.phoneNumber] successHandler:^(RPCRequest *request, id response) {
+        [RPCRequest sendRequest:[TLAPI_account_sendChangePhoneCode createWithFlags:0 phone_number:view.changerView.phoneNumber current_number:YES] successHandler:^(RPCRequest *request, id response) {
             
              [self hideModalProgress];
             

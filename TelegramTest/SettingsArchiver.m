@@ -23,6 +23,8 @@
 
 @implementation SettingsArchiver
 
+NSString *const kPermissionInlineBotGeo = @"kPermissionInlineBotGeo";
+NSString *const kPermissionInlineBotContact = @"kPermissionInlineBotContact";
 
 static NSString *kArchivedSettings = @"kArchivedSettings";
 
@@ -360,6 +362,38 @@ static NSString *kArchivedSettings = @"kArchivedSettings";
     });
     
     return instance;
+}
+
++(void)requestPermissionWithKey:(NSString *)permissionKey peer_id:(int)peer_id handler:(void (^)(bool success))handler {
+    
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    
+    NSString *key = [NSString stringWithFormat:@"%@:%d",permissionKey,peer_id];
+    
+    BOOL access = [defaults boolForKey:key];
+    
+    if(access) {
+        if(handler)
+            handler(access);
+    } else {
+        
+        NSString *localizeKey = [NSString stringWithFormat:@"Confirm.%@",permissionKey];
+        
+        confirm(appName(), NSLocalizedString(localizeKey, nil), ^{
+            if(handler)
+                handler(YES);
+            
+            [defaults setBool:YES forKey:key];
+            [defaults synchronize];
+        }, ^{
+            if(handler)
+                handler(NO);
+            
+            [defaults setBool:NO forKey:key];
+            [defaults synchronize];
+        });
+    }
+    
 }
 
 @end

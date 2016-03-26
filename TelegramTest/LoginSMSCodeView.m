@@ -73,11 +73,11 @@
                                              componentsJoinedByString:@""];
 
     
-    if(str.length > 5) {
-        str = [str substringToIndex:5];
+    if(str.length > self.code_length) {
+        str = [str substringToIndex:self.code_length];
     }
     
-    if(str.length == 5) {
+    if(str.length == self.code_length) {
         if(![str isEqualToString:self.oldValue]) {
             self.oldValue = str;
             [self.loginController signIn];
@@ -176,9 +176,16 @@
 }
 
 - (BOOL)isValidCode {
-    return self.code.length == 5;
+    return self.code.length == self.code_length;
 }
 
+
+-(int)code_length {
+    if(_code_length == 0)
+        return 5;
+    else
+        return _code_length;
+}
 
 
 - (void)changeCallTextFieldString:(NSString *)string {

@@ -3,7 +3,7 @@
 //  ClassStore.m
 //  Telegram
 //
-    //  Created by keepcoder on 21.03.16.
+    //  Created by keepcoder on 25.03.16.
 //  Copyright (c) 2015 keepcoder. All rights reserved.
 //
 
@@ -225,7 +225,7 @@ static NSMutableDictionary *cs_constuctors;
    [cs_classes setObject:[TL_geoPointEmpty class] forKey:[NSNumber numberWithInt:286776671]];
    [cs_classes setObject:[TL_geoPoint class] forKey:[NSNumber numberWithInt:541710092]];
    [cs_classes setObject:[TL_auth_checkedPhone class] forKey:[NSNumber numberWithInt:-2128698738]];
-   [cs_classes setObject:[TL_auth_sentCode class] forKey:[NSNumber numberWithInt:-269659687]];
+   [cs_classes setObject:[TL_auth_sentCode class] forKey:[NSNumber numberWithInt:1577067778]];
    [cs_classes setObject:[TL_auth_authorization class] forKey:[NSNumber numberWithInt:-16553231]];
    [cs_classes setObject:[TL_auth_exportedAuthorization class] forKey:[NSNumber numberWithInt:-543777747]];
    [cs_classes setObject:[TL_inputNotifyPeer class] forKey:[NSNumber numberWithInt:-1195615476]];
@@ -347,7 +347,6 @@ static NSMutableDictionary *cs_constuctors;
    [cs_classes setObject:[TL_notifyAll class] forKey:[NSNumber numberWithInt:1959820384]];
    [cs_classes setObject:[TL_updateUserBlocked class] forKey:[NSNumber numberWithInt:-2131957734]];
    [cs_classes setObject:[TL_updateNotifySettings class] forKey:[NSNumber numberWithInt:-1094555409]];
-   [cs_classes setObject:[TL_auth_sentAppCode class] forKey:[NSNumber numberWithInt:-484053553]];
    [cs_classes setObject:[TL_sendMessageTypingAction class] forKey:[NSNumber numberWithInt:381645902]];
    [cs_classes setObject:[TL_sendMessageCancelAction class] forKey:[NSNumber numberWithInt:-44119819]];
    [cs_classes setObject:[TL_sendMessageRecordVideoAction class] forKey:[NSNumber numberWithInt:-1584933265]];
@@ -380,7 +379,6 @@ static NSMutableDictionary *cs_constuctors;
    [cs_classes setObject:[TL_privacyValueDisallowUsers class] forKey:[NSNumber numberWithInt:209668535]];
    [cs_classes setObject:[TL_account_privacyRules class] forKey:[NSNumber numberWithInt:1430961007]];
    [cs_classes setObject:[TL_accountDaysTTL class] forKey:[NSNumber numberWithInt:-1194283041]];
-   [cs_classes setObject:[TL_account_sentChangePhoneCode class] forKey:[NSNumber numberWithInt:-1527411636]];
    [cs_classes setObject:[TL_updateUserPhone class] forKey:[NSNumber numberWithInt:314130811]];
    [cs_classes setObject:[TL_documentAttributeImageSize class] forKey:[NSNumber numberWithInt:1815593308]];
    [cs_classes setObject:[TL_documentAttributeAnimated class] forKey:[NSNumber numberWithInt:297109817]];
@@ -530,6 +528,19 @@ static NSMutableDictionary *cs_constuctors;
    [cs_classes setObject:[TL_channels_messageEditData class] forKey:[NSNumber numberWithInt:1742808415]];
    [cs_classes setObject:[TL_updateChannelPinnedMessage class] forKey:[NSNumber numberWithInt:-1738988427]];
    [cs_classes setObject:[TL_messageActionPinMessage class] forKey:[NSNumber numberWithInt:-1799538451]];
+   [cs_classes setObject:[TL_auth_codeTypeSms class] forKey:[NSNumber numberWithInt:1923290508]];
+   [cs_classes setObject:[TL_auth_codeTypeCall class] forKey:[NSNumber numberWithInt:1948046307]];
+   [cs_classes setObject:[TL_auth_codeTypeFlashCall class] forKey:[NSNumber numberWithInt:577556219]];
+   [cs_classes setObject:[TL_auth_sentCodeTypeApp class] forKey:[NSNumber numberWithInt:1035688326]];
+   [cs_classes setObject:[TL_auth_sentCodeTypeSms class] forKey:[NSNumber numberWithInt:-1073693790]];
+   [cs_classes setObject:[TL_auth_sentCodeTypeCall class] forKey:[NSNumber numberWithInt:1398007207]];
+   [cs_classes setObject:[TL_auth_sentCodeTypeFlashCall class] forKey:[NSNumber numberWithInt:-1425815847]];
+   [cs_classes setObject:[TL_keyboardButtonUrl class] forKey:[NSNumber numberWithInt:629866245]];
+   [cs_classes setObject:[TL_keyboardButtonCallback class] forKey:[NSNumber numberWithInt:716063107]];
+   [cs_classes setObject:[TL_keyboardButtonRequestPhone class] forKey:[NSNumber numberWithInt:-1318425559]];
+   [cs_classes setObject:[TL_keyboardButtonRequestGeoLocation class] forKey:[NSNumber numberWithInt:-59151553]];
+   [cs_classes setObject:[TL_messages_botCallbackAnswer class] forKey:[NSNumber numberWithInt:-1266250455]];
+   [cs_classes setObject:[TL_updateBotCallbackQuery class] forKey:[NSNumber numberWithInt:-652713370]];
    [cs_classes setObject:[TL_userSelf class] forKey:[NSNumber numberWithInt:476112392]];
    [cs_classes setObject:[TL_userContact class] forKey:[NSNumber numberWithInt:-894214632]];
    [cs_classes setObject:[TL_userRequest class] forKey:[NSNumber numberWithInt:-640891665]];

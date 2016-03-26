@@ -10,8 +10,7 @@
 #import "UserInfoShortTextEditView.h"
 #import "TGTimer.h"
 @interface PhoneChangeConfirmController ()<NSTextFieldDelegate>
-@property (nonatomic,strong) TMTextField *centerTextField;
-@property (nonatomic,strong) TL_account_sentChangePhoneCode *params;
+@property (nonatomic,strong) TL_auth_sentCode *params;
 @property (nonatomic,strong) UserInfoShortTextEditView *smsCodeView;
 @property (nonatomic,strong) TGTimer *callTimer;
 @property (nonatomic,strong) TMTextField *callTextField;
@@ -108,7 +107,7 @@
     
 }
 
-- (void)setChangeParams:(TL_account_sentChangePhoneCode *)params phone:(NSString *)phone {
+- (void)setChangeParams:(TL_auth_sentCode *)params phone:(NSString *)phone {
     if(!self.view)
         [self loadView];
     
@@ -143,9 +142,9 @@
     
     self.callTimer = [[TGTimer alloc] initWithTimeout:1.0 repeat:YES completion:^{
         
-        --self.params.send_call_timeout;
+        --self.params.timeout;
         
-        if(self.params.send_call_timeout == 0) {
+        if(self.params.timeout == 0) {
            [self.callTimer invalidate];
             self.callTimer = nil;
         }
@@ -161,8 +160,8 @@
 
 -(void)updateCallTime {
     
-    if(self.params.send_call_timeout > 0) {
-         [self.callTextField setStringValue:[NSString stringWithFormat:NSLocalizedString(@"PhoneChangeConfirmController.sendCall", nil), [NSString durationTransformedValue:self.params.send_call_timeout]]];
+    if(self.params.timeout > 0) {
+         [self.callTextField setStringValue:[NSString stringWithFormat:NSLocalizedString(@"PhoneChangeConfirmController.sendCall", nil), [NSString durationTransformedValue:self.params.timeout]]];
     } else {
         [self.callTextField setStringValue:NSLocalizedString(@"PhoneChangeConfirmController.phoneDialed", nil)];
     }

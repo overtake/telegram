@@ -35,6 +35,7 @@
 #import "NSNumber+NumberFormatter.h"
 #import "MessageTableItemMpeg.h"
 #import "NSAttributedString+Hyperlink.h"
+#import "TGLocationRequest.h"
 @interface TGItemCache : NSObject
 @property (nonatomic,strong) NSMutableAttributedString *header;
 @property (nonatomic,strong) TLUser *user;
@@ -47,12 +48,17 @@
 
 @end
 
-@interface MessageTableItem() <NSCopying>
+@interface MessageTableItem() <NSCopying,CLLocationManagerDelegate>
 @property (nonatomic) BOOL isChat;
 @property (nonatomic) NSSize _viewSize;
 @property (nonatomic,assign) BOOL autoStart;
 @property (nonatomic, assign) NSSize headerOriginalSize;
 @property (nonatomic, assign) NSSize viewsCountAndSignOriginalSize;
+
+
+@property (nonatomic,strong) TGLocationRequest *locationRequest;
+
+
 @end
 
 @implementation MessageTableItem
@@ -388,8 +394,12 @@ static NSTextAttachment *channelViewsCountAttachment() {
         viewSize.height = 1;
     }
     
+    if(self.message.reply_markup.isInline) {
+        viewSize.height+=_inlineKeyboardSize.height+self.defaultContentOffset;
+    }
     
     viewSize.width = self.makeSize + (self.isForwadedMessage ? self.defaultOffset : 0);
+    
     
     return viewSize;
 }
@@ -704,8 +714,9 @@ static NSTextAttachment *channelViewsCountAttachment() {
     
     _viewsCountAndSignSize = NSMakeSize(MIN(MAX(width - _headerOriginalSize.width/2.0f,0),_viewsCountAndSignOriginalSize.width), self.viewsCountAndSignSize.height);
     
-    
     self.headerSize = NSMakeSize(MIN(_headerOriginalSize.width, width - self.defaultOffset * 2), self.headerSize.height);
+    
+    _inlineKeyboardSize = NSMakeSize(width, _message.reply_markup.rows.count * (33 + self.defaultContentOffset) - self.defaultContentOffset *2);
     
     return YES;
 }
@@ -745,6 +756,73 @@ static NSTextAttachment *channelViewsCountAttachment() {
     item.messageSender = self.messageSender;
     
     return item;
+}
+
+
+
+-(void)proccessInlineKeyboardButton:(TLKeyboardButton *)keyboard {
+    if([keyboard isKindOfClass:[TL_keyboardButtonCallback class]]) {
+        
+        weak();
+        
+        [RPCRequest sendRequest:[TLAPI_messages_getBotCallbackAnswer createWithPeer:_message.conversation.inputPeer msg_id:_message.n_id text:keyboard.text] successHandler:^(id request, TL_messages_botCallbackAnswer *response) {
+            
+            strongWeak();
+            
+            if(strongSelf == weakSelf) {
+                alert(appName(), response.message);
+            }
+            
+            
+        } errorHandler:^(id request, RpcError *error) {
+            
+        }];
+        
+    } else if([keyboard isKindOfClass:[TL_keyboardButtonUrl class]]) {
+        open_link(keyboard.url);
+    } else if([keyboard isKindOfClass:[TL_keyboardButtonRequestGeoLocation class]]) {
+        
+        weak();
+        
+        [SettingsArchiver requestPermissionWithKey:kPermissionInlineBotGeo peer_id:_message.peer_id handler:^(bool success) {
+            
+            if(success) {
+                strongWeak();
+                
+                strongSelf.locationRequest = [[TGLocationRequest alloc] init];
+                
+                [strongSelf.locationRequest startRequestLocation:^(CLLocation *location) {
+                    
+                    [strongSelf.table.viewController sendLocation:location.coordinate forConversation:_message.conversation];
+                    
+                } failback:^(NSString *error) {
+                    
+                    alert(appName(), error);
+                    
+                }];
+
+            }
+            
+        }];
+        
+        
+    } else if([keyboard isKindOfClass:[TL_keyboardButtonRequestPhone class]]) {
+        
+        weak();
+        
+        [SettingsArchiver requestPermissionWithKey:kPermissionInlineBotContact peer_id:_message.peer_id handler:^(bool success) {
+            
+            if(success) {
+                strongWeak();
+                
+                [strongSelf.table.viewController shareContact:[UsersManager currentUser] forConversation:_message.conversation callback:nil];
+            }
+            
+        }];
+        
+    } else if([keyboard isKindOfClass:[TL_keyboardButton class]]) {
+        [self.table.viewController sendMessage:keyboard.text forConversation:_message.conversation];
+    }
 }
 
 
@@ -807,6 +885,10 @@ static NSTextAttachment *channelViewsCountAttachment() {
 
 -(int)defaultPhotoWidth {
     return 36;
+}
+
+-(void)dealloc {
+    
 }
 
 @end

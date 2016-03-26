@@ -10,9 +10,11 @@
 
 @interface TGBotCommandsKeyboard : TMView
 
--(void)setConversation:(TL_conversation *)conversation botUser:(TLUser *)botUser;
+
+@property (nonatomic,strong,readonly) TL_localMessage *keyboard;
+
+-(void)setKeyboard:(TL_localMessage *)keyboard fillToSize:(BOOL)fillToSize keyboadrdCallback:(void (^)(TLKeyboardButton *command))keyboardCallback;
 
 -(BOOL)isCanShow;
--(TL_localMessage *)keyboard;
 
 @end

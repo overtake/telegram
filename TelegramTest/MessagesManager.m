@@ -52,39 +52,6 @@
     return self;
 }
 
-//
-//-(void)addSupportMessages:(NSArray *)supportMessages {
-//    
-//    [self.queue dispatchOnQueue:^{
-//        
-//        [supportMessages enumerateObjectsUsingBlock:^(TL_localMessage *obj, NSUInteger idx, BOOL *stop) {
-//            
-//            if(!_supportMessages[@(obj.peer_id)]) {
-//                _supportMessages[@(obj.peer_id)] = [[NSMutableDictionary alloc] init];
-//            }
-//            
-//            _supportMessages[@(obj.peer_id)][@(obj.channelMsgId)] = obj;
-//            
-//        }];
-//        
-//    }];
-//    
-//   
-//}
-//
-//-(TL_localMessage *)supportMessage:(int)n_id peer_id:(int)peer_id {
-//    
-//    __block TL_localMessage *message;
-//    
-//    [self.queue dispatchOnQueue:^{
-//        
-//        message = _supportMessages[@(peer_id)][@(n_id)];
-//        
-//    } synchronous:YES];
-//    
-//    return message;
-//}
-
 
 +(void)addSupportMessages:(NSArray *)supportMessages {
     [[self sharedManager] addSupportMessages:supportMessages];

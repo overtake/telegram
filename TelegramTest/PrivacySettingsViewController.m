@@ -279,8 +279,8 @@
     NSString *allowDesc = [NSString stringWithFormat:@"PrivacySettingsController.AlwaysShare_%@",self.privacy.privacyType];
     NSString *disallowDesc = [NSString stringWithFormat:@"PrivacySettingsController.NeverShare_%@",self.privacy.privacyType];
     
-    _disallowSelector.desc = NSLocalizedString(disallowDesc, nil);
-    _allowSelector.desc = NSLocalizedString(allowDesc, nil);;
+    [_disallowSelector setDescString:NSLocalizedString(disallowDesc, nil)];
+    [_allowSelector setDescString:NSLocalizedString(allowDesc, nil)];
     
     switch (_changedPrivacy.allowType) {
         case PrivacyAllowTypeContacts:
@@ -309,9 +309,9 @@
     [self.tableView addItem:_lastDescription tableRedraw:NO];
 
     
-    [self.allowSelector setSubdesc:self.changedPrivacy.allowUsers.count == 0 ? NSLocalizedString(@"PrivacySettingsController.AddUsers", nil) : [NSString stringWithFormat:self.changedPrivacy.allowUsers.count == 1 ? NSLocalizedString(@"PrivacySettingsController.UserCount", nil) : NSLocalizedString(@"PrivacySettingsController.UsersCount", nil),self.changedPrivacy.allowUsers.count]];
+    [self.allowSelector setSubdescString:self.changedPrivacy.allowUsers.count == 0 ? NSLocalizedString(@"PrivacySettingsController.AddUsers", nil) : [NSString stringWithFormat:self.changedPrivacy.allowUsers.count == 1 ? NSLocalizedString(@"PrivacySettingsController.UserCount", nil) : NSLocalizedString(@"PrivacySettingsController.UsersCount", nil),self.changedPrivacy.allowUsers.count]];
     
-    [self.disallowSelector setSubdesc:self.changedPrivacy.disallowUsers.count == 0 ? NSLocalizedString(@"PrivacySettingsController.AddUsers", nil) : [NSString stringWithFormat:self.changedPrivacy.disallowUsers.count == 1 ? NSLocalizedString(@"PrivacySettingsController.UserCount", nil) : NSLocalizedString(@"PrivacySettingsController.UsersCount", nil),self.changedPrivacy.disallowUsers.count]];
+    [self.disallowSelector setSubdescString:self.changedPrivacy.disallowUsers.count == 0 ? NSLocalizedString(@"PrivacySettingsController.AddUsers", nil) : [NSString stringWithFormat:self.changedPrivacy.disallowUsers.count == 1 ? NSLocalizedString(@"PrivacySettingsController.UserCount", nil) : NSLocalizedString(@"PrivacySettingsController.UsersCount", nil),self.changedPrivacy.disallowUsers.count]];
 
     
     [self.tableView reloadData];

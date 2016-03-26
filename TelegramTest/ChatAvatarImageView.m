@@ -45,8 +45,6 @@
         
         _editCamera = imageViewWithImage(image_EditPhotoCamera());
         
-        
-        
         _editBlank = [[TMView alloc] initWithFrame:self.bounds];
         
         _editBlank.wantsLayer = YES;

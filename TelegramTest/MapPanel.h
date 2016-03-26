@@ -21,6 +21,9 @@
 
 + (MapPanel *)sharedPanel;
 
+
+-(void)loadUserLocation:(void (^)(CLLocationCoordinate2D coordinate2d))successCallback failback:(void (^)(NSError *error))errorCallback dispatchAfterFind:(BOOL)dispatchAfterFind;
+
 -(void)update;
 
 @end

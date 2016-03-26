@@ -181,18 +181,14 @@
 
 -(void)mouseUp:(NSEvent *)theEvent {
     
-    if(!_deleteHandler) {
-        if(_item.table.viewController.state == MessagesViewControllerStateNone)
-            [_item.table.viewController showMessage:_replyObject.replyMessage fromMsg:_item.message flags:ShowMessageTypeReply];
-    } else if(self.isPinnedMessage) {
-       // if(!_doublePinScrolled) {
-       //     _doublePinScrolled = YES;
-        if(![self mouse:[self convertPoint:theEvent.locationInWindow fromView:nil] inRect:_deleteImageView.frame])
-            [appWindow().navigationController.messagesViewController showMessage:_replyObject.replyMessage fromMsg:nil flags:ShowMessageTypeReply];
-         //   [self addScrollEvent];
-       // } else {
-       //     if(_deleteHandler) _deleteHandler();
-      //  }
+    if([self.superview mouse:[self.superview convertPoint:theEvent.locationInWindow fromView:nil] inRect:self.frame]) {
+        if(!_deleteHandler) {
+            if(_item.table.viewController.state == MessagesViewControllerStateNone)
+                [_item.table.viewController showMessage:_replyObject.replyMessage fromMsg:_item.message flags:ShowMessageTypeReply];
+        } else if(self.isPinnedMessage) {
+            if(![self mouse:[self convertPoint:theEvent.locationInWindow fromView:nil] inRect:_deleteImageView.frame])
+                [appWindow().navigationController.messagesViewController showMessage:_replyObject.replyMessage fromMsg:nil flags:ShowMessageTypeReply];
+        }
     }
     
 }

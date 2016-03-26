@@ -40,6 +40,8 @@
 
 @property (nonatomic,assign) NSSize rightSize;
 
+@property (nonatomic,assign) NSSize inlineKeyboardSize;
+
 
 @property (nonatomic,strong) NSAttributedString *caption;
 @property (nonatomic,assign) NSSize captionSize;
@@ -93,6 +95,8 @@
 - (void)doAfterDownload;
 - (void)startDownload:(BOOL)cancel force:(BOOL)force;
 - (void)checkStartDownload:(SettingsMask)setting size:(int)size;
+
+-(void)proccessInlineKeyboardButton:(TLKeyboardButton *)keyboard;
 
 + (NSDateFormatter *)dateFormatter;
 

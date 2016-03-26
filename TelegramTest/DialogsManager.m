@@ -299,15 +299,14 @@
                 
                 currentKeyboard = [transaction objectForKey:conversation.cacheKey inCollection:BOT_COMMANDS];
                 
-                
                 if([message.reply_markup isKindOfClass:[TL_replyKeyboardHide class]]) {
-                    if((message.reply_markup.flags & (1 << 2)) == 0 || [message isMentioned])
+                    if((!message.reply_markup.isSelective || message.isMentioned) && !message.reply_markup.isInline)
                         if(currentKeyboard.from_id == message.from_id) {
                             [transaction removeObjectForKey:conversation.cacheKey inCollection:BOT_COMMANDS];
                             needNotify = YES;
                         }
                 } else if([message.reply_markup isKindOfClass:[TL_replyKeyboardMarkup class]]) {
-                    if((message.reply_markup.flags & (1 << 2)) == 0 || [message isMentioned])
+                    if((!message.reply_markup.isSelective || message.isMentioned) && !message.reply_markup.isInline)
                         [transaction setObject:message forKey:conversation.cacheKey inCollection:BOT_COMMANDS];
                     needNotify = YES;
                 }
@@ -324,12 +323,7 @@
                         
                     }];
                     
-                    if(conversation.peer_id == [Telegram conversation].peer_id) {
-                        [ASQueue dispatchOnMainQueue:^{
-                            [[Telegram rightViewController].messagesViewController.bottomView updateReplayMessage:YES animated:YES];
-                        }];
-                        
-                    }
+                    [Notification perform:[Notification notificationNameByDialog:conversation action:@"reply"] data:@{KEY_DIALOG:conversation}];
                     
                     notify = NO;
                 }

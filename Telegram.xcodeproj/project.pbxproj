@@ -636,10 +636,12 @@
 		C2C3A8901A2C7D57008C4C4A /* MTProto.m in Sources */ = {isa = PBXBuildFile; fileRef = C2C3A88D1A2C7D57008C4C4A /* MTProto.m */; };
 		C2C3A8911A2C7D57008C4C4A /* TLApi.m in Sources */ = {isa = PBXBuildFile; fileRef = C2C3A88F1A2C7D57008C4C4A /* TLApi.m */; };
 		C2C3D9B81CA3156A0031A296 /* TGModernConversationTitleActivityIndicator.m in Sources */ = {isa = PBXBuildFile; fileRef = C2C3D9B71CA3156A0031A296 /* TGModernConversationTitleActivityIndicator.m */; };
-		C2C3D9BC1CA41A570031A296 /* Sparkle.framework in Copy Files (6 items) */ = {isa = PBXBuildFile; fileRef = C235364C19C88D620044978E /* Sparkle.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		C2C3D9BD1CA41A570031A296 /* HockeySDK.framework in Copy Files (6 items) */ = {isa = PBXBuildFile; fileRef = C2082B7219C1E1C4000005E2 /* HockeySDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		C2C3D9BE1CA41A5B0031A296 /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C235364C19C88D620044978E /* Sparkle.framework */; };
-		C2C3D9BF1CA41A5B0031A296 /* HockeySDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2082B7219C1E1C4000005E2 /* HockeySDK.framework */; };
+		C2C3D9C11CA586B70031A296 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2C3D9C01CA586B70031A296 /* CoreLocation.framework */; };
+		C2C3D9C41CA58F470031A296 /* TGLocationRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = C2C3D9C31CA58F470031A296 /* TGLocationRequest.m */; };
+		C2C3D9C51CA597D30031A296 /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C235364C19C88D620044978E /* Sparkle.framework */; };
+		C2C3D9C61CA597D30031A296 /* HockeySDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2082B7219C1E1C4000005E2 /* HockeySDK.framework */; };
+		C2C3D9C71CA597DA0031A296 /* Sparkle.framework in Copy Files (6 items) */ = {isa = PBXBuildFile; fileRef = C235364C19C88D620044978E /* Sparkle.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		C2C3D9C81CA597DA0031A296 /* HockeySDK.framework in Copy Files (6 items) */ = {isa = PBXBuildFile; fileRef = C2082B7219C1E1C4000005E2 /* HockeySDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		C2C6D9661A111B3E001EF8A2 /* TGPhotoViewerItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C2C6D9651A111B3E001EF8A2 /* TGPhotoViewerItem.m */; };
 		C2C6D9691A124F70001EF8A2 /* TGPVControls.m in Sources */ = {isa = PBXBuildFile; fileRef = C2C6D9681A124F70001EF8A2 /* TGPVControls.m */; };
 		C2C6D96D1A12650B001EF8A2 /* TGPVMediaBehavior.m in Sources */ = {isa = PBXBuildFile; fileRef = C2C6D96C1A12650B001EF8A2 /* TGPVMediaBehavior.m */; };
@@ -1043,8 +1045,8 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				C2C3D9BC1CA41A570031A296 /* Sparkle.framework in Copy Files (6 items) */,
-				C2C3D9BD1CA41A570031A296 /* HockeySDK.framework in Copy Files (6 items) */,
+				C2C3D9C71CA597DA0031A296 /* Sparkle.framework in Copy Files (6 items) */,
+				C2C3D9C81CA597DA0031A296 /* HockeySDK.framework in Copy Files (6 items) */,
 			);
 			name = "Copy Files (6 items)";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2362,6 +2364,9 @@
 		C2C3A88F1A2C7D57008C4C4A /* TLApi.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLApi.m; sourceTree = "<group>"; };
 		C2C3D9B61CA3156A0031A296 /* TGModernConversationTitleActivityIndicator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGModernConversationTitleActivityIndicator.h; sourceTree = "<group>"; };
 		C2C3D9B71CA3156A0031A296 /* TGModernConversationTitleActivityIndicator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGModernConversationTitleActivityIndicator.m; sourceTree = "<group>"; };
+		C2C3D9C01CA586B70031A296 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
+		C2C3D9C21CA58F470031A296 /* TGLocationRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGLocationRequest.h; sourceTree = "<group>"; };
+		C2C3D9C31CA58F470031A296 /* TGLocationRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGLocationRequest.m; sourceTree = "<group>"; };
 		C2C6D9641A111B3E001EF8A2 /* TGPhotoViewerItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGPhotoViewerItem.h; sourceTree = "<group>"; };
 		C2C6D9651A111B3E001EF8A2 /* TGPhotoViewerItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGPhotoViewerItem.m; sourceTree = "<group>"; };
 		C2C6D9671A124F70001EF8A2 /* TGPVControls.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGPVControls.h; sourceTree = "<group>"; };
@@ -2883,8 +2888,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C2C3D9BE1CA41A5B0031A296 /* Sparkle.framework in Frameworks */,
-				C2C3D9BF1CA41A5B0031A296 /* HockeySDK.framework in Frameworks */,
+				C2C3D9C51CA597D30031A296 /* Sparkle.framework in Frameworks */,
+				C2C3D9C61CA597D30031A296 /* HockeySDK.framework in Frameworks */,
+				C2C3D9C11CA586B70031A296 /* CoreLocation.framework in Frameworks */,
 				C2034BB31C2EB1C70080D023 /* VideoToolbox.framework in Frameworks */,
 				C21068C61C1B417200815859 /* CoreVideo.framework in Frameworks */,
 				C21068BE1C1B04A100815859 /* QuickTime.framework in Frameworks */,
@@ -3768,6 +3774,8 @@
 				C24136431C679DCC00130D2E /* TGWaveformView.m */,
 				C215BDF31C77354700B4BF16 /* MessageRightView.h */,
 				C215BDF41C77354700B4BF16 /* MessageRightView.m */,
+				C2C3D9C21CA58F470031A296 /* TGLocationRequest.h */,
+				C2C3D9C31CA58F470031A296 /* TGLocationRequest.m */,
 			);
 			name = help;
 			sourceTree = "<group>";
@@ -5908,6 +5916,7 @@
 		CEB09E5A17DAFC250055F150 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				C2C3D9C01CA586B70031A296 /* CoreLocation.framework */,
 				C2034BB21C2EB1C70080D023 /* VideoToolbox.framework */,
 				C21068C51C1B417200815859 /* CoreVideo.framework */,
 				C21068A91C19DBCB00815859 /* QuickTime.framework */,
@@ -6919,6 +6928,7 @@
 				C2967B491AA9BF90003759B2 /* TGKeychain.m in Sources */,
 				C274C3C61AC488CE000DFDE4 /* TGSessionsViewController.m in Sources */,
 				0A62CC9A181F24270098720C /* RightViewController.m in Sources */,
+				C2C3D9C41CA58F470031A296 /* TGLocationRequest.m in Sources */,
 				C247C47C18C0D05200726C91 /* TGProccessUpdates.m in Sources */,
 				0AB43BAB18D4F1FF00FB805A /* TMImagePicker.m in Sources */,
 				C2C1DC231A444F2F00BBCC63 /* TGMessagesStickerImageObject.m in Sources */,

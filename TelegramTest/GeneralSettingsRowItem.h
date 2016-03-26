@@ -20,8 +20,14 @@
 
 @property (nonatomic,assign, getter=isEnabled) BOOL enabled;
 
-@property (nonatomic,strong,getter=description) NSString *desc;
-@property (nonatomic,strong) NSString *subdesc;
+@property (nonatomic,strong,readonly) NSAttributedString *desc;
+@property (nonatomic,strong,readonly) NSAttributedString *subdesc;
+
+@property (nonatomic,assign,readonly) NSSize descSize;
+@property (nonatomic,assign,readonly) NSSize subdescSize;
+
+-(void)setDescString:(NSString *)desc;
+-(void)setSubdescString:(NSString *)subdesc;
 
 
 @property (nonatomic,assign) BOOL locked;

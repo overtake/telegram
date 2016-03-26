@@ -31,7 +31,7 @@
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>41309</string>
+	<string>41310</string>
 	<key>LSApplicationCategoryType</key>
 	<string>public.app-category.social-networking</string>
 	<key>LSMinimumSystemVersion</key>
@@ -43,6 +43,8 @@
 	</dict>
 	<key>NSHumanReadableCopyright</key>
 	<string>Copyright © 2015 TELEGRAM MESSENGER LLP. All rights reserved.</string>
+	<key>NSLocationUsageDescription</key>
+	<string></string>
 	<key>NSMainNibFile</key>
 	<string>NewMainMenu</string>
 	<key>NSPrincipalClass</key>

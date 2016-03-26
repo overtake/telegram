@@ -7,16 +7,33 @@
 //
 
 #import "TGBotCommandsKeyboard.h"
+#import "TGTextLabel.h"
+@interface TGDisableScrollView : NSScrollView
+@property (nonatomic,assign) BOOL disableScrolling;
+@end
 
+@implementation TGDisableScrollView
+
+-(void)scrollWheel:(NSEvent *)theEvent {
+    if(!_disableScrolling)
+        [super scrollWheel:theEvent];
+    else
+        [self.superview scrollWheel:theEvent];
+}
+
+@end
 
 @interface TGBotKeyboardItemView : TMView
 @property (nonatomic,strong) TLKeyboardButton *keyboardButton;
-@property (nonatomic,strong) TL_conversation *conversation;
-@property (nonatomic,strong) TMTextField *textField;
+@property (nonatomic,strong) TGTextLabel *textField;
 
 @property (nonatomic,strong) TL_localMessage *keyboard;
 
+@property (nonatomic,copy) void (^keyboardCallback)(TLKeyboardButton *command);
 
+@property (nonatomic,strong) NSMutableAttributedString *string;
+
+@property (nonatomic,assign) NSSize stringSize;
 
 @end
 
@@ -31,12 +48,7 @@
         self.layer.backgroundColor = [NSColor whiteColor].CGColor;
         self.layer.borderColor = GRAY_BORDER_COLOR.CGColor;
         self.layer.borderWidth = 1;
-        _textField = [TMTextField defaultTextField];
-        
-        [_textField setFont:TGSystemFont(13)];
-        [_textField setAlignment:NSCenterTextAlignment];
-        [_textField setAutoresizingMask:NSViewWidthSizable];
-        [[_textField cell] setTruncatesLastVisibleLine:YES];
+        _textField = [[TGTextLabel alloc] initWithFrame:NSZeroRect];
         [self addSubview:_textField];
         
        
@@ -50,52 +62,47 @@
 -(void)setKeyboardButton:(TLKeyboardButton *)keyboardButton {
     _keyboardButton = keyboardButton;
     
+    _string = [[NSMutableAttributedString alloc] init];
     
-    [_textField setStringValue:[_keyboardButton.text stringByReplacingOccurrencesOfString:@"\n" withString:@" "]];
-    [_textField sizeToFit];
+    [_string appendString:[_keyboardButton.text stringByReplacingOccurrencesOfString:@"\n" withString:@" "] withColor:TEXT_COLOR];
+    [_string setFont:TGSystemFont(13) forRange:_string.range];
+    _stringSize = [_string coreTextSizeForTextFieldForWidth:INT32_MAX];
+    
+    [_textField setText:_string maxWidth:NSWidth(self.frame) - 10];
+    
     [self setToolTip:NSWidth(self.frame) - 10 > NSWidth(_textField.frame) ? _keyboardButton.text : nil];
 }
 
 -(void)setFrameSize:(NSSize)newSize {
     [super setFrameSize:newSize];
-    [_textField setFrameSize:NSMakeSize(newSize.width-10, NSHeight(_textField.frame))];
-    [_textField setCenteredYByView:self];
-    [_textField setFrameOrigin:NSMakePoint(5, NSMinY(self.textField.frame) +2)];
-    
+    [_textField setText:_string maxWidth:MIN(NSWidth(self.frame) - 10,_stringSize.width) height:_stringSize.height];
+    [_textField setCenterByView:self];    
 }
 
 -(void)mouseUp:(NSEvent *)theEvent {
     
-    NSString *command = _keyboardButton.text;
-    
-    [[Telegram rightViewController].messagesViewController sendMessage:command forConversation:_conversation];
-    
-    
-    if(_keyboard.reply_markup.flags & (1 << 1) ) {
-        
-        _keyboard.reply_markup.flags|= (1 << 5);
-        
-        [[Storage yap] readWriteWithBlock:^(YapDatabaseReadWriteTransaction * __nonnull transaction) {
-            [transaction setObject:_keyboard forKey:_conversation.cacheKey inCollection:BOT_COMMANDS];
-        }];
-        
-        [Notification perform:[Notification notificationNameByDialog:_conversation action:@"hideBotKeyboard"] data:@{KEY_DIALOG:_conversation}];
+    if([self.superview mouse:[self.superview convertPoint:[theEvent locationInWindow] fromView:nil] inRect:self.frame]) {
+        if(_keyboardCallback != nil) {
+            _keyboardCallback(_keyboardButton);
+        }
     }
+    
+   
+}
+
+-(void)mouseDown:(NSEvent *)theEvent {
+     [super mouseDown:theEvent];
 }
 
 @end
 
 @interface TGBotCommandsKeyboard ()
-@property (nonatomic,strong) TL_conversation *conversation;
-@property (nonatomic,strong) TLUser *botUser;
-@property (nonatomic,strong) NSScrollView *scrollView;
+@property (nonatomic,strong) TGDisableScrollView *scrollView;
 
 @property (nonatomic,strong) TMView *containerView;
-
-
 @property (nonatomic,strong) NSArray *rows;
-@property (nonatomic,strong) TL_localMessage *keyboard;
-
+@property (nonatomic,assign) BOOL fillToSize;
+@property (nonatomic,copy) void (^keyboardCallback)(TLKeyboardButton *command);
 @end
 
 @implementation TGBotCommandsKeyboard
@@ -103,13 +110,11 @@
 
 -(instancetype)initWithFrame:(NSRect)frameRect {
     if(self = [super initWithFrame:frameRect]) {
-        _scrollView = [[NSScrollView alloc] initWithFrame:self.bounds];
+        _scrollView = [[TGDisableScrollView alloc] initWithFrame:self.bounds];
         
-       
         
         [self addSubview:_scrollView];
 
-        
         _containerView = [[TMView alloc] initWithFrame:self.bounds];
         _containerView.backgroundColor = [NSColor clearColor];
         _containerView.isFlipped = YES;
@@ -124,14 +129,6 @@
     return self;
 }
 
--(void)deleteKeyboard {
-    [[Storage yap] readWriteWithBlock:^(YapDatabaseReadWriteTransaction * __nonnull transaction) {
-        [transaction removeObjectForKey:_conversation.cacheKey inCollection:BOT_COMMANDS];
-    }];
-    
-    [Notification perform:[Notification notificationNameByDialog:_conversation action:@"botKeyboard"] data:@{KEY_DIALOG:_conversation}];
-}
-
 
 
 - (void)drawRect:(NSRect)dirtyRect {
@@ -140,42 +137,30 @@
     // Drawing code here.
 }
 
--(void)setConversation:(TL_conversation *)conversation botUser:(TLUser *)botUser {
-    _botUser = botUser;
-    _conversation = conversation;
+-(void)setKeyboard:(TL_localMessage *)keyboard fillToSize:(BOOL)fillToSize keyboadrdCallback:(void (^)(TLKeyboardButton *command))keyboardCallback {
+    _fillToSize = fillToSize;
+  
+    _keyboard = keyboard;
     
-    [_containerView removeAllSubviews];
+    _keyboardCallback = [keyboardCallback copy];
     
-    [self load];
+     [_containerView removeAllSubviews];
+     
+     if(keyboard) {
+         [self drawKeyboardWithKeyboard:keyboard];
+     } else {
+         [self setFrameSize:NSMakeSize(NSWidth(self.frame), 0)];
+     }
+
 }
+
+
+
 
 -(BOOL)isCanShow {
     return _rows.count > 0;
 }
 
--(void)load {
-    
-    _rows = nil;
-    
-    
-
-    __block TL_localMessage *keyboard;
-    
-    [[Storage yap] readWithBlock:^(YapDatabaseReadTransaction * __nonnull transaction) {
-        
-         keyboard = [transaction objectForKey:_conversation.cacheKey inCollection:BOT_COMMANDS];
-        
-    }];
-    
-    _keyboard = keyboard;
-    
-    if(keyboard) {
-        [self drawKeyboardWithKeyboard:keyboard];
-    } else {
-        [self setFrameSize:NSMakeSize(NSWidth(self.frame), 0)];
-    }
-    
-}
 
 
 -(void)drawKeyboardWithKeyboard:(TL_localMessage *)keyboard {
@@ -210,12 +195,13 @@
     
     int itemHeight = 33;
     
-    NSUInteger height = f.count * itemHeight + ((f.count -1) * 3 ) + 6;
+    NSUInteger height = f.count * itemHeight + ((f.count -1) * 3 ) + (_fillToSize ? 0 : 6);
     
-    NSUInteger maxHeight = MIN(height,3 * itemHeight + ((3 -1) * 3 ) + 6 + (itemHeight/2));
+    NSUInteger maxHeight = _fillToSize ? height : MIN(height,3 * itemHeight + ((3 -1) * 3 ) + 6 + (itemHeight/2));
     
    
    
+    _scrollView.disableScrolling = _fillToSize;
     
     [_scrollView setFrameSize:NSMakeSize(NSWidth(self.frame), maxHeight)];
     
@@ -230,8 +216,8 @@
             TGBotKeyboardItemView *itemView = [[TGBotKeyboardItemView alloc] initWithFrame:NSMakeRect(0, 0, 0, 22)];
             
             [itemView setKeyboardButton:button];
-            [itemView setConversation:_conversation];
             [itemView setKeyboard:keyboard];
+            [itemView setKeyboardCallback:self.keyboardCallback];
             [_containerView addSubview:itemView];
             
         }];
@@ -249,7 +235,7 @@
     [super setFrameSize:newSize];
     
     __block int x = 0;
-    __block int y = 3;
+    __block int y = _fillToSize ? 0 : 3;
     
     int itemHeight = 33;
     

@@ -10,14 +10,22 @@
 #import <Accelerate/Accelerate.h>
 #import <QuickLook/QuickLook.h>
 #import "NSImage+RHResizableImageAdditions.h"
+
 #define CACHE_IMAGE(Name) NSImage* image_##Name () { \
-static NSImage *image;\
-static dispatch_once_t onceToken;\
-dispatch_once(&onceToken, ^{\
-image = [NSImage imageNamed:@""#Name]; \
-}); \
-return image; \
+return [NSImage imageNamed:@""#Name]; \
 }
+
+
+/*
+ #define CACHE_IMAGE(Name) NSImage* image_##Name () { \
+ static NSImage *image;\
+ static dispatch_once_t onceToken;\
+ dispatch_once(&onceToken, ^{\
+ image = [NSImage imageNamed:@""#Name]; \
+ }); \
+ return image; \
+ }
+ */
 
 
 CACHE_IMAGE(actions)

@@ -2,7 +2,7 @@
 //  MTProto.h
 //  Telegram
 //
-//  Auto created by Mikhail Filimonov on 21.03.16.
+//  Auto created by Mikhail Filimonov on 25.03.16.
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -273,9 +273,6 @@
 @interface TLAccountDaysTTL : TLObject
 @end
 	
-@interface TLaccount_SentChangePhoneCode : TLObject
-@end
-	
 @interface TLDocumentAttribute : TLObject
 @end
 	
@@ -424,6 +421,15 @@
 @end
 	
 @interface TLchannels_MessageEditData : TLObject
+@end
+	
+@interface TLauth_CodeType : TLObject
+@end
+	
+@interface TLauth_SentCodeType : TLObject
+@end
+	
+@interface TLmessages_BotCallbackAnswer : TLObject
 @end
 	
 @interface TLAudio : TLObject
@@ -1255,17 +1261,16 @@
 @end
 	
 @interface TLauth_SentCode()
-@property Boolean phone_registered;
+@property int flags;
+@property (nonatomic,assign,readonly) BOOL isPhone_registered;
+@property (nonatomic, strong) TLauth_SentCodeType* type;
 @property (nonatomic, strong) NSString* phone_code_hash;
-@property int send_call_timeout;
-@property Boolean is_password;
+@property (nonatomic, strong) TLauth_CodeType* next_type;
+@property int timeout;
 @end
 
 @interface TL_auth_sentCode : TLauth_SentCode<NSCoding>
-+(TL_auth_sentCode*)createWithPhone_registered:(Boolean)phone_registered phone_code_hash:(NSString*)phone_code_hash send_call_timeout:(int)send_call_timeout is_password:(Boolean)is_password;
-@end
-@interface TL_auth_sentAppCode : TLauth_SentCode<NSCoding>
-+(TL_auth_sentAppCode*)createWithPhone_registered:(Boolean)phone_registered phone_code_hash:(NSString*)phone_code_hash send_call_timeout:(int)send_call_timeout is_password:(Boolean)is_password;
++(TL_auth_sentCode*)createWithFlags:(int)flags  type:(TLauth_SentCodeType*)type phone_code_hash:(NSString*)phone_code_hash next_type:(TLauth_CodeType*)next_type timeout:(int)timeout;
 @end
 	
 @interface TLauth_Authorization()
@@ -1620,7 +1625,7 @@
 @property int version;
 @property (nonatomic, strong) NSMutableArray* dc_options;
 @property Boolean blocked;
-@property (nonatomic, strong) TLPeer* peer;
+@property (nonatomic, strong) TLInputPeer* peer;
 @property (nonatomic, strong) TLPeerNotifySettings* notify_settings;
 @property (nonatomic, strong) NSString* type;
 @property (nonatomic, strong) TLMessageMedia* media;
@@ -1641,7 +1646,9 @@
 @property long query_id;
 @property (nonatomic, strong) NSString* query;
 @property (nonatomic, strong) NSString* offset;
-@property (nonatomic, strong) NSString* update_bot_inline_id;
+@property (nonatomic, strong) NSString* id_update_bot_inline_send;
+@property int msg_id;
+@property (nonatomic, strong) NSString* text;
 @end
 
 @interface TL_updateNewMessage : TLUpdate<NSCoding>
@@ -1771,13 +1778,16 @@
 +(TL_updateBotInlineQuery*)createWithQuery_id:(long)query_id user_id:(int)user_id query:(NSString*)query offset:(NSString*)offset;
 @end
 @interface TL_updateBotInlineSend : TLUpdate<NSCoding>
-+(TL_updateBotInlineSend*)createWithUser_id:(int)user_id query:(NSString*)query update_bot_inline_id:(NSString*)update_bot_inline_id;
++(TL_updateBotInlineSend*)createWithUser_id:(int)user_id query:(NSString*)query id_update_bot_inline_send:(NSString*)id_update_bot_inline_send;
 @end
 @interface TL_updateEditChannelMessage : TLUpdate<NSCoding>
 +(TL_updateEditChannelMessage*)createWithMessage:(TLMessage*)message pts:(int)pts pts_count:(int)pts_count;
 @end
 @interface TL_updateChannelPinnedMessage : TLUpdate<NSCoding>
 +(TL_updateChannelPinnedMessage*)createWithChannel_id:(int)channel_id n_id:(int)n_id;
+@end
+@interface TL_updateBotCallbackQuery : TLUpdate<NSCoding>
++(TL_updateBotCallbackQuery*)createWithQuery_id:(long)query_id user_id:(int)user_id peer:(TLInputPeer*)peer msg_id:(int)msg_id text:(NSString*)text;
 @end
 	
 @interface TLupdates_State()
@@ -2279,15 +2289,6 @@
 +(TL_accountDaysTTL*)createWithDays:(int)days;
 @end
 	
-@interface TLaccount_SentChangePhoneCode()
-@property (nonatomic, strong) NSString* phone_code_hash;
-@property int send_call_timeout;
-@end
-
-@interface TL_account_sentChangePhoneCode : TLaccount_SentChangePhoneCode<NSCoding>
-+(TL_account_sentChangePhoneCode*)createWithPhone_code_hash:(NSString*)phone_code_hash send_call_timeout:(int)send_call_timeout;
-@end
-	
 @interface TLDocumentAttribute()
 @property int w;
 @property int h;
@@ -2604,10 +2605,23 @@
 	
 @interface TLKeyboardButton()
 @property (nonatomic, strong) NSString* text;
+@property (nonatomic, strong) NSString* url;
 @end
 
 @interface TL_keyboardButton : TLKeyboardButton<NSCoding>
 +(TL_keyboardButton*)createWithText:(NSString*)text;
+@end
+@interface TL_keyboardButtonUrl : TLKeyboardButton<NSCoding>
++(TL_keyboardButtonUrl*)createWithText:(NSString*)text url:(NSString*)url;
+@end
+@interface TL_keyboardButtonCallback : TLKeyboardButton<NSCoding>
++(TL_keyboardButtonCallback*)createWithText:(NSString*)text;
+@end
+@interface TL_keyboardButtonRequestPhone : TLKeyboardButton<NSCoding>
++(TL_keyboardButtonRequestPhone*)createWithText:(NSString*)text;
+@end
+@interface TL_keyboardButtonRequestGeoLocation : TLKeyboardButton<NSCoding>
++(TL_keyboardButtonRequestGeoLocation*)createWithText:(NSString*)text;
 @end
 	
 @interface TLKeyboardButtonRow()
@@ -2623,6 +2637,7 @@
 @property (nonatomic,assign,readonly) BOOL isSelective;
 @property (nonatomic,assign,readonly) BOOL isSingle_use;
 @property (nonatomic,assign,readonly) BOOL isResize;
+@property (nonatomic,assign,readonly) BOOL isInline;
 @property (nonatomic, strong) NSMutableArray* rows;
 @end
 
@@ -2633,7 +2648,7 @@
 +(TL_replyKeyboardForceReply*)createWithFlags:(int)flags  ;
 @end
 @interface TL_replyKeyboardMarkup : TLReplyMarkup<NSCoding>
-+(TL_replyKeyboardMarkup*)createWithFlags:(int)flags    rows:(NSMutableArray*)rows;
++(TL_replyKeyboardMarkup*)createWithFlags:(int)flags     rows:(NSMutableArray*)rows;
 @end
 	
 @interface TLhelp_AppChangelog()
@@ -3018,6 +3033,46 @@
 
 @interface TL_channels_messageEditData : TLchannels_MessageEditData<NSCoding>
 +(TL_channels_messageEditData*)createWithFlags:(int)flags ;
+@end
+	
+@interface TLauth_CodeType()
+
+@end
+
+@interface TL_auth_codeTypeSms : TLauth_CodeType<NSCoding>
++(TL_auth_codeTypeSms*)create;
+@end
+@interface TL_auth_codeTypeCall : TLauth_CodeType<NSCoding>
++(TL_auth_codeTypeCall*)create;
+@end
+@interface TL_auth_codeTypeFlashCall : TLauth_CodeType<NSCoding>
++(TL_auth_codeTypeFlashCall*)create;
+@end
+	
+@interface TLauth_SentCodeType()
+@property int length;
+@property (nonatomic, strong) NSString* pattern;
+@end
+
+@interface TL_auth_sentCodeTypeApp : TLauth_SentCodeType<NSCoding>
++(TL_auth_sentCodeTypeApp*)createWithLength:(int)length;
+@end
+@interface TL_auth_sentCodeTypeSms : TLauth_SentCodeType<NSCoding>
++(TL_auth_sentCodeTypeSms*)createWithLength:(int)length;
+@end
+@interface TL_auth_sentCodeTypeCall : TLauth_SentCodeType<NSCoding>
++(TL_auth_sentCodeTypeCall*)createWithLength:(int)length;
+@end
+@interface TL_auth_sentCodeTypeFlashCall : TLauth_SentCodeType<NSCoding>
++(TL_auth_sentCodeTypeFlashCall*)createWithPattern:(NSString*)pattern;
+@end
+	
+@interface TLmessages_BotCallbackAnswer()
+@property (nonatomic, strong) NSString* message;
+@end
+
+@interface TL_messages_botCallbackAnswer : TLmessages_BotCallbackAnswer<NSCoding>
++(TL_messages_botCallbackAnswer*)createWithMessage:(NSString*)message;
 @end
 	
 @interface TLAudio()

@@ -170,7 +170,7 @@
                 [self sendAccountDaysTTL:365];
             }]];
             
-            [menu popUpForView:view.subdescField];
+            //[menu popUpForView:view.subdescField];
         }
         
     } description:NSLocalizedString(@"PrivacyAndSecurity.DeleteAccount", nil) height:42 stateback:^id(TGGeneralRowItem *item) {
@@ -251,7 +251,7 @@
     
     NSString *key = [NSString stringWithFormat:@"AccountDaysTTL%d",self.accountDaysTTL];
     
-    self.accountDaysItem.subdesc = NSLocalizedString(key, nil);
+    [self.accountDaysItem setSubdescString:NSLocalizedString(key, nil)];
     
     [self.tableView reloadData];
 }
@@ -325,7 +325,7 @@
                 break;
         }
         
-        item.subdesc = subdesc;
+        [item setSubdescString:subdesc];
 
     };
     

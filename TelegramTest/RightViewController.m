@@ -844,7 +844,7 @@
     [self.navigationViewController pushViewController:self.phoneChangeController animated:self.navigationViewController.currentController != [self noDialogsSelectedViewController]];
 }
 
-- (void)showPhoneChangeConfirmController:(TL_account_sentChangePhoneCode *)params phone:(NSString *)phone {
+- (void)showPhoneChangeConfirmController:(id)params phone:(NSString *)phone {
     if(self.navigationViewController.currentController == self.phoneChangeConfirmController)
         return;
     
