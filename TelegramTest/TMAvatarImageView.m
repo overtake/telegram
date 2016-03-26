@@ -89,7 +89,7 @@ static const TGTwoColors colors[] = {
 + (instancetype)standartTableAvatar {
     TMAvatarImageView *avatarImageView = [[self alloc] initWithFrame:NSMakeRect(10, roundf((66 - 50) / 2.0), 50, 50)];
     avatarImageView.placeholder = [TMAvatarImageView placeholderImageBySize:avatarImageView.frame.size andColor:NSColorFromRGB(0xfafafa)];
-    [avatarImageView setFont:TGSystemLightFont(18)];
+    [avatarImageView setFont:TGSystemFont(18)];
     [avatarImageView setOffsetTextY:-1];
     return avatarImageView;
 }
@@ -97,7 +97,7 @@ static const TGTwoColors colors[] = {
 + (instancetype)standartNewConversationTableAvatar {
     TMAvatarImageView *avatarImageView = [[self alloc] initWithFrame:NSMakeRect(10, roundf((60 - 44) / 2.0), 44, 44)];
     avatarImageView.placeholder = [TMAvatarImageView placeholderImageBySize:avatarImageView.frame.size andColor:NSColorFromRGB(0xfafafa)];
-    [avatarImageView setFont:TGSystemLightFont(18)];
+    [avatarImageView setFont:TGSystemFont(18)];
     return avatarImageView;
 }
 
@@ -120,14 +120,14 @@ static const TGTwoColors colors[] = {
 + (instancetype) standartUserInfoAvatar {
     TMAvatarImageView *avatarImageView = [[self alloc] initWithFrame:NSMakeRect(0, 0, 130, 130)];
     avatarImageView.placeholder = [TMAvatarImageView placeholderImageBySize:avatarImageView.frame.size andColor:NSColorFromRGB(0xfafafa)];
-    [avatarImageView setFont:TGSystemLightFont(30)];
+    [avatarImageView setFont:TGSystemFont(30)];
     return avatarImageView;
 }
 
 + (instancetype) standartInfoAvatar {
     TMAvatarImageView *avatarImageView = [[self alloc] initWithFrame:NSMakeRect(0, 0, 70, 70)];
     avatarImageView.placeholder = [TMAvatarImageView placeholderImageBySize:avatarImageView.frame.size andColor:NSColorFromRGB(0xfafafa)];
-    [avatarImageView setFont:TGSystemLightFont(18)];
+    [avatarImageView setFont:TGSystemFont(18)];
     return avatarImageView;
 }
 

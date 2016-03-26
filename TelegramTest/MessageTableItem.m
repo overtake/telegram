@@ -257,7 +257,8 @@ static NSCache *cItems;
     long cacheId = channelMsgId(_isChat ? 1 : 0, _message.isPost ? _message.peer_id : _message.from_id);
     
     
-    [cItems setObject:item forKey:@(cacheId)];
+    if(item.user != nil)
+        [cItems setObject:item forKey:@(cacheId)];
 }
 
 
@@ -760,26 +761,36 @@ static NSTextAttachment *channelViewsCountAttachment() {
 
 
 
--(void)proccessInlineKeyboardButton:(TLKeyboardButton *)keyboard {
+-(void)proccessInlineKeyboardButton:(TLKeyboardButton *)keyboard handler:(void (^)(TGInlineKeyboardProccessType type))handler {
+    
+    assert(handler != nil);
+    
     if([keyboard isKindOfClass:[TL_keyboardButtonCallback class]]) {
         
         weak();
+        
+        handler(TGInlineKeyboardProccessingType);
         
         [RPCRequest sendRequest:[TLAPI_messages_getBotCallbackAnswer createWithPeer:_message.conversation.inputPeer msg_id:_message.n_id text:keyboard.text] successHandler:^(id request, TL_messages_botCallbackAnswer *response) {
             
             strongWeak();
             
             if(strongSelf == weakSelf) {
-                alert(appName(), response.message);
+                if(response.message.length > 0)
+                    [Notification perform:SHOW_ALERT_HINT_VIEW data:@{@"text":response.message,@"color":NSColorFromRGB(0x4ba3e2)}];
+                
+                handler(TGInlineKeyboardSuccessType);
             }
             
             
         } errorHandler:^(id request, RpcError *error) {
-            
+            handler(TGInlineKeyboardErrorType);
         }];
         
     } else if([keyboard isKindOfClass:[TL_keyboardButtonUrl class]]) {
         open_link(keyboard.url);
+        handler(TGInlineKeyboardSuccessType);
+        
     } else if([keyboard isKindOfClass:[TL_keyboardButtonRequestGeoLocation class]]) {
         
         weak();
@@ -789,18 +800,26 @@ static NSTextAttachment *channelViewsCountAttachment() {
             if(success) {
                 strongWeak();
                 
+                handler(TGInlineKeyboardProccessingType);
+                
                 strongSelf.locationRequest = [[TGLocationRequest alloc] init];
                 
                 [strongSelf.locationRequest startRequestLocation:^(CLLocation *location) {
                     
                     [strongSelf.table.viewController sendLocation:location.coordinate forConversation:_message.conversation];
                     
+                    handler(TGInlineKeyboardSuccessType);
+                    
                 } failback:^(NSString *error) {
+                    
+                    handler(TGInlineKeyboardErrorType);
                     
                     alert(appName(), error);
                     
                 }];
 
+            } else {
+                handler(TGInlineKeyboardErrorType);
             }
             
         }];
@@ -816,12 +835,16 @@ static NSTextAttachment *channelViewsCountAttachment() {
                 strongWeak();
                 
                 [strongSelf.table.viewController shareContact:[UsersManager currentUser] forConversation:_message.conversation callback:nil];
+                
+                handler(TGInlineKeyboardSuccessType);
             }
             
         }];
         
     } else if([keyboard isKindOfClass:[TL_keyboardButton class]]) {
         [self.table.viewController sendMessage:keyboard.text forConversation:_message.conversation];
+        
+        handler(TGInlineKeyboardSuccessType);
     }
 }
 

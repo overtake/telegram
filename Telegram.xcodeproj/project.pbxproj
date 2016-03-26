@@ -338,6 +338,7 @@
 		C22A2A0C1C21A38100678172 /* TGDocumentThumbObject.m in Sources */ = {isa = PBXBuildFile; fileRef = C22A2A0B1C21A38100678172 /* TGDocumentThumbObject.m */; };
 		C22A2A0F1C21C67A00678172 /* CompressedDocumentSenderItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C22A2A0E1C21C67A00678172 /* CompressedDocumentSenderItem.m */; };
 		C22C7F2C18B2163F007C4D17 /* MTNetwork.m in Sources */ = {isa = PBXBuildFile; fileRef = C22C7F2918B2163F007C4D17 /* MTNetwork.m */; };
+		C230D85B1CA6AE7100475FF5 /* TGMessagesViewAlertHintView.m in Sources */ = {isa = PBXBuildFile; fileRef = C230D85A1CA6AE7100475FF5 /* TGMessagesViewAlertHintView.m */; };
 		C23223D21A024CC600E476E2 /* TGSecretInAction.m in Sources */ = {isa = PBXBuildFile; fileRef = C23223D11A024CC600E476E2 /* TGSecretInAction.m */; };
 		C23223D91A029ED600E476E2 /* FlushHistorySecretSenderItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C23223D81A029ED600E476E2 /* FlushHistorySecretSenderItem.m */; };
 		C23298CA18CF1A34000826E5 /* TL_conversation.m in Sources */ = {isa = PBXBuildFile; fileRef = C23298C918CF1A34000826E5 /* TL_conversation.m */; };
@@ -1743,6 +1744,8 @@
 		C22A2A0E1C21C67A00678172 /* CompressedDocumentSenderItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CompressedDocumentSenderItem.m; sourceTree = "<group>"; };
 		C22C7F2818B2163F007C4D17 /* MTNetwork.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTNetwork.h; sourceTree = "<group>"; };
 		C22C7F2918B2163F007C4D17 /* MTNetwork.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MTNetwork.m; path = TelegramTest/MTNetwork.m; sourceTree = SOURCE_ROOT; };
+		C230D8591CA6AE7100475FF5 /* TGMessagesViewAlertHintView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGMessagesViewAlertHintView.h; sourceTree = "<group>"; };
+		C230D85A1CA6AE7100475FF5 /* TGMessagesViewAlertHintView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGMessagesViewAlertHintView.m; sourceTree = "<group>"; };
 		C23223D01A024CC600E476E2 /* TGSecretInAction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGSecretInAction.h; sourceTree = "<group>"; };
 		C23223D11A024CC600E476E2 /* TGSecretInAction.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGSecretInAction.m; sourceTree = "<group>"; };
 		C23223D71A029ED600E476E2 /* FlushHistorySecretSenderItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FlushHistorySecretSenderItem.h; sourceTree = "<group>"; };
@@ -3661,6 +3664,8 @@
 				C2753DD119E4282000752BAF /* SearchMessagesView.m */,
 				C2967B441AA8684E003759B2 /* TGReplayMessage.h */,
 				C2967B451AA8684E003759B2 /* TGReplayMessage.m */,
+				C230D8591CA6AE7100475FF5 /* TGMessagesViewAlertHintView.h */,
+				C230D85A1CA6AE7100475FF5 /* TGMessagesViewAlertHintView.m */,
 			);
 			name = messages;
 			sourceTree = "<group>";
@@ -6899,6 +6904,7 @@
 				C2A2B4311BD7C8DB0083DA8A /* TGModalForwardView.m in Sources */,
 				C268C14319F01AE3007F836A /* TMLoaderView.m in Sources */,
 				C2D51BE41B21C67B009327C0 /* EMInMemoryImageCache.m in Sources */,
+				C230D85B1CA6AE7100475FF5 /* TGMessagesViewAlertHintView.m in Sources */,
 				C233FB3418B661B6008C9A96 /* TMCheckBox.m in Sources */,
 				0A59067F18AA32C8002ED7BA /* BTRScrollView.m in Sources */,
 				CEB0D72418E3770D00457D08 /* TMWindowTitleView.m in Sources */,

@@ -88,6 +88,7 @@
 
 #import "TGInputMessageTemplate.h"
 #import "TGMessageEditSender.h"
+#import "TGMessagesViewAlertHintView.h"
 #define HEADER_MESSAGES_GROUPING_TIME (10 * 60)
 
 #define SCROLLDOWNBUTTON_OFFSET 1500
@@ -117,6 +118,7 @@
 
 @interface MessagesViewController () <SettingsListener,TMNavagationDelegate> {
     __block SMDelayedBlockHandle _delayedBlockHandle;
+    __block SMDelayedBlockHandle _messagesHintHandle;
 }
 
 @property (nonatomic, strong) NSMutableArray *messages;
@@ -191,6 +193,8 @@
 
 
 @property (nonatomic,strong) TGInputMessageTemplate *template;
+
+@property (nonatomic,strong) TGMessagesViewAlertHintView *messagesAlertHintView;
 
 
 @end
@@ -305,6 +309,8 @@
     [Notification addObserver:self selector:@selector(didChangeDeleteDialog:) name:DIALOG_DELETE];
     
     [Notification addObserver:self selector:@selector(updateMessageViews:) name:UPDATE_MESSAGE_VIEWS];
+    
+    [Notification addObserver:self selector:@selector(showHintAlertView:) name:SHOW_ALERT_HINT_VIEW];
     
     [self.view setAutoresizesSubviews:YES];
     [self.view setAutoresizingMask:NSViewHeightSizable | NSViewWidthSizable];
@@ -450,6 +456,12 @@
     
     [self.view addSubview:self.hintView];
     
+    
+    _messagesAlertHintView = [[TGMessagesViewAlertHintView alloc] initWithFrame:NSMakeRect(0, NSHeight(self.view.frame) - 25, NSWidth(self.view.frame), 25)];
+    
+    [self.view addSubview:_messagesAlertHintView];
+    [_messagesAlertHintView setHidden:YES];
+
     
 }
 
@@ -1407,6 +1419,40 @@ static NSTextAttachment *headerMediaIcon() {
     positionAnimation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut];
     
     return positionAnimation;
+}
+
+-(void)showHintAlertView:(NSNotification *)notification {
+    
+    NSString *text = notification.userInfo[@"text"];
+    NSColor *color = notification.userInfo[@"color"];
+    
+    [_messagesAlertHintView setText:text backgroundColor:color];
+    
+    [_messagesAlertHintView setFrameSize:NSMakeSize(NSWidth(self.view.frame), NSHeight(_messagesAlertHintView.frame))];
+    
+    void (^runAnimation)(BOOL hide) = ^(BOOL hide){
+        [NSAnimationContext runAnimationGroup:^(NSAnimationContext * _Nonnull context) {
+            
+            [[_messagesAlertHintView animator] setFrameOrigin:NSMakePoint(NSMinX(_messagesAlertHintView.frame), hide ? NSHeight(self.view.frame) : (NSHeight(self.view.frame) - NSHeight(_messagesAlertHintView.frame)))];
+            
+        } completionHandler:^{
+            [_messagesAlertHintView setHidden:hide];
+        }];
+    };
+    
+    if(_messagesAlertHintView.isHidden) {
+        [_messagesAlertHintView setHidden:NO];
+        [_messagesAlertHintView setFrameOrigin:NSMakePoint(NSMinX(_messagesAlertHintView.frame), NSHeight(self.view.frame))];
+        runAnimation(NO);
+    }
+    
+    
+    cancel_delayed_block(_messagesHintHandle);
+    
+    _messagesHintHandle = perform_block_after_delay(3.5, ^{
+        runAnimation(YES);
+    });
+    
 }
 
 - (void)showTopInfoView:(BOOL)animated {
@@ -2563,6 +2609,9 @@ static NSTextAttachment *headerMediaIcon() {
     
     [self hideSearchBox:NO];
     
+    cancel_delayed_block(_messagesHintHandle);
+    [_messagesAlertHintView setHidden:YES];
+    
     if(![globalAudioPlayer().delegate isKindOfClass:[TGAudioPlayerWindow class]]) {
         [globalAudioPlayer() stop];
         [globalAudioPlayer().delegate audioPlayerDidFinishPlaying:globalAudioPlayer()];
@@ -2717,6 +2766,8 @@ static NSTextAttachment *headerMediaIcon() {
         
         self.conversation.last_marked_message = self.conversation.top_message;
         self.conversation.last_marked_date = [[MTNetwork instance] getTime];
+        
+        [self.conversation save];
         
         cancel_delayed_block(_delayedBlockHandle);
         

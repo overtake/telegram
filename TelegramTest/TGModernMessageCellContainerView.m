@@ -269,7 +269,10 @@
         
         if(!_keyboard) {
             _keyboard = [[TGBotCommandsKeyboard alloc] initWithFrame:NSZeroRect];
-            
+            [_keyboard setBackgroundColor:[NSColor whiteColor]];
+            [_keyboard setButtonBorderColor:NSColorFromRGB(0x4ba3e2)];
+            [_keyboard setButtonColor:NSColorFromRGB(0x4ba3e2)];
+            [_keyboard setButtonTextColor:[NSColor whiteColor]];
             [self.contentContainerView addSubview:_keyboard];
         }
         
@@ -283,7 +286,10 @@
             
             if(strongSelf == weakSelf) {
                 
-                [item proccessInlineKeyboardButton:command];
+                [item proccessInlineKeyboardButton:command handler:^(TGInlineKeyboardProccessType type) {
+                    [strongSelf.keyboard setProccessing:type == TGInlineKeyboardProccessingType forKeyboardButton:command];
+                    
+                }];
                 
             }
             
@@ -587,6 +593,8 @@ static bool dragAction = NO;
         [_captionView.textView pop_addAnimation:anim forKey:@"background"];
         [_nameView pop_addAnimation:anim forKey:@"background"];
     }
+    
+    [_keyboard setBackgroundColor:color];
     
     
     [_replyContainer _didChangeBackgroundColorWithAnimation:anim toColor:color];

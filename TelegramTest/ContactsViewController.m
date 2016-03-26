@@ -42,7 +42,7 @@
         self.field = [TMTextField defaultTextField];
         
         [self.field setBackgroundColor:[NSColor clearColor]];
-        [self.field setFont:TGSystemMediumFont(12)];
+        [self.field setFont:TGSystemFont(13)];
         [[self.field cell] setLineBreakMode:NSLineBreakByCharWrapping];
         [[self.field cell] setTruncatesLastVisibleLine:YES];
         
@@ -50,7 +50,7 @@
         
         [self.field sizeToFit];
         
-        [self.field setTextColor:BLUE_UI_COLOR];
+        [self.field setTextColor:LINK_COLOR];
         
         [self.field setFrameOrigin:NSMakePoint(55, 13)];
         
@@ -70,7 +70,7 @@
 
 -(void)checkSelected:(BOOL)isSelected {
     self.imageView.image = isSelected ? image_ContactsAddContactActive() : image_ContactsAddContact();
-    [self.field setTextColor:isSelected ? NSColorFromRGB(0xffffff) : GRAY_TEXT_COLOR];
+    [self.field setTextColor:isSelected ? NSColorFromRGB(0xffffff) : LINK_COLOR];
 }
 
 -(void)drawRect:(NSRect)dirtyRect {

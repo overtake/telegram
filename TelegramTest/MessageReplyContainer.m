@@ -228,6 +228,10 @@
     
 }
 
+-(void)mouseDown:(NSEvent *)theEvent{
+    
+}
+
 - (void)drawRect:(NSRect)dirtyRect {
     [super drawRect:dirtyRect];
     

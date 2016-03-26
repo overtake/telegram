@@ -169,7 +169,7 @@
             strongWeak();
             
             if(strongSelf == weakSelf) {
-                [weakSelf checkPassword];
+                [strongSelf checkPassword];
             }
             
             

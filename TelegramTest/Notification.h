@@ -54,7 +54,7 @@ extern NSString *const KEY_MODAL_VIEW;
 
 
 extern NSString *const FULLCHAT_LOADED; //загружен полный чат
-
+extern NSString *const SHOW_ALERT_HINT_VIEW;
 extern NSString *const USER_ONLINE_CHANGED;
 
 extern NSString *const USER_UPDATE_PHOTO;

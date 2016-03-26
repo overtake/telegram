@@ -17,7 +17,7 @@
     NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
     [paragraphStyle setAlignment:NSLeftTextAlignment];
     
-    NSMutableAttributedString *attr = [[NSMutableAttributedString alloc] initWithString:[value trim] attributes:@{NSForegroundColorAttributeName: NSColorFromRGB(0x333333), (NSString *)kCTFontAttributeName:TGSystemLightFont(14), NSParagraphStyleAttributeName: paragraphStyle}];
+    NSMutableAttributedString *attr = [[NSMutableAttributedString alloc] initWithString:[value trim] attributes:@{NSForegroundColorAttributeName: NSColorFromRGB(0x333333), (NSString *)kCTFontAttributeName:TGSystemFont(14), NSParagraphStyleAttributeName: paragraphStyle}];
     
     if(detectUrls)
         [attr detectAndAddLinks:URLFindTypeAll];

@@ -60,7 +60,7 @@
 + (instancetype)standartUserProfileButtonWithTitle:(NSString *)title {
     TMTextButton *button = [[TMTextButton alloc] init];
     [button setStringValue:title];
-    [button setFont:TGSystemLightFont(14)];
+    [button setFont:TGSystemFont(14)];
     [button setTextColor:BLUE_UI_COLOR];
     [button setWantsLayer:YES];
     [button sizeToFit];

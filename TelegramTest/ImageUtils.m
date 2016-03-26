@@ -245,6 +245,8 @@ CACHE_IMAGE(ConversationInputFieldBroadcastIconInactive);
 CACHE_IMAGE(ModernMessageCheckmark1);
 CACHE_IMAGE(ModernMessageCheckmark2);
 
+CACHE_IMAGE(bot_inline_keyboard_url);
+
 @implementation ImageUtils
 
 NSImage *previewImageForDocument(NSString *path) {

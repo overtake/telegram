@@ -8,6 +8,7 @@
 
 #import "TGBotCommandsKeyboard.h"
 #import "TGTextLabel.h"
+#import "ITProgressIndicator.h"
 @interface TGDisableScrollView : NSScrollView
 @property (nonatomic,assign) BOOL disableScrolling;
 @end
@@ -35,6 +36,8 @@
 
 @property (nonatomic,assign) NSSize stringSize;
 
+@property (nonatomic,strong) ITProgressIndicator *indicator;
+
 @end
 
 
@@ -51,7 +54,23 @@
         _textField = [[TGTextLabel alloc] initWithFrame:NSZeroRect];
         [self addSubview:_textField];
         
-       
+        _indicator = [[ITProgressIndicator alloc] initWithFrame:NSMakeRect(0, 0, 20, 20)];
+        
+        
+        _indicator.color = [NSColor whiteColor];
+        
+        [_indicator setIndeterminate:YES];
+        
+        _indicator.lengthOfLine = 5;
+        _indicator.numberOfLines = 10;
+        _indicator.innerMargin = 5;
+        _indicator.widthOfLine = 2;
+        
+     
+        
+        [_indicator setHidden:YES];
+        
+        [self addSubview:_indicator];
         
     }
     
@@ -73,6 +92,29 @@
     [self setToolTip:NSWidth(self.frame) - 10 > NSWidth(_textField.frame) ? _keyboardButton.text : nil];
 }
 
+-(void)setProccessing:(BOOL)proccessing {
+    [_indicator setHidden:!proccessing];
+    
+    [_indicator setCenterByView:self];
+    
+    [_textField setHidden:proccessing];
+    
+    [_indicator setAnimates:proccessing];
+}
+
+-(void)setTextColor:(NSColor *)textColor {
+    [_string addAttribute:NSForegroundColorAttributeName value:textColor range:_string.range];
+}
+
+-(void)setBackgroundColor:(NSColor *)backgroundColor {
+    self.layer.backgroundColor = backgroundColor.CGColor;
+    [_textField setBackgroundColor:backgroundColor];
+}
+
+-(void)setBorderColor:(NSColor *)color {
+    self.layer.borderColor = color.CGColor;
+}
+
 -(void)setFrameSize:(NSSize)newSize {
     [super setFrameSize:newSize];
     [_textField setText:_string maxWidth:MIN(NSWidth(self.frame) - 10,_stringSize.width) height:_stringSize.height];
@@ -81,17 +123,23 @@
 
 -(void)mouseUp:(NSEvent *)theEvent {
     
+    self.layer.opacity = 1.0;
+    
     if([self.superview mouse:[self.superview convertPoint:[theEvent locationInWindow] fromView:nil] inRect:self.frame]) {
         if(_keyboardCallback != nil) {
             _keyboardCallback(_keyboardButton);
         }
     }
+}
+
+-(void)mouseDragged:(NSEvent *)theEvent {
     
-   
 }
 
 -(void)mouseDown:(NSEvent *)theEvent {
-     [super mouseDown:theEvent];
+    //[super mouseDown:theEvent];
+    
+    self.layer.opacity = 0.8;
 }
 
 @end
@@ -121,7 +169,6 @@
         _scrollView.backgroundColor = NSColorFromRGB(0xfafafa);
         _scrollView.documentView = _containerView;
         
-        
         _containerView.autoresizingMask = _scrollView.autoresizingMask = self.autoresizingMask = NSViewWidthSizable;
         
     }
@@ -142,6 +189,8 @@
   
     _keyboard = keyboard;
     
+    _rows = @[];
+    
     _keyboardCallback = [keyboardCallback copy];
     
      [_containerView removeAllSubviews];
@@ -155,7 +204,77 @@
 }
 
 
+-(void)setBackgroundColor:(NSColor *)backgroundColor {
+    [super setBackgroundColor:backgroundColor];
+    _scrollView.backgroundColor = backgroundColor;
+}
 
+-(void)setButtonColor:(NSColor *)buttonColor {
+    _buttonColor = buttonColor;
+    
+    [self updateButtons];
+}
+
+-(void)setButtonTextColor:(NSColor *)textColor {
+    _buttonTextColor = textColor;
+    
+    [self updateButtons];
+}
+
+-(void)setButtonBorderColor:(NSColor *)buttonBorderColor {
+    _buttonBorderColor = buttonBorderColor;
+    
+    [self updateButtons];
+}
+
+
+-(void)updateButtons {
+    
+    __block int k = 0;
+    
+    [_rows enumerateObjectsUsingBlock:^(NSMutableArray *row, NSUInteger rdx, BOOL *stop) {
+        
+        [row enumerateObjectsUsingBlock:^(TL_keyboardButton *button, NSUInteger idx, BOOL *stop) {
+            
+            
+            if(_containerView.subviews.count > k) {
+                TGBotKeyboardItemView *itemView = [_containerView.subviews objectAtIndex:k];
+               
+                [itemView setBackgroundColor:_buttonColor ? _buttonColor : [NSColor whiteColor]];
+                [itemView setTextColor:_buttonTextColor ? _buttonTextColor : TEXT_COLOR];
+                [itemView setBorderColor:_buttonBorderColor ? _buttonBorderColor : DIALOG_BORDER_COLOR];
+            }
+            
+            ++k;
+            
+        }];
+        
+    }];
+}
+
+-(void)setProccessing:(BOOL)proccessing forKeyboardButton:(TLKeyboardButton *)keyboardButton {
+    __block int k = 0;
+    
+    [_rows enumerateObjectsUsingBlock:^(NSMutableArray *row, NSUInteger rdx, BOOL *stop) {
+        
+        [row enumerateObjectsUsingBlock:^(TL_keyboardButton *button, NSUInteger idx, BOOL *stop) {
+            
+            
+            if(_containerView.subviews.count > k) {
+                TGBotKeyboardItemView *itemView = [_containerView.subviews objectAtIndex:k];
+                
+                if(itemView.keyboardButton == keyboardButton) {
+                    [itemView setProccessing:proccessing];
+                }
+                
+            }
+            
+            ++k;
+            
+        }];
+        
+    }];
+}
 
 -(BOOL)isCanShow {
     return _rows.count > 0;
@@ -218,6 +337,11 @@
             [itemView setKeyboardButton:button];
             [itemView setKeyboard:keyboard];
             [itemView setKeyboardCallback:self.keyboardCallback];
+            
+            [itemView setBackgroundColor:_buttonColor ? _buttonColor : [NSColor whiteColor]];
+            [itemView setTextColor:_buttonTextColor ? _buttonTextColor : TEXT_COLOR];
+            [itemView setBorderColor:_buttonBorderColor ? _buttonBorderColor : DIALOG_BORDER_COLOR];
+            
             [_containerView addSubview:itemView];
             
         }];

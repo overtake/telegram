@@ -353,7 +353,7 @@ DYNAMIC_PROPERTY(ProfileTitle);
         [userNameProfileTitle setSelectionColor:NSColorFromRGB(0xffffff) forColor:NSColorFromRGB(0x333333)];
         
         
-        [userNameProfileTitle setFont:TGSystemLightFont(14) forRange:userNameProfileTitle.range];
+        [userNameProfileTitle setFont:TGSystemFont(14) forRange:userNameProfileTitle.range];
         [self setUserNameProfileTitle:userNameProfileTitle];
 
     }
@@ -517,7 +517,7 @@ DYNAMIC_PROPERTY(STATUS_MESSAGES_HEADER_VIEW);
             range = [str appendString:string withColor:NSColorFromRGB(0xa1a1a1)];
         }
         
-        [str setFont:TGSystemLightFont(12.5) forRange:range];
+        [str setFont:TGSystemFont(12.5) forRange:range];
     }
     return str;
 }
@@ -585,7 +585,7 @@ DYNAMIC_PROPERTY(STATUS_MESSAGES_HEADER_VIEW);
             range = [str appendString:string withColor:GRAY_TEXT_COLOR];
         }
         
-        [str setFont:TGSystemLightFont(14) forRange:range];
+        [str setFont:TGSystemFont(14) forRange:range];
         
         [str setAlignment:NSLeftTextAlignment range:range];
     }

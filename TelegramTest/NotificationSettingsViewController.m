@@ -220,8 +220,6 @@
     
     
     
-    
-    
     [self.tableView addItem:soundEffects tableRedraw:NO];
 
     [self.tableView addItem:messagePreview tableRedraw:NO];

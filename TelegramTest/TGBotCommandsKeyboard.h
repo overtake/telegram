@@ -13,7 +13,13 @@
 
 @property (nonatomic,strong,readonly) TL_localMessage *keyboard;
 
+@property (nonatomic,strong) NSColor *buttonColor;
+@property (nonatomic,strong) NSColor *buttonTextColor;
+@property (nonatomic,strong) NSColor *buttonBorderColor;
+
 -(void)setKeyboard:(TL_localMessage *)keyboard fillToSize:(BOOL)fillToSize keyboadrdCallback:(void (^)(TLKeyboardButton *command))keyboardCallback;
+
+-(void)setProccessing:(BOOL)proccessing forKeyboardButton:(TLKeyboardButton *)keyboardButton;
 
 -(BOOL)isCanShow;
 

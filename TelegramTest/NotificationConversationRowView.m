@@ -79,6 +79,9 @@
     [super setFrameSize:newSize];
     
     [_nameTextField setFrameSize:NSMakeSize(newSize.width - 110 - NSWidth(_notificationSwitch.frame), 20)];
+    
+    [_nameTextField setCenteredYByView:self];
+    
     [_notificationSwitch setFrameOrigin:NSMakePoint(newSize.width - 30 - NSWidth(_notificationSwitch.frame), 7)];
 }
 

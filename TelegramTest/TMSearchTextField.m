@@ -174,7 +174,7 @@ const static int textFieldXOffset = 30;
         [[self.textField cell] setPlaceholderAttributedString:placeholderAttributed];
         
         [self.textField setBackgroundColor:[NSColor clearColor]];
-        [self.textField setFont:TGSystemLightFont(12)];
+        [self.textField setFont:TGSystemFont(12)];
         [self.textField setStringValue:NSLocalizedString(@"Search", nil)];
         [self.textField sizeToFit];
         [self.textField setStringValue:@""];

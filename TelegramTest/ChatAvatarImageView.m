@@ -40,7 +40,7 @@
         [self addSubview:self.progressContainer];
         
         self.sourceType = ChatAvatarSourceGroup;
-        [self setFont:TGSystemLightFont(18)];
+        [self setFont:TGSystemLightFont(30)];
         
         
         _editCamera = imageViewWithImage(image_EditPhotoCamera());

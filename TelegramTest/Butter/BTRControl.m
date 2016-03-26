@@ -512,12 +512,10 @@ static void BTRControlCommonInit(BTRControl *self) {
 	} else {
 		events |= BTRControlEventMouseUpOutside;
 	}
+   
+    self.highlighted = NO;
     
-    
-	
-	[self sendActionsForControlEvents:events];
-	
-	self.highlighted = NO;
+    [self sendActionsForControlEvents:events];
 }
 
 - (void)sendActionsForControlEvents:(BTRControlEvents)events {

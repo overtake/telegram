@@ -165,6 +165,13 @@
     
     GeneralSettingsRowItem *item = (GeneralSettingsRowItem *) [self rowItem];
     
+    
+    [self.descriptionField setText:item.desc maxWidth:MIN(item.descSize.width, NSWidth(self.frame) - (item.xOffset * 2 + 50))];
+    
+    [self.nextDesc setText:item.subdesc maxWidth:MIN(item.subdescSize.width, NSWidth(self.frame) - (item.xOffset * 2 + 50 + NSWidth(_descriptionField.frame)))];
+    
+    
+    
     [self.descriptionField setFrameOrigin:NSMakePoint( item.xOffset, 12)];
     
     [self.subdescField setFrameOrigin:NSMakePoint(NSWidth(self.frame) - item.xOffset - NSWidth(self.subdescField.frame), 13)];
@@ -173,7 +180,6 @@
     
     [self.selectedImageView setFrameOrigin:NSMakePoint(NSWidth(self.frame) - item.xOffset - NSWidth(self.selectedImageView.frame), 10)];
         
-   // [_selectedImageView setCenteredYByView:_selectedImageView.superview];
     
     [self.nextImage setFrameOrigin:NSMakePoint(NSWidth(self.frame) - item.xOffset - image_ArrowGrey().size.width - 4, 14)];
     
@@ -181,11 +187,10 @@
     
     [self.lockedIndicator setFrameOrigin:NSMakePoint(NSWidth(self.frame) - item.xOffset - NSWidth(self.lockedIndicator.frame), 10)];
     
-    [self.descriptionField setFrameSize:NSMakeSize(MIN(item.descSize.width, NSWidth(self.frame) - (item.xOffset * 2 + 50)), NSHeight(self.descriptionField.frame))];
     
     
-    [self.nextDesc setFrameSize:NSMakeSize(NSWidth(self.frame) - (item.xOffset * 2 + 50 + NSWidth(_descriptionField.frame)), NSHeight(self.nextDesc.frame))];
-    [self.nextDesc setFrameOrigin:NSMakePoint(NSWidth(self.frame) - item.xOffset - NSWidth(self.nextImage.frame) - NSWidth(self.nextDesc.frame) - 8, 13)];
+    
+    [self.nextDesc setFrameOrigin:NSMakePoint(NSWidth(self.frame) - item.xOffset - NSWidth(self.nextImage.frame) - NSWidth(self.nextDesc.frame) - 10, 13)];
 }
 
 
