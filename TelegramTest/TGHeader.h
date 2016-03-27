@@ -81,7 +81,7 @@ __attribute__((weak_import,deprecated("API newer than Deployment Target.")))
 #define TGSystemLightFont(s) NSAppKitVersionNumber > NSAppKitVersionNumber10_10_Max ? [NSFont systemFontOfSize:(s)  weight:NSFontWeightLight] : [NSFont fontWithName:@"HelveticaNeue-Light" size:(s)]
 #define TGSystemItalicFont(s) NSAppKitVersionNumber > NSAppKitVersionNumber10_10_Max ? [NSFont fontWithName:@".SFNSText-Italic" size:(s)] : [NSFont fontWithName:@"HelveticaNeue-Italic" size:(s)]
 #define TGSystemBoldItalicFont(s) NSAppKitVersionNumber > NSAppKitVersionNumber10_10_Max ? [NSFont fontWithName:@".SFNSText-BoldItalic" size:(s)] : [NSFont fontWithName:@"HelveticaNeue-BoldItalic" size:(s)]
-#define TGSystemBoldFont(s) NSAppKitVersionNumber > NSAppKitVersionNumber10_10_Max ? [NSFont systemFontOfSize:(s) weight:NSFontWeightSemibold] : [NSFont fontWithName:@"HelveticaNeue-Bold" size:(s)]
+#define TGSystemBoldFont(s) NSAppKitVersionNumber > NSAppKitVersionNumber10_10_Max ? [NSFont systemFontOfSize:(s) weight:NSFontWeightBold] : [NSFont fontWithName:@"HelveticaNeue-Bold" size:(s)]
 
 
 #define VIDEO_COMPRESSED_PROGRESS 10.0f
