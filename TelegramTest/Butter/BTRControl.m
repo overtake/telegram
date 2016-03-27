@@ -514,10 +514,9 @@ static void BTRControlCommonInit(BTRControl *self) {
 	}
     
     
-	
+	self.highlighted = NO;
 	[self sendActionsForControlEvents:events];
 	
-	self.highlighted = NO;
 }
 
 - (void)sendActionsForControlEvents:(BTRControlEvents)events {
