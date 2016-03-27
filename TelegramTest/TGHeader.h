@@ -77,11 +77,11 @@ __attribute__((weak_import,deprecated("API newer than Deployment Target.")))
 //[NSFont fontWithName:@".SFNSText-Medium" size:(s)]
 //[NSFont fontWithName:@".SFNSText-Regular" size:(s)]
 #define TGSystemFont(s) NSAppKitVersionNumber > NSAppKitVersionNumber10_10_Max ? ((s >= 13) ? [NSFont systemFontOfSize:(s)] : [NSFont fontWithName:@".SFNSText-Regular" size:(s)]) : [NSFont fontWithName:@"HelveticaNeue" size:(s)]
-#define TGSystemMediumFont(s) NSAppKitVersionNumber > NSAppKitVersionNumber10_10_Max ? [NSFont fontWithName:@".SFNSDisplay-Semibold" size:(s)] : [NSFont fontWithName:@"HelveticaNeue-Medium" size:(s)]
-#define TGSystemLightFont(s) NSAppKitVersionNumber > NSAppKitVersionNumber10_10_Max ? [NSFont systemFontOfSize:(s)  weight:0] : [NSFont fontWithName:@"HelveticaNeue-Light" size:(s)]
+#define TGSystemMediumFont(s) NSAppKitVersionNumber > NSAppKitVersionNumber10_10_Max ? [NSFont systemFontOfSize:(s) weight:NSFontWeightSemibold] : [NSFont fontWithName:@"HelveticaNeue-Medium" size:(s)]
+#define TGSystemLightFont(s) NSAppKitVersionNumber > NSAppKitVersionNumber10_10_Max ? [NSFont systemFontOfSize:(s)] : [NSFont fontWithName:@"HelveticaNeue-Light" size:(s)]
 #define TGSystemItalicFont(s) NSAppKitVersionNumber > NSAppKitVersionNumber10_10_Max ? [NSFont fontWithName:@".SFNSText-Italic" size:(s)] : [NSFont fontWithName:@"HelveticaNeue-Italic" size:(s)]
 #define TGSystemBoldItalicFont(s) NSAppKitVersionNumber > NSAppKitVersionNumber10_10_Max ? [NSFont fontWithName:@".SFNSText-BoldItalic" size:(s)] : [NSFont fontWithName:@"HelveticaNeue-BoldItalic" size:(s)]
-#define TGSystemBoldFont(s) NSAppKitVersionNumber > NSAppKitVersionNumber10_10_Max ? [NSFont fontWithName:@".SFNSDisplay-Semibold" size:(s)] : [NSFont fontWithName:@"HelveticaNeue-Bold" size:(s)]
+#define TGSystemBoldFont(s) NSAppKitVersionNumber > NSAppKitVersionNumber10_10_Max ? [NSFont systemFontOfSize:(s) weight:NSFontWeightBold] : [NSFont fontWithName:@"HelveticaNeue-Bold" size:(s)]
 
 
 #define VIDEO_COMPRESSED_PROGRESS 10.0f

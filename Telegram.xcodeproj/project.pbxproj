@@ -338,6 +338,7 @@
 		C22A2A0C1C21A38100678172 /* TGDocumentThumbObject.m in Sources */ = {isa = PBXBuildFile; fileRef = C22A2A0B1C21A38100678172 /* TGDocumentThumbObject.m */; };
 		C22A2A0F1C21C67A00678172 /* CompressedDocumentSenderItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C22A2A0E1C21C67A00678172 /* CompressedDocumentSenderItem.m */; };
 		C22C7F2C18B2163F007C4D17 /* MTNetwork.m in Sources */ = {isa = PBXBuildFile; fileRef = C22C7F2918B2163F007C4D17 /* MTNetwork.m */; };
+		C230D88B1CA7689B00475FF5 /* TGShare.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = C2CBF3B61AF38426006BF90A /* TGShare.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		C23223D21A024CC600E476E2 /* TGSecretInAction.m in Sources */ = {isa = PBXBuildFile; fileRef = C23223D11A024CC600E476E2 /* TGSecretInAction.m */; };
 		C23223D91A029ED600E476E2 /* FlushHistorySecretSenderItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C23223D81A029ED600E476E2 /* FlushHistorySecretSenderItem.m */; };
 		C23298CA18CF1A34000826E5 /* TL_conversation.m in Sources */ = {isa = PBXBuildFile; fileRef = C23298C918CF1A34000826E5 /* TL_conversation.m */; };
@@ -967,6 +968,13 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		C230D8891CA7689400475FF5 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = CEB09E5017DAFC240055F150 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = C2CBF3B51AF38426006BF90A;
+			remoteInfo = TGShare;
+		};
 		C24136541C735A2700130D2E /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = C26E80101B7B748A003CC483 /* SSignalKit.xcodeproj */;
@@ -1058,6 +1066,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 13;
 			files = (
+				C230D88B1CA7689B00475FF5 /* TGShare.appex in Embed App Extensions */,
 			);
 			name = "Embed App Extensions";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -6315,6 +6324,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				C230D88A1CA7689400475FF5 /* PBXTargetDependency */,
 			);
 			name = Telegram;
 			productName = TelegramTest;
@@ -7453,6 +7463,14 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		C230D88A1CA7689400475FF5 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = C2CBF3B51AF38426006BF90A /* TGShare */;
+			targetProxy = C230D8891CA7689400475FF5 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		0A9EDC191897BA0E0037E1BC /* InfoPlist.strings */ = {
