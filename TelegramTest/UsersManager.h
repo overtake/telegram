@@ -18,6 +18,9 @@
 +(TLUser *)findUserByName:(NSString *)userName;
 +(NSArray *)findUsersByName:(NSString *)userName;
 
+
+-(void)updateUsers:(NSArray *)userIds;
+
 +(NSArray *)findUsersByMention:(NSString *)userName withUids:(NSArray *)uids;
 +(NSArray *)findUsersByMention:(NSString *)userName withUids:(NSArray *)uids acceptContextBots:(BOOL)acceptContextBots;
 

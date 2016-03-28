@@ -29,6 +29,7 @@ NSString *const kStatusGroups = @"TL_privacyKeyChatInvite";
     [defaults setObject:[NSKeyedArchiver archivedDataWithRootObject:self] forKey:[NSString stringWithFormat:@"privacy_%@",_privacyType]];
     [defaults synchronize];
     [cache setObject:self forKey:_privacyType];
+    
 }
 
 -(void)encodeWithCoder:(NSCoder *)aCoder {

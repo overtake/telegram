@@ -405,7 +405,7 @@
             [_tableView addItem:[[TGGeneralRowItem alloc] initWithHeight:20] tableRedraw:YES];
         }
         
-        if(_userFull && (_userFull.about.length > 0)) {
+        if(_userFull && (_userFull.about.length > 0) && _userFull.bot_info == nil) {
             TGProfileParamItem *botInfo = [[TGProfileParamItem alloc] init];
             
             [botInfo setHeader:NSLocalizedString(@"Profile.bio", nil) withValue:_userFull.about detectUrls:NO];

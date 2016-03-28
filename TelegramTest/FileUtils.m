@@ -309,7 +309,7 @@ void confirm(NSString *text, NSString *info, void (^block)(void), void (^cancelB
             else if(cancelBlock)
                 cancelBlock();
         }];
-        [alert addButtonWithTitle:NSLocalizedString(@"Ok", nil)];
+        [alert addButtonWithTitle:NSLocalizedString(@"OK", nil)];
         [alert addButtonWithTitle:NSLocalizedString(@"Cancel", nil)];
         [alert show];
     }];

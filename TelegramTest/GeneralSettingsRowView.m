@@ -168,7 +168,7 @@
     
     [self.descriptionField setText:item.desc maxWidth:MIN(item.descSize.width, NSWidth(self.frame) - (item.xOffset * 2 + 50))];
     
-    [self.nextDesc setText:item.subdesc maxWidth:MIN(item.subdescSize.width, NSWidth(self.frame) - (item.xOffset * 2 + 50 + NSWidth(_descriptionField.frame)))];
+    [self.nextDesc setText:item.subdesc maxWidth:MIN(item.subdescSize.width, NSWidth(self.frame) - (item.xOffset * 2 + 30 + NSWidth(_descriptionField.frame)))];
     
     
     

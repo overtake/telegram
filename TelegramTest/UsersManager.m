@@ -44,6 +44,12 @@
     }];
 }
 
+
+-(void)updateUsers:(NSArray *)userIds {
+    
+    
+}
+
 - (void)statusUpdater {
     [self.lastSeenRequest cancelRequest];
     
@@ -311,7 +317,7 @@
 
 - (BOOL)setUserStatus:(TLUserStatus *)status forUser:(TLUser *)currentUser {
     
-    BOOL result = currentUser.status.expires != status.expires && currentUser.status.was_online != status.was_online && currentUser.status.class != status.class;
+    BOOL result = (currentUser.status.expires != status.expires && currentUser.status.was_online != status.was_online) || currentUser.status.class != status.class;
     
     BOOL saveOnlyTime = currentUser.status.class == status.class || (([currentUser.status isKindOfClass:[TL_userStatusOnline class]] || [currentUser.status isKindOfClass:[TL_userStatusOffline class]])  && ([status isKindOfClass:[TL_userStatusOnline class]] || [status isKindOfClass:[TL_userStatusOffline class]]));
     
@@ -431,7 +437,12 @@
     
     
     [[FullUsersManager sharedManager] requestUserFull:self.userSelf withCallback:^(TLUserFull *userFull) {
-        [RPCRequest sendRequest:[TLAPI_account_updateProfile createWithFlags:0 first_name:firstName last_name:lastName about:userFull.about] successHandler:^(RPCRequest *request, TLUser *response) {
+        
+        int flags = firstName.length > 0 ? (1 << 0) : 0;
+        flags|=lastName.length > 0 ? (1 << 1) : 0;
+        flags|=userFull.about.length > 0 ? (1 << 2) : 0;
+        
+        [RPCRequest sendRequest:[TLAPI_account_updateProfile createWithFlags:flags first_name:firstName last_name:lastName about:userFull.about] successHandler:^(RPCRequest *request, TLUser *response) {
             
             if(response.type == TLUserTypeSelf) {
                 [self add:@[response]];

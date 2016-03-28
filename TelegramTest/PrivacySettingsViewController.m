@@ -14,6 +14,7 @@
 #import "SelectUserItem.h"
 #import "NewContactsManager.h"
 #import "TGSettingsTableView.h"
+#import "FullUsersManager.h"
 @interface PrivacySettingsViewController () <TMTableViewDelegate>
 @property (nonatomic,strong) TMTextButton *doneButton;
 @property (nonatomic,strong) TGSettingsTableView *tableView;
@@ -252,6 +253,8 @@
         
         self.privacy = self.changedPrivacy;
         [self.privacy _save];
+        
+        [[FullUsersManager sharedManager] drop];
         
         self.changedPrivacy = [self.privacy copy];
         

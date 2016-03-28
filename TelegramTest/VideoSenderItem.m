@@ -118,7 +118,7 @@
                 }
                 
                 
-                TLMessage *msg = [TL_localMessage convertReceivedMessage:(TLMessage *) ( [response.updates[1] message])];
+                TLMessage *msg = [strongSelf updateNewMessageWithUpdates:response].message;
                 
                 strongSelf.message.n_id = msg.n_id;
                 strongSelf.message.date = msg.date;
@@ -139,14 +139,15 @@
                 NSImage *thumb = [MessageSender videoParams:mediaFilePath(strongSelf.message) thumbSize:strongsize(NSMakeSize(video.w, video.h), 320)][@"image"];
                 
                 
-                TLFileLocation *location = msg.media.document.thumb.location;
+                if(thumb) {
+                    TLFileLocation *location = msg.media.document.thumb.location;
+                    
+                    [TGCache cacheImage:thumb forKey:msg.media.document.thumb.location.cacheKey groups:@[IMGCACHE]];
+                    
+                    [jpegNormalizedData(thumb) writeToFile:locationFilePath(location, @"jpg") atomically:YES];
+                }
                 
-                [TGCache cacheImage:thumb forKey:msg.media.document.thumb.location.cacheKey groups:@[IMGCACHE]];
-                
-                [jpegNormalizedData(thumb) writeToFile:locationFilePath(location, @"jpg") atomically:YES];
 
-
-                
                 strongSelf.uploader = nil;
                 
                 strongSelf.message.dstate = DeliveryStateNormal;

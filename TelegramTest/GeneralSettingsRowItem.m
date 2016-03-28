@@ -42,16 +42,20 @@
     NSMutableAttributedString *d = [_desc mutableCopy];
     
     [d replaceCharactersInRange:d.range withString:desc];
+    [d setFont:TGSystemFont(14) forRange:d.range];
     
     _desc = d;
+    _descSize = [_desc coreTextSizeForTextFieldForWidth:INT32_MAX];
 }
 
 -(void)setSubdescString:(NSString *)subdesc {
     NSMutableAttributedString *d = [_subdesc mutableCopy];
     
     [d replaceCharactersInRange:d.range withString:subdesc];
+    [d setFont:TGSystemFont(14) forRange:d.range];
     
     _subdesc = d;
+    _subdescSize = [_subdesc coreTextSizeForTextFieldForWidth:INT32_MAX];
 }
 
 -(void)setTextColor:(NSColor *)textColor {
