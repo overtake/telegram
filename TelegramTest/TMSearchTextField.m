@@ -254,7 +254,7 @@ const static int textFieldXOffset = 30;
     [super setFrameSize:newSize];
     
     
-    [self.textField setFrame:NSMakeRect(textFieldXOffset, roundf((self.frame.size.height - self.textField.frame.size.height) / 2) - 2, self.containerView.frame.size.width - 30 - textFieldXOffset, self.textField.bounds.size.height)];
+    [self.textField setFrame:NSMakeRect(textFieldXOffset, roundf((self.frame.size.height - self.textField.frame.size.height) / 2) - 5, self.containerView.frame.size.width - 30 - textFieldXOffset, self.textField.bounds.size.height)];
     
    // [self.textField setFrameOrigin:NSMakePoint(30, NSMinY(self.textField.frame))];
     
