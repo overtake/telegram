@@ -47,14 +47,14 @@
         [_stickers enumerateObjectsUsingBlock:^(TL_document *obj, NSUInteger idx, BOOL *stop) {
             
             NSImage *placeholder = [[NSImage alloc] initWithData:obj.thumb.bytes];
-                
+            
             if(!placeholder)
                 placeholder = [NSImage imageWithWebpData:obj.thumb.bytes error:nil];
-                
+            
             TGMessagesStickerImageObject *imgObj = [[TGMessagesStickerImageObject alloc] initWithLocation:obj.thumb.location placeHolder:placeholder];
-                
+            
             imgObj.imageSize = strongsize(NSMakeSize(obj.thumb.w, obj.thumb.h), 65);
-                
+            
             [_objects addObject:imgObj];
             
         }];
@@ -62,7 +62,7 @@
     
     return self;
 }
- 
+
 
 -(NSUInteger)hash {
     
@@ -90,7 +90,7 @@
 
 -(instancetype)initWithFrame:(NSRect)frameRect {
     if(self = [super initWithFrame:frameRect]) {
-    
+        
     }
     
     return self;
@@ -153,35 +153,32 @@ static NSImage *higlightedImage() {
         
         [button addBlock:^(BTRControlEvents events) {
             
-            strongWeak();
-            
-            if(strongSelf.tableView.previewModal != nil) {
-                [strongSelf.tableView.previewModal close:YES];
-                strongSelf.tableView.previewModal = nil;
+            if(weakSelf.tableView.previewModal != nil) {
+                [weakSelf.tableView.previewModal close:YES];
+                weakSelf.tableView.previewModal = nil;
                 
                 return;
             }
             
-            if(strongSelf.tableView.notSendUpSticker)
+            if(weakSelf.tableView.notSendUpSticker)
             {
-                strongSelf.tableView.notSendUpSticker = NO;
+                weakSelf.tableView.notSendUpSticker = NO;
                 return;
             }
             
-            if(!strongSelf.tableView.isCustomStickerPack || strongSelf.tableView.canSendStickerAlways)
+            if(!weakSelf.tableView.isCustomStickerPack || weakSelf.tableView.canSendStickerAlways)
                 [appWindow().navigationController.messagesViewController sendSticker:item.stickers[idx] forConversation:appWindow().navigationController.messagesViewController.conversation addCompletionHandler:nil];
             
-            if(strongSelf.tableView.canSendStickerAlways) {
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    [TMViewController closeAllModals];
-                });
-                
+            if(weakSelf.tableView.canSendStickerAlways) {
+                [TMViewController closeAllModals];
             }
             
             
-        } forControlEvents:weakSelf.tableView.isCustomStickerPack ? BTRControlEventMouseUpOutside | BTRControlEventMouseUpInside : BTRControlEventMouseUpInside];
-
-       // if(!weakSelf.tableView.isCustomStickerPack) {
+        } forControlEvents:weakSelf.tableView.isCustomStickerPack ? BTRControlEventMouseUpOutside : BTRControlEventMouseUpInside];
+        
+        if(!weakSelf.tableView.isCustomStickerPack) {
+            
+            
             
             [button addBlock:^(BTRControlEvents events) {
                 
@@ -194,7 +191,7 @@ static NSImage *higlightedImage() {
                 weakSelf.tableView.previewModal = preview;
                 
             } forControlEvents:BTRControlEventLongLeftClick];
-      //  }
+        }
         
         
         
@@ -205,7 +202,6 @@ static NSImage *higlightedImage() {
         [imageView setCenterByView:button];
         
         [button addSubview:imageView];
-            
         
         
         [self addSubview:button];
@@ -238,8 +234,6 @@ static NSImage *higlightedImage() {
         [Notification addObserver:self selector:@selector(stickersNeedFullReload:) name:STICKERS_ALL_CHANGED];
         [Notification addObserver:self selector:@selector(stickersNeedReorder:) name:STICKERS_REORDER];
         [Notification addObserver:self selector:@selector(stickersNewPackAdded:) name:STICKERS_NEW_PACK];
-        
-        [TGCache setMemoryLimit:300*1024*1024 group:STICKERSCACHE];
         
     }
     
@@ -278,15 +272,7 @@ static NSImage *higlightedImage() {
     [self reloadData];
 }
 
--(ASQueue *)queue {
-    static ASQueue *queue;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        queue = [[ASQueue alloc] initWithName:"StickersQueue"];
-    });
-    
-    return queue;
-}
+
 
 -(NSScrollView *)containerView {
     return [super containerView];
@@ -311,31 +297,29 @@ static NSImage *higlightedImage() {
             
             weakSelf.sets = info[@"sets"];
             
-            if(!isRemoteStickersLoaded() || force) {
-                [RPCRequest sendRequest:[TLAPI_messages_getAllStickers createWithN_hash:[self stickersHash:_sets]] successHandler:^(RPCRequest *request, TL_messages_allStickers *response) {
-                    
-                    if(![response isKindOfClass:[TL_messages_allStickersNotModified class]]) {
-                        
-                        [self loadSetsIfNeeded:response.sets n_hash:response.n_hash];
-                        
-                    } else {
-                        [self reloadData];
-                    }
-                    
-                    setRemoteStickersLoaded(YES);
-                    
-                } errorHandler:^(RPCRequest *request, RpcError *error) {
-                    
-                }];
-                
-                
-            } else {
-                [self reloadData];
-            }
-            
         }];
         
-       
+        if(!isRemoteStickersLoaded() || force) {
+            [RPCRequest sendRequest:[TLAPI_messages_getAllStickers createWithN_hash:[self stickersHash:_sets]] successHandler:^(RPCRequest *request, TL_messages_allStickers *response) {
+                
+                if(![response isKindOfClass:[TL_messages_allStickersNotModified class]]) {
+                    
+                    [self loadSetsIfNeeded:response.sets n_hash:response.n_hash];
+                    
+                } else {
+                    [self reloadData];
+                }
+                
+                setRemoteStickersLoaded(YES);
+                
+            } errorHandler:^(RPCRequest *request, RpcError *error) {
+                
+            }];
+            
+            
+        } else {
+            [self reloadData];
+        }
     } else {
         [self reloadData];
     }
@@ -345,9 +329,9 @@ static NSImage *higlightedImage() {
 
 -(void)save:(NSArray *)sets stickers:(NSDictionary *)stickers n_hash:(int)n_hash saveSets:(BOOL)saveSets {
     
-    [[Storage yap] asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction * __nonnull transaction) {
+    [[Storage yap] readWriteWithBlock:^(YapDatabaseReadWriteTransaction * __nonnull transaction) {
         
-        NSMutableDictionary *serializedStickers = [stickers mutableCopy];
+        NSMutableDictionary *serializedStickers = [_stickers mutableCopy];
         
         NSMutableDictionary *data = [[transaction objectForKey:@"modern_stickers" inCollection:STICKERS_COLLECTION] mutableCopy];
         
@@ -367,7 +351,7 @@ static NSImage *higlightedImage() {
         [transaction setObject:data forKey:@"modern_stickers" inCollection:STICKERS_COLLECTION];
         
     }];
-
+    
 }
 
 -(void)loadSetsIfNeeded:(NSArray *)sets n_hash:(int)n_hash {
@@ -396,14 +380,8 @@ static NSImage *higlightedImage() {
         
     }];
     
+    _sets = [sets mutableCopy];
     
-
-     _sets = [sets mutableCopy];
-    
-    
-    [removed enumerateObjectsUsingBlock:^(TL_stickerSet *set, NSUInteger idx, BOOL * _Nonnull stop) {
-        [_stickers[@(set.n_id)] removeAllObjects];
-    }];
     
     [changed enumerateObjectsUsingBlock:^(TL_stickerSet *set, NSUInteger idx, BOOL * _Nonnull stop) {
         
@@ -412,10 +390,10 @@ static NSImage *higlightedImage() {
     }];
     
     [self save:sets stickers:_stickers n_hash:n_hash saveSets:changed.count == 0];
-   
+    
     
     [self reloadData];
-
+    
     
 }
 
@@ -436,9 +414,8 @@ static NSImage *higlightedImage() {
                 data[@"sets"] = [[NSMutableArray alloc] init];
             }
             
-            
             _stickers[@(response.set.n_id)] = response.documents;
-
+            
         }];
         
         [self save:_sets stickers:_stickers n_hash:n_hash saveSets:YES];
@@ -450,7 +427,7 @@ static NSImage *higlightedImage() {
         
     } errorHandler:^(id request, RpcError *error) {
         
-    }];
+    } timeout:60 queue:[ASQueue globalQueue].nativeQueue];
     
     
 }
@@ -458,6 +435,7 @@ static NSImage *higlightedImage() {
 -(NSDictionary *)allStickers {
     return _stickers;
 }
+
 
 
 -(NSArray *)sets {
@@ -468,152 +446,116 @@ static NSImage *higlightedImage() {
     _sets = [sets mutableCopy];
 }
 
--(void)removeSticker:(TL_document *)document {
+
+-(void)reloadData {
     
-    [[Storage yap] readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
+    
+    
+    NSMutableArray *items = [[NSMutableArray alloc] init];
+    
+    weak();
+    
+    [[Storage yap] readWithBlock:^(YapDatabaseReadTransaction *transaction) {
         
-        NSMutableArray *localStickers = [[transaction objectForKey:@"localStickers" inCollection:STICKERS_COLLECTION] mutableCopy];
+        NSMutableDictionary *sort = [transaction objectForKey:@"recentStickers" inCollection:STICKERS_COLLECTION];
         
-        __block id toDelete;
+        NSMutableArray *s = [NSMutableArray array];
         
-        [localStickers enumerateObjectsUsingBlock:^(TL_document *obj, NSUInteger idx, BOOL *stop) {
+        [sort enumerateKeysAndObjectsUsingBlock:^(id  _Nonnull set_id, id  _Nonnull obj, BOOL * _Nonnull stop) {
             
+            [obj enumerateKeysAndObjectsUsingBlock:^(id  _Nonnull n_id, id  _Nonnull count, BOOL * _Nonnull stop) {
+                
+                [s addObject:@{@"count":count,@"n_id":n_id,@"set_id":set_id}];
+                
+            }];
             
-            if(obj.n_id == document.n_id) {
-                
-                toDelete = obj;
-                
-                *stop = YES;
+        }];
+        
+        [s sortUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"self.count" ascending:NO]]];
+        
+        
+        
+        __block NSArray *recent = [NSArray array];
+        
+        [s enumerateObjectsUsingBlock:^(NSDictionary *obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            
+            NSArray *setStickers = weakSelf.stickers[obj[@"set_id"]];
+            
+            TL_document *recentSticker = [[setStickers filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.n_id = %@",obj[@"n_id"]]] firstObject];
+            
+            if(recentSticker) {
+                recent = [recent arrayByAddingObject:recentSticker];
             }
             
         }];
         
-        [localStickers removeObject:toDelete];
         
-        [transaction setObject:localStickers forKey:@"localStickers" inCollection:STICKERS_COLLECTION];
+        if(!weakSelf.isCustomStickerPack) {
+            recent = [recent subarrayWithRange:NSMakeRange(0, MIN(20,recent.count))];
+            
+        } else {
+            recent = @[];
+        }
         
-    }];
-    
-    [self load:YES];
-    
-}
-
--(void)reloadData {
-    
-    if(self.window) {
-        NSMutableArray *items = [[NSMutableArray alloc] init];
+        weakSelf.hasRecentStickers = recent.count > 0;
         
-        weak();
         
-        [[Storage yap] readWithBlock:^(YapDatabaseReadTransaction *transaction) {
+        NSMutableArray *row = [[NSMutableArray alloc] init];
+        
+        
+        [recent enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
             
-            NSMutableDictionary *sort = [transaction objectForKey:@"recentStickers" inCollection:STICKERS_COLLECTION];
+            [row addObject:obj];
             
-            NSMutableArray *s = [NSMutableArray array];
-            
-            [sort enumerateKeysAndObjectsUsingBlock:^(id  _Nonnull set_id, id  _Nonnull obj, BOOL * _Nonnull stop) {
-                
-                [obj enumerateKeysAndObjectsUsingBlock:^(id  _Nonnull n_id, id  _Nonnull count, BOOL * _Nonnull stop) {
-                    
-                    [s addObject:@{@"count":count,@"n_id":n_id,@"set_id":set_id}];
-                    
-                }];
-                
-            }];
-            
-            [s sortUsingComparator:^NSComparisonResult(NSDictionary * _Nonnull obj1, NSDictionary *  _Nonnull obj2) {
-                
-                NSComparisonResult result = [obj1[@"count"] compare:obj2[@"count"]];
-                
-                return result == NSOrderedAscending ? NSOrderedDescending : result == NSOrderedDescending ? NSOrderedAscending : NSOrderedSame;
-                
-            }];;
-            
-            
-            
-            __block NSArray *recent = [NSArray array];
-            
-            [s enumerateObjectsUsingBlock:^(NSDictionary *obj, NSUInteger idx, BOOL * _Nonnull stop) {
-                
-                NSArray *setStickers = weakSelf.stickers[obj[@"set_id"]];
-                
-                TL_document *recentSticker = [[setStickers filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.n_id = %@",obj[@"n_id"]]] firstObject];
-                
-                if(recentSticker) {
-                    recent = [recent arrayByAddingObject:recentSticker];
-                }
-                
-            }];
-            
-            
-            if(!weakSelf.isCustomStickerPack) {
-                recent = [recent subarrayWithRange:NSMakeRange(0, MIN(20,recent.count))];
-                
-            } else {
-                recent = @[];
-            }
-            
-            weakSelf.hasRecentStickers = recent.count > 0;
-            
-            
-            NSMutableArray *row = [[NSMutableArray alloc] init];
-            
-            
-            [recent enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
-                
-                [row addObject:obj];
-                
-                if(row.count == 5) {
-                    [items addObject:[[TGAllStickersTableItem alloc] initWithObject:[row copy] packId:-1]];
-                    [row removeAllObjects];
-                }
-                
-            }];
-            
-            
-            if(row.count > 0) {
+            if(row.count == 5) {
                 [items addObject:[[TGAllStickersTableItem alloc] initWithObject:[row copy] packId:-1]];
                 [row removeAllObjects];
             }
             
+        }];
+        
+        
+        if(row.count > 0) {
+            [items addObject:[[TGAllStickersTableItem alloc] initWithObject:[row copy] packId:-1]];
+            [row removeAllObjects];
+        }
+        
+        
+        [weakSelf.sets enumerateObjectsUsingBlock:^(TL_stickerSet *set, NSUInteger idx, BOOL * _Nonnull stop) {
             
-            [weakSelf.sets enumerateObjectsUsingBlock:^(TL_stickerSet *set, NSUInteger idx, BOOL * _Nonnull stop) {
+            [weakSelf.stickers[@(set.n_id)] enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
                 
-                [weakSelf.stickers[@(set.n_id)] enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-                    
-                    [row addObject:obj];
-                    
-                    if(row.count == 5) {
-                        [items addObject:[[TGAllStickersTableItem alloc] initWithObject:[row copy] packId:set.n_id]];
-                        [row removeAllObjects];
-                    }
-                }];
+                [row addObject:obj];
                 
-                if(row.count > 0) {
+                if(row.count == 5) {
                     [items addObject:[[TGAllStickersTableItem alloc] initWithObject:[row copy] packId:set.n_id]];
                     [row removeAllObjects];
                 }
-                
-                
             }];
             
-            [ASQueue dispatchOnMainQueue:^{
-                [self removeAllItems:NO];
-                
-                
-                [self insert:items startIndex:0 tableRedraw:NO];
-                
-                [super reloadData];
-                
-                if(_didNeedReload) {
-                    _didNeedReload();
-                }
-                
-            }];
+            if(row.count > 0) {
+                [items addObject:[[TGAllStickersTableItem alloc] initWithObject:[row copy] packId:set.n_id]];
+                [row removeAllObjects];
+            }
             
             
         }];
+        
+        
+    }];
+    
+    [self removeAllItems:NO];
+    
+    
+    [self insert:items startIndex:0 tableRedraw:NO];
+    
+    [super reloadData];
+    //
+    if(_didNeedReload) {
+        _didNeedReload();
     }
+    
+    
     
 }
 
@@ -695,23 +637,20 @@ static NSImage *higlightedImage() {
     if(_previewModal != nil) {
         NSUInteger index = [self rowAtPoint:[self convertPoint:[theEvent locationInWindow] fromView:nil]];
         
-        if(index != NSNotFound && (int)index >= 0 && index < self.count) {
-            TGAllStickerTableItemView *view = [self viewAtColumn:0 row:index makeIfNecessary:NO];
-            
-            TGAllStickersTableItem *item = [self itemAtPosition:index];
-            
-            NSPoint point = [view convertPoint:[theEvent locationInWindow] fromView:nil];
-            
-            [view.subviews enumerateObjectsUsingBlock:^(__kindof NSView * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-                
-                if(NSMinX(obj.frame) < point.x && NSMaxX(obj.frame) > point.x) {
-                    
-                    [_previewModal setSticker:item.stickers[idx]];
-                }
-                
-            }];
-        }
+        TGAllStickerTableItemView *view = [self viewAtColumn:0 row:index makeIfNecessary:NO];
         
+        TGAllStickersTableItem *item = [self itemAtPosition:index];
+        
+        NSPoint point = [view convertPoint:[theEvent locationInWindow] fromView:nil];
+        
+        [view.subviews enumerateObjectsUsingBlock:^(__kindof NSView * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            
+            if(NSMinX(obj.frame) < point.x && NSMaxX(obj.frame) > point.x) {
+                
+                [_previewModal setSticker:item.stickers[idx]];
+            }
+            
+        }];
         
     } else {
         [super mouseDragged:theEvent];
@@ -722,7 +661,11 @@ static NSImage *higlightedImage() {
     
     if(_previewModal) {
         
-        _notSendUpSticker = YES;
+        NSEvent *event = [NSApp currentEvent];
+        
+        if(![event.window isKindOfClass:[RBLPopoverWindow class]]) {
+            _notSendUpSticker = YES;
+        }
     }
     
     [_previewModal close:YES];
@@ -736,21 +679,9 @@ static NSImage *higlightedImage() {
 
 -(void)clear {
     [super clear];
-
+    
 }
 
--(void)mouseUp:(NSEvent *)theEvent {
-    if(_previewModal)
-        [self hideStickerPreview];
-    else
-        [super mouseUp:theEvent];
-}
-
--(void)viewDidMoveToWindow {
-    if(self.window == nil) {
-        [TGCache removeAllCachedImages:@[STICKERSCACHE]];
-    }
-}
 
 
 @end
