@@ -9,18 +9,18 @@
 #import "TGBotCommandsKeyboard.h"
 #import "TGTextLabel.h"
 #import "ITProgressIndicator.h"
-@interface TGDisableScrollView : NSScrollView
+@interface TGDisableScrollView : BTRScrollView
 @property (nonatomic,assign) BOOL disableScrolling;
 @end
 
 @implementation TGDisableScrollView
 
--(void)scrollWheel:(NSEvent *)theEvent {
-    if(!_disableScrolling)
-        [super scrollWheel:theEvent];
-    else
-        [self.superview scrollWheel:theEvent];
-}
+//-(void)scrollWheel:(NSEvent *)theEvent {
+//    if(!_disableScrolling)
+//        [super scrollWheel:theEvent];
+//    else
+//        [self.superview scrollWheel:theEvent];
+//}
 
 @end
 
@@ -319,8 +319,7 @@
     NSUInteger maxHeight = _fillToSize ? height : MIN(height,3 * itemHeight + ((3 -1) * 3 ) + 6 + (itemHeight/2));
     
    
-   
-    _scrollView.disableScrolling = _fillToSize;
+    _scrollView.horizontalScrollElasticity = !_fillToSize;
     
     [_scrollView setFrameSize:NSMakeSize(NSWidth(self.frame), maxHeight)];
     

@@ -49,7 +49,7 @@
     BOOL res = [super resignFirstResponder];
     
     [self.searchDelegate searchFieldDidResign];
-                
+    
     return res;
 }
 
@@ -155,7 +155,7 @@ const static int textFieldXOffset = 30;
         self.isActive = NO;
         self.isResults = NO;
         [self addTrackingRect:self.bounds owner:self userData:nil assumeInside:NO];
-
+        
         
         self.containerView = [[TMView alloc] initWithFrame:NSMakeRect(0, 0, self.bounds.size.width, self.bounds.size.height)];
         [self.containerView setAutoresizingMask:NSViewWidthSizable];
@@ -174,7 +174,7 @@ const static int textFieldXOffset = 30;
         [[self.textField cell] setPlaceholderAttributedString:placeholderAttributed];
         
         [self.textField setBackgroundColor:[NSColor clearColor]];
-        [self.textField setFont:TGSystemFont(12)];
+        [self.textField setFont:TGSystemLightFont(12)];
         [self.textField setStringValue:NSLocalizedString(@"Search", nil)];
         [self.textField sizeToFit];
         [self.textField setStringValue:@""];
@@ -202,7 +202,7 @@ const static int textFieldXOffset = 30;
         
         [self.cancelButton setFrameSize:image_clear().size];
         [self.cancelButton setFrameOrigin:NSMakePoint(self.frame.size.width - self.cancelButton.frame.size.width - 10, roundf((self.bounds.size.height - self.cancelButton.bounds.size.height) / 2))];
-//        [self.cancelButton setBackgroundColor:[NSColor redColor]];
+        //        [self.cancelButton setBackgroundColor:[NSColor redColor]];
         [self.cancelButton setNeedsDisplay:YES];
         [self.cancelButton setHidden:YES];
         [self.cancelButton setTarget:self selector:@selector(cancelButtonClick)];
@@ -254,9 +254,9 @@ const static int textFieldXOffset = 30;
     [super setFrameSize:newSize];
     
     
-    [self.textField setFrame:NSMakeRect(textFieldXOffset, roundf((self.frame.size.height - self.textField.frame.size.height) / 2) - 5, self.containerView.frame.size.width - 30 - textFieldXOffset, self.textField.bounds.size.height)];
+    [self.textField setFrame:NSMakeRect(textFieldXOffset, roundf((self.frame.size.height - self.textField.frame.size.height) / 2) - 2, self.containerView.frame.size.width - 30 - textFieldXOffset, self.textField.bounds.size.height)];
     
-   // [self.textField setFrameOrigin:NSMakePoint(30, NSMinY(self.textField.frame))];
+    // [self.textField setFrameOrigin:NSMakePoint(30, NSMinY(self.textField.frame))];
     
     [self.textField setFrameSize:NSMakeSize(self.containerView.frame.size.width - 30 - NSMinX(self.textField.frame), NSHeight(self.textField.frame))];
     
@@ -276,11 +276,11 @@ static float duration = 0.1;
 - (void)viewDidMoveToWindow {
     [self.containerView setFrameOrigin:NSMakePoint(roundf((self.bounds.size.width - [self containerWidth]) / 2), 0)];
     [super viewDidMoveToSuperview];
-
-   // dispatch_async(dispatch_get_main_queue(), ^{
-        [self.containerView setFrameOrigin:NSMakePoint(0, 0)];
-        [self centerPosition:NO];
-   // });
+    
+    // dispatch_async(dispatch_get_main_queue(), ^{
+    [self.containerView setFrameOrigin:NSMakePoint(0, 0)];
+    [self centerPosition:NO];
+    // });
 }
 
 - (void)leftPosition:(BOOL)animation {
@@ -313,7 +313,7 @@ static float duration = 0.1;
 }
 
 - (void)centerPosition:(BOOL)animation {
-
+    
     if(self.textField.stringValue.length > 0)
         return;
     
@@ -327,7 +327,7 @@ static float duration = 0.1;
         NSPoint oldPoint = self.containerView.layer.position;
         
         self.containerView.layer.position = NSMakePoint(self.containerView.layer.position.x + point.x, self.containerView.layer.position.y);
-
+        
         [CATransaction begin];
         [CATransaction setCompletionBlock:^{
             [self.containerView setFrameOrigin:point];
@@ -391,11 +391,11 @@ static float duration = 0.1;
 }
 
 - (BOOL)isTextFieldInFocus:(NSTextField *)textField {
-	BOOL inFocus = ([[[textField window] firstResponder] isKindOfClass:[NSTextView class]]
-			   && [[textField window] fieldEditor:NO forObject:nil]!=nil
-			   && [textField isEqualTo:(id)[(NSTextView *)[[textField window] firstResponder]delegate]]);
-	
-	return inFocus;
+    BOOL inFocus = ([[[textField window] firstResponder] isKindOfClass:[NSTextView class]]
+                    && [[textField window] fieldEditor:NO forObject:nil]!=nil
+                    && [textField isEqualTo:(id)[(NSTextView *)[[textField window] firstResponder]delegate]]);
+    
+    return inFocus;
 }
 
 - (void) controlTextDidChange:(NSNotification *)obj {
@@ -419,9 +419,9 @@ static float duration = 0.1;
 
 - (void) searchFieldBlur {
     self.isActive = NO;
-//    if(self.)
- //   [self centerPosition:YES];
-//    [self setNeedsDisplay:YES];
+    //    if(self.)
+    //   [self centerPosition:YES];
+    //    [self setNeedsDisplay:YES];
     
     [self.cancelButton setHidden:![self isTextFieldInFocus:self.textField] && self.textField.stringValue.length == 0];
     if([self.delegate respondsToSelector:@selector(searchFieldBlur)])
@@ -431,8 +431,8 @@ static float duration = 0.1;
 - (void) searchFieldFocus {
     self.isActive = YES;
     [self leftPosition:YES];
-//    [self setNeedsDisplay:YES];
-     [self.cancelButton setHidden:![self isTextFieldInFocus:self.textField] && self.textField.stringValue.length == 0];
+    //    [self setNeedsDisplay:YES];
+    [self.cancelButton setHidden:![self isTextFieldInFocus:self.textField] && self.textField.stringValue.length == 0];
     
     if([self.delegate respondsToSelector:@selector(searchFieldFocus)])
         [self.delegate searchFieldFocus];
@@ -447,13 +447,13 @@ static float duration = 0.1;
 - (void) mouseEntered:(NSEvent *)theEvent {
     [super mouseEntered:theEvent];
     self.isHover = YES;
-//    [self setNeedsDisplay:YES];
+    //    [self setNeedsDisplay:YES];
 }
 
 - (void) mouseExited:(NSEvent *)theEvent {
     [super mouseExited:theEvent];
     self.isHover = NO;
-//    [self setNeedsDisplay:YES];
+    //    [self setNeedsDisplay:YES];
 }
 
 - (void) searchFieldTextChange:(NSString *)searchString {
