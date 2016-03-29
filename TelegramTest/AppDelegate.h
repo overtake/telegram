@@ -10,9 +10,9 @@
 #import "NSContactsPopover.h"
 
 #ifdef TGDEBUG
-
+#ifndef TGSTABLE
 #import <HockeySDK/HockeySDK.h>
-
+#endif
 #endif
 
 #import "TelegramWindow.h"

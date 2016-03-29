@@ -13,23 +13,14 @@
 #define API_ID 2834
 #define API_HASH @"68875f756c9b437a8b916ca3de215815"
 
+
 #ifdef TGDEBUG
-
-#ifdef TGStable
-
-#define HOCKEY_APP_IDENTIFIER @"d77af558b21e0878953100680b5ac66a"
-
-#else 
-
 #define HOCKEY_APP_IDENTIFIER @"c55f5e74ae5d0ad254df29f71a1b5f0e"
-
-#endif
-
 #else
-
-#define HOCKEY_APP_IDENTIFIER @"715197b9fde97522d67b323b316412aa"
-
+#define HOCKEY_APP_IDENTIFIER @"d77af558b21e0878953100680b5ac66a"
 #endif
+
+
 
 
 

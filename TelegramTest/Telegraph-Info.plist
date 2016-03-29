@@ -15,7 +15,7 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>2.06</string>
+	<string>2.07</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleURLTypes</key>
@@ -31,7 +31,7 @@
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>42389</string>
+	<string>42498</string>
 	<key>LSApplicationCategoryType</key>
 	<string>public.app-category.social-networking</string>
 	<key>LSMinimumSystemVersion</key>
@@ -54,8 +54,8 @@
 		<string>org.telegram.conversation</string>
 	</array>
 	<key>SUFeedURL</key>
-	<string>http://net2ftp.ru/node0/overtakeful@gmail.com/osxupdate.xml</string>
+	<string>${SFEED_URL}</string>
 	<key>SUPublicDSAKeyFile</key>
-	<string>dsa_pub.pem</string>
+	<string>${DSA_PEM_FILE}</string>
 </dict>
 </plist>

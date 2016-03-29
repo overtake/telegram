@@ -13,7 +13,6 @@
 #import "SSKeychain.h"
 #import "TGSecretAction.h"
 #ifdef TGDEBUG
-
 #import <Sparkle/Sparkle.h>
 #import "FFYDaemonController.h"
 #endif
@@ -111,11 +110,14 @@ static void TGTelegramLoggingFunction(NSString *format, va_list args)
     
 #ifdef TGDEBUG
     
+#ifndef TGSTABLE
+    
     [[BITHockeyManager sharedHockeyManager] configureWithIdentifier:HOCKEY_APP_IDENTIFIER companyName:HOCKEY_APP_COMPANY delegate:self];
     [[BITHockeyManager sharedHockeyManager] setDebugLogEnabled:YES];
     [[BITHockeyManager sharedHockeyManager].crashManager setAutoSubmitCrashReport: YES];
     [[BITHockeyManager sharedHockeyManager] startManager];
-    
+   
+#endif
     
 #else 
     
@@ -254,7 +256,6 @@ void exceptionHandler(NSException * exception)
     
     NSSetUncaughtExceptionHandler(&exceptionHandler);
     
-          // [_statusItem setAlternateImage:highlightIcon];
     
     [SharedManager sharedManager];
     
@@ -269,95 +270,8 @@ void exceptionHandler(NSException * exception)
     CFStringRef bundleID = (__bridge CFStringRef)[[NSBundle mainBundle] bundleIdentifier];
     LSSetDefaultHandlerForURLScheme(CFSTR("tg"), bundleID);
     
-#ifdef TGDEBUG
-    
+    [self initializeMainWindow];
 
-//
-//    NSString *updater_path =  [NSString stringWithFormat:@"%@/Updater",[[NSBundle mainBundle] privateFrameworksPath]];
-//    
-//    if([[NSFileManager defaultManager] fileExistsAtPath:updater_path]) {
-//        // close other proccess
-//        {
-//            FFYDaemonController *daemonController = [[FFYDaemonController alloc] init];
-//            
-//            
-//            
-//            daemonController.launchPath = updater_path;
-//            
-//            daemonController.startArguments = [NSArray arrayWithObjects:
-//                                               @"--bundle_id=ru.keepcoder.Telegram",
-//                                               @"--close_others=1",
-//                                               nil];
-//            
-//            
-//            [daemonController start];
-//
-//        }
-//        
-//        
-//        
-//        
-//        // update application
-//        {
-//            TGUpdater *updater = [[TGUpdater alloc] initWithVersion:APP_VERSION token:@"kqjflkqwjeflkjewf123" url:@"http://net2ftp.ru/node0/overtakeful@gmail.com/tgupdater.json"];
-//            
-//            [updater itsHaveNewVersion:^(bool nVer){
-//                
-//                
-//                if(nVer)
-//                {
-//                    confirm(appName(), @"New version avaiable, download?", ^{
-//                        [updater startDownload:^(NSString *fpath) {
-//                            
-//                            NSLog(@"%@",fpath);
-//                            
-//                            [self.window setTitle:@"Proccessing..."];
-//                            
-//                            FFYDaemonController *daemonController = [[FFYDaemonController alloc] init];
-//                            
-//                            daemonController.launchPath = updater_path;
-//                            
-//                            daemonController.startArguments = [NSArray arrayWithObjects:
-//                                                               @"--bundle_id=ru.keepcoder.Telegram",
-//                                                               [NSString stringWithFormat:@"--app_path=%@",[[NSBundle mainBundle] bundlePath]],  //[@"~/desktop" stringByExpandingTildeInPath]]
-//                                                               [NSString stringWithFormat:@"--download_path=%@",fpath],
-//                                                               nil];
-//                            
-//                            [daemonController setDaemonStoppedCallback:^{
-//                                
-//                                [self.window setTitle:appName()];
-//                                
-//                            }];
-//                            
-//                            [daemonController start];
-//                            
-//                            
-//                        } progress:^(NSUInteger progress) {
-//                            [self.window setTitle:[NSString stringWithFormat:@"Downloading: %lu%%",progress]];
-//                        }];
-//                        
-//                    }, ^{
-//                        
-//                    });
-//                    
-//                }
-//                
-//            }];
-//        }
-//    }
-//    
-    
-
-    
-#endif
-    
- //   if([[MTNetwork instance] isAuth]) {
-        [self initializeMainWindow];
-   // } else {
-        
-   //    [self logoutWithForce:NO];
-        
- //   }
 
 }
 
@@ -370,15 +284,7 @@ void exceptionHandler(NSException * exception)
     [self.updater setAutomaticallyChecksForUpdates:YES];
   //  [self.updater setAutomaticallyDownloadsUpdates:NO];
     
-    NSString *feedURL = @"https://rink.hockeyapp.net/api/2/apps/c55f5e74ae5d0ad254df29f71a1b5f0e";
     
-    #ifdef TGStable
-    
-    feedURL = @"https://rink.hockeyapp.net/api/2/apps/d77af558b21e0878953100680b5ac66a";
-    
-    #endif
-    
-    [self.updater setFeedURL:[NSURL URLWithString:feedURL]];
     
     NSUserDefaults *defs = [NSUserDefaults standardUserDefaults];
     NSArray *languages = [defs objectForKey:@"AppleLanguages"];
