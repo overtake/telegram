@@ -121,7 +121,7 @@
         
         range.length+= (secondRange.location - range.length - range.location) + secondRange.length;
         
-        [attr addAttribute:NSLinkAttributeName value:@"photoOrVideo" range:range];
+        [attr addAttribute:NSLinkAttributeName value:@"chat://photoOrVideo" range:range];
         
     
     }
@@ -143,7 +143,7 @@
         
         range.length+= (secondRange.location - range.length - range.location) + secondRange.length;
         
-        [attr addAttribute:NSLinkAttributeName value:@"files" range:range];
+        [attr addAttribute:NSLinkAttributeName value:@"chat://files" range:range];
         
     }
     
@@ -161,7 +161,7 @@
         
         range.length+= (secondRange.location - range.length - range.location) + secondRange.length;
         
-        [attr addAttribute:NSLinkAttributeName value:@"audio" range:range];
+        [attr addAttribute:NSLinkAttributeName value:@"chat://audio" range:range];
 
 
     }
@@ -180,7 +180,7 @@
         
         range.length+= (secondRange.location - range.length - range.location) + secondRange.length;
         
-        [attr addAttribute:NSLinkAttributeName value:@"links" range:range];
+        [attr addAttribute:NSLinkAttributeName value:@"chat://links" range:range];
         
     }
     
@@ -233,8 +233,35 @@ static NSMutableDictionary *loaders;
 -(instancetype)initWithFrame:(NSRect)frameRect {
     if(self = [super initWithFrame:frameRect]) {
         _headerTextField = [[TGTextLabel alloc] init];
+        
         _countersTextField = [[TGTextLabel alloc] init];
         
+        weak();
+        
+        [_countersTextField setLinkCallback:^(NSString *url) {
+            
+            if([url isEqualToString:@"chat://audio"]) {
+                [TGAudioPlayerWindow show:weakSelf.item.conversation playerState:TGAudioPlayerWindowStatePlayList];
+                return;
+            }
+            
+            TMCollectionPageController *viewController = [[TMCollectionPageController alloc] initWithFrame:NSZeroRect];
+            
+            [weakSelf.item.controller.navigationViewController pushViewController:viewController animated:YES];
+            
+            [viewController setConversation:weakSelf.item.conversation];
+            
+            if([url isEqualToString:@"chat://files"]) {
+                
+                [viewController showFiles];
+                
+            } else if([url isEqualToString:@"chat://links"]) {
+                
+                [viewController showSharedLinks];
+                
+            }
+            
+        }];
         _headerAttr = [[NSMutableAttributedString alloc] init];
         
         [_headerAttr appendString:NSLocalizedString(@"Profile.SharedMedia", nil) withColor:TEXT_COLOR];
@@ -257,26 +284,7 @@ static NSMutableDictionary *loaders;
 -(void)textField:(id)textField handleURLClick:(NSString *)url {
     
     // handle
-    if([url isEqualToString:@"audio"]) {
-        [TGAudioPlayerWindow show:self.item.conversation playerState:TGAudioPlayerWindowStatePlayList];
-        return;
-    }
-    
-    TMCollectionPageController *viewController = [[TMCollectionPageController alloc] initWithFrame:NSZeroRect];
-    
-    [self.item.controller.navigationViewController pushViewController:viewController animated:YES];
-    
-    [viewController setConversation:self.item.conversation];
-    
-    if([url isEqualToString:@"files"]) {
-        
-        [viewController showFiles];
-        
-    } else if([url isEqualToString:@"links"]) {
-        
-        [viewController showSharedLinks];
-        
-    }
+  
     
     
     
@@ -377,7 +385,7 @@ static NSMutableDictionary *loaders;
 }
 
 -(void)mouseDown:(NSEvent *)theEvent {
-    [super mouseDown:theEvent];
+   // [super mouseDown:theEvent];
     
     if(self.item.callback)
         self.item.callback(self.item);
