@@ -54,20 +54,22 @@
                 
                 NSImage *image;
                 
-                if(self.imageProcessor) {
-                    image = self.imageProcessor(responseObject,self.imageSize);
-                } else {
-                    image = renderedImage(responseObject, self.imageSize);
+                if(image) {
+                    if(self.imageProcessor) {
+                        image = self.imageProcessor(responseObject,self.imageSize);
+                    } else {
+                        image = renderedImage(responseObject, self.imageSize);
+                    }
+                    
+                    [TGCache cacheImage:image forKey:[self cacheKey] groups:@[IMGCACHE]];
+                    
+                    [ASQueue dispatchOnMainQueue:^{
+                        [self.delegate didDownloadImage:image object:self];
+                    }];
+                    
+                    self.af_imageRequestOperation = nil;
                 }
-                
-                [TGCache cacheImage:image forKey:[self cacheKey] groups:@[IMGCACHE]];
-                
-                [ASQueue dispatchOnMainQueue:^{
-                    [self.delegate didDownloadImage:image object:self];
-                }];
-                
-                self.af_imageRequestOperation = nil;
-                
+    
             }
             
             
