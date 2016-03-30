@@ -165,12 +165,14 @@
                 }
             }];
             
+            [self.items removeObjectAtIndex:itemIndex];
+            
             if(itemIndex != NSNotFound) {
                 [self.tableView removeRowsAtIndexes:[NSIndexSet indexSetWithIndex:itemIndex] withAnimation:NSTableViewAnimationEffectFade];
             }
         }];
         
-        [self.items removeObjectsInArray:items];
+        
         [self.tableView checkCap];
     }
     

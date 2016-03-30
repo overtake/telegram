@@ -1268,7 +1268,7 @@ static NSTextAttachment *headerMediaIcon() {
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     
-    if(_conversation.type == DialogTypeUser) {
+    if(_conversation && _conversation.type == DialogTypeUser) {
         [[FullUsersManager sharedManager] requestUserFull:_conversation.user withCallback:nil];
     }
     

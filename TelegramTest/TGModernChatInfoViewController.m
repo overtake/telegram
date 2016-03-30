@@ -232,9 +232,13 @@
             self.action.editable = NO;
         }
         
+        [self updateActionNavigation];
         [self configure];
         [self drawParticipants];
+        [self checkSupergroup];
         
+        
+        [_tableView addItem:_deleteAndExitItem tableRedraw:YES];
     }
 }
 

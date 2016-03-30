@@ -384,11 +384,16 @@ static NSMutableDictionary *loaders;
     
 }
 
+
+-(void)mouseUp:(NSEvent *)theEvent {
+    if(self.item.callback)
+        self.item.callback(self.item);
+}
+
 -(void)mouseDown:(NSEvent *)theEvent {
    // [super mouseDown:theEvent];
     
-    if(self.item.callback)
-        self.item.callback(self.item);
+    
 }
 
 

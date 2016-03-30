@@ -42,7 +42,7 @@
         [self.namesField setStringValue:@"super test"];
         
         
-        [self.namesField setFrame:NSMakeRect(5, NSHeight(frameRect) - 13, NSWidth(frameRect), 20)];
+        [self.namesField setFrame:NSMakeRect(5, NSHeight(frameRect) - 18, NSWidth(frameRect), 20)];
         
         [self.descriptionField setFrame:NSMakeRect(5, 0, NSWidth(frameRect), 17)];
         

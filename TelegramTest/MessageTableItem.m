@@ -402,6 +402,13 @@ static NSTextAttachment *channelViewsCountAttachment() {
     viewSize.width = self.makeSize + (self.isForwadedMessage ? self.defaultOffset : 0);
     
     
+    if(self.isHeaderMessage) {
+        viewSize.height = MAX(46,viewSize.height);
+    } else {
+        viewSize.height = MAX(28,viewSize.height);
+    }
+
+    
     return viewSize;
 }
 

@@ -1,6 +1,7 @@
 
 #import <OpenGL/gl.h>
 #import "VideoLayer.h"
+#import <GLUT/GLUT.h>
 
 @implementation VideoLayer {
     CVOpenGLTextureCacheRef _textureCache;
@@ -24,6 +25,7 @@
     }
     CGLUnlockContext(glContext);
     
+    
     return glContext;
 }
 
@@ -32,6 +34,22 @@
     if(pixelBuffer != NULL) {
         CVOpenGLTextureCacheFlush(_textureCache,0);
         CVOpenGLTextureRelease(_texture);
+        
+        CFTypeID imageType = CFGetTypeID(pixelBuffer);
+        
+        if (imageType == CVPixelBufferGetTypeID()) {
+            // Pixel Data
+            int bp = 0;
+        }
+        else if (imageType == CVOpenGLBufferGetTypeID()) {
+            // OpenGL pbuffer
+            int bp = 0;
+        }
+        else if (imageType == CVOpenGLTextureGetTypeID()) {
+            // OpenGL Texture
+            int bp = 0;
+        }
+        
         CVOpenGLTextureCacheCreateTextureFromImage(NULL,
                                                    _textureCache,
                                                    pixelBuffer,

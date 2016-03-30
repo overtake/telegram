@@ -7,4 +7,7 @@
 //
 
 DSA_PEM_FILE = dsa_pub_prod.pem
-SFEED_URL = http://tgupdate.comli.com/versions.xml
+
+SIMPLE_SLASH=/
+
+SFEED_URL = http:$(SIMPLE_SLASH)/tgupdate.comli.com/versions.xml
