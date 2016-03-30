@@ -559,7 +559,7 @@ static NSMenu *deleteMenu;
     NSView *view = [self hitTest:[self convertPoint:[theEvent locationInWindow] fromView:nil]];
     
     
-    NSUInteger index = [self.subviews indexOfObject:view.superview];
+    NSUInteger index = [self.subviews indexOfObject:view.superview.superview];
     
     
     TGGifSearchRowItem *item = (TGGifSearchRowItem *)[self rowItem];
