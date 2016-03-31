@@ -511,7 +511,7 @@
                 [self.messages replaceObjectAtIndex:index withObject:item];
                 
                 if(index != NSNotFound) {
-                    [[NSAnimationContext currentContext] setDuration:0];
+               //     [[NSAnimationContext currentContext] setDuration:0];
                     [self.table reloadDataForRowIndexes:[NSIndexSet indexSetWithIndex:index] columnIndexes:[NSIndexSet indexSetWithIndex:0]];
                     [self.table noteHeightOfRowsWithIndexesChanged:[NSIndexSet indexSetWithIndex:index]];
                     

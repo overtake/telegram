@@ -2,7 +2,7 @@
 //  MTProto.m
 //  Telegram
 //
-//  Auto created by Mikhail Filimonov on 25.03.16.
+//  Auto created by Mikhail Filimonov on 31.03.16.
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -13093,22 +13093,22 @@
 @end
 
 @implementation TL_updateBotInlineSend
-+(TL_updateBotInlineSend*)createWithUser_id:(int)user_id query:(NSString*)query id_update_bot_inline_send:(NSString*)id_update_bot_inline_send {
++(TL_updateBotInlineSend*)createWithUser_id:(int)user_id query:(NSString*)query update_bot_inline_send_id:(NSString*)update_bot_inline_send_id {
 	TL_updateBotInlineSend* obj = [[TL_updateBotInlineSend alloc] init];
 	obj.user_id = user_id;
 	obj.query = query;
-	obj.id_update_bot_inline_send = id_update_bot_inline_send;
+	obj.update_bot_inline_send_id = update_bot_inline_send_id;
 	return obj;
 }
 -(void)serialize:(SerializedData*)stream {
 	[stream writeInt:self.user_id];
 	[stream writeString:self.query];
-	[stream writeString:self.id_update_bot_inline_send];
+	[stream writeString:self.update_bot_inline_send_id];
 }
 -(void)unserialize:(SerializedData*)stream {
 	super.user_id = [stream readInt];
 	super.query = [stream readString];
-	super.id_update_bot_inline_send = [stream readString];
+	super.update_bot_inline_send_id = [stream readString];
 }
         
 -(TL_updateBotInlineSend *)copy {
@@ -13117,7 +13117,7 @@
     
     objc.user_id = self.user_id;
     objc.query = self.query;
-    objc.id_update_bot_inline_send = self.id_update_bot_inline_send;
+    objc.update_bot_inline_send_id = self.update_bot_inline_send_id;
     
     return objc;
 }
@@ -13236,7 +13236,7 @@
 @end
 
 @implementation TL_updateBotCallbackQuery
-+(TL_updateBotCallbackQuery*)createWithQuery_id:(long)query_id user_id:(int)user_id peer:(TLInputPeer*)peer msg_id:(int)msg_id text:(NSString*)text {
++(TL_updateBotCallbackQuery*)createWithQuery_id:(long)query_id user_id:(int)user_id peer:(TLPeer*)peer msg_id:(int)msg_id text:(NSString*)text {
 	TL_updateBotCallbackQuery* obj = [[TL_updateBotCallbackQuery alloc] init];
 	obj.query_id = query_id;
 	obj.user_id = user_id;
@@ -13269,6 +13269,55 @@
     objc.peer = [self.peer copy];
     objc.msg_id = self.msg_id;
     objc.text = self.text;
+    
+    return objc;
+}
+        
+
+    
+-(id)initWithCoder:(NSCoder *)aDecoder {
+
+    if((self = [ClassStore deserialize:[aDecoder decodeObjectForKey:@"data"]])) {
+        
+    }
+    
+    return self;
+}
+        
+-(void)encodeWithCoder:(NSCoder *)aCoder {
+    [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
+}
+        
+
+        
+@end
+
+@implementation TL_updateEditMessage
++(TL_updateEditMessage*)createWithMessage:(TLMessage*)message pts:(int)pts pts_count:(int)pts_count {
+	TL_updateEditMessage* obj = [[TL_updateEditMessage alloc] init];
+	obj.message = message;
+	obj.pts = pts;
+	obj.pts_count = pts_count;
+	return obj;
+}
+-(void)serialize:(SerializedData*)stream {
+	[ClassStore TLSerialize:self.message stream:stream];
+	[stream writeInt:self.pts];
+	[stream writeInt:self.pts_count];
+}
+-(void)unserialize:(SerializedData*)stream {
+	self.message = [ClassStore TLDeserialize:stream];
+	super.pts = [stream readInt];
+	super.pts_count = [stream readInt];
+}
+        
+-(TL_updateEditMessage *)copy {
+    
+    TL_updateEditMessage *objc = [[TL_updateEditMessage alloc] init];
+    
+    objc.message = [self.message copy];
+    objc.pts = self.pts;
+    objc.pts_count = self.pts_count;
     
     return objc;
 }
@@ -24804,59 +24853,6 @@
         
 @end
 
-@implementation TLchannels_MessageEditData
-            
--(BOOL)isCaption {return NO;}
-            
-@end
-        
-@implementation TL_channels_messageEditData
-+(TL_channels_messageEditData*)createWithFlags:(int)flags  {
-	TL_channels_messageEditData* obj = [[TL_channels_messageEditData alloc] init];
-	obj.flags = flags;
-	
-	return obj;
-}
--(void)serialize:(SerializedData*)stream {
-	[stream writeInt:self.flags];
-	
-}
--(void)unserialize:(SerializedData*)stream {
-	super.flags = [stream readInt];
-	
-}
-        
--(TL_channels_messageEditData *)copy {
-    
-    TL_channels_messageEditData *objc = [[TL_channels_messageEditData alloc] init];
-    
-    objc.flags = self.flags;
-    
-    
-    return objc;
-}
-        
-
-    
--(id)initWithCoder:(NSCoder *)aDecoder {
-
-    if((self = [ClassStore deserialize:[aDecoder decodeObjectForKey:@"data"]])) {
-        
-    }
-    
-    return self;
-}
-        
--(void)encodeWithCoder:(NSCoder *)aCoder {
-    [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
-}
-        
-            
--(BOOL)isCaption {return (self.flags & (1 << 0)) > 0;}
-            
-        
-@end
-
 @implementation TLauth_CodeType
 
 @end
@@ -25194,6 +25190,59 @@
 }
         
 
+        
+@end
+
+@implementation TLmessages_MessageEditData
+            
+-(BOOL)isCaption {return NO;}
+            
+@end
+        
+@implementation TL_messages_messageEditData
++(TL_messages_messageEditData*)createWithFlags:(int)flags  {
+	TL_messages_messageEditData* obj = [[TL_messages_messageEditData alloc] init];
+	obj.flags = flags;
+	
+	return obj;
+}
+-(void)serialize:(SerializedData*)stream {
+	[stream writeInt:self.flags];
+	
+}
+-(void)unserialize:(SerializedData*)stream {
+	super.flags = [stream readInt];
+	
+}
+        
+-(TL_messages_messageEditData *)copy {
+    
+    TL_messages_messageEditData *objc = [[TL_messages_messageEditData alloc] init];
+    
+    objc.flags = self.flags;
+    
+    
+    return objc;
+}
+        
+
+    
+-(id)initWithCoder:(NSCoder *)aDecoder {
+
+    if((self = [ClassStore deserialize:[aDecoder decodeObjectForKey:@"data"]])) {
+        
+    }
+    
+    return self;
+}
+        
+-(void)encodeWithCoder:(NSCoder *)aCoder {
+    [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
+}
+        
+            
+-(BOOL)isCaption {return (self.flags & (1 << 0)) > 0;}
+            
         
 @end
 

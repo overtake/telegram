@@ -138,7 +138,7 @@
                 
                 [weakSelf.messagesViewController setEditableMessage:weakSelf.item.message];
                 
-                [RPCRequest sendRequest:[TLAPI_channels_getMessageEditData createWithChannel:weakSelf.item.message.chat.inputPeer n_id:weakSelf.item.message.n_id] successHandler:^(id request, id response) {
+                [RPCRequest sendRequest:[TLAPI_messages_getMessageEditData createWithPeer:weakSelf.item.message.conversation.inputPeer n_id:weakSelf.item.message.n_id] successHandler:^(id request, id response) {
                     
                     [SharedManager proccessGlobalResponse:response];
                     

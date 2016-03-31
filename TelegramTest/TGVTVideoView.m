@@ -785,42 +785,42 @@ static NSImage *TGVTThumbCap() {
 -(void)displayFrame:(TGVTAcceleratedVideoFrame *)frame {
     
     
-    CMSampleBufferRef sampleBuffer = NULL;
-    OSStatus err = noErr;
-    
-    if (!_videoInfo || !CMVideoFormatDescriptionMatchesImageBuffer(_videoInfo, frame.buffer)) {
-        if (_videoInfo) {
-            CFRelease(_videoInfo);
-            _videoInfo = nil;
-        }
-        err = CMVideoFormatDescriptionCreateForImageBuffer(NULL, frame.buffer, &_videoInfo);
-    }
-    
-    if (err) {
-        NSLog(@"Error at CMVideoFormatDescriptionCreateForImageBuffer %d", err);
-    }
-    
-    CMSampleTimingInfo sampleTimingInfo = {
-        .duration = kCMTimeInvalid,
-        .presentationTimeStamp = frame.outputTime,
-        .decodeTimeStamp = kCMTimeInvalid,
-        
-    };
-    
-    
-    
-    err = CMSampleBufferCreateForImageBuffer(kCFAllocatorDefault, frame.buffer, true, NULL, NULL, _videoInfo, &sampleTimingInfo, &sampleBuffer);
-    
-    if (err) {
-        NSLog(@"Error at CMSampleBufferCreateForImageBuffer %d", err);
-    }
-    
+//    CMSampleBufferRef sampleBuffer = NULL;
+//    OSStatus err = noErr;
+//    
+//    if (!_videoInfo || !CMVideoFormatDescriptionMatchesImageBuffer(_videoInfo, frame.buffer)) {
+//        if (_videoInfo) {
+//            CFRelease(_videoInfo);
+//            _videoInfo = nil;
+//        }
+//        err = CMVideoFormatDescriptionCreateForImageBuffer(NULL, frame.buffer, &_videoInfo);
+//    }
+//    
+//    if (err) {
+//        NSLog(@"Error at CMVideoFormatDescriptionCreateForImageBuffer %d", err);
+//    }
+//    
+//    CMSampleTimingInfo sampleTimingInfo = {
+//        .duration = kCMTimeInvalid,
+//        .presentationTimeStamp = frame.outputTime,
+//        .decodeTimeStamp = kCMTimeInvalid,
+//        
+//    };
+//    
+//    
+//    
+//    err = CMSampleBufferCreateForImageBuffer(kCFAllocatorDefault, frame.buffer, true, NULL, NULL, _videoInfo, &sampleTimingInfo, &sampleBuffer);
+//    
+//    if (err) {
+//        NSLog(@"Error at CMSampleBufferCreateForImageBuffer %d", err);
+//    }
+//    
     
     [ASQueue dispatchOnMainQueue:^{
         
         _thumbView.image = frame.image;
         
-        CFRelease(sampleBuffer);
+      //  CFRelease(sampleBuffer);
     }];
     
 }

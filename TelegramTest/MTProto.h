@@ -2,7 +2,7 @@
 //  MTProto.h
 //  Telegram
 //
-//  Auto created by Mikhail Filimonov on 25.03.16.
+//  Auto created by Mikhail Filimonov on 31.03.16.
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -420,9 +420,6 @@
 @interface TLMessageFwdHeader : TLObject
 @end
 	
-@interface TLchannels_MessageEditData : TLObject
-@end
-	
 @interface TLauth_CodeType : TLObject
 @end
 	
@@ -430,6 +427,9 @@
 @end
 	
 @interface TLmessages_BotCallbackAnswer : TLObject
+@end
+	
+@interface TLmessages_MessageEditData : TLObject
 @end
 	
 @interface TLAudio : TLObject
@@ -1625,7 +1625,7 @@
 @property int version;
 @property (nonatomic, strong) NSMutableArray* dc_options;
 @property Boolean blocked;
-@property (nonatomic, strong) TLInputPeer* peer;
+@property (nonatomic, strong) TLPeer* peer;
 @property (nonatomic, strong) TLPeerNotifySettings* notify_settings;
 @property (nonatomic, strong) NSString* type;
 @property (nonatomic, strong) TLMessageMedia* media;
@@ -1646,7 +1646,7 @@
 @property long query_id;
 @property (nonatomic, strong) NSString* query;
 @property (nonatomic, strong) NSString* offset;
-@property (nonatomic, strong) NSString* id_update_bot_inline_send;
+@property (nonatomic, strong) NSString* update_bot_inline_send_id;
 @property int msg_id;
 @property (nonatomic, strong) NSString* text;
 @end
@@ -1778,7 +1778,7 @@
 +(TL_updateBotInlineQuery*)createWithQuery_id:(long)query_id user_id:(int)user_id query:(NSString*)query offset:(NSString*)offset;
 @end
 @interface TL_updateBotInlineSend : TLUpdate<NSCoding>
-+(TL_updateBotInlineSend*)createWithUser_id:(int)user_id query:(NSString*)query id_update_bot_inline_send:(NSString*)id_update_bot_inline_send;
++(TL_updateBotInlineSend*)createWithUser_id:(int)user_id query:(NSString*)query update_bot_inline_send_id:(NSString*)update_bot_inline_send_id;
 @end
 @interface TL_updateEditChannelMessage : TLUpdate<NSCoding>
 +(TL_updateEditChannelMessage*)createWithMessage:(TLMessage*)message pts:(int)pts pts_count:(int)pts_count;
@@ -1787,7 +1787,10 @@
 +(TL_updateChannelPinnedMessage*)createWithChannel_id:(int)channel_id n_id:(int)n_id;
 @end
 @interface TL_updateBotCallbackQuery : TLUpdate<NSCoding>
-+(TL_updateBotCallbackQuery*)createWithQuery_id:(long)query_id user_id:(int)user_id peer:(TLInputPeer*)peer msg_id:(int)msg_id text:(NSString*)text;
++(TL_updateBotCallbackQuery*)createWithQuery_id:(long)query_id user_id:(int)user_id peer:(TLPeer*)peer msg_id:(int)msg_id text:(NSString*)text;
+@end
+@interface TL_updateEditMessage : TLUpdate<NSCoding>
++(TL_updateEditMessage*)createWithMessage:(TLMessage*)message pts:(int)pts pts_count:(int)pts_count;
 @end
 	
 @interface TLupdates_State()
@@ -3026,15 +3029,6 @@
 +(TL_localMessageFwdHeader*)createWithFlags:(int)flags from_id:(int)from_id date:(int)date channel_id:(int)channel_id channel_post:(int)channel_post channel_original_id:(int)channel_original_id;
 @end
 	
-@interface TLchannels_MessageEditData()
-@property int flags;
-@property (nonatomic,assign,readonly) BOOL isCaption;
-@end
-
-@interface TL_channels_messageEditData : TLchannels_MessageEditData<NSCoding>
-+(TL_channels_messageEditData*)createWithFlags:(int)flags ;
-@end
-	
 @interface TLauth_CodeType()
 
 @end
@@ -3073,6 +3067,15 @@
 
 @interface TL_messages_botCallbackAnswer : TLmessages_BotCallbackAnswer<NSCoding>
 +(TL_messages_botCallbackAnswer*)createWithMessage:(NSString*)message;
+@end
+	
+@interface TLmessages_MessageEditData()
+@property int flags;
+@property (nonatomic,assign,readonly) BOOL isCaption;
+@end
+
+@interface TL_messages_messageEditData : TLmessages_MessageEditData<NSCoding>
++(TL_messages_messageEditData*)createWithFlags:(int)flags ;
 @end
 	
 @interface TLAudio()

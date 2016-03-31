@@ -96,10 +96,11 @@
             statelessUpdates = @[NSStringFromClass([TL_updateReadChannelInbox class]),NSStringFromClass([TL_updateChannelTooLong class]),NSStringFromClass([TL_updateChannelGroup class]),NSStringFromClass([TL_updateChannelMessageViews class]),NSStringFromClass([TL_updateChannel class]),NSStringFromClass([TL_updateChannelPinnedMessage class])];
         });
         
+        
         if([statefullUpdates indexOfObject:[update className]] != NSNotFound)
         {
-            
-            if(_channelsInUpdating[@([self channelIdWithUpdate:update])] == nil) {
+           
+             if(_channelsInUpdating[@([self channelIdWithUpdate:update])] == nil) {
                 [self addStatefullUpdate:[[TGUpdateChannelContainer alloc] initWithPts:[update pts] pts_count:[update pts_count] channel_id:[self channelIdWithUpdate:update] update:update]];
             }
             
@@ -398,10 +399,8 @@
         
         TL_conversation *channel = [self conversationWithChannelId:[self channelIdWithUpdate:update]];
         
-        if(channel && channel.pts < [update pts]) {
+        if(channel) {
              [self failUpdateWithChannelId:[update channel_id] limit:10 withCallback:nil errorCallback:nil];
-        } else {
-            [[MTNetwork instance].updateService update];
         }
         
         

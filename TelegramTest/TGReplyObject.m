@@ -93,7 +93,7 @@ static NSCache *replyCache;
     if((_replyMessage.media == nil || [_replyMessage.media isKindOfClass:[TL_messageMediaEmpty class]]) || [_replyMessage.media isKindOfClass:[TL_messageMediaWebPage class]]) {
         
         if(![_replyMessage isKindOfClass:[TL_localMessageService class]]) {
-            [replyText appendString:[[_replyMessage.message stringByReplacingOccurrencesOfString:@"\n" withString:@" "] fixEmoji] withColor:TEXT_COLOR];
+            [replyText appendString:[[[_replyMessage.message stringByReplacingOccurrencesOfString:@"\n" withString:@" "] fixEmoji] trim] withColor:TEXT_COLOR];
         } else {
             [replyText appendString:[MessagesUtils serviceMessage:_replyMessage forAction:_replyMessage.action] withColor:GRAY_TEXT_COLOR];
         }

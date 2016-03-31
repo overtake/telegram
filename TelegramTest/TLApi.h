@@ -2,7 +2,7 @@
 //  TLApi.h
 //  Telegram
 //
-//  Auto created by Mikhail Filimonov on 25.03.16.
+//  Auto created by Mikhail Filimonov on 31.03.16.
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -1153,24 +1153,6 @@
 +(TLAPI_channels_toggleSignatures*)createWithChannel:(TLInputChannel*)channel enabled:(Boolean)enabled;
 @end
 
-@interface TLAPI_channels_getMessageEditData : TLApiObject
-@property (nonatomic, strong) TLInputChannel* channel;
-@property int n_id;
-
-+(TLAPI_channels_getMessageEditData*)createWithChannel:(TLInputChannel*)channel n_id:(int)n_id;
-@end
-
-@interface TLAPI_channels_editMessage : TLApiObject
-@property int flags;
-@property (nonatomic,assign,readonly) BOOL isNo_webpage;
-@property (nonatomic, strong) TLInputChannel* channel;
-@property int n_id;
-@property (nonatomic, strong) NSString* message;
-@property (nonatomic, strong) NSMutableArray* entities;
-
-+(TLAPI_channels_editMessage*)createWithFlags:(int)flags  channel:(TLInputChannel*)channel n_id:(int)n_id message:(NSString*)message entities:(NSMutableArray*)entities;
-@end
-
 @interface TLAPI_channels_updatePinnedMessage : TLApiObject
 @property int flags;
 @property (nonatomic,assign,readonly) BOOL isSilent;
@@ -1192,6 +1174,25 @@
 @property (nonatomic, strong) NSString* phone_code_hash;
 
 +(TLAPI_auth_cancelCode*)createWithPhone_number:(NSString*)phone_number phone_code_hash:(NSString*)phone_code_hash;
+@end
+
+@interface TLAPI_messages_getMessageEditData : TLApiObject
+@property (nonatomic, strong) TLInputPeer* peer;
+@property int n_id;
+
++(TLAPI_messages_getMessageEditData*)createWithPeer:(TLInputPeer*)peer n_id:(int)n_id;
+@end
+
+@interface TLAPI_messages_editMessage : TLApiObject
+@property int flags;
+@property (nonatomic,assign,readonly) BOOL isNo_webpage;
+@property (nonatomic, strong) TLInputPeer* peer;
+@property int n_id;
+@property (nonatomic, strong) NSString* message;
+@property (nonatomic, strong) NSMutableArray* entities;
+@property (nonatomic, strong) TLReplyMarkup* reply_markup;
+
++(TLAPI_messages_editMessage*)createWithFlags:(int)flags  peer:(TLInputPeer*)peer n_id:(int)n_id message:(NSString*)message entities:(NSMutableArray*)entities reply_markup:(TLReplyMarkup*)reply_markup;
 @end
 
 @interface TLAPI_messages_getBotCallbackAnswer : TLApiObject

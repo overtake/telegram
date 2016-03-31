@@ -513,11 +513,23 @@ static NSArray *channelUpdates;
             return;
         }
         
-        if([update isKindOfClass:[TL_updateBotInlineQuery class]]) {
+        if([update isKindOfClass:[TL_updateEditMessage class]]) {
             
-            //TODO
+            TL_localMessage *msg = [TL_localMessage convertReceivedMessage:[(TL_updateEditMessage *)update message]];
             
-            int bp = 0;
+            if(msg)
+                [[Storage manager] addSupportMessages:@[msg]];
+            
+            [[Storage manager] insertMessages:@[msg]];
+            
+            TL_conversation *conversation = msg.conversation;
+            
+            if(conversation.lastMessage.n_id == msg.n_id) {
+                conversation.lastMessage = msg;
+                [Notification perform:[Notification notificationNameByDialog:conversation action:@"message"] data:@{KEY_DIALOG:conversation,KEY_LAST_CONVRESATION_DATA:[MessagesUtils conversationLastData:conversation]}];
+            }
+            
+            [Notification perform:UPDATE_EDITED_MESSAGE data:@{KEY_MESSAGE:msg}];
             
             return;
         }

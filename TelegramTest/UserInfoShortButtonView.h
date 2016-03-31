@@ -7,12 +7,14 @@
 //
 
 #import "TMView.h"
-
+#import "TGTextLabel.h"
 @interface UserInfoShortButtonView : TMView
-@property (nonatomic, strong) TMTextButton *textButton;
+@property (nonatomic, strong) TGTextLabel *textLabel;
 @property (nonatomic, assign) BOOL locked;
 @property (nonatomic,strong) NSView *rightContainer;
 @property (nonatomic, assign) NSPoint rightContainerOffset;
+
+@property (nonatomic,strong) NSColor *textColor;
 
 @property (nonatomic,strong,readonly) NSView *currentRightController;
 

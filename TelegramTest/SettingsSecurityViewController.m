@@ -55,7 +55,7 @@
         [ImageStorage clearCache];
     }];
     
-    [self.clearCache.textButton setFrameOrigin:NSMakePoint(0, NSMinY(self.clearCache.textButton.frame))];
+    [self.clearCache.textLabel setFrameOrigin:NSMakePoint(0, NSMinY(self.clearCache.textLabel.frame))];
     
     
     
@@ -88,7 +88,7 @@
         [weakSelf terminateSessions];
     }];
     
-    [self.terminate.textButton setFrameOrigin:NSMakePoint(0, NSMinY(self.terminate.textButton.frame))];
+    [self.terminate.textLabel setFrameOrigin:NSMakePoint(0, NSMinY(self.terminate.textLabel.frame))];
     
     
     

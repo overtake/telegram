@@ -2840,6 +2840,9 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "+[TGConversationsViewController showPopupMenuForDialog:withEvent:forView:]:TGConversationsViewController.m">
+      </ContextState>
+      <ContextState
          contextName = "-[TGContextRowItem initWithObject:]:TGContextRowItem.m">
       </ContextState>
       <ContextState
@@ -3383,6 +3386,9 @@
       </ContextState>
       <ContextState
          contextName = "open_user_by_name:FileUtils.m">
+      </ContextState>
+      <ContextState
+         contextName = "-[TGUpdateChannels addWaitingUpdate:]:TGUpdateChannels.m">
       </ContextState>
       <ContextState
          contextName = "-[RightViewController showByDialog:withJump:historyFilter:sender:]:RightViewController.m">
@@ -3975,6 +3981,9 @@
       <ContextState
          contextName = "-[TGUpdateChannels proccessUpdate:]:TGUpdateChannels.m">
          <PersistentStrings>
+            <PersistentString
+               value = "[update pts]">
+            </PersistentString>
             <PersistentString
                value = "channel.chat">
             </PersistentString>

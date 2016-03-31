@@ -473,4 +473,12 @@ static void *kType;
     return self.type == DialogTypeChannel && !self.chat.isMegagroup && !self.chat.isSignatures;
 }
 
+-(void)setPts:(int)pts {
+    [super setPts:pts];
+    
+    if(pts > 200000000) {
+        int bp = 0;
+    }
+}
+
 @end

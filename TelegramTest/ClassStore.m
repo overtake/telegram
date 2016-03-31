@@ -3,7 +3,7 @@
 //  ClassStore.m
 //  Telegram
 //
-    //  Created by keepcoder on 25.03.16.
+    //  Created by keepcoder on 31.03.16.
 //  Copyright (c) 2015 keepcoder. All rights reserved.
 //
 
@@ -525,7 +525,6 @@ static NSMutableDictionary *cs_constuctors;
    [cs_classes setObject:[TL_exportedMessageLink class] forKey:[NSNumber numberWithInt:524838915]];
    [cs_classes setObject:[TL_messageFwdHeader class] forKey:[NSNumber numberWithInt:-947462709]];
    [cs_classes setObject:[TL_updateEditChannelMessage class] forKey:[NSNumber numberWithInt:457133559]];
-   [cs_classes setObject:[TL_channels_messageEditData class] forKey:[NSNumber numberWithInt:1742808415]];
    [cs_classes setObject:[TL_updateChannelPinnedMessage class] forKey:[NSNumber numberWithInt:-1738988427]];
    [cs_classes setObject:[TL_messageActionPinMessage class] forKey:[NSNumber numberWithInt:-1799538451]];
    [cs_classes setObject:[TL_auth_codeTypeSms class] forKey:[NSNumber numberWithInt:1923290508]];
@@ -540,7 +539,9 @@ static NSMutableDictionary *cs_constuctors;
    [cs_classes setObject:[TL_keyboardButtonRequestPhone class] forKey:[NSNumber numberWithInt:-1318425559]];
    [cs_classes setObject:[TL_keyboardButtonRequestGeoLocation class] forKey:[NSNumber numberWithInt:-59151553]];
    [cs_classes setObject:[TL_messages_botCallbackAnswer class] forKey:[NSNumber numberWithInt:-1266250455]];
-   [cs_classes setObject:[TL_updateBotCallbackQuery class] forKey:[NSNumber numberWithInt:-652713370]];
+   [cs_classes setObject:[TL_updateBotCallbackQuery class] forKey:[NSNumber numberWithInt:1344586416]];
+   [cs_classes setObject:[TL_messages_messageEditData class] forKey:[NSNumber numberWithInt:649453030]];
+   [cs_classes setObject:[TL_updateEditMessage class] forKey:[NSNumber numberWithInt:-469536605]];
    [cs_classes setObject:[TL_userSelf class] forKey:[NSNumber numberWithInt:476112392]];
    [cs_classes setObject:[TL_userContact class] forKey:[NSNumber numberWithInt:-894214632]];
    [cs_classes setObject:[TL_userRequest class] forKey:[NSNumber numberWithInt:-640891665]];

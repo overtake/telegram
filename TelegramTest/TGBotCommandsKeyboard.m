@@ -319,7 +319,7 @@
     NSUInteger maxHeight = _fillToSize ? height : MIN(height,3 * itemHeight + ((3 -1) * 3 ) + 6 + (itemHeight/2));
     
    
-    _scrollView.horizontalScrollElasticity = !_fillToSize;
+    _scrollView.verticalScrollElasticity = !_fillToSize;
     
     [_scrollView setFrameSize:NSMakeSize(NSWidth(self.frame), maxHeight)];
     

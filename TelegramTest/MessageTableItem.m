@@ -401,14 +401,13 @@ static NSTextAttachment *channelViewsCountAttachment() {
     
     viewSize.width = self.makeSize + (self.isForwadedMessage ? self.defaultOffset : 0);
     
-    
-    if(self.isHeaderMessage) {
-        viewSize.height = MAX(46,viewSize.height);
-    } else {
-        viewSize.height = MAX(28,viewSize.height);
+    if(![self isKindOfClass:[MessageTableItem class]]) {
+        if(self.isHeaderMessage) {
+            viewSize.height = MAX(46,viewSize.height);
+        } else {
+            viewSize.height = MAX(28,viewSize.height);
+        }
     }
-
-    
     return viewSize;
 }
 
@@ -719,12 +718,11 @@ static NSTextAttachment *channelViewsCountAttachment() {
         self.blockSize = NSMakeSize(self.blockSize.width, self.blockSize.height + _captionSize.height + self.defaultContentOffset);
     }
     
-    
     _viewsCountAndSignSize = NSMakeSize(MIN(MAX(width - _headerOriginalSize.width/2.0f,0),_viewsCountAndSignOriginalSize.width), self.viewsCountAndSignSize.height);
     
     self.headerSize = NSMakeSize(MIN(_headerOriginalSize.width, width - self.defaultOffset * 2), self.headerSize.height);
     
-    _inlineKeyboardSize = NSMakeSize(width, _message.reply_markup.rows.count * (33 + self.defaultContentOffset) - self.defaultContentOffset *2);
+    _inlineKeyboardSize = NSMakeSize(MIN(300,width), _message.reply_markup.rows.count * (33 + self.defaultContentOffset) - self.defaultContentOffset *2);
     
     return YES;
 }
