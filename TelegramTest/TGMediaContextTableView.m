@@ -422,6 +422,14 @@ static NSMenu *deleteMenu;
                 imageObject = [[TGExternalImageObject alloc] initWithURL:botResult.thumb_url];
             } else if([botResult.type isEqualToString:@"photo"] && botResult.content_url.length > 0) {
                 imageObject = [[TGExternalImageObject alloc] initWithURL:botResult.content_url];
+            } else if(botResult.send_message.geo != nil) {
+                
+                NSSize size = [sizes[idx] sizeValue];
+                
+                NSString *gSize = [NSString stringWithFormat:@"%dx%d",IS_RETINA ? (int)(size.width*2.0f) : (int)size.width, IS_RETINA ? (int)(size.height*2.0f) : (int)size.height];
+                
+                imageObject = [[TGExternalImageObject alloc] initWithURL:[NSString stringWithFormat:@"https://maps.googleapis.com/maps/api/staticmap?center=%f,%f&zoom=15&size=%@&sensor=true", botResult.send_message.geo.lat,  botResult.send_message.geo.n_long, gSize]];
+                imageObject.imageProcessor = [ImageUtils c_processor];
             }
             
             imageObject.imageSize = [sizes[idx] sizeValue];
@@ -648,14 +656,23 @@ static NSMenu *deleteMenu;
             
             TL_documentAttributeVideo *video = (TL_documentAttributeVideo *) [botResult.document attributeWithClass:[TL_documentAttributeVideo class]];
             
+            TL_documentAttributeImageSize *sizeAttr = (TL_documentAttributeImageSize *) [botResult.document attributeWithClass:[TL_documentAttributeImageSize class]];
+            
             int w = MAX(video.w,botResult.w);
             int h = MAX(video.h,botResult.h);
+            
+            if(sizeAttr) {
+                w = MIN(sizeAttr.w,100);
+                h = MIN(sizeAttr.h,100);
+            }
             
             if(botResult.photo.sizes.count > 0 && video == nil) {
                 TLPhotoSize *s = botResult.photo.sizes[MIN(botResult.photo.sizes.count-1,2)];
                 w = s.w;
                 h = s.h;
             }
+            
+            
             
             NSSize size = convertSize(NSMakeSize(w,h), NSMakeSize(INT32_MAX, maxHeight));
             
@@ -755,35 +772,35 @@ static NSMenu *deleteMenu;
 
 -(void)drawResponse:(NSArray *)items {
     
-    NSMutableArray *filter = [NSMutableArray array];
-    
-    [items enumerateObjectsUsingBlock:^(TLBotInlineResult *obj, NSUInteger idx, BOOL * _Nonnull stop) {
-        
-        if(!((obj.document == nil || [obj.document isKindOfClass:[TL_documentEmpty class]]) && (obj.photo == nil || [obj.photo isKindOfClass:[TL_photoEmpty class]]) && obj.content_url.length ==0)) {
-            
-            static NSArray *acceptTypes;
-            
-            static dispatch_once_t onceToken;
-            dispatch_once(&onceToken, ^{
-                acceptTypes = @[@"photo",@"gif"];
-            });
-            
-            if([acceptTypes indexOfObject:obj.type] != NSNotFound) {
-                
-            }
-            [filter addObject:obj];
-        }
-        
-    }];
-    
-    items = filter;
-    
+//    NSMutableArray *filter = [NSMutableArray array];
+//    
+//    [items enumerateObjectsUsingBlock:^(TLBotInlineResult *obj, NSUInteger idx, BOOL * _Nonnull stop) {
+//        
+//        if(!((obj.document == nil || [obj.document isKindOfClass:[TL_documentEmpty class]]) && (obj.photo == nil || [obj.photo isKindOfClass:[TL_photoEmpty class]]) && obj.content_url.length ==0)) {
+//            
+//            static NSArray *acceptTypes;
+//            
+//            static dispatch_once_t onceToken;
+//            dispatch_once(&onceToken, ^{
+//                acceptTypes = @[@"photo",@"gif"];
+//            });
+//            
+//            if([acceptTypes indexOfObject:obj.type] != NSNotFound) {
+//                
+//            }
+//            [filter addObject:obj];
+//        }
+//        
+//    }];
+//    
+//    items = filter;
+//    
     [_items addObjectsFromArray:items];
     
     
     TGGifSearchRowItem *prevItem = [self.list lastObject];
     
-     int f = floor(NSWidth(self.frame)/100);
+     int f = roundf(NSWidth(self.frame)/100.0f);
     
      NSMutableArray *draw = [items mutableCopy];
     

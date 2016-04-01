@@ -817,9 +817,14 @@ static NSMutableDictionary *inlineBotsExceptions;
         selectedIndex = 0;
     }
     
-    [_currentTableView setSelectedObject:[_currentTableView itemAtPosition:selectedIndex]];
+    if(selectedIndex < _currentTableView.count)
+    {
+        [_currentTableView setSelectedObject:[_currentTableView itemAtPosition:selectedIndex]];
+        
+        [_currentTableView.scrollView.clipView scrollRectToVisible:[_currentTableView rectOfRow:selectedIndex] animated:NO];
+    }
     
-    [_currentTableView.scrollView.clipView scrollRectToVisible:[_currentTableView rectOfRow:selectedIndex] animated:NO];
+    
 
 }
 -(void)selectPrev {
@@ -828,12 +833,15 @@ static NSMutableDictionary *inlineBotsExceptions;
     selectedIndex--;
     
     if(selectedIndex == -1) {
-        selectedIndex = _currentTableView.count-1;
+        selectedIndex =  MAX(_currentTableView.count-1,0);
     }
     
-    [_currentTableView setSelectedObject:[_currentTableView itemAtPosition:selectedIndex]];
-    
-    [_currentTableView.scrollView.clipView scrollRectToVisible:[_currentTableView rectOfRow:selectedIndex] animated:NO];
+    if(selectedIndex < _currentTableView.count)
+    {
+        [_currentTableView setSelectedObject:[_currentTableView itemAtPosition:selectedIndex]];
+        
+        [_currentTableView.scrollView.clipView scrollRectToVisible:[_currentTableView rectOfRow:selectedIndex] animated:NO];
+    }
 }
 
 

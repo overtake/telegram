@@ -67,6 +67,7 @@
         
         _venueField = [[TGCTextView alloc] initWithFrame:NSMakeRect(70, 0, 0, 0)];
         
+        
         [self.containerView addSubview:_venueField];
         
     }
@@ -82,7 +83,7 @@
     
     [_imageView setObject:item.imageObject];
     
-    [_venueField setHidden:![item.message.media isKindOfClass:[TL_messageMediaVenue class]]];
+    [_venueField setHidden:!item.isVenue];
     
     [_venueField setAttributedString:item.venue];
     

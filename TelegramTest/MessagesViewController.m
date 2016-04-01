@@ -512,9 +512,12 @@
                 
                 if(index != NSNotFound) {
                     
-                [self.table noteHeightOfRowsWithIndexesChanged:[NSIndexSet indexSetWithIndex:index]];
+                    [self.table beginUpdates];
+                    [self.table noteHeightOfRowsWithIndexesChanged:[NSIndexSet indexSetWithIndex:index]];
                     
-                   NSTableRowView *rowView = [self.table rowViewAtRow:index makeIfNecessary:NO];
+                    [self.table endUpdates];
+                    
+                    NSTableRowView *rowView = [self.table rowViewAtRow:index makeIfNecessary:NO];
                     
                     MessageTableCell *cell = rowView.subviews[0];
                     
@@ -537,7 +540,9 @@
                             cell.layer.opacity = 1.0f;
                             [cell setItem:item];
                             [nCell removeFromSuperview];
-                        } 
+                            
+                            [cell searchSelection];
+                        }
                         
                     }];
                     
@@ -583,7 +588,7 @@
                     
                     //
                     
-                    [cell searchSelection];
+                    
                 }
             }];
             

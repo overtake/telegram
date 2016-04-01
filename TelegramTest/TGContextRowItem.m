@@ -71,6 +71,10 @@
             _imageObject = [[TGExternalImageObject alloc] initWithURL:botResult.thumb_url];
             _imageObject.imageSize = NSMakeSize(60, 60);
             _imageObject.imageProcessor = [ImageUtils c_processor];
+        } else if(botResult.send_message.geo != nil) {
+            _imageObject = [[TGExternalImageObject alloc] initWithURL:[NSString stringWithFormat:@"https://maps.googleapis.com/maps/api/staticmap?center=%f,%f&zoom=15&size=%@&sensor=true", botResult.send_message.geo.lat,  botResult.send_message.geo.n_long, ([NSScreen mainScreen].backingScaleFactor == 2 ? @"120x120" : @"60x60")]];
+            _imageObject.imageSize = NSMakeSize(60, 60);
+            _imageObject.imageProcessor = [ImageUtils c_processor];
         }
 
     }

@@ -283,7 +283,9 @@ void exceptionHandler(NSException * exception)
     
     [self.updater setAutomaticallyChecksForUpdates:YES];
     
-
+    [self.updater setFeedURL:[NSURL URLWithString:[NSBundle mainBundle].infoDictionary[@"SUFeedURL"]]];
+    
+    NSLog(@"%@",self.updater.feedURL.absoluteString);
     
     NSUserDefaults *defs = [NSUserDefaults standardUserDefaults];
     NSArray *languages = [defs objectForKey:@"AppleLanguages"];

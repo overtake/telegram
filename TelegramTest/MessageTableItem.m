@@ -71,7 +71,6 @@ static NSCache *cItems;
     if(self) {
         self.message = object;
         
-        
         if(self.message.media.caption.length > 0) {
             NSMutableAttributedString *c = [[NSMutableAttributedString alloc] init];
             
@@ -521,6 +520,10 @@ static NSTextAttachment *channelViewsCountAttachment() {
                         }
                     }
                     
+                } else if([message.media.bot_result.send_message isKindOfClass:[TL_botInlineMessageMediaGeo class]] || [message.media.bot_result.send_message isKindOfClass:[TL_botInlineMessageMediaVenue class]]) {
+                    objectReturn = [[MessageTableItemGeo alloc] initWithObject:message];
+                } else if([message.media.bot_result.send_message isKindOfClass:[TL_botInlineMessageMediaContact class]]) {
+                    objectReturn = [[MessageTableItemContact alloc] initWithObject:message];
                 }
                 
                 if(!objectReturn) {
@@ -793,8 +796,11 @@ static NSTextAttachment *channelViewsCountAttachment() {
             
             if(strongSelf == weakSelf) {
                 if([response isKindOfClass:[TL_messages_botCallbackAnswer class]]) {
-                    if(response.message.length > 0 && response.isAlert)
-                        [Notification perform:SHOW_ALERT_HINT_VIEW data:@{@"text":response.message,@"color":NSColorFromRGB(0x4ba3e2)}];
+                    if(response.isAlert)
+                        alert(appName(), response.message);
+                    else
+                        if(response.message.length > 0)
+                            [Notification perform:SHOW_ALERT_HINT_VIEW data:@{@"text":response.message,@"color":NSColorFromRGB(0x4ba3e2)}];
                 }
                 
                 handler(TGInlineKeyboardSuccessType);

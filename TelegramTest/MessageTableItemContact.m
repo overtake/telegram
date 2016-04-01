@@ -12,26 +12,31 @@
 #import "RMPhoneFormat.h"
 #import "NS(Attributed)String+Geometrics.h"
 #import "MessageTableCellContactView.h"
+
+@interface MessageTableItemContact ()
+@property (nonatomic,strong) TL_messageMediaContact *contact;
+@end
+
 @implementation MessageTableItemContact
 
 - (id) initWithObject:(TLMessage *)object  {
     self = [super initWithObject:object];
     if(self) {
         
-        TL_messageMediaContact *contact = (TL_messageMediaContact * )object.media;
+        _contact = [self.message.media isKindOfClass:[TL_messageMediaContact class]] ? (TL_messageMediaContact *) self.message.media : [TL_messageMediaContact createWithPhone_number:self.message.media.bot_result.send_message.phone_number first_name:self.message.media.bot_result.send_message.first_name last_name:self.message.media.bot_result.send_message.last_name user_id:0];
         
-        _fullName = [[[[NSString stringWithFormat:@"%@%@%@", contact.first_name,contact.first_name.length > 0 ? @" " : @"", contact.last_name] trim] htmlentities] singleLine];
+        _fullName = [[[[NSString stringWithFormat:@"%@%@%@", self.contact.first_name,self.contact.first_name.length > 0 ? @" " : @"", self.contact.last_name] trim] htmlentities] singleLine];
         
         
-        if(contact.user_id) {
-            self.contactUser = [[UsersManager sharedManager] find:contact.user_id];
+        if(self.contact.user_id) {
+            self.contactUser = [[UsersManager sharedManager] find:self.contact.user_id];
         }
 
 
         if(self.contactUser) {
-            self.user_id = contact.user_id;
+            self.user_id = self.contact.user_id;
         } else {
-            self.contactText =  [NSString stringWithFormat:@"%C%C", (unichar)(contact.first_name.length ? [contact.first_name characterAtIndex:0] : 0), (unichar)(contact.last_name.length ? [contact.last_name characterAtIndex:0] : 0)];
+            self.contactText =  [NSString stringWithFormat:@"%C%C", (unichar)(self.contact.first_name.length ? [self.contact.first_name characterAtIndex:0] : 0), (unichar)(self.contact.last_name.length ? [self.contact.last_name characterAtIndex:0] : 0)];
         }
         
         [self doAfterDownload];
@@ -42,8 +47,10 @@
     return self;
 }
 
+
+
 -(void)doAfterDownload {
-    NSString *phoneNumber = self.message.media.phone_number.length ? [RMPhoneFormat formatPhoneNumber:self.message.media.phone_number] : NSLocalizedString(@"User.Hidden", nil);
+    NSString *phoneNumber = self.contact.phone_number.length ? [RMPhoneFormat formatPhoneNumber:self.contact.phone_number] : NSLocalizedString(@"User.Hidden", nil);
     
     NSMutableAttributedString *attributedText = [[NSMutableAttributedString alloc] init];
     
@@ -51,7 +58,7 @@
     [attributedText setFont:TGSystemMediumFont(13) forRange:attributedText.range];
     
     if(_contactUser)
-        [attributedText setLink:[TMInAppLinks peerProfile:[TL_peerUser createWithUser_id:self.message.media.user_id]] forRange:range];
+        [attributedText setLink:[TMInAppLinks peerProfile:[TL_peerUser createWithUser_id:self.contact.user_id]] forRange:range];
     
     [attributedText appendString:@"\n"];
     

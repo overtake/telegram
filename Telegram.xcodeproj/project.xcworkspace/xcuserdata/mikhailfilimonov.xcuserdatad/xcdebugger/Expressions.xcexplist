@@ -1439,9 +1439,6 @@
          contextName = "__45-[ComposeActionGroupBehavior createGroupChat]_block_invoke:ComposeActionGroupBehavior.m">
       </ContextState>
       <ContextState
-         contextName = "__40-[TGMediaContextTableView drawResponse:]_block_invoke:TGMediaContextTableView.m">
-      </ContextState>
-      <ContextState
          contextName = "__40-[ComposeManagmentViewController reload]_block_invoke_2:ComposeManagmentViewController.m">
          <PersistentStrings>
             <PersistentString
@@ -2465,6 +2462,11 @@
       </ContextState>
       <ContextState
          contextName = "__43-[TGGifSearchRowItem initWithObject:sizes:]_block_invoke:TGMediaContextTableView.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "imageObject.imageSize">
+            </PersistentString>
+         </PersistentStrings>
       </ContextState>
       <ContextState
          contextName = "__46-[TGPVMediaBehavior load:next:limit:callback:]_block_invoke:TGPVMediaBehavior.m">
@@ -2545,6 +2547,14 @@
          contextName = "-[TGProccessUpdates uptodateWithConnectionState:]:TGProccessUpdates.m">
       </ContextState>
       <ContextState
+         contextName = "-[TGMessagesHintView selectNext]:TGMessagesHintView.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "_currentTableView.count">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "+[EmojiViewController reloadStickers]:EmojiViewController.m">
          <PersistentStrings>
             <PersistentString
@@ -2568,6 +2578,14 @@
       </ContextState>
       <ContextState
          contextName = "__40-[TMCollectionPageController reloadData]_block_invoke:TMCollectionPageController.m">
+      </ContextState>
+      <ContextState
+         contextName = "-[MessageTableItemContact contact]:MessageTableItemContact.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.message.media.bot_result">
+            </PersistentString>
+         </PersistentStrings>
       </ContextState>
       <ContextState
          contextName = "-[MessageTableItem setHeaderName:]:MessageTableItem.m">
@@ -3176,6 +3194,9 @@
          contextName = "__36-[StartBotSenderItem performRequest]_block_invoke:StartBotSenderItem.m">
       </ContextState>
       <ContextState
+         contextName = "__49-[TGMediaContextTableView makeRow:isLastRowItem:]_block_invoke_2:TGMediaContextTableView.m">
+      </ContextState>
+      <ContextState
          contextName = "__35-[TGPVMediaBehavior load:callback:]_block_invoke_2:TGPVMediaBehavior.m">
          <PersistentStrings>
             <PersistentString
@@ -3222,6 +3243,9 @@
                value = "isStorageLoaded">
             </PersistentString>
          </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[TGContextRowItem initWithObject:bot:queryId:]:TGContextRowItem.m">
       </ContextState>
       <ContextState
          contextName = "__66-[ChatHistoryController request:anotherSource:sync:selectHandler:]_block_invoke_2301:ChatHistoryController.m">
@@ -3648,9 +3672,6 @@
          contextName = "-[TMButton drawRect:]:TMButton.m">
       </ContextState>
       <ContextState
-         contextName = "-[TGGifSearchRowItem initWithObject:sizes:]:TGMediaContextTableView.m">
-      </ContextState>
-      <ContextState
          contextName = "-[TGUpdateChannels proccessStatefullUpdate:]:TGUpdateChannels.m">
          <PersistentStrings>
             <PersistentString
@@ -3783,6 +3804,14 @@
       </ContextState>
       <ContextState
          contextName = "__58-[TGModernEncryptedUpdates dequeueInActions:conversation:]_block_invoke_2:TGModernEncryptedUpdates.m">
+      </ContextState>
+      <ContextState
+         contextName = "-[MessageTableCellGeoView setItem:]:MessageTableCellGeoView.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "_venueField.frame">
+            </PersistentString>
+         </PersistentStrings>
       </ContextState>
       <ContextState
          contextName = "-[TGImageView setObject:]:TGImageView.m">
@@ -4086,6 +4115,14 @@
       </ContextState>
       <ContextState
          contextName = "-[TGPhotoViewer show:]:TGPhotoViewer.m">
+      </ContextState>
+      <ContextState
+         contextName = "-[TGMediaContextTableView drawResponse:]:TGMediaContextTableView.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "NSWidth(self.frame)">
+            </PersistentString>
+         </PersistentStrings>
       </ContextState>
       <ContextState
          contextName = "-[TGAllStickersTableView stickersHash:]:TGAllStickersTableView.m">
@@ -6135,6 +6172,9 @@
       </ContextState>
       <ContextState
          contextName = "-[MessageTableItemText checkAndReturnEntityRange:]:MessageTableItemText.m">
+      </ContextState>
+      <ContextState
+         contextName = "-[MessageTableItemGeo makeSizeByWidth:]:MessageTableItemGeo.m">
       </ContextState>
       <ContextState
          contextName = "-[ConversationTableItem notificationTyping:]:ConversationTableItem.m">

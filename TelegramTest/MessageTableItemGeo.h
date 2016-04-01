@@ -17,4 +17,7 @@
 
 @property (nonatomic,strong) NSAttributedString *venue;
 @property (nonatomic,assign) NSSize venueSize;
+
+-(BOOL)isVenue;
+
 @end

@@ -9,10 +9,11 @@
 #import "TGContextRowView.h"
 #import "TGImageView.h"
 #import "TGCTextView.h"
+#import "TGTextLabel.h"
 @interface TGContextRowView ()
 @property (nonatomic,strong) TGImageView *imageView;
 @property (nonatomic,strong) TMTextField *textField;
-@property (nonatomic,strong) TMTextField *domainField;
+@property (nonatomic,strong) TMTextField *domainSymbolView;
 @end
 
 @implementation TGContextRowView
@@ -54,10 +55,10 @@
         
         [self addSubview:_textField];
         
-        _domainField = [TMTextField defaultTextField];
-        [_domainField setFont:TGSystemFont(18)];
-        [_domainField setTextColor:[NSColor whiteColor]];
-        [_imageView addSubview:_domainField];
+        _domainSymbolView = [TMTextField defaultTextField];
+        [_domainSymbolView setFont:TGSystemFont(18)];
+        [_domainSymbolView setTextColor:[NSColor whiteColor]];
+        [_imageView addSubview:_domainSymbolView];
         
         
         
@@ -81,16 +82,16 @@
     
     [_imageView setObject:self.item.imageObject];
     
-    [_textField setFrame:NSMakeRect(self.xTextOffset, 5, NSWidth(self.frame) - self.xTextOffset, 55)];
+    [_textField setFrame:NSMakeRect(self.xTextOffset, 0, NSWidth(self.frame) - self.xTextOffset, 55)];
     
     [self.item.desc setSelected:self.isSelected];
     
     [_textField setAttributedStringValue:self.item.desc];
     
-    [_domainField setStringValue:first_domain_character(self.item.botResult.content_url)];
-    [_domainField sizeToFit];
-    [_domainField setCenterByView:_imageView];
-    [_domainField setHidden:self.item.imageObject != nil];
+    [_domainSymbolView setStringValue:first_domain_character(self.item.botResult.content_url)];
+    [_domainSymbolView sizeToFit];
+    [_domainSymbolView setCenterByView:_imageView];
+    [_domainSymbolView setHidden:self.item.imageObject != nil];
 }
 
 
