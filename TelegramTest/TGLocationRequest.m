@@ -47,7 +47,7 @@
 {
     switch (status) {
         case kCLAuthorizationStatusAuthorized:
-           // [_locationManager startUpdatingLocation];
+            [_locationManager startUpdatingLocation];
             break;
             
         case kCLAuthorizationStatusDenied:
@@ -77,7 +77,7 @@
 {
     CLLocation *location = locations.lastObject;
     
-    if(location && location.horizontalAccuracy > 0) {
+    if(location) {
         if (self.successCallback != nil)
             self.successCallback(location);
         

@@ -976,6 +976,14 @@
          contextName = "-[MessageInputGrowingTextView keyDown:]:MessageInputGrowingTextView.m">
       </ContextState>
       <ContextState
+         contextName = "-[TGModernMessageCellContainerView setEditable:animated:]:TGModernMessageCellContainerView.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.item.message.message">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "-[ChannelInfoViewController reloadParticipants]:ChannelInfoViewController.m">
          <PersistentStrings>
             <PersistentString
@@ -1055,6 +1063,12 @@
       <ContextState
          contextName = "__57-[MessagesViewController messagTableEditedMessageUpdate:]_block_invoke_2:MessagesViewController.m">
          <PersistentStrings>
+            <PersistentString
+               value = "cell.superview">
+            </PersistentString>
+            <PersistentString
+               value = "rowView.subviews">
+            </PersistentString>
             <PersistentString
                value = "self.messages">
             </PersistentString>
@@ -1726,6 +1740,14 @@
             </PersistentString>
             <PersistentString
                value = "self.imageSize">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[MessagesViewController setCellsEditButtonShow:animated:]:MessagesViewController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "[cell canEdit]">
             </PersistentString>
          </PersistentStrings>
       </ContextState>

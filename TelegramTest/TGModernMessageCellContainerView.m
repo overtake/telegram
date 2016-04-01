@@ -490,45 +490,7 @@ static bool dragAction = NO;
 }
 
 
-- (void)searchSelection {
-    NSColor *color = NSColorFromRGB(0xffffff);
-    NSColor *oldColor = NSColorFromRGB(0xf7f7f7);
-    
-    POPBasicAnimation *animation = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerBackgroundColor];
-    animation.duration = 2;
-    animation.fromValue = (__bridge id)(oldColor.CGColor);
-    animation.toValue = (__bridge id)(color.CGColor);
-    [animation setCompletionBlock:^(POPAnimation *anim, BOOL finish) {
-        [self.layer setBackgroundColor:(self.isSelected ? NSColorFromRGB(0xf7f7f7) : NSColorFromRGB(0xffffff)).CGColor];
-    }];
-    
-    animation.removedOnCompletion = YES;
-        
-    [self.layer pop_addAnimation:animation forKey:@"background"];
-    
-    
-    POPBasicAnimation *fieldsAnimation = [POPBasicAnimation animation];
-    
-    fieldsAnimation.property = [POPAnimatableProperty propertyWithName:@"background" initializer:^(POPMutableAnimatableProperty *prop) {
-        
-        [prop setReadBlock:^(TMView *textView, CGFloat values[]) {
-            POPCGColorGetRGBAComponents(textView.backgroundColor.CGColor, values);
-        }];
-        
-        [prop setWriteBlock:^(TMView *textView, const CGFloat values[]) {
-            CGColorRef color = POPCGColorRGBACreate(values);
-            textView.backgroundColor = [NSColor colorWithCGColor:color];
-        }];
-        
-    }];
-    
-    fieldsAnimation.toValue = animation.toValue;
-    fieldsAnimation.fromValue = animation.fromValue;
-    fieldsAnimation.duration = animation.duration;
-    fieldsAnimation.removedOnCompletion = YES;
-    
-    [self _didChangeBackgroundColorWithAnimation:fieldsAnimation toColor:color];
-}
+
 
 
 

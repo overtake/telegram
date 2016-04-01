@@ -511,33 +511,74 @@
                 [self.messages replaceObjectAtIndex:index withObject:item];
                 
                 if(index != NSNotFound) {
-                    [self.table noteHeightOfRowsWithIndexesChanged:[NSIndexSet indexSetWithIndex:index]];
                     
+                [self.table noteHeightOfRowsWithIndexesChanged:[NSIndexSet indexSetWithIndex:index]];
                     
-                    MessageTableCellContainerView *cell = (MessageTableCellContainerView *)[self cellForRow:index];
+                   NSTableRowView *rowView = [self.table rowViewAtRow:index makeIfNecessary:NO];
                     
-                    TMView *fade = [[TMView alloc] initWithFrame:NSMakeRect(0, 0, NSWidth(cell.frame), item.viewSize.height)];
+                    MessageTableCell *cell = rowView.subviews[0];
                     
-                    fade.backgroundColor = [NSColor whiteColor];
-                    fade.alphaValue = 0.0f;
+                    MessageTableCell *nCell = (MessageTableCell *) [self tableView:_table viewForTableColumn:nil row:index];
+#ifdef TGDEBUG
+                    assert(cell != nCell);
+#endif
+
                     
-                    [NSAnimationContext runAnimationGroup:^(NSAnimationContext * _Nonnull context) {
-                        [context setDuration:0.1];
-                        fade.animator.alphaValue = 0.9;
-                    } completionHandler:^{
-                       // [fade removeFromSuperview];
-                        [cell setItem:item];
+                    POPBasicAnimation *fadeOut = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerOpacity];
+                    fadeOut.fromValue = @(1.0f);
+                    fadeOut.toValue = @(0.0f);
+                    fadeOut.duration = 0.3f;
+                    fadeOut.removedOnCompletion = YES;
+                    [cell.layer pop_addAnimation:fadeOut forKey:@"opacity"];
                     
-                        [NSAnimationContext runAnimationGroup:^(NSAnimationContext * _Nonnull context) {
-                            [context setDuration:0.1];
-                            fade.animator.alphaValue = 0.0f;
-                        } completionHandler:^{
-                            [fade removeFromSuperview];
-                        }];
+                    [fadeOut setCompletionBlock:^(POPAnimation *animation, BOOL success) {
+                        
+                        if(success) {
+                            cell.layer.opacity = 1.0f;
+                            [cell setItem:item];
+                            [nCell removeFromSuperview];
+                        } 
                         
                     }];
                     
-                    [cell addSubview:fade];
+                    assert(nCell != nil);
+                    
+                     [rowView addSubview:nCell positioned:NSWindowBelow relativeTo:cell];
+                    
+                    
+//                    POPBasicAnimation *fadeIn = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerOpacity];
+//                    fadeIn.fromValue = @(0.0f);
+//                    fadeIn.toValue = @(1.0f);
+//                    fadeIn.duration = 0.2f;
+//                    fadeIn.removedOnCompletion = YES;
+//                    [nCell.layer pop_addAnimation:fadeIn forKey:@"opacity"];
+                    
+                    
+                    
+//                    TMView *fade = [[TMView alloc] initWithFrame:NSMakeRect(0, 0, NSWidth(cell.frame), item.viewSize.height)];
+//                    
+//                    fade.backgroundColor = [NSColor whiteColor];
+//                    fade.alphaValue = 0.0f;
+//                    
+//                    
+//                    
+//                    [NSAnimationContext runAnimationGroup:^(NSAnimationContext * _Nonnull context) {
+//                        [context setDuration:0.1];
+//                        fade.animator.alphaValue = 1.0f;
+//                    } completionHandler:^{
+//                        
+//                        [cell setItem:item];
+//                        [NSAnimationContext runAnimationGroup:^(NSAnimationContext * _Nonnull context) {
+//                            [context setDuration:0.1];
+//                            fade.animator.alphaValue = 0.0f;
+//                        } completionHandler:^{
+//                            [fade removeFromSuperview];
+//                            
+//                        }];
+//                        
+//                    }];
+//                    
+//                    [cell addSubview:fade];
                     
                     
                     //
@@ -1800,7 +1841,13 @@ static NSTextAttachment *headerMediaIcon() {
 }
 
 - (MessageTableCell *)cellForRow:(NSInteger)row {
-    return [self.table viewAtColumn:0 row:row makeIfNecessary:NO];
+    
+    @try {
+        return [self.table rowViewAtRow:row makeIfNecessary:NO].subviews[0];
+    } @catch (NSException *exception) {
+        return nil;
+    }
+    
 }
 
 

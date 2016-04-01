@@ -27,8 +27,7 @@ typedef enum {
 
 @interface MessageTableCellContainerView : MessageTableCell<SenderListener>
 
-@property (nonatomic,readonly) BOOL isSelected;
-@property (nonatomic,readonly) BOOL isEditable;
+
 
 @property (nonatomic, assign) CellState cellState;
 @property (nonatomic) MessageTableCellState actionState;
@@ -58,8 +57,7 @@ typedef enum {
 - (void)uploadProgressHandler:(SenderItem *)item animated:(BOOL)animation;
 - (void)downloadProgressHandler:(DownloadItem *)item;
 
-- (void)searchSelection;
-- (void)stopSearchSelection;
+
 
 - (void)setProgressToView:(NSView *)view;
 - (void)setProgressStyle:(TMCircularProgressStyle)style;

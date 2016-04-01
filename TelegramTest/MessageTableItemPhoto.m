@@ -95,6 +95,10 @@
             
         }
         
+        if(!cachePhoto) {
+            cachePhoto = white_background_color();
+        }
+        
         self.imageObject = [[TGImageObject alloc] initWithLocation:photoSize.location placeHolder:cachePhoto sourceId:self.message.n_id size:photoSize.size];
         
         if(self.isSecretPhoto) {

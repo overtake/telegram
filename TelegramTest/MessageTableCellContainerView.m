@@ -127,9 +127,7 @@
 
 
 
-- (void)stopSearchSelection {
-    [self.layer pop_removeAnimationForKey:@"background"];
-}
+
 
 -(BOOL)isSelected {
     return self.item.isSelected;

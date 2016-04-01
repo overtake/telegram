@@ -218,11 +218,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "TelegramTest/MessagesViewController.m"
-            timestampString = "481205541.016167"
+            timestampString = "481212551.775842"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "2369"
-            endingLineNumber = "2369"
+            startingLineNumber = "2418"
+            endingLineNumber = "2418"
             landmarkName = "-becomeFirstResponder"
             landmarkType = "5">
          </BreakpointContent>
@@ -272,6 +272,22 @@
             startingLineNumber = "480"
             endingLineNumber = "480"
             landmarkName = "-setPts:"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "TelegramTest/MessagesViewController.m"
+            timestampString = "481212551.775842"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "4190"
+            endingLineNumber = "4190"
+            landmarkName = "-tableView:viewForTableColumn:row:"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
