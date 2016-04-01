@@ -241,6 +241,17 @@
     }
 }
 
+-(void)viewDidMoveToSuperview {
+    if(self.superview == nil) {
+        [[NSNotificationCenter defaultCenter] removeObserver:self name:NSViewFrameDidChangeNotification object:nil];
+    } else
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(superViewDidChangedFrame:) name:NSViewFrameDidChangeNotification object:self.superview];
+}
+
+-(void)superViewDidChangedFrame:(NSNotification *)notification {
+    [self _didScrolledTableView:notification];
+}
+
 
 -(void)viewDidMoveToWindow {
     if(self.containerView.window == nil) {

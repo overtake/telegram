@@ -561,6 +561,9 @@ static NSMenu *deleteMenu;
     
     NSUInteger index = [self.subviews indexOfObject:view.superview.superview];
     
+    if(index == NSNotFound)
+        index = [self.subviews indexOfObject:view.superview];
+    
     
     TGGifSearchRowItem *item = (TGGifSearchRowItem *)[self rowItem];
     

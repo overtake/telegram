@@ -23,15 +23,22 @@
         
         [self rebuildImageObject];
                 
-        [self checkStartDownload:[self.message.to_id isKindOfClass:[TL_peerChat class]] ? AutoGroupVideo : AutoPrivateVideo size:self.message.media.document.size];
+        [self checkStartDownload:[self.message.to_id isKindOfClass:[TL_peerChat class]] ? AutoGroupVideo : AutoPrivateVideo size:self.document.size];
     }
     return self;
 }
 
 
+-(TLDocument *)document {
+    if([self.message.media isKindOfClass:[TL_messageMediaBotResult class]]) {
+        return self.message.media.bot_result.document;
+    } else
+        return self.message.media.document;
+}
+
 -(void)rebuildImageObject {
     
-    TLDocument *document = self.message.media.document;
+    TLDocument *document = self.document;
     TLPhotoSize *photoSize = document.thumb;
     NSImage *placeholder;
     
@@ -58,7 +65,7 @@
 
 -(BOOL)makeSizeByWidth:(int)width {
     
-    TL_documentAttributeVideo *video = (TL_documentAttributeVideo *) [self.message.media.document attributeWithClass:[TL_documentAttributeVideo class]];
+    TL_documentAttributeVideo *video = (TL_documentAttributeVideo *) [self.document attributeWithClass:[TL_documentAttributeVideo class]];
     
     _videoSize = strongsize(NSMakeSize(MAX(150,video.w), MAX(150,video.h)), MIN(320,width));
     
@@ -72,7 +79,7 @@
 
 -(DownloadItem *)downloadItem {
     if(super.downloadItem == nil)
-        [super setDownloadItem:[DownloadQueue find:self.message.media.document.n_id]];
+        [super setDownloadItem:[DownloadQueue find:self.document.n_id]];
     
     return [super downloadItem];
 }
@@ -83,9 +90,9 @@
 
 -(void)rebuildTimeString {
     
-    NSString *sizeInfo = self.message.media.document.size == 0 ? NSLocalizedString(@"Message.Send.Compressing", nil) : [NSString sizeToTransformedValue:self.message.media.document.size];
+    NSString *sizeInfo = self.document.size == 0 ? NSLocalizedString(@"Message.Send.Compressing", nil) : [NSString sizeToTransformedValue:self.document.size];
     
-    TL_documentAttributeVideo *video = (TL_documentAttributeVideo *) [self.message.media.document attributeWithClass:[TL_documentAttributeVideo class]];
+    TL_documentAttributeVideo *video = (TL_documentAttributeVideo *) [self.document attributeWithClass:[TL_documentAttributeVideo class]];
     
     
     NSMutableAttributedString *attr = [[NSMutableAttributedString alloc] initWithString:[[NSString durationTransformedValue:video.duration] stringByAppendingString:@", "] attributes:@{NSForegroundColorAttributeName: [NSColor whiteColor] }];
@@ -110,7 +117,7 @@
 
 -(BOOL)isset {
     NSString *path = [self filePath];
-    return isPathExists(path) && [FileUtils checkNormalizedSize:path checksize:self.message.media.document.size];
+    return isPathExists(path) && [FileUtils checkNormalizedSize:path checksize:self.document.size];
 }
 
 -(BOOL)needUploader {
@@ -128,7 +135,7 @@
 }
 
 -(BOOL)canDownload {
-    return self.message.media.document.dc_id != 0;
+    return self.document.dc_id != 0;
 }
 
 @end

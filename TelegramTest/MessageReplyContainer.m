@@ -18,7 +18,7 @@
 @property (nonatomic,strong) NSImageView *locationImageView;
 
 @property (nonatomic,strong) NSImageView *deleteImageView;
-@property (nonatomic,strong) TMTextField *loadingTextField;
+@property (nonatomic,strong) TGTextLabel *loadingTextField;
 
 
 
@@ -31,10 +31,18 @@
 -(id)initWithFrame:(NSRect)frameRect {
     if(self = [super initWithFrame:frameRect]) {
         
-        _loadingTextField = [TMTextField defaultTextField];
-        [_loadingTextField setFont:TGSystemFont(13)];
-        [_loadingTextField setStringValue:NSLocalizedString(@"Reply.Loading", nil)];
-        [_loadingTextField sizeToFit];
+        _loadingTextField = [[TGTextLabel alloc] init];
+        
+        static NSMutableAttributedString *loadingAttr;
+        
+        static dispatch_once_t onceToken;
+        dispatch_once(&onceToken, ^{
+            loadingAttr = [[NSMutableAttributedString alloc] init];
+            [loadingAttr appendString:NSLocalizedString(@"Reply.Loading", nil) withColor:TEXT_COLOR];
+            [loadingAttr setFont:TGSystemFont(13) forRange:loadingAttr.range];
+        });
+        
+        [_loadingTextField setText:loadingAttr maxWidth:INT32_MAX];
         [_loadingTextField setFrameOrigin:NSMakePoint(6, 0)];
         
         self.nameView = [[TGTextLabel alloc] initWithFrame:NSMakeRect(15, NSHeight(frameRect) - 13, 200, 20)];

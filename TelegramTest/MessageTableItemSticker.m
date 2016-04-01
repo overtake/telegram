@@ -13,18 +13,18 @@
 -(id)initWithObject:(TL_localMessage *)object {
     if(self = [super initWithObject:object]) {
         
-        if(NSSizeNotZero(object.media.document.imageSize)) {
-            self.blockSize = object.media.document.imageSize;
+        if(NSSizeNotZero(self.document.imageSize)) {
+            self.blockSize = self.document.imageSize;
         } else {
             self.blockSize = NSMakeSize(200, 200);
         }
         
         NSImage *placeholder;
         
-        NSData *bytes = object.media.document.thumb.bytes;
+        NSData *bytes = self.document.thumb.bytes;
             
         if(bytes.length == 0) {
-            bytes = [NSData dataWithContentsOfFile:locationFilePath(object.media.document.thumb.location, @"jpg") options:NSDataReadingMappedIfSafe error:nil];
+            bytes = [NSData dataWithContentsOfFile:locationFilePath(self.document.thumb.location, @"jpg") options:NSDataReadingMappedIfSafe error:nil];
         }
             
         placeholder = [[NSImage alloc] initWithData:bytes];
@@ -33,16 +33,26 @@
             placeholder = [NSImage imageWithWebpData:bytes error:nil];
             
 
+        if(!placeholder)
+            placeholder = white_background_color();
         
         self.blockSize = strongsize(self.blockSize, 200);
         
-        self.imageObject = [[TGStickerImageObject alloc] initWithMessage:object placeholder:placeholder];
+        self.imageObject = [[TGStickerImageObject alloc] initWithDocument:self.document placeholder:placeholder];
         
         self.imageObject.imageSize = self.blockSize;
         
     }
     
     return self;
+}
+
+
+-(TLDocument *)document {
+    if([self.message.media isKindOfClass:[TL_messageMediaBotResult class]]) {
+        return self.message.media.bot_result.document;
+    } else
+        return self.message.media.document;
 }
 
 

@@ -2130,6 +2130,11 @@
       </ContextState>
       <ContextState
          contextName = "-[MessageTableItemSticker initWithObject:]:MessageTableItemSticker.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "object.media">
+            </PersistentString>
+         </PersistentStrings>
       </ContextState>
       <ContextState
          contextName = "-[CompressedDocumentSenderItem didEndCompressing:success:]:CompressedDocumentSenderItem.m">
@@ -3828,6 +3833,9 @@
             <PersistentString
                value = "_inlineKeyboardSize">
             </PersistentString>
+            <PersistentString
+               value = "_message.reply_markup.rows.count">
+            </PersistentString>
          </PersistentStrings>
       </ContextState>
       <ContextState
@@ -4212,6 +4220,9 @@
       </ContextState>
       <ContextState
          contextName = "-[ChatHistoryController addFilter:]:ChatHistoryController.m">
+      </ContextState>
+      <ContextState
+         contextName = "__49-[FullUsersManager requestUserFull:withCallback:]_block_invoke.76:FullUsersManager.m">
       </ContextState>
       <ContextState
          contextName = "__39-[TGProccessUpdates uptodate:qts:date:]_block_invoke:TGProccessUpdates.m">
@@ -7080,6 +7091,14 @@
       </ContextState>
       <ContextState
          contextName = "__55-[MTContext defaultTransportSchemeForDatacenterWithId:]_block_invoke:MTContext.m">
+      </ContextState>
+      <ContextState
+         contextName = "-[MessageTableCellMpegView superViewDidChangedFrame:]:MessageTableCellMpegView.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "notification.object">
+            </PersistentString>
+         </PersistentStrings>
       </ContextState>
       <ContextState
          contextName = "__53-[DialogsHistoryController loadlocal:limit:callback:]_block_invoke_2:DialogsHistoryController.m">

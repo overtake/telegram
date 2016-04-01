@@ -55,7 +55,7 @@
         if(strongSelf != nil) {
             [weakSelf updateMessageId:response];
             
-            TL_localMessage *msg = [TL_localMessage convertReceivedMessage:[[weakSelf updateNewMessageWithUpdates:response] message]];
+            TLMessage *msg = [[weakSelf updateNewMessageWithUpdates:response] message];
             
             if(msg == nil)
             {

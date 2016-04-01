@@ -14,7 +14,12 @@
 -(NSString *)file_name;
 -(NSString *)path_with_cache;
 - (BOOL)isset;
+
 -(BOOL)isSticker;
+-(BOOL)isVoice;
+-(BOOL)isAudio;
+-(BOOL)isGif;
+-(BOOL)isVideo;
 -(TLDocumentAttribute *)attributeWithClass:(Class)className;
 -(NSSize)imageSize;
 -(BOOL)isExist;

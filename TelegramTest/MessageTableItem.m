@@ -461,22 +461,16 @@ static NSTextAttachment *channelViewsCountAttachment() {
             } else if([message.media isKindOfClass:[TL_messageMediaDocument class]] || [message.media isKindOfClass:[TL_messageMediaDocument_old44 class]]) {
                 
                 TLDocument *document = message.media.document;
-            
-                TL_documentAttributeAnimated *attr = (TL_documentAttributeAnimated *) [document attributeWithClass:[TL_documentAttributeAnimated class]];
                 
-                TL_documentAttributeAudio *audioAttr = (TL_documentAttributeAudio *) [document attributeWithClass:[TL_documentAttributeAudio class]];
-                
-                if([document.mime_type hasPrefix:@"video"] && attr != nil) {
+                if(document.isGif) {
                     objectReturn = [[MessageTableItemMpeg alloc] initWithObject:message];
-                } else if([document attributeWithClass:[TL_documentAttributeVideo class]] != nil) {
+                } else if(document.isVideo) {
                     objectReturn = [[MessageTableItemVideo alloc] initWithObject:message];
-                } else if([document.mime_type isEqualToString:@"image/gif"] && ![document.thumb isKindOfClass:[TL_photoSizeEmpty class]]) {
-                    objectReturn = [[MessageTableItemDocument alloc] initWithObject:message];
-                } else if((audioAttr && !audioAttr.isVoice) || ([document.mime_type isEqualToString:@"audio/mpeg"] && (!audioAttr || !audioAttr.isVoice))) {
+                } else if(document.isAudio) {
                     objectReturn = [[MessageTableItemAudioDocument alloc] initWithObject:message];
-                } else if([document isSticker]) {
+                } else if(document.isSticker) {
                     objectReturn = [[MessageTableItemSticker alloc] initWithObject:message];
-                } else if((audioAttr && audioAttr.isVoice) || [message.media.document.mime_type isEqualToString:@"audio/ogg"]) {
+                } else if(document.isVoice) {
                     objectReturn = [[MessageTableItemAudio alloc] initWithObject:message];
                 } else {
                     objectReturn = [[MessageTableItemDocument alloc] initWithObject:message];
@@ -499,8 +493,23 @@ static NSTextAttachment *channelViewsCountAttachment() {
                 if([message.media.bot_result.send_message isKindOfClass:[TL_botInlineMessageMediaAuto class]]) {
                     
                     if([message.media.bot_result isKindOfClass:[TL_botInlineMediaResultDocument class]]) {
-                        if(([message.media.bot_result.document.mime_type isEqualToString:@"video/mp4"] && [message.media.bot_result.document attributeWithClass:[TL_documentAttributeAnimated class]]))
+                        
+                        TLDocument *document = message.media.bot_result.document;
+                        
+                        if(document.isGif) {
                             objectReturn = [[MessageTableItemMpeg alloc] initWithObject:message];
+                        } else if(document.isVideo) {
+                            objectReturn = [[MessageTableItemVideo alloc] initWithObject:message];
+                        } else if(document.isAudio) {
+                            objectReturn = [[MessageTableItemAudioDocument alloc] initWithObject:message];
+                        } else if(document.isSticker) {
+                            objectReturn = [[MessageTableItemSticker alloc] initWithObject:message];
+                        } else if(document.isVoice) {
+                            objectReturn = [[MessageTableItemAudio alloc] initWithObject:message];
+                        } else {
+                            objectReturn = [[MessageTableItemDocument alloc] initWithObject:message];
+                        }
+                        
                     } else if([message.media.bot_result isKindOfClass:[TL_botInlineMediaResultPhoto class]])
                         objectReturn = [[MessageTableItemPhoto alloc] initWithObject:message];
                     else if([message.media.bot_result isKindOfClass:[TL_botInlineResult class]]) {
@@ -510,7 +519,6 @@ static NSTextAttachment *channelViewsCountAttachment() {
                         } else if([message.media.bot_result.type isEqualToString:@"photo"]) {
                             objectReturn = [[MessageTableItemPhoto alloc] initWithObject:message];
                         }
- 
                     }
                     
                 }
@@ -722,7 +730,10 @@ static NSTextAttachment *channelViewsCountAttachment() {
     
     self.headerSize = NSMakeSize(MIN(_headerOriginalSize.width, width - self.defaultOffset * 2), self.headerSize.height);
     
-    _inlineKeyboardSize = NSMakeSize(MIN(300,width), _message.reply_markup.rows.count * (33 + self.defaultContentOffset) - self.defaultContentOffset *2);
+    if(_message.reply_markup.rows) {
+        _inlineKeyboardSize = NSMakeSize(MIN(300,width), _message.reply_markup.rows.count > 1 ? _message.reply_markup.rows.count * (33 + self.defaultContentOffset) - self.defaultContentOffset *2 : 33);
+    }
+    
     
     return YES;
 }
@@ -776,13 +787,15 @@ static NSTextAttachment *channelViewsCountAttachment() {
         
         handler(TGInlineKeyboardProccessingType);
         
-        [RPCRequest sendRequest:[TLAPI_messages_getBotCallbackAnswer createWithPeer:_message.conversation.inputPeer msg_id:_message.n_id text:keyboard.text] successHandler:^(id request, TL_messages_botCallbackAnswer *response) {
+        [RPCRequest sendRequest:[TLAPI_messages_getBotCallbackAnswer createWithPeer:_message.conversation.inputPeer msg_id:_message.n_id data:keyboard.data] successHandler:^(id request, TL_messages_botCallbackAnswer *response) {
             
             strongWeak();
             
             if(strongSelf == weakSelf) {
-                if(response.message.length > 0)
-                    [Notification perform:SHOW_ALERT_HINT_VIEW data:@{@"text":response.message,@"color":NSColorFromRGB(0x4ba3e2)}];
+                if([response isKindOfClass:[TL_messages_botCallbackAnswer class]]) {
+                    if(response.message.length > 0 && response.isAlert)
+                        [Notification perform:SHOW_ALERT_HINT_VIEW data:@{@"text":response.message,@"color":NSColorFromRGB(0x4ba3e2)}];
+                }
                 
                 handler(TGInlineKeyboardSuccessType);
             }

@@ -550,8 +550,6 @@ static NSMutableDictionary *inlineBotsExceptions;
     cancel_delayed_block(_handle);
     
     
-    
-    
     _handle = perform_block_after_delay(0.4, ^{
         
         __block BOOL forceNextLoad = NO;
@@ -564,7 +562,7 @@ static NSMutableDictionary *inlineBotsExceptions;
             
             _isLockedWithRequest = YES;
 
-            _contextRequest = [RPCRequest sendRequest:[TLAPI_messages_getInlineBotResults createWithBot:user.inputUser query:query offset:offset] successHandler:^(id request, TL_messages_botResults *response) {
+            _contextRequest = [RPCRequest sendRequest:[TLAPI_messages_getInlineBotResults createWithFlags:0 bot:user.inputUser geo_point:nil query:query offset:offset] successHandler:^(id request, TL_messages_botResults *response) {
                 
                 [self.messagesViewController.bottomView setProgress:NO];
                 

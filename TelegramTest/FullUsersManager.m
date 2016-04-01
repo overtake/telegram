@@ -36,6 +36,7 @@
 
 -(void)requestUserFull:(TLUser *)user withCallback:(void (^) (TLUserFull *userFull))callback {
     
+    assert(user != nil);
     
     int time = [_lastTimeCalled[@(user.n_id)] intValue];
     
@@ -84,6 +85,7 @@
             
             
         } errorHandler:^(id request, RpcError *error) {
+            
             
         } timeout:10 queue:[ASQueue globalQueue].nativeQueue];
         

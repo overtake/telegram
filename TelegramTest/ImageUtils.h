@@ -229,6 +229,8 @@ CACHE_IMAGE(ModernMessageCheckmark2);
 
 CACHE_IMAGE(bot_inline_keyboard_url);
 
+CACHE_IMAGE(bot_inline_button_url);
+
 @interface ImageUtils : NSObject
 
 
@@ -280,7 +282,7 @@ NSImage *play_image();
 NSImage *gray_circle_background_image();
 NSImage *blue_circle_background_image();
 NSImage *attach_downloaded_background();
-
+NSImage *white_background_color();
 float scaleFactor();
 
 @end

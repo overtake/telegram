@@ -511,11 +511,37 @@
                 [self.messages replaceObjectAtIndex:index withObject:item];
                 
                 if(index != NSNotFound) {
-               //     [[NSAnimationContext currentContext] setDuration:0];
-                    [self.table reloadDataForRowIndexes:[NSIndexSet indexSetWithIndex:index] columnIndexes:[NSIndexSet indexSetWithIndex:0]];
                     [self.table noteHeightOfRowsWithIndexesChanged:[NSIndexSet indexSetWithIndex:index]];
                     
+                    
                     MessageTableCellContainerView *cell = (MessageTableCellContainerView *)[self cellForRow:index];
+                    
+                    TMView *fade = [[TMView alloc] initWithFrame:NSMakeRect(0, 0, NSWidth(cell.frame), item.viewSize.height)];
+                    
+                    fade.backgroundColor = [NSColor whiteColor];
+                    fade.alphaValue = 0.0f;
+                    
+                    [NSAnimationContext runAnimationGroup:^(NSAnimationContext * _Nonnull context) {
+                        [context setDuration:0.1];
+                        fade.animator.alphaValue = 0.9;
+                    } completionHandler:^{
+                       // [fade removeFromSuperview];
+                        [cell setItem:item];
+                    
+                        [NSAnimationContext runAnimationGroup:^(NSAnimationContext * _Nonnull context) {
+                            [context setDuration:0.1];
+                            fade.animator.alphaValue = 0.0f;
+                        } completionHandler:^{
+                            [fade removeFromSuperview];
+                        }];
+                        
+                    }];
+                    
+                    [cell addSubview:fade];
+                    
+                    
+                    //
+                    
                     [cell searchSelection];
                 }
             }];
@@ -1723,7 +1749,7 @@ static NSTextAttachment *headerMediaIcon() {
     [self becomeFirstResponder];
     [self tryRead];
     
-    if(_conversation.type == DialogTypeUser) {
+    if(_conversation &&_conversation.type == DialogTypeUser) {
         [[FullUsersManager sharedManager] requestUserFull:_conversation.user withCallback:nil];
     }
     

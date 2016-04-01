@@ -20,28 +20,28 @@
 @implementation MessageTableItemDocument
 
 - (BOOL)isHasThumb {
-    return self.message.media.document.thumb && ![self.message.media.document.thumb isKindOfClass:[TL_photoSizeEmpty class]];
+    return self.document.thumb && ![self.document.thumb isKindOfClass:[TL_photoSizeEmpty class]];
 }
 
 - (id)initWithObject:(TL_localMessage *)object {
     self = [super initWithObject:object];
     if(self) {
         
-        _fileSize = [[NSString sizeToTransformedValuePretty:self.message.media.document.size] trim];
+        _fileSize = [[NSString sizeToTransformedValuePretty:self.document.size] trim];
         
         [self doAfterDownload];
         
-        NSSize size;
+        NSSize size = NSZeroSize;
         
         if([self isHasThumb]) {
             
-            if(![TGCache cachedImage:self.message.media.document.thumb.location.cacheKey]) {
-                size = strongsizeWithMinMax(NSMakeSize(self.message.media.document.thumb.w, self.message.media.document.thumb.h), 70, 70);
+            if(![TGCache cachedImage:self.document.thumb.location.cacheKey]) {
+                size = strongsizeWithMinMax(NSMakeSize(self.document.thumb.w, self.document.thumb.h), 70, 70);
                 
-                if(self.message.media.document.thumb.bytes) {
-                    NSImage *thumb = [[NSImage alloc] initWithData:self.message.media.document.thumb.bytes];
+                if(self.document.thumb.bytes) {
+                    NSImage *thumb = [[NSImage alloc] initWithData:self.document.thumb.bytes];
                     thumb = renderedImage(thumb, size);
-                    [TGCache cacheImage:thumb forKey:self.message.media.document.thumb.location.cacheKey groups:@[IMGCACHE]];
+                    [TGCache cacheImage:thumb forKey:self.document.thumb.location.cacheKey groups:@[IMGCACHE]];
                 }
             }
             
@@ -51,15 +51,22 @@
             self.thumbSize = NSMakeSize(40, 40);
         }
         
-        self.thumbObject = [[TGImageObject alloc] initWithLocation:self.message.media.document.thumb.location placeHolder:nil];
+        self.thumbObject = [[TGImageObject alloc] initWithLocation:self.document.thumb.location placeHolder:nil];
         
         self.thumbObject.imageSize = size;
         self.thumbObject.imageProcessor = [ImageUtils c_processor];
         self.blockSize = NSMakeSize(200, self.thumbSize.height + 6);
-        [self checkStartDownload:[self.message.to_id isKindOfClass:[TL_peerChat class]] ? AutoGroupDocuments : AutoPrivateDocuments size:self.message.media.document.size];
+        [self checkStartDownload:[self.message.to_id isKindOfClass:[TL_peerChat class]] ? AutoGroupDocuments : AutoPrivateDocuments size:self.document.size];
         
     }
     return self;
+}
+
+-(TLDocument *)document {
+    if([self.message.media isKindOfClass:[TL_messageMediaBotResult class]]) {
+        return self.message.media.bot_result.document;
+    } else
+        return self.message.media.document;
 }
 
 -(BOOL)makeSizeByWidth:(int)width {
@@ -77,7 +84,7 @@
 }
 
 - (int)size {
-    return self.message.media.document.size;
+    return self.document.size;
 }
 
 - (Class)downloadClass {
@@ -93,7 +100,7 @@
     
     NSMutableAttributedString *attr = [[NSMutableAttributedString alloc] init];
     
-    [attr appendString:self.message.media.document.file_name withColor:TEXT_COLOR];
+    [attr appendString:self.document.file_name withColor:TEXT_COLOR];
     
     [attr setFont:TGSystemMediumFont(13) forRange:attr.range];
     
@@ -124,13 +131,13 @@
 -(DownloadItem *)downloadItem {
     
     if(super.downloadItem == nil)
-        [super setDownloadItem:[DownloadQueue find:self.message.media.document.n_id]];
+        [super setDownloadItem:[DownloadQueue find:self.document.n_id]];
     
     return [super downloadItem];
 }
 
 - (BOOL)canDownload {
-    return self.message.media.document.dc_id != 0;
+    return self.document.dc_id != 0;
 }
 
 - (BOOL)isset {

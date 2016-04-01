@@ -10,5 +10,5 @@
 
 @interface TGStickerImageObject : TGImageObject
 
--(id)initWithMessage:(TL_localMessage *)message placeholder:(NSImage *)placeholder;
+-(id)initWithDocument:(TLDocument *)document placeholder:(NSImage *)placeholder;
 @end

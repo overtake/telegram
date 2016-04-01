@@ -2,7 +2,7 @@
 //  TLApi.m
 //  Telegram
 //
-//  Auto created by Mikhail Filimonov on 31.03.16..
+//  Auto created by Mikhail Filimonov on 01.04.16..
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -2603,16 +2603,20 @@
 @end
 
 @implementation TLAPI_messages_getInlineBotResults
-+(TLAPI_messages_getInlineBotResults*)createWithBot:(TLInputUser*)bot query:(NSString*)query offset:(NSString*)offset {
++(TLAPI_messages_getInlineBotResults*)createWithFlags:(int)flags bot:(TLInputUser*)bot geo_point:(TLInputGeoPoint*)geo_point query:(NSString*)query offset:(NSString*)offset {
     TLAPI_messages_getInlineBotResults* obj = [[TLAPI_messages_getInlineBotResults alloc] init];
-    obj.bot = bot;
+    obj.flags = flags;
+	obj.bot = bot;
+	obj.geo_point = geo_point;
 	obj.query = query;
 	obj.offset = offset;
     return obj;
 }
 - (NSData*)getData {
-	SerializedData* stream = [ClassStore streamWithConstuctor:-1826332659];
+	SerializedData* stream = [ClassStore streamWithConstuctor:-1796755088];
+	[stream writeInt:self.flags];
 	[ClassStore TLSerialize:self.bot stream:stream];
+	if(self.flags & (1 << 0)) {[ClassStore TLSerialize:self.geo_point stream:stream];}
 	[stream writeString:self.query];
 	[stream writeString:self.offset];
 	return [stream getOutput];
@@ -2826,33 +2830,37 @@
 @end
 
 @implementation TLAPI_messages_getBotCallbackAnswer
-+(TLAPI_messages_getBotCallbackAnswer*)createWithPeer:(TLInputPeer*)peer msg_id:(int)msg_id text:(NSString*)text {
++(TLAPI_messages_getBotCallbackAnswer*)createWithPeer:(TLInputPeer*)peer msg_id:(int)msg_id data:(NSData*)data {
     TLAPI_messages_getBotCallbackAnswer* obj = [[TLAPI_messages_getBotCallbackAnswer alloc] init];
     obj.peer = peer;
 	obj.msg_id = msg_id;
-	obj.text = text;
+	obj.data = data;
     return obj;
 }
 - (NSData*)getData {
-	SerializedData* stream = [ClassStore streamWithConstuctor:-753565985];
+	SerializedData* stream = [ClassStore streamWithConstuctor:-1494659324];
 	[ClassStore TLSerialize:self.peer stream:stream];
 	[stream writeInt:self.msg_id];
-	[stream writeString:self.text];
+	[stream writeByteArray:self.data];
 	return [stream getOutput];
 }
 @end
 
 @implementation TLAPI_messages_setBotCallbackAnswer
-+(TLAPI_messages_setBotCallbackAnswer*)createWithQuery_id:(long)query_id message:(NSString*)message {
++(TLAPI_messages_setBotCallbackAnswer*)createWithFlags:(int)flags  query_id:(long)query_id message:(NSString*)message {
     TLAPI_messages_setBotCallbackAnswer* obj = [[TLAPI_messages_setBotCallbackAnswer alloc] init];
-    obj.query_id = query_id;
+    obj.flags = flags;
+	
+	obj.query_id = query_id;
 	obj.message = message;
     return obj;
 }
 - (NSData*)getData {
-	SerializedData* stream = [ClassStore streamWithConstuctor:-1589996972];
+	SerializedData* stream = [ClassStore streamWithConstuctor:1209817370];
+	[stream writeInt:self.flags];
+	
 	[stream writeLong:self.query_id];
-	[stream writeString:self.message];
+	if(self.flags & (1 << 0)) {[stream writeString:self.message];}
 	return [stream getOutput];
 }
 @end

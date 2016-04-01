@@ -3,7 +3,7 @@
 //  ClassStore.m
 //  Telegram
 //
-    //  Created by keepcoder on 31.03.16.
+    //  Created by keepcoder on 01.04.16.
 //  Copyright (c) 2015 keepcoder. All rights reserved.
 //
 
@@ -516,8 +516,8 @@ static NSMutableDictionary *cs_constuctors;
    [cs_classes setObject:[TL_botInlineMediaResultPhoto class] forKey:[NSNumber numberWithInt:-984447609]];
    [cs_classes setObject:[TL_botInlineResult class] forKey:[NSNumber numberWithInt:-1679053127]];
    [cs_classes setObject:[TL_messages_botResults class] forKey:[NSNumber numberWithInt:292597923]];
-   [cs_classes setObject:[TL_updateBotInlineQuery class] forKey:[NSNumber numberWithInt:-1071715832]];
-   [cs_classes setObject:[TL_updateBotInlineSend class] forKey:[NSNumber numberWithInt:258597139]];
+   [cs_classes setObject:[TL_updateBotInlineQuery class] forKey:[NSNumber numberWithInt:1417832080]];
+   [cs_classes setObject:[TL_updateBotInlineSend class] forKey:[NSNumber numberWithInt:-626997955]];
    [cs_classes setObject:[TL_inputMessagesFilterVoice class] forKey:[NSNumber numberWithInt:1358283666]];
    [cs_classes setObject:[TL_inputMessagesFilterMusic class] forKey:[NSNumber numberWithInt:928101534]];
    [cs_classes setObject:[TL_inputPrivacyKeyChatInvite class] forKey:[NSNumber numberWithInt:-1107622874]];
@@ -535,13 +535,21 @@ static NSMutableDictionary *cs_constuctors;
    [cs_classes setObject:[TL_auth_sentCodeTypeCall class] forKey:[NSNumber numberWithInt:1398007207]];
    [cs_classes setObject:[TL_auth_sentCodeTypeFlashCall class] forKey:[NSNumber numberWithInt:-1425815847]];
    [cs_classes setObject:[TL_keyboardButtonUrl class] forKey:[NSNumber numberWithInt:629866245]];
-   [cs_classes setObject:[TL_keyboardButtonCallback class] forKey:[NSNumber numberWithInt:716063107]];
+   [cs_classes setObject:[TL_keyboardButtonCallback class] forKey:[NSNumber numberWithInt:1748655686]];
    [cs_classes setObject:[TL_keyboardButtonRequestPhone class] forKey:[NSNumber numberWithInt:-1318425559]];
    [cs_classes setObject:[TL_keyboardButtonRequestGeoLocation class] forKey:[NSNumber numberWithInt:-59151553]];
-   [cs_classes setObject:[TL_messages_botCallbackAnswer class] forKey:[NSNumber numberWithInt:-1266250455]];
-   [cs_classes setObject:[TL_updateBotCallbackQuery class] forKey:[NSNumber numberWithInt:1344586416]];
+   [cs_classes setObject:[TL_messages_botCallbackAnswer class] forKey:[NSNumber numberWithInt:308605382]];
+   [cs_classes setObject:[TL_updateBotCallbackQuery class] forKey:[NSNumber numberWithInt:-1500747636]];
    [cs_classes setObject:[TL_messages_messageEditData class] forKey:[NSNumber numberWithInt:649453030]];
    [cs_classes setObject:[TL_updateEditMessage class] forKey:[NSNumber numberWithInt:-469536605]];
+   [cs_classes setObject:[TL_inputBotInlineMessageMediaGeo class] forKey:[NSNumber numberWithInt:427675262]];
+   [cs_classes setObject:[TL_inputBotInlineMessageMediaVenue class] forKey:[NSNumber numberWithInt:-1967579260]];
+   [cs_classes setObject:[TL_inputBotInlineMessageMediaContact class] forKey:[NSNumber numberWithInt:1385634898]];
+   [cs_classes setObject:[TL_botInlineMessageMediaGeo class] forKey:[NSNumber numberWithInt:1506934582]];
+   [cs_classes setObject:[TL_botInlineMessageMediaVenue class] forKey:[NSNumber numberWithInt:1872848504]];
+   [cs_classes setObject:[TL_botInlineMessageMediaContact class] forKey:[NSNumber numberWithInt:-1994382495]];
+   [cs_classes setObject:[TL_inputBotInlineResultPhoto class] forKey:[NSNumber numberWithInt:608099366]];
+   [cs_classes setObject:[TL_inputBotInlineResultDocument class] forKey:[NSNumber numberWithInt:296721356]];
    [cs_classes setObject:[TL_userSelf class] forKey:[NSNumber numberWithInt:476112392]];
    [cs_classes setObject:[TL_userContact class] forKey:[NSNumber numberWithInt:-894214632]];
    [cs_classes setObject:[TL_userRequest class] forKey:[NSNumber numberWithInt:-640891665]];

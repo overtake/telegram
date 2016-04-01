@@ -20,13 +20,20 @@
     if(self) {
         self.blockSize = NSMakeSize(200, 60);
        
-       _fileSize = [[NSString sizeToTransformedValuePretty:self.message.media.document.size] trim];
+       _fileSize = [[NSString sizeToTransformedValuePretty:self.document.size] trim];
        
        
         [self doAfterDownload];
     
     }
     return self;
+}
+
+-(TLDocument *)document {
+    if([self.message.media isKindOfClass:[TL_messageMediaBotResult class]]) {
+        return self.message.media.bot_result.document;
+    } else
+        return self.message.media.document;
 }
 
 -(void)checkStartDownload:(SettingsMask)setting size:(int)size {
@@ -43,7 +50,7 @@
 
 -(void)doAfterDownload {
     
-    TL_documentAttributeAudio *audio = (TL_documentAttributeAudio *) [self.message.media.document attributeWithClass:[TL_documentAttributeAudio class]];
+    TL_documentAttributeAudio *audio = (TL_documentAttributeAudio *) [self.document attributeWithClass:[TL_documentAttributeAudio class]];
     
     NSMutableAttributedString *attr = [[NSMutableAttributedString alloc] init];
     
@@ -58,7 +65,7 @@
         
     } else {
         
-        [attr appendString:self.message.media.document.file_name withColor:TEXT_COLOR];
+        [attr appendString:self.document.file_name withColor:TEXT_COLOR];
         [attr setFont:TGSystemMediumFont(13) forRange:attr.range];
     }
     
@@ -77,7 +84,7 @@
 -(void)regenerate {
     NSMutableAttributedString *attr = [[NSMutableAttributedString alloc] init];
     
-    TL_documentAttributeAudio *audio = (TL_documentAttributeAudio *) [self.message.media.document attributeWithClass:[TL_documentAttributeAudio class]];
+    TL_documentAttributeAudio *audio = (TL_documentAttributeAudio *) [self.document attributeWithClass:[TL_documentAttributeAudio class]];
     
     NSString *perfomer = [audio.performer trim];
     NSString *title = [audio.title trim];
@@ -106,7 +113,7 @@
         
         
     } else {
-        [attr appendString:self.message.media.document.file_name withColor:TEXT_COLOR];
+        [attr appendString:self.document.file_name withColor:TEXT_COLOR];
         [attr setFont:TGSystemFont(13) forRange:attr.range];
     }
     
@@ -131,7 +138,7 @@
 }
 
 - (BOOL)canDownload {
-    return self.message.media.document.dc_id != 0;
+    return self.document.dc_id != 0;
 }
 
 -(void)setDownloadItem:(DownloadItem *)downloadItem {
@@ -142,7 +149,7 @@
 
 -(DownloadItem *)downloadItem {
     if(super.downloadItem == nil)
-        [super setDownloadItem:[DownloadQueue find:self.message.media.document.n_id]];
+        [super setDownloadItem:[DownloadQueue find:self.document.n_id]];
     
     return [super downloadItem];
 }
@@ -152,11 +159,11 @@
 }
 
 - (int)size {
-    return self.message.media.document.size;
+    return self.document.size;
 }
 
 -(NSString *)fileName {
-    return self.message.media.document.file_name;
+    return self.document.file_name;
 }
 
 -(BOOL)makeSizeByWidth:(int)width {

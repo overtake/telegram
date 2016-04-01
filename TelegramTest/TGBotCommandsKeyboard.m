@@ -38,6 +38,8 @@
 
 @property (nonatomic,strong) ITProgressIndicator *indicator;
 
+@property (nonatomic,strong) NSImageView *inlineBotUrlImageView;
+
 @end
 
 
@@ -72,6 +74,8 @@
         
         [self addSubview:_indicator];
         
+        
+        
     }
     
     return self;
@@ -88,6 +92,17 @@
     _stringSize = [_string coreTextSizeForTextFieldForWidth:INT32_MAX];
     
     [_textField setText:_string maxWidth:NSWidth(self.frame) - 10];
+    
+    if([keyboardButton isKindOfClass:[TL_keyboardButtonUrl class]]) {
+        if(!_inlineBotUrlImageView) {
+            _inlineBotUrlImageView = imageViewWithImage(image_bot_inline_button_url());
+            [self addSubview:_inlineBotUrlImageView];
+        }
+        
+    } else {
+        [_inlineBotUrlImageView removeFromSuperview];
+        _inlineBotUrlImageView = nil;
+    }
     
     [self setToolTip:NSWidth(self.frame) - 10 > NSWidth(_textField.frame) ? _keyboardButton.text : nil];
 }
@@ -118,7 +133,9 @@
 -(void)setFrameSize:(NSSize)newSize {
     [super setFrameSize:newSize];
     [_textField setText:_string maxWidth:MIN(NSWidth(self.frame) - 10,_stringSize.width) height:_stringSize.height];
-    [_textField setCenterByView:self];    
+    [_textField setCenterByView:self];
+    
+    [_inlineBotUrlImageView setFrameOrigin:NSMakePoint(newSize.width - NSWidth(_inlineBotUrlImageView.frame) - 5, newSize.height - NSHeight(_inlineBotUrlImageView.frame) - 5)];
 }
 
 -(void)mouseUp:(NSEvent *)theEvent {
@@ -194,6 +211,18 @@
     _keyboardCallback = [keyboardCallback copy];
     
      [_containerView removeAllSubviews];
+    
+    
+    if(fillToSize) {
+        [_containerView removeFromSuperview];
+        [self addSubview:_containerView];
+        [_scrollView removeFromSuperview];
+    } else {
+        if(!_scrollView.superview)
+            [self addSubview:_scrollView];
+        _scrollView.documentView = _containerView;
+        
+    }
      
      if(keyboard) {
          [self drawKeyboardWithKeyboard:keyboard];
@@ -318,8 +347,6 @@
     
     NSUInteger maxHeight = _fillToSize ? height : MIN(height,3 * itemHeight + ((3 -1) * 3 ) + 6 + (itemHeight/2));
     
-   
-    _scrollView.verticalScrollElasticity = !_fillToSize;
     
     [_scrollView setFrameSize:NSMakeSize(NSWidth(self.frame), maxHeight)];
     
@@ -366,7 +393,7 @@
     
     [_rows enumerateObjectsUsingBlock:^(NSMutableArray *row, NSUInteger rdx, BOOL *stop) {
         
-        __block int itemWidth = floor(NSWidth(self.frame)/row.count) - ((row.count-1) * 3 )/row.count;
+        __block int itemWidth = floor(NSWidth(self.frame)/row.count) - ((row.count-1) * 3 )/MAX(row.count,1);
         
         x = 0;
         

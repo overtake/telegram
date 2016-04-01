@@ -247,6 +247,8 @@ CACHE_IMAGE(ModernMessageCheckmark2);
 
 CACHE_IMAGE(bot_inline_keyboard_url);
 
+CACHE_IMAGE(bot_inline_button_url);
+
 @implementation ImageUtils
 
 NSImage *previewImageForDocument(NSString *path) {
@@ -1084,6 +1086,24 @@ NSImage *attach_downloaded_background() {
     });
     return image;
 }
+
+NSImage *white_background_color() {
+    static NSImage *image;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        image = [[NSImage alloc] initWithSize:NSMakeSize(100, 100)];
+        [image lockFocus];
+        NSBezierPath *path = [NSBezierPath bezierPathWithRoundedRect:NSMakeRect(0, 0, 100, 100) xRadius:3 yRadius:3];
+        [[NSColor whiteColor] set];
+        [path fill];
+        [image unlockFocus];
+        
+        image = [[RHResizableImage alloc] initWithImage:image capInsets:RHEdgeInsetsMake(5, 5, 5, 5)];
+        
+    });
+    return image;
+}
+
 
 
 + (NSImage *)roundedImage:(NSImage *)oldImage size:(NSSize)size {

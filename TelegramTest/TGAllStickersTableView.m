@@ -51,6 +51,9 @@
             if(!placeholder)
                 placeholder = [NSImage imageWithWebpData:obj.thumb.bytes error:nil];
             
+            if(!placeholder)
+                placeholder = white_background_color();
+            
             TGMessagesStickerImageObject *imgObj = [[TGMessagesStickerImageObject alloc] initWithLocation:obj.thumb.location placeHolder:placeholder];
             
             imgObj.imageSize = strongsize(NSMakeSize(obj.thumb.w, obj.thumb.h), 65);
@@ -125,6 +128,7 @@ static NSImage *higlightedImage() {
     return image;
 }
 
+
 -(void)redrawRow {
     
     
@@ -174,25 +178,19 @@ static NSImage *higlightedImage() {
             }
             
             
-        } forControlEvents:weakSelf.tableView.isCustomStickerPack ? BTRControlEventMouseUpOutside : BTRControlEventMouseUpInside];
+        } forControlEvents:BTRControlEventMouseUpInside];
         
-        if(!weakSelf.tableView.isCustomStickerPack) {
+        [button addBlock:^(BTRControlEvents events) {
             
+            TGStickerPreviewModalView *preview = [[TGStickerPreviewModalView alloc] init];
             
+            [preview setSticker:item.stickers[idx]];
             
-            [button addBlock:^(BTRControlEvents events) {
-                
-                TGStickerPreviewModalView *preview = [[TGStickerPreviewModalView alloc] init];
-                
-                [preview setSticker:item.stickers[idx]];
-                
-                [preview show:appWindow() animated:YES];
-                
-                weakSelf.tableView.previewModal = preview;
-                
-            } forControlEvents:BTRControlEventLongLeftClick];
-        }
-        
+            [preview show:appWindow() animated:YES];
+            
+            weakSelf.tableView.previewModal = preview;
+            
+        } forControlEvents:BTRControlEventLongLeftClick];
         
         
         [imageView setFrameSize:[item.objects[idx] imageSize]];

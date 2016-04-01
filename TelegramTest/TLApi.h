@@ -2,7 +2,7 @@
 //  TLApi.h
 //  Telegram
 //
-//  Auto created by Mikhail Filimonov on 31.03.16.
+//  Auto created by Mikhail Filimonov on 01.04.16.
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -1099,11 +1099,13 @@
 @end
 
 @interface TLAPI_messages_getInlineBotResults : TLApiObject
+@property int flags;
 @property (nonatomic, strong) TLInputUser* bot;
+@property (nonatomic, strong) TLInputGeoPoint* geo_point;
 @property (nonatomic, strong) NSString* query;
 @property (nonatomic, strong) NSString* offset;
 
-+(TLAPI_messages_getInlineBotResults*)createWithBot:(TLInputUser*)bot query:(NSString*)query offset:(NSString*)offset;
++(TLAPI_messages_getInlineBotResults*)createWithFlags:(int)flags bot:(TLInputUser*)bot geo_point:(TLInputGeoPoint*)geo_point query:(NSString*)query offset:(NSString*)offset;
 @end
 
 @interface TLAPI_messages_setInlineBotResults : TLApiObject
@@ -1198,15 +1200,17 @@
 @interface TLAPI_messages_getBotCallbackAnswer : TLApiObject
 @property (nonatomic, strong) TLInputPeer* peer;
 @property int msg_id;
-@property (nonatomic, strong) NSString* text;
+@property (nonatomic, strong) NSData* data;
 
-+(TLAPI_messages_getBotCallbackAnswer*)createWithPeer:(TLInputPeer*)peer msg_id:(int)msg_id text:(NSString*)text;
++(TLAPI_messages_getBotCallbackAnswer*)createWithPeer:(TLInputPeer*)peer msg_id:(int)msg_id data:(NSData*)data;
 @end
 
 @interface TLAPI_messages_setBotCallbackAnswer : TLApiObject
+@property int flags;
+@property (nonatomic,assign,readonly) BOOL isAlert;
 @property long query_id;
 @property (nonatomic, strong) NSString* message;
 
-+(TLAPI_messages_setBotCallbackAnswer*)createWithQuery_id:(long)query_id message:(NSString*)message;
++(TLAPI_messages_setBotCallbackAnswer*)createWithFlags:(int)flags  query_id:(long)query_id message:(NSString*)message;
 @end
 

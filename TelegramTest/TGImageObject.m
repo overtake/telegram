@@ -105,6 +105,8 @@
 -(void)_didDownloadImage:(DownloadItem *)item {
     NSImage *image = [[NSImage alloc] initWithData:item.result];
     
+    if(!image)
+        image = [NSImage imageWithWebpData:item.result error:nil];
     
     if(image != nil) {
         
