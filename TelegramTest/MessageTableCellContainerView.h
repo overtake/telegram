@@ -51,7 +51,7 @@ typedef enum {
 - (void)startDownload:(BOOL)cancel;
 - (void)updateCellState:(BOOL)animated;
 - (void)setProgressFrameSize:(NSSize)newsize;
--(void)updateDownloadState;
+- (void)updateDownloadState:(BOOL)animated;
 - (BOOL)canEdit;
 
 - (void)uploadProgressHandler:(SenderItem *)item animated:(BOOL)animation;

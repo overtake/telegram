@@ -67,7 +67,7 @@
         if(!self.item.isset) {
             [self.item checkStartDownload:0 size:0];
             if(self.item.downloadItem != nil) {
-                [self updateDownloadState];
+                [self updateDownloadState:NO];
             }
         }
     } else if(self.cellState == CellStateDownloading && cellState == CellStateNormal) {
@@ -116,7 +116,7 @@
     
     [_playImageView setCenterByView:_playImageView.superview];
 
-    [self updateDownloadState];
+    [self updateDownloadState:NO];
     
 }
 

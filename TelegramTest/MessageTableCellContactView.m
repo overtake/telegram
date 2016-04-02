@@ -94,6 +94,22 @@
     
 }
 
+-(void)onStateChanged:(SenderItem *)item {
+    
+    if(item == self.item.messageSender) {
+        if(item.state == MessageSendingStateSent) {
+            MessageTableItemContact *contact =  (MessageTableItemContact *)self.item;
+            
+            [contact doAfterDownload];
+            
+            [self setItem:contact];
+        }
+    }
+    
+    [super onStateChanged:item];
+    
+}
+
 
 -(void)clearSelection {
     [super clearSelection];

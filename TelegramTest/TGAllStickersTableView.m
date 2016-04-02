@@ -384,7 +384,10 @@ static NSImage *higlightedImage() {
     [changed enumerateObjectsUsingBlock:^(TL_stickerSet *set, NSUInteger idx, BOOL * _Nonnull stop) {
         
         [_stickers[@(set.n_id)] removeAllObjects];
-        [self performLoadSet:set allSets:sets hash:n_hash save:idx == changed.count-1];
+        dispatch_after_seconds(0.3, ^{
+            [self performLoadSet:set allSets:sets hash:n_hash save:idx == changed.count-1];
+        });
+        
     }];
     
     [self save:sets stickers:_stickers n_hash:n_hash saveSets:changed.count == 0];

@@ -32,6 +32,18 @@ extern NSString *const TLBotCommandPrefix;
 extern NSString *const TGJoinGroupPrefix;
 extern NSString *const TGStickerPackPrefix;
 extern NSString *const TGImportShareLinkPrefix;
+
+
+extern NSString *const kBotInlineTypeAudio;
+extern NSString *const kBotInlineTypeVideo;
+extern NSString *const kBotInlineTypeSticker;
+extern NSString *const kBotInlineTypeGif;
+extern NSString *const kBotInlineTypePhoto;
+extern NSString *const kBotInlineTypeContact;
+extern NSString *const kBotInlineTypeVenue;
+extern NSString *const kBotInlineTypeFile;
+
+
 unsigned long fileSize(NSString *path);
 + (void)showPanelWithTypes:(NSArray *)types completionHandler:(void (^)(NSArray * result))handler;
 
@@ -93,6 +105,8 @@ NSString *path_for_external_link(NSString *link);
 NSString *display_url(NSString *url);
 
 NSArray *document_preview_mime_types();
+
+NSString *priorityString(NSString *, ...);
 
 
 + (TGAudioWaveform *)waveformForPath:(NSString *)path;

@@ -82,13 +82,15 @@
     
     [_imageView setObject:self.item.imageObject];
     
-    [_textField setFrame:NSMakeRect(self.xTextOffset, 0, NSWidth(self.frame) - self.xTextOffset, 55)];
+    [_textField setFrame:NSMakeRect(self.xTextOffset, 0, NSWidth(self.frame) - self.xTextOffset, self.item.descSize.height)];
+    
+    [_textField setCenteredYByView:_textField.superview];
     
     [self.item.desc setSelected:self.isSelected];
     
     [_textField setAttributedStringValue:self.item.desc];
     
-    [_domainSymbolView setStringValue:first_domain_character(self.item.botResult.content_url)];
+    [_domainSymbolView setStringValue:self.item.domainSymbol];
     [_domainSymbolView sizeToFit];
     [_domainSymbolView setCenterByView:_imageView];
     [_domainSymbolView setHidden:self.item.imageObject != nil];

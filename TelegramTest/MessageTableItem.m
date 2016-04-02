@@ -489,41 +489,29 @@ static NSTextAttachment *channelViewsCountAttachment() {
                     objectReturn = [[MessageTableItemText alloc] initWithObject:message];
                 }
                 
-                if([message.media.bot_result.send_message isKindOfClass:[TL_botInlineMessageMediaAuto class]]) {
+                NSString *mime_type = message.media.bot_result.document ? message.media.bot_result.document.mime_type : message.media.bot_result.content_type;
+                
+                if(([message.media.bot_result.type isEqualToString:kBotInlineTypeGif])) {
+                    objectReturn = [[MessageTableItemMpeg alloc] initWithObject:message];
+                } else if([message.media.bot_result.type isEqualToString:kBotInlineTypePhoto]) {
+                    objectReturn = [[MessageTableItemPhoto alloc] initWithObject:message];
+                } else if([message.media.bot_result.type isEqualToString:kBotInlineTypeAudio]) {
                     
-                    if([message.media.bot_result isKindOfClass:[TL_botInlineMediaResultDocument class]]) {
-                        
-                        TLDocument *document = message.media.bot_result.document;
-                        
-                        if(document.isGif) {
-                            objectReturn = [[MessageTableItemMpeg alloc] initWithObject:message];
-                        } else if(document.isVideo) {
-                            objectReturn = [[MessageTableItemVideo alloc] initWithObject:message];
-                        } else if(document.isAudio) {
-                            objectReturn = [[MessageTableItemAudioDocument alloc] initWithObject:message];
-                        } else if(document.isSticker) {
-                            objectReturn = [[MessageTableItemSticker alloc] initWithObject:message];
-                        } else if(document.isVoice) {
-                            objectReturn = [[MessageTableItemAudio alloc] initWithObject:message];
-                        } else {
-                            objectReturn = [[MessageTableItemDocument alloc] initWithObject:message];
-                        }
-                        
-                    } else if([message.media.bot_result isKindOfClass:[TL_botInlineMediaResultPhoto class]])
-                        objectReturn = [[MessageTableItemPhoto alloc] initWithObject:message];
-                    else if([message.media.bot_result isKindOfClass:[TL_botInlineResult class]]) {
-                        
-                        if(([message.media.bot_result.content_type isEqualToString:@"video/mp4"] && [message.media.bot_result.type isEqualToString:@"gif"])) {
-                            objectReturn = [[MessageTableItemMpeg alloc] initWithObject:message];
-                        } else if([message.media.bot_result.type isEqualToString:@"photo"]) {
-                            objectReturn = [[MessageTableItemPhoto alloc] initWithObject:message];
-                        }
-                    }
+                    if([mime_type isEqualToString:@"audio/ogg"])
+                        objectReturn = [[MessageTableItemAudio alloc] initWithObject:message];
+                    else
+                        objectReturn = [[MessageTableItemAudioDocument alloc] initWithObject:message];
                     
-                } else if([message.media.bot_result.send_message isKindOfClass:[TL_botInlineMessageMediaGeo class]] || [message.media.bot_result.send_message isKindOfClass:[TL_botInlineMessageMediaVenue class]]) {
+                } else if([message.media.bot_result.type isEqualToString:kBotInlineTypeVideo]) {
+                    objectReturn = [[MessageTableItemVideo alloc] initWithObject:message];
+                } else if([message.media.bot_result.type isEqualToString:kBotInlineTypeFile]) {
+                    objectReturn = [[MessageTableItemDocument alloc] initWithObject:message];
+                } else if([message.media.bot_result.type isEqualToString:kBotInlineTypeVenue]) {
                     objectReturn = [[MessageTableItemGeo alloc] initWithObject:message];
-                } else if([message.media.bot_result.send_message isKindOfClass:[TL_botInlineMessageMediaContact class]]) {
+                } else if([message.media.bot_result.type isEqualToString:kBotInlineTypeContact]) {
                     objectReturn = [[MessageTableItemContact alloc] initWithObject:message];
+                } else if([message.media.bot_result.type isEqualToString:kBotInlineTypeSticker]) {
+                    objectReturn = [[MessageTableItemSticker alloc] initWithObject:message];
                 }
                 
                 if(!objectReturn) {

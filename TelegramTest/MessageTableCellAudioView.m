@@ -322,7 +322,7 @@
     
     self.acceptTimeChanger = NO;
     
-    [self updateDownloadState];
+    [self updateDownloadState:NO];
     
     
     [self.durationView setText:item.duration maxWidth:self.maxContentWidth];

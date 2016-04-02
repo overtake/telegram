@@ -231,6 +231,8 @@ CACHE_IMAGE(bot_inline_keyboard_url);
 
 CACHE_IMAGE(bot_inline_button_url);
 
+CACHE_IMAGE(ModernMessageLocationPin);
+
 @interface ImageUtils : NSObject
 
 

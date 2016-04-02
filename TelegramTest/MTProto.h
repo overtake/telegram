@@ -2,7 +2,7 @@
 //  MTProto.h
 //  Telegram
 //
-//  Auto created by Mikhail Filimonov on 01.04.16.
+//  Auto created by Mikhail Filimonov on 02.04.16.
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -1648,7 +1648,7 @@
 @property (nonatomic, strong) NSString* query;
 @property (nonatomic, strong) TLGeoPoint* geo;
 @property (nonatomic, strong) NSString* offset;
-@property (nonatomic, strong) NSString* update_bot_inline_id;
+@property (nonatomic, strong) NSString* update_bot_inline_send_id;
 @property int msg_id;
 @property (nonatomic, strong) NSData* data;
 @end
@@ -1780,7 +1780,7 @@
 +(TL_updateBotInlineQuery*)createWithFlags:(int)flags query_id:(long)query_id user_id:(int)user_id query:(NSString*)query geo:(TLGeoPoint*)geo offset:(NSString*)offset;
 @end
 @interface TL_updateBotInlineSend : TLUpdate<NSCoding>
-+(TL_updateBotInlineSend*)createWithFlags:(int)flags user_id:(int)user_id query:(NSString*)query geo:(TLGeoPoint*)geo update_bot_inline_id:(NSString*)update_bot_inline_id;
++(TL_updateBotInlineSend*)createWithFlags:(int)flags user_id:(int)user_id query:(NSString*)query geo:(TLGeoPoint*)geo update_bot_inline_send_id:(NSString*)update_bot_inline_send_id;
 @end
 @interface TL_updateEditChannelMessage : TLUpdate<NSCoding>
 +(TL_updateEditChannelMessage*)createWithMessage:(TLMessage*)message pts:(int)pts pts_count:(int)pts_count;
@@ -2964,18 +2964,10 @@
 @property int h;
 @property int duration;
 @property (nonatomic, strong) TLInputBotInlineMessage* send_message;
-@property (nonatomic, strong) TLInputPhoto* photo;
-@property (nonatomic, strong) TLInputDocument* document;
 @end
 
 @interface TL_inputBotInlineResult : TLInputBotInlineResult<NSCoding>
 +(TL_inputBotInlineResult*)createWithFlags:(int)flags n_id:(NSString*)n_id type:(NSString*)type title:(NSString*)title n_description:(NSString*)n_description url:(NSString*)url thumb_url:(NSString*)thumb_url content_url:(NSString*)content_url content_type:(NSString*)content_type w:(int)w h:(int)h duration:(int)duration send_message:(TLInputBotInlineMessage*)send_message;
-@end
-@interface TL_inputBotInlineResultPhoto : TLInputBotInlineResult<NSCoding>
-+(TL_inputBotInlineResultPhoto*)createWithFlags:(int)flags n_id:(NSString*)n_id type:(NSString*)type photo:(TLInputPhoto*)photo send_message:(TLInputBotInlineMessage*)send_message;
-@end
-@interface TL_inputBotInlineResultDocument : TLInputBotInlineResult<NSCoding>
-+(TL_inputBotInlineResultDocument*)createWithFlags:(int)flags n_id:(NSString*)n_id type:(NSString*)type title:(NSString*)title n_description:(NSString*)n_description document:(TLInputDocument*)document send_message:(TLInputBotInlineMessage*)send_message;
 @end
 	
 @interface TLBotInlineMessage()
@@ -3011,12 +3003,9 @@
 @end
 	
 @interface TLBotInlineResult()
+@property int flags;
 @property (nonatomic, strong) NSString* n_id;
 @property (nonatomic, strong) NSString* type;
-@property (nonatomic, strong) TLDocument* document;
-@property (nonatomic, strong) TLBotInlineMessage* send_message;
-@property (nonatomic, strong) TLPhoto* photo;
-@property int flags;
 @property (nonatomic, strong) NSString* title;
 @property (nonatomic, strong) NSString* n_description;
 @property (nonatomic, strong) NSString* url;
@@ -3026,16 +3015,16 @@
 @property int w;
 @property int h;
 @property int duration;
+@property (nonatomic, strong) TLBotInlineMessage* send_message;
+@property (nonatomic, strong) TLPhoto* photo;
+@property (nonatomic, strong) TLDocument* document;
 @end
 
-@interface TL_botInlineMediaResultDocument : TLBotInlineResult<NSCoding>
-+(TL_botInlineMediaResultDocument*)createWithN_id:(NSString*)n_id type:(NSString*)type document:(TLDocument*)document send_message:(TLBotInlineMessage*)send_message;
-@end
-@interface TL_botInlineMediaResultPhoto : TLBotInlineResult<NSCoding>
-+(TL_botInlineMediaResultPhoto*)createWithN_id:(NSString*)n_id type:(NSString*)type photo:(TLPhoto*)photo send_message:(TLBotInlineMessage*)send_message;
-@end
 @interface TL_botInlineResult : TLBotInlineResult<NSCoding>
 +(TL_botInlineResult*)createWithFlags:(int)flags n_id:(NSString*)n_id type:(NSString*)type title:(NSString*)title n_description:(NSString*)n_description url:(NSString*)url thumb_url:(NSString*)thumb_url content_url:(NSString*)content_url content_type:(NSString*)content_type w:(int)w h:(int)h duration:(int)duration send_message:(TLBotInlineMessage*)send_message;
+@end
+@interface TL_botInlineMediaResult : TLBotInlineResult<NSCoding>
++(TL_botInlineMediaResult*)createWithFlags:(int)flags n_id:(NSString*)n_id type:(NSString*)type photo:(TLPhoto*)photo document:(TLDocument*)document title:(NSString*)title n_description:(NSString*)n_description send_message:(TLBotInlineMessage*)send_message;
 @end
 	
 @interface TLmessages_BotResults()

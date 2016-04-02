@@ -23,24 +23,7 @@
     self = [super initWithObject:object];
     if(self) {
         
-        _contact = [self.message.media isKindOfClass:[TL_messageMediaContact class]] ? (TL_messageMediaContact *) self.message.media : [TL_messageMediaContact createWithPhone_number:self.message.media.bot_result.send_message.phone_number first_name:self.message.media.bot_result.send_message.first_name last_name:self.message.media.bot_result.send_message.last_name user_id:0];
-        
-        _fullName = [[[[NSString stringWithFormat:@"%@%@%@", self.contact.first_name,self.contact.first_name.length > 0 ? @" " : @"", self.contact.last_name] trim] htmlentities] singleLine];
-        
-        
-        if(self.contact.user_id) {
-            self.contactUser = [[UsersManager sharedManager] find:self.contact.user_id];
-        }
-
-
-        if(self.contactUser) {
-            self.user_id = self.contact.user_id;
-        } else {
-            self.contactText =  [NSString stringWithFormat:@"%C%C", (unichar)(self.contact.first_name.length ? [self.contact.first_name characterAtIndex:0] : 0), (unichar)(self.contact.last_name.length ? [self.contact.last_name characterAtIndex:0] : 0)];
-        }
-        
         [self doAfterDownload];
-       
         
         self.blockSize = NSMakeSize(300, 50);
     }
@@ -50,6 +33,26 @@
 
 
 -(void)doAfterDownload {
+    
+    
+    _contact = [self.message.media isKindOfClass:[TL_messageMediaContact class]] ? (TL_messageMediaContact *) self.message.media : [TL_messageMediaContact createWithPhone_number:self.message.media.bot_result.send_message.phone_number first_name:self.message.media.bot_result.send_message.first_name last_name:self.message.media.bot_result.send_message.last_name user_id:0];
+    
+    _fullName = [[[[NSString stringWithFormat:@"%@%@%@", self.contact.first_name,self.contact.first_name.length > 0 ? @" " : @"", self.contact.last_name] trim] htmlentities] singleLine];
+    
+    
+    if(self.contact.user_id) {
+        self.contactUser = [[UsersManager sharedManager] find:self.contact.user_id];
+    }
+    
+    
+    if(self.contactUser) {
+        self.user_id = self.contact.user_id;
+    } else {
+        self.contactText =  [NSString stringWithFormat:@"%C%C", (unichar)(self.contact.first_name.length ? [self.contact.first_name characterAtIndex:0] : 0), (unichar)(self.contact.last_name.length ? [self.contact.last_name characterAtIndex:0] : 0)];
+    }
+    
+    
+    
     NSString *phoneNumber = self.contact.phone_number.length ? [RMPhoneFormat formatPhoneNumber:self.contact.phone_number] : NSLocalizedString(@"User.Hidden", nil);
     
     NSMutableAttributedString *attributedText = [[NSMutableAttributedString alloc] init];

@@ -15,6 +15,8 @@
 @property (nonatomic,strong,readonly) TLUser *bot;
 @property (nonatomic,assign,readonly) long queryId;
 @property (nonatomic,strong,readonly) NSMutableAttributedString *desc;
+@property (nonatomic,assign,readonly) NSSize descSize;
+@property (nonatomic,strong,readonly) NSString *domainSymbol;
 @property (nonatomic,strong) TGImageObject *imageObject;
 
 -(id)initWithObject:(id)object bot:(TLUser *)bot queryId:(long)queryId;

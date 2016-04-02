@@ -177,7 +177,7 @@ static NSImage *playImage() {
 - (void) setItem:(MessageTableItemVideo *)item {
     [super setItem:item];
     
-    [self updateDownloadState];
+    [self updateDownloadState:NO];
    
     
     [self.imageView setFrameSize:item.videoSize];

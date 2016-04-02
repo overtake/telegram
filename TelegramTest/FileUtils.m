@@ -57,7 +57,14 @@ NSString *const TLBotCommandPrefix = @"/";
 
 
 
-
+NSString *const kBotInlineTypeAudio = @"audio";
+NSString *const kBotInlineTypeVideo = @"video";
+NSString *const kBotInlineTypeSticker = @"sticker";
+NSString *const kBotInlineTypeGif = @"gif";
+NSString *const kBotInlineTypePhoto = @"photo";
+NSString *const kBotInlineTypeContact = @"contact";
+NSString *const kBotInlineTypeVenue = @"venue";
+NSString *const kBotInlineTypeFile = @"file";
 
 
 +(BOOL)checkNormalizedSize:(NSString *)path checksize:(int)checksize {
@@ -174,11 +181,11 @@ NSString* mediaFilePath(TL_localMessage *message) {
     }
     
     if([message.media isKindOfClass:[TL_messageMediaBotResult class]]) {
-        if([message.media.bot_result isKindOfClass:[TL_botInlineMediaResultPhoto class]]) {
+        if([message.media.bot_result.type isEqualToString:kBotInlineTypePhoto]) {
             TL_photoSize *size = [message.media.bot_result.photo.sizes lastObject];
             return locationFilePath(size.location, @"jpg");
-        } else if([message.media.bot_result isKindOfClass:[TL_botInlineMediaResultDocument class]]) {
-            
+        } else if([message.media.bot_result.type isEqualToString:kBotInlineTypeFile]) {
+        
             NSRange srange = [message.media.bot_result.document.mime_type rangeOfString:@"/"];
             
             NSString *ext = srange.location == NSNotFound ? @"file" : [message.media.bot_result.document.mime_type substringFromIndex:srange.location + 1];
@@ -1490,6 +1497,20 @@ NSArray *document_preview_mime_types() {
     });
     
     return types;
+}
+
+NSString *priorityString(NSString * str, ...) {
+    va_list args;
+    va_start(args, str);
+    
+    for (NSString *arg = str; arg != [NSNull class]; arg = va_arg(args, NSString*))
+    {
+        if(arg.length > 0)
+            return arg;
+    }
+    va_end(args);
+    
+    return str;
 }
 
 @end

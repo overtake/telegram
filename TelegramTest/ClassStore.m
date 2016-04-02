@@ -3,7 +3,7 @@
 //  ClassStore.m
 //  Telegram
 //
-    //  Created by keepcoder on 01.04.16.
+    //  Created by keepcoder on 02.04.16.
 //  Copyright (c) 2015 keepcoder. All rights reserved.
 //
 
@@ -512,8 +512,6 @@ static NSMutableDictionary *cs_constuctors;
    [cs_classes setObject:[TL_inputBotInlineResult class] forKey:[NSNumber numberWithInt:750510426]];
    [cs_classes setObject:[TL_botInlineMessageMediaAuto class] forKey:[NSNumber numberWithInt:-61413251]];
    [cs_classes setObject:[TL_botInlineMessageText class] forKey:[NSNumber numberWithInt:-1520330839]];
-   [cs_classes setObject:[TL_botInlineMediaResultDocument class] forKey:[NSNumber numberWithInt:-124267714]];
-   [cs_classes setObject:[TL_botInlineMediaResultPhoto class] forKey:[NSNumber numberWithInt:-984447609]];
    [cs_classes setObject:[TL_botInlineResult class] forKey:[NSNumber numberWithInt:-1679053127]];
    [cs_classes setObject:[TL_messages_botResults class] forKey:[NSNumber numberWithInt:292597923]];
    [cs_classes setObject:[TL_updateBotInlineQuery class] forKey:[NSNumber numberWithInt:1417832080]];
@@ -548,8 +546,7 @@ static NSMutableDictionary *cs_constuctors;
    [cs_classes setObject:[TL_botInlineMessageMediaGeo class] forKey:[NSNumber numberWithInt:1506934582]];
    [cs_classes setObject:[TL_botInlineMessageMediaVenue class] forKey:[NSNumber numberWithInt:1872848504]];
    [cs_classes setObject:[TL_botInlineMessageMediaContact class] forKey:[NSNumber numberWithInt:-1994382495]];
-   [cs_classes setObject:[TL_inputBotInlineResultPhoto class] forKey:[NSNumber numberWithInt:608099366]];
-   [cs_classes setObject:[TL_inputBotInlineResultDocument class] forKey:[NSNumber numberWithInt:296721356]];
+   [cs_classes setObject:[TL_botInlineMediaResult class] forKey:[NSNumber numberWithInt:400266251]];
    [cs_classes setObject:[TL_userSelf class] forKey:[NSNumber numberWithInt:476112392]];
    [cs_classes setObject:[TL_userContact class] forKey:[NSNumber numberWithInt:-894214632]];
    [cs_classes setObject:[TL_userRequest class] forKey:[NSNumber numberWithInt:-640891665]];

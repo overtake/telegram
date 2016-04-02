@@ -19,6 +19,8 @@
         _botResult = botResult;
         _queryId = queryId;
         
+        botResult.title = priorityString(botResult.title, @"Empty title",[NSNull class]);
+        
         if(botResult.n_description || botResult.title) {
             
             
@@ -40,7 +42,7 @@
             if(t.length > 0)  {
                 NSMutableAttributedString *title = [[NSMutableAttributedString alloc] init];
                 
-                [title appendString:[NSString stringWithFormat:@"%@\n",t] withColor:NSColorFromRGB(0x000000)];
+                [title appendString:[NSString stringWithFormat:@"%@%@",t,botResult.n_description.length > 0 ? @"\n" : @""] withColor:NSColorFromRGB(0x000000)];
                 [title setFont:TGSystemMediumFont(13) forRange:title.range];
                 
                 
@@ -51,7 +53,7 @@
             
             
             [desc setSelectionColor:NSColorFromRGB(0xffffff) forColor:NSColorFromRGB(0x000000)];
-            [desc setSelectionColor:NSColorFromRGB(0xffffff) forColor:NSColorFromRGB(0x808080)];
+            [desc setSelectionColor:NSColorFromRGB(0xfffffe) forColor:NSColorFromRGB(0x808080)];
         } else {
             _desc = [[NSMutableAttributedString alloc] init];
         }
@@ -77,6 +79,8 @@
             _imageObject.imageProcessor = [ImageUtils c_processor];
         }
 
+        _domainSymbol = botResult.content_url.length > 0 ? first_domain_character(botResult.content_url) :  [botResult.title substringToIndex:1];
+        
     }
     
     return self;
@@ -88,6 +92,10 @@
 
 
 -(BOOL)updateItemHeightWithWidth:(int)width {
+    
+    _descSize = [_desc sizeForTextFieldForWidth:width - 70];
+    _descSize.height = MIN(54,_descSize.height);
+    
     return NO;
 }
 

@@ -132,16 +132,6 @@
 -(void)doAfterDownload {
     [super doAfterDownload];
     
-    if(_waveform.count == 0 && self.isset) {
-        TGAudioWaveform *waveform = [FileUtils waveformForPath:self.path];
-        
-        @synchronized(self) {
-           self.document.audioAttr.waveform = [waveform bitstream];
-            _waveform = self.document.audioAttr.arrayWaveform;
-            [self.message save:NO];
-        }
-        
-    }
 }
 
 -(NSArray *)emptyWaveform {

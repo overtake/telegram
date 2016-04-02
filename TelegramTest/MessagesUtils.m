@@ -580,6 +580,8 @@
         return message.media.caption;
     }
     
+    TLDocument *document = message.media.document ? message.media.document : message.media.bot_result.document;
+    
     if([message.media isKindOfClass:[TL_messageMediaPhoto class]]) {
         return  NSLocalizedString(@"ChatMedia.Photo", nil);
     } else if([message.media isKindOfClass:[TL_messageMediaContact class]]) {
@@ -588,30 +590,52 @@
         return NSLocalizedString(@"ChatMedia.Video", nil);
     } else if([message.media isKindOfClass:[TL_messageMediaGeo class]] || [message.media isKindOfClass:[TL_messageMediaVenue class]]) {
         return NSLocalizedString(@"ChatMedia.Location", nil);
-    }  else if([message.media isKindOfClass:[TL_messageMediaDocument class]] || [message.media isKindOfClass:[TL_messageMediaDocument_old44 class]]) {
+    }  else if(document) {
         
-        if([message.media.document.mime_type isEqualToString:@"video/mp4"] && [message.media.document attributeWithClass:[TL_documentAttributeAnimated class]] != nil) {
+        if(document.isGif) {
             return @"GIF";
         }
         
-        if([message.media.document attributeWithClass:[TL_documentAttributeVideo class]]) {
+        if(document.isVideo) {
             return NSLocalizedString(@"ChatMedia.Video", nil);
         }
         
-        if(message.media.document.audioAttr.isVoice) {
-            return NSLocalizedString(@"ChatMedia.Audio", nil);
+        if(message.media.document.isVoice) {
+            return NSLocalizedString(@"ChatMedia.Voice", nil);
         }
         
         return [message.media.document isSticker] ? (((TL_documentAttributeSticker *)[message.media.document attributeWithClass:[TL_documentAttributeSticker class]]).alt.length > 0 ? [NSString stringWithFormat:@"%@ %@",((TL_documentAttributeSticker *)[message.media.document attributeWithClass:[TL_documentAttributeSticker class]]).alt,NSLocalizedString(@"Sticker", nil)] : NSLocalizedString(@"Sticker", nil)) : (message.media.document.file_name.length == 0 ? NSLocalizedString(@"ChatMedia.File", nil) : message.media.document.file_name);
     } else {
         
-        if([message.media.bot_result.type isEqualToString:@"gif"] && [message.media.bot_result.send_message isKindOfClass:[TL_botInlineMessageMediaAuto class]]) {
-            return @"GIF";
-        } else if([message.media.bot_result.type isEqualToString:@"photo"] && [message.media.bot_result.send_message isKindOfClass:[TL_botInlineMessageMediaAuto class]]) {
-            return  NSLocalizedString(@"ChatMedia.Photo", nil);
-        } else if([message.media.bot_result.send_message isKindOfClass:[TL_botInlineMessageText class]]) {
+        if([message.media.bot_result.send_message isKindOfClass:[TL_botInlineMessageText class]]) {
             return message.message;
         }
+        
+        NSString *mime_type = message.media.bot_result.document ? message.media.bot_result.document.mime_type : message.media.bot_result.content_type;
+        
+        if(([message.media.bot_result.type isEqualToString:kBotInlineTypeGif])) {
+            return @"GIF";
+        } else if([message.media.bot_result.type isEqualToString:kBotInlineTypePhoto]) {
+            return  NSLocalizedString(@"ChatMedia.Photo", nil);
+        } else if([message.media.bot_result.type isEqualToString:kBotInlineTypeAudio]) {
+            
+            if([mime_type isEqualToString:@"audio/ogg"])
+                 return  NSLocalizedString(@"ChatMedia.Voice", nil);
+            else
+                return  NSLocalizedString(@"ChatMedia.Audio", nil);
+            
+        } else if([message.media.bot_result.type isEqualToString:kBotInlineTypeVideo]) {
+            return  NSLocalizedString(@"ChatMedia.Video", nil);
+        } else if([message.media.bot_result.type isEqualToString:kBotInlineTypeFile]) {
+            return  NSLocalizedString(@"ChatMedia.File", nil);
+        } else if([message.media.bot_result.type isEqualToString:kBotInlineTypeVenue]) {
+            return  NSLocalizedString(@"ChatMedia.Location", nil);
+        } else if([message.media.bot_result.type isEqualToString:kBotInlineTypeContact]) {
+            return  NSLocalizedString(@"ChatMedia.Contact", nil);
+        } else if([message.media.bot_result.type isEqualToString:kBotInlineTypeSticker]) {
+            return NSLocalizedString(@"Sticker", nil);
+        }
+
         
         if(message.action != nil) {
             return [self serviceMessage:message forAction:message.action];

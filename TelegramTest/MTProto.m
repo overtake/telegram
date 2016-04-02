@@ -2,7 +2,7 @@
 //  MTProto.m
 //  Telegram
 //
-//  Auto created by Mikhail Filimonov on 01.04.16.
+//  Auto created by Mikhail Filimonov on 02.04.16.
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -13115,13 +13115,13 @@
 @end
 
 @implementation TL_updateBotInlineSend
-+(TL_updateBotInlineSend*)createWithFlags:(int)flags user_id:(int)user_id query:(NSString*)query geo:(TLGeoPoint*)geo update_bot_inline_id:(NSString*)update_bot_inline_id {
++(TL_updateBotInlineSend*)createWithFlags:(int)flags user_id:(int)user_id query:(NSString*)query geo:(TLGeoPoint*)geo update_bot_inline_send_id:(NSString*)update_bot_inline_send_id {
 	TL_updateBotInlineSend* obj = [[TL_updateBotInlineSend alloc] init];
 	obj.flags = flags;
 	obj.user_id = user_id;
 	obj.query = query;
 	obj.geo = geo;
-	obj.update_bot_inline_id = update_bot_inline_id;
+	obj.update_bot_inline_send_id = update_bot_inline_send_id;
 	return obj;
 }
 -(void)serialize:(SerializedData*)stream {
@@ -13129,14 +13129,14 @@
 	[stream writeInt:self.user_id];
 	[stream writeString:self.query];
 	if(self.flags & (1 << 0)) {[ClassStore TLSerialize:self.geo stream:stream];}
-	[stream writeString:self.update_bot_inline_id];
+	[stream writeString:self.update_bot_inline_send_id];
 }
 -(void)unserialize:(SerializedData*)stream {
 	super.flags = [stream readInt];
 	super.user_id = [stream readInt];
 	super.query = [stream readString];
 	if(self.flags & (1 << 0)) {self.geo = [ClassStore TLDeserialize:stream];}
-	super.update_bot_inline_id = [stream readString];
+	super.update_bot_inline_send_id = [stream readString];
 }
         
 -(TL_updateBotInlineSend *)copy {
@@ -13147,7 +13147,7 @@
     objc.user_id = self.user_id;
     objc.query = self.query;
     objc.geo = [self.geo copy];
-    objc.update_bot_inline_id = self.update_bot_inline_id;
+    objc.update_bot_inline_send_id = self.update_bot_inline_send_id;
     
     return objc;
 }
@@ -24355,146 +24355,6 @@
         
 @end
 
-@implementation TL_inputBotInlineResultPhoto
-+(TL_inputBotInlineResultPhoto*)createWithFlags:(int)flags n_id:(NSString*)n_id type:(NSString*)type photo:(TLInputPhoto*)photo send_message:(TLInputBotInlineMessage*)send_message {
-	TL_inputBotInlineResultPhoto* obj = [[TL_inputBotInlineResultPhoto alloc] init];
-	obj.flags = flags;
-	obj.n_id = n_id;
-	obj.type = type;
-	obj.photo = photo;
-	obj.send_message = send_message;
-	return obj;
-}
--(void)serialize:(SerializedData*)stream {
-	[stream writeInt:self.flags];
-	[stream writeString:self.n_id];
-	[stream writeString:self.type];
-	[ClassStore TLSerialize:self.photo stream:stream];
-	[ClassStore TLSerialize:self.send_message stream:stream];
-}
--(void)unserialize:(SerializedData*)stream {
-	super.flags = [stream readInt];
-	super.n_id = [stream readString];
-	super.type = [stream readString];
-	self.photo = [ClassStore TLDeserialize:stream];
-	self.send_message = [ClassStore TLDeserialize:stream];
-}
-        
--(TL_inputBotInlineResultPhoto *)copy {
-    
-    TL_inputBotInlineResultPhoto *objc = [[TL_inputBotInlineResultPhoto alloc] init];
-    
-    objc.flags = self.flags;
-    objc.n_id = self.n_id;
-    objc.type = self.type;
-    objc.photo = [self.photo copy];
-    objc.send_message = [self.send_message copy];
-    
-    return objc;
-}
-        
-
-    
--(id)initWithCoder:(NSCoder *)aDecoder {
-
-    if((self = [ClassStore deserialize:[aDecoder decodeObjectForKey:@"data"]])) {
-        
-    }
-    
-    return self;
-}
-        
--(void)encodeWithCoder:(NSCoder *)aCoder {
-    [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
-}
-        
-
-        
-@end
-
-@implementation TL_inputBotInlineResultDocument
-+(TL_inputBotInlineResultDocument*)createWithFlags:(int)flags n_id:(NSString*)n_id type:(NSString*)type title:(NSString*)title n_description:(NSString*)n_description document:(TLInputDocument*)document send_message:(TLInputBotInlineMessage*)send_message {
-	TL_inputBotInlineResultDocument* obj = [[TL_inputBotInlineResultDocument alloc] init];
-	obj.flags = flags;
-	obj.n_id = n_id;
-	obj.type = type;
-	obj.title = title;
-	obj.n_description = n_description;
-	obj.document = document;
-	obj.send_message = send_message;
-	return obj;
-}
--(void)serialize:(SerializedData*)stream {
-	[stream writeInt:self.flags];
-	[stream writeString:self.n_id];
-	[stream writeString:self.type];
-	if(self.flags & (1 << 1)) {[stream writeString:self.title];}
-	if(self.flags & (1 << 2)) {[stream writeString:self.n_description];}
-	if(self.flags & (1 << 5)) {[ClassStore TLSerialize:self.document stream:stream];}
-	[ClassStore TLSerialize:self.send_message stream:stream];
-}
--(void)unserialize:(SerializedData*)stream {
-	super.flags = [stream readInt];
-	super.n_id = [stream readString];
-	super.type = [stream readString];
-	if(self.flags & (1 << 1)) {super.title = [stream readString];}
-	if(self.flags & (1 << 2)) {super.n_description = [stream readString];}
-	if(self.flags & (1 << 5)) {self.document = [ClassStore TLDeserialize:stream];}
-	self.send_message = [ClassStore TLDeserialize:stream];
-}
-        
--(TL_inputBotInlineResultDocument *)copy {
-    
-    TL_inputBotInlineResultDocument *objc = [[TL_inputBotInlineResultDocument alloc] init];
-    
-    objc.flags = self.flags;
-    objc.n_id = self.n_id;
-    objc.type = self.type;
-    objc.title = self.title;
-    objc.n_description = self.n_description;
-    objc.document = [self.document copy];
-    objc.send_message = [self.send_message copy];
-    
-    return objc;
-}
-        
-
-    
--(id)initWithCoder:(NSCoder *)aDecoder {
-
-    if((self = [ClassStore deserialize:[aDecoder decodeObjectForKey:@"data"]])) {
-        
-    }
-    
-    return self;
-}
-        
--(void)encodeWithCoder:(NSCoder *)aCoder {
-    [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
-}
-        
-            
--(void)setTitle:(NSString*)title
-{
-   super.title = title;
-                
-    if(super.title == nil)  { super.flags&= ~ (1 << 1) ;} else { super.flags|= (1 << 1); }
-}            
--(void)setN_description:(NSString*)n_description
-{
-   super.n_description = n_description;
-                
-    if(super.n_description == nil)  { super.flags&= ~ (1 << 2) ;} else { super.flags|= (1 << 2); }
-}            
--(void)setDocument:(TLInputDocument*)document
-{
-   super.document = document;
-                
-    if(super.document == nil)  { super.flags&= ~ (1 << 5) ;} else { super.flags|= (1 << 5); }
-}
-        
-@end
-
 @implementation TLBotInlineMessage
             
 -(BOOL)isNo_webpage {return NO;}
@@ -24776,112 +24636,6 @@
 
 @end
         
-@implementation TL_botInlineMediaResultDocument
-+(TL_botInlineMediaResultDocument*)createWithN_id:(NSString*)n_id type:(NSString*)type document:(TLDocument*)document send_message:(TLBotInlineMessage*)send_message {
-	TL_botInlineMediaResultDocument* obj = [[TL_botInlineMediaResultDocument alloc] init];
-	obj.n_id = n_id;
-	obj.type = type;
-	obj.document = document;
-	obj.send_message = send_message;
-	return obj;
-}
--(void)serialize:(SerializedData*)stream {
-	[stream writeString:self.n_id];
-	[stream writeString:self.type];
-	[ClassStore TLSerialize:self.document stream:stream];
-	[ClassStore TLSerialize:self.send_message stream:stream];
-}
--(void)unserialize:(SerializedData*)stream {
-	super.n_id = [stream readString];
-	super.type = [stream readString];
-	self.document = [ClassStore TLDeserialize:stream];
-	self.send_message = [ClassStore TLDeserialize:stream];
-}
-        
--(TL_botInlineMediaResultDocument *)copy {
-    
-    TL_botInlineMediaResultDocument *objc = [[TL_botInlineMediaResultDocument alloc] init];
-    
-    objc.n_id = self.n_id;
-    objc.type = self.type;
-    objc.document = [self.document copy];
-    objc.send_message = [self.send_message copy];
-    
-    return objc;
-}
-        
-
-    
--(id)initWithCoder:(NSCoder *)aDecoder {
-
-    if((self = [ClassStore deserialize:[aDecoder decodeObjectForKey:@"data"]])) {
-        
-    }
-    
-    return self;
-}
-        
--(void)encodeWithCoder:(NSCoder *)aCoder {
-    [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
-}
-        
-
-        
-@end
-
-@implementation TL_botInlineMediaResultPhoto
-+(TL_botInlineMediaResultPhoto*)createWithN_id:(NSString*)n_id type:(NSString*)type photo:(TLPhoto*)photo send_message:(TLBotInlineMessage*)send_message {
-	TL_botInlineMediaResultPhoto* obj = [[TL_botInlineMediaResultPhoto alloc] init];
-	obj.n_id = n_id;
-	obj.type = type;
-	obj.photo = photo;
-	obj.send_message = send_message;
-	return obj;
-}
--(void)serialize:(SerializedData*)stream {
-	[stream writeString:self.n_id];
-	[stream writeString:self.type];
-	[ClassStore TLSerialize:self.photo stream:stream];
-	[ClassStore TLSerialize:self.send_message stream:stream];
-}
--(void)unserialize:(SerializedData*)stream {
-	super.n_id = [stream readString];
-	super.type = [stream readString];
-	self.photo = [ClassStore TLDeserialize:stream];
-	self.send_message = [ClassStore TLDeserialize:stream];
-}
-        
--(TL_botInlineMediaResultPhoto *)copy {
-    
-    TL_botInlineMediaResultPhoto *objc = [[TL_botInlineMediaResultPhoto alloc] init];
-    
-    objc.n_id = self.n_id;
-    objc.type = self.type;
-    objc.photo = [self.photo copy];
-    objc.send_message = [self.send_message copy];
-    
-    return objc;
-}
-        
-
-    
--(id)initWithCoder:(NSCoder *)aDecoder {
-
-    if((self = [ClassStore deserialize:[aDecoder decodeObjectForKey:@"data"]])) {
-        
-    }
-    
-    return self;
-}
-        
--(void)encodeWithCoder:(NSCoder *)aCoder {
-    [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
-}
-        
-
-        
-@end
-
 @implementation TL_botInlineResult
 +(TL_botInlineResult*)createWithFlags:(int)flags n_id:(NSString*)n_id type:(NSString*)type title:(NSString*)title n_description:(NSString*)n_description url:(NSString*)url thumb_url:(NSString*)thumb_url content_url:(NSString*)content_url content_type:(NSString*)content_type w:(int)w h:(int)h duration:(int)duration send_message:(TLBotInlineMessage*)send_message {
 	TL_botInlineResult* obj = [[TL_botInlineResult alloc] init];
@@ -25021,6 +24775,99 @@
    super.duration = duration;
                 
     if(super.duration == 0)  { super.flags&= ~ (1 << 7) ;} else { super.flags|= (1 << 7); }
+}
+        
+@end
+
+@implementation TL_botInlineMediaResult
++(TL_botInlineMediaResult*)createWithFlags:(int)flags n_id:(NSString*)n_id type:(NSString*)type photo:(TLPhoto*)photo document:(TLDocument*)document title:(NSString*)title n_description:(NSString*)n_description send_message:(TLBotInlineMessage*)send_message {
+	TL_botInlineMediaResult* obj = [[TL_botInlineMediaResult alloc] init];
+	obj.flags = flags;
+	obj.n_id = n_id;
+	obj.type = type;
+	obj.photo = photo;
+	obj.document = document;
+	obj.title = title;
+	obj.n_description = n_description;
+	obj.send_message = send_message;
+	return obj;
+}
+-(void)serialize:(SerializedData*)stream {
+	[stream writeInt:self.flags];
+	[stream writeString:self.n_id];
+	[stream writeString:self.type];
+	if(self.flags & (1 << 0)) {[ClassStore TLSerialize:self.photo stream:stream];}
+	if(self.flags & (1 << 1)) {[ClassStore TLSerialize:self.document stream:stream];}
+	if(self.flags & (1 << 2)) {[stream writeString:self.title];}
+	if(self.flags & (1 << 3)) {[stream writeString:self.n_description];}
+	[ClassStore TLSerialize:self.send_message stream:stream];
+}
+-(void)unserialize:(SerializedData*)stream {
+	super.flags = [stream readInt];
+	super.n_id = [stream readString];
+	super.type = [stream readString];
+	if(self.flags & (1 << 0)) {self.photo = [ClassStore TLDeserialize:stream];}
+	if(self.flags & (1 << 1)) {self.document = [ClassStore TLDeserialize:stream];}
+	if(self.flags & (1 << 2)) {super.title = [stream readString];}
+	if(self.flags & (1 << 3)) {super.n_description = [stream readString];}
+	self.send_message = [ClassStore TLDeserialize:stream];
+}
+        
+-(TL_botInlineMediaResult *)copy {
+    
+    TL_botInlineMediaResult *objc = [[TL_botInlineMediaResult alloc] init];
+    
+    objc.flags = self.flags;
+    objc.n_id = self.n_id;
+    objc.type = self.type;
+    objc.photo = [self.photo copy];
+    objc.document = [self.document copy];
+    objc.title = self.title;
+    objc.n_description = self.n_description;
+    objc.send_message = [self.send_message copy];
+    
+    return objc;
+}
+        
+
+    
+-(id)initWithCoder:(NSCoder *)aDecoder {
+
+    if((self = [ClassStore deserialize:[aDecoder decodeObjectForKey:@"data"]])) {
+        
+    }
+    
+    return self;
+}
+        
+-(void)encodeWithCoder:(NSCoder *)aCoder {
+    [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
+}
+        
+            
+-(void)setPhoto:(TLPhoto*)photo
+{
+   super.photo = photo;
+                
+    if(super.photo == nil)  { super.flags&= ~ (1 << 0) ;} else { super.flags|= (1 << 0); }
+}            
+-(void)setDocument:(TLDocument*)document
+{
+   super.document = document;
+                
+    if(super.document == nil)  { super.flags&= ~ (1 << 1) ;} else { super.flags|= (1 << 1); }
+}            
+-(void)setTitle:(NSString*)title
+{
+   super.title = title;
+                
+    if(super.title == nil)  { super.flags&= ~ (1 << 2) ;} else { super.flags|= (1 << 2); }
+}            
+-(void)setN_description:(NSString*)n_description
+{
+   super.n_description = n_description;
+                
+    if(super.n_description == nil)  { super.flags&= ~ (1 << 3) ;} else { super.flags|= (1 << 3); }
 }
         
 @end

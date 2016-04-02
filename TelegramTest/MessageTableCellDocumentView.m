@@ -408,7 +408,7 @@
     }
     
     
-    [self updateDownloadState];
+    [self updateDownloadState:NO];
     
     
     

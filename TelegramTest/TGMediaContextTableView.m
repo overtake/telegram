@@ -367,6 +367,7 @@ static NSMenu *deleteMenu;
         [self.downloadItem removeEvent:_downloadEventListener];
         
     } else {
+        
         [self addScrollEvent];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_didScrolledTableView:) name:NSWindowDidBecomeKeyNotification object:self.window];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_didScrolledTableView:) name:NSWindowDidResignKeyNotification object:self.window];

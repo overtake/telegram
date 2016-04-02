@@ -369,11 +369,13 @@ static CAAnimation *ani2() {
         return;
     }
     
+    
     if(self.fileLocation) {
         self.currentHash = [self.fileLocation hashCacheKey];
     } else {
-        _text = [TMAvatarImageView text:self.chat ? self.chat : (self.broadcast ? self.broadcast : self.user)];
-        self.currentHash = [self.text hash];
+        if(_text.length == 0)
+            _text = [TMAvatarImageView text:self.chat ? self.chat : (self.broadcast ? self.broadcast : self.user)];
+        self.currentHash = [_text hash];
     }
     
     __block NSString *key = [NSString stringWithFormat:@"%lu:%@",self.currentHash,NSStringFromSize(self.bounds.size)];

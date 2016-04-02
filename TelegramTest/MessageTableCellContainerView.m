@@ -308,11 +308,11 @@ static BOOL mouseIsDown = NO;
     
     [self.item startDownload:cancel force:YES];
     
-    [self updateDownloadState];
+    [self updateDownloadState:YES];
 }
 
 
--(void)updateDownloadState {
+-(void)updateDownloadState:(BOOL)animated {
     
     
     [self updateCellState:NO];
@@ -320,7 +320,7 @@ static BOOL mouseIsDown = NO;
     weak();
     
     if(self.item.downloadItem) {
-        [self.progressView setProgress:self.item.downloadItem.progress animated:NO];
+        [self.progressView setProgress:self.item.downloadItem.progress animated:animated];
         
         [self.item.downloadItem removeEvent:_downloadEventListener];
         
@@ -385,9 +385,11 @@ static BOOL mouseIsDown = NO;
 - (void)onStateChanged:(SenderItem *)item {
     
     if(item == self.item.messageSender) {
-        [self checkState:item];
-        [self uploadProgressHandler:item animated:YES];
-        [self updateCellState:YES];
+//        [self checkState:item];
+//        [self uploadProgressHandler:item animated:YES];
+//        [self updateCellState:YES];
+        
+        [self setItem:self.item];
         
         if(item.state == MessageSendingStateCancelled) {
             [self deleteAndCancel];

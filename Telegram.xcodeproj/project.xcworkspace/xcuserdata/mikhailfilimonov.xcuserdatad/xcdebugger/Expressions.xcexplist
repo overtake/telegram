@@ -471,6 +471,9 @@
          contextName = "+[Storage findWebpage:]:Storage.m">
       </ContextState>
       <ContextState
+         contextName = "__30-[TGVTVideoView displayFrame:]_block_invoke:TGVTVideoView.m">
+      </ContextState>
+      <ContextState
          contextName = "-[RBLPopover showRelativeToRect:ofView:preferredEdge:]:RBLPopover.m">
          <PersistentStrings>
             <PersistentString
@@ -575,6 +578,9 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "-[MessageTableCellGeoView _didChangeBackgroundColorWithAnimation:toColor:]:MessageTableCellGeoView.m">
+      </ContextState>
+      <ContextState
          contextName = "__60-[UsersManager updateUserName:completeHandler:errorHandler:]_block_invoke:UsersManager.m">
       </ContextState>
       <ContextState
@@ -582,6 +588,17 @@
          <PersistentStrings>
             <PersistentString
                value = "videoFrame.timestamp">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "__39-[TGGifKeyboardView didReceiveMessage:]_block_invoke:TGGifKeyboardView.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.window">
+            </PersistentString>
+            <PersistentString
+               value = "self.visibleRect">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -1289,6 +1306,9 @@
          contextName = "+[Secret45__Environment serializeObject:]:SecretLayer45.m">
       </ContextState>
       <ContextState
+         contextName = "-[MessageTableItemContact doAfterDownload]:MessageTableItemContact.m">
+      </ContextState>
+      <ContextState
          contextName = "-[DialogTableFirstView redrawRow]:DialogTableFirstView.m">
          <PersistentStrings>
             <PersistentString
@@ -1402,6 +1422,9 @@
          <PersistentStrings>
             <PersistentString
                value = "item.textSize.height">
+            </PersistentString>
+            <PersistentString
+               value = "item.contactText">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -4026,6 +4049,9 @@
             </PersistentString>
             <PersistentString
                value = "self.item.webpage">
+            </PersistentString>
+            <PersistentString
+               value = "self.item.descSize.">
             </PersistentString>
          </PersistentStrings>
       </ContextState>

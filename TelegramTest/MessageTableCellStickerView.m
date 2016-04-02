@@ -85,29 +85,54 @@
 }
 
 
+-(void)mouseDown:(NSEvent *)theEvent {
+    
+    if(self.isEditable)
+        [super mouseDown:theEvent];
+    else if(![self.containerView mouse:[self.containerView convertPoint:[theEvent locationInWindow] fromView:nil] inRect:self.imageView.frame]) {
+        [super mouseDown:theEvent];
+    }
+    
+}
+
 
 -(void)mouseUp:(NSEvent *)theEvent {
     
     
     if(self.isEditable)
         [super mouseUp:theEvent];
-    else  if([self.containerView mouse:[self.containerView convertPoint:[theEvent locationInWindow] fromView:nil] inRect:self.imageView.frame]) {
-
-        TL_documentAttributeSticker *attr = (TL_documentAttributeSticker *) [self.item.message.media.document attributeWithClass:TL_documentAttributeSticker.class];
+    else  if([self.containerView mouse:[self.containerView convertPoint:[theEvent locationInWindow] fromView:nil] inRect:self.imageView.frame] ) {
         
-        if(![attr.stickerset isKindOfClass:[TL_inputStickerSetEmpty class]]) {
+        if(theEvent.clickCount == 1) {
+            TL_documentAttributeSticker *attr = (TL_documentAttributeSticker *) [self.item.message.media.document attributeWithClass:TL_documentAttributeSticker.class];
             
-            TL_stickerSet *set = [EmojiViewController setWithId:attr.stickerset.n_id];
-            NSMutableArray *stickers = (NSMutableArray *) [EmojiViewController stickersWithId:attr.stickerset.n_id];
-            if(set && stickers.count > 0) {
-                TGStickerPackModalView *modalView = [[TGStickerPackModalView alloc] init];
+            if(![attr.stickerset isKindOfClass:[TL_inputStickerSetEmpty class]]) {
                 
-                modalView.canSendSticker = YES;
-                [modalView show:self.window animated:YES];
-                [modalView setStickerPack:[TL_messages_stickerSet createWithSet:set packs:nil documents:stickers]];
-            } else
-                add_sticker_pack_by_name(attr.stickerset);
+                NSArray *modals = [TMViewController modalsView];
+                
+                [modals enumerateObjectsUsingBlock:^(TGModalView *obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                    
+                    if([obj isKindOfClass:[TGStickerPackModalView class]]) {
+                        [obj close:NO];
+                    }
+                    
+                }];
+                
+                TL_stickerSet *set = [EmojiViewController setWithId:attr.stickerset.n_id];
+                NSMutableArray *stickers = (NSMutableArray *) [EmojiViewController stickersWithId:attr.stickerset.n_id];
+                if(set && stickers.count > 0) {
+                    
+                    TGStickerPackModalView *modalView = [[TGStickerPackModalView alloc] init];
+                    
+                    modalView.canSendSticker = YES;
+                    [modalView show:self.window animated:YES];
+                    [modalView setStickerPack:[TL_messages_stickerSet createWithSet:set packs:nil documents:stickers]];
+                } else
+                    add_sticker_pack_by_name(attr.stickerset);
+            }
         }
+
+        
     }
 }
 

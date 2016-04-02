@@ -196,7 +196,7 @@
     [_nameView setFrame:NSMakeRect(NSMaxX(_playView.frame) + item.defaultOffset, 0, item.nameSize.width, item.nameSize.height)];
     [_nameView setCenteredYByView:_nameView.superview];
     
-    [self updateDownloadState];
+    [self updateDownloadState:NO];
     
     [self updateCellState:NO];
     
