@@ -64,6 +64,7 @@ NSString *const kBotInlineTypeGif = @"gif";
 NSString *const kBotInlineTypePhoto = @"photo";
 NSString *const kBotInlineTypeContact = @"contact";
 NSString *const kBotInlineTypeVenue = @"venue";
+NSString *const kBotInlineTypeGeo = @"geo";
 NSString *const kBotInlineTypeFile = @"file";
 
 

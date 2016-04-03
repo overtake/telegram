@@ -381,14 +381,11 @@ static NSImage *higlightedImage() {
     _sets = [sets mutableCopy];
     
     
-    [changed enumerateObjectsUsingBlock:^(TL_stickerSet *set, NSUInteger idx, BOOL * _Nonnull stop) {
-        
-        [_stickers[@(set.n_id)] removeAllObjects];
-        dispatch_after_seconds(0.3, ^{
-            [self performLoadSet:set allSets:sets hash:n_hash save:idx == changed.count-1];
-        });
-        
-    }];
+    
+    if(changed.count > 0) {
+        [self loadChangedSets:changed sets:sets hash:n_hash];
+    }
+
     
     [self save:sets stickers:_stickers n_hash:n_hash saveSets:changed.count == 0];
     
@@ -399,7 +396,25 @@ static NSImage *higlightedImage() {
 }
 
 
--(void)performLoadSet:(TL_stickerSet *)set allSets:(NSArray *)allSets hash:(int)n_hash save:(BOOL)save {
+-(void)loadChangedSets:(NSMutableArray *)changed sets:(NSArray *)sets hash:(int)n_hash {
+    TL_stickerSet *set = changed[0];
+    
+    [changed removeObjectAtIndex:0];
+    
+    [_stickers[@(set.n_id)] removeAllObjects];
+    
+    [self performLoadSet:set allSets:sets hash:n_hash save:YES completeHandler:^{
+        if(changed.count > 0) {
+            dispatch_after_seconds(0.2, ^{
+                [self loadChangedSets:changed sets:sets hash:n_hash];
+            });
+        }
+        
+    }];
+}
+
+
+-(void)performLoadSet:(TL_stickerSet *)set allSets:(NSArray *)allSets hash:(int)n_hash save:(BOOL)save completeHandler:(dispatch_block_t)completeHandler {
     
     
     [RPCRequest sendRequest:[TLAPI_messages_getStickerSet createWithStickerset:[TL_inputStickerSetID createWithN_id:set.n_id access_hash:set.access_hash]] successHandler:^(id request, TL_messages_stickerSet *response) {
@@ -407,7 +422,6 @@ static NSImage *higlightedImage() {
         [[Storage yap] readWriteWithBlock:^(YapDatabaseReadWriteTransaction * __nonnull transaction) {
             
             NSMutableDictionary *data = [[transaction objectForKey:@"modern_stickers" inCollection:STICKERS_COLLECTION] mutableCopy];
-            
             
             if(!data) {
                 data = [[NSMutableDictionary alloc] init];
@@ -421,6 +435,8 @@ static NSImage *higlightedImage() {
         
         [self save:_sets stickers:_stickers n_hash:n_hash saveSets:YES];
         
+        if(completeHandler != nil)
+            completeHandler();
         
         [ASQueue dispatchOnMainQueue:^{
             [self reloadData];

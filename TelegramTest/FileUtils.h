@@ -41,6 +41,7 @@ extern NSString *const kBotInlineTypeGif;
 extern NSString *const kBotInlineTypePhoto;
 extern NSString *const kBotInlineTypeContact;
 extern NSString *const kBotInlineTypeVenue;
+extern NSString *const kBotInlineTypeGeo;
 extern NSString *const kBotInlineTypeFile;
 
 

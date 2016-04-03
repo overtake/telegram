@@ -506,7 +506,7 @@ static NSTextAttachment *channelViewsCountAttachment() {
                     objectReturn = [[MessageTableItemVideo alloc] initWithObject:message];
                 } else if([message.media.bot_result.type isEqualToString:kBotInlineTypeFile]) {
                     objectReturn = [[MessageTableItemDocument alloc] initWithObject:message];
-                } else if([message.media.bot_result.type isEqualToString:kBotInlineTypeVenue]) {
+                } else if([message.media.bot_result.type isEqualToString:kBotInlineTypeVenue] || [message.media.bot_result.type isEqualToString:kBotInlineTypeGeo] || [message.media.bot_result.send_message isKindOfClass:[TL_botInlineMessageMediaGeo class]] || [message.media.bot_result.send_message isKindOfClass:[TL_botInlineMessageMediaVenue class]]) {
                     objectReturn = [[MessageTableItemGeo alloc] initWithObject:message];
                 } else if([message.media.bot_result.type isEqualToString:kBotInlineTypeContact]) {
                     objectReturn = [[MessageTableItemContact alloc] initWithObject:message];
