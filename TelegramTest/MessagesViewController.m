@@ -496,7 +496,7 @@
                 if(item) {
                     NSUInteger index = [self indexOfObject:item];
                     
-                    item = [MessageTableItem messageItemFromObject:obj];
+                     item = [MessageTableItem messageItemFromObject:obj];
                     
                     MessageTableItem *prevItem;
                     

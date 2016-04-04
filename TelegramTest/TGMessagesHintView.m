@@ -728,7 +728,7 @@ static NSMutableDictionary *inlineBotsExceptions;
     NSUInteger height = MIN(_currentTableView.count * 40, 140 );
     
     if(_currentTableView == _mediaContextTableView) {
-        height = _currentTableView.count == 1 ? 100 : 200;
+        height = _mediaContextTableView.hintHeight == 1 ? 100 : 200;
     } else if(_currentTableView == _contextTableView) {
         height = MIN(_currentTableView.count * 60, 180 );
     }

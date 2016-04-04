@@ -18,7 +18,7 @@
 @property (nonatomic,strong) NSArray *proportions;
 @property (nonatomic,strong) NSArray *imageObjects;
 @property (nonatomic,assign) BOOL needCheckKeyWindow;
-
+@property (nonatomic,assign) int height;
 @end
 
 @interface TGPicItemView : TMView
@@ -437,8 +437,14 @@ static NSMenu *deleteMenu;
             
             if(imageObject == nil)
                 imageObject = (TGImageObject *) [[NSNull alloc] init];
+            else if([botResult.document attributeWithClass:[TL_documentAttributeSticker class]]) {
+                imageObject.reserved1 = @(YES);
+                imageObject.imageSize = strongsize([sizes[idx] sizeValue], 90);
+            }
             
             [imageObjects addObject:imageObject];
+            
+            
         }];
         
         _imageObjects = [imageObjects copy];
@@ -543,7 +549,16 @@ static NSMenu *deleteMenu;
                 [self addSubview:picContainer];
             }
             
-            [picContainer setSize:size];
+            
+            TGImageObject *object = item.imageObjects[idx];
+            
+            if([object.reserved1 boolValue]) {
+                [picContainer setSize:object.imageSize];
+            } else {
+                [picContainer setSize:size];
+            }
+            
+            
             [picContainer.imageView setObject:item.imageObjects[idx]];
             container = picContainer;
            
@@ -619,8 +634,8 @@ static NSMenu *deleteMenu;
 
 
 
-- (CGFloat)rowHeight:(NSUInteger)row item:(TMRowItem *) item {
-    return 100;
+- (CGFloat)rowHeight:(NSUInteger)row item:(TGGifSearchRowItem *) item {
+    return item.height;
 }
 - (BOOL)isGroupRow:(NSUInteger)row item:(TMRowItem *) item {
     return NO;
@@ -645,7 +660,7 @@ static NSMenu *deleteMenu;
 }
 
 
--(NSArray *)makeRow:(NSMutableArray *)gifs isLastRowItem:(BOOL)isLastRowItem {
+-(NSArray *)makeRow:(NSMutableArray *)gifs isLastRowItem:(BOOL)isLastRowItem itemHeight:(int *)itemHeight {
     
     
     __block int currentWidth = 0;
@@ -657,14 +672,15 @@ static NSMenu *deleteMenu;
             
             TL_documentAttributeVideo *video = (TL_documentAttributeVideo *) [botResult.document attributeWithClass:[TL_documentAttributeVideo class]];
             
-            TL_documentAttributeImageSize *sizeAttr = (TL_documentAttributeImageSize *) [botResult.document attributeWithClass:[TL_documentAttributeImageSize class]];
+            NSSize thumbSize =NSMakeSize( botResult.document.thumb.w,  botResult.document.thumb.h);
             
             int w = MAX(video.w,botResult.w);
             int h = MAX(video.h,botResult.h);
             
-            if(sizeAttr) {
-                w = MIN(sizeAttr.w,100);
-                h = MIN(sizeAttr.h,100);
+            if(!video && thumbSize.width > 0 && thumbSize.height > 0) {
+                                
+                w = MIN(thumbSize.width,maxHeight);
+                h = MIN(thumbSize.height,maxHeight);
             }
             
             if(botResult.photo.sizes.count > 0 && video == nil) {
@@ -712,7 +728,7 @@ static NSMenu *deleteMenu;
         
         block();
         
-        if((currentWidth - NSWidth(self.frame)) > 100 && gifs.count > 1) {
+        if((currentWidth - NSWidth(self.frame)) > maxHeight && gifs.count > 1) {
             [gifs removeLastObject];
             continue;
         }
@@ -727,6 +743,7 @@ static NSMenu *deleteMenu;
         
     }
     
+    *itemHeight = maxHeight;
     
     return sizes;
     
@@ -817,15 +834,18 @@ static NSMenu *deleteMenu;
     
     dispatch_block_t next = ^{
         
-        int rowCount = MIN(f,(int)draw.count);
+        int rowCount = (int)draw.count;
         
         NSMutableArray *r = [[draw subarrayWithRange:NSMakeRange(0, rowCount)] mutableCopy];
         
-        NSArray *s = [self makeRow:r isLastRowItem:r.count < rowCount || (f > rowCount && r.count <= rowCount)];
+        int itemHeight = 100;
+        
+        NSArray *s = [self makeRow:r isLastRowItem:r.count < rowCount || (f > rowCount && r.count <= rowCount) itemHeight:&itemHeight];
         
         [draw removeObjectsInArray:r];
         
         TGGifSearchRowItem *item = [[TGGifSearchRowItem alloc] initWithObject:[r copy] sizes:[s copy]];
+        item.height = itemHeight;
         item.needCheckKeyWindow = _needCheckKeyWindow;
         if(redrawPrev) {
             NSUInteger index = [self.list indexOfObject:prevItem];
@@ -846,7 +866,16 @@ static NSMenu *deleteMenu;
 }
 
 
-
+-(int)hintHeight {
+    
+    __block int height = 0;
+    
+    [self.list enumerateObjectsUsingBlock:^(TGGifSearchRowItem *obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        height+=obj.height;
+    }];
+    
+    return MIN(200,height);
+}
 
 
 -(void)draw {

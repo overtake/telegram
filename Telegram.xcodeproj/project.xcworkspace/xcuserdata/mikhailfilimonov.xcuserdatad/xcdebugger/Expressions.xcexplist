@@ -1410,6 +1410,9 @@
          contextName = "__46-[TGPhotoViewer show:conversation:isReversed:]_block_invoke_2:TGPhotoViewer.m">
       </ContextState>
       <ContextState
+         contextName = "-[RPCRequest completeHandler]:RPCRequest.m">
+      </ContextState>
+      <ContextState
          contextName = "__38-[TGDownloadOperation start:selector:]_block_invoke:TGDownloadOperation.m">
          <PersistentStrings>
             <PersistentString
@@ -3238,6 +3241,14 @@
       </ContextState>
       <ContextState
          contextName = "__49-[TGMediaContextTableView makeRow:isLastRowItem:]_block_invoke_2:TGMediaContextTableView.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "thumbSize">
+            </PersistentString>
+            <PersistentString
+               value = "botResult">
+            </PersistentString>
+         </PersistentStrings>
       </ContextState>
       <ContextState
          contextName = "__35-[TGPVMediaBehavior load:callback:]_block_invoke_2:TGPVMediaBehavior.m">
