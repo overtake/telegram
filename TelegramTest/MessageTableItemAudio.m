@@ -35,10 +35,7 @@
         
         [self doAfterDownload];
         
-        if([self isset])
-            self.state = AudioStateWaitPlaying;
-        else
-            self.state = AudioStateWaitDownloading;
+        self.state = AudioStateWaitPlaying;
         
         [self checkStartDownload:[self.message.to_id isKindOfClass:[TL_peerChat class]] ? AutoGroupAudio : AutoPrivateAudio size:self.document.size];
         

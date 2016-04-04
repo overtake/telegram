@@ -66,7 +66,7 @@ NSString *const kBotInlineTypeContact = @"contact";
 NSString *const kBotInlineTypeVenue = @"venue";
 NSString *const kBotInlineTypeGeo = @"geo";
 NSString *const kBotInlineTypeFile = @"file";
-
+NSString *const kBotInlineTypeVoice = @"voice";
 
 +(BOOL)checkNormalizedSize:(NSString *)path checksize:(int)checksize {
     int pathsize = (int)fileSize(path);
@@ -1365,7 +1365,15 @@ NSString *first_domain_character(NSString *url) {
 }
 
 NSString *path_for_external_link(NSString *link) {
-    return [NSString stringWithFormat:@"%@/%ld.%@",[FileUtils path],[link hash],[link pathExtension].length == 0 ? @"file" : [link pathExtension]];
+    NSString *extension = [link pathExtension];
+    
+    NSUInteger dropIndex = NSNotFound;
+    
+    if((dropIndex = [extension rangeOfString:@"?"].location) != NSNotFound) {
+        extension = [extension substringToIndex:dropIndex];
+    }
+    
+    return [NSString stringWithFormat:@"%@/%ld.%@",[FileUtils path],[link hash],extension.length == 0 ? @"file" : extension];
 }
 
 

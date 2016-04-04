@@ -104,7 +104,8 @@
     
     [attr setFont:TGSystemMediumFont(13) forRange:attr.range];
     
-    [attr appendString:@"\n"];
+    if(attr.length > 0)
+        [attr appendString:@"\n"];
     NSRange range = [attr appendString:_fileSize withColor:GRAY_TEXT_COLOR];
     
     [attr setFont:TGSystemFont(13) forRange:range];

@@ -307,6 +307,20 @@
          contextName = "__47-[TGPVMediaBehavior loadRemote:limit:callback:]_block_invoke:TGPVMediaBehavior.m">
       </ContextState>
       <ContextState
+         contextName = "-[TGContextRowView updateDownloadState]:TGContextRowView.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.item.audioController.state">
+            </PersistentString>
+            <PersistentString
+               value = "_loaderView.isHidden">
+            </PersistentString>
+            <PersistentString
+               value = "_loaderView.state">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "-[UpgradeLayerSenderItem decryptedMessageLayer20]:UpgradeLayerSenderItem.m">
       </ContextState>
       <ContextState
@@ -3275,6 +3289,11 @@
       </ContextState>
       <ContextState
          contextName = "-[TGContextRowItem initWithObject:bot:queryId:]:TGContextRowItem.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "botResult.document.thumb">
+            </PersistentString>
+         </PersistentStrings>
       </ContextState>
       <ContextState
          contextName = "__66-[ChatHistoryController request:anotherSource:sync:selectHandler:]_block_invoke_2301:ChatHistoryController.m">
@@ -3705,6 +3724,14 @@
          <PersistentStrings>
             <PersistentString
                value = "hole">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[TGImageView cachedThumb:]:TGImageView.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.object.placeholder">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -5960,6 +5987,14 @@
          contextName = "__39-[ChatAvatarImageView updateChatPhoto:]_block_invoke198:ChatAvatarImageView.m">
       </ContextState>
       <ContextState
+         contextName = "-[TGContextRowView open]:TGContextRowView.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.item.path">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "-[TGModernMessageCellContainerView setItem:]:TGModernMessageCellContainerView.m">
          <PersistentStrings>
             <PersistentString
@@ -6558,6 +6593,14 @@
          <PersistentStrings>
             <PersistentString
                value = "offset">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[MessageTableCellDocumentView updateFrames]:MessageTableCellDocumentView.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.fileNameTextField">
             </PersistentString>
          </PersistentStrings>
       </ContextState>

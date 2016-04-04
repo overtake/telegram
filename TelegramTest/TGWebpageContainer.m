@@ -160,9 +160,7 @@
         if(self.loaderView.currentProgress > 0) {
             [self.loaderView setProgress:self.loaderView.currentProgress animated:YES];
         }
-        
-        
-        
+ 
 
     } else  {
         [_loaderView removeFromSuperview];

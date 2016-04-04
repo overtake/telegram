@@ -493,105 +493,69 @@
             [items enumerateObjectsUsingBlock:^(TL_localMessage *obj, NSUInteger idx, BOOL *stop) {
                 
                MessageTableItem *item = [self itemOfMsgId:obj.channelMsgId];
-                NSUInteger index = [self indexOfObject:item];
-                
-                item = [MessageTableItem messageItemFromObject:obj];
-                
-                MessageTableItem *prevItem;
-                
-                if(index+1 < self.messages.count-1) {
-                    prevItem = self.messages[index+1];
-                }
-                
-                [self isHeaderMessage:item prevItem:prevItem];
-                
-                item.table = self.table;
-                [item makeSizeByWidth:item.makeSize];
-                
-                [self.messages replaceObjectAtIndex:index withObject:item];
-                
-                if(index != NSNotFound) {
+                if(item) {
+                    NSUInteger index = [self indexOfObject:item];
                     
-                    [self.table beginUpdates];
-                    [self.table noteHeightOfRowsWithIndexesChanged:[NSIndexSet indexSetWithIndex:index]];
+                    item = [MessageTableItem messageItemFromObject:obj];
                     
-                    [self.table endUpdates];
+                    MessageTableItem *prevItem;
                     
-                    NSTableRowView *rowView = [self.table rowViewAtRow:index makeIfNecessary:NO];
+                    if(index+1 < self.messages.count-1) {
+                        prevItem = self.messages[index+1];
+                    }
                     
-                    MessageTableCell *cell = rowView.subviews[0];
+                    [self isHeaderMessage:item prevItem:prevItem];
                     
-                    MessageTableCell *nCell = (MessageTableCell *) [self tableView:_table viewForTableColumn:nil row:index];
+                    item.table = self.table;
+                    [item makeSizeByWidth:item.makeSize];
                     
+                    [self.messages replaceObjectAtIndex:index withObject:item];
                     
-                    [nCell setFrameSize:NSMakeSize(NSWidth(cell.frame), item.viewSize.height)];
-                    
+                    if(index != NSNotFound) {
+                        
+                        [self.table beginUpdates];
+                        [self.table noteHeightOfRowsWithIndexesChanged:[NSIndexSet indexSetWithIndex:index]];
+                        
+                        [self.table endUpdates];
+                        
+                        NSTableRowView *rowView = [self.table rowViewAtRow:index makeIfNecessary:NO];
+                        
+                        MessageTableCell *cell = rowView.subviews[0];
+                        
+                        MessageTableCell *nCell = (MessageTableCell *) [self tableView:_table viewForTableColumn:nil row:index];
+                        
+                        
+                        [nCell setFrameSize:NSMakeSize(NSWidth(cell.frame), item.viewSize.height)];
+                        
 #ifdef TGDEBUG
-                    assert(cell != nCell);
+                        assert(cell != nCell);
 #endif
-
-                    
-                    POPBasicAnimation *fadeOut = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerOpacity];
-                    fadeOut.fromValue = @(1.0f);
-                    fadeOut.toValue = @(0.0f);
-                    fadeOut.duration = 0.3f;
-                    fadeOut.removedOnCompletion = YES;
-                    [cell.layer pop_addAnimation:fadeOut forKey:@"opacity"];
-                    
-                    [fadeOut setCompletionBlock:^(POPAnimation *animation, BOOL success) {
                         
-                        if(success) {
-                            cell.layer.opacity = 1.0f;
-                            [cell setItem:item];
-                            [nCell removeFromSuperview];
+                        
+                        POPBasicAnimation *fadeOut = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerOpacity];
+                        fadeOut.fromValue = @(1.0f);
+                        fadeOut.toValue = @(0.0f);
+                        fadeOut.duration = 0.3f;
+                        fadeOut.removedOnCompletion = YES;
+                        [cell.layer pop_addAnimation:fadeOut forKey:@"opacity"];
+                        
+                        [fadeOut setCompletionBlock:^(POPAnimation *animation, BOOL success) {
                             
-                            if(![notification.userInfo[@"nonselect"] boolValue])
-                                [cell searchSelection];
-                        }
+                            if(success) {
+                                cell.layer.opacity = 1.0f;
+                                [cell setItem:item];
+                                [nCell removeFromSuperview];
+                                
+                                if(![notification.userInfo[@"nonselect"] boolValue])
+                                    [cell searchSelection];
+                            }
+                            
+                        }];
                         
-                    }];
-                    
-                    assert(nCell != nil);
-                    
-                    [rowView addSubview:nCell positioned:NSWindowBelow relativeTo:cell];
-                    
-                    
-//                    POPBasicAnimation *fadeIn = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerOpacity];
-//                    fadeIn.fromValue = @(0.0f);
-//                    fadeIn.toValue = @(1.0f);
-//                    fadeIn.duration = 0.2f;
-//                    fadeIn.removedOnCompletion = YES;
-//                    [nCell.layer pop_addAnimation:fadeIn forKey:@"opacity"];
-                    
-                    
-                    
-//                    TMView *fade = [[TMView alloc] initWithFrame:NSMakeRect(0, 0, NSWidth(cell.frame), item.viewSize.height)];
-//                    
-//                    fade.backgroundColor = [NSColor whiteColor];
-//                    fade.alphaValue = 0.0f;
-//                    
-//                    
-//                    
-//                    [NSAnimationContext runAnimationGroup:^(NSAnimationContext * _Nonnull context) {
-//                        [context setDuration:0.1];
-//                        fade.animator.alphaValue = 1.0f;
-//                    } completionHandler:^{
-//                        
-//                        [cell setItem:item];
-//                        [NSAnimationContext runAnimationGroup:^(NSAnimationContext * _Nonnull context) {
-//                            [context setDuration:0.1];
-//                            fade.animator.alphaValue = 0.0f;
-//                        } completionHandler:^{
-//                            [fade removeFromSuperview];
-//                            
-//                        }];
-//                        
-//                    }];
-//                    
-//                    [cell addSubview:fade];
-                    
-                    
-                    //
+                        assert(nCell != nil);
+                        
+                        [rowView addSubview:nCell positioned:NSWindowBelow relativeTo:cell];
+                    }
                     
                     
                 }

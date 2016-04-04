@@ -7,6 +7,15 @@
 //
 
 #import "ContextBotSenderItem.h"
+#import "TGTimer.h"
+#import "SpacemanBlocks.h"
+@interface ContextBotSenderItem ()
+{
+    __block SMDelayedBlockHandle _handle;
+}
+@property (nonatomic,strong) TGTimer *timer;
+
+@end
 
 
 @implementation ContextBotSenderItem
@@ -48,11 +57,39 @@
     
     weak();
     
+    _handle = perform_block_after_delay(1.0, ^{
+        
+        [ASQueue dispatchOnStageQueue:^{
+            self.progress = 50.0f;
+            
+            _timer = [[TGTimer alloc] initWithTimeout:0.5 repeat:YES completion:^{
+                
+                self.progress+=5.0;
+                
+                if(self.progress == 100.0f) {
+                    [_timer invalidate];
+                    _timer = nil;
+                }
+                
+            } queue:[ASQueue globalQueue].nativeQueue];
+        }];
+        
+        
+        
+    });
+    
     self.rpc_request = [RPCRequest sendRequest:[TLAPI_messages_sendInlineBotResult createWithFlags:[self senderFlags] peer:self.conversation.inputPeer reply_to_msg_id:self.message.reply_to_msg_id random_id:self.message.randomId query_id:self.message.media.query_id n_id:self.message.media.bot_result.n_id] successHandler:^(id request, id response) {
         
         strongWeak();
         
+        
+        
         if(strongSelf != nil) {
+            
+            cancel_delayed_block(_handle);
+            
+            [_timer invalidate];
+            
             [weakSelf updateMessageId:response];
             
             TLMessage *msg = [[weakSelf updateNewMessageWithUpdates:response] message];
@@ -108,6 +145,10 @@
     
 }
 
+
+-(void)dealloc {
+    [_timer invalidate];
+}
 
 
 @end

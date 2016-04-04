@@ -249,6 +249,10 @@ static BOOL mouseIsDown = NO;
     
     [self.progressView setState:cellState];
     [self.progressView setHidden:cellState == CellStateNormal];
+    
+    if(self.cellState == CellStateNeedDownload) {
+        [self.progressView setCurrentProgress:0];
+    }
 }
 
 - (void)updateCellState:(BOOL)animated {

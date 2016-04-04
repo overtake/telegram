@@ -154,19 +154,27 @@
         MessageTableItemDocument *item = (MessageTableItemDocument *)self.item;
         
         
+        
         NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] init];
         
         NSRange range = [attributedString appendString:item.message.media.document.file_name withColor:TEXT_COLOR];
         
         [attributedString setFont:TGSystemMediumFont(13) forRange:range];
         
-        [attributedString appendString:@"\n"];
+        if(attributedString.length > 0)
+            [attributedString appendString:@"\n"];
         
         range = [attributedString appendString:[NSString stringWithFormat:format,progress] withColor:GRAY_TEXT_COLOR];
         
         [attributedString setFont:TGSystemFont(13) forRange:range];
         
-        [attributedString addAttribute:NSParagraphStyleAttributeName value:[item.fileNameAttrubutedString attribute:NSParagraphStyleAttributeName atIndex:0 effectiveRange:NULL] range:attributedString.range];
+        id value = [item.fileNameAttrubutedString attribute:NSParagraphStyleAttributeName atIndex:0 effectiveRange:NULL] ;
+        
+        if(value) {
+            [attributedString addAttribute:NSParagraphStyleAttributeName value:value range:attributedString.range];
+        }
+        
+       
         
 
         
@@ -263,7 +271,6 @@
     PreviewObject *previewObject = [[PreviewObject alloc] initWithMsdId:self.item.message.n_id media:self.item.message peer_id:self.item.message.peer_id];
     TMPreviewDocumentItem *item = [[TMPreviewDocumentItem alloc] initWithItem:previewObject];
     [[TMMediaController controller] show:item];
-
 }
 
 - (NSMenu *)contextMenu {
@@ -423,7 +430,7 @@
     
     
     [self.fileNameTextField setFrameOrigin:NSMakePoint(item.isHasThumb ? NSMaxX(self.thumbView.frame) + self.item.defaultOffset : NSMaxX(self.attachButton.frame) + self.item.defaultOffset, item.isHasThumb ? item.defaultContentOffset : roundf(((item.blockSize.height - item.captionSize.height) - NSHeight(self.fileNameTextField.frame))/2))];
-    [self.actionsTextField setFrameOrigin:NSMakePoint(item.isHasThumb ? NSMaxX(self.thumbView.frame) + self.item.defaultOffset : NSMaxX(self.attachButton.frame) + self.item.defaultOffset, NSMaxY(self.fileNameTextField.frame) + 2)];
+    [self.actionsTextField setFrameOrigin:NSMakePoint(item.isHasThumb ? NSMaxX(self.thumbView.frame) + self.item.defaultOffset : NSMaxX(self.attachButton.frame) + self.item.defaultOffset,  NSMaxY(self.fileNameTextField.frame) + 2)];
 }
 
 
@@ -432,7 +439,7 @@
     
     PreviewObject *previewObject = [[PreviewObject alloc] initWithMsdId:self.item.message.n_id media:self.item.message peer_id:self.item.message.peer_id];
     
-    if([document_preview_mime_types() indexOfObject:self.item.message.media.document.mime_type] != NSNotFound) {
+    if([document_preview_mime_types() indexOfObject:self.item.message.media.document.mime_type] != NSNotFound && [document_preview_mime_types() indexOfObject:[self.item.message.media.document.file_name pathExtension]] != NSNotFound) {
         if(!self.item.message.isFake)
             [[TGPhotoViewer viewer] showDocuments:previewObject conversation:self.item.message.conversation];
         else

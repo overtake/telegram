@@ -83,7 +83,7 @@
         self.progressColor = NSColorFromRGB(0xffffff);
     } else {
         
-        self.progressColor = NSColorFromRGB(0xa0a0a0);
+        self.progressColor = NSColorFromRGB(0xffffff); // NSColorFromRGB(0xa0a0a0);
     }
     
     [self setNeedsDisplay:YES];
@@ -280,7 +280,7 @@ float ease(float t, float b, float c, float d) {
     
     
     
-    if(![self pop_animationForKey:@"rotate"]) {
+    if(![self pop_animationForKey:@"rotate"] && !_disableRotating) {
 
         
         

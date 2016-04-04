@@ -76,7 +76,7 @@
 
 
 #ifdef TGDEBUG
-#define ACCEPT_FEATURE ([@[@"vihor",@"Marvin",@"Ricdallaglio",@"Victor",@"Jdkdkdkdmdmdmx",@"dmitry",@"peter",@"Zlomch",@"MarcoK",@"VitocoEP",@"zinoviev",@"ecstasy",@"Gerardo",@"kondratyevdev",@"Markus",@"Telegrafm",@"doublespb"] indexOfObject:[UsersManager currentUser].username] != NSNotFound)
+#define ACCEPT_FEATURE ([@[@"vihor",@"Marvin",@"Ricdallaglio",@"Victor",@"Jdkdkdkdmdmdmx",@"dmitry",@"peter",@"Zlomch",@"MarcoK",@"VitocoEP",@"zinoviev",@"ecstasy",@"Gerardo",@"kondratyevdev",@"Markus",@"Telegrafm",@"doublespb",@"izhukov",@"requilence"] indexOfObject:[UsersManager currentUser].username] != NSNotFound)
 #else
 #define ACCEPT_FEATURE YES
 #endif

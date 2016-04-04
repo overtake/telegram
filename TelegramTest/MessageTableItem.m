@@ -495,7 +495,7 @@ static NSTextAttachment *channelViewsCountAttachment() {
                     objectReturn = [[MessageTableItemMpeg alloc] initWithObject:message];
                 } else if([message.media.bot_result.type isEqualToString:kBotInlineTypePhoto]) {
                     objectReturn = [[MessageTableItemPhoto alloc] initWithObject:message];
-                } else if([message.media.bot_result.type isEqualToString:kBotInlineTypeAudio]) {
+                } else if([message.media.bot_result.type isEqualToString:kBotInlineTypeAudio] || [message.media.bot_result.type isEqualToString:kBotInlineTypeVoice]) {
                     
                     if([mime_type isEqualToString:@"audio/ogg"])
                         objectReturn = [[MessageTableItemAudio alloc] initWithObject:message];

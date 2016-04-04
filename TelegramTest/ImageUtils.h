@@ -285,6 +285,7 @@ NSImage *gray_circle_background_image();
 NSImage *blue_circle_background_image();
 NSImage *attach_downloaded_background();
 NSImage *white_background_color();
+NSImage *video_play_image();
 float scaleFactor();
 
 @end

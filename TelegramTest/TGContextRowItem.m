@@ -8,8 +8,11 @@
 
 #import "TGContextRowItem.h"
 #import "TGArticleImageObject.h"
+#import "DownloadDocumentItem.h"
+#import "DownloadExternalItem.h"
+#import "DownloadQueue.h"
 @interface TGContextRowItem ()
-
+@property (nonatomic,strong) TL_localMessage *message;
 @end
 
 @implementation TGContextRowItem
@@ -63,31 +66,125 @@
             TLPhotoSize *size = [botResult.photo.sizes lastObject];
             
             {
-                _imageObject = [[TGArticleImageObject alloc] initWithLocation:size.location placeHolder:nil sourceId:0 size:size.size];
-                
+                _imageObject = [[TGImageObject alloc] initWithLocation:size.location placeHolder:nil sourceId:0 size:size.size];
                 _imageObject.imageSize = NSMakeSize(60, 60);
             }
             
             
+        } else if(botResult.document.thumb && ![botResult.document.thumb isKindOfClass:[TL_photoSizeEmpty class]]) {
+            _imageObject = [[TGImageObject alloc] initWithLocation:botResult.document.thumb.location placeHolder:nil sourceId:0 size:botResult.document.thumb.size];
+            _imageObject.imageSize = NSMakeSize(60, 60);
+            
         } else if(botResult.thumb_url.length > 0) {
             _imageObject = [[TGExternalImageObject alloc] initWithURL:botResult.thumb_url];
             _imageObject.imageSize = NSMakeSize(60, 60);
-            _imageObject.imageProcessor = [ImageUtils c_processor];
         } else if(botResult.send_message.geo != nil) {
             _imageObject = [[TGExternalImageObject alloc] initWithURL:[NSString stringWithFormat:@"https://maps.googleapis.com/maps/api/staticmap?center=%f,%f&zoom=15&size=%@&sensor=true", botResult.send_message.geo.lat,  botResult.send_message.geo.n_long, ([NSScreen mainScreen].backingScaleFactor == 2 ? @"120x120" : @"60x60")]];
             _imageObject.imageSize = NSMakeSize(60, 60);
-            _imageObject.imageProcessor = [ImageUtils c_processor];
         }
+        
+        _imageObject.imageProcessor = [ImageUtils c_processor];
+        _imageObject.placeholder = gray_resizable_placeholder();
 
-        _domainSymbol = botResult.content_url.length > 0 ? first_domain_character(botResult.content_url) :  [botResult.title substringToIndex:1];
+        _domainSymbol = botResult.content_url.length > 0 ? first_domain_character(botResult.content_url) :  [[botResult.title substringToIndex:1] uppercaseString];
         
     }
+    
+    if([_botResult.type isEqualToString:kBotInlineTypeVoice] || [_botResult.type isEqualToString:kBotInlineTypeAudio]) {
+        _audioController = [[TGAudioController alloc] init];
+        [_audioController setPath:self.path];
+    }
+    
+    _downloadEventListener = [[DownloadEventListener alloc] init];
     
     return self;
 }
 
+-(void)dealloc {
+    [_audioController setDelegate:nil];
+    [_audioController stop];
+    
+}
+
+-(TL_localMessage *)fakeMessage {
+    if(!_message)
+    {
+        TL_localMessage *fake = [[TL_localMessage alloc] init];
+        
+        if(_botResult.document) {
+            fake.media = [TL_messageMediaDocument createWithDocument:_botResult.document caption:@""];
+        } else {
+            fake.media = [TL_messageMediaBotResult createWithBot_result:_botResult query_id:_queryId];
+        }
+        
+        _message = fake;
+    }
+    
+    return _message;
+}
+
 -(NSString *)outMessage {
     return nil;
+}
+
+-(void)startDownload:(BOOL)cancel {
+    
+    
+    DownloadItem *downloadItem = self.downloadItem;
+    
+    if(!downloadItem) {
+        
+        if(_botResult.document) {
+            
+            TL_localMessage *fake = [[TL_localMessage alloc] init];
+            fake.media = [TL_messageMediaDocument createWithDocument:_botResult.document caption:@""];
+            downloadItem = [[DownloadDocumentItem alloc] initWithObject:fake];
+            
+            [downloadItem start];
+            
+        } else if(_botResult.content_url) {
+            downloadItem = [[DownloadExternalItem alloc] initWithObject:_botResult.content_url];
+            [downloadItem start];
+        }
+        
+        [downloadItem addEvent:_downloadEventListener];
+        
+    } else if(cancel) {
+        [downloadItem cancel];
+        [downloadItem removeEvent:_downloadEventListener];
+        
+    } else {
+        [downloadItem addEvent:_downloadEventListener];
+    }
+    
+}
+
+-(DownloadItem *)downloadItem {
+    
+    if(_botResult.document) {
+        return [DownloadQueue find:_botResult.document.n_id];
+    } else
+        return [DownloadQueue find:[_botResult.content_url hash]];
+    
+    return nil;
+}
+
+-(NSString *)path {
+    if(_botResult.document) {
+        return _botResult.document.path_with_cache;
+    } else
+         return path_for_external_link(_botResult.content_url);
+}
+
+-(int)size {
+    return _botResult.document ? _botResult.document.size : 1;
+}
+
+-(BOOL)isset {
+    
+    BOOL isset = isPathExists([self path]) && (fileSize([self path]) >= self.size);
+    
+    return isset;
 }
 
 

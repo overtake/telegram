@@ -10,6 +10,7 @@
 #import "TGPhotoViewer.h"
 #import "TGPVDocumentObject.h"
 #import "TGVideoViewerItem.h"
+#import "TGExternalImageObject.h"
 @implementation TGPVEmptyBehavior
 @synthesize conversation = _conversation;
 @synthesize user = _user;
@@ -73,6 +74,23 @@
                 [converted addObject:item];
             
             
+        } else if([message.media isKindOfClass:[TL_messageMediaBotResult class]]) {
+            
+            id item;
+            
+            if([message.media.bot_result.type isEqualToString:kBotInlineTypeVideo]) {
+                
+                TGExternalImageObject *imgObj = [[TGExternalImageObject alloc] initWithURL:message.media.bot_result.thumb_url];
+                
+                imgObj.imageSize = NSMakeSize(MAX(640,message.media.bot_result.w), MAX(480,message.media.bot_result.h));
+                
+                imgObj.imageProcessor = [ImageUtils b_processor];
+                
+                item = [[TGVideoViewerItem alloc] initWithImageObject:imgObj previewObject:obj];
+            }
+            
+            if(item)
+                [converted addObject:item];
         }
         
     }];

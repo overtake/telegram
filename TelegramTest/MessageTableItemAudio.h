@@ -15,12 +15,9 @@
 @interface MessageTableItemAudio : MessageTableItem<TGAudioPlayerDelegate>
 
 typedef enum {
-    AudioStateWaitDownloading,
     AudioStateWaitPlaying,
     AudioStatePaused,
     AudioStatePlaying,
-    AudioStateDownloading,
-    AudioStateUploading
 } AudioState;
 
 @property (nonatomic, strong) NSAttributedString *duration;

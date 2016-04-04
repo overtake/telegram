@@ -136,7 +136,7 @@
 - (void)cancelDownload {
     [super cancelDownload];
 
-    self.audioItem.state = AudioStateWaitDownloading;
+    self.audioItem.state = AudioStateWaitPlaying;
     self.cellState = CellStateNeedDownload;
 }
 
@@ -147,18 +147,17 @@
     [_waveformView setWaveform:item.waveform.count > 0 ? item.waveform : item.emptyWaveform];
     
     if(item.messageSender) {
-        self.audioItem.state = AudioStateUploading;
+        self.audioItem.state = AudioStateWaitPlaying;
         [self setCellState:CellStateSending animated:animated];
         return;
     }
     
     if(item.downloadItem && item.downloadItem.downloadState != DownloadStateCompleted && item.downloadItem.downloadState != DownloadStateWaitingStart) {
-        self.audioItem.state = item.downloadItem.downloadState == DownloadStateCanceled ? AudioStateWaitDownloading : AudioStateDownloading;
         [self setCellState:item.downloadItem.downloadState == DownloadStateCanceled ? CellStateCancelled : CellStateDownloading animated:animated];
         
        
     } else  if(![self.item isset]) {
-        self.audioItem.state = AudioStateWaitDownloading;
+        self.audioItem.state = AudioStateWaitPlaying;
         [self setCellState:CellStateNeedDownload animated:animated];
     } else {
         self.audioItem.state = globalAudioPlayer().delegate == self.audioItem ? (globalAudioPlayer().isPaused ? AudioStatePaused : AudioStatePlaying) : AudioStateWaitPlaying;

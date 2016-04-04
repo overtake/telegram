@@ -43,7 +43,7 @@ extern NSString *const kBotInlineTypeContact;
 extern NSString *const kBotInlineTypeVenue;
 extern NSString *const kBotInlineTypeGeo;
 extern NSString *const kBotInlineTypeFile;
-
+extern NSString *const kBotInlineTypeVoice;
 
 unsigned long fileSize(NSString *path);
 + (void)showPanelWithTypes:(NSArray *)types completionHandler:(void (^)(NSArray * result))handler;
