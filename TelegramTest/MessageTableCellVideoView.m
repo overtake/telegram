@@ -194,6 +194,7 @@ static NSImage *playImage() {
 - (void)updateVideoTimeView {
     [self.videoTimeView setFrameSize:((MessageTableItemVideo *)self.item).videoTimeSize];
     [self.videoTimeView setString:((MessageTableItemVideo *)self.item).videoTimeAttributedString];
+    [self.videoTimeView setHidden:((MessageTableItemVideo *)self.item).videoTimeAttributedString == nil];
 }
 
 - (void)onStateChanged:(SenderItem *)item {

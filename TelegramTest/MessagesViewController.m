@@ -522,6 +522,10 @@
                     MessageTableCell *cell = rowView.subviews[0];
                     
                     MessageTableCell *nCell = (MessageTableCell *) [self tableView:_table viewForTableColumn:nil row:index];
+                    
+                    
+                    [nCell setFrameSize:NSMakeSize(NSWidth(cell.frame), item.viewSize.height)];
+                    
 #ifdef TGDEBUG
                     assert(cell != nCell);
 #endif
@@ -541,14 +545,15 @@
                             [cell setItem:item];
                             [nCell removeFromSuperview];
                             
-                            [cell searchSelection];
+                            if(![notification.userInfo[@"nonselect"] boolValue])
+                                [cell searchSelection];
                         }
                         
                     }];
                     
                     assert(nCell != nil);
                     
-                     [rowView addSubview:nCell positioned:NSWindowBelow relativeTo:cell];
+                    [rowView addSubview:nCell positioned:NSWindowBelow relativeTo:cell];
                     
                     
 //                    POPBasicAnimation *fadeIn = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerOpacity];
@@ -612,6 +617,10 @@
             if(items.count == 1) {
                 MessageTableItem * item = [self itemOfMsgId:((TL_localMessage *)items[0]).channelMsgId];
                 item.message = items[0];
+                
+                [item makeSizeByWidth:item.makeSize];
+                
+                
                 
                 NSUInteger index = [self indexOfObject:item];
                

@@ -90,19 +90,23 @@
 
 -(void)rebuildTimeString {
     
-    NSString *sizeInfo = self.document.size == 0 ? NSLocalizedString(@"Message.Send.Compressing", nil) : [NSString sizeToTransformedValue:self.document.size];
+    NSString *sizeInfo =  self.document.size == 0 ? self.document ? NSLocalizedString(@"Message.Send.Compressing", nil) : nil : [NSString sizeToTransformedValue:self.document.size];
     
     TL_documentAttributeVideo *video = (TL_documentAttributeVideo *) [self.document attributeWithClass:[TL_documentAttributeVideo class]];
     
     
-    NSMutableAttributedString *attr = [[NSMutableAttributedString alloc] initWithString:[[NSString durationTransformedValue:video.duration] stringByAppendingString:@", "] attributes:@{NSForegroundColorAttributeName: [NSColor whiteColor] }];
+    if(sizeInfo) {
+        NSMutableAttributedString *attr = [[NSMutableAttributedString alloc] initWithString:[[NSString durationTransformedValue:video.duration] stringByAppendingString:@", "] attributes:@{NSForegroundColorAttributeName: [NSColor whiteColor] }];
+        
+        
+        [attr appendString:sizeInfo withColor:NSColorFromRGB(0xffffff)];
+        
+        [attr setFont:TGSystemFont(13) forRange:attr.range];
+        
+        self.videoTimeAttributedString = attr;
+    }
     
     
-    [attr appendString:sizeInfo withColor:NSColorFromRGB(0xffffff)];
-    
-    [attr setFont:TGSystemFont(13) forRange:attr.range];
-    
-    self.videoTimeAttributedString = attr;
     
     
     NSSize size = [self.videoTimeAttributedString size];

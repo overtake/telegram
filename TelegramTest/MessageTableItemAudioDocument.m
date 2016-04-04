@@ -65,7 +65,7 @@
         
     } else {
         
-        [attr appendString:self.document.file_name withColor:TEXT_COLOR];
+        [attr appendString:self.document.file_name.length > 0 ? self.document.file_name : @"Undefined.file" withColor:TEXT_COLOR];
         [attr setFont:TGSystemMediumFont(13) forRange:attr.range];
     }
     

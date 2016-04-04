@@ -63,6 +63,8 @@
                 return;
             }
             
+            BOOL needUpdateMessage = !weakSelf.message.media.bot_result.document;
+            
             weakSelf.message.n_id = msg.n_id;
             weakSelf.message.date = msg.date;
             weakSelf.message.media = msg.media;
@@ -78,6 +80,10 @@
             if([weakSelf.message.media isKindOfClass:[TL_messageMediaWebPage class]])
             {
                 [Notification perform:UPDATE_WEB_PAGE_ITEMS data:@{KEY_DATA:@{@(weakSelf.message.peer_id):@[@(weakSelf.message.n_id)]},KEY_WEBPAGE:weakSelf.message.media.webpage}];
+            }
+            
+            if(needUpdateMessage) {
+                [Notification perform:UPDATE_EDITED_MESSAGE data:@{KEY_MESSAGE:weakSelf.message,@"nonselect":@(YES)}];
             }
 
         }

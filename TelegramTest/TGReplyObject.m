@@ -56,7 +56,7 @@ static NSCache *replyCache;
                 [self updateObject];
                 
                 if(_item != nil) {
-                    [Notification perform:UPDATE_MESSAGE_ITEM data:@{@"item":_item}];
+                    [Notification perform:UPDATE_EDITED_MESSAGE data:@{KEY_MESSAGE:_fromMessage,@"nonselect":@"YES"}];
                 }
             }];
         
