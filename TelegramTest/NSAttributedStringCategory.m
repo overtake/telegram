@@ -23,6 +23,8 @@ static NSTextField *testTextField() {
     return instance;
 }
 
+
+
 - (NSSize)sizeForTextFieldForWidth:(int)width {
     
     NSTextField *textField = testTextField();

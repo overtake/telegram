@@ -231,8 +231,19 @@ static NSDictionary *attributes() {
             
             
             if(self.item.conversation.isVerified) {
-                [self.isSelected ? image_VerifyWhite() : image_Verify() drawInRect:NSMakeRect(NSMaxX(self.nameTextField.frame),NSMinY(self.nameTextField.frame) + 6, image_Verify().size.width, image_Verify().size.height) fromRect:NSZeroRect operation:NSCompositeHighlight fraction:1];
+                
+                NSImage *image = self.isSelected ? image_VerifyWhite() : image_Verify();
+                
+                [image drawInRect:NSMakeRect(NSMaxX(self.nameTextField.frame) + 2,NSMinY(self.nameTextField.frame) + 6, image.size.width, image.size.height) fromRect:NSZeroRect operation:NSCompositeHighlight fraction:1];
             }
+            
+            if(self.item.conversation.isMute) {
+                
+                NSImage *image = !self.isSelected ? image_muted() : image_mutedSld();
+                
+                [image drawInRect:NSMakeRect(NSMaxX(self.nameTextField.frame) + (self.item.conversation.isVerified ? image_Verify().size.width + 6 : 0), NSMinY(self.nameTextField.frame) + 7, image.size.width, image.size.height) fromRect:NSZeroRect operation:NSCompositeHighlight fraction:1];
+            }
+            
             if(self.item.unreadText.length && self.style != ConversationTableCellShortStyle && self.item.conversation.unread_count > 0)
                 [self drawUnreadCount]; 
         };
@@ -267,7 +278,7 @@ static NSDictionary *attributes() {
     
     self.style = NSWidth(self.frame) == 70 ? ConversationTableCellShortStyle : ConversationTableCellFullStyle;
     
-    int width = MIN(NSWidth(self.frame) - NSMinX(_nameTextField.frame) - NSWidth(_dateField.frame) - 10 - (self.item.message.n_out ? 18 : 0) - (self.item.conversation.isVerified ? 10 : 0), self.item.nameTextSize.width);
+    int width = MIN(NSWidth(self.frame) - NSMinX(_nameTextField.frame) - NSWidth(_dateField.frame) - 10 - (self.item.message.n_out ? 18 : 0) - (self.item.conversation.isVerified ? image_Verify().size.width + 2 : 0) - (self.item.conversation.isMute ? image_muted().size.width + 4 : 0), self.item.nameTextSize.width);
     
     [_nameTextField setFrameSize:NSMakeSize(width, 23)];
     [_messageField setFrame:NSMakeRect(NSMinX(_messageField.frame), self.item.typing.length > 0 ? 21 : 3, NSWidth(self.frame) - NSMinX(_messageField.frame) -40, self.item.typing.length > 0 ? 18 : 36)];
@@ -377,21 +388,21 @@ static NSDictionary *attributes() {
     [item.messageText setSelected:self.isSelected];
     [item.dateText setSelected:self.isSelected];
     
-    if(item.conversation.isMute)
-    {
-        static NSTextAttachment *attach;
-        static NSTextAttachment *selectedAttach;
-        
-        static dispatch_once_t onceToken;
-        dispatch_once(&onceToken, ^{
-            attach = [NSMutableAttributedString textAttachmentByImage:[image_muted() imageWithInsets:NSEdgeInsetsMake(0, 4, 0, 0)]];
-            selectedAttach = [NSMutableAttributedString textAttachmentByImage:[image_mutedSld() imageWithInsets:NSEdgeInsetsMake(0, 4, 0, 0)]];
-        });
-        
-        _nameTextField.attach = attach;
-        _nameTextField.selectedAttach = selectedAttach;
-    }
-    
+//    if(item.conversation.isMute)
+//    {
+//        static NSTextAttachment *attach;
+//        static NSTextAttachment *selectedAttach;
+//        
+//        static dispatch_once_t onceToken;
+//        dispatch_once(&onceToken, ^{
+//            attach = [NSMutableAttributedString textAttachmentByImage:[image_muted() imageWithInsets:NSEdgeInsetsMake(0, 4, 0, 0)]];
+//            selectedAttach = [NSMutableAttributedString textAttachmentByImage:[image_mutedSld() imageWithInsets:NSEdgeInsetsMake(0, 4, 0, 0)]];
+//        });
+//        
+//        _nameTextField.attach = attach;
+//        _nameTextField.selectedAttach = selectedAttach;
+//    }
+//    
     
     [_nameTextField updateWithConversation:item.conversation];
     

@@ -14,7 +14,7 @@
 @interface GeneralSettingsRowView ()
 @property (nonatomic,strong) TGTextLabel *descriptionField;
 @property (nonatomic,strong) TGTextLabel *nextDesc;
-@property (nonatomic,strong) TGTextLabel *subdescField;
+@property (nonatomic,strong) BTRButton *subdescField;
 
 @property (nonatomic,strong) ITSwitch *switchControl;
 @property (nonatomic,strong) NSImageView *nextImage;
@@ -29,9 +29,11 @@
 -(id)initWithFrame:(NSRect)frameRect {
     if(self = [super initWithFrame:frameRect]) {
         _descriptionField = [[TGTextLabel alloc] init];
-        _subdescField = [[TGTextLabel alloc] init];
+        _subdescField = [[BTRButton alloc] init];
         _nextDesc = [[TGTextLabel alloc] init];
         
+        [_subdescField setTitleFont:TGSystemFont(14) forControlState:BTRControlStateNormal];
+        [_subdescField setTitleColor:TEXT_COLOR forControlState:BTRControlStateNormal];
         
         self.lockedIndicator = [[TGProgressIndicator alloc] initWithFrame:NSMakeRect(0, 0, 20, 20)];
         
@@ -41,20 +43,20 @@
         
         
         [self.descriptionField setFrameOrigin:NSMakePoint(100, 12)];
-//        weak();
-//        [self.subdescField addBlock:^(BTRControlEvents events) {
-//            
-//            GeneralSettingsRowItem *item = (GeneralSettingsRowItem *) [weakSelf rowItem];
-//            
-//            if(item.type == SettingsRowItemTypeChoice) {
-//                
-//                TMMenuPopover *popover = [[TMMenuPopover alloc] initWithMenu:item.menu];
-//                
-//                [popover showRelativeToRect:weakSelf.subdescField.bounds ofView:weakSelf.subdescField preferredEdge:CGRectMinYEdge];
-//                                
-//            }
-//            
-//        } forControlEvents:BTRControlEventClick];
+        weak();
+        [self.subdescField addBlock:^(BTRControlEvents events) {
+            
+            GeneralSettingsRowItem *item = (GeneralSettingsRowItem *) [weakSelf rowItem];
+            
+            if(item.type == SettingsRowItemTypeChoice) {
+                
+                TMMenuPopover *popover = [[TMMenuPopover alloc] initWithMenu:item.menu];
+                
+                [popover showRelativeToRect:weakSelf.subdescField.bounds ofView:weakSelf.subdescField preferredEdge:CGRectMinYEdge];
+                                
+            }
+            
+        } forControlEvents:BTRControlEventClick];
         
 
         self.nextImage = [[NSImageView alloc] initWithFrame:NSMakeRect(0, 0, image_ArrowGrey().size.width, image_ArrowGrey().size.height)];
@@ -118,7 +120,9 @@
             [self.subdescField setHidden:item.locked];
             [self.switchControl setHidden:YES];
             [self.nextImage setHidden:YES];
-           // [self.subdescField setTitle:item.stateback(item) forControlState:BTRControlStateNormal];
+           
+            [self.subdescField setTitle:item.stateback(item) forControlState:BTRControlStateNormal];
+            [self.subdescField.titleLabel sizeToFit];
             [self.selectedImageView setHidden:YES];
             [self.nextDesc setHidden:YES];
             break;
@@ -154,7 +158,7 @@
         [self.lockedIndicator stopAnimation:self];
     }
     
-  //  [self.subdescField setFrameSize:self.subdescField.titleLabel.frame.size];
+     [self.subdescField setFrameSize:self.subdescField.titleLabel.frame.size];
   //  [_nextDesc sizeToFit];
 }
 

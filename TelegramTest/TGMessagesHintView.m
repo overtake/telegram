@@ -13,6 +13,7 @@
 #import "MessagesBottomView.h"
 #import "TGMediaContextTableView.h"
 #import "TLBotInlineResult+Extension.h"
+#import "TGLocationRequest.h"
 @interface TL_botCommand (BotCommandCategory2)
 
 -(void)setUser:(TLUser *)user;
@@ -194,8 +195,11 @@ DYNAMIC_PROPERTY(DUser);
 @property (nonatomic,weak) TMTableView *currentTableView;
 @property (nonatomic,strong) TGMediaContextTableView *mediaContextTableView;
 
+@property (nonatomic,strong) TGLocationRequest *locationRequest;
+
 
 @property (nonatomic,assign) BOOL isLockedWithRequest;
+
 
 @end
 
@@ -554,96 +558,129 @@ static NSMutableDictionary *inlineBotsExceptions;
         
         __block BOOL forceNextLoad = NO;
         
+        __block TL_inputGeoPoint *geo = nil;
+        
         dispatch_block_t performQuery = ^{
             
-            [_contextRequest cancelRequest];
             
-            [self.messagesViewController.bottomView setProgress:offset.length == 0];
-            
-            _isLockedWithRequest = YES;
-
-            _contextRequest = [RPCRequest sendRequest:[TLAPI_messages_getInlineBotResults createWithFlags:0 bot:user.inputUser geo_point:nil query:query offset:offset] successHandler:^(id request, TL_messages_botResults *response) {
+            dispatch_block_t block = ^{
+                [_contextRequest cancelRequest];
                 
-                [self.messagesViewController.bottomView setProgress:NO];
+                [self.messagesViewController.bottomView setProgress:offset.length == 0];
                 
-                if(self.messagesViewController.conversation == conversation && request == _contextRequest) {
+                _isLockedWithRequest = YES;
+                
+                _contextRequest = [RPCRequest sendRequest:[TLAPI_messages_getInlineBotResults createWithFlags:geo ? (1 << 0) : 0 bot:user.inputUser geo_point:geo query:query offset:offset] successHandler:^(id request, TL_messages_botResults *response) {
                     
-                    forceNextLoad = offset.length == 0 && response.next_offset.length > 0;
+                    [self.messagesViewController.bottomView setProgress:NO];
                     
-                    offset = response.next_offset;
-                    
-                    NSMutableArray *items = [NSMutableArray array];
-                    
-                    if(!response.isGallery) {
+                    if(self.messagesViewController.conversation == conversation && request == _contextRequest) {
+                        
+                        forceNextLoad = offset.length == 0 && response.next_offset.length > 0;
+                        
+                        offset = response.next_offset;
+                        
+                        NSMutableArray *items = [NSMutableArray array];
+                        
+                        if(!response.isGallery) {
+                            
+                            
+                            [response.results enumerateObjectsUsingBlock:^(TLBotInlineResult *obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                                
+                                TGContextRowItem *item = [[TGContextRowItem alloc] initWithObject:obj bot:user queryId:response.query_id];
+                                
+                                [items addObject:item];
+                                
+                            }];
+                            
+                            [self setCurrentTableView:_contextTableView];
+                            
+                            [_contextTableView insert:items startIndex:_contextTableView.count tableRedraw:YES];
+                            
+                            [self updateFrames:YES];
+                            
+                            
+                        } else {
+                            
+                            [response.results enumerateObjectsUsingBlock:^(TLBotInlineResult *obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                                [obj setQueryId:response.query_id];
+                                [items addObject:obj];
+                            }];
+                            
+                            [_mediaContextTableView drawResponse:items];
+                            
+                            [self setCurrentTableView:_mediaContextTableView];
+                        }
+                        
+                        [_mediaContextTableView setMessagesViewController:self.messagesViewController];
                         
                         
-                        [response.results enumerateObjectsUsingBlock:^(TLBotInlineResult *obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                        if(items.count > 0) {
+                            if(self.alphaValue == 0.0f)
+                                [self show:NO];
+                        } else if(_currentTableView.count == 0)
+                            [self hide];
+                        
+                        
+                        
+                    } else if(_currentTableView == _mediaContextTableView) {
+                        [self hide];
+                    }
+                    
+                    weak();
+                    
+                    [_mediaContextTableView setChoiceHandler:^(TLBotInlineResult *botResult) {
+                        
+                        __strong TGMessagesHintView *strongSelf = weakSelf;
+                        
+                        if(strongSelf != nil) {
+                            [strongSelf.messagesViewController sendContextBotResult:botResult via_bot_id:user.n_id via_bot_name:user.username queryId:botResult.queryId forConversation:conversation];
+                            [strongSelf.messagesViewController.bottomView setInputMessageString:@"" disableAnimations:NO];
+                        }
+                        
+                    }];
+                    
+                    
+                    
+                    _isLockedWithRequest = NO;
+                    k++;
+                    
+                    if(forceNextLoad && _mediaContextTableView.needLoadNext) {
+                        _mediaContextTableView.needLoadNext(YES);
+                    }
+                    
+                } errorHandler:^(id request, RpcError *error) {
+                    _isLockedWithRequest = NO;
+                }];
+            };
+            
+            
+            
+            if(user.isBot_inline_geo) {
+                [SettingsArchiver requestPermissionWithKey:kPermissionInlineBotGeo peer_id:user.n_id handler:^(bool success) {
+                    
+                    if(success) {
+                        
+                        _locationRequest = [[TGLocationRequest alloc] init];
+                        
+                        [_locationRequest startRequestLocation:^(CLLocation *location) {
                             
-                            TGContextRowItem *item = [[TGContextRowItem alloc] initWithObject:obj bot:user queryId:response.query_id];
+                            geo = [TL_inputGeoPoint createWithLat:location.coordinate.latitude n_long:location.coordinate.longitude];
                             
-                            [items addObject:item];
+                            block();
                             
+                        } failback:^(NSString *error) {
+                            alert(appName(), error);
                         }];
-                        
-                        [self setCurrentTableView:_contextTableView];
-                        
-                        [_contextTableView insert:items startIndex:_contextTableView.count tableRedraw:YES];
-                        
-                        [self updateFrames:YES];
                         
                         
                     } else {
-                        
-                        [response.results enumerateObjectsUsingBlock:^(TLBotInlineResult *obj, NSUInteger idx, BOOL * _Nonnull stop) {
-                            [obj setQueryId:response.query_id];
-                            [items addObject:obj];  
-                        }];
-                        
-                        [_mediaContextTableView drawResponse:items];
-                        
-                        [self setCurrentTableView:_mediaContextTableView];
-                    }
-                    
-                    [_mediaContextTableView setMessagesViewController:self.messagesViewController];
-                    
-                    
-                    if(items.count > 0) {
-                        if(self.alphaValue == 0.0f)
-                            [self show:NO];
-                    } else
-                        [self hide];
-                    
-                    
-
-                } else if(_currentTableView == _mediaContextTableView) {
-                    [self hide];
-                }
-                
-                weak();
-                
-                [_mediaContextTableView setChoiceHandler:^(TLBotInlineResult *botResult) {
-                    
-                    __strong TGMessagesHintView *strongSelf = weakSelf;
-                    
-                    if(strongSelf != nil) {
-                        [strongSelf.messagesViewController sendContextBotResult:botResult via_bot_id:user.n_id via_bot_name:user.username queryId:botResult.queryId forConversation:conversation];
-                        [strongSelf.messagesViewController.bottomView setInputMessageString:@"" disableAnimations:NO];
+                        [self.messagesViewController.bottomView setProgress:NO];
                     }
                     
                 }];
-                
-               
-                
-                _isLockedWithRequest = NO;
-                k++;
-                
-                if(forceNextLoad && _mediaContextTableView.needLoadNext) {
-                    _mediaContextTableView.needLoadNext(YES);
-                }
-                
-            } errorHandler:^(id request, RpcError *error) {
-                _isLockedWithRequest = NO;
-            }];
+            } else
+                block();
             
         };
         

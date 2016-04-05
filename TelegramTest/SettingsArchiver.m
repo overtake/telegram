@@ -25,6 +25,7 @@
 
 NSString *const kPermissionInlineBotGeo = @"kPermissionInlineBotGeo";
 NSString *const kPermissionInlineBotContact = @"kPermissionInlineBotContact";
+NSString *const kPermissionInlineBotLocationRequest = @"kPermissionInlineBotLocationRequest";
 
 static NSString *kArchivedSettings = @"kArchivedSettings";
 

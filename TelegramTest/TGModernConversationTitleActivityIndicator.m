@@ -144,7 +144,7 @@ const CGFloat maxDiameter = 8.f;
 
 - (void)drawRect:(CGRect)__unused rect
 {
-    CGContextRef context = [[NSGraphicsContext currentContext] CGContext]; // UIGraphicsGetCurrentContext();
+    CGContextRef context = [[NSGraphicsContext currentContext] graphicsPort]; // UIGraphicsGetCurrentContext();
     
     switch (_type)
     {
@@ -189,7 +189,7 @@ const CGFloat maxDiameter = 8.f;
         }
         case TGModernConversationTitleActivityIndicatorTypeAudioRecording:
         {
-            CGContextRef context = [[NSGraphicsContext currentContext] CGContext];
+            CGContextRef context = [[NSGraphicsContext currentContext] graphicsPort];
             
             int rgbValue = 0x999999;
             

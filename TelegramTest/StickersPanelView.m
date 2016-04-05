@@ -104,6 +104,9 @@ static NSImage *higlightedImage() {
             if(!placeholder)
                 placeholder = [NSImage imageWithWebpData:obj.thumb.bytes error:nil];
             
+            if(!placeholder)
+                placeholder = white_background_color();
+            
             TGMessagesStickerImageObject *imgObj = [[TGMessagesStickerImageObject alloc] initWithLocation:obj.thumb.location placeHolder:placeholder];
             
             imgObj.imageSize = strongsize(NSMakeSize(obj.thumb.w, obj.thumb.h), NSHeight(self.frame) - 10);

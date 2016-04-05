@@ -422,13 +422,13 @@ static NSArray *channelUpdates;
 
 -(BOOL)proccessStatefulMessage:(TGUpdateContainer *)container needSave:(BOOL)needSave {
     
+    
     if([container.update isKindOfClass:[TL_updateShortChatMessage class]]) {
         
         TL_updateShortChatMessage *shortMessage = (TL_updateShortChatMessage *) container.update;
         
-        
-        
         TL_localMessage *message = [TL_localMessage createWithN_id:shortMessage.n_id flags:shortMessage.flags from_id:[shortMessage from_id] to_id:[TL_peerChat createWithChat_id:shortMessage.chat_id] fwd_from:shortMessage.fwd_from reply_to_msg_id:shortMessage.reply_to_msg_id date:shortMessage.date message:shortMessage.message media:[TL_messageMediaEmpty create] fakeId:[MessageSender getFakeMessageId] randomId:rand_long() reply_markup:nil entities:shortMessage.entities views:0 via_bot_id:shortMessage.via_bot_id edit_date:0 isViewed:YES state:DeliveryStateNormal];
+        
         
         if(![[UsersManager sharedManager] find:shortMessage.from_id] || ![[ChatsManager sharedManager] find:shortMessage.chat_id] || (message.fwd_from != nil && !message.fwdObject) || (message.via_bot_id != 0 && ![[UsersManager sharedManager] find:message.via_bot_id])) {
             
@@ -438,6 +438,10 @@ static NSArray *channelUpdates;
             
             [self failSequence];
             return NO;
+        }
+        
+        if(message.reply_to_msg_id) {
+            [self fillReplyMessage:message];
         }
         
         [MessagesManager addAndUpdateMessage:message];
@@ -452,6 +456,10 @@ static NSArray *channelUpdates;
         if(![[UsersManager sharedManager] find:shortMessage.user_id] || (message.fwd_from != nil && !message.fwdObject) || (message.via_bot_id != 0 && ![[UsersManager sharedManager] find:message.via_bot_id])) {
             [self failSequence];
             return NO;
+        }
+        
+        if(message.reply_to_msg_id) {
+             [self fillReplyMessage:message];
         }
         
         if(message.n_out) {
@@ -480,6 +488,20 @@ static NSArray *channelUpdates;
     [self saveUpdateState];
     
     [self proccessUpdate:shortUpdate.update];
+}
+
+-(void)fillReplyMessage:(TL_localMessage *)message {
+    if(message.reply_to_msg_id != 0) {
+        
+        TL_localMessage *replyMessage = [[Storage manager] messageById:message.reply_to_msg_id];
+        
+        if(replyMessage)
+        {
+            [[Storage manager] addSupportMessages:@[replyMessage]];
+        }
+        
+        message.replyMessage = replyMessage;
+    }
 }
 
 
@@ -574,12 +596,9 @@ static NSArray *channelUpdates;
             
             TL_localMessage *message = [TL_localMessage convertReceivedMessage:(TL_localMessage *)[update message]];
             
-            if(message.reply_to_msg_id != 0 && message.replyMessage == nil) {
-                [self failSequence];
-                return;
+            if(message.reply_to_msg_id) {
+                [self fillReplyMessage:message];
             }
-            
-            
             
             return [MessagesManager addAndUpdateMessage:message];
         }

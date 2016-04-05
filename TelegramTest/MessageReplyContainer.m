@@ -70,10 +70,29 @@
         
         [self update];
         
+        [Notification addObserver:self selector:@selector(messagTableEditedMessageUpdate:) name:UPDATE_EDITED_MESSAGE];
+        
     }
     
     
     return self;
+}
+
+
+
+-(void)messagTableEditedMessageUpdate:(NSNotification *)notification {
+    TL_localMessage *message = notification.userInfo[KEY_MESSAGE];
+    
+    if( self.replyObject.replyMessage.channelMsgId == message.channelMsgId ) {
+        
+        TGReplyObject* nReply = [[TGReplyObject alloc] initWithReplyMessage:message fromMessage:self.replyObject.fromMessage tableItem:self.replyObject.item pinnedMessage:self.replyObject.pinnedMessage withoutCache:YES];;
+        
+        self.replyObject = nReply;
+    }
+}
+
+-(void)dealloc {
+    [Notification removeObserver:self];
 }
 
 -(void)setDeleteHandler:(dispatch_block_t)deleteHandler {
@@ -147,7 +166,7 @@
     
     if(_deleteHandler != nil)
     {
-        _deleteImageView = [[NSImageView alloc] initWithFrame:NSMakeRect(NSWidth(self.frame) - image_CancelReply().size.width, NSHeight(self.frame) - image_CancelReply().size.height, image_CancelReply().size.width + 3, image_CancelReply().size.height + 3)];
+        _deleteImageView = [[NSImageView alloc] initWithFrame:NSMakeRect(NSWidth(self.frame) - image_CancelReply().size.width, NSHeight(self.frame) - image_CancelReply().size.height, image_CancelReply().size.width , image_CancelReply().size.height )];
         
         _deleteImageView.image = image_CancelReply();
         

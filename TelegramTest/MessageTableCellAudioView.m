@@ -216,24 +216,27 @@
         [_playView setBackgroundImage:blue_circle_background_image() forControlState:BTRControlStateNormal];
     }
     
-    switch (self.audioItem.state) {
-        case AudioStateWaitPlaying:
-            [_playView setImage:voice_play_image() forControlState:BTRControlStateNormal];
-            [self.waveformView setProgress:0];
-            break;
-            
-        case AudioStatePaused:
-            [_playView setImage:voice_play_image() forControlState:BTRControlStateNormal];
-            break;
-            
-        case AudioStatePlaying:
-            [_playView setImage:image_VoicePause() forControlState:BTRControlStateNormal];
-            break;
-            
-        default:
-            [_playView setImage:nil forControlState:BTRControlStateNormal];
-            break;
+    if(cellState == CellStateNormal) {
+        switch (self.audioItem.state) {
+            case AudioStateWaitPlaying:
+                [_playView setImage:voice_play_image() forControlState:BTRControlStateNormal];
+                [self.waveformView setProgress:0];
+                break;
+                
+            case AudioStatePaused:
+                [_playView setImage:voice_play_image() forControlState:BTRControlStateNormal];
+                break;
+                
+            case AudioStatePlaying:
+                [_playView setImage:image_VoicePause() forControlState:BTRControlStateNormal];
+                break;
+                
+            default:
+                [_playView setImage:nil forControlState:BTRControlStateNormal];
+                break;
+        }
     }
+    
     
     [self setNeedsDisplay:YES];
     

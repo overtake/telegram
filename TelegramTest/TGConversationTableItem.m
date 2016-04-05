@@ -71,7 +71,7 @@
 }
 
 -(NSSize)nameTextSize {
-    return NSMakeSize(_nameTextSize.width + (self.conversation.isMute ? 20 : 0), _nameTextSize.height);;
+    return NSMakeSize(_nameTextSize.width, _nameTextSize.height);;
 }
 
 -(BOOL)itemIsUpdated {

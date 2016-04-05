@@ -209,7 +209,6 @@ static NSMutableDictionary *cache;
     [Notification addObserver:self selector:@selector(didChangeUserType:) name:[Notification notificationForUser:conversation.user action:USER_CHANGE_TYPE]];
     [Notification addObserver:self selector:@selector(didUpdatePinnedMessage:) name:UPDATE_PINNED_MESSAGE];
     
-    [Notification addObserver:self selector:@selector(messagTableEditedMessageUpdate:) name:UPDATE_EDITED_MESSAGE];
     [Notification addObserver:self selector:@selector(messageTableDeleteMessage:) name:MESSAGE_DELETE_EVENT];
     
     TLUser *user = conversation.user;
@@ -307,13 +306,7 @@ static NSMutableDictionary *cache;
     }];
 }
 
--(void)messagTableEditedMessageUpdate:(NSNotification *)notification {
-    TL_localMessage *message = notification.userInfo[KEY_MESSAGE];
-    
-    if(self.action == MessagesTopInfoActionPinnedMessage && self.pinnedContainer.replyObject.replyMessage.n_id == message.n_id) {
-        self.pinnedContainer.replyObject = [[TGReplyObject alloc] initWithReplyMessage:message fromMessage:nil tableItem:nil pinnedMessage:YES];
-    }
-}
+
 
 
 -(void)checkReportSpam {
@@ -368,7 +361,7 @@ static NSMutableDictionary *cache;
         
         self.action = MessagesTopInfoActionPinnedMessage;
         
-        TGReplyObject *replyObject = [[TGReplyObject alloc] initWithReplyMessage:msg fromMessage:nil tableItem:nil pinnedMessage:YES];
+        TGReplyObject *replyObject = [[TGReplyObject alloc] initWithReplyMessage:msg fromMessage:nil tableItem:nil pinnedMessage:YES withoutCache:YES];
         
         [_pinnedContainer removeFromSuperview];
         _pinnedContainer = nil;

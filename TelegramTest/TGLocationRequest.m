@@ -7,11 +7,14 @@
 //
 
 #import "TGLocationRequest.h"
-
+#import "Reachability.h"
 @interface TGLocationRequest ()<CLLocationManagerDelegate>
 @property (nonatomic,strong) CLLocationManager *locationManager;
 @property (nonatomic,copy) void (^successCallback)(CLLocation *location);
 @property (nonatomic,copy) void (^errorCallback)(NSString *error);
+
+@property (nonatomic,strong) Reachability *reachability;
+
 @end
 
 @implementation TGLocationRequest
@@ -38,6 +41,7 @@
     _errorCallback = [errorCallback copy];
     
     if([CLLocationManager locationServicesEnabled]) {
+        _locationManager.delegate = self;
         [_locationManager startUpdatingLocation];
     }
    
@@ -71,6 +75,17 @@
     }
 }
 
+-(void)locationManager:(CLLocationManager *)manager didFailWithError:(NSError *)error {
+    if(_errorCallback) {
+        
+        _reachability = [Reachability reachabilityForLocalWiFi];
+        [_reachability startNotifier];
+            
+        
+            _errorCallback(NSLocalizedString(error.code == 0 ? NSLocalizedString(@"LocationService.WifiDisabledError", nil) : @"LocationService.UndefinedError", nil));
+        [self clear]; 
+    }
+}
 
 
 - (void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations

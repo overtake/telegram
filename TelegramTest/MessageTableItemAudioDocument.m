@@ -50,7 +50,7 @@
 
 -(void)doAfterDownload {
     
-    TL_documentAttributeAudio *audio = (TL_documentAttributeAudio *) [self.document attributeWithClass:[TL_documentAttributeAudio class]];
+    TL_documentAttributeAudio *audio = [self audioAttr];
     
     NSMutableAttributedString *attr = [[NSMutableAttributedString alloc] init];
     
@@ -80,11 +80,20 @@
     [self regenerate];
 }
 
+-(TL_documentAttributeAudio *)audioAttr {
+    TL_documentAttributeAudio *audio = (TL_documentAttributeAudio *) [self.document attributeWithClass:[TL_documentAttributeAudio class]];
+    
+    if(self.message.media.bot_result != nil && !audio) {
+        audio = [TL_documentAttributeAudio createWithFlags:0 duration:0 title:self.message.media.bot_result.title performer:self.message.media.bot_result.n_description waveform:nil];
+    }
+    
+    return audio;
+}
 
 -(void)regenerate {
     NSMutableAttributedString *attr = [[NSMutableAttributedString alloc] init];
     
-    TL_documentAttributeAudio *audio = (TL_documentAttributeAudio *) [self.document attributeWithClass:[TL_documentAttributeAudio class]];
+    TL_documentAttributeAudio *audio = [self audioAttr];
     
     NSString *perfomer = [audio.performer trim];
     NSString *title = [audio.title trim];

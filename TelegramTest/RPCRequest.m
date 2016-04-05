@@ -172,8 +172,39 @@
                     
                     [[MTNetwork instance] setDatacenter:self.error.resultId];
                     [[MTNetwork instance] initConnectionWithId:self.error.resultId];
+                } else if([self.error.error_msg isEqualToString:@"PEER_FLOOD"]) {
+                    
+                    
+                    NSString *localizedKey = nil;
+                    
+                    static NSDictionary *keys;
+                    static dispatch_once_t onceToken;
+                    dispatch_once(&onceToken, ^{
+                        keys = @{NSStringFromClass([TLAPI_messages_sendMessage class]):NSLocalizedString(@"PEER_FLOOD_MESSAGES", nil),NSStringFromClass([TLAPI_messages_sendMedia class]):NSLocalizedString(@"PEER_FLOOD_MESSAGES", nil),NSStringFromClass([TLAPI_messages_sendMedia class]):NSLocalizedString(@"PEER_FLOOD_MESSAGES", nil)};
+                    });
+                    
+                    localizedKey = keys[NSStringFromClass([self.object class])];
+                    
+                    if(localizedKey) {
+                        [ASQueue dispatchOnMainQueue:^{
+                            
+                            NSAlert *alert = [NSAlert alertWithMessageText:appName() informativeText:localizedKey block:^(id result) {
+                                if([result intValue] != 1000) {
+                                    
+                                    open_user_by_name(@{@"domain":@"spambot"});
+                                }
+                            }];
+                            [alert addButtonWithTitle:NSLocalizedString(@"OK", nil)];
+                            [alert addButtonWithTitle:NSLocalizedString(@"Alert.MoreInfo", nil)];
+                            [alert show];
+                        }];
+                    }
+                    
+                   
+                    
+                    
                 } else {
-                     MTLog(@"%@",self.error.error_msg);
+                    MTLog(@"%@",self.error.error_msg);
                 }
                 
                 self.errorHandler(self, self.error);

@@ -18,13 +18,13 @@
 @implementation TGReplyObject
 
 -(id)initWithReplyMessage:(TL_localMessage *)replyMessage fromMessage:(TL_localMessage *)fromMessage tableItem:(MessageTableItem *)item {
-    return [self initWithReplyMessage:replyMessage fromMessage:fromMessage tableItem:item pinnedMessage:NO];
+    return [self initWithReplyMessage:replyMessage fromMessage:fromMessage tableItem:item pinnedMessage:NO withoutCache:NO];
 }
 
 static NSCache *replyCache;
 
 
--(id)initWithReplyMessage:(TL_localMessage *)replyMessage fromMessage:(TL_localMessage *)fromMessage tableItem:(MessageTableItem *)item pinnedMessage:(BOOL)pinnedMessage {
+-(id)initWithReplyMessage:(TL_localMessage *)replyMessage fromMessage:(TL_localMessage *)fromMessage tableItem:(MessageTableItem *)item pinnedMessage:(BOOL)pinnedMessage withoutCache:(BOOL)withoutCache {
     if(self = [super init]) {
         
         static dispatch_once_t onceToken;
@@ -33,7 +33,7 @@ static NSCache *replyCache;
             [replyCache setCountLimit:150];
         });
         
-        if(replyMessage != nil) {
+        if(replyMessage != nil && !withoutCache) {
             TGReplyObject *cObj = [replyCache objectForKey:@(replyMessage.channelMsgId)];
             if(cObj)
                 return cObj;

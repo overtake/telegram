@@ -33,7 +33,7 @@
     
     self.textAttributed = [[NSMutableAttributedString alloc] init];
     
-    NSString *message = [[object.message fixEmoji] trim];
+    NSString *message = [object.message trim];
         
     
     [self.textAttributed appendString:message withColor:TEXT_COLOR];
@@ -41,8 +41,6 @@
     [self.textAttributed setAlignment:NSLeftTextAlignment range:self.textAttributed.range];
     
     [self updateEntities];
-
-    
     [self updateWebPage];
     
     return self;
@@ -177,6 +175,7 @@
 -(void)updateEntities {
     [self updateLinkAttributesByMessageEntities];
     [self updateFontAttributesByEntities];
+    [self.textAttributed fixEmoji];
 }
 
 -(void)updateFontAttributesByEntities {

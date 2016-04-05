@@ -143,39 +143,39 @@
     [self.tableView insert:deleteAccountHeader atIndex:self.tableView.list.count tableRedraw:NO];
     
     
-    self.accountDaysItem = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeNext callback:^(TGGeneralRowItem *item) {
+    self.accountDaysItem = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeChoice callback:^(TGGeneralRowItem *item) {
         
-       /// [self logOut];
-        
-        GeneralSettingsRowView *view = [self.tableView viewAtColumn:0 row:[self.tableView indexOfItem:self.accountDaysItem] makeIfNecessary:NO];
-        
-        if(view) {
-            NSMenu *menu = [[NSMenu alloc] initWithTitle:@""];
-            
-            [menu addItem:[NSMenuItem menuItemWithTitle:NSLocalizedString(@"AccountDaysTTL30",nil) withBlock:^(id sender) {
-                
-                [self sendAccountDaysTTL:30];
-                
-            }]];
-            
-            [menu addItem:[NSMenuItem menuItemWithTitle:NSLocalizedString(@"AccountDaysTTL90",nil) withBlock:^(id sender) {
-                [self sendAccountDaysTTL:90];
-            }]];
-            
-            [menu addItem:[NSMenuItem menuItemWithTitle:NSLocalizedString(@"AccountDaysTTL182",nil) withBlock:^(id sender) {
-                [self sendAccountDaysTTL:182];
-            }]];
-            
-            [menu addItem:[NSMenuItem menuItemWithTitle:NSLocalizedString(@"AccountDaysTTL365",nil) withBlock:^(id sender) {
-                [self sendAccountDaysTTL:365];
-            }]];
-            
-            //[menu popUpForView:view.subdescField];
-        }
         
     } description:NSLocalizedString(@"PrivacyAndSecurity.DeleteAccount", nil) height:42 stateback:^id(TGGeneralRowItem *item) {
-        return @([SettingsArchiver checkMaskedSetting:AutoGroupAudio]);
+        NSString *key = [NSString stringWithFormat:@"AccountDaysTTL%d",self.accountDaysTTL];
+        
+        return NSLocalizedString(key, nil);
     }];
+    
+    
+    NSMenu *menu = [[NSMenu alloc] initWithTitle:@""];
+    
+    [menu addItem:[NSMenuItem menuItemWithTitle:NSLocalizedString(@"AccountDaysTTL30",nil) withBlock:^(id sender) {
+        
+        [self sendAccountDaysTTL:30];
+        
+    }]];
+    
+    [menu addItem:[NSMenuItem menuItemWithTitle:NSLocalizedString(@"AccountDaysTTL90",nil) withBlock:^(id sender) {
+        [self sendAccountDaysTTL:90];
+    }]];
+    
+    [menu addItem:[NSMenuItem menuItemWithTitle:NSLocalizedString(@"AccountDaysTTL182",nil) withBlock:^(id sender) {
+        [self sendAccountDaysTTL:182];
+    }]];
+    
+    [menu addItem:[NSMenuItem menuItemWithTitle:NSLocalizedString(@"AccountDaysTTL365",nil) withBlock:^(id sender) {
+        [self sendAccountDaysTTL:365];
+    }]];
+
+    
+    self.accountDaysItem.menu = menu;
+
     
     [self.tableView insert:self.accountDaysItem atIndex:self.tableView.list.count tableRedraw:NO];
     
@@ -249,10 +249,7 @@
 
 -(void)updateAccountDaysTTL {
     
-    NSString *key = [NSString stringWithFormat:@"AccountDaysTTL%d",self.accountDaysTTL];
-    
-    [self.accountDaysItem setSubdescString:NSLocalizedString(key, nil)];
-    
+
     [self.tableView reloadData];
 }
 

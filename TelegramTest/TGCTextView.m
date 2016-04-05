@@ -167,7 +167,7 @@
     CGMutablePathRef path = CGPathCreateMutable();
     
     if(self.drawRects.count == 0) {
-        CGPathAddRect(path, NULL, NSMakeRect(0.0f, 1.5f, NSWidth(self.bounds), NSHeight(self.bounds)));
+        CGPathAddRect(path, NULL, NSMakeRect(0.0f, 0.0f, NSWidth(self.bounds), NSHeight(self.bounds)));
     } else {
         [self.drawRects enumerateObjectsUsingBlock:^(NSValue *obj, NSUInteger idx, BOOL *stop) {
             
@@ -753,7 +753,7 @@
         else
             _linkCallback(link);
     } else {
-        confirm(appName(), [NSString stringWithFormat:@"Open this link: %@?",link], ^{
+        confirm(appName(), [NSString stringWithFormat:NSLocalizedString(@"Link.ConfirmOpenExternalLink", nil),link], ^{
             
             if(_linkCallback == nil)
                 open_link(link);

@@ -68,6 +68,7 @@ typedef enum {
 
 extern NSString *const kPermissionInlineBotGeo;
 extern NSString *const kPermissionInlineBotContact;
+extern NSString *const kPermissionInlineBotLocationRequest;
 /*
  binary settings mask
 */

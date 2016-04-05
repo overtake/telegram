@@ -165,7 +165,12 @@
         {
             [success addObject:statefullMessage];
             
-            [self proccessStatefullUpdate:statefullMessage];
+            BOOL success = [self proccessStatefullUpdate:statefullMessage];
+            
+            if(!success)
+            {
+                *stop = YES;
+            }
         }
         
     }];
@@ -266,7 +271,7 @@
     
 }
 
--(void)proccessUpdate:(id)update {
+-(BOOL)proccessUpdate:(id)update {
     
     
     if(![update isKindOfClass:[TL_updateChannel class]]) {
@@ -277,7 +282,7 @@
             
             [self proccessUpdate:[TL_updateChannel createWithChannel_id:[self channelIdWithUpdate:update]]];
             
-            return;
+            return YES;
             
         }
         
@@ -286,20 +291,25 @@
     if([update isKindOfClass:[TL_updateNewChannelMessage class]])
     {
         
-        TL_localMessage *msg = [TL_localMessage convertReceivedMessage:[(TL_updateNewChannelMessage *)update message]];
+        TL_localMessage *message = [TL_localMessage convertReceivedMessage:[(TL_updateNewChannelMessage *)update message]];
         
-        
-
-        if(![msg isImportantMessage]) {
+        if(![[UsersManager sharedManager] find:message.from_id] || (message.fwd_from != nil && !message.fwdObject) || (message.via_bot_id != 0 && ![[UsersManager sharedManager] find:message.via_bot_id])) {
             
-            TGMessageGroupHole *hole = [self proccessUnimportantGroup:@[msg]];
+            
+            [self failUpdateWithChannelId:[self channelIdWithUpdate:update] limit:50 withCallback:nil errorCallback:nil];
+            return NO;
+        }
+
+        if(![message isImportantMessage]) {
+            
+            TGMessageGroupHole *hole = [self proccessUnimportantGroup:@[message]];
             
             [Notification performOnStageQueue:UPDATE_MESSAGE_GROUP_HOLE data:@{KEY_GROUP_HOLE:hole}];
             
         }
         
         
-        [MessagesManager addAndUpdateMessage:msg];
+        [MessagesManager addAndUpdateMessage:message];
         
     } else if([update isKindOfClass:[TL_updateEditChannelMessage class]]) {
       
@@ -338,6 +348,8 @@
         
         [[DialogsManager sharedManager] deleteChannelMessags:channelMessages];
 
+        
+        
         
         [[update messages] enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
             
@@ -424,7 +436,7 @@
         
         
         if(!chat)
-            return;
+            return NO;
         
         TL_conversation *channel = [self conversationWithChannelId:[update channel_id]];
         
@@ -521,20 +533,26 @@
         [Notification perform:UPDATE_PINNED_MESSAGE data:@{KEY_PEER_ID:@(-[update channel_id]),KEY_MESSAGE_ID:@(chat.pinned_msg_id)}];
     }
 
+    
+    return YES;
 }
 
 
--(void)proccessStatefullUpdate:(TGUpdateChannelContainer *)statefulMessage {
+-(BOOL)proccessStatefullUpdate:(TGUpdateChannelContainer *)statefulMessage {
     
-    [self proccessUpdate:statefulMessage.update];
+    BOOL success = [self proccessUpdate:statefulMessage.update];
     
-    if(statefulMessage.pts > 0) {
-        TL_conversation *conversation = [self conversationWithChannelId:statefulMessage.channel_id];
-        
-        conversation.pts = [statefulMessage pts];
-        
-        [conversation save];
+    if(success) {
+        if(statefulMessage.pts > 0) {
+            TL_conversation *conversation = [self conversationWithChannelId:statefulMessage.channel_id];
+            
+            conversation.pts = [statefulMessage pts];
+            
+            [conversation save];
+        }
     }
+    
+    return success;
     
 }
 

@@ -29,7 +29,7 @@
             
             NSMutableAttributedString *desc = [[NSMutableAttributedString alloc] init];
             
-            [desc appendString:botResult.n_description withColor:NSColorFromRGB(0x808080)];
+            [desc appendString:[botResult.n_description trim] withColor:NSColorFromRGB(0x808080)];
             [desc setFont:TGSystemFont(13) forRange:desc.range];
             
             
@@ -40,7 +40,7 @@
             [desc addAttribute:NSParagraphStyleAttributeName value:style range:desc.range];
             
             
-            NSString *t = botResult.title;
+            NSString *t = [botResult.title trim];
             
             if(t.length > 0)  {
                 NSMutableAttributedString *title = [[NSMutableAttributedString alloc] init];

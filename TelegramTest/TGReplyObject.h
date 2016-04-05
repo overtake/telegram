@@ -29,7 +29,7 @@
 @property (nonatomic,weak) MessageTableItem *item;
 
 -(id)initWithReplyMessage:(TL_localMessage *)replyMessage fromMessage:(TL_localMessage *)fromMessage tableItem:(MessageTableItem *)item;
--(id)initWithReplyMessage:(TL_localMessage *)replyMessage fromMessage:(TL_localMessage *)fromMessage tableItem:(MessageTableItem *)item pinnedMessage:(BOOL)pinnedMessage;
+-(id)initWithReplyMessage:(TL_localMessage *)replyMessage fromMessage:(TL_localMessage *)fromMessage tableItem:(MessageTableItem *)item pinnedMessage:(BOOL)pinnedMessage withoutCache:(BOOL)withoutCache;
 
 +(void)loadReplyMessage:(TL_localMessage *)fromMessage completionHandler:(void (^)(TL_localMessage *message))completionHandler;
 

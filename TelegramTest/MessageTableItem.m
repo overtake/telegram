@@ -800,7 +800,18 @@ static NSTextAttachment *channelViewsCountAttachment() {
         }];
         
     } else if([keyboard isKindOfClass:[TL_keyboardButtonUrl class]]) {
-        open_link(keyboard.url);
+        
+        if([keyboard.url rangeOfString:@"telegram.me/"].location != NSNotFound || [keyboard.url hasPrefix:@"tg://"]) {
+            open_link(keyboard.url);
+        } else {
+            confirm(appName(), [NSString stringWithFormat:NSLocalizedString(@"Link.ConfirmOpenExternalLink", nil),keyboard.url], ^{
+                
+                 open_link(keyboard.url);
+                
+            }, nil);
+        }
+        
+        
         handler(TGInlineKeyboardSuccessType);
         
     } else if([keyboard isKindOfClass:[TL_keyboardButtonRequestGeoLocation class]]) {

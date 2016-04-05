@@ -198,7 +198,7 @@
         
         BOOL completelyVisible = self.containerView.visibleRect.size.width > 0 && self.containerView.visibleRect.size.height > 0 && ![TMViewController isModalActive];
         
-        return ![SettingsArchiver checkMaskedSetting:DisableAutoplayGifSetting] && completelyVisible && ((self.containerView.window != nil && self.containerView.window.isKeyWindow) || notification == nil) && item.isset && ![self.containerView inLiveResize];
+        return ![SettingsArchiver checkMaskedSetting:DisableAutoplayGifSetting] && completelyVisible && ((self.containerView.window != nil && appWindow().isKeyWindow)) && item.isset && ![self.containerView inLiveResize];
         
     };
         
