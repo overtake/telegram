@@ -330,6 +330,13 @@ DYNAMIC_PROPERTY(DDialog);
     return dialog;
 }
 
+-(void)setMedia:(TLMessageMedia *)media {
+    [super setMedia:media];
+    
+    _type = 0;
+    [self filterType];
+}
+
 -(int)filterType {
     if(_type == 0)
     {
