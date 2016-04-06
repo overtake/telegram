@@ -7,7 +7,7 @@
 //
 
 #import "MessagesViewController.h"
-
+#import "TGModalMessagesViewController.h"
 @interface TGContextMessagesvViewController : MessagesViewController
-
+@property (nonatomic,weak) TGModalMessagesViewController *contextModalView;
 @end

@@ -79,6 +79,8 @@
     
     _messagesViewController = [[TGContextMessagesvViewController alloc] initWithFrame:NSMakeRect(0, 0, self.containerSize.width, self.containerSize.height)];
     
+    _messagesViewController.contextModalView = self;
+    
     self.navigationController.messagesViewController = _messagesViewController;
     
     [_messagesViewController loadViewIfNeeded];

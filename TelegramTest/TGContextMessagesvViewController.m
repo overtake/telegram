@@ -11,6 +11,7 @@
 @interface TGContextMessagesvViewController ()
 @property (nonatomic,strong) TMTextButton *doneButton;
 @property (nonatomic,strong) TMView *container;
+
 @end
 
 @implementation TGContextMessagesvViewController
@@ -47,7 +48,7 @@
 }
 
 -(void)close {
-    
+    [_contextModalView close:YES];
 }
 
 -(BOOL)contextAbility {
