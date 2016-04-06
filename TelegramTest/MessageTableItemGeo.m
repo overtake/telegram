@@ -61,7 +61,7 @@
     
     NSSize imageSize = NSMakeSize(MIN(width,self.isVenue ? 60 : 250), self.isVenue ? 60 : 130);
         
-    _imageSize = imageSize;
+    self.contentSize = imageSize;
     
     return [super makeSizeByWidth:width];
 }

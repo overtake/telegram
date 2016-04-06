@@ -120,6 +120,10 @@
 
 
 - (void)save:(BOOL)updateConversation {
+    
+    _type = 0;
+    [self filterType];
+    
     [[Storage manager] insertMessages:@[self]];
     if(updateConversation && (self.n_id != self.conversation.top_message || [self isKindOfClass:[TL_destructMessage class]])) {
         [[DialogsManager sharedManager] updateTop:self needUpdate:YES update_real_date:NO];
@@ -334,7 +338,6 @@ DYNAMIC_PROPERTY(DDialog);
     [super setMedia:media];
     
     _type = 0;
-    [self filterType];
 }
 
 -(int)filterType {

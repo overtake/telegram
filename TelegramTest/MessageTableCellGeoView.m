@@ -77,7 +77,7 @@
 - (void) setItem:(MessageTableItemGeo *)item {
     [super setItem:item];
     
-    [_imageView setFrameSize:item.imageSize];
+    [_imageView setFrameSize:item.contentSize];
     
     [_pinView setCenterByView:_pinView.superview];
     
@@ -88,7 +88,7 @@
     [_venueField setAttributedString:item.venue];
     
     [_venueField setFrameSize:item.venueSize];
-    [_venueField setFrameOrigin:NSMakePoint(item.imageSize.width + item.defaultOffset, 0)];
+    [_venueField setFrameOrigin:NSMakePoint(item.contentSize.width + item.defaultOffset, 0)];
     [_venueField setCenteredYByView:_venueField.superview];
     
 }

@@ -50,9 +50,9 @@
     _textSize = [_text coreTextSizeForTextFieldForWidth:width];
     
     
-    self.blockSize = NSMakeSize(width, _textSize.height + self.defaultContentOffset * 2);
+    self.contentSize = self.blockSize = NSMakeSize(width, _textSize.height + self.defaultContentOffset * 2);
     
-    [super makeSizeByWidth:width];
+    return [super makeSizeByWidth:width];
 }
 
 -(Class)viewClass {

@@ -43,6 +43,7 @@ typedef enum {
 @property (nonatomic, strong,readonly) MessagesTableView *table;
 @property (nonatomic, strong) MessagesBottomView *bottomView;
 
+
 typedef enum {
     ShowMessageTypeReply = 1 << 0,
     ShowMessageTypeSearch = 1 << 1,

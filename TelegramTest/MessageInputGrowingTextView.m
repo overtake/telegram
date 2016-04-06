@@ -355,11 +355,11 @@ typedef enum {
 
 - (void)initialize {
     
-    if(![[NSUserDefaults standardUserDefaults] boolForKey:@"enableSpelling1"]) {
+    if(![[NSUserDefaults standardUserDefaults] boolForKey:@"enableSpelling"]) {
         [self setAutomaticSpellingCorrectionEnabled:YES];
         [self setGrammarCheckingEnabled:YES];
         [self setContinuousSpellCheckingEnabled:YES];
-        [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"enableSpelling1"];
+        [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"enableSpelling"];
     }
     
     self.maxHeight = 250;

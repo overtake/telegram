@@ -60,7 +60,7 @@
 -(void)setFrameSize:(NSSize)newSize {
     [super setFrameSize:newSize];
     
-    [_textLabel setText:_attr maxWidth:MIN(_textSize.width,newSize.width - 20)];
+    [_textLabel setText:_attr maxWidth:MIN(_textSize.width,newSize.width - 20) height:_textSize.height];
     
     [_textLabel setCenterByView:self];
     

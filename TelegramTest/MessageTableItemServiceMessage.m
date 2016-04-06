@@ -140,7 +140,7 @@
     size.width = width;
     size.height += self.defaultContentOffset*2;
     size.height += self.photoSize.height ? self.photoSize.height + self.defaultContentOffset  : 0;
-    self.blockSize = size;
+    self.contentSize = self.blockSize = size;
     
     return [super makeSizeByWidth:width];
 }

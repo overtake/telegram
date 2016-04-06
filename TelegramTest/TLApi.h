@@ -2,7 +2,7 @@
 //  TLApi.h
 //  Telegram
 //
-//  Auto created by Mikhail Filimonov on 02.04.16.
+//  Auto created by Mikhail Filimonov on 06.04.16.
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -1191,10 +1191,21 @@
 @property (nonatomic, strong) TLInputPeer* peer;
 @property int n_id;
 @property (nonatomic, strong) NSString* message;
-@property (nonatomic, strong) NSMutableArray* entities;
 @property (nonatomic, strong) TLReplyMarkup* reply_markup;
+@property (nonatomic, strong) NSMutableArray* entities;
 
-+(TLAPI_messages_editMessage*)createWithFlags:(int)flags  peer:(TLInputPeer*)peer n_id:(int)n_id message:(NSString*)message entities:(NSMutableArray*)entities reply_markup:(TLReplyMarkup*)reply_markup;
++(TLAPI_messages_editMessage*)createWithFlags:(int)flags  peer:(TLInputPeer*)peer n_id:(int)n_id message:(NSString*)message reply_markup:(TLReplyMarkup*)reply_markup entities:(NSMutableArray*)entities;
+@end
+
+@interface TLAPI_messages_editInlineBotMessage : TLApiObject
+@property int flags;
+@property (nonatomic,assign,readonly) BOOL isNo_webpage;
+@property (nonatomic, strong) TLInputBotInlineMessageID* n_id;
+@property (nonatomic, strong) NSString* message;
+@property (nonatomic, strong) TLReplyMarkup* reply_markup;
+@property (nonatomic, strong) NSMutableArray* entities;
+
++(TLAPI_messages_editInlineBotMessage*)createWithFlags:(int)flags  n_id:(TLInputBotInlineMessageID*)n_id message:(NSString*)message reply_markup:(TLReplyMarkup*)reply_markup entities:(NSMutableArray*)entities;
 @end
 
 @interface TLAPI_messages_getBotCallbackAnswer : TLApiObject

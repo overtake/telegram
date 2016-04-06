@@ -439,7 +439,7 @@
     
     PreviewObject *previewObject = [[PreviewObject alloc] initWithMsdId:self.item.message.n_id media:self.item.message peer_id:self.item.message.peer_id];
     
-    if([document_preview_mime_types() indexOfObject:self.item.message.media.document.mime_type] != NSNotFound && [document_preview_mime_types() indexOfObject:[self.item.message.media.document.file_name pathExtension]] != NSNotFound) {
+    if([document_preview_mime_types() indexOfObject:self.item.message.media.document.mime_type] != NSNotFound && [document_preview_mime_types() indexOfObject:mimetypefromExtension([[self.item.message.media.document.file_name pathExtension] lowercaseString])] != NSNotFound) {
         if(!self.item.message.isFake)
             [[TGPhotoViewer viewer] showDocuments:previewObject conversation:self.item.message.conversation];
         else

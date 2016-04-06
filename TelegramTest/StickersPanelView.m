@@ -13,11 +13,15 @@
 #import "SenderHeader.h"
 #import "EmojiViewController.h"
 #import "TGTransformScrollView.h"
+#import "TGStickerPreviewModalView.h"
 @interface StickersPanelView ()
 @property (nonatomic,strong) TGTransformScrollView *scrollView;
 
 @property (nonatomic,strong) TMView *containerView;
 @property (nonatomic,strong) TMView *background;
+
+@property (nonatomic,strong) TGStickerPreviewModalView *previewModal;
+@property (nonatomic,assign) BOOL notSendUpSticker;
 @end
 
 
@@ -108,23 +112,54 @@ static NSImage *higlightedImage() {
                 placeholder = white_background_color();
             
             TGMessagesStickerImageObject *imgObj = [[TGMessagesStickerImageObject alloc] initWithLocation:obj.thumb.location placeHolder:placeholder];
-            
+            imgObj.reserved1 = obj;
             imgObj.imageSize = strongsize(NSMakeSize(obj.thumb.w, obj.thumb.h), NSHeight(self.frame) - 10);
                         
             TGStickerImageView *imgView = [[TGStickerImageView alloc] initWithFrame:NSMakeRect(0, 0, imgObj.imageSize.width, imgObj.imageSize.height)];
             
             
-            [imgView setTapBlock:^{
-                
-                [_messagesViewController sendSticker:obj forConversation:[Telegram conversation] addCompletionHandler:nil];
-                
-                [_messagesViewController setStringValueToTextField:@""];
-            }];
-            
             imgView.object = imgObj;
             
             
             BTRButton *button = [[BTRButton alloc] initWithFrame:NSMakeRect(xOffset + 3, 2, hoverImage().size.width, NSHeight(self.bounds) - 6)];
+            
+            weak();
+            
+            [button addBlock:^(BTRControlEvents events) {
+                
+                if(weakSelf.previewModal.isShown) {
+                    [weakSelf.previewModal close:YES];
+                    weakSelf.previewModal = nil;
+                    
+                    return;
+                }
+                
+                if(weakSelf.notSendUpSticker)
+                {
+                    weakSelf.notSendUpSticker = NO;
+                    return;
+                }
+                
+                [weakSelf.messagesViewController sendSticker:obj forConversation:self.messagesViewController.conversation addCompletionHandler:nil];
+                
+                [weakSelf.messagesViewController setStringValueToTextField:@""];
+                
+                
+            } forControlEvents:BTRControlEventMouseUpInside];
+            
+            [button addBlock:^(BTRControlEvents events) {
+                
+                TGStickerPreviewModalView *preview = [[TGStickerPreviewModalView alloc] init];
+                
+                [preview setSticker:obj];
+                
+                [preview show:appWindow() animated:YES];
+                
+                weakSelf.previewModal = preview;
+                
+            } forControlEvents:BTRControlEventLongLeftClick];
+            
+            
             [button setBackgroundImage:hoverImage() forControlState:BTRControlStateHover];
             [button setBackgroundImage:higlightedImage() forControlState:BTRControlStateHighlighted];
             
@@ -283,6 +318,37 @@ bool isRemoteStickersLoaded() {
         
         [EmojiViewController reloadStickers];
     }
+}
+
+
+-(void)mouseDragged:(NSEvent *)theEvent {
+    if(_previewModal != nil) {
+        TGStickerImageView *sticker = (TGStickerImageView *) [self.containerView hitTest:[self.containerView convertPoint:[theEvent locationInWindow] fromView:nil]];
+        
+        if(sticker && [sticker isKindOfClass:[TGStickerImageView class]]) {
+            [_previewModal setSticker:sticker.object.reserved1];
+        }
+        
+        
+    } else {
+        [super mouseDragged:theEvent];
+    }
+}
+
+-(void)hideStickerPreview {
+    
+    if(_previewModal) {
+        
+        NSEvent *event = [NSApp currentEvent];
+        
+        if(![event.window isKindOfClass:[RBLPopoverWindow class]]) {
+            _notSendUpSticker = YES;
+        }
+    }
+    
+    [_previewModal close:YES];
+    _previewModal = nil;
+    
 }
 
 @end

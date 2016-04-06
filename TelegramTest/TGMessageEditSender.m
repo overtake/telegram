@@ -21,7 +21,7 @@
 }
 
 -(void)performEdit:(int)flags {
-    [RPCRequest sendRequest:[TLAPI_messages_editMessage createWithFlags:flags peer:_conversation.inputPeer n_id:_inputTemplate.postId message:_inputTemplate.text entities:nil reply_markup:nil] successHandler:^(id request, id response) {
+    [RPCRequest sendRequest:[TLAPI_messages_editMessage createWithFlags:flags peer:_conversation.inputPeer n_id:_inputTemplate.postId message:_inputTemplate.text reply_markup:nil entities:nil] successHandler:^(id request, id response) {
         
         
     } errorHandler:^(id request, RpcError *error) {

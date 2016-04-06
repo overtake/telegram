@@ -208,6 +208,10 @@
 		C2034BBC1C31C1D20080D023 /* TL_localMessage_old44.m in Sources */ = {isa = PBXBuildFile; fileRef = C2034BBB1C31C1D20080D023 /* TL_localMessage_old44.m */; };
 		C2034BC81C31C8000080D023 /* ContextBotSenderItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C2034BC71C31C8000080D023 /* ContextBotSenderItem.m */; };
 		C2034BE31C3560530080D023 /* TLBotInlineResult+Extension.m in Sources */ = {isa = PBXBuildFile; fileRef = C2034BE21C3560530080D023 /* TLBotInlineResult+Extension.m */; };
+		C2078E2E1CB53CD00037B1B2 /* TGModalMessagesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C2078E2D1CB53CD00037B1B2 /* TGModalMessagesViewController.m */; };
+		C2078E311CB53E870037B1B2 /* TGContextImportantRowItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C2078E301CB53E870037B1B2 /* TGContextImportantRowItem.m */; };
+		C2078E341CB53E9A0037B1B2 /* TGContextImportantRowView.m in Sources */ = {isa = PBXBuildFile; fileRef = C2078E331CB53E9A0037B1B2 /* TGContextImportantRowView.m */; };
+		C2078E371CB56A910037B1B2 /* TGContextMessagesvViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C2078E361CB56A910037B1B2 /* TGContextMessagesvViewController.m */; };
 		C20932241938BABF00DFF3EC /* AudioHistoryFilter.m in Sources */ = {isa = PBXBuildFile; fileRef = C20932231938BABF00DFF3EC /* AudioHistoryFilter.m */; };
 		C20A5E711B86290C007F4B49 /* TGWebpageGifObject.m in Sources */ = {isa = PBXBuildFile; fileRef = C20A5E701B86290C007F4B49 /* TGWebpageGifObject.m */; };
 		C20A5E831B863979007F4B49 /* TGWebpageGifContainer.m in Sources */ = {isa = PBXBuildFile; fileRef = C20A5E821B863979007F4B49 /* TGWebpageGifContainer.m */; };
@@ -1490,6 +1494,14 @@
 		C2034BC71C31C8000080D023 /* ContextBotSenderItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ContextBotSenderItem.m; sourceTree = "<group>"; };
 		C2034BE11C3560530080D023 /* TLBotInlineResult+Extension.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "TLBotInlineResult+Extension.h"; sourceTree = "<group>"; };
 		C2034BE21C3560530080D023 /* TLBotInlineResult+Extension.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "TLBotInlineResult+Extension.m"; sourceTree = "<group>"; };
+		C2078E2C1CB53CD00037B1B2 /* TGModalMessagesViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGModalMessagesViewController.h; sourceTree = "<group>"; };
+		C2078E2D1CB53CD00037B1B2 /* TGModalMessagesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGModalMessagesViewController.m; sourceTree = "<group>"; };
+		C2078E2F1CB53E870037B1B2 /* TGContextImportantRowItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGContextImportantRowItem.h; sourceTree = "<group>"; };
+		C2078E301CB53E870037B1B2 /* TGContextImportantRowItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGContextImportantRowItem.m; sourceTree = "<group>"; };
+		C2078E321CB53E9A0037B1B2 /* TGContextImportantRowView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGContextImportantRowView.h; sourceTree = "<group>"; };
+		C2078E331CB53E9A0037B1B2 /* TGContextImportantRowView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGContextImportantRowView.m; sourceTree = "<group>"; };
+		C2078E351CB56A910037B1B2 /* TGContextMessagesvViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGContextMessagesvViewController.h; sourceTree = "<group>"; };
+		C2078E361CB56A910037B1B2 /* TGContextMessagesvViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGContextMessagesvViewController.m; sourceTree = "<group>"; };
 		C2082B7219C1E1C4000005E2 /* HockeySDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = HockeySDK.framework; sourceTree = "<group>"; };
 		C20932221938BABF00DFF3EC /* AudioHistoryFilter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AudioHistoryFilter.h; sourceTree = "<group>"; };
 		C20932231938BABF00DFF3EC /* AudioHistoryFilter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AudioHistoryFilter.m; sourceTree = "<group>"; };
@@ -3675,6 +3687,8 @@
 				C2967B451AA8684E003759B2 /* TGReplayMessage.m */,
 				C230D8591CA6AE7100475FF5 /* TGMessagesViewAlertHintView.h */,
 				C230D85A1CA6AE7100475FF5 /* TGMessagesViewAlertHintView.m */,
+				C2078E2C1CB53CD00037B1B2 /* TGModalMessagesViewController.h */,
+				C2078E2D1CB53CD00037B1B2 /* TGModalMessagesViewController.m */,
 			);
 			name = messages;
 			sourceTree = "<group>";
@@ -5755,6 +5769,12 @@
 				C2ED753D1C2AF4C000002ACF /* TGContextGifRowView.m */,
 				C2034BA31C2D692A0080D023 /* TGMediaContextTableView.h */,
 				C2034BA41C2D692A0080D023 /* TGMediaContextTableView.m */,
+				C2078E2F1CB53E870037B1B2 /* TGContextImportantRowItem.h */,
+				C2078E301CB53E870037B1B2 /* TGContextImportantRowItem.m */,
+				C2078E321CB53E9A0037B1B2 /* TGContextImportantRowView.h */,
+				C2078E331CB53E9A0037B1B2 /* TGContextImportantRowView.m */,
+				C2078E351CB56A910037B1B2 /* TGContextMessagesvViewController.h */,
+				C2078E361CB56A910037B1B2 /* TGContextMessagesvViewController.m */,
 			);
 			name = context;
 			sourceTree = "<group>";
@@ -6801,6 +6821,7 @@
 				C2C1DC1D1A443CCB00BBCC63 /* StickersPanelView.m in Sources */,
 				0A6758EB18955FC900F4487D /* MessageTableCell.m in Sources */,
 				C222774218FE8BB3002AA0F6 /* ChatHistoryController.m in Sources */,
+				C2078E371CB56A910037B1B2 /* TGContextMessagesvViewController.m in Sources */,
 				0AD35DC91869B604007BA752 /* TMButton.m in Sources */,
 				C2D51BE31B21C67B009327C0 /* EMImageData.m in Sources */,
 				CEC22DF218273CEE008817D0 /* RMPhoneFormat.m in Sources */,
@@ -6814,6 +6835,7 @@
 				C2A2B42E1BD519870083DA8A /* TGHCMessagesViewController.m in Sources */,
 				0A613C1D18AD96A9004096DD /* MessageTableCellDocumentView.m in Sources */,
 				C22A2A0F1C21C67A00678172 /* CompressedDocumentSenderItem.m in Sources */,
+				C2078E341CB53E9A0037B1B2 /* TGContextImportantRowView.m in Sources */,
 				CEAE5D6D181EEFF000C17645 /* TLPeer+Extensions.m in Sources */,
 				0A6D098919535E8500A9AC64 /* NSArrayCategory.m in Sources */,
 				C222AB391A0901F500BEF907 /* PhotoTableItemView.m in Sources */,
@@ -7019,6 +7041,7 @@
 				C2AC8D9E1A7693F400655B9D /* TGUnreadMarkView.m in Sources */,
 				C240B1BB1B627E6F00912248 /* TGSharedLinkRowView.m in Sources */,
 				C22C7F2C18B2163F007C4D17 /* MTNetwork.m in Sources */,
+				C2078E2E1CB53CD00037B1B2 /* TGModalMessagesViewController.m in Sources */,
 				C26F7EB51A56E5C4001D1AE2 /* CommitKeySecretSenderItem.m in Sources */,
 				0A4A1A2B18A295F100D756CD /* TMInAppLinks.m in Sources */,
 				C23223D91A029ED600E476E2 /* FlushHistorySecretSenderItem.m in Sources */,
@@ -7246,6 +7269,7 @@
 				0AB43BC718D8A4AC00FB805A /* NSView+CNGridView.m in Sources */,
 				C20A5EDF1B8B8905007F4B49 /* TGObservableObject.m in Sources */,
 				C2D4B8701AFCE8FA0035B4E4 /* YapCache.m in Sources */,
+				C2078E311CB53E870037B1B2 /* TGContextImportantRowItem.m in Sources */,
 				C270D2F91A1CE12000522FB0 /* PrivacySettingsViewController.m in Sources */,
 				0A613C2318AD9924004096DD /* MessageTableCellContactView.m in Sources */,
 				C268C14019EFF70E007F836A /* GLView.m in Sources */,

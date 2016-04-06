@@ -164,7 +164,7 @@
     [self updateDownloadState:NO];
    
     
-    [self.imageView setFrameSize:item.videoSize];
+    [self.imageView setFrameSize:item.contentSize];
     
     [self.progressView setCenterByView:self.progressView.superview];
     

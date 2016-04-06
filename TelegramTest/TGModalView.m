@@ -335,6 +335,9 @@
     
 }
 
+-(BOOL)isShown {
+    return self.window != nil;
+}
 
 -(void)mouseUp:(NSEvent *)theEvent {
     

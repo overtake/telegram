@@ -13,7 +13,6 @@
 
 @property (nonatomic, strong) TGExternalImageObject *imageObject;
 
-@property (nonatomic, assign) NSSize imageSize;
 
 @property (nonatomic,strong) NSAttributedString *venue;
 @property (nonatomic,assign) NSSize venueSize;

@@ -11,7 +11,6 @@
 @interface MessageTableItemMpeg : MessageTableItem
 @property (nonatomic,strong,readonly) TGImageObject *thumbObject;
 
-@property (nonatomic,assign) NSSize imageSize;
 
 -(NSString *)path;
 

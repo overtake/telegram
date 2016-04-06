@@ -14,6 +14,9 @@
 #import "TGMediaContextTableView.h"
 #import "TLBotInlineResult+Extension.h"
 #import "TGLocationRequest.h"
+#import "TGContextImportantRowView.h"
+#import "TGModalMessagesViewController.h"
+#import "ComposeActionCustomBehavior.h"
 @interface TL_botCommand (BotCommandCategory2)
 
 -(void)setUser:(TLUser *)user;
@@ -197,6 +200,7 @@ DYNAMIC_PROPERTY(DUser);
 
 @property (nonatomic,strong) TGLocationRequest *locationRequest;
 
+@property (nonatomic,strong) TGModalMessagesViewController *messagesModalView;
 
 @property (nonatomic,assign) BOOL isLockedWithRequest;
 
@@ -584,6 +588,11 @@ static NSMutableDictionary *inlineBotsExceptions;
                         
                         if(!response.isGallery) {
                             
+                            if(_contextTableView.count == 0) {
+                                TGContextImportantRowItem *important = [[TGContextImportantRowItem alloc] initWithObject:nil bot:user];
+                                
+                                [items addObject:important];
+                            }
                             
                             [response.results enumerateObjectsUsingBlock:^(TLBotInlineResult *obj, NSUInteger idx, BOOL * _Nonnull stop) {
                                 
@@ -651,6 +660,7 @@ static NSMutableDictionary *inlineBotsExceptions;
                     
                 } errorHandler:^(id request, RpcError *error) {
                     _isLockedWithRequest = NO;
+                    [self.messagesViewController.bottomView setProgress:NO];
                 }];
             };
             
@@ -765,9 +775,9 @@ static NSMutableDictionary *inlineBotsExceptions;
     NSUInteger height = MIN(_currentTableView.count * 40, 140 );
     
     if(_currentTableView == _mediaContextTableView) {
-        height = _mediaContextTableView.hintHeight == 1 ? 100 : 200;
+        height = _mediaContextTableView.count == 1 ? 100 : 200;
     } else if(_currentTableView == _contextTableView) {
-        height = MIN(_currentTableView.count * 60, 180 );
+        height = MIN(_contextTableView.hintHeight, 180 );
     }
     
     if(animated) {
@@ -837,8 +847,25 @@ static NSMutableDictionary *inlineBotsExceptions;
      } else if(_currentTableView == _contextTableView) {
         TGContextRowItem *item = (TGContextRowItem *)_contextTableView.selectedItem;
         
-         [self.messagesViewController sendContextBotResult:item.botResult via_bot_id:item.bot.n_id via_bot_name:item.bot.username queryId:item.queryId forConversation:self.messagesViewController.conversation];
-        [self.messagesViewController.bottomView setInputMessageString:@"" disableAnimations:NO];
+         if([item isKindOfClass:[TGContextImportantRowItem class]]) {
+             _messagesModalView = [[TGModalMessagesViewController alloc] initWithFrame:self.window.contentView.bounds];
+             
+             [_messagesModalView show:self.window animated:YES];
+             
+             ComposeAction *action = [[ComposeAction alloc] initWithBehaviorClass:[ComposeActionCustomBehavior class] filter:nil object:_messagesViewController.conversation];
+             
+             ComposeActionCustomBehavior *behavior = (ComposeActionCustomBehavior *) action.behavior;
+             
+             [behavior setCustomDoneTitle:@"Done"];
+             [behavior setCustomCenterTitle:@"Controller"];
+             
+             [_messagesModalView setAction:action];
+             
+         } else {
+             [self.messagesViewController sendContextBotResult:item.botResult via_bot_id:item.bot.n_id via_bot_name:item.bot.username queryId:item.queryId forConversation:self.messagesViewController.conversation];
+             [self.messagesViewController.bottomView setInputMessageString:@"" disableAnimations:NO];
+         }
+         
     }
     
     [self hide:YES];
@@ -856,7 +883,20 @@ static NSMutableDictionary *inlineBotsExceptions;
     
     if(selectedIndex < _currentTableView.count)
     {
-        [_currentTableView setSelectedObject:[_currentTableView itemAtPosition:selectedIndex]];
+        
+         id item = [_currentTableView itemAtPosition:selectedIndex];
+        [_currentTableView setSelectedObject:item];
+        
+        if([item isKindOfClass:[TGContextImportantRowItem class]])
+        {
+            if(_currentTableView.count > 1) {
+                [self selectNext];
+                return;
+            }
+            
+        }
+        
+        
         
         [_currentTableView.scrollView.clipView scrollRectToVisible:[_currentTableView rectOfRow:selectedIndex] animated:NO];
     }
@@ -875,7 +915,19 @@ static NSMutableDictionary *inlineBotsExceptions;
     
     if(selectedIndex < _currentTableView.count)
     {
-        [_currentTableView setSelectedObject:[_currentTableView itemAtPosition:selectedIndex]];
+        id item = [_currentTableView itemAtPosition:selectedIndex];
+        [_currentTableView setSelectedObject:item];
+        
+        if([item isKindOfClass:[TGContextImportantRowItem class]])
+        {
+            if(_currentTableView.count > 1) {
+                [self selectPrev];
+                return;
+            }
+            
+        }
+        
+        
         
         [_currentTableView.scrollView.clipView scrollRectToVisible:[_currentTableView rectOfRow:selectedIndex] animated:NO];
     }

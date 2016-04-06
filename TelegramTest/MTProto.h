@@ -2,7 +2,7 @@
 //  MTProto.h
 //  Telegram
 //
-//  Auto created by Mikhail Filimonov on 02.04.16.
+//  Auto created by Mikhail Filimonov on 06.04.16.
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -430,6 +430,9 @@
 @end
 	
 @interface TLmessages_MessageEditData : TLObject
+@end
+	
+@interface TLInputBotInlineMessageID : TLObject
 @end
 	
 @interface TLAudio : TLObject
@@ -1648,8 +1651,7 @@
 @property (nonatomic, strong) NSString* query;
 @property (nonatomic, strong) TLGeoPoint* geo;
 @property (nonatomic, strong) NSString* offset;
-@property (nonatomic, strong) NSString* update_bot_inline_send_id;
-@property int msg_id;
+@property (nonatomic, strong) TLInputBotInlineMessageID* msg_id;
 @property (nonatomic, strong) NSData* data;
 @end
 
@@ -1779,20 +1781,17 @@
 @interface TL_updateBotInlineQuery : TLUpdate<NSCoding>
 +(TL_updateBotInlineQuery*)createWithFlags:(int)flags query_id:(long)query_id user_id:(int)user_id query:(NSString*)query geo:(TLGeoPoint*)geo offset:(NSString*)offset;
 @end
-@interface TL_updateBotInlineSend : TLUpdate<NSCoding>
-+(TL_updateBotInlineSend*)createWithFlags:(int)flags user_id:(int)user_id query:(NSString*)query geo:(TLGeoPoint*)geo update_bot_inline_send_id:(NSString*)update_bot_inline_send_id;
-@end
 @interface TL_updateEditChannelMessage : TLUpdate<NSCoding>
 +(TL_updateEditChannelMessage*)createWithMessage:(TLMessage*)message pts:(int)pts pts_count:(int)pts_count;
 @end
 @interface TL_updateChannelPinnedMessage : TLUpdate<NSCoding>
 +(TL_updateChannelPinnedMessage*)createWithChannel_id:(int)channel_id n_id:(int)n_id;
 @end
-@interface TL_updateBotCallbackQuery : TLUpdate<NSCoding>
-+(TL_updateBotCallbackQuery*)createWithQuery_id:(long)query_id user_id:(int)user_id peer:(TLPeer*)peer msg_id:(int)msg_id data:(NSData*)data;
-@end
 @interface TL_updateEditMessage : TLUpdate<NSCoding>
 +(TL_updateEditMessage*)createWithMessage:(TLMessage*)message pts:(int)pts pts_count:(int)pts_count;
+@end
+@interface TL_updateInlineBotCallbackQuery : TLUpdate<NSCoding>
++(TL_updateInlineBotCallbackQuery*)createWithQuery_id:(long)query_id user_id:(int)user_id msg_id:(TLInputBotInlineMessageID*)msg_id data:(NSData*)data;
 @end
 	
 @interface TLupdates_State()
@@ -2643,7 +2642,6 @@
 @property (nonatomic,assign,readonly) BOOL isSelective;
 @property (nonatomic,assign,readonly) BOOL isSingle_use;
 @property (nonatomic,assign,readonly) BOOL isResize;
-@property (nonatomic,assign,readonly) BOOL isInline;
 @property (nonatomic, strong) NSMutableArray* rows;
 @end
 
@@ -2654,7 +2652,10 @@
 +(TL_replyKeyboardForceReply*)createWithFlags:(int)flags  ;
 @end
 @interface TL_replyKeyboardMarkup : TLReplyMarkup<NSCoding>
-+(TL_replyKeyboardMarkup*)createWithFlags:(int)flags     rows:(NSMutableArray*)rows;
++(TL_replyKeyboardMarkup*)createWithFlags:(int)flags    rows:(NSMutableArray*)rows;
+@end
+@interface TL_replyInlineMarkup : TLReplyMarkup<NSCoding>
++(TL_replyInlineMarkup*)createWithRows:(NSMutableArray*)rows;
 @end
 	
 @interface TLhelp_AppChangelog()
@@ -2919,8 +2920,9 @@
 @end
 	
 @interface TLInputBotInlineMessage()
-@property (nonatomic, strong) NSString* caption;
 @property int flags;
+@property (nonatomic, strong) NSString* caption;
+@property (nonatomic, strong) TLReplyMarkup* reply_markup;
 @property (nonatomic,assign,readonly) BOOL isNo_webpage;
 @property (nonatomic, strong) NSString* message;
 @property (nonatomic, strong) NSMutableArray* entities;
@@ -2935,19 +2937,19 @@
 @end
 
 @interface TL_inputBotInlineMessageMediaAuto : TLInputBotInlineMessage<NSCoding>
-+(TL_inputBotInlineMessageMediaAuto*)createWithCaption:(NSString*)caption;
++(TL_inputBotInlineMessageMediaAuto*)createWithFlags:(int)flags caption:(NSString*)caption reply_markup:(TLReplyMarkup*)reply_markup;
 @end
 @interface TL_inputBotInlineMessageText : TLInputBotInlineMessage<NSCoding>
-+(TL_inputBotInlineMessageText*)createWithFlags:(int)flags  message:(NSString*)message entities:(NSMutableArray*)entities;
++(TL_inputBotInlineMessageText*)createWithFlags:(int)flags  message:(NSString*)message entities:(NSMutableArray*)entities reply_markup:(TLReplyMarkup*)reply_markup;
 @end
 @interface TL_inputBotInlineMessageMediaGeo : TLInputBotInlineMessage<NSCoding>
-+(TL_inputBotInlineMessageMediaGeo*)createWithGeo_point:(TLInputGeoPoint*)geo_point;
++(TL_inputBotInlineMessageMediaGeo*)createWithFlags:(int)flags geo_point:(TLInputGeoPoint*)geo_point reply_markup:(TLReplyMarkup*)reply_markup;
 @end
 @interface TL_inputBotInlineMessageMediaVenue : TLInputBotInlineMessage<NSCoding>
-+(TL_inputBotInlineMessageMediaVenue*)createWithGeo_point:(TLInputGeoPoint*)geo_point title:(NSString*)title address:(NSString*)address provider:(NSString*)provider venue_id:(NSString*)venue_id;
++(TL_inputBotInlineMessageMediaVenue*)createWithFlags:(int)flags geo_point:(TLInputGeoPoint*)geo_point title:(NSString*)title address:(NSString*)address provider:(NSString*)provider venue_id:(NSString*)venue_id reply_markup:(TLReplyMarkup*)reply_markup;
 @end
 @interface TL_inputBotInlineMessageMediaContact : TLInputBotInlineMessage<NSCoding>
-+(TL_inputBotInlineMessageMediaContact*)createWithPhone_number:(NSString*)phone_number first_name:(NSString*)first_name last_name:(NSString*)last_name;
++(TL_inputBotInlineMessageMediaContact*)createWithFlags:(int)flags phone_number:(NSString*)phone_number first_name:(NSString*)first_name last_name:(NSString*)last_name reply_markup:(TLReplyMarkup*)reply_markup;
 @end
 	
 @interface TLInputBotInlineResult()
@@ -2964,15 +2966,24 @@
 @property int h;
 @property int duration;
 @property (nonatomic, strong) TLInputBotInlineMessage* send_message;
+@property (nonatomic, strong) TLInputPhoto* photo;
+@property (nonatomic, strong) TLInputDocument* document;
 @end
 
 @interface TL_inputBotInlineResult : TLInputBotInlineResult<NSCoding>
 +(TL_inputBotInlineResult*)createWithFlags:(int)flags n_id:(NSString*)n_id type:(NSString*)type title:(NSString*)title n_description:(NSString*)n_description url:(NSString*)url thumb_url:(NSString*)thumb_url content_url:(NSString*)content_url content_type:(NSString*)content_type w:(int)w h:(int)h duration:(int)duration send_message:(TLInputBotInlineMessage*)send_message;
 @end
+@interface TL_inputBotInlineResultPhoto : TLInputBotInlineResult<NSCoding>
++(TL_inputBotInlineResultPhoto*)createWithN_id:(NSString*)n_id type:(NSString*)type photo:(TLInputPhoto*)photo send_message:(TLInputBotInlineMessage*)send_message;
+@end
+@interface TL_inputBotInlineResultDocument : TLInputBotInlineResult<NSCoding>
++(TL_inputBotInlineResultDocument*)createWithFlags:(int)flags n_id:(NSString*)n_id type:(NSString*)type title:(NSString*)title n_description:(NSString*)n_description document:(TLInputDocument*)document send_message:(TLInputBotInlineMessage*)send_message;
+@end
 	
 @interface TLBotInlineMessage()
-@property (nonatomic, strong) NSString* caption;
 @property int flags;
+@property (nonatomic, strong) NSString* caption;
+@property (nonatomic, strong) TLReplyMarkup* reply_markup;
 @property (nonatomic,assign,readonly) BOOL isNo_webpage;
 @property (nonatomic, strong) NSString* message;
 @property (nonatomic, strong) NSMutableArray* entities;
@@ -2987,19 +2998,19 @@
 @end
 
 @interface TL_botInlineMessageMediaAuto : TLBotInlineMessage<NSCoding>
-+(TL_botInlineMessageMediaAuto*)createWithCaption:(NSString*)caption;
++(TL_botInlineMessageMediaAuto*)createWithFlags:(int)flags caption:(NSString*)caption reply_markup:(TLReplyMarkup*)reply_markup;
 @end
 @interface TL_botInlineMessageText : TLBotInlineMessage<NSCoding>
-+(TL_botInlineMessageText*)createWithFlags:(int)flags  message:(NSString*)message entities:(NSMutableArray*)entities;
++(TL_botInlineMessageText*)createWithFlags:(int)flags  message:(NSString*)message entities:(NSMutableArray*)entities reply_markup:(TLReplyMarkup*)reply_markup;
 @end
 @interface TL_botInlineMessageMediaGeo : TLBotInlineMessage<NSCoding>
-+(TL_botInlineMessageMediaGeo*)createWithGeo:(TLGeoPoint*)geo;
++(TL_botInlineMessageMediaGeo*)createWithFlags:(int)flags geo:(TLGeoPoint*)geo reply_markup:(TLReplyMarkup*)reply_markup;
 @end
 @interface TL_botInlineMessageMediaVenue : TLBotInlineMessage<NSCoding>
-+(TL_botInlineMessageMediaVenue*)createWithGeo:(TLGeoPoint*)geo title:(NSString*)title address:(NSString*)address provider:(NSString*)provider venue_id:(NSString*)venue_id;
++(TL_botInlineMessageMediaVenue*)createWithFlags:(int)flags geo:(TLGeoPoint*)geo title:(NSString*)title address:(NSString*)address provider:(NSString*)provider venue_id:(NSString*)venue_id reply_markup:(TLReplyMarkup*)reply_markup;
 @end
 @interface TL_botInlineMessageMediaContact : TLBotInlineMessage<NSCoding>
-+(TL_botInlineMessageMediaContact*)createWithPhone_number:(NSString*)phone_number first_name:(NSString*)first_name last_name:(NSString*)last_name;
++(TL_botInlineMessageMediaContact*)createWithFlags:(int)flags phone_number:(NSString*)phone_number first_name:(NSString*)first_name last_name:(NSString*)last_name reply_markup:(TLReplyMarkup*)reply_markup;
 @end
 	
 @interface TLBotInlineResult()
@@ -3112,6 +3123,16 @@
 
 @interface TL_messages_messageEditData : TLmessages_MessageEditData<NSCoding>
 +(TL_messages_messageEditData*)createWithFlags:(int)flags ;
+@end
+	
+@interface TLInputBotInlineMessageID()
+@property int dc_id;
+@property long n_id;
+@property long access_hash;
+@end
+
+@interface TL_inputBotInlineMessageID : TLInputBotInlineMessageID<NSCoding>
++(TL_inputBotInlineMessageID*)createWithDc_id:(int)dc_id n_id:(long)n_id access_hash:(long)access_hash;
 @end
 	
 @interface TLAudio()

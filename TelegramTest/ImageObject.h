@@ -38,7 +38,7 @@
 
 @property (nonatomic,weak) id <TGImageObjectDelegate> delegate;
 
-
+@property (nonatomic,strong) id reserved1;
 
 @property (nonatomic,assign) BOOL isLoaded;
 

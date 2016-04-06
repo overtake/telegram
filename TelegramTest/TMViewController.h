@@ -102,6 +102,9 @@
 
 -(TMView *)standartLeftBarView;
 
+-(TMView *)standartRightBarView;
+
+
 -(void)setCenterBarViewText:(NSString *)text;
 -(void)setCenterBarViewTextAttributed:(NSAttributedString *)text;
 

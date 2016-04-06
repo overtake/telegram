@@ -69,7 +69,7 @@
     
     size.width = width;
     size.height += self.defaultContentOffset*2;
-    self.blockSize = size;
+    self.contentSize = self.blockSize = size;
     
     return [super makeSizeByWidth:width];
 }

@@ -215,7 +215,7 @@ NSImage *fireImage() {
     
     self.imageView.object = item.imageObject;
     
-    [self.imageView setFrameSize:item.imageSize];
+    [self.imageView setFrameSize:item.contentSize];
 
     [self updateCellState:NO];
     

@@ -62,6 +62,7 @@
 @property (nonatomic,assign,readonly) int makeSize;
 
 @property (nonatomic) NSSize blockSize;
+@property (nonatomic) NSSize contentSize;
 
 @property (nonatomic, strong) DownloadItem *downloadItem;
 

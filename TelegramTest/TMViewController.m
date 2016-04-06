@@ -100,6 +100,10 @@
     return (TMView *) self.backButton;
 }
 
+-(TMView *)standartRightBarView {
+    return nil;
+}
+
 
 -(void)setCenterBarViewText:(NSString *)text {
     

@@ -38,5 +38,5 @@
 -(BOOL)isset;
 
 
-@property (nonatomic,strong) id reserved1;
+
 @end

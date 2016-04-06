@@ -25,6 +25,8 @@
 -(void)modalViewDidShow;
 -(void)modalViewDidHide;
 
+-(BOOL)isShown;
+
 @property (assign) BOOL acceptEvents;
 @property (assign,nonatomic) BOOL opaqueContent;
 

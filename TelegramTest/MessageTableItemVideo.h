@@ -19,7 +19,6 @@
 
 @property (nonatomic,strong) TGImageObject *imageObject;
 
-@property (nonatomic,assign) NSSize videoSize;
 
 
 -(void)rebuildTimeString;

@@ -2,7 +2,7 @@
 //  TLApi.m
 //  Telegram
 //
-//  Auto created by Mikhail Filimonov on 02.04.16..
+//  Auto created by Mikhail Filimonov on 06.04.16..
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -2796,24 +2796,25 @@
 @end
 
 @implementation TLAPI_messages_editMessage
-+(TLAPI_messages_editMessage*)createWithFlags:(int)flags  peer:(TLInputPeer*)peer n_id:(int)n_id message:(NSString*)message entities:(NSMutableArray*)entities reply_markup:(TLReplyMarkup*)reply_markup {
++(TLAPI_messages_editMessage*)createWithFlags:(int)flags  peer:(TLInputPeer*)peer n_id:(int)n_id message:(NSString*)message reply_markup:(TLReplyMarkup*)reply_markup entities:(NSMutableArray*)entities {
     TLAPI_messages_editMessage* obj = [[TLAPI_messages_editMessage alloc] init];
     obj.flags = flags;
 	
 	obj.peer = peer;
 	obj.n_id = n_id;
 	obj.message = message;
-	obj.entities = entities;
 	obj.reply_markup = reply_markup;
+	obj.entities = entities;
     return obj;
 }
 - (NSData*)getData {
-	SerializedData* stream = [ClassStore streamWithConstuctor:-771739049];
+	SerializedData* stream = [ClassStore streamWithConstuctor:-829299510];
 	[stream writeInt:self.flags];
 	
 	[ClassStore TLSerialize:self.peer stream:stream];
 	[stream writeInt:self.n_id];
-	[stream writeString:self.message];
+	if(self.flags & (1 << 11)) {[stream writeString:self.message];}
+	if(self.flags & (1 << 2)) {[ClassStore TLSerialize:self.reply_markup stream:stream];}
 	if(self.flags & (1 << 3)) {//Serialize FullVector
 	[stream writeInt:0x1cb5c415];
 	{
@@ -2824,7 +2825,38 @@
             [ClassStore TLSerialize:obj stream:stream];
 		}
 	}}
+	return [stream getOutput];
+}
+@end
+
+@implementation TLAPI_messages_editInlineBotMessage
++(TLAPI_messages_editInlineBotMessage*)createWithFlags:(int)flags  n_id:(TLInputBotInlineMessageID*)n_id message:(NSString*)message reply_markup:(TLReplyMarkup*)reply_markup entities:(NSMutableArray*)entities {
+    TLAPI_messages_editInlineBotMessage* obj = [[TLAPI_messages_editInlineBotMessage alloc] init];
+    obj.flags = flags;
+	
+	obj.n_id = n_id;
+	obj.message = message;
+	obj.reply_markup = reply_markup;
+	obj.entities = entities;
+    return obj;
+}
+- (NSData*)getData {
+	SerializedData* stream = [ClassStore streamWithConstuctor:319564933];
+	[stream writeInt:self.flags];
+	
+	[ClassStore TLSerialize:self.n_id stream:stream];
+	if(self.flags & (1 << 11)) {[stream writeString:self.message];}
 	if(self.flags & (1 << 2)) {[ClassStore TLSerialize:self.reply_markup stream:stream];}
+	if(self.flags & (1 << 3)) {//Serialize FullVector
+	[stream writeInt:0x1cb5c415];
+	{
+		NSInteger tl_count = [self.entities count];
+		[stream writeInt:(int)tl_count];
+		for(int i = 0; i < (int)tl_count; i++) {
+            TLMessageEntity* obj = [self.entities objectAtIndex:i];
+            [ClassStore TLSerialize:obj stream:stream];
+		}
+	}}
 	return [stream getOutput];
 }
 @end

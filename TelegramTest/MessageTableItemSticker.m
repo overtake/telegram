@@ -47,6 +47,19 @@
     return self;
 }
 
+-(BOOL)makeSizeByWidth:(int)width {
+    
+    if(NSSizeNotZero(self.document.imageSize)) {
+        self.blockSize = self.document.imageSize;
+    } else {
+        self.blockSize = NSMakeSize(200, 200);
+    }
+    
+    self.contentSize = self.blockSize = strongsize(self.blockSize, MIN(width,200));
+    
+    return [super makeSizeByWidth:width];
+}
+
 
 -(TLDocument *)document {
     if([self.message.media isKindOfClass:[TL_messageMediaBotResult class]]) {

@@ -25,7 +25,7 @@
         
         [self doAfterDownload];
         
-        self.blockSize = NSMakeSize(300, 50);
+        
     }
     return self;
 }
@@ -90,6 +90,9 @@
 
 -(BOOL)makeSizeByWidth:(int)width {
     _textSize = [_attributedText coreTextSizeForTextFieldForWidth:width - 50 - self.defaultOffset];
+    
+    self.contentSize = self.blockSize = NSMakeSize(MIN(300,_textSize.width + 50 + self.defaultOffset), 50);
+    
     return [super makeSizeByWidth:width];
 }
 

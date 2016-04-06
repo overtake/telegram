@@ -394,7 +394,7 @@ static NSTextAttachment *channelViewsCountAttachment() {
         viewSize.height = 1;
     }
     
-    if(self.message.reply_markup.isInline) {
+    if([self.message.reply_markup isKindOfClass:[TL_replyInlineMarkup class]]) {
         viewSize.height+=_inlineKeyboardSize.height+self.defaultContentOffset;
     }
     
@@ -712,6 +712,7 @@ static NSTextAttachment *channelViewsCountAttachment() {
 - (BOOL)makeSizeByWidth:(int)width {
     _blockWidth = width;
     
+    
     if(_caption) {
         _captionSize = [_caption coreTextSizeForTextFieldForWidth:self.blockSize.width];
         self.blockSize = NSMakeSize(self.blockSize.width, self.blockSize.height + _captionSize.height + self.defaultContentOffset);
@@ -722,7 +723,7 @@ static NSTextAttachment *channelViewsCountAttachment() {
     self.headerSize = NSMakeSize(MIN(_headerOriginalSize.width, width - self.defaultOffset * 2), self.headerSize.height);
     
     if(_message.reply_markup.rows) {
-        _inlineKeyboardSize = NSMakeSize(MIN(300,width), _message.reply_markup.rows.count > 1 ? _message.reply_markup.rows.count * (33 + self.defaultContentOffset) - self.defaultContentOffset *2 : 33);
+        _inlineKeyboardSize = NSMakeSize(MAX(MIN(self.contentSize.width,300),180), _message.reply_markup.rows.count > 1 ? _message.reply_markup.rows.count * (33 + self.defaultContentOffset) - self.defaultContentOffset *2 : 33);
     }
     
     
@@ -772,7 +773,7 @@ static NSTextAttachment *channelViewsCountAttachment() {
     
     assert(handler != nil);
     
-    if([keyboard isKindOfClass:[TL_keyboardButtonCallback class]]) {
+    if([keyboard isKindOfClass:[TL_keyboardButtonCallback class]] && (!_messageSender || _messageSender.state == MessageSendingStateSent)) {
         
         weak();
         

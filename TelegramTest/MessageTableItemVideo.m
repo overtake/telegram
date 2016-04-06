@@ -67,12 +67,12 @@
     
     TL_documentAttributeVideo *video = (TL_documentAttributeVideo *) [self.document attributeWithClass:[TL_documentAttributeVideo class]];
     
-    _videoSize = strongsize(NSMakeSize(MAX(150,video.w), MAX(150,video.h)), MIN(320,width));
+    self.contentSize = strongsize(NSMakeSize(MAX(150,video.w), MAX(150,video.h)), MIN(320,width));
     
 
     
     
-     self.blockSize = NSMakeSize(_videoSize.width, _videoSize.height);
+     self.blockSize = NSMakeSize(self.contentSize.width, self.contentSize.height);
     
     return [super makeSizeByWidth:width];
 }

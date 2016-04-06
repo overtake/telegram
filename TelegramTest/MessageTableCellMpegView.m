@@ -103,8 +103,8 @@
     
     _prevState = NO;
     
-    [_playerContainer setFrameSize:item.imageSize];
-    [_player setFrameSize:item.imageSize];
+    [_playerContainer setFrameSize:item.contentSize];
+    [_player setFrameSize:item.contentSize];
     
     [_player setImageObject:item.thumbObject];
     

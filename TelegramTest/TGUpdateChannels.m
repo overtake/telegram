@@ -645,9 +645,7 @@
                         [[DialogsManager sharedManager] notifyAfterUpdateConversation:conversation];
                         
                         
-                        
-                        
-                        
+ 
                         
                         // insert holes
                         {

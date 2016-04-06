@@ -542,6 +542,7 @@
                         [fadeOut setCompletionBlock:^(POPAnimation *animation, BOOL success) {
                             
                             if(success) {
+                                
                                 cell.layer.opacity = 1.0f;
                                 [cell setItem:item];
                                 [nCell removeFromSuperview];
@@ -896,7 +897,7 @@
         for(int i = 0; i < self.messages.count; i++) {
             TGModernMessageCellContainerView *cell = (TGModernMessageCellContainerView *)[self cellForRow:i];
             if([cell isKindOfClass:[TGModernMessageCellContainerView class]] && [cell canEdit]) {
-                [cell setEditable:show animated:animated];
+                [cell setEditable:self.state == MessagesViewControllerStateEditable animated:animated];
             }
         }
   //  }
@@ -1041,6 +1042,10 @@ static NSTextAttachment *headerMediaIcon() {
     return self.conversation.canEditConversation || state == MessagesViewControllerStateNone;
 }
 
+-(TMView *)standartRightBarView {
+    return (TMView *) self.normalNavigationRightView;
+}
+
 - (void)setState:(MessagesViewControllerState)state animated:(BOOL)animated {
     
     self->_state = state;
@@ -1051,7 +1056,7 @@ static NSTextAttachment *headerMediaIcon() {
     
     
     if(state == MessagesViewControllerStateNone) {
-        rightView = self.normalNavigationRightView;
+        rightView = [self standartRightBarView];
         leftView = [self standartLeftBarView];
         
         [self.bottomView setState:MessagesBottomViewNormalState animated:animated];
@@ -4160,6 +4165,10 @@ static NSTextAttachment *headerMediaIcon() {
         cell = [[item.viewClass alloc] initWithFrame:self.view.bounds];
         cell.identifier = identifier;
         cell.messagesViewController = self;
+    } else {
+        [cell.layer pop_removeAllAnimations];
+        cell.layer.opacity = 1.0f;
+        
     }
     
     item.table = self.table;

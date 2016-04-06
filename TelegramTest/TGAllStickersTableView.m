@@ -157,7 +157,7 @@ static NSImage *higlightedImage() {
         
         [button addBlock:^(BTRControlEvents events) {
             
-            if(weakSelf.tableView.previewModal != nil) {
+            if(weakSelf.tableView.previewModal.isShown) {
                 [weakSelf.tableView.previewModal close:YES];
                 weakSelf.tableView.previewModal = nil;
                 

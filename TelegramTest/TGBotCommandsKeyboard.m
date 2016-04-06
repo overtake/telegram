@@ -89,7 +89,7 @@
     
     [_string appendString:[_keyboardButton.text stringByReplacingOccurrencesOfString:@"\n" withString:@" "] withColor:TEXT_COLOR];
     [_string setFont:TGSystemFont(13) forRange:_string.range];
-    _stringSize = [_string coreTextSizeForTextFieldForWidth:INT32_MAX];
+    _stringSize = [_string coreTextSizeOneLineForWidth:INT32_MAX];
     
     [_textField setText:_string maxWidth:NSWidth(self.frame) - 10];
     

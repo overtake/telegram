@@ -198,31 +198,15 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "TelegramTest/MessageTableItemHole.m"
-            timestampString = "479394273.862886"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "59"
-            endingLineNumber = "59"
-            landmarkName = "-viewClass"
-            landmarkType = "5">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "TelegramTest/MessagesViewController.m"
-            timestampString = "481490495.569177"
+            timestampString = "481655674.773699"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "2394"
-            endingLineNumber = "2394"
+            startingLineNumber = "2399"
+            endingLineNumber = "2399"
             landmarkName = "-becomeFirstResponder"
             landmarkType = "5">
          </BreakpointContent>

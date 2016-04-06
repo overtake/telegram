@@ -662,7 +662,7 @@ void open_user_by_name(NSDictionary *params) {
                 [appWindow().navigationController.messagesViewController showBotStartButton:params[@"start"] bot:user];
             } else if(user.isBot && params[@"startgroup"] && (user.flags & TGBOTGROUPBLOCKED) == 0) {
                 [[Telegram rightViewController] showComposeAddUserToGroup:[[ComposeAction alloc] initWithBehaviorClass:[ComposeActionAddUserToGroupBehavior class] filter:nil object:user reservedObjects:@[params]]];
-            } else if(params[@"open_profile"]) {
+            } else if(params[@"open_profile"] && !user.isBot) {
                 [appWindow().navigationController showInfoPage:user.dialog];
             } else {
                [appWindow().navigationController showMessagesViewController:user.dialog];
@@ -1507,6 +1507,8 @@ NSArray *document_preview_mime_types() {
     
     return types;
 }
+
+
 
 NSString *priorityString(NSString * str, ...) {
     va_list args;

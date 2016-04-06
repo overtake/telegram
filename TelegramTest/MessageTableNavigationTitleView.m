@@ -13,6 +13,7 @@
 #import "TGAnimationBlockDelegate.h"
 #import "TGTimerTarget.h"
 #import "ITSwitch.h"
+#import "TGContextMessagesvViewController.h"
 @interface MessageTableNavigationTitleView()<TMTextFieldDelegate, TMSearchTextFieldDelegate>
 @property (nonatomic, strong) TMNameTextField *nameTextField;
 @property (nonatomic, strong) TMStatusTextField *statusTextField;
@@ -169,10 +170,15 @@
     [self.nameTextField updateWithConversation:self.dialog];
 
     [self.statusTextField updateWithConversation:self.dialog];
-
+    
     
 }
 
+-(void)setController:(MessagesViewController *)controller {
+    _controller = controller;
+    
+    [_searchButton setHidden:controller.class == [TGContextMessagesvViewController class]];
+}
 
 -(void)setState:(MessagesViewControllerState)state {
     _state = state;

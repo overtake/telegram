@@ -53,7 +53,7 @@
 
 -(BOOL)makeSizeByWidth:(int)width {
     
-    self.blockSize = NSMakeSize(width, 40);
+    self.contentSize = self.blockSize = NSMakeSize(width, 40);
     
     return [super makeSizeByWidth:width];
 }

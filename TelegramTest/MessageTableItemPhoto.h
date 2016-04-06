@@ -13,7 +13,6 @@
 
 @property (nonatomic,strong) TGImageObject *imageObject;
 
-@property (nonatomic,assign) NSSize imageSize;
 
 -(BOOL)isSecretPhoto;
 

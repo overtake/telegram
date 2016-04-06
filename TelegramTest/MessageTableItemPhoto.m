@@ -53,9 +53,9 @@
 
 
 -(BOOL)makeSizeByWidth:(int)width {
-    _imageSize = strongsize(self.imageObject.realSize, MIN(MIN_IMG_SIZE.width,width));
+    self.contentSize = strongsize(self.imageObject.realSize, MIN(MIN_IMG_SIZE.width,width));
         
-    self.blockSize = NSMakeSize(_imageSize.width, _imageSize.height);
+    self.blockSize = NSMakeSize(self.contentSize.width, self.contentSize.height);
     
     return [super makeSizeByWidth:width];
 }

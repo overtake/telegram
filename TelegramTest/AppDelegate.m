@@ -52,6 +52,7 @@
 #import "TGHeadChatPanel.h"
 #import "NSArrayCategory.h"
 #import "FullUsersManager.h"
+#import "TGStickerPreviewModalView.h"
 @interface NSUserNotification(For107)
 
 @property (nonatomic, strong) NSAttributedString *response;
@@ -638,7 +639,15 @@ void exceptionHandler(NSException * exception)
             
             
             if(result.type == NSLeftMouseUp && [TMViewController isModalActive]) {
-                [EmojiViewController hideStickerPreviewIfNeeded];
+                
+                NSArray *modals = [TMViewController modalsView];
+                
+                [modals enumerateObjectsUsingBlock:^(TGModalView *obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                    if([obj isKindOfClass:[TGStickerPreviewModalView class]]) {
+                        [obj close:YES];
+                    }
+                }];
+                
             }
             
             return result;

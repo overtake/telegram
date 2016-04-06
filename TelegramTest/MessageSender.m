@@ -244,6 +244,10 @@
     
     TL_localMessage *outMessage = [TL_localMessage createWithN_id:0 flags:flags from_id:UsersManager.currentUserId to_id:[conversation.peer peerOut]  fwd_from:nil reply_to_msg_id:reply_to_msg_id  date: (int) [[MTNetwork instance] getTime] message:message media:media fakeId:[MessageSender getFakeMessageId] randomId:rand_long() reply_markup:nil entities:nil views:1 via_bot_id:0 edit_date:0 isViewed:NO state:DeliveryStatePending];
     
+    if(media.bot_result != nil) {
+        outMessage.reply_markup = media.bot_result.send_message.reply_markup;
+    }
+    
     if(additionFlags & (1 << 4))
         outMessage.flags|= (1 << 14);
     

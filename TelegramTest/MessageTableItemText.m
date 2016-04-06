@@ -256,7 +256,7 @@
     
     _textSize.width = width;
     
-    self.blockSize = NSMakeSize(width, _textSize.height + ([self isWebPage] ? [_webpage blockHeight] + self.defaultContentOffset : 0));
+    self.contentSize = self.blockSize = NSMakeSize(width, _textSize.height + ([self isWebPage] ? [_webpage blockHeight] + self.defaultContentOffset : 0));
     
     return [super makeSizeByWidth:width];
 }
