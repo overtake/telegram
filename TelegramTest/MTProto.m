@@ -21057,6 +21057,51 @@
         
 @end
 
+@implementation TL_keyboardButtonSwitchInline
++(TL_keyboardButtonSwitchInline*)createWithText:(NSString*)text query:(NSString*)query {
+	TL_keyboardButtonSwitchInline* obj = [[TL_keyboardButtonSwitchInline alloc] init];
+	obj.text = text;
+	obj.query = query;
+	return obj;
+}
+-(void)serialize:(SerializedData*)stream {
+	[stream writeString:self.text];
+	[stream writeString:self.query];
+}
+-(void)unserialize:(SerializedData*)stream {
+	super.text = [stream readString];
+	super.query = [stream readString];
+}
+        
+-(TL_keyboardButtonSwitchInline *)copy {
+    
+    TL_keyboardButtonSwitchInline *objc = [[TL_keyboardButtonSwitchInline alloc] init];
+    
+    objc.text = self.text;
+    objc.query = self.query;
+    
+    return objc;
+}
+        
+
+    
+-(id)initWithCoder:(NSCoder *)aDecoder {
+
+    if((self = [ClassStore deserialize:[aDecoder decodeObjectForKey:@"data"]])) {
+        
+    }
+    
+    return self;
+}
+        
+-(void)encodeWithCoder:(NSCoder *)aCoder {
+    [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
+}
+        
+
+        
+@end
+
 @implementation TLKeyboardButtonRow
 
 @end
@@ -25129,12 +25174,13 @@
 @end
         
 @implementation TL_messages_botResults
-+(TL_messages_botResults*)createWithFlags:(int)flags  query_id:(long)query_id next_offset:(NSString*)next_offset results:(NSMutableArray*)results {
++(TL_messages_botResults*)createWithFlags:(int)flags  query_id:(long)query_id next_offset:(NSString*)next_offset switch_pm:(TLInlineBotSwitchPM*)switch_pm results:(NSMutableArray*)results {
 	TL_messages_botResults* obj = [[TL_messages_botResults alloc] init];
 	obj.flags = flags;
 	
 	obj.query_id = query_id;
 	obj.next_offset = next_offset;
+	obj.switch_pm = switch_pm;
 	obj.results = results;
 	return obj;
 }
@@ -25143,6 +25189,7 @@
 	
 	[stream writeLong:self.query_id];
 	if(self.flags & (1 << 1)) {[stream writeString:self.next_offset];}
+	if(self.flags & (1 << 2)) {[ClassStore TLSerialize:self.switch_pm stream:stream];}
 	//Serialize FullVector
 	[stream writeInt:0x1cb5c415];
 	{
@@ -25159,6 +25206,7 @@
 	
 	super.query_id = [stream readLong];
 	if(self.flags & (1 << 1)) {super.next_offset = [stream readString];}
+	if(self.flags & (1 << 2)) {self.switch_pm = [ClassStore TLDeserialize:stream];}
 	//UNS FullVector
 	[stream readInt];
 	{
@@ -25183,6 +25231,7 @@
     
     objc.query_id = self.query_id;
     objc.next_offset = self.next_offset;
+    objc.switch_pm = [self.switch_pm copy];
     objc.results = [self.results copy];
     
     return objc;
@@ -25211,6 +25260,12 @@
    super.next_offset = next_offset;
                 
     if(super.next_offset == nil)  { super.flags&= ~ (1 << 1) ;} else { super.flags|= (1 << 1); }
+}            
+-(void)setSwitch_pm:(TLInlineBotSwitchPM*)switch_pm
+{
+   super.switch_pm = switch_pm;
+                
+    if(super.switch_pm == nil)  { super.flags&= ~ (1 << 2) ;} else { super.flags|= (1 << 2); }
 }
         
 @end
@@ -25865,6 +25920,55 @@
     objc.dc_id = self.dc_id;
     objc.n_id = self.n_id;
     objc.access_hash = self.access_hash;
+    
+    return objc;
+}
+        
+
+    
+-(id)initWithCoder:(NSCoder *)aDecoder {
+
+    if((self = [ClassStore deserialize:[aDecoder decodeObjectForKey:@"data"]])) {
+        
+    }
+    
+    return self;
+}
+        
+-(void)encodeWithCoder:(NSCoder *)aCoder {
+    [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
+}
+        
+
+        
+@end
+
+@implementation TLInlineBotSwitchPM
+
+@end
+        
+@implementation TL_inlineBotSwitchPM
++(TL_inlineBotSwitchPM*)createWithText:(NSString*)text start_param:(NSString*)start_param {
+	TL_inlineBotSwitchPM* obj = [[TL_inlineBotSwitchPM alloc] init];
+	obj.text = text;
+	obj.start_param = start_param;
+	return obj;
+}
+-(void)serialize:(SerializedData*)stream {
+	[stream writeString:self.text];
+	[stream writeString:self.start_param];
+}
+-(void)unserialize:(SerializedData*)stream {
+	super.text = [stream readString];
+	super.start_param = [stream readString];
+}
+        
+-(TL_inlineBotSwitchPM *)copy {
+    
+    TL_inlineBotSwitchPM *objc = [[TL_inlineBotSwitchPM alloc] init];
+    
+    objc.text = self.text;
+    objc.start_param = self.start_param;
     
     return objc;
 }

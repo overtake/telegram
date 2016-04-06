@@ -21,52 +21,7 @@
 #import "ComposeBroadcastListViewController.h"
 #import "ContactsViewController.h"
 #import "TGPhotoViewer.h"
-@implementation TMView (Dragging)
-
-
-
-
--(NSDragOperation)draggingEntered:(id<NSDraggingInfo>)sender {
-
-    if([Telegram rightViewController].messagesViewController.conversation && [Telegram rightViewController].navigationViewController.currentController == [Telegram rightViewController].messagesViewController) {
-        NSPasteboard *pst = [sender draggingPasteboard];
-        
-        if(![pst.name isEqualToString:TGImagePType] && ( [[pst types] containsObject:NSFilenamesPboardType] || [[pst types] containsObject:NSTIFFPboardType])) {
-            
-            if([[pst types] containsObject:NSFilenamesPboardType]) {
-                NSArray *files = [[sender draggingPasteboard] propertyListForType:NSFilenamesPboardType];
-                
-
-                
-                if(files.count == 1 && ![mediaTypes() containsObject:[[files[0] pathExtension] lowercaseString]]) {
-                     [DraggingControllerView setType:DraggingTypeSingleChoose];
-                } else {
-                    [DraggingControllerView setType:DraggingTypeMultiChoose];
-                }
-            }
-            
-            
-            [self addSubview:[DraggingControllerView view]];
-            
-        }
-        
-    }
-    
-    
-    return NSDragOperationNone;
-}
-
-
-
-
--(BOOL)performDragOperation:(id<NSDraggingInfo>)sender {
-    
-    [MessageSender sendDraggedFiles:sender dialog:[Telegram rightViewController].messagesViewController.conversation asDocument:NO];
-    
-    return YES;
-}
-
-@end
+#import "TGMessagesNavigationController.h"
 
 @interface RightViewController ()
 @property (nonatomic, strong) NSView *lastView;
@@ -99,18 +54,18 @@
     return YES;
 }
 
+
 - (void) loadView {
+    
     [super loadView];
     
-    
-    self.navigationViewController = [[TMNavigationController alloc] initWithFrame:self.view.bounds];
+    self.navigationViewController = [[TGMessagesNavigationController alloc] initWithFrame:self.view.bounds];
     [self.view addSubview:self.navigationViewController.view];
     
     
     [self.view setBackgroundColor:[NSColor whiteColor]];
     [self.view setAutoresizesSubviews:YES];
     
-    [self.view registerForDraggedTypes:[NSArray arrayWithObjects:NSFilenamesPboardType,NSStringPboardType,NSTIFFPboardType, nil]];
     
     [Notification addObserver:self selector:@selector(logout:) name:LOGOUT_EVENT];
     

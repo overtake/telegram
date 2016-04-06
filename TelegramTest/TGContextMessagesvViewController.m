@@ -50,7 +50,9 @@
     
 }
 
-
+-(BOOL)contextAbility {
+    return NO;
+}
 
 
 -(void)setState:(MessagesViewControllerState)state {

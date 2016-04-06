@@ -2624,7 +2624,7 @@
 @end
 
 @implementation TLAPI_messages_setInlineBotResults
-+(TLAPI_messages_setInlineBotResults*)createWithFlags:(int)flags   query_id:(long)query_id results:(NSMutableArray*)results cache_time:(int)cache_time next_offset:(NSString*)next_offset {
++(TLAPI_messages_setInlineBotResults*)createWithFlags:(int)flags   query_id:(long)query_id results:(NSMutableArray*)results cache_time:(int)cache_time next_offset:(NSString*)next_offset switch_pm:(TLInlineBotSwitchPM*)switch_pm {
     TLAPI_messages_setInlineBotResults* obj = [[TLAPI_messages_setInlineBotResults alloc] init];
     obj.flags = flags;
 	
@@ -2633,10 +2633,11 @@
 	obj.results = results;
 	obj.cache_time = cache_time;
 	obj.next_offset = next_offset;
+	obj.switch_pm = switch_pm;
     return obj;
 }
 - (NSData*)getData {
-	SerializedData* stream = [ClassStore streamWithConstuctor:1059318802];
+	SerializedData* stream = [ClassStore streamWithConstuctor:-346119674];
 	[stream writeInt:self.flags];
 	
 	
@@ -2653,6 +2654,7 @@
 	}
 	[stream writeInt:self.cache_time];
 	if(self.flags & (1 << 2)) {[stream writeString:self.next_offset];}
+	if(self.flags & (1 << 3)) {[ClassStore TLSerialize:self.switch_pm stream:stream];}
 	return [stream getOutput];
 }
 @end

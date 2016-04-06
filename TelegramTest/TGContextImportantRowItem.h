@@ -11,6 +11,7 @@
 @interface TGContextImportantRowItem : TMRowItem
 
 -(id)initWithObject:(id)object bot:(TLUser *)bot;
-
-@property (nonatomic,strong) NSAttributedString *header;
+@property (nonatomic,strong,readonly) TLUser *bot;
+@property (nonatomic,strong,readonly) TL_inlineBotSwitchPM *botResult;
+@property (nonatomic,strong,readonly) NSAttributedString *header;
 @end

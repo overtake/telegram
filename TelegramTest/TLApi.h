@@ -1116,8 +1116,9 @@
 @property (nonatomic, strong) NSMutableArray* results;
 @property int cache_time;
 @property (nonatomic, strong) NSString* next_offset;
+@property (nonatomic, strong) TLInlineBotSwitchPM* switch_pm;
 
-+(TLAPI_messages_setInlineBotResults*)createWithFlags:(int)flags   query_id:(long)query_id results:(NSMutableArray*)results cache_time:(int)cache_time next_offset:(NSString*)next_offset;
++(TLAPI_messages_setInlineBotResults*)createWithFlags:(int)flags   query_id:(long)query_id results:(NSMutableArray*)results cache_time:(int)cache_time next_offset:(NSString*)next_offset switch_pm:(TLInlineBotSwitchPM*)switch_pm;
 @end
 
 @interface TLAPI_messages_sendInlineBotResult : TLApiObject

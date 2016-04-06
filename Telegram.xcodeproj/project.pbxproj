@@ -212,6 +212,8 @@
 		C2078E311CB53E870037B1B2 /* TGContextImportantRowItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C2078E301CB53E870037B1B2 /* TGContextImportantRowItem.m */; };
 		C2078E341CB53E9A0037B1B2 /* TGContextImportantRowView.m in Sources */ = {isa = PBXBuildFile; fileRef = C2078E331CB53E9A0037B1B2 /* TGContextImportantRowView.m */; };
 		C2078E371CB56A910037B1B2 /* TGContextMessagesvViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C2078E361CB56A910037B1B2 /* TGContextMessagesvViewController.m */; };
+		C2078E3A1CB595420037B1B2 /* TGViewMessagesDragging.m in Sources */ = {isa = PBXBuildFile; fileRef = C2078E391CB595420037B1B2 /* TGViewMessagesDragging.m */; };
+		C2078E3D1CB596720037B1B2 /* TGMessagesNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = C2078E3C1CB596720037B1B2 /* TGMessagesNavigationController.m */; };
 		C20932241938BABF00DFF3EC /* AudioHistoryFilter.m in Sources */ = {isa = PBXBuildFile; fileRef = C20932231938BABF00DFF3EC /* AudioHistoryFilter.m */; };
 		C20A5E711B86290C007F4B49 /* TGWebpageGifObject.m in Sources */ = {isa = PBXBuildFile; fileRef = C20A5E701B86290C007F4B49 /* TGWebpageGifObject.m */; };
 		C20A5E831B863979007F4B49 /* TGWebpageGifContainer.m in Sources */ = {isa = PBXBuildFile; fileRef = C20A5E821B863979007F4B49 /* TGWebpageGifContainer.m */; };
@@ -1502,6 +1504,10 @@
 		C2078E331CB53E9A0037B1B2 /* TGContextImportantRowView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGContextImportantRowView.m; sourceTree = "<group>"; };
 		C2078E351CB56A910037B1B2 /* TGContextMessagesvViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGContextMessagesvViewController.h; sourceTree = "<group>"; };
 		C2078E361CB56A910037B1B2 /* TGContextMessagesvViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGContextMessagesvViewController.m; sourceTree = "<group>"; };
+		C2078E381CB595420037B1B2 /* TGViewMessagesDragging.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGViewMessagesDragging.h; sourceTree = "<group>"; };
+		C2078E391CB595420037B1B2 /* TGViewMessagesDragging.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGViewMessagesDragging.m; sourceTree = "<group>"; };
+		C2078E3B1CB596720037B1B2 /* TGMessagesNavigationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGMessagesNavigationController.h; sourceTree = "<group>"; };
+		C2078E3C1CB596720037B1B2 /* TGMessagesNavigationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGMessagesNavigationController.m; sourceTree = "<group>"; };
 		C2082B7219C1E1C4000005E2 /* HockeySDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = HockeySDK.framework; sourceTree = "<group>"; };
 		C20932221938BABF00DFF3EC /* AudioHistoryFilter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AudioHistoryFilter.h; sourceTree = "<group>"; };
 		C20932231938BABF00DFF3EC /* AudioHistoryFilter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AudioHistoryFilter.m; sourceTree = "<group>"; };
@@ -3631,6 +3637,10 @@
 				C215BE2D1C7B917B00B4BF16 /* TGTextLabel.m */,
 				C215BE2F1C7B979100B4BF16 /* TGFont.h */,
 				C215BE301C7B979100B4BF16 /* TGFont.mm */,
+				C2078E381CB595420037B1B2 /* TGViewMessagesDragging.h */,
+				C2078E391CB595420037B1B2 /* TGViewMessagesDragging.m */,
+				C2078E3B1CB596720037B1B2 /* TGMessagesNavigationController.h */,
+				C2078E3C1CB596720037B1B2 /* TGMessagesNavigationController.m */,
 			);
 			name = elements;
 			sourceTree = "<group>";
@@ -6819,6 +6829,7 @@
 				0AB8501E1875AC38001A796C /* TMRowItem.m in Sources */,
 				C21D482E19ACB7CD000F06E1 /* AccountSettingsViewController.m in Sources */,
 				C2C1DC1D1A443CCB00BBCC63 /* StickersPanelView.m in Sources */,
+				C2078E3D1CB596720037B1B2 /* TGMessagesNavigationController.m in Sources */,
 				0A6758EB18955FC900F4487D /* MessageTableCell.m in Sources */,
 				C222774218FE8BB3002AA0F6 /* ChatHistoryController.m in Sources */,
 				C2078E371CB56A910037B1B2 /* TGContextMessagesvViewController.m in Sources */,
@@ -7447,6 +7458,7 @@
 				C23578981C1C4DE900F38698 /* TGGLVideoPlayer.m in Sources */,
 				C20A7E5F19D7069C008844F2 /* TGActor.m in Sources */,
 				C2200B6018EDD1E200F28803 /* AboutViewControllerWindowController.m in Sources */,
+				C2078E3A1CB595420037B1B2 /* TGViewMessagesDragging.m in Sources */,
 				C2D931401991140F00668F86 /* TGWindowArchiver.m in Sources */,
 				C2B0DF771BA98E7C0023982C /* TL_localEmptyMessage.m in Sources */,
 				C2D4B7431AFCD3B80035B4E4 /* TGStickerPackModalView.m in Sources */,

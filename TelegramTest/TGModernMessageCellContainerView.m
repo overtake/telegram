@@ -456,7 +456,7 @@ static bool dragAction = NO;
     if(self.item.messageSender && !(self.item.messageSender.state == MessageSendingStateSent))
         return;
     
-    if(self.messagesViewController.state == MessagesViewControllerStateNone && theEvent == nil) {
+    if(self.messagesViewController.state == MessagesViewControllerStateNone && theEvent == nil && [self.messagesViewController contextAbility]) {
         [self.messagesViewController setCellsEditButtonShow:self.messagesViewController.state != MessagesViewControllerStateEditable animated:YES];
         [self mouseDown:nil];
         

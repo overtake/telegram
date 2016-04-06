@@ -305,6 +305,8 @@
     [Notification addObserver:self selector:@selector(messageTableItemsEntitiesUpdate:) name:UPDATE_MESSAGE_ENTITIES];
     [Notification addObserver:self selector:@selector(messageTableItemsHoleUpdate:) name:UPDATE_MESSAGE_GROUP_HOLE];
     [Notification addObserver:self selector:@selector(messagTableEditedMessageUpdate:) name:UPDATE_EDITED_MESSAGE];
+    [Notification addObserver:self selector:@selector(updateMessageTemplate:) name:UPDATE_MESSAGE_TEMPLATE];
+
     
     [Notification addObserver:self selector:@selector(didChangeDeleteDialog:) name:DIALOG_DELETE];
     
@@ -565,6 +567,14 @@
         }];
     }
     
+}
+
+-(void)updateMessageTemplate:(NSNotification *)notification {
+    if([notification.userInfo[KEY_PEER_ID] intValue] == _conversation.peer_id) {
+        
+        [_template updateTextAndSave:notification.userInfo[@"text"]];
+        [self.bottomView setTemplate:_template];
+    }
 }
 
 
@@ -1002,9 +1012,7 @@ static NSTextAttachment *headerMediaIcon() {
         
         [ASQueue dispatchOnStageQueue:^{
             
-            StartBotSenderItem *sender = [[StartBotSenderItem alloc] initWithMessage:conversation.type == DialogTypeChat || conversation.type == DialogTypeChannel ? [NSString stringWithFormat:@"/start@%@",bot.username] : @"/start" forConversation:conversation bot:bot startParam:startParam];
-            sender.tableItem = [[weakSelf messageTableItemsFromMessages:@[sender.message]] lastObject];
-            [weakSelf.historyController addItem:sender.tableItem conversation:conversation callback:nil sentControllerCallback:nil];
+            [weakSelf sendStartBot:startParam forConversation:conversation bot:bot];
             
             [ASQueue dispatchOnMainQueue:^{
                 
@@ -1018,10 +1026,20 @@ static NSTextAttachment *headerMediaIcon() {
         
     }];
     
+}
+
+-(void)sendStartBot:(NSString *)startParam forConversation:(TL_conversation *)conversation bot:(TLUser *)bot {
     
-//    if(startParam.length > 0 && ![[startParam lowercaseString] isEqualToString:@"start"]) {
-//        self.bottomView.onClickToLockedView();
-//    }
+    if(!conversation.canSendMessage)
+        return;
+    
+     [ASQueue dispatchOnStageQueue:^{
+         StartBotSenderItem *sender = [[StartBotSenderItem alloc] initWithMessage:conversation.type == DialogTypeChat || conversation.type == DialogTypeChannel ? [NSString stringWithFormat:@"/start@%@",bot.username] : @"/start"  forConversation:conversation bot:bot startParam:startParam];
+         sender.tableItem = [[self messageTableItemsFromMessages:@[sender.message]] lastObject];
+         
+         [self.historyController addItem:sender.tableItem conversation:conversation callback:nil sentControllerCallback:nil];
+     }];
+
 }
 
 
@@ -2734,6 +2752,12 @@ static NSTextAttachment *headerMediaIcon() {
              _template = [[TGInputMessageTemplate alloc] initWithType:TGInputMessageTemplateTypeSimpleText text:@"" peer_id:dialog.peer_id];
          }
          
+         if(self.class != [MessagesViewController class]) {
+             _template = [[TGInputMessageTemplate alloc] initWithType:TGInputMessageTemplateTypeSimpleText text:@"" peer_id:rand_int()];
+         }
+         
+         
+         
         [self.bottomView setTemplate:_template];
         
         [self unSelectAll:NO];
@@ -2813,6 +2837,10 @@ static NSTextAttachment *headerMediaIcon() {
 
 -(TGInputMessageTemplateType)templateType {
     return _template.type;
+}
+
+-(BOOL)contextAbility {
+    return YES;
 }
 
 - (void)tryRead {

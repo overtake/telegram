@@ -21,6 +21,10 @@
 }
 
 -(void)performEdit:(int)flags {
+    
+    if(_inputTemplate.text.length >0)
+        flags |= (1 << 11);
+    
     [RPCRequest sendRequest:[TLAPI_messages_editMessage createWithFlags:flags peer:_conversation.inputPeer n_id:_inputTemplate.postId message:_inputTemplate.text reply_markup:nil entities:nil] successHandler:^(id request, id response) {
         
         

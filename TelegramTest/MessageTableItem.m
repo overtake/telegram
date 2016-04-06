@@ -36,6 +36,7 @@
 #import "MessageTableItemMpeg.h"
 #import "NSAttributedString+Hyperlink.h"
 #import "TGLocationRequest.h"
+#import "TGContextMessagesvViewController.h"
 @interface TGItemCache : NSObject
 @property (nonatomic,strong) NSMutableAttributedString *header;
 @property (nonatomic,strong) TLUser *user;
@@ -869,6 +870,15 @@ static NSTextAttachment *channelViewsCountAttachment() {
         [self.table.viewController sendMessage:keyboard.text forConversation:_message.conversation];
         
         handler(TGInlineKeyboardSuccessType);
+    } else if([keyboard isKindOfClass:[TL_keyboardButtonSwitchInline class]]) {
+       
+        if(self.table.viewController.class == [TGContextMessagesvViewController class]) {
+            
+            [Notification perform:UPDATE_CONTEXT_SWITCH data:@{@"keyboard":keyboard}];
+        } else {
+            
+        }
+        
     }
 }
 

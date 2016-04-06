@@ -76,7 +76,7 @@
 
 -(void)rightMouseDown:(NSEvent *)theEvent {
     
-    if(self.item.messageSender != nil || self.item.message.n_id > TGMINFAKEID) {
+    if(self.item.messageSender != nil || self.item.message.n_id > TGMINFAKEID || [self.messagesViewController contextAbility]) {
         [super rightMouseDown:theEvent];
         return;
     }

@@ -93,23 +93,23 @@
     // Drawing code here.
 }
 
-- (void)configure:(NSRect)forRect {
+- (void)configure:(NSSize)size {
     
     int margin = 10;
-    float maxHeight = (forRect.size.height - (margin*3) ) / 2;
+    float maxHeight = (size.height - (margin*3) ) / 2;
     
-    self.frame = NSMakeRect(0, 0, forRect.size.width, forRect.size.height);
+    self.frame = NSMakeRect(0, 0, size.width, size.height);
     
     
     [_mediaView setHidden:self.type == DraggingTypeSingleChoose];
     
-    _mediaView.frame = NSMakeRect(margin, margin, forRect.size.width- (margin *2), maxHeight);
+    _mediaView.frame = NSMakeRect(margin, margin, size.width- (margin *2), maxHeight);
     
     
     if(!_mediaView.isHidden)
         _documentView.frame = NSMakeRect(margin, _mediaView.frame.origin.y+maxHeight+margin, _mediaView.frame.size.width, maxHeight);
     else
-        _documentView.frame = NSMakeRect(margin, margin, _mediaView.frame.size.width, forRect.size.height - margin * 2);
+        _documentView.frame = NSMakeRect(margin, margin, _mediaView.frame.size.width, size.height - margin * 2);
     
     
     
@@ -120,14 +120,20 @@
 + (DraggingControllerView *)view {
     static DraggingControllerView *instance;
     
-    NSRect tableRect = [Telegram rightViewController].view.frame;
     
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        instance = [[DraggingControllerView alloc] initWithFrame:NSMakeRect(0, 0, tableRect.size.width, tableRect.size.height)];
+        instance = [[DraggingControllerView alloc] initWithFrame:NSMakeRect(0, 0, 300, 300)];
     });
+
+    return instance;
+}
+
++ (DraggingControllerView *)view:(NSSize)size {
     
-    [instance configure:tableRect];
+    DraggingControllerView *instance = [self view];
+    
+    [instance configure:size];
     
     return instance;
 }

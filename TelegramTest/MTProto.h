@@ -435,6 +435,9 @@
 @interface TLInputBotInlineMessageID : TLObject
 @end
 	
+@interface TLInlineBotSwitchPM : TLObject
+@end
+	
 @interface TLAudio : TLObject
 @end
 	
@@ -2611,6 +2614,7 @@
 @property (nonatomic, strong) NSString* text;
 @property (nonatomic, strong) NSString* url;
 @property (nonatomic, strong) NSData* data;
+@property (nonatomic, strong) NSString* query;
 @end
 
 @interface TL_keyboardButton : TLKeyboardButton<NSCoding>
@@ -2627,6 +2631,9 @@
 @end
 @interface TL_keyboardButtonRequestGeoLocation : TLKeyboardButton<NSCoding>
 +(TL_keyboardButtonRequestGeoLocation*)createWithText:(NSString*)text;
+@end
+@interface TL_keyboardButtonSwitchInline : TLKeyboardButton<NSCoding>
++(TL_keyboardButtonSwitchInline*)createWithText:(NSString*)text query:(NSString*)query;
 @end
 	
 @interface TLKeyboardButtonRow()
@@ -3043,11 +3050,12 @@
 @property (nonatomic,assign,readonly) BOOL isGallery;
 @property long query_id;
 @property (nonatomic, strong) NSString* next_offset;
+@property (nonatomic, strong) TLInlineBotSwitchPM* switch_pm;
 @property (nonatomic, strong) NSMutableArray* results;
 @end
 
 @interface TL_messages_botResults : TLmessages_BotResults<NSCoding>
-+(TL_messages_botResults*)createWithFlags:(int)flags  query_id:(long)query_id next_offset:(NSString*)next_offset results:(NSMutableArray*)results;
++(TL_messages_botResults*)createWithFlags:(int)flags  query_id:(long)query_id next_offset:(NSString*)next_offset switch_pm:(TLInlineBotSwitchPM*)switch_pm results:(NSMutableArray*)results;
 @end
 	
 @interface TLExportedMessageLink()
@@ -3133,6 +3141,15 @@
 
 @interface TL_inputBotInlineMessageID : TLInputBotInlineMessageID<NSCoding>
 +(TL_inputBotInlineMessageID*)createWithDc_id:(int)dc_id n_id:(long)n_id access_hash:(long)access_hash;
+@end
+	
+@interface TLInlineBotSwitchPM()
+@property (nonatomic, strong) NSString* text;
+@property (nonatomic, strong) NSString* start_param;
+@end
+
+@interface TL_inlineBotSwitchPM : TLInlineBotSwitchPM<NSCoding>
++(TL_inlineBotSwitchPM*)createWithText:(NSString*)text start_param:(NSString*)start_param;
 @end
 	
 @interface TLAudio()

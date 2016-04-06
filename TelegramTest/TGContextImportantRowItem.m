@@ -9,14 +9,14 @@
 #import "TGContextImportantRowItem.h"
 
 @interface TGContextImportantRowItem ()
-@property (nonatomic,strong) TLBotInlineResult *botResult;
-@property (nonatomic,strong) TLUser *bot;
+
+
 @property (nonatomic,assign) long h;
 @end
 
 @implementation TGContextImportantRowItem
 
--(id)initWithObject:(id)object bot:(TLUser *)bot {
+-(id)initWithObject:(TL_inlineBotSwitchPM *)object bot:(TLUser *)bot {
     if(self = [super initWithObject:object]) {
         _botResult = object;
         _bot = bot;
@@ -24,7 +24,7 @@
         
         NSMutableAttributedString *header = [[NSMutableAttributedString alloc] init];
         
-        [header appendString:@"Open Chat" withColor:LINK_COLOR];
+        [header appendString:priorityString(object.text,@"Switch PM",[NSNull class]) withColor:LINK_COLOR];
         
         [header setFont:TGSystemFont(13) forRange:header.range];
         

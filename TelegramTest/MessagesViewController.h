@@ -147,6 +147,7 @@ typedef enum {
 - (void)sendFoundGif:(TLMessageMedia *)media forConversation:(TL_conversation *)conversation;
 - (void)sendCompressedItem:(TGCompressItem *)compressedItem;
 - (void)sendContextBotResult:(TLBotInlineResult *)botContextResult via_bot_id:(int)via_bot_id via_bot_name:(NSString *)via_bot_name queryId:(long)queryId forConversation:(TL_conversation *)conversation;
+-(void)sendStartBot:(NSString *)startParam forConversation:(TL_conversation *)conversation bot:(TLUser *)bot;
 
 - (NSArray *)messageTableItemsFromMessages:(NSArray *)input;
 + (NSArray *)messageTableItemsFromMessages:(NSArray *)input;
@@ -183,6 +184,8 @@ typedef enum {
 -(void)showOrHideChannelDiscussion;
 
 -(void)tryRead;
+
+-(BOOL)contextAbility;
 
 -(void)selectInputTextByText:(NSString *)text;
 

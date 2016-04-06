@@ -17,8 +17,9 @@ typedef enum {
     DraggingTypeSingleChoose
 } DraggingViewType;
 
-+ (DraggingControllerView *)view;
 
++ (DraggingControllerView *)view:(NSSize)size;
++ (DraggingControllerView *)view;
 +(void)setType:(DraggingViewType)type;
 
 @end

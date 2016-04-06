@@ -17,6 +17,7 @@
 #import "TGContextImportantRowView.h"
 #import "TGModalMessagesViewController.h"
 #import "ComposeActionCustomBehavior.h"
+#import "TGContextMessagesvViewController.h"
 @interface TL_botCommand (BotCommandCategory2)
 
 -(void)setUser:(TLUser *)user;
@@ -458,7 +459,7 @@ DYNAMIC_PROPERTY(DUser);
     
     __block NSMutableArray *botUsers = [[NSMutableArray alloc] init];
     
-    if(allowInlineBot && self.messagesViewController.templateType != TGInputMessageTemplateTypeEditMessage) {
+    if(allowInlineBot && self.messagesViewController.templateType != TGInputMessageTemplateTypeEditMessage && self.messagesViewController.class != [TGContextMessagesvViewController class]) {
         __block NSMutableDictionary *bots;
         
         [[Storage yap] readWithBlock:^(YapDatabaseReadTransaction *transaction) {
@@ -531,7 +532,7 @@ static NSMutableDictionary *inlineBotsExceptions;
 -(void)showContextPopupWithQuery:(NSString *)bot query:(NSString *)query conversation:(TL_conversation *)conversation  {
     
     
-    if(inlineBotsExceptions[bot])
+    if(inlineBotsExceptions[bot] || self.messagesViewController.class == [TGContextMessagesvViewController class])
         return;
     
     if(self.messagesViewController.templateType == TGInputMessageTemplateTypeEditMessage || (conversation.type == DialogTypeSecretChat && conversation.encryptedChat.encryptedParams.layer < 45))
@@ -588,13 +589,14 @@ static NSMutableDictionary *inlineBotsExceptions;
                         
                         if(!response.isGallery) {
                             
-                            if(_contextTableView.count == 0) {
-                                TGContextImportantRowItem *important = [[TGContextImportantRowItem alloc] initWithObject:nil bot:user];
+                            if(response.switch_pm != nil && _contextTableView.count == 0) {
+                                TGContextImportantRowItem *important = [[TGContextImportantRowItem alloc] initWithObject:response.switch_pm bot:user];
                                 
                                 [items addObject:important];
                             }
                             
                             [response.results enumerateObjectsUsingBlock:^(TLBotInlineResult *obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                                
                                 
                                 TGContextRowItem *item = [[TGContextRowItem alloc] initWithObject:obj bot:user queryId:response.query_id];
                                 
@@ -848,17 +850,21 @@ static NSMutableDictionary *inlineBotsExceptions;
         TGContextRowItem *item = (TGContextRowItem *)_contextTableView.selectedItem;
         
          if([item isKindOfClass:[TGContextImportantRowItem class]]) {
+             
+             TGContextImportantRowItem *importantItem = ( TGContextImportantRowItem *)item;
+             
+             [_messagesModalView close:YES];
+             
              _messagesModalView = [[TGModalMessagesViewController alloc] initWithFrame:self.window.contentView.bounds];
              
              [_messagesModalView show:self.window animated:YES];
              
-             ComposeAction *action = [[ComposeAction alloc] initWithBehaviorClass:[ComposeActionCustomBehavior class] filter:nil object:_messagesViewController.conversation];
+             ComposeAction *action = [[ComposeAction alloc] initWithBehaviorClass:[ComposeActionCustomBehavior class] filter:nil object:importantItem.bot.dialog];
              
              ComposeActionCustomBehavior *behavior = (ComposeActionCustomBehavior *) action.behavior;
-             
-             [behavior setCustomDoneTitle:@"Done"];
-             [behavior setCustomCenterTitle:@"Controller"];
-             
+             action.reservedObject1 = item.botResult;
+             action.reservedObject2 = item.bot;
+             action.reservedObject3 =  _messagesViewController.conversation;
              [_messagesModalView setAction:action];
              
          } else {

@@ -89,7 +89,8 @@ extern NSString *const UPDATE_MESSAGE_VIEWS;
 extern NSString *const UPDATE_PINNED_MESSAGE;
 extern NSString *const UPDATE_MESSAGE;
 
-
+extern NSString *const UPDATE_CONTEXT_SWITCH;
+extern NSString *const UPDATE_MESSAGE_TEMPLATE;
 extern NSString *const CHAT_FLAGS_UPDATED;
 
 extern NSString *const KEY_PREVIEW_OBJECT;
