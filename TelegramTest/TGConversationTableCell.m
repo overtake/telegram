@@ -144,7 +144,7 @@ static NSDictionary *attributes() {
     
     [appWindow().navigationController showMessagesViewController:conversation];
     
-    [MessageSender sendDraggedFiles:sender dialog:conversation asDocument:NO];
+    [MessageSender sendDraggedFiles:sender dialog:conversation asDocument:NO messagesViewController:appWindow().navigationController.messagesViewController];
     
     return YES;
 }

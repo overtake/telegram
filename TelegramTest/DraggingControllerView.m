@@ -117,6 +117,8 @@
     _documentView.dragEntered = NO;
 }
 
+
+
 + (DraggingControllerView *)view {
     static DraggingControllerView *instance;
     

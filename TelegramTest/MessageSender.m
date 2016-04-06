@@ -477,7 +477,7 @@
 
 static NSMutableArray *wrong_files;
 
-+ (void)sendFilesByPath:(NSArray *)files dialog:(TL_conversation *)dialog isMultiple:(BOOL)isMultiple asDocument:(BOOL)asDocument {
++ (void)sendFilesByPath:(NSArray *)files dialog:(TL_conversation *)dialog isMultiple:(BOOL)isMultiple asDocument:(BOOL)asDocument messagesViewController:(MessagesViewController *)messagesViewController {
    
     
    
@@ -506,7 +506,7 @@ static NSMutableArray *wrong_files;
       
         if(files.count > 0) {
             
-            [self sendFilesByPath:files dialog:dialog isMultiple:isMultiple asDocument:asDocument];
+            [self sendFilesByPath:files dialog:dialog isMultiple:isMultiple asDocument:asDocument messagesViewController:messagesViewController];
         }
             
         
@@ -540,28 +540,25 @@ static NSMutableArray *wrong_files;
     }
     
     if([imageTypes() containsObject:pathExtension] && !asDocument) {
-        [[[Telegram rightViewController] messagesViewController]
-         sendImage:file forConversation:dialog file_data:nil isMultiple:isMultiple addCompletionHandler:nil];
+        [messagesViewController sendImage:file forConversation:dialog file_data:nil isMultiple:isMultiple addCompletionHandler:nil];
         next();
         return;
         
     }
     
     if([videoTypes() containsObject:pathExtension] && !asDocument) {
-        [[[Telegram rightViewController] messagesViewController]
-         sendVideo:file forConversation:dialog];
+        [messagesViewController sendVideo:file forConversation:dialog];
          next();
        
         return;
     }
     
-    [[[Telegram rightViewController] messagesViewController]
-     sendDocument:file forConversation:dialog];
+    [messagesViewController sendDocument:file forConversation:dialog];
     next();
     
 }
 
-+(BOOL)sendDraggedFiles:(id <NSDraggingInfo>)sender dialog:(TL_conversation *)dialog asDocument:(BOOL)asDocument {
++(BOOL)sendDraggedFiles:(id <NSDraggingInfo>)sender dialog:(TL_conversation *)dialog asDocument:(BOOL)asDocument  messagesViewController:(MessagesViewController *)messagesViewController {
     NSPasteboard *pboard;
     
     if(![dialog canSendMessage])
@@ -572,7 +569,7 @@ static NSMutableArray *wrong_files;
     if ( [[pboard types] containsObject:NSFilenamesPboardType] ) {
         NSArray *files = [pboard propertyListForType:NSFilenamesPboardType];
         BOOL isMultiple = [files filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.pathExtension.lowercaseString IN (%@)",imageTypes()]].count > 1;
-        [self sendFilesByPath:files dialog:dialog isMultiple:isMultiple asDocument:asDocument];
+        [self sendFilesByPath:files dialog:dialog isMultiple:isMultiple asDocument:asDocument messagesViewController:messagesViewController];
         
     } else if([[pboard types] containsObject:NSTIFFPboardType]) {
         NSData *tiff = [pboard dataForType:NSTIFFPboardType];

@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 #import "UploadOperation.h"
 #import "EncryptedParams.h"
+#import "MessagesViewController.h"
 @interface MessageSender : NSObject
 
 
@@ -19,8 +20,8 @@
 +(void)insertEncryptedServiceMessage:(NSString *)title chat:(TLEncryptedChat *)chat;
 +(void)startEncryptedChat:(TLUser *)user callback:(dispatch_block_t)callback;
 +(RPCRequest *)setTTL:(int)ttl toConversation:(TL_conversation *)conversation callback:(dispatch_block_t)callback;
-+(BOOL)sendDraggedFiles:(id <NSDraggingInfo>)sender dialog:(TL_conversation *)dialog asDocument:(BOOL)asDocument;
-+(void)sendFilesByPath:(NSArray *)files dialog:(TL_conversation *)dialog isMultiple:(BOOL)isMultiple asDocument:(BOOL)asDocument;
++(BOOL)sendDraggedFiles:(id <NSDraggingInfo>)sender dialog:(TL_conversation *)dialog asDocument:(BOOL)asDocument messagesViewController:(MessagesViewController *)messagesViewController;
++(void)sendFilesByPath:(NSArray *)files dialog:(TL_conversation *)dialog isMultiple:(BOOL)isMultiple asDocument:(BOOL)asDocument messagesViewController:(MessagesViewController *)messagesViewController;
 
 + (NSDictionary *)videoParams:(NSString *)path thumbSize:(NSSize)thumbSize;
 +(NSString *)parseEntities:(NSString *)message entities:(NSMutableArray *)entities backstrips:(NSString *)backstrips startIndex:(NSUInteger)startIndex;

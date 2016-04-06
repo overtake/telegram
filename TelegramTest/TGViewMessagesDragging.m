@@ -27,9 +27,10 @@
         
         if(![pst.name isEqualToString:TGImagePType] && ( [[pst types] containsObject:NSFilenamesPboardType] || [[pst types] containsObject:NSTIFFPboardType])) {
             
+            [DraggingControllerView view].navigationController = self.navigationViewController;
+            
             if([[pst types] containsObject:NSFilenamesPboardType]) {
                 NSArray *files = [[sender draggingPasteboard] propertyListForType:NSFilenamesPboardType];
-                
                 
                 
                 if(files.count == 1 && ![mediaTypes() containsObject:[[files[0] pathExtension] lowercaseString]]) {
@@ -51,11 +52,13 @@
 }
 
 
-
+-(void)setNavigationViewController:(TMNavigationController *)navigationViewController {
+    _navigationViewController = navigationViewController;
+}
 
 -(BOOL)performDragOperation:(id<NSDraggingInfo>)sender {
     
-    [MessageSender sendDraggedFiles:sender dialog:self.navigationViewController.messagesViewController.conversation asDocument:NO];
+    [MessageSender sendDraggedFiles:sender dialog:self.navigationViewController.messagesViewController.conversation asDocument:NO messagesViewController:self.navigationViewController.messagesViewController];
     
     return YES;
 }

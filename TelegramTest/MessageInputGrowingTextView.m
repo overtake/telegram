@@ -51,7 +51,7 @@ typedef enum {
         
     } else {
         
-        return [MessageSender sendDraggedFiles:sender dialog:[Telegram rightViewController].messagesViewController.conversation asDocument:NO];
+        return [MessageSender sendDraggedFiles:sender dialog:self.controller.conversation asDocument:NO messagesViewController:self.controller];
     
     }
     
@@ -96,7 +96,7 @@ typedef enum {
             if([result intValue] == 1000) {
                 
                 BOOL isMultiple = [files filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.pathExtension.lowercaseString IN (%@)",imageTypes()]].count > 1;
-                [MessageSender sendFilesByPath:files dialog:[Telegram rightViewController].messagesViewController.conversation isMultiple:isMultiple asDocument:NO];
+                [MessageSender sendFilesByPath:files dialog:self.controller.conversation isMultiple:isMultiple asDocument:NO messagesViewController:self.controller];
             }
         }];
         [alert addButtonWithTitle:NSLocalizedString(@"Message.Send", nil)];
