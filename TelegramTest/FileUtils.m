@@ -92,7 +92,7 @@ NSString *const kBotInlineTypeVoice = @"voice";
     
     [openDlg setAllowsMultipleSelection:YES];
     [openDlg beginSheetModalForWindow:window completionHandler:^(NSInteger result) {
-      //  if (result == NSFileHandlingPanelOKButton) {
+        if (result == NSFileHandlingPanelOKButton) {
             NSArray* urls = [openDlg URLs];
             
             NSMutableArray *paths = [[NSMutableArray alloc] init];
@@ -110,7 +110,7 @@ NSString *const kBotInlineTypeVoice = @"voice";
             }
             
             handler(paths);
-   //     }
+       }
     }];
 }
 

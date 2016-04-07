@@ -47,7 +47,7 @@
     TLUser *user = _action.reservedObject2;
     TL_conversation *parentConversation = _action.reservedObject3;
     
-    [Notification perform:UPDATE_MESSAGE_TEMPLATE data:@{@"text":[NSString stringWithFormat:@"@%@ %@",user.username,keyboard.text],KEY_PEER_ID:@(parentConversation.peer_id)}];
+    [Notification perform:UPDATE_MESSAGE_TEMPLATE data:@{@"text":[NSString stringWithFormat:@"@%@ %@",user.username,keyboard.query],KEY_PEER_ID:@(parentConversation.peer_id)}];
     
     [self close:YES];
 }

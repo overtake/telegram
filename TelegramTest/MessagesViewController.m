@@ -89,6 +89,7 @@
 #import "TGInputMessageTemplate.h"
 #import "TGMessageEditSender.h"
 #import "TGMessagesViewAlertHintView.h"
+#import "TGContextMessagesvViewController.h"
 #define HEADER_MESSAGES_GROUPING_TIME (10 * 60)
 
 #define SCROLLDOWNBUTTON_OFFSET 1500
@@ -356,7 +357,7 @@
     [self.normalNavigationCenterView setController:self];
     
     [self.normalNavigationCenterView setTapBlock:^{
-        if(![Telegram isTripleLayout])
+        if(![Telegram isTripleLayout] && self.class != [TGContextMessagesvViewController class])
             [weakSelf.navigationViewController showInfoPage:weakSelf.conversation];
     }];
     self.centerNavigationBarView = self.normalNavigationCenterView;
@@ -683,19 +684,23 @@
             
             MessageTableItemText *item = (MessageTableItemText *) [self itemOfMsgId:obj.channelMsgId];
             
-            NSUInteger index = [self indexOfObject:item];
-            
-            item.message.media.webpage = webpage;
-            
-            [item updateWebPage];
-            
-            item.isHeaderMessage = item.isHeaderMessage || item.webpage != nil;
-            
-            if(index != NSNotFound) {
-                [self.table noteHeightOfRowsWithIndexesChanged:[NSIndexSet indexSetWithIndex:index]];
+            if([item isKindOfClass:[MessageTableItemText class]]) {
+                NSUInteger index = [self indexOfObject:item];
                 
-                [self.table reloadDataForRowIndexes:[NSIndexSet indexSetWithIndex:index] columnIndexes:[NSIndexSet indexSetWithIndex:0]];
+                item.message.media.webpage = webpage;
+                
+                [item updateWebPage];
+                
+                item.isHeaderMessage = item.isHeaderMessage || item.webpage != nil;
+                
+                if(index != NSNotFound) {
+                    [self.table noteHeightOfRowsWithIndexesChanged:[NSIndexSet indexSetWithIndex:index]];
+                    
+                    [self.table reloadDataForRowIndexes:[NSIndexSet indexSetWithIndex:index] columnIndexes:[NSIndexSet indexSetWithIndex:0]];
+                }
+
             }
+            
             
         }];
         

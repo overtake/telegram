@@ -93,13 +93,17 @@
 }
 
 -(void)checkOperation {
-    if(!self.item.isset) {
-        [self.item startDownload:!self.item.isset];
-    } else {
-        [self open];
+    
+    if([self.item.botResult.send_message isKindOfClass:[TL_botInlineMessageMediaAuto class]]) {
+        if(!self.item.isset) {
+            [self.item startDownload:!self.item.isset];
+        } else {
+            [self open];
+        }
+        
+        [self updateDownloadState];
     }
     
-    [self updateDownloadState];
 }
 
 -(void)audioControllerUpdateProgress:(int)progress {

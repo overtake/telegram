@@ -7,7 +7,7 @@
 //
 
 #import "TGContextMessagesvViewController.h"
-
+#import "MessageTableItem.h"
 @interface TGContextMessagesvViewController ()
 @property (nonatomic,strong) TMTextButton *doneButton;
 @property (nonatomic,strong) TMView *container;
@@ -54,6 +54,26 @@
 -(BOOL)contextAbility {
     return NO;
 }
+
+-(void)receivedMessageList:(NSArray *)list inRange:(NSRange)range itsSelf:(BOOL)force {
+    [super receivedMessageList:list inRange:range itsSelf:force];
+    
+   [list enumerateObjectsUsingBlock:^(MessageTableItem *obj, NSUInteger idx, BOOL * _Nonnull stop) {
+       if([obj.message.reply_markup isKindOfClass:[TL_replyInlineMarkup class]]) {
+           [obj.message.reply_markup.rows enumerateObjectsUsingBlock:^(TL_keyboardButtonRow *keyboard, NSUInteger idx, BOOL * _Nonnull stop) {
+               [keyboard.buttons enumerateObjectsUsingBlock:^(TLKeyboardButton *button, NSUInteger idx, BOOL * _Nonnull stop) {
+                   if([button isKindOfClass:[TL_keyboardButtonSwitchInline class]]) {
+                       
+                       [obj proccessInlineKeyboardButton:button handler:nil];
+                       *stop = YES;
+                   }
+               }];
+           }];
+       }
+   }];
+    
+}
+
 
 
 -(void)setState:(MessagesViewControllerState)state {

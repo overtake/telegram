@@ -91,7 +91,7 @@
     [_string setFont:TGSystemFont(13) forRange:_string.range];
     _stringSize = [_string coreTextSizeOneLineForWidth:INT32_MAX];
     
-    [_textField setText:_string maxWidth:NSWidth(self.frame) - 10];
+    [_textField setText:_string maxWidth:NSWidth(self.frame) - 30];
     
     if([keyboardButton isKindOfClass:[TL_keyboardButtonUrl class]]) {
         if(!_inlineBotUrlImageView) {
@@ -132,7 +132,7 @@
 
 -(void)setFrameSize:(NSSize)newSize {
     [super setFrameSize:newSize];
-    [_textField setText:_string maxWidth:MIN(NSWidth(self.frame) - 10,_stringSize.width) height:_stringSize.height];
+    [_textField setText:_string maxWidth:MIN(NSWidth(self.frame) - 30,_stringSize.width) height:_stringSize.height];
     [_textField setCenterByView:self];
     
     [_inlineBotUrlImageView setFrameOrigin:NSMakePoint(newSize.width - NSWidth(_inlineBotUrlImageView.frame) - 5, newSize.height - NSHeight(_inlineBotUrlImageView.frame) - 5)];

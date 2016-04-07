@@ -438,8 +438,13 @@ static NSMenu *deleteMenu;
             if(imageObject == nil)
                 imageObject = (TGImageObject *) [[NSNull alloc] init];
             else if([botResult.document attributeWithClass:[TL_documentAttributeSticker class]]) {
+                
+                TL_documentAttributeImageSize *imageSize = (TL_documentAttributeImageSize *)[botResult.document attributeWithClass:[TL_documentAttributeImageSize class]];
+                
+                NSSize size = imageSize ? NSMakeSize(imageSize.w, imageSize.h) : [sizes[idx] sizeValue];
+                
                 imageObject.reserved1 = @(YES);
-                imageObject.imageSize = strongsize([sizes[idx] sizeValue], 90);
+                imageObject.imageSize = strongsize(size, 90);
             }
             
             [imageObjects addObject:imageObject];

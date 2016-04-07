@@ -488,32 +488,34 @@ static NSTextAttachment *channelViewsCountAttachment() {
                 
                 if([message.media.bot_result.send_message isKindOfClass:[TL_botInlineMessageText class]]) {
                     objectReturn = [[MessageTableItemText alloc] initWithObject:message];
+                } else {
+                    NSString *mime_type = message.media.bot_result.document ? message.media.bot_result.document.mime_type : message.media.bot_result.content_type;
+                    
+                    if(([message.media.bot_result.type isEqualToString:kBotInlineTypeGif])) {
+                        objectReturn = [[MessageTableItemMpeg alloc] initWithObject:message];
+                    } else if([message.media.bot_result.type isEqualToString:kBotInlineTypePhoto]) {
+                        objectReturn = [[MessageTableItemPhoto alloc] initWithObject:message];
+                    } else if([message.media.bot_result.type isEqualToString:kBotInlineTypeAudio] || [message.media.bot_result.type isEqualToString:kBotInlineTypeVoice]) {
+                        
+                        if([mime_type isEqualToString:@"audio/ogg"])
+                            objectReturn = [[MessageTableItemAudio alloc] initWithObject:message];
+                        else
+                            objectReturn = [[MessageTableItemAudioDocument alloc] initWithObject:message];
+                        
+                    } else if([message.media.bot_result.type isEqualToString:kBotInlineTypeVideo]) {
+                        objectReturn = [[MessageTableItemVideo alloc] initWithObject:message];
+                    } else if([message.media.bot_result.type isEqualToString:kBotInlineTypeFile]) {
+                        objectReturn = [[MessageTableItemDocument alloc] initWithObject:message];
+                    } else if([message.media.bot_result.type isEqualToString:kBotInlineTypeVenue] || [message.media.bot_result.type isEqualToString:kBotInlineTypeGeo] || [message.media.bot_result.send_message isKindOfClass:[TL_botInlineMessageMediaGeo class]] || [message.media.bot_result.send_message isKindOfClass:[TL_botInlineMessageMediaVenue class]]) {
+                        objectReturn = [[MessageTableItemGeo alloc] initWithObject:message];
+                    } else if([message.media.bot_result.type isEqualToString:kBotInlineTypeContact]) {
+                        objectReturn = [[MessageTableItemContact alloc] initWithObject:message];
+                    } else if([message.media.bot_result.type isEqualToString:kBotInlineTypeSticker]) {
+                        objectReturn = [[MessageTableItemSticker alloc] initWithObject:message];
+                    }
+
                 }
                 
-                NSString *mime_type = message.media.bot_result.document ? message.media.bot_result.document.mime_type : message.media.bot_result.content_type;
-                
-                if(([message.media.bot_result.type isEqualToString:kBotInlineTypeGif])) {
-                    objectReturn = [[MessageTableItemMpeg alloc] initWithObject:message];
-                } else if([message.media.bot_result.type isEqualToString:kBotInlineTypePhoto]) {
-                    objectReturn = [[MessageTableItemPhoto alloc] initWithObject:message];
-                } else if([message.media.bot_result.type isEqualToString:kBotInlineTypeAudio] || [message.media.bot_result.type isEqualToString:kBotInlineTypeVoice]) {
-                    
-                    if([mime_type isEqualToString:@"audio/ogg"])
-                        objectReturn = [[MessageTableItemAudio alloc] initWithObject:message];
-                    else
-                        objectReturn = [[MessageTableItemAudioDocument alloc] initWithObject:message];
-                    
-                } else if([message.media.bot_result.type isEqualToString:kBotInlineTypeVideo]) {
-                    objectReturn = [[MessageTableItemVideo alloc] initWithObject:message];
-                } else if([message.media.bot_result.type isEqualToString:kBotInlineTypeFile]) {
-                    objectReturn = [[MessageTableItemDocument alloc] initWithObject:message];
-                } else if([message.media.bot_result.type isEqualToString:kBotInlineTypeVenue] || [message.media.bot_result.type isEqualToString:kBotInlineTypeGeo] || [message.media.bot_result.send_message isKindOfClass:[TL_botInlineMessageMediaGeo class]] || [message.media.bot_result.send_message isKindOfClass:[TL_botInlineMessageMediaVenue class]]) {
-                    objectReturn = [[MessageTableItemGeo alloc] initWithObject:message];
-                } else if([message.media.bot_result.type isEqualToString:kBotInlineTypeContact]) {
-                    objectReturn = [[MessageTableItemContact alloc] initWithObject:message];
-                } else if([message.media.bot_result.type isEqualToString:kBotInlineTypeSticker]) {
-                    objectReturn = [[MessageTableItemSticker alloc] initWithObject:message];
-                }
                 
                 if(!objectReturn) {
                     message.message = @"This message is not supported on your version of Telegram. Update the app to view: https://telegram.org/dl/osx";
@@ -772,7 +774,6 @@ static NSTextAttachment *channelViewsCountAttachment() {
 
 -(void)proccessInlineKeyboardButton:(TLKeyboardButton *)keyboard handler:(void (^)(TGInlineKeyboardProccessType type))handler {
     
-    assert(handler != nil);
     
     if([keyboard isKindOfClass:[TL_keyboardButtonCallback class]] && (!_messageSender || _messageSender.state == MessageSendingStateSent)) {
         

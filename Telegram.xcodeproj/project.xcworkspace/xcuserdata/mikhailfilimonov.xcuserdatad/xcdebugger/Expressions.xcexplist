@@ -25,6 +25,14 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "__38-[ContextBotSenderItem performRequest]_block_invoke.102:ContextBotSenderItem.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "MessageTableItemMpeg">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "-[TGWebpageStandartObject initWithWebPage:]:TGWebpageStandartObject.m">
       </ContextState>
       <ContextState
@@ -2550,6 +2558,14 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "-[TGContextRowView checkOperation]:TGContextRowView.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.item.botResult">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "__67-[TGMessagesHintView showContextPopupWithQuery:query:conversation:]_block_invoke382:TGMessagesHintView.m">
       </ContextState>
       <ContextState
@@ -4358,6 +4374,9 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "-[MessageTableItem proccessInlineKeyboardButton:handler:]:MessageTableItem.m">
+      </ContextState>
+      <ContextState
          contextName = "__52-[TMCollectionPageController setItems:conversation:]_block_invoke:TMCollectionPageController.m">
          <PersistentStrings>
             <PersistentString
@@ -6077,6 +6096,9 @@
          contextName = "-[TGContextRowView open]:TGContextRowView.m">
          <PersistentStrings>
             <PersistentString
+               value = "self.item.botResult.document">
+            </PersistentString>
+            <PersistentString
                value = "self.item.path">
             </PersistentString>
          </PersistentStrings>
@@ -7376,6 +7398,9 @@
                value = "result">
             </PersistentString>
          </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[TGContextMessagesvViewController receivedMessageList:inRange:itsSelf:]:TGContextMessagesvViewController.m">
       </ContextState>
       <ContextState
          contextName = "__39-[MessagesTopInfoView setConversation:]_block_invoke:MessagesTopInfoView.m">

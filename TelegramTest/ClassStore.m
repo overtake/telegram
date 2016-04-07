@@ -3,7 +3,7 @@
 //  ClassStore.m
 //  Telegram
 //
-    //  Created by keepcoder on 06.04.16.
+    //  Created by keepcoder on 07.04.16.
 //  Copyright (c) 2015 keepcoder. All rights reserved.
 //
 
@@ -97,7 +97,7 @@ static NSMutableDictionary *cs_constuctors;
         if(constructor == 481674261) {
             return [self deserializeVector:stream];
         }
-        MTLog(@"Error, constructor %d not found, return nil", constructor);
+        [NSException raise:@"TLError" format:@"constructor not found %d",constructor];
         return nil;
     } else {
         //TLog("@ create class %@ with constructor %d", class, constructor);
