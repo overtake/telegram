@@ -1450,9 +1450,26 @@ static RBLPopover *popover;
     }
     
     
+    
+    
    [self.inputMessageTextField setInline_placeholder:nil];
     
+    if(self.inputMessageTextField.stringValue.length > 0 && [self.inputMessageTextField.stringValue hasPrefix:@"@"] && type != 0) {
+        NSRange split = [self.inputMessageTextField.stringValue rangeOfString:@" "];
+        if(split.location != NSNotFound && split.location != 1) {
+            
+            NSString *bot = [self.inputMessageTextField.stringValue substringWithRange:NSMakeRange(1,split.location-1)];
+            if(bot.length < 5 || [[bot lowercaseString] hasSuffix:@"bot"]) {
+                search = nil;
+            }
+        }
+        
+        
+    }
+    
     if(search != nil && ![string hasPrefix:@" "]) {
+        
+        
         
         void (^callback)(NSString *fullUserName) = ^(NSString *fullUserName) {
             NSMutableString *insert = [[self.inputMessageTextField string] mutableCopy];

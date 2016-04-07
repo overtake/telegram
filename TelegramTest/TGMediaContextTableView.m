@@ -641,7 +641,6 @@ static NSMenu *deleteMenu;
         self.tm_delegate = self;
         _items = [NSMutableArray array];
         _needCheckKeyWindow = YES;
-        [self addScrollEvent];
     }
     
     return self;
@@ -782,7 +781,17 @@ static NSMenu *deleteMenu;
 }
 
 
-
+-(void)setNeedLoadNext:(void (^)(BOOL))needLoadNext {
+    _needLoadNext = needLoadNext;
+    
+    weak();
+    
+    [self.scrollView setScrollWheelBlock:^{
+        if(weakSelf.needLoadNext) {
+            weakSelf.needLoadNext([weakSelf.scrollView isNeedUpdateBottom]);
+        }
+    }];
+}
 
 -(void)clear {
     
@@ -797,9 +806,7 @@ static NSMenu *deleteMenu;
     
     _needCheckKeyWindow = needCheckKey;
     
-    
-    [self removeScrollEvent];
-    [self addScrollEvent];
+
 }
 
 
@@ -878,6 +885,7 @@ static NSMenu *deleteMenu;
         next();
     }
     
+    
 }
 
 
@@ -885,7 +893,7 @@ static NSMenu *deleteMenu;
     
     __block int height = 0;
     
-    [self.list enumerateObjectsUsingBlock:^(TGGifSearchRowItem *obj, NSUInteger idx, BOOL * _Nonnull stop) {
+    [self.list enumerateObjectsUsingBlock:^(TMRowItem *obj, NSUInteger idx, BOOL * _Nonnull stop) {
         height+=obj.height;
     }];
     
@@ -897,28 +905,10 @@ static NSMenu *deleteMenu;
     
 }
 
--(void)addScrollEvent {
-    id clipView = [[self enclosingScrollView] contentView];
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(_didScrolledTableView:)
-                                                 name:NSViewBoundsDidChangeNotification
-                                               object:clipView];
-    
-}
 
--(void)removeScrollEvent {
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
-}
-
-
--(void)_didScrolledTableView:(NSNotification *)notification {
-    if(_needLoadNext) {
-        _needLoadNext([self.scrollView isNeedUpdateBottom]);
-    }
-}
 
 -(void)dealloc {
-    [self removeScrollEvent];
+    [self clear];
 }
 
 

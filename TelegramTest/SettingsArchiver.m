@@ -365,7 +365,18 @@ static NSString *kArchivedSettings = @"kArchivedSettings";
     return instance;
 }
 
+
+
 +(void)requestPermissionWithKey:(NSString *)permissionKey peer_id:(int)peer_id handler:(void (^)(bool success))handler {
+    
+    static NSMutableDictionary *denied;
+    
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        denied =  [NSMutableDictionary dictionary];
+    });
+    
+    
     
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     
@@ -373,10 +384,17 @@ static NSString *kArchivedSettings = @"kArchivedSettings";
     
     BOOL access = [defaults boolForKey:key];
     
+    
     if(access) {
         if(handler)
             handler(access);
     } else {
+        
+        if([denied[key] boolValue]) {
+            if(handler)
+                handler(NO);
+            return;
+        }
         
         NSString *localizeHeaderKey = [NSString stringWithFormat:@"Confirm.Header.%@",permissionKey];
         NSString *localizeDescKey = [NSString stringWithFormat:@"Confirm.Desc.%@",permissionKey];
@@ -389,6 +407,8 @@ static NSString *kArchivedSettings = @"kArchivedSettings";
         }, ^{
             if(handler)
                 handler(NO);
+            
+            [denied setValue:@(YES) forKey:key];
             
             [defaults setBool:NO forKey:key];
             [defaults synchronize];

@@ -325,18 +325,19 @@
 
 -(NSImage *)contentAssociationImage:(TGContextRowItem *)item {
     
-    if([item.botResult.type isEqualToString:kBotInlineTypeGeo] || [item.botResult.type isEqualToString:kBotInlineTypeVenue]) {
-        return image_MessageMapPin();
+    if([self.item.botResult.send_message isKindOfClass:[TL_botInlineMessageMediaAuto class]]) {
+        if([item.botResult.type isEqualToString:kBotInlineTypeGeo] || [item.botResult.type isEqualToString:kBotInlineTypeVenue]) {
+            return image_MessageMapPin();
+        }
+        
+        if([item.botResult.type isEqualToString:kBotInlineTypeVideo]) {
+            return video_play_image();
+        }
+        
+        if([self.item.botResult.type isEqualToString:kBotInlineTypeVoice] || [self.item.botResult.type isEqualToString:kBotInlineTypeAudio]) {
+            return voice_play_image();
+        }
     }
-    
-    if([item.botResult.type isEqualToString:kBotInlineTypeVideo]) {
-        return video_play_image();
-    }
-    
-    if([self.item.botResult.type isEqualToString:kBotInlineTypeVoice] || [self.item.botResult.type isEqualToString:kBotInlineTypeAudio]) {
-        return voice_play_image();
-    }
-    
     
     return nil;
     

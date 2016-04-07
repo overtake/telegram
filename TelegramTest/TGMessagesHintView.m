@@ -158,13 +158,13 @@ DYNAMIC_PROPERTY(DUser);
     
     int xOffset = item.imageObject == nil ? 10 : 30 + 15;
     
-   
+    
     
     if(self.isSelected) {
         
         [BLUE_COLOR_SELECT set];
         
-         NSRectFill(NSMakeRect(0, 0, NSWidth(dirtyRect) , NSHeight(dirtyRect)));
+        NSRectFill(NSMakeRect(0, 0, NSWidth(dirtyRect) , NSHeight(dirtyRect)));
     } else {
         
         TMTableView *table = item.table;
@@ -248,13 +248,15 @@ DYNAMIC_PROPERTY(DUser);
         
         [self addSubview:_tableView.containerView];
         
+        _mediaContextTableView = [[TGMediaContextTableView alloc]  initWithFrame:self.bounds];
+        
+        [self addSubview:_mediaContextTableView.containerView];
+        
         _contextTableView = [[TGContextBotTableView alloc]  initWithFrame:self.bounds];
         
         [self addSubview:_contextTableView.containerView];
         
-        _mediaContextTableView = [[TGMediaContextTableView alloc]  initWithFrame:self.bounds];
         
-        [self addSubview:_mediaContextTableView.containerView];
         
         
         
@@ -281,7 +283,7 @@ DYNAMIC_PROPERTY(DUser);
         
         _separator.backgroundColor = DIALOG_BORDER_COLOR;
         
-         _separator.autoresizingMask = NSViewWidthSizable | NSViewMinYMargin;
+        _separator.autoresizingMask = NSViewWidthSizable | NSViewMinYMargin;
         
         [self addSubview:_separator];
         
@@ -391,14 +393,14 @@ DYNAMIC_PROPERTY(DUser);
     {
         list = [list filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.tag BEGINSWITH[c] %@",query]];
     }
-
+    
     
     NSMutableArray *items = [[NSMutableArray alloc] init];
     
     [list enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
         
         TGMessagesHintRowItem *item = [[TGMessagesHintRowItem alloc] initWithImageObject:nil text:[NSString stringWithFormat:@"#%@",obj[@"tag"]]desc:nil];
-                                       
+        
         item.result = obj[@"tag"];
         
         [items addObject:item];
@@ -415,11 +417,11 @@ DYNAMIC_PROPERTY(DUser);
         [self show:NO];
     else
         [self hide];
-   
+    
 }
 
 -(void)showMentionPopupWithQuery:(NSString *)query conversation:(TL_conversation *)conversation chat:(TLChat *)chat allowInlineBot:(BOOL)allowInlineBot choiceHandler:(void (^)(NSString *result))choiceHandler {
-   
+    
     _choiceHandler = choiceHandler;
     cancel_delayed_block(_handle);
     [_contextRequest cancelRequest];
@@ -433,7 +435,7 @@ DYNAMIC_PROPERTY(DUser);
     if(chat) {
         TLChatFull *fullChat = [[ChatFullManager sharedManager] find:chat.n_id];
         
-         if(fullChat.participants.participants) {
+        if(fullChat.participants.participants) {
             [fullChat.participants.participants enumerateObjectsUsingBlock:^(TLChatParticipant * obj, NSUInteger idx, BOOL *stop) {
                 [uids addObject:@(obj.user_id)];
                 
@@ -448,7 +450,7 @@ DYNAMIC_PROPERTY(DUser);
                 
             }];
         }
-
+        
     }
     
     
@@ -474,7 +476,7 @@ DYNAMIC_PROPERTY(DUser);
             int botId = [bot[@"id"] intValue];
             
             TLUser *user = [[UsersManager sharedManager] find:botId];
-                                  //two weeks
+            //two weeks
             if(user && dateUsed + 14*60*60*24 > [[MTNetwork instance] getTime] && ([[user.username lowercaseString] hasPrefix:[query lowercaseString]] || query.length == 0)) {
                 [botUsers addObject:user];
             }
@@ -483,7 +485,7 @@ DYNAMIC_PROPERTY(DUser);
         
         
         users = [botUsers arrayByAddingObjectsFromArray:users];
-
+        
     }
     
     
@@ -505,7 +507,7 @@ DYNAMIC_PROPERTY(DUser);
     
     
     [self setCurrentTableView:_tableView];
-
+    
     
     [_tableView removeAllItems:YES];
     
@@ -693,7 +695,7 @@ static NSMutableDictionary *inlineBotsExceptions;
                         
                         
                     } else {
-                        [self.messagesViewController.bottomView setProgress:NO];
+                        block();
                     }
                     
                 }];
@@ -702,9 +704,16 @@ static NSMutableDictionary *inlineBotsExceptions;
             
         };
         
-
+        
         
         [_mediaContextTableView setNeedLoadNext:^(BOOL next) {
+            if(forceNextLoad || (next && !_isLockedWithRequest && offset.length > 0)) {
+                performQuery();
+            }
+            
+        }];
+        
+        [_contextTableView setNeedLoadNext:^(BOOL next) {
             if(forceNextLoad || (next && !_isLockedWithRequest && offset.length > 0)) {
                 performQuery();
             }
@@ -734,7 +743,7 @@ static NSMutableDictionary *inlineBotsExceptions;
                     inlineBotsExceptions[req.username] = @(1);
                 }
                 
-               
+                
                 
             } errorHandler:^(id request, RpcError *error) {
                 
@@ -783,7 +792,7 @@ static NSMutableDictionary *inlineBotsExceptions;
     NSUInteger height = MIN(_currentTableView.count * 40, 140 );
     
     if(_currentTableView == _mediaContextTableView) {
-        height = _mediaContextTableView.count == 1 ? 100 : 200;
+        height = MIN(_mediaContextTableView.hintHeight,200);
     } else if(_currentTableView == _contextTableView) {
         height = MIN(_contextTableView.hintHeight, 180 );
     }
@@ -814,7 +823,7 @@ static NSMutableDictionary *inlineBotsExceptions;
 
 
 -(void)hide {
-        
+    
     [self hide:NO];
     [_tableView removeAllItems:YES];
     [_contextTableView removeAllItems:YES];
@@ -852,39 +861,39 @@ static NSMutableDictionary *inlineBotsExceptions;
         if(item != nil) {
             _choiceHandler(item.result);
         }
-     } else if(_currentTableView == _contextTableView) {
+    } else if(_currentTableView == _contextTableView) {
         TGContextRowItem *item = (TGContextRowItem *)_contextTableView.selectedItem;
         
-         if([item isKindOfClass:[TGContextImportantRowItem class]]) {
-             
-             TGContextImportantRowItem *importantItem = ( TGContextImportantRowItem *)item;
-             
-             [_messagesModalView close:YES];
-             
-             _messagesModalView = [[TGModalMessagesViewController alloc] initWithFrame:self.window.contentView.bounds];
-             
-             [_messagesModalView show:self.window animated:YES];
-             
-             ComposeAction *action = [[ComposeAction alloc] initWithBehaviorClass:[ComposeActionCustomBehavior class] filter:nil object:importantItem.bot.dialog];
-             
-             ComposeActionCustomBehavior *behavior = (ComposeActionCustomBehavior *) action.behavior;
-             
-             weak();
-             
-             [behavior setComposeDone:^{
-                 [weakSelf.messagesViewController.bottomView updateText];
-             }];
-             
-             action.reservedObject1 = item.botResult;
-             action.reservedObject2 = item.bot;
-             action.reservedObject3 =  _messagesViewController.conversation;
-             [_messagesModalView setAction:action];
-             
-         } else {
-             [self.messagesViewController sendContextBotResult:item.botResult via_bot_id:item.bot.n_id via_bot_name:item.bot.username queryId:item.queryId forConversation:self.messagesViewController.conversation];
-             [self.messagesViewController.bottomView setInputMessageString:@"" disableAnimations:NO];
-         }
-         
+        if([item isKindOfClass:[TGContextImportantRowItem class]]) {
+            
+            TGContextImportantRowItem *importantItem = ( TGContextImportantRowItem *)item;
+            
+            [_messagesModalView close:YES];
+            
+            _messagesModalView = [[TGModalMessagesViewController alloc] initWithFrame:self.window.contentView.bounds];
+            
+            [_messagesModalView show:self.window animated:YES];
+            
+            ComposeAction *action = [[ComposeAction alloc] initWithBehaviorClass:[ComposeActionCustomBehavior class] filter:nil object:importantItem.bot.dialog];
+            
+            ComposeActionCustomBehavior *behavior = (ComposeActionCustomBehavior *) action.behavior;
+            
+            weak();
+            
+            [behavior setComposeDone:^{
+                [weakSelf.messagesViewController.bottomView updateText];
+            }];
+            
+            action.reservedObject1 = item.botResult;
+            action.reservedObject2 = item.bot;
+            action.reservedObject3 =  _messagesViewController.conversation;
+            [_messagesModalView setAction:action];
+            
+        } else {
+            [self.messagesViewController sendContextBotResult:item.botResult via_bot_id:item.bot.n_id via_bot_name:item.bot.username queryId:item.queryId forConversation:self.messagesViewController.conversation];
+            [self.messagesViewController.bottomView setInputMessageString:@"" disableAnimations:NO];
+        }
+        
     }
     
     [self hide:YES];
@@ -903,7 +912,7 @@ static NSMutableDictionary *inlineBotsExceptions;
     if(selectedIndex < _currentTableView.count)
     {
         
-         id item = [_currentTableView itemAtPosition:selectedIndex];
+        id item = [_currentTableView itemAtPosition:selectedIndex];
         [_currentTableView setSelectedObject:item];
         
         if([item isKindOfClass:[TGContextImportantRowItem class]])
@@ -921,7 +930,7 @@ static NSMutableDictionary *inlineBotsExceptions;
     }
     
     
-
+    
 }
 -(void)selectPrev {
     NSUInteger selectedIndex = _currentTableView.selectedItem == nil ? _currentTableView.count : [_currentTableView indexOfItem:_currentTableView.selectedItem];
@@ -951,7 +960,6 @@ static NSMutableDictionary *inlineBotsExceptions;
         [_currentTableView.scrollView.clipView scrollRectToVisible:[_currentTableView rectOfRow:selectedIndex] animated:NO];
     }
 }
-
 
 -(void)setCurrentTableView:(TMTableView *)currentTableView {
     

@@ -2955,6 +2955,17 @@
          contextName = "-[TelegramSerialization parseMessage:responseParsingBlock:]:TelegramSerialization.m">
       </ContextState>
       <ContextState
+         contextName = "-[TMScrollView scrollWheel:]:TMScrollView.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.documentView.isHidden">
+            </PersistentString>
+            <PersistentString
+               value = "self.documentView">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "__30-[MTNetwork constructRequest:]_block_invoke_4:MTNetwork.m">
          <PersistentStrings>
             <PersistentString
@@ -4733,6 +4744,14 @@
             </PersistentString>
             <PersistentString
                value = "[UsersManager currentUser].userNameTitle">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[TGMediaContextTableView addScrollEvent]:TGMediaContextTableView.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "clipView.postsBoundsChangedNotifications">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -6799,6 +6818,9 @@
       </ContextState>
       <ContextState
          contextName = "-[TGPVUserBehavior didAddedPhoto:]:TGPVUserBehavior.m">
+      </ContextState>
+      <ContextState
+         contextName = "__42-[MessageTableCellTextView initWithFrame:]_block_invoke:MessageTableCellTextView.m">
       </ContextState>
       <ContextState
          contextName = "+[SharedManager proccessGlobalResponse:]:SharedManager.m">

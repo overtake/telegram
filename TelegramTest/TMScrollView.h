@@ -31,6 +31,8 @@
 @property (nonatomic,strong) id <TMScrollViewDelegate> delegate;
 
 
+
+@property (nonatomic,strong) dispatch_block_t scrollWheelBlock;
 -(void)dropScrollData;
 
 - (BOOL) isScrollEndOfDocument;
