@@ -1554,22 +1554,31 @@ static RBLPopover *popover;
         strongWeak();
         
         if(strongSelf == weakSelf) {
-            NSString *command = botCommand.text;
             
-            [strongSelf.messagesViewController sendMessage:command forConversation:keyboard.conversation];
+            [MessageSender proccessInlineKeyboardButton:botCommand messagesViewController:strongSelf.messagesViewController conversation:keyboard.conversation messageId:0 handler:^(TGInlineKeyboardProccessType type) {
+                
+                [strongSelf.botKeyboard setProccessing:type == TGInlineKeyboardProccessingType forKeyboardButton:botCommand];
+                
+                if(type == TGInlineKeyboardSuccessType) {
+                    if(keyboard.reply_markup.isSingle_use ) {
+                        
+                        
+                        //ФЛАГ SINGLE_USE (1 << 5) ЗАНЯТ. Предупредить.
+                        keyboard.reply_markup.flags|= (1 << 5);
+                        
+                        [[Storage yap] readWriteWithBlock:^(YapDatabaseReadWriteTransaction * __nonnull transaction) {
+                            [transaction setObject:keyboard forKey:keyboard.conversation.cacheKey inCollection:BOT_COMMANDS];
+                        }];
+                        
+                        [Notification perform:[Notification notificationNameByDialog:keyboard.conversation action:@"hideBotKeyboard"] data:@{KEY_DIALOG:keyboard.conversation}];
+                    }
+                }
+                
+                
+            }];
             
-            if(keyboard.reply_markup.isSingle_use ) {
-                
-                
-                //ФЛАГ SINGLE_USE (1 << 5) ЗАНЯТ. Предупредить.
-                keyboard.reply_markup.flags|= (1 << 5);
-                
-                [[Storage yap] readWriteWithBlock:^(YapDatabaseReadWriteTransaction * __nonnull transaction) {
-                    [transaction setObject:keyboard forKey:keyboard.conversation.cacheKey inCollection:BOT_COMMANDS];
-                }];
-                
-                [Notification perform:[Notification notificationNameByDialog:keyboard.conversation action:@"hideBotKeyboard"] data:@{KEY_DIALOG:keyboard.conversation}];
-            }
+            
+            
         }
         
     }];

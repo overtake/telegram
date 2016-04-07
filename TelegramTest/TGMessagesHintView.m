@@ -669,7 +669,7 @@ static NSMutableDictionary *inlineBotsExceptions;
             
             
             if(user.isBot_inline_geo) {
-                [SettingsArchiver requestPermissionWithKey:kPermissionInlineBotGeo peer_id:user.n_id handler:^(bool success) {
+                [SettingsArchiver requestPermissionWithKey:kPermissionInlineBotLocationRequest peer_id:user.n_id handler:^(bool success) {
                     
                     if(success) {
                         

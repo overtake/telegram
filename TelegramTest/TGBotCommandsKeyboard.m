@@ -124,6 +124,9 @@
 -(void)setBackgroundColor:(NSColor *)backgroundColor {
     self.layer.backgroundColor = backgroundColor.CGColor;
     [_textField setBackgroundColor:backgroundColor];
+    
+    _indicator.color = [[NSColor whiteColor] isEqual:backgroundColor] ? [NSColor blackColor] : [NSColor whiteColor];
+    
 }
 
 -(void)setBorderColor:(NSColor *)color {

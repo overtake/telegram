@@ -35,7 +35,6 @@
 #import "NSNumber+NumberFormatter.h"
 #import "MessageTableItemMpeg.h"
 #import "NSAttributedString+Hyperlink.h"
-#import "TGLocationRequest.h"
 #import "TGContextMessagesvViewController.h"
 @interface TGItemCache : NSObject
 @property (nonatomic,strong) NSMutableAttributedString *header;
@@ -56,8 +55,6 @@
 @property (nonatomic, assign) NSSize headerOriginalSize;
 @property (nonatomic, assign) NSSize viewsCountAndSignOriginalSize;
 
-
-@property (nonatomic,strong) TGLocationRequest *locationRequest;
 
 
 @end
@@ -774,113 +771,10 @@ static NSTextAttachment *channelViewsCountAttachment() {
 
 -(void)proccessInlineKeyboardButton:(TLKeyboardButton *)keyboard handler:(void (^)(TGInlineKeyboardProccessType type))handler {
     
-    
-    if([keyboard isKindOfClass:[TL_keyboardButtonCallback class]] && (!_messageSender || _messageSender.state == MessageSendingStateSent)) {
-        
-        weak();
-        
-        handler(TGInlineKeyboardProccessingType);
-        
-        [RPCRequest sendRequest:[TLAPI_messages_getBotCallbackAnswer createWithPeer:_message.conversation.inputPeer msg_id:_message.n_id data:keyboard.data] successHandler:^(id request, TL_messages_botCallbackAnswer *response) {
-            
-            strongWeak();
-            
-            if(strongSelf == weakSelf) {
-                if([response isKindOfClass:[TL_messages_botCallbackAnswer class]]) {
-                    if(response.isAlert)
-                        alert(appName(), response.message);
-                    else
-                        if(response.message.length > 0)
-                            [Notification perform:SHOW_ALERT_HINT_VIEW data:@{@"text":response.message,@"color":NSColorFromRGB(0x4ba3e2)}];
-                }
-                
-                handler(TGInlineKeyboardSuccessType);
-            }
-            
-            
-        } errorHandler:^(id request, RpcError *error) {
-            handler(TGInlineKeyboardErrorType);
-        }];
-        
-    } else if([keyboard isKindOfClass:[TL_keyboardButtonUrl class]]) {
-        
-        if([keyboard.url rangeOfString:@"telegram.me/"].location != NSNotFound || [keyboard.url hasPrefix:@"tg://"]) {
-            open_link(keyboard.url);
-        } else {
-            confirm(appName(), [NSString stringWithFormat:NSLocalizedString(@"Link.ConfirmOpenExternalLink", nil),keyboard.url], ^{
-                
-                 open_link(keyboard.url);
-                
-            }, nil);
-        }
-        
-        
-        handler(TGInlineKeyboardSuccessType);
-        
-    } else if([keyboard isKindOfClass:[TL_keyboardButtonRequestGeoLocation class]]) {
-        
-        weak();
-        
-        [SettingsArchiver requestPermissionWithKey:kPermissionInlineBotGeo peer_id:_message.peer_id handler:^(bool success) {
-            
-            if(success) {
-                strongWeak();
-                
-                handler(TGInlineKeyboardProccessingType);
-                
-                strongSelf.locationRequest = [[TGLocationRequest alloc] init];
-                
-                [strongSelf.locationRequest startRequestLocation:^(CLLocation *location) {
-                    
-                    [strongSelf.table.viewController sendLocation:location.coordinate forConversation:_message.conversation];
-                    
-                    handler(TGInlineKeyboardSuccessType);
-                    
-                } failback:^(NSString *error) {
-                    
-                    handler(TGInlineKeyboardErrorType);
-                    
-                    alert(appName(), error);
-                    
-                }];
-
-            } else {
-                handler(TGInlineKeyboardErrorType);
-            }
-            
-        }];
-        
-        
-    } else if([keyboard isKindOfClass:[TL_keyboardButtonRequestPhone class]]) {
-        
-        weak();
-        
-        [SettingsArchiver requestPermissionWithKey:kPermissionInlineBotContact peer_id:_message.peer_id handler:^(bool success) {
-            
-            if(success) {
-                strongWeak();
-                
-                [strongSelf.table.viewController shareContact:[UsersManager currentUser] forConversation:_message.conversation callback:nil];
-                
-                handler(TGInlineKeyboardSuccessType);
-            }
-            
-        }];
-        
-    } else if([keyboard isKindOfClass:[TL_keyboardButton class]]) {
-        [self.table.viewController sendMessage:keyboard.text forConversation:_message.conversation];
-        
-        handler(TGInlineKeyboardSuccessType);
-    } else if([keyboard isKindOfClass:[TL_keyboardButtonSwitchInline class]]) {
-       
-        if(self.table.viewController.class == [TGContextMessagesvViewController class]) {
-            
-            [Notification perform:UPDATE_CONTEXT_SWITCH data:@{@"keyboard":keyboard}];
-        } else {
-            [[Telegram rightViewController] showInlineBotSwitchModalView:self.message.fromUser keyboard:keyboard];
-        }
-        
+    if(_messageSender == nil || _messageSender.state == MessageSendingStateSent) {
+        [MessageSender proccessInlineKeyboardButton:keyboard messagesViewController:self.table.viewController conversation:_message.conversation messageId:_message.n_id handler:handler];
     }
+    
 }
 
 

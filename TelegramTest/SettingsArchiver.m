@@ -378,9 +378,9 @@ static NSString *kArchivedSettings = @"kArchivedSettings";
             handler(access);
     } else {
         
-        NSString *localizeKey = [NSString stringWithFormat:@"Confirm.%@",permissionKey];
-        
-        confirm(appName(), NSLocalizedString(localizeKey, nil), ^{
+        NSString *localizeHeaderKey = [NSString stringWithFormat:@"Confirm.Header.%@",permissionKey];
+        NSString *localizeDescKey = [NSString stringWithFormat:@"Confirm.Desc.%@",permissionKey];
+        confirm(NSLocalizedString(localizeHeaderKey, nil), NSLocalizedString(localizeDescKey, nil), ^{
             if(handler)
                 handler(YES);
             

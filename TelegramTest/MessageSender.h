@@ -12,6 +12,13 @@
 #import "MessagesViewController.h"
 @interface MessageSender : NSObject
 
+typedef enum {
+    TGInlineKeyboardProccessingType = 1,
+    TGInlineKeyboardSuccessType = 2,
+    TGInlineKeyboardErrorType = 3,
+} TGInlineKeyboardProccessType;
+
+
 
 +(TL_localMessage *)createOutMessage:(NSString *)msg media:(TLMessageMedia *)media conversation:(TL_conversation *)conversation  additionFlags:(int)additionFlags;
 +(int)getFutureMessageId;
@@ -30,6 +37,9 @@
 
 +(id)requestForDeleteEncryptedMessages:(NSMutableArray *)ids dialog:(TL_conversation *)dialog;
 +(id)requestForFlushEncryptedHistory:(TL_conversation *)dialog;
+
+
++(void)proccessInlineKeyboardButton:(TLKeyboardButton *)keyboard messagesViewController:(MessagesViewController *)messagesViewController conversation:(TL_conversation *)conversation messageId:(int)messageId handler:(void (^)(TGInlineKeyboardProccessType type))handler;
 
 
 +(NSData *)getEncrypted:(EncryptedParams *)params messageData:(NSData *)messageData;

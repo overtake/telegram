@@ -95,11 +95,6 @@
 - (void)startDownload:(BOOL)cancel force:(BOOL)force;
 - (void)checkStartDownload:(SettingsMask)setting size:(int)size;
 
-typedef enum {
-    TGInlineKeyboardProccessingType = 1,
-    TGInlineKeyboardSuccessType = 2,
-    TGInlineKeyboardErrorType = 3,
-} TGInlineKeyboardProccessType;
 
 -(void)proccessInlineKeyboardButton:(TLKeyboardButton *)keyboard handler:(void (^)(TGInlineKeyboardProccessType type))handler;
 

@@ -216,6 +216,8 @@
         [_playView setBackgroundImage:blue_circle_background_image() forControlState:BTRControlStateNormal];
     }
     
+    [_playView setImage:nil forControlState:BTRControlStateNormal];
+    
     if(cellState == CellStateNormal) {
         switch (self.audioItem.state) {
             case AudioStateWaitPlaying:
