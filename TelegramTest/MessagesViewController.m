@@ -538,7 +538,7 @@
                         POPBasicAnimation *fadeOut = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerOpacity];
                         fadeOut.fromValue = @(1.0f);
                         fadeOut.toValue = @(0.0f);
-                        fadeOut.duration = 0.3f;
+                        fadeOut.duration = 0.2f;
                         fadeOut.removedOnCompletion = YES;
                         [cell.layer pop_addAnimation:fadeOut forKey:@"opacity"];
                         
