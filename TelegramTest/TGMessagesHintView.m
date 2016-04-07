@@ -868,6 +868,13 @@ static NSMutableDictionary *inlineBotsExceptions;
              ComposeAction *action = [[ComposeAction alloc] initWithBehaviorClass:[ComposeActionCustomBehavior class] filter:nil object:importantItem.bot.dialog];
              
              ComposeActionCustomBehavior *behavior = (ComposeActionCustomBehavior *) action.behavior;
+             
+             weak();
+             
+             [behavior setComposeDone:^{
+                 [weakSelf.messagesViewController.bottomView updateText];
+             }];
+             
              action.reservedObject1 = item.botResult;
              action.reservedObject2 = item.bot;
              action.reservedObject3 =  _messagesViewController.conversation;

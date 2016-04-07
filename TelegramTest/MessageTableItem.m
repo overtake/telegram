@@ -76,7 +76,7 @@ static NSCache *cItems;
             
             [c setFont:TGSystemFont(13) forRange:c.range];
             
-            [c detectAndAddLinks:URLFindTypeHashtags | URLFindTypeLinks | URLFindTypeMentions | (self.user.isBot || self.message.peer.isChat ? URLFindTypeBotCommands : 0)];
+            [c detectAndAddLinks:self.linkParseTypes()];
             
             _caption = c;
         }
@@ -775,6 +775,16 @@ static NSTextAttachment *channelViewsCountAttachment() {
         [MessageSender proccessInlineKeyboardButton:keyboard messagesViewController:self.table.viewController conversation:_message.conversation messageId:_message.n_id handler:handler];
     }
     
+}
+
+-(linkTypeRequest)linkParseTypes {
+    if(!_linkParseTypes) {
+        _linkParseTypes = ^URLFindType() {
+            return URLFindTypeLinks | URLFindTypeMentions | URLFindTypeHashtags | (self.message.conversation.user.isBot || (self.message.conversation.type == DialogTypeChat || (self.message.conversation.type == DialogTypeChannel && self.message.chat.isMegagroup)) ? URLFindTypeBotCommands : 0);
+        };
+    }
+    
+    return _linkParseTypes;
 }
 
 

@@ -84,6 +84,8 @@
 +(BOOL)isModalActive;
 +(NSArray *)modalsView;
 
++(void)hideAllModals;
+
 +(TMView *)modalView;
 
 +(void)becomePasslock;

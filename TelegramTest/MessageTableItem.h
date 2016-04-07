@@ -10,7 +10,7 @@
 #import "SenderHeader.h"
 #import "DownloadItem.h"
 #import "TGReplyObject.h"
-
+#import "NSString+FindURLs.h"
 
 @interface MessageTableItem : NSObject<SelectTextDelegate>
 
@@ -114,6 +114,10 @@
 
 -(Class)viewClass;
 -(int)cellWidth;
+
+typedef URLFindType (^linkTypeRequest)();
+
+@property (nonatomic,copy) linkTypeRequest linkParseTypes;
 
 
 -(int)defaultPhotoWidth;

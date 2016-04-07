@@ -9,6 +9,7 @@
 #import "TGModalMessagesViewController.h"
 #import "TGContextMessagesvViewController.h"
 #import "TGMessagesNavigationController.h"
+#import "ComposeActionCustomBehavior.h"
 @interface TGModalMessagesViewController ()
 @property (nonatomic,strong) TMNavigationController *navigationController;
 @property (nonatomic,strong) TGContextMessagesvViewController *messagesViewController;
@@ -54,6 +55,13 @@
 
 -(void)modalViewDidHide {
     [Notification removeObserver:self];
+    
+    ComposeActionCustomBehavior *behavior = (ComposeActionCustomBehavior *)self.action.behavior;
+    
+    if(behavior.composeDone != nil)
+        behavior.composeDone();
+    
+    behavior.composeDone = nil;
 }
 
 -(void)dealloc {

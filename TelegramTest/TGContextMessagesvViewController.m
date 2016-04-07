@@ -82,7 +82,6 @@
 }
 
 
-
 -(void)setState:(MessagesViewControllerState)state {
     [super setState:MessagesViewControllerStateNone];
 }

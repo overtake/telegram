@@ -788,9 +788,9 @@ void determinateURLLink(NSString *link) {
     
 }
 
-void open_link(NSString *link) {
+void open_link_with_controller(NSString *link, TMNavigationController *controller) {
     
-    
+    TMNavigationController *navigationController = controller ? controller : appWindow().navigationController;
     
     if([link hasPrefix:@"chat://"]) {
         
@@ -802,9 +802,9 @@ void open_link(NSString *link) {
         if(components.count > 3) {
             
             NSString *command = components[2];
-
+            
             if([command isEqualToString:@"viabot"]) {
-                [appWindow().navigationController.messagesViewController setStringValueToTextField:[NSString stringWithFormat:@"%@ ",vars[@"username"]]];
+                [navigationController.messagesViewController setStringValueToTextField:[NSString stringWithFormat:@"%@ ",vars[@"username"]]];
                 return;
             }
             
@@ -825,9 +825,9 @@ void open_link(NSString *link) {
                     }
                     
                     
-                    [appWindow().navigationController.messagesViewController showMessage:msg fromMsg:fromMsg flags:ShowMessageTypeReply];
+                    [navigationController.messagesViewController showMessage:msg fromMsg:fromMsg flags:ShowMessageTypeReply];
                 }
-
+                
                 return;
             }
             
@@ -839,15 +839,15 @@ void open_link(NSString *link) {
                     
                     TLUser *user = [[UsersManager sharedManager] find:peer.peer_id];
                     
-                    [appWindow().navigationController showInfoPage:user.dialog];
+                    [navigationController showInfoPage:user.dialog];
                 } else if(peer.class == [TL_peerChat class] || peer.class == [TL_peerChannel class]) {
                     TLChat *chat = [[ChatsManager sharedManager] find:abs([vars[@"peer_id"] intValue])];
                     
                     if(chat.username.length == 0 && chat.isBroadcast && chat.dialog.isInvisibleChannel)
                         return;
                     
-                    if(appWindow().navigationController.messagesViewController.conversation.peer_id == peer.peer_id) {
-                        [appWindow().navigationController showInfoPage:chat.dialog];
+                    if(navigationController.messagesViewController.conversation.peer_id == peer.peer_id) {
+                        [navigationController showInfoPage:chat.dialog];
                     } else {
                         
                         TL_localMessage *message;
@@ -860,7 +860,7 @@ void open_link(NSString *link) {
                             message.to_id = peer;
                         }
                         
-                        [appWindow().navigationController showMessagesViewController:chat.dialog withMessage:message];
+                        [navigationController showMessagesViewController:chat.dialog withMessage:message];
                     }
                     
                 }
@@ -895,12 +895,14 @@ void open_link(NSString *link) {
     
     if([link hasPrefix:TLHashTagPrefix]) {
         
+        [TMViewController hideAllModals];
+        
         [[Telegram leftViewController] showTabControllerAtIndex:1];
         
         StandartViewController *controller = (StandartViewController *) [[Telegram leftViewController] currentTabController];
         
         [((StandartViewController *)controller).searchViewController dontLoadHashTagsForOneRequest];
-                
+        
         [controller searchByString:link];
         
         if([Telegram isSingleLayout]) {
@@ -912,7 +914,7 @@ void open_link(NSString *link) {
     
     
     if([link hasPrefix:TLBotCommandPrefix]) {
-        [appWindow().navigationController.messagesViewController sendMessage:link forConversation:[appWindow().navigationController.messagesViewController conversation]];
+        [navigationController.messagesViewController sendMessage:link forConversation:[navigationController.messagesViewController conversation]];
         return;
     }
     
@@ -945,7 +947,7 @@ void open_link(NSString *link) {
                     NSDictionary *vars = getUrlVars(name);
                     
                     user[@"domain"] = [name substringToIndex:[name rangeOfString:@"?"].location];
-                   
+                    
                     [user addEntriesFromDictionary:vars];
                 }
                 
@@ -1014,7 +1016,7 @@ void open_link(NSString *link) {
     [escaped replaceOccurrencesOfString:@"%22" withString:@"\"" options:NSCaseInsensitiveSearch range:NSMakeRange(0, escaped.length)];
     [escaped replaceOccurrencesOfString:@"%0A" withString:@"\n" options:NSCaseInsensitiveSearch range:NSMakeRange(0, escaped.length)];
     [escaped replaceOccurrencesOfString:@"%25" withString:@"%" options:NSCaseInsensitiveSearch range:NSMakeRange(0, escaped.length)];
-     NSURL *url = [[NSURL alloc] initWithString: escaped];
+    NSURL *url = [[NSURL alloc] initWithString: escaped];
     
     
     if([SettingsArchiver checkMaskedSetting:OpenLinksInBackground]) {
@@ -1022,6 +1024,11 @@ void open_link(NSString *link) {
     } else {
         [[NSWorkspace sharedWorkspace] openURL:url];
     }
+
+}
+
+void open_link(NSString *link) {
+    open_link_with_controller(link, appWindow().navigationController);
 }
 
 

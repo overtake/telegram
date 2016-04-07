@@ -2030,6 +2030,10 @@ static RBLPopover *popover;
     [self setTemplate:inputTemplate checkElements:NO];
 }
 
+-(void)updateText {
+    [self.inputMessageTextField textDidChange:nil];
+}
+
 
 - (void)setInputMessageString:(NSString *)message disableAnimations:(BOOL)disableAnimations {
     [self.inputMessageTextField setString:message];

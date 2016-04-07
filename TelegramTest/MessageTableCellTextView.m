@@ -40,6 +40,13 @@
     if (self) {
         
         _textView = [[TGMultipleSelectTextView alloc] initWithFrame:self.bounds];
+        
+        weak();
+        
+        [_textView setLinkCallback:^(NSString *link) {
+            open_link_with_controller(link, weakSelf.messagesViewController.navigationViewController);
+        }];
+        
         [self.containerView addSubview:self.textView];
     
     }

@@ -353,6 +353,14 @@ static TGModalSetCaptionView *setCaptionView;
     return modals;
 }
 
++(void)hideAllModals {
+    NSArray *modals = [self modalsView];
+    
+    [modals enumerateObjectsUsingBlock:^(TGModalView *obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        [obj close:NO];
+    }];
+}
+
 +(TMView *)modalView {
     __block TMView *res;
     

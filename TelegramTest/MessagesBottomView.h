@@ -41,6 +41,8 @@ typedef enum {
 
 -(void)setTemplate:(TGInputMessageTemplate *)inputTemplate;
 -(void)setTemplate:(TGInputMessageTemplate *)inputTemplate checkElements:(BOOL)checkElements;
+-(void)updateText;
+
 - (void)setInputMessageString:(NSString *)message disableAnimations:(BOOL)disableAnimations;
 - (NSString *)inputMessageString;
 - (void)setSectedMessagesCount:(NSUInteger)count enable:(BOOL)enable;

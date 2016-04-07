@@ -299,25 +299,31 @@
 
 -(void)close:(BOOL)animated {
     
-    [[NSNotificationCenter defaultCenter] postNotificationName:NSWindowDidBecomeKeyNotification object:self.window];
-    
-    if(animated) {
-        POPBasicAnimation *anim = [TMViewController popAnimationForProgress:self.layer.opacity to:0];
+    if(self.window) {
+        [[NSNotificationCenter defaultCenter] postNotificationName:NSWindowDidBecomeKeyNotification object:self.window];
         
-        weak();
+        if(animated) {
+            POPBasicAnimation *anim = [TMViewController popAnimationForProgress:self.layer.opacity to:0];
+            
+            weak();
+            
+            [anim setCompletionBlock:^(POPAnimation *anim, BOOL success) {
+                [weakSelf removeFromSuperview];
+            }];
+            
+            [self.layer pop_addAnimation:anim forKey:@"fade"];
+            
+        } else {
+            [self removeFromSuperview];
+        }
+        [self resignFirstResponder];
         
-        [anim setCompletionBlock:^(POPAnimation *anim, BOOL success) {
-            [weakSelf removeFromSuperview];
-        }];
-        
-        [self.layer pop_addAnimation:anim forKey:@"fade"];
-
-    } else {
-        [self removeFromSuperview];
+        [self modalViewDidHide];
     }
-    [self resignFirstResponder];
     
-    [self modalViewDidHide];
+    
+    
+    
     
     
 }
