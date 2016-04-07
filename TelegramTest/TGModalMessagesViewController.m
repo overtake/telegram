@@ -12,7 +12,6 @@
 #import "ComposeActionCustomBehavior.h"
 @interface TGModalMessagesViewController ()
 @property (nonatomic,strong) TMNavigationController *navigationController;
-@property (nonatomic,strong) TGContextMessagesvViewController *messagesViewController;
 @end
 @implementation TGModalMessagesViewController
 

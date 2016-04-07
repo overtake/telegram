@@ -22,6 +22,8 @@
 #include "opus.h"
 #include "opusfile.h"
 #import "TGAudioWaveform.h"
+#import "TGModalMessagesViewController.h"
+#import "TGContextMessagesvViewController.h"
 @implementation OpenWithObject
 
 -(id)initWithFullname:(NSString *)fullname app:(NSURL *)app icon:(NSImage *)icon {
@@ -658,9 +660,29 @@ void open_user_by_name(NSDictionary *params) {
             TLUser *user = obj;
             
             if(user.isBot && params[@"start"]) {
+                
+                __block TGModalMessagesViewController *modalController;
+                NSArray *modalViews = [TMViewController modalsView];
+                
+                [modalViews enumerateObjectsUsingBlock:^(TGModalMessagesViewController *obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                    
+                    if([obj isKindOfClass:[TGModalMessagesViewController class]] && [obj.action.object peer_id] == user.n_id) {
+                        modalController = obj;
+                        *stop = YES;
+                    }
+                    
+                }];
+                
+                if(modalController) {
+                    [modalController.messagesViewController sendStartBot:params[@"start"] forConversation:user.dialog bot:user];
+                    return;
+                }
+                
                 [appWindow().navigationController showMessagesViewController:user.dialog];
                 [appWindow().navigationController.messagesViewController showBotStartButton:params[@"start"] bot:user];
             } else if(user.isBot && params[@"startgroup"] && (user.flags & TGBOTGROUPBLOCKED) == 0) {
+                
+                [TMViewController hideAllModals];
                 [[Telegram rightViewController] showComposeAddUserToGroup:[[ComposeAction alloc] initWithBehaviorClass:[ComposeActionAddUserToGroupBehavior class] filter:nil object:user reservedObjects:@[params]]];
             } else if(params[@"open_profile"] && !user.isBot) {
                 [appWindow().navigationController showInfoPage:user.dialog];

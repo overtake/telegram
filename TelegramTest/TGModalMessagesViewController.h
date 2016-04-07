@@ -7,9 +7,10 @@
 //
 
 #import "TGModalView.h"
-
+@class TGContextMessagesvViewController;
 @interface TGModalMessagesViewController : TGModalView
 
+@property (nonatomic,strong,readonly) TGContextMessagesvViewController *messagesViewController;
 
 @property (nonatomic,strong) ComposeAction *action;
 

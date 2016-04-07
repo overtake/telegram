@@ -230,20 +230,20 @@ static NSDictionary *attributes() {
             }
             
             
-            if(self.item.conversation.isVerified) {
+            if(self.item.conversation.isVerified && self.style != ConversationTableCellShortStyle) {
                 
                 NSImage *image = self.isSelected ? image_VerifyWhite() : image_Verify();
                 
                 [image drawInRect:NSMakeRect(NSMaxX(self.nameTextField.frame) + 2,NSMinY(self.nameTextField.frame) + 6, image.size.width, image.size.height) fromRect:NSZeroRect operation:NSCompositeHighlight fraction:1];
             }
             
-            if(self.item.conversation.isMute) {
+            if(self.item.conversation.isMute && self.style != ConversationTableCellShortStyle ) {
                 
                 NSImage *image = !self.isSelected ? image_muted() : image_mutedSld();
                 
                 [image drawInRect:NSMakeRect(NSMaxX(self.nameTextField.frame) + (self.item.conversation.isVerified ? image_Verify().size.width + 6 : 0), NSMinY(self.nameTextField.frame) + 7, image.size.width, image.size.height) fromRect:NSZeroRect operation:NSCompositeHighlight fraction:1];
             }
-            
+    
             if(self.item.unreadText.length && self.style != ConversationTableCellShortStyle && self.item.conversation.unread_count > 0)
                 [self drawUnreadCount]; 
         };
