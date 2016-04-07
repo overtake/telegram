@@ -613,6 +613,12 @@ static NSMutableDictionary *inlineBotsExceptions;
                             
                         } else {
                             
+                            if(response.switch_pm != nil && _mediaContextTableView.count == 0) {
+                                TGContextImportantRowItem *important = [[TGContextImportantRowItem alloc] initWithObject:response.switch_pm bot:user];
+                                
+                                [items addObject:important];
+                            }
+                            
                             [response.results enumerateObjectsUsingBlock:^(TLBotInlineResult *obj, NSUInteger idx, BOOL * _Nonnull stop) {
                                 [obj setQueryId:response.query_id];
                                 [items addObject:obj];

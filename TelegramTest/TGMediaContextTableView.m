@@ -11,6 +11,11 @@
 #import "DownloadDocumentItem.h"
 #import "DownloadExternalItem.h"
 #import "MessagesBottomView.h"
+#import "TGContextImportantRowItem.h"
+
+@interface TGGifSearchRowView : TMRowView
+@property (nonatomic, strong) NSTrackingArea *trackingArea;
+@end
 
 @interface TGGifSearchRowItem : TMRowItem
 @property (nonatomic,strong) NSArray *gifs;
@@ -459,6 +464,13 @@ static NSMenu *deleteMenu;
     return self;
 }
 
+-(Class)viewClass {
+    return [TGGifSearchRowView class];
+}
+
+-(int)height {
+    return 100;
+}
 
 
 -(NSUInteger)hash {
@@ -468,9 +480,7 @@ static NSMenu *deleteMenu;
 @end
 
 
-@interface TGGifSearchRowView : TMRowView
-@property (nonatomic, strong) NSTrackingArea *trackingArea;
-@end
+
 
 
 @implementation TGGifSearchRowView
@@ -646,7 +656,7 @@ static NSMenu *deleteMenu;
     return NO;
 }
 - (TMRowView *)viewForRow:(NSUInteger)row item:(TMRowItem *) item {
-    return [self cacheViewForClass:[TGGifSearchRowView class] identifier:@"TGGifSearchRowView" withSize:NSMakeSize(NSWidth(self.frame), 100)];
+    return [self cacheViewForClass:[item viewClass] identifier:NSStringFromClass([item viewClass]) withSize:NSMakeSize(NSWidth(self.frame), item.height)];
 }
 - (void)selectionDidChange:(NSInteger)row item:(TGGifSearchRowItem *) item {
     
@@ -795,33 +805,33 @@ static NSMenu *deleteMenu;
 
 -(void)drawResponse:(NSArray *)items {
     
-//    NSMutableArray *filter = [NSMutableArray array];
-//    
-//    [items enumerateObjectsUsingBlock:^(TLBotInlineResult *obj, NSUInteger idx, BOOL * _Nonnull stop) {
-//        
-//        if(!((obj.document == nil || [obj.document isKindOfClass:[TL_documentEmpty class]]) && (obj.photo == nil || [obj.photo isKindOfClass:[TL_photoEmpty class]]) && obj.content_url.length ==0)) {
-//            
-//            static NSArray *acceptTypes;
-//            
-//            static dispatch_once_t onceToken;
-//            dispatch_once(&onceToken, ^{
-//                acceptTypes = @[@"photo",@"gif"];
-//            });
-//            
-//            if([acceptTypes indexOfObject:obj.type] != NSNotFound) {
-//                
-//            }
-//            [filter addObject:obj];
-//        }
-//        
-//    }];
-//    
-//    items = filter;
-//    
+    NSMutableArray *filter = [NSMutableArray array];
+    
+    __block TGContextImportantRowItem *switchItem;
+    
+    [items enumerateObjectsUsingBlock:^(TLBotInlineResult *obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        
+        if(![obj isKindOfClass:[TGContextImportantRowItem class]]) {
+            [filter addObject:obj];
+        } else {
+            switchItem = (TGContextImportantRowItem *) obj;
+        }
+        
+    }];
+    if(switchItem) {
+        [self insert:@[switchItem] startIndex:0 tableRedraw:YES];
+    }
+    
+    
+    items = filter;
+
+    
+    
+    
     [_items addObjectsFromArray:items];
     
     
-    TGGifSearchRowItem *prevItem = [self.list lastObject];
+    TGGifSearchRowItem *prevItem = [[self.list filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.class != %@",[TGContextImportantRowItem class]]] lastObject];
     
      int f = roundf(NSWidth(self.frame)/100.0f);
     

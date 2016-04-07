@@ -64,7 +64,14 @@
                [keyboard.buttons enumerateObjectsUsingBlock:^(TLKeyboardButton *button, NSUInteger idx, BOOL * _Nonnull stop) {
                    if([button isKindOfClass:[TL_keyboardButtonSwitchInline class]]) {
                        
-                       [obj proccessInlineKeyboardButton:button handler:nil];
+                       dispatch_after_seconds(0.2, ^{
+                           [MessageSender proccessInlineKeyboardButton:button messagesViewController:self conversation:self.conversation messageId:0 handler:^(TGInlineKeyboardProccessType type) {
+                               
+                           }];
+                       });
+                       
+                       
+                       
                        *stop = YES;
                    }
                }];
