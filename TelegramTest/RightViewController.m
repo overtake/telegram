@@ -350,6 +350,16 @@
         
         [self hideModalView:YES animation:YES];
         
+    } else if(self.modalView == [self shareInlineModalView]) {
+        
+        NSString *text = self.modalObject;
+        
+        [appWindow().navigationController showMessagesViewController:dialog];
+        
+        [Notification perform:UPDATE_MESSAGE_TEMPLATE data:@{@"text":text,KEY_PEER_ID:@(dialog.peer_id)}];
+        
+        [self hideModalView:YES animation:YES];
+        
     } else  {
         
      //   confirm(NSLocalizedString(@"Alert.Forward", nil), [NSString stringWithFormat:NSLocalizedString(@"Alert.ForwardTo", nil),(dialog.type == DialogTypeChat) ? dialog.chat.title : (dialog.type == DialogTypeBroadcast) ? dialog.broadcast.title : dialog.user.fullName], ^{
@@ -441,6 +451,34 @@
     
 }
 
+- (void)showInlineBotSwitchModalView:(TLUser *)user keyboard:(TLKeyboardButton *)keyboard {
+    [self hideModalView:YES animation:NO];
+    
+    TMModalView *view = [self shareInlineModalView];
+    
+    self.modalView = view;
+    self.modalObject = [NSString stringWithFormat:@"@%@ %@",user.username, keyboard.query];
+    
+    
+    if([Telegram isSingleLayout]) {
+        [self.navigationViewController pushViewController:[self currentEmptyController] animated:YES];
+    }
+    
+    [view removeFromSuperview];
+    [view setFrameSize:view.bounds.size];
+
+    
+    NSString *name = user.fullName;
+
+    
+    NSString *title = [NSString stringWithFormat:NSLocalizedString(@"Message.Action.ShareInlineSwitch", nil)];
+    
+    [view setHeaderTitle:title text:[NSString stringWithFormat:NSLocalizedString(@"Conversation.ShareInlineSwitchResult", nil), name]];
+    
+    
+    [self hideModalView:NO animation:YES];
+}
+
 - (void)showForwardMessagesModalView:(TL_conversation *)dialog messagesCount:(NSUInteger)messagesCount {
     [self hideModalView:YES animation:NO];
     
@@ -484,6 +522,15 @@
 }
 
 - (TMModalView *)forwardModalView {
+    static TMModalView *view;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        view = [[TMModalView alloc] initWithFrame:self.view.bounds];
+    });
+    return view;
+}
+
+- (TMModalView *)shareInlineModalView {
     static TMModalView *view;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{

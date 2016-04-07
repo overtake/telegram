@@ -96,6 +96,7 @@
 
 - (void)showShareContactModalView:(TLUser *)user;
 - (void)showForwardMessagesModalView:(TL_conversation *)dialog messagesCount:(NSUInteger)messagesCount;
+- (void)showInlineBotSwitchModalView:(TLUser *)user keyboard:(TLKeyboardButton *)keyboard;
 - (void)showShareLinkModalView:(NSString *)url text:(NSString *)text;
 
 

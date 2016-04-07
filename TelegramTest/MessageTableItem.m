@@ -877,7 +877,7 @@ static NSTextAttachment *channelViewsCountAttachment() {
             
             [Notification perform:UPDATE_CONTEXT_SWITCH data:@{@"keyboard":keyboard}];
         } else {
-            
+            [[Telegram rightViewController] showInlineBotSwitchModalView:self.message.fromUser keyboard:keyboard];
         }
         
     }
