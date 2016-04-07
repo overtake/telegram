@@ -79,7 +79,7 @@
     
     NSSize embedSize = NSMakeSize(_webpage.embed_width, _webpage.embed_height);
     
-    embedSize = strongsize(embedSize, MIN(newSize.width,newSize.height) - 10);
+    embedSize = strongsize(embedSize, MIN(newSize.width,newSize.height) - 30);
     
     [self setContainerFrameSize:embedSize];
     

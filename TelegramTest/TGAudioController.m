@@ -25,8 +25,7 @@
     }
     if(_audioState == AudioStatePaused) {
         self.audioState = AudioStatePlaying;
-        [globalAudioPlayer() reset];
-        [self startTimer];
+        [self play:self.currentTime];
         return;
     }
     if(_audioState == AudioStatePlaying) {
@@ -45,7 +44,6 @@
 - (void)audioPlayerDidFinishPlaying:(TGAudioPlayer *)audioPlayer {
     [ASQueue dispatchOnMainQueue:^{
         [self stopPlayer];
-
     }];
     
 }

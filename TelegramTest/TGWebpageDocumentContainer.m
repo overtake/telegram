@@ -61,11 +61,17 @@
 
 -(void)mouseDown:(NSEvent *)theEvent {
     if([self mouse:[self convertPoint:[theEvent locationInWindow] fromView:nil] inRect:_cellView.containerView.frame]) {
-        if([self.webpage.webpage.embed_type isEqualToString:@"iframe"]) {
+        if([self.webpage.webpage.embed_type isEqualToString:@"iframe"] && theEvent.clickCount == 1) {
             [self showPhoto];
         }
         
+    } else {
+        [super mouseDown:theEvent];
     }
+}
+
+-(BOOL)mouseInContainer:(NSEvent *)theEvent {
+    return [self mouse:[self convertPoint:[theEvent locationInWindow] fromView:nil] inRect:_cellView.containerView.frame];
 }
 
 -(void)_didChangeBackgroundColorWithAnimation:(POPBasicAnimation *)anim toColor:(NSColor *)color {

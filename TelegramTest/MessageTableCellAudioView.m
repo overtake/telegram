@@ -63,8 +63,7 @@
             if(weakSelf.audioItem.state == AudioStatePaused) {
                 weakSelf.audioItem.state = AudioStatePlaying;
                 weakSelf.cellState = weakSelf.cellState;
-                [globalAudioPlayer() reset];
-                [weakSelf startTimer];
+                [weakSelf play:weakSelf.currentTime];
                 return;
             }
             if(weakSelf.audioItem.state == AudioStatePlaying) {

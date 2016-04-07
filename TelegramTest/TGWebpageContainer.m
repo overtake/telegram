@@ -27,7 +27,13 @@
 }
 
 -(void)mouseDown:(NSEvent *)theEvent {
-    
+    if(![self mouseInContainer:theEvent]) {
+        [super mouseDown:theEvent];
+    }
+}
+
+-(BOOL)mouseInContainer:(NSEvent *)theEvent {
+    return [self mouse:[self convertPoint:theEvent.locationInWindow fromView:nil] inRect:_containerView.frame];
 }
 
 -(void)_didChangeBackgroundColorWithAnimation:(POPBasicAnimation *)anim toColor:(NSColor *)color {
@@ -204,8 +210,9 @@
             
             
         } else if([self.webpage.webpage.embed_type isEqualToString:@"iframe"]) {
+
             
-            TGEmbedModalView *embed =  [[TGEmbedModalView alloc] init];
+            TGEmbedModalView *embed = [[TGEmbedModalView alloc] init];
             
             [embed setWebpage:self.webpage.webpage];
             

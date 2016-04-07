@@ -96,7 +96,7 @@
             
             if(msg == nil)
             {
-                [weakSelf cancel];
+                 weakSelf.state = MessageSendingStateError;
                 return;
             }
             

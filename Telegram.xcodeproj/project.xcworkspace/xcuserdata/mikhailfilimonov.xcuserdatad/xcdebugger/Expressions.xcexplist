@@ -218,6 +218,17 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "-[TGContextRowItem startDownload:]:TGContextRowItem.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "_botResult">
+            </PersistentString>
+            <PersistentString
+               value = "self.path">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "-[ChannelCommonFilter proccessResponse:state:next:]:ChannelCommonFilter.m">
          <PersistentStrings>
             <PersistentString
@@ -1424,6 +1435,9 @@
       </ContextState>
       <ContextState
          contextName = "__46-[TGPhotoViewer show:conversation:isReversed:]_block_invoke_2:TGPhotoViewer.m">
+      </ContextState>
+      <ContextState
+         contextName = "-[TGAudioController play:]:TGAudioController.m">
       </ContextState>
       <ContextState
          contextName = "-[RPCRequest completeHandler]:RPCRequest.m">
@@ -6115,6 +6129,9 @@
          contextName = "-[TGContextRowView open]:TGContextRowView.m">
          <PersistentStrings>
             <PersistentString
+               value = "self.item.audioController">
+            </PersistentString>
+            <PersistentString
                value = "self.item.botResult.document">
             </PersistentString>
             <PersistentString
@@ -6521,6 +6538,14 @@
             </PersistentString>
             <PersistentString
                value = "message.media.bot_result">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[TGContextRowView audioControllerSetNeedDisplay]:TGContextRowView.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.loaderView.isHidden">
             </PersistentString>
          </PersistentStrings>
       </ContextState>

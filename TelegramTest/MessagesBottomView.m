@@ -1500,7 +1500,7 @@ static RBLPopover *popover;
             }
         }
         
-    } else if(self.inputMessageTextField.stringValue.length > 1 && [[self.inputMessageTextField.stringValue substringToIndex:1] isEqualToString:@"@"]) {
+    } else if(self.inputMessageTextField.stringValue.length > 1 && [[self.inputMessageTextField.stringValue substringToIndex:1] isEqualToString:@"@"] && self.dialog.type != DialogTypeSecretChat) {
         
         [self.messagesViewController.hintView hide];
         [self setProgress:NO];
