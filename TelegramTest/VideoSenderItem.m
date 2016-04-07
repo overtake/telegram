@@ -57,7 +57,7 @@
         [attributes addObject:[TL_documentAttributeFilename createWithFile_name:[path_for_file lastPathComponent]]];
         [attributes addObject:[TL_documentAttributeVideo createWithDuration:duration w:size.width h:size.height]];
         
-        TL_messageMediaDocument *media = [TL_messageMediaDocument createWithDocument:[TL_document createWithN_id:0 access_hash:0 date:[[MTNetwork instance] getTime] mime_type:@"video/mp4" size:fileSize(path_for_file) thumb:cachedSize dc_id:0 attributes:attributes] caption:nil];
+        TL_messageMediaDocument *media = [TL_messageMediaDocument createWithDocument:[TL_document createWithN_id:0 access_hash:0 date:[[MTNetwork instance] getTime] mime_type:@"video/mp4" size:(int)fileSize(path_for_file) thumb:cachedSize dc_id:0 attributes:attributes] caption:nil];
 
         [[ImageCache sharedManager] setImage:thumbImage forLocation:[cachedSize location]];
 
@@ -77,8 +77,14 @@
     
     NSString *export = exportPath(self.message.randomId,@"mp4");
     
-    if(!self.path_for_file)
+    NSError *error;
+    
+    [[NSFileManager defaultManager] copyItemAtPath:self.path_for_file toPath:export error:&error];
+    
+    if(!error)
         self.path_for_file = export;
+    else
+        [self cancel];
     
 
     
