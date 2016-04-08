@@ -113,7 +113,7 @@
         _saveTime = [[MTNetwork instance] getTime];
     }
     
-    if(_saveTime != 0  && [TGPasslock isEnabled]) {
+    if(_saveTime != 0  && [TGPasslock isEnabled] && [self autoLockTime] > 0) {
         int differenceTime = [[MTNetwork instance] getTime] - _saveTime;
         
         if(differenceTime > [self autoLockTime] || [self autoLockTime] < SystemIdleTime()) {

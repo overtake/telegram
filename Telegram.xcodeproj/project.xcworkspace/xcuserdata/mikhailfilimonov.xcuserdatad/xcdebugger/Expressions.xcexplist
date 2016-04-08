@@ -3462,6 +3462,14 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "__25-[TGPasslock checkLocker]_block_invoke:TGPasslock.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "[self autoLockTime]">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "-[DownloadStickerItem initWithObject:]:DownloadStickerItem.m">
          <PersistentStrings>
             <PersistentString

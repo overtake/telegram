@@ -573,8 +573,14 @@
 -(void)updateMessageTemplate:(NSNotification *)notification {
     if([notification.userInfo[KEY_PEER_ID] intValue] == _conversation.peer_id) {
         
-        [_template updateTextAndSave:notification.userInfo[@"text"]];
-        [self.bottomView setTemplate:_template];
+        if(_template && ![_template.text isEqualToString:notification.userInfo[@"text"]]) {
+            BOOL autoSave = _template.autoSave;
+            _template.autoSave = NO;
+            [_template updateTextAndSave:notification.userInfo[@"text"]];
+            _template.autoSave = autoSave;
+            [self.bottomView setTemplate:_template];
+        }
+        
     }
 }
 
@@ -2455,7 +2461,7 @@ static NSTextAttachment *headerMediaIcon() {
         [self.stickerPanel hide:YES];
     }
     
-    
+    [Notification perform:UPDATE_MESSAGE_TEMPLATE data:@{@"text":self.bottomView.inputMessageString,KEY_PEER_ID:@(_conversation.peer_id)}];
 }
 
 - (void)showMessage:(TL_localMessage *)message fromMsg:(TL_localMessage *)fromMsg flags:(int)flags {
