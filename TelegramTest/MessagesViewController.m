@@ -922,8 +922,7 @@
             }
         }
   //  }
-    
-    
+
     
 }
 
@@ -1083,6 +1082,7 @@ static NSTextAttachment *headerMediaIcon() {
     
     centerView = self.normalNavigationCenterView;
     
+    [self.hintView setHidden:self.hintView.isHidden || state != MessagesViewControllerStateNone];
     
     if(state == MessagesViewControllerStateNone) {
         rightView = [self standartRightBarView];
@@ -2829,6 +2829,8 @@ static NSTextAttachment *headerMediaIcon() {
 
 -(void)setEditableMessage:(TL_localMessage *)message {
     
+    TGInputMessageTemplate *currentTemplate = _template;
+    
     if(message) {
         [self setState:MessagesViewControllerStateEditMessage];
         
@@ -2841,8 +2843,9 @@ static NSTextAttachment *headerMediaIcon() {
         _template = [TGInputMessageTemplate templateWithType:TGInputMessageTemplateTypeSimpleText ofPeerId:_conversation.peer_id];
     }
     
+    if(currentTemplate != _template)
+        [self.bottomView setTemplate:_template checkElements:YES];
     
-    [self.bottomView setTemplate:_template checkElements:YES];
     
 }
 

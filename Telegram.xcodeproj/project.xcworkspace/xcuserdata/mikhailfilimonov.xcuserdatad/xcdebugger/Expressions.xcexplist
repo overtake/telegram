@@ -5295,6 +5295,9 @@
             <PersistentString
                value = "query">
             </PersistentString>
+            <PersistentString
+               value = "self.messagesViewController.state">
+            </PersistentString>
          </PersistentStrings>
       </ContextState>
       <ContextState

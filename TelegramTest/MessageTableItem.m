@@ -723,8 +723,15 @@ static NSTextAttachment *channelViewsCountAttachment() {
     self.headerSize = NSMakeSize(MIN(_headerOriginalSize.width, width - self.defaultOffset * 2), self.headerSize.height);
     
     if(_message.reply_markup.rows) {
-        _inlineKeyboardSize = NSMakeSize(MIN(300,self.viewSize.width), _message.reply_markup.rows.count > 1 ? (_message.reply_markup.rows.count * 33) + ((_message.reply_markup.rows.count-1 ) * 3) : 33);
-        int bp = 0;
+        
+        __block NSUInteger max = 0;
+        
+        [_message.reply_markup.rows enumerateObjectsUsingBlock:^(TL_keyboardButtonRow *obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            max = MAX(obj.buttons.count,max);
+        }];
+        
+        
+        _inlineKeyboardSize = NSMakeSize(MIN(max > 3 ? MIN_IMG_SIZE.width : MIN(self.contentSize.width,MIN_IMG_SIZE.width),self.viewSize.width), _message.reply_markup.rows.count > 1 ? (_message.reply_markup.rows.count * 33) + ((_message.reply_markup.rows.count-1 ) * 3) : 33);
     }
     
     

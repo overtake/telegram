@@ -57,6 +57,7 @@
         
         self.currentAnnotation = annotation;
         
+        
         [self addAnnotation:annotation];
         
         
@@ -65,6 +66,11 @@
     }
     
     [super mouseUp:theEvent];
+}
+
+-(void)setCurrentAnnotation:(TMAnnotation *)currentAnnotation {
+    [self removeAnnotation:self.currentAnnotation];
+    _currentAnnotation = currentAnnotation;
 }
 
 @end
@@ -246,7 +252,6 @@
    
     
     _dispatchAfterFind = dispatchAfterFind;
-    _mapView.currentAnnotation = nil;
     _isFindUser = NO;
     _successCallback = successCallback;
     _errorCallback = errorCallback;

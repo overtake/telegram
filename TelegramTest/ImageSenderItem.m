@@ -33,7 +33,7 @@
         
         
         NSSize realSize = image.size;
-        NSSize maxSize = strongsize(realSize, 250);
+        NSSize maxSize = strongsize(realSize, MIN_IMG_SIZE.width);
         
         
         if(realSize.width < 50 || realSize.height < 50)
