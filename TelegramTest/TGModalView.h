@@ -27,6 +27,8 @@
 
 -(BOOL)isShown;
 
+-(NSRect)contentRect;
+
 @property (assign) BOOL acceptEvents;
 @property (assign,nonatomic) BOOL opaqueContent;
 

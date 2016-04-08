@@ -1847,6 +1847,14 @@
          contextName = "-[DialogsManager createDialogForMessage:]:DialogsManager.m">
       </ContextState>
       <ContextState
+         contextName = "-[TGModalView updateTrackingAreas]:TGModalView.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.frame">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "-[MessagesBottomView initWithFrame:]:MessagesBottomView.m">
       </ContextState>
       <ContextState
@@ -3175,6 +3183,20 @@
       </ContextState>
       <ContextState
          contextName = "-[TGPhotoViewer itemAtIndex:]:TGPhotoViewer.m">
+      </ContextState>
+      <ContextState
+         contextName = "__39-[AppDelegate initializeKeyDownHandler]_block_invoke_4:AppDelegate.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "incomingEvent.responder">
+            </PersistentString>
+            <PersistentString
+               value = "incomingEvent.window">
+            </PersistentString>
+            <PersistentString
+               value = "incomingEvent.window.firstResponder">
+            </PersistentString>
+         </PersistentStrings>
       </ContextState>
       <ContextState
          contextName = "-[MessageTableItemMpeg checkStartDownload:size:]:MessageTableItemMpeg.m">
@@ -5311,6 +5333,14 @@
          <PersistentStrings>
             <PersistentString
                value = "_progress">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "__50-[MessageTableCellMpegView _didScrolledTableView:]_block_invoke:MessageTableCellMpegView.m">
+         <PersistentStrings>
+            <PersistentString
+               value = " appWindow().isKeyWindow">
             </PersistentString>
          </PersistentStrings>
       </ContextState>

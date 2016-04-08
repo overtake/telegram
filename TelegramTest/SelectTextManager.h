@@ -7,7 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
-
+@class MessagesTableView;
 @class TGCTextView;
 
 
@@ -26,6 +26,9 @@
 @end
 
 @interface SelectTextManager : NSResponder
+
++(MessagesTableView *)currentTableView;
++(void)setCurrentTableView:(MessagesTableView *)currentTableView;
 
 +(void)addSelectManagerDelegate:(id<SelectTextManagerDelegate>)delegate;
 +(void)removeSelectManagerDelegate:(id<SelectTextManagerDelegate>)delegate;

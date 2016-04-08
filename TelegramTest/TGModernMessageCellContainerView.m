@@ -210,21 +210,21 @@
             weak();
             
             [_shareView addBlock:^(BTRControlEvents events) {
-                
-                strongWeak();
-                
-                if(strongSelf == weakSelf) {
-                    TGModalForwardView *forwardModalView;
+                if((events & BTRControlEventClickRepeat ) == 0) {
+                    strongWeak();
                     
-                    forwardModalView = [[TGModalForwardView alloc] initWithFrame:weakSelf.window.contentView.bounds];
-                    
-                    [weakSelf.messagesViewController setSelectedMessage:weakSelf.item selected:YES];
-                    
-                    forwardModalView.messagesViewController = weakSelf.messagesViewController;
-                    forwardModalView.messageCaller = weakSelf.item.message;
-                    [forwardModalView show:weakSelf.window animated:YES];
+                    if(strongSelf == weakSelf) {
+                        TGModalForwardView *forwardModalView;
+                        
+                        forwardModalView = [[TGModalForwardView alloc] initWithFrame:weakSelf.window.contentView.bounds];
+                        
+                        [weakSelf.messagesViewController setSelectedMessage:weakSelf.item selected:YES];
+                        
+                        forwardModalView.messagesViewController = weakSelf.messagesViewController;
+                        forwardModalView.messageCaller = weakSelf.item.message;
+                        [forwardModalView show:weakSelf.window animated:YES];
+                    }
                 }
-                
                 
                 
             } forControlEvents:BTRControlEventClick ];

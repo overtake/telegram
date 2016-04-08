@@ -665,7 +665,7 @@
     
     
     [self.smileButton addTarget:self action:@selector(smileButtonClick:) forControlEvents:BTRControlEventMouseEntered];
-    
+    [self.smileButton addTarget:self action:@selector(smileButtonClick:) forControlEvents:BTRControlEventClick];
     [self.inputMessageTextField.containerView addSubview:self.smileButton];
     
     //self.normalView.backgroundColor = NSColorFromRGB(0x000000)

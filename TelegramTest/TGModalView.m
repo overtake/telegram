@@ -8,12 +8,13 @@
 
 #import "TGModalView.h"
 #import "TGAllStickersTableView.h"
+#import "CAMediaTimingFunction+AdditionalEquations.h"
 @interface TGModalView ()
 @property (nonatomic,strong) TMView *containerView;
 @property (nonatomic,strong) TMView *backgroundView;
 
 @property (nonatomic,strong) TMView *animationContainerView;
-
+@property (nonatomic,strong) NSTrackingArea *trackingArea;
 
 @end
 
@@ -107,7 +108,7 @@
     
     _containerView = [[TMView alloc] initWithFrame:NSMakeRect(0, 0, 300, 300)];
     
-//    _containerView.wantsLayer = YES;
+    _containerView.wantsLayer = YES;
 //    _containerView.layer.cornerRadius = 4;
     
     _containerView.layer.backgroundColor = [NSColor whiteColor].CGColor;
@@ -146,16 +147,34 @@
     
 }
 
+-(void)updateTrackingAreas
+{
+    if(_trackingArea != nil) {
+        [self removeTrackingArea:_trackingArea];
+    }
+    
+
+    
+    int opts = (NSTrackingMouseEnteredAndExited | NSTrackingMouseMoved | NSTrackingActiveInActiveApp | NSTrackingInVisibleRect);
+    _trackingArea = [ [NSTrackingArea alloc] initWithRect:[self bounds]
+                                                  options:opts
+                                                    owner:self
+                                                 userInfo:nil];
+    [self addTrackingArea:_trackingArea];
+}
+
 -(void)show:(NSWindow *)window animated:(BOOL)animated {
     
 
-    [self setFrameSize:window.frame.size];
+    [self setFrameSize:window.contentView.frame.size];
     
     [self setContainerFrameSize:self.containerSize];
     
-    [window.contentView addSubview:self];
+    [window.contentView.subviews[0] addSubview:self];
     
     [window makeFirstResponder:self];
+    
+    [window update];
     
     self.layer.opacity = 1;
     
@@ -167,7 +186,10 @@
         self.containerView.layer.opacity = 0;
 
         
-        POPBasicAnimation *anim = [TMViewController popAnimationForProgress:self.containerView.layer.opacity to:1];
+        POPBasicAnimation *anim = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerOpacity];
+        anim.timingFunction = [CAMediaTimingFunction easeOutQuint];
+        anim.fromValue = @(self.containerView.layer.opacity);
+        anim.toValue = @(1.0);
         anim.duration = 0.2;
         anim.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseIn];
         [self.containerView.layer pop_addAnimation:anim forKey:@"fade"];
@@ -179,122 +201,28 @@
         }];
         
         
-//        _animationContainerView.layer.anchorPoint = CGPointMake(0.5, 0.5);
-//        
-//        _animationContainerView.layer.position = CGPointMake(roundf(NSWidth(self.frame) / 2), roundf(NSHeight(self.frame) / 2));
-//        
-//        POPBasicAnimation *sizeAnim = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerSize];
-//        
-//        sizeAnim.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut];
-//        
-//        sizeAnim.fromValue = [NSValue valueWithSize:NSMakeSize(0, 0)];
-//        sizeAnim.toValue = [NSValue valueWithSize:self.containerSize];
-//        sizeAnim.duration = 0.15;
-//        
-//        
-//        
-//        POPBasicAnimation *originContainerAnim = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerPosition];
-//        originContainerAnim.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut];
-//        originContainerAnim.fromValue = [NSValue valueWithPoint:NSMakePoint(- roundf(NSWidth(_animationContainerView.frame)/2), - roundf(NSHeight(_animationContainerView.frame)/2))];
-//        originContainerAnim.toValue = [NSValue valueWithPoint:NSMakePoint(0, 0)];
-//        originContainerAnim.duration = 0.15;
+        POPBasicAnimation *slide = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerPositionY];
+        slide.duration = 0.2;
+        slide.fromValue = @(-NSHeight(self.animationContainerView.frame));
+        slide.toValue = @(roundf((NSHeight(self.frame) - NSHeight(self.animationContainerView.frame))/2));
+        slide.timingFunction = [CAMediaTimingFunction easeOutQuint];
+        slide.removedOnCompletion = YES;
+        [self.animationContainerView.layer pop_addAnimation: slide forKey:@"slide"];
         
-        
+
+        [slide setCompletionBlock:^(POPAnimation *pop, BOOL anim) {
+          
+        }];
+
         
         
     } else {
          [self modalViewDidShow];
     }
 
-    
-   
-    
-    
-    int bp = 0;
+
     
 }
-
-/*
- [[[Telegram delegate] window] makeFirstResponder:self];
- 
- //  self.layer.opacity = 0;
- 
- //[_containerView.layer setFrameOrigin:];
- [self setContainerFrameSize:NSMakeSize(self.containerSize.width + 20, self.containerSize.height + 20)];
- 
- [self setFrameSize:self.frame.size];
- 
- POPBasicAnimation *anim = [TMViewController popAnimationForProgress:self.layer.opacity to:1];
- 
- //  [self.layer pop_addAnimation:anim forKey:@"fade"];
- 
- _animationContainerView.layer.backgroundColor = [NSColor redColor].CGColor;
- 
- _containerView.layer.backgroundColor = [NSColor blueColor].CGColor;
- 
- _animationContainerView.layer.anchorPoint = CGPointMake(0.5, 0.5);
- 
- _animationContainerView.layer.position = CGPointMake(roundf(NSWidth(self.frame) / 2), roundf(NSHeight(self.frame) / 2));
- 
- POPBasicAnimation *sizeAnim = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerSize];
- 
- sizeAnim.fromValue = [NSValue valueWithSize:NSMakeSize(0, 0)];
- sizeAnim.toValue = [NSValue valueWithSize:self.containerSize];
- sizeAnim.duration = 0.2;
- [_animationContainerView.layer pop_addAnimation:sizeAnim forKey:@"size"];
- 
- 
- [sizeAnim setCompletionBlock:^(POPAnimation *anim, BOOL completed) {
- 
- POPBasicAnimation *c = (POPBasicAnimation *) anim;
- c.removedOnCompletion = YES;
- c.completionBlock = nil;
- 
- c.fromValue = [NSValue valueWithSize:_animationContainerView.layer.frame.size];
- c.toValue = [NSValue valueWithSize:NSMakeSize(self.containerSize.width - 20, self.containerSize.height - 20)];
- 
- 
- [_animationContainerView.layer pop_addAnimation:c forKey:@"size"];
- 
- }];
- 
- POPBasicAnimation *originContainerAnim = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerPosition];
- 
- originContainerAnim.fromValue = [NSValue valueWithPoint:NSMakePoint(- roundf(NSWidth(_animationContainerView.frame)/2), - roundf(NSHeight(_animationContainerView.frame)/2))];
- originContainerAnim.toValue = [NSValue valueWithPoint:NSMakePoint(-10, -10)];
- originContainerAnim.duration = 0.2;
- 
- [_containerView.layer pop_addAnimation:originContainerAnim forKey:@"origin"];
- 
- 
- [originContainerAnim setCompletionBlock:^(POPAnimation *anim, BOOL completed) {
- 
- 
- 
- POPBasicAnimation *c = (POPBasicAnimation *) anim;
- c.removedOnCompletion = YES;
- c.completionBlock = nil;
- 
- c.fromValue = [NSValue valueWithPoint:_containerView.layer.frame.origin];
- c.toValue = [NSValue valueWithPoint:NSMakePoint(0, 0)];
- [_containerView.layer pop_addAnimation:c forKey:@"origin"];
- 
- 
- 
- POPBasicAnimation *s = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerSize];
- s.removedOnCompletion = YES;
- s.fromValue = [NSValue valueWithSize:_containerView.layer.frame.size];
- s.toValue = [NSValue valueWithSize:NSMakeSize(self.containerSize.width - 20, self.containerSize.height - 20)];
- s.duration = 5;
- [_containerView.layer pop_addAnimation:s forKey:@"size"];
- 
- [s setCompletionBlock:^(POPAnimation *anim, BOOL completed) {
- //  [self setContainerFrameSize:NSMakeSize(self.containerSize.width - 20, self.containerSize.height - 20)];
- }];
- 
- }];
- 
- */
 
 
 -(void)close:(BOOL)animated {
@@ -303,15 +231,22 @@
         [[NSNotificationCenter defaultCenter] postNotificationName:NSWindowDidBecomeKeyNotification object:self.window];
         
         if(animated) {
-            POPBasicAnimation *anim = [TMViewController popAnimationForProgress:self.layer.opacity to:0];
+            POPBasicAnimation *anim = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerOpacity];
+            anim.timingFunction = [CAMediaTimingFunction easeInQuint];
+            anim.fromValue = @(self.layer.opacity);
+            anim.toValue = @(0.0f);
+            anim.duration = 0.2;
+            [self.containerView.layer pop_addAnimation:anim forKey:@"fade"];
             
             weak();
             
             [anim setCompletionBlock:^(POPAnimation *anim, BOOL success) {
                 [weakSelf removeFromSuperview];
+                [weakSelf modalViewDidHide];
             }];
             
             [self.layer pop_addAnimation:anim forKey:@"fade"];
+            
             
         } else {
             [self removeFromSuperview];
@@ -345,6 +280,10 @@
     return self.window != nil;
 }
 
+-(NSRect)contentRect {
+    return self.animationContainerView.frame;
+}
+
 -(void)mouseUp:(NSEvent *)theEvent {
     
 }
@@ -370,6 +309,9 @@
 -(void)mouseEntered:(NSEvent *)theEvent {
     
 }
+-(void)mouseDragged:(NSEvent *)theEvent {
+    
+}
 
 
 -(void)mouseExited:(NSEvent *)theEvent {
@@ -386,7 +328,7 @@
     [_animationContainerView setFrameSize:size];
     
     float x = roundf((NSWidth(self.frame) - NSWidth(_animationContainerView.frame)) / 2);
-    float y = roundf((NSHeight(self.frame) - NSHeight(_animationContainerView.frame) - 20) / 2);
+    float y = roundf((NSHeight(self.frame) - NSHeight(_animationContainerView.frame) ) / 2);
     
     [_animationContainerView setFrameOrigin:NSMakePoint(x,y)];
     

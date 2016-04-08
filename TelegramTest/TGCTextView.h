@@ -55,4 +55,6 @@
 
 -(BOOL)mouseInText:(NSEvent *)theEvent;
 
+-(void)_mouseDown:(NSEvent *)theEvent;
+
 @end

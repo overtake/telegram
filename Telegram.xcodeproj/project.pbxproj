@@ -214,6 +214,7 @@
 		C2078E371CB56A910037B1B2 /* TGContextMessagesvViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C2078E361CB56A910037B1B2 /* TGContextMessagesvViewController.m */; };
 		C2078E3A1CB595420037B1B2 /* TGViewMessagesDragging.m in Sources */ = {isa = PBXBuildFile; fileRef = C2078E391CB595420037B1B2 /* TGViewMessagesDragging.m */; };
 		C2078E3D1CB596720037B1B2 /* TGMessagesNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = C2078E3C1CB596720037B1B2 /* TGMessagesNavigationController.m */; };
+		C2078E401CB7ADC90037B1B2 /* CAMediaTimingFunction+AdditionalEquations.m in Sources */ = {isa = PBXBuildFile; fileRef = C2078E3F1CB7ADC90037B1B2 /* CAMediaTimingFunction+AdditionalEquations.m */; };
 		C20932241938BABF00DFF3EC /* AudioHistoryFilter.m in Sources */ = {isa = PBXBuildFile; fileRef = C20932231938BABF00DFF3EC /* AudioHistoryFilter.m */; };
 		C20A5E711B86290C007F4B49 /* TGWebpageGifObject.m in Sources */ = {isa = PBXBuildFile; fileRef = C20A5E701B86290C007F4B49 /* TGWebpageGifObject.m */; };
 		C20A5E831B863979007F4B49 /* TGWebpageGifContainer.m in Sources */ = {isa = PBXBuildFile; fileRef = C20A5E821B863979007F4B49 /* TGWebpageGifContainer.m */; };
@@ -1508,6 +1509,8 @@
 		C2078E391CB595420037B1B2 /* TGViewMessagesDragging.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGViewMessagesDragging.m; sourceTree = "<group>"; };
 		C2078E3B1CB596720037B1B2 /* TGMessagesNavigationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGMessagesNavigationController.h; sourceTree = "<group>"; };
 		C2078E3C1CB596720037B1B2 /* TGMessagesNavigationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGMessagesNavigationController.m; sourceTree = "<group>"; };
+		C2078E3E1CB7ADC90037B1B2 /* CAMediaTimingFunction+AdditionalEquations.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "CAMediaTimingFunction+AdditionalEquations.h"; sourceTree = "<group>"; };
+		C2078E3F1CB7ADC90037B1B2 /* CAMediaTimingFunction+AdditionalEquations.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "CAMediaTimingFunction+AdditionalEquations.m"; sourceTree = "<group>"; };
 		C2082B7219C1E1C4000005E2 /* HockeySDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = HockeySDK.framework; sourceTree = "<group>"; };
 		C20932221938BABF00DFF3EC /* AudioHistoryFilter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AudioHistoryFilter.h; sourceTree = "<group>"; };
 		C20932231938BABF00DFF3EC /* AudioHistoryFilter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AudioHistoryFilter.m; sourceTree = "<group>"; };
@@ -4802,6 +4805,8 @@
 		C291C7B71836C38D00ABBB50 /* utils */ = {
 			isa = PBXGroup;
 			children = (
+				C2078E3E1CB7ADC90037B1B2 /* CAMediaTimingFunction+AdditionalEquations.h */,
+				C2078E3F1CB7ADC90037B1B2 /* CAMediaTimingFunction+AdditionalEquations.m */,
 				C291C7B81836C39900ABBB50 /* Background.h */,
 				C291C7B91836C39900ABBB50 /* Background.m */,
 				C291C7BA1836C39900ABBB50 /* LBProgressBar.h */,
@@ -6965,6 +6970,7 @@
 				0A9EDC601897BA0E0037E1BC /* RBLView.m in Sources */,
 				C20D190219542AB80095A906 /* SearchHistoryFilter.m in Sources */,
 				C2D4B8721AFCE8FA0035B4E4 /* YapDatabaseQuery.m in Sources */,
+				C2078E401CB7ADC90037B1B2 /* CAMediaTimingFunction+AdditionalEquations.m in Sources */,
 				C2D825D61B67B22E00434D37 /* CacheSettingsViewController.m in Sources */,
 				C20D1893193E09C00095A906 /* TMBlueAddButtonView.m in Sources */,
 				C2CE53D61BE905D800BBEF5F /* TGProfileHeaderRowView.m in Sources */,

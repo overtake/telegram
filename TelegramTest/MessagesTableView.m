@@ -310,7 +310,7 @@
     
     [SelectTextManager clear];
     [SelectTextManager becomeFirstResponder];
-    
+    [SelectTextManager setCurrentTableView:self];
     _startSelectPosition = tablePoint;
     
     

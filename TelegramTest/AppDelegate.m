@@ -620,7 +620,10 @@ void exceptionHandler(NSException * exception)
             if(result.window == [NSApp mainWindow] && [result.window isKindOfClass:[MainWindow class]]) {
                 
                 if([result.window.contentView hitTest:[result locationInWindow]]) {
-                    if([TMViewController isModalActive]) {
+                    
+                    TGModalView *modalView = (TGModalView *) [TMViewController modalView];
+                    
+                    if(modalView && (![modalView isKindOfClass:[TGModalView class]] || ![modalView mouse:[modalView convertPoint:[result locationInWindow] fromView:nil] inRect:modalView.contentRect])) {
                         if(result.type == NSMouseEntered || result.type == NSMouseMoved) {
                             result = nil;
                         }
@@ -666,9 +669,11 @@ void exceptionHandler(NSException * exception)
     
     id block3 = ^(NSEvent *incomingEvent) {
         
-        if([appWindow().firstResponder class] == [SelectTextManager class]) { // hard fix for osx events bug
+        if([incomingEvent.window.firstResponder class] == [SelectTextManager class]) { // hard fix for osx events bug
             
-            MessagesViewController *viewController = appWindow().navigationController.messagesViewController;
+            
+            
+            MessagesViewController *viewController = [SelectTextManager currentTableView].viewController;
             
             
             NSPoint mouseLoc = [viewController.table.scrollView convertPoint:[incomingEvent locationInWindow] fromView:nil];

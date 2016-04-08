@@ -196,7 +196,7 @@
     
     BOOL (^check_block)() = ^BOOL() {
         
-        BOOL completelyVisible = self.containerView.visibleRect.size.width > 0 && self.containerView.visibleRect.size.height > 0 && ![TMViewController isModalActive];
+        BOOL completelyVisible = self.containerView.visibleRect.size.width > 0 && self.containerView.visibleRect.size.height > 0 ;
         
         return ![SettingsArchiver checkMaskedSetting:DisableAutoplayGifSetting] && completelyVisible && ((self.containerView.window != nil && appWindow().isKeyWindow)) && item.isset && ![self.containerView inLiveResize];
         

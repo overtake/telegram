@@ -8,15 +8,23 @@
 
 #import "SelectTextManager.h"
 #import "MessageTableItem.h"
-
+#import "MessagesTableView.h"
 @interface SelectTextManager ()
 @property (nonatomic,strong) NSMutableDictionary *keys;
 @property (nonatomic,strong) NSMutableArray *list;
 @property (nonatomic,strong) NSMutableArray *delegates;
+
+@property (nonatomic,strong) MessagesTableView *tableView;
 @end
 
 @implementation SelectTextManager
 
++(MessagesTableView *)currentTableView {
+    return [(SelectTextManager *)[self instance] tableView];
+}
++(void)setCurrentTableView:(MessagesTableView *)currentTableView {
+    [(SelectTextManager *)[self instance] setTableView:currentTableView];
+}
 
 +(void)addSelectManagerDelegate:(id<SelectTextManagerDelegate>)delegate {
     [[[self instance] delegates] addObject:delegate];
@@ -61,6 +69,7 @@
     [[[self instance] delegates] enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
          [obj clearSelection];
     }];
+    [self setCurrentTableView:nil];
 }
 
 +(NSRange)rangeForItem:(id<SelectTextDelegate>)item {
@@ -187,7 +196,7 @@
     
 }
 
-+(id)instance {
++(SelectTextManager *)instance {
     static const SelectTextManager *manager;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
