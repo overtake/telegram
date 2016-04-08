@@ -87,15 +87,15 @@
     
     _string = [[NSMutableAttributedString alloc] init];
     
-    [_string appendString:[_keyboardButton.text stringByReplacingOccurrencesOfString:@"\n" withString:@" "] withColor:TEXT_COLOR];
+    [_string appendString:[[_keyboardButton.text fixEmoji] stringByReplacingOccurrencesOfString:@"\n" withString:@" "] withColor:TEXT_COLOR];
     [_string setFont:TGSystemFont(13) forRange:_string.range];
     _stringSize = [_string coreTextSizeOneLineForWidth:INT32_MAX];
     
     [_textField setText:_string maxWidth:INT32_MAX];
     
-    if([keyboardButton isKindOfClass:[TL_keyboardButtonUrl class]]) {
+    if([keyboardButton isKindOfClass:[TL_keyboardButtonUrl class]] || [keyboardButton isKindOfClass:[TL_keyboardButtonSwitchInline class]]) {
         if(!_inlineBotUrlImageView) {
-            _inlineBotUrlImageView = imageViewWithImage(image_bot_inline_button_url());
+            _inlineBotUrlImageView = imageViewWithImage([keyboardButton isKindOfClass:[TL_keyboardButtonSwitchInline class]] ? image_share_inline_bot() : image_bot_inline_button_url());
             [self addSubview:_inlineBotUrlImageView];
         }
         
@@ -104,7 +104,7 @@
         _inlineBotUrlImageView = nil;
     }
     
-    [self setToolTip:NSWidth(self.frame) - 10 > NSWidth(_textField.frame) ? _keyboardButton.text : nil];
+    [self setToolTip:NSWidth(self.frame) - 10 < NSWidth(_textField.frame) ? _keyboardButton.text : nil];
 }
 
 -(void)setProccessing:(BOOL)proccessing {
@@ -145,7 +145,7 @@
     
     self.layer.opacity = 1.0;
     
-    if([self.superview mouse:[self.superview convertPoint:[theEvent locationInWindow] fromView:nil] inRect:self.frame]) {
+    if([self.superview mouse:[self.superview convertPoint:[theEvent locationInWindow] fromView:nil] inRect:self.frame] && theEvent.clickCount == 1) {
         if(_keyboardCallback != nil) {
             _keyboardCallback(_keyboardButton);
         }
@@ -238,7 +238,10 @@
 
 -(void)setBackgroundColor:(NSColor *)backgroundColor {
     [super setBackgroundColor:backgroundColor];
+    _containerView.backgroundColor = backgroundColor;
     _scrollView.backgroundColor = backgroundColor;
+    [self setNeedsLayout:YES];
+    [_containerView setNeedsLayout:YES];
 }
 
 -(void)setButtonColor:(NSColor *)buttonColor {
@@ -361,7 +364,7 @@
        
         [row enumerateObjectsUsingBlock:^(TL_keyboardButton *button, NSUInteger idx, BOOL *stop) {
             
-            TGBotKeyboardItemView *itemView = [[TGBotKeyboardItemView alloc] initWithFrame:NSMakeRect(0, 0, 0, 22)];
+            TGBotKeyboardItemView *itemView = [[TGBotKeyboardItemView alloc] initWithFrame:NSMakeRect(0, 0, 0, 33)];
             
             [itemView setKeyboardButton:button];
             [itemView setKeyboard:keyboard];
@@ -381,11 +384,13 @@
     _rows = f;
     
     
-    [self setFrameSize:NSMakeSize(NSWidth(self.frame), _rows.count == 0 ? 0 : maxHeight+2)];
+    [self setFrameSize:NSMakeSize(NSWidth(self.frame), _rows.count == 0 ? 0 : maxHeight)];
 }
 
 -(void)setFrameSize:(NSSize)newSize {
     [super setFrameSize:newSize];
+    
+
     
     __block int x = 0;
     __block int y = _fillToSize ? 0 : 3;

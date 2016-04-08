@@ -233,6 +233,8 @@ CACHE_IMAGE(bot_inline_button_url);
 
 CACHE_IMAGE(ModernMessageLocationPin);
 
+CACHE_IMAGE(share_inline_bot);
+
 @interface ImageUtils : NSObject
 
 

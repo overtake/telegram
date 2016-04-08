@@ -319,7 +319,11 @@
     if( ![self mouse:[self convertPoint:[theEvent locationInWindow] fromView:nil] inRect:_imageView.frame])
         [super mouseDown:theEvent];
     else {
-        [self checkOperation];
+         if([self.item.botResult.send_message isKindOfClass:[TL_botInlineMessageMediaAuto class]]) {
+             [self checkOperation];
+         } else {
+            [super mouseDown:theEvent];
+         }
     }
 }
 

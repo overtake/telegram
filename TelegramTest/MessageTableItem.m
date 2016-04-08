@@ -393,7 +393,7 @@ static NSTextAttachment *channelViewsCountAttachment() {
     }
     
     if([self.message.reply_markup isKindOfClass:[TL_replyInlineMarkup class]]) {
-        viewSize.height+=_inlineKeyboardSize.height+self.defaultContentOffset;
+        viewSize.height+=_inlineKeyboardSize.height+(self.defaultContentOffset );
     }
     
     viewSize.width = self.makeSize + (self.isForwadedMessage ? self.defaultOffset : 0);
@@ -723,7 +723,8 @@ static NSTextAttachment *channelViewsCountAttachment() {
     self.headerSize = NSMakeSize(MIN(_headerOriginalSize.width, width - self.defaultOffset * 2), self.headerSize.height);
     
     if(_message.reply_markup.rows) {
-        _inlineKeyboardSize = NSMakeSize(MAX(MIN(self.contentSize.width,300),180), _message.reply_markup.rows.count > 1 ? _message.reply_markup.rows.count * (33 + self.defaultContentOffset) - self.defaultContentOffset *2 : 33);
+        _inlineKeyboardSize = NSMakeSize(MIN(300,self.viewSize.width), _message.reply_markup.rows.count > 1 ? (_message.reply_markup.rows.count * 33) + ((_message.reply_markup.rows.count-1 ) * 3) : 33);
+        int bp = 0;
     }
     
     

@@ -2772,6 +2772,9 @@
          contextName = "-[TGModernMessageCellContainerView checkAndMakeBotKeyboard:]:TGModernMessageCellContainerView.m">
          <PersistentStrings>
             <PersistentString
+               value = "item.inlineKeyboardSize">
+            </PersistentString>
+            <PersistentString
                value = "item.message.reply_markup">
             </PersistentString>
          </PersistentStrings>
@@ -3762,6 +3765,9 @@
          <PersistentStrings>
             <PersistentString
                value = "_textField.frame">
+            </PersistentString>
+            <PersistentString
+               value = "self.frame">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -5535,6 +5541,14 @@
             </PersistentString>
             <PersistentString
                value = "sql">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[TGMediaContextTableView selectionDidChange:item:]:TGMediaContextTableView.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "_choiceHandler">
             </PersistentString>
          </PersistentStrings>
       </ContextState>

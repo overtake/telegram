@@ -269,7 +269,7 @@
         
         if(!_keyboard) {
             _keyboard = [[TGBotCommandsKeyboard alloc] initWithFrame:NSZeroRect];
-            [_keyboard setBackgroundColor:[NSColor whiteColor]];
+            [_keyboard setBackgroundColor:[NSColor clearColor]];
             [_keyboard setButtonBorderColor:NSColorFromRGB(0x4ba3e2)];
             [_keyboard setButtonColor:NSColorFromRGB(0x4ba3e2)];
             [_keyboard setButtonTextColor:[NSColor whiteColor]];
@@ -556,7 +556,6 @@ static bool dragAction = NO;
         [_nameView pop_addAnimation:anim forKey:@"background"];
     }
     
-    [_keyboard setBackgroundColor:color];
     
     
     [_replyContainer _didChangeBackgroundColorWithAnimation:anim toColor:color];

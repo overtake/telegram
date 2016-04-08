@@ -659,11 +659,19 @@ static NSMenu *deleteMenu;
 }
 - (void)selectionDidChange:(NSInteger)row item:(TGGifSearchRowItem *) item {
     
-    TLBotInlineResult *botResult = item.gifs[row];
-    
-    if(_choiceHandler) {
-        _choiceHandler(botResult);
+    if(![item isKindOfClass:[TGContextImportantRowItem class]]) {
+        TLBotInlineResult *botResult = item.gifs[row];
+        
+        if(_choiceHandler) {
+            _choiceHandler(botResult);
+        }
+    } else {
+        if(_choiceHandler) {
+            _choiceHandler((TGGifSearchRowItem *)item);
+        }
     }
+    
+    
     
 }
 - (BOOL)selectionWillChange:(NSInteger)row item:(TMRowItem *) item {

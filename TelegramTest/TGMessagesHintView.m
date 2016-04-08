@@ -306,6 +306,9 @@ DYNAMIC_PROPERTY(DUser);
     cancel_delayed_block(_handle);
     [_contextRequest cancelRequest];
     
+    if(self.messagesViewController.state != MessagesViewControllerStateNone)
+        return;
+    
     if(conversation.type == DialogTypeSecretChat)
         return;
     
@@ -365,6 +368,9 @@ DYNAMIC_PROPERTY(DUser);
     _choiceHandler = choiceHandler;
     cancel_delayed_block(_handle);
     [_contextRequest cancelRequest];
+    
+    if(self.messagesViewController.state != MessagesViewControllerStateNone)
+        return;
     
     __block NSMutableDictionary *tags;
     
@@ -428,6 +434,9 @@ DYNAMIC_PROPERTY(DUser);
     
     
     if(conversation.type == DialogTypeSecretChat && conversation.encryptedChat.encryptedParams.layer < 45)
+        return;
+    
+    if(self.messagesViewController.state != MessagesViewControllerStateNone)
         return;
     
     NSMutableArray *uids = [[NSMutableArray alloc] init];
@@ -534,8 +543,9 @@ static NSMutableDictionary *inlineBotsExceptions;
 -(void)showContextPopupWithQuery:(NSString *)bot query:(NSString *)query conversation:(TL_conversation *)conversation  {
     
     
-    if(inlineBotsExceptions[bot] || self.messagesViewController.class == [TGContextMessagesvViewController class])
+    if(inlineBotsExceptions[bot] || self.messagesViewController.class == [TGContextMessagesvViewController class] || self.messagesViewController.state != MessagesViewControllerStateNone)
         return;
+    
     
     if(self.messagesViewController.templateType == TGInputMessageTemplateTypeEditMessage || (conversation.type == DialogTypeSecretChat && conversation.encryptedChat.encryptedParams.layer < 45))
         return;
@@ -653,8 +663,14 @@ static NSMutableDictionary *inlineBotsExceptions;
                         __strong TGMessagesHintView *strongSelf = weakSelf;
                         
                         if(strongSelf != nil) {
-                            [strongSelf.messagesViewController sendContextBotResult:botResult via_bot_id:user.n_id via_bot_name:user.username queryId:botResult.queryId forConversation:conversation];
-                            [strongSelf.messagesViewController.bottomView setInputMessageString:@"" disableAnimations:NO];
+                            
+                            if([botResult isKindOfClass:[TGContextImportantRowItem class]]) {
+                                [strongSelf performSelected];
+                            } else {
+                                [strongSelf.messagesViewController sendContextBotResult:botResult via_bot_id:user.n_id via_bot_name:user.username queryId:botResult.queryId forConversation:conversation];
+                                [strongSelf.messagesViewController.bottomView setInputMessageString:@"" disableAnimations:NO];
+                            }
+                            
                         }
                         
                     }];
@@ -854,6 +870,37 @@ static NSMutableDictionary *inlineBotsExceptions;
 }
 
 -(void)performSelected {
+    
+    TGContextRowItem *item = (TGContextRowItem *)_currentTableView.selectedItem;
+    
+    if([item isKindOfClass:[TGContextImportantRowItem class]]) {
+        
+        TGContextImportantRowItem *importantItem = ( TGContextImportantRowItem *)item;
+        
+        [_messagesModalView close:YES];
+        
+        _messagesModalView = [[TGModalMessagesViewController alloc] initWithFrame:self.window.contentView.bounds];
+        
+        [_messagesModalView show:self.window animated:YES];
+        
+        ComposeAction *action = [[ComposeAction alloc] initWithBehaviorClass:[ComposeActionCustomBehavior class] filter:nil object:importantItem.bot.dialog];
+        
+        ComposeActionCustomBehavior *behavior = (ComposeActionCustomBehavior *) action.behavior;
+        
+        weak();
+        
+        [behavior setComposeDone:^{
+            [weakSelf.messagesViewController.bottomView updateText];
+        }];
+        
+        action.reservedObject1 = item.botResult;
+        action.reservedObject2 = item.bot;
+        action.reservedObject3 =  _messagesViewController.conversation;
+        [_messagesModalView setAction:action];
+        
+        return;
+    }
+    
     if(_choiceHandler != nil)
     {
         TGMessagesHintRowItem *item = (TGMessagesHintRowItem *) _tableView.selectedItem;
@@ -862,37 +909,10 @@ static NSMutableDictionary *inlineBotsExceptions;
             _choiceHandler(item.result);
         }
     } else if(_currentTableView == _contextTableView) {
-        TGContextRowItem *item = (TGContextRowItem *)_contextTableView.selectedItem;
         
-        if([item isKindOfClass:[TGContextImportantRowItem class]]) {
-            
-            TGContextImportantRowItem *importantItem = ( TGContextImportantRowItem *)item;
-            
-            [_messagesModalView close:YES];
-            
-            _messagesModalView = [[TGModalMessagesViewController alloc] initWithFrame:self.window.contentView.bounds];
-            
-            [_messagesModalView show:self.window animated:YES];
-            
-            ComposeAction *action = [[ComposeAction alloc] initWithBehaviorClass:[ComposeActionCustomBehavior class] filter:nil object:importantItem.bot.dialog];
-            
-            ComposeActionCustomBehavior *behavior = (ComposeActionCustomBehavior *) action.behavior;
-            
-            weak();
-            
-            [behavior setComposeDone:^{
-                [weakSelf.messagesViewController.bottomView updateText];
-            }];
-            
-            action.reservedObject1 = item.botResult;
-            action.reservedObject2 = item.bot;
-            action.reservedObject3 =  _messagesViewController.conversation;
-            [_messagesModalView setAction:action];
-            
-        } else {
-            [self.messagesViewController sendContextBotResult:item.botResult via_bot_id:item.bot.n_id via_bot_name:item.bot.username queryId:item.queryId forConversation:self.messagesViewController.conversation];
-            [self.messagesViewController.bottomView setInputMessageString:@"" disableAnimations:NO];
-        }
+        [self.messagesViewController sendContextBotResult:item.botResult via_bot_id:item.bot.n_id via_bot_name:item.bot.username queryId:item.queryId forConversation:self.messagesViewController.conversation];
+        [self.messagesViewController.bottomView setInputMessageString:@"" disableAnimations:NO];
+        
         
     }
     
