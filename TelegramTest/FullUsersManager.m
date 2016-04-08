@@ -35,8 +35,10 @@
 }
 
 -(void)requestUserFull:(TLUser *)user withCallback:(void (^) (TLUserFull *userFull))callback {
+
     
-    assert(user != nil);
+    if(!user)
+        return;
     
     int time = [_lastTimeCalled[@(user.n_id)] intValue];
     
