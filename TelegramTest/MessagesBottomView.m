@@ -1109,7 +1109,7 @@ static RBLPopover *popover;
                 
                 
                 if(response.updates.count == 0) {
-                    TL_localMessage *msg = [TL_localMessageService createWithFlags:TGMENTIONMESSAGE n_id:0 from_id:[UsersManager currentUserId] to_id:weakSelf.dialog.peer reply_to_msg_id:0 date:[[MTNetwork instance] getTime] action:([TL_messageActionChatAddUser createWithUsers:[@[@([UsersManager currentUserId])] mutableCopy]]) fakeId:[MessageSender getFakeMessageId] randomId:rand_long() dstate:DeliveryStateNormal];
+                    TL_localMessage *msg = [TL_localMessageService createWithFlags:TGMENTIONMESSAGE | (1 << 14) n_id:[MessageSender getFakeMessageId] from_id:[UsersManager currentUserId] to_id:weakSelf.dialog.peer reply_to_msg_id:0 date:[[MTNetwork instance] getTime] action:([TL_messageActionChatAddUser createWithUsers:[@[@([UsersManager currentUserId])] mutableCopy]]) fakeId:[MessageSender getFakeMessageId] randomId:rand_long() dstate:DeliveryStateNormal];
                     
                     [MessagesManager addAndUpdateMessage:msg];
                 }

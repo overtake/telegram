@@ -11,6 +11,14 @@
 @implementation CommonMediaHistoryFilter
 
 
+-(instancetype)init {
+    if(self = [super init]) {
+        
+    }
+    
+    return self;
+}
+
 -(void)remoteRequest:(BOOL)next max_id:(int)max_id hole:(TGMessageHole *)hole callback:(void (^)(id response,ChatHistoryState state))callback {
     
     int maxDate = next ? self.minDate : INT32_MAX;
