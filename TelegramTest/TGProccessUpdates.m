@@ -407,16 +407,23 @@ static NSArray *channelUpdates;
 
 -(void)applyUpdate:(TGUpdateContainer *)container {
     
+    if(container.pts != INT32_MAX) {
+        _updateState.seq = container.beginSeq;
         
-    _updateState.seq = container.beginSeq;
+        _updateState.pts = container.pts;
+        
+        _updateState.date = container.date;
+        
+        _updateState.qts = container.qts;
+        
+        [self saveUpdateState];
+    } else {
+#ifdef TGDEBUG
+        assert(false);
+#endif
+    }
     
-    _updateState.pts = container.pts;
     
-    _updateState.date = container.date;
-    
-    _updateState.qts = container.qts;
-    
-    [self saveUpdateState];
 }
 
 
@@ -974,7 +981,7 @@ static NSArray *channelUpdates;
    
     _holdUpdates = YES;
     
-    if( !_updateState || force) {
+    if( !_updateState || force || _updateState.pts == INT32_MAX) {
         
         [RPCRequest sendRequest:[TLAPI_updates_getState create] successHandler:^(RPCRequest *request, TL_updates_state * state) {
     
@@ -982,7 +989,7 @@ static NSArray *channelUpdates;
             
             MTLog(@"update dif broken pts:%d, date:%d, qts:%d,seq:%d",_updateState.pts,_updateState.date,_updateState.qts,_updateState.seq);
             
-            _updateState = [[TGUpdateState alloc] initWithPts:_updateState.pts == 0 ? state.pts : _updateState.pts qts:_updateState.qts == 0 ? state.qts : _updateState.qts date:_updateState.date == 0 ? state.date : _updateState.date seq:_updateState.seq == 0 ? state.seq : _updateState.seq pts_count:_updateState.pts_count];
+            _updateState = [[TGUpdateState alloc] initWithPts:_updateState.pts == 0 || _updateState.pts == INT32_MAX ? state.pts : _updateState.pts qts:_updateState.qts == 0 ? state.qts : _updateState.qts date:_updateState.date == 0 ? state.date : _updateState.date seq:_updateState.seq == 0 ? state.seq : _updateState.seq pts_count:_updateState.pts_count];
 
             [self saveUpdateState];
             
@@ -1017,7 +1024,7 @@ static NSArray *channelUpdates;
         [Telegram setConnectionState:ConnectingStatusTypeUpdating];
     
     
-    MTLog(@"updateDifference:%@, pts:%d,date:%d,qts:%d",_updateState,_updateState.pts,_updateState.date,_updateState.qts);
+    MTLog(@"updateDifference:%@",_updateState);
     
     TLAPI_updates_getDifference *dif = [TLAPI_updates_getDifference createWithPts:_updateState.pts date:_updateState.date qts:_updateState.qts];
     [RPCRequest sendRequest:dif successHandler:^(RPCRequest *request, id response)  {
@@ -1080,12 +1087,10 @@ static NSArray *channelUpdates;
             }
             
             
-            _updateState.checkMinimum = NO;
             _updateState.qts = stateQts;
             _updateState.pts = statePts;
             _updateState.date = stateDate;
             _updateState.seq = stateSeq;
-            _updateState.checkMinimum = YES;
             
             [self saveUpdateState];
             
