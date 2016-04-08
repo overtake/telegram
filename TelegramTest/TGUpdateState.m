@@ -55,7 +55,7 @@
         _date = date;
         _seq = seq;
         
-        self.checkMinimum = YES;
+        _checkMinimum = YES;
     }
     
     return self;

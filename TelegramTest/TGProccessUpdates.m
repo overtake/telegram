@@ -981,7 +981,7 @@ static NSArray *channelUpdates;
    
     _holdUpdates = YES;
     
-    if( !_updateState || force || _updateState.pts == INT32_MAX) {
+    if( !_updateState || force || _updateState.pts == INT32_MAX || _updateState.pts == 0) {
         
         [RPCRequest sendRequest:[TLAPI_updates_getState create] successHandler:^(RPCRequest *request, TL_updates_state * state) {
     
