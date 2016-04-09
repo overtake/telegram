@@ -551,6 +551,10 @@ static int MAX_WORKER_POLL = 3;
     return [_context globalTime];
 }
 
+-(int)globalTimeOffsetFromUTC {
+    return [_context globalTimeOffsetFromUTC];
+}
+
 -(int)currentDatacenter {
     return (int)_masterDatacenter;
 }

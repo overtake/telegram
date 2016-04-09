@@ -4717,6 +4717,14 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "-[TGCalendarView monthDay:]:TGCalendarView.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "cal.timeZone">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "-[TGCompressItem isFinished]:TGCompressItem.m">
          <PersistentStrings>
             <PersistentString

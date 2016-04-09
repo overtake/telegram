@@ -156,14 +156,12 @@
    
     
     if(_messagesViewController.conversation.type == DialogTypeChannel) {
-        request = [TLAPI_channels_getImportantHistory createWithChannel:_messagesViewController.conversation.chat.inputPeer offset_id:0 offset_date:selectedDate.timeIntervalSince1970- 3*60*60 add_offset:-100 limit:100 max_id:INT32_MAX min_id:0];
+        request = [TLAPI_channels_getImportantHistory createWithChannel:_messagesViewController.conversation.chat.inputPeer offset_id:0 offset_date:selectedDate.timeIntervalSince1970- [[MTNetwork instance] globalTimeOffsetFromUTC] add_offset:-100 limit:100 max_id:INT32_MAX min_id:0];
     } else {
-        request = [TLAPI_messages_getHistory createWithPeer:_messagesViewController.conversation.inputPeer offset_id:0 offset_date:selectedDate.timeIntervalSince1970 - 3*60*60 add_offset:-100 limit:100 max_id:INT32_MAX min_id:0];
+        request = [TLAPI_messages_getHistory createWithPeer:_messagesViewController.conversation.inputPeer offset_id:0 offset_date:selectedDate.timeIntervalSince1970 - [[MTNetwork instance] globalTimeOffsetFromUTC] add_offset:-100 limit:100 max_id:INT32_MAX min_id:0];
     }
     
     
-    
-    NSLog(@"selected date: %@",selectedDate);
     
     [RPCRequest sendRequest:request successHandler:^(id request, TL_messages_messages *response) {
         

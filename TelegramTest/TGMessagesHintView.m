@@ -538,10 +538,15 @@ static NSMutableDictionary *inlineBotsExceptions;
     });
 }
 
+-(void)cancel {
+    [_contextRequest cancelRequest];
+    cancel_delayed_block(_handle);
+}
 
 
 -(void)showContextPopupWithQuery:(NSString *)bot query:(NSString *)query conversation:(TL_conversation *)conversation acceptHandler:(void (^)(TLUser *user))acceptHandler  {
     
+    [self cancel];
     
     if(inlineBotsExceptions[bot] || self.messagesViewController.class == [TGContextMessagesvViewController class] || self.messagesViewController.state != MessagesViewControllerStateNone)
         return;

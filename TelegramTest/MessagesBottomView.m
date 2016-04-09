@@ -1475,6 +1475,8 @@ static RBLPopover *popover;
     }
     
     self.inlineBot = nil;
+    [self.messagesViewController.hintView cancel];
+    [self setProgress:NO];
     
     if(search != nil && ![string hasPrefix:@" "]) {
         
@@ -1512,7 +1514,7 @@ static RBLPopover *popover;
     } else if([self.inputMessageTextField.stringValue hasPrefix:@"@"] && self.dialog.type != DialogTypeSecretChat) {
         
         [self.messagesViewController.hintView hide];
-        [self setProgress:NO];
+        
         
         
 

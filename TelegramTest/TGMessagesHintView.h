@@ -19,6 +19,8 @@
 
 -(void)showContextPopupWithQuery:(NSString *)bot query:(NSString *)query conversation:(TL_conversation *)conversation acceptHandler:(void (^)(TLUser *user))acceptHandler;
 
+-(void)cancel;
+
 -(void)selectNext;
 -(void)selectPrev;
 

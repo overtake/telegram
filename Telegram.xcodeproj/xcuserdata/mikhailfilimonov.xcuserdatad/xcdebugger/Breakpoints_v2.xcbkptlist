@@ -313,13 +313,13 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "TelegramTest/TGMessagesHintView.m"
-            timestampString = "481910942.892427"
+            filePath = "TGCalendarView.m"
+            timestampString = "481918429.36775"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "693"
-            endingLineNumber = "693"
-            landmarkName = "-showContextPopupWithQuery:query:conversation:acceptHandler:"
+            startingLineNumber = "223"
+            endingLineNumber = "223"
+            landmarkName = "+dd:"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
