@@ -2,7 +2,7 @@
 //  TLApi.h
 //  Telegram
 //
-//  Auto created by Mikhail Filimonov on 07.04.16.
+//  Auto created by Mikhail Filimonov on 09.04.16.
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -1101,11 +1101,12 @@
 @interface TLAPI_messages_getInlineBotResults : TLApiObject
 @property int flags;
 @property (nonatomic, strong) TLInputUser* bot;
+@property (nonatomic, strong) TLInputPeer* peer;
 @property (nonatomic, strong) TLInputGeoPoint* geo_point;
 @property (nonatomic, strong) NSString* query;
 @property (nonatomic, strong) NSString* offset;
 
-+(TLAPI_messages_getInlineBotResults*)createWithFlags:(int)flags bot:(TLInputUser*)bot geo_point:(TLInputGeoPoint*)geo_point query:(NSString*)query offset:(NSString*)offset;
++(TLAPI_messages_getInlineBotResults*)createWithFlags:(int)flags bot:(TLInputUser*)bot peer:(TLInputPeer*)peer geo_point:(TLInputGeoPoint*)geo_point query:(NSString*)query offset:(NSString*)offset;
 @end
 
 @interface TLAPI_messages_setInlineBotResults : TLApiObject

@@ -1,14 +1,7 @@
-//
-//  MLCalendarView.m
-//  ModernLookOSX
-//
-//  Created by András Gyetván on 2015. 03. 08..
-//  Copyright (c) 2015. DroidZONE. All rights reserved.
-//
 
-#import "MLCalendarBackground.h"
+#import "TGCalendarBackground.h"
 
-@implementation MLCalendarBackground
+@implementation TGCalendarBackground
 
 - (instancetype)initWithFrame: (NSRect)frameRect
 {

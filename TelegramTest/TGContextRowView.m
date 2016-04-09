@@ -63,6 +63,7 @@
         
         _domainSymbolView = [TMTextField defaultTextField];
         [_domainSymbolView setFont:TGSystemFont(18)];
+        [_domainSymbolView setFrameSize:NSMakeSize(15, 22)];
         [_domainSymbolView setTextColor:[NSColor whiteColor]];
         [_imageView addSubview:_domainSymbolView];
         
@@ -291,7 +292,6 @@
     [_textField setAttributedStringValue:self.item.desc];
     
     [_domainSymbolView setStringValue:self.item.domainSymbol];
-    [_domainSymbolView sizeToFit];
     [_domainSymbolView setCenterByView:_imageView];
     [_domainSymbolView setHidden:self.item.imageObject != nil];
     

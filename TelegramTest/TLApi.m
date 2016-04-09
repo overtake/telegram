@@ -2,7 +2,7 @@
 //  TLApi.m
 //  Telegram
 //
-//  Auto created by Mikhail Filimonov on 07.04.16..
+//  Auto created by Mikhail Filimonov on 09.04.16..
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -2603,19 +2603,21 @@
 @end
 
 @implementation TLAPI_messages_getInlineBotResults
-+(TLAPI_messages_getInlineBotResults*)createWithFlags:(int)flags bot:(TLInputUser*)bot geo_point:(TLInputGeoPoint*)geo_point query:(NSString*)query offset:(NSString*)offset {
++(TLAPI_messages_getInlineBotResults*)createWithFlags:(int)flags bot:(TLInputUser*)bot peer:(TLInputPeer*)peer geo_point:(TLInputGeoPoint*)geo_point query:(NSString*)query offset:(NSString*)offset {
     TLAPI_messages_getInlineBotResults* obj = [[TLAPI_messages_getInlineBotResults alloc] init];
     obj.flags = flags;
 	obj.bot = bot;
+	obj.peer = peer;
 	obj.geo_point = geo_point;
 	obj.query = query;
 	obj.offset = offset;
     return obj;
 }
 - (NSData*)getData {
-	SerializedData* stream = [ClassStore streamWithConstuctor:-1796755088];
+	SerializedData* stream = [ClassStore streamWithConstuctor:1364105629];
 	[stream writeInt:self.flags];
 	[ClassStore TLSerialize:self.bot stream:stream];
+	[ClassStore TLSerialize:self.peer stream:stream];
 	if(self.flags & (1 << 0)) {[ClassStore TLSerialize:self.geo_point stream:stream];}
 	[stream writeString:self.query];
 	[stream writeString:self.offset];

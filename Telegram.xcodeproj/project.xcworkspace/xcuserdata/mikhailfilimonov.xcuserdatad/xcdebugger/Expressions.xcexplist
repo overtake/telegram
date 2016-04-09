@@ -926,6 +926,9 @@
          contextName = "+[SearchItem hash:]:SearchItem.m">
       </ContextState>
       <ContextState
+         contextName = "__67-[TGMessagesHintView showContextPopupWithQuery:query:conversation:]_block_invoke_4:TGMessagesHintView.m">
+      </ContextState>
+      <ContextState
          contextName = "__33-[PhoneChangeController loadView]_block_invoke_2:PhoneChangeController.m">
       </ContextState>
       <ContextState
@@ -2455,10 +2458,13 @@
          contextName = "__36-[TMBottomScrollView didSelectDate:]_block_invoke_2:TMBottomScrollView.m">
          <PersistentStrings>
             <PersistentString
+               value = "response.messages">
+            </PersistentString>
+            <PersistentString
                value = "obj.date">
             </PersistentString>
             <PersistentString
-               value = "jumpDate.timeIntervalSince1970">
+               value = "selectedDate.timeIntervalSince1970">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -3839,6 +3845,9 @@
          contextName = "-[ExternalGifSenderItem cancel]:ExternalGifSenderItem.m">
       </ContextState>
       <ContextState
+         contextName = "-[MessagesBottomView updateTextFieldContainer]:MessagesBottomView.m">
+      </ContextState>
+      <ContextState
          contextName = "-[StickersPanelView mouseDragged:]:StickersPanelView.m">
          <PersistentStrings>
             <PersistentString
@@ -4049,6 +4058,9 @@
          <PersistentStrings>
             <PersistentString
                value = "self.font">
+            </PersistentString>
+            <PersistentString
+               value = "self.containerView.bounds.size">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -4496,6 +4508,9 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "__54-[MessageTableItemText updateFontAttributesByEntities]_block_invoke:MessageTableItemText.m">
+      </ContextState>
+      <ContextState
          contextName = "__86-[Storage loadMessages:min_id:max_id:minDate:maxDate:limit:next:filterMask:isChannel:]_block_invoke_2:Storage.m">
          <PersistentStrings>
             <PersistentString
@@ -4615,6 +4630,14 @@
       </ContextState>
       <ContextState
          contextName = "__43-[SearchViewController remoteGlobalSearch:]_block_invoke:SearchViewController.m">
+      </ContextState>
+      <ContextState
+         contextName = "__81-[TGMessagesHintView showContextPopupWithQuery:query:conversation:acceptHandler:]_block_invoke_2:TGMessagesHintView.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "_isLockedWithRequest">
+            </PersistentString>
+         </PersistentStrings>
       </ContextState>
       <ContextState
          contextName = "__42-[TGModernChatInfoViewController loadView]_block_invoke_2:TGModernChatInfoViewController.m">
@@ -5366,6 +5389,14 @@
          <PersistentStrings>
             <PersistentString
                value = "_listeners">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[MessagesBottomView updateTextFieldContainer:]:MessagesBottomView.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.inlineBot">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -7165,6 +7196,9 @@
       </ContextState>
       <ContextState
          contextName = "-[ComposeActionCreateChannelBehavior composeDidDone]:ComposeActionCreateChannelBehavior.m">
+      </ContextState>
+      <ContextState
+         contextName = "__81-[TGMessagesHintView showContextPopupWithQuery:query:conversation:acceptHandler:]_block_invoke_4:TGMessagesHintView.m">
       </ContextState>
       <ContextState
          contextName = "-[TGMovableTableView checkAndScroll:]:TGMovableTableView.m">

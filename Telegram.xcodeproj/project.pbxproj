@@ -376,10 +376,10 @@
 		C241364A1C6DEA2900130D2E /* TGCirclularCounter.m in Sources */ = {isa = PBXBuildFile; fileRef = C24136491C6DEA2900130D2E /* TGCirclularCounter.m */; };
 		C241364E1C70AF7100130D2E /* TGRecordedAudioPreview.m in Sources */ = {isa = PBXBuildFile; fileRef = C241364D1C70AF7100130D2E /* TGRecordedAudioPreview.m */; };
 		C24136511C735A2100130D2E /* TL_localMessage_old46.m in Sources */ = {isa = PBXBuildFile; fileRef = C24136501C735A2100130D2E /* TL_localMessage_old46.m */; };
-		C2431D101CA04A7C00C6AACE /* MLCalendarBackground.m in Sources */ = {isa = PBXBuildFile; fileRef = C2431D0C1CA04A7C00C6AACE /* MLCalendarBackground.m */; };
-		C2431D111CA04A7C00C6AACE /* MLCalendarCell.m in Sources */ = {isa = PBXBuildFile; fileRef = C2431D0E1CA04A7C00C6AACE /* MLCalendarCell.m */; };
-		C2431D121CA04A7C00C6AACE /* MLCalendarView.xib in Resources */ = {isa = PBXBuildFile; fileRef = C2431D0F1CA04A7C00C6AACE /* MLCalendarView.xib */; };
-		C2431D151CA04B2A00C6AACE /* MLCalendarView.m in Sources */ = {isa = PBXBuildFile; fileRef = C2431D141CA04B2A00C6AACE /* MLCalendarView.m */; };
+		C2431D101CA04A7C00C6AACE /* TGCalendarBackground.m in Sources */ = {isa = PBXBuildFile; fileRef = C2431D0C1CA04A7C00C6AACE /* TGCalendarBackground.m */; };
+		C2431D111CA04A7C00C6AACE /* TGCalendarCell.m in Sources */ = {isa = PBXBuildFile; fileRef = C2431D0E1CA04A7C00C6AACE /* TGCalendarCell.m */; };
+		C2431D121CA04A7C00C6AACE /* TGCalendarView.xib in Resources */ = {isa = PBXBuildFile; fileRef = C2431D0F1CA04A7C00C6AACE /* TGCalendarView.xib */; };
+		C2431D151CA04B2A00C6AACE /* TGCalendarView.m in Sources */ = {isa = PBXBuildFile; fileRef = C2431D141CA04B2A00C6AACE /* TGCalendarView.m */; };
 		C2431D1B1CA1600900C6AACE /* ChatFullManager.m in Sources */ = {isa = PBXBuildFile; fileRef = C2431D1A1CA1600900C6AACE /* ChatFullManager.m */; };
 		C24435811A1D1B9900F9BB38 /* PrivacyArchiver.m in Sources */ = {isa = PBXBuildFile; fileRef = C24435801A1D1B9900F9BB38 /* PrivacyArchiver.m */; };
 		C24435881A1E018100F9BB38 /* ComposeActionCustomBehavior.m in Sources */ = {isa = PBXBuildFile; fileRef = C24435871A1E018100F9BB38 /* ComposeActionCustomBehavior.m */; };
@@ -1823,13 +1823,13 @@
 		C241364D1C70AF7100130D2E /* TGRecordedAudioPreview.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGRecordedAudioPreview.m; sourceTree = "<group>"; };
 		C241364F1C735A2100130D2E /* TL_localMessage_old46.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TL_localMessage_old46.h; sourceTree = "<group>"; };
 		C24136501C735A2100130D2E /* TL_localMessage_old46.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TL_localMessage_old46.m; sourceTree = "<group>"; };
-		C2431D0B1CA04A7C00C6AACE /* MLCalendarBackground.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MLCalendarBackground.h; sourceTree = SOURCE_ROOT; };
-		C2431D0C1CA04A7C00C6AACE /* MLCalendarBackground.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MLCalendarBackground.m; sourceTree = SOURCE_ROOT; };
-		C2431D0D1CA04A7C00C6AACE /* MLCalendarCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MLCalendarCell.h; sourceTree = SOURCE_ROOT; };
-		C2431D0E1CA04A7C00C6AACE /* MLCalendarCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MLCalendarCell.m; sourceTree = SOURCE_ROOT; };
-		C2431D0F1CA04A7C00C6AACE /* MLCalendarView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MLCalendarView.xib; sourceTree = SOURCE_ROOT; };
-		C2431D131CA04ACC00C6AACE /* MLCalendarView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MLCalendarView.h; sourceTree = SOURCE_ROOT; };
-		C2431D141CA04B2A00C6AACE /* MLCalendarView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MLCalendarView.m; sourceTree = SOURCE_ROOT; };
+		C2431D0B1CA04A7C00C6AACE /* TGCalendarBackground.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGCalendarBackground.h; sourceTree = SOURCE_ROOT; };
+		C2431D0C1CA04A7C00C6AACE /* TGCalendarBackground.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGCalendarBackground.m; sourceTree = SOURCE_ROOT; };
+		C2431D0D1CA04A7C00C6AACE /* TGCalendarCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGCalendarCell.h; sourceTree = SOURCE_ROOT; };
+		C2431D0E1CA04A7C00C6AACE /* TGCalendarCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGCalendarCell.m; sourceTree = SOURCE_ROOT; };
+		C2431D0F1CA04A7C00C6AACE /* TGCalendarView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TGCalendarView.xib; sourceTree = SOURCE_ROOT; };
+		C2431D131CA04ACC00C6AACE /* TGCalendarView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGCalendarView.h; sourceTree = SOURCE_ROOT; };
+		C2431D141CA04B2A00C6AACE /* TGCalendarView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGCalendarView.m; sourceTree = SOURCE_ROOT; };
 		C2431D191CA1600900C6AACE /* ChatFullManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChatFullManager.h; sourceTree = "<group>"; };
 		C2431D1A1CA1600900C6AACE /* ChatFullManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChatFullManager.m; sourceTree = "<group>"; };
 		C244357F1A1D1B9900F9BB38 /* PrivacyArchiver.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PrivacyArchiver.h; sourceTree = "<group>"; };
@@ -3735,13 +3735,13 @@
 		C2032CCF1C5B801F00E23481 /* MLCalendar */ = {
 			isa = PBXGroup;
 			children = (
-				C2431D131CA04ACC00C6AACE /* MLCalendarView.h */,
-				C2431D141CA04B2A00C6AACE /* MLCalendarView.m */,
-				C2431D0B1CA04A7C00C6AACE /* MLCalendarBackground.h */,
-				C2431D0C1CA04A7C00C6AACE /* MLCalendarBackground.m */,
-				C2431D0D1CA04A7C00C6AACE /* MLCalendarCell.h */,
-				C2431D0E1CA04A7C00C6AACE /* MLCalendarCell.m */,
-				C2431D0F1CA04A7C00C6AACE /* MLCalendarView.xib */,
+				C2431D131CA04ACC00C6AACE /* TGCalendarView.h */,
+				C2431D141CA04B2A00C6AACE /* TGCalendarView.m */,
+				C2431D0B1CA04A7C00C6AACE /* TGCalendarBackground.h */,
+				C2431D0C1CA04A7C00C6AACE /* TGCalendarBackground.m */,
+				C2431D0D1CA04A7C00C6AACE /* TGCalendarCell.h */,
+				C2431D0E1CA04A7C00C6AACE /* TGCalendarCell.m */,
+				C2431D0F1CA04A7C00C6AACE /* TGCalendarView.xib */,
 			);
 			name = MLCalendar;
 			path = "../../Downloads/Calendar-OSX-master/MLCalendarSample";
@@ -6579,7 +6579,7 @@
 				C261E3BF197031B90025A3F9 /* phone_numbers_for_OS_X.txt in Resources */,
 				CEC22DEE18273CB1008817D0 /* PhoneCountries.txt in Resources */,
 				C2200B5618EC8A2700F28803 /* sent.caf in Resources */,
-				C2431D121CA04A7C00C6AACE /* MLCalendarView.xib in Resources */,
+				C2431D121CA04A7C00C6AACE /* TGCalendarView.xib in Resources */,
 				C2A5C00818E17C630021BE68 /* SettingsWindowController.xib in Resources */,
 				C235780C1CAAE36E0092F50A /* debug.xcconfig in Resources */,
 				CE46A2551854B68F00D6EF14 /* Localizable.strings in Resources */,
@@ -7358,7 +7358,7 @@
 				0AC7F485185DCC3800F90558 /* TMArrayController.mm in Sources */,
 				0A241A9A18AB0CB200C32F45 /* MessageTableCellContainerView.m in Sources */,
 				0A9EDC4D1897BA0E0037E1BC /* NSAttributedString+RBLHTMLAdditions.m in Sources */,
-				C2431D111CA04A7C00C6AACE /* MLCalendarCell.m in Sources */,
+				C2431D111CA04A7C00C6AACE /* TGCalendarCell.m in Sources */,
 				C222773518FC2DDA002AA0F6 /* MessageTableCellUnreadMarkView.m in Sources */,
 				C274C3A91ABC6251000DFDE4 /* TGHashtagPopup.m in Sources */,
 				C24F878E1A00048C00EC962E /* TL_messageActionSetMessageTTL.m in Sources */,
@@ -7382,7 +7382,7 @@
 				0A59067E18AA32C8002ED7BA /* BTRPopUpButton.m in Sources */,
 				0AF4F4A2189ABDCC004BA4DF /* MessageTypingView.m in Sources */,
 				0A56FF1418D0BBCC00FE63CF /* LoginSMSCodeView.m in Sources */,
-				C2431D151CA04B2A00C6AACE /* MLCalendarView.m in Sources */,
+				C2431D151CA04B2A00C6AACE /* TGCalendarView.m in Sources */,
 				0A073FE318C392B200BAA928 /* MessageTableNavigationTitleView.m in Sources */,
 				C271524D19B4893400841C8A /* ComposeChatCreateViewController.m in Sources */,
 				C2C85B811AE54C3F00FBEABD /* TGImageAttachment.m in Sources */,
@@ -7505,7 +7505,7 @@
 				C270C5B018A13F9F005D80E0 /* FileUtils.m in Sources */,
 				C20A5F5C1B90D815007F4B49 /* TGMessageGroupHole.m in Sources */,
 				C2D4B86C1AFCE8F90035B4E4 /* YapNull.m in Sources */,
-				C2431D101CA04A7C00C6AACE /* MLCalendarBackground.m in Sources */,
+				C2431D101CA04A7C00C6AACE /* TGCalendarBackground.m in Sources */,
 				C2200B7618F43B3300F28803 /* EncryptedKeyWindow.m in Sources */,
 				C268C18919F0519C007F836A /* POPAnimationRuntime.mm in Sources */,
 				C2C8AB101A3F508300C857D6 /* TLDocument+Extension.m in Sources */,

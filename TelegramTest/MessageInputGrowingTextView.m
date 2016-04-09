@@ -15,6 +15,23 @@
 #import "NSString+FindURLs.h"
 #import "NSString+Extended.h"
 #import "TGBotCommandsPopup.h"
+
+@interface TGHackView : TMView
+
+@end
+
+@implementation TGHackView
+
+-(void)setFrame:(NSRect)frame {
+    [super setFrame:frame];
+}
+
+-(void)setFrameSize:(NSSize)newSize {
+    [super setFrameSize:newSize];
+}
+
+@end
+
 typedef enum {
     PasteBoardItemTypeVideo,
     PasteBoardItemTypeDocument,
@@ -260,8 +277,8 @@ typedef enum {
 -(void)checkWebpages {
     
     NSString *link = [self.string webpageLink];
-    [appWindow().navigationController.messagesViewController clearNoWebpage];
-    [appWindow().navigationController.messagesViewController checkWebpage:link];
+    [_controller.messagesViewController clearNoWebpage];
+    [_controller.messagesViewController checkWebpage:link];
     
 }
 
@@ -358,7 +375,7 @@ typedef enum {
     if(![[NSUserDefaults standardUserDefaults] boolForKey:@"enableSpelling"]) {
         [self setAutomaticSpellingCorrectionEnabled:YES];
         [self setGrammarCheckingEnabled:YES];
-        [self setContinuousSpellCheckingEnabled:YES];
+       // [self setContinuousSpellCheckingEnabled:YES];
         [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"enableSpelling"];
     }
     
@@ -383,9 +400,9 @@ typedef enum {
     //TODO
     __strong MessageInputGrowingTextView *weakSelf = self;
     
-    self.containerView = [[TMView alloc] initWithFrame:self.bounds];
+    self.containerView = [[TGHackView alloc] initWithFrame:self.bounds];
     [self.containerView setDrawBlock:^{
-        NSRect rect = NSMakeRect(1, 1, weakSelf.containerView.bounds.size.width - 2, weakSelf.containerView.bounds.size.height - 2);
+        NSRect rect = NSMakeRect(1, 1, NSWidth(weakSelf.containerView.frame) - 2, NSHeight(weakSelf.containerView.frame) - 2);
         NSBezierPath *circlePath = [NSBezierPath bezierPath];
         [circlePath appendBezierPathWithRoundedRect:rect xRadius:3 yRadius:3];
         [NSColorFromRGB(0xdedede) setStroke];

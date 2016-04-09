@@ -100,8 +100,9 @@
 
 @property (nonatomic,strong) BTRButton *removeAudioRecordButton;
 
-
 @property (nonatomic,strong) TGInputMessageTemplate *template;
+
+@property (nonatomic,strong) TLUser *inlineBot;
 
 @end
 
@@ -220,7 +221,7 @@
 - (void)setDialog:(TL_conversation *)dialog {
     self->_dialog = dialog;
     
-    
+    _inlineBot = nil;
     
     self.botStartParam = nil;
     
@@ -569,7 +570,7 @@
     [self.recordHelpLayer setTextFont:TGSystemFont(14)];
     [self.normalView.layer addSublayer:self.recordHelpLayer];
 
-    int offsetX = self.attachButton.frame.origin.x + self.attachButton.frame.size.width + 21;
+    int offsetX = self.textFieldXOffset;
     
     self.inputMessageTextField.containerView.autoresizesSubviews = YES;
     self.inputMessageTextField.containerView.autoresizingMask = NSViewWidthSizable;
@@ -1105,9 +1106,6 @@ static RBLPopover *popover;
             
             [RPCRequest sendRequest:[TLAPI_channels_joinChannel createWithChannel:weakSelf.dialog.chat.inputPeer] successHandler:^(RPCRequest *request, TLUpdates *response) {
                 
-                
-                
-                
                 if(response.updates.count == 0) {
                     TL_localMessage *msg = [TL_localMessageService createWithFlags:TGMENTIONMESSAGE | (1 << 14) n_id:[MessageSender getFakeMessageId] from_id:[UsersManager currentUserId] to_id:weakSelf.dialog.peer reply_to_msg_id:0 date:[[MTNetwork instance] getTime] action:([TL_messageActionChatAddUser createWithUsers:[@[@([UsersManager currentUserId])] mutableCopy]]) fakeId:[MessageSender getFakeMessageId] randomId:rand_long() dstate:DeliveryStateNormal];
                     
@@ -1299,6 +1297,9 @@ static RBLPopover *popover;
 
 - (void)sendButtonAction {
     
+    if(!self.messagesViewController.hintView.isHidden)
+        return;
+        
     if(self.template.type == TGInputMessageTemplateTypeEditMessage) {
         [self.messagesViewController sendMessage];
         return;
@@ -1381,11 +1382,14 @@ static RBLPopover *popover;
     
     [self updateWebpage:YES];
    
-    [self checkMentionsOrTags];
     
     [self updateBotButtons];
-    [self updateTextFieldContainer];
+    
+    [self checkMentionsOrTags];
+    
+    [self updateTextFieldContainer:NO];
 
+    
 
 }
 
@@ -1459,13 +1463,18 @@ static RBLPopover *popover;
         if(split.location != NSNotFound && split.location != 1) {
             
             NSString *bot = [self.inputMessageTextField.stringValue substringWithRange:NSMakeRange(1,split.location-1)];
-            if(bot.length < 5 || [[bot lowercaseString] hasSuffix:@"bot"]) {
+            
+            TLUser *user = [UsersManager findUserByName:bot];
+            
+            if(user.isBot && user.isBotInlinePlaceholder) {
                 search = nil;
             }
         }
         
         
     }
+    
+    self.inlineBot = nil;
     
     if(search != nil && ![string hasPrefix:@" "]) {
         
@@ -1500,15 +1509,14 @@ static RBLPopover *popover;
             }
         }
         
-    } else if(self.inputMessageTextField.stringValue.length > 1 && [[self.inputMessageTextField.stringValue substringToIndex:1] isEqualToString:@"@"] && self.dialog.type != DialogTypeSecretChat) {
+    } else if([self.inputMessageTextField.stringValue hasPrefix:@"@"] && self.dialog.type != DialogTypeSecretChat) {
         
         [self.messagesViewController.hintView hide];
         [self setProgress:NO];
+        
+        
 
-        
-        
-        
-        NSString *value = self.inputMessageTextField.stringValue;
+         NSString *value = self.inputMessageTextField.stringValue;
         
         NSRange split = [value rangeOfString:@" "];
         
@@ -1516,10 +1524,15 @@ static RBLPopover *popover;
             NSString *bot = [value substringWithRange:NSMakeRange(1,split.location-1)];
             NSString *query = [value substringFromIndex:split.location];
             
-            TLUser *user = [UsersManager findUserByName:bot];
-            [self.inputMessageTextField setInline_placeholder:![query isEqualToString:@" "] ? nil : [self inline_placeholder:user]];
+            weak();
             
-            [self.messagesViewController.hintView showContextPopupWithQuery:bot query:[query trim] conversation:self.dialog];
+            [self.messagesViewController.hintView showContextPopupWithQuery:bot query:[query trim] conversation:self.dialog acceptHandler:^(TLUser *user){
+                [weakSelf.inputMessageTextField setInline_placeholder:![query isEqualToString:@" "] ? nil : [weakSelf inline_placeholder:user]];
+                weakSelf.inlineBot = user;
+                [weakSelf checkAndDisableSendingWithInlineBot:user animated:YES];
+            }];
+        } else {
+            [self checkAndDisableSendingWithInlineBot:nil animated:YES];
         }
         
         
@@ -1527,8 +1540,16 @@ static RBLPopover *popover;
         [self.messagesViewController.hintView hide];
         [self setProgress:NO];
     }
-    
+}
 
+-(void)setInlineBot:(TLUser *)inlineBot {
+    _inlineBot = inlineBot;
+    [self.sendButton setHidden:self.sendButton.isHidden || inlineBot != nil];
+    [self.recordAudioButton setHidden:self.recordAudioButton.isHidden || inlineBot != nil];
+}
+
+-(void)checkAndDisableSendingWithInlineBot:(TLUser *)user animated:(BOOL)animated {
+    [self updateTextFieldContainer:NO];
 }
 
 -(NSAttributedString *)inline_placeholder:(TLUser *)bot {
@@ -1539,6 +1560,8 @@ static RBLPopover *popover;
     [attr setFont:TGSystemFont(13) forRange:attr.range];
     
     return attr;
+    
+    
 }
 
 
@@ -1618,7 +1641,7 @@ static RBLPopover *popover;
     
     [self updateBotButtons];
     
-    [self updateTextFieldContainer];
+    [self updateTextFieldContainer:NO];
     
     [self.botKeyboardButton setBackgroundImage:!_botKeyboardButton.isSelected ? image_botKeyboard() : image_botKeyboardActive() forControlState:BTRControlStateNormal];
     
@@ -1943,7 +1966,7 @@ static RBLPopover *popover;
     [super setFrame:frame];
     
     
-    [self updateTextFieldContainer];
+    [self updateTextFieldContainer:NO];
     
 //    [self.inputMessageTextField textDidChange:nil];
     
@@ -1956,13 +1979,21 @@ static RBLPopover *popover;
     [self updateWebpage:NO];
 }
 
+-(int)textFieldXOffset {
+    return NSMaxX(self.attachButton.frame) + 21;;
+}
 
--(void)updateTextFieldContainer {
+-(void)updateTextFieldContainer:(BOOL)animated {
     
-    int offsetX = self.attachButton.frame.origin.x + self.attachButton.frame.size.width + 21;
+    int offsetX = self.textFieldXOffset;
     
-    self.inputMessageTextField.containerView.frame = NSMakeRect(offsetX, 11, self.bounds.size.width - offsetX - self.sendButton.frame.size.width - 33, NSHeight(self.inputMessageTextField.containerView.frame));
+    TMView *view = animated  ? [self.inputMessageTextField.containerView animator] : self.inputMessageTextField.containerView;
     
+    
+    
+    view.frame = NSMakeRect(offsetX, 11, self.bounds.size.width - offsetX - (self.inlineBot != nil ? 20 : (self.sendButton.frame.size.width + 33)), NSHeight(self.inputMessageTextField.containerView.frame));
+    
+        
     [self.inputMessageTextField setFrameSize:NSMakeSize(NSWidth(self.inputMessageTextField.containerView.frame) - 40 - (_botKeyboardButton.isHidden ? 0 : 30) - (_botCommandButton.isHidden ? 0 : 30) - (_channelAdminButton.isHidden ? 0 : 30) - (_secretTimerButton.isHidden ? 0 : 30) - (_progressView.isHidden ? 0 : 30) - (_silentModeButton.isHidden ? 0 : 30),NSHeight(self.inputMessageTextField.frame))];
     
     
@@ -2064,7 +2095,7 @@ static RBLPopover *popover;
     
     [self updateBotButtons];
     
-    [self updateTextFieldContainer];
+    [self updateTextFieldContainer:NO];
     
 }
 

@@ -540,7 +540,7 @@ static NSMutableDictionary *inlineBotsExceptions;
 
 
 
--(void)showContextPopupWithQuery:(NSString *)bot query:(NSString *)query conversation:(TL_conversation *)conversation  {
+-(void)showContextPopupWithQuery:(NSString *)bot query:(NSString *)query conversation:(TL_conversation *)conversation acceptHandler:(void (^)(TLUser *user))acceptHandler  {
     
     
     if(inlineBotsExceptions[bot] || self.messagesViewController.class == [TGContextMessagesvViewController class] || self.messagesViewController.state != MessagesViewControllerStateNone)
@@ -557,6 +557,10 @@ static NSMutableDictionary *inlineBotsExceptions;
     if(user && (!user.isBot || !user.isBotInlinePlaceholder)) {
         return;
     }
+    
+    if(user && acceptHandler)
+        acceptHandler(user);
+    
     
     __block NSString *offset = @"";
     
@@ -587,7 +591,7 @@ static NSMutableDictionary *inlineBotsExceptions;
                 
                 _isLockedWithRequest = YES;
                 
-                _contextRequest = [RPCRequest sendRequest:[TLAPI_messages_getInlineBotResults createWithFlags:geo ? (1 << 0) : 0 bot:user.inputUser geo_point:geo query:query offset:offset] successHandler:^(id request, TL_messages_botResults *response) {
+                _contextRequest = [RPCRequest sendRequest:[TLAPI_messages_getInlineBotResults createWithFlags:geo ? (1 << 0) : 0 bot:user.inputUser peer:conversation.inputPeer geo_point:geo query:query offset:offset] successHandler:^(id request, TL_messages_botResults *response) {
                     
                     [self.messagesViewController.bottomView setProgress:NO];
                     
@@ -595,7 +599,7 @@ static NSMutableDictionary *inlineBotsExceptions;
                         
                         forceNextLoad = offset.length == 0 && response.next_offset.length > 0;
                         
-                        offset = response.next_offset;
+                        offset = ![offset isEqualToString:response.next_offset] &&  response.next_offset.length > 0 && response.results.count > 0 ? response.next_offset : nil;
                         
                         NSMutableArray *items = [NSMutableArray array];
                         
@@ -692,7 +696,10 @@ static NSMutableDictionary *inlineBotsExceptions;
             
             
             
-            if(user.isBot_inline_geo) {
+            if(user.isBot_inline_geo && !geo && !_locationRequest) {
+                
+                weak();
+                
                 [SettingsArchiver requestPermissionWithKey:kPermissionInlineBotLocationRequest peer_id:user.n_id handler:^(bool success) {
                     
                     if(success) {
@@ -700,6 +707,8 @@ static NSMutableDictionary *inlineBotsExceptions;
                         _locationRequest = [[TGLocationRequest alloc] init];
                         
                         [_locationRequest startRequestLocation:^(CLLocation *location) {
+                            
+                            weakSelf.locationRequest = nil;
                             
                             geo = [TL_inputGeoPoint createWithLat:location.coordinate.latitude n_long:location.coordinate.longitude];
                             
@@ -751,6 +760,9 @@ static NSMutableDictionary *inlineBotsExceptions;
                     }
                     
                     performQuery();
+                    
+                    if(user && acceptHandler)
+                        acceptHandler(user);
                     
                 }  else {
                     
@@ -870,6 +882,9 @@ static NSMutableDictionary *inlineBotsExceptions;
 }
 
 -(void)performSelected {
+    
+    if(_currentTableView == _mediaContextTableView)
+        return;
     
     TGContextRowItem *item = (TGContextRowItem *)_currentTableView.selectedItem;
     

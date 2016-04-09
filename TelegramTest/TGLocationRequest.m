@@ -15,6 +15,8 @@
 
 @property (nonatomic,strong) Reachability *reachability;
 
+
+
 @end
 
 @implementation TGLocationRequest
@@ -30,6 +32,15 @@
     return self;
 }
 
+//static ASQueue *locationQueue;
+//
+//+(void)initialize {
+//    static dispatch_once_t onceToken;
+//    dispatch_once(&onceToken, ^{
+//        locationQueue = [[ASQueue alloc] initWithName:"LocationRequestQueue"];
+//    });
+//}
+
 
 -(void)startRequestLocation:(void (^)(CLLocation *location))successCallback failback:(void (^)(NSString *error))errorCallback {
     [self startRequestLocation:successCallback failback:errorCallback timeout:0];
@@ -44,7 +55,8 @@
         _locationManager.delegate = self;
         [_locationManager startUpdatingLocation];
     }
-   
+    
+    
 }
 
 - (void)locationManager:(CLLocationManager *)manager didChangeAuthorizationStatus:(CLAuthorizationStatus)status
@@ -93,10 +105,12 @@
     CLLocation *location = locations.lastObject;
     
     if(location) {
+        
+        [_locationManager stopUpdatingLocation];
+        _locationManager.delegate = nil;
+        
         if (self.successCallback != nil)
             self.successCallback(location);
-        
-        [self clear];
     }
     
 }

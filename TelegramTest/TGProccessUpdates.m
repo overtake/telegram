@@ -407,7 +407,7 @@ static NSArray *channelUpdates;
 
 -(void)applyUpdate:(TGUpdateContainer *)container {
     
-    if(container.pts != INT32_MAX) {
+    if(container.pts != INT32_MAX && !_holdUpdates) {
         _updateState.seq = container.beginSeq;
         
         _updateState.pts = container.pts;
@@ -421,6 +421,10 @@ static NSArray *channelUpdates;
 #ifdef TGDEBUG
         assert(false);
 #endif
+    }
+    
+    if(_holdUpdates) {
+        int bp = 0;
     }
     
     
@@ -1054,6 +1058,14 @@ static NSArray *channelUpdates;
             stateSeq = [intstate seq];
         }
         
+        if([response isKindOfClass:[TL_updates_differenceEmpty class]]) {
+            stateDate = [updates date];
+            stateSeq = [updates seq];
+        }
+        
+        statePts = statePts == 0 ? _updateState.pts : statePts;
+        stateQts = stateQts == 0 ? _updateState.qts : stateQts;
+        stateSeq = stateSeq == 0 ? _updateState.seq : stateSeq;
         
         for (TL_encryptedMessage *enmsg in [updates n_encrypted_messages]) {
             [self.encryptedUpdates proccessUpdate:enmsg];
@@ -1091,7 +1103,7 @@ static NSArray *channelUpdates;
             _updateState.pts = statePts;
             _updateState.date = stateDate;
             _updateState.seq = stateSeq;
-            
+             MTLog(@"new updateDifference update update: %@",_updateState);
             [self saveUpdateState];
             
             _holdUpdates = NO;

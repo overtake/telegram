@@ -1,19 +1,12 @@
-//
-//  NSCalendarCell.m
-//  ModernLookOSX
-//
-//  Created by András Gyetván on 2015. 03. 08..
-//  Copyright (c) 2015. DroidZONE. All rights reserved.
-//
 
-#import "MLCalendarCell.h"
-#import "MLCalendarView.h"
-@interface MLCalendarCell ()
+#import "TGCalendarCell.h"
+#import "TGCalendarView.h"
+@interface TGCalendarCell ()
 - (void) commonInit;
 - (BOOL) isToday;
 @end
 
-@implementation MLCalendarCell
+@implementation TGCalendarCell
 
 - (instancetype)initWithFrame: (NSRect)frameRect
 {
@@ -51,7 +44,7 @@
 
 - (BOOL) isToday {
 	if(self.representedDate) {
-		return 	[MLCalendarView isSameDate:self.representedDate date:[NSDate date]];
+		return 	[TGCalendarView isSameDate:self.representedDate date:[NSDate date]];
 	} else {
 		return NO;
 	}

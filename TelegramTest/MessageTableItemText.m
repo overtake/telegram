@@ -207,16 +207,10 @@
             
             if([obj isKindOfClass:[TL_messageEntityBold class]]) {
                 
-                NSString *link = [self.message.message substringWithRange:range];
                 
-                range = [self.textAttributed.string rangeOfString:link];
                 
                 [self.textAttributed addAttribute:NSFontAttributeName value:TGSystemMediumFont([self fontSize]) range:range];
             } else if([obj isKindOfClass:[TL_messageEntityItalic class]]) {
-                
-                NSString *link = [self.message.message substringWithRange:range];
-                
-                range = [self.textAttributed.string rangeOfString:link];
                 
                 
                 [self.textAttributed addAttribute:NSFontAttributeName value:TGSystemItalicFont([self fontSize]) range:range];
@@ -228,7 +222,7 @@
 
     }
     @catch (NSException *exception) {
-        
+        int bp = 0;
     }
     
 }

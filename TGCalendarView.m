@@ -1,20 +1,16 @@
-//
-//  MLCalendarPopup.m
-//  ModernLookOSX
-//
-//  Created by András Gyetván on 2015. 03. 08..
-//  Copyright (c) 2015. DroidZONE. All rights reserved.
-//
 
-#import "MLCalendarView.h"
-#import "MLCalendarCell.h"
-#import "MLCalendarBackground.h"
 
-@interface MLCalendarView ()
+#import "TGCalendarView.h"
+#import "TGCalendarCell.h"
+#import "TGCalendarBackground.h"
+
+@interface TGCalendarView ()
 
 @property (weak) IBOutlet NSTextField *calendarTitle;
 - (IBAction)nextMonth:(id)sender;
 - (IBAction)prevMonth:(id)sender;
+@property (weak) IBOutlet NSButton *nextButton;
+@property (weak) IBOutlet NSButton *prevButton;
 
 @property (strong) NSMutableArray* dayLabels;
 @property (strong) NSMutableArray* dayCells;
@@ -25,7 +21,7 @@
 - (void) stepMonth:(NSInteger)dm;
 @end
 
-@implementation MLCalendarView
+@implementation TGCalendarView
 
 + (BOOL) isSameDate:(NSDate*)d1 date:(NSDate*)d2 {
 	if(d1 && d2) {
@@ -48,7 +44,7 @@
 
 
 - (instancetype) init {
-	self = [super initWithNibName:@"MLCalendarView" bundle:[NSBundle bundleForClass:[self class]]];
+	self = [super initWithNibName:@"TGCalendarView" bundle:[NSBundle bundleForClass:[self class]]];
 	if (self != nil) {
 		[self commonInit];
 	}
@@ -91,7 +87,7 @@
 		for(int col = 0; col < 7; col++) {
 			int i = (row*7)+col+1;
 			NSString* _id = [NSString stringWithFormat:@"c%d",i];
-			MLCalendarCell* cell = [self viewByID:_id];
+			TGCalendarCell* cell = [self viewByID:_id];
             [cell setTarget:self selector:@selector(cellClicked:)];
 			[self.dayCells[row] addObject:cell];
 			cell.owner = self;
@@ -105,9 +101,19 @@
 		NSTextField* tf = self.dayLabels[col];
 		tf.stringValue = day;
 	}
-	MLCalendarBackground* bv = (MLCalendarBackground*)self.view;
+    
+    if(NSAppKitVersionNumber > NSAppKitVersionNumber10_9) {
+        self.prevButton.appearance = [NSAppearance currentAppearance];
+        self.nextButton.appearance = [NSAppearance currentAppearance];
+    }
+    
+    [(NSButtonCell*)[self.prevButton cell] setHighlightsBy:NSNoCellMask];
+    [(NSButtonCell*)[self.nextButton cell] setHighlightsBy:NSNoCellMask];
+
+	TGCalendarBackground* bv = (TGCalendarBackground*)self.view;
 	bv.backgroundColor = self.backgroundColor;
 	[self layoutCalendar];
+    
 }
 
 - (id) viewByID:(NSString*)_id {
@@ -149,8 +155,8 @@
 	_selectedDate = [self toUTC:selectedDate];
 	for(int row = 0; row < 6;row++) {
 		for(int col = 0; col < 7; col++) {
-			MLCalendarCell*cell = self.dayCells[row][col];
-			BOOL selected = [MLCalendarView isSameDate:cell.representedDate date:_selectedDate];
+			TGCalendarCell*cell = self.dayCells[row][col];
+			BOOL selected = [TGCalendarView isSameDate:cell.representedDate date:_selectedDate];
 			cell.selected = selected;
 		}
 	}
@@ -159,14 +165,14 @@
 
 - (void)cellClicked:(id)sender {
     
-    MLCalendarCell* cell = sender;
+    TGCalendarCell* cell = sender;
     
     if(cell.representedDate.timeIntervalSince1970 > [[MTNetwork instance] getTime])
         return;
     
 	for(int row = 0; row < 6;row++) {
 		for(int col = 0; col < 7; col++) {
-			MLCalendarCell*cell = self.dayCells[row][col];
+			TGCalendarCell*cell = self.dayCells[row][col];
 			cell.selected = NO;
 		}
 	}
@@ -221,7 +227,7 @@
 	if(!self.view) return;
 	for(int row = 0; row < 6;row++) {
 		for(int col = 0; col < 7; col++) {
-			MLCalendarCell*cell = self.dayCells[row][col];
+			TGCalendarCell*cell = self.dayCells[row][col];
 			cell.representedDate = nil;
 			cell.selected = NO;
 		}
@@ -237,10 +243,10 @@
 	for(int row = 0; row < 6;row++) {
 		for(; col < 7; col++) {
 			if(day <= lastDay) {
-				MLCalendarCell*cell = self.dayCells[row][col];
+				TGCalendarCell*cell = self.dayCells[row][col];
 				NSDate* d = [self monthDay:day];
 				cell.representedDate = d;
-				BOOL selected = [MLCalendarView isSameDate:d date:_selectedDate];
+				BOOL selected = [TGCalendarView isSameDate:d date:_selectedDate];
 				cell.selected = selected;
 				day++;
 			}

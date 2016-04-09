@@ -7,13 +7,13 @@
 //
 
 #import "TMBottomScrollView.h"
-#import "MLCalendarView.h"
+#import "TGCalendarView.h"
 #import "MessageTableItem.h"
 @interface TMBottomScrollView ()<MLCalendarViewDelegate>
 @property (nonatomic, strong) NSAttributedString *messagesCountAttributedString;
 
 @property (strong) NSPopover* calendarPopover;
-@property (strong) MLCalendarView*calendarView;
+@property (strong) TGCalendarView*calendarView;
 @property (weak) IBOutlet NSDateFormatter *dateFormatter;
 
 @property (nonatomic,strong) BTRButton *calendarButton;
@@ -122,7 +122,7 @@
     NSPopover* myPopover = self.calendarPopover;
     if(!myPopover) {
         myPopover = [[NSPopover alloc] init];
-        self.calendarView = [[MLCalendarView alloc] init];
+        self.calendarView = [[TGCalendarView alloc] init];
         self.calendarView.delegate = self;
         myPopover.contentViewController = self.calendarView;
      //   myPopover.appearance = [NSAppearance appearanceNamed:NSAppearanceNameAqua];
@@ -149,18 +149,16 @@
     [self.messagesViewController showModalProgress];
     
     
-    NSDate *jumpDate = selectedDate;
     
     selectedDate = [NSDate dateWithTimeIntervalSince1970:selectedDate.timeIntervalSince1970];
-    
     id request;
     
    
     
     if(_messagesViewController.conversation.type == DialogTypeChannel) {
-        request = [TLAPI_channels_getImportantHistory createWithChannel:_messagesViewController.conversation.chat.inputPeer offset_id:0 offset_date:selectedDate.timeIntervalSince1970 add_offset:0 limit:100 max_id:INT32_MAX min_id:0];
+        request = [TLAPI_channels_getImportantHistory createWithChannel:_messagesViewController.conversation.chat.inputPeer offset_id:0 offset_date:selectedDate.timeIntervalSince1970- 3*60*60 add_offset:-100 limit:100 max_id:INT32_MAX min_id:0];
     } else {
-        request = [TLAPI_messages_getHistory createWithPeer:_messagesViewController.conversation.inputPeer offset_id:0 offset_date:selectedDate.timeIntervalSince1970 add_offset:0 limit:100 max_id:INT32_MAX min_id:0];
+        request = [TLAPI_messages_getHistory createWithPeer:_messagesViewController.conversation.inputPeer offset_id:0 offset_date:selectedDate.timeIntervalSince1970 - 3*60*60 add_offset:-100 limit:100 max_id:INT32_MAX min_id:0];
     }
     
     
@@ -174,23 +172,11 @@
         if(response.messages.count > 0) {
             [[Storage manager] addHolesAroundMessage:[response.messages firstObject]];
             [[Storage manager] addHolesAroundMessage:[response.messages lastObject]];
-            [[Storage manager] insertMessages:response.messages];
             
+            [SharedManager proccessGlobalResponse:response];
             
-            NSLog(@"first date: %@",[NSDate dateWithTimeIntervalSince1970:[(TL_localMessage *)[response.messages firstObject] date]]);
-            NSLog(@"last date: %@",[NSDate dateWithTimeIntervalSince1970:[(TL_localMessage *)[response.messages lastObject] date]]);
+            __block TL_localMessage *jumpMessage = [response.messages lastObject];
             
-            __block TL_localMessage *jumpMessage = [response.messages firstObject];
-            
-            [response.messages enumerateObjectsWithOptions:NSEnumerationReverse usingBlock:^(TL_localMessage *obj, NSUInteger idx, BOOL * _Nonnull stop) {
-                
-                if(obj.date >= jumpDate.timeIntervalSince1970) {
-                    jumpMessage = obj;
-                    NSLog(@"jump date: %@",[NSDate dateWithTimeIntervalSince1970:[obj date]]);
-                    *stop = YES;
-                }
-                
-            }];
             
             [self.messagesViewController showMessage:jumpMessage fromMsg:nil flags:ShowMessageTypeDateJump];
             [self.messagesViewController hideModalProgressWithSuccess];
