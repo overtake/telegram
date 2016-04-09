@@ -60,7 +60,7 @@
     if(!multiRequest) {
         RPCRequest *q = [RPCRequest sendRequest:[TLAPI_users_getFullUser createWithN_id:user.inputUser] successHandler:^(id request, TLUserFull *response) {
             
-            if(![response isKindOfClass:[TL_userEmpty class]]) {
+            if(response.user && ![response.user isKindOfClass:[TL_userEmpty class]]) {
                 
                 [[UsersManager sharedManager] add:@[response.user]];
                 
@@ -82,7 +82,7 @@
                 }];
                 
                 [_requests removeObjectForKey:@(user.n_id)];
-                _lastTimeCalled[@(user.n_id)] = @([[MTNetwork instance] getTime] + 60*5);
+                _lastTimeCalled[@(user.n_id)] = @([[MTNetwork instance] getTime] + 10);
             }];
             
             
