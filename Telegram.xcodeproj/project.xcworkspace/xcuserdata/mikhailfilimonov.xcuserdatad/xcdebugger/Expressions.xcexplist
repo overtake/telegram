@@ -2524,6 +2524,14 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "__43-[TGMediaContextTableView setNeedLoadNext:]_block_invoke:TGMediaContextTableView.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "[weakSelf.scrollView isNeedUpdateBottom]">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "-[PlaceholderTextView setHidden:]:TMTextField.m">
          <PersistentStrings>
             <PersistentString

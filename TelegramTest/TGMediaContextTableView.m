@@ -67,7 +67,11 @@ static NSImage *tgContextPicCap() {
 
 -(void)setSize:(NSSize)size {
     _size = size;
-    [_imageView setFrame:NSMakeRect(MIN(- roundf((size.width - NSWidth(self.frame))/2),0), MIN(- roundf((size.height - NSHeight(self.frame))/2),0), size.width, size.height)];
+    [_imageView setFrameSize:size];
+    
+    [_imageView setCenterByView:_imageView.superview];
+    
+    //[_imageView setFrame:NSMakeRect(MIN(- roundf((size.width - NSWidth(self.frame))/2),0), MIN(- roundf((size.height - NSHeight(self.frame))/2),0), size.width, size.height)];
 }
 
 -(void)setFrameSize:(NSSize)newSize {
