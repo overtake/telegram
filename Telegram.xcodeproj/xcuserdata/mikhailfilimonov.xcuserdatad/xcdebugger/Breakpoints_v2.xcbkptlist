@@ -326,16 +326,16 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            shouldBeEnabled = "Yes"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "TelegramTest/MessageTableCell.m"
-            timestampString = "481996885.506676"
+            filePath = "TelegramTest/UsersManager.m"
+            timestampString = "482011521.189633"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "79"
-            endingLineNumber = "79"
-            landmarkName = "-rightMouseDown:"
+            startingLineNumber = "263"
+            endingLineNumber = "263"
+            landmarkName = "-add:withCustomKey:update:"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>

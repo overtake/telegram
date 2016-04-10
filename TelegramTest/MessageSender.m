@@ -599,14 +599,14 @@ static TGLocationRequest *locationRequest;
 
 
 
-+(void)proccessInlineKeyboardButton:(TLKeyboardButton *)keyboard messagesViewController:(MessagesViewController *)messagesViewController conversation:(TL_conversation *)conversation messageId:(int)messageId handler:(void (^)(TGInlineKeyboardProccessType type))handler {
++(RPCRequest *)proccessInlineKeyboardButton:(TLKeyboardButton *)keyboard messagesViewController:(MessagesViewController *)messagesViewController conversation:(TL_conversation *)conversation messageId:(int)messageId handler:(void (^)(TGInlineKeyboardProccessType type))handler {
     
     
     if([keyboard isKindOfClass:[TL_keyboardButtonCallback class]]) {
         
         handler(TGInlineKeyboardProccessingType);
         
-        [RPCRequest sendRequest:[TLAPI_messages_getBotCallbackAnswer createWithPeer:conversation.inputPeer msg_id:messageId data:keyboard.data] successHandler:^(id request, TL_messages_botCallbackAnswer *response) {
+        return [RPCRequest sendRequest:[TLAPI_messages_getBotCallbackAnswer createWithPeer:conversation.inputPeer msg_id:messageId data:keyboard.data] successHandler:^(id request, TL_messages_botCallbackAnswer *response) {
             
             if([response isKindOfClass:[TL_messages_botCallbackAnswer class]]) {
                 if(response.isAlert)
@@ -699,6 +699,8 @@ static TGLocationRequest *locationRequest;
         }
         
     }
+    
+    return nil;
 }
 
 

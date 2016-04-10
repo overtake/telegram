@@ -244,7 +244,7 @@
         }
     }
     
-    
+    [self.containerView setNeedsDisplay:YES];
     [self setNeedsDisplay:YES];
     
 }

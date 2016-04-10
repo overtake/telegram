@@ -777,12 +777,13 @@ static NSTextAttachment *channelViewsCountAttachment() {
 
 
 
--(void)proccessInlineKeyboardButton:(TLKeyboardButton *)keyboard handler:(void (^)(TGInlineKeyboardProccessType type))handler {
+-(RPCRequest *)proccessInlineKeyboardButton:(TLKeyboardButton *)keyboard handler:(void (^)(TGInlineKeyboardProccessType type))handler {
     
     if(_messageSender == nil || _messageSender.state == MessageSendingStateSent) {
-        [MessageSender proccessInlineKeyboardButton:keyboard messagesViewController:self.table.viewController conversation:_message.conversation messageId:_message.n_id handler:handler];
+        return [MessageSender proccessInlineKeyboardButton:keyboard messagesViewController:self.table.viewController conversation:_message.conversation messageId:_message.n_id handler:handler];
     }
     
+    return nil;
 }
 
 -(linkTypeRequest)linkParseTypes {

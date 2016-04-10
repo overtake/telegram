@@ -39,7 +39,7 @@ typedef enum {
 +(id)requestForFlushEncryptedHistory:(TL_conversation *)dialog;
 
 
-+(void)proccessInlineKeyboardButton:(TLKeyboardButton *)keyboard messagesViewController:(MessagesViewController *)messagesViewController conversation:(TL_conversation *)conversation messageId:(int)messageId handler:(void (^)(TGInlineKeyboardProccessType type))handler;
++(RPCRequest *)proccessInlineKeyboardButton:(TLKeyboardButton *)keyboard messagesViewController:(MessagesViewController *)messagesViewController conversation:(TL_conversation *)conversation messageId:(int)messageId handler:(void (^)(TGInlineKeyboardProccessType type))handler;
 
 
 +(NSData *)getEncrypted:(EncryptedParams *)params messageData:(NSData *)messageData;

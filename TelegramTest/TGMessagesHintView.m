@@ -515,7 +515,7 @@ DYNAMIC_PROPERTY(DUser);
         if(conversation.type == DialogTypeSecretChat && !obj.isBotInlinePlaceholder)
             return;
         
-        TGMessagesHintRowItem *item = [[TGMessagesHintRowItem alloc] initWithImageObject:obj text:obj.bot_inline_placeholder.length > 0 ? obj.bot_inline_placeholder : obj.fullName desc:[NSString stringWithFormat:@"@%@",obj.username]];
+        TGMessagesHintRowItem *item = [[TGMessagesHintRowItem alloc] initWithImageObject:obj text:obj.fullName desc:[NSString stringWithFormat:@"@%@",obj.username]];
         
         item.result = obj.username;
         

@@ -550,8 +550,8 @@
                                 [cell setItem:item];
                                 [nCell removeFromSuperview];
                                 
-                                if(![notification.userInfo[@"nonselect"] boolValue])
-                                    [cell searchSelection];
+//                                if(![notification.userInfo[@"nonselect"] boolValue])
+//                                    [cell searchSelection];
                             }
                             
                         }];
@@ -4211,7 +4211,6 @@ static NSTextAttachment *headerMediaIcon() {
         [cell.layer pop_removeAllAnimations];
         
 
-        
         if(cell.superview.subviews.count > 1) {
             [cell.superview.subviews[0] removeFromSuperview]; // remove editd view
         }

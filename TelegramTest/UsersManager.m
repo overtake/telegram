@@ -317,7 +317,7 @@
 
 - (BOOL)setUserStatus:(TLUserStatus *)status forUser:(TLUser *)currentUser {
     
-    BOOL result = (currentUser.status.expires != status.expires && currentUser.status.was_online != status.was_online) || currentUser.status.class != status.class;
+    BOOL result = (currentUser.status.expires != status.expires || currentUser.status.was_online != status.was_online) || currentUser.status.class != status.class;
     
     BOOL saveOnlyTime = currentUser.status.class == status.class || (([currentUser.status isKindOfClass:[TL_userStatusOnline class]] || [currentUser.status isKindOfClass:[TL_userStatusOffline class]])  && ([status isKindOfClass:[TL_userStatusOnline class]] || [status isKindOfClass:[TL_userStatusOffline class]]));
     

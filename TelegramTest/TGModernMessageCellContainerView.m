@@ -34,6 +34,10 @@
 
 @property (nonatomic,strong) BTRButton *shareView;
 
+
+@property (nonatomic,strong) RPCRequest *botKeyboardRequest;
+@property (nonatomic,strong) id prevKeyboardButton;
+
 @end
 
 @implementation TGModernMessageCellContainerView
@@ -294,10 +298,20 @@
             
             if(strongSelf == weakSelf) {
                 
-                [item proccessInlineKeyboardButton:command handler:^(TGInlineKeyboardProccessType type) {
+                [strongSelf.botKeyboardRequest cancelRequest];
+                strongSelf.botKeyboardRequest = nil;
+                
+                
+                [strongSelf.keyboard setProccessing:NO forKeyboardButton:strongSelf.prevKeyboardButton];
+                
+                strongSelf.prevKeyboardButton = command;
+                
+                strongSelf.botKeyboardRequest = [item proccessInlineKeyboardButton:command handler:^(TGInlineKeyboardProccessType type) {
                     [strongSelf.keyboard setProccessing:type == TGInlineKeyboardProccessingType forKeyboardButton:command];
                     
                 }];
+                
+                
                 
             }
             

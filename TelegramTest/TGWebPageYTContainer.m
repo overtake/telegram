@@ -17,7 +17,12 @@
 #import "ITProgressIndicator.h"
 #import "TGPhotoViewer.h"
 #import "MessageCellDescriptionView.h"
+#import "SpacemanBlocks.h"
+#import "TGEmbedModalView.h"
 @interface TGWebpageYTContainer ()
+{
+    SMDelayedBlockHandle _handle;
+}
 
 @property (nonatomic, strong) MessageCellDescriptionView *videoTimeView;
 
@@ -30,6 +35,8 @@
 @property (nonatomic,strong) ITProgressIndicator *progressIndicator;
 
 @property (nonatomic,strong) TMView *blackContainer;
+
+@property (nonatomic,strong) TGEmbedModalView *embedModalView;
 
 @end
 
@@ -93,6 +100,7 @@
     
     [super setWebpage:webpage];
     
+    _embedModalView = nil;
 
     [_blackContainer removeFromSuperview];
     
@@ -141,14 +149,28 @@
             [self.imageView addSubview:_blackContainer];
         }
         
-        
-        [(TGWebpageYTObject *)self.webpage loadVideo:^(XCDYouTubeVideo *video) {
-            
+        _handle = perform_block_after_delay(5.0, ^{
             [_progressIndicator setAnimates:NO];
             [_blackContainer removeFromSuperview];
             
-            [self playFullScreen];
+            _embedModalView = [[TGEmbedModalView alloc] initWithFrame:self.window.contentView.subviews[0].frame];
+            [_embedModalView setWebpage:self.webpage.webpage];
+            [_embedModalView show:self.window animated:YES];
             
+        });
+        
+        
+        [(TGWebpageYTObject *)self.webpage loadVideo:^(XCDYouTubeVideo *video) {
+            
+            cancel_delayed_block(_handle);
+            
+            if(!_embedModalView) {
+                [_progressIndicator setAnimates:NO];
+                [_blackContainer removeFromSuperview];
+                
+                [self playFullScreen];
+            }
+
             
         }];
     } else {

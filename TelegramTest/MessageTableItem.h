@@ -96,7 +96,7 @@
 - (void)checkStartDownload:(SettingsMask)setting size:(int)size;
 
 
--(void)proccessInlineKeyboardButton:(TLKeyboardButton *)keyboard handler:(void (^)(TGInlineKeyboardProccessType type))handler;
+-(RPCRequest *)proccessInlineKeyboardButton:(TLKeyboardButton *)keyboard handler:(void (^)(TGInlineKeyboardProccessType type))handler;
 
 + (NSDateFormatter *)dateFormatter;
 
