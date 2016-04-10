@@ -46,7 +46,7 @@
     
     _attr = [[NSMutableAttributedString alloc] init];
     
-    [_attr appendString:text withColor:[NSColor whiteColor]];
+    [_attr appendString:[text fixEmoji] withColor:[NSColor whiteColor]];
     [_attr setFont:TGSystemFont(13) forRange:_attr.range];
     [_attr addAttribute:NSForegroundColorAttributeName value:[NSColor whiteColor] range:_attr
      .range];

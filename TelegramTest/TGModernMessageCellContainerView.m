@@ -92,10 +92,12 @@
 
     if(item.isHeaderMessage)
     {
+        weak();
+        
         if(!_photoView) {
             _photoView = [TMAvatarImageView standartMessageTableAvatar];
             
-            weak();
+            
             
             [_photoView setTapBlock:^{
                 strongWeak();
@@ -110,6 +112,12 @@
         
         if(!_nameView) {
             _nameView = [[TGTextLabel alloc] initWithText:nil maxWidth:0];
+            
+            [_nameView setLinkCallback:^(NSString *link) {
+                open_link_with_controller(link, weakSelf.messagesViewController.navigationViewController);
+            }];
+
+            
             [self addSubview:_nameView];
         }
         

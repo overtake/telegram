@@ -691,7 +691,9 @@ static TGLocationRequest *locationRequest;
         
         if(messagesViewController.class == [TGContextMessagesvViewController class]) {
             
-            [Notification perform:UPDATE_CONTEXT_SWITCH data:@{@"keyboard":keyboard}];
+            TGContextMessagesvViewController *m = (TGContextMessagesvViewController *)messagesViewController;
+            
+            [m.contextModalView didNeedCloseAndSwitch:keyboard];
         } else {
             [[Telegram rightViewController] showInlineBotSwitchModalView:conversation.user keyboard:keyboard];
         }

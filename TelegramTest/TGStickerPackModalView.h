@@ -12,6 +12,8 @@
 
 @property (nonatomic,assign) BOOL canSendSticker;
 
--(void)setStickerPack:(TL_messages_stickerSet *)stickerPack;
+@property (nonatomic,weak) MessagesViewController *messagesViewController;
+
+-(void)setStickerPack:(TL_messages_stickerSet *)stickerPack forMessagesViewController:(MessagesViewController *)messagesViewController;
 
 @end

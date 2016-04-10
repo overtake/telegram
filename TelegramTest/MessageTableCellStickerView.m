@@ -126,7 +126,7 @@
                     
                     modalView.canSendSticker = YES;
                     [modalView show:self.window animated:YES];
-                    [modalView setStickerPack:[TL_messages_stickerSet createWithSet:set packs:nil documents:stickers]];
+                    [modalView setStickerPack:[TL_messages_stickerSet createWithSet:set packs:nil documents:stickers] forMessagesViewController:self.messagesViewController];
                 } else
                     add_sticker_pack_by_name(attr.stickerset);
             }

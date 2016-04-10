@@ -369,7 +369,7 @@ static NSMutableDictionary *loaders;
     
     id progress = animated ? [_progressIndicator animator] : _progressIndicator;
     
-    [progress setFrameOrigin:NSMakePoint(NSMaxX(_countersTextField.frame) + (loader.loaderString.length == 0 ? 0 : 3), NSMinY(_countersTextField.frame) + 1)];
+    [progress setFrameOrigin:NSMakePoint(NSMaxX(_countersTextField.frame) + (loader.loaderString.length == 0 ? 0 : 3), 3)];
     
 }
 

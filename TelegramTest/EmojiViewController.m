@@ -457,6 +457,7 @@
 -(void)setMessagesViewController:(MessagesViewController *)messagesViewController {
     _messagesViewController = messagesViewController;
     _gifContainer.messagesViewController = messagesViewController;
+    _stickersTableView.stickers.messagesViewController = messagesViewController;
 }
 
 - (void)close {
@@ -514,6 +515,7 @@
     [self.gifContainer setHidden:self.currentButton.index != 8];
     
 }
+
 
 - (void)insertEmoji:(NSString *)emoji {
     if(self.insertEmoji)

@@ -171,7 +171,7 @@ static NSImage *higlightedImage() {
             }
             
             if(!weakSelf.tableView.isCustomStickerPack || weakSelf.tableView.canSendStickerAlways)
-                [appWindow().navigationController.messagesViewController sendSticker:item.stickers[idx] forConversation:appWindow().navigationController.messagesViewController.conversation addCompletionHandler:nil];
+                [weakSelf.tableView.messagesViewController sendSticker:item.stickers[idx] forConversation:weakSelf.tableView.messagesViewController.conversation addCompletionHandler:nil];
             
             if(weakSelf.tableView.canSendStickerAlways) {
                 [TMViewController closeAllModals];

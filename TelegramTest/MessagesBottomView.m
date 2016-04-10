@@ -818,10 +818,12 @@ static RBLPopover *popover;
     [attachTakePhotoItem setHighlightedImage:image_AttachTakePhotoHighlighted()];
     [theMenu addItem:attachTakePhotoItem];
     
+    weak();
+    
     NSMenuItem *attachLocationItem = [NSMenuItem menuItemWithTitle:NSLocalizedString(@"Attach.Location", nil) withBlock:^(id sender) {
         
         MapPanel *panel = [MapPanel sharedPanel];
-        
+        panel.messagesViewController = weakSelf.messagesViewController;
         [panel update];
         
         [self.window beginSheet:panel completionHandler:^(NSModalResponse returnCode) {

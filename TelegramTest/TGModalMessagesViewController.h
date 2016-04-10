@@ -14,4 +14,6 @@
 
 @property (nonatomic,strong) ComposeAction *action;
 
+-(void)didNeedCloseAndSwitch:(TLKeyboardButton *)keyboard;
+
 @end

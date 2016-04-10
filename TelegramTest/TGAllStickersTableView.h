@@ -21,6 +21,8 @@
 
 -(void)showWithStickerPack:(TL_messages_stickerSet *)stickerPack;
 
+@property (nonatomic,weak) MessagesViewController *messagesViewController;
+
 -(NSDictionary *)allStickers;
 -(NSArray *)sets;
 

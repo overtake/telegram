@@ -423,10 +423,7 @@ static NSArray *channelUpdates;
 #endif
     }
     
-    if(_holdUpdates) {
-        int bp = 0;
-    }
-    
+
     
 }
 

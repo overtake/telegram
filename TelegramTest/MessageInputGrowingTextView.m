@@ -202,53 +202,58 @@ typedef enum {
     
     switch (type) {
         case PasteBoardItemTypeImage:
-            
-            if([[Telegram rightViewController] messagesViewController].conversation.type == DialogTypeSecretChat) {
+        {
+            if(self.controller.conversation.type == DialogTypeSecretChat) {
                 alert = [NSAlert alertWithMessageText:NSLocalizedString(@"Conversation.Confirm.SendThisPicture", nil) informativeText:NSLocalizedString(@"Conversation.Confirm.SendThisPictureDescription", nil) block:^(id result) {
                     if([result intValue] == 1000) {
                         
-                        [[[Telegram rightViewController] messagesViewController] sendImage:image.name forConversation:[[Telegram rightViewController] messagesViewController].conversation file_data:[image TIFFRepresentation]];
+                        [self.controller sendImage:image.name forConversation:self.controller.conversation file_data:[image TIFFRepresentation]];
                         
                     }
                 }];
             } else {
-                 [[[Telegram rightViewController] messagesViewController] sendImage:image.name forConversation:[[Telegram rightViewController] messagesViewController].conversation file_data:[image TIFFRepresentation]];
+                [self.controller sendImage:image.name forConversation:self.controller.conversation file_data:[image TIFFRepresentation]];
             }
             
-           
+            
             break;
+        }
             
         case PasteBoardItemTypeDocument:
+        {
             alert = [NSAlert alertWithMessageText:NSLocalizedString(@"Conversation.Confirm.SendThisFile", nil) informativeText:NSLocalizedString(@"Conversation.Confirm.SendThisFileDescription", nil) block:^(id result) {
                 if([result intValue] == 1000) {
                     
-                    [[[Telegram rightViewController] messagesViewController] sendDocument:path forConversation:[[Telegram rightViewController] messagesViewController].conversation];
+                    [self.controller sendDocument:path forConversation:self.controller.conversation];
                     
                 }
             }];
             break;
+        }
             
         case PasteBoardItemTypeVideo:
+        {
             alert = [NSAlert alertWithMessageText:NSLocalizedString(@"Conversation.Confirm.SendThisVideo", nil) informativeText:NSLocalizedString(@"Conversation.Confirm.SendThisVideoDescription", nil) block:^(id result) {
                 if([result intValue] == 1000) {
                     
-                    [[[Telegram rightViewController] messagesViewController] sendVideo:path forConversation:[[Telegram rightViewController] messagesViewController].conversation];
+                    [self.controller sendVideo:path forConversation:self.controller.conversation];
                     
                 }
             }];
             break;
-            
+
+        }
         case PasteBoardItemTypeGif:
+        {
             alert = [NSAlert alertWithMessageText:NSLocalizedString(@"Conversation.Confirm.SendThisGif", nil) informativeText:NSLocalizedString(@"Conversation.Confirm.SendThisGifDescription", nil) block:^(id result) {
                 if([result intValue] == 1000) {
                     
-                    [[[Telegram rightViewController] messagesViewController] sendDocument:path forConversation:[[Telegram rightViewController] messagesViewController].conversation];
+                    [self.controller sendDocument:path forConversation:self.controller.conversation];
                     
                 }
             }];
             break;
-            
-
+        }
             
         default:
             break;

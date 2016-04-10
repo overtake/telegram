@@ -470,7 +470,7 @@ DYNAMIC_PROPERTY(DUser);
     
     __block NSMutableArray *botUsers = [[NSMutableArray alloc] init];
     
-    if(allowInlineBot && self.messagesViewController.templateType != TGInputMessageTemplateTypeEditMessage && self.messagesViewController.class != [TGContextMessagesvViewController class]) {
+    if(allowInlineBot && self.messagesViewController.templateType != TGInputMessageTemplateTypeEditMessage) {
         __block NSMutableDictionary *bots;
         
         [[Storage yap] readWithBlock:^(YapDatabaseReadTransaction *transaction) {
@@ -489,6 +489,14 @@ DYNAMIC_PROPERTY(DUser);
             if(user && dateUsed + 14*60*60*24 > [[MTNetwork instance] getTime] && ([[user.username lowercaseString] hasPrefix:[query lowercaseString]] || query.length == 0)) {
                 [botUsers addObject:user];
             }
+            
+        }];
+        
+        [botUsers sortUsingComparator:^NSComparisonResult(TLUser *obj1, TLUser *obj2) {
+            
+            NSComparisonResult result = [bots[@(obj1.n_id)][@"date"] compare:bots[@(obj2.n_id)][@"date"]];
+            
+            return result == NSOrderedAscending ? NSOrderedDescending : result == NSOrderedDescending ? NSOrderedAscending : NSOrderedSame;
             
         }];
         
@@ -548,7 +556,9 @@ static NSMutableDictionary *inlineBotsExceptions;
     
     [self cancel];
     
-    if(inlineBotsExceptions[bot] || self.messagesViewController.class == [TGContextMessagesvViewController class] || self.messagesViewController.state != MessagesViewControllerStateNone)
+    //|| self.messagesViewController.class == [TGContextMessagesvViewController class]
+    
+    if(inlineBotsExceptions[bot] || self.messagesViewController.state != MessagesViewControllerStateNone)
         return;
     
     
@@ -602,7 +612,7 @@ static NSMutableDictionary *inlineBotsExceptions;
                     
                     if(self.messagesViewController.conversation == conversation && request == _contextRequest) {
                         
-                        forceNextLoad = offset.length == 0 && response.next_offset.length > 0;
+                        forceNextLoad = offset.length == 0 && response.next_offset.length > 0 && response.results.count <=3;
                         
                         offset = ![offset isEqualToString:response.next_offset] &&  response.next_offset.length > 0 && response.results.count > 0 ? response.next_offset : nil;
                         

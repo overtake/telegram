@@ -460,7 +460,7 @@
         TGStickerPackModalView *modalView = [[TGStickerPackModalView alloc] init];
        
         [modalView show:self.view.window animated:YES];
-        [modalView setStickerPack:[TL_messages_stickerSet createWithSet:item.pack[@"set"] packs:nil documents:[item.pack[@"stickers"] mutableCopy]]];
+        [modalView setStickerPack:[TL_messages_stickerSet createWithSet:item.pack[@"set"] packs:nil documents:[item.pack[@"stickers"] mutableCopy]] forMessagesViewController:appWindow().navigationController.messagesViewController];
     }
     
 }

@@ -285,7 +285,7 @@
     
     TL_conversation *conversation = [[DialogsManager sharedManager] find:self.peer_id];
     
-    if(self.prevState != ChatHistoryStateFull && (conversation.top_message <= self.server_max_id || conversation.top_message == 0))
+    if(self.prevState != ChatHistoryStateFull && (conversation.top_message <= self.server_max_id || conversation.top_message == 0 || (conversation.top_message > TGMINFAKEID && conversation.last_message_date <= self.maxDate)))
         [self setState:ChatHistoryStateFull next:NO];
     
     return converted;

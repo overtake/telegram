@@ -226,7 +226,7 @@
 
 - (void)sendCoordinates:(CLLocationCoordinate2D)coordinates {
    
-    [appWindow().navigationController.messagesViewController sendLocation:coordinates forConversation:[Telegram rightViewController].messagesViewController.conversation];
+    [_messagesViewController sendLocation:coordinates forConversation:_messagesViewController.conversation];
     
     [self close];
     

@@ -598,7 +598,7 @@ static NSMenu *deleteMenu;
     NSView *view = [self hitTest:[self convertPoint:[theEvent locationInWindow] fromView:nil]];
     
     
-    NSUInteger index = [self.subviews indexOfObject:view.superview.superview];
+    NSUInteger index = [self.subviews indexOfObject:view];
     
     if(index == NSNotFound)
         index = [self.subviews indexOfObject:view.superview];

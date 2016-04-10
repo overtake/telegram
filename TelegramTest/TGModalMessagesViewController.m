@@ -38,7 +38,6 @@
 
 -(void)modalViewDidShow {
     [self setContainerFrameSize:NSMakeSize(MAX(300,MIN(450,NSWidth(self.frame) - 60)), MAX(330,MIN(555,NSHeight(self.frame) - 60)))];
-    [Notification addObserver:self selector:@selector(didUpdateContextSwitch:) name:UPDATE_CONTEXT_SWITCH];
     
     if(self.action) {
         TL_inlineBotSwitchPM *pm = _action.reservedObject1;
@@ -46,9 +45,9 @@
     }
 }
 
--(void)didUpdateContextSwitch:(NSNotification *)notification {
-    TL_keyboardButtonSwitchInline *keyboard = notification.userInfo[@"keyboard"];
-    
+
+
+-(void)didNeedCloseAndSwitch:(TLKeyboardButton *)keyboard {
     TLUser *user = _action.reservedObject2;
     TL_conversation *parentConversation = _action.reservedObject3;
     

@@ -271,11 +271,12 @@ static ChatHistoryController *observer;
     
     [ASQueue dispatchOnStageQueue:^{
         
-        ChatHistoryState state = [self filterWithNext:NO].prevState;
+        HistoryFilter *filer = [self filterWithNext:NO];
+        
         
         [ASQueue dispatchOnMainQueue:^{
             
-            block(state);
+            block(filer.prevState);
             
         }];
         

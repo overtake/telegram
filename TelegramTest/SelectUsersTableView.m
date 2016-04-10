@@ -132,7 +132,7 @@ static NSCache *cacheItems;
         
         [chats enumerateObjectsUsingBlock:^(TL_conversation *obj, NSUInteger idx, BOOL * _Nonnull stop) {
             
-            if(obj.type == DialogTypeUser || (obj.type == DialogTypeChat && obj.chat.type == TLChatTypeNormal && !obj.chat.isDeactivated) || (obj.type == DialogTypeChannel && obj.chat.isMegagroup)) {
+            if(obj.canSendMessage) {
                 [accepted addObject:obj];
             }
             
