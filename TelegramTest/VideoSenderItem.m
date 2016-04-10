@@ -148,7 +148,7 @@
                 if(thumb.size.width > 0 && thumb.size.height > 0) {
                     TLFileLocation *location = msg.media.document.thumb.location;
                     
-                    [TGCache cacheImage:thumb forKey:msg.media.document.thumb.location.cacheKey groups:@[IMGCACHE]];
+                    [TGCache cacheImage:thumb forKey:location.cacheKey groups:@[IMGCACHE]];
                     
                     [jpegNormalizedData(thumb) writeToFile:locationFilePath(location, @"jpg") atomically:YES];
                 }

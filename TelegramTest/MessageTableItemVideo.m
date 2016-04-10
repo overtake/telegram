@@ -51,6 +51,7 @@
     
     if(!image) {
         image = fileSize(document.thumb.location.path) > photoSize.size ? imageFromFile(document.thumb.location.path) : nil;
+        
     }
     
     
