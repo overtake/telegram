@@ -97,6 +97,24 @@
         
         [self.containerView addSubview:_waveformView];
         
+        
+        
+        [self.containerView setDrawBlock:^{
+           
+            if(!self.item.message.readedContent && !weakSelf.item.messageSender && (!weakSelf.item.downloadItem || weakSelf.item.downloadItem.downloadState == DownloadStateCompleted) && globalAudioPlayer().delegate != weakSelf.audioItem && !weakSelf.item.message.chat.isChannel) {
+                [NSColorFromRGB(0x4ba3e2) setFill];
+                
+                NSBezierPath *path = [NSBezierPath bezierPath];
+                
+                NSRect rect = NSMakeRect(NSWidth(_playView.frame) + NSWidth(weakSelf.durationView.frame) + self.item.defaultOffset + 3,  NSMinY(weakSelf.durationView.frame) + (NSHeight(weakSelf.durationView.frame)/2) -3, 6, 6);
+                
+                [path appendBezierPathWithRoundedRect:rect xRadius:3 yRadius:3];
+                
+                [path fill];
+            }
+            
+        }];
+        
     }
     return self;
 }
@@ -178,18 +196,6 @@
 
 
 
--(void)drawRect:(NSRect)dirtyRect {
-    
-    if(!self.item.message.readedContent && !self.item.messageSender && (!self.item.downloadItem || self.item.downloadItem.downloadState == DownloadStateCompleted) && globalAudioPlayer().delegate != self.audioItem && !self.item.message.chat.isChannel) {
-        [NSColorFromRGB(0x4ba3e2) setFill];
-        
-        NSBezierPath *path = [NSBezierPath bezierPath];
-        
-        [path appendBezierPathWithRoundedRect:NSMakeRect(NSMinX(self.containerView.superview.frame) + NSWidth(_playView.frame) + NSWidth(self.durationView.frame) + self.item.defaultOffset + 3, NSMaxY(self.containerView.superview.frame) - self.item.defaultContentOffset - (NSHeight(self.durationView.frame)/2) , 6, 6) xRadius:3 yRadius:3];
-        
-        [path fill];
-    }
-}
 
 - (void)setCellState:(CellState)cellState animated:(BOOL)animated  {
     [super setCellState:cellState animated:animated];

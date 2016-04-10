@@ -1154,6 +1154,9 @@
          contextName = "parseMessage:Storage.m">
       </ContextState>
       <ContextState
+         contextName = "__77-[TGUpdateChannels failUpdateWithChannelId:limit:withCallback:errorCallback:]_block_invoke:TGUpdateChannels.m">
+      </ContextState>
+      <ContextState
          contextName = "__56+[TGBotCommandsPopup show:botInfo:view:ofRect:callback:]_block_invoke42:TGBotCommandsPopup.m">
       </ContextState>
       <ContextState
@@ -2995,6 +2998,14 @@
       </ContextState>
       <ContextState
          contextName = "-[TelegramSerialization parseMessage:responseParsingBlock:]:TelegramSerialization.m">
+      </ContextState>
+      <ContextState
+         contextName = "-[MessageTableCellAudioView drawRect:]:MessageTableCellAudioView.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.item.message.readedContent">
+            </PersistentString>
+         </PersistentStrings>
       </ContextState>
       <ContextState
          contextName = "__30-[MTNetwork constructRequest:]_block_invoke_4:MTNetwork.m">
@@ -7021,6 +7032,9 @@
                value = "self.chat">
             </PersistentString>
          </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[TGModernUserViewController setUser:conversation:]:TGModernUserViewController.m">
       </ContextState>
       <ContextState
          contextName = "-[CompressedDocumentSenderItem initWithItem:]:CompressedDocumentSenderItem.m">
