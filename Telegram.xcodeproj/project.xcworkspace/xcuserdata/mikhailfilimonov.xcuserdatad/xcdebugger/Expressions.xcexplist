@@ -1573,6 +1573,15 @@
          contextName = "-[MessagesViewController tableView:viewForTableColumn:row:]:MessagesViewController.m">
          <PersistentStrings>
             <PersistentString
+               value = "cell.superview">
+            </PersistentString>
+            <PersistentString
+               value = "rowView.subviews">
+            </PersistentString>
+            <PersistentString
+               value = "cell.subviews">
+            </PersistentString>
+            <PersistentString
                value = "item">
             </PersistentString>
          </PersistentStrings>

@@ -329,13 +329,13 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "TelegramTest/VideoSenderItem.m"
-            timestampString = "481990909.660107"
+            filePath = "TelegramTest/MessageTableCell.m"
+            timestampString = "481996885.506676"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "153"
-            endingLineNumber = "153"
-            landmarkName = "-performRequest"
+            startingLineNumber = "79"
+            endingLineNumber = "79"
+            landmarkName = "-rightMouseDown:"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>

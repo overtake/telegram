@@ -538,7 +538,7 @@
                         POPBasicAnimation *fadeOut = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerOpacity];
                         fadeOut.fromValue = @(1.0f);
                         fadeOut.toValue = @(0.0f);
-                        fadeOut.duration = 0.2f;
+                        fadeOut.duration = 0.2;
                         fadeOut.removedOnCompletion = YES;
                         [cell.layer pop_addAnimation:fadeOut forKey:@"opacity"];
                         
@@ -3551,7 +3551,7 @@ static NSTextAttachment *headerMediaIcon() {
                     MessageSenderItem *sender = [[cs alloc] initWithMessage:substring forConversation:conversation noWebpage:noWebpage  additionFlags:self.senderFlags];
                     sender.tableItem = [[self messageTableItemsFromMessages:@[sender.message]] lastObject];
                     
-                    [preparedItems insertObject:sender.tableItem atIndex:0];
+                    [preparedItems addObject:sender.tableItem];
                     
                     
                 }
@@ -4209,6 +4209,12 @@ static NSTextAttachment *headerMediaIcon() {
         cell.messagesViewController = self;
     } else {
         [cell.layer pop_removeAllAnimations];
+        
+
+        
+        if(cell.superview.subviews.count > 1) {
+            [cell.superview.subviews[0] removeFromSuperview]; // remove editd view
+        }
         cell.layer.opacity = 1.0f;
         
     }
@@ -4218,179 +4224,7 @@ static NSTextAttachment *headerMediaIcon() {
     [cell setItem:item];
 
     return cell;
-    
-    
-    if(item.message.hole != nil) {
-        
-        static NSString *const kRowIdentifier = @"holeItem";
-        cell = [self.table makeViewWithIdentifier:kRowIdentifier owner:self];
-        if(!cell) {
-            cell = [[MessageTableCellHoleView alloc] initWithFrame:self.view.bounds];
-            cell.identifier = kRowIdentifier;
-            cell.messagesViewController = self;
-        }
-        
-    } else if(item.class == [MessageTableItemServiceMessage class]) {
-        
-        static NSString *const kRowIdentifier = @"service";
-        cell = [self.table makeViewWithIdentifier:kRowIdentifier owner:self];
-        if(!cell) {
-            cell = [[MessageTableCellServiceMessage alloc] initWithFrame:self.view.bounds];
-            cell.identifier = kRowIdentifier;
-            cell.messagesViewController = self;
-        }
-    } else if(item.class == [MessageTableItemText class]) {
-        static NSString *const kRowIdentifier = @"text";
-        cell = [self.table makeViewWithIdentifier:kRowIdentifier owner:self];
-        
-        
-        if(!cell) {
-            cell = [[MessageTableCellTextView alloc] initWithFrame:self.view.bounds];
-            cell.identifier = kRowIdentifier;
-            cell.messagesViewController = self;
-            
-        }
-        
-    } else if(item.class == [MessageTableItemPhoto class]) {
-        static NSString *const kRowIdentifier = @"photo";
-        cell = [self.table makeViewWithIdentifier:kRowIdentifier owner:self];
-        if(!cell) {
-            cell = [[MessageTableCellPhotoView alloc] initWithFrame:self.view.bounds];
-            cell.identifier = kRowIdentifier;
-            cell.messagesViewController = self;
-        }
-    } else if(item.class == [MessageTableItemVideo class]) {
-        static NSString *const kRowIdentifier = @"video";
-        cell = [self.table makeViewWithIdentifier:kRowIdentifier owner:self];
-        if(!cell) {
-            cell = [[MessageTableCellVideoView alloc] initWithFrame:self.view.bounds];
-            cell.identifier = kRowIdentifier;
-            cell.messagesViewController = self;
-        }
-    } else if(item.class == [MessageTableItemGeo class]) {
-        static NSString *const kRowIdentifier = @"geo";
-        cell = [self.table makeViewWithIdentifier:kRowIdentifier owner:self];
-        if(!cell) {
-            cell = [[MessageTableCellGeoView alloc] initWithFrame:self.view.bounds];
-            cell.identifier = kRowIdentifier;
-            cell.messagesViewController = self;
-        }
-    } else if(item.class == [MessageTableItemContact class]) {
-        static NSString *const kRowIdentifier = @"contact";
-        cell = [self.table makeViewWithIdentifier:kRowIdentifier owner:self];
-        if(!cell) {
-            cell = [[MessageTableCellContactView alloc] initWithFrame:self.view.bounds];
-            cell.identifier = kRowIdentifier;
-            cell.messagesViewController = self;
-        }
-    } else if(item.class == [MessageTableItemAudio class]) {
-        static NSString *const kRowIdentifier = @"audio";
-        cell = [self.table makeViewWithIdentifier:kRowIdentifier owner:self];
-        if(!cell) {
-            cell = [[MessageTableCellAudioView alloc] initWithFrame:self.view.bounds];
-            cell.identifier = kRowIdentifier;
-            cell.messagesViewController = self;
-        }
-    } else if(item.class == [MessageTableItemDocument class]) {
-        static NSString *const kRowIdentifier = @"document";
-        cell = [self.table makeViewWithIdentifier:kRowIdentifier owner:self];
-        if(!cell) {
-            cell = [[MessageTableCellDocumentView alloc] initWithFrame:self.view.bounds];
-            cell.identifier = kRowIdentifier;
-            cell.messagesViewController = self;
-        }
-    } else if(item.class == [MessageTableItemAudioDocument class]) {
-        static NSString *const kRowIdentifier = @"auido_document";
-        cell = [self.table makeViewWithIdentifier:kRowIdentifier owner:self];
-        if(!cell) {
-            cell = [[MessageTablecellAudioDocumentView alloc] initWithFrame:self.view.bounds];
-            cell.identifier = kRowIdentifier;
-            cell.messagesViewController = self;
-        }
-    } else if(item.class == [MessageTableItemUnreadMark class]) {
-        static NSString *const kRowIdentifier = @"unread_mark_cell";
-        cell = [self.table makeViewWithIdentifier:kRowIdentifier owner:self];
-        
-        if(!cell) {
-            cell = [[MessageTableCellUnreadMarkView alloc] initWithFrame:self.view.bounds];
-            cell.identifier = kRowIdentifier;
-            cell.messagesViewController = self;
-        }
-    } else if(item.class == [MessageTableItemSocial class]) {
-      
-        static NSString *const kRowIdentifier = @"social_cell";
-        cell = [self.table makeViewWithIdentifier:kRowIdentifier owner:self];
-        
-        if(!cell) {
-            cell = [[MessageTableCellSocialView alloc] initWithFrame:self.view.bounds];
-            cell.identifier = kRowIdentifier;
-            cell.messagesViewController = self;
-        }
 
-        
-    } else if(item.class == [MessageTableItemSticker class]) {
-        
-        static NSString *const kRowIdentifier = @"sticker_cell";
-        cell = [self.table makeViewWithIdentifier:kRowIdentifier owner:self];
-        
-        if(!cell) {
-            cell = [[MessageTableCellStickerView alloc] initWithFrame:self.view.bounds];
-            cell.identifier = kRowIdentifier;
-            cell.messagesViewController = self;
-        }
-        
-        
-    } else if(item.class == [MessageTableItemMpeg class]) {
-        static NSString *const kRowIdentifier = @"mpeg_cell";
-        cell = [self.table makeViewWithIdentifier:kRowIdentifier owner:self];
-        
-        if(!cell) {
-            cell = [[MessageTableCellMpegView alloc] initWithFrame:self.view.bounds];
-            cell.identifier = kRowIdentifier;
-            cell.messagesViewController = self;
-        }
-    }else if(item.class == [MessageTableItemDate class]) {
-        static NSString *const kRowIdentifier = @"date_cell";
-        cell = [self.table makeViewWithIdentifier:kRowIdentifier owner:self];
-        
-        if(!cell) {
-            cell = [[MessageTableCellDateView alloc] initWithFrame:self.view.bounds];
-            cell.identifier = kRowIdentifier;
-            cell.messagesViewController = self;
-        }
-    } else if(!(item.class == [MessageTableCellServiceMessage class]) && !(item.class == [MessageTableItemTyping class])) {
-        
-        assert(NO);
-        
-        static NSString *const kRowIdentifier = @"else";
-        cell = (MessageTableCellContainerView *)[self.table makeViewWithIdentifier:kRowIdentifier owner:self];
-        if(!cell) {
-            cell = [[MessageTableCellContainerView alloc] initWithFrame:self.view.bounds];
-            cell.identifier = kRowIdentifier;
-            cell.messagesViewController = self;
-        }
-        
-    } else if([item isKindOfClass:[MessageTableItemTyping class]]) {
-        return self.typingView;
-    }
-    
-    NSDate *start = [NSDate new];
-    item.table = self.table;
-    item.rowId = row;
-    [cell setItem:item];
-   
-    
-    if([cell isKindOfClass:[TGModernMessageCellContainerView class]]) {
-        TGModernMessageCellContainerView *containerView = (TGModernMessageCellContainerView *)cell;
-        [containerView setEditable:self.state == MessagesViewControllerStateEditable animated:NO];
-    }
-    
-    double time = ABS([start timeIntervalSinceNow]);
-    if(time > 0.010) {
-        MTLog(@"cell #%@, %f", NSStringFromClass([cell class]), time);
-    }
-    
-    return cell;
 }
 
 

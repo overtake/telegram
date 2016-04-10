@@ -24,6 +24,8 @@
 {
     self = [super initWithFrame:frame];
     if (self) {
+        
+        
         self.textField = [[TGCTextView alloc] initWithFrame:NSMakeRect(0, 10, 0, 0)];
         
         [self addSubview:self.textField];

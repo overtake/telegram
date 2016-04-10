@@ -718,7 +718,7 @@ static NSTextAttachment *channelViewsCountAttachment() {
         self.blockSize = NSMakeSize(self.blockSize.width, self.blockSize.height + _captionSize.height + self.defaultContentOffset);
     }
     
-    _viewsCountAndSignSize = NSMakeSize(MIN(MAX(width - _headerOriginalSize.width,0),_viewsCountAndSignOriginalSize.width), self.viewsCountAndSignSize.height);
+    _viewsCountAndSignSize = NSMakeSize(MIN(MAX(width - _headerOriginalSize.width,40),_viewsCountAndSignOriginalSize.width), self.viewsCountAndSignSize.height);
     
     self.headerSize = NSMakeSize(MIN(_headerOriginalSize.width, width - self.defaultOffset * 2), self.headerSize.height);
     
