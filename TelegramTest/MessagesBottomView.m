@@ -1524,17 +1524,24 @@ static RBLPopover *popover;
         
         NSRange split = [value rangeOfString:@" "];
         
+        
         if(split.location != NSNotFound && split.location != 1) {
             NSString *bot = [value substringWithRange:NSMakeRange(1,split.location-1)];
             NSString *query = [value substringFromIndex:split.location];
             
-            weak();
+            if([bot rangeOfString:@"\n"].location == NSNotFound) {
+                weak();
+                
+                [self.messagesViewController.hintView showContextPopupWithQuery:bot query:[query trim] conversation:self.dialog acceptHandler:^(TLUser *user){
+                    [weakSelf.inputMessageTextField setInline_placeholder:![query isEqualToString:@" "] ? nil : [weakSelf inline_placeholder:user]];
+                    weakSelf.inlineBot = user;
+                    [weakSelf checkAndDisableSendingWithInlineBot:user animated:YES];
+                }];
+            } else {
+                 [self checkAndDisableSendingWithInlineBot:nil animated:YES];
+            }
             
-            [self.messagesViewController.hintView showContextPopupWithQuery:bot query:[query trim] conversation:self.dialog acceptHandler:^(TLUser *user){
-                [weakSelf.inputMessageTextField setInline_placeholder:![query isEqualToString:@" "] ? nil : [weakSelf inline_placeholder:user]];
-                weakSelf.inlineBot = user;
-                [weakSelf checkAndDisableSendingWithInlineBot:user animated:YES];
-            }];
+            
         } else {
             [self checkAndDisableSendingWithInlineBot:nil animated:YES];
         }

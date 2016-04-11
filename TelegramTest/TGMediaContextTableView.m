@@ -602,11 +602,13 @@ static NSMenu *deleteMenu;
     NSView *view = [self hitTest:[self convertPoint:[theEvent locationInWindow] fromView:nil]];
     
     
+    while (![view isKindOfClass:[TGGifPlayerItemView class]] && ![view isKindOfClass:[TGPicItemView class]]) {
+        view = view.superview;
+    
+    }
+    
     NSUInteger index = [self.subviews indexOfObject:view];
-    
-    if(index == NSNotFound)
-        index = [self.subviews indexOfObject:view.superview];
-    
+
     
     TGGifSearchRowItem *item = (TGGifSearchRowItem *)[self rowItem];
     

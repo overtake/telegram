@@ -255,7 +255,11 @@
                 }
                 
                 if(!newUser.isMin) {
+                    
+                    if(currentUser.access_hash != newUser.access_hash)
+                        needUpdateUserInDB = YES;
                     currentUser.access_hash = newUser.access_hash;
+                    
                 }
                 
                 [self setUserStatus:newUser.status forUser:currentUser];

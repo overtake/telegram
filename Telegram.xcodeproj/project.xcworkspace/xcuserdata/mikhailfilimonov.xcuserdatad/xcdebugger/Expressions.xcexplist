@@ -1051,10 +1051,19 @@
          contextName = "-[TGGifSearchRowView mouseUp:]:TGMediaContextTableView.m">
          <PersistentStrings>
             <PersistentString
-               value = "view.superview">
+               value = "view.superview.superview.superview">
+            </PersistentString>
+            <PersistentString
+               value = "view.superview.">
             </PersistentString>
             <PersistentString
                value = "self.subviews">
+            </PersistentString>
+            <PersistentString
+               value = "view.superview.superview">
+            </PersistentString>
+            <PersistentString
+               value = "view.superview">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -3660,6 +3669,9 @@
          contextName = "open_user_by_name:FileUtils.m">
       </ContextState>
       <ContextState
+         contextName = "__81-[TGMessagesHintView showContextPopupWithQuery:query:conversation:acceptHandler:]_block_invoke.509:TGMessagesHintView.m">
+      </ContextState>
+      <ContextState
          contextName = "-[TGUpdateChannels addWaitingUpdate:]:TGUpdateChannels.m">
       </ContextState>
       <ContextState
@@ -4197,7 +4209,7 @@
          contextName = "__41-[UsersManager add:withCustomKey:update:]_block_invoke:UsersManager.m">
          <PersistentStrings>
             <PersistentString
-               value = "">
+               value = "currentUser.access_hash">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -5830,6 +5842,14 @@
       </ContextState>
       <ContextState
          contextName = "__42-[DialogsManager setTopMessagesToDialogs:]_block_invoke_3:DialogsManager.m">
+      </ContextState>
+      <ContextState
+         contextName = "-[TGMessagesHintView showContextPopupWithQuery:query:conversation:acceptHandler:]:TGMessagesHintView.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "bot">
+            </PersistentString>
+         </PersistentStrings>
       </ContextState>
       <ContextState
          contextName = "-[_TMSearchTextField becomeFirstResponder]:TMSearchTextField.m">
@@ -7482,6 +7502,9 @@
                value = "isCleared">
             </PersistentString>
          </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "__open_user_by_name_block_invoke.583:FileUtils.m">
       </ContextState>
       <ContextState
          contextName = "-[MTNetwork sendRequest:]:MTNetwork.m">

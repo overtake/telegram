@@ -651,7 +651,7 @@ void add_sticker_pack_by_name(TLInputStickerSet *set) {
 
 void open_user_by_name(NSDictionary *params) {
     
-    __block id obj = [Telegram findObjectWithName:params[@"domain"]];
+    __block id obj = nil;[Telegram findObjectWithName:params[@"domain"]];
     
     dispatch_block_t showConversation = ^ {
         
