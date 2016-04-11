@@ -637,6 +637,10 @@ static NSMutableDictionary *inlineBotsExceptions;
                             
                             [self setCurrentTableView:_contextTableView];
                             
+                            if(_contextTableView.count > 0) {
+                                [_contextTableView reloadDataForRowIndexes:[NSIndexSet indexSetWithIndex:_contextTableView.count-1] columnIndexes:[NSIndexSet indexSetWithIndex:0]];
+                            }
+                            
                             [_contextTableView insert:items startIndex:_contextTableView.count tableRedraw:YES];
                             
                             [self updateFrames:YES];

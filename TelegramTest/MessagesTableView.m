@@ -369,6 +369,8 @@
 
 -(void)checkAndScroll:(NSPoint)point {
     
+    
+    
     NSPoint topCorner = NSMakePoint(0, roundf(NSHeight(self.scrollView.frame) - 100));
     
     NSPoint botCorner = NSMakePoint(0, 100);
@@ -396,7 +398,7 @@
         next = NO;
     
     
-    if(next) {
+    if(next && [NSEvent pressedMouseButtons] > 0) {
         if(_timer == nil)
             [self startUpdateScrollTimerIfNeeded];
     } else

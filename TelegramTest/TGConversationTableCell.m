@@ -237,7 +237,7 @@ static NSDictionary *attributes() {
                 [image drawInRect:NSMakeRect(NSMaxX(self.nameTextField.frame) + 2,NSMinY(self.nameTextField.frame) + 6, image.size.width, image.size.height) fromRect:NSZeroRect operation:NSCompositeHighlight fraction:1];
             }
             
-            if(self.item.conversation.isMute && self.style != ConversationTableCellShortStyle ) {
+            if(self.item.conversation.isMute && self.style != ConversationTableCellShortStyle && self.class == [TGConversationTableCell class]) {
                 
                 NSImage *image = !self.isSelected ? image_muted() : image_mutedSld();
                 

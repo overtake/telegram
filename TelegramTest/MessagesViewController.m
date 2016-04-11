@@ -3222,7 +3222,7 @@ static NSTextAttachment *headerMediaIcon() {
                 
                 NSDate *currentDate = [NSDate dateWithTimeIntervalSince1970:[[currentItem message] date]];
                 
-                if(currentItem.message != nil && ![prevDate isEqualToDateIgnoringTime:currentDate]) {
+                if(currentItem.message != nil && ![prevDate isEqualToDateIgnoringTime:currentDate] && prevDate.timeIntervalSince1970 != 0) {
                     [items addObject:[[MessageTableItemDate alloc] initWithObject:prevDate]];
                 }
                 
@@ -3256,11 +3256,12 @@ static NSTextAttachment *headerMediaIcon() {
                     if(self.messages.count > 1 && pos != self.messages.count) {
                         NSDate *prevDate = [NSDate dateWithTimeIntervalSince1970:[[(MessageTableItem *)self.messages[pos] message] date]];
                         
-                        if(![prevDate isEqualToDateIgnoringTime:currentDate]) {
+                        if(![prevDate isEqualToDateIgnoringTime:currentDate] && currentDate.timeIntervalSince1970 != 0) {
                             [items addObject:[[MessageTableItemDate alloc] initWithObject:currentDate]];
                         }
                         
-                    } else {
+                    } else if(currentDate.timeIntervalSince1970 != 0) {
+                        
                         [items addObject:[[MessageTableItemDate alloc] initWithObject:currentDate]];
                     }
                 }  

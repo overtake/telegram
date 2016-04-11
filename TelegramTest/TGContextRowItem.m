@@ -11,6 +11,7 @@
 #import "DownloadDocumentItem.h"
 #import "DownloadExternalItem.h"
 #import "DownloadQueue.h"
+#import "TGContextRowView.h"
 @interface TGContextRowItem ()
 @property (nonatomic,strong) TL_localMessage *message;
 @end
@@ -104,7 +105,8 @@
 
 -(void)dealloc {
     [_audioController setDelegate:nil];
-    [_audioController stop];
+    if(globalAudioPlayer().delegate.class == [TGContextRowView class])
+        [_audioController stop];
     
 }
 
