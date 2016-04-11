@@ -45,7 +45,7 @@
 //        _calendarButton.layer.borderColor = DIALOG_BORDER_COLOR.CGColor;
 //        _calendarButton.layer.borderWidth = 2;
         
-        [_calendarButton setHidden:!ACCEPT_FEATURE];
+       
         
         weak();
         
@@ -109,12 +109,17 @@
     if(self.isHidden) {
         [self.calendarPopover close];
     }
+  
+    [_calendarButton setHidden:_messagesViewController.conversation.type == DialogTypeChannel && !_messagesViewController.conversation.chat.isMegagroup];
+
     
     if(flag) {
         [self setMessagesCount:0];
         [self sizeToFit];
     }
     
+
+
     
 }
 
@@ -141,6 +146,8 @@
     [self _didScrolledTableView:nil];
 }
 
+
+
 - (void) didSelectDate:(NSDate *)selectedDate {
     [self.calendarPopover close];
     
@@ -155,7 +162,7 @@
     
    
     
-    if(_messagesViewController.conversation.type == DialogTypeChannel) {
+    if(_messagesViewController.conversation.type == DialogTypeChannel && !_messagesViewController.conversation.chat.isMegagroup) {
         request = [TLAPI_channels_getImportantHistory createWithChannel:_messagesViewController.conversation.chat.inputPeer offset_id:0 offset_date:selectedDate.timeIntervalSince1970- [[MTNetwork instance] globalTimeOffsetFromUTC] add_offset:-100 limit:100 max_id:INT32_MAX min_id:0];
     } else {
         request = [TLAPI_messages_getHistory createWithPeer:_messagesViewController.conversation.inputPeer offset_id:0 offset_date:selectedDate.timeIntervalSince1970 - [[MTNetwork instance] globalTimeOffsetFromUTC] add_offset:-100 limit:100 max_id:INT32_MAX min_id:0];
@@ -263,7 +270,7 @@
 
     
     NSPoint point;
-    if(ACCEPT_FEATURE)
+    if(!_calendarButton.isHidden)
         point.x = -5;
     point.y = roundf((NSHeight(dirtyRect) - image_ScrollDownArrow().size.height) * 0.5);
 
@@ -290,10 +297,10 @@
         size.width += 16;
     }
     
-    if(ACCEPT_FEATURE) {
+    if(!_calendarButton.isHidden) {
          size.width += 60;
     } else {
-        size.width+=40;
+        size.width+=44;
     }
     
    
@@ -301,7 +308,9 @@
     
     
     [self setFrameSize:size];
-  //  [self setNeedsDisplay:YES];
+    
+    
+    [self setNeedsDisplay:YES];
 //    [self.layer setNeedsLayout];
 //    [self.layer needsDisplay];
 }
