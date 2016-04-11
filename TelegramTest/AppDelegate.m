@@ -718,8 +718,7 @@ void exceptionHandler(NSException * exception)
 
 -(NSApplicationTerminateReply)applicationShouldTerminate:(NSApplication *)sender {
     
-    if(![[UsersManager currentUser].username isEqualToString:@"izhukov"])
-        [[NSUserNotificationCenter defaultUserNotificationCenter] removeAllDeliveredNotifications];
+    [[NSUserNotificationCenter defaultUserNotificationCenter] removeAllDeliveredNotifications];
     
     if([SenderItem allSendersSaved])
         return NSTerminateNow;

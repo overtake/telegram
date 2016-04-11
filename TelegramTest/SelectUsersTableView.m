@@ -57,8 +57,11 @@ static NSCache *cacheItems;
     [contacts enumerateObjectsUsingBlock:^(TLContact *obj, NSUInteger idx, BOOL *stop) {
         
         SelectUserItem *item = [[SelectUserItem alloc] initWithObject:obj.user];
-        item.isSelected = [_selectedItems indexOfObject:@(obj.user.n_id)] != NSNotFound;
-        [items addObject:item];
+        if(item) {
+            item.isSelected = [_selectedItems indexOfObject:@(obj.user.n_id)] != NSNotFound;
+            [items addObject:item];
+        }
+       
         
         if(items.count == 30)
             *stop = YES;
@@ -115,7 +118,11 @@ static NSCache *cacheItems;
     
     [chats enumerateObjectsUsingBlock:^(TL_conversation * obj, NSUInteger idx, BOOL *stop) {
         
-        [items addObject:[[SelectUserItem alloc] initWithObject:obj.chat]];
+        SelectUserItem *item = [[SelectUserItem alloc] initWithObject:obj.chat];
+        if(item) {
+            [items addObject:item];
+        }
+        
         
     }];
     
@@ -143,8 +150,11 @@ static NSCache *cacheItems;
         
         [accepted enumerateObjectsUsingBlock:^(TL_conversation * obj, NSUInteger idx, BOOL *stop) {
             
-            if(obj.chat || obj.user) {
-                [items addObject:[[SelectUserItem alloc] initWithObject:obj.chat ? obj.chat : obj.user]];
+            if((obj.chat || obj.user) && obj.type != DialogTypeSecretChat) {
+                SelectUserItem *item = [[SelectUserItem alloc] initWithObject:obj.chat ? obj.chat : obj.user];
+                
+                if(item)
+                    [items addObject:item];
             }
             
             
@@ -206,9 +216,12 @@ static NSCache *cacheItems;
         
         [other enumerateObjectsUsingBlock:^(TL_contact *obj, NSUInteger idx, BOOL *stop) {
             
-             SelectUserItem *item = [[SelectUserItem alloc] initWithObject:obj.user];
-             item.isSelected = [_selectedItems indexOfObject:@(obj.user_id)] != NSNotFound;
-             [items addObject:item];
+            SelectUserItem *item = [[SelectUserItem alloc] initWithObject:obj.user];
+            if(item) {
+                item.isSelected = [_selectedItems indexOfObject:@(obj.user_id)] != NSNotFound;
+                [items addObject:item];
+            }
+            
             
         }];
         
@@ -490,9 +503,10 @@ static NSCache *cacheItems;
             return;
         
         SelectUserItem *item = [[SelectUserItem alloc] initWithObject:obj];
-        item.isSearchUser = YES;
-        [converted addObject:item];
-        
+        if(item) {
+            item.isSearchUser = YES;
+            [converted addObject:item];
+        }
     }];
     
     if(converted.count > 0) {
