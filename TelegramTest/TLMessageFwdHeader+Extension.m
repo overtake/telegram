@@ -17,7 +17,7 @@
     if(self.channel_id != 0)
         channel = [[ChatsManager sharedManager] find:self.channel_id];
     
-    if(self.from_id != 0 || channel.isMegagroup) {
+    if(!channel || channel.isMegagroup) {
         return [TL_peerUser createWithUser_id:self.from_id];
     } else if(self.channel_id != 0) {
         return [TL_peerChannel createWithChannel_id:self.channel_id];

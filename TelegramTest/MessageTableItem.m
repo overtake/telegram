@@ -304,7 +304,7 @@ static NSCache *cItems;
                 NSRange r = [self.forwardName appendString:[NSString stringWithFormat:@"%@",self.fwd_user.first_name] withColor:LINK_COLOR];
                 [self.forwardName appendString:@")" withColor:LINK_COLOR];
                 
-                [self.forwardName setLink:[TMInAppLinks peerProfile:[TL_peerChannel createWithChannel_id:self.message.fwd_from.channel_id]] forRange:r];
+                [self.forwardName setLink:[TMInAppLinks peerProfile:self.message.fwd_from.fwdPeer jumpId:self.message.fwd_from.channel_post] forRange:r];
                 
                 [self.forwardName setFont:TGSystemMediumFont(13) forRange:r];
             }

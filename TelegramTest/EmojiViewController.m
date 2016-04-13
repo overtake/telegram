@@ -480,6 +480,19 @@
         [btn setSelected:btn == button];
     }
     
+    if(button.index == 7) {
+        [self.stickersTableView reload];
+    } else if(_currentButton.index == 7) {
+        [self.stickersTableView removeAllItems];
+    }
+    
+    if(button.index == 8) {
+        [_gifContainer prepareSavedGifvs];
+    } else if(_currentButton.index == 8) {
+        [_gifContainer clear];
+    }
+    
+    
     self.currentButton = button;
     
     [self.tableView.containerView setHidden:NO];
@@ -497,17 +510,6 @@
     [self.tableView reloadData];
     [self.tableView scrollToBeginningOfDocument:nil];
     
-    if(self.currentButton.index == 7) {
-        [self.stickersTableView reload];
-    } else {
-        [self.stickersTableView removeAllItems];
-    }
-    
-    if(self.currentButton.index == 8) {
-        [_gifContainer prepareSavedGifvs];
-    } else {
-        [_gifContainer clear];
-    }
     
     
     [self.tableView.containerView setHidden:self.currentButton.index == 7 || self.currentButton.index == 8];

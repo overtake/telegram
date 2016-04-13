@@ -327,28 +327,30 @@ static NSImage *higlightedImage() {
 
 -(void)save:(NSArray *)sets stickers:(NSDictionary *)stickers n_hash:(int)n_hash saveSets:(BOOL)saveSets {
     
-    [[Storage yap] readWriteWithBlock:^(YapDatabaseReadWriteTransaction * __nonnull transaction) {
-        
-        NSMutableDictionary *serializedStickers = [_stickers mutableCopy];
-        
-        NSMutableDictionary *data = [[transaction objectForKey:@"modern_stickers" inCollection:STICKERS_COLLECTION] mutableCopy];
-        
-        if(!data)
-        {
-            data = [[NSMutableDictionary alloc] init];
-            data[@"sets"] = [[NSMutableArray alloc] init];
-        }
-        
-        data[@"serialized"] = serializedStickers;
-        
-        if(saveSets) {
+    if(saveSets) {
+        [[Storage yap] readWriteWithBlock:^(YapDatabaseReadWriteTransaction * __nonnull transaction) {
             
-            data[@"sets"] = sets;
-        }
-        
-        [transaction setObject:data forKey:@"modern_stickers" inCollection:STICKERS_COLLECTION];
-        
-    }];
+            NSMutableDictionary *serializedStickers = [_stickers mutableCopy];
+            
+            NSMutableDictionary *data = [[transaction objectForKey:@"modern_stickers" inCollection:STICKERS_COLLECTION] mutableCopy];
+            
+            if(!data)
+            {
+                data = [[NSMutableDictionary alloc] init];
+                data[@"sets"] = [[NSMutableArray alloc] init];
+            }
+            
+            data[@"serialized"] = serializedStickers;
+            
+            if(saveSets) {
+                
+                data[@"sets"] = sets;
+            }
+            
+            [transaction setObject:data forKey:@"modern_stickers" inCollection:STICKERS_COLLECTION];
+            
+        }];
+    }
     
 }
 
@@ -419,19 +421,7 @@ static NSImage *higlightedImage() {
     
     [RPCRequest sendRequest:[TLAPI_messages_getStickerSet createWithStickerset:[TL_inputStickerSetID createWithN_id:set.n_id access_hash:set.access_hash]] successHandler:^(id request, TL_messages_stickerSet *response) {
         
-        [[Storage yap] readWriteWithBlock:^(YapDatabaseReadWriteTransaction * __nonnull transaction) {
-            
-            NSMutableDictionary *data = [[transaction objectForKey:@"modern_stickers" inCollection:STICKERS_COLLECTION] mutableCopy];
-            
-            if(!data) {
-                data = [[NSMutableDictionary alloc] init];
-                data[@"serialized"] = [[NSMutableArray alloc] init];
-                data[@"sets"] = [[NSMutableArray alloc] init];
-            }
-            
-            _stickers[@(response.set.n_id)] = response.documents;
-            
-        }];
+         _stickers[@(response.set.n_id)] = response.documents;
         
         [self save:_sets stickers:_stickers n_hash:n_hash saveSets:YES];
         
