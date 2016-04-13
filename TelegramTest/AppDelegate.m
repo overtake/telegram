@@ -53,6 +53,8 @@
 #import "NSArrayCategory.h"
 #import "FullUsersManager.h"
 #import "TGStickerPreviewModalView.h"
+#import "SPMediaKeyTap.h"
+#import "TGAudioPlayerWindow.h"
 @interface NSUserNotification(For107)
 
 @property (nonatomic, strong) NSAttributedString *response;
@@ -69,6 +71,7 @@
 #endif
 
 @property (nonatomic,strong) SettingsWindowController *settingsWindow;
+
 
 @end
 
@@ -103,6 +106,12 @@ static void TGTelegramLoggingFunction(NSString *format, va_list args)
 
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification {
     
+    
+    _mediaKeyTap = [[SPMediaKeyTap alloc] initWithDelegate:self];
+    
+    if([SPMediaKeyTap usesGlobalMediaKeyTap] && [SettingsArchiver checkMaskedSetting:HandleMediaKeysSettings])
+        [_mediaKeyTap startWatchingMediaKeys];
+
 
     MTLogSetLoggingFunction(&TGTelegramLoggingFunction);
     
@@ -127,6 +136,67 @@ static void TGTelegramLoggingFunction(NSString *format, va_list args)
 #endif
     
     
+}
+
++(void)initialize;
+{
+    
+    // Register defaults for the whitelist of apps that want to use media keys
+    [[NSUserDefaults standardUserDefaults] registerDefaults:[NSDictionary dictionaryWithObjectsAndKeys:
+                                                             [SPMediaKeyTap defaultMediaKeyUserBundleIdentifiers], kMediaKeyUsingBundleIdentifiersDefaultsKey,
+                                                             nil]];
+}
+
+-(void)mediaKeyTap:(SPMediaKeyTap*)keyTap receivedMediaKeyEvent:(NSEvent*)event {
+    NSAssert([event type] == NSSystemDefined && [event subtype] == SPSystemDefinedEventMediaKeys, @"Unexpected NSEvent in mediaKeyTap:receivedMediaKeyEvent:");
+    // here be dragons...
+    int keyCode = (([event data1] & 0xFFFF0000) >> 16);
+    int keyFlags = ([event data1] & 0x0000FFFF);
+    BOOL keyIsPressed = (((keyFlags & 0xFF00) >> 8)) == 0xA;
+    int keyRepeat = (keyFlags & 0x1);
+    
+    if (keyIsPressed) {
+        NSString *debugString = [NSString stringWithFormat:@"%@", keyRepeat?@", repeated.":@"."];
+        switch (keyCode) {
+            case NX_KEYTYPE_PLAY:
+                debugString = [@"Play/pause pressed" stringByAppendingString:debugString];
+                
+                if(_mainWindow.navigationController.currentController == _mainWindow.navigationController.messagesViewController || [TGAudioPlayerWindow isShown]) {
+                    if([TGAudioPlayerWindow isShown]) {
+                        if([TGAudioPlayerWindow playerState] == TGAudioPlayerStatePlaying)
+                            [TGAudioPlayerWindow pause];
+                        else
+                            [TGAudioPlayerWindow resume];
+                    } else {
+                        [TGAudioPlayerWindow show:_mainWindow.navigationController.messagesViewController.conversation];
+                    }
+                }
+                
+                
+                
+                break;
+                
+            case NX_KEYTYPE_FAST:
+                debugString = [@"Ffwd pressed" stringByAppendingString:debugString];
+                if([TGAudioPlayerWindow isShown]) {
+                    [TGAudioPlayerWindow nextTrack];
+                }
+                break;
+                
+            case NX_KEYTYPE_REWIND:
+                debugString = [@"Rewind pressed" stringByAppendingString:debugString];
+                if([TGAudioPlayerWindow isShown]) {
+                    [TGAudioPlayerWindow prevTrack];
+                }
+                break;
+            default:
+                debugString = [NSString stringWithFormat:@"Key %d pressed%@", keyCode, debugString];
+                break;
+                // More cases defined in hidsystem/ev_keymap.h
+        }
+        NSLog(@"%@",debugString);
+    }
+
 }
 
 -(BOOL)acceptsPreviewPanelControl:(QLPreviewPanel *)panel {

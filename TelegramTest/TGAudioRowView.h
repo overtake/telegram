@@ -10,4 +10,6 @@
 #import "TGAudioRowItem.h"
 @interface TGAudioRowView : TMRowView
 
+-(NSImage *)image;
+
 @end

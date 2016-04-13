@@ -18,7 +18,7 @@
 #import "TelegramWindow.h"
 #import "LoginWindow.h"
 #import "MainWindow.h"
-
+#import "SPMediaKeyTap.h"
 @class Telegram;
 
 
@@ -30,6 +30,8 @@
 @property (nonatomic, strong) IBOutlet  Telegram *telegram;
 @property (nonatomic, strong) MainWindow *mainWindow;
 @property (nonatomic, strong) LoginWindow *loginWindow;
+
+@property (nonatomic, strong) SPMediaKeyTap *mediaKeyTap;
 
 @property (nonatomic, strong,readonly) NSStatusItem *statusItem;
 

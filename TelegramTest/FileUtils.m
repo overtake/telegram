@@ -766,6 +766,7 @@ void share_link(NSString *url, NSString *text) {
 
 void determinateURLLink(NSString *link) {
     
+    NSLog(@"%@",link);
     
     if([link hasPrefix:TGImportCardPrefix]) {
         

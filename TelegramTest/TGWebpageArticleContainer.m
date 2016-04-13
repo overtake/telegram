@@ -26,7 +26,7 @@
     if(webpage.imageObject) {
         
         
-        [self.descriptionField setFrame:NSMakeRect([self textX], 0, webpage.descSize.width  , webpage.size.height )];
+        [self.descriptionField setFrame:NSMakeRect([self textX], 0, webpage.descSize.width  , webpage.descSize.height )];
     } else {
         [self.descriptionField setFrame:NSMakeRect([self textX], 0, webpage.descSize.width , webpage.descSize.height )];
     }

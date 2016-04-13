@@ -19,6 +19,8 @@
 
 @property (nonatomic,strong) TGImageObject *imageObject;
 
+-(void)performLoadImageObject;
+
 -(MessageTableItemAudioDocument *)document;
 
 @end

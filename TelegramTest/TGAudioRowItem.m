@@ -58,6 +58,11 @@
     return _documentItem;
 }
 
+-(void)performLoadImageObject {
+    if(![TGCache cachedImage:_imageObject.cacheKey])
+        [_imageObject initDownloadItem];
+}
+
 -(NSString *)trackName {
     return _documentItem.fileName;
 }

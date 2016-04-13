@@ -277,7 +277,7 @@
 
 -(void)checkAndMakeBotKeyboard:(MessageTableItem *)item {
     
-    if(ACCEPT_FEATURE && [item.message.reply_markup isKindOfClass:[TL_replyInlineMarkup class]]) {
+    if([item.message.reply_markup isKindOfClass:[TL_replyInlineMarkup class]]) {
         
         if(!_keyboard) {
             _keyboard = [[TGBotCommandsKeyboard alloc] initWithFrame:NSZeroRect];

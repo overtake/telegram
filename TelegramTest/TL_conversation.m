@@ -475,10 +475,6 @@ static void *kType;
 
 -(void)setPts:(int)pts {
     [super setPts:pts];
-    
-    if(pts > 200000000) {
-        int bp = 0;
-    }
 }
 
 @end

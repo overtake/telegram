@@ -322,7 +322,7 @@ DYNAMIC_PROPERTY(DUser);
             
             NSString *cmd = command.command;
             
-            if((conversation.type == DialogTypeChat || conversation.type == DialogTypeChannel) && (user.flags & TGUSERFLAGREADHISTORY) != TGUSERFLAGREADHISTORY) {
+            if((conversation.type == DialogTypeChat || conversation.type == DialogTypeChannel) ) {
                 cmd = [cmd stringByAppendingString:[NSString stringWithFormat:@"@%@",user.username]];
             }
             

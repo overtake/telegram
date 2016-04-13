@@ -11,6 +11,7 @@
 #import "GeneralSettingsRowView.h"
 #import "GeneralSettingsBlockHeaderView.h"
 #import "ASCommon.h"
+#import "SPMediaKeyTap.h"
 @interface GeneralSettingsViewController () <TMTableViewDelegate,SettingsListener>
 @property (nonatomic,strong) TMTableView *tableView;
 @end
@@ -241,16 +242,26 @@
     
     [self.tableView insert:autoplayGifs atIndex:self.tableView.list.count tableRedraw:NO];
     
-    GeneralSettingsRowItem *tripleLayout = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeSwitch callback:^(TGGeneralRowItem *item) {
+    GeneralSettingsRowItem *handleMeiaKeys = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeSwitch callback:^(TGGeneralRowItem *item) {
         
-        [SettingsArchiver addOrRemoveSetting:TripleLayoutSettings];
+        [SettingsArchiver addOrRemoveSetting:HandleMediaKeysSettings];
+        
+        if([SPMediaKeyTap usesGlobalMediaKeyTap]) {
+            
+            SPMediaKeyTap *mediaKeyTap = [Telegram delegate].mediaKeyTap;
+            
+            if([SettingsArchiver checkMaskedSetting:HandleMediaKeysSettings])
+                [mediaKeyTap startWatchingMediaKeys];
+            else
+                [mediaKeyTap stopWatchingMediaKeys];
+        }
 
         
-    } description:NSLocalizedString(@"Settings.TripleLayout", nil) height:42 stateback:^id(TGGeneralRowItem *item) {
-        return @([SettingsArchiver checkMaskedSetting:TripleLayoutSettings]);
+    } description:NSLocalizedString(@"Settings.HandleMediaKeys", nil) height:42 stateback:^id(TGGeneralRowItem *item) {
+        return @([SettingsArchiver checkMaskedSetting:HandleMediaKeysSettings]);
     }];
     
-  //  [self.tableView insert:tripleLayout atIndex:self.tableView.list.count tableRedraw:NO];
+    [self.tableView insert:handleMeiaKeys atIndex:self.tableView.list.count tableRedraw:NO];
     
     
     

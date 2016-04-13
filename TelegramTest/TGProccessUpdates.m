@@ -154,6 +154,8 @@ static NSArray *channelUpdates;
                 return;
             }
             
+           
+            
             if([update isKindOfClass:[TL_updates class]]) {
                 
                 [SharedManager proccessGlobalResponse:update];
@@ -174,7 +176,7 @@ static NSArray *channelUpdates;
                 
             }
             
-            if([update isKindOfClass:[TL_messages_affectedMessages class]]) {
+            if([update isKindOfClass:[TL_messages_affectedMessages class]] || [update isKindOfClass:[TL_messages_affectedHistory class]]) {
                 
                 [self addStatefullUpdate:update seq:0 pts:[update pts] date:0 qts:0 pts_count:[update pts_count]];
                 

@@ -3301,6 +3301,9 @@
          contextName = "__36-[DownloadOperation start:selector:]_block_invoke:DownloadOperation.m">
       </ContextState>
       <ContextState
+         contextName = "-[TGProccessUpdates failSequence]:TGProccessUpdates.m">
+      </ContextState>
+      <ContextState
          contextName = "-[TGCTextView calcSelectedRange]:TGCTextView.m">
          <PersistentStrings>
             <PersistentString
@@ -3606,6 +3609,9 @@
       </ContextState>
       <ContextState
          contextName = "-[TGModernEncryptedUpdates proccessMessage:withLayer:params:conversation:]:TGModernEncryptedUpdates.m">
+      </ContextState>
+      <ContextState
+         contextName = "__48-[DialogsManager _clearHistory:completeHandler:]_block_invoke:DialogsManager.m">
       </ContextState>
       <ContextState
          contextName = "-[SearchItem initWithDialogItem:searchString:]:SearchItem.m">
@@ -6759,6 +6765,11 @@
       </ContextState>
       <ContextState
          contextName = "-[TGWebpageArticleContainer setWebpage:]:TGWebpageArticleContainer.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "webpage.descSize.height">
+            </PersistentString>
+         </PersistentStrings>
       </ContextState>
       <ContextState
          contextName = "-[Storage loadChannelMessages:min_id:max_id:minDate:maxDate:limit:filterMask:important:]:Storage.m">
@@ -7339,6 +7350,9 @@
       </ContextState>
       <ContextState
          contextName = "__70+[StickersPanelView saveResponse:allSets:currentSet:documents:n_hash:]_block_invoke_2:StickersPanelView.m">
+      </ContextState>
+      <ContextState
+         contextName = "-[TGProccessUpdates proccessUpdate:]:TGProccessUpdates.m">
       </ContextState>
       <ContextState
          contextName = "__35-[TGUpdateChannels proccessUpdate:]_block_invoke_4:TGUpdateChannels.m">

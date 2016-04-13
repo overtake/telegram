@@ -42,6 +42,10 @@ typedef enum {
 
 +(void)pause;
 +(void)resume;
++(void)nextTrack;
++(void)prevTrack;
+
++(BOOL)isShown;
 
 +(BOOL)autoStart;
 

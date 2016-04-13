@@ -20,6 +20,8 @@
 @property (nonatomic,strong) void (^changedAudio)(MessageTableItemAudioDocument *item);
 
 
+-(NSImage *)getAlbumImageFromItem:(MessageTableItemAudioDocument *)item;
+
 -(void)selectNext;
 -(void)selectPrev;
 
