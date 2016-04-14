@@ -5155,6 +5155,14 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "-[TGStickerPackEmojiController removeAllItems]:TGStickerPackEmojiController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "_stickers.count">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "__52-[ComposeChannelParticipantsViewController loadNext]_block_invoke142:ComposeChannelParticipantsViewController.m">
          <PersistentStrings>
             <PersistentString

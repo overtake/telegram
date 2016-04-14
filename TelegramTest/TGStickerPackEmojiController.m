@@ -171,11 +171,19 @@
 
 -(void)removeAllItems {
     [_stickers removeAllItems:NO];
+    
+    dispatch_block_t block =  _stickers.didNeedReload;
+    
+    _stickers.didNeedReload = nil;
+    
     [_stickers reloadData];
+    
+    _stickers.didNeedReload = block;
 }
 
 -(void)reload {
-    [self reload:YES];
+    if(self.window &&! NSIsEmptyRect(self.visibleRect))
+        [self reload:YES];
 }
 
 -(void)reload:(BOOL)reloadStickers {

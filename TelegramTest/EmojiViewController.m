@@ -451,6 +451,7 @@
 }
 
 - (void)showPopovers {
+    _currentButton = nil;
     [self bottomButtonClick:[self.bottomView.subviews objectAtIndex:self.userEmoji.count ? 0 : 1]];
 }
 
