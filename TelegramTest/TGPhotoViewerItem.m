@@ -8,6 +8,7 @@
 
 #import "TGPhotoViewerItem.h"
 #import "TGDateUtils.h"
+#import "TGPVDocumentObject.h"
 @implementation TGPhotoViewerItem
 
 -(id)initWithImageObject:(TGImageObject *)imageObject previewObject:(PreviewObject *)previewObject {
@@ -20,7 +21,7 @@
 }
 
 -(void)startDownload {
-    if(![TGCache cachedImage:self.imageObject.cacheKey group:@[PVCACHE]]) {
+    if(![self.imageObject isKindOfClass:[TGPVDocumentObject class]] &&  ![TGCache cachedImage:self.imageObject.cacheKey group:@[PVCACHE]]) {
         [self.imageObject initDownloadItem];
     }
 }
