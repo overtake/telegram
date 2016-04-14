@@ -2011,7 +2011,7 @@ TL_localMessage *parseMessage(FMResultSet *result) {
     
     [queue inDatabase:^(FMDatabase *db) {
         __block BOOL result;
-        //[db beginTransaction];
+        [db beginTransaction];
         for (TLChat *chat in chats) {
             
             dispatch_block_t insert_blck = ^{
@@ -2022,7 +2022,7 @@ TL_localMessage *parseMessage(FMResultSet *result) {
                 insert_blck();
             
         }
-        //[db commit];
+        [db commit];
         dispatch_async(dispatch_get_main_queue(), ^{
             if(completeHandler) completeHandler(result);
         });
@@ -2035,7 +2035,6 @@ TL_localMessage *parseMessage(FMResultSet *result) {
     
     [queue inDatabase:^(FMDatabase *db) {
         NSMutableArray *chats = [[NSMutableArray alloc] init];
-        //[db beginTransaction];
       FMResultSet *result = [db executeQuery:@"select * from chats"];
         while ([result next]) {
             @try {
@@ -2048,7 +2047,6 @@ TL_localMessage *parseMessage(FMResultSet *result) {
             
         }
         [result close];
-        //[db commit];
         dispatch_async(dispatch_get_main_queue(), ^{
             if(completeHandler) completeHandler(chats);
         });
@@ -2117,6 +2115,9 @@ TL_localMessage *parseMessage(FMResultSet *result) {
 - (void)insertUsers:(NSArray *)users completeHandler:(void (^)(BOOL result))completeHandler {
     
     [queue inDatabase:^(FMDatabase *db) {
+        
+        [db beginTransaction];
+        
         for (TLUser *user in users) {
             
             if([user isKindOfClass:[TLUser class]]) {
@@ -2135,6 +2136,8 @@ TL_localMessage *parseMessage(FMResultSet *result) {
             }
             
         }
+        
+        [db commit];
         
         if(completeHandler) {
             [[ASQueue mainQueue] dispatchOnQueue:^{

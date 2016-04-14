@@ -262,7 +262,9 @@
                     
                 }
                 
-                [self setUserStatus:newUser.status forUser:currentUser];
+                BOOL result = [self setUserStatus:newUser.status forUser:currentUser autoSave:NO];
+                
+                needUpdateUserInDB = needUpdateUserInDB || result;
                 
                 if(isNeedRebuildNames) {
                     [currentUser rebuildNames];
@@ -301,7 +303,7 @@
             if(currentUser.type == TLUserTypeSelf)
                 _userSelf = currentUser;
             
-            BOOL result = [self setUserStatus:newUser.status forUser:currentUser];
+            BOOL result = [self setUserStatus:newUser.status forUser:currentUser autoSave:NO];
             if(!needUpdateUserInDB && result) {
                 needUpdateUserInDB = YES;
             }
@@ -319,7 +321,7 @@
     
 }
 
-- (BOOL)setUserStatus:(TLUserStatus *)status forUser:(TLUser *)currentUser {
+- (BOOL)setUserStatus:(TLUserStatus *)status forUser:(TLUser *)currentUser autoSave:(BOOL)autoSave {
     
     BOOL result = (currentUser.status.expires != status.expires || currentUser.status.was_online != status.was_online) || currentUser.status.class != status.class;
     
@@ -327,14 +329,12 @@
     
     currentUser.status = status;
     currentUser.lastSeenUpdate = [[MTNetwork instance] getTime];
-    currentUser.status.was_online = status.was_online;
-    currentUser.status.expires = status.expires;
-    
+
     if(result)
         [Notification perform:USER_STATUS data:@{KEY_USER_ID: @(currentUser.n_id)}];
     
     
-    if(result) {
+    if(result && autoSave) {
         if(saveOnlyTime) {
             [[Storage manager] updateUsersStatus:@[currentUser]];
         } else {
@@ -349,7 +349,7 @@
     [self.queue dispatchOnQueue:^{
         TLUser *currentUser = [keys objectForKey:@(uid)];
         if(currentUser) {
-            BOOL result = [self setUserStatus:status forUser:currentUser];
+            [self setUserStatus:status forUser:currentUser autoSave:YES];
         }
     }];
 }

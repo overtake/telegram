@@ -295,7 +295,6 @@
 		C21C7B4F18D8410700253A7A /* ShareContactSenterItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C21C7B4E18D8410700253A7A /* ShareContactSenterItem.m */; };
 		C21C7B5318D8991D00253A7A /* SecretSenderItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C21C7B5218D8991D00253A7A /* SecretSenderItem.m */; };
 		C21C7B5C18D8A32800253A7A /* FileSecretSenderItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C21C7B5B18D8A32800253A7A /* FileSecretSenderItem.m */; };
-		C21D06C71CBBF20D00CB28B8 /* TGShare.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = C2CBF3B61AF38426006BF90A /* TGShare.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		C21D06C81CBC219900CB28B8 /* Sparkle.framework in Copy Files (6 items) */ = {isa = PBXBuildFile; fileRef = C235364C19C88D620044978E /* Sparkle.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		C21D06C91CBC219900CB28B8 /* HockeySDK.framework in Copy Files (6 items) */ = {isa = PBXBuildFile; fileRef = C2082B7219C1E1C4000005E2 /* HockeySDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		C21D06CA1CBC219F00CB28B8 /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C235364C19C88D620044978E /* Sparkle.framework */; };
@@ -989,13 +988,6 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		C21D06C51CBBF20600CB28B8 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = CEB09E5017DAFC240055F150 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = C2CBF3B51AF38426006BF90A;
-			remoteInfo = TGShare;
-		};
 		C24136541C735A2700130D2E /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = C26E80101B7B748A003CC483 /* SSignalKit.xcodeproj */;
@@ -1089,7 +1081,6 @@
 			dstPath = "";
 			dstSubfolderSpec = 13;
 			files = (
-				C21D06C71CBBF20D00CB28B8 /* TGShare.appex in Embed App Extensions */,
 			);
 			name = "Embed App Extensions";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -6425,7 +6416,6 @@
 			buildRules = (
 			);
 			dependencies = (
-				C21D06C61CBBF20600CB28B8 /* PBXTargetDependency */,
 			);
 			name = Telegram;
 			productName = TelegramTest;
@@ -7579,14 +7569,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
-
-/* Begin PBXTargetDependency section */
-		C21D06C61CBBF20600CB28B8 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = C2CBF3B51AF38426006BF90A /* TGShare */;
-			targetProxy = C21D06C51CBBF20600CB28B8 /* PBXContainerItemProxy */;
-		};
-/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		0A9EDC191897BA0E0037E1BC /* InfoPlist.strings */ = {
