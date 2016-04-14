@@ -108,7 +108,7 @@
 
 -(int)fontSize;
 
-
+-(BOOL)isWebPage;
 -(BOOL)isViaBot;
 
 

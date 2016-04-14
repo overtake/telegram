@@ -408,6 +408,10 @@ static NSTextAttachment *channelViewsCountAttachment() {
     return viewSize;
 }
 
+-(BOOL)isWebPage {
+    return NO;
+}
+
 -(BOOL)isViaBot {
     return self.message.via_bot_id != 0 || ([self.message isKindOfClass:[TL_destructMessage45 class]] && ((TL_destructMessage45 *)self.message).via_bot_name.length > 0);
 }

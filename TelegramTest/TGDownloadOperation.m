@@ -233,8 +233,6 @@
             [self load];
             
         }  else{
-            part.request = nil;
-            
             [self cancel];
         }
         

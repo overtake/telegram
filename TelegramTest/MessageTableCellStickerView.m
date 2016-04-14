@@ -125,8 +125,9 @@
                     TGStickerPackModalView *modalView = [[TGStickerPackModalView alloc] init];
                     
                     modalView.canSendSticker = YES;
-                    [modalView show:self.window animated:YES];
                     [modalView setStickerPack:[TL_messages_stickerSet createWithSet:set packs:nil documents:stickers] forMessagesViewController:self.messagesViewController];
+
+                    [modalView show:self.window animated:YES];
                 } else
                     add_sticker_pack_by_name(attr.stickerset);
             }
