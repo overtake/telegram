@@ -25,6 +25,8 @@
     _statusView = [[TMStatusTextField alloc] initWithFrame:NSMakeRect(60, 10, 200, 20)];
     [[_statusView cell] setTruncatesLastVisibleLine:YES];
     [[_statusView cell] setLineBreakMode:NSLineBreakByTruncatingTail];
+    [[_nameView cell] setTruncatesLastVisibleLine:YES];
+    [[_nameView cell] setLineBreakMode:NSLineBreakByTruncatingTail];
     [_statusView setSelector:@selector(statusForMessagesHeaderView)];
     
    

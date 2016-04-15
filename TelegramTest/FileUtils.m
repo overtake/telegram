@@ -1066,27 +1066,26 @@ NSString *tg_domain_from_link(NSString *link) {
             
             
             if(![name hasPrefix:joinPrefix] && ![name hasPrefix:stickerPrefix]) {
-               
-            }  if([name rangeOfString:@"/"].location == NSNotFound) {
-                
-                NSMutableDictionary *user = [@{@"domain":name} mutableCopy];
-                
-                if([name rangeOfString:@"?"].location != NSNotFound) {
-                    NSDictionary *vars = getUrlVars(name);
+                if([name rangeOfString:@"/"].location == NSNotFound) {
                     
-                    user[@"domain"] = [name substringToIndex:[name rangeOfString:@"?"].location];
+                    NSMutableDictionary *user = [@{@"domain":name} mutableCopy];
                     
-                    [user addEntriesFromDictionary:vars];
+                    if([name rangeOfString:@"?"].location != NSNotFound) {
+                        NSDictionary *vars = getUrlVars(name);
+                        
+                        user[@"domain"] = [name substringToIndex:[name rangeOfString:@"?"].location];
+                        
+                        [user addEntriesFromDictionary:vars];
+                    }
+                    
+                    return user[@"domain"];
+                } else {
+                    NSArray *userAndPost = [name componentsSeparatedByString:@"/"];
+                    
+                    return userAndPost[0];
                 }
-                
-                return user[@"domain"];
-            } else {
-                NSArray *userAndPost = [name componentsSeparatedByString:@"/"];
-                
-                return userAndPost[0];
+
             }
-            
-            
             
             
         }
