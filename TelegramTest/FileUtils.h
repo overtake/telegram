@@ -81,7 +81,7 @@ NSString *exportPath(long randomId,NSString *extension);
 
 
 void determinateURLLink(NSString *link);
-
+NSString *tg_domain_from_link(NSString *link);
 
 BOOL zipDirectory(NSURL *directoryURL, NSString * archivePath);
 NSString *decodeCard(NSArray *card);

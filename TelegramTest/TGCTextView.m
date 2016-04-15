@@ -625,7 +625,7 @@
 
 
 
--(NSString *)linkAtPoint:(NSPoint)location hitTest:(BOOL *)hitTest itsReal:(BOOL *)itsReal {
+-(NSString *)linkAtPoint:(NSPoint)location hitTest:(BOOL *)hitTest itsReal:(BOOL *)itsReal lineRect:(NSRect *)lineRect {
     
    if(_disableLinks || CTFrame == NULL)
        return nil;
@@ -668,6 +668,13 @@
                 if(link.length > 0) {
                     NSString *real = [self.attributedString.string substringWithRange:range];
                     
+                    if(lineRect != NULL) {
+                        int startOffset = CTLineGetOffsetForStringIndex(lineRef, range.location, NULL);
+                        int endOffset = CTLineGetOffsetForStringIndex(lineRef, range.location + range.length, NULL);
+                        *lineRect = NSMakeRect(startOffset, origins[line].y, endOffset - startOffset, ceil(ascent + ceil(descent) + leading));
+                    }
+                    
+                    
                     *itsReal = [link isEqualToString:real];
                 }
                 
@@ -692,19 +699,29 @@
     if([self mouse:location inRect:self.bounds]) {
         
         BOOL hitTest,itsReal;
-        
-        NSString *link = [self linkAtPoint:location hitTest:&hitTest itsReal:&itsReal];
+        NSRect lineRect;
+        NSString *link = [self linkAtPoint:location hitTest:&hitTest itsReal:&itsReal lineRect:&lineRect];
         
         if(hitTest) {
             if(link) {
                 [[NSCursor pointingHandCursor] set];
+                if(_linkOver) {
+                    _linkOver(link,YES,lineRect);
+                }
             } else {
                 if(_isEditable)
                     [[NSCursor IBeamCursor] set];
+                if(_linkOver) {
+                    _linkOver(link,NO,NSZeroRect);
+                }
             }
            // if(_isEditable)
             return;
         }
+    }
+    
+    if(_linkOver) {
+        _linkOver(nil,NO,NSZeroRect);
     }
     
     [[NSCursor arrowCursor] set];
@@ -717,6 +734,10 @@
 -(void)mouseExited:(NSEvent *)theEvent {
     [super mouseExited:theEvent];
     [[NSCursor arrowCursor] set];
+    
+    if(_linkOver) {
+        _linkOver(nil,NO,NSZeroRect);
+    }
 }
 
 
@@ -728,7 +749,7 @@
         NSPoint location = [self convertPoint:[theEvent locationInWindow] fromView:nil];
         
         BOOL hitTest,itsReal;
-        NSString *link = [self linkAtPoint:location hitTest:&hitTest itsReal:&itsReal];
+        NSString *link = [self linkAtPoint:location hitTest:&hitTest itsReal:&itsReal lineRect:NULL];
         
         if(link) {
             [self open_link:link itsReal:itsReal];

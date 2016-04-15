@@ -26,13 +26,18 @@
         associations = @{@"✌":@"✌️",@"☺":@"☺️",@"☝":@"☝️",@"1⃣":@"1️⃣",@"2⃣":@"2️⃣",@"3⃣":@"3️⃣",@"4⃣":@"4️⃣",@"5⃣":@"5️⃣",@"6⃣":@"6️⃣",@"7⃣":@"7️⃣",@"8⃣":@"8️⃣",@"9⃣":@"9️⃣",@"0⃣":@"0️⃣",@"❤":@"❤️"};
     });
     
-    [associations enumerateKeysAndObjectsUsingBlock:^(id  _Nonnull key, id  _Nonnull obj, BOOL * _Nonnull stop) {
+    @try {
+        [associations enumerateKeysAndObjectsUsingBlock:^(id  _Nonnull key, id  _Nonnull obj, BOOL * _Nonnull stop) {
+            
+            NSRange range;
+            while ((range = [self.string rangeOfString:key]).location != NSNotFound) {
+                [self replaceCharactersInRange:range withString:obj];
+            }
+        }];
+    } @catch (NSException *exception) {
         
-        NSRange range;
-        while ((range = [self.string rangeOfString:key]).location != NSNotFound) {
-            [self replaceCharactersInRange:range withString:obj];
-        }
-    }];
+    }
+    
     
 }
 

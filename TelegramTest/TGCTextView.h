@@ -49,6 +49,8 @@
 
 @property (nonatomic,copy) void (^linkCallback)(NSString *link);
 
+@property (nonatomic,copy) void (^linkOver)(NSString *link, BOOL over,NSRect rect);
+
 
 // its private not for use
 -(BOOL)_checkClickCount:(NSEvent *)theEvent;

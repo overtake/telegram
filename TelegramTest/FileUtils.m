@@ -651,7 +651,7 @@ void add_sticker_pack_by_name(TLInputStickerSet *set) {
 
 void open_user_by_name(NSDictionary *params) {
     
-    __block id obj = nil;[Telegram findObjectWithName:params[@"domain"]];
+    __block id obj = [Telegram findObjectWithName:params[@"domain"]];
     
     dispatch_block_t showConversation = ^ {
         
@@ -766,7 +766,6 @@ void share_link(NSString *url, NSString *text) {
 
 void determinateURLLink(NSString *link) {
     
-    NSLog(@"%@",link);
     
     if([link hasPrefix:TGImportCardPrefix]) {
         
@@ -1048,6 +1047,53 @@ void open_link_with_controller(NSString *link, TMNavigationController *controlle
         [[NSWorkspace sharedWorkspace] openURL:url];
     }
 
+}
+
+NSString *tg_domain_from_link(NSString *link) {
+    NSRange checkRange = [link rangeOfString:@"telegram.me/"];
+    
+    
+    if(checkRange.location != NSNotFound) {
+        
+        NSString *name = [link substringFromIndex:checkRange.location + checkRange.length ];
+        
+        if(name.length > 0) {
+            
+            NSString *joinPrefix = @"joinchat/";
+            NSString *stickerPrefix = @"addstickers/";
+            
+            
+            if(![name hasPrefix:joinPrefix] && ![name hasPrefix:stickerPrefix]) {
+               
+            }  if([name rangeOfString:@"/"].location == NSNotFound) {
+                
+                NSMutableDictionary *user = [@{@"domain":name} mutableCopy];
+                
+                if([name rangeOfString:@"?"].location != NSNotFound) {
+                    NSDictionary *vars = getUrlVars(name);
+                    
+                    user[@"domain"] = [name substringToIndex:[name rangeOfString:@"?"].location];
+                    
+                    [user addEntriesFromDictionary:vars];
+                }
+                
+                return user[@"domain"];
+            } else {
+                NSArray *userAndPost = [name componentsSeparatedByString:@"/"];
+                
+                return userAndPost[0];
+            }
+            
+            
+            
+            
+        }
+    } else if([link hasPrefix:@"tg://resolve"]) {
+       NSDictionary *vars = getUrlVars(link);
+        return vars[@"domain"];
+    }
+    
+    return nil;
 }
 
 void open_link(NSString *link) {

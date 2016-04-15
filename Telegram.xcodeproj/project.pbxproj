@@ -302,6 +302,7 @@
 		C21D06D01CBE571C00CB28B8 /* SPMediaKeyTap.m in Sources */ = {isa = PBXBuildFile; fileRef = C21D06CE1CBE571C00CB28B8 /* SPMediaKeyTap.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		C21D06DB1CBE590900CB28B8 /* NSObject+SPInvocationGrabbing.m in Sources */ = {isa = PBXBuildFile; fileRef = C21D06D71CBE590900CB28B8 /* NSObject+SPInvocationGrabbing.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		C21D06DD1CBE5A5900CB28B8 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C21D06DC1CBE5A5900CB28B8 /* Carbon.framework */; };
+		C21D06FF1CC0DF8700CB28B8 /* TGUserPopup.m in Sources */ = {isa = PBXBuildFile; fileRef = C21D06FE1CC0DF8700CB28B8 /* TGUserPopup.m */; };
 		C21D482219ABC891000F06E1 /* TMTabViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C21D482119ABC891000F06E1 /* TMTabViewController.m */; };
 		C21D482A19AC78BB000F06E1 /* TMTabItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C21D482919AC78BB000F06E1 /* TMTabItem.m */; };
 		C21D482E19ACB7CD000F06E1 /* AccountSettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C21D482D19ACB7CD000F06E1 /* AccountSettingsViewController.m */; };
@@ -1677,6 +1678,8 @@
 		C21D06D61CBE590900CB28B8 /* NSObject+SPInvocationGrabbing.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSObject+SPInvocationGrabbing.h"; sourceTree = "<group>"; };
 		C21D06D71CBE590900CB28B8 /* NSObject+SPInvocationGrabbing.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSObject+SPInvocationGrabbing.m"; sourceTree = "<group>"; };
 		C21D06DC1CBE5A5900CB28B8 /* Carbon.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Carbon.framework; path = System/Library/Frameworks/Carbon.framework; sourceTree = SDKROOT; };
+		C21D06FD1CC0DF8700CB28B8 /* TGUserPopup.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGUserPopup.h; sourceTree = "<group>"; };
+		C21D06FE1CC0DF8700CB28B8 /* TGUserPopup.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGUserPopup.m; sourceTree = "<group>"; };
 		C21D482019ABC891000F06E1 /* TMTabViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TMTabViewController.h; sourceTree = "<group>"; };
 		C21D482119ABC891000F06E1 /* TMTabViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TMTabViewController.m; sourceTree = "<group>"; };
 		C21D482819AC78BB000F06E1 /* TMTabItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TMTabItem.h; sourceTree = "<group>"; };
@@ -3826,6 +3829,8 @@
 				C215BDF41C77354700B4BF16 /* MessageRightView.m */,
 				C2C3D9C21CA58F470031A296 /* TGLocationRequest.h */,
 				C2C3D9C31CA58F470031A296 /* TGLocationRequest.m */,
+				C21D06FD1CC0DF8700CB28B8 /* TGUserPopup.h */,
+				C21D06FE1CC0DF8700CB28B8 /* TGUserPopup.m */,
 			);
 			name = help;
 			sourceTree = "<group>";
@@ -6984,6 +6989,7 @@
 				C2CE53DD1BE9275700BBEF5F /* ComposeActionInfoProfileBehavior.m in Sources */,
 				C2D8CFC31B84D3E200080775 /* ComposeActionCreateChannelBehavior.m in Sources */,
 				0ADA319C19469D16002BAEDB /* EmojiViewController.m in Sources */,
+				C21D06FF1CC0DF8700CB28B8 /* TGUserPopup.m in Sources */,
 				C2967B431AA4CFA9003759B2 /* TGMentionPopup.m in Sources */,
 				C26976B01A10CDED0047E2C3 /* TGPhotoViewer.m in Sources */,
 				C268C19419F0519C007F836A /* POPSpringAnimation.mm in Sources */,
