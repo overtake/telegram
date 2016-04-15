@@ -49,7 +49,7 @@
 
 @property (nonatomic,copy) void (^linkCallback)(NSString *link);
 
-@property (nonatomic,copy) void (^linkOver)(NSString *link, BOOL over,NSRect rect);
+@property (nonatomic,copy) void (^linkOver)(NSString *link, BOOL over,NSRect rect,TGCTextView *textView);
 
 
 // its private not for use

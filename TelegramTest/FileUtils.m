@@ -112,7 +112,9 @@ NSString *const kBotInlineTypeVoice = @"voice";
             }
             
             handler(paths);
-       }
+        } else {
+            handler(@[]);
+        }
     }];
 }
 

@@ -10,6 +10,7 @@
 #import "NSString+Extended.h"
 #import "TGMultipleSelectTextView.h"
 #import "MessageTableItemText.h"
+#import "TGUserPopup.h"
 @interface DrawsRect : NSObject
 
 @property(nonatomic,assign) CGColorRef color;
@@ -39,6 +40,97 @@
 @implementation TGCTextView
 
 
+static TGUserPopup *short_info_controller;
+static RBLPopover *popover;
+static NSString *last_link;
+static RPCRequest *resolveRequest;
+static NSMutableDictionary *ignoreName;
+
+void clear_current_popover() {
+    last_link = nil;
+    [resolveRequest cancelRequest];
+    [popover close];
+}
+
+void (^linkOverHandle)(NSString *link, BOOL over, NSRect rect,TGCTextView *textView) = ^(NSString *link, BOOL over, NSRect rect,TGCTextView *textView) {
+    popover.animates = NO;
+    
+    BOOL accept = [link hasPrefix:@"@"];
+    
+   if(accept)
+        link = [link substringFromIndex:1];
+    
+    if([link rangeOfString:@"telegram.me"].location != NSNotFound || [link hasPrefix:@"tg://resolve"]) {
+        link = tg_domain_from_link(link);
+        accept = link.length > 0;
+    }
+    
+    __block id obj = [Telegram findObjectWithName:link];
+    
+    
+    
+    if(!over || ![link isEqualToString:last_link] || !accept || (ignoreName[link] && !obj)) {
+        clear_current_popover();
+        
+        if( !over || ignoreName[link] || !accept)
+            return;
+        
+    }
+    
+    
+    
+    if(![link isEqualToString:last_link] || !popover.isShown) {
+        last_link = link;
+        
+        dispatch_block_t show_block = ^{
+            [short_info_controller setObject:obj];
+            
+            //  [popover setHoverView:weakSelf.textView];
+            
+            
+            if(!popover.isShown) {
+                [popover setDidCloseBlock:^(RBLPopover *popover) {
+                    popover = nil;
+                }];
+                
+                
+                [popover showRelativeToRect:NSOffsetRect(rect, 3, -3) ofView:textView preferredEdge:CGRectMaxYEdge];
+            }
+        };
+        
+        if(over) {
+            
+            if(obj) {
+                show_block();
+            } else {
+                [resolveRequest cancelRequest];
+                resolveRequest = [RPCRequest sendRequest:[TLAPI_contacts_resolveUsername createWithUsername:link] successHandler:^(RPCRequest *request, TL_contacts_resolvedPeer *response) {
+                    
+                    [SharedManager proccessGlobalResponse:response];
+                    
+                    if([response.peer isKindOfClass:[TL_peerChannel class]]) {
+                        obj = [response.chats firstObject];
+                    } else if([response.peer isKindOfClass:[TL_peerUser class]]) {
+                        obj = [response.users firstObject];
+                    }
+                    
+                    if(obj) {
+                        show_block();
+                    }
+                    
+                    
+                } errorHandler:^(RPCRequest *request, RpcError *error) {
+                    
+                    ignoreName[link] = @(1);
+                    
+                } timeout:4];
+            }
+            
+        }
+    }
+};
+
+
 
 -(id)initWithFrame:(NSRect)frameRect {
     if(self = [super initWithFrame:frameRect]) {
@@ -46,6 +138,18 @@
         self.selectColor = NSColorFromRGBWithAlpha(0x1d80cc, 0.5);
         self.backgroundColor = [NSColor whiteColor];
         _marks = [[NSMutableArray alloc] init];
+        
+        
+        static dispatch_once_t onceToken;
+        dispatch_once(&onceToken, ^{
+            short_info_controller = [[TGUserPopup alloc] initWithFrame:NSMakeRect(0, 0, 200, 60)];
+            popover = [[RBLPopover alloc] initWithContentViewController:(NSViewController *)short_info_controller];
+            ignoreName = [NSMutableDictionary dictionary];
+        });
+        
+        _linkOver = linkOverHandle;
+        
+       
     }
     
     return self;
@@ -706,13 +810,13 @@
             if(link) {
                 [[NSCursor pointingHandCursor] set];
                 if(_linkOver) {
-                    _linkOver(link,YES,lineRect);
+                    _linkOver(link,YES,lineRect,self);
                 }
             } else {
                 if(_isEditable)
                     [[NSCursor IBeamCursor] set];
                 if(_linkOver) {
-                    _linkOver(link,NO,NSZeroRect);
+                    _linkOver(link,NO,NSZeroRect,self);
                 }
             }
            // if(_isEditable)
@@ -721,7 +825,7 @@
     }
     
     if(_linkOver) {
-        _linkOver(nil,NO,NSZeroRect);
+        _linkOver(nil,NO,NSZeroRect,self);
     }
     
     [[NSCursor arrowCursor] set];
@@ -736,14 +840,14 @@
     [[NSCursor arrowCursor] set];
     
     if(_linkOver) {
-        _linkOver(nil,NO,NSZeroRect);
+        _linkOver(nil,NO,NSZeroRect,self);
     }
 }
 
 
 -(void)mouseUp:(NSEvent *)theEvent {
     
-    
+    clear_current_popover();
     
     if((self.selectRange.location == NSNotFound || !_isEditable) && !_disableLinks) {
         NSPoint location = [self convertPoint:[theEvent locationInWindow] fromView:nil];

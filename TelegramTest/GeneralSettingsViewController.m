@@ -261,8 +261,9 @@
         return @([SettingsArchiver checkMaskedSetting:HandleMediaKeysSettings]);
     }];
     
+#ifdef TGDEBUG
     [self.tableView insert:handleMeiaKeys atIndex:self.tableView.list.count tableRedraw:NO];
-    
+#endif
     
     
     

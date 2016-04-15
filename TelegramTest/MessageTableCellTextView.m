@@ -37,114 +37,23 @@
 @implementation MessageTableCellTextView
 
 
-static TGUserPopup *short_info_controller;
-static RBLPopover *popover;
-static NSString *last_link;
-static RPCRequest *resolveRequest;
-static NSMutableDictionary *ignoreName;
+
 - (id)initWithFrame:(NSRect)frame {
     self = [super initWithFrame:frame];
     if (self) {
         
         
-        static dispatch_once_t onceToken;
-        dispatch_once(&onceToken, ^{
-            short_info_controller = [[TGUserPopup alloc] initWithFrame:NSMakeRect(0, 0, 200, 60)];
-            popover = [[RBLPopover alloc] initWithContentViewController:(NSViewController *)short_info_controller];
-            ignoreName = [NSMutableDictionary dictionary];
-        });
+        
         
         _textView = [[TGMultipleSelectTextView alloc] initWithFrame:self.bounds];
         
         weak();
         
         [_textView setLinkCallback:^(NSString *link) {
-            last_link = nil;
-            [resolveRequest cancelRequest];
-            [popover close];
-            
-            open_link_with_controller(link, weakSelf.messagesViewController.navigationViewController);
+           open_link_with_controller(link, weakSelf.messagesViewController.navigationViewController);
         }];
         
-        [_textView setLinkOver:^(NSString *link, BOOL over, NSRect rect) {
-            
-            popover.animates = NO;
-            
-            BOOL accept = [link hasPrefix:@"@"];
-            
-            if([link rangeOfString:@"telegram.me"].location != NSNotFound || [link hasPrefix:@"tg://resolve"]) {
-                link = tg_domain_from_link(link);
-                accept = link.length > 0;
-            }
-            
-            __block id obj = [Telegram findObjectWithName:link];
-            
 
-            
-            if(!over || ![link isEqualToString:last_link] || !accept || (ignoreName[link] && !obj)) {
-                last_link = nil;
-                [resolveRequest cancelRequest];
-                [popover close];
-                
-                if( !over || ignoreName[link] || !accept)
-                    return;
-                
-            }
-            
-
-            
-            if(![link isEqualToString:last_link] || !popover.isShown) {
-                last_link = link;
-                
-                dispatch_block_t show_block = ^{
-                    [short_info_controller setObject:obj];
-                    
-                    //  [popover setHoverView:weakSelf.textView];
-                    
-                    
-                    if(!popover.isShown) {
-                        [popover setDidCloseBlock:^(RBLPopover *popover) {
-                            popover = nil;
-                        }];
-                        
-     
-                        [popover showRelativeToRect:NSOffsetRect(rect, 3, -3) ofView:weakSelf.textView preferredEdge:CGRectMaxYEdge];
-                    }
-                };
-                
-                if(over) {
-                    
-                    if(obj) {
-                        show_block();
-                    } else {
-                        [resolveRequest cancelRequest];
-                        resolveRequest = [RPCRequest sendRequest:[TLAPI_contacts_resolveUsername createWithUsername:link] successHandler:^(RPCRequest *request, TL_contacts_resolvedPeer *response) {
-                            
-                            [SharedManager proccessGlobalResponse:response];
-                            
-                            if([response.peer isKindOfClass:[TL_peerChannel class]]) {
-                                obj = [response.chats firstObject];
-                            } else if([response.peer isKindOfClass:[TL_peerUser class]]) {
-                                obj = [response.users firstObject];
-                            }
-                            
-                            if(obj) {
-                                show_block();
-                            }
-                            
-                            
-                        } errorHandler:^(RPCRequest *request, RpcError *error) {
-                            
-                            ignoreName[link] = @(1);
-                            
-                        } timeout:4];
-                    }
-                    
-                }
-            }
-            
-
-        }];
         
         [self.containerView addSubview:self.textView];
     
