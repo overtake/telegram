@@ -479,10 +479,58 @@
 }
 
 -(void)_didStackRemoved {
+    
+    
     self.conversation = nil;
     [self.historyController stopChannelPolling];
     [self flushMessages];
 }
+
+static NSMutableDictionary *savedScrolling;
+
+
+-(void)saveScrollingState {
+    
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        savedScrolling = [NSMutableDictionary dictionary];
+    });
+    
+    if(_conversation) {
+        NSRange range = [self.table rowsInRect:[self.table visibleRect]];
+        
+        if(self.table.scrollView.documentSize.height > NSHeight(self.table.scrollView.frame)) {
+            NSUInteger index = range.location + range.length - 1;
+            
+            int yTopOffset = 0;
+            
+            if(index != NSNotFound) {
+                NSRect rect = [self.table rectOfRow:index];
+                
+                yTopOffset =  self.table.scrollView.documentOffset.y + NSHeight(self.table.containerView.frame) - (rect.origin.y);
+                
+                MessageTableItem *item = [self objectAtIndex:index];
+                if(item) {
+                    savedScrolling[@(_conversation.peer_id)] = @{@"message":item.message,@"topOffset":@(yTopOffset)};
+                } else {
+                    [savedScrolling removeObjectForKey:@(_conversation.peer_id)];
+                }
+                
+            
+            } else {
+                [savedScrolling removeObjectForKey:@(_conversation.peer_id)];
+            }
+        } else {
+            [savedScrolling removeObjectForKey:@(_conversation.peer_id)];
+        }
+
+    }
+    
+    
+   
+    
+}
+
 
 -(void)messagTableEditedMessageUpdate:(NSNotification *)notification {
     TL_localMessage *message = notification.userInfo[KEY_MESSAGE];
@@ -2530,6 +2578,10 @@ static NSTextAttachment *headerMediaIcon() {
             
         }
         
+        if((flags & ShowMessageTypeSaveScrolled) > 0) {
+            yTopOffset = [savedScrolling[@(message.peer_id)][@"topOffset"] intValue];
+        }
+        
         [self removeScrollEvent];
         
         
@@ -2593,11 +2645,12 @@ static NSTextAttachment *headerMediaIcon() {
                 [self.table setNeedsDisplay:YES];
                 [self.table display];
                 
+                
                 if((flags & ShowMessageTypeUnreadMark) > 0) {
                     
                     [self scrollToUnreadItem:NO];
                     
-                } else if(rect.origin.y == 0 || ((flags & ShowMessageTypeReply) > 0 || (flags & ShowMessageTypeSearch) > 0)) {
+                } else if((rect.origin.y == 0 && (flags & ShowMessageTypeSaveScrolled) == 0)  || ((flags & ShowMessageTypeReply) > 0 || (flags & ShowMessageTypeSearch) > 0)) {
                     [self scrollToItem:item animated:NO centered:YES highlight:YES];
                 } else if((flags & ShowMessageTypeDateJump) > 0) {
                     [self scrollToRect:[self.table rectOfRow:[self indexOfObject:item]] isCenter:NO animated:NO yOffset:48];
@@ -2777,8 +2830,9 @@ static NSTextAttachment *headerMediaIcon() {
         [self removeScrollEvent];
         
   
-        
-        if(message != nil) {
+         if(savedScrolling[@(_conversation.peer_id)]) {
+             [self showMessage:savedScrolling[@(_conversation.peer_id)][@"message"] fromMsg:nil flags:ShowMessageTypeSaveScrolled];
+         } else if(message != nil) {
             [self showMessage:message fromMsg:nil flags:ShowMessageTypeSearch];
         } else if(dialog.last_marked_message != -1 && dialog.last_marked_message < dialog.universalTopMessage && dialog.universalTopMessage < TGMINFAKEID) {
             
@@ -3454,6 +3508,9 @@ static NSTextAttachment *headerMediaIcon() {
 }
 
 -(void)setConversation:(TL_conversation *)conversation {
+    
+    [self saveScrollingState];
+    
     _conversation = conversation;
 }
 

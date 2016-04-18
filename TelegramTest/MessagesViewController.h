@@ -48,7 +48,8 @@ typedef enum {
     ShowMessageTypeReply = 1 << 0,
     ShowMessageTypeSearch = 1 << 1,
     ShowMessageTypeUnreadMark = 1 << 2,
-    ShowMessageTypeDateJump = 1 << 3
+    ShowMessageTypeDateJump = 1 << 3,
+    ShowMessageTypeSaveScrolled = 1 << 4
 } ShowMessageType;
 
 

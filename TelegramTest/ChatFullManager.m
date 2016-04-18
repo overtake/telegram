@@ -193,6 +193,7 @@
                         [conversation save];
                     }
                     
+                    
                     [self add:@[[response full_chat]]];
                     
                     [[Storage manager] insertFullChat:response.full_chat completeHandler:nil];
@@ -299,6 +300,9 @@
                     currentChat.participants_count = newChatFull.participants_count;
                     currentChat.kicked_count = newChatFull.kicked_count;
                     currentChat.admins_count = newChatFull.admins_count;
+                    
+                    if(!currentChat.participants)
+                        currentChat.participants = [TL_chatParticipants createWithChat_id:currentChat.n_id participants:[NSMutableArray array] version:0];
                     
                     [Notification perform:CHAT_STATUS data:@{KEY_CHAT_ID: @(currentChat.n_id)}];
                     

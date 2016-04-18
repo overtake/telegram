@@ -483,7 +483,8 @@
                         }];
 
                     } else {
-                        
+                        channel.invisibleChannel = NO;
+                        [channel save];
                         [self failUpdateWithChannelId:[update channel_id] limit:50 withCallback:nil errorCallback:nil];
                     }
                 
@@ -524,6 +525,8 @@
                 
                 [_channelsInUpdating removeObjectForKey:@(channel.peer_id)];
             }];
+        } else {
+            dispatch();
         }
     
     } else if([update isKindOfClass:[TL_updateChannelPinnedMessage class]]) {
