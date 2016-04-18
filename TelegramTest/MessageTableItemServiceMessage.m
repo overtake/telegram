@@ -13,8 +13,8 @@
 #import "TGDateUtils.h"
 #import "NSAttributedString+Hyperlink.h"
 #import "TGImageObject.h"
-#import "TMImageUtils.h"
-
+#import "ImageUtils.h"
+#import "MessageTableCellServiceMessage.h"
 
 @interface TGImageGroupPhotoObject : TGImageObject
 
@@ -30,13 +30,23 @@
     
     [TGCache cacheImage:image forKey:self.location.cacheKey groups:@[IMGCACHE]];
     
-    image = [TMImageUtils roundedImageNew:image size:self.imageSize];
+    image = [ImageUtils roundedImageNew:image size:self.imageSize];
     
     [TGCache cacheImage:image forKey:[self cacheKey] groups:@[IMGCACHE]];
     
     [ASQueue dispatchOnMainQueue:^{
         [self.delegate didDownloadImage:image object:self];
     }];
+}
+
+
+
+-(NSImage *)placeholder {
+    if(super.placeholder) {
+        return super.placeholder;
+    }
+    
+    return gray_circle_resizable_placeholder();
 }
 
 -(NSString *)cacheKey {
@@ -122,19 +132,21 @@
 }
 
 -(BOOL)makeSizeByWidth:(int)width {
-    [super makeSizeByWidth:width];
     
-    
-    NSSize size = [self.messageAttributedString coreTextSizeForTextFieldForWidth:width];
+     NSSize size = [self.messageAttributedString coreTextSizeForTextFieldForWidth:width];
     
     _textSize = size;
     
     size.width = width;
-    size.height += 10;
-    size.height += self.photoSize.height ? self.photoSize.height  : 0;
-    self.blockSize = size;
+    size.height += self.defaultContentOffset*2;
+    size.height += self.photoSize.height ? self.photoSize.height + self.defaultContentOffset  : 0;
+    self.contentSize = self.blockSize = size;
     
-    return YES;
+    return [super makeSizeByWidth:width];
+}
+
+-(Class)viewClass {
+    return [MessageTableCellServiceMessage class];
 }
 
 

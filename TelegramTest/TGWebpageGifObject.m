@@ -11,6 +11,7 @@
 #import "TGVTVideoView.h"
 #import "TGBlurImageObject.h"
 #import "TGThumbnailObject.h"
+#import "MessageTableItem.h"
 @interface TGWebpageGifObject ()
 @property (nonatomic,strong) TL_documentAttributeVideo *imagesize;
 @end
@@ -22,8 +23,8 @@
 @synthesize imageSize = _imageSize;
 
 
--(id)initWithWebPage:(TLWebPage *)webpage {
-    if(self = [super initWithWebPage:webpage]) {
+-(id)initWithWebPage:(TLWebPage *)webpage tableItem:(MessageTableItem *)item {
+    if(self = [super initWithWebPage:webpage tableItem:item]) {
         
         
         _imagesize = (TL_documentAttributeVideo *) [webpage.document attributeWithClass:[TL_documentAttributeVideo class]];
@@ -89,13 +90,10 @@
 -(void)makeSize:(int)width {
     [super makeSize:width];
     
-    _imageSize = strongsize(NSMakeSize(self.imagesize.w, self.imagesize.h), MIN(320, width - 67));
+    _imageSize = strongsize(NSMakeSize(self.imagesize.w, self.imagesize.h), MIN(320, width));
     _size = _imageSize;
-    _size.width = MAX(_imageSize.width,self.descSize.width);
-    
-    _size.width+=20;
-    _size.height +=self.descSize.height;
-    
+    _size.width = _imageSize.width;
+        
 }
 
 - (BOOL)isset {
@@ -109,18 +107,27 @@
 -(void)doAfterDownload {
     [super doAfterDownload];
     
-    if(![self.webpage.document.thumb isKindOfClass:[TL_photoSizeEmpty class]]) {
-        _imageObject = [[TGBlurImageObject alloc] initWithLocation:self.webpage.document.thumb.location thumbData:self.webpage.document.thumb.bytes size:self.webpage.document.thumb.size];
-        _imageObject.imageSize = NSMakeSize(self.imagesize.w, self.imagesize.h);
-    } else {
-        if([self isset]) {
-            _imageObject = [[TGThumbnailObject alloc] initWithFilepath:[self path]];
-            _imageObject.imageSize = NSMakeSize(self.imagesize.w, self.imagesize.h);
+    if(self.webpage.document) {
+        if(![self.webpage.document.thumb isKindOfClass:[TL_photoSizeEmpty class]]) {
+            
+            _imageObject = [[TGImageObject alloc] initWithLocation:self.webpage.document.thumb.location placeHolder:[[NSImage alloc] initWithData:self.webpage.document.thumb.bytes] sourceId:0 size:self.webpage.document.thumb.size];
+            
+            _imageObject.imageProcessor = [ImageUtils b_processor];
+            _imageObject.thumbProcessor = [ImageUtils b_processor];
+        } else {
+            if(self.isset) {
+                _imageObject = [[TGThumbnailObject alloc] initWithFilepath:self.path];
+                _imageObject.imageProcessor = [ImageUtils b_processor];
+            }
+            
         }
     }
-    
+    _imageObject.imageSize = NSMakeSize(self.imagesize.w, self.imagesize.h);
 }
 
+-(int)blockHeight {
+    return self.size.height;
+}
 
 -(Class)webpageContainer {
     return NSClassFromString(@"TGWebpageGifContainer");

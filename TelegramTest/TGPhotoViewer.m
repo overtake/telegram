@@ -179,13 +179,7 @@ static const int controlsHeight = 75;
                 
                 [self insertObjects:@[previewObject]];
                 
-            } else {
-                TGPVUserBehavior *behavior = [[TGPVUserBehavior alloc] initWithConversation:_conversation commonItem:previewObject];
-                behavior.user = user;
-                
-                [behavior addItems:@[previewObject]];
             }
-            
         }
         
     }];
@@ -538,15 +532,7 @@ static TGPhotoViewer *viewer;
 
 -(void)show:(PreviewObject *)item {
     
-    if([item.reservedObject isKindOfClass:[NSDictionary class]]) {
-        
-        if (floor(NSAppKitVersionNumber) <= 1187)  { // video avaiable only on 10.9 +
-            
-            return;
-           
-        }
-        
-    }
+
     
     _behavior = [[TGPVEmptyBehavior alloc] initWithConversation:_conversation commonItem:item];
     
@@ -572,7 +558,7 @@ static TGPhotoViewer *viewer;
     [Notification addObserver:self selector:@selector(didDeleteMessages:) name:MESSAGE_DELETE_EVENT];
     [Notification addObserver:self selector:@selector(didAddedPhoto:) name:USER_UPDATE_PHOTO];
     
-     [self runAnimation:YES];
+    [self runAnimation:YES];
     
     [self setFrame:[NSScreen mainScreen].frame display:NO];
     
@@ -677,7 +663,8 @@ static TGPhotoViewer *viewer;
      [self.controls setCurrentPosition:_isReversed ? _totalCount - _currentItemId : _currentItemId+1 ofCount:_totalCount];
         
     
-    [[self photoContainer] setCurrentViewerItem:_currentItem animated:NO];
+    if(self.photoContainer.currentViewerItem != _currentItem)
+        [[self photoContainer] setCurrentViewerItem:_currentItem animated:NO];
     
     
      [_zoomControl setHidden:[_currentItem.previewObject.reservedObject isKindOfClass:[NSDictionary class]]];
@@ -710,8 +697,8 @@ static TGPhotoViewer *viewer;
         
         [_list enumerateObjectsAtIndexes:[NSIndexSet indexSetWithIndexesInRange:range] options:NSEnumerationReverse usingBlock:^(TGPhotoViewerItem *obj, NSUInteger idx, BOOL *stop) {
             
-            if(![TGCache cachedImage:obj.imageObject.cacheKey group:@[PVCACHE]]) {
-                 [obj.imageObject initDownloadItem];
+            if(!obj.isset) {
+                [obj startDownload];
             }
             
         }];

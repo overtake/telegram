@@ -20,7 +20,6 @@
             _chat = object;
         }
         
-        assert(_user != nil || _chat != nil);
         
     }
     return self;

@@ -22,6 +22,8 @@
 #include "opus.h"
 #include "opusfile.h"
 #import "TGAudioWaveform.h"
+#import "TGModalMessagesViewController.h"
+#import "TGContextMessagesvViewController.h"
 @implementation OpenWithObject
 
 -(id)initWithFullname:(NSString *)fullname app:(NSURL *)app icon:(NSImage *)icon {
@@ -57,8 +59,16 @@ NSString *const TLBotCommandPrefix = @"/";
 
 
 
-
-
+NSString *const kBotInlineTypeAudio = @"audio";
+NSString *const kBotInlineTypeVideo = @"video";
+NSString *const kBotInlineTypeSticker = @"sticker";
+NSString *const kBotInlineTypeGif = @"gif";
+NSString *const kBotInlineTypePhoto = @"photo";
+NSString *const kBotInlineTypeContact = @"contact";
+NSString *const kBotInlineTypeVenue = @"venue";
+NSString *const kBotInlineTypeGeo = @"geo";
+NSString *const kBotInlineTypeFile = @"file";
+NSString *const kBotInlineTypeVoice = @"voice";
 
 +(BOOL)checkNormalizedSize:(NSString *)path checksize:(int)checksize {
     int pathsize = (int)fileSize(path);
@@ -102,6 +112,8 @@ NSString *const TLBotCommandPrefix = @"/";
             }
             
             handler(paths);
+        } else {
+            handler(@[]);
         }
     }];
 }
@@ -174,11 +186,11 @@ NSString* mediaFilePath(TL_localMessage *message) {
     }
     
     if([message.media isKindOfClass:[TL_messageMediaBotResult class]]) {
-        if([message.media.bot_result isKindOfClass:[TL_botInlineMediaResultPhoto class]]) {
+        if([message.media.bot_result.type isEqualToString:kBotInlineTypePhoto]) {
             TL_photoSize *size = [message.media.bot_result.photo.sizes lastObject];
             return locationFilePath(size.location, @"jpg");
-        } else if([message.media.bot_result isKindOfClass:[TL_botInlineMediaResultDocument class]]) {
-            
+        } else if([message.media.bot_result.type isEqualToString:kBotInlineTypeFile]) {
+        
             NSRange srange = [message.media.bot_result.document.mime_type rangeOfString:@"/"];
             
             NSString *ext = srange.location == NSNotFound ? @"file" : [message.media.bot_result.document.mime_type substringFromIndex:srange.location + 1];
@@ -214,11 +226,6 @@ void removeMessageMedia(TL_localMessage *message) {
     if(message) {
         NSString *path = mediaFilePath(message);
         
-        if(path != nil &&![message.media.document isKindOfClass:[TL_outDocument class]]) {
-            [[NSFileManager defaultManager] removeItemAtPath:path error:nil];
-        }
-        
-        
     }
     
 }
@@ -227,13 +234,14 @@ void removeMessageMedia(TL_localMessage *message) {
 NSString* documentPath(TLDocument *document) {
     NSString *fileName = document.file_name;
     
-    if([document isKindOfClass:[TL_outDocument class]]) {
-        NSString *path_for_file = ((TL_outDocument *)document).file_path;
+    TL_documentAttributeLocalFile *localPath = (TL_documentAttributeLocalFile *) [document attributeWithClass:[TL_documentAttributeLocalFile class]];
+    
+    if(localPath) {
+        NSString *path_for_file = localPath.file_path;
         if(isPathExists(path_for_file)) {
             return path_for_file;
         }
     }
-    
     
     
     NSArray *item = [fileName componentsSeparatedByCharactersInSet:
@@ -313,8 +321,8 @@ void confirm(NSString *text, NSString *info, void (^block)(void), void (^cancelB
             else if(cancelBlock)
                 cancelBlock();
         }];
-        [alert addButtonWithTitle:NSLocalizedString(@"Yes", nil)];
-        [alert addButtonWithTitle:NSLocalizedString(@"No", nil)];
+        [alert addButtonWithTitle:NSLocalizedString(@"OK", nil)];
+        [alert addButtonWithTitle:NSLocalizedString(@"Cancel", nil)];
         [alert show];
     }];
     
@@ -551,7 +559,7 @@ void join_group_by_hash(NSString * hash) {
     
         [TMViewController showModalProgress];
         
-        [RPCRequest sendRequest:[TLAPI_messages_checkChatInvite createWithN_hash:hash] successHandler:^(RPCRequest *request, id response) {
+        [RPCRequest sendRequest:[TLAPI_messages_checkChatInvite createWithN_hash:hash] successHandler:^(RPCRequest *request, TL_chatInvite *response) {
             
             if([response isKindOfClass:[TL_chatInviteAlready class]] && ![(TLChat *)[response chat] left]) {
                 
@@ -564,7 +572,9 @@ void join_group_by_hash(NSString * hash) {
                 
                 [TMViewController hideModalProgress];
                 
-                confirm(appName(), [NSString stringWithFormat:NSLocalizedString(@"Confirm.ConfrimToJoinGroup", nil),[response title]], ^{
+                
+                
+                confirm(appName(), [NSString stringWithFormat:NSLocalizedString(response.isChannel ? response.isMegagroup ? @"Confirm.ConfrimToJoinSupergroup" : @"Confirm.ConfrimToJoinChannel" : @"Confirm.ConfrimToJoinGroup", nil),[response title]], ^{
                     
                     [TMViewController showModalProgress];
                     
@@ -626,10 +636,9 @@ void add_sticker_pack_by_name(TLInputStickerSet *set) {
         dispatch_after_seconds(0.2, ^{
             TGStickerPackModalView *stickerModalView = [[TGStickerPackModalView alloc] init];
             
-            [stickerModalView setStickerPack:response];
             stickerModalView.canSendSticker = YES;
+            [stickerModalView setStickerPack:response forMessagesViewController:appWindow().navigationController.messagesViewController];
             [stickerModalView show:appWindow() animated:YES];
-
         });
         
         
@@ -653,11 +662,31 @@ void open_user_by_name(NSDictionary *params) {
             TLUser *user = obj;
             
             if(user.isBot && params[@"start"]) {
+                
+                __block TGModalMessagesViewController *modalController;
+                NSArray *modalViews = [TMViewController modalsView];
+                
+                [modalViews enumerateObjectsUsingBlock:^(TGModalMessagesViewController *obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                    
+                    if([obj isKindOfClass:[TGModalMessagesViewController class]] && [obj.action.object peer_id] == user.n_id) {
+                        modalController = obj;
+                        *stop = YES;
+                    }
+                    
+                }];
+                
+                if(modalController) {
+                    [modalController.messagesViewController sendStartBot:params[@"start"] forConversation:user.dialog bot:user];
+                    return;
+                }
+                
                 [appWindow().navigationController showMessagesViewController:user.dialog];
                 [appWindow().navigationController.messagesViewController showBotStartButton:params[@"start"] bot:user];
             } else if(user.isBot && params[@"startgroup"] && (user.flags & TGBOTGROUPBLOCKED) == 0) {
+                
+                [TMViewController hideAllModals];
                 [[Telegram rightViewController] showComposeAddUserToGroup:[[ComposeAction alloc] initWithBehaviorClass:[ComposeActionAddUserToGroupBehavior class] filter:nil object:user reservedObjects:@[params]]];
-            } else if(params[@"open_profile"]) {
+            } else if(params[@"open_profile"] && !user.isBot) {
                 [appWindow().navigationController showInfoPage:user.dialog];
             } else {
                [appWindow().navigationController showMessagesViewController:user.dialog];
@@ -686,7 +715,7 @@ void open_user_by_name(NSDictionary *params) {
         
     };
     
-    if(false) {
+    if(obj) {
         
         perform();
         
@@ -783,56 +812,86 @@ void determinateURLLink(NSString *link) {
     
 }
 
-void open_link(NSString *link) {
+void open_link_with_controller(NSString *link, TMNavigationController *controller) {
     
+    TMNavigationController *navigationController = controller ? controller : appWindow().navigationController;
     
-    if([link hasPrefix:@"USER_PROFILE:"]) {
+    if([link hasPrefix:@"chat://"]) {
         
-        [TMInAppLinks parseUrlAndDo:link];
+        NSDictionary *vars = getUrlVars(link);
         
-        return;
-    }
-    
-    if([link hasPrefix:@"openWithPeer:"]) {
+        NSArray *components = [link componentsSeparatedByString:@"/"];
         
-        NSArray *components = [link componentsSeparatedByString:@":"];
-        if(components.count > 2) {
-            int peer_id = [components[2] intValue];
+        
+        if(components.count > 3) {
             
-            Class peer = NSClassFromString(components[1]);
+            NSString *command = components[2];
             
-            int msgId = components.count == 4 ? [components[3] intValue] : 0;
+            if([command isEqualToString:@"viabot"]) {
+                [navigationController.messagesViewController setStringValueToTextField:[NSString stringWithFormat:@"%@ ",vars[@"username"]]];
+                return;
+            }
             
-            if(peer == [TL_peerUser class]) {
+            if([command isEqualToString:@"showreplymessage"]) {
                 
-                TLUser *user = [[UsersManager sharedManager] find:peer_id];
-                
-                TL_conversation *conversation = user.dialog;
-                
-                [appWindow().navigationController showInfoPage:conversation];
-                
-            } else if(peer == [TL_peerChat class] || peer == [TL_peerChannel class]) {
-                
-                TLChat *chat = [[ChatsManager sharedManager] find:abs(peer_id)];
-                
-                if(chat.username.length == 0 && chat.isBroadcast && chat.dialog.isInvisibleChannel)
-                    return;
-                
-                if(appWindow().navigationController.messagesViewController.conversation.peer_id == peer_id) {
-                    [appWindow().navigationController showInfoPage:chat.dialog];
-                } else {
+                if(vars[@"peer_class"] && vars[@"msg_id"]) {
+                    TL_localMessage *msg = [[TL_localMessage alloc] init];
+                    msg.to_id = [TLPeer peerWithClassName:vars[@"peer_class"] peer_id:[vars[@"peer_id"] intValue]];
+                    msg.n_id = [vars[@"msg_id"] intValue];
                     
-                    TL_localMessage *message;
-                    if(msgId != 0) {
-                        message = [[TL_localMessage alloc] init];
-                        message.n_id = msgId;
-                        message.to_id = [peer isKindOfClass:[TL_peerChat class]] ? [TL_peerChat createWithChat_id:abs(peer_id)] : [TL_peerChannel createWithChannel_id:abs(peer_id)];
+                    
+                    TL_localMessage *fromMsg;
+                    
+                    if([vars[@"from_msg_id"] intValue] > 0) {
+                        fromMsg = [[TL_localMessage alloc] init];
+                        fromMsg.to_id = msg.to_id;
+                        fromMsg.n_id = [vars[@"from_msg_id"] intValue];
                     }
                     
-                    [appWindow().navigationController showMessagesViewController:chat.dialog withMessage:message];
+                    
+                    [navigationController.messagesViewController showMessage:msg fromMsg:fromMsg flags:ShowMessageTypeReply];
                 }
                 
+                return;
             }
+            
+            if([command isEqualToString:@"openprofile"]) {
+                
+                TLPeer *peer = [TLPeer peerWithClassName:vars[@"peer_class"] peer_id:[vars[@"peer_id"] intValue]];
+                
+                if([peer isKindOfClass:[TL_peerUser class]]) {
+                    
+                    TLUser *user = [[UsersManager sharedManager] find:peer.peer_id];
+                    
+                    [navigationController showInfoPage:user.dialog];
+                } else if(peer.class == [TL_peerChat class] || peer.class == [TL_peerChannel class]) {
+                    TLChat *chat = [[ChatsManager sharedManager] find:abs([vars[@"peer_id"] intValue])];
+                    
+                    if(chat.username.length == 0 && chat.isBroadcast && chat.dialog.isInvisibleChannel)
+                        return;
+                    
+                    if(navigationController.messagesViewController.conversation.peer_id == peer.peer_id) {
+                        [navigationController showInfoPage:chat.dialog];
+                    } else {
+                        
+                        TL_localMessage *message;
+                        
+                        int msgId = [vars[@"jump_msg_id"] intValue];
+                        
+                        if(msgId != 0) {
+                            message = [[TL_localMessage alloc] init];
+                            message.n_id = msgId;
+                            message.to_id = peer;
+                        }
+                        
+                        [navigationController showMessagesViewController:chat.dialog withMessage:message];
+                    }
+                    
+                }
+                
+                return;
+            }
+            
         }
         
         
@@ -860,12 +919,14 @@ void open_link(NSString *link) {
     
     if([link hasPrefix:TLHashTagPrefix]) {
         
+        [TMViewController hideAllModals];
+        
         [[Telegram leftViewController] showTabControllerAtIndex:1];
         
         StandartViewController *controller = (StandartViewController *) [[Telegram leftViewController] currentTabController];
         
         [((StandartViewController *)controller).searchViewController dontLoadHashTagsForOneRequest];
-                
+        
         [controller searchByString:link];
         
         if([Telegram isSingleLayout]) {
@@ -877,7 +938,7 @@ void open_link(NSString *link) {
     
     
     if([link hasPrefix:TLBotCommandPrefix]) {
-        [appWindow().navigationController.messagesViewController sendMessage:link forConversation:[appWindow().navigationController.messagesViewController conversation]];
+        [navigationController.messagesViewController sendMessage:link forConversation:[navigationController.messagesViewController conversation]];
         return;
     }
     
@@ -910,7 +971,7 @@ void open_link(NSString *link) {
                     NSDictionary *vars = getUrlVars(name);
                     
                     user[@"domain"] = [name substringToIndex:[name rangeOfString:@"?"].location];
-                   
+                    
                     [user addEntriesFromDictionary:vars];
                 }
                 
@@ -919,7 +980,7 @@ void open_link(NSString *link) {
             } else {
                 NSArray *userAndPost = [name componentsSeparatedByString:@"/"];
                 
-                if(userAndPost.count == 2) {
+                if(userAndPost.count >= 2) {
                     NSString *username = userAndPost[0];
                     int postId = [userAndPost[1] intValue];
                     
@@ -979,7 +1040,7 @@ void open_link(NSString *link) {
     [escaped replaceOccurrencesOfString:@"%22" withString:@"\"" options:NSCaseInsensitiveSearch range:NSMakeRange(0, escaped.length)];
     [escaped replaceOccurrencesOfString:@"%0A" withString:@"\n" options:NSCaseInsensitiveSearch range:NSMakeRange(0, escaped.length)];
     [escaped replaceOccurrencesOfString:@"%25" withString:@"%" options:NSCaseInsensitiveSearch range:NSMakeRange(0, escaped.length)];
-     NSURL *url = [[NSURL alloc] initWithString: escaped];
+    NSURL *url = [[NSURL alloc] initWithString: escaped];
     
     
     if([SettingsArchiver checkMaskedSetting:OpenLinksInBackground]) {
@@ -987,6 +1048,57 @@ void open_link(NSString *link) {
     } else {
         [[NSWorkspace sharedWorkspace] openURL:url];
     }
+
+}
+
+NSString *tg_domain_from_link(NSString *link) {
+    NSRange checkRange = [link rangeOfString:@"telegram.me/"];
+    
+    
+    if(checkRange.location != NSNotFound) {
+        
+        NSString *name = [link substringFromIndex:checkRange.location + checkRange.length ];
+        
+        if(name.length > 0) {
+            
+            NSString *joinPrefix = @"joinchat/";
+            NSString *stickerPrefix = @"addstickers/";
+            
+            
+            if(![name hasPrefix:joinPrefix] && ![name hasPrefix:stickerPrefix]) {
+                if([name rangeOfString:@"/"].location == NSNotFound) {
+                    
+                    NSMutableDictionary *user = [@{@"domain":name} mutableCopy];
+                    
+                    if([name rangeOfString:@"?"].location != NSNotFound) {
+                        NSDictionary *vars = getUrlVars(name);
+                        
+                        user[@"domain"] = [name substringToIndex:[name rangeOfString:@"?"].location];
+                        
+                        [user addEntriesFromDictionary:vars];
+                    }
+                    
+                    return user[@"domain"];
+                } else {
+                    NSArray *userAndPost = [name componentsSeparatedByString:@"/"];
+                    
+                    return userAndPost[0];
+                }
+
+            }
+            
+            
+        }
+    } else if([link hasPrefix:@"tg://resolve"]) {
+       NSDictionary *vars = getUrlVars(link);
+        return vars[@"domain"];
+    }
+    
+    return nil;
+}
+
+void open_link(NSString *link) {
+    open_link_with_controller(link, appWindow().navigationController);
 }
 
 
@@ -1330,7 +1442,15 @@ NSString *first_domain_character(NSString *url) {
 }
 
 NSString *path_for_external_link(NSString *link) {
-    return [NSString stringWithFormat:@"%@/%ld.%@",[FileUtils path],[link hash],[link pathExtension].length == 0 ? @"file" : [link pathExtension]];
+    NSString *extension = [link pathExtension];
+    
+    NSUInteger dropIndex = NSNotFound;
+    
+    if((dropIndex = [extension rangeOfString:@"?"].location) != NSNotFound) {
+        extension = [extension substringToIndex:dropIndex];
+    }
+    
+    return [NSString stringWithFormat:@"%@/%ld.%@",[FileUtils path],[link hash],extension.length == 0 ? @"file" : extension];
 }
 
 
@@ -1463,6 +1583,22 @@ NSArray *document_preview_mime_types() {
     });
     
     return types;
+}
+
+
+
+NSString *priorityString(NSString * str, ...) {
+    va_list args;
+    va_start(args, str);
+    
+    for (NSString *arg = str; arg != [NSNull class]; arg = va_arg(args, NSString*))
+    {
+        if(arg.length > 0)
+            return arg;
+    }
+    va_end(args);
+    
+    return str;
 }
 
 @end

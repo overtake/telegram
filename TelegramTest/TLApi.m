@@ -2,7 +2,7 @@
 //  TLApi.m
 //  Telegram
 //
-//  Auto created by Mikhail Filimonov on 22.02.16..
+//  Auto created by Mikhail Filimonov on 09.04.16..
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -23,37 +23,26 @@
 @end
 
 @implementation TLAPI_auth_sendCode
-+(TLAPI_auth_sendCode*)createWithPhone_number:(NSString*)phone_number sms_type:(int)sms_type api_id:(int)api_id api_hash:(NSString*)api_hash lang_code:(NSString*)lang_code {
++(TLAPI_auth_sendCode*)createWithFlags:(int)flags  phone_number:(NSString*)phone_number current_number:(Boolean)current_number api_id:(int)api_id api_hash:(NSString*)api_hash lang_code:(NSString*)lang_code {
     TLAPI_auth_sendCode* obj = [[TLAPI_auth_sendCode alloc] init];
-    obj.phone_number = phone_number;
-	obj.sms_type = sms_type;
+    obj.flags = flags;
+	
+	obj.phone_number = phone_number;
+	obj.current_number = current_number;
 	obj.api_id = api_id;
 	obj.api_hash = api_hash;
 	obj.lang_code = lang_code;
     return obj;
 }
 - (NSData*)getData {
-	SerializedData* stream = [ClassStore streamWithConstuctor:1988976461];
+	SerializedData* stream = [ClassStore streamWithConstuctor:-855805745];
+	[stream writeInt:self.flags];
+	
 	[stream writeString:self.phone_number];
-	[stream writeInt:self.sms_type];
+	if(self.flags & (1 << 0)) {[stream writeBool:self.current_number];}
 	[stream writeInt:self.api_id];
 	[stream writeString:self.api_hash];
 	[stream writeString:self.lang_code];
-	return [stream getOutput];
-}
-@end
-
-@implementation TLAPI_auth_sendCall
-+(TLAPI_auth_sendCall*)createWithPhone_number:(NSString*)phone_number phone_code_hash:(NSString*)phone_code_hash {
-    TLAPI_auth_sendCall* obj = [[TLAPI_auth_sendCall alloc] init];
-    obj.phone_number = phone_number;
-	obj.phone_code_hash = phone_code_hash;
-    return obj;
-}
-- (NSData*)getData {
-	SerializedData* stream = [ClassStore streamWithConstuctor:63247716];
-	[stream writeString:self.phone_number];
-	[stream writeString:self.phone_code_hash];
 	return [stream getOutput];
 }
 @end
@@ -278,16 +267,20 @@
 @end
 
 @implementation TLAPI_account_updateProfile
-+(TLAPI_account_updateProfile*)createWithFirst_name:(NSString*)first_name last_name:(NSString*)last_name {
++(TLAPI_account_updateProfile*)createWithFlags:(int)flags first_name:(NSString*)first_name last_name:(NSString*)last_name about:(NSString*)about {
     TLAPI_account_updateProfile* obj = [[TLAPI_account_updateProfile alloc] init];
-    obj.first_name = first_name;
+    obj.flags = flags;
+	obj.first_name = first_name;
 	obj.last_name = last_name;
+	obj.about = about;
     return obj;
 }
 - (NSData*)getData {
-	SerializedData* stream = [ClassStore streamWithConstuctor:-259486360];
-	[stream writeString:self.first_name];
-	[stream writeString:self.last_name];
+	SerializedData* stream = [ClassStore streamWithConstuctor:2018596725];
+	[stream writeInt:self.flags];
+	if(self.flags & (1 << 0)) {[stream writeString:self.first_name];}
+	if(self.flags & (1 << 1)) {[stream writeString:self.last_name];}
+	if(self.flags & (1 << 2)) {[stream writeString:self.about];}
 	return [stream getOutput];
 }
 @end
@@ -845,6 +838,32 @@
 }
 - (NSData*)getData {
 	SerializedData* stream = [ClassStore streamWithConstuctor:-820669733];
+	[ClassStore TLSerialize:self.peer stream:stream];
+	return [stream getOutput];
+}
+@end
+
+@implementation TLAPI_messages_hideReportSpam
++(TLAPI_messages_hideReportSpam*)createWithPeer:(TLInputPeer*)peer {
+    TLAPI_messages_hideReportSpam* obj = [[TLAPI_messages_hideReportSpam alloc] init];
+    obj.peer = peer;
+    return obj;
+}
+- (NSData*)getData {
+	SerializedData* stream = [ClassStore streamWithConstuctor:-1460572005];
+	[ClassStore TLSerialize:self.peer stream:stream];
+	return [stream getOutput];
+}
+@end
+
+@implementation TLAPI_messages_getPeerSettings
++(TLAPI_messages_getPeerSettings*)createWithPeer:(TLInputPeer*)peer {
+    TLAPI_messages_getPeerSettings* obj = [[TLAPI_messages_getPeerSettings alloc] init];
+    obj.peer = peer;
+    return obj;
+}
+- (NSData*)getData {
+	SerializedData* stream = [ClassStore streamWithConstuctor:913498268];
 	[ClassStore TLSerialize:self.peer stream:stream];
 	return [stream getOutput];
 }
@@ -1440,21 +1459,6 @@
 }
 @end
 
-@implementation TLAPI_auth_sendSms
-+(TLAPI_auth_sendSms*)createWithPhone_number:(NSString*)phone_number phone_code_hash:(NSString*)phone_code_hash {
-    TLAPI_auth_sendSms* obj = [[TLAPI_auth_sendSms alloc] init];
-    obj.phone_number = phone_number;
-	obj.phone_code_hash = phone_code_hash;
-    return obj;
-}
-- (NSData*)getData {
-	SerializedData* stream = [ClassStore streamWithConstuctor:229241832];
-	[stream writeString:self.phone_number];
-	[stream writeString:self.phone_code_hash];
-	return [stream getOutput];
-}
-@end
-
 @implementation TLAPI_messages_readMessageContents
 +(TLAPI_messages_readMessageContents*)createWithN_id:(NSMutableArray*)n_id {
     TLAPI_messages_readMessageContents* obj = [[TLAPI_messages_readMessageContents alloc] init];
@@ -1611,14 +1615,20 @@
 @end
 
 @implementation TLAPI_account_sendChangePhoneCode
-+(TLAPI_account_sendChangePhoneCode*)createWithPhone_number:(NSString*)phone_number {
++(TLAPI_account_sendChangePhoneCode*)createWithFlags:(int)flags  phone_number:(NSString*)phone_number current_number:(Boolean)current_number {
     TLAPI_account_sendChangePhoneCode* obj = [[TLAPI_account_sendChangePhoneCode alloc] init];
-    obj.phone_number = phone_number;
+    obj.flags = flags;
+	
+	obj.phone_number = phone_number;
+	obj.current_number = current_number;
     return obj;
 }
 - (NSData*)getData {
-	SerializedData* stream = [ClassStore streamWithConstuctor:-1543001868];
+	SerializedData* stream = [ClassStore streamWithConstuctor:149257707];
+	[stream writeInt:self.flags];
+	
 	[stream writeString:self.phone_number];
+	if(self.flags & (1 << 0)) {[stream writeBool:self.current_number];}
 	return [stream getOutput];
 }
 @end
@@ -2593,16 +2603,22 @@
 @end
 
 @implementation TLAPI_messages_getInlineBotResults
-+(TLAPI_messages_getInlineBotResults*)createWithBot:(TLInputUser*)bot query:(NSString*)query offset:(NSString*)offset {
++(TLAPI_messages_getInlineBotResults*)createWithFlags:(int)flags bot:(TLInputUser*)bot peer:(TLInputPeer*)peer geo_point:(TLInputGeoPoint*)geo_point query:(NSString*)query offset:(NSString*)offset {
     TLAPI_messages_getInlineBotResults* obj = [[TLAPI_messages_getInlineBotResults alloc] init];
-    obj.bot = bot;
+    obj.flags = flags;
+	obj.bot = bot;
+	obj.peer = peer;
+	obj.geo_point = geo_point;
 	obj.query = query;
 	obj.offset = offset;
     return obj;
 }
 - (NSData*)getData {
-	SerializedData* stream = [ClassStore streamWithConstuctor:-1826332659];
+	SerializedData* stream = [ClassStore streamWithConstuctor:1364105629];
+	[stream writeInt:self.flags];
 	[ClassStore TLSerialize:self.bot stream:stream];
+	[ClassStore TLSerialize:self.peer stream:stream];
+	if(self.flags & (1 << 0)) {[ClassStore TLSerialize:self.geo_point stream:stream];}
 	[stream writeString:self.query];
 	[stream writeString:self.offset];
 	return [stream getOutput];
@@ -2610,7 +2626,7 @@
 @end
 
 @implementation TLAPI_messages_setInlineBotResults
-+(TLAPI_messages_setInlineBotResults*)createWithFlags:(int)flags   query_id:(long)query_id results:(NSMutableArray*)results cache_time:(int)cache_time next_offset:(NSString*)next_offset {
++(TLAPI_messages_setInlineBotResults*)createWithFlags:(int)flags   query_id:(long)query_id results:(NSMutableArray*)results cache_time:(int)cache_time next_offset:(NSString*)next_offset switch_pm:(TLInlineBotSwitchPM*)switch_pm {
     TLAPI_messages_setInlineBotResults* obj = [[TLAPI_messages_setInlineBotResults alloc] init];
     obj.flags = flags;
 	
@@ -2619,10 +2635,11 @@
 	obj.results = results;
 	obj.cache_time = cache_time;
 	obj.next_offset = next_offset;
+	obj.switch_pm = switch_pm;
     return obj;
 }
 - (NSData*)getData {
-	SerializedData* stream = [ClassStore streamWithConstuctor:1059318802];
+	SerializedData* stream = [ClassStore streamWithConstuctor:-346119674];
 	[stream writeInt:self.flags];
 	
 	
@@ -2639,6 +2656,7 @@
 	}
 	[stream writeInt:self.cache_time];
 	if(self.flags & (1 << 2)) {[stream writeString:self.next_offset];}
+	if(self.flags & (1 << 3)) {[ClassStore TLSerialize:self.switch_pm stream:stream];}
 	return [stream getOutput];
 }
 @end
@@ -2717,39 +2735,90 @@
 }
 @end
 
-@implementation TLAPI_channels_getMessageEditData
-+(TLAPI_channels_getMessageEditData*)createWithChannel:(TLInputChannel*)channel n_id:(int)n_id {
-    TLAPI_channels_getMessageEditData* obj = [[TLAPI_channels_getMessageEditData alloc] init];
-    obj.channel = channel;
+@implementation TLAPI_channels_updatePinnedMessage
++(TLAPI_channels_updatePinnedMessage*)createWithFlags:(int)flags  channel:(TLInputChannel*)channel n_id:(int)n_id {
+    TLAPI_channels_updatePinnedMessage* obj = [[TLAPI_channels_updatePinnedMessage alloc] init];
+    obj.flags = flags;
+	
+	obj.channel = channel;
 	obj.n_id = n_id;
     return obj;
 }
 - (NSData*)getData {
-	SerializedData* stream = [ClassStore streamWithConstuctor:669661736];
+	SerializedData* stream = [ClassStore streamWithConstuctor:-1490162350];
+	[stream writeInt:self.flags];
+	
 	[ClassStore TLSerialize:self.channel stream:stream];
 	[stream writeInt:self.n_id];
 	return [stream getOutput];
 }
 @end
 
-@implementation TLAPI_channels_editMessage
-+(TLAPI_channels_editMessage*)createWithFlags:(int)flags  channel:(TLInputChannel*)channel n_id:(int)n_id message:(NSString*)message entities:(NSMutableArray*)entities {
-    TLAPI_channels_editMessage* obj = [[TLAPI_channels_editMessage alloc] init];
+@implementation TLAPI_auth_resendCode
++(TLAPI_auth_resendCode*)createWithPhone_number:(NSString*)phone_number phone_code_hash:(NSString*)phone_code_hash {
+    TLAPI_auth_resendCode* obj = [[TLAPI_auth_resendCode alloc] init];
+    obj.phone_number = phone_number;
+	obj.phone_code_hash = phone_code_hash;
+    return obj;
+}
+- (NSData*)getData {
+	SerializedData* stream = [ClassStore streamWithConstuctor:1056025023];
+	[stream writeString:self.phone_number];
+	[stream writeString:self.phone_code_hash];
+	return [stream getOutput];
+}
+@end
+
+@implementation TLAPI_auth_cancelCode
++(TLAPI_auth_cancelCode*)createWithPhone_number:(NSString*)phone_number phone_code_hash:(NSString*)phone_code_hash {
+    TLAPI_auth_cancelCode* obj = [[TLAPI_auth_cancelCode alloc] init];
+    obj.phone_number = phone_number;
+	obj.phone_code_hash = phone_code_hash;
+    return obj;
+}
+- (NSData*)getData {
+	SerializedData* stream = [ClassStore streamWithConstuctor:520357240];
+	[stream writeString:self.phone_number];
+	[stream writeString:self.phone_code_hash];
+	return [stream getOutput];
+}
+@end
+
+@implementation TLAPI_messages_getMessageEditData
++(TLAPI_messages_getMessageEditData*)createWithPeer:(TLInputPeer*)peer n_id:(int)n_id {
+    TLAPI_messages_getMessageEditData* obj = [[TLAPI_messages_getMessageEditData alloc] init];
+    obj.peer = peer;
+	obj.n_id = n_id;
+    return obj;
+}
+- (NSData*)getData {
+	SerializedData* stream = [ClassStore streamWithConstuctor:-39416522];
+	[ClassStore TLSerialize:self.peer stream:stream];
+	[stream writeInt:self.n_id];
+	return [stream getOutput];
+}
+@end
+
+@implementation TLAPI_messages_editMessage
++(TLAPI_messages_editMessage*)createWithFlags:(int)flags  peer:(TLInputPeer*)peer n_id:(int)n_id message:(NSString*)message reply_markup:(TLReplyMarkup*)reply_markup entities:(NSMutableArray*)entities {
+    TLAPI_messages_editMessage* obj = [[TLAPI_messages_editMessage alloc] init];
     obj.flags = flags;
 	
-	obj.channel = channel;
+	obj.peer = peer;
 	obj.n_id = n_id;
 	obj.message = message;
+	obj.reply_markup = reply_markup;
 	obj.entities = entities;
     return obj;
 }
 - (NSData*)getData {
-	SerializedData* stream = [ClassStore streamWithConstuctor:-589659923];
+	SerializedData* stream = [ClassStore streamWithConstuctor:-829299510];
 	[stream writeInt:self.flags];
 	
-	[ClassStore TLSerialize:self.channel stream:stream];
+	[ClassStore TLSerialize:self.peer stream:stream];
 	[stream writeInt:self.n_id];
-	[stream writeString:self.message];
+	if(self.flags & (1 << 11)) {[stream writeString:self.message];}
+	if(self.flags & (1 << 2)) {[ClassStore TLSerialize:self.reply_markup stream:stream];}
 	if(self.flags & (1 << 3)) {//Serialize FullVector
 	[stream writeInt:0x1cb5c415];
 	{
@@ -2760,6 +2829,74 @@
             [ClassStore TLSerialize:obj stream:stream];
 		}
 	}}
+	return [stream getOutput];
+}
+@end
+
+@implementation TLAPI_messages_editInlineBotMessage
++(TLAPI_messages_editInlineBotMessage*)createWithFlags:(int)flags  n_id:(TLInputBotInlineMessageID*)n_id message:(NSString*)message reply_markup:(TLReplyMarkup*)reply_markup entities:(NSMutableArray*)entities {
+    TLAPI_messages_editInlineBotMessage* obj = [[TLAPI_messages_editInlineBotMessage alloc] init];
+    obj.flags = flags;
+	
+	obj.n_id = n_id;
+	obj.message = message;
+	obj.reply_markup = reply_markup;
+	obj.entities = entities;
+    return obj;
+}
+- (NSData*)getData {
+	SerializedData* stream = [ClassStore streamWithConstuctor:319564933];
+	[stream writeInt:self.flags];
+	
+	[ClassStore TLSerialize:self.n_id stream:stream];
+	if(self.flags & (1 << 11)) {[stream writeString:self.message];}
+	if(self.flags & (1 << 2)) {[ClassStore TLSerialize:self.reply_markup stream:stream];}
+	if(self.flags & (1 << 3)) {//Serialize FullVector
+	[stream writeInt:0x1cb5c415];
+	{
+		NSInteger tl_count = [self.entities count];
+		[stream writeInt:(int)tl_count];
+		for(int i = 0; i < (int)tl_count; i++) {
+            TLMessageEntity* obj = [self.entities objectAtIndex:i];
+            [ClassStore TLSerialize:obj stream:stream];
+		}
+	}}
+	return [stream getOutput];
+}
+@end
+
+@implementation TLAPI_messages_getBotCallbackAnswer
++(TLAPI_messages_getBotCallbackAnswer*)createWithPeer:(TLInputPeer*)peer msg_id:(int)msg_id data:(NSData*)data {
+    TLAPI_messages_getBotCallbackAnswer* obj = [[TLAPI_messages_getBotCallbackAnswer alloc] init];
+    obj.peer = peer;
+	obj.msg_id = msg_id;
+	obj.data = data;
+    return obj;
+}
+- (NSData*)getData {
+	SerializedData* stream = [ClassStore streamWithConstuctor:-1494659324];
+	[ClassStore TLSerialize:self.peer stream:stream];
+	[stream writeInt:self.msg_id];
+	[stream writeByteArray:self.data];
+	return [stream getOutput];
+}
+@end
+
+@implementation TLAPI_messages_setBotCallbackAnswer
++(TLAPI_messages_setBotCallbackAnswer*)createWithFlags:(int)flags  query_id:(long)query_id message:(NSString*)message {
+    TLAPI_messages_setBotCallbackAnswer* obj = [[TLAPI_messages_setBotCallbackAnswer alloc] init];
+    obj.flags = flags;
+	
+	obj.query_id = query_id;
+	obj.message = message;
+    return obj;
+}
+- (NSData*)getData {
+	SerializedData* stream = [ClassStore streamWithConstuctor:1209817370];
+	[stream writeInt:self.flags];
+	
+	[stream writeLong:self.query_id];
+	if(self.flags & (1 << 0)) {[stream writeString:self.message];}
 	return [stream getOutput];
 }
 @end

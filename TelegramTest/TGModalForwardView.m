@@ -94,7 +94,7 @@
 }
 
 -(BOOL)isShareModalType {
-    return _messageCaller.chat.isChannel && !_messageCaller.chat.isMegagroup && _messageCaller.chat.username > 0;
+    return _messageCaller.isPost && _messageCaller.chat.username > 0 && !_user;
 }
 
 -(void)okAction {
@@ -141,23 +141,35 @@
         
     }
     
-    
-    NSMutableArray *ids = [[NSMutableArray alloc] init];
-    for(MessageTableItem *item in _messagesViewController.selectedMessages)
-        [ids addObject:item.message];
-    
-    [ids sortUsingComparator:^NSComparisonResult(TLMessage * a, TLMessage * b) {
-        return a.n_id > b.n_id ? NSOrderedDescending : NSOrderedAscending;
-    }];
-
-    
-    [_tableView.selectedItems enumerateObjectsUsingBlock:^(SelectUserItem *obj, NSUInteger idx, BOOL * _Nonnull stop) {
+    if(!_user) {
+        NSMutableArray *ids = [[NSMutableArray alloc] init];
+        for(MessageTableItem *item in _messagesViewController.selectedMessages)
+            [ids addObject:item.message];
         
-        TL_conversation *conversation = [obj.object dialog];
+        [ids sortUsingComparator:^NSComparisonResult(TLMessage * a, TLMessage * b) {
+            return a.n_id > b.n_id ? NSOrderedDescending : NSOrderedAscending;
+        }];
         
-        [_messagesViewController forwardMessages:ids conversation:conversation callback:nil];
         
-    }];
+        [_tableView.selectedItems enumerateObjectsUsingBlock:^(SelectUserItem *obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            
+            TL_conversation *conversation = [obj.object dialog];
+            
+            [_messagesViewController forwardMessages:ids conversation:conversation callback:nil];
+            
+        }];
+    } else {
+        [_tableView.selectedItems enumerateObjectsUsingBlock:^(SelectUserItem *obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            
+            TL_conversation *conversation = [obj.object dialog];
+            
+            [_messagesViewController shareContact:_user forConversation:conversation callback:nil];
+            
+        }];
+    }
+    
+    
+    
     
     
     [self close:YES];
@@ -167,9 +179,13 @@
 -(void)selectTableDidChangedItem:(id)item {
     
     
+    
+    
     [self.ok setTitle:_tableView.selectedItems.count == 0 && self.isShareModalType ? NSLocalizedString(@"Conversation.Action.CopyShareLink", nil) : NSLocalizedString(@"Conversation.Action.Share", nil) forControlState:BTRControlStateNormal];
     
-
+    [self updateCounterOrigin];
+    
+    
     [self.ok setEnabled:_tableView.selectedItems.count > 0 || self.isShareModalType];
     [self.ok setTitleColor:_tableView.selectedItems.count > 0 || self.isShareModalType ? LINK_COLOR : GRAY_TEXT_COLOR forControlState:BTRControlStateNormal];
 

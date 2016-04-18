@@ -174,6 +174,7 @@ static NSImage *sharedLinkCapImage() {
     
     [super setItem:item];
     
+   
     
     [_linkField setHidden:item.webpage == nil || item.webpage.desc.length == 0];
     
@@ -321,16 +322,5 @@ static NSImage *sharedLinkCapImage() {
 }
 
 
-
--(void)_colorAnimationEvent {
-    
-    CALayer *currentLayer = (CALayer *)[self.textField.layer presentationLayer];
-    
-    id value = [currentLayer valueForKeyPath:@"backgroundColor"];
-    
-    self.textField.layer.backgroundColor = (__bridge CGColorRef)(value);
-    [self.textField setNeedsDisplay:YES];
-    
-}
 
 @end

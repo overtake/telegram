@@ -57,7 +57,7 @@
         [attributes addObject:[TL_documentAttributeFilename createWithFile_name:[path_for_file lastPathComponent]]];
         [attributes addObject:[TL_documentAttributeVideo createWithDuration:duration w:size.width h:size.height]];
         
-        TL_messageMediaDocument *media = [TL_messageMediaDocument createWithDocument:[TL_document createWithN_id:0 access_hash:0 date:[[MTNetwork instance] getTime] mime_type:@"video/mp4" size:0 thumb:cachedSize dc_id:0 attributes:attributes] caption:nil];
+        TL_messageMediaDocument *media = [TL_messageMediaDocument createWithDocument:[TL_document createWithN_id:0 access_hash:0 date:[[MTNetwork instance] getTime] mime_type:@"video/mp4" size:(int)fileSize(path_for_file) thumb:cachedSize dc_id:0 attributes:attributes] caption:nil];
 
         [[ImageCache sharedManager] setImage:thumbImage forLocation:[cachedSize location]];
 
@@ -77,8 +77,14 @@
     
     NSString *export = exportPath(self.message.randomId,@"mp4");
     
-    if(!self.path_for_file)
+    NSError *error;
+    
+    [[NSFileManager defaultManager] copyItemAtPath:self.path_for_file toPath:export error:&error];
+    
+    if(!error)
         self.path_for_file = export;
+    else
+        [self cancel];
     
 
     
@@ -118,9 +124,9 @@
                 }
                 
                 
-                TLMessage *msg = [TL_localMessage convertReceivedMessage:(TLMessage *) ( [response.updates[1] message])];
+                TLMessage *msg = [strongSelf updateNewMessageWithUpdates:response].message;
                 
-                 strongSelf.message.n_id = msg.n_id;
+                strongSelf.message.n_id = msg.n_id;
                 strongSelf.message.date = msg.date;
                     
 
@@ -128,16 +134,26 @@
                 strongSelf.message.media.document.size = [msg media].document.size;
                 strongSelf.message.media.document.access_hash = [msg media].document.access_hash;
                 strongSelf.message.media.document.n_id = [msg media].document.n_id;
+                strongSelf.message.media.document.mime_type = msg.media.document.mime_type;
+                strongSelf.message.media.document.attributes = msg.media.document.attributes;
+                strongSelf.message.media.document.thumb = msg.media.document.thumb;
                 
-                
+                TL_documentAttributeVideo *video = (TL_documentAttributeVideo *) [strongSelf.message.media.document attributeWithClass:[TL_documentAttributeVideo class]];
                 
                 [[NSFileManager defaultManager] moveItemAtPath:strongSelf.path_for_file toPath:mediaFilePath(strongSelf.message) error:nil];
             
-                NSImage *thumb = [MessageSender videoParams:mediaFilePath(strongSelf.message) thumbSize:strongsize(NSMakeSize(640, 480), 250)][@"image"];
+                NSImage *thumb = [MessageSender videoParams:mediaFilePath(strongSelf.message) thumbSize:strongsize(NSMakeSize(video.w, video.h), 320)][@"image"];
                 
                 
-                strongSelf.message.media.document.thumb = [TL_photoCachedSize createWithType:@"x" location:msg.media.video.thumb.location w:thumb.size.width h:thumb.size.height bytes:jpegNormalizedData(thumb)];
+                if(thumb.size.width > 0 && thumb.size.height > 0) {
+                    TLFileLocation *location = msg.media.document.thumb.location;
+                    
+                    [TGCache cacheImage:thumb forKey:location.cacheKey groups:@[IMGCACHE]];
+                    
+                    [jpegNormalizedData(thumb) writeToFile:locationFilePath(location, @"jpg") atomically:YES];
+                }
                 
+
                 strongSelf.uploader = nil;
                 
                 strongSelf.message.dstate = DeliveryStateNormal;
@@ -167,7 +183,7 @@
                 UploadOperation *thumbUpload = [[UploadOperation alloc] init];
                 [thumbUpload setUploadComplete:^(UploadOperation *thumb, TL_inputFile *inputThumbFile) {
                     
-                    media = [TL_inputMediaUploadedThumbDocument createWithFile:input thumb:inputThumbFile mime_type:@"image/jpeg" attributes:nil caption:self.message.media.caption];
+                    media = [TL_inputMediaUploadedThumbDocument createWithFile:input thumb:inputThumbFile mime_type:@"video/mp4" attributes:self.message.media.document.attributes caption:self.message.media.caption];
                     
                     block();
                 }];
@@ -175,7 +191,7 @@
                 [thumbUpload setFileData:thumbData];
                 [thumbUpload ready:UploadImageType];
             } else {
-                media = [TL_inputMediaUploadedDocument createWithFile:input mime_type:mimetypefromExtension(@"mp4") attributes:self.message.media.document.attributes caption:self.message.media.caption];
+                media = [TL_inputMediaUploadedDocument createWithFile:input mime_type:@"video/mp4" attributes:self.message.media.document.attributes caption:self.message.media.caption];
                 block();
             }
         }
@@ -187,7 +203,8 @@
     
     
     [self.uploader setUploadProgress:^(UploadOperation *operation, NSUInteger current, NSUInteger total) {
-        weakSelf.progress =VIDEO_COMPRESSED_PROGRESS + (((float)current/(float)total) * (100.0f - VIDEO_COMPRESSED_PROGRESS));
+        //weakSelf.progress =VIDEO_COMPRESSED_PROGRESS + (((float)current/(float)total) * (100.0f - VIDEO_COMPRESSED_PROGRESS));
+        weakSelf.progress = ((float)current/(float)total) * 100.0f;
     }];
     
     [self.uploader setUploadTypingNeed:^(UploadOperation *operation) {
@@ -198,27 +215,36 @@
         [TGSendTypingManager addAction:[TL_sendMessageUploadVideoAction createWithProgress:weakSelf.progress] forConversation:weakSelf.conversation];
     }];
     
+    self.isCompressed = YES;
     
-    [MessageSender compressVideo:self.path_for_file randomId:[self.message randomId] completeHandler:^(BOOL success,NSString *c) {
-        
-       
-        if(self.state == MessageSendingStateCancelled)
-            return;
-        
-        self.isCompressed = YES;
-        
-        self.path_for_file = c;
-            
-        [self.uploader setFilePath:self.path_for_file];
-        [self.uploader ready:UploadVideoType];
-        
-        [self.message save:YES];
-            
-        ((TL_localMessage *)self.message).media.video.size = self.uploader.total_size;
-        self.state = self.state;
-    } progressHandler:^(float progress) {
-        self.progress = (progress/1.0f) * VIDEO_COMPRESSED_PROGRESS;
-    }];
+    
+    [self.uploader setFilePath:self.path_for_file];
+    [self.uploader ready:UploadVideoType];
+    
+    [self.message save:YES];
+    
+    
+//    [MessageSender compressVideo:self.path_for_file randomId:[self.message randomId] completeHandler:^(BOOL success,NSString *c) {
+//        
+//       
+//        if(self.state == MessageSendingStateCancelled)
+//            return;
+//        
+//        self.isCompressed = YES;
+//        
+//        self.path_for_file = c;
+//            
+//        [self.uploader setFilePath:self.path_for_file];
+//        [self.uploader ready:UploadVideoType];
+//        
+//        [self.message save:YES];
+//        
+//            
+//        ((TL_localMessage *)self.message).media.document.size = self.uploader.total_size;
+//        self.state = self.state;
+//    } progressHandler:^(float progress) {
+//        self.progress = (progress/1.0f) * VIDEO_COMPRESSED_PROGRESS;
+//    }];
 
     
 }

@@ -96,9 +96,9 @@
 
 - (BOOL)performDragOperation:(id <NSDraggingInfo>)sender {
   
-    TL_conversation *dialog = [Telegram rightViewController].messagesViewController.conversation;
+    TL_conversation *dialog = [DraggingControllerView view].navigationController.messagesViewController.conversation;
   
-    return [MessageSender sendDraggedFiles:sender dialog:dialog asDocument:_type == DraggingTypeDocument];
+    return [MessageSender sendDraggedFiles:sender dialog:dialog asDocument:_type == DraggingTypeDocument messagesViewController:[DraggingControllerView view].navigationController.messagesViewController];
 }
 
 

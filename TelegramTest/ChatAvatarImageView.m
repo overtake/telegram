@@ -40,12 +40,10 @@
         [self addSubview:self.progressContainer];
         
         self.sourceType = ChatAvatarSourceGroup;
-        [self setFont:TGSystemLightFont(18)];
+        [self setFont:TGSystemLightFont(30)];
         
         
         _editCamera = imageViewWithImage(image_EditPhotoCamera());
-        
-        
         
         _editBlank = [[TMView alloc] initWithFrame:self.bounds];
         
@@ -154,10 +152,10 @@
     if(self.sourceType == ChatAvatarSourceUser) {
         if(![self.user.photo isKindOfClass:[TL_userProfilePhotoEmpty class]] && self.user.photo != nil) {
             
-            previewObject = [[PreviewObject alloc] initWithMsdId:NSIntegerMax media:[TL_photoSize createWithType:@"x" location:self.user.photo.photo_big w:640 h:640 size:0] peer_id:self.user.n_id];
+            previewObject = [[PreviewObject alloc] initWithMsdId:self.user.photo.photo_id media:[TL_photoSize createWithType:@"x" location:self.user.photo.photo_big w:640 h:640 size:0] peer_id:self.user.n_id];
             
             previewObject.reservedObject = [TGCache cachedImage:self.user.photo.photo_small.cacheKey];
-            
+
             
             [[TGPhotoViewer viewer] show:previewObject user:self.user];
         }
@@ -182,7 +180,7 @@
     NSMenu *menu = [[NSMenu alloc] init];
     
 
-    if(([self.chat isKindOfClass:[TL_channel class]] || [self.chat isKindOfClass:[TL_channel_old43 class]]) && !self.chat.isManager)
+    if(self.chat.isChannel && !self.chat.isManager)
         return;
     else
         if([self.chat isKindOfClass:[TL_chat class]] && !(!self.chat.isAdmins_enabled || self.chat.isAdmin))
@@ -240,7 +238,7 @@
 }
 
 - (void)rebuild {
-    AvatarUpdaterItem *operation = [lockDictionary() objectForKey:@(self.controller.chat.n_id)];
+    AvatarUpdaterItem *operation = [lockDictionary() objectForKey:@(self.chat.n_id)];
     if(operation) {
         [self startUploading:operation withAnimation:NO];
     } else {

@@ -11,6 +11,7 @@
 #import "NSString+Extended.h"
 #import "NSAttributedString+Hyperlink.h"
 #import "TGExternalImageObject.h"
+#import "MessageTableCellPhotoView.h"
 @implementation MessageTableItemPhoto
 
 - (id) initWithObject:(TL_localMessage *)object {
@@ -19,7 +20,6 @@
         
         [self doAfterDownload];
         
-        [self makeSizeByWidth:310];
     }
     return self;
 }
@@ -53,23 +53,11 @@
 
 
 -(BOOL)makeSizeByWidth:(int)width {
-    [super makeSizeByWidth:width];
-    
-    
-    
-    
-    _imageSize = strongsize(self.imageObject.realSize, MIN(MIN_IMG_SIZE.width,width - (self.message.n_out ?  60 : 40)));
+    self.contentSize = strongsize(self.imageObject.realSize, MIN(MIN_IMG_SIZE.width,width));
         
-    if(_caption) {
-        _captionSize = [_caption coreTextSizeForTextFieldForWidth:_imageSize.width ];
-        _captionSize.width = _imageSize.width ;
-    }
+    self.blockSize = NSMakeSize(self.contentSize.width, self.contentSize.height);
     
-    int captionHeight = _captionSize.height ? _captionSize.height + 5 : 0;
-    
-    self.blockSize = NSMakeSize(_imageSize.width, MAX(_imageSize.height + captionHeight,30 + captionHeight));
-    
-    return YES;
+    return [super makeSizeByWidth:width];
 }
 
 -(BOOL)needUploader {
@@ -84,7 +72,6 @@
     if(photo.sizes.count) {
         
         NSImage *cachePhoto;
-        
         for(TLPhotoSize *photoSize in photo.sizes) {
             if([photoSize isKindOfClass:[TL_photoCachedSize class]]) {
                 cachePhoto = [[NSImage alloc] initWithData:photoSize.bytes];
@@ -100,7 +87,6 @@
         
         cachePhoto.size = imageSize;
         
-        
         if(cachePhoto && imageSize.width == MIN_IMG_SIZE.width && imageSize.height == MIN_IMG_SIZE.height && photoSize.w > MIN_IMG_SIZE.width && photoSize.h > MIN_IMG_SIZE.height) {
             
             cachePhoto = [ImageUtils imageResize:cachePhoto newSize:NSMakeSize(photoSize.w, photoSize.h)];
@@ -109,12 +95,17 @@
             
         }
         
-        if(cachePhoto) {
-            cachePhoto = [ImageUtils blurImage:renderedImage(cachePhoto, cachePhoto.size) blurRadius:80 frameSize:cachePhoto.size];
+        if(!cachePhoto) {
+            cachePhoto = white_background_color();
         }
         
-        
         self.imageObject = [[TGImageObject alloc] initWithLocation:photoSize.location placeHolder:cachePhoto sourceId:self.message.n_id size:photoSize.size];
+        
+        if(self.isSecretPhoto) {
+            self.imageObject.imageProcessor = [ImageUtils b_processor];
+        }
+        
+        self.imageObject.thumbProcessor = [ImageUtils b_processor];
         
         self.imageObject.realSize = NSMakeSize(photoSize.w, photoSize.h);
         
@@ -127,22 +118,19 @@
         imageSize.height = MAX(MIN_IMG_SIZE.height,imageSize.height);
     }
     
-    if(self.message.media.caption.length > 0) {
-        NSMutableAttributedString *c = [[NSMutableAttributedString alloc] init];
-        
-        [c appendString:[[self.message.media.caption trim] fixEmoji] withColor:TEXT_COLOR];
-        
-        [c setFont:TGSystemFont(13) forRange:c.range];
-        
-        [c detectAndAddLinks:URLFindTypeHashtags | URLFindTypeLinks | URLFindTypeMentions | (self.user.isBot || self.message.peer.isChat ? URLFindTypeBotCommands : 0)];
-        
-        _caption = c;
-    }
+
     
     self.imageObject.imageSize = imageSize;
     
-    self.previewSize = imageSize;
 }
 
+-(BOOL)isSecretPhoto {
+    return ([self.message isKindOfClass:[TL_destructMessage class]] && ((TL_destructMessage *)self.message).ttl_seconds < 60 && ((TL_destructMessage *)self.message).ttl_seconds > 0);
+}
+
+
+-(Class)viewClass {
+    return [MessageTableCellPhotoView class];
+}
 
 @end

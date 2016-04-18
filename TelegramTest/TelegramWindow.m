@@ -29,6 +29,12 @@
     self = [super initWithContentRect:contentRect styleMask:aStyle backing:bufferingType defer:flag];
     if(self) {
         
+//        self.titleVisibility = NSWindowTitleHidden;
+//        self.titlebarAppearsTransparent = YES;
+//        
+//        self.backgroundColor = [NSColor whiteColor];
+       // self.styleMask |= NSFullSizeContentViewWindowMask;
+        
         
        // self.titlebarColor = [NSColor colorWithCalibratedWhite:1 alpha:1.0];
         //self.enableGradients = NO;

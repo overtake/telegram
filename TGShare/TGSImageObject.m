@@ -96,7 +96,7 @@ static const TGTwoColors colors[] = {
         
         image = renderedImage(imageOrigin, imageOrigin.size);
         
-        image = [TMImageUtils roundedImageNew:image size:self.imageSize];
+        image = [ImageUtils roundedImageNew:image size:self.imageSize];
     }
     
     
@@ -270,7 +270,7 @@ static const TGTwoColors colors[] = {
     
     [image unlockFocus];
     
-    image = [TMImageUtils roundedImageNew:image size:size];
+    image = [ImageUtils roundedImageNew:image size:size];
     return image;
 }
 

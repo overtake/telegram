@@ -13,7 +13,7 @@
 #import "TGAudioPlayer.h"
 #import "TGTimer.h"
 #import "TGAudioPlayerListView.h"
-
+#import "SpacemanBlocks.h"
 
 
 
@@ -351,7 +351,8 @@
 }
 
 -(void)showOrHidePlayList {
-    self.windowState = _windowState == TGAudioPlayerWindowStateMini ? TGAudioPlayerWindowStatePlayList : TGAudioPlayerWindowStateMini;
+    
+    self.windowState = _windowState == TGAudioPlayerWindowStateMini && !self.currentItem.message.isFake ? TGAudioPlayerWindowStatePlayList : TGAudioPlayerWindowStateMini;
 }
 
 -(void)setWindowState:(TGAudioPlayerWindowState)windowState {
@@ -371,7 +372,7 @@
     
     NSRect frame = [self frame];
     
-    float dif = abs(frame.size.height - height);
+    float dif = fabs(frame.size.height - height);
     
     if(frame.size.height > height) {
         frame.origin.y+=dif;
@@ -621,6 +622,14 @@
     [_playListContainerView selectPrev];
 }
 
++(void)nextTrack {
+    [self.instance.playListContainerView selectNext];
+}
+
++(void)prevTrack {
+    [self.instance.playListContainerView selectPrev];
+}
+
 +(void)pause {
     if([self instance].playerState == TGAudioPlayerStatePlaying)
     {
@@ -633,6 +642,10 @@
 +(void)resume {
     if([self instance].playerState == TGAudioPlayerStateForcePaused)
         [[self instance] play:[self instance].currentTime];
+}
+
++(BOOL)isShown {
+    return [self instance].isVisible;
 }
 
 +(BOOL)autoStart {
@@ -698,7 +711,7 @@
     
     self.mouseInWindow = NSPointInRect([_windowContainerView convertPoint:[self convertScreenToBase:[NSEvent mouseLocation]] fromView:nil], _containerView.frame);
     
-    
+    [self globalNotify:audioItem];
     
     if([_currentItem isset]) {
         [_progressView setDisableChanges:NO];
@@ -711,6 +724,51 @@
     
     
     [self updateWithItem:_currentItem];
+    
+}
+
+
+
+
+-(void)globalNotify:(MessageTableItemAudioDocument *)audioItem {
+    
+    static NSUserNotification *sNotify;
+    
+    if(sNotify) {
+        [[NSUserNotificationCenter defaultUserNotificationCenter] removeDeliveredNotification:sNotify];
+    }
+    
+ // `   cancel_delayed_block(handle);
+    
+    sNotify = [[NSUserNotification alloc] init];
+    
+    NSString *name = audioItem.nameAttributedString.string;
+    
+    
+    NSArray *items = [name componentsSeparatedByString:@"\n"];
+    
+    if(items.count > 0)
+        sNotify.title = items[0];
+    else
+        sNotify.title = @"Unknown Artist";
+    if(items.count > 1)
+        sNotify.informativeText = items[1];
+
+    
+    
+    NSImage *image = [self.playListContainerView getAlbumImageFromItem:audioItem];
+    
+    if(image) {
+        [sNotify setValue:image forKey:@"_identityImage"];
+    }
+    
+    
+    
+    [[NSUserNotificationCenter defaultUserNotificationCenter] deliverNotification:sNotify];
+    
+//    handle = perform_block_after_delay(3.0, ^{
+//        [[NSUserNotificationCenter defaultUserNotificationCenter] removeDeliveredNotification:sNotify];
+//    });
     
 }
 

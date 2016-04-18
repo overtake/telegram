@@ -53,7 +53,7 @@ DYNAMIC_PROPERTY(ChatFull);
     
     if(!chatFull)
     {
-        chatFull = [[FullChatManager sharedManager] find:self.n_id];
+        chatFull = [[ChatFullManager sharedManager] find:self.n_id];
         [self setChatFull:chatFull];
     }
     
@@ -172,7 +172,7 @@ static NSTextAttachment *channelVerifySelectedAttachment() {
         [str appendString:[NSString stringWithFormat:@"%d %@", self.participants_count, self.participants_count > 1 ?  NSLocalizedString(@"Conversation.Members", nil) : NSLocalizedString(@"Conversation.Member", nil)] withColor:NSColorFromRGB(0x9b9b9b)];
 
         
-        int online = [[FullChatManager sharedManager] getOnlineCount:self.chatFull];
+        int online = [[ChatFullManager sharedManager] getOnlineCount:self.n_id];
         if(online > 0) {
             [str appendString:@", " withColor:NSColorFromRGB(0x9b9b9b)];
             [str appendString:[NSString stringWithFormat:@"%d %@", online, NSLocalizedString(@"Account.Online", @"")] withColor:NSColorFromRGB(0x9b9b9b)];
@@ -197,7 +197,19 @@ static NSTextAttachment *channelVerifySelectedAttachment() {
         TLChatFull *fullChat = self.chatFull;
         
         if(fullChat.participants_count > 0) {
-            [attributedString appendString:[NSString stringWithFormat:@"%d %@", fullChat.participants_count, fullChat.participants_count > 1 ?  NSLocalizedString(@"Conversation.Members", nil) : NSLocalizedString(@"Conversation.Member", nil)] withColor:NSColorFromRGB(0xa9a9a9)];
+            
+            if(self.isMegagroup && fullChat.participants_count <= 200) {
+                
+                 [attributedString appendString:[NSString stringWithFormat:@"%d %@", fullChat.participants_count, fullChat.participants_count > 1 ?  NSLocalizedString(@"Conversation.Members", nil) : NSLocalizedString(@"Conversation.Member", nil)] withColor:NSColorFromRGB(0xa9a9a9)];
+                
+                int online = [[ChatFullManager sharedManager] getOnlineCount:self.n_id];
+                if(online > 0) {
+                    [attributedString appendString:@", " withColor:NSColorFromRGB(0xa9a9a9)];
+                    [attributedString appendString:[NSString stringWithFormat:@"%d %@", online, NSLocalizedString(@"Account.Online", @"")] withColor:NSColorFromRGB(0x9b9b9b)];
+                }
+            } else
+                [attributedString appendString:[NSString stringWithFormat:@"%d %@", fullChat.participants_count, fullChat.participants_count > 1 ?  NSLocalizedString(@"Conversation.Members", nil) : NSLocalizedString(@"Conversation.Member", nil)] withColor:NSColorFromRGB(0xa9a9a9)];
+            
         } else {
             [attributedString appendString:self.isMegagroup ? NSLocalizedString(@"Conversation.GroupTitle", nil) : NSLocalizedString(@"Conversation.ChannelTitle", nil) withColor:NSColorFromRGB(0xa9a9a9)];
         }
@@ -207,7 +219,7 @@ static NSTextAttachment *channelVerifySelectedAttachment() {
     
     [attributedString appendString:[NSString stringWithFormat:@"%d %@", self.participants_count, self.participants_count > 1 ?  NSLocalizedString(@"Conversation.Members", nil) : NSLocalizedString(@"Conversation.Member", nil)] withColor:NSColorFromRGB(0xa9a9a9)];
     
-    int online = [[FullChatManager sharedManager] getOnlineCount:self.chatFull];
+    int online = [[ChatFullManager sharedManager] getOnlineCount:self.n_id];
     if(online > 0) {
         [attributedString appendString:@", " withColor:NSColorFromRGB(0xa9a9a9)];
         [attributedString appendString:[NSString stringWithFormat:@"%d %@", online, NSLocalizedString(@"Account.Online", @"")] withColor:NSColorFromRGB(0x9b9b9b)];
@@ -225,11 +237,11 @@ static NSTextAttachment *channelVerifySelectedAttachment() {
 }
 
 -(id)inputPeer {
-    return [self isKindOfClass:[TL_channel_old43 class]]|| [self isKindOfClass:[TL_channel class]] || [self isKindOfClass:[TL_channelForbidden class]] ? [TL_inputChannel createWithChannel_id:self.n_id access_hash:self.access_hash] : ([self isKindOfClass:[TL_peerSecret class]] ? [TL_inputEncryptedChat createWithChat_id:self.n_id access_hash:self.access_hash] : nil);
+    return self.isChannel || [self isKindOfClass:[TL_channelForbidden class]] ? [TL_inputChannel createWithChannel_id:self.n_id access_hash:self.access_hash] : ([self isKindOfClass:[TL_peerSecret class]] ? [TL_inputEncryptedChat createWithChat_id:self.n_id access_hash:self.access_hash] : nil);
 }
 
 -(TLPeer *)peer {
-    return [self isKindOfClass:[TL_channel class]] || [self isKindOfClass:[TL_channel_old43 class]] ? [TL_peerChannel createWithChannel_id:self.n_id] : [TL_peerChat createWithChat_id:self.n_id];
+    return self.isChannel ? [TL_peerChannel createWithChannel_id:self.n_id] : [TL_peerChat createWithChat_id:self.n_id];
 }
 
 
@@ -252,7 +264,7 @@ static NSTextAttachment *channelVerifySelectedAttachment() {
 
         
 -(BOOL)isChannel {
-    return [self isKindOfClass:[TL_channel_old43 class]] || [self isKindOfClass:[TL_channel class]] || [self isKindOfClass:[TL_channelForbidden class]];
+    return [self isKindOfClass:[TL_channel_old43 class]] || [self isKindOfClass:[TL_channel class]] || [self isKindOfClass:[TL_channelForbidden class]] || [self isKindOfClass:[TL_channel_old48 class]];
 }
 
 -(BOOL)isManager {

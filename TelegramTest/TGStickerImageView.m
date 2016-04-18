@@ -58,6 +58,10 @@
     [self setNeedsDisplay:YES];
 }
 
+-(NSImage *)cachedImage:(NSString *)key {
+    return [TGCache cachedImage:key group:@[STICKERSCACHE]];
+}
+
 -(void)updateTrackingAreas
 {
     if(_trackingArea != nil) {

@@ -30,7 +30,7 @@
         
         _playImageView = imageViewWithImage(image_PlayButtonBig());
         _playerContainer = [[TMView alloc] initWithFrame:NSZeroRect];
-        [_playerContainer addSubview:_playImageView];
+        
         
         _playerContainer.wantsLayer = YES;
         _playerContainer.layer.cornerRadius = 4;
@@ -40,13 +40,13 @@
         _player = [[TGVTVideoView alloc] initWithFrame:NSMakeRect(0, 0, 500, 280)];
         
         [_playerContainer addSubview:_player];
+        [_playerContainer addSubview:_playImageView];
+        
         
         [self setProgressStyle:TMCircularProgressDarkStyle];
         [self.progressView setImage:image_DownloadIconWhite() forState:TMLoaderViewStateNeedDownload];
         [self.progressView setImage:image_LoadCancelWhiteIcon() forState:TMLoaderViewStateDownloading];
         [self.progressView setImage:image_LoadCancelWhiteIcon() forState:TMLoaderViewStateUploading];
-        
-        
         
     }
     
@@ -59,15 +59,15 @@
     // Drawing code here.
 }
 
-- (void)setCellState:(CellState)cellState {
+- (void)setCellState:(CellState)cellState animated:(BOOL)animated {
     
     if(self.cellState == CellStateSending && cellState == CellStateNormal) {
-        [super setCellState:cellState];
+        [super setCellState:cellState animated:animated];
         
         if(!self.item.isset) {
             [self.item checkStartDownload:0 size:0];
             if(self.item.downloadItem != nil) {
-                [self updateDownloadState];
+                [self updateDownloadState:NO];
             }
         }
     } else if(self.cellState == CellStateDownloading && cellState == CellStateNormal) {
@@ -77,8 +77,7 @@
         }
     }
     
-    [super setCellState:cellState];
-    [self.progressView setState:cellState];
+    [super setCellState:cellState animated:animated];
     
     [_playImageView setHidden:![SettingsArchiver checkMaskedSetting:DisableAutoplayGifSetting] || cellState != CellStateNormal];
     
@@ -103,25 +102,29 @@
     [super setItem:item];
     
     _prevState = NO;
-    [_player setPath:nil];
     
-    [_playerContainer setFrameSize:item.blockSize];
-    [_player setFrameSize:item.blockSize];
+    [_playerContainer setFrameSize:item.contentSize];
+    [_player setFrameSize:item.contentSize];
     
     [_player setImageObject:item.thumbObject];
     
     [self setProgressToView:_playerContainer];
     
     [_playImageView removeFromSuperview];
-    [_playerContainer addSubview:_playImageView];
+    [self.playerContainer addSubview:_playImageView];
+    
     
     [_playImageView setCenterByView:_playImageView.superview];
 
-    [self updateDownloadState];
+    [self updateDownloadState:NO];
     
 }
 
 -(NSMenu *)contextMenu {
+    
+    
+    if([self.item.message isKindOfClass:[TL_destructMessage class]])
+        return [super contextMenu];
     
      MessageTableItemMpeg *item = (MessageTableItemMpeg *) self.item;
     NSMenu *menu = [[NSMenu alloc] initWithTitle:@"Gifs"];
@@ -189,14 +192,13 @@
 
 -(void)_didScrolledTableView:(NSNotification *)notification {
 
-    
     MessageTableItemMpeg *item = (MessageTableItemMpeg *) self.item;
     
     BOOL (^check_block)() = ^BOOL() {
         
-        BOOL completelyVisible = self.visibleRect.size.width > 0 && self.visibleRect.size.height > 0 && ![TMViewController isModalActive];
+        BOOL completelyVisible = self.containerView.visibleRect.size.width > 0 && self.containerView.visibleRect.size.height > 0 ;
         
-        return ![SettingsArchiver checkMaskedSetting:DisableAutoplayGifSetting] && completelyVisible && ((self.window != nil && self.window.isKeyWindow) || notification == nil) && item.isset && ![self inLiveResize];
+        return ![SettingsArchiver checkMaskedSetting:DisableAutoplayGifSetting] && completelyVisible && ((self.containerView.window != nil && appWindow().isKeyWindow)) && item.isset && ![self.containerView inLiveResize];
         
     };
         
@@ -205,11 +207,13 @@
     dispatch_block_t block = ^{
         BOOL nextState = check_block();
         
-        if(_prevState != nextState) {
+        if(_prevState != nextState || [SettingsArchiver checkMaskedSetting:DisableAutoplayGifSetting]) {
             [_player setPath:nextState ? item.path : nil];
+            
+            [_playImageView removeFromSuperview];
+            [self.playerContainer addSubview:_playImageView];
+            [_playImageView setHidden:nextState || ![SettingsArchiver checkMaskedSetting:DisableAutoplayGifSetting]];
         }
-        
-        
         
         _prevState = nextState;
     };
@@ -219,10 +223,7 @@
     else
         _handle = perform_block_after_delay(0.03, block);
 
-
-    
 }
-
 
 
 -(void)mouseUp:(NSEvent *)theEvent {
@@ -231,23 +232,39 @@
     if(item.isset && [SettingsArchiver checkMaskedSetting:DisableAutoplayGifSetting]) {
         
         [_player setPath:_playImageView.isHidden ? nil : item.path];
+        
+        [_playImageView removeFromSuperview];
+        [self.playerContainer addSubview:_playImageView];
         [_playImageView setHidden:!_playImageView.isHidden];
     } else {
         [super mouseUp:theEvent];
     }
 }
 
+-(void)viewDidMoveToSuperview {
+    if(self.superview == nil) {
+        [[NSNotificationCenter defaultCenter] removeObserver:self name:NSViewFrameDidChangeNotification object:nil];
+    } else
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(superViewDidChangedFrame:) name:NSViewFrameDidChangeNotification object:self.superview];
+}
+
+-(void)superViewDidChangedFrame:(NSNotification *)notification {
+    [self _didScrolledTableView:notification];
+}
+
 
 -(void)viewDidMoveToWindow {
-    if(self.window == nil) {
+    if(self.containerView.window == nil) {
         
         [self removeScrollEvent];
         [_player setPath:nil];
         
     } else {
         [self addScrollEvent];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_didScrolledTableView:) name:NSWindowDidBecomeKeyNotification object:self.window];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_didScrolledTableView:) name:NSWindowDidResignKeyNotification object:self.window];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_didScrolledTableView:) name:NSWindowDidBecomeKeyNotification object:self.containerView.window];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_didScrolledTableView:) name:NSWindowDidResignKeyNotification object:self.containerView.window];
+        
+        [self _didScrolledTableView:nil];
     }
 }
 

@@ -7,7 +7,7 @@
 //
 
 #import "MessageTableItemDate.h"
-
+#import "MessageTableCellDateView.h"
 @implementation MessageTableItemDate
 
 -(id)initWithObject:(id)object {
@@ -28,17 +28,18 @@
 
 
 -(BOOL)makeSizeByWidth:(int)width {
-    [super makeSizeByWidth:width];
-    
-    
     _textSize = [_text coreTextSizeForTextFieldForWidth:width];
     
     
-    self.blockSize = NSMakeSize(width, _textSize.height);
+    self.contentSize = self.blockSize = NSMakeSize(width, _textSize.height + self.defaultContentOffset * 2);
     
     
-    return YES;
+    [super makeSizeByWidth:width];
     
+}
+
+-(Class)viewClass {
+    return [MessageTableCellDateView class];
 }
 
 @end

@@ -7,7 +7,7 @@
 //
 
 #import "MessageInputGrowingTextView.h"
-#import "TMImageUtils.h"
+#import "ImageUtils.h"
 #import "MessageSender.h"
 #import "ImageUtils.h"
 #import "TGMentionPopup.h"
@@ -15,6 +15,23 @@
 #import "NSString+FindURLs.h"
 #import "NSString+Extended.h"
 #import "TGBotCommandsPopup.h"
+
+@interface TGHackView : TMView
+
+@end
+
+@implementation TGHackView
+
+-(void)setFrame:(NSRect)frame {
+    [super setFrame:frame];
+}
+
+-(void)setFrameSize:(NSSize)newSize {
+    [super setFrameSize:newSize];
+}
+
+@end
+
 typedef enum {
     PasteBoardItemTypeVideo,
     PasteBoardItemTypeDocument,
@@ -35,12 +52,7 @@ typedef enum {
 }
 
 
-- (void)drawRect:(NSRect)dirtyRect
-{
-    [super drawRect:dirtyRect];
-    
-    // Drawing code here.
-}
+
 
 
 -(BOOL)performDragOperation:(id<NSDraggingInfo>)sender {
@@ -56,7 +68,7 @@ typedef enum {
         
     } else {
         
-        return [MessageSender sendDraggedFiles:sender dialog:[Telegram rightViewController].messagesViewController.conversation asDocument:NO];
+        return [MessageSender sendDraggedFiles:sender dialog:self.controller.conversation asDocument:NO messagesViewController:self.controller];
     
     }
     
@@ -101,7 +113,7 @@ typedef enum {
             if([result intValue] == 1000) {
                 
                 BOOL isMultiple = [files filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.pathExtension.lowercaseString IN (%@)",imageTypes()]].count > 1;
-                [MessageSender sendFilesByPath:files dialog:[Telegram rightViewController].messagesViewController.conversation isMultiple:isMultiple asDocument:NO];
+                [MessageSender sendFilesByPath:files dialog:self.controller.conversation isMultiple:isMultiple asDocument:NO messagesViewController:self.controller];
             }
         }];
         [alert addButtonWithTitle:NSLocalizedString(@"Message.Send", nil)];
@@ -190,53 +202,58 @@ typedef enum {
     
     switch (type) {
         case PasteBoardItemTypeImage:
-            
-            if([[Telegram rightViewController] messagesViewController].conversation.type == DialogTypeSecretChat) {
+        {
+            if(self.controller.conversation.type == DialogTypeSecretChat) {
                 alert = [NSAlert alertWithMessageText:NSLocalizedString(@"Conversation.Confirm.SendThisPicture", nil) informativeText:NSLocalizedString(@"Conversation.Confirm.SendThisPictureDescription", nil) block:^(id result) {
                     if([result intValue] == 1000) {
                         
-                        [[[Telegram rightViewController] messagesViewController] sendImage:image.name forConversation:[[Telegram rightViewController] messagesViewController].conversation file_data:[image TIFFRepresentation]];
+                        [self.controller sendImage:image.name forConversation:self.controller.conversation file_data:[image TIFFRepresentation]];
                         
                     }
                 }];
             } else {
-                 [[[Telegram rightViewController] messagesViewController] sendImage:image.name forConversation:[[Telegram rightViewController] messagesViewController].conversation file_data:[image TIFFRepresentation]];
+                [self.controller sendImage:image.name forConversation:self.controller.conversation file_data:[image TIFFRepresentation]];
             }
             
-           
+            
             break;
+        }
             
         case PasteBoardItemTypeDocument:
+        {
             alert = [NSAlert alertWithMessageText:NSLocalizedString(@"Conversation.Confirm.SendThisFile", nil) informativeText:NSLocalizedString(@"Conversation.Confirm.SendThisFileDescription", nil) block:^(id result) {
                 if([result intValue] == 1000) {
                     
-                    [[[Telegram rightViewController] messagesViewController] sendDocument:path forConversation:[[Telegram rightViewController] messagesViewController].conversation];
+                    [self.controller sendDocument:path forConversation:self.controller.conversation];
                     
                 }
             }];
             break;
+        }
             
         case PasteBoardItemTypeVideo:
+        {
             alert = [NSAlert alertWithMessageText:NSLocalizedString(@"Conversation.Confirm.SendThisVideo", nil) informativeText:NSLocalizedString(@"Conversation.Confirm.SendThisVideoDescription", nil) block:^(id result) {
                 if([result intValue] == 1000) {
                     
-                    [[[Telegram rightViewController] messagesViewController] sendVideo:path forConversation:[[Telegram rightViewController] messagesViewController].conversation];
+                    [self.controller sendVideo:path forConversation:self.controller.conversation];
                     
                 }
             }];
             break;
-            
+
+        }
         case PasteBoardItemTypeGif:
+        {
             alert = [NSAlert alertWithMessageText:NSLocalizedString(@"Conversation.Confirm.SendThisGif", nil) informativeText:NSLocalizedString(@"Conversation.Confirm.SendThisGifDescription", nil) block:^(id result) {
                 if([result intValue] == 1000) {
                     
-                    [[[Telegram rightViewController] messagesViewController] sendDocument:path forConversation:[[Telegram rightViewController] messagesViewController].conversation];
+                    [self.controller sendDocument:path forConversation:self.controller.conversation];
                     
                 }
             }];
             break;
-            
-
+        }
             
         default:
             break;
@@ -265,8 +282,8 @@ typedef enum {
 -(void)checkWebpages {
     
     NSString *link = [self.string webpageLink];
-    
-    [appWindow().navigationController.messagesViewController checkWebpage:link];
+    [_controller.messagesViewController clearNoWebpage];
+    [_controller.messagesViewController checkWebpage:link];
     
 }
 
@@ -283,9 +300,45 @@ typedef enum {
     [self setPlaceholderString:NSLocalizedString(@"Messages.SendPlaceholder", nil)];
 }
 
+-(void)setInline_placeholder:(NSAttributedString *)inline_placeholder {
+    
+    if(![_inline_placeholder isEqualToAttributedString:inline_placeholder]) {
+        _inline_placeholder = inline_placeholder;
+        
+        if(self.inline_placeholder != nil) {
+//            NSMutableAttributedString *str = [self.attributedString mutableCopy];
+//            
+//            [str appendAttributedString:self.inline_placeholder];
+//            
+//            [self setString:@""];
+//            [super insertText:str];
+        }
+        
+        [self setNeedsDisplay:YES];
+    }
+    
+}
+
+
+- (void)drawRect:(NSRect)dirtyRect
+{
+    [super drawRect:dirtyRect];
+    
+    if(self.inline_placeholder) {
+        
+        NSSize size = [self.attributedString sizeForTextFieldForWidth:NSWidth(self.frame)];
+        
+        [self.inline_placeholder drawAtPoint:NSMakePoint(size.width, NSAppKitVersionNumber > NSAppKitVersionNumber10_10_Max ? 6 : 4)];
+    }
+}
+
+
+
 -(void)textDidChange:(NSNotification *)notification {
     
     [super textDidChange:notification];
+    
+    
     
 }
 
@@ -327,6 +380,7 @@ typedef enum {
     if(![[NSUserDefaults standardUserDefaults] boolForKey:@"enableSpelling"]) {
         [self setAutomaticSpellingCorrectionEnabled:YES];
         [self setGrammarCheckingEnabled:YES];
+       // [self setContinuousSpellCheckingEnabled:YES];
         [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"enableSpelling"];
     }
     
@@ -351,9 +405,9 @@ typedef enum {
     //TODO
     __strong MessageInputGrowingTextView *weakSelf = self;
     
-    self.containerView = [[TMView alloc] initWithFrame:self.bounds];
+    self.containerView = [[TGHackView alloc] initWithFrame:self.bounds];
     [self.containerView setDrawBlock:^{
-        NSRect rect = NSMakeRect(1, 1, weakSelf.containerView.bounds.size.width - 2, weakSelf.containerView.bounds.size.height - 2);
+        NSRect rect = NSMakeRect(1, 1, NSWidth(weakSelf.containerView.frame) - 2, NSHeight(weakSelf.containerView.frame) - 2);
         NSBezierPath *circlePath = [NSBezierPath bezierPath];
         [circlePath appendBezierPathWithRoundedRect:rect xRadius:3 yRadius:3];
         [NSColorFromRGB(0xdedede) setStroke];

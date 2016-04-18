@@ -18,7 +18,6 @@
 -(instancetype)initWithFrame:(NSRect)frameRect {
     if(self = [super initWithFrame:frameRect]) {
         _textView = [[TGCTextView alloc] initWithFrame:NSZeroRect];
-        
         [self addSubview:_textView];
         
 

@@ -232,7 +232,7 @@ static long h_r_l;
             [f enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
                 
                 TGAudioRowItem *item = [[TGAudioRowItem alloc] initWithObject:obj];
-                
+                [item performLoadImageObject];
                 item.isSelected = [item hash] == _selectedId;
                 
                 [convert addObject:item];
@@ -372,6 +372,15 @@ static long h_r_l;
         
         _changedAudio([(TGAudioRowItem *)[_tableView itemAtPosition:rowId] document]);
     }];
+}
+
+-(NSImage *)getAlbumImageFromItem:(MessageTableItemAudioDocument *)item {
+    TGAudioRowItem *rowItem  =(TGAudioRowItem *) [_tableView itemByHash:item.message.randomId];
+    
+    NSImage *image = [TGCache cachedImage:rowItem.imageObject.cacheKey];
+    
+    
+    return image;
 }
 
 -(void)receivedMessage:(MessageTableItem *)message position:(int)position itsSelf:(BOOL)force {

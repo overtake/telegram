@@ -23,6 +23,9 @@
 
 @implementation SettingsArchiver
 
+NSString *const kPermissionInlineBotGeo = @"kPermissionInlineBotGeo";
+NSString *const kPermissionInlineBotContact = @"kPermissionInlineBotContact";
+NSString *const kPermissionInlineBotLocationRequest = @"kPermissionInlineBotLocationRequest";
 
 static NSString *kArchivedSettings = @"kArchivedSettings";
 
@@ -360,6 +363,58 @@ static NSString *kArchivedSettings = @"kArchivedSettings";
     });
     
     return instance;
+}
+
+
+
++(void)requestPermissionWithKey:(NSString *)permissionKey peer_id:(int)peer_id handler:(void (^)(bool success))handler {
+    
+    static NSMutableDictionary *denied;
+    
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        denied =  [NSMutableDictionary dictionary];
+    });
+    
+    
+    
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    
+    NSString *key = [NSString stringWithFormat:@"%@:%d",permissionKey,peer_id];
+    
+    BOOL access = [defaults boolForKey:key];
+    
+    
+    if(access) {
+        if(handler)
+            handler(access);
+    } else {
+        
+        if([denied[key] boolValue]) {
+            if(handler)
+                handler(NO);
+            return;
+        }
+        
+        NSString *localizeHeaderKey = [NSString stringWithFormat:@"Confirm.Header.%@",permissionKey];
+        NSString *localizeDescKey = [NSString stringWithFormat:@"Confirm.Desc.%@",permissionKey];
+        confirm(NSLocalizedString(localizeHeaderKey, nil), NSLocalizedString(localizeDescKey, nil), ^{
+            if(handler)
+                handler(YES);
+            
+            [defaults setBool:YES forKey:key];
+            [defaults synchronize];
+        }, ^{
+            if(handler)
+                handler(NO);
+            
+            [denied setValue:@(YES) forKey:key];
+            
+            [defaults setBool:NO forKey:key];
+            [defaults synchronize];
+        });
+    }
+    
 }
 
 @end

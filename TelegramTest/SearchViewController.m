@@ -281,7 +281,7 @@ typedef enum {
         return res;
     }
     
-    if(item && (![item isKindOfClass:[SearchSeparatorItem class]])) {
+    if(item && (![item isKindOfClass:[SearchSeparatorItem class]] && ![item isKindOfClass:[SearchLoadMoreItem class]])) {
         TGConversationTableItem *searchItem = (TGConversationTableItem *)item;
         
         if(searchItem.conversation) {
@@ -713,19 +713,17 @@ static int insertCount = 3;
     
     for(TLChat *chat in searchChats) {
         TL_conversation *dialog = chat.dialog;
-        if(dialog && !dialog.fake && ([chat isKindOfClass:[TLChat class]] && !chat.isDeactivated))
-            [dialogs addObject:dialog];
-        else if ([chat isKindOfClass:[TLChat class]] && !chat.isDeactivated)
-            [dialogsNeedCheck addObject:@(-chat.n_id)];
+        if(!dialog.isInvisibleChannel) {
+            if(dialog && !dialog.fake && ([chat isKindOfClass:[TLChat class]] && !chat.isDeactivated))
+                [dialogs addObject:dialog];
+            else if ([chat isKindOfClass:[TLChat class]] && !chat.isDeactivated)
+                [dialogsNeedCheck addObject:@(-chat.n_id)];
+        }
+        
     }
     
     //Users
-    NSArray *searchUsers = [[UsersManager sharedManager] searchWithString:searchString selector:@"fullName" checker:^BOOL(id object) {
-       
-        TLUser *user = object;
-        
-        return user.isContact;
-    }];
+    NSArray *searchUsers = [[UsersManager sharedManager] searchWithString:searchString selector:@"fullName"];
     
     searchUsers = [searchUsers sortedArrayWithOptions:NSSortStable usingComparator:^NSComparisonResult(TLUser *obj1, TLUser *obj2) {
         if(obj1.lastSeenTime > obj2.lastSeenTime) {
@@ -736,7 +734,7 @@ static int insertCount = 3;
     }];
     
     for(TLUser *user in searchUsers) {
-        TL_conversation *dialog = user.dialog;
+        TL_conversation *dialog = [[DialogsManager sharedManager] find:user.n_id];
         if(dialog && !dialog.fake)
             [dialogs addObject:dialog];
         else

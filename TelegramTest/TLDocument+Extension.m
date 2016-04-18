@@ -65,21 +65,39 @@
     
 }
 
--(BOOL)isSticker {
-    __block BOOL isSticker = NO;
+-(NSArray *)serverAttributes {
     
-    [self.attributes enumerateObjectsUsingBlock:^(TLDocumentAttribute *obj, NSUInteger idx, BOOL *stop) {
-        
-        if([obj isKindOfClass:[TL_documentAttributeSticker class]]) {
-            isSticker = YES;
-            *stop = YES;
-        }
-        
-    }];
+    static NSArray *localAttributes;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        localAttributes = @[NSStringFromClass([TL_documentAttributeLocalFile class])];
+    });
     
-    return isSticker;
+    return [self.attributes filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(id  _Nonnull evaluatedObject, NSDictionary<NSString *,id> * _Nullable bindings) {
+        
+        return [localAttributes indexOfObject:NSStringFromClass([evaluatedObject class])] == NSNotFound;
+        
+    }]];
 }
 
+-(BOOL)isSticker {
+    return [self attributeWithClass:[TL_documentAttributeSticker class]] != nil;
+}
+
+-(BOOL)isVideo {
+    return [self.mime_type hasPrefix:@"video"] && [self attributeWithClass:[TL_documentAttributeVideo class]] != nil && [self attributeWithClass:[TL_documentAttributeAnimated class]] == nil;
+}
+
+-(BOOL)isGif {
+    return [self.mime_type hasPrefix:@"video"] && [self attributeWithClass:[TL_documentAttributeVideo class]] != nil && [self attributeWithClass:[TL_documentAttributeAnimated class]] != nil;
+}
+-(BOOL)isAudio {
+    return ([self.mime_type isEqualToString:@"audio/mpeg"] && [self attributeWithClass:[TL_documentAttributeAudio class]] == nil) || ([self attributeWithClass:[TL_documentAttributeAudio class]] != nil && ![self attributeWithClass:[TL_documentAttributeAudio class]].isVoice);
+}
+
+-(BOOL)isVoice {
+    return ([self.mime_type isEqualToString:@"audio/ogg"] && [self attributeWithClass:[TL_documentAttributeAudio class]] == nil) || ([self attributeWithClass:[TL_documentAttributeAudio class]] != nil && [self attributeWithClass:[TL_documentAttributeAudio class]].isVoice);
+}
 
 -(TL_documentAttributeAudio *)audioAttr {
     return (TL_documentAttributeAudio *) [self attributeWithClass:[TL_documentAttributeAudio class]];

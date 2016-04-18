@@ -167,7 +167,7 @@ static ASQueue *queue;
     
     _imageSize = image.size;
     
-    NSSize maxSize = strongsize(_imageSize, 250);
+    NSSize maxSize = strongsize(_imageSize, MIN_IMG_SIZE.width);
     
     
     if(_imageSize.width > MIN_IMG_SIZE.width && _imageSize.height > MIN_IMG_SIZE.height && maxSize.width == MIN_IMG_SIZE.width && maxSize.height == MIN_IMG_SIZE.height) {

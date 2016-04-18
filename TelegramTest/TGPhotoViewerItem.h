@@ -15,4 +15,11 @@
 @property (nonatomic,strong,readonly) NSString *stringDate;
 -(id)initWithImageObject:(TGImageObject *)imageObject previewObject:(PreviewObject *)previewObject;
 
+-(DownloadItem *)downloadItem;
+-(BOOL)isset;
+
+-(NSSize)size;
+
+-(void)startDownload;
+
 @end

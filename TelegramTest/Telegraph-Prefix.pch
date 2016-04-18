@@ -25,7 +25,6 @@
 #import <MTProtoKit/MTLogging.h>
 #import "TL_destructMessage.h"
 #import "TL_destructMessage45.h"
-#import "TL_outDocument.h"
 #import "TL_secretWebpage.h"
 #import "TL_localMessageService.h"
 #import "TLMessageFwdHeader+Extension.h"
@@ -39,6 +38,7 @@
 #import "TL_broadcast.h"
 #import "TL_messageActionEncryptedChat.h"
 #import "TL_messageActionBotDescription.h"
+#import "TL_localMessageService_old48.h"
 #import "TLUserStatusCategory.h"
 #import "TLClassStore.h"
 #import "UsersManager.h"
@@ -52,11 +52,10 @@
 #import "Storage.h"
 #import "Notification.h"
 #import "ChatsManager.h"
-#import "FullChatManager.h"
+#import "ChatFullManager.h"
 #import "TGDcAuth.h"
 #import "TLDocument+Extension.h"
 #import "TLEncryptedChat+Extensions.h"
-#import "LoopingUtils.h"
 
 #import "MessageSender.h"
 #import "TMElements.h"
@@ -77,10 +76,15 @@
 
 
 #ifdef TGDEBUG
-#define ACCEPT_FEATURE ([@[@"vihor",@"Marvin",@"Ricdallaglio",@"Victor",@"Jdkdkdkdmdmdmx",@"dmitry",@"peter",@"Zlomch",@"MarcoK",@"VitocoEP",@"zinoviev",@"ecstasy",@"Gerardo",@"kondratyevdev",@"Markus",@"Telegrafm",@"doublespb"] indexOfObject:[UsersManager currentUser].username] != NSNotFound)
+#define ACCEPT_FEATURE ([@[@"vihor",@"Marvin",@"Ricdallaglio",@"Victor",@"Jdkdkdkdmdmdmx",@"dmitry",@"peter",@"Zlomch",@"MarcoK",@"VitocoEP",@"zinoviev",@"ecstasy",@"Gerardo",@"kondratyevdev",@"Markus",@"Telegrafm",@"doublespb",@"izhukov",@"requilence",@"nadymov",@"kolar",@"asmico",@"Cooper1",@"MarkusRa"] indexOfObject:[UsersManager currentUser].username] != NSNotFound)
 #else
 #define ACCEPT_FEATURE YES
 #endif
 
+#ifdef TGDEBUG
+#define	TGAssert(e) assert(e)
+#else
+#define TGAssert(e)
+#endif
 
 #endif

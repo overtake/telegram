@@ -16,6 +16,9 @@
 @property (nonatomic, weak) MessageTableItem *item;
 @property (nonatomic, weak) MessagesViewController *messagesViewController;
 
+@property (nonatomic,readonly) BOOL isSelected;
+@property (nonatomic,readonly) BOOL isEditable;
+
 - (void)setHover:(BOOL)isHover redraw:(BOOL)redraw;
 - (void)setItem:(MessageTableItem *)item;
 - (void)resizeAndRedraw;
@@ -27,6 +30,9 @@
 
 -(void)addScrollEvent;
 -(void)removeScrollEvent;
+
+- (void)searchSelection;
+- (void)stopSearchSelection;
 
 -(void)_didScrolledTableView:(NSNotification *)notification;
 

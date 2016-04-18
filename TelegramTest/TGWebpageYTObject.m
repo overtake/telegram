@@ -13,8 +13,8 @@
 
 @synthesize size = _size;
 @synthesize author = _author;
--(id)initWithWebPage:(TLWebPage *)webpage {
-    if(self = [super initWithWebPage:webpage]) {
+-(id)initWithWebPage:(TLWebPage *)webpage tableItem:(MessageTableItem *)item {
+    if(self = [super initWithWebPage:webpage tableItem:item]) {
         
         NSString *sizeInfo = [NSString durationTransformedValue:self.webpage.duration];
         

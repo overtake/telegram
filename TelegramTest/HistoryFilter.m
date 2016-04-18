@@ -20,6 +20,7 @@
 #import "ChannelFilter.h"
 #import "ChannelCommonFilter.h"
 #import "SelfDestructionController.h"
+#import "MessageTableItem.h"
 @interface HistoryFilter ()
 @property (nonatomic,strong,readonly) TGMessageHole *botHole;
 @property (nonatomic,strong,readonly) TGMessageHole *topHole;
@@ -29,6 +30,9 @@
 
 @property (nonatomic,strong) NSMutableArray *messageItems;
 @property (nonatomic,strong) NSMutableDictionary *messageKeys;
+
+
+
 @end
 
 @implementation HistoryFilter
@@ -281,7 +285,7 @@
     
     TL_conversation *conversation = [[DialogsManager sharedManager] find:self.peer_id];
     
-    if(self.prevState != ChatHistoryStateFull && (conversation.top_message <= self.server_max_id || conversation.top_message == 0))
+    if(self.prevState != ChatHistoryStateFull && (conversation.top_message <= self.server_max_id || conversation.top_message == 0 || (conversation.top_message > TGMINFAKEID && conversation.last_message_date <= self.maxDate)))
         [self setState:ChatHistoryStateFull next:NO];
     
     return converted;

@@ -15,12 +15,13 @@
 
 @property (nonatomic,assign) BOOL canSendStickerAlways;
 
--(void)removeSticker:(TL_outDocument *)document;
 -(void)load:(BOOL)force;
 
 @property (nonatomic,strong) dispatch_block_t didNeedReload;
 
 -(void)showWithStickerPack:(TL_messages_stickerSet *)stickerPack;
+
+@property (nonatomic,weak) MessagesViewController *messagesViewController;
 
 -(NSDictionary *)allStickers;
 -(NSArray *)sets;

@@ -141,33 +141,49 @@
     
     if(NSIsEmptyRect([_stickers visibleRect]))
         return;
+
     
-    id fItem =  [_stickers itemAtPosition:MIN([_stickers rowsInRect:[_stickers visibleRect]].location,_stickers.count-1)];
-    
-    long packId = [[fItem valueForKey:@"packId"] longValue];
-    
-    if(packId != _selectedItem.packId) {
-        [_packsContainerView.subviews enumerateObjectsUsingBlock:^(TGStickerPackButton *obj, NSUInteger idx, BOOL *stop) {
-            
-            if(obj.packId == packId) {
-                [self didSelected:obj scrollToPack:NO selectItem:YES];
+    @try {
+        id fItem =  [_stickers itemAtPosition:MIN([_stickers rowsInRect:[_stickers visibleRect]].location,_stickers.count-1)];
+        
+        long packId = [[fItem valueForKey:@"packId"] longValue];
+        
+        if(packId != _selectedItem.packId) {
+            [_packsContainerView.subviews enumerateObjectsUsingBlock:^(TGStickerPackButton *obj, NSUInteger idx, BOOL *stop) {
                 
+                if(obj.packId == packId) {
+                    [self didSelected:obj scrollToPack:NO selectItem:YES];
+                    
+                    
+                    *stop = YES;
+                }
                 
-                *stop = YES;
-            }
-            
-        }];
+            }];
+        }
     }
+    @catch (NSException *exception) {
+        
+    }
+    
+
     
 }
 
 -(void)removeAllItems {
     [_stickers removeAllItems:NO];
+    
+    dispatch_block_t block =  _stickers.didNeedReload;
+    
+    _stickers.didNeedReload = nil;
+    
     [_stickers reloadData];
+    
+    _stickers.didNeedReload = block;
 }
 
 -(void)reload {
-    [self reload:YES];
+    if(self.window &&! NSIsEmptyRect(self.visibleRect))
+        [self reload:YES];
 }
 
 -(void)reload:(BOOL)reloadStickers {

@@ -8,7 +8,7 @@
 
 #import <Cocoa/Cocoa.h>
 #import <MapKit/MapKit.h>
-
+@class MessagesViewController;
 @interface TMMapView : MKMapView
 
 @end
@@ -20,6 +20,11 @@
 @interface MapPanel : NSPanel
 
 + (MapPanel *)sharedPanel;
+
+
+@property (nonatomic,weak) MessagesViewController *messagesViewController;
+
+-(void)loadUserLocation:(void (^)(CLLocationCoordinate2D coordinate2d))successCallback failback:(void (^)(NSError *error))errorCallback dispatchAfterFind:(BOOL)dispatchAfterFind;
 
 -(void)update;
 

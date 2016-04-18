@@ -184,9 +184,11 @@
             size = [TL_photoSizeEmpty createWithType:thumbName];
         }
         
+        TL_documentAttributeLocalFile *fileAttr = [TL_documentAttributeLocalFile createWithFile_path:path];
         
+        [attrs addObject:fileAttr];
         
-        TL_messageMediaDocument *document = [TL_messageMediaDocument createWithDocument:[TL_outDocument createWithN_id:randomId access_hash:0 date:[[MTNetwork instance] getTime] mime_type:self.mimeType size:(int)fileSize(self.filePath) thumb:size dc_id:0 file_path:self.filePath attributes:attrs] caption:@""];
+        TL_messageMediaDocument *document = [TL_messageMediaDocument createWithDocument:[TL_document createWithN_id:randomId access_hash:0 date:[[MTNetwork instance] getTime] mime_type:self.mimeType size:(int)fileSize(self.filePath) thumb:size dc_id:0 attributes:attrs] caption:@""];
         
         self.message = [MessageSender createOutMessage:@"" media:document conversation:conversation additionFlags:additionFlags];
        
@@ -269,9 +271,9 @@
    
     if(isNewDocument) {
         if([self.thumbFile isKindOfClass:[TLInputFile class]]) {
-            media = [TL_inputMediaUploadedThumbDocument createWithFile:self.inputFile thumb:self.thumbFile mime_type:self.message.media.document.mime_type attributes:self.message.media.document.attributes caption:@""];
+            media = [TL_inputMediaUploadedThumbDocument createWithFile:self.inputFile thumb:self.thumbFile mime_type:self.message.media.document.mime_type attributes:self.message.media.document.serverAttributes caption:@""];
         } else {
-            media = [TL_inputMediaUploadedDocument createWithFile:self.inputFile mime_type:self.message.media.document.mime_type attributes:self.message.media.document.attributes caption:@""];
+            media = [TL_inputMediaUploadedDocument createWithFile:self.inputFile mime_type:self.message.media.document.mime_type attributes:self.message.media.document.serverAttributes caption:@""];
         }
     } else {
         TLDocument *document = (TLDocument *)self.inputFile;
@@ -332,7 +334,6 @@
             message.media.document.size = [msg media].document.size;
             message.media.document.access_hash = [msg media].document.access_hash;
             message.media.document.n_id = [msg media].document.n_id;
-            message.media.document.attributes = msg.media.document.attributes;
             
             if([message.media.document isKindOfClass:[TL_compressDocument class]]) {
                 message.media = [msg media];

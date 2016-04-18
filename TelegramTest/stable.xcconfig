@@ -1,0 +1,13 @@
+//
+//  stable.xcconfig
+//  Telegram
+//
+//  Created by keepcoder on 29/03/16.
+//  Copyright © 2016 keepcoder. All rights reserved.
+//
+
+DSA_PEM_FILE = dsa_pub_prod.pem
+
+SIMPLE_SLASH=/
+
+SFEED_URL = http:$(SIMPLE_SLASH)/tgupdate.comli.com/versions.xml

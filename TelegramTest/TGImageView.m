@@ -48,8 +48,10 @@
         self.image = image;
         return;
     }
+    
+    image = [self cachedThumb:[object cacheKey]];
         
-    self.image = [self cachedThumb:[object cacheKey]];
+    self.image = image;
   
     object.delegate = self;
     
@@ -60,10 +62,8 @@
 
 -(void)didDownloadImage:(NSImage *)newImage object:(ImageObject *)object {
     if([[object cacheKey] isEqualToString:[self.object cacheKey]]) {
-        if(object.class != NSClassFromString(@"TGPVImageObject"))
-            [self addAnimation:contentAnimation() forKey:@"contents"];
-        [self setImage:newImage];
-        
+        [self addAnimation:contentAnimation() forKey:@"contents"];
+        self.image = newImage;
     }
 }
 
@@ -133,7 +133,7 @@
     }
 }
 
-static CAAnimation *contentAnimation() {
+CAAnimation *contentAnimation() {
     static CAAnimation *animation;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{

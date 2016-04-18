@@ -4,4 +4,7 @@
 +(id)hyperlinkFromString:(NSString*)inString withURL:(NSURL*)aURL;
 -(NSArray *)detectAndAddLinks:(URLFindType)urlType;
 -(void)detectBoldColorInStringWithFont:(NSFont *)font;
+
+-(void)fixEmoji;
+
 @end

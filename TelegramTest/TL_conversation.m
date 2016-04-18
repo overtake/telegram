@@ -151,7 +151,7 @@
         if(self.type == DialogTypeChannel) {
             
             if(self.isInvisibleChannel) {
-                return NSLocalizedString(@"Conversation.Action.JoinToChannel", nil);
+                return NSLocalizedString(@"Conversation.Action.Join", nil);
             }
             
             if(self.chat.isKicked || self.chat.left || self.chat.type == TLChatTypeForbidden) {
@@ -416,7 +416,7 @@ static void *kType;
 }
 
 - (TLChatFull *)fullChat {
-    return [[FullChatManager sharedManager] find:[self chat].n_id];
+    return self.chat.chatFull;
 }
 
 -(long)channel_top_message_id {
@@ -471,6 +471,10 @@ static void *kType;
 
 -(BOOL)needRemoveFromIdBeforeSend {
     return self.type == DialogTypeChannel && !self.chat.isMegagroup && !self.chat.isSignatures;
+}
+
+-(void)setPts:(int)pts {
+    [super setPts:pts];
 }
 
 @end

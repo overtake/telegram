@@ -17,4 +17,12 @@
     }
     return self;
 }
+
+-(BOOL)instantlySave {
+    return NO;
+}
+-(BOOL)checkSize {
+    return NO;
+}
+
 @end

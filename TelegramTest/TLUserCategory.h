@@ -27,7 +27,7 @@ typedef enum {
 - (BOOL)isBlocked;
 - (void)rebuildNames;
 - (void)rebuidStatuses;
-
+- (BOOL)isServiceUser;
 
 -(BOOL)isBot;
 

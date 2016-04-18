@@ -69,6 +69,8 @@
         return ((TL_updateNewChannelMessage *)update).message.to_id.channel_id;
     }  else if([update isKindOfClass:[TL_updateDeleteChannelMessages class]]) {
         return [(TL_updateDeleteChannelMessages *)update channel_id];
+    } else if([update isKindOfClass:[TL_updateChannelTooLong class]]) {
+        return [(TL_updateChannelTooLong *)update channel_id];
     }
     
     return 0;
@@ -91,13 +93,14 @@
         dispatch_once(&onceToken, ^{
             
             statefullUpdates = @[NSStringFromClass([TL_updateNewChannelMessage class]),NSStringFromClass([TL_updateDeleteChannelMessages class]),NSStringFromClass([TL_updateEditChannelMessage class])];
-            statelessUpdates = @[NSStringFromClass([TL_updateReadChannelInbox class]),NSStringFromClass([TL_updateChannelTooLong class]),NSStringFromClass([TL_updateChannelGroup class]),NSStringFromClass([TL_updateChannelMessageViews class]),NSStringFromClass([TL_updateChannel class])];
+            statelessUpdates = @[NSStringFromClass([TL_updateReadChannelInbox class]),NSStringFromClass([TL_updateChannelTooLong class]),NSStringFromClass([TL_updateChannelGroup class]),NSStringFromClass([TL_updateChannelMessageViews class]),NSStringFromClass([TL_updateChannel class]),NSStringFromClass([TL_updateChannelPinnedMessage class])];
         });
+        
         
         if([statefullUpdates indexOfObject:[update className]] != NSNotFound)
         {
-            
-            if(_channelsInUpdating[@([self channelIdWithUpdate:update])] == nil) {
+           
+             if(_channelsInUpdating[@([self channelIdWithUpdate:update])] == nil) {
                 [self addStatefullUpdate:[[TGUpdateChannelContainer alloc] initWithPts:[update pts] pts_count:[update pts_count] channel_id:[self channelIdWithUpdate:update] update:update]];
             }
             
@@ -123,8 +126,15 @@
         return;
     }
     
+    TL_conversation *channel = [[ChatsManager sharedManager] find:statefulMessage.channel_id];
     
-    [self addWaitingUpdate:statefulMessage];
+    if(channel) {
+        [self addWaitingUpdate:statefulMessage];
+    } else {
+        [[MTNetwork instance].updateService update];
+    }
+    
+    
     
 }
 
@@ -155,7 +165,12 @@
         {
             [success addObject:statefullMessage];
             
-            [self proccessStatefullUpdate:statefullMessage];
+            BOOL success = [self proccessStatefullUpdate:statefullMessage];
+            
+            if(!success)
+            {
+                *stop = YES;
+            }
         }
         
     }];
@@ -173,11 +188,17 @@
             [_channelWaitingTimers removeObjectForKey:@(statefullMessage.channel_id)];
         }
         
+        weak();
+        
         timer = [[TGTimer alloc] initWithTimeout:2 repeat:NO completion:^{
             
-            [self failUpdateWithChannelId:statefullMessage.channel_id limit:50 withCallback:nil errorCallback:nil];
+            [weakSelf.channelWaitingUpdates removeAllObjects];
+            
+            [weakSelf failUpdateWithChannelId:statefullMessage.channel_id limit:50 withCallback:nil errorCallback:nil];
             
         } queue:_queue.nativeQueue reservedObject:@(statefullMessage.channel_id)];
+        
+        _channelWaitingTimers[@(statefullMessage.channel_id)] = timer;
         
         [timer start];
     }
@@ -250,40 +271,56 @@
     
 }
 
--(void)proccessUpdate:(id)update {
+-(BOOL)proccessUpdate:(id)update {
+    
+    
+    if(![update isKindOfClass:[TL_updateChannel class]]) {
+        
+        TL_conversation *conversation = [self conversationWithChannelId:[self channelIdWithUpdate:update]];
+        
+        if(conversation && conversation.isInvisibleChannel) {
+            
+            [self proccessUpdate:[TL_updateChannel createWithChannel_id:[self channelIdWithUpdate:update]]];
+            
+            return YES;
+            
+        }
+        
+    }
+    
     if([update isKindOfClass:[TL_updateNewChannelMessage class]])
     {
         
-        TL_localMessage *msg = [TL_localMessage convertReceivedMessage:[(TL_updateNewChannelMessage *)update message]];
+        TL_localMessage *message = [TL_localMessage convertReceivedMessage:[(TL_updateNewChannelMessage *)update message]];
         
-        if(![self conversationWithChannelId:abs(msg.peer_id)]) {
-            [self proccessUpdate:[TL_updateChannel createWithChannel_id:abs(msg.peer_id)]];
-            return;
-        }
         
-
-        if(![msg isImportantMessage]) {
+        if(![[UsersManager sharedManager] find:message.from_id] || (message.fwd_from != nil && !message.fwdObject) || (message.via_bot_id != 0 && ![[UsersManager sharedManager] find:message.via_bot_id])) {
             
-            TGMessageGroupHole *hole = [self proccessUnimportantGroup:@[msg]];
+            
+            [self failUpdateWithChannelId:[self channelIdWithUpdate:update] limit:50 withCallback:nil errorCallback:nil];
+            return NO;
+        }
+
+        if(![message isImportantMessage]) {
+            
+            TGMessageGroupHole *hole = [self proccessUnimportantGroup:@[message]];
             
             [Notification performOnStageQueue:UPDATE_MESSAGE_GROUP_HOLE data:@{KEY_GROUP_HOLE:hole}];
             
         }
         
         
-        [MessagesManager addAndUpdateMessage:msg];
+        [MessagesManager addAndUpdateMessage:message];
         
     } else if([update isKindOfClass:[TL_updateEditChannelMessage class]]) {
       
-        
         TL_localMessage *msg = [TL_localMessage convertReceivedMessage:[(TL_updateEditChannelMessage *)update message]];
+        
+        if(msg)
+            [[Storage manager] addSupportMessages:@[msg]];
         
         TL_conversation *conversation = [self conversationWithChannelId:abs(msg.peer_id)];
         
-        if(!conversation) {
-            [self proccessUpdate:[TL_updateChannel createWithChannel_id:abs(msg.peer_id)]];
-            return;
-        }
         
         [[Storage manager] addHolesAroundMessage:msg];
         
@@ -312,6 +349,8 @@
         
         [[DialogsManager sharedManager] deleteChannelMessags:channelMessages];
 
+        
+        
         
         [[update messages] enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
             
@@ -371,14 +410,18 @@
         
     } else if([update isKindOfClass:[TL_updateChannelTooLong class]]) {
         
-        [self failUpdateWithChannelId:[update channel_id] limit:1 withCallback:nil errorCallback:nil];
+        TL_conversation *channel = [self conversationWithChannelId:[self channelIdWithUpdate:update]];
+        
+        if(channel) {
+             [self failUpdateWithChannelId:[update channel_id] limit:10 withCallback:nil errorCallback:nil];
+        }
         
         
     } else if([update isKindOfClass:[TL_updateChannelMessageViews class]]) {
         
         TL_updateChannelMessageViews *views = (TL_updateChannelMessageViews *)update;
         
-        [[Storage manager] updateMessageViews:views.views channelMsgId:channelMsgId(views.n_id, views.peer.peer_id)];
+        [[Storage manager] updateMessageViews:views.views channelMsgId:channelMsgId(views.n_id, -views.channel_id)];
         
         [Notification perform:UPDATE_MESSAGE_VIEWS data:@{KEY_DATA:@{@(views.n_id):@(views.views)},KEY_MESSAGE_ID_LIST:@[@(views.n_id)],KEY_PEER_ID:@(-views.channel_id)}];
         
@@ -394,7 +437,7 @@
         
         
         if(!chat)
-            return;
+            return NO;
         
         TL_conversation *channel = [self conversationWithChannelId:[update channel_id]];
         
@@ -415,7 +458,7 @@
         dispatch_block_t dispatch = ^{
             if(!chat.left && chat.type != TLChatTypeForbidden) {
                 
-                [[FullChatManager sharedManager] performLoad:chat.n_id callback:^(TLChatFull *fullChat) {
+                [[ChatFullManager sharedManager] requestChatFull:chat.n_id withCallback:^(TLChatFull *fullChat) {
                    
                     if(fullChat.migrated_from_chat_id == 0) {
                         [RPCRequest sendRequest:[TLAPI_channels_getParticipant createWithChannel:chat.inputPeer user_id:[[UsersManager currentUser] inputUser]] successHandler:^(id request, TL_channels_channelParticipant *participant) {
@@ -423,7 +466,7 @@
                             [SharedManager proccessGlobalResponse:participant];
                             
                             if([participant.participant isKindOfClass:[TL_channelParticipantSelf class]]) {
-                                TL_localMessage *msg = [TL_localMessageService createWithFlags:TGMENTIONMESSAGE n_id:0 from_id:[participant.participant inviter_id] to_id:channel.peer date:participant.participant.date action:([TL_messageActionChatAddUser createWithUsers:[@[@([UsersManager currentUserId])] mutableCopy]]) fakeId:[MessageSender getFakeMessageId] randomId:rand_long() dstate:DeliveryStateNormal];
+                                TL_localMessage *msg = [TL_localMessageService createWithFlags:TGMENTIONMESSAGE n_id:0 from_id:[participant.participant inviter_id] to_id:channel.peer reply_to_msg_id:0 date:participant.participant.date action:([TL_messageActionChatAddUser createWithUsers:[@[@([UsersManager currentUserId])] mutableCopy]]) fakeId:[MessageSender getFakeMessageId] randomId:rand_long() dstate:DeliveryStateNormal];
                                 
                                 channel.invisibleChannel = NO;
                                 
@@ -483,22 +526,34 @@
             }];
         }
     
+    } else if([update isKindOfClass:[TL_updateChannelPinnedMessage class]]) {
+        TLChatFull *chat = [[ChatFullManager sharedManager] find:[update channel_id]];
+        
+        chat.pinned_msg_id = [(TL_updateChannelPinnedMessage *)update n_id];
+        
+        [Notification perform:UPDATE_PINNED_MESSAGE data:@{KEY_PEER_ID:@(-[update channel_id]),KEY_MESSAGE_ID:@(chat.pinned_msg_id)}];
     }
 
+    
+    return YES;
 }
 
 
--(void)proccessStatefullUpdate:(TGUpdateChannelContainer *)statefulMessage {
+-(BOOL)proccessStatefullUpdate:(TGUpdateChannelContainer *)statefulMessage {
     
-    [self proccessUpdate:statefulMessage.update];
+    BOOL success = [self proccessUpdate:statefulMessage.update];
     
-    if(statefulMessage.pts > 0) {
-        TL_conversation *conversation = [self conversationWithChannelId:statefulMessage.channel_id];
-        
-        conversation.pts = [statefulMessage pts];
-        
-        [conversation save];
+    if(success) {
+        if(statefulMessage.pts > 0) {
+            TL_conversation *conversation = [self conversationWithChannelId:statefulMessage.channel_id];
+            
+            conversation.pts = [statefulMessage pts];
+            
+            [conversation save];
+        }
     }
+    
+    return success;
     
 }
 
@@ -591,9 +646,7 @@
                         [[DialogsManager sharedManager] notifyAfterUpdateConversation:conversation];
                         
                         
-                        
-                        
-                        
+ 
                         
                         // insert holes
                         {

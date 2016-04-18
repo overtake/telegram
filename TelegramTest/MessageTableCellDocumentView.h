@@ -6,20 +6,16 @@
 //  Copyright (c) 2014 keepcoder. All rights reserved.
 //
 
-#import "MessageTableCellContainerView.h"
+#import "TGModernMessageCellContainerView.h"
 #import "MessageTableItemDocument.h"
 #import "TGImageView.h"
 
 #import "DownloadQueue.h"
 
-@interface DocumentThumbImageView : TGImageView
 
-@end
+@interface MessageTableCellDocumentView : TGModernMessageCellContainerView
 
-@interface MessageTableCellDocumentView : MessageTableCellContainerView<TMHyperlinkTextFieldDelegate>
+@property (nonatomic, strong) TGImageView *thumbView;
 
-@property (nonatomic, strong) DocumentThumbImageView *thumbView;
-
-- (void)redrawThumb:(NSImage *)image;
 
 @end

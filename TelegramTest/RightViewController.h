@@ -8,11 +8,8 @@
 
 #import <Cocoa/Cocoa.h>
 #import "MessagesViewController.h"
-#import "UserInfoViewController.h"
-#import "ChatInfoViewController.h"
 #import "TMCollectionPageController.h"
 #import "HistoryFilter.h"
-#import "BroadcastInfoViewController.h"
 #import "ComposeAction.h"
 #import "ComposePickerViewController.h"
 #import "ComposeChatCreateViewController.h"
@@ -43,12 +40,10 @@
 #import "CacheSettingsViewController.h"
 #import "NotificationSettingsViewController.h"
 #import "ComposeCreateChannelViewController.h"
-#import "ChannelInfoViewController.h"
 #import "ComposeCreateChannelUserNameStepViewController.h"
 #import "ComposeConfirmModeratorViewController.h"
 #import "ComposeManagmentViewController.h"
 #import "ComposeChannelParticipantsViewController.h"
-#import "ComposeSettingupNewChannelViewController.h"
 @class MainViewController;
 @class LeftViewController;
 
@@ -60,9 +55,6 @@
 
 
 @property (nonatomic, strong) MessagesViewController *messagesViewController;
-@property (nonatomic, strong) UserInfoViewController *userInfoViewController;
-@property (nonatomic, strong) ChatInfoViewController *chatInfoViewController;
-@property (nonatomic, strong) BroadcastInfoViewController *broadcastInfoViewController;
 @property (nonatomic, strong) TMCollectionPageController *collectionViewController;
 @property (nonatomic, strong) ComposePickerViewController *composePickerViewController;
 @property (nonatomic, strong) ComposeChatCreateViewController *composeChatCreateViewController;
@@ -91,12 +83,10 @@
 @property (nonatomic, strong) CacheSettingsViewController *cacheSettingsViewController;
 @property (nonatomic, strong) NotificationSettingsViewController *notificationSettingsViewController;
 @property (nonatomic, strong) ComposeCreateChannelViewController *composeCreateChannelViewController;
-@property (nonatomic, strong) ChannelInfoViewController *channelInfoViewController;
 @property (nonatomic, strong) ComposeCreateChannelUserNameStepViewController *composeCreateChannelUserNameStepViewController;
 @property (nonatomic, strong) ComposeConfirmModeratorViewController *composeConfirmModeratorViewController;
 @property (nonatomic,strong) ComposeManagmentViewController *composeManagmentViewController;
 @property (nonatomic,strong) ComposeChannelParticipantsViewController *composeChannelParticipantsViewController;
-@property (nonatomic,strong) ComposeSettingupNewChannelViewController *composeSettingupNewChannelViewController;
 
 - (void)modalViewSendAction:(id)object;
 - (BOOL)isModalViewActive;
@@ -106,6 +96,7 @@
 
 - (void)showShareContactModalView:(TLUser *)user;
 - (void)showForwardMessagesModalView:(TL_conversation *)dialog messagesCount:(NSUInteger)messagesCount;
+- (void)showInlineBotSwitchModalView:(TLUser *)user keyboard:(TLKeyboardButton *)keyboard;
 - (void)showShareLinkModalView:(NSString *)url text:(NSString *)text;
 
 
@@ -167,7 +158,6 @@
 
 -(void)showComposeChannelParticipants:(ComposeAction *)action;
 
--(void)showComposeSettingsupNewChannel:(ComposeAction *)action;
 
 - (void)showChatInviteController;
 @end

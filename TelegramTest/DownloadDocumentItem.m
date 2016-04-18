@@ -19,7 +19,7 @@
     if(self = [super initWithObject:object]) {
         self.isEncrypted = [object isKindOfClass:[TL_destructMessage class]];
         self.n_id = self.document.n_id;
-        self.path = non_documents_mime_types()[self.document.mime_type] != nil ? mediaFilePath(object) :  [NSString stringWithFormat:@"%@/%lu.download",[SettingsArchiver documentsFolder],self.document.n_id];
+        self.path =  [NSString stringWithFormat:@"%@/%lu.download",[SettingsArchiver documentsFolder],self.document.n_id];
         self.fileType = DownloadFileDocument;
         self.dc_id = self.document.dc_id;
         self.size =  self.document.size;
@@ -39,47 +39,17 @@
 
 -(void)setDownloadState:(DownloadState)downloadState {
     if(self.downloadState != DownloadStateCompleted && downloadState == DownloadStateCompleted) {
+       
         NSString *old_path = self.path;
         
-        TL_localMessage *message = self.object;
+        self.path = mediaFilePath(self.object);
         
-        if(non_documents_mime_types()[message.media.document.mime_type] == nil) {
-            
-            self.path = mediaFilePath(self.object);
-            
-            NSError *error = nil;
-            
-            [[NSFileManager defaultManager] moveItemAtPath:old_path toPath:self.path error:&error];
-            
-            if(![self.path isEqualToString:old_path] && error && error.code == 516) {
-                [[NSFileManager defaultManager] removeItemAtPath:old_path error:&error];
-            }
-            
-            if(message.n_id > 0) {
-                TL_outDocument *document = [TL_outDocument outWithDocument:self.document file_path:self.path];
-                
-                
-                TL_documentAttributeAudio *attr = (TL_documentAttributeAudio *) [document attributeWithClass:[TL_documentAttributeAudio class]];
-                
-                if(attr && !attr.performer.length == 0 && attr.title.length == 0) {
-                    
-                    AVURLAsset *asset = [AVURLAsset assetWithURL:[NSURL fileURLWithPath:self.path]];
-                    NSDictionary *tags = audioTags(asset);
-                    
-                    attr.title = tags[@"songName"];
-                    attr.performer = tags[@"artist"];
-                    
-                }
-                
-                if([message.media isKindOfClass:[TL_messageMediaBotResult class]])
-                    message.media.bot_result.document = document;
-                else
-                    message.media.document = document;
-                
-                [[Storage manager] addHolesAroundMessage:message];
-                
-                [message save:NO];
-            }
+        NSError *error = nil;
+        
+        [[NSFileManager defaultManager] moveItemAtPath:old_path toPath:self.path error:&error];
+        
+        if(![self.path isEqualToString:old_path] && error && error.code == 516) {
+            [[NSFileManager defaultManager] removeItemAtPath:old_path error:&error];
         }
         
     }
@@ -96,8 +66,4 @@
 
 @end
 
-/*
- 
- 
- 
- */
+

@@ -66,7 +66,7 @@ static NSArray *channelUpdates;
         
         dispatch_once(&onceToken, ^{
             
-            channelUpdates = @[NSStringFromClass([TL_updateNewChannelMessage class]),NSStringFromClass([TL_updateReadChannelInbox class]),NSStringFromClass([TL_updateDeleteChannelMessages class]),NSStringFromClass([TGForceChannelUpdate class]),NSStringFromClass([TL_updateChannelTooLong class]),NSStringFromClass([TL_updateChannelGroup class]),NSStringFromClass([TL_updateChannelMessageViews class]),NSStringFromClass([TL_updateChannel class]),NSStringFromClass([TL_updateEditChannelMessage class])];
+            channelUpdates = @[NSStringFromClass([TL_updateNewChannelMessage class]),NSStringFromClass([TL_updateReadChannelInbox class]),NSStringFromClass([TL_updateDeleteChannelMessages class]),NSStringFromClass([TGForceChannelUpdate class]),NSStringFromClass([TL_updateChannelTooLong class]),NSStringFromClass([TL_updateChannelGroup class]),NSStringFromClass([TL_updateChannelMessageViews class]),NSStringFromClass([TL_updateChannel class]),NSStringFromClass([TL_updateEditChannelMessage class]),NSStringFromClass([TL_updateChannelPinnedMessage class])];
         });
         
         queue = q;
@@ -149,10 +149,12 @@ static NSArray *channelUpdates;
             } else if([update respondsToSelector:@selector(update)] && [channelUpdates indexOfObject:[[(TL_updateShort *)update update] className]] != NSNotFound) {
                 [_channelsUpdater addUpdate:[(TL_updateShort *)update update]];
                 
-                [_updateState setDate:[(TL_updateShort *)update date]];
-                [self saveUpdateState];
+               // [_updateState setDate:[(TL_updateShort *)update date]];
+              //  [self saveUpdateState];
                 return;
             }
+            
+           
             
             if([update isKindOfClass:[TL_updates class]]) {
                 
@@ -174,7 +176,7 @@ static NSArray *channelUpdates;
                 
             }
             
-            if([update isKindOfClass:[TL_messages_affectedMessages class]]) {
+            if([update isKindOfClass:[TL_messages_affectedMessages class]] || [update isKindOfClass:[TL_messages_affectedHistory class]]) {
                 
                 [self addStatefullUpdate:update seq:0 pts:[update pts] date:0 qts:0 pts_count:[update pts_count]];
                 
@@ -252,24 +254,26 @@ static NSArray *channelUpdates;
     TGUpdateContainer *statefulMessage = [[TGUpdateContainer alloc] initWithSequence:seq pts:pts date:date qts:qts pts_count:pts_count update:update];
     
    
-    if(statefulMessage.pts > 0 && ((_updateState.pts + statefulMessage.pts_count == statefulMessage.pts) || _updateState.pts >= statefulMessage.pts) && !_holdUpdates) {
-        [self proccessStatefulMessage:statefulMessage needSave:YES];
-        return;
-    }
-    
-    if(statefulMessage.qts > 0 && _updateState.qts + 1 == statefulMessage.qts && !_holdUpdates) {
-        [self proccessStatefulMessage:statefulMessage needSave:YES];
-        return;
-    }
-    
-    if(statefulMessage.beginSeq > 0 && _updateState.seq + 1 == statefulMessage.beginSeq && !_holdUpdates) {
-        [self proccessStatefulMessage:statefulMessage needSave:YES];
-        return;
-    }
-    
-    if([statefulMessage isEmpty] && _updateState != nil) {
-        [self proccessStatefulMessage:statefulMessage needSave:NO];
-        return;
+    {
+        if(statefulMessage.pts > 0 && ((_updateState.pts + statefulMessage.pts_count == statefulMessage.pts)) && !_holdUpdates) {
+            [self proccessStatefulMessage:statefulMessage needSave:YES];
+            return;
+        }
+        
+        if(statefulMessage.qts > 0 && _updateState.qts + 1 == statefulMessage.qts && !_holdUpdates) {
+            [self proccessStatefulMessage:statefulMessage needSave:YES];
+            return;
+        }
+        
+        if(statefulMessage.beginSeq > 0 && _updateState.seq + 1 == statefulMessage.beginSeq && !_holdUpdates) {
+            [self proccessStatefulMessage:statefulMessage needSave:YES];
+            return;
+        }
+        
+        if([statefulMessage isEmpty] && _updateState != nil) {
+            [self proccessStatefulMessage:statefulMessage needSave:NO];
+            return;
+        }
     }
     
     [_statefulUpdates addObject:statefulMessage];
@@ -405,37 +409,49 @@ static NSArray *channelUpdates;
 
 -(void)applyUpdate:(TGUpdateContainer *)container {
     
+    if(container.pts != INT32_MAX && !_holdUpdates) {
+        _updateState.seq = container.beginSeq;
         
-    _updateState.seq = container.beginSeq;
+        _updateState.pts = container.pts;
+        
+        _updateState.date = container.date;
+        
+        _updateState.qts = container.qts;
+        
+        [self saveUpdateState];
+    } else {
+#ifdef TGDEBUG
+        assert(false);
+#endif
+    }
     
-    _updateState.pts = container.pts;
+
     
-    _updateState.date = container.date;
-    
-    _updateState.qts = container.qts;
-    
-    [self saveUpdateState];
 }
 
 
 -(BOOL)proccessStatefulMessage:(TGUpdateContainer *)container needSave:(BOOL)needSave {
     
+    
     if([container.update isKindOfClass:[TL_updateShortChatMessage class]]) {
         
         TL_updateShortChatMessage *shortMessage = (TL_updateShortChatMessage *) container.update;
         
-        
-        
         TL_localMessage *message = [TL_localMessage createWithN_id:shortMessage.n_id flags:shortMessage.flags from_id:[shortMessage from_id] to_id:[TL_peerChat createWithChat_id:shortMessage.chat_id] fwd_from:shortMessage.fwd_from reply_to_msg_id:shortMessage.reply_to_msg_id date:shortMessage.date message:shortMessage.message media:[TL_messageMediaEmpty create] fakeId:[MessageSender getFakeMessageId] randomId:rand_long() reply_markup:nil entities:shortMessage.entities views:0 via_bot_id:shortMessage.via_bot_id edit_date:0 isViewed:YES state:DeliveryStateNormal];
+        
         
         if(![[UsersManager sharedManager] find:shortMessage.from_id] || ![[ChatsManager sharedManager] find:shortMessage.chat_id] || (message.fwd_from != nil && !message.fwdObject) || (message.via_bot_id != 0 && ![[UsersManager sharedManager] find:message.via_bot_id])) {
             
             if(![[ChatsManager sharedManager] find:shortMessage.chat_id]) {
-                [[FullChatManager sharedManager] loadIfNeed:shortMessage.chat_id force:YES];
+                [[ChatFullManager sharedManager] requestChatFull:shortMessage.chat_id force:YES];
             }
             
             [self failSequence];
             return NO;
+        }
+        
+        if(message.reply_to_msg_id) {
+            [self fillReplyMessage:message];
         }
         
         [MessagesManager addAndUpdateMessage:message];
@@ -450,6 +466,10 @@ static NSArray *channelUpdates;
         if(![[UsersManager sharedManager] find:shortMessage.user_id] || (message.fwd_from != nil && !message.fwdObject) || (message.via_bot_id != 0 && ![[UsersManager sharedManager] find:message.via_bot_id])) {
             [self failSequence];
             return NO;
+        }
+        
+        if(message.reply_to_msg_id) {
+             [self fillReplyMessage:message];
         }
         
         if(message.n_out) {
@@ -478,6 +498,20 @@ static NSArray *channelUpdates;
     [self saveUpdateState];
     
     [self proccessUpdate:shortUpdate.update];
+}
+
+-(void)fillReplyMessage:(TL_localMessage *)message {
+    if(message.reply_to_msg_id != 0) {
+        
+        TL_localMessage *replyMessage = [[Storage manager] messageById:message.reply_to_msg_id];
+        
+        if(replyMessage)
+        {
+            [[Storage manager] addSupportMessages:@[replyMessage]];
+        }
+        
+        message.replyMessage = replyMessage;
+    }
 }
 
 
@@ -511,11 +545,23 @@ static NSArray *channelUpdates;
             return;
         }
         
-        if([update isKindOfClass:[TL_updateBotInlineQuery class]]) {
+        if([update isKindOfClass:[TL_updateEditMessage class]]) {
             
-            //TODO
+            TL_localMessage *msg = [TL_localMessage convertReceivedMessage:[(TL_updateEditMessage *)update message]];
             
-            int bp = 0;
+            if(msg)
+                [[Storage manager] addSupportMessages:@[msg]];
+            
+            [[Storage manager] insertMessages:@[msg]];
+            
+            TL_conversation *conversation = msg.conversation;
+            
+            if(conversation.lastMessage.n_id == msg.n_id) {
+                conversation.lastMessage = msg;
+                [Notification perform:[Notification notificationNameByDialog:conversation action:@"message"] data:@{KEY_DIALOG:conversation,KEY_LAST_CONVRESATION_DATA:[MessagesUtils conversationLastData:conversation]}];
+            }
+            
+            [Notification perform:UPDATE_EDITED_MESSAGE data:@{KEY_MESSAGE:msg}];
             
             return;
         }
@@ -560,12 +606,9 @@ static NSArray *channelUpdates;
             
             TL_localMessage *message = [TL_localMessage convertReceivedMessage:(TL_localMessage *)[update message]];
             
-            if(message.reply_to_msg_id != 0 && message.replyMessage == nil) {
-                [self failSequence];
-                return;
+            if(message.reply_to_msg_id) {
+                [self fillReplyMessage:message];
             }
-            
-            
             
             return [MessagesManager addAndUpdateMessage:message];
         }
@@ -659,15 +702,15 @@ static NSArray *channelUpdates;
         if([update isKindOfClass:[TL_updateChatParticipants class]]) {
             TLChatParticipants *chatParticipants = ((TL_updateChatParticipants *)update).participants;
             
-            TLChatFull *fullChat = [[FullChatManager sharedManager] find:chatParticipants.chat_id];
+            TLChatFull *fullChat = [[ChatFullManager sharedManager] find:chatParticipants.chat_id];
             
-            [[FullChatManager sharedManager] performLoad:chatParticipants.chat_id force:YES callback:nil];
+            [[ChatFullManager sharedManager] requestChatFull:chatParticipants.chat_id force:YES];
             
             if(fullChat) {
                 fullChat.participants = chatParticipants;
                 [[Storage manager] insertFullChat:fullChat completeHandler:nil];
                 
-                [Notification perform:CHAT_UPDATE_PARTICIPANTS data:@{KEY_CHAT_ID: @(fullChat.n_id), @"participants": fullChat.participants}];
+                [Notification performOnStageQueue:CHAT_UPDATE_PARTICIPANTS data:@{KEY_CHAT_ID: @(fullChat.n_id), @"participants": fullChat.participants}];
             }
             
             return;
@@ -821,7 +864,7 @@ static NSArray *channelUpdates;
         
         if([update isKindOfClass:[TL_updateChatParticipantAdmin class]]) {
             
-            TLChatFull *chatFull = [[FullChatManager sharedManager] find:[update chat_id]];
+            TLChatFull *chatFull = [[ChatFullManager sharedManager] find:[update chat_id]];
             
             NSArray *f = [chatFull.participants.participants filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.user_id == %d",update.user_id]];
             
@@ -835,7 +878,7 @@ static NSArray *channelUpdates;
                 
              }
             
-            [Notification perform:CHAT_UPDATE_PARTICIPANTS data:@{KEY_CHAT_ID:@([update chat_id]),@"participants":chatFull.participants}];
+            [Notification performOnStageQueue:CHAT_UPDATE_PARTICIPANTS data:@{KEY_CHAT_ID:@([update chat_id]),@"participants":chatFull.participants}];
             
         }
         
@@ -844,7 +887,7 @@ static NSArray *channelUpdates;
             TLChat *chat = [[ChatsManager sharedManager] find:[update chat_id]];
             
             if(chat.version != update.version) {
-                [[FullChatManager sharedManager] loadIfNeed:[update chat_id] force:YES];
+                [[ChatFullManager sharedManager] requestChatFull:[update chat_id] force:YES];
             }
             
             
@@ -894,7 +937,7 @@ static NSArray *channelUpdates;
             
             NSString *text = [NSString stringWithFormat:NSLocalizedString(@"Notification.UserRegistred", nil),user.fullName];
             
-            TL_localMessageService *message = [TL_localMessageService createWithFlags:0 n_id:0 from_id:[update user_id] to_id:[TL_peerUser createWithUser_id:[update user_id]] date:[update date] action:[TL_messageActionEncryptedChat createWithTitle:text] fakeId:[MessageSender getFakeMessageId] randomId:rand_long() dstate:DeliveryStateNormal];
+            TL_localMessageService *message = [TL_localMessageService createWithFlags:0 n_id:0 from_id:[update user_id] to_id:[TL_peerUser createWithUser_id:[update user_id]] reply_to_msg_id:0 date:[update date] action:[TL_messageActionEncryptedChat createWithTitle:text] fakeId:[MessageSender getFakeMessageId] randomId:rand_long() dstate:DeliveryStateNormal];
             
             [MessagesManager addAndUpdateMessage:message];
             
@@ -941,7 +984,7 @@ static NSArray *channelUpdates;
    
     _holdUpdates = YES;
     
-    if( !_updateState || force) {
+    if( !_updateState || force || _updateState.pts == INT32_MAX || _updateState.pts == 0) {
         
         [RPCRequest sendRequest:[TLAPI_updates_getState create] successHandler:^(RPCRequest *request, TL_updates_state * state) {
     
@@ -949,7 +992,7 @@ static NSArray *channelUpdates;
             
             MTLog(@"update dif broken pts:%d, date:%d, qts:%d,seq:%d",_updateState.pts,_updateState.date,_updateState.qts,_updateState.seq);
             
-            _updateState = [[TGUpdateState alloc] initWithPts:_updateState.pts == 0 ? state.pts : _updateState.pts qts:_updateState.qts == 0 ? state.qts : _updateState.qts date:_updateState.date == 0 ? state.date : _updateState.date seq:_updateState.seq == 0 ? state.seq : _updateState.seq pts_count:_updateState.pts_count];
+            _updateState = [[TGUpdateState alloc] initWithPts:_updateState.pts == 0 || _updateState.pts == INT32_MAX ? state.pts : _updateState.pts qts:_updateState.qts == 0 ? state.qts : _updateState.qts date:_updateState.date == 0 ? state.date : _updateState.date seq:_updateState.seq == 0 ? state.seq : _updateState.seq pts_count:_updateState.pts_count];
 
             [self saveUpdateState];
             
@@ -984,7 +1027,7 @@ static NSArray *channelUpdates;
         [Telegram setConnectionState:ConnectingStatusTypeUpdating];
     
     
-    MTLog(@"updateDifference:%@, pts:%d,date:%d,qts:%d",_updateState,_updateState.pts,_updateState.date,_updateState.qts);
+    MTLog(@"updateDifference:%@",_updateState);
     
     TLAPI_updates_getDifference *dif = [TLAPI_updates_getDifference createWithPts:_updateState.pts date:_updateState.date qts:_updateState.qts];
     [RPCRequest sendRequest:dif successHandler:^(RPCRequest *request, id response)  {
@@ -1014,6 +1057,14 @@ static NSArray *channelUpdates;
             stateSeq = [intstate seq];
         }
         
+        if([response isKindOfClass:[TL_updates_differenceEmpty class]]) {
+            stateDate = [updates date];
+            stateSeq = [updates seq];
+        }
+        
+        statePts = statePts == 0 ? _updateState.pts : statePts;
+        stateQts = stateQts == 0 ? _updateState.qts : stateQts;
+        stateSeq = stateSeq == 0 ? _updateState.seq : stateSeq;
         
         for (TL_encryptedMessage *enmsg in [updates n_encrypted_messages]) {
             [self.encryptedUpdates proccessUpdate:enmsg];
@@ -1047,13 +1098,11 @@ static NSArray *channelUpdates;
             }
             
             
-            _updateState.checkMinimum = NO;
             _updateState.qts = stateQts;
             _updateState.pts = statePts;
             _updateState.date = stateDate;
             _updateState.seq = stateSeq;
-            _updateState.checkMinimum = YES;
-            
+             MTLog(@"new updateDifference update update: %@",_updateState);
             [self saveUpdateState];
             
             _holdUpdates = NO;

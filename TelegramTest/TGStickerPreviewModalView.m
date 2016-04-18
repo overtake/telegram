@@ -56,24 +56,17 @@
         placeholder = [NSImage imageWithWebpData:bytes error:nil];
     
     
-    TL_localMessage *message = [[TL_localMessage alloc] init];
-    
-    message.media = [TL_messageMediaDocument createWithDocument:sticker caption:@""];
-    
-    
-    TGStickerImageObject *imageObject = [[TGStickerImageObject alloc] initWithMessage:message placeholder:placeholder];
+    TGStickerImageObject *imageObject = [[TGStickerImageObject alloc] initWithDocument:sticker placeholder:placeholder];
     
     TL_documentAttributeImageSize *imageSize = (TL_documentAttributeImageSize *) [sticker attributeWithClass:[TL_documentAttributeImageSize class]];
     
     imageObject.imageSize = strongsize(NSMakeSize(imageSize.w, imageSize.h), 320);
-    
     
     [self setContainerFrameSize:imageObject.imageSize];
     
     self.imageView.object = imageObject;
     [self.imageView setFrameSize:imageObject.imageSize];
 }
-
 
 
 

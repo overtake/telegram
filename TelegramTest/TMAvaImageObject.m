@@ -7,7 +7,7 @@
 //
 
 #import "TMAvaImageObject.h"
-#import "TMImageUtils.h"
+#import "ImageUtils.h"
 
 @implementation TMAvaImageObject
 
@@ -19,7 +19,7 @@
     
     [TGCache cacheImage:image forKey:self.location.cacheKey groups:@[AVACACHE]];
     
-    image = [TMImageUtils roundedImageNew:image size:self.imageSize];
+    image = [ImageUtils roundedImageNew:image size:self.imageSize];
     
     [TGCache cacheImage:image forKey:[self cacheKey] groups:@[AVACACHE]];
     

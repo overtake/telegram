@@ -99,14 +99,14 @@ static NSDictionary *colors;
         
     
         
-        _downloadImageView = [[TMView alloc] initWithFrame:NSMakeRect(s_dox + 50, 15, image_SharedMediaDocumentStatusDownload().size.width, image_SharedMediaDocumentStatusDownload().size.height)];
+        _downloadImageView = [[TMView alloc] initWithFrame:NSMakeRect(s_dox + 50, 11, image_SharedMediaDocumentStatusDownload().size.width, image_SharedMediaDocumentStatusDownload().size.height)];
         
         
         [_downloadImageView addSubview:imageViewWithImage(image_SharedMediaDocumentStatusDownload())];
         
         [self addSubview:_downloadImageView];
         
-        _thumbView = [[TGSharedMediaFileThumbnailView alloc] initWithFrame:NSMakeRect(s_dox, 10, 40, 40)];
+        _thumbView = [[TGSharedMediaFileThumbnailView alloc] initWithFrame:NSMakeRect(s_dox, 9, 40, 40)];
         
         [self addSubview:_thumbView];
         
@@ -206,9 +206,9 @@ static NSDictionary *colors;
     
     [super setItem:item];
     
-    [self.nameField setStringValue:item.fileName];
+    [self.nameField setStringValue:item.message.media.document.file_name];
     
-    NSString *ext = [item.fileName pathExtension];
+    NSString *ext = [item.message.media.document.file_name pathExtension];
     
     NSArray *c = colors[ext];
     

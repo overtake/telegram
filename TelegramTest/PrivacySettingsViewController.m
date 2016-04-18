@@ -13,9 +13,11 @@
 #import "ComposeActionCustomBehavior.h"
 #import "SelectUserItem.h"
 #import "NewContactsManager.h"
+#import "TGSettingsTableView.h"
+#import "FullUsersManager.h"
 @interface PrivacySettingsViewController () <TMTableViewDelegate>
 @property (nonatomic,strong) TMTextButton *doneButton;
-@property (nonatomic,strong) TMTableView *tableView;
+@property (nonatomic,strong) TGSettingsTableView *tableView;
 
 @property (nonatomic,strong) PrivacyArchiver *changedPrivacy;
 @property (nonatomic,strong) PrivacyArchiver *privacy;
@@ -111,9 +113,7 @@
     [self setRightNavigationBarView:rightView animated:NO];
 
     
-    self.tableView = [[TMTableView alloc] initWithFrame:self.view.bounds];
-    
-    self.tableView.tm_delegate = self;
+    self.tableView = [[TGSettingsTableView alloc] initWithFrame:self.view.bounds];
     
     
     [self.view addSubview:self.tableView.containerView];
@@ -199,7 +199,7 @@
     
     NSString *first_desc = [NSString stringWithFormat:@"PRIVACY_FIRST_%@",self.privacy.privacyType];
     
-    _firstDescription = [[GeneralSettingsBlockHeaderItem alloc] initWithString:NSLocalizedString(first_desc, nil) height:50 flipped:YES];
+    _firstDescription = [[GeneralSettingsBlockHeaderItem alloc] initWithString:NSLocalizedString(first_desc, nil) flipped:YES];
     
     [self.tableView addItem:_firstDescription tableRedraw:NO];
     
@@ -254,6 +254,8 @@
         self.privacy = self.changedPrivacy;
         [self.privacy _save];
         
+        [[FullUsersManager sharedManager] drop];
+        
         self.changedPrivacy = [self.privacy copy];
         
        
@@ -280,8 +282,8 @@
     NSString *allowDesc = [NSString stringWithFormat:@"PrivacySettingsController.AlwaysShare_%@",self.privacy.privacyType];
     NSString *disallowDesc = [NSString stringWithFormat:@"PrivacySettingsController.NeverShare_%@",self.privacy.privacyType];
     
-    _disallowSelector.desc = NSLocalizedString(disallowDesc, nil);
-    _allowSelector.desc = NSLocalizedString(allowDesc, nil);;
+    [_disallowSelector setDescString:NSLocalizedString(disallowDesc, nil)];
+    [_allowSelector setDescString:NSLocalizedString(allowDesc, nil)];
     
     switch (_changedPrivacy.allowType) {
         case PrivacyAllowTypeContacts:
@@ -310,9 +312,9 @@
     [self.tableView addItem:_lastDescription tableRedraw:NO];
 
     
-    [self.allowSelector setSubdesc:self.changedPrivacy.allowUsers.count == 0 ? NSLocalizedString(@"PrivacySettingsController.AddUsers", nil) : [NSString stringWithFormat:self.changedPrivacy.allowUsers.count == 1 ? NSLocalizedString(@"PrivacySettingsController.UserCount", nil) : NSLocalizedString(@"PrivacySettingsController.UsersCount", nil),self.changedPrivacy.allowUsers.count]];
+    [self.allowSelector setSubdescString:self.changedPrivacy.allowUsers.count == 0 ? NSLocalizedString(@"PrivacySettingsController.AddUsers", nil) : [NSString stringWithFormat:self.changedPrivacy.allowUsers.count == 1 ? NSLocalizedString(@"PrivacySettingsController.UserCount", nil) : NSLocalizedString(@"PrivacySettingsController.UsersCount", nil),self.changedPrivacy.allowUsers.count]];
     
-    [self.disallowSelector setSubdesc:self.changedPrivacy.disallowUsers.count == 0 ? NSLocalizedString(@"PrivacySettingsController.AddUsers", nil) : [NSString stringWithFormat:self.changedPrivacy.disallowUsers.count == 1 ? NSLocalizedString(@"PrivacySettingsController.UserCount", nil) : NSLocalizedString(@"PrivacySettingsController.UsersCount", nil),self.changedPrivacy.disallowUsers.count]];
+    [self.disallowSelector setSubdescString:self.changedPrivacy.disallowUsers.count == 0 ? NSLocalizedString(@"PrivacySettingsController.AddUsers", nil) : [NSString stringWithFormat:self.changedPrivacy.disallowUsers.count == 1 ? NSLocalizedString(@"PrivacySettingsController.UserCount", nil) : NSLocalizedString(@"PrivacySettingsController.UsersCount", nil),self.changedPrivacy.disallowUsers.count]];
 
     
     [self.tableView reloadData];
@@ -359,40 +361,6 @@
     
     [self.doneButton setDisable:!isChanged];
     
-}
-
-- (CGFloat)rowHeight:(NSUInteger)row item:(GeneralSettingsRowItem *) item {
-    return  item.height;
-}
-
-- (BOOL)isGroupRow:(NSUInteger)row item:(GeneralSettingsRowItem *) item {
-    return NO;
-}
-
-- (TMRowView *)viewForRow:(NSUInteger)row item:(TMRowItem *) item {
-    
-    if([item isKindOfClass:[GeneralSettingsBlockHeaderItem class]]) {
-        return [self.tableView cacheViewForClass:[GeneralSettingsBlockHeaderView class] identifier:@"GeneralSettingsBlockHeaderView"];
-    }
-    
-    if([item isKindOfClass:[GeneralSettingsRowItem class]]) {
-        return [self.tableView cacheViewForClass:[GeneralSettingsRowView class] identifier:@"GeneralSettingsRowViewClass"];
-    }
-    
-    return nil;
-    
-}
-
-- (void)selectionDidChange:(NSInteger)row item:(GeneralSettingsRowItem *) item {
-    
-}
-
-- (BOOL)selectionWillChange:(NSInteger)row item:(GeneralSettingsRowItem *) item {
-    return NO;
-}
-
-- (BOOL)isSelectable:(NSInteger)row item:(GeneralSettingsRowItem *) item {
-    return NO;
 }
 
 

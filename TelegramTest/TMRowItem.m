@@ -40,6 +40,14 @@
     
 }
 
+-(Class)viewClass {
+    return [TMRowView class];
+}
+
+-(int)height {
+    return 60;
+}
+
 -(id)initWithObject:(id)object {
     if(self = [super init]) {
         

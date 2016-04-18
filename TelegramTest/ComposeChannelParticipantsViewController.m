@@ -248,7 +248,7 @@
         chat.chatFull.participants_count+= kick ? -1 : 1;
         chat.chatFull.kicked_count+= !kick ? -1 : 1;
         
-        [[FullChatManager sharedManager] loadIfNeed:[chat n_id] force:YES];
+        [[ChatFullManager sharedManager] requestChatFull:[chat n_id] force:YES];
         
         [[Storage manager] insertFullChat:chat.chatFull completeHandler:nil];
         
@@ -268,7 +268,7 @@
     
     weak();
     
-    [[FullChatManager sharedManager] loadIfNeed:[chat n_id] force:YES];
+    [[ChatFullManager sharedManager] requestChatFull:[chat n_id] force:YES];
     
     self.action.behavior.delegate = self;
     

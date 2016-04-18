@@ -25,6 +25,8 @@
 #import "ComposeChangeChannelDescriptionViewController.h"
 #import "ComposeActionChangeChannelAboutBehavior.h"
 #import "TGReportChannelModalView.h"
+#import "TGChannelTypeSettingViewController.h"
+#import "ComposeActionCustomBehavior.h"
 @interface TGModernChannelInfoViewController ()
 @property (nonatomic,strong) TGSettingsTableView *tableView;
 
@@ -62,6 +64,7 @@
     [self configure];
     
     [self drawParticipants:_chat.chatFull.participants.participants];
+    
     
 }
 
@@ -166,7 +169,16 @@
         user.type = SettingsRowItemTypeNone;
         user.editable = self.action.isEditable;
         
-        
+        if([obj isKindOfClass:[TL_channelParticipantEditor class]] || [obj isKindOfClass:[TL_channelParticipantCreator class]]) {
+            NSMutableAttributedString *attr = [[NSMutableAttributedString alloc] init];
+            
+            [attr appendString:NSLocalizedString(@"Channel.admin", nil) withColor:GRAY_TEXT_COLOR];
+            
+            [attr setFont:TGSystemFont(13) forRange:attr.range];
+            
+            user.badge = attr;
+        }
+                
         [user setStateback:^id(TGGeneralRowItem *item) {
             
             BOOL canRemoveUser = ((obj.user_id != [UsersManager currentUserId] && (weakSelf.chat.isCreator || weakSelf.chat.isManager)) && ![obj isKindOfClass:[TL_channelParticipantCreator class]]);
@@ -341,21 +353,6 @@
                  
             } description:NSLocalizedString(@"Channel.Members", nil) subdesc:[NSString stringWithFormat:@"%d",_chat.chatFull.participants_count] height:42 stateback:nil];
             
-            
-           
-            
-            
-            inviteViaLink = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeNone callback:^(TGGeneralRowItem *item) {
-                
-                ChatExportLinkViewController *export = [[ChatExportLinkViewController alloc] initWithFrame:NSZeroRect];
-                
-                [export setChat:weakSelf.chat.chatFull];
-                
-                [weakSelf.navigationViewController pushViewController:export animated:YES];
-                
-                
-            } description:NSLocalizedString(@"Modern.Channel.InviteViaLink", nil) height:42 stateback:nil];
-            
             if(_chat.chatFull.kicked_count > 0) {
                 blacklistItem = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeNext callback:^(TGGeneralRowItem *item) {
                     
@@ -369,6 +366,17 @@
                     
                 } description:NSLocalizedString(@"Settings.BlackList", nil) subdesc:[NSString stringWithFormat:@"%d",weakSelf.chat.chatFull.kicked_count] height:42 stateback:nil];
             }
+            
+            inviteViaLink = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeNone callback:^(TGGeneralRowItem *item) {
+                
+                ChatExportLinkViewController *export = [[ChatExportLinkViewController alloc] initWithFrame:NSZeroRect];
+                
+                [export setChat:weakSelf.chat.chatFull];
+                
+                [weakSelf.navigationViewController pushViewController:export animated:YES];
+                
+                
+            } description:NSLocalizedString(@"Modern.Channel.InviteViaLink", nil) height:42 stateback:nil];
             
         } else {
             
@@ -396,7 +404,7 @@
                 [_tableView addItem:addMembersItem tableRedraw:YES];
             if(_chat.isCreator)
                 [_tableView addItem:inviteViaLink tableRedraw:YES];
-        } else {
+         } else {
             if(membersItem)
                 [_tableView addItem:membersItem tableRedraw:YES];
         }
@@ -448,6 +456,89 @@
         [_tableView addItem:_notificationItem tableRedraw:YES];
     } else {
         
+        GeneralSettingsRowItem *groupType;
+        
+        groupType = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeNext callback:^(TGGeneralRowItem *item) {
+            
+            TLChatFull *chatfull = [[ChatFullManager sharedManager] find:weakSelf.chat.n_id];
+            
+            ComposeAction *action = [[ComposeAction alloc] initWithBehaviorClass:[ComposeActionCustomBehavior class] filter:nil object:weakSelf.chat];
+            
+            ComposeActionCustomBehavior *behavior = (ComposeActionCustomBehavior *) action.behavior;
+            
+            [behavior setCustomCenterTitle:NSLocalizedString(@"Conversation.GroupTitle", nil)];
+            
+            [behavior setCustomDoneTitle:NSLocalizedString(@"Compose.Done", nil)];
+            
+            [behavior setComposeDone:^{
+                
+                [weakSelf showModalProgress];
+                
+                BOOL private = ![action.result.singleObject boolValue];
+                
+                NSString *username = private ? @"" : action.reservedObject2;
+                
+                if((private && weakSelf.chat.username.length > 0) || (!private && weakSelf.chat.username != username)) {
+                    [[ChatsManager sharedManager] updateChannelUserName:username channel:(TL_channel *)weakSelf.chat completeHandler:^(TL_channel *channel) {
+                        
+                        [weakSelf.navigationViewController goBackWithAnimation:YES];
+                        
+                        [weakSelf hideModalProgressWithSuccess];
+                        
+                    } errorHandler:^(NSString *error) {
+                        [weakSelf hideModalProgress];
+                    }];
+                } else {
+                    [weakSelf.navigationViewController goBackWithAnimation:YES];
+                }
+
+            }];
+            
+            
+            dispatch_block_t block = ^ {
+                
+                TGChannelTypeSettingViewController *viewController = [[TGChannelTypeSettingViewController alloc] initWithFrame:weakSelf.action.currentViewController.view.bounds];;
+                
+                action.reservedObject1 = chatfull.exported_invite;
+                action.result = [[ComposeResult alloc] initWithMultiObjects:nil];
+                action.result.singleObject = @(weakSelf.chat.username.length > 0);
+                [viewController setAction:action];
+                
+                [weakSelf.action.currentViewController.navigationViewController pushViewController:viewController animated:YES];
+                
+            };
+            
+            if([chatfull.exported_invite isKindOfClass:[TL_chatInviteExported class]]) {
+                
+                block();
+                
+            } else {
+                
+                [weakSelf showModalProgress];
+                
+                [RPCRequest sendRequest:[TLAPI_channels_exportInvite createWithChannel:weakSelf.chat.inputPeer] successHandler:^(RPCRequest *request, TL_chatInviteExported *response) {
+                    
+                    [weakSelf hideModalProgressWithSuccess];
+                    
+                    chatfull.exported_invite = response;
+                    [[Storage manager] insertFullChat:chatfull completeHandler:nil];
+                    
+                    block();
+                    
+                    
+                } errorHandler:^(RPCRequest *request, RpcError *error) {
+                    [weakSelf hideModalProgress];
+                } timeout:10];
+                
+            }
+            
+        } description:NSLocalizedString(@"Modern.Channel.GroupType", nil) subdesc:NSLocalizedString(self.chat.username.length > 0 ? @"Channel.Public" : @"Channel.Private", nil) height:42 stateback:nil];
+        
+        
+        if(_chat.isMegagroup && _chat.isCreator && (!self.chat.chatFull || self.chat.chatFull.isCan_set_username)) {
+            [_tableView addItem:groupType tableRedraw:YES];
+        }
+        
         GeneralSettingsRowItem *descriptionItem = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeNext callback:^(TGGeneralRowItem *item) {
             
             ComposeChangeChannelDescriptionViewController *viewController = [[ComposeChangeChannelDescriptionViewController alloc] init];
@@ -461,7 +552,7 @@
         [_tableView addItem:descriptionItem tableRedraw:YES];
         
         
-       // if(!_chat.isMegagroup) {
+        if(!_chat.isMegagroup) {
         GeneralSettingsRowItem *linkItem = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeNext callback:^(TGGeneralRowItem *item) {
                 
             ComposeAction *action = [[ComposeAction alloc] initWithBehaviorClass:[ComposeActionBehavior class]];
@@ -477,7 +568,7 @@
             
         [_tableView addItem:linkItem tableRedraw:YES];
             
-      //  }
+        }
         
         if(!_chat.isMegagroup && _chat.isCreator) {
             

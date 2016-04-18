@@ -16,7 +16,7 @@ extern NSString *const THUMBCACHE;
 extern NSString *const PVCACHE;
 extern NSString *const PCCACHE;
 extern NSString *const AVACACHE;
-
+extern NSString *const STICKERSCACHE;
 
 +(void)cacheImage:(NSImage *)image forKey:(NSString *)key groups:(NSArray *)groups;
 

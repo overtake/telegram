@@ -29,6 +29,30 @@
     
 }
 
+-(int)hintHeight {
+    __block int height = 0;
+    
+    [self.list enumerateObjectsUsingBlock:^(TGContextRowItem *obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        
+        height+=obj.height;
+        
+    }];
+    
+    return height;
+}
+
+-(void)setNeedLoadNext:(void (^)(BOOL))needLoadNext {
+    _needLoadNext = needLoadNext;
+    
+    weak();
+    
+    [self.scrollView setScrollWheelBlock:^{
+        if(weakSelf.needLoadNext) {
+            weakSelf.needLoadNext([weakSelf.scrollView isNeedUpdateBottom]);
+        }
+    }];
+}
+
 
 - (void)selectionDidChange:(NSInteger)row item:(TGContextRowItem *) item {
     if(_didSelectedItem) {

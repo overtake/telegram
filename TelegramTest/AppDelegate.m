@@ -13,7 +13,6 @@
 #import "SSKeychain.h"
 #import "TGSecretAction.h"
 #ifdef TGDEBUG
-
 #import <Sparkle/Sparkle.h>
 #import "FFYDaemonController.h"
 #endif
@@ -52,6 +51,10 @@
 #import "TGUpdater.h"
 #import "TGHeadChatPanel.h"
 #import "NSArrayCategory.h"
+#import "FullUsersManager.h"
+#import "TGStickerPreviewModalView.h"
+#import "SPMediaKeyTap.h"
+#import "TGAudioPlayerWindow.h"
 @interface NSUserNotification(For107)
 
 @property (nonatomic, strong) NSAttributedString *response;
@@ -68,6 +71,7 @@
 #endif
 
 @property (nonatomic,strong) SettingsWindowController *settingsWindow;
+
 
 @end
 
@@ -102,6 +106,12 @@ static void TGTelegramLoggingFunction(NSString *format, va_list args)
 
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification {
     
+    
+    _mediaKeyTap = [[SPMediaKeyTap alloc] initWithDelegate:self];
+    
+    if([SPMediaKeyTap usesGlobalMediaKeyTap] && [SettingsArchiver checkMaskedSetting:HandleMediaKeysSettings])
+        [_mediaKeyTap startWatchingMediaKeys];
+
 
     MTLogSetLoggingFunction(&TGTelegramLoggingFunction);
     
@@ -110,11 +120,14 @@ static void TGTelegramLoggingFunction(NSString *format, va_list args)
     
 #ifdef TGDEBUG
     
+#ifndef TGSTABLE
+    
     [[BITHockeyManager sharedHockeyManager] configureWithIdentifier:HOCKEY_APP_IDENTIFIER companyName:HOCKEY_APP_COMPANY delegate:self];
     [[BITHockeyManager sharedHockeyManager] setDebugLogEnabled:YES];
     [[BITHockeyManager sharedHockeyManager].crashManager setAutoSubmitCrashReport: YES];
     [[BITHockeyManager sharedHockeyManager] startManager];
-    
+   
+#endif
     
 #else 
     
@@ -123,6 +136,67 @@ static void TGTelegramLoggingFunction(NSString *format, va_list args)
 #endif
     
     
+}
+
++(void)initialize;
+{
+    
+    // Register defaults for the whitelist of apps that want to use media keys
+    [[NSUserDefaults standardUserDefaults] registerDefaults:[NSDictionary dictionaryWithObjectsAndKeys:
+                                                             [SPMediaKeyTap defaultMediaKeyUserBundleIdentifiers], kMediaKeyUsingBundleIdentifiersDefaultsKey,
+                                                             nil]];
+}
+
+-(void)mediaKeyTap:(SPMediaKeyTap*)keyTap receivedMediaKeyEvent:(NSEvent*)event {
+    NSAssert([event type] == NSSystemDefined && [event subtype] == SPSystemDefinedEventMediaKeys, @"Unexpected NSEvent in mediaKeyTap:receivedMediaKeyEvent:");
+    // here be dragons...
+    int keyCode = (([event data1] & 0xFFFF0000) >> 16);
+    int keyFlags = ([event data1] & 0x0000FFFF);
+    BOOL keyIsPressed = (((keyFlags & 0xFF00) >> 8)) == 0xA;
+    int keyRepeat = (keyFlags & 0x1);
+    
+    if (keyIsPressed) {
+        NSString *debugString = [NSString stringWithFormat:@"%@", keyRepeat?@", repeated.":@"."];
+        switch (keyCode) {
+            case NX_KEYTYPE_PLAY:
+                debugString = [@"Play/pause pressed" stringByAppendingString:debugString];
+                
+                if(_mainWindow.navigationController.currentController == _mainWindow.navigationController.messagesViewController || [TGAudioPlayerWindow isShown]) {
+                    if([TGAudioPlayerWindow isShown]) {
+                        if([TGAudioPlayerWindow playerState] == TGAudioPlayerStatePlaying)
+                            [TGAudioPlayerWindow pause];
+                        else
+                            [TGAudioPlayerWindow resume];
+                    } else {
+                        [TGAudioPlayerWindow show:_mainWindow.navigationController.messagesViewController.conversation];
+                    }
+                }
+                
+                
+                
+                break;
+                
+            case NX_KEYTYPE_FAST:
+                debugString = [@"Ffwd pressed" stringByAppendingString:debugString];
+                if([TGAudioPlayerWindow isShown]) {
+                    [TGAudioPlayerWindow nextTrack];
+                }
+                break;
+                
+            case NX_KEYTYPE_REWIND:
+                debugString = [@"Rewind pressed" stringByAppendingString:debugString];
+                if([TGAudioPlayerWindow isShown]) {
+                    [TGAudioPlayerWindow prevTrack];
+                }
+                break;
+            default:
+                debugString = [NSString stringWithFormat:@"Key %d pressed%@", keyCode, debugString];
+                break;
+                // More cases defined in hidsystem/ev_keymap.h
+        }
+        NSLog(@"%@",debugString);
+    }
+
 }
 
 -(BOOL)acceptsPreviewPanelControl:(QLPreviewPanel *)panel {
@@ -157,7 +231,7 @@ static void TGTelegramLoggingFunction(NSString *format, va_list args)
     
     NSDictionary *userInfo = notification.userInfo;
     
-    TL_conversation *dialog = [[DialogsManager sharedManager] find:[[userInfo objectForKey:@"peer_id"] intValue]];
+    TL_conversation *dialog = [[DialogsManager sharedManager] find:[userInfo[KEY_PEER_ID] intValue]];
     
     if(dialog == nil) {
         ELog(@"nil dialog here, check it");
@@ -174,7 +248,7 @@ static void TGTelegramLoggingFunction(NSString *format, va_list args)
         
         dispatch_async(dispatch_get_main_queue(), ^{
             
-            TL_localMessage *msg = [[Storage manager] messageById:[[userInfo objectForKey:@"msg_id"] intValue] inChannel:dialog.type == DialogTypeChannel ? dialog.peer_id : 0];
+            TL_localMessage *msg = [[Storage manager] messageById:[userInfo[KEY_MESSAGE_ID] intValue] inChannel:dialog.type == DialogTypeChannel ? dialog.peer_id : 0];
             
             if(dialog.type == DialogTypeChat) {
                 if(msg)
@@ -253,7 +327,6 @@ void exceptionHandler(NSException * exception)
     
     NSSetUncaughtExceptionHandler(&exceptionHandler);
     
-          // [_statusItem setAlternateImage:highlightIcon];
     
     [SharedManager sharedManager];
     
@@ -265,96 +338,11 @@ void exceptionHandler(NSException * exception)
         [[NSUserNotificationCenter defaultUserNotificationCenter] setDelegate:self];
     }
     
-#ifdef TGDEBUG
+    CFStringRef bundleID = (__bridge CFStringRef)[[NSBundle mainBundle] bundleIdentifier];
+    LSSetDefaultHandlerForURLScheme(CFSTR("tg"), bundleID);
     
-//    CFStringRef bundleID = (__bridge CFStringRef)[[NSBundle mainBundle] bundleIdentifier];
-//    LSSetDefaultHandlerForURLScheme(CFSTR("tg"), bundleID);
-//    
-//    NSString *updater_path =  [NSString stringWithFormat:@"%@/Updater",[[NSBundle mainBundle] privateFrameworksPath]];
-//    
-//    if([[NSFileManager defaultManager] fileExistsAtPath:updater_path]) {
-//        // close other proccess
-//        {
-//            FFYDaemonController *daemonController = [[FFYDaemonController alloc] init];
-//            
-//            
-//            
-//            daemonController.launchPath = updater_path;
-//            
-//            daemonController.startArguments = [NSArray arrayWithObjects:
-//                                               @"--bundle_id=ru.keepcoder.Telegram",
-//                                               @"--close_others=1",
-//                                               nil];
-//            
-//            
-//            [daemonController start];
-//
-//        }
-//        
-//        
-//        
-//        
-//        // update application
-//        {
-//            TGUpdater *updater = [[TGUpdater alloc] initWithVersion:APP_VERSION token:@"kqjflkqwjeflkjewf123" url:@"http://net2ftp.ru/node0/overtakeful@gmail.com/tgupdater.json"];
-//            
-//            [updater itsHaveNewVersion:^(bool nVer){
-//                
-//                
-//                if(nVer)
-//                {
-//                    confirm(appName(), @"New version avaiable, download?", ^{
-//                        [updater startDownload:^(NSString *fpath) {
-//                            
-//                            NSLog(@"%@",fpath);
-//                            
-//                            [self.window setTitle:@"Proccessing..."];
-//                            
-//                            FFYDaemonController *daemonController = [[FFYDaemonController alloc] init];
-//                            
-//                            daemonController.launchPath = updater_path;
-//                            
-//                            daemonController.startArguments = [NSArray arrayWithObjects:
-//                                                               @"--bundle_id=ru.keepcoder.Telegram",
-//                                                               [NSString stringWithFormat:@"--app_path=%@",[[NSBundle mainBundle] bundlePath]],  //[@"~/desktop" stringByExpandingTildeInPath]]
-//                                                               [NSString stringWithFormat:@"--download_path=%@",fpath],
-//                                                               nil];
-//                            
-//                            [daemonController setDaemonStoppedCallback:^{
-//                                
-//                                [self.window setTitle:appName()];
-//                                
-//                            }];
-//                            
-//                            [daemonController start];
-//                            
-//                            
-//                        } progress:^(NSUInteger progress) {
-//                            [self.window setTitle:[NSString stringWithFormat:@"Downloading: %lu%%",progress]];
-//                        }];
-//                        
-//                    }, ^{
-//                        
-//                    });
-//                    
-//                }
-//                
-//            }];
-//        }
-//    }
-//    
-    
+    [self initializeMainWindow];
 
-    
-#endif
-    
- //   if([[MTNetwork instance] isAuth]) {
-        [self initializeMainWindow];
-   // } else {
-        
-   //    [self logoutWithForce:NO];
-        
- //   }
 
 }
 
@@ -365,17 +353,10 @@ void exceptionHandler(NSException * exception)
 #ifdef TGDEBUG
     
     [self.updater setAutomaticallyChecksForUpdates:YES];
-  //  [self.updater setAutomaticallyDownloadsUpdates:NO];
     
-    NSString *feedURL = @"https://rink.hockeyapp.net/api/2/apps/c55f5e74ae5d0ad254df29f71a1b5f0e";
+    [self.updater setFeedURL:[NSURL URLWithString:[NSBundle mainBundle].infoDictionary[@"SUFeedURL"]]];
     
-    #ifdef TGStable
-    
-    feedURL = @"https://rink.hockeyapp.net/api/2/apps/d77af558b21e0878953100680b5ac66a";
-    
-    #endif
-    
-    [self.updater setFeedURL:[NSURL URLWithString:feedURL]];
+    NSLog(@"%@",self.updater.feedURL.absoluteString);
     
     NSUserDefaults *defs = [NSUserDefaults standardUserDefaults];
     NSArray *languages = [defs objectForKey:@"AppleLanguages"];
@@ -709,7 +690,10 @@ void exceptionHandler(NSException * exception)
             if(result.window == [NSApp mainWindow] && [result.window isKindOfClass:[MainWindow class]]) {
                 
                 if([result.window.contentView hitTest:[result locationInWindow]]) {
-                    if([TMViewController isModalActive]) {
+                    
+                    TGModalView *modalView = (TGModalView *) [TMViewController modalView];
+                    
+                    if(modalView && (![modalView isKindOfClass:[TGModalView class]] || ![modalView mouse:[modalView convertPoint:[result locationInWindow] fromView:nil] inRect:modalView.contentRect])) {
                         if(result.type == NSMouseEntered || result.type == NSMouseMoved) {
                             result = nil;
                         }
@@ -728,7 +712,15 @@ void exceptionHandler(NSException * exception)
             
             
             if(result.type == NSLeftMouseUp && [TMViewController isModalActive]) {
-                [EmojiViewController hideStickerPreviewIfNeeded];
+                
+                NSArray *modals = [TMViewController modalsView];
+                
+                [modals enumerateObjectsUsingBlock:^(TGModalView *obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                    if([obj isKindOfClass:[TGStickerPreviewModalView class]]) {
+                        [obj close:YES];
+                    }
+                }];
+                
             }
             
             return result;
@@ -747,9 +739,11 @@ void exceptionHandler(NSException * exception)
     
     id block3 = ^(NSEvent *incomingEvent) {
         
-        if([appWindow().firstResponder class] == [SelectTextManager class]) { // hard fix for osx events bug
+        if([incomingEvent.window.firstResponder class] == [SelectTextManager class]) { // hard fix for osx events bug
             
-            MessagesViewController *viewController = appWindow().navigationController.messagesViewController;
+            
+            
+            MessagesViewController *viewController = [SelectTextManager currentTableView].viewController;
             
             
             NSPoint mouseLoc = [viewController.table.scrollView convertPoint:[incomingEvent locationInWindow] fromView:nil];
@@ -793,6 +787,8 @@ void exceptionHandler(NSException * exception)
 
 
 -(NSApplicationTerminateReply)applicationShouldTerminate:(NSApplication *)sender {
+    
+    [[NSUserNotificationCenter defaultUserNotificationCenter] removeAllDeliveredNotifications];
     
     if([SenderItem allSendersSaved])
         return NSTerminateNow;
@@ -839,6 +835,8 @@ void exceptionHandler(NSException * exception)
 - (void) receiveWakeNote: (NSNotification*) note
 {
     [[MTNetwork instance] update];
+    
+    [[FullUsersManager sharedManager] drop];
     MTLog(@"receiveSleepNote: %@", [note name]);
 }
 

@@ -2,13 +2,13 @@
   "images" : [
     {
       "idiom" : "universal",
-      "scale" : "1x",
-      "filename" : "Voice_Play.png"
+      "filename" : "Play_1x.png",
+      "scale" : "1x"
     },
     {
       "idiom" : "universal",
-      "scale" : "2x",
-      "filename" : "Voice_Play@2x.png"
+      "filename" : "Play_2x (1).png",
+      "scale" : "2x"
     },
     {
       "idiom" : "universal",

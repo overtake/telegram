@@ -12,7 +12,6 @@
 #import "SSKeychain.h"
 #import "SSKeychainQuery.h"
 #import "Crypto.h"
-#import "LoopingUtils.h"
 #import "PreviewObject.h"
 #import "HistoryFilter.h"
 #import "FMDatabaseAdditions.h"
@@ -612,6 +611,8 @@ static NSString *encryptionKey;
 
 
 - (id)fileInfoByPathHash:(NSString *)pathHash  {
+    
+    return nil; //todo
     
     __block id file;
     
@@ -1288,7 +1289,7 @@ TL_localMessage *parseMessage(FMResultSet *result) {
     }];
 }
 
--(void)markAllInConversation:(int)peer_id max_id:(int)max_id out:(BOOL)n_out completeHandler:(void (^)(NSArray * ids,NSArray *messages))completeHandler {
+-(void)markAllInConversation:(int)peer_id max_id:(int)max_id out:(BOOL)n_out completeHandler:(void (^)(NSArray * ids,NSArray *messages, int unread_count))completeHandler {
     
     NSMutableArray *ids = [[NSMutableArray alloc] init];
     NSMutableArray *messages = [NSMutableArray array];
@@ -1303,10 +1304,11 @@ TL_localMessage *parseMessage(FMResultSet *result) {
         
         FMResultSet *result;
         
+        
+        
         if(!n_out) {
-            int read_inbox_max_id = [db intForQuery:[NSString stringWithFormat:@"select read_inbox_max_id from %@ where peer_id = ?",tableModernDialogs],@(peer_id)];
             
-            result = [db executeQuery:[NSString stringWithFormat:@"select * from %@ where ((n_id <= ? and n_id > ?) OR dstate=?) and peer_id = ? and (flags & ?) = ? and (flags & ?) = 0",tableMessages],@(max_id),@(read_inbox_max_id),@(DeliveryStatePending),@(peer_id),@(flags),@(flags),@(TGOUTMESSAGE)];
+            result = [db executeQuery:[NSString stringWithFormat:@"select * from %@ where ((n_id <= ?) OR dstate=?) and peer_id = ? and (flags & ?) = ? and (flags & ?) = 0",tableMessages],@(max_id),@(DeliveryStatePending),@(peer_id),@(flags),@(flags),@(TGOUTMESSAGE)];
             
             
             [db executeUpdate:[NSString stringWithFormat:@"update %@ set read_inbox_max_id = ? where peer_id = ?",tableModernDialogs],@(max_id),@(peer_id)];
@@ -1330,15 +1332,22 @@ TL_localMessage *parseMessage(FMResultSet *result) {
         
         if(ids.count > 0)
         {
-            NSString *sql = [NSString stringWithFormat:@"update messages set flags= flags & ~1 where n_id in (%@)",[ids componentsJoinedByString:@","]];
+            NSString *sql = [NSString stringWithFormat:@"update %@ set flags= flags & ~1 where n_id in (%@)",tableMessages,[ids componentsJoinedByString:@","]];
             
             [db executeUpdateWithFormat:sql,nil];
         }
         
+        int unread_count = -1;
+        
+        if(!n_out) {
+            unread_count = [db intForQuery:[NSString stringWithFormat:@"select count(*) from %@ where peer_id = ? and (flags & ?) = ? and (flags & ?) = 0",tableMessages],@(peer_id),@(flags),@(flags),@(TGOUTMESSAGE)];
+        }
+        
+        
         [db commit];
         
         dispatch_async(q,^{
-            completeHandler(ids,messages);
+            completeHandler(ids,messages,unread_count);
         });
         
     }];
@@ -1504,6 +1513,71 @@ TL_localMessage *parseMessage(FMResultSet *result) {
         
     }];
 }
+
+
+-(void)deleteUserChannelMessages:(int)channelId from_id:(int)from_id completeHandler:(void (^)(NSArray *peer_updates, NSDictionary *readCount))completeHandler {
+    
+    dispatch_queue_t dqueue = dispatch_get_current_queue();
+    
+    [queue inDatabase:^(FMDatabase *db) {
+        
+        NSMutableArray *peer_updates = [[NSMutableArray alloc] init];
+        
+        NSString *sql = [NSString stringWithFormat:@"SELECT n_id,random_id FROM %@ WHERE from_id = %d and peer_id = %d",tableChannelMessages,from_id,-channelId];
+        
+        FMResultSet *result = [db executeQueryWithFormat:sql,nil];
+        
+        NSMutableDictionary *unreadCount = [NSMutableDictionary dictionary];
+        
+        NSMutableArray *randomIds = [NSMutableArray array];
+        
+        while ([result next]) {
+            
+            [randomIds addObject:@([result longForColumn:@"random_id"])];
+            
+            long n_id = [result longForColumn:@"n_id"];
+            
+            NSData *nData = [[NSData alloc] initWithBytes:&n_id length:8];
+            
+            int msgId;
+            int peerId;
+            
+            [nData getBytes:&msgId range:NSMakeRange(0, 4)];
+            [nData getBytes:&peerId range:NSMakeRange(4, 4)];
+            
+            int read_max_id = [db intForQuery:[NSString stringWithFormat:@"select read_inbox_max_id from %@ where peer_id = ?",tableModernDialogs],@(peerId)];
+            
+            if(msgId > read_max_id) {
+                unreadCount[@(peerId)] = @([unreadCount[@(peerId)] intValue] + 1);
+            }
+            
+            
+            [peer_updates addObject:@{KEY_MESSAGE_ID:@(msgId),KEY_PEER_ID:@(peerId)}];
+        }
+        
+        [result close];
+        
+        
+        [unreadCount enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
+            
+            [db executeUpdate:[NSString stringWithFormat:@"update %@ set unread_count = unread_count - ? where peer_id = ?",tableModernDialogs],key,obj];
+        }];
+        
+        
+        sql = [NSString stringWithFormat:@"delete from %@ WHERE from_id = %d and peer_id = %d",tableChannelMessages, from_id, -channelId];
+        
+        [db executeUpdateWithFormat:sql,nil];
+        
+        
+        dispatch_async(dqueue, ^{
+            if(completeHandler) completeHandler(peer_updates,unreadCount);
+        });
+
+        
+    }];
+}
+
+
 
 -(void)deleteMessagesInDialog:(TL_conversation *)dialog completeHandler:(dispatch_block_t)completeHandler {
     [queue inDatabase:^(FMDatabase *db) {
@@ -1939,11 +2013,18 @@ TL_localMessage *parseMessage(FMResultSet *result) {
     
     [queue inDatabase:^(FMDatabase *db) {
         __block BOOL result;
-        //[db beginTransaction];
+        [db beginTransaction];
         for (TLChat *chat in chats) {
-            result = [db executeUpdate:@"insert or replace into chats (n_id,serialized) values (?,?)",[NSNumber numberWithInt:chat.n_id], [TLClassStore serialize:chat]];
+            
+            dispatch_block_t insert_blck = ^{
+                result = [db executeUpdate:@"insert or replace into chats (n_id,serialized) values (?,?)",[NSNumber numberWithInt:chat.n_id], [TLClassStore serialize:chat]];
+            };
+            
+            if(!chat.isMin || [db intForQuery:[NSString stringWithFormat:@"select n_id from %@ where n_id = ?",tableChats],@(chat.n_id)] == 0)
+                insert_blck();
+            
         }
-        //[db commit];
+        [db commit];
         dispatch_async(dispatch_get_main_queue(), ^{
             if(completeHandler) completeHandler(result);
         });
@@ -1956,7 +2037,6 @@ TL_localMessage *parseMessage(FMResultSet *result) {
     
     [queue inDatabase:^(FMDatabase *db) {
         NSMutableArray *chats = [[NSMutableArray alloc] init];
-        //[db beginTransaction];
       FMResultSet *result = [db executeQuery:@"select * from chats"];
         while ([result next]) {
             @try {
@@ -1969,7 +2049,6 @@ TL_localMessage *parseMessage(FMResultSet *result) {
             
         }
         [result close];
-        //[db commit];
         dispatch_async(dispatch_get_main_queue(), ^{
             if(completeHandler) completeHandler(chats);
         });
@@ -2038,6 +2117,9 @@ TL_localMessage *parseMessage(FMResultSet *result) {
 - (void)insertUsers:(NSArray *)users completeHandler:(void (^)(BOOL result))completeHandler {
     
     [queue inDatabase:^(FMDatabase *db) {
+        
+        [db beginTransaction];
+        
         for (TLUser *user in users) {
             
             if([user isKindOfClass:[TLUser class]]) {
@@ -2046,11 +2128,18 @@ TL_localMessage *parseMessage(FMResultSet *result) {
                     [[MTNetwork instance] setUserId:user.n_id];
                 }
                 
-                [db executeUpdate:@"insert or replace into users (n_id, serialized,lastseen_update,last_seen) values (?,?,?,?)", @(user.n_id), [TLClassStore serialize:user],@(user.lastSeenUpdate),@(user.status.lastSeenTime)];
+                dispatch_block_t insert_blck = ^{
+                    [db executeUpdate:@"insert or replace into users (n_id, serialized,lastseen_update,last_seen) values (?,?,?,?)", @(user.n_id), [TLClassStore serialize:user],@(user.lastSeenUpdate),@(user.status.lastSeenTime)];
+                };
+                
+                if(!user.isMin || [db intForQuery:[NSString stringWithFormat:@"select n_id from %@ where n_id = ?",tableUsers],@(user.n_id)] == 0)
+                    insert_blck();
 
             }
             
         }
+        
+        [db commit];
         
         if(completeHandler) {
             [[ASQueue mainQueue] dispatchOnQueue:^{
@@ -2070,7 +2159,7 @@ TL_localMessage *parseMessage(FMResultSet *result) {
         if(![db executeUpdate:@"insert or replace into contacts (user_id, mutual) values (?,?)", [NSNumber numberWithInt:contact.user_id],[NSNumber numberWithBool:contact.mutual]]) {
             ELog(@"DB insert contact error: %d", contact.user_id);
         }
-        [LoopingUtils runOnMainQueueAsync:^{
+        [ASQueue dispatchOnMainQueue:^{
             if(completeHandler)
                 completeHandler();
         }];
@@ -2299,7 +2388,7 @@ TL_localMessage *parseMessage(FMResultSet *result) {
              
          }
          
-         [LoopingUtils  runOnMainQueueAsync:^{
+         [ASQueue  dispatchOnMainQueue:^{
             if(completeHandler)
                 completeHandler(list);
         }];
@@ -2333,7 +2422,7 @@ TL_localMessage *parseMessage(FMResultSet *result) {
             
         }
         
-        [LoopingUtils  runOnMainQueueAsync:^{
+        [ASQueue  dispatchOnMainQueue:^{
             if(completeHandler)
                 completeHandler(list);
         }];
@@ -2725,7 +2814,7 @@ TL_localMessage *parseMessage(FMResultSet *result) {
             BOOL isset = [db boolForQuery:[NSString stringWithFormat:@"select count(*) from %@ where n_id = ?",tableSupportMessages],@(obj.channelMsgId)];
             
             if(isset) {
-                [db executeUpdate:[NSString stringWithFormat:@"update %@ set serialized = ? where n_id = ?",tableSupportMessages],@(obj.channelMsgId),[TLClassStore serialize:obj],@(obj.channelMsgId)];
+                [db executeUpdate:[NSString stringWithFormat:@"update %@ set serialized = ? where n_id = ?",tableSupportMessages],[TLClassStore serialize:obj],@(obj.channelMsgId)];
             } else {
                 [db executeUpdate:[NSString stringWithFormat:@"insert or replace into %@ (n_id,serialized) values (?,?)",tableSupportMessages],@(obj.channelMsgId),[TLClassStore serialize:obj]];
             }

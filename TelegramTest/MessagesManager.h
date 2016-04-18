@@ -11,13 +11,7 @@
 @interface MessagesManager : SharedManager
 
 
-
-//+(void)addSupportMessages:(NSArray *)supportMessages;
-
-//+(TL_localMessage *)supportMessage:(int)n_id peer_id:(int)peer_id;
-
-
-
++(void)clearNotifies:(TL_conversation *)conversation max_id:(int)max_id;
 
 -(TL_localMessage *)findWithRandomId:(long)random_id;
 

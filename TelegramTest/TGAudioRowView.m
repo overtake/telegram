@@ -37,6 +37,10 @@
     return self;
 }
 
+-(NSImage *)image {
+    return _imageView.image;
+}
+
 - (void)drawRect:(NSRect)dirtyRect {
     [super drawRect:dirtyRect];
     

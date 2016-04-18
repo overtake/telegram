@@ -15,75 +15,76 @@
 #import "NSAttributedString+Hyperlink.h"
 #import "ImageCache.h"
 #import "ImageUtils.h"
-
 #import "MessageTableCellDocumentView.h"
 #import "NSString+Extended.h"
-
 @implementation MessageTableItemDocument
 
 - (BOOL)isHasThumb {
-    return self.message.media.document.thumb && ![self.message.media.document.thumb isKindOfClass:[TL_photoSizeEmpty class]];
+    return self.document.thumb && ![self.document.thumb isKindOfClass:[TL_photoSizeEmpty class]];
 }
 
-- (id)initWithObject:(TLMessage *)object {
+- (id)initWithObject:(TL_localMessage *)object {
     self = [super initWithObject:object];
     if(self) {
-        self.fileName = self.message.media.document.file_name;
-        if(!self.fileName)
-            self.fileName = @"undefined.file";
         
+        _fileSize = [[NSString sizeToTransformedValuePretty:self.document.size] trim];
         
-        self.fileSize = [[NSString sizeToTransformedValuePretty:self.message.media.document.size] trim];
+        [self doAfterDownload];
         
-        NSSize size;
+        NSSize size = NSZeroSize;
         
         if([self isHasThumb]) {
             
-            size = strongsizeWithMinMax(NSMakeSize(self.message.media.document.thumb.w, self.message.media.document.thumb.h), 70, 70);
-            
-           if(self.message.media.document.thumb.bytes) {
-                NSImage *thumb = [[NSImage alloc] initWithData:self.message.media.document.thumb.bytes];
-                thumb = renderedImage(thumb, size);
-                [TGCache cacheImage:thumb forKey:self.message.media.document.thumb.location.cacheKey groups:@[IMGCACHE]];
+            if(![TGCache cachedImage:self.document.thumb.location.cacheKey]) {
+                size = strongsizeWithMinMax(NSMakeSize(self.document.thumb.w, self.document.thumb.h), 70, 70);
+                
+                if(self.document.thumb.bytes) {
+                    NSImage *thumb = [[NSImage alloc] initWithData:self.document.thumb.bytes];
+                    thumb = renderedImage(thumb, size);
+                    [TGCache cacheImage:thumb forKey:self.document.thumb.location.cacheKey groups:@[IMGCACHE]];
+                }
             }
             
             self.thumbSize = NSMakeSize(70, 70);
             
         } else {
-            self.thumbSize = NSMakeSize(48, 48);
+            self.thumbSize = NSMakeSize(40, 40);
         }
         
-        self.thumbObject = [[TGImageObject alloc] initWithLocation:self.message.media.document.thumb.location placeHolder:self.cachedThumb];
+        self.thumbObject = [[TGImageObject alloc] initWithLocation:self.document.thumb.location placeHolder:nil];
         
         self.thumbObject.imageSize = size;
-        
+        self.thumbObject.imageProcessor = [ImageUtils c_processor];
         self.blockSize = NSMakeSize(200, self.thumbSize.height + 6);
-        self.previewSize = self.thumbSize;
-    
-        if(self.isset) {
-            self.state = DocumentStateDownloaded;
-        } else {
-            self.state = DocumentStateWaitingDownload;
-        }
-
-         [self checkStartDownload:[self.message.to_id isKindOfClass:[TL_peerChat class]] ? AutoGroupDocuments : AutoPrivateDocuments size:self.message.media.document.size];
+        [self checkStartDownload:[self.message.to_id isKindOfClass:[TL_peerChat class]] ? AutoGroupDocuments : AutoPrivateDocuments size:self.document.size];
         
     }
     return self;
 }
 
--(NSString *)fileName {
-    return _fileName.length > 0 ? _fileName : @"File";
+-(TLDocument *)document {
+    if([self.message.media isKindOfClass:[TL_messageMediaBotResult class]]) {
+        return self.message.media.bot_result.document;
+    } else
+        return self.message.media.document;
 }
+
+-(BOOL)makeSizeByWidth:(int)width {
+    
+    _fileNameSize = [_fileNameAttrubutedString coreTextSizeForTextFieldForWidth:width - self.thumbSize.width - self.defaultOffset];
+    
+    self.contentSize = self.blockSize = NSMakeSize(MAX(_fileNameSize.width,90) + self.thumbSize.width + self.defaultOffset, self.thumbSize.height);
+    
+    return [super makeSizeByWidth:width];
+}
+
 
 -(BOOL)canShare {
     return [self isset];
 }
 
-
-
 - (int)size {
-    return self.message.media.document.size;
+    return self.document.size;
 }
 
 - (Class)downloadClass {
@@ -91,28 +92,53 @@
 }
 
 - (NSString *)path {
-    if([self.message.media.document isKindOfClass:[TL_outDocument class]])
-        return ((TL_outDocument *)self.message.media.document).file_path;
-    else
         return mediaFilePath(self.message);
 }
 
 - (void)doAfterDownload {
     [super doAfterDownload];
     
-    self.state = DocumentStateDownloaded;
+    NSMutableAttributedString *attr = [[NSMutableAttributedString alloc] init];
+    
+    [attr appendString:self.document.file_name withColor:TEXT_COLOR];
+    
+    [attr setFont:TGSystemMediumFont(13) forRange:attr.range];
+    
+    if(attr.length > 0)
+        [attr appendString:@"\n"];
+    NSRange range = [attr appendString:_fileSize withColor:GRAY_TEXT_COLOR];
+    
+    [attr setFont:TGSystemFont(13) forRange:range];
+    
+    if(![self isHasThumb] && self.isset) {
+        range = [attr appendString:@" - " withColor:GRAY_TEXT_COLOR];
+        [attr setFont:TGSystemFont(13) forRange:range];
+        range = [attr appendString:NSLocalizedString(@"Message.File.ShowInFinder", nil) withColor:LINK_COLOR];
+        [attr setFont:TGSystemFont(13) forRange:range];
+        [attr setLink:@"chat://finder" forRange:range];
+    }
+    
+    NSMutableParagraphStyle *style = [[NSMutableParagraphStyle alloc] init];
+    style.lineBreakMode = NSLineBreakByTruncatingMiddle;
+    style.lineSpacing = 2;
+    
+    [attr addAttribute:NSParagraphStyleAttributeName value:style range:attr.range];
+    
+    _fileNameAttrubutedString = attr;
+    _fileNameSize = [_fileNameAttrubutedString coreTextSizeForTextFieldForWidth:self.makeSize - self.thumbSize.width - self.defaultOffset];
+    
 }
 
 -(DownloadItem *)downloadItem {
     
     if(super.downloadItem == nil)
-        [super setDownloadItem:[DownloadQueue find:self.message.media.document.n_id]];
+        [super setDownloadItem:[DownloadQueue find:self.document.n_id]];
     
     return [super downloadItem];
 }
 
 - (BOOL)canDownload {
-    return self.message.media.document.dc_id != 0;
+    return self.document.dc_id != 0;
 }
 
 - (BOOL)isset {
@@ -121,6 +147,10 @@
 
 - (BOOL)needUploader {
     return YES;
+}
+
+-(Class)viewClass {
+    return [MessageTableCellDocumentView class];
 }
 
 @end

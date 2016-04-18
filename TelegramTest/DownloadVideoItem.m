@@ -32,7 +32,7 @@
         
         AVAssetImageGenerator *generator = [[AVAssetImageGenerator alloc] initWithAsset:asset];
         generator.appliesPreferredTrackTransform = TRUE;
-        CMTime thumbTime = CMTimeMakeWithSeconds(0, 30);
+        CMTime thumbTime = CMTimeMakeWithSeconds(0, 1);
         
         
         TL_localMessage *msg = (TL_localMessage *)self.object;
@@ -62,20 +62,17 @@
         [generator generateCGImagesAsynchronouslyForTimes:[NSArray arrayWithObject:[NSValue valueWithCMTime:thumbTime]] completionHandler:handler];
         
         dispatch_semaphore_wait(sema, DISPATCH_TIME_FOREVER);
-        //dispatch_release(sema);
         
         TLFileLocation *location = msg.media.document.thumb.location;
         
-        if(!location)
-        {
-            location = [TL_fileLocation createWithDc_id:0 volume_id:rand_long() local_id:0 secret:0];
-        }
+        [TGCache removeCachedImage:msg.media.document.thumb.location.cacheKey];
         
-        msg.media.document.thumb = [TL_photoCachedSize createWithType:@"hd" location:location w:size.width h:size.height bytes:jpegNormalizedData(thumbImg)];
+        thumbImg = prettysize(thumbImg);
         
-        [msg save:NO];
+        [jpegNormalizedData(thumbImg) writeToFile:locationFilePath(location, @"jpg") atomically:YES];
         
-        [[Storage manager] addHolesAroundMessage:msg];
+        [Notification perform:UPDATE_MESSAGE data:@{KEY_MESSAGE:msg}];
+
     }
     [super setDownloadState:downloadState];
 }
@@ -87,8 +84,6 @@
         return [TL_inputEncryptedFileLocation createWithN_id:self.n_id access_hash:message.media.document.access_hash];
     return [TL_inputDocumentFileLocation createWithN_id:self.n_id access_hash:message.media.document.access_hash];
 }
-
-
 
 
 @end

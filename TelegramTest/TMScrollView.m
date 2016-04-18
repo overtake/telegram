@@ -165,6 +165,17 @@
     return self.contentView.documentRect.size;
 }
 
+-(void)setScrollWheelBlock:(dispatch_block_t)scrollWheelBlock {
+    _scrollWheelBlock = scrollWheelBlock;
+}
+
+- (void)scrollWheel:(NSEvent *)theEvent {
+    [super scrollWheel:theEvent];
+    if(_scrollWheelBlock)
+        _scrollWheelBlock();
+}
+
+
 //- (void)scrollWheel:(NSEvent *)theEvent {
 //    if(!self.disableScrolling) {
 //        [super scrollWheel:theEvent];

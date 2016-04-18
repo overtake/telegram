@@ -93,7 +93,7 @@
      self.view = [[TMCollectionPageView alloc] initWithFrame:NSZeroRect];
     
     
-    [self setTitle:NSLocalizedString(@"Conversation.Filter.Photos", nil)];
+    [self setTitle:NSLocalizedString(@"Profile.SharedMedia", nil)];
     
     [self.centerTextField setClickBlock:^{
         
@@ -729,8 +729,6 @@ static const int maxWidth = 120;
         
         if(photo.sizes.count) {
             
-            //        NSImage *cachePhoto;
-            
             int idx = photo.sizes.count == 1 ? 0 : 1;
             
             TLPhotoSize* photoSize =  ((TLPhotoSize *)photo.sizes[idx]);
@@ -740,12 +738,12 @@ static const int maxWidth = 120;
             imageObject.previewObject = previewObject;
             
         }
-    } else if([media isKindOfClass:[TL_messageMediaVideo class]]) {
+    } else if([media isKindOfClass:[TL_messageMediaDocument class]]) {
         
-        TLVideo *video = media.video;
+        TLDocument *video = media.document;
         
         imageObject = [[PhotoCollectionImageObject alloc] initWithLocation:video.thumb.location placeHolder:[video.thumb isKindOfClass:[TL_photoCachedSize class]] ? [[NSImage alloc] initWithData:video.thumb.bytes] : nil sourceId:arc4random()];
-        imageObject.imageProcessor = [ImageUtils b_processor];
+        imageObject.imageProcessor = ![video.thumb.type isEqualToString:@"hd"] ? [ImageUtils b_processor] : [ImageUtils c_processor];
         imageObject.previewObject = previewObject;
         
         previewObject.reservedObject = [[DownloadVideoItem alloc] initWithObject:previewObject.media];
@@ -766,10 +764,6 @@ static const int maxWidth = 120;
         
     }]];
     
-//    [filterMenu addItem:[NSMenuItem menuItemWithTitle:NSLocalizedString(@"Conversation.Filter.Video",nil) withBlock:^(id sender) {
-//        [[Telegram rightViewController] showByDialog:self.conversation withJump:0 historyFilter:[VideoHistoryFilter class] sender:self];
-//    }]];
-//    
     
     [filterMenu addItem:[NSMenuItem menuItemWithTitle:NSLocalizedString(@"Conversation.Filter.Files",nil) withBlock:^(id sender) {
         [self showFiles];
@@ -784,9 +778,6 @@ static const int maxWidth = 120;
         [TGAudioPlayerWindow show:_conversation playerState:TGAudioPlayerWindowStatePlayList];
     }]];
     
-//    [filterMenu addItem:[NSMenuItem menuItemWithTitle:NSLocalizedString(@"Conversation.Filter.Audio",nil) withBlock:^(id sender) {
-//        [[Telegram rightViewController] showByDialog:self.conversation withJump:0 historyFilter:[AudioHistoryFilter class] sender:self];
-//    }]];
     
     return filterMenu;
 }
@@ -881,9 +872,20 @@ static const int maxWidth = 120;
             
         }
         
-       [weakSelf.navigationViewController.messagesViewController deleteSelectedMessages];
+        [weakSelf.navigationViewController.messagesViewController deleteSelectedMessages:^{
+            
+            NSMutableArray *array = [NSMutableArray array];
+            
+            [weakSelf.navigationViewController.messagesViewController.selectedMessages enumerateObjectsUsingBlock:^(MessageTableItem *obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                [array addObject:@{KEY_PEER_ID:@(obj.message.peer_id),KEY_MESSAGE_ID:@(obj.message.n_id)}];
+            }];
+            
+            [Notification perform:MESSAGE_DELETE_EVENT data:@{KEY_DATA:array}];
+            
+            [weakSelf setIsEditable:NO animated:YES];
+        }];
         
-        [weakSelf setIsEditable:NO animated:YES];
+        
         
     }];
     self.deleteButton.disableColor = NSColorFromRGB(0xa1a1a1);

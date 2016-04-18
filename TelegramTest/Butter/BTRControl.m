@@ -349,6 +349,12 @@ static void BTRControlCommonInit(BTRControl *self) {
 	[super updateTrackingAreas];
 }
 
+-(BOOL)mouseInside {
+    NSPoint mouseLocation = [[self window] mouseLocationOutsideOfEventStream];
+    mouseLocation = [self convertPoint:mouseLocation fromView:nil];
+    return NSPointInRect(mouseLocation, self.bounds);
+}
+
 - (void)setNeedsTrackingArea:(BOOL)needsTrackingArea {
 	_needsTrackingArea = needsTrackingArea;
 	if (!needsTrackingArea && self.trackingArea != nil) {
@@ -486,8 +492,8 @@ static void BTRControlCommonInit(BTRControl *self) {
     
     cancel_delayed_block(_internalId);
     
-    if(_lastDownTime == 1)
-        return;
+//    if(_lastDownTime == 1)
+//        return;
     
     _lastDownTime = 0;
     
@@ -506,12 +512,10 @@ static void BTRControlCommonInit(BTRControl *self) {
 	} else {
 		events |= BTRControlEventMouseUpOutside;
 	}
+   
+    self.highlighted = NO;
     
-    
-	
-	[self sendActionsForControlEvents:events];
-	
-	self.highlighted = NO;
+    [self sendActionsForControlEvents:events];
 }
 
 - (void)sendActionsForControlEvents:(BTRControlEvents)events {

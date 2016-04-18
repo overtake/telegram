@@ -90,6 +90,8 @@
         
     } else if([action isKindOfClass:[TL_messageActionChatMigrateTo class]] || [action isKindOfClass:[TL_messageActionChannelMigrateFrom class]]) {
         text = NSLocalizedString(@"MessageAction.Service.ChatMigrated", nil);
+    } else if([action isKindOfClass:[TL_messageActionPinMessage class]]) {
+        text = NSLocalizedString(@"MessageAction.Service.PinnedMessage", nil);
     }
    
     return text;
@@ -198,7 +200,7 @@
         
         
         
-        if(((message.conversation.type == DialogTypeChannel && message.from_id != 0) || message.conversation.type == DialogTypeChat) && !message.action ) {
+        if(((message.conversation.type == DialogTypeChannel && message.from_id != 0 && !message.isPost && message.chat.isMegagroup) || message.conversation.type == DialogTypeChat) ) {
             
             if(!message.n_out) {
                 userLast = message.fromUser;
@@ -206,6 +208,10 @@
             } else {
                 chatUserNameString = [NSLocalizedString(@"Profile.You", nil) stringByAppendingString:@"\n"];
             }
+            
+            if(message.action)
+                userLast = message.fromUser;
+            
         }
         
         
@@ -214,8 +220,6 @@
         
         if(message.action) {
             isAction = YES;
-            if(!userLast && message.from_id != 0)
-                userLast = message.fromUser;
              if(message.conversation.type != DialogTypeSecretChat && userLast)
                 chatUserNameString = userLast ? userLast.fullName : NSLocalizedString(@"MessageAction.Service.LeaveChat", nil);
 
@@ -284,6 +288,9 @@
             } else if([action isKindOfClass:[TL_messageActionChannelMigrateFrom class]] || [action isKindOfClass:[TL_messageActionChatMigrateTo class]]) {
                 msgText = NSLocalizedString(@"MessageAction.Service.ChatMigrated", nil);
                 chatUserNameString = nil;
+            } else if([action isKindOfClass:[TL_messageActionPinMessage class]]) {
+                msgText = NSLocalizedString(@"MessageAction.Service.PinnedMessage", nil);
+
             }
 
             
@@ -293,8 +300,7 @@
         }
         
         if(chatUserNameString)
-            [messageText appendString:chatUserNameString withColor:DARK_BLACK];
-        
+            [messageText appendString:chatUserNameString withColor:!message.action ? DARK_BLACK : GRAY_TEXT_COLOR];
         
         if(!message.action) {
             if(message.media && ![message.media isKindOfClass:[TL_messageMediaEmpty class]] && ![message.media isKindOfClass:[TL_messageMediaWebPage class]]) {
@@ -352,7 +358,7 @@
 
 + (NSAttributedString *) serviceAttributedMessage:(TL_localMessage *)message forAction:(TLMessageAction *)action {
     
-    TLUser *user = [[UsersManager sharedManager] find:message.from_id];
+    TLUser *user = [message.chat isKindOfClass:[TLChat class]] && message.chat.isChannel && !message.chat.isMegagroup ? nil : [[UsersManager sharedManager] find:message.from_id];
     
     NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] init];
     NSMutableArray *users = [NSMutableArray array];
@@ -390,20 +396,13 @@
                 }];
                 
                 actionText = NSLocalizedString(@"MessageAction.Service.Invited",nil);
-                
             }
-            
-           
             if(message.from_id  == [UsersManager currentUserId]) {
                 actionText = NSLocalizedString(@"MessageAction.Service.YouChoinedToChannel", nil);
             }
         } else {
-            
-           
-            
             if(action.users.count == 1 && [action.users[0] intValue] == message.from_id) {
                 actionText = NSLocalizedString(@"MessageAction.Service.JoinedGroup", nil);
-                
             } else {
                 actionText = NSLocalizedString(@"MessageAction.Service.InvitedGroup",nil);
                 
@@ -417,8 +416,6 @@
             }
         }
         
-        
-        
     } else if([action isKindOfClass:[TL_messageActionChatCreate class]]) {
         
         actionText = [NSString stringWithFormat:NSLocalizedString(@"MessageAction.Service.CreatedChat",nil), action.title];
@@ -426,13 +423,10 @@
     } else if([action isKindOfClass:[TL_messageActionChatDeleteUser class]]) {
         
         if(action.user_id != message.from_id) {
-            
             TLUser *user = [[UsersManager sharedManager] find:action.user_id];
-            
             if(user != nil) {
                 [users addObject:user];
             }
-            
             actionText = NSLocalizedString(@"MessageAction.Service.KickedGroup",nil);
         } else {
             actionText = NSLocalizedString(@"MessageAction.Service.LeftGroup",nil);
@@ -442,15 +436,40 @@
     } else if([action isKindOfClass:[TL_messageActionSetMessageTTL class]]) {
         actionText = [MessagesUtils selfDestructTimer:[(TL_messageActionSetMessageTTL *)action ttl]];
     } else if([action isKindOfClass:[TL_messageActionChatJoinedByLink class]]) {
-        
-        
         actionText = NSLocalizedString(@"MessageAction.Service.JoinedGroupByLink", nil);
-        
     } else if([action isKindOfClass:[TL_messageActionChannelCreate class]]) {
          actionText = NSLocalizedString(@"MessageAction.Service.ChannelCreated", nil);
     }  else if([action isKindOfClass:[TL_messageActionChannelMigrateFrom class]] || [action isKindOfClass:[TL_messageActionChatMigrateTo class]]) {
         actionText = NSLocalizedString(@"MessageAction.Service.ChatMigrated", nil);
         user = nil;
+    } else if([action isKindOfClass:[TL_messageActionPinMessage class]]) {
+        actionText = NSLocalizedString(@"MessageAction.Service.PinMessage", nil);
+        
+        if(!message.replyMessage || (message.replyMessage.media == nil && message.replyMessage.message.length == 0)) {
+            actionText = NSLocalizedString(@"Message.PinnedDeletedMessage", nil);
+        } else if(message.replyMessage.media == nil || [message.replyMessage.media isKindOfClass:[TL_messageMediaWebPage class]]) {
+            
+            BOOL addDot = message.replyMessage.message.length > 30;
+            
+            actionText = [NSString stringWithFormat:actionText, [[message.replyMessage.message stringByReplacingOccurrencesOfString:@"\n" withString:@" "] substringWithRange:NSMakeRange(0, MIN(30,message.replyMessage.message.length))]];
+            
+            if(addDot) {
+                actionText = [actionText stringByAppendingString:@"..."];
+            }
+        } else {
+            
+            NSString *caption = message.replyMessage.media.caption;
+            message.replyMessage.media.caption = @"";
+            NSString *media = [self mediaMessage:message.replyMessage];
+            message.replyMessage.media.caption = caption;
+            if(![media isEqualToString:@"GIF"]) {
+                media = [media lowercaseString];
+            }
+            
+            actionText = [NSString stringWithFormat:NSLocalizedString(@"Message.PinnedMediaHeader", nil),media];
+        }
+        
+        
     }
     static float size = 11.5;
     
@@ -460,25 +479,16 @@
         
         NSRange range = [attributedString appendString:NSLocalizedString(@"Bot.WhatBotCanDo", nil) withColor:TEXT_COLOR];
         [attributedString setFont:TGSystemMediumFont(13) forRange:range];
-        
         [attributedString setAlignment:NSCenterTextAlignment range:range];
-        
         [attributedString appendString:@"\n\n"];
-        
         range = [attributedString appendString:actionText withColor:TEXT_COLOR];
-        
         [attributedString setFont:TGSystemFont(13) forRange:range];
-        
         [attributedString setAlignment:NSLeftTextAlignment range:range];
         
         return attributedString;
     }
     
-    
-    
-    
     NSRange start = NSMakeRange(NSNotFound, 0);
-    //  if(user != [UsersManager currentUser]) {
     if(user)
         start = [attributedString appendString:[user fullName] withColor:LINK_COLOR];
     
@@ -486,7 +496,6 @@
         [attributedString setLink:[TMInAppLinks userProfile:user.n_id] forRange:start];
         [attributedString setFont:TGSystemMediumFont(size) forRange:start];
     }
-    
     
     start = [attributedString appendString:[NSString stringWithFormat:@" %@ ", actionText] withColor:NSColorFromRGB(0xaeaeae)];
     [attributedString setFont:TGSystemFont(size) forRange:start];
@@ -507,13 +516,10 @@
         
     }
     
-
     if(title) {
         start = [attributedString appendString:[NSString stringWithFormat:@"\"%@\"", title] withColor:NSColorFromRGB(0xaeaeae)];
         [attributedString setFont:TGSystemMediumFont(size) forRange:start];
     }
-    
-    //    [attributedString appendString:@"wqeqoeqwe wqkeqwoewkq keqwoei qoioiweiqwioeoqweiwqoi qoiweoiqwoiewqoieoiqweoiwqeoiwqoeiwqoieoiw oiqweoiqwoieqwoieoqwi"];
     
     return attributedString;
 }
@@ -574,6 +580,8 @@
         return message.media.caption;
     }
     
+    TLDocument *document = message.media.document ? message.media.document : message.media.bot_result.document;
+    
     if([message.media isKindOfClass:[TL_messageMediaPhoto class]]) {
         return  NSLocalizedString(@"ChatMedia.Photo", nil);
     } else if([message.media isKindOfClass:[TL_messageMediaContact class]]) {
@@ -582,30 +590,52 @@
         return NSLocalizedString(@"ChatMedia.Video", nil);
     } else if([message.media isKindOfClass:[TL_messageMediaGeo class]] || [message.media isKindOfClass:[TL_messageMediaVenue class]]) {
         return NSLocalizedString(@"ChatMedia.Location", nil);
-    }  else if([message.media isKindOfClass:[TL_messageMediaDocument class]] || [message.media isKindOfClass:[TL_messageMediaDocument_old44 class]]) {
+    }  else if(document) {
         
-        if([message.media.document.mime_type isEqualToString:@"video/mp4"] && [message.media.document attributeWithClass:[TL_documentAttributeAnimated class]] != nil) {
+        if(document.isGif) {
             return @"GIF";
         }
         
-        if([message.media.document attributeWithClass:[TL_documentAttributeVideo class]]) {
+        if(document.isVideo) {
             return NSLocalizedString(@"ChatMedia.Video", nil);
         }
         
-        if(message.media.document.audioAttr.isVoice) {
-            return NSLocalizedString(@"ChatMedia.Audio", nil);
+        if(message.media.document.isVoice) {
+            return NSLocalizedString(@"ChatMedia.Voice", nil);
         }
         
         return [message.media.document isSticker] ? (((TL_documentAttributeSticker *)[message.media.document attributeWithClass:[TL_documentAttributeSticker class]]).alt.length > 0 ? [NSString stringWithFormat:@"%@ %@",((TL_documentAttributeSticker *)[message.media.document attributeWithClass:[TL_documentAttributeSticker class]]).alt,NSLocalizedString(@"Sticker", nil)] : NSLocalizedString(@"Sticker", nil)) : (message.media.document.file_name.length == 0 ? NSLocalizedString(@"ChatMedia.File", nil) : message.media.document.file_name);
     } else {
         
-        if([message.media.bot_result.type isEqualToString:@"gif"] && [message.media.bot_result.send_message isKindOfClass:[TL_botInlineMessageMediaAuto class]]) {
-            return @"GIF";
-        } else if([message.media.bot_result.type isEqualToString:@"photo"] && [message.media.bot_result.send_message isKindOfClass:[TL_botInlineMessageMediaAuto class]]) {
-            return  NSLocalizedString(@"ChatMedia.Photo", nil);
-        } else if([message.media.bot_result.send_message isKindOfClass:[TL_botInlineMessageText class]]) {
+        if([message.media.bot_result.send_message isKindOfClass:[TL_botInlineMessageText class]]) {
             return message.message;
         }
+        
+        NSString *mime_type = message.media.bot_result.document ? message.media.bot_result.document.mime_type : message.media.bot_result.content_type;
+        
+        if(([message.media.bot_result.type isEqualToString:kBotInlineTypeGif])) {
+            return @"GIF";
+        } else if([message.media.bot_result.type isEqualToString:kBotInlineTypePhoto]) {
+            return  NSLocalizedString(@"ChatMedia.Photo", nil);
+        } else if([message.media.bot_result.type isEqualToString:kBotInlineTypeAudio]) {
+            
+            if([mime_type isEqualToString:@"audio/ogg"])
+                 return  NSLocalizedString(@"ChatMedia.Voice", nil);
+            else
+                return  NSLocalizedString(@"ChatMedia.Audio", nil);
+            
+        } else if([message.media.bot_result.type isEqualToString:kBotInlineTypeVideo]) {
+            return  NSLocalizedString(@"ChatMedia.Video", nil);
+        } else if([message.media.bot_result.type isEqualToString:kBotInlineTypeFile]) {
+            return  NSLocalizedString(@"ChatMedia.File", nil);
+        } else if([message.media.bot_result.type isEqualToString:kBotInlineTypeVenue]) {
+            return  NSLocalizedString(@"ChatMedia.Location", nil);
+        } else if([message.media.bot_result.type isEqualToString:kBotInlineTypeContact]) {
+            return  NSLocalizedString(@"ChatMedia.Contact", nil);
+        } else if([message.media.bot_result.type isEqualToString:kBotInlineTypeSticker]) {
+            return NSLocalizedString(@"Sticker", nil);
+        }
+
         
         if(message.action != nil) {
             return [self serviceMessage:message forAction:message.action];

@@ -23,3 +23,5 @@
 #import "MessageTableCellStickerView.h"
 #import "MessageTableCellHoleView.h"
 #import "MessageTableCellMpegView.h"
+
+#import "TGModernMessageCellContainerView.h"

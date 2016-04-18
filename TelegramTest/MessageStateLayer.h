@@ -9,10 +9,14 @@
 #import "BTRView.h"
 #import "MessageTableCellContainerView.h"
 
-@interface MessageStateLayer : BTRView
+@interface MessageStateLayer : TMView
 
 @property (nonatomic,weak) MessageTableCellContainerView *container;
 
 -(void)setState:(MessageTableCellState)state;
+-(void)setState:(MessageTableCellState)state animated:(BOOL)animated;
+
+
+-(void)_didChangeBackgroundColorWithAnimation:(POPBasicAnimation *)anim toColor:(NSColor *)color;
 
 @end

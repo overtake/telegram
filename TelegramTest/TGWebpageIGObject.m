@@ -16,13 +16,6 @@
     return NSClassFromString(@"TGWebpageIGContainer");
 }
 
--(id)initWithWebPage:(TLWebPage *)webpage {
-    if(self = [super initWithWebPage:webpage]) {
-        
-    }
-    
-    return self;
-}
 
 
 -(void)makeSize:(int)width {

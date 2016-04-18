@@ -9,6 +9,7 @@
 #import "TGObjectContainerView.h"
 #import "TGUserContainerRowItem.h"
 #import "ITSwitch.h"
+#import "TGTextLabel.h"
 @interface TGObjectContainerView ()
 
 @property (nonatomic,strong) TMView *avatarContainerView;
@@ -25,6 +26,8 @@
 @property (nonatomic,strong) NSImageView *deleteMenuImageView;
 
 @property (nonatomic,strong) BTRButton *selectView;
+
+@property (nonatomic,strong) TGTextLabel *bagdeLabel;
 
 @end
 
@@ -65,19 +68,12 @@
         
         [self addSubview:_deleteMenuImageView];
         
-//        weak();
-//        
-//        [self.selectView setBackgroundImage:image_ComposeCheck() forControlState:BTRControlStateNormal];
-//        [self.selectView setBackgroundImage:image_ComposeCheck() forControlState:BTRControlStateHover];
-//        [self.selectView setBackgroundImage:image_ComposeCheck() forControlState:BTRControlStateHighlighted];
-//        [self.selectView setBackgroundImage:image_ComposeCheckActive() forControlState:BTRControlStateSelected];
-//        [self.selectView addBlock:^(BTRControlEvents events) {
-//            [weakSelf mouseDown:[NSApp currentEvent]];
-//        } forControlEvents:BTRControlEventLeftClick];
-//        
-//        [self addSubview:self.selectView];
-//        
-//        [self.selectView setHidden:YES];
+        
+        _bagdeLabel = [[TGTextLabel alloc] init];
+        
+        [_bagdeLabel setHidden:YES];
+        
+        [self addSubview:_bagdeLabel];
     }
     return self;
 }
@@ -118,6 +114,13 @@
     [_switchView setCenteredYByView:self];
     [_selectImageView setCenteredYByView:self];
     
+    
+    [_bagdeLabel setHidden:item.badge.length == 0];
+    if(item.badge.length > 0) {
+        [_bagdeLabel setText:item.badge maxWidth:100];
+        [_bagdeLabel setCenteredYByView:self];
+    }
+    
     [self setUser:item.user];
 }
 
@@ -141,6 +144,8 @@
     
     id deleteF = animated ? [_deleteMenuImageView animator] : _deleteMenuImageView;
     
+    id badgeF = animated ? [_bagdeLabel animator] : _bagdeLabel;
+    
     [statusF setFrameOrigin:NSMakePoint(self.xOffset + NSWidth(_avatarContainerView.frame) + 10, NSHeight(self.frame)/2 - NSHeight(self.statusTextField.frame) )];
     [nameF setFrameOrigin:NSMakePoint(self.xOffset + NSWidth(_avatarContainerView.frame) + 10, NSHeight(self.frame)/2 )];
     
@@ -156,6 +161,10 @@
     [(NSView *)deleteF setAlphaValue:self.item.isEditable ? 1 : 0];
     
     [_deleteMenuImageView setHidden:self.item.stateback == nil || ![self.item.stateback(self.item) boolValue]];
+    
+    [badgeF setFrameOrigin:NSMakePoint(NSWidth(self.frame) - NSWidth(_bagdeLabel.frame) - self.item.xOffset, NSMinY(_bagdeLabel.frame))];
+    
+    
 }
 
 -(void)setFrameSize:(NSSize)newSize {

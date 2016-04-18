@@ -630,6 +630,8 @@ static const int navigationOffset = 48;
 
 -(void)showInfoPage:(TL_conversation *)conversation animated:(BOOL)animated isDisclosureController:(BOOL)isDisclosureController {
     
+    [TMViewController hideAllModals];
+    
     ComposeViewController *infoViewController;
 
     
@@ -711,7 +713,9 @@ static const int navigationOffset = 48;
 
 -(void)showMessagesViewController:(TL_conversation *)conversation withMessage:(TL_localMessage *)message {
     
-     [self.messagesViewController setCurrentConversation:conversation withMessageJump:message];
+    [TMViewController hideAllModals];
+    
+    [self.messagesViewController setCurrentConversation:conversation withMessageJump:message];
     
     [self gotoViewController:self.messagesViewController];
     

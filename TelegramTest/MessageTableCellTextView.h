@@ -9,7 +9,8 @@
 #import "MessageTableCellContainerView.h"
 #import "MessageTableItemText.h"
 #import "TGMultipleSelectTextView.h"
-@interface MessageTableCellTextView : MessageTableCellContainerView
+#import "TGModernMessageCellContainerView.h"
+@interface MessageTableCellTextView : TGModernMessageCellContainerView
 
 
 @property (nonatomic, strong,readonly) TGMultipleSelectTextView *textView;

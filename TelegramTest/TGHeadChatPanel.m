@@ -9,6 +9,7 @@
 #import "TGHeadChatPanel.h"
 #import "TGHCMessagesViewController.h"
 #import "TGChatHeadLockView.h"
+#import "TGMessagesNavigationController.h"
 @interface TGHeadChatPanel ()
 @property (nonatomic,strong) TGHCMessagesViewController *messagesViewController;
 @property (nonatomic,strong) TL_conversation *conversation;
@@ -109,7 +110,7 @@ static NSMutableDictionary *allChatHeads;
     self.contentView.wantsLayer = YES;
    // self.contentView.autoresizingMask = NSViewWidthSizable | NSViewHeightSizable;
     
-    self.navigationController = [[TMNavigationController alloc] initWithFrame:self.contentView.bounds];
+    self.navigationController = [[TGMessagesNavigationController alloc] initWithFrame:self.contentView.bounds];
     
     
     _messagesViewController = [[TGHCMessagesViewController alloc] initWithFrame:self.contentView.bounds];

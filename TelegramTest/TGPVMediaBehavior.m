@@ -12,8 +12,8 @@
 #import "PhotoHistoryFilter.h"
 #import "MessageTableItem.h"
 #import "PhotoVideoHistoryFilter.h"
+#import "TGVideoViewerItem.h"
 @interface TGPVMediaBehavior () <MessagesDelegate>
-
 @end
 
 @implementation TGPVMediaBehavior
@@ -29,7 +29,7 @@
 
 -(id)initWithConversation:(TL_conversation *)conversation commonItem:(PreviewObject *)object {
     
-    if(self = [self initWithConversation:conversation commonItem:object filter:[PhotoHistoryFilter class]]) {
+    if(self = [self initWithConversation:conversation commonItem:object filter:[PhotoVideoHistoryFilter class]]) {
         
     }
     
@@ -100,7 +100,6 @@
 
 -(void)load:(long)max_id next:(BOOL)next limit:(int)limit callback:(void (^)(NSArray *))callback {
     
-    
     [_controller request:next anotherSource:YES sync:NO selectHandler:^(NSArray *result, NSRange range,HistoryFilter *filter) {
         
         [ASQueue dispatchOnStageQueue:^{
@@ -133,9 +132,10 @@
     
     [list enumerateObjectsUsingBlock:^(PreviewObject *obj, NSUInteger idx, BOOL *stop) {
         
+        TL_localMessage *message = (TL_localMessage *)obj.media;
         
-        if([[(TL_localMessage *)obj.media media] isKindOfClass:[TL_messageMediaPhoto class]]) {
-            TLPhoto *photo = [((TL_localMessage *)[obj media]) media].photo;
+        if([message.media isKindOfClass:[TL_messageMediaPhoto class]]) {
+            TLPhoto *photo = message.media.photo;
             
             
             TL_photoSize *photoSize = ((TL_photoSize *)[photo.sizes lastObject]);
@@ -156,6 +156,21 @@
             TGPhotoViewerItem *item = [[TGPhotoViewerItem alloc] initWithImageObject:imgObj previewObject:obj];
             
             [converted addObject:item];
+        } else if([message.media isKindOfClass:[TL_messageMediaDocument class]]) {
+            
+            TL_documentAttributeVideo *video = (TL_documentAttributeVideo *) [message.media.document attributeWithClass:[TL_documentAttributeVideo class]];
+            
+            if(video) {
+                TGPVImageObject *imgObj = [[TGPVImageObject alloc] initWithLocation:message.media.document.thumb.location thumbData:nil size:message.media.document.thumb.size];
+             
+                imgObj.imageSize = NSMakeSize(video.w, video.h);
+                
+                imgObj.imageProcessor = [ImageUtils b_processor];
+                
+                TGVideoViewerItem *item = [[TGVideoViewerItem alloc] initWithImageObject:imgObj previewObject:obj];
+                
+                [converted addObject:item];
+            }
         }
         
     }];

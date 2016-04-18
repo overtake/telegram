@@ -266,7 +266,9 @@
 
 
 -(void)stickersNeedFullReload:(NSNotification *)notification {
-    [self reload];
+    
+     [self reload];
+   
 }
 
 -(void)stickersNeedReorder:(NSNotification *)notification {
@@ -456,9 +458,7 @@
     
     if([item isKindOfClass:[TGStickerPackRowItem class]]) {
         TGStickerPackModalView *modalView = [[TGStickerPackModalView alloc] init];
-       
-        [modalView setStickerPack:[TL_messages_stickerSet createWithSet:item.pack[@"set"] packs:nil documents:[item.pack[@"stickers"] mutableCopy]]];
-        
+        [modalView setStickerPack:[TL_messages_stickerSet createWithSet:item.pack[@"set"] packs:nil documents:[item.pack[@"stickers"] mutableCopy]] forMessagesViewController:appWindow().navigationController.messagesViewController];
         [modalView show:self.view.window animated:YES];
     }
     

@@ -61,6 +61,8 @@ long channelMsgId(int msg_id, int peer_id);
 -(BOOL)readedContent;
 -(BOOL)isMentioned;
 
+-(BOOL)isFake;
+
 -(id)fwdObject;
 
 - (TL_conversation *)conversation;

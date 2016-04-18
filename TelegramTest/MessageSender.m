@@ -30,6 +30,8 @@
 #import "Telegram.h"
 #import "TGTimer.h"
 #import "NSString+FindURLs.h"
+#import "TGLocationRequest.h"
+#import "TGContextMessagesvViewController.h"
 @implementation MessageSender
 
 
@@ -123,11 +125,9 @@
     int duration = ceil(time.value / time.timescale);
     
     
-    
-    
     AVAssetImageGenerator *generator = [[AVAssetImageGenerator alloc] initWithAsset:asset];
     generator.appliesPreferredTrackTransform = TRUE;
-    CMTime thumbTime = CMTimeMakeWithSeconds(0, 30);
+    CMTime thumbTime = CMTimeMakeWithSeconds(0, 1);
     
     __block NSImage *thumbImg;
     
@@ -245,6 +245,10 @@
     
     
     TL_localMessage *outMessage = [TL_localMessage createWithN_id:0 flags:flags from_id:UsersManager.currentUserId to_id:[conversation.peer peerOut]  fwd_from:nil reply_to_msg_id:reply_to_msg_id  date: (int) [[MTNetwork instance] getTime] message:message media:media fakeId:[MessageSender getFakeMessageId] randomId:rand_long() reply_markup:nil entities:nil views:1 via_bot_id:0 edit_date:0 isViewed:NO state:DeliveryStatePending];
+    
+    if(media.bot_result != nil) {
+        outMessage.reply_markup = media.bot_result.send_message.reply_markup;
+    }
     
     if(additionFlags & (1 << 4))
         outMessage.flags|= (1 << 14);
@@ -381,7 +385,7 @@
 
 +(void)insertEncryptedServiceMessage:(NSString *)title chat:(TLEncryptedChat *)chat {
     
-    TL_localMessageService *msg = [TL_localMessageService createWithFlags:TGNOFLAGSMESSAGE n_id:[MessageSender getFutureMessageId] from_id:chat.admin_id to_id:[TL_peerSecret createWithChat_id:chat.n_id] date:[[MTNetwork instance] getTime] action:[TL_messageActionEncryptedChat createWithTitle:title] fakeId:[MessageSender getFakeMessageId] randomId:rand_long() dstate:DeliveryStatePending];
+    TL_localMessageService *msg = [TL_localMessageService createWithFlags:TGNOFLAGSMESSAGE n_id:[MessageSender getFutureMessageId] from_id:chat.admin_id to_id:[TL_peerSecret createWithChat_id:chat.n_id] reply_to_msg_id:0 date:[[MTNetwork instance] getTime] action:[TL_messageActionEncryptedChat createWithTitle:title] fakeId:[MessageSender getFakeMessageId] randomId:rand_long() dstate:DeliveryStatePending];
     [MessagesManager addAndUpdateMessage:msg];
 }
 
@@ -475,7 +479,7 @@
 
 static NSMutableArray *wrong_files;
 
-+ (void)sendFilesByPath:(NSArray *)files dialog:(TL_conversation *)dialog isMultiple:(BOOL)isMultiple asDocument:(BOOL)asDocument {
++ (void)sendFilesByPath:(NSArray *)files dialog:(TL_conversation *)dialog isMultiple:(BOOL)isMultiple asDocument:(BOOL)asDocument messagesViewController:(MessagesViewController *)messagesViewController {
    
     
    
@@ -504,7 +508,7 @@ static NSMutableArray *wrong_files;
       
         if(files.count > 0) {
             
-            [self sendFilesByPath:files dialog:dialog isMultiple:isMultiple asDocument:asDocument];
+            [self sendFilesByPath:files dialog:dialog isMultiple:isMultiple asDocument:asDocument messagesViewController:messagesViewController];
         }
             
         
@@ -538,28 +542,25 @@ static NSMutableArray *wrong_files;
     }
     
     if([imageTypes() containsObject:pathExtension] && !asDocument) {
-        [[[Telegram rightViewController] messagesViewController]
-         sendImage:file forConversation:dialog file_data:nil isMultiple:isMultiple addCompletionHandler:nil];
+        [messagesViewController sendImage:file forConversation:dialog file_data:nil isMultiple:isMultiple addCompletionHandler:nil];
         next();
         return;
         
     }
     
     if([videoTypes() containsObject:pathExtension] && !asDocument) {
-        [[[Telegram rightViewController] messagesViewController]
-         sendVideo:file forConversation:dialog];
+        [messagesViewController sendVideo:file forConversation:dialog];
          next();
        
         return;
     }
     
-    [[[Telegram rightViewController] messagesViewController]
-     sendDocument:file forConversation:dialog];
+    [messagesViewController sendDocument:file forConversation:dialog];
     next();
     
 }
 
-+(BOOL)sendDraggedFiles:(id <NSDraggingInfo>)sender dialog:(TL_conversation *)dialog asDocument:(BOOL)asDocument {
++(BOOL)sendDraggedFiles:(id <NSDraggingInfo>)sender dialog:(TL_conversation *)dialog asDocument:(BOOL)asDocument  messagesViewController:(MessagesViewController *)messagesViewController {
     NSPasteboard *pboard;
     
     if(![dialog canSendMessage])
@@ -570,13 +571,13 @@ static NSMutableArray *wrong_files;
     if ( [[pboard types] containsObject:NSFilenamesPboardType] ) {
         NSArray *files = [pboard propertyListForType:NSFilenamesPboardType];
         BOOL isMultiple = [files filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.pathExtension.lowercaseString IN (%@)",imageTypes()]].count > 1;
-        [self sendFilesByPath:files dialog:dialog isMultiple:isMultiple asDocument:asDocument];
+        [self sendFilesByPath:files dialog:dialog isMultiple:isMultiple asDocument:asDocument messagesViewController:messagesViewController];
         
     } else if([[pboard types] containsObject:NSTIFFPboardType]) {
         NSData *tiff = [pboard dataForType:NSTIFFPboardType];
         
         if(!asDocument) {
-            [[[Telegram rightViewController] messagesViewController]
+            [messagesViewController
              sendImage:nil forConversation:dialog file_data:tiff];
         } else {
             
@@ -584,7 +585,7 @@ static NSMutableArray *wrong_files;
             
             [tiff writeToFile:path atomically:YES];
             
-            [[Telegram rightViewController].messagesViewController sendDocument:path forConversation:[Telegram conversation]];
+        [messagesViewController sendDocument:path forConversation:dialog];
         }
         
         
@@ -592,6 +593,116 @@ static NSMutableArray *wrong_files;
     
     return YES;
 }
+
+
+static TGLocationRequest *locationRequest;
+
+
+
++(RPCRequest *)proccessInlineKeyboardButton:(TLKeyboardButton *)keyboard messagesViewController:(MessagesViewController *)messagesViewController conversation:(TL_conversation *)conversation messageId:(int)messageId handler:(void (^)(TGInlineKeyboardProccessType type))handler {
+    
+    
+    if([keyboard isKindOfClass:[TL_keyboardButtonCallback class]]) {
+        
+        handler(TGInlineKeyboardProccessingType);
+        
+        return [RPCRequest sendRequest:[TLAPI_messages_getBotCallbackAnswer createWithPeer:conversation.inputPeer msg_id:messageId data:keyboard.data] successHandler:^(id request, TL_messages_botCallbackAnswer *response) {
+            
+            if([response isKindOfClass:[TL_messages_botCallbackAnswer class]]) {
+                if(response.isAlert)
+                    alert(appName(), response.message);
+                else
+                    if(response.message.length > 0)
+                        [Notification perform:SHOW_ALERT_HINT_VIEW data:@{@"text":response.message,@"color":NSColorFromRGB(0x4ba3e2)}];
+            }
+            
+                handler(TGInlineKeyboardSuccessType);
+            
+            
+        } errorHandler:^(id request, RpcError *error) {
+            handler(TGInlineKeyboardErrorType);
+        }];
+        
+    } else if([keyboard isKindOfClass:[TL_keyboardButtonUrl class]]) {
+        
+        if([keyboard.url rangeOfString:@"telegram.me/"].location != NSNotFound || [keyboard.url hasPrefix:@"tg://"]) {
+            open_link(keyboard.url);
+        } else {
+            confirm(appName(), [NSString stringWithFormat:NSLocalizedString(@"Link.ConfirmOpenExternalLink", nil),keyboard.url], ^{
+                
+                open_link(keyboard.url);
+                
+            }, nil);
+        }
+        
+        
+        handler(TGInlineKeyboardSuccessType);
+        
+    } else if([keyboard isKindOfClass:[TL_keyboardButtonRequestGeoLocation class]]) {
+        
+        [SettingsArchiver requestPermissionWithKey:kPermissionInlineBotGeo peer_id:conversation.peer_id handler:^(bool success) {
+            
+            if(success) {
+                
+                handler(TGInlineKeyboardProccessingType);
+                
+                locationRequest = [[TGLocationRequest alloc] init];
+                
+                [locationRequest startRequestLocation:^(CLLocation *location) {
+                    
+                    [messagesViewController sendLocation:location.coordinate forConversation:conversation];
+                    
+                    handler(TGInlineKeyboardSuccessType);
+                    
+                } failback:^(NSString *error) {
+                    
+                    handler(TGInlineKeyboardErrorType);
+                    
+                    alert(appName(), error);
+                    
+                }];
+                
+            } else {
+                handler(TGInlineKeyboardErrorType);
+            }
+            
+        }];
+        
+        
+    } else if([keyboard isKindOfClass:[TL_keyboardButtonRequestPhone class]]) {
+        
+        
+        [SettingsArchiver requestPermissionWithKey:kPermissionInlineBotContact peer_id:conversation.peer_id handler:^(bool success) {
+            
+            if(success) {
+                
+                [messagesViewController shareContact:[UsersManager currentUser] forConversation:conversation callback:nil];
+                
+                handler(TGInlineKeyboardSuccessType);
+            }
+            
+        }];
+        
+    } else if([keyboard isKindOfClass:[TL_keyboardButton class]]) {
+        [messagesViewController sendMessage:keyboard.text forConversation:conversation];
+        
+        handler(TGInlineKeyboardSuccessType);
+    } else if([keyboard isKindOfClass:[TL_keyboardButtonSwitchInline class]]) {
+        
+        if(messagesViewController.class == [TGContextMessagesvViewController class]) {
+            
+            TGContextMessagesvViewController *m = (TGContextMessagesvViewController *)messagesViewController;
+            
+            [m.contextModalView didNeedCloseAndSwitch:keyboard];
+        } else {
+            [[Telegram rightViewController] showInlineBotSwitchModalView:conversation.user keyboard:keyboard];
+        }
+        
+    }
+    
+    return nil;
+}
+
 
 
 +(void)drop {

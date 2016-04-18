@@ -8,13 +8,15 @@
 
 #import "MessageTableItem.h"
 #import "MessageTableItemGeo.h"
-
+#import "TGExternalImageObject.h"
 @interface MessageTableItemGeo : MessageTableItem
 
-@property (nonatomic, strong) NSURL *geoUrl;
+@property (nonatomic, strong) TGExternalImageObject *imageObject;
 
-@property (nonatomic, assign) NSSize imageSize;
 
 @property (nonatomic,strong) NSAttributedString *venue;
+@property (nonatomic,assign) NSSize venueSize;
+
+-(BOOL)isVenue;
 
 @end

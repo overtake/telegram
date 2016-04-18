@@ -39,13 +39,25 @@
 
     [self.downloadListener setCompleteHandler:^(DownloadItem * item) {
         
-        [DownloadQueue dispatchOnDownloadQueue:^{
-            weakSelf.isLoaded = YES;
+        strongWeak();
+        
+        if(strongSelf == weakSelf) {
+            [TGImageObject.threadPool addTask:[[SThreadPoolTask alloc] initWithBlock:^(bool (^canceled)()) {
+                strongWeak();
+                
+                if(strongSelf == weakSelf) {
+                    strongSelf.isLoaded = YES;
+                    [strongSelf _didDownloadImage:item];
+                    strongSelf.downloadItem = nil;
+                    strongSelf.downloadListener = nil;
+                }
+                
+            }]];
             
-            [weakSelf _didDownloadImage:item];
-            weakSelf.downloadItem = nil;
-            weakSelf.downloadListener = nil;
-        }];
+
+        }
+        
+        
        
     }];
     
@@ -60,9 +72,41 @@
     [self.downloadItem start];
 }
 
+-(NSImage *)placeholder {
+    __block NSImage *placeHolder = super.placeholder;
+    
+    if(placeHolder && _thumbProcessor) {
+        
+        weak();
+        
+        [TGImageObject.threadPool addTask:[[SThreadPoolTask alloc] initWithBlock:^(bool (^canceled)()) {
+            
+            strongWeak();
+            
+            if(strongSelf == weakSelf && _thumbProcessor) {
+                
+                placeHolder = _thumbProcessor(placeHolder,self.imageSize);
+                super.placeholder = placeHolder;
+                _thumbProcessor = nil;
+                
+                [ASQueue dispatchOnMainQueue:^{
+                    [self.delegate didDownloadImage:placeHolder object:self];
+                }];
+            }
+
+        }]];
+        
+        return gray_resizable_placeholder();
+    }
+    
+    return super.placeholder;
+}
+
 -(void)_didDownloadImage:(DownloadItem *)item {
     NSImage *image = [[NSImage alloc] initWithData:item.result];
     
+    if(!image)
+        image = [NSImage imageWithWebpData:item.result error:nil];
     
     if(image != nil) {
         
@@ -82,10 +126,29 @@
         
         [TGCache cacheImage:image forKey:[self cacheKey] groups:@[IMGCACHE]];
     }
-        
+    
+
     [[ASQueue mainQueue] dispatchOnQueue:^{
         [self.delegate didDownloadImage:image object:self];
     }];
+}
+
++(SThreadPool *)threadPool {
+    static SThreadPool *pool;
+    
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        pool = [[SThreadPool alloc] initWithThreadCount:3 threadPriority:0.5];
+    });
+    
+    
+    return pool;
+}
+
+
+-(BOOL)isset {
+    
+    return [TGCache cachedImage:self.cacheKey] || ((fileSize(self.location.path) >= self.size || (self.size == 0 && isPathExists(self.location.path))) && self.downloadItem == nil);
 }
 
 

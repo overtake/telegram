@@ -121,7 +121,7 @@
     NSRect newRect = [self.layoutManager usedRectForTextContainer:self.textContainer];
     
     NSSize size = newRect.size;
-    size.width = self.containerView.bounds.size.width;
+    size.width = NSWidth(self.containerView.frame);
     
     
    // NSArray *
@@ -164,7 +164,7 @@
     BOOL isCleared = self.string.length == 0 && self.lastHeight > newSize.height && !self.disableAnimation;
     
     
-    NSSize layoutSize = NSMakeSize(newSize.width, newSize.height);
+    
     
     dispatch_block_t future = ^ {
         [self.scrollView setFrameSize:NSMakeSize(self.scrollView.bounds.size.width, newSize.height-2)];
@@ -182,6 +182,11 @@
     
     [self.layoutManager ensureLayoutForTextContainer:self.textContainer];
     [self.growingDelegate TMGrowingTextViewTextDidChange:notification != nil ? self : nil];
+    
+    newSize.width = NSWidth(self.containerView.frame);
+    
+    NSSize layoutSize = NSMakeSize(newSize.width, newSize.height);
+
     
     if(isCleared) {
       //  CAAnimation *anim = [TMAnimations resizeLayer:self.containerView.layer to:layoutSize];
@@ -244,7 +249,7 @@
             NSBezierPath *circlePath = [NSBezierPath bezierPath];
             [circlePath appendBezierPathWithRoundedRect:rect xRadius:3 yRadius:3];
             [NSColorFromRGB(0xdedede) setStroke];
-            [circlePath setLineWidth:IS_RETINA ? 2 : 1];
+            [circlePath setLineWidth:2];
             [circlePath stroke];
             [[NSColor whiteColor] setFill];
             [circlePath fill];

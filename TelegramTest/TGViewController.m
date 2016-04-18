@@ -20,7 +20,7 @@
 
 
 -(id)initWithFrame:(NSRect)frameRect {
-    if(self = [super init]) {
+    if(self = [super initWithFrame:frameRect]) {
         _frameRect = frameRect;
         _internalId = [[TGInternalObject alloc] init];
     }
@@ -47,7 +47,8 @@
 
 
 - (void)loadView {
-    _view = [[TGView alloc] initWithFrame: _frameRect];
+    if(!_view)
+        _view = [[TGView alloc] initWithFrame: _frameRect];
     
 }
 

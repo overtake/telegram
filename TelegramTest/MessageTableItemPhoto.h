@@ -13,10 +13,8 @@
 
 @property (nonatomic,strong) TGImageObject *imageObject;
 
-@property (nonatomic,assign) NSSize imageSize;
 
+-(BOOL)isSecretPhoto;
 
-@property (nonatomic,strong) NSAttributedString *caption;
-@property (nonatomic,assign) NSSize captionSize;
 
 @end

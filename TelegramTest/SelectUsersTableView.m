@@ -57,8 +57,11 @@ static NSCache *cacheItems;
     [contacts enumerateObjectsUsingBlock:^(TLContact *obj, NSUInteger idx, BOOL *stop) {
         
         SelectUserItem *item = [[SelectUserItem alloc] initWithObject:obj.user];
-        item.isSelected = [_selectedItems indexOfObject:@(obj.user.n_id)] != NSNotFound;
-        [items addObject:item];
+        if(item) {
+            item.isSelected = [_selectedItems indexOfObject:@(obj.user.n_id)] != NSNotFound;
+            [items addObject:item];
+        }
+       
         
         if(items.count == 30)
             *stop = YES;
@@ -115,7 +118,11 @@ static NSCache *cacheItems;
     
     [chats enumerateObjectsUsingBlock:^(TL_conversation * obj, NSUInteger idx, BOOL *stop) {
         
-        [items addObject:[[SelectUserItem alloc] initWithObject:obj.chat]];
+        SelectUserItem *item = [[SelectUserItem alloc] initWithObject:obj.chat];
+        if(item) {
+            [items addObject:item];
+        }
+        
         
     }];
     
@@ -126,31 +133,51 @@ static NSCache *cacheItems;
 -(void)readyConversations {
     _type = SelectTableConversations;
     
-    NSArray *chats = [[DialogsManager sharedManager] all];
     
-    NSMutableArray *accepted = [[NSMutableArray alloc] init];
-    
-    [chats enumerateObjectsUsingBlock:^(TL_conversation *obj, NSUInteger idx, BOOL * _Nonnull stop) {
+    void (^proccessResult) (NSArray *chats) = ^(NSArray *chats) {
+        NSMutableArray *accepted = [[NSMutableArray alloc] init];
         
-        if(obj.type == DialogTypeUser || (obj.type == DialogTypeChat && obj.chat.type == TLChatTypeNormal && !obj.chat.isDeactivated) || (obj.type == DialogTypeChannel && obj.chat.isMegagroup)) {
-            [accepted addObject:obj];
-        }
+        [chats enumerateObjectsUsingBlock:^(TL_conversation *obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            
+            if(obj.canSendMessage) {
+                [accepted addObject:obj];
+            }
+            
+        }];
+        
+        
+        NSMutableArray *items = [[NSMutableArray alloc] init];
+        
+        [accepted enumerateObjectsUsingBlock:^(TL_conversation * obj, NSUInteger idx, BOOL *stop) {
+            
+            if((obj.chat || obj.user) && obj.type != DialogTypeSecretChat) {
+                SelectUserItem *item = [[SelectUserItem alloc] initWithObject:obj.chat ? obj.chat : obj.user];
+                
+                if(item)
+                    [items addObject:item];
+            }
+            
+            
+        }];
+        
+        
+        
+        [ASQueue dispatchOnMainQueue:^{
+            [self readyItems:items];
+        }];
+    };
+    
+    [[Storage manager] dialogsWithOffset:0 limit:30 completeHandler:^(NSArray *chats) {
+        
+        proccessResult(chats);
+        
+        [[Storage manager] dialogsWithOffset:30 limit:1000 completeHandler:^(NSArray *d) {
+            proccessResult([chats arrayByAddingObjectsFromArray:d]);
+        }];
         
     }];
     
     
-    NSMutableArray *items = [[NSMutableArray alloc] init];
-    
-    [accepted enumerateObjectsUsingBlock:^(TL_conversation * obj, NSUInteger idx, BOOL *stop) {
-        
-        if(obj.chat || obj.user) {
-            [items addObject:[[SelectUserItem alloc] initWithObject:obj.chat ? obj.chat : obj.user]];
-        }
-
-        
-    }];
-    
-    [self readyItems:items];
 }
 
 
@@ -189,9 +216,12 @@ static NSCache *cacheItems;
         
         [other enumerateObjectsUsingBlock:^(TL_contact *obj, NSUInteger idx, BOOL *stop) {
             
-             SelectUserItem *item = [[SelectUserItem alloc] initWithObject:obj.user];
-             item.isSelected = [_selectedItems indexOfObject:@(obj.user_id)] != NSNotFound;
-             [items addObject:item];
+            SelectUserItem *item = [[SelectUserItem alloc] initWithObject:obj.user];
+            if(item) {
+                item.isSelected = [_selectedItems indexOfObject:@(obj.user_id)] != NSNotFound;
+                [items addObject:item];
+            }
+            
             
         }];
         
@@ -473,9 +503,10 @@ static NSCache *cacheItems;
             return;
         
         SelectUserItem *item = [[SelectUserItem alloc] initWithObject:obj];
-        item.isSearchUser = YES;
-        [converted addObject:item];
-        
+        if(item) {
+            item.isSearchUser = YES;
+            [converted addObject:item];
+        }
     }];
     
     if(converted.count > 0) {

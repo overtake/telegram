@@ -11,16 +11,14 @@
 
 @interface MessageTableItemContact : MessageTableItem
 
-@property (nonatomic, strong) NSString *firstName;
-@property (nonatomic, strong) NSString *lastName;
+
 @property (nonatomic, strong) TLUser *contactUser;
 @property (nonatomic, strong) NSString *contactText;
-@property (nonatomic, strong) NSString *contactName;
-@property (nonatomic, assign) NSSize contactNameSize;
-@property (nonatomic, strong) NSAttributedString *contactNumber;
-@property (nonatomic, strong) NSString *contactNumberString;
 
-@property (nonatomic) NSSize contactNumberSize;
+@property (nonatomic,strong) NSString *fullName;
+
+@property (nonatomic) NSSize textSize;
+@property (nonatomic,strong) NSAttributedString *attributedText;
 @property (nonatomic) int user_id;
 
 @end

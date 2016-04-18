@@ -40,6 +40,13 @@
     return request;
 }
 
++ (id)sendRequest:(id)object successHandler:(RPCSuccessHandler)successHandler errorHandler:(RPCErrorHandler)errorHandler timeout:(int)timeout queue:(dispatch_queue_t)queue alwayContinueWithErrorContext:(BOOL)alwayContinueWithErrorContext {
+    RPCRequest *request = [self sendRequest:object successHandler:successHandler errorHandler:errorHandler timeout:timeout];
+    request.queue = queue;
+    request.alwayContinueWithErrorContext = alwayContinueWithErrorContext;
+    return request;
+}
+
 - (void)timeoutInterval:(NSTimer *)timer {
     RPCRequest *request = [timer userInfo];
     request.error = [[RpcError alloc] init];
@@ -141,6 +148,11 @@
     
     
     dispatch_block_t block = ^{
+        if([self.response isKindOfClass:[RpcError class]]) {
+            self.error = self.response;
+            self.response = nil;
+        }
+        
         if(self.response) {
             if(self.successHandler != nil) {
                 self.successHandler(self, self.response);
@@ -160,8 +172,39 @@
                     
                     [[MTNetwork instance] setDatacenter:self.error.resultId];
                     [[MTNetwork instance] initConnectionWithId:self.error.resultId];
+                } else if([self.error.error_msg isEqualToString:@"PEER_FLOOD"]) {
+                    
+                    
+                    NSString *localizedKey = nil;
+                    
+                    static NSDictionary *keys;
+                    static dispatch_once_t onceToken;
+                    dispatch_once(&onceToken, ^{
+                        keys = @{NSStringFromClass([TLAPI_messages_sendMessage class]):NSLocalizedString(@"PEER_FLOOD_MESSAGES", nil),NSStringFromClass([TLAPI_messages_sendMedia class]):NSLocalizedString(@"PEER_FLOOD_MESSAGES", nil),NSStringFromClass([TLAPI_messages_sendMedia class]):NSLocalizedString(@"PEER_FLOOD_MESSAGES", nil)};
+                    });
+                    
+                    localizedKey = keys[NSStringFromClass([self.object class])];
+                    
+                    if(localizedKey) {
+                        [ASQueue dispatchOnMainQueue:^{
+                            
+                            NSAlert *alert = [NSAlert alertWithMessageText:appName() informativeText:localizedKey block:^(id result) {
+                                if([result intValue] != 1000) {
+                                    
+                                    open_user_by_name(@{@"domain":@"spambot"});
+                                }
+                            }];
+                            [alert addButtonWithTitle:NSLocalizedString(@"OK", nil)];
+                            [alert addButtonWithTitle:NSLocalizedString(@"Alert.MoreInfo", nil)];
+                            [alert show];
+                        }];
+                    }
+                    
+                   
+                    
+                    
                 } else {
-                     MTLog(@"%@",self.error.error_msg);
+                    MTLog(@"%@",self.error.error_msg);
                 }
                 
                 self.errorHandler(self, self.error);

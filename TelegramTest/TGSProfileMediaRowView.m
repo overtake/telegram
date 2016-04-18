@@ -9,6 +9,7 @@
 #import "TGSProfileMediaRowView.h"
 #import "TGSProfileMediaRowItem.h"
 #import "TGAudioPlayerWindow.h"
+#import "TGTextLabel.h"
 @interface TGMediaCounterLoader : NSObject
 @property (nonatomic,assign) int photoAndVideoCounter;
 @property (nonatomic,assign) int filesCounter;
@@ -120,7 +121,7 @@
         
         range.length+= (secondRange.location - range.length - range.location) + secondRange.length;
         
-        [attr addAttribute:NSLinkAttributeName value:@"photoOrVideo" range:range];
+        [attr addAttribute:NSLinkAttributeName value:@"chat://photoOrVideo" range:range];
         
     
     }
@@ -142,7 +143,7 @@
         
         range.length+= (secondRange.location - range.length - range.location) + secondRange.length;
         
-        [attr addAttribute:NSLinkAttributeName value:@"files" range:range];
+        [attr addAttribute:NSLinkAttributeName value:@"chat://files" range:range];
         
     }
     
@@ -160,7 +161,7 @@
         
         range.length+= (secondRange.location - range.length - range.location) + secondRange.length;
         
-        [attr addAttribute:NSLinkAttributeName value:@"audio" range:range];
+        [attr addAttribute:NSLinkAttributeName value:@"chat://audio" range:range];
 
 
     }
@@ -179,7 +180,7 @@
         
         range.length+= (secondRange.location - range.length - range.location) + secondRange.length;
         
-        [attr addAttribute:NSLinkAttributeName value:@"links" range:range];
+        [attr addAttribute:NSLinkAttributeName value:@"chat://links" range:range];
         
     }
     
@@ -195,10 +196,12 @@
 
 
 @interface TGSProfileMediaRowView () <TMHyperlinkTextFieldDelegate>
-@property (nonatomic,strong) TMTextField *headerTextField;
-@property (nonatomic,strong) TMHyperlinkTextField *countersTextField;
+@property (nonatomic,strong) TGTextLabel *headerTextField;
+@property (nonatomic,strong) TGTextLabel *countersTextField;
 
 @property (nonatomic,strong) NSProgressIndicator *progressIndicator;
+
+@property (nonatomic,strong) NSMutableAttributedString *headerAttr;
 
 @end
 
@@ -229,25 +232,43 @@ static NSMutableDictionary *loaders;
 
 -(instancetype)initWithFrame:(NSRect)frameRect {
     if(self = [super initWithFrame:frameRect]) {
-        _headerTextField = [TMTextField defaultTextField];
-        _countersTextField = [TMHyperlinkTextField defaultTextField];
+        _headerTextField = [[TGTextLabel alloc] init];
         
-        _countersTextField.url_delegate = self;
+        _countersTextField = [[TGTextLabel alloc] init];
         
-        [_countersTextField setFont:TGSystemFont(13)];
+        weak();
         
-        [_headerTextField setStringValue:NSLocalizedString(@"Profile.SharedMedia", nil)];
-        [_headerTextField setFont:TGSystemFont(14)];
-        [_headerTextField setTextColor:TEXT_COLOR];
-        [_headerTextField sizeToFit];
+        [_countersTextField setLinkCallback:^(NSString *url) {
+            
+            if([url isEqualToString:@"chat://audio"]) {
+                [TGAudioPlayerWindow show:weakSelf.item.conversation playerState:TGAudioPlayerWindowStatePlayList];
+                return;
+            }
+            
+            TMCollectionPageController *viewController = [[TMCollectionPageController alloc] initWithFrame:NSZeroRect];
+            
+            [weakSelf.item.controller.navigationViewController pushViewController:viewController animated:YES];
+            
+            [viewController setConversation:weakSelf.item.conversation];
+            
+            if([url isEqualToString:@"chat://files"]) {
+                
+                [viewController showFiles];
+                
+            } else if([url isEqualToString:@"chat://links"]) {
+                
+                [viewController showSharedLinks];
+                
+            }
+            
+        }];
+        _headerAttr = [[NSMutableAttributedString alloc] init];
         
+        [_headerAttr appendString:NSLocalizedString(@"Profile.SharedMedia", nil) withColor:TEXT_COLOR];
+        [_headerAttr setFont:TGSystemFont(14) forRange:_headerAttr.range];
         
-        [[_headerTextField cell] setTruncatesLastVisibleLine:YES];
-        [[_headerTextField cell] setTruncatesLastVisibleLine:YES];
+        [_headerTextField setText:_headerAttr maxWidth:INT32_MAX];
         
-        
-        [[_countersTextField cell] setTruncatesLastVisibleLine:YES];
-        [[_countersTextField cell] setLineBreakMode:NSLineBreakByTruncatingTail];
         _progressIndicator = [[NSProgressIndicator alloc] initWithFrame:NSMakeRect(0, 0, 15, 15)];
         [_progressIndicator setStyle:NSProgressIndicatorSpinningStyle];
         [self addSubview:_progressIndicator];
@@ -263,26 +284,7 @@ static NSMutableDictionary *loaders;
 -(void)textField:(id)textField handleURLClick:(NSString *)url {
     
     // handle
-    if([url isEqualToString:@"audio"]) {
-        [TGAudioPlayerWindow show:self.item.conversation playerState:TGAudioPlayerWindowStatePlayList];
-        return;
-    }
-    
-    TMCollectionPageController *viewController = [[TMCollectionPageController alloc] initWithFrame:NSZeroRect];
-    
-    [self.item.controller.navigationViewController pushViewController:viewController animated:YES];
-    
-    [viewController setConversation:self.item.conversation];
-    
-    if([url isEqualToString:@"files"]) {
-        
-        [viewController showFiles];
-        
-    } else if([url isEqualToString:@"links"]) {
-        
-        [viewController showSharedLinks];
-        
-    }
+  
     
     
     
@@ -333,17 +335,13 @@ static NSMutableDictionary *loaders;
     else
         [_progressIndicator startAnimation:self];
     
-    [_countersTextField setAttributedStringValue:loader.loaderString];
-    
-    [_countersTextField sizeToFit];
-    
-    
-    
+    [_countersTextField setText:loader.loaderString maxWidth:NSWidth(self.frame) - self.item.xOffset*2];
+   
     if(loader.isLoaded && loader.loaderString.length == 0 && animated) {
         
         [NSAnimationContext runAnimationGroup:^(NSAnimationContext * _Nonnull context) {
             
-            [[_headerTextField animator] setFrameOrigin:NSMakePoint(self.item.xOffset - 2, roundf((NSHeight(self.frame) - NSHeight(_headerTextField.frame)))/2)];
+            [[_headerTextField animator] setFrameOrigin:NSMakePoint(self.item.xOffset, roundf((NSHeight(self.frame) - NSHeight(_headerTextField.frame)))/2)];
             
         } completionHandler:^{
             [self updateFrames:NO];
@@ -354,14 +352,16 @@ static NSMutableDictionary *loaders;
 }
 
 -(void)updateFrames:(BOOL)animated {
-    [_countersTextField setFrameSize:NSMakeSize(MIN(NSWidth(_countersTextField.frame), NSWidth(self.frame) - 60 - NSWidth(_progressIndicator.frame)) , NSHeight(_countersTextField.frame))];
-    
     
     TGMediaCounterLoader *loader = loaders[@(self.conversation.peer_id)];
     
+    [_countersTextField setText:loader.loaderString maxWidth:NSWidth(self.frame) - self.item.xOffset*2];
+    
+    [_headerTextField setText:_headerAttr maxWidth:NSWidth(self.frame) - self.item.xOffset*2];
+    
     int totalHeight = NSHeight(_countersTextField.frame) + NSHeight(_headerTextField.frame);
-    [_countersTextField setFrameOrigin:NSMakePoint(self.item.xOffset - 2, roundf((NSHeight(self.frame) - totalHeight)/2))];
-    [_headerTextField setFrameOrigin:NSMakePoint(self.item.xOffset - 2, roundf((NSHeight(self.frame) - totalHeight)/2) + NSHeight(_countersTextField.frame))];
+    [_countersTextField setFrameOrigin:NSMakePoint(self.item.xOffset, roundf((NSHeight(self.frame) - totalHeight)/2) - 3)];
+    [_headerTextField setFrameOrigin:NSMakePoint(self.item.xOffset , roundf((NSHeight(self.frame) - totalHeight)/2) + NSHeight(_countersTextField.frame))];
     
     if(loader.isLoaded && loader.loaderString.length == 0) {
         [_headerTextField setCenteredYByView:self];
@@ -369,7 +369,7 @@ static NSMutableDictionary *loaders;
     
     id progress = animated ? [_progressIndicator animator] : _progressIndicator;
     
-    [progress setFrameOrigin:NSMakePoint(NSMaxX(_countersTextField.frame) + (_countersTextField.attributedStringValue.length == 0 ? 0 : 3), NSMinY(_countersTextField.frame) + 1)];
+    [progress setFrameOrigin:NSMakePoint(NSMaxX(_countersTextField.frame) + (loader.loaderString.length == 0 ? 0 : 3), 3)];
     
 }
 
@@ -384,11 +384,16 @@ static NSMutableDictionary *loaders;
     
 }
 
--(void)mouseDown:(NSEvent *)theEvent {
-    [super mouseDown:theEvent];
-    
+
+-(void)mouseUp:(NSEvent *)theEvent {
     if(self.item.callback)
         self.item.callback(self.item);
+}
+
+-(void)mouseDown:(NSEvent *)theEvent {
+   // [super mouseDown:theEvent];
+    
+    
 }
 
 

@@ -7,7 +7,7 @@
 //
 
 #import "GeneralSettingsBlockHeaderView.h"
-
+#import "NSAttributedString+Hyperlink.h"
 @interface GeneralSettingsBlockHeaderItem ()
 
 @end
@@ -18,6 +18,7 @@
 -(id)initWithString:(NSString *)header flipped:(BOOL)flipped {
     if(self = [self initWithString:header height:0 flipped:flipped]) {
         _autoHeight = YES;
+        
     }
     return self;
 }
@@ -25,12 +26,8 @@
 
 -(id)initWithString:(NSString *)header height:(int)height flipped:(BOOL)flipped {
     if(self = [super init]) {
-        NSMutableAttributedString *attr = [[NSMutableAttributedString alloc] init];
-        
-        [attr appendString:header withColor:GRAY_TEXT_COLOR];
-        [attr setFont:TGSystemFont(12) forRange:attr.range];
-        
-        _header = attr;
+       
+        [self updateWithString:header];
         self.height = height;
         _isFlipped = flipped;
         self.drawsSeparator = NO;
@@ -39,10 +36,28 @@
     return self;
 }
 
+-(void)updateWithString:(NSString *)string {
+    NSMutableAttributedString *attr = [[NSMutableAttributedString alloc] init];
+    
+    [attr appendString:string withColor:GRAY_TEXT_COLOR];
+    [attr setFont:TGSystemFont(12) forRange:attr.range];
+    [attr detectBoldColorInStringWithFont:TGSystemMediumFont(12)];
+    
+    _header = attr;
+}
+
 -(void)setAligment:(NSTextAlignment)aligment {
     NSMutableAttributedString *attr = [_header mutableCopy];
     
     [attr setAlignment:aligment range:attr.range];
+    
+    _header = attr;
+}
+
+-(void)setParagraph:(NSParagraphStyle *)paragraph {
+    NSMutableAttributedString *attr = [_header mutableCopy];
+    
+    [attr addAttribute:NSParagraphStyleAttributeName value:paragraph range:attr.range];
     
     _header = attr;
 }

@@ -11,6 +11,11 @@
 #import "DownloadDocumentItem.h"
 #import "DownloadExternalItem.h"
 #import "MessagesBottomView.h"
+#import "TGContextImportantRowItem.h"
+
+@interface TGGifSearchRowView : TMRowView
+@property (nonatomic, strong) NSTrackingArea *trackingArea;
+@end
 
 @interface TGGifSearchRowItem : TMRowItem
 @property (nonatomic,strong) NSArray *gifs;
@@ -18,7 +23,7 @@
 @property (nonatomic,strong) NSArray *proportions;
 @property (nonatomic,strong) NSArray *imageObjects;
 @property (nonatomic,assign) BOOL needCheckKeyWindow;
-
+@property (nonatomic,assign) int height;
 @end
 
 @interface TGPicItemView : TMView
@@ -62,7 +67,11 @@ static NSImage *tgContextPicCap() {
 
 -(void)setSize:(NSSize)size {
     _size = size;
-    [_imageView setFrame:NSMakeRect(MIN(- roundf((size.width - NSWidth(self.frame))/2),0), MIN(- roundf((size.height - NSHeight(self.frame))/2),0), size.width, size.height)];
+    [_imageView setFrameSize:size];
+    
+    [_imageView setCenterByView:_imageView.superview];
+    
+    //[_imageView setFrame:NSMakeRect(MIN(- roundf((size.width - NSWidth(self.frame))/2),0), MIN(- roundf((size.height - NSHeight(self.frame))/2),0), size.width, size.height)];
 }
 
 -(void)setFrameSize:(NSSize)newSize {
@@ -89,9 +98,8 @@ static NSImage *tgContextPicCap() {
 @property (nonatomic,strong) TL_localMessage *fakeMessage;
 
 
-@property (nonatomic,weak) TMTableView *table;
+@property (nonatomic,weak) TGMediaContextTableView *table;
 @property (nonatomic,weak) TGGifSearchRowItem *item;
-
 
 
 @end
@@ -161,21 +169,61 @@ static NSImage *tgContextPicCap() {
             }];
         }];
         
+       
         
     }
     
     return self;
 }
 
+
+-(void)deleteLocalGifAction:(BTRButton *)button {
+    if(self.table.deleteLocalGif) {
+        self.table.deleteLocalGif(self.botResult);
+    }
+}
+
 -(void)setSize:(NSSize)size {
     _size = size;
     [_player setFrame:NSMakeRect(MIN(- roundf((size.width - NSWidth(self.frame))/2),0), MIN(- roundf((size.height - NSHeight(self.frame))/2),0), MAX(size.width,NSWidth(self.frame)), MAX(size.height,NSHeight(self.frame)))];
+
 }
 
 -(void)setFrameSize:(NSSize)newSize {
     [super setFrameSize:newSize];
     
     [_player setFrame:NSMakeRect(MIN(- roundf((_size.width - NSWidth(self.frame))/2),0), MIN(- roundf((_size.height - NSHeight(self.frame))/2),0), MAX(_size.width,NSWidth(self.frame)), MAX(_size.height,NSHeight(self.frame)))];
+    
+}
+
+static NSMenu *deleteMenu;
+
+-(void)rightMouseDown:(NSEvent *)theEvent {
+    
+    if(_table.deleteLocalGif) {
+        
+        weak();
+        
+        deleteMenu = [[NSMenu alloc] initWithTitle:@"remove"];
+        [deleteMenu addItem:[NSMenuItem menuItemWithTitle:NSLocalizedString(@"Messages.Selected.Delete", nil) withBlock:^(id sender) {
+            
+            weakSelf.table.deleteLocalGif(weakSelf.botResult);
+            
+        }]];
+        
+        [NSMenu popUpContextMenu:deleteMenu withEvent:theEvent forView:self];
+    }
+}
+
+-(void)mouseUp:(NSEvent *)theEvent {
+    if(deleteMenu) {
+        [deleteMenu cancelTrackingWithoutAnimation];
+        if(deleteMenu.itemArray.count > 0)
+            [deleteMenu removeItemAtIndex:0];
+        deleteMenu = nil;
+    } else {
+        [super mouseUp:theEvent];
+    }
 }
 
 -(void)setBotResult:(TLBotInlineResult *)botResult {
@@ -198,6 +246,9 @@ static NSImage *tgContextPicCap() {
 
 -(void)dealloc {
     [self.downloadItem removeEvent:_downloadEventListener];
+    [deleteMenu cancelTrackingWithoutAnimation];
+    if(deleteMenu.itemArray.count > 0)
+        [deleteMenu removeItemAtIndex:0];
 }
 
 -(void)updateContainer {
@@ -215,6 +266,7 @@ static NSImage *tgContextPicCap() {
     }
     
     [_player setImageObject:_imageObject];
+    
     
     [self _didScrolledTableView:nil];
 }
@@ -324,6 +376,7 @@ static NSImage *tgContextPicCap() {
         [self.downloadItem removeEvent:_downloadEventListener];
         
     } else {
+        
         [self addScrollEvent];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_didScrolledTableView:) name:NSWindowDidBecomeKeyNotification object:self.window];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_didScrolledTableView:) name:NSWindowDidResignKeyNotification object:self.window];
@@ -379,14 +432,33 @@ static NSImage *tgContextPicCap() {
                 imageObject = [[TGExternalImageObject alloc] initWithURL:botResult.thumb_url];
             } else if([botResult.type isEqualToString:@"photo"] && botResult.content_url.length > 0) {
                 imageObject = [[TGExternalImageObject alloc] initWithURL:botResult.content_url];
+            } else if(botResult.send_message.geo != nil) {
+                
+                NSSize size = [sizes[idx] sizeValue];
+                
+                NSString *gSize = [NSString stringWithFormat:@"%dx%d",IS_RETINA ? (int)(size.width*2.0f) : (int)size.width, IS_RETINA ? (int)(size.height*2.0f) : (int)size.height];
+                
+                imageObject = [[TGExternalImageObject alloc] initWithURL:[NSString stringWithFormat:@"https://maps.googleapis.com/maps/api/staticmap?center=%f,%f&zoom=15&size=%@&sensor=true", botResult.send_message.geo.lat,  botResult.send_message.geo.n_long, gSize]];
+                imageObject.imageProcessor = [ImageUtils c_processor];
             }
             
             imageObject.imageSize = [sizes[idx] sizeValue];
             
             if(imageObject == nil)
                 imageObject = (TGImageObject *) [[NSNull alloc] init];
+            else if([botResult.document attributeWithClass:[TL_documentAttributeSticker class]]) {
+                
+                TL_documentAttributeImageSize *imageSize = (TL_documentAttributeImageSize *)[botResult.document attributeWithClass:[TL_documentAttributeImageSize class]];
+                
+                NSSize size = imageSize ? NSMakeSize(imageSize.w, imageSize.h) : [sizes[idx] sizeValue];
+                
+                imageObject.reserved1 = @(YES);
+                imageObject.imageSize = strongsize(size, 90);
+            }
             
             [imageObjects addObject:imageObject];
+            
+            
         }];
         
         _imageObjects = [imageObjects copy];
@@ -396,6 +468,13 @@ static NSImage *tgContextPicCap() {
     return self;
 }
 
+-(Class)viewClass {
+    return [TGGifSearchRowView class];
+}
+
+-(int)height {
+    return 100;
+}
 
 
 -(NSUInteger)hash {
@@ -405,9 +484,7 @@ static NSImage *tgContextPicCap() {
 @end
 
 
-@interface TGGifSearchRowView : TMRowView
-@property (nonatomic, strong) NSTrackingArea *trackingArea;
-@end
+
 
 
 @implementation TGGifSearchRowView
@@ -491,7 +568,16 @@ static NSImage *tgContextPicCap() {
                 [self addSubview:picContainer];
             }
             
-            [picContainer setSize:size];
+            
+            TGImageObject *object = item.imageObjects[idx];
+            
+            if([object.reserved1 boolValue]) {
+                [picContainer setSize:object.imageSize];
+            } else {
+                [picContainer setSize:size];
+            }
+            
+            
             [picContainer.imageView setObject:item.imageObjects[idx]];
             container = picContainer;
            
@@ -508,8 +594,6 @@ static NSImage *tgContextPicCap() {
         
     }];
     
-    
-    assert(self.subviews.count == item.gifs.count);
 }
 
 -(void)mouseUp:(NSEvent *)theEvent {
@@ -517,9 +601,16 @@ static NSImage *tgContextPicCap() {
     
     NSView *view = [self hitTest:[self convertPoint:[theEvent locationInWindow] fromView:nil]];
     
+
+    if(view && ![view isKindOfClass:[TGGifSearchRowView class]]) {
+        while (view != nil && ![view isKindOfClass:[TGGifPlayerItemView class]] && ![view isKindOfClass:[TGPicItemView class]]) {
+            view = view.superview;
+        }
+    }
     
-    NSUInteger index = [self.subviews indexOfObject:view.superview];
     
+    NSUInteger index = [self.subviews indexOfObject:view];
+
     
     TGGifSearchRowItem *item = (TGGifSearchRowItem *)[self rowItem];
     
@@ -558,7 +649,6 @@ static NSImage *tgContextPicCap() {
         self.tm_delegate = self;
         _items = [NSMutableArray array];
         _needCheckKeyWindow = YES;
-        [self addScrollEvent];
     }
     
     return self;
@@ -566,22 +656,30 @@ static NSImage *tgContextPicCap() {
 
 
 
-- (CGFloat)rowHeight:(NSUInteger)row item:(TMRowItem *) item {
-    return 100;
+- (CGFloat)rowHeight:(NSUInteger)row item:(TGGifSearchRowItem *) item {
+    return item.height;
 }
 - (BOOL)isGroupRow:(NSUInteger)row item:(TMRowItem *) item {
     return NO;
 }
 - (TMRowView *)viewForRow:(NSUInteger)row item:(TMRowItem *) item {
-    return [self cacheViewForClass:[TGGifSearchRowView class] identifier:@"TGGifSearchRowView" withSize:NSMakeSize(NSWidth(self.frame), 100)];
+    return [self cacheViewForClass:[item viewClass] identifier:NSStringFromClass([item viewClass]) withSize:NSMakeSize(NSWidth(self.frame), item.height)];
 }
 - (void)selectionDidChange:(NSInteger)row item:(TGGifSearchRowItem *) item {
     
-    TLBotInlineResult *botResult = item.gifs[row];
-    
-    if(_choiceHandler) {
-        _choiceHandler(botResult);
+    if(![item isKindOfClass:[TGContextImportantRowItem class]]) {
+        TLBotInlineResult *botResult = item.gifs[row];
+        
+        if(_choiceHandler) {
+            _choiceHandler(botResult);
+        }
+    } else {
+        if(_choiceHandler) {
+            _choiceHandler((TGGifSearchRowItem *)item);
+        }
     }
+    
+    
     
 }
 - (BOOL)selectionWillChange:(NSInteger)row item:(TMRowItem *) item {
@@ -592,7 +690,7 @@ static NSImage *tgContextPicCap() {
 }
 
 
--(NSArray *)makeRow:(NSMutableArray *)gifs isLastRowItem:(BOOL)isLastRowItem {
+-(NSArray *)makeRow:(NSMutableArray *)gifs isLastRowItem:(BOOL)isLastRowItem itemHeight:(int *)itemHeight {
     
     
     __block int currentWidth = 0;
@@ -604,14 +702,24 @@ static NSImage *tgContextPicCap() {
             
             TL_documentAttributeVideo *video = (TL_documentAttributeVideo *) [botResult.document attributeWithClass:[TL_documentAttributeVideo class]];
             
+            NSSize thumbSize =NSMakeSize( botResult.document.thumb.w,  botResult.document.thumb.h);
+            
             int w = MAX(video.w,botResult.w);
             int h = MAX(video.h,botResult.h);
+            
+            if(!video && thumbSize.width > 0 && thumbSize.height > 0) {
+                                
+                w = MIN(thumbSize.width,maxHeight);
+                h = MIN(thumbSize.height,maxHeight);
+            }
             
             if(botResult.photo.sizes.count > 0 && video == nil) {
                 TLPhotoSize *s = botResult.photo.sizes[MIN(botResult.photo.sizes.count-1,2)];
                 w = s.w;
                 h = s.h;
             }
+            
+            
             
             NSSize size = convertSize(NSMakeSize(w,h), NSMakeSize(INT32_MAX, maxHeight));
             
@@ -650,7 +758,7 @@ static NSImage *tgContextPicCap() {
         
         block();
         
-        if((currentWidth - NSWidth(self.frame)) > 100 && gifs.count > 1) {
+        if((currentWidth - NSWidth(self.frame)) > maxHeight && gifs.count > 1) {
             [gifs removeLastObject];
             continue;
         }
@@ -665,6 +773,7 @@ static NSImage *tgContextPicCap() {
         
     }
     
+    *itemHeight = maxHeight;
     
     return sizes;
     
@@ -688,7 +797,17 @@ static NSImage *tgContextPicCap() {
 }
 
 
-
+-(void)setNeedLoadNext:(void (^)(BOOL))needLoadNext {
+    _needLoadNext = needLoadNext;
+    
+    weak();
+    
+    [self.scrollView setScrollWheelBlock:^{
+        if(weakSelf.needLoadNext) {
+            weakSelf.needLoadNext([weakSelf.scrollView isNeedUpdateBottom]);
+        }
+    }];
+}
 
 -(void)clear {
     
@@ -703,9 +822,7 @@ static NSImage *tgContextPicCap() {
     
     _needCheckKeyWindow = needCheckKey;
     
-    
-    [self removeScrollEvent];
-    [self addScrollEvent];
+
 }
 
 
@@ -713,33 +830,33 @@ static NSImage *tgContextPicCap() {
     
     NSMutableArray *filter = [NSMutableArray array];
     
+    __block TGContextImportantRowItem *switchItem;
+    
     [items enumerateObjectsUsingBlock:^(TLBotInlineResult *obj, NSUInteger idx, BOOL * _Nonnull stop) {
         
-        if(!((obj.document == nil || [obj.document isKindOfClass:[TL_documentEmpty class]]) && (obj.photo == nil || [obj.photo isKindOfClass:[TL_photoEmpty class]]) && obj.content_url.length ==0)) {
-            
-            static NSArray *acceptTypes;
-            
-            static dispatch_once_t onceToken;
-            dispatch_once(&onceToken, ^{
-                acceptTypes = @[@"photo",@"gif"];
-            });
-            
-            if([acceptTypes indexOfObject:obj.type] != NSNotFound) {
-                
-            }
+        if(![obj isKindOfClass:[TGContextImportantRowItem class]]) {
             [filter addObject:obj];
+        } else {
+            switchItem = (TGContextImportantRowItem *) obj;
         }
         
     }];
+    if(switchItem) {
+        [self insert:@[switchItem] startIndex:0 tableRedraw:YES];
+    }
+    
     
     items = filter;
+
+    
+    
     
     [_items addObjectsFromArray:items];
     
     
-    TGGifSearchRowItem *prevItem = [self.list lastObject];
+    TGGifSearchRowItem *prevItem = [[self.list filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.class != %@",[TGContextImportantRowItem class]]] lastObject];
     
-     int f = floor(NSWidth(self.frame)/100);
+     int f = roundf(NSWidth(self.frame)/100.0f);
     
      NSMutableArray *draw = [items mutableCopy];
     
@@ -755,15 +872,18 @@ static NSImage *tgContextPicCap() {
     
     dispatch_block_t next = ^{
         
-        int rowCount = MIN(f,(int)draw.count);
+        int rowCount = (int)draw.count;
         
         NSMutableArray *r = [[draw subarrayWithRange:NSMakeRange(0, rowCount)] mutableCopy];
         
-        NSArray *s = [self makeRow:r isLastRowItem:r.count < rowCount || (f > rowCount && r.count <= rowCount)];
+        int itemHeight = 100;
+        
+        NSArray *s = [self makeRow:r isLastRowItem:r.count < rowCount || (f > rowCount && r.count <= rowCount) itemHeight:&itemHeight];
         
         [draw removeObjectsInArray:r];
         
         TGGifSearchRowItem *item = [[TGGifSearchRowItem alloc] initWithObject:[r copy] sizes:[s copy]];
+        item.height = itemHeight;
         item.needCheckKeyWindow = _needCheckKeyWindow;
         if(redrawPrev) {
             NSUInteger index = [self.list indexOfObject:prevItem];
@@ -781,38 +901,30 @@ static NSImage *tgContextPicCap() {
         next();
     }
     
+    
 }
 
 
-
+-(int)hintHeight {
+    
+    __block int height = 0;
+    
+    [self.list enumerateObjectsUsingBlock:^(TMRowItem *obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        height+=obj.height;
+    }];
+    
+    return MIN(200,height);
+}
 
 
 -(void)draw {
     
 }
 
--(void)addScrollEvent {
-    id clipView = [[self enclosingScrollView] contentView];
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(_didScrolledTableView:)
-                                                 name:NSViewBoundsDidChangeNotification
-                                               object:clipView];
-    
-}
 
--(void)removeScrollEvent {
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
-}
-
-
--(void)_didScrolledTableView:(NSNotification *)notification {
-    if(_needLoadNext) {
-        _needLoadNext([self.scrollView isNeedUpdateBottom]);
-    }
-}
 
 -(void)dealloc {
-    [self removeScrollEvent];
+    [self clear];
 }
 
 

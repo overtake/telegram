@@ -7,7 +7,7 @@
 //
 
 #import "TGWebpageAttach.h"
-
+#import "TGTextLabel.h"
 @interface TGWebpageAttach ()
 @property (nonatomic,assign) int peer_id;
 
@@ -50,7 +50,7 @@
         
         
         
-        [_stateField setFrameOrigin:NSMakePoint(5, 0)];
+        [_stateField setFrameOrigin:NSMakePoint(5, -3)];
         
         [self addSubview:_titleField];
         [self addSubview:_stateField];
@@ -63,7 +63,7 @@
         
         [_deleteImageView setCallback:^{
             
-            [[Telegram rightViewController].messagesViewController markAsNoWebpage];
+            [appWindow().navigationController.messagesViewController markAsNoWebpage];
             
         }];
         

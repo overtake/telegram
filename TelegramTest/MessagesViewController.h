@@ -43,6 +43,7 @@ typedef enum {
 @property (nonatomic, strong,readonly) MessagesTableView *table;
 @property (nonatomic, strong) MessagesBottomView *bottomView;
 
+
 typedef enum {
     ShowMessageTypeReply = 1 << 0,
     ShowMessageTypeSearch = 1 << 1,
@@ -63,6 +64,7 @@ typedef enum {
 - (void)setCellsEditButtonShow:(BOOL)show animated:(BOOL)animated;
 - (void)setSelectedMessage:(MessageTableItem *)item selected:(BOOL)selected;
 - (void)deleteSelectedMessages;
+- (void) deleteSelectedMessages:(dispatch_block_t)deleteAcceptBlock;
 - (void)cancelSelectionAndScrollToBottom:(BOOL)scrollToBottom;
 - (void)unSelectAll:(BOOL)animated;
 - (void)bottomViewChangeSize:(int)height animated:(BOOL)animated;
@@ -145,6 +147,7 @@ typedef enum {
 - (void)sendFoundGif:(TLMessageMedia *)media forConversation:(TL_conversation *)conversation;
 - (void)sendCompressedItem:(TGCompressItem *)compressedItem;
 - (void)sendContextBotResult:(TLBotInlineResult *)botContextResult via_bot_id:(int)via_bot_id via_bot_name:(NSString *)via_bot_name queryId:(long)queryId forConversation:(TL_conversation *)conversation;
+-(void)sendStartBot:(NSString *)startParam forConversation:(TL_conversation *)conversation bot:(TLUser *)bot;
 
 - (NSArray *)messageTableItemsFromMessages:(NSArray *)input;
 + (NSArray *)messageTableItemsFromMessages:(NSArray *)input;
@@ -173,12 +176,16 @@ typedef enum {
 -(void)removeWebpage;
 -(void)updateWebpage;
 
+
+-(void)clearNoWebpage;
 -(void)markAsNoWebpage;
 -(BOOL)noWebpage:(NSString *)message;
 
 -(void)showOrHideChannelDiscussion;
 
 -(void)tryRead;
+
+-(BOOL)contextAbility;
 
 -(void)selectInputTextByText:(NSString *)text;
 
@@ -187,5 +194,7 @@ typedef enum {
 -(void)setEditableMessage:(TL_localMessage *)message;
 
 -(TGInputMessageTemplateType)templateType;
+
+
 
 @end

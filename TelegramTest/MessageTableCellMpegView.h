@@ -6,8 +6,8 @@
 //  Copyright © 2015 keepcoder. All rights reserved.
 //
 
-#import "MessageTableCellContainerView.h"
+#import "TGModernMessageCellContainerView.h"
 #import "MessageTableItemMpeg.h"
-@interface MessageTableCellMpegView : MessageTableCellContainerView
+@interface MessageTableCellMpegView : TGModernMessageCellContainerView
 
 @end

@@ -20,6 +20,8 @@
 #import "ComposeActionAddGroupMembersBehavior.h"
 #import "TGPhotoViewer.h"
 #import "ChatAdminsViewController.h"
+#import "TGModernUpgradeChatViewController.h"
+#import "ComposeActionCustomBehavior.h"
 @interface TGModernChatInfoViewController ()
 @property (nonatomic,strong) TGSettingsTableView *tableView;
 
@@ -31,6 +33,7 @@
 @property (nonatomic,strong) GeneralSettingsRowItem *notificationItem;
 @property (nonatomic,strong) GeneralSettingsRowItem *adminsItem;
 @property (nonatomic,strong) GeneralSettingsRowItem *deleteAndExitItem;
+@property (nonatomic,strong) GeneralSettingsRowItem *convertToSuperGroup;
 @property (nonatomic,strong) TGProfileHeaderRowItem *headerItem;
 @property (nonatomic,strong) TGSProfileMediaRowItem *mediaItem;
 
@@ -81,7 +84,39 @@
         }];
         
     } description:NSLocalizedString(@"Conversation.DeleteAndExit", nil) height:42 stateback:nil];
+    
+    _convertToSuperGroup = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeNone callback:^(TGGeneralRowItem *item) {
+        
+        strongWeak();
+        
+        if(strongSelf == weakSelf) {
+            TGModernUpgradeChatViewController *upgradeController = [[TGModernUpgradeChatViewController alloc] initWithFrame:NSZeroRect];
+            
+            
+            ComposeAction *action = [[ComposeAction alloc] initWithBehaviorClass:[ComposeActionCustomBehavior class] filter:nil object:strongSelf.chat];
+            
+            ComposeActionCustomBehavior *behavior = (ComposeActionCustomBehavior *) action.behavior;
+            
+            behavior.customCenterTitle = NSLocalizedString(@"Conversation.ConvertToSuperGroup", nil);
+            
+            [behavior setComposeDone:^{
+               
+                strongWeak();
+                
+                if(strongSelf == weakSelf) {
+                    [strongSelf upgradeToSuperGroup:YES];
+                }
+                
+            }];
+            
+            [upgradeController setAction:action];
+            [strongSelf.navigationViewController pushViewController:upgradeController animated:YES];
+        }
+        
+    } description:NSLocalizedString(@"Conversation.ConvertToSuperGroup", nil) height:42 stateback:nil];
+    
     _deleteAndExitItem.textColor = [NSColor redColor];
+    _convertToSuperGroup.textColor = BLUE_UI_COLOR;
     
 }
 
@@ -107,6 +142,16 @@
         }];
     }
     
+    
+    NSUInteger deleteIndex = [self.tableView indexOfItem:_deleteAndExitItem];
+    
+    if(deleteIndex != NSNotFound) {
+        if(_chat.isCreator && editable) {
+            [_tableView insert:_convertToSuperGroup atIndex:deleteIndex tableRedraw:YES];
+        }
+    }
+    
+   
     
     
     [self.action setEditable:editable];
@@ -149,6 +194,9 @@
         }
         
     }];
+    
+    if(!editable)
+        [_tableView removeItem:_convertToSuperGroup tableRedraw:YES];
 }
 
 -(void)viewWillAppear:(BOOL)animated {
@@ -161,7 +209,7 @@
     [self drawParticipants];
     [self checkSupergroup];
     
-
+    [_tableView addItem:_deleteAndExitItem tableRedraw:YES];
     
     [Notification addObserver:self selector:@selector(chatParticipantsUpdateNotification:) name:CHAT_UPDATE_PARTICIPANTS];
     [Notification addObserver:self selector:@selector(didChangeChatFlags:) name:CHAT_FLAGS_UPDATED];
@@ -184,30 +232,39 @@
             self.action.editable = NO;
         }
         
+        [self updateActionNavigation];
         [self configure];
         [self drawParticipants];
+        [self checkSupergroup];
         
+        
+        [_tableView addItem:_deleteAndExitItem tableRedraw:YES];
     }
 }
 
 - (void)chatParticipantsUpdateNotification:(NSNotification *)notification {
     
-    TLChat *chat = notification.userInfo[KEY_CHAT];
+    TLChat *chat = [[ChatsManager sharedManager] find:[notification.userInfo[KEY_CHAT_ID] intValue]];
     
-    if(_chat == chat) {
+    [ASQueue dispatchOnMainQueue:^{
         
-        NSRange range = [self participantsRange];
+        if(_chat == chat) {
+        
+            NSRange range = [self participantsRange];
        
-        if(range.length > 0) {
+            if(range.length > 0) {
             
-            if(range.length != _chat.chatFull.participants_count && (range.length >= maxChatUsers()+1 || _chat.chatFull.participants_count >= maxChatUsers()+1) ) {
-                [self checkSupergroup];
+                if(range.length != _chat.chatFull.participants_count && (range.length >= maxChatUsers()+1 || _chat.chatFull.participants_count >= maxChatUsers()+1) ) {
+                    [self checkSupergroup];
+                }
             }
+        
+            [self drawParticipants];
+        
         }
-        
-        [self drawParticipants];
-        
-    }
+    }];
+    
+    
 }
 
 
@@ -276,7 +333,7 @@
 -(void)drawParticipants {
     
     
-    
+    [_participantsHeaderItem updateWithString:[NSString stringWithFormat:NSLocalizedString(@"Modern.Chat.Members", nil),_chat.participants_count]];
     
     [_participantsHeaderItem redrawRow];
     
@@ -299,6 +356,15 @@
         user.type = SettingsRowItemTypeNone;
         user.editable = weakSelf.action.isEditable;
         
+        if(([obj isKindOfClass:[TL_chatParticipantAdmin class]] && weakSelf.chat.isAdmins_enabled ) || [obj isKindOfClass:[TL_chatParticipantCreator class]]) {
+            NSMutableAttributedString *attr = [[NSMutableAttributedString alloc] init];
+            
+            [attr appendString:NSLocalizedString(@"Channel.admin", nil) withColor:GRAY_TEXT_COLOR];
+            
+            [attr setFont:TGSystemFont(13) forRange:attr.range];
+            
+            user.badge = attr;
+        }
         
         [user setStateback:^id(TGGeneralRowItem *item) {
             
@@ -345,12 +411,13 @@
         return online1 > online2 ?  NSOrderedAscending : NSOrderedDescending;
     }];
     
-    [_tableView insert:items startIndex:_tableView.list.count tableRedraw:YES];
+    NSUInteger idx = MIN([_tableView indexOfItem:_deleteAndExitItem],[_tableView indexOfItem:_convertToSuperGroup]);
+    
+    [_tableView insert:items startIndex:idx == NSNotFound ? _tableView.count : idx-1 tableRedraw:YES];
     
     
-    [_tableView addItem:[[TGGeneralRowItem alloc] initWithHeight:20] tableRedraw:YES];
     
-    [_tableView addItem:_deleteAndExitItem tableRedraw:YES];
+    
     
 
 }
@@ -460,42 +527,7 @@
             
             strongWeak();
             
-            confirm(NSLocalizedString(@"Modern.Chat.UpgradeConfirmHeader", nil), NSLocalizedString(@"Modern.Chat.UpgradeConfirmDescription", nil), ^{
-                
-                [strongSelf showModalProgress];
-                
-                
-                 [RPCRequest sendRequest:[TLAPI_messages_migrateChat createWithChat_id:weakSelf.chat.n_id] successHandler:^(id request, id response) {
-                    
-                    if(strongSelf == weakSelf) {
-                        TLChat *chat = [[ChatsManager sharedManager] find:weakSelf.chat.migrated_to.channel_id];
-                        
-                        if(chat) {
-                            
-                            [[FullChatManager sharedManager] performLoad:chat.n_id callback:^(TLChatFull *fullChat) {
-                                
-                                [weakSelf.navigationViewController showMessagesViewController:chat.dialog];
-                                
-                                [weakSelf hideModalProgressWithSuccess];
-                            }];
-                            
-                            
-                        }
-                    }
-                    
-                    
-                    
-                    
-                } errorHandler:^(id request, RpcError *error) {
-                    [weakSelf hideModalProgress];
-                    
-                    alert(appName(), NSLocalizedString(@"Alert.somethingIsWrong", nil));
-                } timeout:0 queue:[ASQueue globalQueue].nativeQueue];
-                
-            }, ^{
-                
-            });
-            
+            [strongSelf upgradeToSuperGroup:NO];
             
         } description:NSLocalizedString(@"Modern.Chat.UpgrateToMegagroup", nil) height:42 stateback:nil];
         upgradeToMegagroup.textColor = BLUE_UI_COLOR;
@@ -526,7 +558,7 @@
 
 -(NSRange)participantsRange {
     NSUInteger startIdx = [_tableView indexOfItem:_participantsHeaderItem]+1;
-    NSUInteger stopIdx = [_tableView indexOfItem:_deleteAndExitItem];
+    NSUInteger stopIdx = MIN([_tableView indexOfItem:_deleteAndExitItem],[_tableView indexOfItem:_convertToSuperGroup]);
     
     if(stopIdx != NSNotFound)
         stopIdx--;
@@ -572,7 +604,7 @@
         
     } errorHandler:^(RPCRequest *request, RpcError *error) {
         
-        [[FullChatManager sharedManager] performLoad:_chat.n_id callback:^(TLChatFull *fullChat) {
+        [[ChatFullManager sharedManager] requestChatFull:_chat.n_id withCallback:^(TLChatFull *fullChat) {
             [self drawParticipants];
         }];
 
@@ -582,6 +614,45 @@
 -(void)dealloc {
     
     [_tableView clear];
+    
+}
+
+-(void)upgradeToSuperGroup:(BOOL)force {
+    
+    confirm(NSLocalizedString(force ? @"ConvertGroupAlertWarning" : @"Modern.Chat.UpgradeConfirmHeader", nil), NSLocalizedString(force ? @"ConvertGroupAlert" : @"Modern.Chat.UpgradeConfirmDescription", nil), ^{
+        
+        [self showModalProgress];
+        
+        
+        [RPCRequest sendRequest:[TLAPI_messages_migrateChat createWithChat_id:self.chat.n_id] successHandler:^(id request, id response) {
+            
+            TLChat *chat = [[ChatsManager sharedManager] find:self.chat.migrated_to.channel_id];
+            
+            if(chat) {
+                
+                [[ChatFullManager sharedManager] requestChatFull:chat.n_id withCallback:^(TLChatFull *fullChat) {
+                    
+                    [self.navigationViewController showMessagesViewController:chat.dialog];
+                    
+                    [self hideModalProgressWithSuccess];
+                }];
+                
+                
+            }
+
+            
+            
+            
+            
+        } errorHandler:^(id request, RpcError *error) {
+            [ASQueue dispatchOnMainQueue:^{
+                [self hideModalProgress];
+                alert(appName(), NSLocalizedString(@"Alert.somethingIsWrong", nil));
+            }];
+
+        } timeout:0 queue:[ASQueue globalQueue].nativeQueue];
+        
+    }, nil);
     
 }
 

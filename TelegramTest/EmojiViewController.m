@@ -193,7 +193,7 @@
         
         self.userEmoji = [Storage emoji];
         
-        NSMutableArray *popular = [[@"😂 😘 ❤️ 😍 😊 😁 👍 ☺️ 😔 😄 😭 💋 😒 😳 😜 🙈 😉 😃 😢 😝 😱 😡 😏 😞 😅 😚 🙊 😌 😀 😋 😆 👌 😐 😕 👎 👌 👊 ✊ ✌️ 👋 ✋ 👐 👆 👇 👉 👈 🙌 🙏 ☝️ 👏 💪 😢 😪 😥 😰 😓 😩 😫 😨 😱 😠 😡 😤 😖 😆 😋 😷 😎" componentsSeparatedByString:@" "] mutableCopy];
+        NSMutableArray *popular = [[@"😂 😘 ❤️ 😍 😊 🤔 😁 👍 ☺️ 😔 😄 😭 💋 😒 😳 😜 🙈 😉 😃 😢 😝 😱 😡 😏 😞 😅 😚 🙊 😌 😀 😋 😆 👌 😐 😕 👎 👌 👊 ✊ ✌️ 👋 ✋ 👐 👆 👇 👉 👈 🙌 🙏 ☝️ 👏 💪 😢 😪 😥 😰 😓 😩 😫 😨 😱 😠 😡 😤 😖 😆 😋 😷 😎" componentsSeparatedByString:@" "] mutableCopy];
         
         
         [self.userEmoji enumerateObjectsUsingBlock:^(NSString *emoji, NSUInteger idx, BOOL *stop) {
@@ -451,15 +451,18 @@
 }
 
 - (void)showPopovers {
+    _currentButton = nil;
     [self bottomButtonClick:[self.bottomView.subviews objectAtIndex:self.userEmoji.count ? 0 : 1]];
 }
 
 -(void)setMessagesViewController:(MessagesViewController *)messagesViewController {
     _messagesViewController = messagesViewController;
     _gifContainer.messagesViewController = messagesViewController;
+    _stickersTableView.stickers.messagesViewController = messagesViewController;
 }
 
 - (void)close {
+    [TGCache removeAllCachedImages:@[STICKERSCACHE]];
     [self.messagesViewController.bottomView.smilePopover close];
     [self.stickersTableView removeAllItems];
     [_gifContainer clear];
@@ -478,6 +481,19 @@
         [btn setSelected:btn == button];
     }
     
+    if(button.index == 7) {
+        [self.stickersTableView reload];
+    } else if(_currentButton.index == 7) {
+        [self.stickersTableView removeAllItems];
+    }
+    
+    if(button.index == 8) {
+        [_gifContainer prepareSavedGifvs];
+    } else if(_currentButton.index == 8) {
+        [_gifContainer clear];
+    }
+    
+    
     self.currentButton = button;
     
     [self.tableView.containerView setHidden:NO];
@@ -495,17 +511,6 @@
     [self.tableView reloadData];
     [self.tableView scrollToBeginningOfDocument:nil];
     
-    if(self.currentButton.index == 7) {
-        [self.stickersTableView reload];
-    } else {
-        [self.stickersTableView removeAllItems];
-    }
-    
-    if(self.currentButton.index == 8) {
-        [_gifContainer prepareSavedGifvs];
-    } else {
-        [_gifContainer clear];
-    }
     
     
     [self.tableView.containerView setHidden:self.currentButton.index == 7 || self.currentButton.index == 8];
@@ -513,6 +518,7 @@
     [self.gifContainer setHidden:self.currentButton.index != 8];
     
 }
+
 
 - (void)insertEmoji:(NSString *)emoji {
     if(self.insertEmoji)

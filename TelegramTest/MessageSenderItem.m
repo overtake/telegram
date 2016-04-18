@@ -20,7 +20,7 @@
     
     if(self = [super initWithConversation:conversation]) {
         
-        [message trim];
+        message = [message trim];
         
         self.message = [MessageSender createOutMessage:message media:[TL_messageMediaEmpty create] conversation:conversation additionFlags:additionFlags];
         
@@ -72,6 +72,9 @@
         strongWeak();
         
         if(strongSelf != nil) {
+            
+            
+            
             [strongSelf updateMessageId:response];
             
             if([response isKindOfClass:[TL_updates class]]) {
@@ -90,7 +93,6 @@
             [strongSelf.message save:YES];
             
             strongSelf.state = MessageSendingStateSent;
-            
             
             
             if([strongSelf.message.media isKindOfClass:[TL_messageMediaWebPage class]])

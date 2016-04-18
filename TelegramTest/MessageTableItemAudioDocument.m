@@ -12,6 +12,7 @@
 #import "NSString+Extended.h"
 #import <AVFoundation/AVFoundation.h>
 #import "DownloadQueue.h"
+#import "MessageTablecellAudioDocumentView.h"
 @implementation MessageTableItemAudioDocument
 
 - (id)initWithObject:(TLMessage *)object {
@@ -19,17 +20,20 @@
     if(self) {
         self.blockSize = NSMakeSize(200, 60);
        
-       _fileSize = [[NSString sizeToTransformedValuePretty:self.message.media.document.size] trim];
+       _fileSize = [[NSString sizeToTransformedValuePretty:self.document.size] trim];
        
-        if([self isset])
-            self.state = AudioStateWaitPlaying;
-        else
-            self.state = AudioStateWaitDownloading;
        
         [self doAfterDownload];
     
     }
     return self;
+}
+
+-(TLDocument *)document {
+    if([self.message.media isKindOfClass:[TL_messageMediaBotResult class]]) {
+        return self.message.media.bot_result.document;
+    } else
+        return self.message.media.document;
 }
 
 -(void)checkStartDownload:(SettingsMask)setting size:(int)size {
@@ -46,24 +50,50 @@
 
 -(void)doAfterDownload {
     
-    TL_documentAttributeAudio *audio = (TL_documentAttributeAudio *) [self.message.media.document attributeWithClass:[TL_documentAttributeAudio class]];
+    TL_documentAttributeAudio *audio = [self audioAttr];
+    
+    NSMutableAttributedString *attr = [[NSMutableAttributedString alloc] init];
     
     if(audio && ([audio.title trim].length > 0 && [audio.performer trim].length > 0)) {
-        self.duration = [NSString stringWithFormat:@"%@\n%@",audio.performer,audio.title];
+        NSRange range = [attr appendString:[audio.performer trim] withColor:TEXT_COLOR];
+        [attr setFont:TGSystemMediumFont(13) forRange:range];
+        
+        [attr appendString:@"\n"];
+        
+        range = [attr appendString:[audio.title trim] withColor:GRAY_TEXT_COLOR];
+        [attr setFont:TGSystemFont(13) forRange:range];
+        
     } else {
-        self.duration = self.message.media.document.file_name;
+        
+        [attr appendString:self.document.file_name.length > 0 ? self.document.file_name : @"Undefined.file" withColor:TEXT_COLOR];
+        [attr setFont:TGSystemMediumFont(13) forRange:attr.range];
     }
     
+    NSMutableParagraphStyle *style = [[NSMutableParagraphStyle alloc] init];
+    style.lineBreakMode = NSLineBreakByTruncatingMiddle;
+    style.lineSpacing = 2;
+    [attr addAttribute:NSParagraphStyleAttributeName value:style range:attr.range];
+
     
+    _nameAttributedString = attr;
     
     [self regenerate];
 }
 
+-(TL_documentAttributeAudio *)audioAttr {
+    TL_documentAttributeAudio *audio = (TL_documentAttributeAudio *) [self.document attributeWithClass:[TL_documentAttributeAudio class]];
+    
+    if(self.message.media.bot_result != nil && !audio) {
+        audio = [TL_documentAttributeAudio createWithFlags:0 duration:0 title:self.message.media.bot_result.title performer:self.message.media.bot_result.n_description waveform:nil];
+    }
+    
+    return audio;
+}
 
 -(void)regenerate {
     NSMutableAttributedString *attr = [[NSMutableAttributedString alloc] init];
     
-    TL_documentAttributeAudio *audio = (TL_documentAttributeAudio *) [self.message.media.document attributeWithClass:[TL_documentAttributeAudio class]];
+    TL_documentAttributeAudio *audio = [self audioAttr];
     
     NSString *perfomer = [audio.performer trim];
     NSString *title = [audio.title trim];
@@ -92,7 +122,7 @@
         
         
     } else {
-        [attr appendString:self.message.media.document.file_name withColor:TEXT_COLOR];
+        [attr appendString:self.document.file_name withColor:TEXT_COLOR];
         [attr setFont:TGSystemFont(13) forRange:attr.range];
     }
     
@@ -117,7 +147,7 @@
 }
 
 - (BOOL)canDownload {
-    return self.message.media.document.dc_id != 0;
+    return self.document.dc_id != 0;
 }
 
 -(void)setDownloadItem:(DownloadItem *)downloadItem {
@@ -128,7 +158,7 @@
 
 -(DownloadItem *)downloadItem {
     if(super.downloadItem == nil)
-        [super setDownloadItem:[DownloadQueue find:self.message.media.document.n_id]];
+        [super setDownloadItem:[DownloadQueue find:self.document.n_id]];
     
     return [super downloadItem];
 }
@@ -138,21 +168,24 @@
 }
 
 - (int)size {
-    return self.message.media.document.size;
+    return self.document.size;
 }
 
 -(NSString *)fileName {
-    return self.message.media.document.file_name;
+    return self.document.file_name;
 }
 
 -(BOOL)makeSizeByWidth:(int)width {
-    [super makeSizeByWidth:width];
     
+    _nameSize = [_nameAttributedString coreTextSizeForTextFieldForWidth:width - 40 - self.defaultOffset];
     
+    self.contentSize = self.blockSize = NSMakeSize(_nameSize.width + 40 + self.defaultOffset, 40);
     
-    self.blockSize = NSMakeSize(width - self.dateSize.width - 20, 50);
-    
-    return NO;
+    return [super makeSizeByWidth:width];
+}
+
+-(Class)viewClass {
+    return [MessageTablecellAudioDocumentView class];
 }
 
 @end

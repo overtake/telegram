@@ -13,6 +13,7 @@
 #import "TGTimer.h"
 #import <AddressBook/AddressBook.h>
 #import "TLUserCategory.h"
+#import "FullUsersManager.h"
 @interface UsersManager ()
 @property (nonatomic, strong) TGTimer *lastSeenUpdater;
 @property (nonatomic, strong) RPCRequest *lastSeenRequest;
@@ -41,6 +42,12 @@
 //        [self.lastSeenUpdater start];
       //  [self statusUpdater];
     }];
+}
+
+
+-(void)updateUsers:(NSArray *)userIds {
+    
+    
 }
 
 - (void)statusUpdater {
@@ -222,11 +229,11 @@
                 if(currentUser.type != TLUserTypeEmpty) {
                     if(![newUser.first_name isEqualToString:currentUser.first_name] || ![newUser.last_name isEqualToString:currentUser.last_name] || ![newUser.username isEqualToString:currentUser.username] || ( newUser.phone && ![newUser.phone isEqualToString:currentUser.phone])) {
                         
-            
-                        currentUser.first_name = newUser.first_name;
-                        currentUser.last_name = newUser.last_name;
-                        
                         if(!newUser.isMin) {
+                            currentUser.first_name = newUser.first_name;
+                            currentUser.last_name = newUser.last_name;
+                        
+                        
                             currentUser.username = newUser.username;
                             currentUser.phone = newUser.phone;
                         }
@@ -248,10 +255,16 @@
                 }
                 
                 if(!newUser.isMin) {
+                    
+                    if(currentUser.access_hash != newUser.access_hash)
+                        needUpdateUserInDB = YES;
                     currentUser.access_hash = newUser.access_hash;
+                    
                 }
                 
+                BOOL result = [self setUserStatus:newUser.status forUser:currentUser autoSave:NO];
                 
+                needUpdateUserInDB = needUpdateUserInDB || result;
                 
                 if(isNeedRebuildNames) {
                     [currentUser rebuildNames];
@@ -276,9 +289,6 @@
                 [self->keys setObject:newUser forKey:[newUser valueForKey:key]];
                 
                 [newUser rebuildNames];
-                
-                
-                
                 [newUser rebuildType];
                 
                  currentUser = newUser;
@@ -293,7 +303,7 @@
             if(currentUser.type == TLUserTypeSelf)
                 _userSelf = currentUser;
             
-            BOOL result = [self setUserStatus:newUser.status forUser:currentUser];
+            BOOL result = [self setUserStatus:newUser.status forUser:currentUser autoSave:NO];
             if(!needUpdateUserInDB && result) {
                 needUpdateUserInDB = YES;
             }
@@ -311,22 +321,20 @@
     
 }
 
-- (BOOL)setUserStatus:(TLUserStatus *)status forUser:(TLUser *)currentUser {
+- (BOOL)setUserStatus:(TLUserStatus *)status forUser:(TLUser *)currentUser autoSave:(BOOL)autoSave {
     
-    BOOL result = currentUser.status.expires != status.expires && currentUser.status.was_online != status.was_online && currentUser.status.class != status.class;
+    BOOL result = (currentUser.status.expires != status.expires || currentUser.status.was_online != status.was_online) || currentUser.status.class != status.class;
     
     BOOL saveOnlyTime = currentUser.status.class == status.class || (([currentUser.status isKindOfClass:[TL_userStatusOnline class]] || [currentUser.status isKindOfClass:[TL_userStatusOffline class]])  && ([status isKindOfClass:[TL_userStatusOnline class]] || [status isKindOfClass:[TL_userStatusOffline class]]));
     
     currentUser.status = status;
     currentUser.lastSeenUpdate = [[MTNetwork instance] getTime];
-    currentUser.status.was_online = status.was_online;
-    currentUser.status.expires = status.expires;
-    
+
     if(result)
         [Notification perform:USER_STATUS data:@{KEY_USER_ID: @(currentUser.n_id)}];
     
     
-    if(result) {
+    if(result && autoSave) {
         if(saveOnlyTime) {
             [[Storage manager] updateUsersStatus:@[currentUser]];
         } else {
@@ -341,7 +349,7 @@
     [self.queue dispatchOnQueue:^{
         TLUser *currentUser = [keys objectForKey:@(uid)];
         if(currentUser) {
-            BOOL result = [self setUserStatus:status forUser:currentUser];
+            [self setUserStatus:status forUser:currentUser autoSave:YES];
         }
     }];
 }
@@ -432,20 +440,30 @@
     [Notification perform:USER_UPDATE_NAME data:@{KEY_USER:self.userSelf}];
     
     
-    [RPCRequest sendRequest:[TLAPI_account_updateProfile createWithFirst_name:firstName last_name:lastName] successHandler:^(RPCRequest *request, TLUser *response) {
+    [[FullUsersManager sharedManager] requestUserFull:self.userSelf withCallback:^(TLUserFull *userFull) {
         
-        if(response.type == TLUserTypeSelf) {
-            [self add:@[response]];
-        }
+        int flags = firstName.length > 0 ? (1 << 0) : 0;
+        flags|=lastName.length > 0 ? (1 << 1) : 0;
+        flags|=userFull.about.length > 0 ? (1 << 2) : 0;
         
-        [[Storage manager] insertUser:self.userSelf completeHandler:nil];
-        
-        completeHandler(self.userSelf);
-        [Notification perform:USER_UPDATE_NAME data:@{KEY_USER:self.userSelf}];
-    } errorHandler:^(RPCRequest *request, RpcError *error) {
-        if(errorHandler)
-            errorHandler(NSLocalizedString(@"Profile.CantUpdate", nil));
-    } timeout:10];
+        [RPCRequest sendRequest:[TLAPI_account_updateProfile createWithFlags:flags first_name:firstName last_name:lastName about:userFull.about] successHandler:^(RPCRequest *request, TLUser *response) {
+            
+            if(response.type == TLUserTypeSelf) {
+                [self add:@[response]];
+            }
+            
+            [[Storage manager] insertUser:self.userSelf completeHandler:nil];
+            
+            completeHandler(self.userSelf);
+            [Notification perform:USER_UPDATE_NAME data:@{KEY_USER:self.userSelf}];
+        } errorHandler:^(RPCRequest *request, RpcError *error) {
+            if(errorHandler)
+                errorHandler(NSLocalizedString(@"Profile.CantUpdate", nil));
+        } timeout:10];
+    }];
+    
+    
+    
 }
 
 -(void)updateAccountPhoto:(NSString *)path completeHandler:(void (^)(TLUser *user))completeHandler progressHandler:(void (^)(float))progressHandler errorHandler:(void (^)(NSString *description))errorHandler {

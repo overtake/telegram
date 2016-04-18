@@ -27,14 +27,16 @@ typedef enum {
 
 @interface MessageTableCellContainerView : MessageTableCell<SenderListener>
 
-@property (nonatomic,readonly) BOOL isSelected;
-@property (nonatomic,readonly) BOOL isEditable;
+
 
 @property (nonatomic, assign) CellState cellState;
 @property (nonatomic) MessageTableCellState actionState;
 @property (nonatomic, strong) TMView *containerView;
 
 @property (nonatomic, strong,readonly) TMLoaderView *progressView;
+
+
+-(void)setCellState:(CellState)cellState animated:(BOOL)animated;
 
 -(void)checkOperation;
 
@@ -47,21 +49,15 @@ typedef enum {
 - (void)deleteAndCancel;
 - (void)doAfterDownload;
 - (void)startDownload:(BOOL)cancel;
-- (void)updateCellState;
-//- (void)checkStartDownload:(SettingsMask)setting size:(int)size downloadItemClass:(Class)itemClass;
+- (void)updateCellState:(BOOL)animated;
 - (void)setProgressFrameSize:(NSSize)newsize;
--(void)updateDownloadState;
+- (void)updateDownloadState:(BOOL)animated;
 - (BOOL)canEdit;
 
 - (void)uploadProgressHandler:(SenderItem *)item animated:(BOOL)animation;
 - (void)downloadProgressHandler:(DownloadItem *)item;
 
-- (void)searchSelection;
-- (void)stopSearchSelection;
 
-
-- (void)setSelected:(BOOL)selected animation:(BOOL)animation;
-- (void)setEditable:(BOOL)editable animation:(BOOL)animation;
 
 - (void)setProgressToView:(NSView *)view;
 - (void)setProgressStyle:(TMCircularProgressStyle)style;

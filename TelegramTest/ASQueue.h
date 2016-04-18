@@ -30,4 +30,7 @@
 - (void)dispatchOnQueue:(dispatch_block_t)block;
 - (void)dispatchOnQueue:(dispatch_block_t)block synchronous:(bool)synchronous;
 
+void dispatch_after_seconds(float seconds, dispatch_block_t block);
+void dispatch_after_seconds_queue(float seconds, dispatch_block_t block,dispatch_queue_t queue);
+
 @end

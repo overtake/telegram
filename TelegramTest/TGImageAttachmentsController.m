@@ -149,8 +149,8 @@
 
 -(void)mouseUp:(NSEvent *)theEvent {
     
-    if([TMViewController isModalActive])
-        return;
+//    if([TMViewController isModalActive])
+//        return;
     
     [self.delegate didChangeAttachmentsCount:0];
     

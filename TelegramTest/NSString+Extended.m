@@ -31,6 +31,11 @@
     }
     
 
+    while (string.length > 0 && ([string rangeOfCharacterFromSet:[NSCharacterSet whitespaceCharacterSet] options:0 range:NSMakeRange(string.length - 1, 1)].location == string.length-1 || [string rangeOfString:@"\n" options:0 range:NSMakeRange(string.length - 1, 1)].location == string.length-1)) {
+        string = [string substringToIndex:string.length - 1];
+    }
+
+
     NSMutableString *replaceSlowCoreTextCharacters = [[NSMutableString alloc] init];
     
     [string enumerateSubstringsInRange: NSMakeRange(0, [string length]) options:NSStringEnumerationByComposedCharacterSequences usingBlock:

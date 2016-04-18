@@ -24,14 +24,14 @@
 {
     self = [super initWithFrame:frame];
     if (self) {
-        self.textField = [[TGCTextView alloc] initWithFrame:NSMakeRect(0, 10, 0, 0)];
         
-      //  [self.textField setEditable:YES];
+        
+        self.textField = [[TGCTextView alloc] initWithFrame:NSMakeRect(0, 10, 0, 0)];
         
         [self addSubview:self.textField];
         
         self.photoImageView = [[TGImageView alloc] initWithFrame:NSMakeRect(0, 0, 60, 60)];
-        
+        [self.photoImageView setContentMode:BTRViewContentModeScaleAspectFill];
         self.photoImageView.layer.cornerRadius = 30;
         self.photoImageView.wantsLayer = YES;
         [self addSubview:self.photoImageView];
@@ -88,7 +88,7 @@
         [self.textField setFrameSize:item.textSize];
         
     
-        [self.textField setFrameOrigin:NSMakePoint(roundf((NSWidth(self.messagesViewController.view.frame) - item.textSize.width) / 2),   (item.photoSize.height ? (item.photoSize.height + 5) : roundf((item.viewSize.height - NSHeight(_textField.frame))/2)))];
+        [self.textField setFrameOrigin:NSMakePoint(roundf((NSWidth(self.messagesViewController.view.frame) - item.textSize.width) / 2),   (item.photoSize.height ? (item.photoSize.height + item.defaultContentOffset*2) : roundf((item.viewSize.height - NSHeight(_textField.frame))/2)))];
                 
         if(item.photo) {
             
@@ -96,7 +96,7 @@
             self.photoImageView.object = item.imageObject;
             
             [self.photoImageView setHidden:NO];
-            [self.photoImageView setFrameOrigin:NSMakePoint(roundf((NSWidth(self.messagesViewController.view.frame) - _photoImageView.frame.size.width) / 2), 0)];
+            [self.photoImageView setFrameOrigin:NSMakePoint(roundf((NSWidth(self.messagesViewController.view.frame) - _photoImageView.frame.size.width) / 2), self.item.defaultContentOffset)];
             
         } else {
             [self.photoImageView setHidden:YES];

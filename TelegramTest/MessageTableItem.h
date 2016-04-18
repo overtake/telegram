@@ -10,7 +10,7 @@
 #import "SenderHeader.h"
 #import "DownloadItem.h"
 #import "TGReplyObject.h"
-#define FORWARMESSAGE_TITLE_HEIGHT 20
+#import "NSString+FindURLs.h"
 
 @interface MessageTableItem : NSObject<SelectTextDelegate>
 
@@ -24,18 +24,33 @@
 @property (nonatomic, strong) NSDate *date;
 @property (nonatomic, strong) NSString *fullDate;
 @property (nonatomic, strong) TLUser *user;
+
 @property (nonatomic, strong) NSMutableAttributedString *headerName;
 @property (nonatomic, assign) NSSize headerSize;
-@property (nonatomic, strong) NSMutableAttributedString *forwardMessageAttributedString;
+
+
+@property (nonatomic, strong) NSMutableAttributedString *forwardName;
+@property (nonatomic, assign) NSSize forwardNameSize;
+
 @property (nonatomic,strong) NSAttributedString *forwardHeaderAttr;
-@property (nonatomic, strong) NSString *dateStr;
+@property (nonatomic,assign) NSSize forwardHeaderSize;
+
+
+@property (nonatomic, strong) NSAttributedString *dateAttributedString;
+@property (nonatomic) NSSize dateSize;
+
+@property (nonatomic,assign) NSSize rightSize;
+
+@property (nonatomic,assign) NSSize inlineKeyboardSize;
+
+
+@property (nonatomic,strong) NSAttributedString *caption;
+@property (nonatomic,assign) NSSize captionSize;
 
 @property (nonatomic, strong) TLUser *fwd_user;
 @property (nonatomic, strong) TLChat *fwd_chat;
 
 @property (nonatomic,strong) TLUser *via_bot_user;
-@property (nonatomic,strong) NSAttributedString *via_attr_string;
-
 
 
 @property (nonatomic) BOOL isForwadedMessage;
@@ -43,20 +58,15 @@
 @property (nonatomic) BOOL isHeaderMessage;
 @property (nonatomic) BOOL isHeaderForwardedMessage;
 
-@property (nonatomic,assign,readonly) int containerOffsetForward;
-@property (nonatomic,assign,readonly) int containerOffset;
 
 @property (nonatomic,assign,readonly) int makeSize;
 
 @property (nonatomic) NSSize blockSize;
-@property (nonatomic) NSSize previewSize;
-@property (nonatomic) NSSize dateSize;
+@property (nonatomic) NSSize contentSize;
+
 @property (nonatomic, strong) DownloadItem *downloadItem;
 
-
 @property (nonatomic,assign,readonly) int blockWidth;
-
-
 
 @property (nonatomic,strong) TGReplyObject *replyObject;
 
@@ -85,6 +95,9 @@
 - (void)startDownload:(BOOL)cancel force:(BOOL)force;
 - (void)checkStartDownload:(SettingsMask)setting size:(int)size;
 
+
+-(RPCRequest *)proccessInlineKeyboardButton:(TLKeyboardButton *)keyboard handler:(void (^)(TGInlineKeyboardProccessType type))handler;
+
 + (NSDateFormatter *)dateFormatter;
 
 -(BOOL)canShare;
@@ -92,11 +105,32 @@
 -(NSURL *)shareObject;
 
 -(BOOL)isReplyMessage;
--(BOOL)isFwdMessage;
 
 -(int)fontSize;
 
-
+-(BOOL)isWebPage;
 -(BOOL)isViaBot;
+
+
+-(Class)viewClass;
+-(int)cellWidth;
+
+typedef URLFindType (^linkTypeRequest)();
+
+@property (nonatomic,copy) linkTypeRequest linkParseTypes;
+
+
+-(int)defaultPhotoWidth;
+-(int)startContentOffset;
+-(int)defaultContainerOffset;
+-(int)defaultContentOffset;
+-(int)defaultOffset;
+-(int)contentHeaderOffset;
+
++(int)defaultOffset;
++(int)defaultContainerOffset;
+-(BOOL)hasRightView;
+
+-(NSString *)path;
 
 @end

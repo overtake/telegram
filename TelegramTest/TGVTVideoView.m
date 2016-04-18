@@ -74,6 +74,7 @@ static int32_t nextSessionId = 0;
 @property (nonatomic, readonly) CVImageBufferRef buffer;
 @property (nonatomic, readonly) NSTimeInterval timestamp;
 @property (nonatomic,readonly) CMTime outputTime;
+@property (nonatomic,strong) NSImage *image;
 
 @end
 
@@ -191,7 +192,7 @@ static int32_t nextSessionId = 0;
     self = [super init];
     if (self != nil) {
 
-        _useVT = YES;
+        _useVT = NO;
         
         _sessionId = nextSessionId++;
         OSSpinLockLock(&sessionsLock);
@@ -346,6 +347,7 @@ static void TGVTPlayerDecompressionOutputCallback(void *decompressionOutputRefCo
         OSSpinLockUnlock(&sessionsLock);
         
         TGVTAcceleratedVideoFrame *frame = [[TGVTAcceleratedVideoFrame alloc] initWithBuffer:imageBuffer timestamp:presentationSeconds outputTime:presentationTimestamp];
+        
         TGVTAcceleratedVideoFrameQueue *queue = sessionReference.nonretainedObjectValue;
         //[queue dispatch:^{
         [queue.pendingFrames addObject:frame];
@@ -383,7 +385,7 @@ static void TGVTPlayerDecompressionOutputCallback(void *decompressionOutputRefCo
                     
                     _output = [AVAssetReaderTrackOutput assetReaderTrackOutputWithTrack:track outputSettings:nil];
                 } else {
-                    _output = [AVAssetReaderTrackOutput assetReaderTrackOutputWithTrack:track outputSettings:@{(NSString *)kCVPixelBufferPixelFormatTypeKey: @(kCVPixelFormatType_420YpCbCr8BiPlanarVideoRange)}];
+                    _output = [AVAssetReaderTrackOutput assetReaderTrackOutputWithTrack:track outputSettings:@{(NSString *)kCVPixelBufferPixelFormatTypeKey: @(kCVPixelFormatType_32BGRA)}];
                 }
                 if (_output != nil) {
                     _output.alwaysCopiesSampleData = false;
@@ -458,6 +460,7 @@ static void TGVTPlayerDecompressionOutputCallback(void *decompressionOutputRefCo
                     NSTimeInterval presentationSeconds = CMTimeGetSeconds(presentationTime);
                     CVImageBufferRef imageBuffer = CMSampleBufferGetImageBuffer(sampleVideo);
                     videoFrame = [[TGVTAcceleratedVideoFrame alloc] initWithBuffer:imageBuffer timestamp:presentationSeconds outputTime:presentationTime];
+                    videoFrame.image = [self imageFromSampleBuffer:imageBuffer];
                 }
                 
                 CFRelease(sampleVideo);
@@ -493,6 +496,44 @@ static void TGVTPlayerDecompressionOutputCallback(void *decompressionOutputRefCo
     return nil;
 }
 
+
+- (NSImage *)imageFromSampleBuffer:(CVImageBufferRef)imageBuffer {
+    // Lock the base address of the pixel buffer
+    CVPixelBufferLockBaseAddress(imageBuffer, 0);
+    
+    // Get the number of bytes per row for the pixel buffer
+    void *baseAddress = CVPixelBufferGetBaseAddress(imageBuffer);
+    
+    // Get the number of bytes per row for the pixel buffer
+    size_t bytesPerRow = CVPixelBufferGetBytesPerRow(imageBuffer);
+    // Get the pixel buffer width and height
+    size_t width = CVPixelBufferGetWidth(imageBuffer);
+    size_t height = CVPixelBufferGetHeight(imageBuffer);
+    
+    // Create a device-dependent RGB color space
+    CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
+    
+    // Create a bitmap graphics context with the sample buffer data
+    CGContextRef context = CGBitmapContextCreate(baseAddress, width, height, 8,
+                                                 bytesPerRow, colorSpace, kCGBitmapByteOrder32Little | kCGImageAlphaPremultipliedFirst);
+    // Create a Quartz image from the pixel data in the bitmap graphics context
+    CGImageRef quartzImage = CGBitmapContextCreateImage(context);
+    // Unlock the pixel buffer
+    CVPixelBufferUnlockBaseAddress(imageBuffer,0);
+    
+    
+    // Free up the context and color space
+    CGContextRelease(context);
+    CGColorSpaceRelease(colorSpace);
+    
+    // Create an image object from the Quartz image
+    NSImage *image = [[NSImage alloc] initWithCGImage:quartzImage size:NSMakeSize(width, height)];
+    
+    // Release the Quartz image
+    CGImageRelease(quartzImage);
+    
+    return image;
+}
 
 @end
 
@@ -601,6 +642,7 @@ static NSMutableDictionary *queueItemsByPath() {
     TGSampleBufferDiplayLayer *_videoLayer;
     CMVideoFormatDescriptionRef _videoInfo;
     TGImageView *_thumbView;
+    
 }
 
 @end
@@ -615,13 +657,12 @@ static NSMutableDictionary *queueItemsByPath() {
        
         [self setWantsLayer:YES];
         
-        [self reconfigLayer:NO];
-        
         _pendingFrames = [[NSMutableArray alloc] init];
         
         _thumbView = [[TGImageView alloc] initWithFrame:NSZeroRect];
         
         [self addSubview:_thumbView];
+        
         
        
     }
@@ -672,37 +713,13 @@ static NSImage *TGVTThumbCap() {
 }
 
 
--(void)reconfigLayer:(BOOL)allocNew {
-    
-    [_videoLayer flush];
-    [_videoLayer removeFromSuperlayer];
-    [self setLayer:nil];
-    if(allocNew) {
-        _videoLayer = [[TGSampleBufferDiplayLayer alloc] init];
-        _videoLayer.bounds = self.bounds;
-        _videoLayer.backgroundColor = NSColorFromRGB(0xb6b6b6).CGColor;
-        _videoLayer.videoGravity = AVLayerVideoGravityResizeAspectFill;
-        [self setLayer:_videoLayer];
-    }
-    
-    
-}
+
 
 -(void)dealloc {
-    if(_videoInfo != NULL) {
-        CFRelease(_videoInfo);
-        _videoInfo = NULL;
-    }
-    [_videoLayer flushAndRemoveImage];
+    
 }
 
 - (void)setPath:(NSString *)path {
-    
-    
-    [_thumbView setHidden:NO];
-    
-    [self reconfigLayer:[[NSFileManager defaultManager] fileExistsAtPath:path]];
-    
     
     [[TGVTAcceleratedVideoFrameQueueGuard controlQueue] dispatch:^{
         NSString *realPath = path;
@@ -719,6 +736,8 @@ static NSImage *TGVTThumbCap() {
         }
     
         if (![realPath isEqualToString:_path]) {
+            
+            
             _path = realPath;
             _frameQueueGuard = nil;
             
@@ -761,55 +780,17 @@ static NSImage *TGVTThumbCap() {
 }
 
 -(void)displayFrame:(TGVTAcceleratedVideoFrame *)frame {
-    
-    
-    CMSampleBufferRef sampleBuffer = NULL;
-    OSStatus err = noErr;
-    
-    if (!_videoInfo || !CMVideoFormatDescriptionMatchesImageBuffer(_videoInfo, frame.buffer)) {
-        if (_videoInfo) {
-            CFRelease(_videoInfo);
-            _videoInfo = nil;
-        }
-        err = CMVideoFormatDescriptionCreateForImageBuffer(NULL, frame.buffer, &_videoInfo);
-    }
-    
-    if (err) {
-        NSLog(@"Error at CMVideoFormatDescriptionCreateForImageBuffer %d", err);
-    }
-    
-    CMSampleTimingInfo sampleTimingInfo = {
-        .duration = kCMTimeInvalid,
-        .presentationTimeStamp = frame.outputTime,
-        .decodeTimeStamp = kCMTimeInvalid,
-        
-    };
-    
-    
-    
-    err = CMSampleBufferCreateForImageBuffer(kCFAllocatorDefault, frame.buffer, true, NULL, NULL, _videoInfo, &sampleTimingInfo, &sampleBuffer);
-    
-    if (err) {
-        NSLog(@"Error at CMSampleBufferCreateForImageBuffer %d", err);
-    }
-    
-    
+
     [ASQueue dispatchOnMainQueue:^{
-        if(frame.timestamp == 0) {
-            [_videoLayer flushAndRemoveImage];
-            
-        }
-        
-        [_thumbView setHidden:YES];
-        
-        if (_videoLayer.readyForMoreMediaData) {
-            [_videoLayer enqueueSampleBuffer:sampleBuffer];
-        }
-        
-        CFRelease(sampleBuffer);
+        if(self.window != nil)
+            _thumbView.image = frame.image;
+        else
+            [self setPath:nil];
     }];
     
 }
+
+
 
 
 @end

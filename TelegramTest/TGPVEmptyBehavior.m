@@ -9,7 +9,8 @@
 #import "TGPVEmptyBehavior.h"
 #import "TGPhotoViewer.h"
 #import "TGPVDocumentObject.h"
-
+#import "TGVideoViewerItem.h"
+#import "TGExternalImageObject.h"
 @implementation TGPVEmptyBehavior
 @synthesize conversation = _conversation;
 @synthesize user = _user;
@@ -34,6 +35,7 @@
     
     [list enumerateObjectsUsingBlock:^(PreviewObject *obj, NSUInteger idx, BOOL *stop) {
         
+        TL_localMessage *message = obj.media;
         
         if([obj.media isKindOfClass:[TLPhotoSize class]]) {
             
@@ -41,17 +43,54 @@
             
             imgObj.imageSize = NSMakeSize([(TL_photoSize *)obj.media w], [(TL_photoSize *)obj.media h]);
             
-            TGPhotoViewerItem *item = [[TGPhotoViewerItem alloc] initWithImageObject:imgObj previewObject:obj];
+            TGPhotoViewerItem *item = [[[obj.reservedObject isKindOfClass:[NSDictionary class]] ? TGVideoViewerItem.class : TGPhotoViewerItem.class alloc] initWithImageObject:imgObj previewObject:obj];
+            
+            
             
             [converted addObject:item];
-        } else if([[(TL_localMessage *)obj.media media] isKindOfClass:[TL_messageMediaDocument class]] || [[(TL_localMessage *)obj.media media] isKindOfClass:[TL_messageMediaDocument_old44 class]]) {
+        } else if([message.media isKindOfClass:[TL_messageMediaDocument class]] || [message.media isKindOfClass:[TL_messageMediaDocument_old44 class]]) {
+            
+            TL_documentAttributeVideo *video = (TL_documentAttributeVideo *) [message.media.document attributeWithClass:[TL_documentAttributeVideo class]];
+            
+            id item;
+            
+            if(video) {
+                TGPVImageObject *imgObj = [[TGPVImageObject alloc] initWithLocation:message.media.document.thumb.location thumbData:nil size:message.media.document.thumb.size];
+                
+                imgObj.imageSize = NSMakeSize(video.w, video.h);
+                
+                imgObj.imageProcessor = [ImageUtils b_processor];
+                
+                item = [[TGVideoViewerItem alloc] initWithImageObject:imgObj previewObject:obj];
+
+            } else {
+                TGPVDocumentObject *imgObj = [[TGPVDocumentObject alloc] initWithMessage:obj.media placeholder:[[NSImage alloc] initWithContentsOfFile:mediaFilePath(obj.media)]];
+                
+                item = [[TGPhotoViewerItem alloc] initWithImageObject:imgObj previewObject:obj];
+                
+            }
+            
+            if(item)
+                [converted addObject:item];
             
             
-            TGPVDocumentObject *imgObj = [[TGPVDocumentObject alloc] initWithMessage:obj.media placeholder:[[NSImage alloc] initWithContentsOfFile:mediaFilePath(obj.media)]];
+        } else if([message.media isKindOfClass:[TL_messageMediaBotResult class]]) {
             
+            id item;
             
-            TGPhotoViewerItem *item = [[TGPhotoViewerItem alloc] initWithImageObject:imgObj previewObject:obj];
-            [converted addObject:item];
+            if([message.media.bot_result.type isEqualToString:kBotInlineTypeVideo]) {
+                
+                TGExternalImageObject *imgObj = [[TGExternalImageObject alloc] initWithURL:message.media.bot_result.thumb_url];
+                
+                imgObj.imageSize = NSMakeSize(MAX(640,message.media.bot_result.w), MAX(480,message.media.bot_result.h));
+                
+                imgObj.imageProcessor = [ImageUtils b_processor];
+                
+                item = [[TGVideoViewerItem alloc] initWithImageObject:imgObj previewObject:obj];
+            }
+            
+            if(item)
+                [converted addObject:item];
         }
         
     }];

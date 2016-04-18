@@ -11,14 +11,7 @@
 @implementation TGWebpageTWObject
 
 @synthesize size = _size;
--(id)initWithWebPage:(TLWebPage *)webpage {
-    if(self = [super initWithWebPage:webpage]) {
-        
-        
-    }
-    
-    return self;
-}
+
 
 -(Class)webpageContainer {
     return NSClassFromString(@"TGWebpageTWContainer");

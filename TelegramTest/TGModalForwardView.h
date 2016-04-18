@@ -15,4 +15,8 @@
 @property (nonatomic,strong) TL_localMessage *messageCaller;
 
 
+@property (nonatomic,strong) TLUser *user;
+
+
+
 @end

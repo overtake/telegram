@@ -14,6 +14,7 @@
 
 @property (nonatomic,strong,readonly) TLUser *user;
 
+@property (nonatomic,strong) NSAttributedString *badge;
 
 @property (nonatomic,assign) int avatarHeight;
 @property (nonatomic,strong) NSString *status;

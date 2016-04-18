@@ -36,6 +36,6 @@
 -(void)showPhoto;
 
 -(int)textY;
-
+-(void)_didChangeBackgroundColorWithAnimation:(POPBasicAnimation *)anim toColor:(NSColor *)color ;
 
 @end

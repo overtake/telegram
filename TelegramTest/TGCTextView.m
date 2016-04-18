@@ -10,6 +10,7 @@
 #import "NSString+Extended.h"
 #import "TGMultipleSelectTextView.h"
 #import "MessageTableItemText.h"
+#import "TGUserPopup.h"
 @interface DrawsRect : NSObject
 
 @property(nonatomic,assign) CGColorRef color;
@@ -39,6 +40,97 @@
 @implementation TGCTextView
 
 
+static TGUserPopup *short_info_controller;
+static RBLPopover *popover;
+static NSString *last_link;
+static RPCRequest *resolveRequest;
+static NSMutableDictionary *ignoreName;
+
+void clear_current_popover() {
+    last_link = nil;
+    [resolveRequest cancelRequest];
+    [popover close];
+}
+
+void (^linkOverHandle)(NSString *link, BOOL over, NSRect rect,TGCTextView *textView) = ^(NSString *link, BOOL over, NSRect rect,TGCTextView *textView) {
+    popover.animates = NO;
+    
+    BOOL accept = [link hasPrefix:@"@"];
+    
+   if(accept)
+        link = [link substringFromIndex:1];
+    
+    if([link rangeOfString:@"telegram.me"].location != NSNotFound || [link hasPrefix:@"tg://resolve"]) {
+        link = tg_domain_from_link(link);
+        accept = link.length > 0;
+    }
+    
+    __block id obj = [Telegram findObjectWithName:link];
+    
+    
+    
+    if(!over || ![link isEqualToString:last_link] || !accept || (ignoreName[link] && !obj)) {
+        clear_current_popover();
+        
+        if( !over || ignoreName[link] || !accept)
+            return;
+        
+    }
+    
+    
+    
+    if(![link isEqualToString:last_link] || !popover.isShown) {
+        last_link = link;
+        
+        dispatch_block_t show_block = ^{
+            [short_info_controller setObject:obj];
+            
+            //  [popover setHoverView:weakSelf.textView];
+            
+            
+            if(!popover.isShown) {
+                [popover setDidCloseBlock:^(RBLPopover *popover) {
+                    popover = nil;
+                }];
+                
+                
+                [popover showRelativeToRect:NSOffsetRect(rect, 3, -3) ofView:textView preferredEdge:CGRectMaxYEdge];
+            }
+        };
+        
+        if(over) {
+            
+            if(obj) {
+                show_block();
+            } else {
+                [resolveRequest cancelRequest];
+                resolveRequest = [RPCRequest sendRequest:[TLAPI_contacts_resolveUsername createWithUsername:link] successHandler:^(RPCRequest *request, TL_contacts_resolvedPeer *response) {
+                    
+                    [SharedManager proccessGlobalResponse:response];
+                    
+                    if([response.peer isKindOfClass:[TL_peerChannel class]]) {
+                        obj = [response.chats firstObject];
+                    } else if([response.peer isKindOfClass:[TL_peerUser class]]) {
+                        obj = [response.users firstObject];
+                    }
+                    
+                    if(obj) {
+                        show_block();
+                    }
+                    
+                    
+                } errorHandler:^(RPCRequest *request, RpcError *error) {
+                    
+                    ignoreName[link] = @(1);
+                    
+                } timeout:4];
+            }
+            
+        }
+    }
+};
+
+
 
 -(id)initWithFrame:(NSRect)frameRect {
     if(self = [super initWithFrame:frameRect]) {
@@ -46,6 +138,18 @@
         self.selectColor = NSColorFromRGBWithAlpha(0x1d80cc, 0.5);
         self.backgroundColor = [NSColor whiteColor];
         _marks = [[NSMutableArray alloc] init];
+        
+        
+        static dispatch_once_t onceToken;
+        dispatch_once(&onceToken, ^{
+            short_info_controller = [[TGUserPopup alloc] initWithFrame:NSMakeRect(0, 0, 200, 60)];
+            popover = [[RBLPopover alloc] initWithContentViewController:(NSViewController *)short_info_controller];
+            ignoreName = [NSMutableDictionary dictionary];
+        });
+        
+        _linkOver = linkOverHandle;
+        
+       
     }
     
     return self;
@@ -61,7 +165,7 @@
     if( self.attributedString.length == 0)
         return;
     
-    int opts = (NSTrackingMouseEnteredAndExited | NSTrackingMouseMoved | NSTrackingActiveAlways | NSTrackingInVisibleRect);
+    int opts = (NSTrackingCursorUpdate | NSTrackingMouseEnteredAndExited | NSTrackingMouseMoved | NSTrackingActiveInActiveApp | NSTrackingInVisibleRect);
     _trackingArea = [ [NSTrackingArea alloc] initWithRect:[self bounds]
                                                  options:opts
                                                    owner:self
@@ -155,15 +259,10 @@
    CGContextRef context = (CGContextRef)[[NSGraphicsContext currentContext]
                                           graphicsPort];
     
-//    CGContextSetAllowsFontSubpixelQuantization(context, false);
-//    CGContextSetShouldSubpixelQuantizeFonts(context, false);
-//    CGContextSetAllowsFontSubpixelPositioning(context, false);
-//    CGContextSetShouldSubpixelPositionFonts(context, false);
     CGContextSetAllowsAntialiasing(context,true);
     CGContextSetShouldSmoothFonts(context, !IS_RETINA);
     CGContextSetAllowsFontSmoothing(context,!IS_RETINA);
     
-   
     
    NSRectFill(self.bounds);
     
@@ -172,7 +271,7 @@
     CGMutablePathRef path = CGPathCreateMutable();
     
     if(self.drawRects.count == 0) {
-        CGPathAddRect(path, NULL, self.bounds);
+        CGPathAddRect(path, NULL, NSMakeRect(0.0f, 0.0f, NSWidth(self.bounds), NSHeight(self.bounds)));
     } else {
         [self.drawRects enumerateObjectsUsingBlock:^(NSValue *obj, NSUInteger idx, BOOL *stop) {
             
@@ -194,7 +293,7 @@
     
     
     CGContextSaveGState(context);
-    
+
     CTFrameDraw(CTFrame, context);
     
     CFRelease(path);
@@ -461,51 +560,6 @@
     [self _mouseDown:theEvent];
 }
 
-
-
-
-/*
- -(int)lineIndexOnLocation:(NSPoint)position {
- 
- CFArrayRef lines = CTFrameGetLines(CTFrame);
- 
- NSPoint location;
- 
- int count = (int) CFArrayGetCount(lines);
- 
- 
- for (int i = 0 ; i < count; i++) {
- 
- CTLineRef line = CFArrayGetValueAtIndex(lines, i);
- 
- CGFloat ascent, descent, leading;
- 
- CGFloat width = CTLineGetTypographicBounds(line, &ascent, &descent, &leading);
- 
- float height = floor(ascent + ceil(descent) + leading);
- 
- if((position.y > location.y) && position.y < (location.y + height)) {
- 
- MTLog(@"index:%d",i);
- 
- return i - (count -1);
- }
- 
- location.y+=height;
- 
- }
- 
- 
- 
- return position.y < 0 ? 0 : count-1;
- 
- 
- //
- }
- */
-
-
-
 -(int)currentIndexInLocation:(NSPoint)location {
     
     CFArrayRef lines = CTFrameGetLines(CTFrame);
@@ -675,7 +729,7 @@
 
 
 
--(NSString *)linkAtPoint:(NSPoint)location hitTest:(BOOL *)hitTest itsReal:(BOOL *)itsReal {
+-(NSString *)linkAtPoint:(NSPoint)location hitTest:(BOOL *)hitTest itsReal:(BOOL *)itsReal lineRect:(NSRect *)lineRect {
     
    if(_disableLinks || CTFrame == NULL)
        return nil;
@@ -687,7 +741,6 @@
             
             
             CFArrayRef lines = CTFrameGetLines(CTFrame);
-            
             
             CGPoint origins[CFArrayGetCount(lines)];
             CTFrameGetLineOrigins(CTFrame, CFRangeMake(0, 0), origins);
@@ -719,6 +772,13 @@
                 if(link.length > 0) {
                     NSString *real = [self.attributedString.string substringWithRange:range];
                     
+                    if(lineRect != NULL) {
+                        int startOffset = CTLineGetOffsetForStringIndex(lineRef, range.location, NULL);
+                        int endOffset = CTLineGetOffsetForStringIndex(lineRef, range.location + range.length, NULL);
+                        *lineRect = NSMakeRect(startOffset, origins[line].y, endOffset - startOffset, ceil(ascent + ceil(descent) + leading));
+                    }
+                    
+                    
                     *itsReal = [link isEqualToString:real];
                 }
                 
@@ -743,19 +803,29 @@
     if([self mouse:location inRect:self.bounds]) {
         
         BOOL hitTest,itsReal;
-        
-        NSString *link = [self linkAtPoint:location hitTest:&hitTest itsReal:&itsReal];
+        NSRect lineRect;
+        NSString *link = [self linkAtPoint:location hitTest:&hitTest itsReal:&itsReal lineRect:&lineRect];
         
         if(hitTest) {
             if(link) {
                 [[NSCursor pointingHandCursor] set];
+                if(_linkOver) {
+                    _linkOver(link,YES,lineRect,self);
+                }
             } else {
                 if(_isEditable)
                     [[NSCursor IBeamCursor] set];
+                if(_linkOver) {
+                    _linkOver(link,NO,NSZeroRect,self);
+                }
             }
            // if(_isEditable)
             return;
         }
+    }
+    
+    if(_linkOver) {
+        _linkOver(nil,NO,NSZeroRect,self);
     }
     
     [[NSCursor arrowCursor] set];
@@ -768,18 +838,22 @@
 -(void)mouseExited:(NSEvent *)theEvent {
     [super mouseExited:theEvent];
     [[NSCursor arrowCursor] set];
+    
+    if(_linkOver) {
+        _linkOver(nil,NO,NSZeroRect,self);
+    }
 }
 
 
 -(void)mouseUp:(NSEvent *)theEvent {
     
-    
+    clear_current_popover();
     
     if((self.selectRange.location == NSNotFound || !_isEditable) && !_disableLinks) {
         NSPoint location = [self convertPoint:[theEvent locationInWindow] fromView:nil];
         
         BOOL hitTest,itsReal;
-        NSString *link = [self linkAtPoint:location hitTest:&hitTest itsReal:&itsReal];
+        NSString *link = [self linkAtPoint:location hitTest:&hitTest itsReal:&itsReal lineRect:NULL];
         
         if(link) {
             [self open_link:link itsReal:itsReal];
@@ -796,7 +870,7 @@
 
 -(void)open_link:(NSString *)link  itsReal:(BOOL)itsReal {
     
-    itsReal = itsReal || [link rangeOfString:@"USER_PROFILE:"].location != NSNotFound || [link rangeOfString:@"openWithPeer"].location != NSNotFound;
+    itsReal = itsReal || [link rangeOfString:@"chat://"].location != NSNotFound;
     
     if(itsReal) {
         if(_linkCallback == nil)
@@ -804,7 +878,7 @@
         else
             _linkCallback(link);
     } else {
-        confirm(appName(), [NSString stringWithFormat:@"Open this link: %@?",link], ^{
+        confirm(appName(), [NSString stringWithFormat:NSLocalizedString(@"Link.ConfirmOpenExternalLink", nil),link], ^{
             
             if(_linkCallback == nil)
                 open_link(link);
@@ -821,7 +895,7 @@
     
     [self _checkClickCount:theEvent];
     
-    if(self.selectRange.location != NSNotFound) {
+    if(self.selectRange.location != NSNotFound && self.isEditable) {
         NSTextView *view = (NSTextView *) [self.window fieldEditor:YES forObject:self];
         [view setEditable:NO];
         

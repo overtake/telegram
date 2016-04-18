@@ -190,10 +190,10 @@
     [_splitView setProportion:(struct TGSplitProportion){380,300+380} forState:TGSplitViewStateSingleLayout];
     [_splitView setProportion:(struct TGSplitProportion){300+380,300+380+600} forState:TGSplitViewStateDualLayout];
     
-    if([SettingsArchiver checkMaskedSetting:TripleLayoutSettings]) {
-        [_splitView setProportion:(struct TGSplitProportion){300+380+600,FLT_MAX}forState:TGSplitViewStateTripleLayout];
-    }
-        
+//    if([SettingsArchiver checkMaskedSetting:TripleLayoutSettings]) {
+//        [_splitView setProportion:(struct TGSplitProportion){300+380+600,FLT_MAX}forState:TGSplitViewStateTripleLayout];
+//    }
+    
     _splitView.delegate = self;
  
     [_splitView update];
@@ -204,13 +204,13 @@
 }
 
 -(void)didChangeSettingsMask:(SettingsMask)mask {
-    if([SettingsArchiver checkMaskedSetting:TripleLayoutSettings]) {
-        [_splitView setProportion:(struct TGSplitProportion){300,FLT_MAX} forState:TGSplitViewStateTripleLayout];
-    } else {
-        [_splitView removeProportion:TGSplitViewStateTripleLayout];
-    }
-    
-    [_splitView update];
+//    if([SettingsArchiver checkMaskedSetting:TripleLayoutSettings]) {
+//        [_splitView setProportion:(struct TGSplitProportion){300,FLT_MAX} forState:TGSplitViewStateTripleLayout];
+//    } else {
+//        [_splitView removeProportion:TGSplitViewStateTripleLayout];
+//    }
+//    
+//    [_splitView update];
 }
 
 -(void)splitViewDidNeedFullsize:(TGViewController<TGSplitViewDelegate> *)controller {

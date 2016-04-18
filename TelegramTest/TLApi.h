@@ -2,7 +2,7 @@
 //  TLApi.h
 //  Telegram
 //
-//  Auto created by Mikhail Filimonov on 22.02.16.
+//  Auto created by Mikhail Filimonov on 09.04.16.
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -17,20 +17,15 @@
 @end
 
 @interface TLAPI_auth_sendCode : TLApiObject
+@property int flags;
+@property (nonatomic,assign,readonly) BOOL isAllow_flashcall;
 @property (nonatomic, strong) NSString* phone_number;
-@property int sms_type;
+@property Boolean current_number;
 @property int api_id;
 @property (nonatomic, strong) NSString* api_hash;
 @property (nonatomic, strong) NSString* lang_code;
 
-+(TLAPI_auth_sendCode*)createWithPhone_number:(NSString*)phone_number sms_type:(int)sms_type api_id:(int)api_id api_hash:(NSString*)api_hash lang_code:(NSString*)lang_code;
-@end
-
-@interface TLAPI_auth_sendCall : TLApiObject
-@property (nonatomic, strong) NSString* phone_number;
-@property (nonatomic, strong) NSString* phone_code_hash;
-
-+(TLAPI_auth_sendCall*)createWithPhone_number:(NSString*)phone_number phone_code_hash:(NSString*)phone_code_hash;
++(TLAPI_auth_sendCode*)createWithFlags:(int)flags  phone_number:(NSString*)phone_number current_number:(Boolean)current_number api_id:(int)api_id api_hash:(NSString*)api_hash lang_code:(NSString*)lang_code;
 @end
 
 @interface TLAPI_auth_signUp : TLApiObject
@@ -131,10 +126,12 @@
 @end
 
 @interface TLAPI_account_updateProfile : TLApiObject
+@property int flags;
 @property (nonatomic, strong) NSString* first_name;
 @property (nonatomic, strong) NSString* last_name;
+@property (nonatomic, strong) NSString* about;
 
-+(TLAPI_account_updateProfile*)createWithFirst_name:(NSString*)first_name last_name:(NSString*)last_name;
++(TLAPI_account_updateProfile*)createWithFlags:(int)flags first_name:(NSString*)first_name last_name:(NSString*)last_name about:(NSString*)about;
 @end
 
 @interface TLAPI_account_updateStatus : TLApiObject
@@ -352,6 +349,18 @@
 @property (nonatomic, strong) TLInputPeer* peer;
 
 +(TLAPI_messages_reportSpam*)createWithPeer:(TLInputPeer*)peer;
+@end
+
+@interface TLAPI_messages_hideReportSpam : TLApiObject
+@property (nonatomic, strong) TLInputPeer* peer;
+
++(TLAPI_messages_hideReportSpam*)createWithPeer:(TLInputPeer*)peer;
+@end
+
+@interface TLAPI_messages_getPeerSettings : TLApiObject
+@property (nonatomic, strong) TLInputPeer* peer;
+
++(TLAPI_messages_getPeerSettings*)createWithPeer:(TLInputPeer*)peer;
 @end
 
 @interface TLAPI_messages_getChats : TLApiObject
@@ -602,13 +611,6 @@
 +(TLAPI_help_getSupport*)create;
 @end
 
-@interface TLAPI_auth_sendSms : TLApiObject
-@property (nonatomic, strong) NSString* phone_number;
-@property (nonatomic, strong) NSString* phone_code_hash;
-
-+(TLAPI_auth_sendSms*)createWithPhone_number:(NSString*)phone_number phone_code_hash:(NSString*)phone_code_hash;
-@end
-
 @interface TLAPI_messages_readMessageContents : TLApiObject
 @property (nonatomic, strong) NSMutableArray* n_id;
 
@@ -672,9 +674,12 @@
 @end
 
 @interface TLAPI_account_sendChangePhoneCode : TLApiObject
+@property int flags;
+@property (nonatomic,assign,readonly) BOOL isAllow_flashcall;
 @property (nonatomic, strong) NSString* phone_number;
+@property Boolean current_number;
 
-+(TLAPI_account_sendChangePhoneCode*)createWithPhone_number:(NSString*)phone_number;
++(TLAPI_account_sendChangePhoneCode*)createWithFlags:(int)flags  phone_number:(NSString*)phone_number current_number:(Boolean)current_number;
 @end
 
 @interface TLAPI_account_changePhone : TLApiObject
@@ -1094,11 +1099,14 @@
 @end
 
 @interface TLAPI_messages_getInlineBotResults : TLApiObject
+@property int flags;
 @property (nonatomic, strong) TLInputUser* bot;
+@property (nonatomic, strong) TLInputPeer* peer;
+@property (nonatomic, strong) TLInputGeoPoint* geo_point;
 @property (nonatomic, strong) NSString* query;
 @property (nonatomic, strong) NSString* offset;
 
-+(TLAPI_messages_getInlineBotResults*)createWithBot:(TLInputUser*)bot query:(NSString*)query offset:(NSString*)offset;
++(TLAPI_messages_getInlineBotResults*)createWithFlags:(int)flags bot:(TLInputUser*)bot peer:(TLInputPeer*)peer geo_point:(TLInputGeoPoint*)geo_point query:(NSString*)query offset:(NSString*)offset;
 @end
 
 @interface TLAPI_messages_setInlineBotResults : TLApiObject
@@ -1109,8 +1117,9 @@
 @property (nonatomic, strong) NSMutableArray* results;
 @property int cache_time;
 @property (nonatomic, strong) NSString* next_offset;
+@property (nonatomic, strong) TLInlineBotSwitchPM* switch_pm;
 
-+(TLAPI_messages_setInlineBotResults*)createWithFlags:(int)flags   query_id:(long)query_id results:(NSMutableArray*)results cache_time:(int)cache_time next_offset:(NSString*)next_offset;
++(TLAPI_messages_setInlineBotResults*)createWithFlags:(int)flags   query_id:(long)query_id results:(NSMutableArray*)results cache_time:(int)cache_time next_offset:(NSString*)next_offset switch_pm:(TLInlineBotSwitchPM*)switch_pm;
 @end
 
 @interface TLAPI_messages_sendInlineBotResult : TLApiObject
@@ -1148,21 +1157,73 @@
 +(TLAPI_channels_toggleSignatures*)createWithChannel:(TLInputChannel*)channel enabled:(Boolean)enabled;
 @end
 
-@interface TLAPI_channels_getMessageEditData : TLApiObject
+@interface TLAPI_channels_updatePinnedMessage : TLApiObject
+@property int flags;
+@property (nonatomic,assign,readonly) BOOL isSilent;
 @property (nonatomic, strong) TLInputChannel* channel;
 @property int n_id;
 
-+(TLAPI_channels_getMessageEditData*)createWithChannel:(TLInputChannel*)channel n_id:(int)n_id;
++(TLAPI_channels_updatePinnedMessage*)createWithFlags:(int)flags  channel:(TLInputChannel*)channel n_id:(int)n_id;
 @end
 
-@interface TLAPI_channels_editMessage : TLApiObject
+@interface TLAPI_auth_resendCode : TLApiObject
+@property (nonatomic, strong) NSString* phone_number;
+@property (nonatomic, strong) NSString* phone_code_hash;
+
++(TLAPI_auth_resendCode*)createWithPhone_number:(NSString*)phone_number phone_code_hash:(NSString*)phone_code_hash;
+@end
+
+@interface TLAPI_auth_cancelCode : TLApiObject
+@property (nonatomic, strong) NSString* phone_number;
+@property (nonatomic, strong) NSString* phone_code_hash;
+
++(TLAPI_auth_cancelCode*)createWithPhone_number:(NSString*)phone_number phone_code_hash:(NSString*)phone_code_hash;
+@end
+
+@interface TLAPI_messages_getMessageEditData : TLApiObject
+@property (nonatomic, strong) TLInputPeer* peer;
+@property int n_id;
+
++(TLAPI_messages_getMessageEditData*)createWithPeer:(TLInputPeer*)peer n_id:(int)n_id;
+@end
+
+@interface TLAPI_messages_editMessage : TLApiObject
 @property int flags;
 @property (nonatomic,assign,readonly) BOOL isNo_webpage;
-@property (nonatomic, strong) TLInputChannel* channel;
+@property (nonatomic, strong) TLInputPeer* peer;
 @property int n_id;
 @property (nonatomic, strong) NSString* message;
+@property (nonatomic, strong) TLReplyMarkup* reply_markup;
 @property (nonatomic, strong) NSMutableArray* entities;
 
-+(TLAPI_channels_editMessage*)createWithFlags:(int)flags  channel:(TLInputChannel*)channel n_id:(int)n_id message:(NSString*)message entities:(NSMutableArray*)entities;
++(TLAPI_messages_editMessage*)createWithFlags:(int)flags  peer:(TLInputPeer*)peer n_id:(int)n_id message:(NSString*)message reply_markup:(TLReplyMarkup*)reply_markup entities:(NSMutableArray*)entities;
+@end
+
+@interface TLAPI_messages_editInlineBotMessage : TLApiObject
+@property int flags;
+@property (nonatomic,assign,readonly) BOOL isNo_webpage;
+@property (nonatomic, strong) TLInputBotInlineMessageID* n_id;
+@property (nonatomic, strong) NSString* message;
+@property (nonatomic, strong) TLReplyMarkup* reply_markup;
+@property (nonatomic, strong) NSMutableArray* entities;
+
++(TLAPI_messages_editInlineBotMessage*)createWithFlags:(int)flags  n_id:(TLInputBotInlineMessageID*)n_id message:(NSString*)message reply_markup:(TLReplyMarkup*)reply_markup entities:(NSMutableArray*)entities;
+@end
+
+@interface TLAPI_messages_getBotCallbackAnswer : TLApiObject
+@property (nonatomic, strong) TLInputPeer* peer;
+@property int msg_id;
+@property (nonatomic, strong) NSData* data;
+
++(TLAPI_messages_getBotCallbackAnswer*)createWithPeer:(TLInputPeer*)peer msg_id:(int)msg_id data:(NSData*)data;
+@end
+
+@interface TLAPI_messages_setBotCallbackAnswer : TLApiObject
+@property int flags;
+@property (nonatomic,assign,readonly) BOOL isAlert;
+@property long query_id;
+@property (nonatomic, strong) NSString* message;
+
++(TLAPI_messages_setBotCallbackAnswer*)createWithFlags:(int)flags  query_id:(long)query_id message:(NSString*)message;
 @end
 

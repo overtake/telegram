@@ -57,9 +57,8 @@
         
         self.currentAnnotation = annotation;
         
+        
         [self addAnnotation:annotation];
-        
-        
         
         
         return;
@@ -67,6 +66,11 @@
     }
     
     [super mouseUp:theEvent];
+}
+
+-(void)setCurrentAnnotation:(TMAnnotation *)currentAnnotation {
+    [self removeAnnotation:self.currentAnnotation];
+    _currentAnnotation = currentAnnotation;
 }
 
 @end
@@ -81,6 +85,13 @@
 @property (nonatomic,strong) TMView *controlView;
 @property (nonatomic,assign) BOOL isFindUser;
 @property (nonatomic,strong) TMTextField *textField;
+
+
+@property (nonatomic,copy) void (^successCallback)(CLLocationCoordinate2D coordinate2d);
+@property (nonatomic,copy) void (^errorCallback)(NSError *error);
+
+@property (nonatomic,assign) BOOL dispatchAfterFind;
+
 @end
 
 @implementation MapPanel
@@ -146,7 +157,19 @@
         
         [sendButton addBlock:^(BTRControlEvents events) {
             
-            [self sendCoordinates];
+            
+            CLLocationCoordinate2D coordinates;
+            if(self.mapView.currentAnnotation) {
+                coordinates = self.mapView.currentAnnotation.coordinate;
+            } else {
+                coordinates = self.mapView.userLocation.coordinate;
+            }
+            
+            if(coordinates.latitude == 0 && coordinates.longitude == 0)
+                return;
+            
+            if(_successCallback != nil)
+                _successCallback(coordinates);
             
         } forControlEvents:BTRControlEventClick];
         
@@ -196,37 +219,44 @@
         
         [self.backgroundView addSubview:self.progressView];
         
-        [self loadUserLocation];
-        
-       
        
     }
     return self;
 }
 
-- (void)sendCoordinates {
-    CLLocationCoordinate2D coordinates;
-    if(self.mapView.currentAnnotation) {
-        coordinates = self.mapView.currentAnnotation.coordinate;
-    } else {
-        coordinates = self.mapView.userLocation.coordinate;
-    }
-    
-    if(coordinates.latitude == 0 && coordinates.longitude == 0)
-        return;
-    
-    [[Telegram rightViewController].messagesViewController sendLocation:coordinates forConversation:[Telegram rightViewController].messagesViewController.conversation];
+- (void)sendCoordinates:(CLLocationCoordinate2D)coordinates {
+   
+    [_messagesViewController sendLocation:coordinates forConversation:_messagesViewController.conversation];
     
     [self close];
     
 }
 
 
+
 -(void)update {
     
     
-    self.mapView.delegate = self;
+    [self loadUserLocation:^(CLLocationCoordinate2D coordinate2d) {
+        
+        [self sendCoordinates:coordinate2d];
+        
+    } failback:^(NSError *error) {
+       //  alert(appName(), error.localizedDescription);
+    } dispatchAfterFind:NO];
     
+   
+}
+
+-(void)loadUserLocation:(void (^)(CLLocationCoordinate2D coordinate2d))successCallback failback:(void (^)(NSError *error))errorCallback dispatchAfterFind:(BOOL)dispatchAfterFind {
+   
+    
+    _dispatchAfterFind = dispatchAfterFind;
+    _isFindUser = NO;
+    _successCallback = successCallback;
+    _errorCallback = errorCallback;
+    
+    _mapView.delegate = self;
     [self loadUserLocation];
 }
 
@@ -234,7 +264,6 @@
     
     [self.backgroundView setHidden:YES];
     [self.mapView setHidden:NO];
- //   [self.progressView startAnimation:self];
     
     self.mapView.showsUserLocation = YES;
     
@@ -242,6 +271,10 @@
 
 -(void)mapView:(MKMapView *)mapView didFailToLocateUserWithError:(NSError *)error {
 
+    if(_errorCallback != nil) {
+        _errorCallback(error);
+    }
+    
 }
 
 
@@ -279,6 +312,12 @@
     
     [self.backgroundView setHidden:YES];
     [self.progressView stopAnimation:self];
+    
+    
+    if(_dispatchAfterFind) {
+        if(_successCallback)
+            _successCallback(location);
+    }
     
 }
 

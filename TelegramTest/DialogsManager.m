@@ -14,6 +14,7 @@
 #import "MessagesBottomView.h"
 #import "MessagesUtils.h"
 #import "FullUsersManager.h"
+#import "SelfDestructionController.h"
 @interface DialogsManager ()
 @property (nonatomic,strong) NSMutableArray *dialogs;
 @property (nonatomic,assign) NSInteger maxCount;
@@ -43,14 +44,6 @@
         
         if(!conversation) {
             unloaded[@(obj.peer_id)] = @(1);
-            
-            if([obj.to_id isKindOfClass:[TL_peerUser class]]) {
-                TLUserFull *full = [[FullUsersManager sharedManager] find:obj.from_id];
-                
-                if(!full) {
-                    [[FullUsersManager sharedManager] loadUserFull:obj.fromUser callback:nil];
-                }
-            }
         }
         
         
@@ -104,7 +97,7 @@
     
     [ASQueue dispatchOnStageQueue:^{
         
-        if([chat isKindOfClass:[TL_channel class]] || [chat isKindOfClass:[TL_channel_old43 class]]) {
+        if(chat.isChannel) {
             dialog = [self createDialogForChannel:chat];
         } else
             dialog = [TL_conversation createWithPeer:[TL_peerChat createWithChat_id:chat.n_id] top_message:0 unread_count:0 last_message_date:0 notify_settings:nil last_marked_message:0 top_message_fake:0 last_marked_date:0 sync_message_id:0 read_inbox_max_id:0 unread_important_count:0 lastMessage:nil];
@@ -306,15 +299,14 @@
                 
                 currentKeyboard = [transaction objectForKey:conversation.cacheKey inCollection:BOT_COMMANDS];
                 
-                
                 if([message.reply_markup isKindOfClass:[TL_replyKeyboardHide class]]) {
-                    if((message.reply_markup.flags & (1 << 2)) == 0 || [message isMentioned])
+                    if((!message.reply_markup.isSelective || message.isMentioned))
                         if(currentKeyboard.from_id == message.from_id) {
                             [transaction removeObjectForKey:conversation.cacheKey inCollection:BOT_COMMANDS];
                             needNotify = YES;
                         }
                 } else if([message.reply_markup isKindOfClass:[TL_replyKeyboardMarkup class]]) {
-                    if((message.reply_markup.flags & (1 << 2)) == 0 || [message isMentioned])
+                    if((!message.reply_markup.isSelective || message.isMentioned))
                         [transaction setObject:message forKey:conversation.cacheKey inCollection:BOT_COMMANDS];
                     needNotify = YES;
                 }
@@ -331,12 +323,7 @@
                         
                     }];
                     
-                    if(conversation.peer_id == [Telegram conversation].peer_id) {
-                        [ASQueue dispatchOnMainQueue:^{
-                            [[Telegram rightViewController].messagesViewController.bottomView updateReplayMessage:YES animated:YES];
-                        }];
-                        
-                    }
+                    [Notification perform:[Notification notificationNameByDialog:conversation action:@"reply"] data:@{KEY_DIALOG:conversation}];
                     
                     notify = NO;
                 }
@@ -393,7 +380,7 @@
             [MessagesManager updateUnreadBadge];
             
             if(dialog.chat != nil) {
-                [[FullChatManager sharedManager] removeObjectWithKey:@(dialog.chat.n_id)];
+                [[ChatFullManager sharedManager] removeObjectWithKey:@(dialog.chat.n_id)];
                 [[ChatsManager sharedManager] removeObjectWithKey:@(dialog.chat.n_id)];
             }
             
@@ -539,6 +526,9 @@
         
         
         [self updateTop:message needUpdate:YES update_real_date:update_real_date];
+        
+        
+        
         [Notification performOnStageQueue:MESSAGE_RECEIVE_EVENT data:@{KEY_MESSAGE:message}];
     }];
 }
@@ -580,6 +570,10 @@
     [self.queue dispatchOnQueue:^{
         
         
+        if([message.to_id isKindOfClass:[TL_peerChannel class]] && message.chat.left) {
+            return;
+        }
+        
         NSArray *unloaded = [self unloadedConversationsWithMessages:@[message]];
         
         [[Storage manager] conversationsWithPeerIds:unloaded completeHandler:^(NSArray *result) {
@@ -617,7 +611,7 @@
 
 - (void)markAllMessagesAsRead:(TL_conversation *)dialog {
     
-    [[Storage manager] markAllInConversation:dialog.peer_id max_id:dialog.top_message out:NO completeHandler:^(NSArray *ids,NSArray *messages) {
+    [[Storage manager] markAllInConversation:dialog.peer_id max_id:dialog.top_message out:NO completeHandler:^(NSArray *ids,NSArray *messages, int unread_count) {
         
     }];
 }
@@ -625,7 +619,7 @@
 - (void) markAllMessagesAsRead:(TLPeer *)peer max_id:(int)max_id out:(BOOL)n_out {
     
     [self.queue dispatchOnQueue:^{
-        [[Storage manager] markAllInConversation:peer.peer_id max_id:max_id out:n_out completeHandler:^(NSArray *ids,NSArray *messages) {
+        [[Storage manager] markAllInConversation:peer.peer_id max_id:max_id out:n_out completeHandler:^(NSArray *ids,NSArray *messages, int unread_count) {
             
             
             if(messages.count > 0) {
@@ -642,20 +636,21 @@
                     
                     
                     [messages enumerateObjectsUsingBlock:^(TL_localMessage *message, NSUInteger idx, BOOL * _Nonnull stop) {
-                        if(!message.n_out && message.unread) {
-                            conversation.unread_count--;
-                        }
+                        
+                        message.flags&=~TGUNREADMESSAGE;
                         
                         if(conversation.lastMessage.n_id == message.n_id) {
                             conversation.lastMessage.flags&= ~TGUNREADMESSAGE;
                         }
-                        
                     }];
                     
-                    if(!n_out && conversation.read_inbox_max_id < max_id) {
-                        
+                    if(!n_out) {
                         conversation.read_inbox_max_id = max_id;
+                        conversation.unread_count = unread_count;
                     }
+                    
+                    [SelfDestructionController addMessages:messages];
+                    
                     
                     [Notification perform:[Notification notificationNameByDialog:conversation action:@"unread_count"] data:@{KEY_DIALOG:conversation,KEY_LAST_CONVRESATION_DATA:[MessagesUtils conversationLastData:conversation]}];
                     [Notification perform:MESSAGE_READ_EVENT data:@{KEY_MESSAGE_ID_LIST:ids}];
@@ -663,6 +658,8 @@
                     [conversation save];
                     
                     [MessagesManager updateUnreadBadge];
+                    
+                    [MessagesManager clearNotifies:conversation max_id:max_id];
                     
                 }];
             }
@@ -744,11 +741,9 @@
     
     
     
-    if(message.unread && !message.n_out) {
+    if(message.unread && !message.n_out && message.conversation.read_inbox_max_id < message.n_id) {
         dialog.unread_count++;
-    } else if(!message.unread && !message.n_out) {
-        dialog.unread_count = 0;
-    }
+    } 
     
     if([message.action isKindOfClass:[TL_messageActionChatMigrateTo class]]) {
         dialog.unread_count = 0;

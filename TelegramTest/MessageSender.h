@@ -9,7 +9,15 @@
 #import <Foundation/Foundation.h>
 #import "UploadOperation.h"
 #import "EncryptedParams.h"
+#import "MessagesViewController.h"
 @interface MessageSender : NSObject
+
+typedef enum {
+    TGInlineKeyboardProccessingType = 1,
+    TGInlineKeyboardSuccessType = 2,
+    TGInlineKeyboardErrorType = 3,
+} TGInlineKeyboardProccessType;
+
 
 
 +(TL_localMessage *)createOutMessage:(NSString *)msg media:(TLMessageMedia *)media conversation:(TL_conversation *)conversation  additionFlags:(int)additionFlags;
@@ -19,8 +27,8 @@
 +(void)insertEncryptedServiceMessage:(NSString *)title chat:(TLEncryptedChat *)chat;
 +(void)startEncryptedChat:(TLUser *)user callback:(dispatch_block_t)callback;
 +(RPCRequest *)setTTL:(int)ttl toConversation:(TL_conversation *)conversation callback:(dispatch_block_t)callback;
-+(BOOL)sendDraggedFiles:(id <NSDraggingInfo>)sender dialog:(TL_conversation *)dialog asDocument:(BOOL)asDocument;
-+(void)sendFilesByPath:(NSArray *)files dialog:(TL_conversation *)dialog isMultiple:(BOOL)isMultiple asDocument:(BOOL)asDocument;
++(BOOL)sendDraggedFiles:(id <NSDraggingInfo>)sender dialog:(TL_conversation *)dialog asDocument:(BOOL)asDocument messagesViewController:(MessagesViewController *)messagesViewController;
++(void)sendFilesByPath:(NSArray *)files dialog:(TL_conversation *)dialog isMultiple:(BOOL)isMultiple asDocument:(BOOL)asDocument messagesViewController:(MessagesViewController *)messagesViewController;
 
 + (NSDictionary *)videoParams:(NSString *)path thumbSize:(NSSize)thumbSize;
 +(NSString *)parseEntities:(NSString *)message entities:(NSMutableArray *)entities backstrips:(NSString *)backstrips startIndex:(NSUInteger)startIndex;
@@ -29,6 +37,9 @@
 
 +(id)requestForDeleteEncryptedMessages:(NSMutableArray *)ids dialog:(TL_conversation *)dialog;
 +(id)requestForFlushEncryptedHistory:(TL_conversation *)dialog;
+
+
++(RPCRequest *)proccessInlineKeyboardButton:(TLKeyboardButton *)keyboard messagesViewController:(MessagesViewController *)messagesViewController conversation:(TL_conversation *)conversation messageId:(int)messageId handler:(void (^)(TGInlineKeyboardProccessType type))handler;
 
 
 +(NSData *)getEncrypted:(EncryptedParams *)params messageData:(NSData *)messageData;

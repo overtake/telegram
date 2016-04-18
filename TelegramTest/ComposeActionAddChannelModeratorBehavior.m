@@ -79,7 +79,11 @@
                 
                 [SharedManager proccessGlobalResponse:response];
                 
-                [[FullChatManager sharedManager] performLoad:self.chat.n_id force:YES callback:^(TLChatFull *fullChat) {
+                [[ChatFullManager sharedManager] requestChatFull:self.chat.n_id force:YES withCallback:^(TLChatFull *fullChat) {
+                    
+                    fullChat.participants = nil;
+                    [[ChatFullManager sharedManager] loadParticipantsWithMegagroupId:fullChat.n_id];
+                    
                     ComposeAction *action = [[ComposeAction alloc] initWithBehaviorClass:[ComposeActionBehavior class] filter:@[] object:self.chat];
                     
                     action.result = [[ComposeResult alloc] initWithMultiObjects:response.participants];

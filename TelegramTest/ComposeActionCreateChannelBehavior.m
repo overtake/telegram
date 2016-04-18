@@ -9,6 +9,7 @@
 #import "ComposeActionCreateChannelBehavior.h"
 #import "SelectUserItem.h"
 #import "ComposeActionAddGroupMembersBehavior.h"
+#import "TGChannelTypeSettingViewController.h"
 @interface ComposeActionCreateChannelBehavior ()
 @property (nonatomic,strong) RPCRequest *request;
 @end
@@ -55,7 +56,7 @@
         
         [self createChannel];
         
-    } else if([self.action.currentViewController isKindOfClass:[ComposeSettingupNewChannelViewController class]]) {
+    } else if([self.action.currentViewController isKindOfClass:[TGChannelTypeSettingViewController class]]) {
         
         
         [self updateChannel];
@@ -99,7 +100,7 @@
     
     int chatId = [(TLChat *)self.action.object n_id];
     
-    __block TLChatFull *chatFull = [[FullChatManager sharedManager] find:chatId];
+    __block TLChatFull *chatFull = [[ChatFullManager sharedManager] find:chatId];
     
     
     dispatch_block_t block = ^{
@@ -117,7 +118,7 @@
         
         [self.action.currentViewController showModalProgress];
         
-        [[FullChatManager sharedManager] performLoad:chatId force:YES callback:^(TLChatFull *fullChat) {
+        [[ChatFullManager sharedManager] requestChatFull:chatId force:YES withCallback:^(TLChatFull *fullChat) {
             
             chatFull = fullChat;
             
@@ -157,14 +158,14 @@
             dispatch_block_t block = ^{
                 [weakSelf.delegate behaviorDidEndRequest:response];
                 
-                [[FullChatManager sharedManager] loadIfNeed:channel.n_id force:YES];
+                [[ChatFullManager sharedManager] requestChatFull:channel.n_id force:YES];
                 
                 
                 [weakSelf.action.currentViewController.messagesViewController setCurrentConversation:channel.dialog];
                 
                 [weakSelf.action.currentViewController.navigationViewController gotoViewController:weakSelf.action.currentViewController.messagesViewController animated:NO];
                 
-                ComposeSettingupNewChannelViewController *viewController = [[ComposeSettingupNewChannelViewController alloc] initWithFrame:weakSelf.action.currentViewController.view.bounds];;
+                TGChannelTypeSettingViewController *viewController = [[TGChannelTypeSettingViewController alloc] initWithFrame:weakSelf.action.currentViewController.view.bounds];;
                 
                 [viewController setAction:weakSelf.action];
                 

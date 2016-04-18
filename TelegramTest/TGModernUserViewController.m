@@ -19,6 +19,8 @@
 #import "TGReportChannelModalView.h"
 #import "FullUsersManager.h"
 #import "NSData+Extensions.h"
+#import "Crypto.h"
+#import "TGModalForwardView.h"
 @interface TGModernUserViewController ()
 @property (nonatomic,strong) TLUser *user;
 @property (nonatomic,strong) TL_conversation *conversation;
@@ -132,15 +134,13 @@
         
     _userFull = nil;
     
-    if(user.isBot) {
-        [[FullUsersManager sharedManager] loadUserFull:_user callback:^(TL_userFull *userFull) {
-            
-            _userFull = userFull;
-            
-            [self configure];
-            
-        }];
-    }
+    [[FullUsersManager sharedManager] requestUserFull:_user withCallback:^(TLUserFull *userFull) {
+        
+        _userFull = (TL_userFull *) userFull;
+        
+        [self configure];
+        
+    }];
     
     [self configure];
    
@@ -221,7 +221,7 @@
                 
             } else {
                 
-                TGShareContactModalView *shareContactModalView = [[TGShareContactModalView alloc] initWithFrame:NSMakeRect(0, 0, NSWidth(weakSelf.view.window.frame), NSHeight(weakSelf.view.window.frame))];
+                TGModalForwardView *shareContactModalView = [[TGModalForwardView alloc] initWithFrame:NSZeroRect];
                 
                 
                 [shareContactModalView setMessagesViewController:weakSelf.navigationViewController.messagesViewController];
@@ -290,9 +290,7 @@
     
     
     GeneralSettingsRowItem *encryptionKeyItem = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeNext callback:^(TGGeneralRowItem *item) {
-        
-        if(!ACCEPT_FEATURE)
-            return;
+
         
         EncryptedKeyViewController *viewController = [[EncryptedKeyViewController alloc] initWithFrame:NSZeroRect];
         
@@ -304,7 +302,7 @@
         
         EncryptedParams *params = [EncryptedParams findAndCreate:weakSelf.conversation.encryptedChat.n_id];
         
-        NSData *keyData = [MTSha1([params.firstKey subdataWithRange:NSMakeRange(0, 16)]) dataWithData:MTSha256([params.firstKey subdataWithRange:NSMakeRange(0, 16)])];
+        NSData *keyData = [Crypto sha1:[params firstKey]];
         return TGIdenticonImage(keyData,CGSizeMake(16, 16));
         
     }];
@@ -399,10 +397,18 @@
     if(!self.action.isEditable) {
         
         
-        if(_userFull && _userFull.bot_info.n_description.length > 0) {
+        if(_userFull && (_userFull.bot_info.n_description.length > 0)) {
             TGProfileParamItem *botInfo = [[TGProfileParamItem alloc] init];
             
             [botInfo setHeader:NSLocalizedString(@"Profile.About", nil) withValue:_userFull.bot_info.n_description detectUrls:NO];
+            [_tableView addItem:botInfo tableRedraw:YES];
+            [_tableView addItem:[[TGGeneralRowItem alloc] initWithHeight:20] tableRedraw:YES];
+        }
+        
+        if(_userFull && (_userFull.about.length > 0) && _userFull.bot_info == nil) {
+            TGProfileParamItem *botInfo = [[TGProfileParamItem alloc] init];
+            
+            [botInfo setHeader:NSLocalizedString(@"Profile.bio", nil) withValue:_userFull.about detectUrls:NO];
             [_tableView addItem:botInfo tableRedraw:YES];
             [_tableView addItem:[[TGGeneralRowItem alloc] initWithHeight:20] tableRedraw:YES];
         }

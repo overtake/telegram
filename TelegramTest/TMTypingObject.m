@@ -186,8 +186,9 @@
         
         allObjects = [allObjects sortedArrayUsingSelector:@selector(compare:)];
         
-        
-        [actions addObject:allObjects[0]];
+        if(allObjects.count > 0) {
+            [actions addObject:allObjects[0]];
+        }
         
     }];
     

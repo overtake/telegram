@@ -7,7 +7,6 @@
 //
 
 #import "TMView.h"
-
 @interface DraggingItemView : TMView
 
 typedef enum {

@@ -10,6 +10,8 @@
 
 @interface MessageTableItemMpeg : MessageTableItem
 @property (nonatomic,strong,readonly) TGImageObject *thumbObject;
+
+
 -(NSString *)path;
 
 @end

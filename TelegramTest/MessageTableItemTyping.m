@@ -7,7 +7,7 @@
 //
 
 #import "MessageTableItemTyping.h"
-
+#
 @implementation MessageTableItemTyping
 
 - (id) init {
@@ -17,5 +17,7 @@
     }
     return self;
 }
+
+
 
 @end

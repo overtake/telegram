@@ -86,6 +86,9 @@
         [Notification perform:MESSAGE_CHANGED_DSTATE data:@{KEY_MESSAGE:self}];
 }
 
+-(BOOL)isFake {
+    return self.to_id == nil || (self.flags & (1 << 30)) > 0;
+}
 
 +(TL_localMessage *)convertReceivedMessage:(TLMessage *)message {
     
@@ -93,7 +96,7 @@
     
     
     if([message isKindOfClass:[TL_messageService class]]) {
-        msg = [TL_localMessageService createWithFlags:message.flags n_id:message.n_id from_id:message.from_id to_id:message.to_id date:message.date action:message.action fakeId:[MessageSender getFakeMessageId] randomId:rand_long() dstate:DeliveryStateNormal];
+        msg = [TL_localMessageService createWithFlags:message.flags n_id:message.n_id from_id:message.from_id to_id:message.to_id reply_to_msg_id:message.reply_to_msg_id date:message.date action:message.action fakeId:[MessageSender getFakeMessageId] randomId:rand_long() dstate:DeliveryStateNormal];
     }  else if(![message isKindOfClass:[TL_messageEmpty class]]) {
         msg = [TL_localMessage createWithN_id:message.n_id flags:message.flags from_id:message.from_id to_id:message.to_id fwd_from:message.fwd_from reply_to_msg_id:message.reply_to_msg_id date:message.date message:message.message media:message.media fakeId:[MessageSender getFakeMessageId] randomId:rand_long() reply_markup:message.reply_markup entities:message.entities views:message.views via_bot_id:message.via_bot_id edit_date:message.edit_date isViewed:NO state:DeliveryStateNormal];
         
@@ -117,6 +120,10 @@
 
 
 - (void)save:(BOOL)updateConversation {
+    
+    _type = 0;
+    [self filterType];
+    
     [[Storage manager] insertMessages:@[self]];
     if(updateConversation && (self.n_id != self.conversation.top_message || [self isKindOfClass:[TL_destructMessage class]])) {
         [[DialogsManager sharedManager] updateTop:self needUpdate:YES update_real_date:NO];
@@ -270,6 +277,9 @@
     return self.flags & TGOUTMESSAGE;
 }
 
+-(void)setFlags:(int)flags {
+    [super setFlags:flags];
+}
 
 -(BOOL)isImportantMessage {
     return self.isChannelMessage &&  (self.isPost);
@@ -299,6 +309,9 @@ DYNAMIC_PROPERTY(DDialog);
 
 - (TL_conversation *)conversation {
     
+    if(self.isFake)
+        return nil;
+    
     __block TL_conversation *dialog;
     
     dialog = [self getDDialog];
@@ -321,6 +334,12 @@ DYNAMIC_PROPERTY(DDialog);
     return dialog;
 }
 
+-(void)setMedia:(TLMessageMedia *)media {
+    [super setMedia:media];
+    
+    _type = 0;
+}
+
 -(int)filterType {
     if(_type == 0)
     {
@@ -337,14 +356,17 @@ DYNAMIC_PROPERTY(DDialog);
         
         if([self.media isKindOfClass:[TL_messageMediaDocument class]] || [self.media isKindOfClass:[TL_messageMediaDocument_old44 class]]) {
             TL_documentAttributeAudio *attr =  (TL_documentAttributeAudio *)[self.media.document attributeWithClass:[TL_documentAttributeAudio class]];
+            
+            TL_documentAttributeVideo *videoAttr =  (TL_documentAttributeVideo *)[self.media.document attributeWithClass:[TL_documentAttributeVideo class]];
            
             if(attr.isVoice) {
                 mask|=HistoryFilterAudio;
             } else if(attr != nil || [self.media.document.mime_type hasPrefix:@"audio/"]) {
                 mask|=HistoryFilterAudioDocument;
-            } else {
+            } else if(videoAttr != nil && [self.media.document attributeWithClass:[TL_documentAttributeAnimated class]] == nil) {
+                mask|=HistoryFilterVideo;
+            } else
                 mask|=HistoryFilterDocuments;
-            }
         }
         
         if([self.media isKindOfClass:[TL_messageMediaVideo class]]) {
@@ -373,6 +395,8 @@ DYNAMIC_PROPERTY(DDialog);
 }
 
 -(NSUserNotification *)userNotification {
+    
+    
     
 //    if(!_notification) {
 //        NSArray *notifications = [[NSUserNotificationCenter defaultUserNotificationCenter] deliveredNotifications];

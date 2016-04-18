@@ -73,8 +73,8 @@
                     
                 }
                  
-                
-                [self dispatchWithFullList:[self mixChannelsWithConversations:d] offset:(int)d.count];
+                if(d.count > 0)
+                    [self dispatchWithFullList:[self mixChannelsWithConversations:d] offset:(int)d.count];
                 
             }];
             
@@ -166,7 +166,7 @@
                     
                     lastMessage = chat.isMegagroup ? topMsg : topMsg;
                     
-                    int unread_count = dialog.unread_important_count;
+                    int unread_count = chat.isMegagroup ? dialog.unread_count : dialog.unread_important_count;
                     
                     conversation = [TL_conversation createWithPeer:dialog.peer top_message:dialog.top_message unread_count:unread_count last_message_date:date notify_settings:dialog.notify_settings last_marked_message:unread_count > 0 ? dialog.read_inbox_max_id : top_important_message top_message_fake:top_important_message last_marked_date:minMsg.date sync_message_id:topMsg.n_id read_inbox_max_id:dialog.read_inbox_max_id unread_important_count:dialog.unread_important_count lastMessage:lastMessage pts:dialog.pts isInvisibleChannel:NO top_important_message:top_important_message];
                 } else {

@@ -52,39 +52,6 @@
     return self;
 }
 
-//
-//-(void)addSupportMessages:(NSArray *)supportMessages {
-//    
-//    [self.queue dispatchOnQueue:^{
-//        
-//        [supportMessages enumerateObjectsUsingBlock:^(TL_localMessage *obj, NSUInteger idx, BOOL *stop) {
-//            
-//            if(!_supportMessages[@(obj.peer_id)]) {
-//                _supportMessages[@(obj.peer_id)] = [[NSMutableDictionary alloc] init];
-//            }
-//            
-//            _supportMessages[@(obj.peer_id)][@(obj.channelMsgId)] = obj;
-//            
-//        }];
-//        
-//    }];
-//    
-//   
-//}
-//
-//-(TL_localMessage *)supportMessage:(int)n_id peer_id:(int)peer_id {
-//    
-//    __block TL_localMessage *message;
-//    
-//    [self.queue dispatchOnQueue:^{
-//        
-//        message = _supportMessages[@(peer_id)][@(n_id)];
-//        
-//    } synchronous:YES];
-//    
-//    return message;
-//}
-
 
 +(void)addSupportMessages:(NSArray *)supportMessages {
     [[self sharedManager] addSupportMessages:supportMessages];
@@ -158,29 +125,32 @@ static const int seconds_to_notify = 120;
             if(chat != nil) {
                 cacheKey = [chat.photo.photo_small cacheKey];
             }
+
+            NSString *p;
             
-            NSString *p = [NSString stringWithFormat:@"%@/%@.jpg", path(), cacheKey];
-            
-            
-            image = [TGCache cachedImage:p group:@[AVACACHE]];
-            
-            
-            
-            if(!image) {
+            if(cacheKey) {
                 
-                NSData *data = [[NSFileManager defaultManager] fileExistsAtPath:p] ? [NSData dataWithContentsOfFile:p] : nil;
+                p = [NSString stringWithFormat:@"%@/%@.jpg", path(), cacheKey];
                 
                 
-                if(data.length > 0) {
-                    image = [[NSImage alloc] initWithData:data];
+                image = [TGCache cachedImage:p group:@[AVACACHE]];
+                
+                if(!image) {
                     
-                    image = [ImageUtils roundCorners:image size:NSMakeSize(image.size.width/2, image.size.height/2)];
+                    NSData *data = [[NSFileManager defaultManager] fileExistsAtPath:p] ? [NSData dataWithContentsOfFile:p] : nil;
                     
-                    [TGCache cacheImage:image forKey:p groups:@[AVACACHE]];
+                    
+                    if(data.length > 0) {
+                        image = [[NSImage alloc] initWithData:data];
+                        
+                        image = [ImageUtils roundCorners:image size:NSMakeSize(image.size.width/2, image.size.height/2)];
+                        
+                        [TGCache cacheImage:image forKey:p groups:@[AVACACHE]];
+                    }
+                    
                 }
                 
             }
-            
             
             if(!image) {
                 
@@ -199,6 +169,7 @@ static const int seconds_to_notify = 120;
                 }
                 
             }
+            
             
         }
         
@@ -220,10 +191,6 @@ static const int seconds_to_notify = 120;
             }
             
           
-            
-            
-            
-            
             NSUserNotification *notification = [[NSUserNotification alloc] init];
             notification.title = title;
             notification.informativeText = [msg fixEmoji];
@@ -249,8 +216,10 @@ static const int seconds_to_notify = 120;
                 
             }
             
-            [notification setUserInfo:@{@"peer_id":@(message.peer_id),@"msg_id":@(message.n_id)}];
+            [notification setUserInfo:@{KEY_PEER_ID:@(message.peer_id),KEY_MESSAGE_ID:@(message.n_id)}];
             [[NSUserNotificationCenter defaultUserNotificationCenter] deliverNotification:notification];
+            
+            
             
             //[NSApp requestUserAttention:NSInformationalRequest];
         }
@@ -260,6 +229,19 @@ static const int seconds_to_notify = 120;
     }];
 }
 
+
++(void)clearNotifies:(TL_conversation *)conversation max_id:(int)max_id
+{
+    NSArray *deliveredNotifications = [[NSUserNotificationCenter defaultUserNotificationCenter] deliveredNotifications];
+    
+    [deliveredNotifications enumerateObjectsUsingBlock:^(NSUserNotification *notify, NSUInteger idx, BOOL * _Nonnull stop) {
+        
+        if([notify.userInfo[KEY_PEER_ID] intValue] == conversation.peer_id && [notify.userInfo[KEY_MESSAGE_ID] intValue] <= max_id) {
+            [[NSUserNotificationCenter defaultUserNotificationCenter] removeDeliveredNotification:notify];
+        }
+        
+    }];
+}
 
 +(void)notifyMessage:(TL_localMessage *)message update_real_date:(BOOL)update_real_date {
      [self notifyMessage:message update_real_date:update_real_date notify:YES];

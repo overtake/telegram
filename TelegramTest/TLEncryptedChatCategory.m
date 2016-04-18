@@ -26,4 +26,36 @@
     return NO;
 }
 
+-(BOOL)isCreator {return NO;}
+
+-(BOOL)isKicked {return NO;}
+
+-(BOOL)isLeft {return NO;}
+
+-(BOOL)isAdmins_enabled {return NO;}
+
+-(BOOL)isAdmin {return NO;}
+
+-(BOOL)isEditor {return NO;}
+
+-(BOOL)isModerator {return NO;}
+
+-(BOOL)isBroadcast {return NO;}
+
+-(BOOL)isVerified {return NO;}
+
+-(BOOL)isMegagroup {return NO;}
+
+-(BOOL)isRestricted {return NO;}
+
+-(BOOL)isDemocracy {return NO;}
+
+-(BOOL)isSignatures {return NO;}
+
+-(BOOL)isMin {return NO;}
+
+-(BOOL)isExplicit_content {return NO;}
+
+-(BOOL)isChannel {return NO;}
+
 @end

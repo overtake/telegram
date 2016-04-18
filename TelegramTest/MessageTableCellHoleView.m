@@ -64,8 +64,6 @@
     [_textView setFrameSize:item.textSize];
     [_textView setAttributedString:item.text];
     
-    
-    
     [_textView setCenteredXByView:_textView.superview];
     
     [_textView setFrameOrigin:NSMakePoint(roundf((NSWidth(self.messagesViewController.view.frame) - item.textSize.width) / 2), roundf((item.viewSize.height - NSHeight(_textView.frame))/2))];

@@ -6,8 +6,8 @@
 //  Copyright (c) 2014 keepcoder. All rights reserved.
 //
 
-#import "MessageTableCellContainerView.h"
+#import "TGModernMessageCellContainerView.h"
 #import "MessageTableItemContact.h"
 
-@interface MessageTableCellContactView : MessageTableCellContainerView<TMHyperlinkTextFieldDelegate>
+@interface MessageTableCellContactView : TGModernMessageCellContainerView<TMHyperlinkTextFieldDelegate>
 @end

@@ -9,20 +9,17 @@
 #import "TGWebpageArticle.h"
 #import "TGArticleImageObject.h"
 #import "TGExternalImageObject.h"
+#import "MessageTableItem.h"
 @implementation TGWebpageArticle
 
 @synthesize size = _size;
 @synthesize imageSize = _imageSize;
-@synthesize author = _author;
 @synthesize imageObject = _imageObject;
 @synthesize descSize = _descSize;
 
--(id)initWithWebPage:(TLWebPage *)webpage {
+-(id)initWithWebPage:(TLWebPage *)webpage tableItem:(MessageTableItem *)item {
     
-    if(self = [super initWithWebPage:webpage]) {
-        
-        
-       
+    if(self = [super initWithWebPage:webpage tableItem:item]) {
         
         if([webpage.photo isKindOfClass:[TL_photo class]]) {
             
@@ -53,18 +50,18 @@
     _size = [super size];
 
    // if(self.imageObject) {
-        
+    if(_imageObject) {
         _imageSize = strongsize(self.imageObject.imageSize,60);
-    
-        _descSize = [self.desc coreTextSizeForTextFieldForWidth: width-67];
-    
-//        _size.height = [self.desc coreTextSizeForTextFieldForWidth:width - 67 withPaths:@[[NSValue valueWithRect:NSMakeRect(0, 300, _size.width - 77, 60)],[NSValue valueWithRect:NSMakeRect(0, 0, _size.width -7, 300)]]].height;
-//
-        _size.width = _descSize.width + _imageSize.width + 100;
-        _size.height = _descSize.width > 200 ? _descSize.height : _descSize.height + _imageSize.height + 10;
+    }
     
     
-        _size.height = MAX(_size.height, _imageSize.height);
+    _descSize = [self.desc coreTextSizeForTextFieldForWidth: width - self.tableItem.defaultOffset - _imageSize.width];
+    
+    _size.width = _descSize.width + _imageSize.width + self.tableItem.defaultOffset;
+    _size.height = _descSize.height > 60 ? _descSize.height : _descSize.height + _imageSize.height + (_imageObject ? self.tableItem.defaultContentOffset : 0);
+    
+    
+    _size.height = MAX(_size.height, _imageSize.height);
  //   }
     
 }

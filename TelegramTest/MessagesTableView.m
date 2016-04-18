@@ -62,6 +62,12 @@
     
 }
 
+-(void)setFrameSize:(NSSize)newSize {
+    [super setFrameSize:newSize];
+    
+     [_textField setCenterByView:self];
+}
+
 @end
 
 
@@ -142,11 +148,13 @@
                 [_secretChatInactiveCap removeFromSuperview];
             } else {
                 [_secretChatInactiveCap setFrame:NSMakeRect(2, 2, NSWidth(self.frame) - 4, NSHeight(self.frame) - 4)];
-                [self addSubview:_secretChatInactiveCap];
+                [self.scrollView addSubview:_secretChatInactiveCap];
             }
             
         }
         
+    } else {
+        [_secretChatInactiveCap removeFromSuperview];
     }
 }
 
@@ -229,7 +237,7 @@
             [self noteHeightOfRowsWithIndexesChanged:[NSIndexSet indexSetWithIndexesInRange:visibleRows]];
             
             for(MessageTableCell *cell in array) {
-                [cell resizeAndRedraw];
+                [cell setItem:cell.item];
             }
             
             
@@ -302,7 +310,7 @@
     
     [SelectTextManager clear];
     [SelectTextManager becomeFirstResponder];
-    
+    [SelectTextManager setCurrentTableView:self];
     _startSelectPosition = tablePoint;
     
     
@@ -361,6 +369,8 @@
 
 -(void)checkAndScroll:(NSPoint)point {
     
+    
+    
     NSPoint topCorner = NSMakePoint(0, roundf(NSHeight(self.scrollView.frame) - 100));
     
     NSPoint botCorner = NSMakePoint(0, 100);
@@ -388,7 +398,7 @@
         next = NO;
     
     
-    if(next) {
+    if(next && [NSEvent pressedMouseButtons] > 0) {
         if(_timer == nil)
             [self startUpdateScrollTimerIfNeeded];
     } else
@@ -456,124 +466,139 @@
     
     [self checkAndScroll:[self.scrollView convertPoint:point fromView:nil]];
 
-    
-    NSUInteger row = [self rowAtPoint:startTablePoint];
-    
-    if(row == NSUIntegerMax && startTablePoint.y > 0 && NSHeight(self.frame) == NSHeight(self.scrollView.frame)) {
-        row = [self.viewController messagesCount] - 1;
-    }
-    
-    self.currentSelectItem = [self.viewController messageList][row];
-    
-    NSUInteger startRow = [self indexOfItem:self.firstSelectItem];
-    
-    NSUInteger endRow = [self indexOfItem:self.currentSelectItem];
-    
-    
-    BOOL reversed = endRow < startRow;
-    
-    if(endRow < startRow) {
-        startRow = startRow + endRow;
-        endRow = startRow - endRow;
-        startRow = startRow - endRow;
-    }
+    @try {
+        NSUInteger row = [self rowAtPoint:startTablePoint];
         
-    BOOL isMultiple = abs((int)endRow - (int)startRow) > 0;
-    
-    for (NSUInteger i = startRow; i <= endRow; i++) {
-        
-        
-        MessageTableItem *item = self.viewController.messageList[i];
-        
-        if([item isKindOfClass:[MessageTableItemText class]]) {
-            
-            MessageTableItemText *textItem = (MessageTableItemText *)item;
-            
-            NSPoint startPoint;
-            NSPoint endPoint;
-            
-            NSRect rect = [self rectOfRow:i];
-            
-            MessageTableCellTextView * view;
-            
-            @try {
-                
-                view = [self viewAtColumn:0 row:i makeIfNecessary:NO];
-            }
-            @catch (NSException *exception) {
-                
-            }
-            
-            TGCTextView *textView = ((MessageTableCellTextView *)view).textView;
-            
-            NSPoint startConverted = NSMakePoint(_startSelectPosition.x - rect.origin.x - (item.isForwadedMessage ? item.containerOffsetForward : item.containerOffset), _startSelectPosition.y - rect.origin.y - NSMinY(view.containerView.frame));
-            
-            NSPoint currentConverted = NSMakePoint(startTablePoint.x - rect.origin.x - (item.isForwadedMessage ? item.containerOffsetForward : item.containerOffset), startTablePoint.y - rect.origin.y - NSMinY(view.containerView.frame));
-            
-            
-
-            
-            if(i > startRow && i < endRow) {
-                
-                startPoint = NSMakePoint(textItem.blockSize.width, 0);
-                endPoint = NSMakePoint(1, INT32_MAX);
-                
-            } else if(i == startRow) {
-                
-                if(!isMultiple) {
-                    
-                    startPoint = startConverted;
-                    endPoint = currentConverted;
-                    
-                    
-                } else {
-                    
-                    if(!reversed) {
-                        
-                        startPoint = NSMakePoint(startConverted.x, startConverted.y);
-                        endPoint = NSMakePoint(1, INT32_MAX);
-                        
-                    } else {
-                        
-                        // its end :D
-                        
-                        startPoint = NSMakePoint(0, INT32_MAX);
-                        endPoint = currentConverted;
-                        
-                        
-                    }
-                    
-                }
-                
-            } else if(i == endRow) {
-                
-                if(!reversed) {
-                    startPoint = NSMakePoint(textItem.blockSize.width, 0);
-                    endPoint = currentConverted;
-                    
-                    
-                } else {
-                    
-                    startPoint = startConverted;
-                    endPoint = NSMakePoint(textItem.blockSize.width, 0);
-                }
-            }
-            
-            NSRange selectRange = [textItem.textAttributed selectRange:textItem.blockSize startPoint:startPoint currentPoint:endPoint];
-            
-            
-            [SelectTextManager addRange:selectRange forItem:item];
-            
-            
-            [textView setSelectionRange:selectRange];
-            
-            
+        if(row == NSUIntegerMax && startTablePoint.y > 0 && NSHeight(self.frame) == NSHeight(self.scrollView.frame)) {
+            row = [self.viewController messagesCount] - 1;
         }
         
         
+        
+        self.currentSelectItem = [self.viewController messageList][row];
+        
+        NSUInteger startRow = [self indexOfItem:self.firstSelectItem];
+        
+        NSUInteger endRow = [self indexOfItem:self.currentSelectItem];
+        
+        
+        BOOL reversed = endRow < startRow;
+        
+        if(endRow < startRow) {
+            startRow = startRow + endRow;
+            endRow = startRow - endRow;
+            startRow = startRow - endRow;
+        }
+        
+        BOOL isMultiple = abs((int)endRow - (int)startRow) > 0;
+        
+        for (NSUInteger i = startRow; i <= endRow; i++) {
+            
+            
+            MessageTableItem *item = self.viewController.messageList[i];
+            
+            if([item isKindOfClass:[MessageTableItemText class]]) {
+                
+                MessageTableItemText *textItem = (MessageTableItemText *)item;
+                
+                NSPoint startPoint;
+                NSPoint endPoint;
+                
+                NSRect rect = [self rectOfRow:i];
+                
+                MessageTableCellTextView * view;
+                
+                @try {
+                    
+                    view = [self viewAtColumn:0 row:i makeIfNecessary:NO];
+                }
+                @catch (NSException *exception) {
+                    
+                }
+                
+                
+                
+                
+                TGCTextView *textView = ((MessageTableCellTextView *)view).textView;
+                
+                NSPoint startConverted = NSMakePoint(_startSelectPosition.x - rect.origin.x - (item.isForwadedMessage ? item.startContentOffset + item.defaultOffset : item.startContentOffset), _startSelectPosition.y - rect.origin.y - NSMinY(item.isForwadedMessage ? view.containerView.superview.frame : view.containerView.frame));
+                
+                NSPoint currentConverted = NSMakePoint(startTablePoint.x - rect.origin.x - (item.isForwadedMessage ? item.startContentOffset + item.defaultOffset : item.startContentOffset), startTablePoint.y - rect.origin.y - NSMinY(item.isForwadedMessage ? view.containerView.superview.frame : view.containerView.frame));
+                //
+                //
+                //            if(startRow == endRow) {
+                //
+                //                if([view.textView.superview mouse:startConverted inRect:view.textView.frame]) {
+                //                    int bp = 0;
+                //                }
+                //
+                //            }
+                //
+                
+                
+                if(i > startRow && i < endRow) {
+                    
+                    startPoint = NSMakePoint(textItem.blockSize.width, 0);
+                    endPoint = NSMakePoint(1, INT32_MAX);
+                    
+                } else if(i == startRow) {
+                    
+                    if(!isMultiple) {
+                        
+                        startPoint = startConverted;
+                        endPoint = currentConverted;
+                        
+                        
+                    } else {
+                        
+                        if(!reversed) {
+                            
+                            startPoint = NSMakePoint(startConverted.x, startConverted.y);
+                            endPoint = NSMakePoint(1, INT32_MAX);
+                            
+                        } else {
+                            
+                            // its end :D
+                            
+                            startPoint = NSMakePoint(0, INT32_MAX);
+                            endPoint = currentConverted;
+                            
+                            
+                        }
+                        
+                    }
+                    
+                } else if(i == endRow) {
+                    
+                    if(!reversed) {
+                        startPoint = NSMakePoint(textItem.blockSize.width, 0);
+                        endPoint = currentConverted;
+                        
+                        
+                    } else {
+                        
+                        startPoint = startConverted;
+                        endPoint = NSMakePoint(textItem.blockSize.width, 0);
+                    }
+                }
+                
+                NSRange selectRange = [textItem.textAttributed selectRange:textItem.blockSize startPoint:startPoint currentPoint:endPoint];
+                
+                
+                [SelectTextManager addRange:selectRange forItem:item];
+                
+                
+                [textView setSelectionRange:selectRange];
+                
+                
+            }
+            
+            
+        }
+    } @catch (NSException *exception) {
+        
     }
     
-
 }
 
 -(void)rightMouseDown:(NSEvent *)theEvent {

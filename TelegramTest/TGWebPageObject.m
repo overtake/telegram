@@ -22,29 +22,13 @@
 
 @implementation TGWebpageObject
 
-NSImage *placeholder() {
-    static RHResizableImage *image = nil;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        NSRect rect = NSMakeRect(0, 0, 50, 50);
-        NSImage *img = [[NSImage alloc] initWithSize:rect.size];
-        [img lockFocus];
-        [GRAY_BORDER_COLOR set];
-        NSBezierPath *path = [NSBezierPath bezierPath];
-        [path appendBezierPathWithRoundedRect:NSMakeRect(0, 0, rect.size.width, rect.size.height) xRadius:4 yRadius:4];
-        [path fill];
-        [img unlockFocus];
-        
-        image = [[RHResizableImage alloc] initWithImage:img capInsets:RHEdgeInsetsMake(5, 5, 5, 5)];
-        
-    });
-    return image;
-}
 
--(id)initWithWebPage:(TLWebPage *)webpage {
+
+-(id)initWithWebPage:(TLWebPage *)webpage tableItem:(MessageTableItem *)item {
     if(self = [super init]) {
         
         _webpage = webpage;
+        _tableItem = item;
         
         
         NSMutableParagraphStyle *style = [NSMutableParagraphStyle new];
@@ -77,20 +61,9 @@ NSImage *placeholder() {
             
             _title = title;
         }
-//        
-//        if(!_author) {
-//            
-//            NSMutableAttributedString *copy = [_title mutableCopy];
-//            
-//            [copy setFont:TGSystemMediumFont(12.5) forRange:copy.range];
-//            [copy addAttribute:NSParagraphStyleAttributeName value:style range:copy.range];
-//            _author = copy;
-//            
-//        }
-        
         NSMutableAttributedString *siteName = [[NSMutableAttributedString alloc] init];
         
-        [siteName appendString:webpage.site_name ? webpage.site_name : webpage.document ? NSLocalizedString(webpage.type, nil) : @"Link Preview" withColor:GRAY_TEXT_COLOR];
+        [siteName appendString:webpage.site_name ? webpage.site_name : webpage.document ? NSLocalizedString(webpage.type, nil) : @"Link Preview" withColor:LINK_COLOR];
 
         [siteName setFont:TGSystemMediumFont(13) forRange:siteName.range];
       //  [siteName addAttribute:NSParagraphStyleAttributeName value:style range:siteName.range];
@@ -148,7 +121,7 @@ NSImage *placeholder() {
             TLPhotoSize *photoSize = [photo lastObject];
             
             
-            _imageObject = [[TGImageObject alloc] initWithLocation:photoSize.location placeHolder:placeholder() sourceId:0 size:photoSize.size];
+            _imageObject = [[TGImageObject alloc] initWithLocation:photoSize.location placeHolder:gray_resizable_placeholder() sourceId:0 size:photoSize.size];
             
             
             NSSize imageSize = strongsize(NSMakeSize(photoSize.w, photoSize.h), 320);
@@ -157,8 +130,8 @@ NSImage *placeholder() {
             _imageObject.imageSize = imageSize;
             
             
-            _roundObject = [[TGArticleImageObject alloc] initWithLocation:photoSize.location placeHolder:placeholder() sourceId:0 size:photoSize.size];
-            
+            _roundObject = [[TGArticleImageObject alloc] initWithLocation:photoSize.location placeHolder:gray_resizable_placeholder() sourceId:0 size:photoSize.size];
+            _roundObject.imageProcessor = [ImageUtils c_processor];
             _roundObject.imageSize = NSMakeSize(60, 60);
         }
         
@@ -203,55 +176,47 @@ NSImage *placeholder() {
     return NSClassFromString(@"TGWebpageContainer");
 }
 
-+(id)objectForWebpage:(TLWebPage *)webpage {
-    
-    
-#ifdef TGDEBUG
-    
-   // if(!ACCEPT_FEATURE)
-     //   return nil;
-    
-#endif
-    
-    
+static NSCache *webpages;
 
+
+
++(id)objectForWebpage:(TLWebPage *)webpage tableItem:(MessageTableItem *)item {
+    
+    
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        webpages = [[NSCache alloc] init];
+        [webpages setCountLimit:150];
+    });
+    
+    Class webpageClass = [NSNull class];
     
     if([webpage.site_name isEqualToString:@"YouTube"] && [webpage.type isEqualToString:@"video"])
+        webpageClass = [TGWebpageYTObject class];
+     else if([webpage.site_name isEqualToString:@"Instagram"])
+         webpageClass = [TGWebpageIGObject class];
+    else if([webpage.site_name isEqualToString:@"Twitter"])
+        webpageClass = [TGWebpageTWObject class];
+    else if([webpage.type isEqualToString:@"article"] || [webpage.type isEqualToString:@"app"])
+        webpageClass = [TGWebpageArticle class];
+    else if(webpage.document)
+        webpageClass = [TGWebpageDocumentObject class];
+    else
+        webpageClass = [TGWebpageStandartObject class];
+    
+    
+    NSString *key = [NSString stringWithFormat:@"%@_%ld",NSStringFromClass(webpageClass),webpage.n_id];
+    
+    TGWebpageObject *object = [webpages objectForKey:key];
+    
+    if(!object && webpageClass != [NSNull class])
     {
-        return [[TGWebpageYTObject alloc] initWithWebPage:webpage];
-    }
+        object = [[webpageClass alloc] initWithWebPage:webpage tableItem:item];
+        [webpages setObject:object forKey:key];
+    } else if (object)
+        object.tableItem = item;
     
-    if([webpage.site_name isEqualToString:@"Instagram"])
-    {
-        return [[TGWebpageIGObject alloc] initWithWebPage:webpage];
-    }
-    
-    if([webpage.site_name isEqualToString:@"Twitter"])
-    {
-        return [[TGWebpageTWObject alloc] initWithWebPage:webpage];
-    }
-    
-    
-    
-    
-    if([webpage.type isEqualToString:@"article"] || [webpage.type isEqualToString:@"app"])
-    {
-        return [[TGWebpageArticle alloc] initWithWebPage:webpage];
-    }
-    
-    if([webpage.type isEqualToString:@"document"] || [webpage.type isEqualToString:@"gif"]) {
-        
-        id animated = [webpage.document attributeWithClass:[TL_documentAttributeAnimated class]];
-        
-        if([webpage.document.mime_type isEqualToString:@"video/mp4"] && animated)
-            return [[TGWebpageGifObject alloc] initWithWebPage:webpage];
-    }
-    
-    if([webpage.type isEqualToString:@"document"] && webpage.document != nil) {
-        return [[TGWebpageDocumentObject alloc] initWithWebPage:webpage];
-    }
-    
-    return [[TGWebpageStandartObject alloc] initWithWebPage:webpage];
+    return object;
     
 }
 

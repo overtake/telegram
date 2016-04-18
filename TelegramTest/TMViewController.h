@@ -84,6 +84,8 @@
 +(BOOL)isModalActive;
 +(NSArray *)modalsView;
 
++(void)hideAllModals;
+
 +(TMView *)modalView;
 
 +(void)becomePasslock;
@@ -101,6 +103,9 @@
 - (void)viewDidDisappear:(BOOL)animated;
 
 -(TMView *)standartLeftBarView;
+
+-(TMView *)standartRightBarView;
+
 
 -(void)setCenterBarViewText:(NSString *)text;
 -(void)setCenterBarViewTextAttributed:(NSAttributedString *)text;

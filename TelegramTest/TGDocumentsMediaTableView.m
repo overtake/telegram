@@ -153,15 +153,26 @@
     
     if(self.items.count > 1) {
         
-        [items enumerateObjectsUsingBlock:^(MessageTableItem *obj, NSUInteger idx, BOOL *stop) {
+        [items enumerateObjectsUsingBlock:^(TL_localMessage *message, NSUInteger idx, BOOL *stop) {
             
-            NSUInteger itemIndex = [self.items indexOfObject:obj];
+            __block NSUInteger itemIndex = NSNotFound;
+            
+            [self.items enumerateObjectsUsingBlock:^(MessageTableItem *item, NSUInteger idx, BOOL * _Nonnull stop) {
+                if([item isKindOfClass:[MessageTableItem class]] && item.message.n_id == message.n_id) {
+                    
+                    itemIndex = idx;
+                    *stop = YES;
+                }
+            }];
+            
+            [self.items removeObjectAtIndex:itemIndex];
+            
             if(itemIndex != NSNotFound) {
                 [self.tableView removeRowsAtIndexes:[NSIndexSet indexSetWithIndex:itemIndex] withAnimation:NSTableViewAnimationEffectFade];
             }
         }];
         
-        [self.items removeObjectsInArray:items];
+        
         [self.tableView checkCap];
     }
     
@@ -202,6 +213,7 @@
     
     NSMutableArray *array = [NSMutableArray array];
     for(TLMessage *message in messages) {
+        message.flags|= (1 << 30);
         MessageTableItem *item = [MessageTableItem messageItemFromObject:message];
         if(item) {
             [array addObject:item];
@@ -403,7 +415,7 @@
         if(strongSelf != nil) {
             [TL_localMessage convertReceivedMessages:[response messages]];
             
-            NSArray *converted = [MessageTableItem messageTableItemsFromMessages:[response messages]];
+            NSArray *converted = [self.controller messageTableItemsFromMessages:[response messages]];
             
             NSArray *filtred = [converted filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary *bindings) {
                 
@@ -514,7 +526,7 @@
     item.table = self;
     
     [cell setFrameSize:NSMakeSize(NSWidth(self.bounds),[self heightWithItem:item])];
-    
+    cell.messagesViewController = self.collectionViewController.messagesViewController;
     [cell setItem:item];
     
     

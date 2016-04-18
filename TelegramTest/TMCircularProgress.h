@@ -32,6 +32,8 @@ typedef enum {
 @property (nonatomic,assign) float currentProgress;
 @property (nonatomic,strong) NSColor *backgroundColor;
 
+@property (nonatomic,assign) BOOL disableRotating;
+
 -(void)setProgress:(float)progress animated:(BOOL)animated;
 
 @end

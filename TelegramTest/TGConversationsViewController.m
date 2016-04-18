@@ -177,7 +177,6 @@
     [TGModernTypingManager initialize];
     
     [[NewContactsManager sharedManager] fullReload];
-    [[FullChatManager sharedManager] loadStored];
     
     [TGSecretAction dequeAllStorageActions];
     
@@ -576,7 +575,7 @@
         
         if(dialog.type == DialogTypeChat || dialog.type == DialogTypeChannel) {
             
-            NSMenuItem *deleteAndExitItem = [NSMenuItem menuItemWithTitle:chat.type == TLChatTypeNormal ? (dialog.type != DialogTypeChannel ? NSLocalizedString(@"Profile.DeleteAndExit", nil) : (chat.isCreator ? NSLocalizedString(chat.isMegagroup ?@"Conversation.Confirm.DeleteGroup" : @"Profile.DeleteChannel", nil) : NSLocalizedString(chat.isMegagroup ? @"Conversation.Delete" : @"Profile.LeaveChannel", nil)) ) : NSLocalizedString(@"Profile.DeleteConversation", nil)  withBlock:^(id sender) {
+            NSMenuItem *deleteAndExitItem = [NSMenuItem menuItemWithTitle:chat.type == TLChatTypeNormal ? (dialog.type != DialogTypeChannel ? NSLocalizedString(@"Profile.DeleteAndExit", nil) : (chat.isCreator ? NSLocalizedString(chat.isMegagroup ?@"Conversation.Confirm.DeleteGroup" : @"Profile.DeleteChannel", nil) : NSLocalizedString(chat.isMegagroup ? @"Conversation.Actions.LeaveGroup" : @"Profile.LeaveChannel", nil)) ) : NSLocalizedString(@"Profile.DeleteConversation", nil)  withBlock:^(id sender) {
                 [[Telegram rightViewController].messagesViewController deleteDialog:dialog];
             }];
             [menu addItem:deleteAndExitItem];
@@ -589,6 +588,14 @@
                     leaveFromGroupItem.target = nil;
                 
                 [menu addItem:leaveFromGroupItem];
+                
+                
+                NSMenuItem *clearHistory = [NSMenuItem menuItemWithTitle:NSLocalizedString(@"Confirm.ClearHistory", nil) withBlock:^(id sender) {
+                    [[Telegram rightViewController].messagesViewController clearHistory:dialog];
+                }];
+
+                
+                [menu addItem:clearHistory];
             }
             
             

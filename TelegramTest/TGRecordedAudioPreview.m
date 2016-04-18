@@ -20,10 +20,7 @@
 @property (nonatomic,strong) TMTextField *durationField;
 
 @property (nonatomic,assign) AudioState audioState;
-
 @property (nonatomic,strong) TGTimer *progressTimer;
-
-
 @property (nonatomic,assign) NSTimeInterval currentTime;
 @end
 

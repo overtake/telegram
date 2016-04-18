@@ -134,11 +134,13 @@
             size = [TL_photoSizeEmpty createWithType:@"x"];
         }
         
-       
+        
+        NSMutableArray *attrs = [NSMutableArray array];
+        [attrs addObject:[TL_documentAttributeLocalFile createWithFile_path:filePath]];
+        [attrs addObject:[TL_documentAttributeFilename createWithFile_name:[filePath lastPathComponent]]];
         
         
-        
-        media = [TL_messageMediaDocument createWithDocument:[TL_outDocument createWithN_id:rand_long() access_hash:0 date:[[MTNetwork instance] getTime] mime_type:self.mimeType size:(int)fileSize(self.filePath) thumb:size dc_id:0 file_path:self.filePath attributes:[@[[TL_documentAttributeFilename createWithFile_name:[filePath lastPathComponent]]] mutableCopy]] caption:@""];
+        media = [TL_messageMediaDocument createWithDocument:[TL_document createWithN_id:rand_long() access_hash:0 date:[[MTNetwork instance] getTime] mime_type:self.mimeType size:(int)fileSize(self.filePath) thumb:size dc_id:0 attributes:attrs] caption:@""];
     } else if(self.uploadType == UploadAudioType) {
         
         NSTimeInterval duration = [TGOpusAudioPlayerAU durationFile:filePath];
@@ -288,7 +290,7 @@
             } else if(strongSelf.params.layer == 23) {
                 strongSelf.media = [Secret23_DecryptedMessageMedia decryptedMessageMediaDocumentWithThumb:strongSelf.message.media.document.thumb.bytes == nil ? [[NSData alloc] initWithEmptyBytes:16] : strongSelf.message.media.document.thumb.bytes thumb_w:@(msg.media.document.thumb.w) thumb_h:@(msg.media.document.thumb.h) file_name:[strongSelf.filePath lastPathComponent] mime_type:strongSelf.mimeType size:@(uploader.total_size) key:strongSelf.key iv:strongSelf.iv];
             } else if(strongSelf.params.layer == 45) {
-                strongSelf.media = [Secret45_DecryptedMessageMedia decryptedMessageMediaDocumentWithThumb:strongSelf.message.media.document.thumb.bytes == nil ? [[NSData alloc] initWithEmptyBytes:16] : strongSelf.message.media.document.thumb.bytes thumb_w:@(msg.media.document.thumb.w) thumb_h:@(msg.media.document.thumb.h) mime_type:strongSelf.message.media.document.mime_type size:@(uploader.total_size) key:strongSelf.key iv:strongSelf.iv attributes:[strongSelf convertLAttributes:strongSelf.message.media.document.attributes layer:45] caption:@""];
+                strongSelf.media = [Secret45_DecryptedMessageMedia decryptedMessageMediaDocumentWithThumb:strongSelf.message.media.document.thumb.bytes == nil ? [[NSData alloc] initWithEmptyBytes:16] : strongSelf.message.media.document.thumb.bytes thumb_w:@(msg.media.document.thumb.w) thumb_h:@(msg.media.document.thumb.h) mime_type:strongSelf.message.media.document.mime_type size:@(uploader.total_size) key:strongSelf.key iv:strongSelf.iv attributes:[strongSelf convertLAttributes:strongSelf.message.media.document.serverAttributes layer:45] caption:@""];
             }
         }
         

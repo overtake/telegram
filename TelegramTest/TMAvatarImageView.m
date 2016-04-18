@@ -7,7 +7,7 @@
 //
 
 #import "TMAvatarImageView.h"
-#import "TMImageUtils.h"
+#import "ImageUtils.h"
 
 #import "TLFileLocation+Extensions.h"
 #import "DownloadQueue.h"
@@ -19,7 +19,7 @@
 #import "TGCache.h"
 #import "TMAvaImageObject.h"
 #import "NSString+Extended.h"
-
+#import "TGImageView.h"
 
 typedef struct
 {
@@ -78,7 +78,7 @@ static const TGTwoColors colors[] = {
         NSRectFill(NSMakeRect(0, 0, size.width, size.height));
         [image unlockFocus];
         
-        image = [TMImageUtils roundedImage:image size:size];
+        image = [ImageUtils roundedImage:image size:size];
         
         [placeHolderCache setObject:image forKey:NSStringFromSize(size)];
     }
@@ -89,14 +89,15 @@ static const TGTwoColors colors[] = {
 + (instancetype)standartTableAvatar {
     TMAvatarImageView *avatarImageView = [[self alloc] initWithFrame:NSMakeRect(10, roundf((66 - 50) / 2.0), 50, 50)];
     avatarImageView.placeholder = [TMAvatarImageView placeholderImageBySize:avatarImageView.frame.size andColor:NSColorFromRGB(0xfafafa)];
-    [avatarImageView setFont:TGSystemLightFont(18)];
+    [avatarImageView setFont:TGSystemFont(18)];
+    [avatarImageView setOffsetTextY:-1];
     return avatarImageView;
 }
 
 + (instancetype)standartNewConversationTableAvatar {
     TMAvatarImageView *avatarImageView = [[self alloc] initWithFrame:NSMakeRect(10, roundf((60 - 44) / 2.0), 44, 44)];
     avatarImageView.placeholder = [TMAvatarImageView placeholderImageBySize:avatarImageView.frame.size andColor:NSColorFromRGB(0xfafafa)];
-    [avatarImageView setFont:TGSystemLightFont(18)];
+    [avatarImageView setFont:TGSystemFont(18)];
     return avatarImageView;
 }
 
@@ -104,7 +105,7 @@ static const TGTwoColors colors[] = {
     TMAvatarImageView *avatarImageView = [[self alloc] initWithFrame:NSMakeRect(0, 0, 36, 36)];
     avatarImageView.placeholder = [TMAvatarImageView placeholderImageBySize:avatarImageView.frame.size andColor:NSColorFromRGB(0xfafafa)];
     [avatarImageView setFont:TGSystemFont(14)];
-    [avatarImageView setOffsetTextY:0];
+    [avatarImageView setOffsetTextY:-1];
     return avatarImageView;
 }
 
@@ -119,14 +120,14 @@ static const TGTwoColors colors[] = {
 + (instancetype) standartUserInfoAvatar {
     TMAvatarImageView *avatarImageView = [[self alloc] initWithFrame:NSMakeRect(0, 0, 130, 130)];
     avatarImageView.placeholder = [TMAvatarImageView placeholderImageBySize:avatarImageView.frame.size andColor:NSColorFromRGB(0xfafafa)];
-    [avatarImageView setFont:TGSystemLightFont(30)];
+    [avatarImageView setFont:TGSystemFont(30)];
     return avatarImageView;
 }
 
 + (instancetype) standartInfoAvatar {
     TMAvatarImageView *avatarImageView = [[self alloc] initWithFrame:NSMakeRect(0, 0, 70, 70)];
     avatarImageView.placeholder = [TMAvatarImageView placeholderImageBySize:avatarImageView.frame.size andColor:NSColorFromRGB(0xfafafa)];
-    [avatarImageView setFont:TGSystemLightFont(18)];
+    [avatarImageView setFont:TGSystemFont(18)];
     return avatarImageView;
 }
 
@@ -173,13 +174,12 @@ static const TGTwoColors colors[] = {
 - (void) initialize {
     [Notification addObserver:self selector:@selector(notificationUserChange:) name:USER_UPDATE_PHOTO];
     [Notification addObserver:self selector:@selector(notificationUserChange:) name:USER_UPDATE_NAME];
-
     [Notification addObserver:self selector:@selector(notificationChatChange:) name:CHAT_UPDATE_PHOTO];
     [Notification addObserver:self selector:@selector(notificationChatChange:) name:CHAT_UPDATE_TITLE];
 
     self.font = TGSystemFont(12);
     self.isNeedPlaceholder = YES;
-    
+    self.offsetTextY = -1;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         [TGCache setMemoryLimit:50*1024*1024 group:AVACACHE];
@@ -189,6 +189,7 @@ static const TGTwoColors colors[] = {
 -(void)didDownloadImage:(NSImage *)image object:(TMAvaImageObject *)object {
     
     if([_imageObject.location isEqualTo:object.location]) {
+        [self addAnimation:contentAnimation() forKey:@"contents"];
         self.image = image;
     }
     
@@ -368,11 +369,13 @@ static CAAnimation *ani2() {
         return;
     }
     
+    
     if(self.fileLocation) {
         self.currentHash = [self.fileLocation hashCacheKey];
     } else {
-        _text = [TMAvatarImageView text:self.chat ? self.chat : (self.broadcast ? self.broadcast : self.user)];
-        self.currentHash = [self.text hash];
+        if(_text.length == 0)
+            _text = [TMAvatarImageView text:self.chat ? self.chat : (self.broadcast ? self.broadcast : self.user)];
+        self.currentHash = [_text hash];
     }
     
     __block NSString *key = [NSString stringWithFormat:@"%lu:%@",self.currentHash,NSStringFromSize(self.bounds.size)];
@@ -546,7 +549,10 @@ static CAAnimation *ani2() {
     
     
     if(colorMask != -1) {
+        
         CGContextRef context = (CGContextRef)[[NSGraphicsContext currentContext] graphicsPort];
+        
+        CGContextSaveGState(context);
         
         CGColorRef colors[2] = {
             CGColorRetain(NSColorFromRGB(twoColors.bottom).CGColor),
@@ -568,6 +574,8 @@ static CAAnimation *ani2() {
         CGContextDrawLinearGradient(context, gradient, CGPointMake(0.0f, 0.0f), CGPointMake(0.0f, size.height), 0);
         
         CFRelease(gradient);
+        
+        CGContextRestoreGState(context);
     }
 
     if(type != TMAvatarTypeBroadcast) {
@@ -624,7 +632,10 @@ static CAAnimation *ani2() {
     
     [image unlockFocus];
     
-    image = [TMImageUtils roundedImageNew:image size:size];
+    image = [ImageUtils roundedImageNew:image size:size];
+    
+    
+    
     return image;
 }
 

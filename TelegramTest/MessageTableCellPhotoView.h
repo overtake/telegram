@@ -7,9 +7,8 @@
 //
 
 #import "MessageTableCell.h"
-#import "MessageTableCellContainerView.h"
+#import "TGModernMessageCellContainerView.h"
 #import "MessageTableItemPhoto.h"
-#import "BluredPhotoImageView.h"
-@interface MessageTableCellPhotoView : MessageTableCellContainerView
-@property (nonatomic, strong) BluredPhotoImageView *imageView;
+@interface MessageTableCellPhotoView : TGModernMessageCellContainerView
+@property (nonatomic, strong) TGImageView *imageView;
 @end

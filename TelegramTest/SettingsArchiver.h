@@ -41,7 +41,8 @@ typedef enum {
     MessagesNotificationPreview = 1 << 24,
     IncludeMutedUnreadCount = 1 << 25,
     DisableAutoplayGifSetting = 1 << 26,
-    TripleLayoutSettings = 1 << 27
+    TripleLayoutSettings = 1 << 27,
+    HandleMediaKeysSettings = 2 << 28
 } SettingsMask;
 
 
@@ -66,7 +67,9 @@ typedef enum {
 
 @interface SettingsArchiver : NSObject<NSCoding>
 
-
+extern NSString *const kPermissionInlineBotGeo;
+extern NSString *const kPermissionInlineBotContact;
+extern NSString *const kPermissionInlineBotLocationRequest;
 /*
  binary settings mask
 */
@@ -103,4 +106,9 @@ typedef enum {
 + (void)notifyOfLaunch;
 + (BOOL)isLaunchAtStartup;
 + (void)toggleLaunchAtStartup;
+
+
+
++(void)requestPermissionWithKey:(NSString *)permissionKey peer_id:(int)peer_id handler:(void (^)(bool success))handler;
+
 @end

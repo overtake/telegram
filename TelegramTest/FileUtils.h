@@ -32,6 +32,19 @@ extern NSString *const TLBotCommandPrefix;
 extern NSString *const TGJoinGroupPrefix;
 extern NSString *const TGStickerPackPrefix;
 extern NSString *const TGImportShareLinkPrefix;
+
+
+extern NSString *const kBotInlineTypeAudio;
+extern NSString *const kBotInlineTypeVideo;
+extern NSString *const kBotInlineTypeSticker;
+extern NSString *const kBotInlineTypeGif;
+extern NSString *const kBotInlineTypePhoto;
+extern NSString *const kBotInlineTypeContact;
+extern NSString *const kBotInlineTypeVenue;
+extern NSString *const kBotInlineTypeGeo;
+extern NSString *const kBotInlineTypeFile;
+extern NSString *const kBotInlineTypeVoice;
+
 unsigned long fileSize(NSString *path);
 + (void)showPanelWithTypes:(NSArray *)types completionHandler:(void (^)(NSArray * result))handler;
 
@@ -61,13 +74,14 @@ TelegramWindow *appWindow();
 NSArray * soundsList();
 void playSentMessage(BOOL play);
 void open_link(NSString *link);
+void open_link_with_controller(NSString *link, TMNavigationController *controller);
 void open_card(NSString *link);
 void share_link(NSString *url, NSString *text);
 NSString *exportPath(long randomId,NSString *extension);
 
 
 void determinateURLLink(NSString *link);
-
+NSString *tg_domain_from_link(NSString *link);
 
 BOOL zipDirectory(NSURL *directoryURL, NSString * archivePath);
 NSString *decodeCard(NSArray *card);
@@ -93,6 +107,8 @@ NSString *path_for_external_link(NSString *link);
 NSString *display_url(NSString *url);
 
 NSArray *document_preview_mime_types();
+
+NSString *priorityString(NSString *, ...);
 
 
 + (TGAudioWaveform *)waveformForPath:(NSString *)path;

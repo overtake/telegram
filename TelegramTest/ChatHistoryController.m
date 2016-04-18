@@ -119,7 +119,7 @@ static ChatHistoryController *observer;
             if(_conversation.chat.chatFull != nil) {
                 block();
             } else {
-                [[FullChatManager sharedManager] performLoad:_conversation.chat.n_id callback:^(TLChatFull *fullChat) {
+                [[ChatFullManager sharedManager] requestChatFull:_conversation.chat.n_id withCallback:^(TLChatFull *fullChat) {
                     
                     requestNext = YES;
                     block();
@@ -218,8 +218,6 @@ static ChatHistoryController *observer;
     } synchronous:YES];
     
     
-    
-    
     return filter;
 
 }
@@ -273,11 +271,12 @@ static ChatHistoryController *observer;
     
     [ASQueue dispatchOnStageQueue:^{
         
-        ChatHistoryState state = [self filterWithNext:NO].prevState;
+        HistoryFilter *filer = [self filterWithNext:NO];
+        
         
         [ASQueue dispatchOnMainQueue:^{
             
-            block(state);
+            block(filer.prevState);
             
         }];
         
@@ -535,6 +534,56 @@ static ChatHistoryController *observer;
     
 }
 
+static NSMutableDictionary *lastMessageItems;
+static const int maxCacheCount = 30;
++(void)initialize {
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        lastMessageItems = [NSMutableDictionary dictionary];
+    });
+}
+
+
+
++(void)addLatestMessageItems:(NSArray *)items position:(int)position {
+    [ASQueue dispatchOnStageQueue:^{
+        
+        [items enumerateObjectsUsingBlock:^(MessageTableItem *  _Nonnull item, NSUInteger idx, BOOL * _Nonnull stop) {
+            
+            if([item isKindOfClass:[MessageTableItem class]]) {
+                NSMutableArray *items = lastMessageItems[@(item.message.peer_id)];
+                
+                if(!items)
+                {
+                    items = [NSMutableArray array];
+                    lastMessageItems[@(item.message.peer_id)] = items;
+                }
+                
+                TGAssert(position <= items.count);
+                
+                if(position > items.count) {
+                    [items insertObject:item atIndex:position];
+                }
+                
+                if(items.count > maxCacheCount) {
+                    [items removeObjectsInRange:NSMakeRange(maxCacheCount, items.count - maxCacheCount)];
+                }
+            }
+
+        }];
+        
+        
+    }];
+}
+
++(void)clearLatestMessageItemsWithPeer:(TLPeer *)peer {
+    
+    [ASQueue dispatchOnStageQueue:^{
+        [lastMessageItems removeObjectForKey:@(peer.peer_id)];
+    }];
+    
+}
+
 
 -(void)performCallback:(selectHandler)selectHandler result:(NSArray *)result range:(NSRange )range controller:(id)controller {
    
@@ -579,6 +628,7 @@ static ChatHistoryController *observer;
             }
             
             NSArray *converted = [self.controller messageTableItemsFromMessages:[filter proccessResponse:result state:state next:next]];
+            
             
             [self performCallback:selectHandler result:converted range:NSMakeRange(0, converted.count) controller:self];
             
@@ -808,10 +858,6 @@ static ChatHistoryController *observer;
                 
             }];
             
-            item.messageSender.conversation.last_marked_message = item.message.n_id;
-            item.messageSender.conversation.last_marked_date = item.message.date+1;
-            
-            [item.messageSender.conversation save];
             
             [item.messageSender send];
             
@@ -866,7 +912,7 @@ static ChatHistoryController *observer;
             conversation.last_marked_message = item.message.n_id;
             conversation.last_marked_date = item.message.date+1;
             
-            [LoopingUtils runOnMainQueueAsync:^{
+            [ASQueue dispatchOnMainQueue:^{
                 if(callback != nil)
                     callback();
             }];

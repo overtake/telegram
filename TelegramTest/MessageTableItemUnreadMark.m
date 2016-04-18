@@ -7,7 +7,7 @@
 //
 
 #import "MessageTableItemUnreadMark.h"
-
+#import "MessageTableCellUnreadMarkView.h"
 @implementation MessageTableItemUnreadMark
 
 
@@ -26,6 +26,10 @@
         _text = NSLocalizedString(@"Messages.UnreadMessages", nil);
     }
     return self;
+}
+
+-(Class)viewClass {
+    return [MessageTableCellUnreadMarkView class];
 }
 
 @end

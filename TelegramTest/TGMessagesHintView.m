@@ -13,6 +13,11 @@
 #import "MessagesBottomView.h"
 #import "TGMediaContextTableView.h"
 #import "TLBotInlineResult+Extension.h"
+#import "TGLocationRequest.h"
+#import "TGContextImportantRowView.h"
+#import "TGModalMessagesViewController.h"
+#import "ComposeActionCustomBehavior.h"
+#import "TGContextMessagesvViewController.h"
 @interface TL_botCommand (BotCommandCategory2)
 
 -(void)setUser:(TLUser *)user;
@@ -153,13 +158,13 @@ DYNAMIC_PROPERTY(DUser);
     
     int xOffset = item.imageObject == nil ? 10 : 30 + 15;
     
-   
+    
     
     if(self.isSelected) {
         
         [BLUE_COLOR_SELECT set];
         
-         NSRectFill(NSMakeRect(0, 0, NSWidth(dirtyRect) , NSHeight(dirtyRect)));
+        NSRectFill(NSMakeRect(0, 0, NSWidth(dirtyRect) , NSHeight(dirtyRect)));
     } else {
         
         TMTableView *table = item.table;
@@ -194,8 +199,12 @@ DYNAMIC_PROPERTY(DUser);
 @property (nonatomic,weak) TMTableView *currentTableView;
 @property (nonatomic,strong) TGMediaContextTableView *mediaContextTableView;
 
+@property (nonatomic,strong) TGLocationRequest *locationRequest;
+
+@property (nonatomic,strong) TGModalMessagesViewController *messagesModalView;
 
 @property (nonatomic,assign) BOOL isLockedWithRequest;
+
 
 @end
 
@@ -239,13 +248,15 @@ DYNAMIC_PROPERTY(DUser);
         
         [self addSubview:_tableView.containerView];
         
+        _mediaContextTableView = [[TGMediaContextTableView alloc]  initWithFrame:self.bounds];
+        
+        [self addSubview:_mediaContextTableView.containerView];
+        
         _contextTableView = [[TGContextBotTableView alloc]  initWithFrame:self.bounds];
         
         [self addSubview:_contextTableView.containerView];
         
-        _mediaContextTableView = [[TGMediaContextTableView alloc]  initWithFrame:self.bounds];
         
-        [self addSubview:_mediaContextTableView.containerView];
         
         
         
@@ -272,7 +283,7 @@ DYNAMIC_PROPERTY(DUser);
         
         _separator.backgroundColor = DIALOG_BORDER_COLOR;
         
-         _separator.autoresizingMask = NSViewWidthSizable | NSViewMinYMargin;
+        _separator.autoresizingMask = NSViewWidthSizable | NSViewMinYMargin;
         
         [self addSubview:_separator];
         
@@ -295,6 +306,9 @@ DYNAMIC_PROPERTY(DUser);
     cancel_delayed_block(_handle);
     [_contextRequest cancelRequest];
     
+    if(self.messagesViewController.state != MessagesViewControllerStateNone)
+        return;
+    
     if(conversation.type == DialogTypeSecretChat)
         return;
     
@@ -308,7 +322,7 @@ DYNAMIC_PROPERTY(DUser);
             
             NSString *cmd = command.command;
             
-            if((conversation.type == DialogTypeChat || conversation.type == DialogTypeChannel) && (user.flags & TGUSERFLAGREADHISTORY) != TGUSERFLAGREADHISTORY) {
+            if((conversation.type == DialogTypeChat || conversation.type == DialogTypeChannel) ) {
                 cmd = [cmd stringByAppendingString:[NSString stringWithFormat:@"@%@",user.username]];
             }
             
@@ -355,6 +369,9 @@ DYNAMIC_PROPERTY(DUser);
     cancel_delayed_block(_handle);
     [_contextRequest cancelRequest];
     
+    if(self.messagesViewController.state != MessagesViewControllerStateNone)
+        return;
+    
     __block NSMutableDictionary *tags;
     
     
@@ -382,14 +399,14 @@ DYNAMIC_PROPERTY(DUser);
     {
         list = [list filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.tag BEGINSWITH[c] %@",query]];
     }
-
+    
     
     NSMutableArray *items = [[NSMutableArray alloc] init];
     
     [list enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
         
         TGMessagesHintRowItem *item = [[TGMessagesHintRowItem alloc] initWithImageObject:nil text:[NSString stringWithFormat:@"#%@",obj[@"tag"]]desc:nil];
-                                       
+        
         item.result = obj[@"tag"];
         
         [items addObject:item];
@@ -406,11 +423,11 @@ DYNAMIC_PROPERTY(DUser);
         [self show:NO];
     else
         [self hide];
-   
+    
 }
 
 -(void)showMentionPopupWithQuery:(NSString *)query conversation:(TL_conversation *)conversation chat:(TLChat *)chat allowInlineBot:(BOOL)allowInlineBot choiceHandler:(void (^)(NSString *result))choiceHandler {
-   
+    
     _choiceHandler = choiceHandler;
     cancel_delayed_block(_handle);
     [_contextRequest cancelRequest];
@@ -419,12 +436,15 @@ DYNAMIC_PROPERTY(DUser);
     if(conversation.type == DialogTypeSecretChat && conversation.encryptedChat.encryptedParams.layer < 45)
         return;
     
+    if(self.messagesViewController.state != MessagesViewControllerStateNone)
+        return;
+    
     NSMutableArray *uids = [[NSMutableArray alloc] init];
     
     if(chat) {
-        TLChatFull *fullChat = [[FullChatManager sharedManager] find:chat.n_id];
+        TLChatFull *fullChat = [[ChatFullManager sharedManager] find:chat.n_id];
         
-         if(fullChat.participants.participants) {
+        if(fullChat.participants.participants) {
             [fullChat.participants.participants enumerateObjectsUsingBlock:^(TLChatParticipant * obj, NSUInteger idx, BOOL *stop) {
                 [uids addObject:@(obj.user_id)];
                 
@@ -439,7 +459,7 @@ DYNAMIC_PROPERTY(DUser);
                 
             }];
         }
-
+        
     }
     
     
@@ -465,16 +485,24 @@ DYNAMIC_PROPERTY(DUser);
             int botId = [bot[@"id"] intValue];
             
             TLUser *user = [[UsersManager sharedManager] find:botId];
-                                  //two weeks
+            //two weeks
             if(user && dateUsed + 14*60*60*24 > [[MTNetwork instance] getTime] && ([[user.username lowercaseString] hasPrefix:[query lowercaseString]] || query.length == 0)) {
                 [botUsers addObject:user];
             }
             
         }];
         
+        [botUsers sortUsingComparator:^NSComparisonResult(TLUser *obj1, TLUser *obj2) {
+            
+            NSComparisonResult result = [bots[@(obj1.n_id)][@"date"] compare:bots[@(obj2.n_id)][@"date"]];
+            
+            return result == NSOrderedAscending ? NSOrderedDescending : result == NSOrderedDescending ? NSOrderedAscending : NSOrderedSame;
+            
+        }];
+        
         
         users = [botUsers arrayByAddingObjectsFromArray:users];
-
+        
     }
     
     
@@ -487,7 +515,7 @@ DYNAMIC_PROPERTY(DUser);
         if(conversation.type == DialogTypeSecretChat && !obj.isBotInlinePlaceholder)
             return;
         
-        TGMessagesHintRowItem *item = [[TGMessagesHintRowItem alloc] initWithImageObject:obj text:obj.bot_inline_placeholder.length > 0 ? obj.bot_inline_placeholder : obj.fullName desc:[NSString stringWithFormat:@"@%@",obj.username]];
+        TGMessagesHintRowItem *item = [[TGMessagesHintRowItem alloc] initWithImageObject:obj text:obj.fullName desc:[NSString stringWithFormat:@"@%@",obj.username]];
         
         item.result = obj.username;
         
@@ -496,7 +524,7 @@ DYNAMIC_PROPERTY(DUser);
     
     
     [self setCurrentTableView:_tableView];
-
+    
     
     [_tableView removeAllItems:YES];
     
@@ -518,13 +546,21 @@ static NSMutableDictionary *inlineBotsExceptions;
     });
 }
 
+-(void)cancel {
+    [_contextRequest cancelRequest];
+    cancel_delayed_block(_handle);
+}
 
 
--(void)showContextPopupWithQuery:(NSString *)bot query:(NSString *)query conversation:(TL_conversation *)conversation  {
+-(void)showContextPopupWithQuery:(NSString *)bot query:(NSString *)query conversation:(TL_conversation *)conversation acceptHandler:(void (^)(TLUser *user))acceptHandler  {
     
+    [self cancel];
     
-    if(inlineBotsExceptions[bot])
+    //|| self.messagesViewController.class == [TGContextMessagesvViewController class]
+    
+    if(inlineBotsExceptions[bot] || self.messagesViewController.state != MessagesViewControllerStateNone)
         return;
+    
     
     if(self.messagesViewController.templateType == TGInputMessageTemplateTypeEditMessage || (conversation.type == DialogTypeSecretChat && conversation.encryptedChat.encryptedParams.layer < 45))
         return;
@@ -536,6 +572,10 @@ static NSMutableDictionary *inlineBotsExceptions;
     if(user && (!user.isBot || !user.isBotInlinePlaceholder)) {
         return;
     }
+    
+    if(user && acceptHandler)
+        acceptHandler(user);
+    
     
     __block NSString *offset = @"";
     
@@ -550,108 +590,174 @@ static NSMutableDictionary *inlineBotsExceptions;
     cancel_delayed_block(_handle);
     
     
-    
-    
     _handle = perform_block_after_delay(0.4, ^{
         
         __block BOOL forceNextLoad = NO;
         
+        __block TL_inputGeoPoint *geo = nil;
+        
         dispatch_block_t performQuery = ^{
             
-            [_contextRequest cancelRequest];
             
-            [self.messagesViewController.bottomView setProgress:offset.length == 0];
-            
-            _isLockedWithRequest = YES;
-
-            _contextRequest = [RPCRequest sendRequest:[TLAPI_messages_getInlineBotResults createWithBot:user.inputUser query:query offset:offset] successHandler:^(id request, TL_messages_botResults *response) {
+            dispatch_block_t block = ^{
+                [_contextRequest cancelRequest];
                 
-                [self.messagesViewController.bottomView setProgress:NO];
+                [self.messagesViewController.bottomView setProgress:offset.length == 0];
                 
-                if(self.messagesViewController.conversation == conversation && request == _contextRequest) {
+                _isLockedWithRequest = YES;
+                
+                _contextRequest = [RPCRequest sendRequest:[TLAPI_messages_getInlineBotResults createWithFlags:geo ? (1 << 0) : 0 bot:user.inputUser peer:conversation.inputPeer geo_point:geo query:query offset:offset] successHandler:^(id request, TL_messages_botResults *response) {
                     
-                    forceNextLoad = offset.length == 0 && response.next_offset.length > 0;
+                    [self.messagesViewController.bottomView setProgress:NO];
                     
-                    offset = response.next_offset;
-                    
-                    NSMutableArray *items = [NSMutableArray array];
-                    
-                    if(!response.isGallery) {
+                    if(self.messagesViewController.conversation == conversation && request == _contextRequest) {
                         
+                        forceNextLoad = offset.length == 0 && response.next_offset.length > 0 && response.results.count <=3;
                         
-                        [response.results enumerateObjectsUsingBlock:^(TLBotInlineResult *obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                        offset = ![offset isEqualToString:response.next_offset] &&  response.next_offset.length > 0 && response.results.count > 0 ? response.next_offset : nil;
+                        
+                        NSMutableArray *items = [NSMutableArray array];
+                        
+                        if(!response.isGallery) {
                             
-                            TGContextRowItem *item = [[TGContextRowItem alloc] initWithObject:obj bot:user queryId:response.query_id];
+                            if(response.switch_pm != nil && _contextTableView.count == 0) {
+                                TGContextImportantRowItem *important = [[TGContextImportantRowItem alloc] initWithObject:response.switch_pm bot:user];
+                                
+                                [items addObject:important];
+                            }
                             
-                            [items addObject:item];
+                            [response.results enumerateObjectsUsingBlock:^(TLBotInlineResult *obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                                
+                                
+                                TGContextRowItem *item = [[TGContextRowItem alloc] initWithObject:obj bot:user queryId:response.query_id];
+                                
+                                [items addObject:item];
+                                
+                            }];
                             
-                        }];
+                            [self setCurrentTableView:_contextTableView];
+                            
+                            if(_contextTableView.count > 0) {
+                                [_contextTableView reloadDataForRowIndexes:[NSIndexSet indexSetWithIndex:_contextTableView.count-1] columnIndexes:[NSIndexSet indexSetWithIndex:0]];
+                            }
+                            
+                            [_contextTableView insert:items startIndex:_contextTableView.count tableRedraw:YES];
+                            
+                            [self updateFrames:YES];
+                            
+                            
+                        } else {
+                            
+                            if(response.switch_pm != nil && _mediaContextTableView.count == 0) {
+                                TGContextImportantRowItem *important = [[TGContextImportantRowItem alloc] initWithObject:response.switch_pm bot:user];
+                                
+                                [items addObject:important];
+                            }
+                            
+                            [response.results enumerateObjectsUsingBlock:^(TLBotInlineResult *obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                                [obj setQueryId:response.query_id];
+                                [items addObject:obj];
+                            }];
+                            
+                            [_mediaContextTableView drawResponse:items];
+                            
+                            [self setCurrentTableView:_mediaContextTableView];
+                        }
                         
-                        [self setCurrentTableView:_contextTableView];
-                        
-                        [_contextTableView insert:items startIndex:_contextTableView.count tableRedraw:YES];
-                        
-                        [self updateFrames:YES];
+                        [_mediaContextTableView setMessagesViewController:self.messagesViewController];
                         
                         
-                    } else {
+                        if(items.count > 0) {
+                            if(self.alphaValue == 0.0f)
+                                [self show:NO];
+                        } else if(_currentTableView.count == 0)
+                            [self hide];
                         
-                        [response.results enumerateObjectsUsingBlock:^(TLBotInlineResult *obj, NSUInteger idx, BOOL * _Nonnull stop) {
-                            [obj setQueryId:response.query_id];
-                            [items addObject:obj];  
-                        }];
                         
-                        [_mediaContextTableView drawResponse:items];
                         
-                        [self setCurrentTableView:_mediaContextTableView];
+                    } else if(_currentTableView == _mediaContextTableView) {
+                        [self hide];
                     }
                     
-                    [_mediaContextTableView setMessagesViewController:self.messagesViewController];
+                    weak();
+                    
+                    [_mediaContextTableView setChoiceHandler:^(TLBotInlineResult *botResult) {
+                        
+                        __strong TGMessagesHintView *strongSelf = weakSelf;
+                        
+                        if(strongSelf != nil) {
+                            
+                            if([botResult isKindOfClass:[TGContextImportantRowItem class]]) {
+                                [strongSelf performSelected];
+                            } else {
+                                [strongSelf.messagesViewController sendContextBotResult:botResult via_bot_id:user.n_id via_bot_name:user.username queryId:botResult.queryId forConversation:conversation];
+                                [strongSelf.messagesViewController.bottomView setInputMessageString:@"" disableAnimations:NO];
+                            }
+                            
+                        }
+                        
+                    }];
                     
                     
-                    if(items.count > 0) {
-                        if(self.alphaValue == 0.0f)
-                            [self show:NO];
-                    } else
-                        [self hide];
                     
+                    _isLockedWithRequest = NO;
+                    k++;
                     
-
-                } else if(_currentTableView == _mediaContextTableView) {
-                    [self hide];
-                }
+                    if(forceNextLoad && _mediaContextTableView.needLoadNext) {
+                        _mediaContextTableView.needLoadNext(YES);
+                    }
+                    
+                } errorHandler:^(id request, RpcError *error) {
+                    _isLockedWithRequest = NO;
+                    [self.messagesViewController.bottomView setProgress:NO];
+                }];
+            };
+            
+            
+            
+            if(user.isBot_inline_geo && !geo && !_locationRequest) {
                 
                 weak();
                 
-                [_mediaContextTableView setChoiceHandler:^(TLBotInlineResult *botResult) {
+                [SettingsArchiver requestPermissionWithKey:kPermissionInlineBotLocationRequest peer_id:user.n_id handler:^(bool success) {
                     
-                    __strong TGMessagesHintView *strongSelf = weakSelf;
-                    
-                    if(strongSelf != nil) {
-                        [strongSelf.messagesViewController sendContextBotResult:botResult via_bot_id:user.n_id via_bot_name:user.username queryId:botResult.queryId forConversation:conversation];
-                        [strongSelf.messagesViewController.bottomView setInputMessageString:@"" disableAnimations:NO];
+                    if(success) {
+                        
+                        _locationRequest = [[TGLocationRequest alloc] init];
+                        
+                        [_locationRequest startRequestLocation:^(CLLocation *location) {
+                            
+                            weakSelf.locationRequest = nil;
+                            
+                            geo = [TL_inputGeoPoint createWithLat:location.coordinate.latitude n_long:location.coordinate.longitude];
+                            
+                            block();
+                            
+                        } failback:^(NSString *error) {
+                            alert(appName(), error);
+                        }];
+                        
+                        
+                    } else {
+                        block();
                     }
                     
                 }];
-                
-               
-                
-                _isLockedWithRequest = NO;
-                k++;
-                
-                if(forceNextLoad && _mediaContextTableView.needLoadNext) {
-                    _mediaContextTableView.needLoadNext(YES);
-                }
-                
-            } errorHandler:^(id request, RpcError *error) {
-                _isLockedWithRequest = NO;
-            }];
+            } else
+                block();
             
         };
         
-
+        
         
         [_mediaContextTableView setNeedLoadNext:^(BOOL next) {
+            if(forceNextLoad || (next && !_isLockedWithRequest && offset.length > 0)) {
+                performQuery();
+            }
+            
+        }];
+        
+        [_contextTableView setNeedLoadNext:^(BOOL next) {
             if(forceNextLoad || (next && !_isLockedWithRequest && offset.length > 0)) {
                 performQuery();
             }
@@ -674,6 +780,9 @@ static NSMutableDictionary *inlineBotsExceptions;
                     
                     performQuery();
                     
+                    if(user && acceptHandler)
+                        acceptHandler(user);
+                    
                 }  else {
                     
                     TLAPI_contacts_resolveUsername *req = request.object;
@@ -681,7 +790,7 @@ static NSMutableDictionary *inlineBotsExceptions;
                     inlineBotsExceptions[req.username] = @(1);
                 }
                 
-               
+                
                 
             } errorHandler:^(id request, RpcError *error) {
                 
@@ -730,9 +839,9 @@ static NSMutableDictionary *inlineBotsExceptions;
     NSUInteger height = MIN(_currentTableView.count * 40, 140 );
     
     if(_currentTableView == _mediaContextTableView) {
-        height = _currentTableView.count == 1 ? 100 : 200;
+        height = MIN(_mediaContextTableView.hintHeight,200);
     } else if(_currentTableView == _contextTableView) {
-        height = MIN(_currentTableView.count * 60, 180 );
+        height = MIN(_contextTableView.hintHeight, 180 );
     }
     
     if(animated) {
@@ -761,7 +870,7 @@ static NSMutableDictionary *inlineBotsExceptions;
 
 
 -(void)hide {
-        
+    
     [self hide:NO];
     [_tableView removeAllItems:YES];
     [_contextTableView removeAllItems:YES];
@@ -792,6 +901,40 @@ static NSMutableDictionary *inlineBotsExceptions;
 }
 
 -(void)performSelected {
+    
+    if(_currentTableView == _mediaContextTableView)
+        return;
+    
+    TGContextRowItem *item = (TGContextRowItem *)_currentTableView.selectedItem;
+    
+    if([item isKindOfClass:[TGContextImportantRowItem class]]) {
+        
+        TGContextImportantRowItem *importantItem = ( TGContextImportantRowItem *)item;
+        
+        [_messagesModalView close:YES];
+        
+        _messagesModalView = [[TGModalMessagesViewController alloc] initWithFrame:self.window.contentView.bounds];
+        
+        [_messagesModalView show:self.window animated:YES];
+        
+        ComposeAction *action = [[ComposeAction alloc] initWithBehaviorClass:[ComposeActionCustomBehavior class] filter:nil object:importantItem.bot.dialog];
+        
+        ComposeActionCustomBehavior *behavior = (ComposeActionCustomBehavior *) action.behavior;
+        
+        weak();
+        
+        [behavior setComposeDone:^{
+            [weakSelf.messagesViewController.bottomView updateText];
+        }];
+        
+        action.reservedObject1 = item.botResult;
+        action.reservedObject2 = item.bot;
+        action.reservedObject3 =  _messagesViewController.conversation;
+        [_messagesModalView setAction:action];
+        
+        return;
+    }
+    
     if(_choiceHandler != nil)
     {
         TGMessagesHintRowItem *item = (TGMessagesHintRowItem *) _tableView.selectedItem;
@@ -799,11 +942,12 @@ static NSMutableDictionary *inlineBotsExceptions;
         if(item != nil) {
             _choiceHandler(item.result);
         }
-     } else if(_currentTableView == _contextTableView) {
-        TGContextRowItem *item = (TGContextRowItem *)_contextTableView.selectedItem;
+    } else if(_currentTableView == _contextTableView) {
         
-         [self.messagesViewController sendContextBotResult:item.botResult via_bot_id:item.bot.n_id via_bot_name:item.bot.username queryId:item.queryId forConversation:self.messagesViewController.conversation];
+        [self.messagesViewController sendContextBotResult:item.botResult via_bot_id:item.bot.n_id via_bot_name:item.bot.username queryId:item.queryId forConversation:self.messagesViewController.conversation];
         [self.messagesViewController.bottomView setInputMessageString:@"" disableAnimations:NO];
+        
+        
     }
     
     [self hide:YES];
@@ -819,10 +963,28 @@ static NSMutableDictionary *inlineBotsExceptions;
         selectedIndex = 0;
     }
     
-    [_currentTableView setSelectedObject:[_currentTableView itemAtPosition:selectedIndex]];
+    if(selectedIndex < _currentTableView.count)
+    {
+        
+        id item = [_currentTableView itemAtPosition:selectedIndex];
+        [_currentTableView setSelectedObject:item];
+        
+        if([item isKindOfClass:[TGContextImportantRowItem class]])
+        {
+            if(_currentTableView.count > 1) {
+                [self selectNext];
+                return;
+            }
+            
+        }
+        
+        
+        
+        [_currentTableView.scrollView.clipView scrollRectToVisible:[_currentTableView rectOfRow:selectedIndex] animated:NO];
+    }
     
-    [_currentTableView.scrollView.clipView scrollRectToVisible:[_currentTableView rectOfRow:selectedIndex] animated:NO];
-
+    
+    
 }
 -(void)selectPrev {
     NSUInteger selectedIndex = _currentTableView.selectedItem == nil ? _currentTableView.count : [_currentTableView indexOfItem:_currentTableView.selectedItem];
@@ -830,14 +992,28 @@ static NSMutableDictionary *inlineBotsExceptions;
     selectedIndex--;
     
     if(selectedIndex == -1) {
-        selectedIndex = _currentTableView.count-1;
+        selectedIndex =  MAX(_currentTableView.count-1,0);
     }
     
-    [_currentTableView setSelectedObject:[_currentTableView itemAtPosition:selectedIndex]];
-    
-    [_currentTableView.scrollView.clipView scrollRectToVisible:[_currentTableView rectOfRow:selectedIndex] animated:NO];
+    if(selectedIndex < _currentTableView.count)
+    {
+        id item = [_currentTableView itemAtPosition:selectedIndex];
+        [_currentTableView setSelectedObject:item];
+        
+        if([item isKindOfClass:[TGContextImportantRowItem class]])
+        {
+            if(_currentTableView.count > 1) {
+                [self selectPrev];
+                return;
+            }
+            
+        }
+        
+        
+        
+        [_currentTableView.scrollView.clipView scrollRectToVisible:[_currentTableView rectOfRow:selectedIndex] animated:NO];
+    }
 }
-
 
 -(void)setCurrentTableView:(TMTableView *)currentTableView {
     

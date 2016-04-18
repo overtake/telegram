@@ -1,4 +1,4 @@
-//
+ //
 //  MessageTableNavigationTitleView.m
 //  Messenger for Telegram
 //
@@ -13,6 +13,7 @@
 #import "TGAnimationBlockDelegate.h"
 #import "TGTimerTarget.h"
 #import "ITSwitch.h"
+#import "TGContextMessagesvViewController.h"
 @interface MessageTableNavigationTitleView()<TMTextFieldDelegate, TMSearchTextFieldDelegate>
 @property (nonatomic, strong) TMNameTextField *nameTextField;
 @property (nonatomic, strong) TMStatusTextField *statusTextField;
@@ -86,7 +87,7 @@
         
         [_searchButton setImage:image_SearchMessages() forControlState:BTRControlStateNormal];
         
-        [_searchButton setToolTip:@"cmd+f"];
+        [_searchButton setToolTip:@"CMD + F"];
         
         [self.container addSubview:_searchButton];
         
@@ -138,6 +139,16 @@
 }
 
 -(void)setFrameSize:(NSSize)newSize {
+    
+    
+    if(!CGRectIsEmpty(self.frame) && ![self inLiveResize]) {
+        int dif = (NSWidth(self.frame) - newSize.width)/2.0f;
+        
+        [_searchButton setFrameOrigin:NSMakePoint(NSMinX(_searchButton.frame) - dif, 10)];
+        
+    } else {
+        [_searchButton setFrameOrigin:NSMakePoint(newSize.width - image_SearchMessages().size.width - 10, 10)];
+    }
     [super setFrameSize:newSize];
     
     [self buildForSize:newSize];
@@ -150,7 +161,7 @@
 - (void)setDialog:(TL_conversation *)dialog {
     self->_dialog = dialog;
     
-
+    [_searchButton setFrameOrigin:NSMakePoint(NSWidth(self.frame) - image_SearchMessages().size.width - 10, 10)];
    // [_searchButton setHidden:self.dialog.type == DialogTypeChannel];
     
     [self enableDiscussion:_discussionSwitch.isOn force:NO];
@@ -159,14 +170,20 @@
     [self.nameTextField updateWithConversation:self.dialog];
 
     [self.statusTextField updateWithConversation:self.dialog];
-
     
 
-    
-    
+
 }
 
+-(void)setController:(MessagesViewController *)controller {
+    _controller = controller;
+    
+    [_searchButton setHidden:controller.class == [TGContextMessagesvViewController class]];
+}
 
+-(void)setState:(MessagesViewControllerState)state {
+    _state = state;
+}
 
 
 
@@ -187,7 +204,8 @@
     
     [self.statusTextField setFrameOrigin:NSMakePoint(NSMinX(self.statusTextField.frame), 7)];
     
-    [_searchButton setFrameOrigin:NSMakePoint(NSWidth(self.container.frame) - NSWidth(_searchButton.frame) +5, 10)];
+    
+  
     
     
     [_discussionSwitch setCenteredXByView:_discussionSwitch.superview];

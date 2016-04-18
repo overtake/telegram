@@ -18,9 +18,8 @@
 #import "TGCaptionView.h"
 #import "TGExternalImageObject.h"
 
-@interface MessageTableCellPhotoView()<TGImageObjectDelegate>
-@property (nonatomic,strong) NSImageView *fireImageView;
-@property (nonatomic,strong) TGCaptionView *captionView;
+@interface MessageTableCellPhotoView()
+@property (nonatomic,strong) NSImageView *secretImageView;
 
 @property (nonatomic,assign) NSPoint startDragLocation;
 
@@ -59,19 +58,11 @@ NSImage *fireImage() {
     if (self) {
         weak();
         
-        self.containerView.isFlipped = YES;
-        
-        self.imageView = [[BluredPhotoImageView alloc] initWithFrame:NSMakeRect(0, 0, 20, 20)];
-        [self.imageView setWantsLayer:YES];
+        self.imageView = [[TGImageView alloc] initWithFrame:NSMakeRect(0, 0, 20, 20)];
         self.imageView.cornerRadius = 4;
-        [self.imageView setBorderColor:NSColorFromRGB(0xf3f3f3)];
-        [self.imageView setBorderWidth:1];
-
-      //  [self.imageView setContentMode:BTRViewContentModeCenter];
-        
+        [self.imageView setContentMode:BTRViewContentModeScaleAspectFill];
         [self.imageView setTapBlock:^{
             PreviewObject *object = [[PreviewObject alloc] initWithMsdId:weakSelf.item.message.n_id media:weakSelf.item.message peer_id:weakSelf.item.message.peer_id];
-            
             
             if(!weakSelf.item.isset)
                 return;
@@ -93,17 +84,9 @@ NSImage *fireImage() {
         }];
         
 
-        
         [self setProgressToView:self.imageView];
-
-        
         [self.containerView addSubview:self.imageView];
-        
         [self setProgressStyle:TMCircularProgressDarkStyle];
-        
-      //  [self.imageView setContentMode:BTRViewContentModeCenter];
-        
-        
         
     }
     return self;
@@ -112,7 +95,6 @@ NSImage *fireImage() {
 
 -(void)openInQuickLook:(id)sender {
     PreviewObject *previewObject = [[PreviewObject alloc] initWithMsdId:self.item.message.n_id media:self.item.message peer_id:self.item.message.peer_id];
-    
     
     if(!self.item.isset)
         return;
@@ -125,6 +107,10 @@ NSImage *fireImage() {
 }
 
 - (NSMenu *)contextMenu {
+    
+    if([self.item.message isKindOfClass:[TL_destructMessage class]])
+        return [super contextMenu];
+    
     NSMenu *menu = [[NSMenu alloc] initWithTitle:@"Photo menu"];
     
     [menu addItem:[NSMenuItem menuItemWithTitle:NSLocalizedString(@"Context.OpenInQuickLook", nil) withBlock:^(id sender) {
@@ -136,9 +122,6 @@ NSImage *fireImage() {
     [menu addItem:[NSMenuItem menuItemWithTitle:NSLocalizedString(@"Context.SaveAs", nil) withBlock:^(id sender) {
         [self performSelector:@selector(saveAs:) withObject:self];
     }]];
-    
-    
-   
     
     [menu addItem:[NSMenuItem menuItemWithTitle:NSLocalizedString(@"Context.CopyToClipBoard", nil) withBlock:^(id sender) {
         [self performSelector:@selector(copy:) withObject:self];
@@ -156,45 +139,31 @@ NSImage *fireImage() {
 }
 
 
-- (void)initFireImage {
-    if(!self.fireImageView) {
-        self.fireImageView = imageViewWithImage(fireImage());
+- (void)initSecretImage {
+    if(!_secretImageView) {
+        _secretImageView = imageViewWithImage(fireImage());
         
-        [self.fireImageView setHidden:YES];
+        [_secretImageView setHidden:YES];
         
-        [self.imageView addSubview:self.fireImageView];
+        [self.imageView addSubview:_secretImageView];
 
     }
 }
 
-- (void)deallocFireImage {
-    [self.fireImageView removeFromSuperview];
-    self.fireImageView = nil;
+- (void)deallocSecretImage {
+    [_secretImageView removeFromSuperview];
+    _secretImageView = nil;
 }
 
 
 
--(void)initCaptionTextView {
-    if(!_captionView) {
-        _captionView = [[TGCaptionView alloc] initWithFrame:NSZeroRect];
-        [self.containerView addSubview:_captionView];
-    }
-}
 
-
-- (void)deallocCaptionTextView {
-    [_captionView removeFromSuperview];
-    _captionView = nil;
-}
-
-
--(void)setCellState:(CellState)cellState {
+-(void)setCellState:(CellState)cellState animated:(BOOL)animated {
     
+    MessageTableItemPhoto *item = (MessageTableItemPhoto *)self.item;
     
-     MessageTableItemPhoto *item = (MessageTableItemPhoto *)self.item;
-    
-    if(self.cellState == CellStateSending && cellState == CellStateNormal) {
-        [super setCellState:cellState];
+     if(self.cellState == CellStateSending && cellState == CellStateNormal) {
+        [super setCellState:cellState animated:animated];
         
         if([item.imageObject isKindOfClass:[TGExternalImageObject class]]) {
             [self.item doAfterDownload];
@@ -202,37 +171,24 @@ NSImage *fireImage() {
             [self updateDownloadListeners];
         }
         
-    }
-    
-    
-    [super setCellState:cellState];
-    
-    
-   
+     }
     
     [self.progressView setImage:cellState == CellStateSending ? image_DownloadIconWhite() : nil forState:TMLoaderViewStateNeedDownload];
     [self.progressView setImage:cellState == CellStateSending ? image_LoadCancelWhiteIcon() : nil forState:TMLoaderViewStateDownloading];
     [self.progressView setImage:cellState == CellStateSending ? image_LoadCancelWhiteIcon() : nil forState:TMLoaderViewStateUploading];
 
-    
-    
-    BOOL isNeedSecretBlur = ([self.item.message isKindOfClass:[TL_destructMessage class]] && ((TL_destructMessage *)self.item.message).ttl_seconds < 60*60 && ((TL_destructMessage *)self.item.message).ttl_seconds > 0);
 
     
-    [self deallocFireImage];
+    [self deallocSecretImage];
     
     if(cellState == CellStateNormal) {
         
-        if(isNeedSecretBlur)
-            [self initFireImage];
+        if(item.isSecretPhoto)
+            [self initSecretImage];
         
-        [self.imageView setIsAlwaysBlur:isNeedSecretBlur];
-        [self.fireImageView setHidden:!isNeedSecretBlur];
-        [self.fireImageView setCenterByView:self.imageView];
+        [_secretImageView setHidden:!item.isSecretPhoto];
+        [_secretImageView setCenterByView:self.imageView];
     }
-    
-    
-    
     
     
     [self.progressView setHidden:self.item.isset && cellState != CellStateSending];
@@ -247,9 +203,9 @@ NSImage *fireImage() {
         
     }
     
-    [self.progressView setState:cellState];
-    
     [self.progressView setCenterByView:self.imageView];
+    
+    [super setCellState:cellState animated:animated];
 }
 
 - (void) setItem:(MessageTableItemPhoto *)item {
@@ -259,26 +215,13 @@ NSImage *fireImage() {
     
     self.imageView.object = item.imageObject;
     
-    [self.imageView setFrameSize:item.imageSize];
+    [self.imageView setFrameSize:item.contentSize];
 
-    [self updateCellState];
+    [self updateCellState:NO];
     
     
     [self updateDownloadListeners];
     
-    
-    if(item.caption) {
-        [self initCaptionTextView];
-        
-        [_captionView setFrame:NSMakeRect(0, NSHeight(self.containerView.frame) - item.captionSize.height , item.imageSize.width, item.captionSize.height)];
-        
-        [_captionView setAttributedString:item.caption fieldSize:item.captionSize];
-        
-        [_captionView setItem:item];
-        
-    } else {
-        [self deallocCaptionTextView];
-    }
         
 }
 
@@ -299,68 +242,40 @@ NSImage *fireImage() {
                 
             }];
         }
-        
-        
-        
+
     }];
     
     [item.imageObject.supportDownloadListener setCompleteHandler:^(DownloadItem *item) {
          strongWeak();
         
         if(strongSelf == weakSelf) {
-            
-        }[ASQueue dispatchOnMainQueue:^{
-            [strongSelf.progressView setProgress:100 animated:YES];
-            
-            dispatch_after_seconds(0.2, ^{
-                [strongSelf updateCellState];
-            });
-        }];
-        
-        
+            [ASQueue dispatchOnMainQueue:^{
+                [strongSelf.progressView setProgress:100 animated:YES];
+                
+                [strongSelf updateCellState:YES];
+            }];
+        }
     }];
     
 }
 
 
-
--(void)clearSelection {
-    [super clearSelection];
-    [_captionView.textView setSelectionRange:NSMakeRange(NSNotFound, 0)];
-}
-
--(BOOL)mouseInText:(NSEvent *)theEvent {
-    return [_captionView.textView mouseInText:theEvent] || [super mouseInText:theEvent];
-}
-
--(void)setEditable:(BOOL)editable animation:(BOOL)animation
+-(void)setEditable:(BOOL)editable animated:(BOOL)animated
 {
-    [super setEditable:editable animation:animation];
     self.imageView.isNotNeedHackMouseUp = editable;
+    [super setEditable:editable animated:animated];
 }
 
--(void)drawRect:(NSRect)dirtyRect {
-    [super drawRect:dirtyRect];
-    
-    const int borderOffset = self.imageView.borderWidth;
-    const int borderSize = borderOffset*2;
-    
-    NSRect rect = NSMakeRect(self.containerView.frame.origin.x-borderOffset, NSMinY(self.containerView.frame) + NSHeight(self.containerView.frame) - NSHeight(self.imageView.frame) - borderOffset, NSWidth(self.imageView.frame)+borderSize, NSHeight(self.imageView.frame)+borderSize);
-    
-    NSBezierPath *path = [NSBezierPath bezierPathWithRoundedRect:rect xRadius:self.imageView.cornerRadius yRadius:self.imageView.cornerRadius];
-    [path addClip];
-    
-    
-    [self.imageView.borderColor set];
-    NSRectFill(rect);
-}
 
 -(void)mouseDown:(NSEvent *)theEvent {
     
-    _startDragLocation = [self.containerView convertPoint:[theEvent locationInWindow] fromView:nil];
-    
-    if([_imageView mouse:_startDragLocation inRect:_imageView.frame])
-        return;
+    if(!self.isEditable) {
+        _startDragLocation = [self.containerView convertPoint:[theEvent locationInWindow] fromView:nil];
+        
+        if([_imageView mouse:_startDragLocation inRect:_imageView.frame])
+            return;
+
+    }
     
     [super mouseDown:theEvent];
 }
@@ -375,7 +290,7 @@ NSImage *fireImage() {
     NSPoint eventLocation = [self.imageView convertPoint: [theEvent locationInWindow] fromView: nil];
    
     if([self.imageView hitTest:eventLocation]) {
-        NSPoint dragPosition = NSMakePoint(80, 8);
+        NSPoint dragPosition = [self convertPoint:self.imageView.frame.origin fromView:self.imageView];
         
         NSString *path = locationFilePath(((MessageTableItemPhoto *)self.item).imageObject.location,@"jpg");
         
@@ -390,7 +305,6 @@ NSImage *fireImage() {
         
         dragImage = [ImageUtils imageResize:dragImage newSize:self.imageView.frame.size];
         
-        
         [pasteBrd setData:[self.imageView.image TIFFRepresentation] forType:NSTIFFPboardType];
         
         [pasteBrd setPropertyList:@[path] forType:NSFilenamesPboardType];
@@ -403,58 +317,8 @@ NSImage *fireImage() {
 }
 
 
--(void)_didChangeBackgroundColorWithAnimation:(POPBasicAnimation *)anim toColor:(NSColor *)color {
-    
-    [super _didChangeBackgroundColorWithAnimation:anim toColor:color];
-    
-    if(!_captionView.textView) {
-        return;
-    }
-    
-    
-    if(!anim) {
-        _captionView.textView.backgroundColor = color;
-        return;
-    }
-    
-    POPBasicAnimation *animation = [POPBasicAnimation animation];
-    
-    animation.property = [POPAnimatableProperty propertyWithName:@"background" initializer:^(POPMutableAnimatableProperty *prop) {
-        
-        [prop setReadBlock:^(TGCTextView *textView, CGFloat values[]) {
-            POPCGColorGetRGBAComponents(textView.backgroundColor.CGColor, values);
-        }];
-        
-        [prop setWriteBlock:^(TGCTextView *textView, const CGFloat values[]) {
-            CGColorRef color = POPCGColorRGBACreate(values);
-            textView.backgroundColor = [NSColor colorWithCGColor:color];
-        }];
-        
-    }];
-    
-    animation.toValue = anim.toValue;
-    animation.fromValue = anim.fromValue;
-    animation.duration = anim.duration;
-    animation.removedOnCompletion = YES;
-    [_captionView.textView pop_addAnimation:animation forKey:@"background"];
-    
-    
-}
 
 
-
--(void)_colorAnimationEvent {
-    
-    if(!_captionView.textView)
-        return;
-    
-    CALayer *currentLayer = (CALayer *)[_captionView.textView.layer presentationLayer];
-    
-    id value = [currentLayer valueForKeyPath:@"backgroundColor"];
-    
-    _captionView.textView.layer.backgroundColor = (__bridge CGColorRef)(value);
-    [_captionView.textView setNeedsDisplay:YES];
-}
 
 -(void)dealloc {
     MessageTableItemPhoto *item = (MessageTableItemPhoto *) self.item;

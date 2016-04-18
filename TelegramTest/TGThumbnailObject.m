@@ -40,7 +40,13 @@
             
             NSImage* thumbImg = [[NSImage alloc] initWithCGImage:im size:self.imageSize];
             
-            thumbImg = decompressedImage(thumbImg);
+            if(self.imageProcessor) {
+                thumbImg = self.imageProcessor(thumbImg,self.imageSize);
+            } else {
+                 thumbImg = decompressedImage(thumbImg);
+            }
+            
+           
             
             [TGCache cacheImage:thumbImg forKey:[self cacheKey] groups:@[IMGCACHE]];
             

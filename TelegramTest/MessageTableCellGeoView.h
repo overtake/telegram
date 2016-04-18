@@ -8,7 +8,7 @@
 
 #import "MessageTableCellContainerView.h"
 #import "MessageTableItemGeo.h"
-
-@interface MessageTableCellGeoView : MessageTableCellContainerView
+#import "TGModernMessageCellContainerView.h"
+@interface MessageTableCellGeoView : TGModernMessageCellContainerView
 
 @end

@@ -83,7 +83,7 @@
         self.progressColor = NSColorFromRGB(0xffffff);
     } else {
         
-        self.progressColor = NSColorFromRGB(0xa0a0a0);
+        self.progressColor = NSColorFromRGB(0xffffff); // NSColorFromRGB(0xa0a0a0);
     }
     
     [self setNeedsDisplay:YES];
@@ -139,7 +139,7 @@ float ease(float t, float b, float c, float d) {
         return;
     
     
-    const int topPadding = 1;
+    const int topPadding = 4;
     
     int radius = roundf(self.frame.size.width / 2 - topPadding);
     
@@ -170,7 +170,7 @@ float ease(float t, float b, float c, float d) {
     
     [self.progressColor setStroke];
     
-    [path setLineWidth:2];
+    [path setLineWidth:2.5];
     [path setLineCapStyle:NSRoundLineCapStyle];
     
     NSAffineTransform * transform = [NSAffineTransform transform];
@@ -280,7 +280,7 @@ float ease(float t, float b, float c, float d) {
     
     
     
-    if(![self pop_animationForKey:@"rotate"]) {
+    if(![self pop_animationForKey:@"rotate"] && !_disableRotating) {
 
         
         

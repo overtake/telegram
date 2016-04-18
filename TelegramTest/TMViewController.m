@@ -100,6 +100,10 @@
     return (TMView *) self.backButton;
 }
 
+-(TMView *)standartRightBarView {
+    return nil;
+}
+
 
 -(void)setCenterBarViewText:(NSString *)text {
     
@@ -201,13 +205,13 @@ static TGModalSetCaptionView *setCaptionView;
 +(void)showModalProgress {
     
     if(!progressView) {
-        progressView = [[TMProgressModalView alloc] initWithFrame:[appWindow().contentView bounds]];
+        progressView = [[TMProgressModalView alloc] initWithFrame:[appWindow().contentView.subviews[0] bounds]];
         
         progressView.layer.opacity = 0;
         
-        [progressView setCenterByView:appWindow().contentView];
+        [progressView setCenterByView:appWindow().contentView.subviews[0]];
         
-         [appWindow().contentView addSubview:progressView];
+         [appWindow().contentView.subviews[0] addSubview:progressView];
     }
     
    
@@ -245,7 +249,7 @@ static TGModalSetCaptionView *setCaptionView;
 
 +(POPBasicAnimation *)popAnimationForProgress:(float)from to:(float)to {
     POPBasicAnimation *anim = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerOpacity];
-    anim.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
+    anim.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseIn];
     anim.fromValue = @(from);
     anim.toValue = @(to);
     anim.duration = 0.2;
@@ -263,13 +267,13 @@ static TGModalSetCaptionView *setCaptionView;
     
     if(!setCaptionView) {
         
-        setCaptionView = [[TGModalSetCaptionView alloc] initWithFrame:[[[Telegram delegate] window].contentView bounds]];
+        setCaptionView = [[TGModalSetCaptionView alloc] initWithFrame:[appWindow().contentView.subviews[0] bounds]];
         
         setCaptionView.layer.opacity = 0;
         
-         [setCaptionView setCenterByView:[[Telegram delegate] window].contentView];
+         [setCaptionView setCenterByView:appWindow().contentView.subviews[0] ];
         
-        [[[Telegram delegate] window].contentView addSubview:setCaptionView];
+        [appWindow().contentView.subviews[0] addSubview:setCaptionView];
     } else {
         return;
     }
@@ -306,7 +310,7 @@ static TGModalSetCaptionView *setCaptionView;
 +(BOOL)isModalActive {
     __block BOOL res = NO;
     
-    NSView *view = [[Telegram delegate] window].contentView;
+    NSView *view = appWindow().contentView.subviews[0];
     
     [view.subviews enumerateObjectsWithOptions:NSEnumerationReverse usingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
         
@@ -333,7 +337,7 @@ static TGModalSetCaptionView *setCaptionView;
 
 +(NSArray *)modalsView {
     
-    NSView *view = appWindow().contentView;
+    NSView *view = appWindow().contentView.subviews[0];
     
     NSMutableArray *modals = [[NSMutableArray alloc] init];
     
@@ -349,10 +353,18 @@ static TGModalSetCaptionView *setCaptionView;
     return modals;
 }
 
++(void)hideAllModals {
+    NSArray *modals = [self modalsView];
+    
+    [modals enumerateObjectsUsingBlock:^(TGModalView *obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        [obj close:NO];
+    }];
+}
+
 +(TMView *)modalView {
     __block TMView *res;
     
-    NSView *view = [[Telegram delegate] window].contentView;
+    NSView *view = appWindow().contentView.subviews[0];
     
     [view.subviews enumerateObjectsWithOptions:NSEnumerationReverse usingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
         
@@ -384,13 +396,13 @@ static TGModalSetCaptionView *setCaptionView;
 
 -(void)showModalProgress {
     if(!progressView) {
-        progressView = [[TMProgressModalView alloc] initWithFrame:[self.view.window.contentView bounds]];
+        progressView = [[TMProgressModalView alloc] initWithFrame:[self.view.window.contentView.subviews[0] bounds]];
         
         progressView.layer.opacity = 0;
         
-        [progressView setCenterByView:self.view.window.contentView];
+        [progressView setCenterByView:self.view.window.contentView.subviews[0]];
         
-        [self.view.window.contentView addSubview:progressView];
+        [self.view.window.contentView.subviews[0] addSubview:progressView];
     }
     
     
@@ -414,14 +426,14 @@ static TGModalSetCaptionView *setCaptionView;
         return;
     
     if(!passlockView) {
-        passlockView = [[TGPasslockModalView alloc] initWithFrame:[[[Telegram delegate] mainWindow].contentView bounds]];
+        passlockView = [[TGPasslockModalView alloc] initWithFrame:[appWindow().contentView.subviews[0] bounds]];
         
         if(animated)
             passlockView.layer.opacity = 0;
         
-        [passlockView setCenterByView:[[Telegram delegate] mainWindow].contentView];
+        [passlockView setCenterByView:appWindow().contentView.subviews[0]];
         
-        [[[Telegram delegate] mainWindow].contentView addSubview:passlockView];
+        [appWindow().contentView.subviews[0] addSubview:passlockView];
     }
     
     passlockView.passlockResult = callback;

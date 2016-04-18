@@ -33,6 +33,10 @@
 - (void) redrawRow;
 - (NSUInteger)hash;
 
+-(int)height;
+
+
+-(Class)viewClass;
 
 @property (nonatomic,assign,getter=isEditable) BOOL editable;
 

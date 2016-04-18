@@ -24,5 +24,6 @@ typedef enum {
 
 -(void)addTarget:(id)target selector:(SEL)selector;
 
+-(void)setHidden:(BOOL)hidden animated:(BOOL)animated;
 
 @end

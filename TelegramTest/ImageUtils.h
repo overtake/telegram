@@ -223,6 +223,18 @@ CACHE_IMAGE(TempAudioPreviewPause);
 
 CACHE_IMAGE(ConversationInputFieldBroadcastIconActive);
 CACHE_IMAGE(ConversationInputFieldBroadcastIconInactive);
+
+CACHE_IMAGE(ModernMessageCheckmark1);
+CACHE_IMAGE(ModernMessageCheckmark2);
+
+CACHE_IMAGE(bot_inline_keyboard_url);
+
+CACHE_IMAGE(bot_inline_button_url);
+
+CACHE_IMAGE(ModernMessageLocationPin);
+
+CACHE_IMAGE(share_inline_bot);
+
 @interface ImageUtils : NSObject
 
 
@@ -258,8 +270,24 @@ NSImage *renderedImage(NSImage * oldImage, NSSize size);
 NSImage *cropImage(NSImage *image,NSSize backSize, NSPoint difference);
 
 
++ (NSImage *) roundedImage:(NSImage *)oldImage size:(NSSize)size;
++ (NSImage *) roundedImageNew:(NSImage *)oldImage size:(NSSize)size;
+
 typedef NSImage * (^ImageProcessor)(NSImage *image, NSSize size);
 
 +(ImageProcessor)c_processor;
 +(ImageProcessor)b_processor;
+
+NSImage *gray_resizable_placeholder();
+NSImage *gray_circle_resizable_placeholder();
+
+NSImage *voice_play_image();
+NSImage *play_image();
+NSImage *gray_circle_background_image();
+NSImage *blue_circle_background_image();
+NSImage *attach_downloaded_background();
+NSImage *white_background_color();
+NSImage *video_play_image();
+float scaleFactor();
+
 @end

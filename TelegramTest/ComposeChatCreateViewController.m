@@ -314,7 +314,10 @@
     NSMutableArray *array = [[NSMutableArray alloc] init];
     
     for (TLUser *item in self.action.result.multiObjects) {
-        [array addObject:[[SelectUserItem alloc] initWithObject:item]];
+        
+        SelectUserItem *selectItem = [[SelectUserItem alloc] initWithObject:item];
+        if(selectItem)
+            [array addObject:selectItem];
     }
     
     [self.tableView removeAllItems:NO];

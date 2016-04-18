@@ -48,13 +48,13 @@
 }
 
 - (void)updateParticipantsNotification:(NSNotification *)notify {
-    int chat_id = [[notify.userInfo objectForKey:KEY_CHAT_ID] intValue];
-    
-    if(self.chat.n_id == chat_id) {
-        [self reloadData];
-    }
-    
-    
+    [ASQueue dispatchOnMainQueue:^{
+        int chat_id = [[notify.userInfo objectForKey:KEY_CHAT_ID] intValue];
+        
+        if(self.chat.n_id == chat_id) {
+            [self reloadData];
+        }
+    }];
 }
 
 -(void)didChangeChatFlags:(NSNotification *)notification {
@@ -164,7 +164,7 @@
                             
                             if([response isKindOfClass:[TL_boolTrue class]]) {
                                 
-                                [[FullChatManager sharedManager] loadIfNeed:weakSelf.chat.n_id force:YES];
+                                [[ChatFullManager sharedManager] requestChatFull:weakSelf.chat.n_id force:YES];
                                 
                                 
                                 NSArray *f = [weakSelf.chat.chatFull.participants.participants filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.user_id == %d",user.n_id]];
@@ -184,11 +184,15 @@
                                 }
                                 
                             }
+                            [ASQueue dispatchOnMainQueue:^{
+                                [weakSelf hideModalProgressWithSuccess];
+                            }];
                             
-                            [weakSelf hideModalProgressWithSuccess];
                             
                         } errorHandler:^(id request, RpcError *error) {
-                            [weakSelf hideModalProgress];
+                            [ASQueue dispatchOnMainQueue:^{
+                                [weakSelf hideModalProgress];
+                            }];
                         } timeout:0 queue:[ASQueue globalQueue].nativeQueue];
                         
                     }, nil);

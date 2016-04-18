@@ -10,10 +10,19 @@
 
 @interface NSAttributedString (Category)
 
+typedef enum {
+    CoreTextSizeExpectEmojiType = 2
+} CoreTextSizeExpectType;
+
 - (NSSize)sizeForTextFieldForWidth:(int)width;
 - (NSSize)coreTextSizeForTextFieldForWidth:(int)width;
-
 - (NSSize)coreTextSizeForTextFieldForWidth:(int)width withPaths:(NSArray *)paths;
+
+
+- (NSSize)coreTextSizeOneLineForWidth:(int)width;
+- (NSSize)coreTextSizeOneLineForWidth:(int)width expectType:(CoreTextSizeExpectType)expectType;
+
+
 
 - (NSRange)range;
 

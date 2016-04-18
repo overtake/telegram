@@ -117,11 +117,16 @@
     
     NSMutableArray *users = [[NSMutableArray alloc] init];
     
-    [self.tableView.selectedItems enumerateObjectsUsingBlock:^(SelectUserItem *obj, NSUInteger idx, BOOL *stop) {
-        
-        [users addObject:obj.user];
-        
-    }];
+    if(self.action.behavior.limit == 0) {
+        [users addObject:item.user];
+    } else {
+        [self.tableView.selectedItems enumerateObjectsUsingBlock:^(SelectUserItem *obj, NSUInteger idx, BOOL *stop) {
+            
+            [users addObject:obj.user];
+            
+        }];
+    }
+    
     
     if(!self.action.result)
         self.action.result = [[ComposeResult alloc] initWithMultiObjects:users];

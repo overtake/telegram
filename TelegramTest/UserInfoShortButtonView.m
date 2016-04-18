@@ -14,6 +14,8 @@
 
 
 @property (nonatomic,strong) dispatch_block_t tapBlock;
+
+@property (nonatomic,strong) NSMutableAttributedString *attr;
 @end
 
 @implementation UserInfoShortButtonView
@@ -29,14 +31,18 @@
         
         self.wantsLayer = YES;
         
-        self.textButton = [TMTextButton standartUserProfileButtonWithTitle:name];
+        _textLabel =[[TGTextLabel alloc] init];
         self.tapBlock = block;
-        [self.textButton sizeToFit];
-        [self.textButton setFrameOrigin:NSMakePoint(0, 7)]; // 10
-        [[self.textButton cell] setLineBreakMode:NSLineBreakByTruncatingTail];
-        [[self.textButton cell] setTruncatesLastVisibleLine:YES];
+
+        _attr = [[NSMutableAttributedString alloc] init];
+        [_attr appendString:name withColor:TEXT_COLOR];
+        [_attr setFont:TGSystemFont(14) forRange:_attr.range];
+        
+        [_textLabel setText:_attr maxWidth:INT32_MAX];
+        
+        [_textLabel setFrameOrigin:NSMakePoint(20, 10)]; // 10
         [self setAutoresizingMask:NSViewWidthSizable];
-        [self addSubview:self.textButton];
+        [self addSubview:_textLabel];
         
         self.progress = [[TGProgressIndicator alloc] initWithFrame:NSMakeRect(0, 0, 20, 17)];
         [self.progress setStyle:NSProgressIndicatorSpinningStyle];
@@ -61,6 +67,14 @@
         [self updateTrackingAreas];
     }
     return self;
+}
+
+-(void)setTextColor:(NSColor *)textColor {
+    _textColor = textColor;
+    
+    [_attr addAttribute:NSForegroundColorAttributeName value:textColor range:_attr.range];
+    
+    [_textLabel setText:_attr maxWidth:NSWidth(_textLabel.frame)];
 }
 
 -(void)setRightContainerOffset:(NSPoint)rightContainerOffset {
@@ -180,9 +194,8 @@
     [self setRightContainer:self.currentRightController];
     
     
-    [self.textButton sizeToFit];
+    [_textLabel setText:_attr maxWidth:MIN(NSWidth(_textLabel.frame),newSize.width - NSWidth(self.rightContainer.frame) - 15 )];
     
-    [self.textButton setFrameSize:NSMakeSize(MIN(NSWidth(_textButton.frame),newSize.width - NSWidth(self.rightContainer.frame) - 15 ), 22)];
     
     
     [self.subviews enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
@@ -191,7 +204,7 @@
 
             [obj sizeToFit];
             
-            [obj setFrameSize:NSMakeSize(MIN(NSWidth([obj frame]),NSWidth(self.frame) - NSMaxX(_textButton.frame) - NSWidth(_rightContainer.frame) - 30), NSHeight([obj frame]))];
+            [obj setFrameSize:NSMakeSize(MIN(NSWidth([obj frame]),NSWidth(self.frame) - NSMaxX(_textLabel.frame) - NSWidth(_rightContainer.frame) - 30), NSHeight([obj frame]))];
             
             [obj setFrameOrigin:NSMakePoint(NSMinX(_rightContainer.frame) - 10 - NSWidth([obj frame]), NSMinY([obj frame]))];
         }
@@ -247,6 +260,9 @@
 -(void)setIsSelected:(BOOL)isSelected {
     self->_isSelected = isSelected;
     
+    [self setTextColor:isSelected ? [NSColor whiteColor] : _textColor];
+    self.textLabel.backgroundColor = isSelected ? _selectedColor : self.backgroundColor;
+    
     [self setNeedsDisplay:YES];
 }
 
@@ -257,7 +273,7 @@
     [super drawRect:dirtyRect];
 
     [LIGHT_GRAY_BORDER_COLOR set];
-    NSRectFill(NSMakeRect(self.textButton.frame.origin.x, 0, self.bounds.size.width, 1));
+    NSRectFill(NSMakeRect(_textLabel.frame.origin.x, 0, self.bounds.size.width, 1));
     
     if(self.backgroundColor) {
         [self.backgroundColor set];

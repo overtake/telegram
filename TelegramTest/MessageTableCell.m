@@ -9,6 +9,7 @@
 #import "MessageTableCell.h"
 #import "MessageTableCellTextView.h"
 #import "TGMessageViewSender.h"
+#import "POPCGUtils.h"
 @interface MessageTableCell()<NSMenuDelegate>
 
 @end
@@ -75,7 +76,7 @@
 
 -(void)rightMouseDown:(NSEvent *)theEvent {
     
-    if(self.item.messageSender != nil || self.item.message.n_id > TGMINFAKEID) {
+    if(self.item.messageSender != nil || self.item.message.n_id > TGMINFAKEID || ![self.messagesViewController contextAbility]) {
         [super rightMouseDown:theEvent];
         return;
     }
@@ -125,8 +126,10 @@
     weak();
     
     
-    if(self.item.message.chat.isChannel && self.item.message.fwd_from == nil) {
+    if([self.item.message.chat isKindOfClass:[TLChat class]] && self.item.message.chat.isChannel && self.item.message.fwd_from == nil) {
         BOOL canEdit = self.item.message.isPost ?  self.item.message.chat.isCreator || (self.item.message.chat.isEditor && self.item.message.from_id == [UsersManager currentUserId]) : self.item.message.from_id == [UsersManager currentUserId];
+        
+        canEdit = canEdit && self.item.message.via_bot_id == 0;
 
         
         canEdit = canEdit && ([self.item isKindOfClass:[MessageTableItemText class]] || [self.item.message.media isKindOfClass:[TL_messageMediaPhoto class]] || ([self.item.message.media.document attributeWithClass:[TL_documentAttributeVideo class]] && ![self.item.message.media.document attributeWithClass:[TL_documentAttributeAnimated class]]));
@@ -136,7 +139,7 @@
                 
                 [weakSelf.messagesViewController setEditableMessage:weakSelf.item.message];
                 
-                [RPCRequest sendRequest:[TLAPI_channels_getMessageEditData createWithChannel:weakSelf.item.message.chat.inputPeer n_id:weakSelf.item.message.n_id] successHandler:^(id request, id response) {
+                [RPCRequest sendRequest:[TLAPI_messages_getMessageEditData createWithPeer:weakSelf.item.message.conversation.inputPeer n_id:weakSelf.item.message.n_id] successHandler:^(id request, id response) {
                     
                     [SharedManager proccessGlobalResponse:response];
                     
@@ -145,6 +148,49 @@
             }]];
             
         }
+    }
+    
+    if(self.item.message.isChannelMessage && self.item.message.chat.isMegagroup && self.item.message.chat.isManager) {
+        
+        TLChatFull *chat = [[ChatFullManager sharedManager] find:abs(self.item.message.peer_id)];
+        
+        BOOL unpin = chat.pinned_msg_id == self.item.message.n_id;
+        
+        
+        [items addObject:[NSMenuItem menuItemWithTitle:!unpin ? NSLocalizedString(@"Context.Pin", nil) : NSLocalizedString(@"Context.Unpin", nil) withBlock:^(id sender) {
+        
+            BOOL unpin = chat.pinned_msg_id == weakSelf.item.message.n_id;
+            __block int flags = 0;
+            dispatch_block_t block = ^{
+                [RPCRequest sendRequest:[TLAPI_channels_updatePinnedMessage createWithFlags:flags channel:weakSelf.item.message.chat.inputPeer n_id:unpin ? 0 : weakSelf.item.message.n_id] successHandler:^(id request, id response) {
+                    
+                    
+                } errorHandler:nil];
+            };
+            
+            if(!unpin) {
+                
+                NSAlert *alert = [NSAlert alertWithMessageText:appName() informativeText:NSLocalizedString(@"Pin.PinMessageAndNotifyDesc", nil) block:^(id result) {
+                    
+                    if([result intValue] != 1002) {
+                        if([result intValue] != 1000)
+                            flags|= (1 << 0);
+                        block();
+                    }
+                    
+                    
+                }];
+                [alert addButtonWithTitle:NSLocalizedString(@"Pin.Ok", nil)];
+                [alert addButtonWithTitle:NSLocalizedString(@"Pin.OnlyPin", nil)];
+                [alert addButtonWithTitle:NSLocalizedString(@"Cancel", nil)];
+                [alert show];
+            } else {
+                block();
+            }
+            
+            
+            
+        }]];
     }
     
     
@@ -191,12 +237,7 @@
             
             [weakSelf.messagesViewController setState:MessagesViewControllerStateNone];
             [weakSelf.messagesViewController unSelectAll:NO];
-            
-            
-            
             [weakSelf.messagesViewController setSelectedMessage:weakSelf.item selected:YES];
-            
-            
             [weakSelf.messagesViewController showForwardMessagesModalView];
             
             
@@ -234,6 +275,50 @@
 
 -(void)clearSelection {
     
+}
+
+- (void)stopSearchSelection {
+    [self.layer pop_removeAnimationForKey:@"background"];
+}
+
+- (void)searchSelection {
+    NSColor *color = NSColorFromRGB(0xffffff);
+    NSColor *oldColor = NSColorFromRGB(0xf7f7f7);
+    
+    POPBasicAnimation *animation = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerBackgroundColor];
+    animation.duration = 2;
+    animation.fromValue = (__bridge id)(oldColor.CGColor);
+    animation.toValue = (__bridge id)(color.CGColor);
+    [animation setCompletionBlock:^(POPAnimation *anim, BOOL finish) {
+        [self.layer setBackgroundColor:(self.isSelected ? NSColorFromRGB(0xf7f7f7) : NSColorFromRGB(0xffffff)).CGColor];
+    }];
+    
+    animation.removedOnCompletion = YES;
+    
+    [self.layer pop_addAnimation:animation forKey:@"background"];
+    
+    
+    POPBasicAnimation *fieldsAnimation = [POPBasicAnimation animation];
+    
+    fieldsAnimation.property = [POPAnimatableProperty propertyWithName:@"background" initializer:^(POPMutableAnimatableProperty *prop) {
+        
+        [prop setReadBlock:^(TMView *textView, CGFloat values[]) {
+            POPCGColorGetRGBAComponents(textView.backgroundColor.CGColor, values);
+        }];
+        
+        [prop setWriteBlock:^(TMView *textView, const CGFloat values[]) {
+            CGColorRef color = POPCGColorRGBACreate(values);
+            textView.backgroundColor = [NSColor colorWithCGColor:color];
+        }];
+        
+    }];
+    
+    fieldsAnimation.toValue = animation.toValue;
+    fieldsAnimation.fromValue = animation.fromValue;
+    fieldsAnimation.duration = animation.duration;
+    fieldsAnimation.removedOnCompletion = YES;
+    
+    [self _didChangeBackgroundColorWithAnimation:fieldsAnimation toColor:color];
 }
 
 -(BOOL)mouseInText:(NSEvent *)theEvent {

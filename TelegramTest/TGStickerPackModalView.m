@@ -188,12 +188,12 @@ static NSImage * greenBackgroundImage(NSSize size) {
     _tableView.canSendStickerAlways = canSendSticker;
 }
 
--(void)setStickerPack:(TL_messages_stickerSet *)stickerPack {
+-(void)setStickerPack:(TL_messages_stickerSet *)stickerPack forMessagesViewController:(MessagesViewController *)messagesViewController{
+    _messagesViewController = messagesViewController;
+    _tableView.messagesViewController = messagesViewController;
     _pack = stickerPack;
     
-    
     NSMutableAttributedString *title = [[NSMutableAttributedString alloc] init];
-    
     
     NSRange range = [title appendString:_pack.set.title withColor:TEXT_COLOR];
     
@@ -258,7 +258,7 @@ static NSImage * greenBackgroundImage(NSSize size) {
     
     [_addButton setTitle:[NSString stringWithFormat:NSLocalizedString(@"StickerPack.AddStickerPack", nil),stickerPack.documents.count] forControlState:BTRControlStateNormal];
   
-    _addButton.heightBugFix = 5;
+    _addButton.heightBugFix = 3;
     
     [_addButton setTitleFont:TGSystemBoldFont(14) forControlState:BTRControlStateNormal];
     
@@ -272,6 +272,12 @@ static NSImage * greenBackgroundImage(NSSize size) {
 -(void)modalViewDidHide {
     
     int bp = 0;
+}
+
+-(void)modalViewDidShow {
+    [super modalViewDidShow];
+    [self.window makeFirstResponder:self.tableView];
+    [self.tableView becomeFirstResponder];
 }
 
 -(void)dealloc {

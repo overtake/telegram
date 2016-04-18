@@ -9,5 +9,5 @@
 #import "TMViewController.h"
 
 @interface PhoneChangeConfirmController : TMViewController
-- (void)setChangeParams:(TL_account_sentChangePhoneCode *)params phone:(NSString *)phone;
+- (void)setChangeParams:(TL_auth_sentCode *)params phone:(NSString *)phone;
 @end

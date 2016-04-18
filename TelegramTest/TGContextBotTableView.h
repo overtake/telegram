@@ -15,5 +15,8 @@
 
 
 @property (nonatomic,copy) dispatch_block_t didSelectedItem;
+@property (nonatomic,copy) void (^needLoadNext)(BOOL next);
+
+-(int)hintHeight;
 
 @end

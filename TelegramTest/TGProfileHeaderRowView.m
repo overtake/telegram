@@ -36,7 +36,6 @@
 -(instancetype)initWithFrame:(NSRect)frameRect {
     if(self = [super initWithFrame:frameRect]) {
         _imageView = [[ChatAvatarImageView alloc] initWithFrame:NSMakeRect(0, 0, 70, 70)];
-        
         _nameTextField = [[TMNameTextField alloc] initWithFrame:NSZeroRect];
         [[_nameTextField cell] setTruncatesLastVisibleLine:YES];
         [[_nameTextField cell] setLineBreakMode:NSLineBreakByTruncatingTail];

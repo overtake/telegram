@@ -8,6 +8,7 @@
 
 #import "TGPhotoViewerItem.h"
 #import "TGDateUtils.h"
+#import "TGPVDocumentObject.h"
 @implementation TGPhotoViewerItem
 
 -(id)initWithImageObject:(TGImageObject *)imageObject previewObject:(PreviewObject *)previewObject {
@@ -19,26 +20,25 @@
     return self;
 }
 
+-(void)startDownload {
+    if(![self.imageObject isKindOfClass:[TGPVDocumentObject class]] &&  ![TGCache cachedImage:self.imageObject.cacheKey group:@[PVCACHE]]) {
+        [self.imageObject initDownloadItem];
+    }
+}
+
 -(BOOL)isEqualTo:(TGPhotoViewerItem *)object {
     return self.previewObject.msg_id == object.previewObject.msg_id;
 }
 
+-(DownloadItem *)downloadItem {
+    return self.imageObject.downloadItem;
+}
+-(BOOL)isset {
+    return [TGCache cachedImage:self.imageObject.cacheKey group:@[PVCACHE]] != nil;
+}
 
-//
-//-(void)rebuildDate:(int)date {
-//    _date = [NSDate dateWithTimeIntervalSince1970:date];
-//    
-//    int time = date;
-//    time -= [[MTNetwork instance] getTime] - [[NSDate date] timeIntervalSince1970];
-//    
-//    
-//    NSDateFormatter *formatter = [NSDateFormatter new];
-//    
-//    [formatter setDateStyle:NSDateFormatterMediumStyle];
-//    [formatter setTimeStyle:NSDateFormatterShortStyle];
-//    
-//
-//    _stringDate = [formatter stringFromDate:[NSDate dateWithTimeIntervalSince1970:time]];
-//}
+-(NSSize)size {
+    return self.imageObject.imageSize;
+}
 
 @end

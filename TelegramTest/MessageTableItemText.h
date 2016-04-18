@@ -28,7 +28,6 @@
 -(void)updateWebPage;
 -(void)updateEntities;
 
--(BOOL)isWebPage;
 
 
 @end

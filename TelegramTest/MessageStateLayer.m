@@ -9,20 +9,20 @@
 #import "MessageStateLayer.h"
 #import "TMClockProgressView.h"
 #import "NSNumber+NumberFormatter.h"
+#import "TGTextLabel.h"
 @interface MessageStateLayer ()
 @property (nonatomic,strong) TMClockProgressView *progressView;
-@property (nonatomic,strong) NSImageView *readOrSentView;
+@property (nonatomic,strong) NSImageView *checkMark1;
+@property (nonatomic,strong) NSImageView *checkMark2;
+
+
 @property (nonatomic,strong) BTRButton *errorView;
 
 @property (nonatomic,assign) MessageTableCellState state;
 
-@property (nonatomic,strong) TMTextField *viewsCountText;
+@property (nonatomic,strong) TGTextLabel *viewsCountText;
 
 @property (nonatomic,strong) NSImageView *channelImageView;
-
-@property (nonatomic,strong) TMTextField *signTextField;
-
-
 
 @end
 
@@ -33,20 +33,17 @@
 
 -(id)initWithFrame:(NSRect)frameRect {
     if(self = [super initWithFrame:frameRect]) {
-            
+        self.wantsLayer = YES;
     }
     
     return self;
 }
 
-
--(void)setState:(MessageTableCellState)state {
-    _state = state;
-    
+-(void)setState:(MessageTableCellState)state animated:(BOOL)animated {
     
     if(state == MessageTableCellSending) {
         if(!self.progressView) {
-            self.progressView = [[TMClockProgressView alloc] initWithFrame:NSMakeRect(NSWidth(self.frame) - 15- 3, 4, 15, 15)];
+            self.progressView = [[TMClockProgressView alloc] initWithFrame:NSMakeRect(NSWidth(self.frame) - image_ClockFrame().size.width, 1, 15, 15)];
             [self.layer addSublayer:self.progressView.layer];
         }
         [self.progressView startAnimating];
@@ -60,11 +57,10 @@
     if(state == MessageTableCellSendingError) {
         
         if(!self.errorView) {
-            self.errorView = [[BTRButton alloc] initWithFrame:NSMakeRect(NSWidth(self.frame) - image_ChatMessageError().size.width - 3, 2, image_ChatMessageError().size.width , image_ChatMessageError().size.height)];
+            self.errorView = [[BTRButton alloc] initWithFrame:NSMakeRect(NSWidth(self.frame) - image_ChatMessageError().size.width, 0, 13 , 13)];
             [self.errorView setBackgroundImage:image_ChatMessageError() forControlState:BTRControlStateNormal];
             [self addSubview:self.errorView];
         }
-        
         
         weak();
         
@@ -81,9 +77,6 @@
     [_viewsCountText removeFromSuperview];
     _viewsCountText = nil;
     [_channelImageView removeFromSuperview];
-    [_signTextField removeFromSuperview];
-    _signTextField = nil;
-    
     
     if((state == MessageTableCellUnread || state == MessageTableCellRead)) {
         
@@ -91,53 +84,98 @@
             
             _channelImageView = imageViewWithImage(image_ChannelViews());
             
-            self.readOrSentView.image = nil;
-            [self.readOrSentView.layer removeFromSuperlayer];
-            self.readOrSentView = nil;
+            [self.checkMark1 removeFromSuperview];
+            [self.checkMark2 removeFromSuperview];
+            self.checkMark1 = nil;
+            self.checkMark2 = nil;
             
-            _viewsCountText = [TMHyperlinkTextField defaultTextField];
-            [[_viewsCountText cell] setTruncatesLastVisibleLine:YES];
-            [_viewsCountText setAttributedStringValue:self.container.item.viewsCountAndSign];
-            [_viewsCountText setFrameSize:NSMakeSize(MIN(NSWidth(self.frame) - NSWidth(_channelImageView.frame) - 4,self.container.item.viewsCountAndSignSize.width), 17)];
-            [_viewsCountText setFrameOrigin:CGPointMake(NSWidth(self.frame) - NSWidth(_viewsCountText.frame) - 2,1)];
+            _viewsCountText = [[TGTextLabel alloc] init];
+            
+            [_viewsCountText setText:self.container.item.viewsCountAndSign maxWidth:self.container.item.viewsCountAndSignSize.width];
+            
+            [_viewsCountText setFrameSize:NSMakeSize(MIN(NSWidth(self.frame) - NSWidth(_channelImageView.frame) - 4,self.container.item.viewsCountAndSignSize.width), NSHeight(_viewsCountText.frame))];
+            [_viewsCountText setFrameOrigin:CGPointMake(NSWidth(self.frame) - NSWidth(_viewsCountText.frame) - 2,0)];
             [self addSubview:_viewsCountText];
             
-            
-            
-            [_channelImageView setFrameOrigin:NSMakePoint(NSMinX(_viewsCountText.frame) - NSWidth(_channelImageView.frame), 5)];
+            [_channelImageView setFrameOrigin:NSMakePoint(NSMinX(_viewsCountText.frame) - NSWidth(_channelImageView.frame) - 2, 3)];
             
             [self addSubview:_channelImageView];
-            
-            
-            
+
         } else {
-            if(!self.readOrSentView) {
-                self.readOrSentView = [[NSImageView alloc] initWithFrame:NSMakeRect(11, 5, 0, 0)];
-                self.readOrSentView.wantsLayer = YES;
+            
+            if(!_checkMark1) {
+                _checkMark1 = [[NSImageView alloc] initWithFrame:NSMakeRect(0, 1, 0, 0)];
+                _checkMark1.wantsLayer = YES;
+                _checkMark1.image = image_ModernMessageCheckmark1();
+                [_checkMark1 setFrameSize:image_ModernMessageCheckmark1().size];
+                
             }
             
-            self.readOrSentView.image = state == MessageTableCellUnread ? image_MessageStateSent() : image_MessageStateRead();
-            [self.readOrSentView setFrameSize:self.readOrSentView.image.size];
-            [self.readOrSentView setFrameOrigin:NSMakePoint(NSWidth(self.frame) - NSWidth(_readOrSentView.frame) - 3, NSMinY(self.readOrSentView.frame))];
-            [self.layer addSublayer:self.readOrSentView.layer];
-        }
+            [self.layer addSublayer:_checkMark1.layer];
+            
+            if(state == MessageTableCellRead) {
+                if(!_checkMark2) {
+                    _checkMark2 = [[NSImageView alloc] initWithFrame:NSMakeRect(0, 1, 0, 0)];
+                    _checkMark2.wantsLayer = YES;
+                    _checkMark2.image = image_ModernMessageCheckmark2();
+                    [_checkMark2 setFrameSize:image_ModernMessageCheckmark2().size];
+                }
+                
+                [self addSubview:_checkMark2];
 
+            } else {
+                [_checkMark2 removeFromSuperview];
+                _checkMark2= nil;
+            }
+            
+            [self.checkMark1 setFrameOrigin:NSMakePoint(NSWidth(self.frame) - 15, NSMinY(self.checkMark1.frame))];
+            [self.checkMark2 setFrameOrigin:NSMakePoint(NSWidth(self.frame) - (15 - 4), NSMinY(self.checkMark2.frame))];
+            
+            
+            if(_state == MessageTableCellSending && state == MessageTableCellUnread) {
+                CABasicAnimation *animation = [CABasicAnimation animationWithKeyPath:@"transform.scale"];
+                animation.fromValue = @(1.2f);
+                animation.toValue = @(1.0f);
+                animation.duration = 0.14;
+                animation.removedOnCompletion = true;
+                [_checkMark1.layer addAnimation:animation forKey:@"transform.scale"];
+            }
+            
+            if(_state == MessageTableCellUnread && state == MessageTableCellRead) {
+                CABasicAnimation *animation = [CABasicAnimation animationWithKeyPath:@"transform.scale"];
+                animation.fromValue = @(1.2f);
+                animation.toValue = @(1.0f);
+                animation.duration = 0.14;
+                animation.removedOnCompletion = true;
+                [_checkMark2.layer addAnimation:animation forKey:@"transform.scale"];
+            }
+            
+        }
+        
     } else {
-        self.readOrSentView.image = nil;
-        [self.readOrSentView.layer removeFromSuperlayer];
-        self.readOrSentView = nil;
-        
-        
+        [self.checkMark1 removeFromSuperview];
+        [self.checkMark2 removeFromSuperview];
+        self.checkMark1 = nil;
+        self.checkMark2 = nil;
     }
     
+    _state = state;
     
     [self setNeedsDisplay:YES];
-    
+
+}
+
+-(void)setState:(MessageTableCellState)state {
+    [self setState:state animated:NO];
 }
 
 
-
-
-
+-(void)_didChangeBackgroundColorWithAnimation:(POPBasicAnimation *)anim toColor:(NSColor *)color {
+    if(!anim)
+        _viewsCountText.backgroundColor = color;
+    else
+        [_viewsCountText pop_addAnimation:anim forKey:@"background"];
+    
+}
 
 @end
