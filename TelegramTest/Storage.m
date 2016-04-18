@@ -612,6 +612,8 @@ static NSString *encryptionKey;
 
 - (id)fileInfoByPathHash:(NSString *)pathHash  {
     
+    return nil; //todo
+    
     __block id file;
     
     [queue inDatabaseWithDealocing:^(FMDatabase *db) {

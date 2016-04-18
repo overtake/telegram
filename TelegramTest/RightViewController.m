@@ -376,12 +376,12 @@
         
         [self.messagesViewController cancelSelectionAndScrollToBottom:YES];
         
-//        
-//        dialog.last_marked_date = [[MTNetwork instance] getTime]+1;
-//        dialog.last_marked_message = dialog.top_message;
-//        
-//        [dialog save];
-//        
+        
+        dialog.last_marked_date = [[MTNetwork instance] getTime]+1;
+        dialog.last_marked_message = dialog.top_message;
+        
+        [dialog save];
+        
         [self.messagesViewController setFwdMessages:ids forConversation:dialog];
         
 

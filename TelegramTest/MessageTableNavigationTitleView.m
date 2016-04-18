@@ -172,11 +172,6 @@
     [self.statusTextField updateWithConversation:self.dialog];
     
 
-    if([Telegram isSingleLayout]) {
-        dispatch_async(dispatch_get_current_queue(), ^{
-            [self setDialog:dialog];
-        });
-    }
 
 }
 

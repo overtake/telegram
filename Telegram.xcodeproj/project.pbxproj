@@ -216,6 +216,10 @@
 		C2078E3D1CB596720037B1B2 /* TGMessagesNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = C2078E3C1CB596720037B1B2 /* TGMessagesNavigationController.m */; };
 		C2078E401CB7ADC90037B1B2 /* CAMediaTimingFunction+AdditionalEquations.m in Sources */ = {isa = PBXBuildFile; fileRef = C2078E3F1CB7ADC90037B1B2 /* CAMediaTimingFunction+AdditionalEquations.m */; };
 		C20932241938BABF00DFF3EC /* AudioHistoryFilter.m in Sources */ = {isa = PBXBuildFile; fileRef = C20932231938BABF00DFF3EC /* AudioHistoryFilter.m */; };
+		C20A02391CC18D2400D94EF2 /* Sparkle.framework in Copy Files (6 items) */ = {isa = PBXBuildFile; fileRef = C235364C19C88D620044978E /* Sparkle.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		C20A023A1CC18D2400D94EF2 /* HockeySDK.framework in Copy Files (6 items) */ = {isa = PBXBuildFile; fileRef = C2082B7219C1E1C4000005E2 /* HockeySDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		C20A023B1CC18D2800D94EF2 /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C235364C19C88D620044978E /* Sparkle.framework */; };
+		C20A023C1CC18D2800D94EF2 /* HockeySDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2082B7219C1E1C4000005E2 /* HockeySDK.framework */; };
 		C20A5E711B86290C007F4B49 /* TGWebpageGifObject.m in Sources */ = {isa = PBXBuildFile; fileRef = C20A5E701B86290C007F4B49 /* TGWebpageGifObject.m */; };
 		C20A5E831B863979007F4B49 /* TGWebpageGifContainer.m in Sources */ = {isa = PBXBuildFile; fileRef = C20A5E821B863979007F4B49 /* TGWebpageGifContainer.m */; };
 		C20A5E8F1B86404D007F4B49 /* DownloadCacheDocumentItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C20A5E8E1B86404D007F4B49 /* DownloadCacheDocumentItem.m */; };
@@ -295,10 +299,6 @@
 		C21C7B4F18D8410700253A7A /* ShareContactSenterItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C21C7B4E18D8410700253A7A /* ShareContactSenterItem.m */; };
 		C21C7B5318D8991D00253A7A /* SecretSenderItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C21C7B5218D8991D00253A7A /* SecretSenderItem.m */; };
 		C21C7B5C18D8A32800253A7A /* FileSecretSenderItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C21C7B5B18D8A32800253A7A /* FileSecretSenderItem.m */; };
-		C21D06C81CBC219900CB28B8 /* Sparkle.framework in Copy Files (6 items) */ = {isa = PBXBuildFile; fileRef = C235364C19C88D620044978E /* Sparkle.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		C21D06C91CBC219900CB28B8 /* HockeySDK.framework in Copy Files (6 items) */ = {isa = PBXBuildFile; fileRef = C2082B7219C1E1C4000005E2 /* HockeySDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		C21D06CA1CBC219F00CB28B8 /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C235364C19C88D620044978E /* Sparkle.framework */; };
-		C21D06CB1CBC219F00CB28B8 /* HockeySDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2082B7219C1E1C4000005E2 /* HockeySDK.framework */; };
 		C21D06D01CBE571C00CB28B8 /* SPMediaKeyTap.m in Sources */ = {isa = PBXBuildFile; fileRef = C21D06CE1CBE571C00CB28B8 /* SPMediaKeyTap.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		C21D06DB1CBE590900CB28B8 /* NSObject+SPInvocationGrabbing.m in Sources */ = {isa = PBXBuildFile; fileRef = C21D06D71CBE590900CB28B8 /* NSObject+SPInvocationGrabbing.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		C21D06DD1CBE5A5900CB28B8 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C21D06DC1CBE5A5900CB28B8 /* Carbon.framework */; };
@@ -1061,8 +1061,8 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				C21D06C81CBC219900CB28B8 /* Sparkle.framework in Copy Files (6 items) */,
-				C21D06C91CBC219900CB28B8 /* HockeySDK.framework in Copy Files (6 items) */,
+				C20A02391CC18D2400D94EF2 /* Sparkle.framework in Copy Files (6 items) */,
+				C20A023A1CC18D2400D94EF2 /* HockeySDK.framework in Copy Files (6 items) */,
 			);
 			name = "Copy Files (6 items)";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2932,9 +2932,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C20A023B1CC18D2800D94EF2 /* Sparkle.framework in Frameworks */,
+				C20A023C1CC18D2800D94EF2 /* HockeySDK.framework in Frameworks */,
 				C21D06DD1CBE5A5900CB28B8 /* Carbon.framework in Frameworks */,
-				C21D06CA1CBC219F00CB28B8 /* Sparkle.framework in Frameworks */,
-				C21D06CB1CBC219F00CB28B8 /* HockeySDK.framework in Frameworks */,
 				C2C3D9C11CA586B70031A296 /* CoreLocation.framework in Frameworks */,
 				C2034BB31C2EB1C70080D023 /* VideoToolbox.framework in Frameworks */,
 				C21068C61C1B417200815859 /* CoreVideo.framework in Frameworks */,
@@ -7893,6 +7893,7 @@
 				CODE_SIGN_IDENTITY = "";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "";
 				COMBINE_HIDPI_IMAGES = YES;
+				DEBUG_INFORMATION_FORMAT = dwarf;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
