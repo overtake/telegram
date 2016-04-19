@@ -84,8 +84,8 @@ static NSDictionary *elements;
 -(void)emojiClick:(BTRButton *)button {
     [self.controller insertEmoji:button.titleLabel.stringValue];
     [self.controller saveModifier:[button.titleLabel.stringValue emojiModifier:button.titleLabel.stringValue] forEmoji:_emoji];
+    [self.ebutton setTitle:button.titleLabel.stringValue forControlState:BTRControlStateNormal];
     [self.popover close];
-    [self.controller close];
 }
 
 @end

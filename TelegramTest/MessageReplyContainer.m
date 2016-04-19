@@ -229,7 +229,7 @@
 
 
 -(void)addScrollEvent {
-    id clipView = [[appWindow().navigationController.messagesViewController.table enclosingScrollView] contentView];
+    id clipView = [[_item.table.viewController.table enclosingScrollView] contentView];
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(_didScrolledTableView:)
                                                  name:NSViewBoundsDidChangeNotification

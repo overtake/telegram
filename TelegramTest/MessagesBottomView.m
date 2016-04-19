@@ -37,6 +37,7 @@
 #import "BlockedUsersManager.h"
 #import "TGModalGifSearch.h"
 #import "TGRecordedAudioPreview.h"
+#import "TGModernEmojiViewController.h"
 @interface MessagesBottomView()<TGImageAttachmentsControllerDelegate>
 
 @property (nonatomic, strong) TMView *actionsView;
@@ -1052,21 +1053,27 @@ static RBLPopover *popover;
 }
 
 - (void)smileButtonClick:(BTRButton *)button {
-    EmojiViewController *emojiViewController = [EmojiViewController instance];
     
-    emojiViewController.messagesViewController = self.messagesViewController;
+    TGModernEmojiViewController *emojiViewController = (TGModernEmojiViewController *) self.smilePopover.contentViewController;
+    
+ //
     weak();
     if(!self.smilePopover) {
+        
+        emojiViewController = [[TGModernEmojiViewController alloc] initWithFrame:NSMakeRect(0,0,350,300)];
        
        self.smilePopover = [[RBLPopover alloc] initWithContentViewController:(NSViewController *)emojiViewController];
         [self.smilePopover setHoverView:self.smileButton];
 //        [self.smilePopover setCanBecomeKey:YES];
         [self.smilePopover setDidCloseBlock:^(RBLPopover *popover){
             [weakSelf.smileButton setSelected:NO];
-            [[EmojiViewController instance] close];
+            [emojiViewController close];
         }];
         
     }
+    
+    emojiViewController.messagesViewController = self.messagesViewController;
+    emojiViewController.epopover = self.smilePopover;
     
     [emojiViewController setInsertEmoji:^(NSString *emoji) {
         [weakSelf insertEmoji:emoji];
@@ -1079,7 +1086,7 @@ static RBLPopover *popover;
     
     if(!self.smilePopover.isShown) {
         [self.smilePopover showRelativeToRect:frame ofView:self.smileButton preferredEdge:CGRectMaxYEdge];
-        [[EmojiViewController instance] showPopovers];
+        [emojiViewController showPopovers];
     }
 }
 

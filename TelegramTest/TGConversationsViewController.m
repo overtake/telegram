@@ -15,6 +15,7 @@
 #import "SecretChatAccepter.h"
 #import "TMTaskRequest.h"
 #import "EmojiViewController.h"
+#import "TGModernEmojiViewController.h"
 #import "TGConversationTableCell.h"
 #import "TGConversationsTableView.h"
 #import "MessagesUtils.h"
@@ -183,6 +184,7 @@
     
     [ASQueue dispatchOnMainQueue:^{
         [EmojiViewController reloadStickers];
+        [TGModernEmojiViewController initialize];
     }];
     
     [MessagesManager updateUnreadBadge];

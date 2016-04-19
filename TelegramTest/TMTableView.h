@@ -94,4 +94,7 @@
 
 -(void)clear;
 
+
+-(void)setStickClass:(Class)stickClass;
+
 @end

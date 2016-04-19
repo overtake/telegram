@@ -61,7 +61,7 @@ static const int fwdUserFlag = 1 << 31;
             
             TL_localMessage *fake = [TL_localMessage createWithN_id:0 flags:TGOUTUNREADMESSAGE | TGFWDMESSAGE | TGREADEDCONTENT from_id:[UsersManager currentUserId] to_id:conversation.peer fwd_from:fwdHeader reply_to_msg_id:0 date:[[MTNetwork instance] getTime] message:f.message media:f.media fakeId:[MessageSender getFakeMessageId] randomId:random reply_markup:nil entities:f.entities views:f.views via_bot_id:f.via_bot_id edit_date:0 isViewed:NO state:DeliveryStatePending];
             
-            if(additionFlags & (1 << 4))
+            if(additionFlags & (1 << 4) || f.isPost & (1 << 4))
                 fake.flags|= (1 << 14);
             
             if(conversation.needRemoveFromIdBeforeSend) {

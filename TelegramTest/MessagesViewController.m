@@ -510,7 +510,7 @@ static NSMutableDictionary *savedScrolling;
                 yTopOffset =  self.table.scrollView.documentOffset.y + NSHeight(self.table.containerView.frame) - (rect.origin.y);
                 
                 MessageTableItem *item = [self objectAtIndex:index];
-                if(item) {
+                if(item && item.message && self.table.scrollView.documentOffset.y > 100) {
                     savedScrolling[@(_conversation.peer_id)] = @{@"message":item.message,@"topOffset":@(yTopOffset)};
                 } else {
                     [savedScrolling removeObjectForKey:@(_conversation.peer_id)];
@@ -2830,9 +2830,7 @@ static NSTextAttachment *headerMediaIcon() {
         [self removeScrollEvent];
         
   
-         if(savedScrolling[@(_conversation.peer_id)]) {
-             [self showMessage:savedScrolling[@(_conversation.peer_id)][@"message"] fromMsg:nil flags:ShowMessageTypeSaveScrolled];
-         } else if(message != nil) {
+         if(message != nil) {
             [self showMessage:message fromMsg:nil flags:ShowMessageTypeSearch];
         } else if(dialog.last_marked_message != -1 && dialog.last_marked_message < dialog.universalTopMessage && dialog.universalTopMessage < TGMINFAKEID) {
             
@@ -2843,7 +2841,9 @@ static NSTextAttachment *headerMediaIcon() {
             
             [self showMessage:msg fromMsg:nil flags:ShowMessageTypeUnreadMark];
             
-        } else {
+        } else  if(savedScrolling[@(_conversation.peer_id)]) {
+            [self showMessage:savedScrolling[@(_conversation.peer_id)][@"message"] fromMsg:nil flags:ShowMessageTypeSaveScrolled];
+        } else  {
             
            
             [self flushMessages];

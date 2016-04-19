@@ -22,7 +22,7 @@
     
     _photoView = [TMAvatarImageView standartTableAvatar];
     _nameView = [[TMNameTextField alloc] initWithFrame:NSMakeRect(60, 30, 200, 20)];
-    _statusView = [[TMStatusTextField alloc] initWithFrame:NSMakeRect(60, 10, 200, 20)];
+    _statusView = [[TMStatusTextField alloc] initWithFrame:NSMakeRect(58, 10, 200, 20)];
     [[_statusView cell] setTruncatesLastVisibleLine:YES];
     [[_statusView cell] setLineBreakMode:NSLineBreakByTruncatingTail];
     [[_nameView cell] setTruncatesLastVisibleLine:YES];

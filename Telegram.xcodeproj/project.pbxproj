@@ -220,6 +220,10 @@
 		C20A023A1CC18D2400D94EF2 /* HockeySDK.framework in Copy Files (6 items) */ = {isa = PBXBuildFile; fileRef = C2082B7219C1E1C4000005E2 /* HockeySDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		C20A023B1CC18D2800D94EF2 /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C235364C19C88D620044978E /* Sparkle.framework */; };
 		C20A023C1CC18D2800D94EF2 /* HockeySDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2082B7219C1E1C4000005E2 /* HockeySDK.framework */; };
+		C20A02561CC6461500D94EF2 /* emoji.txt in Resources */ = {isa = PBXBuildFile; fileRef = C20A02531CC6461500D94EF2 /* emoji.txt */; };
+		C20A02571CC6461500D94EF2 /* emoji1347.txt in Resources */ = {isa = PBXBuildFile; fileRef = C20A02541CC6461500D94EF2 /* emoji1347.txt */; };
+		C20A02581CC6461500D94EF2 /* emoji1404.txt in Resources */ = {isa = PBXBuildFile; fileRef = C20A02551CC6461500D94EF2 /* emoji1404.txt */; };
+		C20A025B1CC6483200D94EF2 /* TGModernEmojiViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C20A025A1CC6483200D94EF2 /* TGModernEmojiViewController.m */; };
 		C20A5E711B86290C007F4B49 /* TGWebpageGifObject.m in Sources */ = {isa = PBXBuildFile; fileRef = C20A5E701B86290C007F4B49 /* TGWebpageGifObject.m */; };
 		C20A5E831B863979007F4B49 /* TGWebpageGifContainer.m in Sources */ = {isa = PBXBuildFile; fileRef = C20A5E821B863979007F4B49 /* TGWebpageGifContainer.m */; };
 		C20A5E8F1B86404D007F4B49 /* DownloadCacheDocumentItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C20A5E8E1B86404D007F4B49 /* DownloadCacheDocumentItem.m */; };
@@ -1518,6 +1522,11 @@
 		C2082B7219C1E1C4000005E2 /* HockeySDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = HockeySDK.framework; sourceTree = "<group>"; };
 		C20932221938BABF00DFF3EC /* AudioHistoryFilter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AudioHistoryFilter.h; sourceTree = "<group>"; };
 		C20932231938BABF00DFF3EC /* AudioHistoryFilter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AudioHistoryFilter.m; sourceTree = "<group>"; };
+		C20A02531CC6461500D94EF2 /* emoji.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = emoji.txt; sourceTree = "<group>"; };
+		C20A02541CC6461500D94EF2 /* emoji1347.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = emoji1347.txt; sourceTree = "<group>"; };
+		C20A02551CC6461500D94EF2 /* emoji1404.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = emoji1404.txt; sourceTree = "<group>"; };
+		C20A02591CC6483200D94EF2 /* TGModernEmojiViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGModernEmojiViewController.h; sourceTree = "<group>"; };
+		C20A025A1CC6483200D94EF2 /* TGModernEmojiViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGModernEmojiViewController.m; sourceTree = "<group>"; };
 		C20A5E6F1B86290C007F4B49 /* TGWebpageGifObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGWebpageGifObject.h; sourceTree = "<group>"; };
 		C20A5E701B86290C007F4B49 /* TGWebpageGifObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGWebpageGifObject.m; sourceTree = "<group>"; };
 		C20A5E811B863979007F4B49 /* TGWebpageGifContainer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGWebpageGifContainer.h; sourceTree = "<group>"; };
@@ -3903,6 +3912,8 @@
 				C215BE181C7A0FB900B4BF16 /* containers */,
 				C215BE151C7A0F6D00B4BF16 /* TGModernMessageCellContainerView.h */,
 				C215BE161C7A0F6D00B4BF16 /* TGModernMessageCellContainerView.m */,
+				C20A02591CC6483200D94EF2 /* TGModernEmojiViewController.h */,
+				C20A025A1CC6483200D94EF2 /* TGModernEmojiViewController.m */,
 			);
 			name = modern;
 			sourceTree = "<group>";
@@ -6090,6 +6101,9 @@
 		CEB09E6217DAFC250055F150 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				C20A02531CC6461500D94EF2 /* emoji.txt */,
+				C20A02541CC6461500D94EF2 /* emoji1347.txt */,
+				C20A02551CC6461500D94EF2 /* emoji1404.txt */,
 				C23578071CAADDF70092F50A /* dsa_pub_prod.pem */,
 				C2967B111A9656A4003759B2 /* url-schemes.txt */,
 				C261E3BE197031B90025A3F9 /* phone_numbers_for_OS_X.txt */,
@@ -6607,12 +6621,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				C2D4B86F1AFCE8FA0035B4E4 /* LICENSE.txt in Resources */,
+				C20A02571CC6461500D94EF2 /* emoji1347.txt in Resources */,
 				C2967B121A9656A4003759B2 /* url-schemes.txt in Resources */,
 				CEC22DEF18273CB1008817D0 /* PhoneFormats.dat in Resources */,
 				C271524A19B0D8C700841C8A /* Images.xcassets in Resources */,
 				C261E3BD196EF1A80025A3F9 /* phone-x-format.txt in Resources */,
 				C261E3BF197031B90025A3F9 /* phone_numbers_for_OS_X.txt in Resources */,
 				CEC22DEE18273CB1008817D0 /* PhoneCountries.txt in Resources */,
+				C20A02561CC6461500D94EF2 /* emoji.txt in Resources */,
 				C2200B5618EC8A2700F28803 /* sent.caf in Resources */,
 				C2431D121CA04A7C00C6AACE /* TGCalendarView.xib in Resources */,
 				C2A5C00818E17C630021BE68 /* SettingsWindowController.xib in Resources */,
@@ -6620,6 +6636,7 @@
 				CE46A2551854B68F00D6EF14 /* Localizable.strings in Resources */,
 				0A9EDC621897BA0E0037E1BC /* Rebel-Info.plist in Resources */,
 				0A9EDC4B1897BA0E0037E1BC /* InfoPlist.strings in Resources */,
+				C20A02581CC6461500D94EF2 /* emoji1404.txt in Resources */,
 				C270C5B218A13FB9005D80E0 /* mime-types.txt in Resources */,
 				0AA17C04183D825E004CE1A1 /* dsa_pub.pem in Resources */,
 				C20D18EC1948A3F70095A906 /* NewMainMenu.xib in Resources */,
@@ -7416,6 +7433,7 @@
 				0A613C1718AD7A6B004096DD /* MessageTableItemGeo.m in Sources */,
 				C26F7EC61A602837001D1AE2 /* ResendSecretSenderItem.m in Sources */,
 				C20B312E1C89E44C00A6BCF5 /* TGModernUpgradeChatViewController.m in Sources */,
+				C20A025B1CC6483200D94EF2 /* TGModernEmojiViewController.m in Sources */,
 				C297955519EC29DE00BE893E /* GeneralSettingsRowItem.m in Sources */,
 				0A59067E18AA32C8002ED7BA /* BTRPopUpButton.m in Sources */,
 				0AF4F4A2189ABDCC004BA4DF /* MessageTypingView.m in Sources */,

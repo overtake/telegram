@@ -133,6 +133,7 @@
 
 - (void)dealloc {
 	[self.popoverWindow close];
+
 }
 
 #pragma mark -
@@ -176,6 +177,7 @@
         }
     });
 }
+
 
 - (BOOL)isMouseInPopover {
     NSPoint globalLocation = [ NSEvent mouseLocation ];

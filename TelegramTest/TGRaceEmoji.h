@@ -7,13 +7,14 @@
 //
 
 #import "TMViewController.h"
-#import "EmojiViewController.h"
+#import "TGModernEmojiViewController.h"
 @interface TGRaceEmoji : TMViewController
 
 @property (nonatomic,strong,readonly) NSString *emoji;
 
 -(BOOL)makeWithEmoji:(NSString *)emoji;
-@property (nonatomic,weak) EmojiViewController *controller;
+@property (nonatomic,weak) TGModernEmojiViewController *controller;
+@property (nonatomic,weak) BTRButton *ebutton;
 
 -(id)initWithFrame:(NSRect)frame emoji:(NSString *)emoji;
 @end

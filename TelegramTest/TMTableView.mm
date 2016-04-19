@@ -21,7 +21,10 @@
 @property (nonatomic) NSInteger lastOverRow;
 @property (nonatomic, strong)  NSTrackingArea *trackingArea;
 
+@property (nonatomic,strong) Class stickClass;
 
+@property (nonatomic,strong) TMRowItem *currentStickItem;
+@property (nonatomic,strong) TMRowView *currentStickView;
 
 @end
 
@@ -325,6 +328,9 @@ static TMTableView *tableStatic;
 }
 
 - (id) itemAtPosition:(NSUInteger)positionOfItem {
+    if(self.count <= positionOfItem)
+        return nil;
+    
     return [self.list objectAtIndex:positionOfItem];
 }
 
@@ -507,7 +513,7 @@ static TMTableView *tableStatic;
         self.listSelectionHash->clear();
     delete self.listCacheHash;
     delete self.listSelectionHash;
-    
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
     [self removeTrackingArea:self.trackingArea];
 }
 
@@ -619,9 +625,147 @@ static TMTableView *tableStatic;
 
 -(void)clear {
     _scrollView.documentView = nil;
- 
+    [self removeScrollEvent];
 }
 
+
+-(void)setStickClass:(Class)stickClass {
+    _stickClass = stickClass;
+    
+    if(stickClass != nil) {
+        
+        [self addScrollEvent];
+        
+        if(!_currentStickView) {
+            
+            __block TMRowItem *item;
+            [self.list enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                if([obj isKindOfClass:stickClass]) {
+                    item = obj;
+                    *stop = YES;
+                }
+            }];
+            
+            _currentStickItem = item;
+            _currentStickView = [[[item viewClass] alloc] initWithFrame:NSMakeRect(0, 0, NSWidth(self.frame), item.height)];
+            [_currentStickView setRowItem:item];
+            [_currentStickView redrawRow];
+            [self addSubview:_currentStickView];
+        }
+        
+        
+    } else {
+        [self removeScrollEvent];
+    }
+    
+    
+}
+
+-(void)_didScrolledTableView:(NSNotification *)notification {
+
+    NSRange range = [self rowsInRect:[self visibleRect]];
+    
+    if(self.scrollView.documentSize.height > NSHeight(self.scrollView.frame)) {
+        NSUInteger stickIndex = range.location + 1;
+        
+        int yScrollOffset = self.scrollView.documentOffset.y - NSMinY(self.containerView.frame);
+
+        
+        TMRowItem *item = [self itemAtPosition:stickIndex];
+        
+//        
+        if(![item isKindOfClass:_stickClass]) {
+            
+            stickIndex++;
+            item = [self itemAtPosition:stickIndex];
+            
+        }
+        
+        
+        __block id currentStick;
+        
+        [self.list enumerateObjectsAtIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, range.location + 1)] options:NSEnumerationReverse usingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            
+            if([obj isKindOfClass:_stickClass]) {
+                currentStick = obj;
+                *stop = YES;
+            }
+            
+        }];
+        
+        if(_currentStickView && _currentStickView.rowItem != currentStick) {
+            [_currentStickView setRowItem:currentStick];
+            [_currentStickView redrawRow];
+        }
+        
+        if(item) {
+            
+            
+            
+            if([item isKindOfClass:_stickClass]) {
+               
+                NSRect rect = [self rectOfRow:stickIndex];
+                
+                float dif = MAX(MIN(0,yScrollOffset - NSMinY(rect)),-item.height);
+                
+                float yTopOffset =  yScrollOffset  - (dif + item.height);
+            
+                
+                
+                
+               
+                
+                
+                [_currentStickView setFrameOrigin:NSMakePoint(0, yTopOffset)];
+                
+                
+                
+                
+                // [_currentStickView setFrameOrigin:NSMakePoint(0, <#CGFloat y#>)]
+                
+                if(dif > -20 && _currentStickItem != item) {
+                    
+                    _currentStickItem = item;
+
+                    [_currentStickView setRowItem:item];
+                    [_currentStickView redrawRow];
+
+                }
+
+//                }
+                
+            }else if(_currentStickView) {
+                if([self.subviews lastObject] != _currentStickView) {
+                    [_currentStickView removeFromSuperview];
+                    [self addSubview:_currentStickView];
+                }
+                
+                
+                [_currentStickView setFrameOrigin:NSMakePoint(0, MIN(NSHeight(self.frame) - NSHeight(self.scrollView.frame),MAX(0,yScrollOffset)))];
+               
+            }
+            
+
+            
+        }
+        
+    }
+    
+}
+
+
+-(void)addScrollEvent {
+    id clipView = [[self enclosingScrollView] contentView];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(_didScrolledTableView:)
+                                                 name:NSViewBoundsDidChangeNotification
+                                               object:clipView];
+    
+}
+
+-(void)removeScrollEvent {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
 
 
 @end

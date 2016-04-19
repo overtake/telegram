@@ -10,11 +10,7 @@
 
 @interface EmojiViewController : TMViewController<NSTableViewDataSource, NSTableViewDelegate>
 
-- (void)insertEmoji:(NSString *)emoji;
-- (void)saveEmoji:(NSArray *)array;
 
-- (void)showPopovers;
-- (void)close;
 
 @property (nonatomic, copy) void (^insertEmoji) (NSString *emoji);
 
@@ -31,8 +27,13 @@
 +(NSArray *)allSets;
 +(TL_stickerSet *)setWithId:(long)n_id;
 +(NSArray *)stickersWithId:(long)n_id;
+
+
 -(void)saveModifier:(NSString *)modifier forEmoji:(NSString *)emoji;
-
 -(NSString *)emojiModifier:(NSString *)emoji;
+- (void)insertEmoji:(NSString *)emoji;
+- (void)saveEmoji:(NSArray *)array;
 
+- (void)showPopovers;
+- (void)close;
 @end
