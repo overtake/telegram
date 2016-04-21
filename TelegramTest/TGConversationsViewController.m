@@ -183,7 +183,7 @@
     
     
     [ASQueue dispatchOnMainQueue:^{
-        [EmojiViewController reloadStickers];
+        //[EmojiViewController reloadStickers];
         [TGModernEmojiViewController initialize];
     }];
     

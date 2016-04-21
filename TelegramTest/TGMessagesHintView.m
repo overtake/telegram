@@ -573,8 +573,13 @@ static NSMutableDictionary *inlineBotsExceptions;
         return;
     }
     
+    if(user.access_hash == 0)
+        user = nil;
+    
     if(user && acceptHandler)
         acceptHandler(user);
+    
+    
     
     
     __block NSString *offset = @"";

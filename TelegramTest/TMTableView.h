@@ -38,6 +38,9 @@
 
 @property (nonatomic,weak) TMViewController *viewController;
 
+@property (nonatomic,strong,readonly) Class stickClass;
+@property (nonatomic,strong,readonly) TMRowView *currentStickView;
+
 
 + (TMTableView *)current;
 + (void)setCurrent:(TMTableView *)table;

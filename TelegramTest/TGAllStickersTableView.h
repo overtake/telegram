@@ -30,6 +30,6 @@
 
 -(void)updateSets:(NSArray *)sets;
 
--(void)scrollToStickerPack:(long)packId;
+-(void)scrollToStickerPack:(long)packId completionHandler:(dispatch_block_t)completionHandler;
 
 @end

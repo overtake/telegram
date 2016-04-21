@@ -37,7 +37,7 @@
 #import "BlockedUsersManager.h"
 #import "TGModalGifSearch.h"
 #import "TGRecordedAudioPreview.h"
-#import "TGModernEmojiViewController.h"
+#import "TGModernESGViewController.h"
 @interface MessagesBottomView()<TGImageAttachmentsControllerDelegate>
 
 @property (nonatomic, strong) TMView *actionsView;
@@ -1049,33 +1049,33 @@ static RBLPopover *popover;
 }
 
 -(void)closeEmoji {
-    [[EmojiViewController instance] close];
+    [self.smilePopover close];
 }
 
 - (void)smileButtonClick:(BTRButton *)button {
     
-    TGModernEmojiViewController *emojiViewController = (TGModernEmojiViewController *) self.smilePopover.contentViewController;
+    TGModernESGViewController *egsViewController = (TGModernESGViewController *) self.smilePopover.contentViewController;
     
  //
     weak();
     if(!self.smilePopover) {
         
-        emojiViewController = [[TGModernEmojiViewController alloc] initWithFrame:NSMakeRect(0,0,350,300)];
+        egsViewController = [[TGModernESGViewController alloc] initWithFrame:NSMakeRect(0,0,350,300)];
        
-       self.smilePopover = [[RBLPopover alloc] initWithContentViewController:(NSViewController *)emojiViewController];
+        self.smilePopover = [[RBLPopover alloc] initWithContentViewController:(NSViewController *)egsViewController];
         [self.smilePopover setHoverView:self.smileButton];
-//        [self.smilePopover setCanBecomeKey:YES];
+        
         [self.smilePopover setDidCloseBlock:^(RBLPopover *popover){
             [weakSelf.smileButton setSelected:NO];
-            [emojiViewController close];
+            [egsViewController close];
         }];
         
     }
     
-    emojiViewController.messagesViewController = self.messagesViewController;
-    emojiViewController.epopover = self.smilePopover;
+    egsViewController.messagesViewController = self.messagesViewController;
+    egsViewController.epopover = self.smilePopover;
     
-    [emojiViewController setInsertEmoji:^(NSString *emoji) {
+    [egsViewController.emojiViewController setInsertEmoji:^(NSString *emoji) {
         [weakSelf insertEmoji:emoji];
     }];
     
@@ -1086,7 +1086,7 @@ static RBLPopover *popover;
     
     if(!self.smilePopover.isShown) {
         [self.smilePopover showRelativeToRect:frame ofView:self.smileButton preferredEdge:CGRectMaxYEdge];
-        [emojiViewController showPopovers];
+        [egsViewController show];
     }
 }
 

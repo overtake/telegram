@@ -53,12 +53,12 @@
         
         for(int i = 0; i < EMOJI_COUNT_PER_ROW; i++) {
             EmojiButton *button = [[EmojiButton alloc] initWithFrame:NSMakeRect(34 * i, 0, 34, 34)];
-            [button setTitleFont:TGSystemFont(17) forControlState:BTRControlStateNormal];
-            [button addTarget:self action:@selector(emojiClick:) forControlEvents:BTRControlEventMouseDownInside];
-                        
-            if(floor(NSAppKitVersionNumber) >= 1347 ) {
-                [button addTarget:self action:@selector(emojiLongClick:) forControlEvents:BTRControlEventLongLeftClick];
-            }
+//            [button setTitleFont:TGSystemFont(17) forControlState:BTRControlStateNormal];
+//            [button addTarget:self action:@selector(emojiClick:) forControlEvents:BTRControlEventMouseDownInside];
+//                        
+//            if(floor(NSAppKitVersionNumber) >= 1347 ) {
+//                [button addTarget:self action:@selector(emojiLongClick:) forControlEvents:BTRControlEventLongLeftClick];
+//            }
             
             [self addSubview:button];
         }
@@ -121,25 +121,25 @@
 - (void)setEmoji:(NSString *)string atIndex:(int)index {
     
     
-    EmojiButton *button = [self.subviews objectAtIndex:index];
-    if(string) {
-        [button setHidden:NO];
-        
-        NSString *modifier = [self.controller emojiModifier:string];
-        
-        if(modifier) {
-            string = [string emojiWithModifier:modifier emoji:string];
-        }
-        
-        [button setTitle:string forControlState:BTRControlStateNormal];
-    } else {
-        [button setHidden:YES];
-    }
-    
- 
-    [button setHighlighted:NO];
-    [button setHovered:NO];
-    [button setSelected:NO];
+//    EmojiButton *button = [self.subviews objectAtIndex:index];
+//    if(string) {
+//        [button setHidden:NO];
+//        
+//        NSString *modifier = [self.controller emojiModifier:string];
+//        
+//        if(modifier) {
+//            string = [string emojiWithModifier:modifier emoji:string];
+//        }
+//        
+//        [button setTitle:string forControlState:BTRControlStateNormal];
+//    } else {
+//        [button setHidden:YES];
+//    }
+//    
+// 
+//    [button setHighlighted:NO];
+//    [button setHovered:NO];
+//    [button setSelected:NO];
 }
 
 

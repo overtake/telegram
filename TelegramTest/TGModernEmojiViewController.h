@@ -8,7 +8,11 @@
 
 #import "TMViewController.h"
 
+@class TGModernESGViewController;
+
 @interface TGModernEmojiViewController : TMViewController
+
+@property (nonatomic,weak) TGModernESGViewController *esgViewController;
 
 
 @property (nonatomic,weak) MessagesViewController *messagesViewController;
@@ -22,8 +26,7 @@
 - (void)insertEmoji:(NSString *)emoji;
 - (void)saveEmoji:(NSArray *)array;
 
-- (void)showPopovers;
+- (void)show;
 - (void)close;
-
 
 @end

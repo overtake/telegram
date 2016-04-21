@@ -10,76 +10,15 @@
 #import "EmojiButton.h"
 #import "TGRaceEmoji.h"
 #import "TGTextLabel.h"
-
-
-@interface TGModernSegmentRowView : TMRowView
-@property (nonatomic,strong) TGTextLabel *textLabel;
-@end
+#import "TGModernESGViewController.h"
+#import "TGTextLabel.h"
+#import "TGModernStickRowItem.h"
 
 @interface TGModernEmojiRowView : TMRowView
 @property (nonatomic, strong) RBLPopover *racePopover;
 @end
 
-@interface TGModernSegmentItem : TMRowItem
-@property (nonatomic,strong) NSAttributedString *header;
-@end
 
-@implementation TGModernSegmentItem
-
--(id)initWithObject:(id)object {
-    if(self = [super initWithObject:object]) {
-        NSMutableAttributedString *attr = [[NSMutableAttributedString alloc] init];
-        
-        [attr appendString:object withColor:GRAY_TEXT_COLOR];
-        [attr setFont:TGSystemFont(13) forRange:attr.range];
-        
-        _header = attr;
-        
-    }
-    
-    return self;
-}
-
--(int)height {
-    return 34;
-}
-
--(NSUInteger)hash {
-    return [_header.string hash];
-}
-
--(Class)viewClass {
-    return [TGModernSegmentRowView class];
-}
-
-@end
-
-
-
-@implementation TGModernSegmentRowView
-
--(instancetype)initWithFrame:(NSRect)frameRect {
-    if(self = [super initWithFrame:frameRect]) {
-        _textLabel = [[TGTextLabel alloc] initWithFrame:NSMakeRect(5, 0, 0, 0)];
-        [self addSubview:_textLabel];
-        self.backgroundColor = NSColorFromRGBWithAlpha(0xffffff, 0.9);
-    }
-    
-    return self;
-}
-
-
--(void)redrawRow {
-    [super redrawRow];
-    
-    TGModernSegmentItem *item = (TGModernSegmentItem *)self.rowItem;
-    
-    [_textLabel setText:item.header maxWidth:NSWidth(self.frame) - 20];
-    
-    [_textLabel setCenteredYByView:self];
-}
-
-@end
 
 @interface TGModernEmojiBottomButton : BTRButton
 @property (nonatomic) int index;
@@ -106,6 +45,8 @@
 @property (nonatomic,strong) NSArray *list;
 @property (nonatomic,assign) NSUInteger nhash;
 @property (nonatomic, weak) TGModernEmojiViewController *controller;
+@property (nonatomic,strong) NSAttributedString *attr;
+@property (nonatomic,assign) NSSize size;
 
 @end
 
@@ -113,8 +54,38 @@
 
 -(id)initWithObject:(id)object {
     if(self = [super initWithObject:object]) {
-        _list = object;
-        _nhash = [[_list componentsJoinedByString:@" "] hash];
+        
+        NSMutableArray *list = [NSMutableArray array];
+        
+        
+        static NSMutableParagraphStyle *paragraph;
+        static dispatch_once_t onceToken;
+        dispatch_once(&onceToken, ^{
+            paragraph = [[NSMutableParagraphStyle alloc] init];
+            [paragraph setLineSpacing:10];
+            
+        });
+        
+        
+        [object enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+           
+            NSMutableAttributedString *attr = [[NSMutableAttributedString alloc] init];
+            
+            [attr appendString:obj];
+            
+            [attr addAttribute:NSParagraphStyleAttributeName value:paragraph range:attr.range];
+            [attr addAttribute:(NSString *) kCTKernAttributeName value:@(0.0) range:attr.range];
+            [attr setFont:TGSystemFont(17) forRange:attr.range];
+            
+            [list addObject:attr];
+    
+       
+        }];
+        
+        
+        _list = list;
+
+        _nhash = [[object componentsJoinedByString:@" "] hash];
         
     }
     
@@ -122,7 +93,7 @@
 }
 
 -(int)height {
-    return 34;
+    return 34.0;
 }
 
 -(NSUInteger)hash {
@@ -146,18 +117,47 @@
         
         [self setWantsLayer:YES];
         
+        
+      //  for (int index = 0; index < 10; index++) {
+            
+            
+            EmojiButton *button = [[EmojiButton alloc] initWithFrame:NSMakeRect(0, 0, NSWidth(frameRect), NSHeight(frameRect))];
+        
+        weak();
+        [button setEmojiCallback:^(NSString *emoji) {
+            TGModernEmojiRowItem *item = (TGModernEmojiRowItem *) weakSelf.rowItem;
+            if(!item.controller.epopover.lockHoverClose) {
+                [item.controller insertEmoji:emoji];
+            }
+        }];
+           // [button addTarget:self action:@selector(emojiClick:) forControlEvents:BTRControlEventMouseUpInside];
+            
+            if(floor(NSAppKitVersionNumber) >= 1347 ) {
+          //      [button addTarget:self action:@selector(emojiLongClick:) forControlEvents:BTRControlEventLongLeftClick];
+            }
+            
+            [self addSubview:button];
+     //   }
+        
+        
+        
+        
+        
     }
     return self;
 }
 
-- (void)emojiClick:(BTRButton *)button {
+-(void)setFrameSize:(NSSize)newSize {
+    [super setFrameSize:newSize];
     
-    TGModernEmojiRowItem *item = (TGModernEmojiRowItem *) self.rowItem;
-    if(!item.controller.epopover.lockHoverClose) {
-        [item.controller insertEmoji:button.titleLabel.stringValue];
-    }
+    
+    EmojiButton *button = [self.subviews objectAtIndex:0];
+    
+    [button setFrameSize:newSize];
+    
     
 }
+
 
 -(void)emojiLongClick:(BTRButton *)button {
     
@@ -212,52 +212,31 @@
     
     TGModernEmojiRowItem *item = (TGModernEmojiRowItem *) self.rowItem;
     
-    while (item.list.count < self.subviews.count) {
-        [[self.subviews lastObject] removeFromSuperview];
-    }
     
-    [item.list enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-        [self setEmoji:obj atIndex:idx];
-    }];
+    [self setEmoji:item.attr atIndex:0];
     
 }
 
 
-- (void)setEmoji:(NSString *)string atIndex:(NSUInteger)index {
+- (void)setEmoji:(NSAttributedString *)string atIndex:(NSUInteger)index {
     
     TGModernEmojiRowItem *item = (TGModernEmojiRowItem *) self.rowItem;
     
-    if(self.subviews.count < index+1) {
-        EmojiButton *button = [[EmojiButton alloc] initWithFrame:NSMakeRect(item.height * index, 0, item.height, item.height)];
-        [button setTitleFont:TGSystemFont(17) forControlState:BTRControlStateNormal];
-        [button addTarget:self action:@selector(emojiClick:) forControlEvents:BTRControlEventMouseUpInside];
-        
-        if(floor(NSAppKitVersionNumber) >= 1347 ) {
-            [button addTarget:self action:@selector(emojiLongClick:) forControlEvents:BTRControlEventLongLeftClick];
-        }
-        
-        [self addSubview:button];
-    }
     
     EmojiButton *button = [self.subviews objectAtIndex:index];
-    if(string) {
-        [button setHidden:NO];
         
-        NSString *modifier = [item.controller emojiModifier:string];
-        
-        if(modifier) {
-            string = [string emojiWithModifier:modifier emoji:string];
-        }
-        
-        [button setTitle:string forControlState:BTRControlStateNormal];
-    } else {
-        [button setHidden:YES];
-    }
-    
-    
-    [button setHighlighted:NO];
-    [button setHovered:NO];
-    [button setSelected:NO];
+//    NSString *modifier = [item.controller emojiModifier:string];
+//    
+//    if(modifier) {
+//        string = [string emojiWithModifier:modifier emoji:string];
+//    }
+//    
+    [button setList:item.list];
+
+//    
+//    [button setHighlighted:NO];
+//    [button setHovered:NO];
+//    [button setSelected:NO];
 }
 
 
@@ -267,6 +246,7 @@
 @interface TGModernEmojiViewController () <TMTableViewDelegate>
 @property (nonatomic,strong) TMTableView *tableView;
 @property (nonatomic,strong) TMView *bottomView;
+@property (nonatomic,strong) BTRButton *showGSControllerView;
 
 @end
 
@@ -286,20 +266,47 @@ static NSArray *segment_list;
 -(void)loadView {
     [super loadView];
     
-    _tableView = [[TMTableView alloc] initWithFrame:NSMakeRect(5, 42, NSWidth(self.view.frame) - 10, NSHeight(self.view.frame) - 42)];
+    _tableView = [[TMTableView alloc] initWithFrame:NSMakeRect(0, 42, NSWidth(self.view.frame) - 0, NSHeight(self.view.frame) - 42)];
     [self.view addSubview:_tableView.containerView];
     
     _tableView.tm_delegate = self;
     
     
     self.bottomView = [[TMView alloc] initWithFrame:NSMakeRect(0, 0, self.view.bounds.size.width, 42)];
+    
+    weak();
+    
+    [self.bottomView setDrawBlock:^{
+        [DIALOG_BORDER_COLOR set];
+        NSRectFill(NSMakeRect(0, NSHeight(weakSelf.bottomView.frame) - DIALOG_BORDER_WIDTH, NSWidth(weakSelf.bottomView.frame), DIALOG_BORDER_WIDTH));
+    }];
+    
     for(int i = 1; i <= 6; i++) {
         BTRButton *button = [self createButtonForIndex:i];//20
-        [button setFrameOrigin:NSMakePoint(i * 12 + 30 * (i - 1), 12)];
+        [button setFrameOrigin:NSMakePoint(i * 26 + 30 * (i - 1), 12)];
         [self.bottomView addSubview:button];
     }
     
     [self.view addSubview:self.bottomView];
+    
+    _showGSControllerView = [[BTRButton alloc] initWithFrame:NSZeroRect];
+    
+    [_showGSControllerView setTitle:NSLocalizedString(@"EGS.GifsAndStickers", nil) forControlState:BTRControlStateNormal];
+    [_showGSControllerView setTitleColor:LINK_COLOR forControlState:BTRControlStateNormal];
+    [_showGSControllerView setTitleFont:TGSystemMediumFont(13) forControlState:BTRControlStateNormal];
+    
+    [_showGSControllerView.titleLabel sizeToFit];
+    
+    [_showGSControllerView setFrame:NSMakeRect(NSWidth(self.view.frame) - NSWidth(_showGSControllerView.titleLabel.frame) - 10, NSHeight(self.view.frame) - NSHeight(_showGSControllerView.titleLabel.frame) - 8, NSWidth(_showGSControllerView.titleLabel.frame), 20)];
+    
+    
+    
+    [_showGSControllerView addBlock:^(BTRControlEvents events) {
+        
+        [weakSelf.esgViewController showSGController:YES];
+        
+    } forControlEvents:BTRControlEventClick];
+    [self.view addSubview:_showGSControllerView];
     
     [self addScrollEvent];
 
@@ -318,10 +325,20 @@ static NSArray *segment_list;
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
+-(void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    [self show];
+}
 
-- (void)showPopovers {
+-(void)viewDidDisappear:(BOOL)animated {
+    [super viewDidDisappear:animated];
+    [self close];
+}
+
+
+- (void)show {
     
-    int rowCount = floor(NSWidth(_tableView.frame) / 34.0f);
+    int rowCount = floor(NSWidth(_tableView.frame) / 34.0f) ;
     
     
     NSArray *segments = @[@"Emoji.Recent",@"Emoji.People",@"Emoji.Nature",@"Emoji.Food",@"Emoji.TravelAndPlaces",@"Emoji.Symbols"];
@@ -332,7 +349,7 @@ static NSArray *segment_list;
         
          NSMutableArray *items = [NSMutableArray array];
         
-        id stickyItem = [[TGModernSegmentItem alloc] initWithObject:NSLocalizedString(segments[idx], nil)];
+        id stickyItem = [[TGModernStickRowItem alloc] initWithObject:NSLocalizedString(segments[idx], nil)];
         [stickyItems addObject:stickyItem];
         [_tableView addItem:stickyItem tableRedraw:NO];
         
@@ -343,7 +360,7 @@ static NSArray *segment_list;
            
             [items addObject:obj];
             
-            if(items.count == rowCount) {
+            if(items.count == rowCount ) {
                 TGModernEmojiRowItem *item = [[TGModernEmojiRowItem alloc] initWithObject:[items copy]];
                 item.controller = self;
                 
@@ -362,9 +379,11 @@ static NSArray *segment_list;
         
     }];
     
-    [self.tableView setStickClass:[TGModernSegmentItem class]];
     
     [self.tableView reloadData];
+    
+    [self.tableView setStickClass:[TGModernStickRowItem class]];
+
 }
 
 - (void)close {
@@ -475,7 +494,7 @@ static NSArray *segment_list;
     
     [self.tableView.list enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
         
-        if([obj isKindOfClass:[TGModernSegmentItem class]]) {
+        if([obj isKindOfClass:_tableView.stickClass]) {
             currentStickIdx ++;
             
             if(button.index == currentStickIdx) {
@@ -502,7 +521,7 @@ static NSArray *segment_list;
         if(range.location != NSNotFound) {
             [self.tableView.list enumerateObjectsAtIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, range.location + 1)] options:NSEnumerationReverse usingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
                 
-                if([obj isKindOfClass:[TGModernSegmentItem class]]) {
+                if([obj isKindOfClass:_tableView.stickClass]) {
                     currentStick = obj;
                     *stop = YES;
                 }

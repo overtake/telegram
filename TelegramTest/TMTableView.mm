@@ -21,10 +21,9 @@
 @property (nonatomic) NSInteger lastOverRow;
 @property (nonatomic, strong)  NSTrackingArea *trackingArea;
 
-@property (nonatomic,strong) Class stickClass;
 
 @property (nonatomic,strong) TMRowItem *currentStickItem;
-@property (nonatomic,strong) TMRowView *currentStickView;
+
 
 @end
 
@@ -646,22 +645,37 @@ static TMTableView *tableStatic;
                 }
             }];
             
-            _currentStickItem = item;
-            _currentStickView = [[[item viewClass] alloc] initWithFrame:NSMakeRect(0, 0, NSWidth(self.frame), item.height)];
-            [_currentStickView setRowItem:item];
-            [_currentStickView redrawRow];
-            [self addSubview:_currentStickView];
+            if(item) {
+                _currentStickItem = item;
+                _currentStickView = [[[item viewClass] alloc] initWithFrame:NSMakeRect(0, 0, NSWidth(self.frame), item.height)];
+                [_currentStickView setValue:@(YES) forKey:@"isStickView"];
+                [_currentStickView setRowItem:item];
+                [_currentStickView redrawRow];
+                [self addSubview:_currentStickView];
+            }
+            
+            
         }
+    
+        dispatch_async(dispatch_get_current_queue(), ^{
+            [self _didScrolledTableView:nil];
+        });
+        
         
         
     } else {
         [self removeScrollEvent];
+        [_currentStickView removeFromSuperview];
+        _currentStickView = nil;
     }
     
+   
     
 }
 
 -(void)_didScrolledTableView:(NSNotification *)notification {
+    
+    
 
     NSRange range = [self rowsInRect:[self visibleRect]];
     
@@ -699,50 +713,29 @@ static TMTableView *tableStatic;
         }
         
         if(item) {
-            
+                        
+            if([self.subviews lastObject] != _currentStickView) {
+                [_currentStickView removeFromSuperview];
+                [self addSubview:_currentStickView];
+            }
             
             
             if([item isKindOfClass:_stickClass]) {
                
-                NSRect rect = [self rectOfRow:stickIndex];
+                NSRect rect = [self rectOfRow:stickIndex]; 
                 
                 float dif = MAX(MIN(0,yScrollOffset - NSMinY(rect)),-item.height);
                 
                 float yTopOffset =  yScrollOffset  - (dif + item.height);
-            
-                
-                
-                
-               
-                
                 
                 [_currentStickView setFrameOrigin:NSMakePoint(0, yTopOffset)];
+                [_currentStickView setValue:@(fabs(dif) == item.height) forKey:@"isStickView"];
                 
-                
-                
-                
-                // [_currentStickView setFrameOrigin:NSMakePoint(0, <#CGFloat y#>)]
-                
-                if(dif > -20 && _currentStickItem != item) {
-                    
-                    _currentStickItem = item;
 
-                    [_currentStickView setRowItem:item];
-                    [_currentStickView redrawRow];
-
-                }
-
-//                }
-                
             }else if(_currentStickView) {
-                if([self.subviews lastObject] != _currentStickView) {
-                    [_currentStickView removeFromSuperview];
-                    [self addSubview:_currentStickView];
-                }
-                
-                
-                [_currentStickView setFrameOrigin:NSMakePoint(0, MIN(NSHeight(self.frame) - NSHeight(self.scrollView.frame),MAX(0,yScrollOffset)))];
-               
+                //MIN(NSHeight(self.frame) - NSHeight(self.scrollView.frame),MAX(0,yScrollOffset))
+                [_currentStickView setFrameOrigin:NSMakePoint(0,  MAX(0,yScrollOffset))];
+               [_currentStickView setValue:@(YES) forKey:@"isStickView"];
             }
             
 

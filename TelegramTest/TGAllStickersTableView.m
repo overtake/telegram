@@ -12,9 +12,12 @@
 #import "EmojiViewController.h"
 #import "StickersPanelView.h"
 #import "TGStickerPreviewModalView.h"
+#import "TGModernStickRowItem.h"
 
+@interface TGAllStickerTableItemView : TMRowView
+@property (nonatomic,strong) TGStickerImageView *imageView;
 
-
+@end
 
 @interface TGAllStickersTableView ()<TMTableViewDelegate>
 @property (nonatomic,strong) TMView *noEmojiView;
@@ -23,6 +26,7 @@
 @property (nonatomic,assign) BOOL isCustomStickerPack;
 @property (nonatomic,strong) TGStickerPreviewModalView *previewModal;
 @property (nonatomic,assign) BOOL notSendUpSticker;
+@property (nonatomic,strong) NSMutableArray *cItems;
 @end
 
 
@@ -66,6 +70,14 @@
     return self;
 }
 
+-(int)height {
+    return 80;
+}
+
+-(Class)viewClass {
+    return [TGAllStickerTableItemView class];
+}
+
 
 -(NSUInteger)hash {
     
@@ -82,11 +94,7 @@
 
 
 
-@interface TGAllStickerTableItemView : TMRowView
-@property (nonatomic,strong) TGStickerImageView *imageView;
-@property (nonatomic,weak) TGAllStickersTableView *tableView;
 
-@end
 
 
 @implementation TGAllStickerTableItemView
@@ -94,25 +102,69 @@
 -(instancetype)initWithFrame:(NSRect)frameRect {
     if(self = [super initWithFrame:frameRect]) {
         
+        __block int xOffset = 0;
+        
+        int width = round(NSWidth(self.bounds)/5);
+        
+        weak();
+        
+        for (int i = 0; i < 5; i++) {
+            BTRButton *button = [[BTRButton alloc] initWithFrame:NSMakeRect(xOffset, 0, width, NSHeight(self.bounds))];
+            
+            
+            
+            [button addBlock:^(BTRControlEvents events) {
+                
+                TGAllStickersTableItem *item = (TGAllStickersTableItem *)[weakSelf rowItem];
+                
+                if(weakSelf.tableView.previewModal.isShown) {
+                    [weakSelf.tableView.previewModal close:YES];
+                    weakSelf.tableView.previewModal = nil;
+                    
+                    return;
+                }
+                
+                if(weakSelf.tableView.notSendUpSticker)
+                {
+                    weakSelf.tableView.notSendUpSticker = NO;
+                    return;
+                }
+                
+                if(!weakSelf.tableView.isCustomStickerPack || weakSelf.tableView.canSendStickerAlways)
+                    [weakSelf.tableView.messagesViewController sendSticker:item.stickers[i] forConversation:weakSelf.tableView.messagesViewController.conversation addCompletionHandler:nil];
+                
+                if(weakSelf.tableView.canSendStickerAlways) {
+                    [TMViewController closeAllModals];
+                }
+                
+                
+            } forControlEvents:BTRControlEventMouseUpInside];
+            
+            [button addBlock:^(BTRControlEvents events) {
+                
+                TGAllStickersTableItem *item = (TGAllStickersTableItem *)[weakSelf rowItem];
+                
+                TGStickerPreviewModalView *preview = [[TGStickerPreviewModalView alloc] init];
+                
+                [preview setSticker:item.stickers[i]];
+                
+                [preview show:appWindow() animated:YES];
+                
+                weakSelf.tableView.previewModal = preview;
+                
+            } forControlEvents:BTRControlEventLongLeftClick];
+            
+            
+            TGStickerImageView *imageView = [[TGStickerImageView alloc] initWithFrame:NSZeroRect];
+            [button addSubview:imageView];
+            [self addSubview:button];
+            xOffset+=width;
+        }
     }
     
     return self;
 }
 
-
-static NSImage *hoverImage() {
-    static NSImage *image;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        image = [[NSImage alloc] initWithSize:NSMakeSize(67, 67)];
-        [image lockFocus];
-        NSBezierPath *path = [NSBezierPath bezierPathWithRoundedRect:NSMakeRect(0, 0, 67, 67) xRadius:3 yRadius:3];
-        [NSColorFromRGB(0xf4f4f4) set];
-        [path fill];
-        [image unlockFocus];
-    });
-    return image;
-}
 
 static NSImage *higlightedImage() {
     static NSImage *image;
@@ -128,83 +180,38 @@ static NSImage *higlightedImage() {
     return image;
 }
 
+-(TGAllStickersTableView *)tableView {
+    return (TGAllStickersTableView *) self.rowItem.table;
+}
+
 
 -(void)redrawRow {
     
-    
-    [self removeAllSubviews];
-    
     TGAllStickersTableItem *item = (TGAllStickersTableItem *)[self rowItem];
     
-    __block int xOffset = 0;
-    
-    int width = round(NSWidth(self.bounds)/5);
-    
-    weak();
-    
+    [self.subviews enumerateObjectsUsingBlock:^(__kindof NSView * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        
+        [obj setHidden:idx >= item.stickers.count];
+        
+    }];
+   
+
     [item.stickers enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
         
-        BTRButton *button = [[BTRButton alloc] initWithFrame:NSMakeRect(xOffset, 0, width, NSHeight(self.bounds))];
+        BTRButton *button = self.subviews[idx];
+        TGStickerImageView *imageView = [button.subviews lastObject];
         
-        
-        if(!_tableView.isCustomStickerPack) {
-            [button setBackgroundImage:hoverImage() forControlState:BTRControlStateHover];
+        if(!self.tableView.isCustomStickerPack) {
             [button setBackgroundImage:higlightedImage() forControlState:BTRControlStateHover];
+        } else {
+            [button setBackgroundImage:nil forControlState:BTRControlStateHover];
         }
-        
-        TGStickerImageView *imageView = [[TGStickerImageView alloc] initWithFrame:NSMakeRect(xOffset, 0, width, NSHeight(self.bounds))];
-        
-        
-        [button addBlock:^(BTRControlEvents events) {
-            
-            if(weakSelf.tableView.previewModal.isShown) {
-                [weakSelf.tableView.previewModal close:YES];
-                weakSelf.tableView.previewModal = nil;
-                
-                return;
-            }
-            
-            if(weakSelf.tableView.notSendUpSticker)
-            {
-                weakSelf.tableView.notSendUpSticker = NO;
-                return;
-            }
-            
-            if(!weakSelf.tableView.isCustomStickerPack || weakSelf.tableView.canSendStickerAlways)
-                [weakSelf.tableView.messagesViewController sendSticker:item.stickers[idx] forConversation:weakSelf.tableView.messagesViewController.conversation addCompletionHandler:nil];
-            
-            if(weakSelf.tableView.canSendStickerAlways) {
-                [TMViewController closeAllModals];
-            }
-            
-            
-        } forControlEvents:BTRControlEventMouseUpInside];
-        
-        [button addBlock:^(BTRControlEvents events) {
-            
-            TGStickerPreviewModalView *preview = [[TGStickerPreviewModalView alloc] init];
-            
-            [preview setSticker:item.stickers[idx]];
-            
-            [preview show:appWindow() animated:YES];
-            
-            weakSelf.tableView.previewModal = preview;
-            
-        } forControlEvents:BTRControlEventLongLeftClick];
-        
         
         [imageView setFrameSize:[item.objects[idx] imageSize]];
         
         imageView.object = item.objects[idx];
         
         [imageView setCenterByView:button];
-        
-        [button addSubview:imageView];
-        
-        
-        [self addSubview:button];
-        
-        xOffset+=width;
         
         
     }];
@@ -462,6 +469,8 @@ static NSImage *higlightedImage() {
     
     weak();
     
+
+    
     [[Storage yap] readWithBlock:^(YapDatabaseReadTransaction *transaction) {
         
         NSMutableDictionary *sort = [transaction objectForKey:@"recentStickers" inCollection:STICKERS_COLLECTION];
@@ -509,6 +518,9 @@ static NSImage *higlightedImage() {
         
         NSMutableArray *row = [[NSMutableArray alloc] init];
         
+        if(recent.count > 0) {
+             [items addObject:[[TGModernStickRowItem alloc] initWithObject:NSLocalizedString(@"Stickers.Recent", nil)]];
+        }
         
         [recent enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
             
@@ -530,6 +542,8 @@ static NSImage *higlightedImage() {
         
         [weakSelf.sets enumerateObjectsUsingBlock:^(TL_stickerSet *set, NSUInteger idx, BOOL * _Nonnull stop) {
             
+            [items addObject:[[TGModernStickRowItem alloc] initWithObject:set.title]];
+            
             [weakSelf.stickers[@(set.n_id)] enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
                 
                 [row addObject:obj];
@@ -548,13 +562,23 @@ static NSImage *higlightedImage() {
             
         }];
         
+        _cItems = items;
+        
         
     }];
     
+
     [self removeAllItems:NO];
     
+
     
     [self insert:items startIndex:0 tableRedraw:NO];
+    
+
+
+    
+    [self setStickClass:[TGModernStickRowItem class]];
+
     
     [super reloadData];
     //
@@ -568,7 +592,7 @@ static NSImage *higlightedImage() {
 
 - (CGFloat)rowHeight:(NSUInteger)row item:(TMRowItem *) item
 {
-    return 80;
+    return item.height;
 }
 
 - (BOOL)isGroupRow:(NSUInteger)row item:(TMRowItem *) item {
@@ -576,8 +600,7 @@ static NSImage *higlightedImage() {
 }
 
 - (TMRowView *)viewForRow:(NSUInteger)row item:(TMRowItem *) item {
-    TGAllStickerTableItemView *view = (TGAllStickerTableItemView *) [self cacheViewForClass:[TGAllStickerTableItemView class] identifier:@"stickerTableItemView" withSize:NSMakeSize(NSWidth(self.bounds), 80)];;
-    view.tableView = self;
+    TGAllStickerTableItemView *view = (TGAllStickerTableItemView *) [self cacheViewForClass:item.viewClass identifier:NSStringFromClass(item.viewClass) withSize:NSMakeSize(NSWidth(self.containerView.frame), item.height)];;
     return view;
 }
 
@@ -598,7 +621,7 @@ static NSImage *higlightedImage() {
     
     [_stickers removeAllObjects];
     _sets = [NSMutableArray array];
-    
+
     [_sets addObject:stickerPack.set];
     _stickers[@(stickerPack.set.n_id)] = [stickerPack documents];
     
@@ -621,20 +644,27 @@ static NSImage *higlightedImage() {
 }
 
 
--(void)scrollToStickerPack:(long)packId {
+-(void)scrollToStickerPack:(long)packId completionHandler:(dispatch_block_t)completionHandler {
     
     __block TGAllStickersTableItem *item;
     
     [self.list enumerateObjectsUsingBlock:^(TGAllStickersTableItem *obj, NSUInteger idx, BOOL *stop) {
-        
-        if(obj.packId == packId) {
-            item = obj;
-            *stop = YES;
+        if(obj.class == TGAllStickersTableItem.class) {
+            if(obj.packId == packId) {
+                item = obj;
+                *stop = YES;
+            }
         }
+        
         
     }];
     
-    [self.scrollView scrollToPoint:[self rectOfRow:[self indexOfItem:item]].origin animation:YES];
+    
+    NSRect rect = [self rectOfRow:[self indexOfItem:item]];
+    
+    [self.scrollView.clipView scrollRectToVisible:NSMakeRect(NSMinX(rect), NSMinY(rect) + (NSMinY(self.containerView.frame) - NSHeight(self.currentStickView.frame)), NSWidth(rect), NSHeight(self.scrollView.frame))  animated:YES completion:^(BOOL scrolled) {
+        completionHandler();
+    }];
     
 }
 

@@ -147,7 +147,7 @@
     
     [view setRowItem:item];
     [view redrawRow];
-    item.table = self;
+    item.table = (TMTableView *) self;
     
     [view setFrameSize:NSMakeSize(NSWidth(_containerView.frame), height)];
 

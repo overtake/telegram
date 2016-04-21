@@ -757,10 +757,14 @@
     
     
     NSImage *image = [self.playListContainerView getAlbumImageFromItem:audioItem];
-    
-    if(image) {
-        [sNotify setValue:image forKey:@"_identityImage"];
+    @try {
+        if(image) {
+            [sNotify setValue:image forKey:@"_identityImage"];
+        }
+    } @catch (NSException *exception) {
+        
     }
+   
     
     
     

@@ -61,6 +61,7 @@ extern NSString * const BTRControlStateCursorKey;
 @class BTRControlContent;
 @interface BTRControl : BTRView
 
+
 - (void)addBlock:(void (^)(BTRControlEvents events))block forControlEvents:(BTRControlEvents)events;
 - (void)addTarget:(id)target action:(SEL)action forControlEvents:(BTRControlEvents)events;
 

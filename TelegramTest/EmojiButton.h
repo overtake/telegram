@@ -8,6 +8,9 @@
 
 #import "BTRButton.h"
 
-@interface EmojiButton : BTRButton
-@property (nonatomic, strong) NSString *smile;
+@interface EmojiButton : TMView
+@property (nonatomic, strong) NSAttributedString *smile;
+@property (nonatomic, strong) NSArray<NSAttributedString *> *list;
+
+@property (nonatomic,strong) void (^emojiCallback)(NSString *emoji);
 @end

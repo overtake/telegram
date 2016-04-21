@@ -591,6 +591,8 @@
 		C29A40341C5127F800AE4B71 /* TL_destructMessage45.m in Sources */ = {isa = PBXBuildFile; fileRef = C29A40331C5127F700AE4B71 /* TL_destructMessage45.m */; };
 		C29A40371C52484F00AE4B71 /* InlineBotMediaSecretSenderItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C29A40361C52484F00AE4B71 /* InlineBotMediaSecretSenderItem.m */; };
 		C29A403A1C592B5100AE4B71 /* TL_secretWebpage.m in Sources */ = {isa = PBXBuildFile; fileRef = C29A40391C592B5100AE4B71 /* TL_secretWebpage.m */; };
+		C29E5FCD1CC8281000476AE2 /* TGModernStickRowItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C29E5FCC1CC8281000476AE2 /* TGModernStickRowItem.m */; };
+		C29E5FDA1CC8282600476AE2 /* TGModernStickRowView.m in Sources */ = {isa = PBXBuildFile; fileRef = C29E5FD91CC8282600476AE2 /* TGModernStickRowView.m */; };
 		C2A2B4261BD01FC20083DA8A /* TGHeadChatPanel.m in Sources */ = {isa = PBXBuildFile; fileRef = C2A2B4251BD01FC20083DA8A /* TGHeadChatPanel.m */; };
 		C2A2B42E1BD519870083DA8A /* TGHCMessagesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C2A2B42D1BD519870083DA8A /* TGHCMessagesViewController.m */; };
 		C2A2B4311BD7C8DB0083DA8A /* TGModalForwardView.m in Sources */ = {isa = PBXBuildFile; fileRef = C2A2B4301BD7C8DB0083DA8A /* TGModalForwardView.m */; };
@@ -909,6 +911,8 @@
 		C2F07E1F1BBDBACD00B3DB39 /* libstdc++.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = C2F07E1E1BBDBACD00B3DB39 /* libstdc++.tbd */; };
 		C2F07E251BC02F6200B3DB39 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A2576A4181D09E500FB386C /* SystemConfiguration.framework */; };
 		C2F07E281BC02FC500B3DB39 /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = C2F07E181BBD7D9300B3DB39 /* libz.tbd */; };
+		C2F0F4B91CC7763800DB8CC5 /* TGModernESGViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C2F0F4B81CC7763800DB8CC5 /* TGModernESGViewController.m */; };
+		C2F0F4BD1CC7780F00DB8CC5 /* TGModernSGViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C2F0F4BC1CC7780F00DB8CC5 /* TGModernSGViewController.m */; };
 		C2F3995F190E7692006B36F7 /* ReadHistroryTask.m in Sources */ = {isa = PBXBuildFile; fileRef = C2F3995E190E7692006B36F7 /* ReadHistroryTask.m */; };
 		C2F39967190FD1D6006B36F7 /* ASHandle.m in Sources */ = {isa = PBXBuildFile; fileRef = C2F39965190FD1D6006B36F7 /* ASHandle.m */; };
 		C2F3996E190FD1FC006B36F7 /* SGraphListNode.m in Sources */ = {isa = PBXBuildFile; fileRef = C2F39969190FD1FC006B36F7 /* SGraphListNode.m */; };
@@ -2277,6 +2281,10 @@
 		C29A40361C52484F00AE4B71 /* InlineBotMediaSecretSenderItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = InlineBotMediaSecretSenderItem.m; sourceTree = "<group>"; };
 		C29A40381C592B5100AE4B71 /* TL_secretWebpage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TL_secretWebpage.h; sourceTree = "<group>"; };
 		C29A40391C592B5100AE4B71 /* TL_secretWebpage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TL_secretWebpage.m; sourceTree = "<group>"; };
+		C29E5FCB1CC8281000476AE2 /* TGModernStickRowItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGModernStickRowItem.h; sourceTree = "<group>"; };
+		C29E5FCC1CC8281000476AE2 /* TGModernStickRowItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGModernStickRowItem.m; sourceTree = "<group>"; };
+		C29E5FD81CC8282600476AE2 /* TGModernStickRowView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGModernStickRowView.h; sourceTree = "<group>"; };
+		C29E5FD91CC8282600476AE2 /* TGModernStickRowView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGModernStickRowView.m; sourceTree = "<group>"; };
 		C2A2B4241BD01FC20083DA8A /* TGHeadChatPanel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGHeadChatPanel.h; sourceTree = "<group>"; };
 		C2A2B4251BD01FC20083DA8A /* TGHeadChatPanel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGHeadChatPanel.m; sourceTree = "<group>"; };
 		C2A2B42C1BD519870083DA8A /* TGHCMessagesViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGHCMessagesViewController.h; sourceTree = "<group>"; };
@@ -2757,6 +2765,10 @@
 		C2F07E1C1BBDBABF00B3DB39 /* ImageIO.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ImageIO.framework; path = System/Library/Frameworks/ImageIO.framework; sourceTree = SDKROOT; };
 		C2F07E1E1BBDBACD00B3DB39 /* libstdc++.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = "libstdc++.tbd"; path = "usr/lib/libstdc++.tbd"; sourceTree = SDKROOT; };
 		C2F07E231BC0210600B3DB39 /* libcommonCrypto.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libcommonCrypto.tbd; path = usr/lib/system/libcommonCrypto.tbd; sourceTree = SDKROOT; };
+		C2F0F4B71CC7763800DB8CC5 /* TGModernESGViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGModernESGViewController.h; sourceTree = "<group>"; };
+		C2F0F4B81CC7763800DB8CC5 /* TGModernESGViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGModernESGViewController.m; sourceTree = "<group>"; };
+		C2F0F4BB1CC7780F00DB8CC5 /* TGModernSGViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGModernSGViewController.h; sourceTree = "<group>"; };
+		C2F0F4BC1CC7780F00DB8CC5 /* TGModernSGViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGModernSGViewController.m; sourceTree = "<group>"; };
 		C2F3995D190E7692006B36F7 /* ReadHistroryTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ReadHistroryTask.h; sourceTree = "<group>"; };
 		C2F3995E190E7692006B36F7 /* ReadHistroryTask.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ReadHistroryTask.m; sourceTree = "<group>"; };
 		C2F39964190FD1D6006B36F7 /* ASHandle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ASHandle.h; sourceTree = "<group>"; };
@@ -3909,11 +3921,10 @@
 		C215BE0A1C7A0F4F00B4BF16 /* modern */ = {
 			isa = PBXGroup;
 			children = (
+				C2F0F4BA1CC776B700DB8CC5 /* esg */,
 				C215BE181C7A0FB900B4BF16 /* containers */,
 				C215BE151C7A0F6D00B4BF16 /* TGModernMessageCellContainerView.h */,
 				C215BE161C7A0F6D00B4BF16 /* TGModernMessageCellContainerView.m */,
-				C20A02591CC6483200D94EF2 /* TGModernEmojiViewController.h */,
-				C20A025A1CC6483200D94EF2 /* TGModernEmojiViewController.m */,
 			);
 			name = modern;
 			sourceTree = "<group>";
@@ -5839,6 +5850,23 @@
 			name = context;
 			sourceTree = "<group>";
 		};
+		C2F0F4BA1CC776B700DB8CC5 /* esg */ = {
+			isa = PBXGroup;
+			children = (
+				C20A02591CC6483200D94EF2 /* TGModernEmojiViewController.h */,
+				C20A025A1CC6483200D94EF2 /* TGModernEmojiViewController.m */,
+				C2F0F4B71CC7763800DB8CC5 /* TGModernESGViewController.h */,
+				C2F0F4B81CC7763800DB8CC5 /* TGModernESGViewController.m */,
+				C2F0F4BB1CC7780F00DB8CC5 /* TGModernSGViewController.h */,
+				C2F0F4BC1CC7780F00DB8CC5 /* TGModernSGViewController.m */,
+				C29E5FCB1CC8281000476AE2 /* TGModernStickRowItem.h */,
+				C29E5FCC1CC8281000476AE2 /* TGModernStickRowItem.m */,
+				C29E5FD81CC8282600476AE2 /* TGModernStickRowView.h */,
+				C29E5FD91CC8282600476AE2 /* TGModernStickRowView.m */,
+			);
+			name = esg;
+			sourceTree = "<group>";
+		};
 		C2F429C21B00C87500C2CE4E /* stickers */ = {
 			isa = PBXGroup;
 			children = (
@@ -6920,6 +6948,7 @@
 				C215BE171C7A0F6D00B4BF16 /* TGModernMessageCellContainerView.m in Sources */,
 				0AAAE56118C5F3FB00A2F9F1 /* TMModalView.m in Sources */,
 				C274C4401ACD8223000DFDE4 /* TGWebpageIGObject.m in Sources */,
+				C2F0F4BD1CC7780F00DB8CC5 /* TGModernSGViewController.m in Sources */,
 				C21D485619B07A21000F06E1 /* ComposeActionSecretChatBehavior.m in Sources */,
 				C222AB361A0901DC00BEF907 /* PhotoTableItem.m in Sources */,
 				C274C37C1AB831A3000DFDE4 /* TGForwardObject.m in Sources */,
@@ -7093,6 +7122,7 @@
 				C2D51BF71B21C707009327C0 /* TGAudioPlayerListView.m in Sources */,
 				C21D484919AF3C53000F06E1 /* ComposePickerViewController.m in Sources */,
 				CE7E5654189AC25C0058C532 /* UploadQueue.m in Sources */,
+				C29E5FDA1CC8282600476AE2 /* TGModernStickRowView.m in Sources */,
 				C22A29F81C20434000678172 /* TGGifConverter.m in Sources */,
 				C274C3D31AC585C1000DFDE4 /* TGPasswordSetViewController.m in Sources */,
 				C2C6D96D1A12650B001EF8A2 /* TGPVMediaBehavior.m in Sources */,
@@ -7275,6 +7305,7 @@
 				C2D4B86A1AFCE8F90035B4E4 /* YapDebugDictionary.m in Sources */,
 				C21D483219ACC436000F06E1 /* ContactsViewController.m in Sources */,
 				C2AA4F0A18A8ED5500E20C68 /* TGTimer.m in Sources */,
+				C29E5FCD1CC8281000476AE2 /* TGModernStickRowItem.m in Sources */,
 				0ABACDA8181ADB1E00EF43DB /* SerializedData.m in Sources */,
 				CE4CC6EA1829B4DF00B532CC /* WhiteTitleButton.m in Sources */,
 				C23223D21A024CC600E476E2 /* TGSecretInAction.m in Sources */,
@@ -7434,6 +7465,7 @@
 				C26F7EC61A602837001D1AE2 /* ResendSecretSenderItem.m in Sources */,
 				C20B312E1C89E44C00A6BCF5 /* TGModernUpgradeChatViewController.m in Sources */,
 				C20A025B1CC6483200D94EF2 /* TGModernEmojiViewController.m in Sources */,
+				C2F0F4B91CC7763800DB8CC5 /* TGModernESGViewController.m in Sources */,
 				C297955519EC29DE00BE893E /* GeneralSettingsRowItem.m in Sources */,
 				0A59067E18AA32C8002ED7BA /* BTRPopUpButton.m in Sources */,
 				0AF4F4A2189ABDCC004BA4DF /* MessageTypingView.m in Sources */,

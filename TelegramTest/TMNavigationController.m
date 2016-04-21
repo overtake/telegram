@@ -1,11 +1,4 @@
 
-//
-//  ITNavigationView.m
-//  ITNavigationView
-//
-//  Created by Ilija Tovilo on 2/27/13.
-//  Copyright (c) 2013 Ilija Tovilo. All rights reserved.
-//
 #import "TMNavigationController.h"
 #import <QuartzCore/QuartzCore.h>
 #import "ConnectionStatusViewControllerView.h"
