@@ -338,6 +338,8 @@ static NSArray *segment_list;
 
 - (void)show {
     
+    [self.tableView removeAllItems:NO];
+    
     int rowCount = floor(NSWidth(_tableView.frame) / 34.0f) ;
     
     
@@ -383,6 +385,8 @@ static NSArray *segment_list;
     [self.tableView reloadData];
     
     [self.tableView setStickClass:[TGModernStickRowItem class]];
+    
+    [self _didScrolledTableView:nil];
 
 }
 
@@ -415,8 +419,19 @@ static NSArray *segment_list;
         NSMutableArray *separated = [NSMutableArray array];
         
         [list enumerateObjectsUsingBlock:^(NSString *obj, NSUInteger idx, BOOL * _Nonnull stop) {
-            [separated addObject:[obj componentsSeparatedByString:@" "]];
+            [separated addObject:[[obj componentsSeparatedByString:@" "] mutableCopy]];
         }];
+        
+        
+        NSArray *recently = [Storage emoji];
+        
+        NSMutableArray *recent = separated[0];
+        
+        [recently enumerateObjectsUsingBlock:^(NSString *emoji, NSUInteger idx, BOOL *stop) {
+            [recent removeObject:emoji];
+        }];
+        
+        [recent addObjectsFromArray:recently];
         
         segment_list = [separated copy];
         
@@ -465,9 +480,22 @@ static NSArray *segment_list;
         self.insertEmoji(emoji);
 }
 
-- (void)saveEmoji:(NSArray *)array {
++ (void)saveEmoji:(NSArray *)array {
     
+    NSMutableArray *recent = segment_list[0];
+    
+    for(NSString *emoji in array) {
+        [recent removeObject:emoji];
+        [recent insertObject:emoji atIndex:0];
+    }
+    
+    [Storage saveEmoji:recent];
+
 }
+
+
+
+
 
 - (TGModernEmojiBottomButton *)createButtonForIndex:(int)index {
     

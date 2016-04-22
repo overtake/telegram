@@ -10,12 +10,11 @@
 #import "GeneralSettingsDescriptionRowItem.h"
 #import "GeneralSettingsBlockHeaderView.h"
 #import "TGImageView.h"
-#import "EmojiViewController.h"
 #import "TGMessagesStickerImageObject.h"
 #import "TGStickerPackModalView.h"
 #import "ComposeActionStickersBehavior.h"
 #import "TGMovableTableView.h"
-
+#import "TGModernESGViewController.h"
 
 
 @interface TGStickerPackRowItem : TMRowItem
@@ -360,12 +359,12 @@
 -(void)reload {
     NSMutableArray *packSets = [NSMutableArray array];
     
-    NSArray *sets = [EmojiViewController allSets];
+    NSArray *sets = [TGModernESGViewController allSets];
     
     
     [sets enumerateObjectsUsingBlock:^(TL_stickerSet *set, NSUInteger setIdx, BOOL * _Nonnull setStop) {
         
-        NSArray *stickers = [EmojiViewController stickersWithId:set.n_id];
+        NSArray *stickers = [TGModernESGViewController stickersWithId:set.n_id];
         if(stickers != nil) {
             NSDictionary *val = @{@"stickers":stickers,@"set":set};
             
@@ -414,7 +413,7 @@
             
             [_tableView removeItemAtIndex:[_tableView indexOfObject:item] animated:YES];
             
-            [EmojiViewController reloadStickers];
+            [TGModernESGViewController reloadStickers];
             
             [self hideModalProgress];
             

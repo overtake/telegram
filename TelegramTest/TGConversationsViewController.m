@@ -14,7 +14,6 @@
 #import "TGPasslock.h"
 #import "SecretChatAccepter.h"
 #import "TMTaskRequest.h"
-#import "EmojiViewController.h"
 #import "TGModernEmojiViewController.h"
 #import "TGConversationTableCell.h"
 #import "TGConversationsTableView.h"

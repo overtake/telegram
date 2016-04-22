@@ -11,7 +11,6 @@
 #import "TMTableView.h"
 #import "TMRowItem.h"
 #import "TMView.h"
-#import "TMImagePicker.h"
 #import "TMViewController.h"
 #import "TMArrayController.h"
 #import "TMRowView.h"

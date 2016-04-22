@@ -528,7 +528,7 @@ static void BTRControlCommonInit(BTRControl *self) {
             if (action.events & events) {
                 if (action.block != nil) {
                     action.block(events);
-                } else if (action.action != nil) { // the target can be nil
+                } else if (action.target != nil && action.action != nil) { // the target can not be nil
                     [NSApp sendAction:action.action to:action.target from:self];
                 }
             }

@@ -682,7 +682,7 @@ static TMTableView *tableStatic;
     if(self.scrollView.documentSize.height > NSHeight(self.scrollView.frame)) {
         NSUInteger stickIndex = range.location + 1;
         
-        int yScrollOffset = self.scrollView.documentOffset.y - NSMinY(self.containerView.frame);
+        float yScrollOffset = self.scrollView.documentOffset.y - NSMinY(self.containerView.frame);
 
         
         TMRowItem *item = [self itemAtPosition:stickIndex];
@@ -733,6 +733,8 @@ static TMTableView *tableStatic;
                 
 
             }else if(_currentStickView) {
+                
+                
                 //MIN(NSHeight(self.frame) - NSHeight(self.scrollView.frame),MAX(0,yScrollOffset))
                 [_currentStickView setFrameOrigin:NSMakePoint(0,  MAX(0,yScrollOffset))];
                [_currentStickView setValue:@(YES) forKey:@"isStickView"];

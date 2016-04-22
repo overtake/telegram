@@ -7,32 +7,57 @@
 //
 
 #import "TGStickerPackEmojiController.h"
-#import "EmojiViewController.h"
 #import "TGAllStickersTableView.h"
 #import "TGImageView.h"
 #import "TGMessagesStickerImageObject.h"
 #import "TGTransformScrollView.h"
 #import "SpacemanBlocks.h"
+#import "TGHorizontalTableView.h"
+#import "TGModernESGViewController.h"
+#import "TGGifKeyboardView.h"
+
+@interface TGPackItem : NSObject
+@property (nonatomic,strong) TGImageObject *imageObject;
+@property (nonatomic,assign) long packId;
+@property (nonatomic,assign) BOOL selected;
+@property (nonatomic,strong) NSImage *image;
+@end
+
+@implementation TGPackItem
+
+-(id)initWithObject:(TLDocument *)obj {
+    if( self = [super init]) {
+        TL_documentAttributeSticker *attr = (TL_documentAttributeSticker *)[obj attributeWithClass:[TL_documentAttributeSticker class]];
+        _packId = attr.stickerset.n_id;
+        _imageObject = [[TGMessagesStickerImageObject alloc] initWithLocation:obj.thumb.location placeHolder:nil];
+        _imageObject.imageSize = strongsize(NSMakeSize(obj.thumb.w, obj.thumb.h), 28);
+    }
+    
+    return self;
+}
+
+@end
+
 
 @protocol TGStickerPackButtonDelegate <NSObject>
 -(void)removeScrollEvent;
 -(void)addScrollEvent;
--(void)didSelected:(id)button scrollToPack:(BOOL)scrollToPack selectItem:(BOOL)selectItem;
+-(void)didSelected:(id)button scrollToPack:(BOOL)scrollToPack selectItem:(BOOL)selectItem disableAnimation:(BOOL)disableAnimation;
 
 @end
 
-@interface TGStickerPackButton : TMView
+@interface TGStickerPackView : PXListViewCell
 @property (nonatomic,assign,setter=setSelected:) BOOL isSelected;
 @property (nonatomic,strong) TGImageView *imageView;
 @property (nonatomic,strong) id <TGStickerPackButtonDelegate> delegate;
-@property (nonatomic,assign) long packId;
 @property (nonatomic,strong) TMView *separator;
+@property (nonatomic,strong) TGPackItem *packItem;
 @end
 
 
 
 
-@implementation TGStickerPackButton
+@implementation TGStickerPackView
 
 
 -(instancetype)initWithFrame:(NSRect)frameRect {
@@ -60,7 +85,31 @@
     return self;
 }
 
+-(void)drawRect:(NSRect)dirtyRect {
+    [super drawRect:dirtyRect];
+    
+    [DIALOG_BORDER_COLOR set];
+    NSRectFill(NSMakeRect(0, NSHeight(self.frame) - DIALOG_BORDER_WIDTH, NSWidth(self.frame), DIALOG_BORDER_WIDTH));
+}
 
+
+-(void)setPackItem:(TGPackItem *)packItem {
+    
+    _packItem = packItem;
+    
+    if(packItem.imageObject) {
+        [self.imageView setFrameSize:packItem.imageObject.imageSize];
+        [self.imageView setCenterByView:self];
+        self.imageView.object = packItem.imageObject;
+    } else if(packItem.image) {
+        [self.imageView setFrameSize:packItem.image.size];
+        [self.imageView setCenterByView:self];
+        [self.imageView setImage:packItem.image];
+    }
+    
+    [self setSelected:packItem.selected];
+
+}
 
 
 -(void)setSelected:(BOOL)isSelected {
@@ -93,17 +142,20 @@
 
 -(void)mouseDown:(NSEvent *)theEvent {
     
-    [_delegate didSelected:self scrollToPack:YES selectItem:YES];
+    [_delegate didSelected:self.packItem scrollToPack:YES selectItem:YES disableAnimation:NO];
 }
 
 @end
 
-@interface TGStickerPackEmojiController () <TGStickerPackButtonDelegate> {
+@interface TGStickerPackEmojiController () <TGStickerPackButtonDelegate,PXListViewDelegate> {
     SMDelayedBlockHandle _handle;
 }
-@property (nonatomic,strong) TGTransformScrollView *scrollView;
-@property (nonatomic,strong) TMView *packsContainerView;
-@property (nonatomic,strong) TGStickerPackButton *selectedItem;
+//@property (nonatomic,strong) TGTransformScrollView *scrollView;
+//@property (nonatomic,strong) TMView *packsContainerView;
+@property (nonatomic,strong) TGPackItem *selectedItem;
+@property (nonatomic,strong) TGHorizontalTableView *tableView;
+@property (nonatomic,strong) NSMutableArray *packs;
+@property (nonatomic, strong) TGGifKeyboardView *gifContainer;
 
 
 @end
@@ -118,34 +170,31 @@
 
 -(instancetype)initWithFrame:(NSRect)frameRect {
     if(self = [super initWithFrame:frameRect]) {
+
+       
         
-        _scrollView = [[TGTransformScrollView alloc] initWithFrame:NSMakeRect(0, 0, NSWidth(frameRect), 44)];
         
+        _packs = [NSMutableArray array];
         
-        [self addSubview:_scrollView];
+        _tableView = [[TGHorizontalTableView alloc] initWithFrame:NSMakeRect(0, 0, NSWidth(frameRect), 44)];
+        _tableView.delegate = self;
         
-        _packsContainerView = [[TMView alloc] initWithFrame:_scrollView.bounds];
+        [self addSubview:_tableView];
         
         weak();
         
-        [_packsContainerView setDrawBlock:^{
-            [DIALOG_BORDER_COLOR set];
-            NSRectFill(NSMakeRect(0, NSHeight(weakSelf.packsContainerView.frame) - DIALOG_BORDER_WIDTH, NSWidth(weakSelf.packsContainerView.frame), DIALOG_BORDER_WIDTH));
-        }];
-        
-        _scrollView.documentView = _packsContainerView;
-        
-        
-        _stickers = [[TGAllStickersTableView alloc] initWithFrame:NSMakeRect(0, NSHeight(_scrollView.frame), NSWidth(frameRect), NSHeight(frameRect) - 44)];
-        
-        
+        _stickers = [[TGAllStickersTableView alloc] initWithFrame:NSMakeRect(0, NSHeight(_tableView.frame), NSWidth(frameRect), NSHeight(frameRect) - 44)];
+        [_stickers load:NO];
         [_stickers setDidNeedReload:^{
-           
             [weakSelf reload:NO];
-            
         }];
         
-        [self addSubview:_stickers.containerView];
+       [self addSubview:_stickers.containerView];
+        
+        _gifContainer = [[TGGifKeyboardView alloc] initWithFrame:NSMakeRect(0, NSHeight(_tableView.frame), NSWidth(frameRect), NSHeight(frameRect) - 44)];
+        [self addSubview:_gifContainer];
+        [_gifContainer setHidden:YES];
+        
         
         [self addScrollEvent];
         
@@ -154,7 +203,10 @@
     return self;
 }
 
-
+-(void)setEsgViewController:(TGModernESGViewController *)esgViewController {
+    _esgViewController = esgViewController;
+    _gifContainer.messagesViewController = esgViewController.messagesViewController;
+}
 
 
 - (void) addScrollEvent {
@@ -189,11 +241,10 @@
         long packId = [[fItem valueForKey:@"packId"] longValue];
         
         if(packId != _selectedItem.packId) {
-            [_packsContainerView.subviews enumerateObjectsUsingBlock:^(TGStickerPackButton *obj, NSUInteger idx, BOOL *stop) {
+            [_packs enumerateObjectsUsingBlock:^(TGPackItem *obj, NSUInteger idx, BOOL *stop) {
                 
                 if(obj.packId == packId) {
-                    [self didSelected:obj scrollToPack:NO selectItem:YES];
-                    
+                    [self didSelected:obj scrollToPack:NO selectItem:YES disableAnimation:NO];
                     
                     *stop = YES;
                 }
@@ -212,7 +263,9 @@
 -(void)removeAllItems {
     [_stickers removeAllItems:YES];
     
-    [_packsContainerView removeAllSubviews];
+    [_gifContainer clear];
+    
+   // [_packsContainerView removeAllSubviews];
     
 }
 
@@ -222,128 +275,103 @@
 
 -(void)reload:(BOOL)reloadStickers {
     
+    
+    if(!reloadStickers)
+        [_packs removeAllObjects];
+    
+    
+   if(reloadStickers) {
+        id reload_block = _stickers.didNeedReload;
+        [_stickers setDidNeedReload:nil];
+        [_stickers reloadData];
+        [_stickers setDidNeedReload:reload_block];
+    }
+    
+    
 
-    if(reloadStickers)
-        [_stickers load:NO];
     
-    NSDictionary *stickers = [_stickers allStickers];
-
-    
-    NSMutableArray *sets = [[NSMutableArray alloc] init];
-    
-    [[_stickers sets] enumerateObjectsUsingBlock:^(TL_stickerSet *obj, NSUInteger idx, BOOL *stop) {
+    if(_packs.count == 0)
+    {
         
-        id sticker = [stickers[@(obj.n_id)] firstObject];
-       
-        if(sticker)
-            [sets addObject:sticker];
-    }];
+        TGPackItem *gifpack = [[TGPackItem alloc] init];
+        gifpack.packId = -3;
+        gifpack.image = image_emojiContainer8();
+        [_packs addObject:gifpack];
+        
+        if(_stickers.hasRecentStickers) {
+            TGPackItem *recent = [[TGPackItem alloc] init];
+            recent.packId = -1;
+            recent.image = image_emojiContainer1();
+            [_packs addObject:recent];
+        }
+        
+        NSDictionary *stickers = [_stickers allStickers];
+        
+        [[_stickers sets] enumerateObjectsUsingBlock:^(TL_stickerSet *obj, NSUInteger idx, BOOL *stop) {
+            
+            id sticker = [stickers[@(obj.n_id)] firstObject];
+            
+            if(sticker) {
+                [_packs addObject:[[TGPackItem alloc] initWithObject:sticker]];
+            }
+            
+        }];
+        
+        TGPackItem *settings = [[TGPackItem alloc] init];
+        settings.packId = -2;
+        settings.image = image_StickerSettings();
+        [_packs addObject:settings];
+    }
     
-    [self drawWithStickers:sets];
+    
+    
+    [_tableView reloadData];
     
     
     [self.stickers scrollToBeginningOfDocument:nil];
-    if(_packsContainerView.subviews.count > 0 && reloadStickers)
-        [self didSelected:_packsContainerView.subviews[0] scrollToPack:NO selectItem:YES];
+    if(_packs.count > 0 && reloadStickers)
+        [self didSelected:_packs[1] scrollToPack:NO selectItem:YES disableAnimation:YES];
     
 
 }
 
--(void)drawWithStickers:(NSArray *)stickers {
-    
-    [_packsContainerView removeAllSubviews];
-    
-    [self setSelectedItem:nil];
-    
-    if(_stickers.hasRecentStickers) {
-        stickers = [@[[[NSObject alloc] init]] arrayByAddingObjectsFromArray:stickers];
-    }
-    
-    __block int x = 0;
-    
-    
-    float itemWidth = MAX(roundf(NSWidth(self.frame)/(stickers.count + 1)),48);
-    
-    [stickers enumerateObjectsUsingBlock:^(TLDocument *obj, NSUInteger idx, BOOL *stop) {
-        
-        TGStickerPackButton *button = [[TGStickerPackButton alloc] initWithFrame:NSMakeRect(x, 0, itemWidth, 44)];
-        
-        if(obj.class != [NSObject class]) {
-            TL_documentAttributeSticker *attr = (TL_documentAttributeSticker *)[obj attributeWithClass:[TL_documentAttributeSticker class]];
-            
-            TGMessagesStickerImageObject *imageObject = [[TGMessagesStickerImageObject alloc] initWithLocation:obj.thumb.location placeHolder:nil];
-            imageObject.imageSize = strongsize(NSMakeSize(obj.thumb.w, obj.thumb.h), 28);
-            
-            [button.imageView setFrameSize:imageObject.imageSize];
-            
-            [button.imageView setCenterByView:button];
-            button.packId = attr.stickerset.n_id;
-            button.delegate = self;
-            
-             button.imageView.object = imageObject;
-            
-        } else {
-            button.packId = -1;
-            button.delegate = self;
-            [button.imageView setContentMode:BTRViewContentModeCenter];
-            button.imageView.image = image_emojiContainer1();
-        }
-        
-        
-        
-        if(_selectedItem != nil) {
-            if(_selectedItem.packId == button.packId)
-                [self selectItem:button];
-        } else {
-            if(idx == 0)
-                [self selectItem:button];
-        }
-        
-       
-        
-        [_packsContainerView addSubview:button];
-        
-        x+=itemWidth;
-        
-    }];
-    
-    if(self.stickers.sets.count > 1) {
-        TGStickerPackButton *button = [[TGStickerPackButton alloc] initWithFrame:NSMakeRect(x, 0, itemWidth, 44)];
-                
-        button.packId = -2;
-        button.delegate = self;
-        button.imageView.image = image_StickerSettings();
-        [button.imageView setContentMode:BTRViewContentModeCenter];
-        [_packsContainerView addSubview:button];
-        
-         x+=itemWidth;
-    }
-    
-    
-    
-    
-    [_packsContainerView setFrameSize:NSMakeSize(x, NSHeight(_packsContainerView.frame))];
-    
-}
 
 
--(void)selectItem:(TGStickerPackButton *)button {
+-(void)selectItem:(TGPackItem *)item {
     [_selectedItem setSelected:NO];
-    _selectedItem = button;
+    _selectedItem = item;
     [_selectedItem setSelected:YES];
+    
+
 }
 
--(void)didSelected:(TGStickerPackButton *)button scrollToPack:(BOOL)scrollToPack selectItem:(BOOL)selectItem {
+-(void)didSelected:(TGPackItem *)packItem scrollToPack:(BOOL)scrollToPack selectItem:(BOOL)selectItem disableAnimation:(BOOL)disableAnimation {
     
-    if(self.selectedItem.packId == -2)
-        return;
+
     
-    if(button.packId == -2) {
+    if(packItem.packId == -3 && _selectedItem.packId != -3)
+        [_gifContainer prepareSavedGifvs];
+    else if(_selectedItem.packId == -3 && packItem.packId != -3)
+        [_gifContainer clear];
+    
+    [_gifContainer setHidden:packItem.packId != -3];
+    [_stickers.containerView setHidden:packItem.packId == -3];
+    
+    if(selectItem) {
+        
+        TGStickerPackView *ocell = (TGStickerPackView *)[_tableView cellForRowAtIndex:[_packs indexOfObject:_selectedItem]];
+        [ocell setSelected:NO];
+        [self selectItem:packItem];
+        TGStickerPackView *ncell = (TGStickerPackView *)[_tableView cellForRowAtIndex:[_packs indexOfObject:packItem]];
+        [ncell setSelected:YES];
+    }
+    
+
+    
+    if(packItem.packId == -2) {
         
         
-        [self selectItem:button];
-        
-        [[EmojiViewController instance] close];
+        [self.esgViewController forceClose];
         
         TGStickersSettingsViewController *settingViewController = [[TGStickersSettingsViewController alloc] initWithFrame:NSZeroRect];
         
@@ -351,62 +379,71 @@
         
         settingViewController.action.editable = YES;
         
-        [self.stickers.messagesViewController.navigationViewController pushViewController:settingViewController animated:YES];
+        [self.esgViewController.messagesViewController.navigationViewController pushViewController:settingViewController animated:YES];
         
-        
-        [self.scrollView.clipView scrollRectToVisible:NSZeroRect animated:NO];
-   
-        
-       
-        
+
         return;
     }
     
     [self removeScrollEvent];
     
-    if(selectItem) {
-        [self selectItem:button];
-    }
     
-//    cancel_delayed_block(_handle);
-//    
-//    if(_handle)
-//        _handle = nil;
-//    
+    
+
     
     void (^block)(BOOL animated) = ^(BOOL animated){
-        NSRect rect = NSMakeRect(MAX(NSMinX(button.frame) - (NSWidth(_scrollView.frame) - NSWidth(button.frame))/2.0f,0), NSMinY(button.frame), NSWidth(_scrollView.frame), NSHeight(_packsContainerView.frame));
-        [self.scrollView.clipView scrollRectToVisible:rect animated:selectItem];
+        
+        NSRect prect = [_tableView rectOfRow:[_packs indexOfObject:packItem]];
+        
+        NSRect rect = NSMakeRect(MAX(NSMinX(prect) - (NSWidth(_tableView.frame) - NSWidth(prect))/2.0f,0), NSMinY(prect), NSWidth(_tableView.frame), NSHeight(_tableView.frame));
+        [self.tableView.clipView scrollRectToVisible:rect animated:selectItem && animated completion:^(BOOL scrolled) {
+           if(scrolled)
+           {
+               TGStickerPackView *ncell = (TGStickerPackView *)[_tableView cellForRowAtIndex:[_packs indexOfObject:packItem]];
+               [ncell setSelected:YES];
+           }
+        }];
     };
     
-    
-    
-    
-//    _handle = perform_block_after_delay(0.01, ^{
-//        _handle = nil;
-//
-//    });
-//    
-    
-    
-   // if(!NSContainsRect(_scrollView.clipView.documentVisibleRect, button.frame)) {
-    
-  //  }
+
     
     
     if(scrollToPack)
-        [_stickers scrollToStickerPack:button.packId completionHandler:^{
-            block(YES);
+        [_stickers scrollToStickerPack:packItem.packId completionHandler:^{
+            block(!disableAnimation);
             [self addScrollEvent];
         }];
     else {
-        block(YES);
+        block(!disableAnimation);
         [self addScrollEvent];
     }
     
     
     
+}
+
+- (NSUInteger)numberOfRowsInListView:(PXListView*)aListView {
+    return _packs.count;
+}
+- (CGFloat)listView:(PXListView*)aListView heightOfRow:(NSUInteger)row {
+    return 44.0;
+}
+- (CGFloat)listView:(PXListView*)aListView widthOfRow:(NSUInteger)row {
+    return MAX(roundf(NSWidth(self.frame)/(_packs.count + 1)),48);
+}
+- (PXListViewCell*)listView:(PXListView*)aListView cellForRow:(NSUInteger)row {
     
+    TGStickerPackView *cell = (TGStickerPackView *) [aListView dequeueCellWithReusableIdentifier:NSStringFromClass([TGStickerPackView class])];
+    
+    if(!cell) {
+        cell = [[TGStickerPackView alloc] initWithFrame:NSMakeRect(0, 0, [self listView:aListView widthOfRow:row], [self listView:aListView heightOfRow:row])];
+    } 
+    
+    cell.delegate = self;
+    
+    [cell setPackItem:_packs[row]];
+    
+    return cell;
 }
 
 @end

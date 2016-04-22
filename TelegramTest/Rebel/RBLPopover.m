@@ -460,9 +460,11 @@
 		[self.popoverWindow.parentWindow removeChildWindow:self.popoverWindow];
 		[self.popoverWindow close];
 		
-		if (self.didCloseBlock != nil) self.didCloseBlock(self);
 		
 		self.contentViewController.view.frame = CGRectMake(self.contentViewController.view.frame.origin.x, self.contentViewController.view.frame.origin.y, self.originalViewSize.width, self.originalViewSize.height);
+        
+        if (self.didCloseBlock != nil) self.didCloseBlock(self);
+
 	};
 	
 	if (self.animates) {

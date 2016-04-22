@@ -3,6 +3,7 @@
 #import "SpacemanBlocks.h"
 #import "TGMediaContextTableView.h"
 #import "MessagesBottomView.h"
+#import "TGModernStickRowItem.h"
 @interface TGGifKeyboardView () <TMSearchTextFieldDelegate> {
     __block SMDelayedBlockHandle _delayedBlockHandle;
 }
@@ -253,8 +254,10 @@
         
     }];
     
-    
+    [_tableView addItem:[[TGModernStickRowItem alloc] initWithObject:NSLocalizedString(@"Gifs.SavedGifs", nil)] tableRedraw:YES];
     [_tableView drawResponse:result];
+    
+    [_tableView setStickClass:[TGModernStickRowItem class]];
     
     [_tableView.containerView setHidden:items.count == 0];
     [_emptyImageView setHidden:items.count > 0];

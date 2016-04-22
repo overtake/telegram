@@ -21,7 +21,8 @@
     
     _stickersView = [[TGStickerPackEmojiController alloc] initWithFrame:self.view.bounds];
     _stickersView.stickers.messagesViewController = _esgViewController.messagesViewController;
-    [_stickersView.stickers load:NO];
+    
+  //  [_stickersView.stickers load:NO];
     
   
     [self.view addSubview:_stickersView];
@@ -47,11 +48,14 @@
     [self.view addSubview:_showGSControllerView];
 }
 
+-(void)reloadStickers {
+    [_stickersView.stickers load:YES];
+}
 
 -(void)setEsgViewController:(TGModernESGViewController *)esgViewController {
     _esgViewController = esgViewController;
     _stickersView.stickers.messagesViewController = _esgViewController.messagesViewController;
-
+    _stickersView.esgViewController = esgViewController;
 }
 
 -(void)viewWillAppear:(BOOL)animated {
@@ -65,7 +69,9 @@
 }
 
 -(void)show {
+
     [_stickersView reload];
+
 }
 
 -(void)close {

@@ -20,6 +20,5 @@
 void setRemoteStickersLoaded(BOOL loaded);
 bool isRemoteStickersLoaded();
 
-+(void)addLocalSticker:(TLDocument *)document;
 +(BOOL)hasSticker:(TLDocument *)document;
 @end

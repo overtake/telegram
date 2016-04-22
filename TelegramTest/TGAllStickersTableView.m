@@ -9,7 +9,6 @@
 #import "TGAllStickersTableView.h"
 #import "TGStickerImageView.h"
 #import "TGMessagesStickerImageObject.h"
-#import "EmojiViewController.h"
 #import "StickersPanelView.h"
 #import "TGStickerPreviewModalView.h"
 #import "TGModernStickRowItem.h"
@@ -245,6 +244,10 @@ static NSImage *higlightedImage() {
     return self;
 }
 
++(void)initialize {
+    [TGCache setMemoryLimit:300*1024*1024 group:STICKERSCACHE];
+}
+
 
 -(void)stickersNeedFullReload:(NSNotification *)notification {
     [self load:YES];
@@ -473,6 +476,7 @@ static NSImage *higlightedImage() {
     
     [[Storage yap] readWithBlock:^(YapDatabaseReadTransaction *transaction) {
         
+        
         NSMutableDictionary *sort = [transaction objectForKey:@"recentStickers" inCollection:STICKERS_COLLECTION];
         
         NSMutableArray *s = [NSMutableArray array];
@@ -487,10 +491,9 @@ static NSImage *higlightedImage() {
             
         }];
         
-        [s sortUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"self.count" ascending:NO]]];
         
-        
-        
+        [s sortUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"count" ascending:NO]]];
+
         __block NSArray *recent = [NSArray array];
         
         [s enumerateObjectsUsingBlock:^(NSDictionary *obj, NSUInteger idx, BOOL * _Nonnull stop) {
@@ -541,8 +544,8 @@ static NSImage *higlightedImage() {
         
         
         [weakSelf.sets enumerateObjectsUsingBlock:^(TL_stickerSet *set, NSUInteger idx, BOOL * _Nonnull stop) {
-            
-            [items addObject:[[TGModernStickRowItem alloc] initWithObject:set.title]];
+            if(!_isCustomStickerPack)
+                [items addObject:[[TGModernStickRowItem alloc] initWithObject:set.title]];
             
             [weakSelf.stickers[@(set.n_id)] enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
                 
@@ -562,7 +565,6 @@ static NSImage *higlightedImage() {
             
         }];
         
-        _cItems = items;
         
         
     }];
@@ -579,7 +581,6 @@ static NSImage *higlightedImage() {
     
     [self setStickClass:[TGModernStickRowItem class]];
 
-    
     [super reloadData];
     //
     if(_didNeedReload) {
@@ -587,7 +588,23 @@ static NSImage *higlightedImage() {
     }
     
     
+}
+
+-(BOOL)removeAllItems:(BOOL)tableRedraw {
+    [TGCache removeAllCachedImages:@[STICKERSCACHE]];
     
+    if(tableRedraw) {
+        [super removeAllItems:NO];
+        [super reloadData];
+    } else {
+        [super removeAllItems:tableRedraw];
+    }
+    
+    return YES;
+}
+
+-(void)setStickers:(NSMutableDictionary *)stickers {
+    _stickers = stickers;
 }
 
 - (CGFloat)rowHeight:(NSUInteger)row item:(TMRowItem *) item

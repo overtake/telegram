@@ -7,9 +7,8 @@
 //
 
 #import "TMTextField.h"
-#import "EmojiViewController.h"
 #import "RBLPopover.h"
-
+#import "TGModernESGViewController.h"
 @implementation NSTextField (Extension)
 
 -(void)setAttributedString:(NSAttributedString *)attributedString {
@@ -192,23 +191,23 @@
 }
 
 -(void)showEmoji {
-     EmojiViewController *emojiViewController = [EmojiViewController instance];
-        
+    TGModernESGViewController *egsViewController = [TGModernESGViewController controller];
+    
         weak();
         
-        [emojiViewController setInsertEmoji:^(NSString *emoji) {
+        [egsViewController.emojiViewController setInsertEmoji:^(NSString *emoji) {
             [weakSelf insertEmoji:emoji];
         }];
         
-        RBLPopover *smilePopover = [[RBLPopover alloc] initWithContentViewController:emojiViewController];
+        RBLPopover *smilePopover = [[RBLPopover alloc] initWithContentViewController:egsViewController];
         [smilePopover setDidCloseBlock:^(RBLPopover *popover){
 
         }];
 
     if(!smilePopover.isShown) {
         [smilePopover showRelativeToRect:self.frame ofView:self preferredEdge:CGRectMaxYEdge];
-        [[EmojiViewController instance] showPopovers];
     }
+     [egsViewController show];
 
 }
 

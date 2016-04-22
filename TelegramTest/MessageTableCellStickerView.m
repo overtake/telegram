@@ -9,9 +9,9 @@
 #import "MessageTableCellStickerView.h"
 #import "TGImageView.h"
 #import "StickersPanelView.h"
-#import "EmojiViewController.h"
 #import "TGStickerPackModalView.h"
 #import "TGStickerPreviewModalView.h"
+#import "TGModernESGViewController.h"
 @interface MessageTableCellStickerView ()
 @property (nonatomic,strong) TGImageView *imageView;
 @end
@@ -40,23 +40,14 @@
     
     weak();
     
-    if(![StickersPanelView hasSticker:self.item.message.media.document])
     {
-        
-        [menu addItem:[NSMenuItem menuItemWithTitle:NSLocalizedString(@"Context.AddCustomSticker", nil) withBlock:^(id sender) {
-            [StickersPanelView addLocalSticker:[TL_document createWithN_id:weakSelf.item.message.media.document.n_id access_hash:weakSelf.item.message.media.document.access_hash date:weakSelf.item.message.media.document.date mime_type:weakSelf.item.message.media.document.mime_type size:weakSelf.item.message.media.document.size thumb:weakSelf.item.message.media.document.thumb dc_id:weakSelf.item.message.media.document.dc_id attributes:weakSelf.item.message.media.document.attributes]];
-        }]];
-        
-        
-    } else {
         
         TL_documentAttributeSticker *attr = (TL_documentAttributeSticker *) [self.item.message.media.document attributeWithClass:TL_documentAttributeSticker.class];
         
         if(![attr.stickerset isKindOfClass:[TL_inputStickerSetEmpty class]]) {
             
-           NSArray *check = [[EmojiViewController allSets] filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.n_id == %ld",attr.stickerset.n_id]];
-            
-            if(check.count == 0) {
+
+            if([TGModernESGViewController setWithId:attr.stickerset.n_id] == nil) {
                 [menu addItem:[NSMenuItem menuItemWithTitle:NSLocalizedString(@"Context.AddStickers", nil) withBlock:^(id sender) {
                     
                     add_sticker_pack_by_name(attr.stickerset);
@@ -66,7 +57,6 @@
             
             
         }
-        
         
         
     }
@@ -118,8 +108,8 @@
                     
                 }];
                 
-                TL_stickerSet *set = [EmojiViewController setWithId:attr.stickerset.n_id];
-                NSMutableArray *stickers = (NSMutableArray *) [EmojiViewController stickersWithId:attr.stickerset.n_id];
+                TL_stickerSet *set = [TGModernESGViewController setWithId:attr.stickerset.n_id];
+                NSMutableArray *stickers = (NSMutableArray *) [TGModernESGViewController stickersWithId:attr.stickerset.n_id];
                 if(set && stickers.count > 0) {
                     
                     TGStickerPackModalView *modalView = [[TGStickerPackModalView alloc] init];

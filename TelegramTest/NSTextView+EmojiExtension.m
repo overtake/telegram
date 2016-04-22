@@ -7,16 +7,17 @@
 //
 
 #import "NSTextView+EmojiExtension.h"
-#import "EmojiViewController.h"
 #import "RBLPopover.h"
 #import "TGMentionPopup.h"
+#import "TGModernESGViewController.h"
 @implementation NSTextView (EmojiExtension)
 
 
 DYNAMIC_PROPERTY(EmojiPopover)
 
+
 -(void)showEmoji {
-    EmojiViewController *emojiViewController = [EmojiViewController instance];
+    TGModernESGViewController *emojiViewController = [TGModernESGViewController controller];
     
     
     
@@ -26,7 +27,7 @@ DYNAMIC_PROPERTY(EmojiPopover)
         popover = [[RBLPopover alloc] initWithContentViewController:emojiViewController];
     }
     
-    [emojiViewController setInsertEmoji:^(NSString *emoji) {
+    [emojiViewController.emojiViewController setInsertEmoji:^(NSString *emoji) {
         [self insertText:emoji];
     }];
     
@@ -44,7 +45,7 @@ DYNAMIC_PROPERTY(EmojiPopover)
 
     if(!popover.isShown) {
         [popover showRelativeToRect:rect ofView:self.window.contentView preferredEdge:CGRectMinYEdge];
-        [[EmojiViewController instance] showPopovers];
+        [emojiViewController show];
     }
 
 }

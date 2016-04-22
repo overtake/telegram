@@ -14,7 +14,6 @@
 #import "MessageInputGrowingTextView.h"
 #import <Quartz/Quartz.h>
 #import "Rebel/Rebel.h"
-#import "EmojiViewController.h"
 #import "MapPanel.h"
 #import "TGTimer.h"
 
@@ -1054,17 +1053,15 @@ static RBLPopover *popover;
 
 - (void)smileButtonClick:(BTRButton *)button {
     
-    TGModernESGViewController *egsViewController = (TGModernESGViewController *) self.smilePopover.contentViewController;
+    TGModernESGViewController *egsViewController = [TGModernESGViewController controller];
     
  //
     weak();
     if(!self.smilePopover) {
-        
-        egsViewController = [[TGModernESGViewController alloc] initWithFrame:NSMakeRect(0,0,350,300)];
-       
+            
         self.smilePopover = [[RBLPopover alloc] initWithContentViewController:(NSViewController *)egsViewController];
         [self.smilePopover setHoverView:self.smileButton];
-        
+        self.smilePopover.animates = NO;
         [self.smilePopover setDidCloseBlock:^(RBLPopover *popover){
             [weakSelf.smileButton setSelected:NO];
             [egsViewController close];
@@ -1088,6 +1085,8 @@ static RBLPopover *popover;
         [self.smilePopover showRelativeToRect:frame ofView:self.smileButton preferredEdge:CGRectMaxYEdge];
         [egsViewController show];
     }
+    
+   
 }
 
 - (TMView *)secretInfoView {

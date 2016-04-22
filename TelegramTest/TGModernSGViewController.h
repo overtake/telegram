@@ -9,9 +9,12 @@
 #import "TMViewController.h"
 @class TGModernESGViewController;
 @interface TGModernSGViewController : TMViewController
+
 @property (nonatomic,weak) TGModernESGViewController *esgViewController;
 
 -(void)show;
 -(void)close;
+
+-(void)reloadStickers;
 
 @end

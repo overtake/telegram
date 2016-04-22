@@ -11,7 +11,6 @@
 #import "TGStickerImageView.h"
 #import "TGMessagesStickerImageObject.h"
 #import "SenderHeader.h"
-#import "EmojiViewController.h"
 #import "TGTransformScrollView.h"
 #import "TGStickerPreviewModalView.h"
 @interface StickersPanelView ()
@@ -301,24 +300,6 @@ bool isRemoteStickersLoaded() {
 
 
 
-+(void)addLocalSticker:(TLDocument *)document {
-    
-    if(![self hasSticker:document]) {
-        [[Storage yap] readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
-            
-            NSArray *stickers = [transaction objectForKey:@"localStickers" inCollection:STICKERS_COLLECTION];
-            
-            if(!stickers)
-                stickers = @[];
-            
-            stickers = [stickers arrayByAddingObject:document];
-            
-            [transaction setObject:stickers forKey:@"localStickers" inCollection:STICKERS_COLLECTION];
-        }];
-        
-        [EmojiViewController reloadStickers];
-    }
-}
 
 
 -(void)mouseDragged:(NSEvent *)theEvent {

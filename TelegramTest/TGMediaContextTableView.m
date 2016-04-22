@@ -12,7 +12,7 @@
 #import "DownloadExternalItem.h"
 #import "MessagesBottomView.h"
 #import "TGContextImportantRowItem.h"
-
+#import "TGModernStickRowItem.h"
 @interface TGGifSearchRowView : TMRowView
 @property (nonatomic, strong) NSTrackingArea *trackingArea;
 @end
@@ -834,9 +834,9 @@ static NSMenu *deleteMenu;
     
     [items enumerateObjectsUsingBlock:^(TLBotInlineResult *obj, NSUInteger idx, BOOL * _Nonnull stop) {
         
-        if(![obj isKindOfClass:[TGContextImportantRowItem class]]) {
+        if(![obj isKindOfClass:[TGContextImportantRowItem class]] && ![obj isKindOfClass:[TGModernStickRowItem class]]) {
             [filter addObject:obj];
-        } else {
+        } else if([obj isKindOfClass:[TGContextImportantRowItem class]]) {
             switchItem = (TGContextImportantRowItem *) obj;
         }
         
@@ -854,7 +854,7 @@ static NSMenu *deleteMenu;
     [_items addObjectsFromArray:items];
     
     
-    TGGifSearchRowItem *prevItem = [[self.list filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.class != %@",[TGContextImportantRowItem class]]] lastObject];
+    TGGifSearchRowItem *prevItem = [[self.list filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.class == %@",[TGGifSearchRowItem class]]] lastObject];
     
      int f = roundf(NSWidth(self.frame)/100.0f);
     

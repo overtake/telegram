@@ -18,13 +18,15 @@
 @property (nonatomic,weak) MessagesViewController *messagesViewController;
 @property (nonatomic,weak) RBLPopover *epopover;
 
-@property (nonatomic, copy) void (^insertEmoji) (NSString *emoji);
+@property (nonatomic, strong) void (^insertEmoji) (NSString *emoji);
 
 
 -(void)saveModifier:(NSString *)modifier forEmoji:(NSString *)emoji;
 -(NSString *)emojiModifier:(NSString *)emoji;
 - (void)insertEmoji:(NSString *)emoji;
-- (void)saveEmoji:(NSArray *)array;
+
++ (void)saveEmoji:(NSArray *)array;
+
 
 - (void)show;
 - (void)close;

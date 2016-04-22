@@ -13,7 +13,6 @@
 #import "TGSendTypingManager.h"
 #import "webp/decode.h"
 #import "FileUtils.h"
-#import "EmojiViewController.h"
 #import "StickersPanelView.h"
 #import <AVFoundation/AVFoundation.h>
 #import "MessageTableItem.h"

@@ -8,7 +8,13 @@
 
 #import "TGModernStickRowItem.h"
 #import "TGModernStickRowView.h"
+
+@interface TGModernStickRowItem ()
+@property (nonatomic,assign) long randKey;
+@end
+
 @implementation TGModernStickRowItem
+
 
 -(id)initWithObject:(id)object {
     if(self = [super initWithObject:object]) {
@@ -18,6 +24,8 @@
         [attr setFont:TGSystemFont(13) forRange:attr.range];
         
         _header = attr;
+        
+        _randKey = rand_long();
         
     }
     
@@ -29,7 +37,7 @@
 }
 
 -(NSUInteger)hash {
-    return [_header.string hash];
+    return _randKey;
 }
 
 -(Class)viewClass {

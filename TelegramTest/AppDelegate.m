@@ -36,7 +36,6 @@
 #import "_TMSearchTextField.h"
 #import "SecretChatAccepter.h"
 #import "SenderItem.h"
-#import "EmojiViewController.h"
 #import "RBLPopover.h"
 #import "NSTextView+EmojiExtension.h"
 #import "TGPhotoViewer.h"

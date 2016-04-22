@@ -8,9 +8,9 @@
 
 #import "TGStickerPackModalView.h"
 #import "TGAllStickersTableView.h"
-#import "EmojiViewController.h"
 #import "TGMessagesStickerImageObject.h"
 #import "TGImageView.h"
+#import "TGModernESGViewController.h"
 @interface TGStickerPackModalView ()<TMHyperlinkTextFieldDelegate>
 @property (nonatomic,strong) TGAllStickersTableView *tableView;
 
@@ -92,7 +92,7 @@ static NSImage * greenBackgroundImage(NSSize size) {
                     [TMViewController hideModalProgressWithSuccess];
                 });
                 
-                [EmojiViewController reloadStickers];
+                [TGModernESGViewController reloadStickers];
                 
             } errorHandler:^(id request, RpcError *error) {
                 [TMViewController hideModalProgress]; 
@@ -222,7 +222,7 @@ static NSImage * greenBackgroundImage(NSSize size) {
     
     [_tableView showWithStickerPack:stickerPack];
     
-    __block BOOL packIsset = [EmojiViewController setWithId:stickerPack.set.n_id] != nil;
+    __block BOOL packIsset = [TGModernESGViewController setWithId:stickerPack.set.n_id] != nil;
     
     
     __block TLDocument *headerSticker = [stickerPack.documents firstObject];

@@ -11,7 +11,7 @@
 #import "NSMutableData+Extension.h"
 #import "UpgradeLayerSenderItem.h"
 #import "MessageTableItem.h"
-#import "EmojiViewController.h"
+#import "TGModernESGViewController.h"
 @interface SecretSenderItem ()<SenderListener>
 @property (nonatomic,strong,readonly) NSData *decryptedData;
 @end
@@ -222,7 +222,7 @@
             } else if([obj isKindOfClass:[TL_documentAttributeSticker class]]) {
                 
                 //TODO mb can crash, because non thread-safe operation
-                TLStickerSet *set = [EmojiViewController setWithId:obj.stickerset.n_id];
+                TLStickerSet *set = [TGModernESGViewController setWithId:obj.stickerset.n_id];
                 
                 if(layer >= 45) {
                     [attrs addObject:[baseClass documentAttributeStickerWithAlt:obj.alt stickerset:[Secret45_InputStickerSet inputStickerSetShortNameWithShort_name:set.short_name]]];

@@ -15,12 +15,10 @@
 #import "CMath.h"
 #import "ImageCache.h"
 #import "SpacemanBlocks.h"
-#import "EmojiViewController.h"
 
 #import "NSImage+RHResizableImageAdditions.h"
 #import "Telegram.h"
 #import "AppDelegate.h"
-#import "SJExpandingTextView.h"
 #import "MessageTableItem.h"
 #import "EncryptedParams.h"
 #import "NSString+Extended.h"
@@ -90,6 +88,7 @@
 #import "TGMessageEditSender.h"
 #import "TGMessagesViewAlertHintView.h"
 #import "TGContextMessagesvViewController.h"
+#import "TGModernEmojiViewController.h"
 #define HEADER_MESSAGES_GROUPING_TIME (10 * 60)
 
 #define SCROLLDOWNBUTTON_OFFSET 1500
@@ -3577,7 +3576,7 @@ static NSTextAttachment *headerMediaIcon() {
     
     NSArray *array = [message getEmojiFromString:YES];
     if(array.count > 0) {
-        [[EmojiViewController instance] saveEmoji:array];
+        [TGModernEmojiViewController saveEmoji:array];
     }
     
     [Telegram saveHashTags:message peer_id:0];

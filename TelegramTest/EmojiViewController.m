@@ -257,6 +257,7 @@
 }
 
 +(NSDictionary *)allStickers {
+    
     return [[self instance].stickersTableView.stickers allStickers];
 }
 
