@@ -210,25 +210,31 @@
 }
 
 
--(TGMessageGroupHole *)proccessUnimportantGroup:(NSArray *)messages {
+-(TGMessageGroupHole *)proccessUnimportantGroup:(NSArray *)messages channel:(TLChat *)channel {
     
-    TL_localMessage *minMsg = [[Storage manager] lastMessageAroundMinId:[(TL_localMessage *)messages[0] channelMsgId] important:YES isTop:NO];
+    TGMessageGroupHole *hole;
     
-    TL_localMessage *minUnimportantMsg = [messages firstObject];
-    TL_localMessage *maxUnimportantMsg = [messages lastObject];
+    if(!channel.isMegagroup && !channel.isBroadcast) {
+        TL_localMessage *minMsg = [[Storage manager] lastMessageAroundMinId:[(TL_localMessage *)messages[0] channelMsgId] important:YES isTop:NO];
+        
+        TL_localMessage *minUnimportantMsg = [messages firstObject];
+        TL_localMessage *maxUnimportantMsg = [messages lastObject];
+        
+        
+        int minId = minMsg ? minMsg.n_id : minUnimportantMsg.n_id - 1;
+        
+        TGMessageGroupHole *hole = [[[Storage manager] groupHoles:minUnimportantMsg.peer_id min:minId max:maxUnimportantMsg.n_id +1] lastObject];
+        
+        if(hole == nil)
+            hole = [[TGMessageGroupHole alloc] initWithUniqueId:-rand_int() peer_id:minUnimportantMsg.peer_id min_id:minId max_id:maxUnimportantMsg.n_id+1 date:minUnimportantMsg.date-1  count:0];
+        
+        hole.max_id = maxUnimportantMsg.n_id+1;
+        hole.messagesCount+= (int)messages.count;
+        
+        [hole save];
+    }
     
-    
-    int minId = minMsg ? minMsg.n_id : minUnimportantMsg.n_id - 1;
-    
-    TGMessageGroupHole *hole = [[[Storage manager] groupHoles:minUnimportantMsg.peer_id min:minId max:maxUnimportantMsg.n_id +1] lastObject];
-    
-    if(hole == nil)
-        hole = [[TGMessageGroupHole alloc] initWithUniqueId:-rand_int() peer_id:minUnimportantMsg.peer_id min_id:minId max_id:maxUnimportantMsg.n_id+1 date:minUnimportantMsg.date-1  count:0];
-    
-    hole.max_id = maxUnimportantMsg.n_id+1;
-    hole.messagesCount+= (int)messages.count;
-    
-    [hole save];
+   
     
     [[Storage manager] insertMessages:messages];
     
@@ -237,7 +243,7 @@
 }
 
 
--(void)proccessHoleWithNewMessage:(NSArray *)messages {
+-(void)proccessHoleWithNewMessage:(NSArray *)messages channel:(TLChat *)channel {
     
     messages = [messages sortedArrayUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"self.n_id" ascending:YES]]];
     
@@ -259,9 +265,12 @@
             }
             
             if(unimporantMessages.count > 0) {
-                TGMessageGroupHole *hole = [self proccessUnimportantGroup:[unimporantMessages copy]];
-                [groups addObject:hole];
-                [unimporantMessages removeAllObjects];
+                TGMessageGroupHole *hole = [self proccessUnimportantGroup:[unimporantMessages copy] channel:channel];
+                if(hole) {
+                    [groups addObject:hole];
+                    [unimporantMessages removeAllObjects];
+                }
+                
             }
            
         }
@@ -307,9 +316,12 @@
 
         if(![message isImportantMessage]) {
             
-            TGMessageGroupHole *hole = [self proccessUnimportantGroup:@[message]];
             
-            [Notification performOnStageQueue:UPDATE_MESSAGE_GROUP_HOLE data:@{KEY_GROUP_HOLE:hole}];
+            TGMessageGroupHole *hole = [self proccessUnimportantGroup:@[message] channel:message.chat];
+            if(hole) {
+                [Notification performOnStageQueue:UPDATE_MESSAGE_GROUP_HOLE data:@{KEY_GROUP_HOLE:hole}];
+            }
+            
             
         }
         
@@ -518,7 +530,7 @@
                 {
                     [TL_localMessage convertReceivedMessages:[response n_messages]];
                     
-                    [self proccessHoleWithNewMessage:[response n_messages]];
+                    [self proccessHoleWithNewMessage:[response n_messages] channel:chat];
                 }
                 
                 [_channelsInUpdating removeObjectForKey:@(channel.peer_id)];
@@ -614,7 +626,7 @@
                         
                         [TL_localMessage convertReceivedMessages:[response n_messages]];
                         
-                        [self proccessHoleWithNewMessage:[response n_messages]];
+                        [self proccessHoleWithNewMessage:[response n_messages] channel:channel];
                     }
                     
                     

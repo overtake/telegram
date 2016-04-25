@@ -183,7 +183,7 @@ static NSArray *channelUpdates;
                 return;
             }
             
-            if([update isKindOfClass:[TL_updateShort class]] && !_holdUpdates) {
+            if([update isKindOfClass:[TL_updateShort class]]) {
                 [self updateShort:update];
             }
             if([update isKindOfClass:[TL_updatesCombined class]]) {
@@ -493,9 +493,10 @@ static NSArray *channelUpdates;
 
 
 -(void)updateShort:(TL_updateShort *)shortUpdate {
-    
-    _updateState.date = [shortUpdate date];
-    [self saveUpdateState];
+    if(!_holdUpdates) {
+        _updateState.date = [shortUpdate date];
+        [self saveUpdateState];
+    }
     
     [self proccessUpdate:shortUpdate.update];
 }
@@ -1029,7 +1030,6 @@ static NSArray *channelUpdates;
     
     NSLog(@"%@",[NSDate dateWithTimeIntervalSince1970:_updateState.date]);
     
-    MTLog(@"updateDifference:%@",_updateState);
     
     TLAPI_updates_getDifference *dif = [TLAPI_updates_getDifference createWithPts:_updateState.pts date:_updateState.date qts:_updateState.qts];
     [RPCRequest sendRequest:dif successHandler:^(RPCRequest *request, id response)  {
