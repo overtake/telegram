@@ -743,6 +743,11 @@
     
     if(message.unread && !message.n_out && message.conversation.read_inbox_max_id < message.n_id) {
         dialog.unread_count++;
+        
+        if(message.peer_id == -1048173594) {
+            int bp = 0;
+        }
+        
     } 
     
     if([message.action isKindOfClass:[TL_messageActionChatMigrateTo class]]) {

@@ -29,6 +29,8 @@
     _emojiViewController = [[TGModernEmojiViewController alloc] initWithFrame:self.view.bounds];
     _sgViewController = [[TGModernSGViewController alloc] initWithFrame:self.view.bounds];
     
+    
+    
     [_emojiViewController loadViewIfNeeded];
     [_sgViewController loadViewIfNeeded];
     
@@ -107,6 +109,7 @@ static NSMutableDictionary *stickers;
 -(void)setMessagesViewController:(MessagesViewController *)messagesViewController {
     _messagesViewController = messagesViewController;
     _emojiViewController.messagesViewController = messagesViewController;
+    [_sgViewController setEsgViewController:self];
 }
 
 -(void)show {

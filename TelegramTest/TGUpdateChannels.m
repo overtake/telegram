@@ -96,6 +96,10 @@
             statelessUpdates = @[NSStringFromClass([TL_updateReadChannelInbox class]),NSStringFromClass([TL_updateChannelTooLong class]),NSStringFromClass([TL_updateChannelGroup class]),NSStringFromClass([TL_updateChannelMessageViews class]),NSStringFromClass([TL_updateChannel class]),NSStringFromClass([TL_updateChannelPinnedMessage class])];
         });
         
+        if([self channelIdWithUpdate:update] == 1033196004) {
+            int bp = 0;
+        }
+        
         
         if([statefullUpdates indexOfObject:[update className]] != NSNotFound)
         {
@@ -294,7 +298,7 @@
         TL_localMessage *message = [TL_localMessage convertReceivedMessage:[(TL_updateNewChannelMessage *)update message]];
         
         
-        if(![[UsersManager sharedManager] find:message.from_id] || (message.fwd_from != nil && !message.fwdObject) || (message.via_bot_id != 0 && ![[UsersManager sharedManager] find:message.via_bot_id])) {
+        if((message.from_id > 0 && ![[UsersManager sharedManager] find:message.from_id]) || (message.fwd_from != nil && !message.fwdObject) || (message.via_bot_id != 0 && ![[UsersManager sharedManager] find:message.via_bot_id])) {
             
             
             [self failUpdateWithChannelId:[self channelIdWithUpdate:update] limit:50 withCallback:nil errorCallback:nil];
@@ -574,12 +578,16 @@
     
     TL_conversation *conversation = [self conversationWithChannelId:channel_id];
     
+
+    
     if(conversation) {
         id request = _channelsInUpdating[@(channel_id)];
         
         
         if(request == nil) {
             _channelsInUpdating[@(channel_id)] = [RPCRequest sendRequest:[TLAPI_updates_getChannelDifference createWithChannel:[TL_inputChannel createWithChannel_id:channel_id access_hash:channel.access_hash] filter:[TL_channelMessagesFilterEmpty create] pts:[self ptsWithChannelId:channel_id] limit:limit] successHandler:^(id request, id response) {
+                
+                
                 
                 
                 TGMessageHole *longHole;

@@ -1174,9 +1174,6 @@
          contextName = "parseMessage:Storage.m">
       </ContextState>
       <ContextState
-         contextName = "__77-[TGUpdateChannels failUpdateWithChannelId:limit:withCallback:errorCallback:]_block_invoke:TGUpdateChannels.m">
-      </ContextState>
-      <ContextState
          contextName = "__56+[TGBotCommandsPopup show:botInfo:view:ofRect:callback:]_block_invoke42:TGBotCommandsPopup.m">
       </ContextState>
       <ContextState
@@ -1313,6 +1310,9 @@
                value = "self.n_id">
             </PersistentString>
          </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[TGModernESGViewController loadView]:TGModernESGViewController.m">
       </ContextState>
       <ContextState
          contextName = "-[PreviewObject initWithMsdId:media:peer_id:]:PreviewObject.m">
@@ -2358,6 +2358,14 @@
          contextName = "-[TL_localMessage peer]:TL_localMessage.m">
       </ContextState>
       <ContextState
+         contextName = "__43-[TGAllStickerTableItemView initWithFrame:]_block_invoke:TGAllStickersTableView.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "weakSelf.tableView.messagesViewController">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "-[TLChat(Category) isKicked]:TLChatCategory.m">
          <PersistentStrings>
             <PersistentString
@@ -3111,6 +3119,11 @@
       </ContextState>
       <ContextState
          contextName = "+[TGConversationsViewController showPopupMenuForDialog:withEvent:forView:]:TGConversationsViewController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "dialog.peer_id">
+            </PersistentString>
+         </PersistentStrings>
       </ContextState>
       <ContextState
          contextName = "-[TGContextRowItem initWithObject:]:TGContextRowItem.m">
@@ -4404,13 +4417,19 @@
          contextName = "-[TGUpdateChannels proccessUpdate:]:TGUpdateChannels.m">
          <PersistentStrings>
             <PersistentString
-               value = "[update pts]">
+               value = "message.from_id">
             </PersistentString>
             <PersistentString
                value = "channel.chat">
             </PersistentString>
             <PersistentString
+               value = "message.fromUser">
+            </PersistentString>
+            <PersistentString
                value = "update">
+            </PersistentString>
+            <PersistentString
+               value = "[update pts]">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -4723,13 +4742,19 @@
          contextName = "-[DialogsManager updateConversation:withLastMessage:update_real_date:]:DialogsManager.m">
          <PersistentStrings>
             <PersistentString
-               value = "message.chat">
-            </PersistentString>
-            <PersistentString
                value = "dialog.unread_count">
             </PersistentString>
             <PersistentString
                value = "message.date">
+            </PersistentString>
+            <PersistentString
+               value = "self.isN_out">
+            </PersistentString>
+            <PersistentString
+               value = "message.chat">
+            </PersistentString>
+            <PersistentString
+               value = "self.n_out">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -6965,6 +6990,11 @@
       </ContextState>
       <ContextState
          contextName = "__49-[TGProccessUpdates uptodateWithConnectionState:]_block_invoke_2:TGProccessUpdates.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "request">
+            </PersistentString>
+         </PersistentStrings>
       </ContextState>
       <ContextState
          contextName = "-[ChatHistoryController filterWithNext:]:ChatHistoryController.m">

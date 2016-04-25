@@ -183,7 +183,7 @@ static NSArray *channelUpdates;
                 return;
             }
             
-            if([update isKindOfClass:[TL_updateShort class]]) {
+            if([update isKindOfClass:[TL_updateShort class]] && !_holdUpdates) {
                 [self updateShort:update];
             }
             if([update isKindOfClass:[TL_updatesCombined class]]) {
@@ -1027,6 +1027,8 @@ static NSArray *channelUpdates;
         [Telegram setConnectionState:ConnectingStatusTypeUpdating];
     
     
+    NSLog(@"%@",[NSDate dateWithTimeIntervalSince1970:_updateState.date]);
+    
     MTLog(@"updateDifference:%@",_updateState);
     
     TLAPI_updates_getDifference *dif = [TLAPI_updates_getDifference createWithPts:_updateState.pts date:_updateState.date qts:_updateState.qts];
@@ -1105,7 +1107,7 @@ static NSArray *channelUpdates;
              MTLog(@"new updateDifference update update: %@",_updateState);
             [self saveUpdateState];
             
-            _holdUpdates = NO;
+            
             
             if(intstate != nil) {
                 dispatch_after_seconds_queue(0.5, ^{
@@ -1113,6 +1115,9 @@ static NSArray *channelUpdates;
                 }, queue.nativeQueue);
                 
             } else {
+                
+                _holdUpdates = NO;
+                
                 [Notification perform:PROTOCOL_UPDATED data:nil];
                 [Telegram setConnectionState:ConnectingStatusTypeNormal];
             }
