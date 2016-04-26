@@ -910,20 +910,15 @@ TL_localMessage *parseMessage(FMResultSet *result) {
     
     [queue inDatabase:^(FMDatabase *db) {
         
-        int unread_count = [db intForQuery:[NSString stringWithFormat:@"select unread_count from %@ where peer_id = %d",tableModernDialogs,-channel_id]];
-        
+
         int current_max_read = [db intForQuery:[NSString stringWithFormat:@"select read_inbox_max_id from %@ where peer_id = %d",tableModernDialogs,-channel_id]];
+        int count = [db intForQuery:[NSString stringWithFormat:@"select count(*) from %@ where peer_id = ? and n_id <= ? and n_id > ?",tableChannelMessages],@(-channel_id),@(channelMsgId(max_id, -channel_id)),@(channelMsgId(current_max_read, -channel_id))];
         
-        unread_count = MAX(0, unread_count - (max_id - current_max_read));
         
+        dispatch_async(dqueue,^{
+            callback(count);
+        });
         
-        [db executeUpdate:[NSString stringWithFormat:@"update %@ set read_inbox_max_id = %d, unread_count = %d where peer_id = %d",tableModernDialogs,max_id,unread_count,-channel_id]];
-        
-        if(callback != nil) {
-            dispatch_async(dqueue, ^{
-                callback(unread_count);
-            });
-        }
         
     }];
 }
@@ -1298,7 +1293,6 @@ TL_localMessage *parseMessage(FMResultSet *result) {
     
     [queue inDatabase:^(FMDatabase *db) {
         
-        [db beginTransaction];
         
         int flags = n_out ? TGOUTMESSAGE | TGUNREADMESSAGE : TGUNREADMESSAGE;
         
@@ -1344,7 +1338,6 @@ TL_localMessage *parseMessage(FMResultSet *result) {
         }
         
         
-        [db commit];
         
         dispatch_async(q,^{
             completeHandler(ids,messages,unread_count);

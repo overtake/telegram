@@ -21,8 +21,8 @@
     [super loadView];
     
     _photoView = [TMAvatarImageView standartTableAvatar];
-    _nameView = [[TMNameTextField alloc] initWithFrame:NSMakeRect(60, 30, 200, 20)];
-    _statusView = [[TMStatusTextField alloc] initWithFrame:NSMakeRect(58, 10, 200, 20)];
+    _nameView = [[TMNameTextField alloc] initWithFrame:NSMakeRect(65, 30, 200, 20)];
+    _statusView = [[TMStatusTextField alloc] initWithFrame:NSMakeRect(65, 10, 200, 20)];
     [[_statusView cell] setTruncatesLastVisibleLine:YES];
     [[_statusView cell] setLineBreakMode:NSLineBreakByTruncatingTail];
     [[_nameView cell] setTruncatesLastVisibleLine:YES];
@@ -37,7 +37,7 @@
     [self.view addSubview:_statusView];
     
     
-    [_photoView setFrameOrigin:NSMakePoint(5, 5)];
+    [_photoView setFrameOrigin:NSMakePoint(10, 5)];
     
 }
 

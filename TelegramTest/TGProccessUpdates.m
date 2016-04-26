@@ -276,6 +276,9 @@ static NSArray *channelUpdates;
         }
     }
     
+    if(_holdUpdates)
+        return;
+    
     [_statefulUpdates addObject:statefulMessage];
     
     [self cancelSequenceTimer];
@@ -644,8 +647,11 @@ static NSArray *channelUpdates;
                 
                 TLUser *copy = [user copy];
                 
-                copy.first_name = update.first_name;
-                copy.last_name = update.last_name;
+                if(!copy.isContact)
+                    copy.first_name = update.first_name;
+                if(!copy.isContact)
+                    copy.last_name = update.last_name;
+                
                 copy.username = update.username;
                 [[UsersManager sharedManager] add:@[copy]];
                 
@@ -1104,15 +1110,15 @@ static NSArray *channelUpdates;
             _updateState.pts = statePts;
             _updateState.date = stateDate;
             _updateState.seq = stateSeq;
-             MTLog(@"new updateDifference update update: %@",_updateState);
+             NSLog(@"new updateDifference update update: %@",_updateState);
             [self saveUpdateState];
             
             
             
             if(intstate != nil) {
-                dispatch_after_seconds_queue(0.5, ^{
+             //   dispatch_after_seconds_queue(0.5, ^{
                     [self uptodateWithConnectionState:updateConnectionState];
-                }, queue.nativeQueue);
+             //   }, queue.nativeQueue);
                 
             } else {
                 

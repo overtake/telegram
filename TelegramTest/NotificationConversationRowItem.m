@@ -31,6 +31,10 @@
     [self redrawRow];
 }
 
+-(int)height {
+    return 40;
+}
+
 -(NSUInteger)hash {
     return _conversation.peer_id;
 }

@@ -669,7 +669,9 @@
     
 }
 
--(void)markChannelMessagesAsRead:(int)channel_id max_id:(int)max_id {
+-(void)markChannelMessagesAsRead:(int)channel_id max_id:(int)max_id completionHandler:(dispatch_block_t)completionHandler {
+    
+    dispatch_queue_t dqueue = dispatch_get_current_queue();
     
     [self.queue dispatchOnQueue:^{
         [[Storage manager] markChannelMessagesAsRead:channel_id max_id:max_id callback:^(int unread_count) {
@@ -678,11 +680,13 @@
             
             if(conversation) {
                 
-                conversation.unread_count = unread_count;
+                conversation.unread_count-= unread_count;
                 conversation.last_marked_message = max_id;
                 [conversation save];
                 [Notification perform:[Notification notificationNameByDialog:conversation action:@"unread_count"] data:@{KEY_DIALOG:conversation,KEY_LAST_CONVRESATION_DATA:[MessagesUtils conversationLastData:conversation]}];
             }
+            
+            dispatch_async(dqueue, completionHandler);
  
         }];
 
@@ -743,12 +747,7 @@
     
     if(message.unread && !message.n_out && message.conversation.read_inbox_max_id < message.n_id) {
         dialog.unread_count++;
-        
-        if(message.peer_id == -1048173594) {
-            int bp = 0;
-        }
-        
-    } 
+    }
     
     if([message.action isKindOfClass:[TL_messageActionChatMigrateTo class]]) {
         dialog.unread_count = 0;

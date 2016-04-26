@@ -115,7 +115,7 @@
     if([userName hasPrefix:@"@"])
         userName = [userName substringFromIndex:1];
     
-    NSArray *users = [[[UsersManager sharedManager] all] filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.username == %@",userName]];
+    NSArray *users = [[[UsersManager sharedManager] all] filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.username.lowercaseString == %@",[userName lowercaseString]]];
     
     if(users.count == 1)
         return users[0];
@@ -443,7 +443,7 @@
     [[FullUsersManager sharedManager] requestUserFull:self.userSelf withCallback:^(TLUserFull *userFull) {
         
         int flags = firstName.length > 0 ? (1 << 0) : 0;
-        flags|=lastName.length > 0 ? (1 << 1) : 0;
+        flags|=(1 << 1);
         flags|=userFull.about.length > 0 ? (1 << 2) : 0;
         
         [RPCRequest sendRequest:[TLAPI_account_updateProfile createWithFlags:flags first_name:firstName last_name:lastName about:userFull.about] successHandler:^(RPCRequest *request, TLUser *response) {

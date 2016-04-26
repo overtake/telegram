@@ -1174,6 +1174,9 @@
          contextName = "parseMessage:Storage.m">
       </ContextState>
       <ContextState
+         contextName = "__77-[TGUpdateChannels failUpdateWithChannelId:limit:withCallback:errorCallback:]_block_invoke:TGUpdateChannels.m">
+      </ContextState>
+      <ContextState
          contextName = "__56+[TGBotCommandsPopup show:botInfo:view:ofRect:callback:]_block_invoke42:TGBotCommandsPopup.m">
       </ContextState>
       <ContextState
@@ -2315,6 +2318,14 @@
             </PersistentString>
             <PersistentString
                value = "state-&gt;repeatCount">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "__51-[DialogsManager markChannelMessagesAsRead:max_id:]_block_invoke_2:DialogsManager.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "current_max_read">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -4742,19 +4753,25 @@
          contextName = "-[DialogsManager updateConversation:withLastMessage:update_real_date:]:DialogsManager.m">
          <PersistentStrings>
             <PersistentString
-               value = "dialog.unread_count">
-            </PersistentString>
-            <PersistentString
                value = "message.date">
             </PersistentString>
             <PersistentString
                value = "self.isN_out">
             </PersistentString>
             <PersistentString
-               value = "message.chat">
+               value = "message.conversation.read_inbox_max_id ">
             </PersistentString>
             <PersistentString
                value = "self.n_out">
+            </PersistentString>
+            <PersistentString
+               value = "message.n_id">
+            </PersistentString>
+            <PersistentString
+               value = "dialog.unread_count">
+            </PersistentString>
+            <PersistentString
+               value = "message.chat">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -7534,6 +7551,14 @@
          <PersistentStrings>
             <PersistentString
                value = "self.selectedRow">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "linkOverHandle_block_invoke_4:TGCTextView.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "response">
             </PersistentString>
          </PersistentStrings>
       </ContextState>

@@ -558,7 +558,7 @@ static NSMutableDictionary *inlineBotsExceptions;
     
     //|| self.messagesViewController.class == [TGContextMessagesvViewController class]
     
-    if(inlineBotsExceptions[bot] || self.messagesViewController.state != MessagesViewControllerStateNone)
+    if(inlineBotsExceptions[bot] || self.messagesViewController.state != MessagesViewControllerStateNone || !conversation.canSendMessage)
         return;
     
     

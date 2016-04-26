@@ -232,7 +232,7 @@
     if([userName hasPrefix:@"@"])
         userName = [userName substringFromIndex:1];
     
-    NSArray *chats = [[[ChatsManager sharedManager] all] filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.username == %@",userName]];
+    NSArray *chats = [[[ChatsManager sharedManager] all] filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.username.lowercaseString == %@",userName.lowercaseString]];
     
     if(chats.count == 1)
         return chats[0];

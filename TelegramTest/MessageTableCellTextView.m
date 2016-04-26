@@ -207,6 +207,11 @@
 }
 
 
+-(void)_didScrolledTableView:(NSNotification *)notification {
+    [super _didScrolledTableView:notification];
+
+}
+
 
 -(void)setSelected:(BOOL)selected animated:(BOOL)animated {
     

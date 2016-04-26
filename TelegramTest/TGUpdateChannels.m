@@ -96,9 +96,8 @@
             statelessUpdates = @[NSStringFromClass([TL_updateReadChannelInbox class]),NSStringFromClass([TL_updateChannelTooLong class]),NSStringFromClass([TL_updateChannelGroup class]),NSStringFromClass([TL_updateChannelMessageViews class]),NSStringFromClass([TL_updateChannel class]),NSStringFromClass([TL_updateChannelPinnedMessage class])];
         });
         
-        if([self channelIdWithUpdate:update] == 1033196004) {
-            int bp = 0;
-        }
+        
+       
         
         
         if([statefullUpdates indexOfObject:[update className]] != NSNotFound)
@@ -125,6 +124,11 @@
     
     if(statefulMessage.pts == 0 || [self ptsWithChannelId:statefulMessage.channel_id] + statefulMessage.pts_count == statefulMessage.pts )
     {
+        
+        if(statefulMessage.channel_id == 1031569976) {
+            int bp = 0;
+        }
+        
         [self proccessStatefullUpdate:statefulMessage];
         
         return;
@@ -421,8 +425,11 @@
         [[Storage manager] updateMessageId:[(TL_updateMessageID *)update random_id] msg_id:[(TL_updateMessageID *)update n_id]];
         [Notification performOnStageQueue:MESSAGE_UPDATE_MESSAGE_ID data:@{KEY_MESSAGE_ID:@([(TL_updateMessageID *)update n_id]),KEY_RANDOM_ID:@([(TL_updateMessageID *)update random_id])}];
     } else if([update isKindOfClass:[TL_updateReadChannelInbox class]]) {
+    
         
-        [[DialogsManager sharedManager] markChannelMessagesAsRead:[update channel_id] max_id:[(TL_updateReadChannelInbox *)update max_id]];
+        [[DialogsManager sharedManager] markChannelMessagesAsRead:[update channel_id] max_id:[(TL_updateReadChannelInbox *)update max_id] completionHandler:^{
+        //    [self failUpdateWithChannelId:[(TL_updateReadChannelInbox *)update channel_id] limit:0 withCallback:nil errorCallback:nil];
+        }];
         
     } else if([update isKindOfClass:[TL_updateChannelTooLong class]]) {
         
@@ -600,7 +607,7 @@
             _channelsInUpdating[@(channel_id)] = [RPCRequest sendRequest:[TLAPI_updates_getChannelDifference createWithChannel:[TL_inputChannel createWithChannel_id:channel_id access_hash:channel.access_hash] filter:[TL_channelMessagesFilterEmpty create] pts:[self ptsWithChannelId:channel_id] limit:limit] successHandler:^(id request, id response) {
                 
                 
-                
+               
                 
                 TGMessageHole *longHole;
                 

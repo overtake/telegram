@@ -344,7 +344,7 @@ static NSMutableDictionary *cache;
                   
                   
     if(_conversation.peer_id == peer_id) {
-        if(msg_id != 0) {
+        if(msg_id != 0 ) {
             [self loadAndShowPinnedMessage:msg_id chat_id:abs(peer_id) animated:YES];
         }else if(self.action == MessagesTopInfoActionPinnedMessage) {
             [self hide:YES];
@@ -359,45 +359,48 @@ static NSMutableDictionary *cache;
     
     dispatch_block_t block = ^{
         
-        self.action = MessagesTopInfoActionPinnedMessage;
+        if(![[NSUserDefaults standardUserDefaults] boolForKey:[NSString stringWithFormat:@"igonore_pinned_%d_%d",msg_id,chat_id]]) {
+            self.action = MessagesTopInfoActionPinnedMessage;
+            
+            TGReplyObject *replyObject = [[TGReplyObject alloc] initWithReplyMessage:msg fromMessage:nil tableItem:nil pinnedMessage:YES withoutCache:YES];
+            
+            [_pinnedContainer removeFromSuperview];
+            _pinnedContainer = nil;
+            
+            _pinnedContainer = [[MessageReplyContainer alloc] initWithFrame:NSMakeRect([MessageTableItem defaultContainerOffset], 0, NSWidth(self.frame) - [MessageTableItem defaultContainerOffset] * 2, replyObject.containerHeight)];
+            _pinnedContainer.autoresizingMask = NSViewWidthSizable;
+            
+            _pinnedContainer.pinnedMessage = YES;
+            
+            weak();
+            
+            _pinnedContainer.deleteHandler = ^{
+                strongWeak();
+                if(strongSelf == weakSelf) {
+                    
+                    dispatch_block_t block = ^{
+                        strongSelf.pinnedContainer.pinnedMessage = NO;
+                        [strongSelf deletePinnedMessage:msg chat_id:chat_id withRequest:YES];
+                    };
+                    if(strongSelf.conversation.chat.isManager)
+                        confirm(appName(), NSLocalizedString(@"Channel.ConfirmUnpin", nil), block, nil);
+                    else
+                        block();
+                    
+                }
+            };
+            
+            
+            [_pinnedContainer setCenteredYByView:self];
+            _pinnedContainer.replyObject = replyObject;
+            
+            
+            
+            [self addSubview:_pinnedContainer];
+            
+            [self show:animated];
+        }
         
-        TGReplyObject *replyObject = [[TGReplyObject alloc] initWithReplyMessage:msg fromMessage:nil tableItem:nil pinnedMessage:YES withoutCache:YES];
-        
-        [_pinnedContainer removeFromSuperview];
-        _pinnedContainer = nil;
-        
-        _pinnedContainer = [[MessageReplyContainer alloc] initWithFrame:NSMakeRect([MessageTableItem defaultContainerOffset], 0, NSWidth(self.frame) - [MessageTableItem defaultContainerOffset] * 2, replyObject.containerHeight)];
-        _pinnedContainer.autoresizingMask = NSViewWidthSizable;
-        
-        _pinnedContainer.pinnedMessage = YES;
-        
-        weak();
-        
-        _pinnedContainer.deleteHandler = ^{
-            strongWeak();
-            if(strongSelf == weakSelf) {
-                
-                dispatch_block_t block = ^{
-                    strongSelf.pinnedContainer.pinnedMessage = NO;
-                    [strongSelf deletePinnedMessage:msg chat_id:chat_id withRequest:YES];
-                };
-                
-                confirm(appName(), NSLocalizedString(@"Channel.ConfirmUnpin", nil), block, nil);
-                
-            }
-        };
-        
-        
-        [_pinnedContainer setCenteredYByView:self];
-        _pinnedContainer.replyObject = replyObject;
-        
-        
-        
-        [self addSubview:_pinnedContainer];
-        
-        
-        
-        [self show:animated];
     };
     
     if(!msg) {
@@ -434,6 +437,11 @@ static NSMutableDictionary *cache;
    
      dispatch_block_t block = ^{
         TLChatFull *chat = [[ChatFullManager sharedManager] find:chat_id];
+         
+         if(!withRequest) {
+             [[NSUserDefaults standardUserDefaults] setObject:@(YES) forKey:[NSString stringWithFormat:@"igonore_pinned_%d_%d",msg.n_id,chat_id]];
+         }
+         
         
         chat.pinned_msg_id = 0;
         

@@ -2800,9 +2800,9 @@ static NSTextAttachment *headerMediaIcon() {
         
         [self.normalNavigationCenterView setDialog:dialog];
         
-        
         [self.bottomView setDialog:dialog];
-        
+         
+
         
         self.historyController = [[[self hControllerClass] alloc] initWithController:self historyFilter:[self defHFClass]];
         

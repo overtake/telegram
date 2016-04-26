@@ -1305,7 +1305,7 @@ static RBLPopover *popover;
 
 - (void)sendButtonAction {
     
-    if(!self.messagesViewController.hintView.isHidden)
+    if(_inlineBot)
         return;
         
     if(self.template.type == TGInputMessageTemplateTypeEditMessage) {
