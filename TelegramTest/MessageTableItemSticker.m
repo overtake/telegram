@@ -16,7 +16,11 @@
         if(NSSizeNotZero(self.document.imageSize)) {
             self.blockSize = self.document.imageSize;
         } else {
-            self.blockSize = NSMakeSize(200, 200);
+            if ([SettingsArchiver checkMaskedSetting:SmallerStickers]) {
+                self.blockSize = NSMakeSize(40, 40);
+            } else {
+                self.blockSize = NSMakeSize(200, 200);
+            }
         }
         
         NSImage *placeholder;
@@ -36,8 +40,12 @@
         if(!placeholder)
             placeholder = white_background_color();
         
-        self.blockSize = strongsize(self.blockSize, 200);
-        
+        if ([SettingsArchiver checkMaskedSetting:SmallerStickers]) {
+            self.blockSize = strongsize(self.blockSize, 40);
+        } else {
+            self.blockSize = strongsize(self.blockSize, 200);
+        }
+
         self.imageObject = [[TGStickerImageObject alloc] initWithDocument:self.document placeholder:placeholder];
         
         self.imageObject.imageSize = self.blockSize;
@@ -52,10 +60,19 @@
     if(NSSizeNotZero(self.document.imageSize)) {
         self.blockSize = self.document.imageSize;
     } else {
-        self.blockSize = NSMakeSize(200, 200);
+        if ([SettingsArchiver checkMaskedSetting:SmallerStickers]) {
+            self.blockSize = NSMakeSize(40, 40);
+        } else {
+            self.blockSize = NSMakeSize(200, 200);
+        }
     }
     
-    self.contentSize = self.blockSize = strongsize(self.blockSize, MIN(width,200));
+    if ([SettingsArchiver checkMaskedSetting:SmallerStickers]) {
+        self.contentSize = self.blockSize = strongsize(self.blockSize, MIN(width, 40));
+    } else {
+        self.contentSize = self.blockSize = strongsize(self.blockSize, MIN(width, 200));
+    }
+
     
     return [super makeSizeByWidth:width];
 }
