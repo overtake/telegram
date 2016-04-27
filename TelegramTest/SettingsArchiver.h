@@ -42,7 +42,8 @@ typedef enum {
     IncludeMutedUnreadCount = 1 << 25,
     DisableAutoplayGifSetting = 1 << 26,
     TripleLayoutSettings = 1 << 27,
-    HandleMediaKeysSettings = 2 << 28
+    HandleMediaKeysSettings = 2 << 28,
+    SmallerStickers = 2 << 29,
 } SettingsMask;
 
 
