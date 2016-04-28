@@ -370,55 +370,59 @@
         [[DialogsManager sharedManager] deleteChannelMessags:channelMessages];
 
         
+        TLChat *channel = [[ChatsManager sharedManager] find:-peer_id];
         
-        
-        [[update messages] enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
-            
-            
-            TL_localMessage *topMsg = [[Storage manager] lastMessageAroundMinId:channelMsgId([obj intValue], peer_id) important:YES isTop:NO];
-            
-            TL_localMessage *botMsg = [[Storage manager] lastMessageAroundMinId:channelMsgId([obj intValue], peer_id) important:YES isTop:YES];
-            
-            int topMsgId = topMsg ? topMsg.n_id : [obj intValue]-1;
-            int botMsgId = botMsg ? botMsg.n_id : [obj intValue]+1;
-            
-            NSArray *groupHoles = [[Storage manager] groupHoles:peer_id min:topMsgId max:botMsgId];
-            
-            if(groupHoles.count == 1) {
-        
-                TGMessageGroupHole *hole = [groupHoles firstObject];
+        if(!channel.isBroadcast && !channel.isMegagroup) {
+            [[update messages] enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
                 
-                if(hole.max_id > [obj intValue] && hole.min_id < [obj intValue])
-                     hole.messagesCount--;
-                else {
-                    hole.min_id = topMsg.n_id;
+                
+                TL_localMessage *topMsg = [[Storage manager] lastMessageAroundMinId:channelMsgId([obj intValue], peer_id) important:YES isTop:NO];
+                
+                TL_localMessage *botMsg = [[Storage manager] lastMessageAroundMinId:channelMsgId([obj intValue], peer_id) important:YES isTop:YES];
+                
+                int topMsgId = topMsg ? topMsg.n_id : [obj intValue]-1;
+                int botMsgId = botMsg ? botMsg.n_id : [obj intValue]+1;
+                
+                NSArray *groupHoles = [[Storage manager] groupHoles:peer_id min:topMsgId max:botMsgId];
+                
+                if(groupHoles.count == 1) {
+                    
+                    TGMessageGroupHole *hole = [groupHoles firstObject];
+                    
+                    if(hole.max_id > [obj intValue] && hole.min_id < [obj intValue])
+                        hole.messagesCount--;
+                    else {
+                        hole.min_id = topMsg.n_id;
+                    }
+                    
+                    if(hole.messagesCount == 0)
+                        [hole remove];
+                    else
+                        [hole save];
+                    
+                    [Notification perform:UPDATE_MESSAGE_GROUP_HOLE data:@{KEY_GROUP_HOLE:hole}];
+                    
+                } else if(groupHoles.count == 2) {
+                    
+                    TGMessageGroupHole *topHole = groupHoles[0];
+                    TGMessageGroupHole *botHole = groupHoles[1];
+                    
+                    [botHole remove];
+                    
+                    
+                    topHole.max_id = botHole.max_id;
+                    topHole.messagesCount += botHole.messagesCount;
+                    [topHole save];
+                    
+                    [Notification perform:UPDATE_MESSAGE_GROUP_HOLE data:@{KEY_GROUP_HOLE:topHole}];
+                    [Notification performOnStageQueue:MESSAGE_DELETE_EVENT data:@{KEY_DATA:@[@{KEY_PEER_ID:@(botHole.peer_id),KEY_MESSAGE_ID:@(botHole.uniqueId)}]}];
+                    
                 }
                 
-                if(hole.messagesCount == 0)
-                    [hole remove];
-                else
-                    [hole save];
-                
-                [Notification perform:UPDATE_MESSAGE_GROUP_HOLE data:@{KEY_GROUP_HOLE:hole}];
+            }];
 
-            } else if(groupHoles.count == 2) {
-                
-                TGMessageGroupHole *topHole = groupHoles[0];
-                TGMessageGroupHole *botHole = groupHoles[1];
-                
-                [botHole remove];
-                
-                
-                topHole.max_id = botHole.max_id;
-                topHole.messagesCount += botHole.messagesCount;
-                [topHole save];
-                
-                [Notification perform:UPDATE_MESSAGE_GROUP_HOLE data:@{KEY_GROUP_HOLE:topHole}];
-                [Notification performOnStageQueue:MESSAGE_DELETE_EVENT data:@{KEY_DATA:@[@{KEY_PEER_ID:@(botHole.peer_id),KEY_MESSAGE_ID:@(botHole.uniqueId)}]}];
-                
-            }
-            
-        }];
+        }
+        
         
         
     } else if([update isKindOfClass:[TL_updateMessageID class]]) {
@@ -426,8 +430,17 @@
         [Notification performOnStageQueue:MESSAGE_UPDATE_MESSAGE_ID data:@{KEY_MESSAGE_ID:@([(TL_updateMessageID *)update n_id]),KEY_RANDOM_ID:@([(TL_updateMessageID *)update random_id])}];
     } else if([update isKindOfClass:[TL_updateReadChannelInbox class]]) {
     
+        TL_conversation *conversation = [self conversationWithChannelId:[update channel_id]];
+        
         
         [[DialogsManager sharedManager] markChannelMessagesAsRead:[update channel_id] max_id:[(TL_updateReadChannelInbox *)update max_id] completionHandler:^{
+            [RPCRequest sendRequest:[TLAPI_messages_getPeerDialogs createWithPeer:[@[conversation.inputPeer] mutableCopy]] successHandler:^(id request, id response) {
+                
+                int bp = 0;
+                
+            } errorHandler:^(id request, RpcError *error) {
+                
+            }];
         //    [self failUpdateWithChannelId:[(TL_updateReadChannelInbox *)update channel_id] limit:0 withCallback:nil errorCallback:nil];
         }];
         

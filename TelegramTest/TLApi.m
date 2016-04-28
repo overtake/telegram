@@ -2,7 +2,7 @@
 //  TLApi.m
 //  Telegram
 //
-//  Auto created by Mikhail Filimonov on 09.04.16..
+//  Auto created by Mikhail Filimonov on 28.04.16..
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -2897,6 +2897,72 @@
 	
 	[stream writeLong:self.query_id];
 	if(self.flags & (1 << 0)) {[stream writeString:self.message];}
+	return [stream getOutput];
+}
+@end
+
+@implementation TLAPI_contacts_getTopPeers
++(TLAPI_contacts_getTopPeers*)createWithFlags:(int)flags      offset:(int)offset limit:(int)limit n_hash:(int)n_hash {
+    TLAPI_contacts_getTopPeers* obj = [[TLAPI_contacts_getTopPeers alloc] init];
+    obj.flags = flags;
+	
+	
+	
+	
+	
+	obj.offset = offset;
+	obj.limit = limit;
+	obj.n_hash = n_hash;
+    return obj;
+}
+- (NSData*)getData {
+	SerializedData* stream = [ClassStore streamWithConstuctor:-728224331];
+	[stream writeInt:self.flags];
+	
+	
+	
+	
+	
+	[stream writeInt:self.offset];
+	[stream writeInt:self.limit];
+	[stream writeInt:self.n_hash];
+	return [stream getOutput];
+}
+@end
+
+@implementation TLAPI_contacts_resetTopPeerRating
++(TLAPI_contacts_resetTopPeerRating*)createWithCategory:(TLTopPeerCategory*)category peer:(TLInputPeer*)peer {
+    TLAPI_contacts_resetTopPeerRating* obj = [[TLAPI_contacts_resetTopPeerRating alloc] init];
+    obj.category = category;
+	obj.peer = peer;
+    return obj;
+}
+- (NSData*)getData {
+	SerializedData* stream = [ClassStore streamWithConstuctor:451113900];
+	[ClassStore TLSerialize:self.category stream:stream];
+	[ClassStore TLSerialize:self.peer stream:stream];
+	return [stream getOutput];
+}
+@end
+
+@implementation TLAPI_messages_getPeerDialogs
++(TLAPI_messages_getPeerDialogs*)createWithPeer:(NSMutableArray*)peer {
+    TLAPI_messages_getPeerDialogs* obj = [[TLAPI_messages_getPeerDialogs alloc] init];
+    obj.peer = peer;
+    return obj;
+}
+- (NSData*)getData {
+	SerializedData* stream = [ClassStore streamWithConstuctor:421857415];
+	//Serialize FullVector
+	[stream writeInt:0x1cb5c415];
+	{
+		NSInteger tl_count = [self.peer count];
+		[stream writeInt:(int)tl_count];
+		for(int i = 0; i < (int)tl_count; i++) {
+            TLInputPeer* obj = [self.peer objectAtIndex:i];
+            [ClassStore TLSerialize:obj stream:stream];
+		}
+	}
 	return [stream getOutput];
 }
 @end

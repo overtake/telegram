@@ -3608,7 +3608,7 @@ static NSTextAttachment *headerMediaIcon() {
                     MessageSenderItem *sender = [[cs alloc] initWithMessage:substring forConversation:conversation noWebpage:noWebpage  additionFlags:self.senderFlags];
                     sender.tableItem = [[self messageTableItemsFromMessages:@[sender.message]] lastObject];
                     
-                    [preparedItems addObject:sender.tableItem];
+                    [preparedItems insertObject:sender.tableItem atIndex:0];
                     
                     
                 }

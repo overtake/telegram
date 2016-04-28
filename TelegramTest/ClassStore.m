@@ -3,7 +3,7 @@
 //  ClassStore.m
 //  Telegram
 //
-    //  Created by keepcoder on 09.04.16.
+    //  Created by keepcoder on 28.04.16.
 //  Copyright (c) 2015 keepcoder. All rights reserved.
 //
 
@@ -298,7 +298,7 @@ static NSMutableDictionary *cs_constuctors;
    [cs_classes setObject:[TL_photos_photo class] forKey:[NSNumber numberWithInt:539045032]];
    [cs_classes setObject:[TL_upload_file class] forKey:[NSNumber numberWithInt:157948117]];
    [cs_classes setObject:[TL_dcOption class] forKey:[NSNumber numberWithInt:98092748]];
-   [cs_classes setObject:[TL_config class] forKey:[NSNumber numberWithInt:830271220]];
+   [cs_classes setObject:[TL_config class] forKey:[NSNumber numberWithInt:-918482040]];
    [cs_classes setObject:[TL_nearestDc class] forKey:[NSNumber numberWithInt:-1910892683]];
    [cs_classes setObject:[TL_help_appUpdate class] forKey:[NSNumber numberWithInt:-1987579119]];
    [cs_classes setObject:[TL_help_noAppUpdate class] forKey:[NSNumber numberWithInt:-1000708810]];
@@ -552,6 +552,18 @@ static NSMutableDictionary *cs_constuctors;
    [cs_classes setObject:[TL_inputBotInlineMessageID class] forKey:[NSNumber numberWithInt:-1995686519]];
    [cs_classes setObject:[TL_updateInlineBotCallbackQuery class] forKey:[NSNumber numberWithInt:750622127]];
    [cs_classes setObject:[TL_inlineBotSwitchPM class] forKey:[NSNumber numberWithInt:1008755359]];
+   [cs_classes setObject:[TL_messages_peerDialogs class] forKey:[NSNumber numberWithInt:863093588]];
+   [cs_classes setObject:[TL_topPeer class] forKey:[NSNumber numberWithInt:-305282981]];
+   [cs_classes setObject:[TL_topPeerCategoryBotsPM class] forKey:[NSNumber numberWithInt:-1419371685]];
+   [cs_classes setObject:[TL_topPeerCategoryBotsInline class] forKey:[NSNumber numberWithInt:344356834]];
+   [cs_classes setObject:[TL_topPeerCategoryCorrespondents class] forKey:[NSNumber numberWithInt:104314861]];
+   [cs_classes setObject:[TL_topPeerCategoryGroups class] forKey:[NSNumber numberWithInt:-1122524854]];
+   [cs_classes setObject:[TL_topPeerCategoryChannels class] forKey:[NSNumber numberWithInt:371037736]];
+   [cs_classes setObject:[TL_topPeerCategoryPeers class] forKey:[NSNumber numberWithInt:-75283823]];
+   [cs_classes setObject:[TL_contacts_topPeersNotModified class] forKey:[NSNumber numberWithInt:-567906571]];
+   [cs_classes setObject:[TL_contacts_topPeers class] forKey:[NSNumber numberWithInt:1891070632]];
+   [cs_classes setObject:[TL_messageEntityMentionName class] forKey:[NSNumber numberWithInt:892193368]];
+   [cs_classes setObject:[TL_inputMessageEntityMentionName class] forKey:[NSNumber numberWithInt:546203849]];
    [cs_classes setObject:[TL_userSelf class] forKey:[NSNumber numberWithInt:476112392]];
    [cs_classes setObject:[TL_userContact class] forKey:[NSNumber numberWithInt:-894214632]];
    [cs_classes setObject:[TL_userRequest class] forKey:[NSNumber numberWithInt:-640891665]];

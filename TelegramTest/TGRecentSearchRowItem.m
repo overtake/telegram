@@ -7,7 +7,7 @@
 //
 
 #import "TGRecentSearchRowItem.h"
-
+#import "TGRecentSearchRowView.h"
 
 
 @implementation TGRecentSearchRowItem
@@ -23,6 +23,14 @@
 
 -(NSUInteger)hash {
     return _conversation.peer_id;
+}
+
+-(Class)viewClass {
+    return [TGRecentSearchRowView class];
+}
+
+-(int)height {
+    return 50;
 }
 
 @end

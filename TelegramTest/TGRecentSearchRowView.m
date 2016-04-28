@@ -62,12 +62,16 @@
 }
 
 -(void)mouseEntered:(NSEvent *)theEvent {
+    
+    TGRecentSearchRowItem *item = (TGRecentSearchRowItem *)[self rowItem];
+
     [super mouseEntered:theEvent];
-    [_removeButton setHidden:NO];
+    [_removeButton setHidden:item.disableRemoveButton];
 }
 
 -(void)mouseExited:(NSEvent *)theEvent {
     [super mouseExited:theEvent];
+    
     [_removeButton setHidden:YES];
 }
 
@@ -78,8 +82,14 @@
 - (void)drawRect:(NSRect)dirtyRect {
     [super drawRect:dirtyRect];
     
-    [DIALOG_BORDER_COLOR set];
-    NSRectFill(NSMakeRect(60, 0, NSWidth(dirtyRect) - 60, 1));
+    TGRecentSearchRowItem *item = (TGRecentSearchRowItem *)[self rowItem];
+
+    if(!item.disableBottomSeparator) {
+        [DIALOG_BORDER_COLOR set];
+        NSRectFill(NSMakeRect(60, 0, NSWidth(dirtyRect) - 60, 1));
+    }
+    
+  
 
     
         // Drawing code here.

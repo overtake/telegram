@@ -2,7 +2,7 @@
 //  TLApi.h
 //  Telegram
 //
-//  Auto created by Mikhail Filimonov on 09.04.16.
+//  Auto created by Mikhail Filimonov on 28.04.16.
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -1225,5 +1225,32 @@
 @property (nonatomic, strong) NSString* message;
 
 +(TLAPI_messages_setBotCallbackAnswer*)createWithFlags:(int)flags  query_id:(long)query_id message:(NSString*)message;
+@end
+
+@interface TLAPI_contacts_getTopPeers : TLApiObject
+@property int flags;
+@property (nonatomic,assign,readonly) BOOL isCorrespondents;
+@property (nonatomic,assign,readonly) BOOL isBots_pm;
+@property (nonatomic,assign,readonly) BOOL isBots_inline;
+@property (nonatomic,assign,readonly) BOOL isGroups;
+@property (nonatomic,assign,readonly) BOOL isChannels;
+@property int offset;
+@property int limit;
+@property int n_hash;
+
++(TLAPI_contacts_getTopPeers*)createWithFlags:(int)flags      offset:(int)offset limit:(int)limit n_hash:(int)n_hash;
+@end
+
+@interface TLAPI_contacts_resetTopPeerRating : TLApiObject
+@property (nonatomic, strong) TLTopPeerCategory* category;
+@property (nonatomic, strong) TLInputPeer* peer;
+
++(TLAPI_contacts_resetTopPeerRating*)createWithCategory:(TLTopPeerCategory*)category peer:(TLInputPeer*)peer;
+@end
+
+@interface TLAPI_messages_getPeerDialogs : TLApiObject
+@property (nonatomic, strong) NSMutableArray* peer;
+
++(TLAPI_messages_getPeerDialogs*)createWithPeer:(NSMutableArray*)peer;
 @end
 

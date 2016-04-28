@@ -1495,9 +1495,8 @@ static RBLPopover *popover;
             
             [insert insertString:fullUserName atIndex:selectedRange.location - search.length];
             
-            
-            
             [self.inputMessageTextField insertText:[fullUserName stringByAppendingString:@" "] replacementRange:NSMakeRange(selectedRange.location - search.length, search.length)];
+            
             
         };
         

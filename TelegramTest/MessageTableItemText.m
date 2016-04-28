@@ -63,7 +63,7 @@
             
             [self.message.entities enumerateObjectsUsingBlock:^(TLMessageEntity *obj, NSUInteger idx, BOOL *stop) {
                 
-                if([obj isKindOfClass:[TL_messageEntityUrl class]] ||[obj isKindOfClass:[TL_messageEntityTextUrl class]] || [obj isKindOfClass:[TL_messageEntityMention class]] || [obj isKindOfClass:[TL_messageEntityBotCommand class]] || [obj isKindOfClass:[TL_messageEntityHashtag class]] || [obj isKindOfClass:[TL_messageEntityEmail class]] || [obj isKindOfClass:[TL_messageEntityPre class]] || [obj isKindOfClass:[TL_messageEntityCode class]]) {
+                if([obj isKindOfClass:[TL_messageEntityUrl class]] ||[obj isKindOfClass:[TL_messageEntityTextUrl class]] || [obj isKindOfClass:[TL_messageEntityMention class]] || [obj isKindOfClass:[TL_messageEntityBotCommand class]] || [obj isKindOfClass:[TL_messageEntityHashtag class]] || [obj isKindOfClass:[TL_messageEntityEmail class]] || [obj isKindOfClass:[TL_messageEntityPre class]] || [obj isKindOfClass:[TL_messageEntityCode class]] || [obj isKindOfClass:[TL_messageEntityMentionName class]]) {
                     
                     
                     if([obj isKindOfClass:[TL_messageEntityMention class]] && (self.linkParseTypes() & URLFindTypeMentions) == 0)
@@ -84,6 +84,10 @@
                     NSRange range = [self checkAndReturnEntityRange:obj];
                     
                     NSString *link = [self.message.message substringWithRange:range];
+                    
+                    if([obj isKindOfClass:[TL_messageEntityMentionName class]]) {
+                        link = [TMInAppLinks peerProfile:[TL_peerUser createWithUser_id:obj.user_id]];
+                    }
                     
                     
                     nextRange = NSMakeRange(range.location + range.length, self.textAttributed.length - (range.location + range.length));

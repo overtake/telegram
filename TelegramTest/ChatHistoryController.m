@@ -898,7 +898,7 @@ static const int maxCacheCount = 30;
 
                     [[ASQueue mainQueue] dispatchOnQueue:^{
                         
-                        [controller.controller receivedMessageList:[items reversedArray] inRange:NSMakeRange(0, items.count) itsSelf:YES];
+                        [controller.controller receivedMessageList:items inRange:NSMakeRange(0, items.count) itsSelf:YES];
                         
                         if(controller == self) {
                             if(sentControllerCallback)

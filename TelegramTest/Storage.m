@@ -33,7 +33,7 @@ NSString *const ATTACHMENTS = @"attachments";
 NSString *const BOT_COMMANDS = @"bot_commands_v2";
 NSString *const RECENT_SEARCH = @"recent_search";
 NSString *const RECENT_GIFS = @"RECENT_GIFS";
-
+NSString *const TOP_PEERS = @"TOP_PEERS";
 -(id)init {
     if(self = [super init]) {
         [self open:nil queue:nil];

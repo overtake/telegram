@@ -1,3 +1,4 @@
+
 //
 //  MesssageInputGrowingTextView.m
 //  Messenger for Telegram
@@ -16,21 +17,36 @@
 #import "NSString+Extended.h"
 #import "TGBotCommandsPopup.h"
 
-@interface TGHackView : TMView
+@interface TGCustomMentionRange : NSObject
+@property (nonatomic,strong) NSString *original;
+@property (nonatomic,assign) NSRange range;
+
+@property (nonatomic,strong) NSString *name;
+@property (nonatomic,assign) int user_id;
 
 @end
 
-@implementation TGHackView
+@implementation TGCustomMentionRange
 
--(void)setFrame:(NSRect)frame {
-    [super setFrame:frame];
+
+-(id)initWithOriginalText:(NSString *)text range:(NSRange)range {
+    if(self = [super init]) {
+        _original = text;
+        _range = range;
+        
+        _name = [text substringWithRange:NSMakeRange(2, [text rangeOfString:@"|"].location - 2)];
+        _user_id = [[text substringWithRange:NSMakeRange([text rangeOfString:@"|"].location + 1, text.length - 1 - [text rangeOfString:@"|"].location)] intValue];
+
+    }
+    
+    return self;
 }
 
--(void)setFrameSize:(NSSize)newSize {
-    [super setFrameSize:newSize];
-}
+
+
 
 @end
+
 
 typedef enum {
     PasteBoardItemTypeVideo,
@@ -40,6 +56,11 @@ typedef enum {
     PasteBoardTypeLink
 } PasteBoardItemType;
 
+
+@interface MessageInputGrowingTextView ()
+@property (nonatomic,strong) NSMutableArray *customMentions;
+@end
+
 @implementation MessageInputGrowingTextView
 
 - (id)initWithFrame:(NSRect)frame
@@ -47,6 +68,7 @@ typedef enum {
     self = [super initWithFrame:frame];
     if (self) {
         [self setPlaceholderString:NSLocalizedString(@"Messages.SendPlaceholder", nil)];
+        _customMentions = [NSMutableArray array];
     }
     return self;
 }
@@ -78,7 +100,22 @@ typedef enum {
 -(void)insertText:(id)insertString {
     //lol. MessagesBottomView
     if(!self.superview.superview.superview.superview.superview.isHidden) {
-         [super insertText:insertString];
+        
+        NSRange range = self.selectedRange;
+        
+        if(_customMentions.count > 0) {
+            
+            NSString *string = self.stringValue;
+            
+            [_customMentions removeAllObjects];
+            self.string = string;
+
+        }
+        
+       
+        
+        [super insertText:insertString];
+        
     }
    
 }
@@ -274,7 +311,6 @@ typedef enum {
 
 -(void)setString:(NSString *)string {
     [super setString:string];
-    
 }
 
 
@@ -335,11 +371,91 @@ typedef enum {
 
 
 -(void)textDidChange:(NSNotification *)notification {
-    
+    [self checkAndReplaceCustomMentions];
     [super textDidChange:notification];
+}
+
+-(NSString *)parseMentions:(NSMutableString *)copy {
+    NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:@"((?<!\\w)@\\[([^\\[\\]]+(\\|))+([0-9])+\\])" options:NSRegularExpressionCaseInsensitive error:nil];
+    NSArray *mentions = [regex matchesInString:copy options:0 range:NSMakeRange(0, [copy length])];
+    
+    if(mentions.count > 0) {
+        
+        
+        [mentions enumerateObjectsUsingBlock:^(NSTextCheckingResult * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            
+            TGCustomMentionRange *custom = [[TGCustomMentionRange alloc] initWithOriginalText:[copy substringWithRange:obj.range] range:obj.range];
+            
+            [_customMentions addObject:custom];
+            
+            [copy replaceCharactersInRange:NSMakeRange(obj.range.location, obj.range.length) withString:[NSString stringWithFormat:@"@(%@)",custom.name]];
+            
+            *stop = YES;
+            
+        }];
+        
+    }
+    
+    if(mentions.count > 0)
+        return [self parseMentions:copy];
+    
+    return copy;
+
+}
+
+-(void)checkAndReplaceCustomMentions {
+    
+    NSString *value = self.string;
+    NSMutableString *copy = [value mutableCopy];
+    
+    if(value.length > 0) {
+        
+        [_customMentions removeAllObjects];
+        
+         [self setString:[self parseMentions:copy]];
+        
+        
+    }
+}
+
+-(NSString *)realMentions:(NSMutableString *)string mentions:(NSMutableArray *)mentions {
+    NSString *local = string;
+    
+    if(mentions.count > 0) {
+        NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:@"(@\\([^\\(\\)]+\\))" options:NSRegularExpressionCaseInsensitive error:nil];
+        NSArray *fakeMentions = [regex matchesInString:string options:0 range:NSMakeRange(0, [string length])];
+        
+        if(fakeMentions.count > 0) {
+            [mentions enumerateObjectsUsingBlock:^(TGCustomMentionRange *obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                
+                NSTextCheckingResult *fake = fakeMentions[idx];
+                
+                NSString *nname = [local substringWithRange:NSMakeRange(fake.range.location+2, fake.range.length - 3)];
+                
+                [string replaceCharactersInRange:fake.range withString:[NSString stringWithFormat:@"@[%@|%d]",nname,obj.user_id]];
+                
+                *stop = YES;
+                
+            }];
+        }
+        
+        
+        if(mentions.count > 0)
+            [mentions removeObjectAtIndex:0];
+        
+        if(fakeMentions.count > 0 && mentions.count > 0)
+            return [self realMentions:string mentions:mentions];
+    }
     
     
+    return string;
+}
+
+-(NSString *)stringValue {
     
+    NSMutableString *string = [super.stringValue mutableCopy];
+    
+   return [self realMentions:string mentions:[_customMentions mutableCopy]];
 }
 
 
@@ -405,7 +521,7 @@ typedef enum {
     //TODO
     __strong MessageInputGrowingTextView *weakSelf = self;
     
-    self.containerView = [[TGHackView alloc] initWithFrame:self.bounds];
+    self.containerView = [[TMView alloc] initWithFrame:self.bounds];
     [self.containerView setDrawBlock:^{
         NSRect rect = NSMakeRect(1, 1, NSWidth(weakSelf.containerView.frame) - 2, NSHeight(weakSelf.containerView.frame) - 2);
         NSBezierPath *circlePath = [NSBezierPath bezierPath];
@@ -459,6 +575,8 @@ typedef enum {
 
 -(void)keyDown:(NSEvent *)theEvent {
     
+    
+    
     TGMessagesHintView *hint = self.controller.hintView;
     
     
@@ -492,12 +610,11 @@ typedef enum {
     
     //lol. MessagesBottomView
     if(!self.superview.superview.superview.superview.superview.isHidden) {
+        
+       
+        
         [super keyDown:theEvent];
     }
-    
-    
-    
-
     
 }
 

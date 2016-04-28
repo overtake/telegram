@@ -95,7 +95,7 @@ static const int seconds_to_notify = 120;
         }
         
         if( conversation.isMute )
-            if((message.flags & TGMENTIONMESSAGE) == 0)
+            if(!message.isMentioned)
                 return;
         
         

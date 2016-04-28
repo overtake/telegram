@@ -44,13 +44,16 @@
     return [TMRowView class];
 }
 
+-(NSString *)identifier {
+    return NSStringFromClass([self viewClass]);
+}
+
 -(int)height {
     return 60;
 }
 
 -(id)initWithObject:(id)object {
     if(self = [super init]) {
-        
     }
     return self;
 }

@@ -136,14 +136,14 @@
         
         
         fullName = [[[UsersManager sharedManager] all] filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(TLUser *evaluatedObject, NSDictionary *bindings) {
-            
-            return evaluatedObject.username.length > 0 && [evaluatedObject.fullName searchInStringByWordsSeparated:userName] && [uids indexOfObject:@(evaluatedObject.n_id)] != NSNotFound;
+            //evaluatedObject.username.length > 0 &&
+            return [evaluatedObject.fullName searchInStringByWordsSeparated:userName] && [uids indexOfObject:@(evaluatedObject.n_id)] != NSNotFound;
             
         }]];
     }  else {
         userNames = [[[UsersManager sharedManager] all] filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(TLUser *evaluatedObject, NSDictionary *bindings) {
-            
-            return (evaluatedObject.username.length > 0 && [uids indexOfObject:@(evaluatedObject.n_id)] != NSNotFound) || (evaluatedObject.isBotInlinePlaceholder && acceptContextBots);
+            //evaluatedObject.username.length > 0 &&
+            return ( [uids indexOfObject:@(evaluatedObject.n_id)] != NSNotFound) || (evaluatedObject.isBotInlinePlaceholder && acceptContextBots);
             
         }]];
         

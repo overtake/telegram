@@ -2,7 +2,7 @@
 //  MTProto.h
 //  Telegram
 //
-//  Auto created by Mikhail Filimonov on 09.04.16.
+//  Auto created by Mikhail Filimonov on 28.04.16.
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -436,6 +436,21 @@
 @end
 	
 @interface TLInlineBotSwitchPM : TLObject
+@end
+	
+@interface TLmessages_PeerDialogs : TLObject
+@end
+	
+@interface TLTopPeer : TLObject
+@end
+	
+@interface TLTopPeerCategory : TLObject
+@end
+	
+@interface TLTopPeerCategoryPeers : TLObject
+@end
+	
+@interface TLcontacts_TopPeers : TLObject
 @end
 	
 @interface TLAudio : TLObject
@@ -1947,11 +1962,12 @@
 @property int push_chat_limit;
 @property int saved_gifs_limit;
 @property int edit_time_limit;
+@property int rating_e_decay;
 @property (nonatomic, strong) NSMutableArray* disabled_features;
 @end
 
 @interface TL_config : TLConfig<NSCoding>
-+(TL_config*)createWithDate:(int)date expires:(int)expires test_mode:(Boolean)test_mode this_dc:(int)this_dc dc_options:(NSMutableArray*)dc_options chat_size_max:(int)chat_size_max megagroup_size_max:(int)megagroup_size_max forwarded_count_max:(int)forwarded_count_max online_update_period_ms:(int)online_update_period_ms offline_blur_timeout_ms:(int)offline_blur_timeout_ms offline_idle_timeout_ms:(int)offline_idle_timeout_ms online_cloud_timeout_ms:(int)online_cloud_timeout_ms notify_cloud_delay_ms:(int)notify_cloud_delay_ms notify_default_delay_ms:(int)notify_default_delay_ms chat_big_size:(int)chat_big_size push_chat_period_ms:(int)push_chat_period_ms push_chat_limit:(int)push_chat_limit saved_gifs_limit:(int)saved_gifs_limit edit_time_limit:(int)edit_time_limit disabled_features:(NSMutableArray*)disabled_features;
++(TL_config*)createWithDate:(int)date expires:(int)expires test_mode:(Boolean)test_mode this_dc:(int)this_dc dc_options:(NSMutableArray*)dc_options chat_size_max:(int)chat_size_max megagroup_size_max:(int)megagroup_size_max forwarded_count_max:(int)forwarded_count_max online_update_period_ms:(int)online_update_period_ms offline_blur_timeout_ms:(int)offline_blur_timeout_ms offline_idle_timeout_ms:(int)offline_idle_timeout_ms online_cloud_timeout_ms:(int)online_cloud_timeout_ms notify_cloud_delay_ms:(int)notify_cloud_delay_ms notify_default_delay_ms:(int)notify_default_delay_ms chat_big_size:(int)chat_big_size push_chat_period_ms:(int)push_chat_period_ms push_chat_limit:(int)push_chat_limit saved_gifs_limit:(int)saved_gifs_limit edit_time_limit:(int)edit_time_limit rating_e_decay:(int)rating_e_decay disabled_features:(NSMutableArray*)disabled_features;
 @end
 	
 @interface TLNearestDc()
@@ -2681,6 +2697,8 @@
 @property int length;
 @property (nonatomic, strong) NSString* language;
 @property (nonatomic, strong) NSString* url;
+@property int user_id;
+@property (nonatomic, strong) TLInputUser* input_user_id;
 @end
 
 @interface TL_messageEntityUnknown : TLMessageEntity<NSCoding>
@@ -2715,6 +2733,12 @@
 @end
 @interface TL_messageEntityTextUrl : TLMessageEntity<NSCoding>
 +(TL_messageEntityTextUrl*)createWithOffset:(int)offset length:(int)length url:(NSString*)url;
+@end
+@interface TL_messageEntityMentionName : TLMessageEntity<NSCoding>
++(TL_messageEntityMentionName*)createWithOffset:(int)offset length:(int)length user_id:(int)user_id;
+@end
+@interface TL_inputMessageEntityMentionName : TLMessageEntity<NSCoding>
++(TL_inputMessageEntityMentionName*)createWithOffset:(int)offset length:(int)length input_user_id:(TLInputUser*)input_user_id;
 @end
 	
 @interface TLInputChannel()
@@ -3150,6 +3174,70 @@
 
 @interface TL_inlineBotSwitchPM : TLInlineBotSwitchPM<NSCoding>
 +(TL_inlineBotSwitchPM*)createWithText:(NSString*)text start_param:(NSString*)start_param;
+@end
+	
+@interface TLmessages_PeerDialogs()
+@property (nonatomic, strong) NSMutableArray* dialogs;
+@property (nonatomic, strong) NSMutableArray* messages;
+@property (nonatomic, strong) NSMutableArray* chats;
+@property (nonatomic, strong) NSMutableArray* users;
+@property (nonatomic, strong) TLupdates_State* state;
+@end
+
+@interface TL_messages_peerDialogs : TLmessages_PeerDialogs<NSCoding>
++(TL_messages_peerDialogs*)createWithDialogs:(NSMutableArray*)dialogs messages:(NSMutableArray*)messages chats:(NSMutableArray*)chats users:(NSMutableArray*)users state:(TLupdates_State*)state;
+@end
+	
+@interface TLTopPeer()
+@property (nonatomic, strong) TLPeer* peer;
+@property double rating;
+@end
+
+@interface TL_topPeer : TLTopPeer<NSCoding>
++(TL_topPeer*)createWithPeer:(TLPeer*)peer rating:(double)rating;
+@end
+	
+@interface TLTopPeerCategory()
+
+@end
+
+@interface TL_topPeerCategoryBotsPM : TLTopPeerCategory<NSCoding>
++(TL_topPeerCategoryBotsPM*)create;
+@end
+@interface TL_topPeerCategoryBotsInline : TLTopPeerCategory<NSCoding>
++(TL_topPeerCategoryBotsInline*)create;
+@end
+@interface TL_topPeerCategoryCorrespondents : TLTopPeerCategory<NSCoding>
++(TL_topPeerCategoryCorrespondents*)create;
+@end
+@interface TL_topPeerCategoryGroups : TLTopPeerCategory<NSCoding>
++(TL_topPeerCategoryGroups*)create;
+@end
+@interface TL_topPeerCategoryChannels : TLTopPeerCategory<NSCoding>
++(TL_topPeerCategoryChannels*)create;
+@end
+	
+@interface TLTopPeerCategoryPeers()
+@property (nonatomic, strong) TLTopPeerCategory* category;
+@property int n_count;
+@property (nonatomic, strong) NSMutableArray* peers;
+@end
+
+@interface TL_topPeerCategoryPeers : TLTopPeerCategoryPeers<NSCoding>
++(TL_topPeerCategoryPeers*)createWithCategory:(TLTopPeerCategory*)category n_count:(int)n_count peers:(NSMutableArray*)peers;
+@end
+	
+@interface TLcontacts_TopPeers()
+@property (nonatomic, strong) NSMutableArray* categories;
+@property (nonatomic, strong) NSMutableArray* chats;
+@property (nonatomic, strong) NSMutableArray* users;
+@end
+
+@interface TL_contacts_topPeersNotModified : TLcontacts_TopPeers<NSCoding>
++(TL_contacts_topPeersNotModified*)create;
+@end
+@interface TL_contacts_topPeers : TLcontacts_TopPeers<NSCoding>
++(TL_contacts_topPeers*)createWithCategories:(NSMutableArray*)categories chats:(NSMutableArray*)chats users:(NSMutableArray*)users;
 @end
 	
 @interface TLAudio()

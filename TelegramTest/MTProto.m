@@ -2,7 +2,7 @@
 //  MTProto.m
 //  Telegram
 //
-//  Auto created by Mikhail Filimonov on 09.04.16.
+//  Auto created by Mikhail Filimonov on 28.04.16.
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -14937,7 +14937,7 @@
 @end
         
 @implementation TL_config
-+(TL_config*)createWithDate:(int)date expires:(int)expires test_mode:(Boolean)test_mode this_dc:(int)this_dc dc_options:(NSMutableArray*)dc_options chat_size_max:(int)chat_size_max megagroup_size_max:(int)megagroup_size_max forwarded_count_max:(int)forwarded_count_max online_update_period_ms:(int)online_update_period_ms offline_blur_timeout_ms:(int)offline_blur_timeout_ms offline_idle_timeout_ms:(int)offline_idle_timeout_ms online_cloud_timeout_ms:(int)online_cloud_timeout_ms notify_cloud_delay_ms:(int)notify_cloud_delay_ms notify_default_delay_ms:(int)notify_default_delay_ms chat_big_size:(int)chat_big_size push_chat_period_ms:(int)push_chat_period_ms push_chat_limit:(int)push_chat_limit saved_gifs_limit:(int)saved_gifs_limit edit_time_limit:(int)edit_time_limit disabled_features:(NSMutableArray*)disabled_features {
++(TL_config*)createWithDate:(int)date expires:(int)expires test_mode:(Boolean)test_mode this_dc:(int)this_dc dc_options:(NSMutableArray*)dc_options chat_size_max:(int)chat_size_max megagroup_size_max:(int)megagroup_size_max forwarded_count_max:(int)forwarded_count_max online_update_period_ms:(int)online_update_period_ms offline_blur_timeout_ms:(int)offline_blur_timeout_ms offline_idle_timeout_ms:(int)offline_idle_timeout_ms online_cloud_timeout_ms:(int)online_cloud_timeout_ms notify_cloud_delay_ms:(int)notify_cloud_delay_ms notify_default_delay_ms:(int)notify_default_delay_ms chat_big_size:(int)chat_big_size push_chat_period_ms:(int)push_chat_period_ms push_chat_limit:(int)push_chat_limit saved_gifs_limit:(int)saved_gifs_limit edit_time_limit:(int)edit_time_limit rating_e_decay:(int)rating_e_decay disabled_features:(NSMutableArray*)disabled_features {
 	TL_config* obj = [[TL_config alloc] init];
 	obj.date = date;
 	obj.expires = expires;
@@ -14958,6 +14958,7 @@
 	obj.push_chat_limit = push_chat_limit;
 	obj.saved_gifs_limit = saved_gifs_limit;
 	obj.edit_time_limit = edit_time_limit;
+	obj.rating_e_decay = rating_e_decay;
 	obj.disabled_features = disabled_features;
 	return obj;
 }
@@ -14990,6 +14991,7 @@
 	[stream writeInt:self.push_chat_limit];
 	[stream writeInt:self.saved_gifs_limit];
 	[stream writeInt:self.edit_time_limit];
+	[stream writeInt:self.rating_e_decay];
 	//Serialize FullVector
 	[stream writeInt:0x1cb5c415];
 	{
@@ -15034,6 +15036,7 @@
 	super.push_chat_limit = [stream readInt];
 	super.saved_gifs_limit = [stream readInt];
 	super.edit_time_limit = [stream readInt];
+	super.rating_e_decay = [stream readInt];
 	//UNS FullVector
 	[stream readInt];
 	{
@@ -15073,6 +15076,7 @@
     objc.push_chat_limit = self.push_chat_limit;
     objc.saved_gifs_limit = self.saved_gifs_limit;
     objc.edit_time_limit = self.edit_time_limit;
+    objc.rating_e_decay = self.rating_e_decay;
     objc.disabled_features = [self.disabled_features copy];
     
     return objc;
@@ -22020,6 +22024,104 @@
         
 @end
 
+@implementation TL_messageEntityMentionName
++(TL_messageEntityMentionName*)createWithOffset:(int)offset length:(int)length user_id:(int)user_id {
+	TL_messageEntityMentionName* obj = [[TL_messageEntityMentionName alloc] init];
+	obj.offset = offset;
+	obj.length = length;
+	obj.user_id = user_id;
+	return obj;
+}
+-(void)serialize:(SerializedData*)stream {
+	[stream writeInt:self.offset];
+	[stream writeInt:self.length];
+	[stream writeInt:self.user_id];
+}
+-(void)unserialize:(SerializedData*)stream {
+	super.offset = [stream readInt];
+	super.length = [stream readInt];
+	super.user_id = [stream readInt];
+}
+        
+-(TL_messageEntityMentionName *)copy {
+    
+    TL_messageEntityMentionName *objc = [[TL_messageEntityMentionName alloc] init];
+    
+    objc.offset = self.offset;
+    objc.length = self.length;
+    objc.user_id = self.user_id;
+    
+    return objc;
+}
+        
+
+    
+-(id)initWithCoder:(NSCoder *)aDecoder {
+
+    if((self = [ClassStore deserialize:[aDecoder decodeObjectForKey:@"data"]])) {
+        
+    }
+    
+    return self;
+}
+        
+-(void)encodeWithCoder:(NSCoder *)aCoder {
+    [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
+}
+        
+
+        
+@end
+
+@implementation TL_inputMessageEntityMentionName
++(TL_inputMessageEntityMentionName*)createWithOffset:(int)offset length:(int)length input_user_id:(TLInputUser*)input_user_id {
+	TL_inputMessageEntityMentionName* obj = [[TL_inputMessageEntityMentionName alloc] init];
+	obj.offset = offset;
+	obj.length = length;
+	obj.input_user_id = input_user_id;
+	return obj;
+}
+-(void)serialize:(SerializedData*)stream {
+	[stream writeInt:self.offset];
+	[stream writeInt:self.length];
+	[ClassStore TLSerialize:self.input_user_id stream:stream];
+}
+-(void)unserialize:(SerializedData*)stream {
+	super.offset = [stream readInt];
+	super.length = [stream readInt];
+	self.input_user_id = [ClassStore TLDeserialize:stream];
+}
+        
+-(TL_inputMessageEntityMentionName *)copy {
+    
+    TL_inputMessageEntityMentionName *objc = [[TL_inputMessageEntityMentionName alloc] init];
+    
+    objc.offset = self.offset;
+    objc.length = self.length;
+    objc.input_user_id = [self.input_user_id copy];
+    
+    return objc;
+}
+        
+
+    
+-(id)initWithCoder:(NSCoder *)aDecoder {
+
+    if((self = [ClassStore deserialize:[aDecoder decodeObjectForKey:@"data"]])) {
+        
+    }
+    
+    return self;
+}
+        
+-(void)encodeWithCoder:(NSCoder *)aCoder {
+    [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
+}
+        
+
+        
+@end
+
 @implementation TLInputChannel
 
 @end
@@ -25969,6 +26071,648 @@
     
     objc.text = self.text;
     objc.start_param = self.start_param;
+    
+    return objc;
+}
+        
+
+    
+-(id)initWithCoder:(NSCoder *)aDecoder {
+
+    if((self = [ClassStore deserialize:[aDecoder decodeObjectForKey:@"data"]])) {
+        
+    }
+    
+    return self;
+}
+        
+-(void)encodeWithCoder:(NSCoder *)aCoder {
+    [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
+}
+        
+
+        
+@end
+
+@implementation TLmessages_PeerDialogs
+
+@end
+        
+@implementation TL_messages_peerDialogs
++(TL_messages_peerDialogs*)createWithDialogs:(NSMutableArray*)dialogs messages:(NSMutableArray*)messages chats:(NSMutableArray*)chats users:(NSMutableArray*)users state:(TLupdates_State*)state {
+	TL_messages_peerDialogs* obj = [[TL_messages_peerDialogs alloc] init];
+	obj.dialogs = dialogs;
+	obj.messages = messages;
+	obj.chats = chats;
+	obj.users = users;
+	obj.state = state;
+	return obj;
+}
+-(void)serialize:(SerializedData*)stream {
+	//Serialize FullVector
+	[stream writeInt:0x1cb5c415];
+	{
+		NSInteger tl_count = [self.dialogs count];
+		[stream writeInt:(int)tl_count];
+		for(int i = 0; i < (int)tl_count; i++) {
+            TLDialog* obj = [self.dialogs objectAtIndex:i];
+            [ClassStore TLSerialize:obj stream:stream];
+		}
+	}
+	//Serialize FullVector
+	[stream writeInt:0x1cb5c415];
+	{
+		NSInteger tl_count = [self.messages count];
+		[stream writeInt:(int)tl_count];
+		for(int i = 0; i < (int)tl_count; i++) {
+            TLMessage* obj = [self.messages objectAtIndex:i];
+            [ClassStore TLSerialize:obj stream:stream];
+		}
+	}
+	//Serialize FullVector
+	[stream writeInt:0x1cb5c415];
+	{
+		NSInteger tl_count = [self.chats count];
+		[stream writeInt:(int)tl_count];
+		for(int i = 0; i < (int)tl_count; i++) {
+            TLChat* obj = [self.chats objectAtIndex:i];
+            [ClassStore TLSerialize:obj stream:stream];
+		}
+	}
+	//Serialize FullVector
+	[stream writeInt:0x1cb5c415];
+	{
+		NSInteger tl_count = [self.users count];
+		[stream writeInt:(int)tl_count];
+		for(int i = 0; i < (int)tl_count; i++) {
+            TLUser* obj = [self.users objectAtIndex:i];
+            [ClassStore TLSerialize:obj stream:stream];
+		}
+	}
+	[ClassStore TLSerialize:self.state stream:stream];
+}
+-(void)unserialize:(SerializedData*)stream {
+	//UNS FullVector
+	[stream readInt];
+	{
+		if(!self.dialogs)
+			self.dialogs = [[NSMutableArray alloc] init];
+		int count = [stream readInt];
+		for(int i = 0; i < count; i++) {
+			TLDialog* obj = [ClassStore TLDeserialize:stream];
+            if(obj != nil && [obj isKindOfClass:[TLDialog class]])
+                 [self.dialogs addObject:obj];
+            else
+                break;
+		}
+	}
+	//UNS FullVector
+	[stream readInt];
+	{
+		if(!self.messages)
+			self.messages = [[NSMutableArray alloc] init];
+		int count = [stream readInt];
+		for(int i = 0; i < count; i++) {
+			TLMessage* obj = [ClassStore TLDeserialize:stream];
+            if(obj != nil && [obj isKindOfClass:[TLMessage class]])
+                 [self.messages addObject:obj];
+            else
+                break;
+		}
+	}
+	//UNS FullVector
+	[stream readInt];
+	{
+		if(!self.chats)
+			self.chats = [[NSMutableArray alloc] init];
+		int count = [stream readInt];
+		for(int i = 0; i < count; i++) {
+			TLChat* obj = [ClassStore TLDeserialize:stream];
+            if(obj != nil && [obj isKindOfClass:[TLChat class]])
+                 [self.chats addObject:obj];
+            else
+                break;
+		}
+	}
+	//UNS FullVector
+	[stream readInt];
+	{
+		if(!self.users)
+			self.users = [[NSMutableArray alloc] init];
+		int count = [stream readInt];
+		for(int i = 0; i < count; i++) {
+			TLUser* obj = [ClassStore TLDeserialize:stream];
+            if(obj != nil && [obj isKindOfClass:[TLUser class]])
+                 [self.users addObject:obj];
+            else
+                break;
+		}
+	}
+	self.state = [ClassStore TLDeserialize:stream];
+}
+        
+-(TL_messages_peerDialogs *)copy {
+    
+    TL_messages_peerDialogs *objc = [[TL_messages_peerDialogs alloc] init];
+    
+    objc.dialogs = [self.dialogs copy];
+    objc.messages = [self.messages copy];
+    objc.chats = [self.chats copy];
+    objc.users = [self.users copy];
+    objc.state = [self.state copy];
+    
+    return objc;
+}
+        
+
+    
+-(id)initWithCoder:(NSCoder *)aDecoder {
+
+    if((self = [ClassStore deserialize:[aDecoder decodeObjectForKey:@"data"]])) {
+        
+    }
+    
+    return self;
+}
+        
+-(void)encodeWithCoder:(NSCoder *)aCoder {
+    [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
+}
+        
+
+        
+@end
+
+@implementation TLTopPeer
+
+@end
+        
+@implementation TL_topPeer
++(TL_topPeer*)createWithPeer:(TLPeer*)peer rating:(double)rating {
+	TL_topPeer* obj = [[TL_topPeer alloc] init];
+	obj.peer = peer;
+	obj.rating = rating;
+	return obj;
+}
+-(void)serialize:(SerializedData*)stream {
+	[ClassStore TLSerialize:self.peer stream:stream];
+	[stream writeDouble:self.rating];
+}
+-(void)unserialize:(SerializedData*)stream {
+	self.peer = [ClassStore TLDeserialize:stream];
+	super.rating = [stream readDouble];
+}
+        
+-(TL_topPeer *)copy {
+    
+    TL_topPeer *objc = [[TL_topPeer alloc] init];
+    
+    objc.peer = [self.peer copy];
+    objc.rating = self.rating;
+    
+    return objc;
+}
+        
+
+    
+-(id)initWithCoder:(NSCoder *)aDecoder {
+
+    if((self = [ClassStore deserialize:[aDecoder decodeObjectForKey:@"data"]])) {
+        
+    }
+    
+    return self;
+}
+        
+-(void)encodeWithCoder:(NSCoder *)aCoder {
+    [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
+}
+        
+
+        
+@end
+
+@implementation TLTopPeerCategory
+
+@end
+        
+@implementation TL_topPeerCategoryBotsPM
++(TL_topPeerCategoryBotsPM*)create {
+	TL_topPeerCategoryBotsPM* obj = [[TL_topPeerCategoryBotsPM alloc] init];
+	
+	return obj;
+}
+-(void)serialize:(SerializedData*)stream {
+	
+}
+-(void)unserialize:(SerializedData*)stream {
+	
+}
+        
+-(TL_topPeerCategoryBotsPM *)copy {
+    
+    TL_topPeerCategoryBotsPM *objc = [[TL_topPeerCategoryBotsPM alloc] init];
+    
+    
+    
+    return objc;
+}
+        
+
+    
+-(id)initWithCoder:(NSCoder *)aDecoder {
+
+    if((self = [ClassStore deserialize:[aDecoder decodeObjectForKey:@"data"]])) {
+        
+    }
+    
+    return self;
+}
+        
+-(void)encodeWithCoder:(NSCoder *)aCoder {
+    [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
+}
+        
+
+        
+@end
+
+@implementation TL_topPeerCategoryBotsInline
++(TL_topPeerCategoryBotsInline*)create {
+	TL_topPeerCategoryBotsInline* obj = [[TL_topPeerCategoryBotsInline alloc] init];
+	
+	return obj;
+}
+-(void)serialize:(SerializedData*)stream {
+	
+}
+-(void)unserialize:(SerializedData*)stream {
+	
+}
+        
+-(TL_topPeerCategoryBotsInline *)copy {
+    
+    TL_topPeerCategoryBotsInline *objc = [[TL_topPeerCategoryBotsInline alloc] init];
+    
+    
+    
+    return objc;
+}
+        
+
+    
+-(id)initWithCoder:(NSCoder *)aDecoder {
+
+    if((self = [ClassStore deserialize:[aDecoder decodeObjectForKey:@"data"]])) {
+        
+    }
+    
+    return self;
+}
+        
+-(void)encodeWithCoder:(NSCoder *)aCoder {
+    [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
+}
+        
+
+        
+@end
+
+@implementation TL_topPeerCategoryCorrespondents
++(TL_topPeerCategoryCorrespondents*)create {
+	TL_topPeerCategoryCorrespondents* obj = [[TL_topPeerCategoryCorrespondents alloc] init];
+	
+	return obj;
+}
+-(void)serialize:(SerializedData*)stream {
+	
+}
+-(void)unserialize:(SerializedData*)stream {
+	
+}
+        
+-(TL_topPeerCategoryCorrespondents *)copy {
+    
+    TL_topPeerCategoryCorrespondents *objc = [[TL_topPeerCategoryCorrespondents alloc] init];
+    
+    
+    
+    return objc;
+}
+        
+
+    
+-(id)initWithCoder:(NSCoder *)aDecoder {
+
+    if((self = [ClassStore deserialize:[aDecoder decodeObjectForKey:@"data"]])) {
+        
+    }
+    
+    return self;
+}
+        
+-(void)encodeWithCoder:(NSCoder *)aCoder {
+    [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
+}
+        
+
+        
+@end
+
+@implementation TL_topPeerCategoryGroups
++(TL_topPeerCategoryGroups*)create {
+	TL_topPeerCategoryGroups* obj = [[TL_topPeerCategoryGroups alloc] init];
+	
+	return obj;
+}
+-(void)serialize:(SerializedData*)stream {
+	
+}
+-(void)unserialize:(SerializedData*)stream {
+	
+}
+        
+-(TL_topPeerCategoryGroups *)copy {
+    
+    TL_topPeerCategoryGroups *objc = [[TL_topPeerCategoryGroups alloc] init];
+    
+    
+    
+    return objc;
+}
+        
+
+    
+-(id)initWithCoder:(NSCoder *)aDecoder {
+
+    if((self = [ClassStore deserialize:[aDecoder decodeObjectForKey:@"data"]])) {
+        
+    }
+    
+    return self;
+}
+        
+-(void)encodeWithCoder:(NSCoder *)aCoder {
+    [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
+}
+        
+
+        
+@end
+
+@implementation TL_topPeerCategoryChannels
++(TL_topPeerCategoryChannels*)create {
+	TL_topPeerCategoryChannels* obj = [[TL_topPeerCategoryChannels alloc] init];
+	
+	return obj;
+}
+-(void)serialize:(SerializedData*)stream {
+	
+}
+-(void)unserialize:(SerializedData*)stream {
+	
+}
+        
+-(TL_topPeerCategoryChannels *)copy {
+    
+    TL_topPeerCategoryChannels *objc = [[TL_topPeerCategoryChannels alloc] init];
+    
+    
+    
+    return objc;
+}
+        
+
+    
+-(id)initWithCoder:(NSCoder *)aDecoder {
+
+    if((self = [ClassStore deserialize:[aDecoder decodeObjectForKey:@"data"]])) {
+        
+    }
+    
+    return self;
+}
+        
+-(void)encodeWithCoder:(NSCoder *)aCoder {
+    [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
+}
+        
+
+        
+@end
+
+@implementation TLTopPeerCategoryPeers
+
+@end
+        
+@implementation TL_topPeerCategoryPeers
++(TL_topPeerCategoryPeers*)createWithCategory:(TLTopPeerCategory*)category n_count:(int)n_count peers:(NSMutableArray*)peers {
+	TL_topPeerCategoryPeers* obj = [[TL_topPeerCategoryPeers alloc] init];
+	obj.category = category;
+	obj.n_count = n_count;
+	obj.peers = peers;
+	return obj;
+}
+-(void)serialize:(SerializedData*)stream {
+	[ClassStore TLSerialize:self.category stream:stream];
+	[stream writeInt:self.n_count];
+	//Serialize FullVector
+	[stream writeInt:0x1cb5c415];
+	{
+		NSInteger tl_count = [self.peers count];
+		[stream writeInt:(int)tl_count];
+		for(int i = 0; i < (int)tl_count; i++) {
+            TLTopPeer* obj = [self.peers objectAtIndex:i];
+            [ClassStore TLSerialize:obj stream:stream];
+		}
+	}
+}
+-(void)unserialize:(SerializedData*)stream {
+	self.category = [ClassStore TLDeserialize:stream];
+	super.n_count = [stream readInt];
+	//UNS FullVector
+	[stream readInt];
+	{
+		if(!self.peers)
+			self.peers = [[NSMutableArray alloc] init];
+		int count = [stream readInt];
+		for(int i = 0; i < count; i++) {
+			TLTopPeer* obj = [ClassStore TLDeserialize:stream];
+            if(obj != nil && [obj isKindOfClass:[TLTopPeer class]])
+                 [self.peers addObject:obj];
+            else
+                break;
+		}
+	}
+}
+        
+-(TL_topPeerCategoryPeers *)copy {
+    
+    TL_topPeerCategoryPeers *objc = [[TL_topPeerCategoryPeers alloc] init];
+    
+    objc.category = [self.category copy];
+    objc.n_count = self.n_count;
+    objc.peers = [self.peers copy];
+    
+    return objc;
+}
+        
+
+    
+-(id)initWithCoder:(NSCoder *)aDecoder {
+
+    if((self = [ClassStore deserialize:[aDecoder decodeObjectForKey:@"data"]])) {
+        
+    }
+    
+    return self;
+}
+        
+-(void)encodeWithCoder:(NSCoder *)aCoder {
+    [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
+}
+        
+
+        
+@end
+
+@implementation TLcontacts_TopPeers
+
+@end
+        
+@implementation TL_contacts_topPeersNotModified
++(TL_contacts_topPeersNotModified*)create {
+	TL_contacts_topPeersNotModified* obj = [[TL_contacts_topPeersNotModified alloc] init];
+	
+	return obj;
+}
+-(void)serialize:(SerializedData*)stream {
+	
+}
+-(void)unserialize:(SerializedData*)stream {
+	
+}
+        
+-(TL_contacts_topPeersNotModified *)copy {
+    
+    TL_contacts_topPeersNotModified *objc = [[TL_contacts_topPeersNotModified alloc] init];
+    
+    
+    
+    return objc;
+}
+        
+
+    
+-(id)initWithCoder:(NSCoder *)aDecoder {
+
+    if((self = [ClassStore deserialize:[aDecoder decodeObjectForKey:@"data"]])) {
+        
+    }
+    
+    return self;
+}
+        
+-(void)encodeWithCoder:(NSCoder *)aCoder {
+    [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
+}
+        
+
+        
+@end
+
+@implementation TL_contacts_topPeers
++(TL_contacts_topPeers*)createWithCategories:(NSMutableArray*)categories chats:(NSMutableArray*)chats users:(NSMutableArray*)users {
+	TL_contacts_topPeers* obj = [[TL_contacts_topPeers alloc] init];
+	obj.categories = categories;
+	obj.chats = chats;
+	obj.users = users;
+	return obj;
+}
+-(void)serialize:(SerializedData*)stream {
+	//Serialize FullVector
+	[stream writeInt:0x1cb5c415];
+	{
+		NSInteger tl_count = [self.categories count];
+		[stream writeInt:(int)tl_count];
+		for(int i = 0; i < (int)tl_count; i++) {
+            TLTopPeerCategoryPeers* obj = [self.categories objectAtIndex:i];
+            [ClassStore TLSerialize:obj stream:stream];
+		}
+	}
+	//Serialize FullVector
+	[stream writeInt:0x1cb5c415];
+	{
+		NSInteger tl_count = [self.chats count];
+		[stream writeInt:(int)tl_count];
+		for(int i = 0; i < (int)tl_count; i++) {
+            TLChat* obj = [self.chats objectAtIndex:i];
+            [ClassStore TLSerialize:obj stream:stream];
+		}
+	}
+	//Serialize FullVector
+	[stream writeInt:0x1cb5c415];
+	{
+		NSInteger tl_count = [self.users count];
+		[stream writeInt:(int)tl_count];
+		for(int i = 0; i < (int)tl_count; i++) {
+            TLUser* obj = [self.users objectAtIndex:i];
+            [ClassStore TLSerialize:obj stream:stream];
+		}
+	}
+}
+-(void)unserialize:(SerializedData*)stream {
+	//UNS FullVector
+	[stream readInt];
+	{
+		if(!self.categories)
+			self.categories = [[NSMutableArray alloc] init];
+		int count = [stream readInt];
+		for(int i = 0; i < count; i++) {
+			TLTopPeerCategoryPeers* obj = [ClassStore TLDeserialize:stream];
+            if(obj != nil && [obj isKindOfClass:[TLTopPeerCategoryPeers class]])
+                 [self.categories addObject:obj];
+            else
+                break;
+		}
+	}
+	//UNS FullVector
+	[stream readInt];
+	{
+		if(!self.chats)
+			self.chats = [[NSMutableArray alloc] init];
+		int count = [stream readInt];
+		for(int i = 0; i < count; i++) {
+			TLChat* obj = [ClassStore TLDeserialize:stream];
+            if(obj != nil && [obj isKindOfClass:[TLChat class]])
+                 [self.chats addObject:obj];
+            else
+                break;
+		}
+	}
+	//UNS FullVector
+	[stream readInt];
+	{
+		if(!self.users)
+			self.users = [[NSMutableArray alloc] init];
+		int count = [stream readInt];
+		for(int i = 0; i < count; i++) {
+			TLUser* obj = [ClassStore TLDeserialize:stream];
+            if(obj != nil && [obj isKindOfClass:[TLUser class]])
+                 [self.users addObject:obj];
+            else
+                break;
+		}
+	}
+}
+        
+-(TL_contacts_topPeers *)copy {
+    
+    TL_contacts_topPeers *objc = [[TL_contacts_topPeers alloc] init];
+    
+    objc.categories = [self.categories copy];
+    objc.chats = [self.chats copy];
+    objc.users = [self.users copy];
     
     return objc;
 }

@@ -39,6 +39,7 @@ extern NSString *const ATTACHMENTS;
 extern NSString *const BOT_COMMANDS;
 extern NSString *const RECENT_SEARCH;
 extern NSString *const RECENT_GIFS;
+extern NSString *const TOP_PEERS;
 -(void)drop:(void (^)())completeHandler;
 +(void)drop;
 +(void)open:(void (^)())completeHandler;

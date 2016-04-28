@@ -357,6 +357,46 @@
     
 }
 
++(NSString *)parseCustomMentions:(NSString *)message entities:(NSMutableArray *)entities {
+    NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:@"((?<!\\w)@\\[([^\\[\\]]+(\\|))+([0-9])+\\])" options:NSRegularExpressionCaseInsensitive error:nil];
+    NSArray *mentions = [[regex matchesInString:message options:0 range:NSMakeRange(0, [message length])] mutableCopy];
+    
+    __block NSMutableString *replacedMessage = [message mutableCopy];
+    
+    @try {
+        [mentions enumerateObjectsUsingBlock:^(NSTextCheckingResult * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            
+            NSString *text = [replacedMessage substringWithRange:obj.range];
+            
+            NSString *name = [replacedMessage substringWithRange:NSMakeRange(2, [text rangeOfString:@"|"].location - 2)];
+            int user_id = [[replacedMessage substringWithRange:NSMakeRange([text rangeOfString:@"|"].location + 1, text.length - 1 - [text rangeOfString:@"|"].location)] intValue];
+            
+            TLUser *user = [[UsersManager sharedManager] find:user_id];
+            
+            if(user) {
+              //  [entities addObject:[TL_messageEntityMentionName createWithOffset:(int)obj.range.location length:(int)name.length user_id:user_id]];
+                [entities addObject:[TL_inputMessageEntityMentionName createWithOffset:(int)obj.range.location length:(int)name.length input_user_id:user.inputUser]];
+            }
+            
+            
+            [replacedMessage deleteCharactersInRange:obj.range];
+            [replacedMessage insertString:name atIndex:obj.range.location];
+            
+            *stop = YES;
+            
+        }];
+        
+        if(mentions.count > 0)
+            return [self parseCustomMentions:replacedMessage entities:entities];
+
+    } @catch (NSException *exception) {
+        
+    }
+    
+    return replacedMessage;
+    
+}
+
 
 
 

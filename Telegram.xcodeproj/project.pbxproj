@@ -265,6 +265,10 @@
 		C20D18EC1948A3F70095A906 /* NewMainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = C20D18EE1948A3F70095A906 /* NewMainMenu.xib */; };
 		C20D18F81948D1FE0095A906 /* SecretChatAccepter.m in Sources */ = {isa = PBXBuildFile; fileRef = C20D18F71948D1FE0095A906 /* SecretChatAccepter.m */; };
 		C20D190219542AB80095A906 /* SearchHistoryFilter.m in Sources */ = {isa = PBXBuildFile; fileRef = C20D190119542AB80095A906 /* SearchHistoryFilter.m */; };
+		C20F76071CD0DCDD0051900D /* TGRecentHeaderItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C20F76061CD0DCDD0051900D /* TGRecentHeaderItem.m */; };
+		C20F76141CD0DD050051900D /* TGRecentMoreItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C20F76131CD0DD050051900D /* TGRecentMoreItem.m */; };
+		C20F76171CD0DDA20051900D /* TGRecentHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = C20F76161CD0DDA20051900D /* TGRecentHeaderView.m */; };
+		C20F761A1CD0DDB80051900D /* TGRecentMoreView.m in Sources */ = {isa = PBXBuildFile; fileRef = C20F76191CD0DDB80051900D /* TGRecentMoreView.m */; };
 		C20F76E91BB994A6003A1E86 /* TGModernUserViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C20F76E81BB994A6003A1E86 /* TGModernUserViewController.m */; };
 		C20F76ED1BBAC41A003A1E86 /* TGMessagesHintView.m in Sources */ = {isa = PBXBuildFile; fileRef = C20F76EC1BBAC41A003A1E86 /* TGMessagesHintView.m */; };
 		C210688D1C19C07A00815859 /* MessageTableItemMpeg.m in Sources */ = {isa = PBXBuildFile; fileRef = C210688C1C19C07A00815859 /* MessageTableItemMpeg.m */; };
@@ -1604,6 +1608,14 @@
 		C20D18F71948D1FE0095A906 /* SecretChatAccepter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SecretChatAccepter.m; sourceTree = "<group>"; };
 		C20D190019542AB80095A906 /* SearchHistoryFilter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SearchHistoryFilter.h; sourceTree = "<group>"; };
 		C20D190119542AB80095A906 /* SearchHistoryFilter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SearchHistoryFilter.m; sourceTree = "<group>"; };
+		C20F76051CD0DCDD0051900D /* TGRecentHeaderItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGRecentHeaderItem.h; sourceTree = "<group>"; };
+		C20F76061CD0DCDD0051900D /* TGRecentHeaderItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGRecentHeaderItem.m; sourceTree = "<group>"; };
+		C20F76121CD0DD050051900D /* TGRecentMoreItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGRecentMoreItem.h; sourceTree = "<group>"; };
+		C20F76131CD0DD050051900D /* TGRecentMoreItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGRecentMoreItem.m; sourceTree = "<group>"; };
+		C20F76151CD0DDA10051900D /* TGRecentHeaderView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGRecentHeaderView.h; sourceTree = "<group>"; };
+		C20F76161CD0DDA20051900D /* TGRecentHeaderView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGRecentHeaderView.m; sourceTree = "<group>"; };
+		C20F76181CD0DDB80051900D /* TGRecentMoreView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGRecentMoreView.h; sourceTree = "<group>"; };
+		C20F76191CD0DDB80051900D /* TGRecentMoreView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGRecentMoreView.m; sourceTree = "<group>"; };
 		C20F76E71BB994A6003A1E86 /* TGModernUserViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGModernUserViewController.h; sourceTree = "<group>"; };
 		C20F76E81BB994A6003A1E86 /* TGModernUserViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGModernUserViewController.m; sourceTree = "<group>"; };
 		C20F76EB1BBAC41A003A1E86 /* TGMessagesHintView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGMessagesHintView.h; sourceTree = "<group>"; };
@@ -2999,6 +3011,10 @@
 				C274C3AB1AC083AA000DFDE4 /* SearchHashtagItem.m */,
 				C26E80281B7E00A1003CC483 /* TGRecentSearchRowItem.h */,
 				C26E80291B7E00A1003CC483 /* TGRecentSearchRowItem.m */,
+				C20F76051CD0DCDD0051900D /* TGRecentHeaderItem.h */,
+				C20F76061CD0DCDD0051900D /* TGRecentHeaderItem.m */,
+				C20F76121CD0DD050051900D /* TGRecentMoreItem.h */,
+				C20F76131CD0DD050051900D /* TGRecentMoreItem.m */,
 			);
 			name = tableItems;
 			sourceTree = "<group>";
@@ -3473,6 +3489,10 @@
 				C274C3AE1AC0842D000DFDE4 /* SearchHashtagCellView.m */,
 				C26E802B1B7E00C3003CC483 /* TGRecentSearchRowView.h */,
 				C26E802C1B7E00C3003CC483 /* TGRecentSearchRowView.m */,
+				C20F76151CD0DDA10051900D /* TGRecentHeaderView.h */,
+				C20F76161CD0DDA20051900D /* TGRecentHeaderView.m */,
+				C20F76181CD0DDB80051900D /* TGRecentMoreView.h */,
+				C20F76191CD0DDB80051900D /* TGRecentMoreView.m */,
 			);
 			name = tableCells;
 			sourceTree = "<group>";
@@ -6830,6 +6850,7 @@
 				C2D4B8741AFCE8FA0035B4E4 /* YapSet.m in Sources */,
 				C21D485319AFA131000F06E1 /* ComposeActionGroupBehavior.m in Sources */,
 				C274C3CC1AC48F7C000DFDE4 /* TGSessionRowView.m in Sources */,
+				C20F76141CD0DD050051900D /* TGRecentMoreItem.m in Sources */,
 				C29A40231C45589E00AE4B71 /* TGWebpageDocumentObject.m in Sources */,
 				0ABC223918F2D65900243F82 /* TLAPIAdd.m in Sources */,
 				C268C18819F0519C007F836A /* POPAnimationExtras.mm in Sources */,
@@ -6887,6 +6908,7 @@
 				C2078E3D1CB596720037B1B2 /* TGMessagesNavigationController.m in Sources */,
 				0A6758EB18955FC900F4487D /* MessageTableCell.m in Sources */,
 				C222774218FE8BB3002AA0F6 /* ChatHistoryController.m in Sources */,
+				C20F76071CD0DCDD0051900D /* TGRecentHeaderItem.m in Sources */,
 				C2078E371CB56A910037B1B2 /* TGContextMessagesvViewController.m in Sources */,
 				0AD35DC91869B604007BA752 /* TMButton.m in Sources */,
 				C2D51BE31B21C67B009327C0 /* EMImageData.m in Sources */,
@@ -7011,6 +7033,7 @@
 				C268C14319F01AE3007F836A /* TMLoaderView.m in Sources */,
 				C2D51BE41B21C67B009327C0 /* EMInMemoryImageCache.m in Sources */,
 				C230D85B1CA6AE7100475FF5 /* TGMessagesViewAlertHintView.m in Sources */,
+				C20F76171CD0DDA20051900D /* TGRecentHeaderView.m in Sources */,
 				C233FB3418B661B6008C9A96 /* TMCheckBox.m in Sources */,
 				0A59067F18AA32C8002ED7BA /* BTRScrollView.m in Sources */,
 				CEB0D72418E3770D00457D08 /* TMWindowTitleView.m in Sources */,
@@ -7431,6 +7454,7 @@
 				C2F0F4B91CC7763800DB8CC5 /* TGModernESGViewController.m in Sources */,
 				C297955519EC29DE00BE893E /* GeneralSettingsRowItem.m in Sources */,
 				0A59067E18AA32C8002ED7BA /* BTRPopUpButton.m in Sources */,
+				C20F761A1CD0DDB80051900D /* TGRecentMoreView.m in Sources */,
 				0AF4F4A2189ABDCC004BA4DF /* MessageTypingView.m in Sources */,
 				0A56FF1418D0BBCC00FE63CF /* LoginSMSCodeView.m in Sources */,
 				C2431D151CA04B2A00C6AACE /* TGCalendarView.m in Sources */,
