@@ -45,4 +45,6 @@ typedef enum {
 +(NSData *)getEncrypted:(EncryptedParams *)params messageData:(NSData *)messageData;
 
 +(NSString *)parseCustomMentions:(NSString *)message entities:(NSMutableArray *)entities;
++(void)addRatingForPeer:(TLPeer *)peer;
++(void)syncTopCategories:(void (^)(NSArray *categories))completeHandler;
 @end

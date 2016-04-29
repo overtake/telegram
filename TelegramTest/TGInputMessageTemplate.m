@@ -25,6 +25,7 @@ static NSString *kYapTemplateCollection = @"kYapTemplateCollection";
         _type = [aDecoder  decodeInt32ForKey:@"type"];
         _peer_id = [aDecoder decodeInt32ForKey:@"peerId"];
         _autoSave = [aDecoder decodeBoolForKey:@"autoSave"];
+        _editMessage = [aDecoder decodeObjectForKey:@"editMessage"];
     }
     return self;
 }
@@ -36,6 +37,8 @@ static NSString *kYapTemplateCollection = @"kYapTemplateCollection";
     [aCoder encodeInt32:_postId forKey:@"postId"];
     [aCoder encodeInt32:_peer_id forKey:@"peerId"];
     [aCoder encodeBool:_autoSave forKey:@"autoSave"];
+    if(_editMessage)
+        [aCoder encodeObject:_editMessage forKey:@"editMessage"];
     
 }
 
@@ -57,6 +60,40 @@ static NSString *kYapTemplateCollection = @"kYapTemplateCollection";
     }
     
     return self;
+}
+
+-(void)setEditMessage:(TL_localMessage *)editMessage {
+    _editMessage = editMessage;
+    
+    __block int rightOffset = 0;
+    __block int startOffset = (int)_text.length;
+    
+    [_editMessage.entities enumerateObjectsUsingBlock:^(TLMessageEntity *obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        
+        NSRange range = NSMakeRange(obj.offset > startOffset ? obj.offset + rightOffset : obj.offset, obj.length);
+        
+        if([obj isKindOfClass:[TL_messageEntityMentionName class]]) {
+            
+            NSString *value = [_text substringWithRange:range];
+            NSString *userId = [NSString stringWithFormat:@"%d",obj.user_id];
+            
+            _text = [_text stringByReplacingOccurrencesOfString:value withString:[NSString stringWithFormat:@"@[%@|%@]",value,userId] options:0 range:range];
+            
+            rightOffset+=4+userId.length;
+            startOffset = MIN(startOffset,obj.offset);
+            
+        } else if([obj isKindOfClass:[TL_messageEntityCode class]]) {
+            NSString *value = [_text substringWithRange:range];
+            _text = [_text stringByReplacingOccurrencesOfString:value withString:[NSString stringWithFormat:@"```%@```",value] options:0 range:range];
+            rightOffset+=6;
+            startOffset = MIN(startOffset,obj.offset);
+        } else if([obj isKindOfClass:[TL_messageEntityPre class]]) {
+            NSString *value = [_text substringWithRange:range];
+            _text = [_text stringByReplacingOccurrencesOfString:value withString:[NSString stringWithFormat:@"`%@`",value] options:0 range:range];
+            rightOffset+=2;
+            startOffset = MIN(startOffset,obj.offset);
+        }
+    }];
 }
 
 

@@ -160,6 +160,7 @@
     setMaxChatUsers(config.chat_size_max-1);
     setMegagroupSizeMax(config.megagroup_size_max);
     set_edit_time_limit(config.edit_time_limit);
+    set_rating_e_decay(config.rating_e_decay);
     
 #if TARGET_IPHONE_SIMULATOR
     NSMutableArray *dcOptions = [[NSMutableArray alloc] init];

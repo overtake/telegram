@@ -85,7 +85,7 @@
     
     if( self.replyObject.replyMessage.channelMsgId == message.channelMsgId ) {
         
-        TGReplyObject* nReply = [[TGReplyObject alloc] initWithReplyMessage:message fromMessage:self.replyObject.fromMessage tableItem:self.replyObject.item pinnedMessage:self.replyObject.pinnedMessage withoutCache:YES];;
+        TGReplyObject* nReply = [[TGReplyObject alloc] initWithReplyMessage:message fromMessage:self.replyObject.fromMessage tableItem:self.replyObject.item pinnedMessage:self.replyObject.pinnedMessage];
         
         self.replyObject = nReply;
     }

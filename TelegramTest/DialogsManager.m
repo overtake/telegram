@@ -684,6 +684,29 @@
                 conversation.last_marked_message = max_id;
                 [conversation save];
                 [Notification perform:[Notification notificationNameByDialog:conversation action:@"unread_count"] data:@{KEY_DIALOG:conversation,KEY_LAST_CONVRESATION_DATA:[MessagesUtils conversationLastData:conversation]}];
+                
+                if(conversation.unread_count > 0) {
+                    [RPCRequest sendRequest:[TLAPI_messages_getPeerDialogs createWithPeers:[@[conversation.inputPeer] mutableCopy]] successHandler:^(id request, TL_messages_peerDialogs *response) {
+                        
+                        [response.messages removeAllObjects];
+                        
+                        [SharedManager proccessGlobalResponse:response];
+                        
+                        if(response.dialogs.count == 1) {
+                            TL_dialog *c = response.dialogs[0];
+                            if(c.unread_count != conversation.unread_count) {
+                                conversation.unread_count = unread_count;
+                                
+                                [conversation save];
+                                [Notification perform:[Notification notificationNameByDialog:conversation action:@"unread_count"] data:@{KEY_DIALOG:conversation,KEY_LAST_CONVRESATION_DATA:[MessagesUtils conversationLastData:conversation]}];
+                            }
+                        }
+                                                
+                    } errorHandler:^(id request, RpcError *error) {
+                        
+                    }];
+                }
+                
             }
             
             dispatch_async(dqueue, completionHandler);
@@ -782,11 +805,19 @@
         dialog.last_real_message_date = last_real_date;
     }
     
+    if(message.isN_out) {
+        [MessageSender addRatingForPeer:message.peer];
+        if(message.via_bot_id != 0) {
+            [MessageSender addRatingForPeer:[TL_peerUser createWithUser_id:message.via_bot_id]];
+        }
+    }
+    
     dialog.fake = NO;
     
     return YES;
     
 }
+
 
 - (void)setTopMessagesToDialogs:(NSNotification *)notify {
     NSArray *messages = [notify.userInfo objectForKey:KEY_MESSAGE_LIST];

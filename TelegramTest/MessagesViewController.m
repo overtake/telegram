@@ -2888,6 +2888,7 @@ static NSTextAttachment *headerMediaIcon() {
         [self setState:MessagesViewControllerStateEditMessage];
         
         _template = [[TGInputMessageTemplate alloc] initWithType:TGInputMessageTemplateTypeEditMessage text:message.message.length > 0 ? message.message : message.media.caption peer_id:message.peer_id postId:message.n_id];
+        _template.editMessage = message;
         
         [_template setAutoSave:NO];
     } else {
@@ -2898,8 +2899,17 @@ static NSTextAttachment *headerMediaIcon() {
     
     if(currentTemplate != _template)
         [self.bottomView setTemplate:_template checkElements:YES];
-    
-    
+}
+
+-(void)forceSetLastSentMessage {
+    [self.messages enumerateObjectsUsingBlock:^(MessageTableItem *obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        
+        if(obj.message.isN_out && obj.message.dstate == DeliveryStateNormal && obj.message.canEdit) {
+            [self setEditableMessage:obj.message];
+            *stop = YES;
+        }
+        
+    }];
 }
 
 -(TGInputMessageTemplateType)templateType {

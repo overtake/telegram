@@ -2,7 +2,7 @@
 //  TLApi.h
 //  Telegram
 //
-//  Auto created by Mikhail Filimonov on 28.04.16.
+//  Auto created by Mikhail Filimonov on 29.04.16.
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -1249,8 +1249,8 @@
 @end
 
 @interface TLAPI_messages_getPeerDialogs : TLApiObject
-@property (nonatomic, strong) NSMutableArray* peer;
+@property (nonatomic, strong) NSMutableArray* peers;
 
-+(TLAPI_messages_getPeerDialogs*)createWithPeer:(NSMutableArray*)peer;
++(TLAPI_messages_getPeerDialogs*)createWithPeers:(NSMutableArray*)peers;
 @end
 

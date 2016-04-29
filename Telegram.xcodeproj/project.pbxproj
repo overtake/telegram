@@ -269,6 +269,7 @@
 		C20F76141CD0DD050051900D /* TGRecentMoreItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C20F76131CD0DD050051900D /* TGRecentMoreItem.m */; };
 		C20F76171CD0DDA20051900D /* TGRecentHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = C20F76161CD0DDA20051900D /* TGRecentHeaderView.m */; };
 		C20F761A1CD0DDB80051900D /* TGRecentMoreView.m in Sources */ = {isa = PBXBuildFile; fileRef = C20F76191CD0DDB80051900D /* TGRecentMoreView.m */; };
+		C20F761D1CD37B3F0051900D /* TGInlineBotHintView.m in Sources */ = {isa = PBXBuildFile; fileRef = C20F761C1CD37B3F0051900D /* TGInlineBotHintView.m */; };
 		C20F76E91BB994A6003A1E86 /* TGModernUserViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C20F76E81BB994A6003A1E86 /* TGModernUserViewController.m */; };
 		C20F76ED1BBAC41A003A1E86 /* TGMessagesHintView.m in Sources */ = {isa = PBXBuildFile; fileRef = C20F76EC1BBAC41A003A1E86 /* TGMessagesHintView.m */; };
 		C210688D1C19C07A00815859 /* MessageTableItemMpeg.m in Sources */ = {isa = PBXBuildFile; fileRef = C210688C1C19C07A00815859 /* MessageTableItemMpeg.m */; };
@@ -1616,6 +1617,8 @@
 		C20F76161CD0DDA20051900D /* TGRecentHeaderView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGRecentHeaderView.m; sourceTree = "<group>"; };
 		C20F76181CD0DDB80051900D /* TGRecentMoreView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGRecentMoreView.h; sourceTree = "<group>"; };
 		C20F76191CD0DDB80051900D /* TGRecentMoreView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGRecentMoreView.m; sourceTree = "<group>"; };
+		C20F761B1CD37B3F0051900D /* TGInlineBotHintView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGInlineBotHintView.h; sourceTree = "<group>"; };
+		C20F761C1CD37B3F0051900D /* TGInlineBotHintView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGInlineBotHintView.m; sourceTree = "<group>"; };
 		C20F76E71BB994A6003A1E86 /* TGModernUserViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGModernUserViewController.h; sourceTree = "<group>"; };
 		C20F76E81BB994A6003A1E86 /* TGModernUserViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGModernUserViewController.m; sourceTree = "<group>"; };
 		C20F76EB1BBAC41A003A1E86 /* TGMessagesHintView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGMessagesHintView.h; sourceTree = "<group>"; };
@@ -3840,6 +3843,8 @@
 				C2ED752F1C29DAD700002ACF /* context */,
 				C20F76EB1BBAC41A003A1E86 /* TGMessagesHintView.h */,
 				C20F76EC1BBAC41A003A1E86 /* TGMessagesHintView.m */,
+				C20F761B1CD37B3F0051900D /* TGInlineBotHintView.h */,
+				C20F761C1CD37B3F0051900D /* TGInlineBotHintView.m */,
 			);
 			name = "hint-view";
 			sourceTree = "<group>";
@@ -6955,6 +6960,7 @@
 				C256E8F818D0A70B008FFA04 /* TMPreviewUserPicture.m in Sources */,
 				C24F878819FFFFEB00EC962E /* SetTTLSenderItem.m in Sources */,
 				C2233DA51A07EE4B0056594F /* MessageTableCellSocialView.m in Sources */,
+				C20F761D1CD37B3F0051900D /* TGInlineBotHintView.m in Sources */,
 				C2FA78E91923CB76001A9D1B /* DocumentHistoryFilter.m in Sources */,
 				C24435881A1E018100F9BB38 /* ComposeActionCustomBehavior.m in Sources */,
 				C21C7B5318D8991D00253A7A /* SecretSenderItem.m in Sources */,

@@ -24,6 +24,7 @@
 @property (nonatomic,strong) NSString *name;
 @property (nonatomic,assign) int user_id;
 
+
 @end
 
 @implementation TGCustomMentionRange
@@ -58,7 +59,7 @@ typedef enum {
 
 
 @interface MessageInputGrowingTextView ()
-@property (nonatomic,strong) NSMutableArray *customMentions;
+@property (nonatomic,strong) NSMutableDictionary *customMentions;
 @end
 
 @implementation MessageInputGrowingTextView
@@ -68,7 +69,7 @@ typedef enum {
     self = [super initWithFrame:frame];
     if (self) {
         [self setPlaceholderString:NSLocalizedString(@"Messages.SendPlaceholder", nil)];
-        _customMentions = [NSMutableArray array];
+        _customMentions = [NSMutableDictionary dictionary];
     }
     return self;
 }
@@ -105,10 +106,15 @@ typedef enum {
         
         if(_customMentions.count > 0) {
             
-            NSString *string = self.stringValue;
-            
-            [_customMentions removeAllObjects];
-            self.string = string;
+//            NSString *string = self.stringValue;
+//            NSString *original = self.string;
+//            
+//            if(range.location != self.string.length) {
+//                
+//            }
+//            
+//            [_customMentions removeAllObjects];
+//            self.string = string;
 
         }
         
@@ -310,6 +316,7 @@ typedef enum {
 
 
 -(void)setString:(NSString *)string {
+    [_customMentions removeAllObjects];
     [super setString:string];
 }
 
@@ -375,7 +382,7 @@ typedef enum {
     [super textDidChange:notification];
 }
 
--(NSString *)parseMentions:(NSMutableString *)copy {
+-(NSString *)parseMentions:(NSMutableString *)copy mentions:(NSMutableArray *)customMentions {
     NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:@"((?<!\\w)@\\[([^\\[\\]]+(\\|))+([0-9])+\\])" options:NSRegularExpressionCaseInsensitive error:nil];
     NSArray *mentions = [regex matchesInString:copy options:0 range:NSMakeRange(0, [copy length])];
     
@@ -386,7 +393,7 @@ typedef enum {
             
             TGCustomMentionRange *custom = [[TGCustomMentionRange alloc] initWithOriginalText:[copy substringWithRange:obj.range] range:obj.range];
             
-            [_customMentions addObject:custom];
+            [customMentions addObject:custom];
             
             [copy replaceCharactersInRange:NSMakeRange(obj.range.location, obj.range.length) withString:[NSString stringWithFormat:@"@(%@)",custom.name]];
             
@@ -397,7 +404,7 @@ typedef enum {
     }
     
     if(mentions.count > 0)
-        return [self parseMentions:copy];
+        return [self parseMentions:copy mentions:customMentions];
     
     return copy;
 
@@ -410,15 +417,50 @@ typedef enum {
     
     if(value.length > 0) {
         
-        [_customMentions removeAllObjects];
+      //  [_customMentions removeAllObjects];
         
-         [self setString:[self parseMentions:copy]];
+        NSMutableArray *mentions = [NSMutableArray array];
+        
+        NSString *m = [self parseMentions:copy mentions:mentions];
         
         
+        if(_customMentions.count > 0) {
+            NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:@"(@\\([^\\(\\)]+\\))" options:NSRegularExpressionCaseInsensitive error:nil];
+            NSArray *fakeMentions = [regex matchesInString:copy options:0 range:NSMakeRange(0, [copy length])];
+            
+            if(fakeMentions.count < _customMentions.count + mentions.count) {
+                
+                NSString *real = self.stringValue;
+                
+                __block id remove = nil;
+                
+                [_customMentions enumerateKeysAndObjectsUsingBlock:^(id  _Nonnull key, TGCustomMentionRange *obj, BOOL * _Nonnull stop) {
+                    if([real rangeOfString:obj.original].location == NSNotFound) {
+                        remove = key;
+                    }
+                }];
+                
+                [_customMentions removeObjectForKey:remove];
+                
+               
+            }
+        }
+        NSMutableDictionary *cMentions = [_customMentions mutableCopy];
+                                     
+        [mentions enumerateObjectsUsingBlock:^(TGCustomMentionRange *obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            
+            cMentions[@(_customMentions.count + idx)] = obj;
+            
+        }];
+        
+        if(![m isEqualToString:value])
+            [self setString:m];
+        
+        _customMentions = cMentions;
     }
 }
 
--(NSString *)realMentions:(NSMutableString *)string mentions:(NSMutableArray *)mentions {
+-(NSString *)realMentions:(NSMutableString *)string mentions:(NSMutableDictionary *)mentions idx:(int)idx {
     NSString *local = string;
     
     if(mentions.count > 0) {
@@ -426,25 +468,23 @@ typedef enum {
         NSArray *fakeMentions = [regex matchesInString:string options:0 range:NSMakeRange(0, [string length])];
         
         if(fakeMentions.count > 0) {
-            [mentions enumerateObjectsUsingBlock:^(TGCustomMentionRange *obj, NSUInteger idx, BOOL * _Nonnull stop) {
-                
-                NSTextCheckingResult *fake = fakeMentions[idx];
-                
-                NSString *nname = [local substringWithRange:NSMakeRange(fake.range.location+2, fake.range.length - 3)];
-                
-                [string replaceCharactersInRange:fake.range withString:[NSString stringWithFormat:@"@[%@|%d]",nname,obj.user_id]];
-                
-                *stop = YES;
-                
-            }];
+            
+            TGCustomMentionRange *obj = mentions[@(idx)];
+            
+            NSTextCheckingResult *fake = fakeMentions[0];
+            
+            NSString *nname = [local substringWithRange:NSMakeRange(fake.range.location+2, fake.range.length - 3)];
+            
+            [string replaceCharactersInRange:fake.range withString:[NSString stringWithFormat:@"@[%@|%d]",nname,obj.user_id]];
+            
         }
         
         
         if(mentions.count > 0)
-            [mentions removeObjectAtIndex:0];
+            [mentions removeObjectForKey:@(idx)];
         
         if(fakeMentions.count > 0 && mentions.count > 0)
-            return [self realMentions:string mentions:mentions];
+            return [self realMentions:string mentions:mentions idx:idx+1];
     }
     
     
@@ -453,9 +493,9 @@ typedef enum {
 
 -(NSString *)stringValue {
     
-    NSMutableString *string = [super.stringValue mutableCopy];
+    NSString *string = [self realMentions:[super.stringValue mutableCopy] mentions:[_customMentions mutableCopy] idx:0];
     
-   return [self realMentions:string mentions:[_customMentions mutableCopy]];
+    return string;
 }
 
 
@@ -606,6 +646,9 @@ typedef enum {
             
         }
         
+    } else if(theEvent.keyCode == 126) {
+        [self.controller forceSetLastSentMessage];
+        return;
     }
     
     //lol. MessagesBottomView

@@ -22,6 +22,8 @@ typedef enum {
 @property (nonatomic,assign,readonly) int postId;
 @property (nonatomic,assign,readonly) int peer_id;
 
+@property (nonatomic,strong) TL_localMessage *editMessage;
+
 @property (nonatomic,strong,readonly) NSString *originalText;
 
 @property (nonatomic,assign) BOOL autoSave;

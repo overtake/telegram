@@ -478,27 +478,30 @@ void exceptionHandler(NSException * exception)
        
         
         if(incomingEvent.keyCode == 125 || incomingEvent.keyCode == 126) {
-            BOOL result = YES;
-            
-            if([responder isKindOfClass:[NSTextField class]]) {
-                NSTextField *textField = responder;
-                result = !textField.stringValue.length;
-            } else if([responder isKindOfClass:[TMSearchTextField class]]) {
-                result = incomingEvent.keyCode == 126;
-            } else if ([responder isKindOfClass:[NSTextView class]]) {
-                NSTextView *textView = responder;
-                if([textView.superview.superview isKindOfClass:NSClassFromString(@"_TMSearchTextField")]) {
-                    result = incomingEvent.keyCode == 125;
-                } else {
-                    result = !textView.string.length;
+            if((incomingEvent.modifierFlags & NSAlternateKeyMask) > 0) {
+                BOOL result = YES;
+                
+                if([responder isKindOfClass:[NSTextField class]]) {
+                    NSTextField *textField = responder;
+                    result = !textField.stringValue.length;
+                } else if([responder isKindOfClass:[TMSearchTextField class]]) {
+                    result = incomingEvent.keyCode == 126;
+                } else if ([responder isKindOfClass:[NSTextView class]]) {
+                    NSTextView *textView = responder;
+                    if([textView.superview.superview isKindOfClass:NSClassFromString(@"_TMSearchTextField")]) {
+                        result = incomingEvent.keyCode == 125;
+                    } else {
+                        result = !textView.string.length;
+                    }
+                }
+                
+                
+                if(result) {
+                    [[TMTableView current] keyDown:incomingEvent];
+                    return [[NSEvent alloc] init];
                 }
             }
             
-            
-            if(result) {
-                [[TMTableView current] keyDown:incomingEvent];
-                return [[NSEvent alloc] init];
-            }
             
         } else if(incomingEvent.keyCode == 53) {
             
@@ -527,6 +530,13 @@ void exceptionHandler(NSException * exception)
                 BOOL res = [appWindow().navigationController.messagesViewController.bottomView removeQuickRecord];
                 
                 if(!res) {
+                    
+                    if([[TMAudioRecorder sharedInstance] isRecording]) {
+                        [appWindow().navigationController.messagesViewController.bottomView startOrStopQuickRecord];
+                        return incomingEvent;
+                        
+                    }
+                    
                     if(appWindow().navigationController.messagesViewController.inputText.length > 0) {
                         return incomingEvent;
                     } else {

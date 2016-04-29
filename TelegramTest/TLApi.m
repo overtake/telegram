@@ -2,7 +2,7 @@
 //  TLApi.m
 //  Telegram
 //
-//  Auto created by Mikhail Filimonov on 28.04.16..
+//  Auto created by Mikhail Filimonov on 29.04.16..
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -2946,20 +2946,20 @@
 @end
 
 @implementation TLAPI_messages_getPeerDialogs
-+(TLAPI_messages_getPeerDialogs*)createWithPeer:(NSMutableArray*)peer {
++(TLAPI_messages_getPeerDialogs*)createWithPeers:(NSMutableArray*)peers {
     TLAPI_messages_getPeerDialogs* obj = [[TLAPI_messages_getPeerDialogs alloc] init];
-    obj.peer = peer;
+    obj.peers = peers;
     return obj;
 }
 - (NSData*)getData {
-	SerializedData* stream = [ClassStore streamWithConstuctor:421857415];
+	SerializedData* stream = [ClassStore streamWithConstuctor:764901049];
 	//Serialize FullVector
 	[stream writeInt:0x1cb5c415];
 	{
-		NSInteger tl_count = [self.peer count];
+		NSInteger tl_count = [self.peers count];
 		[stream writeInt:(int)tl_count];
 		for(int i = 0; i < (int)tl_count; i++) {
-            TLInputPeer* obj = [self.peer objectAtIndex:i];
+            TLInputPeer* obj = [self.peers objectAtIndex:i];
             [ClassStore TLSerialize:obj stream:stream];
 		}
 	}

@@ -478,6 +478,14 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "__41-[TGInputMessageTemplate setEditMessage:]_block_invoke:TGInputMessageTemplate.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "obj.offset">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "__66-[ChatHistoryController request:anotherSource:sync:selectHandler:]_block_invoke293:ChatHistoryController.m">
       </ContextState>
       <ContextState
@@ -519,6 +527,9 @@
       </ContextState>
       <ContextState
          contextName = "+[Storage findWebpage:]:Storage.m">
+      </ContextState>
+      <ContextState
+         contextName = "-[MessagesBottomView setTemplate:checkElements:]:MessagesBottomView.m">
       </ContextState>
       <ContextState
          contextName = "__30-[TGVTVideoView displayFrame:]_block_invoke:TGVTVideoView.m">
@@ -1194,6 +1205,17 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "__46+[MessageSender parseCustomMentions:entities:]_block_invoke:MessageSender.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "obj.range">
+            </PersistentString>
+            <PersistentString
+               value = "text">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "-[PhotoCollectionImageObject _didDownloadImage:]:PhotoCollectionImageObject.m">
          <PersistentStrings>
             <PersistentString
@@ -1247,6 +1269,11 @@
       </ContextState>
       <ContextState
          contextName = "-[TGRecentSearchTableView loadRecentSearchItems]:TGRecentSearchTableView.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "_topCategories">
+            </PersistentString>
+         </PersistentStrings>
       </ContextState>
       <ContextState
          contextName = "__57-[MessagesViewController loadhistory:toEnd:prev:isFirst:]_block_invoke_2:MessagesViewController.m">
@@ -1306,6 +1333,17 @@
          <PersistentStrings>
             <PersistentString
                value = "self.conversation">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "__34+[MessageSender addRatingForPeer:]_block_invoke_3:MessageSender.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "obj">
+            </PersistentString>
+            <PersistentString
+               value = "topPeer.rating">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -3190,6 +3228,9 @@
             <PersistentString
                value = "photoSize.h">
             </PersistentString>
+            <PersistentString
+               value = "self.isEditMessage">
+            </PersistentString>
          </PersistentStrings>
       </ContextState>
       <ContextState
@@ -3621,6 +3662,14 @@
          <PersistentStrings>
             <PersistentString
                value = "_replyObject.replyMessage">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "__36-[MessageTableCell defaultMenuItems]_block_invoke:MessageTableCell.m">
+         <PersistentStrings>
+            <PersistentString
+               value = ":weakSelf.item.message.entities">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -5039,6 +5088,9 @@
          contextName = "__39-[ChatAvatarImageView updateChatPhoto:]_block_invoke_2274:ChatAvatarImageView.m">
       </ContextState>
       <ContextState
+         contextName = "-[TGMessageEditSender performEdit:]:TGMessageEditSender.m">
+      </ContextState>
+      <ContextState
          contextName = "-[TGWebpageObject initWithWebPage:]:TGWebpageObject.m">
       </ContextState>
       <ContextState
@@ -5129,6 +5181,9 @@
       </ContextState>
       <ContextState
          contextName = "__45-[TGMediaCounterLoader loadWithConversation:]_block_invoke_2:TGSProfileMediaRowView.m">
+      </ContextState>
+      <ContextState
+         contextName = "__34+[MessageSender addRatingForPeer:]_block_invoke_2:MessageSender.m">
       </ContextState>
       <ContextState
          contextName = "-[Storage createAndCheckDatabase:]:Storage.m">
@@ -5275,6 +5330,9 @@
          contextName = "-[MessageInputGrowingTextView checkAndReplaceCustomMentions]:MessageInputGrowingTextView.m">
          <PersistentStrings>
             <PersistentString
+               value = "_customMentions">
+            </PersistentString>
+            <PersistentString
                value = "self.stringValue">
             </PersistentString>
          </PersistentStrings>
@@ -5358,6 +5416,9 @@
                value = "_stickers.count">
             </PersistentString>
          </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[TGInputMessageTemplate setEditMessage:]:TGInputMessageTemplate.m">
       </ContextState>
       <ContextState
          contextName = "__52-[ComposeChannelParticipantsViewController loadNext]_block_invoke142:ComposeChannelParticipantsViewController.m">
@@ -6140,7 +6201,7 @@
          contextName = "-[TMTableView keyDown:]:TMTableView.mm">
          <PersistentStrings>
             <PersistentString
-               value = "theEvent.keyCode">
+               value = "theEvent.modifier">
             </PersistentString>
             <PersistentString
                value = "self.listSelectedElementHash">
@@ -6613,6 +6674,9 @@
                value = "self.window.contentView ">
             </PersistentString>
          </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "__35-[TGMessageEditSender performEdit:]_block_invoke:TGMessageEditSender.m">
       </ContextState>
       <ContextState
          contextName = "__31-[TGAllStickersTableView load:]_block_invoke:TGAllStickersTableView.m">
@@ -7734,6 +7798,9 @@
                value = "response.messages">
             </PersistentString>
          </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "__35-[TGMessageEditSender performEdit:]_block_invoke_2:TGMessageEditSender.m">
       </ContextState>
       <ContextState
          contextName = "__42-[TGModalGifSearch searchFieldTextChange:]_block_invoke_2:TGModalGifSearch.m">

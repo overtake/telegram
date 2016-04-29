@@ -403,52 +403,56 @@ static TMTableView *tableStatic;
     
     if(theEvent.keyCode == 125 || theEvent.keyCode == 126 || theEvent.keyCode == 121 || theEvent.keyCode == 116) {
         
-        if([NSClassFromString(@"TMViewController") performSelector:@selector(isModalActive) withObject:nil])
-            return;
-        
-        NSUInteger pos = 0;
-        id item = [self itemByHash:self.listSelectedElementHash];
-        if(item) {
-            pos = [self positionOfItem:item];
-            if(pos == NSNotFound) {
-                pos = 0;
+        if((theEvent.modifierFlags & NSAlternateKeyMask) > 0) {
+            if([NSClassFromString(@"TMViewController") performSelector:@selector(isModalActive) withObject:nil])
+                return;
+            
+            NSUInteger pos = 0;
+            id item = [self itemByHash:self.listSelectedElementHash];
+            if(item) {
+                pos = [self positionOfItem:item];
+                if(pos == NSNotFound) {
+                    pos = 0;
+                }
+                
+                
+                if(theEvent.keyCode == 125 || theEvent.keyCode == 121) {
+                    pos++;
+                } else {
+                    pos--;
+                }
             }
             
-            
-            if(theEvent.keyCode == 125 || theEvent.keyCode == 121) {
-                pos++;
-            } else {
-                pos--;
-            }
-        }
-        
-        while(true) {
-            if(self.count > pos && pos < NSNotFound) {
-                if([self.tm_delegate isSelectable:pos item:[self.list objectAtIndex:pos]]) {
+            while(true) {
+                if(self.count > pos && pos < NSNotFound) {
+                    if([self.tm_delegate isSelectable:pos item:[self.list objectAtIndex:pos]]) {
+                        break;
+                    }
+                } else {
                     break;
                 }
-            } else {
-                break;
+                
+                if(theEvent.keyCode == 125 || theEvent.keyCode == 121) {
+                    pos++;
+                } else {
+                    pos--;
+                }
             }
             
-            if(theEvent.keyCode == 125 || theEvent.keyCode == 121) {
-                pos++;
-            } else {
-                pos--;
+            
+            if(self.count > pos && pos < NSNotFound) {
+                [self selectRowIndexes:[NSIndexSet indexSetWithIndex:pos] byExtendingSelection:NO];
+                
+                int posS = (int)(pos + (theEvent.keyCode == 125 || theEvent.keyCode == 121 ? 1 : -1));
+                int count = (int)self.count - 1;
+                
+                int rowIndex = MAX(0, MIN(posS, count));
+                
+                [self scrollRowToVisible:rowIndex];
             }
-        }
 
+        } 
         
-        if(self.count > pos && pos < NSNotFound) {
-            [self selectRowIndexes:[NSIndexSet indexSetWithIndex:pos] byExtendingSelection:NO];
-            
-            int posS = (int)(pos + (theEvent.keyCode == 125 || theEvent.keyCode == 121 ? 1 : -1));
-            int count = (int)self.count - 1;
-            
-            int rowIndex = MAX(0, MIN(posS, count));
-            
-            [self scrollRowToVisible:rowIndex];
-        }
     }
 }
 

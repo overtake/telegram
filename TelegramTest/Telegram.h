@@ -51,6 +51,9 @@ void setMaxBroadcastUsers(int max_broadcast_users);
 int maxBroadcastUsers();
 int maxChatUsers();
 
+int rating_e_decay();
+void set_rating_e_decay(int c);
+
 void setMegagroupSizeMax(int b);
 int megagroupSizeMax();
 

@@ -45,46 +45,15 @@
 
 
 
--(int)topHash {
-    __block int acc = 0;
-    
-    [_topCategories enumerateObjectsUsingBlock:^(TL_topPeerCategoryPeers *obj, NSUInteger idx, BOOL * _Nonnull stop) {
-        
-        [obj.peers enumerateObjectsUsingBlock:^(TL_topPeer *topPeer, NSUInteger idx, BOOL * _Nonnull stop) {
-             acc = (acc * 20261) + abs(topPeer.peer.peer_id);
-        }];
-        
-    }];
-    
-    return (int)(acc & 0x7FFFFFFF);
-}
-
--(void)loadRemote {
-    [RPCRequest sendRequest:[TLAPI_contacts_getTopPeers createWithFlags:(1 << 0) | (1 << 1) | (1 << 5) | (1 << 10) offset:0 limit:100 n_hash:self.topHash] successHandler:^(id request, TL_contacts_topPeers *response) {
-        
-        if(![response isKindOfClass:[TL_contacts_topPeersNotModified class]]) {
-            [SharedManager proccessGlobalResponse:response];
-            
-            [[Storage yap] readWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
-                [transaction setObject:response.categories forKey:@"categories" inCollection:TOP_PEERS];
-            }];
-            
-            [self reloadItems];
-        }
-        
-
-        
-    } errorHandler:^(id request, RpcError *error) {
-        
-    }];
-}
-
 -(void)reloadItems {
     [self removeAllItems:NO];
     [self reloadData];
     
     
     [_topCategories enumerateObjectsUsingBlock:^(TL_topPeerCategoryPeers *obj, NSUInteger cidx, BOOL * _Nonnull stop) {
+        
+        if([obj.category isKindOfClass:[TL_topPeerCategoryBotsInline class]])
+            return;
         
         NSString *header = [NSString stringWithFormat:@"%@",obj.category.className];
         TGRecentHeaderItem *headerItem = [[TGRecentHeaderItem alloc] initWithObject:NSLocalizedString(header, nil)];
@@ -186,9 +155,11 @@
 }
 
 
--(BOOL)loadRecentSearchItems {
+
+
+-(BOOL)loadRecentSearchItems:(BOOL)draw {
     
-    [self loadRemote];
+    
     
     if(![Storage isInitialized])
         return NO;
@@ -200,12 +171,29 @@
         _recentPeers = [transaction objectForKey:@"peerIds" inCollection:RECENT_SEARCH];
         _topCategories = [transaction objectForKey:@"categories" inCollection:TOP_PEERS];
         
+        [_topCategories enumerateObjectsUsingBlock:^(TL_topPeerCategoryPeers *obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            [obj.peers sortUsingComparator:^NSComparisonResult(TL_topPeer *obj1, TL_topPeer *obj2) {
+                return obj1.rating < obj2.rating ? NSOrderedDescending : obj1.rating > obj2.rating ? NSOrderedAscending : NSOrderedSame;
+            }];
+        }];
+        
+        
     }];
+    
+    [MessageSender syncTopCategories:^(NSArray *categories) {
+        
+        _topCategories = categories;
+        
+        if(draw) {
+            [self reloadItems];
+        }
+        
+    }];;
     
     _recentPeers = [_recentPeers subarrayWithRange:NSMakeRange(0, MIN(_recentPeers.count,MAX_RECENT_ITEMS))];
     
-    
-    [self reloadItems];
+    if(draw)
+        [self reloadItems];
     
     return self.count > 0;
     

@@ -104,6 +104,8 @@
 
 @property (nonatomic,strong) TLUser *inlineBot;
 
+@property (nonatomic,strong) MessageReplyContainer *editMessageContainer;
+
 @end
 
 @implementation MessagesBottomView
@@ -120,9 +122,7 @@
         
         self.attachmentsIgnore = [[NSMutableArray alloc] init];
 
-                
         [self setState:MessagesBottomViewNormalState animated:NO];
-        
         
         [self normalView];
     }
@@ -1404,18 +1404,7 @@ static RBLPopover *popover;
 -(void)checkMentionsOrTags {
     
         
-    NSRect rect = [self.inputMessageTextField firstRectForCharacterRange:[self.inputMessageTextField selectedRange]];
-    
-    NSRect textViewBounds = [self.inputMessageTextField convertRectToBase:[self.inputMessageTextField bounds]];
-    textViewBounds.origin = [[self.inputMessageTextField window] convertBaseToScreen:textViewBounds.origin];
-    
-    rect.origin.x -= textViewBounds.origin.x;
-    rect.origin.y-= textViewBounds.origin.y;
-    
-    rect.origin.x += 100;
-    
-    
-    NSRange range;
+ NSRange range;
     
     NSString *search;
     
@@ -1905,6 +1894,10 @@ static RBLPopover *popover;
         if(_botKeyboard != nil) {
             height+= (!_botKeyboard.isHidden ? NSHeight(_botKeyboard.frame) : 0);
         }
+        
+        if(_editMessageContainer != nil) {
+            height+= (!_editMessageContainer.isHidden ? NSHeight(_editMessageContainer.frame) : 0);
+        }
 
     } else {
         height = 58;
@@ -2065,6 +2058,7 @@ static RBLPopover *popover;
 -(void)setTemplate:(TGInputMessageTemplate *)inputTemplate checkElements:(BOOL)checkElements {
     _template = inputTemplate;
     
+    
     [self.sendButton setText:_template.type == TGInputMessageTemplateTypeSimpleText ? NSLocalizedString(@"Message.Send", nil) : NSLocalizedString(@"Message.Save",nil)];
     
     if(checkElements) {
@@ -2088,6 +2082,47 @@ static RBLPopover *popover;
         [self setInputMessageString:_template.text ? _template.text : @"" disableAnimations:NO];
     }
     
+    
+    
+    if(_template.type == TGInputMessageTemplateTypeEditMessage) {
+        
+        int startX = self.attachButton.frame.origin.x + self.attachButton.frame.size.width + 21;
+        
+        TGReplyObject *replyObject = [[TGReplyObject alloc] initWithReplyMessage:inputTemplate.editMessage fromMessage:nil tableItem:nil editMessage:YES];
+        
+        _editMessageContainer = [[MessageReplyContainer alloc] initWithFrame:NSMakeRect(startX, NSHeight(self.inputMessageTextField.containerView.frame) + NSMinX(self.inputMessageTextField.frame) + 20 , NSWidth(self.inputMessageTextField.containerView.frame), replyObject.containerHeight)];
+        [_editMessageContainer setBackgroundColor:NSColorFromRGB(0xfafafa)];
+
+        
+        weak();
+        
+        [_editMessageContainer setDeleteHandler:^{
+            [weakSelf.messagesViewController setEditableMessage:nil];
+        }];
+        
+        [_editMessageContainer setReplyObject:replyObject];
+        
+        [self.normalView addSubview:_editMessageContainer];
+        
+        [self updateBottomHeight:YES];
+        [self TMGrowingTextViewTextDidChange:nil];
+        
+    } else {
+        
+        BOOL update = _editMessageContainer.superview != nil;
+        
+        [_editMessageContainer removeFromSuperview];
+        _editMessageContainer = nil;
+        
+        if(update) {
+            [self updateBottomHeight:YES];
+            [self TMGrowingTextViewTextDidChange:nil];
+        }
+        
+    }
+    
+
+    
 }
 
 -(void)setTemplate:(TGInputMessageTemplate *)inputTemplate {
@@ -2101,6 +2136,8 @@ static RBLPopover *popover;
 
 - (void)setInputMessageString:(NSString *)message disableAnimations:(BOOL)disableAnimations {
     [self.inputMessageTextField setString:message];
+    
+    NSLog(@"message %@",message);
     
     
     self.inputMessageTextField.disableAnimation = disableAnimations;

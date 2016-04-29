@@ -362,7 +362,7 @@ static NSMutableDictionary *cache;
         if(![[NSUserDefaults standardUserDefaults] boolForKey:[NSString stringWithFormat:@"igonore_pinned_%d_%d",msg_id,chat_id]]) {
             self.action = MessagesTopInfoActionPinnedMessage;
             
-            TGReplyObject *replyObject = [[TGReplyObject alloc] initWithReplyMessage:msg fromMessage:nil tableItem:nil pinnedMessage:YES withoutCache:YES];
+            TGReplyObject *replyObject = [[TGReplyObject alloc] initWithReplyMessage:msg fromMessage:nil tableItem:nil pinnedMessage:YES];
             
             [_pinnedContainer removeFromSuperview];
             _pinnedContainer = nil;

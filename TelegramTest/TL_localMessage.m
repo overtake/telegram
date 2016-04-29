@@ -423,6 +423,29 @@ DYNAMIC_PROPERTY(DDialog);
     return self.isChannelMessage ? channelMsgId(self.n_id,self.peer_id) : self.n_id;
 }
 
+-(TLUser *)via_bot_user {
+    if(_via_bot_user)
+        return _via_bot_user;
+    if(self.via_bot_id != 0)
+        _via_bot_user = [[UsersManager sharedManager] find:self.via_bot_id];
+    
+    return _via_bot_user;
+}
+
+-(BOOL)canEdit {
+    
+    BOOL canEdit = (([self.chat isKindOfClass:[TLChat class]] && self.chat.isChannel) || [self.to_id isKindOfClass:[TL_peerUser class]]) && self.fwd_from == nil;
+    
+    if(canEdit) {
+        canEdit = self.isPost ?  self.chat.isCreator || (self.chat.isEditor && self.from_id == [UsersManager currentUserId]) : self.from_id == [UsersManager currentUserId];
+        
+        canEdit = canEdit && self.via_bot_id == 0;
+        
+        return canEdit && self.date + edit_time_limit() > [[MTNetwork instance] getTime];
+    }
+    
+    return NO;
+}
 
 long channelMsgId(int msg_id, int peer_id) {
     NSMutableData *data = [NSMutableData data];

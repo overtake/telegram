@@ -300,8 +300,6 @@
     
     [self searchByString:@""];
     
-    // add to recent
-    
     
     
     [[Storage yap] asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction * __nonnull transaction) {
@@ -327,7 +325,7 @@
 -(BOOL)showRecentSearchItems {
     
     
-    BOOL canShow = [self.recentTableView loadRecentSearchItems];
+    BOOL canShow = [self.recentTableView loadRecentSearchItems:YES];
     
     if(canShow) {
         [self.mainView removeFromSuperview];

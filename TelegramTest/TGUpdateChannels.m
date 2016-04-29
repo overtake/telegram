@@ -432,17 +432,11 @@
     
         TL_conversation *conversation = [self conversationWithChannelId:[update channel_id]];
         
+        if(conversation.unread_count > 0) {
+            [[DialogsManager sharedManager] markChannelMessagesAsRead:[update channel_id] max_id:[(TL_updateReadChannelInbox *)update max_id] completionHandler:^{}];
+        }
         
-        [[DialogsManager sharedManager] markChannelMessagesAsRead:[update channel_id] max_id:[(TL_updateReadChannelInbox *)update max_id] completionHandler:^{
-            [RPCRequest sendRequest:[TLAPI_messages_getPeerDialogs createWithPeer:[@[conversation.inputPeer] mutableCopy]] successHandler:^(id request, id response) {
-                
-                int bp = 0;
-                
-            } errorHandler:^(id request, RpcError *error) {
-                
-            }];
-        //    [self failUpdateWithChannelId:[(TL_updateReadChannelInbox *)update channel_id] limit:0 withCallback:nil errorCallback:nil];
-        }];
+        
         
     } else if([update isKindOfClass:[TL_updateChannelTooLong class]]) {
         

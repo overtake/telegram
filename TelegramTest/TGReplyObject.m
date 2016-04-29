@@ -18,13 +18,22 @@
 @implementation TGReplyObject
 
 -(id)initWithReplyMessage:(TL_localMessage *)replyMessage fromMessage:(TL_localMessage *)fromMessage tableItem:(MessageTableItem *)item {
-    return [self initWithReplyMessage:replyMessage fromMessage:fromMessage tableItem:item pinnedMessage:NO withoutCache:NO];
+    return [self initWithReplyMessage:replyMessage fromMessage:fromMessage tableItem:item withoutCache:NO];
 }
 
-static NSCache *replyCache;
+-(id)initWithReplyMessage:(TL_localMessage *)replyMessage fromMessage:(TL_localMessage *)fromMessage tableItem:(MessageTableItem *)item editMessage:(BOOL)editMessage {
+    return [self initWithReplyMessage:replyMessage fromMessage:fromMessage tableItem:item withoutCache:YES pinnedMessage:NO editMessage:editMessage];
+}
 
+-(id)initWithReplyMessage:(TL_localMessage *)replyMessage fromMessage:(TL_localMessage *)fromMessage tableItem:(MessageTableItem *)item pinnedMessage:(BOOL)pinnedMessage {
+    return [self initWithReplyMessage:replyMessage fromMessage:fromMessage tableItem:item withoutCache:YES pinnedMessage:pinnedMessage editMessage:NO];
+}
 
--(id)initWithReplyMessage:(TL_localMessage *)replyMessage fromMessage:(TL_localMessage *)fromMessage tableItem:(MessageTableItem *)item pinnedMessage:(BOOL)pinnedMessage withoutCache:(BOOL)withoutCache {
+-(id)initWithReplyMessage:(TL_localMessage *)replyMessage fromMessage:(TL_localMessage *)fromMessage tableItem:(MessageTableItem *)item withoutCache:(BOOL)withoutCache  {
+    return [self initWithReplyMessage:replyMessage fromMessage:fromMessage tableItem:item withoutCache:withoutCache pinnedMessage:NO editMessage:NO];
+}
+
+-(id)initWithReplyMessage:(TL_localMessage *)replyMessage fromMessage:(TL_localMessage *)fromMessage tableItem:(MessageTableItem *)item withoutCache:(BOOL)withoutCache pinnedMessage:(BOOL)pinnedMessage editMessage:(BOOL)editMessage {
     if(self = [super init]) {
         
         static dispatch_once_t onceToken;
@@ -39,11 +48,12 @@ static NSCache *replyCache;
                 return cObj;
         }
         
+        _pinnedMessage = pinnedMessage;
+        _editMessage = editMessage;
         
         _item = item;
         _fromMessage = fromMessage;
         _replyMessage = replyMessage;
-        _pinnedMessage = pinnedMessage;
         
         _containerHeight = 30;
         
@@ -65,6 +75,11 @@ static NSCache *replyCache;
     return self;
 }
 
+static NSCache *replyCache;
+
+
+
+
 -(void)updateObject {
     
     if([_replyMessage isKindOfClass:[TL_localEmptyMessage class]]) {
@@ -74,7 +89,7 @@ static NSCache *replyCache;
     
     NSColor *nameColor = LINK_COLOR;
     
-    NSString *name = self.isPinnedMessage ? NSLocalizedString(@"PinnedHeaderMessage", nil) : (_replyMessage.isPost ? _replyMessage.chat.title : _replyMessage.fromUser.fullName);
+    NSString *name = self.isPinnedMessage ? NSLocalizedString(@"PinnedHeaderMessage", nil) : self.isEditMessage ? NSLocalizedString(@"EditHeaderMessage", nil) : (_replyMessage.isPost ? _replyMessage.chat.title : _replyMessage.fromUser.fullName);
     
     
     NSMutableAttributedString *replyHeader = [[NSMutableAttributedString alloc] init];

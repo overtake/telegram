@@ -25,7 +25,20 @@
     if(_inputTemplate.text.length >0)
         flags |= (1 << 11);
     
-    [RPCRequest sendRequest:[TLAPI_messages_editMessage createWithFlags:flags peer:_conversation.inputPeer n_id:_inputTemplate.postId message:_inputTemplate.text reply_markup:nil entities:nil] successHandler:^(id request, id response) {
+    NSMutableArray *entities = [NSMutableArray array];
+    
+    NSString *message = [_inputTemplate.text copy];
+    
+    message = [MessageSender parseCustomMentions:message entities:entities];
+    
+    message = [MessageSender parseEntities:message entities:entities backstrips:@"```" startIndex:0];
+    
+    message = [MessageSender parseEntities:message entities:entities backstrips:@"`" startIndex:0];
+    
+    if(entities.count > 0)
+        flags |= (1 << 3);
+    
+    [RPCRequest sendRequest:[TLAPI_messages_editMessage createWithFlags:flags peer:_conversation.inputPeer n_id:_inputTemplate.postId message:message reply_markup:nil entities:entities] successHandler:^(id request, id response) {
         
         
     } errorHandler:^(id request, RpcError *error) {
