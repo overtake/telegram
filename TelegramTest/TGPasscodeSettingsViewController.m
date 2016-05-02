@@ -11,9 +11,10 @@
 #import "GeneralSettingsBlockHeaderView.h"
 #import "GeneralSettingsRowItem.h"
 #import "TGPasslock.h"
+#import "TGSettingsTableView.h"
 #import "NSData+Extensions.h"
 @interface TGPasscodeSettingsViewController ()<TMTableViewDelegate>
-@property (nonatomic,strong) TMTableView *tableView;
+@property (nonatomic,strong) TGSettingsTableView *tableView;
 @end
 
 @implementation TGPasscodeSettingsViewController
@@ -25,10 +26,8 @@
     
     [self setCenterBarViewText:NSLocalizedString(@"PasscodeSettings.Header", nil)];
     
-    self.tableView = [[TMTableView alloc] initWithFrame:self.view.bounds];
-    
-    self.tableView.tm_delegate = self;
-    
+    self.tableView = [[TGSettingsTableView alloc] initWithFrame:self.view.bounds];
+        
     
     [self.view addSubview:self.tableView.containerView];
     
@@ -135,6 +134,11 @@
         [self.tableView insert:changePasscode atIndex:self.tableView.list.count tableRedraw:NO];
         
         
+        GeneralSettingsBlockHeaderItem *description = [[GeneralSettingsBlockHeaderItem alloc] initWithString:NSLocalizedString(@"PasscodeSettings.TurnOffDescription", nil) flipped:YES];
+        
+        [self.tableView insert:description atIndex:self.tableView.count tableRedraw:NO];
+        
+        
         GeneralSettingsRowItem *autoLockPasscode = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeChoice callback:^(TGGeneralRowItem *item) {
             
             
@@ -199,38 +203,5 @@
 }
 
 
-- (CGFloat)rowHeight:(NSUInteger)row item:(GeneralSettingsRowItem *) item {
-    return  item.height;
-}
-
-- (BOOL)isGroupRow:(NSUInteger)row item:(GeneralSettingsRowItem *) item {
-    return NO;
-}
-
-- (TMRowView *)viewForRow:(NSUInteger)row item:(TMRowItem *) item {
-    
-    if([item isKindOfClass:[GeneralSettingsBlockHeaderItem class]]) {
-        return [self.tableView cacheViewForClass:[GeneralSettingsBlockHeaderView class] identifier:@"GeneralSettingsBlockHeaderView"];
-    }
-    
-    if([item isKindOfClass:[GeneralSettingsRowItem class]]) {
-        return [self.tableView cacheViewForClass:[GeneralSettingsRowView class] identifier:@"GeneralSettingsRowViewClass"];
-    }
-    
-    return nil;
-    
-}
-
-- (void)selectionDidChange:(NSInteger)row item:(GeneralSettingsRowItem *) item {
-    
-}
-
-- (BOOL)selectionWillChange:(NSInteger)row item:(GeneralSettingsRowItem *) item {
-    return NO;
-}
-
-- (BOOL)isSelectable:(NSInteger)row item:(GeneralSettingsRowItem *) item {
-    return NO;
-}
 
 @end

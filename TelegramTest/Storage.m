@@ -2818,17 +2818,21 @@ TL_localMessage *parseMessage(FMResultSet *result) {
 
 
 
--(void)updateMessageId:(long)random_id msg_id:(int)n_id {
+-(void)updateMessageId:(long)random_id msg_id:(int)n_id isChannel:(BOOL)isChannel {
     
     [queue inDatabase:^(FMDatabase *db) {
         
-        if(![db boolForQuery:[NSString stringWithFormat:@"select count(*) from %@ where n_id = ?",tableMessages],@(n_id)]) {
-            [db executeUpdate:[NSString stringWithFormat:@"update %@ set n_id = (?), dstate = (?) where random_id = ?",tableMessages],@(n_id),@(DeliveryStateNormal),@(random_id)];
+        if(!isChannel) {
+            if(![db boolForQuery:[NSString stringWithFormat:@"select count(*) from %@ where n_id = ?",tableMessages],@(n_id)]) {
+                [db executeUpdate:[NSString stringWithFormat:@"update %@ set n_id = (?), dstate = (?) where random_id = ?",tableMessages],@(n_id),@(DeliveryStateNormal),@(random_id)];
+            }
         }
         
-        int  peer_id = [db intForQuery:[NSString stringWithFormat:@"select peer_id from %@ where random_id = ?",tableChannelMessages],@(random_id)];
-      
-        [db executeUpdate:[NSString stringWithFormat:@"update %@ set n_id = (?), dstate = (?) where random_id = ?",tableChannelMessages],@(channelMsgId(n_id,peer_id)),@(DeliveryStateNormal),@(random_id)];
+        if(isChannel) {
+            int  peer_id = [db intForQuery:[NSString stringWithFormat:@"select peer_id from %@ where random_id = ?",tableChannelMessages],@(random_id)];
+            [db executeUpdate:[NSString stringWithFormat:@"update %@ set n_id = (?), dstate = (?) where random_id = ?",tableChannelMessages],@(channelMsgId(n_id,peer_id)),@(DeliveryStateNormal),@(random_id)];
+        }
+        
         
         
     }];

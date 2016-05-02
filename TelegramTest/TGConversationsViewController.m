@@ -203,9 +203,7 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self name:NSViewBoundsDidChangeNotification object:clipView];
 }
 
-- (void)searchFieldDidEnter {
-    
-}
+
 
 -(void)notificationLogout:(NSNotification *)notification {
     [self.tableView removeAllItems:NO];

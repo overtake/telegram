@@ -50,15 +50,27 @@
     [self reloadData];
     
     
-    [_topCategories enumerateObjectsUsingBlock:^(TL_topPeerCategoryPeers *obj, NSUInteger cidx, BOOL * _Nonnull stop) {
+    NSArray *top = @[NSStringFromClass([TL_topPeerCategoryCorrespondents class]),NSStringFromClass([TL_topPeerCategoryBotsPM class]),NSStringFromClass([TL_topPeerCategoryGroups class]),NSStringFromClass([TL_topPeerCategoryChannels class])];
+    
+    
+    NSMutableArray *copy = [_topCategories mutableCopy];
+    
+    
+    [copy sortUsingComparator:^NSComparisonResult(id  _Nonnull obj1, id  _Nonnull obj2) {
+        
+        NSUInteger index1 = [top indexOfObject:[obj1 className]];
+        NSUInteger index2 = [top indexOfObject:[obj2 className]];
+        
+        return index1 > index2 ? NSOrderedDescending : index1 < index2 ? NSOrderedAscending : NSOrderedSame;
+        
+    }];
+    
+    
+    [copy enumerateObjectsUsingBlock:^(TL_topPeerCategoryPeers *obj, NSUInteger cidx, BOOL * _Nonnull stop) {
         
         if([obj.category isKindOfClass:[TL_topPeerCategoryBotsInline class]])
             return;
         
-        NSString *header = [NSString stringWithFormat:@"%@",obj.category.className];
-        TGRecentHeaderItem *headerItem = [[TGRecentHeaderItem alloc] initWithObject:NSLocalizedString(header, nil)];
-        
-        [self addItem:headerItem tableRedraw:NO];
         
         
         NSArray *items;
@@ -70,6 +82,14 @@
         } else {
             items = obj.peers;
         }
+        
+        NSString *header = [NSString stringWithFormat:@"%@",obj.category.className];
+        TGRecentHeaderItem *headerItem = [[TGRecentHeaderItem alloc] initWithObject:NSLocalizedString(header, nil)];
+        
+       
+        
+        
+       
         
         NSMutableArray *moreConverted = [NSMutableArray array];
         
@@ -85,9 +105,12 @@
                 [moreConverted addObject:item];
             }
             
-            
-            
         }];
+        
+        headerItem.otherItems = moreConverted;
+        headerItem.isMore = NO;
+        
+        [self addItem:headerItem tableRedraw:NO];
         
         [items enumerateObjectsUsingBlock:^(TL_topPeer *peer, NSUInteger pidx, BOOL * _Nonnull stop) {
             
@@ -96,7 +119,7 @@
             if(conversation) {
                 TGRecentSearchRowItem *item = [[TGRecentSearchRowItem alloc] initWithObject:conversation];
                 item.disableRemoveButton = YES;
-                item.disableBottomSeparator = pidx == items.count-1 && !moreItems;
+                item.disableBottomSeparator = pidx == items.count-1;
                 
                 [self addItem:item tableRedraw:NO];
             }
@@ -105,9 +128,6 @@
             
         }];
         
-        if(moreConverted.count > 0) {
-            [self addItem:[[TGRecentMoreItem alloc] initWithObject:moreConverted] tableRedraw:NO];
-        }
         
         
     }];
@@ -283,15 +303,37 @@
         [appWindow().navigationController showMessagesViewController:conv];
         [[Telegram leftViewController] resignFirstResponder];
         
-    } else if([item isKindOfClass:[TGRecentMoreItem class]]) {
+    } else if([item isKindOfClass:[TGRecentHeaderItem class]]) {
         
+        TGRecentHeaderItem *headerItem = (TGRecentHeaderItem *)item;
         
-        self.defaultAnimation = NSTableViewAnimationEffectFade;
-        [self insert:[(TGRecentMoreItem *)item otherItems] startIndex:[self indexOfItem:item] tableRedraw:YES];
-        [self removeItem:item tableRedraw:YES];
-        self.defaultAnimation = NSTableViewAnimationEffectNone;
+        if(!headerItem.isMore) {
+            self.defaultAnimation = NSTableViewAnimationEffectFade;
+            [self insert:[headerItem otherItems] startIndex:[self indexOfItem:item]+4 tableRedraw:YES];
+            self.defaultAnimation = NSTableViewAnimationEffectNone;
+            
+            [[Telegram leftViewController].conversationsViewController becomeFirstResponder];
+        } else {
+            
+            [headerItem.otherItems enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                [self removeItem:obj];
+            }];
+            
+        }
         
-        [[Telegram leftViewController].conversationsViewController becomeFirstResponder];
+        if(headerItem.otherItems.count > 0) {
+            
+            TGRecentSearchRowItem *last = [self itemAtPosition:[self indexOfItem:item] + 3];
+            
+            last.disableBottomSeparator = headerItem.isMore;
+            
+            [self reloadDataForRowIndexes:[NSIndexSet indexSetWithIndex:+3] columnIndexes:[NSIndexSet indexSetWithIndex:0]];
+        }
+        
+        headerItem.isMore= !headerItem.isMore;
+        
+        [self reloadDataForRowIndexes:[NSIndexSet indexSetWithIndex:row] columnIndexes:[NSIndexSet indexSetWithIndex:0]];
+       
     }
     
 }
@@ -311,7 +353,7 @@
         }
     }
     
-    return [item isKindOfClass:[TGRecentSearchRowItem class]] || [item isKindOfClass:[TGRecentMoreItem class]];
+    return [item isKindOfClass:[TGRecentSearchRowItem class]] || [item isKindOfClass:[TGRecentHeaderItem class]];
 }
 - (BOOL)isSelectable:(NSInteger)row item:(TMRowItem *) item {
     return YES;

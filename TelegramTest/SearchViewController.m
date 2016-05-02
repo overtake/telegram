@@ -544,7 +544,7 @@ static int insertCount = 3;
      //   [self.tableView.containerView setHidden:self.tableView.count == 0];
     }
 
-    
+
     
     
     MTLog(@"search time %f", [params.startDate timeIntervalSinceNow]);
@@ -675,8 +675,23 @@ static int insertCount = 3;
     return ((SearchItem *)self.tableView.selectedItem).conversation.peer_id;
 }
 
+- (void)selectFirst {
+    
+    if(self.tableView.count > 0) {
+        [self.tableView.list enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            if([self.tableView.tm_delegate isSelectable:idx item:[self.tableView itemAtPosition:idx]]) {
+                [self.tableView selectRowIndexes:[NSIndexSet indexSetWithIndex:idx] byExtendingSelection:NO];
+                [self.tableView scrollRowToVisible:idx];
+                *stop = YES;
+            }
+        }];
+    }
+}
+
 - (void)searchByString:(NSString *)searchString {
     
+    
+    [self.tableView cancelSelection];
     
     [self.tableView.containerView setHidden:NO];
     

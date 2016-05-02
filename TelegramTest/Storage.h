@@ -223,7 +223,7 @@ extern NSString *const TOP_PEERS;
 -(void)addSupportMessages:(NSArray *)messages;
 
 
--(void)updateMessageId:(long)random_id msg_id:(int)n_id;
+-(void)updateMessageId:(long)random_id msg_id:(int)n_id isChannel:(BOOL)isChannel;
 
 +(void)addWebpage:(TLWebPage *)webpage forLink:(NSString *)link;
 +(TLWebPage *)findWebpage:(NSString *)link;

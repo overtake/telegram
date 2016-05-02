@@ -26,6 +26,20 @@
         [attr setFont:TGSystemFont(13) forRange:attr.range];
         
         _attrHeader = attr;
+        
+        NSMutableAttributedString *sm = [[NSMutableAttributedString alloc] init];
+        
+        [sm appendString:NSLocalizedString(@"Recent.More", nil) withColor:LINK_COLOR];
+        [sm setFont:TGSystemFont(12) forRange:sm.range];
+        
+        _showMore = sm;
+        
+        NSMutableAttributedString *sl = [[NSMutableAttributedString alloc] init];
+        
+        [sl appendString:NSLocalizedString(@"Recent.Less", nil) withColor:LINK_COLOR];
+        [sl setFont:TGSystemFont(12) forRange:sl.range];
+        
+        _showLess = sl;
     }
     
     return self;

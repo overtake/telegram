@@ -141,13 +141,18 @@
     
     [request setCompleted:^(TL_config *result, __unused NSTimeInterval timestamp, id error)
     {
-        [ASQueue dispatchOnStageQueue:^{
-            __strong TGDatacenterWatchdogActor *strongSelf = weakSelf;
-            if (error == nil)
-            {
-                [strongSelf processConfig:result fromDatacenterId:datacenterId];
-            }
-        }];
+        
+        if(![result isKindOfClass:[RpcError class]]) {
+            [ASQueue dispatchOnStageQueue:^{
+                __strong TGDatacenterWatchdogActor *strongSelf = weakSelf;
+                if (error == nil)
+                {
+                    [strongSelf processConfig:result fromDatacenterId:datacenterId];
+                }
+            }];
+        }
+        
+        
     }];
     
     [requestService addRequest:request];

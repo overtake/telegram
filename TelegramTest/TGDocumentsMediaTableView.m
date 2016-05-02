@@ -338,7 +338,7 @@
 
 
 -(NSPredicate *)searchPredicateWithString:(NSString *)string {
-    return [NSPredicate predicateWithFormat:@"self.fileName CONTAINS[cd] %@",string];
+    return [NSPredicate predicateWithFormat:@"self.message.media.document.file_name CONTAINS[cd] %@",string];
 }
 
 -(void)reloadWithString:(NSString *)string {

@@ -10,5 +10,11 @@
 
 @interface TGRecentHeaderItem : TMRowItem
 @property (nonatomic,strong) NSAttributedString *attrHeader;
+@property (nonatomic,strong) NSAttributedString *showMore;
+@property (nonatomic,strong) NSAttributedString *showLess;
+
+
+@property (nonatomic,strong) NSArray *otherItems;
+@property (nonatomic,assign) BOOL isMore;
 
 @end

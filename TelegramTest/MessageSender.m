@@ -408,6 +408,10 @@
         
         __block BOOL saved = NO;
         
+        __block Class currentClass;
+        
+        int drating = pow(M_E, (dt/rating_e_decay()));
+        
         
         [top enumerateObjectsUsingBlock:^(TL_topPeerCategoryPeers *obj, NSUInteger idx, BOOL * _Nonnull stop1) {
             
@@ -418,22 +422,46 @@
                 
                 if(user.isBot && user.isBotInlinePlaceholder) {
                     isCurrentCategory = [obj.category isKindOfClass:[TL_topPeerCategoryBotsInline class]];
-                } else if(user.isBot)
+                    
+                    if(isCurrentCategory)
+                        currentClass = [TL_topPeerCategoryBotsInline class];
+                    
+                } else if(user.isBot) {
                     isCurrentCategory = [obj.category isKindOfClass:[TL_topPeerCategoryBotsPM class]];
-                else
+                    
+                    if(isCurrentCategory)
+                        currentClass = [TL_topPeerCategoryBotsPM class];
+                }
+                else {
                     isCurrentCategory = [obj.category isKindOfClass:[TL_topPeerCategoryCorrespondents class]];
+                    
+                    if(isCurrentCategory)
+                        currentClass = [TL_topPeerCategoryCorrespondents class];
+                }
             }
             
+            if(!isCurrentCategory) {
+                isCurrentCategory =([peer isKindOfClass:[TL_peerChat class]] && [obj.category isKindOfClass:[TL_topPeerCategoryGroups class]]);
+                
+                if(isCurrentCategory)
+                    currentClass = [TL_topPeerCategoryGroups class];
+            }
             
-            isCurrentCategory = isCurrentCategory || ([peer isKindOfClass:[TL_peerChat class]] && [obj.category isKindOfClass:[TL_topPeerCategoryGroups class]]);
-            isCurrentCategory = isCurrentCategory || ([peer isKindOfClass:[TL_peerChannel class]] && [obj.category isKindOfClass:[TL_topPeerCategoryChannels class]]);
+            if(!isCurrentCategory) {
+                isCurrentCategory = isCurrentCategory || ([peer isKindOfClass:[TL_peerChannel class]] && [obj.category isKindOfClass:[TL_topPeerCategoryChannels class]]);
+
+                if(isCurrentCategory)
+                    currentClass = [TL_topPeerCategoryChannels class];
+                
+            }
+            
             
             if(isCurrentCategory) {
                 [obj.peers enumerateObjectsUsingBlock:^(TL_topPeer *topPeer, NSUInteger idx, BOOL * _Nonnull stop2) {
                     
                     
                     if(topPeer.peer.peer_id == peer.peer_id) {
-                        topPeer.rating+= pow(M_E, (dt/rating_e_decay()));
+                        topPeer.rating+= drating;
                         
                         
                         *stop1 = YES;
@@ -446,7 +474,7 @@
                 }];
                 
                 if(!saved) {
-                    [obj.peers addObject:[TL_topPeer createWithPeer:peer rating:pow(M_E, (dt/rating_e_decay()))]];
+                    [obj.peers addObject:[TL_topPeer createWithPeer:peer rating:drating]];
                     saved = YES;
                 }
                 
@@ -463,7 +491,10 @@
         }];
         
         if(!saved) {
-            [transaction removeObjectForKey:@"categories" inCollection:TOP_PEERS];
+            NSMutableArray *peers = [NSMutableArray array];
+            [peers addObject:[TL_topPeer createWithPeer:peer rating:drating]];
+            [top addObject:[TL_topPeerCategoryPeers createWithCategory:[[currentClass alloc] init] n_count:1 peers:peers]];
+            [transaction setObject:top forKey:@"categories" inCollection:TOP_PEERS];
         }
         
     }];

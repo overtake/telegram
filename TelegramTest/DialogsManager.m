@@ -536,7 +536,7 @@
 
 -(BOOL)checkAndProccessGifMessage:(TL_localMessage *)message {
     
-    if(message.isN_out && [message.media.document.mime_type isEqualToString:@"video/mp4"] && [message.media.document attributeWithClass:[TL_documentAttributeVideo class]] != nil) {
+    if(message.isN_out && message.media.document.isGif) {
         
         [[Storage yap] asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
             

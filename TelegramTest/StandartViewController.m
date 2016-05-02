@@ -177,9 +177,6 @@
     NSMenu *theMenu = [[NSMenu alloc] init];
     
     
-   
-    
-    
     NSMenuItem *createGropup = [NSMenuItem menuItemWithTitle:NSLocalizedString(@"ComposeMenu.CreateGroup", nil) withBlock:^(id sender) {
         
     
@@ -214,51 +211,29 @@
     
     [theMenu addItem:secretChat];
     
-    
-   // if(ACCEPT_FEATURE) {
-        NSMenuItem *createChannel = [NSMenuItem menuItemWithTitle:NSLocalizedString(@"ComposeMenu.CreateChannel", nil) withBlock:^(id sender) {
-            
-            
-            ComposeAction *action = [[ComposeAction alloc] initWithBehaviorClass:[ComposeActionCreateChannelBehavior class]];
-            
-            [[Telegram rightViewController] showComposeCreateChannel:action];
-            
-            [[NSApplication sharedApplication] activateIgnoringOtherApps:YES];
-            
-        }];
+    NSMenuItem *createChannel = [NSMenuItem menuItemWithTitle:NSLocalizedString(@"ComposeMenu.CreateChannel", nil) withBlock:^(id sender) {
         
-        [createChannel setImage:[NSImage imageNamed:@"ComposeMenuNewBroadcast"]];
-        [createChannel setHighlightedImage:[NSImage imageNamed:@"ComposeMenuNewBroadcastActive"]];
-        [theMenu addItem:createChannel];
- //   }
+        
+        ComposeAction *action = [[ComposeAction alloc] initWithBehaviorClass:[ComposeActionCreateChannelBehavior class]];
+        
+        [[Telegram rightViewController] showComposeCreateChannel:action];
+        
+        [[NSApplication sharedApplication] activateIgnoringOtherApps:YES];
+        
+    }];
     
-    
-    
-    
-//    NSMenuItem *createMegagroup = [NSMenuItem menuItemWithTitle:NSLocalizedString(@"ComposeMenu.CreateMegaGroup", nil) withBlock:^(id sender) {
-//        
-//        
-//        ComposeAction *action = [[ComposeAction alloc] initWithBehaviorClass:[ComposeActionCreateMegaGroupBehavior class]];
-//        
-//        ComposeCreateChannelViewController *viewController = [[ComposeCreateChannelViewController alloc] initWithFrame:[Telegram rightViewController].view.bounds];
-//        
-//        [viewController setAction:action];
-//        
-//        
-//        [[Telegram rightViewController].navigationViewController pushViewController:viewController animated:YES];
-//        
-//       
-//        
-//        [[NSApplication sharedApplication] activateIgnoringOtherApps:YES];
-//        
-//    }];
-//    
-//    [createMegagroup setImage:[NSImage imageNamed:@"ComposeMenuNewBroadcast"]];
-//    [createMegagroup setHighlightedImage:[NSImage imageNamed:@"ComposeMenuNewBroadcastActive"]];
-//    [theMenu addItem:createMegagroup];
-    
+    [createChannel setImage:[NSImage imageNamed:@"ComposeMenuNewBroadcast"]];
+    [createChannel setHighlightedImage:[NSImage imageNamed:@"ComposeMenuNewBroadcastActive"]];
+    [theMenu addItem:createChannel];
+
     
     return theMenu;
+}
+
+- (void)searchFieldDidEnter {
+    if(self.searchView.superview != nil && !self.searchView.isHidden) {
+        [_searchViewController selectFirst];
+    }
 }
 
 -(BOOL)isSearchActive {

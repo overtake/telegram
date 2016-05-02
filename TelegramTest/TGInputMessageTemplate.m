@@ -82,12 +82,12 @@ static NSString *kYapTemplateCollection = @"kYapTemplateCollection";
             rightOffset+=4+userId.length;
             startOffset = MIN(startOffset,obj.offset);
             
-        } else if([obj isKindOfClass:[TL_messageEntityCode class]]) {
+        } else if([obj isKindOfClass:[TL_messageEntityPre class]]) {
             NSString *value = [_text substringWithRange:range];
             _text = [_text stringByReplacingOccurrencesOfString:value withString:[NSString stringWithFormat:@"```%@```",value] options:0 range:range];
             rightOffset+=6;
             startOffset = MIN(startOffset,obj.offset);
-        } else if([obj isKindOfClass:[TL_messageEntityPre class]]) {
+        } else if([obj isKindOfClass:[TL_messageEntityCode class]]) {
             NSString *value = [_text substringWithRange:range];
             _text = [_text stringByReplacingOccurrencesOfString:value withString:[NSString stringWithFormat:@"`%@`",value] options:0 range:range];
             rightOffset+=2;

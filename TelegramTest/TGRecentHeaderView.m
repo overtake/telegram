@@ -11,6 +11,7 @@
 #import "TGRecentHeaderItem.h"
 @interface TGRecentHeaderView ()
 @property (nonatomic,strong) TGTextLabel *textLabel;
+@property (nonatomic,strong) TGTextLabel *showMoreOrLess;
 @end
 
 @implementation TGRecentHeaderView
@@ -21,6 +22,10 @@
         [_textLabel setFrameOrigin:NSMakePoint(10, 0)];
         [_textLabel setBackgroundColor:NSColorFromRGB(0xf4f4f4)];
         [self addSubview:_textLabel];
+        
+        _showMoreOrLess = [[TGTextLabel alloc] init];
+        [_showMoreOrLess setBackgroundColor:NSColorFromRGB(0xf4f4f4)];
+        [self addSubview:_showMoreOrLess];
     }
     
     return self;
@@ -37,9 +42,20 @@
 -(void)redrawRow {
     TGRecentHeaderItem *item = (TGRecentHeaderItem *) self.rowItem;
     
-    [_textLabel setText:item.attrHeader maxWidth:NSWidth(self.frame)];
+    [_textLabel setText:item.attrHeader maxWidth:NSWidth(self.frame)/2.0];
     
     [_textLabel setCenteredYByView:self];
+    
+    [_showMoreOrLess setHidden:item.otherItems.count == 0];
+    
+    if(!_showMoreOrLess.isHidden) {
+        [_showMoreOrLess setText:item.isMore ? item.showLess : item.showMore maxWidth:NSWidth(self.frame)/2.0];
+        
+        [_showMoreOrLess setCenteredYByView:self];
+        
+        [_showMoreOrLess setFrameOrigin:NSMakePoint(NSWidth(self.frame) - NSWidth(_showMoreOrLess.frame) - 10, NSMinY(_showMoreOrLess.frame))];
+    }
+
 }
 
 @end
