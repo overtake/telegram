@@ -57,7 +57,7 @@
     
     [_list enumerateObjectsUsingBlock:^(NSAttributedString *obj, NSUInteger idx, BOOL * _Nonnull stop) {
         
-        if(self.mouseInView) {
+        if(self.mouseInView && _mouseIsDown) {
             NSRect hrect = NSMakeRect(5 + idx * 34, 0, 34, 34);
             
             if(NSMinX(hrect) < mouse.x && NSMaxX(hrect) > mouse.x) {

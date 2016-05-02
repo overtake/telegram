@@ -134,11 +134,27 @@
     
     int offset = (int) _chat.chatFull.participants.participants.count;
         
-    [RPCRequest sendRequest:[TLAPI_channels_getParticipants createWithChannel:_chat.inputPeer filter:[TL_channelParticipantsRecent create] offset:offset limit:30] successHandler:^(id request, TL_channels_channelParticipants *response) {
+    [RPCRequest sendRequest:[TLAPI_channels_getParticipants createWithChannel:_chat.inputPeer filter:[TL_channelParticipantsRecent create] offset:offset limit:100] successHandler:^(id request, TL_channels_channelParticipants *response) {
         
         [SharedManager proccessGlobalResponse:response];
         
+        if(_chat.chatFull.participants_count <= 200) {
+            [response.participants sortUsingComparator:^NSComparisonResult(TL_channelParticipant *obj1, TL_channelParticipant *obj2) {
+                TLUser *user1 = [[UsersManager sharedManager] find:obj1.user_id];
+                TLUser *user2 = [[UsersManager sharedManager] find:obj2.user_id];
+                
+                int time1 = MAX(user1.status.expires,user1.status.was_online);
+                int time2 = MAX(user2.status.expires,user2.status.was_online);
+                return time1 > time2 ? NSOrderedAscending : time1 < time2 ? NSOrderedDescending : NSOrderedSame;
+                
+            }];
+            
+        }
+        
         [_chat.chatFull.participants.participants addObjectsFromArray:response.participants];
+
+        
+        
         
         [self drawParticipants:response.participants];
         
@@ -161,6 +177,7 @@
     NSMutableArray *items = [NSMutableArray array];
     
     weak();
+    
     
     [participants enumerateObjectsUsingBlock:^(TLChatParticipant *obj, NSUInteger idx, BOOL * _Nonnull stop) {
         

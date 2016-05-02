@@ -22,7 +22,7 @@
     _stickersView = [[TGStickerPackEmojiController alloc] initWithFrame:self.view.bounds];
     _stickersView.stickers.messagesViewController = _esgViewController.messagesViewController;
     
-  //  [_stickersView.stickers load:NO];
+  //  [_stickersView.stickers load:NO]; 
     
   
     [self.view addSubview:_stickersView];

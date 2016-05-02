@@ -219,8 +219,7 @@
     NSPoint eventLocation = [_imageView convertPoint: [theEvent locationInWindow] fromView: nil];
     
     if([_imageView hitTest:eventLocation]) {
-        NSPoint dragPosition = NSMakePoint(80, 8);
-        
+        NSPoint dragPosition = [self convertPoint:self.imageView.frame.origin fromView:self.imageView];        
         NSString *path = mediaFilePath(self.item.message);
         
         

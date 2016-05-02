@@ -49,88 +49,92 @@
     [self removeAllItems:NO];
     [self reloadData];
     
-    
-    NSArray *top = @[NSStringFromClass([TL_topPeerCategoryCorrespondents class]),NSStringFromClass([TL_topPeerCategoryBotsPM class]),NSStringFromClass([TL_topPeerCategoryGroups class]),NSStringFromClass([TL_topPeerCategoryChannels class])];
-    
-    
-    NSMutableArray *copy = [_topCategories mutableCopy];
-    
-    
-    [copy sortUsingComparator:^NSComparisonResult(id  _Nonnull obj1, id  _Nonnull obj2) {
+    if(ACCEPT_FEATURE) {
+        NSArray *top = @[NSStringFromClass([TL_topPeerCategoryCorrespondents class]),NSStringFromClass([TL_topPeerCategoryBotsPM class]),NSStringFromClass([TL_topPeerCategoryGroups class]),NSStringFromClass([TL_topPeerCategoryChannels class])];
         
-        NSUInteger index1 = [top indexOfObject:[obj1 className]];
-        NSUInteger index2 = [top indexOfObject:[obj2 className]];
         
-        return index1 > index2 ? NSOrderedDescending : index1 < index2 ? NSOrderedAscending : NSOrderedSame;
+        NSMutableArray *copy = [_topCategories mutableCopy];
         
-    }];
-    
-    
-    [copy enumerateObjectsUsingBlock:^(TL_topPeerCategoryPeers *obj, NSUInteger cidx, BOOL * _Nonnull stop) {
         
-        if([obj.category isKindOfClass:[TL_topPeerCategoryBotsInline class]])
+        [copy sortUsingComparator:^NSComparisonResult(id  _Nonnull obj1, id  _Nonnull obj2) {
+            
+            NSUInteger index1 = [top indexOfObject:[obj1 className]];
+            NSUInteger index2 = [top indexOfObject:[obj2 className]];
+            
+            return index1 > index2 ? NSOrderedDescending : index1 < index2 ? NSOrderedAscending : NSOrderedSame;
+            
+        }];
+        
+        
+        [copy enumerateObjectsUsingBlock:^(TL_topPeerCategoryPeers *obj, NSUInteger cidx, BOOL * _Nonnull stop) {
+            
+            if([obj.category isKindOfClass:[TL_topPeerCategoryBotsInline class]])
             return;
-        
-        
-        
-        NSArray *items;
-        NSArray *moreItems;
-        
-        if(obj.peers.count > 3) {
-            items = [obj.peers subarrayWithRange:NSMakeRange(0, 3)];
-            moreItems = [obj.peers subarrayWithRange:NSMakeRange(3, obj.peers.count - 3)];
-        } else {
-            items = obj.peers;
-        }
-        
-        NSString *header = [NSString stringWithFormat:@"%@",obj.category.className];
-        TGRecentHeaderItem *headerItem = [[TGRecentHeaderItem alloc] initWithObject:NSLocalizedString(header, nil)];
-        
-       
-        
-        
-       
-        
-        NSMutableArray *moreConverted = [NSMutableArray array];
-        
-        [moreItems enumerateObjectsUsingBlock:^(TL_topPeer *peer, NSUInteger midx, BOOL * _Nonnull stop) {
             
-            TL_conversation *conversation = [peer.peer isKindOfClass:[TL_peerUser class]] ? [[[UsersManager sharedManager] find:peer.peer.user_id] dialog] : [[[ChatsManager sharedManager] find:peer.peer.chat_id > 0 ? peer.peer.chat_id : peer.peer.channel_id] dialog];
             
-            if(conversation) {
-                TGRecentSearchRowItem *item = [[TGRecentSearchRowItem alloc] initWithObject:conversation];
-                item.disableRemoveButton = YES;
-                item.disableBottomSeparator = midx == moreItems.count-1;
-                
-                [moreConverted addObject:item];
+            
+            NSArray *items;
+            NSArray *moreItems;
+            
+            if(obj.peers.count > 3) {
+                items = [obj.peers subarrayWithRange:NSMakeRange(0, 3)];
+                moreItems = [obj.peers subarrayWithRange:NSMakeRange(3, obj.peers.count - 3)];
+            } else {
+                items = obj.peers;
             }
             
-        }];
-        
-        headerItem.otherItems = moreConverted;
-        headerItem.isMore = NO;
-        
-        [self addItem:headerItem tableRedraw:NO];
-        
-        [items enumerateObjectsUsingBlock:^(TL_topPeer *peer, NSUInteger pidx, BOOL * _Nonnull stop) {
+            NSString *header = [NSString stringWithFormat:@"%@",obj.category.className];
+            TGRecentHeaderItem *headerItem = [[TGRecentHeaderItem alloc] initWithObject:NSLocalizedString(header, nil)];
             
-            TL_conversation *conversation = [peer.peer isKindOfClass:[TL_peerUser class]] ? [[[UsersManager sharedManager] find:peer.peer.user_id] dialog] : [[[ChatsManager sharedManager] find:peer.peer.chat_id > 0 ? peer.peer.chat_id : peer.peer.channel_id] dialog];
             
-            if(conversation) {
-                TGRecentSearchRowItem *item = [[TGRecentSearchRowItem alloc] initWithObject:conversation];
-                item.disableRemoveButton = YES;
-                item.disableBottomSeparator = pidx == items.count-1;
+            
+            
+            
+            
+            NSMutableArray *moreConverted = [NSMutableArray array];
+            
+            [moreItems enumerateObjectsUsingBlock:^(TL_topPeer *peer, NSUInteger midx, BOOL * _Nonnull stop) {
                 
-                [self addItem:item tableRedraw:NO];
-            }
+                TL_conversation *conversation = [peer.peer isKindOfClass:[TL_peerUser class]] ? [[[UsersManager sharedManager] find:peer.peer.user_id] dialog] : [[[ChatsManager sharedManager] find:peer.peer.chat_id > 0 ? peer.peer.chat_id : peer.peer.channel_id] dialog];
+                
+                if(conversation) {
+                    TGRecentSearchRowItem *item = [[TGRecentSearchRowItem alloc] initWithObject:conversation];
+                    item.disableRemoveButton = YES;
+                    item.disableBottomSeparator = midx == moreItems.count-1;
+                    
+                    [moreConverted addObject:item];
+                }
+                
+            }];
+            
+            headerItem.otherItems = moreConverted;
+            headerItem.isMore = NO;
+            
+            [self addItem:headerItem tableRedraw:NO];
+            
+            [items enumerateObjectsUsingBlock:^(TL_topPeer *peer, NSUInteger pidx, BOOL * _Nonnull stop) {
+                
+                TL_conversation *conversation = [peer.peer isKindOfClass:[TL_peerUser class]] ? [[[UsersManager sharedManager] find:peer.peer.user_id] dialog] : [[[ChatsManager sharedManager] find:peer.peer.chat_id > 0 ? peer.peer.chat_id : peer.peer.channel_id] dialog];
+                
+                if(conversation) {
+                    TGRecentSearchRowItem *item = [[TGRecentSearchRowItem alloc] initWithObject:conversation];
+                    item.disableRemoveButton = YES;
+                    item.disableBottomSeparator = pidx == items.count-1;
+                    
+                    [self addItem:item tableRedraw:NO];
+                }
+                
+                
+                
+            }];
             
             
             
         }];
-        
-        
-        
-    }];
+    }
+    
+    
+    
     
     if(_recentPeers.count > 0) {
         
@@ -332,7 +336,7 @@
         
         headerItem.isMore= !headerItem.isMore;
         
-        [self reloadDataForRowIndexes:[NSIndexSet indexSetWithIndex:row] columnIndexes:[NSIndexSet indexSetWithIndex:0]];
+        [self reloadDataForRowIndexes:[NSIndexSet indexSetWithIndex:[self indexOfItem:headerItem]] columnIndexes:[NSIndexSet indexSetWithIndex:0]];
        
     }
     

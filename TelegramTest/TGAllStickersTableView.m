@@ -200,11 +200,7 @@ static NSImage *higlightedImage() {
         BTRButton *button = self.subviews[idx];
         TGStickerImageView *imageView = [button.subviews lastObject];
         
-        if(!self.tableView.isCustomStickerPack) {
-            [button setBackgroundImage:higlightedImage() forControlState:BTRControlStateHover];
-        } else {
-            [button setBackgroundImage:nil forControlState:BTRControlStateHover];
-        }
+        [button setBackgroundImage:higlightedImage() forControlState:BTRControlStateHighlighted];
         
         [imageView setFrameSize:[item.objects[idx] imageSize]];
         

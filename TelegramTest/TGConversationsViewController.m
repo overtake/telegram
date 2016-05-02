@@ -22,6 +22,7 @@
 #import "TGHeadChatPanel.h"
 #import "TMAudioRecorder.h"
 #import "MessagesBottomView.h"
+#import "TGModernESGViewController.h"
 @interface TestView : TMView
 
 @end
@@ -183,7 +184,8 @@
     
     [ASQueue dispatchOnMainQueue:^{
         //[EmojiViewController reloadStickers];
-        [TGModernEmojiViewController initialize];
+        //[TGModernEmojiViewController initialize];
+        [TGModernESGViewController controller];
     }];
     
     [MessagesManager updateUnreadBadge];

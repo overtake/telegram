@@ -60,7 +60,7 @@ void (^linkOverHandle)(NSString *link, BOOL over, NSRect rect,TGCTextView *textV
    if(accept)
         link = [link substringFromIndex:1];
     
-    if([link rangeOfString:@"telegram.me"].location != NSNotFound || [link hasPrefix:@"tg://resolve"]) {
+    if([link hasPrefix:@"tg://resolve"]) {
         link = tg_domain_from_link(link);
         accept = link.length > 0;
     }
@@ -165,12 +165,18 @@ void (^linkOverHandle)(NSString *link, BOOL over, NSRect rect,TGCTextView *textV
     if( self.attributedString.length == 0)
         return;
     
-    int opts = (NSTrackingCursorUpdate | NSTrackingMouseEnteredAndExited | NSTrackingMouseMoved | NSTrackingActiveInActiveApp | NSTrackingInVisibleRect);
+    int opts = (NSTrackingCursorUpdate | NSTrackingMouseEnteredAndExited | NSTrackingMouseMoved | NSTrackingActiveInKeyWindow | NSTrackingInVisibleRect);
     _trackingArea = [ [NSTrackingArea alloc] initWithRect:[self bounds]
                                                  options:opts
                                                    owner:self
                                                 userInfo:nil];
     [self addTrackingArea:_trackingArea];
+}
+
+-(void)scrollWheel:(NSEvent *)theEvent {
+    [super scrollWheel:theEvent];
+    
+    [self checkCursor:theEvent];
 }
 
 
