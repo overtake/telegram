@@ -13,7 +13,7 @@
 #import "TGModernESGViewController.h"
 #import "TGTextLabel.h"
 #import "TGModernStickRowItem.h"
-
+#import "MessagesBottomView.h"
 @interface TGModernEmojiRowView : TMRowView
 @property (nonatomic, strong) RBLPopover *racePopover;
 @end
@@ -127,7 +127,7 @@
         [button setEmojiCallback:^(NSString *emoji) {
             TGModernEmojiRowItem *item = (TGModernEmojiRowItem *) weakSelf.rowItem;
             if(!item.controller.epopover.lockHoverClose) {
-                [item.controller insertEmoji:emoji];
+                [item.controller.messagesViewController.bottomView insertEmoji:emoji];
             }
         }];
            // [button addTarget:self action:@selector(emojiClick:) forControlEvents:BTRControlEventMouseUpInside];
@@ -266,13 +266,13 @@ static NSArray *segment_list;
 -(void)loadView {
     [super loadView];
     
-    _tableView = [[TMTableView alloc] initWithFrame:NSMakeRect(0, 42, NSWidth(self.view.frame) - 0, NSHeight(self.view.frame) - 42)];
+    _tableView = [[TMTableView alloc] initWithFrame:NSMakeRect(0, 58, NSWidth(self.view.frame) - 0, NSHeight(self.view.frame) - 58)];
     [self.view addSubview:_tableView.containerView];
     
     _tableView.tm_delegate = self;
     
     
-    self.bottomView = [[TMView alloc] initWithFrame:NSMakeRect(0, 0, self.view.bounds.size.width, 42)];
+    self.bottomView = [[TMView alloc] initWithFrame:NSMakeRect(0, 0, self.view.bounds.size.width, 58)];
     
     weak();
     
@@ -283,7 +283,7 @@ static NSArray *segment_list;
     
     for(int i = 1; i <= 6; i++) {
         BTRButton *button = [self createButtonForIndex:i];//20
-        [button setFrameOrigin:NSMakePoint(i * 26 + 30 * (i - 1), 12)];
+        [button setFrameOrigin:NSMakePoint(i * 26 + 30 * (i - 1), roundf((NSHeight(self.bottomView.frame) - NSHeight(button.frame))/2.0f))];
         [self.bottomView addSubview:button];
     }
     
@@ -298,7 +298,7 @@ static NSArray *segment_list;
     [_showGSControllerView.titleLabel sizeToFit];
     
     [_showGSControllerView setFrame:NSMakeRect(NSWidth(self.view.frame) - NSWidth(_showGSControllerView.titleLabel.frame) - 10, NSHeight(self.view.frame) - NSHeight(_showGSControllerView.titleLabel.frame) - 8, NSWidth(_showGSControllerView.titleLabel.frame), 20)];
-    
+    _showGSControllerView.autoresizingMask = NSViewMinYMargin;
     
     
     [_showGSControllerView addBlock:^(BTRControlEvents events) {

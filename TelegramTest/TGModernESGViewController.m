@@ -9,7 +9,7 @@
 #import "TGModernESGViewController.h"
 
 @interface TGModernESGViewController ()
-
+@property (nonatomic,strong) TMView *separator;
 @end
 
 @implementation TGModernESGViewController
@@ -19,12 +19,19 @@
     
     self.view.wantsLayer = YES;
     self.view.layer.cornerRadius = 4;
+    self.view.autoresizesSubviews = YES;
+    _separator = [[TMView alloc] initWithFrame:NSMakeRect(0, 0, DIALOG_BORDER_WIDTH, NSHeight(self.view.frame))];
+    _separator.autoresizingMask = NSViewHeightSizable;
+    [_separator setBackgroundColor:DIALOG_BORDER_COLOR];
+    [_separator setHidden:YES];
     
     self.navigationViewController = [[TMNavigationController alloc] initWithFrame:self.view.bounds];
     
     self.navigationViewController.view.wantsLayer = YES;
     
     [self.view addSubview:self.navigationViewController.view];
+    
+    [self.view addSubview:_separator];
     
     _emojiViewController = [[TGModernEmojiViewController alloc] initWithFrame:self.view.bounds];
     _sgViewController = [[TGModernSGViewController alloc] initWithFrame:self.view.bounds];
@@ -104,6 +111,12 @@ static NSMutableDictionary *stickers;
     sets = nil;
     stickers = nil;
     [[self controller].sgViewController reloadStickers];
+}
+-(void)setIsLayoutStyle:(BOOL)isLayoutStyle {
+    _isLayoutStyle = isLayoutStyle;
+   
+    [self.view setNeedsDisplay:YES];
+    [_separator setHidden:!isLayoutStyle];
 }
 
 -(void)setMessagesViewController:(MessagesViewController *)messagesViewController {

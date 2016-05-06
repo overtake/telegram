@@ -11,6 +11,7 @@
 #import "MessageTableElements.h"
 #import "UIImageView+AFNetworking.h"
 #import "TGTextLabel.h"
+#import "TGTimer.h"
 @interface MessageReplyContainer ()
 @property (nonatomic,strong) TGTextLabel *nameView;
 
@@ -20,6 +21,9 @@
 @property (nonatomic,strong) NSImageView *deleteImageView;
 @property (nonatomic,strong) TGTextLabel *loadingTextField;
 
+
+@property (nonatomic,strong) TGTimer *editTimer;
+@property (nonatomic,strong) TGTextLabel *editTimerLabel;
 
 
 @end
@@ -166,6 +170,9 @@
     [self.messageField setFrameOrigin:NSMakePoint(self.xOffset, 0)];
 
     
+   
+    
+    
     if(_deleteHandler != nil)
     {
         _deleteImageView = [[NSImageView alloc] initWithFrame:NSMakeRect(NSWidth(self.frame) - image_CancelReply().size.width, NSHeight(self.frame) - image_CancelReply().size.height, image_CancelReply().size.width , image_CancelReply().size.height )];
@@ -190,6 +197,51 @@
     
     [self setFrame:self.frame];
     
+    
+    if(self.replyObject.isEditMessage) {
+        _editTimerLabel = [[TGTextLabel alloc] init];
+        [self addSubview:_editTimerLabel];
+        [_editTimerLabel setBackgroundColor:self.backgroundColor];
+        
+        weak();
+        
+        _editTimer = [[TGTimer alloc] initWithTimeout:1.0 repeat:YES completion:^{
+            
+            
+            NSMutableAttributedString *attr = [[NSMutableAttributedString alloc] init];
+            
+            int time =MAX( self.replyObject.replyMessage.date + edit_time_limit() - [[MTNetwork instance] getTime],0);
+            
+            [attr appendString:[NSString durationTransformedValue:time] withColor:GRAY_TEXT_COLOR];
+            
+            [attr setFont:TGSystemFont(13) forRange:attr.range];
+            
+            [_editTimerLabel setText:attr maxWidth:NSWidth(weakSelf.frame) - self.xOffset- 30 - NSWidth(weakSelf.nameView.frame)];
+            
+            [_editTimerLabel setFrameOrigin:NSMakePoint(NSMaxX(weakSelf.nameView.frame) + 8, NSMinY(weakSelf.nameView.frame))];
+            
+            if(time <= 0) {
+                [weakSelf.editTimer invalidate];
+                weakSelf.editTimer = nil;
+                if(weakSelf.deleteHandler)
+                weakSelf.deleteHandler();
+            }
+            
+            
+        } queue:dispatch_get_current_queue()];
+        
+        [_editTimer start];
+        [_editTimer fire];
+        
+    } else {
+        
+        [_editTimer invalidate];
+        _editTimer =nil;
+        
+        [_editTimerLabel removeFromSuperview];
+        _editTimerLabel = nil;
+    }
+    
 }
 
 -(void)setFrame:(NSRect)frame {
@@ -206,6 +258,7 @@
     
     [self.messageField setBackgroundColor:backgroundColor];
     [self.nameView setBackgroundColor:backgroundColor];
+    [self.editTimerLabel setBackgroundColor:backgroundColor];
 }
 
 -(void)mouseUp:(NSEvent *)theEvent {

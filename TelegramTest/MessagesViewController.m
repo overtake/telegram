@@ -89,6 +89,7 @@
 #import "TGMessagesViewAlertHintView.h"
 #import "TGContextMessagesvViewController.h"
 #import "TGModernEmojiViewController.h"
+#import "TGModernESGViewController.h"
 #define HEADER_MESSAGES_GROUPING_TIME (10 * 60)
 
 #define SCROLLDOWNBUTTON_OFFSET 1500
@@ -195,6 +196,8 @@
 @property (nonatomic,strong) TGInputMessageTemplate *template;
 
 @property (nonatomic,strong) TGMessagesViewAlertHintView *messagesAlertHintView;
+
+@property (nonatomic,strong) TGModernESGViewController *esgViewController;
 
 
 @end
@@ -382,9 +385,10 @@
         [weakSelf setEditableMessage:nil];
     }];
     
-    
+
+
     //Center
-    _table = [[MessagesTableView alloc] initWithFrame:self.view.bounds];
+    _table = [[MessagesTableView alloc] initWithFrame:NSMakeRect(0, 0, NSWidth(self.view.bounds) - 300, NSHeight(self.view.bounds))];
     [self.table setAutoresizesSubviews:YES];
     [self.table.containerView setAutoresizingMask:NSViewHeightSizable | NSViewWidthSizable];
     [self.table setDelegate:self];
@@ -396,9 +400,21 @@
     
     [self.view addSubview:self.table.containerView];
     
+    
+    _esgViewController = [[TGModernESGViewController alloc] initWithFrame:NSMakeRect(NSMaxX(self.table.frame), 0, 300, NSHeight(self.view.bounds) )];
+    [_esgViewController loadViewIfNeeded];
+
+    _esgViewController.view.autoresizingMask = NSViewMinXMargin | NSViewHeightSizable;
+    _esgViewController.isNavigationBarHidden = YES;
+    [_esgViewController setIsLayoutStyle:YES];
+    _esgViewController.messagesViewController = self;
+    
+    [self.view addSubview:_esgViewController.view];
+
+    
     self.typingView = [[MessageTypingView alloc] initWithFrame:self.view.bounds];
     
-    self.bottomView = [[MessagesBottomView alloc] initWithFrame:NSMakeRect(0, 0, self.view.bounds.size.width, 58)];
+    self.bottomView = [[MessagesBottomView alloc] initWithFrame:NSMakeRect(0, 0, self.view.bounds.size.width - 300, 58)];
     self.bottomView.messagesViewController = self;
     [self.bottomView setAutoresizesSubviews:YES];
     [self.bottomView setAutoresizingMask:NSViewWidthSizable];
@@ -431,7 +447,7 @@
     
    
     
-    self.searchMessagesView = [[SearchMessagesView alloc] initWithFrame:NSMakeRect(0, NSHeight(self.view.frame), NSWidth(self.view.frame), 40)];
+    self.searchMessagesView = [[SearchMessagesView alloc] initWithFrame:NSMakeRect(0, NSHeight(self.view.frame), NSWidth(self.table.frame), 40)];
     [self.searchMessagesView setAutoresizingMask:NSViewMinXMargin | NSViewMinYMargin | NSViewMaxXMargin | NSViewMinYMargin | NSViewWidthSizable];
     
     self.searchMessagesView.controller = self;
@@ -445,21 +461,21 @@
     [self.searchMessagesView setHidden:YES];
     
     
-    self.stickerPanel = [[StickersPanelView alloc] initWithFrame:NSMakeRect(0, NSHeight(self.bottomView.frame), NSWidth(self.view.frame), 76)];
+    self.stickerPanel = [[StickersPanelView alloc] initWithFrame:NSMakeRect(0, NSHeight(self.bottomView.frame), NSWidth(self.table.frame), 76)];
     self.stickerPanel.messagesViewController = self;
     
     [self.view addSubview:self.stickerPanel];
     
     [self.stickerPanel hide:NO];
     
-    self.hintView = [[TGMessagesHintView alloc] initWithFrame:NSMakeRect(0, NSHeight(self.bottomView.frame), NSWidth(self.view.frame), 100)];
+    self.hintView = [[TGMessagesHintView alloc] initWithFrame:NSMakeRect(0, NSHeight(self.bottomView.frame), NSWidth(self.table.frame), 100)];
     self.hintView.messagesViewController = self;
     [self.hintView setHidden:YES];
     
     [self.view addSubview:self.hintView];
     
     
-    _messagesAlertHintView = [[TGMessagesViewAlertHintView alloc] initWithFrame:NSMakeRect(0, NSHeight(self.view.frame) - 25, NSWidth(self.view.frame), 25)];
+    _messagesAlertHintView = [[TGMessagesViewAlertHintView alloc] initWithFrame:NSMakeRect(0, NSHeight(self.view.frame) - 25, NSWidth(self.table.frame), 25)];
     
     [self.view addSubview:_messagesAlertHintView];
     [_messagesAlertHintView setHidden:YES];
@@ -1389,10 +1405,16 @@ static NSTextAttachment *headerMediaIcon() {
     [self.typingView setDialog:_conversation];
     
     [self tryRead];
+    
+    
+   
 }
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
+    
+    
+    [_esgViewController show];
     
     if(_conversation && _conversation.type == DialogTypeUser) {
         [[FullUsersManager sharedManager] requestUserFull:_conversation.user withCallback:nil];
@@ -1446,6 +1468,8 @@ static NSTextAttachment *headerMediaIcon() {
         [globalAudioPlayer() stop];
         [globalAudioPlayer().delegate audioPlayerDidFinishPlaying:globalAudioPlayer()];
     }
+    
+     [_esgViewController close];
     
 }
 
@@ -1556,7 +1580,7 @@ static NSTextAttachment *headerMediaIcon() {
     
     [_messagesAlertHintView setText:text backgroundColor:color];
     
-    [_messagesAlertHintView setFrameSize:NSMakeSize(NSWidth(self.view.frame), NSHeight(_messagesAlertHintView.frame))];
+    [_messagesAlertHintView setFrameSize:NSMakeSize(NSWidth(self.table.frame), NSHeight(_messagesAlertHintView.frame))];
     
     void (^runAnimation)(BOOL hide) = ^(BOOL hide){
         [NSAnimationContext runAnimationGroup:^(NSAnimationContext * _Nonnull context) {

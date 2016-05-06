@@ -18,6 +18,8 @@
 @property (nonatomic,strong,readonly) TGModernEmojiViewController *emojiViewController;
 @property (nonatomic,strong,readonly) TGModernSGViewController *sgViewController;
 
+@property (nonatomic,assign) BOOL isLayoutStyle;
+
 -(void)showSGController:(BOOL)animated;
 
 - (void)show;

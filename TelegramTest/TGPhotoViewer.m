@@ -18,7 +18,9 @@
 #import "TGCache.h"
 #import "TGPVZoomControl.h"
 #import "TGPVDocumentsBehavior.h"
-@interface TGPhotoViewer ()
+#import "TGPVMiniControl.h"
+#import "TGVideoViewerItem.h"
+@interface TGPhotoViewer ()<NSWindowDelegate>
 @property (nonatomic,strong) TL_conversation *conversation;
 @property (nonatomic,strong) TLUser *user;
 
@@ -37,6 +39,8 @@
 @property (nonatomic,assign) int totalCount;
 
 @property (nonatomic,strong) TGPVZoomControl *zoomControl;
+@property (nonatomic,strong) TGPVMiniControl *miniControl;
+
 
 @property (nonatomic,assign) BOOL isReversed;
 
@@ -67,9 +71,9 @@
     _behavior = nil;
     [TGCache removeAllCachedImages:@[PVCACHE]];
 
-    [[NSApp mainWindow] makeFirstResponder:nil];
-    
-    viewer = nil;
+    [[NSApp mainWindow] makeFirstResponder:appWindow()];
+//    
+//    viewer = nil;
 }
 
 
@@ -80,6 +84,7 @@
 +(BOOL)isVisibility {
     return viewer.isVisibility;
 }
+
 
 +(void)increaseZoom {
     [viewer.photoContainer increaseZoom];
@@ -101,6 +106,8 @@ static const int controlsHeight = 75;
 
 - (void)initialize {
     
+    _viewerStyle = TGPhotoViewerFullStyle;
+    
     [TGCache setMemoryLimit:32*1024*1024 group:PVCACHE];
     [TGCache setCountLimit:25 group:PVCACHE];
 
@@ -112,9 +119,12 @@ static const int controlsHeight = 75;
     self.background = [[TMView alloc] initWithFrame:[self.contentView bounds]];
     
     self.background.wantsLayer = YES;
-    self.background.layer.backgroundColor = NSColorFromRGBWithAlpha(0x222222, 0.7).CGColor;
     
+    [self.background addTrackingArea:[[NSTrackingArea alloc] initWithRect:self.contentView.bounds
+                                                                                 options: (NSTrackingMouseEnteredAndExited | NSTrackingMouseMoved | NSTrackingActiveInKeyWindow )
+                                                                                   owner:self userInfo:nil]];
     
+    self.background.backgroundColor = NSColorFromRGB(0x222222);
     
     weak();
     
@@ -125,10 +135,12 @@ static const int controlsHeight = 75;
         
         NSPoint containerPoint = weakSelf.photoContainer.frame.origin;
         
-        if(location.x > containerPoint.x)
-            [[TGPhotoViewer viewer] hide];
-        else
+        
+        if(location.x > containerPoint.x) {
+            [TGPhotoViewer nextItem];
+        } else
             [TGPhotoViewer prevItem];
+       
     }];
     
     [self.background setAutoresizingMask:NSViewWidthSizable | NSViewHeightSizable];
@@ -155,7 +167,81 @@ static const int controlsHeight = 75;
     self.zoomControl = [[TGPVZoomControl alloc] initWithFrame:NSMakeRect(50, 16, 200, controlsHeight)];
     
      [self.contentView addSubview:self.zoomControl];
+    
+    
+//    self.miniControl = [[TGPVMiniControl alloc] initWithFrame:NSMakeRect(NSWidth(self.frame) - 100, NSHeight(self.frame) - 100, controlsHeight, controlsHeight)];
+//    
+//    
+//    [self.miniControl addBlock:^(BTRControlEvents events) {
+//        
+//        [weakSelf miniaturizeOrMaxiatursize];
+//        
+//    } forControlEvents:BTRControlEventClick];
+//    
+//    [self.contentView addSubview:self.miniControl];
 }
+
+-(void)miniaturizeOrMaxiatursize {
+    
+    
+    
+    _viewerStyle = _viewerStyle == TGPhotoViewerMinStyle ? TGPhotoViewerFullStyle : TGPhotoViewerMinStyle;
+    
+    if(_viewerStyle == TGPhotoViewerMinStyle) {
+        //[self setLevel:NSNormalWindowLevel];
+      //  [self setStyleMask:NSTitledWindowMask | NSClosableWindowMask | NSResizableWindowMask];
+      //  if(NSAppKitVersionNumber >= NSAppKitVersionNumber10_10) {
+          //  self.titlebarAppearsTransparent = YES;
+     //   }
+        
+        [self toggleFullScreen:self];
+        
+    } else {
+       // [self setLevel:NSScreenSaverWindowLevel];
+        [self toggleFullScreen:self];
+        
+
+    }
+
+
+    
+}
+
+-(void)toggleFullScreen:(id)sender {
+    
+    if(self.collectionBehavior == NSWindowCollectionBehaviorDefault)
+        [self setCollectionBehavior:NSWindowCollectionBehaviorFullScreenPrimary];
+    else
+        [self setCollectionBehavior:NSWindowCollectionBehaviorDefault];
+    
+    
+
+    [super toggleFullScreen:sender];
+    
+    
+    _viewerStyle = self.collectionBehavior == NSWindowCollectionBehaviorDefault ? TGPhotoViewerMinStyle : TGPhotoViewerFullStyle;
+
+    [self updateStyle];
+    
+}
+
+-(void)updateStyle {
+    
+    self.background.layer.backgroundColor =  NSColorFromRGB(0x222222).CGColor;
+    
+    [self.photoContainer updateSize];
+    
+    [_zoomControl setHidden:[_currentItem.previewObject.reservedObject isKindOfClass:[NSDictionary class]] || [_currentItem isKindOfClass:[TGVideoViewerItem class]]  || _viewerStyle == TGPhotoViewerMinStyle];
+    
+     [self.zoomControl setFrameOrigin:NSMakePoint(50, 16)];
+}
+
+-(void)setFrame:(NSRect)frameRect display:(BOOL)flag {
+    [super setFrame:frameRect display:flag];
+    
+    [self updateStyle];
+}
+
 
 
 -(void)didAddedPhoto:(NSNotification *)notification {
@@ -187,11 +273,15 @@ static const int controlsHeight = 75;
 }
 
 
+
+
 -(void)mouseMoved:(NSEvent *)theEvent {
     
  //
     
+    
     NSPoint point = [theEvent locationInWindow];
+    
     
     TGPVControlHighlightType highlight;
     
@@ -345,10 +435,12 @@ static TGPhotoViewer *viewer;
    
     if(!viewer)
     {
-        viewer = [[TGPhotoViewer alloc] initWithContentRect:[NSScreen mainScreen].frame styleMask:NSBorderlessWindowMask backing:NSBackingStoreBuffered defer:NO screen:[NSScreen mainScreen]];
-        [viewer setLevel:NSScreenSaverWindowLevel];
-        [viewer setOpaque:NO];
-        viewer.backgroundColor = [NSColor clearColor];
+        viewer = [[TGPhotoViewer alloc] initWithContentRect:NSMakeRect(roundf((NSWidth([NSScreen mainScreen].frame) - 600)/2.0f), roundf((NSHeight([NSScreen mainScreen].frame) - 600)/2.0f), 600, 600) styleMask:NSClosableWindowMask | NSResizableWindowMask | NSTitledWindowMask backing:NSBackingStoreRetained defer:YES screen:[NSScreen mainScreen]];
+        [viewer setLevel:NSNormalWindowLevel];
+        viewer.releasedWhenClosed = NO;
+        [viewer setMinSize:NSMakeSize(400, 400)];
+        viewer.contentView.wantsLayer = YES;
+        viewer.backgroundColor = NSColorFromRGB(0x222222);
         
     }
     return viewer;
@@ -552,7 +644,7 @@ static TGPhotoViewer *viewer;
 -(void)makeKeyAndOrderFront:(id)sender {
     
     self.invokeWindow = appWindow();
-    
+    //
     
     [Notification addObserver:self selector:@selector(didReceivedMedia:) name:MEDIA_RECEIVE];
     [Notification addObserver:self selector:@selector(didDeleteMessages:) name:MESSAGE_DELETE_EVENT];
@@ -560,9 +652,10 @@ static TGPhotoViewer *viewer;
     
     [self runAnimation:YES];
     
-    [self setFrame:[NSScreen mainScreen].frame display:NO];
+    
     
     [super makeKeyAndOrderFront:nil];
+
     
     
     [[NSApp mainWindow] makeFirstResponder:self.photoContainer];
@@ -570,6 +663,22 @@ static TGPhotoViewer *viewer;
 
     _isVisibility = YES;
     [self.controls update];
+    
+    [self updateStyle];
+
+    
+    if(_viewerStyle == TGPhotoViewerFullStyle) {
+      //  dispatch_async(dispatch_get_current_queue(), ^{
+        [self setCollectionBehavior:NSWindowCollectionBehaviorDefault];
+        [self toggleFullScreen:self];
+      //  });
+        
+    }
+    
+
+    
+    //_viewerStyle = TGPhotoViewerFullStyle;
+   // [self miniaturizeOrMaxiatursize];
 }
 
 
@@ -667,7 +776,7 @@ static TGPhotoViewer *viewer;
         [[self photoContainer] setCurrentViewerItem:_currentItem animated:NO];
     
     
-     [_zoomControl setHidden:[_currentItem.previewObject.reservedObject isKindOfClass:[NSDictionary class]]];
+     [_zoomControl setHidden:[_currentItem.previewObject.reservedObject isKindOfClass:[NSDictionary class]] || [_currentItem isKindOfClass:[TGVideoViewerItem class]]  || _viewerStyle == TGPhotoViewerMinStyle];
     
     if(_list.count > 1 && !_waitRequest) {
         int rcurrent = _isReversed ? _totalCount - (int)_currentItemId : (int)_currentItemId;
@@ -706,6 +815,39 @@ static TGPhotoViewer *viewer;
     }];
 }
 
+-(void)keyUp:(NSEvent *)incomingEvent {
+ //   [super keyUp:incomingEvent];
+    
+    if([TGPhotoViewer isVisibility]) {
+        
+        
+        if(incomingEvent.keyCode == 53) {
+            [[TGPhotoViewer viewer] hide];
+        }
+        
+        if(incomingEvent.keyCode == 123) {
+            [TGPhotoViewer prevItem];
+        }
+        
+        if(incomingEvent.keyCode == 124) {
+            [TGPhotoViewer nextItem];
+        }
+        
+        if(incomingEvent.keyCode == 49 ){
+            [[TGPhotoViewer viewer] hide];
+        }
+        
+        if(incomingEvent.keyCode == 24 || incomingEvent.keyCode == 69) {
+            [TGPhotoViewer increaseZoom];
+        }
+        
+        if(incomingEvent.keyCode == 27 || incomingEvent.keyCode == 78) {
+            [TGPhotoViewer decreaseZoom];
+        }
+        
+    }
+}
+
 -(void)insertObjects:(NSArray *)previewObjects {
     
     [ASQueue dispatchOnStageQueue:^{
@@ -726,9 +868,9 @@ static TGPhotoViewer *viewer;
 
 -(void)hide {
     
-    if(!self.photoContainer.ifVideoFullScreenPlayingNeedToogle) {
-        [self orderOut:self];
-    }
+   // if(!self.photoContainer.ifVideoFullScreenPlayingNeedToogle) {
+    //    [self orderOut:self];
+   // }
 
 }
 

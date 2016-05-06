@@ -192,15 +192,20 @@
     
     [[Storage yap] readWithBlock:^(YapDatabaseReadTransaction * __nonnull transaction) {
         
-        _recentPeers = [transaction objectForKey:@"peerIds" inCollection:RECENT_SEARCH];
-        _topCategories = [transaction objectForKey:@"categories" inCollection:TOP_PEERS];
-        
-        [_topCategories enumerateObjectsUsingBlock:^(TL_topPeerCategoryPeers *obj, NSUInteger idx, BOOL * _Nonnull stop) {
-            [obj.peers sortUsingComparator:^NSComparisonResult(TL_topPeer *obj1, TL_topPeer *obj2) {
-                return obj1.rating < obj2.rating ? NSOrderedDescending : obj1.rating > obj2.rating ? NSOrderedAscending : NSOrderedSame;
+        @try {
+            _recentPeers = [transaction objectForKey:@"peerIds" inCollection:RECENT_SEARCH];
+            _topCategories = [transaction objectForKey:@"categories" inCollection:TOP_PEERS];
+            
+            
+            [_topCategories enumerateObjectsUsingBlock:^(TL_topPeerCategoryPeers *obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                [obj.peers sortUsingComparator:^NSComparisonResult(TL_topPeer *obj1, TL_topPeer *obj2) {
+                    return obj1.rating < obj2.rating ? NSOrderedDescending : obj1.rating > obj2.rating ? NSOrderedAscending : NSOrderedSame;
+                }];
             }];
-        }];
-        
+        } @catch (NSException *exception) {
+            
+        }
+          
         
     }];
     

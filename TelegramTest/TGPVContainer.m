@@ -222,6 +222,8 @@
 }
 
 
+
+
 -(void)setCurrentIncrease:(int)currentIncrease {
     
     int n = MAX(MIN(ZOOM_COUNT,currentIncrease),0);
@@ -392,7 +394,7 @@
  */
 
 -(NSSize)maxSize {
-    NSRect screenFrame = [NSScreen mainScreen].frame;
+    NSRect screenFrame = [TGPhotoViewer viewer].frame;
     
     return NSMakeSize(NSWidth(screenFrame) - 100, NSHeight(screenFrame) - 120);;
 }
@@ -506,31 +508,8 @@ static const int bottomHeight = 60;
     
 }
 
--(void)setCurrentViewerItem:(TGPhotoViewerItem *)currentViewerItem animated:(BOOL)animated {
-    
-    [_currentViewerItem.downloadItem removeEvent:_eventListener];
-    [self.loaderView setHidden:currentViewerItem.isset || currentViewerItem.downloadItem == nil || currentViewerItem.downloadItem.downloadState == DownloadStateCompleted animated:animated];
-    [self updateDownloadListeners:currentViewerItem.downloadItem];
-
-    
-    _currentViewerItem = currentViewerItem;
-    
-    _currentIncrease = 0;
-    
-    self.imageView.object = currentViewerItem.imageObject;
-    
-    if([currentViewerItem.previewObject.media isKindOfClass:[TL_destructMessage class]]) {
-        
-        TL_destructMessage *msg = (TL_destructMessage *) currentViewerItem.previewObject.media;
-        
-        if(msg.ttl_seconds != 0 && msg.destruction_time == 0 && !msg.n_out) {
-            [SelfDestructionController addMessage:msg force:YES];
-        }
-        
-    }
-    
-    
-    NSSize size = [self contentFullSize:currentViewerItem];
+-(void)updateSize {
+    NSSize size = [self contentFullSize:self.currentViewerItem];
     
     NSSize containerSize = size;
     
@@ -575,10 +554,43 @@ static const int bottomHeight = 60;
     
     [self.imageContainerView setFrameOrigin:NSMakePoint(roundf((self.bounds.size.width - NSWidth(self.imageView.frame)) / 2) , roundf((self.bounds.size.height - NSHeight(self.imageView.frame) + c_s.height + 10 ) / 2) )];
     
-    
     if(caption) {
         [_photoCaptionView setFrame:NSMakeRect(roundf((self.frame.size.width - c_s.width) / 2), MAX(NSHeight(self.frame) - NSMaxY(_imageContainerView.frame) ,0) , c_s.width, c_s.height)];
     }
+    
+    
+    [_videoPlayerView setFrame:NSMakeRect(0, roundf((self.frame.size.height - size.height) / 2), size.width, size.height)];
+
+}
+
+-(void)setCurrentViewerItem:(TGPhotoViewerItem *)currentViewerItem animated:(BOOL)animated {
+    
+    [_currentViewerItem.downloadItem removeEvent:_eventListener];
+    [self.loaderView setHidden:currentViewerItem.isset || currentViewerItem.downloadItem == nil || currentViewerItem.downloadItem.downloadState == DownloadStateCompleted animated:animated];
+    [self updateDownloadListeners:currentViewerItem.downloadItem];
+
+    
+    _currentViewerItem = currentViewerItem;
+    
+    _currentIncrease = 0;
+    
+    self.imageView.object = currentViewerItem.imageObject;
+    
+    if([currentViewerItem.previewObject.media isKindOfClass:[TL_destructMessage class]]) {
+        
+        TL_destructMessage *msg = (TL_destructMessage *) currentViewerItem.previewObject.media;
+        
+        if(msg.ttl_seconds != 0 && msg.destruction_time == 0 && !msg.n_out) {
+            [SelfDestructionController addMessage:msg force:YES];
+        }
+        
+    }
+    
+    
+    [self updateSize];
+    
+    
+
   
     
     [self.imageContainerView setHidden:NO];
@@ -604,9 +616,10 @@ static const int bottomHeight = 60;
             [self addSubview:_videoPlayerView];
             
         }
-        
+        NSSize size = [self contentFullSize:self.currentViewerItem];
         [_videoPlayerView setFrame:NSMakeRect(0, roundf((self.frame.size.height - size.height) / 2), size.width, size.height)];
         
+       
         _videoPlayerView.player = player;
         
         [_videoPlayerView.player play];

@@ -197,6 +197,7 @@
 		C2034BBC1C31C1D20080D023 /* TL_localMessage_old44.m in Sources */ = {isa = PBXBuildFile; fileRef = C2034BBB1C31C1D20080D023 /* TL_localMessage_old44.m */; };
 		C2034BC81C31C8000080D023 /* ContextBotSenderItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C2034BC71C31C8000080D023 /* ContextBotSenderItem.m */; };
 		C2034BE31C3560530080D023 /* TLBotInlineResult+Extension.m in Sources */ = {isa = PBXBuildFile; fileRef = C2034BE21C3560530080D023 /* TLBotInlineResult+Extension.m */; };
+		C207530B1CDA13A700766F80 /* TGPVMiniControl.m in Sources */ = {isa = PBXBuildFile; fileRef = C207530A1CDA13A700766F80 /* TGPVMiniControl.m */; };
 		C2078E2E1CB53CD00037B1B2 /* TGModalMessagesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C2078E2D1CB53CD00037B1B2 /* TGModalMessagesViewController.m */; };
 		C2078E311CB53E870037B1B2 /* TGContextImportantRowItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C2078E301CB53E870037B1B2 /* TGContextImportantRowItem.m */; };
 		C2078E341CB53E9A0037B1B2 /* TGContextImportantRowView.m in Sources */ = {isa = PBXBuildFile; fileRef = C2078E331CB53E9A0037B1B2 /* TGContextImportantRowView.m */; };
@@ -1483,6 +1484,8 @@
 		C2034BC71C31C8000080D023 /* ContextBotSenderItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ContextBotSenderItem.m; sourceTree = "<group>"; };
 		C2034BE11C3560530080D023 /* TLBotInlineResult+Extension.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "TLBotInlineResult+Extension.h"; sourceTree = "<group>"; };
 		C2034BE21C3560530080D023 /* TLBotInlineResult+Extension.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "TLBotInlineResult+Extension.m"; sourceTree = "<group>"; };
+		C20753091CDA13A700766F80 /* TGPVMiniControl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGPVMiniControl.h; sourceTree = "<group>"; };
+		C207530A1CDA13A700766F80 /* TGPVMiniControl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGPVMiniControl.m; sourceTree = "<group>"; };
 		C2078E2C1CB53CD00037B1B2 /* TGModalMessagesViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGModalMessagesViewController.h; sourceTree = "<group>"; };
 		C2078E2D1CB53CD00037B1B2 /* TGModalMessagesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGModalMessagesViewController.m; sourceTree = "<group>"; };
 		C2078E2F1CB53E870037B1B2 /* TGContextImportantRowItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGContextImportantRowItem.h; sourceTree = "<group>"; };
@@ -4532,6 +4535,8 @@
 				C2C6D9681A124F70001EF8A2 /* TGPVControls.m */,
 				C2D826471B74FD5D00434D37 /* TGPVZoomControl.h */,
 				C2D826481B74FD5D00434D37 /* TGPVZoomControl.m */,
+				C20753091CDA13A700766F80 /* TGPVMiniControl.h */,
+				C207530A1CDA13A700766F80 /* TGPVMiniControl.m */,
 			);
 			name = elements;
 			sourceTree = "<group>";
@@ -6813,6 +6818,7 @@
 				C2AA5D32186B50520026EA1F /* TLEncryptedChat+Extensions.m in Sources */,
 				C2D4B8761AFCE8FA0035B4E4 /* YapDatabase.m in Sources */,
 				0AA3F3A818BDF54F00D383F1 /* TMStatusTextField.m in Sources */,
+				C207530B1CDA13A700766F80 /* TGPVMiniControl.m in Sources */,
 				C2FA78EF1924D934001A9D1B /* NoMessagesView.m in Sources */,
 				C2B0DF861BA9C59B0023982C /* ComposeConfirmModeratorViewController.m in Sources */,
 				0A9EDC4A1897BA0E0037E1BC /* CAAnimation+RBLBlockAdditions.m in Sources */,

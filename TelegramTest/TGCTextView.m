@@ -65,6 +65,12 @@ void (^linkOverHandle)(NSString *link, BOOL over, NSRect rect,TGCTextView *textV
         accept = link.length > 0;
     }
     
+    if(!link) {
+        clear_current_popover();
+        return;
+    }
+    
+    
     __block id obj = [Telegram findObjectWithName:link];
     
     
@@ -710,10 +716,12 @@ void (^linkOverHandle)(NSString *link, BOOL over, NSRect rect,TGCTextView *textV
 -(void)mouseDragged:(NSEvent *)theEvent {
         
     [super mouseDragged:theEvent];
+    if(![TMViewController isModalActive]) {
+        [[NSCursor IBeamCursor] set];
+        
+        [self _mouseDragged:theEvent];
+    }
     
-    [[NSCursor IBeamCursor] set];
-    
-    [self _mouseDragged:theEvent];
 }
 
 
@@ -730,7 +738,11 @@ void (^linkOverHandle)(NSString *link, BOOL over, NSRect rect,TGCTextView *textV
 
 -(void)mouseEntered:(NSEvent *)theEvent {
     [super mouseEntered:theEvent];
-    [self checkCursor:theEvent];
+    
+    if(![TMViewController isModalActive]) {
+        [self checkCursor:theEvent];
+    }
+    
 }
 
 
@@ -838,16 +850,22 @@ void (^linkOverHandle)(NSString *link, BOOL over, NSRect rect,TGCTextView *textV
 }
 
 -(void)mouseMoved:(NSEvent *)theEvent {
-    [self checkCursor:theEvent];
+    if(![TMViewController isModalActive]) {
+        [self checkCursor:theEvent];
+    }
 }
 
 -(void)mouseExited:(NSEvent *)theEvent {
     [super mouseExited:theEvent];
-    [[NSCursor arrowCursor] set];
     
-    if(_linkOver) {
-        _linkOver(nil,NO,NSZeroRect,self);
-    }
+     if(![TMViewController isModalActive]) {
+         [[NSCursor arrowCursor] set];
+         
+         if(_linkOver) {
+             _linkOver(nil,NO,NSZeroRect,self);
+         }
+     }
+    
 }
 
 
@@ -904,6 +922,7 @@ void (^linkOverHandle)(NSString *link, BOOL over, NSRect rect,TGCTextView *textV
     if(self.selectRange.location != NSNotFound && self.isEditable) {
         NSTextView *view = (NSTextView *) [self.window fieldEditor:YES forObject:self];
         [view setEditable:NO];
+        [view setSelectable:NO];
         
         [view setString:self.attributedString.string];
         

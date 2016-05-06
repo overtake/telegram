@@ -768,7 +768,7 @@
     
     
     
-    if(message.unread && !message.n_out && message.conversation.read_inbox_max_id < message.n_id) {
+    if(message.unread && !message.n_out && (message.conversation.read_inbox_max_id < message.n_id || message.conversation.read_inbox_max_id > TGMINFAKEID)) {
         dialog.unread_count++;
     }
     

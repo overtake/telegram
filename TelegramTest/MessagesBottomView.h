@@ -64,6 +64,8 @@ typedef enum {
 
 -(void)startOrStopQuickRecord;
 
+- (void)insertEmoji:(NSString *)emoji;
+
 -(BOOL)removeQuickRecord;
 -(void)showQuickRecordedPreview:(NSString *)file audioAttr:(TL_documentAttributeAudio *)audioAttr;
 

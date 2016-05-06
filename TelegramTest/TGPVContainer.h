@@ -26,4 +26,7 @@
 -(BOOL)isInImageContainer:(NSEvent *)event;
 -(void)increaseZoom;
 -(void)decreaseZoom;
+
+-(void)updateSize;
+
 @end

@@ -11,11 +11,18 @@
 #import "TGPhotoViewerItem.h"
 #import "TGPVBehavior.h"
 #import "TGPVControls.h"
-@interface TGPhotoViewer : NSPanel
+@interface TGPhotoViewer : NSWindow
+
+typedef enum {
+    TGPhotoViewerMinStyle,
+    TGPhotoViewerFullStyle
+} TGPhotoViewerStyle;
 
 
 @property (nonatomic,strong,readonly) TGPVContainer *photoContainer;
 @property (nonatomic,strong,readonly) TGPVControls *controls;
+
+@property (nonatomic,assign,readonly) TGPhotoViewerStyle viewerStyle;
 
 
 @property (nonatomic,weak) TelegramWindow *invokeWindow;

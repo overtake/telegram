@@ -318,6 +318,8 @@ typedef enum {
 -(void)setString:(NSString *)string {
     [_customMentions removeAllObjects];
     [super setString:string];
+    
+   
 }
 
 
@@ -646,7 +648,7 @@ typedef enum {
             
         }
         
-    } else if(theEvent.keyCode == 126) {
+    } else if(theEvent.keyCode == 126 && self.stringValue.length == 0) {
         [self.controller forceSetLastSentMessage];
         return;
     }

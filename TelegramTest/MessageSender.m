@@ -400,102 +400,112 @@
 
 +(void)addRatingForPeer:(TLPeer *)peer {
     
+    
+    TLUser *user = [peer isKindOfClass:[TL_peerUser class]] ? [[UsersManager sharedManager] find:peer.user_id] : nil;
+    
     [[Storage yap] asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
         
-        NSMutableArray *top = [transaction objectForKey:@"categories" inCollection:TOP_PEERS];
-        
-        int dt = ([[MTNetwork instance] getTime] - [[transaction objectForKey:@"dt" inCollection:TOP_PEERS] intValue]);
-        
-        __block BOOL saved = NO;
-        
-        __block Class currentClass;
-        
-        int drating = pow(M_E, (dt/rating_e_decay()));
-        
-        
-        [top enumerateObjectsUsingBlock:^(TL_topPeerCategoryPeers *obj, NSUInteger idx, BOOL * _Nonnull stop1) {
+        @try {
+            NSMutableArray *top = [transaction objectForKey:@"categories" inCollection:TOP_PEERS];
             
-            BOOL isCurrentCategory = NO;
-            
-            if([peer isKindOfClass:[TL_peerUser class]]) {
-                TLUser *user = [[UsersManager sharedManager] find:peer.user_id];
+            if(top) {
+                int dt = ([[MTNetwork instance] getTime] - [[transaction objectForKey:@"dt" inCollection:TOP_PEERS] intValue]);
                 
-                if(user.isBot && user.isBotInlinePlaceholder) {
-                    isCurrentCategory = [obj.category isKindOfClass:[TL_topPeerCategoryBotsInline class]];
-                    
-                    if(isCurrentCategory)
-                        currentClass = [TL_topPeerCategoryBotsInline class];
-                    
-                } else if(user.isBot) {
-                    isCurrentCategory = [obj.category isKindOfClass:[TL_topPeerCategoryBotsPM class]];
-                    
-                    if(isCurrentCategory)
-                        currentClass = [TL_topPeerCategoryBotsPM class];
-                }
-                else {
-                    isCurrentCategory = [obj.category isKindOfClass:[TL_topPeerCategoryCorrespondents class]];
-                    
-                    if(isCurrentCategory)
-                        currentClass = [TL_topPeerCategoryCorrespondents class];
-                }
-            }
-            
-            if(!isCurrentCategory) {
-                isCurrentCategory =([peer isKindOfClass:[TL_peerChat class]] && [obj.category isKindOfClass:[TL_topPeerCategoryGroups class]]);
+                __block BOOL saved = NO;
                 
-                if(isCurrentCategory)
-                    currentClass = [TL_topPeerCategoryGroups class];
-            }
-            
-            if(!isCurrentCategory) {
-                isCurrentCategory = isCurrentCategory || ([peer isKindOfClass:[TL_peerChannel class]] && [obj.category isKindOfClass:[TL_topPeerCategoryChannels class]]);
-
-                if(isCurrentCategory)
-                    currentClass = [TL_topPeerCategoryChannels class];
+                __block Class currentClass;
                 
-            }
-            
-            
-            if(isCurrentCategory) {
-                [obj.peers enumerateObjectsUsingBlock:^(TL_topPeer *topPeer, NSUInteger idx, BOOL * _Nonnull stop2) {
+                int drating = pow(M_E, (dt/rating_e_decay()));
+                
+                
+                [top enumerateObjectsUsingBlock:^(TL_topPeerCategoryPeers *obj, NSUInteger idx, BOOL * _Nonnull stop1) {
+                    
+                    BOOL isCurrentCategory = NO;
+                    
+                    if([peer isKindOfClass:[TL_peerUser class]]) {
+                        if(user.isBot && user.isBotInlinePlaceholder) {
+                            isCurrentCategory = [obj.category isKindOfClass:[TL_topPeerCategoryBotsInline class]];
+                            
+                            if(isCurrentCategory)
+                            currentClass = [TL_topPeerCategoryBotsInline class];
+                            
+                        } else if(user.isBot) {
+                            isCurrentCategory = [obj.category isKindOfClass:[TL_topPeerCategoryBotsPM class]];
+                            
+                            if(isCurrentCategory)
+                            currentClass = [TL_topPeerCategoryBotsPM class];
+                        }
+                        else {
+                            isCurrentCategory = [obj.category isKindOfClass:[TL_topPeerCategoryCorrespondents class]];
+                            
+                            if(isCurrentCategory)
+                            currentClass = [TL_topPeerCategoryCorrespondents class];
+                        }
+                    }
+                    
+                    if(!isCurrentCategory) {
+                        isCurrentCategory =([peer isKindOfClass:[TL_peerChat class]] && [obj.category isKindOfClass:[TL_topPeerCategoryGroups class]]);
+                        
+                        if(isCurrentCategory)
+                        currentClass = [TL_topPeerCategoryGroups class];
+                    }
+                    
+                    if(!isCurrentCategory) {
+                        isCurrentCategory = isCurrentCategory || ([peer isKindOfClass:[TL_peerChannel class]] && [obj.category isKindOfClass:[TL_topPeerCategoryChannels class]]);
+                        
+                        if(isCurrentCategory)
+                        currentClass = [TL_topPeerCategoryChannels class];
+                        
+                    }
                     
                     
-                    if(topPeer.peer.peer_id == peer.peer_id) {
-                        topPeer.rating+= drating;
+                    if(isCurrentCategory) {
+                        [obj.peers enumerateObjectsUsingBlock:^(TL_topPeer *topPeer, NSUInteger idx, BOOL * _Nonnull stop2) {
+                            
+                            
+                            if(topPeer.peer.peer_id == peer.peer_id) {
+                                topPeer.rating+= drating;
+                                
+                                
+                                *stop1 = YES;
+                                *stop2 = YES;
+                                
+                                saved = YES;
+                                
+                            }
+                            
+                        }];
                         
+                        if(!saved) {
+                            [obj.peers addObject:[TL_topPeer createWithPeer:peer rating:drating]];
+                            saved = YES;
+                        }
                         
-                        *stop1 = YES;
-                        *stop2 = YES;
+                        [top enumerateObjectsUsingBlock:^(TL_topPeerCategoryPeers *obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                            [obj.peers sortUsingComparator:^NSComparisonResult(TL_topPeer *obj1, TL_topPeer *obj2) {
+                                return obj1.rating < obj2.rating ? NSOrderedDescending : obj1.rating > obj2.rating ? NSOrderedAscending : NSOrderedSame;
+                            }];
+                        }];
                         
-                        saved = YES;
+                        [transaction setObject:top forKey:@"categories" inCollection:TOP_PEERS];
                         
                     }
                     
                 }];
                 
                 if(!saved) {
-                    [obj.peers addObject:[TL_topPeer createWithPeer:peer rating:drating]];
-                    saved = YES;
+                    NSMutableArray *peers = [NSMutableArray array];
+                    [peers addObject:[TL_topPeer createWithPeer:peer rating:drating]];
+                    [top addObject:[TL_topPeerCategoryPeers createWithCategory:[[currentClass alloc] init] n_count:1 peers:peers]];
+                    [transaction setObject:top forKey:@"categories" inCollection:TOP_PEERS];
                 }
-                
-                [top enumerateObjectsUsingBlock:^(TL_topPeerCategoryPeers *obj, NSUInteger idx, BOOL * _Nonnull stop) {
-                    [obj.peers sortUsingComparator:^NSComparisonResult(TL_topPeer *obj1, TL_topPeer *obj2) {
-                        return obj1.rating < obj2.rating ? NSOrderedDescending : obj1.rating > obj2.rating ? NSOrderedAscending : NSOrderedSame;
-                    }];
-                }];
-                
-                [transaction setObject:top forKey:@"categories" inCollection:TOP_PEERS];
-                
             }
+
+        } @catch (NSException *exception) {
             
-        }];
-        
-        if(!saved) {
-            NSMutableArray *peers = [NSMutableArray array];
-            [peers addObject:[TL_topPeer createWithPeer:peer rating:drating]];
-            [top addObject:[TL_topPeerCategoryPeers createWithCategory:[[currentClass alloc] init] n_count:1 peers:peers]];
-            [transaction setObject:top forKey:@"categories" inCollection:TOP_PEERS];
         }
+        
+       
         
     }];
     
@@ -506,58 +516,66 @@
 
 +(void)syncTopCategories:(void (^)(NSArray *categories))completeHandler {
     
+    if(!ACCEPT_FEATURE)
+        return;
+    
     dispatch_queue_t dqueue = dispatch_get_current_queue();
     
     [[Storage yap] asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
         
-        NSMutableArray *top = [transaction objectForKey:@"categories" inCollection:TOP_PEERS];
-        
-        __block int acc = 0;
-        
-        [top enumerateObjectsUsingBlock:^(TL_topPeerCategoryPeers *obj, NSUInteger idx, BOOL * _Nonnull stop) {
-            [obj.peers sortUsingComparator:^NSComparisonResult(TL_topPeer *obj1, TL_topPeer *obj2) {
-                return obj1.rating < obj2.rating ? NSOrderedDescending : obj1.rating > obj2.rating ? NSOrderedAscending : NSOrderedSame;
-            }];
+        @try {
+            NSMutableArray *top = [transaction objectForKey:@"categories" inCollection:TOP_PEERS];
             
-            [obj.peers enumerateObjectsUsingBlock:^(TL_topPeer *topPeer, NSUInteger idx, BOOL * _Nonnull stop) {
-                acc = (acc * 20261) + abs(topPeer.peer.peer_id);
-            }];
+            __block int acc = 0;
             
-        }];
-        
-        
-        acc = (int)(acc & 0x7FFFFFFF);
-        
-        int offset = 0;
-        
-        
-        dispatch_block_t next = ^{
-            [RPCRequest sendRequest:[TLAPI_contacts_getTopPeers createWithFlags:(1 << 0) | (1 << 1) | (1 << 2) | (1 << 5) | (1 << 10) offset:offset limit:100 n_hash:acc] successHandler:^(id request, TL_contacts_topPeers *response) {
+            [top enumerateObjectsUsingBlock:^(TL_topPeerCategoryPeers *obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                [obj.peers sortUsingComparator:^NSComparisonResult(TL_topPeer *obj1, TL_topPeer *obj2) {
+                    return obj1.rating < obj2.rating ? NSOrderedDescending : obj1.rating > obj2.rating ? NSOrderedAscending : NSOrderedSame;
+                }];
                 
-                if(![response isKindOfClass:[TL_contacts_topPeersNotModified class]]) {
-                    [SharedManager proccessGlobalResponse:response];
+                [obj.peers enumerateObjectsUsingBlock:^(TL_topPeer *topPeer, NSUInteger idx, BOOL * _Nonnull stop) {
+                    acc = (acc * 20261) + abs(topPeer.peer.peer_id);
+                }];
+                
+            }];
+            
+            
+            acc = (int)(acc & 0x7FFFFFFF);
+            
+            int offset = 0;
+            
+            
+            dispatch_block_t next = ^{
+                [RPCRequest sendRequest:[TLAPI_contacts_getTopPeers createWithFlags:(1 << 0) | (1 << 1) | (1 << 2) | (1 << 5) | (1 << 10) offset:offset limit:100 n_hash:acc] successHandler:^(id request, TL_contacts_topPeers *response) {
                     
-                    [transaction setObject:response.categories forKey:@"categories" inCollection:TOP_PEERS];
-                    [transaction setObject:@([[MTNetwork instance] getTime]) forKey:@"dt" inCollection:TOP_PEERS];
+                    if([response isKindOfClass:[TL_contacts_topPeers class]]) {
+                        [SharedManager proccessGlobalResponse:response];
+                        
+                        [transaction setObject:response.categories forKey:@"categories" inCollection:TOP_PEERS];
+                        [transaction setObject:@([[MTNetwork instance] getTime]) forKey:@"dt" inCollection:TOP_PEERS];
+                        
+                        dispatch_async(dqueue, ^{
+                            completeHandler(response.categories);
+                        });
+                        
+                    } else {
+                        dispatch_async(dqueue, ^{
+                            completeHandler(top);
+                        });
+                    }
                     
-                    dispatch_async(dqueue, ^{
-                        completeHandler(response.categories);
-                    });
+                    
+                    
+                } errorHandler:^(id request, RpcError *error) {
+                    
+                }];
+            };
+            
+            next();
 
-                } else {
-                    dispatch_async(dqueue, ^{
-                        completeHandler(top);
-                    });
-                }
-                
-               
-                
-            } errorHandler:^(id request, RpcError *error) {
-                
-            }];
-        };
-        
-        next();
+        } @catch (NSException *exception) {
+            
+        }
         
     }];
     

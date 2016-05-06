@@ -2135,9 +2135,13 @@ static RBLPopover *popover;
 
 
 - (void)setInputMessageString:(NSString *)message disableAnimations:(BOOL)disableAnimations {
+    
+    
+    [self.inputMessageTextField.undoManager removeAllActions];
+
+    
     [self.inputMessageTextField setString:message];
     
-    NSLog(@"message %@",message);
     
     
     self.inputMessageTextField.disableAnimation = disableAnimations;
