@@ -1,263 +1,315 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="7531" systemVersion="14D136" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="10117" systemVersion="15E65" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
-        <deployment version="1070" identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="7531"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="10117"/>
     </dependencies>
     <objects>
         <customObject id="-2" userLabel="File's Owner"/>
         <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
-        <customObject id="-3" userLabel="Application" customClass="NSObject"/>
-        <customObject id="2" customClass="NSApplication">
+        <customObject id="-3" userLabel="Application" customClass="NSObject">
             <connections>
-                <outlet property="delegate" destination="85" id="90"/>
+                <outlet property="delegate" destination="494" id="6Vn-8c-acK"/>
             </connections>
         </customObject>
-        <menu title="AMainMenu" systemMenu="main" id="3">
+        <menu title="AMainMenu" systemMenu="main" id="29">
             <items>
-                <menuItem title="Telegram" id="4">
-                    <menu key="submenu" title="Telegram" systemMenu="apple" id="5">
+                <menuItem title="Telegram" id="56">
+                    <menu key="submenu" title="Telegram" systemMenu="apple" id="57">
                         <items>
-                            <menuItem title="Over" id="6">
+                            <menuItem title="Over" id="129">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
-                                    <action selector="aboutAction:" target="89" id="98"/>
+                                    <action selector="aboutAction:" target="QPE-Oq-DBa" id="PjC-fs-rFh"/>
                                 </connections>
                             </menuItem>
-                            <menuItem isSeparatorItem="YES" id="7">
+                            <menuItem isSeparatorItem="YES" id="143">
                                 <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                             </menuItem>
-                            <menuItem title="Account Instellingen..." id="8">
+                            <menuItem title="Account Instellingen..." id="KdJ-69-lPo">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
-                                    <action selector="settings:" target="89" id="108"/>
+                                    <action selector="settings:" target="QPE-Oq-DBa" id="8Dh-eo-pOh"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Voorkeuren..." keyEquivalent="," id="9">
+                            <menuItem title="Voorkeuren..." keyEquivalent="," id="iOx-Ud-JtE">
                                 <connections>
-                                    <action selector="openSettings:" target="89" id="114"/>
+                                    <action selector="openSettings:" target="QPE-Oq-DBa" id="wSx-Ho-hCD"/>
                                 </connections>
                             </menuItem>
-                            <menuItem isSeparatorItem="YES" id="10">
+                            <menuItem isSeparatorItem="YES" id="m7b-nQ-Fg2">
                                 <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                             </menuItem>
-                            <menuItem title="Een vraag stellen..." id="11">
+                            <menuItem title="Een vraag stellen..." id="PlM-u7-PLz">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
-                                    <action selector="askQuestion:" target="89" id="111"/>
+                                    <action selector="askQuestion:" target="QPE-Oq-DBa" id="OaG-hR-V3f"/>
                                 </connections>
                             </menuItem>
-                            <menuItem isSeparatorItem="YES" id="12">
+                            <menuItem isSeparatorItem="YES" id="M0l-bh-XxW">
                                 <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                             </menuItem>
-                            <menuItem title="Controleren up updates..." tag="1000" id="13">
+                            <menuItem title="Controleren op updates..." tag="1000" id="VxH-Ao-S0R" userLabel="Menu Item - Check update">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
-                                    <action selector="checkForUpdates:" target="88" id="112"/>
+                                    <action selector="checkForUpdates:" target="Bzi-s3-u6d" id="sxQ-GB-wZ1"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Voorzieningen" id="14">
-                                <menu key="submenu" title="Voorzieningen" systemMenu="services" id="15"/>
+                            <menuItem title="Voorzieningen" id="131">
+                                <menu key="submenu" title="Voorzieningen" systemMenu="services" id="130"/>
                             </menuItem>
-                            <menuItem isSeparatorItem="YES" id="16">
+                            <menuItem isSeparatorItem="YES" id="144">
                                 <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                             </menuItem>
-                            <menuItem title="Verberg" keyEquivalent="h" id="17">
+                            <menuItem title="Verberg" keyEquivalent="h" id="134">
                                 <connections>
-                                    <action selector="hide:" target="-1" id="99"/>
+                                    <action selector="hide:" target="-1" id="367"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Verberg andere" keyEquivalent="h" id="18">
+                            <menuItem title="Verberg andere" keyEquivalent="h" id="145">
                                 <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
                                 <connections>
-                                    <action selector="hideOtherApplications:" target="-1" id="101"/>
+                                    <action selector="hideOtherApplications:" target="-1" id="368"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Toon alles" id="19">
+                            <menuItem title="Toon alles" id="150">
                                 <connections>
-                                    <action selector="unhideAllApplications:" target="-1" id="102"/>
+                                    <action selector="unhideAllApplications:" target="-1" id="370"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Sluiten" keyEquivalent="w" id="20">
+                            <menuItem title="Sluiten" keyEquivalent="w" id="ukn-6g-5Mk">
                                 <connections>
-                                    <action selector="performClose:" target="-1" id="119"/>
+                                    <action selector="performClose:" target="-1" id="BUR-5z-wHC"/>
                                 </connections>
                             </menuItem>
-                            <menuItem isSeparatorItem="YES" id="21">
+                            <menuItem isSeparatorItem="YES" id="236">
                                 <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                             </menuItem>
-                            <menuItem title="Stop Telegram" keyEquivalent="q" id="22">
+                            <menuItem title="Stop Telegram" keyEquivalent="q" id="136">
                                 <connections>
-                                    <action selector="terminate:" target="-1" id="100"/>
+                                    <action selector="terminate:" target="-1" id="hgo-WI-wgR"/>
                                 </connections>
                             </menuItem>
                         </items>
                     </menu>
                 </menuItem>
-                <menuItem title="Bestand" id="23">
-                    <menu key="submenu" title="Bestand" id="24">
+                <menuItem title="Bestand" id="9aa-b0-kdd">
+                    <menu key="submenu" title="Bestand" id="zZt-zA-b9J">
                         <items>
-                            <menuItem title="Media weergeven" keyEquivalent="y" id="25">
+                            <menuItem title="Media Weergeven" keyEquivalent="y" id="lWR-cc-Xrk">
                                 <connections>
-                                    <action selector="showMedia:" target="89" id="116"/>
+                                    <action selector="showMedia:" target="QPE-Oq-DBa" id="07x-2y-hy3"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Show Audio" tag="2000" keyEquivalent="u" id="YeF-9t-pel">
+                            <menuItem title="Audio Weergeven" keyEquivalent="u" id="iNs-0H-uCu">
                                 <connections>
-                                    <action selector="showAudioMiniPlayer:" target="89" id="JDP-G8-29Q"/>
+                                    <action selector="showAudioMiniPlayer:" target="QPE-Oq-DBa" id="Me0-8C-uW8"/>
                                 </connections>
                             </menuItem>
-                            <menuItem isSeparatorItem="YES" id="28">
+                            <menuItem isSeparatorItem="YES" tag="2000" id="LA8-TF-Ir0">
                                 <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                             </menuItem>
-                            <menuItem title="Uitloggen" id="29">
+                            <menuItem title="Uitloggen" id="FJL-I9-FV9">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
-                                    <action selector="logout:" target="89" id="105"/>
+                                    <action selector="logout:" target="QPE-Oq-DBa" id="sbe-gb-cZ4"/>
                                 </connections>
                             </menuItem>
                         </items>
                     </menu>
                 </menuItem>
-                <menuItem title="Wijzig" id="30">
-                    <menu key="submenu" title="Wijzig" id="31">
+                <menuItem title="Wijzig" id="cEF-g4-S1O">
+                    <menu key="submenu" title="Wijzig" id="2f6-tO-6dI">
                         <items>
-                            <menuItem title="Herstel typen" keyEquivalent="z" id="32">
+                            <menuItem title="Herstel Typen" keyEquivalent="z" id="kg3-05-Cu0">
                                 <connections>
-                                    <action selector="undo:" target="-1" id="115"/>
+                                    <action selector="undo:" target="-1" id="Cea-3P-o0I"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Opnieuw" keyEquivalent="Z" id="33">
+                            <menuItem title="Opnieuw" keyEquivalent="Z" id="GxW-gd-Q0I">
                                 <connections>
-                                    <action selector="redo:" target="-1" id="106"/>
+                                    <action selector="redo:" target="-1" id="WP7-8S-8Vh"/>
                                 </connections>
                             </menuItem>
-                            <menuItem isSeparatorItem="YES" id="34">
+                            <menuItem isSeparatorItem="YES" id="Ulu-fv-lzO">
                                 <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                             </menuItem>
-                            <menuItem title="Knip" keyEquivalent="x" id="35">
+                            <menuItem title="Knip" keyEquivalent="x" id="nUA-QH-jiO">
                                 <connections>
-                                    <action selector="cut:" target="-1" id="117"/>
+                                    <action selector="cut:" target="-1" id="TeU-V9-KVd"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Kopieer" keyEquivalent="c" id="36">
+                            <menuItem title="Kopieer" keyEquivalent="c" id="1nJ-Zo-Xvq">
                                 <connections>
-                                    <action selector="copy:" target="-1" id="104"/>
+                                    <action selector="copy:" target="-1" id="6u6-65-mHT"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Plak" keyEquivalent="v" id="37">
+                            <menuItem title="Plak" keyEquivalent="v" id="N1s-6j-TDD">
                                 <connections>
-                                    <action selector="paste:" target="-1" id="110"/>
+                                    <action selector="paste:" target="-1" id="F4Y-Td-OB4"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Opslaan" keyEquivalent="s" id="38">
+                            <menuItem title="Opslaan" keyEquivalent="s" id="H6s-Mh-WPc">
                                 <connections>
-                                    <action selector="save:" target="-1" id="107"/>
+                                    <action selector="save:" target="-1" id="AQU-y6-Zxt"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Plak en pas stijl aan" keyEquivalent="V" id="39">
-                                <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
-                            </menuItem>
-                            <menuItem title="Verwijder" id="40">
+                            <menuItem title="Verwijder" id="ZNq-Nx-7c1">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
-                                    <action selector="delete:" target="-1" id="113"/>
+                                    <action selector="delete:" target="-1" id="T0W-cB-Z6l"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Selecteer alles" keyEquivalent="a" id="41">
+                            <menuItem title="Selecteer Alles" keyEquivalent="a" id="pLu-rH-vDh">
                                 <connections>
-                                    <action selector="selectAll:" target="-1" id="118"/>
+                                    <action selector="selectAll:" target="-1" id="tFi-E5-BYA"/>
                                 </connections>
                             </menuItem>
-                            <menuItem isSeparatorItem="YES" id="42"/>
-                            <menuItem title="Zoek" id="43">
+                            <menuItem isSeparatorItem="YES" id="bIi-T6-Bdx"/>
+                            <menuItem title="Zoek" id="v4S-vz-rPP">
                                 <modifierMask key="keyEquivalentModifierMask"/>
-                                <menu key="submenu" title="Zoek" id="44">
+                                <menu key="submenu" title="Zoek" id="Uhq-UI-QHq">
                                     <items>
-                                        <menuItem title="Zoek…" tag="1" keyEquivalent="f" id="45"/>
-                                        <menuItem title="Zoek en vervang…" tag="12" keyEquivalent="f" id="46">
-                                            <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
+                                        <menuItem title="Zoek…" tag="1" keyEquivalent="f" id="C3w-Yr-qpO">
+                                            <connections>
+                                                <action selector="findAction:" target="QPE-Oq-DBa" id="oSC-l4-vVX"/>
+                                            </connections>
                                         </menuItem>
-                                        <menuItem title="Zoek volgende" tag="2" keyEquivalent="g" id="47"/>
-                                        <menuItem title="Zoek vorige" tag="3" keyEquivalent="G" id="48"/>
-                                        <menuItem title="Gebruik selectie voor zoekactie" tag="7" keyEquivalent="e" id="49"/>
-                                        <menuItem title="Ga naar selectie" keyEquivalent="j" id="50"/>
-                                    </items>
-                                </menu>
-                            </menuItem>
-                            <menuItem title="Spelling en grammatica" id="51">
-                                <modifierMask key="keyEquivalentModifierMask"/>
-                                <menu key="submenu" title="Spelling en grammatica" id="52">
-                                    <items>
-                                        <menuItem title="Toon spelling en grammatica" keyEquivalent=":" id="53"/>
-                                        <menuItem title="Controleer document nu" keyEquivalent=";" id="54"/>
-                                        <menuItem isSeparatorItem="YES" id="55"/>
-                                        <menuItem title="Controleer spelling tijdens typen" id="56">
-                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                        <menuItem title="Zoek Volgende" tag="2" keyEquivalent="g" id="iB5-ll-s6Z">
+                                            <connections>
+                                                <action selector="findNext:" target="QPE-Oq-DBa" id="ex5-iq-oT1"/>
+                                            </connections>
                                         </menuItem>
-                                        <menuItem title="Controleer grammatica tegelijk met spelling" id="57">
-                                            <modifierMask key="keyEquivalentModifierMask"/>
-                                        </menuItem>
-                                        <menuItem title="Corrigeer spelling automatisch" id="58">
-                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                        <menuItem title="Zoek Vorige" tag="3" keyEquivalent="G" id="lBV-JG-h7X">
+                                            <connections>
+                                                <action selector="findPrevious:" target="QPE-Oq-DBa" id="hMR-zh-sZf"/>
+                                            </connections>
                                         </menuItem>
                                     </items>
                                 </menu>
                             </menuItem>
-                            <menuItem title="Vervanging" id="59">
+                            <menuItem title="Spelling en Grammatica" id="uPB-6m-K3K">
                                 <modifierMask key="keyEquivalentModifierMask"/>
-                                <menu key="submenu" title="Vervanging" id="60">
+                                <menu key="submenu" title="Spelling en Grammatica" id="18Z-H9-nxX">
                                     <items>
-                                        <menuItem title="Toon vervangingen" id="61">
-                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                        <menuItem title="Toon spelling en grammatica" keyEquivalent=":" id="GLK-eC-cnx">
+                                            <connections>
+                                                <action selector="showGuessPanel:" target="-1" id="mlX-Y5-BND"/>
+                                            </connections>
                                         </menuItem>
-                                        <menuItem isSeparatorItem="YES" id="62"/>
-                                        <menuItem title="Slim kopiëren/plakken" id="63">
-                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                        <menuItem title="Controleer document nu" keyEquivalent=";" id="CKW-Pr-X2u">
+                                            <connections>
+                                                <action selector="checkSpelling:" target="-1" id="y1e-Yr-7Zb"/>
+                                            </connections>
                                         </menuItem>
-                                        <menuItem title="Slimme aanhalingstekens" id="64">
+                                        <menuItem isSeparatorItem="YES" id="u4I-bZ-77b"/>
+                                        <menuItem title="Controleer spelling tijdens typen" id="4SB-c1-mUF">
                                             <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="toggleContinuousSpellChecking:" target="-1" id="z6c-6B-EPJ"/>
+                                            </connections>
                                         </menuItem>
-                                        <menuItem title="Slimme streepjes" id="65">
+                                        <menuItem title="Controleer grammatica tegelijk met spelling" id="fkH-sn-VYb">
                                             <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="toggleGrammarChecking:" target="-1" id="7Q9-oM-L1I"/>
+                                            </connections>
                                         </menuItem>
-                                        <menuItem title="Slimme koppelingen" id="66">
+                                        <menuItem title="Corrigeer spelling automatisch" id="JAf-uH-TN3">
                                             <modifierMask key="keyEquivalentModifierMask"/>
-                                        </menuItem>
-                                        <menuItem title="Datadetectie" id="67">
-                                            <modifierMask key="keyEquivalentModifierMask"/>
-                                        </menuItem>
-                                        <menuItem title="Tekstvervanging" id="68">
-                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="toggleAutomaticSpellingCorrection:" target="-1" id="cqU-iy-vAW"/>
+                                            </connections>
                                         </menuItem>
                                     </items>
                                 </menu>
                             </menuItem>
-                            <menuItem title="Omzetting" id="69">
+                            <menuItem title="Vervanging" id="pqU-2l-cjd">
                                 <modifierMask key="keyEquivalentModifierMask"/>
-                                <menu key="submenu" title="Omzetting" id="70">
+                                <menu key="submenu" title="Vervanging" id="KQO-sI-qMs">
                                     <items>
-                                        <menuItem title="Zet om in hoofdletters" id="71">
+                                        <menuItem title="Toon vervangingen" id="Ec1-22-uo0">
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                         </menuItem>
-                                        <menuItem title="Zet om in kleine letters" id="72">
+                                        <menuItem isSeparatorItem="YES" id="DxJ-wO-PZD"/>
+                                        <menuItem title="Slim kopiëren/plakken" id="SmM-CB-5od">
                                             <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="toggleSmartInsertDelete:" target="-1" id="yR6-KX-L5E"/>
+                                            </connections>
                                         </menuItem>
-                                        <menuItem title="Zet om in beginhoofdletters" id="73">
+                                        <menuItem title="Slimme aanhalingstekens" id="STA-1x-4Zq">
                                             <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="toggleAutomaticQuoteSubstitution:" target="-1" id="zr0-bd-1Hh"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="Slimme streepjes" id="GYa-tw-Vyc">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="toggleAutomaticDashSubstitution:" target="-1" id="CZt-dh-74S"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="Slimme koppelingen" id="zUP-Zk-PcO">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="toggleAutomaticLinkDetection:" target="-1" id="DFE-ki-j6u"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="Data detectie" id="Sfl-ar-tGl">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="toggleAutomaticDataDetection:" target="-1" id="fs3-sG-Ic4"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="Tekstvervanging" id="VKp-bH-5hq">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="toggleAutomaticTextReplacement:" target="-1" id="zpm-wh-cJQ"/>
+                                            </connections>
                                         </menuItem>
                                     </items>
                                 </menu>
                             </menuItem>
-                            <menuItem title="Spraak" id="74">
+                            <menuItem title="Omzetting" id="n1X-kq-7w8">
                                 <modifierMask key="keyEquivalentModifierMask"/>
-                                <menu key="submenu" title="Spraak" id="75">
+                                <menu key="submenu" title="Omzetting" id="eVA-1e-Bx5">
                                     <items>
-                                        <menuItem title="Start spraakfunctie" id="76">
+                                        <menuItem title="Zet om in hoofdletters" id="aNV-M8-iia">
                                             <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="uppercaseWord:" target="-1" id="rRi-C2-OPs"/>
+                                            </connections>
                                         </menuItem>
-                                        <menuItem title="Stop spraakfunctie" id="77">
+                                        <menuItem title="Zet om in kleine letters" id="v9f-x3-pvd">
                                             <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="lowercaseWord:" target="-1" id="4gi-EC-dTW"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="Zet om in beginhoofdletters" id="ibD-KD-IAp">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="capitalizeWord:" target="-1" id="cQ5-xm-0Fq"/>
+                                            </connections>
+                                        </menuItem>
+                                    </items>
+                                </menu>
+                            </menuItem>
+                            <menuItem title="Spraak" id="iDh-HZ-j9V">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <menu key="submenu" title="Spraak" id="T99-9E-T9Y">
+                                    <items>
+                                        <menuItem title="Start spraakfunctie" id="SSO-TM-nH6">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="startSpeaking:" target="-1" id="ggo-bm-Izw"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="Stop spraakfunctie" id="8aU-pO-WGh">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="stopSpeaking:" target="-1" id="v47-op-YQG"/>
+                                            </connections>
                                         </menuItem>
                                     </items>
                                 </menu>
@@ -265,59 +317,59 @@
                         </items>
                     </menu>
                 </menuItem>
-                <menuItem title="Venster" id="78">
-                    <menu key="submenu" title="Venster" systemMenu="window" id="79">
+                <menuItem title="Window" id="19">
+                    <menu key="submenu" title="Window" systemMenu="window" autoenablesItems="NO" id="24">
                         <items>
-                            <menuItem title="Minimaliseer" keyEquivalent="m" id="80">
+                            <menuItem title="Minimaliseer" keyEquivalent="m" id="23">
                                 <connections>
-                                    <action selector="performMiniaturize:" target="-1" id="97"/>
+                                    <action selector="performMiniaturize:" target="-1" id="37"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Vergroot/verklein" id="81">
+                            <menuItem title="Vergroot/verklein" id="239">
                                 <connections>
-                                    <action selector="performZoom:" target="-1" id="103"/>
+                                    <action selector="performZoom:" target="-1" id="240"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Zwevend op Voorgrond" id="25i-E2-af8">
+                            <menuItem title="Zwevend op voorgond" id="MEX-yH-BLO">
                                 <connections>
-                                    <action selector="toogleFloatOnTop:" target="89" id="R99-yW-abJ"/>
+                                    <action selector="toogleFloatOnTop:" target="QPE-Oq-DBa" id="8dk-3J-AMI"/>
                                 </connections>
                             </menuItem>
-                            <menuItem isSeparatorItem="YES" id="82">
+                            <menuItem isSeparatorItem="YES" id="92">
                                 <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                             </menuItem>
-                            <menuItem title="Alles op voorgrond" id="83">
+                            <menuItem title="Alles op voorgrond" id="5">
                                 <connections>
-                                    <action selector="arrangeInFront:" target="-1" id="96"/>
+                                    <action selector="arrangeInFront:" target="-1" id="39"/>
                                 </connections>
                             </menuItem>
                         </items>
                     </menu>
                 </menuItem>
-                <menuItem title="Help" id="84">
+                <menuItem title="Help" id="490">
                     <modifierMask key="keyEquivalentModifierMask"/>
                 </menuItem>
             </items>
             <connections>
-                <outlet property="delegate" destination="89" id="91"/>
+                <outlet property="delegate" destination="QPE-Oq-DBa" id="NZX-in-taw"/>
             </connections>
         </menu>
-        <customObject id="85" customClass="AppDelegate">
+        <customObject id="494" customClass="AppDelegate">
             <connections>
-                <outlet property="telegram" destination="87" id="92"/>
-                <outlet property="updater" destination="88" id="93"/>
+                <outlet property="telegram" destination="bBQ-Ld-OaO" id="r6H-iQ-RaR"/>
+                <outlet property="updater" destination="Bzi-s3-u6d" id="1hR-cR-yNv"/>
             </connections>
         </customObject>
-        <customObject id="86" customClass="NSFontManager"/>
-        <objectController id="87" customClass="Telegram">
+        <customObject id="420" customClass="NSFontManager"/>
+        <objectController id="bBQ-Ld-OaO" customClass="Telegram">
             <connections>
-                <outlet property="firstController" destination="89" id="95"/>
+                <outlet property="firstController" destination="QPE-Oq-DBa" id="q1b-ze-0KY"/>
             </connections>
         </objectController>
-        <customObject id="88" customClass="SUUpdater"/>
-        <customObject id="89" customClass="TelegramFirstController">
+        <customObject id="Bzi-s3-u6d" customClass="SUUpdater"/>
+        <customObject id="QPE-Oq-DBa" customClass="TelegramFirstController">
             <connections>
-                <outlet property="checkUpdatesMenuItem" destination="13" id="94"/>
+                <outlet property="checkUpdatesMenuItem" destination="VxH-Ao-S0R" id="C4U-hP-B6b"/>
             </connections>
         </customObject>
     </objects>
