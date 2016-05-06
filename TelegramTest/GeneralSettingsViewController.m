@@ -266,6 +266,22 @@
 #endif
     
     
+    GeneralSettingsRowItem *esglayout = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeSwitch callback:^(TGGeneralRowItem *item) {
+        
+        [SettingsArchiver addOrRemoveSetting:ESGLayoutSettings];
+        
+       
+        
+        
+    } description:NSLocalizedString(@"Settings.ESGLayoutSetting", nil) height:42 stateback:^id(TGGeneralRowItem *item) {
+        return @([SettingsArchiver checkMaskedSetting:ESGLayoutSettings]);
+    }];
+    
+
+    [self.tableView insert:esglayout atIndex:self.tableView.list.count tableRedraw:NO];
+
+    
+    
     
 #ifdef TGDEBUG
     

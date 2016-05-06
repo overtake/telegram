@@ -266,7 +266,7 @@
     self.goToMessage = callback;
     self.closeCallback = closeCallback;
     
-    [self setFrameSize:NSMakeSize(self.controller.view.frame.size.width, NSHeight(self.frame))];
+    [self setFrameSize:NSMakeSize(self.controller.table.frame.size.width, NSHeight(self.frame))];
     
     [self updateSearchArrows];
     

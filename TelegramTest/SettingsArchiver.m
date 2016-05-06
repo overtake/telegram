@@ -253,6 +253,14 @@ static NSString *kArchivedSettings = @"kArchivedSettings";
     return isInList;
 }
 
++(BOOL)isDefaultEnabledESGLayout {
+    return [[NSUserDefaults standardUserDefaults] boolForKey:@"isDefaultEnabledESGLayout"] && [SettingsArchiver checkMaskedSetting:ESGLayoutSettings];
+}
+
++(void)toggleDefaultEnabledESGLayout {
+    [[NSUserDefaults standardUserDefaults] setBool:![[NSUserDefaults standardUserDefaults] boolForKey:@"isDefaultEnabledESGLayout"] forKey:@"isDefaultEnabledESGLayout"];
+}
+
 + (void)toggleLaunchAtStartup {
     BOOL shouldBeToggled = ![self isLaunchAtStartup];
     LSSharedFileListRef loginItemsRef = LSSharedFileListCreate(NULL, kLSSharedFileListSessionLoginItems, NULL);

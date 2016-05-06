@@ -266,13 +266,15 @@ static NSArray *segment_list;
 -(void)loadView {
     [super loadView];
     
-    _tableView = [[TMTableView alloc] initWithFrame:NSMakeRect(0, 58, NSWidth(self.view.frame) - 0, NSHeight(self.view.frame) - 58)];
+    int topOffset = self.esgViewController.isLayoutStyle ? 58 : 44;
+    
+    _tableView = [[TMTableView alloc] initWithFrame:NSMakeRect(0, topOffset, NSWidth(self.view.frame) - 0, NSHeight(self.view.frame) - topOffset)];
     [self.view addSubview:_tableView.containerView];
     
     _tableView.tm_delegate = self;
     
     
-    self.bottomView = [[TMView alloc] initWithFrame:NSMakeRect(0, 0, self.view.bounds.size.width, 58)];
+    self.bottomView = [[TMView alloc] initWithFrame:NSMakeRect(0, 0, self.view.bounds.size.width, topOffset)];
     
     weak();
     

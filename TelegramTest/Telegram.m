@@ -34,7 +34,7 @@
 }
 
 +(TL_conversation *)conversation {
-    return [Telegram delegate].mainWindow.navigationController.messagesViewController.conversation;
+    return appWindow().navigationController.messagesViewController.conversation;
 }
 
 + (AppDelegate *)delegate {

@@ -88,7 +88,7 @@
         [self.textField setFrameSize:item.textSize];
         
     
-        [self.textField setFrameOrigin:NSMakePoint(roundf((NSWidth(self.messagesViewController.view.frame) - item.textSize.width) / 2),   (item.photoSize.height ? (item.photoSize.height + item.defaultContentOffset*2) : roundf((item.viewSize.height - NSHeight(_textField.frame))/2)))];
+        [self.textField setFrameOrigin:NSMakePoint(roundf((NSWidth(item.table.containerView.frame) - item.textSize.width) / 2),   (item.photoSize.height ? (item.photoSize.height + item.defaultContentOffset*2) : roundf((item.viewSize.height - NSHeight(_textField.frame))/2)))];
                 
         if(item.photo) {
             
@@ -96,7 +96,7 @@
             self.photoImageView.object = item.imageObject;
             
             [self.photoImageView setHidden:NO];
-            [self.photoImageView setFrameOrigin:NSMakePoint(roundf((NSWidth(self.messagesViewController.view.frame) - _photoImageView.frame.size.width) / 2), self.item.defaultContentOffset)];
+            [self.photoImageView setFrameOrigin:NSMakePoint(roundf((NSWidth(item.table.containerView.frame) - _photoImageView.frame.size.width) / 2), self.item.defaultContentOffset)];
             
         } else {
             [self.photoImageView setHidden:YES];
@@ -106,7 +106,7 @@
         [self.textField setFrameSize:item.textSize];
         [self.textField setAttributedString:item.messageAttributedString];
        
-        [_textField setFrameOrigin:NSMakePoint(roundf((NSWidth(self.messagesViewController.view.frame) - item.textSize.width) / 2), roundf((item.viewSize.height - NSHeight(_textField.frame))/2))];
+        [_textField setFrameOrigin:NSMakePoint(roundf((NSWidth(item.table.containerView.frame) - item.textSize.width) / 2), roundf((item.viewSize.height - NSHeight(_textField.frame))/2))];
         
     } else  {
         [self.photoImageView setHidden:YES];

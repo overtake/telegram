@@ -1048,6 +1048,9 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "-[TMGrowingTextView changeLayoutOrientation:]:TMGrowingTextView.m">
+      </ContextState>
+      <ContextState
          contextName = "__36-[MessageTableCell defaultMenuItems]_block_invoke_2:MessageTableCell.m">
       </ContextState>
       <ContextState
@@ -2054,6 +2057,12 @@
          contextName = "-[MessagesViewController setCurrentConversation:withMessageJump:force:]:MessagesViewController.m">
          <PersistentStrings>
             <PersistentString
+               value = "self.isShownESGController">
+            </PersistentString>
+            <PersistentString
+               value = "self.conversation.canSendMessage">
+            </PersistentString>
+            <PersistentString
                value = "dialog.last_marked_message">
             </PersistentString>
          </PersistentStrings>
@@ -2392,6 +2401,14 @@
          <PersistentStrings>
             <PersistentString
                value = "msg.media">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[TMNavigationController setCurrentViewController:withAnimation:]:TMNavigationController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.view.bounds.size.height">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -3376,6 +3393,14 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "-[TGModernSGViewController loadView]:TGModernSGViewController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.view.bounds">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "-[MessageTableItemMpeg checkStartDownload:size:]:MessageTableItemMpeg.m">
          <PersistentStrings>
             <PersistentString
@@ -4112,6 +4137,9 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "-[TMGrowingTextView validateMenuItem:]:TMGrowingTextView.m">
+      </ContextState>
+      <ContextState
          contextName = "__79-[TGPasswosdMainViewController setPassword:current_pswd_hash:email:hint:flags:]_block_invoke237:TGPasswosdMainViewController.m">
       </ContextState>
       <ContextState
@@ -4447,6 +4475,14 @@
          <PersistentStrings>
             <PersistentString
                value = "item.result">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[TGModernSGViewController viewWillAppear:]:TGModernSGViewController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.view.frame">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -7546,6 +7582,9 @@
                value = "weakSelf.delegate">
             </PersistentString>
          </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[TL_topPeerCategoryPeers serialize:]:MTProto.m">
       </ContextState>
       <ContextState
          contextName = "__40-[TGPVDocumentsBehavior convertObjects:]_block_invoke:TGPVDocumentsBehavior.m">

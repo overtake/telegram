@@ -19,7 +19,10 @@
 -(void)loadView {
     [super loadView];
     
-    _stickersView = [[TGStickerPackEmojiController alloc] initWithFrame:self.view.bounds];
+    self.view.autoresizesSubviews = YES;
+    self.view.autoresizingMask = NSViewHeightSizable;
+    
+    _stickersView = [[TGStickerPackEmojiController alloc] initWithFrame:self.view.bounds packHeight:_esgViewController.isLayoutStyle ? 58 : 44];
     _stickersView.stickers.messagesViewController = _esgViewController.messagesViewController;
     
   //  [_stickersView.stickers load:NO]; 
@@ -37,6 +40,8 @@
     [_showGSControllerView.titleLabel sizeToFit];
     
     [_showGSControllerView setFrame:NSMakeRect(NSWidth(self.view.frame) - NSWidth(_showGSControllerView.titleLabel.frame) - 10, NSHeight(self.view.frame) - NSHeight(_showGSControllerView.titleLabel.frame) - 8, NSWidth(_showGSControllerView.titleLabel.frame), 20)];
+    
+    _showGSControllerView.autoresizingMask = NSViewMinYMargin;
     
     weak();
     

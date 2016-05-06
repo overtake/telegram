@@ -15,20 +15,14 @@ typedef enum {
     AutoPrivateAudio = 1 << 4,
     AutoGroupDocuments = 1 << 5,
     AutoPrivateDocuments = 1 << 6,
-    
     SendEnter = 1 << 7,
     SendCmdEnter = 1 << 8,
-    
-    OnlineFocused = 1 << 9,
+     OnlineFocused = 1 << 9,
     OnlineForever = 1 << 10,
-    
     AutoOpenDocuments = 1 << 11,
     OpenLinksInBackground = 1 << 12,
     SoundEffects = 1 << 13,
-    
-    
     BlockedContactsSynchronized = 1 << 14,
-    
     AutoGroupPhoto = 1 << 15,
     AutoPrivatePhoto = 1 << 16,
     PushNotifications = 1 << 17,
@@ -42,7 +36,8 @@ typedef enum {
     IncludeMutedUnreadCount = 1 << 25,
     DisableAutoplayGifSetting = 1 << 26,
     TripleLayoutSettings = 1 << 27,
-    HandleMediaKeysSettings = 2 << 28
+    HandleMediaKeysSettings = 2 << 28,
+    ESGLayoutSettings = 2 << 29
 } SettingsMask;
 
 
@@ -108,6 +103,8 @@ extern NSString *const kPermissionInlineBotLocationRequest;
 + (void)toggleLaunchAtStartup;
 
 
++(void)toggleDefaultEnabledESGLayout;
++(BOOL)isDefaultEnabledESGLayout;
 
 +(void)requestPermissionWithKey:(NSString *)permissionKey peer_id:(int)peer_id handler:(void (^)(bool success))handler;
 

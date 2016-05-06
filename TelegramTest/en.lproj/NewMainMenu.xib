@@ -26,12 +26,6 @@
                             <menuItem isSeparatorItem="YES" id="143">
                                 <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                             </menuItem>
-                            <menuItem title="Account Settings..." id="KdJ-69-lPo">
-                                <modifierMask key="keyEquivalentModifierMask"/>
-                                <connections>
-                                    <action selector="settings:" target="QPE-Oq-DBa" id="8Dh-eo-pOh"/>
-                                </connections>
-                            </menuItem>
                             <menuItem title="Preferences..." keyEquivalent="," id="iOx-Ud-JtE">
                                 <connections>
                                     <action selector="openSettings:" target="QPE-Oq-DBa" id="wSx-Ho-hCD"/>
@@ -172,17 +166,17 @@
                                     <items>
                                         <menuItem title="Find…" tag="1" keyEquivalent="f" id="C3w-Yr-qpO">
                                             <connections>
-                                                <action selector="findAction:" target="QPE-Oq-DBa" id="oSC-l4-vVX"/>
+                                                <action selector="findAction:" target="QPE-Oq-DBa" id="daG-Rb-xti"/>
                                             </connections>
                                         </menuItem>
                                         <menuItem title="Find Next" tag="2" keyEquivalent="g" id="iB5-ll-s6Z">
                                             <connections>
-                                                <action selector="findNext:" target="QPE-Oq-DBa" id="ex5-iq-oT1"/>
+                                                <action selector="findNextAction:" target="QPE-Oq-DBa" id="Us7-5Q-Jt1"/>
                                             </connections>
                                         </menuItem>
                                         <menuItem title="Find Previous" tag="3" keyEquivalent="G" id="lBV-JG-h7X">
                                             <connections>
-                                                <action selector="findPrevious:" target="QPE-Oq-DBa" id="hMR-zh-sZf"/>
+                                                <action selector="findPreviousAction:" target="QPE-Oq-DBa" id="HYp-Jz-2fY"/>
                                             </connections>
                                         </menuItem>
                                     </items>

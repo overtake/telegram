@@ -36,6 +36,7 @@ typedef enum {
 - (void)smileButtonClick:(BTRButton *)button;
 
 - (void)setState:(MessagesBottomViewState)state animated:(BOOL)animated;
+- (void)setSelectedSmileButton:(BOOL)selected;
 
 - (void)setContextBotString:(NSString *)bot;
 

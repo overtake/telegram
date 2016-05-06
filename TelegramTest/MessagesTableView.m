@@ -253,6 +253,10 @@
     } else {
         [self fixedResize];
     }
+    
+    if((newSize.width > 850 && !self.viewController.isShownESGController && self.viewController.canShownESGController && [SettingsArchiver isDefaultEnabledESGLayout]) || (newSize.width <= 500 && self.viewController.isShownESGController)) {
+        [self.viewController showOrHideESGController:NO toggle:NO];
+    }
 }
 
 -(void)scrollToItemInLiveResize {
@@ -289,7 +293,7 @@
         [item makeSizeByWidth:item.makeSize];
     }
     
-  //  [self reloadData];
+    [self reloadData];
     
     
     self.isLocked = NO;

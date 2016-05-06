@@ -230,6 +230,9 @@
 
 -(BOOL)removeItem:(TGRecentSearchRowItem *)item {
     
+//    
+//    [RPCRequest sendRequest:[TLAPI_contacts_resetTopPeerRating createWithCategory:<#(TLTopPeerCategory *)#> peer:<#(TLInputPeer *)#>] successHandler:<#^(id request, id response)successHandler#> errorHandler:<#^(id request, RpcError *error)errorHandler#>]
+    
     __block  NSMutableArray *peerIds;
     
     NSUInteger count = [self count];

@@ -126,7 +126,7 @@ static NSMutableDictionary *cache;
 }
 
 -(void)setFrame:(NSRect)frameRect {
-    [super setFrame:NSMakeRect(0, NSMinY(frameRect), NSWidth(self.controller.view.frame), frameRect.size.height)];
+    [super setFrame:NSMakeRect(0, NSMinY(frameRect), NSWidth(self.controller.table.containerView.frame), frameRect.size.height)];
     
     [self.progress setCenterByView:self];
     [self.field setCenterByView:self];
@@ -368,7 +368,8 @@ static NSMutableDictionary *cache;
             _pinnedContainer = nil;
             
             _pinnedContainer = [[MessageReplyContainer alloc] initWithFrame:NSMakeRect([MessageTableItem defaultContainerOffset], 0, NSWidth(self.frame) - [MessageTableItem defaultContainerOffset] * 2, replyObject.containerHeight)];
-            _pinnedContainer.autoresizingMask = NSViewWidthSizable;
+            
+            //_pinnedContainer.autoresizingMask = NSViewWidthSizable;
             
             _pinnedContainer.pinnedMessage = YES;
             
@@ -608,6 +609,9 @@ static NSMutableDictionary *cache;
 -(void)setFrameSize:(NSSize)newSize {
     [super setFrameSize:newSize];
     
+    [_field setFrameSize:NSMakeSize(NSWidth(self.frame) - 40, NSHeight(_field.frame))];
+    [_field setCenteredXByView:self];
+    [_pinnedContainer setFrame:NSMakeRect(NSMinX(_pinnedContainer.frame), NSMinY(_pinnedContainer.frame), newSize.width - NSMinX(_pinnedContainer.frame) * 2, NSHeight(_pinnedContainer.frame))];
     [_cancel setFrameOrigin:NSMakePoint(newSize.width - NSWidth(_cancel.frame), 2)];
 }
 

@@ -732,6 +732,8 @@ static TMTableView *tableStatic;
                 
                 float yTopOffset =  yScrollOffset  - (dif + item.height);
                 
+
+                
                 [_currentStickView setFrameOrigin:NSMakePoint(0, yTopOffset)];
                 [_currentStickView setValue:@(fabs(dif) == item.height) forKey:@"isStickView"];
                 

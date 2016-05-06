@@ -665,7 +665,7 @@
     [self.inputMessageTextField.containerView addSubview:self.progressView];
     
     
-    [self.smileButton addTarget:self action:@selector(smileButtonClick:) forControlEvents:BTRControlEventMouseEntered];
+    [self.smileButton addTarget:self action:@selector(smileButtonEntered:) forControlEvents:BTRControlEventMouseEntered];
     [self.smileButton addTarget:self action:@selector(smileButtonClick:) forControlEvents:BTRControlEventClick];
     [self.inputMessageTextField.containerView addSubview:self.smileButton];
     
@@ -1051,7 +1051,25 @@ static RBLPopover *popover;
     [self.smilePopover close];
 }
 
+- (void)smileButtonEntered:(BTRButton *)button {
+    
+    if(!([SettingsArchiver checkMaskedSetting:ESGLayoutSettings] && [self.messagesViewController canShownESGController])) {
+       [self smileButtonClick:button]; 
+    }
+    
+    //if(![SettingsArchiver isDefaultEnabledESGLayout] || ![self.messagesViewController canShownESGController] || NSWidth(self.messagesViewController.view.frame) < 800) {
+        //[
+   // }
+}
+
 - (void)smileButtonClick:(BTRButton *)button {
+    
+    if([SettingsArchiver checkMaskedSetting:ESGLayoutSettings] && [self.messagesViewController canShownESGController])
+    {
+        [self.messagesViewController showOrHideESGController:NO toggle:YES];
+        return;
+    }
+
     
     TGModernESGViewController *egsViewController = [TGModernESGViewController controller];
     
@@ -1303,6 +1321,10 @@ static RBLPopover *popover;
 
 }
 
+- (void)setSelectedSmileButton:(BOOL)selected {
+    [self.smileButton setSelected:selected];
+}
+
 - (void)sendButtonAction {
     
     if(_inlineBot)
@@ -1358,7 +1380,8 @@ static RBLPopover *popover;
 
 - (void)TMGrowingTextViewTextDidChange:(id)textView {
     
-    [self.messagesViewController saveInputText];
+    if(textView)
+        [self.messagesViewController saveInputText];
     
     
     if( (([self.inputMessageTextField.stringValue trim].length > 0 || self.template.type == TGInputMessageTemplateTypeEditMessage) || self.fwdContainer || _imageAttachmentsController.isShown || _recordedAudioPreview != nil)) {
@@ -2105,7 +2128,7 @@ static RBLPopover *popover;
         [self.normalView addSubview:_editMessageContainer];
         
         [self updateBottomHeight:YES];
-        [self TMGrowingTextViewTextDidChange:nil];
+        [self TMGrowingTextViewTextDidChange:self.inputMessageTextField];
         
     } else {
         
@@ -2116,7 +2139,9 @@ static RBLPopover *popover;
         
         if(update) {
             [self updateBottomHeight:YES];
-            [self TMGrowingTextViewTextDidChange:nil];
+            [self TMGrowingTextViewTextDidChange:self.inputMessageTextField];
+        } else {
+            [self TMGrowingTextViewTextDidChange:self.inputMessageTextField];
         }
         
     }
@@ -2146,7 +2171,7 @@ static RBLPopover *popover;
     
     self.inputMessageTextField.disableAnimation = disableAnimations;
     
-    [self.inputMessageTextField textDidChange:nil];
+    [self.inputMessageTextField textDidChange:self];
 
     self.inputMessageTextField.disableAnimation = YES;
     

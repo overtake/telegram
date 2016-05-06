@@ -388,7 +388,7 @@
 
 
     //Center
-    _table = [[MessagesTableView alloc] initWithFrame:NSMakeRect(0, 0, NSWidth(self.view.bounds) - 300, NSHeight(self.view.bounds))];
+    _table = [[MessagesTableView alloc] initWithFrame:NSMakeRect(0, 0, NSWidth(self.view.bounds) , NSHeight(self.view.bounds))];
     [self.table setAutoresizesSubviews:YES];
     [self.table.containerView setAutoresizingMask:NSViewHeightSizable | NSViewWidthSizable];
     [self.table setDelegate:self];
@@ -401,20 +401,17 @@
     [self.view addSubview:self.table.containerView];
     
     
-    _esgViewController = [[TGModernESGViewController alloc] initWithFrame:NSMakeRect(NSMaxX(self.table.frame), 0, 300, NSHeight(self.view.bounds) )];
-    [_esgViewController loadViewIfNeeded];
+    _esgViewController = [[TGModernESGViewController alloc] initWithFrame:NSMakeRect(NSMaxX(self.table.frame), 0, 350, NSHeight(self.view.bounds) )];
+    [_esgViewController setIsLayoutStyle:YES];
 
     _esgViewController.view.autoresizingMask = NSViewMinXMargin | NSViewHeightSizable;
-    _esgViewController.isNavigationBarHidden = YES;
-    [_esgViewController setIsLayoutStyle:YES];
     _esgViewController.messagesViewController = self;
     
-    [self.view addSubview:_esgViewController.view];
 
     
     self.typingView = [[MessageTypingView alloc] initWithFrame:self.view.bounds];
     
-    self.bottomView = [[MessagesBottomView alloc] initWithFrame:NSMakeRect(0, 0, self.view.bounds.size.width - 300, 58)];
+    self.bottomView = [[MessagesBottomView alloc] initWithFrame:NSMakeRect(0, 0, self.view.bounds.size.width , 58)];
     self.bottomView.messagesViewController = self;
     [self.bottomView setAutoresizesSubviews:YES];
     [self.bottomView setAutoresizingMask:NSViewWidthSizable];
@@ -447,7 +444,7 @@
     
    
     
-    self.searchMessagesView = [[SearchMessagesView alloc] initWithFrame:NSMakeRect(0, NSHeight(self.view.frame), NSWidth(self.table.frame), 40)];
+    self.searchMessagesView = [[SearchMessagesView alloc] initWithFrame:NSMakeRect(0, NSHeight(self.view.frame), NSWidth(self.table.containerView.frame), 40)];
     [self.searchMessagesView setAutoresizingMask:NSViewMinXMargin | NSViewMinYMargin | NSViewMaxXMargin | NSViewMinYMargin | NSViewWidthSizable];
     
     self.searchMessagesView.controller = self;
@@ -461,21 +458,21 @@
     [self.searchMessagesView setHidden:YES];
     
     
-    self.stickerPanel = [[StickersPanelView alloc] initWithFrame:NSMakeRect(0, NSHeight(self.bottomView.frame), NSWidth(self.table.frame), 76)];
+    self.stickerPanel = [[StickersPanelView alloc] initWithFrame:NSMakeRect(0, NSHeight(self.bottomView.frame), NSWidth(self.table.containerView.frame), 76)];
     self.stickerPanel.messagesViewController = self;
     
     [self.view addSubview:self.stickerPanel];
     
     [self.stickerPanel hide:NO];
     
-    self.hintView = [[TGMessagesHintView alloc] initWithFrame:NSMakeRect(0, NSHeight(self.bottomView.frame), NSWidth(self.table.frame), 100)];
+    self.hintView = [[TGMessagesHintView alloc] initWithFrame:NSMakeRect(0, NSHeight(self.bottomView.frame), NSWidth(self.table.containerView.frame), 100)];
     self.hintView.messagesViewController = self;
     [self.hintView setHidden:YES];
     
     [self.view addSubview:self.hintView];
     
     
-    _messagesAlertHintView = [[TGMessagesViewAlertHintView alloc] initWithFrame:NSMakeRect(0, NSHeight(self.view.frame) - 25, NSWidth(self.table.frame), 25)];
+    _messagesAlertHintView = [[TGMessagesViewAlertHintView alloc] initWithFrame:NSMakeRect(0, NSHeight(self.view.frame) - 25, NSWidth(self.table.containerView.frame), 25)];
     
     [self.view addSubview:_messagesAlertHintView];
     [_messagesAlertHintView setHidden:YES];
@@ -542,7 +539,73 @@ static NSMutableDictionary *savedScrolling;
     }
     
     
-   
+}
+
+
+-(BOOL)isShownESGController {
+    return self.esgViewController.view.superview != nil;
+}
+
+-(BOOL)canShownESGController {
+    return self.class == [MessagesViewController class] && self.conversation.canSendMessage && NSWidth(self.view.frame) > 850;
+}
+
+-(void)showOrHideESGController:(BOOL)animated toggle:(BOOL)toggle {
+    
+    static BOOL locked = NO;
+    
+    if(toggle)
+        [SettingsArchiver toggleDefaultEnabledESGLayout];
+    
+    if(!locked) {
+        
+        locked = YES;
+        
+        BOOL show = self.esgViewController.view.superview == nil;
+        
+        if(show) {
+            [self.view addSubview:self.esgViewController.view];
+            [self.esgViewController show];
+        }
+        
+        dispatch_block_t resize = ^{
+            [animated ? [self.table.containerView animator] : self.table.containerView  setFrameSize:NSMakeSize(!show ?  NSWidth(self.view.frame) : NSWidth(self.view.frame) - NSWidth(_esgViewController.view.frame), NSHeight(self.table.containerView.frame))];
+            [animated ? [self.table animator] : self.table setFrameSize:NSMakeSize(!show ?  NSWidth(self.view.frame) : NSWidth(self.view.frame) - NSWidth(_esgViewController.view.frame), NSHeight(self.table.frame))];
+            
+            [animated ? [self.esgViewController.view animator] : self.esgViewController.view setFrameOrigin:NSMakePoint(!show ? NSMaxX(self.view.frame) : NSMaxX(self.view.frame) - NSWidth(_esgViewController.view.frame), NSMinY(self.esgViewController.view.frame))];
+            [animated ? [self.bottomView animator] : self.bottomView setFrameSize:NSMakeSize(!show ?  NSWidth(self.view.frame) : (NSWidth(self.view.frame) - NSWidth(_esgViewController.view.frame)), NSHeight(self.bottomView.frame))];
+            [animated ? [self.esgViewController.view animator] : self.esgViewController.view setFrameSize:NSMakeSize(NSWidth(_esgViewController.view.frame), NSHeight(self.view.frame))];
+            [animated ? [self.stickerPanel animator] : self.stickerPanel setFrameSize:NSMakeSize(!show ?  NSWidth(self.view.frame) : NSWidth(self.view.frame) - NSWidth(_esgViewController.view.frame), NSHeight(self.stickerPanel.frame))];
+            [animated ? [self.topInfoView animator] : self.topInfoView setFrameSize:NSMakeSize(!show ?  NSWidth(self.view.frame) : NSWidth(self.view.frame) - NSWidth(_esgViewController.view.frame), NSHeight(self.stickerPanel.frame))];
+            [animated ? [self.searchMessagesView animator] : self.searchMessagesView setFrameSize:NSMakeSize(!show ?  NSWidth(self.view.frame) : NSWidth(self.view.frame) - NSWidth(_esgViewController.view.frame), NSHeight(self.stickerPanel.frame))];
+
+        };
+        
+        dispatch_block_t complete = ^{
+            if(!show) {
+                [self.esgViewController.view removeFromSuperview];
+                [self.esgViewController close];
+            }
+            
+            locked = NO;
+            
+            [self.bottomView setSelectedSmileButton:self.messagesViewController.isShownESGController];
+        };
+        
+        if(animated) {
+            [NSAnimationContext runAnimationGroup:^(NSAnimationContext * _Nonnull context) {
+                
+                resize();
+                
+            } completionHandler:complete];
+        } else {
+            resize();
+            complete();
+        }
+        
+        
+    }
+    
     
 }
 
@@ -582,7 +645,7 @@ static NSMutableDictionary *savedScrolling;
                         [self.table beginUpdates];
                         [self.table noteHeightOfRowsWithIndexesChanged:[NSIndexSet indexSetWithIndex:index]];
                         
-                        [self.table endUpdates];
+                        
                         
                         NSTableRowView *rowView = [self.table rowViewAtRow:index makeIfNecessary:NO];
                         
@@ -590,13 +653,17 @@ static NSMutableDictionary *savedScrolling;
                         
                         MessageTableCell *nCell = (MessageTableCell *) [self tableView:_table viewForTableColumn:nil row:index];
                         
+
                         
+                        
+                        [self.table endUpdates];
                         [nCell setFrameSize:NSMakeSize(NSWidth(cell.frame), item.viewSize.height)];
                         
 #ifdef TGDEBUG
-                        assert(cell != nCell);
+                        assert(nCell.class == item.viewClass);
 #endif
-                        
+                        if(nCell.class != item.viewClass)
+                            return;
                         
                         POPBasicAnimation *fadeOut = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerOpacity];
                         fadeOut.fromValue = @(1.0f);
@@ -911,6 +978,16 @@ static NSMutableDictionary *savedScrolling;
         [self.searchMessagesView becomeFirstResponder];
     }];
     
+}
+
+
+-(void)nextSearchResult {
+    if(self.searchBoxIsVisible)
+        [self.searchMessagesView next];
+}
+-(void)prevSearchResult {
+    if(self.searchBoxIsVisible)
+        [self.searchMessagesView prev];
 }
 
 -(BOOL)searchBoxIsVisible {
@@ -1580,7 +1657,7 @@ static NSTextAttachment *headerMediaIcon() {
     
     [_messagesAlertHintView setText:text backgroundColor:color];
     
-    [_messagesAlertHintView setFrameSize:NSMakeSize(NSWidth(self.table.frame), NSHeight(_messagesAlertHintView.frame))];
+    [_messagesAlertHintView setFrameSize:NSMakeSize(NSWidth(self.table.containerView.frame), NSHeight(_messagesAlertHintView.frame))];
     
     void (^runAnimation)(BOOL hide) = ^(BOOL hide){
         [NSAnimationContext runAnimationGroup:^(NSAnimationContext * _Nonnull context) {
@@ -1748,7 +1825,7 @@ static NSTextAttachment *headerMediaIcon() {
 
 - (void)jumpToBottomButtonDisplay {
     [self.jumpToBottomButton sizeToFit];
-    [self.jumpToBottomButton setFrameOrigin:NSMakePoint(self.view.bounds.size.width - self.jumpToBottomButton.bounds.size.width - 30, self.bottomView.bounds.size.height + 30)];
+    [self.jumpToBottomButton setFrameOrigin:NSMakePoint(self.table.bounds.size.width - self.jumpToBottomButton.bounds.size.width - 30, self.bottomView.bounds.size.height + 30)];
 }
 
 
@@ -2868,9 +2945,7 @@ static NSTextAttachment *headerMediaIcon() {
             [self showMessage:savedScrolling[@(_conversation.peer_id)][@"message"] fromMsg:nil flags:ShowMessageTypeSaveScrolled];
         } else  {
             
-           
             [self flushMessages];
-            
             [self loadhistory:0 toEnd:YES prev:NO isFirst:YES];
         }
         
@@ -2878,8 +2953,12 @@ static NSTextAttachment *headerMediaIcon() {
         
         if(self.conversation.type == DialogTypeChannel) {
             [self.historyController startChannelPolling];
-           
         }
+         
+         
+         if((!self.conversation.canSendMessage && self.isShownESGController) || (self.canShownESGController && !self.isShownESGController && [SettingsArchiver isDefaultEnabledESGLayout])) {
+             [self showOrHideESGController:NO toggle:NO];
+         }
     }
 }
 
@@ -3896,7 +3975,7 @@ static NSTextAttachment *headerMediaIcon() {
         
         void (^fwd_blck) (NSArray *fwd_msgs) = ^(NSArray *fwd_messages) {
             ForwardSenterItem *sender = [[ForwardSenterItem alloc] initWithMessages:fwd_messages forConversation:conversation additionFlags:conversation != _conversation ? 0 : self.senderFlags];
-            sender.tableItems = [[self messageTableItemsFromMessages:sender.fakes] reversedArray];
+            sender.tableItems = [self messageTableItemsFromMessages:sender.fakes];
             [self.historyController addItems:sender.tableItems conversation:conversation callback:callback sentControllerCallback:nil];
         };
         

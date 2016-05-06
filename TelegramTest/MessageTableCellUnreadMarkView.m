@@ -56,7 +56,7 @@
 -(void)setFrameSize:(NSSize)newSize {
     [super setFrameSize:newSize];
     
-    [self.textField setFrameOrigin:NSMakePoint(roundf((NSWidth(self.messagesViewController.view.frame) - NSWidth(_textField.frame))/2), roundf((self.item.viewSize.height - NSHeight(_textField.frame))/2))];
+    [self.textField setFrameOrigin:NSMakePoint(roundf((NSWidth(self.item.table.frame) - NSWidth(_textField.frame))/2), roundf((self.item.viewSize.height - NSHeight(_textField.frame))/2))];
 }
 
 - (void)drawRect:(NSRect)dirtyRect {

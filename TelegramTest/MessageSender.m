@@ -427,7 +427,7 @@
                             isCurrentCategory = [obj.category isKindOfClass:[TL_topPeerCategoryBotsInline class]];
                             
                             if(isCurrentCategory)
-                            currentClass = [TL_topPeerCategoryBotsInline class];
+                                currentClass = [TL_topPeerCategoryBotsInline class];
                             
                         } else if(user.isBot) {
                             isCurrentCategory = [obj.category isKindOfClass:[TL_topPeerCategoryBotsPM class]];
@@ -439,7 +439,7 @@
                             isCurrentCategory = [obj.category isKindOfClass:[TL_topPeerCategoryCorrespondents class]];
                             
                             if(isCurrentCategory)
-                            currentClass = [TL_topPeerCategoryCorrespondents class];
+                                currentClass = [TL_topPeerCategoryCorrespondents class];
                         }
                     }
                     
@@ -494,10 +494,7 @@
                 }];
                 
                 if(!saved) {
-                    NSMutableArray *peers = [NSMutableArray array];
-                    [peers addObject:[TL_topPeer createWithPeer:peer rating:drating]];
-                    [top addObject:[TL_topPeerCategoryPeers createWithCategory:[[currentClass alloc] init] n_count:1 peers:peers]];
-                    [transaction setObject:top forKey:@"categories" inCollection:TOP_PEERS];
+                    [transaction removeObjectForKey:@"categories" inCollection:TOP_PEERS];
                 }
             }
 

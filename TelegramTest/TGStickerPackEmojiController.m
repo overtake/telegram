@@ -168,22 +168,23 @@
     // Drawing code here.
 }
 
--(instancetype)initWithFrame:(NSRect)frameRect {
+-(instancetype)initWithFrame:(NSRect)frameRect packHeight:(int)packHeight {
     if(self = [super initWithFrame:frameRect]) {
 
        
         
+        self.autoresizingMask = NSViewHeightSizable;
         
         _packs = [NSMutableArray array];
         
-        _tableView = [[TGHorizontalTableView alloc] initWithFrame:NSMakeRect(0, 0, NSWidth(frameRect), 44)];
+        _tableView = [[TGHorizontalTableView alloc] initWithFrame:NSMakeRect(0, 0, NSWidth(frameRect), packHeight)];
         _tableView.delegate = self;
         
         [self addSubview:_tableView];
         
         weak();
         
-        _stickers = [[TGAllStickersTableView alloc] initWithFrame:NSMakeRect(0, NSHeight(_tableView.frame), NSWidth(frameRect), NSHeight(frameRect) - 44)];
+        _stickers = [[TGAllStickersTableView alloc] initWithFrame:NSMakeRect(0, NSHeight(_tableView.frame), NSWidth(frameRect), NSHeight(frameRect) - NSHeight(_tableView.frame))];
         [_stickers load:NO];
         [_stickers setDidNeedReload:^{
             [weakSelf reload:NO];
@@ -191,11 +192,12 @@
         
        [self addSubview:_stickers.containerView];
         
-        _gifContainer = [[TGGifKeyboardView alloc] initWithFrame:NSMakeRect(0, NSHeight(_tableView.frame), NSWidth(frameRect), NSHeight(frameRect) - 44)];
+        _gifContainer = [[TGGifKeyboardView alloc] initWithFrame:NSMakeRect(0, NSHeight(_tableView.frame), NSWidth(frameRect), NSHeight(frameRect) - NSHeight(_tableView.frame))];
         [self addSubview:_gifContainer];
         [_gifContainer setHidden:YES];
         
         
+        _gifContainer.autoresizingMask = NSViewHeightSizable;
         [self addScrollEvent];
         
     }
@@ -206,6 +208,7 @@
 -(void)setEsgViewController:(TGModernESGViewController *)esgViewController {
     _esgViewController = esgViewController;
     _gifContainer.messagesViewController = esgViewController.messagesViewController;
+    
 }
 
 
@@ -371,7 +374,6 @@
     if(packItem.packId == -2) {
         
         
-        [self.esgViewController forceClose];
         
         TGStickersSettingsViewController *settingViewController = [[TGStickersSettingsViewController alloc] initWithFrame:NSZeroRect];
         
@@ -379,7 +381,12 @@
         
         settingViewController.action.editable = YES;
         
-        [self.esgViewController.messagesViewController.navigationViewController pushViewController:settingViewController animated:YES];
+        if(!self.esgViewController.isLayoutStyle) {
+            [self.esgViewController forceClose];
+            [self.esgViewController.messagesViewController.navigationViewController pushViewController:settingViewController animated:YES];
+        } else
+            [self.esgViewController.navigationViewController pushViewController:settingViewController animated:YES];
+        
         
 
         return;
@@ -422,11 +429,19 @@
     
 }
 
+-(void)setFrameSize:(NSSize)newSize {
+    [super setFrameSize:newSize];
+}
+
+-(void)setFrame:(NSRect)frame {
+    [super setFrame:frame];
+}
+
 - (NSUInteger)numberOfRowsInListView:(PXListView*)aListView {
     return _packs.count;
 }
 - (CGFloat)listView:(PXListView*)aListView heightOfRow:(NSUInteger)row {
-    return 44.0;
+    return _esgViewController.isLayoutStyle ? 58 : 44;
 }
 - (CGFloat)listView:(PXListView*)aListView widthOfRow:(NSUInteger)row {
     return MAX(roundf(NSWidth(self.frame)/(_packs.count + 1)),48);

@@ -160,6 +160,8 @@ typedef enum {
 
 -(void)showSearchBox;
 -(BOOL)searchBoxIsVisible;
+-(void)nextSearchResult;
+-(void)prevSearchResult;
 
 -(NSArray *)messageList;
 
@@ -196,6 +198,7 @@ typedef enum {
 -(void)forceSetLastSentMessage;
 -(TGInputMessageTemplateType)templateType;
 
-
-
+-(void)showOrHideESGController:(BOOL)animated toggle:(BOOL)toggle;
+-(BOOL)isShownESGController;
+-(BOOL)canShownESGController;
 @end
