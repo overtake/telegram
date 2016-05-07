@@ -40,7 +40,7 @@
     
     [self.textAttributed setAlignment:NSLeftTextAlignment range:self.textAttributed.range];
     
-    [self updateEntities];
+  //  [self updateEntities];
     [self updateWebPage];
     
     return self;
@@ -274,13 +274,9 @@
     if([self isWebPage]) {
         
         remove_global_dispatcher(_requestKey);
-        
 
          _webpage = [TGWebpageObject objectForWebpage:self.message.media.webpage tableItem:self]; // its only youtube.
-        
-        if(self.blockWidth != 0)
-            [self makeSizeByWidth:self.blockWidth];
-        
+
         
     } else if([self isWebPagePending]) {
         

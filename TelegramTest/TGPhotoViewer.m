@@ -124,7 +124,7 @@ static const int controlsHeight = 75;
                                                                                  options: (NSTrackingMouseEnteredAndExited | NSTrackingMouseMoved | NSTrackingActiveInKeyWindow )
                                                                                    owner:self userInfo:nil]];
     
-    self.background.backgroundColor = NSColorFromRGB(0x222222);
+    self.background.backgroundColor = NSColorFromRGBWithAlpha(0x222222, 0.7);
     
     weak();
     
@@ -137,7 +137,7 @@ static const int controlsHeight = 75;
         
         
         if(location.x > containerPoint.x) {
-            [TGPhotoViewer nextItem];
+            [[TGPhotoViewer viewer] hide];
         } else
             [TGPhotoViewer prevItem];
        
@@ -227,7 +227,7 @@ static const int controlsHeight = 75;
 
 -(void)updateStyle {
     
-    self.background.layer.backgroundColor =  NSColorFromRGB(0x222222).CGColor;
+    self.background.layer.backgroundColor = NSColorFromRGBWithAlpha(0x222222, 0.7).CGColor;
     
     [self.photoContainer updateSize];
     
@@ -435,12 +435,16 @@ static TGPhotoViewer *viewer;
    
     if(!viewer)
     {
-        viewer = [[TGPhotoViewer alloc] initWithContentRect:NSMakeRect(roundf((NSWidth([NSScreen mainScreen].frame) - 600)/2.0f), roundf((NSHeight([NSScreen mainScreen].frame) - 600)/2.0f), 600, 600) styleMask:NSClosableWindowMask | NSResizableWindowMask | NSTitledWindowMask backing:NSBackingStoreRetained defer:YES screen:[NSScreen mainScreen]];
-        [viewer setLevel:NSNormalWindowLevel];
+        
+        //NSMakeRect(roundf((NSWidth([NSScreen mainScreen].frame) - 600)/2.0f), roundf((NSHeight([NSScreen mainScreen].frame) - 600)/2.0f), 600, 600)
+        ///NSClosableWindowMask | NSResizableWindowMask | NSTitledWindowMask
+        viewer = [[TGPhotoViewer alloc] initWithContentRect:NSMakeRect(0, 0, NSWidth([NSScreen mainScreen].frame), NSHeight([NSScreen mainScreen].frame)) styleMask:NSBorderlessWindowMask backing:NSBackingStoreRetained defer:YES screen:[NSScreen mainScreen]];
+        [viewer setLevel:NSScreenSaverWindowLevel];
+        [viewer setOpaque:YES];
         viewer.releasedWhenClosed = NO;
         [viewer setMinSize:NSMakeSize(400, 400)];
         viewer.contentView.wantsLayer = YES;
-        viewer.backgroundColor = NSColorFromRGB(0x222222);
+        viewer.backgroundColor = [NSColor clearColor];
         
     }
     return viewer;
@@ -669,8 +673,8 @@ static TGPhotoViewer *viewer;
     
     if(_viewerStyle == TGPhotoViewerFullStyle) {
       //  dispatch_async(dispatch_get_current_queue(), ^{
-        [self setCollectionBehavior:NSWindowCollectionBehaviorDefault];
-        [self toggleFullScreen:self];
+      //  [self setCollectionBehavior:NSWindowCollectionBehaviorDefault];
+      //  [self toggleFullScreen:self];
       //  });
         
     }
@@ -868,9 +872,9 @@ static TGPhotoViewer *viewer;
 
 -(void)hide {
     
-   // if(!self.photoContainer.ifVideoFullScreenPlayingNeedToogle) {
-    //    [self orderOut:self];
-   // }
+    if(!self.photoContainer.ifVideoFullScreenPlayingNeedToogle) {
+        [self orderOut:self];
+    }
 
 }
 

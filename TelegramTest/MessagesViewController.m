@@ -3226,8 +3226,11 @@ static NSTextAttachment *headerMediaIcon() {
     
     _needNextRequest = NO;
     
+    
+    
 
     [self.historyController request:!prev anotherSource:YES sync:isFirst selectHandler:^(NSArray *prevResult, NSRange range1, id controller) {
+        
         
         NSUInteger pos = prev ? 0 : self.messages.count;
         
@@ -3246,6 +3249,7 @@ static NSTextAttachment *headerMediaIcon() {
             
             [self addScrollEvent];
         }
+        
 
     }];
 }
@@ -3327,7 +3331,7 @@ static NSTextAttachment *headerMediaIcon() {
 - (NSArray *)messageTableItemsFromMessages:(NSArray *)input {
     NSMutableArray *array = [NSMutableArray array];
     
-
+    test_start_group(@"test");
     for(TLMessage *message in input) {
         MessageTableItem *item = [MessageTableItem messageItemFromObject:message];        
 
@@ -3336,6 +3340,9 @@ static NSTextAttachment *headerMediaIcon() {
             [array addObject:item];
         }
     }
+    
+     test_step_group(@"test");
+    test_release_group(@"test");
 
     return array;
 }

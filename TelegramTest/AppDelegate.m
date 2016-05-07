@@ -414,11 +414,46 @@ void exceptionHandler(NSException * exception)
             }
             
             if([result.window isKindOfClass:[QLPreviewPanel class]] || [result.window isKindOfClass:[NSPanel class]] || [result.window isKindOfClass:[TGPhotoViewer class]]) {
-                  return [[NSEvent alloc] init];
+                 return result;
             }
             
         }
         
+        if([TGPhotoViewer isVisibility]) {
+            
+            
+            if(incomingEvent.keyCode == 53) {
+                [[TGPhotoViewer viewer] hide];
+                return [[NSEvent alloc] init];
+            }
+            
+            if(incomingEvent.keyCode == 123) {
+                [TGPhotoViewer prevItem];
+                return [[NSEvent alloc] init];
+            }
+            
+            if(incomingEvent.keyCode == 124) {
+                [TGPhotoViewer nextItem];
+                return [[NSEvent alloc] init];
+            }
+            
+            if(incomingEvent.keyCode == 49 ){
+                [[TGPhotoViewer viewer] hide];
+                return [[NSEvent alloc] init];
+            }
+            
+            if(incomingEvent.keyCode == 24 || incomingEvent.keyCode == 69) {
+                [TGPhotoViewer increaseZoom];
+                return [[NSEvent alloc] init];
+            }
+            
+            if(incomingEvent.keyCode == 27 || incomingEvent.keyCode == 78) {
+                [TGPhotoViewer decreaseZoom];
+                return [[NSEvent alloc] init];
+            }
+            
+            return result;
+        }
         
         
         if([Telegram rightViewController].navigationViewController.isLocked)

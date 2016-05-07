@@ -317,6 +317,7 @@ typedef enum {
 
 -(void)setString:(NSString *)string {
     [_customMentions removeAllObjects];
+    
     [super setString:string];
     
    
@@ -391,13 +392,18 @@ typedef enum {
     if(mentions.count > 0) {
         
         
+        
         [mentions enumerateObjectsUsingBlock:^(NSTextCheckingResult * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            
             
             TGCustomMentionRange *custom = [[TGCustomMentionRange alloc] initWithOriginalText:[copy substringWithRange:obj.range] range:obj.range];
             
             [customMentions addObject:custom];
             
-            [copy replaceCharactersInRange:NSMakeRange(obj.range.location, obj.range.length) withString:[NSString stringWithFormat:@"@(%@)",custom.name]];
+            NSString *mention = [NSString stringWithFormat:@"@(%@)",custom.name];
+            
+            [copy replaceCharactersInRange:NSMakeRange(obj.range.location, obj.range.length) withString:mention];
+            
             
             *stop = YES;
             
@@ -425,11 +431,13 @@ typedef enum {
         
         NSString *m = [self parseMentions:copy mentions:mentions];
         
+        [[self textStorage] setAttributes:nil range:NSMakeRange(0, value.length)];
+        
+        NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:@"(@\\([^\\(\\)]+\\))" options:NSRegularExpressionCaseInsensitive error:nil];
+        NSArray *fakeMentions = [regex matchesInString:copy options:0 range:NSMakeRange(0, [copy length])];
         
         if(_customMentions.count > 0) {
-            NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:@"(@\\([^\\(\\)]+\\))" options:NSRegularExpressionCaseInsensitive error:nil];
-            NSArray *fakeMentions = [regex matchesInString:copy options:0 range:NSMakeRange(0, [copy length])];
-            
+
             if(fakeMentions.count < _customMentions.count + mentions.count) {
                 
                 NSString *real = self.stringValue;
@@ -446,13 +454,22 @@ typedef enum {
                 
                
             }
+
         }
+        
+        
+        
         NSMutableDictionary *cMentions = [_customMentions mutableCopy];
                                      
         [mentions enumerateObjectsUsingBlock:^(TGCustomMentionRange *obj, NSUInteger idx, BOOL * _Nonnull stop) {
             
             cMentions[@(_customMentions.count + idx)] = obj;
             
+        }];
+        
+        [fakeMentions enumerateObjectsUsingBlock:^(NSTextCheckingResult *obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            [[self textStorage] addAttribute:NSForegroundColorAttributeName value:LINK_COLOR range:obj.range];
+            [[self textStorage] addAttribute:NSUnderlineStyleAttributeName value:[NSNumber numberWithInt:NSUnderlineStyleNone] range:obj.range];
         }];
         
         if(![m isEqualToString:value])
@@ -545,6 +562,10 @@ typedef enum {
     self.maxHeight = 250;
     self.minHeight = 33;
     
+    [self setRichText:YES];
+    
+    
+
     [SettingsArchiver addEventListener:self];
     
     self.frame = NSMakeRect(0, 0, self.frame.size.width - 90, 200);

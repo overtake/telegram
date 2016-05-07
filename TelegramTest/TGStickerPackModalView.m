@@ -88,6 +88,22 @@ static NSImage * greenBackgroundImage(NSSize size) {
             
             [RPCRequest sendRequest:[TLAPI_messages_installStickerSet createWithStickerset:[TL_inputStickerSetID createWithN_id:weakSelf.pack.set.n_id access_hash:weakSelf.pack.set.access_hash] disabled:NO] successHandler:^(id request, id response) {
                 
+                if([response isKindOfClass:[TL_boolTrue class]]) {
+                    [[Storage yap] readWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
+                        
+                        NSDictionary *info  = [transaction objectForKey:@"modern_stickers" inCollection:STICKERS_COLLECTION];
+                        
+                        NSMutableDictionary *stickers = info[@"serialized"];
+                        
+
+                        NSMutableDictionary *sets = info[@"sets"];
+                        
+                        sets[@(weakSelf.pack.set.n_id)] = weakSelf.pack.set;
+                        stickers[@(weakSelf.pack.set.n_id)] = weakSelf.pack.documents;
+                        
+                    }];
+                }
+                
                 dispatch_after_seconds(0.2, ^{
                     [TMViewController hideModalProgressWithSuccess];
                 });
