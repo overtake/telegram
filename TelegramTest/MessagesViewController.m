@@ -581,6 +581,7 @@ static NSMutableDictionary *savedScrolling;
             [animated ? [self.stickerPanel animator] : self.stickerPanel setFrameSize:NSMakeSize(!show ?  NSWidth(self.view.frame) : NSWidth(self.view.frame) - NSWidth(_esgViewController.view.frame), NSHeight(self.stickerPanel.frame))];
             [animated ? [self.topInfoView animator] : self.topInfoView setFrameSize:NSMakeSize(!show ?  NSWidth(self.view.frame) : NSWidth(self.view.frame) - NSWidth(_esgViewController.view.frame), NSHeight(self.stickerPanel.frame))];
             [animated ? [self.searchMessagesView animator] : self.searchMessagesView setFrameSize:NSMakeSize(!show ?  NSWidth(self.view.frame) : NSWidth(self.view.frame) - NSWidth(_esgViewController.view.frame), NSHeight(self.stickerPanel.frame))];
+            [self.noMessagesView setFrameSize:NSMakeSize(!show ?  NSWidth(self.view.frame) : NSWidth(self.view.frame) - NSWidth(_esgViewController.view.frame), NSHeight(self.noMessagesView.frame))];
             
         };
         
@@ -759,9 +760,8 @@ static NSMutableDictionary *savedScrolling;
         NSUInteger index = [self indexOfObject:item];
         
         if(index != NSNotFound) {
-            TGModernMessageCellContainerView *cell = (TGModernMessageCellContainerView *)[self cellForRow:index];
             
-            [cell setItem:item];
+            [self.table reloadDataForRowIndexes:[NSIndexSet indexSetWithIndex:index] columnIndexes:[NSIndexSet indexSetWithIndex:0]];
             [self.table noteHeightOfRowsWithIndexesChanged:[NSIndexSet indexSetWithIndex:index]];
         }
     };
@@ -3334,7 +3334,6 @@ static NSTextAttachment *headerMediaIcon() {
 - (NSArray *)messageTableItemsFromMessages:(NSArray *)input {
     NSMutableArray *array = [NSMutableArray array];
     
-    test_start_group(@"test");
     for(TLMessage *message in input) {
         MessageTableItem *item = [MessageTableItem messageItemFromObject:message];        
 
@@ -3344,8 +3343,6 @@ static NSTextAttachment *headerMediaIcon() {
         }
     }
     
-     test_step_group(@"test");
-    test_release_group(@"test");
 
     return array;
 }
