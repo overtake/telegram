@@ -321,49 +321,11 @@ static NSString *kArchivedSettings = @"kArchivedSettings";
                 
             NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
             
-            if (![defaults objectForKey:@"check_push_once"]) {
-                [defaults setObject:@"once" forKey:@"check_push_once"];
-                
-                [SettingsArchiver addSetting:PushNotifications];
-            }
             
-            
-            if(![defaults objectForKey:@"icloud_sync_once"]) {
-                [defaults setObject:@"once" forKey:@"icloud_sync_once"];
+            if(![defaults objectForKey:@"stickerslayout"]) {
+                [defaults setObject:@"once" forKey:@"stickerslayout"];
                 
-                [SettingsArchiver addSetting:iCloudSynch];
-
-            }
-            
-            if(![defaults objectForKey:@"status_bar_sync_once"]) {
-                [defaults setObject:@"once" forKey:@"status_bar_sync_once"];
-                
-                [SettingsArchiver addSetting:StatusBarIcon];
-                
-            }
-            
-            if(![defaults objectForKey:@"SmartNotifications"]) {
-                [defaults setObject:@"once" forKey:@"SmartNotifications"];
-                
-                [SettingsArchiver addSetting:SmartNotifications];
-                
-            }
-            if(![defaults objectForKey:@"MarkedInputText"]) {
-                [defaults setObject:@"once" forKey:@"MarkedInputText"];
-                
-                [SettingsArchiver addSetting:MarkedInputText];    
-            }
-            
-            if(![defaults objectForKey:@"MessagesPreview"]) {
-                [defaults setObject:@"once" forKey:@"MessagesPreview"];
-                
-                [SettingsArchiver addSetting:MessagesNotificationPreview];
-            }
-            
-            if(![defaults objectForKey:@"IncludeMutedUnreadCount"]) {
-                [defaults setObject:@"once" forKey:@"IncludeMutedUnreadCount"];
-                
-                [SettingsArchiver addSetting:IncludeMutedUnreadCount];
+                [SettingsArchiver addSetting:ESGLayoutSettings];
             }
             
         });

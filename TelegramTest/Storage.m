@@ -1919,6 +1919,7 @@ TL_localMessage *parseMessage(FMResultSet *result) {
 
 
 -(void)insertDialogs:(NSArray *)dialogs {
+    
         
     [queue inDatabase:^(FMDatabase *db) {
         

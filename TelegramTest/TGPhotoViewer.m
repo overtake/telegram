@@ -648,6 +648,9 @@ static TGPhotoViewer *viewer;
 -(void)makeKeyAndOrderFront:(id)sender {
     
     self.invokeWindow = appWindow();
+    
+    [self setFrame:NSMakeRect(0, 0, NSWidth([NSScreen mainScreen].frame), NSHeight([NSScreen mainScreen].frame)) display:YES];
+    
     //
     
     [Notification addObserver:self selector:@selector(didReceivedMedia:) name:MEDIA_RECEIVE];

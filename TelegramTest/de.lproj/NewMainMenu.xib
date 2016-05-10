@@ -26,12 +26,6 @@
                             <menuItem isSeparatorItem="YES" id="143">
                                 <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                             </menuItem>
-                            <menuItem title="Kontoeinstellungen" id="KdJ-69-lPo">
-                                <modifierMask key="keyEquivalentModifierMask"/>
-                                <connections>
-                                    <action selector="settings:" target="QPE-Oq-DBa" id="8Dh-eo-pOh"/>
-                                </connections>
-                            </menuItem>
                             <menuItem title="Einstellungen..." keyEquivalent="," id="iOx-Ud-JtE">
                                 <connections>
                                     <action selector="openSettings:" target="QPE-Oq-DBa" id="wSx-Ho-hCD"/>
@@ -94,7 +88,7 @@
                     </menu>
                 </menuItem>
                 <menuItem title="Ablage" id="9aa-b0-kdd">
-                    <menu key="submenu" title="File" id="zZt-zA-b9J">
+                    <menu key="submenu" title="Ablage" id="zZt-zA-b9J">
                         <items>
                             <menuItem title="Medien anzeigen" keyEquivalent="y" id="lWR-cc-Xrk">
                                 <connections>
@@ -119,7 +113,7 @@
                     </menu>
                 </menuItem>
                 <menuItem title="Bearbeiten" id="cEF-g4-S1O">
-                    <menu key="submenu" title="Edit" id="2f6-tO-6dI">
+                    <menu key="submenu" title="Bearbeiten" id="2f6-tO-6dI">
                         <items>
                             <menuItem title="Widerrufen" keyEquivalent="z" id="kg3-05-Cu0">
                                 <connections>

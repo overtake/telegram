@@ -856,7 +856,7 @@
                     
                 }];
                 
-                [[Storage manager] insertDialogs:last.allValues];
+                
                 
                 if([message.media isKindOfClass:[TL_messageMediaPhoto class]]) {
                     
@@ -866,6 +866,8 @@
                 }
 
             }];
+            
+            [[Storage manager] insertDialogs:last.allValues];
             
             
             [self add:last.allValues];

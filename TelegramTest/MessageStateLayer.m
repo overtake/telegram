@@ -80,9 +80,10 @@
     
     if((state == MessageTableCellUnread || state == MessageTableCellRead)) {
         
-        if(self.container.item.message.isPost) {
+        if(self.container.item.viewsCountAndSign.length > 0) {
             
-            _channelImageView = imageViewWithImage(image_ChannelViews());
+            if(self.container.item.message.isPost)
+                _channelImageView = imageViewWithImage(image_ChannelViews());
             
             [self.checkMark1 removeFromSuperview];
             [self.checkMark2 removeFromSuperview];
@@ -97,9 +98,13 @@
             [_viewsCountText setFrameOrigin:CGPointMake(NSWidth(self.frame) - NSWidth(_viewsCountText.frame) - 2,0)];
             [self addSubview:_viewsCountText];
             
-            [_channelImageView setFrameOrigin:NSMakePoint(NSMinX(_viewsCountText.frame) - NSWidth(_channelImageView.frame) - 2, 3)];
+            if(self.container.item.message.isPost) {
+                [_channelImageView setFrameOrigin:NSMakePoint(NSMinX(_viewsCountText.frame) - NSWidth(_channelImageView.frame) - 2, 3)];
+                
+                [self addSubview:_channelImageView];
+            }
             
-            [self addSubview:_channelImageView];
+           
 
         } else {
             

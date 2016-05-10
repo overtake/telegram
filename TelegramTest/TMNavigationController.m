@@ -299,6 +299,8 @@ static const int navigationOffset = 48;
     MTLog(@"navigation controller isAnimate = %@", isAnimate ? @"YES" : @"NO");
     assert([NSThread isMainThread]);
     
+    [oldViewController viewWillDisappear:NO];
+
     
     if(newViewController.isNavigationBarHidden) {
         [newView setFrameSize:NSMakeSize(self.view.bounds.size.width, self.view.bounds.size.height)];
@@ -325,7 +327,6 @@ static const int navigationOffset = 48;
         
         [newView setHidden:NO];
         
-        [oldViewController viewWillDisappear:NO];
         [newViewController viewWillAppear:NO];
         [self.containerView addSubview:newView positioned:NSWindowAbove relativeTo:oldView];
         
@@ -362,7 +363,6 @@ static const int navigationOffset = 48;
     
         float duration = 0.25;
         
-        [oldViewController viewWillDisappear:NO];
         [newViewController viewWillAppear:NO];
         
         float animOldFrom,animOldTo,animNewTo,animNewFrom = 0;

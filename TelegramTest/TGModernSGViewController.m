@@ -47,7 +47,7 @@
     
     [_showGSControllerView addBlock:^(BTRControlEvents events) {
         
-        [weakSelf.esgViewController.navigationViewController goBackWithAnimation:YES];
+        [weakSelf.esgViewController showEmojiViewController:YES];
         
     } forControlEvents:BTRControlEventClick];
     [self.view addSubview:_showGSControllerView];

@@ -989,7 +989,6 @@ static NSArray *channelUpdates;
     
    if(![[MTNetwork instance] isAuth] ) return;
    
-    _holdUpdates = YES;
     
     if( !_updateState || force || _updateState.pts == INT32_MAX || _updateState.pts == 0) {
         
@@ -1014,7 +1013,6 @@ static NSArray *channelUpdates;
             _holdUpdates = NO;
         } timeout:0 queue:queue.nativeQueue];
     } else {
-        _holdUpdates = NO;
         [self uptodateWithConnectionState:updateConnectionState];
     }
 }
@@ -1025,7 +1023,7 @@ static NSArray *channelUpdates;
 
 -(void)uptodateWithConnectionState:(BOOL)updateConnectionState {
     
-    if( ![[MTNetwork instance] isAuth] )
+    if( ![[MTNetwork instance] isAuth] || _holdUpdates)
         return;
     
     _holdUpdates = YES;
@@ -1117,12 +1115,13 @@ static NSArray *channelUpdates;
             
             if(intstate != nil) {
              //   dispatch_after_seconds_queue(0.5, ^{
-                    [self uptodateWithConnectionState:updateConnectionState];
+                 _holdUpdates = NO;
+                [self uptodateWithConnectionState:updateConnectionState];
              //   }, queue.nativeQueue);
                 
             } else {
                 
-                _holdUpdates = NO;
+               _holdUpdates = NO;
                 
                 [Notification perform:PROTOCOL_UPDATED data:nil];
                 [Telegram setConnectionState:ConnectingStatusTypeNormal];

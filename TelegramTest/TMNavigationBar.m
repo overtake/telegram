@@ -68,6 +68,8 @@ static const float duration = 0.25;
 }
 
 
+
+
 -(void)changeConnection:(BOOL)show animated:(BOOL)animated {
     
     [self.connectionView.layer removeAllAnimations];

@@ -210,7 +210,7 @@
             
             NSMutableAttributedString *attr = [[NSMutableAttributedString alloc] init];
             
-            int time = MAX( self.replyObject.replyMessage.date + edit_time_limit() - [[MTNetwork instance] getTime],0);
+            int time = MAX( self.replyObject.replyMessage.date + 300 + edit_time_limit() - [[MTNetwork instance] getTime],0);
             
             [attr appendString:[NSString durationTransformedValue:time] withColor:GRAY_TEXT_COLOR];
             
@@ -220,7 +220,7 @@
             
             [_editTimerLabel setFrameOrigin:NSMakePoint(NSMaxX(weakSelf.nameView.frame) + 8, NSMinY(weakSelf.nameView.frame))];
             
-            [_editTimerLabel setHidden:time <= 10*60];
+            [_editTimerLabel setHidden:time >= 10*60];
             
             if(time <= 0) {
                 [weakSelf.editTimer invalidate];

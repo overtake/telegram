@@ -81,6 +81,8 @@ static NSImage * greenBackgroundImage(NSSize size) {
         
         [_addButton addBlock:^(BTRControlEvents events) {
             
+            strongWeak();
+            
             [weakSelf close:NO];
             
             [TMViewController showModalProgress];
@@ -96,19 +98,23 @@ static NSImage * greenBackgroundImage(NSSize size) {
                         NSMutableDictionary *stickers = info[@"serialized"];
                         
 
-                        NSMutableDictionary *sets = info[@"sets"];
+                        NSMutableArray *sets = info[@"sets"];
                         
-                        sets[@(weakSelf.pack.set.n_id)] = weakSelf.pack.set;
-                        stickers[@(weakSelf.pack.set.n_id)] = weakSelf.pack.documents;
+                        [sets addObject:strongSelf.pack.set];
+                        stickers[@(weakSelf.pack.set.n_id)] = strongSelf.pack.documents;
+                        
+                        [transaction setObject:info forKey:@"modern_stickers" inCollection:STICKERS_COLLECTION];
                         
                     }];
                 }
                 
+               
+                
+                [TGModernESGViewController reloadStickers];
+                
                 dispatch_after_seconds(0.2, ^{
                     [TMViewController hideModalProgressWithSuccess];
                 });
-                
-                [TGModernESGViewController reloadStickers];
                 
             } errorHandler:^(id request, RpcError *error) {
                 [TMViewController hideModalProgress]; 

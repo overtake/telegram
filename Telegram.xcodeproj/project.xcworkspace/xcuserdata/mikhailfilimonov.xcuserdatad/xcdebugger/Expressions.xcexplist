@@ -625,6 +625,14 @@
          contextName = "__42-[MessageTableCellStickerView contextMenu]_block_invoke73:MessageTableCellStickerView.m">
       </ContextState>
       <ContextState
+         contextName = "__40-[TGStickerPackModalView initWithFrame:]_block_invoke_3:TGStickerPackModalView.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "self">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "-[SelectUserRowView mouseDown:]:SelectUserRowView.m">
          <PersistentStrings>
             <PersistentString
@@ -2057,13 +2065,16 @@
          contextName = "-[MessagesViewController setCurrentConversation:withMessageJump:force:]:MessagesViewController.m">
          <PersistentStrings>
             <PersistentString
+               value = "dialog.last_marked_message">
+            </PersistentString>
+            <PersistentString
                value = "self.isShownESGController">
             </PersistentString>
             <PersistentString
                value = "self.conversation.canSendMessage">
             </PersistentString>
             <PersistentString
-               value = "dialog.last_marked_message">
+               value = "self.canShownESGController">
             </PersistentString>
          </PersistentStrings>
       </ContextState>

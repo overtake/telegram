@@ -90,6 +90,7 @@
 #import "TGContextMessagesvViewController.h"
 #import "TGModernEmojiViewController.h"
 #import "TGModernESGViewController.h"
+#import "TGSplitView.h"
 #define HEADER_MESSAGES_GROUPING_TIME (10 * 60)
 
 #define SCROLLDOWNBUTTON_OFFSET 1500
@@ -401,11 +402,13 @@
     [self.view addSubview:self.table.containerView];
     
     
-    _esgViewController = [[TGModernESGViewController alloc] initWithFrame:NSMakeRect(NSMaxX(self.table.frame), 0, 350, NSHeight(self.view.bounds) )];
-    [_esgViewController setIsLayoutStyle:YES];
-
-    _esgViewController.view.autoresizingMask = NSViewMinXMargin | NSViewHeightSizable;
-    _esgViewController.messagesViewController = self;
+    if(self.class == [MessagesViewController class]) {
+        _esgViewController = [[TGModernESGViewController alloc] initWithFrame:NSMakeRect(NSMaxX(self.table.frame), 0, 350, NSHeight(self.view.bounds) )];
+        [_esgViewController setIsLayoutStyle:YES];
+        
+        _esgViewController.view.autoresizingMask = NSViewMinXMargin | NSViewHeightSizable;
+        _esgViewController.messagesViewController = self;
+    }
     
 
     
@@ -578,7 +581,7 @@ static NSMutableDictionary *savedScrolling;
             [animated ? [self.stickerPanel animator] : self.stickerPanel setFrameSize:NSMakeSize(!show ?  NSWidth(self.view.frame) : NSWidth(self.view.frame) - NSWidth(_esgViewController.view.frame), NSHeight(self.stickerPanel.frame))];
             [animated ? [self.topInfoView animator] : self.topInfoView setFrameSize:NSMakeSize(!show ?  NSWidth(self.view.frame) : NSWidth(self.view.frame) - NSWidth(_esgViewController.view.frame), NSHeight(self.stickerPanel.frame))];
             [animated ? [self.searchMessagesView animator] : self.searchMessagesView setFrameSize:NSMakeSize(!show ?  NSWidth(self.view.frame) : NSWidth(self.view.frame) - NSWidth(_esgViewController.view.frame), NSHeight(self.stickerPanel.frame))];
-
+            
         };
         
         dispatch_block_t complete = ^{

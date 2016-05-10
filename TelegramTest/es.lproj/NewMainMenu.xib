@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="10116" systemVersion="15E65" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
+        <deployment identifier="macosx"/>
         <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="10116"/>
     </dependencies>
     <objects>
@@ -24,12 +25,6 @@
                             </menuItem>
                             <menuItem isSeparatorItem="YES" id="143">
                                 <modifierMask key="keyEquivalentModifierMask" command="YES"/>
-                            </menuItem>
-                            <menuItem title="Ajustes del perfil..." id="KdJ-69-lPo">
-                                <modifierMask key="keyEquivalentModifierMask"/>
-                                <connections>
-                                    <action selector="settings:" target="QPE-Oq-DBa" id="8Dh-eo-pOh"/>
-                                </connections>
                             </menuItem>
                             <menuItem title="Preferencias..." keyEquivalent="," id="iOx-Ud-JtE">
                                 <connections>
@@ -100,7 +95,7 @@
                                     <action selector="showMedia:" target="QPE-Oq-DBa" id="07x-2y-hy3"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Mostrar audio" keyEquivalent="u" id="iNs-0H-uCu">
+                            <menuItem title="Mostrar reproductor" keyEquivalent="u" id="iNs-0H-uCu">
                                 <connections>
                                     <action selector="showAudioMiniPlayer:" target="QPE-Oq-DBa" id="Me0-8C-uW8"/>
                                 </connections>
@@ -143,8 +138,7 @@
                                     <action selector="copy:" target="-1" id="6u6-65-mHT"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Pegar" keyEquivalent="P" id="N1s-6j-TDD">
-                                <modifierMask key="keyEquivalentModifierMask"/>
+                            <menuItem title="Pegar" keyEquivalent="v" id="N1s-6j-TDD">
                                 <connections>
                                     <action selector="paste:" target="-1" id="F4Y-Td-OB4"/>
                                 </connections>

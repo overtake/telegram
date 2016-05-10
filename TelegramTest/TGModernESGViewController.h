@@ -21,6 +21,7 @@
 @property (nonatomic,assign) BOOL isLayoutStyle;
 
 -(void)showSGController:(BOOL)animated;
+-(void)showEmojiViewController:(BOOL)animated;
 
 - (void)show;
 - (void)close;
@@ -33,6 +34,7 @@
 +(NSArray *)allSets;
 +(TL_stickerSet *)setWithId:(long)n_id;
 +(NSArray *)stickersWithId:(long)n_id;
+
 
 
 +(void)reloadStickers;

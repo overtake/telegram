@@ -177,9 +177,9 @@ static NSCache *cItems;
             
             [self headerStringBuilder];
             
-            if(self.message.isPost) {
+          //  if(self.message.isPost) {
                 [self updateViews];
-            }
+          //  }
             
         }
         
@@ -750,20 +750,27 @@ static NSTextAttachment *channelViewsCountAttachment() {
 -(BOOL)updateViews {
     
     NSAttributedString *o = _viewsCountAndSign;
-    
+
     NSMutableAttributedString *signString = [[NSMutableAttributedString alloc] init];
-    
-    NSRange range = [signString appendString:[@(MAX(1,self.message.views)) prettyNumber] withColor:GRAY_TEXT_COLOR];
-    
-    if(self.message.isPost && self.message.from_id != 0) {
-        [signString appendString:@" "];
-        range = [signString appendString:_user.fullName withColor:GRAY_TEXT_COLOR];
-      //  [signString setLink:[TMInAppLinks peerProfile:[TL_peerUser createWithUser_id:_user.n_id]] forRange:range];
+
+    if(self.message.isPost) {
+        
+        
+        NSRange range = [signString appendString:[@(MAX(1,self.message.views)) prettyNumber] withColor:GRAY_TEXT_COLOR];
+        
+        if(self.message.isPost && self.message.from_id != 0) {
+            [signString appendString:@" "];
+            range = [signString appendString:_user.fullName withColor:GRAY_TEXT_COLOR];
+        }
+        
+       
+    } else if(self.message.edit_date != 0) {
+        [signString appendString:NSLocalizedString(@"Message.Edited", nil) withColor:GRAY_TEXT_COLOR];
     }
     
     [signString setFont:TGSystemFont(12) forRange:signString.range];
     
-     _viewsCountAndSignOriginalSize = _viewsCountAndSignSize = [signString coreTextSizeOneLineForWidth:INT32_MAX];
+    _viewsCountAndSignOriginalSize = _viewsCountAndSignSize = [signString coreTextSizeOneLineForWidth:INT32_MAX];
     
     _viewsCountAndSign = signString;
     

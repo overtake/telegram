@@ -826,7 +826,7 @@ static TGLocationRequest *locationRequest;
         
         return [RPCRequest sendRequest:[TLAPI_messages_getBotCallbackAnswer createWithPeer:conversation.inputPeer msg_id:messageId data:keyboard.data] successHandler:^(id request, TL_messages_botCallbackAnswer *response) {
             
-            if([response isKindOfClass:[TL_messages_botCallbackAnswer class]]) {
+            if([response isKindOfClass:[TL_messages_botCallbackAnswer class]] && response.message.length > 0) {
                 if(response.isAlert)
                     alert(appName(), response.message);
                 else

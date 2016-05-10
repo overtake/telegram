@@ -156,7 +156,7 @@
     
     
     
-    _disclosureController = [[TGDisclosureViewController alloc] initWithFrame:NSMakeRect(0, 0, 300, self.view.bounds.size.height)];
+    _disclosureController = [[TGDisclosureViewController alloc] initWithFrame:NSMakeRect(0, 0, 350, self.view.bounds.size.height)];
     
 
 // [_splitView setProportion:(struct TGSplitProportion){MIN_SINGLE_LAYOUT_WIDTH,300+MIN_SINGLE_LAYOUT_WIDTH} forState:TGSplitViewStateSingleLayout];
@@ -164,12 +164,12 @@
 // [_splitView setProportion:(struct TGSplitProportion){300,FLT_MAX} forState:TGSplitViewStateTripleLayout];
  
     
-    [_splitView setProportion:(struct TGSplitProportion){380,300+380} forState:TGSplitViewStateSingleLayout];
-    [_splitView setProportion:(struct TGSplitProportion){300+380,300+380+600} forState:TGSplitViewStateDualLayout];
+    [_splitView setProportion:(struct TGSplitProportion){380,300+350} forState:TGSplitViewStateSingleLayout];
+    [_splitView setProportion:(struct TGSplitProportion){300+350,300+350+600} forState:TGSplitViewStateDualLayout];
     
-    //if([SettingsArchiver checkMaskedSetting:TripleLayoutSettings]) {
-    //    [_splitView setProportion:(struct TGSplitProportion){300+380+600,FLT_MAX}forState:TGSplitViewStateTripleLayout];
-  //  }
+//    if([SettingsArchiver checkMaskedSetting:TripleLayoutSettings]) {
+//        [_splitView setProportion:(struct TGSplitProportion){300+350+600,FLT_MAX}forState:TGSplitViewStateTripleLayout];
+//    }
     
     _splitView.delegate = self;
  
@@ -181,13 +181,17 @@
 }
 
 -(void)didChangeSettingsMask:(SettingsMask)mask {
-//    if([SettingsArchiver checkMaskedSetting:TripleLayoutSettings]) {
-//        [_splitView setProportion:(struct TGSplitProportion){300,FLT_MAX} forState:TGSplitViewStateTripleLayout];
-//    } else {
-//        [_splitView removeProportion:TGSplitViewStateTripleLayout];
-//    }
-//    
-//    [_splitView update];
+    //[self updateESGLayout:YES];
+}
+
+-(void)updateESGLayout:(BOOL)show {
+    if([SettingsArchiver isDefaultEnabledESGLayout] && show) {
+        [_splitView setProportion:(struct TGSplitProportion){300,FLT_MAX} forState:TGSplitViewStateTripleLayout];
+    } else {
+        [_splitView removeProportion:TGSplitViewStateTripleLayout];
+    }
+    
+    [_splitView update];
 }
 
 -(void)splitViewDidNeedFullsize:(TGViewController<TGSplitViewDelegate> *)controller {
@@ -242,7 +246,7 @@
             [_splitView addController:_leftViewController proportion:(struct TGSplitProportion){w,w}];
             [_splitView addController:_rightViewController proportion:(struct TGSplitProportion){MIN_SINGLE_LAYOUT_WIDTH,INT32_MAX}];
             
-            [_splitView addController:_disclosureController proportion:(struct TGSplitProportion){MIN_SINGLE_LAYOUT_WIDTH,MIN_SINGLE_LAYOUT_WIDTH}];
+            [_splitView addController:_disclosureController proportion:(struct TGSplitProportion){350,350}];
             
 
         default:
