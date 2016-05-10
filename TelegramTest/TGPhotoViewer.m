@@ -825,34 +825,34 @@ static TGPhotoViewer *viewer;
 -(void)keyUp:(NSEvent *)incomingEvent {
  //   [super keyUp:incomingEvent];
     
-    if([TGPhotoViewer isVisibility]) {
-        
-        
-        if(incomingEvent.keyCode == 53) {
-            [[TGPhotoViewer viewer] hide];
-        }
-        
-        if(incomingEvent.keyCode == 123) {
-            [TGPhotoViewer prevItem];
-        }
-        
-        if(incomingEvent.keyCode == 124) {
-            [TGPhotoViewer nextItem];
-        }
-        
-        if(incomingEvent.keyCode == 49 ){
-            [[TGPhotoViewer viewer] hide];
-        }
-        
-        if(incomingEvent.keyCode == 24 || incomingEvent.keyCode == 69) {
-            [TGPhotoViewer increaseZoom];
-        }
-        
-        if(incomingEvent.keyCode == 27 || incomingEvent.keyCode == 78) {
-            [TGPhotoViewer decreaseZoom];
-        }
-        
-    }
+//    if([TGPhotoViewer isVisibility]) {
+//        
+//        
+//        if(incomingEvent.keyCode == 53) {
+//            [[TGPhotoViewer viewer] hide];
+//        }
+//        
+//        if(incomingEvent.keyCode == 123) {
+//            [TGPhotoViewer prevItem];
+//        }
+//        
+//        if(incomingEvent.keyCode == 124) {
+//            [TGPhotoViewer nextItem];
+//        }
+//        
+//        if(incomingEvent.keyCode == 49 ){
+//            [[TGPhotoViewer viewer] hide];
+//        }
+//        
+//        if(incomingEvent.keyCode == 24 || incomingEvent.keyCode == 69) {
+//            [TGPhotoViewer increaseZoom];
+//        }
+//        
+//        if(incomingEvent.keyCode == 27 || incomingEvent.keyCode == 78) {
+//            [TGPhotoViewer decreaseZoom];
+//        }
+//        
+//    }
 }
 
 -(void)insertObjects:(NSArray *)previewObjects {

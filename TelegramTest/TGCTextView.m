@@ -11,6 +11,7 @@
 #import "TGMultipleSelectTextView.h"
 #import "MessageTableItemText.h"
 #import "TGUserPopup.h"
+#import "SpacemanBlocks.h"
 @interface DrawsRect : NSObject
 
 @property(nonatomic,assign) CGColorRef color;
@@ -45,7 +46,7 @@ static RBLPopover *popover;
 static NSString *last_link;
 static RPCRequest *resolveRequest;
 static NSMutableDictionary *ignoreName;
-
+static SMDelayedBlockHandle blockHandle;
 void clear_current_popover() {
     last_link = nil;
     [resolveRequest cancelRequest];
@@ -54,6 +55,8 @@ void clear_current_popover() {
 
 void (^linkOverHandle)(NSString *link, BOOL over, NSRect rect,TGCTextView *textView) = ^(NSString *link, BOOL over, NSRect rect,TGCTextView *textView) {
     popover.animates = NO;
+    
+     cancel_delayed_block(blockHandle);
     
     BOOL accept = [link hasPrefix:@"@"];
     
@@ -86,53 +89,60 @@ void (^linkOverHandle)(NSString *link, BOOL over, NSRect rect,TGCTextView *textV
     
     
     if(![link isEqualToString:last_link] || !popover.isShown) {
-        last_link = link;
         
-        dispatch_block_t show_block = ^{
-            [short_info_controller setObject:obj];
+      
+        
+        blockHandle = perform_block_after_delay(0.2, ^{
+            last_link = link;
             
-            //  [popover setHoverView:weakSelf.textView];
-            
-            
-            if(!popover.isShown) {
-                [popover setDidCloseBlock:^(RBLPopover *popover) {
-                    popover = nil;
-                }];
+            dispatch_block_t show_block = ^{
+                [short_info_controller setObject:obj];
+                
+                //  [popover setHoverView:weakSelf.textView];
                 
                 
-                [popover showRelativeToRect:NSOffsetRect(rect, 3, -3) ofView:textView preferredEdge:CGRectMaxYEdge];
+                if(!popover.isShown) {
+                    [popover setDidCloseBlock:^(RBLPopover *popover) {
+                        popover = nil;
+                    }];
+                    
+                    
+                    [popover showRelativeToRect:NSOffsetRect(rect, 3, -3) ofView:textView preferredEdge:CGRectMaxYEdge];
+                }
+            };
+            
+            if(over) {
+                
+                if(obj) {
+                    show_block();
+                } else {
+                    [resolveRequest cancelRequest];
+                    resolveRequest = [RPCRequest sendRequest:[TLAPI_contacts_resolveUsername createWithUsername:link] successHandler:^(RPCRequest *request, TL_contacts_resolvedPeer *response) {
+                        
+                        [SharedManager proccessGlobalResponse:response];
+                        
+                        if([response.peer isKindOfClass:[TL_peerChannel class]]) {
+                            obj = [response.chats firstObject];
+                        } else if([response.peer isKindOfClass:[TL_peerUser class]]) {
+                            obj = [response.users firstObject];
+                        }
+                        
+                        if(obj) {
+                            show_block();
+                        }
+                        
+                        
+                    } errorHandler:^(RPCRequest *request, RpcError *error) {
+                        
+                        ignoreName[link] = @(1);
+                        
+                    } timeout:4];
+                }
+                
             }
-        };
+
+        });
         
-        if(over) {
-            
-            if(obj) {
-                show_block();
-            } else {
-                [resolveRequest cancelRequest];
-                resolveRequest = [RPCRequest sendRequest:[TLAPI_contacts_resolveUsername createWithUsername:link] successHandler:^(RPCRequest *request, TL_contacts_resolvedPeer *response) {
-                    
-                    [SharedManager proccessGlobalResponse:response];
-                    
-                    if([response.peer isKindOfClass:[TL_peerChannel class]]) {
-                        obj = [response.chats firstObject];
-                    } else if([response.peer isKindOfClass:[TL_peerUser class]]) {
-                        obj = [response.users firstObject];
-                    }
-                    
-                    if(obj) {
-                        show_block();
-                    }
-                    
-                    
-                } errorHandler:^(RPCRequest *request, RpcError *error) {
-                    
-                    ignoreName[link] = @(1);
-                    
-                } timeout:4];
-            }
-            
-        }
     }
 };
 

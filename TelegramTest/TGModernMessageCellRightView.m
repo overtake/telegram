@@ -91,6 +91,8 @@
     [self setEditable:_container.isEditable animated:NO];
     [self setSelected:item.isSelected animated:NO];
     
+    [self setToolTip:item.fullDate];
+    
 }
 
 -(void)setEditable:(BOOL)editable animated:(BOOL)animated {

@@ -618,7 +618,22 @@ static NSTextAttachment *channelViewsCountAttachment() {
     
     NSDate *date = [NSDate dateWithTimeIntervalSince1970:self.message.date];
     
-    self.fullDate = [formatter stringFromDate:date];
+    
+   
+    
+    
+    NSString *fullDate = [formatter stringFromDate:date];
+    
+    if(self.message.edit_date > 0) {
+        NSDateFormatter *formatterEdited = [NSDateFormatter new];
+        
+        [formatterEdited setDateStyle:NSDateFormatterShortStyle];
+        [formatterEdited setTimeStyle:NSDateFormatterShortStyle];
+        
+        fullDate = [NSString stringWithFormat:@"%@ (%@)",fullDate,[formatterEdited stringFromDate:[NSDate dateWithTimeIntervalSince1970:self.message.edit_date]]];
+    }
+    
+    self.fullDate = fullDate;
 }
 
 -(void)buildRightSize {
