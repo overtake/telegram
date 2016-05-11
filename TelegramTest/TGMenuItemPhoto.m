@@ -20,7 +20,7 @@
     if(self = [super init]) {
         _user = user;
         _menuItem = menuItem;
-        
+        _menuItem.representedObject = self;
         [self generatePhoto];
         
     }
@@ -81,6 +81,8 @@ static NSImage *mentionCap() {
     
     
 }
+
+
 
 -(void)didDownloadImage:(NSImage *)image object:(id)object {
     

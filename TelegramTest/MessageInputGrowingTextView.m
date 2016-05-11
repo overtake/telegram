@@ -320,7 +320,7 @@ typedef enum {
     
     [super setString:string];
     
-   
+    [self checkAndReplaceCustomMentions];
 }
 
 
@@ -469,11 +469,13 @@ typedef enum {
         
         [fakeMentions enumerateObjectsUsingBlock:^(NSTextCheckingResult *obj, NSUInteger idx, BOOL * _Nonnull stop) {
             [[self textStorage] addAttribute:NSForegroundColorAttributeName value:LINK_COLOR range:obj.range];
-            [[self textStorage] addAttribute:NSUnderlineStyleAttributeName value:[NSNumber numberWithInt:NSUnderlineStyleNone] range:obj.range];
+
         }];
         
-        if(![m isEqualToString:value])
-            [self setString:m];
+        if(![m isEqualToString:value]) {
+             [self setString:m];
+        }
+        
         
         _customMentions = cMentions;
     }

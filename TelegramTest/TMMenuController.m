@@ -44,6 +44,11 @@
         self.wantsLayer = YES;
         self.gradientLayer.contentsScale = self.layer.contentsScale;
         [self setLayer:self.gradientLayer];
+        
+        [item addObserver:self
+               forKeyPath:@"image"
+                  options:0
+                  context:NULL];
 
         _textAttr = [[NSMutableAttributedString alloc] init];
         [_textAttr appendString:item.title withColor:TEXT_COLOR];
@@ -75,9 +80,20 @@
         
         [self handleStateChange];
         
+        
         [self addTarget:self action:@selector(click) forControlEvents:BTRControlEventLeftClick];
     }
     return self;
+}
+
+-(void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
+    
+    [self handleStateChange];
+    
+}
+
+-(void)dealloc {
+    [_item removeObserver:self forKeyPath:@"image"];
 }
 
 -(NSString *)title {

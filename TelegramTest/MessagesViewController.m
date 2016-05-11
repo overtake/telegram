@@ -582,7 +582,7 @@ static NSMutableDictionary *savedScrolling;
             [animated ? [self.topInfoView animator] : self.topInfoView setFrameSize:NSMakeSize(!show ?  NSWidth(self.view.frame) : NSWidth(self.view.frame) - NSWidth(_esgViewController.view.frame), NSHeight(self.stickerPanel.frame))];
             [animated ? [self.searchMessagesView animator] : self.searchMessagesView setFrameSize:NSMakeSize(!show ?  NSWidth(self.view.frame) : NSWidth(self.view.frame) - NSWidth(_esgViewController.view.frame), NSHeight(self.stickerPanel.frame))];
             [self.noMessagesView setFrameSize:NSMakeSize(!show ?  NSWidth(self.view.frame) : NSWidth(self.view.frame) - NSWidth(_esgViewController.view.frame), NSHeight(self.noMessagesView.frame))];
-            
+            [self.hintView setFrameSize:NSMakeSize(!show ?  NSWidth(self.view.frame) : NSWidth(self.view.frame) - NSWidth(_esgViewController.view.frame), NSHeight(self.hintView.frame))];
         };
         
         dispatch_block_t complete = ^{
@@ -593,7 +593,7 @@ static NSMutableDictionary *savedScrolling;
             
             locked = NO;
             
-            [self.bottomView setSelectedSmileButton:self.messagesViewController.isShownESGController];
+            [self.bottomView setSelectedSmileButton:show];
         };
         
         if(animated) {
@@ -647,52 +647,52 @@ static NSMutableDictionary *savedScrolling;
                     if(index != NSNotFound) {
                         
                         [self.table beginUpdates];
+                        [[NSAnimationContext currentContext] setDuration:0.0f];
                         [self.table noteHeightOfRowsWithIndexesChanged:[NSIndexSet indexSetWithIndex:index]];
-                        
-                        
-                        
-                        NSTableRowView *rowView = [self.table rowViewAtRow:index makeIfNecessary:NO];
-                        
-                        MessageTableCell *cell = rowView.subviews[0];
-                        
-                        MessageTableCell *nCell = (MessageTableCell *) [self tableView:_table viewForTableColumn:nil row:index];
-                        
-
-                        
-                        
+                        [self.table reloadDataForRowIndexes:[NSIndexSet indexSetWithIndex:index] columnIndexes:[NSIndexSet indexSetWithIndex:0]];
                         [self.table endUpdates];
-                        [nCell setFrameSize:NSMakeSize(NSWidth(cell.frame), item.viewSize.height)];
                         
-#ifdef TGDEBUG
-                        assert(nCell.class == item.viewClass);
-#endif
-                        if(nCell.class != item.viewClass)
-                            return;
-                        
-                        POPBasicAnimation *fadeOut = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerOpacity];
-                        fadeOut.fromValue = @(1.0f);
-                        fadeOut.toValue = @(0.0f);
-                        fadeOut.duration = 0.3;
-                        fadeOut.removedOnCompletion = YES;
-                        [cell.layer pop_addAnimation:fadeOut forKey:@"opacity"];
-                        
-                        [fadeOut setCompletionBlock:^(POPAnimation *animation, BOOL success) {
-                            
-                            if(success) {
-                                
-                                cell.layer.opacity = 1.0f;
-                                [cell setItem:item];
-                                [nCell removeFromSuperview];
-                                
-//                                if(![notification.userInfo[@"nonselect"] boolValue])
-//                                    [cell searchSelection];
-                            }
-                            
-                        }];
-                        
-                        assert(nCell != nil);
-                        
-                        [rowView addSubview:nCell positioned:NSWindowBelow relativeTo:cell];
+//                        NSTableRowView *rowView = [self.table rowViewAtRow:index makeIfNecessary:NO];
+//                        
+//                        MessageTableCell *cell = rowView.subviews[0];
+//                        
+//                        MessageTableCell *nCell = (MessageTableCell *) [self tableView:_table viewForTableColumn:nil row:index];
+//                        
+//
+//                        
+//                        [self.table endUpdates];
+//                        [nCell setFrameSize:NSMakeSize(NSWidth(cell.frame), item.viewSize.height)];
+//                        
+//#ifdef TGDEBUG
+//                        assert(nCell.class == item.viewClass);
+//#endif
+//                        if(nCell.class != item.viewClass)
+//                            return;
+//                        
+//                        POPBasicAnimation *fadeOut = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerOpacity];
+//                        fadeOut.fromValue = @(1.0f);
+//                        fadeOut.toValue = @(0.0f);
+//                        fadeOut.duration = 0.3;
+//                        fadeOut.removedOnCompletion = YES;
+//                        [cell.layer pop_addAnimation:fadeOut forKey:@"opacity"];
+//                        
+//                        [fadeOut setCompletionBlock:^(POPAnimation *animation, BOOL success) {
+//                            
+//                            if(success) {
+//                                
+//                                cell.layer.opacity = 1.0f;
+//                                [cell setItem:item];
+//                                [nCell removeFromSuperview];
+//                                
+////                                if(![notification.userInfo[@"nonselect"] boolValue])
+////                                    [cell searchSelection];
+//                            }
+//                            
+//                        }];
+//                        
+//                        assert(nCell != nil);
+//                        
+//                        [rowView addSubview:nCell positioned:NSWindowBelow relativeTo:cell];
                     }
                     
                     
@@ -2961,7 +2961,9 @@ static NSTextAttachment *headerMediaIcon() {
          
          if((!self.conversation.canSendMessage && self.isShownESGController) || (self.canShownESGController && !self.isShownESGController && [SettingsArchiver isDefaultEnabledESGLayout])) {
              [self showOrHideESGController:NO toggle:NO];
-         }
+         } else
+            [self.bottomView setSelectedSmileButton:self.messagesViewController.isShownESGController];
+
     }
 }
 

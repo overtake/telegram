@@ -645,7 +645,7 @@ static NSTextAttachment *channelViewsCountAttachment() {
     
     int w = _dateSize.width +selectSize + selectOffset + sendingUnreadReadSize + sendingUnreadReadOffset;
     
-    if(!self.message.n_out && !self.message.isPost) {
+    if(!self.message.n_out && !self.message.isPost && self.message.edit_date == 0) {
         w = _dateSize.width + selectSize + selectOffset;
     }
     
@@ -776,10 +776,16 @@ static NSTextAttachment *channelViewsCountAttachment() {
         if(self.message.isPost && self.message.from_id != 0) {
             [signString appendString:@" "];
             range = [signString appendString:_user.fullName withColor:GRAY_TEXT_COLOR];
+            
         }
         
+        if(self.message.edit_date > 0) {
+            [signString appendString:@" "];
+        }
        
-    } else if(self.message.edit_date != 0) {
+    }
+    
+    if(self.message.edit_date != 0 && (!self.message.isPost || self.message.from_id == 0)) {
         [signString appendString:NSLocalizedString(@"Message.Edited", nil) withColor:GRAY_TEXT_COLOR];
     }
     

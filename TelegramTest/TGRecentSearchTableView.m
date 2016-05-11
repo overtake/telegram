@@ -68,11 +68,6 @@
         
         [copy enumerateObjectsUsingBlock:^(TL_topPeerCategoryPeers *obj, NSUInteger cidx, BOOL * _Nonnull stop) {
             
-            if([obj.category isKindOfClass:[TL_topPeerCategoryBotsInline class]])
-            return;
-            
-            
-            
             NSArray *items;
             NSArray *moreItems;
             
@@ -129,6 +124,7 @@
             }];
             
             
+            *stop = YES;
             
         }];
     }

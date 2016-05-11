@@ -94,6 +94,8 @@ static NSString *kYapTemplateCollection = @"kYapTemplateCollection";
             startOffset = MIN(startOffset,obj.offset);
         }
     }];
+    
+    int bp = 0;
 }
 
 

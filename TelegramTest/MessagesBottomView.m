@@ -37,6 +37,7 @@
 #import "TGModalGifSearch.h"
 #import "TGRecordedAudioPreview.h"
 #import "TGModernESGViewController.h"
+#import "TGMenuItemPhoto.h"
 @interface MessagesBottomView()<TGImageAttachmentsControllerDelegate>
 
 @property (nonatomic, strong) TMView *actionsView;
@@ -855,8 +856,47 @@ static RBLPopover *popover;
     [attachFileItem setHighlightedImage:image_AttachFileHighlighted()];
     
     
-    
     [theMenu addItem:attachFileItem];
+    
+    
+    __block NSMutableArray *top;
+    
+    [[Storage yap] readWithBlock:^(YapDatabaseReadTransaction *transaction) {
+        
+        top = [[transaction objectForKey:@"categories" inCollection:TOP_PEERS] mutableCopy];
+        
+    }];
+    
+    
+    [top enumerateObjectsUsingBlock:^(TL_topPeerCategoryPeers *obj, NSUInteger cidx, BOOL * _Nonnull stop) {
+
+        if([obj.category isKindOfClass:[TL_topPeerCategoryBotsInline class]]) {
+            
+            [obj.peers enumerateObjectsUsingBlock:^(TL_topPeer *peer, NSUInteger idx, BOOL *stop) {
+                
+                TLUser *user = [[UsersManager sharedManager] find:peer.peer.user_id];
+                
+                NSMenuItem *botMenuItem = [NSMenuItem menuItemWithTitle:[NSString stringWithFormat:@"@%@",user.username] withBlock:^(id sender) {
+                    
+                    open_link_with_controller([NSString stringWithFormat:@"chat://viabot/?username=@%@",user.username],weakSelf.messagesViewController.navigationViewController);
+                    
+                }];
+                
+                TGMenuItemPhoto *photoItem = [[TGMenuItemPhoto alloc] initWithUser:user menuItem:botMenuItem];
+                
+                
+                [theMenu addItem:botMenuItem];
+                
+            }];
+            
+            *stop = YES;
+        }
+        
+    }];
+
+    
+   
+
     
    
     
@@ -1958,6 +1998,7 @@ static RBLPopover *popover;
             
             [[_webpageAttach animator] setFrameOrigin:NSMakePoint(NSMinX(_webpageAttach.frame), NSHeight(self.inputMessageTextField.containerView.frame) + offset )];
             
+            [[_editMessageContainer animator] setFrameOrigin:NSMakePoint(NSMinX(_editMessageContainer.frame), NSHeight(self.inputMessageTextField.containerView.frame) + offset)];
         } else {
             
              [self setFrameSize:layoutSize];
@@ -1976,7 +2017,8 @@ static RBLPopover *popover;
             
             [_replyContainer setFrameOrigin:NSMakePoint(NSMinX(_replyContainer.frame), NSHeight(self.inputMessageTextField.containerView.frame) + offset)];
             
-            
+            [_editMessageContainer setFrameOrigin:NSMakePoint(NSMinX(_editMessageContainer.frame), NSHeight(self.inputMessageTextField.containerView.frame) + offset)];
+
             [_fwdContainer setFrameOrigin:NSMakePoint(NSMinX(_fwdContainer.frame), NSHeight(self.inputMessageTextField.containerView.frame) + offset)];
             
             [_webpageAttach setFrameOrigin:NSMakePoint(NSMinX(_webpageAttach.frame), NSHeight(self.inputMessageTextField.containerView.frame) + offset)];

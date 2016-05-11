@@ -241,8 +241,8 @@
         return YES;
     
     // && (!self.chat.isDeactivated)
-        
-    return !self.isInvisibleChannel && self.last_message_date > 0  && !self.fake;
+        //&& self.last_message_date > 0
+    return !self.isInvisibleChannel  && !self.fake;
 }
 
 //-(BOOL)isInvisibleChannel {

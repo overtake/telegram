@@ -92,8 +92,11 @@
 }
 
 -(void)windowBecomeNotification:(NSNotification *)notification {
-    [self.view.window makeFirstResponder:self.view];
-    [[Telegram leftViewController].conversationsViewController resignFirstResponder];
+  //  [self.view.window makeFirstResponder:self.view];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [[Telegram leftViewController].conversationsViewController resignFirstResponder];
+
+    });
 }
 
 - (void)viewWillAppear:(BOOL)animated {

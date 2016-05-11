@@ -43,6 +43,10 @@
 
 }
 
+-(BOOL)makeFirstResponder:(NSResponder *)aResponder {
+    return [super makeFirstResponder:aResponder];
+}
+
 
 -(void)setFrame:(NSRect)frameRect display:(BOOL)flag {
     

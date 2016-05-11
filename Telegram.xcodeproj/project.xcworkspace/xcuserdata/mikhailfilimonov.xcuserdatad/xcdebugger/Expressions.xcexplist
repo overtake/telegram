@@ -1626,6 +1626,14 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "__57-[MessagesViewController showOrHideESGController:toggle:]_block_invoke.416:MessagesViewController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.messagesViewController.isShownESGController">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "-[MessageSenderItem parseEntities:nextLocation:entities:]:MessageSenderItem.m">
          <PersistentStrings>
             <PersistentString
@@ -4752,6 +4760,14 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "__60-[MessageInputGrowingTextView checkAndReplaceCustomMentions]_block_invoke.308:MessageInputGrowingTextView.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "obj.range">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "__47-[NSString(NSString_FindURLs) locationsOfLinks]_block_invoke:NSString+FindURLs.m">
       </ContextState>
       <ContextState
@@ -4909,6 +4925,14 @@
       </ContextState>
       <ContextState
          contextName = "__46-[TMCollectionPageController setConversation:]_block_invoke:TMCollectionPageController.m">
+      </ContextState>
+      <ContextState
+         contextName = "__25-[Storage insertDialogs:]_block_invoke:Storage.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "dialogs">
+            </PersistentString>
+         </PersistentStrings>
       </ContextState>
       <ContextState
          contextName = "-[DialogsManager updateConversation:withLastMessage:update_real_date:]:DialogsManager.m">
@@ -6994,6 +7018,9 @@
          <PersistentStrings>
             <PersistentString
                value = "self.navigationViewController.currentController">
+            </PersistentString>
+            <PersistentString
+               value = "conversation">
             </PersistentString>
          </PersistentStrings>
       </ContextState>

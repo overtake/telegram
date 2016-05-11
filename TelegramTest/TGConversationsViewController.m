@@ -186,6 +186,8 @@
         //[EmojiViewController reloadStickers];
         //[TGModernEmojiViewController initialize];
         [TGModernESGViewController controller];
+        [MessageSender syncTopCategories:^(NSArray *categories) {
+        }];
     }];
     
     [MessagesManager updateUnreadBadge];
@@ -287,7 +289,7 @@
         [self.tableView cancelSelection];
         
         if(![conversation isKindOfClass:NSNull.class]) {
-            [self.tableView setSelectedByHash:[[Telegram conversation] peer_id]];
+            [self.tableView setSelectedByHash:[conversation peer_id]];
             
             if([Telegram isSingleLayout]  && !conversation) {
                 [self.tableView cancelSelection];

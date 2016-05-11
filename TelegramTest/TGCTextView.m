@@ -49,6 +49,7 @@ static NSMutableDictionary *ignoreName;
 static SMDelayedBlockHandle blockHandle;
 void clear_current_popover() {
     last_link = nil;
+    cancel_delayed_block(blockHandle);
     [resolveRequest cancelRequest];
     [popover close];
 }
@@ -883,11 +884,15 @@ void (^linkOverHandle)(NSString *link, BOOL over, NSRect rect,TGCTextView *textV
     
     clear_current_popover();
     
+    
     if((self.selectRange.location == NSNotFound || !_isEditable) && !_disableLinks) {
         NSPoint location = [self convertPoint:[theEvent locationInWindow] fromView:nil];
         
         BOOL hitTest,itsReal;
         NSString *link = [self linkAtPoint:location hitTest:&hitTest itsReal:&itsReal lineRect:NULL];
+        
+        
+      
         
         if(link) {
             [self open_link:link itsReal:itsReal];

@@ -481,19 +481,19 @@ void exceptionHandler(NSException * exception)
             if((incomingEvent.modifierFlags & NSAlternateKeyMask) > 0) {
                 BOOL result = YES;
                 
-                if([responder isKindOfClass:[NSTextField class]]) {
-                    NSTextField *textField = responder;
-                    result = !textField.stringValue.length;
-                } else if([responder isKindOfClass:[TMSearchTextField class]]) {
-                    result = incomingEvent.keyCode == 126;
-                } else if ([responder isKindOfClass:[NSTextView class]]) {
-                    NSTextView *textView = responder;
-                    if([textView.superview.superview isKindOfClass:NSClassFromString(@"_TMSearchTextField")]) {
-                        result = incomingEvent.keyCode == 125;
-                    } else {
-                        result = !textView.string.length;
-                    }
-                }
+//                if([responder isKindOfClass:[NSTextField class]]) {
+//                    NSTextField *textField = responder;
+//                    result = !textField.stringValue.length;
+//                } else if([responder isKindOfClass:[TMSearchTextField class]]) {
+//                    result = incomingEvent.keyCode == 126;
+//                } else if ([responder isKindOfClass:[NSTextView class]]) {
+//                    NSTextView *textView = responder;
+//                    if([textView.superview.superview isKindOfClass:NSClassFromString(@"_TMSearchTextField")]) {
+//                        result = incomingEvent.keyCode == 125;
+//                    } else {
+//                        result = !textView.string.length;
+//                    }
+//                }
                 
                 
                 if(result) {
