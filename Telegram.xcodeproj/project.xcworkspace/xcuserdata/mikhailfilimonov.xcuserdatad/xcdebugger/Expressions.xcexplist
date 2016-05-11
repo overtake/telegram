@@ -7960,6 +7960,9 @@
             <PersistentString
                value = "result">
             </PersistentString>
+            <PersistentString
+               value = "_loader filterWithNext:YES]">
+            </PersistentString>
          </PersistentStrings>
       </ContextState>
       <ContextState

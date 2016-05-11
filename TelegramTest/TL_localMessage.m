@@ -354,24 +354,18 @@ DYNAMIC_PROPERTY(DDialog);
         
         
         
-        if([self.media isKindOfClass:[TL_messageMediaDocument class]] || [self.media isKindOfClass:[TL_messageMediaDocument_old44 class]]) {
-            TL_documentAttributeAudio *attr =  (TL_documentAttributeAudio *)[self.media.document attributeWithClass:[TL_documentAttributeAudio class]];
-            
-            TL_documentAttributeVideo *videoAttr =  (TL_documentAttributeVideo *)[self.media.document attributeWithClass:[TL_documentAttributeVideo class]];
-           
-            if(attr.isVoice) {
+        if([self.media isKindOfClass:[TL_messageMediaDocument class]]) {
+                       
+            if(self.media.document.isVoice) {
                 mask|=HistoryFilterAudio;
-            } else if(attr != nil || [self.media.document.mime_type hasPrefix:@"audio/"]) {
+            } else if(self.media.document.isAudio) {
                 mask|=HistoryFilterAudioDocument;
-            } else if(videoAttr != nil && [self.media.document attributeWithClass:[TL_documentAttributeAnimated class]] == nil) {
+            } else if(self.media.document.isVideo) {
                 mask|=HistoryFilterVideo;
-            } else
+            } else if(!self.media.document.isSticker && !self.media.document.isGif)
                 mask|=HistoryFilterDocuments;
         }
-        
-        if([self.media isKindOfClass:[TL_messageMediaVideo class]]) {
-            mask|=HistoryFilterVideo;
-        }
+
         
         if([self.media isKindOfClass:[TL_messageMediaContact class]]) {
             mask|=HistoryFilterContact;
