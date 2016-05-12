@@ -1165,16 +1165,10 @@
          contextName = "__57-[MessagesViewController messagTableEditedMessageUpdate:]_block_invoke_2:MessagesViewController.m">
          <PersistentStrings>
             <PersistentString
-               value = "cell.superview">
-            </PersistentString>
-            <PersistentString
-               value = "rowView.subviews">
-            </PersistentString>
-            <PersistentString
                value = "self.messages">
             </PersistentString>
             <PersistentString
-               value = "cell.layer.opacity">
+               value = "self.messagesKeys">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -4745,6 +4739,14 @@
             </PersistentString>
             <PersistentString
                value = "maxDate">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[MessagesViewController findMessageItemById:]:MessagesViewController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.messageKeys">
             </PersistentString>
          </PersistentStrings>
       </ContextState>

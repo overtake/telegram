@@ -858,45 +858,42 @@ static RBLPopover *popover;
     
     [theMenu addItem:attachFileItem];
     
-    
-    __block NSMutableArray *top;
-    
-    [[Storage yap] readWithBlock:^(YapDatabaseReadTransaction *transaction) {
+    if(self.dialog.type != DialogTypeSecretChat) {
+        __block NSMutableArray *top;
         
-        top = [[transaction objectForKey:@"categories" inCollection:TOP_PEERS] mutableCopy];
-        
-    }];
-    
-    
-    [top enumerateObjectsUsingBlock:^(TL_topPeerCategoryPeers *obj, NSUInteger cidx, BOOL * _Nonnull stop) {
-
-        if([obj.category isKindOfClass:[TL_topPeerCategoryBotsInline class]]) {
+        [[Storage yap] readWithBlock:^(YapDatabaseReadTransaction *transaction) {
             
-            [obj.peers enumerateObjectsUsingBlock:^(TL_topPeer *peer, NSUInteger idx, BOOL *stop) {
+            top = [[transaction objectForKey:@"categories" inCollection:TOP_PEERS] mutableCopy];
+            
+        }];
+        
+        
+        [top enumerateObjectsUsingBlock:^(TL_topPeerCategoryPeers *obj, NSUInteger cidx, BOOL * _Nonnull stop) {
+            
+            if([obj.category isKindOfClass:[TL_topPeerCategoryBotsInline class]]) {
                 
-                TLUser *user = [[UsersManager sharedManager] find:peer.peer.user_id];
-                
-                NSMenuItem *botMenuItem = [NSMenuItem menuItemWithTitle:[NSString stringWithFormat:@"@%@",user.username] withBlock:^(id sender) {
+                [obj.peers enumerateObjectsUsingBlock:^(TL_topPeer *peer, NSUInteger idx, BOOL *stop) {
                     
-                    open_link_with_controller([NSString stringWithFormat:@"chat://viabot/?username=@%@",user.username],weakSelf.messagesViewController.navigationViewController);
+                    TLUser *user = [[UsersManager sharedManager] find:peer.peer.user_id];
+                    
+                    NSMenuItem *botMenuItem = [NSMenuItem menuItemWithTitle:[NSString stringWithFormat:@"@%@",user.username] withBlock:^(id sender) {
+                        
+                        open_link_with_controller([NSString stringWithFormat:@"chat://viabot/?username=@%@",user.username],weakSelf.messagesViewController.navigationViewController);
+                        
+                    }];
+                    
+                    [[TGMenuItemPhoto alloc] initWithUser:user menuItem:botMenuItem];
+                    
+                    
+                    [theMenu addItem:botMenuItem];
                     
                 }];
                 
-                TGMenuItemPhoto *photoItem = [[TGMenuItemPhoto alloc] initWithUser:user menuItem:botMenuItem];
-                
-                
-                [theMenu addItem:botMenuItem];
-                
-            }];
+                *stop = YES;
+            }
             
-            *stop = YES;
-        }
-        
-    }];
-
-    
-   
-
+        }];
+    }
     
    
     

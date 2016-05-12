@@ -173,11 +173,18 @@
         
         [[Storage manager] deleteMessages:ids completeHandler:^(NSArray *peer_update) {
             
+            
             [peer_update enumerateObjectsUsingBlock:^(NSDictionary *obj, NSUInteger idx, BOOL *stop) {
                 
-                TL_conversation *conversation = [[DialogsManager sharedManager] find:[obj[KEY_PEER_ID] intValue]];
+                int peer_id = [obj[KEY_PEER_ID] intValue];
+                int msg_id = [obj[KEY_MESSAGE_ID] intValue];
                 
-                [self updateLastMessageForDialog:conversation];
+                TL_conversation *conversation = [[DialogsManager sharedManager] find:peer_id];
+                
+                if(conversation.top_message == msg_id) {
+                    [self updateLastMessageForDialog:conversation];
+                }
+                
                 
             }];
             

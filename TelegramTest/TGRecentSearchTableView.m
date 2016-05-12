@@ -71,9 +71,9 @@
             NSArray *items;
             NSArray *moreItems;
             
-            if(obj.peers.count > 3) {
-                items = [obj.peers subarrayWithRange:NSMakeRange(0, 3)];
-                moreItems = [obj.peers subarrayWithRange:NSMakeRange(3, obj.peers.count - 3)];
+            if(obj.peers.count > 5) {
+                items = [obj.peers subarrayWithRange:NSMakeRange(0, 5)];
+                moreItems = [obj.peers subarrayWithRange:NSMakeRange(5, obj.peers.count - 5)];
             } else {
                 items = obj.peers;
             }
@@ -317,25 +317,26 @@
         
         if(!headerItem.isMore) {
             self.defaultAnimation = NSTableViewAnimationEffectFade;
-            [self insert:[headerItem otherItems] startIndex:[self indexOfItem:item]+4 tableRedraw:YES];
+            [self insert:[headerItem otherItems] startIndex:[self indexOfItem:item]+6 tableRedraw:YES];
             self.defaultAnimation = NSTableViewAnimationEffectNone;
             
             [[Telegram leftViewController].conversationsViewController becomeFirstResponder];
         } else {
-            
+            self.defaultAnimation = NSTableViewAnimationEffectFade;
+
             [headerItem.otherItems enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-                [self removeItem:obj];
+                [self removeItem:obj tableRedraw:YES];
             }];
-            
+            self.defaultAnimation = NSTableViewAnimationEffectNone;
         }
         
         if(headerItem.otherItems.count > 0) {
             
-            TGRecentSearchRowItem *last = [self itemAtPosition:[self indexOfItem:item] + 3];
+            TGRecentSearchRowItem *last = [self itemAtPosition:[self indexOfItem:item] + 5];
             
             last.disableBottomSeparator = headerItem.isMore;
             
-            [self reloadDataForRowIndexes:[NSIndexSet indexSetWithIndex:+3] columnIndexes:[NSIndexSet indexSetWithIndex:0]];
+            [self reloadDataForRowIndexes:[NSIndexSet indexSetWithIndex:5] columnIndexes:[NSIndexSet indexSetWithIndex:0]];
         }
         
         headerItem.isMore= !headerItem.isMore;

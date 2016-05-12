@@ -65,6 +65,8 @@
                 _fromMessage.replyMessage = _replyMessage;
                 [self updateObject];
                 
+                [replyCache setObject:self forKey:@(_replyMessage.channelMsgId)];
+                
                 if(_item != nil) {
                     [Notification perform:UPDATE_EDITED_MESSAGE data:@{KEY_MESSAGE:_fromMessage,@"nonselect":@"YES"}];
                 }

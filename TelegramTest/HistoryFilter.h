@@ -21,14 +21,14 @@ typedef enum {
     HistoryFilterPhoto = 1 << 3,
     HistoryFilterVideo = 1 << 4,
     HistoryFilterAudio = 1 << 5,
-    HistoryFilterDocuments = 1 << 6,
     HistoryFilterText = 1 << 7,
     HistoryFilterContact = 1 << 8,
     HistoryFilterSearch = 1 << 9,
     HistoryFilterAudioDocument = 1 << 10,
     HistoryFilterSharedLink = 1 << 11,
     HistoryFilterChannelMessage = 1 << 12,
-    HistoryFilterImportantChannelMessage = 1 << 13
+    HistoryFilterImportantChannelMessage = 1 << 13,
+    HistoryFilterDocuments = 1 << 14,
 } HistoryFilterType;
 
 typedef enum {

@@ -726,7 +726,7 @@ static TMMediaController* currentController;
     }
     
     MessagesViewController *controller = appWindow().navigationController.messagesViewController;
-    MessageTableItem *messageItem = [controller itemOfMsgId:item.previewObject.msg_id];
+    MessageTableItem *messageItem = [controller itemOfMsgId:item.previewObject.msg_id fakeId:0];
     
     NSInteger row = [controller indexOfObject:messageItem];
     NSView *cellView = nil;
@@ -774,7 +774,7 @@ static TMMediaController* currentController;
     }
     
     MessagesViewController *controller = appWindow().navigationController.messagesViewController;
-    MessageTableItem *messageItem = [controller itemOfMsgId:item.previewObject.msg_id];
+    MessageTableItem *messageItem = [controller itemOfMsgId:item.previewObject.msg_id fakeId:0];
     
     NSInteger row = [controller indexOfObject:messageItem];
     NSView *cellView = nil;

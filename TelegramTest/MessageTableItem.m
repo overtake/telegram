@@ -388,6 +388,7 @@ static NSTextAttachment *channelViewsCountAttachment() {
     assert(viewSize.height > 0);
     
     
+    
     if([self.message.action isKindOfClass:[TL_messageActionChatMigrateTo class]]) {
         viewSize.height = 1;
     }
