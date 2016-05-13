@@ -336,24 +336,28 @@
       
         TL_localMessage *msg = [TL_localMessage convertReceivedMessage:[(TL_updateEditChannelMessage *)update message]];
         
-        if(msg)
+        if([TGProccessUpdates checkMessageEntityUsers:msg]) {
+            if(msg)
             [[Storage manager] addSupportMessages:@[msg]];
-        
-        TL_conversation *conversation = [self conversationWithChannelId:abs(msg.peer_id)];
-        
-        
-        [[Storage manager] addHolesAroundMessage:msg];
-        
-        [[Storage manager] insertMessages:@[msg]];
-        
-        if(conversation.lastMessage.n_id == msg.n_id) {
-            conversation.lastMessage = msg;
-            [Notification perform:[Notification notificationNameByDialog:conversation action:@"message"] data:@{KEY_DIALOG:conversation,KEY_LAST_CONVRESATION_DATA:[MessagesUtils conversationLastData:conversation]}];
+            
+            TL_conversation *conversation = [self conversationWithChannelId:abs(msg.peer_id)];
+            
+            
+            [[Storage manager] addHolesAroundMessage:msg];
+            
+            [[Storage manager] insertMessages:@[msg]];
+            
+            if(conversation.lastMessage.n_id == msg.n_id) {
+                conversation.lastMessage = msg;
+                [Notification perform:[Notification notificationNameByDialog:conversation action:@"message"] data:@{KEY_DIALOG:conversation,KEY_LAST_CONVRESATION_DATA:[MessagesUtils conversationLastData:conversation]}];
+            }
+            
+            
+            
+            [Notification perform:UPDATE_EDITED_MESSAGE data:@{KEY_MESSAGE:msg}];
+        } else {
+            return NO;
         }
-        
-        
-        
-        [Notification perform:UPDATE_EDITED_MESSAGE data:@{KEY_MESSAGE:msg}];
         
     } else if( [update isKindOfClass:[TL_updateDeleteChannelMessages class]]) {
         
