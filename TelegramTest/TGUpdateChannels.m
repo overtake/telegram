@@ -311,7 +311,7 @@
         TL_localMessage *message = [TL_localMessage convertReceivedMessage:[(TL_updateNewChannelMessage *)update message]];
         
         
-        if((message.from_id > 0 && ![[UsersManager sharedManager] find:message.from_id]) || (message.fwd_from != nil && !message.fwdObject) || (message.via_bot_id != 0 && ![[UsersManager sharedManager] find:message.via_bot_id])) {
+        if((message.from_id > 0 && ![[UsersManager sharedManager] find:message.from_id]) || (message.fwd_from != nil && !message.fwdObject) || (message.via_bot_id != 0 && ![[UsersManager sharedManager] find:message.via_bot_id] || [TGProccessUpdates checkMessageEntityUsers:message])) {
             
             
             [self failUpdateWithChannelId:[self channelIdWithUpdate:update] limit:50 withCallback:nil errorCallback:nil];

@@ -1928,6 +1928,14 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "__56-[DialogsManager updateTop:needUpdate:update_real_date:]_block_invoke_2:DialogsManager.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "result">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "-[TGCTextView setSelectionRange:]:TGCTextView.m">
          <PersistentStrings>
             <PersistentString
@@ -3865,6 +3873,14 @@
          contextName = "__39-[UserNameViewContainer initWithFrame:]_block_invoke_2:UserNameViewController.m">
       </ContextState>
       <ContextState
+         contextName = "-[TGConversationsViewController move:conversation:]:TGConversationsViewController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "[[DialogsManager sharedManager] all];">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "__42-[MessageInputGrowingTextView stringValue]_block_invoke:MessageInputGrowingTextView.m">
          <PersistentStrings>
             <PersistentString
@@ -4230,6 +4246,20 @@
       </ContextState>
       <ContextState
          contextName = "-[MessagesViewController setCurrentConversation:]:MessagesViewController.m">
+      </ContextState>
+      <ContextState
+         contextName = "__59-[TGConversationsViewController notificationDialogsReload:]_block_invoke_2:TGConversationsViewController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "obj.chat">
+            </PersistentString>
+            <PersistentString
+               value = "obj.chat.isDeactivated">
+            </PersistentString>
+            <PersistentString
+               value = "obj.isAddToList">
+            </PersistentString>
+         </PersistentStrings>
       </ContextState>
       <ContextState
          contextName = "-[TGConversationsViewController selectionDidChange:item:]:TGConversationsViewController.m">

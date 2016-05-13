@@ -432,6 +432,26 @@ static NSArray *channelUpdates;
     
 }
 
++(BOOL)checkMessageEntityUsers:(TL_localMessage *)message {
+    
+    __block BOOL accept = YES;
+    
+    [message.entities enumerateObjectsUsingBlock:^(TLMessageEntity *entity, NSUInteger idx, BOOL * _Nonnull stop) {
+        
+        if([entity isKindOfClass:[TL_messageEntityMentionName class]]) {
+            
+            if(![[UsersManager sharedManager] find:entity.user_id]) {
+                accept = NO;
+                *stop = YES;
+            }
+        }
+        
+    }];
+    
+    return accept;
+    
+}
+
 
 -(BOOL)proccessStatefulMessage:(TGUpdateContainer *)container needSave:(BOOL)needSave {
     
@@ -443,7 +463,7 @@ static NSArray *channelUpdates;
         TL_localMessage *message = [TL_localMessage createWithN_id:shortMessage.n_id flags:shortMessage.flags from_id:[shortMessage from_id] to_id:[TL_peerChat createWithChat_id:shortMessage.chat_id] fwd_from:shortMessage.fwd_from reply_to_msg_id:shortMessage.reply_to_msg_id date:shortMessage.date message:shortMessage.message media:[TL_messageMediaEmpty create] fakeId:[MessageSender getFakeMessageId] randomId:rand_long() reply_markup:nil entities:shortMessage.entities views:0 via_bot_id:shortMessage.via_bot_id edit_date:0 isViewed:YES state:DeliveryStateNormal];
         
         
-        if(![[UsersManager sharedManager] find:shortMessage.from_id] || ![[ChatsManager sharedManager] find:shortMessage.chat_id] || (message.fwd_from != nil && !message.fwdObject) || (message.via_bot_id != 0 && ![[UsersManager sharedManager] find:message.via_bot_id])) {
+        if(![[UsersManager sharedManager] find:shortMessage.from_id] || ![[ChatsManager sharedManager] find:shortMessage.chat_id] || (message.fwd_from != nil && !message.fwdObject) || (message.via_bot_id != 0 && ![[UsersManager sharedManager] find:message.via_bot_id]) || ![TGProccessUpdates checkMessageEntityUsers:message]) {
             
             if(![[ChatsManager sharedManager] find:shortMessage.chat_id]) {
                 [[ChatFullManager sharedManager] requestChatFull:shortMessage.chat_id force:YES];
@@ -466,7 +486,7 @@ static NSArray *channelUpdates;
         TL_localMessage *message = [TL_localMessage createWithN_id:shortMessage.n_id flags:shortMessage.flags from_id:[shortMessage user_id] to_id:[TL_peerUser createWithUser_id:[shortMessage user_id]] fwd_from:shortMessage.fwd_from reply_to_msg_id:shortMessage.reply_to_msg_id date:shortMessage.date message:shortMessage.message media:[TL_messageMediaEmpty create] fakeId:[MessageSender getFakeMessageId] randomId:rand_long() reply_markup:nil entities:shortMessage.entities views:0 via_bot_id:shortMessage.via_bot_id edit_date:0 isViewed:YES state:DeliveryStateNormal];
         
         
-        if(![[UsersManager sharedManager] find:shortMessage.user_id] || (message.fwd_from != nil && !message.fwdObject) || (message.via_bot_id != 0 && ![[UsersManager sharedManager] find:message.via_bot_id])) {
+        if(![[UsersManager sharedManager] find:shortMessage.user_id] || (message.fwd_from != nil && !message.fwdObject) || (message.via_bot_id != 0 && ![[UsersManager sharedManager] find:message.via_bot_id] || ![TGProccessUpdates checkMessageEntityUsers:message])) {
             [self failSequence];
             return NO;
         }

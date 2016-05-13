@@ -9,6 +9,9 @@
 #import "TGRecentSearchRowItem.h"
 #import "TGRecentSearchRowView.h"
 
+@interface TGRecentSearchRowItem ()
+@property (nonatomic,assign) long randKey;
+@end
 
 @implementation TGRecentSearchRowItem
 
@@ -16,13 +19,14 @@
     if(self = [super initWithObject:object]) {
         _conversation = object;
         _conversation.fake = YES;
+        _randKey = rand_long();
     }
     
     return self;
 }
 
 -(NSUInteger)hash {
-    return _conversation.peer_id;
+    return _randKey;
 }
 
 -(Class)viewClass {

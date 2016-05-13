@@ -543,7 +543,7 @@
             
             
             dispatch_block_t next = ^{
-                [RPCRequest sendRequest:[TLAPI_contacts_getTopPeers createWithFlags:(1 << 0) | (1 << 1) | (1 << 2) | (1 << 5) | (1 << 10) offset:offset limit:100 n_hash:acc] successHandler:^(id request, TL_contacts_topPeers *response) {
+                [RPCRequest sendRequest:[TLAPI_contacts_getTopPeers createWithFlags:(1 << 0) | (1 << 2) offset:offset limit:100 n_hash:acc] successHandler:^(id request, TL_contacts_topPeers *response) {
                     
                     if([response isKindOfClass:[TL_contacts_topPeers class]]) {
                         [SharedManager proccessGlobalResponse:response];

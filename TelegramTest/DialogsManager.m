@@ -813,10 +813,14 @@
     }
     
     if(message.isN_out) {
-        [MessageSender addRatingForPeer:message.peer];
-        if(message.via_bot_id != 0) {
-            [MessageSender addRatingForPeer:[TL_peerUser createWithUser_id:message.via_bot_id]];
+        if([message.peer isKindOfClass:[TL_peerUser class]]) {
+            if(message.via_bot_id != 0) {
+                [MessageSender addRatingForPeer:[TL_peerUser createWithUser_id:message.via_bot_id]];
+            } else {
+                [MessageSender addRatingForPeer:message.peer];
+            }
         }
+        
     }
     
     dialog.fake = NO;
