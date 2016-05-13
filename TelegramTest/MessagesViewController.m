@@ -1498,8 +1498,13 @@ static NSTextAttachment *headerMediaIcon() {
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     
+    if(((!self.conversation.canSendMessage || ![SettingsArchiver isDefaultEnabledESGLayout]) && self.isShownESGController) || (self.canShownESGController && !self.isShownESGController && [SettingsArchiver isDefaultEnabledESGLayout])) {
+        [self showOrHideESGController:NO toggle:NO];
+    } else {
+        [self.bottomView setSelectedSmileButton:self.messagesViewController.isShownESGController];
+        [_esgViewController show];
+    }
     
-    [_esgViewController show];
     
     if(_conversation && _conversation.type == DialogTypeUser) {
         [[FullUsersManager sharedManager] requestUserFull:_conversation.user withCallback:nil];
@@ -2978,10 +2983,7 @@ static NSTextAttachment *headerMediaIcon() {
         }
          
          
-         if((!self.conversation.canSendMessage && self.isShownESGController) || (self.canShownESGController && !self.isShownESGController && [SettingsArchiver isDefaultEnabledESGLayout])) {
-             [self showOrHideESGController:NO toggle:NO];
-         } else
-            [self.bottomView setSelectedSmileButton:self.messagesViewController.isShownESGController];
+
 
     }
 }

@@ -15,4 +15,6 @@
 
 @property (nonatomic,strong) NSAttributedString *inline_placeholder;
 
+-(void)checkAndReplaceCustomMentions;
+
 @end

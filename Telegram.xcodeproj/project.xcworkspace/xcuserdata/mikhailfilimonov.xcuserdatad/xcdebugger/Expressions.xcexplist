@@ -5469,6 +5469,9 @@
          contextName = "-[MessageInputGrowingTextView checkAndReplaceCustomMentions]:MessageInputGrowingTextView.m">
          <PersistentStrings>
             <PersistentString
+               value = "fakeMentions">
+            </PersistentString>
+            <PersistentString
                value = "_customMentions">
             </PersistentString>
             <PersistentString
