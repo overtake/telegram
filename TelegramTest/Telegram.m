@@ -407,6 +407,12 @@ static TGEnterPasswordPanel *panel;
 
 +(id)findObjectWithName:(NSString *)name {
     
+    NSString *inchatprefix = @"chat://openprofile/?peer_class=TL_peerUser&peer_id=";
+    
+    if([name hasPrefix:inchatprefix]) {
+        return [[UsersManager sharedManager] find:[[name substringFromIndex:inchatprefix.length] intValue]];
+    }
+    
     id obj = [UsersManager findUserByName:name];
     
     if(!obj)

@@ -59,9 +59,9 @@ void (^linkOverHandle)(NSString *link, BOOL over, NSRect rect,TGCTextView *textV
     
      cancel_delayed_block(blockHandle);
     
-    BOOL accept = [link hasPrefix:@"@"];
+    BOOL accept = [link hasPrefix:@"@"] || [link hasPrefix:@"chat://openprofile/?peer_class=TL_peerUser&peer_id="];
     
-   if(accept)
+   if(accept && [link hasPrefix:@"@"])
         link = [link substringFromIndex:1];
     
     if([link hasPrefix:@"tg://resolve"]) {
@@ -73,6 +73,8 @@ void (^linkOverHandle)(NSString *link, BOOL over, NSRect rect,TGCTextView *textV
         clear_current_popover();
         return;
     }
+    
+    
     
     
     __block id obj = [Telegram findObjectWithName:link];
