@@ -436,7 +436,7 @@ DYNAMIC_PROPERTY(DUser);
     if(conversation.type == DialogTypeSecretChat && conversation.encryptedChat.encryptedParams.layer < 45)
         return;
     
-    if(self.messagesViewController.state != MessagesViewControllerStateNone)
+    if(self.messagesViewController.state != MessagesViewControllerStateNone && self.messagesViewController.state != MessagesViewControllerStateEditMessage)
         return;
     
     NSMutableArray *uids = [[NSMutableArray alloc] init];
@@ -489,7 +489,7 @@ DYNAMIC_PROPERTY(DUser);
                     
                     TLUser *user = [[UsersManager sharedManager] find:peer.peer.user_id];
                     
-                    if(user)
+                    if(user && ([[user.username lowercaseString] hasPrefix:[query lowercaseString]] || query.length == 0))
                         [botUsers addObject:user];
 
                 }];

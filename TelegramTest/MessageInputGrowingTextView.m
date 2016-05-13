@@ -321,6 +321,8 @@ typedef enum {
     [super setString:string];
     
     [self checkAndReplaceCustomMentions];
+    
+    [self.scrollView.clipView scrollRectToVisible:NSMakeRect(0, 0, NSWidth(self.frame), NSHeight(self.frame)) animated:NO];
 }
 
 
@@ -468,8 +470,10 @@ typedef enum {
         }];
         
         [fakeMentions enumerateObjectsUsingBlock:^(NSTextCheckingResult *obj, NSUInteger idx, BOOL * _Nonnull stop) {
-            [[self textStorage] addAttribute:NSForegroundColorAttributeName value:LINK_COLOR range:obj.range];
-
+            if(cMentions.count > idx) {
+                [[self textStorage] addAttribute:NSForegroundColorAttributeName value:LINK_COLOR range:obj.range];
+            }
+            
         }];
         
         if(![m isEqualToString:value]) {
@@ -479,6 +483,11 @@ typedef enum {
         
         _customMentions = cMentions;
     }
+}
+
+-(void)insertText:(id)aString replacementRange:(NSRange)replacementRange {
+    [super insertText:aString replacementRange:replacementRange];
+   // [self checkAndReplaceCustomMentions];
 }
 
 -(NSString *)realMentions:(NSMutableString *)string mentions:(NSMutableDictionary *)mentions idx:(int)idx {

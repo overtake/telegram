@@ -1907,7 +1907,7 @@ static RBLPopover *popover;
         int startX = self.attachButton.frame.origin.x + self.attachButton.frame.size.width + 21;
         
         _webpageAttach = [[TGWebpageAttach alloc] initWithFrame:NSMakeRect(startX, NSHeight(self.inputMessageTextField.containerView.frame) + NSMinX(self.inputMessageTextField.frame) + 20 , NSWidth(self.inputMessageTextField.containerView.frame), 30) webpage:webpage link:[self.inputMessageString webpageLink]];
-        
+        _webpageAttach.backgroundColor = self.backgroundColor;
         _webpageAttach.autoresizingMask = NSViewWidthSizable;
         
         [self.normalView addSubview:_webpageAttach];
@@ -1943,8 +1943,8 @@ static RBLPopover *popover;
             height += 75;
         }
         
-        if(self.replyContainer != nil || self.fwdContainer != nil || (self.webpageAttach != nil && self.inputMessageString.length > 0)) {
-            height+= MAX(MAX(NSHeight(self.replyContainer.frame),NSHeight(self.webpageAttach.frame)),NSHeight(self.fwdContainer.frame)) + 5;
+        if(self.replyContainer != nil || self.fwdContainer != nil || (self.webpageAttach != nil && self.inputMessageString.length > 0) || (_editMessageContainer != nil && !_editMessageContainer.isHidden)) {
+            height+= MAX(MAX(MAX(NSHeight(self.replyContainer.frame),NSHeight(self.webpageAttach.frame)),NSHeight(self.fwdContainer.frame)),NSHeight(_editMessageContainer.frame)) + 5;
         }
         
         [_webpageAttach setHidden:_fwdContainer != nil];
@@ -1954,10 +1954,7 @@ static RBLPopover *popover;
         if(_botKeyboard != nil) {
             height+= (!_botKeyboard.isHidden ? NSHeight(_botKeyboard.frame) : 0);
         }
-        
-        if(_editMessageContainer != nil) {
-            height+= (!_editMessageContainer.isHidden ? NSHeight(_editMessageContainer.frame) : 0);
-        }
+
 
     } else {
         height = 58;

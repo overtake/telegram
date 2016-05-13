@@ -1391,6 +1391,14 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "-[TGMessagesHintView showMentionPopupWithQuery:conversation:chat:allowInlineBot:choiceHandler:]:TGMessagesHintView.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.messagesViewController.state">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "-[MessageTableItem initWithObject:]:MessageTableItem.m">
          <PersistentStrings>
             <PersistentString
@@ -4889,6 +4897,9 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "__69-[DialogsManager markChannelMessagesAsRead:max_id:completionHandler:]_block_invoke_3:DialogsManager.m">
+      </ContextState>
+      <ContextState
          contextName = "__54-[MessageTableItemText updateFontAttributesByEntities]_block_invoke:MessageTableItemText.m">
       </ContextState>
       <ContextState
@@ -7808,6 +7819,11 @@
       </ContextState>
       <ContextState
          contextName = "-[TGProccessUpdates proccessUpdate:]:TGProccessUpdates.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "msg.isUnread">
+            </PersistentString>
+         </PersistentStrings>
       </ContextState>
       <ContextState
          contextName = "__35-[TGUpdateChannels proccessUpdate:]_block_invoke_4:TGUpdateChannels.m">

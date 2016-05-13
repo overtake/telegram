@@ -22,8 +22,7 @@
 
 -(void)performEdit:(int)flags {
     
-    if(_inputTemplate.text.length >0)
-        flags |= (1 << 11);
+    flags |= (1 << 11);
     
     NSMutableArray *entities = [NSMutableArray array];
     
@@ -39,6 +38,7 @@
         flags |= (1 << 3);
     
     [RPCRequest sendRequest:[TLAPI_messages_editMessage createWithFlags:flags peer:_conversation.inputPeer n_id:_inputTemplate.postId message:message reply_markup:nil entities:entities] successHandler:^(id request, id response) {
+        
         
         
     } errorHandler:^(id request, RpcError *error) {

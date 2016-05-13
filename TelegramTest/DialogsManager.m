@@ -816,14 +816,14 @@
     }
     
     if(message.isN_out) {
-        if([message.peer isKindOfClass:[TL_peerUser class]]) {
-            if(message.via_bot_id != 0) {
-                [MessageSender addRatingForPeer:[TL_peerUser createWithUser_id:message.via_bot_id]];
-            } else {
+        
+        if(message.via_bot_id != 0) {
+            [MessageSender addRatingForPeer:[TL_peerUser createWithUser_id:message.via_bot_id]];
+        } else {
+            if([message.peer isKindOfClass:[TL_peerUser class]]) {
                 [MessageSender addRatingForPeer:message.peer];
             }
-        }
-        
+        } 
     }
     
     dialog.fake = NO;

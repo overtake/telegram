@@ -833,6 +833,8 @@ static NSMutableDictionary *savedScrolling;
                 
                 [item updateWebPage];
                 
+                [item makeSizeByWidth:item.makeSize];
+                
                 item.isHeaderMessage = item.isHeaderMessage || item.webpage != nil;
                 
                 if(index != NSNotFound) {

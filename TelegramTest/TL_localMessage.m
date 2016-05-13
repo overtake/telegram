@@ -430,6 +430,9 @@ DYNAMIC_PROPERTY(DDialog);
     
     BOOL canEdit = (([self.chat isKindOfClass:[TLChat class]] && self.chat.isChannel) || ([self.to_id isKindOfClass:[TL_peerUser class]] || [self.chat isKindOfClass:[TLChat class]])) && self.fwd_from == nil;
     
+    if(self.media.document && (self.media.document.isVoice || self.media.document.isSticker))
+        return NO;
+    
     if(canEdit) {
         canEdit = self.isPost ?  self.chat.isCreator || (self.chat.isEditor && self.from_id == [UsersManager currentUserId]) : self.from_id == [UsersManager currentUserId];
         
