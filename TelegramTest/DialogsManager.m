@@ -691,9 +691,12 @@
                 conversation.last_marked_message = max_id;
                 [conversation save];
                 [Notification perform:[Notification notificationNameByDialog:conversation action:@"unread_count"] data:@{KEY_DIALOG:conversation,KEY_LAST_CONVRESATION_DATA:[MessagesUtils conversationLastData:conversation]}];
+
                 
                 if(conversation.unread_count > 0) {
                     [RPCRequest sendRequest:[TLAPI_messages_getPeerDialogs createWithPeers:[@[conversation.inputPeer] mutableCopy]] successHandler:^(id request, TL_messages_peerDialogs *response) {
+                        
+
                         
                         [response.messages removeAllObjects];
                         

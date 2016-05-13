@@ -175,7 +175,7 @@
     [self.generalToolItem setLabel:NSLocalizedString(@"Settings.General", nil)];
     [self.accountToolItem setLabel:NSLocalizedString(@"Settings.Account", nil)];
     
-    [self.markedInputText setStringValue:NSLocalizedString(@"Settings.CheckMarkedInputText", nil)];
+    [self.markedInputText setTitle:NSLocalizedString(@"Settings.CheckMarkedInputText", nil)];
     
     
     self.blocked_table_view.removeButton = self.remove_from_block_button;

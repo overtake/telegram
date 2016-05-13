@@ -94,7 +94,7 @@ typedef enum {
 - (void)updateLoading;
 - (MessageTableItem *)objectAtIndex:(NSUInteger)position;
 - (NSUInteger)indexOfObject:(MessageTableItem *)item;
-- (MessageTableItem *)itemOfMsgId:(long)msg_id fakeId:(int)fakeId;
+- (MessageTableItem *)itemOfMsgId:(long)msg_id randomId:(long)randomId;
 
 +(NSMenu *)destructMenu:(dispatch_block_t)ttlCallback click:(dispatch_block_t)click;
 +(NSMenu *)notifications:(dispatch_block_t)callback conversation:(TL_conversation *)conversation click:(dispatch_block_t)click;

@@ -223,8 +223,8 @@
 
 -(void)setUnread_count:(int)unread_count {
     
-    if(unread_count >= 0)
-        [super setUnread_count:unread_count];
+    [super setUnread_count:MAX(unread_count,0)];
+    
     
 }
 

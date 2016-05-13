@@ -624,11 +624,12 @@ static NSMutableDictionary *savedScrolling;
         
         [self.historyController updateMessage:message];
         
+        
         [self.historyController items:@[@(message.n_id)] complete:^(NSArray *items) {
             
             [items enumerateObjectsUsingBlock:^(TL_localMessage *obj, NSUInteger idx, BOOL *stop) {
                 
-               MessageTableItem *item = [self itemOfMsgId:obj.channelMsgId fakeId:obj.fakeId];
+               MessageTableItem *item = [self itemOfMsgId:obj.channelMsgId randomId:obj.randomId];
                 NSUInteger index = [self indexOfObject:item];
 
                 if(item && index != NSNotFound) {
@@ -735,7 +736,7 @@ static NSMutableDictionary *savedScrolling;
         [self.historyController items:@[@(message.n_id)] complete:^(NSArray *items) {
             
             if(items.count == 1) {
-                MessageTableItem * item = [self itemOfMsgId:((TL_localMessage *)items[0]).channelMsgId fakeId:((TL_localMessage *)items[0]).fakeId];
+                MessageTableItem * item = [self itemOfMsgId:((TL_localMessage *)items[0]).channelMsgId randomId:((TL_localMessage *)items[0]).randomId];
                 item.message = items[0];
                 
                 [item makeSizeByWidth:item.makeSize];
@@ -775,7 +776,7 @@ static NSMutableDictionary *savedScrolling;
             [self.historyController items:@[notification.userInfo[KEY_MESSAGE_ID]] complete:^(NSArray *items) {
                 
                 if(items.count == 1) {
-                    item = [self itemOfMsgId:((TL_localMessage *)items[0]).channelMsgId fakeId:((TL_localMessage *)items[0]).fakeId];
+                    item = [self itemOfMsgId:((TL_localMessage *)items[0]).channelMsgId randomId:((TL_localMessage *)items[0]).randomId];
                     block();
                 }
                
@@ -800,7 +801,7 @@ static NSMutableDictionary *savedScrolling;
         
         [items enumerateObjectsUsingBlock:^(TL_localMessage *obj, NSUInteger idx, BOOL *stop) {
             
-            MessageTableItem *item = [self itemOfMsgId:obj.channelMsgId fakeId:obj.fakeId];
+            MessageTableItem *item = [self itemOfMsgId:obj.channelMsgId randomId:obj.randomId];
             item.message.flags&=~TGREADEDCONTENT;
             NSUInteger index = [self indexOfObject:item];
             
@@ -825,7 +826,7 @@ static NSMutableDictionary *savedScrolling;
         
         [items enumerateObjectsUsingBlock:^(TL_localMessage *obj, NSUInteger idx, BOOL *stop) {
             
-            MessageTableItemText *item = (MessageTableItemText *) [self itemOfMsgId:obj.channelMsgId fakeId:obj.fakeId];
+            MessageTableItemText *item = (MessageTableItemText *) [self itemOfMsgId:obj.channelMsgId randomId:obj.randomId];
             
             if([item isKindOfClass:[MessageTableItemText class]]) {
                 NSUInteger index = [self indexOfObject:item];
@@ -861,7 +862,7 @@ static NSMutableDictionary *savedScrolling;
             
             [items enumerateObjectsUsingBlock:^(TL_localMessage *message, NSUInteger idx, BOOL *stop) {
                 
-                MessageTableItem *item = [self itemOfMsgId:message.channelMsgId fakeId:message.fakeId];
+                MessageTableItem *item = [self itemOfMsgId:message.channelMsgId randomId:message.randomId];
                 
                 NSUInteger index = [self indexOfObject:item];
                 
@@ -894,7 +895,7 @@ static NSMutableDictionary *savedScrolling;
                 
                 if(items.count == 1) {
                     
-                    item = (MessageTableItemHole *) [self itemOfMsgId:[[items firstObject] channelMsgId] fakeId:[[items firstObject] fakeId]];
+                    item = (MessageTableItemHole *) [self itemOfMsgId:[[items firstObject] channelMsgId] randomId:[[items firstObject] randomId]];
                     
                     if(hole.messagesCount != 0) {
                         
@@ -931,7 +932,7 @@ static NSMutableDictionary *savedScrolling;
             
             [items enumerateObjectsUsingBlock:^(TL_localMessage *obj, NSUInteger idx, BOOL *stop) {
                 
-                MessageTableItemText *item = (MessageTableItemText *) [self itemOfMsgId:obj.channelMsgId fakeId:obj.fakeId];
+                MessageTableItemText *item = (MessageTableItemText *) [self itemOfMsgId:obj.channelMsgId randomId:obj.randomId];
                 
                 NSUInteger index = [self indexOfObject:item];
                 
@@ -1870,7 +1871,7 @@ static NSTextAttachment *headerMediaIcon() {
         
         if(!hide)
         {
-            MessageTableItem *item = [self itemOfMsgId:[[_replyMsgsStack lastObject] channelMsgId] fakeId:[[_replyMsgsStack lastObject] fakeId]];
+            MessageTableItem *item = [self itemOfMsgId:[[_replyMsgsStack lastObject] channelMsgId] randomId:[[_replyMsgsStack lastObject] randomId]];
             
             if(item) {
                 NSRect rowRect = [self.table rectOfRow:[self indexOfObject:item]];
@@ -1991,7 +1992,7 @@ static NSTextAttachment *headerMediaIcon() {
             
             [filtred enumerateObjectsUsingBlock:^(TL_localMessage *obj, NSUInteger idx, BOOL * _Nonnull stop) {
                 
-               MessageTableItem *item = [self itemOfMsgId:obj.channelMsgId fakeId:obj.fakeId];
+               MessageTableItem *item = [self itemOfMsgId:obj.channelMsgId randomId:obj.randomId];
                 
               
                 
@@ -2442,7 +2443,7 @@ static NSTextAttachment *headerMediaIcon() {
                 }
             }
             
-            MessageTableItem *item = [self itemOfMsgId:obj.channelMsgId fakeId:obj.fakeId];
+            MessageTableItem *item = [self itemOfMsgId:obj.channelMsgId randomId:obj.randomId];
             
             NSUInteger row = [self.messages indexOfObject:item];
             
@@ -2528,12 +2529,16 @@ static NSTextAttachment *headerMediaIcon() {
     
 }
 
-- (MessageTableItem *) findMessageItemById:(long)msgId fakeId:(int)fakeId {
+- (MessageTableItem *) findMessageItemById:(long)msgId randomId:(long)randomId {
     
     MessageTableItem *item = self.messagesKeys[@(msgId)];;
     
     if(!item) {
-        item = self.messagesKeys[@(fakeId)];
+        item = self.messagesKeys[@(randomId)];
+        
+        if(!item) {
+            item = [[self.messages filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.message.channelMsgId == %ld",msgId]] lastObject];
+        }
         
         if(item) {
             self.messagesKeys[@(msgId)] = item;
@@ -2645,7 +2650,7 @@ static NSTextAttachment *headerMediaIcon() {
     if(fromMsg != nil)
         [_replyMsgsStack addObject:fromMsg];
     
-    MessageTableItem *item = message.hole != nil ? [self itemOfMsgId:channelMsgId(message.hole.min_id, message.peer_id) fakeId:message.fakeId] : [self itemOfMsgId:message.channelMsgId fakeId:message.fakeId];
+    MessageTableItem *item = message.hole != nil ? [self itemOfMsgId:channelMsgId(message.hole.min_id, message.peer_id) randomId:message.randomId] : [self itemOfMsgId:message.channelMsgId randomId:message.randomId];
     
     if(item && (flags & ShowMessageTypeReply) > 0) {
         [self scrollToItem:item animated:YES centered:YES highlight:YES];
@@ -2682,7 +2687,7 @@ static NSTextAttachment *headerMediaIcon() {
         [self.normalNavigationCenterView enableDiscussion:[self.historyController.filter isKindOfClass:[ChannelFilter class]] force:YES];
         
         
-        NSUInteger index = [self indexOfObject:[self itemOfMsgId:msg.channelMsgId fakeId:msg.fakeId]];
+        NSUInteger index = [self indexOfObject:[self itemOfMsgId:msg.channelMsgId randomId:msg.randomId]];
         
         __block NSRect rect = NSZeroRect;
         
@@ -3476,7 +3481,7 @@ static NSTextAttachment *headerMediaIcon() {
     }
     
     [array enumerateObjectsUsingBlock:^(MessageTableItem  *obj, NSUInteger idx, BOOL * _Nonnull stop) {
-        _messagesKeys[@(obj.message.channelMsgId)] = obj;
+        _messagesKeys[@(obj.message.n_id < TGMINFAKEID ? obj.message.channelMsgId : obj.message.randomId)] = obj;
     }];
     
     
@@ -4451,8 +4456,8 @@ static NSTextAttachment *headerMediaIcon() {
     return [self.messages indexOfObject:item];
 }
 
-- (MessageTableItem *)itemOfMsgId:(long)msg_id fakeId:(int)fakeId {
-    return [self findMessageItemById:msg_id fakeId:fakeId];
+- (MessageTableItem *)itemOfMsgId:(long)msg_id randomId:(long)randomId {
+    return [self findMessageItemById:msg_id randomId:randomId];
 }
 
 - (void)clearHistory:(TL_conversation *)dialog {

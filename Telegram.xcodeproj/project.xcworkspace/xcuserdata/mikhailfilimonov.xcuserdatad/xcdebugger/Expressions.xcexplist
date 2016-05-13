@@ -6804,6 +6804,9 @@
             <PersistentString
                value = "self.window.contentView ">
             </PersistentString>
+            <PersistentString
+               value = "self.markedInputTex">
+            </PersistentString>
          </PersistentStrings>
       </ContextState>
       <ContextState
