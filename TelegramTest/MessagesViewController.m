@@ -651,11 +651,9 @@ static NSMutableDictionary *savedScrolling;
                     self.messagesKeys[@(message.channelMsgId)] = item;
                     if(index != NSNotFound) {
                         
-                        [self.table beginUpdates];
                         [[NSAnimationContext currentContext] setDuration:0.0f];
                         [self.table noteHeightOfRowsWithIndexesChanged:[NSIndexSet indexSetWithIndex:index]];
                         [self.table reloadDataForRowIndexes:[NSIndexSet indexSetWithIndex:index] columnIndexes:[NSIndexSet indexSetWithIndex:0]];
-                        [self.table endUpdates];
                         
 //                        NSTableRowView *rowView = [self.table rowViewAtRow:index makeIfNecessary:NO];
 //                        

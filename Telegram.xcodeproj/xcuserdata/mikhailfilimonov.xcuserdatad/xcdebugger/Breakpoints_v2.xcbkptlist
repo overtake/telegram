@@ -170,11 +170,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "TelegramTest/MessagesViewController.m"
-            timestampString = "484852863.116771"
+            timestampString = "484853131.874087"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "2598"
-            endingLineNumber = "2598"
+            startingLineNumber = "2596"
+            endingLineNumber = "2596"
             landmarkName = "-becomeFirstResponder"
             landmarkType = "5">
          </BreakpointContent>
