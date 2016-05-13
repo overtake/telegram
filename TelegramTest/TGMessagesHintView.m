@@ -471,34 +471,64 @@ DYNAMIC_PROPERTY(DUser);
     __block NSMutableArray *botUsers = [[NSMutableArray alloc] init];
     
     if(allowInlineBot && self.messagesViewController.templateType != TGInputMessageTemplateTypeEditMessage) {
-        __block NSMutableDictionary *bots;
+        
+        __block NSMutableArray *top;
         
         [[Storage yap] readWithBlock:^(YapDatabaseReadTransaction *transaction) {
             
-            bots = [[transaction objectForKey:@"bots" inCollection:@"inlinebots"] mutableCopy];
+            top = [[transaction objectForKey:@"categories" inCollection:TOP_PEERS] mutableCopy];
             
         }];
         
-        [bots enumerateKeysAndObjectsUsingBlock:^(id  _Nonnull key, NSDictionary *bot, BOOL * _Nonnull stop) {
+        
+        [top enumerateObjectsUsingBlock:^(TL_topPeerCategoryPeers *obj, NSUInteger cidx, BOOL * _Nonnull stop) {
             
-            int dateUsed = [bot[@"date"] intValue];
-            int botId = [bot[@"id"] intValue];
-            
-            TLUser *user = [[UsersManager sharedManager] find:botId];
-            //two weeks
-            if(user && dateUsed + 14*60*60*24 > [[MTNetwork instance] getTime] && ([[user.username lowercaseString] hasPrefix:[query lowercaseString]] || query.length == 0)) {
-                [botUsers addObject:user];
+            if([obj.category isKindOfClass:[TL_topPeerCategoryBotsInline class]]) {
+                
+                [obj.peers enumerateObjectsUsingBlock:^(TL_topPeer *peer, NSUInteger idx, BOOL *stop) {
+                    
+                    TLUser *user = [[UsersManager sharedManager] find:peer.peer.user_id];
+                    
+                    if(user)
+                        [botUsers addObject:user];
+
+                }];
+                
+                *stop = YES;
             }
             
         }];
+
         
-        [botUsers sortUsingComparator:^NSComparisonResult(TLUser *obj1, TLUser *obj2) {
-            
-            NSComparisonResult result = [bots[@(obj1.n_id)][@"date"] compare:bots[@(obj2.n_id)][@"date"]];
-            
-            return result == NSOrderedAscending ? NSOrderedDescending : result == NSOrderedDescending ? NSOrderedAscending : NSOrderedSame;
-            
-        }];
+        
+//        __block NSMutableDictionary *bots;
+//
+//        [[Storage yap] readWithBlock:^(YapDatabaseReadTransaction *transaction) {
+//            
+//            bots = [[transaction objectForKey:@"bots" inCollection:@"inlinebots"] mutableCopy];
+//            
+//        }];
+//        
+//        [bots enumerateKeysAndObjectsUsingBlock:^(id  _Nonnull key, NSDictionary *bot, BOOL * _Nonnull stop) {
+//            
+//            int dateUsed = [bot[@"date"] intValue];
+//            int botId = [bot[@"id"] intValue];
+//            
+//            TLUser *user = [[UsersManager sharedManager] find:botId];
+//            //two weeks
+//            if(user && dateUsed + 14*60*60*24 > [[MTNetwork instance] getTime] && ([[user.username lowercaseString] hasPrefix:[query lowercaseString]] || query.length == 0)) {
+//                [botUsers addObject:user];
+//            }
+//            
+//        }];
+//        
+//        [botUsers sortUsingComparator:^NSComparisonResult(TLUser *obj1, TLUser *obj2) {
+//            
+//            NSComparisonResult result = [bots[@(obj1.n_id)][@"date"] compare:bots[@(obj2.n_id)][@"date"]];
+//            
+//            return result == NSOrderedAscending ? NSOrderedDescending : result == NSOrderedDescending ? NSOrderedAscending : NSOrderedSame;
+//            
+//        }];
         
         
         users = [botUsers arrayByAddingObjectsFromArray:users];

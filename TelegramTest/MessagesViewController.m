@@ -1891,7 +1891,7 @@ static NSTextAttachment *headerMediaIcon() {
     if(hide) {
         [self.historyController prevStateAsync:^(ChatHistoryState state) {
             
-            BOOL h = hide && state == ChatHistoryStateFull;
+            BOOL h = (hide && state == ChatHistoryStateFull) || !self.noMessagesView.isHidden;
             
             if(self.jumpToBottomButton.isHidden != h) {
                 [self.jumpToBottomButton setHidden:h];

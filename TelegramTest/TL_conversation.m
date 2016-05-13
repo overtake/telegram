@@ -455,6 +455,10 @@ static void *kType;
     return _p_user;
 }
 
+-(id)copy {
+    return [TL_conversation createWithPeer:self.peer top_message:self.top_message unread_count:self.unread_count last_message_date:self.last_message_date notify_settings:self.notify_settings last_marked_message:self.last_marked_message top_message_fake:self.top_message_fake last_marked_date:self.last_marked_date sync_message_id:self.sync_message_id read_inbox_max_id:self.read_inbox_max_id unread_important_count:self.unread_important_count lastMessage:self.lastMessage];
+}
+
 - (void)setUser:(TLUser *)user {
     _p_user = user;
 }

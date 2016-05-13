@@ -1579,6 +1579,14 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "__59-[TGConversationsViewController notificationDialogsReload:]_block_invoke.279:TGConversationsViewController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "current">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "-[ComposePickerViewController viewWillAppear:]:ComposePickerViewController.m">
          <PersistentStrings>
             <PersistentString
@@ -4251,13 +4259,19 @@
          contextName = "__59-[TGConversationsViewController notificationDialogsReload:]_block_invoke_2:TGConversationsViewController.m">
          <PersistentStrings>
             <PersistentString
+               value = "obj.isAddToList">
+            </PersistentString>
+            <PersistentString
+               value = "idx">
+            </PersistentString>
+            <PersistentString
+               value = "obj.fake">
+            </PersistentString>
+            <PersistentString
                value = "obj.chat">
             </PersistentString>
             <PersistentString
                value = "obj.chat.isDeactivated">
-            </PersistentString>
-            <PersistentString
-               value = "obj.isAddToList">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -7074,6 +7088,14 @@
       </ContextState>
       <ContextState
          contextName = "-[Storage executeSaveConversation:db:]:Storage.m">
+      </ContextState>
+      <ContextState
+         contextName = "__59-[TGConversationsViewController notificationDialogsReload:]_block_invoke:TGConversationsViewController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "current">
+            </PersistentString>
+         </PersistentStrings>
       </ContextState>
       <ContextState
          contextName = "-[TLChat(Category) isAdmin]:TLChatCategory.m">

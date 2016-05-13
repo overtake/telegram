@@ -885,7 +885,15 @@
             
             [MessagesManager updateUnreadBadge];
             
-            [Notification perform:DIALOGS_NEED_FULL_RESORT data:@{KEY_DIALOGS:self->list}];
+            [last.allValues enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                
+                NSUInteger position = [self positionForConversation:obj];
+                
+                [Notification perform:DIALOG_MOVE_POSITION data:@{KEY_DIALOG:obj, KEY_POSITION:@(position)}];
+                [Notification perform:[Notification notificationNameByDialog:obj action:@"message"] data:@{KEY_DIALOG:obj,KEY_LAST_CONVRESATION_DATA:[MessagesUtils conversationLastData:obj]}];
+
+            }];
+            
             [Notification perform:MESSAGE_LIST_RECEIVE object:messages];
             
         }];

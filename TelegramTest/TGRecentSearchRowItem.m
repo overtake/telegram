@@ -17,7 +17,7 @@
 
 -(id)initWithObject:(id)object {
     if(self = [super initWithObject:object]) {
-        _conversation = object;
+        _conversation = [object copy];
         _conversation.fake = YES;
         _randKey = rand_long();
     }
