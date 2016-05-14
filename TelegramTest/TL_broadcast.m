@@ -216,7 +216,7 @@ DYNAMIC_PROPERTY(TITLEFORMESSAGE);
     [attributedString setFont:TGSystemFont(12) forRange:attributedString.range];
     
     NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
-    [paragraphStyle setAlignment:2];
+    [paragraphStyle setAlignment:NSCenterTextAlignment];
     [attributedString addAttribute:NSParagraphStyleAttributeName value:paragraphStyle range:NSMakeRange(0, attributedString.length)];
     
     

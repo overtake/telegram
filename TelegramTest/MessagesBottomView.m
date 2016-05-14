@@ -2160,7 +2160,10 @@ static RBLPopover *popover;
         
         [_editMessageContainer setReplyObject:replyObject];
         
-        [self.normalView addSubview:_editMessageContainer];
+        if(_webpageAttach == nil)
+            [self.normalView addSubview:_editMessageContainer];
+        else
+            [self.normalView addSubview:_editMessageContainer positioned:NSWindowBelow relativeTo:_webpageAttach];
         
         [self updateBottomHeight:YES];
         [self TMGrowingTextViewTextDidChange:self.inputMessageTextField];

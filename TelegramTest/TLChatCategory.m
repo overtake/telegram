@@ -236,6 +236,51 @@ static NSTextAttachment *channelVerifySelectedAttachment() {
     return attributedString;
 }
 
+
+- (NSAttributedString *)statusForUserInfoView {
+    NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] init];
+    
+    if([self isChannel])
+    {
+        
+        TLChatFull *fullChat = self.chatFull;
+        
+        if(fullChat.participants_count > 0) {
+            
+            if(self.isMegagroup && fullChat.participants_count <= 200) {
+                
+                [attributedString appendString:[NSString stringWithFormat:@"%d %@", fullChat.participants_count, fullChat.participants_count > 1 ?  NSLocalizedString(@"Conversation.Members", nil) : NSLocalizedString(@"Conversation.Member", nil)] withColor:NSColorFromRGB(0xa9a9a9)];
+                
+                int online = [[ChatFullManager sharedManager] getOnlineCount:self.n_id];
+                if(online > 0) {
+                    [attributedString appendString:@", " withColor:NSColorFromRGB(0xa9a9a9)];
+                    [attributedString appendString:[NSString stringWithFormat:@"%d %@", online, NSLocalizedString(@"Account.Online", @"")] withColor:NSColorFromRGB(0x9b9b9b)];
+                }
+            } else
+            [attributedString appendString:[NSString stringWithFormat:@"%d %@", fullChat.participants_count, fullChat.participants_count > 1 ?  NSLocalizedString(@"Conversation.Members", nil) : NSLocalizedString(@"Conversation.Member", nil)] withColor:NSColorFromRGB(0xa9a9a9)];
+            
+        } else {
+            [attributedString appendString:self.isMegagroup ? NSLocalizedString(@"Conversation.GroupTitle", nil) : NSLocalizedString(@"Conversation.ChannelTitle", nil) withColor:NSColorFromRGB(0xa9a9a9)];
+        }
+        
+        return attributedString;
+    }
+    
+    [attributedString appendString:[NSString stringWithFormat:@"%d %@", self.participants_count, self.participants_count > 1 ?  NSLocalizedString(@"Conversation.Members", nil) : NSLocalizedString(@"Conversation.Member", nil)] withColor:NSColorFromRGB(0xa9a9a9)];
+    
+    int online = [[ChatFullManager sharedManager] getOnlineCount:self.n_id];
+    if(online > 0) {
+        [attributedString appendString:@", " withColor:NSColorFromRGB(0xa9a9a9)];
+        [attributedString appendString:[NSString stringWithFormat:@"%d %@", online, NSLocalizedString(@"Account.Online", @"")] withColor:NSColorFromRGB(0x9b9b9b)];
+    }
+    
+    
+    [attributedString setFont:TGSystemFont(12.5) forRange:attributedString.range];
+    
+    
+    return attributedString;
+}
+
 -(id)inputPeer {
     return self.isChannel || [self isKindOfClass:[TL_channelForbidden class]] ? [TL_inputChannel createWithChannel_id:self.n_id access_hash:self.access_hash] : ([self isKindOfClass:[TL_peerSecret class]] ? [TL_inputEncryptedChat createWithChat_id:self.n_id access_hash:self.access_hash] : nil);
 }

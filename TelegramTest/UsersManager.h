@@ -22,7 +22,7 @@
 -(void)updateUsers:(NSArray *)userIds;
 
 +(NSArray *)findUsersByMention:(NSString *)userName withUids:(NSArray *)uids;
-+(NSArray *)findUsersByMention:(NSString *)userName withUids:(NSArray *)uids acceptContextBots:(BOOL)acceptContextBots;
++(NSArray *)findUsersByMention:(NSString *)userName withUids:(NSArray *)uids acceptContextBots:(BOOL)acceptContextBots acceptNonameUsers:(BOOL)acceptNonameUsers;
 
 
 - (void)addFromDB:(NSArray *)array;

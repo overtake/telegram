@@ -42,7 +42,7 @@
         
         
     } errorHandler:^(id request, RpcError *error) {
-        
+        alert(appName(), NSLocalizedString(@"EditMessage.EditErrorAlert", nil));
     }];
 }
 

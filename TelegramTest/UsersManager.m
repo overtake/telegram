@@ -123,7 +123,7 @@
     return nil;
 }
 
-+(NSArray *)findUsersByMention:(NSString *)userName withUids:(NSArray *)uids acceptContextBots:(BOOL)acceptContextBots {
++(NSArray *)findUsersByMention:(NSString *)userName withUids:(NSArray *)uids acceptContextBots:(BOOL)acceptContextBots acceptNonameUsers:(BOOL)acceptNonameUsers {
     if([userName hasPrefix:@"@"])
         userName = [userName substringFromIndex:1];
     
@@ -136,14 +136,25 @@
         
         
         fullName = [[[UsersManager sharedManager] all] filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(TLUser *evaluatedObject, NSDictionary *bindings) {
-            //evaluatedObject.username.length > 0 &&
-            return [evaluatedObject.fullName searchInStringByWordsSeparated:userName] && [uids indexOfObject:@(evaluatedObject.n_id)] != NSNotFound;
+            BOOL result = [evaluatedObject.fullName searchInStringByWordsSeparated:userName] && [uids indexOfObject:@(evaluatedObject.n_id)] != NSNotFound;
+            
+            if(result && !acceptNonameUsers) {
+                result = result && evaluatedObject.username.length > 0;
+            }
+            
+            return result;
             
         }]];
     }  else {
         userNames = [[[UsersManager sharedManager] all] filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(TLUser *evaluatedObject, NSDictionary *bindings) {
-            //evaluatedObject.username.length > 0 &&
-            return ( [uids indexOfObject:@(evaluatedObject.n_id)] != NSNotFound) || (evaluatedObject.isBotInlinePlaceholder && acceptContextBots);
+            
+            BOOL result = ( [uids indexOfObject:@(evaluatedObject.n_id)] != NSNotFound) || (evaluatedObject.isBotInlinePlaceholder && acceptContextBots);
+            
+            if(result && !acceptNonameUsers) {
+                result = result && evaluatedObject.username.length > 0;
+            }
+            
+            return result;
             
         }]];
         
@@ -181,7 +192,7 @@
 
 +(NSArray *)findUsersByMention:(NSString *)userName withUids:(NSArray *)uids {
    
-    return [self findUsersByMention:userName withUids:uids acceptContextBots:NO];
+    return [self findUsersByMention:userName withUids:uids acceptContextBots:NO acceptNonameUsers:YES];
 }
 
 - (void)addFromDB:(NSArray *)array {

@@ -42,6 +42,7 @@ typedef enum {
 @property (nonatomic, strong) NSMutableArray *selectedMessages;
 @property (nonatomic, strong,readonly) MessagesTableView *table;
 @property (nonatomic, strong) MessagesBottomView *bottomView;
+@property (nonatomic,strong,readonly) TGInputMessageTemplate * editTemplate;
 
 
 typedef enum {

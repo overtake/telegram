@@ -444,7 +444,7 @@
     return _esgViewController.isLayoutStyle ? 58 : 44;
 }
 - (CGFloat)listView:(PXListView*)aListView widthOfRow:(NSUInteger)row {
-    return MAX(roundf(NSWidth(self.frame)/(_packs.count + 1)),48);
+    return MAX(roundf(NSWidth(self.frame)/(_packs.count )),48);
 }
 - (PXListViewCell*)listView:(PXListView*)aListView cellForRow:(NSUInteger)row {
     

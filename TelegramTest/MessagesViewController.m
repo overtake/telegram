@@ -195,7 +195,6 @@
 @property (nonatomic,assign) BOOL needNextRequest;
 
 
-@property (nonatomic,strong) TGInputMessageTemplate *template;
 
 @property (nonatomic,strong) TGMessagesViewAlertHintView *messagesAlertHintView;
 
@@ -710,12 +709,12 @@ static NSMutableDictionary *savedScrolling;
 -(void)updateMessageTemplate:(NSNotification *)notification {
     if([notification.userInfo[KEY_PEER_ID] intValue] == _conversation.peer_id) {
         
-        if(_template && ![_template.text isEqualToString:notification.userInfo[@"text"]]) {
-            BOOL autoSave = _template.autoSave;
-            _template.autoSave = NO;
-            [_template updateTextAndSave:notification.userInfo[@"text"]];
-            _template.autoSave = autoSave;
-            [self.bottomView setTemplate:_template];
+        if(_editTemplate && ![_editTemplate.text isEqualToString:notification.userInfo[@"text"]]) {
+            BOOL autoSave = _editTemplate.autoSave;
+            _editTemplate.autoSave = NO;
+            [_editTemplate updateTextAndSave:notification.userInfo[@"text"]];
+            _editTemplate.autoSave = autoSave;
+            [self.bottomView setTemplate:_editTemplate];
         }
         
     }
@@ -2442,8 +2441,8 @@ static NSTextAttachment *headerMediaIcon() {
         
         [messages enumerateObjectsUsingBlock:^(TL_localMessage *obj, NSUInteger idx, BOOL * _Nonnull stop) {
             
-            if(_template.type == TGInputMessageTemplateTypeEditMessage) {
-                if(obj.n_id == _template.postId) {
+            if(_editTemplate.type == TGInputMessageTemplateTypeEditMessage) {
+                if(obj.n_id == _editTemplate.postId) {
                     [self setEditableMessage:nil];
                 }
             }
@@ -2616,7 +2615,7 @@ static NSTextAttachment *headerMediaIcon() {
         return;
     
     
-    [_template updateTextAndSave:self.bottomView.inputMessageString];
+    [_editTemplate updateTextAndSave:self.bottomView.inputMessageString];
     
     
     if(self.conversation.type == DialogTypeSecretChat && self.conversation.encryptedChat.encryptedParams.layer < 23)
@@ -2937,19 +2936,19 @@ static NSTextAttachment *headerMediaIcon() {
         self.state = MessagesViewControllerStateNone;
         
         
-         _template = [TGInputMessageTemplate templateWithType:TGInputMessageTemplateTypeSimpleText ofPeerId:dialog.peer_id];
+         _editTemplate = [TGInputMessageTemplate templateWithType:TGInputMessageTemplateTypeSimpleText ofPeerId:dialog.peer_id];
          
-         if(!_template) {
-             _template = [[TGInputMessageTemplate alloc] initWithType:TGInputMessageTemplateTypeSimpleText text:@"" peer_id:dialog.peer_id];
+         if(!_editTemplate) {
+             _editTemplate = [[TGInputMessageTemplate alloc] initWithType:TGInputMessageTemplateTypeSimpleText text:@"" peer_id:dialog.peer_id];
          }
          
          if(self.class != [MessagesViewController class]) {
-             _template = [[TGInputMessageTemplate alloc] initWithType:TGInputMessageTemplateTypeSimpleText text:@"" peer_id:rand_int()];
+             _editTemplate = [[TGInputMessageTemplate alloc] initWithType:TGInputMessageTemplateTypeSimpleText text:@"" peer_id:rand_int()];
          }
          
          
          
-        [self.bottomView setTemplate:_template];
+        [self.bottomView setTemplate:_editTemplate];
         
         [self unSelectAll:NO];
         
@@ -3011,23 +3010,23 @@ static NSTextAttachment *headerMediaIcon() {
 
 -(void)setEditableMessage:(TL_localMessage *)message {
     
-    TGInputMessageTemplate *currentTemplate = _template;
+    TGInputMessageTemplate *currentTemplate = _editTemplate;
     
     if(message) {
         [self setState:MessagesViewControllerStateEditMessage];
         
-        _template = [[TGInputMessageTemplate alloc] initWithType:TGInputMessageTemplateTypeEditMessage text:message.message.length > 0 ? message.message : message.media.caption peer_id:message.peer_id postId:message.n_id];
-        _template.editMessage = message;
+        _editTemplate = [[TGInputMessageTemplate alloc] initWithType:TGInputMessageTemplateTypeEditMessage text:message.message.length > 0 ? message.message : message.media.caption peer_id:message.peer_id postId:message.n_id];
+        _editTemplate.editMessage = message;
         
-        [_template setAutoSave:NO];
+        [_editTemplate setAutoSave:NO];
     } else {
         [self setState:MessagesViewControllerStateNone];
         
-        _template = [TGInputMessageTemplate templateWithType:TGInputMessageTemplateTypeSimpleText ofPeerId:_conversation.peer_id];
+        _editTemplate = [TGInputMessageTemplate templateWithType:TGInputMessageTemplateTypeSimpleText ofPeerId:_conversation.peer_id];
     }
     
-    if(currentTemplate != _template)
-        [self.bottomView setTemplate:_template checkElements:YES];
+    if(currentTemplate != _editTemplate)
+        [self.bottomView setTemplate:_editTemplate checkElements:YES];
 }
 
 -(void)forceSetLastSentMessage {
@@ -3042,7 +3041,7 @@ static NSTextAttachment *headerMediaIcon() {
 }
 
 -(TGInputMessageTemplateType)templateType {
-    return _template.type;
+    return _editTemplate.type;
 }
 
 -(BOOL)contextAbility {
@@ -3363,6 +3362,9 @@ static NSTextAttachment *headerMediaIcon() {
         if(item) {
             item.isSelected = NO;
             [item setTable:self.table];
+            [item setIsHeaderMessage:YES];
+            [item setIsHeaderForwardedMessage:YES];
+            [item makeSizeByWidth:item.makeSize];
             [array addObject:item];
         }
     }
@@ -3682,9 +3684,9 @@ static NSTextAttachment *headerMediaIcon() {
         return;
     }
     
-    if(_template.type == TGInputMessageTemplateTypeEditMessage) {
+    if(_editTemplate.type == TGInputMessageTemplateTypeEditMessage) {
         
-        TGMessageEditSender *editSender = [[TGMessageEditSender alloc] initWithTemplate:_template conversation:_conversation];
+        TGMessageEditSender *editSender = [[TGMessageEditSender alloc] initWithTemplate:_editTemplate conversation:_conversation];
         
         BOOL noWebpage = [self noWebpage:message];
         
