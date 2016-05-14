@@ -199,7 +199,7 @@
 @implementation TMMenuController
 
 - (id)initWithMenu:(NSMenu *)menu {
-    self = [super initWithFrame:NSMakeRect(0, 0, 250, MIN(menu.itemArray.count * 36 + 16,196))];
+    self = [super initWithFrame:NSMakeRect(0, 0, 250, MIN(menu.itemArray.count * 36 + (menu.itemArray.count > 4 ? 26 : 8),196))];
     if(self) {
         self.menuController = menu;
         _selectedIndex = -1;
@@ -218,7 +218,7 @@
     [super loadView];
     
     
-    _scrollView = [[BTRScrollView alloc] initWithFrame:NSMakeRect(0, 4, NSWidth(self.view.frame) , NSHeight(self.view.frame)-4 )];
+    _scrollView = [[BTRScrollView alloc] initWithFrame:NSMakeRect(4, 4, NSWidth(self.view.frame) -8, NSHeight(self.view.frame)-8 )];
     _documentView = [[TMView alloc] initWithFrame:_scrollView.bounds];
     
     [self.view addSubview:_scrollView];

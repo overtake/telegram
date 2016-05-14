@@ -3363,7 +3363,6 @@ static NSTextAttachment *headerMediaIcon() {
         if(item) {
             item.isSelected = NO;
             [item setTable:self.table];
-            [item makeSizeByWidth:item.makeSize];
             [array addObject:item];
         }
     }
@@ -3530,6 +3529,9 @@ static NSTextAttachment *headerMediaIcon() {
         }
         if(isBHdr != backItem.isHeaderMessage || isBFwdHdr != backItem.isHeaderForwardedMessage)
             [backItem makeSizeByWidth:backItem.makeSize];
+        if(isCHdr != current.isHeaderMessage || isCFwdHdr != current.isHeaderForwardedMessage)
+            [current makeSizeByWidth:current.makeSize];
+
         
         backItem = current;
         

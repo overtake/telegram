@@ -858,19 +858,6 @@
                     [last setObject:dialog forKey:@(dialog.peer_id)];
                 }
                 
-                [last enumerateKeysAndObjectsUsingBlock:^(id key, TL_conversation *obj, BOOL *stop) {
-                    
-                    BOOL needNotify = [self checkBotKeyboard:obj forMessage:obj.lastMessage notify:NO];
-                    
-                    if(needNotify) {
-                        [Notification perform:[Notification notificationNameByDialog:obj action:@"botKeyboard"] data:@{KEY_DIALOG:obj}];
-                    }
-                    
-                   
-                    
-                }];
-                
-                
                 
                 if([message.media isKindOfClass:[TL_messageMediaPhoto class]]) {
                     
@@ -883,6 +870,15 @@
             
             [[Storage manager] insertDialogs:last.allValues];
             
+            [last enumerateKeysAndObjectsUsingBlock:^(id key, TL_conversation *obj, BOOL *stop) {
+                
+                BOOL needNotify = [self checkBotKeyboard:obj forMessage:obj.lastMessage notify:NO];
+                
+                if(needNotify) {
+                    [Notification perform:[Notification notificationNameByDialog:obj action:@"botKeyboard"] data:@{KEY_DIALOG:obj}];
+                }
+                
+            }];
             
             [self add:last.allValues];
             

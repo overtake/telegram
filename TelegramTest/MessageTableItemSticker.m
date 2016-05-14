@@ -16,7 +16,7 @@
         if(NSSizeNotZero(self.document.imageSize)) {
             self.blockSize = self.document.imageSize;
         } else {
-            self.blockSize = NSMakeSize(200, 200);
+            self.blockSize = NSMakeSize(150, 150);
         }
         
         NSImage *placeholder;
@@ -36,7 +36,7 @@
         if(!placeholder)
             placeholder = white_background_color();
         
-        self.blockSize = strongsize(self.blockSize, 200);
+        self.blockSize = strongsize(self.blockSize, 150);
         
         self.imageObject = [[TGStickerImageObject alloc] initWithDocument:self.document placeholder:placeholder];
         
@@ -52,10 +52,10 @@
     if(NSSizeNotZero(self.document.imageSize)) {
         self.blockSize = self.document.imageSize;
     } else {
-        self.blockSize = NSMakeSize(200, 200);
+        self.blockSize = NSMakeSize(150, 150);
     }
     
-    self.contentSize = self.blockSize = strongsize(self.blockSize, MIN(width,200));
+    self.contentSize = self.blockSize = strongsize(self.blockSize, MIN(width,150));
     
     return [super makeSizeByWidth:width];
 }
