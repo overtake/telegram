@@ -2148,6 +2148,8 @@ static RBLPopover *popover;
         
         TGReplyObject *replyObject = [[TGReplyObject alloc] initWithReplyMessage:inputTemplate.editMessage fromMessage:nil tableItem:nil editMessage:YES];
         
+        [_editMessageContainer removeFromSuperview];
+        
         _editMessageContainer = [[MessageReplyContainer alloc] initWithFrame:NSMakeRect(startX, NSHeight(self.inputMessageTextField.containerView.frame) + NSMinX(self.inputMessageTextField.frame) + 20 , NSWidth(self.inputMessageTextField.containerView.frame), replyObject.containerHeight)];
         [_editMessageContainer setBackgroundColor:NSColorFromRGB(0xfafafa)];
 

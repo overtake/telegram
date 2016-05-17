@@ -4107,6 +4107,17 @@
          contextName = "__41-[NewContactsManager remoteCheckContacts]_block_invoke_3:NewContactsManager.m">
       </ContextState>
       <ContextState
+         contextName = "__49-[MessagesViewController forceSetLastSentMessage]_block_invoke:MessagesViewController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "obj.message.isN_out ">
+            </PersistentString>
+            <PersistentString
+               value = "_editTemplate.editMessage.n_id">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "-[TGDocumentsMediaTableView isEditable]:TGDocumentsMediaTableView.m">
          <PersistentStrings>
             <PersistentString
@@ -4144,6 +4155,9 @@
       </ContextState>
       <ContextState
          contextName = "-[ExternalGifSenderItem cancel]:ExternalGifSenderItem.m">
+      </ContextState>
+      <ContextState
+         contextName = "-[TL_localMessage canEdit]:TL_localMessage.m">
       </ContextState>
       <ContextState
          contextName = "-[MessagesBottomView updateTextFieldContainer]:MessagesBottomView.m">

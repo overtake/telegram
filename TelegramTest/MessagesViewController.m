@@ -3029,15 +3029,29 @@ static NSTextAttachment *headerMediaIcon() {
         [self.bottomView setTemplate:_editTemplate checkElements:YES];
 }
 
--(void)forceSetLastSentMessage {
-    [self.messages enumerateObjectsUsingBlock:^(MessageTableItem *obj, NSUInteger idx, BOOL * _Nonnull stop) {
+-(void)forceSetEditSentMessage:(BOOL)rollback {
+    
+    [self.messages enumerateObjectsWithOptions:rollback ? NSEnumerationReverse : 0 usingBlock:^(MessageTableItem *obj, NSUInteger idx, BOOL * _Nonnull stop) {
         
         if(obj.message.isN_out && obj.message.dstate == DeliveryStateNormal && obj.message.canEdit) {
-            [self setEditableMessage:obj.message];
-            *stop = YES;
+            if(_editTemplate.editMessage == nil || ((!rollback && _editTemplate.editMessage.n_id > obj.message.n_id) || (rollback && _editTemplate.editMessage.n_id < obj.message.n_id))) {
+                [self setEditableMessage:obj.message];
+                *stop = YES;
+            }
         }
         
     }];
+    
+}
+
+-(BOOL)proccessEscAction {
+    if(self.state == MessagesViewControllerStateEditMessage) {
+        [self setEditableMessage:nil];
+        
+        return YES;
+    }
+    
+    return NO;
 }
 
 -(TGInputMessageTemplateType)templateType {

@@ -196,10 +196,13 @@ typedef enum {
 -(TGMessagesHintView *)hintView;
 
 -(void)setEditableMessage:(TL_localMessage *)message;
--(void)forceSetLastSentMessage;
+-(void)forceSetEditSentMessage:(BOOL)rollback;
 -(TGInputMessageTemplateType)templateType;
 
 -(void)showOrHideESGController:(BOOL)animated toggle:(BOOL)toggle;
 -(BOOL)isShownESGController;
 -(BOOL)canShownESGController;
+
+-(BOOL)proccessEscAction;
+
 @end

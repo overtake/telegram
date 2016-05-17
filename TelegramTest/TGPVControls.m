@@ -34,7 +34,7 @@
 }
 
 -(void)update {
-     self.countTextField.alphaValue = 0.7;
+    self.countTextField.alphaValue = 0.7;
     [self.leftButton setAlphaValue:0.7];
     [self.rightButton setAlphaValue:0.7];
     [self.closeButton setAlphaValue:0.7];
@@ -57,7 +57,7 @@
                 [appWindow().navigationController showInfoPage:weakSelf.convertsation];
             }
             
-           
+            
             
         } forControlEvents:BTRControlEventClick];
         
@@ -109,7 +109,7 @@
         [self.closeButton setImage:image_PhotoViewerClose() forControlState:BTRControlStateNormal];
         [self.closeButton setCenterByView:self];
         [self.closeButton setFrameOrigin:NSMakePoint(NSWidth(self.frame) - 60, NSMinY(self.closeButton.frame))];
-    
+        
         [self.leftButton addBlock:^(BTRControlEvents events) {
             [TGPhotoViewer prevItem];
         } forControlEvents:BTRControlEventClick];
@@ -119,13 +119,13 @@
         } forControlEvents:BTRControlEventClick];
         
         [self.moreButton addBlock:^(BTRControlEvents events) {
-                [weakSelf contextMenu];
+            [weakSelf contextMenu];
             
         } forControlEvents:BTRControlEventClick];
         
         [self.closeButton addBlock:^(BTRControlEvents events) {
-           
-             [[TGPhotoViewer viewer] close];
+            
+            [[TGPhotoViewer viewer] hide];
             
         } forControlEvents:BTRControlEventClick];
         
@@ -137,14 +137,14 @@
         [self addSubview:self.moreButton];
         [self addSubview:self.closeButton];
         
-      
+        
     }
     
     return self;
 }
 
 - (void)reset {
-   [self.leftButton setAlphaValue:0.7];
+    [self.leftButton setAlphaValue:0.7];
     [self.rightButton setAlphaValue:0.7];
     [self.closeButton setAlphaValue:0.7];
     [self.moreButton setAlphaValue:0.7];
@@ -152,23 +152,23 @@
 }
 
 -(void)highlightControl:(TGPVControlHighlightType)type {
-
-
+    
+    
     [self reset];
     
     switch (type) {
         case TGPVControlHighLightClose:
-            [self.leftButton setAlphaValue:1];
-            break;
+        [self.leftButton setAlphaValue:1];
+        break;
         case TGPVControlHighLightNext:
-            [self.rightButton setAlphaValue:1];
-            break;
+        [self.rightButton setAlphaValue:1];
+        break;
         case TGPVControlHighLightPrev:
-            [self.closeButton setAlphaValue:1];
-            break;
-            
+        [self.closeButton setAlphaValue:1];
+        break;
+        
         default:
-            break;
+        break;
     }
 }
 
@@ -196,12 +196,12 @@
     SEL selector = NSSelectorFromString([NSString stringWithFormat:@"%@Menu",NSStringFromClass([[TGPhotoViewer behavior] class])]);
     
     if(![self respondsToSelector:selector])
-        return;
+    return;
     
     [self.moreButton setSelected:YES];
     
-   // if(!self.menuPopover) {
-        
+    // if(!self.menuPopover) {
+    
     [self.menuPopover close];
     
     
@@ -240,7 +240,7 @@
                 PreviewObject *previewObject = [TGPhotoViewer currentItem].previewObject;
                 
                 TL_inputPhoto *inputPhoto = [TL_inputPhoto createWithN_id:previewObject.msg_id access_hash:previewObject.access_hash];
-
+                
                 
                 [RPCRequest sendRequest:[TLAPI_photos_deletePhotos createWithN_id:[@[inputPhoto] mutableCopy]] successHandler:^(RPCRequest *request, id response) {
                     
@@ -257,7 +257,7 @@
                     
                     [SharedManager proccessGlobalResponse:response];
                     
-                     [TGPhotoViewer deleteItem:[TGPhotoViewer currentItem]];
+                    [TGPhotoViewer deleteItem:[TGPhotoViewer currentItem]];
                     
                     
                 } errorHandler:^(RPCRequest *request, RpcError *error) {
@@ -265,10 +265,10 @@
                     
                     
                 } timeout:10];
-
+                
                 
             }
-             
+            
             
         }];
         // [photoDelete setImage:image_AttachPhotoVideo()];
@@ -345,11 +345,11 @@
         
         
     }];
-   // [photoDelete setImage:image_AttachPhotoVideo()];
-   // [photoDelete setHighlightedImage:image_AttachPhotoVideoHighlighted()];
+    // [photoDelete setImage:image_AttachPhotoVideo()];
+    // [photoDelete setHighlightedImage:image_AttachPhotoVideoHighlighted()];
     
     if([MessagesViewController canDeleteMessages:@[msg] inConversation:msg.conversation])
-        [theMenu addItem:photoDelete];
+    [theMenu addItem:photoDelete];
     
     
     
@@ -373,7 +373,7 @@
             
             
         }];
-
+        
         [theMenu addItem:photoForward];
         
         NSMenuItem *photoSave = [NSMenuItem menuItemWithTitle:NSLocalizedString(@"PhotoViewer.SaveAs", nil) withBlock:^(id sender) {
@@ -404,7 +404,7 @@
             
             
         }];
-
+        
         [theMenu addItem:photoSave];
         
         
@@ -433,7 +433,7 @@
         
         
         [theMenu addItem:copy];
-
+        
     }
     
     

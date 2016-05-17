@@ -69,10 +69,12 @@ static NSCache *cItems;
     if(self) {
         self.message = object;
         
-        if(self.message.media.caption.length > 0) {
+        if(self.message.media.caption.length > 0 || (self.message.media != nil && ![self.message.media isKindOfClass:[TL_messageMediaEmpty class]] && ![self.message.media isKindOfClass:[TL_messageMediaWebPage class]] && self.message.message.length > 0)) {
             NSMutableAttributedString *c = [[NSMutableAttributedString alloc] init];
             
-            [c appendString:[[self.message.media.caption trim] fixEmoji] withColor:TEXT_COLOR];
+            NSString *caption = self.message.media.caption.length > 0 ? self.message.media.caption : self.message.message;
+            
+            [c appendString:[[caption trim] fixEmoji] withColor:TEXT_COLOR];
             
             [c setFont:TGSystemFont(13) forRange:c.range];
             
@@ -443,7 +445,7 @@ static NSTextAttachment *channelViewsCountAttachment() {
     @try {
         if(message.class == [TL_localMessage_old46 class] || message.class == [TL_localMessage class] || message.class == [TL_localMessage_old32 class] || message.class == [TL_localMessage_old34 class] || message.class == [TL_localMessage_old44 class] || message.class == [TL_destructMessage class] || message.class == [TL_destructMessage45 class]) {
             
-            if((message.media == nil || [message.media isKindOfClass:[TL_messageMediaEmpty class]]) || [message.media isMemberOfClass:[TL_messageMediaWebPage class]] || message.message.length > 0) {
+            if((message.media == nil || [message.media isKindOfClass:[TL_messageMediaEmpty class]]) || [message.media isMemberOfClass:[TL_messageMediaWebPage class]]) {
                 
                 objectReturn = [[MessageTableItemText alloc] initWithObject:message];
                 

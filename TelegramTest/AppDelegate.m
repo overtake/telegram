@@ -538,7 +538,10 @@ void exceptionHandler(NSException * exception)
                     }
                     
                     if(appWindow().navigationController.messagesViewController.inputText.length > 0) {
-                        return incomingEvent;
+                        if(![appWindow().navigationController.messagesViewController proccessEscAction]) {
+                            return incomingEvent;
+                        }
+                        
                     } else {
                        [[[Telegram sharedInstance] firstController] backOrClose:[[NSMenuItem alloc] initWithTitle:@"Profile.Back" action:@selector(backOrClose:) keyEquivalent:@""]];
                     }

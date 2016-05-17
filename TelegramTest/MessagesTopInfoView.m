@@ -508,6 +508,8 @@ static NSMutableDictionary *cache;
     
     [string addAttributes:@{NSLinkAttributeName:@"first"} range:range];
     
+    [string setAlignment:NSCenterTextAlignment range:string.range];
+    
     [_cancel setHidden:action != MessagesTopInfoActionReportSpam];
     
     
