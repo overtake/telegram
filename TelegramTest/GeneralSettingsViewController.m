@@ -130,20 +130,20 @@
     
     
     
-    GeneralSettingsRowItem *soundNotification = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeSwitch callback:^(TGGeneralRowItem *item) {
-        
-        
-        [SettingsArchiver addOrRemoveSetting:SoundEffects];
-        
-    } description:NSLocalizedString(@"Settings.SoundEffects", nil) height:42 stateback:^id(TGGeneralRowItem *item) {
-        return @([SettingsArchiver checkMaskedSetting:SoundEffects]);
-    }];
-    
-    
-    
-
-    
-    [self.tableView insert:soundNotification atIndex:self.tableView.list.count tableRedraw:NO];
+//    GeneralSettingsRowItem *soundNotification = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeSwitch callback:^(TGGeneralRowItem *item) {
+//        
+//        
+//        [SettingsArchiver addOrRemoveSetting:SoundEffects];
+//        
+//    } description:NSLocalizedString(@"Settings.SoundEffects", nil) height:42 stateback:^id(TGGeneralRowItem *item) {
+//        return @([SettingsArchiver checkMaskedSetting:SoundEffects]);
+//    }];
+//    
+//    
+//    
+//
+//    
+//    [self.tableView insert:soundNotification atIndex:self.tableView.list.count tableRedraw:NO];
     
     //audio end
 //    

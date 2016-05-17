@@ -18,9 +18,7 @@
 #import "TGCache.h"
 #import "TGPVZoomControl.h"
 #import "TGPVDocumentsBehavior.h"
-#import "TGPVMiniControl.h"
-#import "TGVideoViewerItem.h"
-@interface TGPhotoViewer ()<NSWindowDelegate>
+@interface TGPhotoViewer ()
 @property (nonatomic,strong) TL_conversation *conversation;
 @property (nonatomic,strong) TLUser *user;
 
@@ -39,8 +37,6 @@
 @property (nonatomic,assign) int totalCount;
 
 @property (nonatomic,strong) TGPVZoomControl *zoomControl;
-@property (nonatomic,strong) TGPVMiniControl *miniControl;
-
 
 @property (nonatomic,assign) BOOL isReversed;
 
@@ -60,9 +56,9 @@
     [self runAnimation:NO];
     [Notification removeObserver:self];
     [super orderOut:sender];
-   
+    
     [_photoContainer setCurrentViewerItem:nil animated:NO];
-     _isVisibility = NO;
+    _isVisibility = NO;
     _list = nil;
     _currentItem = nil;
     _currentItemId = 0;
@@ -70,10 +66,10 @@
     [_behavior clear];
     _behavior = nil;
     [TGCache removeAllCachedImages:@[PVCACHE]];
-
-    [[NSApp mainWindow] makeFirstResponder:appWindow()];
-//    
-//    viewer = nil;
+    
+    [[NSApp mainWindow] makeFirstResponder:nil];
+    
+    viewer = nil;
 }
 
 
@@ -85,7 +81,6 @@
     return viewer.isVisibility;
 }
 
-
 +(void)increaseZoom {
     [viewer.photoContainer increaseZoom];
 }
@@ -96,7 +91,7 @@
 -(id)initWithContentRect:(NSRect)contentRect styleMask:(NSUInteger)aStyle backing:(NSBackingStoreType)bufferingType defer:(BOOL)flag screen:(NSScreen *)screen {
     if(self = [super initWithContentRect:contentRect styleMask:aStyle backing:bufferingType defer:flag screen:screen]) {
         
-       [self initialize];
+        [self initialize];
     }
     
     return self;
@@ -106,12 +101,10 @@ static const int controlsHeight = 75;
 
 - (void)initialize {
     
-    _viewerStyle = TGPhotoViewerFullStyle;
-    
     [TGCache setMemoryLimit:32*1024*1024 group:PVCACHE];
     [TGCache setCountLimit:25 group:PVCACHE];
-
-  //  [CATransaction begin];
+    
+    //  [CATransaction begin];
     
     
     [(NSView *)self.contentView setAutoresizingMask:NSViewWidthSizable | NSViewHeightSizable];
@@ -119,12 +112,9 @@ static const int controlsHeight = 75;
     self.background = [[TMView alloc] initWithFrame:[self.contentView bounds]];
     
     self.background.wantsLayer = YES;
+    self.background.layer.backgroundColor = NSColorFromRGBWithAlpha(0x222222, 0.7).CGColor;
     
-    [self.background addTrackingArea:[[NSTrackingArea alloc] initWithRect:self.contentView.bounds
-                                                                                 options: (NSTrackingMouseEnteredAndExited | NSTrackingMouseMoved | NSTrackingActiveInKeyWindow )
-                                                                                   owner:self userInfo:nil]];
     
-    self.background.backgroundColor = NSColorFromRGBWithAlpha(0x222222, 0.7);
     
     weak();
     
@@ -135,12 +125,10 @@ static const int controlsHeight = 75;
         
         NSPoint containerPoint = weakSelf.photoContainer.frame.origin;
         
-        
-        if(location.x > containerPoint.x) {
-            [[TGPhotoViewer viewer] hide];
-        } else
-            [TGPhotoViewer prevItem];
-       
+        if(location.x > containerPoint.x)
+        [[TGPhotoViewer viewer] hide];
+        else
+        [TGPhotoViewer prevItem];
     }];
     
     [self.background setAutoresizingMask:NSViewWidthSizable | NSViewHeightSizable];
@@ -150,7 +138,7 @@ static const int controlsHeight = 75;
     
     _photoContainer = [[TGPVContainer alloc] initWithFrame:NSMakeRect(0, 0, 300, 600)];
     
-
+    
     [self.contentView addSubview:self.photoContainer];
     
     
@@ -166,82 +154,8 @@ static const int controlsHeight = 75;
     
     self.zoomControl = [[TGPVZoomControl alloc] initWithFrame:NSMakeRect(50, 16, 200, controlsHeight)];
     
-     [self.contentView addSubview:self.zoomControl];
-    
-    
-//    self.miniControl = [[TGPVMiniControl alloc] initWithFrame:NSMakeRect(NSWidth(self.frame) - 100, NSHeight(self.frame) - 100, controlsHeight, controlsHeight)];
-//    
-//    
-//    [self.miniControl addBlock:^(BTRControlEvents events) {
-//        
-//        [weakSelf miniaturizeOrMaxiatursize];
-//        
-//    } forControlEvents:BTRControlEventClick];
-//    
-//    [self.contentView addSubview:self.miniControl];
+    [self.contentView addSubview:self.zoomControl];
 }
-
--(void)miniaturizeOrMaxiatursize {
-    
-    
-    
-    _viewerStyle = _viewerStyle == TGPhotoViewerMinStyle ? TGPhotoViewerFullStyle : TGPhotoViewerMinStyle;
-    
-    if(_viewerStyle == TGPhotoViewerMinStyle) {
-        //[self setLevel:NSNormalWindowLevel];
-      //  [self setStyleMask:NSTitledWindowMask | NSClosableWindowMask | NSResizableWindowMask];
-      //  if(NSAppKitVersionNumber >= NSAppKitVersionNumber10_10) {
-          //  self.titlebarAppearsTransparent = YES;
-     //   }
-        
-        [self toggleFullScreen:self];
-        
-    } else {
-       // [self setLevel:NSScreenSaverWindowLevel];
-        [self toggleFullScreen:self];
-        
-
-    }
-
-
-    
-}
-
--(void)toggleFullScreen:(id)sender {
-    
-    if(self.collectionBehavior == NSWindowCollectionBehaviorDefault)
-        [self setCollectionBehavior:NSWindowCollectionBehaviorFullScreenPrimary];
-    else
-        [self setCollectionBehavior:NSWindowCollectionBehaviorDefault];
-    
-    
-
-    [super toggleFullScreen:sender];
-    
-    
-    _viewerStyle = self.collectionBehavior == NSWindowCollectionBehaviorDefault ? TGPhotoViewerMinStyle : TGPhotoViewerFullStyle;
-
-    [self updateStyle];
-    
-}
-
--(void)updateStyle {
-    
-    self.background.layer.backgroundColor = NSColorFromRGBWithAlpha(0x222222, 0.7).CGColor;
-    
-    [self.photoContainer updateSize];
-    
-    [_zoomControl setHidden:[_currentItem.previewObject.reservedObject isKindOfClass:[NSDictionary class]] || [_currentItem isKindOfClass:[TGVideoViewerItem class]]  || _viewerStyle == TGPhotoViewerMinStyle];
-    
-     [self.zoomControl setFrameOrigin:NSMakePoint(50, 16)];
-}
-
--(void)setFrame:(NSRect)frameRect display:(BOOL)flag {
-    [super setFrame:frameRect display:flag];
-    
-    [self updateStyle];
-}
-
 
 
 -(void)didAddedPhoto:(NSNotification *)notification {
@@ -257,7 +171,7 @@ static const int controlsHeight = 75;
     [ASQueue dispatchOnStageQueue:^{
         
         if(todelete) {
-           
+            
             
         } else {
             
@@ -273,15 +187,11 @@ static const int controlsHeight = 75;
 }
 
 
-
-
 -(void)mouseMoved:(NSEvent *)theEvent {
     
- //
-    
+    //
     
     NSPoint point = [theEvent locationInWindow];
-    
     
     TGPVControlHighlightType highlight;
     
@@ -297,19 +207,19 @@ static const int controlsHeight = 75;
         
         [self.controls highlightControl:highlight];
     } else {
-       [self.controls mouseMoved:theEvent];
+        [self.controls mouseMoved:theEvent];
     }
     
-   
     
-   
+    
+    
 }
 
 
 -(void)didDeleteMessages:(NSNotification *)notification {
     
     if(!_isVisibility)
-        return;
+    return;
     
     [ASQueue dispatchOnStageQueue:^{
         
@@ -345,7 +255,7 @@ static const int controlsHeight = 75;
     PreviewObject *previewObject = notification.userInfo[KEY_PREVIEW_OBJECT];
     
     if(!_isVisibility || _conversation.peer_id != previewObject.peerId)
-        return;
+    return;
     
     
     [ASQueue dispatchOnStageQueue:^{
@@ -432,18 +342,12 @@ static const int controlsHeight = 75;
 static TGPhotoViewer *viewer;
 
 +(TGPhotoViewer *)viewer {
-   
+    
     if(!viewer)
     {
-        
-        //NSMakeRect(roundf((NSWidth([NSScreen mainScreen].frame) - 600)/2.0f), roundf((NSHeight([NSScreen mainScreen].frame) - 600)/2.0f), 600, 600)
-        ///NSClosableWindowMask | NSResizableWindowMask | NSTitledWindowMask
-        viewer = [[TGPhotoViewer alloc] initWithContentRect:NSMakeRect(0, 0, NSWidth([NSScreen mainScreen].frame), NSHeight([NSScreen mainScreen].frame)) styleMask:NSBorderlessWindowMask backing:NSBackingStoreRetained defer:YES screen:[NSScreen mainScreen]];
+        viewer = [[TGPhotoViewer alloc] initWithContentRect:[NSScreen mainScreen].frame styleMask:NSBorderlessWindowMask backing:NSBackingStoreBuffered defer:NO screen:[NSScreen mainScreen]];
         [viewer setLevel:NSScreenSaverWindowLevel];
-        [viewer setOpaque:YES];
-        viewer.releasedWhenClosed = NO;
-        [viewer setMinSize:NSMakeSize(400, 400)];
-        viewer.contentView.wantsLayer = YES;
+        [viewer setOpaque:NO];
         viewer.backgroundColor = [NSColor clearColor];
         
     }
@@ -581,7 +485,7 @@ static TGPhotoViewer *viewer;
     _waitRequest = YES;
     
     
-     self.currentItemId = 0;
+    self.currentItemId = 0;
     
     [self.behavior load:0 next:YES limit:100 callback:^(NSArray *nextObjects) {
         
@@ -628,7 +532,7 @@ static TGPhotoViewer *viewer;
 
 -(void)show:(PreviewObject *)item {
     
-
+    
     
     _behavior = [[TGPVEmptyBehavior alloc] initWithConversation:_conversation commonItem:item];
     
@@ -649,9 +553,6 @@ static TGPhotoViewer *viewer;
     
     self.invokeWindow = appWindow();
     
-    [self setFrame:NSMakeRect(0, 0, NSWidth([NSScreen mainScreen].frame), NSHeight([NSScreen mainScreen].frame)) display:YES];
-    
-    //
     
     [Notification addObserver:self selector:@selector(didReceivedMedia:) name:MEDIA_RECEIVE];
     [Notification addObserver:self selector:@selector(didDeleteMessages:) name:MESSAGE_DELETE_EVENT];
@@ -659,33 +560,16 @@ static TGPhotoViewer *viewer;
     
     [self runAnimation:YES];
     
-    
+    [self setFrame:[NSScreen mainScreen].frame display:NO];
     
     [super makeKeyAndOrderFront:nil];
-
     
     
     [[NSApp mainWindow] makeFirstResponder:self.photoContainer];
     
-
+    
     _isVisibility = YES;
     [self.controls update];
-    
-    [self updateStyle];
-
-    
-    if(_viewerStyle == TGPhotoViewerFullStyle) {
-      //  dispatch_async(dispatch_get_current_queue(), ^{
-      //  [self setCollectionBehavior:NSWindowCollectionBehaviorDefault];
-      //  [self toggleFullScreen:self];
-      //  });
-        
-    }
-    
-
-    
-    //_viewerStyle = TGPhotoViewerFullStyle;
-   // [self miniaturizeOrMaxiatursize];
 }
 
 
@@ -716,7 +600,7 @@ static TGPhotoViewer *viewer;
     
     [self performNextItem];
     
-
+    
 }
 
 -(void)prevItem {
@@ -731,7 +615,7 @@ static TGPhotoViewer *viewer;
     }
     
     [self performPrevItem];
-
+    
 }
 
 -(void)performNextItem {
@@ -750,7 +634,7 @@ static TGPhotoViewer *viewer;
     if(count > 0 && self.currentItemId != 0) {
         [self setCurrentItemId:[self currentItemId]-1];
     }
-
+    
 }
 
 +(void)prevItem {
@@ -765,35 +649,35 @@ static TGPhotoViewer *viewer;
     
     
     if(currentItemId == NSNotFound)
-        return;
+    return;
     
     
-     BOOL next = _isReversed ? currentItemId > _currentItemId : currentItemId < _currentItemId;
+    BOOL next = _isReversed ? currentItemId > _currentItemId : currentItemId < _currentItemId;
     
     
     _currentItemId = currentItemId;
     
     
-     _currentItem = [self itemAtIndex:currentItemId];
+    _currentItem = [self itemAtIndex:currentItemId];
     
-     [self.controls setCurrentPosition:_isReversed ? _totalCount - _currentItemId : _currentItemId+1 ofCount:_totalCount];
-        
+    [self.controls setCurrentPosition:_isReversed ? _totalCount - _currentItemId : _currentItemId+1 ofCount:_totalCount];
+    
     
     if(self.photoContainer.currentViewerItem != _currentItem)
-        [[self photoContainer] setCurrentViewerItem:_currentItem animated:NO];
+    [[self photoContainer] setCurrentViewerItem:_currentItem animated:NO];
     
     
-     [_zoomControl setHidden:[_currentItem.previewObject.reservedObject isKindOfClass:[NSDictionary class]] || [_currentItem isKindOfClass:[TGVideoViewerItem class]]  || _viewerStyle == TGPhotoViewerMinStyle];
+    [_zoomControl setHidden:[_currentItem.previewObject.reservedObject isKindOfClass:[NSDictionary class]]];
     
     if(_list.count > 1 && !_waitRequest) {
         int rcurrent = _isReversed ? _totalCount - (int)_currentItemId : (int)_currentItemId;
         if((next && (rcurrent <= 15 )) || (!next && ( rcurrent >= (_totalCount - 15)))) {
-             _waitRequest = YES;
+            _waitRequest = YES;
             
             [self.behavior load:0 next:next limit:100 callback:^(NSArray *previewObjects) {
                 
                 if(previewObjects.count > 0)
-                    [self insertObjects:previewObjects];
+                [self insertObjects:previewObjects];
                 
                 _waitRequest = NO;
             }];
@@ -803,7 +687,7 @@ static TGPhotoViewer *viewer;
     
     [ASQueue dispatchOnStageQueue:^{
         
-       
+        
         NSInteger max = MIN(_currentItemId + 5, [self listCount]-1);
         
         NSInteger min = MAX(_currentItemId - 5, 0);
@@ -822,44 +706,11 @@ static TGPhotoViewer *viewer;
     }];
 }
 
--(void)keyUp:(NSEvent *)incomingEvent {
- //   [super keyUp:incomingEvent];
-    
-//    if([TGPhotoViewer isVisibility]) {
-//        
-//        
-//        if(incomingEvent.keyCode == 53) {
-//            [[TGPhotoViewer viewer] hide];
-//        }
-//        
-//        if(incomingEvent.keyCode == 123) {
-//            [TGPhotoViewer prevItem];
-//        }
-//        
-//        if(incomingEvent.keyCode == 124) {
-//            [TGPhotoViewer nextItem];
-//        }
-//        
-//        if(incomingEvent.keyCode == 49 ){
-//            [[TGPhotoViewer viewer] hide];
-//        }
-//        
-//        if(incomingEvent.keyCode == 24 || incomingEvent.keyCode == 69) {
-//            [TGPhotoViewer increaseZoom];
-//        }
-//        
-//        if(incomingEvent.keyCode == 27 || incomingEvent.keyCode == 78) {
-//            [TGPhotoViewer decreaseZoom];
-//        }
-//        
-//    }
-}
-
 -(void)insertObjects:(NSArray *)previewObjects {
     
     [ASQueue dispatchOnStageQueue:^{
         [self.list addObjectsFromArray:[self.behavior convertObjects:previewObjects]];
-                
+        
         [self resort];
     }];
 }
@@ -878,7 +729,7 @@ static TGPhotoViewer *viewer;
     if(!self.photoContainer.ifVideoFullScreenPlayingNeedToogle) {
         [self orderOut:self];
     }
-
+    
 }
 
 

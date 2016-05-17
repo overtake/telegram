@@ -311,7 +311,7 @@ static NSImage *higlightedImage() {
                     [self loadSetsIfNeeded:response.sets n_hash:response.n_hash];
                     
                 } else {
-                    [self reloadData];
+                    [self loadSetsIfNeeded:_sets n_hash:[self stickersHash:_sets]];
                 }
                 
                 setRemoteStickersLoaded(YES);
@@ -379,7 +379,7 @@ static NSImage *higlightedImage() {
         
         NSArray *current = [_sets filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.n_id == %ld",obj.n_id]];
         
-        if(current.count == 0 || [(TL_stickerSet *)current[0] n_hash] != obj.n_hash || [self.stickers[@(obj.n_id)] count] == 0) {
+        if(current.count == 0 || [(TL_stickerSet *)current[0] n_hash] != obj.n_hash || [self.stickers[@(obj.n_id)] count] == 0 ) {
             
             [changed addObject:obj];
         }
