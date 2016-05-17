@@ -504,6 +504,8 @@ static NSMutableDictionary *cache;
     
     [string appendString:NSLocalizedString(localizations[action], nil) withColor:NSColorFromRGB(0xa9a9a9)];
     
+    [string appendString:@" "];
+    
     NSRange range = [string appendString:NSLocalizedString(buttonLocalization[action], nil) withColor:BLUE_UI_COLOR];
     
     [string addAttributes:@{NSLinkAttributeName:@"first"} range:range];

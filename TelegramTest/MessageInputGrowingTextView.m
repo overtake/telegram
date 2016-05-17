@@ -682,11 +682,8 @@ typedef enum {
             
         }
         
-    } else if(theEvent.keyCode == 126 && (self.stringValue.length == 0 || self.controller.state == MessagesViewControllerStateEditMessage)) {
+    } else if(theEvent.keyCode == 126 && (self.stringValue.length == 0)) {
         [self.controller forceSetEditSentMessage:NO];
-        return;
-    } else if(theEvent.keyCode == 125 && self.controller.state == MessagesViewControllerStateEditMessage) {
-        [self.controller forceSetEditSentMessage:YES];
         return;
     }
     
