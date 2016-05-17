@@ -3049,6 +3049,9 @@ static NSTextAttachment *headerMediaIcon() {
         [self setEditableMessage:nil];
         
         return YES;
+    } else if(self.state == MessagesViewControllerStateEditable) {
+        [self setCellsEditButtonShow:NO animated:YES];
+        return YES;
     }
     
     return NO;
