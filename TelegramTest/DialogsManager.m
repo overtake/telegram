@@ -705,8 +705,8 @@
                         if(response.dialogs.count == 1) {
                             TL_dialog *c = response.dialogs[0];
                             if(c.unread_count != conversation.unread_count) {
-                                conversation.unread_count = unread_count;
-                                
+                                conversation.unread_count = conversation.unread_count;
+                                conversation.read_inbox_max_id = conversation.read_inbox_max_id;
                                 [conversation save];
                                 [Notification perform:[Notification notificationNameByDialog:conversation action:@"unread_count"] data:@{KEY_DIALOG:conversation,KEY_LAST_CONVRESATION_DATA:[MessagesUtils conversationLastData:conversation]}];
                             }
