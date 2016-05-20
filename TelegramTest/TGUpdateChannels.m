@@ -93,7 +93,7 @@
         dispatch_once(&onceToken, ^{
             
             statefullUpdates = @[NSStringFromClass([TL_updateNewChannelMessage class]),NSStringFromClass([TL_updateDeleteChannelMessages class]),NSStringFromClass([TL_updateEditChannelMessage class])];
-            statelessUpdates = @[NSStringFromClass([TL_updateReadChannelInbox class]),NSStringFromClass([TL_updateChannelTooLong class]),NSStringFromClass([TL_updateChannelGroup class]),NSStringFromClass([TL_updateChannelMessageViews class]),NSStringFromClass([TL_updateChannel class]),NSStringFromClass([TL_updateChannelPinnedMessage class])];
+            statelessUpdates = @[NSStringFromClass([TL_updateReadChannelInbox class]),NSStringFromClass([TL_updateChannelTooLong class]),NSStringFromClass([TL_updateChannelGroup class]),NSStringFromClass([TL_updateChannelMessageViews class]),NSStringFromClass([TL_updateChannel class]),NSStringFromClass([TL_updateChannelPinnedMessage class]),NSStringFromClass([TL_updateReadChannelOutbox class])];
         });
         
         
@@ -441,6 +441,17 @@
         }
         
         
+        
+    } else if([update isKindOfClass:[TL_updateReadChannelOutbox class]]) {
+        
+        
+        TL_conversation *conversation = [self conversationWithChannelId:[update channel_id]];
+        
+        conversation.read_outbox_max_id = [(TL_updateReadChannelOutbox *)update max_id];
+        
+        [conversation save];
+        
+        [Notification perform:MESSAGE_READ_EVENT data:@{KEY_MESSAGE_ID_LIST:@[]}];
         
     } else if([update isKindOfClass:[TL_updateChannelTooLong class]]) {
         

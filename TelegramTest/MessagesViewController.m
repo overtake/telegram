@@ -2010,6 +2010,10 @@ static NSTextAttachment *headerMediaIcon() {
                 
             }];
             
+            if(readed.count == 0) {
+                [self.table reloadData];
+            }
+            
             
         }];
     }]; 

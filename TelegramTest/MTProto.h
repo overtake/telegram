@@ -2,7 +2,7 @@
 //  MTProto.h
 //  Telegram
 //
-//  Auto created by Mikhail Filimonov on 29.04.16.
+//  Auto created by Mikhail Filimonov on 20.05.16.
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -1068,7 +1068,6 @@
 @interface TLMessage()
 @property int n_id;
 @property int flags;
-@property (nonatomic,assign,readonly) BOOL isUnread;
 @property (nonatomic,assign,readonly) BOOL isN_out;
 @property (nonatomic,assign,readonly) BOOL isMentioned;
 @property (nonatomic,assign,readonly) BOOL isMedia_unread;
@@ -1093,10 +1092,10 @@
 +(TL_messageEmpty*)createWithN_id:(int)n_id;
 @end
 @interface TL_message : TLMessage<NSCoding>
-+(TL_message*)createWithFlags:(int)flags       n_id:(int)n_id from_id:(int)from_id to_id:(TLPeer*)to_id fwd_from:(TLMessageFwdHeader*)fwd_from via_bot_id:(int)via_bot_id reply_to_msg_id:(int)reply_to_msg_id date:(int)date message:(NSString*)message media:(TLMessageMedia*)media reply_markup:(TLReplyMarkup*)reply_markup entities:(NSMutableArray*)entities views:(int)views edit_date:(int)edit_date;
++(TL_message*)createWithFlags:(int)flags      n_id:(int)n_id from_id:(int)from_id to_id:(TLPeer*)to_id fwd_from:(TLMessageFwdHeader*)fwd_from via_bot_id:(int)via_bot_id reply_to_msg_id:(int)reply_to_msg_id date:(int)date message:(NSString*)message media:(TLMessageMedia*)media reply_markup:(TLReplyMarkup*)reply_markup entities:(NSMutableArray*)entities views:(int)views edit_date:(int)edit_date;
 @end
 @interface TL_messageService : TLMessage<NSCoding>
-+(TL_messageService*)createWithFlags:(int)flags       n_id:(int)n_id from_id:(int)from_id to_id:(TLPeer*)to_id reply_to_msg_id:(int)reply_to_msg_id date:(int)date action:(TLMessageAction*)action;
++(TL_messageService*)createWithFlags:(int)flags      n_id:(int)n_id from_id:(int)from_id to_id:(TLPeer*)to_id date:(int)date action:(TLMessageAction*)action;
 @end
 	
 @interface TLMessageMedia()
@@ -1210,6 +1209,7 @@
 @property (nonatomic, strong) TLPeer* peer;
 @property int top_message;
 @property int read_inbox_max_id;
+@property int read_outbox_max_id;
 @property int unread_count;
 @property (nonatomic, strong) TLPeerNotifySettings* notify_settings;
 @property int top_important_message;
@@ -1218,10 +1218,10 @@
 @end
 
 @interface TL_dialog : TLDialog<NSCoding>
-+(TL_dialog*)createWithPeer:(TLPeer*)peer top_message:(int)top_message read_inbox_max_id:(int)read_inbox_max_id unread_count:(int)unread_count notify_settings:(TLPeerNotifySettings*)notify_settings;
++(TL_dialog*)createWithPeer:(TLPeer*)peer top_message:(int)top_message read_inbox_max_id:(int)read_inbox_max_id read_outbox_max_id:(int)read_outbox_max_id unread_count:(int)unread_count notify_settings:(TLPeerNotifySettings*)notify_settings;
 @end
 @interface TL_dialogChannel : TLDialog<NSCoding>
-+(TL_dialogChannel*)createWithPeer:(TLPeer*)peer top_message:(int)top_message top_important_message:(int)top_important_message read_inbox_max_id:(int)read_inbox_max_id unread_count:(int)unread_count unread_important_count:(int)unread_important_count notify_settings:(TLPeerNotifySettings*)notify_settings pts:(int)pts;
++(TL_dialogChannel*)createWithPeer:(TLPeer*)peer top_message:(int)top_message top_important_message:(int)top_important_message read_inbox_max_id:(int)read_inbox_max_id read_outbox_max_id:(int)read_outbox_max_id unread_count:(int)unread_count unread_important_count:(int)unread_important_count notify_settings:(TLPeerNotifySettings*)notify_settings pts:(int)pts;
 @end
 	
 @interface TLPhoto()
@@ -1616,6 +1616,9 @@
 @interface TL_inputMessagesFilterMusic : TLMessagesFilter<NSCoding>
 +(TL_inputMessagesFilterMusic*)create;
 @end
+@interface TL_inputMessagesFilterChatPhotos : TLMessagesFilter<NSCoding>
++(TL_inputMessagesFilterChatPhotos*)create;
+@end
 	
 @interface TLUpdate()
 @property (nonatomic, strong) TLMessage* message;
@@ -1810,6 +1813,9 @@
 @end
 @interface TL_updateInlineBotCallbackQuery : TLUpdate<NSCoding>
 +(TL_updateInlineBotCallbackQuery*)createWithQuery_id:(long)query_id user_id:(int)user_id msg_id:(TLInputBotInlineMessageID*)msg_id data:(NSData*)data;
+@end
+@interface TL_updateReadChannelOutbox : TLUpdate<NSCoding>
++(TL_updateReadChannelOutbox*)createWithChannel_id:(int)channel_id max_id:(int)max_id;
 @end
 	
 @interface TLupdates_State()

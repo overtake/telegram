@@ -290,9 +290,12 @@
 }
 
 
+-(BOOL)isUnread {
+    return (self.flags & TGUNREADMESSAGE) > 0;
+}
 
 -(BOOL)unread {
-    return self.isChannelMessage ? (self.isN_out || self.n_id > TGMINFAKEID) ? NO : (self.conversation.read_inbox_max_id < self.n_id || self.conversation.read_inbox_max_id > TGMINFAKEID) :  self.isUnread;
+    return self.isN_out ? (self.conversation.read_outbox_max_id == 0 ? self.isUnread  : self.conversation.read_outbox_max_id < self.n_id) : (self.conversation.read_inbox_max_id < self.n_id || self.conversation.read_inbox_max_id > TGMINFAKEID);
 }
 
 -(BOOL)readedContent {
@@ -352,7 +355,8 @@ DYNAMIC_PROPERTY(DDialog);
             mask|=HistoryFilterText;
         }
         
-        
+        if(self.action && [self.action isKindOfClass:[TL_messageActionChatEditPhoto class]])
+            mask|=HistoryFilterChatPhoto;
         
         if([self.media isKindOfClass:[TL_messageMediaDocument class]]) {
                        

@@ -164,11 +164,12 @@
         if(![self.chat.photo isKindOfClass:[TL_chatPhotoEmpty class]] && self.chat.photo != nil) {
             
             
-            previewObject = [[PreviewObject alloc] initWithMsdId:NSIntegerMax media:[TL_photoSize createWithType:@"x" location:self.chat.photo.photo_big w:640 h:640 size:0] peer_id:self.chat.n_id];
+            previewObject = [[PreviewObject alloc] initWithMsdId:self.chat.dialog.top_message media:[TL_photoSize createWithType:@"x" location:self.chat.photo.photo_big w:640 h:640 size:0] peer_id:self.chat.n_id];
+            previewObject.date = self.chat.dialog.last_message_date;
             
             previewObject.reservedObject = [TGCache cachedImage:self.chat.photo.photo_big.cacheKey];
             
-            [[TGPhotoViewer viewer] show:previewObject];
+            [[TGPhotoViewer viewer] showChatPhotos:previewObject chat:self.chat];
         }
     }
     

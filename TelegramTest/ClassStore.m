@@ -3,7 +3,7 @@
 //  ClassStore.m
 //  Telegram
 //
-    //  Created by keepcoder on 29.04.16.
+    //  Created by keepcoder on 20.05.16.
 //  Copyright (c) 2015 keepcoder. All rights reserved.
 //
 
@@ -203,7 +203,7 @@ static NSMutableDictionary *cs_constuctors;
    [cs_classes setObject:[TL_chatPhoto class] forKey:[NSNumber numberWithInt:1632839530]];
    [cs_classes setObject:[TL_messageEmpty class] forKey:[NSNumber numberWithInt:-2082087340]];
    [cs_classes setObject:[TL_message class] forKey:[NSNumber numberWithInt:-1063525281]];
-   [cs_classes setObject:[TL_messageService class] forKey:[NSNumber numberWithInt:-1642487306]];
+   [cs_classes setObject:[TL_messageService class] forKey:[NSNumber numberWithInt:-1066691065]];
    [cs_classes setObject:[TL_messageMediaEmpty class] forKey:[NSNumber numberWithInt:1038967584]];
    [cs_classes setObject:[TL_messageMediaPhoto class] forKey:[NSNumber numberWithInt:1032643901]];
    [cs_classes setObject:[TL_messageMediaGeo class] forKey:[NSNumber numberWithInt:1457575028]];
@@ -216,7 +216,7 @@ static NSMutableDictionary *cs_constuctors;
    [cs_classes setObject:[TL_messageActionChatDeletePhoto class] forKey:[NSNumber numberWithInt:-1780220945]];
    [cs_classes setObject:[TL_messageActionChatAddUser class] forKey:[NSNumber numberWithInt:1217033015]];
    [cs_classes setObject:[TL_messageActionChatDeleteUser class] forKey:[NSNumber numberWithInt:-1297179892]];
-   [cs_classes setObject:[TL_dialog class] forKey:[NSNumber numberWithInt:-1042448310]];
+   [cs_classes setObject:[TL_dialog class] forKey:[NSNumber numberWithInt:539878657]];
    [cs_classes setObject:[TL_photoEmpty class] forKey:[NSNumber numberWithInt:590459437]];
    [cs_classes setObject:[TL_photo class] forKey:[NSNumber numberWithInt:-840088834]];
    [cs_classes setObject:[TL_photoSizeEmpty class] forKey:[NSNumber numberWithInt:236446268]];
@@ -457,7 +457,7 @@ static NSMutableDictionary *cs_constuctors;
    [cs_classes setObject:[TL_channelForbidden class] forKey:[NSNumber numberWithInt:763724588]];
    [cs_classes setObject:[TL_contacts_resolvedPeer class] forKey:[NSNumber numberWithInt:2131196633]];
    [cs_classes setObject:[TL_channelFull class] forKey:[NSNumber numberWithInt:-1749097118]];
-   [cs_classes setObject:[TL_dialogChannel class] forKey:[NSNumber numberWithInt:1535415986]];
+   [cs_classes setObject:[TL_dialogChannel class] forKey:[NSNumber numberWithInt:229735461]];
    [cs_classes setObject:[TL_messageRange class] forKey:[NSNumber numberWithInt:182649427]];
    [cs_classes setObject:[TL_messageGroup class] forKey:[NSNumber numberWithInt:-399216813]];
    [cs_classes setObject:[TL_messages_channelMessages class] forKey:[NSNumber numberWithInt:-1139861572]];
@@ -564,6 +564,8 @@ static NSMutableDictionary *cs_constuctors;
    [cs_classes setObject:[TL_contacts_topPeers class] forKey:[NSNumber numberWithInt:1891070632]];
    [cs_classes setObject:[TL_messageEntityMentionName class] forKey:[NSNumber numberWithInt:892193368]];
    [cs_classes setObject:[TL_inputMessageEntityMentionName class] forKey:[NSNumber numberWithInt:546203849]];
+   [cs_classes setObject:[TL_inputMessagesFilterChatPhotos class] forKey:[NSNumber numberWithInt:975236280]];
+   [cs_classes setObject:[TL_updateReadChannelOutbox class] forKey:[NSNumber numberWithInt:634833351]];
    [cs_classes setObject:[TL_userSelf class] forKey:[NSNumber numberWithInt:476112392]];
    [cs_classes setObject:[TL_userContact class] forKey:[NSNumber numberWithInt:-894214632]];
    [cs_classes setObject:[TL_userRequest class] forKey:[NSNumber numberWithInt:-640891665]];

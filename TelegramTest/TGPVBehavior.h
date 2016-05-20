@@ -14,6 +14,7 @@
 
 @property (nonatomic,strong) TL_conversation *conversation;
 @property (nonatomic,strong) TLUser *user;
+@property (nonatomic,strong) TLChat *chat;
 @property (nonatomic,assign,readonly) int totalCount;
 
 

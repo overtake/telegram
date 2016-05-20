@@ -18,6 +18,7 @@
 #import "TGCache.h"
 #import "TGPVZoomControl.h"
 #import "TGPVDocumentsBehavior.h"
+#import "TGPVChatPhotoBehavior.h"
 @interface TGPhotoViewer ()
 @property (nonatomic,strong) TL_conversation *conversation;
 @property (nonatomic,strong) TLUser *user;
@@ -281,8 +282,9 @@ static const int controlsHeight = 75;
         
         _totalCount = MAX([_behavior totalCount],(int)[self listCount]);
         
+        NSUInteger index = [self indexOfObject:self.currentItem.previewObject];
         [[ASQueue mainQueue] dispatchOnQueue:^{
-            self.currentItemId = [self indexOfObject:self.currentItem.previewObject];
+            self.currentItemId = index;
         }];
         
     } synchronous:YES];
@@ -508,7 +510,7 @@ static TGPhotoViewer *viewer;
 -(void)show:(PreviewObject *)item user:(TLUser *)user {
     
     
-    _behavior = [[TGPVUserBehavior alloc] initWithConversation:_conversation commonItem:item];
+    _behavior = [[TGPVUserBehavior alloc] initWithConversation:user.dialog commonItem:item];
     [_behavior setUser:user];
     
     _isReversed = YES;
@@ -528,6 +530,28 @@ static TGPhotoViewer *viewer;
         [self insertObjects:result];
     }];
     
+}
+
+-(void)showChatPhotos:(PreviewObject *)item chat:(TLChat *)chat {
+    _behavior = [[TGPVChatPhotoBehavior alloc] initWithConversation:chat.dialog commonItem:item];
+    [_behavior setChat:chat];
+    
+    _isReversed = YES;
+    
+    [ASQueue dispatchOnStageQueue:^{
+        
+        self.list = [[NSMutableArray alloc] init];
+        [self insertObjects:@[item]];
+        
+    } synchronous:YES];
+    
+    self.currentItemId = 0;
+    
+    [self makeKeyAndOrderFront:self];
+    
+    [self.behavior load:0 next:YES limit:100 callback:^(NSArray *result) {
+        [self insertObjects:result];
+    }];
 }
 
 -(void)show:(PreviewObject *)item {
@@ -649,7 +673,7 @@ static TGPhotoViewer *viewer;
     
     
     if(currentItemId == NSNotFound)
-    return;
+        return;
     
     
     BOOL next = _isReversed ? currentItemId > _currentItemId : currentItemId < _currentItemId;

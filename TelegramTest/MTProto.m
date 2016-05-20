@@ -2,7 +2,7 @@
 //  MTProto.m
 //  Telegram
 //
-//  Auto created by Mikhail Filimonov on 29.04.16.
+//  Auto created by Mikhail Filimonov on 20.05.16.
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -5638,8 +5638,6 @@
 
 @implementation TLMessage
             
--(BOOL)isUnread {return NO;}
-                        
 -(BOOL)isN_out {return NO;}
                         
 -(BOOL)isMentioned {return NO;}
@@ -5694,10 +5692,9 @@
 @end
 
 @implementation TL_message
-+(TL_message*)createWithFlags:(int)flags       n_id:(int)n_id from_id:(int)from_id to_id:(TLPeer*)to_id fwd_from:(TLMessageFwdHeader*)fwd_from via_bot_id:(int)via_bot_id reply_to_msg_id:(int)reply_to_msg_id date:(int)date message:(NSString*)message media:(TLMessageMedia*)media reply_markup:(TLReplyMarkup*)reply_markup entities:(NSMutableArray*)entities views:(int)views edit_date:(int)edit_date {
++(TL_message*)createWithFlags:(int)flags      n_id:(int)n_id from_id:(int)from_id to_id:(TLPeer*)to_id fwd_from:(TLMessageFwdHeader*)fwd_from via_bot_id:(int)via_bot_id reply_to_msg_id:(int)reply_to_msg_id date:(int)date message:(NSString*)message media:(TLMessageMedia*)media reply_markup:(TLReplyMarkup*)reply_markup entities:(NSMutableArray*)entities views:(int)views edit_date:(int)edit_date {
 	TL_message* obj = [[TL_message alloc] init];
 	obj.flags = flags;
-	
 	
 	
 	
@@ -5720,7 +5717,6 @@
 }
 -(void)serialize:(SerializedData*)stream {
 	[stream writeInt:self.flags];
-	
 	
 	
 	
@@ -5751,7 +5747,6 @@
 }
 -(void)unserialize:(SerializedData*)stream {
 	super.flags = [stream readInt];
-	
 	
 	
 	
@@ -5795,7 +5790,6 @@
     
     
     
-    
     objc.n_id = self.n_id;
     objc.from_id = self.from_id;
     objc.to_id = [self.to_id copy];
@@ -5829,8 +5823,6 @@
 }
         
             
--(BOOL)isUnread {return (self.flags & (1 << 0)) > 0;}
-                        
 -(BOOL)isN_out {return (self.flags & (1 << 1)) > 0;}
                         
 -(BOOL)isMentioned {return (self.flags & (1 << 4)) > 0;}
@@ -5899,10 +5891,9 @@
 @end
 
 @implementation TL_messageService
-+(TL_messageService*)createWithFlags:(int)flags       n_id:(int)n_id from_id:(int)from_id to_id:(TLPeer*)to_id reply_to_msg_id:(int)reply_to_msg_id date:(int)date action:(TLMessageAction*)action {
++(TL_messageService*)createWithFlags:(int)flags      n_id:(int)n_id from_id:(int)from_id to_id:(TLPeer*)to_id date:(int)date action:(TLMessageAction*)action {
 	TL_messageService* obj = [[TL_messageService alloc] init];
 	obj.flags = flags;
-	
 	
 	
 	
@@ -5911,7 +5902,6 @@
 	obj.n_id = n_id;
 	obj.from_id = from_id;
 	obj.to_id = to_id;
-	obj.reply_to_msg_id = reply_to_msg_id;
 	obj.date = date;
 	obj.action = action;
 	return obj;
@@ -5923,11 +5913,9 @@
 	
 	
 	
-	
 	[stream writeInt:self.n_id];
 	if(self.flags & (1 << 8)) {[stream writeInt:self.from_id];}
 	[ClassStore TLSerialize:self.to_id stream:stream];
-	if(self.flags & (1 << 3)) {[stream writeInt:self.reply_to_msg_id];}
 	[stream writeInt:self.date];
 	[ClassStore TLSerialize:self.action stream:stream];
 }
@@ -5938,11 +5926,9 @@
 	
 	
 	
-	
 	super.n_id = [stream readInt];
 	if(self.flags & (1 << 8)) {super.from_id = [stream readInt];}
 	self.to_id = [ClassStore TLDeserialize:stream];
-	if(self.flags & (1 << 3)) {super.reply_to_msg_id = [stream readInt];}
 	super.date = [stream readInt];
 	self.action = [ClassStore TLDeserialize:stream];
 }
@@ -5957,11 +5943,9 @@
     
     
     
-    
     objc.n_id = self.n_id;
     objc.from_id = self.from_id;
     objc.to_id = [self.to_id copy];
-    objc.reply_to_msg_id = self.reply_to_msg_id;
     objc.date = self.date;
     objc.action = [self.action copy];
     
@@ -5984,8 +5968,6 @@
 }
         
             
--(BOOL)isUnread {return (self.flags & (1 << 0)) > 0;}
-                        
 -(BOOL)isN_out {return (self.flags & (1 << 1)) > 0;}
                         
 -(BOOL)isMentioned {return (self.flags & (1 << 4)) > 0;}
@@ -6001,12 +5983,6 @@
    super.from_id = from_id;
                 
     if(super.from_id == 0)  { super.flags&= ~ (1 << 8) ;} else { super.flags|= (1 << 8); }
-}            
--(void)setReply_to_msg_id:(int)reply_to_msg_id
-{
-   super.reply_to_msg_id = reply_to_msg_id;
-                
-    if(super.reply_to_msg_id == 0)  { super.flags&= ~ (1 << 3) ;} else { super.flags|= (1 << 3); }
 }
         
 @end
@@ -7145,11 +7121,12 @@
 @end
         
 @implementation TL_dialog
-+(TL_dialog*)createWithPeer:(TLPeer*)peer top_message:(int)top_message read_inbox_max_id:(int)read_inbox_max_id unread_count:(int)unread_count notify_settings:(TLPeerNotifySettings*)notify_settings {
++(TL_dialog*)createWithPeer:(TLPeer*)peer top_message:(int)top_message read_inbox_max_id:(int)read_inbox_max_id read_outbox_max_id:(int)read_outbox_max_id unread_count:(int)unread_count notify_settings:(TLPeerNotifySettings*)notify_settings {
 	TL_dialog* obj = [[TL_dialog alloc] init];
 	obj.peer = peer;
 	obj.top_message = top_message;
 	obj.read_inbox_max_id = read_inbox_max_id;
+	obj.read_outbox_max_id = read_outbox_max_id;
 	obj.unread_count = unread_count;
 	obj.notify_settings = notify_settings;
 	return obj;
@@ -7158,6 +7135,7 @@
 	[ClassStore TLSerialize:self.peer stream:stream];
 	[stream writeInt:self.top_message];
 	[stream writeInt:self.read_inbox_max_id];
+	[stream writeInt:self.read_outbox_max_id];
 	[stream writeInt:self.unread_count];
 	[ClassStore TLSerialize:self.notify_settings stream:stream];
 }
@@ -7165,6 +7143,7 @@
 	self.peer = [ClassStore TLDeserialize:stream];
 	super.top_message = [stream readInt];
 	super.read_inbox_max_id = [stream readInt];
+	super.read_outbox_max_id = [stream readInt];
 	super.unread_count = [stream readInt];
 	self.notify_settings = [ClassStore TLDeserialize:stream];
 }
@@ -7176,6 +7155,7 @@
     objc.peer = [self.peer copy];
     objc.top_message = self.top_message;
     objc.read_inbox_max_id = self.read_inbox_max_id;
+    objc.read_outbox_max_id = self.read_outbox_max_id;
     objc.unread_count = self.unread_count;
     objc.notify_settings = [self.notify_settings copy];
     
@@ -7202,12 +7182,13 @@
 @end
 
 @implementation TL_dialogChannel
-+(TL_dialogChannel*)createWithPeer:(TLPeer*)peer top_message:(int)top_message top_important_message:(int)top_important_message read_inbox_max_id:(int)read_inbox_max_id unread_count:(int)unread_count unread_important_count:(int)unread_important_count notify_settings:(TLPeerNotifySettings*)notify_settings pts:(int)pts {
++(TL_dialogChannel*)createWithPeer:(TLPeer*)peer top_message:(int)top_message top_important_message:(int)top_important_message read_inbox_max_id:(int)read_inbox_max_id read_outbox_max_id:(int)read_outbox_max_id unread_count:(int)unread_count unread_important_count:(int)unread_important_count notify_settings:(TLPeerNotifySettings*)notify_settings pts:(int)pts {
 	TL_dialogChannel* obj = [[TL_dialogChannel alloc] init];
 	obj.peer = peer;
 	obj.top_message = top_message;
 	obj.top_important_message = top_important_message;
 	obj.read_inbox_max_id = read_inbox_max_id;
+	obj.read_outbox_max_id = read_outbox_max_id;
 	obj.unread_count = unread_count;
 	obj.unread_important_count = unread_important_count;
 	obj.notify_settings = notify_settings;
@@ -7219,6 +7200,7 @@
 	[stream writeInt:self.top_message];
 	[stream writeInt:self.top_important_message];
 	[stream writeInt:self.read_inbox_max_id];
+	[stream writeInt:self.read_outbox_max_id];
 	[stream writeInt:self.unread_count];
 	[stream writeInt:self.unread_important_count];
 	[ClassStore TLSerialize:self.notify_settings stream:stream];
@@ -7229,6 +7211,7 @@
 	super.top_message = [stream readInt];
 	super.top_important_message = [stream readInt];
 	super.read_inbox_max_id = [stream readInt];
+	super.read_outbox_max_id = [stream readInt];
 	super.unread_count = [stream readInt];
 	super.unread_important_count = [stream readInt];
 	self.notify_settings = [ClassStore TLDeserialize:stream];
@@ -7243,6 +7226,7 @@
     objc.top_message = self.top_message;
     objc.top_important_message = self.top_important_message;
     objc.read_inbox_max_id = self.read_inbox_max_id;
+    objc.read_outbox_max_id = self.read_outbox_max_id;
     objc.unread_count = self.unread_count;
     objc.unread_important_count = self.unread_important_count;
     objc.notify_settings = [self.notify_settings copy];
@@ -10968,6 +10952,47 @@
         
 @end
 
+@implementation TL_inputMessagesFilterChatPhotos
++(TL_inputMessagesFilterChatPhotos*)create {
+	TL_inputMessagesFilterChatPhotos* obj = [[TL_inputMessagesFilterChatPhotos alloc] init];
+	
+	return obj;
+}
+-(void)serialize:(SerializedData*)stream {
+	
+}
+-(void)unserialize:(SerializedData*)stream {
+	
+}
+        
+-(TL_inputMessagesFilterChatPhotos *)copy {
+    
+    TL_inputMessagesFilterChatPhotos *objc = [[TL_inputMessagesFilterChatPhotos alloc] init];
+    
+    
+    
+    return objc;
+}
+        
+
+    
+-(id)initWithCoder:(NSCoder *)aDecoder {
+
+    if((self = [ClassStore deserialize:[aDecoder decodeObjectForKey:@"data"]])) {
+        
+    }
+    
+    return self;
+}
+        
+-(void)encodeWithCoder:(NSCoder *)aCoder {
+    [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
+}
+        
+
+        
+@end
+
 @implementation TLUpdate
 
 @end
@@ -13287,6 +13312,51 @@
     objc.user_id = self.user_id;
     objc.msg_id = [self.msg_id copy];
     objc.data = [self.data copy];
+    
+    return objc;
+}
+        
+
+    
+-(id)initWithCoder:(NSCoder *)aDecoder {
+
+    if((self = [ClassStore deserialize:[aDecoder decodeObjectForKey:@"data"]])) {
+        
+    }
+    
+    return self;
+}
+        
+-(void)encodeWithCoder:(NSCoder *)aCoder {
+    [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
+}
+        
+
+        
+@end
+
+@implementation TL_updateReadChannelOutbox
++(TL_updateReadChannelOutbox*)createWithChannel_id:(int)channel_id max_id:(int)max_id {
+	TL_updateReadChannelOutbox* obj = [[TL_updateReadChannelOutbox alloc] init];
+	obj.channel_id = channel_id;
+	obj.max_id = max_id;
+	return obj;
+}
+-(void)serialize:(SerializedData*)stream {
+	[stream writeInt:self.channel_id];
+	[stream writeInt:self.max_id];
+}
+-(void)unserialize:(SerializedData*)stream {
+	super.channel_id = [stream readInt];
+	super.max_id = [stream readInt];
+}
+        
+-(TL_updateReadChannelOutbox *)copy {
+    
+    TL_updateReadChannelOutbox *objc = [[TL_updateReadChannelOutbox alloc] init];
+    
+    objc.channel_id = self.channel_id;
+    objc.max_id = self.max_id;
     
     return objc;
 }

@@ -42,8 +42,8 @@
         
         [self.photoImageView setTapBlock:^ {
             PreviewObject *preview = [[PreviewObject alloc] initWithMsdId:weakSelf.item.message.n_id media:[weakSelf.item.message.action.photo.sizes lastObject] peer_id:weakSelf.item.message.peer_id];
-                        
-            [[TGPhotoViewer viewer] show:preview];
+            preview.date = weakSelf.item.message.date;
+            [[TGPhotoViewer viewer] showChatPhotos:preview chat:weakSelf.item.message.chat];
         }];
         
     }

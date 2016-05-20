@@ -59,6 +59,7 @@
 @property (nonatomic) BOOL isHeaderForwardedMessage;
 
 
+
 @property (nonatomic,assign,readonly) int makeSize;
 
 @property (nonatomic) NSSize blockSize;

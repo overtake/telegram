@@ -324,12 +324,17 @@ NSString *const tableModernDialogs = @"modern_dialogs";
         
         // modern dialogs
         {
-            [db executeUpdate:[NSString stringWithFormat:@"create table if not exists %@ (peer_id INTEGER PRIMARY KEY, top_message blob, unread_count integer,last_message_date integer, type integer, last_marked_message integer,last_marked_date integer,last_real_message_date integer, read_inbox_max_id integer, mute_until integer,unread_important_count integer, pts integer, is_invisible integer, top_important_message blob)",tableModernDialogs]];
+            [db executeUpdate:[NSString stringWithFormat:@"create table if not exists %@ (peer_id INTEGER PRIMARY KEY, top_message blob, unread_count integer,last_message_date integer, type integer, last_marked_message integer,last_marked_date integer,last_real_message_date integer, read_inbox_max_id integer, mute_until integer,unread_important_count integer, pts integer, is_invisible integer, top_important_message blob, read_outbox_max_id integer)",tableModernDialogs]];
             
             [db executeUpdate:[NSString stringWithFormat:@"CREATE INDEX if not exists c_l_idx ON %@(last_real_message_date)",tableModernDialogs]];
             [db executeUpdate:[NSString stringWithFormat:@"CREATE INDEX if not exists c_t_idx ON %@(top_message)",tableModernDialogs]];
             [db executeUpdate:[NSString stringWithFormat:@"CREATE INDEX if not exists c_ti_idx ON %@(top_important_message)",tableModernDialogs]];
             
+        }
+        
+        if (![db columnExists:@"read_outbox_max_id" inTableWithName:tableModernDialogs])
+        {
+            [db executeUpdate:[NSString stringWithFormat:@"ALTER TABLE %@ ADD COLUMN read_outbox_max_id integer",tableModernDialogs]];
         }
 
         
@@ -1294,20 +1299,21 @@ TL_localMessage *parseMessage(FMResultSet *result) {
     [queue inDatabase:^(FMDatabase *db) {
         
         
-        int flags = n_out ? TGOUTMESSAGE | TGUNREADMESSAGE : TGUNREADMESSAGE;
-        
         FMResultSet *result;
-        
         
         
         if(!n_out) {
             
-            result = [db executeQuery:[NSString stringWithFormat:@"select * from %@ where ((n_id <= ?) OR dstate=?) and peer_id = ? and (flags & ?) = ? and (flags & ?) = 0",tableMessages],@(max_id),@(DeliveryStatePending),@(peer_id),@(flags),@(flags),@(TGOUTMESSAGE)];
+            int read_inbox_max_id = [db intForQuery:[NSString stringWithFormat:@"select read_inbox_max_id from %@ where peer_id = ?",tableModernDialogs],@(peer_id)];
+            
+            result = [db executeQuery:[NSString stringWithFormat:@"select * from %@ where ((n_id <= ? and n_id > ?) OR dstate=?) and peer_id = ? and (flags & ?) = 0",tableMessages],@(max_id),@(read_inbox_max_id),@(DeliveryStatePending),@(peer_id),@(TGOUTMESSAGE)];
             
             
-            [db executeUpdate:[NSString stringWithFormat:@"update %@ set read_inbox_max_id = ? where peer_id = ?",tableModernDialogs],@(max_id),@(peer_id)];
         } else {
-            result = [db executeQuery:[NSString stringWithFormat:@"select * from %@ where (n_id <= ? OR dstate= ?) and peer_id = ? and (flags & ?) = ?",tableMessages],@(max_id),@(DeliveryStatePending),@(peer_id),@(flags),@(flags)];
+            
+            int read_outbox_max_id = [db intForQuery:[NSString stringWithFormat:@"select read_outbox_max_id from %@ where peer_id = ?",tableModernDialogs],@(peer_id)];
+            
+            result = [db executeQuery:[NSString stringWithFormat:@"select * from %@ where ((n_id <= ? and n_id > ?) OR dstate= ?) and peer_id = ?",tableMessages],@(max_id),@(read_outbox_max_id),@(DeliveryStatePending),@(peer_id),@(TGOUTMESSAGE),@(TGOUTMESSAGE)];
         }
         
         
@@ -1324,17 +1330,11 @@ TL_localMessage *parseMessage(FMResultSet *result) {
         [result close];
         
         
-        if(ids.count > 0)
-        {
-            NSString *sql = [NSString stringWithFormat:@"update %@ set flags= flags & ~1 where n_id in (%@)",tableMessages,[ids componentsJoinedByString:@","]];
-            
-            [db executeUpdateWithFormat:sql,nil];
-        }
         
         int unread_count = -1;
         
         if(!n_out) {
-            unread_count = [db intForQuery:[NSString stringWithFormat:@"select count(*) from %@ where peer_id = ? and (flags & ?) = ? and (flags & ?) = 0",tableMessages],@(peer_id),@(flags),@(flags),@(TGOUTMESSAGE)];
+            unread_count = [db intForQuery:[NSString stringWithFormat:@"select count(*) from %@ where peer_id = ? and (n_id > ?) and (flags & ?) = 0",tableMessages],@(peer_id),@(max_id),@(TGOUTMESSAGE)];
         }
         
         
@@ -1809,7 +1809,7 @@ TL_localMessage *parseMessage(FMResultSet *result) {
         
         
         
-        TL_conversation *dialog = [TL_conversation createWithPeer:peer top_message:[result intForColumn:@"top_message"] unread_count:[result intForColumn:@"unread_count"] last_message_date:[result intForColumn:@"last_message_date"] notify_settings:[TL_peerNotifySettings createWithFlags:0 mute_until:[result intForColumn:@"mute_until"] sound:@""] last_marked_message:[result intForColumn:@"last_marked_message"] top_message_fake:0 last_marked_date:[result intForColumn:@"last_marked_date"] sync_message_id:0 read_inbox_max_id:[result intForColumn:@"read_inbox_max_id"] unread_important_count:[result intForColumn:@"unread_important_count"] lastMessage:nil pts:[result intForColumn:@"pts"] isInvisibleChannel:[result boolForColumn:@"is_invisible"] top_important_message:[result intForColumn:@"top_important_message"]];
+        TL_conversation *dialog = [TL_conversation createWithPeer:peer top_message:[result intForColumn:@"top_message"] unread_count:[result intForColumn:@"unread_count"] last_message_date:[result intForColumn:@"last_message_date"] notify_settings:[TL_peerNotifySettings createWithFlags:0 mute_until:[result intForColumn:@"mute_until"] sound:@""] last_marked_message:[result intForColumn:@"last_marked_message"] top_message_fake:0 last_marked_date:[result intForColumn:@"last_marked_date"] sync_message_id:0 read_inbox_max_id:[result intForColumn:@"read_inbox_max_id"] unread_important_count:[result intForColumn:@"unread_important_count"] read_outbox_max_id:[result intForColumn:@"read_outbox_max_id"] lastMessage:nil pts:[result intForColumn:@"pts"] isInvisibleChannel:[result boolForColumn:@"is_invisible"] top_important_message:[result intForColumn:@"top_important_message"]];
         
         [dialogs addObject:dialog];
 
@@ -1931,7 +1931,7 @@ TL_localMessage *parseMessage(FMResultSet *result) {
                 return;
             
             
-            [db executeUpdate:[NSString stringWithFormat:@"insert or replace into %@ (peer_id,top_message,type,last_message_date,unread_count,last_marked_message,last_marked_date,last_real_message_date,read_inbox_max_id, unread_important_count, pts,is_invisible,top_important_message,mute_until) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?)",tableModernDialogs],
+            [db executeUpdate:[NSString stringWithFormat:@"insert or replace into %@ (peer_id,top_message,type,last_message_date,unread_count,last_marked_message,last_marked_date,last_real_message_date,read_inbox_max_id, read_outbox_max_id, unread_important_count, pts,is_invisible,top_important_message,mute_until) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",tableModernDialogs],
              @(dialog.peer_id),
              @(dialog.channel_top_message_id),
              @(dialog.type),
@@ -1941,6 +1941,7 @@ TL_localMessage *parseMessage(FMResultSet *result) {
              @(dialog.last_marked_date),
              @(dialog.last_real_message_date),
              @(dialog.read_inbox_max_id),
+             @(dialog.read_outbox_max_id),
              @(dialog.unread_important_count),
              @(dialog.pts),
              @(dialog.isInvisibleChannel),
