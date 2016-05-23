@@ -213,7 +213,7 @@ const static int textFieldXOffset = 30;
     return self;
 }
 
--(BOOL)NFirstResponder {
+-(BOOL)becomeFirstResponder {
     return [self.textField becomeFirstResponder];
 }
 

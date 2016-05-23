@@ -159,6 +159,7 @@ extern NSString *const TOP_PEERS;
 -(void)updateMessageViews:(int)views channelMsgId:(long)channelMsgId;
 
 -(void)markChannelMessagesAsRead:(int)channel_id max_id:(int)max_id callback:(void (^)(int unread_count))callback;
+-(void)markChannelOutMessagesAsRead:(int)channel_id max_id:(int)max_id callback:(void (^)(NSArray *messages))callback;
 -(void)updateTopMessagesWithMessages:(NSDictionary *)topMessages topImportantMessages:(NSDictionary *)topImportantMessages;
 
 -(TL_localMessage *)lastImportantMessageAroundMinId:(long)channelMsgId;

@@ -671,56 +671,76 @@
     
 }
 
--(void)markChannelMessagesAsRead:(int)channel_id max_id:(int)max_id completionHandler:(dispatch_block_t)completionHandler {
+
+
+-(void)markChannelMessagesAsRead:(int)channel_id max_id:(int)max_id n_out:(BOOL)n_out completionHandler:(dispatch_block_t)completionHandler {
     
     dispatch_queue_t dqueue = dispatch_get_current_queue();
     
     [self.queue dispatchOnQueue:^{
-        [[Storage manager] markChannelMessagesAsRead:channel_id max_id:max_id callback:^(int unread_count) {
-            
-            TL_conversation *conversation = [self find:-channel_id];
-            
-            if(conversation) {
+        
+        if(!n_out) {
+            [[Storage manager] markChannelMessagesAsRead:channel_id max_id:max_id callback:^(int unread_count) {
                 
-                conversation.unread_count-= unread_count;
-                conversation.last_marked_message = max_id;
-                [conversation save];
-                [Notification perform:[Notification notificationNameByDialog:conversation action:@"unread_count"] data:@{KEY_DIALOG:conversation,KEY_LAST_CONVRESATION_DATA:[MessagesUtils conversationLastData:conversation]}];
-
+                TL_conversation *conversation = [self find:-channel_id];
                 
-                if(conversation.unread_count > 0) {
-                    [RPCRequest sendRequest:[TLAPI_messages_getPeerDialogs createWithPeers:[@[conversation.inputPeer] mutableCopy]] successHandler:^(id request, TL_messages_peerDialogs *response) {
-                        
-
-                        
-                        [response.messages removeAllObjects];
-                        
-                        [SharedManager proccessGlobalResponse:response];
-                        
-                        if(response.dialogs.count == 1) {
-                            TL_dialog *c = response.dialogs[0];
+                if(conversation) {
+                    
+                    conversation.unread_count-= unread_count;
+                    conversation.last_marked_message = max_id;
+                    [conversation save];
+                    [Notification perform:[Notification notificationNameByDialog:conversation action:@"unread_count"] data:@{KEY_DIALOG:conversation,KEY_LAST_CONVRESATION_DATA:[MessagesUtils conversationLastData:conversation]}];
+                    
+                    
+                    if(conversation.unread_count > 0) {
+                        [RPCRequest sendRequest:[TLAPI_messages_getPeerDialogs createWithPeers:[@[conversation.inputPeer] mutableCopy]] successHandler:^(id request, TL_messages_peerDialogs *response) {
                             
-                            if(c.unread_count != conversation.unread_count) {
-                                conversation.unread_count = c.unread_count;
-                                conversation.read_inbox_max_id = c.read_inbox_max_id;
-                                conversation.read_outbox_max_id = c.read_outbox_max_id;
-                                [conversation save];
-                                [Notification perform:[Notification notificationNameByDialog:conversation action:@"unread_count"] data:@{KEY_DIALOG:conversation,KEY_LAST_CONVRESATION_DATA:[MessagesUtils conversationLastData:conversation]}];
+                            [response.messages removeAllObjects];
+                            
+                            [SharedManager proccessGlobalResponse:response];
+                            
+                            if(response.dialogs.count == 1) {
+                                TL_dialog *c = response.dialogs[0];
+                                
+                                if(c.unread_count != conversation.unread_count) {
+                                    conversation.unread_count = c.unread_count;
+                                    conversation.read_inbox_max_id = c.read_inbox_max_id;
+                                    conversation.read_outbox_max_id = c.read_outbox_max_id;
+                                    [conversation save];
+                                    [Notification perform:[Notification notificationNameByDialog:conversation action:@"unread_count"] data:@{KEY_DIALOG:conversation,KEY_LAST_CONVRESATION_DATA:[MessagesUtils conversationLastData:conversation]}];
+                                }
+                                
                             }
                             
-                        }
-                                                
-                    } errorHandler:^(id request, RpcError *error) {
-                        
-                    }];
+                        } errorHandler:^(id request, RpcError *error) {
+                            
+                        }];
+                    }
+                    
                 }
                 
-            }
-            
-            dispatch_async(dqueue, completionHandler);
- 
-        }];
+                dispatch_async(dqueue, completionHandler);
+                
+            }];
 
+        } else {
+            [[Storage manager] markChannelOutMessagesAsRead:channel_id max_id:max_id callback:^(NSArray * messages) {
+                
+                TL_conversation *conversation = [self find:-channel_id];
+                
+                if(conversation) {
+                    
+                    conversation.read_outbox_max_id = max_id;
+                    [conversation save];
+                    
+                    [Notification perform:MESSAGE_READ_EVENT data:@{KEY_MESSAGE_ID_LIST:messages}];
+                    [Notification perform:[Notification notificationNameByDialog:conversation action:@"unread_count"] data:@{KEY_DIALOG:conversation,KEY_LAST_CONVRESATION_DATA:[MessagesUtils conversationLastData:conversation]}];
+                }
+
+            }];
+        }
+        
+        
     }];
     
 }
@@ -773,7 +793,6 @@
     
     if(message.n_id > TGMINFAKEID && dialog.last_message_date > message.date)
         return NO;
-    
     
     
     if(message.unread && !message.n_out && (message.conversation.read_inbox_max_id < message.n_id || message.conversation.read_inbox_max_id > TGMINFAKEID)) {

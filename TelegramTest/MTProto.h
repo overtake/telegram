@@ -1095,7 +1095,7 @@
 +(TL_message*)createWithFlags:(int)flags      n_id:(int)n_id from_id:(int)from_id to_id:(TLPeer*)to_id fwd_from:(TLMessageFwdHeader*)fwd_from via_bot_id:(int)via_bot_id reply_to_msg_id:(int)reply_to_msg_id date:(int)date message:(NSString*)message media:(TLMessageMedia*)media reply_markup:(TLReplyMarkup*)reply_markup entities:(NSMutableArray*)entities views:(int)views edit_date:(int)edit_date;
 @end
 @interface TL_messageService : TLMessage<NSCoding>
-+(TL_messageService*)createWithFlags:(int)flags      n_id:(int)n_id from_id:(int)from_id to_id:(TLPeer*)to_id date:(int)date action:(TLMessageAction*)action;
++(TL_messageService*)createWithFlags:(int)flags      n_id:(int)n_id from_id:(int)from_id to_id:(TLPeer*)to_id reply_to_msg_id:(int)reply_to_msg_id date:(int)date action:(TLMessageAction*)action;
 @end
 	
 @interface TLMessageMedia()
@@ -1854,7 +1854,6 @@
 	
 @interface TLUpdates()
 @property int flags;
-@property (nonatomic,assign,readonly) BOOL isUnread;
 @property (nonatomic,assign,readonly) BOOL isN_out;
 @property (nonatomic,assign,readonly) BOOL isMentioned;
 @property (nonatomic,assign,readonly) BOOL isMedia_unread;
@@ -1884,10 +1883,10 @@
 +(TL_updatesTooLong*)create;
 @end
 @interface TL_updateShortMessage : TLUpdates<NSCoding>
-+(TL_updateShortMessage*)createWithFlags:(int)flags      n_id:(int)n_id user_id:(int)user_id message:(NSString*)message pts:(int)pts pts_count:(int)pts_count date:(int)date fwd_from:(TLMessageFwdHeader*)fwd_from via_bot_id:(int)via_bot_id reply_to_msg_id:(int)reply_to_msg_id entities:(NSMutableArray*)entities;
++(TL_updateShortMessage*)createWithFlags:(int)flags     n_id:(int)n_id user_id:(int)user_id message:(NSString*)message pts:(int)pts pts_count:(int)pts_count date:(int)date fwd_from:(TLMessageFwdHeader*)fwd_from via_bot_id:(int)via_bot_id reply_to_msg_id:(int)reply_to_msg_id entities:(NSMutableArray*)entities;
 @end
 @interface TL_updateShortChatMessage : TLUpdates<NSCoding>
-+(TL_updateShortChatMessage*)createWithFlags:(int)flags      n_id:(int)n_id from_id:(int)from_id chat_id:(int)chat_id message:(NSString*)message pts:(int)pts pts_count:(int)pts_count date:(int)date fwd_from:(TLMessageFwdHeader*)fwd_from via_bot_id:(int)via_bot_id reply_to_msg_id:(int)reply_to_msg_id entities:(NSMutableArray*)entities;
++(TL_updateShortChatMessage*)createWithFlags:(int)flags     n_id:(int)n_id from_id:(int)from_id chat_id:(int)chat_id message:(NSString*)message pts:(int)pts pts_count:(int)pts_count date:(int)date fwd_from:(TLMessageFwdHeader*)fwd_from via_bot_id:(int)via_bot_id reply_to_msg_id:(int)reply_to_msg_id entities:(NSMutableArray*)entities;
 @end
 @interface TL_updateShort : TLUpdates<NSCoding>
 +(TL_updateShort*)createWithUpdate:(TLUpdate*)update date:(int)date;
@@ -1899,7 +1898,7 @@
 +(TL_updates*)createWithUpdates:(NSMutableArray*)updates users:(NSMutableArray*)users chats:(NSMutableArray*)chats date:(int)date seq:(int)seq;
 @end
 @interface TL_updateShortSentMessage : TLUpdates<NSCoding>
-+(TL_updateShortSentMessage*)createWithFlags:(int)flags   n_id:(int)n_id pts:(int)pts pts_count:(int)pts_count date:(int)date media:(TLMessageMedia*)media entities:(NSMutableArray*)entities;
++(TL_updateShortSentMessage*)createWithFlags:(int)flags  n_id:(int)n_id pts:(int)pts pts_count:(int)pts_count date:(int)date media:(TLMessageMedia*)media entities:(NSMutableArray*)entities;
 @end
 	
 @interface TLphotos_Photos()

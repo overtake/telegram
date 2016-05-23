@@ -253,7 +253,7 @@ static ShareViewController *shareViewController;
         
         [[response users] enumerateObjectsUsingBlock:^(TLUser *obj, NSUInteger idx, BOOL *stop) {
             
-            [_contacts addObject:[[TGS_ConversationRowItem alloc] initWithConversation:[TL_dialog createWithPeer:[TL_peerUser createWithUser_id:obj.n_id] top_message:0 read_inbox_max_id:0 unread_count:0 notify_settings:[TL_peerNotifySettingsEmpty create]] user:obj]];
+            [_contacts addObject:[[TGS_ConversationRowItem alloc] initWithConversation:[TL_dialog createWithPeer:[TL_peerUser createWithUser_id:obj.n_id] top_message:0 read_inbox_max_id:0 read_outbox_max_id:0 unread_count:0 notify_settings:[TL_peerNotifySettingsEmpty create]] user:obj]];
             
         }];
         

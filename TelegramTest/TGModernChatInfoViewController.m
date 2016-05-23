@@ -364,6 +364,11 @@
             [attr setFont:TGSystemFont(13) forRange:attr.range];
             
             user.badge = attr;
+            
+            if(user.user.isBot) {
+                user.status = NSLocalizedString(@"Bot.botCanReadAllMessages", nil);
+            }
+            
         }
         
         [user setStateback:^id(TGGeneralRowItem *item) {

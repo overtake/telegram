@@ -437,21 +437,14 @@
         TL_conversation *conversation = [self conversationWithChannelId:[update channel_id]];
         
         if(conversation.unread_count > 0) {
-            [[DialogsManager sharedManager] markChannelMessagesAsRead:[update channel_id] max_id:[(TL_updateReadChannelInbox *)update max_id] completionHandler:^{}];
+            [[DialogsManager sharedManager] markChannelMessagesAsRead:[update channel_id] max_id:[(TL_updateReadChannelInbox *)update max_id] n_out:NO completionHandler:^{}];
         }
         
         
         
     } else if([update isKindOfClass:[TL_updateReadChannelOutbox class]]) {
         
-        
-        TL_conversation *conversation = [self conversationWithChannelId:[update channel_id]];
-        
-        conversation.read_outbox_max_id = [(TL_updateReadChannelOutbox *)update max_id];
-        
-        [conversation save];
-        
-        [Notification perform:MESSAGE_READ_EVENT data:@{KEY_MESSAGE_ID_LIST:@[]}];
+        [[DialogsManager sharedManager] markChannelMessagesAsRead:[update channel_id] max_id:[(TL_updateReadChannelInbox *)update max_id] n_out:YES completionHandler:^{}];
         
     } else if([update isKindOfClass:[TL_updateChannelTooLong class]]) {
         

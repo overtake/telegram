@@ -5891,7 +5891,7 @@
 @end
 
 @implementation TL_messageService
-+(TL_messageService*)createWithFlags:(int)flags      n_id:(int)n_id from_id:(int)from_id to_id:(TLPeer*)to_id date:(int)date action:(TLMessageAction*)action {
++(TL_messageService*)createWithFlags:(int)flags      n_id:(int)n_id from_id:(int)from_id to_id:(TLPeer*)to_id reply_to_msg_id:(int)reply_to_msg_id date:(int)date action:(TLMessageAction*)action {
 	TL_messageService* obj = [[TL_messageService alloc] init];
 	obj.flags = flags;
 	
@@ -5902,6 +5902,7 @@
 	obj.n_id = n_id;
 	obj.from_id = from_id;
 	obj.to_id = to_id;
+	obj.reply_to_msg_id = reply_to_msg_id;
 	obj.date = date;
 	obj.action = action;
 	return obj;
@@ -5916,6 +5917,7 @@
 	[stream writeInt:self.n_id];
 	if(self.flags & (1 << 8)) {[stream writeInt:self.from_id];}
 	[ClassStore TLSerialize:self.to_id stream:stream];
+	if(self.flags & (1 << 3)) {[stream writeInt:self.reply_to_msg_id];}
 	[stream writeInt:self.date];
 	[ClassStore TLSerialize:self.action stream:stream];
 }
@@ -5929,6 +5931,7 @@
 	super.n_id = [stream readInt];
 	if(self.flags & (1 << 8)) {super.from_id = [stream readInt];}
 	self.to_id = [ClassStore TLDeserialize:stream];
+	if(self.flags & (1 << 3)) {super.reply_to_msg_id = [stream readInt];}
 	super.date = [stream readInt];
 	self.action = [ClassStore TLDeserialize:stream];
 }
@@ -5946,6 +5949,7 @@
     objc.n_id = self.n_id;
     objc.from_id = self.from_id;
     objc.to_id = [self.to_id copy];
+    objc.reply_to_msg_id = self.reply_to_msg_id;
     objc.date = self.date;
     objc.action = [self.action copy];
     
@@ -5983,6 +5987,12 @@
    super.from_id = from_id;
                 
     if(super.from_id == 0)  { super.flags&= ~ (1 << 8) ;} else { super.flags|= (1 << 8); }
+}            
+-(void)setReply_to_msg_id:(int)reply_to_msg_id
+{
+   super.reply_to_msg_id = reply_to_msg_id;
+                
+    if(super.reply_to_msg_id == 0)  { super.flags&= ~ (1 << 3) ;} else { super.flags|= (1 << 3); }
 }
         
 @end
@@ -13834,8 +13844,6 @@
 
 @implementation TLUpdates
             
--(BOOL)isUnread {return NO;}
-                        
 -(BOOL)isN_out {return NO;}
                         
 -(BOOL)isMentioned {return NO;}
@@ -13888,10 +13896,9 @@
 @end
 
 @implementation TL_updateShortMessage
-+(TL_updateShortMessage*)createWithFlags:(int)flags      n_id:(int)n_id user_id:(int)user_id message:(NSString*)message pts:(int)pts pts_count:(int)pts_count date:(int)date fwd_from:(TLMessageFwdHeader*)fwd_from via_bot_id:(int)via_bot_id reply_to_msg_id:(int)reply_to_msg_id entities:(NSMutableArray*)entities {
++(TL_updateShortMessage*)createWithFlags:(int)flags     n_id:(int)n_id user_id:(int)user_id message:(NSString*)message pts:(int)pts pts_count:(int)pts_count date:(int)date fwd_from:(TLMessageFwdHeader*)fwd_from via_bot_id:(int)via_bot_id reply_to_msg_id:(int)reply_to_msg_id entities:(NSMutableArray*)entities {
 	TL_updateShortMessage* obj = [[TL_updateShortMessage alloc] init];
 	obj.flags = flags;
-	
 	
 	
 	
@@ -13910,7 +13917,6 @@
 }
 -(void)serialize:(SerializedData*)stream {
 	[stream writeInt:self.flags];
-	
 	
 	
 	
@@ -13937,7 +13943,6 @@
 }
 -(void)unserialize:(SerializedData*)stream {
 	super.flags = [stream readInt];
-	
 	
 	
 	
@@ -13976,7 +13981,6 @@
     
     
     
-    
     objc.n_id = self.n_id;
     objc.user_id = self.user_id;
     objc.message = self.message;
@@ -14007,8 +14011,6 @@
 }
         
             
--(BOOL)isUnread {return (self.flags & (1 << 0)) > 0;}
-                        
 -(BOOL)isN_out {return (self.flags & (1 << 1)) > 0;}
                         
 -(BOOL)isMentioned {return (self.flags & (1 << 4)) > 0;}
@@ -14045,10 +14047,9 @@
 @end
 
 @implementation TL_updateShortChatMessage
-+(TL_updateShortChatMessage*)createWithFlags:(int)flags      n_id:(int)n_id from_id:(int)from_id chat_id:(int)chat_id message:(NSString*)message pts:(int)pts pts_count:(int)pts_count date:(int)date fwd_from:(TLMessageFwdHeader*)fwd_from via_bot_id:(int)via_bot_id reply_to_msg_id:(int)reply_to_msg_id entities:(NSMutableArray*)entities {
++(TL_updateShortChatMessage*)createWithFlags:(int)flags     n_id:(int)n_id from_id:(int)from_id chat_id:(int)chat_id message:(NSString*)message pts:(int)pts pts_count:(int)pts_count date:(int)date fwd_from:(TLMessageFwdHeader*)fwd_from via_bot_id:(int)via_bot_id reply_to_msg_id:(int)reply_to_msg_id entities:(NSMutableArray*)entities {
 	TL_updateShortChatMessage* obj = [[TL_updateShortChatMessage alloc] init];
 	obj.flags = flags;
-	
 	
 	
 	
@@ -14068,7 +14069,6 @@
 }
 -(void)serialize:(SerializedData*)stream {
 	[stream writeInt:self.flags];
-	
 	
 	
 	
@@ -14096,7 +14096,6 @@
 }
 -(void)unserialize:(SerializedData*)stream {
 	super.flags = [stream readInt];
-	
 	
 	
 	
@@ -14136,7 +14135,6 @@
     
     
     
-    
     objc.n_id = self.n_id;
     objc.from_id = self.from_id;
     objc.chat_id = self.chat_id;
@@ -14168,8 +14166,6 @@
 }
         
             
--(BOOL)isUnread {return (self.flags & (1 << 0)) > 0;}
-                        
 -(BOOL)isN_out {return (self.flags & (1 << 1)) > 0;}
                         
 -(BOOL)isMentioned {return (self.flags & (1 << 4)) > 0;}
@@ -14501,10 +14497,9 @@
 @end
 
 @implementation TL_updateShortSentMessage
-+(TL_updateShortSentMessage*)createWithFlags:(int)flags   n_id:(int)n_id pts:(int)pts pts_count:(int)pts_count date:(int)date media:(TLMessageMedia*)media entities:(NSMutableArray*)entities {
++(TL_updateShortSentMessage*)createWithFlags:(int)flags  n_id:(int)n_id pts:(int)pts pts_count:(int)pts_count date:(int)date media:(TLMessageMedia*)media entities:(NSMutableArray*)entities {
 	TL_updateShortSentMessage* obj = [[TL_updateShortSentMessage alloc] init];
 	obj.flags = flags;
-	
 	
 	obj.n_id = n_id;
 	obj.pts = pts;
@@ -14516,7 +14511,6 @@
 }
 -(void)serialize:(SerializedData*)stream {
 	[stream writeInt:self.flags];
-	
 	
 	[stream writeInt:self.n_id];
 	[stream writeInt:self.pts];
@@ -14536,7 +14530,6 @@
 }
 -(void)unserialize:(SerializedData*)stream {
 	super.flags = [stream readInt];
-	
 	
 	super.n_id = [stream readInt];
 	super.pts = [stream readInt];
@@ -14565,7 +14558,6 @@
     
     objc.flags = self.flags;
     
-    
     objc.n_id = self.n_id;
     objc.pts = self.pts;
     objc.pts_count = self.pts_count;
@@ -14592,8 +14584,6 @@
 }
         
             
--(BOOL)isUnread {return (self.flags & (1 << 0)) > 0;}
-                        
 -(BOOL)isN_out {return (self.flags & (1 << 1)) > 0;}
                         
 -(void)setMedia:(TLMessageMedia*)media

@@ -25,7 +25,7 @@
 
 @property (nonatomic,strong) TMTextButton *backButton;
 
-
+@property (nonatomic,strong) BTRButton *enterButton;
 @property (nonatomic,strong) TMView *currentController;
 
 @end
@@ -227,6 +227,32 @@
     [_enterPasswordContainer addSubview:self.secureField];
     
     
+    
+    self.enterButton = [[BTRButton alloc] initWithFrame:NSMakeRect(0, 0, image_PasslockEnter().size.width, image_PasslockEnter().size.height)];
+    
+    [self.enterButton setImage:image_PasslockEnter() forControlState:BTRControlStateNormal];
+    [self.enterButton setImage:image_PasslockEnterHighlighted() forControlState:BTRControlStateHover];
+    
+    weak();
+    
+    [self.enterButton addBlock:^(BTRControlEvents events) {
+        
+        strongWeak();
+        
+        if(strongSelf == weakSelf) {
+            [strongSelf checkPassword];
+        }
+        
+        
+    } forControlEvents:BTRControlEventClick];
+    
+    
+    [self.enterButton setFrameOrigin:NSMakePoint(NSMaxX(self.secureField.frame) - NSWidth(self.enterButton.frame), NSMinY(self.secureField.frame) - 3)];
+    
+    [self.enterPasswordContainer addSubview:self.enterButton];
+
+    
+    
     TMView *separator = [[TMView alloc] initWithFrame:self.secureField.frame];
     
     [separator setFrame:NSMakeRect(NSMinX(separator.frame), NSMinY(separator.frame) + NSHeight(self.secureField.frame) + 1, NSWidth(separator.frame), 1)];
@@ -267,7 +293,6 @@
     
     [self.resetPass setCenterByView:_enterPasswordContainer];
     
-    weak();
     
     [self.resetPass setFrameOrigin:NSMakePoint(NSMinX(self.resetPass.frame), NSHeight(_enterPasswordContainer.frame) - NSHeight(self.resetPass.frame) - 140)];
     
@@ -381,6 +406,9 @@
     
     [resetDescription setHidden:YES];
     [self.resetAccount setHidden:YES];
+    
+    
+    [self.secureField setFrame:NSMakeRect(50, NSMinY(self.secureField.frame), NSWidth(self.secureField.frame) - 50, NSHeight(self.secureField.frame))];
     
     return _enterPasswordContainer;
 }

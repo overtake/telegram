@@ -203,7 +203,7 @@ static NSMutableDictionary *cs_constuctors;
    [cs_classes setObject:[TL_chatPhoto class] forKey:[NSNumber numberWithInt:1632839530]];
    [cs_classes setObject:[TL_messageEmpty class] forKey:[NSNumber numberWithInt:-2082087340]];
    [cs_classes setObject:[TL_message class] forKey:[NSNumber numberWithInt:-1063525281]];
-   [cs_classes setObject:[TL_messageService class] forKey:[NSNumber numberWithInt:-1066691065]];
+   [cs_classes setObject:[TL_messageService class] forKey:[NSNumber numberWithInt:-1642487306]];
    [cs_classes setObject:[TL_messageMediaEmpty class] forKey:[NSNumber numberWithInt:1038967584]];
    [cs_classes setObject:[TL_messageMediaPhoto class] forKey:[NSNumber numberWithInt:1032643901]];
    [cs_classes setObject:[TL_messageMediaGeo class] forKey:[NSNumber numberWithInt:1457575028]];

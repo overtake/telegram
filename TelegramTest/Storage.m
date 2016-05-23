@@ -928,6 +928,38 @@ TL_localMessage *parseMessage(FMResultSet *result) {
     }];
 }
 
+-(void)markChannelOutMessagesAsRead:(int)channel_id max_id:(int)max_id callback:(void (^)(NSArray *messages))callback {
+    dispatch_queue_t dqueue = dispatch_get_current_queue();
+    
+    [queue inDatabase:^(FMDatabase *db) {
+        
+        
+        int current_max_read = [db intForQuery:[NSString stringWithFormat:@"select read_outbox_max_id from %@ where peer_id = %d",tableModernDialogs,-channel_id]];
+        FMResultSet *result = [db executeQuery:[NSString stringWithFormat:@"select n_id from %@ where peer_id = ? and n_id <= ? and n_id > ?",tableChannelMessages],@(-channel_id),@(channelMsgId(max_id, -channel_id)),@(channelMsgId(current_max_read, -channel_id))];
+        
+        NSMutableArray *messages = [NSMutableArray array];
+        
+        while ([result next]) {
+            
+            @try {
+                [messages addObject:@([result intForColumn:@"n_id"])];
+            }
+            @catch (NSException *exception) {
+                
+            }
+            
+        }
+        [result close];
+
+        
+        dispatch_async(dqueue,^{
+            callback(messages);
+        });
+        
+        
+    }];
+}
+
 -(TL_localMessage *)lastImportantMessageAroundMinId:(long)channelMsgId;
 {
     return [self lastMessageAroundMinId:channelMsgId important:YES isTop:NO];

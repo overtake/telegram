@@ -28,7 +28,7 @@
 
 - (void) markAllMessagesAsRead:(TLPeer *)peer max_id:(int)max_id out:(BOOL)n_out;
 
--(void)markChannelMessagesAsRead:(int)channel_id max_id:(int)max_id completionHandler:(dispatch_block_t)completionHandler;
+-(void)markChannelMessagesAsRead:(int)channel_id max_id:(int)max_id n_out:(BOOL)n_out completionHandler:(dispatch_block_t)completionHandler;
 
 
 -(void)completeDeleteConversation:(dispatch_block_t)completeHandler dialog:(TL_conversation *)dialog;
