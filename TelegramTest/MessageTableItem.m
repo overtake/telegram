@@ -391,6 +391,7 @@ static NSTextAttachment *channelViewsCountAttachment() {
     
     
     
+    
     if([self.message.action isKindOfClass:[TL_messageActionChatMigrateTo class]]) {
         viewSize.height = 1;
     }
@@ -627,7 +628,7 @@ static NSTextAttachment *channelViewsCountAttachment() {
     
     NSString *fullDate = [formatter stringFromDate:date];
     
-    if(self.message.edit_date > 0) {
+    if(self.message.edit_date > 0 && self.message.via_bot_id == 0) {
         NSDateFormatter *formatterEdited = [NSDateFormatter new];
         
         [formatterEdited setDateStyle:NSDateFormatterShortStyle];

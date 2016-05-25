@@ -204,6 +204,7 @@ DYNAMIC_PROPERTY(DUser);
 @property (nonatomic,strong) TGModalMessagesViewController *messagesModalView;
 
 @property (nonatomic,assign) BOOL isLockedWithRequest;
+@property (nonatomic,strong) NSTrackingArea *trackingArea;
 
 
 @end
@@ -1061,5 +1062,36 @@ static NSMutableDictionary *inlineBotsExceptions;
     
     
 }
+
+
+-(void)updateTrackingAreas
+{
+    if(_trackingArea != nil) {
+        [self removeTrackingArea:_trackingArea];
+    }
+    
+
+    
+    int opts = (NSTrackingCursorUpdate | NSTrackingMouseEnteredAndExited | NSTrackingMouseMoved | NSTrackingActiveInKeyWindow | NSTrackingInVisibleRect);
+    _trackingArea = [ [NSTrackingArea alloc] initWithRect:[self bounds]
+                                                  options:opts
+                                                    owner:self
+                                                 userInfo:nil];
+    [self addTrackingArea:_trackingArea];
+}
+
+-(void)mouseEntered:(NSEvent *)theEvent {
+    
+}
+
+-(void)mouseExited:(NSEvent *)theEvent {
+    
+}
+
+-(void)mouseMoved:(NSEvent *)theEvent {
+    
+}
+
+
 
 @end

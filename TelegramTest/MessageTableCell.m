@@ -248,6 +248,15 @@
         }]];
     }
     
+    if(self.item.message.dstate == DeliveryStateNormal) {
+        [items addObject:[NSMenuItem menuItemWithTitle:NSLocalizedString(@"Context.Select", nil) withBlock:^(id sender) {
+            
+            [weakSelf.messagesViewController setCellsEditButtonShow:YES animated:YES];
+            [weakSelf setSelected:YES animated:YES];
+            
+        }]];
+    }
+    
     return items;
     
 }

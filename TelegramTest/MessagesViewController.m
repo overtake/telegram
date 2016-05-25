@@ -1894,14 +1894,18 @@ static NSTextAttachment *headerMediaIcon() {
     }
     
     if(hide) {
-        [self.historyController prevStateAsync:^(ChatHistoryState state) {
-            
-            BOOL h = (hide && state == ChatHistoryStateFull) || !self.noMessagesView.isHidden;
-            
-            if(self.jumpToBottomButton.isHidden != h) {
-                [self.jumpToBottomButton setHidden:h];
-                [self jumpToBottomButtonDisplay];
+        [self.historyController prevStateAsync:^(ChatHistoryState state,ChatHistoryController *controller) {
+         
+            if(controller == self.historyController) {
+                BOOL h = (hide && state == ChatHistoryStateFull) || !self.noMessagesView.isHidden;
+                
+                if(self.jumpToBottomButton.isHidden != h) {
+                    [self.jumpToBottomButton setHidden:h];
+                    [self jumpToBottomButtonDisplay];
+                }
             }
+            
+            
             
         }];
     } else {
@@ -1920,16 +1924,16 @@ static NSTextAttachment *headerMediaIcon() {
     
     if([self.table.scrollView isNeedUpdateTop]) {
         
-        [self.historyController prevStateAsync:^(ChatHistoryState state) {
-            if(state != ChatHistoryStateFull) {
+        [self.historyController prevStateAsync:^(ChatHistoryState state,ChatHistoryController *controller) {
+            if(state != ChatHistoryStateFull && self.historyController == controller) {
                 [self loadhistory:0 toEnd:NO prev:YES isFirst:NO];
             }
         }];
         
    } else if([self.table.scrollView isNeedUpdateBottom]) {
         
-        [self.historyController nextStateAsync:^(ChatHistoryState state) {
-            if(state != ChatHistoryStateFull) {
+        [self.historyController nextStateAsync:^(ChatHistoryState state,ChatHistoryController *controller) {
+            if(state != ChatHistoryStateFull && self.historyController == controller) {
                 [self loadhistory:0 toEnd:NO prev:NO isFirst:NO];
             }
         }];
@@ -4581,7 +4585,7 @@ static NSTextAttachment *headerMediaIcon() {
     }];
     
     
-    [alert addButtonWithTitle:NSLocalizedString(@"Ok", nil)];
+    [alert addButtonWithTitle:NSLocalizedString(@"OK", nil)];
     [alert addButtonWithTitle:NSLocalizedString(@"Cancel", nil)];
     [alert show];
 }

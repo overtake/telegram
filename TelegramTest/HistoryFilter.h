@@ -41,8 +41,8 @@ typedef enum {
 
 
 
-@property (nonatomic,assign) ChatHistoryState prevState;
-@property (nonatomic,assign) ChatHistoryState nextState;
+@property (atomic,assign) ChatHistoryState prevState;
+@property (atomic,assign) ChatHistoryState nextState;
 
 @property (nonatomic,weak) ChatHistoryController *controller;
 @property (nonatomic,strong,readonly) TLPeer *peer;

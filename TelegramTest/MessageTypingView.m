@@ -64,7 +64,7 @@ const NSTimeInterval typingIntervalSecond = 0.14;
 
         [self addSubview:self.textField];
         
-        self.backgroundColor = NSColorFromRGB(0xffffff);
+        self.backgroundColor = NSColorFromRGBWithAlpha(0xffffff,0.5);
         
         _activity = [[TGModernConversationTitleActivityIndicator alloc] initWithFrame:NSMakeRect(20+3, 10, 30, 20)];
         [self addSubview:_activity];

@@ -267,30 +267,28 @@ static ChatHistoryController *observer;
 }
 
 
--(void)prevStateAsync:(void (^)(ChatHistoryState state))block {
+-(void)prevStateAsync:(void (^)(ChatHistoryState state,ChatHistoryController *controller))block {
     
     [ASQueue dispatchOnStageQueue:^{
         
         HistoryFilter *filer = [self filterWithNext:NO];
-        
-        
+                
         [ASQueue dispatchOnMainQueue:^{
             
-            block(filer.prevState);
+            block(filer.prevState,self);
             
         }];
         
     }];
     
 }
--(void)nextStateAsync:(void (^)(ChatHistoryState state))block {
+-(void)nextStateAsync:(void (^)(ChatHistoryState state,ChatHistoryController *controller))block {
     [ASQueue dispatchOnStageQueue:^{
         
-        ChatHistoryState state = [self filterWithNext:YES].nextState;
-        
+        HistoryFilter *filer = [self filterWithNext:YES];
         [ASQueue dispatchOnMainQueue:^{
             
-            block(state);
+            block(filer.nextState,self);
             
         }];
         

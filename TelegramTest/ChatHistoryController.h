@@ -32,8 +32,8 @@
 
 @property (nonatomic,assign) NSUInteger selectLimit; // default = 70;
 
--(void)prevStateAsync:(void (^)(ChatHistoryState state))block;
--(void)nextStateAsync:(void (^)(ChatHistoryState state))block;
+-(void)prevStateAsync:(void (^)(ChatHistoryState state,ChatHistoryController *controller))block;
+-(void)nextStateAsync:(void (^)(ChatHistoryState state,ChatHistoryController *controller))block;
 
 
 -(HistoryFilter *)filterWithNext:(BOOL)next;

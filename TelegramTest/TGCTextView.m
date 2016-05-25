@@ -80,11 +80,10 @@ void (^linkOverHandle)(NSString *link, BOOL over, NSRect rect,TGCTextView *textV
     __block id obj = [Telegram findObjectWithName:link];
     
     
-    
-    if(!over || ![link isEqualToString:last_link] || !accept || (ignoreName[link] && !obj)) {
+    if(!over || ![link isEqualToString:last_link] || !accept || (ignoreName[link] && !obj) || (textView.visibleRect.origin.x == 0 && textView.visibleRect.origin.y == 0)) {
         clear_current_popover();
         
-        if( !over || ignoreName[link] || !accept)
+        if( !over || ignoreName[link] || !accept || (textView.visibleRect.origin.x == 0 && textView.visibleRect.origin.y == 0))
             return;
         
     }
@@ -100,8 +99,6 @@ void (^linkOverHandle)(NSString *link, BOOL over, NSRect rect,TGCTextView *textV
             
             dispatch_block_t show_block = ^{
                 [short_info_controller setObject:obj];
-                
-                //  [popover setHoverView:weakSelf.textView];
                 
                 
                 if(!popover.isShown) {

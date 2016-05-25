@@ -887,23 +887,21 @@
             
             [[Storage manager] insertDialogs:last.allValues];
             
-            [last enumerateKeysAndObjectsUsingBlock:^(id key, TL_conversation *obj, BOOL *stop) {
+            [self add:last.allValues];
+            
+            [MessagesManager updateUnreadBadge];
+            
+            [self resort];
+            
+            [last.allValues enumerateObjectsUsingBlock:^(TL_conversation *obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                
+                NSUInteger position = [self->list indexOfObject:obj];
                 
                 BOOL needNotify = [self checkBotKeyboard:obj forMessage:obj.lastMessage notify:NO];
                 
                 if(needNotify) {
                     [Notification perform:[Notification notificationNameByDialog:obj action:@"botKeyboard"] data:@{KEY_DIALOG:obj}];
                 }
-                
-            }];
-            
-            [self add:last.allValues];
-            
-            [MessagesManager updateUnreadBadge];
-            
-            [last.allValues enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-                
-                NSUInteger position = [self positionForConversation:obj];
                 
                 [Notification perform:DIALOG_MOVE_POSITION data:@{KEY_DIALOG:obj, KEY_POSITION:@(position)}];
                 [Notification perform:[Notification notificationNameByDialog:obj action:@"message"] data:@{KEY_DIALOG:obj,KEY_LAST_CONVRESATION_DATA:[MessagesUtils conversationLastData:obj]}];
@@ -953,6 +951,7 @@
                 current.last_real_message_date = dialog.last_real_message_date;
                 current.dstate = dialog.dstate;
                 current.read_inbox_max_id = dialog.read_inbox_max_id;
+                current.read_outbox_max_id = dialog.read_outbox_max_id;
                 current.top_important_message = dialog.top_important_message;
                 current.unread_important_count = dialog.unread_important_count;
                 current.pts = dialog.pts;

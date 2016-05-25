@@ -421,7 +421,7 @@
 -(void)copy:(id)sender {
     NSPasteboard *pasteboard = [NSPasteboard generalPasteboard];
     [pasteboard clearContents];
-    [pasteboard writeObjects:[NSArray arrayWithObject:[NSURL fileURLWithPath:locationFilePath(self.currentViewerItem.imageObject.location, @"jpg")]]];
+    [pasteboard writeObjects:[NSArray arrayWithObject:[NSURL fileURLWithPath:mediaFilePath(self.currentViewerItem.previewObject.media)]]];
 }
 
 

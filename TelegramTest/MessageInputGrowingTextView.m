@@ -232,10 +232,17 @@ typedef enum {
         }
         
         
+        if(image.size.width / 10 < image.size.height) {
+            type = PasteBoardItemTypeImage;
+            iconImage = cropCenterWithSize(image, NSMakeSize(70, 70));
+        } else {
+            type = PasteBoardItemTypeDocument;
+            
+            path = exportPath(rand_long(), @"jpg");
+            [jpegNormalizedData(image) writeToFile:path atomically:YES];
+        }
         
-        
-        type = PasteBoardItemTypeImage;
-        iconImage = cropCenterWithSize(image, NSMakeSize(70, 70));
+       
     }
 
 

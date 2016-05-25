@@ -103,6 +103,11 @@
     return (TL_documentAttributeAudio *) [self attributeWithClass:[TL_documentAttributeAudio class]];
 }
 
+-(TL_documentAttributeSticker *)stickerAttr {
+    return (TL_documentAttributeSticker *) [self attributeWithClass:[TL_documentAttributeSticker class]];
+}
+
+
 -(NSSize)imageSize {
     __block NSSize size = NSZeroSize;
     

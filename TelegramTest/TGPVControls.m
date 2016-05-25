@@ -442,6 +442,119 @@
     return theMenu;
 }
 
+-(NSMenu *)TGPVDocumentsBehaviorMenu {
+    
+    
+    
+    NSMenu *theMenu = [[NSMenu alloc] init];
+    
+    
+    TL_localMessage *msg = [TGPhotoViewer currentItem].previewObject.media;
+    
+    
+    NSMenuItem *photoDelete = [NSMenuItem menuItemWithTitle:NSLocalizedString(@"PhotoViewer.Delete", nil) withBlock:^(id sender) {
+        
+        [[DialogsManager sharedManager] deleteMessagesWithRandomMessageIds:@[@(msg.randomId)] isChannelMessages:msg.isChannelMessage];
+        
+        
+    }];
+    // [photoDelete setImage:image_AttachPhotoVideo()];
+    // [photoDelete setHighlightedImage:image_AttachPhotoVideoHighlighted()];
+    
+    if([MessagesViewController canDeleteMessages:@[msg] inConversation:msg.conversation])
+        [theMenu addItem:photoDelete];
+    
+    
+    
+    
+    if(msg.conversation.type != DialogTypeSecretChat) {
+        NSMenuItem *photoForward = [NSMenuItem menuItemWithTitle:NSLocalizedString(@"PhotoViewer.Forward", nil) withBlock:^(id sender) {
+            
+            
+            [[TGPhotoViewer viewer].invokeWindow.navigationController showMessagesViewController:msg.conversation];
+            
+            [[TGPhotoViewer viewer].invokeWindow.navigationController.messagesViewController setState:MessagesViewControllerStateNone];
+            [[TGPhotoViewer viewer].invokeWindow.navigationController.messagesViewController unSelectAll:NO];
+            
+            MessageTableItem *item  = [MessageTableItem messageItemFromObject:msg];
+            
+            [[TGPhotoViewer viewer].invokeWindow.navigationController.messagesViewController setSelectedMessage:item selected:YES];
+            
+            [[TGPhotoViewer viewer].invokeWindow.navigationController.messagesViewController showForwardMessagesModalView];
+            
+            [[TGPhotoViewer viewer] hide];
+            
+            
+        }];
+        
+        [theMenu addItem:photoForward];
+        
+        NSMenuItem *photoSave = [NSMenuItem menuItemWithTitle:NSLocalizedString(@"PhotoViewer.SaveAs", nil) withBlock:^(id sender) {
+            
+            
+            NSSavePanel *savePanel = [NSSavePanel savePanel];
+            
+            NSDateFormatter* dateFormatter = [[NSDateFormatter alloc] init];
+            dateFormatter.dateFormat = @"yyyy-MM-dd HH:mm:ss";
+            
+            [savePanel setNameFieldStringValue:[NSString stringWithFormat:@"IMG_%@.jpg",[dateFormatter stringFromDate:[NSDate date]]]];
+            [savePanel beginSheetModalForWindow:[TGPhotoViewer viewer] completionHandler:^(NSInteger result)
+             {
+                 if (result == NSFileHandlingPanelOKButton) {
+                     NSURL *file = [savePanel URL];
+                     
+                     NSString *itemUrl = mediaFilePath([TGPhotoViewer currentItem].previewObject.media);
+                     
+                     if ( [[NSFileManager defaultManager] isReadableFileAtPath:itemUrl] ) {
+                         [[NSFileManager defaultManager] copyItemAtURL:[NSURL fileURLWithPath:itemUrl] toURL:file error:nil];
+                     }
+                     
+                 } else if(result == NSFileHandlingPanelCancelButton) {
+                     
+                 }
+                 
+             }];
+            
+            
+        }];
+        
+        [theMenu addItem:photoSave];
+        
+        
+        NSMenuItem *photoGoto = [NSMenuItem menuItemWithTitle:NSLocalizedString(@"PhotoViewer.Goto", nil) withBlock:^(id sender) {
+            
+            TL_localMessage *msg = [TGPhotoViewer currentItem].previewObject.media;
+            
+            [[TGPhotoViewer viewer].invokeWindow.navigationController showMessagesViewController:msg.conversation withMessage:msg];
+            
+            
+            [[TGPhotoViewer viewer] hide];
+            
+        }];
+        
+        [theMenu addItem:photoGoto];
+        
+        NSMenuItem *copy = [NSMenuItem menuItemWithTitle:NSLocalizedString(@"Context.CopyToClipBoard", nil) withBlock:^(id sender) {
+            
+            NSPasteboard *pasteboard = [NSPasteboard generalPasteboard];
+            [pasteboard clearContents];
+            [pasteboard writeObjects:[NSArray arrayWithObject:[NSURL fileURLWithPath:mediaFilePath(msg)]]];
+            
+            
+        }];
+        
+        
+        
+        [theMenu addItem:copy];
+        
+    }
+    
+    
+    
+    
+    return theMenu;
+}
+
 
 
 -(void)mouseDown:(NSEvent *)theEvent {

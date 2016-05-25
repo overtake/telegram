@@ -17,7 +17,7 @@
     TGViewMessagesDragging *view = [[TGViewMessagesDragging alloc] initWithFrame:self.frameInit];
     
     view.navigationViewController = self;
-    [view registerForDraggedTypes:[NSArray arrayWithObjects:NSFilenamesPboardType,NSStringPboardType,NSTIFFPboardType, nil]];
+    [view registerForDraggedTypes:[NSArray arrayWithObjects:NSFilenamesPboardType,NSStringPboardType,NSTIFFPboardType,NSURLPboardType, nil]];
 
     
     _view = view;

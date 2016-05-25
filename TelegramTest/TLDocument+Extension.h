@@ -24,7 +24,7 @@
 -(NSSize)imageSize;
 -(BOOL)isExist;
 -(TL_documentAttributeAudio *)audioAttr;
-
+-(TL_documentAttributeSticker *)stickerAttr;
 -(NSArray *)serverAttributes;
 
 
