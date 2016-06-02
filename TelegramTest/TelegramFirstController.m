@@ -200,9 +200,7 @@
 
 
 - (IBAction)showAudioMiniPlayer:(id)sender {
-#ifdef TGDEBUG
-    [TGAudioPlayerWindow show:[Telegram conversation]];
-#endif
+    [TGAudioPlayerWindow show:[Telegram conversation]  navigation:appWindow().navigationController];
 }
 
 

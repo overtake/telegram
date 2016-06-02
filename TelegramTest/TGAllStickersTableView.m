@@ -336,25 +336,29 @@ static NSImage *higlightedImage() {
     if(saveSets) {
         [[Storage yap] readWriteWithBlock:^(YapDatabaseReadWriteTransaction * __nonnull transaction) {
             
-            NSMutableDictionary *serializedStickers = [_stickers mutableCopy];
-            
-            NSMutableDictionary *data = [[transaction objectForKey:@"modern_stickers" inCollection:STICKERS_COLLECTION] mutableCopy];
-            
-            if(!data)
-            {
-                data = [[NSMutableDictionary alloc] init];
-                data[@"sets"] = [[NSMutableArray alloc] init];
-            }
-            
-            data[@"serialized"] = serializedStickers;
-            
-            if(saveSets) {
+            @try {
+                NSMutableDictionary *serializedStickers = [_stickers mutableCopy];
                 
-                data[@"sets"] = sets;
+                NSMutableDictionary *data = [[transaction objectForKey:@"modern_stickers" inCollection:STICKERS_COLLECTION] mutableCopy];
+                
+                if(!data)
+                {
+                    data = [[NSMutableDictionary alloc] init];
+                    data[@"sets"] = [[NSMutableArray alloc] init];
+                }
+                
+                data[@"serialized"] = serializedStickers;
+                
+                if(saveSets) {
+                    
+                    data[@"sets"] = sets;
+                }
+                
+                [transaction setObject:data forKey:@"modern_stickers" inCollection:STICKERS_COLLECTION];
+            } @catch (NSException *exception) {
+                
             }
-            
-            [transaction setObject:data forKey:@"modern_stickers" inCollection:STICKERS_COLLECTION];
-            
+
         }];
     }
     

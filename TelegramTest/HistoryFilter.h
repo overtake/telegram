@@ -26,8 +26,7 @@ typedef enum {
     HistoryFilterSearch = 1 << 9,
     HistoryFilterAudioDocument = 1 << 10,
     HistoryFilterSharedLink = 1 << 11,
-    HistoryFilterChannelMessage = 1 << 12,
-    HistoryFilterImportantChannelMessage = 1 << 13,
+    HistoryFilterChannelMessage = 12288, //1 << 12 | 1 << 13,
     HistoryFilterDocuments = 1 << 14,
     HistoryFilterChatPhoto = 1 << 15,
 } HistoryFilterType;

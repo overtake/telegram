@@ -336,7 +336,10 @@ typedef enum {
 -(void)checkWebpages {
     
     NSString *link = [self.string webpageLink];
-    [_controller.messagesViewController clearNoWebpage];
+
+    [_inputTemplate setDisabledWebpage:nil];
+    
+    [[_inputTemplate copy] performNotification];
     [_controller.messagesViewController checkWebpage:link];
     
 }

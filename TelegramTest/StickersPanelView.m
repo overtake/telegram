@@ -236,7 +236,7 @@ bool isRemoteStickersLoaded() {
                 
                 TL_documentAttributeSticker *attr = (TL_documentAttributeSticker *) [evaluatedObject attributeWithClass:[TL_documentAttributeSticker class]];
                 
-                if([attr.alt isEqualToString:emotion]) {
+                if([[attr.alt fixEmoji] isEqualToString:emotion]) {
                     [s addObject:evaluatedObject];
                 }
                 

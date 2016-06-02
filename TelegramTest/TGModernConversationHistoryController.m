@@ -140,41 +140,19 @@
                         
                     }];
                     
+
+                    int date = topMsg.date;
                     
+                    lastMessage = topMsg;
                     
-                    if(f.count == 2) {
-                        
-                        if(minMsg.n_id != topMsg.n_id) {
-                            TGMessageHole *hole = [[TGMessageHole alloc] initWithUniqueId:-rand_int() peer_id:minMsg.peer_id min_id:minMsg.n_id max_id:topMsg.n_id date:minMsg.date count:0];
-                            
-                            [[Storage manager] insertMessagesHole:hole];
-                        }
-                        
-                        // need create group hole
-                        
-                        if(!chat.isMegagroup) {
-                            TGMessageGroupHole *groupHole = [[TGMessageGroupHole alloc] initWithUniqueId:-rand_int() peer_id:topMsg.peer_id min_id:minMsg.n_id max_id:topMsg.n_id+1 date:topMsg.date count:0];
-                            
-                            [[Storage manager] insertMessagesHole:groupHole];
-                        }
-                        
-                    }
+                    int unread_count = dialog.unread_count;
                     
-                    int top_important_message = chat.isMegagroup ? topMsg.n_id : topMsg.n_id;
-                    
-                    int date = chat.isMegagroup ? topMsg.date : topMsg.date;
-                    
-                    lastMessage = chat.isMegagroup ? topMsg : topMsg;
-                    
-                    int unread_count = chat.isMegagroup ? dialog.unread_count : dialog.unread_important_count;
-                    
-                    conversation = [TL_conversation createWithPeer:dialog.peer top_message:dialog.top_message unread_count:unread_count last_message_date:date notify_settings:dialog.notify_settings last_marked_message:unread_count > 0 ? dialog.read_inbox_max_id : top_important_message top_message_fake:top_important_message last_marked_date:minMsg.date sync_message_id:topMsg.n_id read_inbox_max_id:dialog.read_inbox_max_id unread_important_count:dialog.unread_important_count read_outbox_max_id:dialog.read_outbox_max_id lastMessage:lastMessage pts:dialog.pts isInvisibleChannel:NO top_important_message:top_important_message];
+                    conversation = [TL_conversation createWithPeer:dialog.peer top_message:dialog.top_message unread_count:unread_count last_message_date:date notify_settings:dialog.notify_settings last_marked_message:unread_count > 0 ? dialog.read_inbox_max_id : lastMessage.n_id top_message_fake:lastMessage.n_id last_marked_date:minMsg.date sync_message_id:topMsg.n_id read_inbox_max_id:dialog.read_inbox_max_id read_outbox_max_id:dialog.read_outbox_max_id draft:dialog.draft lastMessage:lastMessage pts:dialog.pts isInvisibleChannel:NO];
                 } else {
                     
                     int unread_count = chat.migrated_to.channel_id != 0 ? 0 : dialog.unread_count;
                     
-                    conversation = [TL_conversation createWithPeer:dialog.peer top_message:dialog.top_message unread_count:unread_count last_message_date:lastMessage.date notify_settings:dialog.notify_settings last_marked_message:unread_count > 0 ? dialog.read_inbox_max_id : dialog.top_message top_message_fake:dialog.top_message last_marked_date:lastMessage.date sync_message_id:lastMessage.n_id read_inbox_max_id:dialog.read_inbox_max_id unread_important_count:dialog.unread_important_count read_outbox_max_id:dialog.read_outbox_max_id
-                                                       lastMessage:lastMessage pts:dialog.pts isInvisibleChannel:NO top_important_message:dialog.top_important_message];
+                    conversation = [TL_conversation createWithPeer:dialog.peer top_message:dialog.top_message unread_count:unread_count last_message_date:lastMessage.date notify_settings:dialog.notify_settings last_marked_message:unread_count > 0 ? dialog.read_inbox_max_id : dialog.top_message top_message_fake:dialog.top_message last_marked_date:lastMessage.date sync_message_id:lastMessage.n_id read_inbox_max_id:dialog.read_inbox_max_id read_outbox_max_id:dialog.read_outbox_max_id draft:dialog.draft lastMessage:lastMessage pts:dialog.pts isInvisibleChannel:NO];
                 }
                 
                 
@@ -184,23 +162,7 @@
             
             [[DialogsManager sharedManager] add:converted];
             [[Storage manager] insertDialogs:converted];
-            
-//            NSArray *all = [[DialogsManager sharedManager] all];
-//            
-//            if(all.count > 0) {
-//                NSArray *res =all;//[all subarrayWithRange:NSMakeRange(150, 10)];
-//                
-//                [res enumerateObjectsUsingBlock:^(TL_conversation *obj, NSUInteger idx, BOOL * _Nonnull stop) {
-//                    if(obj.chat)
-//                        NSLog(@"chatTitle:%@ username:%@ peer_id:%d date:%d",obj.chat.title,obj.chat.username,obj.peer_id,obj.lastMessage.date);
-//                    else
-//                        NSLog(@"userTitle:%@ username:%@ peer_id:%d date:%d",obj.user.fullName,obj.user.username,obj.peer_id,obj.lastMessage.date);
-//                    
-//                }];
-//                
-//                int bp = 0;
-//            }
-            
+
             [MessagesManager updateUnreadBadge];
             
             if(converted.count < limit) {

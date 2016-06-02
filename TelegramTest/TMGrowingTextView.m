@@ -181,7 +181,7 @@
     };
     
     [self.layoutManager ensureLayoutForTextContainer:self.textContainer];
-    [self.growingDelegate TMGrowingTextViewTextDidChange:notification != nil ? self : nil];
+    [self.growingDelegate TMGrowingTextViewTextDidChange:notification];
     
     newSize.width = NSWidth(self.containerView.frame);
     

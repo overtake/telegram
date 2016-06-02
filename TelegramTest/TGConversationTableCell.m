@@ -244,8 +244,15 @@ static NSDictionary *attributes() {
                 [image drawInRect:NSMakeRect(NSMaxX(self.nameTextField.frame) + (self.item.conversation.isVerified ? image_Verify().size.width + 6 : 0), NSMinY(self.nameTextField.frame) + 7, image.size.width, image.size.height) fromRect:NSZeroRect operation:NSCompositeHighlight fraction:1];
             }
     
-            if(self.item.unreadText.length && self.style != ConversationTableCellShortStyle && self.item.conversation.unread_count > 0)
-                [self drawUnreadCount]; 
+            if(self.item.conversation.draft == nil || [self.item.conversation.draft isKindOfClass:[TL_draftMessageEmpty class]]) {
+                if(self.item.unreadText.length && self.style != ConversationTableCellShortStyle && self.item.conversation.unread_count > 0) {
+                    [self drawUnreadCount];
+                }
+            } else {
+                if(!self.isSelected)
+                    [self drawDraftIcon];
+            }
+            
         };
         
         
@@ -388,21 +395,6 @@ static NSDictionary *attributes() {
     [item.messageText setSelected:self.isSelected];
     [item.dateText setSelected:self.isSelected];
     
-//    if(item.conversation.isMute)
-//    {
-//        static NSTextAttachment *attach;
-//        static NSTextAttachment *selectedAttach;
-//        
-//        static dispatch_once_t onceToken;
-//        dispatch_once(&onceToken, ^{
-//            attach = [NSMutableAttributedString textAttachmentByImage:[image_muted() imageWithInsets:NSEdgeInsetsMake(0, 4, 0, 0)]];
-//            selectedAttach = [NSMutableAttributedString textAttachmentByImage:[image_mutedSld() imageWithInsets:NSEdgeInsetsMake(0, 4, 0, 0)]];
-//        });
-//        
-//        _nameTextField.attach = attach;
-//        _nameTextField.selectedAttach = selectedAttach;
-//    }
-//    
     
     [_nameTextField updateWithConversation:item.conversation];
     
@@ -500,6 +492,8 @@ static NSDictionary *attributes() {
 static int unreadCountRadius = 10;
 static int unreadOffsetRight = 13;
 
+
+
 - (void)drawUnreadCount {
     
     static int offsetY = 9;
@@ -539,6 +533,11 @@ static int unreadOffsetRight = 13;
     
     int offsetX = (sizeWidth - self.item.unreadTextSize.width)/2;
     [self.item.unreadText drawAtPoint:CGPointMake(offset1 - unreadCountRadius + offsetX, offsetY + 3) withAttributes:@{NSForegroundColorAttributeName: self.isSelected ? NSColorFromRGB(0x6896ba)  : [NSColor whiteColor], NSFontAttributeName: TGSystemBoldFont(11)}];
+}
+
+-(void)drawDraftIcon {
+    int offset2 = self.bounds.size.width - unreadOffsetRight;
+    [image_draftIcon() drawInRect:NSMakeRect(offset2 - image_draftIcon().size.width, 12, image_draftIcon().size.width, image_draftIcon().size.height) fromRect:NSZeroRect operation:NSCompositeCopy fraction:1];
 }
 
 -(BOOL)isSelected {

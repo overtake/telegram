@@ -129,6 +129,9 @@
      MessageTableItemMpeg *item = (MessageTableItemMpeg *) self.item;
     NSMenu *menu = [[NSMenu alloc] initWithTitle:@"Gifs"];
     
+    weak();
+    
+
     
     if(item.isset) {
         
@@ -180,7 +183,11 @@
         
         [menu addItem:[NSMenuItem separatorItem]];
     }
-    
+    [menu addItem:[NSMenuItem menuItemWithTitle:NSLocalizedString(@"Context.SaveAs", nil) withBlock:^(id sender) {
+        [weakSelf performSelector:@selector(saveAs:) withObject:weakSelf];
+    }]];
+
+    [menu addItem:[NSMenuItem separatorItem]];
 
     [self.defaultMenuItems enumerateObjectsUsingBlock:^(NSMenuItem *item, NSUInteger idx, BOOL *stop) {
         [menu addItem:item];

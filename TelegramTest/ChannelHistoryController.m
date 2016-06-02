@@ -10,7 +10,6 @@
 #import "MessageTableItem.h"
 #import "TGChannelsPolling.h"
 
-#import "ChannelImportantFilter.h"
 #import "ChannelFilter.h"
 #import "MegagroupChatFilter.h"
 @interface ChannelHistoryController () <TGChannelPollingDelegate>
@@ -75,7 +74,7 @@ static TGChannelsPolling *channelPolling;
             
             [self performCallback:selectHandler result:converted range:NSMakeRange(0, converted.count) controller:self];
             
-            [channelPolling checkInvalidatedMessages:result important:[self.filter isKindOfClass:[ChannelImportantFilter class]]];
+            [channelPolling checkInvalidatedMessages:result];
             
         }];
         
@@ -167,7 +166,7 @@ static TGChannelsPolling *channelPolling;
         
         [self performCallback:selectHandler result:converted range:NSMakeRange(0, converted.count) controller:self];
 
-        [channelPolling checkInvalidatedMessages:result important:[self.filter isKindOfClass:[ChannelImportantFilter class]]];
+        [channelPolling checkInvalidatedMessages:result];
         
         self.proccessing = NO;
         return;

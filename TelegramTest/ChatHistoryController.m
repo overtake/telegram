@@ -26,7 +26,6 @@
 #import "TGProccessUpdates.h"
 #import "ChannelFilter.h"
 #import "TGChannelsPolling.h"
-#import "ChannelImportantFilter.h"
 #import "WeakReference.h"
 #import "MegagroupChatFilter.h"
 @interface ChatHistoryController ()

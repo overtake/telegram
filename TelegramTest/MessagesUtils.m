@@ -318,6 +318,10 @@
         
         msgText = [msgText fixEmoji];
         
+        if(conversation.draft.message.length > 0) {
+            msgText = [NSString stringWithFormat:NSLocalizedString(@"Conversation.Draft", nil),conversation.draft.message];
+        }
+        
         if(msgText) {
             [messageText appendString:msgText withColor:GRAY_TEXT_COLOR];
         }

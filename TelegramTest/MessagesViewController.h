@@ -117,8 +117,6 @@ typedef enum {
 
 -(void)showBotStartButton:(NSString *)startParam bot:(TLUser *)bot;
 
--(void)addReplayMessage:(TL_localMessage *)message animated:(BOOL)animated;
--(void)removeReplayMessage:(BOOL)update animated:(BOOL)animated;
 
 
 
@@ -177,13 +175,7 @@ typedef enum {
 -(void)performForward:(TL_conversation *)conversation;
 
 -(void)checkWebpage:(NSString *)link;
--(void)removeWebpage;
--(void)updateWebpage;
 
-
--(void)clearNoWebpage;
--(void)markAsNoWebpage;
--(BOOL)noWebpage:(NSString *)message;
 
 -(void)showOrHideChannelDiscussion;
 

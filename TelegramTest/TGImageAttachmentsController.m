@@ -60,14 +60,9 @@
 -(void)show:(TL_conversation *)conversation animated:(BOOL)animated {
     
     
-    if(_conversation == conversation) {
-        _isShown = _containerView.subviews.count > 0;
-        [self setHidden:!_isShown];
-        return;
-    }
     
     
-    _conversation = conversation;
+    self.conversation = conversation;
     
     [_containerView removeAllSubviews];
     [self updateContainer];
@@ -104,6 +99,9 @@
     
 }
 
+-(void)setConversation:(TL_conversation *)conversation {
+    _conversation = conversation;
+}
 
 
 -(void)hide:(BOOL)animated deleteItems:(BOOL)deleteItems {
@@ -139,11 +137,7 @@
             [transaction setObject:attachments forKey:_conversation.cacheKey inCollection:ATTACHMENTS];
             
         }];
-    } else {
-         _conversation = nil;
-    }
-    
-   
+    } 
 
 }
 

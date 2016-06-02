@@ -173,9 +173,14 @@
     __block BOOL clear = YES;
     __block BOOL removeKeyboard = NO;
     
+    
+    TGInputMessageTemplate *template = [TGInputMessageTemplate dublicateTemplateWithType:TGInputMessageTemplateTypeSimpleText ofPeerId:conversation.peer_id];
+    
+    replyMessage = template.replyMessage;
+    [template setReplyMessage:nil save:YES];
+    
+    
     [[Storage yap] readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
-        
-        replyMessage = [transaction objectForKey:conversation.cacheKey inCollection:REPLAY_COLLECTION];
         
         
         keyboardMessage = [transaction objectForKey:conversation.cacheKey inCollection:BOT_COMMANDS];
@@ -189,30 +194,16 @@
                 
                 if([message isEqualToString:button.text]) {
                     clear = NO;
-                    
                     *stop = YES;
                 }
                 
             }];
-            
-            
+
         }];
         
         
-//        if(((keyboardMessage.reply_markup.flags & (1 << 1) ) == (1 << 1)) && !clear) {
-//            
-//            [transaction removeObjectForKey:conversation.cacheKey inCollection:BOT_COMMANDS];
-//            
-//            removeKeyboard = YES;
-//        }
         
-        [transaction removeObjectForKey:conversation.cacheKey inCollection:REPLAY_COLLECTION];
-       
     }];
-    
-
-    
-    
     
     if(clear) {
         keyboardMessage = nil;
@@ -266,22 +257,10 @@
     {
         [[Storage manager] addSupportMessages:@[replyMessage]];
         outMessage.replyMessage = replyMessage;
-       // [MessagesManager addSupportMessages:@[replyMessage]];
     }
     
     
-    if(conversation.peer_id == [Telegram conversation].peer_id) {
-        if(replyMessage || removeKeyboard) {
-            [ASQueue dispatchOnMainQueue:^{
-                
-                if(replyMessage) {
-                    [[Telegram rightViewController].messagesViewController removeReplayMessage:YES animated:YES];
-                }
-                
-            }];
-        }
-        
-    }
+    [template performNotification];
     
     
     return  outMessage;
@@ -672,7 +651,7 @@
             
             [params save];
             
-            TL_conversation *dialog = [TL_conversation createWithPeer:[TL_peerSecret createWithChat_id:params.n_id] top_message:-1 unread_count:0 last_message_date:[[MTNetwork instance] getTime] notify_settings:[TL_peerNotifySettingsEmpty create] last_marked_message:0 top_message_fake:-1 last_marked_date:[[MTNetwork instance] getTime] sync_message_id:0 read_inbox_max_id:0 unread_important_count:0 read_outbox_max_id:0 lastMessage:nil];
+            TL_conversation *dialog = [TL_conversation createWithPeer:[TL_peerSecret createWithChat_id:params.n_id] top_message:-1 unread_count:0 last_message_date:[[MTNetwork instance] getTime] notify_settings:[TL_peerNotifySettingsEmpty create] last_marked_message:0 top_message_fake:-1 last_marked_date:[[MTNetwork instance] getTime] sync_message_id:0 read_inbox_max_id:0 read_outbox_max_id:0 draft:[TL_draftMessageEmpty create] lastMessage:nil];
             
             [[DialogsManager sharedManager] insertDialog:dialog];
             

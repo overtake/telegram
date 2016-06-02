@@ -483,7 +483,6 @@ static long h_r_l;
             }]];
         }
         
-        
         [_tableView removeItemsInRange:NSMakeRange(1, _tableView.list.count - 1) tableRedraw:YES];
         
         [_tableView insert:items startIndex:1 tableRedraw:YES];

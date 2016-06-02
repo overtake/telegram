@@ -53,7 +53,7 @@
     
     [d replaceCharactersInRange:d.range withString:subdesc];
     [d setFont:TGSystemFont(14) forRange:d.range];
-    
+    [d addAttribute:NSForegroundColorAttributeName value:GRAY_TEXT_COLOR range:d.range];
     _subdesc = d;
     _subdescSize = [_subdesc coreTextSizeForTextFieldForWidth:INT32_MAX];
 }
@@ -71,7 +71,7 @@
         
         NSMutableAttributedString *attr = [[NSMutableAttributedString alloc] init];
         
-        [attr appendString:subdesc withColor:TEXT_COLOR];
+        [attr appendString:subdesc withColor:GRAY_TEXT_COLOR];
         [attr setFont:TGSystemFont(14) forRange:attr.range];
         
         _subdesc = attr;

@@ -2,7 +2,7 @@
 //  TLApi.h
 //  Telegram
 //
-//  Auto created by Mikhail Filimonov on 20.05.16.
+//  Auto created by Mikhail Filimonov on 01.06.16.
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -23,9 +23,8 @@
 @property Boolean current_number;
 @property int api_id;
 @property (nonatomic, strong) NSString* api_hash;
-@property (nonatomic, strong) NSString* lang_code;
 
-+(TLAPI_auth_sendCode*)createWithFlags:(int)flags  phone_number:(NSString*)phone_number current_number:(Boolean)current_number api_id:(int)api_id api_hash:(NSString*)api_hash lang_code:(NSString*)lang_code;
++(TLAPI_auth_sendCode*)createWithFlags:(int)flags  phone_number:(NSString*)phone_number current_number:(Boolean)current_number api_id:(int)api_id api_hash:(NSString*)api_hash;
 @end
 
 @interface TLAPI_auth_signUp : TLApiObject
@@ -90,13 +89,8 @@
 @interface TLAPI_account_registerDevice : TLApiObject
 @property int token_type;
 @property (nonatomic, strong) NSString* token;
-@property (nonatomic, strong) NSString* device_model;
-@property (nonatomic, strong) NSString* system_version;
-@property (nonatomic, strong) NSString* app_version;
-@property Boolean app_sandbox;
-@property (nonatomic, strong) NSString* lang_code;
 
-+(TLAPI_account_registerDevice*)createWithToken_type:(int)token_type token:(NSString*)token device_model:(NSString*)device_model system_version:(NSString*)system_version app_version:(NSString*)app_version app_sandbox:(Boolean)app_sandbox lang_code:(NSString*)lang_code;
++(TLAPI_account_registerDevice*)createWithToken_type:(int)token_type token:(NSString*)token;
 @end
 
 @interface TLAPI_account_unregisterDevice : TLApiObject
@@ -256,7 +250,6 @@
 
 @interface TLAPI_messages_search : TLApiObject
 @property int flags;
-@property (nonatomic,assign,readonly) BOOL isImportant_only;
 @property (nonatomic, strong) TLInputPeer* peer;
 @property (nonatomic, strong) NSString* q;
 @property (nonatomic, strong) TLMessagesFilter* filter;
@@ -266,7 +259,7 @@
 @property int max_id;
 @property int limit;
 
-+(TLAPI_messages_search*)createWithFlags:(int)flags  peer:(TLInputPeer*)peer q:(NSString*)q filter:(TLMessagesFilter*)filter min_date:(int)min_date max_date:(int)max_date offset:(int)offset max_id:(int)max_id limit:(int)limit;
++(TLAPI_messages_search*)createWithFlags:(int)flags peer:(TLInputPeer*)peer q:(NSString*)q filter:(TLMessagesFilter*)filter min_date:(int)min_date max_date:(int)max_date offset:(int)offset max_id:(int)max_id limit:(int)limit;
 @end
 
 @interface TLAPI_messages_readHistory : TLApiObject
@@ -305,7 +298,6 @@
 @interface TLAPI_messages_sendMessage : TLApiObject
 @property int flags;
 @property (nonatomic,assign,readonly) BOOL isNo_webpage;
-@property (nonatomic,assign,readonly) BOOL isBroadcast;
 @property (nonatomic,assign,readonly) BOOL isSilent;
 @property (nonatomic,assign,readonly) BOOL isBackground;
 @property (nonatomic, strong) TLInputPeer* peer;
@@ -315,12 +307,11 @@
 @property (nonatomic, strong) TLReplyMarkup* reply_markup;
 @property (nonatomic, strong) NSMutableArray* entities;
 
-+(TLAPI_messages_sendMessage*)createWithFlags:(int)flags     peer:(TLInputPeer*)peer reply_to_msg_id:(int)reply_to_msg_id message:(NSString*)message random_id:(long)random_id reply_markup:(TLReplyMarkup*)reply_markup entities:(NSMutableArray*)entities;
++(TLAPI_messages_sendMessage*)createWithFlags:(int)flags    peer:(TLInputPeer*)peer reply_to_msg_id:(int)reply_to_msg_id message:(NSString*)message random_id:(long)random_id reply_markup:(TLReplyMarkup*)reply_markup entities:(NSMutableArray*)entities;
 @end
 
 @interface TLAPI_messages_sendMedia : TLApiObject
 @property int flags;
-@property (nonatomic,assign,readonly) BOOL isBroadcast;
 @property (nonatomic,assign,readonly) BOOL isSilent;
 @property (nonatomic,assign,readonly) BOOL isBackground;
 @property (nonatomic, strong) TLInputPeer* peer;
@@ -329,12 +320,11 @@
 @property long random_id;
 @property (nonatomic, strong) TLReplyMarkup* reply_markup;
 
-+(TLAPI_messages_sendMedia*)createWithFlags:(int)flags    peer:(TLInputPeer*)peer reply_to_msg_id:(int)reply_to_msg_id media:(TLInputMedia*)media random_id:(long)random_id reply_markup:(TLReplyMarkup*)reply_markup;
++(TLAPI_messages_sendMedia*)createWithFlags:(int)flags   peer:(TLInputPeer*)peer reply_to_msg_id:(int)reply_to_msg_id media:(TLInputMedia*)media random_id:(long)random_id reply_markup:(TLReplyMarkup*)reply_markup;
 @end
 
 @interface TLAPI_messages_forwardMessages : TLApiObject
 @property int flags;
-@property (nonatomic,assign,readonly) BOOL isBroadcast;
 @property (nonatomic,assign,readonly) BOOL isSilent;
 @property (nonatomic,assign,readonly) BOOL isBackground;
 @property (nonatomic, strong) TLInputPeer* from_peer;
@@ -342,7 +332,7 @@
 @property (nonatomic, strong) NSMutableArray* random_id;
 @property (nonatomic, strong) TLInputPeer* to_peer;
 
-+(TLAPI_messages_forwardMessages*)createWithFlags:(int)flags    from_peer:(TLInputPeer*)from_peer n_id:(NSMutableArray*)n_id random_id:(NSMutableArray*)random_id to_peer:(TLInputPeer*)to_peer;
++(TLAPI_messages_forwardMessages*)createWithFlags:(int)flags   from_peer:(TLInputPeer*)from_peer n_id:(NSMutableArray*)n_id random_id:(NSMutableArray*)random_id to_peer:(TLInputPeer*)to_peer;
 @end
 
 @interface TLAPI_messages_reportSpam : TLApiObject
@@ -476,12 +466,9 @@
 @end
 
 @interface TLAPI_help_getAppUpdate : TLApiObject
-@property (nonatomic, strong) NSString* device_model;
-@property (nonatomic, strong) NSString* system_version;
-@property (nonatomic, strong) NSString* app_version;
-@property (nonatomic, strong) NSString* lang_code;
 
-+(TLAPI_help_getAppUpdate*)createWithDevice_model:(NSString*)device_model system_version:(NSString*)system_version app_version:(NSString*)app_version lang_code:(NSString*)lang_code;
+
++(TLAPI_help_getAppUpdate*)create;
 @end
 
 @interface TLAPI_help_saveAppLog : TLApiObject
@@ -491,9 +478,9 @@
 @end
 
 @interface TLAPI_help_getInviteText : TLApiObject
-@property (nonatomic, strong) NSString* lang_code;
 
-+(TLAPI_help_getInviteText*)createWithLang_code:(NSString*)lang_code;
+
++(TLAPI_help_getInviteText*)create;
 @end
 
 @interface TLAPI_photos_getUserPhotos : TLApiObject
@@ -820,12 +807,9 @@
 @end
 
 @interface TLAPI_help_getAppChangelog : TLApiObject
-@property (nonatomic, strong) NSString* device_model;
-@property (nonatomic, strong) NSString* system_version;
-@property (nonatomic, strong) NSString* app_version;
-@property (nonatomic, strong) NSString* lang_code;
 
-+(TLAPI_help_getAppChangelog*)createWithDevice_model:(NSString*)device_model system_version:(NSString*)system_version app_version:(NSString*)app_version lang_code:(NSString*)lang_code;
+
++(TLAPI_help_getAppChangelog*)create;
 @end
 
 @interface TLAPI_messages_getMessagesViews : TLApiObject
@@ -834,25 +818,6 @@
 @property Boolean increment;
 
 +(TLAPI_messages_getMessagesViews*)createWithPeer:(TLInputPeer*)peer n_id:(NSMutableArray*)n_id increment:(Boolean)increment;
-@end
-
-@interface TLAPI_channels_getDialogs : TLApiObject
-@property int offset;
-@property int limit;
-
-+(TLAPI_channels_getDialogs*)createWithOffset:(int)offset limit:(int)limit;
-@end
-
-@interface TLAPI_channels_getImportantHistory : TLApiObject
-@property (nonatomic, strong) TLInputChannel* channel;
-@property int offset_id;
-@property int offset_date;
-@property int add_offset;
-@property int limit;
-@property int max_id;
-@property int min_id;
-
-+(TLAPI_channels_getImportantHistory*)createWithChannel:(TLInputChannel*)channel offset_id:(int)offset_id offset_date:(int)offset_date add_offset:(int)add_offset limit:(int)limit max_id:(int)max_id min_id:(int)min_id;
 @end
 
 @interface TLAPI_channels_readHistory : TLApiObject
@@ -958,13 +923,6 @@
 +(TLAPI_channels_editPhoto*)createWithChannel:(TLInputChannel*)channel photo:(TLInputChatPhoto*)photo;
 @end
 
-@interface TLAPI_channels_toggleComments : TLApiObject
-@property (nonatomic, strong) TLInputChannel* channel;
-@property Boolean enabled;
-
-+(TLAPI_channels_toggleComments*)createWithChannel:(TLInputChannel*)channel enabled:(Boolean)enabled;
-@end
-
 @interface TLAPI_channels_checkUsername : TLApiObject
 @property (nonatomic, strong) TLInputChannel* channel;
 @property (nonatomic, strong) NSString* username;
@@ -1059,9 +1017,9 @@
 @end
 
 @interface TLAPI_help_getTermsOfService : TLApiObject
-@property (nonatomic, strong) NSString* lang_code;
 
-+(TLAPI_help_getTermsOfService*)createWithLang_code:(NSString*)lang_code;
+
++(TLAPI_help_getTermsOfService*)create;
 @end
 
 @interface TLAPI_messages_reorderStickerSets : TLApiObject
@@ -1124,7 +1082,6 @@
 
 @interface TLAPI_messages_sendInlineBotResult : TLApiObject
 @property int flags;
-@property (nonatomic,assign,readonly) BOOL isBroadcast;
 @property (nonatomic,assign,readonly) BOOL isSilent;
 @property (nonatomic,assign,readonly) BOOL isBackground;
 @property (nonatomic, strong) TLInputPeer* peer;
@@ -1133,7 +1090,7 @@
 @property long query_id;
 @property (nonatomic, strong) NSString* n_id;
 
-+(TLAPI_messages_sendInlineBotResult*)createWithFlags:(int)flags    peer:(TLInputPeer*)peer reply_to_msg_id:(int)reply_to_msg_id random_id:(long)random_id query_id:(long)query_id n_id:(NSString*)n_id;
++(TLAPI_messages_sendInlineBotResult*)createWithFlags:(int)flags   peer:(TLInputPeer*)peer reply_to_msg_id:(int)reply_to_msg_id random_id:(long)random_id query_id:(long)query_id n_id:(NSString*)n_id;
 @end
 
 @interface TLAPI_channels_toggleInvites : TLApiObject
@@ -1252,5 +1209,22 @@
 @property (nonatomic, strong) NSMutableArray* peers;
 
 +(TLAPI_messages_getPeerDialogs*)createWithPeers:(NSMutableArray*)peers;
+@end
+
+@interface TLAPI_messages_saveDraft : TLApiObject
+@property int flags;
+@property (nonatomic,assign,readonly) BOOL isNo_webpage;
+@property int reply_to_msg_id;
+@property (nonatomic, strong) TLInputPeer* peer;
+@property (nonatomic, strong) NSString* message;
+@property (nonatomic, strong) NSMutableArray* entities;
+
++(TLAPI_messages_saveDraft*)createWithFlags:(int)flags  reply_to_msg_id:(int)reply_to_msg_id peer:(TLInputPeer*)peer message:(NSString*)message entities:(NSMutableArray*)entities;
+@end
+
+@interface TLAPI_messages_getAllDrafts : TLApiObject
+
+
++(TLAPI_messages_getAllDrafts*)create;
 @end
 

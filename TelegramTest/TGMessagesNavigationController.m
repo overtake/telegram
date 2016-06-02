@@ -8,6 +8,12 @@
 
 #import "TGMessagesNavigationController.h"
 #import "TGViewMessagesDragging.h"
+#import "TGInlineAudioPlayer.h"
+
+@interface TGMessagesNavigationController ()
+@property (nonatomic,strong) TGInlineAudioPlayer *inlineAudioPlayer;
+@end
+
 @implementation TGMessagesNavigationController
 
 @synthesize view = _view;
@@ -25,8 +31,48 @@
     [super loadView];
     
     
+}
+
+-(void)pushViewController:(TMViewController *)viewController animated:(BOOL)animated {
+    
+    [self updateInlinePlayer:viewController];
+    
+    [super pushViewController:viewController animated:animated];
+}
+
+-(void)updateInlinePlayer:(TMViewController *)viewController  {
+    [_inlineAudioPlayer setStyle:TGAudioPlayerGlobalStyleMini animated:NO];
+    [_inlineAudioPlayer setFrameOrigin:NSMakePoint(0, NSHeight(self.view.frame) - (viewController.isNavigationBarHidden ? 0 : NSHeight(self.nagivationBarView.frame)) - 50)];
+}
+
+
+-(void)showInlinePlayer {
+    if(!_inlineAudioPlayer) {
+        _inlineAudioPlayer = [[TGInlineAudioPlayer alloc] initWithFrame:NSMakeRect(0, NSHeight(self.view.frame) - NSHeight(self.nagivationBarView.frame) - 50, NSWidth(self.view.frame), 50)];
+        [self.view addSubview:_inlineAudioPlayer];
+    }
+    
+    [self.inlineAudioPlayer show:self.messagesViewController.conversation navigation:self];
+    
+    [self.currentController.view setFrameSize:NSMakeSize(NSWidth(self.currentController.view.frame), self.view.bounds.size.height - self.navigationOffset - self.viewControllerTopOffset)];
+    
     
 }
+
+-(void)hideInlinePlayer{
+    
+    [_inlineAudioPlayer removeFromSuperview];
+    _inlineAudioPlayer = nil;
+    
+    [self.currentController.view setFrameSize:NSMakeSize(NSWidth(self.currentController.view.frame), self.view.bounds.size.height - self.navigationOffset)];
+    
+}
+
+-(int)viewControllerTopOffset {
+    return NSHeight(_inlineAudioPlayer.frame);
+}
+
+
 
 
 

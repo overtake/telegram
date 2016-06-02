@@ -348,8 +348,6 @@ DYNAMIC_PROPERTY(DDialog);
     {
         int mask = [self.to_id isKindOfClass:[TL_peerChannel class]] ? HistoryFilterChannelMessage : HistoryFilterNone;
         
-        if([self isImportantMessage])
-            mask|=HistoryFilterImportantChannelMessage;
         
         if([self.media isKindOfClass:[TL_messageMediaEmpty class]] || self.media == nil) {
             mask|=HistoryFilterText;

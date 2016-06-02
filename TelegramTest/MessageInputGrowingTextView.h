@@ -9,9 +9,11 @@
 #import "TMGrowingTextView.h"
 #import "SettingsArchiver.h"
 #import "MessagesViewController.h"
+#import "TGInputMessageTemplate.h"
 @interface MessageInputGrowingTextView : TMGrowingTextView<SettingsListener>
 
 @property (nonatomic,weak) MessagesViewController *controller;
+@property (nonatomic,strong) TGInputMessageTemplate *inputTemplate;
 
 @property (nonatomic,strong) NSAttributedString *inline_placeholder;
 

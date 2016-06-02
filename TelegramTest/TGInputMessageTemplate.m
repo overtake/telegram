@@ -8,7 +8,7 @@
 
 #import "TGInputMessageTemplate.h"
 #import "SpacemanBlocks.h"
-
+#import "NSString+FindURLs.h"
 
 @implementation TGInputMessageTemplate
 {
@@ -26,6 +26,8 @@ static NSString *kYapTemplateCollection = @"kYapTemplateCollection";
         _peer_id = [aDecoder decodeInt32ForKey:@"peerId"];
         _autoSave = [aDecoder decodeBoolForKey:@"autoSave"];
         _editMessage = [aDecoder decodeObjectForKey:@"editMessage"];
+        _replyMessage = [aDecoder decodeObjectForKey:@"replyMessage"];
+        _disabledWebpage = [aDecoder decodeObjectForKey:@"disabledWebpage"];
     }
     return self;
 }
@@ -39,7 +41,22 @@ static NSString *kYapTemplateCollection = @"kYapTemplateCollection";
     [aCoder encodeBool:_autoSave forKey:@"autoSave"];
     if(_editMessage)
         [aCoder encodeObject:_editMessage forKey:@"editMessage"];
+    if(_replyMessage)
+        [aCoder encodeObject:_replyMessage forKey:@"replyMessage"];
+    if(_disabledWebpage)
+        [aCoder encodeObject:_disabledWebpage forKey:@"disabledWebpage"];
     
+}
+
+-(void)setDisabledWebpage:(NSString *)disabledWebpage {
+    _disabledWebpage = disabledWebpage;
+    
+}
+
+-(void)setText:(NSString *)text {
+    _text = text;
+    if(_text.length == 0)
+        _disabledWebpage = nil;
 }
 
 -(id)initWithType:(TGInputMessageTemplateType)type text:(NSString *)text peer_id:(int)peer_id {
@@ -65,10 +82,14 @@ static NSString *kYapTemplateCollection = @"kYapTemplateCollection";
 -(void)setEditMessage:(TL_localMessage *)editMessage {
     _editMessage = editMessage;
     
+    [self fillEntities:_editMessage.entities];
+}
+
+-(void)fillEntities:(NSArray *)entities {
     __block int rightOffset = 0;
     __block int startOffset = (int)_text.length;
     
-    [_editMessage.entities enumerateObjectsUsingBlock:^(TLMessageEntity *obj, NSUInteger idx, BOOL * _Nonnull stop) {
+    [entities enumerateObjectsUsingBlock:^(TLMessageEntity *obj, NSUInteger idx, BOOL * _Nonnull stop) {
         
         NSRange range = NSMakeRange(obj.offset > startOffset ? obj.offset + rightOffset : obj.offset, obj.length);
         
@@ -94,10 +115,144 @@ static NSString *kYapTemplateCollection = @"kYapTemplateCollection";
             startOffset = MIN(startOffset,obj.offset);
         }
     }];
-    
-    int bp = 0;
 }
 
+-(NSString *)textWithEntities:(NSMutableArray *)entities {
+    
+    NSString *message = [self.text copy];
+    
+    message = [MessageSender parseCustomMentions:message entities:entities];
+    
+    message = [MessageSender parseEntities:message entities:entities backstrips:@"```" startIndex:0];
+    
+    message = [MessageSender parseEntities:message entities:entities backstrips:@"`" startIndex:0];
+    
+    return message;
+}
+
+-(void)saveTemplateInCloudIfNeeded {
+    NSMutableArray *entities = [NSMutableArray array];
+    
+    NSString *text = [self textWithEntities:entities];
+    
+    int flags = 0;
+    
+    if(_replyMessage)
+        flags|= (1 << 0);
+    if(entities.count > 0)
+        flags|= (1 << 3);
+    if(self.noWebpage)
+        flags|= (1 << 1);
+    
+    // need support no webpage
+    
+    
+    TL_conversation *convesation = [[DialogsManager sharedManager] find:_peer_id];
+    
+    TLDraftMessage *draftMessage = text.length == 0 && flags == 0 ? [TL_draftMessageEmpty create] : [TL_draftMessage createWithFlags:0 reply_to_msg_id:_replyMessage.n_id message:text entities:entities date:[[MTNetwork instance] getTime]];
+    
+    if(![convesation.draft isKindOfClass:draftMessage.class] || ((draftMessage.message && ![draftMessage.message isEqualToString:convesation.draft.message]) || draftMessage.flags != draftMessage.flags)) {
+       
+        [RPCRequest sendRequest:[TLAPI_messages_saveDraft createWithFlags:flags reply_to_msg_id:_replyMessage.n_id peer:convesation.inputPeer message:text entities:entities] successHandler:^(id request, id response) {
+            
+            convesation.draft = draftMessage;
+            convesation.last_message_date = MAX(draftMessage.date,convesation.last_message_date);
+            [convesation save];
+            [[DialogsManager sharedManager] notifyAfterUpdateConversation:convesation];
+            
+        } errorHandler:^(id request, RpcError *error) {
+            
+            
+        }];
+        
+    }
+    
+    
+    
+   
+
+}
+
+-(void)performNotification {
+    [Notification perform:UPDATE_MESSAGE_TEMPLATE data:@{KEY_TEMPLATE:self,KEY_PEER_ID:@(_peer_id)}];
+}
+
+-(void)updateTemplateWithDraft:(TLDraftMessage *)draft {
+    
+    TL_conversation *conversation = [[DialogsManager sharedManager] find:_peer_id];
+    
+    _text = draft.message;
+    [self fillEntities:draft.entities];
+    
+    if(draft.isNo_webpage) {
+        _disabledWebpage = [_text webpageLink];
+    }
+    
+    conversation.draft = draft;
+    
+    conversation.last_message_date = MAX(draft.date,conversation.last_message_date);
+    
+    [conversation save];
+    [[DialogsManager sharedManager] notifyAfterUpdateConversation:conversation];
+    
+    _replyMessage = nil;
+    
+    
+    if(draft.reply_to_msg_id != 0) {
+        [[Storage manager] messages:^(NSArray *messages) {
+            
+            if(messages.count == 1) {
+                _replyMessage = messages[0];
+                
+                [self saveForce];
+                [self performNotification];
+            } else {
+                
+                id request = [TLAPI_messages_getMessages createWithN_id:[@[@(draft.reply_to_msg_id)] mutableCopy]];
+                
+                if(conversation.isChannel) {
+                     request = [TLAPI_channels_getMessages createWithChannel:[TL_inputChannel createWithChannel_id:conversation.chat.n_id access_hash:conversation.chat.access_hash] n_id:[@[@(draft.reply_to_msg_id)] mutableCopy]];
+                }
+                
+                [RPCRequest sendRequest:request successHandler:^(id request, TL_messages_messages *response) {
+                    
+                    
+                    if(response.messages.count == 1 ) {
+                        
+                        NSMutableArray *messages = [response.messages mutableCopy];
+                        [[response messages] removeAllObjects];
+                        
+                        
+                        [TL_localMessage convertReceivedMessages:messages];
+                        
+                        if([messages[0] isKindOfClass:[TL_messageEmpty class]]) {
+                            messages[0] = [TL_localEmptyMessage createWithN_Id:[(TL_messageEmpty *)messages[0] n_id] to_id:conversation.peer];
+                        }
+                        
+                        [SharedManager proccessGlobalResponse:response];
+                        
+                        [[Storage manager] addSupportMessages:messages];
+                        
+                        
+                        _replyMessage = messages[0];
+                        
+                        [self saveForce];
+                        [self performNotification];
+                    }
+                    
+                    
+                } errorHandler:^(id request, RpcError *error) {
+                    
+                    
+                } timeout:0 queue:[ASQueue globalQueue].nativeQueue];
+            }
+            
+        } forIds:@[@(draft.reply_to_msg_id)] random:NO sync:NO  queue:[ASQueue globalQueue] isChannel:conversation.isChannel];
+    } else {
+        [self saveForce];
+        [self performNotification];
+    }
+}
 
 -(void)updateTextAndSave:(NSString *)newText {
     _text = newText;
@@ -112,7 +267,20 @@ static NSString *kYapTemplateCollection = @"kYapTemplateCollection";
     
 }
 
+-(BOOL)noWebpage {
+    return [_disabledWebpage isEqualToString:[self.text webpageLink]];
+}
+
+-(void)setReplyMessage:(TL_localMessage *)replyMessage save:(BOOL)save {
+    _replyMessage = replyMessage;
+    if(save) {
+        [self saveForce];
+    }
+}
+
 -(void)saveForce {
+    
+    
     [[Storage yap] asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
         
         [transaction setObject:self forKey:self.key inCollection:kYapTemplateCollection];
@@ -127,13 +295,32 @@ static NSString *kYapTemplateCollection = @"kYapTemplateCollection";
         
         template = [transaction objectForKey:[NSString stringWithFormat:@"%d_%d",peer_id,type] inCollection:kYapTemplateCollection];
         
+        
+        if(!template) {
+            template = [[TGInputMessageTemplate alloc] initWithType:TGInputMessageTemplateTypeSimpleText text:@"" peer_id:peer_id];
+        }
     }];
+    
+    
     
     return template;
 }
 
++(TGInputMessageTemplate *)dublicateTemplateWithType:(TGInputMessageTemplateType)type ofPeerId:(int)peer_id {
+    return [[TGInputMessageTemplate templateWithType:type ofPeerId:peer_id] copy];
+}
+
 -(NSString *)key {
     return [NSString stringWithFormat:@"%d_%d",_peer_id,_type];
+}
+
+-(id)copy {
+    
+    TGInputMessageTemplate *template = [[[self class] alloc] initWithType:self.type text:self.text peer_id:self.peer_id postId:self.postId];;
+    [template setReplyMessage:_replyMessage save:NO];
+    [template setEditMessage:_editMessage];
+    [template setDisabledWebpage:_disabledWebpage];
+    return template;
 }
 
 

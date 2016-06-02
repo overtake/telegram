@@ -26,7 +26,6 @@
 
 @property (nonatomic,strong) BTRButton *searchButton;
 
-@property (nonatomic,strong) ITSwitch *discussionSwitch;
 
 
 @end
@@ -93,20 +92,7 @@
         
         [self addSubview:self.container];
         
-        _discussionSwitch = [[ITSwitch alloc] initWithFrame:NSMakeRect(0, 0, 19, 12)];
-        
-        _discussionSwitch.tintColor = BLUE_UI_COLOR;
-                
-        [_discussionSwitch setDidChangeHandler:^(BOOL res){
-            
-            [weakSelf setDialog:weakSelf.dialog];
-            
-            [weakSelf.controller showOrHideChannelDiscussion];
-    
-        }];
-        
-        [self.container addSubview:_discussionSwitch];
-        
+
         
         [Notification addObserver:self selector:@selector(chatFlagsUpdated:) name:CHAT_FLAGS_UPDATED];
         
@@ -121,22 +107,7 @@
     }
 }
 
--(BOOL)discussIsEnabled {
-    return _discussionSwitch.isOn;
-}
 
--(void)enableDiscussion:(BOOL)enable force:(BOOL)force {
-    [_discussionSwitch setOn:enable];
-    _discussForceSwitched = force;
-    
-    [_discussionSwitch setHidden:(_dialog.type != DialogTypeChannel || _dialog.chat.type == TLChatTypeForbidden || (_dialog.chat.isBroadcast &&  !_discussionSwitch.isOn) || _dialog.chat.isMegagroup)];
-    
-    [self.nameTextField update];
-    [self.statusTextField update];
-    
-    [self buildForSize:self.bounds.size];
-
-}
 
 -(void)setFrameSize:(NSSize)newSize {
     
@@ -164,8 +135,6 @@
     [_searchButton setFrameOrigin:NSMakePoint(NSWidth(self.frame) - image_SearchMessages().size.width - 10, 10)];
    // [_searchButton setHidden:self.dialog.type == DialogTypeChannel];
     
-    [self enableDiscussion:_discussionSwitch.isOn force:NO];
-
     
     [self.nameTextField updateWithConversation:self.dialog];
 
@@ -205,30 +174,8 @@
     [self.statusTextField setFrameOrigin:NSMakePoint(NSMinX(self.statusTextField.frame), 7)];
     
     
-  
-    
-    
-    [_discussionSwitch setCenteredXByView:_discussionSwitch.superview];
-    
-    
-    
-    if(!_discussionSwitch.isHidden)
-    {
-        [_statusTextField setStringValue:NSLocalizedString(@"Channel.showcomments", nil)];
-        
-        [self.statusTextField sizeToFit];
-        
-        [_discussionSwitch setFrameOrigin:NSMakePoint(NSMinX(_discussionSwitch.frame) - roundf(NSWidth(_statusTextField.frame)/2), 6)];
-        
-        [self.statusTextField setFrameOrigin:NSMakePoint(NSMaxX(self.discussionSwitch.frame), 7)];
-        
-    } else {
-        [self.statusTextField sizeToFit];
-        [self.statusTextField setCenteredXByView:self.statusTextField.superview];
-    }
-    
-    
-    
+   [self.statusTextField sizeToFit];
+    [self.statusTextField setCenteredXByView:self.statusTextField.superview];
    
     
     

@@ -16,7 +16,6 @@
 #import "AudioHistoryFilter.h"
 #import "MP3HistoryFilter.h"
 #import "SharedLinksHistoryFilter.h"
-#import "ChannelImportantFilter.h"
 #import "ChannelFilter.h"
 #import "ChannelCommonFilter.h"
 #import "SelfDestructionController.h"

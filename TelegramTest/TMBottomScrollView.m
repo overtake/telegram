@@ -162,11 +162,7 @@
     
    
     
-    if(_messagesViewController.conversation.type == DialogTypeChannel && !_messagesViewController.conversation.chat.isMegagroup) {
-        request = [TLAPI_channels_getImportantHistory createWithChannel:_messagesViewController.conversation.chat.inputPeer offset_id:0 offset_date:selectedDate.timeIntervalSince1970- [[MTNetwork instance] globalTimeOffsetFromUTC] add_offset:-100 limit:100 max_id:INT32_MAX min_id:0];
-    } else {
-        request = [TLAPI_messages_getHistory createWithPeer:_messagesViewController.conversation.inputPeer offset_id:0 offset_date:selectedDate.timeIntervalSince1970 - [[MTNetwork instance] globalTimeOffsetFromUTC] add_offset:-100 limit:100 max_id:INT32_MAX min_id:0];
-    }
+    request = [TLAPI_messages_getHistory createWithPeer:_messagesViewController.conversation.inputPeer offset_id:0 offset_date:selectedDate.timeIntervalSince1970 - [[MTNetwork instance] globalTimeOffsetFromUTC] add_offset:-100 limit:100 max_id:INT32_MAX min_id:0];
     
     
     

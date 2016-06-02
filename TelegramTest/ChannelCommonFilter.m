@@ -8,7 +8,6 @@
 
 #import "ChannelCommonFilter.h"
 #import "ChannelFilter.h"
-#import "ChannelImportantFilter.h"
 #import "ChatHistoryController.h"
 @implementation ChannelCommonFilter
 
@@ -27,8 +26,6 @@
     if(self.prevState != ChatHistoryStateFull && conversation.universalTopMessage > 0 && (conversation.universalTopMessage <= self.server_max_id  || (conversation.universalTopMessage > TGMINFAKEID && conversation.last_message_date <= self.maxDate))) {
         [self setState:ChatHistoryStateFull next:NO];
     }
-    
-    
     
     
     return converted;

@@ -93,7 +93,7 @@
         dispatch_once(&onceToken, ^{
             
             statefullUpdates = @[NSStringFromClass([TL_updateNewChannelMessage class]),NSStringFromClass([TL_updateDeleteChannelMessages class]),NSStringFromClass([TL_updateEditChannelMessage class])];
-            statelessUpdates = @[NSStringFromClass([TL_updateReadChannelInbox class]),NSStringFromClass([TL_updateChannelTooLong class]),NSStringFromClass([TL_updateChannelGroup class]),NSStringFromClass([TL_updateChannelMessageViews class]),NSStringFromClass([TL_updateChannel class]),NSStringFromClass([TL_updateChannelPinnedMessage class]),NSStringFromClass([TL_updateReadChannelOutbox class])];
+            statelessUpdates = @[NSStringFromClass([TL_updateReadChannelInbox class]),NSStringFromClass([TL_updateChannelTooLong class]),NSStringFromClass([TL_updateChannelMessageViews class]),NSStringFromClass([TL_updateChannel class]),NSStringFromClass([TL_updateChannelPinnedMessage class]),NSStringFromClass([TL_updateReadChannelOutbox class])];
         });
         
         
@@ -124,10 +124,6 @@
     
     if(statefulMessage.pts == 0 || [self ptsWithChannelId:statefulMessage.channel_id] + statefulMessage.pts_count == statefulMessage.pts )
     {
-        
-        if(statefulMessage.channel_id == 1031569976) {
-            int bp = 0;
-        }
         
         [self proccessStatefullUpdate:statefulMessage];
         
@@ -214,77 +210,16 @@
 }
 
 
--(TGMessageGroupHole *)proccessUnimportantGroup:(NSArray *)messages channel:(TLChat *)channel {
-    
-    TGMessageGroupHole *hole;
-    
-    if(!channel.isMegagroup && !channel.isBroadcast) {
-        TL_localMessage *minMsg = [[Storage manager] lastMessageAroundMinId:[(TL_localMessage *)messages[0] channelMsgId] important:YES isTop:NO];
-        
-        TL_localMessage *minUnimportantMsg = [messages firstObject];
-        TL_localMessage *maxUnimportantMsg = [messages lastObject];
-        
-        
-        int minId = minMsg ? minMsg.n_id : minUnimportantMsg.n_id - 1;
-        
-        TGMessageGroupHole *hole = [[[Storage manager] groupHoles:minUnimportantMsg.peer_id min:minId max:maxUnimportantMsg.n_id +1] lastObject];
-        
-        if(hole == nil)
-            hole = [[TGMessageGroupHole alloc] initWithUniqueId:-rand_int() peer_id:minUnimportantMsg.peer_id min_id:minId max_id:maxUnimportantMsg.n_id+1 date:minUnimportantMsg.date-1  count:0];
-        
-        hole.max_id = maxUnimportantMsg.n_id+1;
-        hole.messagesCount+= (int)messages.count;
-        
-        [hole save];
-    }
-    
-   
-    
-    [[Storage manager] insertMessages:messages];
-    
-    return hole;
-
-}
-
 
 -(void)proccessHoleWithNewMessage:(NSArray *)messages channel:(TLChat *)channel {
     
     messages = [messages sortedArrayUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"self.n_id" ascending:YES]]];
     
-    NSMutableArray *unimporantMessages = [[NSMutableArray alloc] init];
     
-    
-    
-    NSMutableArray *groups = [[NSMutableArray alloc] init];
-    
-    [messages enumerateObjectsUsingBlock:^(TL_localMessage *obj, NSUInteger idx, BOOL *stop) {
-        
-        if(![obj isImportantMessage])
-            [unimporantMessages addObject:obj];
-        
-        if([obj isImportantMessage] || idx == messages.count-1) {
-            
-            if([obj isImportantMessage]) {
-                [obj save:NO];
-            }
-            
-            if(unimporantMessages.count > 0) {
-                TGMessageGroupHole *hole = [self proccessUnimportantGroup:[unimporantMessages copy] channel:channel];
-                if(hole) {
-                    [groups addObject:hole];
-                    [unimporantMessages removeAllObjects];
-                }
-                
-            }
-           
-        }
-    }];
+    [[Storage manager] insertMessages:messages];
     
     [Notification performOnStageQueue:MESSAGE_LIST_UPDATE_TOP data:@{KEY_MESSAGE_LIST:messages}];
     
-    [groups enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
-         [Notification perform:UPDATE_MESSAGE_GROUP_HOLE data:@{KEY_GROUP_HOLE:obj}];
-    }];
     
 }
 
@@ -311,23 +246,13 @@
         TL_localMessage *message = [TL_localMessage convertReceivedMessage:[(TL_updateNewChannelMessage *)update message]];
         
         
-        if((message.from_id > 0 && ![[UsersManager sharedManager] find:message.from_id]) || (message.fwd_from != nil && !message.fwdObject) || (message.via_bot_id != 0 && ![[UsersManager sharedManager] find:message.via_bot_id] || [TGProccessUpdates checkMessageEntityUsers:message])) {
+        if((message.from_id > 0 && ![[UsersManager sharedManager] find:message.from_id]) || (message.fwd_from != nil && !message.fwdObject) || ((message.via_bot_id != 0 && ![[UsersManager sharedManager] find:message.via_bot_id]) || [TGProccessUpdates checkMessageEntityUsers:message])) {
             
             
             [self failUpdateWithChannelId:[self channelIdWithUpdate:update] limit:50 withCallback:nil errorCallback:nil];
             return NO;
         }
 
-        if(![message isImportantMessage]) {
-            
-            
-            TGMessageGroupHole *hole = [self proccessUnimportantGroup:@[message] channel:message.chat];
-            if(hole) {
-                [Notification performOnStageQueue:UPDATE_MESSAGE_GROUP_HOLE data:@{KEY_GROUP_HOLE:hole}];
-            }
-            
-            
-        }
         
         
         [MessagesManager addAndUpdateMessage:message];
@@ -537,14 +462,13 @@
             _channelsInUpdating[@(channel.peer_id)] = [RPCRequest sendRequest:[TLAPI_updates_getChannelDifference createWithChannel:chat.inputPeer filter:[TL_channelMessagesFilterEmpty create] pts:1 limit:INT32_MAX] successHandler:^(id request, TL_updates_channelDifference *response) {
                 
                 channel.pts = response.pts;
-                channel.top_important_message = [response top_important_message];
                 channel.last_message_date = channel.lastMessage.date;
                 
                 channel.last_marked_message = [response top_message];
                 channel.last_marked_date = [[MTNetwork instance] getTime];
                 
                 channel.read_inbox_max_id = [response read_inbox_max_id];
-                channel.unread_count = [response unread_important_count];
+                channel.unread_count = [response unread_count];
                 
                 if(!chat.isCreator)
                     dispatch();
@@ -676,13 +600,12 @@
                         
                         conversation.top_message = [response top_message];
                         conversation.lastMessage = importantMsg;
-                        conversation.top_important_message = conversation.chat.isMegagroup ? [response top_message] : [response top_important_message];
                         conversation.last_message_date = conversation.lastMessage.date;
                         
                         conversation.last_marked_message = [response read_inbox_max_id];
                         
                         conversation.read_inbox_max_id = [response read_inbox_max_id];
-                        conversation.unread_count = conversation.chat.isMegagroup ? [response unread_count] : [response unread_important_count];
+                        conversation.unread_count = [response unread_count];
                         
                         [conversation save];
                         
@@ -695,25 +618,7 @@
                         
                         // insert holes
                         {
-                            int maxSyncedId = [[Storage manager] syncedMessageIdWithPeerId:conversation.peer_id important:NO latest:YES isChannel:YES];
-                            
-                            if(importantMsg.n_id > maxSyncedId && maxSyncedId > 0) {
-                                longHole = [[TGMessageHole alloc] initWithUniqueId:-rand_int() peer_id:importantMsg.peer_id min_id:maxSyncedId+1 max_id:importantMsg.n_id-1 date:0 count:0];
-                                
-                                [longHole save];
-                                
-                            }
-                            
-                            
-                            if(importantMsg.n_id != topMsg.n_id) {
-                                TGMessageHole *nextHole = [[TGMessageHole alloc] initWithUniqueId:-rand_int() peer_id:importantMsg.peer_id min_id:importantMsg.n_id max_id:topMsg.n_id+1 date:0 count:0];
-                                
-                                [nextHole save];
-                                
-                                if(longHole == nil)
-                                    longHole = nextHole;
-                            }
-                            
+                            [[Storage manager] addHolesAroundMessage:topMsg];  
                         }
                     }
                     

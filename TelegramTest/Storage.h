@@ -72,7 +72,7 @@ extern NSString *const TOP_PEERS;
 -(void)deleteChannelMessages:(NSArray *)messages completeHandler:(void (^)(NSArray *peer_update_data, NSDictionary *readCount))completeHandler;
 -(void)deleteUserChannelMessages:(int)channelId from_id:(int)from_id completeHandler:(void (^)(NSArray *peer_updates, NSDictionary *readCount))completeHandler;
 -(void)markMessagesAsRead:(NSArray *)messages useRandomIds:(NSArray *)randomIds;
--(void)lastMessageWithConversation:(TL_conversation *)conversation completeHandler:(void (^)(TL_localMessage *message, int importantMessage))completeHandler;
+-(void)lastMessageWithConversation:(TL_conversation *)conversation completeHandler:(void (^)(TL_localMessage *message))completeHandler;
 
 // end messages
 -(void)deleteMessagesInDialog:(TL_conversation *)dialog completeHandler:(dispatch_block_t)completeHandler;
@@ -244,5 +244,5 @@ extern NSString *const TOP_PEERS;
 -(void)removeHole:(TGMessageHole *)hole;
 -(NSArray *)groupHoles:(int)peer_id min:(int)min max:(int)max;
 -(void)addHolesAroundMessage:(TL_localMessage *)message;
--(int)syncedMessageIdWithPeerId:(int)peer_id important:(BOOL)important latest:(BOOL)latest isChannel:(BOOL)isChannel;
+-(int)syncedMessageIdWithPeerId:(int)peer_id latest:(BOOL)latest isChannel:(BOOL)isChannel;
 @end

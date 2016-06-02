@@ -66,7 +66,7 @@ static NSArray *channelUpdates;
         
         dispatch_once(&onceToken, ^{
             
-            channelUpdates = @[NSStringFromClass([TL_updateNewChannelMessage class]),NSStringFromClass([TL_updateReadChannelInbox class]),NSStringFromClass([TL_updateDeleteChannelMessages class]),NSStringFromClass([TGForceChannelUpdate class]),NSStringFromClass([TL_updateChannelTooLong class]),NSStringFromClass([TL_updateChannelGroup class]),NSStringFromClass([TL_updateChannelMessageViews class]),NSStringFromClass([TL_updateChannel class]),NSStringFromClass([TL_updateEditChannelMessage class]),NSStringFromClass([TL_updateChannelPinnedMessage class]),NSStringFromClass([TL_updateReadChannelOutbox class])];
+            channelUpdates = @[NSStringFromClass([TL_updateNewChannelMessage class]),NSStringFromClass([TL_updateReadChannelInbox class]),NSStringFromClass([TL_updateDeleteChannelMessages class]),NSStringFromClass([TGForceChannelUpdate class]),NSStringFromClass([TL_updateChannelTooLong class]),NSStringFromClass([TL_updateChannelMessageViews class]),NSStringFromClass([TL_updateChannel class]),NSStringFromClass([TL_updateEditChannelMessage class]),NSStringFromClass([TL_updateChannelPinnedMessage class]),NSStringFromClass([TL_updateReadChannelOutbox class])];
         });
         
         queue = q;
@@ -488,7 +488,7 @@ static NSArray *channelUpdates;
         TL_localMessage *message = [TL_localMessage createWithN_id:shortMessage.n_id flags:shortMessage.flags from_id:[shortMessage user_id] to_id:[TL_peerUser createWithUser_id:[shortMessage user_id]] fwd_from:shortMessage.fwd_from reply_to_msg_id:shortMessage.reply_to_msg_id date:shortMessage.date message:shortMessage.message media:[TL_messageMediaEmpty create] fakeId:[MessageSender getFakeMessageId] randomId:rand_long() reply_markup:nil entities:shortMessage.entities views:0 via_bot_id:shortMessage.via_bot_id edit_date:0 isViewed:YES state:DeliveryStateNormal];
         
         
-        if(![[UsersManager sharedManager] find:shortMessage.user_id] || (message.fwd_from != nil && !message.fwdObject) || (message.via_bot_id != 0 && ![[UsersManager sharedManager] find:message.via_bot_id] || ![TGProccessUpdates checkMessageEntityUsers:message])) {
+        if(![[UsersManager sharedManager] find:shortMessage.user_id] || (message.fwd_from != nil && !message.fwdObject) || ((message.via_bot_id != 0 && ![[UsersManager sharedManager] find:message.via_bot_id]) || ![TGProccessUpdates checkMessageEntityUsers:message])) {
             [self failSequence];
             return NO;
         }
@@ -569,6 +569,16 @@ static NSArray *channelUpdates;
             int bp = 0;
             
             return;
+        }
+        
+        if([update isKindOfClass:[TL_updateDraftMessage class]]) {
+            TLDraftMessage *draft = [update draft];
+            
+            TGInputMessageTemplate *template = [TGInputMessageTemplate dublicateTemplateWithType:TGInputMessageTemplateTypeSimpleText ofPeerId:update.peer.peer_id];
+            
+            [template updateTemplateWithDraft:draft];
+            [template performNotification];
+            
         }
         
         if([update isKindOfClass:[TL_updateEditMessage class]]) {

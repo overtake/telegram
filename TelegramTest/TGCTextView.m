@@ -935,8 +935,8 @@ void (^linkOverHandle)(NSString *link, BOOL over, NSRect rect,TGCTextView *textV
     
     if(self.selectRange.location != NSNotFound && self.isEditable) {
         NSTextView *view = (NSTextView *) [self.window fieldEditor:YES forObject:self];
-        [view setEditable:NO];
-        [view setSelectable:NO];
+        [view setEditable:YES];
+        [view setSelectable:YES];
         
         [view setString:self.attributedString.string];
         

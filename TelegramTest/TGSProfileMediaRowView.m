@@ -241,7 +241,7 @@ static NSMutableDictionary *loaders;
         [_countersTextField setLinkCallback:^(NSString *url) {
             
             if([url isEqualToString:@"chat://audio"]) {
-                [TGAudioPlayerWindow show:weakSelf.item.conversation playerState:TGAudioPlayerWindowStatePlayList];
+                [TGAudioPlayerWindow show:weakSelf.item.conversation playerState:TGAudioPlayerGlobalStyleList  navigation:self.item.controller.navigationViewController];
                 return;
             }
             

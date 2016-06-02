@@ -76,7 +76,7 @@
     
     NSMutableAttributedString *alt = [[NSMutableAttributedString alloc] init];
     
-    [alt appendString:sticker.stickerAttr.alt];
+    [alt appendString:[sticker.stickerAttr.alt fixEmoji]];
     [alt setFont:TGSystemFont(20)  forRange:alt.range];
     [_textLabel setText:alt maxWidth:INT32_MAX];
     

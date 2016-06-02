@@ -384,7 +384,7 @@
     
     [TMViewController showModalProgress];
     
-    [RPCRequest sendRequest:[TLAPI_auth_sendCode createWithFlags:0 phone_number:self.phoneNumber current_number:false api_id:API_ID api_hash:API_HASH lang_code:@"en"] successHandler:^(RPCRequest *request, TL_auth_sentCode *response) {
+    [RPCRequest sendRequest:[TLAPI_auth_sendCode createWithFlags:0 phone_number:self.phoneNumber current_number:false api_id:API_ID api_hash:API_HASH] successHandler:^(RPCRequest *request, TL_auth_sentCode *response) {
         
         
         [self proccessSendCodeResponse:response];
@@ -525,9 +525,10 @@
     
     __block NSString *phone_code_hash = self.phone_code_hash;
     weak();
-    [RPCRequest sendRequest:[TLAPI_auth_resendCode createWithPhone_number:self.phoneNumber phone_code_hash:self.phone_code_hash] successHandler:^(RPCRequest *request, id response) {
+    [RPCRequest sendRequest:[TLAPI_auth_resendCode createWithPhone_number:self.phoneNumber phone_code_hash:self.phone_code_hash] successHandler:^(RPCRequest *request, TL_auth_sentCode *response) {
         if([weakSelf.phone_code_hash isEqualToString:phone_code_hash])
             [self.SMSCodeView changeCallTextFieldString:NSLocalizedString(@"Registration.PhoneDialed", nil)];
+        [self.bottomView startTimer:response.timeout == 0 ? -1 : response.timeout];
     } errorHandler:^(RPCRequest *request, RpcError *error) {
         if([weakSelf.phone_code_hash isEqualToString:phone_code_hash])
             [self.SMSCodeView changeCallTextFieldString:NSLocalizedString(@"Login.Error", nil)];

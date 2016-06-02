@@ -173,6 +173,10 @@ int megagroupSizeMax() {
             
             [[UsersManager sharedManager] setUserStatus:[TL_userStatusOffline createWithWas_online:[[MTNetwork instance] getTime]] forUid:[UsersManager currentUserId]];
             
+            TGInputMessageTemplate *template = [TGInputMessageTemplate dublicateTemplateWithType:TGInputMessageTemplateTypeSimpleText ofPeerId:[Telegram conversation].peer_id];
+            
+            [template saveTemplateInCloudIfNeeded];
+            
             MTLog(@"account is offline");
             
         } errorHandler:nil];

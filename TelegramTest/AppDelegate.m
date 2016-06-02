@@ -162,12 +162,12 @@ static void TGTelegramLoggingFunction(NSString *format, va_list args)
                 
                 if(_mainWindow.navigationController.currentController == _mainWindow.navigationController.messagesViewController || [TGAudioPlayerWindow isShown]) {
                     if([TGAudioPlayerWindow isShown]) {
-                        if([TGAudioPlayerWindow playerState] == TGAudioPlayerStatePlaying)
+                        if([TGAudioPlayerWindow playerState] == TGAudioPlayerGlobalStatePlaying)
                             [TGAudioPlayerWindow pause];
                         else
                             [TGAudioPlayerWindow resume];
                     } else {
-                        [TGAudioPlayerWindow show:_mainWindow.navigationController.messagesViewController.conversation];
+                        [TGAudioPlayerWindow show:_mainWindow.navigationController.messagesViewController.conversation navigation:_mainWindow.navigationController];
                     }
                 }
                 
@@ -250,8 +250,11 @@ static void TGTelegramLoggingFunction(NSString *format, va_list args)
             TL_localMessage *msg = [[Storage manager] messageById:[userInfo[KEY_MESSAGE_ID] intValue] inChannel:dialog.type == DialogTypeChannel ? dialog.peer_id : 0];
             
             if(dialog.type == DialogTypeChat) {
-                if(msg)
-                    [[Telegram rightViewController].messagesViewController addReplayMessage:msg animated:NO];
+                if(msg) {
+                    TGInputMessageTemplate *template = [TGInputMessageTemplate dublicateTemplateWithType:TGInputMessageTemplateTypeSimpleText ofPeerId:msg.peer_id];
+                    [template setReplyMessage:msg save:YES];
+                    [template performNotification];
+                }
             }
             
              [[Telegram rightViewController].messagesViewController sendMessage:userResponse forConversation:dialog];

@@ -79,7 +79,7 @@
     __block TL_conversation *dialog;
     
     [ASQueue dispatchOnStageQueue:^{
-        dialog = [TL_conversation createWithPeer:[TL_peerUser createWithUser_id:user.n_id] top_message:0 unread_count:0 last_message_date:0 notify_settings:nil last_marked_message:0 top_message_fake:0 last_marked_date:0 sync_message_id:0 read_inbox_max_id:0 unread_important_count:0 read_outbox_max_id:0 lastMessage:nil];
+        dialog = [TL_conversation createWithPeer:[TL_peerUser createWithUser_id:user.n_id] top_message:0 unread_count:0 last_message_date:0 notify_settings:nil last_marked_message:0 top_message_fake:0 last_marked_date:0 sync_message_id:0 read_inbox_max_id:0 read_outbox_max_id:0 draft:[TL_draftMessageEmpty create] lastMessage:nil];
    
         [dialog setUser:user];
         dialog.fake = YES;
@@ -100,7 +100,7 @@
         if(chat.isChannel) {
             dialog = [self createDialogForChannel:chat];
         } else
-            dialog = [TL_conversation createWithPeer:[TL_peerChat createWithChat_id:chat.n_id] top_message:0 unread_count:0 last_message_date:0 notify_settings:nil last_marked_message:0 top_message_fake:0 last_marked_date:0 sync_message_id:0 read_inbox_max_id:0 unread_important_count:0 read_outbox_max_id:0 lastMessage:nil];
+            dialog = [TL_conversation createWithPeer:[TL_peerChat createWithChat_id:chat.n_id] top_message:0 unread_count:0 last_message_date:0 notify_settings:nil last_marked_message:0 top_message_fake:0 last_marked_date:0 sync_message_id:0 read_inbox_max_id:0 read_outbox_max_id:0 draft:[TL_draftMessageEmpty create] lastMessage:nil];
         
         
         dialog.fake = YES;
@@ -118,7 +118,7 @@
     __block TL_conversation *dialog;
     
     [ASQueue dispatchOnStageQueue:^{
-        dialog = [TL_conversation createWithPeer:[TL_peerChannel createWithChannel_id:chat.n_id] top_message:0 unread_count:0 last_message_date:0 notify_settings:nil last_marked_message:0 top_message_fake:0 last_marked_date:0 sync_message_id:0 read_inbox_max_id:0 unread_important_count:0 read_outbox_max_id:0 lastMessage:nil pts:0 isInvisibleChannel:YES top_important_message:0];
+        dialog = [TL_conversation createWithPeer:[TL_peerChannel createWithChannel_id:chat.n_id] top_message:0 unread_count:0 last_message_date:0 notify_settings:nil last_marked_message:0 top_message_fake:0 last_marked_date:0 sync_message_id:0 read_inbox_max_id:0 read_outbox_max_id:0 draft:[TL_draftMessageEmpty create] lastMessage:nil pts:0 isInvisibleChannel:YES];
         
         [dialog save];
         
@@ -137,7 +137,7 @@
     __block TL_conversation *dialog;
     
     [ASQueue dispatchOnStageQueue:^{
-        dialog = [TL_conversation createWithPeer:[TL_peerSecret createWithChat_id:chat.n_id] top_message:0 unread_count:0 last_message_date:0 notify_settings:nil last_marked_message:0 top_message_fake:0 last_marked_date:0 sync_message_id:0 read_inbox_max_id:0 unread_important_count:0 read_outbox_max_id:0 lastMessage:nil];
+        dialog = [TL_conversation createWithPeer:[TL_peerSecret createWithChat_id:chat.n_id] top_message:0 unread_count:0 last_message_date:0 notify_settings:nil last_marked_message:0 top_message_fake:0 last_marked_date:0 sync_message_id:0 read_inbox_max_id:0 read_outbox_max_id:0 draft:[TL_draftMessageEmpty create] lastMessage:nil];
         
         
         dialog.fake = YES;
@@ -154,7 +154,7 @@
     __block TL_conversation *dialog;
     
     [ASQueue dispatchOnStageQueue:^{
-        dialog = [TL_conversation createWithPeer:[message peer] top_message:0 unread_count:0  last_message_date:message.date notify_settings:nil last_marked_message:message.n_id top_message_fake:0 last_marked_date:message.date sync_message_id:message.n_id read_inbox_max_id:0 unread_important_count:0 read_outbox_max_id:0 lastMessage:message];
+        dialog = [TL_conversation createWithPeer:[message peer] top_message:0 unread_count:0  last_message_date:message.date notify_settings:nil last_marked_message:message.n_id top_message_fake:0 last_marked_date:message.date sync_message_id:message.n_id read_inbox_max_id:0 read_outbox_max_id:0 draft:[TL_draftMessageEmpty create] lastMessage:message];
         
         
         dialog.fake = YES;
@@ -243,7 +243,7 @@
 -(void)updateLastMessageForDialog:(TL_conversation *)dialog {
     
     [self.queue dispatchOnQueue:^{
-        [[Storage manager] lastMessageWithConversation:dialog completeHandler:^(TL_localMessage *lastMessage, int importantMessage) {
+        [[Storage manager] lastMessageWithConversation:dialog completeHandler:^(TL_localMessage *lastMessage) {
            
             if(lastMessage) {
                 
@@ -257,10 +257,8 @@
             } else {
                 dialog.last_marked_message = dialog.top_message = dialog.last_marked_date = 0;
                 dialog.unread_count = 0;
-                dialog.unread_important_count = 0;
             }
             
-            dialog.top_important_message = importantMessage;
             
             dialog.lastMessage = lastMessage;
             
@@ -280,6 +278,8 @@
         
         if(conversation != nil) {
             [Notification perform:[Notification notificationNameByDialog:conversation action:@"message"] data:@{KEY_DIALOG:conversation,KEY_LAST_CONVRESATION_DATA:[MessagesUtils conversationLastData:conversation]}];
+            
+            
             
             NSUInteger position = [self positionForConversation:conversation];
             
@@ -324,13 +324,12 @@
                 
                 if(message.replyMessage && message.replyMessage.from_id == [UsersManager currentUserId]) {
                     
-                    [[Storage yap] readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
-                        
-                        [transaction setObject:message forKey:conversation.cacheKey inCollection:REPLAY_COLLECTION];
-                        
-                    }];
+                    TGInputMessageTemplate *template = [TGInputMessageTemplate dublicateTemplateWithType:TGInputMessageTemplateTypeSimpleText ofPeerId:message.peer_id];
                     
-                    [Notification perform:[Notification notificationNameByDialog:conversation action:@"reply"] data:@{KEY_DIALOG:conversation}];
+                    [template setReplyMessage:message.replyMessage save:YES];
+                    
+                    [template performNotification];
+                    
                     
                     notify = NO;
                 }
@@ -481,7 +480,6 @@
     dispatch_block_t blockSuccess = ^{
         dialog.top_message = 0;
         
-        dialog.top_important_message = 0;
         dialog.unread_count = 0;
         dialog.lastMessage = nil;
         
@@ -510,6 +508,22 @@
 
 - (void)resort {
     [self->list sortUsingComparator:^NSComparisonResult(TL_conversation * obj1, TL_conversation * obj2) {
+        
+//        int date1 = MAX(obj1.draft.date ,obj1.last_message_date);
+//        int date2 = MAX(obj2.draft.date ,obj2.last_message_date);
+//        
+//        if(date1 < date2)
+//            return NSOrderedDescending;
+//        else {
+//            if (date1 > date2)
+//                return NSOrderedAscending;
+//            else if(obj1.top_message < obj2.top_message)
+//                return NSOrderedDescending;
+//            else
+//                return NSOrderedAscending;
+//        }
+//        
+        
         return (obj1.last_message_date < obj2.last_message_date ? NSOrderedDescending : (obj1.last_message_date > obj2.last_message_date ? NSOrderedAscending : (obj1.top_message < obj2.top_message ? NSOrderedDescending : NSOrderedAscending)));
     }];
     
@@ -786,7 +800,7 @@
 -(BOOL)updateConversation:(TL_conversation *)dialog withLastMessage:(TL_localMessage *)message update_real_date:(BOOL)update_real_date {
     
     
-    int topMessageId = (dialog.type == DialogTypeChannel ? dialog.top_important_message : dialog.top_message);
+    int topMessageId = dialog.top_message;
     
     if(topMessageId != 0 && topMessageId != -1 && ((topMessageId > message.n_id && topMessageId < TGMINFAKEID)))
         return NO;
@@ -805,7 +819,6 @@
     
     dialog.top_message = message.n_id;
     
-    dialog.top_important_message = message.n_id;
 
     dialog.lastMessage = message;
     
@@ -952,8 +965,6 @@
                 current.dstate = dialog.dstate;
                 current.read_inbox_max_id = dialog.read_inbox_max_id;
                 current.read_outbox_max_id = dialog.read_outbox_max_id;
-                current.top_important_message = dialog.top_important_message;
-                current.unread_important_count = dialog.unread_important_count;
                 current.pts = dialog.pts;
                 current.invisibleChannel = dialog.invisibleChannel;
                 current.lastMessage = dialog.lastMessage;

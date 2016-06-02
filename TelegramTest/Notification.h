@@ -124,6 +124,7 @@ extern NSString *const KEY_RANDOM_ID;
 extern NSString *const KEY_ORDER;
 extern NSString *const KEY_STICKERSET;
 extern NSString *const KEY_PRIVACY;
+extern NSString *const KEY_TEMPLATE;
 extern NSString *const PRIVACY_UPDATE;
 extern NSString *const LOGOUT_EVENT;
 

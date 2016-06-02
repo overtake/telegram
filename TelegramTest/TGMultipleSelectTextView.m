@@ -73,8 +73,8 @@
     
     if([SelectTextManager count] > 0 && [self indexIsSelected:index]) {
         NSTextView *view = (NSTextView *) [self.window fieldEditor:YES forObject:self];
-        [view setEditable:NO];
-        
+        [view setEditable:YES];
+        [view setSelectable:YES];
         [view setString:[SelectTextManager fullString]];
         
         [view setSelectedRange:NSMakeRange(0, view.string.length)];
@@ -128,7 +128,9 @@
             
             [menu insertItem:[NSMenuItem menuItemWithTitle:NSLocalizedString(@"Context.Reply", nil) withBlock:^(id sender) {
                 
-                 [[Telegram rightViewController].messagesViewController addReplayMessage:item.message animated:YES];
+                TGInputMessageTemplate *template = [TGInputMessageTemplate dublicateTemplateWithType:TGInputMessageTemplateTypeSimpleText ofPeerId:item.message.peer_id];
+                [template setReplyMessage:item.message save:YES];
+                [template performNotification];
                 
             }] atIndex:1];
             

@@ -192,7 +192,9 @@
         if(self.item.message.conversation.type != DialogTypeSecretChat || self.item.message.conversation.encryptedChat.encryptedParams.layer >= 45) {
             [items addObject:[NSMenuItem menuItemWithTitle:NSLocalizedString(@"Context.Reply", nil) withBlock:^(id sender) {
                 
-                [weakSelf.messagesViewController addReplayMessage:weakSelf.item.message animated:YES];
+                TGInputMessageTemplate *template = [TGInputMessageTemplate dublicateTemplateWithType:TGInputMessageTemplateTypeSimpleText ofPeerId:self.item.message.peer_id];
+                [template setReplyMessage:self.item.message save:YES];
+                [template performNotification];
                 
             }]];
         }
@@ -267,7 +269,11 @@
         BOOL accept = ![self mouseInText:theEvent];;
         
         if(accept && self.item.message.n_id < TGMINFAKEID && self.item.message.n_id > 0)
-            [_messagesViewController addReplayMessage:self.item.message animated:YES];
+        {
+            TGInputMessageTemplate *template = [TGInputMessageTemplate dublicateTemplateWithType:TGInputMessageTemplateTypeSimpleText ofPeerId:self.item.message.peer_id] ;
+            [template setReplyMessage:self.item.message save:YES];
+            [template performNotification];
+        }
     }
     
     

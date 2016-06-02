@@ -47,6 +47,13 @@
 static const int navigationHeight = 48;
 static const int navigationOffset = 48;
 
+-(int)navigationOffset {
+    return navigationOffset;
+}
+
+-(int)viewControllerTopOffset {
+    return 0;
+}
 
 - (void)initNavigationController {
     self.viewControllerStack = [[NSMutableArray alloc] init];
@@ -303,9 +310,9 @@ static const int navigationOffset = 48;
 
     
     if(newViewController.isNavigationBarHidden) {
-        [newView setFrameSize:NSMakeSize(self.view.bounds.size.width, self.view.bounds.size.height)];
+        [newView setFrameSize:NSMakeSize(self.view.bounds.size.width, self.view.bounds.size.height - self.viewControllerTopOffset)];
     } else {
-        [newView setFrameSize:NSMakeSize(self.view.bounds.size.width, self.view.bounds.size.height - navigationOffset)];
+        [newView setFrameSize:NSMakeSize(self.view.bounds.size.width, self.view.bounds.size.height - navigationOffset - self.viewControllerTopOffset)];
     }
     
     
@@ -712,6 +719,14 @@ static const int navigationOffset = 48;
     [self.messagesViewController setCurrentConversation:conversation withMessageJump:message];
     
     [self gotoViewController:self.messagesViewController];
+    
+}
+
+
+-(void)hideInlinePlayer {
+    
+}
+-(void)showInlinePlayer {
     
 }
 

@@ -521,7 +521,7 @@ static const int bottomHeight = 60;
     containerSize = NSMakeSize(MAX(min.width,size.width), MAX(min.height, size.height));
     
     
-    [self setFrameSize:NSMakeSize(containerSize.width, [self maxSize].height)];
+    [self setFrameSize:NSMakeSize(containerSize.width, [self maxSize].height + 20)];
     
     [self updateContainerOrigin];
     

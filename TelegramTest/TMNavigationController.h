@@ -38,6 +38,8 @@ typedef enum {
 
 @property (nonatomic, readonly) BOOL isLocked;
 
+-(int)navigationOffset;
+-(int)viewControllerTopOffset;
 
 @property (nonatomic,weak) MessagesViewController *messagesViewController;
 
@@ -59,4 +61,9 @@ typedef enum {
 -(void)showInfoPage:(TL_conversation *)conversation animated:(BOOL)animated isDisclosureController:(BOOL)isDisclosureController;
 -(void)showMessagesViewController:(TL_conversation *)conversation;
 -(void)showMessagesViewController:(TL_conversation *)conversation withMessage:(TL_localMessage *)message;
+
+
+-(void)hideInlinePlayer;
+-(void)showInlinePlayer;
+
 @end

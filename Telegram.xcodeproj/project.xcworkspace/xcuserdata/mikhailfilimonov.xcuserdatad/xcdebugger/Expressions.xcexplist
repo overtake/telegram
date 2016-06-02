@@ -2434,6 +2434,14 @@
          contextName = "__41-[TGDocumentsController setConversation:]_block_invoke:TGDocumentsMediaTableView.m">
       </ContextState>
       <ContextState
+         contextName = "-[TGInputMessageTemplate saveTemplateInCloud]:TGInputMessageTemplate.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "text">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "-[TGStickersSettingsViewController viewWillAppear:]:TGStickersSettingsViewController.m">
       </ContextState>
       <ContextState
@@ -3156,6 +3164,9 @@
          contextName = "__23-[TMTypingObject check]_block_invoke:TMTypingObject.m">
       </ContextState>
       <ContextState
+         contextName = "-[GeneralSettingsRowView redrawRow]:GeneralSettingsRowView.m">
+      </ContextState>
+      <ContextState
          contextName = "__51-[ChatHistoryController addItemWithoutSavingState:]_block_invoke:ChatHistoryController.m">
          <PersistentStrings>
             <PersistentString
@@ -3748,6 +3759,17 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "-[TGInputMessageTemplate saveTemplateInCloudIfNeeded]:TGInputMessageTemplate.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "draftMessage">
+            </PersistentString>
+            <PersistentString
+               value = "convesation.draft">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "-[DownloadStickerItem initWithObject:]:DownloadStickerItem.m">
          <PersistentStrings>
             <PersistentString
@@ -3816,6 +3838,14 @@
          <PersistentStrings>
             <PersistentString
                value = "self.containerSize">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[TGAudioGlobalController setCurrentItem:]:TGAudioGlobalController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "[_currentItem isset]">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -4103,6 +4133,9 @@
                value = "itemWidth">
             </PersistentString>
          </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "__41-[NewLoginViewController sendCallRequest]_block_invoke:NewLoginViewController.m">
       </ContextState>
       <ContextState
          contextName = "-[TGModernEmojiViewController showPopovers]:TGModernEmojiViewController.m">
@@ -5840,6 +5873,17 @@
          contextName = "__60-[ComposeChannelParticipantsViewController kickParticipant:]_block_invoke:ComposeChannelParticipantsViewController.m">
       </ContextState>
       <ContextState
+         contextName = "-[TGAudioGlobalController updateDownloadListener]:TGAudioGlobalController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "_currentItem.downloadItem.downloadState">
+            </PersistentString>
+            <PersistentString
+               value = "_currentItem.downloadItem.progress">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "-[TMAvatarImageView rebuild:]:TMAvatarImageView.m">
          <PersistentStrings>
             <PersistentString
@@ -6031,6 +6075,9 @@
       </ContextState>
       <ContextState
          contextName = "-[ComposeViewController viewWillAppear:]:ComposeViewController.m">
+      </ContextState>
+      <ContextState
+         contextName = "-[MessagesViewController updateMessageTemplate:]:MessagesViewController.m">
       </ContextState>
       <ContextState
          contextName = "-[MessageTableCellServiceMessage setItem:]:MessageTableCellServiceMessage.m">
@@ -7805,6 +7852,9 @@
       <ContextState
          contextName = "-[MessagesBottomView updateWebpage:]:MessagesBottomView.m">
          <PersistentStrings>
+            <PersistentString
+               value = "[self.messagesViewController noWebpage:self.inputMessageString]">
+            </PersistentString>
             <PersistentString
                value = "[self.inputMessageString webpageLink]">
             </PersistentString>

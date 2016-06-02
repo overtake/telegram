@@ -29,6 +29,6 @@
 -(void)start;
 -(void)stop;
 
--(void)checkInvalidatedMessages:(NSArray *)result important:(BOOL)important;
+-(void)checkInvalidatedMessages:(NSArray *)result;
 
 @end

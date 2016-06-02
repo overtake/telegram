@@ -2,7 +2,7 @@
 //  MTProto.h
 //  Telegram
 //
-//  Auto created by Mikhail Filimonov on 20.05.16.
+//  Auto created by Mikhail Filimonov on 01.06.16.
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -363,9 +363,6 @@
 @interface TLMessageRange : TLObject
 @end
 	
-@interface TLMessageGroup : TLObject
-@end
-	
 @interface TLupdates_ChannelDifference : TLObject
 @end
 	
@@ -451,6 +448,9 @@
 @end
 	
 @interface TLcontacts_TopPeers : TLObject
+@end
+	
+@interface TLDraftMessage : TLObject
 @end
 	
 @interface TLAudio : TLObject
@@ -989,18 +989,19 @@
 @property int admins_count;
 @property int kicked_count;
 @property int read_inbox_max_id;
+@property int read_outbox_max_id;
 @property int unread_count;
-@property int unread_important_count;
 @property int migrated_from_chat_id;
 @property int migrated_from_max_id;
 @property int pinned_msg_id;
+@property int unread_important_count;
 @end
 
 @interface TL_chatFull : TLChatFull<NSCoding>
 +(TL_chatFull*)createWithN_id:(int)n_id participants:(TLChatParticipants*)participants chat_photo:(TLPhoto*)chat_photo notify_settings:(TLPeerNotifySettings*)notify_settings exported_invite:(TLExportedChatInvite*)exported_invite bot_info:(NSMutableArray*)bot_info;
 @end
 @interface TL_channelFull : TLChatFull<NSCoding>
-+(TL_channelFull*)createWithFlags:(int)flags   n_id:(int)n_id about:(NSString*)about participants_count:(int)participants_count admins_count:(int)admins_count kicked_count:(int)kicked_count read_inbox_max_id:(int)read_inbox_max_id unread_count:(int)unread_count unread_important_count:(int)unread_important_count chat_photo:(TLPhoto*)chat_photo notify_settings:(TLPeerNotifySettings*)notify_settings exported_invite:(TLExportedChatInvite*)exported_invite bot_info:(NSMutableArray*)bot_info migrated_from_chat_id:(int)migrated_from_chat_id migrated_from_max_id:(int)migrated_from_max_id pinned_msg_id:(int)pinned_msg_id;
++(TL_channelFull*)createWithFlags:(int)flags   n_id:(int)n_id about:(NSString*)about participants_count:(int)participants_count admins_count:(int)admins_count kicked_count:(int)kicked_count read_inbox_max_id:(int)read_inbox_max_id read_outbox_max_id:(int)read_outbox_max_id unread_count:(int)unread_count chat_photo:(TLPhoto*)chat_photo notify_settings:(TLPeerNotifySettings*)notify_settings exported_invite:(TLExportedChatInvite*)exported_invite bot_info:(NSMutableArray*)bot_info migrated_from_chat_id:(int)migrated_from_chat_id migrated_from_max_id:(int)migrated_from_max_id pinned_msg_id:(int)pinned_msg_id;
 @end
 @interface TL_chatFull_old29 : TLChatFull<NSCoding>
 +(TL_chatFull_old29*)createWithN_id:(int)n_id participants:(TLChatParticipants*)participants chat_photo:(TLPhoto*)chat_photo notify_settings:(TLPeerNotifySettings*)notify_settings exported_invite:(TLExportedChatInvite*)exported_invite;
@@ -1206,22 +1207,19 @@
 @end
 	
 @interface TLDialog()
+@property int flags;
 @property (nonatomic, strong) TLPeer* peer;
 @property int top_message;
 @property int read_inbox_max_id;
 @property int read_outbox_max_id;
 @property int unread_count;
 @property (nonatomic, strong) TLPeerNotifySettings* notify_settings;
-@property int top_important_message;
-@property int unread_important_count;
 @property int pts;
+@property (nonatomic, strong) TLDraftMessage* draft;
 @end
 
 @interface TL_dialog : TLDialog<NSCoding>
-+(TL_dialog*)createWithPeer:(TLPeer*)peer top_message:(int)top_message read_inbox_max_id:(int)read_inbox_max_id read_outbox_max_id:(int)read_outbox_max_id unread_count:(int)unread_count notify_settings:(TLPeerNotifySettings*)notify_settings;
-@end
-@interface TL_dialogChannel : TLDialog<NSCoding>
-+(TL_dialogChannel*)createWithPeer:(TLPeer*)peer top_message:(int)top_message top_important_message:(int)top_important_message read_inbox_max_id:(int)read_inbox_max_id read_outbox_max_id:(int)read_outbox_max_id unread_count:(int)unread_count unread_important_count:(int)unread_important_count notify_settings:(TLPeerNotifySettings*)notify_settings pts:(int)pts;
++(TL_dialog*)createWithFlags:(int)flags peer:(TLPeer*)peer top_message:(int)top_message read_inbox_max_id:(int)read_inbox_max_id read_outbox_max_id:(int)read_outbox_max_id unread_count:(int)unread_count notify_settings:(TLPeerNotifySettings*)notify_settings pts:(int)pts draft:(TLDraftMessage*)draft;
 @end
 	
 @interface TLPhoto()
@@ -1541,7 +1539,6 @@
 @property int n_count;
 @property int flags;
 @property int pts;
-@property (nonatomic, strong) NSMutableArray* collapsed;
 @end
 
 @interface TL_messages_messages : TLmessages_Messages<NSCoding>
@@ -1551,7 +1548,7 @@
 +(TL_messages_messagesSlice*)createWithN_count:(int)n_count messages:(NSMutableArray*)messages chats:(NSMutableArray*)chats users:(NSMutableArray*)users;
 @end
 @interface TL_messages_channelMessages : TLmessages_Messages<NSCoding>
-+(TL_messages_channelMessages*)createWithFlags:(int)flags pts:(int)pts n_count:(int)n_count messages:(NSMutableArray*)messages collapsed:(NSMutableArray*)collapsed chats:(NSMutableArray*)chats users:(NSMutableArray*)users;
++(TL_messages_channelMessages*)createWithFlags:(int)flags pts:(int)pts n_count:(int)n_count messages:(NSMutableArray*)messages chats:(NSMutableArray*)chats users:(NSMutableArray*)users;
 @end
 	
 @interface TLmessages_Chats()
@@ -1662,7 +1659,6 @@
 @property (nonatomic, strong) TLWebPage* webpage;
 @property int flags;
 @property int channel_id;
-@property (nonatomic, strong) TLMessageGroup* group;
 @property int views;
 @property Boolean enabled;
 @property Boolean is_admin;
@@ -1674,6 +1670,7 @@
 @property (nonatomic, strong) NSString* offset;
 @property (nonatomic, strong) TLInputBotInlineMessageID* msg_id;
 @property (nonatomic, strong) NSData* data;
+@property (nonatomic, strong) TLDraftMessage* draft;
 @end
 
 @interface TL_updateNewMessage : TLUpdate<NSCoding>
@@ -1766,9 +1763,6 @@
 @interface TL_updateChannel : TLUpdate<NSCoding>
 +(TL_updateChannel*)createWithChannel_id:(int)channel_id;
 @end
-@interface TL_updateChannelGroup : TLUpdate<NSCoding>
-+(TL_updateChannelGroup*)createWithChannel_id:(int)channel_id group:(TLMessageGroup*)group;
-@end
 @interface TL_updateNewChannelMessage : TLUpdate<NSCoding>
 +(TL_updateNewChannelMessage*)createWithMessage:(TLMessage*)message pts:(int)pts pts_count:(int)pts_count;
 @end
@@ -1816,6 +1810,9 @@
 @end
 @interface TL_updateReadChannelOutbox : TLUpdate<NSCoding>
 +(TL_updateReadChannelOutbox*)createWithChannel_id:(int)channel_id max_id:(int)max_id;
+@end
+@interface TL_updateDraftMessage : TLUpdate<NSCoding>
++(TL_updateDraftMessage*)createWithPeer:(TLPeer*)peer draft:(TLDraftMessage*)draft;
 @end
 	
 @interface TLupdates_State()
@@ -2777,27 +2774,15 @@
 +(TL_messageRange*)createWithMin_id:(int)min_id max_id:(int)max_id;
 @end
 	
-@interface TLMessageGroup()
-@property int min_id;
-@property int max_id;
-@property int n_count;
-@property int date;
-@end
-
-@interface TL_messageGroup : TLMessageGroup<NSCoding>
-+(TL_messageGroup*)createWithMin_id:(int)min_id max_id:(int)max_id n_count:(int)n_count date:(int)date;
-@end
-	
 @interface TLupdates_ChannelDifference()
 @property int flags;
 @property (nonatomic,assign,readonly) BOOL isFinal;
 @property int pts;
 @property int timeout;
 @property int top_message;
-@property int top_important_message;
 @property int read_inbox_max_id;
+@property int read_outbox_max_id;
 @property int unread_count;
-@property int unread_important_count;
 @property (nonatomic, strong) NSMutableArray* messages;
 @property (nonatomic, strong) NSMutableArray* chats;
 @property (nonatomic, strong) NSMutableArray* users;
@@ -2809,7 +2794,7 @@
 +(TL_updates_channelDifferenceEmpty*)createWithFlags:(int)flags  pts:(int)pts timeout:(int)timeout;
 @end
 @interface TL_updates_channelDifferenceTooLong : TLupdates_ChannelDifference<NSCoding>
-+(TL_updates_channelDifferenceTooLong*)createWithFlags:(int)flags  pts:(int)pts timeout:(int)timeout top_message:(int)top_message top_important_message:(int)top_important_message read_inbox_max_id:(int)read_inbox_max_id unread_count:(int)unread_count unread_important_count:(int)unread_important_count messages:(NSMutableArray*)messages chats:(NSMutableArray*)chats users:(NSMutableArray*)users;
++(TL_updates_channelDifferenceTooLong*)createWithFlags:(int)flags  pts:(int)pts timeout:(int)timeout top_message:(int)top_message read_inbox_max_id:(int)read_inbox_max_id read_outbox_max_id:(int)read_outbox_max_id unread_count:(int)unread_count messages:(NSMutableArray*)messages chats:(NSMutableArray*)chats users:(NSMutableArray*)users;
 @end
 @interface TL_updates_channelDifference : TLupdates_ChannelDifference<NSCoding>
 +(TL_updates_channelDifference*)createWithFlags:(int)flags  pts:(int)pts timeout:(int)timeout n_messages:(NSMutableArray*)n_messages other_updates:(NSMutableArray*)other_updates chats:(NSMutableArray*)chats users:(NSMutableArray*)users;
@@ -2817,7 +2802,6 @@
 	
 @interface TLChannelMessagesFilter()
 @property int flags;
-@property (nonatomic,assign,readonly) BOOL isImportant_only;
 @property (nonatomic,assign,readonly) BOOL isExclude_new_messages;
 @property (nonatomic, strong) NSMutableArray* ranges;
 @end
@@ -2826,10 +2810,7 @@
 +(TL_channelMessagesFilterEmpty*)create;
 @end
 @interface TL_channelMessagesFilter : TLChannelMessagesFilter<NSCoding>
-+(TL_channelMessagesFilter*)createWithFlags:(int)flags   ranges:(NSMutableArray*)ranges;
-@end
-@interface TL_channelMessagesFilterCollapsed : TLChannelMessagesFilter<NSCoding>
-+(TL_channelMessagesFilterCollapsed*)create;
++(TL_channelMessagesFilter*)createWithFlags:(int)flags  ranges:(NSMutableArray*)ranges;
 @end
 	
 @interface TLChannelParticipant()
@@ -3243,6 +3224,22 @@
 @end
 @interface TL_contacts_topPeers : TLcontacts_TopPeers<NSCoding>
 +(TL_contacts_topPeers*)createWithCategories:(NSMutableArray*)categories chats:(NSMutableArray*)chats users:(NSMutableArray*)users;
+@end
+	
+@interface TLDraftMessage()
+@property int flags;
+@property (nonatomic,assign,readonly) BOOL isNo_webpage;
+@property int reply_to_msg_id;
+@property (nonatomic, strong) NSString* message;
+@property (nonatomic, strong) NSMutableArray* entities;
+@property int date;
+@end
+
+@interface TL_draftMessageEmpty : TLDraftMessage<NSCoding>
++(TL_draftMessageEmpty*)create;
+@end
+@interface TL_draftMessage : TLDraftMessage<NSCoding>
++(TL_draftMessage*)createWithFlags:(int)flags  reply_to_msg_id:(int)reply_to_msg_id message:(NSString*)message entities:(NSMutableArray*)entities date:(int)date;
 @end
 	
 @interface TLAudio()
