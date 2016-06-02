@@ -622,7 +622,6 @@ static NSString *encryptionKey;
 
 - (id)fileInfoByPathHash:(NSString *)pathHash  {
     
-    return nil; //todo
     
     __block id file;
     
@@ -645,6 +644,9 @@ static NSString *encryptionKey;
 }
 
 - (void)setFileInfo:(id)file forPathHash:(NSString *)pathHash {
+    
+    int bp = 0;
+    
     [queue inDatabase:^(FMDatabase *db) {
         [db executeUpdate:@"insert or replace into files (hash, serialized) values (?,?)", pathHash, [TLClassStore serialize:file isCacheSerialize:NO]];
     }];

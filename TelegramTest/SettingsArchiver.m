@@ -178,7 +178,17 @@ static NSString *kArchivedSettings = @"kArchivedSettings";
 }
 
 + (NSString *)documentsFolder {
-    return [SettingsArchiver instance].documents_folder;
+    
+    NSString *dp = NSSearchPathForDirectoriesInDomains(NSDownloadsDirectory, NSUserDomainMask, YES)[0];
+    
+    NSString *cdp = [SettingsArchiver instance].documents_folder;
+    
+    if(![dp isEqualToString:cdp]) {
+        if([[NSFileManager defaultManager] isWritableFileAtPath:cdp])
+            return cdp;
+    }
+    
+    return dp;
 }
 
 + (BOOL)setDocumentsFolder:(NSString *)folder {

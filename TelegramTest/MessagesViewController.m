@@ -706,11 +706,11 @@ static NSMutableDictionary *savedScrolling;
 -(void)updateMessageTemplate:(NSNotification *)notification {
     if([notification.userInfo[KEY_PEER_ID] intValue] == _conversation.peer_id) {
         
-        TGInputMessageTemplate *template = notification.userInfo[KEY_TEMPLATE];
+        TGInputMessageTemplate *t = notification.userInfo[KEY_TEMPLATE];
         
-        if(_editTemplate && (![_editTemplate.text isEqualToString:template.text] || _editTemplate.replyMessage.n_id != template.replyMessage.n_id || _editTemplate != template) && _editTemplate.type == template.type) {
+        if(_editTemplate && (![_editTemplate.text isEqualToString:t.text] || _editTemplate.replyMessage.n_id != t.replyMessage.n_id || _editTemplate.noWebpage != t.noWebpage) && _editTemplate.type == t.type) {
             BOOL autoSave = _editTemplate.autoSave;
-            _editTemplate = template;
+            _editTemplate = t;
             _editTemplate.autoSave = autoSave;
             [self.bottomView setTemplate:_editTemplate checkElements:YES];
         }
@@ -3051,7 +3051,7 @@ static NSTextAttachment *headerMediaIcon() {
         
         return YES;
     } else if(self.state == MessagesViewControllerStateEditable) {
-        [self setCellsEditButtonShow:NO animated:YES];
+        [self unSelectAll];
         return YES;
     }
     

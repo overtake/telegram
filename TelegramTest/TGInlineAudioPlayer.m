@@ -49,10 +49,14 @@
     // Drawing code here.
 }
 
+
 -(id)initWithFrame:(NSRect)frameRect {
+    return [self initWithFrame:frameRect globalController:nil];
+}
+
+-(id)initWithFrame:(NSRect)frameRect globalController:(TGAudioGlobalController *)globalController {
     if(self = [super initWithFrame:frameRect]) {
         self.backgroundColor = [NSColor whiteColor];
-        
         
         
         
@@ -143,7 +147,12 @@
        [_containerView addSubview:_textNameLabel];
         
         
-        _audioController = [[TGAudioGlobalController alloc] init];
+        if(globalController == nil) {
+            _audioController = [[TGAudioGlobalController alloc] init];
+        } else {
+            _audioController = globalController;
+        }
+        
         [_audioController addEventListener:self];
         
         
@@ -232,7 +241,14 @@
     [_audioController setProgressView:_progressView];
     [_audioController setPlayerList:_playerListView];
     
-    [_audioController show:conversation navigation:navigation];
+    
+   if(_audioController.conversation != conversation)
+        [_audioController show:conversation navigation:navigation];
+    else {
+        [self playerDidChangeItem:_audioController.currentItem];
+        [self playerDidChangedState:_audioController.currentItem playerState:_audioController.pState];
+        [_playerListView setConversation:conversation];
+    }
 }
 
 -(void)playerDidChangeItem:(MessageTableItemAudioDocument *)item {

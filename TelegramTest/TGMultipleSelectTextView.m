@@ -109,8 +109,15 @@
             
           //  result = [result substringToIndex:result.length-1];
             
-            [[Telegram rightViewController].messagesViewController setStringValueToTextField:result];
-            [[Telegram rightViewController].messagesViewController becomeFirstResponder];
+            if([self.owner isKindOfClass:[MessageTableItem class]]) {
+                
+                MessageTableItem *item = self.owner;
+                
+                [item.table.viewController setStringValueToTextField:result];
+                [item.table.viewController becomeFirstResponder];
+            }
+            
+           
             
             
             NSPasteboard* cb = [NSPasteboard generalPasteboard];

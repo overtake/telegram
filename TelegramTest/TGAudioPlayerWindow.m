@@ -288,9 +288,9 @@
         
         [weakSelf.pinButton setImage:self.level == NSNormalWindowLevel ? image_AudioPlayerPin() : image_AudioPlayerPinActive() forControlState:BTRControlStateNormal];
         
-        [weakSelf.audioController.navigationController showInlinePlayer];
+        [weakSelf.audioController.navigationController showInlinePlayer:weakSelf.audioController];
         
-       [TGAudioPlayerWindow hide];
+        [TGAudioPlayerWindow hide:NO];
         
     } forControlEvents:BTRControlEventMouseDownInside];
     
@@ -424,10 +424,14 @@
     return [self instance].currentItem;
 }
 
-+(void)hide {
-    [[self instance] orderOut:nil];
++(void)hide:(BOOL)stop {
+    [[self instance] orderOut:stop ? self.instance : nil];
     [self instance]->_windowState = TGAudioPlayerGlobalStyleMini;
     [[self instance] updateWindowWithHeight:MINI_PHEIGHT animate:NO];
+}
+
++(void)hide {
+    [self hide:YES];
 }
 
 
@@ -494,7 +498,8 @@
 -(void)orderOut:(id)sender {
     [super orderOut:sender];
     _isVisibility = NO;
-    [self clear];
+    if(sender)
+        [self clear];
 }
 
 

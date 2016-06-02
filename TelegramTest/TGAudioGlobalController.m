@@ -101,7 +101,7 @@
     
     [_currentItem.downloadItem removeEvent:_downloadEventListener];
     
-    if(_currentItem == audioItem)
+    if(_currentItem == audioItem && audioItem)
     {
         [self playOrPause];
         return;
@@ -111,6 +111,14 @@
     
     _currentItem = audioItem;
     
+    [self updateWithItem:_currentItem];
+
+    
+    if(!_currentItem)
+        return;
+    
+    
+  
     
     [self.eventListeners enumerateObjectsUsingBlock:^(id  <TGAudioPlayerGlobalDelegate> obj, NSUInteger idx, BOOL * _Nonnull stop) {
         
@@ -135,7 +143,7 @@
     }
     
     
-    [self updateWithItem:_currentItem];
+    
     
 }
 

@@ -11,4 +11,5 @@
 @interface TGInlineAudioPlayer : TMView
 -(void)show:(TL_conversation *)conversation navigation:(TMNavigationController *)navigation;
 -(void)setStyle:(TGAudioPlayerGlobalStyle)style animated:(BOOL)animated;
+-(id)initWithFrame:(NSRect)frameRect globalController:(TGAudioGlobalController *)globalController;
 @end

@@ -46,9 +46,9 @@
 }
 
 
--(void)showInlinePlayer {
+-(void)showInlinePlayer:(TGAudioGlobalController *)controller {
     if(!_inlineAudioPlayer) {
-        _inlineAudioPlayer = [[TGInlineAudioPlayer alloc] initWithFrame:NSMakeRect(0, NSHeight(self.view.frame) - NSHeight(self.nagivationBarView.frame) - 50, NSWidth(self.view.frame), 50)];
+        _inlineAudioPlayer = [[TGInlineAudioPlayer alloc] initWithFrame:NSMakeRect(0, NSHeight(self.view.frame) - NSHeight(self.nagivationBarView.frame) - 50, NSWidth(self.view.frame), 50) globalController:controller];
         [self.view addSubview:_inlineAudioPlayer];
     }
     

@@ -281,13 +281,29 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "TelegramTest/TGModernMessageCellContainerView.m"
-            timestampString = "485800063.494321"
+            filePath = "TelegramTest/Storage.m"
+            timestampString = "486581343.877739"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "390"
-            endingLineNumber = "390"
-            landmarkName = "-onStateChanged:"
+            startingLineNumber = "626"
+            endingLineNumber = "626"
+            landmarkName = "-fileInfoByPathHash:"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "TelegramTest/Storage.m"
+            timestampString = "486581426.488044"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "648"
+            endingLineNumber = "648"
+            landmarkName = "-setFileInfo:forPathHash:"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
