@@ -63,6 +63,8 @@ static long h_r_l;
 }
 
 
+
+
 @end
 
 
@@ -252,7 +254,7 @@ static long h_r_l;
             
             [self check];
             
-            if([TGAudioPlayerWindow currentItem] == nil && _tableView.count > 1 && [TGAudioPlayerWindow autoStart]) {
+            if(_controller.currentItem == nil && _tableView.count > 1 &&  _controller.autoStart) {
                 [self selectNext];
             }
             

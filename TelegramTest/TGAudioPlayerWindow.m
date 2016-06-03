@@ -75,6 +75,7 @@
 
 @property (nonatomic,strong) BTRButton *closeButton;
 @property (nonatomic,strong) BTRButton *pinButton;
+@property (nonatomic,strong) BTRButton *audioPlayerVisibility;
 @property (nonatomic,strong) BTRButton *playButton;
 @property (nonatomic,strong) BTRButton *nextButton;
 @property (nonatomic,strong) BTRButton *prevButton;
@@ -90,7 +91,6 @@
 @property (nonatomic,strong) TMView *nameContainer;
 
 @property (nonatomic,assign) BOOL mouseInWindow;
-@property (nonatomic,assign) BOOL autoStart;
 
 @property (nonatomic,assign) TGAudioPlayerGlobalStyle windowState;
 
@@ -288,11 +288,22 @@
         
         [weakSelf.pinButton setImage:self.level == NSNormalWindowLevel ? image_AudioPlayerPin() : image_AudioPlayerPinActive() forControlState:BTRControlStateNormal];
         
+    } forControlEvents:BTRControlEventMouseDownInside];
+    
+    _audioPlayerVisibility = [[BTRButton alloc] initWithFrame:NSMakeRect(NSMaxX(_pinButton.frame) + 10, NSHeight(_containerView.frame) - 22, image_AudioPlayerVisibilityActive().size.width, image_AudioPlayerVisibilityActive().size.height)];
+    
+    
+    [_audioPlayerVisibility setImage:image_AudioPlayerVisibilityActive() forControlState:BTRControlStateNormal];
+    
+    [_audioPlayerVisibility addBlock:^(BTRControlEvents events) {
+        
         [weakSelf.audioController.navigationController showInlinePlayer:weakSelf.audioController];
         
         [TGAudioPlayerWindow hide:NO];
         
     } forControlEvents:BTRControlEventMouseDownInside];
+    
+    [_containerView addSubview:_audioPlayerVisibility];
     
     
     
@@ -410,14 +421,32 @@
 +(void)show:(TL_conversation *)conversation playerState:(TGAudioPlayerGlobalStyle)state navigation:(TMNavigationController *)navigation {
     [self instance].windowState = state;
     [self show:conversation  navigation:(TGMessagesNavigationController *)navigation];
-    [self instance].autoStart = NO;
+    [self instance].audioController.autoStart = NO;
+}
+
+
+-(void)showWithController:(TGAudioGlobalController *)controller {
+    self.audioController = controller;
+    [controller addEventListener:self];
+    
+    [controller setProgressView:_progressView];
+    [controller setPlayerList:_playListContainerView];
+    
+    [[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"inline-player"];
+    
+    [self makeKeyAndOrderFront:nil];
+    
+    
+    [self updateWithItem:controller.currentItem];
+}
+
++(void)showWithController:(TGAudioGlobalController *)controller {
+    [self.instance showWithController:controller];
+   
 }
 
 +(void)show:(TL_conversation *)conversation navigation:(TMNavigationController *)navigation {
     [[self instance] show:conversation navigation:navigation];
-    [self instance].autoStart = YES;
-    [[self instance] makeKeyAndOrderFront:nil];
-    
 }
 
 +(MessageTableItemAudioDocument *)currentItem {
@@ -440,19 +469,28 @@
     if([self isVisible] && _audioController.conversation == conversation)
         return;
     
-    
-    [_audioController setPlayerList:_playListContainerView];
-    [_audioController setProgressView:_progressView];
-    
-    [_audioController show:conversation navigation:navigation];
-    
-    if(![self isVisible])
-    {
+    if(![[NSUserDefaults standardUserDefaults] boolForKey:@"inline-player"]) {
+        [_audioController setPlayerList:_playListContainerView];
+        [_audioController setProgressView:_progressView];
         
-        NSScreen *screen = [NSScreen mainScreen];
-        [self setFrameOrigin:NSMakePoint(roundf((screen.frame.size.width - self.frame.size.width) / 2),
-                                         roundf((screen.frame.size.height - self.frame.size.height) / 2))];
+        [_audioController show:conversation navigation:navigation];
+        
+        if(![self isVisible])
+        {
+            
+            NSScreen *screen = [NSScreen mainScreen];
+            [self setFrameOrigin:NSMakePoint(roundf((screen.frame.size.width - self.frame.size.width) / 2),
+                                             roundf((screen.frame.size.height - self.frame.size.height) / 2))];
+        }
+        
+        [self makeKeyAndOrderFront:nil];
+        self.audioController.autoStart = YES;
+        
+    } else {
+        [navigation showInlinePlayer:nil];
     }
+    
+    
 }
 
 +(TGAudioPlayerGlobalState)playerState {
@@ -550,7 +588,7 @@
 }
 
 +(BOOL)autoStart {
-    return [self instance].autoStart;
+    return [self instance].audioController.autoStart;
 }
 
 

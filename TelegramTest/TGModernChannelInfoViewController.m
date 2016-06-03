@@ -266,6 +266,21 @@
     _chat.chatFull.participants_count--;
     [_participantsHeaderItem redrawRow];
     
+    __block NSUInteger i = NSNotFound;
+    
+    [_chat.chatFull.participants.participants enumerateObjectsUsingBlock:^(TLChatParticipant  *obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        
+        if(obj.user_id == participant.user.n_id) {
+            i = idx;
+            *stop = YES;
+        }
+    }];
+    
+    if(i != NSNotFound)
+    {
+        [_chat.chatFull.participants.participants removeObjectAtIndex:i];
+    }
+    
     if(idx != NSNotFound) {
         [_tableView removeItem:participant tableRedraw:YES];
         

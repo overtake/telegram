@@ -66,7 +66,7 @@ typedef enum {
 -(void)showMessagesViewController:(TL_conversation *)conversation withMessage:(TL_localMessage *)message;
 
 
--(void)hideInlinePlayer;
+-(void)hideInlinePlayer:(TGAudioGlobalController *)controller;
 -(void)showInlinePlayer:(TGAudioGlobalController *)controller;
 
 @end

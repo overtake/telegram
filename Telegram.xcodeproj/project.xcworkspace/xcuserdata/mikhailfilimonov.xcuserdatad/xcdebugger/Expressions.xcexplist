@@ -979,6 +979,9 @@
          contextName = "-[RightViewController modalViewSendAction:]:RightViewController.m">
       </ContextState>
       <ContextState
+         contextName = "-[TGImageAttachmentsController hide:deleteItems:]:TGImageAttachmentsController.m">
+      </ContextState>
+      <ContextState
          contextName = "-[TGCache cacheImage:forKey:groups:]:TGCache.m">
          <PersistentStrings>
             <PersistentString
@@ -3227,6 +3230,14 @@
          <PersistentStrings>
             <PersistentString
                value = "result">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "__24-[TGViewSender addItem:]_block_invoke_2:TGMessageViewSender.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "items[0]">
             </PersistentString>
          </PersistentStrings>
       </ContextState>

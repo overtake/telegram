@@ -2,7 +2,7 @@
 //  MTProto.m
 //  Telegram
 //
-//  Auto created by Mikhail Filimonov on 01.06.16.
+//  Auto created by Mikhail Filimonov on 03.06.16.
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -7060,6 +7060,47 @@
 -(TL_messageActionPinMessage *)copy {
     
     TL_messageActionPinMessage *objc = [[TL_messageActionPinMessage alloc] init];
+    
+    
+    
+    return objc;
+}
+        
+
+    
+-(id)initWithCoder:(NSCoder *)aDecoder {
+
+    if((self = [ClassStore deserialize:[aDecoder decodeObjectForKey:@"data"]])) {
+        
+    }
+    
+    return self;
+}
+        
+-(void)encodeWithCoder:(NSCoder *)aCoder {
+    [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
+}
+        
+
+        
+@end
+
+@implementation TL_messageActionHistoryClear
++(TL_messageActionHistoryClear*)create {
+	TL_messageActionHistoryClear* obj = [[TL_messageActionHistoryClear alloc] init];
+	
+	return obj;
+}
+-(void)serialize:(SerializedData*)stream {
+	
+}
+-(void)unserialize:(SerializedData*)stream {
+	
+}
+        
+-(TL_messageActionHistoryClear *)copy {
+    
+    TL_messageActionHistoryClear *objc = [[TL_messageActionHistoryClear alloc] init];
     
     
     

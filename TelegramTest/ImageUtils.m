@@ -262,7 +262,8 @@ CACHE_IMAGE(ModernMessageLocationPin);
 CACHE_IMAGE(share_inline_bot);
 
 CACHE_IMAGE(draftIcon);
-
+CACHE_IMAGE(AudioPlayerVisibility);
+CACHE_IMAGE(AudioPlayerVisibilityActive);
 @implementation ImageUtils
 
 NSImage *previewImageForDocument(NSString *path) {

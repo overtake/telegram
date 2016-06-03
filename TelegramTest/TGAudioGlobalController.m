@@ -46,6 +46,8 @@
     [self updateWithItem:nil];
     _currentItem = nil;
     [_playerList setConversation:_conversation];
+    
+    
 
 }
 
@@ -68,6 +70,8 @@
 
 -(void)setPlayerList:(TGAudioPlayerListView *)playerList {
     _playerList = playerList;
+    
+    _playerList.controller = self;
     
     weak();
     

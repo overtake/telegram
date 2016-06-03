@@ -9,7 +9,7 @@
 #import "TGMessagesNavigationController.h"
 #import "TGViewMessagesDragging.h"
 #import "TGInlineAudioPlayer.h"
-
+#import "TGAudioPlayerWindow.h"
 @interface TGMessagesNavigationController ()
 @property (nonatomic,strong) TGInlineAudioPlayer *inlineAudioPlayer;
 @end
@@ -52,20 +52,24 @@
         [self.view addSubview:_inlineAudioPlayer];
     }
     
-    [self.inlineAudioPlayer show:self.messagesViewController.conversation navigation:self];
+    [self.inlineAudioPlayer show:controller ? controller.conversation : self.messagesViewController.conversation navigation:self];
     
     [self.currentController.view setFrameSize:NSMakeSize(NSWidth(self.currentController.view.frame), self.view.bounds.size.height - self.navigationOffset - self.viewControllerTopOffset)];
     
     
 }
 
--(void)hideInlinePlayer{
+-(void)hideInlinePlayer:(TGAudioGlobalController *)controller {
     
     [_inlineAudioPlayer removeFromSuperview];
     _inlineAudioPlayer = nil;
     
     [self.currentController.view setFrameSize:NSMakeSize(NSWidth(self.currentController.view.frame), self.view.bounds.size.height - self.navigationOffset)];
     
+    
+    if(controller) {
+        [TGAudioPlayerWindow showWithController:controller];
+    }
 }
 
 -(int)viewControllerTopOffset {

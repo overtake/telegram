@@ -1451,8 +1451,8 @@ static RBLPopover *popover;
     }
 
     
-    
-    [self updateWebpage:textView != nil && textView != self];
+    // && textView != self
+    [self updateWebpage:textView != nil];
    
     
     [self updateBotButtons];

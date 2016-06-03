@@ -32,6 +32,8 @@
 
 -(void)addItem:(MessageTableItem *)item {
     
+    int bp = 0;
+    
     [ASQueue dispatchOnMainQueue:^{
         [waitingItems addObject:item];
         

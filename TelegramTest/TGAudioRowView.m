@@ -54,6 +54,9 @@
     // Drawing code here.
 }
 
+-(void)rightMouseDown:(NSEvent *)theEvent {
+    
+}
 
 -(void)redrawRow {
     [super redrawRow];

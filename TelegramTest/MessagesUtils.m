@@ -299,6 +299,10 @@
             
         }
         
+        if(conversation.draft.message.length > 0) {
+            chatUserNameString = nil;
+        }
+        
         if(chatUserNameString)
             [messageText appendString:chatUserNameString withColor:!message.action ? DARK_BLACK : GRAY_TEXT_COLOR];
         

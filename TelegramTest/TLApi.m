@@ -2,7 +2,7 @@
 //  TLApi.m
 //  Telegram
 //
-//  Auto created by Mikhail Filimonov on 01.06.16..
+//  Auto created by Mikhail Filimonov on 03.06.16..
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -627,14 +627,18 @@
 @end
 
 @implementation TLAPI_messages_deleteHistory
-+(TLAPI_messages_deleteHistory*)createWithPeer:(TLInputPeer*)peer max_id:(int)max_id {
++(TLAPI_messages_deleteHistory*)createWithFlags:(int)flags  peer:(TLInputPeer*)peer max_id:(int)max_id {
     TLAPI_messages_deleteHistory* obj = [[TLAPI_messages_deleteHistory alloc] init];
-    obj.peer = peer;
+    obj.flags = flags;
+	
+	obj.peer = peer;
 	obj.max_id = max_id;
     return obj;
 }
 - (NSData*)getData {
-	SerializedData* stream = [ClassStore streamWithConstuctor:-1212072999];
+	SerializedData* stream = [ClassStore streamWithConstuctor:469850889];
+	[stream writeInt:self.flags];
+	
 	[ClassStore TLSerialize:self.peer stream:stream];
 	[stream writeInt:self.max_id];
 	return [stream getOutput];
@@ -695,9 +699,10 @@
 @end
 
 @implementation TLAPI_messages_sendMessage
-+(TLAPI_messages_sendMessage*)createWithFlags:(int)flags    peer:(TLInputPeer*)peer reply_to_msg_id:(int)reply_to_msg_id message:(NSString*)message random_id:(long)random_id reply_markup:(TLReplyMarkup*)reply_markup entities:(NSMutableArray*)entities {
++(TLAPI_messages_sendMessage*)createWithFlags:(int)flags     peer:(TLInputPeer*)peer reply_to_msg_id:(int)reply_to_msg_id message:(NSString*)message random_id:(long)random_id reply_markup:(TLReplyMarkup*)reply_markup entities:(NSMutableArray*)entities {
     TLAPI_messages_sendMessage* obj = [[TLAPI_messages_sendMessage alloc] init];
     obj.flags = flags;
+	
 	
 	
 	
@@ -712,6 +717,7 @@
 - (NSData*)getData {
 	SerializedData* stream = [ClassStore streamWithConstuctor:-91733382];
 	[stream writeInt:self.flags];
+	
 	
 	
 	

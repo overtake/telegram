@@ -723,7 +723,7 @@ static const int navigationOffset = 48;
 }
 
 
--(void)hideInlinePlayer {
+-(void)hideInlinePlayer:(TGAudioGlobalController *)controller {
     
 }
 -(void)showInlinePlayer:(TGAudioGlobalController *)controller {

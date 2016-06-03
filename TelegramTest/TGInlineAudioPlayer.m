@@ -26,6 +26,7 @@
 @property (nonatomic,strong) TMTextField *leftDurationField;
 @property (nonatomic,strong) BTRButton *closeButton;
 @property (nonatomic,strong) BTRButton *showPlayListButton;
+@property (nonnull,strong) BTRButton *audioPlayerVisibility;
 
 @property (nonatomic,strong) TGAudioProgressView *progressView;
 @property (nonatomic,strong) TGAudioPlayerListView *playerListView;
@@ -156,7 +157,7 @@
         [_audioController addEventListener:self];
         
         
-        _rightControlsContainer = [[TMView alloc] initWithFrame:NSMakeRect(NSWidth(self.frame) - 110, 5, 110, NSHeight(self.frame)- 10)];
+        _rightControlsContainer = [[TMView alloc] initWithFrame:NSMakeRect(NSWidth(self.frame) - 120, 5, 120, NSHeight(self.frame)- 10)];
         [_containerView addSubview:_rightControlsContainer];
         
         
@@ -187,7 +188,7 @@
         
         [_rightControlsContainer addSubview:_closeButton];
         
-        _showPlayListButton = [[BTRButton alloc] initWithFrame:NSMakeRect(NSMinX(_closeButton.frame) - 25 - 10, NSHeight(_rightControlsContainer.frame) - 30, 25, 25)];
+        _showPlayListButton = [[BTRButton alloc] initWithFrame:NSMakeRect(NSMinX(_closeButton.frame) - 25 - 5, NSHeight(_rightControlsContainer.frame) - 30, 25, 25)];
         
         [_showPlayListButton setCenteredYByView:_rightControlsContainer];
         
@@ -200,10 +201,29 @@
         } forControlEvents:BTRControlEventMouseDownInside];
         
         [_rightControlsContainer addSubview:_showPlayListButton];
+        
+        
+        
+        _audioPlayerVisibility = [[BTRButton alloc] initWithFrame:NSMakeRect(NSMinX(_showPlayListButton.frame) - 25, NSHeight(_rightControlsContainer.frame) - 30, 25, 25)];
+        
+        [_audioPlayerVisibility setCenteredYByView:_rightControlsContainer];
+        
+        [_audioPlayerVisibility setImage:image_AudioPlayerVisibility() forControlState:BTRControlStateNormal];
+        
+        [_audioPlayerVisibility addBlock:^(BTRControlEvents events) {
+             [weakSelf showAudioWindow];
+        } forControlEvents:BTRControlEventMouseDownInside];
+        
+        [_rightControlsContainer addSubview:_audioPlayerVisibility];
 
     }
     
     return self;
+}
+
+-(void)showAudioWindow {
+    [_audioController.navigationController hideInlinePlayer:self.audioController];
+    
 }
 
 -(void)showOrHidePlayList {
@@ -233,7 +253,7 @@
 
 -(void)hide {
     [self.audioController hide];
-    [self.audioController.navigationController hideInlinePlayer];
+    [self.audioController.navigationController hideInlinePlayer:nil];
 }
 
 
@@ -242,9 +262,14 @@
     [_audioController setPlayerList:_playerListView];
     
     
-   if(_audioController.conversation != conversation)
+    
+    if(_audioController.conversation != conversation) {
+        _audioController.autoStart = YES;
         [_audioController show:conversation navigation:navigation];
-    else {
+    } else {
+        
+        [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"inline-player"];
+        
         [self playerDidChangeItem:_audioController.currentItem];
         [self playerDidChangedState:_audioController.currentItem playerState:_audioController.pState];
         [_playerListView setConversation:conversation];

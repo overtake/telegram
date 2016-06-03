@@ -3,7 +3,7 @@
 //  ClassStore.m
 //  Telegram
 //
-    //  Created by keepcoder on 01.06.16.
+    //  Created by keepcoder on 03.06.16.
 //  Copyright (c) 2015 keepcoder. All rights reserved.
 //
 
@@ -565,6 +565,7 @@ static NSMutableDictionary *cs_constuctors;
    [cs_classes setObject:[TL_updateDraftMessage class] forKey:[NSNumber numberWithInt:-299124375]];
    [cs_classes setObject:[TL_draftMessageEmpty class] forKey:[NSNumber numberWithInt:-1169445179]];
    [cs_classes setObject:[TL_draftMessage class] forKey:[NSNumber numberWithInt:-40996577]];
+   [cs_classes setObject:[TL_messageActionHistoryClear class] forKey:[NSNumber numberWithInt:-1615153660]];
    [cs_classes setObject:[TL_userSelf class] forKey:[NSNumber numberWithInt:476112392]];
    [cs_classes setObject:[TL_userContact class] forKey:[NSNumber numberWithInt:-894214632]];
    [cs_classes setObject:[TL_userRequest class] forKey:[NSNumber numberWithInt:-640891665]];

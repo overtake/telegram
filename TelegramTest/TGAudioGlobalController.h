@@ -37,6 +37,8 @@ typedef enum {
 @property (nonatomic,weak) TGAudioPlayerListView *playerList;
 @property (nonatomic,weak) TGAudioProgressView *progressView;
 
+@property (nonatomic,assign) BOOL autoStart;
+
 
 
 @property (nonatomic,strong,readonly) MessageTableItemAudioDocument *currentItem;

@@ -492,8 +492,7 @@
 
 +(void)syncTopCategories:(void (^)(NSArray *categories))completeHandler {
     
-    if(!ACCEPT_FEATURE)
-        return;
+
     
     dispatch_queue_t dqueue = dispatch_get_current_queue();
     
@@ -520,8 +519,11 @@
             
             int offset = 0;
             
+            dispatch_async(dqueue, ^{
+                completeHandler(top);
+            });
             
-            dispatch_block_t next = ^{
+            if([[transaction objectForKey:@"dt" inCollection:TOP_PEERS] intValue] + 24*60*60 < [[MTNetwork instance] getTime]) {
                 [RPCRequest sendRequest:[TLAPI_contacts_getTopPeers createWithFlags:(1 << 0) | (1 << 2) offset:offset limit:100 n_hash:acc] successHandler:^(id request, TL_contacts_topPeers *response) {
                     
                     if([response isKindOfClass:[TL_contacts_topPeers class]]) {
@@ -545,9 +547,8 @@
                 } errorHandler:^(id request, RpcError *error) {
                     
                 }];
-            };
-            
-            next();
+            }
+
 
         } @catch (NSException *exception) {
             

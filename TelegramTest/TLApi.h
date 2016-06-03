@@ -2,7 +2,7 @@
 //  TLApi.h
 //  Telegram
 //
-//  Auto created by Mikhail Filimonov on 01.06.16.
+//  Auto created by Mikhail Filimonov on 03.06.16.
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -270,10 +270,12 @@
 @end
 
 @interface TLAPI_messages_deleteHistory : TLApiObject
+@property int flags;
+@property (nonatomic,assign,readonly) BOOL isJust_clear;
 @property (nonatomic, strong) TLInputPeer* peer;
 @property int max_id;
 
-+(TLAPI_messages_deleteHistory*)createWithPeer:(TLInputPeer*)peer max_id:(int)max_id;
++(TLAPI_messages_deleteHistory*)createWithFlags:(int)flags  peer:(TLInputPeer*)peer max_id:(int)max_id;
 @end
 
 @interface TLAPI_messages_deleteMessages : TLApiObject
@@ -300,6 +302,7 @@
 @property (nonatomic,assign,readonly) BOOL isNo_webpage;
 @property (nonatomic,assign,readonly) BOOL isSilent;
 @property (nonatomic,assign,readonly) BOOL isBackground;
+@property (nonatomic,assign,readonly) BOOL isClear_draft;
 @property (nonatomic, strong) TLInputPeer* peer;
 @property int reply_to_msg_id;
 @property (nonatomic, strong) NSString* message;
@@ -307,7 +310,7 @@
 @property (nonatomic, strong) TLReplyMarkup* reply_markup;
 @property (nonatomic, strong) NSMutableArray* entities;
 
-+(TLAPI_messages_sendMessage*)createWithFlags:(int)flags    peer:(TLInputPeer*)peer reply_to_msg_id:(int)reply_to_msg_id message:(NSString*)message random_id:(long)random_id reply_markup:(TLReplyMarkup*)reply_markup entities:(NSMutableArray*)entities;
++(TLAPI_messages_sendMessage*)createWithFlags:(int)flags     peer:(TLInputPeer*)peer reply_to_msg_id:(int)reply_to_msg_id message:(NSString*)message random_id:(long)random_id reply_markup:(TLReplyMarkup*)reply_markup entities:(NSMutableArray*)entities;
 @end
 
 @interface TLAPI_messages_sendMedia : TLApiObject

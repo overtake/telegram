@@ -2,7 +2,7 @@
 //  MTProto.h
 //  Telegram
 //
-//  Auto created by Mikhail Filimonov on 01.06.16.
+//  Auto created by Mikhail Filimonov on 03.06.16.
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -1201,6 +1201,9 @@
 @end
 @interface TL_messageActionPinMessage : TLMessageAction<NSCoding>
 +(TL_messageActionPinMessage*)create;
+@end
+@interface TL_messageActionHistoryClear : TLMessageAction<NSCoding>
++(TL_messageActionHistoryClear*)create;
 @end
 @interface TL_messageActionChatAddUser_old40 : TLMessageAction<NSCoding>
 +(TL_messageActionChatAddUser_old40*)createWithUser_id:(int)user_id;

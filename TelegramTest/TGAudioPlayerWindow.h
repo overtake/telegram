@@ -22,7 +22,8 @@
 @property (nonatomic,weak,readonly) TMNavigationController *navigationController;
 
 +(void)show:(TL_conversation *)conversation navigation:(TMNavigationController *)navigation;
-+(void)show:(TL_conversation *)conversation playerState:(TGAudioPlayerGlobalStyle)state navigation:(TMNavigationController *)navigation;;
++(void)show:(TL_conversation *)conversation playerState:(TGAudioPlayerGlobalStyle)state navigation:(TMNavigationController *)navigation;
++(void)showWithController:(TGAudioGlobalController *)controller;
 +(void)hide;
 +(MessageTableItemAudioDocument *)currentItem;
 
