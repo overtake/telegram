@@ -156,8 +156,12 @@ static NSString *kYapTemplateCollection = @"kYapTemplateCollection";
         [RPCRequest sendRequest:[TLAPI_messages_saveDraft createWithFlags:flags reply_to_msg_id:_replyMessage.n_id peer:convesation.inputPeer message:text entities:entities] successHandler:^(id request, id response) {
             
             convesation.draft = draftMessage;
-            convesation.last_message_date = MAX(draftMessage.date,convesation.last_message_date);
-            [convesation save];
+            
+            if([convesation.draft isKindOfClass:[TL_draftMessageEmpty class]])
+                convesation.last_message_date = convesation.lastMessage ? convesation.lastMessage.date : convesation.last_message_date;
+             else
+                convesation.last_message_date = MAX(draftMessage.date,convesation.last_message_date);
+            
             [[DialogsManager sharedManager] notifyAfterUpdateConversation:convesation];
             
         } errorHandler:^(id request, RpcError *error) {

@@ -77,13 +77,13 @@
     NSMutableAttributedString *alt = [[NSMutableAttributedString alloc] init];
     
     [alt appendString:[sticker.stickerAttr.alt fixEmoji]];
-    [alt setFont:TGSystemFont(20)  forRange:alt.range];
+    [alt setFont:TGSystemFont(30)  forRange:alt.range];
     [_textLabel setText:alt maxWidth:INT32_MAX];
     
     
     [_textLabel setBackgroundColor:[NSColor clearColor]];
     [_textLabel setCenteredXByView:_textLabel.superview];
-    [_textLabel setFrameOrigin:NSMakePoint(NSMinX(_textLabel.frame), imageObject.imageSize.height + 30)];
+    [_textLabel setFrameOrigin:NSMakePoint(NSMinX(_textLabel.frame), imageObject.imageSize.height + 20)];
 }
 
 

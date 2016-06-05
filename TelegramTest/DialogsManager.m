@@ -254,18 +254,42 @@
                 
                 [self checkBotKeyboard:dialog forMessage:lastMessage notify:YES];
                 
+                dialog.lastMessage = lastMessage;
+                
+                [dialog save];
+                
+                [self notifyAfterUpdateConversation:dialog];
+                
             } else {
-                dialog.last_marked_message = dialog.top_message = dialog.last_marked_date = 0;
-                dialog.unread_count = 0;
+                
+                
+                [RPCRequest sendRequest:[TLAPI_messages_getHistory createWithPeer:dialog.inputPeer offset_id:0 offset_date:0 add_offset:0 limit:100 max_id:0 min_id:0] successHandler:^(id request, TL_messages_messages *response) {
+                    
+                    [SharedManager proccessGlobalResponse:response];
+                    
+                    if(response.messages.count == 0) {
+                        [self completeDeleteConversation:nil dialog:dialog];
+                        
+                        
+                        dialog.lastMessage = lastMessage;
+                        
+                        [dialog save];
+                        
+                        [self notifyAfterUpdateConversation:dialog];
+                        
+                    } else {
+                        [self updateLastMessageForDialog:dialog];
+                    }
+                    
+                    
+                } errorHandler:^(id request, RpcError *error) {
+                    
+                }];
+                
             }
             
             
-            dialog.lastMessage = lastMessage;
             
-            [dialog save];
-            
-            
-            [self notifyAfterUpdateConversation:dialog];
             
         }];
     }];

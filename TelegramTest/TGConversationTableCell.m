@@ -438,29 +438,33 @@ static NSDictionary *attributes() {
         
         NSPoint point;
         
-            if(self.item.message.dstate == DeliveryStateNormal) {
-                
-                if(!self.item.message.unread) {
-                    stateImage = self.isSelected ? image_MessageStateReadWhite() : image_MessageStateRead();
-                } else {
-                    stateImage = self.isSelected ? image_MessageStateSentWhite() : image_MessageStateSent();
-                }
-                
-                point = NSMakePoint(NSMinX(self.dateField.frame) - stateImage.size.width , NSHeight(self.frame) - stateImage.size.height - 12);
-                
-            } else if(self.item.message.dstate == DeliveryStateError) {
-                
-                stateImage = self.isSelected ? image_DialogSelectedSendError() : image_ChatMessageError() ;
-                
-                point = NSMakePoint(NSWidth(self.frame) - stateImage.size.width - 13, 10);
-                
-            } else if(self.item.message.dstate == DeliveryStatePending) {
-                
-                stateImage = self.isSelected ? image_SendingClockWhite() : image_SendingClockGray();
-                
-                point = NSMakePoint(NSMinX(self.dateField.frame) - stateImage.size.width -2, NSHeight(self.frame) - stateImage.size.height - 11);
-                
+        if([self.item.message.action isKindOfClass:[TL_messageActionHistoryClear class]]) {
+            return nil;
+        }
+        
+        if(self.item.message.dstate == DeliveryStateNormal) {
+            
+            if(!self.item.message.unread) {
+                stateImage = self.isSelected ? image_MessageStateReadWhite() : image_MessageStateRead();
+            } else {
+                stateImage = self.isSelected ? image_MessageStateSentWhite() : image_MessageStateSent();
             }
+            
+            point = NSMakePoint(NSMinX(self.dateField.frame) - stateImage.size.width , NSHeight(self.frame) - stateImage.size.height - 12);
+            
+        } else if(self.item.message.dstate == DeliveryStateError) {
+            
+            stateImage = self.isSelected ? image_DialogSelectedSendError() : image_ChatMessageError() ;
+            
+            point = NSMakePoint(NSWidth(self.frame) - stateImage.size.width - 13, 10);
+            
+        } else if(self.item.message.dstate == DeliveryStatePending) {
+            
+            stateImage = self.isSelected ? image_SendingClockWhite() : image_SendingClockGray();
+            
+            point = NSMakePoint(NSMinX(self.dateField.frame) - stateImage.size.width -2, NSHeight(self.frame) - stateImage.size.height - 11);
+            
+        }
         
         if(stateImage != nil) {
             return @{@"image":stateImage,@"point":[NSValue valueWithPoint:point]};

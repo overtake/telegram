@@ -397,7 +397,7 @@ static void *kType;
 }
 
 -(void)setRead_inbox_max_id:(int)read_inbox_max_id {
-    [super setRead_inbox_max_id:MIN(read_inbox_max_id,self.read_inbox_max_id > TGMINFAKEID ? self.top_message : self.read_inbox_max_id)];
+    [super setRead_inbox_max_id:MIN(read_inbox_max_id,self.read_inbox_max_id > TGMINFAKEID ? self.top_message : read_inbox_max_id)];
 
 }
 

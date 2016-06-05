@@ -956,7 +956,7 @@
 +(TL_channel*)createWithFlags:(int)flags             n_id:(int)n_id access_hash:(long)access_hash title:(NSString*)title username:(NSString*)username photo:(TLChatPhoto*)photo date:(int)date version:(int)version restriction_reason:(NSString*)restriction_reason;
 @end
 @interface TL_channelForbidden : TLChat<NSCoding>
-+(TL_channelForbidden*)createWithN_id:(int)n_id access_hash:(long)access_hash title:(NSString*)title;
++(TL_channelForbidden*)createWithFlags:(int)flags   n_id:(int)n_id access_hash:(long)access_hash title:(NSString*)title;
 @end
 @interface TL_chat_old34 : TLChat<NSCoding>
 +(TL_chat_old34*)createWithN_id:(int)n_id title:(NSString*)title photo:(TLChatPhoto*)photo participants_count:(int)participants_count date:(int)date left:(Boolean)left version:(int)version;
@@ -969,6 +969,9 @@
 @end
 @interface TL_channel_old43 : TLChat<NSCoding>
 +(TL_channel_old43*)createWithFlags:(int)flags        n_id:(int)n_id access_hash:(long)access_hash title:(NSString*)title username:(NSString*)username photo:(TLChatPhoto*)photo date:(int)date version:(int)version;
+@end
+@interface TL_channelForbidden_old52 : TLChat<NSCoding>
++(TL_channelForbidden_old52*)createWithN_id:(int)n_id access_hash:(long)access_hash title:(NSString*)title;
 @end
 @interface TL_channel_old48 : TLChat<NSCoding>
 +(TL_channel_old48*)createWithFlags:(int)flags          n_id:(int)n_id access_hash:(long)access_hash title:(NSString*)title username:(NSString*)username photo:(TLChatPhoto*)photo date:(int)date version:(int)version restriction_reason:(NSString*)restriction_reason;

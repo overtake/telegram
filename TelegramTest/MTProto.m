@@ -4016,19 +4016,28 @@
 @end
 
 @implementation TL_channelForbidden
-+(TL_channelForbidden*)createWithN_id:(int)n_id access_hash:(long)access_hash title:(NSString*)title {
++(TL_channelForbidden*)createWithFlags:(int)flags   n_id:(int)n_id access_hash:(long)access_hash title:(NSString*)title {
 	TL_channelForbidden* obj = [[TL_channelForbidden alloc] init];
+	obj.flags = flags;
+	
+	
 	obj.n_id = n_id;
 	obj.access_hash = access_hash;
 	obj.title = title;
 	return obj;
 }
 -(void)serialize:(SerializedData*)stream {
+	[stream writeInt:self.flags];
+	
+	
 	[stream writeInt:self.n_id];
 	[stream writeLong:self.access_hash];
 	[stream writeString:self.title];
 }
 -(void)unserialize:(SerializedData*)stream {
+	super.flags = [stream readInt];
+	
+	
 	super.n_id = [stream readInt];
 	super.access_hash = [stream readLong];
 	super.title = [stream readString];
@@ -4037,6 +4046,9 @@
 -(TL_channelForbidden *)copy {
     
     TL_channelForbidden *objc = [[TL_channelForbidden alloc] init];
+    
+    objc.flags = self.flags;
+    
     
     objc.n_id = self.n_id;
     objc.access_hash = self.access_hash;
@@ -4060,7 +4072,11 @@
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
         
-
+            
+-(BOOL)isBroadcast {return (self.flags & (1 << 5)) > 0;}
+                        
+-(BOOL)isMegagroup {return (self.flags & (1 << 8)) > 0;}
+            
         
 @end
 
@@ -4357,6 +4373,55 @@
                 
     if(super.username == nil)  { super.flags&= ~ (1 << 6) ;} else { super.flags|= (1 << 6); }
 }
+        
+@end
+
+@implementation TL_channelForbidden_old52
++(TL_channelForbidden_old52*)createWithN_id:(int)n_id access_hash:(long)access_hash title:(NSString*)title {
+	TL_channelForbidden_old52* obj = [[TL_channelForbidden_old52 alloc] init];
+	obj.n_id = n_id;
+	obj.access_hash = access_hash;
+	obj.title = title;
+	return obj;
+}
+-(void)serialize:(SerializedData*)stream {
+	[stream writeInt:self.n_id];
+	[stream writeLong:self.access_hash];
+	[stream writeString:self.title];
+}
+-(void)unserialize:(SerializedData*)stream {
+	super.n_id = [stream readInt];
+	super.access_hash = [stream readLong];
+	super.title = [stream readString];
+}
+        
+-(TL_channelForbidden_old52 *)copy {
+    
+    TL_channelForbidden_old52 *objc = [[TL_channelForbidden_old52 alloc] init];
+    
+    objc.n_id = self.n_id;
+    objc.access_hash = self.access_hash;
+    objc.title = self.title;
+    
+    return objc;
+}
+        
+
+    
+-(id)initWithCoder:(NSCoder *)aDecoder {
+
+    if((self = [ClassStore deserialize:[aDecoder decodeObjectForKey:@"data"]])) {
+        
+    }
+    
+    return self;
+}
+        
+-(void)encodeWithCoder:(NSCoder *)aCoder {
+    [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
+}
+        
+
         
 @end
 

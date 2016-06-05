@@ -443,8 +443,11 @@ static NSTextAttachment *channelViewsCountAttachment() {
     id objectReturn = nil;
 
     
+    
     @try {
         if(message.class == [TL_localMessage_old46 class] || message.class == [TL_localMessage class] || message.class == [TL_localMessage_old32 class] || message.class == [TL_localMessage_old34 class] || message.class == [TL_localMessage_old44 class] || message.class == [TL_destructMessage class] || message.class == [TL_destructMessage45 class]) {
+            
+           
             
             if((message.media == nil || [message.media isKindOfClass:[TL_messageMediaEmpty class]]) || [message.media isMemberOfClass:[TL_messageMediaWebPage class]]) {
                 
@@ -531,6 +534,10 @@ static NSTextAttachment *channelViewsCountAttachment() {
         } else if(message.hole != nil) {
             objectReturn = [[MessageTableItemHole alloc] initWithObject:message];
         } else if([message isKindOfClass:[TL_localMessageService class]] || [message isKindOfClass:[TL_secretServiceMessage class]] || [message isKindOfClass:[TL_localMessageService_old48 class]]) {
+            
+            if([message.action isKindOfClass:[TL_messageActionHistoryClear class]])
+                return nil;
+            
             
             if([message.action isKindOfClass:[TL_messageActionPinMessage class]]) {
                 objectReturn = [[MessageTableItemPinned alloc] initWithObject:message];

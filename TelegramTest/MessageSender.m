@@ -471,10 +471,10 @@
                     }
                     
                 }];
-                
-                if(!saved) {
-                    [transaction removeObjectForKey:@"categories" inCollection:TOP_PEERS];
-                }
+//                
+//                if(!saved) {
+//                    [transaction removeObjectForKey:@"categories" inCollection:TOP_PEERS];
+//                }
             }
 
         } @catch (NSException *exception) {
