@@ -92,7 +92,7 @@
 #import "TGSplitView.h"
 #define HEADER_MESSAGES_GROUPING_TIME (10 * 60)
 
-#define SCROLLDOWNBUTTON_OFFSET 1500
+#define SCROLLDOWNBUTTON_OFFSET 300
 
 
 
@@ -1840,8 +1840,8 @@ static NSTextAttachment *headerMediaIcon() {
 
 
 - (void)updateScrollBtn {
-    static int min_go_size = 2000;
-    static int max_go_size = 1000;
+    static int min_go_size = 1000;
+    static int max_go_size = 500;
     
     float offset = self.table.scrollView.documentOffset.y;
     
@@ -2264,6 +2264,19 @@ static NSTextAttachment *headerMediaIcon() {
     NSRange r = [self insertMessageTableItemsToList:list startPosition:range.location needCheckLastMessage:YES backItems:&items checkActive:!force];
     
     if(r.length) {
+        
+        if(!_jumpToBottomButton.isHidden) {
+            [items enumerateObjectsUsingBlock:^(MessageTableItem *obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                if(obj.message.from_id != [UsersManager currentUserId]) {
+                    self.jumpToBottomButton.messagesCount++;
+                } 
+            }];
+            
+            [self jumpToBottomButtonDisplay];
+
+        }
+        
+        
         [self insertAndGoToEnd:r forceEnd:force items:items];
         [self didUpdateTable];
     }

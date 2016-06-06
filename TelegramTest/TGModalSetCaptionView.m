@@ -17,6 +17,7 @@
 @interface TGAttachCaptionRowItem : TMRowItem<TMGrowingTextViewDelegate>
 @property (nonatomic,strong) TGImageAttachment *attach;
 @property (nonatomic,strong) TGModalSetCaptionView *controller;
+@property (nonatomic,strong) TMGrowingTextView *textView;
 @end
 
 @interface TGAttachCaptionRowView : TMRowView<NSTextViewDelegate>
@@ -54,7 +55,9 @@
 }
 - (void) TMGrowingTextViewTextDidChange:(TMGrowingTextView *)textView {
     
-    [_attach.item changeCaption:textView.string needSave:NO];
+    
+    
+    [_attach.item changeCaption:_textView.string needSave:NO];
     
 }
 - (void) TMGrowingTextViewFirstResponder:(id)textView isFirstResponder:(BOOL)isFirstResponder {
@@ -97,6 +100,8 @@
     TGAttachCaptionRowItem *item = (TGAttachCaptionRowItem *) [self rowItem];
     
     _textView.growingDelegate = item;
+    
+    item.textView = _textView;
     
     [self removeAllSubviews];
     

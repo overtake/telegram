@@ -457,6 +457,9 @@ static NSDictionary *attributes() {
             
         } else if(self.item.message.dstate == DeliveryStateError) {
             
+            if([self.item.conversation.draft isKindOfClass:[TL_draftMessage class]])
+                return  nil;
+            
             stateImage = self.isSelected ? image_DialogSelectedSendError() : image_ChatMessageError() ;
             
             point = NSMakePoint(NSWidth(self.frame) - stateImage.size.width - 13, 10);
