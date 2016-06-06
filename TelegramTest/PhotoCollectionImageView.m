@@ -160,6 +160,24 @@ static NSImage *playVideoImage() {
     
 }
 
+-(void)rightMouseDown:(NSEvent *)theEvent {
+    weak();
+    
+    NSMenu *menu = [[NSMenu alloc] init];
+    
+    NSMenuItem *photoGoto = [NSMenuItem menuItemWithTitle:NSLocalizedString(@"PhotoViewer.Goto", nil) withBlock:^(id sender) {
+        
+        PhotoCollectionImageObject *object = (PhotoCollectionImageObject *)self.object;
+        
+        [weakSelf.controller.navigationViewController showMessagesViewController:_controller.conversation withMessage:object.previewObject.media];
+        
+    }];
+    
+    [menu addItem:photoGoto];
+    
+    [NSMenu popUpContextMenu:menu withEvent:theEvent forView:self];
+}
+
 -(void)checkState:(PhotoCollectionImageObject *)object {
     
     if(!object.previewObject.reservedObject || ![object.previewObject.reservedObject isKindOfClass:[DownloadVideoItem class]]) {

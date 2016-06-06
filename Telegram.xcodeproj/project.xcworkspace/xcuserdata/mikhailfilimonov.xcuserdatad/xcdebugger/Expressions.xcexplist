@@ -1196,10 +1196,26 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "-[TMNavigationController showMessagesViewController:withMessage:]:TMNavigationController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "message.conversation">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "parseMessage:Storage.m">
       </ContextState>
       <ContextState
          contextName = "__77-[TGUpdateChannels failUpdateWithChannelId:limit:withCallback:errorCallback:]_block_invoke:TGUpdateChannels.m">
+      </ContextState>
+      <ContextState
+         contextName = "__39-[TGSharedLinkRowView defaultMenuItems]_block_invoke.132:TGSharedLinkRowView.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "weakSelf.messagesViewController">
+            </PersistentString>
+         </PersistentStrings>
       </ContextState>
       <ContextState
          contextName = "__56+[TGBotCommandsPopup show:botInfo:view:ofRect:callback:]_block_invoke42:TGBotCommandsPopup.m">
@@ -2319,6 +2335,14 @@
       </ContextState>
       <ContextState
          contextName = "-[MessageTableCellGifView setItem:]:MessageTableCellGifView.m">
+      </ContextState>
+      <ContextState
+         contextName = "__38-[MessagesTopInfoView checkReportSpam]_block_invoke:MessagesTopInfoView.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "_conversation.inputPeer">
+            </PersistentString>
+         </PersistentStrings>
       </ContextState>
       <ContextState
          contextName = "-[TGWebpageObject initWithWebPage:tableItem:]:TGWebpageObject.m">

@@ -381,8 +381,11 @@ static TGPhotoViewer *viewer;
     __block TGPhotoViewerItem *item;
     
     [ASQueue dispatchOnStageQueue:^{
-        
-        item = _list[index];
+        @try {
+            item = _list[index];
+        } @catch (NSException *exception) {
+            
+        }
         
     } synchronous:YES];
     

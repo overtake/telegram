@@ -288,7 +288,10 @@ static NSDictionary *attributes() {
     int width = MIN(NSWidth(self.frame) - NSMinX(_nameTextField.frame) - NSWidth(_dateField.frame) - 10 - (self.item.message.n_out ? 18 : 0) - (self.item.conversation.isVerified ? image_Verify().size.width + 2 : 0) - (self.item.conversation.isMute ? image_muted().size.width + 4 : 0), self.item.nameTextSize.width);
     
     [_nameTextField setFrameSize:NSMakeSize(width, 23)];
-    [_messageField setFrame:NSMakeRect(NSMinX(_messageField.frame), self.item.typing.length > 0 ? 21 : 3, NSWidth(self.frame) - NSMinX(_messageField.frame) -40, self.item.typing.length > 0 ? 18 : 36)];
+    
+    int unreadOffset = self.item.conversation.unread_count > 100 ? 50 : 40;
+    
+    [_messageField setFrame:NSMakeRect(NSMinX(_messageField.frame), self.item.typing.length > 0 ? 21 : 3, NSWidth(self.frame) - NSMinX(_messageField.frame) - unreadOffset, self.item.typing.length > 0 ? 18 : 36)];
     
     [_dateField setFrameOrigin:NSMakePoint(self.bounds.size.width - self.item.dateSize.width - 10, _dateField.frame.origin.y)];
 
@@ -540,6 +543,10 @@ static int unreadOffsetRight = 13;
 }
 
 -(void)drawDraftIcon {
+    
+    if(!ACCEPT_FEATURE)
+        return;
+    
     int offset2 = self.bounds.size.width - unreadOffsetRight;
     [image_draftIcon() drawInRect:NSMakeRect(offset2 - image_draftIcon().size.width, 12, image_draftIcon().size.width, image_draftIcon().size.height) fromRect:NSZeroRect operation:NSCompositeCopy fraction:1];
 }

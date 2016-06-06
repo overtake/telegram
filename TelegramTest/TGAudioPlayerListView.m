@@ -180,13 +180,9 @@ static long h_r_l;
     
 }
 - (BOOL)selectionWillChange:(NSInteger)row item:(TMRowItem *) item {
-    
-    
     return YES;
 }
 - (BOOL)isSelectable:(NSInteger)row item:(TMRowItem *) item {
-
-    
     return row > 0;
 }
 

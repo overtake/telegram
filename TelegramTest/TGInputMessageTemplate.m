@@ -152,17 +152,24 @@ static NSString *kYapTemplateCollection = @"kYapTemplateCollection";
     TLDraftMessage *draftMessage = text.length == 0 && flags == 0 ? [TL_draftMessageEmpty create] : [TL_draftMessage createWithFlags:0 reply_to_msg_id:_replyMessage.n_id message:text entities:entities date:[[MTNetwork instance] getTime]];
     
     if((![convesation.draft isKindOfClass:draftMessage.class] && !([draftMessage isKindOfClass:[TL_draftMessageEmpty class]] && convesation.draft == nil)) || ((draftMessage.message && ![draftMessage.message isEqualToString:convesation.draft.message]) || draftMessage.flags != draftMessage.flags)) {
+        
+        
+        convesation.draft = draftMessage;
+        
+        if([convesation.draft isKindOfClass:[TL_draftMessageEmpty class]])
+            convesation.last_message_date = convesation.lastMessage ? convesation.lastMessage.date : convesation.last_message_date;
+        else
+            convesation.last_message_date = MAX(draftMessage.date,convesation.last_message_date);
+        
+        [[DialogsManager sharedManager] notifyAfterUpdateConversation:convesation];
        
         [RPCRequest sendRequest:[TLAPI_messages_saveDraft createWithFlags:flags reply_to_msg_id:_replyMessage.n_id peer:convesation.inputPeer message:text entities:entities] successHandler:^(id request, id response) {
             
-            convesation.draft = draftMessage;
             
-            if([convesation.draft isKindOfClass:[TL_draftMessageEmpty class]])
-                convesation.last_message_date = convesation.lastMessage ? convesation.lastMessage.date : convesation.last_message_date;
-             else
-                convesation.last_message_date = MAX(draftMessage.date,convesation.last_message_date);
             
-            [[DialogsManager sharedManager] notifyAfterUpdateConversation:convesation];
+            [convesation save];
+            
+           
             
         } errorHandler:^(id request, RpcError *error) {
             

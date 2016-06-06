@@ -312,8 +312,8 @@ DYNAMIC_PROPERTY(DDialog);
 
 - (TL_conversation *)conversation {
     
-    if(self.isFake)
-        return nil;
+//    if(self.isFake)
+//        return nil;
     
     __block TL_conversation *dialog;
     

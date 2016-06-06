@@ -262,7 +262,6 @@
                 
             } else {
                 
-                
                 [RPCRequest sendRequest:[TLAPI_messages_getHistory createWithPeer:dialog.inputPeer offset_id:0 offset_date:0 add_offset:0 limit:100 max_id:0 min_id:0] successHandler:^(id request, TL_messages_messages *response) {
                     
                     [SharedManager proccessGlobalResponse:response];

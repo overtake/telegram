@@ -328,8 +328,7 @@ static NSMutableDictionary *cache;
                 [[NSUserDefaults standardUserDefaults] setObject:@(YES) forKey:[NSString stringWithFormat:@"alwaysHideReportSpam_%d",conversation.peer_id]];
                 [[NSUserDefaults standardUserDefaults] synchronize];
             }
-            
-            
+
             
         } errorHandler:^(id request, RpcError *error) {
             

@@ -154,6 +154,54 @@ static NSImage *sharedLinkCapImage() {
     }
 }
 
+
+-(NSArray *)defaultMenuItems {
+    
+    
+    NSMutableArray *items = [[NSMutableArray alloc] init];
+    
+    
+    weak();
+    
+    
+    
+    if(self.item.message.conversation.type != DialogTypeSecretChat) {
+        [items addObject:[NSMenuItem menuItemWithTitle:NSLocalizedString(@"Context.Forward", nil) withBlock:^(id sender) {
+            
+            [weakSelf.messagesViewController setState:MessagesViewControllerStateNone];
+            [weakSelf.messagesViewController unSelectAll:NO];
+            [weakSelf.messagesViewController setSelectedMessage:weakSelf.item selected:YES];
+            [weakSelf.messagesViewController showForwardMessagesModalView];
+            
+            
+        }]];
+    }
+    
+    if([MessagesViewController canDeleteMessages:@[self.item.message] inConversation:self.item.message.conversation]) {
+        [items addObject:[NSMenuItem menuItemWithTitle:NSLocalizedString(@"Context.Delete", nil) withBlock:^(id sender) {
+            
+            [weakSelf.messagesViewController setState:MessagesViewControllerStateNone];
+            [weakSelf.messagesViewController unSelectAll:NO];
+            [weakSelf.messagesViewController setSelectedMessage:weakSelf.item selected:YES];
+            [weakSelf.messagesViewController deleteSelectedMessages];
+            
+        }]];
+    }
+    
+    NSMenuItem *photoGoto = [NSMenuItem menuItemWithTitle:NSLocalizedString(@"PhotoViewer.Goto", nil) withBlock:^(id sender) {
+        
+        [weakSelf.messagesViewController.navigationViewController showMessagesViewController:self.item.message.conversation withMessage:self.item.message];
+        
+    }];
+    
+    [items addObject:photoGoto];
+
+    
+
+    return items;
+    
+}
+
 -(NSString *)firstDomainCharacter {
     
     MessageTableItemText *item = (MessageTableItemText *)self.item;

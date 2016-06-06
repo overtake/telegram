@@ -299,7 +299,8 @@
             
         }
         
-        if(conversation.draft.message.length > 0) {
+        
+        if(conversation.draft.message.length > 0 && ACCEPT_FEATURE) {
             chatUserNameString = nil;
         }
         
@@ -322,7 +323,7 @@
         
         msgText = [msgText fixEmoji];
         
-        if(conversation.draft.message.length > 0) {
+        if(conversation.draft.message.length > 0 && ACCEPT_FEATURE) {
             msgText = [NSString stringWithFormat:NSLocalizedString(@"Conversation.Draft", nil),conversation.draft.message];
         }
         
