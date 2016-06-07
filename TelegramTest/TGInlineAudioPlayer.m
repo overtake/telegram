@@ -109,24 +109,26 @@
         } forControlEvents:BTRControlEventMouseDownInside];
         
         
-        [_playButton setBackgroundImage:image_AudioPlayerPlay() forControlState:BTRControlStateNormal];
+        [_playButton setBackgroundImage:image_InlineAudioPlayerPlay() forControlState:BTRControlStateNormal];
+        [_playButton setBackgroundImage:image_InlineAudioPlayerPlayHover() forControlState:BTRControlStateHover];
         
-        
-        [_playButton setFrameSize:image_AudioPlayerPlay().size];
+        [_playButton setFrameSize:image_InlineAudioPlayerPlay().size];
         
         [_playButton setCenterByView:_leftControlsContainer];
         
         
-        [_prevButton setBackgroundImage:image_AudioPlayerBack() forControlState:BTRControlStateNormal];
+        [_prevButton setBackgroundImage:image_InlineAudioPlayerBack() forControlState:BTRControlStateNormal];
+        [_prevButton setBackgroundImage:image_InlineAudioPlayerBackHover() forControlState:BTRControlStateHover];
         
-        [_prevButton setFrameSize:image_AudioPlayerBack().size];
+        [_prevButton setFrameSize:image_InlineAudioPlayerBack().size];
         
         [_prevButton setFrameOrigin:NSMakePoint(NSMinX(_playButton.frame) - NSWidth(_prevButton.frame) - 10, NSMinY(_playButton.frame))];
         
         
-        [_nextButton setBackgroundImage:image_AudioPlayerNext() forControlState:BTRControlStateNormal];
-        
-        [_nextButton setFrameSize:image_AudioPlayerNext().size];
+        [_nextButton setBackgroundImage:image_InlineAudioPlayerNext() forControlState:BTRControlStateNormal];
+        [_nextButton setBackgroundImage:image_InlineAudioPlayerNextHover() forControlState:BTRControlStateHover];
+
+        [_nextButton setFrameSize:image_InlineAudioPlayerNext().size];
         
         [_nextButton setFrameOrigin:NSMakePoint(NSMaxX(_playButton.frame) + 10, NSMinY(_playButton.frame))];
         
@@ -288,7 +290,9 @@
 }
 
 -(void)playerDidChangedState:(MessageTableItemAudioDocument *)item playerState:(TGAudioPlayerGlobalState)state {
-    [_playButton setBackgroundImage:state == TGAudioPlayerGlobalStatePlaying ? image_AudioPlayerPause() : image_AudioPlayerPlay() forControlState:BTRControlStateNormal];
+    [_playButton setBackgroundImage:state == TGAudioPlayerGlobalStatePlaying ? image_InlineAudioPlayerPause() : image_InlineAudioPlayerPlay() forControlState:BTRControlStateNormal];
+    [_playButton setBackgroundImage:state == TGAudioPlayerGlobalStatePlaying ? image_InlineAudioPlayerPauseHover() : image_InlineAudioPlayerPlayHover() forControlState:BTRControlStateHover];
+
     
 }
 

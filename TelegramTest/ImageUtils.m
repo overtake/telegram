@@ -200,6 +200,11 @@ CACHE_IMAGE(InlineAudioPlayerPlay);
 CACHE_IMAGE(InlineAudioPlayerNext);
 CACHE_IMAGE(InlineAudioPlayerPause);
 
+CACHE_IMAGE(InlineAudioPlayerBackHover);
+CACHE_IMAGE(InlineAudioPlayerPlayHover);
+CACHE_IMAGE(InlineAudioPlayerNextHover);
+CACHE_IMAGE(InlineAudioPlayerPauseHover);
+
 
 CACHE_IMAGE(botCommand);
 CACHE_IMAGE(botKeyboard);

@@ -244,13 +244,8 @@ static NSDictionary *attributes() {
                 [image drawInRect:NSMakeRect(NSMaxX(self.nameTextField.frame) + (self.item.conversation.isVerified ? image_Verify().size.width + 6 : 0), NSMinY(self.nameTextField.frame) + 7, image.size.width, image.size.height) fromRect:NSZeroRect operation:NSCompositeHighlight fraction:1];
             }
     
-            if(self.item.conversation.draft == nil || [self.item.conversation.draft isKindOfClass:[TL_draftMessageEmpty class]]) {
-                if(self.item.unreadText.length && self.style != ConversationTableCellShortStyle && self.item.conversation.unread_count > 0) {
-                    [self drawUnreadCount];
-                }
-            } else {
-                if(!self.isSelected)
-                    [self drawDraftIcon];
+            if(self.item.unreadText.length && self.style != ConversationTableCellShortStyle && self.item.conversation.unread_count > 0) {
+                [self drawUnreadCount];
             }
             
         };
@@ -457,8 +452,6 @@ static NSDictionary *attributes() {
             
         } else if(self.item.message.dstate == DeliveryStateError) {
             
-            if([self.item.conversation.draft isKindOfClass:[TL_draftMessage class]])
-                return  nil;
             
             stateImage = self.isSelected ? image_DialogSelectedSendError() : image_ChatMessageError() ;
             
@@ -545,14 +538,7 @@ static int unreadOffsetRight = 13;
     [self.item.unreadText drawAtPoint:CGPointMake(offset1 - unreadCountRadius + offsetX, offsetY + 3) withAttributes:@{NSForegroundColorAttributeName: self.isSelected ? NSColorFromRGB(0x6896ba)  : [NSColor whiteColor], NSFontAttributeName: TGSystemBoldFont(11)}];
 }
 
--(void)drawDraftIcon {
-    
-    if(!ACCEPT_FEATURE)
-        return;
-    
-    int offset2 = self.bounds.size.width - unreadOffsetRight;
-    [image_draftIcon() drawInRect:NSMakeRect(offset2 - image_draftIcon().size.width, 12, image_draftIcon().size.width, image_draftIcon().size.height) fromRect:NSZeroRect operation:NSCompositeCopy fraction:1];
-}
+
 
 -(BOOL)isSelected {
     return self.item.table.selectedItem == self.item;

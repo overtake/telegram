@@ -2,12 +2,12 @@
   "images" : [
     {
       "idiom" : "universal",
-      "filename" : "Forward.png",
+      "filename" : "InlineAudioPlayerPauseHover.png",
       "scale" : "1x"
     },
     {
       "idiom" : "universal",
-      "filename" : "Forward@2x.png",
+      "filename" : "InlineAudioPlayerPauseHover@2x.png",
       "scale" : "2x"
     },
     {

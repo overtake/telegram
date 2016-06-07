@@ -301,11 +301,13 @@
         
         
         if(conversation.draft.message.length > 0 && ACCEPT_FEATURE) {
-            chatUserNameString = nil;
+            [messageText appendString:[NSLocalizedString(@"Conversation.Draft", nil) stringByAppendingString:@"\n"] withColor:[NSColor redColor]];
+        } else {
+            if(chatUserNameString)
+                [messageText appendString:chatUserNameString withColor:!message.action ? DARK_BLACK : GRAY_TEXT_COLOR];
         }
         
-        if(chatUserNameString)
-            [messageText appendString:chatUserNameString withColor:!message.action ? DARK_BLACK : GRAY_TEXT_COLOR];
+        
         
         if(!message.action) {
             if(message.media && ![message.media isKindOfClass:[TL_messageMediaEmpty class]] && ![message.media isKindOfClass:[TL_messageMediaWebPage class]]) {
@@ -324,7 +326,7 @@
         msgText = [msgText fixEmoji];
         
         if(conversation.draft.message.length > 0 && ACCEPT_FEATURE) {
-            msgText = [NSString stringWithFormat:NSLocalizedString(@"Conversation.Draft", nil),conversation.draft.message];
+            msgText = conversation.draft.message;
         }
         
         if(msgText) {
