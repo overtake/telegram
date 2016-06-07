@@ -127,7 +127,7 @@
         [button setEmojiCallback:^(NSString *emoji) {
             TGModernEmojiRowItem *item = (TGModernEmojiRowItem *) weakSelf.rowItem;
             if(!item.controller.epopover.lockHoverClose) {
-                [item.controller.messagesViewController.bottomView insertEmoji:emoji];
+                [item.controller insertEmoji:emoji];
             }
         }];
            // [button addTarget:self action:@selector(emojiClick:) forControlEvents:BTRControlEventMouseUpInside];
