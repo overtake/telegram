@@ -324,13 +324,6 @@ typedef enum {
             [appWindow().navigationController showMessagesViewController:dialog withMessage:searchItem.message];
             
             
-          
-          //  [self searchByString:@""];
-            
-//            BOOL success = [[Telegram rightViewController] showByDialog:dialog withJump:msg_id historyFilter:[HistoryFilter class] sender:self];
-//            if(!success) {
-//                [[Telegram rightViewController].messagesViewController setCurrentConversation:dialog withJump:msg_id historyFilter:[HistoryFilter class]];
-//            }
             [self.tableView setSelectedByHash:item.hash];
         }
     } else if(item && [item isKindOfClass:[SearchHashtagItem class]]) {
@@ -561,7 +554,7 @@ static int insertCount = 3;
     int offset_id = [[(SearchMessageTableItem *)[params.messages lastObject] message] n_id];
     int offset_date = [[(SearchMessageTableItem *)[params.messages lastObject] message] date];
     
-    id request = ACCEPT_FEATURE ? [TLAPI_messages_searchGlobal createWithQ:params.searchString offset_date:offset_date offset_peer:[TL_inputPeerEmpty create] offset_id:offset_id limit:50] : [TLAPI_messages_search createWithFlags:0 peer:[TL_inputPeerEmpty create] q:params.searchString filter:[TL_inputMessagesFilterEmpty create] min_date:0 max_date:0 offset:params.remote_offset max_id:0 limit:50];
+    id request = [TLAPI_messages_searchGlobal createWithQ:params.searchString offset_date:offset_date offset_peer:[TL_inputPeerEmpty create] offset_id:offset_id limit:50];
     
     [RPCRequest sendRequest:request successHandler:^(RPCRequest *request, TL_messages_messagesSlice *response) {
 
@@ -736,9 +729,28 @@ static int insertCount = 3;
         }
         
     }
-    
     //Users
-    NSArray *searchUsers = [[UsersManager sharedManager] searchWithString:searchString selector:@"fullName"];
+    
+    __block NSArray *searchUsers;
+
+    
+    [ASQueue dispatchOnStageQueue:^{
+        searchUsers = [[UsersManager sharedManager] searchWithString:searchString selector:@"fullName" checker:^BOOL(TLUser *user) {
+            
+            if(!user.isMin) {
+                TL_conversation *dialog = [[DialogsManager sharedManager] find:user.n_id];
+                
+                
+                return dialog && !dialog.fake;
+            }
+            
+            return NO;
+            
+            
+        }];
+    } synchronous:YES];
+    
+    
     
     searchUsers = [searchUsers sortedArrayWithOptions:NSSortStable usingComparator:^NSComparisonResult(TLUser *obj1, TLUser *obj2) {
         if(obj1.lastSeenTime > obj2.lastSeenTime) {
@@ -747,14 +759,6 @@ static int insertCount = 3;
             return NSOrderedDescending;
         }
     }];
-    
-    for(TLUser *user in searchUsers) {
-        TL_conversation *dialog = [[DialogsManager sharedManager] find:user.n_id];
-        if(dialog && !dialog.fake)
-            [dialogs addObject:dialog];
-        else
-            [dialogsNeedCheck addObject:@(user.n_id)];
-    }
     
     
     NSMutableArray *cachePeers = [NSMutableArray array];
@@ -812,30 +816,32 @@ static int insertCount = 3;
         _dontLoadHashtagsForOneRequest = NO;
         
         
-        [[Storage manager] searchDialogsByPeers:dialogsNeedCheck needMessages:NO searchString:nil completeHandler:^(NSArray *dialogsDB) {
-            
-            [[DialogsManager sharedManager] add:dialogsDB];
-            [dialogs addObjectsFromArray:dialogsDB];
-            
-            NSArray *insertedDialogs = [dialogs sortedArrayWithOptions:NSSortStable usingComparator:^NSComparisonResult(TL_conversation *dialog1, TL_conversation *dialog2) {
-                if(dialog1.last_message_date > dialog2.last_message_date) {
-                    return NSOrderedAscending;
-                } else {
-                    return NSOrderedDescending;
-                }
-            }];
-            
-            
-            searchParams.dialogs = [NSMutableArray array];
-            for(TL_conversation *conversation in insertedDialogs) {
-                
-                [cachePeers addObject:@(conversation.peer.peer_id)];
-                
-                [searchParams.dialogs addObject:[[SearchItem alloc] initWithDialogItem:conversation searchString:searchString]];
-            }
-            
-            
-        }];
+//        
+//        
+//        [[Storage manager] searchDialogsByPeers:dialogsNeedCheck needMessages:NO searchString:nil completeHandler:^(NSArray *dialogsDB) {
+//            
+//            [[DialogsManager sharedManager] add:dialogsDB];
+//            [dialogs addObjectsFromArray:dialogsDB];
+//            
+//            NSArray *insertedDialogs = [dialogs sortedArrayWithOptions:NSSortStable usingComparator:^NSComparisonResult(TL_conversation *dialog1, TL_conversation *dialog2) {
+//                if(dialog1.last_message_date > dialog2.last_message_date) {
+//                    return NSOrderedAscending;
+//                } else {
+//                    return NSOrderedDescending;
+//                }
+//            }];
+//            
+//            
+//            searchParams.dialogs = [NSMutableArray array];
+//            for(TL_conversation *conversation in insertedDialogs) {
+//                
+//                [cachePeers addObject:@(conversation.peer.peer_id)];
+//                
+//                [searchParams.dialogs addObject:[[SearchItem alloc] initWithDialogItem:conversation searchString:searchString]];
+//            }
+//            
+//            
+//        }];
         
         
     }

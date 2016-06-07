@@ -108,7 +108,6 @@
 
 
 
-
 @implementation TGModernEmojiRowView
 
 - (id)initWithFrame:(NSRect)frameRect {
@@ -495,9 +494,6 @@ static NSArray *segment_list;
     [Storage saveEmoji:recent];
 
 }
-
-
-
 
 
 - (TGModernEmojiBottomButton *)createButtonForIndex:(int)index {
