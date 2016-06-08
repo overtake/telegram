@@ -719,16 +719,7 @@ static int insertCount = 3;
     //Chats
     NSArray *searchChats = [[ChatsManager sharedManager] searchWithString:searchString selector:@"title"];
     
-    for(TLChat *chat in searchChats) {
-        TL_conversation *dialog = chat.dialog;
-        if(!dialog.isInvisibleChannel) {
-            if(dialog && !dialog.fake && ([chat isKindOfClass:[TLChat class]] && !chat.isDeactivated))
-                [dialogs addObject:dialog];
-            else if ([chat isKindOfClass:[TLChat class]] && !chat.isDeactivated)
-                [dialogsNeedCheck addObject:@(-chat.n_id)];
-        }
-        
-    }
+
     //Users
     
     __block NSArray *searchUsers;
@@ -851,6 +842,17 @@ static int insertCount = 3;
         searchParams.dialogs = [NSMutableArray array];
         searchParams.users = [NSMutableArray array];
         searchParams.contacts = [NSMutableArray array];
+        
+        [searchChats enumerateObjectsUsingBlock:^(TLChat *chat, NSUInteger idx, BOOL * _Nonnull stop) {
+            if([cachePeers indexOfObject:@(chat.n_id)] == NSNotFound) {
+                id item = [[SearchItem alloc] initWithChatItem:chat searchString:searchParams.searchString];
+                
+                [searchParams.dialogs addObject:item];
+                
+                [cachePeers addObject:@(chat.n_id)];
+                
+            }
+        }];
         
         for(TLUser *user in searchUsers) {
             
