@@ -173,7 +173,7 @@ int megagroupSizeMax() {
             
             [[UsersManager sharedManager] setUserStatus:[TL_userStatusOffline createWithWas_online:[[MTNetwork instance] getTime]] forUid:[UsersManager currentUserId]];
             
-            TGInputMessageTemplate *template = [TGInputMessageTemplate dublicateTemplateWithType:TGInputMessageTemplateTypeSimpleText ofPeerId:[Telegram conversation].peer_id];
+            TGInputMessageTemplate *template = [TGInputMessageTemplate templateWithType:TGInputMessageTemplateTypeSimpleText ofPeerId:[Telegram conversation].peer_id];
             
             [template saveTemplateInCloudIfNeeded];
             

@@ -574,7 +574,7 @@ static NSArray *channelUpdates;
         if([update isKindOfClass:[TL_updateDraftMessage class]]) {
             TLDraftMessage *draft = [update draft];
             
-            TGInputMessageTemplate *template = [TGInputMessageTemplate dublicateTemplateWithType:TGInputMessageTemplateTypeSimpleText ofPeerId:update.peer.peer_id];
+            TGInputMessageTemplate *template = [TGInputMessageTemplate templateWithType:TGInputMessageTemplateTypeSimpleText ofPeerId:update.peer.peer_id];
             
             [template updateTemplateWithDraft:draft];
             [template performNotification];

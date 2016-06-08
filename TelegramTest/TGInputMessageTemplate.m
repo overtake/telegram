@@ -323,9 +323,7 @@ static NSString *kYapTemplateCollection = @"kYapTemplateCollection";
     return template;
 }
 
-+(TGInputMessageTemplate *)dublicateTemplateWithType:(TGInputMessageTemplateType)type ofPeerId:(int)peer_id {
-    return [[TGInputMessageTemplate templateWithType:type ofPeerId:peer_id] copy];
-}
+
 
 -(NSString *)key {
     return [NSString stringWithFormat:@"%d_%d",_peer_id,_type];

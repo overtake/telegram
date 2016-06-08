@@ -251,7 +251,7 @@ static void TGTelegramLoggingFunction(NSString *format, va_list args)
             
             if(dialog.type == DialogTypeChat) {
                 if(msg) {
-                    TGInputMessageTemplate *template = [TGInputMessageTemplate dublicateTemplateWithType:TGInputMessageTemplateTypeSimpleText ofPeerId:msg.peer_id];
+                    TGInputMessageTemplate *template = [TGInputMessageTemplate templateWithType:TGInputMessageTemplateTypeSimpleText ofPeerId:msg.peer_id];
                     [template setReplyMessage:msg save:YES];
                     [template performNotification];
                 }

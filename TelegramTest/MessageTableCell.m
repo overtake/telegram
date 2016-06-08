@@ -192,7 +192,7 @@
         if(self.item.message.conversation.type != DialogTypeSecretChat || self.item.message.conversation.encryptedChat.encryptedParams.layer >= 45) {
             [items addObject:[NSMenuItem menuItemWithTitle:NSLocalizedString(@"Context.Reply", nil) withBlock:^(id sender) {
                 
-                TGInputMessageTemplate *template = [TGInputMessageTemplate dublicateTemplateWithType:TGInputMessageTemplateTypeSimpleText ofPeerId:self.item.message.peer_id];
+                TGInputMessageTemplate *template = [TGInputMessageTemplate templateWithType:TGInputMessageTemplateTypeSimpleText ofPeerId:self.item.message.peer_id];
                 [template setReplyMessage:self.item.message save:YES];
                 [template performNotification];
                 
@@ -270,7 +270,7 @@
         
         if(accept && self.item.message.n_id < TGMINFAKEID && self.item.message.n_id > 0)
         {
-            TGInputMessageTemplate *template = [TGInputMessageTemplate dublicateTemplateWithType:TGInputMessageTemplateTypeSimpleText ofPeerId:self.item.message.peer_id] ;
+            TGInputMessageTemplate *template = [TGInputMessageTemplate templateWithType:TGInputMessageTemplateTypeSimpleText ofPeerId:self.item.message.peer_id] ;
             [template setReplyMessage:self.item.message save:YES];
             [template performNotification];
         }

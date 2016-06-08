@@ -982,7 +982,7 @@ static NSMutableDictionary *inlineBotsExceptions;
         
         [self.messagesViewController sendContextBotResult:item.botResult via_bot_id:item.bot.n_id via_bot_name:item.bot.username queryId:item.queryId forConversation:self.messagesViewController.conversation];
         
-        TGInputMessageTemplate *template = [TGInputMessageTemplate dublicateTemplateWithType:TGInputMessageTemplateTypeSimpleText ofPeerId:self.messagesViewController.conversation.peer_id];
+        TGInputMessageTemplate *template = [TGInputMessageTemplate templateWithType:TGInputMessageTemplateTypeSimpleText ofPeerId:self.messagesViewController.conversation.peer_id];
         
         template.autoSave = NO;
         [template updateTextAndSave:@""];

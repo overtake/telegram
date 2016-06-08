@@ -1843,7 +1843,7 @@ static RBLPopover *popover;
         
         [_replyContainer setDeleteHandler:^{
            
-            TGInputMessageTemplate *template = [TGInputMessageTemplate dublicateTemplateWithType:TGInputMessageTemplateTypeSimpleText ofPeerId:weakSelf.dialog.peer_id];
+            TGInputMessageTemplate *template = [TGInputMessageTemplate templateWithType:TGInputMessageTemplateTypeSimpleText ofPeerId:weakSelf.dialog.peer_id];
             [template setReplyMessage:nil save:YES];
             [template performNotification];
             

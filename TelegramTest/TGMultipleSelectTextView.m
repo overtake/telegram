@@ -135,7 +135,7 @@
             
             [menu insertItem:[NSMenuItem menuItemWithTitle:NSLocalizedString(@"Context.Reply", nil) withBlock:^(id sender) {
                 
-                TGInputMessageTemplate *template = [TGInputMessageTemplate dublicateTemplateWithType:TGInputMessageTemplateTypeSimpleText ofPeerId:item.message.peer_id];
+                TGInputMessageTemplate *template = [TGInputMessageTemplate templateWithType:TGInputMessageTemplateTypeSimpleText ofPeerId:item.message.peer_id];
                 [template setReplyMessage:item.message save:YES];
                 [template performNotification];
                 

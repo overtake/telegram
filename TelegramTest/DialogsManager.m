@@ -347,7 +347,7 @@
                 
                 if(message.replyMessage && message.replyMessage.from_id == [UsersManager currentUserId]) {
                     
-                    TGInputMessageTemplate *template = [TGInputMessageTemplate dublicateTemplateWithType:TGInputMessageTemplateTypeSimpleText ofPeerId:message.peer_id];
+                    TGInputMessageTemplate *template = [TGInputMessageTemplate templateWithType:TGInputMessageTemplateTypeSimpleText ofPeerId:message.peer_id];
                     
                     [template setReplyMessage:message.replyMessage save:YES];
                     

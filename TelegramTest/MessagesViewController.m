@@ -743,7 +743,8 @@ static NSMutableDictionary *savedScrolling;
         
         TGInputMessageTemplate *t = notification.userInfo[KEY_TEMPLATE];
         
-        if(_editTemplate && (![_editTemplate.text isEqualToString:t.text] || _editTemplate.replyMessage.n_id != t.replyMessage.n_id || _editTemplate.noWebpage != t.noWebpage) && _editTemplate.type == t.type) {
+        if(t.applyNextNotification) {
+            t.applyNextNotification = NO;
             BOOL autoSave = _editTemplate.autoSave;
             _editTemplate = t;
             _editTemplate.autoSave = autoSave;
