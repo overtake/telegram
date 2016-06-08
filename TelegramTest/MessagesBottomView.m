@@ -2071,7 +2071,7 @@ static RBLPopover *popover;
     [self.sendButton setFrameSize:size];
     [self.sendButton setFrameOrigin:NSMakePoint(self.bounds.size.width - size.width - 17, 19)];
     
-    self.inputMessageTextField.containerView.frame = NSMakeRect(offsetX, NSMinY(self.inputMessageTextField.containerView.frame), self.bounds.size.width - offsetX - self.sendButton.frame.size.width - 33, NSHeight(self.inputMessageTextField.containerView.frame));
+    self.inputMessageTextField.containerView.frame = NSMakeRect(offsetX, NSMinY(self.inputMessageTextField.containerView.frame), self.bounds.size.width - offsetX - (self.inlineBot != nil ? 0 : self.sendButton.frame.size.width ) - 33, NSHeight(self.inputMessageTextField.containerView.frame));
 
 
 }

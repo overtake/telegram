@@ -174,10 +174,11 @@
     __block BOOL removeKeyboard = NO;
     
     
-    TGInputMessageTemplate *template = [TGInputMessageTemplate dublicateTemplateWithType:TGInputMessageTemplateTypeSimpleText ofPeerId:conversation.peer_id];
+    TGInputMessageTemplate *template = [TGInputMessageTemplate templateWithType:TGInputMessageTemplateTypeSimpleText ofPeerId:conversation.peer_id];
     
     replyMessage = template.replyMessage;
     [template setReplyMessage:nil save:YES];
+    
     
     
     [[Storage yap] readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {

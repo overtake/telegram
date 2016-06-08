@@ -31,6 +31,8 @@ typedef enum {
 @property (nonatomic,assign) BOOL autoSave;
 @property (nonatomic,strong) NSString *disabledWebpage;
 
+@property (nonatomic,assign) BOOL applyNextNotification;
+
 -(BOOL)noWebpage;
 
 -(void)setReplyMessage:(TL_localMessage *)replyMessage save:(BOOL)save;
@@ -46,7 +48,6 @@ typedef enum {
 -(void)saveTemplateInCloudIfNeeded;
 
 +(TGInputMessageTemplate *)templateWithType:(TGInputMessageTemplateType)type ofPeerId:(int)peer_id;
-+(TGInputMessageTemplate *)dublicateTemplateWithType:(TGInputMessageTemplateType)type ofPeerId:(int)peer_id;
 -(void)performNotification;
 
 @end

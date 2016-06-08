@@ -185,6 +185,7 @@ static NSString *kYapTemplateCollection = @"kYapTemplateCollection";
 }
 
 -(void)performNotification {
+    _applyNextNotification = YES;
     [Notification perform:UPDATE_MESSAGE_TEMPLATE data:@{KEY_TEMPLATE:self,KEY_PEER_ID:@(_peer_id)}];
 }
 
@@ -293,6 +294,8 @@ static NSString *kYapTemplateCollection = @"kYapTemplateCollection";
 }
 
 -(void)saveForce {
+    
+     cancel_delayed_block(_futureblock);
     
     
     [[Storage yap] readWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
