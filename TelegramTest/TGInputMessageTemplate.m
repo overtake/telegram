@@ -266,9 +266,12 @@ static NSString *kYapTemplateCollection = @"kYapTemplateCollection";
 }
 
 -(void)updateTextAndSave:(NSString *)newText {
+    
+    BOOL save = ![_text isEqualToString:newText];
+    
     _text = newText;
     
-    if(_autoSave) {
+    if(_autoSave && save) {
         cancel_delayed_block(_futureblock);
         
         _futureblock = perform_block_after_delay(0.5, ^{
@@ -292,7 +295,7 @@ static NSString *kYapTemplateCollection = @"kYapTemplateCollection";
 -(void)saveForce {
     
     
-    [[Storage yap] asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
+    [[Storage yap] readWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
         
         [transaction setObject:self forKey:self.key inCollection:kYapTemplateCollection];
         

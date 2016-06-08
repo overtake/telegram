@@ -981,7 +981,17 @@ static NSMutableDictionary *inlineBotsExceptions;
     } else if(_currentTableView == _contextTableView) {
         
         [self.messagesViewController sendContextBotResult:item.botResult via_bot_id:item.bot.n_id via_bot_name:item.bot.username queryId:item.queryId forConversation:self.messagesViewController.conversation];
-        [self.messagesViewController.bottomView setInputMessageString:@"" disableAnimations:NO];
+        
+        TGInputMessageTemplate *template = [TGInputMessageTemplate dublicateTemplateWithType:TGInputMessageTemplateTypeSimpleText ofPeerId:self.messagesViewController.conversation.peer_id];
+        
+        template.autoSave = NO;
+        [template updateTextAndSave:@""];
+        template.autoSave = YES;
+        [template saveForce];
+        
+        [template performNotification];
+        
+     //   [self.messagesViewController.bottomView setInputMessageString:@"" disableAnimations:NO];
         
         
     }

@@ -2696,7 +2696,7 @@ static NSTextAttachment *headerMediaIcon() {
         [self.stickerPanel hide:YES];
     }
     
-    [Notification perform:UPDATE_MESSAGE_TEMPLATE data:@{KEY_TEMPLATE:_editTemplate,KEY_PEER_ID:@(_conversation.peer_id)}];
+  //  [Notification perform:UPDATE_MESSAGE_TEMPLATE data:@{KEY_TEMPLATE:_editTemplate,KEY_PEER_ID:@(_conversation.peer_id)}];
 }
 
 - (void)showMessage:(TL_localMessage *)message fromMsg:(TL_localMessage *)fromMsg flags:(int)flags {
