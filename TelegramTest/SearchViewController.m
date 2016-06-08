@@ -848,7 +848,7 @@ static int insertCount = 3;
     
     
     if((self.type & SearchTypeContacts) == SearchTypeContacts) {
-        
+        searchParams.dialogs = [NSMutableArray array];
         searchParams.users = [NSMutableArray array];
         searchParams.contacts = [NSMutableArray array];
         

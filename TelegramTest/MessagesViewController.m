@@ -267,6 +267,41 @@
         [self loadhistory:0 toEnd:YES prev:NO isFirst:YES];
     }
     
+    if(_jumpToBottomButton.messagesCount > 0 && !_jumpToBottomButton.isHidden) {
+        
+        BOOL addScrollOffset = [self.messages indexOfObject:_unreadMark] != NSNotFound;
+        
+        [self deleteItem:_unreadMark];
+        
+        
+        
+        if(!_unreadMark)
+        {
+            _unreadMark = [[MessageTableItemUnreadMark alloc] initWithCount:0 type:RemoveUnreadMarkAfterSecondsType];
+        }
+        
+       // [self insertAndGoToEnd:<#(NSRange)#> forceEnd:<#(BOOL)#> items:<#(NSArray *)#>]
+        
+        int pos = _jumpToBottomButton.messagesCount + 1;
+        
+        NSArray *items = @[_unreadMark];
+        
+        NSRange range = [self insertMessageTableItemsToList:items startPosition:pos needCheckLastMessage:YES backItems:&items checkActive:NO];
+        
+        [self insertAndGoToEnd:range forceEnd:NO items:@[_unreadMark]];
+        
+       // [self messagesLoadedTryToInsert:@[_unreadMark] pos:_jumpToBottomButton.messagesCount+1 next:NO];
+
+        //[self.table.scrollView scrollToPoint:NSMakePoint(0, self.table.scrollView.documentOffset.y - (addScrollOffset ? _unreadMark.viewSize.height : -_unreadMark.viewSize.height)) animation:NO];
+      
+        dispatch_async(dispatch_get_current_queue(), ^{
+            [self scrollToUnreadItem:YES];
+        });
+        
+        
+        return;
+    }
+    
     [self.table.scrollView scrollToPoint:NSMakePoint(0, 0) animation:animated];
 }
 
@@ -1840,7 +1875,7 @@ static NSTextAttachment *headerMediaIcon() {
 
 
 - (void)updateScrollBtn {
-    static int min_go_size = 1000;
+    static int min_go_size = 300;
     static int max_go_size = 500;
     
     float offset = self.table.scrollView.documentOffset.y;
@@ -1936,6 +1971,8 @@ static NSTextAttachment *headerMediaIcon() {
             }
         }];
     }
+    
+    [self tryRead];
 }
 
 - (void) dealloc {
@@ -3079,10 +3116,27 @@ static NSTextAttachment *headerMediaIcon() {
     return YES;
 }
 
+-(BOOL)haveUnreadMessagesInVisibleRect {
+    NSRange range = [self.table rowsInRect:[self.table visibleRect]];
+    
+    
+    __block BOOL have = NO;
+    
+    [self.messages enumerateObjectsAtIndexes:[NSIndexSet indexSetWithIndexesInRange:range] options:0 usingBlock:^(MessageTableItem *obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        
+        if(obj.message.n_id > self.conversation.read_inbox_max_id) {
+            *stop = have = YES;
+        }
+        
+    }];
+    
+    return have;
+}
+
 - (void)tryRead {
     
     
-    if(!self.view.isHidden && self.view.window.isKeyWindow && ![TGPasslock isVisibility]) {
+    if(!self.view.isHidden && self.view.window.isKeyWindow && ![TGPasslock isVisibility] && self.haveUnreadMessagesInVisibleRect) {
         
         [MessagesManager clearNotifies:_conversation max_id:_conversation.top_message];
         
@@ -3091,21 +3145,16 @@ static NSTextAttachment *headerMediaIcon() {
         
         [self.conversation save];
         
-        cancel_delayed_block(_delayedBlockHandle);
-        
-        _delayedBlockHandle = perform_block_after_delay(0.2f, ^{
-            _delayedBlockHandle = nil;
-            if(self.conversation.unread_count > 0 || self.conversation.peer.user_id == [UsersManager currentUserId]) {
-                [self readHistory:0];
-            }
-        });
+        if(self.conversation.unread_count > 0 || self.conversation.peer.user_id == [UsersManager currentUserId]) {
+            [self readHistory:0];
+        }
     }
 }
 
 
 
 - (void)readHistory:(int)offset{
-        
+    
     if(!self.conversation || (self.conversation.unread_count == 0) || (self.conversation.type != DialogTypeSecretChat && (self.conversation.chat.isKicked || self.conversation.chat.left)))
         return;
     

@@ -440,6 +440,9 @@ static NSDictionary *attributes() {
             return nil;
         }
         
+        if([self.item.conversation.draft isKindOfClass:[TL_draftMessage class]])
+            return nil;
+        
         if(self.item.message.dstate == DeliveryStateNormal) {
             
             if(!self.item.message.unread) {

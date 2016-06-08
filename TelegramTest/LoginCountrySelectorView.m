@@ -115,13 +115,9 @@
         //        [self addSubview:self.countryCodeTextField];
         
         
-        NSString *countryCode = [[NSLocale currentLocale] objectForKey:NSLocaleCountryCode];
-        if(countryCode) {
-            CountryItem *item = [[_ountriesManager sharedManager] itemBySmallCountryName:countryCode];
-            if(item) {
-                [self changeCountry:[[NSMenuItem alloc] initWithTitle:item.fullCountryName action:NULL keyEquivalent:@""]];
-            }
-        }
+
+//        
+        [self loadNearstDc];
         
         dispatch_async(dispatch_get_main_queue(), ^{
             [self.numberTextField.window makeFirstResponder:self.numberTextField];
@@ -134,6 +130,31 @@
         });
     }
     return self;
+}
+
+-(void)loadNearstDc {
+    
+    dispatch_block_t dblock = ^{
+        NSString *countryCode = [[NSLocale currentLocale] objectForKey:NSLocaleCountryCode];
+        if(countryCode) {
+            CountryItem *item = [[_ountriesManager sharedManager] itemBySmallCountryName:countryCode];
+            if(item) {
+                [self changeCountry:[[NSMenuItem alloc] initWithTitle:item.fullCountryName action:NULL keyEquivalent:@""]];
+            }
+        }
+    };
+    
+    [RPCRequest sendRequest:[TLAPI_help_getNearestDc create] successHandler:^(id request, TL_nearestDc *response) {
+        
+        CountryItem *item = [[_ountriesManager sharedManager] itemBySmallCountryName:response.country];
+        if(item)
+            [self changeCountry:[[NSMenuItem alloc] initWithTitle:item.fullCountryName action:NULL keyEquivalent:@""]];
+         else
+            dblock();
+        
+    } errorHandler:^(id request, RpcError *error) {
+        dblock();
+    } timeout:10];
 }
 
 - (void)changeCountry:(NSMenuItem *)item {

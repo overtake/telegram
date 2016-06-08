@@ -466,7 +466,7 @@ DYNAMIC_PROPERTY(DUser);
     
     
     
-    NSArray *users = [UsersManager findUsersByMention:query withUids:uids acceptContextBots:NO acceptNonameUsers:self.messagesViewController.state != MessagesViewControllerStateEditMessage || (self.messagesViewController.editTemplate.editMessage.media == nil || [self.messagesViewController.editTemplate.editMessage.media isKindOfClass:[TL_messageMediaWebPage class]])];
+    NSArray *users = chat ? [UsersManager findUsersByMention:query withUids:uids acceptContextBots:NO acceptNonameUsers:self.messagesViewController.state != MessagesViewControllerStateEditMessage || (self.messagesViewController.editTemplate.editMessage.media == nil || [self.messagesViewController.editTemplate.editMessage.media isKindOfClass:[TL_messageMediaWebPage class]])] : nil;
     
     
     __block NSMutableArray *botUsers = [[NSMutableArray alloc] init];

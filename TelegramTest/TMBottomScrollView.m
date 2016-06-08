@@ -74,8 +74,8 @@
 - (void)clickHandler {
 
     if(_callback) {
-        [self setHidden:YES];
         _callback();
+        [self setHidden:YES];
     }
 }
 
