@@ -345,17 +345,14 @@
             
             if([message.reply_markup isKindOfClass:[TL_replyKeyboardForceReply class]]) {
                 
-                if(message.replyMessage && message.replyMessage.from_id == [UsersManager currentUserId]) {
-                    
-                    TGInputMessageTemplate *template = [TGInputMessageTemplate templateWithType:TGInputMessageTemplateTypeSimpleText ofPeerId:message.peer_id];
-                    
-                    [template setReplyMessage:message.replyMessage save:YES];
-                    
-                    [template performNotification];
-                    
-                    
-                    notify = NO;
-                }
+                TGInputMessageTemplate *template = [TGInputMessageTemplate templateWithType:TGInputMessageTemplateTypeSimpleText ofPeerId:message.peer_id];
+                
+                [template setReplyMessage:message save:YES];
+                
+                [template performNotification];
+                
+                notify = NO;
+
                 
             }
             

@@ -3809,11 +3809,7 @@ static NSTextAttachment *headerMediaIcon() {
         if(message.length > 0) {
             
             BOOL nowebpage = _editTemplate.noWebpage;
-            
-            [self.bottomView setInputMessageString:@"" disableAnimations:NO];
-            
-            [_editTemplate saveTemplateInCloudIfNeeded];
-            
+                        
             [self sendMessage:message forConversation:self.conversation nowebpage:nowebpage callback:^{
                 [_typingReservation removeAllObjects];
             }];

@@ -889,6 +889,7 @@
 		C2E5A0611BABF33C00C1BCA1 /* TL_localMessageService_old34.m in Sources */ = {isa = PBXBuildFile; fileRef = C2E5A0601BABF33C00C1BCA1 /* TL_localMessageService_old34.m */; };
 		C2E5A0731BAC75C200C1BCA1 /* TGMessageViewSender.m in Sources */ = {isa = PBXBuildFile; fileRef = C2E5A0721BAC75C100C1BCA1 /* TGMessageViewSender.m */; };
 		C2EA57971C9B209E0085F72F /* NSImage+RHResizableImageAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A235AD31823238900D2247B /* NSImage+RHResizableImageAdditions.m */; };
+		C2EBE3211D09CD90009D9C96 /* TGGifPreviewModalView.m in Sources */ = {isa = PBXBuildFile; fileRef = C2EBE3201D09CD90009D9C96 /* TGGifPreviewModalView.m */; };
 		C2ED28041BFF7F0E00F19531 /* TGReportChannelModalView.m in Sources */ = {isa = PBXBuildFile; fileRef = C2ED28031BFF7F0E00F19531 /* TGReportChannelModalView.m */; };
 		C2ED357D18D9FECB00D0027C /* CAProgressLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = C2ED357C18D9FECB00D0027C /* CAProgressLayer.m */; };
 		C2ED75141C25BB0900002ACF /* TGVideoContainerView.m in Sources */ = {isa = PBXBuildFile; fileRef = C2ED75131C25BB0900002ACF /* TGVideoContainerView.m */; };
@@ -2736,6 +2737,8 @@
 		C2E5A0601BABF33C00C1BCA1 /* TL_localMessageService_old34.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TL_localMessageService_old34.m; sourceTree = "<group>"; };
 		C2E5A0711BAC75C100C1BCA1 /* TGMessageViewSender.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGMessageViewSender.h; sourceTree = "<group>"; };
 		C2E5A0721BAC75C100C1BCA1 /* TGMessageViewSender.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGMessageViewSender.m; sourceTree = "<group>"; };
+		C2EBE31F1D09CD90009D9C96 /* TGGifPreviewModalView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGGifPreviewModalView.h; sourceTree = "<group>"; };
+		C2EBE3201D09CD90009D9C96 /* TGGifPreviewModalView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGGifPreviewModalView.m; sourceTree = "<group>"; };
 		C2ED28021BFF7F0E00F19531 /* TGReportChannelModalView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGReportChannelModalView.h; sourceTree = "<group>"; };
 		C2ED28031BFF7F0E00F19531 /* TGReportChannelModalView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGReportChannelModalView.m; sourceTree = "<group>"; };
 		C2ED357B18D9FECB00D0027C /* CAProgressLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CAProgressLayer.h; sourceTree = "<group>"; };
@@ -5591,6 +5594,8 @@
 				C20B82AF1BDA975500EF01AD /* TGShareContactModalView.m */,
 				C2ED28021BFF7F0E00F19531 /* TGReportChannelModalView.h */,
 				C2ED28031BFF7F0E00F19531 /* TGReportChannelModalView.m */,
+				C2EBE31F1D09CD90009D9C96 /* TGGifPreviewModalView.h */,
+				C2EBE3201D09CD90009D9C96 /* TGGifPreviewModalView.m */,
 			);
 			name = modal;
 			sourceTree = "<group>";
@@ -7258,6 +7263,7 @@
 				0AB4789818E304B100DF283B /* ChatAvatarImageView.m in Sources */,
 				C281C1781917D9C2007B160F /* DraggingControllerView.m in Sources */,
 				C24F877719FE7CAB00EC962E /* SecretLayer17.m in Sources */,
+				C2EBE3211D09CD90009D9C96 /* TGGifPreviewModalView.m in Sources */,
 				C22A2A0C1C21A38100678172 /* TGDocumentThumbObject.m in Sources */,
 				CE84548E1822C41D00E73DF7 /* ImageStorage.m in Sources */,
 				C247015919839A4B007AB338 /* TGTimerTarget.m in Sources */,

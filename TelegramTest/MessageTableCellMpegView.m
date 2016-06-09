@@ -12,6 +12,7 @@
 #import "TGVTVideoView.h"
 #import "TGImageView.h"
 #import "SpacemanBlocks.h"
+#import "TGGifPreviewModalView.h"
 @interface MessageTableCellMpegView () {
     SMDelayedBlockHandle _handle;
     BOOL _prevState;
@@ -119,6 +120,31 @@
     [self updateDownloadState:NO];
     
 }
+
+
+-(void)mouseDown:(NSEvent *)theEvent {
+    
+    if(self.isEditable)
+        [super mouseDown:theEvent];
+    else if(![self.containerView mouse:[self.containerView convertPoint:[theEvent locationInWindow] fromView:nil] inRect:self.playerContainer.frame]) {
+        [super mouseDown:theEvent];
+    } else {
+        
+        if(self.item.isset) {
+            TGGifPreviewModalView *preview = [[TGGifPreviewModalView alloc] initWithFrame:self.window.contentView.frame];
+            
+            [preview setGif:self.item];
+            
+            [preview show:self.window animated:YES];
+        }
+        
+    }
+    
+    
+    
+    
+}
+
 
 -(NSMenu *)contextMenu {
     
@@ -234,6 +260,8 @@
 
 
 -(void)mouseUp:(NSEvent *)theEvent {
+    
+    
     MessageTableItemMpeg *item = (MessageTableItemMpeg *) self.item;
     
     if(item.isset && [SettingsArchiver checkMaskedSetting:DisableAutoplayGifSetting]) {

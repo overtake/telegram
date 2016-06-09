@@ -743,16 +743,7 @@ static int insertCount = 3;
     
     
     
-    searchUsers = [searchUsers sortedArrayWithOptions:NSSortStable usingComparator:^NSComparisonResult(TLUser *obj1, TLUser *obj2) {
-        if(obj1.lastSeenTime > obj2.lastSeenTime) {
-            return NSOrderedAscending;
-        } else {
-            return NSOrderedDescending;
-        }
-    }];
-    
-    
-    NSMutableArray *cachePeers = [NSMutableArray array];
+    NSMutableDictionary *cachePeers = [NSMutableDictionary dictionary];
     
     
     if((self.type & SearchTypeDialogs) == SearchTypeDialogs) {
@@ -805,67 +796,47 @@ static int insertCount = 3;
         
         
         _dontLoadHashtagsForOneRequest = NO;
-        
-        
-//        
-//        
-//        [[Storage manager] searchDialogsByPeers:dialogsNeedCheck needMessages:NO searchString:nil completeHandler:^(NSArray *dialogsDB) {
-//            
-//            [[DialogsManager sharedManager] add:dialogsDB];
-//            [dialogs addObjectsFromArray:dialogsDB];
-//            
-//            NSArray *insertedDialogs = [dialogs sortedArrayWithOptions:NSSortStable usingComparator:^NSComparisonResult(TL_conversation *dialog1, TL_conversation *dialog2) {
-//                if(dialog1.last_message_date > dialog2.last_message_date) {
-//                    return NSOrderedAscending;
-//                } else {
-//                    return NSOrderedDescending;
-//                }
-//            }];
-//            
-//            
-//            searchParams.dialogs = [NSMutableArray array];
-//            for(TL_conversation *conversation in insertedDialogs) {
-//                
-//                [cachePeers addObject:@(conversation.peer.peer_id)];
-//                
-//                [searchParams.dialogs addObject:[[SearchItem alloc] initWithDialogItem:conversation searchString:searchString]];
-//            }
-//            
-//            
-//        }];
-        
+
         
     }
     
     
     if((self.type & SearchTypeContacts) == SearchTypeContacts) {
         searchParams.dialogs = [NSMutableArray array];
-        searchParams.users = [NSMutableArray array];
-        searchParams.contacts = [NSMutableArray array];
+
         
-        [searchChats enumerateObjectsUsingBlock:^(TLChat *chat, NSUInteger idx, BOOL * _Nonnull stop) {
-            if([cachePeers indexOfObject:@(chat.n_id)] == NSNotFound) {
-                id item = [[SearchItem alloc] initWithChatItem:chat searchString:searchParams.searchString];
-                
-                [searchParams.dialogs addObject:item];
-                
-                [cachePeers addObject:@(chat.n_id)];
-                
-            }
+        NSArray *alls = [searchChats arrayByAddingObjectsFromArray:searchUsers];
+        
+        alls = [alls sortedArrayUsingComparator:^NSComparisonResult(id  _Nonnull obj1, id  _Nonnull obj2) {
+            
+            TL_conversation *c1 = [obj1 dialog];
+            TL_conversation *c2 = [obj2 dialog];
+            
+            return c1.top_message > c2.top_message ? NSOrderedAscending : c1.top_message < c2.top_message ? NSOrderedDescending : NSOrderedSame;
+            
         }];
         
-        for(TLUser *user in searchUsers) {
+        [alls enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL * _Nonnull stop) {
             
-            if([cachePeers indexOfObject:@(user.n_id)] == NSNotFound) {
-                id item = [[SearchItem alloc] initWithUserItem:user searchString:searchParams.searchString];
+            TLChat *chat = obj;
+            TLUser *user = obj;
+            
+            id item;
+            
+            if(cachePeers[@(chat.n_id)] == nil) {
+                if([obj isKindOfClass:[TLChat class]])
+                    item = [[SearchItem alloc] initWithChatItem:chat searchString:searchParams.searchString];
+                else
+                    item = [[SearchItem alloc] initWithUserItem:user searchString:searchParams.searchString];
                 
                 [searchParams.dialogs addObject:item];
                 
-                [cachePeers addObject:@(user.n_id)];
-                
+                cachePeers[@(chat.n_id)] = @(chat.n_id);
+
             }
             
-        }
+        }];
+        
         
     }
     

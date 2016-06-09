@@ -177,8 +177,10 @@
     TGInputMessageTemplate *template = [TGInputMessageTemplate templateWithType:TGInputMessageTemplateTypeSimpleText ofPeerId:conversation.peer_id];
     
     replyMessage = template.replyMessage;
-    [template setReplyMessage:nil save:YES];
     
+    template.autoSave = NO;
+    [template setReplyMessage:nil save:NO];
+    [template updateTextAndSave:@""];
     
     
     [[Storage yap] readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
@@ -260,7 +262,8 @@
         outMessage.replyMessage = replyMessage;
     }
     
-    
+    [template saveForce];
+    [template saveTemplateInCloudIfNeeded];
     [template performNotification];
     
     
