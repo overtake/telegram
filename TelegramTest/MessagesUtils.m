@@ -302,6 +302,7 @@
         
         if(conversation.draft.message.length > 0 && ACCEPT_FEATURE) {
             [messageText appendString:[NSLocalizedString(@"Conversation.Draft", nil) stringByAppendingString:@"\n"] withColor:[NSColor redColor]];
+            [messageText setSelectionColor:[NSColor whiteColor] forColor:[NSColor redColor]];
         } else {
             if(chatUserNameString)
                 [messageText appendString:chatUserNameString withColor:!message.action ? DARK_BLACK : GRAY_TEXT_COLOR];

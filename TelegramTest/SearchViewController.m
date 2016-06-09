@@ -732,7 +732,7 @@ static int insertCount = 3;
                 TL_conversation *dialog = [[DialogsManager sharedManager] find:user.n_id];
                 
                 
-                return dialog && !dialog.fake;
+                return (dialog && !dialog.fake) || user.isContact;
             }
             
             return NO;
@@ -859,9 +859,7 @@ static int insertCount = 3;
             if([cachePeers indexOfObject:@(user.n_id)] == NSNotFound) {
                 id item = [[SearchItem alloc] initWithUserItem:user searchString:searchParams.searchString];
                 
-                if(user.type == TLUserTypeContact) {
-                    [searchParams.dialogs addObject:item];
-                }
+                [searchParams.dialogs addObject:item];
                 
                 [cachePeers addObject:@(user.n_id)];
                 
