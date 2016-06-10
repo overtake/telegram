@@ -216,6 +216,7 @@ static RBLPopover *race_popover;
         if(race_popover.isShown) {
             [race_popover close];
         }
+        [self.controller.esgViewController.epopover setLockHoverClose:NO];
     }
     
     
