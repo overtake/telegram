@@ -279,7 +279,7 @@
         
         
         
-        
+        [self.table.scrollView scrollToPoint:NSMakePoint(0, 0) animation:animated];
         
         return;
     }
@@ -320,6 +320,7 @@
     }
     
     [self.table.scrollView scrollToPoint:NSMakePoint(0, 0) animation:animated];
+    
 }
 
 -(Class)hControllerClass {
@@ -617,6 +618,12 @@ static NSMutableDictionary *savedScrolling;
         
         BOOL show = self.esgViewController.view.superview == nil;
         
+        weak();
+        
+        [self.esgViewController.emojiViewController setInsertEmoji:^(NSString *e) {
+            [weakSelf.bottomView insertEmoji:e];
+        }];
+        
         if(show) {
             [self.view addSubview:self.esgViewController.view];
             [self.esgViewController show];
@@ -684,67 +691,71 @@ static NSMutableDictionary *savedScrolling;
                     
                      item = [MessageTableItem messageItemFromObject:obj];
                     
-                    MessageTableItem *prevItem;
-                    
-                    if(index+1 < self.messages.count-1) {
-                        prevItem = self.messages[index+1];
+                    if(item) {
+                        MessageTableItem *prevItem;
+                        
+                        if(index+1 < self.messages.count-1) {
+                            prevItem = self.messages[index+1];
+                        }
+                        
+                        [self isHeaderMessage:item prevItem:prevItem];
+                        
+                        item.table = self.table;
+                        [item makeSizeByWidth:item.makeSize];
+                        
+                        [self.messages replaceObjectAtIndex:index withObject:item];
+                        self.messagesKeys[@(message.channelMsgId)] = item;
+                        if(index != NSNotFound) {
+                            
+                            [[NSAnimationContext currentContext] setDuration:0.0f];
+                            [self.table noteHeightOfRowsWithIndexesChanged:[NSIndexSet indexSetWithIndex:index]];
+                            [self.table reloadDataForRowIndexes:[NSIndexSet indexSetWithIndex:index] columnIndexes:[NSIndexSet indexSetWithIndex:0]];
+                            
+                            //                        NSTableRowView *rowView = [self.table rowViewAtRow:index makeIfNecessary:NO];
+                            //
+                            //                        MessageTableCell *cell = rowView.subviews[0];
+                            //
+                            //                        MessageTableCell *nCell = (MessageTableCell *) [self tableView:_table viewForTableColumn:nil row:index];
+                            //
+                            //
+                            //
+                            //                        [self.table endUpdates];
+                            //                        [nCell setFrameSize:NSMakeSize(NSWidth(cell.frame), item.viewSize.height)];
+                            //
+                            //#ifdef TGDEBUG
+                            //                        assert(nCell.class == item.viewClass);
+                            //#endif
+                            //                        if(nCell.class != item.viewClass)
+                            //                            return;
+                            //
+                            //                        POPBasicAnimation *fadeOut = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerOpacity];
+                            //                        fadeOut.fromValue = @(1.0f);
+                            //                        fadeOut.toValue = @(0.0f);
+                            //                        fadeOut.duration = 0.3;
+                            //                        fadeOut.removedOnCompletion = YES;
+                            //                        [cell.layer pop_addAnimation:fadeOut forKey:@"opacity"];
+                            //
+                            //                        [fadeOut setCompletionBlock:^(POPAnimation *animation, BOOL success) {
+                            //
+                            //                            if(success) {
+                            //                                
+                            //                                cell.layer.opacity = 1.0f;
+                            //                                [cell setItem:item];
+                            //                                [nCell removeFromSuperview];
+                            //                                
+                            ////                                if(![notification.userInfo[@"nonselect"] boolValue])
+                            ////                                    [cell searchSelection];
+                            //                            }
+                            //                            
+                            //                        }];
+                            //                        
+                            //                        assert(nCell != nil);
+                            //                        
+                            //                        [rowView addSubview:nCell positioned:NSWindowBelow relativeTo:cell];
+                        }
                     }
                     
-                    [self isHeaderMessage:item prevItem:prevItem];
                     
-                    item.table = self.table;
-                    [item makeSizeByWidth:item.makeSize];
-                    
-                    [self.messages replaceObjectAtIndex:index withObject:item];
-                    self.messagesKeys[@(message.channelMsgId)] = item;
-                    if(index != NSNotFound) {
-                        
-                        [[NSAnimationContext currentContext] setDuration:0.0f];
-                        [self.table noteHeightOfRowsWithIndexesChanged:[NSIndexSet indexSetWithIndex:index]];
-                        [self.table reloadDataForRowIndexes:[NSIndexSet indexSetWithIndex:index] columnIndexes:[NSIndexSet indexSetWithIndex:0]];
-                        
-//                        NSTableRowView *rowView = [self.table rowViewAtRow:index makeIfNecessary:NO];
-//                        
-//                        MessageTableCell *cell = rowView.subviews[0];
-//                        
-//                        MessageTableCell *nCell = (MessageTableCell *) [self tableView:_table viewForTableColumn:nil row:index];
-//                        
-//
-//                        
-//                        [self.table endUpdates];
-//                        [nCell setFrameSize:NSMakeSize(NSWidth(cell.frame), item.viewSize.height)];
-//                        
-//#ifdef TGDEBUG
-//                        assert(nCell.class == item.viewClass);
-//#endif
-//                        if(nCell.class != item.viewClass)
-//                            return;
-//                        
-//                        POPBasicAnimation *fadeOut = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerOpacity];
-//                        fadeOut.fromValue = @(1.0f);
-//                        fadeOut.toValue = @(0.0f);
-//                        fadeOut.duration = 0.3;
-//                        fadeOut.removedOnCompletion = YES;
-//                        [cell.layer pop_addAnimation:fadeOut forKey:@"opacity"];
-//                        
-//                        [fadeOut setCompletionBlock:^(POPAnimation *animation, BOOL success) {
-//                            
-//                            if(success) {
-//                                
-//                                cell.layer.opacity = 1.0f;
-//                                [cell setItem:item];
-//                                [nCell removeFromSuperview];
-//                                
-////                                if(![notification.userInfo[@"nonselect"] boolValue])
-////                                    [cell searchSelection];
-//                            }
-//                            
-//                        }];
-//                        
-//                        assert(nCell != nil);
-//                        
-//                        [rowView addSubview:nCell positioned:NSWindowBelow relativeTo:cell];
-                    }
                     
                     
                 }
@@ -1990,7 +2001,7 @@ static NSTextAttachment *headerMediaIcon() {
         }];
     }
     
-    [self tryRead];
+   // [self tryRead];
 }
 
 - (void) dealloc {
@@ -3154,7 +3165,7 @@ static NSTextAttachment *headerMediaIcon() {
 - (void)tryRead {
     
     
-    if(!self.view.isHidden && self.view.window.isKeyWindow && ![TGPasslock isVisibility] && self.haveUnreadMessagesInVisibleRect) {
+    if(!self.view.isHidden && self.view.window.isKeyWindow && ![TGPasslock isVisibility] ) {
         
         [MessagesManager clearNotifies:_conversation max_id:_conversation.top_message];
         

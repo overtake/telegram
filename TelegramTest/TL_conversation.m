@@ -87,7 +87,11 @@
 }
 
 -(void)setLastMessage:(TL_localMessage *)lastMessage {
+    
+    
     _lastMessage = lastMessage;
+    
+    
 }
 
 -(BOOL)canSendMessage {

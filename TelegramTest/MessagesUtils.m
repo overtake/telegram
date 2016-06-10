@@ -191,7 +191,7 @@
     
     
     [messageText beginEditing];
-    if(message) {
+    if(message && ![message.action isKindOfClass:[TL_messageActionHistoryClear class]]) {
         
         NSString *msgText = @"";
         NSMutableArray *users = [NSMutableArray array];

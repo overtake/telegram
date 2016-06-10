@@ -37,12 +37,15 @@
     if(entities.count > 0)
         flags |= (1 << 3);
     
+    
+    
     [RPCRequest sendRequest:[TLAPI_messages_editMessage createWithFlags:flags peer:_conversation.inputPeer n_id:_inputTemplate.postId message:message reply_markup:nil entities:entities] successHandler:^(id request, id response) {
         
         
         
     } errorHandler:^(id request, RpcError *error) {
-        alert(appName(), NSLocalizedString(@"EditMessage.EditErrorAlert", nil));
+        if(![error.error_msg  isEqualToString:@"MESSAGE_NOT_MODIFIED"])
+            alert(appName(), NSLocalizedString(@"EditMessage.EditErrorAlert", nil));
     }];
 }
 

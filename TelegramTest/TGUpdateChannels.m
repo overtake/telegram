@@ -558,6 +558,14 @@
                     
                     if(conversation.pts < [response pts]) {
                         
+                        [TL_localMessage convertReceivedMessages:[response n_messages]];
+                        
+                        // 
+                        // add check remote dialog unread count with current read_inbox_max_id
+                        //
+                        
+                        [self proccessHoleWithNewMessage:[response n_messages] channel:channel];
+                        
                         [[response other_updates] enumerateObjectsUsingBlock:^(TLUpdate *obj, NSUInteger idx, BOOL *stop) {
                             
                             obj.channel_id = channel_id;
@@ -570,9 +578,7 @@
                         
                         [conversation save];
                         
-                        [TL_localMessage convertReceivedMessages:[response n_messages]];
                         
-                        [self proccessHoleWithNewMessage:[response n_messages] channel:channel];
                     }
                     
                     

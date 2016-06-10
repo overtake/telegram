@@ -35,6 +35,7 @@
 +(TL_stickerSet *)setWithId:(long)n_id;
 +(NSArray *)stickersWithId:(long)n_id;
 
++(NSString *)emojiModifier:(NSString *)emoji;
 
 
 +(void)reloadStickers;

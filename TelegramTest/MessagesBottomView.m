@@ -1083,7 +1083,8 @@ static RBLPopover *popover;
 }
 
 - (void)insertEmoji:(NSString *)emoji {
-    [self.inputMessageTextField insertText:emoji];
+    if(self.dialog.canSendMessage)
+        [self.inputMessageTextField insertText:emoji];
 }
 
 -(void)closeEmoji {

@@ -44,6 +44,9 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "+[MessageSender createOutMessage:media:conversation:additionFlags:]:MessageSender.m">
+      </ContextState>
+      <ContextState
          contextName = "__35-[DownloadQueue operationComplete:]_block_invoke_2:DownloadQueue.mm">
       </ContextState>
       <ContextState
@@ -4087,10 +4090,16 @@
          contextName = "__51-[DialogsManager markAllMessagesAsRead:max_id:out:]_block_invoke_3:DialogsManager.m">
          <PersistentStrings>
             <PersistentString
+               value = "messages">
+            </PersistentString>
+            <PersistentString
+               value = "">
+            </PersistentString>
+            <PersistentString
                value = "conversation.unread_count">
             </PersistentString>
             <PersistentString
-               value = "messages">
+               value = "unread_count">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -4950,6 +4959,9 @@
          contextName = "__35-[TGPVUserBehavior convertObjects:]_block_invoke:TGPVUserBehavior.m">
       </ContextState>
       <ContextState
+         contextName = "__75-[DialogsManager markChannelMessagesAsRead:max_id:n_out:completionHandler:]_block_invoke_3:DialogsManager.m">
+      </ContextState>
+      <ContextState
          contextName = "-[HistoryFilter remoteRequest:peer_id:callback:]:HistoryFilter.m">
          <PersistentStrings>
             <PersistentString
@@ -4982,6 +4994,9 @@
             </PersistentString>
             <PersistentString
                value = "self.conversation">
+            </PersistentString>
+            <PersistentString
+               value = "notification.userInfo[KEY_DIALOG]">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -5096,6 +5111,9 @@
          <PersistentStrings>
             <PersistentString
                value = "message.date">
+            </PersistentString>
+            <PersistentString
+               value = "message.message">
             </PersistentString>
             <PersistentString
                value = "self.isN_out">
@@ -5333,6 +5351,11 @@
       </ContextState>
       <ContextState
          contextName = "-[TGMessageEditSender performEdit:]:TGMessageEditSender.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "error">
+            </PersistentString>
+         </PersistentStrings>
       </ContextState>
       <ContextState
          contextName = "__39-[ChatAvatarImageView updateChatPhoto:]_block_invoke_2274:ChatAvatarImageView.m">
@@ -5633,10 +5656,7 @@
                value = "max_id">
             </PersistentString>
             <PersistentString
-               value = "read_inbox_max_id">
-            </PersistentString>
-            <PersistentString
-               value = "n_out">
+               value = "messages">
             </PersistentString>
             <PersistentString
                value = "ids">
@@ -6625,6 +6645,9 @@
       </ContextState>
       <ContextState
          contextName = "-[MTContext transportSchemeForDatacenterWithid:]:MTContext.m">
+      </ContextState>
+      <ContextState
+         contextName = "__35-[TGInputMessageTemplate saveForce]_block_invoke:TGInputMessageTemplate.m">
       </ContextState>
       <ContextState
          contextName = "-[TGReplyObject initWithReplyMessage:]:TGReplyObject.m">

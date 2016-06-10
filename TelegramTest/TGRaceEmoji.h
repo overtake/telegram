@@ -14,7 +14,6 @@
 
 -(BOOL)makeWithEmoji:(NSString *)emoji;
 @property (nonatomic,weak) TGModernEmojiViewController *controller;
-@property (nonatomic,weak) BTRButton *ebutton;
 
 -(id)initWithFrame:(NSRect)frame emoji:(NSString *)emoji;
 @end

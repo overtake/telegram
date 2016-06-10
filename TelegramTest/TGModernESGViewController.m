@@ -145,6 +145,16 @@ static NSMutableDictionary *stickers;
     return stickers[@(n_id)];
 }
 
++(NSString *)emojiModifier:(NSString *)emoji {
+    NSUserDefaults *s = [NSUserDefaults standardUserDefaults];
+    
+    
+    NSMutableDictionary *modifiers = [s objectForKey:@"emojiModifiers"];
+    
+    
+    return modifiers[emoji];
+}
+
 +(void)reloadStickers {
 
     [esgControllers enumerateObjectsUsingBlock:^(WeakReference *obj, NSUInteger idx, BOOL * _Nonnull stop) {

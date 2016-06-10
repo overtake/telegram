@@ -61,10 +61,10 @@ static NSDictionary *elements;
     [self.view removeAllSubviews];
     
     for(int i = 0; i < _currentElements.count; i++) {
-        EmojiButton *button = [[EmojiButton alloc] initWithFrame:NSMakeRect(2+ (34 * i), 2, 34, 34)];
-//        [button setTitle:_currentElements[i] forControlState:BTRControlStateNormal];
-//        [button setTitleFont:TGSystemFont(17) forControlState:BTRControlStateNormal];
-//        [button addTarget:self action:@selector(emojiClick:) forControlEvents:BTRControlEventLeftClick];
+        BTRButton *button = [[BTRButton alloc] initWithFrame:NSMakeRect(2+ (34 * i), 2, 34, 34)];
+        [button setTitle:_currentElements[i] forControlState:BTRControlStateNormal];
+        [button setTitleFont:TGSystemFont(17) forControlState:BTRControlStateNormal];
+        [button addTarget:self action:@selector(emojiClick:) forControlEvents:BTRControlEventLeftClick];
         
         [self.view addSubview:button];
     }
@@ -84,7 +84,6 @@ static NSDictionary *elements;
 -(void)emojiClick:(BTRButton *)button {
     [self.controller insertEmoji:button.titleLabel.stringValue];
     [self.controller saveModifier:[button.titleLabel.stringValue emojiModifier:button.titleLabel.stringValue] forEmoji:_emoji];
-    [self.ebutton setTitle:button.titleLabel.stringValue forControlState:BTRControlStateNormal];
     [self.popover close];
 }
 

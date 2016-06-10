@@ -61,7 +61,9 @@
         
         [[Storage manager] dialogsWithOffset:_offset limit:_offset > 0 ? 1000 : [self.delegate conversationsLoadingLimit] completeHandler:^(NSArray *d) {
             
-            [[DialogsManager sharedManager] add:d];
+            
+            
+            [[DialogsManager sharedManager] add:d updateCurrent:NO];
             
              [_queue dispatchOnQueue:^{
                  

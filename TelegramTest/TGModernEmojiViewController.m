@@ -14,6 +14,7 @@
 #import "TGTextLabel.h"
 #import "TGModernStickRowItem.h"
 #import "MessagesBottomView.h"
+#import "NSString+Extended.h"
 @interface TGModernEmojiRowView : TMRowView
 @property (nonatomic, strong) RBLPopover *racePopover;
 @end
@@ -70,6 +71,12 @@
         [object enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
            
             NSMutableAttributedString *attr = [[NSMutableAttributedString alloc] init];
+            
+            NSString *modifier = [TGModernESGViewController emojiModifier:obj];
+            
+            if(modifier) {
+                obj = [obj emojiWithModifier:modifier emoji:obj];
+            }
             
             [attr appendString:obj];
             
@@ -129,6 +136,8 @@
                 [item.controller insertEmoji:emoji];
             }
         }];
+        
+
            // [button addTarget:self action:@selector(emojiClick:) forControlEvents:BTRControlEventMouseUpInside];
             
             if(floor(NSAppKitVersionNumber) >= 1347 ) {
@@ -158,54 +167,6 @@
 }
 
 
--(void)emojiLongClick:(BTRButton *)button {
-    
-    TGModernEmojiRowItem *item = (TGModernEmojiRowItem *) self.rowItem;
-    
-    static TGRaceEmoji *e_race_controller;
-    static RBLPopover *race_popover;
-    
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        e_race_controller = [[TGRaceEmoji alloc] initWithFrame:NSMakeRect(0, 0, 208, 38) emoji:nil];
-        
-        race_popover = [[RBLPopover alloc] initWithContentViewController:(NSViewController *) e_race_controller];
-        
-        [race_popover setDidCloseBlock:^(RBLPopover *popover){
-            [item.controller.epopover setLockHoverClose:NO];
-        }];
-        
-        [e_race_controller loadView];
-        
-        
-    });
-    
-    e_race_controller.popover = race_popover;
-    e_race_controller.controller = item.controller;
-    e_race_controller.ebutton = button;
-    
-    [race_popover setHoverView:button];
-    [race_popover close];
-    
-    if([e_race_controller makeWithEmoji:[button.titleLabel.stringValue getEmojiFromString:YES][0]]) {
-        
-        [item.controller.epopover setLockHoverClose:YES];
-        
-        NSRect frame = button.bounds;
-        frame.origin.y += 4;
-        
-        
-        if(!race_popover.isShown) {
-            [race_popover showRelativeToRect:frame ofView:button preferredEdge:CGRectMaxYEdge];
-            
-        }
-    } else {
-        [race_popover setHoverView:nil];
-    }
-    
-    
-}
-
 -(void)redrawRow {
     [super redrawRow];
     
@@ -223,13 +184,10 @@
     
     
     EmojiButton *button = [self.subviews objectAtIndex:index];
-        
-//    NSString *modifier = [item.controller emojiModifier:string];
-//    
-//    if(modifier) {
-//        string = [string emojiWithModifier:modifier emoji:string];
-//    }
-//    
+    button.controller = item.controller;
+    
+   
+    
     [button setList:item.list];
 
 //    
@@ -464,6 +422,9 @@ static NSArray *segment_list;
     
     
     [s setObject:modifiers forKey:@"emojiModifiers"];
+    
+    
+    [self show];
     
 }
 

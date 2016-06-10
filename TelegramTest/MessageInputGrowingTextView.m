@@ -100,7 +100,7 @@ typedef enum {
 
 -(void)insertText:(id)insertString {
     //lol. MessagesBottomView
-    if(!self.superview.superview.superview.superview.superview.isHidden) {
+    if(!self.superview.superview.superview.superview.superview.isHidden && insertString) {
         
         NSRange range = self.selectedRange;
         

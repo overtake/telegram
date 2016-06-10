@@ -45,4 +45,6 @@
 
 -(void)notifyAfterUpdateConversation:(TL_conversation *)conversation;
 
+- (void)add:(NSArray *)all updateCurrent:(BOOL)updateCurrent;
+
 @end

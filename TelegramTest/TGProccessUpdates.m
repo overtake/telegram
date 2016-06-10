@@ -1129,6 +1129,10 @@ static NSArray *channelUpdates;
             
             [response setN_messages:copy];
             
+            if([response n_messages].count > 0) {
+                [Notification performOnStageQueue:MESSAGE_LIST_UPDATE_TOP data:@{KEY_MESSAGE_LIST:[response n_messages]}];
+            }
+            
             for (TLUpdate *update in [updates other_updates]) {
                 
                 if([channelUpdates indexOfObject:update.className] != NSNotFound)
@@ -1137,10 +1141,7 @@ static NSArray *channelUpdates;
                     [self proccessUpdate:update];
             }
             
-            if([response n_messages].count > 0) {
-                [Notification performOnStageQueue:MESSAGE_LIST_UPDATE_TOP data:@{KEY_MESSAGE_LIST:[response n_messages]}];
-            }
-            
+      
             
             _updateState.qts = stateQts;
             _updateState.pts = statePts;

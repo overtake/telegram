@@ -899,8 +899,7 @@ TL_localMessage *parseMessage(FMResultSet *result) {
     [queue inDatabase:^(FMDatabase *db) {
         
 
-        int current_max_read = [db intForQuery:[NSString stringWithFormat:@"select read_inbox_max_id from %@ where peer_id = %d",tableModernDialogs,-channel_id]];
-        int count = [db intForQuery:[NSString stringWithFormat:@"select count(*) from %@ where peer_id = ? and n_id <= ? and n_id > ?",tableChannelMessages],@(-channel_id),@(channelMsgId(max_id, -channel_id)),@(channelMsgId(current_max_read, -channel_id))];
+        int count = [db intForQuery:[NSString stringWithFormat:@"select count(*) from %@ where peer_id = ? and n_id > ?",tableChannelMessages],@(-channel_id),@(channelMsgId(max_id, -channel_id))];
         
         
         dispatch_async(dqueue,^{
@@ -1316,16 +1315,11 @@ TL_localMessage *parseMessage(FMResultSet *result) {
         
         if(!n_out) {
             
-            int read_inbox_max_id = [db intForQuery:[NSString stringWithFormat:@"select read_inbox_max_id from %@ where peer_id = ?",tableModernDialogs],@(peer_id)];
-            
-            result = [db executeQuery:[NSString stringWithFormat:@"select * from %@ where ((n_id <= ? and n_id > ?) OR dstate=?) and peer_id = ? and (flags & ?) = 0",tableMessages],@(max_id),@(read_inbox_max_id),@(DeliveryStatePending),@(peer_id),@(TGOUTMESSAGE)];
-            
+            result = [db executeQuery:[NSString stringWithFormat:@"select * from %@ where n_id > ? and peer_id = ? and (flags & ?) = 0",tableMessages],@(max_id),@(peer_id),@(TGOUTMESSAGE)];
             
         } else {
             
-            int read_outbox_max_id = [db intForQuery:[NSString stringWithFormat:@"select read_outbox_max_id from %@ where peer_id = ?",tableModernDialogs],@(peer_id)];
-            
-            result = [db executeQuery:[NSString stringWithFormat:@"select * from %@ where ((n_id <= ? and n_id > ?) OR dstate= ?) and peer_id = ?",tableMessages],@(max_id),@(read_outbox_max_id),@(DeliveryStatePending),@(peer_id),@(TGOUTMESSAGE),@(TGOUTMESSAGE)];
+            result = [db executeQuery:[NSString stringWithFormat:@"select * from %@ where n_id > ? and peer_id = ? and (flags & ?) = ?",tableMessages],@(max_id),@(peer_id),@(TGOUTMESSAGE),@(TGOUTMESSAGE)];
         }
         
         
@@ -1343,13 +1337,9 @@ TL_localMessage *parseMessage(FMResultSet *result) {
         
         
         
-        int unread_count = -1;
+        int unread_count = n_out ? -1 : (int)messages.count;
         
-        if(!n_out) {
-            unread_count = [db intForQuery:[NSString stringWithFormat:@"select count(*) from %@ where peer_id = ? and (n_id > ?) and (flags & ?) = 0",tableMessages],@(peer_id),@(max_id),@(TGOUTMESSAGE)];
-        }
-        
-        
+
         
         dispatch_async(q,^{
             completeHandler(ids,messages,unread_count);
@@ -2672,6 +2662,8 @@ TL_localMessage *parseMessage(FMResultSet *result) {
         FMResultSet *result = [db executeQueryWithFormat:sql,nil];
         
         NSArray *list = [self parseDialogs:result];
+        
+        [self fillLastMessagesWithConversations:list];
         
         [result close];
         
