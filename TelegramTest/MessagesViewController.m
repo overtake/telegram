@@ -264,18 +264,7 @@
         animated = NO;
         
         
-        if(_conversation.last_marked_message != -1 && _conversation.last_marked_message < _conversation.universalTopMessage && _conversation.universalTopMessage < TGMINFAKEID) {
-            
-            TL_localMessage *msg =  [[TL_localMessage alloc] init];
-            
-            msg.n_id = _conversation.last_marked_message;
-            msg.to_id = _conversation.peer;
-            
-            [self showMessage:msg fromMsg:nil flags:ShowMessageTypeUnreadMark];
-            
-        } else {
-            [self loadhistory:0 toEnd:YES prev:NO isFirst:YES];
-        }
+        [self loadhistory:0 toEnd:YES prev:NO isFirst:YES];
         
         
         

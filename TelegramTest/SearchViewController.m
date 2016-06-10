@@ -829,9 +829,12 @@ static int insertCount = 3;
                 else
                     item = [[SearchItem alloc] initWithUserItem:user searchString:searchParams.searchString];
                 
-                [searchParams.dialogs addObject:item];
+                if(item) {
+                    [searchParams.dialogs addObject:item];
+                    
+                    cachePeers[@(chat.n_id)] = @(chat.n_id);
+                }
                 
-                cachePeers[@(chat.n_id)] = @(chat.n_id);
 
             }
             

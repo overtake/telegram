@@ -178,9 +178,7 @@
     
     replyMessage = template.replyMessage;
     
-    template.autoSave = NO;
-    [template setReplyMessage:nil save:NO];
-    [template updateTextAndSave:@""];
+    
     
     
     [[Storage yap] readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
@@ -261,6 +259,10 @@
         [[Storage manager] addSupportMessages:@[replyMessage]];
         outMessage.replyMessage = replyMessage;
     }
+    
+    template.autoSave = NO;
+    [template setReplyMessage:nil save:NO];
+    [template updateTextAndSave:@""];
     
     [template saveForce];
     [template saveTemplateInCloudIfNeeded];
