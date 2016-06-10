@@ -3050,7 +3050,10 @@ static NSTextAttachment *headerMediaIcon() {
             [self.historyController startChannelPolling];
         }
          
-         
+         if((!self.conversation.canSendMessage && self.isShownESGController) || (self.canShownESGController && !self.isShownESGController && [SettingsArchiver isDefaultEnabledESGLayout])) {
+             [self showOrHideESGController:NO toggle:NO];
+         } else
+             [self.bottomView setSelectedSmileButton:self.messagesViewController.isShownESGController];
 
 
     }

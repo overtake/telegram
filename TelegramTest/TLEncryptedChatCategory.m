@@ -26,6 +26,10 @@
     return NO;
 }
 
+-(TLChatType)type {
+    return TLChatTypeNormal;
+}
+
 -(BOOL)isCreator {return NO;}
 
 -(BOOL)isKicked {return NO;}
@@ -57,5 +61,7 @@
 -(BOOL)isExplicit_content {return NO;}
 
 -(BOOL)isChannel {return NO;}
+
+-(BOOL)left {return NO;}
 
 @end

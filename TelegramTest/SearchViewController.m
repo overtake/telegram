@@ -824,7 +824,7 @@ static int insertCount = 3;
             id item;
             
             if(cachePeers[@(chat.n_id)] == nil) {
-                if([obj isKindOfClass:[TLChat class]])
+                if([obj isKindOfClass:[TLChat class]] || [obj isKindOfClass:[TLEncryptedChat class]])
                     item = [[SearchItem alloc] initWithChatItem:chat searchString:searchParams.searchString];
                 else
                     item = [[SearchItem alloc] initWithUserItem:user searchString:searchParams.searchString];
