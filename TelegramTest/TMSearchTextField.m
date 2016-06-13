@@ -56,14 +56,14 @@
 - (BOOL)becomeFirstResponder {
     
     @try {
-        NSString *sourceString = [[NSThread callStackSymbols] objectAtIndex:4];
-        // Example: 1   UIKit                               0x00540c89 -[UIApplication _callInitializationDelegatesForURL:payload:suspended:] + 1163
-        NSCharacterSet *separatorSet = [NSCharacterSet characterSetWithCharactersInString:@" -[]+?.,"];
-        NSMutableArray *array = [NSMutableArray arrayWithArray:[sourceString  componentsSeparatedByCharactersInSet:separatorSet]];
-        [array removeObject:@""];
-        
-        if(array.count > 4 && [[array objectAtIndex:4] isEqualToString:@"_selectFirstKeyView"])
-            return NO;
+//        NSString *sourceString = [[NSThread callStackSymbols] objectAtIndex:4];
+//        // Example: 1   UIKit                               0x00540c89 -[UIApplication _callInitializationDelegatesForURL:payload:suspended:] + 1163
+//        NSCharacterSet *separatorSet = [NSCharacterSet characterSetWithCharactersInString:@" -[]+?.,"];
+//        NSMutableArray *array = [NSMutableArray arrayWithArray:[sourceString  componentsSeparatedByCharactersInSet:separatorSet]];
+//        [array removeObject:@""];
+//        
+//        if(array.count > 4 && [[array objectAtIndex:4] isEqualToString:@"_selectFirstKeyView"])
+//            return NO;
         
        
 

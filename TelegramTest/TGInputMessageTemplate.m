@@ -66,6 +66,8 @@ static NSString *kYapTemplateCollection = @"kYapTemplateCollection";
         _peer_id = peer_id;
         _autoSave = YES;
         _originalText = text;
+        
+       
     }
     
     return self;
@@ -161,7 +163,6 @@ static NSString *kYapTemplateCollection = @"kYapTemplateCollection";
         else
             convesation.last_message_date = MAX(draftMessage.date,convesation.last_message_date);
         
-        [[DialogsManager sharedManager] notifyAfterUpdateConversation:convesation];
        
         [RPCRequest sendRequest:[TLAPI_messages_saveDraft createWithFlags:flags reply_to_msg_id:_replyMessage.n_id peer:convesation.inputPeer message:text entities:entities] successHandler:^(id request, id response) {
             
@@ -169,7 +170,15 @@ static NSString *kYapTemplateCollection = @"kYapTemplateCollection";
             
             [convesation save];
             
-           
+            dispatch_block_t block = ^{
+                [[DialogsManager sharedManager] notifyAfterUpdateConversation:convesation];
+            };
+            
+            if([convesation.draft isKindOfClass:[TL_draftMessageEmpty class]] || convesation.draft == nil)
+                block();
+            else
+                dispatch_after_seconds(1.5,block);
+
             
         } errorHandler:^(id request, RpcError *error) {
             
@@ -191,7 +200,42 @@ static NSString *kYapTemplateCollection = @"kYapTemplateCollection";
 
 -(void)updateTemplateWithDraft:(TLDraftMessage *)draft {
     
-    TL_conversation *conversation = [[DialogsManager sharedManager] find:_peer_id];
+    __block TL_conversation *conversation = [[DialogsManager sharedManager] find:_peer_id];
+    
+    NSArray *unloaded = @[];
+    
+    if(!conversation)
+        unloaded = @[@(conversation.peer_id)];
+    
+    [[Storage manager] conversationsWithPeerIds:unloaded completeHandler:^(NSArray *result) {
+        
+        [[DialogsManager sharedManager] add:result];
+        if(!conversation) {
+             conversation = [[DialogsManager sharedManager] find:_peer_id];
+        }
+        
+        if(conversation) {
+            
+            conversation.draft = draft;
+            
+            conversation.last_message_date = MAX(draft.date,conversation.last_message_date);
+            
+            [conversation save];
+            [[DialogsManager sharedManager] notifyAfterUpdateConversation:conversation];
+            
+            [self fillDraft:draft conversation:conversation];
+            
+
+        }
+        
+       
+    }];
+    
+}
+
+-(void)fillDraft:(TLDraftMessage *)draft conversation:(TL_conversation *)conversation {
+    
+    
     
     _text = draft.message;
     [self fillEntities:draft.entities];
@@ -200,67 +244,65 @@ static NSString *kYapTemplateCollection = @"kYapTemplateCollection";
         _disabledWebpage = [_text webpageLink];
     }
     
-    conversation.draft = draft;
-    
-    conversation.last_message_date = MAX(draft.date,conversation.last_message_date);
-    
-    [conversation save];
-    [[DialogsManager sharedManager] notifyAfterUpdateConversation:conversation];
-    
-    _replyMessage = nil;
     
     
     if(draft.reply_to_msg_id != 0) {
-        [[Storage manager] messages:^(NSArray *messages) {
-            
-            if(messages.count == 1) {
-                _replyMessage = messages[0];
+        
+        if(draft.reply_to_msg_id != _replyMessage.n_id) {
+            [[Storage manager] messages:^(NSArray *messages) {
                 
-                [self saveForce];
-                [self performNotification];
-            } else {
-                
-                id request = [TLAPI_messages_getMessages createWithN_id:[@[@(draft.reply_to_msg_id)] mutableCopy]];
-                
-                if(conversation.isChannel) {
-                     request = [TLAPI_channels_getMessages createWithChannel:[TL_inputChannel createWithChannel_id:conversation.chat.n_id access_hash:conversation.chat.access_hash] n_id:[@[@(draft.reply_to_msg_id)] mutableCopy]];
-                }
-                
-                [RPCRequest sendRequest:request successHandler:^(id request, TL_messages_messages *response) {
+                if(messages.count == 1) {
+                    _replyMessage = messages[0];
                     
+                    [self saveForce];
+                    [self performNotification];
+                } else {
                     
-                    if(response.messages.count == 1 ) {
-                        
-                        NSMutableArray *messages = [response.messages mutableCopy];
-                        [[response messages] removeAllObjects];
-                        
-                        
-                        [TL_localMessage convertReceivedMessages:messages];
-                        
-                        if([messages[0] isKindOfClass:[TL_messageEmpty class]]) {
-                            messages[0] = [TL_localEmptyMessage createWithN_Id:[(TL_messageEmpty *)messages[0] n_id] to_id:conversation.peer];
-                        }
-                        
-                        [SharedManager proccessGlobalResponse:response];
-                        
-                        [[Storage manager] addSupportMessages:messages];
-                        
-                        
-                        _replyMessage = messages[0];
-                        
-                        [self saveForce];
-                        [self performNotification];
+                    id request = [TLAPI_messages_getMessages createWithN_id:[@[@(draft.reply_to_msg_id)] mutableCopy]];
+                    
+                    if(conversation.isChannel) {
+                        request = [TLAPI_channels_getMessages createWithChannel:[TL_inputChannel createWithChannel_id:conversation.chat.n_id access_hash:conversation.chat.access_hash] n_id:[@[@(draft.reply_to_msg_id)] mutableCopy]];
                     }
                     
-                    
-                } errorHandler:^(id request, RpcError *error) {
-                    
-                    
-                } timeout:0 queue:[ASQueue globalQueue].nativeQueue];
-            }
-            
-        } forIds:@[@(draft.reply_to_msg_id)] random:NO sync:NO  queue:[ASQueue globalQueue] isChannel:conversation.isChannel];
+                    [RPCRequest sendRequest:request successHandler:^(id request, TL_messages_messages *response) {
+                        
+                        
+                        if(response.messages.count == 1 ) {
+                            
+                            NSMutableArray *messages = [response.messages mutableCopy];
+                            [[response messages] removeAllObjects];
+                            
+                            
+                            [TL_localMessage convertReceivedMessages:messages];
+                            
+                            if([messages[0] isKindOfClass:[TL_messageEmpty class]]) {
+                                messages[0] = [TL_localEmptyMessage createWithN_Id:[(TL_messageEmpty *)messages[0] n_id] to_id:conversation.peer];
+                            }
+                            
+                            [SharedManager proccessGlobalResponse:response];
+                            
+                            [[Storage manager] addSupportMessages:messages];
+                            
+                            
+                            _replyMessage = messages[0];
+                            
+                            [self saveForce];
+                            [self performNotification];
+                        }
+                        
+                        
+                    } errorHandler:^(id request, RpcError *error) {
+                        
+                        
+                    } timeout:0 queue:[ASQueue globalQueue].nativeQueue];
+                }
+                
+            } forIds:@[@(draft.reply_to_msg_id)] random:NO sync:NO  queue:[ASQueue globalQueue] isChannel:conversation.isChannel];
+        }
+        
     } else {
+        _replyMessage = nil;
+        
         [self saveForce];
         [self performNotification];
     }
@@ -270,7 +312,7 @@ static NSString *kYapTemplateCollection = @"kYapTemplateCollection";
     
     BOOL save = ![_text isEqualToString:newText];
     
-    _text = newText;
+    _text = [newText trim];
     
     if(_autoSave && save) {
         cancel_delayed_block(_futureblock);
@@ -308,17 +350,27 @@ static NSString *kYapTemplateCollection = @"kYapTemplateCollection";
 +(TGInputMessageTemplate *)templateWithType:(TGInputMessageTemplateType)type ofPeerId:(int)peer_id {
     __block TGInputMessageTemplate *template;
     
-    [[Storage yap] readWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
+    __block BOOL n = NO;
+    
+    [[Storage yap] readWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
         
         template = [transaction objectForKey:[NSString stringWithFormat:@"%d_%d",peer_id,type] inCollection:kYapTemplateCollection];
         
         
         if(!template) {
             template = [[TGInputMessageTemplate alloc] initWithType:TGInputMessageTemplateTypeSimpleText text:@"" peer_id:peer_id];
+            n = YES;
+            
+            [transaction setObject:template forKey:template.key inCollection:kYapTemplateCollection];
         }
+        
     }];
     
+    TL_conversation *conversation = [[DialogsManager sharedManager] find:peer_id];
     
+    if([conversation.draft isKindOfClass:[TL_draftMessage class]] && ![conversation.draft.message isEqualToString:template.text]) {
+        [template fillDraft:conversation.draft conversation:conversation];
+    }
     
     return template;
 }

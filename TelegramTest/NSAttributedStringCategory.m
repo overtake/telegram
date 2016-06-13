@@ -39,7 +39,6 @@ static NSTextField *testTextField() {
 
 -(NSSize)coreTextSizeForTextFieldForWidth:(int)width {
     
-
     CTFramesetterRef framesetter = CTFramesetterCreateWithAttributedString((CFAttributedStringRef) self);
    
     CGSize textSize = CTFramesetterSuggestFrameSizeWithConstraints(framesetter, CFRangeMake(0,self.length), NULL, CGSizeMake(width, CGFLOAT_MAX), NULL);
@@ -47,6 +46,7 @@ static NSTextField *testTextField() {
     
     textSize.width= ceil(textSize.width);
     textSize.height = ceil(textSize.height);
+    
     
     
     CFRelease(framesetter);

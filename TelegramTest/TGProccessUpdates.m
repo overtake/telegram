@@ -1137,8 +1137,10 @@ static NSArray *channelUpdates;
                 
                 if([channelUpdates indexOfObject:update.className] != NSNotFound)
                     [self.channelsUpdater addUpdate:update];
-                else
-                    [self proccessUpdate:update];
+                else {
+                     [self proccessUpdate:update];
+                }
+                
             }
             
       
@@ -1149,7 +1151,7 @@ static NSArray *channelUpdates;
             _updateState.seq = stateSeq;
              NSLog(@"new updateDifference update update: %@",_updateState);
             [self saveUpdateState];
-            
+//
             
             
             if(intstate != nil) {

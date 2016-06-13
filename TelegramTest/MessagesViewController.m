@@ -3462,9 +3462,6 @@ static NSTextAttachment *headerMediaIcon() {
         if(item) {
             item.isSelected = NO;
             [item setTable:self.table];
-            [item setIsHeaderMessage:YES];
-            [item setIsHeaderForwardedMessage:YES];
-            [item makeSizeByWidth:item.makeSize];
             [array addObject:item];
         }
     }

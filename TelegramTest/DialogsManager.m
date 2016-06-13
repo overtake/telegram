@@ -675,31 +675,34 @@
             [[Storage manager] markAllInConversation:peer.peer_id max_id:max_id out:n_out completeHandler:^(NSArray *ids,NSArray *messages, int unread_count) {
                 
                 
-                
                 TL_conversation *conversation = [self find:peer.peer_id];
                 
-                conversation.last_marked_message = max_id;
-                
-                if(!n_out) {
-                    conversation.read_inbox_max_id = max_id;
-                    conversation.unread_count = unread_count;
-                } else {
-                    conversation.read_outbox_max_id = max_id;
+                if(conversation)
+                {
+                    conversation.last_marked_message = max_id;
+                    
+                    if(!n_out) {
+                        conversation.read_inbox_max_id = max_id;
+                        conversation.unread_count = unread_count;
+                    } else {
+                        conversation.read_outbox_max_id = max_id;
+                    }
+                    
+                    [conversation save];
+                    
+                    [SelfDestructionController addMessages:messages];
+                    
+                    
+                    [Notification perform:[Notification notificationNameByDialog:conversation action:@"unread_count"] data:@{KEY_DIALOG:conversation,KEY_LAST_CONVRESATION_DATA:[MessagesUtils conversationLastData:conversation]}];
+                    [Notification perform:MESSAGE_READ_EVENT data:@{KEY_MESSAGE_ID_LIST:ids}];
+                    
+                    
+                    
+                    [MessagesManager updateUnreadBadge];
+                    
+                    [MessagesManager clearNotifies:conversation max_id:max_id];
+
                 }
-                
-                [conversation save];
-                
-                [SelfDestructionController addMessages:messages];
-                
-                
-                [Notification perform:[Notification notificationNameByDialog:conversation action:@"unread_count"] data:@{KEY_DIALOG:conversation,KEY_LAST_CONVRESATION_DATA:[MessagesUtils conversationLastData:conversation]}];
-                [Notification perform:MESSAGE_READ_EVENT data:@{KEY_MESSAGE_ID_LIST:ids}];
-                
-                
-                
-                [MessagesManager updateUnreadBadge];
-                
-                [MessagesManager clearNotifies:conversation max_id:max_id];
                 
                 
             }];
@@ -935,6 +938,12 @@
                     
                     [Notification perform:MEDIA_RECEIVE data:@{KEY_PREVIEW_OBJECT:previewObject}];
                 }
+                
+                BOOL needNotify = [self checkBotKeyboard:dialog forMessage:dialog.lastMessage notify:NO];
+                
+                if(needNotify) {
+                    [Notification perform:[Notification notificationNameByDialog:dialog action:@"botKeyboard"] data:@{KEY_DIALOG:dialog}];
+                }
 
             }];
             
@@ -950,11 +959,7 @@
                 
                 NSUInteger position = [self->list indexOfObject:obj];
                 
-                BOOL needNotify = [self checkBotKeyboard:obj forMessage:obj.lastMessage notify:NO];
                 
-                if(needNotify) {
-                    [Notification perform:[Notification notificationNameByDialog:obj action:@"botKeyboard"] data:@{KEY_DIALOG:obj}];
-                }
                 
 
                 

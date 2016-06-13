@@ -51,7 +51,7 @@
     TLUser *user = _action.reservedObject2;
     TL_conversation *parentConversation = _action.reservedObject3;
     
-    TGInputMessageTemplate *template = [[TGInputMessageTemplate templateWithType:TGInputMessageTemplateTypeSimpleText ofPeerId:parentConversation.peer_id] copy];
+    TGInputMessageTemplate *template = [TGInputMessageTemplate templateWithType:TGInputMessageTemplateTypeSimpleText ofPeerId:parentConversation.peer_id];
     [template updateTextAndSave:[NSString stringWithFormat:@"@%@ %@",user.username,keyboard.query]];
     [Notification perform:UPDATE_MESSAGE_TEMPLATE data:@{KEY_TEMPLATE:template,KEY_PEER_ID:@(parentConversation.peer_id)}];
     

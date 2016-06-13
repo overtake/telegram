@@ -717,7 +717,9 @@ static int insertCount = 3;
     
     
     //Chats
-    NSArray *searchChats = [[ChatsManager sharedManager] searchWithString:searchString selector:@"title"];
+    NSArray *searchChats = [[ChatsManager sharedManager] searchWithString:searchString selector:@"title" checker:^BOOL(TLChat *chat) {
+        return !chat.isDeactivated;
+    }];
     
 
     //Users

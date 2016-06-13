@@ -546,7 +546,8 @@
             _channelsInUpdating[@(channel_id)] = [RPCRequest sendRequest:[TLAPI_updates_getChannelDifference createWithChannel:[TL_inputChannel createWithChannel_id:channel_id access_hash:channel.access_hash] filter:[TL_channelMessagesFilterEmpty create] pts:[self ptsWithChannelId:channel_id] limit:limit] successHandler:^(id request, id response) {
                 
                 
-               
+               if(channel && channel.left)
+                   return;
                 
                 TGMessageHole *longHole;
                 
