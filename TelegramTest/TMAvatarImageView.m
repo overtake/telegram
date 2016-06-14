@@ -539,7 +539,10 @@ static CAAnimation *ani2() {
 //colorIndex = ABS(digest[ABS(groupId % 16)]) % numColors;
 
 + (NSImage *)generateTextAvatar:(int)colorMask size:(NSSize)size text:(NSString *)text type:(TMAvatarType)type font:(NSFont *)font offsetY:(int)offset {
-    
+    return [self generateTextAvatar:colorMask size:size text:text type:type font:font offsetY:offset corners:0];
+}
+
++ (NSImage *)generateTextAvatar:(int)colorMask size:(NSSize)size text:(NSString *)text type:(TMAvatarType)type font:(NSFont *)font offsetY:(int)offset corners:(int)corners {
     NSImage *image = [[NSImage alloc] initWithSize:size];
     [image lockFocus];
     
@@ -577,62 +580,43 @@ static CAAnimation *ani2() {
         
         CGContextRestoreGState(context);
     }
-
-    if(type != TMAvatarTypeBroadcast) {
-        NSColor *color = [NSColor whiteColor];
+    
+    NSColor *color = [NSColor whiteColor];
+    
+    __block NSString *textResult = [text uppercaseString];
+    
+    
+    
+    NSArray *emoji = [textResult getEmojiFromString:NO];
+    
+    [emoji enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+        textResult = [textResult stringByReplacingOccurrencesOfString:obj withString:@""];
+    }];
+    
+    if(colorMask == -1) {
+        NSBezierPath *path = [NSBezierPath bezierPath];
         
-         __block NSString *textResult = [text uppercaseString];
-        
-        
-       
-         NSArray *emoji = [textResult getEmojiFromString:NO];
-        
-        [emoji enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
-            textResult = [textResult stringByReplacingOccurrencesOfString:obj withString:@""];
-        }];
-        
-        if(colorMask == -1) {
-            NSBezierPath *path = [NSBezierPath bezierPath];
-            
-            [path appendBezierPathWithArcWithCenter: NSMakePoint(image.size.width/2, image.size.height/2)
-                                             radius: roundf(image.size.width/2)
-                                         startAngle: 0
-                                           endAngle: 360 clockwise:NO];
-            [path setLineWidth:2];
-            [GRAY_TEXT_COLOR set];
-            [path stroke];
-            
-            
-            color = GRAY_TEXT_COLOR;
-        }
-        
-        NSDictionary *attributes = @{NSFontAttributeName: font, NSForegroundColorAttributeName: color};
-        NSSize textSize = [textResult sizeWithAttributes:attributes];
-        
-        textSize.height-=4;
-        [textResult drawAtPoint: NSMakePoint(roundf( (size.width- textSize.width) * 0.5 ),roundf( (size.height - textSize.height) * 0.5 + offset) ) withAttributes: attributes];
-
-    } else {
-        static NSImage *smallAvatar;
-        
-        static NSImage *largeAvatar;
-        
-        static dispatch_once_t onceToken;
-        dispatch_once(&onceToken, ^{
-            smallAvatar = [NSImage imageNamed:@"BroadcastAvatarIcon"];
-            largeAvatar = [NSImage imageNamed:@"BroadcastLargeAvatarIcon"];
-        });
-        
-        NSImage *img = size.width > 50.0 ? largeAvatar : smallAvatar;
+        [path appendBezierPathWithArcWithCenter: NSMakePoint(image.size.width/2, image.size.height/2)
+                                         radius: roundf(image.size.width/2)
+                                     startAngle: 0
+                                       endAngle: 360 clockwise:NO];
+        [path setLineWidth:2];
+        [GRAY_TEXT_COLOR set];
+        [path stroke];
         
         
-        [img drawInRect:NSMakeRect(roundf( (size.width - img.size.width) * 0.5 ),roundf( (size.height - img.size.height) * 0.5 ), img.size.width, img.size.height) fromRect:NSZeroRect operation:NSCompositeHighlight fraction:1];
+        color = GRAY_TEXT_COLOR;
     }
     
+    NSDictionary *attributes = @{NSFontAttributeName: font, NSForegroundColorAttributeName: color};
+    NSSize textSize = [textResult sizeWithAttributes:attributes];
+    
+    textSize.height-=4;
+    [textResult drawAtPoint: NSMakePoint(roundf( (size.width- textSize.width) * 0.5 ),roundf( (size.height - textSize.height) * 0.5 + offset) ) withAttributes: attributes];
     
     [image unlockFocus];
     
-    image = [ImageUtils roundedImageNew:image size:size];
+    image = [ImageUtils roundCorners:image size:corners == 0 ? NSMakeSize(size.width/2, size.height/2) : NSMakeSize(4, 4)];
     
     
     

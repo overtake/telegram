@@ -3626,9 +3626,9 @@ static NSTextAttachment *headerMediaIcon() {
                 [rld addIndex:idx-1];
             }
         }
-        if(isBHdr != backItem.isHeaderMessage || isBFwdHdr != backItem.isHeaderForwardedMessage)
+     //   if(isBHdr != backItem.isHeaderMessage || isBFwdHdr != backItem.isHeaderForwardedMessage)
             [backItem makeSizeByWidth:backItem.makeSize];
-        if(isCHdr != current.isHeaderMessage || isCFwdHdr != current.isHeaderForwardedMessage)
+      //  if(isCHdr != current.isHeaderMessage || isCFwdHdr != current.isHeaderForwardedMessage)
             [current makeSizeByWidth:current.makeSize];
 
         
