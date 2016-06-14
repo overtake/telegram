@@ -319,10 +319,9 @@
 -(BOOL)checkBotKeyboard:(TL_conversation *)conversation forMessage:(TL_localMessage *)message notify:(BOOL)notify {
     
     __block BOOL needNotify = NO;
-    
-    if(message.fromUser.isBot || ([message.action isKindOfClass:[TL_messageActionChatDeleteUser class]])) {
-        if(message.reply_markup != nil && !message.n_out) {
-            
+     if(message.reply_markup != nil && !message.n_out) {
+         if(message.fromUser.isBot || ([message.action isKindOfClass:[TL_messageActionChatDeleteUser class]])) {
+       
             __block TL_localMessage *currentKeyboard;
             
             [[Storage yap] readWriteWithBlock:^(YapDatabaseReadWriteTransaction * __nonnull transaction) {

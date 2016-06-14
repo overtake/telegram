@@ -246,6 +246,8 @@
     
     if([self.changedPrivacy.privacyType isEqualToString:kStatusTimestamp])
         pk = [TL_inputPrivacyKeyStatusTimestamp create];
+    else if([self.changedPrivacy.privacyType isEqualToString:kStatusGroups])
+        pk = [TL_inputPrivacyKeyChatInvite create];
     
     [self showModalProgress];
     
