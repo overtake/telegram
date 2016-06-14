@@ -180,7 +180,7 @@
 }
 
 
--(void)setUser:(TLUser *)user {    
+-(void)setUser:(TLUser *)user {
     [self.statusTextField setUser:user];
     [self.nameTextField setUser:user];
     [self.avatarImageView setUser:user];

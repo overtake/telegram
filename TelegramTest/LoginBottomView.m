@@ -61,13 +61,17 @@
 
 - (void)startTimer:(int)timer {
     [self.timer invalidate];
-    self.timeToCall = timer + 1;
     
-    self.timer = [NSTimer timerWithTimeInterval: 1.0
-                                         target:self selector:@selector(timerTick) userInfo:nil repeats:YES];
+    if(timer > 0) {
+        self.timeToCall = timer + 1;
+        
+        self.timer = [NSTimer timerWithTimeInterval: 1.0
+                                             target:self selector:@selector(timerTick) userInfo:nil repeats:YES];
+        
+        
+        [[NSRunLoop currentRunLoop] addTimer: self.timer forMode:NSRunLoopCommonModes];
+    }
     
-    
-    [[NSRunLoop currentRunLoop] addTimer: self.timer forMode:NSRunLoopCommonModes];
     [self timerTick];
 }
 
@@ -79,11 +83,11 @@
 - (void)timerTick {
     self.timeToCall--;
     
-    if(self.timeToCall <= 0) {
+    if(self.timeToCall == 0) {
         [self.timer invalidate];
         self.timer = nil;
         [self.loginController sendCallRequest];
-    } else {
+    } else  {
         int minutes = self.timeToCall / 60;
         int sec = self.timeToCall % 60;
         NSString *secStr = sec > 9 ? [NSString stringWithFormat:@"%d", sec] : [NSString stringWithFormat:@"0%d", sec];
@@ -92,13 +96,15 @@
         
         [str appendString:NSLocalizedString(@"Login.WeSendSms", nil) withColor:NSColorFromRGB(0xaeaeae)];
         
-        [str appendString:@"\n"];
-        
-        [str appendString:[NSString stringWithFormat:NSLocalizedString(@"Login.willCallYou", nil), minutes, secStr] withColor:NSColorFromRGB(0xaeaeae)];
+        if(self.timeToCall > 0) {
+            [str appendString:@"\n"];
+            
+            [str appendString:[NSString stringWithFormat:NSLocalizedString(@"Login.willCallYou", nil), minutes, secStr] withColor:NSColorFromRGB(0xaeaeae)];
+            
+        }
         
         [str setAlignment:NSCenterTextAlignment range:str.range];
-        
-        self.callTextField.attributedStringValue = str;
+
         
         self.callTextField.attributedStringValue = str;
         

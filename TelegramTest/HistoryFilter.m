@@ -16,7 +16,6 @@
 #import "AudioHistoryFilter.h"
 #import "MP3HistoryFilter.h"
 #import "SharedLinksHistoryFilter.h"
-#import "ChannelImportantFilter.h"
 #import "ChannelFilter.h"
 #import "ChannelCommonFilter.h"
 #import "SelfDestructionController.h"
@@ -395,7 +394,7 @@
     
     weak();
 
-    self.request = [RPCRequest sendRequest:[TLAPI_messages_getHistory createWithPeer:[_peer inputPeer] offset_id:source_id offset_date:0 add_offset:next ||  source_id == 0 ? 0 : -(int)self.selectLimit limit:(int)self.selectLimit max_id:next ? 0 : INT32_MAX min_id:0] successHandler:^(RPCRequest *request, TL_messages_channelMessages * response) {
+    self.request = [RPCRequest sendRequest:[TLAPI_messages_getHistory createWithPeer:[_peer inputPeer] offset_id:source_id offset_date:0 add_offset:next ||  source_id == 0 ? 0 : -(int)self.selectLimit limit:(int)self.selectLimit max_id:next ? 0 : INT32_MAX min_id:0] successHandler:^(RPCRequest *request, TL_messages_messages * response) {
         
         strongWeak();
         

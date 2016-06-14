@@ -33,7 +33,7 @@
         _nextDesc = [[TGTextLabel alloc] init];
         
         [_subdescField setTitleFont:TGSystemFont(14) forControlState:BTRControlStateNormal];
-        [_subdescField setTitleColor:TEXT_COLOR forControlState:BTRControlStateNormal];
+        [_subdescField setTitleColor:GRAY_TEXT_COLOR forControlState:BTRControlStateNormal];
         
         self.lockedIndicator = [[TGProgressIndicator alloc] initWithFrame:NSMakeRect(0, 0, 20, 20)];
         

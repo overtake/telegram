@@ -173,9 +173,15 @@
     __block BOOL clear = YES;
     __block BOOL removeKeyboard = NO;
     
+    
+    TGInputMessageTemplate *template = [TGInputMessageTemplate templateWithType:TGInputMessageTemplateTypeSimpleText ofPeerId:conversation.peer_id];
+    
+    replyMessage = template.replyMessage;
+    
+    
+    
+    
     [[Storage yap] readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
-        
-        replyMessage = [transaction objectForKey:conversation.cacheKey inCollection:REPLAY_COLLECTION];
         
         
         keyboardMessage = [transaction objectForKey:conversation.cacheKey inCollection:BOT_COMMANDS];
@@ -189,30 +195,16 @@
                 
                 if([message isEqualToString:button.text]) {
                     clear = NO;
-                    
                     *stop = YES;
                 }
                 
             }];
-            
-            
+
         }];
         
         
-//        if(((keyboardMessage.reply_markup.flags & (1 << 1) ) == (1 << 1)) && !clear) {
-//            
-//            [transaction removeObjectForKey:conversation.cacheKey inCollection:BOT_COMMANDS];
-//            
-//            removeKeyboard = YES;
-//        }
         
-        [transaction removeObjectForKey:conversation.cacheKey inCollection:REPLAY_COLLECTION];
-       
     }];
-    
-
-    
-    
     
     if(clear) {
         keyboardMessage = nil;
@@ -266,22 +258,15 @@
     {
         [[Storage manager] addSupportMessages:@[replyMessage]];
         outMessage.replyMessage = replyMessage;
-       // [MessagesManager addSupportMessages:@[replyMessage]];
     }
     
+    template.autoSave = NO;
+    [template setReplyMessage:nil save:NO];
+    [template updateTextAndSave:@""];
     
-    if(conversation.peer_id == [Telegram conversation].peer_id) {
-        if(replyMessage || removeKeyboard) {
-            [ASQueue dispatchOnMainQueue:^{
-                
-                if(replyMessage) {
-                    [[Telegram rightViewController].messagesViewController removeReplayMessage:YES animated:YES];
-                }
-                
-            }];
-        }
-        
-    }
+    [template saveForce];
+    [template saveTemplateInCloudIfNeeded];
+    [template performNotification];
     
     
     return  outMessage;
@@ -357,8 +342,227 @@
     
 }
 
++(NSString *)parseCustomMentions:(NSString *)message entities:(NSMutableArray *)entities {
+    NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:@"((?<!\\w)@\\[([^\\[\\]]+(\\|))+([0-9])+\\])" options:NSRegularExpressionCaseInsensitive error:nil];
+    NSArray *mentions = [[regex matchesInString:message options:0 range:NSMakeRange(0, [message length])] mutableCopy];
+    
+    __block NSMutableString *replacedMessage = [message mutableCopy];
+    
+    @try {
+        [mentions enumerateObjectsUsingBlock:^(NSTextCheckingResult * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            
+            NSString *text = [replacedMessage substringWithRange:obj.range];
+            
+            NSString *name = [text substringWithRange:NSMakeRange(2, [text rangeOfString:@"|"].location - 2)];
+            int user_id = [[text substringWithRange:NSMakeRange([text rangeOfString:@"|"].location + 1, text.length - 1 - [text rangeOfString:@"|"].location)] intValue];
+            
+            TLUser *user = [[UsersManager sharedManager] find:user_id];
+            
+            if(user) {
+              //  [entities addObject:[TL_messageEntityMentionName createWithOffset:(int)obj.range.location length:(int)name.length user_id:user_id]];
+                [entities addObject:[TL_inputMessageEntityMentionName createWithOffset:(int)obj.range.location length:(int)name.length input_user_id:user.inputUser]];
+            }
+            
+            
+            [replacedMessage deleteCharactersInRange:obj.range];
+            [replacedMessage insertString:name atIndex:obj.range.location];
+            
+            *stop = YES;
+            
+        }];
+        
+        if(mentions.count > 0)
+            return [self parseCustomMentions:replacedMessage entities:entities];
+
+    } @catch (NSException *exception) {
+        
+    }
+    
+    return replacedMessage;
+    
+}
 
 
++(void)addRatingForPeer:(TLPeer *)peer {
+    
+    
+    TLUser *user = [peer isKindOfClass:[TL_peerUser class]] ? [[UsersManager sharedManager] find:peer.user_id] : nil;
+    
+    [[Storage yap] asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
+        
+        @try {
+            NSMutableArray *top = [transaction objectForKey:@"categories" inCollection:TOP_PEERS];
+            
+            if(top) {
+                int dt = ([[MTNetwork instance] getTime] - [[transaction objectForKey:@"dt" inCollection:TOP_PEERS] intValue]);
+                
+                __block BOOL saved = NO;
+                
+                __block Class currentClass;
+                
+                int drating = pow(M_E, (dt/rating_e_decay()));
+                
+                
+                [top enumerateObjectsUsingBlock:^(TL_topPeerCategoryPeers *obj, NSUInteger idx, BOOL * _Nonnull stop1) {
+                    
+                    BOOL isCurrentCategory = NO;
+                    
+                    if([peer isKindOfClass:[TL_peerUser class]]) {
+                        if(user.isBot && user.isBotInlinePlaceholder) {
+                            isCurrentCategory = [obj.category isKindOfClass:[TL_topPeerCategoryBotsInline class]];
+                            
+                            if(isCurrentCategory)
+                                currentClass = [TL_topPeerCategoryBotsInline class];
+                            
+                        } else if(user.isBot) {
+                            isCurrentCategory = [obj.category isKindOfClass:[TL_topPeerCategoryBotsPM class]];
+                            
+                            if(isCurrentCategory)
+                            currentClass = [TL_topPeerCategoryBotsPM class];
+                        }
+                        else {
+                            isCurrentCategory = [obj.category isKindOfClass:[TL_topPeerCategoryCorrespondents class]];
+                            
+                            if(isCurrentCategory)
+                                currentClass = [TL_topPeerCategoryCorrespondents class];
+                        }
+                    }
+                    
+                    if(!isCurrentCategory) {
+                        isCurrentCategory =([peer isKindOfClass:[TL_peerChat class]] && [obj.category isKindOfClass:[TL_topPeerCategoryGroups class]]);
+                        
+                        if(isCurrentCategory)
+                        currentClass = [TL_topPeerCategoryGroups class];
+                    }
+                    
+                    if(!isCurrentCategory) {
+                        isCurrentCategory = isCurrentCategory || ([peer isKindOfClass:[TL_peerChannel class]] && [obj.category isKindOfClass:[TL_topPeerCategoryChannels class]]);
+                        
+                        if(isCurrentCategory)
+                        currentClass = [TL_topPeerCategoryChannels class];
+                        
+                    }
+                    
+                    
+                    if(isCurrentCategory) {
+                        [obj.peers enumerateObjectsUsingBlock:^(TL_topPeer *topPeer, NSUInteger idx, BOOL * _Nonnull stop2) {
+                            
+                            
+                            if(topPeer.peer.peer_id == peer.peer_id) {
+                                topPeer.rating+= drating;
+                                
+                                
+                                *stop1 = YES;
+                                *stop2 = YES;
+                                
+                                saved = YES;
+                                
+                            }
+                            
+                        }];
+                        
+                        if(!saved) {
+                            [obj.peers addObject:[TL_topPeer createWithPeer:peer rating:drating]];
+                            saved = YES;
+                        }
+                        
+                        [top enumerateObjectsUsingBlock:^(TL_topPeerCategoryPeers *obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                            [obj.peers sortUsingComparator:^NSComparisonResult(TL_topPeer *obj1, TL_topPeer *obj2) {
+                                return obj1.rating < obj2.rating ? NSOrderedDescending : obj1.rating > obj2.rating ? NSOrderedAscending : NSOrderedSame;
+                            }];
+                        }];
+                        
+                        [transaction setObject:top forKey:@"categories" inCollection:TOP_PEERS];
+                        
+                    }
+                    
+                }];
+//                
+//                if(!saved) {
+//                    [transaction removeObjectForKey:@"categories" inCollection:TOP_PEERS];
+//                }
+            }
+
+        } @catch (NSException *exception) {
+            
+        }
+        
+       
+        
+    }];
+    
+}
+
+
+
+
++(void)syncTopCategories:(void (^)(NSArray *categories))completeHandler {
+    
+
+    
+    dispatch_queue_t dqueue = dispatch_get_current_queue();
+    
+    [[Storage yap] asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
+        
+        @try {
+            NSMutableArray *top = [transaction objectForKey:@"categories" inCollection:TOP_PEERS];
+            
+            __block int acc = 0;
+            
+            [top enumerateObjectsUsingBlock:^(TL_topPeerCategoryPeers *obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                [obj.peers sortUsingComparator:^NSComparisonResult(TL_topPeer *obj1, TL_topPeer *obj2) {
+                    return obj1.rating < obj2.rating ? NSOrderedDescending : obj1.rating > obj2.rating ? NSOrderedAscending : NSOrderedSame;
+                }];
+                
+                [obj.peers enumerateObjectsUsingBlock:^(TL_topPeer *topPeer, NSUInteger idx, BOOL * _Nonnull stop) {
+                    acc = (acc * 20261) + abs(topPeer.peer.peer_id);
+                }];
+                
+            }];
+            
+            
+            acc = (int)(acc & 0x7FFFFFFF);
+            
+            int offset = 0;
+            
+            dispatch_async(dqueue, ^{
+                completeHandler(top);
+            });
+            
+            if([[transaction objectForKey:@"dt" inCollection:TOP_PEERS] intValue] + 24*60*60 < [[MTNetwork instance] getTime]) {
+                [RPCRequest sendRequest:[TLAPI_contacts_getTopPeers createWithFlags:(1 << 0) | (1 << 2) offset:offset limit:100 n_hash:acc] successHandler:^(id request, TL_contacts_topPeers *response) {
+                    
+                    if([response isKindOfClass:[TL_contacts_topPeers class]]) {
+                        [SharedManager proccessGlobalResponse:response];
+                        
+                        [transaction setObject:response.categories forKey:@"categories" inCollection:TOP_PEERS];
+                        [transaction setObject:@([[MTNetwork instance] getTime]) forKey:@"dt" inCollection:TOP_PEERS];
+                        
+                        dispatch_async(dqueue, ^{
+                            completeHandler(response.categories);
+                        });
+                        
+                    } else {
+                        dispatch_async(dqueue, ^{
+                            completeHandler(top);
+                        });
+                    }
+                    
+                    
+                    
+                } errorHandler:^(id request, RpcError *error) {
+                    
+                }];
+            }
+
+
+        } @catch (NSException *exception) {
+            
+        }
+        
+    }];
+    
+}
 
 +(NSData *)getEncrypted:(EncryptedParams *)params messageData:(NSData *)messageData {
     
@@ -454,7 +658,7 @@
             
             [params save];
             
-            TL_conversation *dialog = [TL_conversation createWithPeer:[TL_peerSecret createWithChat_id:params.n_id] top_message:-1 unread_count:0 last_message_date:[[MTNetwork instance] getTime] notify_settings:[TL_peerNotifySettingsEmpty create] last_marked_message:0 top_message_fake:-1 last_marked_date:[[MTNetwork instance] getTime] sync_message_id:0 read_inbox_max_id:0 unread_important_count:0 lastMessage:nil];
+            TL_conversation *dialog = [TL_conversation createWithPeer:[TL_peerSecret createWithChat_id:params.n_id] top_message:-1 unread_count:0 last_message_date:[[MTNetwork instance] getTime] notify_settings:[TL_peerNotifySettingsEmpty create] last_marked_message:0 top_message_fake:-1 last_marked_date:[[MTNetwork instance] getTime] sync_message_id:0 read_inbox_max_id:0 read_outbox_max_id:0 draft:[TL_draftMessageEmpty create] lastMessage:nil];
             
             [[DialogsManager sharedManager] insertDialog:dialog];
             
@@ -608,7 +812,7 @@ static TGLocationRequest *locationRequest;
         
         return [RPCRequest sendRequest:[TLAPI_messages_getBotCallbackAnswer createWithPeer:conversation.inputPeer msg_id:messageId data:keyboard.data] successHandler:^(id request, TL_messages_botCallbackAnswer *response) {
             
-            if([response isKindOfClass:[TL_messages_botCallbackAnswer class]]) {
+            if([response isKindOfClass:[TL_messages_botCallbackAnswer class]] && response.message.length > 0) {
                 if(response.isAlert)
                     alert(appName(), response.message);
                 else

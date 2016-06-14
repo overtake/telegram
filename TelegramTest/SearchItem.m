@@ -103,8 +103,11 @@
         [self initialize];
 
         self.type = SearchItemChat;
-        self.chat = [[ChatsManager sharedManager] find:chat.n_id];
+        self.chat = chat;
         self.conversation = chat.dialog;
+        
+        if([chat isKindOfClass:[TLEncryptedChat class]])
+            self.user = self.conversation.user;
         
         [self.title appendString:chat.title withColor:DARK_BLACK];
         [NSMutableAttributedString selectText:searchString fromAttributedString:(NSMutableAttributedString *)self.title selectionColor:BLUE_UI_COLOR];

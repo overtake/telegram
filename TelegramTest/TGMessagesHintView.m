@@ -204,6 +204,7 @@ DYNAMIC_PROPERTY(DUser);
 @property (nonatomic,strong) TGModalMessagesViewController *messagesModalView;
 
 @property (nonatomic,assign) BOOL isLockedWithRequest;
+@property (nonatomic,strong) NSTrackingArea *trackingArea;
 
 
 @end
@@ -436,7 +437,7 @@ DYNAMIC_PROPERTY(DUser);
     if(conversation.type == DialogTypeSecretChat && conversation.encryptedChat.encryptedParams.layer < 45)
         return;
     
-    if(self.messagesViewController.state != MessagesViewControllerStateNone)
+    if(self.messagesViewController.state != MessagesViewControllerStateNone && self.messagesViewController.state != MessagesViewControllerStateEditMessage)
         return;
     
     NSMutableArray *uids = [[NSMutableArray alloc] init];
@@ -465,40 +466,70 @@ DYNAMIC_PROPERTY(DUser);
     
     
     
-    NSArray *users = [UsersManager findUsersByMention:query withUids:uids acceptContextBots:NO];
+    NSArray *users = chat ? [UsersManager findUsersByMention:query withUids:uids acceptContextBots:NO acceptNonameUsers:self.messagesViewController.state != MessagesViewControllerStateEditMessage || (self.messagesViewController.editTemplate.editMessage.media == nil || [self.messagesViewController.editTemplate.editMessage.media isKindOfClass:[TL_messageMediaWebPage class]])] : nil;
     
     
     __block NSMutableArray *botUsers = [[NSMutableArray alloc] init];
     
     if(allowInlineBot && self.messagesViewController.templateType != TGInputMessageTemplateTypeEditMessage) {
-        __block NSMutableDictionary *bots;
+        
+        __block NSMutableArray *top;
         
         [[Storage yap] readWithBlock:^(YapDatabaseReadTransaction *transaction) {
             
-            bots = [[transaction objectForKey:@"bots" inCollection:@"inlinebots"] mutableCopy];
+            top = [[transaction objectForKey:@"categories" inCollection:TOP_PEERS] mutableCopy];
             
         }];
         
-        [bots enumerateKeysAndObjectsUsingBlock:^(id  _Nonnull key, NSDictionary *bot, BOOL * _Nonnull stop) {
+        
+        [top enumerateObjectsUsingBlock:^(TL_topPeerCategoryPeers *obj, NSUInteger cidx, BOOL * _Nonnull stop) {
             
-            int dateUsed = [bot[@"date"] intValue];
-            int botId = [bot[@"id"] intValue];
-            
-            TLUser *user = [[UsersManager sharedManager] find:botId];
-            //two weeks
-            if(user && dateUsed + 14*60*60*24 > [[MTNetwork instance] getTime] && ([[user.username lowercaseString] hasPrefix:[query lowercaseString]] || query.length == 0)) {
-                [botUsers addObject:user];
+            if([obj.category isKindOfClass:[TL_topPeerCategoryBotsInline class]]) {
+                
+                [obj.peers enumerateObjectsUsingBlock:^(TL_topPeer *peer, NSUInteger idx, BOOL *stop) {
+                    
+                    TLUser *user = [[UsersManager sharedManager] find:peer.peer.user_id];
+                    
+                    if(user && ([[user.username lowercaseString] hasPrefix:[query lowercaseString]] || query.length == 0))
+                        [botUsers addObject:user];
+
+                }];
+                
+                *stop = YES;
             }
             
         }];
+
         
-        [botUsers sortUsingComparator:^NSComparisonResult(TLUser *obj1, TLUser *obj2) {
-            
-            NSComparisonResult result = [bots[@(obj1.n_id)][@"date"] compare:bots[@(obj2.n_id)][@"date"]];
-            
-            return result == NSOrderedAscending ? NSOrderedDescending : result == NSOrderedDescending ? NSOrderedAscending : NSOrderedSame;
-            
-        }];
+        
+//        __block NSMutableDictionary *bots;
+//
+//        [[Storage yap] readWithBlock:^(YapDatabaseReadTransaction *transaction) {
+//            
+//            bots = [[transaction objectForKey:@"bots" inCollection:@"inlinebots"] mutableCopy];
+//            
+//        }];
+//        
+//        [bots enumerateKeysAndObjectsUsingBlock:^(id  _Nonnull key, NSDictionary *bot, BOOL * _Nonnull stop) {
+//            
+//            int dateUsed = [bot[@"date"] intValue];
+//            int botId = [bot[@"id"] intValue];
+//            
+//            TLUser *user = [[UsersManager sharedManager] find:botId];
+//            //two weeks
+//            if(user && dateUsed + 14*60*60*24 > [[MTNetwork instance] getTime] && ([[user.username lowercaseString] hasPrefix:[query lowercaseString]] || query.length == 0)) {
+//                [botUsers addObject:user];
+//            }
+//            
+//        }];
+//        
+//        [botUsers sortUsingComparator:^NSComparisonResult(TLUser *obj1, TLUser *obj2) {
+//            
+//            NSComparisonResult result = [bots[@(obj1.n_id)][@"date"] compare:bots[@(obj2.n_id)][@"date"]];
+//            
+//            return result == NSOrderedAscending ? NSOrderedDescending : result == NSOrderedDescending ? NSOrderedAscending : NSOrderedSame;
+//            
+//        }];
         
         
         users = [botUsers arrayByAddingObjectsFromArray:users];
@@ -515,9 +546,9 @@ DYNAMIC_PROPERTY(DUser);
         if(conversation.type == DialogTypeSecretChat && !obj.isBotInlinePlaceholder)
             return;
         
-        TGMessagesHintRowItem *item = [[TGMessagesHintRowItem alloc] initWithImageObject:obj text:obj.fullName desc:[NSString stringWithFormat:@"@%@",obj.username]];
+        TGMessagesHintRowItem *item = [[TGMessagesHintRowItem alloc] initWithImageObject:obj text:obj.fullName desc:obj.username.length > 0 ? [NSString stringWithFormat:@"@%@",obj.username] : @""];
         
-        item.result = obj.username;
+        item.result = obj.username.length > 0 ? obj.username : [NSString stringWithFormat:@"[%@|%d]",obj.first_name,obj.n_id];
         
         [items addObject:item];
     }];
@@ -950,7 +981,17 @@ static NSMutableDictionary *inlineBotsExceptions;
     } else if(_currentTableView == _contextTableView) {
         
         [self.messagesViewController sendContextBotResult:item.botResult via_bot_id:item.bot.n_id via_bot_name:item.bot.username queryId:item.queryId forConversation:self.messagesViewController.conversation];
-        [self.messagesViewController.bottomView setInputMessageString:@"" disableAnimations:NO];
+        
+        TGInputMessageTemplate *template = [TGInputMessageTemplate templateWithType:TGInputMessageTemplateTypeSimpleText ofPeerId:self.messagesViewController.conversation.peer_id];
+        
+        template.autoSave = NO;
+        [template updateTextAndSave:@""];
+        template.autoSave = YES;
+        [template saveForce];
+        
+        [template performNotification];
+        
+     //   [self.messagesViewController.bottomView setInputMessageString:@"" disableAnimations:NO];
         
         
     }
@@ -1031,5 +1072,36 @@ static NSMutableDictionary *inlineBotsExceptions;
     
     
 }
+
+
+-(void)updateTrackingAreas
+{
+    if(_trackingArea != nil) {
+        [self removeTrackingArea:_trackingArea];
+    }
+    
+
+    
+    int opts = (NSTrackingCursorUpdate | NSTrackingMouseEnteredAndExited | NSTrackingMouseMoved | NSTrackingActiveInKeyWindow | NSTrackingInVisibleRect);
+    _trackingArea = [ [NSTrackingArea alloc] initWithRect:[self bounds]
+                                                  options:opts
+                                                    owner:self
+                                                 userInfo:nil];
+    [self addTrackingArea:_trackingArea];
+}
+
+-(void)mouseEntered:(NSEvent *)theEvent {
+    
+}
+
+-(void)mouseExited:(NSEvent *)theEvent {
+    
+}
+
+-(void)mouseMoved:(NSEvent *)theEvent {
+    
+}
+
+
 
 @end

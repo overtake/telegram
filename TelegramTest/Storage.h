@@ -39,6 +39,7 @@ extern NSString *const ATTACHMENTS;
 extern NSString *const BOT_COMMANDS;
 extern NSString *const RECENT_SEARCH;
 extern NSString *const RECENT_GIFS;
+extern NSString *const TOP_PEERS;
 -(void)drop:(void (^)())completeHandler;
 +(void)drop;
 +(void)open:(void (^)())completeHandler;
@@ -71,7 +72,7 @@ extern NSString *const RECENT_GIFS;
 -(void)deleteChannelMessages:(NSArray *)messages completeHandler:(void (^)(NSArray *peer_update_data, NSDictionary *readCount))completeHandler;
 -(void)deleteUserChannelMessages:(int)channelId from_id:(int)from_id completeHandler:(void (^)(NSArray *peer_updates, NSDictionary *readCount))completeHandler;
 -(void)markMessagesAsRead:(NSArray *)messages useRandomIds:(NSArray *)randomIds;
--(void)lastMessageWithConversation:(TL_conversation *)conversation completeHandler:(void (^)(TL_localMessage *message, int importantMessage))completeHandler;
+-(void)lastMessageWithConversation:(TL_conversation *)conversation completeHandler:(void (^)(TL_localMessage *message))completeHandler;
 
 // end messages
 -(void)deleteMessagesInDialog:(TL_conversation *)dialog completeHandler:(dispatch_block_t)completeHandler;
@@ -158,6 +159,7 @@ extern NSString *const RECENT_GIFS;
 -(void)updateMessageViews:(int)views channelMsgId:(long)channelMsgId;
 
 -(void)markChannelMessagesAsRead:(int)channel_id max_id:(int)max_id callback:(void (^)(int unread_count))callback;
+-(void)markChannelOutMessagesAsRead:(int)channel_id max_id:(int)max_id callback:(void (^)(NSArray *messages))callback;
 -(void)updateTopMessagesWithMessages:(NSDictionary *)topMessages topImportantMessages:(NSDictionary *)topImportantMessages;
 
 -(TL_localMessage *)lastImportantMessageAroundMinId:(long)channelMsgId;
@@ -222,7 +224,7 @@ extern NSString *const RECENT_GIFS;
 -(void)addSupportMessages:(NSArray *)messages;
 
 
--(void)updateMessageId:(long)random_id msg_id:(int)n_id;
+-(void)updateMessageId:(long)random_id msg_id:(int)n_id isChannel:(BOOL)isChannel;
 
 +(void)addWebpage:(TLWebPage *)webpage forLink:(NSString *)link;
 +(TLWebPage *)findWebpage:(NSString *)link;
@@ -242,5 +244,5 @@ extern NSString *const RECENT_GIFS;
 -(void)removeHole:(TGMessageHole *)hole;
 -(NSArray *)groupHoles:(int)peer_id min:(int)min max:(int)max;
 -(void)addHolesAroundMessage:(TL_localMessage *)message;
--(int)syncedMessageIdWithPeerId:(int)peer_id important:(BOOL)important latest:(BOOL)latest isChannel:(BOOL)isChannel;
+-(int)syncedMessageIdWithPeerId:(int)peer_id latest:(BOOL)latest isChannel:(BOOL)isChannel;
 @end

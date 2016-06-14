@@ -10,8 +10,6 @@
 
 @interface TGRecentSearchTableView : TMTableView
 
--(BOOL)loadRecentSearchItems;
-
-
+-(BOOL)loadRecentSearchItems:(BOOL)draw;
 
 @end

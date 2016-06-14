@@ -46,6 +46,18 @@
     
 }
 
+- (IBAction)findAction:(id)sender {
+    [appWindow().navigationController.messagesViewController showSearchBox];
+}
+
+- (IBAction)findNextAction:(id)sender {
+    [appWindow().navigationController.messagesViewController nextSearchResult];
+}
+
+- (IBAction)findPreviousAction:(id)sender {
+    [appWindow().navigationController.messagesViewController prevSearchResult];
+}
+
 - (void)controller:(TMViewController *)controller performSelector:(SEL)aSelector withObject:(id)anArgument {
     IMP imp = [controller methodForSelector:aSelector];
     if(imp) {
@@ -168,7 +180,15 @@
             return YES;
         } else if(menuItem.action == @selector(showAudioMiniPlayer:)) {
             return [Telegram conversation] && [Telegram conversation].type != DialogTypeSecretChat && [Telegram conversation].type != DialogTypeBroadcast;
+        } else if(menuItem.action == @selector(findAction:)) {
+            return [appWindow().navigationController.currentController isKindOfClass:[MessagesViewController class]];
+        }else if(menuItem.action == @selector(findPreviousAction:)) {
+            return [appWindow().navigationController.currentController isKindOfClass:[MessagesViewController class]] && [appWindow().navigationController.messagesViewController searchBoxIsVisible];
         }
+        else if(menuItem.action == @selector(findNextAction:)) {
+            return [appWindow().navigationController.currentController isKindOfClass:[MessagesViewController class]] && [appWindow().navigationController.messagesViewController searchBoxIsVisible];
+        }
+
     }
     
     if(menuItem.action == @selector(aboutAction:))
@@ -180,9 +200,7 @@
 
 
 - (IBAction)showAudioMiniPlayer:(id)sender {
-#ifdef TGDEBUG
-    [TGAudioPlayerWindow show:[Telegram conversation]];
-#endif
+    [TGAudioPlayerWindow show:[Telegram conversation]  navigation:appWindow().navigationController];
 }
 
 

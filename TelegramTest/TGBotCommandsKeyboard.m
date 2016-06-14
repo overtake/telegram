@@ -349,7 +349,7 @@
     
     int itemHeight = 33;
     
-    NSUInteger height = f.count * itemHeight + ((f.count -1) * 3 ) + (_fillToSize ? 0 : 6);
+    NSUInteger height = f.count * itemHeight + ((f.count -1) * 3 ) + (_fillToSize ? 0 : 0);
     
     NSUInteger maxHeight = _fillToSize ? height : MIN(height,3 * itemHeight + ((3 -1) * 3 ) + 6 + (itemHeight/2));
     
@@ -393,7 +393,7 @@
 
     
     __block int x = 0;
-    __block int y = _fillToSize ? 0 : 3;
+    __block int y = _fillToSize ? 0 : 0;
     
     int itemHeight = 33;
     

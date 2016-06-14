@@ -121,6 +121,8 @@
     BOOL result = self.lastScrollTop < 0;
     if(self.lastScrollTop > (int)[self documentOffset].y) {
         
+       // NSLog(@"offset:%f height:%f",[self documentOffset].y,self.documentSize.height);
+        
         result = [self documentOffset].y  <= 1500; // эт бред если что
     }
     

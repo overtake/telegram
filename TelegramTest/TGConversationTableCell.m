@@ -244,8 +244,10 @@ static NSDictionary *attributes() {
                 [image drawInRect:NSMakeRect(NSMaxX(self.nameTextField.frame) + (self.item.conversation.isVerified ? image_Verify().size.width + 6 : 0), NSMinY(self.nameTextField.frame) + 7, image.size.width, image.size.height) fromRect:NSZeroRect operation:NSCompositeHighlight fraction:1];
             }
     
-            if(self.item.unreadText.length && self.style != ConversationTableCellShortStyle && self.item.conversation.unread_count > 0)
-                [self drawUnreadCount]; 
+            if(self.item.unreadText.length && self.style != ConversationTableCellShortStyle && self.item.conversation.unread_count > 0) {
+                [self drawUnreadCount];
+            }
+            
         };
         
         
@@ -281,7 +283,10 @@ static NSDictionary *attributes() {
     int width = MIN(NSWidth(self.frame) - NSMinX(_nameTextField.frame) - NSWidth(_dateField.frame) - 10 - (self.item.message.n_out ? 18 : 0) - (self.item.conversation.isVerified ? image_Verify().size.width + 2 : 0) - (self.item.conversation.isMute ? image_muted().size.width + 4 : 0), self.item.nameTextSize.width);
     
     [_nameTextField setFrameSize:NSMakeSize(width, 23)];
-    [_messageField setFrame:NSMakeRect(NSMinX(_messageField.frame), self.item.typing.length > 0 ? 21 : 3, NSWidth(self.frame) - NSMinX(_messageField.frame) -40, self.item.typing.length > 0 ? 18 : 36)];
+    
+    int unreadOffset = self.item.conversation.unread_count > 100 ? 50 : 40;
+    
+    [_messageField setFrame:NSMakeRect(NSMinX(_messageField.frame), self.item.typing.length > 0 ? 21 : 3, NSWidth(self.frame) - NSMinX(_messageField.frame) - unreadOffset, self.item.typing.length > 0 ? 18 : 36)];
     
     [_dateField setFrameOrigin:NSMakePoint(self.bounds.size.width - self.item.dateSize.width - 10, _dateField.frame.origin.y)];
 
@@ -388,21 +393,6 @@ static NSDictionary *attributes() {
     [item.messageText setSelected:self.isSelected];
     [item.dateText setSelected:self.isSelected];
     
-//    if(item.conversation.isMute)
-//    {
-//        static NSTextAttachment *attach;
-//        static NSTextAttachment *selectedAttach;
-//        
-//        static dispatch_once_t onceToken;
-//        dispatch_once(&onceToken, ^{
-//            attach = [NSMutableAttributedString textAttachmentByImage:[image_muted() imageWithInsets:NSEdgeInsetsMake(0, 4, 0, 0)]];
-//            selectedAttach = [NSMutableAttributedString textAttachmentByImage:[image_mutedSld() imageWithInsets:NSEdgeInsetsMake(0, 4, 0, 0)]];
-//        });
-//        
-//        _nameTextField.attach = attach;
-//        _nameTextField.selectedAttach = selectedAttach;
-//    }
-//    
     
     [_nameTextField updateWithConversation:item.conversation];
     
@@ -446,29 +436,37 @@ static NSDictionary *attributes() {
         
         NSPoint point;
         
-            if(self.item.message.dstate == DeliveryStateNormal) {
-                
-                if(!self.item.message.unread) {
-                    stateImage = self.isSelected ? image_MessageStateReadWhite() : image_MessageStateRead();
-                } else {
-                    stateImage = self.isSelected ? image_MessageStateSentWhite() : image_MessageStateSent();
-                }
-                
-                point = NSMakePoint(NSMinX(self.dateField.frame) - stateImage.size.width , NSHeight(self.frame) - stateImage.size.height - 12);
-                
-            } else if(self.item.message.dstate == DeliveryStateError) {
-                
-                stateImage = self.isSelected ? image_DialogSelectedSendError() : image_ChatMessageError() ;
-                
-                point = NSMakePoint(NSWidth(self.frame) - stateImage.size.width - 13, 10);
-                
-            } else if(self.item.message.dstate == DeliveryStatePending) {
-                
-                stateImage = self.isSelected ? image_SendingClockWhite() : image_SendingClockGray();
-                
-                point = NSMakePoint(NSMinX(self.dateField.frame) - stateImage.size.width -2, NSHeight(self.frame) - stateImage.size.height - 11);
-                
+        if([self.item.message.action isKindOfClass:[TL_messageActionHistoryClear class]]) {
+            return nil;
+        }
+        
+        if([self.item.conversation.draft isKindOfClass:[TL_draftMessage class]])
+            return nil;
+        
+        if(self.item.message.dstate == DeliveryStateNormal) {
+            
+            if(!self.item.message.unread) {
+                stateImage = self.isSelected ? image_MessageStateReadWhite() : image_MessageStateRead();
+            } else {
+                stateImage = self.isSelected ? image_MessageStateSentWhite() : image_MessageStateSent();
             }
+            
+            point = NSMakePoint(NSMinX(self.dateField.frame) - stateImage.size.width , NSHeight(self.frame) - stateImage.size.height - 12);
+            
+        } else if(self.item.message.dstate == DeliveryStateError) {
+            
+            
+            stateImage = self.isSelected ? image_DialogSelectedSendError() : image_ChatMessageError() ;
+            
+            point = NSMakePoint(NSWidth(self.frame) - stateImage.size.width - 13, 10);
+            
+        } else if(self.item.message.dstate == DeliveryStatePending) {
+            
+            stateImage = self.isSelected ? image_SendingClockWhite() : image_SendingClockGray();
+            
+            point = NSMakePoint(NSMinX(self.dateField.frame) - stateImage.size.width -2, NSHeight(self.frame) - stateImage.size.height - 11);
+            
+        }
         
         if(stateImage != nil) {
             return @{@"image":stateImage,@"point":[NSValue valueWithPoint:point]};
@@ -499,6 +497,8 @@ static NSDictionary *attributes() {
 
 static int unreadCountRadius = 10;
 static int unreadOffsetRight = 13;
+
+
 
 - (void)drawUnreadCount {
     
@@ -540,6 +540,8 @@ static int unreadOffsetRight = 13;
     int offsetX = (sizeWidth - self.item.unreadTextSize.width)/2;
     [self.item.unreadText drawAtPoint:CGPointMake(offset1 - unreadCountRadius + offsetX, offsetY + 3) withAttributes:@{NSForegroundColorAttributeName: self.isSelected ? NSColorFromRGB(0x6896ba)  : [NSColor whiteColor], NSFontAttributeName: TGSystemBoldFont(11)}];
 }
+
+
 
 -(BOOL)isSelected {
     return self.item.table.selectedItem == self.item;

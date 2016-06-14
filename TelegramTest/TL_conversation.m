@@ -18,7 +18,7 @@
 
 
 @implementation TL_conversation
-+(TL_conversation *)createWithPeer:(TLPeer *)peer top_message:(int)top_message unread_count:(int)unread_count last_message_date:(int)last_message_date notify_settings:(TLPeerNotifySettings *)notify_settings last_marked_message:(int)last_marked_message top_message_fake:(int)top_message_fake last_marked_date:(int)last_marked_date sync_message_id:(int)sync_message_id read_inbox_max_id:(int)read_inbox_max_id unread_important_count:(int)unread_important_count lastMessage:(TL_localMessage *)lastMessage {
++(TL_conversation *)createWithPeer:(TLPeer *)peer top_message:(int)top_message unread_count:(int)unread_count last_message_date:(int)last_message_date notify_settings:(TLPeerNotifySettings *)notify_settings last_marked_message:(int)last_marked_message top_message_fake:(int)top_message_fake last_marked_date:(int)last_marked_date sync_message_id:(int)sync_message_id read_inbox_max_id:(int)read_inbox_max_id read_outbox_max_id:(int)read_outbox_max_id draft:(TLDraftMessage *)draft lastMessage:(TL_localMessage *)lastMessage {
     TL_conversation *dialog = [[TL_conversation alloc] init];
     dialog.peer = peer;
     dialog.top_message = top_message;
@@ -35,19 +35,18 @@
 
     
     dialog.read_inbox_max_id = read_inbox_max_id;
-    dialog.unread_important_count = unread_important_count;
-    
+    dialog.read_outbox_max_id = read_outbox_max_id;
+    dialog.draft = draft;
     return dialog;
 }
 
 
-+ (TL_conversation *)createWithPeer:(TLPeer *)peer top_message:(int)top_message unread_count:(int)unread_count last_message_date:(int)last_message_date notify_settings:(TLPeerNotifySettings *)notify_settings last_marked_message:(int)last_marked_message top_message_fake:(int)top_message_fake last_marked_date:(int)last_marked_date sync_message_id:(int)sync_message_id read_inbox_max_id:(int)read_inbox_max_id unread_important_count:(int)unread_important_count lastMessage:(TL_localMessage *)lastMessage pts:(int)pts isInvisibleChannel:(BOOL)isInvisibleChannel top_important_message:(int)top_important_message {
++ (TL_conversation *)createWithPeer:(TLPeer *)peer top_message:(int)top_message unread_count:(int)unread_count last_message_date:(int)last_message_date notify_settings:(TLPeerNotifySettings *)notify_settings last_marked_message:(int)last_marked_message top_message_fake:(int)top_message_fake last_marked_date:(int)last_marked_date sync_message_id:(int)sync_message_id read_inbox_max_id:(int)read_inbox_max_id read_outbox_max_id:(int)read_outbox_max_id draft:(TLDraftMessage *)draft  lastMessage:(TL_localMessage *)lastMessage pts:(int)pts isInvisibleChannel:(BOOL)isInvisibleChannel {
     
-    TL_conversation *conversation = [self createWithPeer:peer top_message:top_message unread_count:unread_count last_message_date:last_message_date notify_settings:notify_settings last_marked_message:last_marked_message top_message_fake:top_message_fake last_marked_date:last_marked_date sync_message_id:sync_message_id read_inbox_max_id:read_inbox_max_id unread_important_count:unread_important_count lastMessage:lastMessage];
+    TL_conversation *conversation = [self createWithPeer:peer top_message:top_message unread_count:unread_count last_message_date:last_message_date notify_settings:notify_settings last_marked_message:last_marked_message top_message_fake:top_message_fake last_marked_date:last_marked_date sync_message_id:sync_message_id read_inbox_max_id:read_inbox_max_id read_outbox_max_id:read_outbox_max_id draft:draft  lastMessage:lastMessage];
     
     conversation.pts = pts;
     conversation.invisibleChannel = isInvisibleChannel;
-    conversation.top_important_message = top_important_message;
     return conversation;
     
 }
@@ -64,7 +63,7 @@
     [stream writeInt:self.last_real_message_date];
     [stream writeInt:self.sync_message_id];
     [stream writeInt:self.read_inbox_max_id];
-    [stream writeInt:self.unread_important_count];
+    [stream writeInt:self.read_outbox_max_id];
     
 }
 -(void)unserialize:(SerializedData*)stream {
@@ -79,7 +78,7 @@
     self.last_real_message_date = [stream readInt];
     self.sync_message_id = [stream readInt];
     self.read_inbox_max_id = [stream readInt];
-    self.unread_important_count = [stream readInt];
+    self.read_outbox_max_id = [stream readInt];
 }
 
 -(void)setLast_message_date:(int)last_message_date {
@@ -88,7 +87,11 @@
 }
 
 -(void)setLastMessage:(TL_localMessage *)lastMessage {
+    
+    
     _lastMessage = lastMessage;
+    
+    
 }
 
 -(BOOL)canSendMessage {
@@ -126,7 +129,7 @@
 }
 
 -(int)universalTopMessage {
-    return (self.type == DialogTypeChannel ? self.top_important_message : self.top_message);
+    return self.top_message;
 }
 
 -(NSString *)blockedText {
@@ -223,8 +226,8 @@
 
 -(void)setUnread_count:(int)unread_count {
     
-    if(unread_count >= 0)
-        [super setUnread_count:unread_count];
+    [super setUnread_count:MAX(unread_count,0)];
+    
     
 }
 
@@ -241,8 +244,8 @@
         return YES;
     
     // && (!self.chat.isDeactivated)
-        
-    return !self.isInvisibleChannel && self.last_message_date > 0  && !self.fake;
+        //&& self.last_message_date > 0
+    return !self.isInvisibleChannel  && !self.fake;
 }
 
 //-(BOOL)isInvisibleChannel {
@@ -397,7 +400,10 @@ static void *kType;
     }
 }
 
+-(void)setRead_inbox_max_id:(int)read_inbox_max_id {
+    [super setRead_inbox_max_id:MIN(read_inbox_max_id,self.read_inbox_max_id > TGMINFAKEID ? self.top_message : read_inbox_max_id)];
 
+}
 
 - (NSUInteger) cacheHash {
     return [[self cacheKey] hash];
@@ -424,11 +430,15 @@ static void *kType;
 }
 
 -(long)channel_top_important_message_id {
-    return channelMsgId(self.top_important_message,self.peer_id);
+    return channelMsgId(self.top_message,self.peer_id);
 }
 
 -(BOOL)isVerified {
     return self.type == DialogTypeChannel ? self.chat.isVerified : self.type == DialogTypeUser ? self.user.isVerified : NO;
+}
+
+-(BOOL)isChannel {
+    return [self.peer isKindOfClass:[TL_peerChannel class]];
 }
 
 - (TL_encryptedChat *) encryptedChat {
@@ -450,6 +460,10 @@ static void *kType;
     }
     
     return _p_user;
+}
+
+-(id)copy {
+    return [TL_conversation createWithPeer:self.peer top_message:self.top_message unread_count:self.unread_count last_message_date:self.last_message_date notify_settings:self.notify_settings last_marked_message:self.last_marked_message top_message_fake:self.top_message_fake last_marked_date:self.last_marked_date sync_message_id:self.sync_message_id read_inbox_max_id:self.read_inbox_max_id read_outbox_max_id:self.read_outbox_max_id draft:self.draft lastMessage:self.lastMessage];
 }
 
 - (void)setUser:(TLUser *)user {

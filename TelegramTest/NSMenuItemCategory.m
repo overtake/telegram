@@ -17,6 +17,7 @@ static char * const qBlockActionKey = "BlockActionKey";
 
 DYNAMIC_PROPERTY(HIGHLIGHTED)
 DYNAMIC_PROPERTY(SUBTITLE)
+
 + (id) menuItemWithTitle:(NSString *)title withBlock:(void (^)(id sender))block {
     NSMenuItem *item = [[NSMenuItem alloc] init];
     [item setTitle:title];

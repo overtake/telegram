@@ -80,9 +80,10 @@
     
     if((state == MessageTableCellUnread || state == MessageTableCellRead)) {
         
-        if(self.container.item.message.isPost) {
+        if(self.container.item.viewsCountAndSign.length > 0) {
             
-            _channelImageView = imageViewWithImage(image_ChannelViews());
+            if(self.container.item.message.isPost)
+                _channelImageView = imageViewWithImage(image_ChannelViews());
             
             [self.checkMark1 removeFromSuperview];
             [self.checkMark2 removeFromSuperview];
@@ -94,15 +95,20 @@
             [_viewsCountText setText:self.container.item.viewsCountAndSign maxWidth:self.container.item.viewsCountAndSignSize.width];
             
             [_viewsCountText setFrameSize:NSMakeSize(MIN(NSWidth(self.frame) - NSWidth(_channelImageView.frame) - 4,self.container.item.viewsCountAndSignSize.width), NSHeight(_viewsCountText.frame))];
-            [_viewsCountText setFrameOrigin:CGPointMake(NSWidth(self.frame) - NSWidth(_viewsCountText.frame) - 2,0)];
+            [_viewsCountText setFrameOrigin:CGPointMake(NSWidth(self.frame) - NSWidth(_viewsCountText.frame) - 2 - (!self.container.item.message.isPost && self.container.item.message.isN_out ? 15 : 0),0)];
             [self addSubview:_viewsCountText];
             
-            [_channelImageView setFrameOrigin:NSMakePoint(NSMinX(_viewsCountText.frame) - NSWidth(_channelImageView.frame) - 2, 3)];
+            if(self.container.item.message.isPost) {
+                [_channelImageView setFrameOrigin:NSMakePoint(NSMinX(_viewsCountText.frame) - NSWidth(_channelImageView.frame) - 2, 3)];
+                
+                [self addSubview:_channelImageView];
+            }
             
-            [self addSubview:_channelImageView];
+           
 
-        } else {
-            
+        }
+        
+        if(!self.container.item.message.isPost && self.container.item.message.n_out) {
             if(!_checkMark1) {
                 _checkMark1 = [[NSImageView alloc] initWithFrame:NSMakeRect(0, 1, 0, 0)];
                 _checkMark1.wantsLayer = YES;
@@ -122,7 +128,7 @@
                 }
                 
                 [self addSubview:_checkMark2];
-
+                
             } else {
                 [_checkMark2 removeFromSuperview];
                 _checkMark2= nil;
@@ -149,7 +155,7 @@
                 animation.removedOnCompletion = true;
                 [_checkMark2.layer addAnimation:animation forKey:@"transform.scale"];
             }
-            
+
         }
         
     } else {

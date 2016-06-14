@@ -16,6 +16,7 @@
 @property (nonatomic, strong) LeftViewController *leftViewController;
 @property (nonatomic, strong) RightViewController *rightViewController;
 
+-(void)updateESGLayout:(BOOL)show;
 
 
 -(void)updateWindowMinSize;

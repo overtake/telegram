@@ -29,6 +29,7 @@ typedef enum {
 
 -(int)selectedPeerId;
 
+- (void)selectFirst;
 -(void)dontLoadHashTagsForOneRequest;
 
 @end

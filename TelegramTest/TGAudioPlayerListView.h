@@ -19,6 +19,8 @@
 
 @property (nonatomic,strong) void (^changedAudio)(MessageTableItemAudioDocument *item);
 
+@property (nonatomic,weak) TGAudioGlobalController *controller;
+
 
 -(NSImage *)getAlbumImageFromItem:(MessageTableItemAudioDocument *)item;
 

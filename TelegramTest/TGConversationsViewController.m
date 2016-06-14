@@ -22,6 +22,7 @@
 #import "TGHeadChatPanel.h"
 #import "TMAudioRecorder.h"
 #import "MessagesBottomView.h"
+#import "TGModernESGViewController.h"
 @interface TestView : TMView
 
 @end
@@ -183,7 +184,10 @@
     
     [ASQueue dispatchOnMainQueue:^{
         //[EmojiViewController reloadStickers];
-        [TGModernEmojiViewController initialize];
+        //[TGModernEmojiViewController initialize];
+        [TGModernESGViewController controller];
+        [MessageSender syncTopCategories:^(NSArray *categories) {
+        }];
     }];
     
     [MessagesManager updateUnreadBadge];
@@ -203,9 +207,7 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self name:NSViewBoundsDidChangeNotification object:clipView];
 }
 
-- (void)searchFieldDidEnter {
-    
-}
+
 
 -(void)notificationLogout:(NSNotification *)notification {
     [self.tableView removeAllItems:NO];
@@ -287,7 +289,7 @@
         [self.tableView cancelSelection];
         
         if(![conversation isKindOfClass:NSNull.class]) {
-            [self.tableView setSelectedByHash:[[Telegram conversation] peer_id]];
+            [self.tableView setSelectedByHash:[conversation peer_id]];
             
             if([Telegram isSingleLayout]  && !conversation) {
                 [self.tableView cancelSelection];

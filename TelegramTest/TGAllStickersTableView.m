@@ -200,11 +200,7 @@ static NSImage *higlightedImage() {
         BTRButton *button = self.subviews[idx];
         TGStickerImageView *imageView = [button.subviews lastObject];
         
-        if(!self.tableView.isCustomStickerPack) {
-            [button setBackgroundImage:higlightedImage() forControlState:BTRControlStateHover];
-        } else {
-            [button setBackgroundImage:nil forControlState:BTRControlStateHover];
-        }
+        [button setBackgroundImage:higlightedImage() forControlState:BTRControlStateHighlighted];
         
         [imageView setFrameSize:[item.objects[idx] imageSize]];
         
@@ -315,7 +311,7 @@ static NSImage *higlightedImage() {
                     [self loadSetsIfNeeded:response.sets n_hash:response.n_hash];
                     
                 } else {
-                    [self reloadData];
+                    [self loadSetsIfNeeded:_sets n_hash:[self stickersHash:_sets]];
                 }
                 
                 setRemoteStickersLoaded(YES);
@@ -340,25 +336,29 @@ static NSImage *higlightedImage() {
     if(saveSets) {
         [[Storage yap] readWriteWithBlock:^(YapDatabaseReadWriteTransaction * __nonnull transaction) {
             
-            NSMutableDictionary *serializedStickers = [_stickers mutableCopy];
-            
-            NSMutableDictionary *data = [[transaction objectForKey:@"modern_stickers" inCollection:STICKERS_COLLECTION] mutableCopy];
-            
-            if(!data)
-            {
-                data = [[NSMutableDictionary alloc] init];
-                data[@"sets"] = [[NSMutableArray alloc] init];
-            }
-            
-            data[@"serialized"] = serializedStickers;
-            
-            if(saveSets) {
+            @try {
+                NSMutableDictionary *serializedStickers = [_stickers mutableCopy];
                 
-                data[@"sets"] = sets;
+                NSMutableDictionary *data = [[transaction objectForKey:@"modern_stickers" inCollection:STICKERS_COLLECTION] mutableCopy];
+                
+                if(!data)
+                {
+                    data = [[NSMutableDictionary alloc] init];
+                    data[@"sets"] = [[NSMutableArray alloc] init];
+                }
+                
+                data[@"serialized"] = serializedStickers;
+                
+                if(saveSets) {
+                    
+                    data[@"sets"] = sets;
+                }
+                
+                [transaction setObject:data forKey:@"modern_stickers" inCollection:STICKERS_COLLECTION];
+            } @catch (NSException *exception) {
+                
             }
-            
-            [transaction setObject:data forKey:@"modern_stickers" inCollection:STICKERS_COLLECTION];
-            
+
         }];
     }
     
@@ -383,7 +383,7 @@ static NSImage *higlightedImage() {
         
         NSArray *current = [_sets filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.n_id == %ld",obj.n_id]];
         
-        if(current.count == 0 || [(TL_stickerSet *)current[0] n_hash] != obj.n_hash || [self.stickers[@(obj.n_id)] count] == 0) {
+        if(current.count == 0 || [(TL_stickerSet *)current[0] n_hash] != obj.n_hash || [self.stickers[@(obj.n_id)] count] == 0 ) {
             
             [changed addObject:obj];
         }
@@ -689,22 +689,28 @@ static NSImage *higlightedImage() {
 
 -(void)mouseDragged:(NSEvent *)theEvent {
     if(_previewModal != nil) {
-        NSUInteger index = [self rowAtPoint:[self convertPoint:[theEvent locationInWindow] fromView:nil]];
         
-        TGAllStickerTableItemView *view = [self viewAtColumn:0 row:index makeIfNecessary:NO];
-        
-        TGAllStickersTableItem *item = [self itemAtPosition:index];
-        
-        NSPoint point = [view convertPoint:[theEvent locationInWindow] fromView:nil];
-        
-        [view.subviews enumerateObjectsUsingBlock:^(__kindof NSView * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        @try {
+            NSUInteger index = [self rowAtPoint:[self convertPoint:[theEvent locationInWindow] fromView:nil]];
             
-            if(NSMinX(obj.frame) < point.x && NSMaxX(obj.frame) > point.x) {
+            TGAllStickerTableItemView *view = [self viewAtColumn:0 row:index makeIfNecessary:NO];
+            
+            TGAllStickersTableItem *item = [self itemAtPosition:index];
+            
+            NSPoint point = [view convertPoint:[theEvent locationInWindow] fromView:nil];
+            
+            [view.subviews enumerateObjectsUsingBlock:^(__kindof NSView * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
                 
-                [_previewModal setSticker:item.stickers[idx]];
-            }
+                if(NSMinX(obj.frame) < point.x && NSMaxX(obj.frame) > point.x) {
+                    
+                    [_previewModal setSticker:item.stickers[idx]];
+                }
+                
+            }];
+        } @catch (NSException *exception) {
             
-        }];
+        }
+       
         
     } else {
         [super mouseDragged:theEvent];

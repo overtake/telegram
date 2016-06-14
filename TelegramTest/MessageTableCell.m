@@ -126,29 +126,22 @@
     weak();
     
     
-    if([self.item.message.chat isKindOfClass:[TLChat class]] && self.item.message.chat.isChannel && self.item.message.fwd_from == nil) {
-        BOOL canEdit = self.item.message.isPost ?  self.item.message.chat.isCreator || (self.item.message.chat.isEditor && self.item.message.from_id == [UsersManager currentUserId]) : self.item.message.from_id == [UsersManager currentUserId];
-        
-        canEdit = canEdit && self.item.message.via_bot_id == 0;
-
-        
-        canEdit = canEdit && ([self.item isKindOfClass:[MessageTableItemText class]] || [self.item.message.media isKindOfClass:[TL_messageMediaPhoto class]] || ([self.item.message.media.document attributeWithClass:[TL_documentAttributeVideo class]] && ![self.item.message.media.document attributeWithClass:[TL_documentAttributeAnimated class]]));
-        
-        if(canEdit && self.item.message.date + edit_time_limit() > [[MTNetwork instance] getTime]) {
-            [items addObject:[NSMenuItem menuItemWithTitle:NSLocalizedString(@"Context.Edit", nil) withBlock:^(id sender) {
-                
-                [weakSelf.messagesViewController setEditableMessage:weakSelf.item.message];
-                
-                [RPCRequest sendRequest:[TLAPI_messages_getMessageEditData createWithPeer:weakSelf.item.message.conversation.inputPeer n_id:weakSelf.item.message.n_id] successHandler:^(id request, id response) {
-                    
-                    [SharedManager proccessGlobalResponse:response];
-                    
-                } errorHandler:nil];
-
-            }]];
+    BOOL canEdit = self.item.message.canEdit;
+    
+    if(canEdit) {
+        [items addObject:[NSMenuItem menuItemWithTitle:NSLocalizedString(@"Context.Edit", nil) withBlock:^(id sender) {
             
-        }
+            [weakSelf.messagesViewController setEditableMessage:weakSelf.item.message];
+            
+            [RPCRequest sendRequest:[TLAPI_messages_getMessageEditData createWithPeer:weakSelf.item.message.conversation.inputPeer n_id:weakSelf.item.message.n_id] successHandler:^(id request, id response) {
+                
+                [SharedManager proccessGlobalResponse:response];
+                
+            } errorHandler:nil];
+            
+        }]];
     }
+    
     
     if(self.item.message.isChannelMessage && self.item.message.chat.isMegagroup && self.item.message.chat.isManager) {
         
@@ -199,7 +192,9 @@
         if(self.item.message.conversation.type != DialogTypeSecretChat || self.item.message.conversation.encryptedChat.encryptedParams.layer >= 45) {
             [items addObject:[NSMenuItem menuItemWithTitle:NSLocalizedString(@"Context.Reply", nil) withBlock:^(id sender) {
                 
-                [weakSelf.messagesViewController addReplayMessage:weakSelf.item.message animated:YES];
+                TGInputMessageTemplate *template = [TGInputMessageTemplate templateWithType:TGInputMessageTemplateTypeSimpleText ofPeerId:self.item.message.peer_id];
+                [template setReplyMessage:self.item.message save:YES];
+                [template performNotification];
                 
             }]];
         }
@@ -255,6 +250,15 @@
         }]];
     }
     
+    if(self.item.message.dstate == DeliveryStateNormal) {
+        [items addObject:[NSMenuItem menuItemWithTitle:NSLocalizedString(@"Context.Select", nil) withBlock:^(id sender) {
+            
+            [weakSelf.messagesViewController setCellsEditButtonShow:YES animated:YES];
+            [weakSelf setSelected:YES animated:YES];
+            
+        }]];
+    }
+    
     return items;
     
 }
@@ -265,7 +269,11 @@
         BOOL accept = ![self mouseInText:theEvent];;
         
         if(accept && self.item.message.n_id < TGMINFAKEID && self.item.message.n_id > 0)
-            [_messagesViewController addReplayMessage:self.item.message animated:YES];
+        {
+            TGInputMessageTemplate *template = [TGInputMessageTemplate templateWithType:TGInputMessageTemplateTypeSimpleText ofPeerId:self.item.message.peer_id] ;
+            [template setReplyMessage:self.item.message save:YES];
+            [template performNotification];
+        }
     }
     
     

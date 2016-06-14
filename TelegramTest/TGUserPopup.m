@@ -27,8 +27,8 @@
     [[_statusView cell] setLineBreakMode:NSLineBreakByTruncatingTail];
     [[_nameView cell] setTruncatesLastVisibleLine:YES];
     [[_nameView cell] setLineBreakMode:NSLineBreakByTruncatingTail];
-    [_statusView setSelector:@selector(statusForMessagesHeaderView)];
-    
+    [_statusView setSelector:@selector(statusForUserInfoView)];
+
    
     
     

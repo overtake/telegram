@@ -278,9 +278,9 @@
     
     [ASQueue dispatchOnMainQueue:^{
         
-        if(replyMessage) {
-            [appWindow().navigationController.messagesViewController removeReplayMessage:YES animated:YES];
-        }
+//        if(replyMessage) {
+//            [appWindow().navigationController.messagesViewController removeReplayMessage:YES animated:YES];
+//        }
         
     }];
 }

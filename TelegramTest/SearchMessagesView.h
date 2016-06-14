@@ -17,4 +17,9 @@
 -(NSString *)currentString;
 
 
+
+-(void)next;
+-(void)prev;
+
+
 @end

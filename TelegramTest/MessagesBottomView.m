@@ -37,6 +37,7 @@
 #import "TGModalGifSearch.h"
 #import "TGRecordedAudioPreview.h"
 #import "TGModernESGViewController.h"
+#import "TGMenuItemPhoto.h"
 @interface MessagesBottomView()<TGImageAttachmentsControllerDelegate>
 
 @property (nonatomic, strong) TMView *actionsView;
@@ -104,6 +105,8 @@
 
 @property (nonatomic,strong) TLUser *inlineBot;
 
+@property (nonatomic,strong) MessageReplyContainer *editMessageContainer;
+
 @end
 
 @implementation MessagesBottomView
@@ -120,9 +123,7 @@
         
         self.attachmentsIgnore = [[NSMutableArray alloc] init];
 
-                
         [self setState:MessagesBottomViewNormalState animated:NO];
-        
         
         [self normalView];
     }
@@ -220,6 +221,8 @@
 
 - (void)setDialog:(TL_conversation *)dialog {
     self->_dialog = dialog;
+    
+    _template = [TGInputMessageTemplate templateWithType:TGInputMessageTemplateTypeSimpleText ofPeerId:_dialog.peer_id];
     
     _inlineBot = nil;
     
@@ -665,7 +668,7 @@
     [self.inputMessageTextField.containerView addSubview:self.progressView];
     
     
-    [self.smileButton addTarget:self action:@selector(smileButtonClick:) forControlEvents:BTRControlEventMouseEntered];
+    [self.smileButton addTarget:self action:@selector(smileButtonEntered:) forControlEvents:BTRControlEventMouseEntered];
     [self.smileButton addTarget:self action:@selector(smileButtonClick:) forControlEvents:BTRControlEventClick];
     [self.inputMessageTextField.containerView addSubview:self.smileButton];
     
@@ -855,8 +858,44 @@ static RBLPopover *popover;
     [attachFileItem setHighlightedImage:image_AttachFileHighlighted()];
     
     
-    
     [theMenu addItem:attachFileItem];
+    
+    if(self.dialog.type != DialogTypeSecretChat) {
+        __block NSMutableArray *top;
+        
+        [[Storage yap] readWithBlock:^(YapDatabaseReadTransaction *transaction) {
+            
+            top = [[transaction objectForKey:@"categories" inCollection:TOP_PEERS] mutableCopy];
+            
+        }];
+        
+        
+        [top enumerateObjectsUsingBlock:^(TL_topPeerCategoryPeers *obj, NSUInteger cidx, BOOL * _Nonnull stop) {
+            
+            if([obj.category isKindOfClass:[TL_topPeerCategoryBotsInline class]]) {
+                
+                [obj.peers enumerateObjectsUsingBlock:^(TL_topPeer *peer, NSUInteger idx, BOOL *stop) {
+                    
+                    TLUser *user = [[UsersManager sharedManager] find:peer.peer.user_id];
+                    
+                    NSMenuItem *botMenuItem = [NSMenuItem menuItemWithTitle:[NSString stringWithFormat:@"@%@",user.username] withBlock:^(id sender) {
+                        
+                        open_link_with_controller([NSString stringWithFormat:@"chat://viabot/?username=@%@",user.username],weakSelf.messagesViewController.navigationViewController);
+                        
+                    }];
+                    
+                    [[TGMenuItemPhoto alloc] initWithUser:user menuItem:botMenuItem];
+                    
+                    
+                    [theMenu addItem:botMenuItem];
+                    
+                }];
+                
+                *stop = YES;
+            }
+            
+        }];
+    }
     
    
     
@@ -1044,14 +1083,33 @@ static RBLPopover *popover;
 }
 
 - (void)insertEmoji:(NSString *)emoji {
-    [self.inputMessageTextField insertText:emoji];
+    if(self.dialog.canSendMessage)
+        [self.inputMessageTextField insertText:emoji];
 }
 
 -(void)closeEmoji {
     [self.smilePopover close];
 }
 
+- (void)smileButtonEntered:(BTRButton *)button {
+    
+    if(!([SettingsArchiver checkMaskedSetting:ESGLayoutSettings] && [self.messagesViewController canShownESGController])) {
+       [self smileButtonClick:button]; 
+    }
+    
+    //if(![SettingsArchiver isDefaultEnabledESGLayout] || ![self.messagesViewController canShownESGController] || NSWidth(self.messagesViewController.view.frame) < 800) {
+        //[
+   // }
+}
+
 - (void)smileButtonClick:(BTRButton *)button {
+    
+    if([SettingsArchiver checkMaskedSetting:ESGLayoutSettings] && [self.messagesViewController canShownESGController])
+    {
+        [self.messagesViewController showOrHideESGController:NO toggle:YES];
+        return;
+    }
+
     
     TGModernESGViewController *egsViewController = [TGModernESGViewController controller];
     
@@ -1175,7 +1233,9 @@ static RBLPopover *popover;
             
             return;
         } else if(weakSelf.dialog.type == DialogTypeUser && weakSelf.dialog.user.isBlocked) {
-            [[BlockedUsersManager sharedManager] unblock:weakSelf.dialog.user.n_id completeHandler:nil];
+            [[BlockedUsersManager sharedManager] unblock:weakSelf.dialog.user.n_id completeHandler:^(BOOL response){
+                [weakSelf setState:MessagesBottomViewNormalState animated:YES];
+            }];
         }
         if(_onClickToLockedView != nil)
         {
@@ -1303,6 +1363,10 @@ static RBLPopover *popover;
 
 }
 
+- (void)setSelectedSmileButton:(BOOL)selected {
+    [self.smileButton setSelected:selected];
+}
+
 - (void)sendButtonAction {
     
     if(_inlineBot)
@@ -1358,7 +1422,8 @@ static RBLPopover *popover;
 
 - (void)TMGrowingTextViewTextDidChange:(id)textView {
     
-    [self.messagesViewController saveInputText];
+    if(textView)
+        [self.messagesViewController saveInputText];
     
     
     if( (([self.inputMessageTextField.stringValue trim].length > 0 || self.template.type == TGInputMessageTemplateTypeEditMessage) || self.fwdContainer || _imageAttachmentsController.isShown || _recordedAudioPreview != nil)) {
@@ -1387,8 +1452,8 @@ static RBLPopover *popover;
     }
 
     
-    
-    [self updateWebpage:YES];
+    // && textView != self
+    [self updateWebpage:textView != nil];
    
     
     [self updateBotButtons];
@@ -1404,18 +1469,7 @@ static RBLPopover *popover;
 -(void)checkMentionsOrTags {
     
         
-    NSRect rect = [self.inputMessageTextField firstRectForCharacterRange:[self.inputMessageTextField selectedRange]];
-    
-    NSRect textViewBounds = [self.inputMessageTextField convertRectToBase:[self.inputMessageTextField bounds]];
-    textViewBounds.origin = [[self.inputMessageTextField window] convertBaseToScreen:textViewBounds.origin];
-    
-    rect.origin.x -= textViewBounds.origin.x;
-    rect.origin.y-= textViewBounds.origin.y;
-    
-    rect.origin.x += 100;
-    
-    
-    NSRange range;
+ NSRange range;
     
     NSString *search;
     
@@ -1494,10 +1548,8 @@ static RBLPopover *popover;
             NSMutableString *insert = [[self.inputMessageTextField string] mutableCopy];
             
             [insert insertString:fullUserName atIndex:selectedRange.location - search.length];
-            
-            
-            
             [self.inputMessageTextField insertText:[fullUserName stringByAppendingString:@" "] replacementRange:NSMakeRange(selectedRange.location - search.length, search.length)];
+            
             
         };
         
@@ -1585,16 +1637,6 @@ static RBLPopover *popover;
 -(void)checkBotKeyboard:(BOOL)updateHeight animated:(BOOL)animated forceShow:(BOOL)forceShow  {
     
     
-    
-    if(!_botKeyboard) {
-        
-        _botKeyboard = nil;
-        
-        _botKeyboard = [[TGBotCommandsKeyboard alloc] initWithFrame:NSMakeRect(self.attachButton.frame.origin.x + self.attachButton.frame.size.width + 21, NSHeight(self.inputMessageTextField.containerView.frame) + NSMinX(self.inputMessageTextField.frame) + 20 + (self.replyContainer ? 45 : 0), NSWidth(self.inputMessageTextField.containerView.frame), 30)];
-        
-        [self.normalView addSubview:_botKeyboard];
-    }
-    
     __block TL_localMessage *keyboard;
     
     [[Storage yap] readWithBlock:^(YapDatabaseReadTransaction * __nonnull transaction) {
@@ -1602,6 +1644,19 @@ static RBLPopover *popover;
         keyboard = [transaction objectForKey:self.dialog.cacheKey inCollection:BOT_COMMANDS];
         
     }];
+    
+    
+    if(!_botKeyboard && keyboard) {
+        
+        _botKeyboard = [[TGBotCommandsKeyboard alloc] initWithFrame:NSMakeRect(self.attachButton.frame.origin.x + self.attachButton.frame.size.width + 21, NSHeight(self.inputMessageTextField.containerView.frame) + NSMinX(self.inputMessageTextField.frame) + 20 + (self.replyContainer ? 45 : 0), NSWidth(self.inputMessageTextField.containerView.frame), 30)];
+        
+        [self.normalView addSubview:_botKeyboard];
+    } else {
+        [_botKeyboard removeFromSuperview];
+        _botKeyboard = nil;
+    }
+    
+   
 
    
     weak();
@@ -1688,7 +1743,7 @@ static RBLPopover *popover;
     
     if(fwdMessages.count > 0 && _template.type != TGInputMessageTemplateTypeEditMessage) {
         
-        _fwdContainer = [[TGForwardContainer alloc] initWithFrame:NSMakeRect(self.attachButton.frame.origin.x + self.attachButton.frame.size.width + 21, NSHeight(self.inputMessageTextField.containerView.frame) + NSMinX(self.inputMessageTextField.frame) + 20 + (self.replyContainer ? 45 : 0), NSWidth(self.inputMessageTextField.containerView.frame), 30)];
+        _fwdContainer = [[TGForwardContainer alloc] initWithFrame:NSMakeRect(self.attachButton.frame.origin.x + self.attachButton.frame.size.width + 21, NSHeight(self.inputMessageTextField.containerView.frame) + NSMinX(self.inputMessageTextField.frame) + 20 , NSWidth(self.inputMessageTextField.containerView.frame), 30)];
         
         
         TGForwardObject *fwdObj = [[TGForwardObject alloc] initWithMessages:fwdMessages];
@@ -1768,14 +1823,9 @@ static RBLPopover *popover;
     
     
     
-    __block TL_localMessage *replyMessage;
+    __block TL_localMessage *replyMessage = _template.replyMessage;
     
-    [[Storage yap] readWithBlock:^(YapDatabaseReadTransaction *transaction) {
-        
-        replyMessage = [transaction objectForKey:self.dialog.cacheKey inCollection:REPLAY_COLLECTION];
-        
-    }];
-    
+   
     if(replyMessage && _template.type != TGInputMessageTemplateTypeEditMessage) {
         int startX = self.attachButton.frame.origin.x + self.attachButton.frame.size.width + 21;
         
@@ -1794,7 +1844,9 @@ static RBLPopover *popover;
         
         [_replyContainer setDeleteHandler:^{
            
-            [weakSelf.messagesViewController removeReplayMessage:YES animated:YES];
+            TGInputMessageTemplate *template = [TGInputMessageTemplate templateWithType:TGInputMessageTemplateTypeSimpleText ofPeerId:weakSelf.dialog.peer_id];
+            [template setReplyMessage:nil save:YES];
+            [template performNotification];
             
         }];
         
@@ -1828,7 +1880,7 @@ static RBLPopover *popover;
 #endif
     
     
-    if([self.webpageAttach.link isEqualToString:[self.inputMessageString webpageLink]] && ![self.messagesViewController noWebpage:self.inputMessageString]) {
+    if([self.webpageAttach.link isEqualToString:[self.inputMessageString webpageLink]] && !_template.noWebpage) {
      
         if(_webpageAttach && [_webpageAttach.webpage isKindOfClass:[TL_webPageEmpty class]]) {
             [_webpageAttach removeFromSuperview];
@@ -1843,7 +1895,7 @@ static RBLPopover *popover;
     if(self.dialog.type == DialogTypeSecretChat && self.dialog.encryptedChat.encryptedParams.layer < 45)
         return;
     
-    TLWebPage *webpage = ![self.messagesViewController noWebpage:self.inputMessageString] ? [Storage findWebpage:display_url([self.inputMessageString webpageLink])] : nil;
+    TLWebPage *webpage = !_template.noWebpage ? [Storage findWebpage:display_url([self.inputMessageString webpageLink])] : nil;
     
     if(!webpage && !self.webpageAttach)
         return;
@@ -1858,8 +1910,8 @@ static RBLPopover *popover;
         
         int startX = self.attachButton.frame.origin.x + self.attachButton.frame.size.width + 21;
         
-        _webpageAttach = [[TGWebpageAttach alloc] initWithFrame:NSMakeRect(startX, NSHeight(self.inputMessageTextField.containerView.frame) + NSMinX(self.inputMessageTextField.frame) + 20 , NSWidth(self.inputMessageTextField.containerView.frame), 30) webpage:webpage link:[self.inputMessageString webpageLink]];
-        
+        _webpageAttach = [[TGWebpageAttach alloc] initWithFrame:NSMakeRect(startX, NSHeight(self.inputMessageTextField.containerView.frame) + NSMinX(self.inputMessageTextField.frame) + 20 , NSWidth(self.inputMessageTextField.containerView.frame), 30) webpage:webpage link:[self.inputMessageString webpageLink] inputTemplate:_template];
+        _webpageAttach.backgroundColor = self.backgroundColor;
         _webpageAttach.autoresizingMask = NSViewWidthSizable;
         
         [self.normalView addSubview:_webpageAttach];
@@ -1895,8 +1947,8 @@ static RBLPopover *popover;
             height += 75;
         }
         
-        if(self.replyContainer != nil || self.fwdContainer != nil || (self.webpageAttach != nil && self.inputMessageString.length > 0)) {
-            height+= MAX(MAX(NSHeight(self.replyContainer.frame),NSHeight(self.webpageAttach.frame)),NSHeight(self.fwdContainer.frame)) + 5;
+        if(self.replyContainer != nil || self.fwdContainer != nil || (self.webpageAttach != nil && self.inputMessageString.length > 0) || (_editMessageContainer != nil && !_editMessageContainer.isHidden)) {
+            height+= MAX(MAX(MAX(NSHeight(self.replyContainer.frame),NSHeight(self.webpageAttach.frame)),NSHeight(self.fwdContainer.frame)),NSHeight(_editMessageContainer.frame)) + 5;
         }
         
         [_webpageAttach setHidden:_fwdContainer != nil];
@@ -1904,8 +1956,9 @@ static RBLPopover *popover;
         
         
         if(_botKeyboard != nil) {
-            height+= (!_botKeyboard.isHidden ? NSHeight(_botKeyboard.frame) : 0);
+            height+= (!_botKeyboard.isHidden ? NSHeight(_botKeyboard.frame) + 5 : 0);
         }
+
 
     } else {
         height = 58;
@@ -1943,6 +1996,7 @@ static RBLPopover *popover;
             
             [[_webpageAttach animator] setFrameOrigin:NSMakePoint(NSMinX(_webpageAttach.frame), NSHeight(self.inputMessageTextField.containerView.frame) + offset )];
             
+            [[_editMessageContainer animator] setFrameOrigin:NSMakePoint(NSMinX(_editMessageContainer.frame), NSHeight(self.inputMessageTextField.containerView.frame) + offset)];
         } else {
             
              [self setFrameSize:layoutSize];
@@ -1961,7 +2015,8 @@ static RBLPopover *popover;
             
             [_replyContainer setFrameOrigin:NSMakePoint(NSMinX(_replyContainer.frame), NSHeight(self.inputMessageTextField.containerView.frame) + offset)];
             
-            
+            [_editMessageContainer setFrameOrigin:NSMakePoint(NSMinX(_editMessageContainer.frame), NSHeight(self.inputMessageTextField.containerView.frame) + offset)];
+
             [_fwdContainer setFrameOrigin:NSMakePoint(NSMinX(_fwdContainer.frame), NSHeight(self.inputMessageTextField.containerView.frame) + offset)];
             
             [_webpageAttach setFrameOrigin:NSMakePoint(NSMinX(_webpageAttach.frame), NSHeight(self.inputMessageTextField.containerView.frame) + offset)];
@@ -2013,7 +2068,13 @@ static RBLPopover *popover;
         
     [self.inputMessageTextField setFrameSize:NSMakeSize(NSWidth(self.inputMessageTextField.containerView.frame) - 40 - (_botKeyboardButton.isHidden ? 0 : 30) - (_botCommandButton.isHidden ? 0 : 30) - (_channelAdminButton.isHidden ? 0 : 30) - (_secretTimerButton.isHidden ? 0 : 30) - (_progressView.isHidden ? 0 : 30) - (_silentModeButton.isHidden ? 0 : 30),NSHeight(self.inputMessageTextField.frame))];
     
+    NSSize size = [self.sendButton sizeOfText];
+    [self.sendButton setFrameSize:size];
+    [self.sendButton setFrameOrigin:NSMakePoint(self.bounds.size.width - size.width - 17, 19)];
     
+    self.inputMessageTextField.containerView.frame = NSMakeRect(offsetX, NSMinY(self.inputMessageTextField.containerView.frame), self.bounds.size.width - offsetX - (self.inlineBot != nil ? 0 : self.sendButton.frame.size.width ) - 33, NSHeight(self.inputMessageTextField.containerView.frame));
+
+
 }
 
 
@@ -2065,8 +2126,10 @@ static RBLPopover *popover;
 
 -(void)setTemplate:(TGInputMessageTemplate *)inputTemplate checkElements:(BOOL)checkElements {
     _template = inputTemplate;
+    _inputMessageTextField.inputTemplate = inputTemplate;
     
     [self.sendButton setText:_template.type == TGInputMessageTemplateTypeSimpleText ? NSLocalizedString(@"Message.Send", nil) : NSLocalizedString(@"Message.Save",nil)];
+    
     
     if(checkElements) {
         [self removeQuickRecord];
@@ -2086,8 +2149,56 @@ static RBLPopover *popover;
         
         
     } else {
-        [self setInputMessageString:_template.text ? _template.text : @"" disableAnimations:NO];
+        [self setInputMessageString:_template.text ? _template.text : @"" disableAnimations:YES];
     }
+    
+    
+    
+    if(_template.type == TGInputMessageTemplateTypeEditMessage) {
+        
+        int startX = self.attachButton.frame.origin.x + self.attachButton.frame.size.width + 21;
+        
+        TGReplyObject *replyObject = [[TGReplyObject alloc] initWithReplyMessage:inputTemplate.editMessage fromMessage:nil tableItem:nil editMessage:YES];
+        
+        [_editMessageContainer removeFromSuperview];
+        
+        _editMessageContainer = [[MessageReplyContainer alloc] initWithFrame:NSMakeRect(startX, NSHeight(self.inputMessageTextField.containerView.frame) + NSMinX(self.inputMessageTextField.frame) + 20 , NSWidth(self.inputMessageTextField.containerView.frame), replyObject.containerHeight)];
+        [_editMessageContainer setBackgroundColor:NSColorFromRGB(0xfafafa)];
+
+        
+        weak();
+        
+        [_editMessageContainer setDeleteHandler:^{
+            [weakSelf.messagesViewController setEditableMessage:nil];
+        }];
+        
+        [_editMessageContainer setReplyObject:replyObject];
+        
+        if(_webpageAttach == nil)
+            [self.normalView addSubview:_editMessageContainer];
+        else
+            [self.normalView addSubview:_editMessageContainer positioned:NSWindowBelow relativeTo:_webpageAttach];
+        
+        [self updateBottomHeight:YES];
+        [self TMGrowingTextViewTextDidChange:self.inputMessageTextField];
+        
+    } else {
+        
+        BOOL update = _editMessageContainer.superview != nil;
+        
+        [_editMessageContainer removeFromSuperview];
+        _editMessageContainer = nil;
+        
+        if(update) {
+            [self updateBottomHeight:YES];
+            [self TMGrowingTextViewTextDidChange:self.inputMessageTextField];
+        } else {
+            [self TMGrowingTextViewTextDidChange:self.inputMessageTextField];
+        }
+        
+    }
+    
+
     
 }
 
@@ -2101,12 +2212,18 @@ static RBLPopover *popover;
 
 
 - (void)setInputMessageString:(NSString *)message disableAnimations:(BOOL)disableAnimations {
+    
+    
+    [self.inputMessageTextField.undoManager removeAllActions];
+
+    
     [self.inputMessageTextField setString:message];
+    
     
     
     self.inputMessageTextField.disableAnimation = disableAnimations;
     
-    [self.inputMessageTextField textDidChange:nil];
+    [self.inputMessageTextField textDidChange:self]; // webpage disable animation after switch
 
     self.inputMessageTextField.disableAnimation = YES;
     

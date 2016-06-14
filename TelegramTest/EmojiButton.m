@@ -8,11 +8,17 @@
 
 #import "EmojiButton.h"
 #import "TGCTextView.h"
+#import "SpacemanBlocks.h"
+#import "TGRaceEmoji.h"
 
-@interface EmojiButton ()
+
+@interface EmojiButton () {
+    SMDelayedBlockHandle _longHandle;
+}
 @property (nonatomic,strong) NSTrackingArea *trackingArea;
 @property (nonatomic,assign) BOOL mouseInView;
 @property (nonatomic,assign) BOOL mouseIsDown;
+@property (nonatomic,assign) BOOL cancelInsertNext;
 
 @end
 
@@ -22,8 +28,7 @@
     self = [super initWithFrame:frameRect];
     if(self) {
         
-        
-        
+
         
     }
     return self;
@@ -57,7 +62,7 @@
     
     [_list enumerateObjectsUsingBlock:^(NSAttributedString *obj, NSUInteger idx, BOOL * _Nonnull stop) {
         
-        if(self.mouseInView) {
+        if(self.mouseInView && _mouseIsDown) {
             NSRect hrect = NSMakeRect(5 + idx * 34, 0, 34, 34);
             
             if(NSMinX(hrect) < mouse.x && NSMaxX(hrect) > mouse.x) {
@@ -109,15 +114,74 @@
     [self setNeedsDisplay:YES];
 }
 
+static TGRaceEmoji *e_race_controller;
+static RBLPopover *race_popover;
+
 -(void)mouseDown:(NSEvent *)theEvent {
     //[super mouseDown:theEvent];
     _mouseIsDown = YES;
     [self setNeedsDisplay:YES];
+    
+    _longHandle = perform_block_after_delay(0.3, ^{
+        
+        
+        static dispatch_once_t onceToken;
+        dispatch_once(&onceToken, ^{
+            e_race_controller = [[TGRaceEmoji alloc] initWithFrame:NSMakeRect(0, 0, 208, 38) emoji:nil];
+            
+            race_popover = [[RBLPopover alloc] initWithContentViewController:(NSViewController *) e_race_controller];
+            
+            [race_popover setDidCloseBlock:^(RBLPopover *popover){
+                [self.controller.esgViewController.epopover setLockHoverClose:NO];
+            }];
+            
+            [e_race_controller loadView];
+            
+            
+        });
+        
+        e_race_controller.popover = race_popover;
+        e_race_controller.controller = self.controller;
+        
+//        [race_popover setHoverView:self];
+        [race_popover close];
+        
+        NSString *e = [self emojiBelowEvent:theEvent];
+        
+        if([e_race_controller makeWithEmoji:[e realEmoji:e]]) {
+            
+            [self.controller.esgViewController.epopover setLockHoverClose:YES];
+            
+            NSUInteger idx = [_list indexOfObjectPassingTest:^BOOL(NSAttributedString * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                
+                if([obj.string isEqualToString:e])
+                {
+                    *stop = YES;
+                    return YES;
+                }
+                
+                return NO;
+            }];
+            
+            NSRect frame = NSMakeRect(idx * 34 + 5, 3, 34, 34);
+            
+            if(!race_popover.isShown) {
+                [race_popover showRelativeToRect:frame ofView:self preferredEdge:CGRectMaxYEdge];
+            }
+            
+            _cancelInsertNext = YES;
+            
+        } else {
+            [race_popover setHoverView:nil];
+        }
+    });
+
 }
 
--(void)mouseUp:(NSEvent *)theEvent {
-    _mouseIsDown = NO;
-    if(self.mouseInView && _emojiCallback) {
+-(NSString *)emojiBelowEvent:(NSEvent *)theEvent {
+    
+    __block NSString *e = nil;
+    if(self.mouseInView) {
         NSPoint mouse = [self convertPoint:[self.window convertScreenToBase:[NSEvent mouseLocation]] fromView:nil];
         
         [_list enumerateObjectsUsingBlock:^(NSAttributedString *obj, NSUInteger idx, BOOL * _Nonnull stop) {
@@ -127,11 +191,39 @@
             if(NSMinX(hrect) < mouse.x && NSMaxX(hrect) > mouse.x) {
                 *stop = YES;
                 
-                _emojiCallback(_list[idx].string);
+                e = _list[idx].string;
                 
             }
         }];
     }
+    
+    return e;
+   
+}
+
+-(void)mouseUp:(NSEvent *)theEvent {
+    _mouseIsDown = NO;
+    
+    cancel_delayed_block(_longHandle);
+    
+    if(!_cancelInsertNext) {
+        
+        if(_emojiCallback) {
+            NSString *e = [self emojiBelowEvent:theEvent];
+            _emojiCallback(e);
+        }
+        
+        if(race_popover.isShown) {
+            [race_popover close];
+        }
+        [self.controller.esgViewController.epopover setLockHoverClose:NO];
+    }
+    
+    
+    
+    _cancelInsertNext = NO;
+    
+    
     [self setNeedsDisplay:YES];
 }
 

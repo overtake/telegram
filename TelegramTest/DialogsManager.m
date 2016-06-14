@@ -79,7 +79,7 @@
     __block TL_conversation *dialog;
     
     [ASQueue dispatchOnStageQueue:^{
-        dialog = [TL_conversation createWithPeer:[TL_peerUser createWithUser_id:user.n_id] top_message:0 unread_count:0 last_message_date:0 notify_settings:nil last_marked_message:0 top_message_fake:0 last_marked_date:0 sync_message_id:0 read_inbox_max_id:0 unread_important_count:0 lastMessage:nil];
+        dialog = [TL_conversation createWithPeer:[TL_peerUser createWithUser_id:user.n_id] top_message:0 unread_count:0 last_message_date:0 notify_settings:nil last_marked_message:0 top_message_fake:0 last_marked_date:0 sync_message_id:0 read_inbox_max_id:0 read_outbox_max_id:0 draft:[TL_draftMessageEmpty create] lastMessage:nil];
    
         [dialog setUser:user];
         dialog.fake = YES;
@@ -100,7 +100,7 @@
         if(chat.isChannel) {
             dialog = [self createDialogForChannel:chat];
         } else
-            dialog = [TL_conversation createWithPeer:[TL_peerChat createWithChat_id:chat.n_id] top_message:0 unread_count:0 last_message_date:0 notify_settings:nil last_marked_message:0 top_message_fake:0 last_marked_date:0 sync_message_id:0 read_inbox_max_id:0 unread_important_count:0 lastMessage:nil];
+            dialog = [TL_conversation createWithPeer:[TL_peerChat createWithChat_id:chat.n_id] top_message:0 unread_count:0 last_message_date:0 notify_settings:nil last_marked_message:0 top_message_fake:0 last_marked_date:0 sync_message_id:0 read_inbox_max_id:0 read_outbox_max_id:0 draft:[TL_draftMessageEmpty create] lastMessage:nil];
         
         
         dialog.fake = YES;
@@ -118,7 +118,7 @@
     __block TL_conversation *dialog;
     
     [ASQueue dispatchOnStageQueue:^{
-        dialog = [TL_conversation createWithPeer:[TL_peerChannel createWithChannel_id:chat.n_id] top_message:0 unread_count:0 last_message_date:0 notify_settings:nil last_marked_message:0 top_message_fake:0 last_marked_date:0 sync_message_id:0 read_inbox_max_id:0 unread_important_count:0 lastMessage:nil pts:0 isInvisibleChannel:YES top_important_message:0];
+        dialog = [TL_conversation createWithPeer:[TL_peerChannel createWithChannel_id:chat.n_id] top_message:0 unread_count:0 last_message_date:0 notify_settings:nil last_marked_message:0 top_message_fake:0 last_marked_date:0 sync_message_id:0 read_inbox_max_id:0 read_outbox_max_id:0 draft:[TL_draftMessageEmpty create] lastMessage:nil pts:0 isInvisibleChannel:YES];
         
         [dialog save];
         
@@ -137,7 +137,7 @@
     __block TL_conversation *dialog;
     
     [ASQueue dispatchOnStageQueue:^{
-        dialog = [TL_conversation createWithPeer:[TL_peerSecret createWithChat_id:chat.n_id] top_message:0 unread_count:0 last_message_date:0 notify_settings:nil last_marked_message:0 top_message_fake:0 last_marked_date:0 sync_message_id:0 read_inbox_max_id:0 unread_important_count:0 lastMessage:nil];
+        dialog = [TL_conversation createWithPeer:[TL_peerSecret createWithChat_id:chat.n_id] top_message:0 unread_count:0 last_message_date:0 notify_settings:nil last_marked_message:0 top_message_fake:0 last_marked_date:0 sync_message_id:0 read_inbox_max_id:0 read_outbox_max_id:0 draft:[TL_draftMessageEmpty create] lastMessage:nil];
         
         
         dialog.fake = YES;
@@ -154,7 +154,7 @@
     __block TL_conversation *dialog;
     
     [ASQueue dispatchOnStageQueue:^{
-        dialog = [TL_conversation createWithPeer:[message peer] top_message:0 unread_count:0  last_message_date:message.date notify_settings:nil last_marked_message:message.n_id top_message_fake:0 last_marked_date:message.date sync_message_id:message.n_id read_inbox_max_id:0 unread_important_count:0 lastMessage:message];
+        dialog = [TL_conversation createWithPeer:[message peer] top_message:0 unread_count:0  last_message_date:message.date notify_settings:nil last_marked_message:message.n_id top_message_fake:0 last_marked_date:message.date sync_message_id:message.n_id read_inbox_max_id:0 read_outbox_max_id:message.n_id-1 draft:[TL_draftMessageEmpty create] lastMessage:message];
         
         
         dialog.fake = YES;
@@ -173,11 +173,18 @@
         
         [[Storage manager] deleteMessages:ids completeHandler:^(NSArray *peer_update) {
             
+            
             [peer_update enumerateObjectsUsingBlock:^(NSDictionary *obj, NSUInteger idx, BOOL *stop) {
                 
-                TL_conversation *conversation = [[DialogsManager sharedManager] find:[obj[KEY_PEER_ID] intValue]];
+                int peer_id = [obj[KEY_PEER_ID] intValue];
+                int msg_id = [obj[KEY_MESSAGE_ID] intValue];
                 
-                [self updateLastMessageForDialog:conversation];
+                TL_conversation *conversation = [[DialogsManager sharedManager] find:peer_id];
+                
+                if(conversation.top_message == msg_id) {
+                    [self updateLastMessageForDialog:conversation];
+                }
+                
                 
             }];
             
@@ -236,7 +243,7 @@
 -(void)updateLastMessageForDialog:(TL_conversation *)dialog {
     
     [self.queue dispatchOnQueue:^{
-        [[Storage manager] lastMessageWithConversation:dialog completeHandler:^(TL_localMessage *lastMessage, int importantMessage) {
+        [[Storage manager] lastMessageWithConversation:dialog completeHandler:^(TL_localMessage *lastMessage) {
            
             if(lastMessage) {
                 
@@ -247,20 +254,41 @@
                 
                 [self checkBotKeyboard:dialog forMessage:lastMessage notify:YES];
                 
+                dialog.lastMessage = lastMessage;
+                
+                [dialog save];
+                
+                [self notifyAfterUpdateConversation:dialog];
+                
             } else {
-                dialog.last_marked_message = dialog.top_message = dialog.last_marked_date = 0;
-                dialog.unread_count = 0;
-                dialog.unread_important_count = 0;
+                
+                [RPCRequest sendRequest:[TLAPI_messages_getHistory createWithPeer:dialog.inputPeer offset_id:0 offset_date:0 add_offset:0 limit:100 max_id:0 min_id:0] successHandler:^(id request, TL_messages_messages *response) {
+                    
+                    [SharedManager proccessGlobalResponse:response];
+                    
+                    if(response.messages.count == 0) {
+                        [self completeDeleteConversation:nil dialog:dialog];
+                        
+                        
+                        dialog.lastMessage = lastMessage;
+                        
+                        [dialog save];
+                        
+                        [self notifyAfterUpdateConversation:dialog];
+                        
+                    } else {
+                        [self updateLastMessageForDialog:dialog];
+                    }
+                    
+                    
+                } errorHandler:^(id request, RpcError *error) {
+                    
+                }];
+                
             }
             
-            dialog.top_important_message = importantMessage;
-            
-            dialog.lastMessage = lastMessage;
-            
-            [dialog save];
             
             
-            [self notifyAfterUpdateConversation:dialog];
             
         }];
     }];
@@ -273,6 +301,8 @@
         
         if(conversation != nil) {
             [Notification perform:[Notification notificationNameByDialog:conversation action:@"message"] data:@{KEY_DIALOG:conversation,KEY_LAST_CONVRESATION_DATA:[MessagesUtils conversationLastData:conversation]}];
+            
+            
             
             NSUInteger position = [self positionForConversation:conversation];
             
@@ -289,10 +319,9 @@
 -(BOOL)checkBotKeyboard:(TL_conversation *)conversation forMessage:(TL_localMessage *)message notify:(BOOL)notify {
     
     __block BOOL needNotify = NO;
-    
-    if(message.fromUser.isBot || ([message.action isKindOfClass:[TL_messageActionChatDeleteUser class]])) {
-        if(message.reply_markup != nil && !message.n_out) {
-            
+     if(message.reply_markup != nil && !message.n_out) {
+         if(message.fromUser.isBot || ([message.action isKindOfClass:[TL_messageActionChatDeleteUser class]])) {
+       
             __block TL_localMessage *currentKeyboard;
             
             [[Storage yap] readWriteWithBlock:^(YapDatabaseReadWriteTransaction * __nonnull transaction) {
@@ -315,18 +344,14 @@
             
             if([message.reply_markup isKindOfClass:[TL_replyKeyboardForceReply class]]) {
                 
-                if(message.replyMessage && message.replyMessage.from_id == [UsersManager currentUserId]) {
-                    
-                    [[Storage yap] readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
-                        
-                        [transaction setObject:message forKey:conversation.cacheKey inCollection:REPLAY_COLLECTION];
-                        
-                    }];
-                    
-                    [Notification perform:[Notification notificationNameByDialog:conversation action:@"reply"] data:@{KEY_DIALOG:conversation}];
-                    
-                    notify = NO;
-                }
+                TGInputMessageTemplate *template = [TGInputMessageTemplate templateWithType:TGInputMessageTemplateTypeSimpleText ofPeerId:message.peer_id];
+                
+                [template setReplyMessage:message save:YES];
+                
+                [template performNotification];
+                
+                notify = NO;
+
                 
             }
             
@@ -406,7 +431,7 @@
         };
         
         if(dialog.type != DialogTypeSecretChat && dialog.type != DialogTypeBroadcast && dialog.type != DialogTypeChannel)
-            [self _clearHistory:dialog completeHandler:^{
+            [self _clearHistory:dialog justClear:NO completeHandler:^{
                 block();
             }];
         else {
@@ -454,10 +479,10 @@
     newBlock();
 }
 
-- (void)_clearHistory:(TL_conversation *)dialog completeHandler:(dispatch_block_t)block {
-    [RPCRequest sendRequest:[TLAPI_messages_deleteHistory createWithPeer:[dialog inputPeer] max_id:INT32_MAX] successHandler:^(RPCRequest *request, TL_messages_affectedHistory *response) {
+- (void)_clearHistory:(TL_conversation *)dialog justClear:(BOOL)justClear completeHandler:(dispatch_block_t)block {
+    [RPCRequest sendRequest:[TLAPI_messages_deleteHistory createWithFlags:justClear ? (1 << 0) : 0 peer:[dialog inputPeer] max_id:INT32_MAX] successHandler:^(RPCRequest *request, TL_messages_affectedHistory *response) {
         if([response offset] != 0)
-            [self _clearHistory:dialog completeHandler:(dispatch_block_t)block];
+            [self _clearHistory:dialog justClear:justClear completeHandler:(dispatch_block_t)block];
         else {
             if(block)
                 block();
@@ -474,7 +499,6 @@
     dispatch_block_t blockSuccess = ^{
         dialog.top_message = 0;
         
-        dialog.top_important_message = 0;
         dialog.unread_count = 0;
         dialog.lastMessage = nil;
         
@@ -489,7 +513,7 @@
     };
     
     if(dialog.type != DialogTypeSecretChat) {
-        [self _clearHistory:dialog completeHandler:^{
+        [self _clearHistory:dialog justClear:YES completeHandler:^{
             blockSuccess();
         }];
     } else {
@@ -503,6 +527,22 @@
 
 - (void)resort {
     [self->list sortUsingComparator:^NSComparisonResult(TL_conversation * obj1, TL_conversation * obj2) {
+        
+//        int date1 = MAX(obj1.draft.date ,obj1.last_message_date);
+//        int date2 = MAX(obj2.draft.date ,obj2.last_message_date);
+//        
+//        if(date1 < date2)
+//            return NSOrderedDescending;
+//        else {
+//            if (date1 > date2)
+//                return NSOrderedAscending;
+//            else if(obj1.top_message < obj2.top_message)
+//                return NSOrderedDescending;
+//            else
+//                return NSOrderedAscending;
+//        }
+//        
+        
         return (obj1.last_message_date < obj2.last_message_date ? NSOrderedDescending : (obj1.last_message_date > obj2.last_message_date ? NSOrderedAscending : (obj1.top_message < obj2.top_message ? NSOrderedDescending : NSOrderedAscending)));
     }];
     
@@ -536,7 +576,7 @@
 
 -(BOOL)checkAndProccessGifMessage:(TL_localMessage *)message {
     
-    if(message.isN_out && [message.media.document.mime_type isEqualToString:@"video/mp4"] && [message.media.document attributeWithClass:[TL_documentAttributeVideo class]] != nil) {
+    if(message.isN_out && message.media.document.isGif) {
         
         [[Storage yap] asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
             
@@ -619,35 +659,35 @@
 - (void) markAllMessagesAsRead:(TLPeer *)peer max_id:(int)max_id out:(BOOL)n_out {
     
     [self.queue dispatchOnQueue:^{
-        [[Storage manager] markAllInConversation:peer.peer_id max_id:max_id out:n_out completeHandler:^(NSArray *ids,NSArray *messages, int unread_count) {
+        
+        TL_conversation *c = [self find:peer.peer_id];
+        
+        NSArray *unloaded = @[];
+        
+        if(!c)
+            unloaded = @[@(peer.peer_id)];
+        
+        [[Storage manager] conversationsWithPeerIds:unloaded completeHandler:^(NSArray *result) {
             
+            [self add:result];
             
-            if(messages.count > 0) {
+            [[Storage manager] markAllInConversation:peer.peer_id max_id:max_id out:n_out completeHandler:^(NSArray *ids,NSArray *messages, int unread_count) {
                 
-                NSArray *unloaded = [self unloadedConversationsWithMessages:@[[messages firstObject]]];
                 
-                [[Storage manager] conversationsWithPeerIds:unloaded completeHandler:^(NSArray *result) {
-                    
-                    [self add:result];
-                    
-                    TL_conversation *conversation = [(TL_localMessage *)[messages firstObject] conversation];
-                    
+                TL_conversation *conversation = [self find:peer.peer_id];
+                
+                if(conversation)
+                {
                     conversation.last_marked_message = max_id;
-                    
-                    
-                    [messages enumerateObjectsUsingBlock:^(TL_localMessage *message, NSUInteger idx, BOOL * _Nonnull stop) {
-                        
-                        message.flags&=~TGUNREADMESSAGE;
-                        
-                        if(conversation.lastMessage.n_id == message.n_id) {
-                            conversation.lastMessage.flags&= ~TGUNREADMESSAGE;
-                        }
-                    }];
                     
                     if(!n_out) {
                         conversation.read_inbox_max_id = max_id;
                         conversation.unread_count = unread_count;
+                    } else {
+                        conversation.read_outbox_max_id = max_id;
                     }
+                    
+                    [conversation save];
                     
                     [SelfDestructionController addMessages:messages];
                     
@@ -655,41 +695,106 @@
                     [Notification perform:[Notification notificationNameByDialog:conversation action:@"unread_count"] data:@{KEY_DIALOG:conversation,KEY_LAST_CONVRESATION_DATA:[MessagesUtils conversationLastData:conversation]}];
                     [Notification perform:MESSAGE_READ_EVENT data:@{KEY_MESSAGE_ID_LIST:ids}];
                     
-                    [conversation save];
+                    
                     
                     [MessagesManager updateUnreadBadge];
                     
                     [MessagesManager clearNotifies:conversation max_id:max_id];
-                    
-                }];
-            }
+
+                }
+                
+                
+            }];
+            
             
         }];
+
+        
     }];
+    
+    
+    
     
 }
 
--(void)markChannelMessagesAsRead:(int)channel_id max_id:(int)max_id completionHandler:(dispatch_block_t)completionHandler {
+
+
+-(void)markChannelMessagesAsRead:(int)channel_id max_id:(int)max_id n_out:(BOOL)n_out completionHandler:(dispatch_block_t)completionHandler {
     
     dispatch_queue_t dqueue = dispatch_get_current_queue();
     
+    
     [self.queue dispatchOnQueue:^{
-        [[Storage manager] markChannelMessagesAsRead:channel_id max_id:max_id callback:^(int unread_count) {
-            
-            TL_conversation *conversation = [self find:-channel_id];
-            
-            if(conversation) {
+        
+        if(!n_out) {
+            [[Storage manager] markChannelMessagesAsRead:channel_id max_id:max_id callback:^(int unread_count) {
                 
-                conversation.unread_count-= unread_count;
-                conversation.last_marked_message = max_id;
-                [conversation save];
-                [Notification perform:[Notification notificationNameByDialog:conversation action:@"unread_count"] data:@{KEY_DIALOG:conversation,KEY_LAST_CONVRESATION_DATA:[MessagesUtils conversationLastData:conversation]}];
-            }
-            
-            dispatch_async(dqueue, completionHandler);
- 
-        }];
+                TL_conversation *conversation = [self find:-channel_id];
+                
+                if(conversation) {
+                    
 
+                    
+                    conversation.unread_count= unread_count;
+                    conversation.last_marked_message = max_id;
+                    conversation.read_inbox_max_id = max_id;
+                    [conversation save];
+                    
+                    [Notification perform:[Notification notificationNameByDialog:conversation action:@"unread_count"] data:@{KEY_DIALOG:conversation,KEY_LAST_CONVRESATION_DATA:[MessagesUtils conversationLastData:conversation]}];
+                    
+                    
+                    if(conversation.unread_count > 0) {
+                        [RPCRequest sendRequest:[TLAPI_messages_getPeerDialogs createWithPeers:[@[conversation.inputPeer] mutableCopy]] successHandler:^(id request, TL_messages_peerDialogs *response) {
+                            
+                            [response.messages removeAllObjects];
+                            
+                            [SharedManager proccessGlobalResponse:response];
+                            
+                            
+                            
+                            if(response.dialogs.count == 1) {
+                                TL_dialog *c = response.dialogs[0];
+                                
+                                
+                                if(c.unread_count != conversation.unread_count) {
+                                    conversation.unread_count = c.unread_count;
+                                    conversation.read_inbox_max_id = c.read_inbox_max_id;
+                                    conversation.read_outbox_max_id = c.read_outbox_max_id;
+                                    [conversation save];
+                                    [Notification perform:[Notification notificationNameByDialog:conversation action:@"unread_count"] data:@{KEY_DIALOG:conversation,KEY_LAST_CONVRESATION_DATA:[MessagesUtils conversationLastData:conversation]}];
+                                }
+                                
+                            }
+                            
+                        } errorHandler:^(id request, RpcError *error) {
+                            
+                        }];
+                    }
+                    
+                }
+                
+                dispatch_async(dqueue, completionHandler);
+                
+            }];
+
+        } else {
+            [[Storage manager] markChannelOutMessagesAsRead:channel_id max_id:max_id callback:^(NSArray * messages) {
+                
+                TL_conversation *conversation = [self find:-channel_id];
+                
+                if(conversation) {
+                    
+                    conversation.read_outbox_max_id = max_id;
+                    [conversation save];
+                    
+                    [Notification perform:MESSAGE_READ_EVENT data:@{KEY_MESSAGE_ID_LIST:messages}];
+                    [Notification perform:[Notification notificationNameByDialog:conversation action:@"unread_count"] data:@{KEY_DIALOG:conversation,KEY_LAST_CONVRESATION_DATA:[MessagesUtils conversationLastData:conversation]}];
+                }
+
+            }];
+        }
+        
+        
     }];
     
 }
@@ -735,7 +840,7 @@
 -(BOOL)updateConversation:(TL_conversation *)dialog withLastMessage:(TL_localMessage *)message update_real_date:(BOOL)update_real_date {
     
     
-    int topMessageId = (dialog.type == DialogTypeChannel ? dialog.top_important_message : dialog.top_message);
+    int topMessageId = dialog.top_message;
     
     if(topMessageId != 0 && topMessageId != -1 && ((topMessageId > message.n_id && topMessageId < TGMINFAKEID)))
         return NO;
@@ -744,8 +849,9 @@
         return NO;
     
     
-    
-    if(message.unread && !message.n_out && message.conversation.read_inbox_max_id < message.n_id) {
+    if(message.unread && !message.n_out && (message.conversation.read_inbox_max_id < message.n_id)) {
+        
+        
         dialog.unread_count++;
     }
     
@@ -755,7 +861,6 @@
     
     dialog.top_message = message.n_id;
     
-    dialog.top_important_message = message.n_id;
 
     dialog.lastMessage = message;
     
@@ -782,11 +887,23 @@
         dialog.last_real_message_date = last_real_date;
     }
     
+    if(message.isN_out) {
+        
+        if(message.via_bot_id != 0) {
+            [MessageSender addRatingForPeer:[TL_peerUser createWithUser_id:message.via_bot_id]];
+        } else {
+            if([message.peer isKindOfClass:[TL_peerUser class]]) {
+                [MessageSender addRatingForPeer:message.peer];
+            }
+        } 
+    }
+    
     dialog.fake = NO;
     
     return YES;
     
 }
+
 
 - (void)setTopMessagesToDialogs:(NSNotification *)notify {
     NSArray *messages = [notify.userInfo objectForKey:KEY_MESSAGE_LIST];
@@ -813,19 +930,6 @@
                     [last setObject:dialog forKey:@(dialog.peer_id)];
                 }
                 
-                [last enumerateKeysAndObjectsUsingBlock:^(id key, TL_conversation *obj, BOOL *stop) {
-                    
-                    BOOL needNotify = [self checkBotKeyboard:obj forMessage:obj.lastMessage notify:NO];
-                    
-                    if(needNotify) {
-                        [Notification perform:[Notification notificationNameByDialog:obj action:@"botKeyboard"] data:@{KEY_DIALOG:obj}];
-                    }
-                    
-                   
-                    
-                }];
-                
-                [[Storage manager] insertDialogs:last.allValues];
                 
                 if([message.media isKindOfClass:[TL_messageMediaPhoto class]]) {
                     
@@ -833,15 +937,36 @@
                     
                     [Notification perform:MEDIA_RECEIVE data:@{KEY_PREVIEW_OBJECT:previewObject}];
                 }
+                
+                BOOL needNotify = [self checkBotKeyboard:dialog forMessage:dialog.lastMessage notify:NO];
+                
+                if(needNotify) {
+                    [Notification perform:[Notification notificationNameByDialog:dialog action:@"botKeyboard"] data:@{KEY_DIALOG:dialog}];
+                }
 
             }];
             
+            [[Storage manager] insertDialogs:last.allValues];
             
             [self add:last.allValues];
             
             [MessagesManager updateUnreadBadge];
             
-            [Notification perform:DIALOGS_NEED_FULL_RESORT data:@{KEY_DIALOGS:self->list}];
+            [self resort];
+            
+            [last.allValues enumerateObjectsUsingBlock:^(TL_conversation *obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                
+                NSUInteger position = [self->list indexOfObject:obj];
+                
+                
+                
+
+                
+                [Notification perform:DIALOG_MOVE_POSITION data:@{KEY_DIALOG:obj, KEY_POSITION:@(position)}];
+                [Notification perform:[Notification notificationNameByDialog:obj action:@"message"] data:@{KEY_DIALOG:obj,KEY_LAST_CONVRESATION_DATA:[MessagesUtils conversationLastData:obj]}];
+
+            }];
+            
             [Notification perform:MESSAGE_LIST_RECEIVE object:messages];
             
         }];
@@ -870,26 +995,34 @@
 
 - (void)add:(NSArray *)all {
     
+    [self add:all updateCurrent:YES];
+}
+
+
+- (void)add:(NSArray *)all updateCurrent:(BOOL)updateCurrent {
+    
     [self.queue dispatchOnQueue:^{
         [all enumerateObjectsUsingBlock:^(TL_conversation * dialog, NSUInteger idx, BOOL *stop) {
             TL_conversation *current = [keys objectForKey:@(dialog.peer_id)];
             if(current) {
-                current.unread_count = dialog.unread_count;
-                current.top_message = dialog.top_message;
-                current.last_message_date = dialog.last_message_date;
-                current.notify_settings = dialog.notify_settings;
-                current.fake = dialog.fake;
-                current.last_marked_message = dialog.last_marked_message;
-                current.top_message_fake = dialog.top_message_fake;
-                current.last_marked_date = dialog.last_marked_date;
-                current.last_real_message_date = dialog.last_real_message_date;
-                current.dstate = dialog.dstate;
-                current.read_inbox_max_id = dialog.read_inbox_max_id;
-                current.top_important_message = dialog.top_important_message;
-                current.unread_important_count = dialog.unread_important_count;
-                current.pts = dialog.pts;
-                current.invisibleChannel = dialog.invisibleChannel;
-                current.lastMessage = dialog.lastMessage;
+                if(updateCurrent) {
+                    current.unread_count = dialog.unread_count;
+                    current.top_message = dialog.top_message;
+                    current.last_message_date = dialog.last_message_date;
+                    current.notify_settings = dialog.notify_settings;
+                    current.fake = dialog.fake;
+                    current.last_marked_message = dialog.last_marked_message;
+                    current.top_message_fake = dialog.top_message_fake;
+                    current.last_marked_date = dialog.last_marked_date;
+                    current.last_real_message_date = dialog.last_real_message_date;
+                    current.dstate = dialog.dstate;
+                    current.read_inbox_max_id = dialog.read_inbox_max_id;
+                    current.read_outbox_max_id = dialog.read_outbox_max_id;
+                    current.pts = dialog.pts;
+                    current.invisibleChannel = dialog.invisibleChannel;
+                    current.lastMessage = dialog.lastMessage;
+                }
+               
             } else {
                 [self->list addObject:dialog];
                 [self->keys setObject:dialog forKey:@(dialog.peer_id)];

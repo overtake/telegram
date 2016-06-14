@@ -26,7 +26,6 @@
 #import "TGProccessUpdates.h"
 #import "ChannelFilter.h"
 #import "TGChannelsPolling.h"
-#import "ChannelImportantFilter.h"
 #import "WeakReference.h"
 #import "MegagroupChatFilter.h"
 @interface ChatHistoryController ()
@@ -267,30 +266,28 @@ static ChatHistoryController *observer;
 }
 
 
--(void)prevStateAsync:(void (^)(ChatHistoryState state))block {
+-(void)prevStateAsync:(void (^)(ChatHistoryState state,ChatHistoryController *controller))block {
     
     [ASQueue dispatchOnStageQueue:^{
         
         HistoryFilter *filer = [self filterWithNext:NO];
-        
-        
+                
         [ASQueue dispatchOnMainQueue:^{
             
-            block(filer.prevState);
+            block(filer.prevState,self);
             
         }];
         
     }];
     
 }
--(void)nextStateAsync:(void (^)(ChatHistoryState state))block {
+-(void)nextStateAsync:(void (^)(ChatHistoryState state,ChatHistoryController *controller))block {
     [ASQueue dispatchOnStageQueue:^{
         
-        ChatHistoryState state = [self filterWithNext:YES].nextState;
-        
+        HistoryFilter *filer = [self filterWithNext:YES];
         [ASQueue dispatchOnMainQueue:^{
             
-            block(state);
+            block(filer.nextState,self);
             
         }];
         
@@ -898,7 +895,7 @@ static const int maxCacheCount = 30;
 
                     [[ASQueue mainQueue] dispatchOnQueue:^{
                         
-                        [controller.controller receivedMessageList:[items reversedArray] inRange:NSMakeRange(0, items.count) itsSelf:YES];
+                        [controller.controller receivedMessageList:items inRange:NSMakeRange(0, items.count) itsSelf:YES];
                         
                         if(controller == self) {
                             if(sentControllerCallback)

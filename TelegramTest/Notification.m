@@ -128,6 +128,7 @@ NSString *const KEY_RANDOM_ID = @"KEY_RANDOM_ID";
 NSString *const KEY_WEBPAGE = @"WEBPAGE";
 NSString *const KEY_ORDER = @"order";
 NSString *const KEY_STICKERSET = @"sticker_set";
+NSString *const KEY_TEMPLATE = @"template";
 NSString *const LOGOUT_EVENT = @"logout";
 
 NSString *const KEY_PRIVACY = @"key_privacy";

@@ -42,8 +42,8 @@
         
         [self.photoImageView setTapBlock:^ {
             PreviewObject *preview = [[PreviewObject alloc] initWithMsdId:weakSelf.item.message.n_id media:[weakSelf.item.message.action.photo.sizes lastObject] peer_id:weakSelf.item.message.peer_id];
-                        
-            [[TGPhotoViewer viewer] show:preview];
+            preview.date = weakSelf.item.message.date;
+            [[TGPhotoViewer viewer] showChatPhotos:preview chat:weakSelf.item.message.chat];
         }];
         
     }
@@ -57,7 +57,9 @@
     if(self.item.message.to_id.class == [TL_peerChat class] || self.item.message.to_id.class == [TL_peerUser class])  {
         [items addObject:[NSMenuItem menuItemWithTitle:NSLocalizedString(@"Context.Reply", nil) withBlock:^(id sender) {
             
-            [self.messagesViewController addReplayMessage:self.item.message animated:YES];
+            TGInputMessageTemplate *template = [TGInputMessageTemplate templateWithType:TGInputMessageTemplateTypeSimpleText ofPeerId:self.item.message.peer_id];
+            [template setReplyMessage:self.item.message save:YES];
+            [template performNotification];
             
         }]];
     }
@@ -88,7 +90,7 @@
         [self.textField setFrameSize:item.textSize];
         
     
-        [self.textField setFrameOrigin:NSMakePoint(roundf((NSWidth(self.messagesViewController.view.frame) - item.textSize.width) / 2),   (item.photoSize.height ? (item.photoSize.height + item.defaultContentOffset*2) : roundf((item.viewSize.height - NSHeight(_textField.frame))/2)))];
+        [self.textField setFrameOrigin:NSMakePoint(roundf((NSWidth(item.table.containerView.frame) - item.textSize.width) / 2),   (item.photoSize.height ? (item.photoSize.height + item.defaultContentOffset*2) : roundf((item.viewSize.height - NSHeight(_textField.frame))/2)))];
                 
         if(item.photo) {
             
@@ -96,7 +98,7 @@
             self.photoImageView.object = item.imageObject;
             
             [self.photoImageView setHidden:NO];
-            [self.photoImageView setFrameOrigin:NSMakePoint(roundf((NSWidth(self.messagesViewController.view.frame) - _photoImageView.frame.size.width) / 2), self.item.defaultContentOffset)];
+            [self.photoImageView setFrameOrigin:NSMakePoint(roundf((NSWidth(item.table.containerView.frame) - _photoImageView.frame.size.width) / 2), self.item.defaultContentOffset)];
             
         } else {
             [self.photoImageView setHidden:YES];
@@ -106,7 +108,7 @@
         [self.textField setFrameSize:item.textSize];
         [self.textField setAttributedString:item.messageAttributedString];
        
-        [_textField setFrameOrigin:NSMakePoint(roundf((NSWidth(self.messagesViewController.view.frame) - item.textSize.width) / 2), roundf((item.viewSize.height - NSHeight(_textField.frame))/2))];
+        [_textField setFrameOrigin:NSMakePoint(roundf((NSWidth(item.table.containerView.frame) - item.textSize.width) / 2), roundf((item.viewSize.height - NSHeight(_textField.frame))/2))];
         
     } else  {
         [self.photoImageView setHidden:YES];

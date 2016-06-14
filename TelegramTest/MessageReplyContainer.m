@@ -11,6 +11,7 @@
 #import "MessageTableElements.h"
 #import "UIImageView+AFNetworking.h"
 #import "TGTextLabel.h"
+#import "TGTimer.h"
 @interface MessageReplyContainer ()
 @property (nonatomic,strong) TGTextLabel *nameView;
 
@@ -20,6 +21,9 @@
 @property (nonatomic,strong) NSImageView *deleteImageView;
 @property (nonatomic,strong) TGTextLabel *loadingTextField;
 
+
+@property (nonatomic,strong) TGTimer *editTimer;
+@property (nonatomic,strong) TGTextLabel *editTimerLabel;
 
 
 @end
@@ -85,7 +89,7 @@
     
     if( self.replyObject.replyMessage.channelMsgId == message.channelMsgId ) {
         
-        TGReplyObject* nReply = [[TGReplyObject alloc] initWithReplyMessage:message fromMessage:self.replyObject.fromMessage tableItem:self.replyObject.item pinnedMessage:self.replyObject.pinnedMessage withoutCache:YES];;
+        TGReplyObject* nReply = [[TGReplyObject alloc] initWithReplyMessage:message fromMessage:self.replyObject.fromMessage tableItem:self.replyObject.item pinnedMessage:self.replyObject.pinnedMessage];
         
         self.replyObject = nReply;
     }
@@ -161,10 +165,13 @@
     [self.nameView setText:[_replyObject replyHeader] maxWidth:NSWidth(self.frame) - self.xOffset height:_replyObject.replyHeaderHeight];
     
     
-    [self.messageField setText:_replyObject.replyText maxWidth:NSWidth(self.frame) - self.xOffset- (_deleteHandler ?  NSWidth(_deleteImageView.frame) +10 : 0) height:_replyObject.replyHeight];
+    
     
     [self.messageField setFrameOrigin:NSMakePoint(self.xOffset, 0)];
 
+    
+   
+    
     
     if(_deleteHandler != nil)
     {
@@ -190,12 +197,59 @@
     
     [self setFrame:self.frame];
     
+    
+    if(self.replyObject.isEditMessage) {
+        _editTimerLabel = [[TGTextLabel alloc] init];
+        [self addSubview:_editTimerLabel];
+        [_editTimerLabel setBackgroundColor:self.backgroundColor];
+        
+        weak();
+        
+        _editTimer = [[TGTimer alloc] initWithTimeout:1.0 repeat:YES completion:^{
+            
+            
+            NSMutableAttributedString *attr = [[NSMutableAttributedString alloc] init];
+            
+            int time = MAX( self.replyObject.replyMessage.date + 300 + edit_time_limit() - [[MTNetwork instance] getTime],0);
+            
+            [attr appendString:[NSString durationTransformedValue:time] withColor:GRAY_TEXT_COLOR];
+            
+            [attr setFont:TGSystemFont(13) forRange:attr.range];
+            
+            [_editTimerLabel setText:attr maxWidth:NSWidth(weakSelf.frame) - self.xOffset- 30 - NSWidth(weakSelf.nameView.frame)];
+            
+            [_editTimerLabel setFrameOrigin:NSMakePoint(NSMaxX(weakSelf.nameView.frame) + 8, NSMinY(weakSelf.nameView.frame))];
+            
+            [_editTimerLabel setHidden:time >= 10*60];
+            
+            if(time <= 0) {
+                [weakSelf.editTimer invalidate];
+                weakSelf.editTimer = nil;
+                if(weakSelf.deleteHandler)
+                weakSelf.deleteHandler();
+            }
+            
+            
+        } queue:dispatch_get_current_queue()];
+        
+        [_editTimer start];
+        [_editTimer fire];
+        
+    } else {
+        
+        [_editTimer invalidate];
+        _editTimer =nil;
+        
+        [_editTimerLabel removeFromSuperview];
+        _editTimerLabel = nil;
+    }
+    
 }
 
 -(void)setFrame:(NSRect)frame {
     [super setFrame:frame];
     
-    
+    [self.messageField setText:_replyObject.replyText maxWidth:NSWidth(self.frame) - self.xOffset- (_deleteHandler ?  NSWidth(_deleteImageView.frame) +10 : 0) height:_replyObject.replyHeight];
     [self.nameView setFrameOrigin:NSMakePoint(self.xOffset, NSHeight(self.frame) - NSHeight(_nameView.frame))];
     
     [_loadingTextField setCenteredYByView:self];
@@ -206,6 +260,7 @@
     
     [self.messageField setBackgroundColor:backgroundColor];
     [self.nameView setBackgroundColor:backgroundColor];
+    [self.editTimerLabel setBackgroundColor:backgroundColor];
 }
 
 -(void)mouseUp:(NSEvent *)theEvent {

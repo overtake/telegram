@@ -34,7 +34,7 @@
 }
 
 +(TL_conversation *)conversation {
-    return [Telegram delegate].mainWindow.navigationController.messagesViewController.conversation;
+    return appWindow().navigationController.messagesViewController.conversation;
 }
 
 + (AppDelegate *)delegate {
@@ -111,6 +111,7 @@ Telegram *TelegramInstance() {
 static int max_chat_users = 199;
 static int max_broadcast_users = 100;
 static int megagroup_size_max = 5000;
+static int rating_e_decay_l = 2419200;
 
 static int edit_time_limit_default = 2*24*60*60;
 
@@ -120,6 +121,13 @@ void setMaxChatUsers(int c) {
 
 int maxChatUsers() {
     return max_chat_users;
+}
+void set_rating_e_decay(int c) {
+    rating_e_decay_l = c;
+}
+
+int rating_e_decay() {
+    return rating_e_decay_l;
 }
 
 int edit_time_limit() {
@@ -164,6 +172,10 @@ int megagroupSizeMax() {
             _isOnline = NO;
             
             [[UsersManager sharedManager] setUserStatus:[TL_userStatusOffline createWithWas_online:[[MTNetwork instance] getTime]] forUid:[UsersManager currentUserId]];
+            
+            TGInputMessageTemplate *template = [TGInputMessageTemplate templateWithType:TGInputMessageTemplateTypeSimpleText ofPeerId:[Telegram conversation].peer_id];
+            
+            [template saveTemplateInCloudIfNeeded];
             
             MTLog(@"account is offline");
             
@@ -398,6 +410,12 @@ static TGEnterPasswordPanel *panel;
 }
 
 +(id)findObjectWithName:(NSString *)name {
+    
+    NSString *inchatprefix = @"chat://openprofile/?peer_class=TL_peerUser&peer_id=";
+    
+    if([name hasPrefix:inchatprefix]) {
+        return [[UsersManager sharedManager] find:[[name substringFromIndex:inchatprefix.length] intValue]];
+    }
     
     id obj = [UsersManager findUserByName:name];
     

@@ -63,7 +63,7 @@
             
             [self.message.entities enumerateObjectsUsingBlock:^(TLMessageEntity *obj, NSUInteger idx, BOOL *stop) {
                 
-                if([obj isKindOfClass:[TL_messageEntityUrl class]] ||[obj isKindOfClass:[TL_messageEntityTextUrl class]] || [obj isKindOfClass:[TL_messageEntityMention class]] || [obj isKindOfClass:[TL_messageEntityBotCommand class]] || [obj isKindOfClass:[TL_messageEntityHashtag class]] || [obj isKindOfClass:[TL_messageEntityEmail class]] || [obj isKindOfClass:[TL_messageEntityPre class]] || [obj isKindOfClass:[TL_messageEntityCode class]]) {
+                if([obj isKindOfClass:[TL_messageEntityUrl class]] ||[obj isKindOfClass:[TL_messageEntityTextUrl class]] || [obj isKindOfClass:[TL_messageEntityMention class]] || [obj isKindOfClass:[TL_messageEntityBotCommand class]] || [obj isKindOfClass:[TL_messageEntityHashtag class]] || [obj isKindOfClass:[TL_messageEntityEmail class]] || [obj isKindOfClass:[TL_messageEntityPre class]] || [obj isKindOfClass:[TL_messageEntityCode class]] || [obj isKindOfClass:[TL_messageEntityMentionName class]]) {
                     
                     
                     if([obj isKindOfClass:[TL_messageEntityMention class]] && (self.linkParseTypes() & URLFindTypeMentions) == 0)
@@ -84,6 +84,10 @@
                     NSRange range = [self checkAndReturnEntityRange:obj];
                     
                     NSString *link = [self.message.message substringWithRange:range];
+                    
+                    if([obj isKindOfClass:[TL_messageEntityMentionName class]]) {
+                        link = [TMInAppLinks peerProfile:[TL_peerUser createWithUser_id:obj.user_id]];
+                    }
                     
                     
                     nextRange = NSMakeRange(range.location + range.length, self.textAttributed.length - (range.location + range.length));
@@ -122,47 +126,39 @@
         
         NSMutableAttributedString *attr = [[NSMutableAttributedString alloc] init];
         
-        
-        
-        [_links enumerateObjectsUsingBlock:^(NSString *obj, NSUInteger idx, BOOL *stop) {
+        if(_links.count > 0) {
             
-            if(idx == 0) {
-                
-                NSString *header = obj;
-                
-                if(![obj hasPrefix:@"http://"] && ![obj hasPrefix:@"https://"] && ![obj hasPrefix:@"ftp://"])
-                header = obj;
-                else  {
-                    NSURLComponents *components = [[NSURLComponents alloc] initWithString:obj];
-                    header = components.host;
-                }
-                
-                
-                
-                NSRange r = [attr appendString:[header stringByAppendingString:@"\n\n"] withColor:TEXT_COLOR];
-                [attr setCTFont:TGSystemMediumFont(13) forRange:r];
-                
-                NSRange range = [attr appendString:obj];
-                
-                
-                
-                [attr addAttribute:NSLinkAttributeName value:obj range:range];
-                [attr addAttribute:NSForegroundColorAttributeName value:LINK_COLOR range:range];
-                [attr addAttribute:NSCursorAttributeName value:[NSCursor pointingHandCursor] range:range];
-                [attr addAttribute:NSUnderlineStyleAttributeName value:[NSNumber numberWithInt:NSUnderlineStyleNone] range:range];
-                
-                
-                [attr addAttribute:NSFontAttributeName value:TGSystemFont(12.5) range:range];
-                
-                if(idx != _links.count - 1)
-                [attr appendString:@"\n"];
-            } else {
-                *stop = YES;
+            NSString *obj = _links[0];
+            
+            NSString *header = obj;
+            
+            if(![obj hasPrefix:@"http://"] && ![obj hasPrefix:@"https://"] && ![obj hasPrefix:@"ftp://"])
+            header = obj;
+            else  {
+                NSURLComponents *components = [[NSURLComponents alloc] initWithString:obj];
+                header = components.host;
             }
             
             
             
-        }];
+            NSRange r = [attr appendString:[header stringByAppendingString:@"\n\n"] withColor:TEXT_COLOR];
+            [attr setCTFont:TGSystemMediumFont(13) forRange:r];
+            
+            NSRange range = [attr appendString:obj];
+            
+            
+            
+            [attr addAttribute:NSLinkAttributeName value:obj range:range];
+            [attr addAttribute:NSForegroundColorAttributeName value:LINK_COLOR range:range];
+            [attr addAttribute:NSCursorAttributeName value:[NSCursor pointingHandCursor] range:range];
+            [attr addAttribute:NSUnderlineStyleAttributeName value:[NSNumber numberWithInt:NSUnderlineStyleNone] range:range];
+            
+            
+            [attr addAttribute:NSFontAttributeName value:TGSystemFont(12.5) range:range];
+            
+
+        }
+
         
         NSMutableParagraphStyle *style = [[NSMutableParagraphStyle alloc] init];
         style.lineBreakMode = NSLineBreakByTruncatingTail;
@@ -270,12 +266,9 @@
     if([self isWebPage]) {
         
         remove_global_dispatcher(_requestKey);
-        
 
          _webpage = [TGWebpageObject objectForWebpage:self.message.media.webpage tableItem:self]; // its only youtube.
-        
-        if(self.blockWidth != 0)
-            [self makeSizeByWidth:self.blockWidth];
+
         
         
     } else if([self isWebPagePending]) {

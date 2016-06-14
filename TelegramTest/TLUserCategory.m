@@ -551,7 +551,7 @@ DYNAMIC_PROPERTY(STATUS_MESSAGES_HEADER_VIEW);
         NSString *string = self.lastSeen;
         
         if([self isBot]) {
-            if((self.flags & TGUSERFLAGREADHISTORY) == TGUSERFLAGREADHISTORY) {
+            if(self.isBot_chat_history) {
                 string = NSLocalizedString(@"Bot.botCanReadAllMessages", nil);
             } else {
                 string = NSLocalizedString(@"Bot.onlySeenMessagesWithSlash", nil);

@@ -491,6 +491,8 @@ static NSDictionary *colors;
     return menu;
 }
 
+
+
 - (void)copy:(id)sender {
     
     if(![self.item.message.media isKindOfClass:[TL_messageMediaEmpty class]]) {
@@ -675,6 +677,15 @@ static NSDictionary *colors;
         
         
     }]];
+    
+    NSMenuItem *photoGoto = [NSMenuItem menuItemWithTitle:NSLocalizedString(@"PhotoViewer.Goto", nil) withBlock:^(id sender) {
+        
+        [self.messagesViewController.navigationViewController showMessagesViewController:self.item.message.conversation withMessage:self.item.message];
+        
+    }];
+    
+    [items addObject:photoGoto];
+    
     
     return items;
     

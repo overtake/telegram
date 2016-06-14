@@ -775,7 +775,7 @@ static const int maxWidth = 120;
     
     
     [filterMenu addItem:[NSMenuItem menuItemWithTitle:NSLocalizedString(@"Modern.SharedMedia.Audio",nil) withBlock:^(id sender) {
-        [TGAudioPlayerWindow show:_conversation playerState:TGAudioPlayerWindowStatePlayList];
+        [TGAudioPlayerWindow show:_conversation playerState:TGAudioPlayerGlobalStyleList navigation:self.navigationViewController];
     }]];
     
     

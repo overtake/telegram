@@ -290,9 +290,12 @@
 }
 
 
+-(BOOL)isUnread {
+    return (self.flags & TGUNREADMESSAGE) > 0;
+}
 
 -(BOOL)unread {
-    return self.isChannelMessage ? (self.isN_out || self.n_id > TGMINFAKEID) ? NO : (self.conversation.read_inbox_max_id < self.n_id || self.conversation.read_inbox_max_id > TGMINFAKEID) :  self.isUnread;
+    return self.isN_out ? (self.conversation.read_outbox_max_id == 0 ? self.isUnread  : self.conversation.read_outbox_max_id < self.n_id) : (self.conversation.read_inbox_max_id < self.n_id || self.conversation.read_inbox_max_id > TGMINFAKEID);
 }
 
 -(BOOL)readedContent {
@@ -309,8 +312,8 @@ DYNAMIC_PROPERTY(DDialog);
 
 - (TL_conversation *)conversation {
     
-    if(self.isFake)
-        return nil;
+//    if(self.isFake)
+//        return nil;
     
     __block TL_conversation *dialog;
     
@@ -345,33 +348,26 @@ DYNAMIC_PROPERTY(DDialog);
     {
         int mask = [self.to_id isKindOfClass:[TL_peerChannel class]] ? HistoryFilterChannelMessage : HistoryFilterNone;
         
-        if([self isImportantMessage])
-            mask|=HistoryFilterImportantChannelMessage;
         
         if([self.media isKindOfClass:[TL_messageMediaEmpty class]] || self.media == nil) {
             mask|=HistoryFilterText;
         }
         
+        if(self.action && [self.action isKindOfClass:[TL_messageActionChatEditPhoto class]])
+            mask|=HistoryFilterChatPhoto;
         
-        
-        if([self.media isKindOfClass:[TL_messageMediaDocument class]] || [self.media isKindOfClass:[TL_messageMediaDocument_old44 class]]) {
-            TL_documentAttributeAudio *attr =  (TL_documentAttributeAudio *)[self.media.document attributeWithClass:[TL_documentAttributeAudio class]];
-            
-            TL_documentAttributeVideo *videoAttr =  (TL_documentAttributeVideo *)[self.media.document attributeWithClass:[TL_documentAttributeVideo class]];
-           
-            if(attr.isVoice) {
+        if([self.media isKindOfClass:[TL_messageMediaDocument class]]) {
+                       
+            if(self.media.document.isVoice) {
                 mask|=HistoryFilterAudio;
-            } else if(attr != nil || [self.media.document.mime_type hasPrefix:@"audio/"]) {
+            } else if(self.media.document.isAudio) {
                 mask|=HistoryFilterAudioDocument;
-            } else if(videoAttr != nil && [self.media.document attributeWithClass:[TL_documentAttributeAnimated class]] == nil) {
+            } else if(self.media.document.isVideo) {
                 mask|=HistoryFilterVideo;
-            } else
+            } else if(!self.media.document.isSticker && !self.media.document.isGif)
                 mask|=HistoryFilterDocuments;
         }
-        
-        if([self.media isKindOfClass:[TL_messageMediaVideo class]]) {
-            mask|=HistoryFilterVideo;
-        }
+
         
         if([self.media isKindOfClass:[TL_messageMediaContact class]]) {
             mask|=HistoryFilterContact;
@@ -423,6 +419,39 @@ DYNAMIC_PROPERTY(DDialog);
     return self.isChannelMessage ? channelMsgId(self.n_id,self.peer_id) : self.n_id;
 }
 
+-(TLUser *)via_bot_user {
+    if(_via_bot_user)
+        return _via_bot_user;
+    if(self.via_bot_id != 0)
+        _via_bot_user = [[UsersManager sharedManager] find:self.via_bot_id];
+    
+    return _via_bot_user;
+}
+
+-(BOOL)canEdit {
+    
+    if(self.media.document && (self.media.document.isVoice || self.media.document.isSticker))
+        return NO;
+    
+    if([self isKindOfClass:[TL_localMessageService class]])
+        return  NO;
+    
+    BOOL canEdit = (([self.chat isKindOfClass:[TLChat class]] && self.chat.isChannel) || ([self.to_id isKindOfClass:[TL_peerUser class]] || [self.chat isKindOfClass:[TLChat class]])) && self.fwd_from == nil;
+    
+  
+    
+    
+    
+    if(canEdit) {
+        canEdit = self.isPost ?  self.chat.isCreator || (self.chat.isEditor && self.from_id == [UsersManager currentUserId]) : self.from_id == [UsersManager currentUserId];
+        
+        canEdit = canEdit && self.via_bot_id == 0;
+        
+        return canEdit && self.date + edit_time_limit() > [[MTNetwork instance] getTime];
+    }
+    
+    return NO;
+}
 
 long channelMsgId(int msg_id, int peer_id) {
     NSMutableData *data = [NSMutableData data];

@@ -123,7 +123,7 @@
     return nil;
 }
 
-+(NSArray *)findUsersByMention:(NSString *)userName withUids:(NSArray *)uids acceptContextBots:(BOOL)acceptContextBots {
++(NSArray *)findUsersByMention:(NSString *)userName withUids:(NSArray *)uids acceptContextBots:(BOOL)acceptContextBots acceptNonameUsers:(BOOL)acceptNonameUsers {
     if([userName hasPrefix:@"@"])
         userName = [userName substringFromIndex:1];
     
@@ -131,37 +131,30 @@
     NSArray *userNames;
     NSArray *fullName;
     
+    
+    NSArray *filtered = uids.count > 0 ? [[[self sharedManager] all] filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.n_id IN %@ and self.isBotInlinePlaceholder == 0",uids]] : [[[self sharedManager] all] filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.isBotInlinePlaceholder == 0",uids]];
+    
     if(userName.length > 0) {
-        userNames = [[[UsersManager sharedManager] all] filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.username BEGINSWITH[c] %@ AND (self.n_id IN %@ OR (self.isBotInlinePlaceholder == 1) and %d == 1)",userName,uids,acceptContextBots]];
+        userNames = [filtered filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.username BEGINSWITH[c] %@",userName]];
         
         
-        fullName = [[[UsersManager sharedManager] all] filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(TLUser *evaluatedObject, NSDictionary *bindings) {
+        fullName = [filtered filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(TLUser *evaluatedObject, NSDictionary *bindings) {
+            BOOL result = [evaluatedObject.fullName searchInStringByWordsSeparated:userName];
             
-            return evaluatedObject.username.length > 0 && [evaluatedObject.fullName searchInStringByWordsSeparated:userName] && [uids indexOfObject:@(evaluatedObject.n_id)] != NSNotFound;
+            if(result && !acceptNonameUsers) {
+                result = result && evaluatedObject.username.length > 0;
+            }
+            
+            return result;
             
         }]];
     }  else {
-        userNames = [[[UsersManager sharedManager] all] filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(TLUser *evaluatedObject, NSDictionary *bindings) {
-            
-            return (evaluatedObject.username.length > 0 && [uids indexOfObject:@(evaluatedObject.n_id)] != NSNotFound) || (evaluatedObject.isBotInlinePlaceholder && acceptContextBots);
-            
-        }]];
+        userNames = filtered;
         
         
         
         fullName = @[];
     }
-    
-    userNames = [userNames sortedArrayUsingComparator:^NSComparisonResult(TLUser *obj1, TLUser *obj2) {
-        
-        if(obj1.isBotInlinePlaceholder && !obj2.isBotInlinePlaceholder)
-            return NSOrderedAscending;
-        else if(obj2.isBotInlinePlaceholder && !obj1.isBotInlinePlaceholder)
-            return NSOrderedDescending;
-        else
-            return NSOrderedSame;
-    }];
-    
     
     
     NSMutableArray *result = [[NSMutableArray alloc] initWithArray:userNames];
@@ -181,7 +174,7 @@
 
 +(NSArray *)findUsersByMention:(NSString *)userName withUids:(NSArray *)uids {
    
-    return [self findUsersByMention:userName withUids:uids acceptContextBots:NO];
+    return [self findUsersByMention:userName withUids:uids acceptContextBots:NO acceptNonameUsers:YES];
 }
 
 - (void)addFromDB:(NSArray *)array {

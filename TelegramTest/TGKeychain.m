@@ -81,6 +81,9 @@ NSString * serviceName() {
     return [[NSProcessInfo processInfo].environment[@"test_server"] boolValue] || [[NSUserDefaults standardUserDefaults] boolForKey:@"test-backend"] ? @"telegram-test-server" : @"Telegram";
 }
 
+static NSString *kAuth = @"authkeys";
+static NSString *kOthers = @"others";
+
 + (instancetype)keychainWithName:(NSString *)name
 {
     if (name == nil)
@@ -204,7 +207,7 @@ static NSArray *groups;
 {
     
     if(_encrypted) {
-        _readKeychainData = [NSKeyedUnarchiver unarchiveObjectWithData:[SSKeychain passwordDataForService:serviceName() account:@"authkeys"]];
+        _readKeychainData = [NSKeyedUnarchiver unarchiveObjectWithData:[SSKeychain passwordDataForService:serviceName() account:kAuth]];
     }
     
     
@@ -378,8 +381,12 @@ static NSArray *groups;
     }
 }
 
+-(NSDictionary *)saveKeychainDataWithKey:(NSString *)key {
+    return _saveKeychainData[key];
+}
+
 -(void)saveKeychain {
-    [SSKeychain setPasswordData:[NSKeyedArchiver archivedDataWithRootObject:_saveKeychainData] forService:serviceName() account:@"authkeys"];
+    [SSKeychain setPasswordData:[NSKeyedArchiver archivedDataWithRootObject:_saveKeychainData] forService:serviceName() account:kAuth];
 }
 
 - (void)setObject:(id)object forKey:(id<NSCopying>)aKey group:(NSString *)group

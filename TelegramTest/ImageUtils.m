@@ -194,6 +194,18 @@ CACHE_IMAGE(AudioPlayerList);
 CACHE_IMAGE(AudioPlayerListActive);
 CACHE_IMAGE(MusicStandartCover);
 
+
+CACHE_IMAGE(InlineAudioPlayerBack);
+CACHE_IMAGE(InlineAudioPlayerPlay);
+CACHE_IMAGE(InlineAudioPlayerNext);
+CACHE_IMAGE(InlineAudioPlayerPause);
+
+CACHE_IMAGE(InlineAudioPlayerBackHover);
+CACHE_IMAGE(InlineAudioPlayerPlayHover);
+CACHE_IMAGE(InlineAudioPlayerNextHover);
+CACHE_IMAGE(InlineAudioPlayerPauseHover);
+
+
 CACHE_IMAGE(botCommand);
 CACHE_IMAGE(botKeyboard);
 CACHE_IMAGE(botKeyboardActive);
@@ -254,6 +266,9 @@ CACHE_IMAGE(ModernMessageLocationPin);
 
 CACHE_IMAGE(share_inline_bot);
 
+CACHE_IMAGE(draftIcon);
+CACHE_IMAGE(AudioPlayerVisibility);
+CACHE_IMAGE(AudioPlayerVisibilityActive);
 @implementation ImageUtils
 
 NSImage *previewImageForDocument(NSString *path) {

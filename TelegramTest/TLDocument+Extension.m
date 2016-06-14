@@ -89,7 +89,7 @@
 }
 
 -(BOOL)isGif {
-    return [self.mime_type hasPrefix:@"video"] && [self attributeWithClass:[TL_documentAttributeVideo class]] != nil && [self attributeWithClass:[TL_documentAttributeAnimated class]] != nil;
+    return [self.mime_type hasPrefix:@"video/mp4"] && [self attributeWithClass:[TL_documentAttributeVideo class]] != nil && [self attributeWithClass:[TL_documentAttributeAnimated class]] != nil;
 }
 -(BOOL)isAudio {
     return ([self.mime_type isEqualToString:@"audio/mpeg"] && [self attributeWithClass:[TL_documentAttributeAudio class]] == nil) || ([self attributeWithClass:[TL_documentAttributeAudio class]] != nil && ![self attributeWithClass:[TL_documentAttributeAudio class]].isVoice);
@@ -102,6 +102,11 @@
 -(TL_documentAttributeAudio *)audioAttr {
     return (TL_documentAttributeAudio *) [self attributeWithClass:[TL_documentAttributeAudio class]];
 }
+
+-(TL_documentAttributeSticker *)stickerAttr {
+    return (TL_documentAttributeSticker *) [self attributeWithClass:[TL_documentAttributeSticker class]];
+}
+
 
 -(NSSize)imageSize {
     __block NSSize size = NSZeroSize;

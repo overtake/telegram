@@ -253,6 +253,10 @@
     } else {
         [self fixedResize];
     }
+    
+    if((newSize.width > 850 && !self.viewController.isShownESGController && self.viewController.canShownESGController && [SettingsArchiver isDefaultEnabledESGLayout]) || (newSize.width <= 500 && self.viewController.isShownESGController)) {
+        [self.viewController showOrHideESGController:NO toggle:NO];
+    }
 }
 
 -(void)scrollToItemInLiveResize {
@@ -289,7 +293,7 @@
         [item makeSizeByWidth:item.makeSize];
     }
     
-  //  [self reloadData];
+    [self reloadData];
     
     
     self.isLocked = NO;
@@ -521,9 +525,9 @@
                 
                 TGCTextView *textView = ((MessageTableCellTextView *)view).textView;
                 
-                NSPoint startConverted = NSMakePoint(_startSelectPosition.x - rect.origin.x - (item.isForwadedMessage ? item.startContentOffset + item.defaultOffset : item.startContentOffset), _startSelectPosition.y - rect.origin.y - NSMinY(item.isForwadedMessage ? view.containerView.superview.frame : view.containerView.frame));
+                NSPoint startConverted = NSMakePoint(_startSelectPosition.x - rect.origin.x - (item.isForwadedMessage ? item.startContentOffset + item.defaultOffset : item.startContentOffset), _startSelectPosition.y - rect.origin.y - NSMinY(item.isForwadedMessage ? view.containerView.superview.frame : view.containerView.frame) - (item.inlineKeyboardSize.height));
                 
-                NSPoint currentConverted = NSMakePoint(startTablePoint.x - rect.origin.x - (item.isForwadedMessage ? item.startContentOffset + item.defaultOffset : item.startContentOffset), startTablePoint.y - rect.origin.y - NSMinY(item.isForwadedMessage ? view.containerView.superview.frame : view.containerView.frame));
+                NSPoint currentConverted = NSMakePoint(startTablePoint.x - rect.origin.x - (item.isForwadedMessage ? item.startContentOffset + item.defaultOffset : item.startContentOffset), startTablePoint.y - rect.origin.y - NSMinY(item.isForwadedMessage ? view.containerView.superview.frame : view.containerView.frame) - (item.inlineKeyboardSize.height));
                 //
                 //
                 //            if(startRow == endRow) {

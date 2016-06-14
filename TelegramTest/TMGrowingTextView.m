@@ -181,7 +181,7 @@
     };
     
     [self.layoutManager ensureLayoutForTextContainer:self.textContainer];
-    [self.growingDelegate TMGrowingTextViewTextDidChange:notification != nil ? self : nil];
+    [self.growingDelegate TMGrowingTextViewTextDidChange:notification];
     
     newSize.width = NSWidth(self.containerView.frame);
     
@@ -282,6 +282,22 @@
 -(BOOL)isContinuousSpellCheckingEnabled {
     return  [[NSUserDefaults standardUserDefaults] boolForKey:[NSString stringWithFormat:@"ContinuousSpellCheckingEnabled%@",NSStringFromClass([self class])]];
 }
+
+-(void)changeLayoutOrientation:(id)sender {
+   
+}
+
+
+-(BOOL)validateMenuItem:(NSMenuItem *)menuItem {
+    if(menuItem.action == @selector(changeLayoutOrientation:)) {
+        return NO;
+    }
+    
+    
+    return [super validateMenuItem:menuItem];
+}
+
+
 
 
 -(void)setGrammarCheckingEnabled:(BOOL)flag {
@@ -425,10 +441,6 @@
     }
 }
 
-
--(BOOL)validateMenuItem:(NSMenuItem *)menuItem {
-    return [super validateMenuItem:menuItem];
-}
 
 
 

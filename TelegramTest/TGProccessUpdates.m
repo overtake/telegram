@@ -66,7 +66,7 @@ static NSArray *channelUpdates;
         
         dispatch_once(&onceToken, ^{
             
-            channelUpdates = @[NSStringFromClass([TL_updateNewChannelMessage class]),NSStringFromClass([TL_updateReadChannelInbox class]),NSStringFromClass([TL_updateDeleteChannelMessages class]),NSStringFromClass([TGForceChannelUpdate class]),NSStringFromClass([TL_updateChannelTooLong class]),NSStringFromClass([TL_updateChannelGroup class]),NSStringFromClass([TL_updateChannelMessageViews class]),NSStringFromClass([TL_updateChannel class]),NSStringFromClass([TL_updateEditChannelMessage class]),NSStringFromClass([TL_updateChannelPinnedMessage class])];
+            channelUpdates = @[NSStringFromClass([TL_updateNewChannelMessage class]),NSStringFromClass([TL_updateReadChannelInbox class]),NSStringFromClass([TL_updateDeleteChannelMessages class]),NSStringFromClass([TGForceChannelUpdate class]),NSStringFromClass([TL_updateChannelTooLong class]),NSStringFromClass([TL_updateChannelMessageViews class]),NSStringFromClass([TL_updateChannel class]),NSStringFromClass([TL_updateEditChannelMessage class]),NSStringFromClass([TL_updateChannelPinnedMessage class]),NSStringFromClass([TL_updateReadChannelOutbox class])];
         });
         
         queue = q;
@@ -432,6 +432,28 @@ static NSArray *channelUpdates;
     
 }
 
++(BOOL)checkMessageEntityUsers:(TL_localMessage *)message {
+    
+    __block BOOL accept = YES;
+    
+    [message.entities enumerateObjectsUsingBlock:^(TLMessageEntity *entity, NSUInteger idx, BOOL * _Nonnull stop) {
+        
+        if([entity isKindOfClass:[TL_messageEntityMentionName class]]) {
+            
+            TLUser *user = [[UsersManager sharedManager] find:entity.user_id];
+            
+            if(!user || user.isMin) {
+                accept = NO;
+                *stop = YES;
+            }
+        }
+        
+    }];
+    
+    return accept;
+    
+}
+
 
 -(BOOL)proccessStatefulMessage:(TGUpdateContainer *)container needSave:(BOOL)needSave {
     
@@ -443,7 +465,7 @@ static NSArray *channelUpdates;
         TL_localMessage *message = [TL_localMessage createWithN_id:shortMessage.n_id flags:shortMessage.flags from_id:[shortMessage from_id] to_id:[TL_peerChat createWithChat_id:shortMessage.chat_id] fwd_from:shortMessage.fwd_from reply_to_msg_id:shortMessage.reply_to_msg_id date:shortMessage.date message:shortMessage.message media:[TL_messageMediaEmpty create] fakeId:[MessageSender getFakeMessageId] randomId:rand_long() reply_markup:nil entities:shortMessage.entities views:0 via_bot_id:shortMessage.via_bot_id edit_date:0 isViewed:YES state:DeliveryStateNormal];
         
         
-        if(![[UsersManager sharedManager] find:shortMessage.from_id] || ![[ChatsManager sharedManager] find:shortMessage.chat_id] || (message.fwd_from != nil && !message.fwdObject) || (message.via_bot_id != 0 && ![[UsersManager sharedManager] find:message.via_bot_id])) {
+        if(![[UsersManager sharedManager] find:shortMessage.from_id] || ![[ChatsManager sharedManager] find:shortMessage.chat_id] || (message.fwd_from != nil && !message.fwdObject) || (message.via_bot_id != 0 && ![[UsersManager sharedManager] find:message.via_bot_id]) || ![TGProccessUpdates checkMessageEntityUsers:message]) {
             
             if(![[ChatsManager sharedManager] find:shortMessage.chat_id]) {
                 [[ChatFullManager sharedManager] requestChatFull:shortMessage.chat_id force:YES];
@@ -466,7 +488,7 @@ static NSArray *channelUpdates;
         TL_localMessage *message = [TL_localMessage createWithN_id:shortMessage.n_id flags:shortMessage.flags from_id:[shortMessage user_id] to_id:[TL_peerUser createWithUser_id:[shortMessage user_id]] fwd_from:shortMessage.fwd_from reply_to_msg_id:shortMessage.reply_to_msg_id date:shortMessage.date message:shortMessage.message media:[TL_messageMediaEmpty create] fakeId:[MessageSender getFakeMessageId] randomId:rand_long() reply_markup:nil entities:shortMessage.entities views:0 via_bot_id:shortMessage.via_bot_id edit_date:0 isViewed:YES state:DeliveryStateNormal];
         
         
-        if(![[UsersManager sharedManager] find:shortMessage.user_id] || (message.fwd_from != nil && !message.fwdObject) || (message.via_bot_id != 0 && ![[UsersManager sharedManager] find:message.via_bot_id])) {
+        if(![[UsersManager sharedManager] find:shortMessage.user_id] || (message.fwd_from != nil && !message.fwdObject) || ((message.via_bot_id != 0 && ![[UsersManager sharedManager] find:message.via_bot_id]) || ![TGProccessUpdates checkMessageEntityUsers:message])) {
             [self failSequence];
             return NO;
         }
@@ -549,23 +571,39 @@ static NSArray *channelUpdates;
             return;
         }
         
+        if([update isKindOfClass:[TL_updateDraftMessage class]]) {
+            TLDraftMessage *draft = [update draft];
+            
+            TGInputMessageTemplate *template = [TGInputMessageTemplate templateWithType:TGInputMessageTemplateTypeSimpleText ofPeerId:update.peer.peer_id];
+            
+            [template updateTemplateWithDraft:draft];
+            [template performNotification];
+            
+        }
+        
         if([update isKindOfClass:[TL_updateEditMessage class]]) {
             
             TL_localMessage *msg = [TL_localMessage convertReceivedMessage:[(TL_updateEditMessage *)update message]];
             
-            if(msg)
+            if([TGProccessUpdates checkMessageEntityUsers:msg]) {
+                if(msg)
                 [[Storage manager] addSupportMessages:@[msg]];
-            
-            [[Storage manager] insertMessages:@[msg]];
-            
-            TL_conversation *conversation = msg.conversation;
-            
-            if(conversation.lastMessage.n_id == msg.n_id) {
-                conversation.lastMessage = msg;
-                [Notification perform:[Notification notificationNameByDialog:conversation action:@"message"] data:@{KEY_DIALOG:conversation,KEY_LAST_CONVRESATION_DATA:[MessagesUtils conversationLastData:conversation]}];
+                
+                [[Storage manager] insertMessages:@[msg]];
+                
+                TL_conversation *conversation = msg.conversation;
+                
+                if(conversation.lastMessage.n_id == msg.n_id) {
+                    conversation.lastMessage = msg;
+                    [Notification perform:[Notification notificationNameByDialog:conversation action:@"message"] data:@{KEY_DIALOG:conversation,KEY_LAST_CONVRESATION_DATA:[MessagesUtils conversationLastData:conversation]}];
+                }
+                
+                [Notification perform:UPDATE_EDITED_MESSAGE data:@{KEY_MESSAGE:msg}];
+            } else {
+                [self failSequence];
             }
             
-            [Notification perform:UPDATE_EDITED_MESSAGE data:@{KEY_MESSAGE:msg}];
+          
             
             return;
         }
@@ -595,7 +633,7 @@ static NSArray *channelUpdates;
         
         if([update isKindOfClass:[TL_updateMessageID class]]) {
             
-            [[Storage manager] updateMessageId:update.random_id msg_id:[update n_id]];
+            [[Storage manager] updateMessageId:update.random_id msg_id:[update n_id] isChannel:NO];
             
             [Notification performOnStageQueue:MESSAGE_UPDATE_MESSAGE_ID data:@{KEY_MESSAGE_ID:@(update.n_id),KEY_RANDOM_ID:@(update.random_id)}];
             
@@ -989,7 +1027,6 @@ static NSArray *channelUpdates;
     
    if(![[MTNetwork instance] isAuth] ) return;
    
-    _holdUpdates = YES;
     
     if( !_updateState || force || _updateState.pts == INT32_MAX || _updateState.pts == 0) {
         
@@ -1014,7 +1051,6 @@ static NSArray *channelUpdates;
             _holdUpdates = NO;
         } timeout:0 queue:queue.nativeQueue];
     } else {
-        _holdUpdates = NO;
         [self uptodateWithConnectionState:updateConnectionState];
     }
 }
@@ -1025,7 +1061,7 @@ static NSArray *channelUpdates;
 
 -(void)uptodateWithConnectionState:(BOOL)updateConnectionState {
     
-    if( ![[MTNetwork instance] isAuth] )
+    if( ![[MTNetwork instance] isAuth] || _holdUpdates)
         return;
     
     _holdUpdates = YES;
@@ -1093,18 +1129,21 @@ static NSArray *channelUpdates;
             
             [response setN_messages:copy];
             
-            for (TLUpdate *update in [updates other_updates]) {
-                
-                if([channelUpdates indexOfObject:update.className] != NSNotFound)
-                    [self.channelsUpdater addUpdate:update];
-                else
-                    [self proccessUpdate:update];
-            }
-            
             if([response n_messages].count > 0) {
                 [Notification performOnStageQueue:MESSAGE_LIST_UPDATE_TOP data:@{KEY_MESSAGE_LIST:[response n_messages]}];
             }
             
+            for (TLUpdate *update in [updates other_updates]) {
+                
+                if([channelUpdates indexOfObject:update.className] != NSNotFound)
+                    [self.channelsUpdater addUpdate:update];
+                else {
+                     [self proccessUpdate:update];
+                }
+                
+            }
+            
+      
             
             _updateState.qts = stateQts;
             _updateState.pts = statePts;
@@ -1112,17 +1151,18 @@ static NSArray *channelUpdates;
             _updateState.seq = stateSeq;
              NSLog(@"new updateDifference update update: %@",_updateState);
             [self saveUpdateState];
-            
+//
             
             
             if(intstate != nil) {
              //   dispatch_after_seconds_queue(0.5, ^{
-                    [self uptodateWithConnectionState:updateConnectionState];
+                 _holdUpdates = NO;
+                [self uptodateWithConnectionState:updateConnectionState];
              //   }, queue.nativeQueue);
                 
             } else {
                 
-                _holdUpdates = NO;
+               _holdUpdates = NO;
                 
                 [Notification perform:PROTOCOL_UPDATED data:nil];
                 [Telegram setConnectionState:ConnectingStatusTypeNormal];

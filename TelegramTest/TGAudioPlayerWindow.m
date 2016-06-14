@@ -14,7 +14,7 @@
 #import "TGTimer.h"
 #import "TGAudioPlayerListView.h"
 #import "SpacemanBlocks.h"
-
+#import "TGAudioGlobalController.h"
 
 
 @interface TGAudioPlayerContainerView : TMView
@@ -62,11 +62,10 @@
 
 
 
-@interface TGAudioPlayerWindow ()<TGAudioPlayerDelegate>
+@interface TGAudioPlayerWindow ()<TGAudioPlayerGlobalDelegate>
 {
     BOOL _isVisibility;
-    TGTimer *_progressTimer;
-    TL_conversation *_conversation;
+
     
 }
 @property (nonatomic,strong) TGAudioPlayerContainerView *containerView;
@@ -76,6 +75,7 @@
 
 @property (nonatomic,strong) BTRButton *closeButton;
 @property (nonatomic,strong) BTRButton *pinButton;
+@property (nonatomic,strong) BTRButton *audioPlayerVisibility;
 @property (nonatomic,strong) BTRButton *playButton;
 @property (nonatomic,strong) BTRButton *nextButton;
 @property (nonatomic,strong) BTRButton *prevButton;
@@ -90,21 +90,12 @@
 @property (nonatomic,strong) TMTextField *nameTextField;
 @property (nonatomic,strong) TMView *nameContainer;
 
-
-@property (nonatomic,strong) NSArray *items;
-@property (nonatomic,assign) TGAudioPlayerState playerState;
-@property (nonatomic,assign) NSTimeInterval currentTime;
-
 @property (nonatomic,assign) BOOL mouseInWindow;
 
-@property (nonatomic,assign) TGAudioPlayerWindowState windowState;
+@property (nonatomic,assign) TGAudioPlayerGlobalStyle windowState;
 
 
-@property (nonatomic,strong) DownloadEventListener *downloadEventListener;
-
-@property (nonatomic,strong) NSMutableArray *eventListeners;
-
-@property (nonatomic,assign) BOOL autoStart;
+@property (nonatomic,strong) TGAudioGlobalController *audioController;
 
 @end
 
@@ -124,7 +115,10 @@
 -(void)initialize {
     
     
-    _eventListeners = [[NSMutableArray alloc] init];
+
+    _audioController = [[TGAudioGlobalController alloc] init];
+    [_audioController addEventListener:self];
+    
     
     _windowContainerView = [[TMView alloc] initWithFrame:NSMakeRect(0, 0, NSWidth([self.contentView bounds]), MINI_PHEIGHT)];
     _windowContainerView.autoresizingMask = NSViewHeightSizable;
@@ -155,16 +149,9 @@
     _playListContainerView.backgroundColor = [NSColor whiteColor];
     
     
-    [_playListContainerView setChangedAudio:^(MessageTableItemAudioDocument *audioItem) {
-        [TGAudioPlayerWindow setCurrentItem:audioItem];
-    }];
-    
     [_windowContainerView addSubview:_playListContainerView];
     
-    
-   
-    
-    
+
     
     _playButton = [[BTRButton alloc] init];
     _prevButton = [[BTRButton alloc] init];
@@ -174,16 +161,16 @@
     
     
     [_prevButton addBlock:^(BTRControlEvents events) {
-        [weakSelf prevTrack];
+        [weakSelf.audioController prevTrack];
     } forControlEvents:BTRControlEventMouseDownInside];
     
     [_nextButton addBlock:^(BTRControlEvents events) {
-        [weakSelf nextTrack];
+        [weakSelf.audioController nextTrack];
     } forControlEvents:BTRControlEventMouseDownInside];
     
     [_playButton addBlock:^(BTRControlEvents events) {
         
-        [weakSelf playOrPause];
+        [weakSelf.audioController playOrPause];
         
     } forControlEvents:BTRControlEventMouseDownInside];
     
@@ -224,20 +211,6 @@
     
     _progressView = [[TGAudioProgressView alloc] initWithFrame:NSMakeRect(0, 0, NSWidth(_containerView.frame), 10)];
     
-    [_progressView setProgressCallback:^(float progress) {
-        
-        if(!weakSelf.currentItem)
-            return;
-        
-        if(globalAudioPlayer() && globalAudioPlayer().delegate == self && (self.currentItem.downloadItem == nil || self.currentItem.downloadItem.downloadState == DownloadStateCompleted)) {
-            weakSelf.currentTime = globalAudioPlayer().duration * (progress/100);
-            
-            if(weakSelf.playerState == TGAudioPlayerStatePlaying) {
-                [globalAudioPlayer() playFromPosition:weakSelf.currentTime];
-            }
-        }
-
-    }];
     
     [_controlsContrainer addSubview:_progressView];
     
@@ -317,6 +290,21 @@
         
     } forControlEvents:BTRControlEventMouseDownInside];
     
+    _audioPlayerVisibility = [[BTRButton alloc] initWithFrame:NSMakeRect(NSMaxX(_pinButton.frame) + 10, NSHeight(_containerView.frame) - 22, image_AudioPlayerVisibilityActive().size.width, image_AudioPlayerVisibilityActive().size.height)];
+    
+    
+    [_audioPlayerVisibility setImage:image_AudioPlayerVisibilityActive() forControlState:BTRControlStateNormal];
+    
+    [_audioPlayerVisibility addBlock:^(BTRControlEvents events) {
+        
+        [weakSelf.audioController.navigationController showInlinePlayer:weakSelf.audioController];
+        
+        [TGAudioPlayerWindow hide:NO];
+        
+    } forControlEvents:BTRControlEventMouseDownInside];
+    
+    [_containerView addSubview:_audioPlayerVisibility];
+    
     
     
     _showPlayListButton = [[BTRButton alloc] initWithFrame:NSMakeRect(NSWidth(_containerView.frame) - 30, NSHeight(_containerView.frame) - 30, 25, 25)];
@@ -334,41 +322,25 @@
 }
 
 
-
--(void)playOrPause {
-    
-    
-    if(!_currentItem) {
-        [self nextTrack];
-        return;
-    }
-    
-    if(self.playerState == TGAudioPlayerStatePlaying) {
-        [self pause];
-    } else {
-        [self play:self.currentTime];
-    }
-}
-
 -(void)showOrHidePlayList {
     
-    self.windowState = _windowState == TGAudioPlayerWindowStateMini && !self.currentItem.message.isFake ? TGAudioPlayerWindowStatePlayList : TGAudioPlayerWindowStateMini;
+    self.windowState = _windowState == TGAudioPlayerGlobalStyleMini && !self.currentItem.message.isFake ? TGAudioPlayerGlobalStyleList : TGAudioPlayerGlobalStyleMini;
 }
 
--(void)setWindowState:(TGAudioPlayerWindowState)windowState {
+-(void)setWindowState:(TGAudioPlayerGlobalStyle)windowState {
     _windowState = windowState;
     
-    if(_windowState == TGAudioPlayerWindowStatePlayList) {
+    if(_windowState == TGAudioPlayerGlobalStyleList) {
         [_playListContainerView onShow];
     }
     
-    [self updateWindowWithHeight:_windowState == TGAudioPlayerWindowStateMini ? MINI_PHEIGHT : FULL_PHEIGHT animate:YES];
+    [self updateWindowWithHeight:_windowState == TGAudioPlayerGlobalStyleMini ? MINI_PHEIGHT : FULL_PHEIGHT animate:YES];
 }
 
 
 -(void)updateWindowWithHeight:(float)height animate:(BOOL)animate {
     
-    [self.showPlayListButton setImage:_windowState == TGAudioPlayerWindowStateMini ? image_AudioPlayerList() : image_AudioPlayerListActive() forControlState:BTRControlStateNormal];
+    [self.showPlayListButton setImage:_windowState == TGAudioPlayerGlobalStyleMini ? image_AudioPlayerList() : image_AudioPlayerListActive() forControlState:BTRControlStateNormal];
     
     NSRect frame = [self frame];
     
@@ -446,57 +418,89 @@
     [self playAnimationForName];
 }
 
-+(void)show:(TL_conversation *)conversation playerState:(TGAudioPlayerWindowState)state {
++(void)show:(TL_conversation *)conversation playerState:(TGAudioPlayerGlobalStyle)state navigation:(TMNavigationController *)navigation {
     [self instance].windowState = state;
-    [self show:conversation];
-    [self instance].autoStart = NO;
+    [self show:conversation  navigation:(TGMessagesNavigationController *)navigation];
+    [self instance].audioController.autoStart = NO;
 }
 
-+(void)show:(TL_conversation *)conversation {
-    [[self instance] show:conversation];
-    [self instance].autoStart = YES;
-    [[self instance] makeKeyAndOrderFront:nil];
+
+-(void)showWithController:(TGAudioGlobalController *)controller {
+    self.audioController = controller;
+    [controller addEventListener:self];
     
+    [controller setProgressView:_progressView];
+    [controller setPlayerList:_playListContainerView];
+    
+    [[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"inline-player"];
+    
+    [self makeKeyAndOrderFront:nil];
+    
+    
+    [self updateWithItem:controller.currentItem];
+}
+
++(void)showWithController:(TGAudioGlobalController *)controller {
+    [self.instance showWithController:controller];
+   
+}
+
++(void)show:(TL_conversation *)conversation navigation:(TMNavigationController *)navigation {
+    [[self instance] show:conversation navigation:navigation];
 }
 
 +(MessageTableItemAudioDocument *)currentItem {
     return [self instance].currentItem;
 }
 
-+(void)hide {
-    [[self instance] orderOut:nil];
-    [self instance]->_windowState = TGAudioPlayerWindowStateMini;
++(void)hide:(BOOL)stop {
+    [[self instance] orderOut:stop ? self.instance : nil];
+    [self instance]->_windowState = TGAudioPlayerGlobalStyleMini;
     [[self instance] updateWindowWithHeight:MINI_PHEIGHT animate:NO];
 }
 
-
--(void)show:(TL_conversation *)conversation {
-    
-    if([self isVisible] && _conversation == conversation)
-        return;
-    
-    _conversation = conversation;
-    [self updateWithItem:nil];
-    _currentItem = nil;
-    [_playListContainerView setConversation:_conversation];
-    if(![self isVisible])
-    {
-        
-        NSScreen *screen = [NSScreen mainScreen];
-        [self setFrameOrigin:NSMakePoint(roundf((screen.frame.size.width - self.frame.size.width) / 2),
-                                         roundf((screen.frame.size.height - self.frame.size.height) / 2))];
-    }
++(void)hide {
+    [self hide:YES];
 }
 
-+(TGAudioPlayerState)playerState {
-    return [[self instance] playerState];
+
+-(void)show:(TL_conversation *)conversation navigation:(TGMessagesNavigationController *)navigation {
+    
+    if([self isVisible] && _audioController.conversation == conversation)
+        return;
+    
+    if(![[NSUserDefaults standardUserDefaults] boolForKey:@"inline-player"]) {
+        [_audioController setPlayerList:_playListContainerView];
+        [_audioController setProgressView:_progressView];
+        
+        [_audioController show:conversation navigation:navigation];
+        
+        if(![self isVisible])
+        {
+            
+            NSScreen *screen = [NSScreen mainScreen];
+            [self setFrameOrigin:NSMakePoint(roundf((screen.frame.size.width - self.frame.size.width) / 2),
+                                             roundf((screen.frame.size.height - self.frame.size.height) / 2))];
+        }
+        
+        [self makeKeyAndOrderFront:nil];
+        self.audioController.autoStart = YES;
+        
+    } else {
+        [navigation showInlinePlayer:nil];
+    }
+    
+    
+}
+
++(TGAudioPlayerGlobalState)playerState {
+    return [[self instance].audioController pState];
 }
 
 -(void)updateWithItem:(MessageTableItemAudioDocument *)item {
     
     [_nameTextField setAttributedStringValue:item.id3AttributedStringHeader];
     [_nameTextField sizeToFit];
-    [_progressView setDownloadProgress:0];
     
     if(NSWidth(_nameTextField.frame) < NSWidth(_nameContainer.frame))
     {
@@ -507,12 +511,17 @@
     
     [self playAnimationForName];
     
-    [_progressView setDownloadProgress:0];
     
-    [_playListContainerView setSelectedId:_currentItem.message.randomId];
     
 }
 
+-(void)playerDidChangeItem:(MessageTableItemAudioDocument *)item {
+    [self updateWithItem:item];
+}
+
+-(MessageTableItemAudioDocument *)currentItem {
+    return _audioController.currentItem;
+}
 
 -(void)makeKeyAndOrderFront:(id)sender {
     [super makeKeyAndOrderFront:self];
@@ -527,121 +536,51 @@
 -(void)orderOut:(id)sender {
     [super orderOut:sender];
     _isVisibility = NO;
-    [self.currentItem.downloadItem removeEvent:_downloadEventListener];
-    _downloadEventListener = nil;
-    [self clear];
+    if(sender)
+        [self clear];
 }
 
 
 -(void)clear {
-    [self stopPlayer];
-    [_playListContainerView setConversation:nil];
+    [_audioController hide];
 }
 
--(void)setPlayerState:(TGAudioPlayerState)playerState {
-    _playerState = playerState;
-    
-    [self notifyAllListeners];
-    
-    [_playButton setBackgroundImage:playerState == TGAudioPlayerStatePlaying ? image_AudioPlayerPause() : image_AudioPlayerPlay() forControlState:BTRControlStateNormal];
+
+
+-(void)playerDidChangedState:(MessageTableItemAudioDocument *)item playerState:(TGAudioPlayerGlobalState)state {
+    [_playButton setBackgroundImage:state == TGAudioPlayerGlobalStatePlaying ? image_AudioPlayerPause() : image_AudioPlayerPlay() forControlState:BTRControlStateNormal];
 }
 
--(void)setCurrentTime:(NSTimeInterval)currentTime {
-    _currentTime = currentTime;
-    [self.progressView setCurrentProgress:(self.currentTime/globalAudioPlayer().duration) * 100];
-    [_rightDurationField setStringValue:[NSString stringWithFormat:@"-%@",[NSString durationTransformedValue:globalAudioPlayer().duration - self.currentTime]]];
-    [_leftDurationField setStringValue:[NSString stringWithFormat:@"%@",[NSString durationTransformedValue:self.currentTime]]];
+-(void)playerDidChangeTime:(NSTimeInterval)currentTime {
+    [_rightDurationField setStringValue:[NSString stringWithFormat:@"-%@",[NSString durationTransformedValue:globalAudioPlayer().duration - currentTime]]];
+    [_leftDurationField setStringValue:[NSString stringWithFormat:@"%@",[NSString durationTransformedValue:currentTime]]];
 }
 
--(void)play:(NSTimeInterval)fromPosition {
-    
-    self.playerState = TGAudioPlayerStatePlaying;
-    
-    [globalAudioPlayer() stop];
-    if(globalAudioPlayer().delegate != self)
-        [globalAudioPlayer().delegate audioPlayerDidFinishPlaying:globalAudioPlayer()];
-    setGlobalAudioPlayer([TGAudioPlayer audioPlayerForPath:[_currentItem path]]);
-    
-    if(globalAudioPlayer()) {
-        [globalAudioPlayer() setDelegate:self];
-        [globalAudioPlayer() playFromPosition:fromPosition];
-        
-        _currentItem.state = AudioStatePlaying;
-        [self startTimer];
-    }
-}
 
-- (void)pause {
-    [globalAudioPlayer() pause];
-    self.playerState = TGAudioPlayerStatePaused;
-    [_progressTimer invalidate];
-    _progressTimer = nil;
-}
-
-- (void)startTimer {
-    if(!_progressTimer) {
-        _progressTimer = [[TGTimer alloc] initWithTimeout:1.0f/60.0f repeat:YES completion:^{
-            
-            if(globalAudioPlayer() == nil)
-            {
-                [_progressTimer invalidate];
-                _progressTimer = nil;
-            }
-            
-            if(_currentItem.state != AudioStatePlaying) {
-                [_progressTimer invalidate];
-                _progressTimer = nil;
-            }
-            
-            self.currentTime = [globalAudioPlayer() currentPositionSync:YES];
-            
-            
-            
-        } queue:dispatch_get_current_queue()];
-        
-        [_progressTimer start];
-    }
-}
-
-- (void)stopPlayer {
-    [_progressTimer invalidate];
-    _progressTimer = nil;
-    setGlobalAudioPlayer(nil);
-    _currentItem.state = AudioStateWaitPlaying;
-    self.playerState = TGAudioPlayerStatePaused;
-    self.currentTime = 0;
-    [_progressView setCurrentProgress:0];
-    
-}
 
 -(void)nextTrack {
-    [_playListContainerView selectNext];
+    [_audioController nextTrack];
 }
 
 -(void)prevTrack {
-    [_playListContainerView selectPrev];
+    [_audioController prevTrack];
 }
 
 +(void)nextTrack {
-    [self.instance.playListContainerView selectNext];
+    [self.instance nextTrack];
 }
 
 +(void)prevTrack {
-    [self.instance.playListContainerView selectPrev];
+    [self.instance prevTrack];
 }
 
 +(void)pause {
-    if([self instance].playerState == TGAudioPlayerStatePlaying)
-    {
-        [[self instance] pause];
-        [[self instance] setPlayerState:TGAudioPlayerStateForcePaused];
-    }
+    [self.instance.audioController pause];
     
 }
 
 +(void)resume {
-    if([self instance].playerState == TGAudioPlayerStateForcePaused)
-        [[self instance] play:[self instance].currentTime];
+    [self.instance.audioController resume];
 }
 
 +(BOOL)isShown {
@@ -649,185 +588,21 @@
 }
 
 +(BOOL)autoStart {
-    return [self instance].autoStart;
+    return [self instance].audioController.autoStart;
 }
 
 
-+(void)addEventListener:(id<TGAudioPlayerWindowDelegate>)delegate {
-    [[self instance] addEventListener:delegate];
++(void)addEventListener:(id<TGAudioPlayerGlobalDelegate>)delegate {
+    [self.instance.audioController addEventListener:delegate];
 }
-+(void)removeEventListener:(id<TGAudioPlayerWindowDelegate>)delegate {
-    [[self instance] removeEventListener:delegate];
-}
-
-
--(void)addEventListener:(id<TGAudioPlayerWindowDelegate>)delegate {
-    if([_eventListeners indexOfObject:delegate] == NSNotFound)
-    {
-        [_eventListeners addObject:delegate];
-    }
++(void)removeEventListener:(id<TGAudioPlayerGlobalDelegate>)delegate {
+    [self.instance.audioController removeEventListener:delegate];
 }
 
--(void)removeEventListener:(id<TGAudioPlayerWindowDelegate>)delegate {
-    [_eventListeners removeObject:delegate];
-}
-
--(void)notifyAllListeners {
-    [_eventListeners enumerateObjectsUsingBlock:^(id<TGAudioPlayerWindowDelegate> obj, NSUInteger idx, BOOL *stop) {
-        [obj playerDidChangedState:self.currentItem playerState:self.playerState];
-    }];
-}
-
-
-- (void)audioPlayerDidFinishPlaying:(TGAudioPlayer *)audioPlayer {
-    if(self.playerState == TGAudioPlayerStatePlaying)
-        [self nextTrack];
-}
-- (void)audioPlayerDidStartPlaying:(TGAudioPlayer *)audioPlayer {
-    
-}
 
 +(void)setCurrentItem:(MessageTableItemAudioDocument *)audioItem {
-    [[self instance] setCurrentItem:audioItem];
+    [self.instance.audioController setCurrentItem:audioItem];
 }
-
-
--(void)setCurrentItem:(MessageTableItemAudioDocument *)audioItem {
-    
-    [_currentItem.downloadItem removeEvent:_downloadEventListener];
-    
-    if(_currentItem == audioItem)
-    {
-        [self playOrPause];
-        return;
-    }
-    
-    [_currentItem.downloadItem removeEvent:_downloadEventListener];
-    
-    _currentItem = audioItem;
-
-    
-    self.currentTime = 0;
-    
-    self.mouseInWindow = NSPointInRect([_windowContainerView convertPoint:[self convertScreenToBase:[NSEvent mouseLocation]] fromView:nil], _containerView.frame);
-    
-    [self globalNotify:audioItem];
-    
-    if([_currentItem isset]) {
-        [_progressView setDisableChanges:NO];
-        [self play:self.currentTime];
-    } else {
-        [_currentItem startDownload:NO force:YES];
-        [self updateDownloadListener];
-        [self stopPlayer];
-    }
-    
-    
-    [self updateWithItem:_currentItem];
-    
-}
-
-
-
-
--(void)globalNotify:(MessageTableItemAudioDocument *)audioItem {
-    
-    static NSUserNotification *sNotify;
-    
-    if(sNotify) {
-        [[NSUserNotificationCenter defaultUserNotificationCenter] removeDeliveredNotification:sNotify];
-    }
-    
- // `   cancel_delayed_block(handle);
-    
-    sNotify = [[NSUserNotification alloc] init];
-    
-    NSString *name = audioItem.nameAttributedString.string;
-    
-    
-    NSArray *items = [name componentsSeparatedByString:@"\n"];
-    
-    if(items.count > 0)
-        sNotify.title = items[0];
-    else
-        sNotify.title = @"Unknown Artist";
-    if(items.count > 1)
-        sNotify.informativeText = items[1];
-
-    
-    
-    NSImage *image = [self.playListContainerView getAlbumImageFromItem:audioItem];
-    @try {
-        if(image) {
-            [sNotify setValue:image forKey:@"_identityImage"];
-        }
-    } @catch (NSException *exception) {
-        
-    }
-   
-    
-    
-    
-    [[NSUserNotificationCenter defaultUserNotificationCenter] deliverNotification:sNotify];
-    
-//    handle = perform_block_after_delay(3.0, ^{
-//        [[NSUserNotificationCenter defaultUserNotificationCenter] removeDeliveredNotification:sNotify];
-//    });
-    
-}
-
-
--(void)updateDownloadListener {
-    
-    
-    if(_currentItem.downloadItem) {
-        
-        [_progressView setDisableChanges:YES];
-        
-        weak();
-       
-        [self.progressView setDownloadProgress:_currentItem.downloadItem.progress];
-        
-        
-        [_currentItem.downloadItem removeEvent:_downloadEventListener];
-        
-        _downloadEventListener = [[DownloadEventListener alloc] init];
-        
-        [_currentItem.downloadItem addEvent:_downloadEventListener];
-        
-        
-        [_downloadEventListener setCompleteHandler:^(DownloadItem * item) {
-            
-            [[ASQueue mainQueue] dispatchOnQueue:^{
-                
-                [weakSelf.progressView setDisableChanges:NO];
-                
-                [weakSelf.progressView setDownloadProgress:0];
-                
-                [weakSelf play:weakSelf.currentTime];
-                
-                [weakSelf.playListContainerView reloadData];
-                
-                [weakSelf updateWithItem:weakSelf.currentItem];
-                
-            }];
-            
-        }];
-        
-        [_downloadEventListener setProgressHandler:^(DownloadItem * item) {
-            
-            [ASQueue dispatchOnMainQueue:^{
-                
-                [weakSelf.progressView setDownloadProgress:item.progress];
-                
-            }];
-        }];
-        
-    } else {
-        [_progressView setDisableChanges:NO];
-    }
-}
-
 
 
 +(TGAudioPlayerWindow *)instance {

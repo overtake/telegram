@@ -38,25 +38,25 @@
 
     NSMutableString *replaceSlowCoreTextCharacters = [[NSMutableString alloc] init];
     
-    [string enumerateSubstringsInRange: NSMakeRange(0, [string length]) options:NSStringEnumerationByComposedCharacterSequences usingBlock:
-     ^(NSString *substring, NSRange substringRange, NSRange enclosingRange, BOOL *stop){
-         
-        
-         if(substring.length == 2) {
-             NSString *special = [substring substringFromIndex:1];
-             
-             if([special isEqualToString:@"\u0335"] || [special isEqualToString:@"\u0336"] || [special isEqualToString:@"\u0337"] || [special isEqualToString:@"\u0338"]) {
-                 [replaceSlowCoreTextCharacters appendString:[NSString stringWithFormat:@"-%@",[substring substringToIndex:1]]];
-                 return;
-             }
-         }
-         
-         [replaceSlowCoreTextCharacters appendString:substring];
-         
-     }];
+//    [string enumerateSubstringsInRange: NSMakeRange(0, [string length]) options:NSStringEnumerationByComposedCharacterSequences usingBlock:
+//     ^(NSString *substring, NSRange substringRange, NSRange enclosingRange, BOOL *stop){
+//         
+//        
+//         if(substring.length == 2) {
+//             NSString *special = [substring substringFromIndex:1];
+//             
+//             if([special isEqualToString:@"\u0335"] || [special isEqualToString:@"\u0336"] || [special isEqualToString:@"\u0337"] || [special isEqualToString:@"\u0338"]) {
+//                 [replaceSlowCoreTextCharacters appendString:[NSString stringWithFormat:@"-%@",[substring substringToIndex:1]]];
+//                 return;
+//             }
+//         }
+//         
+//         [replaceSlowCoreTextCharacters appendString:substring];
+//         
+//     }];
 
     
-    return replaceSlowCoreTextCharacters;
+    return string;
 }
 
 -(NSString *)fixEmoji {

@@ -10,4 +10,6 @@
 
 @interface TGRecentSearchRowItem : TMRowItem
 @property (nonatomic,strong,readonly) TL_conversation *conversation;
+@property (nonatomic,assign) BOOL disableBottomSeparator;
+@property (nonatomic,assign) BOOL disableRemoveButton;
 @end

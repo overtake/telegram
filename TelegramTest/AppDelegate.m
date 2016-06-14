@@ -162,12 +162,12 @@ static void TGTelegramLoggingFunction(NSString *format, va_list args)
                 
                 if(_mainWindow.navigationController.currentController == _mainWindow.navigationController.messagesViewController || [TGAudioPlayerWindow isShown]) {
                     if([TGAudioPlayerWindow isShown]) {
-                        if([TGAudioPlayerWindow playerState] == TGAudioPlayerStatePlaying)
+                        if([TGAudioPlayerWindow playerState] == TGAudioPlayerGlobalStatePlaying)
                             [TGAudioPlayerWindow pause];
                         else
                             [TGAudioPlayerWindow resume];
                     } else {
-                        [TGAudioPlayerWindow show:_mainWindow.navigationController.messagesViewController.conversation];
+                        [TGAudioPlayerWindow show:_mainWindow.navigationController.messagesViewController.conversation navigation:_mainWindow.navigationController];
                     }
                 }
                 
@@ -250,8 +250,11 @@ static void TGTelegramLoggingFunction(NSString *format, va_list args)
             TL_localMessage *msg = [[Storage manager] messageById:[userInfo[KEY_MESSAGE_ID] intValue] inChannel:dialog.type == DialogTypeChannel ? dialog.peer_id : 0];
             
             if(dialog.type == DialogTypeChat) {
-                if(msg)
-                    [[Telegram rightViewController].messagesViewController addReplayMessage:msg animated:NO];
+                if(msg) {
+                    TGInputMessageTemplate *template = [TGInputMessageTemplate templateWithType:TGInputMessageTemplateTypeSimpleText ofPeerId:msg.peer_id];
+                    [template setReplyMessage:msg save:YES];
+                    [template performNotification];
+                }
             }
             
              [[Telegram rightViewController].messagesViewController sendMessage:userResponse forConversation:dialog];
@@ -478,27 +481,30 @@ void exceptionHandler(NSException * exception)
        
         
         if(incomingEvent.keyCode == 125 || incomingEvent.keyCode == 126) {
-            BOOL result = YES;
-            
-            if([responder isKindOfClass:[NSTextField class]]) {
-                NSTextField *textField = responder;
-                result = !textField.stringValue.length;
-            } else if([responder isKindOfClass:[TMSearchTextField class]]) {
-                result = incomingEvent.keyCode == 126;
-            } else if ([responder isKindOfClass:[NSTextView class]]) {
-                NSTextView *textView = responder;
-                if([textView.superview.superview isKindOfClass:NSClassFromString(@"_TMSearchTextField")]) {
-                    result = incomingEvent.keyCode == 125;
-                } else {
-                    result = !textView.string.length;
+            if((incomingEvent.modifierFlags & NSAlternateKeyMask) > 0) {
+                BOOL result = YES;
+                
+//                if([responder isKindOfClass:[NSTextField class]]) {
+//                    NSTextField *textField = responder;
+//                    result = !textField.stringValue.length;
+//                } else if([responder isKindOfClass:[TMSearchTextField class]]) {
+//                    result = incomingEvent.keyCode == 126;
+//                } else if ([responder isKindOfClass:[NSTextView class]]) {
+//                    NSTextView *textView = responder;
+//                    if([textView.superview.superview isKindOfClass:NSClassFromString(@"_TMSearchTextField")]) {
+//                        result = incomingEvent.keyCode == 125;
+//                    } else {
+//                        result = !textView.string.length;
+//                    }
+//                }
+                
+                
+                if(result) {
+                    [[TMTableView current] keyDown:incomingEvent];
+                    return [[NSEvent alloc] init];
                 }
             }
             
-            
-            if(result) {
-                [[TMTableView current] keyDown:incomingEvent];
-                return [[NSEvent alloc] init];
-            }
             
         } else if(incomingEvent.keyCode == 53) {
             
@@ -527,11 +533,22 @@ void exceptionHandler(NSException * exception)
                 BOOL res = [appWindow().navigationController.messagesViewController.bottomView removeQuickRecord];
                 
                 if(!res) {
-                    if(appWindow().navigationController.messagesViewController.inputText.length > 0) {
+                    
+                    if([[TMAudioRecorder sharedInstance] isRecording]) {
+                        [appWindow().navigationController.messagesViewController.bottomView startOrStopQuickRecord];
                         return incomingEvent;
-                    } else {
-                       [[[Telegram sharedInstance] firstController] backOrClose:[[NSMenuItem alloc] initWithTitle:@"Profile.Back" action:@selector(backOrClose:) keyEquivalent:@""]];
+                        
                     }
+                    
+                    if(![appWindow().navigationController.messagesViewController proccessEscAction]) {
+                        if(appWindow().navigationController.messagesViewController.inputText.length > 0) {
+                            return incomingEvent;
+                        } else {
+                            [[[Telegram sharedInstance] firstController] backOrClose:[[NSMenuItem alloc] initWithTitle:@"Profile.Back" action:@selector(backOrClose:) keyEquivalent:@""]];
+                        }
+                    }
+                    
+                    
                 }
                 
                 

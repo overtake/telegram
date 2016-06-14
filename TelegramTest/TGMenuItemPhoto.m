@@ -20,7 +20,7 @@
     if(self = [super init]) {
         _user = user;
         _menuItem = menuItem;
-        
+        _menuItem.representedObject = self;
         [self generatePhoto];
         
     }
@@ -70,7 +70,7 @@ static NSImage *mentionCap() {
             
             NSString *text = [TMAvatarImageView text:_user];
             
-            image = [TMAvatarImageView generateTextAvatar:colorMask size:NSMakeSize(30, 30) text:text type: TMAvatarTypeUser font:TGSystemFont(12) offsetY:2];
+            image = [TMAvatarImageView generateTextAvatar:colorMask size:NSMakeSize(30, 30) text:text type: TMAvatarTypeUser font:TGSystemFont(12) offsetY:0];
             
             self.menuItem.image = image;
         }
@@ -81,6 +81,8 @@ static NSImage *mentionCap() {
     
     
 }
+
+
 
 -(void)didDownloadImage:(NSImage *)image object:(id)object {
     

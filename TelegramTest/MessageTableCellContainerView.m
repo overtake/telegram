@@ -412,11 +412,11 @@ static BOOL mouseIsDown = NO;
 }
 
 - (void)onRemovedListener:(SenderItem *)item {
-    if(item.canRelease) {
-        self.item.messageSender = nil;
-        
-        [self updateCellState:YES];
-    } 
+//    if(item.canRelease) {
+//        self.item.messageSender = nil;
+//        
+//        [self updateCellState:YES];
+//    } 
 }
 
 

@@ -12,6 +12,7 @@
 #import "TGVTVideoView.h"
 #import "TGImageView.h"
 #import "SpacemanBlocks.h"
+#import "TGGifPreviewModalView.h"
 @interface MessageTableCellMpegView () {
     SMDelayedBlockHandle _handle;
     BOOL _prevState;
@@ -120,6 +121,31 @@
     
 }
 
+
+-(void)mouseDown:(NSEvent *)theEvent {
+    
+    if(self.isEditable)
+        [super mouseDown:theEvent];
+    else if(![self.containerView mouse:[self.containerView convertPoint:[theEvent locationInWindow] fromView:nil] inRect:self.playerContainer.frame]) {
+        [super mouseDown:theEvent];
+    } else {
+        
+        if(self.item.isset) {
+            TGGifPreviewModalView *preview = [[TGGifPreviewModalView alloc] initWithFrame:self.window.contentView.frame];
+            
+            [preview setGif:self.item];
+            
+            [preview show:self.window animated:YES];
+        }
+        
+    }
+    
+    
+    
+    
+}
+
+
 -(NSMenu *)contextMenu {
     
     
@@ -129,6 +155,9 @@
      MessageTableItemMpeg *item = (MessageTableItemMpeg *) self.item;
     NSMenu *menu = [[NSMenu alloc] initWithTitle:@"Gifs"];
     
+    weak();
+    
+
     
     if(item.isset) {
         
@@ -180,7 +209,11 @@
         
         [menu addItem:[NSMenuItem separatorItem]];
     }
-    
+    [menu addItem:[NSMenuItem menuItemWithTitle:NSLocalizedString(@"Context.SaveAs", nil) withBlock:^(id sender) {
+        [weakSelf performSelector:@selector(saveAs:) withObject:weakSelf];
+    }]];
+
+    [menu addItem:[NSMenuItem separatorItem]];
 
     [self.defaultMenuItems enumerateObjectsUsingBlock:^(NSMenuItem *item, NSUInteger idx, BOOL *stop) {
         [menu addItem:item];
@@ -227,6 +260,8 @@
 
 
 -(void)mouseUp:(NSEvent *)theEvent {
+    
+    
     MessageTableItemMpeg *item = (MessageTableItemMpeg *) self.item;
     
     if(item.isset && [SettingsArchiver checkMaskedSetting:DisableAutoplayGifSetting]) {

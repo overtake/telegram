@@ -10,7 +10,7 @@
 #import "TGWindowArchiver.h"
 #import "NotSelectedDialogsViewController.h"
 #import "TGSplitView.h"
-
+#import "TGModernESGViewController.h"
 
 #define MIN_SINGLE_LAYOUT_WIDTH 380
 #define MAX_SINGLE_LAYOUT_WIDTH 600
@@ -46,7 +46,7 @@
 
 
 @interface TGDisclosureViewController : TGSplitViewController
-@property (nonatomic,strong) NotSelectedDialogsViewController *noSelectedViewController;
+@property (nonatomic,strong) TGModernESGViewController *esgViewController;
 @property (nonatomic,strong) TL_conversation *conversation;
 @end
 
@@ -58,15 +58,12 @@
     
     _view = [[TGDisclosureView alloc] initWithFrame:self.frameInit];
     
-    self.navigationViewController = [[TMNavigationController alloc] initWithFrame:self.view.bounds];
+    _esgViewController = [[TGModernESGViewController alloc] initWithFrame:self.view.bounds];
     
-    _noSelectedViewController = [[NotSelectedDialogsViewController alloc] initWithFrame:self.view.bounds];
-    _noSelectedViewController.customTextCap = NSLocalizedString(@"Conversation.SelectConversationToViewChatInfo", nil);
-    [self.view addSubview:self.navigationViewController.view];
+    [self.view addSubview:_esgViewController.view];
     
-    [self.view setAutoresizingMask:NSViewHeightSizable | NSViewWidthSizable];
-    [self.view setAutoresizesSubviews:YES];
     
+    [_esgViewController show];
     
     TMView *separator = [[TMView alloc] initWithFrame:self.view.bounds];
     separator.backgroundColor = DIALOG_BORDER_COLOR;
@@ -74,29 +71,9 @@
     [self.view addSubview:separator];
     
     
-    [Notification addObserver:self selector:@selector(notificationDialogSelectionChanged:) name:@"ChangeDialogSelection"];
-    
     
 }
 
--(void)notificationDialogSelectionChanged:(NSNotification *)notification {
-    
-    if(self.rightNavigationController.messagesViewController.conversation == _conversation && self.rightNavigationController.messagesViewController.conversation != nil)
-        return;
-    
-    _conversation = self.rightNavigationController.messagesViewController.conversation;
-    
-    
-    if(self.rightNavigationController.messagesViewController.conversation) {
-        [self.navigationViewController clear];
-        [self.navigationViewController pushViewController:_noSelectedViewController animated:NO];
-        [self.navigationViewController showInfoPage:self.rightNavigationController.messagesViewController.conversation animated:NO isDisclosureController:YES];
-    } else {
-        [self.navigationViewController clear];
-        [self.navigationViewController pushViewController:_noSelectedViewController animated:NO];
-    }
-    
-}
 
 -(void)dealloc {
     [Notification removeObserver:self];
@@ -179,19 +156,19 @@
     
     
     
-    _disclosureController = [[TGDisclosureViewController alloc] initWithFrame:NSMakeRect(0, 0, 300, self.view.bounds.size.height)];
+    _disclosureController = [[TGDisclosureViewController alloc] initWithFrame:NSMakeRect(0, 0, 350, self.view.bounds.size.height)];
     
-/*
- [_splitView setProportion:(struct TGSplitProportion){MIN_SINGLE_LAYOUT_WIDTH,300+MIN_SINGLE_LAYOUT_WIDTH} forState:TGSplitViewStateSingleLayout];
- [_splitView setProportion:(struct TGSplitProportion){MIN_SINGLE_LAYOUT_WIDTH,MAX_SINGLE_LAYOUT_WIDTH} forState:TGSplitViewStateDualLayout];
- [_splitView setProportion:(struct TGSplitProportion){300,FLT_MAX} forState:TGSplitViewStateTripleLayout];
- */
+
+// [_splitView setProportion:(struct TGSplitProportion){MIN_SINGLE_LAYOUT_WIDTH,300+MIN_SINGLE_LAYOUT_WIDTH} forState:TGSplitViewStateSingleLayout];
+// [_splitView setProportion:(struct TGSplitProportion){MIN_SINGLE_LAYOUT_WIDTH,MAX_SINGLE_LAYOUT_WIDTH} forState:TGSplitViewStateDualLayout];
+// [_splitView setProportion:(struct TGSplitProportion){300,FLT_MAX} forState:TGSplitViewStateTripleLayout];
+ 
     
-    [_splitView setProportion:(struct TGSplitProportion){380,300+380} forState:TGSplitViewStateSingleLayout];
-    [_splitView setProportion:(struct TGSplitProportion){300+380,300+380+600} forState:TGSplitViewStateDualLayout];
+    [_splitView setProportion:(struct TGSplitProportion){380,300+350} forState:TGSplitViewStateSingleLayout];
+    [_splitView setProportion:(struct TGSplitProportion){300+350,300+350+600} forState:TGSplitViewStateDualLayout];
     
 //    if([SettingsArchiver checkMaskedSetting:TripleLayoutSettings]) {
-//        [_splitView setProportion:(struct TGSplitProportion){300+380+600,FLT_MAX}forState:TGSplitViewStateTripleLayout];
+//        [_splitView setProportion:(struct TGSplitProportion){300+350+600,FLT_MAX}forState:TGSplitViewStateTripleLayout];
 //    }
     
     _splitView.delegate = self;
@@ -204,13 +181,17 @@
 }
 
 -(void)didChangeSettingsMask:(SettingsMask)mask {
-//    if([SettingsArchiver checkMaskedSetting:TripleLayoutSettings]) {
-//        [_splitView setProportion:(struct TGSplitProportion){300,FLT_MAX} forState:TGSplitViewStateTripleLayout];
-//    } else {
-//        [_splitView removeProportion:TGSplitViewStateTripleLayout];
-//    }
-//    
-//    [_splitView update];
+    //[self updateESGLayout:YES];
+}
+
+-(void)updateESGLayout:(BOOL)show {
+    if([SettingsArchiver isDefaultEnabledESGLayout] && show) {
+        [_splitView setProportion:(struct TGSplitProportion){300,FLT_MAX} forState:TGSplitViewStateTripleLayout];
+    } else {
+        [_splitView removeProportion:TGSplitViewStateTripleLayout];
+    }
+    
+    [_splitView update];
 }
 
 -(void)splitViewDidNeedFullsize:(TGViewController<TGSplitViewDelegate> *)controller {
@@ -265,8 +246,7 @@
             [_splitView addController:_leftViewController proportion:(struct TGSplitProportion){w,w}];
             [_splitView addController:_rightViewController proportion:(struct TGSplitProportion){MIN_SINGLE_LAYOUT_WIDTH,INT32_MAX}];
             
-            [_splitView addController:_disclosureController proportion:(struct TGSplitProportion){MIN_SINGLE_LAYOUT_WIDTH,MIN_SINGLE_LAYOUT_WIDTH}];
-            [_disclosureController notificationDialogSelectionChanged:nil];
+            [_splitView addController:_disclosureController proportion:(struct TGSplitProportion){350,350}];
             
 
         default:

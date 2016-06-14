@@ -63,6 +63,8 @@ static long h_r_l;
 }
 
 
+
+
 @end
 
 
@@ -178,13 +180,9 @@ static long h_r_l;
     
 }
 - (BOOL)selectionWillChange:(NSInteger)row item:(TMRowItem *) item {
-    
-    
     return YES;
 }
 - (BOOL)isSelectable:(NSInteger)row item:(TMRowItem *) item {
-
-    
     return row > 0;
 }
 
@@ -252,7 +250,7 @@ static long h_r_l;
             
             [self check];
             
-            if([TGAudioPlayerWindow currentItem] == nil && _tableView.count > 1 && [TGAudioPlayerWindow autoStart]) {
+            if(_controller.currentItem == nil && _tableView.count > 1 &&  _controller.autoStart) {
                 [self selectNext];
             }
             
@@ -482,7 +480,6 @@ static long h_r_l;
                 
             }]];
         }
-        
         
         [_tableView removeItemsInRange:NSMakeRange(1, _tableView.list.count - 1) tableRedraw:YES];
         

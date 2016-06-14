@@ -19,8 +19,8 @@
 #import "TGAudioPlayerWindow.h"
 #import "TGCTextView.h"
 
-@interface MessageTablecellAudioDocumentView()<TGAudioPlayerWindowDelegate>
-@property (nonatomic,assign) TGAudioPlayerState audioState;
+@interface MessageTablecellAudioDocumentView()<TGAudioPlayerGlobalDelegate>
+@property (nonatomic,assign) TGAudioPlayerGlobalState audioState;
 @property (nonatomic,strong) BTRButton *playView;
 @property (nonatomic,strong) TGCTextView *nameView;
 @end
@@ -46,7 +46,7 @@
         [self.playView addBlock:^(BTRControlEvents events) {
             
             if(weakSelf.item.isset) {
-                [TGAudioPlayerWindow show:weakSelf.item.message.conversation];
+                [TGAudioPlayerWindow show:weakSelf.item.message.conversation navigation:self.item.table.viewController.navigationViewController];
                 [TGAudioPlayerWindow setCurrentItem:(MessageTableItemAudioDocument *)weakSelf.item];
 
             } else {
@@ -82,18 +82,18 @@
     [TGAudioPlayerWindow removeEventListener:self];
 }
 
--(void)playerDidChangedState:(MessageTableItemAudioDocument *)item playerState:(TGAudioPlayerState)state {
+-(void)playerDidChangedState:(MessageTableItemAudioDocument *)item playerState:(TGAudioPlayerGlobalState)state {
     
     if(item.message.n_id != self.item.message.n_id)
     {
-        self.audioState = TGAudioPlayerStatePaused;
+        self.audioState = TGAudioPlayerGlobalStatePaused;
     } else {
         self.audioState = state;
     }
 
 }
 
--(void)setAudioState:(TGAudioPlayerState)audioState {
+-(void)setAudioState:(TGAudioPlayerGlobalState)audioState {
     _audioState = audioState;
     
     [self updateCellState:NO];
@@ -108,14 +108,14 @@
     [super setCellState:cellState animated:animated];
     
     switch (self.audioState) {
-        case TGAudioPlayerStatePaused:
+        case TGAudioPlayerGlobalStatePaused:
             [_playView setImage:voice_play_image() forControlState:BTRControlStateNormal];
             break;
             
-        case TGAudioPlayerStatePlaying:
+        case TGAudioPlayerGlobalStatePlaying:
             [_playView setImage:image_VoicePause() forControlState:BTRControlStateNormal];
             break;
-        case TGAudioPlayerStateForcePaused: default :
+        case TGAudioPlayerGlobalStateForcePaused: default :
             [_playView setImage:voice_play_image() forControlState:BTRControlStateNormal];
             break;
     }
@@ -190,7 +190,7 @@
     if([TGAudioPlayerWindow currentItem].message.n_id == item.message.n_id)
         _audioState = [TGAudioPlayerWindow playerState];
      else
-        _audioState = TGAudioPlayerStatePaused;
+         _audioState = TGAudioPlayerGlobalStatePaused;
     
     [_nameView setAttributedString:item.nameAttributedString];
     [_nameView setFrame:NSMakeRect(NSMaxX(_playView.frame) + item.defaultOffset, 0, item.nameSize.width, item.nameSize.height)];

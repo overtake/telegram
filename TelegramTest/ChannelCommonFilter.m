@@ -8,7 +8,6 @@
 
 #import "ChannelCommonFilter.h"
 #import "ChannelFilter.h"
-#import "ChannelImportantFilter.h"
 #import "ChatHistoryController.h"
 @implementation ChannelCommonFilter
 
@@ -29,9 +28,9 @@
     }
     
     
-    
-    
     return converted;
 }
+
+
 
 @end

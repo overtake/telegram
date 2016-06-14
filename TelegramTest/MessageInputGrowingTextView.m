@@ -1,3 +1,4 @@
+
 //
 //  MesssageInputGrowingTextView.m
 //  Messenger for Telegram
@@ -16,21 +17,37 @@
 #import "NSString+Extended.h"
 #import "TGBotCommandsPopup.h"
 
-@interface TGHackView : TMView
+@interface TGCustomMentionRange : NSObject
+@property (nonatomic,strong) NSString *original;
+@property (nonatomic,assign) NSRange range;
+
+@property (nonatomic,strong) NSString *name;
+@property (nonatomic,assign) int user_id;
+
 
 @end
 
-@implementation TGHackView
+@implementation TGCustomMentionRange
 
--(void)setFrame:(NSRect)frame {
-    [super setFrame:frame];
+
+-(id)initWithOriginalText:(NSString *)text range:(NSRange)range {
+    if(self = [super init]) {
+        _original = text;
+        _range = range;
+        
+        _name = [text substringWithRange:NSMakeRange(2, [text rangeOfString:@"|"].location - 2)];
+        _user_id = [[text substringWithRange:NSMakeRange([text rangeOfString:@"|"].location + 1, text.length - 1 - [text rangeOfString:@"|"].location)] intValue];
+
+    }
+    
+    return self;
 }
 
--(void)setFrameSize:(NSSize)newSize {
-    [super setFrameSize:newSize];
-}
+
+
 
 @end
+
 
 typedef enum {
     PasteBoardItemTypeVideo,
@@ -40,6 +57,11 @@ typedef enum {
     PasteBoardTypeLink
 } PasteBoardItemType;
 
+
+@interface MessageInputGrowingTextView ()
+@property (nonatomic,strong) NSMutableDictionary *customMentions;
+@end
+
 @implementation MessageInputGrowingTextView
 
 - (id)initWithFrame:(NSRect)frame
@@ -47,6 +69,7 @@ typedef enum {
     self = [super initWithFrame:frame];
     if (self) {
         [self setPlaceholderString:NSLocalizedString(@"Messages.SendPlaceholder", nil)];
+        _customMentions = [NSMutableDictionary dictionary];
     }
     return self;
 }
@@ -77,8 +100,28 @@ typedef enum {
 
 -(void)insertText:(id)insertString {
     //lol. MessagesBottomView
-    if(!self.superview.superview.superview.superview.superview.isHidden) {
-         [super insertText:insertString];
+    if(!self.superview.superview.superview.superview.superview.isHidden && insertString) {
+        
+        NSRange range = self.selectedRange;
+        
+        if(_customMentions.count > 0) {
+            
+//            NSString *string = self.stringValue;
+//            NSString *original = self.string;
+//            
+//            if(range.location != self.string.length) {
+//                
+//            }
+//            
+//            [_customMentions removeAllObjects];
+//            self.string = string;
+
+        }
+        
+       
+        
+        [super insertText:insertString];
+        
     }
    
 }
@@ -189,10 +232,17 @@ typedef enum {
         }
         
         
+        if(image.size.width / 10 < image.size.height) {
+            type = PasteBoardItemTypeImage;
+            iconImage = cropCenterWithSize(image, NSMakeSize(70, 70));
+        } else {
+            type = PasteBoardItemTypeDocument;
+            
+            path = exportPath(rand_long(), @"jpg");
+            [jpegNormalizedData(image) writeToFile:path atomically:YES];
+        }
         
-        
-        type = PasteBoardItemTypeImage;
-        iconImage = cropCenterWithSize(image, NSMakeSize(70, 70));
+       
     }
 
 
@@ -273,7 +323,11 @@ typedef enum {
 
 
 -(void)setString:(NSString *)string {
+    [_customMentions removeAllObjects];
+    
     [super setString:string];
+    
+    [self checkAndReplaceCustomMentions];
     
 }
 
@@ -282,7 +336,10 @@ typedef enum {
 -(void)checkWebpages {
     
     NSString *link = [self.string webpageLink];
-    [_controller.messagesViewController clearNoWebpage];
+
+    [_inputTemplate setDisabledWebpage:nil];
+    
+    [[_inputTemplate copy] performNotification];
     [_controller.messagesViewController checkWebpage:link];
     
 }
@@ -335,11 +392,152 @@ typedef enum {
 
 
 -(void)textDidChange:(NSNotification *)notification {
-    
+    [self checkAndReplaceCustomMentions];
     [super textDidChange:notification];
+}
+
+-(NSString *)parseMentions:(NSMutableString *)copy mentions:(NSMutableArray *)customMentions {
+    NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:@"((?<!\\w)@\\[([^\\[\\]]+(\\|))+([0-9])+\\])" options:NSRegularExpressionCaseInsensitive error:nil];
+    NSArray *mentions = [regex matchesInString:copy options:0 range:NSMakeRange(0, [copy length])];
+    
+    if(mentions.count > 0) {
+        
+        
+        
+        [mentions enumerateObjectsUsingBlock:^(NSTextCheckingResult * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            
+            
+            TGCustomMentionRange *custom = [[TGCustomMentionRange alloc] initWithOriginalText:[copy substringWithRange:obj.range] range:obj.range];
+            
+            [customMentions addObject:custom];
+            
+            NSString *mention = [NSString stringWithFormat:@"@(%@)",custom.name];
+            
+            [copy replaceCharactersInRange:NSMakeRange(obj.range.location, obj.range.length) withString:mention];
+            
+            
+            *stop = YES;
+            
+        }];
+        
+    }
+    
+    if(mentions.count > 0)
+        return [self parseMentions:copy mentions:customMentions];
+    
+    return copy;
+
+}
+
+-(void)checkAndReplaceCustomMentions {
+    
+    NSString *value = self.string;
+    NSMutableString *copy = [value mutableCopy];
+    
+    if(value.length > 0) {
+        
+      //  [_customMentions removeAllObjects];
+        
+        NSMutableArray *mentions = [NSMutableArray array];
+        
+        NSString *m = [self parseMentions:copy mentions:mentions];
+        
+        [[self textStorage] setAttributes:nil range:NSMakeRange(0, value.length)];
+        
+        NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:@"(@\\([^\\(\\)]+\\))" options:NSRegularExpressionCaseInsensitive error:nil];
+        NSArray *fakeMentions = [regex matchesInString:copy options:0 range:NSMakeRange(0, [copy length])];
+        
+        if(_customMentions.count > 0) {
+
+            if(fakeMentions.count < _customMentions.count + mentions.count) {
+                
+                NSString *real = self.stringValue;
+                
+                __block id remove = nil;
+                
+                [_customMentions enumerateKeysAndObjectsUsingBlock:^(id  _Nonnull key, TGCustomMentionRange *obj, BOOL * _Nonnull stop) {
+                    if([real rangeOfString:obj.original].location == NSNotFound) {
+                        remove = key;
+                    }
+                }];
+                
+                [_customMentions removeObjectForKey:remove];
+                
+               
+            }
+
+        }
+        
+        
+        
+        NSMutableDictionary *cMentions = [_customMentions mutableCopy];
+                                     
+        [mentions enumerateObjectsUsingBlock:^(TGCustomMentionRange *obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            
+            cMentions[@(_customMentions.count + idx)] = obj;
+            
+        }];
+        
+      
+        
+        if(![m isEqualToString:value]) {
+             [self setString:m];
+        }
+        
+        [fakeMentions enumerateObjectsUsingBlock:^(NSTextCheckingResult *obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            if(cMentions[@(idx)] != nil) {
+                [[self textStorage] addAttribute:NSForegroundColorAttributeName value:LINK_COLOR range:obj.range];
+            }
+            
+        }];
+        
+        
+        _customMentions = cMentions;
+    }
+}
+
+-(void)insertText:(id)aString replacementRange:(NSRange)replacementRange {
+    [super insertText:aString replacementRange:replacementRange];
+    
+
+}
+
+-(NSString *)realMentions:(NSMutableString *)string mentions:(NSMutableDictionary *)mentions idx:(int)idx {
+    NSString *local = string;
+    
+    if(mentions.count > 0) {
+        NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:@"(@\\([^\\(\\)]+\\))" options:NSRegularExpressionCaseInsensitive error:nil];
+        NSArray *fakeMentions = [regex matchesInString:string options:0 range:NSMakeRange(0, [string length])];
+        
+        if(fakeMentions.count > 0) {
+            
+            TGCustomMentionRange *obj = mentions[@(idx)];
+            
+            NSTextCheckingResult *fake = fakeMentions[0];
+            
+            NSString *nname = [local substringWithRange:NSMakeRange(fake.range.location+2, fake.range.length - 3)];
+            
+            [string replaceCharactersInRange:fake.range withString:[NSString stringWithFormat:@"@[%@|%d]",nname,obj.user_id]];
+            
+        }
+        
+        
+        if(mentions.count > 0)
+            [mentions removeObjectForKey:@(idx)];
+        
+        if(fakeMentions.count > 0 && mentions.count > 0)
+            return [self realMentions:string mentions:mentions idx:idx+1];
+    }
     
     
+    return string;
+}
+
+-(NSString *)stringValue {
     
+    NSString *string = [self realMentions:[super.stringValue mutableCopy] mentions:[_customMentions mutableCopy] idx:0];
+    
+    return string;
 }
 
 
@@ -387,6 +585,10 @@ typedef enum {
     self.maxHeight = 250;
     self.minHeight = 33;
     
+    [self setRichText:YES];
+    
+    
+
     [SettingsArchiver addEventListener:self];
     
     self.frame = NSMakeRect(0, 0, self.frame.size.width - 90, 200);
@@ -405,7 +607,7 @@ typedef enum {
     //TODO
     __strong MessageInputGrowingTextView *weakSelf = self;
     
-    self.containerView = [[TGHackView alloc] initWithFrame:self.bounds];
+    self.containerView = [[TMView alloc] initWithFrame:self.bounds];
     [self.containerView setDrawBlock:^{
         NSRect rect = NSMakeRect(1, 1, NSWidth(weakSelf.containerView.frame) - 2, NSHeight(weakSelf.containerView.frame) - 2);
         NSBezierPath *circlePath = [NSBezierPath bezierPath];
@@ -459,6 +661,8 @@ typedef enum {
 
 -(void)keyDown:(NSEvent *)theEvent {
     
+    
+    
     TGMessagesHintView *hint = self.controller.hintView;
     
     
@@ -488,16 +692,18 @@ typedef enum {
             
         }
         
+    } else if(theEvent.keyCode == 126 && (self.stringValue.length == 0)) {
+        [self.controller forceSetEditSentMessage:NO];
+        return;
     }
     
     //lol. MessagesBottomView
     if(!self.superview.superview.superview.superview.superview.isHidden) {
+        
+       
+        
         [super keyDown:theEvent];
     }
-    
-    
-    
-
     
 }
 

@@ -126,7 +126,7 @@ static NSMutableDictionary *cache;
 }
 
 -(void)setFrame:(NSRect)frameRect {
-    [super setFrame:NSMakeRect(0, NSMinY(frameRect), NSWidth(self.controller.view.frame), frameRect.size.height)];
+    [super setFrame:NSMakeRect(0, NSMinY(frameRect), NSWidth(self.controller.table.containerView.frame), frameRect.size.height)];
     
     [self.progress setCenterByView:self];
     [self.field setCenterByView:self];
@@ -328,8 +328,7 @@ static NSMutableDictionary *cache;
                 [[NSUserDefaults standardUserDefaults] setObject:@(YES) forKey:[NSString stringWithFormat:@"alwaysHideReportSpam_%d",conversation.peer_id]];
                 [[NSUserDefaults standardUserDefaults] synchronize];
             }
-            
-            
+
             
         } errorHandler:^(id request, RpcError *error) {
             
@@ -362,13 +361,14 @@ static NSMutableDictionary *cache;
         if(![[NSUserDefaults standardUserDefaults] boolForKey:[NSString stringWithFormat:@"igonore_pinned_%d_%d",msg_id,chat_id]]) {
             self.action = MessagesTopInfoActionPinnedMessage;
             
-            TGReplyObject *replyObject = [[TGReplyObject alloc] initWithReplyMessage:msg fromMessage:nil tableItem:nil pinnedMessage:YES withoutCache:YES];
+            TGReplyObject *replyObject = [[TGReplyObject alloc] initWithReplyMessage:msg fromMessage:nil tableItem:nil pinnedMessage:YES];
             
             [_pinnedContainer removeFromSuperview];
             _pinnedContainer = nil;
             
             _pinnedContainer = [[MessageReplyContainer alloc] initWithFrame:NSMakeRect([MessageTableItem defaultContainerOffset], 0, NSWidth(self.frame) - [MessageTableItem defaultContainerOffset] * 2, replyObject.containerHeight)];
-            _pinnedContainer.autoresizingMask = NSViewWidthSizable;
+            
+            //_pinnedContainer.autoresizingMask = NSViewWidthSizable;
             
             _pinnedContainer.pinnedMessage = YES;
             
@@ -503,9 +503,13 @@ static NSMutableDictionary *cache;
     
     [string appendString:NSLocalizedString(localizations[action], nil) withColor:NSColorFromRGB(0xa9a9a9)];
     
+    [string appendString:@" "];
+    
     NSRange range = [string appendString:NSLocalizedString(buttonLocalization[action], nil) withColor:BLUE_UI_COLOR];
     
     [string addAttributes:@{NSLinkAttributeName:@"first"} range:range];
+    
+    [string setAlignment:NSCenterTextAlignment range:string.range];
     
     [_cancel setHidden:action != MessagesTopInfoActionReportSpam];
     
@@ -608,6 +612,9 @@ static NSMutableDictionary *cache;
 -(void)setFrameSize:(NSSize)newSize {
     [super setFrameSize:newSize];
     
+    [_field setFrameSize:NSMakeSize(NSWidth(self.frame) - 40, NSHeight(_field.frame))];
+    [_field setCenteredXByView:self];
+    [_pinnedContainer setFrame:NSMakeRect(NSMinX(_pinnedContainer.frame), NSMinY(_pinnedContainer.frame), newSize.width - NSMinX(_pinnedContainer.frame) * 2, NSHeight(_pinnedContainer.frame))];
     [_cancel setFrameOrigin:NSMakePoint(newSize.width - NSWidth(_cancel.frame), 2)];
 }
 

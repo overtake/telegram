@@ -76,7 +76,7 @@ __attribute__((weak_import,deprecated("API newer than Deployment Target.")))
 //[NSFont fontWithName:@".SFNSDisplay-Regular" size:(s)]
 //[NSFont fontWithName:@".SFNSText-Medium" size:(s)]
 //[NSFont fontWithName:@".SFNSText-Regular" size:(s)]
-#define TGSystemFont(s) NSAppKitVersionNumber > NSAppKitVersionNumber10_10_Max ? ((s >= 13) ? [NSFont systemFontOfSize:(s)] : [NSFont fontWithName:@".SFNSText-Regular" size:(s)]) : [NSFont fontWithName:@"HelveticaNeue" size:(s)]
+#define TGSystemFont(s) NSAppKitVersionNumber > NSAppKitVersionNumber10_10_Max ? ((s >= 13) ? [NSFont systemFontOfSize:(s)] : [NSFont systemFontOfSize:(s)  weight:NSFontWeightRegular]) : [NSFont fontWithName:@"HelveticaNeue" size:(s)]
 #define TGSystemMediumFont(s) NSAppKitVersionNumber > NSAppKitVersionNumber10_10_Max ? [NSFont systemFontOfSize:(s) weight:NSFontWeightSemibold] : [NSFont fontWithName:@"HelveticaNeue-Medium" size:(s)]
 #define TGSystemLightFont(s) NSAppKitVersionNumber > NSAppKitVersionNumber10_10_Max ? [NSFont systemFontOfSize:(s)  weight:NSFontWeightLight] : [NSFont fontWithName:@"HelveticaNeue-Light" size:(s)]
 #define TGSystemItalicFont(s) NSAppKitVersionNumber > NSAppKitVersionNumber10_10_Max ? [NSFont fontWithName:@".SFNSText-Italic" size:(s)] : [NSFont fontWithName:@"HelveticaNeue-Italic" size:(s)]

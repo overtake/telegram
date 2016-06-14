@@ -34,6 +34,16 @@
                 [self replaceCharactersInRange:range withString:obj];
             }
         }];
+        
+        
+//        NSArray *badCoreTextSymbols = @[@"ऀ"];
+//        
+//        [badCoreTextSymbols enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+//            NSRange range;
+//            while ((range = [self.string rangeOfString:obj]).location != NSNotFound) {
+//                [self replaceCharactersInRange:range withString:@"?"];
+//            }
+//        }];
     } @catch (NSException *exception) {
         
     }

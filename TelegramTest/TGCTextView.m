@@ -11,6 +11,7 @@
 #import "TGMultipleSelectTextView.h"
 #import "MessageTableItemText.h"
 #import "TGUserPopup.h"
+#import "SpacemanBlocks.h"
 @interface DrawsRect : NSObject
 
 @property(nonatomic,assign) CGColorRef color;
@@ -45,9 +46,10 @@ static RBLPopover *popover;
 static NSString *last_link;
 static RPCRequest *resolveRequest;
 static NSMutableDictionary *ignoreName;
-
+static SMDelayedBlockHandle blockHandle;
 void clear_current_popover() {
     last_link = nil;
+    cancel_delayed_block(blockHandle);
     [resolveRequest cancelRequest];
     [popover close];
 }
@@ -55,24 +57,33 @@ void clear_current_popover() {
 void (^linkOverHandle)(NSString *link, BOOL over, NSRect rect,TGCTextView *textView) = ^(NSString *link, BOOL over, NSRect rect,TGCTextView *textView) {
     popover.animates = NO;
     
-    BOOL accept = [link hasPrefix:@"@"];
+     cancel_delayed_block(blockHandle);
     
-   if(accept)
+    BOOL accept = [link hasPrefix:@"@"] || [link hasPrefix:@"chat://openprofile/?peer_class=TL_peerUser&peer_id="];
+    
+   if(accept && [link hasPrefix:@"@"])
         link = [link substringFromIndex:1];
     
-    if([link rangeOfString:@"telegram.me"].location != NSNotFound || [link hasPrefix:@"tg://resolve"]) {
+    if([link hasPrefix:@"tg://resolve"]) {
         link = tg_domain_from_link(link);
         accept = link.length > 0;
     }
     
+    if(!link) {
+        clear_current_popover();
+        return;
+    }
+    
+    
+    
+    
     __block id obj = [Telegram findObjectWithName:link];
     
     
-    
-    if(!over || ![link isEqualToString:last_link] || !accept || (ignoreName[link] && !obj)) {
+    if(!over || ![link isEqualToString:last_link] || !accept || (ignoreName[link] && !obj) || (textView.visibleRect.origin.x == 0 && textView.visibleRect.origin.y == 0)) {
         clear_current_popover();
         
-        if( !over || ignoreName[link] || !accept)
+        if( !over || ignoreName[link] || !accept || (textView.visibleRect.origin.x == 0 && textView.visibleRect.origin.y == 0))
             return;
         
     }
@@ -80,53 +91,58 @@ void (^linkOverHandle)(NSString *link, BOOL over, NSRect rect,TGCTextView *textV
     
     
     if(![link isEqualToString:last_link] || !popover.isShown) {
-        last_link = link;
         
-        dispatch_block_t show_block = ^{
-            [short_info_controller setObject:obj];
+      
+        
+        blockHandle = perform_block_after_delay(0.2, ^{
+            last_link = link;
             
-            //  [popover setHoverView:weakSelf.textView];
-            
-            
-            if(!popover.isShown) {
-                [popover setDidCloseBlock:^(RBLPopover *popover) {
-                    popover = nil;
-                }];
+            dispatch_block_t show_block = ^{
+                [short_info_controller setObject:obj];
                 
                 
-                [popover showRelativeToRect:NSOffsetRect(rect, 3, -3) ofView:textView preferredEdge:CGRectMaxYEdge];
+                if(!popover.isShown) {
+                    [popover setDidCloseBlock:^(RBLPopover *popover) {
+                        popover = nil;
+                    }];
+                    
+                    
+                    [popover showRelativeToRect:NSOffsetRect(rect, 3, -3) ofView:textView preferredEdge:CGRectMaxYEdge];
+                }
+            };
+            
+            if(over) {
+                
+                if(obj) {
+                    show_block();
+                } else {
+                    [resolveRequest cancelRequest];
+                    resolveRequest = [RPCRequest sendRequest:[TLAPI_contacts_resolveUsername createWithUsername:link] successHandler:^(RPCRequest *request, TL_contacts_resolvedPeer *response) {
+                        
+                        [SharedManager proccessGlobalResponse:response];
+                        
+                        if([response.peer isKindOfClass:[TL_peerChannel class]]) {
+                            obj = [response.chats firstObject];
+                        } else if([response.peer isKindOfClass:[TL_peerUser class]]) {
+                            obj = [response.users firstObject];
+                        }
+                        
+                        if(obj) {
+                            show_block();
+                        }
+                        
+                        
+                    } errorHandler:^(RPCRequest *request, RpcError *error) {
+                        
+                        ignoreName[link] = @(1);
+                        
+                    } timeout:4];
+                }
+                
             }
-        };
+
+        });
         
-        if(over) {
-            
-            if(obj) {
-                show_block();
-            } else {
-                [resolveRequest cancelRequest];
-                resolveRequest = [RPCRequest sendRequest:[TLAPI_contacts_resolveUsername createWithUsername:link] successHandler:^(RPCRequest *request, TL_contacts_resolvedPeer *response) {
-                    
-                    [SharedManager proccessGlobalResponse:response];
-                    
-                    if([response.peer isKindOfClass:[TL_peerChannel class]]) {
-                        obj = [response.chats firstObject];
-                    } else if([response.peer isKindOfClass:[TL_peerUser class]]) {
-                        obj = [response.users firstObject];
-                    }
-                    
-                    if(obj) {
-                        show_block();
-                    }
-                    
-                    
-                } errorHandler:^(RPCRequest *request, RpcError *error) {
-                    
-                    ignoreName[link] = @(1);
-                    
-                } timeout:4];
-            }
-            
-        }
     }
 };
 
@@ -165,12 +181,18 @@ void (^linkOverHandle)(NSString *link, BOOL over, NSRect rect,TGCTextView *textV
     if( self.attributedString.length == 0)
         return;
     
-    int opts = (NSTrackingCursorUpdate | NSTrackingMouseEnteredAndExited | NSTrackingMouseMoved | NSTrackingActiveInActiveApp | NSTrackingInVisibleRect);
+    int opts = (NSTrackingCursorUpdate | NSTrackingMouseEnteredAndExited | NSTrackingMouseMoved | NSTrackingActiveInKeyWindow | NSTrackingInVisibleRect);
     _trackingArea = [ [NSTrackingArea alloc] initWithRect:[self bounds]
                                                  options:opts
                                                    owner:self
                                                 userInfo:nil];
     [self addTrackingArea:_trackingArea];
+}
+
+-(void)scrollWheel:(NSEvent *)theEvent {
+    [super scrollWheel:theEvent];
+    
+    [self checkCursor:theEvent];
 }
 
 
@@ -704,10 +726,12 @@ void (^linkOverHandle)(NSString *link, BOOL over, NSRect rect,TGCTextView *textV
 -(void)mouseDragged:(NSEvent *)theEvent {
         
     [super mouseDragged:theEvent];
+    if(![TMViewController isModalActive]) {
+        [[NSCursor IBeamCursor] set];
+        
+        [self _mouseDragged:theEvent];
+    }
     
-    [[NSCursor IBeamCursor] set];
-    
-    [self _mouseDragged:theEvent];
 }
 
 
@@ -724,7 +748,11 @@ void (^linkOverHandle)(NSString *link, BOOL over, NSRect rect,TGCTextView *textV
 
 -(void)mouseEntered:(NSEvent *)theEvent {
     [super mouseEntered:theEvent];
-    [self checkCursor:theEvent];
+    
+    if(![TMViewController isModalActive]) {
+        [self checkCursor:theEvent];
+    }
+    
 }
 
 
@@ -832,16 +860,22 @@ void (^linkOverHandle)(NSString *link, BOOL over, NSRect rect,TGCTextView *textV
 }
 
 -(void)mouseMoved:(NSEvent *)theEvent {
-    [self checkCursor:theEvent];
+    if(![TMViewController isModalActive]) {
+        [self checkCursor:theEvent];
+    }
 }
 
 -(void)mouseExited:(NSEvent *)theEvent {
     [super mouseExited:theEvent];
-    [[NSCursor arrowCursor] set];
     
-    if(_linkOver) {
-        _linkOver(nil,NO,NSZeroRect,self);
-    }
+     if(![TMViewController isModalActive]) {
+         [[NSCursor arrowCursor] set];
+         
+         if(_linkOver) {
+             _linkOver(nil,NO,NSZeroRect,self);
+         }
+     }
+    
 }
 
 
@@ -849,11 +883,15 @@ void (^linkOverHandle)(NSString *link, BOOL over, NSRect rect,TGCTextView *textV
     
     clear_current_popover();
     
+    
     if((self.selectRange.location == NSNotFound || !_isEditable) && !_disableLinks) {
         NSPoint location = [self convertPoint:[theEvent locationInWindow] fromView:nil];
         
         BOOL hitTest,itsReal;
         NSString *link = [self linkAtPoint:location hitTest:&hitTest itsReal:&itsReal lineRect:NULL];
+        
+        
+      
         
         if(link) {
             [self open_link:link itsReal:itsReal];
@@ -897,7 +935,8 @@ void (^linkOverHandle)(NSString *link, BOOL over, NSRect rect,TGCTextView *textV
     
     if(self.selectRange.location != NSNotFound && self.isEditable) {
         NSTextView *view = (NSTextView *) [self.window fieldEditor:YES forObject:self];
-        [view setEditable:NO];
+        [view setEditable:YES];
+        [view setSelectable:YES];
         
         [view setString:self.attributedString.string];
         

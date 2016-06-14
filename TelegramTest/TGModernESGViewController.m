@@ -7,18 +7,59 @@
 //
 
 #import "TGModernESGViewController.h"
-
+#import "WeakReference.h"
 @interface TGModernESGViewController ()
-
+@property (nonatomic,strong) TMView *separator;
 @end
 
 @implementation TGModernESGViewController
 
+
+static NSMutableArray *esgControllers;
+
+-(id)initWithFrame:(NSRect)frame {
+    if(self = [super initWithFrame:frame]) {
+        static dispatch_once_t onceToken;
+        dispatch_once(&onceToken, ^{
+            esgControllers = [NSMutableArray array];
+        });
+        
+        [esgControllers addObject:[WeakReference weakReferenceWithObject:self]];
+    }
+    
+    return self;
+}
+
+-(void)dealloc {
+    __block NSUInteger index = NSNotFound;
+    
+    [esgControllers enumerateObjectsUsingBlock:^(WeakReference *obj, NSUInteger idx, BOOL *stop) {
+        
+        if(obj.originalObjectValue == (__bridge void *)(self)) {
+            index = idx;
+            *stop = YES;
+        }
+        
+    }];
+    
+    assert(index != NSNotFound);
+    
+    [esgControllers removeObjectAtIndex:index];
+}
+
 -(void)loadView {
     [super loadView];
     
+    
     self.view.wantsLayer = YES;
     self.view.layer.cornerRadius = 4;
+    self.view.autoresizesSubviews = YES;
+    
+    self.isNavigationBarHidden = YES;
+    _separator = [[TMView alloc] initWithFrame:NSMakeRect(0, 0, DIALOG_BORDER_WIDTH, NSHeight(self.view.frame))];
+    _separator.autoresizingMask = NSViewHeightSizable;
+    [_separator setBackgroundColor:DIALOG_BORDER_COLOR];
+    [_separator setHidden:YES];
     
     self.navigationViewController = [[TMNavigationController alloc] initWithFrame:self.view.bounds];
     
@@ -26,9 +67,13 @@
     
     [self.view addSubview:self.navigationViewController.view];
     
+    [self.view addSubview:_separator];
+    
     _emojiViewController = [[TGModernEmojiViewController alloc] initWithFrame:self.view.bounds];
     _sgViewController = [[TGModernSGViewController alloc] initWithFrame:self.view.bounds];
-    
+  
+    _emojiViewController.esgViewController = self;
+    _sgViewController.esgViewController = self;
     
     
     [_emojiViewController loadViewIfNeeded];
@@ -48,7 +93,7 @@ static NSMutableDictionary *stickers;
 
 +(NSDictionary *)allStickers {
     
-    if(!stickers) {
+   // if(!stickers) {
         [[Storage yap] readWithBlock:^(YapDatabaseReadTransaction *transaction) {
             
             NSDictionary *info  = [transaction objectForKey:@"modern_stickers" inCollection:STICKERS_COLLECTION];
@@ -56,15 +101,15 @@ static NSMutableDictionary *stickers;
             stickers = info[@"serialized"];
             
         }];
-    }
-    
+   // }
+
     
     return stickers;
 }
 
 +(NSArray *)allSets {
     
-    if(!sets) {
+    //if(!sets) {
         [[Storage yap] readWithBlock:^(YapDatabaseReadTransaction *transaction) {
             
             NSDictionary *info = [transaction objectForKey:@"modern_stickers" inCollection:STICKERS_COLLECTION];
@@ -72,7 +117,7 @@ static NSMutableDictionary *stickers;
             sets = info[@"sets"];
             
         }];
-    }
+   // }
     
     
     return sets;
@@ -100,10 +145,32 @@ static NSMutableDictionary *stickers;
     return stickers[@(n_id)];
 }
 
++(NSString *)emojiModifier:(NSString *)emoji {
+    NSUserDefaults *s = [NSUserDefaults standardUserDefaults];
+    
+    
+    NSMutableDictionary *modifiers = [s objectForKey:@"emojiModifiers"];
+    
+    
+    return modifiers[emoji];
+}
+
 +(void)reloadStickers {
-    sets = nil;
-    stickers = nil;
-    [[self controller].sgViewController reloadStickers];
+
+    [esgControllers enumerateObjectsUsingBlock:^(WeakReference *obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        
+        TGModernESGViewController *controller = obj.nonretainedObjectValue;
+        
+        [controller.sgViewController reloadStickers];
+        
+    }];
+    
+}
+-(void)setIsLayoutStyle:(BOOL)isLayoutStyle {
+    _isLayoutStyle = isLayoutStyle;
+   
+    [self.view setNeedsDisplay:YES];
+    [_separator setHidden:!isLayoutStyle];
 }
 
 -(void)setMessagesViewController:(MessagesViewController *)messagesViewController {
@@ -113,13 +180,27 @@ static NSMutableDictionary *stickers;
 }
 
 -(void)show {
+    
+    BOOL needShowStickers = [[NSUserDefaults standardUserDefaults] boolForKey:@"needShowStickers"];
+    
     [self.navigationViewController clear];
-    [self.navigationViewController pushViewController:_emojiViewController animated:NO];
+    [self.navigationViewController pushViewController:!needShowStickers ? _emojiViewController : _sgViewController animated:NO];
 }
 
 -(void)showSGController:(BOOL)animated {
+    [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"needShowStickers"];
     [self.navigationViewController pushViewController:_sgViewController animated:YES];
+    
+}
 
+-(void)showEmojiViewController:(BOOL)animated {
+    [[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"needShowStickers"];
+    
+    if([self.navigationViewController.viewControllerStack indexOfObject:_emojiViewController] == NSNotFound) {
+        [self.navigationViewController.viewControllerStack insertObject:_emojiViewController atIndex:0];
+    }
+    
+    [self.navigationViewController goBackWithAnimation:YES];
 }
 
 -(void)close {

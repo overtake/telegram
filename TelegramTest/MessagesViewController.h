@@ -42,6 +42,7 @@ typedef enum {
 @property (nonatomic, strong) NSMutableArray *selectedMessages;
 @property (nonatomic, strong,readonly) MessagesTableView *table;
 @property (nonatomic, strong) MessagesBottomView *bottomView;
+@property (nonatomic,strong,readonly) TGInputMessageTemplate * editTemplate;
 
 
 typedef enum {
@@ -94,7 +95,7 @@ typedef enum {
 - (void)updateLoading;
 - (MessageTableItem *)objectAtIndex:(NSUInteger)position;
 - (NSUInteger)indexOfObject:(MessageTableItem *)item;
-- (MessageTableItem *)itemOfMsgId:(long)msg_id;
+- (MessageTableItem *)itemOfMsgId:(long)msg_id randomId:(long)randomId;
 
 +(NSMenu *)destructMenu:(dispatch_block_t)ttlCallback click:(dispatch_block_t)click;
 +(NSMenu *)notifications:(dispatch_block_t)callback conversation:(TL_conversation *)conversation click:(dispatch_block_t)click;
@@ -116,8 +117,6 @@ typedef enum {
 
 -(void)showBotStartButton:(NSString *)startParam bot:(TLUser *)bot;
 
--(void)addReplayMessage:(TL_localMessage *)message animated:(BOOL)animated;
--(void)removeReplayMessage:(BOOL)update animated:(BOOL)animated;
 
 
 
@@ -160,6 +159,8 @@ typedef enum {
 
 -(void)showSearchBox;
 -(BOOL)searchBoxIsVisible;
+-(void)nextSearchResult;
+-(void)prevSearchResult;
 
 -(NSArray *)messageList;
 
@@ -174,13 +175,7 @@ typedef enum {
 -(void)performForward:(TL_conversation *)conversation;
 
 -(void)checkWebpage:(NSString *)link;
--(void)removeWebpage;
--(void)updateWebpage;
 
-
--(void)clearNoWebpage;
--(void)markAsNoWebpage;
--(BOOL)noWebpage:(NSString *)message;
 
 -(void)showOrHideChannelDiscussion;
 
@@ -193,9 +188,13 @@ typedef enum {
 -(TGMessagesHintView *)hintView;
 
 -(void)setEditableMessage:(TL_localMessage *)message;
-
+-(void)forceSetEditSentMessage:(BOOL)rollback;
 -(TGInputMessageTemplateType)templateType;
 
+-(void)showOrHideESGController:(BOOL)animated toggle:(BOOL)toggle;
+-(BOOL)isShownESGController;
+-(BOOL)canShownESGController;
 
+-(BOOL)proccessEscAction;
 
 @end

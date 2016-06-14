@@ -44,6 +44,11 @@
         self.wantsLayer = YES;
         self.gradientLayer.contentsScale = self.layer.contentsScale;
         [self setLayer:self.gradientLayer];
+        
+        [item addObserver:self
+               forKeyPath:@"image"
+                  options:0
+                  context:NULL];
 
         _textAttr = [[NSMutableAttributedString alloc] init];
         [_textAttr appendString:item.title withColor:TEXT_COLOR];
@@ -75,9 +80,20 @@
         
         [self handleStateChange];
         
+        
         [self addTarget:self action:@selector(click) forControlEvents:BTRControlEventLeftClick];
     }
     return self;
+}
+
+-(void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
+    
+    [self handleStateChange];
+    
+}
+
+-(void)dealloc {
+    [_item removeObserver:self forKeyPath:@"image"];
 }
 
 -(NSString *)title {
@@ -183,7 +199,7 @@
 @implementation TMMenuController
 
 - (id)initWithMenu:(NSMenu *)menu {
-    self = [super initWithFrame:NSMakeRect(0, 0, 250, MIN(menu.itemArray.count * 36 + 16,372))];
+    self = [super initWithFrame:NSMakeRect(0, 0, 250, MIN(menu.itemArray.count * 36 + (menu.itemArray.count > 4 ? 26 : 8),196))];
     if(self) {
         self.menuController = menu;
         _selectedIndex = -1;
@@ -202,7 +218,7 @@
     [super loadView];
     
     
-    _scrollView = [[BTRScrollView alloc] initWithFrame:NSMakeRect(0, 4, NSWidth(self.view.frame) , NSHeight(self.view.frame)-4 )];
+    _scrollView = [[BTRScrollView alloc] initWithFrame:NSMakeRect(4, 4, NSWidth(self.view.frame) -8, NSHeight(self.view.frame)-8 )];
     _documentView = [[TMView alloc] initWithFrame:_scrollView.bounds];
     
     [self.view addSubview:_scrollView];

@@ -36,4 +36,7 @@
 
 -(void)_didScrolledTableView:(NSNotification *)notification;
 
+-(void)setSelected:(BOOL)selected animated:(BOOL)animated;
+
+
 @end

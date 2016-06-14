@@ -27,8 +27,7 @@
                 current.last_real_message_date = dialog.last_real_message_date;
                 current.dstate = dialog.dstate;
                 current.read_inbox_max_id = dialog.read_inbox_max_id;
-                current.top_important_message = dialog.top_important_message;
-                current.unread_important_count = dialog.unread_important_count;
+                current.read_outbox_max_id = dialog.read_outbox_max_id;
                 current.invisibleChannel = dialog.invisibleChannel;
                 current.lastMessage = dialog.lastMessage;
             } else {

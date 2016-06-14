@@ -12,8 +12,13 @@
 #import "TGStickerPackModalView.h"
 #import "TGStickerPreviewModalView.h"
 #import "TGModernESGViewController.h"
+#import "SpacemanBlocks.h"
 @interface MessageTableCellStickerView ()
+{
+    SMDelayedBlockHandle _longHandle;
+}
 @property (nonatomic,strong) TGImageView *imageView;
+
 @end
 
 @implementation MessageTableCellStickerView
@@ -81,13 +86,28 @@
         [super mouseDown:theEvent];
     else if(![self.containerView mouse:[self.containerView convertPoint:[theEvent locationInWindow] fromView:nil] inRect:self.imageView.frame]) {
         [super mouseDown:theEvent];
+    } else {
+        _longHandle = perform_block_after_delay(0.3, ^{
+            
+            TGStickerPreviewModalView *preview = [[TGStickerPreviewModalView alloc] init];
+            
+            [preview setSticker:self.item.message.media.document];
+            
+            [preview show:self.window animated:YES];
+            
+            
+        });
     }
+    
+    
+    
     
 }
 
 
 -(void)mouseUp:(NSEvent *)theEvent {
     
+    cancel_delayed_block(_longHandle);
     
     if(self.isEditable)
         [super mouseUp:theEvent];

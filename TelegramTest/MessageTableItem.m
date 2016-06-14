@@ -69,10 +69,12 @@ static NSCache *cItems;
     if(self) {
         self.message = object;
         
-        if(self.message.media.caption.length > 0) {
+        if(self.message.media.caption.length > 0 || (self.message.media != nil && ![self.message.media isKindOfClass:[TL_messageMediaEmpty class]] && ![self.message.media isKindOfClass:[TL_messageMediaWebPage class]] && self.message.message.length > 0)) {
             NSMutableAttributedString *c = [[NSMutableAttributedString alloc] init];
             
-            [c appendString:[[self.message.media.caption trim] fixEmoji] withColor:TEXT_COLOR];
+            NSString *caption = self.message.media.caption.length > 0 ? self.message.media.caption : self.message.message;
+            
+            [c appendString:[[caption trim] fixEmoji] withColor:TEXT_COLOR];
             
             [c setFont:TGSystemFont(13) forRange:c.range];
             
@@ -177,9 +179,9 @@ static NSCache *cItems;
             
             [self headerStringBuilder];
             
-            if(self.message.isPost) {
+          //  if(self.message.isPost) {
                 [self updateViews];
-            }
+          //  }
             
         }
         
@@ -388,6 +390,8 @@ static NSTextAttachment *channelViewsCountAttachment() {
     assert(viewSize.height > 0);
     
     
+    
+    
     if([self.message.action isKindOfClass:[TL_messageActionChatMigrateTo class]]) {
         viewSize.height = 1;
     }
@@ -439,8 +443,11 @@ static NSTextAttachment *channelViewsCountAttachment() {
     id objectReturn = nil;
 
     
+    
     @try {
         if(message.class == [TL_localMessage_old46 class] || message.class == [TL_localMessage class] || message.class == [TL_localMessage_old32 class] || message.class == [TL_localMessage_old34 class] || message.class == [TL_localMessage_old44 class] || message.class == [TL_destructMessage class] || message.class == [TL_destructMessage45 class]) {
+            
+           
             
             if((message.media == nil || [message.media isKindOfClass:[TL_messageMediaEmpty class]]) || [message.media isMemberOfClass:[TL_messageMediaWebPage class]]) {
                 
@@ -527,6 +534,10 @@ static NSTextAttachment *channelViewsCountAttachment() {
         } else if(message.hole != nil) {
             objectReturn = [[MessageTableItemHole alloc] initWithObject:message];
         } else if([message isKindOfClass:[TL_localMessageService class]] || [message isKindOfClass:[TL_secretServiceMessage class]] || [message isKindOfClass:[TL_localMessageService_old48 class]]) {
+            
+            if([message.action isKindOfClass:[TL_messageActionHistoryClear class]])
+                return nil;
+            
             
             if([message.action isKindOfClass:[TL_messageActionPinMessage class]]) {
                 objectReturn = [[MessageTableItemPinned alloc] initWithObject:message];
@@ -618,7 +629,22 @@ static NSTextAttachment *channelViewsCountAttachment() {
     
     NSDate *date = [NSDate dateWithTimeIntervalSince1970:self.message.date];
     
-    self.fullDate = [formatter stringFromDate:date];
+    
+   
+    
+    
+    NSString *fullDate = [formatter stringFromDate:date];
+    
+    if(self.message.edit_date > 0 && self.message.via_bot_id == 0) {
+        NSDateFormatter *formatterEdited = [NSDateFormatter new];
+        
+        [formatterEdited setDateStyle:NSDateFormatterShortStyle];
+        [formatterEdited setTimeStyle:NSDateFormatterShortStyle];
+        
+        fullDate = [NSString stringWithFormat:@"%@ (%@)",fullDate,[formatterEdited stringFromDate:[NSDate dateWithTimeIntervalSince1970:self.message.edit_date]]];
+    }
+    
+    self.fullDate = fullDate;
 }
 
 -(void)buildRightSize {
@@ -630,7 +656,7 @@ static NSTextAttachment *channelViewsCountAttachment() {
     
     int w = _dateSize.width +selectSize + selectOffset + sendingUnreadReadSize + sendingUnreadReadOffset;
     
-    if(!self.message.n_out && !self.message.isPost) {
+    if(!self.message.n_out && !self.message.isPost && (self.message.edit_date == 0 || self.message.via_bot_id != 0)) {
         w = _dateSize.width + selectSize + selectOffset;
     }
     
@@ -750,20 +776,33 @@ static NSTextAttachment *channelViewsCountAttachment() {
 -(BOOL)updateViews {
     
     NSAttributedString *o = _viewsCountAndSign;
-    
+
     NSMutableAttributedString *signString = [[NSMutableAttributedString alloc] init];
+
+    if(self.message.isPost) {
+        
+        
+        NSRange range = [signString appendString:[@(MAX(1,self.message.views)) prettyNumber] withColor:GRAY_TEXT_COLOR];
+        
+        if(self.message.isPost && self.message.from_id != 0) {
+            [signString appendString:@" "];
+            range = [signString appendString:_user.fullName withColor:GRAY_TEXT_COLOR];
+            
+        }
+        
+        if(self.message.edit_date > 0 && self.message.via_bot_id == 0) {
+            [signString appendString:@" "];
+        }
+       
+    }
     
-    NSRange range = [signString appendString:[@(MAX(1,self.message.views)) prettyNumber] withColor:GRAY_TEXT_COLOR];
-    
-    if(self.message.isPost && self.message.from_id != 0) {
-        [signString appendString:@" "];
-        range = [signString appendString:_user.fullName withColor:GRAY_TEXT_COLOR];
-      //  [signString setLink:[TMInAppLinks peerProfile:[TL_peerUser createWithUser_id:_user.n_id]] forRange:range];
+    if(self.message.edit_date != 0 && (!self.message.isPost || self.message.from_id == 0) && self.message.via_bot_id == 0) {
+        [signString appendString:NSLocalizedString(@"Message.Edited", nil) withColor:GRAY_TEXT_COLOR];
     }
     
     [signString setFont:TGSystemFont(12) forRange:signString.range];
     
-     _viewsCountAndSignOriginalSize = _viewsCountAndSignSize = [signString coreTextSizeOneLineForWidth:INT32_MAX];
+    _viewsCountAndSignOriginalSize = _viewsCountAndSignSize = [signString coreTextSizeOneLineForWidth:INT32_MAX];
     
     _viewsCountAndSign = signString;
     

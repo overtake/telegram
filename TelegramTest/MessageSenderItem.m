@@ -26,6 +26,8 @@
         
         NSMutableArray *entities = [NSMutableArray array];
         
+        self.message.message = [MessageSender parseCustomMentions:self.message.message entities:entities];
+        
         self.message.message = [MessageSender parseEntities:self.message.message entities:entities backstrips:@"```" startIndex:0];
         
         self.message.message = [MessageSender parseEntities:self.message.message entities:entities backstrips:@"`" startIndex:0];

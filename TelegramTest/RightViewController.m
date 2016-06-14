@@ -356,8 +356,10 @@
         
         [appWindow().navigationController showMessagesViewController:dialog];
         
-        [Notification perform:UPDATE_MESSAGE_TEMPLATE data:@{@"text":text,KEY_PEER_ID:@(dialog.peer_id)}];
-        
+        TGInputMessageTemplate *template = [[TGInputMessageTemplate templateWithType:TGInputMessageTemplateTypeSimpleText ofPeerId:dialog.peer_id] copy];
+        [template updateTextAndSave:text];
+        [Notification perform:UPDATE_MESSAGE_TEMPLATE data:@{KEY_TEMPLATE:template,KEY_PEER_ID:@(dialog.peer_id)}];
+                
         [self hideModalView:YES animation:YES];
         
     } else  {

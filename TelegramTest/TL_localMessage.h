@@ -40,11 +40,17 @@ typedef enum {
 
 @property (nonatomic,strong) TGMessageHole *hole;
 
+@property (nonatomic,strong) TLUser *via_bot_user;
+
+
+
 -(NSUserNotification *)userNotification;
 @property (nonatomic, strong) TL_localMessage *replyMessage;
 
 -(void)save:(BOOL)updateConversation;
 -(void)saveViews;
+
+-(BOOL)canEdit;
 
 +(TL_localMessage *)convertReceivedMessage:(TLMessage *)msg;
 +(void)convertReceivedMessages:(NSMutableArray *)messages;

@@ -285,13 +285,17 @@
     
     NSPoint pos = [self.containerView convertPoint:[theEvent locationInWindow] fromView:nil];
     
-    NSRect rect = _waveformView.frame;
-
-    if(self.acceptTimeChanger) {
+    
+    if(pos.x > NSMinX(_waveformView.frame)) {
+        NSRect rect = _waveformView.frame;
         
-        [self changeTime:pos rect:rect];
-
+        if(self.acceptTimeChanger) {
+            
+            [self changeTime:pos rect:rect];
+            
+        }
     }
+    
 }
 
 - (void)changeTime:(NSPoint)pos rect:(NSRect)rect {

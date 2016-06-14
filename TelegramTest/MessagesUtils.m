@@ -191,7 +191,7 @@
     
     
     [messageText beginEditing];
-    if(message) {
+    if(message && ![message.action isKindOfClass:[TL_messageActionHistoryClear class]]) {
         
         NSString *msgText = @"";
         NSMutableArray *users = [NSMutableArray array];
@@ -223,7 +223,6 @@
              if(message.conversation.type != DialogTypeSecretChat && userLast)
                 chatUserNameString = userLast ? userLast.fullName : NSLocalizedString(@"MessageAction.Service.LeaveChat", nil);
 
-            
             
             TLMessageAction *action = message.action;
             if([action isKindOfClass:[TL_messageActionChatEditTitle class]]) {
@@ -299,9 +298,16 @@
             
         }
         
-        if(chatUserNameString)
-            [messageText appendString:chatUserNameString withColor:!message.action ? DARK_BLACK : GRAY_TEXT_COLOR];
         
+        if(conversation.draft.message.length > 0 && ACCEPT_FEATURE && conversation.unread_count == 0) {
+            [messageText appendString:[NSLocalizedString(@"Conversation.Draft", nil) stringByAppendingString:@"\n"] withColor:[NSColor redColor]];
+            [messageText setSelectionColor:[NSColor whiteColor] forColor:[NSColor redColor]];
+        } else {
+            if(chatUserNameString)
+                [messageText appendString:chatUserNameString withColor:!message.action ? DARK_BLACK : GRAY_TEXT_COLOR];
+        }
+        
+
         if(!message.action) {
             if(message.media && ![message.media isKindOfClass:[TL_messageMediaEmpty class]] && ![message.media isKindOfClass:[TL_messageMediaWebPage class]]) {
                 msgText = [MessagesUtils mediaMessage:message];
@@ -317,6 +323,10 @@
         msgText = [msgText stringByReplacingOccurrencesOfString:@"\n" withString:@" "];
         
         msgText = [msgText fixEmoji];
+        
+        if(conversation.draft.message.length > 0 && ACCEPT_FEATURE && conversation.unread_count == 0) {
+            msgText = conversation.draft.message;
+        }
         
         if(msgText) {
             [messageText appendString:msgText withColor:GRAY_TEXT_COLOR];
@@ -602,6 +612,20 @@
         
         if(message.media.document.isVoice) {
             return NSLocalizedString(@"ChatMedia.Voice", nil);
+        }
+        if(message.media.document.isAudio) {
+            
+            TL_documentAttributeAudio *audio = ( TL_documentAttributeAudio *) [message.media.document attributeWithClass:[TL_documentAttributeAudio class]];
+            
+            NSString *perfomer = [audio.performer trim];
+            NSString *title = [audio.title trim];
+            
+            NSString *result = NSLocalizedString(@"ChatMedia.File", nil);
+            if(perfomer.length > 0 || title.length > 0) {
+                result = [NSString stringWithFormat:@"%@ — %@",perfomer,title];
+            }
+            
+            return result;
         }
         
         return [message.media.document isSticker] ? (((TL_documentAttributeSticker *)[message.media.document attributeWithClass:[TL_documentAttributeSticker class]]).alt.length > 0 ? [NSString stringWithFormat:@"%@ %@",((TL_documentAttributeSticker *)[message.media.document attributeWithClass:[TL_documentAttributeSticker class]]).alt,NSLocalizedString(@"Sticker", nil)] : NSLocalizedString(@"Sticker", nil)) : (message.media.document.file_name.length == 0 ? NSLocalizedString(@"ChatMedia.File", nil) : message.media.document.file_name);

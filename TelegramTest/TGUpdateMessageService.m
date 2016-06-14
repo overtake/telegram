@@ -152,7 +152,7 @@
     
     
     if([incomingMessage isKindOfClass:[TL_gzip_packed class]] ||
-           [incomingMessage isKindOfClass:[TL_messages_affectedMessages class]])
+           [incomingMessage isKindOfClass:[TL_messages_affectedMessages class]] || [incomingMessage isKindOfClass:[TL_messages_affectedHistory class]])
             [self addMessageToQueueAndScheduleProcessing:incomingMessage];
 }
 

@@ -21,14 +21,14 @@ typedef enum {
     HistoryFilterPhoto = 1 << 3,
     HistoryFilterVideo = 1 << 4,
     HistoryFilterAudio = 1 << 5,
-    HistoryFilterDocuments = 1 << 6,
     HistoryFilterText = 1 << 7,
     HistoryFilterContact = 1 << 8,
     HistoryFilterSearch = 1 << 9,
     HistoryFilterAudioDocument = 1 << 10,
     HistoryFilterSharedLink = 1 << 11,
-    HistoryFilterChannelMessage = 1 << 12,
-    HistoryFilterImportantChannelMessage = 1 << 13
+    HistoryFilterChannelMessage = 12288, //1 << 12 | 1 << 13,
+    HistoryFilterDocuments = 1 << 14,
+    HistoryFilterChatPhoto = 1 << 15,
 } HistoryFilterType;
 
 typedef enum {
@@ -40,8 +40,8 @@ typedef enum {
 
 
 
-@property (nonatomic,assign) ChatHistoryState prevState;
-@property (nonatomic,assign) ChatHistoryState nextState;
+@property (atomic,assign) ChatHistoryState prevState;
+@property (atomic,assign) ChatHistoryState nextState;
 
 @property (nonatomic,weak) ChatHistoryController *controller;
 @property (nonatomic,strong,readonly) TLPeer *peer;

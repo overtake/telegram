@@ -69,7 +69,7 @@
     _item = item;
     _container = container;
     
-    if(item.message.n_out || self.item.message.isPost) {
+    if(item.message.n_out || self.item.message.isPost || self.item.message.edit_date > 0) {
         
         if(!_stateLayer) {
             _stateLayer = [[MessageStateLayer alloc] initWithFrame:NSZeroRect];
@@ -90,6 +90,8 @@
     
     [self setEditable:_container.isEditable animated:NO];
     [self setSelected:item.isSelected animated:NO];
+    
+    [self setToolTip:item.fullDate];
     
 }
 

@@ -29,10 +29,11 @@
     NSRectFill(NSMakeRect(0, 0, 2, NSHeight(self.frame)));
 }
 
--(id)initWithFrame:(NSRect)frameRect webpage:(TLWebPage *)webpage link:(NSString *)link {
+-(id)initWithFrame:(NSRect)frameRect webpage:(TLWebPage *)webpage link:(NSString *)link inputTemplate:(TGInputMessageTemplate *)inputTemplate {
     if(self = [super initWithFrame:frameRect]) {
         _webpage = webpage;
         _link = link;
+        _inputTemplate = inputTemplate;
         
         _titleField = [TMTextField defaultTextField];
         _stateField = [TMTextField defaultTextField];
@@ -60,10 +61,13 @@
         
         _deleteImageView.image = image_CancelReply();
         
+        weak();
         
         [_deleteImageView setCallback:^{
-            
-            [appWindow().navigationController.messagesViewController markAsNoWebpage];
+            TGInputMessageTemplate *cpy = [weakSelf.inputTemplate copy];
+            cpy.disabledWebpage = weakSelf.link;
+            [cpy saveForce];
+            [cpy performNotification];
             
         }];
         
@@ -120,7 +124,7 @@
     
     if([_webpage isKindOfClass:[TL_webPageEmpty class]]) {
         
-        [[Telegram rightViewController].messagesViewController updateWebpage];
+        [[_inputTemplate copy] performNotification];
         
         return;
     }

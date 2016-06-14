@@ -47,6 +47,13 @@
 static const int navigationHeight = 48;
 static const int navigationOffset = 48;
 
+-(int)navigationOffset {
+    return navigationOffset;
+}
+
+-(int)viewControllerTopOffset {
+    return 0;
+}
 
 - (void)initNavigationController {
     self.viewControllerStack = [[NSMutableArray alloc] init];
@@ -299,11 +306,13 @@ static const int navigationOffset = 48;
     MTLog(@"navigation controller isAnimate = %@", isAnimate ? @"YES" : @"NO");
     assert([NSThread isMainThread]);
     
+    [oldViewController viewWillDisappear:NO];
+
     
     if(newViewController.isNavigationBarHidden) {
-        [newView setFrameSize:NSMakeSize(self.view.bounds.size.width, self.view.bounds.size.height)];
+        [newView setFrameSize:NSMakeSize(self.view.bounds.size.width, self.view.bounds.size.height - self.viewControllerTopOffset)];
     } else {
-        [newView setFrameSize:NSMakeSize(self.view.bounds.size.width, self.view.bounds.size.height - navigationOffset)];
+        [newView setFrameSize:NSMakeSize(self.view.bounds.size.width, self.view.bounds.size.height - navigationOffset - self.viewControllerTopOffset)];
     }
     
     
@@ -325,7 +334,6 @@ static const int navigationOffset = 48;
         
         [newView setHidden:NO];
         
-        [oldViewController viewWillDisappear:NO];
         [newViewController viewWillAppear:NO];
         [self.containerView addSubview:newView positioned:NSWindowAbove relativeTo:oldView];
         
@@ -362,7 +370,6 @@ static const int navigationOffset = 48;
     
         float duration = 0.25;
         
-        [oldViewController viewWillDisappear:NO];
         [newViewController viewWillAppear:NO];
         
         float animOldFrom,animOldTo,animNewTo,animNewFrom = 0;
@@ -712,6 +719,14 @@ static const int navigationOffset = 48;
     [self.messagesViewController setCurrentConversation:conversation withMessageJump:message];
     
     [self gotoViewController:self.messagesViewController];
+    
+}
+
+
+-(void)hideInlinePlayer:(TGAudioGlobalController *)controller {
+    
+}
+-(void)showInlinePlayer:(TGAudioGlobalController *)controller {
     
 }
 

@@ -262,7 +262,7 @@
         [_userFull.bot_info.commands enumerateObjectsUsingBlock:^(TL_botCommand *obj, NSUInteger idx, BOOL * _Nonnull stop) {
             
             if([obj.command hasPrefix:@"help"]) {
-                command = obj.command;
+              //  command = obj.command;
                 canHelp = YES;
                 *stop = YES;
             }

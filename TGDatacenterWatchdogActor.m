@@ -141,13 +141,22 @@
     
     [request setCompleted:^(TL_config *result, __unused NSTimeInterval timestamp, id error)
     {
-        [ASQueue dispatchOnStageQueue:^{
-            __strong TGDatacenterWatchdogActor *strongSelf = weakSelf;
-            if (error == nil)
-            {
-                [strongSelf processConfig:result fromDatacenterId:datacenterId];
-            }
-        }];
+        
+        if(![result isKindOfClass:[RpcError class]]) {
+            [ASQueue dispatchOnStageQueue:^{
+                __strong TGDatacenterWatchdogActor *strongSelf = weakSelf;
+                if (error == nil)
+                {
+                    @try {
+                        [strongSelf processConfig:result fromDatacenterId:datacenterId];
+                    } @catch (NSException *exception) {
+                        
+                    }
+                }
+            }];
+        }
+        
+        
     }];
     
     [requestService addRequest:request];
@@ -155,11 +164,17 @@
 
 - (void)processConfig:(TL_config *)config fromDatacenterId:(NSInteger)datacenterId
 {
+ 
+    if(![config isKindOfClass:[TLConfig class]])
+        return;
+    
+    
     MTContext *context = [[MTNetwork instance] context];
     
     setMaxChatUsers(config.chat_size_max-1);
     setMegagroupSizeMax(config.megagroup_size_max);
     set_edit_time_limit(config.edit_time_limit);
+    set_rating_e_decay(config.rating_e_decay);
     
 #if TARGET_IPHONE_SIMULATOR
     NSMutableArray *dcOptions = [[NSMutableArray alloc] init];

@@ -9,14 +9,11 @@
 #import "TMBottomScrollView.h"
 #import "TGCalendarView.h"
 #import "MessageTableItem.h"
+#import "TGCirclularCounter.h"
 @interface TMBottomScrollView ()<MLCalendarViewDelegate>
-@property (nonatomic, strong) NSAttributedString *messagesCountAttributedString;
+@property (nonatomic,strong) TGCirclularCounter *circularCounter;
 
-@property (strong) NSPopover* calendarPopover;
-@property (strong) TGCalendarView*calendarView;
-@property (weak) IBOutlet NSDateFormatter *dateFormatter;
 
-@property (nonatomic,strong) BTRButton *calendarButton;
 @end
 
 @implementation TMBottomScrollView
@@ -25,186 +22,71 @@
     self = [super initWithFrame:frame];
     if (self) {
         
+        
+        self.wantsLayer = YES;
+        
         self.layerContentsPlacement = NSViewLayerContentsPlacementScaleAxesIndependently;
         self.layerContentsRedrawPolicy = NSViewLayerContentsRedrawOnSetNeedsDisplay;
         
+        
+        _circularCounter = [[TGCirclularCounter alloc] initWithFrame:NSMakeRect(0, 0, 44, 44)];
+        
+        _circularCounter.textFont = TGSystemFont(13);
+        _circularCounter.textColor = [NSColor whiteColor];
+        _circularCounter.backgroundColor = NSColorFromRGB(0x5098d3);
+        
+        [_circularCounter setHidden:YES];
+        
+        [self addSubview:_circularCounter];
+        
         [self addTarget:self action:@selector(clickHandler) forControlEvents:BTRControlEventLeftClick];
         
-      //  [self setCursor:[NSCursor pointingHandCursor] forControlState:BTRControlStateNormal];
         
-        [self setMessagesCount:32];
+        [self dropCounter];
         
-        _calendarButton = [[BTRButton alloc] initWithFrame:NSMakeRect(NSWidth(frame) - 25, 0, 20, 20)];
-        
-        [_calendarButton setCenteredYByView:self];
-        
-        [_calendarButton setImage:image_CalendarIcon() forControlState:BTRControlStateNormal];
-        
-//        _calendarButton.wantsLayer = YES;
-//        _calendarButton.layer.cornerRadius = 4;
-//        _calendarButton.layer.borderColor = DIALOG_BORDER_COLOR.CGColor;
-//        _calendarButton.layer.borderWidth = 2;
-        
-       
-        
-        weak();
-        
-        [_calendarButton addBlock:^(BTRControlEvents events) {
-            [weakSelf showCalendar];
-        } forControlEvents:BTRControlEventClick];
-        
-        [self addSubview:_calendarButton];
+
     }
     return self;
 }
 
--(void)addScrollEvent {
-    id clipView = [[self.messagesViewController.table enclosingScrollView] contentView];
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(_didScrolledTableView:)
-                                                 name:NSViewBoundsDidChangeNotification
-                                               object:clipView];
-    
+-(void)dropCounter {
+    _circularCounter.animated = NO;
+    _circularCounter.stringValue = @"1";
+    _circularCounter.animated = YES;
 }
+
 
 -(void)setMessagesViewController:(MessagesViewController *)messagesViewController {
     _messagesViewController = messagesViewController;
-    [self addScrollEvent];
 }
 
--(void)dealloc {
-    [Notification removeObserver:self];
-}
 
--(void)removeScrollEvent {
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
-}
-
--(void)_didScrolledTableView:(NSNotification *)notification {
-    
-    if(self.calendarPopover.isShown) {
-        NSRange range = [_messagesViewController.table rowsInRect:[_messagesViewController.table visibleRect]];
-        
-        __block MessageTableItem *item;
-        
-        [_messagesViewController.messageList enumerateObjectsAtIndexes:[NSIndexSet indexSetWithIndexesInRange:range] options:NSEnumerationReverse usingBlock:^(MessageTableItem *obj, NSUInteger idx, BOOL * _Nonnull stop) {
-            
-            if(obj.message != nil) {
-                item = obj;
-                *stop = YES;
-            }
-            
-        }];
-        
-        NSDate* date = [NSDate dateWithTimeIntervalSince1970:item.message.date];
-        self.calendarView.date = date;
-        self.calendarView.selectedDate = date;
-
-    }
-}
 
 -(void)setHidden:(BOOL)flag {
-    [super setHidden:flag];
+   
     
-    if(self.isHidden) {
-        [self.calendarPopover close];
-    }
-  
-    [_calendarButton setHidden:_messagesViewController.conversation.type == DialogTypeChannel && !_messagesViewController.conversation.chat.isMegagroup];
-
+    [NSAnimationContext runAnimationGroup:^(NSAnimationContext * _Nonnull context) {
+        
+        [self.animator setAlphaValue:flag ? 0.0 : 1.0];
+        
+    } completionHandler:^{
+         [super setHidden:flag];
+    }];
     
     if(flag) {
         [self setMessagesCount:0];
+        [self dropCounter];
         [self sizeToFit];
     }
     
-
-
-    
 }
 
-- (void) createCalendarPopover {
-    NSPopover* myPopover = self.calendarPopover;
-    if(!myPopover) {
-        myPopover = [[NSPopover alloc] init];
-        self.calendarView = [[TGCalendarView alloc] init];
-        self.calendarView.delegate = self;
-        myPopover.contentViewController = self.calendarView;
-     //   myPopover.appearance = [NSAppearance appearanceNamed:NSAppearanceNameAqua];
-     //   myPopover.animates = YES;
-        myPopover.behavior = NSPopoverBehaviorTransient;
-    }
-    self.calendarPopover = myPopover;
-}
-
-- (void)showCalendar {
-    [self createCalendarPopover];
-    
-   NSRect cellRect = [_calendarButton bounds];
-    [self.calendarPopover showRelativeToRect:cellRect ofView:_calendarButton preferredEdge:NSMaxYEdge];
-    
-    [self _didScrolledTableView:nil];
-}
-
-
-
-- (void) didSelectDate:(NSDate *)selectedDate {
-    [self.calendarPopover close];
-    
-    assert(_messagesViewController != nil);
-    
-    [self.messagesViewController showModalProgress];
-    
-    
-    
-    selectedDate = [NSDate dateWithTimeIntervalSince1970:selectedDate.timeIntervalSince1970];
-    id request;
-    
-   
-    
-    if(_messagesViewController.conversation.type == DialogTypeChannel && !_messagesViewController.conversation.chat.isMegagroup) {
-        request = [TLAPI_channels_getImportantHistory createWithChannel:_messagesViewController.conversation.chat.inputPeer offset_id:0 offset_date:selectedDate.timeIntervalSince1970- [[MTNetwork instance] globalTimeOffsetFromUTC] add_offset:-100 limit:100 max_id:INT32_MAX min_id:0];
-    } else {
-        request = [TLAPI_messages_getHistory createWithPeer:_messagesViewController.conversation.inputPeer offset_id:0 offset_date:selectedDate.timeIntervalSince1970 - [[MTNetwork instance] globalTimeOffsetFromUTC] add_offset:-100 limit:100 max_id:INT32_MAX min_id:0];
-    }
-    
-    
-    
-    [RPCRequest sendRequest:request successHandler:^(id request, TL_messages_messages *response) {
-        
-        [TL_localMessage convertReceivedMessages:response.messages];
-        
-        if(response.messages.count > 0) {
-            [[Storage manager] addHolesAroundMessage:[response.messages firstObject]];
-            [[Storage manager] addHolesAroundMessage:[response.messages lastObject]];
-            
-            [SharedManager proccessGlobalResponse:response];
-            
-            __block TL_localMessage *jumpMessage = [response.messages lastObject];
-            
-            
-            [self.messagesViewController showMessage:jumpMessage fromMsg:nil flags:ShowMessageTypeDateJump];
-            [self.messagesViewController hideModalProgressWithSuccess];
-
-        } else {
-            [self.messagesViewController hideModalProgress];
-        }
-        
-       
-        
-    } errorHandler:^(id request, RpcError *error) {
-        [self.messagesViewController hideModalProgress];
-    } timeout:10];
-    
-}
 
 - (void)clickHandler {
-    
 
-    
     if(_callback) {
-        [self setHidden:YES];
         _callback();
+        [self setHidden:YES];
     }
 }
 
@@ -217,14 +99,17 @@
         return;
     
     self->_messagesCount = messagesCount;
-    if(messagesCount) {
-        self.messagesCountAttributedString = [[NSAttributedString alloc] initWithString:[NSString stringWithFormat:NSLocalizedString(messagesCount == 1 ? @"Messages.scrollToBottomNewMessage" : @"Messages.scrollToBottomNewMessages", nil), messagesCount] attributes:@{NSFontAttributeName: TGSystemFont(14), NSForegroundColorAttributeName: BLUE_UI_COLOR}];
-    } else {
-        self.messagesCountAttributedString = nil;
-    }
+    
+    [_circularCounter setHidden:messagesCount == 0];
+    
+    if(messagesCount > 0)
+        _circularCounter.stringValue = [NSString stringWithFormat:@"%d",messagesCount];
+    
     
     [self setNeedsDisplay:YES];
 }
+
+
 
 - (void)drawRect:(NSRect)dirtyRect {
     [super drawRect:dirtyRect];
@@ -232,79 +117,89 @@
     CGContextRef context = [NSGraphicsContext currentContext].graphicsPort;
     [NSGraphicsContext saveGraphicsState];
     CGContextSetShouldSmoothFonts(context, TRUE);
-
     
     
-    //ROMANOV BUGFIX
-    NSRect rect = NSMakeRect(1, 1, self.bounds.size.width - 2, self.bounds.size.height - 2);
-    int radius = 3;
+    int width = 42;
     
-    CGMutablePathRef pathRef = CGPathCreateMutable();
-
-    CGPathMoveToPoint(pathRef, NULL, rect.origin.x, rect.origin.y + radius);
-    CGPathAddLineToPoint(pathRef, NULL, rect.origin.x, rect.origin.y + rect.size.height - radius);
-    CGPathAddArc(pathRef, NULL, rect.origin.x + radius, rect.origin.y + rect.size.height - radius, radius, M_PI, M_PI / 2, 1); //STS fixed
-    CGPathAddLineToPoint(pathRef, NULL, rect.origin.x + rect.size.width - radius, rect.origin.y + rect.size.height);
-    CGPathAddArc(pathRef, NULL, rect.origin.x + rect.size.width - radius, rect.origin.y + rect.size.height - radius, radius, M_PI / 2, 0.0f, 1);
-    CGPathAddLineToPoint(pathRef, NULL, rect.origin.x + rect.size.width, rect.origin.y + radius);
-    CGPathAddArc(pathRef, NULL, rect.origin.x + rect.size.width - radius, rect.origin.y + radius, radius, 0.0f, -M_PI / 2, 1);
-    CGPathAddLineToPoint(pathRef, NULL, rect.origin.x + radius, rect.origin.y);
-    CGPathAddArc(pathRef, NULL, rect.origin.x + radius, rect.origin.y + radius, radius, -M_PI / 2, M_PI, 1);
-    
-    CGPathCloseSubpath(pathRef);
-    CGContextAddPath(context, pathRef);
+    NSBezierPath *path = [NSBezierPath bezierPathWithRoundedRect:NSMakeRect(1, 1, width, width) xRadius:width/2.0 yRadius:width/2.0];
     
     NSColor *fillColor = self.isHover ? NSColorFromRGB(0xffffff) : NSColorFromRGB(0xfdfdfd);
     NSColor *strokeColor = GRAY_BORDER_COLOR;
     
-    CGContextSetRGBFillColor(context, fillColor.redComponent, fillColor.greenComponent, fillColor.blueComponent, self.isHover ?  1.f : 0.96f);
-    CGContextAddPath(context, pathRef);
-    CGContextFillPath(context);
+    [fillColor setFill];
+    [strokeColor setStroke];
     
-    CGContextSetRGBStrokeColor(context, strokeColor.redComponent, strokeColor.greenComponent, strokeColor.blueComponent, 1);
-    CGContextAddPath(context, pathRef);
-    CGContextSetLineWidth(context, 1);
-    CGContextStrokePath(context);
+    [path setLineWidth:1];
     
-    CGPathRelease(pathRef);
+    [path fill];
+    [path stroke];
+    
 
     
-    NSPoint point;
-    if(!_calendarButton.isHidden)
-        point.x = -5;
-    point.y = roundf((NSHeight(dirtyRect) - image_ScrollDownArrow().size.height) * 0.5);
-
-    [image_ScrollDownArrow() drawAtPoint:point fromRect:NSZeroRect operation:NSCompositeSourceOver fraction:1];
     
-    if(self.messagesCount) {
-        NSSize size = [self.messagesCountAttributedString size];
-        size.width = ceil(size.width);
-        NSPoint point = NSMakePoint(roundf((self.bounds.size.width - 28 - size.width) / 2.f), roundf( (self.bounds.size.height - size.height) / 2.f ) + 2);
-        [self.messagesCountAttributedString drawAtPoint:point];
-    }
+    
+   // if(self.messagesCount) {
+        
+        
+        
+//        NSSize size = [self.messagesCountAttributedString size];
+//        size.width = ceil(size.width) ;
+//        
+//        int max = MAX(size.width,size.height);
+//    
+//        int cmax = max + 10;
+//    
+//        NSBezierPath *cpath = [NSBezierPath bezierPathWithRoundedRect:NSMakeRect(roundf((NSWidth(self.frame) - cmax)/2.0), NSHeight(self.frame) - cmax, cmax, cmax) xRadius:cmax/2.0f yRadius:cmax/2.0f];
+//        
+//        [BLUE_UI_COLOR setFill];
+//        
+//         NSPoint point = NSMakePoint(roundf((NSWidth(self.frame) - size.width)/2.0), NSHeight(self.frame) - ((float)cmax - size.height/2.0));
+//        
+//        [cpath fill];
+//        
+    
+        
+       // [self.messagesCountAttributedString drawAtPoint:point];
+  //  }
+    
+    
+    NSPoint ipoint;
+    
+    ipoint.y = roundf((width - image_ScrollDownArrow().size.height) * 0.5);
+    
+    [image_ScrollDownArrow() drawAtPoint:ipoint fromRect:NSZeroRect operation:NSCompositeSourceOver fraction:1];
     
     [NSGraphicsContext restoreGraphicsState];
 }
 
-
+-(void)setFrameSize:(NSSize)newSize {
+    [super setFrameSize:newSize];
+    
+    [_circularCounter setCenteredXByView:self];
+    
+    [_circularCounter setFrameOrigin:NSMakePoint(NSMinX(_circularCounter.frame), newSize.height - NSHeight(_circularCounter.frame))];
+}
 
 - (void)sizeToFit {
     
     NSSize size = NSMakeSize(0, 0);
-    if(self.messagesCount) {
-        size = [self.messagesCountAttributedString size];
-        size.width = ceil(size.width);
-        size.width += 16;
-    }
+
     
-    if(!_calendarButton.isHidden) {
-         size.width += 60;
-    } else {
-        size.width+=44;
-    }
-    
-   
+    size.width =44;
+
     size.height = 44;
+    
+    if(_messagesCount > 0) {
+        size.height+=20;
+        if(_messagesCount > 100)
+            size.height+=10;
+    }
+    
+//    if(_messagesCountAttributedString.length > 0) {
+//        NSSize tsize = [_messagesCountAttributedString size];
+//        int m = MAX(tsize.width + 10,tsize.height);
+//        size.height+= roundf(m/2.0f);
+//    }
     
     
     [self setFrameSize:size];

@@ -14,7 +14,9 @@
 
 @property (nonatomic,strong,readonly) NSString *link;
 
--(id)initWithFrame:(NSRect)frameRect webpage:(TLWebPage *)webpage link:(NSString *)link;
+@property (nonatomic,strong) TGInputMessageTemplate *inputTemplate;
+
+-(id)initWithFrame:(NSRect)frameRect webpage:(TLWebPage *)webpage link:(NSString *)link inputTemplate:(TGInputMessageTemplate *)inputTemplate;
 
 
 @end

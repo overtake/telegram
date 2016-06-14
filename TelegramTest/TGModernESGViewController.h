@@ -18,7 +18,10 @@
 @property (nonatomic,strong,readonly) TGModernEmojiViewController *emojiViewController;
 @property (nonatomic,strong,readonly) TGModernSGViewController *sgViewController;
 
+@property (nonatomic,assign) BOOL isLayoutStyle;
+
 -(void)showSGController:(BOOL)animated;
+-(void)showEmojiViewController:(BOOL)animated;
 
 - (void)show;
 - (void)close;
@@ -31,6 +34,8 @@
 +(NSArray *)allSets;
 +(TL_stickerSet *)setWithId:(long)n_id;
 +(NSArray *)stickersWithId:(long)n_id;
+
++(NSString *)emojiModifier:(NSString *)emoji;
 
 
 +(void)reloadStickers;
