@@ -224,7 +224,6 @@
                 chatUserNameString = userLast ? userLast.fullName : NSLocalizedString(@"MessageAction.Service.LeaveChat", nil);
 
             
-            
             TLMessageAction *action = message.action;
             if([action isKindOfClass:[TL_messageActionChatEditTitle class]]) {
                 msgText =message.isChannelMessage && !message.chat.isMegagroup  ? NSLocalizedString(@"MessageAction.Service.ChannelGroupName", nil) : NSLocalizedString(@"MessageAction.Service.ChangedGroupName", nil);
@@ -300,7 +299,7 @@
         }
         
         
-        if(conversation.draft.message.length > 0 && ACCEPT_FEATURE && conversation.draft.date > conversation.lastMessage.date) {
+        if(conversation.draft.message.length > 0 && ACCEPT_FEATURE && conversation.unread_count == 0) {
             [messageText appendString:[NSLocalizedString(@"Conversation.Draft", nil) stringByAppendingString:@"\n"] withColor:[NSColor redColor]];
             [messageText setSelectionColor:[NSColor whiteColor] forColor:[NSColor redColor]];
         } else {
@@ -308,8 +307,7 @@
                 [messageText appendString:chatUserNameString withColor:!message.action ? DARK_BLACK : GRAY_TEXT_COLOR];
         }
         
-        
-        
+
         if(!message.action) {
             if(message.media && ![message.media isKindOfClass:[TL_messageMediaEmpty class]] && ![message.media isKindOfClass:[TL_messageMediaWebPage class]]) {
                 msgText = [MessagesUtils mediaMessage:message];
@@ -326,7 +324,7 @@
         
         msgText = [msgText fixEmoji];
         
-        if(conversation.draft.message.length > 0 && ACCEPT_FEATURE && conversation.draft.date > conversation.lastMessage.date) {
+        if(conversation.draft.message.length > 0 && ACCEPT_FEATURE && conversation.unread_count == 0) {
             msgText = conversation.draft.message;
         }
         

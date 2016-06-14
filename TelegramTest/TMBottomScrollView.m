@@ -22,6 +22,9 @@
     self = [super initWithFrame:frame];
     if (self) {
         
+        
+        self.wantsLayer = YES;
+        
         self.layerContentsPlacement = NSViewLayerContentsPlacementScaleAxesIndependently;
         self.layerContentsRedrawPolicy = NSViewLayerContentsRedrawOnSetNeedsDisplay;
         
@@ -60,7 +63,15 @@
 
 
 -(void)setHidden:(BOOL)flag {
-    [super setHidden:flag];
+   
+    
+    [NSAnimationContext runAnimationGroup:^(NSAnimationContext * _Nonnull context) {
+        
+        [self.animator setAlphaValue:flag ? 0.0 : 1.0];
+        
+    } completionHandler:^{
+         [super setHidden:flag];
+    }];
     
     if(flag) {
         [self setMessagesCount:0];
@@ -94,16 +105,11 @@
     if(messagesCount > 0)
         _circularCounter.stringValue = [NSString stringWithFormat:@"%d",messagesCount];
     
-//    if(messagesCount) {
-//        self.messagesCountAttributedString = [[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"%d",messagesCount] attributes:@{NSFontAttributeName: TGSystemFont(14), NSForegroundColorAttributeName: [NSColor whiteColor]}];
-//    } else {
-//        self.messagesCountAttributedString = nil;
-//    }
-    
-    
     
     [self setNeedsDisplay:YES];
 }
+
+
 
 - (void)drawRect:(NSRect)dirtyRect {
     [super drawRect:dirtyRect];
