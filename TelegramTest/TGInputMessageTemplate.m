@@ -315,12 +315,7 @@ static NSString *kYapTemplateCollection = @"kYapTemplateCollection";
     
     BOOL save = ![_text isEqualToString:newText];
     
-    NSLog(@"%@",newText);
-    
-    if(!save) {
-        int bp = 0;
-    }
-    
+
     _text = [newText trim];
     
     if(_autoSave && save) {
