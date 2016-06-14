@@ -491,7 +491,7 @@ static int32_t get_bits(uint8_t const *bytes, unsigned int bitOffset, unsigned i
 
 
 NSImage *cropCenterWithSize(NSImage *image, NSSize cropSize) {
-    if(!image)
+    if(!image || cropSize.width == 0 || cropSize.height == 0)
         return nil;
     
     NSImage *result = [[NSImage alloc] initWithSize:cropSize];

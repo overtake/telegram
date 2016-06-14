@@ -223,7 +223,7 @@ static NSString *kYapTemplateCollection = @"kYapTemplateCollection";
             [conversation save];
             [[DialogsManager sharedManager] notifyAfterUpdateConversation:conversation];
             
-            [self fillDraft:draft conversation:conversation];
+            [self fillDraft:draft conversation:conversation save:YES];
             
 
         }
@@ -233,9 +233,15 @@ static NSString *kYapTemplateCollection = @"kYapTemplateCollection";
     
 }
 
--(void)fillDraft:(TLDraftMessage *)draft conversation:(TL_conversation *)conversation {
+-(void)fillDraft:(TLDraftMessage *)draft conversation:(TL_conversation *)conversation save:(BOOL)save {
     
     
+    dispatch_block_t pblock = ^{
+        if(save) {
+            [self saveForce];
+            [self performNotification];
+        }
+    };
     
     _text = draft.message;
     [self fillEntities:draft.entities];
@@ -254,8 +260,7 @@ static NSString *kYapTemplateCollection = @"kYapTemplateCollection";
                 if(messages.count == 1) {
                     _replyMessage = messages[0];
                     
-                    [self saveForce];
-                    [self performNotification];
+                    pblock();
                 } else {
                     
                     id request = [TLAPI_messages_getMessages createWithN_id:[@[@(draft.reply_to_msg_id)] mutableCopy]];
@@ -286,8 +291,7 @@ static NSString *kYapTemplateCollection = @"kYapTemplateCollection";
                             
                             _replyMessage = messages[0];
                             
-                            [self saveForce];
-                            [self performNotification];
+                            pblock();
                         }
                         
                         
@@ -302,15 +306,20 @@ static NSString *kYapTemplateCollection = @"kYapTemplateCollection";
         
     } else {
         _replyMessage = nil;
+        pblock();
         
-        [self saveForce];
-        [self performNotification];
     }
 }
 
 -(void)updateTextAndSave:(NSString *)newText {
     
     BOOL save = ![_text isEqualToString:newText];
+    
+    NSLog(@"%@",newText);
+    
+    if(!save) {
+        int bp = 0;
+    }
     
     _text = [newText trim];
     
@@ -362,15 +371,17 @@ static NSString *kYapTemplateCollection = @"kYapTemplateCollection";
             n = YES;
             
             [transaction setObject:template forKey:template.key inCollection:kYapTemplateCollection];
+            
+            TL_conversation *conversation = [[DialogsManager sharedManager] find:peer_id];
+            
+            if([conversation.draft isKindOfClass:[TL_draftMessage class]] && ![conversation.draft.message isEqualToString:template.text]) {
+                [template fillDraft:conversation.draft conversation:conversation save:NO];
+            }
         }
         
     }];
     
-    TL_conversation *conversation = [[DialogsManager sharedManager] find:peer_id];
     
-    if([conversation.draft isKindOfClass:[TL_draftMessage class]] && ![conversation.draft.message isEqualToString:template.text]) {
-        [template fillDraft:conversation.draft conversation:conversation];
-    }
     
     return template;
 }

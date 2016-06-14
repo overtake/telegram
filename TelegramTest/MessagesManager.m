@@ -143,7 +143,7 @@ static const int seconds_to_notify = 120;
                     if(data.length > 0) {
                         image = [[NSImage alloc] initWithData:data];
                         
-                        image = [ImageUtils roundCorners:image size:NSMakeSize(4, 4)];
+                        image = [ImageUtils roundCorners:image size:NSMakeSize(10, 10)];
                         
                         [TGCache cacheImage:image forKey:p groups:@[AVACACHE]];
                     }
@@ -163,7 +163,7 @@ static const int seconds_to_notify = 120;
                     
                     NSString *text = [TMAvatarImageView text:chat ? chat : fromUser];
                     
-                    image = [TMAvatarImageView generateTextAvatar:colorMask size:NSMakeSize(100, 100) text:text type:chat ? TMAvatarTypeChat : TMAvatarTypeUser font:TGSystemFont(30) offsetY:0 corners:4];
+                    image = [TMAvatarImageView generateTextAvatar:colorMask size:NSMakeSize(100, 100) text:text type:chat ? TMAvatarTypeChat : TMAvatarTypeUser font:TGSystemFont(30) offsetY:0 corners:10];
                     
                     [TGCache cacheImage:image forKey:p groups:@[AVACACHE]];
                 }

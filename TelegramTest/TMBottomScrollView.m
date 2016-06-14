@@ -23,7 +23,6 @@
     if (self) {
         
         
-        self.wantsLayer = YES;
         
         self.layerContentsPlacement = NSViewLayerContentsPlacementScaleAxesIndependently;
         self.layerContentsRedrawPolicy = NSViewLayerContentsRedrawOnSetNeedsDisplay;
