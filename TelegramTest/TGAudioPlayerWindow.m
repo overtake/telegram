@@ -290,20 +290,20 @@
         
     } forControlEvents:BTRControlEventMouseDownInside];
     
-    _audioPlayerVisibility = [[BTRButton alloc] initWithFrame:NSMakeRect(NSMaxX(_pinButton.frame) + 10, NSHeight(_containerView.frame) - 22, image_AudioPlayerVisibilityActive().size.width, image_AudioPlayerVisibilityActive().size.height)];
-    
-    
-    [_audioPlayerVisibility setImage:image_AudioPlayerVisibilityActive() forControlState:BTRControlStateNormal];
-    
-    [_audioPlayerVisibility addBlock:^(BTRControlEvents events) {
-        
-        [weakSelf.audioController.navigationController showInlinePlayer:weakSelf.audioController];
-        
-        [TGAudioPlayerWindow hide:NO];
-        
-    } forControlEvents:BTRControlEventMouseDownInside];
-    
-    [_containerView addSubview:_audioPlayerVisibility];
+//    _audioPlayerVisibility = [[BTRButton alloc] initWithFrame:NSMakeRect(NSMaxX(_pinButton.frame) + 10, NSHeight(_containerView.frame) - 22, image_AudioPlayerVisibilityActive().size.width, image_AudioPlayerVisibilityActive().size.height)];
+//    
+//    
+//    [_audioPlayerVisibility setImage:image_AudioPlayerVisibilityActive() forControlState:BTRControlStateNormal];
+//    
+//    [_audioPlayerVisibility addBlock:^(BTRControlEvents events) {
+//        
+//        [weakSelf.audioController.navigationController showInlinePlayer:weakSelf.audioController];
+//        
+//        [TGAudioPlayerWindow hide:NO];
+//        
+//    } forControlEvents:BTRControlEventMouseDownInside];
+//    
+//    [_containerView addSubview:_audioPlayerVisibility];
     
     
     
