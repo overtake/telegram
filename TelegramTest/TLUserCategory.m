@@ -116,7 +116,7 @@ DYNAMIC_PROPERTY(FULLUPDATETIME)
 }
 
 - (BOOL)isBlocked {
-    return [[BlockedUsersManager sharedManager] isBlocked:self.n_id];
+    return [[BlockedUsersManager sharedManager] isBlocked:self.n_id]; 
 }
 
 - (int)lastSeenTime {

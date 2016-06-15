@@ -366,16 +366,19 @@ static NSString *kYapTemplateCollection = @"kYapTemplateCollection";
             n = YES;
             
             [transaction setObject:template forKey:template.key inCollection:kYapTemplateCollection];
-            
-            TL_conversation *conversation = [[DialogsManager sharedManager] find:peer_id];
-            
-            if([conversation.draft isKindOfClass:[TL_draftMessage class]] && ![conversation.draft.message isEqualToString:template.text]) {
-                [template fillDraft:conversation.draft conversation:conversation save:NO];
-            }
         }
         
     }];
     
+    
+    if(n) {
+        
+        TL_conversation *conversation = [[DialogsManager sharedManager] find:peer_id];
+        
+        if([conversation.draft isKindOfClass:[TL_draftMessage class]] && ![conversation.draft.message isEqualToString:template.text]) {
+            [template fillDraft:conversation.draft conversation:conversation save:NO];
+        }
+    }
     
     
     return template;

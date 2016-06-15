@@ -717,17 +717,23 @@ static int insertCount = 3;
     
     
     //Chats
-    NSArray *searchChats = [[ChatsManager sharedManager] searchWithString:searchString selector:@"title" checker:^BOOL(TLChat *chat) {
-        return !chat.isDeactivated;
-    }];
+    __block NSArray *searchChats;
+    __block NSArray *searchUsers;
+    
+    
     
 
     //Users
     
-    __block NSArray *searchUsers;
+    
 
     
     [ASQueue dispatchOnStageQueue:^{
+        
+        searchChats = [[ChatsManager sharedManager] searchWithString:searchString selector:@"title" checker:^BOOL(TLChat *chat) {
+            return !chat.isDeactivated;
+        }];
+        
         searchUsers = [[UsersManager sharedManager] searchWithString:searchString selector:@"fullName" checker:^BOOL(TLUser *user) {
             
             if(!user.isMin) {
@@ -814,7 +820,8 @@ static int insertCount = 3;
             TL_conversation *c1 = [obj1 dialog];
             TL_conversation *c2 = [obj2 dialog];
             
-            return c1.top_message > c2.top_message ? NSOrderedAscending : c1.top_message < c2.top_message ? NSOrderedDescending : NSOrderedSame;
+            
+            return c1.last_message_date > c2.last_message_date ? NSOrderedAscending : c1.last_message_date < c2.last_message_date ? NSOrderedDescending : NSOrderedSame;
             
         }];
         

@@ -905,4 +905,8 @@ static NSTextAttachment *channelViewsCountAttachment() {
     
 }
 
+-(void)setMessageSender:(SenderItem *)messageSender {
+    _messageSender = messageSender;
+}
+
 @end

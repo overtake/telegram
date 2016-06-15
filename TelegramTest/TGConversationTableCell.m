@@ -451,7 +451,7 @@ static NSDictionary *attributes() {
                 stateImage = self.isSelected ? image_MessageStateSentWhite() : image_MessageStateSent();
             }
             
-            point = NSMakePoint(NSMinX(self.dateField.frame) - stateImage.size.width , NSHeight(self.frame) - stateImage.size.height - 12);
+            point = NSMakePoint(NSMinX(self.dateField.frame) - stateImage.size.width , NSHeight(self.frame) - stateImage.size.height - 10);
             
         } else if(self.item.message.dstate == DeliveryStateError) {
             

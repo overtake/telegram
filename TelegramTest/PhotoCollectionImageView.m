@@ -240,6 +240,21 @@ static NSImage *playVideoImage() {
     PhotoCollectionImageObject *object = (PhotoCollectionImageObject *)self.object;
 
     if([self isset:object]) {
+        
+        if (floor(NSAppKitVersionNumber) > 1187 && NSAppKitVersionNumber < 1485)  {
+            
+            [[TGPhotoViewer viewer] show:object.previewObject conversation:self.controller.conversation];
+
+            
+            
+        } else {
+            
+            TMPreviewVideoItem *item = [[TMPreviewVideoItem alloc] initWithItem:object.previewObject];
+            if(item) {
+                [[TMMediaController controller] show:item];
+            }
+        }
+        
         [[TGPhotoViewer viewer] show:object.previewObject conversation:self.controller.conversation];
     } else {
         DownloadVideoItem *downloadItem = object.previewObject.reservedObject;

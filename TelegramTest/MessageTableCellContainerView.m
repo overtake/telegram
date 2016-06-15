@@ -123,12 +123,6 @@
 
 
 
-
-
-
-
-
-
 -(BOOL)isSelected {
     return self.item.isSelected;
 }

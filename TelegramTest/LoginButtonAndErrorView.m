@@ -151,7 +151,6 @@
 
 - (void)performTextToBottomWithDuration:(float)duration {
 
-    [CATransaction begin];
     [CATransaction setCompletionBlock:^{
         self.textButton.layer.opacity = 0;
         [self.errorTextField setHidden:self.errorTextField.layer.opacity == 0];
@@ -202,7 +201,6 @@
     opacityAnimation2.beginTime = CACurrentMediaTime() + opacityAnimation.duration;
     opacityAnimation2.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut];
     [self.textButton setAnimation:opacityAnimation2 forKey:@"opacity2"];
-    [CATransaction begin];
 }
 
 

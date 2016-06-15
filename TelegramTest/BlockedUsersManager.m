@@ -14,7 +14,7 @@
     static BlockedUsersManager *instance;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        instance = [[BlockedUsersManager alloc] initWithQueue:[ASQueue globalQueue]];
+        instance = [[BlockedUsersManager alloc] initWithQueue:[[ASQueue alloc] initWithName:"blockedQueue"]];
     });
     return instance;
 }

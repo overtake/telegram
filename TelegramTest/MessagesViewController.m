@@ -2958,6 +2958,8 @@ static NSTextAttachment *headerMediaIcon() {
         [globalAudioPlayer().delegate audioPlayerDidFinishPlaying:globalAudioPlayer()];
     }
     
+   
+    
     
      if(!self.locked &&  (((message != nil && message.channelMsgId != _jumpMessage.channelMsgId) || force) || [self.conversation.peer peer_id] != [dialog.peer peer_id] )) {
         

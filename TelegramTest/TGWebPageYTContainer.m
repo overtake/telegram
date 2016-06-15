@@ -138,27 +138,34 @@
 -(void)playVideo {
     
     
-    if (floor(NSAppKitVersionNumber) > 1187)  {
-        if(![(TGWebpageYTObject *)self.webpage video]) {
-            [_blackContainer setFrame:self.imageView.bounds];
-            
-            [_progressIndicator setCenterByView:_blackContainer];
-            
-            [_progressIndicator setAnimates:YES];
-            
-            [self.imageView addSubview:_blackContainer];
-        }
+    if(![(TGWebpageYTObject *)self.webpage video]) {
+        [_blackContainer setFrame:self.imageView.bounds];
         
-        _handle = perform_block_after_delay(5.0, ^{
-            [_progressIndicator setAnimates:NO];
-            [_blackContainer removeFromSuperview];
-            
-            _embedModalView = [[TGEmbedModalView alloc] initWithFrame:self.window.contentView.subviews[0].frame];
-            [_embedModalView setWebpage:self.webpage.webpage];
-            [_embedModalView show:self.window animated:YES];
-            
-        });
+        [_progressIndicator setCenterByView:_blackContainer];
         
+        [_progressIndicator setAnimates:YES];
+        
+        [self.imageView addSubview:_blackContainer];
+    }
+    
+    
+    dispatch_block_t embed_block = ^{
+        [_progressIndicator setAnimates:NO];
+        [_blackContainer removeFromSuperview];
+        
+        _embedModalView = [[TGEmbedModalView alloc] initWithFrame:self.window.contentView.subviews[0].frame];
+        [_embedModalView setWebpage:self.webpage.webpage];
+        [_embedModalView show:self.window animated:YES];
+        
+    };
+    
+    
+    
+    if(NSAppKitVersionNumber >= 1485 || floor(NSAppKitVersionNumber) <= 1187)
+        embed_block();
+    else
+    {
+        _handle = perform_block_after_delay(5.0, embed_block);
         
         [(TGWebpageYTObject *)self.webpage loadVideo:^(XCDYouTubeVideo *video) {
             
@@ -170,13 +177,11 @@
                 
                 [self playFullScreen];
             }
-
+            
             
         }];
-    } else {
-        open_link(self.webpage.webpage.display_url);
     }
-    
+
     
     
 }

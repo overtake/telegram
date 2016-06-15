@@ -569,28 +569,32 @@ static NSMutableDictionary *cache;
             
             TL_conversation *conversation = _conversation;
             
-            [RPCRequest sendRequest:[TLAPI_messages_reportSpam createWithPeer:conversation.user.inputPeer] successHandler:^(id request, id response) {
-                
-                 [[DialogsManager sharedManager] deleteDialog:conversation completeHandler:^{
-                     
-                     if(conversation.type == DialogTypeUser) {
-                         [[BlockedUsersManager sharedManager] block:conversation.user.n_id completeHandler:^(BOOL response) {
-                             
-                             weakSelf.locked = NO;
-                             weakSelf.conversation = weakSelf.conversation;
-                         }];
-                     } else {
-                         weakSelf.locked = NO;
-                         weakSelf.conversation = weakSelf.conversation;
-                     }
-                      
+            
+            dispatch_block_t proccessAfter = ^{
+                [[DialogsManager sharedManager] deleteDialog:conversation completeHandler:^{
+                    
+                    if(conversation.type == DialogTypeUser) {
+                        [[BlockedUsersManager sharedManager] block:conversation.user.n_id completeHandler:^(BOOL response) {
+                            
+                            weakSelf.locked = NO;
+                            weakSelf.conversation = weakSelf.conversation;
+                        }];
+                    } else {
+                        weakSelf.locked = NO;
+                        weakSelf.conversation = weakSelf.conversation;
+                    }
+                    
                     
                 }];
+            };
+            
+            [RPCRequest sendRequest:[TLAPI_messages_reportSpam createWithPeer:conversation.user.inputPeer] successHandler:^(id request, id response) {
+                
+                proccessAfter();
                 
                 
             } errorHandler:^(id request, RpcError *error) {
-                weakSelf.locked = NO;
-                weakSelf.conversation = weakSelf.conversation;
+                proccessAfter();
             }];
             
         }, ^{

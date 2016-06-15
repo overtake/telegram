@@ -25,6 +25,7 @@
 
 
 -(void)removeEventListener:(id <TGObservableDelegate>)listener;
+
 -(void)notifyListenersWithObject:(id)object;
 
 @end

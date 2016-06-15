@@ -707,6 +707,15 @@ static const int navigationOffset = 48;
 }
 
 -(void)showMessagesViewController:(TL_conversation *)conversation {
+    
+    if(conversation.chat && [conversation.chat isKindOfClass:[TLChat class]] && conversation.chat.isRestricted) {
+        
+        alert(appName(), conversation.chat.restriction_reason);
+                
+        return;
+        
+    }
+    
     [self.messagesViewController setCurrentConversation:conversation];
     
     [self gotoViewController:self.messagesViewController];
