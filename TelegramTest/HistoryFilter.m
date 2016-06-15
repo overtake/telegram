@@ -311,6 +311,7 @@
                         filterKeys[@(obj.n_id)] = obj;
                     } else {
                         needAdd = NO;
+                        [self.controller updateMessage:obj];
                     }
                 }
                 

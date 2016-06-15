@@ -263,7 +263,7 @@ static NSCache *replyCache;
             } timeout:0 queue:[ASQueue globalQueue].nativeQueue];
         }
         
-    } forIds:@[@([fromMessage isKindOfClass:[TL_destructMessage class]] ? ((TL_destructMessage *)fromMessage).reply_to_random_id : fromMessage.reply_to_msg_id)] random:[fromMessage isKindOfClass:[TL_destructMessage class]] sync:NO queue:[ASQueue globalQueue] isChannel:[fromMessage.to_id isKindOfClass:[TL_peerChannel class]]];
+    } forIds:@[@([fromMessage isKindOfClass:[TL_destructMessage class]] ? ((TL_destructMessage *)fromMessage).reply_to_random_id : ([fromMessage.to_id isKindOfClass:[TL_peerChannel class]] ? channelMsgId(fromMessage.reply_to_msg_id, fromMessage.peer_id) : fromMessage.reply_to_msg_id))] random:[fromMessage isKindOfClass:[TL_destructMessage class]] sync:NO queue:[ASQueue globalQueue] isChannel:[fromMessage.to_id isKindOfClass:[TL_peerChannel class]]];
     
 }
 

@@ -3816,6 +3816,14 @@ static NSTextAttachment *headerMediaIcon() {
                 [_typingReservation removeAllObjects];
             }];
             
+            _editTemplate.autoSave = NO;
+            [_editTemplate updateTextAndSave:@""];
+            _editTemplate.autoSave = YES;
+            
+            [_editTemplate saveForce];
+            
+            [_editTemplate saveTemplateInCloudIfNeeded];
+            [_editTemplate performNotification];
         }
     }
     

@@ -852,7 +852,7 @@ TL_localMessage *parseMessage(FMResultSet *result) {
     [messages enumerateObjectsUsingBlock:^(TL_localMessage *obj, NSUInteger idx, BOOL * _Nonnull stop) {
         
         if(obj.reply_to_msg_id != 0) {
-            obj.replyMessage = support[obj.isChannelMessage ? @(channelMsgId(obj.reply_to_msg_id, obj.peer_id)) : @(obj.reply_to_msg_id)];
+            obj.replyMessage = support[@(channelMsgId(obj.reply_to_msg_id, obj.peer_id))];
         } else if(([obj isKindOfClass:[TL_destructMessage45 class]] && ((TL_destructMessage45 *)obj).reply_to_random_id != 0)) {
             obj.replyMessage = support[@(((TL_destructMessage45 *)obj).reply_to_random_id)];
         }

@@ -199,6 +199,9 @@
    
     if(self.flags & (1 << 10)) {self.views = [stream readInt];}
     if(self.flags & (1 << 15)) {self.edit_date = [stream readInt];}
+    
+    
+
 }
 
 
@@ -451,6 +454,19 @@ DYNAMIC_PROPERTY(DDialog);
     }
     
     return NO;
+}
+
+-(void)setReplyMessage:(TL_localMessage *)replyMessage {
+    
+    if(self.n_id == 41345) {
+        int bp = 0;
+    }
+    
+    
+    _replyMessage = replyMessage;
+    
+    
+  
 }
 
 long channelMsgId(int msg_id, int peer_id) {

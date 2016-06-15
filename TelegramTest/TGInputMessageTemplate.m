@@ -151,6 +151,9 @@ static NSString *kYapTemplateCollection = @"kYapTemplateCollection";
     
     TL_conversation *convesation = [[DialogsManager sharedManager] find:_peer_id];
     
+    if(convesation.type == DialogTypeSecretChat)
+        return;
+    
     TLDraftMessage *draftMessage = text.length == 0 && flags == 0 ? [TL_draftMessageEmpty create] : [TL_draftMessage createWithFlags:0 reply_to_msg_id:_replyMessage.n_id message:text entities:entities date:[[MTNetwork instance] getTime]];
     
     if((![convesation.draft isKindOfClass:draftMessage.class] && !([draftMessage isKindOfClass:[TL_draftMessageEmpty class]] && convesation.draft == nil)) || ((draftMessage.message && ![draftMessage.message isEqualToString:convesation.draft.message]) || draftMessage.flags != draftMessage.flags)) {
@@ -338,6 +341,7 @@ static NSString *kYapTemplateCollection = @"kYapTemplateCollection";
         [self saveForce];
     }
 }
+
 
 -(void)saveForce {
     

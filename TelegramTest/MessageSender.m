@@ -261,13 +261,12 @@
     }
     
     template.autoSave = NO;
-    [template setReplyMessage:nil save:NO];
-    [template updateTextAndSave:@""];
-    
+    [template setReplyMessage:nil save:NO];    
     [template saveForce];
     [template saveTemplateInCloudIfNeeded];
     [template performNotification];
-    
+    template.autoSave = YES;
+
     
     return  outMessage;
 }

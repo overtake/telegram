@@ -131,7 +131,7 @@ DYNAMIC_PROPERTY(FULLUPDATETIME)
     }
     
     if(self.n_id == 777000) {
-        return NSLocalizedString(@"Service notifications", nil);
+        return NSLocalizedString(@"Account.ServiceNotifications", nil);
     } else if([serviceNumbers indexOfObject:self.phone] != NSNotFound) {
         return NSLocalizedString(@"Account.Online", nil);
     }

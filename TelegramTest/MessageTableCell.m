@@ -38,7 +38,7 @@
             item.messageSender.tableItem = item;
             if(item.messageSender.state == MessageStateWaitSend) {
                 [item.messageSender send];
-            }о
+            }
         }
         
     }
