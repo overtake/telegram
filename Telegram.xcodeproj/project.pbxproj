@@ -2376,7 +2376,7 @@
 		C2ACCE6C1AE122A400ABEE78 /* EmojiButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EmojiButton.h; sourceTree = "<group>"; };
 		C2ACCE6D1AE122A400ABEE78 /* EmojiButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EmojiButton.m; sourceTree = "<group>"; };
 		C2B0A7721D12EE52001BAE72 /* Sparkle.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Sparkle.framework; sourceTree = "<group>"; };
-		C2B0A7791D1312F0001BAE72 /* LICENSE */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
+		C2B0A7791D1312F0001BAE72 /* LICENSE */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = LICENSE; path = TelegramTest/LICENSE; sourceTree = "<group>"; };
 		C2B0DF751BA98E7C0023982C /* TL_localEmptyMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TL_localEmptyMessage.h; sourceTree = "<group>"; };
 		C2B0DF761BA98E7C0023982C /* TL_localEmptyMessage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TL_localEmptyMessage.m; sourceTree = "<group>"; };
 		C2B0DF811BA9B7840023982C /* ComposeActionAddChannelModeratorBehavior.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ComposeActionAddChannelModeratorBehavior.h; sourceTree = "<group>"; };
@@ -5107,6 +5107,7 @@
 		C2AA4EBB18A8ECC800E20C68 /* external */ = {
 			isa = PBXGroup;
 			children = (
+				C2B0A7791D1312F0001BAE72 /* LICENSE */,
 				C21D06CC1CBE570700CB28B8 /* mediakeytap */,
 				C2032CCF1C5B801F00E23481 /* TGCalendar */,
 				C2D51BDF1B21C67B009327C0 /* EMImageData.h */,
@@ -6158,7 +6159,6 @@
 		CEB09E6217DAFC250055F150 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				C2B0A7791D1312F0001BAE72 /* LICENSE */,
 				C20A02531CC6461500D94EF2 /* emoji.txt */,
 				C20A02541CC6461500D94EF2 /* emoji1347.txt */,
 				C20A02551CC6461500D94EF2 /* emoji1404.txt */,
