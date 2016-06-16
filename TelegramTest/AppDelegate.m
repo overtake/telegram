@@ -126,8 +126,12 @@ static void TGTelegramLoggingFunction(NSString *format, va_list args)
     [[BITHockeyManager sharedHockeyManager].crashManager setAutoSubmitCrashReport: YES];
     [[BITHockeyManager sharedHockeyManager] startManager];
    
-#endif
+#else
     
+    [self showMainApplicationWindowForCrashManager:nil];
+    
+#endif
+
 #else 
     
     [self showMainApplicationWindowForCrashManager:nil];
