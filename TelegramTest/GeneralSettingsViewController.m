@@ -285,6 +285,8 @@
     
 #ifdef TGDEBUG
     
+#ifndef TGSTABLE
+    
     GeneralSettingsRowItem *sendLogs = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeNext callback:^(TGGeneralRowItem *item) {
         
         
@@ -334,7 +336,7 @@
 
         
     }
-    
+#endif
     
 #endif
     
