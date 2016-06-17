@@ -35,6 +35,7 @@
     
 #ifndef TGDEBUG
     
+    
     NSMenu *menu = [NSApp mainMenu];
     NSMenuItem *main = [menu itemAtIndex:0];
     

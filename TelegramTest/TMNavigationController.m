@@ -708,13 +708,23 @@ static const int navigationOffset = 48;
 
 -(void)showMessagesViewController:(TL_conversation *)conversation {
     
+#ifndef TGSTABLE
+    
+#ifndef TGDEBUG
+    
     if(conversation.chat && [conversation.chat isKindOfClass:[TLChat class]] && conversation.chat.isRestricted) {
         
         alert(appName(), conversation.chat.restriction_reason);
-                
+        
         return;
         
     }
+    
+#endif
+    
+#endif
+    
+    
     
     [self.messagesViewController setCurrentConversation:conversation];
     

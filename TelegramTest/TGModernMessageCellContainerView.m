@@ -327,8 +327,6 @@
 
 -(void)checkAndMakeSenderItem:(MessageTableItem *)item {
     if(item.messageSender)  {
-        
-        [item.messageSender removeAllListeners];
     
         [item.messageSender addEventListener:self];
         if(item.messageSender.state == MessageStateWaitSend)
