@@ -3821,7 +3821,6 @@ static NSTextAttachment *headerMediaIcon() {
                 [_typingReservation removeAllObjects];
             }];
             
-            [_editTemplate saveTemplateInCloudIfNeeded];
             [_editTemplate performNotification];
 
         }
