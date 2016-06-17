@@ -2851,7 +2851,6 @@ TL_localMessage *parseMessage(FMResultSet *result) {
 
 +(void)addWebpage:(TLWebPage *)webpage forLink:(NSString *)link {
     
-    int bp = 0;
     [[Storage yap] readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
         
         [transaction setObject:[TLClassStore serialize:webpage] forKey:display_url(link) inCollection:@"webpage"];
