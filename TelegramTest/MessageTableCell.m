@@ -30,17 +30,11 @@
     self->_item = item;
     
     if(item.message && ( item.message.dstate != DeliveryStateNormal && item.messageSender == nil )) {
-        
-        SenderItem *sender = [SenderItem senderForMessage:item.message];
-        
-        if(sender && sender.state != MessageSendingStateSent) {
-            item.messageSender = sender;
-            item.messageSender.tableItem = item;
-            if(item.messageSender.state == MessageStateWaitSend) {
-                [item.messageSender send];
-            }
+        item.messageSender = [SenderItem senderForMessage:item.message];
+        item.messageSender.tableItem = item;
+        if(item.messageSender.state == MessageStateWaitSend) {
+            [item.messageSender send];
         }
-        
     }
     
     if(item.message.isChannelMessage && item.message.isPost && !item.message.isViewed) {

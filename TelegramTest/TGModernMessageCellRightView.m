@@ -47,7 +47,7 @@
 
 -(void)mouseDown:(NSEvent *)theEvent {
     
-    if(self.item.messageSender)
+    if(self.item.messageSender && self.item.messageSender.state != MessageSendingStateSent)
         return;
     
     NSPoint pos = [_containerView convertPoint:[theEvent locationInWindow] fromView:nil];

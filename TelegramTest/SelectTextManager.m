@@ -197,7 +197,7 @@
 }
 
 +(SelectTextManager *)instance {
-    static const SelectTextManager *manager;
+    static SelectTextManager *manager;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         manager = [[SelectTextManager alloc] init];
