@@ -3463,7 +3463,6 @@ static NSTextAttachment *headerMediaIcon() {
 
         if(item) {
             item.isSelected = NO;
-            [item setTable:self.table];
             [array addObject:item];
         }
     }
@@ -3628,9 +3627,7 @@ static NSTextAttachment *headerMediaIcon() {
                 [rld addIndex:idx-1];
             }
         }
-     //   if(isBHdr != backItem.isHeaderMessage || isBFwdHdr != backItem.isHeaderForwardedMessage)
         [backItem makeSizeByWidth:backItem.makeSize];
-      //  if(isCHdr != current.isHeaderMessage || isCFwdHdr != current.isHeaderForwardedMessage)
         [current makeSizeByWidth:current.makeSize];
 
         
@@ -3772,9 +3769,8 @@ static NSTextAttachment *headerMediaIcon() {
     [self saveScrollingState];
     
     if(_conversation != nil) {
-        TGInputMessageTemplate *template = [TGInputMessageTemplate templateWithType:TGInputMessageTemplateTypeSimpleText ofPeerId:_conversation.peer_id];
         
-        [template saveTemplateInCloudIfNeeded];
+        [_editTemplate saveTemplateInCloudIfNeeded];
     }
     
     _conversation = conversation;
@@ -3811,10 +3807,7 @@ static NSTextAttachment *headerMediaIcon() {
         if(message.length > 0) {
             
             BOOL nowebpage = _editTemplate.noWebpage;
-                        
-            [self sendMessage:message forConversation:self.conversation nowebpage:nowebpage callback:^{
-                [_typingReservation removeAllObjects];
-            }];
+            
             
             _editTemplate.autoSave = NO;
             [_editTemplate updateTextAndSave:@""];
@@ -3822,8 +3815,15 @@ static NSTextAttachment *headerMediaIcon() {
             
             [_editTemplate saveForce];
             
+            
+                        
+            [self sendMessage:message forConversation:self.conversation nowebpage:nowebpage callback:^{
+                [_typingReservation removeAllObjects];
+            }];
+            
             [_editTemplate saveTemplateInCloudIfNeeded];
             [_editTemplate performNotification];
+
         }
     }
     

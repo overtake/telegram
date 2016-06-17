@@ -1319,7 +1319,9 @@ TL_localMessage *parseMessage(FMResultSet *result) {
             
         } else {
             
-            result = [db executeQuery:[NSString stringWithFormat:@"select * from %@ where n_id > ? and peer_id = ? and (flags & ?) = ?",tableMessages],@(max_id),@(peer_id),@(TGOUTMESSAGE),@(TGOUTMESSAGE)];
+            int read_outbox_max_id = [db intForQuery:[NSString stringWithFormat:@"select read_outbox_max_id from %@ where peer_id = ?",tableModernDialogs],@(peer_id)];
+            
+            result = [db executeQuery:[NSString stringWithFormat:@"select * from %@ where n_id <= ? and n_id > ? and peer_id = ? and (flags & ?) = ?",tableMessages],@(max_id),@(read_outbox_max_id),@(peer_id),@(TGOUTMESSAGE),@(TGOUTMESSAGE)];
         }
         
         

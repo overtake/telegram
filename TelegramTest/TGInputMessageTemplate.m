@@ -16,7 +16,7 @@
 }
 
 static NSString *kYapTemplateCollection = @"kYapTemplateCollection";
-
+static ASQueue *queue;
 -(instancetype)initWithCoder:(NSCoder *)aDecoder {
     if(self = [super init]) {
         _text = [aDecoder decodeObjectForKey:@"text"];
@@ -30,6 +30,13 @@ static NSString *kYapTemplateCollection = @"kYapTemplateCollection";
         _disabledWebpage = [aDecoder decodeObjectForKey:@"disabledWebpage"];
     }
     return self;
+}
+
++(void)initialize {
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        queue = [[ASQueue alloc] initWithName:"inputSaveQueue"];
+    });
 }
 
 -(void)encodeWithCoder:(NSCoder *)aCoder {
@@ -49,9 +56,9 @@ static NSString *kYapTemplateCollection = @"kYapTemplateCollection";
 }
 
 -(void)setDisabledWebpage:(NSString *)disabledWebpage {
-    _disabledWebpage = disabledWebpage;
-    
+        _disabledWebpage = disabledWebpage;
 }
+
 
 -(void)setText:(NSString *)text {
     _text = text;
@@ -318,6 +325,7 @@ static NSString *kYapTemplateCollection = @"kYapTemplateCollection";
     
     BOOL save = ![_text isEqualToString:newText];
     
+
 
     _text = [newText trim];
     

@@ -734,7 +734,6 @@
                 if(conversation) {
                     
 
-                    
                     conversation.unread_count= unread_count;
                     conversation.last_marked_message = max_id;
                     conversation.read_inbox_max_id = max_id;
@@ -773,7 +772,10 @@
                     
                 }
                 
-                dispatch_async(dqueue, completionHandler);
+                if(completionHandler) {
+                    dispatch_async(dqueue, completionHandler);
+                }
+                
                 
             }];
 

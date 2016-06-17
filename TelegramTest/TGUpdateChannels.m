@@ -561,9 +561,10 @@
                         
                         [TL_localMessage convertReceivedMessages:[response n_messages]];
                         
-                        // 
-                        // add check remote dialog unread count with current read_inbox_max_id
-                        //
+                        
+                        [[DialogsManager sharedManager] markChannelMessagesAsRead:channel_id max_id:conversation.read_inbox_max_id n_out:NO completionHandler:nil];
+
+
                         
                         [self proccessHoleWithNewMessage:[response n_messages] channel:channel];
                         
