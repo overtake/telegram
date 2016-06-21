@@ -35,8 +35,7 @@
     [super setState:state];
 }
 
-- (id)initWithPath:(NSString *)path forConversation:(TL_conversation *)conversation additionFlags:(int)additionFlags {
-    
+- (id)initWithPath:(NSString *)path forConversation:(TL_conversation *)conversation additionFlags:(int)additionFlags caption:(NSString *)caption {
     if(self = [super init]) {
         self.mimeType = mimetypefromExtension([path pathExtension]);
         self.filePath = path;
@@ -124,7 +123,7 @@
             
             NSString *songName = tags[@"songName"];
             NSString *artistName = tags[@"artist"];
-
+            
             //[TL_documentAttributeAudio createWithDuration:CMTimeGetSeconds(asset.duration) title:songName performer:artistName]
             
             [attrs addObject:[TL_documentAttributeAudio createWithFlags:0 duration:CMTimeGetSeconds(asset.duration) title:songName performer:artistName waveform:nil]];
@@ -172,9 +171,9 @@
             thumbBlock();
         
         
-       TLPhotoSize *size;
+        TLPhotoSize *size;
         if(thumbImage) {
-           
+            
             size = [TL_photoCachedSize createWithType:thumbName location:[TL_fileLocation createWithDc_id:0 volume_id:randomId local_id:0 secret:0] w:thumbImage.size.width h:thumbImage.size.height bytes:thumbData];
             
             [TGCache cacheImage:thumbImage forKey:size.location.cacheKey groups:@[IMGCACHE]];
@@ -187,13 +186,18 @@
         
         [attrs addObject:fileAttr];
         
-        TL_messageMediaDocument *document = [TL_messageMediaDocument createWithDocument:[TL_document createWithN_id:randomId access_hash:0 date:[[MTNetwork instance] getTime] mime_type:self.mimeType size:(int)fileSize(self.filePath) thumb:size dc_id:0 attributes:attrs] caption:@""];
+        TL_messageMediaDocument *document = [TL_messageMediaDocument createWithDocument:[TL_document createWithN_id:randomId access_hash:0 date:[[MTNetwork instance] getTime] mime_type:self.mimeType size:(int)fileSize(self.filePath) thumb:size dc_id:0 attributes:attrs] caption:caption];
         
         self.message = [MessageSender createOutMessage:@"" media:document conversation:conversation additionFlags:additionFlags];
-       
+        
     }
     
     return self;
+}
+
+- (id)initWithPath:(NSString *)path forConversation:(TL_conversation *)conversation additionFlags:(int)additionFlags {
+    return [self initWithPath:path forConversation:conversation additionFlags:additionFlags caption:nil];
+   
 }
 
 
@@ -270,13 +274,13 @@
    
     if(isNewDocument) {
         if([self.thumbFile isKindOfClass:[TLInputFile class]]) {
-            media = [TL_inputMediaUploadedThumbDocument createWithFile:self.inputFile thumb:self.thumbFile mime_type:self.message.media.document.mime_type attributes:self.message.media.document.serverAttributes caption:@""];
+            media = [TL_inputMediaUploadedThumbDocument createWithFile:self.inputFile thumb:self.thumbFile mime_type:self.message.media.document.mime_type attributes:[self.message.media.document.serverAttributes mutableCopy] caption:self.message.media.caption];
         } else {
-            media = [TL_inputMediaUploadedDocument createWithFile:self.inputFile mime_type:self.message.media.document.mime_type attributes:self.message.media.document.serverAttributes caption:@""];
+            media = [TL_inputMediaUploadedDocument createWithFile:self.inputFile mime_type:self.message.media.document.mime_type attributes:[self.message.media.document.serverAttributes mutableCopy] caption:self.message.media.caption];
         }
     } else {
         TLDocument *document = (TLDocument *)self.inputFile;
-        media = [TL_inputMediaDocument createWithN_id:[TL_inputDocument createWithN_id:document.n_id access_hash:document.access_hash] caption:@""];
+        media = [TL_inputMediaDocument createWithN_id:[TL_inputDocument createWithN_id:document.n_id access_hash:document.access_hash] caption:self.message.media.caption];
     }
     
     

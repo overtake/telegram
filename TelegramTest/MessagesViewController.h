@@ -130,10 +130,13 @@ typedef enum {
 - (void)addImageAttachment:(NSString *)file_path forConversation:(TL_conversation *)conversation file_data:(NSData *)data addCompletionHandler:(dispatch_block_t)completeHandler;
 
 
+- (void)sendVideo:(NSString *)file_path forConversation:(TL_conversation *)conversation caption:(NSString *)caption addCompletionHandler:(dispatch_block_t)completeHandler;
+- (void)sendDocument:(NSString *)file_path forConversation:(TL_conversation *)conversation caption:(NSString *)caption addCompletionHandler:(dispatch_block_t)completeHandler;
+
+
 - (void)sendVideo:(NSString *)file_path forConversation:(TL_conversation *)conversation addCompletionHandler:(dispatch_block_t)completeHandler;
-;
 - (void)sendDocument:(NSString *)file_path forConversation:(TL_conversation *)conversation addCompletionHandler:(dispatch_block_t)completeHandler;
-;
+
 
 -(void)sendSticker:(TLDocument *)sticker forConversation:(TL_conversation *)conversation addCompletionHandler:(dispatch_block_t)completeHandler;
 

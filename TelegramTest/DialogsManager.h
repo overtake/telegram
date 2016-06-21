@@ -8,9 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import "SharedManager.h"
-#import "ContentDelegate.h"
 @interface DialogsManager : SharedManager
-@property (nonatomic,strong) id <ContentDelegate> delegate;
 
 
 - (void)updateTop:(TLMessage *)message needUpdate:(BOOL)needUpdate update_real_date:(BOOL)update_real_date;

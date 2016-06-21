@@ -13,7 +13,6 @@
 #import "Telegram.h"
 #import "TLPeer+Extensions.h"
 #import "NSAttributedString+Hyperlink.h"
-#import "ImageCache.h"
 #import "ImageUtils.h"
 #import "MessageTableCellDocumentView.h"
 #import "NSString+Extended.h"

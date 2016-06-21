@@ -179,7 +179,7 @@
     self.layer.opacity = 1;
     
     
-    [[NSNotificationCenter defaultCenter] postNotificationName:NSWindowDidBecomeKeyNotification object:window];
+   // [[NSNotificationCenter defaultCenter] postNotificationName:NSWindowDidBecomeKeyNotification object:window];
 
     if(animated) {
         
@@ -223,6 +223,7 @@
 
     
 }
+
 
 
 -(void)close:(BOOL)animated {
@@ -296,9 +297,13 @@
     
 }
 
+
 -(void)keyUp:(NSEvent *)theEvent {
     if(theEvent.keyCode == 53) {
         [self close:YES];
+    } else if(theEvent.keyCode == 36) {
+        [self okAction];
+        
     }
 }
 

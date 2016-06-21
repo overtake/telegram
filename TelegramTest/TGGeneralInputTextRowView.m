@@ -62,6 +62,7 @@
 }
 
 
+
 -(void)controlTextDidChange:(NSNotification *)obj {
     
     [_textField setStringValue:[_textField.stringValue substringToIndex:MIN(200,_textField.stringValue.length)]];

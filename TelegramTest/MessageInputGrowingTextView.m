@@ -16,7 +16,7 @@
 #import "NSString+FindURLs.h"
 #import "NSString+Extended.h"
 #import "TGBotCommandsPopup.h"
-
+#import "TGSingleMediaSenderModalView.h"
 @interface TGCustomMentionRange : NSObject
 @property (nonatomic,strong) NSString *original;
 @property (nonatomic,assign) NSRange range;
@@ -49,13 +49,7 @@
 @end
 
 
-typedef enum {
-    PasteBoardItemTypeVideo,
-    PasteBoardItemTypeDocument,
-    PasteBoardItemTypeImage,
-    PasteBoardItemTypeGif,
-    PasteBoardTypeLink
-} PasteBoardItemType;
+
 
 
 @interface MessageInputGrowingTextView ()
@@ -177,10 +171,10 @@ typedef enum {
     if (url != nil) {
         path = [[NSURL URLWithString:url] path];
         
-        CFStringRef fileExtension = (__bridge CFStringRef) [path pathExtension];
+        CFStringRef fileExtension = (__bridge CFStringRef) [[path pathExtension] lowercaseString];
         CFStringRef fileUTI = UTTypeCreatePreferredIdentifierForTag(kUTTagClassFilenameExtension, fileExtension, NULL);
         
-        if (UTTypeConformsTo(fileUTI, kUTTypeImage)) {
+        if (UTTypeConformsTo(fileUTI, kUTTypeImage) && [document_preview_mime_types() indexOfObject:mimetypefromExtension((__bridge NSString *)fileExtension)] != NSNotFound) {
 
             image = [[NSImage alloc] initWithContentsOfURL:[NSURL URLWithString:url]];
             if(!image) {
@@ -271,26 +265,48 @@ typedef enum {
             
         case PasteBoardItemTypeDocument:
         {
-            alert = [NSAlert alertWithMessageText:NSLocalizedString(@"Conversation.Confirm.SendThisFile", nil) informativeText:NSLocalizedString(@"Conversation.Confirm.SendThisFileDescription", nil) block:^(id result) {
-                if([result intValue] == 1000) {
-                    
-                    [self.controller sendDocument:path forConversation:self.controller.conversation];
-                    
-                }
-            }];
-            break;
+            
+            if(self.controller.conversation.type != DialogTypeSecretChat) {
+                TGSingleMediaSenderModalView *modalView = [[TGSingleMediaSenderModalView alloc] initWithFrame:NSZeroRect];
+                
+                [modalView show:self.window animated:YES file:path ptype:type conversation:self.controller.conversation messagesViewController:self.controller];
+                
+                break;
+            } else {
+                alert = [NSAlert alertWithMessageText:NSLocalizedString(@"Conversation.Confirm.SendThisFile", nil) informativeText:NSLocalizedString(@"Conversation.Confirm.SendThisFileDescription", nil) block:^(id result) {
+                    if([result intValue] == 1000) {
+                        
+                        [self.controller sendDocument:path forConversation:self.controller.conversation];
+                        
+                    }
+                }];
+                break;
+            }
+            
+            
+            
+            
         }
             
         case PasteBoardItemTypeVideo:
         {
-            alert = [NSAlert alertWithMessageText:NSLocalizedString(@"Conversation.Confirm.SendThisVideo", nil) informativeText:NSLocalizedString(@"Conversation.Confirm.SendThisVideoDescription", nil) block:^(id result) {
-                if([result intValue] == 1000) {
-                    
-                    [self.controller sendVideo:path forConversation:self.controller.conversation];
-                    
-                }
-            }];
-            break;
+            if(self.controller.conversation.type != DialogTypeSecretChat) {
+                TGSingleMediaSenderModalView *modalView = [[TGSingleMediaSenderModalView alloc] initWithFrame:NSZeroRect];
+                
+                [modalView show:self.window animated:YES file:path ptype:type conversation:self.controller.conversation messagesViewController:self.controller];
+                
+                break;
+            } else {
+                alert = [NSAlert alertWithMessageText:NSLocalizedString(@"Conversation.Confirm.SendThisVideo", nil) informativeText:NSLocalizedString(@"Conversation.Confirm.SendThisVideoDescription", nil) block:^(id result) {
+                    if([result intValue] == 1000) {
+                        
+                        [self.controller sendVideo:path forConversation:self.controller.conversation];
+                        
+                    }
+                }];
+                break;
+            }
+
 
         }
         case PasteBoardItemTypeGif:
@@ -321,6 +337,9 @@ typedef enum {
     [alert show];
 }
 
+-(BOOL)becomeFirstResponder {
+    return [super becomeFirstResponder];
+}
 
 -(void)setString:(NSString *)string {
     [_customMentions removeAllObjects];

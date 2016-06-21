@@ -23,7 +23,7 @@
 @property (nonatomic, strong) NSImageView *imageView;
 @property (nonatomic, strong) CAGradientLayer *gradientLayer;
 
-@property (nonatomic, unsafe_unretained) TMMenuController *controller;
+@property (nonatomic, weak) TMMenuController *controller;
 
 @property (nonatomic,strong) NSMutableAttributedString *textAttr;
 @property (nonatomic,strong) NSMutableAttributedString *subTextAttr;

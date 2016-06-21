@@ -7,10 +7,9 @@
 //
 
 #import "TMBottomScrollView.h"
-#import "TGCalendarView.h"
 #import "MessageTableItem.h"
 #import "TGCirclularCounter.h"
-@interface TMBottomScrollView ()<MLCalendarViewDelegate>
+@interface TMBottomScrollView ()
 @property (nonatomic,strong) TGCirclularCounter *circularCounter;
 
 

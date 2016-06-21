@@ -8,8 +8,6 @@
 
 #import "FileSecretSenderItem.h"
 #import "ImageUtils.h"
-#import "ImageCache.h"
-#import "ImageStorage.h"
 #import "NSMutableData+Extension.h"
 #import "TLFileLocation+Extensions.h"
 #import "TGOpusAudioPlayerAU.h"

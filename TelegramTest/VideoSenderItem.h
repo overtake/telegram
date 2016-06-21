@@ -9,5 +9,5 @@
 #import "MessageSenderItem.h"
 
 @interface VideoSenderItem : SenderItem
-
+-(id)initWithPath:(NSString *)path_for_file forConversation:(TL_conversation *)conversation additionFlags:(int)additionFlags caption:(NSString *)caption;
 @end

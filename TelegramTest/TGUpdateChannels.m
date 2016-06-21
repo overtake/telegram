@@ -246,7 +246,7 @@
         TL_localMessage *message = [TL_localMessage convertReceivedMessage:[(TL_updateNewChannelMessage *)update message]];
         
         
-        if((message.from_id > 0 && ![[UsersManager sharedManager] find:message.from_id]) || (message.fwd_from != nil && !message.fwdObject) || ((message.via_bot_id != 0 && ![[UsersManager sharedManager] find:message.via_bot_id]) || [TGProccessUpdates checkMessageEntityUsers:message])) {
+        if((message.from_id > 0 && !message.fromUser) || (message.fwd_from != nil && !message.fwdObject) || ((message.via_bot_id != 0 && ![[UsersManager sharedManager] find:message.via_bot_id]) || ![TGProccessUpdates checkMessageEntityUsers:message])) {
             
             
             [self failUpdateWithChannelId:[self channelIdWithUpdate:update] limit:50 withCallback:nil errorCallback:nil];
@@ -559,14 +559,20 @@
                     
                     if(conversation.pts < [response pts]) {
                         
-                        [TL_localMessage convertReceivedMessages:[response n_messages]];
+                        NSMutableArray *messages = [[response n_messages] mutableCopy];
+                        
+                        [[response n_messages] removeAllObjects];
+                        
+                        [SharedManager proccessGlobalResponse:response];
+                        
+                        [TL_localMessage convertReceivedMessages:messages];
                         
                         
                         [[DialogsManager sharedManager] markChannelMessagesAsRead:channel_id max_id:conversation.read_inbox_max_id n_out:NO completionHandler:nil];
 
 
                         
-                        [self proccessHoleWithNewMessage:[response n_messages] channel:channel];
+                        [self proccessHoleWithNewMessage:messages channel:channel];
                         
                         [[response other_updates] enumerateObjectsUsingBlock:^(TLUpdate *obj, NSUInteger idx, BOOL *stop) {
                             

@@ -8,7 +8,6 @@
 
 #import "TMPreviewDocumentItem.h"
 #import "FileUtils.h"
-#import "ImageCache.h"
 @implementation TMPreviewDocumentItem
 
 @synthesize url = _url;
@@ -46,7 +45,7 @@
         if([thumb isKindOfClass:[TL_photoCachedSize class]]) {
             _previewImage = [[NSImage alloc] initWithData:thumb.bytes];
         } else {
-            _previewImage = [[ImageCache sharedManager] imageFromMemory:thumb.location];
+            _previewImage = [TGCache cachedImage:thumb.location.cacheKey];
         }
     }
     

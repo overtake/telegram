@@ -8,7 +8,6 @@
 
 #import "DownloadDocumentItem.h"
 #import "FileUtils.h"
-#import "ImageCache.h"
 #import <AVFoundation/AVFoundation.h>
 #import "MessageTableItemAudioDocument.h"
 @implementation DownloadDocumentItem

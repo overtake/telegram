@@ -13,7 +13,6 @@
 #import "TLPeer+Extensions.h"
 #import "MessagesBottomView.h"
 #import "CMath.h"
-#import "ImageCache.h"
 #import "SpacemanBlocks.h"
 #import "TGInlineAudioPlayer.h"
 #import "NSImage+RHResizableImageAdditions.h"
@@ -2018,7 +2017,9 @@ static NSTextAttachment *headerMediaIcon() {
 }
 
 - (void)windowBecomeNotification:(NSNotification *)notify {
-    [self becomeFirstResponder];
+    if(![TMViewController isModalActive])
+        [self becomeFirstResponder];
+    
     [self tryRead];
     
     if(_conversation &&_conversation.type == DialogTypeUser) {
@@ -3919,7 +3920,7 @@ static NSTextAttachment *headerMediaIcon() {
     [self sendVideo:file_path forConversation:conversation addCompletionHandler:nil];
 }
 
--(void)sendVideo:(NSString *)file_path forConversation:(TL_conversation *)conversation addCompletionHandler:(dispatch_block_t)completeHandler {
+-(void)sendVideo:(NSString *)file_path forConversation:(TL_conversation *)conversation caption:(NSString *)caption addCompletionHandler:(dispatch_block_t)completeHandler {
     if(!conversation.canSendMessage) return;
     
     [self setHistoryFilter:self.defHFClass force:self.historyController.prevState != ChatHistoryStateFull];
@@ -3935,7 +3936,7 @@ static NSTextAttachment *headerMediaIcon() {
         if(self.conversation.type == DialogTypeSecretChat) {
             sender = [[FileSecretSenderItem alloc] initWithPath:file_path uploadType:UploadVideoType forConversation:conversation];
         } else {
-            sender = [[VideoSenderItem alloc] initWithPath:file_path forConversation:conversation additionFlags:self.senderFlags];
+            sender = [[VideoSenderItem alloc] initWithPath:file_path forConversation:conversation additionFlags:self.senderFlags caption:caption];
         }
         sender.tableItem = [[self messageTableItemsFromMessages:@[sender.message]] lastObject];
         [self.historyController addItem:sender.tableItem sentControllerCallback:completeHandler];
@@ -3990,7 +3991,14 @@ static NSTextAttachment *headerMediaIcon() {
     }];
 }
 
+- (void)sendVideo:(NSString *)file_path forConversation:(TL_conversation *)conversation addCompletionHandler:(dispatch_block_t)completeHandler {
+    [self sendVideo:file_path forConversation:conversation caption:nil addCompletionHandler:completeHandler];
+}
 - (void)sendDocument:(NSString *)file_path forConversation:(TL_conversation *)conversation addCompletionHandler:(dispatch_block_t)completeHandler {
+    [self sendDocument:file_path forConversation:conversation caption:nil addCompletionHandler:completeHandler];
+}
+
+- (void)sendDocument:(NSString *)file_path forConversation:(TL_conversation *)conversation caption:(NSString *)caption addCompletionHandler:(dispatch_block_t)completeHandler {
     if(!conversation.canSendMessage) return;
     
     if([[file_path pathExtension] isEqualToString:@"gif"] && conversation.type != DialogTypeSecretChat) {
@@ -4018,7 +4026,7 @@ static NSTextAttachment *headerMediaIcon() {
         if(self.conversation.type == DialogTypeSecretChat) {
             sender = [[FileSecretSenderItem alloc] initWithPath:file_path uploadType:UploadDocumentType forConversation:conversation];
         } else {
-            sender = [[DocumentSenderItem alloc] initWithPath:file_path forConversation:conversation additionFlags:self.senderFlags];
+            sender = [[DocumentSenderItem alloc] initWithPath:file_path forConversation:conversation additionFlags:self.senderFlags caption:caption];
         }
         
         sender.tableItem = [[self messageTableItemsFromMessages:@[sender.message]] lastObject];

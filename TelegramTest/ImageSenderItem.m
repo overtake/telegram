@@ -7,8 +7,6 @@
 //
 
 #import "ImageSenderItem.h"
-#import "ImageCache.h"
-#import "ImageStorage.h"
 #import "FileUtils.h"
 #import "ImageUtils.h"
 #import "PreviewObject.h"

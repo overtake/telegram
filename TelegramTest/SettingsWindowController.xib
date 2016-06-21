@@ -1,14 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="10116" systemVersion="15E65" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="10117" systemVersion="15F34" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="10116"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="10117"/>
     </dependencies>
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="SettingsWindowController">
             <connections>
-                <outlet property="account_desc" destination="e3s-cY-dgv" id="pzo-kh-RVb"/>
-                <outlet property="add_to_blocks" destination="xVY-c2-9Gn" id="DTj-tZ-KIT"/>
                 <outlet property="auto_download_desc" destination="BGL-fI-MsQ" id="J41-2u-IYK"/>
                 <outlet property="auto_download_limit" destination="Kx6-7a-HZg" id="DAa-95-CK1"/>
                 <outlet property="auto_downlod_audio_group" destination="Qdv-uC-Qwc" id="beu-kT-4ry"/>
@@ -17,35 +15,24 @@
                 <outlet property="auto_downlod_documents_private" destination="Ekc-0j-nDV" id="fxp-Zo-ub4"/>
                 <outlet property="auto_downlod_video_group" destination="kUB-Am-aTf" id="wft-cD-CxY"/>
                 <outlet property="auto_downlod_video_private" destination="tyo-Ik-9xp" id="pOC-mM-qJX"/>
-                <outlet property="blocked_table_view" destination="aeg-fy-f31" id="BxJ-Vq-Xgb"/>
-                <outlet property="cache_desc" destination="Ue3-yQ-etS" id="M2r-8d-h91"/>
-                <outlet property="cache_sub_desc" destination="zAU-qj-vub" id="7L8-Ht-fCj"/>
                 <outlet property="chat_settings_view" destination="E0K-fY-XQW" id="9HH-hN-B04"/>
                 <outlet property="choose_desc" destination="dW0-2B-833" id="enM-5J-LyX"/>
-                <outlet property="clear_all_the_cache_button" destination="InX-g9-kjJ" id="Qil-1n-VKP"/>
                 <outlet property="convertEmoji" destination="Ag1-4M-E9E" id="MC6-mC-Z6J"/>
                 <outlet property="documents_desc" destination="eAW-Ny-dot" id="b8R-bG-pI1"/>
                 <outlet property="documents_folder_button" destination="r4o-zX-lDn" id="qhf-98-GEx"/>
                 <outlet property="file_size_limit_desc" destination="e9T-qT-TvO" id="phU-sF-5OR"/>
                 <outlet property="launch_on_startup" destination="N7k-He-UVX" id="g1t-sG-xcQ"/>
-                <outlet property="log_out_button" destination="7UH-rj-e4p" id="GxY-v1-vet"/>
                 <outlet property="markedInputText" destination="9Pt-fD-IF5" id="aw6-0T-LLs"/>
                 <outlet property="open_links_in_background" destination="4Xz-Dy-e8a" id="UJL-JS-Kbq"/>
                 <outlet property="other_desc" destination="nSZ-tq-yZo" id="Xkx-fD-yn4"/>
-                <outlet property="remove_from_block_button" destination="qoI-jc-Nyd" id="pdB-PD-c9B"/>
                 <outlet property="save_documents_to_desc" destination="6av-g3-c2i" id="5IV-Ou-dZw"/>
-                <outlet property="security_settings_view" destination="0RT-Xr-Du5" id="ytn-S9-GGT"/>
                 <outlet property="send_message_as" destination="fRN-gj-wwt" id="6Uj-8a-Hi8"/>
                 <outlet property="send_message_desc" destination="h7G-oj-hEs" id="oef-qE-76T"/>
-                <outlet property="sessions_desc" destination="pJZ-ec-IHz" id="QN2-eD-SjY"/>
-                <outlet property="sessions_sub_desc" destination="B2E-J8-GiB" id="Wxe-vk-5Ts"/>
                 <outlet property="sound_effects_checkbox" destination="I4j-XC-W57" id="OIF-ck-veM"/>
                 <outlet property="sound_notification_title" destination="Vhh-ee-HNm" id="EvL-12-L4S"/>
                 <outlet property="sound_notifications_button" destination="qcy-kN-GFS" id="gEd-3f-XJE"/>
                 <outlet property="sound_notifications_desc" destination="Vhh-ee-HNm" id="nrn-dD-Ksx"/>
                 <outlet property="statusBarIcon" destination="yJN-im-AEu" id="iUK-Eo-gKk"/>
-                <outlet property="tabView" destination="hIq-yQ-YWW" id="gGk-W5-fTy"/>
-                <outlet property="terminate_all_other_sessions_button" destination="WPZ-i7-vdd" id="Pfh-fi-xhZ"/>
                 <outlet property="video_desc" destination="Myt-Vp-xFz" id="BF5-GX-TXu"/>
                 <outlet property="voice_messages_desc" destination="tfT-ro-Gpg" id="8HA-ME-dKz"/>
                 <outlet property="window" destination="1" id="3"/>
@@ -64,196 +51,6 @@
             </view>
         </window>
         <userDefaultsController representsSharedInstance="YES" id="jWH-V9-UL0"/>
-        <customView appearanceType="aqua" id="0RT-Xr-Du5">
-            <rect key="frame" x="0.0" y="0.0" width="642" height="303"/>
-            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-            <subviews>
-                <tabView id="hIq-yQ-YWW">
-                    <rect key="frame" x="13" y="10" width="616" height="279"/>
-                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                    <font key="font" metaFont="system"/>
-                    <tabViewItems>
-                        <tabViewItem label="Settings" identifier="1" id="fvt-Mp-H1n">
-                            <view key="view" id="zZB-Os-vqe">
-                                <rect key="frame" x="10" y="33" width="596" height="233"/>
-                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                <subviews>
-                                    <button verticalHuggingPriority="750" id="WPZ-i7-vdd">
-                                        <rect key="frame" x="233" y="90" width="215" height="32"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                        <buttonCell key="cell" type="push" title="Terminate all other sessions" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="UXw-bu-2SE">
-                                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                                            <font key="font" metaFont="system"/>
-                                        </buttonCell>
-                                        <connections>
-                                            <action selector="terminateSessions:" target="-2" id="we1-Yg-tzl"/>
-                                        </connections>
-                                    </button>
-                                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" setsMaxLayoutWidthAtFirstLayout="YES" id="B2E-J8-GiB">
-                                        <rect key="frame" x="237" y="44" width="298" height="45"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                        <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="left" title="Logs out all devices expect for the current one" id="0pP-3M-fyL">
-                                            <font key="font" metaFont="system"/>
-                                            <color key="textColor" white="0.54790145990000005" alpha="1" colorSpace="calibratedWhite"/>
-                                            <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
-                                        </textFieldCell>
-                                    </textField>
-                                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" setsMaxLayoutWidthAtFirstLayout="YES" id="zAU-qj-vub">
-                                        <rect key="frame" x="237" y="144" width="298" height="51"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                        <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="left" title="Deleting all pictures, video and voice messages in cache folder" id="bKL-tQ-iOP">
-                                            <font key="font" metaFont="system"/>
-                                            <color key="textColor" white="0.55000000000000004" alpha="1" colorSpace="calibratedWhite"/>
-                                            <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
-                                        </textFieldCell>
-                                    </textField>
-                                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" id="Ue3-yQ-etS">
-                                        <rect key="frame" x="177" y="206" width="47" height="17"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="right" title="Cache:" id="SaF-bN-rc4">
-                                            <font key="font" metaFont="system"/>
-                                            <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
-                                            <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
-                                        </textFieldCell>
-                                    </textField>
-                                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" id="pJZ-ec-IHz">
-                                        <rect key="frame" x="163" y="101" width="61" height="17"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="right" title="Sessions:" id="BcJ-eZ-ZKY">
-                                            <font key="font" metaFont="system"/>
-                                            <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
-                                            <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
-                                        </textFieldCell>
-                                    </textField>
-                                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" id="e3s-cY-dgv">
-                                        <rect key="frame" x="163" y="21" width="60" height="17"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="right" title="Account:" id="9f4-YW-9yr">
-                                            <font key="font" metaFont="system"/>
-                                            <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
-                                            <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
-                                        </textFieldCell>
-                                    </textField>
-                                    <button verticalHuggingPriority="750" id="7UH-rj-e4p">
-                                        <rect key="frame" x="233" y="10" width="111" height="32"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                        <buttonCell key="cell" type="push" title="Log out" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="jqv-Uw-tiR">
-                                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                                            <font key="font" metaFont="system"/>
-                                        </buttonCell>
-                                        <connections>
-                                            <action selector="logOut:" target="-2" id="c6d-sn-8QW"/>
-                                        </connections>
-                                    </button>
-                                    <button verticalHuggingPriority="750" id="InX-g9-kjJ">
-                                        <rect key="frame" x="233" y="196" width="156" height="32"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                        <buttonCell key="cell" type="push" title="Clear all the cache" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="HbL-eL-ZpF">
-                                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                                            <font key="font" metaFont="system"/>
-                                        </buttonCell>
-                                        <connections>
-                                            <action selector="clearCache:" target="-2" id="O7z-x7-GJx"/>
-                                        </connections>
-                                    </button>
-                                    <box appearanceType="aqua" verticalHuggingPriority="750" title="Box" boxType="separator" titlePosition="noTitle" id="Z9b-u6-Zd4">
-                                        <rect key="frame" x="52" y="133" width="483" height="5"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                        <color key="borderColor" white="0.0" alpha="0.41999999999999998" colorSpace="calibratedWhite"/>
-                                        <color key="fillColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                                        <font key="titleFont" metaFont="system"/>
-                                    </box>
-                                </subviews>
-                            </view>
-                        </tabViewItem>
-                        <tabViewItem label="Black list" identifier="2" id="v2l-zL-7je">
-                            <view key="view" id="Ltd-re-H4Q">
-                                <rect key="frame" x="10" y="33" width="596" height="233"/>
-                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                <subviews>
-                                    <scrollView appearanceType="aqua" borderType="none" autohidesScrollers="YES" horizontalLineScroll="19" horizontalPageScroll="10" verticalLineScroll="19" verticalPageScroll="10" usesPredominantAxisScrolling="NO" id="Wej-Fm-BQ9">
-                                        <rect key="frame" x="17" y="34" width="562" height="196"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                        <clipView key="contentView" id="UPD-BK-Esc">
-                                            <rect key="frame" x="0.0" y="0.0" width="562" height="196"/>
-                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                            <subviews>
-                                                <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" columnSelection="YES" autosaveColumns="NO" id="aeg-fy-f31" customClass="BlockedTableController">
-                                                    <rect key="frame" x="0.0" y="0.0" width="562" height="19"/>
-                                                    <autoresizingMask key="autoresizingMask"/>
-                                                    <size key="intercellSpacing" width="3" height="2"/>
-                                                    <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
-                                                    <color key="gridColor" name="gridColor" catalog="System" colorSpace="catalog"/>
-                                                    <tableColumns>
-                                                        <tableColumn identifier="initials" width="226" minWidth="40" maxWidth="1000" id="4Rg-kT-DDu">
-                                                            <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left">
-                                                                <font key="font" metaFont="smallSystem"/>
-                                                                <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
-                                                                <color key="backgroundColor" white="0.33333298560000002" alpha="1" colorSpace="calibratedWhite"/>
-                                                            </tableHeaderCell>
-                                                            <textFieldCell key="dataCell" lineBreakMode="truncatingTail" selectable="YES" editable="YES" refusesFirstResponder="YES" alignment="left" identifier="initials" title="Text Cell" id="Zbx-8A-g4f">
-                                                                <font key="font" metaFont="system"/>
-                                                                <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
-                                                                <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
-                                                            </textFieldCell>
-                                                            <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
-                                                        </tableColumn>
-                                                        <tableColumn identifier="phone" width="330" minWidth="40" maxWidth="1000" id="Hwr-ea-aN4">
-                                                            <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left">
-                                                                <font key="font" metaFont="smallSystem"/>
-                                                                <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
-                                                                <color key="backgroundColor" white="0.33333298560000002" alpha="1" colorSpace="calibratedWhite"/>
-                                                            </tableHeaderCell>
-                                                            <textFieldCell key="dataCell" lineBreakMode="truncatingTail" selectable="YES" editable="YES" refusesFirstResponder="YES" alignment="left" identifier="phone" title="Text Cell" id="EXR-9X-3jg">
-                                                                <font key="font" metaFont="system"/>
-                                                                <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
-                                                                <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
-                                                            </textFieldCell>
-                                                            <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
-                                                        </tableColumn>
-                                                    </tableColumns>
-                                                </tableView>
-                                            </subviews>
-                                            <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
-                                        </clipView>
-                                        <scroller key="horizontalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="YES" id="FWv-XX-BCw">
-                                            <rect key="frame" x="1" y="210" width="631" height="16"/>
-                                            <autoresizingMask key="autoresizingMask"/>
-                                        </scroller>
-                                        <scroller key="verticalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="NO" id="MF9-2B-xYp">
-                                            <rect key="frame" x="224" y="17" width="15" height="102"/>
-                                            <autoresizingMask key="autoresizingMask"/>
-                                        </scroller>
-                                    </scrollView>
-                                    <button id="qoI-jc-Nyd">
-                                        <rect key="frame" x="37" y="5" width="21" height="21"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                        <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="NSRemoveTemplate" imagePosition="below" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="0oM-CQ-0li">
-                                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                                            <font key="font" metaFont="system"/>
-                                        </buttonCell>
-                                        <connections>
-                                            <action selector="removeBlockedUsers:" target="-2" id="9P5-Tx-uOJ"/>
-                                        </connections>
-                                    </button>
-                                    <button id="xVY-c2-9Gn">
-                                        <rect key="frame" x="17" y="5" width="21" height="21"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                        <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="NSAddTemplate" imagePosition="below" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="Cc5-fD-myn">
-                                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                                            <font key="font" metaFont="system"/>
-                                        </buttonCell>
-                                        <connections>
-                                            <action selector="addBlockedUser:" target="-2" id="5HY-gt-5R4"/>
-                                        </connections>
-                                    </button>
-                                </subviews>
-                            </view>
-                        </tabViewItem>
-                    </tabViewItems>
-                </tabView>
-            </subviews>
-        </customView>
         <customView appearanceType="aqua" id="E0K-fY-XQW">
             <rect key="frame" x="0.0" y="0.0" width="630" height="501"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
@@ -564,8 +361,4 @@
             <point key="canvasLocation" x="359" y="809.5"/>
         </customView>
     </objects>
-    <resources>
-        <image name="NSAddTemplate" width="11" height="11"/>
-        <image name="NSRemoveTemplate" width="11" height="11"/>
-    </resources>
 </document>

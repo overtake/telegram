@@ -221,6 +221,10 @@ static const int navigationOffset = 48;
     return _animationView;
 }
 
+-(BOOL)becomeFirstResponder {
+    return [self.currentController becomeFirstResponder];
+}
+
 - (void)pop_animationDidStart:(POPAnimation *)anim {
     NSView *view = [self.containerView.subviews lastObject];
     [view.layer setOpacity:1];

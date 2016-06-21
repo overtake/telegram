@@ -7,8 +7,6 @@
 //
 
 #import "VideoSenderItem.h"
-#import "ImageCache.h"
-#import "ImageStorage.h"
 #import "ImageUtils.h"
 #import "TGSendTypingManager.h"
 @interface VideoSenderItem ()
@@ -23,8 +21,7 @@
     [super setState:state];
 }
 
-
--(id)initWithPath:(NSString *)path_for_file forConversation:(TL_conversation *)conversation additionFlags:(int)additionFlags {
+-(id)initWithPath:(NSString *)path_for_file forConversation:(TL_conversation *)conversation additionFlags:(int)additionFlags caption:(NSString *)caption {
     if(self = [super init]) {
         self.path_for_file = path_for_file;
         self.conversation = conversation;
@@ -57,15 +54,21 @@
         [attributes addObject:[TL_documentAttributeFilename createWithFile_name:[path_for_file lastPathComponent]]];
         [attributes addObject:[TL_documentAttributeVideo createWithDuration:duration w:size.width h:size.height]];
         
-        TL_messageMediaDocument *media = [TL_messageMediaDocument createWithDocument:[TL_document createWithN_id:0 access_hash:0 date:[[MTNetwork instance] getTime] mime_type:@"video/mp4" size:(int)fileSize(path_for_file) thumb:cachedSize dc_id:0 attributes:attributes] caption:nil];
-
-        [[ImageCache sharedManager] setImage:thumbImage forLocation:[cachedSize location]];
-
+        TL_messageMediaDocument *media = [TL_messageMediaDocument createWithDocument:[TL_document createWithN_id:0 access_hash:0 date:[[MTNetwork instance] getTime] mime_type:@"video/mp4" size:(int)fileSize(path_for_file) thumb:cachedSize dc_id:0 attributes:attributes] caption:caption];
+        
+        [TGCache cacheImage:thumbImage forKey:cachedSize.location.cacheKey groups:@[IMGCACHE]];
+        
+        
         self.message = [MessageSender createOutMessage:@"" media:media conversation:conversation additionFlags:additionFlags];
         
     }
-
+    
     return self;
+}
+
+
+-(id)initWithPath:(NSString *)path_for_file forConversation:(TL_conversation *)conversation additionFlags:(int)additionFlags {
+    return [self initWithPath:path_for_file forConversation:conversation additionFlags:additionFlags caption:nil];
 }
 
 -(void)performRequest {

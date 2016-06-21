@@ -87,6 +87,7 @@
 +(void)hideAllModals;
 
 +(TMView *)modalView;
++(void)becomeFirstResponderToModalView;
 
 +(void)becomePasslock;
 

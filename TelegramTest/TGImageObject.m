@@ -8,7 +8,6 @@
 
 #import "TGImageObject.h"
 #import "DownloadPhotoItem.h"
-#import "ImageCache.h"
 #import "TGImageView.h"
 #import "ImageUtils.h"
 #import "TLFileLocation+Extensions.h"

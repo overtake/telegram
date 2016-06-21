@@ -1649,11 +1649,15 @@ static RBLPopover *popover;
     if(!_botKeyboard && keyboard) {
         
         _botKeyboard = [[TGBotCommandsKeyboard alloc] initWithFrame:NSMakeRect(self.attachButton.frame.origin.x + self.attachButton.frame.size.width + 21, NSHeight(self.inputMessageTextField.containerView.frame) + NSMinX(self.inputMessageTextField.frame) + 20 + (self.replyContainer ? 45 : 0), NSWidth(self.inputMessageTextField.containerView.frame), 30)];
+        [_botKeyboard setBackgroundColor:NSColorFromRGB(0xfafafa)];
         
         [self.normalView addSubview:_botKeyboard];
     } else {
-        [_botKeyboard removeFromSuperview];
-        _botKeyboard = nil;
+        if(!keyboard) {
+            [_botKeyboard removeFromSuperview];
+            _botKeyboard = nil;
+        }
+        
     }
     
    
@@ -1704,9 +1708,9 @@ static RBLPopover *popover;
         }
     }
 
-    if(self.replyContainer != nil) {
-        forceShow = NO;
-    }
+//    if(self.replyContainer != nil) {
+//        forceShow = NO;
+//    }
     
     [_botKeyboardButton setSelected:forceShow];
     [_botKeyboardButton setHidden:!_botKeyboard.isCanShow || self.replyContainer != nil || _template.type == TGInputMessageTemplateTypeEditMessage];
@@ -1851,8 +1855,10 @@ static RBLPopover *popover;
         }];
         
         
-        
-        [self.normalView addSubview:_replyContainer];
+        if(_botKeyboard)
+            [self.normalView addSubview:_replyContainer positioned:NSWindowBelow relativeTo:_botKeyboard];
+        else
+            [self.normalView addSubview:_replyContainer];
         
         if(updateHeight) {
             [self updateBottomHeight:animated];
@@ -1943,19 +1949,25 @@ static RBLPopover *popover;
     
     if(self.stateBottom == MessagesBottomViewNormalState) {
         
+        BOOL showkb = YES;
+        
         if(_imageAttachmentsController.isShown ) {
             height += 75;
+            showkb = NO;
         }
+        
+        
         
         if(self.replyContainer != nil || self.fwdContainer != nil || (self.webpageAttach != nil && self.inputMessageString.length > 0) || (_editMessageContainer != nil && !_editMessageContainer.isHidden)) {
             height+= MAX(MAX(MAX(NSHeight(self.replyContainer.frame),NSHeight(self.webpageAttach.frame)),NSHeight(self.fwdContainer.frame)),NSHeight(_editMessageContainer.frame)) + 5;
+             showkb = NO;
         }
         
         [_webpageAttach setHidden:_fwdContainer != nil];
         [_replyContainer setHidden:self.fwdContainer != nil || (self.webpageAttach != nil && self.inputMessageString.length > 0)];
         
         
-        if(_botKeyboard != nil) {
+        if(_botKeyboard != nil && (showkb || _replyContainer != nil)) {
             height+= (!_botKeyboard.isHidden ? NSHeight(_botKeyboard.frame) + 5 : 0);
         }
 
@@ -1985,7 +1997,7 @@ static RBLPopover *popover;
             
             [[_botKeyboard animator] setFrameOrigin:NSMakePoint(NSMinX(_botKeyboard.frame), NSHeight(self.inputMessageTextField.containerView.frame) + 20 )];
             
-            offset+=(!_botKeyboard.isHidden ? NSHeight(_botKeyboard.frame) : 0);
+            offset+=(!_botKeyboard.isHidden ? NSHeight(_botKeyboard.frame) + 5 : 0);
 
             
             [[_imageAttachmentsController animator] setFrameOrigin:NSMakePoint(NSMinX(_imageAttachmentsController.frame), NSHeight(self.inputMessageTextField.containerView.frame) + 20 )];
@@ -2009,7 +2021,7 @@ static RBLPopover *popover;
             
             [_botKeyboard setFrameOrigin:NSMakePoint(NSMinX(_botKeyboard.frame), NSHeight(self.inputMessageTextField.containerView.frame) + 20 )];
             
-            offset+=(!_botKeyboard.isHidden ? NSHeight(_botKeyboard.frame) : 0);
+            offset+=(!_botKeyboard.isHidden ? NSHeight(_botKeyboard.frame) + 5 : 0);
             
             [_imageAttachmentsController setFrameOrigin:NSMakePoint(NSMinX(_imageAttachmentsController.frame), NSHeight(self.inputMessageTextField.containerView.frame) + 20 )];
             

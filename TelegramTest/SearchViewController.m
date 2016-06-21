@@ -731,7 +731,7 @@ static int insertCount = 3;
     [ASQueue dispatchOnStageQueue:^{
         
         searchChats = [[ChatsManager sharedManager] searchWithString:searchString selector:@"title" checker:^BOOL(TLChat *chat) {
-            return !chat.isDeactivated;
+            return !chat.isDeactivated && !chat.left;
         }];
         
         searchUsers = [[UsersManager sharedManager] searchWithString:searchString selector:@"fullName" checker:^BOOL(TLUser *user) {

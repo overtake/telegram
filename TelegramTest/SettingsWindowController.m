@@ -8,14 +8,11 @@
 
 #import "SettingsWindowController.h"
 #import "NSStringCategory.h"
-#import "TMClickTextFieldView.h"
-#import "ImageStorage.h"
 
 #import <AddressBook/AddressBookUI.h>
 #import <AddressBook/AddressBook.h>
 
 
-#import "BlockedTableController.h"
 
 @interface SettingsWindowController ()<SettingsListener>
 
@@ -43,7 +40,6 @@
 @property (weak) IBOutlet NSToolbar *tool_bar;
 @property (weak) IBOutlet NSButton *add_to_blocks;
 
-@property (weak) IBOutlet BlockedTableController *blocked_table_view;
 @property (weak) IBOutlet NSButton *remove_from_block_button;
 
 @property (nonatomic,strong) ABPeoplePickerView *peoplePickerView;
@@ -178,7 +174,6 @@
     [self.markedInputText setTitle:NSLocalizedString(@"Settings.CheckMarkedInputText", nil)];
     
     
-    self.blocked_table_view.removeButton = self.remove_from_block_button;
     
     [self.chat_settings_view setFrameOrigin:NSMakePoint(0, 30)];
     
@@ -415,7 +410,6 @@ static void ListChanged(LSSharedFileListRef inList, void *context) {
 - (IBAction)clearCache:(id)sender {
     [Storage saveEmoji:[NSMutableArray array]];
     [Storage saveInputTextForPeers:[NSMutableDictionary dictionary]];
-    [ImageStorage clearCache];
 }
 - (IBAction)terminateSessions:(id)sender {
     
@@ -510,22 +504,6 @@ static void ListChanged(LSSharedFileListRef inList, void *context) {
     
 }
 
-
-
-- (IBAction)addBlockedUser:(id)sender {
-    
-    NSMutableArray *filter = [[NSMutableArray alloc] init];
-    
-    for (TL_contactBlocked *contact in self.blocked_table_view.blockedList) {
-        [filter addObject:@(contact.user_id)];
-    }
-    
-}
-
-
-- (IBAction)removeBlockedUsers:(id)sender {
-    [self.blocked_table_view unblockSelected];
-}
 
 -(void)updateWindowWithHeight:(float)height animate:(BOOL)animate {
     

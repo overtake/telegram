@@ -49,8 +49,6 @@
 
 -(void)addController:(TGViewController *)controller proportion:(struct TGSplitProportion)proportion {
     
-    assert([NSThread isMainThread] && controller.view.superview == nil);
-    
     
     [self addSubview:controller.view];
     

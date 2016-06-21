@@ -23,6 +23,14 @@
 @interface FileUtils : NSObject
 
 
+typedef enum {
+    PasteBoardItemTypeVideo,
+    PasteBoardItemTypeDocument,
+    PasteBoardItemTypeImage,
+    PasteBoardItemTypeGif,
+    PasteBoardTypeLink
+} PasteBoardItemType;
+
 extern NSString *const TGImagePType;
 
 extern NSString *const TGImportCardPrefix;

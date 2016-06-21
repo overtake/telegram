@@ -227,6 +227,16 @@ void removeMessageMedia(TL_localMessage *message) {
         NSString *path = mediaFilePath(message);
         
     }
+}
+
++ (void) clearCache {
+
+    [[NSFileManager defaultManager] removeItemAtPath:path() error:nil];
+    
+    [[NSFileManager defaultManager] createDirectoryAtPath:path()
+                              withIntermediateDirectories:YES
+                                               attributes:nil
+                                                    error:nil];
     
 }
 

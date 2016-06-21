@@ -11,7 +11,6 @@
 #import "TLFileLocation+Extensions.h"
 #import "DownloadQueue.h"
 #import "TMMediaController.h"
-#import "ImageCache.h"
 #import "DownloadPhotoItem.h"
 #import "ImageUtils.h"
 @interface TMPreviewPhotoItem ()
@@ -67,7 +66,7 @@
     TL_photoSize *size = [((TL_messageMediaPhoto *)[(TL_localMessage *)_previewObject.media media]).photo.sizes lastObject];
     
     if(!_previewImage) {
-        _previewImage = [[ImageCache sharedManager] imageFromMemory:size.location];
+        _previewImage = _previewImage = [TGCache cachedImage:size.location.cacheKey];
        
     }
     

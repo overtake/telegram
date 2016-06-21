@@ -8,7 +8,6 @@
 
 #import "ImageStorage.h"
 #import "ImageUtils.h"
-#import "ImageCache.h"
 #import "FileUtils.h"
 @implementation ImageStorage
 
@@ -26,22 +25,7 @@ static dispatch_queue_t image_queue() {
     return af_image_request_operation_processing_queue;
 }
 
-+ (void) clearCache {
-//    MTLog(@"clear path %@", path());
-   /// CFAbsoluteTime time = getF
-    
-    [[NSFileManager defaultManager] removeItemAtPath:path() error:nil];
-    
-    [[NSFileManager defaultManager] createDirectoryAtPath:path()
-                              withIntermediateDirectories:YES
-                                               attributes:nil
-                                                    error:nil];
-    
-    
-    [[ImageCache sharedManager] clear];
-    
-    
-}
+
 
 +(void)saveImageWithName:(id)name image:(NSImage *)image completionHandler:(void (^)(void))completionHandler {
     dispatch_async(image_queue(), ^{

@@ -9,7 +9,6 @@
 #import "TMPreviewVideoItem.h"
 #import "FileUtils.h"
 #import "TLFileLocation+Extensions.h"
-#import "ImageCache.h"
 
 @implementation TMPreviewVideoItem
 

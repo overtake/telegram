@@ -12,7 +12,6 @@
 #import "TMMediaUserPictureController.h"
 #import "UserInfoShortButtonView.h"
 #import "UserInfoShortTextEditView.h"
-#import "UserCardViewController.h"
 #import "TLPeer+Extensions.h"
 #import "TGPhotoViewer.h"
 @interface AccountScrollView : NSScrollView
@@ -94,7 +93,6 @@
 
 
 
-@property (nonatomic,strong) UserCardViewController *userCardViewController;
 
 
 @property (nonatomic,strong) UserInfoShortButtonView *selectedController;
@@ -234,7 +232,6 @@ typedef enum {
     [self.scrollView setDrawsBackground:YES];
     
   
-    self.userCardViewController = [[UserCardViewController alloc] initWithFrame:NSMakeRect(0, 0, 350, 150)];
     
     FlippedView *container = [[FlippedView alloc] initWithFrame:self.scrollView.bounds];
     

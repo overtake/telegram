@@ -88,7 +88,6 @@
     self.blockedUsersViewController = [[BlockedUsersViewController alloc] initWithFrame:rect];
     
     self.generalSettingsViewController = [[GeneralSettingsViewController alloc] initWithFrame:rect];
-    self.settingsSecurityViewController = [[SettingsSecurityViewController alloc] initWithFrame:rect];
     
     self.aboutViewController = [[AboutViewController alloc] initWithFrame:rect];
     self.userNameViewController = [[UserNameViewController alloc] initWithFrame:rect];
@@ -358,7 +357,7 @@
         
         TGInputMessageTemplate *template = [[TGInputMessageTemplate templateWithType:TGInputMessageTemplateTypeSimpleText ofPeerId:dialog.peer_id] copy];
         [template updateTextAndSave:text];
-        [Notification perform:UPDATE_MESSAGE_TEMPLATE data:@{KEY_TEMPLATE:template,KEY_PEER_ID:@(dialog.peer_id)}];
+        [template performNotification];
                 
         [self hideModalView:YES animation:YES];
         
@@ -719,15 +718,7 @@
     [self.navigationViewController pushViewController:self.generalSettingsViewController animated:self.navigationViewController.currentController != [self noDialogsSelectedViewController]];
 }
 
-- (void)showSecuritySettings {
-    if(self.navigationViewController.currentController == self.settingsSecurityViewController)
-        return;
-    
-    [self hideModalView:YES animation:NO];
-    
-    
-    [self.navigationViewController pushViewController:self.settingsSecurityViewController animated:self.navigationViewController.currentController != [self noDialogsSelectedViewController]];
-}
+
 
 - (void)showAbout {
     if(self.navigationViewController.currentController == self.aboutViewController)

@@ -8,11 +8,9 @@
 
 #import "TelegramWindow.h"
 #import "Telegram.h"
-#import "TMWindowTitleView.h"
 #import "HackUtils.h"
 
 @interface TelegramWindow ()
-@property (nonatomic,strong) TMWindowTitleView *field;
 @end
 
 @implementation TelegramWindow
@@ -28,42 +26,7 @@
 - (id)initWithContentRect:(NSRect)contentRect styleMask:(NSUInteger)aStyle backing:(NSBackingStoreType)bufferingType defer:(BOOL)flag {
     self = [super initWithContentRect:contentRect styleMask:aStyle backing:bufferingType defer:flag];
     if(self) {
-        
-//        self.titleVisibility = NSWindowTitleHidden;
-//        self.titlebarAppearsTransparent = YES;
-//        
-//        self.backgroundColor = [NSColor whiteColor];
-       // self.styleMask |= NSFullSizeContentViewWindowMask;
-        
-        
-       // self.titlebarColor = [NSColor colorWithCalibratedWhite:1 alpha:1.0];
-        //self.enableGradients = NO;
-        
-      //  [self setContentBorderThickness:0 forEdge:NSMinYEdge];
-        //[self setAutorecalculatesContentBorderThickness:YES forEdge:NSMinYEdge];
-      //  [self setStyleMask:<#(NSUInteger)#>]
-        
-        //[self initialize];
-        
-//        NSRect boundsRect = [[[self contentView] superview] bounds];
-//        self.field = [[TMWindowTitleView alloc] initWithFrame:boundsRect];
-//        [self.field setAutoresizingMask:(NSViewWidthSizable | NSViewHeightSizable)];
-//    
-//      //  self.appearance = [[NSAppearance alloc] initWithAppearanceNamed:@"AMEditorAppearance" bundle:nil];
-//       // NSModalPanelWindowLevel - setLevel -- чтоб окно за другое нельзя было переемстить
-//        [HackUtils printViews:[[self contentView] superview]];
-//        
-//        @try {
-//         //   [[[self contentView] superview] addSubview:self.field positioned:NSWindowBelow relativeTo:[[[[self contentView] superview] subviews] objectAtIndex:0]];
-//
-//        }
-//        @catch (NSException *exception) {
-//            
-//        }
-//        @finally {
-//            
-//        }
-        
+
        
     }
     return self;

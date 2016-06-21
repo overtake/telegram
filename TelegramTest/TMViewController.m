@@ -353,6 +353,31 @@ static TGModalSetCaptionView *setCaptionView;
     return modals;
 }
 
++(void)becomeFirstResponderToModalView {
+    
+    
+    
+    NSArray *modals = [self modalsView];
+    
+    if(modals.count > 0) {
+        __block TGModalView *modalView = [modals lastObject];
+        
+        [modals enumerateObjectsWithOptions:NSEnumerationReverse usingBlock:^(TGModalView *obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            
+            NSUInteger idx1 = [modalView.superview.subviews indexOfObject:modalView];
+            NSUInteger idx2 = [modalView.superview.subviews indexOfObject:obj];
+            
+            if(idx2 > idx1) {
+                modalView = obj;
+            }
+            
+        }];
+        
+        [modalView becomeFirstResponder];
+    }
+    
+}
+
 +(void)hideAllModals {
     NSArray *modals = [self modalsView];
     

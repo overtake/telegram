@@ -11,8 +11,6 @@
 #import "Notification.h"
 #import "TLPeer+Extensions.h"
 #import "UploadOperation.h"
-#import "ImageCache.h"
-#import "ImageStorage.h"
 #import "ImageUtils.h"
 #import <QTKit/QTKit.h>
 #import "Crypto.h"

@@ -14,10 +14,8 @@
 #import "TGSecretAction.h"
 #ifdef TGDEBUG
 #import <Sparkle/Sparkle.h>
-#import "FFYDaemonController.h"
 #endif
 
-#import "ImageStorage.h"
 #import "FileUtils.h"
 #import "MTNetwork.h"
 #import "MessageSender.h"
@@ -47,7 +45,6 @@
 #import "MessageInputGrowingTextView.h"
 #import "MessagesBottomView.h"
 #import "TGAudioPlayerWindow.h"
-#import "TGUpdater.h"
 #import "TGHeadChatPanel.h"
 #import "NSArrayCategory.h"
 #import "FullUsersManager.h"
@@ -355,6 +352,7 @@ void exceptionHandler(NSException * exception)
 
 - (void)initializeUpdater {
     
+
     
 #ifdef TGDEBUG
     
@@ -613,8 +611,13 @@ void exceptionHandler(NSException * exception)
                 return [[NSEvent alloc] init];
             }
         } else if(![responder isKindOfClass:[NSTextView class]] || ![responder isEditable]) {
-            if(incomingEvent.modifierFlags == 256 && [Telegram rightViewController].navigationViewController.currentController == [Telegram rightViewController].messagesViewController) {
-                [[[Telegram rightViewController] messagesViewController] becomeFirstResponder];
+            if(incomingEvent.modifierFlags == 256 && appWindow().navigationController.currentController == appWindow().navigationController.messagesViewController) {
+                if(![TMViewController isModalActive])
+                    [appWindow().navigationController.messagesViewController becomeFirstResponder];
+                else
+                {
+                    [TMViewController becomeFirstResponderToModalView];
+                }
             }
         }
         
@@ -646,8 +649,8 @@ void exceptionHandler(NSException * exception)
             
         }
         
-        if((![responder isKindOfClass:[NSTextView class]] || ![responder isEditable]) && [SelectTextManager count] == 0  && ![responder isKindOfClass:[TGCTextView class]])
-            [[Telegram rightViewController] becomeFirstResponder];
+        if((![responder isKindOfClass:[NSTextView class]] || ![responder isEditable]) && [SelectTextManager count] == 0  && ![responder isKindOfClass:[TGCTextView class]] && ![responder isKindOfClass:[TGModalView class]])
+            [appWindow().navigationController becomeFirstResponder];
         
         if([TGPasslock isVisibility]) {
            
@@ -1037,9 +1040,7 @@ void exceptionHandler(NSException * exception)
 }
 
 
-- (IBAction)clearImagesCache:(id)sender {
-    [ImageStorage clearCache];
-}
+
 
 - (IBAction)updateProfilePhoto:(id)sender {
     

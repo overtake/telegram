@@ -9,12 +9,10 @@
 #import "TelegramFirstController.h"
 #define PERFORM_SELECTOR()  if([self.viewController respondsToSelector:sender.action]) [self controller:self.viewController performSelector:sender.action withObject:sender];
 #import "TMMediaController.h"
-#import "AboutViewControllerWindowController.h"
 #import "Rebel/Rebel.h"
 #import "TGPhotoViewer.h"
 #import "TGAudioPlayerWindow.h"
 @interface TelegramFirstController ()
-@property (nonatomic,strong) AboutViewControllerWindowController *aboutViewController;
 
 
 

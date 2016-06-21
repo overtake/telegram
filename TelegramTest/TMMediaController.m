@@ -9,7 +9,6 @@
 #import "TMMediaController.h"
 #import "FileUtils.h"
 #import "TLFileLocation+Extensions.h"
-#import "ImageCache.h"
 #import "TLPeer+Extensions.h"
 #import "TMPreviewDocumentItem.h"
 

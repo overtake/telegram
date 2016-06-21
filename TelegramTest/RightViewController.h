@@ -17,7 +17,6 @@
 #import "EncryptedKeyViewController.h"
 #import "BlockedUsersViewController.h"
 #import "GeneralSettingsViewController.h"
-#import "SettingsSecurityViewController.h"
 #import "AboutViewController.h"
 #import "UserNameViewController.h"
 #import "AddContactViewController.h"
@@ -62,7 +61,6 @@
 @property (nonatomic, strong) EncryptedKeyViewController *encryptedKeyViewController;
 @property (nonatomic, strong) BlockedUsersViewController *blockedUsersViewController;
 @property (nonatomic, strong) GeneralSettingsViewController *generalSettingsViewController;
-@property (nonatomic, strong) SettingsSecurityViewController *settingsSecurityViewController;
 @property (nonatomic, strong) AboutViewController *aboutViewController;
 @property (nonatomic, strong) UserNameViewController *userNameViewController;
 @property (nonatomic, strong) AddContactViewController *addContactViewController;
@@ -110,7 +108,6 @@
 
 - (void)showBlockedUsers;
 - (void)showGeneralSettings;
-- (void)showSecuritySettings;
 - (void)showAbout;
 - (void)showUserNameController;
 - (void)showUserNameControllerWithChannel:(TL_channel *)channel completionHandler:(dispatch_block_t)completionHandler;

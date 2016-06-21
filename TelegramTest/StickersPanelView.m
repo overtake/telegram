@@ -226,13 +226,17 @@ bool isRemoteStickersLoaded() {
         
         NSDictionary *data = [transaction objectForKey:@"modern_stickers" inCollection:STICKERS_COLLECTION];
         
-        NSDictionary *sets = data[@"serialized"];
+        NSDictionary *stickers = data[@"serialized"];
+        
+        
+        NSArray *sets = data[@"sets"];
+
         
         NSMutableArray *s = [NSMutableArray array];
                               
-        [sets enumerateKeysAndObjectsUsingBlock:^(id  _Nonnull set_id, id  _Nonnull stickers, BOOL * _Nonnull stop) {
+        [sets enumerateObjectsUsingBlock:^(TL_stickerSet *obj, NSUInteger idx, BOOL * _Nonnull stop) {
             
-            [stickers enumerateObjectsUsingBlock:^(TL_document *evaluatedObject, NSUInteger idx, BOOL * _Nonnull stop) {
+            [stickers[@(obj.n_id)] enumerateObjectsUsingBlock:^(TL_document *evaluatedObject, NSUInteger idx, BOOL * _Nonnull stop) {
                 
                 TL_documentAttributeSticker *attr = (TL_documentAttributeSticker *) [evaluatedObject attributeWithClass:[TL_documentAttributeSticker class]];
                 

@@ -9,5 +9,5 @@
 #import "SenderItem.h"
 
 @interface DocumentSenderItem : SenderItem
-
+- (id)initWithPath:(NSString *)path forConversation:(TL_conversation *)conversation additionFlags:(int)additionFlags caption:(NSString *)caption;
 @end
