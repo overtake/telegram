@@ -292,16 +292,16 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            shouldBeEnabled = "Yes"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "TelegramTest/TGInputMessageTemplate.m"
-            timestampString = "488311007.739332"
+            filePath = "TelegramTest/TGReplyObject.m"
+            timestampString = "488317009.081416"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "169"
-            endingLineNumber = "169"
-            landmarkName = "-saveTemplateInCloudIfNeeded"
+            startingLineNumber = "56"
+            endingLineNumber = "56"
+            landmarkName = "-initWithReplyMessage:fromMessage:tableItem:withoutCache:pinnedMessage:editMessage:"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>

@@ -458,6 +458,15 @@ DYNAMIC_PROPERTY(DDialog);
 
 -(void)setReplyMessage:(TL_localMessage *)replyMessage {
     
+    if(_replyMessage && !replyMessage) {
+        int bp = 0;
+    }
+    
+    
+    if(replyMessage) {
+        int bp = 0;
+    }
+    
     if(self.n_id == 41345) {
         int bp = 0;
     }
