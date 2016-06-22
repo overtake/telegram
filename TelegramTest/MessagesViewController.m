@@ -4236,6 +4236,10 @@ static NSTextAttachment *headerMediaIcon() {
     [self sendImage:file_path forConversation:conversation file_data:data isMultiple:YES addCompletionHandler:nil];
 }
 
+- (void)sendImage:(NSString *)file_path forConversation:(TL_conversation *)conversation file_data:(NSData *)data caption:(NSString *)caption {
+    [self sendImage:file_path forConversation:conversation file_data:data isMultiple:YES caption:caption addCompletionHandler:nil];
+}
+
 - (void)sendAttachments:(NSArray *)attachments forConversation:(TL_conversation *)conversation addCompletionHandler:(dispatch_block_t)completeHandler {
     if(!conversation.canSendMessage || conversation.type == DialogTypeSecretChat)
         return;
@@ -4292,13 +4296,16 @@ static NSTextAttachment *headerMediaIcon() {
     
 }
 
-
 -(void)sendImage:(NSString *)file_path forConversation:(TL_conversation *)conversation file_data:(NSData *)data isMultiple:(BOOL)isMultiple addCompletionHandler:(dispatch_block_t)completeHandler {
+    [self sendImage:file_path forConversation:conversation file_data:data isMultiple:isMultiple caption:nil addCompletionHandler:completeHandler];
+}
+
+-(void)sendImage:(NSString *)file_path forConversation:(TL_conversation *)conversation file_data:(NSData *)data isMultiple:(BOOL)isMultiple caption:(NSString *)caption addCompletionHandler:(dispatch_block_t)completeHandler {
     if(!conversation.canSendMessage)
         return;
     
-    if(self.conversation.type != DialogTypeSecretChat && (isMultiple || self.bottomView.attachmentsCount > 0)) {
-        [self addImageAttachment:file_path  forConversation:conversation file_data:data addCompletionHandler:completeHandler];
+    if(self.conversation.type != DialogTypeSecretChat && self.bottomView.attachmentsCount > 0) {
+        [self addImageAttachment:file_path forConversation:conversation file_data:data addCompletionHandler:completeHandler];
         
         return;
     }
@@ -4335,7 +4342,7 @@ static NSTextAttachment *headerMediaIcon() {
             
            
             [ASQueue dispatchOnMainQueue:^{
-                [self sendDocument:path forConversation:conversation addCompletionHandler:completeHandler];
+                [self sendDocument:path forConversation:conversation caption:caption addCompletionHandler:completeHandler];
             }];
             
             
@@ -4354,7 +4361,7 @@ static NSTextAttachment *headerMediaIcon() {
         if(self.conversation.type == DialogTypeSecretChat) {
             sender = [[FileSecretSenderItem alloc] initWithImage:originImage uploadType:UploadImageType forConversation:conversation];
         } else {
-            sender = [[ImageSenderItem alloc] initWithImage:originImage jpegData:imageData forConversation:conversation additionFlags:self.senderFlags];
+            sender = [[ImageSenderItem alloc] initWithImage:originImage jpegData:imageData forConversation:conversation additionFlags:self.senderFlags caption:caption];
         }
         
         sender.tableItem = [[self messageTableItemsFromMessages:@[sender.message]] lastObject];

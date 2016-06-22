@@ -119,7 +119,7 @@ typedef enum {
 
 
 
-
+- (void)sendImage:(NSString *)file_path forConversation:(TL_conversation *)conversation file_data:(NSData *)data caption:(NSString *)caption;
 - (void)sendImage:(NSString *)file_path forConversation:(TL_conversation *)conversation file_data:(NSData *)data;
 - (void)sendVideo:(NSString *)file_path forConversation:(TL_conversation *)conversation;
 - (void)sendDocument:(NSString *)file_path forConversation:(TL_conversation *)conversation;

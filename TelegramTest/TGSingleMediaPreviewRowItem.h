@@ -11,12 +11,15 @@
 @interface TGSingleMediaPreviewRowItem : TGGeneralRowItem
 
 
--(id)initWithObject:(id)object ptype:(PasteBoardItemType)ptype;
+-(id)initWithObject:(id)object ptype:(PasteBoardItemType)ptype data:(NSData *)data;
+
+@property (nonatomic,strong,readonly) NSData *data;
 
 @property (nonatomic,strong,readonly) NSAttributedString *text;
 @property (nonatomic,assign,readonly) NSSize textSize;
 
 @property (nonatomic,assign,readonly) PasteBoardItemType ptype;
 @property (nonatomic,strong,readonly) NSImage *thumbImage;
+@property (nonatomic,assign,readonly) NSSize thumbSize;
 
 @end

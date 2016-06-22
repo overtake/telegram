@@ -1997,7 +1997,7 @@ static RBLPopover *popover;
             
             [[_botKeyboard animator] setFrameOrigin:NSMakePoint(NSMinX(_botKeyboard.frame), NSHeight(self.inputMessageTextField.containerView.frame) + 20 )];
             
-            offset+=(!_botKeyboard.isHidden ? NSHeight(_botKeyboard.frame) + 5 : 0);
+            offset+=((_botKeyboard && !_botKeyboard.isHidden) ? NSHeight(_botKeyboard.frame) + 5 : 0);
 
             
             [[_imageAttachmentsController animator] setFrameOrigin:NSMakePoint(NSMinX(_imageAttachmentsController.frame), NSHeight(self.inputMessageTextField.containerView.frame) + 20 )];
@@ -2021,7 +2021,7 @@ static RBLPopover *popover;
             
             [_botKeyboard setFrameOrigin:NSMakePoint(NSMinX(_botKeyboard.frame), NSHeight(self.inputMessageTextField.containerView.frame) + 20 )];
             
-            offset+=(!_botKeyboard.isHidden ? NSHeight(_botKeyboard.frame) + 5 : 0);
+            offset+=((_botKeyboard && !_botKeyboard.isHidden) ? NSHeight(_botKeyboard.frame) + 5 : 0);
             
             [_imageAttachmentsController setFrameOrigin:NSMakePoint(NSMinX(_imageAttachmentsController.frame), NSHeight(self.inputMessageTextField.containerView.frame) + 20 )];
             

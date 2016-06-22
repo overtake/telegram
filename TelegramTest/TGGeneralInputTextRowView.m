@@ -55,6 +55,10 @@
    
 }
 
+-(BOOL)becomeFirstResponder {
+    return [_textField becomeFirstResponder];
+}
+
 -(void)textFieldDidBecomeFirstResponder:(id)field {
     if( self.item.callback != nil) {
         self.item.callback(self.item);

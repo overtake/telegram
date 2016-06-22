@@ -11,6 +11,6 @@
 @interface TGSingleMediaSenderModalView : TGModalView
 
 
--(void)show:(NSWindow *)window animated:(BOOL)animated file:(NSString *)filepath ptype:(PasteBoardItemType)ptype conversation:(TL_conversation *)conversation messagesViewController:(MessagesViewController *)messagesViewController;
+-(void)show:(NSWindow *)window animated:(BOOL)animated file:(NSString *)filepath filedata:(NSData *)filedata ptype:(PasteBoardItemType)ptype conversation:(TL_conversation *)conversation messagesViewController:(MessagesViewController *)messagesViewController;
 
 @end

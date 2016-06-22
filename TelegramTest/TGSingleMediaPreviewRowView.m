@@ -50,13 +50,19 @@
 -(void)redrawRow {
     [super redrawRow];
     
-    [_imageView setCenteredYByView:self];
+    
     
     TGSingleMediaPreviewRowItem *item = (TGSingleMediaPreviewRowItem *) self.rowItem;
     
+    [_imageView setFrameSize:item.thumbSize];
     
+    if(item.text)
+        [_imageView setCenteredYByView:self];
+    else
+        [_imageView setCenterByView:self];
     
     _imageView.image = item.thumbImage;
+    
     
     if(!_imageView.image)
     {

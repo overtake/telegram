@@ -332,9 +332,9 @@ static ASQueue *queue;
     if(_autoSave && save) {
         cancel_delayed_block(_futureblock);
         
-        _futureblock = perform_block_after_delay(0.5, ^{
+       // _futureblock = perform_block_after_delay(0.5, ^{
             [self saveForce];
-        });
+       // });
     }
     
 }

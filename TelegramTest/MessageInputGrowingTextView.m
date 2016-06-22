@@ -17,6 +17,7 @@
 #import "NSString+Extended.h"
 #import "TGBotCommandsPopup.h"
 #import "TGSingleMediaSenderModalView.h"
+#import "MessagesBottomView.h"
 @interface TGCustomMentionRange : NSObject
 @property (nonatomic,strong) NSString *original;
 @property (nonatomic,assign) NSRange range;
@@ -239,7 +240,11 @@
        
     }
 
-
+    dispatch_block_t modal_caption_block = ^{
+        TGSingleMediaSenderModalView *modalView = [[TGSingleMediaSenderModalView alloc] initWithFrame:NSZeroRect];
+        
+        [modalView show:self.window animated:YES file:image ? image.name : path filedata:[image TIFFRepresentation] ptype:type conversation:self.controller.conversation messagesViewController:self.controller];
+    };
     
     
     NSAlert *alert = nil;
@@ -256,7 +261,10 @@
                     }
                 }];
             } else {
-                [self.controller sendImage:image.name forConversation:self.controller.conversation file_data:[image TIFFRepresentation]];
+                if(self.controller.bottomView.attachmentsCount == 0)
+                    modal_caption_block();
+                else
+                    [self.controller sendImage:@"image" forConversation:self.controller.conversation file_data:[image TIFFRepresentation]];
             }
             
             
@@ -267,9 +275,7 @@
         {
             
             if(self.controller.conversation.type != DialogTypeSecretChat) {
-                TGSingleMediaSenderModalView *modalView = [[TGSingleMediaSenderModalView alloc] initWithFrame:NSZeroRect];
-                
-                [modalView show:self.window animated:YES file:path ptype:type conversation:self.controller.conversation messagesViewController:self.controller];
+                modal_caption_block();
                 
                 break;
             } else {
@@ -293,8 +299,7 @@
             if(self.controller.conversation.type != DialogTypeSecretChat) {
                 TGSingleMediaSenderModalView *modalView = [[TGSingleMediaSenderModalView alloc] initWithFrame:NSZeroRect];
                 
-                [modalView show:self.window animated:YES file:path ptype:type conversation:self.controller.conversation messagesViewController:self.controller];
-                
+                modal_caption_block();
                 break;
             } else {
                 alert = [NSAlert alertWithMessageText:NSLocalizedString(@"Conversation.Confirm.SendThisVideo", nil) informativeText:NSLocalizedString(@"Conversation.Confirm.SendThisVideoDescription", nil) block:^(id result) {

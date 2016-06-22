@@ -10,6 +10,7 @@
 #import "TGSettingsTableView.h"
 #import "TGGeneralInputRowItem.h"
 #import "TGSingleMediaPreviewRowItem.h"
+#import "TGGeneralInputTextRowView.h"
 @interface TGSingleMediaSenderModalView ()
 @property (nonatomic,strong) NSString *filepath;
 @property (nonatomic,strong) TGSettingsTableView *tableView;
@@ -17,7 +18,8 @@
 
 @property (nonatomic,strong) TL_conversation *conversation;
 @property (nonatomic,weak) MessagesViewController *messagesViewController;
-@property (nonatomic,assign) PasteBoardItemType ptype;
+@property (nonatomic,assign) BOOL sendAsCompressed;
+@property (nonatomic,strong) TGSingleMediaPreviewRowItem *item;
 @end
 
 @implementation TGSingleMediaSenderModalView
@@ -47,16 +49,46 @@
 
 
 -(void)okAction {
-    if(_ptype == PasteBoardItemTypeVideo) {
-        [_messagesViewController sendVideo:_filepath forConversation:_conversation caption:_inputItem.result.string addCompletionHandler:nil];
-    } else
-        [_messagesViewController sendDocument:_filepath forConversation:_conversation caption:_inputItem.result.string addCompletionHandler:nil];
     
     [self close:YES];
+    
+    if(_item.ptype == PasteBoardItemTypeVideo)
+        [_messagesViewController sendVideo:_filepath forConversation:_conversation caption:_inputItem.result.string addCompletionHandler:nil];
+     else if(_item.ptype == PasteBoardItemTypeDocument)
+        [_messagesViewController sendDocument:_filepath forConversation:_conversation caption:_inputItem.result.string addCompletionHandler:nil];
+    else if(_item.ptype == PasteBoardItemTypeImage) {
+        if(_sendAsCompressed)
+            [_messagesViewController sendImage:_filepath forConversation:_conversation file_data:_item.data caption:_inputItem.result.string];
+        else {
+            _filepath = exportPath(rand_long(), @"jpg");
+            [jpegNormalizedData(_item.thumbImage) writeToFile:_filepath atomically:YES];
+            [_messagesViewController sendDocument:_filepath forConversation:_conversation caption:_inputItem.result.string addCompletionHandler:nil];
+        }
+        
+    }
+        
+    
+    
 }
 
 -(void)cancelAction {
     [self close:YES];
+}
+
+-(BOOL)becomeFirstResponder {
+    
+    @try {
+        TGGeneralInputTextRowView *view = (TGGeneralInputTextRowView *) [self.tableView rowViewAtRow:_item.ptype != PasteBoardItemTypeImage ? 1 : 3 makeIfNecessary:NO].subviews[0];
+
+        
+        if(view)
+            return [view becomeFirstResponder];
+        
+    } @catch (NSException *exception) {
+        
+    }
+    
+    return [super becomeFirstResponder];
 }
 
 
@@ -64,18 +96,32 @@
     [NSException raise:@"use show:animated:file:" format:@""];
 }
 
--(void)show:(NSWindow *)window animated:(BOOL)animated file:(NSString *)filepath ptype:(PasteBoardItemType)ptype conversation:(TL_conversation *)conversation messagesViewController:(MessagesViewController *)messagesViewController {
-    [super show:window animated:animated];
+-(void)show:(NSWindow *)window animated:(BOOL)animated file:(NSString *)filepath filedata:(NSData *)filedata ptype:(PasteBoardItemType)ptype conversation:(TL_conversation *)conversation messagesViewController:(MessagesViewController *)messagesViewController {
     
     
     _messagesViewController = messagesViewController;
     _conversation = conversation;
     _filepath = filepath;
-    _ptype = ptype;
+    _sendAsCompressed = YES;
     
-    TGSingleMediaPreviewRowItem *previewItem = [[TGSingleMediaPreviewRowItem alloc] initWithObject:filepath ptype:ptype];
+    _item = [[TGSingleMediaPreviewRowItem alloc] initWithObject:filepath ptype:ptype data:filedata];
     
-    [_tableView addItem:previewItem tableRedraw:YES];
+    [_tableView addItem:_item tableRedraw:YES];
+    
+    if(ptype == PasteBoardItemTypeImage) {
+        [_tableView addItem:[[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeSwitch callback:^(TGGeneralRowItem *item) {
+            
+            _sendAsCompressed = !_sendAsCompressed;
+            
+            [_tableView reloadData];
+            
+        } description:NSLocalizedString(@"SendMedia.SendAsCompressed", nil) height:42 stateback:^id(TGGeneralRowItem *item) {
+            return @(_sendAsCompressed);
+        }] tableRedraw:YES];
+        [_tableView addItem:[[TGGeneralRowItem alloc] initWithHeight:20] tableRedraw:YES];
+
+    }
+
     
     
     _inputItem = [[TGGeneralInputRowItem alloc] init];
@@ -86,16 +132,11 @@
     [_tableView addItem:_inputItem tableRedraw:YES];
     
     
+    [self setContainerFrameSize:NSMakeSize(350, _tableView.scrollView.documentSize.height + 50 + 40)];
     
     
-    
-//    GeneralSettingsBlockHeaderItem *description = [[GeneralSettingsBlockHeaderItem alloc] initWithString:NSLocalizedString(@"Media.AddFileCaptionDesc", nil) height:50 flipped:YES];
-//    
-//    
-//    [_tableView addItem:description tableRedraw:YES];
-    
-    
-    
+    [super show:window animated:animated];
+
 }
 
 
