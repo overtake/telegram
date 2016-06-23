@@ -37,6 +37,9 @@
     if(entities.count > 0)
         flags |= (1 << 3);
     
+    if([SettingsArchiver checkMaskedSetting:EmojiReplaces])
+        message = [message replaceSmilesToEmoji];
+    
     
     
     [RPCRequest sendRequest:[TLAPI_messages_editMessage createWithFlags:flags peer:_conversation.inputPeer n_id:_inputTemplate.postId message:message reply_markup:nil entities:entities] successHandler:^(id request, id response) {
