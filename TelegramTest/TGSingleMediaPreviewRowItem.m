@@ -52,7 +52,7 @@
             
             _text = [attr copy];
             
-            _textSize = [attr coreTextSizeForTextFieldForWidth:INT32_MAX];
+            _textSize = [attr coreTextSizeForTextFieldForWidth:350 - 80 - 30 - 30];
         }
         
 

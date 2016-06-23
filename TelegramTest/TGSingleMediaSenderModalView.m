@@ -106,7 +106,7 @@
     [NSException raise:@"use show:animated:file:" format:@""];
 }
 
--(void)show:(NSWindow *)window animated:(BOOL)animated file:(NSString *)filepath filedata:(NSData *)filedata ptype:(PasteBoardItemType)ptype conversation:(TL_conversation *)conversation messagesViewController:(MessagesViewController *)messagesViewController {
+-(void)show:(NSWindow *)window animated:(BOOL)animated file:(NSString *)filepath filedata:(NSData *)filedata ptype:(PasteBoardItemType)ptype caption:(NSString *)caption conversation:(TL_conversation *)conversation messagesViewController:(MessagesViewController *)messagesViewController {
     
     
     _messagesViewController = messagesViewController;
@@ -135,7 +135,8 @@
     
     
     _inputItem = [[TGGeneralInputRowItem alloc] init];
-    
+    if(caption.length > 0)
+        _inputItem.result = [[NSAttributedString alloc] initWithString:caption];
     _inputItem.placeholder = NSLocalizedString(@"Media.AddCaptionPlaceholder", nil);
     
     
@@ -151,7 +152,7 @@
     [_tableView addItem:_inputItem tableRedraw:YES];
     
     
-    [self setContainerFrameSize:NSMakeSize(350, _tableView.scrollView.documentSize.height + 50 + 40)];
+    [self setContainerFrameSize:NSMakeSize(350, weakSelf.tableView.tableHeight + 50 + 40)];
     
     
     [super show:window animated:animated];

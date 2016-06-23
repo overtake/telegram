@@ -421,7 +421,12 @@
 -(void)copy:(id)sender {
     NSPasteboard *pasteboard = [NSPasteboard generalPasteboard];
     [pasteboard clearContents];
-    [pasteboard writeObjects:[NSArray arrayWithObject:[NSURL fileURLWithPath:mediaFilePath(self.currentViewerItem.previewObject.media)]]];
+    
+    TL_localMessage *msg = self.currentViewerItem.previewObject.media;
+    
+    
+    [pasteboard writeObjects:@[[NSURL fileURLWithPath:mediaFilePath(msg)]]];
+
 }
 
 

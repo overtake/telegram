@@ -314,7 +314,11 @@
         
         NSPasteboard *pasteboard = [NSPasteboard generalPasteboard];
         [pasteboard clearContents];
-        [pasteboard writeObjects:[NSArray arrayWithObject:[NSURL fileURLWithPath:locationFilePath([TGPhotoViewer currentItem].imageObject.location, @"jpg")]]];
+        
+        TL_localMessage *msg = [TGPhotoViewer currentItem].previewObject.media;
+
+        
+        [pasteboard writeObjects:@[[NSURL fileURLWithPath:mediaFilePath(msg)]]];
         
         
     }];
@@ -425,7 +429,9 @@
             
             NSPasteboard *pasteboard = [NSPasteboard generalPasteboard];
             [pasteboard clearContents];
-            [pasteboard writeObjects:[NSArray arrayWithObject:[NSURL fileURLWithPath:locationFilePath([TGPhotoViewer currentItem].imageObject.location, @"jpg")]]];
+            
+            
+            [pasteboard writeObjects:@[[NSURL fileURLWithPath:mediaFilePath(msg)]]];
             
             
         }];
@@ -537,7 +543,7 @@
             
             NSPasteboard *pasteboard = [NSPasteboard generalPasteboard];
             [pasteboard clearContents];
-            [pasteboard writeObjects:[NSArray arrayWithObject:[NSURL fileURLWithPath:mediaFilePath(msg)]]];
+            [pasteboard writeObjects:@[[NSURL fileURLWithPath:mediaFilePath(msg)]]];
             
         }];
         

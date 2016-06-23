@@ -141,6 +141,11 @@
     __block NSMutableArray *files = [[NSMutableArray alloc] init];
     for(NSPasteboardItem *item in pasteboardItems) {
         NSString *url = [item stringForType:@"public.file-url"];
+        
+        [item.types enumerateObjectsUsingBlock:^(NSString * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            NSLog(@"%@",[item stringForType:obj]);
+        }];
+        
         if(url) {
             [files addObject:[[NSURL URLWithString:url] path]];
         }
@@ -169,6 +174,7 @@
     __block NSString *path = nil;
     
     NSString *url = [[[pasteboard pasteboardItems] objectAtIndex:0] stringForType:@"public.file-url"];
+    NSString *caption = [[[pasteboard pasteboardItems] objectAtIndex:0] stringForType:@"public.plain-text"];
     if (url != nil) {
         path = [[NSURL URLWithString:url] path];
         
@@ -243,7 +249,7 @@
     dispatch_block_t modal_caption_block = ^{
         TGSingleMediaSenderModalView *modalView = [[TGSingleMediaSenderModalView alloc] initWithFrame:NSZeroRect];
         
-        [modalView show:self.window animated:YES file:image ? image.name : path filedata:[image TIFFRepresentation] ptype:type conversation:self.controller.conversation messagesViewController:self.controller];
+        [modalView show:self.window animated:YES file:image ? image.name : path filedata:[image TIFFRepresentation] ptype:type caption:caption conversation:self.controller.conversation messagesViewController:self.controller];
     };
     
     
