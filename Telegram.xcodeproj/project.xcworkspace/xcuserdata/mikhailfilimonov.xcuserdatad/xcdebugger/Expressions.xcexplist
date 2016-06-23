@@ -1085,6 +1085,9 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "-[Storage loadMessages:min_id:max_id:minDate:maxDate:limit:next:filterMask:isChannel:]:Storage.m">
+      </ContextState>
+      <ContextState
          contextName = "-[ChannelInfoViewController reloadParticipants]:ChannelInfoViewController.m">
          <PersistentStrings>
             <PersistentString
@@ -6810,6 +6813,9 @@
          <PersistentStrings>
             <PersistentString
                value = "_textField.frame">
+            </PersistentString>
+            <PersistentString
+               value = "_textField.attributedStringValue">
             </PersistentString>
          </PersistentStrings>
       </ContextState>

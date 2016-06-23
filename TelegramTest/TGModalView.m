@@ -297,6 +297,14 @@
     
 }
 
+-(void)rightMouseDown:(NSEvent *)theEvent {
+    
+}
+
+-(void)rightMouseUp:(NSEvent *)theEvent {
+    
+}
+
 
 -(void)keyUp:(NSEvent *)theEvent {
     if(theEvent.keyCode == 53) {

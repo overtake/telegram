@@ -47,6 +47,8 @@
 
 - (void)checkHover;
 
+-(int)tableHeight;
+
 - (TMRowView *) cacheViewForClass:(Class)classObject
                        identifier:(NSString *)identifier;
 

@@ -433,7 +433,7 @@ DYNAMIC_PROPERTY(DDialog);
 
 -(BOOL)canEdit {
     
-    if(self.media.document && (self.media.document.isVoice || self.media.document.isSticker))
+    if(self.media.document && (self.media.document.isSticker))
         return NO;
     
     if([self isKindOfClass:[TL_localMessageService class]])

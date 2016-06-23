@@ -299,7 +299,7 @@
         }
         
         
-        if(conversation.draft.message.length > 0 && ACCEPT_FEATURE && conversation.unread_count == 0) {
+        if(conversation.draft.message.length > 0 && conversation.unread_count == 0 && conversation.canSendMessage) {
             [messageText appendString:[NSLocalizedString(@"Conversation.Draft", nil) stringByAppendingString:@"\n"] withColor:[NSColor redColor]];
             [messageText setSelectionColor:[NSColor whiteColor] forColor:[NSColor redColor]];
         } else {
@@ -324,7 +324,7 @@
         
         msgText = [msgText fixEmoji];
         
-        if(conversation.draft.message.length > 0 && ACCEPT_FEATURE && conversation.unread_count == 0) {
+        if(conversation.draft.message.length > 0 && conversation.unread_count == 0 && conversation.canSendMessage) {
             msgText = conversation.draft.message;
         }
         

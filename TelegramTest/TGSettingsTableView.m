@@ -104,6 +104,16 @@
     return NO;
 }
 
+-(int)tableHeight {
+    __block int height = 0;
+    
+    [self.list enumerateObjectsUsingBlock:^(TGGeneralRowItem *obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        height+=obj.height;
+    }];
+    
+    return height;
+}
+
 -(BOOL)addItem:(TGGeneralRowItem *)item tableRedraw:(BOOL)tableRedraw {
     [item updateItemHeightWithWidth:NSWidth(self.frame)];
     return [super addItem:item tableRedraw:tableRedraw];

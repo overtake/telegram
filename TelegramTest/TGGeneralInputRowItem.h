@@ -10,6 +10,8 @@
 
 @interface TGGeneralInputRowItem : TGGeneralRowItem
 
+@property (nonatomic,assign) int limit;
+
 @property (nonatomic,strong) NSString *placeholder;
 @property (nonatomic,strong) NSAttributedString *result;
 

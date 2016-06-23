@@ -69,12 +69,15 @@
 
 -(void)controlTextDidChange:(NSNotification *)obj {
     
-    [_textField setStringValue:[_textField.stringValue substringToIndex:MIN(200,_textField.stringValue.length)]];
+    [_textField setStringValue:[_textField.stringValue substringToIndex:MIN(self.item.limit > 0 ? self.item.limit : 200,_textField.stringValue.length)]];
     
     self.item.result = _textField.attributedStringValue;
     
+
+    
     NSSize size = [_textField.attributedStringValue sizeForTextFieldForWidth:NSWidth(self.frame) - (self.item.xOffset * 2)];
     
+    size.height = MAX(17,size.height);
     
     self.item.height = size.height + 5;
     

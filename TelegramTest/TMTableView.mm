@@ -278,6 +278,10 @@ static TMTableView *tableStatic;
     return [self insert:item atIndex:self.list.count tableRedraw:tableRedraw];
 }
 
+-(int)tableHeight {
+    return self.scrollView.documentSize.height;
+}
+
 - (BOOL) insert:(NSObject *)item
         atIndex:(NSUInteger)atIndex
     tableRedraw:(BOOL)tableRedraw {

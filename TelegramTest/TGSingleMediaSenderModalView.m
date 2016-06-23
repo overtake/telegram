@@ -20,6 +20,8 @@
 @property (nonatomic,weak) MessagesViewController *messagesViewController;
 @property (nonatomic,assign) BOOL sendAsCompressed;
 @property (nonatomic,strong) TGSingleMediaPreviewRowItem *item;
+
+@property (nonatomic,assign) BOOL sent;
 @end
 
 @implementation TGSingleMediaSenderModalView
@@ -52,20 +54,28 @@
     
     [self close:YES];
     
-    if(_item.ptype == PasteBoardItemTypeVideo)
-        [_messagesViewController sendVideo:_filepath forConversation:_conversation caption:_inputItem.result.string addCompletionHandler:nil];
-     else if(_item.ptype == PasteBoardItemTypeDocument)
-        [_messagesViewController sendDocument:_filepath forConversation:_conversation caption:_inputItem.result.string addCompletionHandler:nil];
-    else if(_item.ptype == PasteBoardItemTypeImage) {
-        if(_sendAsCompressed)
-            [_messagesViewController sendImage:_filepath forConversation:_conversation file_data:_item.data caption:_inputItem.result.string];
-        else {
-            _filepath = exportPath(rand_long(), @"jpg");
-            [jpegNormalizedData(_item.thumbImage) writeToFile:_filepath atomically:YES];
-            [_messagesViewController sendDocument:_filepath forConversation:_conversation caption:_inputItem.result.string addCompletionHandler:nil];
-        }
+    if(!_sent) {
         
+        _sent = YES;
+        
+        if(_item.ptype == PasteBoardItemTypeVideo)
+            [_messagesViewController sendVideo:_filepath forConversation:_conversation caption:_inputItem.result.string addCompletionHandler:nil];
+        else if(_item.ptype == PasteBoardItemTypeDocument)
+            [_messagesViewController sendDocument:_filepath forConversation:_conversation caption:_inputItem.result.string addCompletionHandler:nil];
+        else if(_item.ptype == PasteBoardItemTypeImage) {
+            if(_sendAsCompressed)
+                [_messagesViewController sendImage:_filepath forConversation:_conversation file_data:_item.data caption:_inputItem.result.string];
+            else {
+                _filepath = exportPath(rand_long(), @"jpg");
+                [_item.data writeToFile:_filepath atomically:YES];
+                [_messagesViewController sendDocument:_filepath forConversation:_conversation caption:_inputItem.result.string addCompletionHandler:nil];
+            }
+            
+        }
     }
+    
+    
+    
         
     
     
@@ -127,6 +137,15 @@
     _inputItem = [[TGGeneralInputRowItem alloc] init];
     
     _inputItem.placeholder = NSLocalizedString(@"Media.AddCaptionPlaceholder", nil);
+    
+    
+    weak();
+    [_inputItem setCallback:^(TGGeneralRowItem *item) {
+        
+        [weakSelf setContainerFrameSize:NSMakeSize(350, weakSelf.tableView.tableHeight + 50 + 40)];
+
+        
+    }];
     
     
     [_tableView addItem:_inputItem tableRedraw:YES];
