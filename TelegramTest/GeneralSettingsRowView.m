@@ -11,6 +11,7 @@
 #import "GeneralSettingsRowItem.h"
 #import "NSMenuCategory.h"
 #import "TGTextLabel.h"
+#import "TGCirclularCounter.h"
 @interface GeneralSettingsRowView ()
 @property (nonatomic,strong) TGTextLabel *descriptionField;
 @property (nonatomic,strong) TGTextLabel *nextDesc;
@@ -20,6 +21,8 @@
 @property (nonatomic,strong) NSImageView *nextImage;
 @property (nonatomic,strong) NSImageView *selectedImageView;
 @property (nonatomic,strong) NSProgressIndicator *lockedIndicator;
+
+@property (nonatomic,strong) TGCirclularCounter *badgeCounter;
 @end
 
 @implementation GeneralSettingsRowView
@@ -31,6 +34,12 @@
         _descriptionField = [[TGTextLabel alloc] init];
         _subdescField = [[BTRButton alloc] init];
         _nextDesc = [[TGTextLabel alloc] init];
+        
+        _badgeCounter = [[TGCirclularCounter alloc] initWithFrame:NSMakeRect(0, 0, 30, 30)];
+        [_badgeCounter setTextFont:TGSystemFont(12)];
+        
+        _badgeCounter.animated = NO;
+        [self addSubview:_badgeCounter];
         
         [_subdescField setTitleFont:TGSystemFont(14) forControlState:BTRControlStateNormal];
         [_subdescField setTitleColor:GRAY_TEXT_COLOR forControlState:BTRControlStateNormal];
@@ -72,6 +81,8 @@
         [self addSubview:self.selectedImageView];
         [self addSubview:self.nextDesc];
         [self addSubview:self.lockedIndicator];
+        
+        
     }
     
     return self;
@@ -85,7 +96,7 @@
 -(void)mouseDown:(NSEvent *)theEvent {
     TGGeneralRowItem *item = (GeneralSettingsRowItem *) [self rowItem];
     
-    if(item.type == SettingsRowItemTypeNext || item.type == SettingsRowItemTypeSelected || item.type == SettingsRowItemTypeNone) {
+    if(item.type == SettingsRowItemTypeNext || item.type == SettingsRowItemTypeNextBadge || item.type == SettingsRowItemTypeSelected || item.type == SettingsRowItemTypeNone) {
         item.callback(item);
     }
 
@@ -108,6 +119,7 @@
     
    switch (item.type) {
         case SettingsRowItemTypeSwitch:
+           [self.badgeCounter setHidden:YES];
             [self.subdescField setHidden:YES];
             [self.switchControl setHidden:item.locked];
             [self.nextImage setHidden:YES];
@@ -117,6 +129,7 @@
            
             break;
         case SettingsRowItemTypeChoice:
+           [self.badgeCounter setHidden:YES];
             [self.subdescField setHidden:item.locked];
             [self.switchControl setHidden:YES];
             [self.nextImage setHidden:YES];
@@ -126,14 +139,23 @@
             [self.selectedImageView setHidden:YES];
             [self.nextDesc setHidden:YES];
             break;
-        case SettingsRowItemTypeNext:
+       case SettingsRowItemTypeNext: case SettingsRowItemTypeNextBadge :
             [self.subdescField setHidden:YES];
             [self.switchControl setHidden:YES];
             [self.nextImage setHidden:item.locked];
             [self.selectedImageView setHidden:YES];
             [self.nextDesc setHidden:self.nextDesc.text.length == 0 || item.locked];
+            [self.badgeCounter setHidden:YES];
+            if(item.type == SettingsRowItemTypeNextBadge) {
+                [self.nextDesc setHidden:YES];
+                [self.badgeCounter setHidden:[item.subdesc.string intValue] == 0];
+            }
+           
+           [self.badgeCounter setStringValue:item.subdesc.string];
+           
             break;
         case SettingsRowItemTypeSelected:
+           [self.badgeCounter setHidden:YES];
            [self.subdescField setHidden:YES];
            [self.switchControl setHidden:YES];
            [self.nextImage setHidden:YES];
@@ -141,6 +163,7 @@
            [self.nextDesc setHidden:YES];
            break;
         case SettingsRowItemTypeNone:
+           [self.badgeCounter setHidden:YES];
            [self.subdescField setHidden:YES];
            [self.switchControl setHidden:YES];
            [self.nextImage setHidden:YES];
@@ -185,7 +208,7 @@
     [self.selectedImageView setFrameOrigin:NSMakePoint(NSWidth(self.frame) - item.xOffset - NSWidth(self.selectedImageView.frame), 12)];
         
     
-    [self.nextImage setFrameOrigin:NSMakePoint(NSWidth(self.frame) - item.xOffset - image_ArrowGrey().size.width - 4, 14)];
+    [self.nextImage setFrameOrigin:NSMakePoint(NSWidth(self.frame) - item.xOffset - image_ArrowGrey().size.width - 4, 15)];
     
     
     
@@ -193,7 +216,7 @@
     
     
     
-    
+    [self.badgeCounter setFrameOrigin:NSMakePoint(NSWidth(self.frame) - item.xOffset - NSWidth(self.badgeCounter.frame) - 15, 6)];
     [self.nextDesc setFrameOrigin:NSMakePoint(NSWidth(self.frame) - item.xOffset - NSWidth(self.nextImage.frame) - NSWidth(self.nextDesc.frame) - 10, 13)];
 }
 

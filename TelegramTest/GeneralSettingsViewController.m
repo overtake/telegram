@@ -167,16 +167,23 @@
     [self.tableView insert:bigFong atIndex:self.tableView.list.count tableRedraw:NO];
     
 
-    GeneralSettingsRowItem *stickers = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeNext callback:^(TGGeneralRowItem *item) {
+    __block NSUInteger nFeaturedSets = 0;
+    
+    [[Storage yap] readWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
+        
+        nFeaturedSets = [[transaction objectForKey:@"featuredUnreadSets" inCollection:STICKERS_COLLECTION] count];
+        
+    }];
+    
+    GeneralSettingsRowItem *stickers = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeNextBadge callback:^(TGGeneralRowItem *item) {
         
         TGStickersSettingsViewController *settingViewController = [[TGStickersSettingsViewController alloc] initWithFrame:NSZeroRect];
         
         [self.navigationViewController pushViewController:settingViewController animated:YES];
         
-        [[Telegram rightViewController] showStickerSettingsController];
         
         
-    } description:NSLocalizedString(@"Settings.Stickers", nil) height:42 stateback:^id(TGGeneralRowItem *item) {
+    } description:NSLocalizedString(@"Settings.Stickers", nil) subdesc:nFeaturedSets > 0 ? [NSString stringWithFormat:@"%ld",nFeaturedSets] : nil height:42 stateback:^id(TGGeneralRowItem *item) {
         return nil;
     }];
     

@@ -282,8 +282,8 @@
         if(!_keyboard) {
             _keyboard = [[TGBotCommandsKeyboard alloc] initWithFrame:NSZeroRect];
             [_keyboard setBackgroundColor:[NSColor clearColor]];
-            [_keyboard setButtonBorderColor:NSColorFromRGB(0x4ba3e2)];
-            [_keyboard setButtonColor:NSColorFromRGB(0x4ba3e2)];
+            [_keyboard setButtonBorderColor:BLUE_COLOR];
+            [_keyboard setButtonColor:BLUE_COLOR];
             [_keyboard setButtonTextColor:[NSColor whiteColor]];
             [self.contentContainerView addSubview:_keyboard];
         }

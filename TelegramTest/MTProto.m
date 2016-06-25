@@ -2,7 +2,7 @@
 //  MTProto.m
 //  Telegram
 //
-//  Auto created by Mikhail Filimonov on 03.06.16.
+//  Auto created by Mikhail Filimonov on 23.06.16.
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -13415,6 +13415,47 @@
         
 @end
 
+@implementation TL_updateReadFeaturedStickers
++(TL_updateReadFeaturedStickers*)create {
+	TL_updateReadFeaturedStickers* obj = [[TL_updateReadFeaturedStickers alloc] init];
+	
+	return obj;
+}
+-(void)serialize:(SerializedData*)stream {
+	
+}
+-(void)unserialize:(SerializedData*)stream {
+	
+}
+        
+-(TL_updateReadFeaturedStickers *)copy {
+    
+    TL_updateReadFeaturedStickers *objc = [[TL_updateReadFeaturedStickers alloc] init];
+    
+    
+    
+    return objc;
+}
+        
+
+    
+-(id)initWithCoder:(NSCoder *)aDecoder {
+
+    if((self = [ClassStore deserialize:[aDecoder decodeObjectForKey:@"data"]])) {
+        
+    }
+    
+    return self;
+}
+        
+-(void)encodeWithCoder:(NSCoder *)aCoder {
+    [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
+}
+        
+
+        
+@end
+
 @implementation TLupdates_State
 
 @end
@@ -25854,26 +25895,34 @@
 @implementation TLmessages_BotCallbackAnswer
             
 -(BOOL)isAlert {return NO;}
+                        
+-(BOOL)isAllow_pip {return NO;}
             
 @end
         
 @implementation TL_messages_botCallbackAnswer
-+(TL_messages_botCallbackAnswer*)createWithFlags:(int)flags  message:(NSString*)message {
++(TL_messages_botCallbackAnswer*)createWithFlags:(int)flags   message:(NSString*)message url:(NSString*)url {
 	TL_messages_botCallbackAnswer* obj = [[TL_messages_botCallbackAnswer alloc] init];
 	obj.flags = flags;
 	
+	
 	obj.message = message;
+	obj.url = url;
 	return obj;
 }
 -(void)serialize:(SerializedData*)stream {
 	[stream writeInt:self.flags];
 	
+	
 	if(self.flags & (1 << 0)) {[stream writeString:self.message];}
+	if(self.flags & (1 << 3)) {[stream writeString:self.url];}
 }
 -(void)unserialize:(SerializedData*)stream {
 	super.flags = [stream readInt];
 	
+	
 	if(self.flags & (1 << 0)) {super.message = [stream readString];}
+	if(self.flags & (1 << 3)) {super.url = [stream readString];}
 }
         
 -(TL_messages_botCallbackAnswer *)copy {
@@ -25882,7 +25931,9 @@
     
     objc.flags = self.flags;
     
+    
     objc.message = self.message;
+    objc.url = self.url;
     
     return objc;
 }
@@ -25905,11 +25956,19 @@
             
 -(BOOL)isAlert {return (self.flags & (1 << 1)) > 0;}
                         
+-(BOOL)isAllow_pip {return (self.flags & (1 << 2)) > 0;}
+                        
 -(void)setMessage:(NSString*)message
 {
    super.message = message;
                 
     if(super.message == nil)  { super.flags&= ~ (1 << 0) ;} else { super.flags|= (1 << 0); }
+}            
+-(void)setUrl:(NSString*)url
+{
+   super.url = url;
+                
+    if(super.url == nil)  { super.flags&= ~ (1 << 3) ;} else { super.flags|= (1 << 3); }
 }
         
 @end
@@ -26852,6 +26911,144 @@
                 
     if(super.entities == nil)  { super.flags&= ~ (1 << 3) ;} else { super.flags|= (1 << 3); }
 }
+        
+@end
+
+@implementation TLmessages_FeaturedStickers
+
+@end
+        
+@implementation TL_messages_featuredStickersNotModified
++(TL_messages_featuredStickersNotModified*)create {
+	TL_messages_featuredStickersNotModified* obj = [[TL_messages_featuredStickersNotModified alloc] init];
+	
+	return obj;
+}
+-(void)serialize:(SerializedData*)stream {
+	
+}
+-(void)unserialize:(SerializedData*)stream {
+	
+}
+        
+-(TL_messages_featuredStickersNotModified *)copy {
+    
+    TL_messages_featuredStickersNotModified *objc = [[TL_messages_featuredStickersNotModified alloc] init];
+    
+    
+    
+    return objc;
+}
+        
+
+    
+-(id)initWithCoder:(NSCoder *)aDecoder {
+
+    if((self = [ClassStore deserialize:[aDecoder decodeObjectForKey:@"data"]])) {
+        
+    }
+    
+    return self;
+}
+        
+-(void)encodeWithCoder:(NSCoder *)aCoder {
+    [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
+}
+        
+
+        
+@end
+
+@implementation TL_messages_featuredStickers
++(TL_messages_featuredStickers*)createWithN_hash:(int)n_hash sets:(NSMutableArray*)sets unread:(NSMutableArray*)unread {
+	TL_messages_featuredStickers* obj = [[TL_messages_featuredStickers alloc] init];
+	obj.n_hash = n_hash;
+	obj.sets = sets;
+	obj.unread = unread;
+	return obj;
+}
+-(void)serialize:(SerializedData*)stream {
+	[stream writeInt:self.n_hash];
+	//Serialize FullVector
+	[stream writeInt:0x1cb5c415];
+	{
+		NSInteger tl_count = [self.sets count];
+		[stream writeInt:(int)tl_count];
+		for(int i = 0; i < (int)tl_count; i++) {
+            TLStickerSet* obj = [self.sets objectAtIndex:i];
+            [ClassStore TLSerialize:obj stream:stream];
+		}
+	}
+	//Serialize ShortVector
+	[stream writeInt:0x1cb5c415];
+	{
+		NSInteger tl_count = [self.unread count];
+		[stream writeInt:(int)tl_count];
+		for(int i = 0; i < (int)tl_count; i++) {
+            if([self.unread count] > i) {
+                NSNumber* obj = [self.unread objectAtIndex:i];
+			[stream writeLong:[obj longValue]];
+            }  else
+                break;
+		}
+	}
+}
+-(void)unserialize:(SerializedData*)stream {
+	super.n_hash = [stream readInt];
+	//UNS FullVector
+	[stream readInt];
+	{
+		if(!self.sets)
+			self.sets = [[NSMutableArray alloc] init];
+		int count = [stream readInt];
+		for(int i = 0; i < count; i++) {
+			TLStickerSet* obj = [ClassStore TLDeserialize:stream];
+            if(obj != nil && [obj isKindOfClass:[TLStickerSet class]])
+                 [self.sets addObject:obj];
+            else
+                break;
+		}
+	}
+	//UNS ShortVector
+	[stream readInt];
+	{
+		if(!self.unread)
+			self.unread = [[NSMutableArray alloc] init];
+		int tl_count = [stream readInt];
+		for(int i = 0; i < tl_count; i++) {
+			long obj = [stream readLong];
+			[self.unread addObject:@(obj)];
+		}
+	}
+}
+        
+-(TL_messages_featuredStickers *)copy {
+    
+    TL_messages_featuredStickers *objc = [[TL_messages_featuredStickers alloc] init];
+    
+    objc.n_hash = self.n_hash;
+    objc.sets = [self.sets copy];
+    objc.unread = [self.unread copy];
+    
+    return objc;
+}
+        
+
+    
+-(id)initWithCoder:(NSCoder *)aDecoder {
+
+    if((self = [ClassStore deserialize:[aDecoder decodeObjectForKey:@"data"]])) {
+        
+    }
+    
+    return self;
+}
+        
+-(void)encodeWithCoder:(NSCoder *)aCoder {
+    [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
+}
+        
+
         
 @end
 

@@ -483,10 +483,11 @@
     NSRange range = [self rangeOfRect:NSMakeRect(0, point.y, 0, 1)];
     
 
-    if(range.location != NSNotFound) {
+    if(range.location != NSNotFound && self.items.count > range.location && [self.items[range.location] isEditable]) {
        
         _prevHoleIndex = _currentHoleIndex;
         _currentHoleIndex = range.location;
+        
         
         [self moveHoleAtIndex:_prevHoleIndex toIndex:_currentHoleIndex animated:YES];
         

@@ -247,6 +247,60 @@ static NSImage *higlightedImage() {
 
 -(void)stickersNeedFullReload:(NSNotification *)notification {
     [self load:YES];
+    
+}
+
+
+-(void)loadFeatured:(BOOL)force {
+    
+    
+    __block int nhash = 0;
+    
+    __block NSArray *sets;
+    
+    [[Storage yap] readWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
+        
+        nhash = [[transaction objectForKey:@"featuredHash" inCollection:STICKERS_COLLECTION] intValue];
+        sets = [transaction objectForKey:@"featuredSets" inCollection:STICKERS_COLLECTION];
+    }];
+    
+    
+    
+    [RPCRequest sendRequest:[TLAPI_messages_getFeaturedStickers createWithN_hash:nhash] successHandler:^(RPCRequest *request, TL_messages_featuredStickers *response) {
+        
+        
+         [[Storage yap] readWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
+        
+             if(![response isKindOfClass:[TL_messages_featuredStickersNotModified class]]) {
+                 
+                 [transaction setObject:response.sets forKey:@"featuredSets" inCollection:STICKERS_COLLECTION];
+                 [transaction setObject:response.unread forKey:@"featuredUnreadSets" inCollection:STICKERS_COLLECTION];
+                 [transaction setObject:@(response.n_hash) forKey:@"featuredHash" inCollection:STICKERS_COLLECTION];
+                 
+                 sets = response.sets;
+             
+             }
+             
+         }];
+        
+        NSMutableArray *ufeaturedSets = [NSMutableArray array];
+        
+        [sets enumerateObjectsUsingBlock:^(TL_stickerSet *obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            
+            if(!_stickers[@(obj.n_id)]) {
+                [ufeaturedSets addObject:obj];
+            }
+            
+        }];
+        
+        if(ufeaturedSets.count > 0) {
+             [self loadChangedSets:ufeaturedSets sets:_sets hash:[self stickersHash:_sets]];
+        }
+        
+    } errorHandler:^(RPCRequest *request, RpcError *error) {
+        
+    }];
+
 }
 
 -(void)stickersNeedReorder:(NSNotification *)notification {
@@ -283,6 +337,8 @@ static NSImage *higlightedImage() {
 }
 
 -(void)load:(BOOL)force {
+    
+    [self loadFeatured:force];
     
     if(_stickers.count == 0 || force) {
         

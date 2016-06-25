@@ -38,7 +38,7 @@
     TGSingleMediaPreviewRowItem *item = (TGSingleMediaPreviewRowItem *) self.rowItem;
 
     if(item.thumbImage == nil) {
-        [NSColorFromRGB(0x4ba3e2) setFill];
+        [BLUE_COLOR setFill];
         NSBezierPath *path = [NSBezierPath bezierPathWithRoundedRect:_imageView.frame xRadius:4 yRadius:4];
         [path fill];
     }

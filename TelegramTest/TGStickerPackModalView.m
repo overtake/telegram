@@ -81,9 +81,19 @@ static NSImage * greenBackgroundImage(NSSize size) {
         
         [_addButton addBlock:^(BTRControlEvents events) {
             
+            
             strongWeak();
             
+           
+            
             [weakSelf close:NO];
+            
+            if(weakSelf.addcallback != nil)
+            {
+                weakSelf.addcallback();
+                
+                return;
+            }
             
             [TMViewController showModalProgress];
             

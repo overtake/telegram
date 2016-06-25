@@ -16,4 +16,6 @@
 
 -(void)setStickerPack:(TL_messages_stickerSet *)stickerPack forMessagesViewController:(MessagesViewController *)messagesViewController;
 
+@property (nonatomic,copy) dispatch_block_t addcallback;
+
 @end

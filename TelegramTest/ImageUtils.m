@@ -1041,7 +1041,7 @@ NSImage *blue_circle_background_image() {
         NSRect rect = NSMakeRect(0, 0, 40, 40);
         image = [[NSImage alloc] initWithSize:rect.size];
         [image lockFocus];
-        [NSColorFromRGB(0x4ba3e2) set];
+        [BLUE_COLOR set];
         NSBezierPath *path = [NSBezierPath bezierPath];
         [path appendBezierPathWithRoundedRect:NSMakeRect(0, 0, rect.size.width, rect.size.height) xRadius:rect.size.width/2 yRadius:rect.size.height/2];
         [path fill];
@@ -1057,7 +1057,7 @@ NSImage *gray_circle_background_image() {
         NSRect rect = NSMakeRect(0, 0, 40, 40);
         image = [[NSImage alloc] initWithSize:rect.size];
         [image lockFocus];
-        [NSColorFromRGB(0x4ba3e2) set];
+        [BLUE_COLOR set];
         NSBezierPath *path = [NSBezierPath bezierPath];
         [path appendBezierPathWithRoundedRect:NSMakeRect(0, 0, rect.size.width, rect.size.height) xRadius:rect.size.width/2 yRadius:rect.size.height/2];
         [path fill];
@@ -1102,7 +1102,7 @@ NSImage *attach_downloaded_background() {
         NSRect rect = NSMakeRect(0, 0, 40, 40);
         image = [[NSImage alloc] initWithSize:rect.size];
         [image lockFocus];
-        [NSColorFromRGB(0x4ba3e2) set];
+        [BLUE_COLOR set];
         NSBezierPath *path = [NSBezierPath bezierPath];
         [path appendBezierPathWithRoundedRect:NSMakeRect(0, 0, rect.size.width, rect.size.height) xRadius:rect.size.width/2 yRadius:rect.size.height/2];
         [path fill];

@@ -102,7 +102,7 @@
         [self.containerView setDrawBlock:^{
            
             if(!self.item.message.readedContent && !weakSelf.item.messageSender && (!weakSelf.item.downloadItem || weakSelf.item.downloadItem.downloadState == DownloadStateCompleted) && globalAudioPlayer().delegate != weakSelf.audioItem && !weakSelf.item.message.chat.isChannel) {
-                [NSColorFromRGB(0x4ba3e2) setFill];
+                [BLUE_COLOR setFill];
                 
                 NSBezierPath *path = [NSBezierPath bezierPath];
                 

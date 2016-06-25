@@ -2,7 +2,7 @@
 //  TLApi.h
 //  Telegram
 //
-//  Auto created by Mikhail Filimonov on 03.06.16.
+//  Auto created by Mikhail Filimonov on 23.06.16.
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -317,13 +317,14 @@
 @property int flags;
 @property (nonatomic,assign,readonly) BOOL isSilent;
 @property (nonatomic,assign,readonly) BOOL isBackground;
+@property (nonatomic,assign,readonly) BOOL isClear_draft;
 @property (nonatomic, strong) TLInputPeer* peer;
 @property int reply_to_msg_id;
 @property (nonatomic, strong) TLInputMedia* media;
 @property long random_id;
 @property (nonatomic, strong) TLReplyMarkup* reply_markup;
 
-+(TLAPI_messages_sendMedia*)createWithFlags:(int)flags   peer:(TLInputPeer*)peer reply_to_msg_id:(int)reply_to_msg_id media:(TLInputMedia*)media random_id:(long)random_id reply_markup:(TLReplyMarkup*)reply_markup;
++(TLAPI_messages_sendMedia*)createWithFlags:(int)flags    peer:(TLInputPeer*)peer reply_to_msg_id:(int)reply_to_msg_id media:(TLInputMedia*)media random_id:(long)random_id reply_markup:(TLReplyMarkup*)reply_markup;
 @end
 
 @interface TLAPI_messages_forwardMessages : TLApiObject
@@ -1087,13 +1088,14 @@
 @property int flags;
 @property (nonatomic,assign,readonly) BOOL isSilent;
 @property (nonatomic,assign,readonly) BOOL isBackground;
+@property (nonatomic,assign,readonly) BOOL isClear_draft;
 @property (nonatomic, strong) TLInputPeer* peer;
 @property int reply_to_msg_id;
 @property long random_id;
 @property long query_id;
 @property (nonatomic, strong) NSString* n_id;
 
-+(TLAPI_messages_sendInlineBotResult*)createWithFlags:(int)flags   peer:(TLInputPeer*)peer reply_to_msg_id:(int)reply_to_msg_id random_id:(long)random_id query_id:(long)query_id n_id:(NSString*)n_id;
++(TLAPI_messages_sendInlineBotResult*)createWithFlags:(int)flags    peer:(TLInputPeer*)peer reply_to_msg_id:(int)reply_to_msg_id random_id:(long)random_id query_id:(long)query_id n_id:(NSString*)n_id;
 @end
 
 @interface TLAPI_channels_toggleInvites : TLApiObject
@@ -1181,10 +1183,12 @@
 @interface TLAPI_messages_setBotCallbackAnswer : TLApiObject
 @property int flags;
 @property (nonatomic,assign,readonly) BOOL isAlert;
+@property (nonatomic,assign,readonly) BOOL isAllow_pip;
 @property long query_id;
 @property (nonatomic, strong) NSString* message;
+@property (nonatomic, strong) NSString* url;
 
-+(TLAPI_messages_setBotCallbackAnswer*)createWithFlags:(int)flags  query_id:(long)query_id message:(NSString*)message;
++(TLAPI_messages_setBotCallbackAnswer*)createWithFlags:(int)flags   query_id:(long)query_id message:(NSString*)message url:(NSString*)url;
 @end
 
 @interface TLAPI_contacts_getTopPeers : TLApiObject
@@ -1229,5 +1233,17 @@
 
 
 +(TLAPI_messages_getAllDrafts*)create;
+@end
+
+@interface TLAPI_messages_getFeaturedStickers : TLApiObject
+@property int n_hash;
+
++(TLAPI_messages_getFeaturedStickers*)createWithN_hash:(int)n_hash;
+@end
+
+@interface TLAPI_messages_readFeaturedStickers : TLApiObject
+
+
++(TLAPI_messages_readFeaturedStickers*)create;
 @end
 

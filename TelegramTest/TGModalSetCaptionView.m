@@ -81,7 +81,7 @@
         
         
         
-        _textView.containerView.frame = NSMakeRect(80, 4, NSWidth(frameRect) - 84, NSHeight(frameRect) - 9);
+        _textView.containerView.frame = NSMakeRect(75, 4, NSWidth(frameRect) - 79, NSHeight(frameRect) - 9);
         
         _textView.minHeight = _textView.maxHeight = NSHeight(_textView.containerView.frame);
         _textView.limit = 140;
@@ -109,7 +109,7 @@
     
     [self addSubview:_textView.containerView];
     
-    [item.attach setFrameOrigin:NSMakePoint(2, 4)];
+    [item.attach setFrameOrigin:NSMakePoint(4, 4)];
     
     [item.attach setDeleteAccept:NO];
     

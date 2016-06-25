@@ -652,6 +652,11 @@
 		C2C5DCCA1D1973950070AC56 /* TGSingleMediaPreviewRowView.m in Sources */ = {isa = PBXBuildFile; fileRef = C2C5DCC91D1973950070AC56 /* TGSingleMediaPreviewRowView.m */; };
 		C2C5DCD11D19CC050070AC56 /* Sparkle.framework in Copy Files (6 items) */ = {isa = PBXBuildFile; fileRef = C2B0A7721D12EE52001BAE72 /* Sparkle.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		C2C5DCD21D19CC080070AC56 /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2B0A7721D12EE52001BAE72 /* Sparkle.framework */; };
+		C2C5DCDD1D1D4E080070AC56 /* TGFeaturedStickersViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C2C5DCDC1D1D4E080070AC56 /* TGFeaturedStickersViewController.m */; };
+		C2C5DCEA1D1D50F10070AC56 /* TGStickerPackRowItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C2C5DCE91D1D50F10070AC56 /* TGStickerPackRowItem.m */; };
+		C2C5DCED1D1D51500070AC56 /* TGStickerPackRowView.m in Sources */ = {isa = PBXBuildFile; fileRef = C2C5DCEC1D1D51500070AC56 /* TGStickerPackRowView.m */; };
+		C2C5DCF01D1D5CAD0070AC56 /* TGFeaturedStickerPackRowView.m in Sources */ = {isa = PBXBuildFile; fileRef = C2C5DCEF1D1D5CAD0070AC56 /* TGFeaturedStickerPackRowView.m */; };
+		C2C5DCF31D1D5CC20070AC56 /* TGFeaturedStickerPackRowItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C2C5DCF21D1D5CC20070AC56 /* TGFeaturedStickerPackRowItem.m */; };
 		C2C6D9661A111B3E001EF8A2 /* TGPhotoViewerItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C2C6D9651A111B3E001EF8A2 /* TGPhotoViewerItem.m */; };
 		C2C6D9691A124F70001EF8A2 /* TGPVControls.m in Sources */ = {isa = PBXBuildFile; fileRef = C2C6D9681A124F70001EF8A2 /* TGPVControls.m */; };
 		C2C6D96D1A12650B001EF8A2 /* TGPVMediaBehavior.m in Sources */ = {isa = PBXBuildFile; fileRef = C2C6D96C1A12650B001EF8A2 /* TGPVMediaBehavior.m */; };
@@ -2377,6 +2382,16 @@
 		C2C5DCC61D1973710070AC56 /* TGSingleMediaPreviewRowItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGSingleMediaPreviewRowItem.m; sourceTree = "<group>"; };
 		C2C5DCC81D1973950070AC56 /* TGSingleMediaPreviewRowView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGSingleMediaPreviewRowView.h; sourceTree = "<group>"; };
 		C2C5DCC91D1973950070AC56 /* TGSingleMediaPreviewRowView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGSingleMediaPreviewRowView.m; sourceTree = "<group>"; };
+		C2C5DCDB1D1D4E080070AC56 /* TGFeaturedStickersViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGFeaturedStickersViewController.h; sourceTree = "<group>"; };
+		C2C5DCDC1D1D4E080070AC56 /* TGFeaturedStickersViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGFeaturedStickersViewController.m; sourceTree = "<group>"; };
+		C2C5DCE81D1D50F10070AC56 /* TGStickerPackRowItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGStickerPackRowItem.h; sourceTree = "<group>"; };
+		C2C5DCE91D1D50F10070AC56 /* TGStickerPackRowItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGStickerPackRowItem.m; sourceTree = "<group>"; };
+		C2C5DCEB1D1D51500070AC56 /* TGStickerPackRowView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGStickerPackRowView.h; sourceTree = "<group>"; };
+		C2C5DCEC1D1D51500070AC56 /* TGStickerPackRowView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGStickerPackRowView.m; sourceTree = "<group>"; };
+		C2C5DCEE1D1D5CAD0070AC56 /* TGFeaturedStickerPackRowView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGFeaturedStickerPackRowView.h; sourceTree = "<group>"; };
+		C2C5DCEF1D1D5CAD0070AC56 /* TGFeaturedStickerPackRowView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGFeaturedStickerPackRowView.m; sourceTree = "<group>"; };
+		C2C5DCF11D1D5CC20070AC56 /* TGFeaturedStickerPackRowItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGFeaturedStickerPackRowItem.h; sourceTree = "<group>"; };
+		C2C5DCF21D1D5CC20070AC56 /* TGFeaturedStickerPackRowItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGFeaturedStickerPackRowItem.m; sourceTree = "<group>"; };
 		C2C6D9641A111B3E001EF8A2 /* TGPhotoViewerItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGPhotoViewerItem.h; sourceTree = "<group>"; };
 		C2C6D9651A111B3E001EF8A2 /* TGPhotoViewerItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGPhotoViewerItem.m; sourceTree = "<group>"; };
 		C2C6D9671A124F70001EF8A2 /* TGPVControls.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGPVControls.h; sourceTree = "<group>"; };
@@ -5673,6 +5688,16 @@
 				C25A57DF1C072D1D0038169F /* ComposeActionStickersBehavior.m */,
 				C25A57EA1C0736D70038169F /* TGMovableTableView.h */,
 				C25A57EB1C0736D70038169F /* TGMovableTableView.m */,
+				C2C5DCDB1D1D4E080070AC56 /* TGFeaturedStickersViewController.h */,
+				C2C5DCDC1D1D4E080070AC56 /* TGFeaturedStickersViewController.m */,
+				C2C5DCE81D1D50F10070AC56 /* TGStickerPackRowItem.h */,
+				C2C5DCE91D1D50F10070AC56 /* TGStickerPackRowItem.m */,
+				C2C5DCEB1D1D51500070AC56 /* TGStickerPackRowView.h */,
+				C2C5DCEC1D1D51500070AC56 /* TGStickerPackRowView.m */,
+				C2C5DCEE1D1D5CAD0070AC56 /* TGFeaturedStickerPackRowView.h */,
+				C2C5DCEF1D1D5CAD0070AC56 /* TGFeaturedStickerPackRowView.m */,
+				C2C5DCF11D1D5CC20070AC56 /* TGFeaturedStickerPackRowItem.h */,
+				C2C5DCF21D1D5CC20070AC56 /* TGFeaturedStickerPackRowItem.m */,
 			);
 			name = stickers;
 			sourceTree = "<group>";
@@ -6767,6 +6792,7 @@
 				C24435921A1E1C7E00F9BB38 /* PrivacyUserListItemView.m in Sources */,
 				C2544E8A1A8128A8006E44DF /* TGSharedMediaCap.m in Sources */,
 				C25A57E01C072D1D0038169F /* ComposeActionStickersBehavior.m in Sources */,
+				C2C5DCF31D1D5CC20070AC56 /* TGFeaturedStickerPackRowItem.m in Sources */,
 				C2C1DC0F1A4336CE00BBCC63 /* TGStickerImageObject.m in Sources */,
 				C20F76E91BB994A6003A1E86 /* TGModernUserViewController.m in Sources */,
 				C274C4471ACD99E7000DFDE4 /* TGWebpageTWObject.m in Sources */,
@@ -6962,6 +6988,7 @@
 				0A59067D18AA32C8002ED7BA /* BTRLabel.m in Sources */,
 				C2967B101A94C0BC003759B2 /* TGAttachImageElement.m in Sources */,
 				C2D4B8731AFCE8FA0035B4E4 /* YapMurmurHash.m in Sources */,
+				C2C5DCEA1D1D50F10070AC56 /* TGStickerPackRowItem.m in Sources */,
 				C268C18A19F0519C007F836A /* POPAnimationTracer.mm in Sources */,
 				C20A5E8F1B86404D007F4B49 /* DownloadCacheDocumentItem.m in Sources */,
 				C2A3FB091A278E2700DE791B /* PhoneChangeController.m in Sources */,
@@ -7029,6 +7056,7 @@
 				C2D826491B74FD5D00434D37 /* TGPVZoomControl.m in Sources */,
 				C20A5EDB1B8B7A81007F4B49 /* TGModernConversationHistoryController.m in Sources */,
 				C271525419B61E5700841C8A /* ComposeActionBroadcastBehavior.m in Sources */,
+				C2C5DCF01D1D5CAD0070AC56 /* TGFeaturedStickerPackRowView.m in Sources */,
 				C2D51BFA1B21C707009327C0 /* TGAudioRowItem.m in Sources */,
 				C270D2F11A1CD8BA00522FB0 /* PrivacyViewController.m in Sources */,
 				C2B669861BA5571C004AF678 /* TGSettingsTableView.m in Sources */,
@@ -7204,6 +7232,7 @@
 				C2CBF6BF1AFB8BAB006BF90A /* ImageObject.m in Sources */,
 				C2A5BFBE18DC80620021BE68 /* info.c in Sources */,
 				C20A5EED1B8CD8B9007F4B49 /* AddContactViewController.m in Sources */,
+				C2C5DCED1D1D51500070AC56 /* TGStickerPackRowView.m in Sources */,
 				C2531F5A1964548100F7D7A2 /* MessagesTopInfoView.m in Sources */,
 				C2D4B86B1AFCE8F90035B4E4 /* YapMemoryTable.m in Sources */,
 				C29A40371C52484F00AE4B71 /* InlineBotMediaSecretSenderItem.m in Sources */,
@@ -7217,6 +7246,7 @@
 				0A59067E18AA32C8002ED7BA /* BTRPopUpButton.m in Sources */,
 				C20F761A1CD0DDB80051900D /* TGRecentMoreView.m in Sources */,
 				0AF4F4A2189ABDCC004BA4DF /* MessageTypingView.m in Sources */,
+				C2C5DCDD1D1D4E080070AC56 /* TGFeaturedStickersViewController.m in Sources */,
 				0A56FF1418D0BBCC00FE63CF /* LoginSMSCodeView.m in Sources */,
 				0A073FE318C392B200BAA928 /* MessageTableNavigationTitleView.m in Sources */,
 				C271524D19B4893400841C8A /* ComposeChatCreateViewController.m in Sources */,

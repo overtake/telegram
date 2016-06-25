@@ -3,7 +3,7 @@
 //  ClassStore.m
 //  Telegram
 //
-    //  Created by keepcoder on 03.06.16.
+    //  Created by keepcoder on 23.06.16.
 //  Copyright (c) 2015 keepcoder. All rights reserved.
 //
 
@@ -533,7 +533,7 @@ static NSMutableDictionary *cs_constuctors;
    [cs_classes setObject:[TL_keyboardButtonRequestGeoLocation class] forKey:[NSNumber numberWithInt:-59151553]];
    [cs_classes setObject:[TL_keyboardButtonSwitchInline class] forKey:[NSNumber numberWithInt:-367298028]];
    [cs_classes setObject:[TL_replyInlineMarkup class] forKey:[NSNumber numberWithInt:1218642516]];
-   [cs_classes setObject:[TL_messages_botCallbackAnswer class] forKey:[NSNumber numberWithInt:308605382]];
+   [cs_classes setObject:[TL_messages_botCallbackAnswer class] forKey:[NSNumber numberWithInt:838723300]];
    [cs_classes setObject:[TL_messages_messageEditData class] forKey:[NSNumber numberWithInt:649453030]];
    [cs_classes setObject:[TL_updateEditMessage class] forKey:[NSNumber numberWithInt:-469536605]];
    [cs_classes setObject:[TL_inputBotInlineMessageMediaGeo class] forKey:[NSNumber numberWithInt:-190472735]];
@@ -566,6 +566,9 @@ static NSMutableDictionary *cs_constuctors;
    [cs_classes setObject:[TL_draftMessageEmpty class] forKey:[NSNumber numberWithInt:-1169445179]];
    [cs_classes setObject:[TL_draftMessage class] forKey:[NSNumber numberWithInt:-40996577]];
    [cs_classes setObject:[TL_messageActionHistoryClear class] forKey:[NSNumber numberWithInt:-1615153660]];
+   [cs_classes setObject:[TL_messages_featuredStickersNotModified class] forKey:[NSNumber numberWithInt:82699215]];
+   [cs_classes setObject:[TL_messages_featuredStickers class] forKey:[NSNumber numberWithInt:-312241481]];
+   [cs_classes setObject:[TL_updateReadFeaturedStickers class] forKey:[NSNumber numberWithInt:1461528386]];
    [cs_classes setObject:[TL_userSelf class] forKey:[NSNumber numberWithInt:476112392]];
    [cs_classes setObject:[TL_userContact class] forKey:[NSNumber numberWithInt:-894214632]];
    [cs_classes setObject:[TL_userRequest class] forKey:[NSNumber numberWithInt:-640891665]];

@@ -39,6 +39,8 @@
 -(Class)viewClass;
 -(NSString *)identifier;
 
+
+
 @property (nonatomic,assign,getter=isEditable) BOOL editable;
 
 @end

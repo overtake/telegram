@@ -2,7 +2,7 @@
 //  MTProto.h
 //  Telegram
 //
-//  Auto created by Mikhail Filimonov on 03.06.16.
+//  Auto created by Mikhail Filimonov on 23.06.16.
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -451,6 +451,9 @@
 @end
 	
 @interface TLDraftMessage : TLObject
+@end
+	
+@interface TLmessages_FeaturedStickers : TLObject
 @end
 	
 @interface TLAudio : TLObject
@@ -1820,6 +1823,9 @@
 @interface TL_updateDraftMessage : TLUpdate<NSCoding>
 +(TL_updateDraftMessage*)createWithPeer:(TLPeer*)peer draft:(TLDraftMessage*)draft;
 @end
+@interface TL_updateReadFeaturedStickers : TLUpdate<NSCoding>
++(TL_updateReadFeaturedStickers*)create;
+@end
 	
 @interface TLupdates_State()
 @property int pts;
@@ -3133,11 +3139,13 @@
 @interface TLmessages_BotCallbackAnswer()
 @property int flags;
 @property (nonatomic,assign,readonly) BOOL isAlert;
+@property (nonatomic,assign,readonly) BOOL isAllow_pip;
 @property (nonatomic, strong) NSString* message;
+@property (nonatomic, strong) NSString* url;
 @end
 
 @interface TL_messages_botCallbackAnswer : TLmessages_BotCallbackAnswer<NSCoding>
-+(TL_messages_botCallbackAnswer*)createWithFlags:(int)flags  message:(NSString*)message;
++(TL_messages_botCallbackAnswer*)createWithFlags:(int)flags   message:(NSString*)message url:(NSString*)url;
 @end
 	
 @interface TLmessages_MessageEditData()
@@ -3246,6 +3254,19 @@
 @end
 @interface TL_draftMessage : TLDraftMessage<NSCoding>
 +(TL_draftMessage*)createWithFlags:(int)flags  reply_to_msg_id:(int)reply_to_msg_id message:(NSString*)message entities:(NSMutableArray*)entities date:(int)date;
+@end
+	
+@interface TLmessages_FeaturedStickers()
+@property int n_hash;
+@property (nonatomic, strong) NSMutableArray* sets;
+@property (nonatomic, strong) NSMutableArray* unread;
+@end
+
+@interface TL_messages_featuredStickersNotModified : TLmessages_FeaturedStickers<NSCoding>
++(TL_messages_featuredStickersNotModified*)create;
+@end
+@interface TL_messages_featuredStickers : TLmessages_FeaturedStickers<NSCoding>
++(TL_messages_featuredStickers*)createWithN_hash:(int)n_hash sets:(NSMutableArray*)sets unread:(NSMutableArray*)unread;
 @end
 	
 @interface TLAudio()

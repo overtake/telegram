@@ -8,6 +8,7 @@
 
 #import "GeneralSettingsBlockHeaderView.h"
 #import "NSAttributedString+Hyperlink.h"
+#import "TMHyperlinkTextField.h"
 @interface GeneralSettingsBlockHeaderItem ()
 
 @end
@@ -42,7 +43,7 @@
     [attr appendString:string withColor:GRAY_TEXT_COLOR];
     [attr setFont:TGSystemFont(12) forRange:attr.range];
     [attr detectBoldColorInStringWithFont:TGSystemMediumFont(12)];
-    
+    [attr detectAndAddLinks:URLFindTypeAll];
     _header = attr;
 }
 
@@ -99,7 +100,7 @@
 
 
 @interface  GeneralSettingsBlockHeaderView()
-@property (nonatomic,strong) TMTextField *textField;
+@property (nonatomic,strong) TMHyperlinkTextField *textField;
 
 @end
 
@@ -110,7 +111,7 @@
 
 -(id)initWithFrame:(NSRect)frameRect {
     if(self = [super initWithFrame:frameRect]) {
-        self.textField = [TMTextField defaultTextField];
+        self.textField = [TMHyperlinkTextField defaultTextField];
 
         [[self.textField cell] setLineBreakMode:NSLineBreakByWordWrapping];
         [self.textField setFrameOrigin:NSMakePoint(100, 0)];

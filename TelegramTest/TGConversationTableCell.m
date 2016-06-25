@@ -306,7 +306,7 @@ static NSDictionary *attributes() {
             [self.layer addSublayer:_shortUnread.layer];
         }
         
-        _shortUnread.color = self.item.conversation.isMute && ![SettingsArchiver checkMaskedSetting:IncludeMutedUnreadCount] ? NSColorFromRGB(0xd7d7d7) : NSColorFromRGB(0x4ba3e2);
+        _shortUnread.color = self.item.conversation.isMute && ![SettingsArchiver checkMaskedSetting:IncludeMutedUnreadCount] ? NSColorFromRGB(0xd7d7d7) : BLUE_COLOR;
         [_shortUnread setUnreadCount:self.item.unreadText];
         
     } else {
@@ -530,7 +530,7 @@ static int unreadOffsetRight = 13;
         
     } else {
         if(!self.item.conversation.isMute || [SettingsArchiver checkMaskedSetting:IncludeMutedUnreadCount])
-            [NSColorFromRGB(0x4ba3e2) set];
+            [BLUE_COLOR set];
         else
             [NSColorFromRGB(0xd7d7d7) set];
     }

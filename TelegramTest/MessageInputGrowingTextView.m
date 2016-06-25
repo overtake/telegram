@@ -142,9 +142,6 @@
     for(NSPasteboardItem *item in pasteboardItems) {
         NSString *url = [item stringForType:@"public.file-url"];
         
-        [item.types enumerateObjectsUsingBlock:^(NSString * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-            NSLog(@"%@",[item stringForType:obj]);
-        }];
         
         if(url) {
             [files addObject:[[NSURL URLWithString:url] path]];

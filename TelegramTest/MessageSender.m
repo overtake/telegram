@@ -30,6 +30,7 @@
 #import "NSString+FindURLs.h"
 #import "TGLocationRequest.h"
 #import "TGContextMessagesvViewController.h"
+#import "TGEmbedModalView.h"
 @implementation MessageSender
 
 
@@ -814,10 +815,17 @@ static TGLocationRequest *locationRequest;
                     alert(appName(), response.message);
                 else
                     if(response.message.length > 0)
-                        [Notification perform:SHOW_ALERT_HINT_VIEW data:@{@"text":response.message,@"color":NSColorFromRGB(0x4ba3e2)}];
+                        [Notification perform:SHOW_ALERT_HINT_VIEW data:@{@"text":response.message,@"color":BLUE_COLOR}];
+            } else if([response isKindOfClass:[TL_messages_botCallbackAnswer class]] && response.url.length > 0) {
+               
+                TGEmbedModalView *embedModal = [[TGEmbedModalView alloc] init];
+                
+                [embedModal setWebpage:[TL_webPage createWithFlags:0 n_id:0 url:response.url display_url:response.url type:nil site_name:nil title:nil n_description:nil photo:nil embed_url:response.url embed_type:@"callback" embed_width:INT32_MAX embed_height:INT32_MAX duration:0 author:nil document:nil]];
+                
+                [embedModal show:appWindow() animated:YES];
             }
             
-                handler(TGInlineKeyboardSuccessType);
+            handler(TGInlineKeyboardSuccessType);
             
             
         } errorHandler:^(id request, RpcError *error) {

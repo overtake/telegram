@@ -12,6 +12,7 @@
 
 typedef enum
 {
+    SettingsRowItemTypeNextBadge,
     SettingsRowItemTypeSwitch,
     SettingsRowItemTypeChoice,
     SettingsRowItemTypeNext,
