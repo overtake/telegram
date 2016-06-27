@@ -270,6 +270,8 @@
 		C21068BA1C19F4B500815859 /* GLKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A7C78FC1947E147001617DB /* GLKit.framework */; };
 		C21068BE1C1B04A100815859 /* QuickTime.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C21068A91C19DBCB00815859 /* QuickTime.framework */; };
 		C21068C61C1B417200815859 /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C21068C51C1B417200815859 /* CoreVideo.framework */; };
+		C212D29B1D21470800A65445 /* HockeySDK.framework in Copy Files (6 items) */ = {isa = PBXBuildFile; fileRef = C2082B7219C1E1C4000005E2 /* HockeySDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		C212D29C1D21470B00A65445 /* HockeySDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2082B7219C1E1C4000005E2 /* HockeySDK.framework */; };
 		C215BDE71C77255C00B4BF16 /* TGMessageEditSender.m in Sources */ = {isa = PBXBuildFile; fileRef = C215BDE21C76422500B4BF16 /* TGMessageEditSender.m */; };
 		C215BDF21C77256700B4BF16 /* TGInputMessageTemplate.m in Sources */ = {isa = PBXBuildFile; fileRef = C215BDDB1C75E46E00B4BF16 /* TGInputMessageTemplate.m */; };
 		C215BDF51C77354700B4BF16 /* MessageRightView.m in Sources */ = {isa = PBXBuildFile; fileRef = C215BDF41C77354700B4BF16 /* MessageRightView.m */; };
@@ -613,8 +615,6 @@
 		C2ACCE5F1ADD66A600ABEE78 /* TGConversationsTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = C2ACCE5E1ADD66A600ABEE78 /* TGConversationsTableView.m */; };
 		C2ACCE6B1AE10ED200ABEE78 /* TGRaceEmoji.m in Sources */ = {isa = PBXBuildFile; fileRef = C2ACCE6A1AE10ED200ABEE78 /* TGRaceEmoji.m */; };
 		C2ACCE6E1AE122A400ABEE78 /* EmojiButton.m in Sources */ = {isa = PBXBuildFile; fileRef = C2ACCE6D1AE122A400ABEE78 /* EmojiButton.m */; };
-		C2B0A7CB1D180230001BAE72 /* HockeySDK.framework in Copy Files (6 items) */ = {isa = PBXBuildFile; fileRef = C2082B7219C1E1C4000005E2 /* HockeySDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		C2B0A7CC1D180235001BAE72 /* HockeySDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2082B7219C1E1C4000005E2 /* HockeySDK.framework */; };
 		C2B0DF771BA98E7C0023982C /* TL_localEmptyMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = C2B0DF761BA98E7C0023982C /* TL_localEmptyMessage.m */; };
 		C2B0DF831BA9B7840023982C /* ComposeActionAddChannelModeratorBehavior.m in Sources */ = {isa = PBXBuildFile; fileRef = C2B0DF821BA9B7840023982C /* ComposeActionAddChannelModeratorBehavior.m */; };
 		C2B0DF861BA9C59B0023982C /* ComposeConfirmModeratorViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C2B0DF851BA9C59B0023982C /* ComposeConfirmModeratorViewController.m */; };
@@ -1048,8 +1048,8 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				C2B0A7CB1D180230001BAE72 /* HockeySDK.framework in Copy Files (6 items) */,
 				C2C5DCD11D19CC050070AC56 /* Sparkle.framework in Copy Files (6 items) */,
+				C212D29B1D21470800A65445 /* HockeySDK.framework in Copy Files (6 items) */,
 			);
 			name = "Copy Files (6 items)";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2875,7 +2875,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				C2C5DCD21D19CC080070AC56 /* Sparkle.framework in Frameworks */,
-				C2B0A7CC1D180235001BAE72 /* HockeySDK.framework in Frameworks */,
+				C212D29C1D21470B00A65445 /* HockeySDK.framework in Frameworks */,
 				C21D06DD1CBE5A5900CB28B8 /* Carbon.framework in Frameworks */,
 				C2C3D9C11CA586B70031A296 /* CoreLocation.framework in Frameworks */,
 				C2034BB31C2EB1C70080D023 /* VideoToolbox.framework in Frameworks */,

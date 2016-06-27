@@ -7,19 +7,21 @@
 //
 
 #import <Cocoa/Cocoa.h>
-#import "SUExport.h"
+
 
 /*!
-    Applies special display formatting to version numbers.
+    @protocol
+    @abstract	Implement this protocol to apply special formatting to the two
+				version numbers.
 */
 @protocol SUVersionDisplay
 
 /*!
-    Formats two version strings.
-
-    Both versions are provided so that important distinguishing information
-    can be displayed while also leaving out unnecessary/confusing parts.
+    @method     
+    @abstract   An abstract method to format two version strings.
+    @discussion You get both so you can display important distinguishing
+				information, but leave out unnecessary/confusing parts.
 */
-- (void)formatVersion:(NSString **)inOutVersionA andVersion:(NSString **)inOutVersionB;
+-(void)	formatVersion: (NSString**)inOutVersionA andVersion: (NSString**)inOutVersionB; 
 
 @end
