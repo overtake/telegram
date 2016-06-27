@@ -9,7 +9,7 @@
 #import <Cocoa/Cocoa.h>
 #import "TMView.h"
 #import "TMTextField.h"
-
+#import "TMNavigationBar.h"
 @class MessagesViewController;
 @class TGAttachObject;
 @class TMPopover;
@@ -28,6 +28,8 @@
 @property (nonatomic,strong,readonly) TMTextField *centerTextField;
 
 @property (nonatomic, strong) TMNavigationController *navigationViewController;
+@property (nonatomic,strong,readonly) TMNavigationBar *navigationBarView;
+
 @property (nonatomic) BOOL isNavigationBarHidden;
 
 - (id)initWithFrame:(NSRect)frame;

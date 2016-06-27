@@ -53,10 +53,21 @@
         
         [self addSubview:self.connectionView];
         
+        [Notification addObserver:self selector:@selector(changedStatusConnection:) name:CONNECTION_STATUS_CHANGED];
 
         
     }
     return self;
+}
+
+-(void)changedStatusConnection:(NSNotification *)notify {
+    ConnectingStatusType status = [notify.userInfo[KEY_DATA] intValue];
+    
+    [self setConnectionState:status];
+}
+
+-(void)dealloc {
+    [Notification removeObserver:self];
 }
 
 static const float duration = 0.25;
@@ -94,52 +105,6 @@ static const float duration = 0.25;
         } completionHandler:^{
         
         }];
-        
-//        TGAnimationBlockDelegate *connectionDelegate = [[TGAnimationBlockDelegate alloc] initWithLayer:self.connectionView.layer];
-//        
-//       // [CATransaction begin];
-//        
-//        POPBasicAnimation *connectionAnimation = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerPositionY];
-//        
-//        connectionAnimation.duration = duration;
-//        connectionAnimation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut];
-//        
-//        connectionAnimation.toValue = @( show ? 0 : NSHeight(self.connectionView.frame)  );
-//        connectionAnimation.fromValue = @( show ? NSHeight(self.connectionView.frame) : 0 );
-//        connectionAnimation.delegate = connectionDelegate;
-//        connectionAnimation.removedOnCompletion = YES;
-//        
-//        
-//        [connectionDelegate setCompletion:^(BOOL isFinished) {
-//            if(isFinished)
-//                [self.connectionView setFrameOrigin:NSMakePoint(NSMinX(self.connectionView.frame), [connectionAnimation.toValue floatValue])];
-//        }];
-//
-//        [self.connectionView.layer pop_addAnimation:connectionAnimation forKey:@"position"];
-//        
-//        
-//        TGAnimationBlockDelegate *centerDelegate = [[TGAnimationBlockDelegate alloc] initWithLayer:self.connectionView.layer];
-//        
-//        POPBasicAnimation *centerAnimation =[POPBasicAnimation animationWithPropertyNamed:kPOPLayerPositionY];
-//        
-//        centerAnimation.duration = duration;
-//        centerAnimation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut];
-//        
-//        centerAnimation.toValue = @( !show ? 0 : -NSHeight(self.centerViewBlock.frame) );
-//        centerAnimation.fromValue = @( !show ? -NSHeight(self.centerViewBlock.frame) : 0 );
-//        centerAnimation.delegate = centerDelegate;
-//        centerAnimation.removedOnCompletion = YES;
-//        
-//      //  self.centerViewBlock.layer.position = CGPointMake(NSMinX(self.connectionView.frame), [centerAnimation.toValue floatValue]);
-//        
-//        [centerDelegate setCompletion:^(BOOL isFinished) {
-//            if(isFinished)
-//                [self.centerViewBlock setFrameOrigin:NSMakePoint(NSMinX(self.centerViewBlock.frame), 0)];
-//        }];
-//        
-//        [self.centerViewBlock.layer pop_addAnimation:centerAnimation forKey:@"position"];
-//        
-//     //   [CATransaction commit];
         
         
     } else {

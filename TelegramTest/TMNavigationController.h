@@ -30,7 +30,6 @@ typedef enum {
 
 @interface TMNavigationController : TGSplitViewController
 
-@property (nonatomic, strong) TMNavigationBar *nagivationBarView;
 
 @property (nonatomic, strong) TMViewController *currentController;
 @property (nonatomic, strong) NSMutableArray *viewControllerStack;

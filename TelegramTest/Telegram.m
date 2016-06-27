@@ -26,7 +26,8 @@
 @implementation Telegram
 
 +(void)setConnectionState:(ConnectingStatusType)state {
-    [[Telegram rightViewController].navigationViewController.nagivationBarView setConnectionState:state];
+    [Notification perform:CONNECTION_STATUS_CHANGED data:@{KEY_DATA:@(state)}];
+
 }
 
 + (Telegram *)sharedInstance {

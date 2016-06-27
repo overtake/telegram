@@ -93,6 +93,8 @@ extern NSString *const UPDATE_CONTEXT_SWITCH;
 extern NSString *const UPDATE_MESSAGE_TEMPLATE;
 extern NSString *const CHAT_FLAGS_UPDATED;
 
+extern NSString *const CONNECTION_STATUS_CHANGED;
+
 extern NSString *const KEY_PREVIEW_OBJECT;
 
 extern NSString *const KEY_USER;

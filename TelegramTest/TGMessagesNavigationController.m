@@ -42,15 +42,15 @@
 
 -(void)updateInlinePlayer:(TMViewController *)viewController  {
     [_inlineAudioPlayer setStyle:TGAudioPlayerGlobalStyleMini animated:NO];
-    [_inlineAudioPlayer setFrameOrigin:NSMakePoint(0, NSHeight(self.view.frame) - (viewController.isNavigationBarHidden ? 0 : NSHeight(self.nagivationBarView.frame)) - 50)];
+    //[_inlineAudioPlayer setFrameOrigin:NSMakePoint(0, NSHeight(self.view.frame) - (viewController.isNavigationBarHidden ? 0 : NSHeight(self.nagivationBarView.frame)) - 50)];
 }
 
 
 -(void)showInlinePlayer:(TGAudioGlobalController *)controller {
-    if(!_inlineAudioPlayer) {
-        _inlineAudioPlayer = [[TGInlineAudioPlayer alloc] initWithFrame:NSMakeRect(0, NSHeight(self.view.frame) - NSHeight(self.nagivationBarView.frame) - 50, NSWidth(self.view.frame), 50) globalController:controller];
-        [self.view addSubview:_inlineAudioPlayer];
-    }
+//    if(!_inlineAudioPlayer) {
+//        _inlineAudioPlayer = [[TGInlineAudioPlayer alloc] initWithFrame:NSMakeRect(0, NSHeight(self.view.frame) - NSHeight(self.nagivationBarView.frame) - 50, NSWidth(self.view.frame), 50) globalController:controller];
+//        [self.view addSubview:_inlineAudioPlayer];
+//    }
     
     [self.inlineAudioPlayer show:controller ? controller.conversation : self.messagesViewController.conversation navigation:self];
     
