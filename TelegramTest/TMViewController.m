@@ -158,6 +158,13 @@
     [_centerTextField setFrameOrigin:NSMakePoint(_centerTextField.frame.origin.x, 13)];
 }
 
+-(BOOL)proccessEnterAction {
+    return NO;
+}
+-(BOOL)proccessEscAction {
+    return YES;
+}
+
 
 - (void)viewWillAppear:(BOOL)animated {
     

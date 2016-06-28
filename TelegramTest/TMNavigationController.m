@@ -292,12 +292,14 @@ static const int navigationOffset = 48;
     newView.autoresizingMask = NSViewWidthSizable | NSViewHeightSizable;
     
     BOOL isAnimate = !(!newView || !animationFlag);
-
-    [newViewController.navigationBarView setLeftView:newViewController.leftNavigationBarView animated:isAnimate];
-    [newViewController.navigationBarView setCenterView:newViewController.centerNavigationBarView animated:isAnimate];
-    [newViewController.navigationBarView setRightView:newViewController.rightNavigationBarView animated:isAnimate];
     
     [newViewController.navigationBarView setFrame:NSMakeRect(0, NSHeight(self.view.frame) - navigationHeight, NSWidth(self.view.frame), navigationHeight)];
+
+
+    [newViewController.navigationBarView setLeftView:newViewController.leftNavigationBarView animated:NO];
+    [newViewController.navigationBarView setCenterView:newViewController.centerNavigationBarView animated:NO];
+    [newViewController.navigationBarView setRightView:newViewController.rightNavigationBarView animated:NO];
+    
     
     NSMutableArray *trm = [NSMutableArray array];
     

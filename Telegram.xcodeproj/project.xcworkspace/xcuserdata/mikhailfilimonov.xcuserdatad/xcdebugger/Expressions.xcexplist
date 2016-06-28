@@ -727,6 +727,14 @@
          contextName = "-[TMCollectionPageController convertedRows:]:TMCollectionPageController.m">
       </ContextState>
       <ContextState
+         contextName = "-[TGCTextView linkAtPoint:hitTest:itsReal:lineRect:]:TGCTextView.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "position">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "-[HistoryFilter remoteRequest:hole:callback:]:HistoryFilter.m">
       </ContextState>
       <ContextState
@@ -5099,6 +5107,17 @@
             </PersistentString>
             <PersistentString
                value = "self.action.behavior">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[TMNavigationBar setRightView:animated:]:TMNavigationBar.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "newRightView.bounds.size.height">
+            </PersistentString>
+            <PersistentString
+               value = "self.bounds.size.height">
             </PersistentString>
          </PersistentStrings>
       </ContextState>

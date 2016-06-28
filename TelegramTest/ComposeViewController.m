@@ -50,6 +50,23 @@
     
 }
 
+-(BOOL)proccessEnterAction {
+    
+    if(!self.doneButton.disable) {
+        [self.action.behavior composeDidDone];
+        
+        self.action.editable = !self.action.editable;
+        [self updateActionNavigation];
+        
+        [self didUpdatedEditableState];
+        
+        return YES;
+    }
+    return NO;
+    
+}
+
+
 -(void)setLoading:(BOOL)isLoading {
     _isLoading = isLoading;
     

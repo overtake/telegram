@@ -24,7 +24,6 @@
 
 @property (nonatomic,strong) TMView *container;
 
-@property (nonatomic,strong) BTRButton *searchButton;
 
 
 
@@ -71,24 +70,7 @@
         //[self.statusTextField setBackgroundColor:NSColorFromRGB(0x000000)];
         
         [self.container addSubview:self.statusTextField];
-        
-        _searchButton = [[BTRButton alloc] initWithFrame:NSMakeRect(NSWidth(self.container.frame) - image_SearchMessages().size.width - 30, 0, image_SearchMessages().size.width +10, image_SearchMessages().size.height+10)];
-        
-        weak();
-        
-        [_searchButton addBlock:^(BTRControlEvents events) {
-            
-            if(![weakSelf.controller searchBoxIsVisible]) {
-                [weakSelf.controller showSearchBox];
-            }
-            
-        } forControlEvents:BTRControlEventClick];
-        
-        [_searchButton setImage:image_SearchMessages() forControlState:BTRControlStateNormal];
-        
-        [_searchButton setToolTip:@"CMD + F"];
-        
-        [self.container addSubview:_searchButton];
+
         
         [self addSubview:self.container];
         
@@ -112,14 +94,6 @@
 -(void)setFrameSize:(NSSize)newSize {
     
     
-    if(!CGRectIsEmpty(self.frame) && ![self inLiveResize]) {
-        int dif = (NSWidth(self.frame) - newSize.width)/2.0f;
-        
-        [_searchButton setFrameOrigin:NSMakePoint(NSMinX(_searchButton.frame) - dif, 10)];
-        
-    } else {
-        [_searchButton setFrameOrigin:NSMakePoint(newSize.width - image_SearchMessages().size.width - 10, 10)];
-    }
     [super setFrameSize:newSize];
     
     [self buildForSize:newSize];
@@ -132,7 +106,6 @@
 - (void)setDialog:(TL_conversation *)dialog {
     self->_dialog = dialog;
     
-    [_searchButton setFrameOrigin:NSMakePoint(NSWidth(self.frame) - image_SearchMessages().size.width - 10, 10)];
    // [_searchButton setHidden:self.dialog.type == DialogTypeChannel];
     
     
@@ -147,7 +120,6 @@
 -(void)setController:(MessagesViewController *)controller {
     _controller = controller;
     
-    [_searchButton setHidden:controller.class == [TGContextMessagesvViewController class]];
 }
 
 -(void)setState:(MessagesViewControllerState)state {

@@ -542,11 +542,14 @@ void exceptionHandler(NSException * exception)
                         
                     }
                     
-                    if(![appWindow().navigationController.messagesViewController proccessEscAction]) {
+                    if(![appWindow().navigationController.currentController proccessEscAction]) {
                         if(appWindow().navigationController.messagesViewController.inputText.length > 0) {
                             return incomingEvent;
                         } else {
-                            [[[Telegram sharedInstance] firstController] backOrClose:[[NSMenuItem alloc] initWithTitle:@"Profile.Back" action:@selector(backOrClose:) keyEquivalent:@""]];
+                            
+                            [appWindow().navigationController goBackWithAnimation:YES];
+                            
+                           // [[[Telegram sharedInstance] firstController] backOrClose:[[NSMenuItem alloc] initWithTitle:@"Profile.Back" action:@selector(backOrClose:) keyEquivalent:@""]];
                         }
                     }
                     
@@ -668,6 +671,12 @@ void exceptionHandler(NSException * exception)
             }
             
             return [[NSEvent alloc]init];
+        }
+        
+        if(result.keyCode == 36) {
+            if([appWindow().navigationController.currentController proccessEnterAction]) {
+                return [[NSEvent alloc] init];
+            }
         }
     
         

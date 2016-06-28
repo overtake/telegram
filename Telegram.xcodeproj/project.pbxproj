@@ -257,6 +257,7 @@
 		C20D18EC1948A3F70095A906 /* NewMainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = C20D18EE1948A3F70095A906 /* NewMainMenu.xib */; };
 		C20D18F81948D1FE0095A906 /* SecretChatAccepter.m in Sources */ = {isa = PBXBuildFile; fileRef = C20D18F71948D1FE0095A906 /* SecretChatAccepter.m */; };
 		C20D190219542AB80095A906 /* SearchHistoryFilter.m in Sources */ = {isa = PBXBuildFile; fileRef = C20D190119542AB80095A906 /* SearchHistoryFilter.m */; };
+		C20D75861D22A4D000A32E7A /* TGMessagesNavigationEditView.m in Sources */ = {isa = PBXBuildFile; fileRef = C20D75851D22A4D000A32E7A /* TGMessagesNavigationEditView.m */; };
 		C20F76071CD0DCDD0051900D /* TGRecentHeaderItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C20F76061CD0DCDD0051900D /* TGRecentHeaderItem.m */; };
 		C20F76141CD0DD050051900D /* TGRecentMoreItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C20F76131CD0DD050051900D /* TGRecentMoreItem.m */; };
 		C20F76171CD0DDA20051900D /* TGRecentHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = C20F76161CD0DDA20051900D /* TGRecentHeaderView.m */; };
@@ -1577,6 +1578,8 @@
 		C20D18F71948D1FE0095A906 /* SecretChatAccepter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SecretChatAccepter.m; sourceTree = "<group>"; };
 		C20D190019542AB80095A906 /* SearchHistoryFilter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SearchHistoryFilter.h; sourceTree = "<group>"; };
 		C20D190119542AB80095A906 /* SearchHistoryFilter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SearchHistoryFilter.m; sourceTree = "<group>"; };
+		C20D75841D22A4D000A32E7A /* TGMessagesNavigationEditView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGMessagesNavigationEditView.h; sourceTree = "<group>"; };
+		C20D75851D22A4D000A32E7A /* TGMessagesNavigationEditView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGMessagesNavigationEditView.m; sourceTree = "<group>"; };
 		C20F76051CD0DCDD0051900D /* TGRecentHeaderItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGRecentHeaderItem.h; sourceTree = "<group>"; };
 		C20F76061CD0DCDD0051900D /* TGRecentHeaderItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGRecentHeaderItem.m; sourceTree = "<group>"; };
 		C20F76121CD0DD050051900D /* TGRecentMoreItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGRecentMoreItem.h; sourceTree = "<group>"; };
@@ -3624,6 +3627,8 @@
 				C230D85A1CA6AE7100475FF5 /* TGMessagesViewAlertHintView.m */,
 				C2078E2C1CB53CD00037B1B2 /* TGModalMessagesViewController.h */,
 				C2078E2D1CB53CD00037B1B2 /* TGModalMessagesViewController.m */,
+				C20D75841D22A4D000A32E7A /* TGMessagesNavigationEditView.h */,
+				C20D75851D22A4D000A32E7A /* TGMessagesNavigationEditView.m */,
 			);
 			name = messages;
 			sourceTree = "<group>";
@@ -7254,6 +7259,7 @@
 				C2D4B8771AFCE8FA0035B4E4 /* YapDatabaseConnection.m in Sources */,
 				C21DD98618D0786700F6B822 /* TMPreviewDocumentItem.m in Sources */,
 				C22A2A091C218AF000678172 /* TGCompressVideoItem.m in Sources */,
+				C20D75861D22A4D000A32E7A /* TGMessagesNavigationEditView.m in Sources */,
 				0AB8501818757E31001A796C /* SearchItem.m in Sources */,
 				0A9EDC5A1897BA0E0037E1BC /* RBLResizableImage.m in Sources */,
 				C21D483519ADD1E3000F06E1 /* StandartViewController.m in Sources */,

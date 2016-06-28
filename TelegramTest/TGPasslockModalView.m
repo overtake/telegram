@@ -8,7 +8,7 @@
 
 #import "TGPasslockModalView.h"
 #import "TGPasslock.h"
-
+#import "TGCTextView.h"
 @interface TGPasslockModalView ()
 @property (nonatomic,strong) TMAvatarImageView *avatar;
 @property (nonatomic,strong) NSSecureTextField *secureField;
@@ -19,6 +19,9 @@
 @property (nonatomic,assign) int state;
 
 @property (nonatomic,strong) NSMutableArray *md5Hashs;
+
+@property (nonatomic,strong) TGCTextView *textView;
+
 
 
 @end
@@ -180,6 +183,42 @@
         
         [containerView addSubview:self.enterButton];
         
+        
+        
+        _textView = [[TGCTextView alloc] init];
+        
+        NSMutableAttributedString *attr = [[NSMutableAttributedString alloc] init];
+        
+        NSString *textFormat =  NSLocalizedString(@"Passcode.forceLogout", nil);
+        
+        NSString *baseText = [[NSString alloc] initWithFormat:textFormat, @"", @""];
+
+        
+        [attr appendString:baseText withColor:GRAY_TEXT_COLOR];
+        
+        
+        NSRange range = NSMakeRange([textFormat rangeOfString:@"%1$@"].location,  [textFormat rangeOfString:@"%2$@"].location - [textFormat rangeOfString:@"%1$@"].location - 4);
+        
+        
+        [attr addAttribute:NSLinkAttributeName value:@"chat://logout" range:range];
+        [attr addAttribute:NSForegroundColorAttributeName value:LINK_COLOR range:range];
+        [attr setAlignment:NSCenterTextAlignment range:attr.range];
+        
+        NSSize size = [attr coreTextSizeForTextFieldForWidth:400];
+        
+        [_textView setAttributedString:attr];
+        [_textView setFrameSize:size];
+        
+        [_textView setFrameOrigin:NSMakePoint(0, 20)];
+
+        _textView.autoresizingMask = NSViewMinXMargin | NSViewMaxXMargin;
+        [_textView setCenteredXByView:self];
+        
+        [_textView setHidden:YES];
+        
+        
+        [self addSubview:_textView];
+        
       //  [self updateDescription];
         
     }
@@ -303,6 +342,8 @@
 
 -(void)setClosable:(BOOL)closable {
     _closable = closable;
+    
+    [self.textView setHidden:closable];
     
     [self.closeButton setHidden:!closable];
 }

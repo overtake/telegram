@@ -89,6 +89,7 @@
 #import "TGModernEmojiViewController.h"
 #import "TGModernESGViewController.h"
 #import "TGSplitView.h"
+#import "TGMessagesNavigationEditView.h"
 #define HEADER_MESSAGES_GROUPING_TIME (10 * 60)
 
 #define SCROLLDOWNBUTTON_OFFSET 300
@@ -150,7 +151,7 @@
 
 @property (nonatomic, strong) TMTextButton *normalNavigationLeftView;
 @property (nonatomic, strong) MessageTableNavigationTitleView *normalNavigationCenterView;
-@property (nonatomic, strong) TMTextButton *normalNavigationRightView;
+@property (nonatomic, strong) TGMessagesNavigationEditView *normalNavigationRightView;
 
 @property (nonatomic, strong) TMTextButton *editableNavigationRightView;
 @property (nonatomic, strong) TMTextButton *editableNavigationLeftView;
@@ -196,6 +197,8 @@
 @property (nonatomic,strong) TGMessagesViewAlertHintView *messagesAlertHintView;
 
 @property (nonatomic,strong) TGModernESGViewController *esgViewController;
+
+
 
 
 @end
@@ -372,11 +375,9 @@
     weak();
     
     //Navigation
-    self.normalNavigationRightView = [TMTextButton standartMessageNavigationButtonWithTitle:NSLocalizedString(@"Profile.Edit", nil)];
-    [self.normalNavigationRightView setTapBlock:^{
-        [weakSelf setCellsEditButtonShow:YES animated:YES];
-    }];
-    [self.normalNavigationRightView setDisableColor:NSColorFromRGB(0xa0a0a0)];
+    self.normalNavigationRightView = [[TGMessagesNavigationEditView alloc] init];
+    
+    self.normalNavigationRightView.controller = self;
     
     self.filtredNavigationCenterView = [TMTextButton standartUserProfileButtonWithTitle:@"nil"];
     

@@ -833,7 +833,7 @@ void open_link_with_controller(NSString *link, TMNavigationController *controlle
         NSArray *components = [link componentsSeparatedByString:@"/"];
         
         
-        if(components.count > 3) {
+        if(components.count >= 3) {
             
             NSString *command = components[2];
             
@@ -900,6 +900,15 @@ void open_link_with_controller(NSString *link, TMNavigationController *controlle
                 }
                 
                 return;
+            }
+            
+            if([command isEqualToString:@"logout"]) {
+                
+                confirm(appName(),NSLocalizedString(@"Confirm.ConfirmLogout", nil), ^ {
+                   [[Telegram delegate] logoutWithForce:YES];
+                },nil);
+
+                
             }
             
         }

@@ -109,6 +109,8 @@
 
 -(TMView *)standartRightBarView;
 
+-(BOOL)proccessEnterAction;
+-(BOOL)proccessEscAction;
 
 -(void)setCenterBarViewText:(NSString *)text;
 -(void)setCenterBarViewTextAttributed:(NSAttributedString *)text;
