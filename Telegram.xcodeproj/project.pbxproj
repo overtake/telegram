@@ -257,7 +257,7 @@
 		C20D18EC1948A3F70095A906 /* NewMainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = C20D18EE1948A3F70095A906 /* NewMainMenu.xib */; };
 		C20D18F81948D1FE0095A906 /* SecretChatAccepter.m in Sources */ = {isa = PBXBuildFile; fileRef = C20D18F71948D1FE0095A906 /* SecretChatAccepter.m */; };
 		C20D190219542AB80095A906 /* SearchHistoryFilter.m in Sources */ = {isa = PBXBuildFile; fileRef = C20D190119542AB80095A906 /* SearchHistoryFilter.m */; };
-		C20D75791D218AF100A32E7A /* TGShare.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = C2CBF3B61AF38426006BF90A /* TGShare.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		C20D75801D21A0B300A32E7A /* TGShare.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = C2CBF3B61AF38426006BF90A /* TGShare.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		C20F76071CD0DCDD0051900D /* TGRecentHeaderItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C20F76061CD0DCDD0051900D /* TGRecentHeaderItem.m */; };
 		C20F76141CD0DD050051900D /* TGRecentMoreItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C20F76131CD0DD050051900D /* TGRecentMoreItem.m */; };
 		C20F76171CD0DDA20051900D /* TGRecentHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = C20F76161CD0DDA20051900D /* TGRecentHeaderView.m */; };
@@ -973,7 +973,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		C20D75771D218AEA00A32E7A /* PBXContainerItemProxy */ = {
+		C20D757E1D21A0AD00A32E7A /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = CEB09E5017DAFC240055F150 /* Project object */;
 			proxyType = 1;
@@ -1062,7 +1062,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 13;
 			files = (
-				C20D75791D218AF100A32E7A /* TGShare.appex in Embed App Extensions */,
+				C20D75801D21A0B300A32E7A /* TGShare.appex in Embed App Extensions */,
 			);
 			name = "Embed App Extensions";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -6238,7 +6238,7 @@
 			buildRules = (
 			);
 			dependencies = (
-				C20D75781D218AEA00A32E7A /* PBXTargetDependency */,
+				C20D757F1D21A0AD00A32E7A /* PBXTargetDependency */,
 			);
 			name = Telegram;
 			productName = TelegramTest;
@@ -7371,10 +7371,10 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		C20D75781D218AEA00A32E7A /* PBXTargetDependency */ = {
+		C20D757F1D21A0AD00A32E7A /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = C2CBF3B51AF38426006BF90A /* TGShare */;
-			targetProxy = C20D75771D218AEA00A32E7A /* PBXContainerItemProxy */;
+			targetProxy = C20D757E1D21A0AD00A32E7A /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -7469,7 +7469,7 @@
 				"OTHER_CODE_SIGN_FLAGS[sdk=*]" = "--deep";
 				PRODUCT_BUNDLE_IDENTIFIER = "ru.keepcoder.Telegram.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "71d6e7cc-c848-4bfb-bebe-2fc121993f5a";
+				PROVISIONING_PROFILE = "19668b0a-3925-4226-86de-70f5fd6b95ab";
 				SDKROOT = macosx;
 				SKIP_INSTALL = YES;
 				USER_HEADER_SEARCH_PATHS = "./MtProtoKit/**";
@@ -7513,7 +7513,7 @@
 				"OTHER_CODE_SIGN_FLAGS[sdk=*]" = "--deep";
 				PRODUCT_BUNDLE_IDENTIFIER = "ru.keepcoder.Telegram.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "71d6e7cc-c848-4bfb-bebe-2fc121993f5a";
+				PROVISIONING_PROFILE = "19668b0a-3925-4226-86de-70f5fd6b95ab";
 				SDKROOT = macosx;
 				SKIP_INSTALL = YES;
 				USER_HEADER_SEARCH_PATHS = "./MtProtoKit/**";
@@ -7627,7 +7627,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = ru.keepcoder.Telegram;
 				PRODUCT_NAME = Telegram;
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "690325a6-fc14-4462-8d8c-d06ccc897909";
 				SDKROOT = macosx;
 				USER_HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/libwebp-0.4.2-mac-10.8/include ./MtProtoKit/**";
 				VALIDATE_PRODUCT = NO;
@@ -7680,7 +7680,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = ru.keepcoder.Telegram;
 				PRODUCT_NAME = Telegram;
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "690325a6-fc14-4462-8d8c-d06ccc897909";
 				SDKROOT = macosx;
 				USER_HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/libwebp-0.4.2-mac-10.8/include ./MtProtoKit/**";
 				VALIDATE_PRODUCT = NO;
