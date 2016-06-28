@@ -162,7 +162,7 @@
     return NO;
 }
 -(BOOL)proccessEscAction {
-    return YES;
+    return NO;
 }
 
 
