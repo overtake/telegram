@@ -2742,7 +2742,7 @@ static NSTextAttachment *headerMediaIcon() {
         
         return;
     } else if(item && (flags & ShowMessageTypeDateJump) > 0) {
-         [self scrollToRect:[self.table rectOfRow:[self indexOfObject:item]] isCenter:NO animated:NO yOffset:48];
+         [self scrollToRect:[self.table rectOfRow:[self indexOfObject:item]] isCenter:NO animated:NO yOffset:28];
         
         return;
     }

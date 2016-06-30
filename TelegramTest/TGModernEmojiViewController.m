@@ -271,6 +271,11 @@ static NSArray *segment_list;
 
 }
 
+-(void)setMessagesViewController:(MessagesViewController *)messagesViewController {
+    _messagesViewController = messagesViewController;
+    [_showGSControllerView setHidden:_messagesViewController == nil];
+}
+
 -(void)addScrollEvent {
     id clipView = [[self.tableView enclosingScrollView] contentView];
     [[NSNotificationCenter defaultCenter] addObserver:self

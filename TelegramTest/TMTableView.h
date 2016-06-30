@@ -101,5 +101,6 @@
 
 
 -(void)setStickClass:(Class)stickClass;
+-(void)scrollToItem:(TMRowItem *)item animated:(BOOL)animated yOffset:(int)yOffset;
 
 @end

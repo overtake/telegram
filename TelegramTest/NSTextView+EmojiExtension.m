@@ -19,7 +19,7 @@ DYNAMIC_PROPERTY(EmojiPopover)
 -(void)showEmoji {
     TGModernESGViewController *emojiViewController = [TGModernESGViewController controller];
     
-    [emojiViewController setMessagesViewController:appWindow().navigationController.messagesViewController];
+    [emojiViewController setMessagesViewController:nil];
     
     RBLPopover *popover = [self getEmojiPopover];
     

@@ -429,6 +429,11 @@
             [self insertNewline:self];
         }
         return;
+    }   else if(theEvent.keyCode == 53 && [self.growingDelegate respondsToSelector:@selector(TMGrowingTextViewNeedClose:)]) {
+        [self.growingDelegate TMGrowingTextViewNeedClose:self];
+        
+        return;
+        
     }
     
     

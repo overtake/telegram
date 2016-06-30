@@ -181,7 +181,7 @@ static NSMutableDictionary *stickers;
 
 -(void)show {
     
-    BOOL needShowStickers = [[NSUserDefaults standardUserDefaults] boolForKey:@"needShowStickers"];
+    BOOL needShowStickers = [[NSUserDefaults standardUserDefaults] boolForKey:@"needShowStickers"] && _messagesViewController;
     
     [self.navigationViewController clear];
     [self.navigationViewController pushViewController:!needShowStickers ? _emojiViewController : _sgViewController animated:NO];

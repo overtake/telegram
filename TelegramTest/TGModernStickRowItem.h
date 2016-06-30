@@ -6,9 +6,9 @@
 //  Copyright © 2016 keepcoder. All rights reserved.
 //
 
-#import "TMRowItem.h"
+#import "TGGeneralRowItem.h"
 
-@interface TGModernStickRowItem : TMRowItem
+@interface TGModernStickRowItem : TGGeneralRowItem
 @property (nonatomic,strong,readonly) NSAttributedString *header;
 
 @end

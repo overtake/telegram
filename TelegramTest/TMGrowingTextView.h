@@ -17,6 +17,8 @@
 - (void) TMGrowingTextViewTextDidChange:(id)textView;
 - (void) TMGrowingTextViewFirstResponder:(id)textView isFirstResponder:(BOOL)isFirstResponder;
 
+@optional
+- (void) TMGrowingTextViewNeedClose:(id)textView;
 
 @end
 

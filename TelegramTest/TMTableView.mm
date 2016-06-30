@@ -638,7 +638,6 @@ static TMTableView *tableStatic;
 
 -(void)setStickClass:(Class)stickClass {
     _stickClass = stickClass;
-    
     if(stickClass != nil) {
         
         [self addScrollEvent];
@@ -770,6 +769,15 @@ static TMTableView *tableStatic;
 
 -(void)removeScrollEvent {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
+
+-(void)scrollToItem:(TMRowItem *)item animated:(BOOL)animated yOffset:(int)yOffset {
+    
+    NSRect rowRect = [self rectOfRow:[self indexOfItem:item]];
+    
+    [self.scrollView.clipView scrollRectToVisible:NSMakeRect(0, NSMinY(rowRect) + yOffset, NSWidth(rowRect),  NSHeight(rowRect)) animated:animated];
+    
 }
 
 

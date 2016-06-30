@@ -12,7 +12,7 @@
 
 
 @interface TGModernStickRowView ()
-@property (nonatomic,strong) TGTextLabel *textLabel;
+
 @end
 
 @implementation TGModernStickRowView

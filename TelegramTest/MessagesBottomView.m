@@ -1671,7 +1671,7 @@ static RBLPopover *popover;
         
         if(strongSelf == weakSelf) {
             
-            [MessageSender proccessInlineKeyboardButton:botCommand messagesViewController:strongSelf.messagesViewController conversation:keyboard.conversation messageId:0 handler:^(TGInlineKeyboardProccessType type) {
+            [MessageSender proccessInlineKeyboardButton:botCommand messagesViewController:strongSelf.messagesViewController conversation:keyboard.conversation messageId:0  handler:^(TGInlineKeyboardProccessType type) {
                 
                 [strongSelf.botKeyboard setProccessing:type == TGInlineKeyboardProccessingType forKeyboardButton:botCommand];
                 

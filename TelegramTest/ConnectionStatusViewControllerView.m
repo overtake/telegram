@@ -204,6 +204,11 @@ static NSColor *stateColor[5];
             
             [self setString:string update:NO];
             
+            if(_state == ConnectingStatusTypeNormal) {
+                [self.animationTimer invalidate];
+                self.animationTimer = nil;
+            }
+            
             
         } queue:dispatch_get_main_queue()];
         

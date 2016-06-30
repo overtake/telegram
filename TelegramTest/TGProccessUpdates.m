@@ -984,6 +984,11 @@ static NSArray *channelUpdates;
             
             TL_localMessageService *message = [TL_localMessageService createWithFlags:0 n_id:0 from_id:[update user_id] to_id:[TL_peerUser createWithUser_id:[update user_id]] reply_to_msg_id:0 date:[update date] action:[TL_messageActionEncryptedChat createWithTitle:text] fakeId:[MessageSender getFakeMessageId] randomId:rand_long() dstate:DeliveryStateNormal];
             
+            TL_conversation *conversation = message.conversation;
+            if(conversation.read_inbox_max_id == 0) {
+                conversation.read_inbox_max_id = message.n_id;
+            }
+            
             [MessagesManager addAndUpdateMessage:message];
             
             return;

@@ -8,6 +8,8 @@
 
 #import "SearchMessagesView.h"
 #import "SpacemanBlocks.h"
+#import "TGCalendarViewController.h"
+#import "TGCalendarStickRowItem.h"
 @interface SearchMessagesView ()<TMSearchTextFieldDelegate>
 @property (nonatomic,strong) TMSearchTextField *searchField;
 @property (nonatomic,strong) TMTextButton *cancelButton;
@@ -29,6 +31,10 @@
 @property (nonatomic,strong) NSMutableArray *messages;
 @property (nonatomic,assign) int currentIdx;
 
+
+@property (nonatomic,strong) TGCalendarViewController *calendarViewController;
+@property (nonatomic,strong) RBLPopover *popover;
+@property (nonatomic,strong) BTRButton *calendarButton;
 
 @end
 
@@ -105,18 +111,65 @@
         [self addSubview:self.prevButton];
         [self addSubview:self.nextButton];
         
+        
+        _calendarButton = [[BTRButton alloc] initWithFrame:NSMakeRect(0, 0, image_CalendarIcon().size.width, image_CalendarIcon().size.height)];
+        [_calendarButton setImage:image_CalendarIcon() forControlState:BTRControlStateNormal];
+        
+        
+        [_calendarButton addBlock:^(BTRControlEvents events) {
+            
+            weakSelf.calendarViewController = [[TGCalendarViewController alloc] initWithFrame:NSMakeRect(0, 0, 280, 200 + [TGCalendarStickRowItem height])];
+            
+            weakSelf.calendarViewController.messagesViewController = weakSelf.controller;
+            [weakSelf.calendarViewController loadViewIfNeeded];
+            [weakSelf.calendarViewController viewWillAppear:NO];
+
+            weakSelf.popover = [[RBLPopover alloc] initWithContentViewController:(NSViewController *)weakSelf.calendarViewController];
+            
+            [weakSelf.popover setDidCloseBlock:^(RBLPopover *popover){
+                _calendarViewController = nil;
+                _popover = nil;
+            }];
+            
+            weakSelf.calendarViewController.rblpopover = weakSelf.popover;
+            
+            
+            [weakSelf.popover showRelativeToRect:NSMakeRect(- 280.0/2.0 + NSWidth(_calendarButton.frame)/2.0, 0, 280, 240) ofView:weakSelf.calendarButton preferredEdge:CGRectMinYEdge];
+            
+        } forControlEvents:BTRControlEventClick];
+        
+        [_calendarButton setFrameOrigin:NSMakePoint(NSMaxX(_searchField.frame) + 10, NSMinY(_cancelButton.frame))];
+
+        [_calendarButton setCenteredYByView:self];
+        
+        [self addSubview:_calendarButton];
+        
+        
+        // calendar
+       
+        
+        
+        
+
     }
     
     return self;
+}
+
+-(void)setController:(MessagesViewController *)controller {
+    _controller = controller;
 }
 
 
 -(void)setFrameSize:(NSSize)newSize {
     [super setFrameSize:newSize];
     
-    [_searchField setFrameSize:NSMakeSize(newSize.width - 160, NSHeight(_searchField.frame))];
+    [_searchField setFrameSize:NSMakeSize(newSize.width - 200, NSHeight(_searchField.frame))];
     
-    int minX = NSMinX(self.searchField.frame) + NSWidth(self.searchField.frame);
+    [_calendarButton setFrameOrigin:NSMakePoint(NSMaxX(_searchField.frame) + 20, NSMinY(_calendarButton.frame))];
+    
+    
+    int minX =  NSMaxX(self.calendarButton.frame);
     int maxX = NSWidth(self.frame);
     
     int dif = ((maxX - minX) - NSWidth(self.cancelButton.frame)) /2;

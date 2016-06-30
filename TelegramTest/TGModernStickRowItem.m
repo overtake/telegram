@@ -44,4 +44,8 @@
     return [TGModernStickRowView class];
 }
 
+-(BOOL)updateItemHeightWithWidth:(int)width {
+    return NO;
+}
+
 @end

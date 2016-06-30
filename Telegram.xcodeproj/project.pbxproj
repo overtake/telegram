@@ -258,6 +258,12 @@
 		C20D18F81948D1FE0095A906 /* SecretChatAccepter.m in Sources */ = {isa = PBXBuildFile; fileRef = C20D18F71948D1FE0095A906 /* SecretChatAccepter.m */; };
 		C20D190219542AB80095A906 /* SearchHistoryFilter.m in Sources */ = {isa = PBXBuildFile; fileRef = C20D190119542AB80095A906 /* SearchHistoryFilter.m */; };
 		C20D75861D22A4D000A32E7A /* TGMessagesNavigationEditView.m in Sources */ = {isa = PBXBuildFile; fileRef = C20D75851D22A4D000A32E7A /* TGMessagesNavigationEditView.m */; };
+		C20D75941D242A8000A32E7A /* TGCalendarViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C20D75931D242A8000A32E7A /* TGCalendarViewController.m */; };
+		C20D75971D242BE300A32E7A /* TGCalendarRowItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C20D75961D242BE300A32E7A /* TGCalendarRowItem.m */; };
+		C20D759A1D242BF000A32E7A /* TGCalendarRowView.m in Sources */ = {isa = PBXBuildFile; fileRef = C20D75991D242BF000A32E7A /* TGCalendarRowView.m */; };
+		C20D759D1D252F0800A32E7A /* TGCalendarUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = C20D759C1D252F0800A32E7A /* TGCalendarUtils.m */; };
+		C20D75A01D25573400A32E7A /* TGCalendarStickRowItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C20D759F1D25573400A32E7A /* TGCalendarStickRowItem.m */; };
+		C20D75A31D2557B400A32E7A /* TGCalendarStickRowView.m in Sources */ = {isa = PBXBuildFile; fileRef = C20D75A21D2557B400A32E7A /* TGCalendarStickRowView.m */; };
 		C20F76071CD0DCDD0051900D /* TGRecentHeaderItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C20F76061CD0DCDD0051900D /* TGRecentHeaderItem.m */; };
 		C20F76141CD0DD050051900D /* TGRecentMoreItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C20F76131CD0DD050051900D /* TGRecentMoreItem.m */; };
 		C20F76171CD0DDA20051900D /* TGRecentHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = C20F76161CD0DDA20051900D /* TGRecentHeaderView.m */; };
@@ -1580,6 +1586,18 @@
 		C20D190119542AB80095A906 /* SearchHistoryFilter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SearchHistoryFilter.m; sourceTree = "<group>"; };
 		C20D75841D22A4D000A32E7A /* TGMessagesNavigationEditView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGMessagesNavigationEditView.h; sourceTree = "<group>"; };
 		C20D75851D22A4D000A32E7A /* TGMessagesNavigationEditView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGMessagesNavigationEditView.m; sourceTree = "<group>"; };
+		C20D75921D242A8000A32E7A /* TGCalendarViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGCalendarViewController.h; sourceTree = "<group>"; };
+		C20D75931D242A8000A32E7A /* TGCalendarViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGCalendarViewController.m; sourceTree = "<group>"; };
+		C20D75951D242BE300A32E7A /* TGCalendarRowItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGCalendarRowItem.h; sourceTree = "<group>"; };
+		C20D75961D242BE300A32E7A /* TGCalendarRowItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGCalendarRowItem.m; sourceTree = "<group>"; };
+		C20D75981D242BF000A32E7A /* TGCalendarRowView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGCalendarRowView.h; sourceTree = "<group>"; };
+		C20D75991D242BF000A32E7A /* TGCalendarRowView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGCalendarRowView.m; sourceTree = "<group>"; };
+		C20D759B1D252F0800A32E7A /* TGCalendarUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGCalendarUtils.h; sourceTree = "<group>"; };
+		C20D759C1D252F0800A32E7A /* TGCalendarUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGCalendarUtils.m; sourceTree = "<group>"; };
+		C20D759E1D25573400A32E7A /* TGCalendarStickRowItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGCalendarStickRowItem.h; sourceTree = "<group>"; };
+		C20D759F1D25573400A32E7A /* TGCalendarStickRowItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGCalendarStickRowItem.m; sourceTree = "<group>"; };
+		C20D75A11D2557B400A32E7A /* TGCalendarStickRowView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGCalendarStickRowView.h; sourceTree = "<group>"; };
+		C20D75A21D2557B400A32E7A /* TGCalendarStickRowView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGCalendarStickRowView.m; sourceTree = "<group>"; };
 		C20F76051CD0DCDD0051900D /* TGRecentHeaderItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGRecentHeaderItem.h; sourceTree = "<group>"; };
 		C20F76061CD0DCDD0051900D /* TGRecentHeaderItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGRecentHeaderItem.m; sourceTree = "<group>"; };
 		C20F76121CD0DD050051900D /* TGRecentMoreItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGRecentMoreItem.h; sourceTree = "<group>"; };
@@ -3595,6 +3613,7 @@
 		0AEE20821821340200F348F2 /* messages */ = {
 			isa = PBXGroup;
 			children = (
+				C20D75911D23DED100A32E7A /* calendar */,
 				C215BE0A1C7A0F4F00B4BF16 /* modern */,
 				C215BDCF1C75E1D100B4BF16 /* input-templates */,
 				C241364B1C70AF5900130D2E /* audio */,
@@ -3722,6 +3741,25 @@
 				C21D06FE1CC0DF8700CB28B8 /* TGUserPopup.m */,
 			);
 			name = help;
+			sourceTree = "<group>";
+		};
+		C20D75911D23DED100A32E7A /* calendar */ = {
+			isa = PBXGroup;
+			children = (
+				C20D75921D242A8000A32E7A /* TGCalendarViewController.h */,
+				C20D75931D242A8000A32E7A /* TGCalendarViewController.m */,
+				C20D75951D242BE300A32E7A /* TGCalendarRowItem.h */,
+				C20D75961D242BE300A32E7A /* TGCalendarRowItem.m */,
+				C20D75981D242BF000A32E7A /* TGCalendarRowView.h */,
+				C20D75991D242BF000A32E7A /* TGCalendarRowView.m */,
+				C20D759B1D252F0800A32E7A /* TGCalendarUtils.h */,
+				C20D759C1D252F0800A32E7A /* TGCalendarUtils.m */,
+				C20D759E1D25573400A32E7A /* TGCalendarStickRowItem.h */,
+				C20D759F1D25573400A32E7A /* TGCalendarStickRowItem.m */,
+				C20D75A11D2557B400A32E7A /* TGCalendarStickRowView.h */,
+				C20D75A21D2557B400A32E7A /* TGCalendarStickRowView.m */,
+			);
+			name = calendar;
 			sourceTree = "<group>";
 		};
 		C20F76E61BB99438003A1E86 /* modern */ = {
@@ -6645,6 +6683,7 @@
 				0A613C2018AD9892004096DD /* MessageTableItemContact.m in Sources */,
 				0A6758E61895507200F4487D /* MessageTableItemText.m in Sources */,
 				C268C1A719F3F6C3007F836A /* TMClockProgressView.m in Sources */,
+				C20D75A31D2557B400A32E7A /* TGCalendarStickRowView.m in Sources */,
 				C2C6D9711A12952D001EF8A2 /* TGPVImageView.m in Sources */,
 				C2C725DA1860E05200094EC7 /* EncryptedParams.m in Sources */,
 				C2A5C00718E17C630021BE68 /* SettingsWindowController.m in Sources */,
@@ -6664,6 +6703,7 @@
 				C274C44D1ACDA00A000DFDE4 /* TGWebpageStandartContainer.m in Sources */,
 				C24F877619FE7CAB00EC962E /* SecretLayer1.m in Sources */,
 				C282485518BBB7FB00131533 /* Destructor.m in Sources */,
+				C20D759D1D252F0800A32E7A /* TGCalendarUtils.m in Sources */,
 				0AACA3F618B752C000621564 /* TMTextButton.m in Sources */,
 				0AEE20811820764900F348F2 /* NSString+Size.m in Sources */,
 				0AD35DC618698CDB007BA752 /* _TMSearchTextField.m in Sources */,
@@ -6962,6 +7002,7 @@
 				C2431D1B1CA1600900C6AACE /* ChatFullManager.m in Sources */,
 				C2CBF6AD1AFB84DB006BF90A /* TGDownloadItem.m in Sources */,
 				0ACDB12E18CF2373009FE910 /* MainWindow.m in Sources */,
+				C20D759A1D242BF000A32E7A /* TGCalendarRowView.m in Sources */,
 				0A67588E1892A7D600F4487D /* TMScrollView.m in Sources */,
 				C2D4B9291AFCEA1D0035B4E4 /* YapDatabaseExtensionConnection.m in Sources */,
 				C2D51C0C1B21FA5F009327C0 /* TGBotCommandsKeyboard.m in Sources */,
@@ -7044,6 +7085,7 @@
 				0A241AB118ACD46700C32F45 /* MessageTableItemVideo.m in Sources */,
 				C2C85B7D1AE532F500FBEABD /* TGImageLocalAttachment.m in Sources */,
 				0A7C78CF194773BB001617DB /* TMMenuPopover.m in Sources */,
+				C20D75971D242BE300A32E7A /* TGCalendarRowItem.m in Sources */,
 				C23298DB18CF61AE000826E5 /* TMPreviewPhotoItem.m in Sources */,
 				CEADBEC218A37DB700FDB258 /* TL_peerSecret.m in Sources */,
 				C2AC8DAB1A77BC6C00655B9D /* TGDocumentMediaRowView.m in Sources */,
@@ -7338,6 +7380,7 @@
 				C2D4B7431AFCD3B80035B4E4 /* TGStickerPackModalView.m in Sources */,
 				C20B63331CB2DE3900A02F24 /* TGAudioController.m in Sources */,
 				0AC9FD431868DF5B00F7E95C /* TMNineImage.m in Sources */,
+				C20D75A01D25573400A32E7A /* TGCalendarStickRowItem.m in Sources */,
 				C20A5F351B8F4579007F4B49 /* TGChannelsPolling.m in Sources */,
 				C282485218BBB67200131533 /* SelfDestructionController.m in Sources */,
 				C281C17B1917D9D9007B160F /* DraggingItemView.m in Sources */,
@@ -7393,6 +7436,7 @@
 				C2233DA91A07EF060056594F /* MessageTableItemSocial.m in Sources */,
 				CEA5894D181673E500462DF0 /* NSView+GreenArrows.m in Sources */,
 				C2FA78DB192379C3001A9D1B /* HistoryFilter.m in Sources */,
+				C20D75941D242A8000A32E7A /* TGCalendarViewController.m in Sources */,
 				C2D7C5BE1B3091400042DC01 /* StartBotSenderItem.m in Sources */,
 				0A6D098819535E8500A9AC64 /* NSAlertCategory.m in Sources */,
 				C2CBF6B71AFB860D006BF90A /* DownloadOperation.m in Sources */,

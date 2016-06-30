@@ -7,8 +7,9 @@
 //
 
 #import "TMRowView.h"
-
+#import "TGTextLabel.h"
 
 @interface TGModernStickRowView : TMRowView
 @property (nonatomic,assign) BOOL isStickView;
+@property (nonatomic,strong,readonly) TGTextLabel *textLabel;
 @end
