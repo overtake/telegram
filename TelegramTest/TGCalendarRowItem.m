@@ -46,7 +46,10 @@
 }
 
 -(int)height {
-    return 200; // 40 * 5
+    
+    int rowCount = ceil(((float)_lastDayOfMonth + (float)_startDay-1) / 7.0);
+    
+    return rowCount*40; 
 }
 
 @end
