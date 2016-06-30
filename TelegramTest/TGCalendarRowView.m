@@ -50,7 +50,7 @@ static  const int wh = 40;
         
         
         NSMutableAttributedString *day = [[NSMutableAttributedString alloc] init];
-        [day appendString:[NSString stringWithFormat:@"%d",i+1] withColor:TEXT_COLOR];
+        [day appendString:[NSString stringWithFormat:@"%d",i+1] withColor:i+1 == self.item.selectedDay ? [NSColor whiteColor] : TEXT_COLOR];
         
         [day setFont:TGSystemFont(14) forRange:day.range];
         [day setAlignment:NSCenterTextAlignment range:day.range];
