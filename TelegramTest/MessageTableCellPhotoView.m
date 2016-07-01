@@ -212,6 +212,8 @@ NSImage *fireImage() {
     
     [super setItem:item];
     
+    _startDragLocation = NSMakePoint(0, 0);
+    
     
     self.imageView.object = item.imageObject;
     
@@ -269,6 +271,8 @@ NSImage *fireImage() {
 
 -(void)mouseDown:(NSEvent *)theEvent {
     
+    _startDragLocation = NSMakePoint(0, 0);
+    
     if(!self.isEditable) {
         _startDragLocation = [self.containerView convertPoint:[theEvent locationInWindow] fromView:nil];
         
@@ -285,6 +289,11 @@ NSImage *fireImage() {
     
     if(![_imageView mouse:_startDragLocation inRect:_imageView.frame]) 
         return;
+    
+    if(_startDragLocation.x == 0 && _startDragLocation.y == 0) {
+        [self mouseDown:theEvent];
+        return;
+    }
     
     
     NSPoint eventLocation = [self.imageView convertPoint: [theEvent locationInWindow] fromView: nil];

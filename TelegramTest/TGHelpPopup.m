@@ -30,17 +30,17 @@ static Class classSetter;
 
 +(void)performSelected {
     if([self class] == classSetter)
-        [popover.contentViewController performSelected];
+        [(TMMenuController *)popover.contentViewController performSelected];
 }
 
 +(void)selectNext {
     if([self class] == classSetter)
-        [popover.contentViewController selectNext];
+        [(TMMenuController *)popover.contentViewController selectNext];
 }
 
 +(void)selectPrev {
     if([self class] == classSetter)
-        [popover.contentViewController selectPrev];
+        [(TMMenuController *)popover.contentViewController selectPrev];
 }
 
 +(void)close {

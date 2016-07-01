@@ -11,7 +11,15 @@
 @interface TGMessagesHintView : TGView
 
 
+typedef enum {
+    TGHintViewShowTypeNone = 0,
+    TGHintViewShowMentionType =1,
+    TGHintViewShowHashtagType = 2,
+    TGHintViewShowBotCommandType = 3
+} TGHintViewShowType;
+
 @property (nonatomic,weak) MessagesViewController *messagesViewController;
+
 
 -(void)showCommandsHintsWithQuery:(NSString *)query conversation:(TL_conversation *)conversation botInfo:(NSArray *)botInfo choiceHandler:(void (^)(NSString *result))choiceHandler;
 -(void)showHashtagHintsWithQuery:(NSString *)query conversation:(TL_conversation *)conversation peer_id:(int)peer_id choiceHandler:(void (^)(NSString *result))choiceHandler;
@@ -27,5 +35,7 @@
 -(void)hide;
 
 -(void)performSelected;
+
++(TGHintViewShowType)needShowHint:(NSString *)string selectedRange:(NSRange)selectedRange completeString:(NSString **)completeString searchString:(NSString **)searchString;
 
 @end

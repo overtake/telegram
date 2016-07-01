@@ -24,7 +24,7 @@ DYNAMIC_PROPERTY(EmojiPopover)
     RBLPopover *popover = [self getEmojiPopover];
     
     if(!popover) {
-        popover = [[RBLPopover alloc] initWithContentViewController:emojiViewController];
+        popover = [[RBLPopover alloc] initWithContentViewController:(NSViewController *)emojiViewController];
     }
     
     [emojiViewController.emojiViewController setInsertEmoji:^(NSString *emoji) {

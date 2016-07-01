@@ -234,6 +234,7 @@
 		C20A7E7519DAAF51008844F2 /* CoreText.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C20A7E7419DAAF51008844F2 /* CoreText.framework */; };
 		C20A7E7C19DC1379008844F2 /* TGCTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = C20A7E7B19DC1379008844F2 /* TGCTextView.m */; };
 		C20A7E7E19DC1816008844F2 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C20A7E7D19DC1816008844F2 /* CoreGraphics.framework */; };
+		C20A8A6B1D2672F400C70134 /* TGPopoverHint.m in Sources */ = {isa = PBXBuildFile; fileRef = C20A8A6A1D2672F400C70134 /* TGPopoverHint.m */; };
 		C20AEF3E1C1F2953001BAAA0 /* TGBlurImageObject.m in Sources */ = {isa = PBXBuildFile; fileRef = C20AEF3D1C1F2953001BAAA0 /* TGBlurImageObject.m */; };
 		C20AEF411C1F347D001BAAA0 /* TGThumbnailObject.m in Sources */ = {isa = PBXBuildFile; fileRef = C20AEF401C1F347D001BAAA0 /* TGThumbnailObject.m */; };
 		C20B228818E971D0007BCCD6 /* bitwise.c in Sources */ = {isa = PBXBuildFile; fileRef = C20B228418E971D0007BCCD6 /* bitwise.c */; };
@@ -1536,6 +1537,8 @@
 		C20A7E7A19DC1379008844F2 /* TGCTextView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGCTextView.h; sourceTree = "<group>"; };
 		C20A7E7B19DC1379008844F2 /* TGCTextView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGCTextView.m; sourceTree = "<group>"; };
 		C20A7E7D19DC1816008844F2 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		C20A8A691D2672F400C70134 /* TGPopoverHint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGPopoverHint.h; sourceTree = "<group>"; };
+		C20A8A6A1D2672F400C70134 /* TGPopoverHint.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGPopoverHint.m; sourceTree = "<group>"; };
 		C20AEF3C1C1F2953001BAAA0 /* TGBlurImageObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGBlurImageObject.h; sourceTree = "<group>"; };
 		C20AEF3D1C1F2953001BAAA0 /* TGBlurImageObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGBlurImageObject.m; sourceTree = "<group>"; };
 		C20AEF3F1C1F347D001BAAA0 /* TGThumbnailObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGThumbnailObject.h; sourceTree = "<group>"; };
@@ -3785,6 +3788,8 @@
 				C20F76EC1BBAC41A003A1E86 /* TGMessagesHintView.m */,
 				C20F761B1CD37B3F0051900D /* TGInlineBotHintView.h */,
 				C20F761C1CD37B3F0051900D /* TGInlineBotHintView.m */,
+				C20A8A691D2672F400C70134 /* TGPopoverHint.h */,
+				C20A8A6A1D2672F400C70134 /* TGPopoverHint.m */,
 			);
 			name = "hint-view";
 			sourceTree = "<group>";
@@ -7411,6 +7416,7 @@
 				0A613C1A18AD7E49004096DD /* MessageTableCellGeoView.m in Sources */,
 				C20A5E711B86290C007F4B49 /* TGWebpageGifObject.m in Sources */,
 				C2CD77C91A2C9E04000B4BA9 /* TGEnterPasswordPanel.m in Sources */,
+				C20A8A6B1D2672F400C70134 /* TGPopoverHint.m in Sources */,
 				C20B31341C8DCCBC00A6BCF5 /* MessageTableItemPinned.m in Sources */,
 				0A9EDC5C1897BA0E0037E1BC /* RBLShadowedTextFieldCell.m in Sources */,
 				C270C5B018A13F9F005D80E0 /* FileUtils.m in Sources */,

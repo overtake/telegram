@@ -180,6 +180,8 @@ DYNAMIC_PROPERTY(DUser);
     
     [_textField setFrameSize:NSMakeSize(newSize.width - NSMinX(_textField.frame) - 10, NSHeight(_textField.frame))];
     [_descField setFrameSize:NSMakeSize(newSize.width - NSMinX(_descField.frame) - 10, NSHeight(_descField.frame))];
+    
+   
 }
 
 @end
@@ -1102,6 +1104,53 @@ static NSMutableDictionary *inlineBotsExceptions;
     
 }
 
+
+
++(TGHintViewShowType)needShowHint:(NSString *)string selectedRange:(NSRange)selectedRange completeString:(NSString **)completeString searchString:(NSString **)searchString {
+    NSRange range;
+    
+    NSString *search;
+    
+    
+    TGHintViewShowType type = TGHintViewShowTypeNone;
+    
+    
+    NSUInteger originalLength = string.length;
+    
+    while ((range = [string rangeOfString:@"@"]).location != NSNotFound || (range = [string rangeOfString:@"#"]).location != NSNotFound || (range = [string rangeOfString:@"/"]).location != NSNotFound) {
+        
+        type = [[string substringWithRange:range] isEqualToString:@"@"] ? TGHintViewShowMentionType : ([[string substringWithRange:range] isEqualToString:@"#"] ? TGHintViewShowHashtagType : TGHintViewShowBotCommandType);
+        
+        search = [string substringFromIndex:range.location + 1];
+        
+        NSRange space = [search rangeOfString:@" "];
+        
+        if(space.location == NSNotFound)
+            space = [search rangeOfString:@"\n"];
+        
+        if(space.location != NSNotFound)
+            search = [search substringToIndex:space.location];
+        
+        
+        
+        if(search.length > 0) {
+            
+            if((selectedRange.location - (originalLength - string.length)) == range.location + search.length + 1)
+                break;
+            else
+                search = nil;
+        }
+        
+        string = [string substringFromIndex:range.location +1];
+        
+    }
+    
+    
+    *completeString = string;
+    *searchString = search;
+    
+    return type;
+}
 
 
 @end

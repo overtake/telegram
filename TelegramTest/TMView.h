@@ -20,7 +20,12 @@ enum {
 typedef NSUInteger TMViewBorder;
 
 @interface TMView : NSView
+
 @property (nonatomic, copy) dispatch_block_t drawBlock;
+@property (nonatomic, copy) void (^updateSizeHandler)(NSSize newSize);
+
+
+
 @property (nonatomic, strong) NSColor *backgroundColor;
 @property (nonatomic) BOOL isDrawn;
 

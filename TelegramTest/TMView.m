@@ -76,6 +76,10 @@
     newSize = NSMakeSize(_minSize.width != 0 ? MIN(_minSize.width,newSize.width) : newSize.width, _minSize.height != 0 ? MIN(_minSize.height,newSize.height) : newSize.height);
     
     [super setFrameSize:newSize];
+    
+    if(_updateSizeHandler) {
+        _updateSizeHandler(newSize);
+    }
 }
 
 

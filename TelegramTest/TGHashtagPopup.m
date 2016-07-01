@@ -69,7 +69,7 @@
         
         [[self popover] showRelativeToRect:rect ofView:view preferredEdge:CGRectMinYEdge];
         
-        [[self popover].contentViewController selectNext];
+        [(TMMenuController *)[self popover].contentViewController selectNext];
     } else {
         [self close];
     }

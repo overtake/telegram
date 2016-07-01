@@ -1468,54 +1468,12 @@ static RBLPopover *popover;
 
 -(void)checkMentionsOrTags {
     
-        
- NSRange range;
-    
-    NSString *search;
-    
-    NSRange selectedRange = self.inputMessageTextField.selectedRange;
-    
-        
-    
-    NSString *string = [self.inputMessageTextField string];
-    
-    int type = 0;
-    
-    // mention = 1
-    // hashtag = 2
-    // botCommand = 3
-    
-    NSUInteger originalLength = string.length;
 
-    while ((range = [string rangeOfString:@"@"]).location != NSNotFound || (range = [string rangeOfString:@"#"]).location != NSNotFound || (range = [string rangeOfString:@"/"]).location != NSNotFound) {
-        
-        type = [[string substringWithRange:range] isEqualToString:@"@"] ? 1 : ([[string substringWithRange:range] isEqualToString:@"#"] ? 2 : 3);
-        
-        search = [string substringFromIndex:range.location + 1];
-        
-        NSRange space = [search rangeOfString:@" "];
-        
-        if(space.location == NSNotFound)
-            space = [search rangeOfString:@"\n"];
-        
-        if(space.location != NSNotFound)
-            search = [search substringToIndex:space.location];
-        
-        
-        
-        if(search.length > 0) {
-            
-            if((selectedRange.location - (originalLength - string.length)) == range.location + search.length + 1)
-                break;
-            else
-                search = nil;
-        }
-        
-        string = [string substringFromIndex:range.location +1];
-        
-    }
     
-    
+    NSString *search = nil;
+    NSString *string = self.inputMessageTextField.string;
+    NSRange selectedRange = self.inputMessageTextField.selectedRange;
+    TGHintViewShowType type = [TGMessagesHintView needShowHint:string selectedRange:selectedRange completeString:&string searchString:&search];
     
     
    [self.inputMessageTextField setInline_placeholder:nil];
@@ -1553,14 +1511,14 @@ static RBLPopover *popover;
             
         };
         
-        if(type == 1) {
+        if(type == TGHintViewShowMentionType) {
             [self.messagesViewController.hintView showMentionPopupWithQuery:search conversation:self.dialog chat:self.dialog.chat allowInlineBot:[self.inputMessageTextField.string rangeOfString:@"@"].location == 0 choiceHandler:callback];
             
-        } else if(type == 2) {
+        } else if(type == TGHintViewShowHashtagType) {
             
             [self.messagesViewController.hintView showHashtagHintsWithQuery:search conversation:self.dialog peer_id:self.dialog.peer_id choiceHandler:callback];
             
-        } else if(type == 3 && [self.inputMessageTextField.string rangeOfString:@"/"].location == 0) {
+        } else if(type == TGHintViewShowBotCommandType && [self.inputMessageTextField.string rangeOfString:@"/"].location == 0) {
             if([_dialog.user isBot] || _dialog.fullChat.bot_info != nil) {
                 
                 [self.messagesViewController.hintView showCommandsHintsWithQuery:search conversation:self.dialog botInfo:_userFull ? @[_userFull.bot_info] : _dialog.fullChat.bot_info choiceHandler:^(NSString *command) {

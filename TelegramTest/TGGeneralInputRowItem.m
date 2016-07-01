@@ -24,4 +24,8 @@
     return YES;
 }
 
+-(TL_conversation *)conversation {
+    return [Telegram conversation];
+}
+
 @end

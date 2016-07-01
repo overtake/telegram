@@ -8,6 +8,7 @@
 
 #import "TGGeneralInputTextRowView.h"
 #import "TGGeneralInputRowItem.h"
+#import "TGPopoverHint.h"
 
 @interface TGGeneralInputTextRowView () <NSTextFieldDelegate,TMTextFieldDelegate>
 @property (nonatomic,strong) TMTextField *textField;
@@ -112,6 +113,39 @@
     
     if( self.item.callback != nil) {
         self.item.callback(self.item);
+    }
+    
+    
+ //
+    
+    NSString *search = nil;
+    NSString *string = self.textField.stringValue;
+    NSRange selectedRange = self.textField.selectedRange;
+    TGHintViewShowType type = [TGMessagesHintView needShowHint:string selectedRange:selectedRange completeString:&string searchString:&search];
+    
+    if(type == TGHintViewShowMentionType && search != nil && ![string hasPrefix:@" "]) {
+        TGMessagesHintView *hintView = [TGPopoverHint showHintViewForView:self.textField ofRect:_textField.frame];
+      
+        [hintView showMentionPopupWithQuery:search conversation:self.item.conversation chat:self.item.conversation.chat allowInlineBot:NO choiceHandler:^(NSString *result) {
+            
+            NSMutableString *insert = [self.textField.stringValue mutableCopy];
+            
+            [insert insertString:result atIndex:selectedRange.location - search.length];
+            
+            
+            
+            [self.textField setStringValue:insert];
+            
+            [TGPopoverHint close];
+            
+        }];
+        
+        if(hintView.isHidden) {
+            [TGPopoverHint close];
+        }
+
+    } else {
+         [TGPopoverHint close];
     }
     
 }

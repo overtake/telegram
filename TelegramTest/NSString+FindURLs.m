@@ -228,14 +228,24 @@
             dataDetector = [NSDataDetector dataDetectorWithTypes:(int)(NSTextCheckingTypeLink) error:&error];
         
         NSMutableArray *results = [[NSMutableArray alloc] init];
-        [dataDetector enumerateMatchesInString:text options:0 range:NSMakeRange(0, text.length) usingBlock:^(NSTextCheckingResult *match, __unused NSMatchingFlags flags, __unused BOOL *stop)
-         {
-             NSTextCheckingType type = [match resultType];
-             if (type == NSTextCheckingTypeLink || type == NSTextCheckingTypePhoneNumber)
+        @try {
+            [dataDetector enumerateMatchesInString:text options:0 range:NSMakeRange(0, text.length) usingBlock:^(NSTextCheckingResult *match, __unused NSMatchingFlags flags, __unused BOOL *stop)
              {
-                 [results addObject:[NSValue valueWithRange:match.range]];
-             }
-         }];
+                 @try {
+                     NSTextCheckingType type = [match resultType];
+                     if (type == NSTextCheckingTypeLink || type == NSTextCheckingTypePhoneNumber)
+                     {
+                         [results addObject:[NSValue valueWithRange:match.range]];
+                     }
+                 } @catch (NSException *exception) {
+                     
+                 }
+                
+             }];
+        } @catch (NSException *exception) {
+            
+        }
+       
         
         static NSCharacterSet *characterSet = nil;
         static dispatch_once_t onceToken;

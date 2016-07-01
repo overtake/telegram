@@ -15,4 +15,8 @@
 @property (nonatomic,strong) NSString *placeholder;
 @property (nonatomic,strong) NSAttributedString *result;
 
+@property (nonatomic,assign) BOOL hintAbility;
+
+@property (nonatomic,strong) TL_conversation *conversation;
+
 @end

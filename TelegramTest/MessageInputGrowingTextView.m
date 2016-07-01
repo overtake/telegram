@@ -346,6 +346,8 @@
 }
 
 -(BOOL)becomeFirstResponder {
+    if([TMViewController isModalActive])
+        return NO;
     return [super becomeFirstResponder];
 }
 
@@ -526,7 +528,7 @@
 -(void)insertText:(id)aString replacementRange:(NSRange)replacementRange {
     [super insertText:aString replacementRange:replacementRange];
     
-
+    
 }
 
 -(NSString *)realMentions:(NSMutableString *)string mentions:(NSMutableDictionary *)mentions idx:(int)idx {

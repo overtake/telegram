@@ -69,7 +69,7 @@ typedef void (^TMMenuPopoverDelegateBlock)(TMMenuPopover *popover);
 @property (nonatomic, strong) BTRControl *hoverView;
 
 // The view controller providing the view displayed within the popover.
-@property (nonatomic, strong) TMMenuController *contentViewController;
+@property (nonatomic, strong) NSViewController *contentViewController;
 
 // The class of which an instance is created which sits behind the
 // `contentViewController`'s view. This is useful for customising the appearance
@@ -129,6 +129,11 @@ typedef void (^TMMenuPopoverDelegateBlock)(TMMenuPopover *popover);
 //
 // Returns a newly initialised `TMMenuPopover`.
 - (instancetype)initWithMenu:(NSMenu *)menu;
+
+// Designated initialiser.
+//
+// Returns a newly initialised `TMMenuPopover`.
+- (instancetype)initWithController:(NSViewController *)controller;
 
 // Displays the popover
 //
